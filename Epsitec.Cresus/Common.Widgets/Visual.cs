@@ -130,11 +130,22 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return (Drawing.Margins) this.GetValue (Visual.AnchorMarginsProperty);
+				return new Drawing.Margins (this.left, this.right, this.top, this.bottom);
 			}
 			set
 			{
-				this.SetValue (Visual.AnchorMarginsProperty, value);
+				Drawing.Margins oldValue = this.AnchorMargins;
+				Drawing.Margins newValue = value;
+
+				if (oldValue != newValue)
+				{
+					this.left   = value.Left;
+					this.right  = value.Right;
+					this.bottom = value.Bottom;
+					this.top    = value.Top;
+					
+					this.InvalidateProperty (Visual.AnchorMarginsProperty, oldValue, newValue);
+				}
 			}
 		}
 		
@@ -191,7 +202,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.Bounds.Size;
+				return new Drawing.Size (this.width, this.height);
 			}
 			set
 			{
@@ -207,7 +218,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.Bounds.Location;
+				return new Drawing.Point (this.left, this.bottom);
 			}
 			set
 			{
@@ -223,39 +234,62 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.bounds;
+				Drawing.Size  size     = this.Size;
+				Drawing.Point location = this.Location;
+				
+				return new Drawing.Rectangle (location, size);
 			}
 			set
 			{
-				if (this.bounds != value)
+				double left   = value.Left;
+				double bottom = value.Bottom;
+				double width  = value.Width;
+				double height = value.Height;
+				
+				if (this.PreferredSize != value.Size)
 				{
-					Visual parent = this.Parent;
-					
+					this.PreferredSize = value.Size;
+				}
+				
+				if ((this.left != left) ||
+					(this.bottom != bottom) ||
+					(this.width != width) ||
+					(this.height != height))
+				{
 					this.SuspendLayout ();
 					
-					if (parent == null)
+					if (this.parent == null)
 					{
-						this.PreferredSize = value.Size;
-						
-						this.SetBounds (value);
+						this.WriteBounds (left, bottom, width, height);
 					}
 					else
 					{
 						Drawing.Size host = parent.Client.Size;
+
+						double right = host.Width - left - width;
+						double top = host.Height - bottom - height;
 						
-						this.PreferredSize = value.Size;
-						this.AnchorMargins = new Drawing.Margins (value.Left, host.Width - value.Right, host.Height - value.Top, value.Bottom);
-						
-						if (this.Anchor == AnchorStyles.None)
+						this.AnchorMargins = new Drawing.Margins (left, right, top, bottom);
+
+						if ((this.Anchor == AnchorStyles.None) &&
+							(this.Dock == DockStyle.None))
 						{
-							this.SetBounds (value);
+							this.WriteBounds (left, bottom, width, height);
+						}
+						else
+						{
 						}
 					}
-					
+
 					this.NotifyGeometryChanged ();
 					this.ResumeLayout ();
 				}
 			}
+		}
+
+		private void WriteBounds(double left, double bottom, double width, double height)
+		{
+			this.SetBounds (new Drawing.Rectangle (left, bottom, width, height));
 		}
 		
 		public Drawing.Size						PreferredSize
@@ -690,9 +724,14 @@ namespace Epsitec.Common.Widgets
 		
 		internal virtual void SetBounds(Drawing.Rectangle value)
 		{
-			Drawing.Rectangle old_value = this.bounds;
-			this.bounds = value;
-			Drawing.Rectangle new_value = this.bounds;
+			Drawing.Rectangle old_value = this.Bounds;
+
+			this.left   = value.Left;
+			this.bottom = value.Bottom;
+			this.width  = value.Width;
+			this.height = value.Height;
+			
+			Drawing.Rectangle new_value = this.Bounds;
 			
 			if (old_value != new_value)
 			{
@@ -1214,7 +1253,11 @@ namespace Epsitec.Common.Widgets
 		protected bool							has_layout_changed;
 		protected bool							have_children_changed;
 		protected byte							currently_updating_layout;
-		private Drawing.Rectangle				bounds;
+
+
+		private double							left, right, top, bottom;
+		private double							width, height;
+		
 		private static short					next_serial_id;
 		Collections.FlatChildrenCollection		children;
 		private Visual							parent;

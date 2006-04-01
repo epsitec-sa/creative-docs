@@ -3391,7 +3391,7 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void SetBounds(double x1, double y1, double x2, double y2)
 		{
-			this.SetBounds (Drawing.Rectangle.FromCorners (x1, y1, x2, y2));
+			this.SetBounds (new Drawing.Rectangle (x1, y1, x2-x1, y2-y1));
 		}
 		
 		protected override void UpdateClientGeometry()
@@ -3755,6 +3755,9 @@ namespace Epsitec.Common.Widgets
 				
 				double dx = bounds.Width;
 				double dy = bounds.Height;
+
+				dx = child.PreferredSize.Width + child.DockMargins.Width;
+				dy = child.PreferredSize.Height + child.DockMargins.Height;
 				
 				switch (child.Dock)
 				{

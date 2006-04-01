@@ -3382,10 +3382,20 @@ namespace Epsitec.Common.Document
 		
 		protected override void UpdateClientGeometry()
 		{
-			if ( this.drawingContext == null )  return;
-			Point center = this.drawingContext.Center;
-			base.UpdateClientGeometry();
-			this.drawingContext.ZoomAndCenter(this.drawingContext.Zoom, center);
+			if (this.drawingContext == null)
+			{
+				return;
+			}
+			if (this.drawingContext.RootStackIsEmpty)
+			{
+				base.UpdateClientGeometry ();
+			}
+			else
+			{
+				Point center = this.drawingContext.Center;
+				base.UpdateClientGeometry ();
+				this.drawingContext.ZoomAndCenter (this.drawingContext.Zoom, center);
+			}
 		}
 
 
