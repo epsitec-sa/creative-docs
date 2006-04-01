@@ -259,11 +259,11 @@ namespace Epsitec.Common.Widgets
 					(this.width != width) ||
 					(this.height != height))
 				{
-					this.SuspendLayout ();
-					
 					if (this.parent == null)
 					{
+						this.SuspendLayout ();
 						this.SetBounds (left, bottom, width, height);
+						this.ResumeLayout ();
 					}
 					else
 					{
@@ -277,15 +277,18 @@ namespace Epsitec.Common.Widgets
 						if ((this.Anchor == AnchorStyles.None) &&
 							(this.Dock == DockStyle.None))
 						{
+							this.SuspendLayout ();
 							this.SetBounds (left, bottom, width, height);
+							this.NotifyGeometryChanged ();
+							this.ResumeLayout ();
 						}
 						else
 						{
+							this.parent.SuspendLayout ();
+							this.NotifyGeometryChanged ();
+							this.parent.ResumeLayout ();
 						}
 					}
-
-					this.NotifyGeometryChanged ();
-					this.ResumeLayout ();
 				}
 			}
 		}
@@ -735,7 +738,7 @@ namespace Epsitec.Common.Widgets
 			this.width  = value.Width;
 			this.height = value.Height;
 			
-			Drawing.Rectangle new_value = this.Bounds;
+			Drawing.Rectangle new_value = value;
 			
 			if (old_value != new_value)
 			{
@@ -909,12 +912,6 @@ namespace Epsitec.Common.Widgets
 		{
 			Visual that = o as Visual;
 			return that.Bounds;
-		}
-		
-		private static void SetBoundsValue(DependencyObject o, object value)
-		{
-			Visual that = o as Visual;
-			that.Bounds = (Drawing.Rectangle) value;
 		}
 		
 		private static object GetSizeValue(DependencyObject o)
@@ -1251,7 +1248,7 @@ namespace Epsitec.Common.Widgets
 		public static readonly DependencyProperty DockMarginsProperty			= DependencyProperty.Register ("DockMargins", typeof (Drawing.Margins), typeof (Visual), new VisualPropertyMetadata (Drawing.Margins.Zero, VisualPropertyMetadataOptions.AffectsArrange));
 		public static readonly DependencyProperty ContainerLayoutModeProperty	= DependencyProperty.Register ("ContainerLayoutMode", typeof (ContainerLayoutMode), typeof (Visual), new VisualPropertyMetadata (ContainerLayoutMode.VerticalFlow, VisualPropertyMetadataOptions.AffectsChildrenLayout));
 		
-		public static readonly DependencyProperty BoundsProperty				= DependencyProperty.Register ("Bounds", typeof (Drawing.Rectangle), typeof (Visual), new DependencyPropertyMetadata (Drawing.Rectangle.Empty, new GetValueOverrideCallback (Visual.GetBoundsValue), new SetValueOverrideCallback (Visual.SetBoundsValue)));
+		public static readonly DependencyProperty BoundsProperty				= DependencyProperty.RegisterReadOnly ("Bounds", typeof (Drawing.Rectangle), typeof (Visual), new DependencyPropertyMetadata (Drawing.Rectangle.Empty, new GetValueOverrideCallback (Visual.GetBoundsValue)));
 		public static readonly DependencyProperty SizeProperty					= DependencyProperty.Register ("Size", typeof (Drawing.Size), typeof (Visual), new DependencyPropertyMetadata (new GetValueOverrideCallback (Visual.GetSizeValue), new SetValueOverrideCallback (Visual.SetSizeValue), new PropertyInvalidatedCallback (Visual.NotifySizeChanged)));
 		public static readonly DependencyProperty PreferredSizeProperty			= DependencyProperty.Register ("PreferredSize", typeof (Drawing.Size), typeof (Visual), new VisualPropertyMetadata (Drawing.Size.Empty, VisualPropertyMetadataOptions.AffectsArrange));
 		public static readonly DependencyProperty MinSizeProperty				= DependencyProperty.Register ("MinSize", typeof (Drawing.Size), typeof (Visual), new VisualPropertyMetadata (Drawing.Size.Empty, new PropertyInvalidatedCallback (Visual.NotifyMinSizeChanged), VisualPropertyMetadataOptions.AffectsArrange));
