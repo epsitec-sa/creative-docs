@@ -4084,7 +4084,7 @@ namespace Epsitec.Common.Widgets
 				for (int i = 0; i < children_num; i++)
 				{
 					Widget widget         = children[children_num-1 - i];
-					bool   contains_focus = root.DoesVisualContainKeyboardFocus (widget);
+					bool   contains_focus = (root == null) ? false : root.DoesVisualContainKeyboardFocus (widget);
 					
 					if ((widget.IsFrozen == false) &&
 						((widget.Visibility) || (contains_focus && message.IsKeyType)) &&
