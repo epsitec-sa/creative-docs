@@ -695,15 +695,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public override bool						IsKeyboardFocused
-		{
-			get
-			{
-				return (this.widget_state & WidgetState.Focused) != 0;
-			}
-		}
-		
-		
 		public bool									IsEntered
 		{
 			get
@@ -792,7 +783,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		private bool								AutoMnemonic
+		public bool									AutoMnemonic
 		{
 			get
 			{
@@ -1543,22 +1534,21 @@ namespace Epsitec.Common.Widgets
 		
 		public void SetParent(Widget widget)
 		{
-			if (widget != this.Parent)
+			Widget oldParent = this.Parent;
+			Widget newParent = widget;
+			
+			if (newParent != oldParent)
 			{
-				Widget parent;
-				
-				if (widget == null)
+				if (newParent == null)
 				{
-					parent = this.Parent;
-					parent.Children.Remove (this);
+					oldParent.Children.Remove (this);
 				}
 				else
 				{
-					parent = widget;
-					parent.Children.Add (this);
+					newParent.Children.Add (this);
 				}
 				
-				System.Diagnostics.Debug.Assert (this.Parent == widget);
+				System.Diagnostics.Debug.Assert (this.Parent == newParent);
 			}
 		}
 		
@@ -1615,7 +1605,7 @@ namespace Epsitec.Common.Widgets
 			//	Utiliser Focus() en lieu et place de SetFocused(true), pour
 			//	avoir une gestion complète des conditions de focus.
 			
-			bool old_focus = this.IsKeyboardFocused;
+			bool old_focus = this.KeyboardFocus;
 			bool new_focus = focused;
 			
 			if (old_focus == new_focus)
@@ -1625,30 +1615,25 @@ namespace Epsitec.Common.Widgets
 			
 			Window window = this.Window;
 
-			Types.DependencyObjectTreeSnapshot snapshot = Types.DependencyObjectTree.CreatePropertyTreeSnapshot (this, Visual.IsKeyboardFocusedProperty, Visual.IsFocusedProperty);
-			
 			if (new_focus)
 			{
 				if (window != null)
 				{
-					this.widget_state |= WidgetState.Focused;
+					this.SetValue (Visual.KeyboardFocusProperty, true);
 					window.FocusedWidget = this;
 				}
-				
-				snapshot.InvalidateDifferentProperties ();
 				
 				this.Invalidate (InvalidateReason.FocusedChanged);
 			}
 			else
 			{
-				this.widget_state &= ~ WidgetState.Focused;
+				this.SetValue (Visual.KeyboardFocusProperty, false);
+				this.ClearValueBase (Visual.KeyboardFocusProperty);
 				
 				if (window != null)
 				{
 					window.FocusedWidget = null;
 				}
-				
-				snapshot.InvalidateDifferentProperties ();
 				
 				this.Invalidate (InvalidateReason.FocusedChanged);
 			}
@@ -2587,7 +2572,7 @@ namespace Epsitec.Common.Widgets
 					//	Il y a un widget avec le focus. Ca peut être nous, un de nos descendants
 					//	ou un autre widget sans aucun lien.
 					
-					if (this.IsKeyboardFocused)
+					if (this.KeyboardFocus)
 					{
 						return this;
 					}
@@ -3406,7 +3391,7 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void SetBounds(double x1, double y1, double x2, double y2)
 		{
-			this.SetBounds (Drawing.Rectangle.FromCorners (x1, y1, x2, y2));
+			this.SetBounds (new Drawing.Rectangle (x1, y1, x2-x1, y2-y1));
 		}
 		
 		protected override void UpdateClientGeometry()
@@ -3770,6 +3755,9 @@ namespace Epsitec.Common.Widgets
 				
 				double dx = bounds.Width;
 				double dy = bounds.Height;
+
+				dx = child.PreferredSize.Width + child.DockMargins.Width;
+				dy = child.PreferredSize.Height + child.DockMargins.Height;
 				
 				switch (child.Dock)
 				{
@@ -4093,11 +4081,13 @@ namespace Epsitec.Common.Widgets
 			{
 				Widget[] children = this.Children.Widgets;
 				int  children_num = children.Length;
+
+				WindowRoot root = message.WindowRoot ?? Helpers.VisualTree.GetWindowRoot (this);
 				
 				for (int i = 0; i < children_num; i++)
 				{
 					Widget widget         = children[children_num-1 - i];
-					bool   contains_focus = widget.ContainsKeyboardFocus;
+					bool   contains_focus = (root == null) ? false : root.DoesVisualContainKeyboardFocus (widget);
 					
 					if ((widget.IsFrozen == false) &&
 						((widget.Visibility) || (contains_focus && message.IsKeyType)) &&

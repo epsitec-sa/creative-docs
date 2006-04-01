@@ -183,6 +183,18 @@ namespace Epsitec.Common.Types
 			o2.Parent = null;
 
 			Assert.AreEqual (null, o3.Cascade);
+
+			o1.Cascade = "X";
+			
+			Assert.AreEqual ("X", o1.Cascade);
+			Assert.AreEqual (null, o2.Cascade);
+			Assert.AreEqual (null, o3.Cascade);
+
+			o2.Parent = o1;
+
+			Assert.AreEqual ("X", o1.Cascade);
+			Assert.AreEqual ("X", o2.Cascade);
+			Assert.AreEqual ("X", o3.Cascade);
 		}
 
 		[Test]
@@ -570,14 +582,29 @@ namespace Epsitec.Common.Types
 			z.AddEventHandler (TreeTest.CascadeProperty, handler.RecordEventAndName);
 			
 			a.AddChild (x);
-			a.AddChild (y);
-
-			//	Change le parent de 'b' : a-->x-->b-->c1/c2/c3
-
-			x.AddChild (b);
+			System.Console.Out.WriteLine ("a.AddChild(x) : {0}", handler.Log);
+			Assert.AreEqual ("a", a.Cascade);
+			Assert.AreEqual ("a", x.Cascade);
 			handler.Clear ();
 			
+			a.AddChild (y);
+			System.Console.Out.WriteLine ("a.AddChild(y) : {0}", handler.Log);
+			Assert.AreEqual ("a", a.Cascade);
+			Assert.AreEqual ("a", y.Cascade);
+			handler.Clear ();
+			
+			//	Change le parent de 'b'. L'arbre devient :
+			//
+			//	a-->x-->b-->c1/c2/c3
+			//	a-->y
+
+			x.AddChild (b);
+			System.Console.Out.WriteLine ("x.AddChild(b) : {0}", handler.Log);
+			handler.Clear ();
+
+			Assert.AreEqual ("a", y.Cascade);
 			y.Cascade = "y";
+			Assert.AreEqual ("y", y.Cascade);
 
 			Assert.AreEqual ("y-Cascade:a,y.", handler.Log);
 			handler.Clear ();
@@ -585,17 +612,38 @@ namespace Epsitec.Common.Types
 			//	Change le parent de 'b' : a-->y-->b-->c1/c2/c3. Comme 'y' définit
 			//	sa propre valeur héritée, cela affecte b, c1 et c3.
 
+			//	L'arbre devient :
+			//
+			//	a-->x
+			//	a-->y-->b-->c1/c2/c3
+			//	z
+			
 			y.AddChild (b);
 
 			Assert.AreEqual ("b-Cascade:a,y.c1-Cascade:a,y.c3-Cascade:a,y.", handler.Log);
 			handler.Clear ();
 
+			//	L'arbre devient :
+			//
+			//	a-->x
+			//	a-->y
+			//	z-->b-->c1/c2/c3
+			
 			z.AddChild (b);
 			Assert.AreEqual ("b-Cascade:y,<UndefinedValue>.c1-Cascade:y,<UndefinedValue>.c3-Cascade:y,<UndefinedValue>.", handler.Log);
 			handler.Clear ();
+			Assert.AreEqual (null, b.Cascade);
+			Assert.AreEqual (null, c1.Cascade);
+			Assert.AreEqual ("C", c2.Cascade);
+			Assert.AreEqual (null, c3.Cascade);
+			
+			//	L'arbre devient :
+			//
+			//	a-->x-->b-->c1/c2/c3
+			//	a-->y
 			
 			x.AddChild (b);
-			Assert.AreEqual ("b-Cascade:<UndefinedValue>,a.c1-Cascade:<UndefinedValue>,a.c2-Cascade:<UndefinedValue>,C.c3-Cascade:<UndefinedValue>,a.", handler.Log);
+			Assert.AreEqual ("b-Cascade:<UndefinedValue>,a.c1-Cascade:<UndefinedValue>,a.c3-Cascade:<UndefinedValue>,a.", handler.Log);
 			handler.Clear ();
 		}
 
@@ -681,13 +729,24 @@ namespace Epsitec.Common.Types
 
 			stopwatch.Reset ();
 			stopwatch.Start ();
-			
+
 			for (int i = 0; i < runs; i++)
 			{
 				array[i].Xyz = 10;
 			}
 			stopwatch.Stop ();
 			System.Console.WriteLine ("Setting int Xyz : {0:0.00} us.", stopwatch.ElapsedMilliseconds * 1000.0 / runs);
+			System.Console.Out.Flush ();
+
+			stopwatch.Reset ();
+			stopwatch.Start ();
+
+			for (int i = 0; i < runs; i++)
+			{
+				array[i].NativeXyz = 10;
+			}
+			stopwatch.Stop ();
+			System.Console.WriteLine ("Setting int Xyz [native] : {0:0.00} us.", stopwatch.ElapsedMilliseconds * 1000.0 / runs);
 			System.Console.Out.Flush ();
 			
 			string text = null;
@@ -715,17 +774,122 @@ namespace Epsitec.Common.Types
 			System.Console.WriteLine ("Setting string Name : {0:0.00} us.", stopwatch.ElapsedMilliseconds * 1000.0 / runs);
 			System.Console.Out.Flush ();
 
+			//	-------- lecture ----------
+
 			stopwatch.Reset ();
 			stopwatch.Start ();
+			
+			xyz = 0;
 
 			for (int i = 0; i < runs; i++)
 			{
-				xyz = array[i].Xyz;
+				xyz += array[i].Xyz;
 			}
 			stopwatch.Stop ();
-			System.Console.WriteLine ("Reading local int Xyz ({1}) : {0:0.00} us.", stopwatch.ElapsedMilliseconds * 1000.0 / runs, xyz);
+			System.Console.WriteLine ("Reading local int Xyz ({1}) : {0:0.000} us.", stopwatch.ElapsedMilliseconds * 1000.0 / runs, xyz);
 			System.Console.Out.Flush ();
 
+			stopwatch.Reset ();
+			stopwatch.Start ();
+
+			xyz = 0;
+			
+			for (int i = 0; i < runs; i++)
+			{
+				xyz += array[i].NativeXyz;
+			}
+			stopwatch.Stop ();
+			System.Console.WriteLine ("Reading local int Xyz [native] ({1}) : {0:0.000} us.", stopwatch.ElapsedMilliseconds * 1000.0 / runs, xyz);
+			System.Console.Out.Flush ();
+
+			stopwatch.Reset ();
+			stopwatch.Start ();
+
+			MyObject myObj = array[0];
+			xyz = 0;
+
+			for (int i = 0; i < runs; i++)
+			{
+				xyz = myObj.Xyz;
+				myObj.Xyz = xyz;
+			}
+			stopwatch.Stop ();
+			System.Console.WriteLine ("Inc. local int Xyz [same] ({1}) : {0:0.000} us.", stopwatch.ElapsedMilliseconds * 1000.0 / runs, xyz);
+			System.Console.Out.Flush ();
+
+			stopwatch.Reset ();
+			stopwatch.Start ();
+
+			myObj = array[0];
+			xyz = 0;
+
+			for (int i = 0; i < runs; i++)
+			{
+				xyz = myObj.NativeXyz;
+				myObj.NativeXyz = xyz;
+			}
+			stopwatch.Stop ();
+			System.Console.WriteLine ("Inc. local int Xyz [native/same] ({1}) : {0:0.000} us.", stopwatch.ElapsedMilliseconds * 1000.0 / runs, xyz);
+			System.Console.Out.Flush ();
+
+			stopwatch.Reset ();
+			stopwatch.Start ();
+
+			myObj = array[0];
+			xyz = 0;
+
+			for (int i = 0; i < runs; i++)
+			{
+				xyz = myObj.Xyz;
+			}
+			stopwatch.Stop ();
+			System.Console.WriteLine ("Get local int Xyz [same] ({1}) : {0:0.000} us.", stopwatch.ElapsedMilliseconds * 1000.0 / runs, xyz);
+			System.Console.Out.Flush ();
+
+			stopwatch.Reset ();
+			stopwatch.Start ();
+
+			myObj = array[0];
+			xyz = 0;
+
+			for (int i = 0; i < runs; i++)
+			{
+				xyz = myObj.NativeXyz;
+			}
+			stopwatch.Stop ();
+			System.Console.WriteLine ("Get local int Xyz [native/same] ({1}) : {0:0.000} us.", stopwatch.ElapsedMilliseconds * 1000.0 / runs, xyz);
+			System.Console.Out.Flush ();
+
+			stopwatch.Reset ();
+			stopwatch.Start ();
+
+			myObj = array[0];
+			xyz = 0;
+
+			for (int i = 0; i < runs; i++)
+			{
+				myObj.Xyz = xyz;
+			}
+			stopwatch.Stop ();
+			System.Console.WriteLine ("Set local int Xyz [same] ({1}) : {0:0.000} us.", stopwatch.ElapsedMilliseconds * 1000.0 / runs, xyz);
+			System.Console.Out.Flush ();
+
+			stopwatch.Reset ();
+			stopwatch.Start ();
+
+			myObj = array[0];
+			xyz = 0;
+
+			for (int i = 0; i < runs; i++)
+			{
+				myObj.NativeXyz = xyz;
+			}
+			stopwatch.Stop ();
+			System.Console.WriteLine ("Set local int Xyz [native/same] ({1}) : {0:0.000} us.", stopwatch.ElapsedMilliseconds * 1000.0 / runs, xyz);
+			System.Console.Out.Flush ();
+
+			//	-------- mesuré inc. 560ns, get 130ns, set 430ns sur PC 3GHz, Pentium D (dual core)
+			
 			stopwatch.Reset ();
 			stopwatch.Start ();
 
@@ -797,6 +961,17 @@ namespace Epsitec.Common.Types
 					this.SetValue (MyObject.XyzProperty, value);
 				}
 			}
+			public int				NativeXyz
+			{
+				get
+				{
+					return this.nativeXyz;
+				}
+				set
+				{
+					this.nativeXyz = value;
+				}
+			}
 			public string			Name
 			{
 				get
@@ -849,11 +1024,56 @@ namespace Epsitec.Common.Types
 				}
 				set
 				{
-					this.SetValue (MyObject.ParentProperty, value);
+					if (value != this.Parent)
+					{
+						if (this.Parent != null)
+						{
+							this.Parent.Children.Remove (this);
+							this.InheritedPropertyCache.ClearAllValues (this);
+						}
+						
+						this.SetValue (MyObject.ParentProperty, value);
+
+						if (this.Parent != null)
+						{
+							this.Parent.Children.Add (this);
+							this.InheritedPropertyCache.InheritValuesFromParent (this, this.Parent);
+						}
+					}
+				}
+			}
+			public MyObjectChildren	Children
+			{
+				get
+				{
+					if (this.children == null)
+					{
+						this.children = new MyObjectChildren ();
+					}
+
+					return this.children;
+				}
+			}
+			public bool				HasChildren
+			{
+				get
+				{
+					return this.children == null ? false : (this.children.Count > 0);
 				}
 			}
 			
 			public static int		OnFooChangedCallCount = 0;
+
+			public static object GetValueChildren(DependencyObject o)
+			{
+				MyObject tt = o as MyObject;
+				return tt.Children;
+			}
+			public static object GetValueHasChildren(DependencyObject o)
+			{
+				MyObject tt = o as MyObject;
+				return tt.HasChildren;
+			}
 			
 			public static DependencyProperty XyzProperty	= DependencyProperty.Register ("Xyz", typeof (int), typeof (MyObject));
 			public static DependencyProperty NameProperty	= DependencyProperty.Register ("Name", typeof (string), typeof (MyObject), new DependencyPropertyMetadata ("[default]"));
@@ -861,19 +1081,23 @@ namespace Epsitec.Common.Types
 			public static DependencyProperty SiblingProperty = DependencyProperty.Register ("Sibling", typeof (MyObject), typeof (MyObject));
 			public static DependencyProperty CascadeProperty = DependencyProperty.Register ("Cascade", typeof (string), typeof (MyObject), new DependencyPropertyMetadataWithInheritance ());
 			public static DependencyProperty ParentProperty = DependencyObjectTree.ParentProperty.AddOwner (typeof (MyObject));
+			public static DependencyProperty ChildrenProperty = DependencyObjectTree.ChildrenProperty.AddOwner (typeof (MyObject), new DependencyPropertyMetadata (MyObject.GetValueChildren).MakeReadOnlySerializable ());
+			public static DependencyProperty HasChildrenProperty = DependencyObjectTree.HasChildrenProperty.AddOwner (typeof (MyObject), new DependencyPropertyMetadata (MyObject.GetValueHasChildren));
 			public static DependencyProperty ReadOnlyProperty = DependencyProperty.RegisterReadOnly ("ReadOnly", typeof (string), typeof (MyObject));
 			
 			protected virtual void OnFooChanged()
 			{
 				MyObject.OnFooChangedCallCount++;
 			}
-			
-			
+
 			private static void NotifyOnFooChanged(DependencyObject o, object old_value, object new_value)
 			{
 				MyObject m = o as MyObject;
 				m.OnFooChanged ();
 			}
+			
+			private MyObjectChildren	children;
+			private int					nativeXyz;
 		}
 		#endregion
 
@@ -1037,7 +1261,13 @@ namespace Epsitec.Common.Types
 		{
 		}
 		#endregion
-		
+
+		#region MyObjectChildren Class
+		class MyObjectChildren : DependencyObjectList<MyObject>
+		{
+		}
+		#endregion
+
 		#region TreeTest Class
 
 		class TreeTest : DependencyObject
@@ -1099,8 +1329,6 @@ namespace Epsitec.Common.Types
 			
 			public void AddChild(TreeTest item)
 			{
-				DependencyObjectTreeSnapshot snapshot = DependencyObjectTree.CreateInheritedPropertyTreeSnapshot (item);
-				
 				if (this.children == null)
 				{
 					this.children = new TreeTestChildren ();
@@ -1108,13 +1336,13 @@ namespace Epsitec.Common.Types
 				if (item.parent != null)
 				{
 					item.parent.children.Remove (item);
+					item.InheritedPropertyCache.ClearAllValues (item);
 				}
 				this.children.Add (item);
 
 				item.parent = this;
-				
-				snapshot.AddNewInheritedProperties (item);
-				snapshot.InvalidateDifferentProperties ();
+				item.InheritedPropertyCache.InheritValuesFromParent (item, item.parent);
+				item.InheritedPropertyCache.NotifyChanges (item);
 			}
 			
 			public static object GetValueParent(DependencyObject o)

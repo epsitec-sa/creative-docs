@@ -76,9 +76,12 @@ namespace Epsitec.Common.Types.Serialization
 						{
 							//	This is a collection. Record it as {Collection xxx, xxx, xxx}
 
-							string markup = MarkupExtension.CollectionToString (dependencyObjectCollection, this);
+							if (dependencyObjectCollection.Count > 0)
+							{
+								string markup = MarkupExtension.CollectionToString (dependencyObjectCollection, this);
 
-							this.writer.WriteObjectFieldValue (obj, this.GetPropertyName (entry.Property), markup);
+								this.writer.WriteObjectFieldValue (obj, this.GetPropertyName (entry.Property), markup);
+							}
 							continue;
 						}
 

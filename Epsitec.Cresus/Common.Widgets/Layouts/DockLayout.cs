@@ -41,6 +41,9 @@ namespace Epsitec.Common.Widgets.Layouts
 				
 				double dx = bounds.Width;
 				double dy = bounds.Height;
+
+				dx = child.PreferredSize.Width + child.DockMargins.Width;
+				dy = child.PreferredSize.Height + child.DockMargins.Height;
 				
 				switch (child.Dock)
 				{

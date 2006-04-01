@@ -1,4 +1,4 @@
-//	Copyright © 2003-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -37,9 +37,9 @@ namespace Epsitec.Common.Widgets
 			
 			this.root.Size = new Drawing.Size (this.window.ClientSize);
 			this.root.Name = "Root";
-			this.root.MinSizeChanged += new PropertyChangedEventHandler (this.HandleRootMinSizeChanged);
+			this.root.MinSizeChanged += this.HandleRootMinSizeChanged;
 			
-			this.timer.TimeElapsed += new EventHandler (this.HandleTimeElapsed);
+			this.timer.TimeElapsed += this.HandleTimeElapsed;
 			this.timer.AutoRepeat = 0.050;
 			
 			Window.windows.Add (new System.WeakReference (this));
@@ -301,7 +301,15 @@ namespace Epsitec.Common.Widgets
 		{
 			this.window.IsMouseActivationEnabled = false;
 		}
-		
+
+		public bool StartWindowManagerOperation(Platform.WindowManagerOperation op)
+		{
+			if (this.window != null)
+			{
+				return this.window.StartWindowManagerOperation (op);
+			}
+			return false;
+		}
 		
 		public virtual void Show()
 		{
@@ -948,6 +956,47 @@ namespace Epsitec.Common.Widgets
 			get { return this.name; }
 			set { this.window.Name = this.name = value; }
 		}
+
+		public static bool						RunningInAutomatedTestEnvironment
+		{
+			get
+			{
+				return Window.is_running_in_automated_test_environment;
+			}
+			set
+			{
+				//	En mettant cette propriété à true, l'appel RunInTestEnvironment
+				//	ne démarrera pas de "message loop", ce qui évite qu'une batterie
+				//	de tests automatique (NUnit) ne se bloque après l'affichage d'une
+				//	fenêtre.
+				
+				if (Window.is_running_in_automated_test_environment != value)
+				{
+					Window.is_running_in_automated_test_environment = value;
+				}
+			}
+		}
+
+
+		public static void RunInTestEnvironment(Window window)
+		{
+			//	Cette méthode doit être appelée dans des tests basés sur NUnit, lorsque
+			//	l'on désire que la fenêtre reste visible jusqu'à sa fermeture manuelle.
+			
+			//	Il est conseillé de rajouter un test nommé AutomatedTestEnvironment qui
+			//	met la propriété RunningInAutomatedTestEnvironment à true; ainsi, si on
+			//	exécute un test global (Run sans avoir sélectionné de test spécifique),
+			//	RunInTestEnvironment ne bloquera pas.
+			
+			if (Window.RunningInAutomatedTestEnvironment)
+			{
+				System.Windows.Forms.Application.DoEvents ();
+			}
+			else
+			{
+				System.Windows.Forms.Application.Run (window.PlatformWindow);
+			}
+		}
 		
 		
 		#region IPropertyProvider Members
@@ -1034,7 +1083,7 @@ namespace Epsitec.Common.Widgets
 				
 				if (this.dispatcher != null)
 				{
-					this.dispatcher.ValidationRuleBecameDirty += new Support.EventHandler (this.HandleValidationRuleBecameDirty);
+					this.dispatcher.ValidationRuleBecameDirty += this.HandleValidationRuleBecameDirty;
 				}
 				
 				Helpers.VisualTree.InvalidateCommandDispatcher (this);
@@ -1047,7 +1096,7 @@ namespace Epsitec.Common.Widgets
 			{
 				System.Diagnostics.Debug.Assert (this.dispatcher == value);
 				
-				this.dispatcher.ValidationRuleBecameDirty -= new Support.EventHandler (this.HandleValidationRuleBecameDirty);
+				this.dispatcher.ValidationRuleBecameDirty -= this.HandleValidationRuleBecameDirty;
 				
 				Helpers.VisualTree.InvalidateCommandDispatcher (this);
 			}
@@ -1164,7 +1213,7 @@ namespace Epsitec.Common.Widgets
 				
 				if (this.root != null)
 				{
-					this.root.MinSizeChanged -= new PropertyChangedEventHandler (this.HandleRootMinSizeChanged);
+					this.root.MinSizeChanged -= this.HandleRootMinSizeChanged;
 					this.root.Dispose ();
 				}
 				
@@ -1200,7 +1249,7 @@ namespace Epsitec.Common.Widgets
 					this.window.Dispose ();
 				}
 				
-				this.timer.TimeElapsed -= new EventHandler (this.HandleTimeElapsed);
+				this.timer.TimeElapsed -= this.HandleTimeElapsed;
 				this.timer.Dispose ();
 				
 				this.timer  = null;
@@ -1277,6 +1326,14 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void OnAboutToShowWindow()
 		{
+			if ((this.owner != null) &&
+				(this.window != null))
+			{
+				this.window.Owner = this.owner.window;
+			}
+			
+			this.SyncMinSizeWithWindowRoot ();
+			
 			if (this.AboutToShowWindow != null)
 			{
 				this.AboutToShowWindow (this);
@@ -1320,17 +1377,16 @@ namespace Epsitec.Common.Widgets
 		{
 			System.Diagnostics.Debug.Assert (! this.window_is_visible);
 
-			Types.DependencyObjectTreeSnapshot snapshot = Types.DependencyObjectTree.CreatePropertyTreeSnapshot (this.Root, Visual.IsVisibleProperty);
-			
 			this.window_is_visible = true;
 			
 			if ((this.owner != null) &&
-				(this.window != null))
+				(this.window != null) &&
+				(this.window.Owner == null))
 			{
 				this.window.Owner = this.owner.window;
 			}
-			
-			snapshot.InvalidateDifferentProperties ();
+
+			this.root.NotifyWindowIsVisibleChanged ();
 			
 			if (this.WindowShown != null)
 			{
@@ -1342,17 +1398,16 @@ namespace Epsitec.Common.Widgets
 		{
 			System.Diagnostics.Debug.Assert (this.window_is_visible);
 
-			Types.DependencyObjectTreeSnapshot snapshot = Types.DependencyObjectTree.CreatePropertyTreeSnapshot (this.Root, Visual.IsVisibleProperty);
-			
 			this.window_is_visible = false;
 			
 			if ((this.owner != null) &&
-				(this.window != null))
+				(this.window != null) &&
+				(this.window.Owner != null))
 			{
 				this.window.Owner = null;
 			}
-			
-			snapshot.InvalidateDifferentProperties ();
+
+			this.root.NotifyWindowIsVisibleChanged ();
 			
 			if (this.WindowHidden != null)
 			{
@@ -1413,25 +1468,17 @@ namespace Epsitec.Common.Widgets
 				
 		internal void NotifyWindowFocused()
 		{
-//-			System.Diagnostics.Debug.WriteLine ("Platform Window focused");
-			
 			if (this.window_is_focused == false)
 			{
 				if (this.focused_widget != null)
 				{
-					Types.DependencyObjectTreeSnapshot snapshot = Types.DependencyObjectTree.CreatePropertyTreeSnapshot (this.focused_widget, Visual.IsFocusedProperty);
-					
 					this.window_is_focused = true;
 					this.focused_widget.Invalidate (Widgets.InvalidateReason.FocusedChanged);
-				
-					snapshot.InvalidateDifferentProperties ();
 				}
 				else
 				{
 					this.window_is_focused = true;
 				}
-				
-//-				System.Diagnostics.Debug.WriteLine ("Window focused");
 				
 				this.OnWindowFocused ();
 			}
@@ -1439,26 +1486,18 @@ namespace Epsitec.Common.Widgets
 		
 		internal void NotifyWindowDefocused()
 		{
-//-			System.Diagnostics.Debug.WriteLine ("Platform Window de-focused");
-			
 			if ((this.window_is_focused == true) &&
 				(this.IsSubmenuOpen == false))
 			{
 				if (this.focused_widget != null)
 				{
-					Types.DependencyObjectTreeSnapshot snapshot = Types.DependencyObjectTree.CreatePropertyTreeSnapshot (this.focused_widget, Visual.IsFocusedProperty);
-					
 					this.window_is_focused = false;
 					this.focused_widget.Invalidate (Widgets.InvalidateReason.FocusedChanged);
-					
-					snapshot.InvalidateDifferentProperties ();
 				}
 				else
 				{
 					this.window_is_focused = false;
 				}
-				
-//-				System.Diagnostics.Debug.WriteLine ("Window de-focused");
 				
 				this.OnWindowDefocused ();
 				
@@ -1559,6 +1598,8 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void OnFocusedWidgetChanged()
 		{
+			this.root.ClearFocusChain ();
+			
 			if (this.FocusedWidgetChanged != null)
 			{
 				this.FocusedWidgetChanged (this);
@@ -1808,7 +1849,7 @@ namespace Epsitec.Common.Widgets
 					pos = root.MapRootToClient (pos);
 					pos = root.MapClientToParent (pos);
 				}
-				
+
 				root.MessageHandler (message, pos);
 				
 				if (this.IsDisposed)
@@ -2143,6 +2184,14 @@ namespace Epsitec.Common.Widgets
 
 		protected void HandleRootMinSizeChanged(object sender, Types.DependencyPropertyChangedEventArgs e)
 		{
+			if (this.IsVisible)
+			{
+				this.SyncMinSizeWithWindowRoot ();
+			}
+		}
+		
+		private void SyncMinSizeWithWindowRoot()
+		{
 			int width  = (int) (this.root.RealMinSize.Width + 0.5);
 			int height = (int) (this.root.RealMinSize.Height + 0.5);
 			
@@ -2255,5 +2304,6 @@ namespace Epsitec.Common.Widgets
 		private Support.Data.ComponentCollection components;
 		
 		static System.Collections.ArrayList		windows = new System.Collections.ArrayList ();
+		static bool								is_running_in_automated_test_environment;
 	}
 }

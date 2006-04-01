@@ -71,6 +71,7 @@ namespace Epsitec.Common.Widgets
 			CommandDispatcher dispatcher = new CommandDispatcher ("TextField", CommandDispatcherLevel.Secondary);
 			dispatcher.RegisterController (new Dispatcher (this));
 			this.AttachCommandDispatcher (dispatcher);
+			this.IsFocusedChanged += this.HandleIsFocusedChanged;
 		}
 		
 		public AbstractTextField(Widget embedder) : this()
@@ -509,6 +510,7 @@ namespace Epsitec.Common.Widgets
 		{
 			if ( disposing )
 			{
+				this.IsFocusedChanged -= this.HandleIsFocusedChanged;
 				if ( TextField.blinking == this )
 				{
 					if ( this.navigator != null )
@@ -531,6 +533,8 @@ namespace Epsitec.Common.Widgets
 		
 		protected override bool AboutToGetFocus(TabNavigationDir dir, TabNavigationMode mode, out Widget focus)
 		{
+			System.Diagnostics.Debug.WriteLine (string.Format ("About to get focus on '{0}'.", this.Text));
+			
 			if ( mode != TabNavigationMode.Passive )
 			{
 				this.SelectAll();
@@ -854,7 +858,7 @@ namespace Epsitec.Common.Widgets
 				this.navigator.ProcessMessage(message, pos);
 			}
 			
-			if ( this.AutoSelectOnFocus && !this.IsKeyboardFocused )
+			if ( this.AutoSelectOnFocus && !this.KeyboardFocus )
 			{
 				this.SelectAll();
 				message.Swallowed = true;
@@ -1046,6 +1050,7 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void HandleFocused()
 		{
+			System.Diagnostics.Debug.WriteLine ("AbstractTextField focused");
 			TextField.blinking = this;
 			this.ResetCursor();
 			
@@ -1076,9 +1081,11 @@ namespace Epsitec.Common.Widgets
 
 		protected virtual void HandleDefocused()
 		{
+			System.Diagnostics.Debug.WriteLine ("AbstractTextField de-focused (KeyboardFocus="+this.KeyboardFocus+")");
+			
 			TextField.blinking = null;
 			
-			if (this.IsKeyboardFocused == false)
+			if (this.KeyboardFocus == false)
 			{
 				switch (this.DefocusAction)
 				{
@@ -1125,7 +1132,7 @@ namespace Epsitec.Common.Widgets
 			if ( this.scrollTop    )  this.ScrollVertical(amplitude);
 		}
 
-		protected override void OnIsFocusedChanged(Types.DependencyPropertyChangedEventArgs e)
+		private void HandleIsFocusedChanged(object sender, Types.DependencyPropertyChangedEventArgs e)
 		{
 			bool focused = (bool) e.NewValue;
 			
@@ -1137,8 +1144,6 @@ namespace Epsitec.Common.Widgets
 			{
 				this.HandleDefocused ();
 			}
-			
-			base.OnIsFocusedChanged (e);
 		}
 
 		protected override void OnTextChanged()
@@ -1176,11 +1181,12 @@ namespace Epsitec.Common.Widgets
 		{
 			base.OnTextDefined ();
 			this.has_edited_text = false;
+			System.Diagnostics.Debug.WriteLine ("Text defined. has_edited_text = false");
 		}
 
-		protected override void OnIsKeyboardFocusedChanged(Types.DependencyPropertyChangedEventArgs e)
+		protected override void OnKeyboardFocusChanged(Types.DependencyPropertyChangedEventArgs e)
 		{
-			base.OnIsKeyboardFocusedChanged (e);
+			base.OnKeyboardFocusChanged (e);
 			
 			this.UpdateButtonVisibility ();
 		}
@@ -1210,6 +1216,7 @@ namespace Epsitec.Common.Widgets
 		{
 			if (this.has_edited_text == false)
 			{
+				System.Diagnostics.Debug.WriteLine ("Text edited. has_edited_text = true");
 				this.has_edited_text = true;
 				
 				this.UpdateButtonVisibility ();
@@ -1277,6 +1284,8 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void OnEditionStarted()
 		{
+			System.Diagnostics.Debug.WriteLine ("Started Edition");
+			
 			if (this.EditionStarted != null)
 			{
 				this.EditionStarted (this);
@@ -1285,6 +1294,8 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void OnEditionAccepted()
 		{
+			System.Diagnostics.Debug.WriteLine ("Accepted Edition");
+			
 			if (this.EditionAccepted != null)
 			{
 				this.EditionAccepted (this);
@@ -1293,6 +1304,8 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void OnEditionRejected()
 		{
+			System.Diagnostics.Debug.WriteLine ("Rejected Edition");
+			
 			if (this.EditionRejected != null)
 			{
 				this.EditionRejected (this);
@@ -1448,7 +1461,7 @@ namespace Epsitec.Common.Widgets
 			rClip = this.MapClientToRoot(rClip);
 			graphics.SetClippingRectangle(rClip);
 			
-			if ( this.IsKeyboardFocused || this.contextMenu != null )
+			if ( this.KeyboardFocus || this.contextMenu != null )
 			{
 				bool visibleCursor = false;
 				
@@ -1469,6 +1482,14 @@ namespace Epsitec.Common.Widgets
 				{
 					adorner.PaintGeneralTextLayout(graphics, clipRect, pos, textLayout, state&~WidgetState.Focused, PaintTextStyle.TextField, this.textDisplayMode, this.BackColor);
 					visibleCursor = TextField.showCursor && this.Window.IsFocused && !this.Window.IsSubmenuOpen;
+				}
+				else if (this.Window.IsFocused == false)
+				{
+					//	Il y a une sélection, mais la fenêtre n'a pas le focus; on ne peint
+					//	donc pas la sélection...
+					
+					adorner.PaintGeneralTextLayout (graphics, clipRect, pos, textLayout, state&~WidgetState.Focused, PaintTextStyle.TextField, this.textDisplayMode, this.BackColor);
+					visibleCursor = false;
 				}
 				else
 				{
@@ -1507,7 +1528,7 @@ namespace Epsitec.Common.Widgets
 					}
 				}
 				
-				if ( !this.navigator.IsReadOnly && visibleCursor && this.IsKeyboardFocused )
+				if ( !this.navigator.IsReadOnly && visibleCursor && this.KeyboardFocus )
 				{
 					//	Dessine le curseur :
 					Drawing.Point p1, p2;

@@ -9,8 +9,15 @@ namespace Epsitec.Common.Drawing
 		{
 			Font.Initialise ();
 		}
-		
-		[Test] public void CheckGetUnicodeName()
+
+		[Test]
+		public void AutomatedTestEnvironment()
+		{
+			Epsitec.Common.Widgets.Window.RunningInAutomatedTestEnvironment = true;
+		}
+
+		[Test]
+		public void CheckGetUnicodeName()
 		{
 			System.Console.Out.WriteLine ("% --> {0}", TextBreak.GetUnicodeName ('%'));
 			System.Console.Out.WriteLine ("¼ --> {0}", TextBreak.GetUnicodeName ('¼'));
@@ -100,6 +107,7 @@ namespace Epsitec.Common.Drawing
 					text.TextLayout.DefaultFontSize = 60;
 					
 					window.Show ();
+					Widgets.Window.RunInTestEnvironment (window);
 				}
 			}
 		}

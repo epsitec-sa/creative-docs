@@ -165,7 +165,7 @@ namespace Epsitec.Common.Support
 			
 			for (int i = 0; i < assemblies.Length; i++)
 			{
-				ObjectBundler.RegisterAssembly (assemblies[i]);
+//-				ObjectBundler.RegisterAssembly (assemblies[i]);
 			}
 			
 			ObjectBundler.is_booting = false;

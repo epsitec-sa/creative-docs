@@ -13,11 +13,17 @@ namespace Epsitec.Common.Document.Containers
 		public Abstract(Document document)
 		{
 			this.document = document;
+			this.IsVisibleChanged += this.HandleIsVisibleChanged;
 		}
 		
 		protected override void Dispose(bool disposing)
 		{
-			base.Dispose(disposing);
+			if (disposing)
+			{
+				this.IsVisibleChanged -= this.HandleIsVisibleChanged;
+			}
+			
+			base.Dispose (disposing);
 		}
 
 
@@ -27,10 +33,9 @@ namespace Epsitec.Common.Document.Containers
 		}
 
 
-		protected override void OnIsVisibleChanged(Types.DependencyPropertyChangedEventArgs e)
+		private void HandleIsVisibleChanged(object sender, Types.DependencyPropertyChangedEventArgs e)
 		{
 			//	Appelé par Widget lorsque la visibilité change.
-			base.OnIsVisibleChanged(e);
 			
 			bool visible = (bool) e.NewValue;
 			

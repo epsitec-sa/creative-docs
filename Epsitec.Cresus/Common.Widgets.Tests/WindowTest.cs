@@ -10,7 +10,12 @@ namespace Epsitec.Common.Widgets
 		static WindowTest()
 		{
 		}
-		
+
+
+		[Test] public void AutomatedTestEnvironment()
+		{
+			Epsitec.Common.Widgets.Window.RunningInAutomatedTestEnvironment = true;
+		}
 		
 		[Test] public void CheckFrameCreation()
 		{
@@ -23,6 +28,7 @@ namespace Epsitec.Common.Widgets
 			
 			window.Text = "CheckFrameCreation";
 			window.Show ();
+			Window.RunInTestEnvironment (window);
 		}
 
 		[Test] public void CheckBounds()
@@ -194,6 +200,7 @@ namespace Epsitec.Common.Widgets
 			window.MouseCursor = MouseCursor.FromImage (image, 4, 28);
 			window.Text = "CheckMouseCursor";
 			window.Show ();
+			Window.RunInTestEnvironment (window);
 		}
 		
 		[Test] public void CheckTabNavigation()
@@ -202,13 +209,17 @@ namespace Epsitec.Common.Widgets
 			window.Text = "CheckTabNavigation";
 			window.ClientSize = new Drawing.Size (450, 230);
 			window.MakeFixedSizeWindow ();
+
+//-			Assert.IsNotNull (window.CommandDispatchers[0]);
+//-			Assert.IsNotNull (window.Root.CommandDispatchers[0]);
 			
-			Assert.IsNotNull (window.CommandDispatchers[0]);
-			Assert.IsNotNull (window.Root.CommandDispatchers[0]);
+//-			CommandDispatcher dispatcher = window.CommandDispatchers[0];
 			
-			CommandDispatcher dispatcher = window.CommandDispatchers[0];
-			
+			CommandDispatcher dispatcher = CommandDispatcher.Default;
 			dispatcher.RegisterController (new MyController ());
+
+			window.AttachCommandDispatcher (dispatcher);
+			window.Root.AttachCommandDispatcher (dispatcher);
 			
 			Assert.AreSame (dispatcher, window.Root.CommandDispatchers[0]);
 			
@@ -466,6 +477,7 @@ namespace Epsitec.Common.Widgets
 			check.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			
 			window.Show ();
+			Window.RunInTestEnvironment (window);
 		}
 		
 		
@@ -497,6 +509,7 @@ namespace Epsitec.Common.Widgets
 			window.Root.MinSize = new Size(200, 100);
 			
 			window.Show ();
+			Window.RunInTestEnvironment (window);
 		}
 		
 		[Test] public void CheckAlphaWindow()

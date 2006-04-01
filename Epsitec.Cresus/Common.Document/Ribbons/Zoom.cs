@@ -23,7 +23,7 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonZoomPrev      = this.CreateIconButton("ZoomPrev");
 			this.separator           = new IconSeparator(this);
 			this.CreateFieldZoom(ref this.fieldZoom, Res.Strings.Action.ZoomValue);
-			this.buttonOthers = this.CreateMenuButton("", Res.Strings.Action.ZoomMenu, new MessageEventHandler(this.HandleOthersClicked));
+			this.buttonOthers = this.CreateMenuButton("", Res.Strings.Action.ZoomMenu, new MessageEventHandler(this.HandleOthersPressed));
 			
 			this.UpdateClientGeometry();
 		}
@@ -163,7 +163,7 @@ namespace Epsitec.Common.Document.Ribbons
 			this.ignoreChange = false;
 		}
 
-		private void HandleOthersClicked(object sender, MessageEventArgs e)
+		private void HandleOthersPressed(object sender, MessageEventArgs e)
 		{
 			//	Bouton pour ouvrir le menu des autres opérations.
 			if ( this.document == null )  return;
@@ -174,7 +174,7 @@ namespace Epsitec.Common.Document.Ribbons
 			VMenu menu = Menus.ZoomMenu.CreateZoomMenu(context.Zoom, context.ZoomPage, null);
 			if ( menu == null )  return;
 			menu.Host = this;
-			menu.ShowAsContextMenu(this.Window, pos);
+			menu.ShowAsComboList(button, pos, button);
 		}
 
 

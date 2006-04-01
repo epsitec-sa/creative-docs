@@ -16,6 +16,13 @@ namespace Epsitec.Common.Widgets
 			Epsitec.Common.Widgets.Widget.Initialise ();
 		}
 
+		[Test]
+		public void AutomatedTestEnvironment()
+		{
+			Epsitec.Common.Widgets.Window.RunningInAutomatedTestEnvironment = true;
+		}
+		
+
 #if true
 		[Test] public void CheckAllocation()
 		{
@@ -328,6 +335,7 @@ namespace Epsitec.Common.Widgets
 			frame2.Name        = "B";
 			
 			window.Show ();
+			Window.RunInTestEnvironment (window);
 		}
 		
 		
@@ -499,7 +507,7 @@ namespace Epsitec.Common.Widgets
 			Widget w1 = new Widget ();
 			Widget w2 = new Widget ();
 			
-			w2.ParentChanged += new PropertyChangedEventHandler (HandleCheckParentChangedParentChanged);
+			w2.ParentChanged += new PropertyChangedEventHandler (this.HandleCheckParentChangedParentChanged);
 			
 			this.check_parent_changed_sender = null;
 			this.check_parent_changed_count  = 0;
@@ -529,8 +537,8 @@ namespace Epsitec.Common.Widgets
 			this.check_parent_changed_count  = 0;
 			w0.Children.Add (w2);
 			Assert.AreEqual (w2, this.check_parent_changed_sender);
-			Assert.AreEqual (2, this.check_parent_changed_count);
-			Assert.AreEqual (null, this.check_parent_changed_old_value);
+			Assert.AreEqual (1, this.check_parent_changed_count);			// 1 seule notification !
+			Assert.AreEqual (w1, this.check_parent_changed_old_value);
 			Assert.AreEqual (w0, this.check_parent_changed_new_value);
 		}
 		
@@ -598,10 +606,11 @@ namespace Epsitec.Common.Widgets
 			Widget widget = new Widget ();
 			string text = "Hel<m>l</m>o";
 			widget.Text = text;
-			Assert.IsTrue (widget.Text == text);
-			Assert.IsTrue (widget.Mnemonic == 'L');
+			widget.AutoMnemonic = true;
+			Assert.AreEqual (text, widget.Text);
+			Assert.AreEqual ('L', widget.Mnemonic);
 			widget.Text = null;
-			Assert.IsTrue (widget.Text == "");
+			Assert.AreEqual ("", widget.Text);
 		}
 		
 		[Test] public void CheckTextLayoutInfo()
@@ -621,6 +630,7 @@ namespace Epsitec.Common.Widgets
 			text.PaintForeground += new PaintEventHandler(this.CheckTextLayoutInfoPaintForeground);
 			
 			window.Show ();
+			Window.RunInTestEnvironment (window);
 		}
 		
 		
@@ -1057,6 +1067,7 @@ namespace Epsitec.Common.Widgets
 			window.Root.Children.Add(button);
 			
 			window.Show ();
+			Window.RunInTestEnvironment (window);
 		}
 		
 		[Test] public void CheckAliveWidgets()
@@ -1207,6 +1218,7 @@ namespace Epsitec.Common.Widgets
 			
 			
 			window.Show ();
+			Window.RunInTestEnvironment (window);
 		}
 		
 		
@@ -1251,6 +1263,7 @@ namespace Epsitec.Common.Widgets
 			selector2.Color = new RichColor(tag.BackColor);
 			
 			window.Show ();
+			Window.RunInTestEnvironment (window);
 		}
 
 

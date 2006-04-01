@@ -6,7 +6,14 @@ namespace Epsitec.Common.Widgets
 	[TestFixture]
 	public class TextLayoutTest
 	{
-		[Test] public void CheckPaint()
+		[Test]
+		public void AutomatedTestEnvironment()
+		{
+			Epsitec.Common.Widgets.Window.RunningInAutomatedTestEnvironment = true;
+		}
+
+		[Test]
+		public void CheckPaint()
 		{
 			Window window = new Window();
 			
@@ -15,6 +22,7 @@ namespace Epsitec.Common.Widgets
 			window.Root.PaintForeground += new PaintEventHandler(CheckPaint_Paint1);
 			window.Root.Invalidate();
 			window.Show();
+			Window.RunInTestEnvironment (window);
 		}
 
 		[Test] public void CheckPaintJustif()
@@ -26,6 +34,7 @@ namespace Epsitec.Common.Widgets
 			window.Root.PaintForeground += new PaintEventHandler(CheckPaint_PaintJustif1);
 			window.Root.Invalidate();
 			window.Show();
+			Window.RunInTestEnvironment (window);
 		}
 
 		[Test] public void CheckPaintUnderline()
@@ -37,6 +46,7 @@ namespace Epsitec.Common.Widgets
 			window.Root.PaintForeground += new PaintEventHandler(CheckPaint_PaintUnderline1);
 			window.Root.Invalidate();
 			window.Show();
+			Window.RunInTestEnvironment (window);
 		}
 
 		[Test] public void CheckPaintCourier()
@@ -48,6 +58,7 @@ namespace Epsitec.Common.Widgets
 			window.Root.PaintForeground += new PaintEventHandler(CheckPaint_PaintCourier);
 			window.Root.Invalidate();
 			window.Show();
+			Window.RunInTestEnvironment (window);
 		}
 
 		[Test] public void CheckPaintWave()
@@ -59,6 +70,7 @@ namespace Epsitec.Common.Widgets
 			window.Root.PaintForeground += new PaintEventHandler(CheckPaint_PaintWave1);
 			window.Root.Invalidate();
 			window.Show();
+			Window.RunInTestEnvironment (window);
 		}
 
 		[Test] public void CheckRectangle()
@@ -70,6 +82,7 @@ namespace Epsitec.Common.Widgets
 			window.Root.PaintForeground += new PaintEventHandler(CheckRectangle_Paint1);
 			window.Root.Invalidate();
 			window.Show();
+			Window.RunInTestEnvironment (window);
 		}
 
 		[Test] public void CheckImage()
@@ -81,6 +94,7 @@ namespace Epsitec.Common.Widgets
 			window.Root.PaintForeground += new PaintEventHandler(CheckImage_Paint1);
 			window.Root.Invalidate ();
 			window.Show();
+			Window.RunInTestEnvironment (window);
 		}
 		
 		[Test] public void CheckAnchorAsStaticText()
@@ -98,6 +112,7 @@ namespace Epsitec.Common.Widgets
 			text.BackColor = Color.FromRgb (1.0, 1.0, 1.0);
 			
 			window.Show ();
+			Window.RunInTestEnvironment (window);
 		}
 
 		[Test] public void CheckJustif()
@@ -346,6 +361,7 @@ namespace Epsitec.Common.Widgets
 			text.Text = "1.<br/><br/><b><i>3.</b></i><br/><br/>5.<br/><br/>";
 			text.SetParent (window.Root);
 			window.Show ();
+			Window.RunInTestEnvironment (window);
 		}
 		
 		

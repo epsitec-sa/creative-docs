@@ -1,4 +1,4 @@
-//	Copyright © 2003-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Widgets.Platform
@@ -108,5 +108,19 @@ namespace Epsitec.Common.Widgets.Platform
 		
 		public const int ROP_SRC_COPY		= 0xCC0020;
 		public const int BLT_COLOR_ON_COLOR	= 0x03;
+
+		public const uint HT_CAPTION		= 2;
+		public const uint HT_SYSMENU		= 3;
+		public const uint HT_MINBUTTON		= 8;
+		public const uint HT_MAXBUTTON		= 9;
+		public const uint HT_LEFT			= 10;
+		public const uint HT_RIGHT			= 11;
+		public const uint HT_TOP			= 12;
+		public const uint HT_TOPLEFT		= 13;
+		public const uint HT_TOPRIGHT		= 14;
+		public const uint HT_BOTTOM			= 15;
+		public const uint HT_BOTTOMLEFT		= 16;
+		public const uint HT_BOTTOMRIGHT	= 17;
+		public const uint HT_CLOSE			= 20;
 	}
 }

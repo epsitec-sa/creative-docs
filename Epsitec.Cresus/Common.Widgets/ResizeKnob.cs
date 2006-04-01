@@ -1,4 +1,4 @@
-//	Copyright © 2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2004-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Widgets
@@ -53,6 +53,11 @@ namespace Epsitec.Common.Widgets
 			switch ( message.Type )
 			{
 				case MessageType.MouseDown:
+					if (this.Window.StartWindowManagerOperation (Platform.WindowManagerOperation.ResizeBottomLeft))
+					{
+						break;
+					}
+					
 					this.isDragging = true;
 					this.initialPos = this.MapClientToScreen(pos);
 					this.initialBounds = this.Window.WindowBounds;

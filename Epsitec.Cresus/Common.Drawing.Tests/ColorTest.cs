@@ -6,6 +6,11 @@ namespace Epsitec.Common.Drawing
 	[TestFixture]
 	public class ColorTest
 	{
+		[Test] public void AutomatedTestEnvironment()
+		{
+			Epsitec.Common.Widgets.Window.RunningInAutomatedTestEnvironment = true;
+		}
+		
 		[Test] public void CheckCreation()
 		{
 			double br = 0.8;
@@ -117,6 +122,7 @@ namespace Epsitec.Common.Drawing
 			window.Root.PaintForeground += new PaintEventHandler(NamedColors_PaintForeground);
 			window.Root.Invalidate ();
 			window.Show ();
+			Window.RunInTestEnvironment (window);
 		}
 
 		[Test] public void CheckHsvConvert()

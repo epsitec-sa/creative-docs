@@ -5,6 +5,11 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Types.Serialization
 {
+	/// <summary>
+	/// The MarkupExtension class provides the basic conversion methods needed
+	/// to convert DependencyObject references/bindings/external object references
+	/// to strings and back to the original objects.
+	/// </summary>
 	public static class MarkupExtension
 	{
 		public static bool IsMarkupExtension(string value)
@@ -179,6 +184,36 @@ namespace Epsitec.Common.Types.Serialization
 			return buffer.ToString ();
 		}
 
+		public static object Resolve(Context context, string markup)
+		{
+			string[] args = MarkupExtension.Explode (markup);
+
+			if (args.Length > 0)
+			{
+				string tag = args[0];
+
+				switch (tag)
+				{
+					case "Null":
+						return MarkupExtension.NullFromString (context, args);
+
+					case "Binding":
+						return MarkupExtension.BindingFromString (context, args);
+
+					case "ObjRef":
+						return MarkupExtension.ObjRefFromString (context, args);
+
+					case "ExtRef":
+						return MarkupExtension.ExtRefFromString (context, args);
+
+					case "Collection":
+						return MarkupExtension.CollectionFromString (context, args);
+				}
+			}
+
+			throw new System.NotImplementedException (string.Format ("Cannot resolve '{0}'", markup));
+		}
+
 		public static Binding BindingFromString(IContextResolver context, string value)
 		{
 			string[] args = MarkupExtension.Explode (value);
@@ -191,48 +226,6 @@ namespace Epsitec.Common.Types.Serialization
 
 			return MarkupExtension.BindingFromString (context, args);
 		}
-
-		private static Binding BindingFromString(IContextResolver context, string[] args)
-		{
-			Binding binding = new Binding ();
-
-			for (int i = 1; i < args.Length; i++)
-			{
-				string element = args[i];
-
-				if (element.Length > 0)
-				{
-					string[] elems = element.Split ('=');
-
-					if (elems.Length != 2)
-					{
-						throw new System.FormatException (string.Format ("Element '{0}' not valid in Binding expression", element));
-					}
-
-					System.Enum mode;
-
-					switch (elems[0])
-					{
-						case "Path":
-							binding.Path = new DependencyPropertyPath (elems[1]);
-							break;
-						case "Source":
-							binding.Source = context.ResolveFromMarkup (elems[1]);
-							break;
-						case "Mode":
-							Converter.Convert (elems[1], typeof (BindingMode), out mode);
-							binding.Mode = (BindingMode) mode;
-							break;
-
-						default:
-							throw new System.FormatException (string.Format ("Element '{0}' not valid in Binding expression", element));
-					}
-				}
-			}
-
-			return binding;
-		}
-
 		public static string[] Explode(string source)
 		{
 			if ((source.StartsWith ("{")) &&
@@ -409,37 +402,83 @@ namespace Epsitec.Common.Types.Serialization
 			}
 		}
 
-		public static object Resolve(Context context, string markup)
+		private static object NullFromString(Context context, string[] args)
 		{
-			string[] args = MarkupExtension.Explode (markup);
-
-			if (args.Length > 0)
+			if ((args.Length != 1) ||
+				(args[0] != "Null"))
 			{
-				string tag = args[0];
-			
-				switch (tag)
+				throw new System.FormatException ("Null format error");
+			}
+
+			return null;
+		}
+		private static Binding BindingFromString(IContextResolver context, string[] args)
+		{
+			if ((args.Length < 1) ||
+				(args[0] != "Binding"))
+			{
+				throw new System.FormatException ("Binding format error");
+			}
+
+			Binding binding = new Binding ();
+
+			for (int i = 1; i < args.Length; i++)
+			{
+				string element = args[i];
+
+				if (element.Length > 0)
 				{
-					case "Null":
-						return null;
-					
-					case "Binding":
-						return MarkupExtension.BindingFromString (context, args);
-					
-					case "ObjRef":
-						return MarkupExtension.ObjRefFromString (context, args);
-					
-					case "ExtRef":
-						return MarkupExtension.ExtRefFromString (context, args);
-					
-					case "Collection":
-						return MarkupExtension.CollectionFromString (context, args);
+					string[] elems = element.Split ('=');
+
+					if (elems.Length != 2)
+					{
+						throw new System.FormatException (string.Format ("Element '{0}' not valid in Binding expression", element));
+					}
+
+					System.Enum mode;
+
+					switch (elems[0])
+					{
+						case "Path":
+							binding.Path = new DependencyPropertyPath (elems[1]);
+							break;
+						case "Source":
+							binding.Source = context.ResolveFromMarkup (elems[1]);
+							break;
+						case "Mode":
+							Converter.Convert (elems[1], typeof (BindingMode), out mode);
+							binding.Mode = (BindingMode) mode;
+							break;
+
+						default:
+							throw new System.FormatException (string.Format ("Element '{0}' not valid in Binding expression", element));
+					}
 				}
 			}
-			
-			throw new System.NotImplementedException (string.Format ("Cannot resolve '{0}'", markup));
-		}
 
-		private static object CollectionFromString(Context context, string[] args)
+			return binding;
+		}
+		private static object ExtRefFromString(Context context, string[] args)
+		{
+			if ((args.Length != 2) ||
+				(args[0] != "ExtRef"))
+			{
+				throw new System.FormatException ("ExtRef format error");
+			}
+
+			return context.ExternalMap.GetValue (args[1]);
+		}
+		private static object ObjRefFromString(Context context, string[] args)
+		{
+			if ((args.Length != 2) ||
+				(args[0] != "ObjRef"))
+			{
+				throw new System.FormatException ("ObjRef format error");
+			}
+
+			return context.ObjectMap.GetValue (Context.ParseId (args[1]));
+		}
+		private static ICollection<DependencyObject> CollectionFromString(Context context, string[] args)
 		{
 			DependencyObject[] items = new DependencyObject[args.Length-1];
 			
@@ -449,26 +488,6 @@ namespace Epsitec.Common.Types.Serialization
 			}
 			
 			return items;
-		}
-
-		private static object ExtRefFromString(Context context, string[] args)
-		{
-			if (args.Length != 2)
-			{
-				throw new System.FormatException ("ObjRef format error");
-			}
-
-			return context.ExternalMap.GetValue (args[1]);
-		}
-
-		private static object ObjRefFromString(Context context, string[] args)
-		{
-			if (args.Length != 2)
-			{
-				throw new System.FormatException ("ObjRef format error");
-			}
-
-			return context.ObjectMap.GetValue (Context.ParseId (args[1]));
 		}
 	}
 }

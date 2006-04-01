@@ -87,8 +87,26 @@ namespace Epsitec.Common.Widgets
 		
 		public Widget						InWidget
 		{
-			get { return this.in_widget; }
-			set { this.in_widget = value; }
+			get
+			{
+				return this.in_widget;
+			}
+			set
+			{
+				this.in_widget = value;
+			}
+		}
+
+		public WindowRoot					WindowRoot
+		{
+			get
+			{
+				return this.window_root;
+			}
+			set
+			{
+				this.window_root = value;
+			}
 		}
 		
 		public bool							ForceCapture
@@ -920,6 +938,7 @@ namespace Epsitec.Common.Widgets
 		private bool						is_non_client;
 		private bool						is_swallowed;
 		private bool						force_capture;
+		private WindowRoot					window_root;
 		private Widget						in_widget;
 		private Widget						consumer;
 		

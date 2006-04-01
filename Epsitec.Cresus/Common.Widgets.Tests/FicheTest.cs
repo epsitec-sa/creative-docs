@@ -7,7 +7,14 @@ namespace Epsitec.Common.Widgets
 	[TestFixture]
 	public class FicheTest
 	{
-		[Test] public void CheckFicheApplication()
+		[Test]
+		public void AutomatedTestEnvironment()
+		{
+			Epsitec.Common.Widgets.Window.RunningInAutomatedTestEnvironment = true;
+		}
+
+		[Test]
+		public void CheckFicheApplication()
 		{
 			Widgets.Adorners.Factory.SetActive("LookRoyale");
 			
@@ -27,6 +34,7 @@ namespace Epsitec.Common.Widgets
 			this.CreateLayout();
 
 			this.window.Show();
+			Window.RunInTestEnvironment (this.window);
 		}
 
 		private void HandleWindowClosed(object sender)
