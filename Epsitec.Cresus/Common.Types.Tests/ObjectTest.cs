@@ -729,13 +729,24 @@ namespace Epsitec.Common.Types
 
 			stopwatch.Reset ();
 			stopwatch.Start ();
-			
+
 			for (int i = 0; i < runs; i++)
 			{
 				array[i].Xyz = 10;
 			}
 			stopwatch.Stop ();
 			System.Console.WriteLine ("Setting int Xyz : {0:0.00} us.", stopwatch.ElapsedMilliseconds * 1000.0 / runs);
+			System.Console.Out.Flush ();
+
+			stopwatch.Reset ();
+			stopwatch.Start ();
+
+			for (int i = 0; i < runs; i++)
+			{
+				array[i].NativeXyz = 10;
+			}
+			stopwatch.Stop ();
+			System.Console.WriteLine ("Setting int Xyz [native] : {0:0.00} us.", stopwatch.ElapsedMilliseconds * 1000.0 / runs);
 			System.Console.Out.Flush ();
 			
 			string text = null;
@@ -763,17 +774,122 @@ namespace Epsitec.Common.Types
 			System.Console.WriteLine ("Setting string Name : {0:0.00} us.", stopwatch.ElapsedMilliseconds * 1000.0 / runs);
 			System.Console.Out.Flush ();
 
+			//	-------- lecture ----------
+
 			stopwatch.Reset ();
 			stopwatch.Start ();
+			
+			xyz = 0;
 
 			for (int i = 0; i < runs; i++)
 			{
-				xyz = array[i].Xyz;
+				xyz += array[i].Xyz;
 			}
 			stopwatch.Stop ();
-			System.Console.WriteLine ("Reading local int Xyz ({1}) : {0:0.00} us.", stopwatch.ElapsedMilliseconds * 1000.0 / runs, xyz);
+			System.Console.WriteLine ("Reading local int Xyz ({1}) : {0:0.000} us.", stopwatch.ElapsedMilliseconds * 1000.0 / runs, xyz);
 			System.Console.Out.Flush ();
 
+			stopwatch.Reset ();
+			stopwatch.Start ();
+
+			xyz = 0;
+			
+			for (int i = 0; i < runs; i++)
+			{
+				xyz += array[i].NativeXyz;
+			}
+			stopwatch.Stop ();
+			System.Console.WriteLine ("Reading local int Xyz [native] ({1}) : {0:0.000} us.", stopwatch.ElapsedMilliseconds * 1000.0 / runs, xyz);
+			System.Console.Out.Flush ();
+
+			stopwatch.Reset ();
+			stopwatch.Start ();
+
+			MyObject myObj = array[0];
+			xyz = 0;
+
+			for (int i = 0; i < runs; i++)
+			{
+				xyz = myObj.Xyz;
+				myObj.Xyz = xyz;
+			}
+			stopwatch.Stop ();
+			System.Console.WriteLine ("Inc. local int Xyz [same] ({1}) : {0:0.000} us.", stopwatch.ElapsedMilliseconds * 1000.0 / runs, xyz);
+			System.Console.Out.Flush ();
+
+			stopwatch.Reset ();
+			stopwatch.Start ();
+
+			myObj = array[0];
+			xyz = 0;
+
+			for (int i = 0; i < runs; i++)
+			{
+				xyz = myObj.NativeXyz;
+				myObj.NativeXyz = xyz;
+			}
+			stopwatch.Stop ();
+			System.Console.WriteLine ("Inc. local int Xyz [native/same] ({1}) : {0:0.000} us.", stopwatch.ElapsedMilliseconds * 1000.0 / runs, xyz);
+			System.Console.Out.Flush ();
+
+			stopwatch.Reset ();
+			stopwatch.Start ();
+
+			myObj = array[0];
+			xyz = 0;
+
+			for (int i = 0; i < runs; i++)
+			{
+				xyz = myObj.Xyz;
+			}
+			stopwatch.Stop ();
+			System.Console.WriteLine ("Get local int Xyz [same] ({1}) : {0:0.000} us.", stopwatch.ElapsedMilliseconds * 1000.0 / runs, xyz);
+			System.Console.Out.Flush ();
+
+			stopwatch.Reset ();
+			stopwatch.Start ();
+
+			myObj = array[0];
+			xyz = 0;
+
+			for (int i = 0; i < runs; i++)
+			{
+				xyz = myObj.NativeXyz;
+			}
+			stopwatch.Stop ();
+			System.Console.WriteLine ("Get local int Xyz [native/same] ({1}) : {0:0.000} us.", stopwatch.ElapsedMilliseconds * 1000.0 / runs, xyz);
+			System.Console.Out.Flush ();
+
+			stopwatch.Reset ();
+			stopwatch.Start ();
+
+			myObj = array[0];
+			xyz = 0;
+
+			for (int i = 0; i < runs; i++)
+			{
+				myObj.Xyz = xyz;
+			}
+			stopwatch.Stop ();
+			System.Console.WriteLine ("Set local int Xyz [same] ({1}) : {0:0.000} us.", stopwatch.ElapsedMilliseconds * 1000.0 / runs, xyz);
+			System.Console.Out.Flush ();
+
+			stopwatch.Reset ();
+			stopwatch.Start ();
+
+			myObj = array[0];
+			xyz = 0;
+
+			for (int i = 0; i < runs; i++)
+			{
+				myObj.NativeXyz = xyz;
+			}
+			stopwatch.Stop ();
+			System.Console.WriteLine ("Set local int Xyz [native/same] ({1}) : {0:0.000} us.", stopwatch.ElapsedMilliseconds * 1000.0 / runs, xyz);
+			System.Console.Out.Flush ();
+
+			//	-------- mesuré inc. 560ns, get 130ns, set 430ns sur PC 3GHz, Pentium D (dual core)
+			
 			stopwatch.Reset ();
 			stopwatch.Start ();
 
@@ -843,6 +959,17 @@ namespace Epsitec.Common.Types
 				set
 				{
 					this.SetValue (MyObject.XyzProperty, value);
+				}
+			}
+			public int				NativeXyz
+			{
+				get
+				{
+					return this.nativeXyz;
+				}
+				set
+				{
+					this.nativeXyz = value;
 				}
 			}
 			public string			Name
@@ -969,7 +1096,8 @@ namespace Epsitec.Common.Types
 				m.OnFooChanged ();
 			}
 			
-			private MyObjectChildren children;
+			private MyObjectChildren	children;
+			private int					nativeXyz;
 		}
 		#endregion
 
