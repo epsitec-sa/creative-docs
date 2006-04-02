@@ -15,7 +15,7 @@ namespace Epsitec.Common.Document.Widgets
 			this.sample.IsSampleAbc = true;
 			this.sample.IsCenter = true;
 			this.sample.Dock = DockStyle.Fill;
-			this.sample.DockMargins = new Margins(0, 0, 3, 2);
+			this.sample.Margins = new Margins(0, 0, 3, 2);
 		}
 
 		public ButtonFontFace(Widget embedder) : this()

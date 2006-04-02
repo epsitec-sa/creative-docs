@@ -831,7 +831,7 @@ namespace Epsitec.Common.Widgets
 			
 //			item.Bounds = this.InnerBounds;
 			item.Anchor = AnchorStyles.All;
-			item.AnchorMargins = new Drawing.Margins (2, 2, this.TabHeight + 2, 2);
+			item.Margins = new Drawing.Margins (2, 2, this.TabHeight + 2, 2);
 			
 			System.Diagnostics.Debug.Assert (oldBook == this);
 			

@@ -402,14 +402,14 @@ namespace Epsitec.Common.Widgets
 			TextFieldCombo    helpMenuItemCombo      = new TextFieldCombo ();
 			
 			helpMenuItemTextField.Dock = DockStyle.Fill;
-			helpMenuItemTextField.DockMargins = new Margins (1, 1, 1, 1);
+			helpMenuItemTextField.Margins = new Margins (1, 1, 1, 1);
 			helpMenuItemTextField.MinSize = new Size (100, 20);
 			helpMenuItemTextField.Text = "";
 			
 			helpMenuItemContainer1.Children.Add (helpMenuItemTextField);
 			
 			helpMenuItemCombo.Dock = DockStyle.Fill;
-			helpMenuItemCombo.DockMargins = new Margins (1, 1, 1, 1);
+			helpMenuItemCombo.Margins = new Margins (1, 1, 1, 1);
 			helpMenuItemCombo.MinSize = new Size (100, 20);
 			helpMenuItemCombo.Text = "";
 			
@@ -448,7 +448,7 @@ namespace Epsitec.Common.Widgets
 				b2.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 				b3.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 				
-				helpMenuItemContainer3.DockPadding = new Margins (0, 0, 4, 4);
+				helpMenuItemContainer3.Padding = new Margins (0, 0, 4, 4);
 				
 				helpMenuItemContainer3.Children.Add (b1);
 				helpMenuItemContainer3.Children.Add (b2);

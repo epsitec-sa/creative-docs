@@ -99,7 +99,7 @@ namespace Epsitec.Common.Script.Developer.Panels
 			double       font_size = 13.0;
 			
 			this.text_source.Dock = DockStyle.Fill;
-			this.text_source.DockMargins = new Drawing.Margins (4, 0, 0, 0);
+			this.text_source.Margins = new Drawing.Margins (4, 0, 0, 0);
 			this.text_source.TextLayout.DefaultFont     = font_face;
 			this.text_source.TextLayout.DefaultFontSize = font_size;
 			this.text_source.TextEdited += new EventHandler (this.HandleTextSourceEdited);

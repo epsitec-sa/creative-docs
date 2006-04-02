@@ -140,10 +140,10 @@
     <bundle>
      <data name='class'>GroupBox</data>
      <data name='Anchor'>Left, Right, Top, Bottom</data>
-     <data name='AnchorMargins'>10;10;100;50</data>
+     <data name='Margins'>10;10;100;50</data>
      <data name='Text'><![CDATA[Choix <i>cornélien</i>...]]></data>
      <data name='DockH'>no</data>
-     <data name='DockPadding'>5;5;5;5</data>
+     <data name='Padding'>5;5;5;5</data>
      <list name='widgets'>
       <bundle>
        <data name='class'>RadioButton</data>
@@ -165,7 +165,7 @@
     <bundle>
      <ref target='button.cancel'/>
      <data name='Anchor'>Bottom, Left</data>
-     <data name='AnchorMargins'>10;0;0;10</data>
+     <data name='Margins'>10;0;0;10</data>
      <data name='Command'>CancelSimpleWindow</data>
     </bundle>
    </list>

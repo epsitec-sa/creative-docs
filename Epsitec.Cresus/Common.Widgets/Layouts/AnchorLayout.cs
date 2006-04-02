@@ -26,7 +26,7 @@ namespace Epsitec.Common.Widgets.Layouts
 				
 				Drawing.Rectangle client  = container.Client.Bounds;
 				Drawing.Rectangle bounds  = child.Bounds;
-				Drawing.Margins   margins = child.AnchorMargins;
+				Drawing.Margins   margins = child.Margins;
 				
 				double x1 = bounds.Left;
 				double x2 = bounds.Right;

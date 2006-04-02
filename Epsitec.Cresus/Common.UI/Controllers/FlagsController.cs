@@ -40,11 +40,11 @@ namespace Epsitec.Common.UI.Controllers
 			
 			this.caption_label.Width         = 80;
 			this.caption_label.Anchor        = AnchorStyles.TopLeft;
-			this.caption_label.AnchorMargins = new Drawing.Margins (0, 0, h_pane - y - h_data + 1, 0);
+			this.caption_label.Margins = new Drawing.Margins (0, 0, h_pane - y - h_data + 1, 0);
 			
 			this.data_widget.Height         = h_data;
 			this.data_widget.Anchor         = AnchorStyles.LeftAndRight | AnchorStyles.Top;
-			this.data_widget.AnchorMargins  = new Drawing.Margins (this.caption_label.Right, 0, h_pane - y - h_data, 0);
+			this.data_widget.Margins  = new Drawing.Margins (this.caption_label.Right, 0, h_pane - y - h_data, 0);
 			
 			this.data_source.Changed += new EventHandler (this.HandleDataSourceChanged);
 			

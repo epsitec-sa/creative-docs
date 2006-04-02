@@ -14,7 +14,7 @@ namespace Epsitec.Common.Document.Containers
 		{
 			this.toolBar = new HToolBar(this);
 			this.toolBar.Dock = DockStyle.Top;
-			this.toolBar.DockMargins = new Margins(0, 0, 0, -1);
+			this.toolBar.Margins = new Margins(0, 0, 0, -1);
 			this.toolBar.TabIndex = 1;
 			this.toolBar.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 
@@ -77,7 +77,7 @@ namespace Epsitec.Common.Document.Containers
 			//	--- Début panelMisc
 			this.buttonPageStack = new Button(this);
 			this.buttonPageStack.Dock = DockStyle.Bottom;
-			this.buttonPageStack.DockMargins = new Margins(0, 0, 0, 0);
+			this.buttonPageStack.Margins = new Margins(0, 0, 0, 0);
 			this.buttonPageStack.Command = "PageStack";
 			this.buttonPageStack.Text = Res.Strings.Container.Pages.Button.PageStack;
 			this.buttonPageStack.TabIndex = 100;
@@ -86,7 +86,7 @@ namespace Epsitec.Common.Document.Containers
 			
 			this.panelMisc = new Widget(this);
 			this.panelMisc.Dock = DockStyle.Bottom;
-			this.panelMisc.DockMargins = new Margins(0, 0, 5, 0);
+			this.panelMisc.Margins = new Margins(0, 0, 5, 0);
 			this.panelMisc.Height = (this.document.Type == DocumentType.Pictogram) ? 186+24+24 : 186;
 			this.panelMisc.TabIndex = 99;
 			this.panelMisc.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
@@ -96,7 +96,7 @@ namespace Epsitec.Common.Document.Containers
 			{
 				this.languageGroup = new Widget(this.panelMisc);
 				this.languageGroup.Dock = DockStyle.Bottom;
-				this.languageGroup.DockMargins = new Margins(0, 0, 0, 4);
+				this.languageGroup.Margins = new Margins(0, 0, 0, 4);
 				this.languageGroup.Height = 20;
 				this.languageGroup.TabIndex = 4;
 				this.languageGroup.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
@@ -106,7 +106,7 @@ namespace Epsitec.Common.Document.Containers
 				labelLanguage.Alignment = ContentAlignment.MiddleRight;
 				labelLanguage.Width = 94;
 				labelLanguage.Dock = DockStyle.Left;
-				labelLanguage.DockMargins = new Margins(0, 4, 0, 0);
+				labelLanguage.Margins = new Margins(0, 4, 0, 0);
 
 				this.languageField = new TextFieldCombo(this.languageGroup);
 				this.languageField.Width = 120;
@@ -115,13 +115,13 @@ namespace Epsitec.Common.Document.Containers
 				this.languageField.Items.Add("de");
 				this.languageField.Items.Add("it");
 				this.languageField.Dock = DockStyle.Left;
-				this.languageField.DockMargins = new Margins(0, 0, 0, 0);
+				this.languageField.Margins = new Margins(0, 0, 0, 0);
 				this.languageField.TextChanged += new EventHandler(this.HandleLanguageChanged);
 
 			
 				this.styleGroup = new Widget(this.panelMisc);
 				this.styleGroup.Dock = DockStyle.Bottom;
-				this.styleGroup.DockMargins = new Margins(0, 0, 0, 4);
+				this.styleGroup.Margins = new Margins(0, 0, 0, 4);
 				this.styleGroup.Height = 20;
 				this.styleGroup.TabIndex = 4;
 				this.styleGroup.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
@@ -131,7 +131,7 @@ namespace Epsitec.Common.Document.Containers
 				labelStyle.Alignment = ContentAlignment.MiddleRight;
 				labelStyle.Width = 94;
 				labelStyle.Dock = DockStyle.Left;
-				labelStyle.DockMargins = new Margins(0, 4, 0, 0);
+				labelStyle.Margins = new Margins(0, 4, 0, 0);
 
 				this.styleField = new TextFieldCombo(this.styleGroup);
 				this.styleField.Width = 120;
@@ -139,13 +139,13 @@ namespace Epsitec.Common.Document.Containers
 				this.styleField.Items.Add("Normal");
 				this.styleField.Items.Add("Cursor");
 				this.styleField.Dock = DockStyle.Left;
-				this.styleField.DockMargins = new Margins(0, 0, 0, 0);
+				this.styleField.Margins = new Margins(0, 0, 0, 0);
 				this.styleField.TextChanged += new EventHandler(this.HandleStyleChanged);
 			}
 
 			this.pageSizeGroup = new Widget(this.panelMisc);
 			this.pageSizeGroup.Dock = DockStyle.Bottom;
-			this.pageSizeGroup.DockMargins = new Margins(0, 0, 0, 4);
+			this.pageSizeGroup.Margins = new Margins(0, 0, 0, 4);
 			this.pageSizeGroup.Height = 22;
 			this.pageSizeGroup.TabIndex = 3;
 			this.pageSizeGroup.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
@@ -155,12 +155,12 @@ namespace Epsitec.Common.Document.Containers
 			labelSize.Alignment = ContentAlignment.MiddleRight;
 			labelSize.Width = 94;
 			labelSize.Dock = DockStyle.Left;
-			labelSize.DockMargins = new Margins(0, 4, 0, 0);
+			labelSize.Margins = new Margins(0, 4, 0, 0);
 
 			this.pageSizeWidth = new TextFieldReal(this.pageSizeGroup);
 			this.pageSizeWidth.Width = 54;
 			this.pageSizeWidth.Dock = DockStyle.Left;
-			this.pageSizeWidth.DockMargins = new Margins(0, 0, 0, 0);
+			this.pageSizeWidth.Margins = new Margins(0, 0, 0, 0);
 			this.pageSizeWidth.FactorMinRange = 0.01M;
 			this.pageSizeWidth.FactorMaxRange = 1.0M;
 			this.pageSizeWidth.FactorStep     = 1.0M;
@@ -179,7 +179,7 @@ namespace Epsitec.Common.Document.Containers
 			this.pageSizeSwap.AutoFocus = false;
 			this.pageSizeSwap.IconName = Misc.Icon("SwapDataV");
 			this.pageSizeSwap.Dock = DockStyle.Left;
-			this.pageSizeSwap.DockMargins = new Margins(0, 0, 0, 0);
+			this.pageSizeSwap.Margins = new Margins(0, 0, 0, 0);
 			this.pageSizeSwap.TabIndex = 2;
 			this.pageSizeSwap.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			this.pageSizeSwap.Clicked += new MessageEventHandler(this.HandlePageSwapClicked);
@@ -188,7 +188,7 @@ namespace Epsitec.Common.Document.Containers
 			this.pageSizeHeight = new TextFieldReal(this.pageSizeGroup);
 			this.pageSizeHeight.Width = 54;
 			this.pageSizeHeight.Dock = DockStyle.Left;
-			this.pageSizeHeight.DockMargins = new Margins(0, 0, 0, 0);
+			this.pageSizeHeight.Margins = new Margins(0, 0, 0, 0);
 			this.pageSizeHeight.FactorMinRange = 0.01M;
 			this.pageSizeHeight.FactorMaxRange = 1.0M;
 			this.pageSizeHeight.FactorStep     = 1.0M;
@@ -206,7 +206,7 @@ namespace Epsitec.Common.Document.Containers
 			this.pageSizeClear.AutoFocus = false;
 			this.pageSizeClear.IconName = Misc.Icon("Nothing");
 			this.pageSizeClear.Dock = DockStyle.Left;
-			this.pageSizeClear.DockMargins = new Margins(0, 0, 0, 0);
+			this.pageSizeClear.Margins = new Margins(0, 0, 0, 0);
 			this.pageSizeClear.TabIndex = 4;
 			this.pageSizeClear.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			this.pageSizeClear.Clicked += new MessageEventHandler(this.HandlePageClearClicked);
@@ -215,7 +215,7 @@ namespace Epsitec.Common.Document.Containers
 			
 			this.radioMasterGroup = new GroupBox(this.panelMisc);
 			this.radioMasterGroup.Dock = DockStyle.Bottom;
-			this.radioMasterGroup.DockMargins = new Margins(0, 0, 0, 4);
+			this.radioMasterGroup.Margins = new Margins(0, 0, 0, 4);
 			this.radioMasterGroup.Height = 130;
 			this.radioMasterGroup.Text = Res.Strings.Container.Pages.Button.MasterGroup;
 			this.radioMasterGroup.TabIndex = 2;
@@ -223,7 +223,7 @@ namespace Epsitec.Common.Document.Containers
 
 			this.radioAll = new RadioButton(this.radioMasterGroup);
 			this.radioAll.Dock = DockStyle.Top;
-			this.radioAll.DockMargins = new Margins(10, 10, 5, 0);
+			this.radioAll.Margins = new Margins(10, 10, 5, 0);
 			this.radioAll.Text = Res.Strings.Container.Pages.Button.MasterAll;
 			this.radioAll.ActiveStateChanged += new EventHandler(this.HandleRadioChanged);
 			this.radioAll.Index = 1;
@@ -232,7 +232,7 @@ namespace Epsitec.Common.Document.Containers
 
 			this.radioOdd = new RadioButton(this.radioMasterGroup);
 			this.radioOdd.Dock = DockStyle.Top;
-			this.radioOdd.DockMargins = new Margins(10, 10, 0, 0);
+			this.radioOdd.Margins = new Margins(10, 10, 0, 0);
 			this.radioOdd.Text = Res.Strings.Container.Pages.Button.MasterOdd;
 			this.radioOdd.ActiveStateChanged += new EventHandler(this.HandleRadioChanged);
 			this.radioOdd.Index = 2;
@@ -241,7 +241,7 @@ namespace Epsitec.Common.Document.Containers
 
 			this.radioEven = new RadioButton(this.radioMasterGroup);
 			this.radioEven.Dock = DockStyle.Top;
-			this.radioEven.DockMargins = new Margins(10, 10, 0, 0);
+			this.radioEven.Margins = new Margins(10, 10, 0, 0);
 			this.radioEven.Text = Res.Strings.Container.Pages.Button.MasterEven;
 			this.radioEven.ActiveStateChanged += new EventHandler(this.HandleRadioChanged);
 			this.radioEven.Index = 3;
@@ -250,7 +250,7 @@ namespace Epsitec.Common.Document.Containers
 
 			this.radioNone = new RadioButton(this.radioMasterGroup);
 			this.radioNone.Dock = DockStyle.Top;
-			this.radioNone.DockMargins = new Margins(10, 10, 0, 0);
+			this.radioNone.Margins = new Margins(10, 10, 0, 0);
 			this.radioNone.Text = Res.Strings.Container.Pages.Button.MasterNone;
 			this.radioNone.ActiveStateChanged += new EventHandler(this.HandleRadioChanged);
 			this.radioNone.Index = 4;
@@ -259,7 +259,7 @@ namespace Epsitec.Common.Document.Containers
 
 			this.checkAutoStop = new CheckButton(this.radioMasterGroup);
 			this.checkAutoStop.Dock = DockStyle.Top;
-			this.checkAutoStop.DockMargins = new Margins(10, 10, 4, 0);
+			this.checkAutoStop.Margins = new Margins(10, 10, 4, 0);
 			this.checkAutoStop.Text = Res.Strings.Container.Pages.Button.MasterStop;
 			this.checkAutoStop.Clicked += new MessageEventHandler(this.HandleCheckClicked);
 			this.checkAutoStop.TabIndex = 5;
@@ -267,7 +267,7 @@ namespace Epsitec.Common.Document.Containers
 
 			this.specificGroup = new Widget(this.radioMasterGroup);
 			this.specificGroup.Dock = DockStyle.Top;
-			this.specificGroup.DockMargins = new Margins(10, 10, 2, 0);
+			this.specificGroup.Margins = new Margins(10, 10, 2, 0);
 			this.specificGroup.Width = 170;
 			this.specificGroup.TabIndex = 6;
 			this.specificGroup.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
@@ -275,7 +275,7 @@ namespace Epsitec.Common.Document.Containers
 			this.checkSpecific = new CheckButton(this.specificGroup);
 			this.checkSpecific.Width = 160;
 			this.checkSpecific.Dock = DockStyle.Left;
-			this.checkSpecific.DockMargins = new Margins(0, 0, 0, 0);
+			this.checkSpecific.Margins = new Margins(0, 0, 0, 0);
 			this.checkSpecific.Text = Res.Strings.Container.Pages.Button.MasterSpecific;
 			this.checkSpecific.Clicked += new MessageEventHandler(this.HandleCheckClicked);
 			this.checkSpecific.TabIndex = 1;
@@ -285,7 +285,7 @@ namespace Epsitec.Common.Document.Containers
 			this.specificMasterPage.Width = 50;
 			this.specificMasterPage.IsReadOnly = true;
 			this.specificMasterPage.Dock = DockStyle.Left;
-			this.specificMasterPage.DockMargins = new Margins(0, 0, 0, 0);
+			this.specificMasterPage.Margins = new Margins(0, 0, 0, 0);
 			this.specificMasterPage.ComboOpening += new EventHandler<CancelEventArgs> (this.HandleComboOpening);
 			this.specificMasterPage.ComboClosed += new EventHandler(this.HandleComboClosed);
 			this.specificMasterPage.TabIndex = 2;
@@ -294,7 +294,7 @@ namespace Epsitec.Common.Document.Containers
 
 			this.radioSlaveGroup = new GroupBox(this.panelMisc);
 			this.radioSlaveGroup.Dock = DockStyle.Bottom;
-			this.radioSlaveGroup.DockMargins = new Margins(0, 0, 0, 4);
+			this.radioSlaveGroup.Margins = new Margins(0, 0, 0, 4);
 			this.radioSlaveGroup.Height = 130;
 			this.radioSlaveGroup.Text = Res.Strings.Container.Pages.Button.SlaveGroup;
 			this.radioSlaveGroup.TabIndex = 3;
@@ -302,14 +302,14 @@ namespace Epsitec.Common.Document.Containers
 
 			this.radioGroupLeft = new Widget(this.radioSlaveGroup);
 			this.radioGroupLeft.Dock = DockStyle.Left;
-			this.radioGroupLeft.DockMargins = new Margins(0, 0, 5, 0);
+			this.radioGroupLeft.Margins = new Margins(0, 0, 5, 0);
 			this.radioGroupLeft.Width = 170;
 			this.radioGroupLeft.TabIndex = 1;
 			this.radioGroupLeft.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 
 			this.radioNever = new RadioButton(this.radioGroupLeft);
 			this.radioNever.Dock = DockStyle.Top;
-			this.radioNever.DockMargins = new Margins(10, 0, 0, 0);
+			this.radioNever.Margins = new Margins(10, 0, 0, 0);
 			this.radioNever.Text = Res.Strings.Container.Pages.Button.SlaveNever;
 			this.radioNever.ActiveStateChanged += new EventHandler(this.HandleRadioChanged);
 			this.radioNever.Index = 1;
@@ -318,7 +318,7 @@ namespace Epsitec.Common.Document.Containers
 
 			this.radioDefault = new RadioButton(this.radioGroupLeft);
 			this.radioDefault.Dock = DockStyle.Top;
-			this.radioDefault.DockMargins = new Margins(10, 0, 0, 0);
+			this.radioDefault.Margins = new Margins(10, 0, 0, 0);
 			this.radioDefault.Text = Res.Strings.Container.Pages.Button.SlaveDefault;
 			this.radioDefault.ActiveStateChanged += new EventHandler(this.HandleRadioChanged);
 			this.radioDefault.Index = 2;
@@ -327,7 +327,7 @@ namespace Epsitec.Common.Document.Containers
 
 			this.radioSpecific = new RadioButton(this.radioGroupLeft);
 			this.radioSpecific.Dock = DockStyle.Top;
-			this.radioSpecific.DockMargins = new Margins(10, 0, 0, 0);
+			this.radioSpecific.Margins = new Margins(10, 0, 0, 0);
 			this.radioSpecific.Text = Res.Strings.Container.Pages.Button.SlaveSpecific;
 			this.radioSpecific.ActiveStateChanged += new EventHandler(this.HandleRadioChanged);
 			this.radioSpecific.Index = 3;
@@ -336,7 +336,7 @@ namespace Epsitec.Common.Document.Containers
 
 			this.checkGuides = new CheckButton(this.radioGroupLeft);
 			this.checkGuides.Dock = DockStyle.Top;
-			this.checkGuides.DockMargins = new Margins(10, 0, 4, 0);
+			this.checkGuides.Margins = new Margins(10, 0, 4, 0);
 			this.checkGuides.Text = Res.Strings.Container.Pages.Button.SlaveGuides;
 			this.checkGuides.Clicked += new MessageEventHandler(this.HandleCheckClicked);
 			this.checkGuides.TabIndex = 4;
@@ -344,7 +344,7 @@ namespace Epsitec.Common.Document.Containers
 
 			this.radioGroupRight = new Widget(this.radioSlaveGroup);
 			this.radioGroupRight.Dock = DockStyle.Left;
-			this.radioGroupRight.DockMargins = new Margins(0, 0, 5, 0);
+			this.radioGroupRight.Margins = new Margins(0, 0, 5, 0);
 			this.radioGroupRight.Width = 50;
 			this.radioGroupRight.TabIndex = 2;
 			this.radioGroupRight.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
@@ -352,7 +352,7 @@ namespace Epsitec.Common.Document.Containers
 			this.specificSlavePage = new TextFieldCombo(this.radioGroupRight);
 			this.specificSlavePage.IsReadOnly = true;
 			this.specificSlavePage.Dock = DockStyle.Bottom;
-			this.specificSlavePage.DockMargins = new Margins(0, 0, 0, 61);
+			this.specificSlavePage.Margins = new Margins(0, 0, 0, 61);
 			this.specificSlavePage.ComboOpening += new EventHandler<CancelEventArgs> (this.HandleComboOpening);
 			this.specificSlavePage.ComboClosed += new EventHandler(this.HandleComboClosed);
 			this.specificSlavePage.TabIndex = 1;
@@ -361,7 +361,7 @@ namespace Epsitec.Common.Document.Containers
 
 			this.radioGroup = new Widget(this.panelMisc);
 			this.radioGroup.Dock = DockStyle.Bottom;
-			this.radioGroup.DockMargins = new Margins(0, 0, 0, 4);
+			this.radioGroup.Margins = new Margins(0, 0, 0, 4);
 			this.radioGroup.Height = 20;
 			this.radioGroup.TabIndex = 1;
 			this.radioGroup.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
@@ -369,7 +369,7 @@ namespace Epsitec.Common.Document.Containers
 			this.radioSlave = new RadioButton(this.radioGroup);
 			this.radioSlave.Width = 100;
 			this.radioSlave.Dock = DockStyle.Left;
-			this.radioSlave.DockMargins = new Margins(10, 10, 0, 0);
+			this.radioSlave.Margins = new Margins(10, 10, 0, 0);
 			this.radioSlave.Text = Res.Strings.Container.Pages.Button.Slave;
 			this.radioSlave.ActiveStateChanged += new EventHandler(this.HandleRadioChanged);
 			this.radioSlave.Index = 1;
@@ -379,7 +379,7 @@ namespace Epsitec.Common.Document.Containers
 			this.radioMaster = new RadioButton(this.radioGroup);
 			this.radioMaster.Width = 100;
 			this.radioMaster.Dock = DockStyle.Left;
-			this.radioMaster.DockMargins = new Margins(10, 10, 0, 0);
+			this.radioMaster.Margins = new Margins(10, 10, 0, 0);
 			this.radioMaster.Text = Res.Strings.Container.Pages.Button.Master;
 			this.radioMaster.ActiveStateChanged += new EventHandler(this.HandleRadioChanged);
 			this.radioMaster.Index = 2;
@@ -389,7 +389,7 @@ namespace Epsitec.Common.Document.Containers
 			
 			this.extendedButton = new GlyphButton(this);
 			this.extendedButton.Dock = DockStyle.Bottom;
-			this.extendedButton.DockMargins = new Margins(0, 0, 5, 0);
+			this.extendedButton.Margins = new Margins(0, 0, 5, 0);
 			this.extendedButton.ButtonStyle = ButtonStyle.Icon;
 			this.extendedButton.Clicked += new MessageEventHandler(this.ExtendedButtonClicked);
 			this.extendedButton.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
@@ -400,7 +400,7 @@ namespace Epsitec.Common.Document.Containers
 
 			this.toolBarName = new HToolBar(this);
 			this.toolBarName.Dock = DockStyle.Bottom;
-			this.toolBarName.DockMargins = new Margins(0, 0, 0, 0);
+			this.toolBarName.Margins = new Margins(0, 0, 0, 0);
 			this.toolBarName.TabIndex = 97;
 			this.toolBarName.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 
@@ -411,7 +411,7 @@ namespace Epsitec.Common.Document.Containers
 
 			this.name = new TextField();
 			this.name.Width = 140;
-			this.name.DockMargins = new Margins(0, 0, 1, 1);
+			this.name.Margins = new Margins(0, 0, 1, 1);
 			this.name.TextChanged += new EventHandler(this.HandleNameTextChanged);
 			this.name.TabIndex = 1;
 			this.name.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
@@ -486,7 +486,7 @@ namespace Epsitec.Common.Document.Containers
 					StaticText st = new StaticText();
 					st.Alignment = (column==0) ? ContentAlignment.MiddleCenter : ContentAlignment.MiddleLeft;
 					st.Dock = DockStyle.Fill;
-					st.DockMargins = new Margins(4, 4, 0, 0);
+					st.Margins = new Margins(4, 4, 0, 0);
 					this.table[column, row].Insert(st);
 				}
 			}

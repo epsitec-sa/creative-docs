@@ -40,12 +40,12 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				labelFind.Alignment = ContentAlignment.MiddleLeft;
 				labelFind.Width = 80;
 				labelFind.Anchor = AnchorStyles.TopLeft;
-				labelFind.AnchorMargins = new Margins(10, 0, 10+3, 0);
+				labelFind.Margins = new Margins(10, 0, 10+3, 0);
 
 				this.fieldFind = new TextFieldCombo(this.window.Root);
 				this.fieldFind.Width = 400-100;
 				this.fieldFind.Anchor = AnchorStyles.TopLeft;
-				this.fieldFind.AnchorMargins = new Margins(90, 0, 10, 0);
+				this.fieldFind.Margins = new Margins(90, 0, 10, 0);
 				this.fieldFind.TabIndex = this.tabIndex++;
 				this.fieldFind.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 				this.fieldFind.TextChanged += new EventHandler(this.HandleWidgetChanged);
@@ -55,12 +55,12 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				labelReplace.Alignment = ContentAlignment.MiddleLeft;
 				labelReplace.Width = 80;
 				labelReplace.Anchor = AnchorStyles.TopLeft;
-				labelReplace.AnchorMargins = new Margins(10, 0, 40+3, 0);
+				labelReplace.Margins = new Margins(10, 0, 40+3, 0);
 
 				this.fieldReplace = new TextFieldCombo(this.window.Root);
 				this.fieldReplace.Width = 400-100;
 				this.fieldReplace.Anchor = AnchorStyles.TopLeft;
-				this.fieldReplace.AnchorMargins = new Margins(90, 0, 40, 0);
+				this.fieldReplace.Margins = new Margins(90, 0, 40, 0);
 				this.fieldReplace.TabIndex = this.tabIndex++;
 				this.fieldReplace.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 				this.fieldReplace.TextChanged += new EventHandler(this.HandleWidgetChanged);
@@ -69,7 +69,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.checkEqualMaj.Text = Res.Strings.Dialog.Replace.Button.EqualMaj;
 				this.checkEqualMaj.Width = 150;
 				this.checkEqualMaj.Anchor = AnchorStyles.TopLeft;
-				this.checkEqualMaj.AnchorMargins = new Margins(10, 0, 72+18*0, 0);
+				this.checkEqualMaj.Margins = new Margins(10, 0, 72+18*0, 0);
 				this.checkEqualMaj.TabIndex = this.tabIndex++;
 				this.checkEqualMaj.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 				this.checkEqualMaj.ActiveStateChanged += new EventHandler(this.HandleWidgetChanged);
@@ -78,7 +78,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.checkEqualAccent.Text = Res.Strings.Dialog.Replace.Button.EqualAccent;
 				this.checkEqualAccent.Width = 150;
 				this.checkEqualAccent.Anchor = AnchorStyles.TopLeft;
-				this.checkEqualAccent.AnchorMargins = new Margins(10, 0, 72+18*1, 0);
+				this.checkEqualAccent.Margins = new Margins(10, 0, 72+18*1, 0);
 				this.checkEqualAccent.TabIndex = this.tabIndex++;
 				this.checkEqualAccent.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 				this.checkEqualAccent.ActiveStateChanged += new EventHandler(this.HandleWidgetChanged);
@@ -87,7 +87,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.checkWholeWord.Text = Res.Strings.Dialog.Replace.Button.WholeWord;
 				this.checkWholeWord.Width = 150;
 				this.checkWholeWord.Anchor = AnchorStyles.TopLeft;
-				this.checkWholeWord.AnchorMargins = new Margins(10, 0, 72+18*2, 0);
+				this.checkWholeWord.Margins = new Margins(10, 0, 72+18*2, 0);
 				this.checkWholeWord.TabIndex = this.tabIndex++;
 				this.checkWholeWord.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 				this.checkWholeWord.ActiveStateChanged += new EventHandler(this.HandleWidgetChanged);
@@ -96,7 +96,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.radioReverse.Text = Res.Strings.Dialog.Replace.Button.Reverse;
 				this.radioReverse.Width = 90;
 				this.radioReverse.Anchor = AnchorStyles.TopLeft;
-				this.radioReverse.AnchorMargins = new Margins(200, 0, 72+18*0, 0);
+				this.radioReverse.Margins = new Margins(200, 0, 72+18*0, 0);
 				this.radioReverse.TabIndex = this.tabIndex++;
 				this.radioReverse.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 				this.radioReverse.ActiveStateChanged += new EventHandler(this.HandleWidgetChanged);
@@ -105,7 +105,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.radioNormal.Text = Res.Strings.Dialog.Replace.Button.Normal;
 				this.radioNormal.Width = 90;
 				this.radioNormal.Anchor = AnchorStyles.TopLeft;
-				this.radioNormal.AnchorMargins = new Margins(200+100, 0, 72+18*0, 0);
+				this.radioNormal.Margins = new Margins(200+100, 0, 72+18*0, 0);
 				this.radioNormal.TabIndex = this.tabIndex++;
 				this.radioNormal.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 				this.radioNormal.ActiveStateChanged += new EventHandler(this.HandleWidgetChanged);
@@ -116,7 +116,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.buttonFind.Text = Res.Strings.Dialog.Replace.Button.Find;
 				this.buttonFind.ButtonStyle = ButtonStyle.DefaultAccept;
 				this.buttonFind.Anchor = AnchorStyles.BottomLeft;
-				this.buttonFind.AnchorMargins = new Margins(10, 0, 0, 10);
+				this.buttonFind.Margins = new Margins(10, 0, 0, 10);
 				this.buttonFind.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 				this.buttonFind.TabIndex = this.tabIndex++;
 				this.buttonFind.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
@@ -127,7 +127,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.buttonReplace.Width = 75;
 				this.buttonReplace.Text = Res.Strings.Dialog.Replace.Button.Replace;
 				this.buttonReplace.Anchor = AnchorStyles.BottomLeft;
-				this.buttonReplace.AnchorMargins = new Margins(10+75+10, 0, 0, 10);
+				this.buttonReplace.Margins = new Margins(10+75+10, 0, 0, 10);
 				this.buttonReplace.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 				this.buttonReplace.TabIndex = this.tabIndex++;
 				this.buttonReplace.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
@@ -138,7 +138,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.buttonClose.Text = Res.Strings.Dialog.Button.Close;
 				this.buttonClose.ButtonStyle = ButtonStyle.DefaultCancel;
 				this.buttonClose.Anchor = AnchorStyles.BottomLeft;
-				this.buttonClose.AnchorMargins = new Margins(10+75+10+75+10, 0, 0, 10);
+				this.buttonClose.Margins = new Margins(10+75+10+75+10, 0, 0, 10);
 				this.buttonClose.Clicked += new MessageEventHandler(this.HandleButtonCloseClicked);
 				this.buttonClose.TabIndex = this.tabIndex++;
 				this.buttonClose.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;

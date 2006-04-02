@@ -2685,7 +2685,7 @@ namespace Epsitec.Common.Document
 					line = new Widget(this.miniBarBalloon);
 					line.Height = button.DefaultHeight;
 					line.Dock = DockStyle.Top;
-					line.DockMargins = new Margins(0, 0, m, 0);
+					line.Margins = new Margins(0, 0, m, 0);
 					beginOfLine = false;
 				}
 

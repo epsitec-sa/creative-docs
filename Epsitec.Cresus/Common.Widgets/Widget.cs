@@ -1,4 +1,4 @@
-//	Copyright © 2003-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Widgets
@@ -59,38 +59,6 @@ namespace Epsitec.Common.Widgets
 		SyncPaint			= 0x20000000,		//	peinture synchrone
 		
 		DebugActive			= 0x80000000		//	widget marqué pour le debug
-	}
-	#endregion
-	
-	#region AnchorStyles enum
-	[System.Flags] public enum AnchorStyles : byte
-	{
-		None				= 0x00,
-		Top					= 0x10,
-		Bottom				= 0x20,
-		Left				= 0x40,
-		Right				= 0x80,
-		
-		TopLeft				= Top | Left,
-		BottomLeft			= Bottom | Left,
-		TopRight			= Top | Right,
-		BottomRight			= Bottom | Right,
-		LeftAndRight		= Left | Right,
-		TopAndBottom		= Top | Bottom,
-		All					= TopAndBottom | LeftAndRight
-	}
-	#endregion
-	
-	#region DockStyle enum
-	public enum DockStyle : byte
-	{
-		None				= 0,
-		
-		Top					= 1,				//	colle en haut
-		Bottom				= 2,				//	colle en bas
-		Left				= 3,				//	colle à gauche
-		Right				= 4,				//	colle à droite
-		Fill				= 5,				//	remplit tout
 	}
 	#endregion
 	
@@ -3485,36 +3453,36 @@ namespace Epsitec.Common.Widgets
 						switch (anchor_x)
 						{
 							case AnchorStyles.Left:							//	[x1] fixe à gauche
-								x1 = child.AnchorMargins.Left;
+								x1 = child.Margins.Left;
 								x2 = x1 + child.Width;
 								break;
 							case AnchorStyles.Right:						//	[x2] fixe à droite
-								x2 = this.Client.Width - child.AnchorMargins.Right;
+								x2 = this.Client.Width - child.Margins.Right;
 								x1 = x2 - child.Width;
 								break;
 							case AnchorStyles.None:							//	ne touche à rien...
 								break;
 							case AnchorStyles.LeftAndRight:					//	[x1] fixe à gauche, [x2] fixe à droite
-								x1 = child.AnchorMargins.Left;
-								x2 = this.Client.Width - child.AnchorMargins.Right;
+								x1 = child.Margins.Left;
+								x2 = this.Client.Width - child.Margins.Right;
 								break;
 						}
 						
 						switch (anchor_y)
 						{
 							case AnchorStyles.Bottom:						//	[y1] fixe en bas
-								y1 = child.AnchorMargins.Bottom;
+								y1 = child.Margins.Bottom;
 								y2 = y1 + child.Height;
 								break;
 							case AnchorStyles.Top:							//	[y2] fixe en haut
-								y2 = this.Client.Height - child.AnchorMargins.Top;
+								y2 = this.Client.Height - child.Margins.Top;
 								y1 = y2 - child.Height;
 								break;
 							case AnchorStyles.None:							//	ne touche à rien...
 								break;
 							case AnchorStyles.TopAndBottom:					//	[y1] fixe en bas, [y2] fixe en haut
-								y1 = child.AnchorMargins.Bottom;
-								y2 = this.Client.Height - child.AnchorMargins.Top;
+								y1 = child.Margins.Bottom;
+								y2 = this.Client.Height - child.Margins.Top;
 								break;
 						}
 						
@@ -3620,8 +3588,8 @@ namespace Epsitec.Common.Widgets
 				{
 					continue;
 				}
-				
-				Drawing.Size margins = child.DockMargins.Size;
+
+				Drawing.Size margins = child.Margins.Size;
 				Drawing.Size min = child.RealMinSize + margins;
 				Drawing.Size max = child.RealMaxSize + margins;
 				
@@ -3693,8 +3661,8 @@ namespace Epsitec.Common.Widgets
 				fill_max_dy = 1000000;
 			}
 			
-			double pad_width  = this.DockPadding.Width  + this.InternalPadding.Width;
-			double pad_height = this.DockPadding.Height + this.InternalPadding.Height;
+			double pad_width  = this.Padding.Width  + this.InternalPadding.Width;
+			double pad_height = this.Padding.Height + this.InternalPadding.Height;
 			
 			double min_width  = System.Math.Max (min_dx, fill_min_dx + min_ox) + pad_width;
 			double min_height = System.Math.Max (min_dy, fill_min_dy + min_oy) + pad_height;
@@ -3722,7 +3690,7 @@ namespace Epsitec.Common.Widgets
 			Drawing.Rectangle client_rect = this.Client.Bounds;
 			Drawing.Rectangle bounds;
 			
-			client_rect.Deflate (this.DockPadding);
+			client_rect.Deflate (this.Padding);
 			client_rect.Deflate (this.InternalPadding);
 			
 			double push_dx = 0;
@@ -3746,40 +3714,40 @@ namespace Epsitec.Common.Widgets
 				}
 				
 				bounds = child.Bounds;
-				bounds.Inflate (child.DockMargins);
+				bounds.Inflate (child.Margins);
 				
 				double dx = bounds.Width;
 				double dy = bounds.Height;
 
-				dx = child.PreferredSize.Width + child.DockMargins.Width;
-				dy = child.PreferredSize.Height + child.DockMargins.Height;
+				dx = child.PreferredSize.Width + child.Margins.Width;
+				dy = child.PreferredSize.Height + child.Margins.Height;
 				
 				switch (child.Dock)
 				{
 					case DockStyle.Top:
 						bounds = new Drawing.Rectangle (client_rect.Left, client_rect.Top - dy, client_rect.Width, dy);
-						bounds.Deflate (child.DockMargins);
+						bounds.Deflate (child.Margins);
 						child.SetBounds (bounds);
 						client_rect.Top -= dy;
 						break;
 						
 					case DockStyle.Bottom:
 						bounds = new Drawing.Rectangle (client_rect.Left, client_rect.Bottom, client_rect.Width, dy);
-						bounds.Deflate (child.DockMargins);
+						bounds.Deflate (child.Margins);
 						child.SetBounds (bounds);
 						client_rect.Bottom += dy;
 						break;
 					
 					case DockStyle.Left:
 						bounds = new Drawing.Rectangle (client_rect.Left, client_rect.Bottom, dx, client_rect.Height);
-						bounds.Deflate (child.DockMargins);
+						bounds.Deflate (child.Margins);
 						child.SetBounds (bounds);
 						client_rect.Left += dx;
 						break;
 					
 					case DockStyle.Right:
 						bounds = new Drawing.Rectangle (client_rect.Right - dx, client_rect.Bottom, dx, client_rect.Height);
-						bounds.Deflate (child.DockMargins);
+						bounds.Deflate (child.Margins);
 						child.SetBounds (bounds);
 						client_rect.Right -= dx;
 						break;
@@ -3816,7 +3784,7 @@ namespace Epsitec.Common.Widgets
 							}
 							
 							bounds = new Drawing.Rectangle (client_rect.Left, client_rect.Bottom, new_dx, client_rect.Height);
-							bounds.Deflate (child.DockMargins);
+							bounds.Deflate (child.Margins);
 						
 							child.SetBounds (bounds);
 							client_rect.Left += new_dx;
@@ -3836,7 +3804,7 @@ namespace Epsitec.Common.Widgets
 							}
 							
 							bounds = new Drawing.Rectangle (client_rect.Left, client_rect.Top - new_dy, client_rect.Width, new_dy);
-							bounds.Deflate (child.DockMargins);
+							bounds.Deflate (child.Margins);
 							
 							child.SetBounds (bounds);
 							client_rect.Top -= new_dy;

@@ -10,7 +10,7 @@ namespace Epsitec.Common.Widgets
 			this.direction     = Direction.Up;
 			
 			double m = (this.DefaultHeight-this.defaultButtonHeight)/2;
-			this.DockPadding = new Drawing.Margins(m, m, m, m);
+			this.Padding = new Drawing.Margins(m, m, m, m);
 		}
 		
 		public HToolBar(Widget embedder) : this()

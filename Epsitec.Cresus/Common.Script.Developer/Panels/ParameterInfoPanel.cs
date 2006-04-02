@@ -100,10 +100,10 @@ namespace Epsitec.Common.Script.Developer.Panels
 			
 //@			edit.AutoResolveResRef = false;
 			edit.AttachCommandDispatcher (this.local_dispatcher);
-			edit.Dock              = DockStyle.Fill;
-			edit.DockMargins       = new Drawing.Margins (0, 0, 0, 0);
-			edit.ColumnCount       = 3;
-			edit.RowCount          = 0;
+			edit.Dock        = DockStyle.Fill;
+			edit.Margins     = new Drawing.Margins (0, 0, 0, 0);
+			edit.ColumnCount = 3;
+			edit.RowCount    = 0;
 			
 			edit.HScroller.Hide ();
 			

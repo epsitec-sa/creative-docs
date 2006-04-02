@@ -65,8 +65,8 @@ namespace Epsitec.Common.Script.Developer
 			
 			this.method_book = new TabBook (parent);
 			this.method_book.HasCloseButton = true;
-			this.method_book.Dock        = DockStyle.Fill;
-			this.method_book.DockMargins = new Drawing.Margins (4, 4, 4, 4);
+			this.method_book.Dock    = DockStyle.Fill;
+			this.method_book.Margins = new Drawing.Margins (4, 4, 4, 4);
 			this.method_book.Items.Add (page);
 			
 			this.method_book.ActivePageChanged += new EventHandler (this.HandleBookActivePageChanged);
@@ -92,8 +92,8 @@ namespace Epsitec.Common.Script.Developer
 			this.find_next_error_button.Shortcuts.Add (new Shortcut (KeyCode.FuncF8));
 			
 			this.panel.Widget.SetParent (page);
-			this.panel.Widget.Dock        = DockStyle.Fill;
-			this.panel.Widget.DockMargins = new Drawing.Margins (4, 4, 4, 4);
+			this.panel.Widget.Dock    = DockStyle.Fill;
+			this.panel.Widget.Margins = new Drawing.Margins (4, 4, 4, 4);
 			
 			this.panel.IsModifiedChanged += new EventHandler (this.HandlePanelIsModifiedChanged);
 			this.panel.SourceWidget.CursorChanged += new EventHandler (this.HandleSourceCursorChanged);

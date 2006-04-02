@@ -32,7 +32,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				Panel panel = new Panel(this.window.Root);
 				panel.Name = "Panel";
 				panel.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.TopAndBottom;
-				panel.AnchorMargins = new Margins(10, 10, 10, 40);
+				panel.Margins = new Margins(10, 10, 10, 40);
 
 				//	Boutons de fermeture.
 				Button buttonOk = new Button(this.window.Root);
@@ -40,7 +40,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				buttonOk.Text = Res.Strings.Dialog.Export.Button.OK;
 				buttonOk.ButtonStyle = ButtonStyle.DefaultAccept;
 				buttonOk.Anchor = AnchorStyles.BottomLeft;
-				buttonOk.AnchorMargins = new Margins(10, 0, 0, 10);
+				buttonOk.Margins = new Margins(10, 0, 0, 10);
 				buttonOk.Clicked += new MessageEventHandler(this.HandleExportButtonOkClicked);
 				buttonOk.TabIndex = 10;
 				buttonOk.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
@@ -50,7 +50,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				buttonCancel.Width = 75;
 				buttonCancel.Text = Res.Strings.Dialog.Export.Button.Cancel;
 				buttonCancel.Anchor = AnchorStyles.BottomLeft;
-				buttonCancel.AnchorMargins = new Margins(10+75+10, 0, 0, 10);
+				buttonCancel.Margins = new Margins(10+75+10, 0, 0, 10);
 				buttonCancel.Clicked += new MessageEventHandler(this.HandleExportButtonCancelClicked);
 				buttonCancel.TabIndex = 11;
 				buttonCancel.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;

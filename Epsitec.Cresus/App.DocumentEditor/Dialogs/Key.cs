@@ -36,14 +36,14 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				StaticText label = new StaticText(this.window.Root);
 				label.Text = Res.Strings.Dialog.Key.Label;
 				label.Dock = DockStyle.Top;
-				label.DockMargins = new Margins(10, 10, 10, 10);
+				label.Margins = new Margins (10, 10, 10, 10);
 
 				this.radio1 = new RadioButton(this.window.Root);
 				this.radio1.Height = radio1.Height*1.2;
 //-				this.radio1.SetClientZoom(1.2);
 				this.radio1.Text = @"<font size=""120%"">" + Res.Strings.Dialog.Key.RadioDemo + "</font>";
 				this.radio1.Dock = DockStyle.Top;
-				this.radio1.DockMargins = new Margins(10, 10, 0, 0);
+				this.radio1.Margins = new Margins (10, 10, 0, 0);
 				this.radio1.ActiveStateChanged += new EventHandler(this.HandleRadioActiveStateChanged);
 				this.radio1.TabIndex = this.tabIndex++;
 				this.radio1.Index = 1;
@@ -54,7 +54,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 //-				this.radio2.SetClientZoom(1.2);
 				this.radio2.Text = @"<font size=""120%"">" + Res.Strings.Dialog.Key.RadioFull + "</font>";
 				this.radio2.Dock = DockStyle.Top;
-				this.radio2.DockMargins = new Margins(10, 10, 0, 0);
+				this.radio2.Margins = new Margins (10, 10, 0, 0);
 				this.radio2.ActiveStateChanged += new EventHandler(this.HandleRadioActiveStateChanged);
 				this.radio2.TabIndex = this.tabIndex++;
 				this.radio2.Index = 2;
@@ -63,12 +63,12 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.keyLabel = new StaticText(this.window.Root);
 				this.keyLabel.Text = Res.Strings.Dialog.Key.Number;
 				this.keyLabel.Dock = DockStyle.Top;
-				this.keyLabel.DockMargins = new Margins(10, 10, 20, 0);
+				this.keyLabel.Margins = new Margins (10, 10, 20, 0);
 
 				Panel keys = new Panel(this.window.Root);
 				keys.Height = 20;
 				keys.Dock = DockStyle.Top;
-				keys.DockMargins = new Margins(10, 0, 10, 0);
+				keys.Margins = new Margins (10, 0, 10, 0);
 				keys.TabIndex = this.tabIndex++;
 
 				this.key1 = new TextField(keys);
@@ -123,7 +123,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.buttonOK.Text = Res.Strings.Dialog.Button.OK;
 				this.buttonOK.ButtonStyle = ButtonStyle.DefaultAccept;
 				this.buttonOK.Anchor = AnchorStyles.BottomLeft;
-				this.buttonOK.AnchorMargins = new Margins(10, 0, 0, 10);
+				this.buttonOK.Margins = new Margins(10, 0, 0, 10);
 				this.buttonOK.Clicked += new MessageEventHandler(this.HandleKeyButtonOKClicked);
 				this.buttonOK.TabIndex = this.tabIndex++;
 				this.buttonOK.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
@@ -134,7 +134,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.buttonCancel.Text = Res.Strings.Dialog.Button.Cancel;
 				this.buttonCancel.ButtonStyle = ButtonStyle.DefaultCancel;
 				this.buttonCancel.Anchor = AnchorStyles.BottomLeft;
-				this.buttonCancel.AnchorMargins = new Margins(10+75+10, 0, 0, 10);
+				this.buttonCancel.Margins = new Margins(10+75+10, 0, 0, 10);
 				this.buttonCancel.Clicked += new MessageEventHandler(this.HandleKeyButtonCancelClicked);
 				this.buttonCancel.TabIndex = this.tabIndex++;
 				this.buttonCancel.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;

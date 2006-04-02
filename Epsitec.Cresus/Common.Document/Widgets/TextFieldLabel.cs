@@ -34,7 +34,7 @@ namespace Epsitec.Common.Document.Widgets
 				this.buttonUnit.Width = 20;
 				this.buttonUnit.AutoFocus = false;
 				this.buttonUnit.Dock = DockStyle.Left;
-				this.buttonUnit.DockMargins = new Margins(0, 1, 0, 0);
+				this.buttonUnit.Margins = new Margins(0, 1, 0, 0);
 				ToolTip.Default.SetToolTip(this.buttonUnit, Res.Strings.TextPanel.Units);
 			}
 			else
@@ -42,7 +42,7 @@ namespace Epsitec.Common.Document.Widgets
 				this.label = new StaticText(this);
 				this.label.Alignment = ContentAlignment.MiddleRight;
 				this.label.Dock = DockStyle.Fill;
-				this.label.DockMargins = new Margins(0, this.marginWidth, 0, 0);
+				this.label.Margins = new Margins(0, this.marginWidth, 0, 0);
 			}
 			this.labelVisibility = true;
 

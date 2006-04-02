@@ -35,12 +35,12 @@ namespace Epsitec.Common.Widgets
 			StaticText  text;
 			RadioButton radio;
 			
-			surface.Panel.DockPadding = new Drawing.Margins (8, 8, 16, 16);
+			surface.Panel.Padding = new Drawing.Margins (8, 8, 16, 16);
 			
 			text  = new StaticText (surface.Panel);
 			text.Dock = DockStyle.Top;
 			text.Text = "Horizontal scroller mode :";
-			text.DockMargins = new Drawing.Margins (0, 0, 0, 4);
+			text.Margins = new Drawing.Margins (0, 0, 0, 4);
 			
 			radio = new RadioButton (surface.Panel);
 			radio.Dock = DockStyle.Top;
@@ -67,7 +67,7 @@ namespace Epsitec.Common.Widgets
 			text  = new StaticText (surface.Panel);
 			text.Dock = DockStyle.Top;
 			text.Text = "Vertical scroller mode :";
-			text.DockMargins = new Drawing.Margins (0, 0, 16, 4);
+			text.Margins = new Drawing.Margins (0, 0, 16, 4);
 			
 			radio = new RadioButton (surface.Panel);
 			radio.Dock = DockStyle.Top;

@@ -15,7 +15,7 @@ namespace Epsitec.Common.Document.Widgets
 			this.hot = 0;
 			this.awayMargin = 5;
 
-			this.DockPadding = new Drawing.Margins(this.margin, this.margin, this.margin, this.distance+this.margin);
+			this.Padding = new Drawing.Margins(this.margin, this.margin, this.margin, this.distance+this.margin);
 
 			this.backgroundColor = Color.FromName("Info");
 			this.frameColor = Color.FromBrightness(0);
@@ -69,7 +69,7 @@ namespace Epsitec.Common.Document.Widgets
 				if ( this.margin != value )
 				{
 					this.margin = value;
-					this.DockPadding = new Drawing.Margins(this.margin, this.margin, this.margin, this.distance+this.margin);
+					this.Padding = new Drawing.Margins(this.margin, this.margin, this.margin, this.distance+this.margin);
 					this.Invalidate();
 				}
 			}

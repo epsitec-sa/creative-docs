@@ -33,7 +33,7 @@ namespace Epsitec.Common.Widgets
 					
 					if (this.contents != null)
 					{
-						this.DockPadding = Widgets.Adorners.Factory.Active.GeometryMenuShadow;
+						this.Padding = Widgets.Adorners.Factory.Active.GeometryMenuShadow;
 						this.contents.Dock = DockStyle.Fill;
 						this.Children.Add (this.contents);
 					}
@@ -59,8 +59,8 @@ namespace Epsitec.Common.Widgets
 				double dx = size.Width;
 				double dy = size.Height;
 				
-				dx += this.DockPadding.Width;
-				dy += this.DockPadding.Height;
+				dx += this.Padding.Width;
+				dy += this.Padding.Height;
 				
 				return new Drawing.Size (dx, dy);
 			}
@@ -76,8 +76,8 @@ namespace Epsitec.Common.Widgets
 			{
 				Drawing.Size size = this.contents.GetBestFitSize ();
 				
-				double width  = size.Width + this.DockPadding.Width;
-				double height = size.Height + this.DockPadding.Height;
+				double width  = size.Width + this.Padding.Width;
+				double height = size.Height + this.Padding.Height;
 				
 				System.Diagnostics.Debug.WriteLine (string.Format ("AdjustSize from {0}:{1} to {2}:{3}", this.Width, this.Height, width, height));
 				
@@ -115,8 +115,8 @@ namespace Epsitec.Common.Widgets
 			{
 				Drawing.Size size = (Drawing.Size) e.NewValue;
 				
-				double width  = size.Width - this.DockPadding.Width;
-				double height = size.Height - this.DockPadding.Height;
+				double width  = size.Width - this.Padding.Width;
+				double height = size.Height - this.Padding.Height;
 				
 				this.contents.MaxSize = size;
 			}

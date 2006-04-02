@@ -14,7 +14,7 @@ namespace Epsitec.Common.Widgets.Layouts
 			
 			Drawing.Rectangle client = container.Client.Bounds;
 			
-			client.Deflate (container.DockPadding);
+			client.Deflate (container.Padding);
 			client.Deflate (container.InternalPadding);
 			
 			double push_dx = 0;
@@ -37,40 +37,40 @@ namespace Epsitec.Common.Widgets.Layouts
 				
 				Drawing.Rectangle bounds;
 				bounds = child.Bounds;
-				bounds.Inflate (child.DockMargins);
+				bounds.Inflate (child.Margins);
 				
 				double dx = bounds.Width;
 				double dy = bounds.Height;
 
-				dx = child.PreferredSize.Width + child.DockMargins.Width;
-				dy = child.PreferredSize.Height + child.DockMargins.Height;
+				dx = child.PreferredSize.Width + child.Margins.Width;
+				dy = child.PreferredSize.Height + child.Margins.Height;
 				
 				switch (child.Dock)
 				{
 					case DockStyle.Top:
 						bounds = new Drawing.Rectangle (client.Left, client.Top - dy, client.Width, dy);
-						bounds.Deflate (child.DockMargins);
+						bounds.Deflate (child.Margins);
 						child.SetBounds (bounds);
 						client.Top -= dy;
 						break;
 						
 					case DockStyle.Bottom:
 						bounds = new Drawing.Rectangle (client.Left, client.Bottom, client.Width, dy);
-						bounds.Deflate (child.DockMargins);
+						bounds.Deflate (child.Margins);
 						child.SetBounds (bounds);
 						client.Bottom += dy;
 						break;
 					
 					case DockStyle.Left:
 						bounds = new Drawing.Rectangle (client.Left, client.Bottom, dx, client.Height);
-						bounds.Deflate (child.DockMargins);
+						bounds.Deflate (child.Margins);
 						child.SetBounds (bounds);
 						client.Left += dx;
 						break;
 					
 					case DockStyle.Right:
 						bounds = new Drawing.Rectangle (client.Right - dx, client.Bottom, dx, client.Height);
-						bounds.Deflate (child.DockMargins);
+						bounds.Deflate (child.Margins);
 						child.SetBounds (bounds);
 						client.Right -= dx;
 						break;
@@ -108,7 +108,7 @@ namespace Epsitec.Common.Widgets.Layouts
 							}
 							
 							bounds = new Drawing.Rectangle (client.Left, client.Bottom, new_dx, client.Height);
-							bounds.Deflate (child.DockMargins);
+							bounds.Deflate (child.Margins);
 							
 							child.SetBounds (bounds);
 							client.Left += new_dx;
@@ -128,7 +128,7 @@ namespace Epsitec.Common.Widgets.Layouts
 							}
 							
 							bounds = new Drawing.Rectangle (client.Left, client.Top - new_dy, client.Width, new_dy);
-							bounds.Deflate (child.DockMargins);
+							bounds.Deflate (child.Margins);
 							
 							child.SetBounds (bounds);
 							client.Top -= new_dy;
@@ -231,8 +231,8 @@ namespace Epsitec.Common.Widgets.Layouts
 				{
 					continue;
 				}
-				
-				Drawing.Size margins = child.DockMargins.Size;
+
+				Drawing.Size margins = child.Margins.Size;
 				Drawing.Size min = child.ResultingMinSize + margins;
 				Drawing.Size max = child.ResultingMaxSize + margins;
 				
@@ -305,8 +305,8 @@ namespace Epsitec.Common.Widgets.Layouts
 				fill_max_dy = 1000000;
 			}
 			
-			double pad_width  = container.DockPadding.Width  + container.InternalPadding.Width;
-			double pad_height = container.DockPadding.Height + container.InternalPadding.Height;
+			double pad_width  = container.Padding.Width  + container.InternalPadding.Width;
+			double pad_height = container.Padding.Height + container.InternalPadding.Height;
 			
 			double min_width  = System.Math.Max (min_dx, fill_min_dx + min_ox) + pad_width;
 			double min_height = System.Math.Max (min_dy, fill_min_dy + min_oy) + pad_height;

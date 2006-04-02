@@ -299,36 +299,6 @@ namespace Epsitec.Common.Widgets
 			set { this.navigator.MaxChar = value; }
 		}
 
-		public virtual Drawing.Margins			Margins
-		{
-			get { return this.margins; }
-			set { this.margins = value; }
-		}
-		
-		public virtual double					LeftMargin
-		{
-			get { return this.margins.Left; }
-			set { this.margins.Left = value; }
-		}
-		
-		public virtual double					RightMargin
-		{
-			get { return this.margins.Right; }
-			set { this.margins.Right = value; }
-		}
-		
-		public virtual double					BottomMargin
-		{
-			get { return this.margins.Bottom; }
-			set { this.margins.Bottom = value; }
-		}
-		
-		public virtual double					TopMargin
-		{
-			get { return this.margins.Top; }
-			set { this.margins.Top = value; }
-		}
-		
 		public TextFieldStyle					TextFieldStyle
 		{
 			get
@@ -1738,9 +1708,9 @@ namespace Epsitec.Common.Widgets
 		
 		private bool							autoSelectOnFocus;
 		private bool							autoEraseOnFocus;
-		protected Drawing.Margins				margins = new Drawing.Margins();
+		protected Drawing.Margins				margins;
 		protected Drawing.Size					realSize;
-		protected Drawing.Point					scrollOffset = new Drawing.Point();
+		protected Drawing.Point					scrollOffset;
 		protected bool							mouseDown = false;
 		protected bool							scrollLeft = false;
 		protected bool							scrollRight = false;

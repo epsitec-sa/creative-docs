@@ -22,7 +22,7 @@ namespace Epsitec.Common.Widgets
 			this.items = new Collections.StringCollection(this);
 			this.items.AcceptsRichText = true;
 			
-			this.DockPadding = new Drawing.Margins(2, 2, 2, 2);
+			this.Padding = new Drawing.Margins(2, 2, 2, 2);
 			this.AutoFocus = true;
 			this.AutoDoubleClick = true;
 			this.InternalState |= InternalState.Focusable;

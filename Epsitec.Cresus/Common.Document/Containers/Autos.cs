@@ -15,7 +15,7 @@ namespace Epsitec.Common.Document.Containers
 			StaticText t1 = new StaticText(this);
 			t1.Text = "<b>[ Debug ]</b>   <i>Montre les styles automatiques:</i>";
 			t1.Dock = DockStyle.Top;
-			t1.DockMargins = new Margins(0, 0, 0, 10);
+			t1.Margins = new Margins(0, 0, 0, 10);
 
 			this.table = new CellTable(this);
 			this.table.Dock = DockStyle.Fill;

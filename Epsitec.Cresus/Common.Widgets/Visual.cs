@@ -130,26 +130,15 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public Drawing.Margins					AnchorMargins
+		public Drawing.Margins					Margins
 		{
 			get
 			{
-				return new Drawing.Margins (this.left, this.right, this.top, this.bottom);
+				return (Drawing.Margins) this.GetValue (Visual.MarginsProperty);
 			}
 			set
 			{
-				Drawing.Margins oldValue = this.AnchorMargins;
-				Drawing.Margins newValue = value;
-
-				if (oldValue != newValue)
-				{
-					this.left   = value.Left;
-					this.right  = value.Right;
-					this.bottom = value.Bottom;
-					this.top    = value.Top;
-					
-					this.InvalidateProperty (Visual.AnchorMarginsProperty, oldValue, newValue);
-				}
+				this.SetValue (Visual.MarginsProperty, value);
 			}
 		}
 		
@@ -165,27 +154,15 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public Drawing.Margins					DockPadding
+		public Drawing.Margins					Padding
 		{
 			get
 			{
-				return (Drawing.Margins) this.GetValue (Visual.DockPaddingProperty);
+				return (Drawing.Margins) this.GetValue (Visual.PaddingProperty);
 			}
 			set
 			{
-				this.SetValue (Visual.DockPaddingProperty, value);
-			}
-		}
-		
-		public Drawing.Margins					DockMargins
-		{
-			get
-			{
-				return (Drawing.Margins) this.GetValue (Visual.DockMarginsProperty);
-			}
-			set
-			{
-				this.SetValue (Visual.DockMarginsProperty, value);
+				this.SetValue (Visual.PaddingProperty, value);
 			}
 		}
 		
@@ -210,11 +187,46 @@ namespace Epsitec.Common.Widgets
 			}
 			set
 			{
-				Drawing.Rectangle bounds = this.Bounds;
+				if (this.PreferredSize != value)
+				{
+					this.PreferredSize = value;
+				}
+
+				double width = value.Width;
+				double height = value.Height;
 				
-				bounds.Size = value;
-				
-				this.Bounds = bounds;
+				if ((this.width != width) ||
+					(this.height != height))
+				{
+					if (this.parent == null)
+					{
+						this.SuspendLayout ();
+						this.SetBounds (this.left, this.bottom, width, height);
+						this.ResumeLayout ();
+					}
+					else
+					{
+						Drawing.Size host = parent.Client.Size;
+
+						double right = host.Width - this.left - width;
+						double top = host.Height - this.bottom - height;
+						
+						if ((this.Anchor == AnchorStyles.None) &&
+							(this.Dock == DockStyle.None))
+						{
+							this.SuspendLayout ();
+							this.SetBounds (this.left, this.bottom, width, height);
+							this.NotifyGeometryChanged ();
+							this.ResumeLayout ();
+						}
+						else
+						{
+							this.parent.SuspendLayout ();
+							this.NotifyGeometryChanged ();
+							this.parent.ResumeLayout ();
+						}
+					}
+				}
 			}
 		}
 		public Drawing.Point					Location
@@ -272,7 +284,7 @@ namespace Epsitec.Common.Widgets
 						double right = host.Width - left - width;
 						double top = host.Height - bottom - height;
 						
-						this.AnchorMargins = new Drawing.Margins (left, right, top, bottom);
+						this.Margins = new Drawing.Margins (left, right, top, bottom);
 
 						if ((this.Anchor == AnchorStyles.None) &&
 							(this.Dock == DockStyle.None))
@@ -422,15 +434,15 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.Bounds.Width;
+				return this.width;
 			}
 			set
 			{
-				Drawing.Rectangle bounds = this.Bounds;
+				Drawing.Size size = this.Size;
 				
-				bounds.Width = value;
+				size.Width = value;
 				
-				this.Bounds = bounds;
+				this.Size = size;
 			}
 		}
 		
@@ -438,15 +450,15 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.Bounds.Height;
+				return this.height;
 			}
 			set
 			{
-				Drawing.Rectangle bounds = this.Bounds;
+				Drawing.Size size = this.Size;
 				
-				bounds.Height = value;
+				size.Height = value;
 				
-				this.Bounds = bounds;
+				this.Size = size;
 			}
 		}
 		
@@ -1242,10 +1254,9 @@ namespace Epsitec.Common.Widgets
 		public static readonly DependencyProperty WindowProperty				= DependencyProperty.RegisterReadOnly ("Window", typeof (Window), typeof (Visual), new VisualPropertyMetadata (null, VisualPropertyMetadataOptions.InheritsValue | VisualPropertyMetadataOptions.ChangesSilently));
 		
 		public static readonly DependencyProperty AnchorProperty				= DependencyProperty.Register ("Anchor", typeof (AnchorStyles), typeof (Visual), new VisualPropertyMetadata (AnchorStyles.None, VisualPropertyMetadataOptions.AffectsArrange));
-		public static readonly DependencyProperty AnchorMarginsProperty			= DependencyProperty.Register ("AnchorMargins", typeof (Drawing.Margins), typeof (Visual), new VisualPropertyMetadata (Drawing.Margins.Zero, VisualPropertyMetadataOptions.AffectsArrange));
+		public static readonly DependencyProperty MarginsProperty				= DependencyProperty.Register ("Margins", typeof (Drawing.Margins), typeof (Visual), new VisualPropertyMetadata (Drawing.Margins.Zero, VisualPropertyMetadataOptions.AffectsArrange));
 		public static readonly DependencyProperty DockProperty					= DependencyProperty.Register ("Dock", typeof (DockStyle), typeof (Visual), new VisualPropertyMetadata (DockStyle.None, VisualPropertyMetadataOptions.AffectsArrange));
-		public static readonly DependencyProperty DockPaddingProperty			= DependencyProperty.Register ("DockPadding", typeof (Drawing.Margins), typeof (Visual), new VisualPropertyMetadata (Drawing.Margins.Zero, VisualPropertyMetadataOptions.AffectsArrange));
-		public static readonly DependencyProperty DockMarginsProperty			= DependencyProperty.Register ("DockMargins", typeof (Drawing.Margins), typeof (Visual), new VisualPropertyMetadata (Drawing.Margins.Zero, VisualPropertyMetadataOptions.AffectsArrange));
+		public static readonly DependencyProperty PaddingProperty				= DependencyProperty.Register ("Padding", typeof (Drawing.Margins), typeof (Visual), new VisualPropertyMetadata (Drawing.Margins.Zero, VisualPropertyMetadataOptions.AffectsArrange));
 		public static readonly DependencyProperty ContainerLayoutModeProperty	= DependencyProperty.Register ("ContainerLayoutMode", typeof (ContainerLayoutMode), typeof (Visual), new VisualPropertyMetadata (ContainerLayoutMode.VerticalFlow, VisualPropertyMetadataOptions.AffectsChildrenLayout));
 		
 		public static readonly DependencyProperty BoundsProperty				= DependencyProperty.RegisterReadOnly ("Bounds", typeof (Drawing.Rectangle), typeof (Visual), new DependencyPropertyMetadata (Drawing.Rectangle.Empty, new GetValueOverrideCallback (Visual.GetBoundsValue)));
