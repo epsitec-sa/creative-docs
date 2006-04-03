@@ -91,7 +91,7 @@ namespace Epsitec.Common.Types
 			}
 			else
 			{
-				return this.GetValueBase (property);
+				return this.GetValueBase (property, metadata);
 			}
 		}
 		public object GetValueBase(DependencyProperty property)
@@ -135,64 +135,20 @@ namespace Epsitec.Common.Types
 			}
 			else
 			{
-				this.SetValueBase (property, value);
+				this.SetValueBase (property, value, metadata);
 			}
 		}
 		public void SetValueBase(DependencyProperty property, object value)
 		{
 			DependencyPropertyMetadata metadata = property.GetMetadata (this);
 
-			if (metadata.InheritsValue)
-			{
-				this.SetLocalValue (property, value);
-				this.inheritedPropertyCache.SetValue (this, property, value);
-				this.inheritedPropertyCache.NotifyChanges (this);
-			}
-			else
-			{
-				object old_value = this.GetValue (property);
-
-				this.SetLocalValue (property, value);
-
-				object new_value = this.GetValue (property);
-
-				if (old_value == new_value)
-				{
-					//	C'est exactement la même valeur -- on ne signale donc rien ici.
-				}
-				else if ((old_value == null) || (!old_value.Equals (new_value)))
-				{
-					this.InvalidateProperty (property, old_value, new_value);
-				}
-			}
+			this.SetValueBase (property, value, metadata);
 		}
 		public void ClearValueBase(DependencyProperty property)
 		{
 			DependencyPropertyMetadata metadata = property.GetMetadata (this);
 
-			if (metadata.InheritsValue)
-			{
-				this.ClearLocalValue (property);
-				this.InheritPropertyFromParent (property);
-				this.inheritedPropertyCache.NotifyChanges (this);
-			}
-			else
-			{
-				object old_value = this.GetValue (property);
-
-				this.ClearLocalValue (property);
-
-				object new_value = this.GetValue (property);
-
-				if (old_value == new_value)
-				{
-					//	C'est exactement la même valeur -- on ne signale donc rien ici.
-				}
-				else if ((old_value == null) || (!old_value.Equals (new_value)))
-				{
-					this.InvalidateProperty (property, old_value, new_value);
-				}
-			}
+			this.ClearValueBase (property, metadata);
 		}
 
 		public object CoerceValue(DependencyProperty property, object value)
@@ -239,6 +195,88 @@ namespace Epsitec.Common.Types
 		{
 			DependencyPropertyMetadata metadata = property.GetMetadata (this);
 
+			this.InvalidateProperty (property, old_value, new_value, metadata);
+		}
+
+		#region Private Methods with DependencyPropertyMetadata
+		
+		private object GetValueBase(DependencyProperty property, DependencyPropertyMetadata metadata)
+		{
+			object value = this.GetLocalValue (property);
+
+			//	Si la valeur n'est pas définie localement, il faut déterminer la
+			//	valeur réelle (par défaut, héritée, etc.)
+
+			if (value == UndefinedValue.Instance)
+			{
+				if ((metadata.InheritsValue) &&
+					(this.inheritedPropertyCache.TryGetValue (this, property, out value)))
+				{
+					//	Re-use cached value.
+					//-	System.Diagnostics.Debug.WriteLine ("Reuse cached value " + (value == null ? "<null>" : value.ToString ()));
+				}
+				else
+				{
+					value = metadata.CreateDefaultValue ();
+				}
+			}
+
+			return value;
+		}
+		private void SetValueBase(DependencyProperty property, object value, DependencyPropertyMetadata metadata)
+		{
+			if (metadata.InheritsValue)
+			{
+				this.SetLocalValue (property, value);
+				this.inheritedPropertyCache.SetValue (this, property, value);
+				this.inheritedPropertyCache.NotifyChanges (this);
+			}
+			else
+			{
+				object old_value = this.GetValue (property);
+
+				this.SetLocalValue (property, value);
+
+				object new_value = this.GetValue (property);
+
+				if (old_value == new_value)
+				{
+					//	C'est exactement la même valeur -- on ne signale donc rien ici.
+				}
+				else if ((old_value == null) || (!old_value.Equals (new_value)))
+				{
+					this.InvalidateProperty (property, old_value, new_value, metadata);
+				}
+			}
+		}
+		private void ClearValueBase(DependencyProperty property, DependencyPropertyMetadata metadata)
+		{
+			if (metadata.InheritsValue)
+			{
+				this.ClearLocalValue (property);
+				this.InheritPropertyFromParent (property);
+				this.inheritedPropertyCache.NotifyChanges (this);
+			}
+			else
+			{
+				object old_value = this.GetValue (property);
+
+				this.ClearLocalValue (property);
+
+				object new_value = this.GetValue (property);
+
+				if (old_value == new_value)
+				{
+					//	C'est exactement la même valeur -- on ne signale donc rien ici.
+				}
+				else if ((old_value == null) || (!old_value.Equals (new_value)))
+				{
+					this.InvalidateProperty (property, old_value, new_value, metadata);
+				}
+			}
+		}
+		private void InvalidateProperty(DependencyProperty property, object old_value, object new_value, DependencyPropertyMetadata metadata)
+		{
 			if (metadata.NotifyPropertyInvalidated (this, old_value, new_value))
 			{
 				if (this.HasEventHandlerForProperty (property))
@@ -251,6 +289,8 @@ namespace Epsitec.Common.Types
 			}
 		}
 		
+		#endregion
+
 		public void AddEventHandler(DependencyProperty property, PropertyChangedEventHandler handler)
 		{
 			if (this.propertyEvents == null)
