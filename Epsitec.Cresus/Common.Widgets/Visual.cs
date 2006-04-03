@@ -920,6 +920,11 @@ namespace Epsitec.Common.Widgets
 		{
 			this.Invalidate ();
 		}
+
+
+		public void Measure(Layouts.LayoutContext context)
+		{
+		}
 		
 		
 		public void AttachCommandDispatcher(CommandDispatcher value)

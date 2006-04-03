@@ -29,16 +29,56 @@ namespace Epsitec.Common.Widgets.Layouts
 				return this.max;
 			}
 		}
+		public bool HasChanged
+		{
+			get
+			{
+				return this.hasChanged;
+			}
+		}
 
+		internal void ClearHasChanged()
+		{
+			this.hasChanged = false;
+		}
+		
 		internal void UpdateMin(int passId, double value)
 		{
-			this.passId = passId;
-			this.min = System.Math.Max (this.min, value);
+			double old = this.min;
+			
+			if (this.passId == passId)
+			{
+				this.min = System.Math.Max (this.min, value);
+			}
+			else
+			{
+				this.passId = passId;
+				this.min = value;
+			}
+
+			if (this.min != old)
+			{
+				this.hasChanged = true;
+			}
 		}
 		internal void UpdateMax(int passId, double value)
 		{
-			this.passId = passId;
-			this.max = System.Math.Min (this.max, value);
+			double old = this.max;
+
+			if (this.passId == passId)
+			{
+				this.max = System.Math.Min (this.max, value);
+			}
+			else
+			{
+				this.passId = passId;
+				this.max = value;
+			}
+
+			if (this.max != old)
+			{
+				this.hasChanged = true;
+			}
 		}
 		
 		public static Types.DependencyProperty WidthProperty  = Types.DependencyProperty.RegisterAttached ("Width", typeof (LayoutMeasure), typeof (LayoutMeasure));
@@ -48,5 +88,6 @@ namespace Epsitec.Common.Widgets.Layouts
 		private double max;
 		private int passId;
 		private double value;
+		private bool hasChanged;
 	}
 }
