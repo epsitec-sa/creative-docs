@@ -475,7 +475,28 @@ namespace Epsitec.Common.Widgets.Helpers
 			
 			return false;
 		}
-		
+
+		public static int GetDepth(Visual visual)
+		{
+			if (visual != null)
+			{
+				visual = visual.Parent;
+
+				int depth = 1;
+
+				while (visual != null)
+				{
+					depth++;
+					visual = visual.Parent;
+				}
+
+				return depth;
+			}
+			else
+			{
+				return 0;
+			}
+		}
 		
 		public static Visual FindParentUsingEvent(Visual visual, Types.DependencyProperty property)
 		{

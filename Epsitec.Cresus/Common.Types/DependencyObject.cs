@@ -164,7 +164,7 @@ namespace Epsitec.Common.Types
 				return value;
 			}
 		}
-		
+
 		public object GetLocalValue(DependencyProperty property)
 		{
 			object value;
@@ -176,6 +176,17 @@ namespace Epsitec.Common.Types
 			else
 			{
 				return UndefinedValue.Instance;
+			}
+		}
+		public bool TryGetLocalValue(DependencyProperty property, out object value)
+		{
+			if (this.properties.TryGetValue (property, out value))
+			{
+				return true;
+			}
+			else
+			{
+				return false;
 			}
 		}
 		public void SetLocalValue(DependencyProperty property, object value)

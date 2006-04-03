@@ -91,11 +91,9 @@ namespace Epsitec.Common.Widgets
 				return;
 			}
 			
-			this.widget_id = Widget.next_widget_id++;
-			
 			if (Widget.DebugDispose)
 			{
-				System.Diagnostics.Debug.WriteLine (string.Format ("{1}+ Created {0}", this.GetType ().Name, this.widget_id));
+				System.Diagnostics.Debug.WriteLine (string.Format ("{1}+ Created {0}", this.GetType ().Name, this.VisualSerialId));
 			}
 			
 			this.InternalState |= InternalState.AutoMnemonic;
@@ -373,7 +371,7 @@ namespace Epsitec.Common.Widgets
 		{
 			if (Widget.DebugDispose)
 			{
-				System.Diagnostics.Debug.WriteLine (string.Format ("{2}- {0} widget {1}", (disposing ? "Disposing" : "Collecting"), this.ToString (), this.widget_id.ToString ()));
+				System.Diagnostics.Debug.WriteLine (string.Format ("{2}- {0} widget {1}", (disposing ? "Disposing" : "Collecting"), this.ToString (), this.VisualSerialId));
 			}
 			
 			if (disposing)
@@ -1740,7 +1738,7 @@ namespace Epsitec.Common.Widgets
 		{
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 			
-			buffer.Append (this.widget_id.ToString ());
+			buffer.Append (this.VisualSerialId.ToString ());
 			buffer.Append (":");
 			buffer.Append (this.GetType ().Name);
 			this.BuildFullPathName (buffer);
@@ -5161,11 +5159,9 @@ namespace Epsitec.Common.Widgets
 		private System.Collections.Hashtable	property_hash;
 		private Support.ResourceManager			resource_manager;
 		private IValidator						validator;
-		private int								widget_id;
 		
 		static System.Collections.ArrayList		entered_widgets = new System.Collections.ArrayList ();
 		static System.Collections.ArrayList		alive_widgets   = new System.Collections.ArrayList ();
-		static int								next_widget_id  = 0;
 		static bool								debug_dispose	= false;
 		
 		private const string					prop_binding	= "$widget$binding$";
