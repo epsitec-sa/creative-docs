@@ -569,8 +569,8 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				double width  = System.Math.Max (this.MinSize.Width, this.auto_min_size.Width);
-				double height = System.Math.Max (this.MinSize.Height, this.auto_min_size.Height);
+				double width  = System.Math.Max (this.MinWidth, this.auto_min_size.Width);
+				double height = System.Math.Max (this.MinHeight, this.auto_min_size.Height);
 				
 				return new Drawing.Size (width, height);
 			}
@@ -580,8 +580,8 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				double width  = System.Math.Min (this.MaxSize.Width, this.auto_max_size.Width);
-				double height = System.Math.Min (this.MaxSize.Height, this.auto_max_size.Height);
+				double width  = System.Math.Min (this.MaxWidth, this.auto_max_size.Width);
+				double height = System.Math.Min (this.MaxHeight, this.auto_max_size.Height);
 				
 				return new Drawing.Size (width, height);
 			}
@@ -3455,11 +3455,11 @@ namespace Epsitec.Common.Widgets
 
 						if (double.IsNaN (dx))
 						{
-							dx = child.Width;
+							dx = child.Width;		//	TODO: améliorer
 						}
 						if (double.IsNaN (dy))
 						{
-							dy = child.Height;
+							dy = child.Height;		//	TODO: améliorer
 						}
 						
 						switch (anchor_x)
@@ -3727,12 +3727,21 @@ namespace Epsitec.Common.Widgets
 				
 				bounds = child.Bounds;
 				bounds.Inflate (child.Margins);
-				
-				double dx = bounds.Width;
-				double dy = bounds.Height;
 
-				dx = child.PreferredSize.Width + child.Margins.Width;
-				dy = child.PreferredSize.Height + child.Margins.Height;
+				double dx = child.PreferredWidth;
+				double dy = child.PreferredHeight;
+
+				if (double.IsNaN (dx))
+				{
+					dx = child.Width;		//	TODO: améliorer
+				}
+				if (double.IsNaN (dy))
+				{
+					dy = child.Height;		//	TODO: améliorer
+				}
+
+				dx += child.Margins.Width;
+				dy += child.Margins.Height;
 				
 				switch (child.Dock)
 				{
@@ -3786,7 +3795,7 @@ namespace Epsitec.Common.Widgets
 					case ContainerLayoutMode.HorizontalFlow:
 						foreach (Widget child in fill_queue)
 						{
-							double min_dx = child.MinSize.Width;
+							double min_dx = child.MinWidth;
 							double new_dx = fill_dx / n;
 							
 							if (new_dx < min_dx)
@@ -3806,7 +3815,7 @@ namespace Epsitec.Common.Widgets
 					case ContainerLayoutMode.VerticalFlow:
 						foreach (Widget child in fill_queue)
 						{
-							double min_dy = child.MinSize.Height;
+							double min_dy = child.MinHeight;
 							double new_dy = fill_dy / n;
 							
 							if (new_dy < min_dy)

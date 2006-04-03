@@ -27,21 +27,33 @@ namespace Epsitec.Common.Widgets.Layouts
 				Drawing.Rectangle client  = container.Client.Bounds;
 				Drawing.Rectangle bounds  = child.Bounds;
 				Drawing.Margins   margins = child.Margins;
-				
+
 				double x1 = bounds.Left;
 				double x2 = bounds.Right;
 				double y1 = bounds.Bottom;
 				double y2 = bounds.Top;
+
+				double dx = child.PreferredWidth;
+				double dy = child.PreferredHeight;
+
+				if (double.IsNaN (dx))
+				{
+					dx = child.Width;		//	TODO: améliorer
+				}
+				if (double.IsNaN (dy))
+				{
+					dy = child.Height;		//	TODO: améliorer
+				}
 				
 				switch (anchor_x)
 				{
 					case AnchorStyles.Left:							//	[x1] fixe à gauche
 						x1 = margins.Left;
-						x2 = x1 + child.Width;
+						x2 = x1 + dx;
 						break;
 					case AnchorStyles.Right:						//	[x2] fixe à droite
 						x2 = client.Width - margins.Right;
-						x1 = x2 - child.Width;
+						x1 = x2 - dx;
 						break;
 					case AnchorStyles.None:							//	ne touche à rien...
 						break;
@@ -55,11 +67,11 @@ namespace Epsitec.Common.Widgets.Layouts
 				{
 					case AnchorStyles.Bottom:						//	[y1] fixe en bas
 						y1 = margins.Bottom;
-						y2 = y1 + child.Height;
+						y2 = y1 + dy;
 						break;
 					case AnchorStyles.Top:							//	[y2] fixe en haut
 						y2 = client.Height - margins.Top;
-						y1 = y2 - child.Height;
+						y1 = y2 - dy;
 						break;
 					case AnchorStyles.None:							//	ne touche à rien...
 						break;

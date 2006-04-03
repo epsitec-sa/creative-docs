@@ -528,23 +528,73 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return (Drawing.Size) this.GetValue (Visual.MinSizeProperty);
+				return new Drawing.Size (this.MinWidth, this.MinHeight);
 			}
 			set
 			{
-				this.SetValue (Visual.MinSizeProperty, value);
+				this.SuspendLayout ();
+				this.MinWidth  = value.Width;
+				this.MinHeight = value.Height;
+				this.ResumeLayout ();
 			}
 		}
-		
 		public Drawing.Size						MaxSize
 		{
 			get
 			{
-				return (Drawing.Size) this.GetValue (Visual.MaxSizeProperty);
+				return new Drawing.Size (this.MaxWidth, this.MaxHeight);
 			}
 			set
 			{
-				this.SetValue (Visual.MaxSizeProperty, value);
+				this.SuspendLayout ();
+				this.MaxWidth  = value.Width;
+				this.MaxHeight = value.Height;
+				this.ResumeLayout ();
+			}
+		}
+
+		public double							MinWidth
+		{
+			get
+			{
+				return (double) this.GetValue (Visual.MinWidthProperty);
+			}
+			set
+			{
+				this.SetValue (Visual.MinWidthProperty, value);
+			}
+		}
+		public double							MaxWidth
+		{
+			get
+			{
+				return (double) this.GetValue (Visual.MaxWidthProperty);
+			}
+			set
+			{
+				this.SetValue (Visual.MaxWidthProperty, value);
+			}
+		}
+		public double							MinHeight
+		{
+			get
+			{
+				return (double) this.GetValue (Visual.MinHeightProperty);
+			}
+			set
+			{
+				this.SetValue (Visual.MinHeightProperty, value);
+			}
+		}
+		public double							MaxHeight
+		{
+			get
+			{
+				return (double) this.GetValue (Visual.MaxHeightProperty);
+			}
+			set
+			{
+				this.SetValue (Visual.MaxHeightProperty, value);
 			}
 		}
 		
@@ -1341,7 +1391,11 @@ namespace Epsitec.Common.Widgets
 		public static readonly DependencyProperty ActualWidthProperty			= DependencyProperty.RegisterReadOnly ("ActualWidth", typeof (double), typeof (Visual), new VisualPropertyMetadata (Visual.GetActualWidthValue, VisualPropertyMetadataOptions.None));
 		public static readonly DependencyProperty ActualHeightProperty			= DependencyProperty.RegisterReadOnly ("ActualHeight", typeof (double), typeof (Visual), new VisualPropertyMetadata (Visual.GetActualHeightValue, VisualPropertyMetadataOptions.None));
 		public static readonly DependencyProperty MinSizeProperty				= DependencyProperty.Register ("MinSize", typeof (Drawing.Size), typeof (Visual), new VisualPropertyMetadata (Drawing.Size.Empty, new PropertyInvalidatedCallback (Visual.NotifyMinSizeChanged), VisualPropertyMetadataOptions.AffectsArrange));
+		public static readonly DependencyProperty MinWidthProperty				= DependencyProperty.Register ("MinWidth", typeof (double), typeof (Visual), new VisualPropertyMetadata (0.0, new PropertyInvalidatedCallback (Visual.NotifyMinSizeChanged), VisualPropertyMetadataOptions.AffectsArrange));
+		public static readonly DependencyProperty MinHeightProperty				= DependencyProperty.Register ("MinHeight", typeof (double), typeof (Visual), new VisualPropertyMetadata (0.0, new PropertyInvalidatedCallback (Visual.NotifyMinSizeChanged), VisualPropertyMetadataOptions.AffectsArrange));
 		public static readonly DependencyProperty MaxSizeProperty				= DependencyProperty.Register ("MaxSize", typeof (Drawing.Size), typeof (Visual), new VisualPropertyMetadata (Drawing.Size.Infinite, new PropertyInvalidatedCallback (Visual.NotifyMaxSizeChanged), VisualPropertyMetadataOptions.AffectsArrange));
+		public static readonly DependencyProperty MaxWidthProperty				= DependencyProperty.Register ("MaxWidth", typeof (double), typeof (Visual), new VisualPropertyMetadata (double.PositiveInfinity, new PropertyInvalidatedCallback (Visual.NotifyMaxSizeChanged), VisualPropertyMetadataOptions.AffectsArrange));
+		public static readonly DependencyProperty MaxHeightProperty				= DependencyProperty.Register ("MaxHeight", typeof (double), typeof (Visual), new VisualPropertyMetadata (double.PositiveInfinity, new PropertyInvalidatedCallback (Visual.NotifyMaxSizeChanged), VisualPropertyMetadataOptions.AffectsArrange));
 		
 		public static readonly DependencyProperty VisibilityProperty			= DependencyProperty.Register ("Visibility", typeof (bool), typeof (Visual), new VisualPropertyMetadata (true, new SetValueOverrideCallback (Visual.SetVisibilityValue), VisualPropertyMetadataOptions.None));
 		public static readonly DependencyProperty EnableProperty				= DependencyProperty.Register ("Enable", typeof (bool), typeof (Visual), new VisualPropertyMetadata (true, new SetValueOverrideCallback (Visual.SetEnableValue), VisualPropertyMetadataOptions.None));

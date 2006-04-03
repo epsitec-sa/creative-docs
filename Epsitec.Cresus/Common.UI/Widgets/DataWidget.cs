@@ -269,10 +269,10 @@ namespace Epsitec.Common.UI.Widgets
 			text_field.Margins = new Drawing.Margins (this.has_caption ? this.caption_width : 0, 0, 0, 0);
 			
 			Widget.BaseLineAlign (text_field, caption);
-			
-			this.DefineBestFitSize (this.caption_width + text_field.GetBestFitSize ().Width, text_field.MinSize.Height);
-			
-			this.MinSize = new Drawing.Size (this.caption_width + text_field.MinSize.Width, text_field.MinSize.Height);
+
+			this.DefineBestFitSize (this.caption_width + text_field.GetBestFitSize ().Width, text_field.MinHeight);
+
+			this.MinSize = new Drawing.Size (this.caption_width + text_field.MinWidth, text_field.MinHeight);
 			
 			Engine.BindWidget (this.source, text_field);
 		}
@@ -301,10 +301,10 @@ namespace Epsitec.Common.UI.Widgets
 			text_field.Margins = new Drawing.Margins (this.has_caption ? this.caption_width : 0, 0, 0, 0);
 			
 			Widget.BaseLineAlign (text_field, caption);
-			
-			this.DefineBestFitSize (this.caption_width + text_field.GetBestFitSize ().Width, text_field.MinSize.Height);
-			
-			this.MinSize = new Drawing.Size (this.caption_width + text_field.MinSize.Width, text_field.MinSize.Height);
+
+			this.DefineBestFitSize (this.caption_width + text_field.GetBestFitSize ().Width, text_field.MinHeight);
+
+			this.MinSize = new Drawing.Size (this.caption_width + text_field.MinWidth, text_field.MinHeight);
 			
 			Engine.BindWidget (this.source, text_field);
 		}
@@ -474,10 +474,10 @@ namespace Epsitec.Common.UI.Widgets
 			button.Margins = new Drawing.Margins (this.has_caption ? this.caption_width : 0, 0, 0, 0);
 			
 			Widget.BaseLineAlign (button, caption);
-			
-			this.DefineBestFitSize (this.caption_width + button.GetBestFitSize ().Width, button.MinSize.Height);
-			
-			this.MinSize = new Drawing.Size (this.caption_width + button.MinSize.Width, button.MinSize.Height);
+
+			this.DefineBestFitSize (this.caption_width + button.GetBestFitSize ().Width, button.MinHeight);
+
+			this.MinSize = new Drawing.Size (this.caption_width + button.MinWidth, button.MinHeight);
 			
 			Engine.BindWidget (this.source, button);
 		}

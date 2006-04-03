@@ -192,14 +192,14 @@ namespace Epsitec.Common.Widgets
 		public override Drawing.Size GetBestFitSize()
 		{
 			double margin = ScrollList.TextOffsetY * 2;
-			double height = System.Math.Min (this.lineHeight * this.items.Count, this.MaxSize.Height);
+			double height = System.Math.Min (this.lineHeight * this.items.Count, this.MaxHeight);
 			double width  = this.PreferredWidth;
 			
 			double dy = height;
 			
 			dy += margin;
-			dy  = System.Math.Max (dy, this.MinSize.Height);
-			dy  = System.Math.Min (dy, this.MaxSize.Height);
+			dy  = System.Math.Max (dy, this.MinHeight);
+			dy  = System.Math.Min (dy, this.MaxHeight);
 			dy -= margin;
 			
 			int n = (int) (dy / this.lineHeight);

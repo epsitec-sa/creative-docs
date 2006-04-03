@@ -38,12 +38,21 @@ namespace Epsitec.Common.Widgets.Layouts
 				Drawing.Rectangle bounds;
 				bounds = child.Bounds;
 				bounds.Inflate (child.Margins);
-				
-				double dx = bounds.Width;
-				double dy = bounds.Height;
 
-				dx = child.PreferredSize.Width + child.Margins.Width;
-				dy = child.PreferredSize.Height + child.Margins.Height;
+				double dx = child.PreferredWidth;
+				double dy = child.PreferredHeight;
+
+				if (double.IsNaN (dx))
+				{
+					dx = child.Width;		//	TODO: améliorer
+				}
+				if (double.IsNaN (dy))
+				{
+					dy = child.Height;		//	TODO: améliorer
+				}
+
+				dx += child.Margins.Width;
+				dy += child.Margins.Height;
 				
 				switch (child.Dock)
 				{
@@ -98,7 +107,7 @@ namespace Epsitec.Common.Widgets.Layouts
 					case ContainerLayoutMode.HorizontalFlow:
 						foreach (Visual child in fill_queue)
 						{
-							double min_dx = child.MinSize.Width;
+							double min_dx = child.MinWidth;
 							double new_dx = fill_dx / n;
 							
 							if (new_dx < min_dx)
@@ -118,7 +127,7 @@ namespace Epsitec.Common.Widgets.Layouts
 					case ContainerLayoutMode.VerticalFlow:
 						foreach (Visual child in fill_queue)
 						{
-							double min_dy = child.MinSize.Height;
+							double min_dy = child.MinHeight;
 							double new_dy = fill_dy / n;
 							
 							if (new_dy < min_dy)
