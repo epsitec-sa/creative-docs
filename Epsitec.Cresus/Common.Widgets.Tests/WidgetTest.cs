@@ -639,11 +639,8 @@ namespace Epsitec.Common.Widgets
 			Widget root = new Widget ();
 			Widget widget = new Widget ();
 			
-			root.Location = new Point (0, 0);
-			root.Size     = new Size (300, 200);
-			
-			widget.Location = new Point (30, 20);
-			widget.Size     = new Size (50, 40);
+			root.Bounds = new Rectangle (0, 0, 300, 200);
+			widget.Bounds = new Rectangle (30, 20, 50, 40);
 			
 			Assert.IsTrue (widget.Left == 30);
 			Assert.IsTrue (widget.Right == 80);
@@ -673,12 +670,9 @@ namespace Epsitec.Common.Widgets
 		{
 			Widget root = new Widget ();
 			Widget widget = new Widget ();
-			
-			root.Location = new Point (0, 0);
-			root.Size     = new Size (300, 200);
-			
-			widget.Location = new Point (30, 20);
-			widget.Size     = new Size (50, 40);
+
+			root.Bounds = new Rectangle (0, 0, 300, 200);
+			widget.Bounds = new Rectangle (30, 20, 50, 40);
 			
 			root.Children.Add (widget);
 			
@@ -725,12 +719,9 @@ namespace Epsitec.Common.Widgets
 		{
 			Widget root = new Widget ();
 			Widget widget = new Widget ();
-			
-			root.Location = new Point (0, 0);
-			root.Size     = new Size (300, 200);
-			
-			widget.Location = new Point (30, 20);
-			widget.Size     = new Size (50, 40);
+
+			root.Bounds = new Rectangle (0, 0, 300, 200);
+			widget.Bounds = new Rectangle (30, 20, 50, 40);
 			
 			root.Children.Add (widget);
 			
@@ -811,12 +802,9 @@ namespace Epsitec.Common.Widgets
 		{
 			Widget root = new Widget ();
 			Widget widget = new Widget ();
-			
-			root.Location = new Point (0, 0);
-			root.Size     = new Size (300, 200);
-			
-			widget.Location = new Point (30, 20);
-			widget.Size     = new Size (50, 40);
+
+			root.Bounds = new Rectangle (0, 0, 300, 200);
+			widget.Bounds = new Rectangle (30, 20, 50, 40);
 			
 			root.Children.Add (widget);
 			
@@ -897,12 +885,9 @@ namespace Epsitec.Common.Widgets
 		{
 			Widget root = new Widget ();
 			Widget widget = new Widget ();
-			
-			root.Location = new Point (0, 0);
-			root.Size     = new Size (300, 200);
-			
-			widget.Location = new Point (30, 20);
-			widget.Size     = new Size (50, 40);
+
+			root.Bounds = new Rectangle (0, 0, 300, 200);
+			widget.Bounds = new Rectangle (30, 20, 50, 40);
 			
 			root.Children.Add (widget);
 			
@@ -952,12 +937,9 @@ namespace Epsitec.Common.Widgets
 		{
 			Widget root = new Widget ();
 			Widget widget = new Widget ();
-			
-			root.Location = new Point (0, 0);
-			root.Size     = new Size (300, 200);
-			
-			widget.Location = new Point (30, 20);
-			widget.Size     = new Size (50, 40);
+
+			root.Bounds = new Rectangle (0, 0, 300, 200);
+			widget.Bounds = new Rectangle (30, 20, 50, 40);
 			
 			root.Children.Add (widget);
 			
@@ -982,12 +964,9 @@ namespace Epsitec.Common.Widgets
 		{
 			Widget root = new Widget ();
 			Widget widget = new Widget ();
-			
-			root.Location = new Point (100, 150);
-			root.Size     = new Size (300, 200);
-			
-			widget.Location = new Point (30, 20);
-			widget.Size     = new Size (50, 40);
+
+			root.Bounds = new Rectangle (100, 150, 300, 200);
+			widget.Bounds = new Rectangle (30, 20, 50, 40);
 			widget.SetParent (root);
 			
 //			widget.SetClientZoom (3);

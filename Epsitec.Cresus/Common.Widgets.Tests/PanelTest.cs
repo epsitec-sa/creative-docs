@@ -4,7 +4,14 @@ namespace Epsitec.Common.Widgets
 {
 	[TestFixture] public class PanelTest
 	{
-		[Test] public void CheckScrollablePanel()
+		[Test]
+		public void AutomatedTestEnvironment()
+		{
+			Epsitec.Common.Widgets.Window.RunningInAutomatedTestEnvironment = true;
+		}
+
+		[Test]
+		public void CheckScrollablePanel()
 		{
 			Window window = new Window ();
 			
@@ -27,8 +34,8 @@ namespace Epsitec.Common.Widgets
 			
 			b1.SetParent (surface.Panel);
 			b2.SetParent (surface.Panel);
-			b1.Location = new Drawing.Point (10, 20);
-			b2.Location = new Drawing.Point (b1.Right + 10, b1.Bottom);
+			b1.Bounds = new Drawing.Rectangle (10, 20, b1.Width, b1.Height);
+			b2.Bounds = new Drawing.Rectangle (b1.Right+10, b1.Bottom, b2.Width, b2.Height);
 			b1.Anchor   = AnchorStyles.TopLeft;
 			b2.Anchor   = AnchorStyles.TopLeft;
 			
@@ -110,6 +117,8 @@ namespace Epsitec.Common.Widgets
 			System.Console.Out.WriteLine ("Panel Bounds = {0}", surface.Panel.Bounds);
 			System.Console.Out.WriteLine ("Button Bounds = {0}, {1}", b1.Bounds, b2.Bounds);
 			System.Console.Out.WriteLine ("Button Bounds (root relative) = {0}, {1}", b1.MapClientToRoot (b1.Client.Bounds), b2.MapClientToRoot (b2.Client.Bounds));
+
+			Window.RunInTestEnvironment (window);
 		}
 
 		private void HandleRadioActiveStateChanged(object sender)

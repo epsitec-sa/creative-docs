@@ -341,7 +341,6 @@ namespace Epsitec.Common.Widgets
 			tip.SetToolTip(tag5, "Je suis un petit <i>smart tag</i> maison bleu.");
 
 			StaticText link = new StaticText();
-//			link.Location = new Point(360, 36);
 			link.Width = 120;
 			link.Text = @"Visitez notre <a href=""http://www.epsitec.ch"">site web</a> !";
 			link.Anchor = AnchorStyles.BottomRight;
@@ -350,13 +349,11 @@ namespace Epsitec.Common.Widgets
 			window.Root.Children.Add(link);
 			
 			SpecialWidget spec = new SpecialWidget();
-			spec.Location = new Point(540, 30);
-			spec.Width    = 40;
+			spec.Bounds = new Rectangle (540, 30, 40, spec.Height);
 			window.Root.Children.Add(spec);
 			tip.SetToolTip(spec, "*");
 
 			GroupBox box = new GroupBox();
-//			box.Location = new Point(10, 100);
 			box.Size = new Size(100, 75);
 			box.Text = "Couleur";
 			box.Anchor = AnchorStyles.BottomLeft;
@@ -365,8 +362,7 @@ namespace Epsitec.Common.Widgets
 			window.Root.Children.Add(box);
 
 			RadioButton radio1 = new RadioButton();
-			radio1.Location = new Point(10, 40);
-			radio1.Width = 80;
+			radio1.Bounds = new Rectangle (10, 40, 80, radio1.Height);
 			radio1.Text = "<font color=\"#ff0000\"><m>R</m>ouge</font>";
 			radio1.Group = "RGB";
 			radio1.TabIndex = 1;
@@ -377,8 +373,7 @@ namespace Epsitec.Common.Widgets
 			tip.SetToolTip(radio1, "Couleur rouge");
 
 			RadioButton radio2 = new RadioButton();
-			radio2.Location = new Point(10, 25);
-			radio2.Width = 80;
+			radio2.Bounds = new Rectangle (10, 25, 80, radio2.Height);
 			radio2.Text = "<font color=\"#00ff00\"><m>V</m>ert</font>";
 			radio2.Group = "RGB";
 			radio2.TabIndex = 1;
@@ -389,8 +384,7 @@ namespace Epsitec.Common.Widgets
 			tip.SetToolTip(radio2, "Couleur verte");
 
 			RadioButton radio3 = new RadioButton();
-			radio3.Location = new Point(10, 10);
-			radio3.Width = 80;
+			radio3.Bounds = new Rectangle (10, 10, 80, radio3.Height);
 			radio3.Text = "<font color=\"#0000ff\"><m>B</m>leu</font>";
 			radio3.Group = "RGB";
 			radio3.TabIndex = 1;
@@ -403,7 +397,6 @@ namespace Epsitec.Common.Widgets
 			radio1.ActiveState = ActiveState.Yes;
 
 			CheckButton check = new CheckButton();
-//			check.Location = new Point(10, 70);
 			check.Width = 100;
 			check.Text = "<m>C</m>ochez ici";
 			check.ActiveState = ActiveState.Yes;
@@ -416,7 +409,6 @@ namespace Epsitec.Common.Widgets
 			tip.SetToolTip(check, "Juste pour voir");
 
 			VScroller scrollv = new VScroller();
-//			scrollv.Location = new Point(120, 70);
 			scrollv.Size = new Size(17, 120);
 			scrollv.MaxValue = 10;
 			scrollv.VisibleRangeRatio = 0.3M;
@@ -429,7 +421,6 @@ namespace Epsitec.Common.Widgets
 			tip.SetToolTip(scrollv, "Ascenseur vertical");
 
 			HScroller scrollh = new HScroller();
-//			scrollh.Location = new Point(140, 70);
 			scrollh.Size = new Size(120, 17);
 			scrollh.MaxValue = 10;
 			scrollh.VisibleRangeRatio = 0.7M;
@@ -465,7 +456,6 @@ namespace Epsitec.Common.Widgets
 
 			TextFieldExList combo = new TextFieldExList();
 			combo.PlaceHolder = "<b>&lt;autre&gt;</b>";
-//			combo.Location = new Point(160, 220);
 			combo.Width = 100;
 			combo.Text = "Janvier";
 			combo.Cursor = combo.Text.Length;
@@ -502,7 +492,6 @@ namespace Epsitec.Common.Widgets
 			window.Root.Children.Add(combo);
 
 			TextField text = new TextField();
-//			text.Location = new Point(160, 190);
 			text.Width = 100;
 			text.Text = "Bonjour";
 			text.Cursor = text.Text.Length;
@@ -513,7 +502,6 @@ namespace Epsitec.Common.Widgets
 			window.Root.Children.Add(text);
 
 			TextFieldUpDown tud = new TextFieldUpDown();
-//			tud.Location = new Point(160, 160);
 			tud.Width = 52;
 			tud.TextSuffix = "%";
 			
@@ -533,7 +521,6 @@ namespace Epsitec.Common.Widgets
 			window.Root.Children.Add(tud);
 
 			TextFieldSlider slider = new TextFieldSlider();
-//			slider.Location = new Point(215, 160);
 			slider.Width = 45;
 			slider.Value = 50;
 			slider.MinValue = -100;
@@ -547,7 +534,6 @@ namespace Epsitec.Common.Widgets
 			window.Root.Children.Add(slider);
 
 			TextFieldMulti multi = new TextFieldMulti();
-//			multi.Location = new Point(160, 100);
 			multi.Size = new Size(100, 50);
 			multi.Text = "Ceci est une petite phrase ridicule.<br/>Mais elle est assez longue pour faire des essais.";
 			//?multi.TextLayout.JustifMode = TextJustifMode.AllButLast;
@@ -559,8 +545,6 @@ namespace Epsitec.Common.Widgets
 
 			TabBook tab = new TabBook();
 			tab.Arrows = TabBookArrows.Right;
-//			tab.Location = new Point(280, 70);
-//			tab.Size = new Size(300, 180);
 			tab.Anchor = AnchorStyles.All;
 			tab.Margins = new Margins(280, 600-280-300+100, 340-180-70, 70);
 			tab.HasMenuButton = true;
@@ -581,7 +565,6 @@ namespace Epsitec.Common.Widgets
 			tab.Items.Add(page1);
 
 			ScrollList sl = new ScrollList();
-//			sl.Location = new Point(20, 10);
 			sl.Size = new Size(90, 100);
 			sl.AdjustHeight(ScrollAdjustMode.MoveBottom);
 			sl.Items.Add("Janvier");
@@ -606,7 +589,6 @@ namespace Epsitec.Common.Widgets
 			tip.SetToolTip(sl, "Choix du mois");
 
 			StaticText st2 = new StaticText();
-//			st2.Location = new Point(160, 120);
 			st2.Width = 90;
 			st2.Text = "Non éditable :";
 			st2.Anchor = AnchorStyles.TopLeft;
@@ -614,7 +596,6 @@ namespace Epsitec.Common.Widgets
 			page1.Children.Add(st2);
 
 			TextField textfix = new TextField();
-//			textfix.Location = new Point(160, 80);
 			textfix.Width = 100;
 			textfix.Text = "Texte fixe";
 			textfix.IsReadOnly = true;
@@ -623,7 +604,6 @@ namespace Epsitec.Common.Widgets
 			page1.Children.Add(textfix);
 
 			TextFieldCombo combofix = new TextFieldCombo();
-//			combofix.Location = new Point(160, 50);
 			combofix.Width = 100;
 			combofix.Text = "Mardi";
 			combofix.IsReadOnly = true;
@@ -662,8 +642,6 @@ namespace Epsitec.Common.Widgets
 			table.StyleV |= CellArrayStyles.SelectLine;
 			table.StyleV |= CellArrayStyles.SelectMulti;
 			table.StyleV |= CellArrayStyles.Sort;
-//			table.Location = new Point(10, 10);
-//			table.Size = new Size(inside.Width-20, inside.Height-20);
 			table.SetArraySize(5, 12);
 
 			table.SetHeaderTextH(0, "A");
@@ -1122,23 +1100,20 @@ namespace Epsitec.Common.Widgets
 
 			Button a = new Button();
 			a.Name = "A";
-			a.Location = new Point(10, 10);
-			a.Size = new Size(75, 24);
+			a.Bounds = new Rectangle (10, 10, 75, 24);
 			a.Text = "OK";
 			a.ButtonStyle = ButtonStyle.DefaultAccept;
 			page1.Children.Add(a);
 
 			Button b = new Button();
 			b.Name = "B";
-			b.Location = new Point(95, 10);
-			b.Size = new Size(75, 24);
+			b.Bounds = new Rectangle (95, 10, 75, 24);
 			b.Text = "<m>A</m>nnuler";
 			page1.Children.Add(b);
 
 			TextFieldMulti multi = new TextFieldMulti();
 			multi.Name = "Multi";
-			multi.Location = new Point(10, 45);
-			multi.Size = new Size(350, 200);
+			multi.Bounds = new Rectangle (10, 45, 350, 200);
 			multi.Text = "1. Introduction<br/><br/>Les onglets permettent de mettre beaucoup de widgets sur une petite surface, ce qui s'avère extrèmement utile et diablement pratique.<br/><br/>2. Conclusion<br/><br/>Un truc chouette, qui sera certainement très utile dans le nouveau Crésus !";
 			multi.Anchor = AnchorStyles.All;
 			multi.Margins = new Margins(10, 10, 20, 40);
@@ -1152,8 +1127,7 @@ namespace Epsitec.Common.Widgets
 
 			VScroller scrollv = new VScroller();
 			scrollv.Name = "Scroller";
-			scrollv.Location = new Point(10, 10);
-			scrollv.Size = new Size(17, tb.Client.Bounds.Height-tb.InternalPadding.Height-20);
+			scrollv.Bounds = new Rectangle (10, 10, 17, tb.Client.Bounds.Height-tb.InternalPadding.Height-20);
 			scrollv.MaxValue = 10;
 			scrollv.VisibleRangeRatio = 0.3M;
 			scrollv.Value = 1;
@@ -1169,8 +1143,7 @@ namespace Epsitec.Common.Widgets
 
 			StaticText st = new StaticText();
 			st.Name = "Static";
-			st.Location = new Point(50, 130);
-			st.Size = new Size(200, 15);
+			st.Bounds = new Rectangle (50, 130, 200, 15);
 			st.Text = "<b>Onglet</b> volontairement <i>vide</i> !";
 			page3.Children.Add(st);
 
@@ -1184,8 +1157,7 @@ namespace Epsitec.Common.Widgets
 
 			StaticText link = new StaticText();
 			link.Name = "Link";
-			link.Location = new Point(10, 50);
-			link.Size = new Size(200, 15);
+			link.Bounds = new Rectangle (10, 50, 200, 15);
 			link.Text = "Voir sur <a href=\"www.epsitec.ch\">www.epsitec.ch</a> !";
 			page4.Children.Add(link);
 
@@ -1197,8 +1169,7 @@ namespace Epsitec.Common.Widgets
 
 			Button add = new Button();
 			add.Name = "Add";
-			add.Location = new Point(100, 100);
-			add.Size = new Size(140, 24);
+			add.Bounds = new Rectangle (100, 100, 140, 24);
 			add.Text = "<m>A</m>jouter un onglet";
 			add.ButtonStyle = ButtonStyle.DefaultAccept;
 			add.Clicked += new MessageEventHandler(this.HandleAdd);
@@ -1257,7 +1228,6 @@ namespace Epsitec.Common.Widgets
 			this.CreateListLook(window.Root, 10, 10, null, -1);
 
 			StaticText title = new StaticText();
-//			title.Location = new Point(120, 245);
 			title.Size = new Size(280, 15);
 			title.Text = "Sélections possibles avec Ctrl et/ou Shift :";
 			title.Anchor = AnchorStyles.TopLeft;
@@ -1272,8 +1242,7 @@ namespace Epsitec.Common.Widgets
 			table.StyleV  = CellArrayStyles.ScrollNorm;
 			table.StyleV |= CellArrayStyles.Separator;
 			table.Name = "Table";
-			table.Location = new Point(10, 20);
-			table.Size = new Size(380, 200);
+			table.Bounds = new Rectangle (10, 20, 380, 200);
 			table.SetArraySize(5, 12);
 			for ( int y=0 ; y<12 ; y++ )
 			{
@@ -1349,8 +1318,7 @@ namespace Epsitec.Common.Widgets
 			this.CreateListLook(window.Root, 10, 10, null, -1);
 
 			StaticText title = new StaticText();
-			title.Location = new Point(120, 245);
-			title.Size = new Size(380, 15);
+			title.Bounds = new Rectangle (120, 245, 380, 15);
 			title.Text = "Tableau de lignes editables et redimensionnable :";
 			title.Anchor = AnchorStyles.TopLeft;
 			title.Margins = new Margins(120, 0, 55, 0);
@@ -1365,8 +1333,7 @@ namespace Epsitec.Common.Widgets
 			table.StyleV |= CellArrayStyles.Separator;
 			table.DefHeight = 20;
 			table.Name = "Table";
-			table.Location = new Point(10, 20);
-			table.Size = new Size(480, 200);
+			table.Bounds = new Rectangle (10, 20, 480, 200);
 			table.SetArraySize(5, 6);
 			table.SetWidthColumn(0, 30);
 			table.SetWidthColumn(1, 200);
@@ -1424,8 +1391,7 @@ namespace Epsitec.Common.Widgets
 			this.CreateListLook(window.Root, 10, 10, null, -1);
 
 			StaticText title = new StaticText();
-			title.Location = new Point(120, 245);
-			title.Size = new Size(280, 15);
+			title.Bounds = new Rectangle (120, 245, 280, 15);
 			title.Text = "Tableau redimensionnable non éditable :";
 			title.Anchor = AnchorStyles.TopLeft;
 			title.Margins = new Margins(120, 0, 55, 0);
@@ -1445,8 +1411,7 @@ namespace Epsitec.Common.Widgets
 			table.StyleV |= CellArrayStyles.Mobile;
 			table.StyleV |= CellArrayStyles.Sort;
 			table.Name = "Table";
-			table.Location = new Point(10, 20);
-			table.Size = new Size(380, 200);
+			table.Bounds = new Rectangle (10, 20, 380, 200);
 			table.SetArraySize(5, 12);
 
 			table.SetHeaderTextH(0, "A");
@@ -1513,16 +1478,14 @@ namespace Epsitec.Common.Widgets
 			this.CreateListLook(window.Root, 10, 10, null, -1);
 
 			StaticText title = new StaticText();
-			title.Location = new Point(120, 245);
-			title.Size = new Size(280, 15);
+			title.Bounds = new Rectangle (120, 245, 280, 15);
 			title.Text = "Tableau rapide pour liste de gauche :";
 			title.Anchor = AnchorStyles.TopLeft;
 			title.Margins = new Margins(120, 0, 55, 0);
 			window.Root.Children.Add(title);
 
 			ScrollArray table = new ScrollArray();
-			table.Location = new Point(10, 20);
-			table.Size = new Size(380, 200);
+			table.Bounds = new Rectangle (10, 20, 380, 200);
 			table.ColumnCount = 5;
 			for ( int x=0 ; x<table.ColumnCount ; x++ )
 			{
@@ -1617,9 +1580,7 @@ namespace Epsitec.Common.Widgets
 			book.Items.Add(p1);
 
 			Button button1 = new Button();
-			button1.Location = new Point(10, 10);
-			button1.Width = p1.Width-20;
-			button1.Height = p1.Height-20;
+			button1.Bounds = new Rectangle (10, 10, p1.Width-20, p1.Height-20);
 			button1.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
 			button1.Text = "P1";
 			p1.Children.Add(button1);
@@ -1639,15 +1600,8 @@ namespace Epsitec.Common.Widgets
 			book.Items.Add(p3);
 
 			Button button3 = new Button();
-#if true
 			button3.Dock = DockStyle.Fill;
 			p3.Padding = new Margins (10, 10, 10, 10);
-#else
-			button3.Location = new Point(10, 10);
-			button3.Width = p3.Width-20;
-			button3.Height = p3.Height-20;
-			button3.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
-#endif
 			button3.Text = "P3";
 			p3.Children.Add(button3);
 
@@ -1658,17 +1612,14 @@ namespace Epsitec.Common.Widgets
 			book.Items.Add(p4);
 
 			Button button4 = new Button();
-			button4.Location = new Point(10, 10);
-			button4.Width = p4.Width-20;
-			button4.Height = p4.Height-20;
+			button4.Bounds = new Rectangle (10, 10, p4.Width-20, p4.Height-20);
 			button4.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
 			button4.Text = "P4";
 			p4.Children.Add(button4);
 
 			//	-----
 			PaneBook bookv = new PaneBook();
-			bookv.Location = new Point(0, 0);
-			bookv.Size = p2.Size;
+			bookv.Bounds = new Rectangle (0, 0, p2.Width, p2.Height);
 			bookv.PaneBookStyle = PaneBookStyle.BottomTop;
 			bookv.PaneBehaviour = PaneBookBehaviour.FollowMe;
 			//bookv.PaneBehaviour = PaneBookBehaviour.Draft;
@@ -1681,9 +1632,7 @@ namespace Epsitec.Common.Widgets
 			bookv.Items.Add(v1);
 
 			Button buttonv1 = new Button();
-			buttonv1.Location = new Point(10, 10);
-			buttonv1.Width = v1.Width-20;
-			buttonv1.Height = v1.Height-20;
+			buttonv1.Bounds = new Rectangle (10, 10, v1.Width-20, v1.Height-20);
 			buttonv1.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
 			buttonv1.Text = "P2.1";
 			v1.Children.Add(buttonv1);
@@ -1694,9 +1643,7 @@ namespace Epsitec.Common.Widgets
 			bookv.Items.Add(v2);
 
 			Button buttonv2 = new Button();
-			buttonv2.Location = new Point(10, 10);
-			buttonv2.Width = v2.Width-20;
-			buttonv2.Height = v2.Height-20;
+			buttonv2.Bounds = new Rectangle (10, 10, v2.Width-20, v2.Height-20);
 			buttonv2.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
 			buttonv2.Text = "P2.2";
 			v2.Children.Add(buttonv2);
@@ -1726,9 +1673,7 @@ namespace Epsitec.Common.Widgets
 			book.Items.Add(p1);
 
 			Button button1 = new Button();
-			button1.Location = new Point(10, 10);
-			button1.Width = p1.Width-20;
-			button1.Height = p1.Height-20;
+			button1.Bounds = new Rectangle (10, 10, p1.Width-20, p1.Height-20);
 			button1.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
 			button1.Text = "P1";
 			p1.Children.Add(button1);
@@ -1740,9 +1685,7 @@ namespace Epsitec.Common.Widgets
 			book.Items.Add(p2);
 
 			Button button2 = new Button();
-			button2.Location = new Point(10, 10);
-			button2.Width = p2.Width-20;
-			button2.Height = p2.Height-20;
+			button2.Bounds = new Rectangle (10, 10, p2.Width-20, p2.Height-20);
 			button2.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
 			button2.Text = "P2";
 			p2.Children.Add(button2);
@@ -1773,9 +1716,7 @@ namespace Epsitec.Common.Widgets
 			book.Items.Add(p1);
 
 			Button button1 = new Button();
-			button1.Location = new Point(10, 10);
-			button1.Width = p1.Width-20;
-			button1.Height = p1.Height-20;
+			button1.Bounds = new Rectangle (10, 10, p1.Width-20, p1.Height-20);
 			button1.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
 			button1.Text = "P1";
 			p1.Children.Add(button1);
@@ -1788,9 +1729,7 @@ namespace Epsitec.Common.Widgets
 			book.Items.Add(p2);
 
 			Button button2 = new Button();
-			button2.Location = new Point(10, 10);
-			button2.Width = p2.Width-20;
-			button2.Height = p2.Height-20;
+			button2.Bounds = new Rectangle (10, 10, p2.Width-20, p2.Height-20);
 			button2.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
 			button2.Text = "P2";
 			p2.Children.Add(button2);

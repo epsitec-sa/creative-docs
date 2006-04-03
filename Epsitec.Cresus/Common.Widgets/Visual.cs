@@ -129,19 +129,6 @@ namespace Epsitec.Common.Widgets
 				this.SetValue (Visual.AnchorProperty, value);
 			}
 		}
-		
-		public Drawing.Margins					Margins
-		{
-			get
-			{
-				return (Drawing.Margins) this.GetValue (Visual.MarginsProperty);
-			}
-			set
-			{
-				this.SetValue (Visual.MarginsProperty, value);
-			}
-		}
-		
 		public DockStyle						Dock
 		{
 			get
@@ -153,7 +140,17 @@ namespace Epsitec.Common.Widgets
 				this.SetValue (Visual.DockProperty, value);
 			}
 		}
-		
+		public Drawing.Margins					Margins
+		{
+			get
+			{
+				return (Drawing.Margins) this.GetValue (Visual.MarginsProperty);
+			}
+			set
+			{
+				this.SetValue (Visual.MarginsProperty, value);
+			}
+		}
 		public Drawing.Margins					Padding
 		{
 			get
@@ -163,6 +160,28 @@ namespace Epsitec.Common.Widgets
 			set
 			{
 				this.SetValue (Visual.PaddingProperty, value);
+			}
+		}
+		public HorizontalAlignment				HorizontalAlignment
+		{
+			get
+			{
+				return (HorizontalAlignment) this.GetValue (Visual.HorizontalAlignmentProperty);
+			}
+			set
+			{
+				this.SetValue (Visual.HorizontalAlignmentProperty, value);
+			}
+		}
+		public VerticalAlignment				VerticalAlignment
+		{
+			get
+			{
+				return (VerticalAlignment) this.GetValue (Visual.VerticalAlignmentProperty);
+			}
+			set
+			{
+				this.SetValue (Visual.VerticalAlignmentProperty, value);
 			}
 		}
 		
@@ -235,7 +254,7 @@ namespace Epsitec.Common.Widgets
 			{
 				return new Drawing.Point (this.left, this.bottom);
 			}
-			set
+			private set
 			{
 				Drawing.Rectangle bounds = this.Bounds;
 				
@@ -1254,9 +1273,12 @@ namespace Epsitec.Common.Widgets
 		public static readonly DependencyProperty WindowProperty				= DependencyProperty.RegisterReadOnly ("Window", typeof (Window), typeof (Visual), new VisualPropertyMetadata (null, VisualPropertyMetadataOptions.InheritsValue | VisualPropertyMetadataOptions.ChangesSilently));
 		
 		public static readonly DependencyProperty AnchorProperty				= DependencyProperty.Register ("Anchor", typeof (AnchorStyles), typeof (Visual), new VisualPropertyMetadata (AnchorStyles.None, VisualPropertyMetadataOptions.AffectsArrange));
-		public static readonly DependencyProperty MarginsProperty				= DependencyProperty.Register ("Margins", typeof (Drawing.Margins), typeof (Visual), new VisualPropertyMetadata (Drawing.Margins.Zero, VisualPropertyMetadataOptions.AffectsArrange));
 		public static readonly DependencyProperty DockProperty					= DependencyProperty.Register ("Dock", typeof (DockStyle), typeof (Visual), new VisualPropertyMetadata (DockStyle.None, VisualPropertyMetadataOptions.AffectsArrange));
+		public static readonly DependencyProperty MarginsProperty				= DependencyProperty.Register ("Margins", typeof (Drawing.Margins), typeof (Visual), new VisualPropertyMetadata (Drawing.Margins.Zero, VisualPropertyMetadataOptions.AffectsArrange));
 		public static readonly DependencyProperty PaddingProperty				= DependencyProperty.Register ("Padding", typeof (Drawing.Margins), typeof (Visual), new VisualPropertyMetadata (Drawing.Margins.Zero, VisualPropertyMetadataOptions.AffectsArrange));
+		public static readonly DependencyProperty HorizontalAlignmentProperty	= DependencyProperty.Register ("HorizontalAlignment", typeof (HorizontalAlignment), typeof (Visual), new VisualPropertyMetadata (HorizontalAlignment.Stretch, VisualPropertyMetadataOptions.AffectsArrange));
+		public static readonly DependencyProperty VerticalAlignmentProperty		= DependencyProperty.Register ("VerticalAlignment", typeof (VerticalAlignment), typeof (Visual), new VisualPropertyMetadata (VerticalAlignment.Stretch, VisualPropertyMetadataOptions.AffectsArrange));
+		
 		public static readonly DependencyProperty ContainerLayoutModeProperty	= DependencyProperty.Register ("ContainerLayoutMode", typeof (ContainerLayoutMode), typeof (Visual), new VisualPropertyMetadata (ContainerLayoutMode.VerticalFlow, VisualPropertyMetadataOptions.AffectsChildrenLayout));
 		
 		public static readonly DependencyProperty BoundsProperty				= DependencyProperty.RegisterReadOnly ("Bounds", typeof (Drawing.Rectangle), typeof (Visual), new DependencyPropertyMetadata (Drawing.Rectangle.Empty, new GetValueOverrideCallback (Visual.GetBoundsValue)));

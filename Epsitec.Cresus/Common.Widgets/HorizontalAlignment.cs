@@ -5,12 +5,10 @@ namespace Epsitec.Common.Widgets
 {
 	public enum HorizontalAlignment
 	{
-		None	= 0,
+		Stretch		= 0,
 
-		Top		= 1,				//	colle en haut
-		Bottom	= 2,				//	colle en bas
-		Left	= 3,				//	colle à gauche
-		Right	= 4,				//	colle à droite
-		Fill	= 5,				//	remplit tout
+		Left		= 1,
+		Center		= 2,
+		Right		= 3
 	}
 }
