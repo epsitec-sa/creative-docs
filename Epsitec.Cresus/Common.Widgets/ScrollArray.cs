@@ -1187,6 +1187,7 @@ invalid:	row    = -1;
 		}
 
 		
+#if false
 		public bool AdjustHeight(ScrollAdjustMode mode)
 		{
 			//	Ajuste la hauteur pour afficher pile un nombre entier de lignes.
@@ -1292,7 +1293,7 @@ invalid:	row    = -1;
 			this.Invalidate ();
 			return true;
 		}
-
+#endif
 		
 		protected void SetFirstVirtualVisibleIndex(int value)
 		{

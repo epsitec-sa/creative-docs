@@ -109,7 +109,7 @@ namespace Epsitec.Common.Types
 					(this.inheritedPropertyCache.TryGetValue (this, property, out value)))
 				{
 					//	Re-use cached value.
-					System.Diagnostics.Debug.WriteLine ("Reuse cached value " + (value == null ? "<null>" : value.ToString ()));
+				//-	System.Diagnostics.Debug.WriteLine ("Reuse cached value " + (value == null ? "<null>" : value.ToString ()));
 				}
 				else
 				{

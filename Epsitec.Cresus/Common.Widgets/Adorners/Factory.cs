@@ -82,6 +82,7 @@ namespace Epsitec.Common.Widgets.Adorners
 			{
 				string[] names = new string[Factory.adorner_list.Count];
 				Factory.adorner_list.CopyTo (names);
+				System.Array.Sort (names);
 				return names;
 			}
 		}

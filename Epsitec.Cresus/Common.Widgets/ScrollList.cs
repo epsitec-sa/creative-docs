@@ -192,8 +192,8 @@ namespace Epsitec.Common.Widgets
 		public override Drawing.Size GetBestFitSize()
 		{
 			double margin = ScrollList.TextOffsetY * 2;
-			double height = this.lineHeight * this.items.Count;
-			double width  = this.Width;
+			double height = System.Math.Min (this.lineHeight * this.items.Count, this.MaxSize.Height);
+			double width  = this.PreferredWidth;
 			
 			double dy = height;
 			
@@ -209,7 +209,7 @@ namespace Epsitec.Common.Widgets
 			return new Drawing.Size (width, height);
 		}
 
-
+#if false
 		public bool AdjustHeight(ScrollAdjustMode mode)
 		{
 			//	Ajuste la hauteur pour afficher pile un nombre entier de lignes.
@@ -220,7 +220,7 @@ namespace Epsitec.Common.Widgets
 			return this.AdjustHeightToRows (mode, count);
 		}
 
-		public bool AdjustHeightToContent(ScrollAdjustMode mode, double min_height, double max_height)
+		bool AdjustHeightToContent(ScrollAdjustMode mode, double min_height, double max_height)
 		{
 			//	Ajuste la hauteur pour afficher exactement le nombre de lignes contenues.
 			
@@ -288,7 +288,7 @@ namespace Epsitec.Common.Widgets
 			this.Invalidate();
 			return true;
 		}
-		
+#endif
 		
 		public override Drawing.Rectangle GetShapeBounds()
 		{
@@ -489,7 +489,7 @@ namespace Epsitec.Common.Widgets
 						this.textLayouts[i] = new TextLayout();
 					}
 					
-					string text = this.items[i+this.firstLine];
+					string text = (i+this.firstLine < this.items.Count) ? this.items[i+this.firstLine] : "";
 					
 					this.textLayouts[i].ResourceManager = this.ResourceManager;
 					this.textLayouts[i].Text            = text;	//@	this.AutoResolveResRef ? this.ResourceManager.ResolveTextRef (text) : text;

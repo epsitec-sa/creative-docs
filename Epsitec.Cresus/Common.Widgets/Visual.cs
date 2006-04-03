@@ -329,11 +329,53 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return (Drawing.Size) this.GetValue (Visual.PreferredSizeProperty);
+				return new Drawing.Size (this.PreferredWidth, this.PreferredHeight);
 			}
 			set
 			{
-				this.SetValue (Visual.PreferredSizeProperty, value);
+				double width = value.Width;
+				double height = value.Height;
+
+				this.SuspendLayout ();
+				this.SetValue (Visual.PreferredWidthProperty, width);
+				this.SetValue (Visual.PreferredHeightProperty, height);
+				this.ResumeLayout ();
+			}
+		}
+		public double							PreferredWidth
+		{
+			get
+			{
+				return (double) this.GetValue (Visual.PreferredWidthProperty);
+			}
+			set
+			{
+				this.SetValue (Visual.PreferredWidthProperty, value);
+			}
+		}
+		public double							PreferredHeight
+		{
+			get
+			{
+				return (double) this.GetValue (Visual.PreferredHeightProperty);
+			}
+			set
+			{
+				this.SetValue (Visual.PreferredHeightProperty, value);
+			}
+		}
+		public double							ActualWidth
+		{
+			get
+			{
+				return this.width;
+			}
+		}
+		public double							ActualHeight
+		{
+			get
+			{
+				return this.height;
 			}
 		}
 		
@@ -391,7 +433,7 @@ namespace Epsitec.Common.Widgets
 			{
 				return this.Bounds.Left;
 			}
-			set
+			private set
 			{
 				Drawing.Rectangle bounds = this.Bounds;
 				
@@ -407,7 +449,7 @@ namespace Epsitec.Common.Widgets
 			{
 				return this.Bounds.Right;
 			}
-			set
+			private set
 			{
 				Drawing.Rectangle bounds = this.Bounds;
 				
@@ -423,7 +465,7 @@ namespace Epsitec.Common.Widgets
 			{
 				return this.Bounds.Top;
 			}
-			set
+			private set
 			{
 				Drawing.Rectangle bounds = this.Bounds;
 				
@@ -439,7 +481,7 @@ namespace Epsitec.Common.Widgets
 			{
 				return this.Bounds.Bottom;
 			}
-			set
+			private set
 			{
 				Drawing.Rectangle bounds = this.Bounds;
 				
@@ -944,6 +986,17 @@ namespace Epsitec.Common.Widgets
 			Visual that = o as Visual;
 			return that.Bounds;
 		}
+
+		private static object GetActualWidthValue(DependencyObject o)
+		{
+			Visual that = o as Visual;
+			return that.ActualWidth;
+		}
+		private static object GetActualHeightValue(DependencyObject o)
+		{
+			Visual that = o as Visual;
+			return that.ActualHeight;
+		}
 		
 		private static object GetSizeValue(DependencyObject o)
 		{
@@ -1283,7 +1336,10 @@ namespace Epsitec.Common.Widgets
 		
 		public static readonly DependencyProperty BoundsProperty				= DependencyProperty.RegisterReadOnly ("Bounds", typeof (Drawing.Rectangle), typeof (Visual), new DependencyPropertyMetadata (Drawing.Rectangle.Empty, new GetValueOverrideCallback (Visual.GetBoundsValue)));
 		public static readonly DependencyProperty SizeProperty					= DependencyProperty.Register ("Size", typeof (Drawing.Size), typeof (Visual), new DependencyPropertyMetadata (new GetValueOverrideCallback (Visual.GetSizeValue), new SetValueOverrideCallback (Visual.SetSizeValue), new PropertyInvalidatedCallback (Visual.NotifySizeChanged)));
-		public static readonly DependencyProperty PreferredSizeProperty			= DependencyProperty.Register ("PreferredSize", typeof (Drawing.Size), typeof (Visual), new VisualPropertyMetadata (Drawing.Size.Empty, VisualPropertyMetadataOptions.AffectsArrange));
+		public static readonly DependencyProperty PreferredWidthProperty		= DependencyProperty.Register ("PreferredWidth", typeof (double), typeof (Visual), new VisualPropertyMetadata (double.NaN, VisualPropertyMetadataOptions.AffectsArrange));
+		public static readonly DependencyProperty PreferredHeightProperty		= DependencyProperty.Register ("PreferredHeight", typeof (double), typeof (Visual), new VisualPropertyMetadata (double.NaN, VisualPropertyMetadataOptions.AffectsArrange));
+		public static readonly DependencyProperty ActualWidthProperty			= DependencyProperty.RegisterReadOnly ("ActualWidth", typeof (double), typeof (Visual), new VisualPropertyMetadata (Visual.GetActualWidthValue, VisualPropertyMetadataOptions.None));
+		public static readonly DependencyProperty ActualHeightProperty			= DependencyProperty.RegisterReadOnly ("ActualHeight", typeof (double), typeof (Visual), new VisualPropertyMetadata (Visual.GetActualHeightValue, VisualPropertyMetadataOptions.None));
 		public static readonly DependencyProperty MinSizeProperty				= DependencyProperty.Register ("MinSize", typeof (Drawing.Size), typeof (Visual), new VisualPropertyMetadata (Drawing.Size.Empty, new PropertyInvalidatedCallback (Visual.NotifyMinSizeChanged), VisualPropertyMetadataOptions.AffectsArrange));
 		public static readonly DependencyProperty MaxSizeProperty				= DependencyProperty.Register ("MaxSize", typeof (Drawing.Size), typeof (Visual), new VisualPropertyMetadata (Drawing.Size.Infinite, new PropertyInvalidatedCallback (Visual.NotifyMaxSizeChanged), VisualPropertyMetadataOptions.AffectsArrange));
 		

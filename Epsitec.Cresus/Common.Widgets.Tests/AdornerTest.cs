@@ -565,8 +565,6 @@ namespace Epsitec.Common.Widgets
 			tab.Items.Add(page1);
 
 			ScrollList sl = new ScrollList();
-			sl.Size = new Size(90, 100);
-			sl.AdjustHeight(ScrollAdjustMode.MoveBottom);
 			sl.Items.Add("Janvier");
 			sl.Items.Add("Fevrier");
 			sl.Items.Add("Mars <i>(A)</i>");
@@ -579,9 +577,11 @@ namespace Epsitec.Common.Widgets
 			sl.Items.Add("Octobre");
 			sl.Items.Add("Novembre");
 			sl.Items.Add("Decembre");
+			sl.MaxSize = new Size (90, 100);
+			sl.PreferredSize = sl.GetBestFitSize ();
 			sl.SelectedIndex = 5;  // sélectionne juin
 			sl.ShowSelected(ScrollShowMode.Center);
-			sl.Anchor = AnchorStyles.TopAndBottom|AnchorStyles.Left;
+			sl.Anchor = AnchorStyles.Top|AnchorStyles.Left;
 			sl.Margins = new Margins(10, 0, 10, 10);
 			sl.TabIndex = 1;
 			sl.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
@@ -1521,10 +1521,7 @@ namespace Epsitec.Common.Widgets
 			ScrollList sl = new ScrollList();
 			
 			sl.SetParent (parent);
-			sl.Size = new Size(100, 64);
-			sl.Anchor = AnchorStyles.TopLeft;
-			sl.Margins = new Margins(mx, 0, my, 0);
-			sl.AdjustHeight(ScrollAdjustMode.MoveBottom);
+			
 			if ( tab != -1 )
 			{
 				sl.TabIndex = tab;
@@ -1541,6 +1538,11 @@ namespace Epsitec.Common.Widgets
 				i ++;
 			}
 
+			sl.MaxSize = new Size (100, 64);
+			sl.PreferredSize = sl.GetBestFitSize ();
+			sl.Anchor = AnchorStyles.TopLeft;
+			sl.Margins = new Margins (mx, 0, my, 0);
+			
 			sl.SelectedIndex = sel;
 			sl.ShowSelected(ScrollShowMode.Center);
 			sl.SelectedIndexChanged += new EventHandler(this.HandleLook);

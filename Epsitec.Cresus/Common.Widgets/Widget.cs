@@ -3449,16 +3449,28 @@ namespace Epsitec.Common.Widgets
 						double x2 = child.Right;
 						double y1 = child.Bottom;
 						double y2 = child.Top;
+
+						double dx = child.PreferredWidth;
+						double dy = child.PreferredHeight;
+
+						if (double.IsNaN (dx))
+						{
+							dx = child.Width;
+						}
+						if (double.IsNaN (dy))
+						{
+							dy = child.Height;
+						}
 						
 						switch (anchor_x)
 						{
 							case AnchorStyles.Left:							//	[x1] fixe à gauche
 								x1 = child.Margins.Left;
-								x2 = x1 + child.Width;
+								x2 = x1 + dx;
 								break;
 							case AnchorStyles.Right:						//	[x2] fixe à droite
 								x2 = this.Client.Width - child.Margins.Right;
-								x1 = x2 - child.Width;
+								x1 = x2 - dx;
 								break;
 							case AnchorStyles.None:							//	ne touche à rien...
 								break;
@@ -3472,11 +3484,11 @@ namespace Epsitec.Common.Widgets
 						{
 							case AnchorStyles.Bottom:						//	[y1] fixe en bas
 								y1 = child.Margins.Bottom;
-								y2 = y1 + child.Height;
+								y2 = y1 + dy;
 								break;
 							case AnchorStyles.Top:							//	[y2] fixe en haut
 								y2 = this.Client.Height - child.Margins.Top;
-								y1 = y2 - child.Height;
+								y1 = y2 - dy;
 								break;
 							case AnchorStyles.None:							//	ne touche à rien...
 								break;
