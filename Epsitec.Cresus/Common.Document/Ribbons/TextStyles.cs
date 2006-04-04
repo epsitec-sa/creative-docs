@@ -80,6 +80,8 @@ namespace Epsitec.Common.Document.Ribbons
 
 				this.comboStyle.SelectedName = null;
 				this.comboStyle.Enable = false;
+				this.comboStyle.Items.Clear();
+				this.comboStyle.UpdateButtons();
 			}
 			else
 			{

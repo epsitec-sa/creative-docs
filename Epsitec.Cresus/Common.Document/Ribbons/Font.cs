@@ -66,6 +66,8 @@ namespace Epsitec.Common.Document.Ribbons
 			{
 				this.comboFont.SelectedName = null;
 				this.comboFont.Enable = false;
+				this.comboFont.Items.Clear();
+				this.comboFont.UpdateButtons();
 			}
 			else
 			{
