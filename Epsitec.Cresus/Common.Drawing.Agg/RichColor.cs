@@ -1206,7 +1206,7 @@ namespace Epsitec.Common.Drawing
 			this.value2 = info.GetDouble("V2");
 			this.value3 = info.GetDouble("V3");
 			this.value4 = info.GetDouble("V4");
-			this.isEmpty = info.GetBoolean("IsZero");
+			this.isEmpty = info.GetBoolean("IsEmpty");
 			this.name = info.GetString("Name");
 #endif
 		}
@@ -1219,7 +1219,7 @@ namespace Epsitec.Common.Drawing
 			info.AddValue("V2", this.value2);
 			info.AddValue("V3", this.value3);
 			info.AddValue("V4", this.value4);
-			info.AddValue("IsZero", this.isEmpty);
+			info.AddValue ("IsEmpty", this.isEmpty);
 			info.AddValue("Name", this.name);
 		}
 		#endregion
