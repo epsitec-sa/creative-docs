@@ -197,5 +197,55 @@ namespace Epsitec.Common.Widgets
 			Assert.AreEqual (a, array[0]);
 			Assert.AreEqual (b, array[1]);
 		}
+
+		[Test]
+		public void CheckArrange3()
+		{
+			Visual a = new Visual ();
+			Visual b = new Visual ();
+			Visual c1 = new Visual ();
+			Visual c2 = new Visual ();
+
+			a.Name = "a";
+			b.Name = "b";
+			c1.Name = "c1";
+			c2.Name = "c2";
+			
+			a.Children.Add (b);
+			b.Children.Add (c1);
+			b.Children.Add (c2);
+
+			a.Bounds = new Drawing.Rectangle (0, 0, 100, 200);
+			
+			b.Dock = DockStyle.Fill;
+			b.Padding = new Drawing.Margins (5, 5, 10, 10);
+			
+			c1.Dock = DockStyle.Top;
+			c2.Dock = DockStyle.Top;
+
+			c1.PreferredHeight = 20;
+			c2.PreferredHeight = 30;
+
+			Layouts.LayoutContext context = Helpers.VisualTree.GetLayoutContext (a);
+
+			foreach (Visual visual in context.GetMeasureQueue ())
+			{
+				System.Console.Out.WriteLine ("Measure: {0}", visual.Name);
+			}
+
+			foreach (Visual visual in context.GetArrangeQueue ())
+			{
+				System.Console.Out.WriteLine ("Arrange: {0}", visual.Name);
+			}
+
+			context.ExecuteMeasure ();
+
+			System.Console.Out.WriteLine ("Executed Measure. Resulting arrange queue contents:");
+
+			foreach (Visual visual in context.GetArrangeQueue ())
+			{
+				System.Console.Out.WriteLine ("Arrange: {0}", visual.Name);
+			}
+		}
 	}
 }

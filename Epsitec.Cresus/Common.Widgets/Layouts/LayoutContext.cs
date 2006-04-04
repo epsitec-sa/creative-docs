@@ -81,15 +81,15 @@ namespace Epsitec.Common.Widgets.Layouts
 
 			if (this.measureQueue.ContainsKey (node))
 			{
-				node.DefineRank (rank);
 				this.measureQueue.Remove (node);
 			}
 			else
 			{
-				node.DefineRank (rank);
-				this.measureQueue.Add (node, visual);
 				this.measureChanges++;
 			}
+			
+			node.DefineRank (rank);
+			this.measureQueue.Add (node, visual);
 		}
 		private void AddToArrangeQueue(Visual visual, int depth)
 		{
@@ -98,15 +98,15 @@ namespace Epsitec.Common.Widgets.Layouts
 			
 			if (this.arrangeQueue.ContainsKey (node))
 			{
-				node.DefineRank (rank);
-				this.arrangeQueue[node] = visual;
+				this.arrangeQueue.Remove (node);
 			}
 			else
 			{
-				node.DefineRank (rank);
-				this.arrangeQueue.Add (node, visual);
 				this.arrangeChanges++;
 			}
+			
+			node.DefineRank (rank);
+			this.arrangeQueue[node] = visual;
 		}
 
 		public void ExecuteMeasure()
