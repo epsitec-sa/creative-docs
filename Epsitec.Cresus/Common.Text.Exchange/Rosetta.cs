@@ -61,12 +61,17 @@ namespace Epsitec.Common.Text.Exchange
 			return this.text.ToString() ;
 		}
 
+		public byte[] GetBytes()
+		{
+			return System.Text.Encoding.UTF8.GetBytes (this.text.ToString ());
+		}
+
 		private void UpdateOffset(string offsetname, int offset)
 		{
 			this.text.Replace (offsetname, string.Format ("{0,9:d9}", offset));
 		}
 
-		private ExchangeStringBuilder text = new ExchangeStringBuilder() ;
+		private StringBuilder text = new StringBuilder() ;
 		private int offsetHtml;
 	}
 
@@ -75,40 +80,58 @@ namespace Epsitec.Common.Text.Exchange
 	{
 		public ExchangeStringBuilder()
 		{
-			theBuilder = new StringBuilder ();
+			theBuilder = new System.Collections.Generic.List<byte> ();
 		}
 
 		public void Append(string str)
 		{
-			this.length += str.Length ;
-			theBuilder.Append (str);
+			UTF8Encoding utf8 = new UTF8Encoding ();
+			byte[] encodedBytes = utf8.GetBytes (str);
+
+			for (int i = 0; i < encodedBytes.Length; i++)
+			{
+				this.theBuilder.Add(encodedBytes[i]);
+			}
 		}
 
 		public void AppendLine(string str)
 		{
 			this.length += str.Length + 2 ;
-			theBuilder.AppendLine(str) ;
+			this.Append(str) ;
+			this.theBuilder.Add ((byte) '\r');
+			this.theBuilder.Add ((byte) '\n');
 		}
 
-		public void Replace(string oldstring, string newstring)
-		{
-			theBuilder.Replace (oldstring, newstring);
-		}
 
 		public int Length
 		{
 			get
 			{
-				return this.length;
+				return this.theBuilder.Count;
 			}
+		}
+
+		public byte this[int index]
+		{
+			get
+			{
+				return this.theBuilder[index];
+			}			
 		}
 
 		public new string ToString()
 		{
-			return theBuilder.ToString() ;
+			StringBuilder tmpBuilder = new StringBuilder ();
+
+			for (int i = 0; i < theBuilder.Count; i++)
+			{
+				tmpBuilder.Append ((char) theBuilder[i]);
+			}
+
+			return tmpBuilder.ToString ();
 		}
 
-		private StringBuilder theBuilder;
+		private System.Collections.Generic.List<byte> theBuilder;
 		private int length ;
 	}
 
@@ -129,12 +152,32 @@ namespace Epsitec.Common.Text.Exchange
 
 		public void Terminate()
 		{
+
 			this.CloseOpenTagsOnStack (true);
+
 			mshtml.UpdateEndFragment (this.output.Length);
 			this.output.AppendLine ("<BODY>");
 			this.output.AppendLine ("<HTML>");
+
 			mshtml.UpdateEndHtml (this.output.Length);
-			mshtml.AddHtmlText (ref this.output);
+
+			int length = mshtml.GetBytes().Length + this.output.Length ;
+			byte[] header = mshtml.GetBytes ();
+
+			byte[] blob = new byte[length];
+
+			int i, j ;
+			for (i = 0; i < header.Length; i++)
+			{
+				blob[i] = header[i]; 
+			}
+
+			for (j = 0; j < this.output.Length; j++,j++)
+			{
+				blob[i] = this.output[j];
+			}
+
+			this.memoryStream = new System.IO.MemoryStream (blob);
 		}
 
 		public override string ToString()
@@ -246,7 +289,6 @@ namespace Epsitec.Common.Text.Exchange
 			this.AppendTagsToOpen ();
 
 			this.TransformSpecialHtmlChars (ref thestring);
-			this.TransformToUTF8 (ref thestring);
 			this.output.Append (thestring);
 		}
 
@@ -307,7 +349,7 @@ namespace Epsitec.Common.Text.Exchange
 
 		public void SetFontColor(string fontcolor)
 		{
-			if (fontcolor != null)
+			if (fontcolor != null)	
 			{
 				Epsitec.Common.Drawing.RichColor richcolor = Epsitec.Common.Drawing.RichColor.Parse (fontcolor);
 
@@ -719,6 +761,16 @@ namespace Epsitec.Common.Text.Exchange
 				return mshtml.ToString() ;
 			}
 		}
+
+		private System.IO.MemoryStream memoryStream;
+
+		public System.IO.MemoryStream MemoryStream
+		{
+			get
+			{
+				return memoryStream;
+			}
+		}
 	}
 
 	/// <summary>
@@ -815,9 +867,10 @@ namespace Epsitec.Common.Text.Exchange
 
 			htmlText.Terminate ();
 
-			byte[] blob = System.Text.Encoding.UTF8.GetBytes (htmlText.msHtml);
-			System.IO.MemoryStream s = new System.IO.MemoryStream (blob);
-			System.Windows.Forms.Clipboard.SetData (System.Windows.Forms.DataFormats.Html, s);
+			//System.Windows.Forms.Clipboard.SetData (System.Windows.Forms.DataFormats.Html, htmlText.MemoryStream);
+			System.Windows.Forms.Clipboard.SetData (System.Windows.Forms.DataFormats.Html, htmlText.MemoryStream);
+
+			// System.Windows.Forms.Clipboard.SetData (System.Windows.Forms.DataFormats.Html, s);
 			//System.Windows.Forms.Clipboard.SetData (System.Windows.Forms.DataFormats.Html, htmlText.msHtml);
 			System.Diagnostics.Debug.WriteLine ("Code de test 1 appelé.");
 		}
