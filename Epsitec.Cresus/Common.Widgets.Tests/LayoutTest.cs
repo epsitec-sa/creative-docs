@@ -7,6 +7,12 @@ namespace Epsitec.Common.Widgets
 	[TestFixture] public class LayoutTest
 	{
 		[Test]
+		public void AutomatedTestEnvironment()
+		{
+			Epsitec.Common.Widgets.Window.RunningInAutomatedTestEnvironment = true;
+		}
+		
+		[Test]
 		public void CheckMeasure()
 		{
 			Visual a = new Visual ();
@@ -265,6 +271,28 @@ namespace Epsitec.Common.Widgets
 			System.Console.Out.WriteLine ("b: {0}", b.Bounds);
 			System.Console.Out.WriteLine ("c1: {0}", c1.Bounds);
 			System.Console.Out.WriteLine ("c2: {0}", c2.Bounds);
+		}
+
+		[Test]
+		public void CheckRealExample()
+		{
+			Window window = AdornerTest.CreateAdornerWidgets ();
+			
+			Layouts.LayoutContext context = Helpers.VisualTree.GetLayoutContext (window.Root);
+
+			System.Console.Out.WriteLine ("Measure: {0} elements", context.MeasureQueueLength);
+			System.Console.Out.WriteLine ("Arrange: {0} elements", context.ArrangeQueueLength);
+
+			context.ExecuteMeasure ();
+
+			System.Console.Out.WriteLine ("After Measure, arrange: {0} elements", context.ArrangeQueueLength);
+
+			context.ExecuteArrange ();
+
+			System.Console.Out.WriteLine ("After Arrange, measure: {0} elements", context.MeasureQueueLength);
+			System.Console.Out.WriteLine ("After Arrange, arrange: {0} elements", context.ArrangeQueueLength);
+
+			Window.RunInTestEnvironment (window);
 		}
 	}
 }

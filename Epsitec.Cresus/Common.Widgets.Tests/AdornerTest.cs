@@ -21,12 +21,12 @@ namespace Epsitec.Common.Widgets
 		
 		[Test] public void CheckAdornerWidgets()
 		{
-			Window.RunInTestEnvironment (this.CreateAdornerWidgets ());
+			Window.RunInTestEnvironment (AdornerTest.CreateAdornerWidgets ());
 		}
 		
 		[Test] public void CheckAdornerWidgetsDisabled()
 		{
-			Window window = this.CreateAdornerWidgets();
+			Window window = AdornerTest.CreateAdornerWidgets ();
 			this.RecursiveDisable(window.Root, true);
 			Window.RunInTestEnvironment (window);
 		}
@@ -58,7 +58,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		private Window CreateAdornerWidgets()
+		public static Window CreateAdornerWidgets()
 		{
 			Document.Engine.Initialise ();
 
@@ -310,7 +310,7 @@ namespace Epsitec.Common.Widgets
 			st.Margins = new Margins(10, 0, 340 - st.Height - 265, 0);
 			window.Root.Children.Add(st);
 
-			this.CreateListLook(window.Root, 10, 80, tip, 1);
+			AdornerTest.CreateListLook(window.Root, 10, 80, tip, 1);
 			
 			Tag tag1 = new Tag("ExecuteTag", "TestTag");
 			tag1.Bounds = new Drawing.Rectangle(115, 246, 18, 18);
@@ -345,7 +345,7 @@ namespace Epsitec.Common.Widgets
 			link.Text = @"Visitez notre <a href=""http://www.epsitec.ch"">site web</a> !";
 			link.Anchor = AnchorStyles.BottomRight;
 			link.Margins = new Margins(0, 600-360-120+100, 0, 36);
-			link.HypertextClicked += new MessageEventHandler(link_HypertextClicked);
+			link.HypertextClicked += new MessageEventHandler (AdornerTest.link_HypertextClicked);
 			window.Root.Children.Add(link);
 			
 			SpecialWidget spec = new SpecialWidget();
@@ -368,7 +368,7 @@ namespace Epsitec.Common.Widgets
 			radio1.TabIndex = 1;
 			radio1.Index = 1;
 			radio1.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			radio1.Clicked += new MessageEventHandler(this.HandleRadio);
+			radio1.Clicked += new MessageEventHandler (AdornerTest.HandleRadio);
 			box.Children.Add(radio1);
 			tip.SetToolTip(radio1, "Couleur rouge");
 
@@ -379,7 +379,7 @@ namespace Epsitec.Common.Widgets
 			radio2.TabIndex = 1;
 			radio2.Index = 2;
 			radio2.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			radio2.Clicked += new MessageEventHandler(this.HandleRadio);
+			radio2.Clicked += new MessageEventHandler (AdornerTest.HandleRadio);
 			box.Children.Add(radio2);
 			tip.SetToolTip(radio2, "Couleur verte");
 
@@ -390,7 +390,7 @@ namespace Epsitec.Common.Widgets
 			radio3.TabIndex = 1;
 			radio3.Index = 3;
 			radio3.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			radio3.Clicked += new MessageEventHandler(this.HandleRadio);
+			radio3.Clicked += new MessageEventHandler (AdornerTest.HandleRadio);
 			box.Children.Add(radio3);
 			tip.SetToolTip(radio3, "Couleur bleue");
 			
@@ -404,7 +404,7 @@ namespace Epsitec.Common.Widgets
 			check.Margins = new Margins(10, 0, 0, 70);
 			check.TabIndex = 3;
 			check.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			check.Clicked += new MessageEventHandler(this.HandleCheck);
+			check.Clicked += new MessageEventHandler (AdornerTest.HandleCheck);
 			window.Root.Children.Add(check);
 			tip.SetToolTip(check, "Juste pour voir");
 
@@ -678,8 +678,8 @@ namespace Epsitec.Common.Widgets
 			text_ex_1.SetParent (page3);
 			text_ex_1.Bounds = new Drawing.Rectangle(10, page3.Height-30, 120, text_ex_1.Height);
 			text_ex_1.TabIndex = 1;
-			text_ex_1.EditionAccepted += new EventHandler(this.HandleTextExEditionAccepted);
-			text_ex_1.EditionRejected += new EventHandler(this.HandleTextExEditionRejected);
+			text_ex_1.EditionAccepted += new EventHandler (AdornerTest.HandleTextExEditionAccepted);
+			text_ex_1.EditionRejected += new EventHandler (AdornerTest.HandleTextExEditionRejected);
 			
 			TextFieldEx text_ex_2 = new TextFieldEx();
 			text_ex_2.SetParent (page3);
@@ -747,7 +747,7 @@ namespace Epsitec.Common.Widgets
 			text_up_down.MaxValue   =  1000000000000000M;
 			text_up_down.Resolution = 0.0000000000000001M;
 			text_up_down.Bounds = new Drawing.Rectangle (10, 10, 200, text_up_down.Height);
-			text_up_down.TextChanged += new EventHandler (this.HandleTextUpDownTextChanged);
+			text_up_down.TextChanged += new EventHandler (AdornerTest.HandleTextUpDownTextChanged);
 			
 
 			//	Crée l'onglet 5.
@@ -782,25 +782,25 @@ namespace Epsitec.Common.Widgets
 			return window;
 		}
 		
-		private void HandleTextUpDownTextChanged(object sender)
+		private static void HandleTextUpDownTextChanged(object sender)
 		{
 			TextFieldUpDown up_down = sender as TextFieldUpDown;
 			System.Diagnostics.Debug.WriteLine (string.Format ("'{0}', value={1}, valid={2}", up_down.Text, up_down.Value, up_down.IsValid));
 		}
 		
-		private void HandleCheck(object sender, MessageEventArgs e)
+		private static void HandleCheck(object sender, MessageEventArgs e)
 		{
 			CheckButton button = sender as CheckButton;
 //			button.Toggle();
 		}
 
-		private void HandleRadio(object sender, MessageEventArgs e)
+		private static void HandleRadio(object sender, MessageEventArgs e)
 		{
 			RadioButton button = sender as RadioButton;
 //			button.Toggle();
 		}
 
-		private void link_HypertextClicked(object sender, MessageEventArgs e)
+		private static void link_HypertextClicked(object sender, MessageEventArgs e)
 		{
 			Widget widget = sender as Widget;
 			System.Diagnostics.Process.Start (widget.Hypertext);
@@ -1153,7 +1153,7 @@ namespace Epsitec.Common.Widgets
 			page4.TabTitle = "<m>L</m>ook";
 			tb.Items.Add(page4);
 
-			this.CreateListLook(page4, 10, 10, null, -1);
+			AdornerTest.CreateListLook(page4, 10, 10, null, -1);
 
 			StaticText link = new StaticText();
 			link.Name = "Link";
@@ -1225,7 +1225,7 @@ namespace Epsitec.Common.Widgets
 			window.ClientSize = new Size(400, 300);
 			window.Text = "CheckAdornerCell1";
 
-			this.CreateListLook(window.Root, 10, 10, null, -1);
+			AdornerTest.CreateListLook(window.Root, 10, 10, null, -1);
 
 			StaticText title = new StaticText();
 			title.Size = new Size(280, 15);
@@ -1315,7 +1315,7 @@ namespace Epsitec.Common.Widgets
 			window.ClientSize = new Size(500, 300);
 			window.Text = "CheckAdornerCell2";
 
-			this.CreateListLook(window.Root, 10, 10, null, -1);
+			AdornerTest.CreateListLook(window.Root, 10, 10, null, -1);
 
 			StaticText title = new StaticText();
 			title.Bounds = new Rectangle (120, 245, 380, 15);
@@ -1388,7 +1388,7 @@ namespace Epsitec.Common.Widgets
 			window.ClientSize = new Size(400, 300);
 			window.Text = "CheckAdornerCell3";
 
-			this.CreateListLook(window.Root, 10, 10, null, -1);
+			AdornerTest.CreateListLook (window.Root, 10, 10, null, -1);
 
 			StaticText title = new StaticText();
 			title.Bounds = new Rectangle (120, 245, 280, 15);
@@ -1475,7 +1475,7 @@ namespace Epsitec.Common.Widgets
 			window.ClientSize = new Size(400, 300);
 			window.Text = "CheckAdornerScrollArray";
 
-			this.CreateListLook(window.Root, 10, 10, null, -1);
+			AdornerTest.CreateListLook (window.Root, 10, 10, null, -1);
 
 			StaticText title = new StaticText();
 			title.Bounds = new Rectangle (120, 245, 280, 15);
@@ -1515,7 +1515,7 @@ namespace Epsitec.Common.Widgets
 
 
 		
-		protected void CreateListLook(Widget parent, double mx, double my, ToolTip tooltip, int tab)
+		protected static void CreateListLook(Widget parent, double mx, double my, ToolTip tooltip, int tab)
 		{
 			//	Crée la liste pour changer de look.
 			ScrollList sl = new ScrollList();
@@ -1545,7 +1545,7 @@ namespace Epsitec.Common.Widgets
 			
 			sl.SelectedIndex = sel;
 			sl.ShowSelected(ScrollShowMode.Center);
-			sl.SelectedIndexChanged += new EventHandler(this.HandleLook);
+			sl.SelectedIndexChanged += new EventHandler (AdornerTest.HandleLook);
 
 			if ( tooltip != null )
 			{
@@ -1553,11 +1553,24 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		private void HandleLook(object sender)
+		private static void HandleLook(object sender)
 		{
 			ScrollList sl = sender as ScrollList;
 			int sel = sl.SelectedIndex;
 			Widgets.Adorners.Factory.SetActive(sl.Items[sel]);
+		}
+
+		private static void HandleTextExEditionAccepted(object sender)
+		{
+			TextFieldEx text = sender as TextFieldEx;
+			text.SelectAll ();
+		}
+
+		private static void HandleTextExEditionRejected(object sender)
+		{
+			TextFieldEx text = sender as TextFieldEx;
+			text.Text = "&lt;rejected&gt;";
+			text.SelectAll ();
 		}
 		
 		[Test] public void CheckAdornerPaneBook1()
@@ -1738,19 +1751,6 @@ namespace Epsitec.Common.Widgets
 
 			window.Show();
 			Window.RunInTestEnvironment (window);
-		}
-		
-		private void HandleTextExEditionAccepted(object sender)
-		{
-			TextFieldEx text = sender as TextFieldEx;
-			text.SelectAll ();
-		}
-
-		private void HandleTextExEditionRejected(object sender)
-		{
-			TextFieldEx text = sender as TextFieldEx;
-			text.Text = "&lt;rejected&gt;";
-			text.SelectAll ();
 		}
 
 
