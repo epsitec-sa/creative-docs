@@ -924,6 +924,21 @@ namespace Epsitec.Common.Widgets
 
 		public void Measure(Layouts.LayoutContext context)
 		{
+			Drawing.Size min;
+			Drawing.Size max;
+
+			this.MeasureMinMax (out min, out max);
+
+			context.DefineMinWidth (this, min.Width);
+			context.DefineMinHeight (this, min.Height);
+			context.DefineMaxWidth (this, max.Width);
+			context.DefineMaxHeight (this, max.Height);
+		}
+
+		protected virtual void MeasureMinMax(out Drawing.Size min, out Drawing.Size max)
+		{
+			min = new Drawing.Size (this.MinWidth, this.MinHeight);
+			max = new Drawing.Size (this.MaxWidth, this.MaxHeight);
 		}
 		
 		
