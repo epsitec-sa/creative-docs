@@ -94,6 +94,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.family.Items.Add(Res.Strings.Dialog.Glyphs.Family.GreekLower);
 				this.family.Items.Add(Res.Strings.Dialog.Glyphs.Family.GreekUpper);
 				this.family.Items.Add(Res.Strings.Dialog.Glyphs.Family.Symbol);
+				this.family.Items.Add(Res.Strings.Dialog.Glyphs.Family.Substitute);
 				System.Diagnostics.Debug.Assert(this.family.Items.Count < this.maxFamiliy);
 				this.family.SelectedIndex = 0;
 				this.family.SelectedIndexChanged += new EventHandler(this.HandleFamilyChanged);
@@ -350,16 +351,25 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.ignoreChanged = true;
 			this.list.Items.Clear();  // vide le contenu précédent
 
-			int[] codes = this.UnicodeList(family);
-			if ( codes != null )
+			if ( family == 7 )  // textes de substitutions ?
 			{
-				foreach ( int code in codes )
+				this.list.Items.Add(Res.Strings.Dialog.Glyphs.Substitute.Title.Latin);
+				this.list.Items.Add(Res.Strings.Dialog.Glyphs.Substitute.Title.French);
+				this.list.Items.Add(Res.Strings.Dialog.Glyphs.Substitute.Title.English);
+			}
+			else
+			{
+				int[] codes = this.UnicodeList(family);
+				if ( codes != null )
 				{
-					string text = Misc.GetUnicodeName(code);
-					char c = (char) code;
+					foreach ( int code in codes )
+					{
+						string text = Misc.GetUnicodeName(code);
+						char c = (char) code;
 
-					string complet = string.Format("  <font face=\"Arial\" size=\"120%\">{0}</font><tab/>{1}", c.ToString(), text);
-					this.list.Items.Add(complet);
+						string complet = string.Format("  <font face=\"Arial\" size=\"120%\">{0}</font><tab/>{1}", c.ToString(), text);
+						this.list.Items.Add(complet);
+					}
 				}
 			}
 
@@ -512,12 +522,28 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			if ( this.book.ActivePage.Name == "List" )
 			{
 				int family = this.family.SelectedIndex;
-
-				int[] codes = this.UnicodeList(family);
 				int sel = this.listSelectedIndex[family];
-				char c = (char) codes[sel];
-				string insert = c.ToString();
-				this.editor.CurrentDocument.Modifier.EditInsertText(insert, "", "");
+
+				if ( family == 7 )  // textes de substitutions ?
+				{
+					string text = "";
+					switch ( sel )
+					{
+						case 0:  text = Res.Strings.Dialog.Glyphs.Substitute.Text.Latin;    break;
+						case 1:  text = Res.Strings.Dialog.Glyphs.Substitute.Text.French;   break;
+						case 2:  text = Res.Strings.Dialog.Glyphs.Substitute.Text.English;  break;
+					}
+
+					this.editor.CurrentDocument.Modifier.EditInsertText(text, "", "");
+					this.editor.CurrentDocument.Modifier.EditInsertText(Unicode.Code.ParagraphSeparator);
+				}
+				else
+				{
+					int[] codes = this.UnicodeList(family);
+					char c = (char) codes[sel];
+					string insert = c.ToString();
+					this.editor.CurrentDocument.Modifier.EditInsertText(insert, "", "");
+				}
 			}
 
 			if ( this.book.ActivePage.Name == "Array" )
