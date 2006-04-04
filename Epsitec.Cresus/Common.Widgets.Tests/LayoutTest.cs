@@ -206,6 +206,8 @@ namespace Epsitec.Common.Widgets
 			Visual c1 = new Visual ();
 			Visual c2 = new Visual ();
 
+			Visual[] array;
+
 			a.Name = "a";
 			b.Name = "b";
 			c1.Name = "c1";
@@ -215,8 +217,15 @@ namespace Epsitec.Common.Widgets
 			b.Children.Add (c1);
 			b.Children.Add (c2);
 
-			a.Bounds = new Drawing.Rectangle (0, 0, 100, 200);
+			Layouts.LayoutContext context = Helpers.VisualTree.GetLayoutContext (a);
+
+			//	Oublie tout ce qui a pu être généré par la construction de l'arbre
+			//	ci-dessus :
 			
+			context.StartNewLayoutPass ();
+
+			a.Bounds = new Drawing.Rectangle (0, 0, 100, 200);
+
 			b.Dock = DockStyle.Fill;
 			b.Padding = new Drawing.Margins (5, 5, 10, 10);
 			
@@ -226,26 +235,36 @@ namespace Epsitec.Common.Widgets
 			c1.PreferredHeight = 20;
 			c2.PreferredHeight = 30;
 
-			Layouts.LayoutContext context = Helpers.VisualTree.GetLayoutContext (a);
+			array = Types.Collection.ToArray (context.GetMeasureQueue ());
 
-			foreach (Visual visual in context.GetMeasureQueue ())
-			{
-				System.Console.Out.WriteLine ("Measure: {0}", visual.Name);
-			}
+			Assert.AreEqual (3, array.Length);
+			Assert.AreEqual (c1, array[0]);
+			Assert.AreEqual (c2, array[1]);
+			Assert.AreEqual (a, array[2]);
 
-			foreach (Visual visual in context.GetArrangeQueue ())
-			{
-				System.Console.Out.WriteLine ("Arrange: {0}", visual.Name);
-			}
+			array = Types.Collection.ToArray (context.GetArrangeQueue ());
 
+			Assert.AreEqual (2, array.Length);
+			Assert.AreEqual (a, array[0]);
+			Assert.AreEqual (b, array[1]);
+			
 			context.ExecuteMeasure ();
 
-			System.Console.Out.WriteLine ("Executed Measure. Resulting arrange queue contents:");
+			array = Types.Collection.ToArray (context.GetArrangeQueue ());
 
-			foreach (Visual visual in context.GetArrangeQueue ())
-			{
-				System.Console.Out.WriteLine ("Arrange: {0}", visual.Name);
-			}
+			Assert.AreEqual (2, array.Length);
+			Assert.AreEqual (a, array[0]);
+			Assert.AreEqual (b, array[1]);
+
+			context.ExecuteArrange ();
+
+			Assert.AreEqual (0, context.ArrangeQueueLength);
+			Assert.AreEqual (0, context.MeasureQueueLength);
+
+			System.Console.Out.WriteLine ("a: {0}", a.Bounds);
+			System.Console.Out.WriteLine ("b: {0}", b.Bounds);
+			System.Console.Out.WriteLine ("c1: {0}", c1.Bounds);
+			System.Console.Out.WriteLine ("c2: {0}", c2.Bounds);
 		}
 	}
 }

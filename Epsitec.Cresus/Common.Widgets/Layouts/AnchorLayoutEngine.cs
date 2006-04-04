@@ -1,14 +1,16 @@
-//	Copyright © 2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2005-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
+
+using System.Collections.Generic;
 
 namespace Epsitec.Common.Widgets.Layouts
 {
 	/// <summary>
 	/// Summary description for AnchorLayout.
 	/// </summary>
-	public sealed class AnchorLayout : ILayout
+	public sealed class AnchorLayoutEngine : ILayoutEngine
 	{
-		public void UpdateLayout(Visual container, System.Collections.ICollection children)
+		public void UpdateLayout(Visual container, IEnumerable<Visual> children)
 		{
 			foreach (Visual child in children)
 			{

@@ -166,6 +166,33 @@ namespace Epsitec.Common.Widgets.Layouts
 			}
 		}
 		
+		public void ExecuteArrange()
+		{
+			//	Arrange all widgets which have been queued to be arranged.
+			//	Start near the root and walk down through the children.
+			
+			//	Abort as soon as there are elements in the measure queue.
+
+			while (this.arrangeQueue.Count > 0)
+			{
+				if (this.measureQueue.Count > 0)
+				{
+					break;
+				}
+				
+				VisualNode node = this.arrangeQueue.Keys[0];
+				this.arrangeQueue.RemoveAt (0);
+
+				System.Diagnostics.Debug.Assert (node.Visual.HasChildren);
+
+				Visual visual = node.Visual;
+				IEnumerable<Visual> children = node.Visual.Children;
+				
+				LayoutEngine.AnchorEngine.UpdateLayout (visual, children);
+				LayoutEngine.DockEngine.UpdateLayout (visual, children);
+			}
+		}
+		
 		public void DefineMinWidth(Visual visual, double value)
 		{
 			LayoutMeasure measure = this.GetCachedWidthMeasure (visual);

@@ -1,14 +1,16 @@
-//	Copyright © 2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2005-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
+
+using System.Collections.Generic;
 
 namespace Epsitec.Common.Widgets.Layouts
 {
 	/// <summary>
 	/// DockLayout.
 	/// </summary>
-	public sealed class DockLayout : ILayout
+	public sealed class DockLayoutEngine : ILayoutEngine
 	{
-		public void UpdateLayout(Visual container, System.Collections.ICollection children)
+		public void UpdateLayout(Visual container, IEnumerable<Visual> children)
 		{
 			System.Collections.Queue fill_queue = null;
 			
