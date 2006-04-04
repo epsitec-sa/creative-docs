@@ -497,6 +497,34 @@ namespace Epsitec.Common.Widgets.Helpers
 				return 0;
 			}
 		}
+
+		public static Layouts.LayoutContext GetLayoutContext(Visual visual)
+		{
+			if (visual == null)
+			{
+				return null;
+			}
+			
+			Visual parent = visual.Parent;
+
+			while (parent != null)
+			{
+				visual = parent;
+				parent = visual.Parent;
+			}
+
+			Layouts.LayoutContext context;
+
+			context = Layouts.LayoutContext.GetLayoutContext (visual);
+
+			if (context == null)
+			{
+				context = new Layouts.LayoutContext ();
+				Layouts.LayoutContext.SetLayoutContext (visual, context);
+			}
+			
+			return context;
+		}
 		
 		public static Visual FindParentUsingEvent(Visual visual, Types.DependencyProperty property)
 		{

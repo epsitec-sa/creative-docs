@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Widgets.Layouts
 {
-	public class LayoutContext
+	public class LayoutContext : Types.DependencyObject
 	{
 		public LayoutContext()
 		{
@@ -254,6 +254,17 @@ namespace Epsitec.Common.Widgets.Layouts
 			private int							rank;
 		}
 
+		public static void SetLayoutContext(Visual visual, LayoutContext context)
+		{
+			visual.SetValue (LayoutContext.LayoutContextProperty, context);
+		}
+		public static LayoutContext GetLayoutContext(Visual visual)
+		{
+			return visual.GetValue (LayoutContext.LayoutContextProperty) as LayoutContext;
+		}
+
+		public static Types.DependencyProperty	LayoutContextProperty = Types.DependencyProperty.RegisterAttached ("LayoutContext", typeof (LayoutContext), typeof (LayoutContext));
+		
 		private static int						nextPassId = 0;
 		
 		private int passId;
