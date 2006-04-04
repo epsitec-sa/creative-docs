@@ -19,6 +19,13 @@ namespace Epsitec.Common.Widgets.Layouts
 				return this.measureQueue.Count;
 			}
 		}
+		public int								ArrangeQueueLength
+		{
+			get
+			{
+				return this.arrangeQueue.Count;
+			}
+		}
 
 		public void StartNewLayoutPass()
 		{
@@ -33,17 +40,38 @@ namespace Epsitec.Common.Widgets.Layouts
 			this.GenerateNewPassId ();
 		}
 
+		public IEnumerable<Visual> GetMeasureQueue()
+		{
+			foreach (VisualNode node in this.measureQueue.Keys)
+			{
+				yield return node.Visual;
+			}
+		}
+		public IEnumerable<Visual> GetArrangeQueue()
+		{
+			foreach (VisualNode node in this.arrangeQueue.Keys)
+			{
+				yield return node.Visual;
+			}
+		}
+
 		public static void AddToMeasureQueue(Visual visual)
 		{
-			int depth;
-			LayoutContext context = Helpers.VisualTree.GetLayoutContext (visual, out depth);
-			context.AddToMeasureQueue (visual, depth);
+			if (visual != null)
+			{
+				int depth;
+				LayoutContext context = Helpers.VisualTree.GetLayoutContext (visual, out depth);
+				context.AddToMeasureQueue (visual, depth);
+			}
 		}
 		public static void AddToArrangeQueue(Visual visual)
 		{
-			int depth;
-			LayoutContext context = Helpers.VisualTree.GetLayoutContext (visual, out depth);
-			context.AddToArrangeQueue (visual, depth);
+			if (visual != null)
+			{
+				int depth;
+				LayoutContext context = Helpers.VisualTree.GetLayoutContext (visual, out depth);
+				context.AddToArrangeQueue (visual, depth);
+			}
 		}
 		
 		private void AddToMeasureQueue(Visual visual, int depth)
@@ -107,10 +135,27 @@ namespace Epsitec.Common.Widgets.Layouts
 				if ((this.cacheWidthMeasure.HasChanged) ||
 					(this.cacheHeightMeasure.HasChanged))
 				{
-					//	The visual has specified other measures which will require
-					//	that the visual will be re-arranged.
+					//	The visual has specified other measures.
+					
+					//	If the visual has children, then its contents need to
+					//	be arranged.
 
-					this.AddToArrangeQueue (node.Visual, node.Depth);
+					if (node.Visual.HasChildren)
+					{
+						this.AddToArrangeQueue (node.Visual, node.Depth);
+					}
+					
+					//	If the visual is either docked or anchored, then the
+					//	contents of the parent need to be re-arranged.
+
+					if ((node.Depth > 1) &&
+						((node.Visual.Dock != DockStyle.None) || (node.Visual.Anchor != AnchorStyles.None)))
+					{
+						Visual parent = node.Visual.Parent;
+						int depth = node.Depth - 1;
+						
+						this.AddToArrangeQueue (parent, depth);
+					}
 				}
 
 				System.Diagnostics.Debug.Assert (this.cacheVisual == node.Visual);

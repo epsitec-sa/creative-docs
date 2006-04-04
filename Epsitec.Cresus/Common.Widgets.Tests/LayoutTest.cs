@@ -14,6 +14,8 @@ namespace Epsitec.Common.Widgets
 			Visual c1 = new Visual ();
 			Visual c2 = new Visual ();
 
+			Visual[] array;
+
 			a.Children.Add (b);
 			b.Children.Add (c1);
 			b.Children.Add (c2);
@@ -93,15 +95,107 @@ namespace Epsitec.Common.Widgets
 
 			c1.MinWidth = 10;
 			c1.MaxHeight = 50;
-			
-			c2.MinWidth = 40;
+
+			b.PreferredWidth = 100;
 
 			Assert.AreEqual (2, context.MeasureQueueLength);
+			
+			array = Types.Collection.ToArray (context.GetMeasureQueue ());
+
+			Assert.AreEqual (c1, array[0]);
+			Assert.AreEqual (b, array[1]);
+
+			c2.MinWidth = 40;
+
+			Assert.AreEqual (3, context.MeasureQueueLength);
+			
+			array = Types.Collection.ToArray (context.GetMeasureQueue ());
+
+			Assert.AreEqual (c1, array[0]);
+			Assert.AreEqual (c2, array[1]);
+			Assert.AreEqual (b, array[2]);
 
 			context.ExecuteMeasure ();
 
 			Assert.AreEqual (10, dxMeasure.Min);
 			Assert.AreEqual (50, dyMeasure.Max);
+		}
+
+		[Test]
+		public void CheckArrange1()
+		{
+			Visual a = new Visual ();
+			Visual b = new Visual ();
+			Visual c1 = new Visual ();
+			Visual c2 = new Visual ();
+
+			Visual[] array;
+
+			a.Children.Add (b);
+			b.Children.Add (c1);
+			b.Children.Add (c2);
+
+			Layouts.LayoutContext context = Helpers.VisualTree.GetLayoutContext (a);
+
+			context.StartNewLayoutPass ();
+
+			b.Dock = DockStyle.Top;
+
+			Assert.AreEqual (0, context.MeasureQueueLength);
+			Assert.AreEqual (1, context.ArrangeQueueLength);
+
+			array = Types.Collection.ToArray (context.GetArrangeQueue ());
+
+			Assert.AreEqual (a, array[0]);
+
+			b.Padding = new Drawing.Margins (5, 5, 5, 5);
+
+			Assert.AreEqual (0, context.MeasureQueueLength);
+			Assert.AreEqual (2, context.ArrangeQueueLength);
+
+			array = Types.Collection.ToArray (context.GetArrangeQueue ());
+
+			Assert.AreEqual (a, array[0]);
+			Assert.AreEqual (b, array[1]);
+		}
+		
+		[Test]
+		public void CheckArrange2()
+		{
+			Visual a = new Visual ();
+			Visual b = new Visual ();
+			Visual c1 = new Visual ();
+			Visual c2 = new Visual ();
+			
+			Visual[] array;
+
+			a.Children.Add (b);
+			b.Children.Add (c1);
+			b.Children.Add (c2);
+
+			c1.Dock = DockStyle.Top;
+			c2.Dock = DockStyle.Top;
+
+			Layouts.LayoutContext context = Helpers.VisualTree.GetLayoutContext (a);
+
+			context.StartNewLayoutPass ();
+
+			b.Dock = DockStyle.Top;
+			c1.MinWidth = 20;
+			c1.MinHeight = 10;
+
+			Assert.AreEqual (1, context.MeasureQueueLength);
+			Assert.AreEqual (1, context.ArrangeQueueLength);
+
+			context.ExecuteMeasure ();
+
+			Assert.AreEqual (0, context.MeasureQueueLength);
+			Assert.AreEqual (2, context.ArrangeQueueLength);
+			
+			array = Types.Collection.ToArray (context.GetArrangeQueue ());
+
+			Assert.AreEqual (a, array[0]);
+			Assert.AreEqual (b, array[1]);
 		}
 	}
 }

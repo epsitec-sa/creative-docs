@@ -161,6 +161,14 @@ namespace Epsitec.Common.Widgets.Helpers
 			{
 				Layouts.LayoutContext.AddToMeasureQueue (visual);
 			}
+			if (this.affectsArrange)
+			{
+				Layouts.LayoutContext.AddToArrangeQueue (visual.Parent);
+			}
+			if (this.affectsChildrenLayout)
+			{
+				Layouts.LayoutContext.AddToArrangeQueue (visual);
+			}
 			
 			base.OnPropertyInvalidated (sender, old_value, new_value);
 		}
