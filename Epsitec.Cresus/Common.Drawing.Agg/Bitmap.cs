@@ -593,7 +593,7 @@ namespace Epsitec.Common.Drawing
 		
 		public static Image FromLargerImage(Image image, Rectangle clip)
 		{
-			Image bitmap = Bitmap.FromLargerImage (image, clip, Point.Empty);
+			Image bitmap = Bitmap.FromLargerImage (image, clip, Point.Zero);
 			bitmap.is_origin_defined = false;
 			return bitmap;
 		}

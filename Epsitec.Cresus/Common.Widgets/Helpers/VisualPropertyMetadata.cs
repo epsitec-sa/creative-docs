@@ -154,6 +154,13 @@ namespace Epsitec.Common.Widgets.Helpers
 			{
 				visual.NotifyDisplayChanged ();
 			}
+
+			//	Layout support :
+			
+			if (this.affectsMeasure)
+			{
+				Layouts.LayoutContext.AddToMeasureQueue (visual);
+			}
 			
 			base.OnPropertyInvalidated (sender, old_value, new_value);
 		}

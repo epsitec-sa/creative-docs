@@ -9,7 +9,7 @@ namespace Epsitec.Common.Widgets.Layouts
 	{
 		public LayoutContext()
 		{
-			this.passId = System.Threading.Interlocked.Increment (ref LayoutContext.nextPassId);
+			this.GenerateNewPassId ();
 		}
 
 		public int								MeasureQueueLength
@@ -29,6 +29,8 @@ namespace Epsitec.Common.Widgets.Layouts
 
 			this.measureChanges = 0;
 			this.arrangeChanges = 0;
+
+			this.GenerateNewPassId ();
 		}
 
 		public static void AddToMeasureQueue(Visual visual)
@@ -46,28 +48,34 @@ namespace Epsitec.Common.Widgets.Layouts
 		
 		private void AddToMeasureQueue(Visual visual, int depth)
 		{
-			VisualNode node = new VisualNode (visual, this.nodeRank++, SortMode.Measure, depth);
+			int rank = ++this.nodeRank;
+			VisualNode node = new VisualNode (visual, 0, SortMode.Measure, depth);
 
 			if (this.measureQueue.ContainsKey (node))
 			{
-				this.measureQueue[node] = visual;
+				node.DefineRank (rank);
+				this.measureQueue.Remove (node);
 			}
 			else
 			{
+				node.DefineRank (rank);
 				this.measureQueue.Add (node, visual);
 				this.measureChanges++;
 			}
 		}
 		private void AddToArrangeQueue(Visual visual, int depth)
 		{
-			VisualNode node = new VisualNode (visual, this.nodeRank++, SortMode.Arrange, depth);
+			int rank = ++this.nodeRank;
+			VisualNode node = new VisualNode (visual, 0, SortMode.Arrange, depth);
 			
 			if (this.arrangeQueue.ContainsKey (node))
 			{
+				node.DefineRank (rank);
 				this.arrangeQueue[node] = visual;
 			}
 			else
 			{
+				node.DefineRank (rank);
 				this.arrangeQueue.Add (node, visual);
 				this.arrangeChanges++;
 			}
@@ -152,6 +160,11 @@ namespace Epsitec.Common.Widgets.Layouts
 			visual.ClearLocalValue (LayoutMeasure.HeightProperty);
 		}
 
+		private void GenerateNewPassId()
+		{
+			this.passId = System.Threading.Interlocked.Increment (ref LayoutContext.nextPassId);
+		}
+		
 		private LayoutMeasure GetCachedWidthMeasure(Visual visual)
 		{
 			if (object.ReferenceEquals (this.cacheVisual, visual))
@@ -237,6 +250,11 @@ namespace Epsitec.Common.Widgets.Layouts
 					return this.depth < 0 ? -this.depth : this.depth;
 				}
 			}
+
+			public void DefineRank(int rank)
+			{
+				this.rank = rank;
+			}
 			
 			public override int GetHashCode()
 			{
@@ -274,6 +292,11 @@ namespace Epsitec.Common.Widgets.Layouts
 				else if (this.depth > other.depth)
 				{
 					return 1;
+				}
+				else if ((object.ReferenceEquals (this.visual, other.visual)) &&
+					/**/ ((this.rank == 0) || (other.rank == 0)))
+				{
+					return 0;
 				}
 				else
 				{

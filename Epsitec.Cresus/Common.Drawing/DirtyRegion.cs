@@ -135,8 +135,8 @@ namespace Epsitec.Common.Drawing
 			int index_b = 1;
 			
 			double    surface;
-			Rectangle union       = Rectangle.Infinite;
-			double    min_surface = Rectangle.Infinite.Surface;
+			Rectangle union       = Rectangle.MaxValue;
+			double    min_surface = Rectangle.MaxValue.Surface;
 			
 			for (int a = 0; a < n-1; a++)
 			{

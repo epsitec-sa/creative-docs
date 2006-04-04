@@ -619,7 +619,7 @@ namespace Epsitec.Common.Widgets.Adorners
 			{
 				state &= ~WidgetState.Focused;
 			}
-			this.PaintGeneralTextLayout(graphics, Drawing.Rectangle.Infinite, pos, text, state, PaintTextStyle.Button, TextDisplayMode.Default, Drawing.Color.Empty);
+			this.PaintGeneralTextLayout(graphics, Drawing.Rectangle.MaxValue, pos, text, state, PaintTextStyle.Button, TextDisplayMode.Default, Drawing.Color.Empty);
 		}
 
 		public override void PaintButtonForeground(Drawing.Graphics graphics,
@@ -1348,7 +1348,7 @@ namespace Epsitec.Common.Widgets.Adorners
 			state &= ~WidgetState.Selected;
 			state &= ~WidgetState.Focused;
 			PaintTextStyle style = ( type == MenuOrientation.Horizontal ) ? PaintTextStyle.HMenu : PaintTextStyle.VMenu;
-			this.PaintGeneralTextLayout(graphics, Drawing.Rectangle.Infinite, pos, text, state, style, TextDisplayMode.Default, Drawing.Color.Empty);
+			this.PaintGeneralTextLayout(graphics, Drawing.Rectangle.MaxValue, pos, text, state, style, TextDisplayMode.Default, Drawing.Color.Empty);
 		}
 
 		public override void PaintMenuItemForeground(Drawing.Graphics graphics,
@@ -1581,7 +1581,7 @@ namespace Epsitec.Common.Widgets.Adorners
 			}
 			state &= ~WidgetState.Focused;
 			PaintTextStyle style = PaintTextStyle.HMenu;
-			this.PaintGeneralTextLayout(graphics, Drawing.Rectangle.Infinite, pos, text, state, style, TextDisplayMode.Default, Drawing.Color.Empty);
+			this.PaintGeneralTextLayout(graphics, Drawing.Rectangle.MaxValue, pos, text, state, style, TextDisplayMode.Default, Drawing.Color.Empty);
 		}
 
 		public override void PaintRibbonTabBackground(Drawing.Graphics graphics,
@@ -1638,7 +1638,7 @@ namespace Epsitec.Common.Widgets.Adorners
 
 			Drawing.TextStyle.DefineDefaultColor(this.colorBlack);
 			text.Alignment = Drawing.ContentAlignment.MiddleLeft;
-			text.Paint(pos, graphics, Drawing.Rectangle.Infinite, Drawing.Color.FromBrightness(0), Drawing.GlyphPaintStyle.Normal);
+			text.Paint(pos, graphics, Drawing.Rectangle.MaxValue, Drawing.Color.FromBrightness(0), Drawing.GlyphPaintStyle.Normal);
 		}
 
 		public override void PaintTagBackground(Drawing.Graphics graphics,

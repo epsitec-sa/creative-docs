@@ -1,4 +1,4 @@
-//	Copyright © 2003-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Drawing
@@ -64,7 +64,9 @@ namespace Epsitec.Common.Drawing
 		
 		
 		public static readonly Size				Empty;
-		public static readonly Size				Infinite = new Drawing.Size (1000000, 1000000);
+		public static readonly Size				MaxValue = new Drawing.Size (2000000000, 2000000000);
+		public static readonly Size				Zero = new Drawing.Size (0, 0);
+		public static readonly Size				PositiveInfinity = new Drawing.Size (double.PositiveInfinity, double.PositiveInfinity);
 		
 		public Point ToPoint()
 		{

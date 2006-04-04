@@ -1699,7 +1699,7 @@ namespace Epsitec.Common.Document
 			//	Donne le déplacement effectif à utiliser pour la commande "dupliquer".
 			get
 			{
-				if ( !this.repeatDuplicateMove || this.moveAfterDuplicate.IsEmpty )
+				if ( !this.repeatDuplicateMove || this.moveAfterDuplicate.IsZero )
 				{
 					return this.duplicateMove;
 				}

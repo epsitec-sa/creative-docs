@@ -1381,8 +1381,8 @@ namespace Epsitec.Common.Document.Objects
 			this.advanceBzt = 0.0;
 			this.advanceP1 = this.Handle(1).Position;
 			this.advanceP2 = this.advanceP1;
-			this.advanceLastTop    = Point.Empty;
-			this.advanceLastBottom = Point.Empty;
+			this.advanceLastTop    = Point.Zero;
+			this.advanceLastBottom = Point.Zero;
 			this.advanceCheckEnd = true;
 			this.advanceFactor = 1.0;
 
@@ -1469,7 +1469,7 @@ namespace Epsitec.Common.Document.Objects
 			ptl = Transform.RotatePointDeg(pos, angle, gb.TopLeft);
 			ptr = Transform.RotatePointDeg(pos, angle, gb.TopRight);
 
-			if ( !this.advanceLastTop.IsEmpty )
+			if ( !this.advanceLastTop.IsZero )
 			{
 				ptl = Point.Projection(this.advanceLastTop, this.advanceLastBottom, ptl);
 				pbl = Point.Projection(this.advanceLastTop, this.advanceLastBottom, pbl);
@@ -1486,10 +1486,10 @@ namespace Epsitec.Common.Document.Objects
 		{
 			//	Conversion d'un rank dans le texte en une position linéaire, c'est-à-dire
 			//	une position qui suppose que le texte est droit.
-			Point lp = Point.Empty;
+			Point lp = Point.Zero;
 			if ( rank == -1 || !this.AdvanceInit() )  return lp;
 
-			lp.X = 0.00001;  // pour feinter Point.IsEmpty !
+			lp.X = 0.00001;  // pour feinter Point.IsZero !
 			lp.Y = 0.00001;
 			string	character;
 			Font	font;
@@ -1652,8 +1652,8 @@ namespace Epsitec.Common.Document.Objects
 
 			int cursorFrom = System.Math.Min(this.textNavigator.Context.CursorFrom, this.textNavigator.Context.CursorTo);
 			int cursorTo   = System.Math.Max(this.textNavigator.Context.CursorFrom, this.textNavigator.Context.CursorTo);
-			Point lastTop    = Point.Empty;
-			Point lastBottom = Point.Empty;
+			Point lastTop    = Point.Zero;
+			Point lastBottom = Point.Zero;
 
 			string	character;
 			Font	font;

@@ -1,4 +1,4 @@
-//	Copyright © 2003-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Drawing
@@ -89,7 +89,7 @@ namespace Epsitec.Common.Drawing
 		
 		
 		public static readonly Rectangle		Empty    = new Rectangle (0, 0, -1, -1);
-		public static readonly Rectangle		Infinite = new Rectangle (-1000000000, -1000000000, 2000000000, 2000000000);
+		public static readonly Rectangle		MaxValue = new Rectangle (-1000000000, -1000000000, 2000000000, 2000000000);
 		
 		public bool								IsEmpty
 		{

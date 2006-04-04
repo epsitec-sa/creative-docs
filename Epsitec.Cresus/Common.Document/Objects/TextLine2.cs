@@ -1464,7 +1464,7 @@ namespace Epsitec.Common.Document.Objects
 			double length = 0.0;
 			double min = 1000000;
 			double best = double.NaN;
-			Point lastProjection = Point.Empty;
+			Point lastProjection = Point.Zero;
 			int i = 0;
 			do
 			{
@@ -1485,7 +1485,7 @@ namespace Epsitec.Common.Document.Objects
 							best = length + Point.Distance(p1, p);
 						}
 					}
-					else if ( !lastProjection.IsEmpty )
+					else if ( !lastProjection.IsZero )
 					{
 						Point pp = Point.Projection(p1, p2, lastProjection);
 						if ( TextLine2.Contains(pp, p1, p2) )
@@ -1521,7 +1521,7 @@ namespace Epsitec.Common.Document.Objects
 								best = length + Point.Distance(pos, p);
 							}
 						}
-						else if ( !lastProjection.IsEmpty )
+						else if ( !lastProjection.IsZero )
 						{
 							Point pp = Point.Projection(pos, next, lastProjection);
 							if ( TextLine2.Contains(pp, pos, next) )

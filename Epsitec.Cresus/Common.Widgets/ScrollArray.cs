@@ -2295,7 +2295,7 @@ invalid:	row    = -1;
 		
 		protected virtual void PaintCellContents(int row_line, int column, Drawing.Graphics graphics, IAdorner adorner, Drawing.Point pos, WidgetState state, TextLayout layout)
 		{
-			adorner.PaintGeneralTextLayout (graphics, Drawing.Rectangle.Infinite, pos, layout, state, PaintTextStyle.Array, TextDisplayMode.Default, this.BackColor);
+			adorner.PaintGeneralTextLayout (graphics, Drawing.Rectangle.MaxValue, pos, layout, state, PaintTextStyle.Array, TextDisplayMode.Default, this.BackColor);
 		}
 		
 		

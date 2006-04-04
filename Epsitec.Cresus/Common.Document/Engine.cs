@@ -96,7 +96,7 @@ namespace Epsitec.Common.Document
 					Point scale = context.Scale;
 					graphics.ScaleTransform(scale.X, scale.Y, 0, 0);
 					
-					doc.Paint(graphics, context, Rectangle.Infinite);
+					doc.Paint(graphics, context, Rectangle.MaxValue);
 
 					graphics.PopColorModifier();
 				}

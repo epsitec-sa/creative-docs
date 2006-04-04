@@ -621,7 +621,7 @@ namespace Epsitec.Common.Widgets
 		
 		public virtual Drawing.Size					DefaultMaxSize
 		{
-			get { return Drawing.Size.Infinite; }
+			get { return Drawing.Size.MaxValue; }
 		}
 		
 		
@@ -1401,7 +1401,7 @@ namespace Epsitec.Common.Widgets
 		
 		public virtual Drawing.Point GetBaseLine()
 		{
-			return Drawing.Point.Empty;
+			return Drawing.Point.Zero;
 		}
 		
 		

@@ -1504,7 +1504,7 @@ namespace Epsitec.Common.Widgets
 			//	Dessine le texte, en fonction du layout...
 			//	Si une couleur est donnée avec uniqueColor, tout le texte est peint
 			//	avec cette couleur, en ignorant les <font color=...>.
-			this.Paint(pos, graphics, Drawing.Rectangle.Infinite, Drawing.RichColor.Empty, Drawing.GlyphPaintStyle.Normal);
+			this.Paint(pos, graphics, Drawing.Rectangle.MaxValue, Drawing.RichColor.Empty, Drawing.GlyphPaintStyle.Normal);
 		}
 
 		public void Paint(Drawing.Point pos, Drawing.IPaintPort graphics, Drawing.Rectangle clipRect, Drawing.Color uniqueColor, Drawing.GlyphPaintStyle paintStyle)
@@ -2170,7 +2170,7 @@ namespace Epsitec.Common.Widgets
 				return pos;
 			}
 			
-			return Drawing.Point.Empty;
+			return Drawing.Point.Zero;
 		}
 		
 		public bool GetLineGeometry(int line, out Drawing.Point pos, out double ascender, out double descender, out double width)
@@ -2189,7 +2189,7 @@ namespace Epsitec.Common.Widgets
 				return true;
 			}
 			
-			pos       = Drawing.Point.Empty;
+			pos       = Drawing.Point.Zero;
 			ascender  = 0;
 			descender = 0;
 			width     = 0;

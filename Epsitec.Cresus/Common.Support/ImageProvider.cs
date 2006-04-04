@@ -471,7 +471,7 @@ namespace Epsitec.Common.Support
 				
 				Drawing.Size size = Drawing.Size.Parse (image_args);
 				
-				cache = Drawing.Bitmap.FromData (image_data, Drawing.Point.Empty, size);
+				cache = Drawing.Bitmap.FromData (image_data, Drawing.Point.Zero, size);
 				
 				this.bundle_hash[bundle] = cache;
 			}
@@ -493,7 +493,7 @@ namespace Epsitec.Common.Support
 				
 				Drawing.Point rect_pos = Drawing.Point.Parse (args[0] + ";" + args[1]);
 				Drawing.Size  rect_siz = Drawing.Size.Parse (args[2] + ";" + args[3]);
-				Drawing.Point origin   = Drawing.Point.Empty;
+				Drawing.Point origin   = Drawing.Point.Zero;
 				
 				if (args.Length >= 6)
 				{

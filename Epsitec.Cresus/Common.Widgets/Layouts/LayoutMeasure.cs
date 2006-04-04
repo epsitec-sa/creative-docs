@@ -29,6 +29,14 @@ namespace Epsitec.Common.Widgets.Layouts
 				return this.max;
 			}
 		}
+		public double Desired
+		{
+			get
+			{
+				return this.desired;
+			}
+		}
+		
 		public bool HasChanged
 		{
 			get
@@ -100,6 +108,15 @@ namespace Epsitec.Common.Widgets.Layouts
 				this.desired = value;
 				this.hasChanged	= true;
 			}
+		}
+
+		public static LayoutMeasure GetWidth(Visual visual)
+		{
+			return visual.GetValue (LayoutMeasure.WidthProperty) as LayoutMeasure;
+		}
+		public static LayoutMeasure GetHeight(Visual visual)
+		{
+			return visual.GetValue (LayoutMeasure.HeightProperty) as LayoutMeasure;
 		}
 		
 		public static Types.DependencyProperty WidthProperty  = Types.DependencyProperty.RegisterAttached ("Width", typeof (LayoutMeasure), typeof (LayoutMeasure));

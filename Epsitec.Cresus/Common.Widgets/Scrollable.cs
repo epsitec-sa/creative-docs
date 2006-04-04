@@ -214,7 +214,7 @@ namespace Epsitec.Common.Widgets
 				panel.SurfaceSizeChanged -= new Support.EventHandler (this.HandlePanelSurfaceSizeChanged);
 				
 				panel.SetEmbedder (null);
-				panel.Aperture = Drawing.Rectangle.Infinite;
+				panel.Aperture = Drawing.Rectangle.MaxValue;
 			}
 		}
 		
