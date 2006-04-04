@@ -9,10 +9,10 @@ namespace Epsitec.Common.Widgets.Layouts
 	{
 		internal LayoutMeasure(int passId)
 		{
-			this.min    = 0;
-			this.max    = double.PositiveInfinity;
-			this.value  = double.NaN;
-			this.passId = passId;
+			this.min     = 0;
+			this.max     = double.PositiveInfinity;
+			this.desired = double.NaN;
+			this.passId  = passId;
 		}
 		
 		public double Min
@@ -83,6 +83,24 @@ namespace Epsitec.Common.Widgets.Layouts
 				this.hasChanged = true;
 			}
 		}
+		internal void UpdateDesired(int passId, double value)
+		{
+			if (double.IsNaN (this.desired))
+			{
+				if (double.IsNaN (value))
+				{
+					return;
+				}
+
+				this.desired = value;
+				this.hasChanged = true;
+			}
+			else if (this.desired != value)
+			{
+				this.desired = value;
+				this.hasChanged	= true;
+			}
+		}
 		
 		public static Types.DependencyProperty WidthProperty  = Types.DependencyProperty.RegisterAttached ("Width", typeof (LayoutMeasure), typeof (LayoutMeasure));
 		public static Types.DependencyProperty HeightProperty = Types.DependencyProperty.RegisterAttached ("Height", typeof (LayoutMeasure), typeof (LayoutMeasure));
@@ -90,7 +108,7 @@ namespace Epsitec.Common.Widgets.Layouts
 		private double min;
 		private double max;
 		private int passId;
-		private double value;
+		private double desired;
 		private bool hasChanged;
 	}
 }

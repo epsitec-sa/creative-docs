@@ -40,8 +40,8 @@ namespace Epsitec.Common.Widgets
 			
 			Assert.AreEqual (0, context.MeasureQueueLength);
 			
-			Assert.IsTrue (c2.ContainsLocalValue (Layouts.LayoutMeasure.WidthProperty));
-			Assert.IsTrue (c2.ContainsLocalValue (Layouts.LayoutMeasure.HeightProperty));
+			Assert.IsTrue (c1.ContainsLocalValue (Layouts.LayoutMeasure.WidthProperty));
+			Assert.IsTrue (c1.ContainsLocalValue (Layouts.LayoutMeasure.HeightProperty));
 		}
 	}
 }

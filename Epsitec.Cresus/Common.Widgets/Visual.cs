@@ -929,16 +929,25 @@ namespace Epsitec.Common.Widgets
 
 			this.MeasureMinMax (out min, out max);
 
+			Drawing.Size desired = this.GetDesiredSize ();
+			
 			context.DefineMinWidth (this, min.Width);
 			context.DefineMinHeight (this, min.Height);
 			context.DefineMaxWidth (this, max.Width);
 			context.DefineMaxHeight (this, max.Height);
+			
+			context.DefineDesiredWidth (this, desired.Width);
+			context.DefineDesiredHeight (this, desired.Height);
 		}
 
 		protected virtual void MeasureMinMax(out Drawing.Size min, out Drawing.Size max)
 		{
 			min = new Drawing.Size (this.MinWidth, this.MinHeight);
 			max = new Drawing.Size (this.MaxWidth, this.MaxHeight);
+		}
+		protected virtual Drawing.Size GetDesiredSize()
+		{
+			return this.PreferredSize;
 		}
 		
 		

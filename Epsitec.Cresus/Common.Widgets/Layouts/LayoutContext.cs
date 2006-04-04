@@ -134,6 +134,17 @@ namespace Epsitec.Common.Widgets.Layouts
 			LayoutMeasure measure = this.GetCachedHeightMeasure (visual);
 			measure.UpdateMax (this.passId, value);
 		}
+		
+		public void DefineDesiredWidth(Visual visual, double value)
+		{
+			LayoutMeasure measure = this.GetCachedWidthMeasure (visual);
+			measure.UpdateDesired (this.passId, value);
+		}
+		public void DefineDesiredHeight(Visual visual, double value)
+		{
+			LayoutMeasure measure = this.GetCachedHeightMeasure (visual);
+			measure.UpdateDesired (this.passId, value);
+		}
 
 		public void ClearMeasures(Visual visual)
 		{
