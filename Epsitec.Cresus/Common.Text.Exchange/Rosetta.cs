@@ -161,23 +161,33 @@ namespace Epsitec.Common.Text.Exchange
 
 			mshtml.UpdateEndHtml (this.output.Length);
 
-			int length = mshtml.GetBytes().Length + this.output.Length ;
-			byte[] header = mshtml.GetBytes ();
+			
+			byte[] headerbytes = mshtml.GetBytes ();
+			int length = headerbytes.Length + this.output.Length;
 
 			byte[] blob = new byte[length];
 
 			int i, j ;
-			for (i = 0; i < header.Length; i++)
+			for (i = 0; i < headerbytes.Length; i++)
 			{
-				blob[i] = header[i]; 
+				blob[i] = headerbytes[i]; 
 			}
 
-			for (j = 0; j < this.output.Length; j++,j++)
+			for (j = 0; j < this.output.Length; j++,i++)
 			{
 				blob[i] = this.output[j];
 			}
 
 			this.memoryStream = new System.IO.MemoryStream (blob);
+
+			char[] chararray = new char[length];
+
+			for (i = 0; i < length; i++)
+			{
+				chararray[i] = (char) blob[i];
+			}
+			string test = new string (chararray);
+
 		}
 
 		public override string ToString()
@@ -287,6 +297,8 @@ namespace Epsitec.Common.Text.Exchange
 			this.AppendTagsToClose (false);
 			this.AppendPendingTags ();
 			this.AppendTagsToOpen ();
+
+			this.rawtextBuilder.Append (thestring);
 
 			this.TransformSpecialHtmlChars (ref thestring);
 			this.output.Append (thestring);
@@ -441,6 +453,14 @@ namespace Epsitec.Common.Text.Exchange
 
 
 			this.NewParagraph (JustificationMode);
+		}
+
+		public string rawText
+		{
+			get
+			{
+				return this.rawtextBuilder.ToString (); 
+			}
 		}
 
 		static private string GetHtmlTag(string attribute, HtmlTagMode tagMode)
@@ -745,6 +765,7 @@ namespace Epsitec.Common.Text.Exchange
 
 
 		private ExchangeStringBuilder output = new ExchangeStringBuilder ();
+		private StringBuilder rawtextBuilder = new StringBuilder ();
 
 		private System.Collections.Generic.Stack<HtmlAttributeWithParam> openTagsStack = new System.Collections.Generic.Stack<HtmlAttributeWithParam> ();
 		private System.Collections.Generic.List<HtmlAttributeWithParam> tagsToClose = new System.Collections.Generic.List<HtmlAttributeWithParam> ();
@@ -764,7 +785,7 @@ namespace Epsitec.Common.Text.Exchange
 
 		private System.IO.MemoryStream memoryStream;
 
-		public System.IO.MemoryStream MemoryStream
+		public System.IO.MemoryStream HtmlStream
 		{
 			get
 			{
@@ -867,8 +888,18 @@ namespace Epsitec.Common.Text.Exchange
 
 			htmlText.Terminate ();
 
+#if true
+			System.Windows.Forms.DataObject data = new System.Windows.Forms.DataObject ();
+			data.SetData (System.Windows.Forms.DataFormats.Text, true, htmlText.rawText);
+			data.SetData (System.Windows.Forms.DataFormats.Html, true, htmlText.HtmlStream);
+			System.Windows.Forms.Clipboard.SetDataObject (data, true);
+#else
 			//System.Windows.Forms.Clipboard.SetData (System.Windows.Forms.DataFormats.Html, htmlText.MemoryStream);
+			System.Windows.Forms.Clipboard.Clear ();
+			System.Windows.Forms.Clipboard.SetData (System.Windows.Forms.DataFormats.Text, "Test");
 			System.Windows.Forms.Clipboard.SetData (System.Windows.Forms.DataFormats.Html, htmlText.MemoryStream);
+			// System.Windows.Forms.Clipboard.SetData (System.Windows.Forms.DataFormats.Text, "Test");
+#endif
 
 			// System.Windows.Forms.Clipboard.SetData (System.Windows.Forms.DataFormats.Html, s);
 			//System.Windows.Forms.Clipboard.SetData (System.Windows.Forms.DataFormats.Html, htmlText.msHtml);
