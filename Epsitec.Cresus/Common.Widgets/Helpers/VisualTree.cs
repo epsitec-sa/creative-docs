@@ -500,17 +500,27 @@ namespace Epsitec.Common.Widgets.Helpers
 
 		public static Layouts.LayoutContext GetLayoutContext(Visual visual)
 		{
+			int depth;
+			return VisualTree.GetLayoutContext (visual, out depth);
+		}
+		
+		public static Layouts.LayoutContext GetLayoutContext(Visual visual, out int depth)
+		{
+			depth = 0;
+			
 			if (visual == null)
 			{
 				return null;
 			}
-			
-			Visual parent = visual.Parent;
 
+			Visual parent = visual.Parent;
+			depth++;
+			
 			while (parent != null)
 			{
 				visual = parent;
 				parent = visual.Parent;
+				depth++;
 			}
 
 			Layouts.LayoutContext context;
@@ -522,7 +532,7 @@ namespace Epsitec.Common.Widgets.Helpers
 				context = new Layouts.LayoutContext ();
 				Layouts.LayoutContext.SetLayoutContext (visual, context);
 			}
-			
+
 			return context;
 		}
 		

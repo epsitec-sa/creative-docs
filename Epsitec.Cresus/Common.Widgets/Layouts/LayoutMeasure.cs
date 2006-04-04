@@ -41,6 +41,11 @@ namespace Epsitec.Common.Widgets.Layouts
 		{
 			this.hasChanged = false;
 		}
+
+		internal void UpdatePassId(int id)
+		{
+			this.passId = id;
+		}
 		
 		internal void UpdateMin(int passId, double value)
 		{
@@ -52,7 +57,6 @@ namespace Epsitec.Common.Widgets.Layouts
 			}
 			else
 			{
-				this.passId = passId;
 				this.min = value;
 			}
 
@@ -71,7 +75,6 @@ namespace Epsitec.Common.Widgets.Layouts
 			}
 			else
 			{
-				this.passId = passId;
 				this.max = value;
 			}
 

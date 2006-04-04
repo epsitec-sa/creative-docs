@@ -31,9 +31,22 @@ namespace Epsitec.Common.Widgets.Layouts
 			this.arrangeChanges = 0;
 		}
 
-		public void AddToMeasureQueue(Visual visual)
+		public static void AddToMeasureQueue(Visual visual)
 		{
-			VisualNode node = new VisualNode (visual, this.nodeRank++, SortMode.Measure);
+			int depth;
+			LayoutContext context = Helpers.VisualTree.GetLayoutContext (visual, out depth);
+			context.AddToMeasureQueue (visual, depth);
+		}
+		public static void AddToArrangeQueue(Visual visual)
+		{
+			int depth;
+			LayoutContext context = Helpers.VisualTree.GetLayoutContext (visual, out depth);
+			context.AddToArrangeQueue (visual, depth);
+		}
+		
+		private void AddToMeasureQueue(Visual visual, int depth)
+		{
+			VisualNode node = new VisualNode (visual, this.nodeRank++, SortMode.Measure, depth);
 
 			if (this.measureQueue.ContainsKey (node))
 			{
@@ -45,9 +58,9 @@ namespace Epsitec.Common.Widgets.Layouts
 				this.measureChanges++;
 			}
 		}
-		public void AddToArrangeQueue(Visual visual)
+		private void AddToArrangeQueue(Visual visual, int depth)
 		{
-			VisualNode node = new VisualNode (visual, this.nodeRank++, SortMode.Arrange);
+			VisualNode node = new VisualNode (visual, this.nodeRank++, SortMode.Arrange, depth);
 			
 			if (this.arrangeQueue.ContainsKey (node))
 			{
@@ -62,6 +75,9 @@ namespace Epsitec.Common.Widgets.Layouts
 
 		public void ExecuteMeasure()
 		{
+			//	Measure all widgets which have been queued to be measured. Start
+			//	with the children farthest down the tree, finish with the root.
+			
 			while (this.measureQueue.Count > 0)
 			{
 				VisualNode node = this.measureQueue.Keys[0];
@@ -74,6 +90,9 @@ namespace Epsitec.Common.Widgets.Layouts
 				this.cacheHeightMeasure = this.GetOrCreateCleanMeasure (node.Visual, LayoutMeasure.HeightProperty);
 
 				node.Visual.Measure (this);
+
+				this.cacheWidthMeasure.UpdatePassId (this.passId);
+				this.cacheHeightMeasure.UpdatePassId (this.passId);
 				
 				//	Did the visual update in any way the measures ?
 
@@ -83,7 +102,7 @@ namespace Epsitec.Common.Widgets.Layouts
 					//	The visual has specified other measures which will require
 					//	that the visual will be re-arranged.
 
-					this.AddToArrangeQueue (node.Visual);
+					this.AddToArrangeQueue (node.Visual, node.Depth);
 				}
 
 				System.Diagnostics.Debug.Assert (this.cacheVisual == node.Visual);
@@ -168,31 +187,28 @@ namespace Epsitec.Common.Widgets.Layouts
 		
 		private struct VisualNode : System.IEquatable<VisualNode>, System.IComparable<VisualNode>
 		{
-			public VisualNode(Visual visual, int rank, SortMode mode)
+			public VisualNode(Visual visual, int rank, SortMode mode, int depth)
 			{
-				int depth;
-
+				if (depth == 0)
+				{
+					depth = Helpers.VisualTree.GetDepth (visual);
+				}
+				
 				//	Depending on the SortMode, we either use a positive or negative
 				//	depth; "arrange" needs to walk through the visuals from the root
 				//	down to the children whereas "measure" needs to start with the
 				//	children, moving up to the root.
-				
+
 				switch (mode)
 				{
-					case SortMode.Arrange:
-						depth = Helpers.VisualTree.GetDepth (visual);	//	1 = root, 2 = 1st children level, etc.
-						break;
-					
-					case SortMode.Measure:
-						depth = -Helpers.VisualTree.GetDepth (visual);	//	-1 = root, -2 = 1st children level, etc.
-						break;
-					
+					case SortMode.Arrange: this.depth =  depth; break;
+					case SortMode.Measure: this.depth = -depth; break;
+
 					default:
 						throw new System.ArgumentException (string.Format ("SortMode.{0} not accepted"));
 				}
-				
+
 				this.visual = visual;
-				this.depth  = depth;
 				this.rank   = rank;
 			}
 
@@ -201,6 +217,13 @@ namespace Epsitec.Common.Widgets.Layouts
 				get
 				{
 					return this.visual;
+				}
+			}
+			public int							Depth
+			{
+				get
+				{
+					return this.depth < 0 ? -this.depth : this.depth;
 				}
 			}
 			
