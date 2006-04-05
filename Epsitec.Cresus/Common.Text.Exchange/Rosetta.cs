@@ -1,7 +1,10 @@
 //	Copyright © 2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Michael WALZ
 
+#define USE_SPAN
+
 using System.Text;
+
 
 namespace Epsitec.Common.Text.Exchange
 {
@@ -147,6 +150,7 @@ namespace Epsitec.Common.Text.Exchange
 			this.output.AppendLine ("</HEAD>");
 			this.output.AppendLine ("");
 			this.output.AppendLine ("<BODY>");
+			this.output.AppendLine ("<!--StartFragment-->");
 			this.mshtml.UpdateStartFragment (this.output.Length);
 		}
 
@@ -156,11 +160,11 @@ namespace Epsitec.Common.Text.Exchange
 			this.CloseOpenTagsOnStack (true);
 
 			mshtml.UpdateEndFragment (this.output.Length);
+			this.output.AppendLine ("<!--EndFragment-->");
 			this.output.AppendLine ("<BODY>");
-			this.output.AppendLine ("<HTML>");
-
+			this.output.Append ("<HTML>");
 			mshtml.UpdateEndHtml (this.output.Length);
-
+			this.output.AppendLine ("");
 			
 			byte[] headerbytes = mshtml.GetBytes ();
 			int length = headerbytes.Length + this.output.Length;
@@ -216,20 +220,17 @@ namespace Epsitec.Common.Text.Exchange
 			{
 				this.CloseTag (HtmlAttribute.Strikeout);
 			}
-
-
+			
 			if (!precedIsItalic && isItalic)
 			{
 				this.OpenTag (HtmlAttribute.Italic);
 			}
-
-
+			
 			if (!precedIsBold && isBold)
 			{
 				this.OpenTag (HtmlAttribute.Bold);
 			}
-
-
+			
 			if (!precedIsUnderlined && isUnderlined)
 			{
 				this.OpenTag (HtmlAttribute.Underlined);
@@ -238,6 +239,16 @@ namespace Epsitec.Common.Text.Exchange
 			if (!precedIsStrikeout && isStrikeout)
 			{
 				this.OpenTag (HtmlAttribute.Strikeout);
+			}
+
+			if (!precedIsSubscript && isSubscript)
+			{
+				this.OpenTag (HtmlAttribute.Subscript);
+			}
+
+			if (!precedIsSuperscript && isSuperscript)
+			{
+				this.OpenTag (HtmlAttribute.Superscript);
 			}
 
 			if (this.precedFontFace != this.fontFace)
@@ -302,6 +313,17 @@ namespace Epsitec.Common.Text.Exchange
 
 			this.TransformSpecialHtmlChars (ref thestring);
 			this.output.Append (thestring);
+		}
+
+		public void SetSimpleXScript(Rosetta.SimpleXScript xscript)
+		{
+			this.isSuperscript = (xscript == Rosetta.SimpleXScript.Superscript);
+			this.isSuperscript = (xscript == Rosetta.SimpleXScript.Subscript);
+		}
+
+		public void SetSubScript(bool subscript)
+		{
+			this.isSubscript = subscript;
 		}
 
 		public void SetItalic(bool italic)
@@ -672,7 +694,9 @@ namespace Epsitec.Common.Text.Exchange
 			Underlined,
 			Strikeout,
 			Font,
-			Paragraph
+			Paragraph,
+			Superscript,
+			Subscript
 		}
 
 		enum HtmlTagMode
@@ -716,6 +740,12 @@ namespace Epsitec.Common.Text.Exchange
 					case HtmlAttribute.Font:
 						retval = HtmlText.GetHtmlTag ("font", tagmode, this.parametername, this.parametervalue);
 						break;
+					case HtmlAttribute.Subscript:
+						retval = HtmlText.GetHtmlTag ("sub", tagmode);
+						break;
+					case HtmlAttribute.Superscript:
+						retval = HtmlText.GetHtmlTag ("sup", tagmode);
+						break;
 				}
 
 				return retval;
@@ -741,6 +771,12 @@ namespace Epsitec.Common.Text.Exchange
 		private Wrappers.JustificationMode paragraphMode = Wrappers.JustificationMode.Unknown;
 		private Wrappers.JustificationMode precedParagraphMode = Wrappers.JustificationMode.Unknown;
 		private bool paragraphNotModeSet = true;
+
+		private bool isSuperscript = false;
+		private bool precedIsSuperscript = false;
+
+		private bool isSubscript = false;
+		private bool precedIsSubscript = false;
 
 		private bool isItalic = false;
 		private bool precedIsItalic = false;
@@ -811,6 +847,31 @@ namespace Epsitec.Common.Text.Exchange
 			return "TODO";
 		}
 
+		public enum SimpleXScript
+		{
+			Superscript,
+			Subscript,
+			Normalscript
+		} ;
+
+		static SimpleXScript GetSimpleXScript(Wrappers.TextWrapper wrapper)
+		{
+
+			if (wrapper.Active.IsXscriptDefined)
+			{
+				if (wrapper.Active.Xscript.Offset < 0.0)
+					return SimpleXScript.Superscript;
+				if (wrapper.Active.Xscript.Offset < 0.0)
+					return SimpleXScript.Subscript;
+				else
+					return SimpleXScript.Normalscript;
+			}
+			else
+			{
+				return SimpleXScript.Normalscript;
+			}
+		}
+
 		public static void TestCode(TextStory story, TextNavigator navigator)
 		{
 			Wrappers.TextWrapper textWrapper = new Wrappers.TextWrapper ();
@@ -862,6 +923,9 @@ namespace Epsitec.Common.Text.Exchange
 					htmlText.SetFontFace (textWrapper.Active.FontFace);
 					htmlText.SetFontSize (textWrapper.Active.IsFontSizeDefined ? textWrapper.Active.FontSize : 0);
 					htmlText.SetFontColor (textWrapper.Active.Color);
+
+					SimpleXScript xscript = GetSimpleXScript (textWrapper);
+					htmlText.SetSimpleXScript (xscript);
 
 					htmlText.AppendText (runText);
 				}
