@@ -63,9 +63,9 @@
 	<data name="EditArray.MoveUp">Move Line up</data>
 	<data name="EditArray.MoveDown">Move Line down</data>
 
-	<data name="IconButtonsCombo.Prev">@@Précédents</data>
-	<data name="IconButtonsCombo.Next">@@Suivants</data>
-	<data name="IconButtonsCombo.Menu">@@Choix détaillé dans un menu</data>
+	<data name="IconButtonsCombo.Prev">Previous</data>
+	<data name="IconButtonsCombo.Next">Next</data>
+	<data name="IconButtonsCombo.Menu">Open menu</data>
 
 	<data name="TextNavigator.Action.Modify">Text modification</data>
 	<data name="TextNavigator.Action.Insert">Text insertion</data>

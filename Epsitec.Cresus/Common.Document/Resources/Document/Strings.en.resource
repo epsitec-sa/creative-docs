@@ -168,10 +168,10 @@
 	<data name="Units.Long.Centimeter">centimeters</data>
 	<data name="Units.Long.Inch">inches</data>
 
-	<data name="Container.Help.Principal">@@● Attributs des objets créés ou sélectionnés :</data>
-	<data name="Container.Help.Styles">@@● Réglages des styles du document :</data>
-	<data name="Container.Help.Pages">@@● Réglages des pages du document :</data>
-	<data name="Container.Help.Layers">@@● Réglages des calques de la page courante :</data>
+	<data name="Container.Help.Principal">● Properties for new objects or selected objects:</data>
+	<data name="Container.Help.Styles">● Settings for the document styles:</data>
+	<data name="Container.Help.Pages">● Settings for the document pages:</data>
+	<data name="Container.Help.Layers">● Settings for the layers in the current page:</data>
 
 	<data name="Container.Guides.RadioGlobal">Document</data>
 	<data name="Container.Guides.RadioPage">Current page</data>
@@ -859,9 +859,9 @@
 	<data name="Action.ToolImage">Bitmap image</data>
 	<data name="Action.ToolDimension">Dimension</data>
 
-	<data name="Action.Apply.Tooltip.StyleParagraph">@@Appliquer le style de paragraphe {0}</data>
-	<data name="Action.Apply.Tooltip.StyleCharacter">@@Appliquer le style de caractère {0}</data>
-	<data name="Action.Apply.Tooltip.Font">@@Utiliser la police {0}</data>
+	<data name="Action.Apply.Tooltip.StyleParagraph">Apply paragraph style {0}</data>
+	<data name="Action.Apply.Tooltip.StyleCharacter">Apply character style {0}</data>
+	<data name="Action.Apply.Tooltip.Font">Use font {0}</data>
 
 	<data name="Action.FileMain">File</data>
 	<data name="Action.New">New</data>
