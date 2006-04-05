@@ -537,7 +537,7 @@
 	<data name="TextPanel.Generator.Header.Prefix">Préfix</data>
 	<data name="TextPanel.Generator.Header.Value">Num.</data>
 	<data name="TextPanel.Generator.Header.Suffix">Suffix</data>
-	<data name="TextPanel.Generator.Type.None">Aucun</data>
+	<data name="TextPanel.Generator.Type.None">Aucune</data>
 	<data name="TextPanel.Generator.Type.Bullet1">Puces rondes</data>
 	<data name="TextPanel.Generator.Type.Bullet2">Puces carrées</data>
 	<data name="TextPanel.Generator.Type.Bullet3">Puces triangulaires</data>
