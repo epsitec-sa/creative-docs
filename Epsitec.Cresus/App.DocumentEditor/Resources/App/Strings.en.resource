@@ -128,6 +128,10 @@
 	<data name="Dialog.Glyphs.Family.GreekLower">Greek Small Letters</data>
 	<data name="Dialog.Glyphs.Family.GreekUpper">Greek Capital Letters</data>
 	<data name="Dialog.Glyphs.Family.Symbol">Symbols</data>
+	<data name="Dialog.Glyphs.Family.Substitute">@@Textes de substitutions</data>
+	<data name="Dialog.Glyphs.Substitute.Title.Latin">@@Texte de substitutions en latin</data>
+	<data name="Dialog.Glyphs.Substitute.Title.French">@@Texte de substitutions en français</data>
+	<data name="Dialog.Glyphs.Substitute.Title.English">@@Texte de substitutions en anglais</data>
 	<data name="Dialog.Glyphs.Alternates.Help">Alternate glyph versions for the selected character:</data>
 	
 	<data name="Dialog.Infos.Title">Informations</data>

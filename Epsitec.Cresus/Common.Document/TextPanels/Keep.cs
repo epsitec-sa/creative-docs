@@ -319,7 +319,7 @@ namespace Epsitec.Common.Document.TextPanels
 				Text.TextStyle nextStyle = currentStyle.NextStyle;
 				if ( nextStyle != null )
 				{
-					nextStyleName = this.document.TextContext.StyleList.StyleMap.GetCaption(nextStyle);
+					nextStyleName = Misc.UserTextStyleName(this.document.TextContext.StyleList.StyleMap.GetCaption(nextStyle));
 				}
 			}
 			this.fieldNextStyle.Text = nextStyleName;
@@ -464,7 +464,7 @@ namespace Epsitec.Common.Document.TextPanels
 			{
 				Text.TextStyle[] styles = this.document.TextStyles(StyleCategory.Paragraph);
 				nextStyle = styles[sel];
-				this.fieldNextStyle.Text = this.document.TextContext.StyleList.StyleMap.GetCaption(nextStyle);
+				this.fieldNextStyle.Text = Misc.UserTextStyleName(this.document.TextContext.StyleList.StyleMap.GetCaption(nextStyle));
 			}
 
 			this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.AggregateChange);

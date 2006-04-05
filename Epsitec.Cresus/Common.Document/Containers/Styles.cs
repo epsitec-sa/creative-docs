@@ -13,6 +13,11 @@ namespace Epsitec.Common.Document.Containers
 	{
 		public Styles(Document document) : base(document)
 		{
+			this.helpText = new StaticText(this);
+			this.helpText.Text = Res.Strings.Container.Help.Styles;
+			this.helpText.Dock = DockStyle.Top;
+			this.helpText.DockMargins = new Margins(0, 0, -2, 7);
+
 			this.mainBook = new PaneBook(this);
 			this.mainBook.PaneBookStyle = PaneBookStyle.BottomTop;
 			this.mainBook.PaneBehaviour = PaneBookBehaviour.Draft;
@@ -362,6 +367,8 @@ namespace Epsitec.Common.Document.Containers
 		protected override void DoUpdateContent()
 		{
 			//	Effectue la mise à jour du contenu.
+			this.helpText.Visibility = this.document.GlobalSettings.LabelProperties;
+
 			this.graphicList.List = this.document.Aggregates;
 			this.graphicList.SelectedRank = this.document.Aggregates.Selected;
 			this.graphicList.UpdateContents();
@@ -626,7 +633,7 @@ namespace Epsitec.Common.Document.Containers
 				if ( sel != -1 )
 				{
 					Common.Text.TextStyle style = this.TextStyleList.List[sel];
-					text = this.document.TextContext.StyleList.StyleMap.GetCaption(style);
+					text = Misc.UserTextStyleName(this.document.TextContext.StyleList.StyleMap.GetCaption(style));
 				}
 			}
 
@@ -680,7 +687,7 @@ namespace Epsitec.Common.Document.Containers
 					{
 						Text.TextStyle parent = parents[i] as Text.TextStyle;
 						if ( builder.Length != 0 )  builder.Append(", ");
-						builder.Append(this.document.TextContext.StyleList.StyleMap.GetCaption(parent));
+						builder.Append(Misc.UserTextStyleName(this.document.TextContext.StyleList.StyleMap.GetCaption(parent)));
 					}
 				}
 
@@ -1355,6 +1362,10 @@ namespace Epsitec.Common.Document.Containers
 
 				Common.Text.TextStyle style = this.TextStyleList.List[sel];
 				string name = this.name.Text;
+				if ( !Misc.IsTextStyleName(name) )
+				{
+					name = ((this.category == StyleCategory.Paragraph) ? "P." : "C.") + name;
+				}
 				int attempt = 0;
 				while ( !this.document.Wrappers.IsFreeName(style, name) )
 				{
@@ -1545,7 +1556,7 @@ namespace Epsitec.Common.Document.Containers
 
 					bool active = Styles.ContainsStyle(currentStyle.ParentStyles, style);
 					string icon = Misc.Icon(active ? "RadioYes" : "RadioNo");
-					string line = this.document.TextContext.StyleList.StyleMap.GetCaption(style);
+					string line = Misc.UserTextStyleName(this.document.TextContext.StyleList.StyleMap.GetCaption(style));
 					MenuItem item = new MenuItem("ChildrensNew", icon, line, "", i.ToString(System.Globalization.CultureInfo.InvariantCulture));
 					item.Pressed += new MessageEventHandler(this.HandleMenuChildrensPressed);
 					menu.Items.Add(item);
@@ -1568,7 +1579,7 @@ namespace Epsitec.Common.Document.Containers
 
 					bool active = Styles.ContainsStyle(currentStyle.ParentStyles, style);
 					string icon = Misc.Icon(active ? "ActiveYes" : "ActiveNo");
-					string line = this.document.TextContext.StyleList.StyleMap.GetCaption(style);
+					string line = Misc.UserTextStyleName(this.document.TextContext.StyleList.StyleMap.GetCaption(style));
 					MenuItem item = new MenuItem("ChildrensNew", icon, line, "", (i+10000).ToString(System.Globalization.CultureInfo.InvariantCulture));
 					item.Pressed += new MessageEventHandler(this.HandleMenuChildrensPressed);
 					menu.Items.Add(item);
@@ -1592,7 +1603,7 @@ namespace Epsitec.Common.Document.Containers
 
 					bool active = Styles.ContainsStyle(currentStyle.ParentStyles, style);
 					string icon = Misc.Icon(active ? "ActiveYes" : "ActiveNo");
-					string line = this.document.TextContext.StyleList.StyleMap.GetCaption(style);
+					string line = Misc.UserTextStyleName(this.document.TextContext.StyleList.StyleMap.GetCaption(style));
 					MenuItem item = new MenuItem("ChildrensNew", icon, line, "", (i+10000).ToString(System.Globalization.CultureInfo.InvariantCulture));
 					item.Pressed += new MessageEventHandler(this.HandleMenuChildrensPressed);
 					menu.Items.Add(item);
@@ -1736,6 +1747,8 @@ namespace Epsitec.Common.Document.Containers
 
 
 		protected static readonly double	selectorSize = 20;
+
+		protected StaticText					helpText;
 
 		protected PaneBook					mainBook;
 		protected PanePage					topPage;

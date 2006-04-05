@@ -66,6 +66,8 @@ namespace Epsitec.Common.Document.Ribbons
 			{
 				this.comboFont.SelectedName = null;
 				this.comboFont.Enable = false;
+				this.comboFont.Items.Clear();
+				this.comboFont.UpdateButtons();
 			}
 			else
 			{
@@ -105,11 +107,11 @@ namespace Epsitec.Common.Document.Ribbons
 			{
 				if ( this.debugMode == DebugMode.DebugCommands )
 				{
-					return 204+76;
+					return 240+40;
 				}
 				else
 				{
-					return 164+76;
+					return 240;
 				}
 			}
 		}
@@ -118,6 +120,7 @@ namespace Epsitec.Common.Document.Ribbons
 		protected void UpdateAfterFontListChanged()
 		{
 			//	Met à jour la liste des styles.
+			if ( this.document == null )  return;
 			this.document.Wrappers.FontFaceComboUpdate(this.comboFont);
 			this.comboFont.UpdateButtons();
 		}
@@ -125,6 +128,7 @@ namespace Epsitec.Common.Document.Ribbons
 		protected void UpdateSelectedFont()
 		{
 			//	Met à jour la police sélectionnée en fonction du texte en édition.
+			if ( this.document == null )  return;
 			if ( this.document.Wrappers.TextFlow == null )  return;
 
 			string face = this.document.Wrappers.TextWrapper.Active.FontFace;
