@@ -128,10 +128,13 @@
 	<data name="Dialog.Glyphs.Family.GreekLower">Greek Small Letters</data>
 	<data name="Dialog.Glyphs.Family.GreekUpper">Greek Capital Letters</data>
 	<data name="Dialog.Glyphs.Family.Symbol">Symbols</data>
-	<data name="Dialog.Glyphs.Family.Substitute">@@Textes de substitutions</data>
-	<data name="Dialog.Glyphs.Substitute.Title.Latin">@@Texte de substitutions en latin</data>
-	<data name="Dialog.Glyphs.Substitute.Title.French">@@Texte de substitutions en français</data>
-	<data name="Dialog.Glyphs.Substitute.Title.English">@@Texte de substitutions en anglais</data>
+	<data name="Dialog.Glyphs.Family.Substitute">Filler texts</data>
+	<data name="Dialog.Glyphs.Substitute.Title.Latin">Latin filler text</data>
+	<data name="Dialog.Glyphs.Substitute.Title.French">French filler text</data>
+	<data name="Dialog.Glyphs.Substitute.Title.English">English filler text</data>
+	<data name="Dialog.Glyphs.Substitute.Text.Latin">Quae se laudari gaudent verbis subdolis, serae dant poenas turpi paenitentia. Cum de fenestra corvus raptum caseum comesse vellet, celsa residens arbore, vulpes invidit, deinde sic coepit loqui: 'O qui tuarum, corve, pinnarum est nitor! Quantum decoris corpore et vultu geris! Si vocem haberes, nulla prior ales foret'. At ille, dum etiam vocem vult ostendere, lato ore emisit caseum; quem celeriter dolosa vulpes avidis rapuit dentibus. Tum demum ingemuit corvi deceptus stupor.</data>
+	<data name="Dialog.Glyphs.Substitute.Text.French">Maître Corbeau, sur un arbre perché, tenait en son bec un fromage. Maître Renard, par l'odeur alléché, lui tint à peu près ce langage: "Hé ! bonjour, Monsieur du Corbeau. Que vous êtes joli ! Que vous me semblez beau ! Sans mentir, si votre ramage se rapporte à votre plumage, vous êtes le Phénix des hôtes de ces bois." A ces mots le Corbeau ne se sent pas de joie; Et pour montrer sa belle voix, il ouvre un large bec, laisse tomber sa proie. Le Renard s'en saisit, et dit: "Mon bon Monsieur, apprenez que tout flatteur vit aux dépens de celui qui l'écoute: Cette leçon vaut bien un fromage, sans doute." Le Corbeau, honteux et confus, jura, mais un peu tard, qu'on ne l'y prendrait plus.</data>
+	<data name="Dialog.Glyphs.Substitute.Text.English">Master Crow perched on a tree, was holding a cheese in his beak. Master Fox attracted by the smell said something like this: "Well, Hello Mister Crow! How beautiful you are! how nice you seem to me! Really, if your voice is like your plumage, you are the phoenix of all the inhabitants of these woods." At these words, the Crow is overjoyed. And in order to show off his beautiful voice, he opens his beak wide, lets his prey fall. The Fox grabs it, and says: "My good man, learn that every flatterer lives at the expense of the one who listens to him. This lesson, without doubt, is well worth a cheese." The Crow, ashamed and embarrassed, swore, but a little late, that he would not be taken again.</data>
 	<data name="Dialog.Glyphs.Alternates.Help">Alternate glyph versions for the selected character:</data>
 	
 	<data name="Dialog.Infos.Title">Informations</data>
