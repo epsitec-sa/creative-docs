@@ -833,9 +833,8 @@ namespace Epsitec.Common.Widgets
 				oldBook.items.Remove(item);
 			}
 			
-//			item.Bounds = this.InnerBounds;
 			item.Anchor = AnchorStyles.All;
-			item.Margins = new Drawing.Margins (2, 2, this.TabHeight + 2, 2);
+			item.Margins = new Drawing.Margins (0, 0, 0, 0);
 			
 			System.Diagnostics.Debug.Assert (oldBook == this);
 			
