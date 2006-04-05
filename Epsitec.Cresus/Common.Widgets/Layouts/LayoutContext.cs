@@ -27,6 +27,21 @@ namespace Epsitec.Common.Widgets.Layouts
 			}
 		}
 
+		public int								TotalMeasureCount
+		{
+			get
+			{
+				return this.totalMeasureCount;
+			}
+		}
+		public int								TotalArrangeCount
+		{
+			get
+			{
+				return this.totalArrangeCount;
+			}
+		}
+
 		public void StartNewLayoutPass()
 		{
 			this.measureQueue.Clear ();
@@ -85,8 +100,6 @@ namespace Epsitec.Common.Widgets.Layouts
 				
 				if (context != null)
 				{
-					System.Diagnostics.Debug.WriteLine (string.Format ("RemoveFromQueues: {0} / {1}", visual, visual.Children.Count));
-					
 					context.RemoveVisualFromMeasureQueue (visual);
 					context.RemoveVisualFromArrangeQueue (visual);
 					context.RemoveChildrenFromQueues (visual);
@@ -146,7 +159,7 @@ namespace Epsitec.Common.Widgets.Layouts
 			this.arrangeMap[visual] = node;
 		}
 
-		private void RemoveVisualFromMeasureQueue(Visual visual)
+		public void RemoveVisualFromMeasureQueue(Visual visual)
 		{
 			System.Diagnostics.Debug.Assert (visual != null);
 
@@ -158,7 +171,7 @@ namespace Epsitec.Common.Widgets.Layouts
 				this.measureMap.Remove (visual);
 			}
 		}
-		private void RemoveVisualFromArrangeQueue(Visual visual)
+		public void RemoveVisualFromArrangeQueue(Visual visual)
 		{
 			System.Diagnostics.Debug.Assert (visual != null);
 
@@ -189,6 +202,8 @@ namespace Epsitec.Common.Widgets.Layouts
 				this.cacheHeightMeasure = this.GetOrCreateCleanMeasure (node.Visual, LayoutMeasure.HeightProperty);
 
 				node.Visual.Measure (this);
+				
+				this.totalMeasureCount++;
 
 				this.cacheWidthMeasure.UpdatePassId (this.passId);
 				this.cacheHeightMeasure.UpdatePassId (this.passId);
@@ -255,10 +270,10 @@ namespace Epsitec.Common.Widgets.Layouts
 			while (this.arrangeQueue.Count > 0)
 			{
 				VisualNode node = this.arrangeQueue.Keys[0];
-				this.arrangeQueue.RemoveAt (0);
-				this.arrangeMap.Remove (node.Visual);
 
 				node.Visual.Arrange (this);
+				
+				this.totalArrangeCount++;
 
 				if (this.measureQueue.Count > 0)
 				{
@@ -474,6 +489,8 @@ namespace Epsitec.Common.Widgets.Layouts
 		
 		private int passId;
 		private int nodeRank;
+		private int totalArrangeCount;
+		private int totalMeasureCount;
 
 		private SortedList<VisualNode, Visual> measureQueue = new SortedList<VisualNode, Visual> ();
 		private SortedList<VisualNode, Visual> arrangeQueue = new SortedList<VisualNode, Visual> ();

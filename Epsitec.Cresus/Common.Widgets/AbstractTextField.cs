@@ -1151,7 +1151,6 @@ namespace Epsitec.Common.Widgets
 		{
 			base.OnTextDefined ();
 			this.has_edited_text = false;
-			System.Diagnostics.Debug.WriteLine ("Text defined. has_edited_text = false");
 		}
 
 		protected override void OnKeyboardFocusChanged(Types.DependencyPropertyChangedEventArgs e)

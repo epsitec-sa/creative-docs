@@ -844,7 +844,7 @@ namespace Epsitec.Common.Widgets
 		{
 			Drawing.Rectangle old_value = this.Bounds;
 
-			this.x   = value.Left;
+			this.x = value.Left;
 			this.y = value.Bottom;
 			this.width  = value.Width;
 			this.height = value.Height;
@@ -853,6 +853,7 @@ namespace Epsitec.Common.Widgets
 			
 			if (old_value != new_value)
 			{
+				this.Arrange (Helpers.VisualTree.FindLayoutContext (this));
 				this.SetBoundsOverride (old_value, new_value);
 				
 				Visual parent = this.Parent;
@@ -912,6 +913,8 @@ namespace Epsitec.Common.Widgets
 
 				this.ManualArrange ();
 			}
+			
+			context.RemoveVisualFromArrangeQueue (this);
 		}
 
 		protected virtual void ManualArrange()
@@ -1406,6 +1409,7 @@ namespace Epsitec.Common.Widgets
 			if (visual == null)
 			{
 				Layouts.LayoutContext.RemoveFromQueues (this);
+				this.parent.Invalidate (this.Bounds);
 				this.parent = visual;
 			}
 			else

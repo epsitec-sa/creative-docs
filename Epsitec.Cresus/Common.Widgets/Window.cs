@@ -370,9 +370,26 @@ namespace Epsitec.Common.Widgets
 		
 		public void SynchronousRepaint()
 		{
-			if (this.window != null)
+			if (this.sync_suspend_count > 0)
 			{
-				this.window.SynchronousRepaint ();
+				System.Diagnostics.Debug.WriteLine ("SynchronousRepaint called recursively !");
+				return;
+			}
+
+			try
+			{
+				this.sync_suspend_count++;
+
+				this.ForceLayout ();
+				
+				if (this.window != null)
+				{
+					this.window.SynchronousRepaint ();
+				}
+			}
+			finally
+			{
+				this.sync_suspend_count--;
 			}
 		}
 		
@@ -1732,9 +1749,12 @@ namespace Epsitec.Common.Widgets
 		{
 			Layouts.LayoutContext context = Helpers.VisualTree.GetLayoutContext (this.root);
 			int counter = 0;
+			int total = 0;
 
 			if (context != null)
 			{
+				total = context.TotalArrangeCount;
+				
 				while ((context.ArrangeQueueLength != 0) || (context.MeasureQueueLength != 0))
 				{
 					context.ExecuteArrange ();
@@ -1744,7 +1764,7 @@ namespace Epsitec.Common.Widgets
 			
 			if (counter > 0)
 			{
-				System.Diagnostics.Debug.WriteLine ("Arranged widgets in " + counter + " passes");
+				System.Diagnostics.Debug.WriteLine (string.Format ("Arranged {0} widgets in {1} passes", context.TotalArrangeCount - total, counter));
 			}
 		}
 		
@@ -2301,6 +2321,7 @@ namespace Epsitec.Common.Widgets
 		private bool							window_location_set;
 		
 		private int								show_count;
+		private int								sync_suspend_count;
 		private Widget							last_in_widget;
 		private Widget							capturing_widget;
 		private MouseButtons					capturing_button;
