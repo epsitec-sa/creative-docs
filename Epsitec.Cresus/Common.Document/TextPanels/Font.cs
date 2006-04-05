@@ -20,6 +20,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 			this.fontFace = new Widgets.FontFaceCombo(this);
 			this.fontFace.IsReadOnly = true;
+			this.fontFace.AutoFocus = false;
 			this.fontFace.ComboOpening += new CancelEventHandler(this.HandleFontFaceComboOpening);
 			this.fontFace.ComboClosed += new EventHandler(this.HandleFontFaceTextChanged);
 			this.fontFace.TabIndex = this.tabIndex++;
@@ -30,6 +31,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 			this.fontStyle = new TextFieldCombo(this);
 			this.fontStyle.IsReadOnly = true;
+			this.fontStyle.AutoFocus = false;
 			this.fontStyle.TextChanged += new EventHandler(this.HandleFieldChanged);
 			this.fontStyle.TabIndex = this.tabIndex++;
 			this.fontStyle.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
