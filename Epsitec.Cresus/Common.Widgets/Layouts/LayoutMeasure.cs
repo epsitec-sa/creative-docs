@@ -33,7 +33,17 @@ namespace Epsitec.Common.Widgets.Layouts
 		{
 			get
 			{
-				return this.desired;
+				if (double.IsNaN (this.desired))
+				{
+					return this.desired;
+				}
+				else
+				{
+					double value;
+					value = System.Math.Min (this.max, this.desired);
+					value = System.Math.Max (this.min, value);
+					return value;
+				}
 			}
 		}
 		

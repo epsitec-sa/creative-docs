@@ -95,11 +95,11 @@ namespace Epsitec.Common.Widgets
 			base.Dispose(disposing);
 		}
 		
-		protected override void UpdateClientGeometry()
+		protected override void UpdateGeometry()
 		{
 			this.margins.Bottom = TextFieldSlider.sliderHeight-AbstractTextField.FrameMargin;
 			
-			base.UpdateClientGeometry();
+			base.UpdateGeometry ();
 
 			if ( this.arrowUp == null )  return;
 

@@ -10,6 +10,6 @@ namespace Epsitec.Common.Widgets.Layouts
 	/// </summary>
 	public interface ILayoutEngine
 	{
-		void UpdateLayout(Visual container, IEnumerable<Visual> children);
+		void UpdateLayout(Visual container, Drawing.Rectangle rect, IEnumerable<Visual> children);
 	}
 }

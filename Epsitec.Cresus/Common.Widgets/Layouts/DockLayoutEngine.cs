@@ -10,14 +10,11 @@ namespace Epsitec.Common.Widgets.Layouts
 	/// </summary>
 	public sealed class DockLayoutEngine : ILayoutEngine
 	{
-		public void UpdateLayout(Visual container, IEnumerable<Visual> children)
+		public void UpdateLayout(Visual container, Drawing.Rectangle rect, IEnumerable<Visual> children)
 		{
 			System.Collections.Queue fill_queue = null;
 			
-			Drawing.Rectangle client = container.Client.Bounds;
-			
-			client.Deflate (container.Padding);
-			client.Deflate (container.InternalPadding);
+			Drawing.Rectangle client = rect;
 			
 			double push_dx = 0;
 			double push_dy = 0;
@@ -41,8 +38,15 @@ namespace Epsitec.Common.Widgets.Layouts
 				bounds = child.Bounds;
 				bounds.Inflate (child.Margins);
 
-				double dx = child.PreferredWidth;
-				double dy = child.PreferredHeight;
+				Drawing.Size size = LayoutContext.GetResultingMeasuredSize (child);
+
+				if (size == Drawing.Size.NegativeInfinity)
+				{
+					return;
+				}
+
+				double dx = size.Width;
+				double dy = size.Height;
 
 				if (double.IsNaN (dx))
 				{

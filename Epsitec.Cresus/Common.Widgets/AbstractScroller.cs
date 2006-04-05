@@ -169,13 +169,13 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		protected override void UpdateClientGeometry()
+		protected override void  ManualArrange()
 		{
-			base.UpdateClientGeometry();
+			base.ManualArrange();
 			this.UpdateGeometry ();
 		}
 		
-		protected virtual void UpdateGeometry()
+		protected void UpdateGeometry()
 		{
 			if ((this.arrowDown == null) ||
 				(this.arrowUp == null))

@@ -135,26 +135,25 @@ namespace Epsitec.Common.Widgets.Layouts
 				if ((this.cacheWidthMeasure.HasChanged) ||
 					(this.cacheHeightMeasure.HasChanged))
 				{
-					//	The visual has specified other measures.
+					//	The visual has specified other measures. Its contents
+					//	will have to be arranged.
 					
-					//	If the visual has children, then its contents need to
-					//	be arranged.
-
-					if (node.Visual.HasChildren)
-					{
-						this.AddToArrangeQueue (node.Visual, node.Depth);
-					}
+					this.AddToArrangeQueue (node.Visual, node.Depth);
 					
 					//	If the visual is either docked or anchored, then the
-					//	contents of the parent need to be re-arranged.
+					//	contents of the parent needs to be re-arranged too.
 
-					if ((node.Depth > 1) &&
-						((node.Visual.Dock != DockStyle.None) || (node.Visual.Anchor != AnchorStyles.None)))
+					if (node.Depth > 1)
 					{
-						Visual parent = node.Visual.Parent;
-						int depth = node.Depth - 1;
-						
-						this.AddToArrangeQueue (parent, depth);
+						LayoutMode mode = LayoutEngine.GetLayoutMode (node.Visual);
+
+						if (mode != LayoutMode.None)
+						{
+							Visual parent = node.Visual.Parent;
+							int depth = node.Depth - 1;
+
+							this.AddToArrangeQueue (parent, depth);
+						}
 					}
 				}
 
@@ -168,6 +167,11 @@ namespace Epsitec.Common.Widgets.Layouts
 		
 		public void ExecuteArrange()
 		{
+			if (this.measureQueue.Count > 0)
+			{
+				this.ExecuteMeasure ();
+			}
+			
 			//	Arrange all widgets which have been queued to be arranged.
 			//	Start near the root and walk down through the children.
 			
@@ -175,21 +179,16 @@ namespace Epsitec.Common.Widgets.Layouts
 
 			while (this.arrangeQueue.Count > 0)
 			{
+				VisualNode node = this.arrangeQueue.Keys[0];
+
+				node.Visual.Arrange (this);
+
 				if (this.measureQueue.Count > 0)
 				{
 					break;
 				}
 				
-				VisualNode node = this.arrangeQueue.Keys[0];
 				this.arrangeQueue.RemoveAt (0);
-
-				System.Diagnostics.Debug.Assert (node.Visual.HasChildren);
-
-				Visual visual = node.Visual;
-				IEnumerable<Visual> children = node.Visual.Children;
-				
-				LayoutEngine.AnchorEngine.UpdateLayout (visual, children);
-				LayoutEngine.DockEngine.UpdateLayout (visual, children);
 			}
 		}
 		
@@ -406,5 +405,21 @@ namespace Epsitec.Common.Widgets.Layouts
 		private Visual cacheVisual;
 		private LayoutMeasure cacheWidthMeasure;
 		private LayoutMeasure cacheHeightMeasure;
+
+		internal static Drawing.Size GetResultingMeasuredSize(Visual visual)
+		{
+			LayoutMeasure measureWidth = LayoutMeasure.GetWidth (visual);
+			LayoutMeasure measureHeight = LayoutMeasure.GetHeight (visual);
+
+			if ((measureWidth == null) ||
+				(measureHeight == null))
+			{
+				LayoutContext.AddToMeasureQueue (visual);
+
+				return Drawing.Size.NegativeInfinity;
+			}
+			
+			return new Drawing.Size (measureWidth.Desired, measureHeight.Desired);
+		}
 	}
 }

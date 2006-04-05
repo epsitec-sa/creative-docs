@@ -319,6 +319,7 @@
     <Compile Include="CommandState.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Layouts\LayoutMode.cs" />
     <Compile Include="Layouts\NoOpLayoutEngine.cs" />
     <Compile Include="Layouts\LayoutContext.cs" />
     <Compile Include="Layouts\LayoutMeasure.cs" />

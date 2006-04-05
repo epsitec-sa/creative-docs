@@ -122,10 +122,15 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		protected override void UpdateClientGeometry()
+		protected override void  ManualArrange()
+		{
+			base.ManualArrange();
+			this.UpdateGeometry ();
+		}
+		
+		protected void UpdateGeometry()
 		{
 			//	Met à jour la géométrie.
-			base.UpdateClientGeometry();
 
 			Drawing.Rectangle rect = this.Client.Bounds;
 			double dim = System.Math.Min(rect.Width, rect.Height);

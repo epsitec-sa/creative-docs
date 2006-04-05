@@ -36,16 +36,28 @@ namespace Epsitec.Common.Widgets.Layouts
 
 		public static ILayoutEngine SelectLayoutEngine(Visual visual)
 		{
-			if (visual.Dock != DockStyle.None)
+			switch (LayoutEngine.GetLayoutMode (visual))
 			{
-				return LayoutEngine.DockEngine;
-			}
-			if (visual.Anchor != AnchorStyles.None)
-			{
-				return LayoutEngine.AnchorEngine;
+				case LayoutMode.Docked:
+					return LayoutEngine.DockEngine;
+				case LayoutMode.Anchored:
+					return LayoutEngine.AnchorEngine;
 			}
 			
 			return LayoutEngine.NoOpEngine;
+		}
+		public static LayoutMode GetLayoutMode(Visual visual)
+		{
+			if (visual.Dock != DockStyle.None)
+			{
+				return LayoutMode.Docked;
+			}
+			if (visual.Anchor != AnchorStyles.None)
+			{
+				return LayoutMode.Anchored;
+			}
+
+			return LayoutMode.None;
 		}
 		
 		private static ILayoutEngine					dock_engine   = new DockLayoutEngine ();

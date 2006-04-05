@@ -66,6 +66,7 @@ namespace Epsitec.Common.Drawing
 		public static readonly Size				Empty;
 		public static readonly Size				MaxValue = new Drawing.Size (2000000000, 2000000000);
 		public static readonly Size				Zero = new Drawing.Size (0, 0);
+		public static readonly Size				NegativeInfinity = new Drawing.Size (double.NegativeInfinity, double.NegativeInfinity);
 		public static readonly Size				PositiveInfinity = new Drawing.Size (double.PositiveInfinity, double.PositiveInfinity);
 		
 		public Point ToPoint()

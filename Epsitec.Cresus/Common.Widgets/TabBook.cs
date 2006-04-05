@@ -700,10 +700,14 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
-		protected override void UpdateClientGeometry()
+		protected override void  ManualArrange()
 		{
-			base.UpdateClientGeometry();
-			
+			base.ManualArrange();
+			this.UpdateGeometry ();
+		}
+		
+		protected void UpdateGeometry()
+		{
 			this.UpdateOffset();
 			this.UpdateButtons();
 		}

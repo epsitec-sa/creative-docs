@@ -274,6 +274,88 @@ namespace Epsitec.Common.Widgets
 		}
 
 		[Test]
+		public void CheckArrange4()
+		{
+			Visual a = new Visual ();
+			Visual b = new Visual ();
+			Visual c1 = new Visual ();
+			Visual c2 = new Visual ();
+
+			Visual[] array;
+
+			a.Name = "a";
+			b.Name = "b";
+			c1.Name = "c1";
+			c2.Name = "c2";
+
+			a.Children.Add (b);
+			b.Children.Add (c1);
+			b.Children.Add (c2);
+
+			Layouts.LayoutContext context = Helpers.VisualTree.GetLayoutContext (a);
+
+			//	Oublie tout ce qui a pu être généré par la construction de l'arbre
+			//	ci-dessus :
+
+			context.StartNewLayoutPass ();
+
+			a.Bounds = new Drawing.Rectangle (0, 0, 100, 200);
+
+			b.Anchor = AnchorStyles.All;
+			b.Margins = new Drawing.Margins (1, 1, 1, 1);
+			b.Padding = new Drawing.Margins (5, 5, 10, 10);
+
+			c1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+			c1.PreferredHeight = 20;
+			c1.PreferredWidth = 60;
+			c1.Margins = new Drawing.Margins (0, 0, 0, 0);
+
+			c2.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+			c2.PreferredWidth = 60;
+			c2.PreferredHeight = 30;
+			c2.Margins = new Drawing.Margins (0, 5, 0, 5);
+
+			array = Types.Collection.ToArray (context.GetMeasureQueue ());
+
+			Assert.AreEqual (3, array.Length);
+			Assert.AreEqual (c1, array[0]);
+			Assert.AreEqual (c2, array[1]);
+			Assert.AreEqual (a, array[2]);
+
+			array = Types.Collection.ToArray (context.GetArrangeQueue ());
+
+			Assert.AreEqual (2, array.Length);
+			Assert.AreEqual (a, array[0]);
+			Assert.AreEqual (b, array[1]);
+
+			context.ExecuteMeasure ();
+
+			array = Types.Collection.ToArray (context.GetArrangeQueue ());
+
+			Assert.AreEqual (4, array.Length);
+			Assert.AreEqual (a, array[0]);
+			Assert.AreEqual (b, array[1]);
+			Assert.AreEqual (c1, array[2]);
+			Assert.AreEqual (c2, array[3]);
+
+			context.ExecuteArrange ();
+
+			Assert.AreEqual (4, context.ArrangeQueueLength);
+			Assert.AreEqual (1, context.MeasureQueueLength);
+
+			context.ExecuteMeasure ();
+			context.ExecuteArrange ();
+
+			Assert.AreEqual (0, context.ArrangeQueueLength);
+			Assert.AreEqual (0, context.MeasureQueueLength);
+
+			Assert.AreEqual ("[0;0;100;200]", a.Bounds.ToString ());
+			Assert.AreEqual ("[1;1;98;198]", b.Bounds.ToString ());
+			Assert.AreEqual ("[5;168;88;20]", c1.Bounds.ToString ());
+			Assert.AreEqual ("[28;15;60;30]", c2.Bounds.ToString ());
+		}
+		
+		[Test]
 		public void CheckRealExample()
 		{
 			Window window = AdornerTest.CreateAdornerWidgets ();
@@ -287,11 +369,12 @@ namespace Epsitec.Common.Widgets
 
 			System.Console.Out.WriteLine ("After Measure, arrange: {0} elements", context.ArrangeQueueLength);
 
-			context.ExecuteArrange ();
-
-			System.Console.Out.WriteLine ("After Arrange, measure: {0} elements", context.MeasureQueueLength);
-			System.Console.Out.WriteLine ("After Arrange, arrange: {0} elements", context.ArrangeQueueLength);
-
+			for (int i = 1; context.ArrangeQueueLength > 0; i++)
+			{
+				context.ExecuteArrange ();
+				System.Console.Out.WriteLine ("Arrange pass {0}, measure: {1} elements, arrange: {2} elements", i, context.MeasureQueueLength, context.ArrangeQueueLength);
+			}
+			
 			Window.RunInTestEnvironment (window);
 		}
 	}

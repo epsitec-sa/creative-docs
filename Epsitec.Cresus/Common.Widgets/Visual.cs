@@ -865,7 +865,7 @@ namespace Epsitec.Common.Widgets
 			
 			if (old_value != new_value)
 			{
-				this.UpdateClientGeometry ();
+//-				this.UpdateClientGeometry ();
 				
 				Visual parent = this.Parent;
 				
@@ -938,6 +938,27 @@ namespace Epsitec.Common.Widgets
 			
 			context.DefineDesiredWidth (this, desired.Width);
 			context.DefineDesiredHeight (this, desired.Height);
+		}
+		public void Arrange(Layouts.LayoutContext context)
+		{
+			if (this.HasChildren)
+			{
+				IEnumerable<Visual> children = this.Children;
+
+				Drawing.Rectangle rect = this.Client.Bounds;
+				
+				rect.Deflate (this.Padding);
+				rect.Deflate (this.InternalPadding);
+
+				Layouts.LayoutEngine.AnchorEngine.UpdateLayout (this, rect, children);
+				Layouts.LayoutEngine.DockEngine.UpdateLayout (this, rect, children);
+
+				this.ManualArrange ();
+			}
+		}
+
+		protected virtual void ManualArrange()
+		{
 		}
 
 		protected virtual void MeasureMinMax(ref Drawing.Size min, ref Drawing.Size max)

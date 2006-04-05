@@ -1514,17 +1514,9 @@ invalid:	row    = -1;
 			return true;
 		}
 		
-		protected override void UpdateClientGeometry()
+		protected override void  ManualArrange()
 		{
-			base.UpdateClientGeometry ();
-			
-			if ((this.v_scroller == null) ||
-				(this.h_scroller == null) ||
-				(this.header == null))
-			{
-				return;
-			}
-			
+			base.ManualArrange();
 			this.UpdateGeometry ();
 		}
 		
@@ -1544,7 +1536,7 @@ invalid:	row    = -1;
 		{
 			if (this.is_dirty)
 			{
-				this.UpdateClientGeometry ();
+				this.UpdateGeometry ();
 				this.DispatchDummyMouseMoveEvent ();
 			}
 		}
@@ -1555,6 +1547,13 @@ invalid:	row    = -1;
 		
 		protected virtual void UpdateGeometry()
 		{
+			if ((this.v_scroller == null) ||
+				(this.h_scroller == null) ||
+				(this.header == null))
+			{
+				return;
+			}
+
 			this.is_dirty = false;
 			
 			this.UpdateRowHeight ();
@@ -1949,7 +1948,7 @@ invalid:	row    = -1;
 		
 		protected override void OnAdornerChanged()
 		{
-			this.UpdateClientGeometry ();
+			this.UpdateGeometry ();
 			base.OnAdornerChanged ();
 		}
 		

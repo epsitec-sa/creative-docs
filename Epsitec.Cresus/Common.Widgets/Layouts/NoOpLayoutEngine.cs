@@ -7,7 +7,7 @@ namespace Epsitec.Common.Widgets.Layouts
 {
 	public sealed class NoOpLayoutEngine : ILayoutEngine
 	{
-		public void UpdateLayout(Visual container, IEnumerable<Visual> children)
+		public void UpdateLayout(Visual container, Drawing.Rectangle rect, IEnumerable<Visual> children)
 		{
 		}
 	}

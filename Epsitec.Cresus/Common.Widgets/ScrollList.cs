@@ -502,11 +502,15 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		protected override void UpdateClientGeometry()
+		protected override void  ManualArrange()
+		{
+			base.ManualArrange();
+			this.UpdateGeometry ();
+		}
+		
+		protected void UpdateGeometry()
 		{
 			//	Met à jour la géométrie de l'ascenseur de la liste.
-			
-			base.UpdateClientGeometry();
 			
 			if ( this.lineHeight == 0 )  return;
 
@@ -531,7 +535,7 @@ namespace Epsitec.Common.Widgets
 
 		protected override void OnAdornerChanged()
 		{
-			this.UpdateClientGeometry ();
+			this.UpdateGeometry ();
 			this.UpdateMargins ();
 			base.OnAdornerChanged ();
 		}

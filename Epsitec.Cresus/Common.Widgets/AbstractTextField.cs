@@ -1138,7 +1138,7 @@ namespace Epsitec.Common.Widgets
 		protected override void OnAdornerChanged()
 		{
 			base.OnAdornerChanged();
-			this.UpdateClientGeometry();
+			this.UpdateGeometry();
 		}
 		
 		protected override void OnCultureChanged()
@@ -1518,9 +1518,14 @@ namespace Epsitec.Common.Widgets
 			graphics.RestoreClippingRectangle(rSaveClip);
 		}
 
-		protected override void UpdateClientGeometry()
+		protected sealed override void  ManualArrange()
 		{
-			base.UpdateClientGeometry();
+			base.ManualArrange();
+			this.UpdateGeometry ();
+		}
+		
+		protected virtual void UpdateGeometry()
+		{
 			this.UpdateButtonGeometry();
 			this.OnCursorChanged(true);
 		}

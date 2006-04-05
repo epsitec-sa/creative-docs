@@ -189,9 +189,9 @@ namespace Epsitec.Common.Widgets
 			base.Dispose (disposing);
 		}
 
-		protected override void UpdateClientGeometry()
+		protected override void  ManualArrange()
 		{
-			base.UpdateClientGeometry();
+			base.ManualArrange();
 			this.UpdateGeometry ();
 		}
 		

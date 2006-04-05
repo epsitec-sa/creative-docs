@@ -123,10 +123,14 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		protected override void UpdateClientGeometry()
+		protected override void  ManualArrange()
 		{
-			base.UpdateClientGeometry();
-
+			base.ManualArrange();
+			this.UpdateGeometry ();
+		}
+		
+		protected void UpdateGeometry()
+		{
 			if ( this.items == null )  return;
 			this.UpdateGeometryPages();
 			this.UpdatePaneButtons();
