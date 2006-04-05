@@ -3353,6 +3353,16 @@ namespace Epsitec.Common.Widgets
 		{
 			this.UpdateClientGeometry ();
 		}
+
+		protected override void ManualArrange()
+		{
+			base.ManualArrange ();
+			
+			if (this.TextLayout != null)
+			{
+				this.UpdateTextLayout ();
+			}
+		}
 		
 		
 		protected override void UpdateClientGeometry()

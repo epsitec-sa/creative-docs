@@ -2071,6 +2071,16 @@ namespace Epsitec.Common.Widgets
 		
 		internal void RefreshGraphics(Drawing.Graphics graphics, Drawing.Rectangle repaint, Drawing.Rectangle[] strips)
 		{
+			Layouts.LayoutContext context = Helpers.VisualTree.GetLayoutContext (this.root);
+
+			if (context != null)
+			{
+				while ((context.ArrangeQueueLength != 0) || (context.MeasureQueueLength != 0))
+				{
+					context.ExecuteArrange ();
+				}
+			}
+			
 			if (strips.Length > 1)
 			{
 				//	On doit repeindre toute une série de rectangles :
