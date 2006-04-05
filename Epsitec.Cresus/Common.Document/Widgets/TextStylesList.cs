@@ -80,7 +80,7 @@ namespace Epsitec.Common.Document.Widgets
 			else
 			{
 				Text.TextStyle style = this.list[rank];
-				return this.document.TextContext.StyleList.StyleMap.GetCaption(style);
+				return Misc.UserTextStyleName(this.document.TextContext.StyleList.StyleMap.GetCaption(style));
 			}
 		}
 

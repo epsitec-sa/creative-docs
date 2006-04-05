@@ -254,6 +254,7 @@ namespace Epsitec.Common.Widgets
 			int first = this.FirstIconVisible;
 			this.buttonPrev.Enable = (first > 0);
 			this.buttonNext.Enable = (first < ((this.items.Count-1)/this.buttonMain.Length)*this.buttonMain.Length);
+			this.buttonMenu.Enable = (this.items.Count > this.buttonMain.Length);
 		}
 
 		public IconButton IconButton(int rank)
@@ -306,12 +307,14 @@ namespace Epsitec.Common.Widgets
 				this.buttonMain[rank].IconName = item.BriefIcon;
 				this.buttonMain[rank].PreferredIconSize = new Drawing.Size(this.ButtonWidth, this.ButtonHeight);
 				this.buttonMain[rank].ActiveState = (this.SelectedIndex == index) ? ActiveState.Yes : ActiveState.No;
+				this.buttonMain[rank].SetSelected(this.SelectedIndex == index);
 				ToolTip.Default.SetToolTip(this.buttonMain[rank], item.Tooltip);
 			}
 			else
 			{
 				this.buttonMain[rank].IconName = null;
 				this.buttonMain[rank].ActiveState = ActiveState.No;
+				this.buttonMain[rank].SetSelected(false);
 				string tooltip = null;
 				ToolTip.Default.SetToolTip(this.buttonMain[rank], tooltip);
 			}
@@ -403,8 +406,7 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void OnSelectedIndexChanged()
 		{
-			//	Ne notifie les changements d'index que lorsque le menu déroulant
-			//	est fermé.
+			//	Ne notifie les changements d'index que lorsque le menu déroulant est fermé.
 			if ( this.IsComboOpen == false )
 			{
 				if ( this.SelectedIndexChanged != null )
@@ -443,11 +445,6 @@ namespace Epsitec.Common.Widgets
 						this.Navigate(1);
 					}
 					
-					message.Consumer = this;
-					return;
-				
-				case MessageType.MouseDown:
-					this.OpenCombo();
 					message.Consumer = this;
 					return;
 			}

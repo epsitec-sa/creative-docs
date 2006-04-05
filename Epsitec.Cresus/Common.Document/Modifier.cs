@@ -1911,7 +1911,7 @@ namespace Epsitec.Common.Document
 			Objects.AbstractText edit = this.RetEditObject();
 			if ( edit == null )  return;
 
-			string name = this.document.TextContext.StyleList.StyleMap.GetCaption(style);
+			string name = Misc.UserTextStyleName(this.document.TextContext.StyleList.StyleMap.GetCaption(style));
 			string text = string.Format(Res.Strings.Action.AggregateUse, name);
 
 			if ( style.TextStyleClass == Text.TextStyleClass.Paragraph )

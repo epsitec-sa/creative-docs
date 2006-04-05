@@ -135,6 +135,7 @@ namespace Epsitec.Common.Document.Containers
 			this.editType.Dock = DockStyle.Left;
 			this.editType.DockMargins = new Margins(3, 1, 0, 0);
 			this.editType.TextChanged += new EventHandler(this.HandleEditTypeChanged);
+			this.editType.ComboClosed += new EventHandler(this.HandleEditTypeClosed);
 			this.editType.TabIndex = 1;
 			this.editType.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
@@ -460,6 +461,12 @@ namespace Epsitec.Common.Document.Containers
 			this.document.Modifier.OpletQueueValidateAction();
 			this.UpdateTable();
 			this.ignoreChanged = false;
+		}
+
+		private void HandleEditTypeClosed(object sender)
+		{
+			this.editPosition.SelectAll();
+			this.editPosition.Focus();
 		}
 
 		private void HandleEditPositionChanged(object sender)

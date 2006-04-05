@@ -12,6 +12,11 @@ namespace Epsitec.Common.Document.Containers
 	{
 		public Layers(Document document) : base(document)
 		{
+			this.helpText = new StaticText(this);
+			this.helpText.Text = Res.Strings.Container.Help.Layers;
+			this.helpText.Dock = DockStyle.Top;
+			this.helpText.DockMargins = new Margins(0, 0, -2, 7);
+
 			this.toolBar = new HToolBar(this);
 			this.toolBar.Dock = DockStyle.Top;
 			this.toolBar.DockMargins = new Margins(0, 0, 0, -1);
@@ -235,6 +240,7 @@ namespace Epsitec.Common.Document.Containers
 		protected override void DoUpdateContent()
 		{
 			//	Effectue la mise à jour du contenu.
+			this.helpText.Visibility = this.document.GlobalSettings.LabelProperties;
 			this.UpdateTable();
 			this.UpdateRadio();
 			this.UpdatePanel();
@@ -562,30 +568,31 @@ namespace Epsitec.Common.Document.Containers
 		}
 
 
-		protected HToolBar				toolBar;
-		protected IconButton			buttonNew;
-		protected IconButton			buttonDuplicate;
-		protected IconButton			buttonNewSel;
-		protected IconButton			buttonMergeUp;
-		protected IconButton			buttonMergeDown;
-		protected IconButton			buttonUp;
-		protected IconButton			buttonDown;
-		protected IconButton			buttonDelete;
-		protected CellTable				table;
-		protected HToolBar				toolBarName;
-		protected TextField				name;
-		protected GlyphButton			extendedButton;
-		protected Widget				panelMisc;
-		protected Widget				panelButton;
-		protected Button				buttonShow;
-		protected Button				buttonDimmed;
-		protected Button				buttonHide;
-		protected GroupBox				radioGroupPrint;
-		protected RadioButton			radioShowPrint;
-		protected RadioButton			radioDimmedPrint;
-		protected RadioButton			radioHidePrint;
-		protected Panels.ModColor		panelModColor;
-		protected bool					isExtended = false;
-		protected bool					ignoreChanged = false;
+		protected StaticText				helpText;
+		protected HToolBar					toolBar;
+		protected IconButton				buttonNew;
+		protected IconButton				buttonDuplicate;
+		protected IconButton				buttonNewSel;
+		protected IconButton				buttonMergeUp;
+		protected IconButton				buttonMergeDown;
+		protected IconButton				buttonUp;
+		protected IconButton				buttonDown;
+		protected IconButton				buttonDelete;
+		protected CellTable					table;
+		protected HToolBar					toolBarName;
+		protected TextField					name;
+		protected GlyphButton				extendedButton;
+		protected Widget					panelMisc;
+		protected Widget					panelButton;
+		protected Button					buttonShow;
+		protected Button					buttonDimmed;
+		protected Button					buttonHide;
+		protected GroupBox					radioGroupPrint;
+		protected RadioButton				radioShowPrint;
+		protected RadioButton				radioDimmedPrint;
+		protected RadioButton				radioHidePrint;
+		protected Panels.ModColor			panelModColor;
+		protected bool						isExtended = false;
+		protected bool						ignoreChanged = false;
 	}
 }

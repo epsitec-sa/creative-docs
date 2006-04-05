@@ -250,7 +250,7 @@ namespace Epsitec.Common.Document.Widgets
 			{
 				Text.TextStyle style = styles[i];
 
-				if ( this.document.TextContext.StyleList.StyleMap.GetCaption(style) == currentStyle )
+				if ( Misc.UserTextStyleName(this.document.TextContext.StyleList.StyleMap.GetCaption(style)) == currentStyle )
 				{
 					return i;
 				}
