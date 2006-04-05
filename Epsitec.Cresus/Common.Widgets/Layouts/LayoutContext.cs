@@ -74,8 +74,24 @@ namespace Epsitec.Common.Widgets.Layouts
 			}
 		}
 		
+		public static void RemoveFromMeasureQueue(Visual visual)
+		{
+			if (visual != null)
+			{
+				int depth;
+				LayoutContext context = Helpers.VisualTree.FindLayoutContext (visual, out depth);
+				
+				if (context != null)
+				{
+					context.RemoveFromMeasureQueue (visual, depth);
+				}
+			}
+		}
+		
 		private void AddToMeasureQueue(Visual visual, int depth)
 		{
+			System.Diagnostics.Debug.Assert (visual != null);
+			
 			int rank = ++this.nodeRank;
 			VisualNode node = new VisualNode (visual, 0, SortMode.Measure, depth);
 
@@ -93,6 +109,8 @@ namespace Epsitec.Common.Widgets.Layouts
 		}
 		private void AddToArrangeQueue(Visual visual, int depth)
 		{
+			System.Diagnostics.Debug.Assert (visual != null);
+			
 			int rank = ++this.nodeRank;
 			VisualNode node = new VisualNode (visual, 0, SortMode.Arrange, depth);
 			
@@ -107,6 +125,14 @@ namespace Epsitec.Common.Widgets.Layouts
 			
 			node.DefineRank (rank);
 			this.arrangeQueue[node] = visual;
+		}
+		
+		private void RemoveFromMeasureQueue(Visual visual, int depth)
+		{
+			System.Diagnostics.Debug.Assert (visual != null);
+
+			VisualNode node = new VisualNode (visual, 0, SortMode.Measure, depth);
+			this.measureQueue.Remove (node);
 		}
 
 		public void ExecuteMeasure()
@@ -152,6 +178,9 @@ namespace Epsitec.Common.Widgets.Layouts
 							Visual parent = node.Visual.Parent;
 							int depth = node.Depth - 1;
 
+							System.Diagnostics.Debug.Assert (Helpers.VisualTree.FindLayoutContext (node.Visual) == this);
+							System.Diagnostics.Debug.Assert (parent != null);
+							
 							this.AddToArrangeQueue (parent, depth);
 						}
 					}

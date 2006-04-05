@@ -503,7 +503,6 @@ namespace Epsitec.Common.Widgets.Helpers
 			int depth;
 			return VisualTree.GetLayoutContext (visual, out depth);
 		}
-		
 		public static Layouts.LayoutContext GetLayoutContext(Visual visual, out int depth)
 		{
 			depth = 0;
@@ -535,7 +534,46 @@ namespace Epsitec.Common.Widgets.Helpers
 
 			return context;
 		}
-		
+
+		public static Layouts.LayoutContext FindLayoutContext(Visual visual)
+		{
+			if (visual == null)
+			{
+				return null;
+			}
+
+			Visual parent = visual.Parent;
+
+			while (parent != null)
+			{
+				visual = parent;
+				parent = visual.Parent;
+			}
+
+			return Layouts.LayoutContext.GetLayoutContext (visual);
+		}
+		public static Layouts.LayoutContext FindLayoutContext(Visual visual, out int depth)
+		{
+			depth = 0;
+
+			if (visual == null)
+			{
+				return null;
+			}
+
+			Visual parent = visual.Parent;
+			depth++;
+
+			while (parent != null)
+			{
+				visual = parent;
+				parent = visual.Parent;
+				depth++;
+			}
+
+			return Layouts.LayoutContext.GetLayoutContext (visual);
+		}
+
 		public static Visual FindParentUsingEvent(Visual visual, Types.DependencyProperty property)
 		{
 			//	Cherche le premier parent dans la hiérarchie pour lequel un

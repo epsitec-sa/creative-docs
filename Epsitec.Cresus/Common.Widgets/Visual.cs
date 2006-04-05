@@ -1118,18 +1118,6 @@ namespace Epsitec.Common.Widgets
 			that.OnSizeChanged (new DependencyPropertyChangedEventArgs (Visual.SizeProperty, old_value, new_value));
 		}
 		
-		private static void NotifyMinSizeChanged(DependencyObject o, object old_value, object new_value)
-		{
-			Visual that = o as Visual;
-			that.OnMinSizeChanged (new DependencyPropertyChangedEventArgs (Visual.MinSizeProperty, old_value, new_value));
-		}
-		
-		private static void NotifyMaxSizeChanged(DependencyObject o, object old_value, object new_value)
-		{
-			Visual that = o as Visual;
-			that.OnMaxSizeChanged (new DependencyPropertyChangedEventArgs (Visual.MaxSizeProperty, old_value, new_value));
-		}
-		
 		private static void NotifyParentChanged(DependencyObject o, object old_value, object new_value)
 		{
 			Visual that = o as Visual;
@@ -1156,14 +1144,6 @@ namespace Epsitec.Common.Widgets
 		
 		
 		protected virtual void OnSizeChanged(Types.DependencyPropertyChangedEventArgs e)
-		{
-		}
-		
-		protected virtual void OnMinSizeChanged(Types.DependencyPropertyChangedEventArgs e)
-		{
-		}
-		
-		protected virtual void OnMaxSizeChanged(Types.DependencyPropertyChangedEventArgs e)
 		{
 		}
 		
@@ -1205,11 +1185,6 @@ namespace Epsitec.Common.Widgets
 		protected virtual void OnCommandDispatchersChanged(Types.DependencyPropertyChangedEventArgs e)
 		{
 			Helpers.VisualTree.InvalidateCommandDispatcher (this);
-		}
-		
-		
-		protected virtual void UpdateClientGeometry()
-		{
 		}
 		
 		
@@ -1357,12 +1332,12 @@ namespace Epsitec.Common.Widgets
 		public static readonly DependencyProperty PreferredHeightProperty		= DependencyProperty.Register ("PreferredHeight", typeof (double), typeof (Visual), new VisualPropertyMetadata (double.NaN, VisualPropertyMetadataOptions.AffectsMeasure));
 		public static readonly DependencyProperty ActualWidthProperty			= DependencyProperty.RegisterReadOnly ("ActualWidth", typeof (double), typeof (Visual), new VisualPropertyMetadata (Visual.GetActualWidthValue, VisualPropertyMetadataOptions.None));
 		public static readonly DependencyProperty ActualHeightProperty			= DependencyProperty.RegisterReadOnly ("ActualHeight", typeof (double), typeof (Visual), new VisualPropertyMetadata (Visual.GetActualHeightValue, VisualPropertyMetadataOptions.None));
-		public static readonly DependencyProperty MinSizeProperty				= DependencyProperty.Register ("MinSize", typeof (Drawing.Size), typeof (Visual), new VisualPropertyMetadata (Drawing.Size.Empty, new PropertyInvalidatedCallback (Visual.NotifyMinSizeChanged), VisualPropertyMetadataOptions.AffectsMeasure));
-		public static readonly DependencyProperty MinWidthProperty				= DependencyProperty.Register ("MinWidth", typeof (double), typeof (Visual), new VisualPropertyMetadata (0.0, new PropertyInvalidatedCallback (Visual.NotifyMinSizeChanged), VisualPropertyMetadataOptions.AffectsMeasure));
-		public static readonly DependencyProperty MinHeightProperty				= DependencyProperty.Register ("MinHeight", typeof (double), typeof (Visual), new VisualPropertyMetadata (0.0, new PropertyInvalidatedCallback (Visual.NotifyMinSizeChanged), VisualPropertyMetadataOptions.AffectsMeasure));
-		public static readonly DependencyProperty MaxSizeProperty				= DependencyProperty.Register ("MaxSize", typeof (Drawing.Size), typeof (Visual), new VisualPropertyMetadata (Drawing.Size.MaxValue, new PropertyInvalidatedCallback (Visual.NotifyMaxSizeChanged), VisualPropertyMetadataOptions.AffectsMeasure));
-		public static readonly DependencyProperty MaxWidthProperty				= DependencyProperty.Register ("MaxWidth", typeof (double), typeof (Visual), new VisualPropertyMetadata (double.PositiveInfinity, new PropertyInvalidatedCallback (Visual.NotifyMaxSizeChanged), VisualPropertyMetadataOptions.AffectsMeasure));
-		public static readonly DependencyProperty MaxHeightProperty				= DependencyProperty.Register ("MaxHeight", typeof (double), typeof (Visual), new VisualPropertyMetadata (double.PositiveInfinity, new PropertyInvalidatedCallback (Visual.NotifyMaxSizeChanged), VisualPropertyMetadataOptions.AffectsMeasure));
+		public static readonly DependencyProperty MinSizeProperty				= DependencyProperty.Register ("MinSize", typeof (Drawing.Size), typeof (Visual), new VisualPropertyMetadata (Drawing.Size.Zero, VisualPropertyMetadataOptions.AffectsMeasure));
+		public static readonly DependencyProperty MinWidthProperty				= DependencyProperty.Register ("MinWidth", typeof (double), typeof (Visual), new VisualPropertyMetadata (0.0, VisualPropertyMetadataOptions.AffectsMeasure));
+		public static readonly DependencyProperty MinHeightProperty				= DependencyProperty.Register ("MinHeight", typeof (double), typeof (Visual), new VisualPropertyMetadata (0.0, VisualPropertyMetadataOptions.AffectsMeasure));
+		public static readonly DependencyProperty MaxSizeProperty				= DependencyProperty.Register ("MaxSize", typeof (Drawing.Size), typeof (Visual), new VisualPropertyMetadata (Drawing.Size.MaxValue, VisualPropertyMetadataOptions.AffectsMeasure));
+		public static readonly DependencyProperty MaxWidthProperty				= DependencyProperty.Register ("MaxWidth", typeof (double), typeof (Visual), new VisualPropertyMetadata (double.PositiveInfinity, VisualPropertyMetadataOptions.AffectsMeasure));
+		public static readonly DependencyProperty MaxHeightProperty				= DependencyProperty.Register ("MaxHeight", typeof (double), typeof (Visual), new VisualPropertyMetadata (double.PositiveInfinity, VisualPropertyMetadataOptions.AffectsMeasure));
 		
 		public static readonly DependencyProperty VisibilityProperty			= DependencyProperty.Register ("Visibility", typeof (bool), typeof (Visual), new VisualPropertyMetadata (true, new SetValueOverrideCallback (Visual.SetVisibilityValue), VisualPropertyMetadataOptions.None));
 		public static readonly DependencyProperty EnableProperty				= DependencyProperty.Register ("Enable", typeof (bool), typeof (Visual), new VisualPropertyMetadata (true, new SetValueOverrideCallback (Visual.SetEnableValue), VisualPropertyMetadataOptions.None));
@@ -1407,10 +1382,14 @@ namespace Epsitec.Common.Widgets
 
 		internal void SetParentVisual(Visual visual)
 		{
-			this.parent = visual;
-
-			if (visual != null)
+			if (visual == null)
 			{
+				Layouts.LayoutContext.RemoveFromMeasureQueue (this);
+				this.parent = visual;
+			}
+			else
+			{
+				this.parent = visual;
 				Layouts.LayoutContext.AddToMeasureQueue (this);
 			}
 		}

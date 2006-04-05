@@ -171,8 +171,6 @@ namespace Epsitec.Common.Widgets
 
 		protected override void SetBoundsOverride(Drawing.Rectangle oldRect, Drawing.Rectangle newRect)
 		{
-			System.Diagnostics.Debug.WriteLine (string.Format ("Scroller {0}, arrange", this.VisualSerialId.ToString ("X4")));
-			
 			base.SetBoundsOverride (oldRect, newRect);
 			this.UpdateGeometry ();
 		}
@@ -513,8 +511,6 @@ namespace Epsitec.Common.Widgets
 			Widgets.Direction dir   = this.is_vertical ? Direction.Up : Direction.Left;
 			WidgetState       state = this.PaintState;
 
-			System.Diagnostics.Debug.WriteLine (string.Format ("Scroller {0}, bounds: {1}", this.VisualSerialId.ToString ("X4"), this.Bounds));
-			
 			//	Dessine le fond.
 			adorner.PaintScrollerBackground (graphics, this.Client.Bounds, this.thumbRect, this.tabRect, state & ~WidgetState.Entered, dir);
 			

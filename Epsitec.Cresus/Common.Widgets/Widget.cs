@@ -3265,11 +3265,6 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		internal void InternalUpdateGeometry()
-		{
-			this.UpdateClientGeometry ();
-		}
-
 		protected override void SetBoundsOverride(Drawing.Rectangle oldRect, Drawing.Rectangle newRect)
 		{
 			base.SetBoundsOverride(oldRect, newRect);
@@ -3278,10 +3273,12 @@ namespace Epsitec.Common.Widgets
 			{
 				this.UpdateTextLayout ();
 			}
+
+			this.UpdateClientGeometry ();
 		}
 		
 		
-		protected override void UpdateClientGeometry()
+		protected virtual void UpdateClientGeometry()
 		{
 		}
 		

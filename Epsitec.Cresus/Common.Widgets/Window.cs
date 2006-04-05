@@ -318,7 +318,7 @@ namespace Epsitec.Common.Widgets
 			if (this.show_count == 0)
 			{
 				this.show_count++;
-				this.root.InternalUpdateGeometry ();
+//				this.root.InternalUpdateGeometry ();
 				this.root.Invalidate ();
 			}
 			
@@ -337,7 +337,7 @@ namespace Epsitec.Common.Widgets
 			if (this.show_count == 0)
 			{
 				this.show_count++;
-				this.root.InternalUpdateGeometry ();
+//				this.root.InternalUpdateGeometry ();
 			}
 			
 			if (this.IsVisible == false)
