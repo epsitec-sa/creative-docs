@@ -1331,7 +1331,8 @@ namespace Epsitec.Common.Widgets
 			{
 				this.window.Owner = this.owner.window;
 			}
-			
+
+			this.ForceLayout ();
 			this.SyncMinSizeWithWindowRoot ();
 			
 			if (this.AboutToShowWindow != null)
@@ -1726,7 +1727,26 @@ namespace Epsitec.Common.Widgets
 				this.window.SendValidation ();
 			}
 		}
-		
+
+		public void ForceLayout()
+		{
+			Layouts.LayoutContext context = Helpers.VisualTree.GetLayoutContext (this.root);
+			int counter = 0;
+
+			if (context != null)
+			{
+				while ((context.ArrangeQueueLength != 0) || (context.MeasureQueueLength != 0))
+				{
+					context.ExecuteArrange ();
+					counter++;
+				}
+			}
+			
+			if (counter > 0)
+			{
+				System.Diagnostics.Debug.WriteLine ("Arranged widgets in " + counter + " passes");
+			}
+		}
 		
 		public static void ResetMouseCursor()
 		{
@@ -2071,15 +2091,7 @@ namespace Epsitec.Common.Widgets
 		
 		internal void RefreshGraphics(Drawing.Graphics graphics, Drawing.Rectangle repaint, Drawing.Rectangle[] strips)
 		{
-			Layouts.LayoutContext context = Helpers.VisualTree.GetLayoutContext (this.root);
-
-			if (context != null)
-			{
-				while ((context.ArrangeQueueLength != 0) || (context.MeasureQueueLength != 0))
-				{
-					context.ExecuteArrange ();
-				}
-			}
+			this.ForceLayout ();
 			
 			if (strips.Length > 1)
 			{

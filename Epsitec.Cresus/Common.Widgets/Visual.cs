@@ -12,7 +12,7 @@ namespace Epsitec.Common.Widgets
 	/// <summary>
 	/// Visual.
 	/// </summary>
-	public class Visual : Types.DependencyObject, ICommandDispatcherHost
+	public class Visual : Types.DependencyObject, ICommandDispatcherHost, IClientInfo
 	{
 		public Visual()
 		{
@@ -219,31 +219,22 @@ namespace Epsitec.Common.Widgets
 				{
 					if (this.parent == null)
 					{
-						this.SuspendLayout ();
-						this.SetBounds (this.left, this.bottom, width, height);
-						this.ResumeLayout ();
+						this.SetBounds (this.x, this.y, width, height);
 					}
 					else
 					{
 						Drawing.Size host = parent.Client.Size;
 
-						double right = host.Width - this.left - width;
-						double top = host.Height - this.bottom - height;
+						double right = host.Width - this.x - width;
+						double top = host.Height - this.y - height;
 						
 						if ((this.Anchor == AnchorStyles.None) &&
 							(this.Dock == DockStyle.None))
 						{
-							this.SuspendLayout ();
-							this.SetBounds (this.left, this.bottom, width, height);
-							this.NotifyGeometryChanged ();
-							this.ResumeLayout ();
+							this.SetBounds (this.x, this.y, width, height);
 						}
-						else
-						{
-							this.parent.SuspendLayout ();
-							this.NotifyGeometryChanged ();
-							this.parent.ResumeLayout ();
-						}
+
+						Layouts.LayoutContext.AddToMeasureQueue (this);
 					}
 				}
 			}
@@ -252,7 +243,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return new Drawing.Point (this.left, this.bottom);
+				return new Drawing.Point (this.x, this.y);
 			}
 			private set
 			{
@@ -285,16 +276,14 @@ namespace Epsitec.Common.Widgets
 					this.PreferredSize = value.Size;
 				}
 				
-				if ((this.left != left) ||
-					(this.bottom != bottom) ||
+				if ((this.x != left) ||
+					(this.y != bottom) ||
 					(this.width != width) ||
 					(this.height != height))
 				{
 					if (this.parent == null)
 					{
-						this.SuspendLayout ();
 						this.SetBounds (left, bottom, width, height);
-						this.ResumeLayout ();
 					}
 					else
 					{
@@ -308,17 +297,10 @@ namespace Epsitec.Common.Widgets
 						if ((this.Anchor == AnchorStyles.None) &&
 							(this.Dock == DockStyle.None))
 						{
-							this.SuspendLayout ();
 							this.SetBounds (left, bottom, width, height);
-							this.NotifyGeometryChanged ();
-							this.ResumeLayout ();
 						}
-						else
-						{
-							this.parent.SuspendLayout ();
-							this.NotifyGeometryChanged ();
-							this.parent.ResumeLayout ();
-						}
+						
+						Layouts.LayoutContext.AddToMeasureQueue (this);
 					}
 				}
 			}
@@ -336,10 +318,8 @@ namespace Epsitec.Common.Widgets
 				double width = value.Width;
 				double height = value.Height;
 
-				this.SuspendLayout ();
 				this.SetValue (Visual.PreferredWidthProperty, width);
 				this.SetValue (Visual.PreferredHeightProperty, height);
-				this.ResumeLayout ();
 			}
 		}
 		public double							PreferredWidth
@@ -379,14 +359,13 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public Widget.ClientInfo				Client
+		public IClientInfo						Client
 		{
 			get
 			{
-				return new Widget.ClientInfo (this.Size);
+				return this;
 			}
 		}
-		
 		
 		public virtual Drawing.Margins			InternalPadding
 		{
@@ -532,10 +511,8 @@ namespace Epsitec.Common.Widgets
 			}
 			set
 			{
-				this.SuspendLayout ();
 				this.MinWidth  = value.Width;
 				this.MinHeight = value.Height;
-				this.ResumeLayout ();
 			}
 		}
 		public Drawing.Size						MaxSize
@@ -546,10 +523,8 @@ namespace Epsitec.Common.Widgets
 			}
 			set
 			{
-				this.SuspendLayout ();
 				this.MaxWidth  = value.Width;
 				this.MaxHeight = value.Height;
-				this.ResumeLayout ();
 			}
 		}
 
@@ -803,14 +778,6 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		internal bool							IsLayoutSuspended
-		{
-			get
-			{
-				return this.suspend_layout_counter > 0 ? true : false;
-			}
-		}
-		
 		public bool								HasChildren
 		{
 			get
@@ -856,8 +823,8 @@ namespace Epsitec.Common.Widgets
 		{
 			Drawing.Rectangle old_value = this.Bounds;
 
-			this.left   = value.Left;
-			this.bottom = value.Bottom;
+			this.x   = value.Left;
+			this.y = value.Bottom;
 			this.width  = value.Width;
 			this.height = value.Height;
 			
@@ -865,7 +832,7 @@ namespace Epsitec.Common.Widgets
 			
 			if (old_value != new_value)
 			{
-//-				this.UpdateClientGeometry ();
+				this.SetBoundsOverride (old_value, new_value);
 				
 				Visual parent = this.Parent;
 				
@@ -881,41 +848,10 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		internal void NotifyGeometryChanged()
+		protected virtual void SetBoundsOverride(Drawing.Rectangle oldRect, Drawing.Rectangle newRect)
 		{
-			this.NotifyLayoutChanged ();
-			this.NotifyParentLayoutChanged ();
 		}
-		
-		internal void NotifyLayoutChanged()
-		{
-			if (this.currently_updating_layout > 0)
-			{
-				return;
-			}
-			
-			this.has_layout_changed = true;
-			
-			if (this.suspend_layout_counter == 0)
-			{
-				this.ExecutePendingLayoutOperations ();
-			}
-		}
-		
-		internal void NotifyParentLayoutChanged()
-		{
-			Visual parent = this.Parent;
-			
-			if (parent != null)
-			{
-				parent.NotifyLayoutChanged ();
-			}
-			else
-			{
-				this.NotifyLayoutChanged ();
-			}
-		}
-		
+
 		internal void NotifyDisplayChanged()
 		{
 			this.Invalidate ();
@@ -1032,30 +968,9 @@ namespace Epsitec.Common.Widgets
 		
 		public void SuspendLayout()
 		{
-			this.suspend_layout_counter++;
 		}
 		
 		public void ResumeLayout()
-		{
-			this.ResumeLayout (true);
-		}
-		
-		public void ResumeLayout(bool update)
-		{
-			if (this.suspend_layout_counter > 0)
-			{
-				this.suspend_layout_counter--;
-			}
-			if (this.suspend_layout_counter == 0)
-			{
-				if (update)
-				{
-					this.ExecutePendingLayoutOperations ();
-				}
-			}
-		}
-		
-		public virtual void ExecutePendingLayoutOperations()
 		{
 		}
 		
@@ -1478,13 +1393,12 @@ namespace Epsitec.Common.Widgets
 		
 		private int								command_cache_id = -1;
 		private short							visual_serial_id = Visual.next_serial_id++;
-		private short							suspend_layout_counter;
 		protected bool							has_layout_changed;
 		protected bool							have_children_changed;
 		protected byte							currently_updating_layout;
 
 
-		private double							left, right, top, bottom;
+		private double							x, y;
 		private double							width, height;
 		
 		private static short					next_serial_id;
@@ -1494,12 +1408,50 @@ namespace Epsitec.Common.Widgets
 		internal void SetParentVisual(Visual visual)
 		{
 			this.parent = visual;
+
+			if (visual != null)
+			{
+				Layouts.LayoutContext.AddToMeasureQueue (this);
+			}
 		}
 
 		internal void NotifyChildrenChanged()
 		{
 			//	TODO: ...
-			this.NotifyLayoutChanged ();
+			
+			Layouts.LayoutContext.AddToMeasureQueue (this);
+		}
+
+		#region IClientInfo Members
+
+		Drawing.Rectangle IClientInfo.Bounds
+		{
+			get
+			{
+				return new Drawing.Rectangle (0, 0, this.width, this.height);
+			}
+		}
+
+		Drawing.Size IClientInfo.Size
+		{
+			get
+			{
+				return new Drawing.Size (this.width, this.height);
+			}
+		}
+
+		#endregion
+	}
+	
+	public interface IClientInfo
+	{
+		Drawing.Rectangle Bounds
+		{
+			get;
+		}
+		Drawing.Size Size
+		{
+			get;
 		}
 	}
 }

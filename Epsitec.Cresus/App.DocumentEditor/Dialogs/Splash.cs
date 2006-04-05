@@ -92,8 +92,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		private void HandleSplashPaintForeground(object sender, PaintEventArgs e)
 		{
 			WindowRoot root = sender as WindowRoot;
-			double dx = root.Client.Width;
-			double dy = root.Client.Height;
+			double dx = root.Client.Size.Width;
+			double dy = root.Client.Size.Height;
 			Graphics graphics = e.Graphics;
 			graphics.LineWidth = 1;
 			graphics.AddRectangle(0.5, 0.5, dx-1, dy-1);

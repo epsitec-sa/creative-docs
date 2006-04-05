@@ -123,9 +123,9 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		protected override void  ManualArrange()
+		protected override void SetBoundsOverride(Drawing.Rectangle oldRect, Drawing.Rectangle newRect)
 		{
-			base.ManualArrange();
+			base.SetBoundsOverride(oldRect, newRect);
 			this.UpdateGeometry ();
 		}
 		
@@ -686,11 +686,11 @@ namespace Epsitec.Common.Widgets
 			double total;
 			if ( this.type == PaneBookStyle.LeftRight )
 			{
-				total = this.Client.Width;
+				total = this.Client.Size.Width;
 			}
 			else
 			{
-				total = this.Client.Height;
+				total = this.Client.Size.Height;
 			}
 			if ( this.items != null )
 			{

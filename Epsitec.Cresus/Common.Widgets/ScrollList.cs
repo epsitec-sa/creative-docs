@@ -214,7 +214,7 @@ namespace Epsitec.Common.Widgets
 		{
 			//	Ajuste la hauteur pour afficher pile un nombre entier de lignes.
 			
-			double h = this.Client.Height-ScrollList.TextOffsetY*2;
+			double h = this.Client.Size.Height-ScrollList.TextOffsetY*2;
 			int count = (int)(h/this.lineHeight);
 			
 			return this.AdjustHeightToRows (mode, count);
@@ -263,7 +263,7 @@ namespace Epsitec.Common.Widgets
 		{
 			//	Ajuste la hauteur pour afficher exactement le nombre de lignes spécifié.
 			
-			double h = this.Client.Height-ScrollList.TextOffsetY*2;
+			double h = this.Client.Size.Height-ScrollList.TextOffsetY*2;
 			double adjust = h - count*this.lineHeight;
 			
 			if (adjust == 0)
@@ -364,14 +364,15 @@ namespace Epsitec.Common.Widgets
 		protected virtual bool MouseSelect(Drawing.Point pos)
 		{
 			//	Sélectionne la ligne selon la souris.
-			
-			double y = this.Client.Height-pos.Y-1-ScrollList.TextOffsetY;
+
+			double y = this.Client.Size.Height-pos.Y-1-ScrollList.TextOffsetY;
 			double x = pos.X-this.margins.Left;
 			
 			if (y < 0) return false;
 			if (y >= this.visibleLines*this.lineHeight) return false;
 			if (x < 0) return false;
-			if (x >= this.Client.Width-this.margins.Width) return false;
+		if (x >= this.Client.Size.Width-this.margins.Width)
+			return false;
 			
 			int line = (int)(y/this.lineHeight);
 			
@@ -502,9 +503,9 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		protected override void  ManualArrange()
+		protected override void SetBoundsOverride(Drawing.Rectangle oldRect, Drawing.Rectangle newRect)
 		{
-			base.ManualArrange();
+			base.SetBoundsOverride(oldRect, newRect);
 			this.UpdateGeometry ();
 		}
 		
@@ -525,10 +526,10 @@ namespace Epsitec.Common.Widgets
 				this.UpdateMargins ();
 				IAdorner adorner = Widgets.Adorners.Factory.Active;
 				Drawing.Rectangle rect = new Drawing.Rectangle();
-				rect.Right  = this.Client.Width-adorner.GeometryScrollerRightMargin;
+				rect.Right  = this.Client.Size.Width-adorner.GeometryScrollerRightMargin;
 				rect.Left   = rect.Right-this.scroller.Width;
 				rect.Bottom = adorner.GeometryScrollerBottomMargin+ScrollList.TextOffsetY-this.margins.Bottom;
-				rect.Top    = this.Client.Height-adorner.GeometryScrollerTopMargin-ScrollList.TextOffsetY+this.margins.Top;
+				rect.Top    = this.Client.Size.Height-adorner.GeometryScrollerTopMargin-ScrollList.TextOffsetY+this.margins.Top;
 				this.scroller.Bounds = rect;
 			}
 		}
@@ -569,15 +570,15 @@ namespace Epsitec.Common.Widgets
 			if ((this.scroller != null) &&
 				(this.scroller.IsVisible))
 			{
-				this.margins.Right = this.Client.Width - this.scroller.Left;
+				this.margins.Right = this.Client.Size.Width - this.scroller.Left;
 			}
 		}
 		
 		protected double GetTextWidth()
 		{
 			//	Calcule la largeur utile pour le texte.
-			
-			return this.Client.Width - this.margins.Width;
+
+			return this.Client.Size.Width - this.margins.Width;
 		}
 
 

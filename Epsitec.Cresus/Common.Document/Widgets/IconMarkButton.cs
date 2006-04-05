@@ -79,7 +79,7 @@ namespace Epsitec.Common.Document.Widgets
 				double zoom = (this.innerZoom-1)/2+1;
 				this.TextLayout.LayoutSize = this.Client.Size/this.innerZoom;
 				Drawing.Transform transform = graphics.Transform;
-				graphics.ScaleTransform(zoom, zoom, 0, -this.Client.Height*zoom);
+				graphics.ScaleTransform(zoom, zoom, 0, -this.Client.Size.Height*zoom);
 				adorner.PaintButtonTextLayout(graphics, pos, this.TextLayout, state, this.buttonStyle);
 				graphics.Transform = transform;
 			}

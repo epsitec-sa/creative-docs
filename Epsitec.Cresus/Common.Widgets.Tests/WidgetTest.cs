@@ -646,8 +646,8 @@ namespace Epsitec.Common.Widgets
 			Assert.IsTrue (widget.Right == 80);
 			Assert.IsTrue (widget.Top == 60);
 			Assert.IsTrue (widget.Bottom == 20);
-			Assert.IsTrue (widget.Client.Width == 50);
-			Assert.IsTrue (widget.Client.Height == 40);
+			Assert.IsTrue (widget.Client.Size.Width == 50);
+			Assert.IsTrue (widget.Client.Size.Height == 40);
 			
 			root.Children.Add (widget);
 			

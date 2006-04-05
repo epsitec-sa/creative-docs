@@ -119,7 +119,7 @@ namespace Epsitec.Common.Document.Containers
 			this.UpdateCategory();
 
 			this.panelContainer.Height = 1;  // nécessaire pour mettre à jour la première fois !
-			this.panelContainer.ForceLayout();
+//-			this.panelContainer.ForceLayout();
 		}
 
 		protected void CreateCategoryGroup()
@@ -726,7 +726,7 @@ namespace Epsitec.Common.Document.Containers
 					this.styleResumePanel.Text = resume;
 
 					this.panelContainer.Height = h;
-					this.panelContainer.ForceLayout();
+//-					this.panelContainer.ForceLayout();
 					return;
 				}
 
@@ -734,7 +734,7 @@ namespace Epsitec.Common.Document.Containers
 				{
 					this.panel.Property = property;
 					this.panelContainer.Height = this.panel.DefaultHeight;
-					this.panelContainer.ForceLayout();
+//-					this.panelContainer.ForceLayout();
 
 					if ( this.colorSelector.Visibility )
 					{
@@ -763,7 +763,7 @@ namespace Epsitec.Common.Document.Containers
 					this.panel.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 
 					this.panelContainer.Height = this.panel.DefaultHeight;
-					this.panelContainer.ForceLayout();
+//-					this.panelContainer.ForceLayout();
 				}
 			}
 
@@ -794,7 +794,7 @@ namespace Epsitec.Common.Document.Containers
 					this.styleResumePanel.Text = resume;
 
 					this.panelContainer.Height = h;
-					this.panelContainer.ForceLayout();
+//-					this.panelContainer.ForceLayout();
 				}
 				else
 				{
@@ -809,7 +809,7 @@ namespace Epsitec.Common.Document.Containers
 					this.textPanel.UpdateAfterAttach();
 
 					this.panelContainer.Height = this.textPanel.DefaultHeight;
-					this.panelContainer.ForceLayout();
+//-					this.panelContainer.ForceLayout();
 				}
 			}
 		}
@@ -858,7 +858,7 @@ namespace Epsitec.Common.Document.Containers
 			}
 
 			this.panelContainer.Height = 0.0;
-			this.panelContainer.ForceLayout();
+//-			this.panelContainer.ForceLayout();
 		}
 
 		protected void ShowSelection()
@@ -1378,7 +1378,7 @@ namespace Epsitec.Common.Document.Containers
 				{
 					this.panel.Height = h;
 					this.panelContainer.Height = h;
-					this.panelContainer.ForceLayout();
+//-					this.panelContainer.ForceLayout();
 				}
 			}
 		}

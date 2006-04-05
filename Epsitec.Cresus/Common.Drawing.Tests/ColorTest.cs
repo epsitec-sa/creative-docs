@@ -255,8 +255,8 @@ namespace Epsitec.Common.Drawing
 		{
 			WindowRoot root = sender as WindowRoot;
 			
-			double dx = root.Client.Width;
-			double dy = root.Client.Height;
+			double dx = root.Client.Size.Width;
+			double dy = root.Client.Size.Height;
 			
 			double sx = dx / 870.0;
 			double sy = dy / 360.0;

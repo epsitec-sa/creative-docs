@@ -1304,10 +1304,10 @@ namespace Epsitec.Common.Widgets
 			if ( !this.isDirty )  return;
 			this.UpdateGeometry();
 		}
-		
-		protected override void  ManualArrange()
+
+		protected override void SetBoundsOverride(Drawing.Rectangle oldRect, Drawing.Rectangle newRect)
 		{
-			base.ManualArrange();
+			base.SetBoundsOverride (oldRect, newRect);
 			this.UpdateGeometry ();
 		}
 		

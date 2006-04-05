@@ -110,8 +110,8 @@ namespace Epsitec.Common.Widgets
 			if ((this.text_fitter != null) &&
 				(this.text_frame != null))
 			{
-				this.text_frame.Width  = this.Client.Width;
-				this.text_frame.Height = this.Client.Height;
+				this.text_frame.Width  = this.Client.Size.Width;
+				this.text_frame.Height = this.Client.Size.Height;
 				
 				this.text_fitter.ClearAllMarks ();
 				this.text_fitter.GenerateAllMarks ();

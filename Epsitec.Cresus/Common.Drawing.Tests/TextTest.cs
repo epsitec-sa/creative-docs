@@ -45,8 +45,8 @@ namespace Epsitec.Common.Drawing
 				
 				this.story  = new TextStory ();
 				this.fitter = new TextFitter (this.story);
-				this.frame1 = new SimpleTextFrame (this.Client.Width * this.frame_ratio, this.Client.Height, 32);
-				this.frame2 = new SimpleTextFrame (this.Client.Width - this.frame1.Width, this.Client.Height, 32);
+				this.frame1 = new SimpleTextFrame (this.Client.Size.Width * this.frame_ratio, this.Client.Size.Height, 32);
+				this.frame2 = new SimpleTextFrame (this.Client.Size.Width - this.frame1.Width, this.Client.Size.Height, 32);
 				
 				this.frame1.PageNumber = 1;
 				this.frame2.PageNumber = 1;
@@ -253,11 +253,11 @@ namespace Epsitec.Common.Drawing
 			
 			private void UpdateFrameSizes()
 			{
-				this.frame1.Width  = this.Client.Width * this.frame_ratio;
-				this.frame1.Height = this.Client.Height;
+				this.frame1.Width  = this.Client.Size.Width * this.frame_ratio;
+				this.frame1.Height = this.Client.Size.Height;
 					
-				this.frame2.Width  = this.Client.Width - this.frame1.Width;
-				this.frame2.Height = this.Client.Height;
+				this.frame2.Width  = this.Client.Size.Width - this.frame1.Width;
+				this.frame2.Height = this.Client.Size.Height;
 				this.frame2.X      = this.frame1.Width + this.frame1.X;
 					
 				this.fitter.ClearAllMarks ();

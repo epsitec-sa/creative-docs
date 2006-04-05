@@ -207,7 +207,7 @@ namespace Epsitec.Common.UI.Widgets
 				this.Height = this.views[this.visible_view_index].Height + 1;
 			}
 			
-			this.ForceLayout ();
+//-			this.ForceLayout ();
 		}
 		
 		

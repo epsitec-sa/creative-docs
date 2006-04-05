@@ -437,9 +437,9 @@ namespace Epsitec.Common.Widgets
 			base.Dispose (disposing);
 		}
 
-		protected override void  ManualArrange()
+		protected override void SetBoundsOverride(Drawing.Rectangle oldRect, Drawing.Rectangle newRect)
 		{
-			base.ManualArrange();
+			base.SetBoundsOverride(oldRect, newRect);
 			this.UpdateGeometry ();
 		}
 		

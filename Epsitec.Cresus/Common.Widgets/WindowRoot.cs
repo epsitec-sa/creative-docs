@@ -412,9 +412,9 @@ namespace Epsitec.Common.Widgets
 			{
 				return;
 			}
-			
-			double dx = this.Client.Width;
-			double dy = this.Client.Height;
+
+			double dx = this.Client.Size.Width;
+			double dy = this.Client.Size.Height;
 			
 			double x1 = System.Math.Max (clip_rect.Left, 0);
 			double y1 = System.Math.Max (clip_rect.Bottom, 0);

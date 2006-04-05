@@ -302,7 +302,7 @@ namespace Epsitec.Common.Widgets
 		{
 			if ( this.possibleSource )
 			{
-				return new Drawing.Rectangle(-5, -5, this.Client.Width+10, this.Client.Height+10);
+				return new Drawing.Rectangle (-5, -5, this.Client.Size.Width+10, this.Client.Size.Height+10);
 			}
 			return this.Client.Bounds;
 		}

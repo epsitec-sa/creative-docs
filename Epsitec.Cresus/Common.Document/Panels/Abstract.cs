@@ -116,7 +116,7 @@ namespace Epsitec.Common.Document.Panels
 			if ( this.Height != h )
 			{
 				this.Height = h;
-				this.ForceLayout();
+//-				this.ForceLayout();
 			}
 		}
 

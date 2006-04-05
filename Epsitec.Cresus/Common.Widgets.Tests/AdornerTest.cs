@@ -553,6 +553,8 @@ namespace Epsitec.Common.Widgets
 			tab.TabNavigation = Widget.TabNavigationMode.ActivateOnTab | Widget.TabNavigationMode.ForwardToChildren;
 			window.Root.Children.Add(tab);
 
+			window.ForceLayout ();
+
 			Rectangle inside = tab.Client.Bounds;
 			inside.Deflate (tab.InternalPadding);
 

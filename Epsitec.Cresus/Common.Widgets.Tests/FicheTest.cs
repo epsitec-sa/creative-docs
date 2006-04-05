@@ -661,11 +661,11 @@ namespace Epsitec.Common.Widgets
 
 			if ( pane == this.pane )
 			{
-				this.listWidth = this.leftPane.Client.Width;
+				this.listWidth = this.leftPane.Client.Size.Width;
 			}
 			if ( pane == this.subPane )
 			{
-				this.critHeight = this.topPane.Client.Height;
+				this.critHeight = this.topPane.Client.Size.Height;
 			}
 			this.ResizeLayout();
 		}

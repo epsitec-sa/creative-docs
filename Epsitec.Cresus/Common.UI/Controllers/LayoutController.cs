@@ -179,8 +179,8 @@ namespace Epsitec.Common.UI.Controllers
 					
 					if (this.host.show_mode == ShowMode.Dock)
 					{
-						double dx = this.Client.Width;
-						double dy = this.Client.Height;
+						double dx = this.Client.Size.Width;
+						double dy = this.Client.Size.Height;
 						double dd = 25;
 						
 						switch (message.Type)
@@ -250,8 +250,8 @@ namespace Epsitec.Common.UI.Controllers
 					}
 					else if (this.host.show_mode == ShowMode.Anchor)
 					{
-						double dx = this.Client.Width;
-						double dy = this.Client.Height;
+						double dx = this.Client.Size.Width;
+						double dy = this.Client.Size.Height;
 						double dd = 25;
 						
 						switch (message.Type)
@@ -356,8 +356,8 @@ namespace Epsitec.Common.UI.Controllers
 				rect_1.Deflate ( 0.5,  0.5,  0.5,  0.5);
 				rect_2.Deflate (25.5, 25.5, 20.5, 20.5);
 				
-				double cx = System.Math.Floor (this.Client.Width / 2) + 0.5;
-				double cy = System.Math.Floor (this.Client.Height / 2) + 0.5;
+				double cx = System.Math.Floor (this.Client.Size.Width / 2) + 0.5;
+				double cy = System.Math.Floor (this.Client.Size.Height / 2) + 0.5;
 				
 				Drawing.Path surface = new Drawing.Path ();
 				Drawing.Path outline = new Drawing.Path ();

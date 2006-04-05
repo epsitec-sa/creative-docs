@@ -189,9 +189,9 @@ namespace Epsitec.Common.Widgets
 			base.Dispose (disposing);
 		}
 
-		protected override void  ManualArrange()
+		protected override void SetBoundsOverride(Drawing.Rectangle oldRect, Drawing.Rectangle newRect)
 		{
-			base.ManualArrange();
+			base.SetBoundsOverride(oldRect, newRect);
 			this.UpdateGeometry ();
 		}
 		
@@ -239,8 +239,8 @@ namespace Epsitec.Common.Widgets
 			double margin_x = (this.v_scroller.IsVisible) ? this.v_scroller.Width  : 0;
 			double margin_y = (this.h_scroller.IsVisible) ? this.h_scroller.Height : 0;
 			
-			double total_dx = this.Client.Width;
-			double total_dy = this.Client.Height;
+			double total_dx = this.Client.Size.Width;
+			double total_dy = this.Client.Size.Height;
 			
 			if (this.v_scroller.IsVisible)
 			{
@@ -263,8 +263,8 @@ namespace Epsitec.Common.Widgets
 				return;
 			}
 			
-			double total_dx = this.Client.Width;
-			double total_dy = this.Client.Height;
+			double total_dx = this.Client.Size.Width;
+			double total_dy = this.Client.Size.Height;
 			double panel_dx = this.panel.SurfaceWidth;
 			double panel_dy = this.panel.SurfaceHeight;
 			double margin_x = (this.v_scroller_mode == ScrollableScrollerMode.ShowAlways) ? this.v_scroller.Width : 0;

@@ -1028,57 +1028,6 @@ namespace Epsitec.Common.Widgets
 		
 		public bool									IsEmpty
 		{
-	//		public int									RootAngle
-	//		{
-	//			get
-	//			{
-	//				Widget widget = this;
-	//				int    angle  = 0;
-	//				
-	//				while (widget != null)
-	//				{
-	//					angle += widget.Client.Angle;
-	//					widget = widget.Parent;
-	//				}
-	//				
-	//				return angle % 360;
-	//			}
-	//		}
-			
-	//		public double								RootZoom
-	//		{
-	//			get
-	//			{
-	//				Widget widget = this;
-	//				double zoom   = 1.0;
-	//				
-	//				while (widget != null)
-	//				{
-	//					zoom  *= widget.Client.Zoom;
-	//					widget = widget.Parent;
-	//				}
-	//				
-	//				return zoom;
-	//			}
-	//		}
-			
-	//		public Direction							RootDirection
-	//		{
-	//			get
-	//			{
-	//				switch (0/*this.RootAngle*/)
-	//				{
-	//					case 0:		return Direction.Up;
-	//					case 90:	return Direction.Left;
-	//					case 180:	return Direction.Down;
-	//					case 270:	return Direction.Right;
-	//				}
-	//				
-	//				return Direction.None;
-	//			}
-	//		}
-			
-			
 			get { return this.HasChildren == false; }
 		}
 		
@@ -1360,39 +1309,6 @@ namespace Epsitec.Common.Widgets
 			return (this.Dock != DockStyle.Fill);
 		}
 		#endregion
-		
-		public override void ExecutePendingLayoutOperations()
-		{
-			bool invalidate = false;
-			
-			if (this.has_layout_changed)
-			{
-				this.has_layout_changed = false;
-				this.UpdateChildrenLayout ();
-				invalidate = true;
-			}
-			
-			if (this.have_children_changed)
-			{
-				this.have_children_changed = false;
-				this.HandleChildrenChanged ();
-				invalidate = true;
-			}
-			
-			if (invalidate)
-			{
-				this.Invalidate ();
-			}
-		}
-		
-		public void ForceLayout()
-		{
-			if (this.Parent != null)
-			{
-				this.Parent.UpdateChildrenLayout ();
-			}
-		}
-		
 		
 		public virtual Drawing.Size GetBestFitSize()
 		{
@@ -1872,8 +1788,8 @@ namespace Epsitec.Common.Widgets
 			if ((widget.Window != window) ||
 				(point_in_widget.X < 0) ||
 				(point_in_widget.Y < 0) ||
-				(point_in_widget.X >= widget.Client.Width) ||
-				(point_in_widget.Y >= widget.Client.Height) ||
+				(point_in_widget.X >= widget.Client.Size.Width) ||
+				(point_in_widget.Y >= widget.Client.Size.Height) ||
 				(message.Type == MessageType.MouseLeave))
 			{
 				widget.SetEntered (false);
@@ -3354,9 +3270,9 @@ namespace Epsitec.Common.Widgets
 			this.UpdateClientGeometry ();
 		}
 
-		protected override void ManualArrange()
+		protected override void SetBoundsOverride(Drawing.Rectangle oldRect, Drawing.Rectangle newRect)
 		{
-			base.ManualArrange ();
+			base.SetBoundsOverride(oldRect, newRect);
 			
 			if (this.TextLayout != null)
 			{
@@ -3367,11 +3283,6 @@ namespace Epsitec.Common.Widgets
 		
 		protected override void UpdateClientGeometry()
 		{
-			if (this.IsLayoutSuspended == false)
-			{
-				this.UpdateChildrenLayout ();
-				this.OnClientGeometryUpdated ();
-			}
 		}
 		
 		protected virtual void UpdateTextLayout()
@@ -3384,139 +3295,6 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		protected void UpdateChildrenLayout()
-		{
-			if (this.IsLayoutSuspended)
-			{
-				//	L'utilisateur a suspendu toute opération de layout, donc on ne va rien faire maintenant
-				//	mais laisser le soin au ResumeLayout final de nous appeler à nouveau.
-				
-//-				System.Diagnostics.Debug.WriteLine ("UpdateChildrenLayout, postponed");
-				
-				this.has_layout_changed = true;
-				
-				return;
-			}
-			
-//-			System.Diagnostics.Debug.WriteLine ("UpdateChildrenLayout on " + this.GetType ().Name);
-			
-			try
-			{
-				this.currently_updating_layout++;
-				Widget[] children = this.Children.Widgets;
-				
-				if (this.TextLayout != null)
-				{
-					this.UpdateTextLayout ();
-				}
-				
-				//	La méthode UpdateMinMaxBasedOnDockedChildren peut être utilisée (par Panel, par ex.) pour
-				//	déterminer une nouvelle taille pour le widget. Si on ne désactive pas temporairement le
-				//	layout ici, on bouclerait (peut-être sans fin) :
-				
-				this.SuspendLayout ();
-				
-				try
-				{
-					this.UpdateHasDockedChildren (children);
-					this.UpdateMinMaxBasedOnDockedChildren (children);
-					
-					//	Ce n'est que maintenant que l'on va s'occuper de placer les enfants correctement, en
-					//	tenant compte de leur docking et ancrage :
-					
-					this.UpdateDockedChildrenLayout (children);
-					
-				}
-				finally
-				{
-					this.ResumeLayout (false);
-				}
-				
-				bool update = true;
-				
-				if (update)
-				{
-					for (int i = 0; i < children.Length; i++)
-					{
-						Widget child = children[i];
-						
-						if ((child.Dock != DockStyle.None) ||
-							(child.Anchor == AnchorStyles.None))
-						{
-							//	Saute les widgets qui sont "docked" dans le parent, car ils ont déjà été
-							//	positionnés par la méthode UpdateDockedChildrenLayout. Ceux qui ne sont
-							//	pas ancrés ne bougent pas non plus.
-							
-							continue;
-						}
-						
-						AnchorStyles anchor_x = child.Anchor & AnchorStyles.LeftAndRight;
-						AnchorStyles anchor_y = child.Anchor & AnchorStyles.TopAndBottom;
-						
-						double x1 = child.Left;
-						double x2 = child.Right;
-						double y1 = child.Bottom;
-						double y2 = child.Top;
-
-						double dx = child.PreferredWidth;
-						double dy = child.PreferredHeight;
-
-						if (double.IsNaN (dx))
-						{
-							dx = child.Width;		//	TODO: améliorer
-						}
-						if (double.IsNaN (dy))
-						{
-							dy = child.Height;		//	TODO: améliorer
-						}
-						
-						switch (anchor_x)
-						{
-							case AnchorStyles.Left:							//	[x1] fixe à gauche
-								x1 = child.Margins.Left;
-								x2 = x1 + dx;
-								break;
-							case AnchorStyles.Right:						//	[x2] fixe à droite
-								x2 = this.Client.Width - child.Margins.Right;
-								x1 = x2 - dx;
-								break;
-							case AnchorStyles.None:							//	ne touche à rien...
-								break;
-							case AnchorStyles.LeftAndRight:					//	[x1] fixe à gauche, [x2] fixe à droite
-								x1 = child.Margins.Left;
-								x2 = this.Client.Width - child.Margins.Right;
-								break;
-						}
-						
-						switch (anchor_y)
-						{
-							case AnchorStyles.Bottom:						//	[y1] fixe en bas
-								y1 = child.Margins.Bottom;
-								y2 = y1 + dy;
-								break;
-							case AnchorStyles.Top:							//	[y2] fixe en haut
-								y2 = this.Client.Height - child.Margins.Top;
-								y1 = y2 - dy;
-								break;
-							case AnchorStyles.None:							//	ne touche à rien...
-								break;
-							case AnchorStyles.TopAndBottom:					//	[y1] fixe en bas, [y2] fixe en haut
-								y1 = child.Margins.Bottom;
-								y2 = this.Client.Height - child.Margins.Top;
-								break;
-						}
-						
-						child.SetBounds (Drawing.Rectangle.FromOppositeCorners (x1, y1, x2, y2));
-					}
-				}
-				
-				this.OnLayoutChanged ();
-			}
-			finally
-			{
-				this.currently_updating_layout--;
-			}
-		}
 		
 		protected void UpdateHasDockedChildren(Widget[] children)
 		{
@@ -4475,28 +4253,6 @@ namespace Epsitec.Common.Widgets
 		}
 #endif
 		
-		protected void HandleChildrenChanged()
-		{
-			//	Cette méthode est appelée chaque fois qu'un widget fils a été ajouté ou supprimé
-			//	de ce widget.
-			
-			System.Diagnostics.Debug.Assert (this.IsLayoutSuspended);
-			
-			if (this.IsLayoutSuspended)
-			{
-				//	L'utilisateur pour suspendre le traitement des événements de layout (ceci comprend
-				//	aussi les événements liés aux changement de widgets fils), ce qui permet d'accélérer
-				//	les modifications massives de l'interface graphique :
-				
-				this.have_children_changed = true;
-				
-				return;
-			}
-			
-			this.UpdateChildrenLayout ();
-			this.Invalidate ();
-		}
-		
 		protected void HandleAdornerChanged()
 		{
 			foreach (Widget child in this.Children)
@@ -5017,70 +4773,6 @@ namespace Epsitec.Common.Widgets
 			SkipMask			= 0x000000ff,
 			
 			Deep				= 0x00010000
-		}
-		#endregion
-		
-		#region ClientInfo class
-		public class ClientInfo
-		{
-			internal ClientInfo()
-			{
-			}
-			
-			internal ClientInfo(double width, double height)
-			{
-				this.width = width;
-				this.height = height;
-			}
-			
-			internal ClientInfo(Drawing.Size size) : this (size.Width, size.Height)
-			{
-			}
-			
-			
-			internal void SetSize(double width, double height)
-			{
-				this.width  = width;
-				this.height = height;
-			}
-			
-			
-			
-			public double					Width
-			{
-				get
-				{
-					return this.width;
-				}
-			}
-			
-			public double					Height
-			{
-				get
-				{
-					return this.height;
-				}
-			}
-			
-			public Drawing.Size				Size
-			{
-				get
-				{
-					return new Drawing.Size (this.width, this.height);
-				}
-			}
-			
-			public Drawing.Rectangle		Bounds
-			{
-				get
-				{
-					return new Drawing.Rectangle (0, 0, this.width, this.height);
-				}
-			}
-			
-			
-			internal double					width;
-			internal double					height;
 		}
 		#endregion
 		

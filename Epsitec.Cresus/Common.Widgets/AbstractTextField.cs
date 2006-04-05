@@ -227,9 +227,9 @@ namespace Epsitec.Common.Widgets
 				
 				if ( this.navigator != null && this.textFieldStyle != TextFieldStyle.Flat )
 				{
-					if ( this.Client.Height < 18 )
+					if ( this.Client.Size.Height < 18 )
 					{
-						if ( this.Client.Height >= 15 )
+						if (this.Client.Size.Height >= 15)
 						{
 							double x = AbstractTextField.FrameMargin/2;
 							double y = AbstractTextField.FrameMargin/2;
@@ -256,10 +256,10 @@ namespace Epsitec.Common.Widgets
 			{
 				Drawing.Rectangle rect = this.Client.Bounds;
 				rect.Deflate (this.InternalPadding);
-				
-				if ( this.Client.Height < 18 && this.textFieldStyle != TextFieldStyle.Flat )
+
+				if (this.Client.Size.Height < 18 && this.textFieldStyle != TextFieldStyle.Flat)
 				{
-					if ( this.Client.Height >= 17 )
+					if (this.Client.Size.Height >= 17)
 					{
 						rect.Deflate(AbstractTextField.TextMargin/2, AbstractTextField.TextMargin/2);
 					}
@@ -1518,9 +1518,9 @@ namespace Epsitec.Common.Widgets
 			graphics.RestoreClippingRectangle(rSaveClip);
 		}
 
-		protected sealed override void  ManualArrange()
+		protected sealed override void SetBoundsOverride(Drawing.Rectangle oldRect, Drawing.Rectangle newRect)
 		{
-			base.ManualArrange();
+			base.SetBoundsOverride(oldRect, newRect);
 			this.UpdateGeometry ();
 		}
 		
@@ -1543,7 +1543,7 @@ namespace Epsitec.Common.Widgets
 			if (this.Client.Bounds.Contains(pos))
 			{
 				if ((pos.X >= this.margins.Left) &&
-					(pos.X <= this.Client.Width - this.margins.Right) &&
+					(pos.X <= this.Client.Size.Width - this.margins.Right) &&
 					(this.navigator.IsReadOnly == false))
 				{
 					this.MouseCursor = MouseCursor.AsIBeam;

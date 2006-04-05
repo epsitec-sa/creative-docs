@@ -62,7 +62,7 @@ namespace Epsitec.Common.Widgets
 					
 					if (this.is_auto_fitting)
 					{
-						this.ForceLayout ();
+//-						this.ForceLayout ();
 					}
 				}
 				

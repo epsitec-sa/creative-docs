@@ -4323,7 +4323,7 @@ namespace Epsitec.Common.Document
 			graphics.LineWidth = initialWidth;
 
 			//	Dessine le cadre.
-			Rectangle rect = new Rectangle(0, 0, this.Client.Width, this.Client.Height);
+			Rectangle rect = new Rectangle(0, 0, this.Client.Size.Width, this.Client.Size.Height);
 			rect.Deflate(0.5);
 			graphics.AddRectangle(rect);
 			graphics.RenderSolid(adorner.ColorBorder);

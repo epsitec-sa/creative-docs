@@ -139,17 +139,6 @@ namespace Epsitec.Common.Widgets.Helpers
 			
 			System.Diagnostics.Debug.Assert (visual != null);
 
-			if (this.affectsChildrenLayout)
-			{
-				visual.NotifyLayoutChanged ();
-			}
-
-			if ((this.affectsArrange) ||
-				(this.affectsMeasure))
-			{
-				visual.NotifyParentLayoutChanged ();
-			}
-
 			if (this.affectsDisplay)
 			{
 				visual.NotifyDisplayChanged ();

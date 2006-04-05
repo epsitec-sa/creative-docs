@@ -155,6 +155,7 @@ namespace Epsitec.Common.Widgets.Platform
 			
 			this.is_animating_active_window = true;
 			this.WindowBounds = bounds;
+			this.widget_window.ForceLayout ();
 			this.MarkForRepaint ();
 			this.RefreshGraphics ();
 			
@@ -1826,7 +1827,7 @@ namespace Epsitec.Common.Widgets.Platform
 		protected bool UpdateLayeredWindow()
 		{
 			bool paint_needed = true;
-			
+
 			this.RefreshGraphics ();
 			
 			if (this.is_layered)

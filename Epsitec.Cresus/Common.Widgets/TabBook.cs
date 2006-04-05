@@ -281,16 +281,16 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				double max = this.Client.Width-2;
+				double max = this.Client.Size.Width-2;
 				if ( this.scrollArrow )
 				{
 					if ( this.Arrows == TabBookArrows.LeftRight )
 					{
-						max = this.Client.Width-(this.tabHeight-2);
+						max = this.Client.Size.Width-(this.tabHeight-2);
 					}
 					else if ( this.Arrows == TabBookArrows.Right )
 					{
-						max = this.Client.Width-(this.tabHeight*2-6);
+						max = this.Client.Size.Width-(this.tabHeight*2-6);
 					}
 				}
 				if ( this.hasMenuButton  )  max -= this.tabHeight-4;
@@ -579,17 +579,17 @@ namespace Epsitec.Common.Widgets
 				if ( this.Arrows == TabBookArrows.LeftRight )
 				{
 					Drawing.Rectangle rect;
-					rect = new Drawing.Rectangle(0, this.Client.Height-this.tabHeight, this.tabHeight, this.tabHeight);
+					rect = new Drawing.Rectangle(0, this.Client.Size.Height-this.tabHeight, this.tabHeight, this.tabHeight);
 					rect.Deflate(2, 2);
 					rect.Offset(-2, 0);
 					this.arrowLeft.Bounds = rect;
 					this.arrowLeft.Visibility = true;
 					this.arrowLeft.Enable = (this.scrollOffset > this.TabOffsetMin);
 
-					double x = this.Client.Width-this.tabHeight;
+					double x = this.Client.Size.Width-this.tabHeight;
 					if ( this.hasMenuButton  )  x -= this.tabHeight-4;
 					if ( this.hasCloseButton )  x -= this.tabHeight-4;
-					rect = new Drawing.Rectangle(x, this.Client.Height-this.tabHeight, this.tabHeight, this.tabHeight);
+					rect = new Drawing.Rectangle(x, this.Client.Size.Height-this.tabHeight, this.tabHeight, this.tabHeight);
 					rect.Deflate(2, 2);
 					rect.Offset(2, 0);
 					this.arrowRight.Bounds = rect;
@@ -598,10 +598,10 @@ namespace Epsitec.Common.Widgets
 				}
 				else if ( this.Arrows == TabBookArrows.Right )
 				{
-					double x = this.Client.Width-this.tabHeight*2;
+					double x = this.Client.Size.Width-this.tabHeight*2;
 					if ( this.hasMenuButton  )  x -= this.tabHeight-4;
 					if ( this.hasCloseButton )  x -= this.tabHeight-4;
-					Drawing.Rectangle rect = new Drawing.Rectangle(x, this.Client.Height-this.tabHeight, this.tabHeight, this.tabHeight);
+					Drawing.Rectangle rect = new Drawing.Rectangle(x, this.Client.Size.Height-this.tabHeight, this.tabHeight, this.tabHeight);
 					rect.Deflate(2, 2);
 					rect.Offset(6, 0);
 					this.arrowLeft.Bounds = rect;
@@ -622,9 +622,9 @@ namespace Epsitec.Common.Widgets
 
 			if ( this.hasMenuButton )
 			{
-				double x = this.Client.Width-(this.tabHeight-2);
+				double x = this.Client.Size.Width-(this.tabHeight-2);
 				if ( this.hasCloseButton )  x -= this.tabHeight-4;
-				Drawing.Rectangle rect = new Drawing.Rectangle(x, this.Client.Height-this.tabHeight, this.tabHeight, this.tabHeight);
+				Drawing.Rectangle rect = new Drawing.Rectangle(x, this.Client.Size.Height-this.tabHeight, this.tabHeight, this.tabHeight);
 				rect.Inflate(-2, -2);
 				this.buttonMenu.Bounds = rect;
 				this.buttonMenu.Visibility = true;
@@ -636,7 +636,7 @@ namespace Epsitec.Common.Widgets
 
 			if ( this.hasCloseButton )
 			{
-				Drawing.Rectangle rect = new Drawing.Rectangle(this.Client.Width-(this.tabHeight-2), this.Client.Height-this.tabHeight, this.tabHeight, this.tabHeight);
+				Drawing.Rectangle rect = new Drawing.Rectangle(this.Client.Size.Width-(this.tabHeight-2), this.Client.Size.Height-this.tabHeight, this.tabHeight, this.tabHeight);
 				rect.Inflate(-2, -2);
 				this.buttonClose.Bounds = rect;
 				this.buttonClose.Visibility = true;
@@ -699,10 +699,10 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		
-		protected override void  ManualArrange()
+
+		protected override void SetBoundsOverride(Drawing.Rectangle oldRect, Drawing.Rectangle newRect)
 		{
-			base.ManualArrange();
+			base.SetBoundsOverride(oldRect, newRect);
 			this.UpdateGeometry ();
 		}
 		

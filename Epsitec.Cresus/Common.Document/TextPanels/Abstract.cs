@@ -173,7 +173,7 @@ namespace Epsitec.Common.Document.TextPanels
 			if ( this.Height != h )
 			{
 				this.Height = h;
-				this.ForceLayout();
+//-				this.ForceLayout();
 			}
 		}
 

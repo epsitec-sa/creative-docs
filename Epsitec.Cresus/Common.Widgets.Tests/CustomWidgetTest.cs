@@ -114,8 +114,8 @@ namespace Epsitec.Common.Widgets
 		{
 			Path path = new Path ();
 			
-			double dx = this.Client.Width;
-			double dy = this.Client.Height;
+			double dx = this.Client.Size.Width;
+			double dy = this.Client.Size.Height;
 			
 			if (this.highlight)
 			{
@@ -175,7 +175,7 @@ namespace Epsitec.Common.Widgets
 		
 		public override Rectangle GetShapeBounds()
 		{
-			double growth = System.Math.Max (this.Client.Width, this.Client.Height) * 0.03;
+			double growth = System.Math.Max (this.Client.Size.Width, this.Client.Size.Height) * 0.03;
 			double margin = 0.3 + (this.highlight ? growth : 0);
 			
 			return Rectangle.Inflate (base.GetShapeBounds (), margin, margin);
