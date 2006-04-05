@@ -12,7 +12,7 @@ namespace Epsitec.Common.Widgets
 	/// <summary>
 	/// Visual.
 	/// </summary>
-	public class Visual : Types.DependencyObject, ICommandDispatcherHost, IClientInfo
+	public class Visual : Types.DependencyObject, ICommandDispatcherHost, IClientInfo, System.IEquatable<Visual>
 	{
 		public Visual()
 		{
@@ -800,6 +800,27 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		public IEnumerable<Visual>				AllChildren
+		{
+			get
+			{
+				if (this.HasChildren)
+				{
+					foreach (Visual child in this.children)
+					{
+						if (child.HasChildren)
+						{
+							foreach (Visual subChild in child.AllChildren)
+							{
+								yield return subChild;
+							}
+						}
+						yield return child;
+					}
+				}
+			}
+		}
+
 		
 		
 		internal int GetCommandCacheId()
@@ -1384,7 +1405,7 @@ namespace Epsitec.Common.Widgets
 		{
 			if (visual == null)
 			{
-				Layouts.LayoutContext.RemoveFromMeasureQueue (this);
+				Layouts.LayoutContext.RemoveFromQueues (this);
 				this.parent = visual;
 			}
 			else
@@ -1420,6 +1441,25 @@ namespace Epsitec.Common.Widgets
 		}
 
 		#endregion
+
+		#region IEquatable<Visual> Members
+
+		public bool Equals(Visual other)
+		{
+			return object.ReferenceEquals (this, other);
+		}
+
+		#endregion
+
+		public override bool Equals(object obj)
+		{
+			return base.Equals (obj as Visual);
+		}
+
+		public override int GetHashCode()
+		{
+			return this.visual_serial_id;
+		}
 	}
 	
 	public interface IClientInfo

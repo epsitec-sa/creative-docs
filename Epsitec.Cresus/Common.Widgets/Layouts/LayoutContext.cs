@@ -31,6 +31,8 @@ namespace Epsitec.Common.Widgets.Layouts
 		{
 			this.measureQueue.Clear ();
 			this.arrangeQueue.Clear ();
+			this.measureMap.Clear ();
+			this.arrangeMap.Clear ();
 			
 			this.nodeRank = 0;
 
@@ -74,7 +76,7 @@ namespace Epsitec.Common.Widgets.Layouts
 			}
 		}
 		
-		public static void RemoveFromMeasureQueue(Visual visual)
+		public static void RemoveFromQueues(Visual visual)
 		{
 			if (visual != null)
 			{
@@ -83,7 +85,24 @@ namespace Epsitec.Common.Widgets.Layouts
 				
 				if (context != null)
 				{
-					context.RemoveFromMeasureQueue (visual, depth);
+					System.Diagnostics.Debug.WriteLine (string.Format ("RemoveFromQueues: {0} / {1}", visual, visual.Children.Count));
+					
+					context.RemoveVisualFromMeasureQueue (visual);
+					context.RemoveVisualFromArrangeQueue (visual);
+					context.RemoveChildrenFromQueues (visual);
+				}
+			}
+		}
+
+		private void RemoveChildrenFromQueues(Visual visual)
+		{
+			if (visual.HasChildren)
+			{
+				foreach (Visual child in visual.Children)
+				{
+					this.RemoveVisualFromMeasureQueue (child);
+					this.RemoveVisualFromArrangeQueue (child);
+					this.RemoveChildrenFromQueues (child);
 				}
 			}
 		}
@@ -92,47 +111,64 @@ namespace Epsitec.Common.Widgets.Layouts
 		{
 			System.Diagnostics.Debug.Assert (visual != null);
 			
-			int rank = ++this.nodeRank;
-			VisualNode node = new VisualNode (visual, 0, SortMode.Measure, depth);
-
-			if (this.measureQueue.ContainsKey (node))
+			VisualNode node = new VisualNode (visual, ++this.nodeRank, SortMode.Measure, depth);
+			VisualNode oldNode;
+			
+			if (this.measureMap.TryGetValue (visual, out oldNode))
 			{
-				this.measureQueue.Remove (node);
+				this.measureQueue.Remove (oldNode);
 			}
 			else
 			{
 				this.measureChanges++;
 			}
 			
-			node.DefineRank (rank);
-			this.measureQueue.Add (node, visual);
+			this.measureQueue[node] = visual;
+			this.measureMap[visual] = node;
 		}
 		private void AddToArrangeQueue(Visual visual, int depth)
 		{
 			System.Diagnostics.Debug.Assert (visual != null);
 			
-			int rank = ++this.nodeRank;
-			VisualNode node = new VisualNode (visual, 0, SortMode.Arrange, depth);
+			VisualNode node = new VisualNode (visual, ++this.nodeRank, SortMode.Arrange, depth);
+			VisualNode oldNode;
 			
-			if (this.arrangeQueue.ContainsKey (node))
+			if (this.arrangeMap.TryGetValue (visual, out oldNode))
 			{
-				this.arrangeQueue.Remove (node);
+				this.arrangeQueue.Remove (oldNode);
 			}
 			else
 			{
 				this.arrangeChanges++;
 			}
 			
-			node.DefineRank (rank);
 			this.arrangeQueue[node] = visual;
+			this.arrangeMap[visual] = node;
 		}
-		
-		private void RemoveFromMeasureQueue(Visual visual, int depth)
+
+		private void RemoveVisualFromMeasureQueue(Visual visual)
 		{
 			System.Diagnostics.Debug.Assert (visual != null);
 
-			VisualNode node = new VisualNode (visual, 0, SortMode.Measure, depth);
-			this.measureQueue.Remove (node);
+			VisualNode node;
+
+			if (this.measureMap.TryGetValue (visual, out node))
+			{
+				this.measureQueue.Remove (node);
+				this.measureMap.Remove (visual);
+			}
+		}
+		private void RemoveVisualFromArrangeQueue(Visual visual)
+		{
+			System.Diagnostics.Debug.Assert (visual != null);
+
+			VisualNode node;
+
+			if (this.arrangeMap.TryGetValue (visual, out node))
+			{
+				this.arrangeQueue.Remove (node);
+				this.arrangeMap.Remove (visual);
+			}
 		}
 
 		public void ExecuteMeasure()
@@ -144,6 +180,7 @@ namespace Epsitec.Common.Widgets.Layouts
 			{
 				VisualNode node = this.measureQueue.Keys[0];
 				this.measureQueue.RemoveAt (0);
+				this.measureMap.Remove (node.Visual);
 
 				System.Diagnostics.Debug.Assert (this.cacheVisual == null);
 				
@@ -178,6 +215,15 @@ namespace Epsitec.Common.Widgets.Layouts
 							Visual parent = node.Visual.Parent;
 							int depth = node.Depth - 1;
 
+							if (Helpers.VisualTree.FindLayoutContext (node.Visual) == null)
+							{
+								System.Diagnostics.Debug.WriteLine ("No context for visual " + node.Visual.ToString ());
+							}
+							if (parent == null)
+							{
+								System.Diagnostics.Debug.WriteLine ("No parent for visual " + node.Visual.ToString ());
+							}
+
 							System.Diagnostics.Debug.Assert (Helpers.VisualTree.FindLayoutContext (node.Visual) == this);
 							System.Diagnostics.Debug.Assert (parent != null);
 							
@@ -209,15 +255,17 @@ namespace Epsitec.Common.Widgets.Layouts
 			while (this.arrangeQueue.Count > 0)
 			{
 				VisualNode node = this.arrangeQueue.Keys[0];
+				this.arrangeQueue.RemoveAt (0);
+				this.arrangeMap.Remove (node.Visual);
 
 				node.Visual.Arrange (this);
 
 				if (this.measureQueue.Count > 0)
 				{
+					this.arrangeQueue[node] = node.Visual;
+					this.arrangeMap[node.Visual] = node;
 					break;
 				}
-				
-				this.arrangeQueue.RemoveAt (0);
 			}
 		}
 		
@@ -429,6 +477,8 @@ namespace Epsitec.Common.Widgets.Layouts
 
 		private SortedList<VisualNode, Visual> measureQueue = new SortedList<VisualNode, Visual> ();
 		private SortedList<VisualNode, Visual> arrangeQueue = new SortedList<VisualNode, Visual> ();
+		private Dictionary<Visual, VisualNode> measureMap = new Dictionary<Visual, VisualNode> ();
+		private Dictionary<Visual, VisualNode> arrangeMap = new Dictionary<Visual, VisualNode> ();
 		private int measureChanges;
 		private int arrangeChanges;
 		private Visual cacheVisual;
