@@ -36,6 +36,7 @@
   <ItemGroup>
     <Compile Include="MainWindow.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Res.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common.Drawing.Agg\Common.Drawing.Agg.csproj">
@@ -66,6 +67,10 @@
       <Project>{C84C2E19-04B7-4244-86F6-E4CAFA3FDA7B}</Project>
       <Name>Common.Widgets</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Designer\Strings.00.resource" />
+    <None Include="Resources\Designer\Strings.en.resource" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
