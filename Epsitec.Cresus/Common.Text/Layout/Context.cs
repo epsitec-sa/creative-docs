@@ -1,4 +1,4 @@
-//	Copyright © 2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2005-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text.Layout
@@ -347,7 +347,7 @@ namespace Epsitec.Common.Text.Layout
 		{
 			get
 			{
-				return this.fence_line_count;
+				return this.frame_fences;
 			}
 		}
 		
@@ -558,13 +558,13 @@ restart:
 			
 			if (! continuation)
 			{
-				int fence = this.fence_line_count[frame_index];
+				int fence = this.frame_fences[frame_index];
 				
 				while ((fence > -1) &&
 					   (paragraph_line_count >= fence))
 				{
 					frame_index++;
-					fence = this.fence_line_count[frame_index];
+					fence = this.frame_fences[frame_index];
 				}
 				
 				if (paragraph_line_count == 0)
@@ -584,13 +584,19 @@ restart:
 					//	Reprend avec un autre frame. Vérifions d'abord si ce changement
 					//	de frame est permis ici :
 					
+					if ((this.frame_list[frame_index-1] is SingleLineTextFrame) ||
+						(this.frame_list[frame_index-0] is SingleLineTextFrame))
+					{
+						goto select_new_frame;
+					}
+					
 					if ((paragraph_line_count < this.keep_start_lines) &&
 						(paragraph_line_count > 0))
 					{
 						//	Il n'y a pas assez de lignes de texte consécutives en début
 						//	de paragraphe !
 						
-						this.fence_line_count.Add (frame_index-1, 0);
+						this.frame_fences.Add (frame_index-1, 0);
 						this.frame_first_line = 0;
 						
 						if (this.keep_with_prev_para)
@@ -610,11 +616,12 @@ restart:
 						//	Un changement de frame ici va affecter le paragraphe qui
 						//	précède immédiatement (récursivement)
 						
-						this.fence_line_count.Add (frame_index-1, 0);
+						this.frame_fences.Add (frame_index-1, 0);
 						
 						return Layout.Status.RewindParagraphAndRestartLayout;
 					}
 					
+				select_new_frame:
 					
 					//	On reprend tout à zéro depuis ici :
 					
@@ -793,15 +800,24 @@ restart:
 							//	Les lignes qui constituent cette fin de paragraphe se trouvent
 							//	seules dans un frame et il y en a moins que le minimum requis.
 							
-							this.fence_line_count.Add (frame_index-1, System.Math.Max (0, paragraph_line_count + 1 - this.keep_end_lines));
-							
-							return Layout.Status.RestartParagraphLayout;
+							if ((this.frame_list[frame_index-1] is SingleLineTextFrame) ||
+								(this.frame_list[frame_index-0] is SingleLineTextFrame))
+							{
+								//	N'applique pas les contraintes dans le cas de lignes de texte
+								//	isolées; cela n'aurait aucun sens !
+							}
+							else
+							{
+								this.frame_fences.Add (frame_index-1, System.Math.Max (0, paragraph_line_count + 1 - this.keep_end_lines));
+								
+								return Layout.Status.RestartParagraphLayout;
+							}
 						}
 						
 						if (status == Layout.Status.OkFitEnded)
 						{
 							this.frame_first_line = 0;
-							this.fence_line_count.Clear ();
+							this.frame_fences.Clear ();
 						}
 						
 						return status;
@@ -940,8 +956,8 @@ restart:
 		
 		public void DefineFrameFences(Layout.FrameLineFenceDictionary value)
 		{
-			this.fence_line_count.Clear ();
-			this.fence_line_count.Add (value);
+			this.frame_fences.Clear ();
+			this.frame_fences.Add (value);
 		}
 		
 		public void DefineKeepWithPreviousParagraph(bool value)
@@ -1862,7 +1878,7 @@ restart:
 		private bool							keep_with_prev_para;
 		private bool							keep_with_next_para;
 		
-		private Layout.FrameLineFenceDictionary	fence_line_count = new FrameLineFenceDictionary ();
+		private Layout.FrameLineFenceDictionary	frame_fences = new FrameLineFenceDictionary ();
 		
 		private double							mx_left;
 		private double							mx_left_body;
