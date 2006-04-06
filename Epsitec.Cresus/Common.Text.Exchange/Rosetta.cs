@@ -143,6 +143,13 @@ namespace Epsitec.Common.Text.Exchange
 	{
 		public HtmlText()
 		{
+			tagStorageList.Add (HtmlAttribute.Bold, new TagStoreage (this, HtmlAttribute.Bold));
+			tagStorageList.Add (HtmlAttribute.Italic, new TagStoreage (this, HtmlAttribute.Italic));
+			tagStorageList.Add (HtmlAttribute.Strikeout, new TagStoreage (this, HtmlAttribute.Strikeout));
+			tagStorageList.Add (HtmlAttribute.Subscript, new TagStoreage (this, HtmlAttribute.Subscript));
+			tagStorageList.Add (HtmlAttribute.Superscript, new TagStoreage (this, HtmlAttribute.Superscript));
+			tagStorageList.Add (HtmlAttribute.Underlined, new TagStoreage (this, HtmlAttribute.Underlined));
+
 			this.mshtml = new MSHtmlText ();
 			this.output.AppendLine ("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">");
 			this.output.AppendLine ("<HTML><HEAD>") ;
@@ -201,56 +208,14 @@ namespace Epsitec.Common.Text.Exchange
 
 		public void AppendText(string thestring)
 		{
-			if (precedIsItalic && !isItalic)
-			{
-				this.CloseTag (HtmlAttribute.Italic);
-			}
+			//ProcessAttribute (ref precedIsItalic, ref isItalic, HtmlAttribute.Italic);
+			//ProcessAttribute (ref precedIsBold, ref isBold, HtmlAttribute.Bold);
 
-			if (precedIsBold && !isBold)
+			foreach (System.Collections.Generic.KeyValuePair<HtmlAttribute, TagStoreage> kv in this.tagStorageList)
 			{
-				this.CloseTag (HtmlAttribute.Bold);
+				kv.Value.ProcessIt ();
 			}
-
-			if (precedIsUnderlined && !isUnderlined)
-			{
-				this.CloseTag (HtmlAttribute.Underlined);
-			}
-
-			if (precedIsStrikeout && !isStrikeout)
-			{
-				this.CloseTag (HtmlAttribute.Strikeout);
-			}
-			
-			if (!precedIsItalic && isItalic)
-			{
-				this.OpenTag (HtmlAttribute.Italic);
-			}
-			
-			if (!precedIsBold && isBold)
-			{
-				this.OpenTag (HtmlAttribute.Bold);
-			}
-			
-			if (!precedIsUnderlined && isUnderlined)
-			{
-				this.OpenTag (HtmlAttribute.Underlined);
-			}
-
-			if (!precedIsStrikeout && isStrikeout)
-			{
-				this.OpenTag (HtmlAttribute.Strikeout);
-			}
-
-			if (!precedIsSubscript && isSubscript)
-			{
-				this.OpenTag (HtmlAttribute.Subscript);
-			}
-
-			if (!precedIsSuperscript && isSuperscript)
-			{
-				this.OpenTag (HtmlAttribute.Superscript);
-			}
-
+	
 			if (this.precedFontFace != this.fontFace)
 			{
 				if (this.precedFontFace.Length != 0)
@@ -263,6 +228,8 @@ namespace Epsitec.Common.Text.Exchange
 					this.OpenTag (HtmlAttribute.Font, "face", this.fontFace);
 				}
 			}
+			this.precedFontFace = this.fontFace;
+
 
 			if (this.precedfontSize != this.fontSize)
 			{
@@ -278,6 +245,7 @@ namespace Epsitec.Common.Text.Exchange
 					this.OpenTag (HtmlAttribute.Font, "size", htmlfontsize.ToString ());
 				}
 			}
+			this.precedfontSize = this.fontSize;
 
 			if (this.precedfontColor != this.fontColor)
 			{
@@ -291,17 +259,8 @@ namespace Epsitec.Common.Text.Exchange
 					this.OpenTag (HtmlAttribute.Font, "color", this.fontColor);
 				}
 			}
-
-
-
-			this.precedIsItalic = this.isItalic;
-			this.precedIsBold = this.isBold;
-			this.precedIsUnderlined = this.isUnderlined;
-			this.precedIsStrikeout = this.isStrikeout;
-
-			this.precedFontFace = this.fontFace;
-			this.precedfontSize = this.fontSize;
-			this.precedfontColor = this.fontColor;
+			this.precedfontColor = this.fontColor;			
+			
 
 			this.precedParagraphMode = this.paragraphMode;
 
@@ -317,33 +276,28 @@ namespace Epsitec.Common.Text.Exchange
 
 		public void SetSimpleXScript(Rosetta.SimpleXScript xscript)
 		{
-			this.isSuperscript = (xscript == Rosetta.SimpleXScript.Superscript);
-			this.isSuperscript = (xscript == Rosetta.SimpleXScript.Subscript);
-		}
-
-		public void SetSubScript(bool subscript)
-		{
-			this.isSubscript = subscript;
+			this.tagStorageList[HtmlAttribute.Superscript].Set (xscript == Rosetta.SimpleXScript.Superscript);
+			this.tagStorageList[HtmlAttribute.Subscript].Set (xscript == Rosetta.SimpleXScript.Subscript);
 		}
 
 		public void SetItalic(bool italic)
 		{
-			this.isItalic = italic;
+			this.tagStorageList[HtmlAttribute.Italic].Set(italic);
 		}
 
 		public void SetBold(bool bold)
 		{
-			this.isBold = bold;
+			this.tagStorageList[HtmlAttribute.Bold].Set (bold);
 		}
 
 		public void SetUnderlined(bool underlined)
 		{
-			this.isUnderlined = underlined;
+			this.tagStorageList[HtmlAttribute.Underlined].Set (underlined);
 		}
 
-		public void SetStrikeout(bool underlined)
+		public void SetStrikeout(bool strikeout)
 		{
-			this.isStrikeout = underlined;
+			this.tagStorageList[HtmlAttribute.Strikeout].Set (strikeout);
 		}
 
 		public void SetFontSize(double fontSize)
@@ -518,23 +472,50 @@ namespace Epsitec.Common.Text.Exchange
 			return retval;
 		}
 
+		public void ProcessAttribute(ref bool precedent, ref bool current, HtmlAttribute attr)
+		{
+			if (precedent && !current)
+			{
+				this.CloseTag (attr);
+			}
+			if (!precedent && current)
+			{
+				this.OpenTag (attr);
+			}
+			precedent = current;
+		}
+
+		private class TagStoreage
+		{
+			public TagStoreage(HtmlText htmltext, HtmlAttribute attr)
+			{
+				this.attr = attr;
+				this.htmltext = htmltext;
+			}
+
+			public void ProcessIt()
+			{
+				this.htmltext.ProcessAttribute (ref this.precedingstate, ref this.currentstate, this.attr);
+			}
+			public void Set(bool setit)
+			{
+				currentstate = setit;
+			}
+
+			private bool precedingstate;
+			private bool currentstate;
+			private HtmlAttribute attr;
+			private HtmlText htmltext;
+		}
+
+		private System.Collections.Generic.Dictionary<HtmlAttribute, TagStoreage> tagStorageList = 
+			new System.Collections.Generic.Dictionary<HtmlAttribute, TagStoreage> ();
+
 		private void ClearTags()
 		{
 			this.paragraphMode = Wrappers.JustificationMode.Unknown;
 			this.precedParagraphMode = Wrappers.JustificationMode.Unknown;
 			this.paragraphNotModeSet = true;
-
-			this.isItalic = false;
-			this.precedIsItalic = false;
-
-			this.isBold = false;
-			this.precedIsBold = false;
-
-			this.isUnderlined = false;
-			this.precedIsUnderlined = false;
-
-			this.isStrikeout = false;
-			this.precedIsStrikeout = false;
 
 			this.fontColor = "";
 			this.precedfontColor = "";
@@ -687,7 +668,7 @@ namespace Epsitec.Common.Text.Exchange
 		}
 
 
-		enum HtmlAttribute
+		public enum HtmlAttribute
 		{
 			Bold,
 			Italic,
@@ -772,24 +753,6 @@ namespace Epsitec.Common.Text.Exchange
 		private Wrappers.JustificationMode precedParagraphMode = Wrappers.JustificationMode.Unknown;
 		private bool paragraphNotModeSet = true;
 
-		private bool isSuperscript = false;
-		private bool precedIsSuperscript = false;
-
-		private bool isSubscript = false;
-		private bool precedIsSubscript = false;
-
-		private bool isItalic = false;
-		private bool precedIsItalic = false;
-
-		private bool isBold = false;
-		private bool precedIsBold = false;
-
-		private bool isUnderlined = false;
-		private bool precedIsUnderlined = false;
-
-		private bool isStrikeout = false;
-		private bool precedIsStrikeout = false;
-
 		private string fontColor = "";
 		private string precedfontColor = "";
 
@@ -859,7 +822,7 @@ namespace Epsitec.Common.Text.Exchange
 
 			if (wrapper.Active.IsXscriptDefined)
 			{
-				if (wrapper.Active.Xscript.Offset < 0.0)
+				if (wrapper.Active.Xscript.Offset > 0.0)
 					return SimpleXScript.Superscript;
 				if (wrapper.Active.Xscript.Offset < 0.0)
 					return SimpleXScript.Subscript;
