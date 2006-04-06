@@ -28,13 +28,13 @@ namespace Epsitec.Common.Document.TextPanels
 			this.fieldKeepStart.TextFieldReal.Scale      = 1.0M;
 			this.fieldKeepStart.TextFieldReal.UnitType   = RealUnitType.Scalar;
 			this.fieldKeepStart.TextFieldReal.MinValue   = 1M;
-			this.fieldKeepStart.TextFieldReal.MaxValue   = 19M;
+			this.fieldKeepStart.TextFieldReal.MaxValue   = 5M;
 			
 			this.fieldKeepEnd.TextFieldReal.Resolution = 1.0M;
 			this.fieldKeepEnd.TextFieldReal.Scale      = 1.0M;
 			this.fieldKeepEnd.TextFieldReal.UnitType   = RealUnitType.Scalar;
 			this.fieldKeepEnd.TextFieldReal.MinValue   = 1M;
-			this.fieldKeepEnd.TextFieldReal.MaxValue   = 19M;
+			this.fieldKeepEnd.TextFieldReal.MaxValue   = 5M;
 
 			this.fieldStartMode = CreateComboStartMode(new EventHandler(this.HandleStartModeChanged));
 
