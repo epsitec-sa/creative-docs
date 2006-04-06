@@ -3488,6 +3488,8 @@ namespace Epsitec.App.DocumentEditor
 		[Command ("ResEditor")]
 		void CommandResEditor(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
+			this.resEditorMainWindow = new Epsitec.Common.Designer.MainWindow();
+			this.resEditorMainWindow.Show();
 		}
 
 		[Command ("DebugBboxThin")]
@@ -5580,6 +5582,7 @@ namespace Epsitec.App.DocumentEditor
 		protected bool							askKey = false;
 		protected MouseCursor					lastMouseCursor = MouseCursor.AsArrow;
 		protected VersionChecker				checker;
+		protected Common.Designer.MainWindow	resEditorMainWindow;
 
 		protected CommandDispatcher				commandDispatcher;
 

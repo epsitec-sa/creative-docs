@@ -94,6 +94,10 @@
     <Reference Include="System.Xml">
       <Name>System.XML</Name>
     </Reference>
+    <ProjectReference Include="..\Common.Designer\Common.Designer.csproj">
+      <Project>{A70AD57E-0E80-48D7-8583-836C4758669D}</Project>
+      <Name>Common.Designer</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Common.Dialogs\Common.Dialogs.csproj">
       <Name>Common.Dialogs</Name>
       <Project>{560DFD49-3052-4F41-A4C3-6216E6135DC9}</Project>
