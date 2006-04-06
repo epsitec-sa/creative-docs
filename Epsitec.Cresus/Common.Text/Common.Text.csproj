@@ -266,6 +266,7 @@
     <Compile Include="Layout\Context.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Layout\FrameLineFenceDictionary.cs" />
     <Compile Include="Layout\LineEngine.cs">
       <SubType>Code</SubType>
     </Compile>
