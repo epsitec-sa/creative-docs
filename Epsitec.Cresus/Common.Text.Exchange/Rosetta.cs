@@ -95,6 +95,9 @@ namespace Epsitec.Common.Text.Exchange
 			{
 				this.theBuilder.Add(encodedBytes[i]);
 			}
+#if DEBUG
+			this.debugstring.Append (str);
+#endif
 		}
 
 		public void AppendLine(string str)
@@ -103,6 +106,9 @@ namespace Epsitec.Common.Text.Exchange
 			this.Append(str) ;
 			this.theBuilder.Add ((byte) '\r');
 			this.theBuilder.Add ((byte) '\n');
+#if DEBUG
+			this.debugstring.Append("\r\n") ;
+#endif
 		}
 
 
@@ -135,6 +141,7 @@ namespace Epsitec.Common.Text.Exchange
 		}
 
 		private System.Collections.Generic.List<byte> theBuilder;
+		private System.Text.StringBuilder debugstring = new System.Text.StringBuilder ();
 		private int length ;
 	}
 
@@ -497,6 +504,12 @@ namespace Epsitec.Common.Text.Exchange
 			{
 				this.htmltext.ProcessAttribute (ref this.precedingstate, ref this.currentstate, this.attr);
 			}
+
+			public void Clear()
+			{
+				this.precedingstate = this.currentstate = false ;
+			}
+
 			public void Set(bool setit)
 			{
 				currentstate = setit;
@@ -525,6 +538,11 @@ namespace Epsitec.Common.Text.Exchange
 
 			this.fontFace = "";
 			this.precedFontFace = "";
+
+			foreach (System.Collections.Generic.KeyValuePair<HtmlAttribute, TagStoreage> kv in this.tagStorageList)
+			{
+				kv.Value.Clear ();
+			}
 		}
 
 
