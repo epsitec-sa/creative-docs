@@ -190,12 +190,13 @@ namespace Epsitec.Common.Document.Panels
 		
 			dialog.Title = Res.Strings.Panel.Image.Dialog.Title;
 			dialog.FileName = this.fieldFilename.Text;
-			dialog.Filters.Add("all", Res.Strings.File.Bitmap.All, "*.bmp; *.tif; *.tiff; *.jpg; *.jpeg; *.gif; *.png");
+			dialog.Filters.Add("all", Res.Strings.File.Bitmap.All, "*.bmp; *.tif; *.tiff; *.jpg; *.jpeg; *.gif; *.png; *.wmf; *.emf");
 			dialog.Filters.Add("bmp", Res.Strings.File.Bitmap.BMP, "*.bmp");
 			dialog.Filters.Add("tif", Res.Strings.File.Bitmap.TIF, "*.tif; *.tiff");
 			dialog.Filters.Add("jpg", Res.Strings.File.Bitmap.JPG, "*.jpg; *.jpeg");
 			dialog.Filters.Add("gif", Res.Strings.File.Bitmap.GIF, "*.gif");
 			dialog.Filters.Add("png", Res.Strings.File.Bitmap.PNG, "*.png");
+			dialog.Filters.Add("wmf", Res.Strings.File.Vector.WMF, "*.wmf; *.emf");
 			dialog.OpenDialog();
 
 			this.fieldFilename.Text = TextLayout.ConvertToTaggedText(dialog.FileName);
