@@ -632,6 +632,21 @@ namespace Epsitec.Common.Document
 		public void ReadFinalizeTextObj()
 		{
 			System.Diagnostics.Debug.Assert(this.TextFitter.FrameList.Count == 0);
+			
+again:
+			foreach ( Objects.AbstractText obj in this.objectsChain )
+			{
+				if ( obj.TextFrame == null )
+				{
+					//	Catastrophe: le fichier lu contient des objets texte qui n'ont
+					//	pas de frame associé; ça ne devrait jamais arriver, mais ça
+					//	arrive quand-même...
+					
+					this.objectsChain.Remove(obj);
+					goto again;
+				}
+			}
+			
 			foreach ( Objects.AbstractText obj in this.objectsChain )
 			{
 				System.Diagnostics.Debug.Assert(obj.TextFrame != null);
