@@ -1,4 +1,4 @@
-//	Copyright © 2003-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Drawing
@@ -432,30 +432,67 @@ namespace Epsitec.Common.Drawing
 				}
 			}
 			
-			using (System.IO.MemoryStream stream = new System.IO.MemoryStream (data, false))
+			//	If the data we get is an EMF/WMF file (it should have the D7CDC69A header),
+			//	then use the dedicated Metafile class to read and render it. This preserves
+			//	the resolution.
+			
+			if ((data.Length > 4) &&
+				(data[0] == 0xD7) &&
+				(data[1] == 0xCD) &&
+				(data[2] == 0xC6) &&
+				(data[3] == 0x9A))
 			{
-				System.Drawing.Bitmap src_bitmap = new System.Drawing.Bitmap (stream);
-				System.Drawing.Bitmap dst_bitmap = new System.Drawing.Bitmap (src_bitmap.Width, src_bitmap.Height);
-				
-				double dpi_x = src_bitmap.HorizontalResolution;
-				double dpi_y = dst_bitmap.VerticalResolution;
-				
-				src_bitmap.SetResolution (dst_bitmap.HorizontalResolution, dst_bitmap.VerticalResolution);
-				
-				using (System.Drawing.Graphics graphics = System.Drawing.Graphics.FromImage (dst_bitmap))
+				using (System.IO.MemoryStream stream = new System.IO.MemoryStream (data, false))
 				{
-					graphics.DrawImageUnscaled (src_bitmap, 0, 0, src_bitmap.Width, src_bitmap.Height);
+					System.Drawing.Imaging.Metafile metafile   = new System.Drawing.Imaging.Metafile (stream);
+					System.Drawing.Bitmap           dst_bitmap = new System.Drawing.Bitmap (metafile.Width, metafile.Height);
+					
+					double dpi_x = metafile.HorizontalResolution;
+					double dpi_y = metafile.VerticalResolution;
+					
+					using (System.Drawing.Graphics graphics = System.Drawing.Graphics.FromImage (dst_bitmap))
+					{
+						graphics.DrawImage (metafile, 0, 0, metafile.Width, metafile.Height);
+					}
+					
+					Image image = Bitmap.FromNativeBitmap (dst_bitmap, origin, size);
+					
+					if (image != null)
+					{
+						image.dpi_x = dpi_x;
+						image.dpi_y = dpi_y;
+					}
+					
+					return image;
 				}
-				
-				Image image = Bitmap.FromNativeBitmap (dst_bitmap, origin, size);
-				
-				if (image != null)
+			}
+			else
+			{
+				using (System.IO.MemoryStream stream = new System.IO.MemoryStream (data, false))
 				{
-					image.dpi_x = dpi_x;
-					image.dpi_y = dpi_y;
+					System.Drawing.Bitmap src_bitmap = new System.Drawing.Bitmap (stream);
+					System.Drawing.Bitmap dst_bitmap = new System.Drawing.Bitmap (src_bitmap.Width, src_bitmap.Height);
+					
+					double dpi_x = src_bitmap.HorizontalResolution;
+					double dpi_y = src_bitmap.VerticalResolution;
+					
+					src_bitmap.SetResolution (dst_bitmap.HorizontalResolution, dst_bitmap.VerticalResolution);
+					
+					using (System.Drawing.Graphics graphics = System.Drawing.Graphics.FromImage (dst_bitmap))
+					{
+						graphics.DrawImageUnscaled (src_bitmap, 0, 0, src_bitmap.Width, src_bitmap.Height);
+					}
+					
+					Image image = Bitmap.FromNativeBitmap (dst_bitmap, origin, size);
+					
+					if (image != null)
+					{
+						image.dpi_x = dpi_x;
+						image.dpi_y = dpi_y;
+					}
+					
+					return image;
 				}
-				
-				return image;
 			}
 		}
 		

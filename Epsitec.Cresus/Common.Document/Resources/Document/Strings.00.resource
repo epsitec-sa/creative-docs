@@ -393,7 +393,8 @@
 	<data name="File.Bitmap.JPG">Image compressée JPEG</data>
 	<data name="File.Bitmap.PNG">Portable Network Graphics PNG</data>
 	<data name="File.Bitmap.GIF">Graphics Interchange Format GIF</data>
-	<data name="File.Vector.PDF">Fichiers PDF</data>
+	<data name="File.Vector.PDF">Fichiers PDF (Adobe® Acrobat®)</data>
+	<data name="File.Vector.WMF">Windows Metafile WMF/EMF</data>
 
 	<data name="Panel.Justif.Short.MarginH">Mx</data>
 	<data name="Panel.Justif.Short.MarginV">My</data>
