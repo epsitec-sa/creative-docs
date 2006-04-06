@@ -3485,6 +3485,11 @@ namespace Epsitec.App.DocumentEditor
 		}
 
 
+		[Command ("ResEditor")]
+		void CommandResEditor(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+		}
+
 		[Command ("DebugBboxThin")]
 		void CommandDebugBboxThin(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
@@ -3762,7 +3767,8 @@ namespace Epsitec.App.DocumentEditor
 			this.arraySwapRowState = this.CreateCommandState("ArraySwapRow");
 			this.arrayLookState = this.CreateCommandState("ArrayLook");
 
-			this.debugBboxThinState = this.CreateCommandState("DebugBboxThin");
+			this.resEditorState = this.CreateCommandState ("ResEditor");
+			this.debugBboxThinState = this.CreateCommandState ("DebugBboxThin");
 			this.debugBboxGeomState = this.CreateCommandState("DebugBboxGeom");
 			this.debugBboxFullState = this.CreateCommandState("DebugBboxFull");
 			this.debugDirtyState = this.CreateCommandState("DebugDirty", KeyCode.FuncF12);
@@ -5810,6 +5816,7 @@ namespace Epsitec.App.DocumentEditor
 		protected CommandState					arraySwapColumnState;
 		protected CommandState					arraySwapRowState;
 		protected CommandState					arrayLookState;
+		protected CommandState					resEditorState;
 		protected CommandState					debugBboxThinState;
 		protected CommandState					debugBboxGeomState;
 		protected CommandState					debugBboxFullState;
