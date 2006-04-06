@@ -489,6 +489,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Layout\FrameLineFenceDictionary.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Layout\LineEngine.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

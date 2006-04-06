@@ -343,7 +343,7 @@ namespace Epsitec.Common.Text.Layout
 		}
 		
 		
-		public int								FenceLineCount
+		public Layout.FrameLineFenceDictionary	FrameFences
 		{
 			get
 			{
@@ -558,10 +558,15 @@ restart:
 			
 			if (! continuation)
 			{
-				if (paragraph_line_count == this.fence_line_count)
+				int fence = this.fence_line_count[frame_index];
+				
+				while ((fence > -1) &&
+					   (paragraph_line_count >= fence))
 				{
 					frame_index++;
+					fence = this.fence_line_count[frame_index];
 				}
+				
 				if (paragraph_line_count == 0)
 				{
 					//	Sélectionne le frame qui convient pour ce paragraphe (selon
@@ -585,7 +590,7 @@ restart:
 						//	Il n'y a pas assez de lignes de texte consécutives en début
 						//	de paragraphe !
 						
-						this.fence_line_count = -1;
+						this.fence_line_count.Add (frame_index-1, 0);
 						this.frame_first_line = 0;
 						
 						if (this.keep_with_prev_para)
@@ -605,7 +610,7 @@ restart:
 						//	Un changement de frame ici va affecter le paragraphe qui
 						//	précède immédiatement (récursivement)
 						
-						this.fence_line_count = -1;
+						this.fence_line_count.Add (frame_index-1, 0);
 						
 						return Layout.Status.RewindParagraphAndRestartLayout;
 					}
@@ -781,13 +786,14 @@ restart:
 						if ((status == Layout.Status.OkFitEnded) &&
 							(this.frame != null) &&
 							(this.frame_first_line > 0) &&
+							(frame_index > 0) &&
 							(paragraph_line_count > 0) &&
 							(paragraph_line_count - this.frame_first_line + 1 < this.keep_end_lines))
 						{
 							//	Les lignes qui constituent cette fin de paragraphe se trouvent
 							//	seules dans un frame et il y en a moins que le minimum requis.
 							
-							this.fence_line_count = System.Math.Max (0, paragraph_line_count + 1 - this.keep_end_lines);
+							this.fence_line_count.Add (frame_index-1, System.Math.Max (0, paragraph_line_count + 1 - this.keep_end_lines));
 							
 							return Layout.Status.RestartParagraphLayout;
 						}
@@ -795,7 +801,7 @@ restart:
 						if (status == Layout.Status.OkFitEnded)
 						{
 							this.frame_first_line = 0;
-							this.fence_line_count = -1;
+							this.fence_line_count.Clear ();
 						}
 						
 						return status;
@@ -932,9 +938,10 @@ restart:
 			this.line_skip_before = value;
 		}
 		
-		public void DefineFenceLineCount(int value)
+		public void DefineFrameFences(Layout.FrameLineFenceDictionary value)
 		{
-			this.fence_line_count = value;
+			this.fence_line_count.Clear ();
+			this.fence_line_count.Add (value);
 		}
 		
 		public void DefineKeepWithPreviousParagraph(bool value)
@@ -1855,7 +1862,7 @@ restart:
 		private bool							keep_with_prev_para;
 		private bool							keep_with_next_para;
 		
-		private int								fence_line_count = -1;		//	# ligne du paragraphe où forcer un saut de frame
+		private Layout.FrameLineFenceDictionary	fence_line_count = new FrameLineFenceDictionary ();
 		
 		private double							mx_left;
 		private double							mx_left_body;

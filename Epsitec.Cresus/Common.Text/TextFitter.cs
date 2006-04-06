@@ -106,7 +106,7 @@ namespace Epsitec.Common.Text
 			this.frame_y     = 0;
 			
 			this.line_skip_before = 0;
-			this.line_fence       = -1;
+			this.frame_fences.Clear ();
 			this.keep_with_prev   = false;
 			
 			if (this.frame_list.Count > 0)
@@ -162,7 +162,7 @@ namespace Epsitec.Common.Text
 				
 				int n = elements.Length - 1;
 				
-				this.line_fence       = -1;
+				this.frame_fences.Clear ();
 				this.line_skip_before = fitter_cursor.SpaceAfterParagraph;
 				this.keep_with_prev   = fitter_cursor.KeepWithNextParagraph;
 				this.frame_index      = elements[n].FrameIndex;
@@ -671,7 +671,7 @@ namespace Epsitec.Common.Text
 			
 			layout.DefineLineSkipBefore (this.line_skip_before);
 			layout.DefineKeepWithPreviousParagraph (this.keep_with_prev);
-			layout.DefineFenceLineCount (this.line_fence);
+			layout.DefineFrameFences (this.frame_fences);
 			
 			int    paragraph_start_offset      = 0;
 			int    paragraph_start_frame_index = layout.FrameIndex;;
@@ -743,7 +743,7 @@ restart_paragraph_layout:
 						
 						this.line_skip_before = layout.LineSpaceAfter;
 						this.keep_with_prev   = layout.KeepWithNextParagraph;
-						this.line_fence       = -1;
+						this.frame_fences.Clear ();
 						
 						layout.DefineLineSkipBefore (this.line_skip_before);
 						layout.DefineKeepWithPreviousParagraph (this.keep_with_prev);
@@ -760,7 +760,7 @@ restart_paragraph_layout:
 					
 					case Layout.Status.RestartParagraphLayout:
 						
-						if (layout.FenceLineCount > -1)
+						if (layout.FrameFences.Count > 0)
 						{
 							//	Il faut se replacer dans le frame correspondant au début
 							//	du paragraphe en cours :
@@ -1121,11 +1121,12 @@ restart_paragraph_layout:
 			int para_length     = para_1.ParagraphLength;
 			
 			this.line_skip_before = ((lead_2 == null) || (double.IsNaN (lead_2.SpaceAfter))) ? 0 : lead_2.SpaceAfterInPoints;
-			this.line_fence       = para_last_line;
 			this.keep_with_prev   = keep_1_with_prev || keep_2_with_next;
 			
 			this.frame_index = elems[0].FrameIndex;
 			this.frame_y     = para_1.ParagraphY;
+			
+			this.frame_fences.Add (this.frame_index, para_last_line);
 			
 			int distance = offset - para_length;
 			
@@ -1702,7 +1703,7 @@ restart_paragraph_layout:
 		private double							frame_y;
 		
 		private double							line_skip_before;
-		private int								line_fence;
+		private Layout.FrameLineFenceDictionary	frame_fences = new Layout.FrameLineFenceDictionary ();
 		private bool							keep_with_prev;
 		
 		private IPageCollection					page_collection;
