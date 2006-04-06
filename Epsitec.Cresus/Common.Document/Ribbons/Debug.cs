@@ -73,7 +73,9 @@ namespace Epsitec.Common.Document.Ribbons
 			//	Construit le sous-menu des autres opérations.
 			VMenu menu = new VMenu();
 
-			this.MenuAdd(menu, "y/n", "DebugBboxThin", "Show BBoxThin", "");
+			this.MenuAdd (menu, "", "ResEditor", "Ressources editor", "");
+			this.MenuAdd (menu, "", "", "", "");
+			this.MenuAdd (menu, "y/n", "DebugBboxThin", "Show BBoxThin", "");
 			this.MenuAdd(menu, "y/n", "DebugBboxGeom", "Show BBoxGeom", "");
 			this.MenuAdd(menu, "y/n", "DebugBboxFull", "Show BBoxFull", "");
 			this.MenuAdd(menu, "", "", "", "");

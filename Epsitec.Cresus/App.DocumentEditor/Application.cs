@@ -10,7 +10,7 @@ namespace Epsitec.App.DocumentEditor
 	/// </summary>
 	public class Application
 	{
-		public static void Start(string mode) 
+		public static void Start(string mode)
 		{
 			Application.mode = mode;
 			
