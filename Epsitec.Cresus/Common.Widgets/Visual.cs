@@ -1414,8 +1414,25 @@ namespace Epsitec.Common.Widgets
 			}
 			else
 			{
+				Layouts.LayoutContext context = null;
+
+				if (this.parent == null)
+				{
+					context = Layouts.LayoutContext.GetLayoutContext (this);
+				}
+				
 				this.parent = visual;
-				Layouts.LayoutContext.AddToMeasureQueue (this);
+				
+				if (context == null)
+				{
+					Layouts.LayoutContext.AddToMeasureQueue (this);
+				}
+				else
+				{
+					Layouts.LayoutContext.ClearLayoutContext (this);
+					Layouts.LayoutContext.AddToMeasureQueue (this, context);
+				}
+				
 			}
 		}
 
@@ -1424,6 +1441,12 @@ namespace Epsitec.Common.Widgets
 			//	TODO: ...
 			
 			Layouts.LayoutContext.AddToMeasureQueue (this);
+
+			this.OnChildrenChanged ();
+		}
+
+		protected virtual void OnChildrenChanged()
+		{
 		}
 
 		#region IClientInfo Members

@@ -139,15 +139,15 @@ namespace Epsitec.Common.Widgets
 			
 			return clip;
 		}
-		
-		
-		protected override void UpdateMinMaxBasedOnDockedChildren(Widget[] children)
+
+
+		protected override void MeasureMinMax(ref Drawing.Size min, ref Drawing.Size max)
 		{
-			base.UpdateMinMaxBasedOnDockedChildren (children);
+			base.MeasureMinMax (ref min, ref max);
 			
 			if (this.is_auto_fitting)
 			{
-				this.SurfaceSize = this.RealMinSize;
+				this.SurfaceSize = min;
 			}
 		}
 

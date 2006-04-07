@@ -81,6 +81,24 @@ namespace Epsitec.Common.Widgets.Layouts
 				context.AddToMeasureQueue (visual, depth);
 			}
 		}
+		public static void AddToMeasureQueue(Visual visual, LayoutContext merge)
+		{
+			if (visual != null)
+			{
+				int depth;
+				LayoutContext context = Helpers.VisualTree.GetLayoutContext (visual, out depth);
+
+				context.AddToMeasureQueue (visual, depth);
+				
+				foreach (VisualNode node in merge.measureQueue.Keys)
+				{
+					if (node.Visual != visual)
+					{
+						context.AddToMeasureQueue (node.Visual, node.Depth + depth - 1);
+					}
+				}
+			}
+		}
 		public static void AddToArrangeQueue(Visual visual)
 		{
 			if (visual != null)
@@ -481,6 +499,10 @@ namespace Epsitec.Common.Widgets.Layouts
 		public static LayoutContext GetLayoutContext(Visual visual)
 		{
 			return visual.GetValue (LayoutContext.LayoutContextProperty) as LayoutContext;
+		}
+		public static void ClearLayoutContext(Visual visual)
+		{
+			visual.ClearValueBase (LayoutContext.LayoutContextProperty);
 		}
 
 		public static Types.DependencyProperty	LayoutContextProperty = Types.DependencyProperty.RegisterAttached ("LayoutContext", typeof (LayoutContext), typeof (LayoutContext));
