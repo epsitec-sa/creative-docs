@@ -1747,24 +1747,38 @@ namespace Epsitec.Common.Widgets
 
 		public void ForceLayout()
 		{
-			Layouts.LayoutContext context = Helpers.VisualTree.GetLayoutContext (this.root);
-			int counter = 0;
-			int total = 0;
-
-			if (context != null)
+			if (this.recursive_layout_count > 0)
 			{
-				total = context.TotalArrangeCount;
-				
-				while ((context.ArrangeQueueLength != 0) || (context.MeasureQueueLength != 0))
+				return;
+			}
+
+			this.recursive_layout_count++;
+			
+			try
+			{
+				Layouts.LayoutContext context = Helpers.VisualTree.GetLayoutContext (this.root);
+				int counter = 0;
+				int total = 0;
+
+				if (context != null)
 				{
-					context.ExecuteArrange ();
-					counter++;
+					total = context.TotalArrangeCount;
+
+					while ((context.ArrangeQueueLength != 0) || (context.MeasureQueueLength != 0))
+					{
+						context.ExecuteArrange ();
+						counter++;
+					}
+				}
+
+				if (counter > 0)
+				{
+					System.Diagnostics.Debug.WriteLine (string.Format ("Arranged {0} widgets in {1} passes", context.TotalArrangeCount - total, counter));
 				}
 			}
-			
-			if (counter > 0)
+			finally
 			{
-				System.Diagnostics.Debug.WriteLine (string.Format ("Arranged {0} widgets in {1} passes", context.TotalArrangeCount - total, counter));
+				this.recursive_layout_count--;
 			}
 		}
 		
@@ -2322,6 +2336,7 @@ namespace Epsitec.Common.Widgets
 		
 		private int								show_count;
 		private int								sync_suspend_count;
+		private int								recursive_layout_count;
 		private Widget							last_in_widget;
 		private Widget							capturing_widget;
 		private MouseButtons					capturing_button;
