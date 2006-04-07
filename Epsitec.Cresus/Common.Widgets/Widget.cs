@@ -4386,14 +4386,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		protected virtual void OnLayoutChanged()
-		{
-			if (this.LayoutChanged != null)
-			{
-				this.LayoutChanged (this);
-			}
-		}
-		
 		protected virtual void OnPressed(MessageEventArgs e)
 		{
 	//		protected virtual void OnLayoutUpdate(Layouts.UpdateEventArgs e)
