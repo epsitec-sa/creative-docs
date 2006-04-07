@@ -301,6 +301,21 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		protected override void UpdateTextLayout()
+		{
+			if (base.TextLayout != null)
+			{
+				this.realSize = this.InnerTextBounds.Size;
+				
+				base.TextLayout.Alignment  = this.Alignment;
+				base.TextLayout.LayoutSize = this.GetTextLayoutSize ();
+
+				if (this.TextLayout.Text != null)
+				{
+					this.CursorScroll (true);
+				}
+			}
+		}
 		
 		protected override void ProcessMessage(Message message, Drawing.Point pos)
 		{
