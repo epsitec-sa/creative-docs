@@ -848,6 +848,8 @@ namespace Epsitec.Common.Widgets
 			this.y = value.Bottom;
 			this.width  = value.Width;
 			this.height = value.Height;
+
+			this.dirty_layout = false;
 			
 			Drawing.Rectangle new_value = value;
 			
@@ -855,15 +857,22 @@ namespace Epsitec.Common.Widgets
 			{
 				this.SetBoundsOverride (old_value, new_value);
 				this.Arrange (Helpers.VisualTree.FindLayoutContext (this));
-				
+
+				this.invalidate_pending = true;
+			}
+			if (this.invalidate_pending)
+			{
 				Visual parent = this.Parent;
 				
 				if (parent != null)
 				{
 					parent.Invalidate (old_value);
 					parent.Invalidate (new_value);
+					
+					this.invalidate_pending = false;
 				}
 			}
+			
 			if (old_value.Size != new_value.Size)
 			{
 				this.InvalidateProperty (Visual.SizeProperty, old_value.Size, new_value.Size);
@@ -876,7 +885,16 @@ namespace Epsitec.Common.Widgets
 
 		internal void NotifyDisplayChanged()
 		{
-			this.Invalidate ();
+			if (this.dirty_layout)
+			{
+				this.Invalidate ();					//	TODO: check why this is needed !!! (tool tips do not repaint properly when removed)
+				this.invalidate_pending = true;
+			}
+			else
+			{
+				this.Invalidate ();
+				this.invalidate_pending = false;
+			}
 		}
 
 
@@ -1392,9 +1410,8 @@ namespace Epsitec.Common.Widgets
 		
 		private int								command_cache_id = -1;
 		private short							visual_serial_id = Visual.next_serial_id++;
-		protected bool							has_layout_changed;
-		protected bool							have_children_changed;
-		protected byte							currently_updating_layout;
+		private bool							dirty_layout;
+		private bool							invalidate_pending;
 
 
 		private double							x, y;
@@ -1403,6 +1420,11 @@ namespace Epsitec.Common.Widgets
 		private static short					next_serial_id;
 		Collections.FlatChildrenCollection		children;
 		private Visual							parent;
+
+		internal void SetLayoutDirtyFlag()
+		{
+			this.dirty_layout = true;
+		}
 
 		internal void SetParentVisual(Visual visual)
 		{
