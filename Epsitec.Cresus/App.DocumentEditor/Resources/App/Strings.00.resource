@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <!-- Ressources pour le projet App.DocumentEditor -->
 
-<bundle type="String">
+<bundle type="String" name="Strings" about="Ressources pour l'application CrDoc">
 	<data name="Application.SoftName">Cresus_Documents</data>
 	<data name="Application.TitleDoc">Crésus Documents</data>
 	<data name="Application.TitlePic">Crésus Pictogrammes</data>

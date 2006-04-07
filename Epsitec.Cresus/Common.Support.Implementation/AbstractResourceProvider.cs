@@ -1,4 +1,4 @@
-//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Support.Implementation
@@ -25,6 +25,7 @@ namespace Epsitec.Common.Support.Implementation
 		}
 
 		public abstract bool SetupApplication(string application);
+		
 		public virtual void SelectLocale(System.Globalization.CultureInfo culture)
 		{
 			this.culture = culture;
@@ -39,14 +40,15 @@ namespace Epsitec.Common.Support.Implementation
 		
 		public virtual bool ValidateId(string id)
 		{
-			return (id != null) && (id != "") && (id.Length < 100);
+			return (id != null) && (id.Length > 0) && (id.Length < 100) && (id[0] != '.');
 		}
 		
 		public abstract bool Contains(string id);
 		
 		public abstract byte[] GetData(string id, Epsitec.Common.Support.ResourceLevel level, System.Globalization.CultureInfo culture);
 		public abstract string[] GetIds(string name_filter, string type_filter, ResourceLevel level, System.Globalization.CultureInfo culture);
-		
+		public abstract string[] GetModules();
+
 		public abstract bool SetData(string id, Epsitec.Common.Support.ResourceLevel level, System.Globalization.CultureInfo culture, byte[] data, Epsitec.Common.Support.ResourceSetMode mode);
 		public abstract bool Remove(string id, Epsitec.Common.Support.ResourceLevel level, System.Globalization.CultureInfo culture);
 		#endregion

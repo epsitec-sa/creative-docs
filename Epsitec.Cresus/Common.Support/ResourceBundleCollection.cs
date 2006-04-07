@@ -119,15 +119,15 @@ namespace Epsitec.Common.Support
 		{
 			if (ids.Length > 0)
 			{
-				string name = Resources.ExtractName (ids[0]);
+				string name = Resources.StripSuffix (Resources.ExtractName (ids[0]));
 				string[] suffixes = new string[ids.Length];
 				suffixes[0] = Resources.ExtractSuffix (ids[0]);
 				
 				for (int i = 1; i < ids.Length; i++)
 				{
-					if (Resources.ExtractName (ids[i]) != name)
+					if (Resources.StripSuffix (Resources.ExtractName (ids[i])) != name)
 					{
-						throw new System.ArgumentException (string.Format ("Invalid name '{0}' in argument ids[{1}]", Resources.ExtractName (ids[i]), i));
+						throw new System.ArgumentException (string.Format ("Invalid name '{0}' in argument ids[{1}]", Resources.StripSuffix (Resources.ExtractName (ids[i])), i));
 					}
 					
 					suffixes[i] = Resources.ExtractSuffix (ids[i]);

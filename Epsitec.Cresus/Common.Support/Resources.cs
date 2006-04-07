@@ -226,7 +226,11 @@ namespace Epsitec.Common.Support
 		{
 			return Resources.manager.GetLevelCaption (level, culture);
 		}
-		
+
+		public static string[] GetModuleNames(string prefix)
+		{
+			return Resources.manager.GetModuleNames (prefix);
+		}
 		
 		public static string[] GetBundleIds(string name_filter)
 		{

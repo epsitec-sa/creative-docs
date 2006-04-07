@@ -1,8 +1,9 @@
-//	Copyright © 2003-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 using System.Globalization;
 using System.Text.RegularExpressions;
+using System.Collections.Generic;
 
 namespace Epsitec.Common.Support.Implementation
 {	
@@ -108,9 +109,10 @@ namespace Epsitec.Common.Support.Implementation
 			
 			if (System.IO.Directory.Exists (path))
 			{
-				System.Diagnostics.Debug.WriteLine ("Path prefix for resource files: " + path);
+//-				System.Diagnostics.Debug.WriteLine ("Path prefix for resource files: " + path);
 				
 				this.path_prefix = path;
+				this.path_prefix_base = path;
 				return true;
 			}
 			
@@ -124,7 +126,7 @@ namespace Epsitec.Common.Support.Implementation
 			if ((this.application != null) &&
 				(this.application.Length > 0))
 			{
-				string path = System.IO.Path.Combine (this.path_prefix, this.application);
+				string path = System.IO.Path.Combine (this.path_prefix_base, this.application);
 				
 				if (System.IO.Directory.Exists (path))
 				{
@@ -197,7 +199,28 @@ namespace Epsitec.Common.Support.Implementation
 			
 			return null;
 		}
-		
+
+		public override string[] GetModules()
+		{
+			string path  = this.path_prefix_base;
+			int    start = path.Length;
+			
+			string[] files = System.IO.Directory.GetDirectories (path);
+
+			List<string> modules = new List<string> ();
+
+			foreach (string file in files)
+			{
+				string module = file.Substring (start);
+
+				if (this.ValidateId (module))
+				{
+					modules.Add (module);
+				}
+			}
+			
+			return modules.ToArray ();
+		}
 		
 		public override string[] GetIds(string name_filter, string type_filter, ResourceLevel level, System.Globalization.CultureInfo culture)
 		{
@@ -332,6 +355,7 @@ namespace Epsitec.Common.Support.Implementation
 		
 		
 		protected string					path_prefix;
+		protected string					path_prefix_base;
 		protected Regex						id_regex;
 		
 		protected string					file_default;

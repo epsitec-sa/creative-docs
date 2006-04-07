@@ -1,4 +1,4 @@
-//	Copyright © 2003-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Support
@@ -17,6 +17,7 @@ namespace Epsitec.Common.Support
 		bool ValidateId(string id);
 		bool Contains(string id);
 		byte[] GetData(string id, ResourceLevel level, System.Globalization.CultureInfo culture);
+		string[] GetModules();
 		string[] GetIds(string name_filter, string type_filter, ResourceLevel level, System.Globalization.CultureInfo culture);
 		bool SetData(string id, ResourceLevel level, System.Globalization.CultureInfo culture, byte[] data, ResourceSetMode mode);
 		bool Remove(string id, ResourceLevel level, System.Globalization.CultureInfo culture);
