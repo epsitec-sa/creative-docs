@@ -402,7 +402,6 @@ namespace Epsitec.Common.Document.Containers
 			this.detailButton.SetParent(null);
 
 			//	Supprime tous les panneaux ou boutons.
-			this.scrollable.Panel.SuspendLayout();
 
 			foreach ( Widget widget in this.scrollable.Panel.Children.Widgets )
 			{
@@ -520,7 +519,6 @@ namespace Epsitec.Common.Document.Containers
 				}
 			}
 
-			this.scrollable.Panel.ResumeLayout();
 			this.HandleOriginColorChanged(originColorLastPanel, true);
 			//?System.Diagnostics.Debug.WriteLine(string.Format("B: DebugAliveWidgetsCount = {0}", Widget.DebugAliveWidgetsCount));
 		}

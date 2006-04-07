@@ -41,6 +41,7 @@ namespace Epsitec.Common.Widgets
 	{
 		None				= 0,
 		
+		ChildrenChanged		= 0x00000001,		//	enfants ajoutés/supprimés
 		ChildrenDocked		= 0x00000004,		//	certains enfants spécifient un DockStyle
 		
 		Embedded			= 0x00000008,		//	=> widget appartient au parent (widgets composés)
@@ -3276,7 +3277,24 @@ namespace Epsitec.Common.Widgets
 
 			this.UpdateClientGeometry ();
 		}
-		
+
+		protected override void MeasureMinMax(ref Drawing.Size min, ref Drawing.Size max)
+		{
+			if ((this.internal_state & InternalState.ChildrenChanged) != 0)
+			{
+				this.internal_state &= ~InternalState.ChildrenChanged;
+				this.UpdateHasDockedChildren ();
+			}
+
+			this.UpdateMinMaxBasedOnDockedChildren ();
+			
+			base.MeasureMinMax (ref min, ref max);
+
+			min.Width  = System.Math.Max (min.Width, this.auto_min_size.Width);
+			min.Height = System.Math.Max (min.Height, this.auto_min_size.Height);
+			max.Width  = System.Math.Min (max.Width, this.auto_max_size.Width);
+			max.Height = System.Math.Min (max.Height, this.auto_max_size.Height);
+		}
 		
 		protected virtual void UpdateClientGeometry()
 		{
@@ -3290,10 +3308,15 @@ namespace Epsitec.Common.Widgets
 				this.text_layout.LayoutSize = this.Client.Size;
 			}
 		}
+
+		protected override void OnChildrenChanged()
+		{
+			base.OnChildrenChanged ();
+
+			this.internal_state |= InternalState.ChildrenChanged;
+		}
 		
-		
-		
-		protected void UpdateHasDockedChildren(Widget[] children)
+		protected void UpdateHasDockedChildren()
 		{
 			//	Met à jour le flag interne qui indique s'il y a des widgets dans l'état
 			//	docked, ou non.
@@ -3301,21 +3324,22 @@ namespace Epsitec.Common.Widgets
 			lock (this)
 			{
 				this.internal_state &= ~InternalState.ChildrenDocked;
-				
-				for (int i = 0; i < children.Length; i++)
+
+				if (this.HasChildren)
 				{
-					Widget child = children[i];
-					
-					if (child.Dock != DockStyle.None)
+					foreach (Visual child in this.Children)
 					{
-						this.internal_state |= InternalState.ChildrenDocked;
-						break;
+						if (child.Dock != DockStyle.None)
+						{
+							this.internal_state |= InternalState.ChildrenDocked;
+							break;
+						}
 					}
 				}
 			}
 		}
 		
-		protected virtual void UpdateMinMaxBasedOnDockedChildren(Widget[] children)
+		protected virtual void UpdateMinMaxBasedOnDockedChildren()
 		{
 			//	Recalcule les tailles minimales et maximales en se basant sur les enfants
 			//	contenus dans le widget.
@@ -3367,10 +3391,8 @@ namespace Epsitec.Common.Widgets
 					break;
 			}
 			
-			for (int i = 0; i < children.Length; i++)
+			foreach (Visual child in this.Children)
 			{
-				Widget child = children[i];
-				
 				if (child.Dock == DockStyle.None)
 				{
 					//	Saute les widgets qui ne sont pas "docked", car leur taille n'est pas prise
@@ -3385,8 +3407,12 @@ namespace Epsitec.Common.Widgets
 				}
 
 				Drawing.Size margins = child.Margins.Size;
-				Drawing.Size min = child.RealMinSize + margins;
-				Drawing.Size max = child.RealMaxSize + margins;
+
+				Layouts.LayoutMeasure measure_dx = Layouts.LayoutMeasure.GetWidth (child);
+				Layouts.LayoutMeasure measure_dy = Layouts.LayoutMeasure.GetHeight (child);
+				
+				Drawing.Size min = new Drawing.Size (measure_dx.Min + margins.Width, measure_dy.Min + margins.Height);
+				Drawing.Size max = new Drawing.Size (measure_dx.Max + margins.Width, measure_dy.Max + margins.Width);
 				
 				switch (child.Dock)
 				{

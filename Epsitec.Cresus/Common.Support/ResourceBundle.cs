@@ -569,15 +569,12 @@ namespace Epsitec.Common.Support
 		{
 			byte[] data;
 			
-			using (System.IO.MemoryStream stream = new System.IO.MemoryStream ())
+			using (System.IO.StringWriter stream = new System.IO.StringWriter ())
 			{
-				using (System.IO.StreamWriter writer = new System.IO.StreamWriter (stream, System.Text.Encoding.UTF8))
-				{
-					System.Xml.XmlDocument xmldoc = this.CreateXmlDocument (true);
-					xmldoc.Save (writer);
-				}
-				
-				data = stream.ToArray ();
+				System.Xml.XmlDocument xmldoc = this.CreateXmlDocument (true);
+				xmldoc.Save (stream);
+				stream.Flush ();
+				data = System.Text.Encoding.UTF8.GetBytes (stream.ToString ());
 			}
 			
 			return data;
