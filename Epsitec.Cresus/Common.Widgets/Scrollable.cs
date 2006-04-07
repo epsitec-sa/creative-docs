@@ -235,19 +235,19 @@ namespace Epsitec.Common.Widgets
 			this.UpdatePanelLocation ();
 			
 			//	Place correctement les ascenceurs.
-			
-			double margin_x = (this.v_scroller.IsVisible) ? this.v_scroller.Width  : 0;
-			double margin_y = (this.h_scroller.IsVisible) ? this.h_scroller.Height : 0;
+
+			double margin_x = (this.v_scroller.Visibility) ? this.v_scroller.Width  : 0;
+			double margin_y = (this.h_scroller.Visibility) ? this.h_scroller.Height : 0;
 			
 			double total_dx = this.Client.Size.Width;
 			double total_dy = this.Client.Size.Height;
 			
-			if (this.v_scroller.IsVisible)
+			if (this.v_scroller.Visibility)
 			{
 				this.v_scroller.Bounds = new Drawing.Rectangle (total_dx - margin_x, margin_y, margin_x, total_dy - margin_y);
 			}
-			
-			if (this.h_scroller.IsVisible)
+
+			if (this.h_scroller.Visibility)
 			{
 				this.h_scroller.Bounds = new Drawing.Rectangle (0, 0, total_dx - margin_x, margin_y);
 			}
@@ -437,8 +437,8 @@ namespace Epsitec.Common.Widgets
 			WidgetState state   = this.PaintState;
 			
 			Drawing.Rectangle rect  = this.Client.Bounds;
-			double margin_x = (this.v_scroller.IsVisible) ? this.v_scroller.Width  : 0;
-			double margin_y = (this.h_scroller.IsVisible) ? this.h_scroller.Height : 0;
+			double margin_x = (this.v_scroller.Visibility) ? this.v_scroller.Width  : 0;
+			double margin_y = (this.h_scroller.Visibility) ? this.h_scroller.Height : 0;
 			rect.Right -= margin_x;
 			rect.Bottom += margin_y;
 			rect.Deflate (this.foregroundFrameMargins);
