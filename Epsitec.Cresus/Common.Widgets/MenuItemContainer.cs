@@ -177,13 +177,13 @@ namespace Epsitec.Common.Widgets
 			
 			double width = this.IconWidth;
 			
-			Drawing.Margins padding = this.DockPadding;
+			Drawing.Margins padding = this.Padding;
 			
 			if (padding.Left != width)
 			{
 				padding.Left = width;
 				
-				this.DockPadding = padding;
+				this.Padding = padding;
 			}
 			
 			base.OnIconSizeChanged ();

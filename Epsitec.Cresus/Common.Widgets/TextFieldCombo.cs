@@ -776,7 +776,7 @@ namespace Epsitec.Common.Widgets
 					//	Il y a assez de place pour dérouler le menu vers le bas,
 					//	mais il faudra peut-être le raccourcir un bout :
 					
-					this.menu.MaxSize = new Drawing.Size (this.menu.MaxSize.Width, max_height);
+					this.menu.MaxSize = new Drawing.Size (this.menu.MaxWidth, max_height);
 					this.menu.AdjustSize ();
 					
 					size      = this.menu.Size;
@@ -790,8 +790,8 @@ namespace Epsitec.Common.Widgets
 					pos.Y += item.Height-2;
 					
 					max_height = working_area.Top - pos.Y;
-				
-					this.menu.MaxSize = new Drawing.Size (this.menu.MaxSize.Width, max_height);
+
+					this.menu.MaxSize = new Drawing.Size (this.menu.MaxWidth, max_height);
 					this.menu.AdjustSize ();
 					
 					pos.Y += this.menu.Height;

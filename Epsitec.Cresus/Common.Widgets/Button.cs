@@ -200,7 +200,7 @@ namespace Epsitec.Common.Widgets
 			if ( this.innerZoom != 1.0 )
 			{
 				Drawing.Transform transform = graphics.Transform;
-				graphics.ScaleTransform(this.innerZoom, this.innerZoom, this.Client.Width / 2, this.Client.Height / 2);
+				graphics.ScaleTransform (this.innerZoom, this.innerZoom, this.Client.Size.Width / 2, this.Client.Size.Height / 2);
 				adorner.PaintButtonTextLayout(graphics, pos, this.TextLayout, state, this.buttonStyle);
 				graphics.Transform = transform;
 			}

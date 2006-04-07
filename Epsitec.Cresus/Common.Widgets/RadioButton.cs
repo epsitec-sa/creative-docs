@@ -100,8 +100,8 @@ namespace Epsitec.Common.Widgets
 			
 			Drawing.Point offset = this.LabelOffset;
 			
-			double dx = this.Client.Width - offset.X;
-			double dy = this.Client.Height;
+			double dx = this.Client.Size.Width - offset.X;
+			double dy = this.Client.Size.Height;
 			
 			this.TextLayout.Alignment  = this.Alignment;
 			this.TextLayout.LayoutSize = new Drawing.Size (dx, dy);
@@ -111,7 +111,9 @@ namespace Epsitec.Common.Widgets
 		{
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
 
-			Drawing.Rectangle rect  = new Drawing.Rectangle (0, (this.Client.Height-RadioButton.RadioHeight)/2, RadioButton.RadioHeight, RadioButton.RadioHeight);
+			double y = (this.Client.Size.Height-RadioButton.RadioHeight) / 2;
+
+			Drawing.Rectangle rect  = new Drawing.Rectangle (0, y, RadioButton.RadioHeight, RadioButton.RadioHeight);
 			WidgetState       state = this.PaintState;
 			
 			adorner.PaintRadio (graphics, rect, state);

@@ -610,7 +610,7 @@ namespace Epsitec.Common.Widgets
 				rank ++;
 			}
 
-			Drawing.Size size = this.scrollList.GetBestSize();
+			Drawing.Size size = this.scrollList.GetBestLineSize();
 			this.scrollList.LineHeight = size.Height;
 			menu.Size = new Drawing.Size(size.Width, 200);
 			menu.AdjustSize();

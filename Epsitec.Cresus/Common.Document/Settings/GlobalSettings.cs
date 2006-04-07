@@ -100,7 +100,7 @@ namespace Epsitec.Common.Document.Settings
 			get
 			{
 				Drawing.Rectangle rect = new Rectangle(this.windowLocation, this.windowSize);
-				if ( this.windowLocation.IsEmpty )
+				if ( this.windowLocation.IsZero )
 				{
 					//	Lors de la première exécution, met l'application au centre
 					//	de la fenêtre.

@@ -1,4 +1,4 @@
-//	Copyright © 2003-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Widgets
@@ -62,38 +62,6 @@ namespace Epsitec.Common.Widgets
 	}
 	#endregion
 	
-	#region AnchorStyles enum
-	[System.Flags] public enum AnchorStyles : byte
-	{
-		None				= 0x00,
-		Top					= 0x10,
-		Bottom				= 0x20,
-		Left				= 0x40,
-		Right				= 0x80,
-		
-		TopLeft				= Top | Left,
-		BottomLeft			= Bottom | Left,
-		TopRight			= Top | Right,
-		BottomRight			= Bottom | Right,
-		LeftAndRight		= Left | Right,
-		TopAndBottom		= Top | Bottom,
-		All					= TopAndBottom | LeftAndRight
-	}
-	#endregion
-	
-	#region DockStyle enum
-	public enum DockStyle : byte
-	{
-		None				= 0,
-		
-		Top					= 1,				//	colle en haut
-		Bottom				= 2,				//	colle en bas
-		Left				= 3,				//	colle à gauche
-		Right				= 4,				//	colle à droite
-		Fill				= 5,				//	remplit tout
-	}
-	#endregion
-	
 	#region ContainerLayoutMode enum
 	public enum ContainerLayoutMode : byte
 	{
@@ -123,11 +91,9 @@ namespace Epsitec.Common.Widgets
 				return;
 			}
 			
-			this.widget_id = Widget.next_widget_id++;
-			
 			if (Widget.DebugDispose)
 			{
-				System.Diagnostics.Debug.WriteLine (string.Format ("{1}+ Created {0}", this.GetType ().Name, this.widget_id));
+				System.Diagnostics.Debug.WriteLine (string.Format ("{1}+ Created {0}", this.GetType ().Name, this.VisualSerialId));
 			}
 			
 			this.InternalState |= InternalState.AutoMnemonic;
@@ -405,7 +371,7 @@ namespace Epsitec.Common.Widgets
 		{
 			if (Widget.DebugDispose)
 			{
-				System.Diagnostics.Debug.WriteLine (string.Format ("{2}- {0} widget {1}", (disposing ? "Disposing" : "Collecting"), this.ToString (), this.widget_id.ToString ()));
+				System.Diagnostics.Debug.WriteLine (string.Format ("{2}- {0} widget {1}", (disposing ? "Disposing" : "Collecting"), this.ToString (), this.VisualSerialId));
 			}
 			
 			if (disposing)
@@ -601,8 +567,8 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				double width  = System.Math.Max (this.MinSize.Width, this.auto_min_size.Width);
-				double height = System.Math.Max (this.MinSize.Height, this.auto_min_size.Height);
+				double width  = System.Math.Max (this.MinWidth, this.auto_min_size.Width);
+				double height = System.Math.Max (this.MinHeight, this.auto_min_size.Height);
 				
 				return new Drawing.Size (width, height);
 			}
@@ -612,8 +578,8 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				double width  = System.Math.Min (this.MaxSize.Width, this.auto_max_size.Width);
-				double height = System.Math.Min (this.MaxSize.Height, this.auto_max_size.Height);
+				double width  = System.Math.Min (this.MaxWidth, this.auto_max_size.Width);
+				double height = System.Math.Min (this.MaxHeight, this.auto_max_size.Height);
 				
 				return new Drawing.Size (width, height);
 			}
@@ -655,7 +621,7 @@ namespace Epsitec.Common.Widgets
 		
 		public virtual Drawing.Size					DefaultMaxSize
 		{
-			get { return Drawing.Size.Infinite; }
+			get { return Drawing.Size.MaxValue; }
 		}
 		
 		
@@ -1062,57 +1028,6 @@ namespace Epsitec.Common.Widgets
 		
 		public bool									IsEmpty
 		{
-	//		public int									RootAngle
-	//		{
-	//			get
-	//			{
-	//				Widget widget = this;
-	//				int    angle  = 0;
-	//				
-	//				while (widget != null)
-	//				{
-	//					angle += widget.Client.Angle;
-	//					widget = widget.Parent;
-	//				}
-	//				
-	//				return angle % 360;
-	//			}
-	//		}
-			
-	//		public double								RootZoom
-	//		{
-	//			get
-	//			{
-	//				Widget widget = this;
-	//				double zoom   = 1.0;
-	//				
-	//				while (widget != null)
-	//				{
-	//					zoom  *= widget.Client.Zoom;
-	//					widget = widget.Parent;
-	//				}
-	//				
-	//				return zoom;
-	//			}
-	//		}
-			
-	//		public Direction							RootDirection
-	//		{
-	//			get
-	//			{
-	//				switch (0/*this.RootAngle*/)
-	//				{
-	//					case 0:		return Direction.Up;
-	//					case 90:	return Direction.Left;
-	//					case 180:	return Direction.Down;
-	//					case 270:	return Direction.Right;
-	//				}
-	//				
-	//				return Direction.None;
-	//			}
-	//		}
-			
-			
 			get { return this.HasChildren == false; }
 		}
 		
@@ -1395,39 +1310,6 @@ namespace Epsitec.Common.Widgets
 		}
 		#endregion
 		
-		public override void ExecutePendingLayoutOperations()
-		{
-			bool invalidate = false;
-			
-			if (this.has_layout_changed)
-			{
-				this.has_layout_changed = false;
-				this.UpdateChildrenLayout ();
-				invalidate = true;
-			}
-			
-			if (this.have_children_changed)
-			{
-				this.have_children_changed = false;
-				this.HandleChildrenChanged ();
-				invalidate = true;
-			}
-			
-			if (invalidate)
-			{
-				this.Invalidate ();
-			}
-		}
-		
-		public void ForceLayout()
-		{
-			if (this.Parent != null)
-			{
-				this.Parent.UpdateChildrenLayout ();
-			}
-		}
-		
-		
 		public virtual Drawing.Size GetBestFitSize()
 		{
 			return new Drawing.Size (this.DefaultWidth, this.DefaultHeight);
@@ -1435,7 +1317,7 @@ namespace Epsitec.Common.Widgets
 		
 		public virtual Drawing.Point GetBaseLine()
 		{
-			return Drawing.Point.Empty;
+			return Drawing.Point.Zero;
 		}
 		
 		
@@ -1772,7 +1654,7 @@ namespace Epsitec.Common.Widgets
 		{
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 			
-			buffer.Append (this.widget_id.ToString ());
+			buffer.Append (this.VisualSerialId.ToString ());
 			buffer.Append (":");
 			buffer.Append (this.GetType ().Name);
 			this.BuildFullPathName (buffer);
@@ -1906,8 +1788,8 @@ namespace Epsitec.Common.Widgets
 			if ((widget.Window != window) ||
 				(point_in_widget.X < 0) ||
 				(point_in_widget.Y < 0) ||
-				(point_in_widget.X >= widget.Client.Width) ||
-				(point_in_widget.Y >= widget.Client.Height) ||
+				(point_in_widget.X >= widget.Client.Size.Width) ||
+				(point_in_widget.Y >= widget.Client.Size.Height) ||
 				(message.Type == MessageType.MouseLeave))
 			{
 				widget.SetEntered (false);
@@ -3383,24 +3265,21 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		internal void InternalUpdateGeometry()
+		protected override void SetBoundsOverride(Drawing.Rectangle oldRect, Drawing.Rectangle newRect)
 		{
+			base.SetBoundsOverride(oldRect, newRect);
+			
+			if (this.TextLayout != null)
+			{
+				this.UpdateTextLayout ();
+			}
+
 			this.UpdateClientGeometry ();
 		}
 		
 		
-		protected virtual void SetBounds(double x1, double y1, double x2, double y2)
+		protected virtual void UpdateClientGeometry()
 		{
-			this.SetBounds (new Drawing.Rectangle (x1, y1, x2-x1, y2-y1));
-		}
-		
-		protected override void UpdateClientGeometry()
-		{
-			if (this.IsLayoutSuspended == false)
-			{
-				this.UpdateChildrenLayout ();
-				this.OnClientGeometryUpdated ();
-			}
 		}
 		
 		protected virtual void UpdateTextLayout()
@@ -3413,127 +3292,6 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		protected void UpdateChildrenLayout()
-		{
-			if (this.IsLayoutSuspended)
-			{
-				//	L'utilisateur a suspendu toute opération de layout, donc on ne va rien faire maintenant
-				//	mais laisser le soin au ResumeLayout final de nous appeler à nouveau.
-				
-//-				System.Diagnostics.Debug.WriteLine ("UpdateChildrenLayout, postponed");
-				
-				this.has_layout_changed = true;
-				
-				return;
-			}
-			
-//-			System.Diagnostics.Debug.WriteLine ("UpdateChildrenLayout on " + this.GetType ().Name);
-			
-			try
-			{
-				this.currently_updating_layout++;
-				Widget[] children = this.Children.Widgets;
-				
-				if (this.TextLayout != null)
-				{
-					this.UpdateTextLayout ();
-				}
-				
-				//	La méthode UpdateMinMaxBasedOnDockedChildren peut être utilisée (par Panel, par ex.) pour
-				//	déterminer une nouvelle taille pour le widget. Si on ne désactive pas temporairement le
-				//	layout ici, on bouclerait (peut-être sans fin) :
-				
-				this.SuspendLayout ();
-				
-				try
-				{
-					this.UpdateHasDockedChildren (children);
-					this.UpdateMinMaxBasedOnDockedChildren (children);
-					
-					//	Ce n'est que maintenant que l'on va s'occuper de placer les enfants correctement, en
-					//	tenant compte de leur docking et ancrage :
-					
-					this.UpdateDockedChildrenLayout (children);
-					
-				}
-				finally
-				{
-					this.ResumeLayout (false);
-				}
-				
-				bool update = true;
-				
-				if (update)
-				{
-					for (int i = 0; i < children.Length; i++)
-					{
-						Widget child = children[i];
-						
-						if ((child.Dock != DockStyle.None) ||
-							(child.Anchor == AnchorStyles.None))
-						{
-							//	Saute les widgets qui sont "docked" dans le parent, car ils ont déjà été
-							//	positionnés par la méthode UpdateDockedChildrenLayout. Ceux qui ne sont
-							//	pas ancrés ne bougent pas non plus.
-							
-							continue;
-						}
-						
-						AnchorStyles anchor_x = child.Anchor & AnchorStyles.LeftAndRight;
-						AnchorStyles anchor_y = child.Anchor & AnchorStyles.TopAndBottom;
-						
-						double x1 = child.Left;
-						double x2 = child.Right;
-						double y1 = child.Bottom;
-						double y2 = child.Top;
-						
-						switch (anchor_x)
-						{
-							case AnchorStyles.Left:							//	[x1] fixe à gauche
-								x1 = child.AnchorMargins.Left;
-								x2 = x1 + child.Width;
-								break;
-							case AnchorStyles.Right:						//	[x2] fixe à droite
-								x2 = this.Client.Width - child.AnchorMargins.Right;
-								x1 = x2 - child.Width;
-								break;
-							case AnchorStyles.None:							//	ne touche à rien...
-								break;
-							case AnchorStyles.LeftAndRight:					//	[x1] fixe à gauche, [x2] fixe à droite
-								x1 = child.AnchorMargins.Left;
-								x2 = this.Client.Width - child.AnchorMargins.Right;
-								break;
-						}
-						
-						switch (anchor_y)
-						{
-							case AnchorStyles.Bottom:						//	[y1] fixe en bas
-								y1 = child.AnchorMargins.Bottom;
-								y2 = y1 + child.Height;
-								break;
-							case AnchorStyles.Top:							//	[y2] fixe en haut
-								y2 = this.Client.Height - child.AnchorMargins.Top;
-								y1 = y2 - child.Height;
-								break;
-							case AnchorStyles.None:							//	ne touche à rien...
-								break;
-							case AnchorStyles.TopAndBottom:					//	[y1] fixe en bas, [y2] fixe en haut
-								y1 = child.AnchorMargins.Bottom;
-								y2 = this.Client.Height - child.AnchorMargins.Top;
-								break;
-						}
-						
-						child.SetBounds (x1, y1, x2, y2);
-					}
-				}
-				
-				this.OnLayoutChanged ();
-			}
-			finally
-			{
-				this.currently_updating_layout--;
-			}
-		}
 		
 		protected void UpdateHasDockedChildren(Widget[] children)
 		{
@@ -3625,8 +3383,8 @@ namespace Epsitec.Common.Widgets
 				{
 					continue;
 				}
-				
-				Drawing.Size margins = child.DockMargins.Size;
+
+				Drawing.Size margins = child.Margins.Size;
 				Drawing.Size min = child.RealMinSize + margins;
 				Drawing.Size max = child.RealMaxSize + margins;
 				
@@ -3698,8 +3456,8 @@ namespace Epsitec.Common.Widgets
 				fill_max_dy = 1000000;
 			}
 			
-			double pad_width  = this.DockPadding.Width  + this.InternalPadding.Width;
-			double pad_height = this.DockPadding.Height + this.InternalPadding.Height;
+			double pad_width  = this.Padding.Width  + this.InternalPadding.Width;
+			double pad_height = this.Padding.Height + this.InternalPadding.Height;
 			
 			double min_width  = System.Math.Max (min_dx, fill_min_dx + min_ox) + pad_width;
 			double min_height = System.Math.Max (min_dy, fill_min_dy + min_oy) + pad_height;
@@ -3727,7 +3485,7 @@ namespace Epsitec.Common.Widgets
 			Drawing.Rectangle client_rect = this.Client.Bounds;
 			Drawing.Rectangle bounds;
 			
-			client_rect.Deflate (this.DockPadding);
+			client_rect.Deflate (this.Padding);
 			client_rect.Deflate (this.InternalPadding);
 			
 			double push_dx = 0;
@@ -3751,41 +3509,50 @@ namespace Epsitec.Common.Widgets
 				}
 				
 				bounds = child.Bounds;
-				bounds.Inflate (child.DockMargins);
-				
-				double dx = bounds.Width;
-				double dy = bounds.Height;
+				bounds.Inflate (child.Margins);
 
-				dx = child.PreferredSize.Width + child.DockMargins.Width;
-				dy = child.PreferredSize.Height + child.DockMargins.Height;
+				double dx = child.PreferredWidth;
+				double dy = child.PreferredHeight;
+
+				if (double.IsNaN (dx))
+				{
+					dx = child.Width;		//	TODO: améliorer
+				}
+				if (double.IsNaN (dy))
+				{
+					dy = child.Height;		//	TODO: améliorer
+				}
+
+				dx += child.Margins.Width;
+				dy += child.Margins.Height;
 				
 				switch (child.Dock)
 				{
 					case DockStyle.Top:
 						bounds = new Drawing.Rectangle (client_rect.Left, client_rect.Top - dy, client_rect.Width, dy);
-						bounds.Deflate (child.DockMargins);
-						child.SetBounds (bounds.Left, bounds.Bottom, bounds.Right, bounds.Top);
+						bounds.Deflate (child.Margins);
+						child.SetBounds (bounds);
 						client_rect.Top -= dy;
 						break;
 						
 					case DockStyle.Bottom:
 						bounds = new Drawing.Rectangle (client_rect.Left, client_rect.Bottom, client_rect.Width, dy);
-						bounds.Deflate (child.DockMargins);
-						child.SetBounds (bounds.Left, bounds.Bottom, bounds.Right, bounds.Top);
+						bounds.Deflate (child.Margins);
+						child.SetBounds (bounds);
 						client_rect.Bottom += dy;
 						break;
 					
 					case DockStyle.Left:
 						bounds = new Drawing.Rectangle (client_rect.Left, client_rect.Bottom, dx, client_rect.Height);
-						bounds.Deflate (child.DockMargins);
-						child.SetBounds (bounds.Left, bounds.Bottom, bounds.Right, bounds.Top);
+						bounds.Deflate (child.Margins);
+						child.SetBounds (bounds);
 						client_rect.Left += dx;
 						break;
 					
 					case DockStyle.Right:
 						bounds = new Drawing.Rectangle (client_rect.Right - dx, client_rect.Bottom, dx, client_rect.Height);
-						bounds.Deflate (child.DockMargins);
-						child.SetBounds (bounds.Left, bounds.Bottom, bounds.Right, bounds.Top);
+						bounds.Deflate (child.Margins);
+						child.SetBounds (bounds);
 						client_rect.Right -= dx;
 						break;
 					
@@ -3811,7 +3578,7 @@ namespace Epsitec.Common.Widgets
 					case ContainerLayoutMode.HorizontalFlow:
 						foreach (Widget child in fill_queue)
 						{
-							double min_dx = child.MinSize.Width;
+							double min_dx = child.MinWidth;
 							double new_dx = fill_dx / n;
 							
 							if (new_dx < min_dx)
@@ -3821,9 +3588,9 @@ namespace Epsitec.Common.Widgets
 							}
 							
 							bounds = new Drawing.Rectangle (client_rect.Left, client_rect.Bottom, new_dx, client_rect.Height);
-							bounds.Deflate (child.DockMargins);
+							bounds.Deflate (child.Margins);
 						
-							child.SetBounds (bounds.Left, bounds.Bottom, bounds.Right, bounds.Top);
+							child.SetBounds (bounds);
 							client_rect.Left += new_dx;
 						}
 						break;
@@ -3831,7 +3598,7 @@ namespace Epsitec.Common.Widgets
 					case ContainerLayoutMode.VerticalFlow:
 						foreach (Widget child in fill_queue)
 						{
-							double min_dy = child.MinSize.Height;
+							double min_dy = child.MinHeight;
 							double new_dy = fill_dy / n;
 							
 							if (new_dy < min_dy)
@@ -3841,9 +3608,9 @@ namespace Epsitec.Common.Widgets
 							}
 							
 							bounds = new Drawing.Rectangle (client_rect.Left, client_rect.Top - new_dy, client_rect.Width, new_dy);
-							bounds.Deflate (child.DockMargins);
+							bounds.Deflate (child.Margins);
 							
-							child.SetBounds (bounds.Left, bounds.Bottom, bounds.Right, bounds.Top);
+							child.SetBounds (bounds);
 							client_rect.Top -= new_dy;
 						}
 						break;
@@ -3864,7 +3631,7 @@ namespace Epsitec.Common.Widgets
 					
 					bounds = child.Bounds;
 					bounds.Offset (0, - push_dy);
-					child.SetBounds (bounds.Left, bounds.Bottom, bounds.Right, bounds.Top);
+					child.SetBounds (bounds);
 				}
 			}
 			
@@ -3882,7 +3649,7 @@ namespace Epsitec.Common.Widgets
 					
 					bounds = child.Bounds;
 					bounds.Offset (push_dx, 0);
-					child.SetBounds (bounds.Left, bounds.Bottom, bounds.Right, bounds.Top);
+					child.SetBounds (bounds);
 				}
 			}
 		}
@@ -4483,28 +4250,6 @@ namespace Epsitec.Common.Widgets
 		}
 #endif
 		
-		protected void HandleChildrenChanged()
-		{
-			//	Cette méthode est appelée chaque fois qu'un widget fils a été ajouté ou supprimé
-			//	de ce widget.
-			
-			System.Diagnostics.Debug.Assert (this.IsLayoutSuspended);
-			
-			if (this.IsLayoutSuspended)
-			{
-				//	L'utilisateur pour suspendre le traitement des événements de layout (ceci comprend
-				//	aussi les événements liés aux changement de widgets fils), ce qui permet d'accélérer
-				//	les modifications massives de l'interface graphique :
-				
-				this.have_children_changed = true;
-				
-				return;
-			}
-			
-			this.UpdateChildrenLayout ();
-			this.Invalidate ();
-		}
-		
 		protected void HandleAdornerChanged()
 		{
 			foreach (Widget child in this.Children)
@@ -5028,70 +4773,6 @@ namespace Epsitec.Common.Widgets
 		}
 		#endregion
 		
-		#region ClientInfo class
-		public class ClientInfo
-		{
-			internal ClientInfo()
-			{
-			}
-			
-			internal ClientInfo(double width, double height)
-			{
-				this.width = width;
-				this.height = height;
-			}
-			
-			internal ClientInfo(Drawing.Size size) : this (size.Width, size.Height)
-			{
-			}
-			
-			
-			internal void SetSize(double width, double height)
-			{
-				this.width  = width;
-				this.height = height;
-			}
-			
-			
-			
-			public double					Width
-			{
-				get
-				{
-					return this.width;
-				}
-			}
-			
-			public double					Height
-			{
-				get
-				{
-					return this.height;
-				}
-			}
-			
-			public Drawing.Size				Size
-			{
-				get
-				{
-					return new Drawing.Size (this.width, this.height);
-				}
-			}
-			
-			public Drawing.Rectangle		Bounds
-			{
-				get
-				{
-					return new Drawing.Rectangle (0, 0, this.width, this.height);
-				}
-			}
-			
-			
-			internal double					width;
-			internal double					height;
-		}
-		#endregion
-		
 		#region HypertextInfo class
 		protected sealed class HypertextInfo : System.ICloneable, System.IComparable
 		{
@@ -5177,11 +4858,9 @@ namespace Epsitec.Common.Widgets
 		private System.Collections.Hashtable	property_hash;
 		private Support.ResourceManager			resource_manager;
 		private IValidator						validator;
-		private int								widget_id;
 		
 		static System.Collections.ArrayList		entered_widgets = new System.Collections.ArrayList ();
 		static System.Collections.ArrayList		alive_widgets   = new System.Collections.ArrayList ();
-		static int								next_widget_id  = 0;
 		static bool								debug_dispose	= false;
 		
 		private const string					prop_binding	= "$widget$binding$";

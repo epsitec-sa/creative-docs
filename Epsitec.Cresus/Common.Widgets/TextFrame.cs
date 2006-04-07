@@ -110,8 +110,8 @@ namespace Epsitec.Common.Widgets
 			if ((this.text_fitter != null) &&
 				(this.text_frame != null))
 			{
-				this.text_frame.Width  = this.Client.Width;
-				this.text_frame.Height = this.Client.Height;
+				this.text_frame.Width  = this.Client.Size.Width;
+				this.text_frame.Height = this.Client.Size.Height;
 				
 				this.text_fitter.ClearAllMarks ();
 				this.text_fitter.GenerateAllMarks ();
@@ -275,7 +275,7 @@ namespace Epsitec.Common.Widgets
 								this.graphics.Rasterizer.Transform.TransformDirect (ref px1, ref py1);
 								this.graphics.Rasterizer.Transform.TransformDirect (ref px2, ref py2);
 								
-								sel_rect_list.Add (Drawing.Rectangle.FromCorners (px1, py1, px2, py2));
+								sel_rect_list.Add (Drawing.Rectangle.FromPoints (px1, py1, px2, py2));
 							}
 						}
 					}
@@ -314,7 +314,7 @@ namespace Epsitec.Common.Widgets
 					this.graphics.Rasterizer.Transform.TransformDirect (ref px1, ref py1);
 					this.graphics.Rasterizer.Transform.TransformDirect (ref px2, ref py2);
 					
-					sel_rect_list.Add (Drawing.Rectangle.FromCorners (px1, py1, px2, py2));
+					sel_rect_list.Add (Drawing.Rectangle.FromPoints (px1, py1, px2, py2));
 				}
 			}
 			

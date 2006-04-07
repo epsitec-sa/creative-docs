@@ -15,7 +15,7 @@ namespace Epsitec.Common.Document.Containers
 			this.radioGroup = new Widget(this);
 			this.radioGroup.Height = 20;
 			this.radioGroup.Dock = DockStyle.Top;
-			this.radioGroup.DockMargins = new Margins(0, 0, 0, 0);
+			this.radioGroup.Margins = new Margins(0, 0, 0, 0);
 			this.radioGroup.TabIndex = 1;
 			this.radioGroup.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 
@@ -23,7 +23,7 @@ namespace Epsitec.Common.Document.Containers
 			this.radioGlobal.Width = 80;
 			this.radioGlobal.Text = Res.Strings.Container.Guides.RadioGlobal;
 			this.radioGlobal.Dock = DockStyle.Left;
-			this.radioGlobal.DockMargins = new Margins(0, 10, 0, 0);
+			this.radioGlobal.Margins = new Margins(0, 10, 0, 0);
 			this.radioGlobal.ActiveStateChanged += new EventHandler(this.HandleRadioChanged);
 			this.radioGlobal.Index = 1;
 			this.radioGlobal.TabIndex = 1;
@@ -33,7 +33,7 @@ namespace Epsitec.Common.Document.Containers
 			this.radioPage.Width = 100;
 			this.radioPage.Text = Res.Strings.Container.Guides.RadioPage;
 			this.radioPage.Dock = DockStyle.Left;
-			this.radioPage.DockMargins = new Margins(0, 0, 0, 0);
+			this.radioPage.Margins = new Margins(0, 0, 0, 0);
 			this.radioPage.ActiveStateChanged += new EventHandler(this.HandleRadioChanged);
 			this.radioPage.Index = 2;
 			this.radioPage.TabIndex = 2;
@@ -41,7 +41,7 @@ namespace Epsitec.Common.Document.Containers
 
 			this.toolBar = new HToolBar(this);
 			this.toolBar.Dock = DockStyle.Top;
-			this.toolBar.DockMargins = new Margins(0, 0, 0, -1);
+			this.toolBar.Margins = new Margins(0, 0, 0, -1);
 			this.toolBar.TabIndex = 2;
 			this.toolBar.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 
@@ -119,7 +119,7 @@ namespace Epsitec.Common.Document.Containers
 			this.editGroup.Width = this.Width;
 			this.editGroup.Height = 22;
 			this.editGroup.Dock = DockStyle.Bottom;
-			this.editGroup.DockMargins = new Margins(0, 0, 5, 0);
+			this.editGroup.Margins = new Margins(0, 0, 5, 0);
 			this.editGroup.TabIndex = 4;
 			this.editGroup.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 
@@ -133,7 +133,7 @@ namespace Epsitec.Common.Document.Containers
 				this.editType.Items.Add(Settings.Guide.TypeToString(type));
 			}
 			this.editType.Dock = DockStyle.Left;
-			this.editType.DockMargins = new Margins(3, 1, 0, 0);
+			this.editType.Margins = new Margins(3, 1, 0, 0);
 			this.editType.TextChanged += new EventHandler(this.HandleEditTypeChanged);
 			this.editType.ComboClosed += new EventHandler(this.HandleEditTypeClosed);
 			this.editType.TabIndex = 1;
@@ -143,7 +143,7 @@ namespace Epsitec.Common.Document.Containers
 			this.document.Modifier.AdaptTextFieldRealDimension(this.editPosition);
 			this.editPosition.Width = 60+10;
 			this.editPosition.Dock = DockStyle.Left;
-			this.editPosition.DockMargins = new Margins(1, 0, 0, 0);
+			this.editPosition.Margins = new Margins(1, 0, 0, 0);
 			this.editPosition.ValueChanged += new EventHandler(this.HandleEditPositionChanged);
 			this.editPosition.TabIndex = 2;
 			this.editPosition.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
@@ -240,7 +240,7 @@ namespace Epsitec.Common.Document.Containers
 					StaticText st = new StaticText();
 					st.Alignment = (column==0) ? ContentAlignment.MiddleLeft : ContentAlignment.MiddleRight;
 					st.Dock = DockStyle.Fill;
-					st.DockMargins = new Margins(4, 4, 0, 0);
+					st.Margins = new Margins(4, 4, 0, 0);
 					this.table[column, row].Insert(st);
 				}
 			}

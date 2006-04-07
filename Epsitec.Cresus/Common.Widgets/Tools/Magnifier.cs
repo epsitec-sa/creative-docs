@@ -306,9 +306,9 @@ namespace Epsitec.Common.Widgets.Tools
 				}
 				
 				this.ConfigureTimer ();
-				
-				double dx = this.Client.Width;
-				double dy = this.Client.Height;
+
+				double dx = this.Client.Size.Width;
+				double dy = this.Client.Size.Height;
 				
 				double cx = dx / 2;
 				double cy = dy / 2;
@@ -474,8 +474,8 @@ namespace Epsitec.Common.Widgets.Tools
 				double       size = 10;
 				
 				double dx = font.GetTextAdvance (text) * size;
-				
-				double ox = (this.Client.Width - dx) / 2;
+
+				double ox = (this.Client.Size.Width - dx) / 2;
 				double oy = 2;
 				
 				graphics.AddFilledRectangle (ox - 1, oy - 2, dx + 2, font.LineHeight * size - 0);
@@ -550,8 +550,8 @@ namespace Epsitec.Common.Widgets.Tools
 			
 			protected override void PaintBackgroundImplementation(Epsitec.Common.Drawing.Graphics graphics, Epsitec.Common.Drawing.Rectangle clip_rect)
 			{
-				double dx = this.Client.Width;
-				double dy = this.Client.Height;
+				double dx = this.Client.Size.Width;
+				double dy = this.Client.Size.Height;
 				double cx = dx / 2;
 				double cy = dy / 2;
 				
@@ -616,7 +616,7 @@ namespace Epsitec.Common.Widgets.Tools
 			{
 				get
 				{
-					Drawing.Point pos = this.MapClientToScreen (new Drawing.Point (this.Client.Width / 2, this.Client.Height / 2));
+					Drawing.Point pos = this.MapClientToScreen (new Drawing.Point (this.Client.Size.Width / 2, this.Client.Size.Height / 2));
 					
 					pos.X = pos.X - this.magnifier.zoom_window.ClientSize.Width  / 2 - 2;
 					pos.Y = pos.Y - this.magnifier.zoom_window.ClientSize.Height / 2 - 2;

@@ -103,7 +103,7 @@ namespace Epsitec.Common.Widgets
 			window.Text = "CheckAnchorAsStaticText";
 			
 			window.ClientSize = new Size (240, 180);
-			window.Root.DockPadding = new Margins (10, 10, 10, 10);
+			window.Root.Padding = new Margins (10, 10, 10, 10);
 			
 			StaticText text = new StaticText ();
 			text.Dock = DockStyle.Fill;
@@ -354,7 +354,7 @@ namespace Epsitec.Common.Widgets
 			Window window = new Window ();
 			window.Text = "CheckTextBrBr";
 			window.ClientSize = new Size (200, 100);
-			window.Root.DockPadding = new Margins (5, 5, 5, 5);
+			window.Root.Padding = new Margins (5, 5, 5, 5);
 			TextFieldMulti text = new TextFieldMulti ();
 			text.Dock = DockStyle.Fill;
 			//?text.Text = "1.<br/><br/>3.";

@@ -475,8 +475,105 @@ namespace Epsitec.Common.Widgets.Helpers
 			
 			return false;
 		}
-		
-		
+
+		public static int GetDepth(Visual visual)
+		{
+			if (visual != null)
+			{
+				visual = visual.Parent;
+
+				int depth = 1;
+
+				while (visual != null)
+				{
+					depth++;
+					visual = visual.Parent;
+				}
+
+				return depth;
+			}
+			else
+			{
+				return 0;
+			}
+		}
+
+		public static Layouts.LayoutContext GetLayoutContext(Visual visual)
+		{
+			int depth;
+			return VisualTree.GetLayoutContext (visual, out depth);
+		}
+		public static Layouts.LayoutContext GetLayoutContext(Visual visual, out int depth)
+		{
+			depth = 0;
+			
+			if (visual == null)
+			{
+				return null;
+			}
+
+			Visual parent = visual.Parent;
+			depth++;
+			
+			while (parent != null)
+			{
+				visual = parent;
+				parent = visual.Parent;
+				depth++;
+			}
+
+			Layouts.LayoutContext context;
+
+			context = Layouts.LayoutContext.GetLayoutContext (visual);
+
+			if (context == null)
+			{
+				context = new Layouts.LayoutContext ();
+				Layouts.LayoutContext.SetLayoutContext (visual, context);
+			}
+
+			return context;
+		}
+
+		public static Layouts.LayoutContext FindLayoutContext(Visual visual)
+		{
+			if (visual == null)
+			{
+				return null;
+			}
+
+			Visual parent = visual.Parent;
+
+			while (parent != null)
+			{
+				visual = parent;
+				parent = visual.Parent;
+			}
+
+			return Layouts.LayoutContext.GetLayoutContext (visual);
+		}
+		public static Layouts.LayoutContext FindLayoutContext(Visual visual, out int depth)
+		{
+			depth = 0;
+
+			if (visual == null)
+			{
+				return null;
+			}
+
+			Visual parent = visual.Parent;
+			depth++;
+
+			while (parent != null)
+			{
+				visual = parent;
+				parent = visual.Parent;
+				depth++;
+			}
+
+			return Layouts.LayoutContext.GetLayoutContext (visual);
+		}
+
 		public static Visual FindParentUsingEvent(Visual visual, Types.DependencyProperty property)
 		{
 			//	Cherche le premier parent dans la hiérarchie pour lequel un

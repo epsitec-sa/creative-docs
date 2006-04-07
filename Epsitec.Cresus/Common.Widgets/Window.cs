@@ -318,7 +318,7 @@ namespace Epsitec.Common.Widgets
 			if (this.show_count == 0)
 			{
 				this.show_count++;
-				this.root.InternalUpdateGeometry ();
+//				this.root.InternalUpdateGeometry ();
 				this.root.Invalidate ();
 			}
 			
@@ -337,7 +337,7 @@ namespace Epsitec.Common.Widgets
 			if (this.show_count == 0)
 			{
 				this.show_count++;
-				this.root.InternalUpdateGeometry ();
+//				this.root.InternalUpdateGeometry ();
 			}
 			
 			if (this.IsVisible == false)
@@ -370,9 +370,26 @@ namespace Epsitec.Common.Widgets
 		
 		public void SynchronousRepaint()
 		{
-			if (this.window != null)
+			if (this.sync_suspend_count > 0)
 			{
-				this.window.SynchronousRepaint ();
+				System.Diagnostics.Debug.WriteLine ("SynchronousRepaint called recursively !");
+				return;
+			}
+
+			try
+			{
+				this.sync_suspend_count++;
+
+				this.ForceLayout ();
+				
+				if (this.window != null)
+				{
+					this.window.SynchronousRepaint ();
+				}
+			}
+			finally
+			{
+				this.sync_suspend_count--;
 			}
 		}
 		
@@ -1331,7 +1348,8 @@ namespace Epsitec.Common.Widgets
 			{
 				this.window.Owner = this.owner.window;
 			}
-			
+
+			this.ForceLayout ();
 			this.SyncMinSizeWithWindowRoot ();
 			
 			if (this.AboutToShowWindow != null)
@@ -1726,7 +1744,29 @@ namespace Epsitec.Common.Widgets
 				this.window.SendValidation ();
 			}
 		}
-		
+
+		public void ForceLayout()
+		{
+			Layouts.LayoutContext context = Helpers.VisualTree.GetLayoutContext (this.root);
+			int counter = 0;
+			int total = 0;
+
+			if (context != null)
+			{
+				total = context.TotalArrangeCount;
+				
+				while ((context.ArrangeQueueLength != 0) || (context.MeasureQueueLength != 0))
+				{
+					context.ExecuteArrange ();
+					counter++;
+				}
+			}
+			
+			if (counter > 0)
+			{
+				System.Diagnostics.Debug.WriteLine (string.Format ("Arranged {0} widgets in {1} passes", context.TotalArrangeCount - total, counter));
+			}
+		}
 		
 		public static void ResetMouseCursor()
 		{
@@ -2071,6 +2111,8 @@ namespace Epsitec.Common.Widgets
 		
 		internal void RefreshGraphics(Drawing.Graphics graphics, Drawing.Rectangle repaint, Drawing.Rectangle[] strips)
 		{
+			this.ForceLayout ();
+			
 			if (strips.Length > 1)
 			{
 				//	On doit repeindre toute une série de rectangles :
@@ -2279,6 +2321,7 @@ namespace Epsitec.Common.Widgets
 		private bool							window_location_set;
 		
 		private int								show_count;
+		private int								sync_suspend_count;
 		private Widget							last_in_widget;
 		private Widget							capturing_widget;
 		private MouseButtons					capturing_button;

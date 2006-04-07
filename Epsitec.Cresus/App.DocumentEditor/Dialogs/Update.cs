@@ -34,18 +34,18 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.version.Height = this.version.Height*1.2;
 //				this.version.SetClientZoom(1.2);
 				this.version.Dock = DockStyle.Top;
-				this.version.DockMargins = new Margins(10, 10, 10, 0);
+				this.version.Margins = new Margins (10, 10, 10, 0);
 
 				this.limit = new StaticText(this.window.Root);
 				this.limit.Height = this.limit.Height*1.2;
 //				this.limit.SetClientZoom(1.2);
 				this.limit.Dock = DockStyle.Top;
-				this.limit.DockMargins = new Margins(10, 10, 0, 10);
+				this.limit.Margins = new Margins(10, 10, 0, 10);
 
 				this.buy = new StaticText(this.window.Root);
 				this.buy.Height = 110;
 				this.buy.Dock = DockStyle.Top;
-				this.buy.DockMargins = new Margins(10, 10, 0, 10);
+				this.buy.Margins = new Margins(10, 10, 0, 10);
 
 				//	Bouton de fermeture.
 				Button buttonClose = new Button(this.window.Root);
@@ -53,7 +53,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				buttonClose.Text = Res.Strings.Dialog.Button.Close;
 				buttonClose.ButtonStyle = ButtonStyle.DefaultAccept;
 				buttonClose.Anchor = AnchorStyles.BottomLeft;
-				buttonClose.AnchorMargins = new Margins(10, 0, 0, 10);
+				buttonClose.Margins = new Margins(10, 0, 0, 10);
 				buttonClose.Clicked += new MessageEventHandler(this.HandleUpdateButtonCloseClicked);
 				buttonClose.TabIndex = 1000;
 				buttonClose.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;

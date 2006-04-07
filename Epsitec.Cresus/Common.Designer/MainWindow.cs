@@ -29,11 +29,11 @@ namespace Epsitec.Common.Designer
 
 				//	Bouton de fermeture.
 				Button buttonClose = new Button (this.window.Root);
-				buttonClose.Width = 75;
+				buttonClose.PreferredWidth = 75;
 				buttonClose.Text = "Close";
 				buttonClose.ButtonStyle = ButtonStyle.DefaultAccept;
 				buttonClose.Anchor = AnchorStyles.BottomLeft;
-				buttonClose.AnchorMargins = new Margins (10, 0, 0, 10);
+				buttonClose.Margins = new Margins (10, 0, 0, 10);
 				buttonClose.Clicked += new MessageEventHandler (this.HandleAboutButtonCloseClicked);
 				buttonClose.TabIndex = 1000;
 				buttonClose.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;

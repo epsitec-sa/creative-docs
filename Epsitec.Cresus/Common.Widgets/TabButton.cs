@@ -18,7 +18,7 @@ namespace Epsitec.Common.Widgets
 		
 		public override Drawing.Rectangle GetShapeBounds()
 		{
-			return new Drawing.Rectangle(-2, -2, this.Client.Width+2, this.Client.Height+2);
+			return new Drawing.Rectangle (-2, -2, this.Client.Size.Width+2, this.Client.Size.Height+2);
 		}
 
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)

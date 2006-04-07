@@ -328,7 +328,7 @@ namespace Epsitec.Common.Printing
 		
 		public void RestoreClippingRectangle(Drawing.Rectangle clip)
 		{
-			if (clip == Drawing.Rectangle.Infinite)
+			if (clip == Drawing.Rectangle.MaxValue)
 			{
 				this.ResetClippingRectangle ();
 				return;
@@ -351,7 +351,7 @@ namespace Epsitec.Common.Printing
 		
 		public void ResetClippingRectangle()
 		{
-			this.clip = Drawing.Rectangle.Infinite;
+			this.clip = Drawing.Rectangle.MaxValue;
 			this.graphics.ResetClip ();
 		}
 		
@@ -822,7 +822,7 @@ namespace Epsitec.Common.Printing
 		protected Drawing.Color					originalColor = Drawing.Color.FromRgb (0, 0, 0);
 		protected Drawing.Color					color = Drawing.Color.FromRgb (0, 0, 0);
 		protected System.Collections.Stack		stackColorModifier;
-		protected Drawing.Rectangle				clip = Drawing.Rectangle.Infinite;
+		protected Drawing.Rectangle				clip = Drawing.Rectangle.MaxValue;
 		protected Drawing.Transform				transform = new Drawing.Transform ();
 		protected Drawing.FillMode				fill_mode = Drawing.FillMode.NonZero;
 	}

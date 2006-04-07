@@ -159,8 +159,8 @@ namespace Epsitec.Common.Widgets
 						if (scale < 5)  scale = 5;
 						if (scale > 21) scale = 21;
 						
-						double dx = this.Client.Width;
-						double dy = this.Client.Height;
+						double dx = this.Client.Size.Width;
+						double dy = this.Client.Size.Height;
 						
 						this.bitmap = Drawing.Bitmap.FromNativeBitmap (scale, scale);
 						this.scale  = scale;
@@ -233,8 +233,8 @@ namespace Epsitec.Common.Widgets
 					this.timer.Start ();
 				}
 				
-				double dx = this.Client.Width;
-				double dy = this.Client.Height;
+				double dx = this.Client.Size.Width;
+				double dy = this.Client.Size.Height;
 				
 				Drawing.Path path;
 				
@@ -345,7 +345,7 @@ namespace Epsitec.Common.Widgets
 				
 				double dx = font.GetTextAdvance (text) * size;
 				
-				double ox = (this.Client.Width - dx) / 2;
+				double ox = (this.Client.Size.Width - dx) / 2;
 				double oy = 2;
 				
 				graphics.AddFilledRectangle (ox - 1, oy - 2, dx + 2, font.LineHeight * size - 0);

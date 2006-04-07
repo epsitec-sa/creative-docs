@@ -51,7 +51,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 					title.Text = Res.Strings.Dialog.Download.Available;
 				}
 				title.Dock = DockStyle.Top;
-				title.DockMargins = new Margins(10, 10, 10, 0);
+				title.Margins = new Margins (10, 10, 10, 0);
 
 				string chip = "<list type=\"fix\" width=\"1.5\"/>";
 
@@ -59,7 +59,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				StaticText actual = new StaticText(this.window.Root);
 				actual.Text = chip+current;
 				actual.Dock = DockStyle.Top;
-				actual.DockMargins = new Margins(10, 10, 8, 0);
+				actual.Margins = new Margins (10, 10, 8, 0);
 
 				string text;
 				if ( this.url == "" )
@@ -74,7 +74,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				StaticText url = new StaticText(this.window.Root);
 				url.Text = chip+text;
 				url.Dock = DockStyle.Top;
-				url.DockMargins = new Margins(10, 10, 0, 0);
+				url.Margins = new Margins (10, 10, 0, 0);
 				url.HypertextClicked += new MessageEventHandler(HandleLinkHypertextClicked);
 
 				//	Bouton de fermeture.
@@ -83,7 +83,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				buttonClose.Text = Res.Strings.Dialog.Button.Close;
 				buttonClose.ButtonStyle = ButtonStyle.DefaultAccept;
 				buttonClose.Anchor = AnchorStyles.BottomLeft;
-				buttonClose.AnchorMargins = new Margins(10, 0, 0, 10);
+				buttonClose.Margins = new Margins(10, 0, 0, 10);
 				buttonClose.Clicked += new MessageEventHandler(this.HandleDownloadButtonCloseClicked);
 				buttonClose.TabIndex = 1000;
 				buttonClose.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;

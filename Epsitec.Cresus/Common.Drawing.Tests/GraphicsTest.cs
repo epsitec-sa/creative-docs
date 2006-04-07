@@ -306,8 +306,8 @@ namespace Epsitec.Common.Drawing
 			WindowRoot root = sender as WindowRoot;
 			
 			double x = 10;
-			double y = root.Client.Height - 10;
-			double width  = root.Client.Width  - 20;
+			double y = root.Client.Size.Height - 10;
+			double width  = root.Client.Size.Width  - 20;
 			double height = 25;
 			
 			string text = "This is a test string using ";
@@ -442,7 +442,7 @@ namespace Epsitec.Common.Drawing
 			WindowRoot root = sender as WindowRoot;
 			
 			double x = 10;
-			double y = root.Client.Height - 10;
+			double y = root.Client.Size.Height - 10;
 			
 			Font   font = Font.GetFont ("Wingdings", "Normal");
 			double size = 48;
@@ -487,7 +487,7 @@ namespace Epsitec.Common.Drawing
 			Font   font = Font.GetFont ("Tahoma", "Regular");
 			double size = 10.6;
 			
-			double y = root.Client.Height - 5;
+			double y = root.Client.Size.Height - 5;
 			
 			for (int i = 0; i < 5; i++)
 			{
@@ -515,8 +515,8 @@ namespace Epsitec.Common.Drawing
 		{
 			WindowRoot root = sender as WindowRoot;
 			
-			double cx = root.Client.Width / 2;
-			double cy = root.Client.Height / 2;
+			double cx = root.Client.Size.Width / 2;
+			double cy = root.Client.Size.Height / 2;
 			
 			e.Graphics.AddLine (cx, cy-5, cx, cy+5);
 			e.Graphics.AddLine (cx-5, cy, cx+5, cy);
@@ -602,8 +602,8 @@ namespace Epsitec.Common.Drawing
 		{
 			WindowRoot root = sender as WindowRoot;
 			
-			double cx = root.Client.Width / 2;
-			double cy = root.Client.Height / 2;
+			double cx = root.Client.Size.Width / 2;
+			double cy = root.Client.Size.Height / 2;
 			
 			e.Graphics.AddLine (cx, cy-5, cx, cy+5);
 			e.Graphics.AddLine (cx-5, cy, cx+5, cy);
@@ -672,14 +672,14 @@ namespace Epsitec.Common.Drawing
 		{
 			WindowRoot root = sender as WindowRoot;
 			
-			double cx = root.Client.Width / 2;
-			double cy = root.Client.Height / 2;
+			double cx = root.Client.Size.Width / 2;
+			double cy = root.Client.Size.Height / 2;
 			
 			e.Graphics.AddLine (cx, cy-5, cx, cy+5);
 			e.Graphics.AddLine (cx-5, cy, cx+5, cy);
 			e.Graphics.RenderSolid (Color.FromBrightness (0));
 			
-			e.Graphics.ScaleTransform (root.Client.Width / 300.0, root.Client.Height / 250.0, 0, 0);
+			e.Graphics.ScaleTransform (root.Client.Size.Width / 300.0, root.Client.Size.Height / 250.0, 0, 0);
 			
 			Graphics mask = e.Graphics.CreateAlphaMask ();
 			
@@ -718,8 +718,8 @@ namespace Epsitec.Common.Drawing
 		{
 			WindowRoot root = sender as WindowRoot;
 			
-			double cx = root.Client.Width / 2;
-			double cy = root.Client.Height / 2;
+			double cx = root.Client.Size.Width / 2;
+			double cy = root.Client.Size.Height / 2;
 			
 			e.Graphics.AddLine (cx, cy-5, cx, cy+5);
 			e.Graphics.AddLine (cx-5, cy, cx+5, cy);
@@ -752,8 +752,8 @@ namespace Epsitec.Common.Drawing
 		{
 			WindowRoot root = sender as WindowRoot;
 			
-			double cx = root.Client.Width / 2;
-			double cy = root.Client.Height / 2;
+			double cx = root.Client.Size.Width / 2;
+			double cy = root.Client.Size.Height / 2;
 			
 			Path path1 = new Path ();
 			Path path2 = new Path ();
@@ -781,8 +781,8 @@ namespace Epsitec.Common.Drawing
 		{
 			WindowRoot root = sender as WindowRoot;
 			
-			double cx = root.Client.Width / 2;
-			double cy = root.Client.Height / 2;
+			double cx = root.Client.Size.Width / 2;
+			double cy = root.Client.Size.Height / 2;
 			
 			Transform t = e.Graphics.Transform;
 			
@@ -829,8 +829,8 @@ namespace Epsitec.Common.Drawing
 		{
 			WindowRoot root = sender as WindowRoot;
 			
-			double cx = root.Client.Width / 2;
-			double cy = root.Client.Height / 2;
+			double cx = root.Client.Size.Width / 2;
+			double cy = root.Client.Size.Height / 2;
 			
 			PathAccumulationRasterizer r = new PathAccumulationRasterizer ();
 			Graphics g = new Graphics ();
@@ -885,8 +885,8 @@ namespace Epsitec.Common.Drawing
 		{
 			WindowRoot root = sender as WindowRoot;
 			
-			double cx = root.Client.Width / 2;
-			double cy = root.Client.Height / 2;
+			double cx = root.Client.Size.Width / 2;
+			double cy = root.Client.Size.Height / 2;
 			
 			Path path = new Path ();
 			path.MoveTo ( 990 - 600,  927 - 800);
@@ -947,8 +947,8 @@ namespace Epsitec.Common.Drawing
 		{
 			WindowRoot root = sender as WindowRoot;
 			
-			double cx = root.Client.Width / 2;
-			double cy = root.Client.Height / 2;
+			double cx = root.Client.Size.Width / 2;
+			double cy = root.Client.Size.Height / 2;
 			
 			Transform t = e.Graphics.Transform;
 			
@@ -982,7 +982,7 @@ namespace Epsitec.Common.Drawing
 			path2.Close ();
 			
 			e.Graphics.FillMode = FillMode.NonZero;
-			e.Graphics.SetClippingRectangle (50, 50, root.Client.Width - 100, 50);
+			e.Graphics.SetClippingRectangle (50, 50, root.Client.Size.Width - 100, 50);
 			
 			e.Graphics.Rasterizer.AddSurface (path1);
 			e.Graphics.Rasterizer.AddSurface (path2);
@@ -992,9 +992,9 @@ namespace Epsitec.Common.Drawing
 			e.Graphics.ResetClippingRectangle ();
 			e.Graphics.Transform = t;
 			
-			Rectangle r1 = new Rectangle (10, root.Client.Height - 20, 100, 10);
-			Rectangle r2 = new Rectangle (10, root.Client.Height - 32, 100,  5);
-			Rectangle r3 = new Rectangle (10, root.Client.Height - 41, 100,  5);
+			Rectangle r1 = new Rectangle (10, root.Client.Size.Height - 20, 100, 10);
+			Rectangle r2 = new Rectangle (10, root.Client.Size.Height - 32, 100,  5);
+			Rectangle r3 = new Rectangle (10, root.Client.Size.Height - 41, 100,  5);
 			
 			e.Graphics.AddFilledRectangle (r1);
 			e.Graphics.AddFilledRectangle (r2);
@@ -1002,7 +1002,7 @@ namespace Epsitec.Common.Drawing
 			e.Graphics.RenderSolid (Color.FromRgb (0, 1, 0));
 			
 			e.Graphics.SetClippingRectangles (new Rectangle[] { r2, r1, r3 });
-			e.Graphics.AddText (0, root.Client.Height - 50, "AAAAAAAAAAAAAAAAAAA", font, 70);
+			e.Graphics.AddText (0, root.Client.Size.Height - 50, "AAAAAAAAAAAAAAAAAAA", font, 70);
 			e.Graphics.RenderSolid (Color.FromRgb (0, 0, 1));
 		}
 		
@@ -1010,8 +1010,8 @@ namespace Epsitec.Common.Drawing
 		{
 			WindowRoot root = sender as WindowRoot;
 			
-			double cx = root.Client.Width / 2;
-			double cy = root.Client.Height / 2;
+			double cx = root.Client.Size.Width / 2;
+			double cy = root.Client.Size.Height / 2;
 			
 			e.Graphics.RotateTransformDeg (15, cx, cy);
 			e.Graphics.ScaleTransform (1.2, 1.2, 0, 0);
@@ -1049,7 +1049,7 @@ namespace Epsitec.Common.Drawing
 			e.Graphics.Rasterizer.AddGlyph (font, font.GetGlyphIndex ('A'), 230, 60, 100);
 			e.Graphics.RenderSolid (Color.FromRgb (1, 0, 0));
 			
-			e.Graphics.AddText (0, cy + 10, root.Client.Width, 20, "The quick brown fox jumps over the lazy dog !", font, 12, ContentAlignment.BottomCenter);
+			e.Graphics.AddText (0, cy + 10, root.Client.Size.Width, 20, "The quick brown fox jumps over the lazy dog !", font, 12, ContentAlignment.BottomCenter);
 			e.Graphics.RenderSolid (Color.FromRgb (0, 0, 0.4));
 		}
 		
@@ -1057,8 +1057,8 @@ namespace Epsitec.Common.Drawing
 		{
 			WindowRoot root = sender as WindowRoot;
 			
-			double dx = root.Client.Width;
-			double dy = root.Client.Height;
+			double dx = root.Client.Size.Width;
+			double dy = root.Client.Size.Height;
 			
 			double y;
 			
@@ -1106,8 +1106,8 @@ namespace Epsitec.Common.Drawing
 		{
 			WindowRoot root = sender as WindowRoot;
 			
-			double cx = root.Client.Width / 2;
-			double cy = root.Client.Height / 2;
+			double cx = root.Client.Size.Width / 2;
+			double cy = root.Client.Size.Height / 2;
 			
 			e.Graphics.RotateTransformDeg (0, cx, cy);
 			e.Graphics.ScaleTransform (0.8, 0.8, cx, cy);
@@ -1160,14 +1160,14 @@ namespace Epsitec.Common.Drawing
 			r[255] = g[255] = b[255] = 1.0;
 			
 			e.Graphics.FillMode = FillMode.NonZero;
-//			e.Graphics.AddFilledRectangle (0, cy+50, root.Client.Width, 10);
+//			e.Graphics.AddFilledRectangle (0, cy+50, root.Client.Size.Width, 10);
 //			e.Graphics.Rasterizer.AddSurface (path1);
 //			e.Graphics.Rasterizer.AddSurface (path2);
 //			e.Graphics.Rasterizer.AddGlyph (font, font.GetGlyphIndex ('A'),  30, 60, 100);
 //			e.Graphics.Rasterizer.AddGlyph (font, font.GetGlyphIndex ('A'), 230, 60, 100);
 			e.Graphics.AddFilledRectangle (0, 0, 2*cx, 2*cy);
 			e.Graphics.GradientRenderer.Fill = Epsitec.Common.Drawing.GradientFill.X;
-//			e.Graphics.GradientRenderer.SetParameters (0, root.Client.Width);
+//			e.Graphics.GradientRenderer.SetParameters (0, root.Client.Size.Width);
 			e.Graphics.GradientRenderer.SetParameters (0, 100);
 			e.Graphics.GradientRenderer.SetColors (r, g, b, a);
 			
@@ -1187,17 +1187,17 @@ namespace Epsitec.Common.Drawing
 		{
 			WindowRoot root = sender as WindowRoot;
 			
-			double cx = root.Client.Width / 2;
-			double cy = root.Client.Height / 2;
+			double cx = root.Client.Size.Width / 2;
+			double cy = root.Client.Size.Height / 2;
 			
 			//e.Graphics.RotateTransform (0, cx, cy);
 			//e.Graphics.ScaleTransform (1, 1, cx, cy);
 
 			Path path1 = new Path ();
 			path1.MoveTo (0, 0);
-			path1.LineTo (0, root.Client.Height);
-			path1.LineTo (root.Client.Width, root.Client.Height);
-			path1.LineTo (root.Client.Width, 0);
+			path1.LineTo (0, root.Client.Size.Height);
+			path1.LineTo (root.Client.Size.Width, root.Client.Size.Height);
+			path1.LineTo (root.Client.Size.Width, 0);
 			path1.Close ();
 			
 			double[] r = new double[256];
@@ -1267,8 +1267,8 @@ namespace Epsitec.Common.Drawing
 		{
 			WindowRoot root = sender as WindowRoot;
 			
-			double cx = root.Client.Width / 2;
-			double cy = root.Client.Height / 2;
+			double cx = root.Client.Size.Width / 2;
+			double cy = root.Client.Size.Height / 2;
 			
 			e.Graphics.RotateTransformDeg (-30, cx, cy);
 			
@@ -1348,8 +1348,8 @@ namespace Epsitec.Common.Drawing
 		{
 			WindowRoot root = sender as WindowRoot;
 			
-			double cx = root.Client.Width / 2;
-			double cy = root.Client.Height / 2;
+			double cx = root.Client.Size.Width / 2;
+			double cy = root.Client.Size.Height / 2;
 			
 			e.Graphics.RotateTransformDeg (0, cx, cy);
 			
@@ -1377,8 +1377,8 @@ namespace Epsitec.Common.Drawing
 		{
 			WindowRoot root = sender as WindowRoot;
 			
-			double cx = root.Client.Width / 2;
-			double cy = root.Client.Height / 2;
+			double cx = root.Client.Size.Width / 2;
+			double cy = root.Client.Size.Height / 2;
 			
 			e.Graphics.ScaleTransform (2, 2, 0, 0);
 			e.Graphics.RotateTransformDeg (0, cx, cy);

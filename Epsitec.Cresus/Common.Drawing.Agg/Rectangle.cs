@@ -1,4 +1,4 @@
-//	Copyright © 2003-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Drawing
@@ -89,7 +89,7 @@ namespace Epsitec.Common.Drawing
 		
 		
 		public static readonly Rectangle		Empty    = new Rectangle (0, 0, -1, -1);
-		public static readonly Rectangle		Infinite = new Rectangle (-1000000000, -1000000000, 2000000000, 2000000000);
+		public static readonly Rectangle		MaxValue = new Rectangle (-1000000000, -1000000000, 2000000000, 2000000000);
 		
 		public bool								IsEmpty
 		{
@@ -598,9 +598,20 @@ namespace Epsitec.Common.Drawing
 			this.y1 = System.Math.Floor (this.y1);
 			this.y2 = System.Math.Floor (this.y2);
 		}
-		
-		
-		public static Rectangle FromCorners(double x1, double y1, double x2, double y2)
+
+
+		public static Rectangle FromOppositeCorners(double x1, double y1, double x2, double y2)
+		{
+			Rectangle r;
+
+			r.x1 = x1;
+			r.y1 = y1;
+			r.x2 = x2;
+			r.y2 = y2;
+
+			return r;
+		}
+		public static Rectangle FromPoints(double x1, double y1, double x2, double y2)
 		{
 			Rectangle r;
 			
@@ -612,7 +623,7 @@ namespace Epsitec.Common.Drawing
 			return r;
 		}
 		
-		public static Rectangle FromCorners(Point p1, Point p2)
+		public static Rectangle FromPoints(Point p1, Point p2)
 		{
 			Rectangle r;
 			
@@ -707,7 +718,7 @@ namespace Epsitec.Common.Drawing
 			double y1 = System.Math.Min (a.y1, b.y1);
 			double y2 = System.Math.Max (a.y2, b.y2);
 			
-			return ((x1 > x2) || (y1 > y2)) ? Rectangle.Empty : Rectangle.FromCorners (x1, y1, x2, y2);
+			return ((x1 > x2) || (y1 > y2)) ? Rectangle.Empty : Rectangle.FromPoints (x1, y1, x2, y2);
 		}
 		
 		public static Rectangle Intersection(Rectangle a, Rectangle b)
@@ -722,7 +733,7 @@ namespace Epsitec.Common.Drawing
 			double y1 = System.Math.Max (a.y1, b.y1);
 			double y2 = System.Math.Min (a.y2, b.y2);
 			
-			return ((x1 > x2) || (y1 > y2)) ? Rectangle.Empty : Rectangle.FromCorners (x1, y1, x2, y2);
+			return ((x1 > x2) || (y1 > y2)) ? Rectangle.Empty : Rectangle.FromPoints (x1, y1, x2, y2);
 		}
 
 		

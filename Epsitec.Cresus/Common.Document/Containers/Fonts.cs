@@ -14,7 +14,7 @@ namespace Epsitec.Common.Document.Containers
 		{
 			this.toolBar = new HToolBar(this);
 			this.toolBar.Dock = DockStyle.Top;
-			this.toolBar.DockMargins = new Margins(0, 0, 0, -1);
+			this.toolBar.Margins = new Margins(0, 0, 0, -1);
 			this.toolBar.TabIndex = 2;
 			this.toolBar.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 
@@ -40,7 +40,7 @@ namespace Epsitec.Common.Document.Containers
 
 			this.slider = new HSlider();
 			this.slider.Width = 100;
-			this.slider.DockMargins = new Margins(0, 0, 4, 4);
+			this.slider.Margins = new Margins(0, 0, 4, 4);
 			this.slider.MinValue = 20.0M;
 			this.slider.MaxValue = 60.0M;
 			this.slider.SmallChange = 1.0M;
@@ -52,7 +52,7 @@ namespace Epsitec.Common.Document.Containers
 
 			this.buttonAbc = new IconButton(Misc.Icon("TextFontSampleAbc"));
 			this.buttonAbc.Command = "TextFontSampleAbc";
-			this.buttonAbc.DockMargins = new Margins(10, 0, 0, 0);
+			this.buttonAbc.Margins = new Margins(10, 0, 0, 0);
 			this.buttonAbc.TabIndex = tabIndex++;
 			this.buttonAbc.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			this.toolBar.Items.Add(this.buttonAbc);

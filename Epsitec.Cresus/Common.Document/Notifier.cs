@@ -364,7 +364,7 @@ namespace Epsitec.Common.Document
 		{
 			//	Agrandit au maximum la zone de redessin de tous les visualisateurs.
 			if ( !this.enable )  return;
-			this.NotifyArea(Rectangle.Infinite);
+			this.NotifyArea(Rectangle.MaxValue);
 		}
 
 		public void NotifyArea(Rectangle rect)
@@ -383,7 +383,7 @@ namespace Epsitec.Common.Document
 		{
 			//	Agrandit au maximum la zone de redessin d'un visualisateur.
 			if ( !this.enable )  return;
-			this.NotifyArea(viewer, Rectangle.Infinite);
+			this.NotifyArea(viewer, Rectangle.MaxValue);
 		}
 
 		public void NotifyArea(Viewer viewer, Rectangle rect)

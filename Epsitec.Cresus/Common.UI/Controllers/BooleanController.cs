@@ -30,12 +30,12 @@ namespace Epsitec.Common.UI.Controllers
 			
 			this.caption_label.Size          = new Drawing.Size (80, h_line);
 			this.caption_label.Anchor        = AnchorStyles.TopLeft;
-			this.caption_label.AnchorMargins = new Drawing.Margins (0, 0, h_pane - y - h_line, 0);
+			this.caption_label.Margins = new Drawing.Margins (0, 0, h_pane - y - h_line, 0);
 			
 			this.check_button.Text           = "True";
 			this.check_button.Height         = h_line;
 			this.check_button.Anchor         = AnchorStyles.LeftAndRight | AnchorStyles.Top;
-			this.check_button.AnchorMargins  = new Drawing.Margins (this.caption_label.Right, 0, h_pane - y - h_line, 0);
+			this.check_button.Margins  = new Drawing.Margins (this.caption_label.Right, 0, h_pane - y - h_line, 0);
 			this.check_button.TabIndex       = 10;
 			this.check_button.Name           = "Value";
 			

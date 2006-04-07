@@ -126,7 +126,7 @@ namespace Epsitec.Common.Document
 				{
 					this.containerGuides = new Containers.Guides(this.document);
 					this.containerGuides.Dock = DockStyle.Fill;
-					this.containerGuides.DockMargins = new Margins(10, 10, 4, 10);
+					this.containerGuides.Margins = new Margins(10, 10, 4, 10);
 					this.containerGuides.TabIndex = this.tabIndex++;
 					this.containerGuides.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 				}
@@ -177,7 +177,7 @@ namespace Epsitec.Common.Document
 				{
 					this.containerFonts = new Containers.Fonts(this.document);
 					this.containerFonts.Dock = DockStyle.Fill;
-					this.containerFonts.DockMargins = new Margins(10, 10, 4, 10);
+					this.containerFonts.Margins = new Margins(10, 10, 4, 10);
 					this.containerFonts.TabIndex = this.tabIndex++;
 					this.containerFonts.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 				}
@@ -477,24 +477,24 @@ namespace Epsitec.Common.Document
 			StaticText text = new StaticText(parent);
 			text.Text = Misc.Bold(labelText);
 			text.Dock = DockStyle.Top;
-			text.DockMargins = new Margins(10, 10, 8, 2);
+			text.Margins = new Margins(10, 10, 8, 2);
 
 			Separator sep = new Separator(parent);
 			sep.Width = parent.Width;
 			sep.Height = 1;
 			sep.Dock = DockStyle.Top;
-			sep.DockMargins = new Margins(0, 0, 3, 6);
+			sep.Margins = new Margins(0, 0, 3, 6);
 #else
 			Separator sep = new Separator(parent);
 			sep.Width = parent.Width;
 			sep.Height = 1;
 			sep.Dock = DockStyle.Top;
-			sep.DockMargins = new Margins(0, 0, 6, 3);
+			sep.Margins = new Margins(0, 0, 6, 3);
 
 			StaticText text = new StaticText(parent);
 			text.Text = Misc.Bold(labelText);
 			text.Dock = DockStyle.Top;
-			text.DockMargins = new Margins(10, 10, 2, 8);
+			text.Margins = new Margins(10, 10, 2, 8);
 #endif
 		}
 
@@ -505,7 +505,7 @@ namespace Epsitec.Common.Document
 			sep.Width = parent.Width;
 			sep.Height = 1;
 			sep.Dock = DockStyle.Top;
-			sep.DockMargins = new Margins(0, 0, 4, 6);
+			sep.Margins = new Margins(0, 0, 4, 6);
 		}
 		#endregion
 
@@ -516,19 +516,19 @@ namespace Epsitec.Common.Document
 			Panel container = new Panel(parent);
 			container.Height = 18;
 			container.Dock = DockStyle.Top;
-			container.DockMargins = new Margins(10, 10, 0, 0);
+			container.Margins = new Margins(10, 10, 0, 0);
 
 			StaticText text = new StaticText(container);
 			text.Text = label;
 			text.Width = 120;
 			text.Dock = DockStyle.Left;
-			text.DockMargins = new Margins(0, 0, 0, 0);
+			text.Margins = new Margins(0, 0, 0, 0);
 
 			text = new StaticText(container);
 			text.Text = info;
 			text.Width = 150;
 			text.Dock = DockStyle.Left;
-			text.DockMargins = new Margins(0, 0, 0, 0);
+			text.Margins = new Margins(0, 0, 0, 0);
 		}
 		#endregion
 
@@ -549,7 +549,7 @@ namespace Epsitec.Common.Document
 			check.TabIndex = this.tabIndex++;
 			check.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			check.Dock = DockStyle.Top;
-			check.DockMargins = new Margins(10, 10, 0, 5);
+			check.Margins = new Margins(10, 10, 0, 5);
 			check.ActiveStateChanged += new EventHandler(this.HandleCheckActiveStateChanged);
 			this.WidgetsTableAdd(check, "");
 		}
@@ -594,13 +594,13 @@ namespace Epsitec.Common.Document
 			container.Height = 22;
 			container.TabIndex = this.tabIndex++;
 			container.Dock = DockStyle.Top;
-			container.DockMargins = new Margins(10, 10, 0, sDouble.Info?0:5);
+			container.Margins = new Margins(10, 10, 0, sDouble.Info?0:5);
 
 			StaticText text = new StaticText(container);
 			text.Text = sDouble.Text;
 			text.Width = 120;
 			text.Dock = DockStyle.Left;
-			text.DockMargins = new Margins(0, 0, 0, 0);
+			text.Margins = new Margins(0, 0, 0, 0);
 
 			TextFieldReal field = new TextFieldReal(container);
 			field.Width = 60;
@@ -626,7 +626,7 @@ namespace Epsitec.Common.Document
 			field.TabIndex = this.tabIndex++;
 			field.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			field.Dock = DockStyle.Left;
-			field.DockMargins = new Margins(0, 0, 0, 0);
+			field.Margins = new Margins(0, 0, 0, 0);
 			this.WidgetsTableAdd(field, "");
 
 			if ( sDouble.Info )
@@ -635,14 +635,14 @@ namespace Epsitec.Common.Document
 				container.Height = 18;
 				container.TabIndex = this.tabIndex++;
 				container.Dock = DockStyle.Top;
-				container.DockMargins = new Margins(10, 10, 0, 5);
+				container.Margins = new Margins(10, 10, 0, 5);
 
 				text = new StaticText(container);
 				text.Name = sDouble.Name;
 				text.Text = "<font size=\"80%\">" + sDouble.GetInfo() + "</font>";
 				text.Width = 150;
 				text.Dock = DockStyle.Left;
-				text.DockMargins = new Margins(120, 0, 0, 0);
+				text.Margins = new Margins(120, 0, 0, 0);
 				this.WidgetsTableAdd(text, ".Info");
 			}
 		}
@@ -707,27 +707,27 @@ namespace Epsitec.Common.Document
 			container.Height = 22+2+22;
 			container.TabIndex = this.tabIndex++;
 			container.Dock = DockStyle.Top;
-			container.DockMargins = new Margins(10, 10, 0, 5);
+			container.Margins = new Margins(10, 10, 0, 5);
 
 			Panel containerXY = new Panel(container);
 			containerXY.Width = 120+60;
 			containerXY.Height = container.Height;
 			containerXY.TabIndex = this.tabIndex++;
 			containerXY.Dock = DockStyle.Left;
-			containerXY.DockMargins = new Margins(0, 0, 0, 0);
+			containerXY.Margins = new Margins(0, 0, 0, 0);
 
 			Panel containerX = new Panel(containerXY);
 			containerX.Width = containerXY.Width;
 			containerX.Height = 22;
 			containerX.TabIndex = this.tabIndex++;
 			containerX.Dock = DockStyle.Top;
-			containerX.DockMargins = new Margins(0, 0, 0, 0);
+			containerX.Margins = new Margins(0, 0, 0, 0);
 
 			text = new StaticText(containerX);
 			text.Text = sPoint.TextX;
 			text.Width = 120;
 			text.Dock = DockStyle.Left;
-			text.DockMargins = new Margins(0, 0, 0, 0);
+			text.Margins = new Margins(0, 0, 0, 0);
 
 			field = new TextFieldReal(containerX);
 			field.Width = 60;
@@ -751,7 +751,7 @@ namespace Epsitec.Common.Document
 			field.TabIndex = this.tabIndex++;
 			field.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			field.Dock = DockStyle.Left;
-			field.DockMargins = new Margins(0, 0, 0, 0);
+			field.Margins = new Margins(0, 0, 0, 0);
 			this.WidgetsTableAdd(field, ".X");
 
 			Panel containerY = new Panel(containerXY);
@@ -759,13 +759,13 @@ namespace Epsitec.Common.Document
 			containerY.Height = 22;
 			containerY.TabIndex = this.tabIndex++;
 			containerY.Dock = DockStyle.Bottom;
-			containerY.DockMargins = new Margins(0, 0, 0, 0);
+			containerY.Margins = new Margins(0, 0, 0, 0);
 
 			text = new StaticText(containerY);
 			text.Text = sPoint.TextY;
 			text.Width = 120;
 			text.Dock = DockStyle.Left;
-			text.DockMargins = new Margins(0, 0, 0, 0);
+			text.Margins = new Margins(0, 0, 0, 0);
 
 			field = new TextFieldReal(containerY);
 			field.Width = 60;
@@ -789,7 +789,7 @@ namespace Epsitec.Common.Document
 			field.TabIndex = this.tabIndex++;
 			field.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			field.Dock = DockStyle.Left;
-			field.DockMargins = new Margins(0, 0, 0, 0);
+			field.Margins = new Margins(0, 0, 0, 0);
 			this.WidgetsTableAdd(field, ".Y");
 
 			Separator sep = new Separator(container);
@@ -797,7 +797,7 @@ namespace Epsitec.Common.Document
 			sep.Width = 1;
 			sep.Height = container.Height;
 			sep.Dock = DockStyle.Left;
-			sep.DockMargins = new Margins(2, 0, 0, 0);
+			sep.Margins = new Margins(2, 0, 0, 0);
 			this.WidgetsTableAdd(sep, ".SepLink");
 
 			IconButton ib = new IconButton(container);
@@ -807,7 +807,7 @@ namespace Epsitec.Common.Document
 			ib.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ib.Dock = DockStyle.Left;
 			double m = System.Math.Floor((container.Height-ib.DefaultHeight)/2);
-			ib.DockMargins = new Margins(-1, 8, m, m);
+			ib.Margins = new Margins(-1, 8, m, m);
 			ib.Clicked += new MessageEventHandler(HandlePointActiveStateChanged);
 			ToolTip.Default.SetToolTip(ib, Res.Strings.Dialog.Point.Link);
 			this.WidgetsTableAdd(ib, ".Link");
@@ -820,14 +820,14 @@ namespace Epsitec.Common.Document
 				containerD.Width = 33;
 				containerD.TabIndex = this.tabIndex++;
 				containerD.Dock = DockStyle.Left;
-				containerD.DockMargins = new Margins(0, 0, 0, 0);
+				containerD.Margins = new Margins(0, 0, 0, 0);
 
 				Panel containerDX = new Panel(containerD);
 				containerDX.Width = containerD.Width;
 				containerDX.Height = 22;
 				containerDX.TabIndex = this.tabIndex++;
 				containerDX.Dock = DockStyle.Top;
-				containerDX.DockMargins = new Margins(0, 0, 0, 0);
+				containerDX.Margins = new Margins(0, 0, 0, 0);
 
 				button = new Button(containerDX);
 				button.ButtonStyle = ButtonStyle.Icon;
@@ -838,7 +838,7 @@ namespace Epsitec.Common.Document
 				button.TabIndex = this.tabIndex++;
 				button.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 				button.Dock = DockStyle.Left;
-				button.DockMargins = new Margins(0, 0, 2, 2);
+				button.Margins = new Margins(0, 0, 2, 2);
 				button.Clicked += new MessageEventHandler(HandleDoublerPointDivXClicked);
 				this.WidgetsTableAdd(button, ".DoublerDivX");
 
@@ -851,7 +851,7 @@ namespace Epsitec.Common.Document
 				button.TabIndex = this.tabIndex++;
 				button.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 				button.Dock = DockStyle.Left;
-				button.DockMargins = new Margins(-1, 0, 2, 2);
+				button.Margins = new Margins(-1, 0, 2, 2);
 				button.Clicked += new MessageEventHandler(HandleDoublerPointMulXClicked);
 				this.WidgetsTableAdd(button, ".DoublerMulX");
 
@@ -860,7 +860,7 @@ namespace Epsitec.Common.Document
 				containerDY.Height = 22;
 				containerDY.TabIndex = this.tabIndex++;
 				containerDY.Dock = DockStyle.Top;
-				containerDY.DockMargins = new Margins(0, 0, 0, 0);
+				containerDY.Margins = new Margins(0, 0, 0, 0);
 
 				button = new Button(containerDY);
 				button.ButtonStyle = ButtonStyle.Icon;
@@ -871,7 +871,7 @@ namespace Epsitec.Common.Document
 				button.TabIndex = this.tabIndex++;
 				button.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 				button.Dock = DockStyle.Left;
-				button.DockMargins = new Margins(0, 0, 2, 2);
+				button.Margins = new Margins(0, 0, 2, 2);
 				button.Clicked += new MessageEventHandler(HandleDoublerPointDivYClicked);
 				this.WidgetsTableAdd(button, ".DoublerDivY");
 
@@ -884,7 +884,7 @@ namespace Epsitec.Common.Document
 				button.TabIndex = this.tabIndex++;
 				button.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 				button.Dock = DockStyle.Left;
-				button.DockMargins = new Margins(-1, 0, 2, 2);
+				button.Margins = new Margins(-1, 0, 2, 2);
 				button.Clicked += new MessageEventHandler(HandleDoublerPointMulYClicked);
 				this.WidgetsTableAdd(button, ".DoublerMulY");
 			}
@@ -1019,13 +1019,13 @@ namespace Epsitec.Common.Document
 			container.Height = 22;
 			container.TabIndex = this.tabIndex++;
 			container.Dock = DockStyle.Top;
-			container.DockMargins = new Margins(10, 10, 0, 5);
+			container.Margins = new Margins(10, 10, 0, 5);
 
 			StaticText text = new StaticText(container);
 			text.Text = sInteger.Text;
 			text.Width = 120;
 			text.Dock = DockStyle.Left;
-			text.DockMargins = new Margins(0, 0, 0, 0);
+			text.Margins = new Margins(0, 0, 0, 0);
 
 			TextFieldCombo field = new TextFieldCombo(container);
 			field.Width = 140;
@@ -1036,7 +1036,7 @@ namespace Epsitec.Common.Document
 			field.TabIndex = this.tabIndex++;
 			field.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			field.Dock = DockStyle.Left;
-			field.DockMargins = new Margins(0, 0, 0, 0);
+			field.Margins = new Margins(0, 0, 0, 0);
 			this.WidgetsTableAdd(field, "");
 		}
 
@@ -1086,14 +1086,14 @@ namespace Epsitec.Common.Document
 			container.Height = 22;
 			container.TabIndex = this.tabIndex++;
 			container.Dock = DockStyle.Top;
-			container.DockMargins = new Margins(10, 10, 0, 5);
+			container.Margins = new Margins(10, 10, 0, 5);
 
 			TextField field = new TextField(container);
 			field.Name = sString.Name;
 			field.Text = sString.Value;
 			field.Width = 177;
 			field.Dock = DockStyle.Left;
-			field.DockMargins = new Margins(0, 0, 0, 0);
+			field.Margins = new Margins(0, 0, 0, 0);
 			field.TextChanged += new EventHandler(this.HandleFilenameTextChanged);
 			this.WidgetsTableAdd(field, "");
 
@@ -1102,7 +1102,7 @@ namespace Epsitec.Common.Document
 			button.Text = Res.Strings.Dialog.Button.Browse;
 			button.Width = 80;
 			button.Dock = DockStyle.Left;
-			button.DockMargins = new Margins(3, 0, 0, 0);
+			button.Margins = new Margins(3, 0, 0, 0);
 			button.Clicked += new MessageEventHandler(HandleFilenameButtonClicked);
 			this.WidgetsTableAdd(button, ".Button");
 		}
@@ -1146,13 +1146,13 @@ namespace Epsitec.Common.Document
 			container.Height = 22;
 			container.TabIndex = this.tabIndex++;
 			container.Dock = DockStyle.Top;
-			container.DockMargins = new Margins(10, 10, 0, 0);
+			container.Margins = new Margins(10, 10, 0, 0);
 
 			StaticText text = new StaticText(container);
 			text.Text = Res.Strings.Dialog.Print.Paper.Direction;
 			text.Width = 120;
 			text.Dock = DockStyle.Left;
-			text.DockMargins = new Margins(0, 0, 0, 0);
+			text.Margins = new Margins(0, 0, 0, 0);
 
 			RadioButton radio = new RadioButton(container);
 			radio.Width = 65;
@@ -1162,7 +1162,7 @@ namespace Epsitec.Common.Document
 			radio.TabIndex = this.tabIndex++;
 			radio.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			radio.Dock = DockStyle.Left;
-			radio.DockMargins = new Margins(0, 0, 0, 0);
+			radio.Margins = new Margins(0, 0, 0, 0);
 			radio.Index = 1;
 			this.WidgetsTableAdd(radio, "");
 			
@@ -1181,13 +1181,13 @@ namespace Epsitec.Common.Document
 			container.Height = 22;
 			container.TabIndex = this.tabIndex++;
 			container.Dock = DockStyle.Top;
-			container.DockMargins = new Margins(10, 10, 0, 5);
+			container.Margins = new Margins(10, 10, 0, 5);
 
 			text = new StaticText(container);
 			text.Text = Res.Strings.Dialog.Print.Paper.PaperList;
 			text.Width = 120;
 			text.Dock = DockStyle.Left;
-			text.DockMargins = new Margins(0, 0, 0, 0);
+			text.Margins = new Margins(0, 0, 0, 0);
 
 			TextFieldCombo field = new TextFieldCombo(container);
 			field.Width = 140;
@@ -1228,7 +1228,7 @@ namespace Epsitec.Common.Document
 			field.TabIndex = this.tabIndex++;
 			field.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			field.Dock = DockStyle.Left;
-			field.DockMargins = new Margins(0, 0, 0, 0);
+			field.Margins = new Margins(0, 0, 0, 0);
 			this.WidgetsTableAdd(field, "");
 
 			this.UpdatePaper();
@@ -1381,7 +1381,7 @@ namespace Epsitec.Common.Document
 			container.Height = 22;
 			container.TabIndex = this.tabIndex++;
 			container.Dock = DockStyle.Top;
-			container.DockMargins = new Margins(10, 10, 0, 5);
+			container.Margins = new Margins(10, 10, 0, 5);
 
 			TextFieldCombo field = new TextFieldCombo(container);
 			field.Name = sString.Name;
@@ -1389,7 +1389,7 @@ namespace Epsitec.Common.Document
 			field.Text = this.document.Settings.PrintInfo.PrintName;
 			field.Width = 177;
 			field.Dock = DockStyle.Left;
-			field.DockMargins = new Margins(0, 0, 0, 0);
+			field.Margins = new Margins(0, 0, 0, 0);
 			field.ComboOpening += new EventHandler<CancelEventArgs> (this.HandlePrinterComboOpening);
 			field.ComboClosed += new EventHandler(this.HandlePrinterComboClosed);
 			this.WidgetsTableAdd(field, "");
@@ -1399,7 +1399,7 @@ namespace Epsitec.Common.Document
 			button.Text = Res.Strings.Dialog.Print.Properties;
 			button.Width = 80;
 			button.Dock = DockStyle.Left;
-			button.DockMargins = new Margins(3, 0, 0, 0);
+			button.Margins = new Margins(3, 0, 0, 0);
 			button.Clicked += new MessageEventHandler(HandlePrinterButtonClicked);
 			this.WidgetsTableAdd(button, ".Button");
 		}
@@ -1484,7 +1484,7 @@ namespace Epsitec.Common.Document
 			radio.TabIndex = this.tabIndex++;
 			radio.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			radio.Dock = DockStyle.Top;
-			radio.DockMargins = new Margins(10, 10, 0, 0);
+			radio.Margins = new Margins(10, 10, 0, 0);
 			radio.ActiveStateChanged += new EventHandler(this.HandleRangeRadioActiveStateChanged);
 			radio.Index = 1;
 			this.WidgetsTableAdd(radio, ".All");
@@ -1494,7 +1494,7 @@ namespace Epsitec.Common.Document
 			container.Height = 20;
 			container.TabIndex = this.tabIndex++;
 			container.Dock = DockStyle.Top;
-			container.DockMargins = new Margins(10, 10, 0, 0);
+			container.Margins = new Margins(10, 10, 0, 0);
 
 			radio = new RadioButton(container);
 			radio.Text = Res.Strings.Dialog.Print.Range.From;
@@ -1505,7 +1505,7 @@ namespace Epsitec.Common.Document
 			radio.TabIndex = this.tabIndex++;
 			radio.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			radio.Dock = DockStyle.Left;
-			radio.DockMargins = new Margins(0, 0, 0, 0);
+			radio.Margins = new Margins(0, 0, 0, 0);
 			radio.ActiveStateChanged += new EventHandler(this.HandleRangeRadioActiveStateChanged);
 			radio.Index = 2;
 			this.WidgetsTableAdd(radio, ".FromTo");
@@ -1523,7 +1523,7 @@ namespace Epsitec.Common.Document
 			field.TabIndex = this.tabIndex++;
 			field.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			field.Dock = DockStyle.Left;
-			field.DockMargins = new Margins(0, 0, 0, 0);
+			field.Margins = new Margins(0, 0, 0, 0);
 			this.WidgetsTableAdd(field, ".From");
 
 			StaticText text = new StaticText(container);
@@ -1532,7 +1532,7 @@ namespace Epsitec.Common.Document
 			text.Height = 20;
 			text.Width = 30;
 			text.Dock = DockStyle.Left;
-			text.DockMargins = new Margins(0, 0, 0, 0);
+			text.Margins = new Margins(0, 0, 0, 0);
 
 			field = new TextFieldReal(container);
 			field.Height = 20;
@@ -1547,7 +1547,7 @@ namespace Epsitec.Common.Document
 			field.TabIndex = this.tabIndex++;
 			field.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			field.Dock = DockStyle.Left;
-			field.DockMargins = new Margins(0, 0, 0, 0);
+			field.Margins = new Margins(0, 0, 0, 0);
 			this.WidgetsTableAdd(field, ".To");
 			//	fin from-to
 
@@ -1560,7 +1560,7 @@ namespace Epsitec.Common.Document
 			radio.TabIndex = this.tabIndex++;
 			radio.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			radio.Dock = DockStyle.Top;
-			radio.DockMargins = new Margins(10, 10, 0, 5);
+			radio.Margins = new Margins(10, 10, 0, 5);
 			radio.ActiveStateChanged += new EventHandler(this.HandleRangeRadioActiveStateChanged);
 			radio.Index = 3;
 			this.WidgetsTableAdd(radio, ".Current");

@@ -128,7 +128,7 @@ namespace Epsitec.Common.Document.Objects
 			this.document.Modifier.TextInfoModif = "";
 
 			//	Crée les 2 autres poignées dans les coins opposés.
-			Drawing.Rectangle rect = Drawing.Rectangle.FromCorners(this.Handle(0).Position, this.Handle(1).Position);
+			Drawing.Rectangle rect = Drawing.Rectangle.FromPoints(this.Handle(0).Position, this.Handle(1).Position);
 			Point p1 = rect.BottomLeft;
 			Point p2 = rect.TopRight;
 			this.Handle(0).Position = p1;

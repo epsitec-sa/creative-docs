@@ -35,7 +35,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				bookDoc.Name = "Book";
 				bookDoc.Arrows = TabBookArrows.Stretch;
 				bookDoc.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.TopAndBottom;
-				bookDoc.AnchorMargins = new Margins(6, 6, 6, 34);
+				bookDoc.Margins = new Margins(6, 6, 6, 34);
 
 				TabPage bookPrinter = new TabPage();
 				bookPrinter.Name = "Printer";
@@ -60,7 +60,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				buttonOk.Text = Res.Strings.Dialog.Print.Button.OK;
 				buttonOk.ButtonStyle = ButtonStyle.DefaultAccept;
 				buttonOk.Anchor = AnchorStyles.BottomLeft;
-				buttonOk.AnchorMargins = new Margins(6, 0, 0, 6);
+				buttonOk.Margins = new Margins(6, 0, 0, 6);
 				buttonOk.Clicked += new MessageEventHandler(this.HandlePrintButtonOkClicked);
 				buttonOk.TabIndex = 1000;
 				buttonOk.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
@@ -71,7 +71,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				buttonCancel.Text = Res.Strings.Dialog.Print.Button.Cancel;
 				buttonCancel.ButtonStyle = ButtonStyle.DefaultCancel;
 				buttonCancel.Anchor = AnchorStyles.BottomLeft;
-				buttonCancel.AnchorMargins = new Margins(6+75+10, 0, 0, 6);
+				buttonCancel.Margins = new Margins(6+75+10, 0, 0, 6);
 				buttonCancel.Clicked += new MessageEventHandler(this.HandlePrintButtonCancelClicked);
 				buttonCancel.TabIndex = 1001;
 				buttonCancel.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;

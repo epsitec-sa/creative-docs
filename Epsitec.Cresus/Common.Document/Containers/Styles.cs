@@ -16,7 +16,7 @@ namespace Epsitec.Common.Document.Containers
 			this.helpText = new StaticText(this);
 			this.helpText.Text = Res.Strings.Container.Help.Styles;
 			this.helpText.Dock = DockStyle.Top;
-			this.helpText.DockMargins = new Margins(0, 0, -2, 7);
+			this.helpText.Margins = new Margins(0, 0, -2, 7);
 
 			this.mainBook = new PaneBook(this);
 			this.mainBook.PaneBookStyle = PaneBookStyle.BottomTop;
@@ -47,7 +47,7 @@ namespace Epsitec.Common.Document.Containers
 			this.graphicList.SetParent(this.topPage);
 			this.graphicList.MinSize = new Size(10, 87);
 			this.graphicList.Dock = DockStyle.Fill;
-			this.graphicList.DockMargins = new Margins(0, 0, 0, 0);
+			this.graphicList.Margins = new Margins(0, 0, 0, 0);
 			this.graphicList.FinalSelectionChanged += new EventHandler(this.HandleAggregatesTableSelectionChanged);
 			this.graphicList.FlyOverChanged += new EventHandler(this.HandleAggregatesTableFlyOverChanged);
 			this.graphicList.DoubleClicked += new MessageEventHandler(this.HandleAggregatesTableDoubleClicked);
@@ -63,7 +63,7 @@ namespace Epsitec.Common.Document.Containers
 			this.paragraphList.SetParent(this.topPage);
 			this.paragraphList.MinSize = new Size(10, 87);
 			this.paragraphList.Dock = DockStyle.Fill;
-			this.paragraphList.DockMargins = new Margins(0, 0, 0, 0);
+			this.paragraphList.Margins = new Margins(0, 0, 0, 0);
 			this.paragraphList.FinalSelectionChanged += new EventHandler(this.HandleStylesTableSelectionChanged);
 			this.paragraphList.DoubleClicked += new MessageEventHandler(this.HandleStylesTableDoubleClicked);
 			this.paragraphList.TabIndex = 2;
@@ -78,7 +78,7 @@ namespace Epsitec.Common.Document.Containers
 			this.characterList.SetParent(this.topPage);
 			this.characterList.MinSize = new Size(10, 87);
 			this.characterList.Dock = DockStyle.Fill;
-			this.characterList.DockMargins = new Margins(0, 0, 0, 0);
+			this.characterList.Margins = new Margins(0, 0, 0, 0);
 			this.characterList.FinalSelectionChanged += new EventHandler(this.HandleStylesTableSelectionChanged);
 			this.characterList.DoubleClicked += new MessageEventHandler(this.HandleStylesTableDoubleClicked);
 			this.characterList.TabIndex = 2;
@@ -103,7 +103,7 @@ namespace Epsitec.Common.Document.Containers
 			this.panelContainer = new Widget(this.bottomScrollable.Panel);
 			this.panelContainer.Height = 0.0;
 			this.panelContainer.Dock = DockStyle.Top;
-			this.panelContainer.DockMargins = new Margins(0, 1, 0, 0);
+			this.panelContainer.Margins = new Margins(0, 1, 0, 0);
 			this.panelContainer.TabIndex = 99;
 			this.panelContainer.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 			
@@ -115,7 +115,7 @@ namespace Epsitec.Common.Document.Containers
 			this.colorSelector.CloseClicked += new EventHandler(this.HandleColorSelectorClosed);
 			this.colorSelector.SetParent(this.bottomScrollable.Panel);
 			this.colorSelector.Dock = DockStyle.Top;
-			this.colorSelector.DockMargins = new Margins(1, 3, 5, 2);
+			this.colorSelector.Margins = new Margins(1, 3, 5, 2);
 			this.colorSelector.TabIndex = 100;
 			this.colorSelector.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 			this.colorSelector.Visibility = false;
@@ -124,7 +124,7 @@ namespace Epsitec.Common.Document.Containers
 			this.UpdateCategory();
 
 			this.panelContainer.Height = 1;  // nécessaire pour mettre à jour la première fois !
-			this.panelContainer.ForceLayout();
+//-			this.panelContainer.ForceLayout();
 		}
 
 		protected void CreateCategoryGroup()
@@ -133,7 +133,7 @@ namespace Epsitec.Common.Document.Containers
 			this.categoryContainer = new Widget(this.topPage);
 			this.categoryContainer.Height = 20+8;
 			this.categoryContainer.Dock = DockStyle.Top;
-			this.categoryContainer.DockMargins = new Margins(0, 0, 0, 0);
+			this.categoryContainer.Margins = new Margins(0, 0, 0, 0);
 			this.categoryContainer.TabIndex = 1;
 			this.categoryContainer.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 
@@ -145,7 +145,7 @@ namespace Epsitec.Common.Document.Containers
 			this.categoryGraphic.AutoFocus = false;
 			this.categoryGraphic.Width = 80;
 			this.categoryGraphic.Dock = DockStyle.Left;
-			this.categoryGraphic.DockMargins = new Margins(0, 0, 0, 0);
+			this.categoryGraphic.Margins = new Margins(0, 0, 0, 0);
 			this.categoryGraphic.TabIndex = this.index++;
 			this.categoryGraphic.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 			this.categoryGraphic.Clicked += new MessageEventHandler(this.HandleCategoryChanged);
@@ -156,7 +156,7 @@ namespace Epsitec.Common.Document.Containers
 			this.categoryParagraph.AutoFocus = false;
 			this.categoryParagraph.Width = 80;
 			this.categoryParagraph.Dock = DockStyle.Left;
-			this.categoryParagraph.DockMargins = new Margins(0, 0, 0, 0);
+			this.categoryParagraph.Margins = new Margins(0, 0, 0, 0);
 			this.categoryParagraph.TabIndex = this.index++;
 			this.categoryParagraph.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 			this.categoryParagraph.Clicked += new MessageEventHandler(this.HandleCategoryChanged);
@@ -167,7 +167,7 @@ namespace Epsitec.Common.Document.Containers
 			this.categoryCharacter.AutoFocus = false;
 			this.categoryCharacter.Width = 80-1;
 			this.categoryCharacter.Dock = DockStyle.Left;
-			this.categoryCharacter.DockMargins = new Margins(0, 0, 0, 0);
+			this.categoryCharacter.Margins = new Margins(0, 0, 0, 0);
 			this.categoryCharacter.TabIndex = this.index++;
 			this.categoryCharacter.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 			this.categoryCharacter.Clicked += new MessageEventHandler(this.HandleCategoryChanged);
@@ -180,7 +180,7 @@ namespace Epsitec.Common.Document.Containers
 			//	Crée la toolbar principale.
 			this.aggregateToolBar = new HToolBar(this.topPage);
 			this.aggregateToolBar.Dock = DockStyle.Top;
-			this.aggregateToolBar.DockMargins = new Margins(0, 0, 0, -1);
+			this.aggregateToolBar.Margins = new Margins(0, 0, 0, -1);
 			this.aggregateToolBar.TabIndex = 1;
 			this.aggregateToolBar.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 
@@ -245,13 +245,13 @@ namespace Epsitec.Common.Document.Containers
 			//	Crée la toolbar pour le choix des enfants.
 			this.childrensToolBar = new HToolBar(this.bottomPage);
 			this.childrensToolBar.Dock = DockStyle.Top;
-			this.childrensToolBar.DockMargins = new Margins(0, 0, 0, 0);
+			this.childrensToolBar.Margins = new Margins(0, 0, 0, 0);
 			this.childrensToolBar.TabIndex = 95;
 			this.childrensToolBar.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 
 			StaticText st = new StaticText();
 			st.Width = 45;
-			st.DockMargins = new Margins(0, 5, 0, 0);
+			st.Margins = new Margins(0, 5, 0, 0);
 			st.Text = Res.Strings.Panel.AggregateChildrens.Label.Name;
 			st.Alignment = ContentAlignment.MiddleRight;
 			this.childrensToolBar.Items.Add(st);
@@ -259,7 +259,7 @@ namespace Epsitec.Common.Document.Containers
 			this.dummyChildrens = new Widgets.DummyTextFieldCombo();
 			this.dummyChildrens.IsReadOnly = true;
 			this.dummyChildrens.Width = 185;
-			this.dummyChildrens.DockMargins = new Margins(0, 0, 1, 1);
+			this.dummyChildrens.Margins = new Margins(0, 0, 1, 1);
 			this.dummyChildrens.Clicked += new MessageEventHandler(this.HandleMenuChildrensClicked);
 			this.dummyChildrens.Button.Clicked += new MessageEventHandler(this.HandleMenuChildrensClicked);
 			this.childrensToolBar.Items.Add(this.dummyChildrens);
@@ -267,7 +267,7 @@ namespace Epsitec.Common.Document.Containers
 
 			this.nameChildrens = new StaticText(this.dummyChildrens);
 			this.nameChildrens.Dock = DockStyle.Fill;
-			this.nameChildrens.DockMargins = new Margins(2, 2, 0, 0);
+			this.nameChildrens.Margins = new Margins(2, 2, 0, 0);
 			this.nameChildrens.TabIndex = 1;
 			this.nameChildrens.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 		}
@@ -277,20 +277,20 @@ namespace Epsitec.Common.Document.Containers
 			//	Crée la toolbar pour le nom de l'agrégat.
 			this.nameToolBar = new HToolBar(this.bottomPage);
 			this.nameToolBar.Dock = DockStyle.Top;
-			this.nameToolBar.DockMargins = new Margins(0, 0, 0, 0);
+			this.nameToolBar.Margins = new Margins(0, 0, 0, 0);
 			this.nameToolBar.TabIndex = 94;
 			this.nameToolBar.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 
 			StaticText st = new StaticText();
 			st.Width = 45;
-			st.DockMargins = new Margins(0, 5, 0, 0);
+			st.Margins = new Margins(0, 5, 0, 0);
 			st.Text = Res.Strings.Panel.AggregateName.Label.Name;
 			st.Alignment = ContentAlignment.MiddleRight;
 			this.nameToolBar.Items.Add(st);
 
 			this.name = new TextField();
 			this.name.Width = 110;
-			this.name.DockMargins = new Margins(0, 0, 1, 1);
+			this.name.Margins = new Margins(0, 0, 1, 1);
 			this.name.TextChanged += new EventHandler(this.HandleNameTextChanged);
 			this.name.AutoSelectOnFocus = true;
 			this.name.TabIndex = 1;
@@ -305,14 +305,14 @@ namespace Epsitec.Common.Document.Containers
 			this.selectorContainer = new Widget(this.bottomPage);
 			this.selectorContainer.Height = Styles.selectorSize+8;
 			this.selectorContainer.Dock = DockStyle.Top;
-			this.selectorContainer.DockMargins = new Margins(0, 0, 5, 0);
+			this.selectorContainer.Margins = new Margins(0, 0, 5, 0);
 			this.selectorContainer.TabIndex = 97;
 			this.selectorContainer.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 
 			this.selectorToolBar = new Widget(this.selectorContainer);
 			this.selectorToolBar.Height = Styles.selectorSize+8;
 			this.selectorToolBar.Dock = DockStyle.Fill;
-			this.selectorToolBar.DockMargins = new Margins(0, 0, 0, 0);
+			this.selectorToolBar.Margins = new Margins(0, 0, 0, 0);
 			this.selectorToolBar.TabIndex = 1;
 			this.selectorToolBar.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 
@@ -321,7 +321,7 @@ namespace Epsitec.Common.Document.Containers
 			this.buttonStyleDelete.AutoFocus = false;
 			this.buttonStyleDelete.Clicked += new MessageEventHandler(this.HandleButtonStyleDelete);
 			this.buttonStyleDelete.Dock = DockStyle.Right;
-			this.buttonStyleDelete.DockMargins = new Margins(0, 0, 0, 6);
+			this.buttonStyleDelete.Margins = new Margins(0, 0, 0, 6);
 			this.buttonStyleDelete.TabIndex = 3;
 			this.buttonStyleDelete.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.buttonStyleDelete, Res.Strings.Action.AggregateStyleDelete);
@@ -331,7 +331,7 @@ namespace Epsitec.Common.Document.Containers
 			this.buttonStyleNew.AutoFocus = false;
 			this.buttonStyleNew.Clicked += new MessageEventHandler(this.HandleButtonStyleNew);
 			this.buttonStyleNew.Dock = DockStyle.Right;
-			this.buttonStyleNew.DockMargins = new Margins(0, 0, 0, 6);
+			this.buttonStyleNew.Margins = new Margins(0, 0, 0, 6);
 			this.buttonStyleNew.TabIndex = 2;
 			this.buttonStyleNew.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.buttonStyleNew, Res.Strings.Action.AggregateStyleNew);
@@ -729,11 +729,11 @@ namespace Epsitec.Common.Document.Containers
 					this.styleBriefPanel.Alignment = ContentAlignment.TopLeft;
 					this.styleBriefPanel.Height = h;
 					this.styleBriefPanel.Dock = DockStyle.Fill;
-					this.styleBriefPanel.DockMargins = new Margins(5, -1000, 5, 5);  // dépasse largement à droite
+					this.styleBriefPanel.Margins = new Margins(5, -1000, 5, 5);  // dépasse largement à droite
 					this.styleBriefPanel.Text = brief;
 
 					this.panelContainer.Height = h;
-					this.panelContainer.ForceLayout();
+//-					this.panelContainer.ForceLayout();
 					return;
 				}
 
@@ -741,7 +741,7 @@ namespace Epsitec.Common.Document.Containers
 				{
 					this.panel.Property = property;
 					this.panelContainer.Height = this.panel.DefaultHeight;
-					this.panelContainer.ForceLayout();
+//-					this.panelContainer.ForceLayout();
 
 					if ( this.colorSelector.Visibility )
 					{
@@ -770,7 +770,7 @@ namespace Epsitec.Common.Document.Containers
 					this.panel.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 
 					this.panelContainer.Height = this.panel.DefaultHeight;
-					this.panelContainer.ForceLayout();
+//-					this.panelContainer.ForceLayout();
 				}
 			}
 
@@ -797,11 +797,11 @@ namespace Epsitec.Common.Document.Containers
 					this.styleBriefPanel.Alignment = ContentAlignment.TopLeft;
 					this.styleBriefPanel.Height = h;
 					this.styleBriefPanel.Dock = DockStyle.Fill;
-					this.styleBriefPanel.DockMargins = new Margins(5, -1000, 5, 5);  // dépasse largement à droite
+					this.styleBriefPanel.Margins = new Margins(5, -1000, 5, 5);  // dépasse largement à droite
 					this.styleBriefPanel.Text = brief;
 
 					this.panelContainer.Height = h;
-					this.panelContainer.ForceLayout();
+//-					this.panelContainer.ForceLayout();
 				}
 				else
 				{
@@ -816,7 +816,7 @@ namespace Epsitec.Common.Document.Containers
 					this.textPanel.UpdateAfterAttach();
 
 					this.panelContainer.Height = this.textPanel.DefaultHeight;
-					this.panelContainer.ForceLayout();
+//-					this.panelContainer.ForceLayout();
 				}
 			}
 		}
@@ -865,7 +865,7 @@ namespace Epsitec.Common.Document.Containers
 			}
 
 			this.panelContainer.Height = 0.0;
-			this.panelContainer.ForceLayout();
+//-			this.panelContainer.ForceLayout();
 		}
 
 		protected void ShowSelection()
@@ -1394,7 +1394,7 @@ namespace Epsitec.Common.Document.Containers
 				{
 					this.panel.Height = h;
 					this.panelContainer.Height = h;
-					this.panelContainer.ForceLayout();
+//-					this.panelContainer.ForceLayout();
 				}
 			}
 		}

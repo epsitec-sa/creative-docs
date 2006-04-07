@@ -121,11 +121,16 @@ namespace Epsitec.Common.Widgets
 				this.Invalidate();
 			}
 		}
+
+		protected override void SetBoundsOverride(Drawing.Rectangle oldRect, Drawing.Rectangle newRect)
+		{
+			base.SetBoundsOverride(oldRect, newRect);
+			this.UpdateGeometry ();
+		}
 		
-		protected override void UpdateClientGeometry()
+		protected void UpdateGeometry()
 		{
 			//	Met à jour la géométrie.
-			base.UpdateClientGeometry();
 
 			Drawing.Rectangle rect = this.Client.Bounds;
 			double dim = System.Math.Min(rect.Width, rect.Height);

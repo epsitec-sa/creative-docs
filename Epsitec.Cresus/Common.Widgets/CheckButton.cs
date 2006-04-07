@@ -81,8 +81,8 @@ namespace Epsitec.Common.Widgets
 			System.Diagnostics.Debug.Assert (this.TextLayout != null);
 			
 			Drawing.Point offset = this.LabelOffset;
-			double        dx     = this.Client.Width - offset.X;
-			double        dy     = this.Client.Height;
+			double dx = this.Client.Size.Width - offset.X;
+			double dy = this.Client.Size.Height;
 			
 			this.TextLayout.Alignment  = this.Alignment;
 			this.TextLayout.LayoutSize = new Drawing.Size (dx, dy);
@@ -91,8 +91,8 @@ namespace Epsitec.Common.Widgets
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
-			
-			Drawing.Rectangle rect  = new Drawing.Rectangle (0, (this.Client.Height-CheckButton.CheckHeight)/2, CheckButton.CheckHeight, CheckButton.CheckHeight);
+
+			Drawing.Rectangle rect  = new Drawing.Rectangle (0, (this.Client.Size.Height-CheckButton.CheckHeight)/2, CheckButton.CheckHeight, CheckButton.CheckHeight);
 			WidgetState       state = this.PaintState;
 			
 			adorner.PaintCheck (graphics, rect, state);

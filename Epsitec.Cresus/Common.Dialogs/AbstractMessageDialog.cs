@@ -76,7 +76,7 @@ namespace Epsitec.Common.Dialogs
 					{
 						if (buttons[i] != null)
 						{
-							buttons[i].Location = new Drawing.Point (x, buttons[i].Bottom);
+							buttons[i].Bounds = new Drawing.Rectangle (x, buttons[i].Bottom, buttons[i].Width, buttons[i].Height);
 							
 							x += buttons[i].Width;
 							x += 8;

@@ -93,12 +93,12 @@ namespace Epsitec.Common.Script.Developer.Panels
 			this.combo_type.Text = this.type_info.GetNameFromType (this.MethodType);
 			
 			this.text_name.Anchor         = AnchorStyles.LeftAndRight | AnchorStyles.Top;
-			this.text_name.AnchorMargins  = new Drawing.Margins (width, 0, 0, 0);
+			this.text_name.Margins  = new Drawing.Margins (width, 0, 0, 0);
 			this.text_name.DefocusAction  = DefocusAction.AutoAcceptOrRejectEdition;
 			this.text_name.ButtonShowCondition = ShowCondition.WhenModified;
 			
 			this.combo_type.Anchor        = AnchorStyles.LeftAndRight | AnchorStyles.Top;
-			this.combo_type.AnchorMargins = new Drawing.Margins (width, 0, this.text_name.Height + 2, 0);
+			this.combo_type.Margins = new Drawing.Margins (width, 0, this.text_name.Height + 2, 0);
 			this.combo_type.IsReadOnly    = true;
 			
 			label_1.Anchor = AnchorStyles.TopLeft;

@@ -157,7 +157,7 @@ namespace Epsitec.Common.Document.Widgets
 
 		public override Size GetBestFitSize()
 		{
-			double maxHeight = System.Math.Min(500, this.MaxSize.Height);
+			double maxHeight = System.Math.Min (500, this.MaxHeight);
 			
 			double w = FontSelector.BestWidth(this.sampleHeight, this.sampleAbc);
 			double h = FontSelector.BestHeight(maxHeight, this.fontList.Count, this.sampleHeight);

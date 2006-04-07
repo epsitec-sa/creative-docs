@@ -46,8 +46,8 @@ namespace Epsitec.Common.Document.Objects
 			this.masterSpecific = false;
 			this.masterGuides = true;
 			this.pageSize = new Size(0,0);
-			this.hotSpot = Point.Empty;
-			this.glyphOrigin = Point.Empty;
+			this.hotSpot = Point.Zero;
+			this.glyphOrigin = Point.Zero;
 			this.glyphSize = new Size(0,0);
 			this.language = null;
 			this.pageStyle = null;

@@ -595,7 +595,7 @@ namespace Epsitec.Common.Widgets
 				
 				Message.state.window = form.HostingWidgetWindow;
 				Message.state.window_cursor = message.cursor;
-				Message.state.screen_cursor = Message.CurrentState.window == null ? Drawing.Point.Empty : Message.CurrentState.window.MapWindowToScreen (message.cursor);
+				Message.state.screen_cursor = Message.CurrentState.window == null ? Drawing.Point.Zero : Message.CurrentState.window.MapWindowToScreen (message.cursor);
 			}
 			
 			//	Gère les clics multiples, en tenant compte des réglages de l'utilisateur.

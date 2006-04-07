@@ -319,20 +319,20 @@ namespace Epsitec.Common.Widgets
 			
 			TextFrameManager manager = new TextFrameManager (pane, frame);
 			
-			frame.Dock        = DockStyle.Fill;
-			frame.DockMargins = new Margins (4, 4, 4, 4);
+			frame.Dock    = DockStyle.Fill;
+			frame.Margins = new Margins (4, 4, 4, 4);
 			frame.SetParent (window.Root);
-			frame.Name        = "A";
+			frame.Name    = "A";
 			
 			frame.Focus ();
 			
 			TextFrame frame2 = new TextFrame (frame);
 			
-			frame2.Height      = 150;
-			frame2.Dock        = DockStyle.Bottom;
-			frame2.DockMargins = new Margins (4, 4, 4, 4);
+			frame2.Height  = 150;
+			frame2.Dock    = DockStyle.Bottom;
+			frame2.Margins = new Margins (4, 4, 4, 4);
 			frame2.SetParent (window.Root);
-			frame2.Name        = "B";
+			frame2.Name    = "B";
 			
 			window.Show ();
 			Window.RunInTestEnvironment (window);
@@ -569,7 +569,7 @@ namespace Epsitec.Common.Widgets
 			
 			widget.Bounds = new Rectangle (20, 10, 80, 30);
 			widget.Anchor = AnchorStyles.Left;
-			widget.AnchorMargins = new Drawing.Margins (20, 0, 0, 0);
+			widget.Margins = new Drawing.Margins (20, 0, 0, 0);
 			
 			Assert.IsTrue (widget.Anchor == AnchorStyles.Left);
 			
@@ -583,7 +583,7 @@ namespace Epsitec.Common.Widgets
 			
 			widget.Bounds = new Rectangle (20, 10, 80, 30);
 			widget.Anchor = AnchorStyles.Right;
-			widget.AnchorMargins = new Drawing.Margins (0, 20, 0, 0);
+			widget.Margins = new Drawing.Margins (0, 20, 0, 0);
 			
 			Assert.IsTrue (widget.Anchor == AnchorStyles.Right);
 			Assert.IsTrue (widget.Right == 100, "AnchorStyles.Right, widget.Right not OK");
@@ -625,7 +625,7 @@ namespace Epsitec.Common.Widgets
 			
 			text.Size     = new Drawing.Size (text.PreferredSize.Width / 2, text.PreferredSize.Height * 2) * 3;
 			text.Anchor   = AnchorStyles.TopLeft;
-			text.AnchorMargins = new Drawing.Margins (10, 0, 10, 0);
+			text.Margins = new Drawing.Margins (10, 0, 10, 0);
 			text.SetParent (window.Root);
 			text.PaintForeground += new PaintEventHandler(this.CheckTextLayoutInfoPaintForeground);
 			
@@ -639,18 +639,15 @@ namespace Epsitec.Common.Widgets
 			Widget root = new Widget ();
 			Widget widget = new Widget ();
 			
-			root.Location = new Point (0, 0);
-			root.Size     = new Size (300, 200);
-			
-			widget.Location = new Point (30, 20);
-			widget.Size     = new Size (50, 40);
+			root.Bounds = new Rectangle (0, 0, 300, 200);
+			widget.Bounds = new Rectangle (30, 20, 50, 40);
 			
 			Assert.IsTrue (widget.Left == 30);
 			Assert.IsTrue (widget.Right == 80);
 			Assert.IsTrue (widget.Top == 60);
 			Assert.IsTrue (widget.Bottom == 20);
-			Assert.IsTrue (widget.Client.Width == 50);
-			Assert.IsTrue (widget.Client.Height == 40);
+			Assert.IsTrue (widget.Client.Size.Width == 50);
+			Assert.IsTrue (widget.Client.Size.Height == 40);
 			
 			root.Children.Add (widget);
 			
@@ -673,12 +670,9 @@ namespace Epsitec.Common.Widgets
 		{
 			Widget root = new Widget ();
 			Widget widget = new Widget ();
-			
-			root.Location = new Point (0, 0);
-			root.Size     = new Size (300, 200);
-			
-			widget.Location = new Point (30, 20);
-			widget.Size     = new Size (50, 40);
+
+			root.Bounds = new Rectangle (0, 0, 300, 200);
+			widget.Bounds = new Rectangle (30, 20, 50, 40);
 			
 			root.Children.Add (widget);
 			
@@ -725,12 +719,9 @@ namespace Epsitec.Common.Widgets
 		{
 			Widget root = new Widget ();
 			Widget widget = new Widget ();
-			
-			root.Location = new Point (0, 0);
-			root.Size     = new Size (300, 200);
-			
-			widget.Location = new Point (30, 20);
-			widget.Size     = new Size (50, 40);
+
+			root.Bounds = new Rectangle (0, 0, 300, 200);
+			widget.Bounds = new Rectangle (30, 20, 50, 40);
 			
 			root.Children.Add (widget);
 			
@@ -811,12 +802,9 @@ namespace Epsitec.Common.Widgets
 		{
 			Widget root = new Widget ();
 			Widget widget = new Widget ();
-			
-			root.Location = new Point (0, 0);
-			root.Size     = new Size (300, 200);
-			
-			widget.Location = new Point (30, 20);
-			widget.Size     = new Size (50, 40);
+
+			root.Bounds = new Rectangle (0, 0, 300, 200);
+			widget.Bounds = new Rectangle (30, 20, 50, 40);
 			
 			root.Children.Add (widget);
 			
@@ -897,12 +885,9 @@ namespace Epsitec.Common.Widgets
 		{
 			Widget root = new Widget ();
 			Widget widget = new Widget ();
-			
-			root.Location = new Point (0, 0);
-			root.Size     = new Size (300, 200);
-			
-			widget.Location = new Point (30, 20);
-			widget.Size     = new Size (50, 40);
+
+			root.Bounds = new Rectangle (0, 0, 300, 200);
+			widget.Bounds = new Rectangle (30, 20, 50, 40);
 			
 			root.Children.Add (widget);
 			
@@ -952,12 +937,9 @@ namespace Epsitec.Common.Widgets
 		{
 			Widget root = new Widget ();
 			Widget widget = new Widget ();
-			
-			root.Location = new Point (0, 0);
-			root.Size     = new Size (300, 200);
-			
-			widget.Location = new Point (30, 20);
-			widget.Size     = new Size (50, 40);
+
+			root.Bounds = new Rectangle (0, 0, 300, 200);
+			widget.Bounds = new Rectangle (30, 20, 50, 40);
 			
 			root.Children.Add (widget);
 			
@@ -982,12 +964,9 @@ namespace Epsitec.Common.Widgets
 		{
 			Widget root = new Widget ();
 			Widget widget = new Widget ();
-			
-			root.Location = new Point (100, 150);
-			root.Size     = new Size (300, 200);
-			
-			widget.Location = new Point (30, 20);
-			widget.Size     = new Size (50, 40);
+
+			root.Bounds = new Rectangle (100, 150, 300, 200);
+			widget.Bounds = new Rectangle (30, 20, 50, 40);
 			widget.SetParent (root);
 			
 //			widget.SetClientZoom (3);
@@ -1009,7 +988,7 @@ namespace Epsitec.Common.Widgets
 			window.ClientSize = new Size(400, 300);
 			window.Text = "CheckDocking";
 			window.Root.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
-			window.Root.DockPadding = new Margins (8, 8, 5, 5);
+			window.Root.Padding = new Margins (8, 8, 5, 5);
 			
 			Button button;
 			button = new Button();

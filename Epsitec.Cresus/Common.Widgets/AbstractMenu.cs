@@ -376,11 +376,11 @@ namespace Epsitec.Common.Widgets
 			
 			if (this.IsVertical)
 			{
-				this.DockPadding = this.shadow + this.margins;
+				this.Padding = this.shadow + this.margins;
 			}
 			else
 			{
-				this.DockPadding = Drawing.Margins.Zero;
+				this.Padding = Drawing.Margins.Zero;
 			}
 		}
 
@@ -511,13 +511,13 @@ namespace Epsitec.Common.Widgets
 			switch (this.MenuOrientation)
 			{
 				case MenuOrientation.Horizontal:
-					item.Dock        = DockStyle.Left;
-					item.DockMargins = new Drawing.Margins (2, 0, 2, 2);
+					item.Dock    = DockStyle.Left;
+					item.Margins = new Drawing.Margins (2, 0, 2, 2);
 					break;
 				
 				case MenuOrientation.Vertical:
-					item.Dock        = DockStyle.Top;
-					item.DockMargins = Drawing.Margins.Zero;
+					item.Dock    = DockStyle.Top;
+					item.Margins = Drawing.Margins.Zero;
 					break;
 			}
 		}

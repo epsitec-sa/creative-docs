@@ -286,7 +286,7 @@ namespace Epsitec.Common.Document.Widgets
 					StaticText st = new StaticText();
 					st.Alignment = ContentAlignment.MiddleCenter;
 					st.Dock = DockStyle.Fill;
-					st.DockMargins = new Margins(2, 2, 0, 0);
+					st.Margins = new Margins(2, 2, 0, 0);
 					this[0, row].Insert(st);
 				}
 			}
@@ -296,7 +296,7 @@ namespace Epsitec.Common.Document.Widgets
 				StaticText st = new StaticText();
 				st.Alignment = ContentAlignment.MiddleLeft;
 				st.Dock = DockStyle.Fill;
-				st.DockMargins = new Margins(4, 4, 0, 0);
+				st.Margins = new Margins(4, 4, 0, 0);
 				this[nc, row].Insert(st);
 			}
 

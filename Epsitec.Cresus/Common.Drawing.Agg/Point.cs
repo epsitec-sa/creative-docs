@@ -1,4 +1,4 @@
-//	Copyright © 2003-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Drawing
@@ -42,13 +42,13 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
-		public bool								IsEmpty
+		public bool								IsZero
 		{
 			get { return this.x == 0 && this.y == 0; }
 		}
 		
 		
-		public static readonly Point 			Empty;
+		public static readonly Point 			Zero;
 		
 		public Size ToSize()
 		{
@@ -102,7 +102,7 @@ namespace Epsitec.Common.Drawing
 		{
 			if (value == null)
 			{
-				return Point.Empty;
+				return Point.Zero;
 			}
 			
 			string[] args = value.Split (';', ':');

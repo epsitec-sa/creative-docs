@@ -143,11 +143,11 @@ namespace Epsitec.Common.Widgets
 		{
 			get { return this.arrowDown; }
 		}
-		
-		
-		protected override void UpdateClientGeometry()
+
+
+		protected override void SetBoundsOverride(Drawing.Rectangle oldRect, Drawing.Rectangle newRect)
 		{
-			base.UpdateClientGeometry();
+			base.SetBoundsOverride(oldRect, newRect);
 			this.UpdateGeometry ();
 		}
 		

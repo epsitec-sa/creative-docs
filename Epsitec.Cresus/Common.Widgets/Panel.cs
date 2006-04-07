@@ -14,7 +14,7 @@ namespace Epsitec.Common.Widgets
 	{
 		public Panel()
 		{
-			this.aperture = Drawing.Rectangle.Infinite;
+			this.aperture = Drawing.Rectangle.MaxValue;
 		}
 		
 		public Panel(Widget embedder) : this()
@@ -62,7 +62,7 @@ namespace Epsitec.Common.Widgets
 					
 					if (this.is_auto_fitting)
 					{
-						this.ForceLayout ();
+//-						this.ForceLayout ();
 					}
 				}
 				
@@ -102,7 +102,7 @@ namespace Epsitec.Common.Widgets
 			//	client du panel.
 			
 			//	Pour indiquer que le panel complet est visible, il faut assigner à Aperture
-			//	la valeur Drawing.Rectangle.Infinite.
+			//	la valeur Drawing.Rectangle.MaxValue.
 			
 			get
 			{
@@ -124,7 +124,7 @@ namespace Epsitec.Common.Widgets
 		{
 			Drawing.Rectangle clip = base.GetClipBounds ();
 			
-			if (this.aperture == Drawing.Rectangle.Infinite)
+			if (this.aperture == Drawing.Rectangle.MaxValue)
 			{
 				//	Si aucune ouverture n'a été définie, elle a une taille infinie et on
 				//	peut donc utiliser la région de clipping retournée par la super-classe.

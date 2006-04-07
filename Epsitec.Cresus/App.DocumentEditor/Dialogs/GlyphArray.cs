@@ -281,7 +281,7 @@ namespace Epsitec.Common.Widgets
 
 			if ( this.scroller != null )
 			{
-				this.scroller.Bounds = new Rectangle(this.Client.Width-this.scroller.Width, 0, this.scroller.Width, this.Client.Height);
+				this.scroller.Bounds = new Rectangle(this.Client.Size.Width-this.scroller.Width, 0, this.scroller.Width, this.Client.Size.Height);
 			}
 		}
 		

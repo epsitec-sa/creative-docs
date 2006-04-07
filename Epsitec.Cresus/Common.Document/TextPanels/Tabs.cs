@@ -241,7 +241,7 @@ namespace Epsitec.Common.Document.TextPanels
 				StaticText st = new StaticText();
 				st.Alignment = ContentAlignment.MiddleLeft;
 				st.Dock = DockStyle.Fill;
-				st.DockMargins = new Drawing.Margins(10, 0, 0, 0);
+				st.Margins = new Drawing.Margins(10, 0, 0, 0);
 				this.table[0, row].Insert(st);
 			}
 
@@ -250,7 +250,7 @@ namespace Epsitec.Common.Document.TextPanels
 				StaticText st = new StaticText();
 				st.Alignment = ContentAlignment.MiddleLeft;
 				st.Dock = DockStyle.Fill;
-				st.DockMargins = new Drawing.Margins(10, 0, 0, 0);
+				st.Margins = new Drawing.Margins(10, 0, 0, 0);
 				this.table[1, row].Insert(st);
 			}
 		}

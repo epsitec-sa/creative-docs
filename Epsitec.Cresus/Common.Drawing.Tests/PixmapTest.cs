@@ -209,8 +209,8 @@ namespace Epsitec.Common.Drawing
 			
 			protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clip_rect)
 			{
-				int dx = (int) (this.Client.Width);
-				int dy = (int) (this.Client.Height);
+				int dx = (int) (this.Client.Size.Width);
+				int dy = (int) (this.Client.Size.Height);
 				
 				for (int i = 0; i < this.stack.Length; i++)
 				{

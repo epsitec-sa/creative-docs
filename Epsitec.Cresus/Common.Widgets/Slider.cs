@@ -241,8 +241,8 @@ namespace Epsitec.Common.Widgets
 		protected virtual decimal Detect(Drawing.Point pos)
 		{
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
-			double   width   = this.Client.Width;
-			double   left    = 0;
+			double width = this.Client.Size.Width;
+			double left = 0;
 			
 			width -= adorner.GeometrySliderLeftMargin;
 			width -= adorner.GeometrySliderRightMargin;
