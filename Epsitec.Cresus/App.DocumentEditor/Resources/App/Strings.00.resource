@@ -2,12 +2,12 @@
 <!-- Ressources pour le projet App.DocumentEditor -->
 
 <bundle type="String" name="Strings" about="Ressources pour l'application CrDoc">
-	<data name="Application.SoftName">Cresus_Documents</data>
-	<data name="Application.TitleDoc">Crésus Documents</data>
-	<data name="Application.TitlePic">Crésus Pictogrammes</data>
-	<data name="Application.TitleTxt">Crésus Textes</data>
-	<data name="Application.TitleShort">Crésus</data>
-	<data name="Application.Type">N</data>
+	<data mod="1" name="Application.SoftName">Cresus_Documents</data>
+	<data mod="1" about="Titre de la fenêtre de l'application, mode Document" name="Application.TitleDoc">Crésus Documents</data>
+  <data mod="1" about="Titre de la fenêtre de l'application, mode Pictogram" name="Application.TitlePic">Crésus Pictogrammes</data>
+	<data mod="1" name="Application.TitleTxt">Crésus Textes</data>
+  <data mod="1" name="Application.TitleShort">Crésus</data>
+	<data mod="1" about="N: application normale/F: application 'freeware'" name="Application.Type">N</data>
 	
 	<data name="Ribbon.Main">Documents</data>
 	<data name="Ribbon.Oper">Opérations</data>

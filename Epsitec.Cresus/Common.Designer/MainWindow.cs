@@ -62,10 +62,27 @@ namespace Epsitec.Common.Designer
 					for (int k = 0; k < bundles.Count; k++)
 					{
 						ResourceBundle bundle = bundles[k];
+						bool needsSave = false;
 						
 						System.Diagnostics.Debug.WriteLine (string.Format ("  Culture {0}, name '{1}'", bundle.Culture.Name, bundle.Name ?? "<null>"));
 						System.Diagnostics.Debug.WriteLine (string.Format ("    About: '{0}'", bundle.About ?? "<null>"));
 						System.Diagnostics.Debug.WriteLine (string.Format ("    {0} fields", bundle.FieldCount));
+
+						foreach (ResourceBundle.Field field in bundle.Fields)
+						{
+							if (field.ModificationId > 0)
+							{
+								System.Diagnostics.Debug.WriteLine (string.Format ("      {0}: modif. id {1}, about: {2}", field.Name, field.ModificationId, field.About ?? "<null>"));
+
+								field.SetModificationId (field.ModificationId+1);
+								needsSave = true;
+							}
+						}
+						
+						if (needsSave)
+						{
+							resourceManager.SetBundle (bundle, ResourceSetMode.UpdateOnly);
+						}
 					}
 				}
 			}

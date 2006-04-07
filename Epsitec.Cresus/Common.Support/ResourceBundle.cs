@@ -1,6 +1,8 @@
 //	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
+using System.Collections.Generic;
+
 namespace Epsitec.Common.Support
 {
 	using System.Globalization;
@@ -224,6 +226,16 @@ namespace Epsitec.Common.Support
 			}
 		}
 		
+		public IEnumerable<Field>			Fields
+		{
+			get
+			{
+				foreach (Field field in this.fields)
+				{
+					yield return field;
+				}
+			}
+		}
 		
 		public void DefineName(string name)
 		{
@@ -1115,6 +1127,14 @@ namespace Epsitec.Common.Support
 				this.name   = parent.GetAttributeValue (xml, "name");
 				this.about  = parent.GetAttributeValue (xml, "about");
 				this.xml    = xml;
+
+				string mod = parent.GetAttributeValue (xml, "mod");
+
+				if ((mod != null) &&
+					(mod.Length > 0))
+				{
+					this.modification_id = int.Parse (mod, System.Globalization.CultureInfo.InvariantCulture);
+				}
 			}
 			
 			public Field(ResourceBundle parent, ResourceBundle bundle)
@@ -1135,6 +1155,14 @@ namespace Epsitec.Common.Support
 			public string					About
 			{
 				get { return this.about; }
+			}
+
+			public int						ModificationId
+			{
+				get
+				{
+					return this.modification_id;
+				}
 			}
 			
 			public ResourceFieldType		Type
@@ -1329,7 +1357,25 @@ namespace Epsitec.Common.Support
 					}
 				}
 			}
-			
+
+			public void SetModificationId(int id)
+			{
+				if (this.IsEmpty)
+				{
+					throw new ResourceException ("An empty field cannot be modified.");
+				}
+
+				if (this.modification_id != id)
+				{
+					this.modification_id = id;
+
+					if (this.xml != null)
+					{
+						this.parent.SetAttributeValue (this.xml, "mod", id.ToString (System.Globalization.CultureInfo.InvariantCulture));
+					}
+				}
+			}
+
 			public void SetStringValue(string value)
 			{
 				if (this.IsEmpty)
@@ -1492,6 +1538,7 @@ namespace Epsitec.Common.Support
 			protected ResourceBundle		parent;
 			protected string				name;
 			protected string				about;
+			protected int					modification_id;
 			protected System.Xml.XmlNode	xml;
 			protected object				data;
 			protected ResourceFieldType		type = ResourceFieldType.None;
