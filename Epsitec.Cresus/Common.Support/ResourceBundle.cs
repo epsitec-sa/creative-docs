@@ -571,8 +571,12 @@ namespace Epsitec.Common.Support
 			
 			using (System.IO.MemoryStream stream = new System.IO.MemoryStream ())
 			{
-				System.Xml.XmlDocument xmldoc = this.CreateXmlDocument (false);
-				xmldoc.Save (stream);
+				using (System.IO.StreamWriter writer = new System.IO.StreamWriter (stream, System.Text.Encoding.UTF8))
+				{
+					System.Xml.XmlDocument xmldoc = this.CreateXmlDocument (true);
+					xmldoc.Save (writer);
+				}
+				
 				data = stream.ToArray ();
 			}
 			
