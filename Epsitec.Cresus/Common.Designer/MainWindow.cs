@@ -39,6 +39,37 @@ namespace Epsitec.Common.Designer
 				buttonClose.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			}
 
+			string[] modules = Resources.GetModuleNames (this.resourcePrefix);
+
+			for (int i = 0; i < modules.Length; i++)
+			{
+				System.Diagnostics.Debug.WriteLine (string.Format ("Module {0}: {1}", i, modules[i]));
+				
+				ResourceManager resourceManager = new ResourceManager ();
+
+				resourceManager.SetupApplication (modules[i]);
+				resourceManager.ActivePrefix = this.resourcePrefix;
+
+				string[] ids = resourceManager.GetBundleIds ("*", ResourceLevel.Default);
+
+				for (int j = 0; j < ids.Length; j++)
+				{
+					System.Diagnostics.Debug.WriteLine (string.Format ("  Bundle {0}: {1}", j, ids[j]));
+
+					ResourceBundleCollection bundles = new ResourceBundleCollection (resourceManager);
+					bundles.LoadBundles (resourceManager.ActivePrefix, resourceManager.GetBundleIds (ids[j], ResourceLevel.All));
+
+					for (int k = 0; k < bundles.Count; k++)
+					{
+						ResourceBundle bundle = bundles[k];
+						
+						System.Diagnostics.Debug.WriteLine (string.Format ("  Culture {0}, name '{1}'", bundle.Culture.Name, bundle.Name ?? "<null>"));
+						System.Diagnostics.Debug.WriteLine (string.Format ("    About: '{0}'", bundle.About ?? "<null>"));
+						System.Diagnostics.Debug.WriteLine (string.Format ("    {0} fields", bundle.FieldCount));
+					}
+				}
+			}
+
 			this.window.ShowDialog ();
 		}
 
@@ -55,5 +86,6 @@ namespace Epsitec.Common.Designer
 
 
 		protected Window window;
+		protected string resourcePrefix = "file";
 	}
 }

@@ -330,7 +330,18 @@ namespace Epsitec.Common.Support
 			
 			throw new ResourceException (string.Format ("Invalid level {0} specified in GetLevelCaption.", level));
 		}
-		
+
+		public string[] GetModuleNames(string prefix)
+		{
+			IResourceProvider provider = this.resource_provider_hash[prefix] as IResourceProvider;
+
+			if (provider != null)
+			{
+				return provider.GetModules ();
+			}
+
+			return null;
+		}
 		
 		public string[] GetBundleIds(string name_filter)
 		{
