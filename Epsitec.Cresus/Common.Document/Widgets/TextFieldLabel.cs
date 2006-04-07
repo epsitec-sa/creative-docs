@@ -370,9 +370,9 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
-		protected override void OnLayoutChanged()
+		protected override void ManualArrange()
 		{
-			base.OnLayoutChanged ();
+ 			base.ManualArrange();
 			
 			if ( this.label != null )
 			{

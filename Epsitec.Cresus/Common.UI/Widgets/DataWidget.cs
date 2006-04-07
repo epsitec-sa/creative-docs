@@ -666,10 +666,10 @@ namespace Epsitec.Common.UI.Widgets
 		}
 		
 		
-		protected override void OnLayoutChanged()
+		protected override void ManualArrange()
 		{
 			this.UpdateInternalLayout ();
-			base.OnLayoutChanged ();
+			base.ManualArrange ();
 		}
 		
 		protected override void OnBindingInfoChanged()
