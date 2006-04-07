@@ -641,12 +641,12 @@ namespace Epsitec.App.DocumentEditor
 			undoRedoList.GlyphShape = GlyphShape.ArrowDown;
 			undoRedoList.ButtonStyle = ButtonStyle.ToolItem;
 			undoRedoList.Width = 14;
-			undoRedoList.DockMargins = new Margins(-1, 0, 0, 0);
+			undoRedoList.Margins = new Margins(-1, 0, 0, 0);
 			ToolTip.Default.SetToolTip(undoRedoList, DocumentEditor.GetRes("Action.UndoRedoList"));
 			this.hToolBar.Items.Add(undoRedoList);
 
 			Widget buttonRedo = this.HToolBarAdd("Redo");
-			buttonRedo.DockMargins = new Margins(-1, 0, 0, 0);
+			buttonRedo.Margins = new Margins(-1, 0, 0, 0);
 
 			this.HToolBarAdd(null);
 
@@ -706,7 +706,7 @@ namespace Epsitec.App.DocumentEditor
 			this.ribbonMain.Name = "Main";
 			this.ribbonMain.Height = this.ribbonHeight;
 			this.ribbonMain.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top;
-			this.ribbonMain.AnchorMargins = new Margins(0, 0, this.hToolBar.Height, 0);
+			this.ribbonMain.Margins = new Margins(0, 0, this.hToolBar.Height, 0);
 			this.ribbonMain.Visibility = true;
 			this.ribbonMain.Items.Add(new Ribbons.File());
 			this.ribbonMain.Items.Add(new Ribbons.Clipboard());
@@ -723,7 +723,7 @@ namespace Epsitec.App.DocumentEditor
 			this.ribbonGeom.Name = "Geom";
 			this.ribbonGeom.Height = this.ribbonHeight;
 			this.ribbonGeom.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top;
-			this.ribbonGeom.AnchorMargins = new Margins(0, 0, this.hToolBar.Height, 0);
+			this.ribbonGeom.Margins = new Margins(0, 0, this.hToolBar.Height, 0);
 			this.ribbonGeom.Visibility = false;
 			this.ribbonGeom.Items.Add(new Ribbons.Move());
 			this.ribbonGeom.Items.Add(new Ribbons.Rotate());
@@ -736,7 +736,7 @@ namespace Epsitec.App.DocumentEditor
 			this.ribbonOper.Name = "Oper";
 			this.ribbonOper.Height = this.ribbonHeight;
 			this.ribbonOper.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top;
-			this.ribbonOper.AnchorMargins = new Margins(0, 0, this.hToolBar.Height, 0);
+			this.ribbonOper.Margins = new Margins(0, 0, this.hToolBar.Height, 0);
 			this.ribbonOper.Visibility = false;
 			this.ribbonOper.Items.Add(new Ribbons.Order());
 			this.ribbonOper.Items.Add(new Ribbons.Group());
@@ -746,7 +746,7 @@ namespace Epsitec.App.DocumentEditor
 			this.ribbonText.Name = "Text";
 			this.ribbonText.Height = this.ribbonHeight;
 			this.ribbonText.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top;
-			this.ribbonText.AnchorMargins = new Margins(0, 0, this.hToolBar.Height, 0);
+			this.ribbonText.Margins = new Margins(0, 0, this.hToolBar.Height, 0);
 			this.ribbonText.Visibility = false;
 			this.ribbonText.Items.Add(new Ribbons.TextStyles());
 			this.ribbonText.Items.Add(new Ribbons.Paragraph());
@@ -760,7 +760,7 @@ namespace Epsitec.App.DocumentEditor
 
 			this.info = new StatusBar(this);
 			this.info.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Bottom;
-			this.info.AnchorMargins = new Margins(0, 22-5, 0, 0);
+			this.info.Margins = new Margins(0, 22-5, 0, 0);
 
 			this.InfoAdd("DeselectAll");
 			this.InfoAdd("SelectAll");
@@ -792,7 +792,7 @@ namespace Epsitec.App.DocumentEditor
 			Widgets.HSlider slider = new HSlider();
 			slider.Name = "StatusZoomSlider";
 			slider.Width = 100;
-			slider.DockMargins = new Margins(1, 1, 1, 1);
+			slider.Margins = new Margins(1, 1, 1, 1);
 			slider.MinValue = 0.1M;
 			slider.MaxValue = 16.0M;
 			slider.SmallChange = 0.1M;
@@ -809,7 +809,7 @@ namespace Epsitec.App.DocumentEditor
 			StatusBar infoMisc = new StatusBar(this);
 			infoMisc.Width = 22;
 			infoMisc.Anchor = AnchorStyles.BottomRight;
-			infoMisc.AnchorMargins = new Margins(0, 0, 0, 0);
+			infoMisc.Margins = new Margins(0, 0, 0, 0);
 
 			IconSeparator sep = new IconSeparator(infoMisc);
 			sep.Height = infoMisc.Height-1.0;
@@ -821,7 +821,7 @@ namespace Epsitec.App.DocumentEditor
 
 			this.vToolBar = new VToolBar(this);
 			this.vToolBar.Anchor = AnchorStyles.TopAndBottom | AnchorStyles.Left;
-			this.vToolBar.AnchorMargins = new Margins(0, 0, this.hToolBar.Height+this.RibbonHeight, this.info.Height);
+			this.vToolBar.Margins = new Margins(0, 0, this.hToolBar.Height+this.RibbonHeight, this.info.Height);
 			this.VToolBarAdd(this.toolSelectState);
 			this.VToolBarAdd(this.toolGlobalState);
 			this.VToolBarAdd(this.toolShaperState);
@@ -861,7 +861,7 @@ namespace Epsitec.App.DocumentEditor
 			this.bookDocuments = new TabBook(this);
 			this.bookDocuments.Width = this.panelsWidth;
 			this.bookDocuments.Anchor = AnchorStyles.All;
-			this.bookDocuments.AnchorMargins = new Margins(this.vToolBar.Width+this.RibbonHeight+1, this.panelsWidth+2, this.hToolBar.Height+1, this.info.Height+1);
+			this.bookDocuments.Margins = new Margins(this.vToolBar.Width+this.RibbonHeight+1, this.panelsWidth+2, this.hToolBar.Height+1, this.info.Height+1);
 			this.bookDocuments.Arrows = TabBookArrows.Right;
 			this.bookDocuments.HasCloseButton = true;
 			this.bookDocuments.CloseButton.Command = "Close";
@@ -944,7 +944,7 @@ namespace Epsitec.App.DocumentEditor
 				Viewer viewer = new Viewer(document);
 				viewer.SetParent(mainViewParent);
 				viewer.Anchor = AnchorStyles.All;
-				viewer.AnchorMargins = new Margins(wm, wm+sw+1, 6+wm, wm+sw+1);
+				viewer.Margins = new Margins(wm, wm+sw+1, 6+wm, wm+sw+1);
 				document.Modifier.ActiveViewer = viewer;
 				document.Modifier.AttachViewer(viewer);
 
@@ -952,14 +952,14 @@ namespace Epsitec.App.DocumentEditor
 				Viewer frame1 = new Viewer(document);
 				frame1.SetParent(rightPane);
 				frame1.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top;
-				frame1.AnchorMargins = new Margins(wm, wm, 6+wm, wm);
+				frame1.Margins = new Margins(wm, wm, 6+wm, wm);
 				frame1.DrawingContext.LayerDrawingMode = LayerDrawingMode.ShowInactive;
 				document.Modifier.AttachViewer(frame1);
 
 				Viewer frame2 = new Viewer(document);
 				frame2.SetParent(rightPane);
 				frame2.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top;
-				frame2.AnchorMargins = new Margins(wm, wm, 6+wm+30, wm);
+				frame2.Margins = new Margins(wm, wm, 6+wm+30, wm);
 				frame2.DrawingContext.LayerDrawingMode = LayerDrawingMode.ShowInactive;
 				document.Modifier.AttachViewer(frame2);
 #endif
@@ -973,20 +973,20 @@ namespace Epsitec.App.DocumentEditor
 				Viewer viewer = new Viewer(document);
 				viewer.SetParent(mainViewParent);
 				viewer.Anchor = AnchorStyles.All;
-				viewer.AnchorMargins = new Margins(wm+lm, wm+sw+1, 6+wm+tm, wm+sw+1);
+				viewer.Margins = new Margins(wm+lm, wm+sw+1, 6+wm+tm, wm+sw+1);
 				document.Modifier.ActiveViewer = viewer;
 				document.Modifier.AttachViewer(viewer);
 
 				di.hRuler = new DocWidgets.HRuler(mainViewParent);
 				di.hRuler.Document = document;
 				di.hRuler.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top;
-				di.hRuler.AnchorMargins = new Margins(wm+lm, wm+sw+1, 6+wm, 0);
+				di.hRuler.Margins = new Margins(wm+lm, wm+sw+1, 6+wm, 0);
 				ToolTip.Default.SetToolTip(di.hRuler, "*");
 
 				di.vRuler = new DocWidgets.VRuler(mainViewParent);
 				di.vRuler.Document = document;
 				di.vRuler.Anchor = AnchorStyles.TopAndBottom | AnchorStyles.Left;
-				di.vRuler.AnchorMargins = new Margins(wm, 0, 6+wm+tm, wm+sw+1);
+				di.vRuler.Margins = new Margins(wm, 0, 6+wm+tm, wm+sw+1);
 				ToolTip.Default.SetToolTip(di.vRuler, "*");
 			}
 
@@ -994,7 +994,7 @@ namespace Epsitec.App.DocumentEditor
 			Widget hBand = new Widget(mainViewParent);
 			hBand.Height = sw;
 			hBand.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Bottom;
-			hBand.AnchorMargins = new Margins(wm+lm, wm+sw+1, 0, wm);
+			hBand.Margins = new Margins(wm+lm, wm+sw+1, 0, wm);
 
 			GlyphButton quickPagePrev = new GlyphButton("PagePrev");
 			quickPagePrev.SetParent(hBand);
@@ -1026,19 +1026,19 @@ namespace Epsitec.App.DocumentEditor
 			quickPageNew.Width = sw;
 			quickPageNew.Height = sw;
 			quickPageNew.Dock = DockStyle.Left;
-			quickPageNew.DockMargins = new Margins(2, 0, 0, 0);
+			quickPageNew.Margins = new Margins(2, 0, 0, 0);
 			ToolTip.Default.SetToolTip(quickPageNew, DocumentEditor.GetRes("Action.PageNew"));
 
 			di.hScroller = new HScroller(hBand);
 			di.hScroller.ValueChanged += new EventHandler(this.HandleHScrollerValueChanged);
 			di.hScroller.Dock = DockStyle.Fill;
-			di.hScroller.DockMargins = new Margins(2, 0, 0, 0);
+			di.hScroller.Margins = new Margins(2, 0, 0, 0);
 
 			//	Bande verticale qui contient les boutons des calques et l'ascenseur.
 			Widget vBand = new Widget(mainViewParent);
 			vBand.Width = sw;
 			vBand.Anchor = AnchorStyles.TopAndBottom | AnchorStyles.Right;
-			vBand.AnchorMargins = new Margins(0, wm, 6+wm+tm, wm+sw+1);
+			vBand.Margins = new Margins(0, wm, 6+wm+tm, wm+sw+1);
 
 			Button quickLayerNew = new Button(vBand);
 			quickLayerNew.Command = "LayerNew";
@@ -1046,7 +1046,7 @@ namespace Epsitec.App.DocumentEditor
 			quickLayerNew.Width = sw;
 			quickLayerNew.Height = sw;
 			quickLayerNew.Dock = DockStyle.Top;
-			quickLayerNew.DockMargins = new Margins(0, 0, 0, 2);
+			quickLayerNew.Margins = new Margins(0, 0, 0, 2);
 			ToolTip.Default.SetToolTip(quickLayerNew, DocumentEditor.GetRes("Action.LayerNew"));
 
 			GlyphButton quickLayerNext = new GlyphButton("LayerNext");
@@ -1076,12 +1076,12 @@ namespace Epsitec.App.DocumentEditor
 			di.vScroller = new VScroller(vBand);
 			di.vScroller.ValueChanged += new EventHandler(this.HandleVScrollerValueChanged);
 			di.vScroller.Dock = DockStyle.Fill;
-			di.vScroller.DockMargins = new Margins(0, 0, 2, 0);
+			di.vScroller.Margins = new Margins(0, 0, 2, 0);
 
 			di.bookPanels = new TabBook(this);
 			di.bookPanels.Width = this.panelsWidth;
 			di.bookPanels.Anchor = AnchorStyles.TopAndBottom | AnchorStyles.Right;
-			di.bookPanels.AnchorMargins = new Margins(1, 1, this.hToolBar.Height+this.RibbonHeight+1, this.info.Height+1);
+			di.bookPanels.Margins = new Margins(1, 1, this.hToolBar.Height+this.RibbonHeight+1, this.info.Height+1);
 			di.bookPanels.Arrows = TabBookArrows.Stretch;
 			di.bookPanels.ActivePageChanged += new EventHandler(this.HandleBookPanelsActivePageChanged);
 
@@ -1126,13 +1126,13 @@ namespace Epsitec.App.DocumentEditor
 			di.containerPrincipal = new Containers.Principal(document);
 			di.containerPrincipal.SetParent(bookPrincipal);
 			di.containerPrincipal.Dock = DockStyle.Fill;
-			di.containerPrincipal.DockMargins = new Margins(4, 4, 10, 4);
+			di.containerPrincipal.Margins = new Margins(4, 4, 10, 4);
 			document.Modifier.AttachContainer(di.containerPrincipal);
 
 			di.containerStyles = new Containers.Styles(document);
 			di.containerStyles.SetParent(bookStyles);
 			di.containerStyles.Dock = DockStyle.Fill;
-			di.containerStyles.DockMargins = new Margins(4, 4, 10, 4);
+			di.containerStyles.Margins = new Margins(4, 4, 10, 4);
 			document.Modifier.AttachContainer(di.containerStyles);
 
 			if ( bookAutos != null )
@@ -1140,27 +1140,27 @@ namespace Epsitec.App.DocumentEditor
 				di.containerAutos = new Containers.Autos(document);
 				di.containerAutos.SetParent(bookAutos);
 				di.containerAutos.Dock = DockStyle.Fill;
-				di.containerAutos.DockMargins = new Margins(4, 4, 10, 4);
+				di.containerAutos.Margins = new Margins(4, 4, 10, 4);
 				document.Modifier.AttachContainer(di.containerAutos);
 			}
 
 			di.containerPages = new Containers.Pages(document);
 			di.containerPages.SetParent(bookPages);
 			di.containerPages.Dock = DockStyle.Fill;
-			di.containerPages.DockMargins = new Margins(4, 4, 10, 4);
+			di.containerPages.Margins = new Margins(4, 4, 10, 4);
 			document.Modifier.AttachContainer(di.containerPages);
 
 			di.containerLayers = new Containers.Layers(document);
 			di.containerLayers.SetParent(bookLayers);
 			di.containerLayers.Dock = DockStyle.Fill;
-			di.containerLayers.DockMargins = new Margins(4, 4, 10, 4);
+			di.containerLayers.Margins = new Margins(4, 4, 10, 4);
 			document.Modifier.AttachContainer(di.containerLayers);
 
 #if false
 			di.containerOperations = new Containers.Operations(document);
 			di.containerOperations.Parent = bookOper;
 			di.containerOperations.Dock = DockStyle.Fill;
-			di.containerOperations.DockMargins = new Margins(4, 4, 10, 4);
+			di.containerOperations.Margins = new Margins(4, 4, 10, 4);
 			document.Modifier.AttachContainer(di.containerOperations);
 #endif
 		}
@@ -1400,14 +1400,14 @@ namespace Epsitec.App.DocumentEditor
 			this.ribbonTextButton.ActiveState = (this.ribbonText == this.ribbonActive) ? ActiveState.Yes : ActiveState.No;
 
 			double h = this.RibbonHeight;
-			this.vToolBar.AnchorMargins = new Margins(0, 0, this.hToolBar.Height+h, this.info.Height);
-			this.bookDocuments.AnchorMargins = new Margins(this.vToolBar.Width+1, this.panelsWidth+2, this.hToolBar.Height+h+1, this.info.Height+1);
+			this.vToolBar.Margins = new Margins(0, 0, this.hToolBar.Height+h, this.info.Height);
+			this.bookDocuments.Margins = new Margins(this.vToolBar.Width+1, this.panelsWidth+2, this.hToolBar.Height+h+1, this.info.Height+1);
 
 			int total = this.bookDocuments.PageCount;
 			for ( int i=0 ; i<total ; i++ )
 			{
 				DocumentInfo di = this.documents[i] as DocumentInfo;
-				di.bookPanels.AnchorMargins = new Margins(1, 1, this.hToolBar.Height+h+1, this.info.Height+1);
+				di.bookPanels.Margins = new Margins(1, 1, this.hToolBar.Height+h+1, this.info.Height+1);
 			}
 			this.ResumeLayout();
 		}
@@ -5000,7 +5000,7 @@ namespace Epsitec.App.DocumentEditor
 				lm = sr-1;
 				tm = sr-1;
 			}
-			viewer.AnchorMargins = new Margins(wm+lm, wm+sw+1, 6+wm+tm, wm+sw+1);
+			viewer.Margins = new Margins(wm+lm, wm+sw+1, 6+wm+tm, wm+sw+1);
 		}
 
 

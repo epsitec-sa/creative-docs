@@ -218,7 +218,7 @@ namespace Epsitec.Common.Document.Objects
 			}
 
 			//	Crée les 2 autres poignées dans les coins opposés.
-			Drawing.Rectangle rect = Drawing.Rectangle.FromCorners(this.Handle(0).Position, this.Handle(1).Position);
+			Drawing.Rectangle rect = Drawing.Rectangle.FromPoints(this.Handle(0).Position, this.Handle(1).Position);
 			Point p1 = rect.BottomLeft;
 			Point p2 = rect.TopRight;
 			this.Handle(0).Position = p1;
@@ -382,7 +382,7 @@ namespace Epsitec.Common.Document.Objects
 
 			if ( this.handles.Count < 4 )
 			{
-				Drawing.Rectangle rect = Drawing.Rectangle.FromCorners(this.Handle(0).Position, this.Handle(1).Position);
+				Drawing.Rectangle rect = Drawing.Rectangle.FromPoints(this.Handle(0).Position, this.Handle(1).Position);
 				h0 = rect.BottomLeft;
 				h1 = rect.TopRight;
 				h2 = rect.TopLeft;

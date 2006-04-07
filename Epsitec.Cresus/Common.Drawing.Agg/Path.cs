@@ -1021,7 +1021,7 @@ namespace Epsitec.Common.Drawing
 		
 		private bool					has_curve = false;
 		private bool					is_empty = true;
-		private Point					current_point = Point.Empty;
+		private Point					current_point = Point.Zero;
 		private bool					has_current_point = false;
 	}
 	

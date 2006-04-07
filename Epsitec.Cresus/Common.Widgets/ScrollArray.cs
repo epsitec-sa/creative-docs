@@ -1187,6 +1187,7 @@ invalid:	row    = -1;
 		}
 
 		
+#if false
 		public bool AdjustHeight(ScrollAdjustMode mode)
 		{
 			//	Ajuste la hauteur pour afficher pile un nombre entier de lignes.
@@ -1292,7 +1293,7 @@ invalid:	row    = -1;
 			this.Invalidate ();
 			return true;
 		}
-
+#endif
 		
 		protected void SetFirstVirtualVisibleIndex(int value)
 		{
@@ -1512,18 +1513,10 @@ invalid:	row    = -1;
 		{
 			return true;
 		}
-		
-		protected override void UpdateClientGeometry()
+
+		protected override void SetBoundsOverride(Drawing.Rectangle oldRect, Drawing.Rectangle newRect)
 		{
-			base.UpdateClientGeometry ();
-			
-			if ((this.v_scroller == null) ||
-				(this.h_scroller == null) ||
-				(this.header == null))
-			{
-				return;
-			}
-			
+			base.SetBoundsOverride(oldRect, newRect);
 			this.UpdateGeometry ();
 		}
 		
@@ -1543,7 +1536,7 @@ invalid:	row    = -1;
 		{
 			if (this.is_dirty)
 			{
-				this.UpdateClientGeometry ();
+				this.UpdateGeometry ();
 				this.DispatchDummyMouseMoveEvent ();
 			}
 		}
@@ -1554,6 +1547,13 @@ invalid:	row    = -1;
 		
 		protected virtual void UpdateGeometry()
 		{
+			if ((this.v_scroller == null) ||
+				(this.h_scroller == null) ||
+				(this.header == null))
+			{
+				return;
+			}
+
 			this.is_dirty = false;
 			
 			this.UpdateRowHeight ();
@@ -1948,7 +1948,7 @@ invalid:	row    = -1;
 		
 		protected override void OnAdornerChanged()
 		{
-			this.UpdateClientGeometry ();
+			this.UpdateGeometry ();
 			base.OnAdornerChanged ();
 		}
 		
@@ -2294,7 +2294,7 @@ invalid:	row    = -1;
 		
 		protected virtual void PaintCellContents(int row_line, int column, Drawing.Graphics graphics, IAdorner adorner, Drawing.Point pos, WidgetState state, TextLayout layout)
 		{
-			adorner.PaintGeneralTextLayout (graphics, Drawing.Rectangle.Infinite, pos, layout, state, PaintTextStyle.Array, TextDisplayMode.Default, this.BackColor);
+			adorner.PaintGeneralTextLayout (graphics, Drawing.Rectangle.MaxValue, pos, layout, state, PaintTextStyle.Array, TextDisplayMode.Default, this.BackColor);
 		}
 		
 		

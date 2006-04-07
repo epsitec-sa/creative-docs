@@ -1302,13 +1302,18 @@ namespace Epsitec.Common.Widgets
 		{
 			//	Met à jour la géométrie du tableau.
 			if ( !this.isDirty )  return;
-			this.UpdateClientGeometry();
+			this.UpdateGeometry();
 		}
 
-		protected override void UpdateClientGeometry()
+		protected override void SetBoundsOverride(Drawing.Rectangle oldRect, Drawing.Rectangle newRect)
+		{
+			base.SetBoundsOverride (oldRect, newRect);
+			this.UpdateGeometry ();
+		}
+		
+		protected void UpdateGeometry()
 		{
 			//	Met à jour la géométrie du conteneur.
-			base.UpdateClientGeometry();
 
 			if ( this.scrollerV == null || this.scrollerH == null )  return;
 
@@ -1502,7 +1507,7 @@ namespace Epsitec.Common.Widgets
 
 		protected override void OnAdornerChanged()
 		{
-			this.UpdateClientGeometry();
+			this.UpdateGeometry();
 			base.OnAdornerChanged();
 		}
 

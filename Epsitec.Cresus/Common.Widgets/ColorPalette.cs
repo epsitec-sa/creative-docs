@@ -148,7 +148,7 @@ namespace Epsitec.Common.Widgets
 				if ( this.hasOptionButton != value )
 				{
 					this.hasOptionButton = value;
-					this.UpdateClientGeometry();
+					this.UpdateGeometry();
 				}
 			}
 		}
@@ -353,11 +353,16 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+
+		protected override void SetBoundsOverride(Drawing.Rectangle oldRect, Drawing.Rectangle newRect)
+		{
+			base.SetBoundsOverride(oldRect, newRect);
+			this.UpdateGeometry ();
+		}
 		
-		protected override void UpdateClientGeometry()
+		protected void UpdateGeometry()
 		{
 			//	Met à jour la géométrie.
-			base.UpdateClientGeometry();
 
 			if ( this.palette == null )  return;
 

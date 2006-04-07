@@ -139,20 +139,24 @@ namespace Epsitec.Common.Widgets.Helpers
 			
 			System.Diagnostics.Debug.Assert (visual != null);
 
-			if (this.affectsChildrenLayout)
-			{
-				visual.NotifyLayoutChanged ();
-			}
-
-			if ((this.affectsArrange) ||
-				(this.affectsMeasure))
-			{
-				visual.NotifyParentLayoutChanged ();
-			}
-
 			if (this.affectsDisplay)
 			{
 				visual.NotifyDisplayChanged ();
+			}
+
+			//	Layout support :
+			
+			if (this.affectsMeasure)
+			{
+				Layouts.LayoutContext.AddToMeasureQueue (visual);
+			}
+			if (this.affectsArrange)
+			{
+				Layouts.LayoutContext.AddToArrangeQueue (visual.Parent);
+			}
+			if (this.affectsChildrenLayout)
+			{
+				Layouts.LayoutContext.AddToArrangeQueue (visual);
 			}
 			
 			base.OnPropertyInvalidated (sender, old_value, new_value);

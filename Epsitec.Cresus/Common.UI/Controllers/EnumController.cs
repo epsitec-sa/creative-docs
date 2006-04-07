@@ -30,12 +30,12 @@ namespace Epsitec.Common.UI.Controllers
 			
 			this.caption_label.Size          = new Drawing.Size (80, h_line);
 			this.caption_label.Anchor        = AnchorStyles.TopLeft;
-			this.caption_label.AnchorMargins = new Drawing.Margins (0, 0, h_pane - y - h_line, 0);
+			this.caption_label.Margins = new Drawing.Margins (0, 0, h_pane - y - h_line, 0);
 			
 			this.combo_value.IsReadOnly     = true;
 			this.combo_value.Height         = h_line;
 			this.combo_value.Anchor         = AnchorStyles.LeftAndRight | AnchorStyles.Top;
-			this.combo_value.AnchorMargins  = new Drawing.Margins (this.caption_label.Right, 0, h_pane - y - h_line, 0);
+			this.combo_value.Margins  = new Drawing.Margins (this.caption_label.Right, 0, h_pane - y - h_line, 0);
 			this.combo_value.TabIndex       = 10;
 			this.combo_value.Name           = "Value";
 			

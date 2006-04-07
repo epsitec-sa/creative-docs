@@ -41,15 +41,6 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public void UpdateWidgetGeometry()
-		{
-			if (this.widget != null)
-			{
-				this.widget.InternalUpdateGeometry ();
-			}
-		}
-		
-		
 		protected virtual void AttachWidget(Widget widget)
 		{
 			widget.PaintForeground += new PaintEventHandler (this.HandleWidgetPaintForeground);

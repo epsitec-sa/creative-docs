@@ -38,7 +38,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				buttonClose.Text = Res.Strings.Dialog.Button.Close;
 				buttonClose.ButtonStyle = ButtonStyle.DefaultAccept;
 				buttonClose.Anchor = AnchorStyles.BottomLeft;
-				buttonClose.AnchorMargins = new Margins(10, 0, 0, 10);
+				buttonClose.Margins = new Margins(10, 0, 0, 10);
 				buttonClose.Clicked += new MessageEventHandler(this.HandleAboutButtonCloseClicked);
 				buttonClose.TabIndex = 1000;
 				buttonClose.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
@@ -50,7 +50,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				www.Alignment = ContentAlignment.MiddleLeft;
 				www.HypertextClicked += new MessageEventHandler(HandleLinkHypertextClicked);
 				www.Anchor = AnchorStyles.BottomRight;
-				www.AnchorMargins = new Margins(0, 0, 0, 15);
+				www.Margins = new Margins(0, 0, 0, 15);
 			}
 
 			this.window.ShowDialog();
@@ -80,75 +80,58 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			string text = string.Format("<img src=\"{0}\"/>", res);
 			StaticText image = new StaticText(parent);
 			image.Text = text;
-			image.Location = new Point(0, y+0);
-			image.Size = new Size(400, 200);
+			image.Bounds = new Rectangle (0, y, 400, 200);
 
 			if ( type == InstallType.Freeware )
 			{
 				string version = About.GetVersion();
 				StaticText sv = new StaticText(parent);
 				sv.Text = string.Format("<font size=\"80%\"><font size=\"140%\"><b>{0} {1}</b></font>    {2}</font>", Res.Strings.Dialog.About.Version, version, Res.Strings.Dialog.About.Language);
-				sv.Location = new Point(10, y+5+12*1);
-				sv.Size = new Size(270, 14);
-//-				sv.SetClientZoom(0.8);
+				sv.Bounds = new Rectangle (10, y+5+12*1, 270, 14);
 
 				StaticText ep = new StaticText(parent);
 				ep.Text = @"<font size=""80%"">" + Res.Strings.Dialog.About.Copyright + "</font>";
-				ep.Location = new Point(10, y+5+12*0);
-				ep.Size = new Size(270, 14);
-//-				ep.SetClientZoom(0.8);
+				ep.Bounds = new Rectangle (10, y+5+12*0, 270, 14);
 			}
 			else
 			{
 				string version = About.GetVersion();
 				StaticText sv = new StaticText(parent);
 				sv.Text = string.Format("<font size=\"80%\"><font size=\"140%\"><b>{0} {1}</b></font>    {2}</font>", Res.Strings.Dialog.About.Version, version, Res.Strings.Dialog.About.Language);
-				sv.Location = new Point(22, y+5+12*2);
-				sv.Size = new Size(270, 14);
-//				sv.SetClientZoom(0.8);
+				sv.Bounds = new Rectangle (22, y+5+12*2, 270, 14);
 
 				string sk = About.GetKey();
 				if ( sk != null )
 				{
 					StaticText key = new StaticText(parent);
 					key.Text = string.Format(@"<font size=""80%"">{0}: {1}</font>", Res.Strings.Dialog.About.Key, sk);
-					key.Location = new Point(22, y+5+12*1);
-					key.Size = new Size(270, 14);
-//-					key.SetClientZoom(0.8);
+					key.Bounds = new Rectangle (22, y+5+12*1, 270, 14);
 				}
 
 				StaticText ep = new StaticText(parent);
 				ep.Text = @"<font size=""80%"">" + Res.Strings.Dialog.About.Copyright + "</font>";
-				ep.Location = new Point(22, y+5+12*0);
-				ep.Size = new Size(270, 14);
-//-				ep.SetClientZoom(0.8);
+				ep.Bounds = new Rectangle (22, y+5+12*0, 270, 14);
 			}
 
 			if ( type == InstallType.Demo )
 			{
 				StaticText warning = new StaticText(parent);
 				warning.Text = "<font size=\"250%\"><b>" + Res.Strings.Dialog.About.Demo + "</b></font>";
-				warning.Location = new Point(280, y+0);
-				warning.Size = new Size(84, 40);
-//-				warning.SetClientZoom(2.5);
+				warning.Bounds = new Rectangle (280, y, 84, 40);
 			}
 
 			if ( type == InstallType.Expired )
 			{
 				StaticText warning = new StaticText(parent);
 				warning.Text = "<font size=\"250%\"><b>" + Res.Strings.Dialog.About.Expired + "</b></font>";
-				warning.Location = new Point(280, y+0);
-				warning.Size = new Size(84, 40);
-//-				warning.SetClientZoom(2.5);
+				warning.Bounds = new Rectangle (280, y, 84, 40);
 			}
 
 			if ( type == InstallType.Freeware )
 			{
 				StaticText warning = new StaticText(parent);
 				warning.Text = "<font size=\"180%\"><b>" + Res.Strings.Dialog.About.Freeware + "</b></font>";
-				warning.Location = new Point(280, y+0);
-				warning.Size = new Size(120, 40);
-//-				warning.SetClientZoom(1.8);
+				warning.Bounds = new Rectangle (280, y, 120, 40);
 			}
 
 			return image;

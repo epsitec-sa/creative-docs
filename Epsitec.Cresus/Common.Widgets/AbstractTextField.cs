@@ -227,9 +227,9 @@ namespace Epsitec.Common.Widgets
 				
 				if ( this.navigator != null && this.textFieldStyle != TextFieldStyle.Flat )
 				{
-					if ( this.Client.Height < 18 )
+					if ( this.Client.Size.Height < 18 )
 					{
-						if ( this.Client.Height >= 15 )
+						if (this.Client.Size.Height >= 15)
 						{
 							double x = AbstractTextField.FrameMargin/2;
 							double y = AbstractTextField.FrameMargin/2;
@@ -256,10 +256,10 @@ namespace Epsitec.Common.Widgets
 			{
 				Drawing.Rectangle rect = this.Client.Bounds;
 				rect.Deflate (this.InternalPadding);
-				
-				if ( this.Client.Height < 18 && this.textFieldStyle != TextFieldStyle.Flat )
+
+				if (this.Client.Size.Height < 18 && this.textFieldStyle != TextFieldStyle.Flat)
 				{
-					if ( this.Client.Height >= 17 )
+					if (this.Client.Size.Height >= 17)
 					{
 						rect.Deflate(AbstractTextField.TextMargin/2, AbstractTextField.TextMargin/2);
 					}
@@ -299,36 +299,6 @@ namespace Epsitec.Common.Widgets
 			set { this.navigator.MaxChar = value; }
 		}
 
-		public virtual Drawing.Margins			Margins
-		{
-			get { return this.margins; }
-			set { this.margins = value; }
-		}
-		
-		public virtual double					LeftMargin
-		{
-			get { return this.margins.Left; }
-			set { this.margins.Left = value; }
-		}
-		
-		public virtual double					RightMargin
-		{
-			get { return this.margins.Right; }
-			set { this.margins.Right = value; }
-		}
-		
-		public virtual double					BottomMargin
-		{
-			get { return this.margins.Bottom; }
-			set { this.margins.Bottom = value; }
-		}
-		
-		public virtual double					TopMargin
-		{
-			get { return this.margins.Top; }
-			set { this.margins.Top = value; }
-		}
-		
 		public TextFieldStyle					TextFieldStyle
 		{
 			get
@@ -1168,7 +1138,7 @@ namespace Epsitec.Common.Widgets
 		protected override void OnAdornerChanged()
 		{
 			base.OnAdornerChanged();
-			this.UpdateClientGeometry();
+			this.UpdateGeometry();
 		}
 		
 		protected override void OnCultureChanged()
@@ -1181,7 +1151,6 @@ namespace Epsitec.Common.Widgets
 		{
 			base.OnTextDefined ();
 			this.has_edited_text = false;
-			System.Diagnostics.Debug.WriteLine ("Text defined. has_edited_text = false");
 		}
 
 		protected override void OnKeyboardFocusChanged(Types.DependencyPropertyChangedEventArgs e)
@@ -1548,9 +1517,14 @@ namespace Epsitec.Common.Widgets
 			graphics.RestoreClippingRectangle(rSaveClip);
 		}
 
-		protected override void UpdateClientGeometry()
+		protected sealed override void SetBoundsOverride(Drawing.Rectangle oldRect, Drawing.Rectangle newRect)
 		{
-			base.UpdateClientGeometry();
+			base.SetBoundsOverride(oldRect, newRect);
+			this.UpdateGeometry ();
+		}
+		
+		protected virtual void UpdateGeometry()
+		{
 			this.UpdateButtonGeometry();
 			this.OnCursorChanged(true);
 		}
@@ -1568,7 +1542,7 @@ namespace Epsitec.Common.Widgets
 			if (this.Client.Bounds.Contains(pos))
 			{
 				if ((pos.X >= this.margins.Left) &&
-					(pos.X <= this.Client.Width - this.margins.Right) &&
+					(pos.X <= this.Client.Size.Width - this.margins.Right) &&
 					(this.navigator.IsReadOnly == false))
 				{
 					this.MouseCursor = MouseCursor.AsIBeam;
@@ -1738,9 +1712,9 @@ namespace Epsitec.Common.Widgets
 		
 		private bool							autoSelectOnFocus;
 		private bool							autoEraseOnFocus;
-		protected Drawing.Margins				margins = new Drawing.Margins();
+		protected Drawing.Margins				margins;
 		protected Drawing.Size					realSize;
-		protected Drawing.Point					scrollOffset = new Drawing.Point();
+		protected Drawing.Point					scrollOffset;
 		protected bool							mouseDown = false;
 		protected bool							scrollLeft = false;
 		protected bool							scrollRight = false;

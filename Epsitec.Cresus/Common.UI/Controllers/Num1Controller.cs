@@ -31,17 +31,17 @@ namespace Epsitec.Common.UI.Controllers
 			
 			this.caption_label.Size          = new Drawing.Size (80, h_line);
 			this.caption_label.Anchor        = AnchorStyles.TopLeft;
-			this.caption_label.AnchorMargins = new Drawing.Margins (0, 0, h_pane - y - h_line, 0);
+			this.caption_label.Margins = new Drawing.Margins (0, 0, h_pane - y - h_line, 0);
 			
 			this.container.Height              = h_line;
 			this.container.Anchor              = AnchorStyles.LeftAndRight | AnchorStyles.Top;
-			this.container.AnchorMargins       = new Drawing.Margins (this.caption_label.Right, 0, h_pane - y - h_line, 0);
+			this.container.Margins		       = new Drawing.Margins (this.caption_label.Right, 0, h_pane - y - h_line, 0);
 			this.container.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
 			this.container.TabIndex            = 10;
 			this.container.TabNavigation       = Widget.TabNavigationMode.ForwardTabPassive;
 			
 			this.text_field_1.Dock        = DockStyle.Fill;
-			this.text_field_1.DockMargins = new Drawing.Margins (0, 2, 0, 0);
+			this.text_field_1.Margins     = new Drawing.Margins (0, 2, 0, 0);
 			this.text_field_1.MinValue    = 0;
 			this.text_field_1.MaxValue    = 9999;
 			this.text_field_1.Resolution  = 1;

@@ -40,8 +40,8 @@ namespace Epsitec.Common.Widgets
 		{
 			if ( this.TextLayout != null )
 			{
-				double dx = this.Client.Width - this.margin*2;
-				double dy = this.Client.Height;
+				double dx = this.Client.Size.Width - this.margin*2;
+				double dy = this.Client.Size.Height;
 				this.TextLayout.Alignment = this.Alignment;
 				this.TextLayout.LayoutSize = new Drawing.Size(dx, dy);
 			}

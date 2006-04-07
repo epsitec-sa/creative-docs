@@ -283,7 +283,7 @@ namespace Epsitec.Common.Widgets
 				if ( this.hasCloseButton != value )
 				{
 					this.hasCloseButton = value;
-					this.UpdateClientGeometry();
+					this.UpdateGeometry();
 				}
 			}
 		}
@@ -299,7 +299,7 @@ namespace Epsitec.Common.Widgets
 			this.ColorToFieldsGray();
 			this.ColorToFieldsHexa();
 			this.UpdateColorSpace();
-			this.UpdateClientGeometry();
+			this.UpdateGeometry();
 			this.Invalidate();
 			this.OnChanged();
 		}
@@ -545,10 +545,15 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		protected override void UpdateClientGeometry()
+		protected override void SetBoundsOverride(Drawing.Rectangle oldRect, Drawing.Rectangle newRect)
+		{
+			base.SetBoundsOverride(oldRect, newRect);
+			this.UpdateGeometry ();
+		}
+		
+		protected void UpdateGeometry()
 		{
 			//	Met à jour la géométrie.
-			base.UpdateClientGeometry();
 
 			if ( this.fields == null )  return;
 			

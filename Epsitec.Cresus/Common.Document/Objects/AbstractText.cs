@@ -1048,19 +1048,19 @@ namespace Epsitec.Common.Document.Objects
 		protected virtual void CornersFlowPrev(out Point p1, out Point p2, out Point p3, out Point p4, DrawingContext drawingContext)
 		{
 			//	Calcules les 4 coins de la poignée "pavé précédent".
-			p1 = Point.Empty;
-			p2 = Point.Empty;
-			p3 = Point.Empty;
-			p4 = Point.Empty;
+			p1 = Point.Zero;
+			p2 = Point.Zero;
+			p3 = Point.Zero;
+			p4 = Point.Zero;
 		}
 
 		protected virtual void CornersFlowNext(out Point p1, out Point p2, out Point p3, out Point p4, DrawingContext drawingContext)
 		{
 			//	Calcules les 4 coins de la poignée "pavé suivant".
-			p1 = Point.Empty;
-			p2 = Point.Empty;
-			p3 = Point.Empty;
-			p4 = Point.Empty;
+			p1 = Point.Zero;
+			p2 = Point.Zero;
+			p3 = Point.Zero;
+			p4 = Point.Zero;
 		}
 
 		protected void Align(ref Point p, IPaintPort port)

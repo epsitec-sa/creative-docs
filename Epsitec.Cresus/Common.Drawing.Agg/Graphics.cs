@@ -883,12 +883,12 @@ namespace Epsitec.Common.Drawing
 				return new Drawing.Rectangle (this.clip_x1, this.clip_y1, this.clip_x2-this.clip_x1, this.clip_y2-this.clip_y1);
 			}
 			
-			return Drawing.Rectangle.Infinite;
+			return Drawing.Rectangle.MaxValue;
 		}
 		
 		public void RestoreClippingRectangle(Drawing.Rectangle rect)
 		{
-			if (rect == Drawing.Rectangle.Infinite)
+			if (rect == Drawing.Rectangle.MaxValue)
 			{
 				this.ResetClippingRectangle ();
 			}

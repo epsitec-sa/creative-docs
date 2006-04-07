@@ -16,7 +16,7 @@ namespace Epsitec.Common.Widgets.Collections
 			this.host = host;
 		}
 
-		public Widget[] Widgets
+		public Widget[]							Widgets
 		{
 			get
 			{

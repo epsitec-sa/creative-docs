@@ -30,12 +30,12 @@ namespace Epsitec.Common.UI.Controllers
 			
 			this.caption_label.Width         = 80;
 			this.caption_label.Anchor        = AnchorStyles.TopLeft;
-			this.caption_label.AnchorMargins = new Drawing.Margins (0, 0, 8, 0);
+			this.caption_label.Margins = new Drawing.Margins (0, 0, 8, 0);
 			
 			this.radio_manual.Text           = "manual";
 			this.radio_manual.Width          = this.caption_label.Width;
 			this.radio_manual.Anchor         = this.caption_label.Anchor;
-			this.radio_manual.AnchorMargins  = new Drawing.Margins (0, 0, 8+20, 0);
+			this.radio_manual.Margins  = new Drawing.Margins (0, 0, 8+20, 0);
 			this.radio_manual.Group          = "mode";
 			this.radio_manual.Index          = (int) ShowMode.Manual;
 			this.radio_manual.TabIndex       = 10;
@@ -45,7 +45,7 @@ namespace Epsitec.Common.UI.Controllers
 			this.radio_anchor.Text           = "anchor";
 			this.radio_anchor.Width          = this.caption_label.Width;
 			this.radio_anchor.Anchor         = this.caption_label.Anchor;
-			this.radio_anchor.AnchorMargins  = new Drawing.Margins (0, 0, 8+20+16, 0);
+			this.radio_anchor.Margins  = new Drawing.Margins (0, 0, 8+20+16, 0);
 			this.radio_anchor.Group          = "mode";
 			this.radio_anchor.Index          = (int) ShowMode.Anchor;
 			this.radio_anchor.TabIndex       = 10;
@@ -55,7 +55,7 @@ namespace Epsitec.Common.UI.Controllers
 			this.radio_dock.Text             = "dock";
 			this.radio_dock.Width            = this.caption_label.Width;
 			this.radio_dock.Anchor           = this.caption_label.Anchor;
-			this.radio_dock.AnchorMargins    = new Drawing.Margins (0, 0, 8+20+16*2, 0);
+			this.radio_dock.Margins    = new Drawing.Margins (0, 0, 8+20+16*2, 0);
 			this.radio_dock.Group            = "mode";
 			this.radio_dock.Index            = (int) ShowMode.Dock;
 			this.radio_dock.TabIndex         = 10;
@@ -63,7 +63,7 @@ namespace Epsitec.Common.UI.Controllers
 			this.radio_dock.Name             = "Value";
 			
 			this.edge_select.Anchor          = AnchorStyles.All;
-			this.edge_select.AnchorMargins   = new Drawing.Margins (80, 0, 4, 4);
+			this.edge_select.Margins   = new Drawing.Margins (80, 0, 4, 4);
 			
 			this.OnCaptionChanged ();
 			
@@ -179,8 +179,8 @@ namespace Epsitec.Common.UI.Controllers
 					
 					if (this.host.show_mode == ShowMode.Dock)
 					{
-						double dx = this.Client.Width;
-						double dy = this.Client.Height;
+						double dx = this.Client.Size.Width;
+						double dy = this.Client.Size.Height;
 						double dd = 25;
 						
 						switch (message.Type)
@@ -250,8 +250,8 @@ namespace Epsitec.Common.UI.Controllers
 					}
 					else if (this.host.show_mode == ShowMode.Anchor)
 					{
-						double dx = this.Client.Width;
-						double dy = this.Client.Height;
+						double dx = this.Client.Size.Width;
+						double dy = this.Client.Size.Height;
 						double dd = 25;
 						
 						switch (message.Type)
@@ -356,8 +356,8 @@ namespace Epsitec.Common.UI.Controllers
 				rect_1.Deflate ( 0.5,  0.5,  0.5,  0.5);
 				rect_2.Deflate (25.5, 25.5, 20.5, 20.5);
 				
-				double cx = System.Math.Floor (this.Client.Width / 2) + 0.5;
-				double cy = System.Math.Floor (this.Client.Height / 2) + 0.5;
+				double cx = System.Math.Floor (this.Client.Size.Width / 2) + 0.5;
+				double cy = System.Math.Floor (this.Client.Size.Height / 2) + 0.5;
 				
 				Drawing.Path surface = new Drawing.Path ();
 				Drawing.Path outline = new Drawing.Path ();

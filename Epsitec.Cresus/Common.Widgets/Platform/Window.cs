@@ -155,6 +155,7 @@ namespace Epsitec.Common.Widgets.Platform
 			
 			this.is_animating_active_window = true;
 			this.WindowBounds = bounds;
+			this.widget_window.ForceLayout ();
 			this.MarkForRepaint ();
 			this.RefreshGraphics ();
 			
@@ -1284,7 +1285,6 @@ namespace Epsitec.Common.Widgets.Platform
 				unsafe
 				{
 					Win32Api.MinMaxInfo* mmi = (Win32Api.MinMaxInfo*) msg.LParam.ToPointer ();
-//					System.Diagnostics.Debug.WriteLine (">MINMAXINFO: MaxSize=["+mmi->MaxSize.Width+";"+mmi->MaxSize.Height+"] MaxPosition=["+mmi->MaxPosition.X+";"+mmi->MaxPosition.Y+"]");
 					mmi->MaxPosition.X = -4;
 					mmi->MaxPosition.Y = -4;
 				}
@@ -1419,15 +1419,6 @@ namespace Epsitec.Common.Widgets.Platform
 				}
 				
 				base.WndProc (ref msg);
-				
-//				if (msg.Msg == Win32Const.WM_GETMINMAXINFO)
-//				{
-//					unsafe
-//					{
-//						Win32Api.MinMaxInfo* mmi = (Win32Api.MinMaxInfo*) msg.LParam.ToPointer ();
-//						System.Diagnostics.Debug.WriteLine ("<MINMAXINFO: MaxSize=["+mmi->MaxSize.Width+";"+mmi->MaxSize.Height+"] MaxPosition=["+mmi->MaxPosition.X+";"+mmi->MaxPosition.Y+"]");
-//					}
-//				}
 			}
 			catch (System.Exception ex)
 			{
@@ -1836,7 +1827,7 @@ namespace Epsitec.Common.Widgets.Platform
 		protected bool UpdateLayeredWindow()
 		{
 			bool paint_needed = true;
-			
+
 			this.RefreshGraphics ();
 			
 			if (this.is_layered)

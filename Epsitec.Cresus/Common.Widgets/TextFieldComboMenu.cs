@@ -11,8 +11,10 @@ namespace Epsitec.Common.Widgets
 		public TextFieldComboMenu()
 		{
 			this.InternalState |= InternalState.Focusable;
+
+			this.AddEventHandler (Visual.MaxWidthProperty, this.HandleMaxWidthChanged);
+			this.AddEventHandler (Visual.MaxHeightProperty, this.HandleMaxHeightChanged);
 		}
-		
 		public TextFieldComboMenu(Widget embedder) : this()
 		{
 			this.SetEmbedder(embedder);
@@ -33,7 +35,7 @@ namespace Epsitec.Common.Widgets
 					
 					if (this.contents != null)
 					{
-						this.DockPadding = Widgets.Adorners.Factory.Active.GeometryMenuShadow;
+						this.Padding = Widgets.Adorners.Factory.Active.GeometryMenuShadow;
 						this.contents.Dock = DockStyle.Fill;
 						this.Children.Add (this.contents);
 					}
@@ -59,8 +61,8 @@ namespace Epsitec.Common.Widgets
 				double dx = size.Width;
 				double dy = size.Height;
 				
-				dx += this.DockPadding.Width;
-				dy += this.DockPadding.Height;
+				dx += this.Padding.Width;
+				dy += this.Padding.Height;
 				
 				return new Drawing.Size (dx, dy);
 			}
@@ -76,8 +78,8 @@ namespace Epsitec.Common.Widgets
 			{
 				Drawing.Size size = this.contents.GetBestFitSize ();
 				
-				double width  = size.Width + this.DockPadding.Width;
-				double height = size.Height + this.DockPadding.Height;
+				double width  = size.Width + this.Padding.Width;
+				double height = size.Height + this.Padding.Height;
 				
 				System.Diagnostics.Debug.WriteLine (string.Format ("AdjustSize from {0}:{1} to {2}:{3}", this.Width, this.Height, width, height));
 				
@@ -92,8 +94,18 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 		}
-		
-		
+
+
+		protected override void Dispose(bool disposing)
+		{
+			if (disposing)
+			{
+				this.RemoveEventHandler (Visual.MaxWidthProperty, this.HandleMaxWidthChanged);
+				this.RemoveEventHandler (Visual.MaxHeightProperty, this.HandleMaxHeightChanged);
+			}
+			
+			base.Dispose (disposing);
+		}
 		
 		protected override bool AboutToGetFocus(Widget.TabNavigationDir dir, Widget.TabNavigationMode mode, out Widget focus)
 		{
@@ -107,21 +119,31 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		protected override void OnMaxSizeChanged(Types.DependencyPropertyChangedEventArgs e)
+		private void HandleMaxWidthChanged(object sender, Types.DependencyPropertyChangedEventArgs e)
 		{
-			base.OnMaxSizeChanged (e);
-			
 			if (this.contents != null)
 			{
-				Drawing.Size size = (Drawing.Size) e.NewValue;
+				double width;
 				
-				double width  = size.Width - this.DockPadding.Width;
-				double height = size.Height - this.DockPadding.Height;
-				
-				this.contents.MaxSize = size;
+				width  = (double) e.NewValue;
+				width -= this.Padding.Width;
+
+				this.contents.MaxWidth = width;
 			}
 		}
-		
+
+		private void HandleMaxHeightChanged(object sender, Types.DependencyPropertyChangedEventArgs e)
+		{
+			if (this.contents != null)
+			{
+				double height;
+
+				height  = (double) e.NewValue;
+				height -= this.Padding.Height;
+
+				this.contents.MaxHeight = height;
+			}
+		}
 		
 		
 		private Widget							contents;

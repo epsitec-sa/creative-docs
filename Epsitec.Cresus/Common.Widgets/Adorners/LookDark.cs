@@ -660,7 +660,7 @@ namespace Epsitec.Common.Widgets.Adorners
 			{
 				state &= ~WidgetState.Focused;
 			}
-			this.PaintGeneralTextLayout(graphics, Drawing.Rectangle.Infinite, pos, text, state, PaintTextStyle.Button, TextDisplayMode.Default, Drawing.Color.Empty);
+			this.PaintGeneralTextLayout(graphics, Drawing.Rectangle.MaxValue, pos, text, state, PaintTextStyle.Button, TextDisplayMode.Default, Drawing.Color.Empty);
 		}
 
 		public override void PaintButtonForeground(Drawing.Graphics graphics,
@@ -1474,7 +1474,7 @@ namespace Epsitec.Common.Widgets.Adorners
 				state |= WidgetState.Selected;
 			}
 			PaintTextStyle style = ( type == MenuOrientation.Horizontal ) ? PaintTextStyle.HMenu : PaintTextStyle.VMenu;
-			this.PaintGeneralTextLayout(graphics, Drawing.Rectangle.Infinite, pos, text, state, style, TextDisplayMode.Default, Drawing.Color.Empty);
+			this.PaintGeneralTextLayout(graphics, Drawing.Rectangle.MaxValue, pos, text, state, style, TextDisplayMode.Default, Drawing.Color.Empty);
 		}
 
 		public override void PaintMenuItemForeground(Drawing.Graphics graphics,
@@ -1660,7 +1660,7 @@ namespace Epsitec.Common.Widgets.Adorners
 				color = this.colorBlack;
 			}
 			
-			text.Paint(pos, graphics, Drawing.Rectangle.Infinite, color, Drawing.GlyphPaintStyle.Normal);
+			text.Paint(pos, graphics, Drawing.Rectangle.MaxValue, color, Drawing.GlyphPaintStyle.Normal);
 		}
 
 		public override void PaintRibbonTabBackground(Drawing.Graphics graphics,
@@ -1711,7 +1711,7 @@ namespace Epsitec.Common.Widgets.Adorners
 
 			Drawing.TextStyle.DefineDefaultColor(this.colorBlack);
 			text.Alignment = Drawing.ContentAlignment.MiddleLeft;
-			text.Paint(pos, graphics, Drawing.Rectangle.Infinite, Drawing.Color.FromBrightness(1), Drawing.GlyphPaintStyle.Normal);
+			text.Paint(pos, graphics, Drawing.Rectangle.MaxValue, Drawing.Color.FromBrightness(1), Drawing.GlyphPaintStyle.Normal);
 		}
 
 		public override void PaintTagBackground(Drawing.Graphics graphics,
@@ -1790,7 +1790,7 @@ namespace Epsitec.Common.Widgets.Adorners
 										   TextLayout text)
 		{
 			//	Dessine le texte d'une bulle d'aide.
-			text.Paint(pos, graphics, Drawing.Rectangle.Infinite, this.colorBlack, Drawing.GlyphPaintStyle.Normal);
+			text.Paint(pos, graphics, Drawing.Rectangle.MaxValue, this.colorBlack, Drawing.GlyphPaintStyle.Normal);
 		}
 
 

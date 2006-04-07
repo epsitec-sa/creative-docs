@@ -35,7 +35,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				Panel topPart = new Panel(this.window.Root);
 				topPart.Height = 20;
 				topPart.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top;
-				topPart.AnchorMargins = new Margins(6, 6, 6, 0);
+				topPart.Margins = new Margins(6, 6, 6, 0);
 
 				//	Crée les boutons radio.
 				RadioButton radio1 = new RadioButton(topPart);
@@ -60,7 +60,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				bookGlobal.Name = "BookGlobal";
 				bookGlobal.Arrows = TabBookArrows.Stretch;
 				bookGlobal.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.TopAndBottom;
-				bookGlobal.AnchorMargins = new Margins(6, 6, 6+20, 34);
+				bookGlobal.Margins = new Margins(6, 6, 6+20, 34);
 
 				TabPage bookGeneral = new TabPage();
 				bookGeneral.Name = "General";
@@ -173,7 +173,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 				toolBar = new HToolBar(bookQuick);
 				toolBar.Dock = DockStyle.Top;
-				toolBar.DockMargins = new Margins(10, 10, 2, -1);
+				toolBar.Margins = new Margins (10, 10, 2, -1);
 				toolBar.TabIndex = tabIndex ++;
 				toolBar.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 
@@ -231,7 +231,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.quickList.Dock = DockStyle.Top;
 				this.quickList.StyleH = CellArrayStyles.Stretch | CellArrayStyles.Separator;
 				this.quickList.StyleV = CellArrayStyles.ScrollNorm | CellArrayStyles.Separator | CellArrayStyles.SelectLine;
-				this.quickList.DockMargins = new Margins(10, 10, 0, 0);
+				this.quickList.Margins = new Margins (10, 10, 0, 0);
 				this.quickList.SelectionChanged += new EventHandler(this.HandleQuickListSelectionChanged);
 
 				this.UpdateQuickList(-1);
@@ -242,7 +242,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				bookDoc.Name = "BookDocument";
 				bookDoc.Arrows = TabBookArrows.Stretch;
 				bookDoc.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.TopAndBottom;
-				bookDoc.AnchorMargins = new Margins(6, 6, 6+20, 34);
+				bookDoc.Margins = new Margins(6, 6, 6+20, 34);
 
 				TabPage bookFormat = new TabPage();
 				bookFormat.Name = "Format";
@@ -282,7 +282,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				buttonClose.Text = Res.Strings.Dialog.Button.Close;
 				buttonClose.ButtonStyle = ButtonStyle.DefaultAccept;
 				buttonClose.Anchor = AnchorStyles.BottomLeft;
-				buttonClose.AnchorMargins = new Margins(6, 0, 0, 6);
+				buttonClose.Margins = new Margins(6, 0, 0, 6);
 				buttonClose.Clicked += new MessageEventHandler(this.HandleSettingsButtonCloseClicked);
 				buttonClose.TabIndex = 1000;
 				buttonClose.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
@@ -351,13 +351,13 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			container.Height = 22;
 			container.TabIndex = this.tabIndex++;
 			container.Dock = DockStyle.Top;
-			container.DockMargins = new Margins(10, 10, 0, 5);
+			container.Margins = new Margins (10, 10, 0, 5);
 
 			StaticText text = new StaticText(container);
 			text.Text = label;
 			text.Width = 100;
 			text.Dock = DockStyle.Left;
-			text.DockMargins = new Margins(0, 0, 0, 0);
+			text.Margins = new Margins (0, 0, 0, 0);
 
 			TextFieldCombo field = new TextFieldCombo(container);
 			field.Width = 160;
@@ -367,7 +367,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			field.TabIndex = this.tabIndex++;
 			field.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			field.Dock = DockStyle.Left;
-			field.DockMargins = new Margins(0, 0, 0, 0);
+			field.Margins = new Margins (0, 0, 0, 0);
 			return field;
 		}
 
@@ -378,13 +378,13 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			container.Height = 22;
 			container.TabIndex = this.tabIndex++;
 			container.Dock = DockStyle.Top;
-			container.DockMargins = new Margins(10, 10, 0, 5);
+			container.Margins = new Margins (10, 10, 0, 5);
 
 			StaticText text = new StaticText(container);
 			text.Text = label;
 			text.Width = 100;
 			text.Dock = DockStyle.Left;
-			text.DockMargins = new Margins(0, 0, 0, 0);
+			text.Margins = new Margins (0, 0, 0, 0);
 
 			TextField field = new TextField(container);
 			field.Width = 160-22;
@@ -393,7 +393,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			field.TabIndex = this.tabIndex++;
 			field.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			field.Dock = DockStyle.Left;
-			field.DockMargins = new Margins(0, 0, 0, 0);
+			field.Margins = new Margins (0, 0, 0, 0);
 
 			IconButton button = new IconButton(container);
 			button.IconName = Misc.Icon("OpenModel");
@@ -402,7 +402,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			button.TabIndex = this.tabIndex++;
 			button.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			button.Dock = DockStyle.Left;
-			button.DockMargins = new Margins(0, 0, 0, 0);
+			button.Margins = new Margins (0, 0, 0, 0);
 			return field;
 		}
 
@@ -413,13 +413,13 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			container.Height = 22;
 			container.TabIndex = this.tabIndex++;
 			container.Dock = DockStyle.Top;
-			container.DockMargins = new Margins(10, 10, 0, 5);
+			container.Margins = new Margins (10, 10, 0, 5);
 
 			StaticText text = new StaticText(container);
 			text.Text = label;
 			text.Width = 100;
 			text.Dock = DockStyle.Left;
-			text.DockMargins = new Margins(0, 0, 0, 0);
+			text.Margins = new Margins (0, 0, 0, 0);
 
 			TextFieldSlider field = new TextFieldSlider(container);
 			field.Width = 50;
@@ -428,7 +428,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			field.TabIndex = this.tabIndex++;
 			field.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			field.Dock = DockStyle.Left;
-			field.DockMargins = new Margins(0, 0, 0, 0);
+			field.Margins = new Margins (0, 0, 0, 0);
 			return field;
 		}
 
@@ -442,7 +442,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			check.TabIndex = this.tabIndex++;
 			check.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			check.Dock = DockStyle.Top;
-			check.DockMargins = new Margins(10+100, 0, 0, 5);
+			check.Margins = new Margins (10+100, 0, 0, 5);
 			return check;
 		}
 
@@ -652,7 +652,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 							bt = new CheckButton();
 							bt.Name = row.ToString();
 							bt.Dock = DockStyle.Fill;
-							bt.DockMargins = new Margins(4, 0, 0, 0);
+							bt.Margins = new Margins (4, 0, 0, 0);
 							bt.ActiveStateChanged += new EventHandler(this.HandleQuickUsedChanged);
 							this.quickList[column, row].Insert(bt);
 						}
@@ -661,7 +661,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 							ib = new IconButton();
 							ib.Name = row.ToString();
 							ib.Dock = DockStyle.Fill;
-							ib.DockMargins = new Margins(0, 0, 0, 0);
+							ib.Margins = new Margins (0, 0, 0, 0);
 							this.quickList[column, row].Insert(ib);
 						}
 						else if ( column == 2 )  // bouton pour le séparateur ?
@@ -669,7 +669,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 							ib = new IconButton();
 							ib.Name = row.ToString();
 							ib.Dock = DockStyle.Fill;
-							ib.DockMargins = new Margins(1, 1, 1, 1);
+							ib.Margins = new Margins (1, 1, 1, 1);
 							ib.Clicked += new MessageEventHandler(this.HandleQuickSeparatorClicked);
 							this.quickList[column, row].Insert(ib);
 						}
@@ -678,7 +678,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 							st = new StaticText();
 							st.Alignment = ContentAlignment.MiddleLeft;
 							st.Dock = DockStyle.Fill;
-							st.DockMargins = new Margins(6, 0, 0, 0);
+							st.Margins = new Margins (6, 0, 0, 0);
 							this.quickList[column, row].Insert(st);
 						}
 					}

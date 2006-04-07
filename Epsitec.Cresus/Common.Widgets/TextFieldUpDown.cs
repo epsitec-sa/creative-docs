@@ -272,9 +272,9 @@ namespace Epsitec.Common.Widgets
 			base.Dispose(disposing);
 		}
 		
-		protected override void UpdateClientGeometry()
+		protected override void UpdateGeometry()
 		{
-			base.UpdateClientGeometry();
+			base.UpdateGeometry ();
 			
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
 			Drawing.Rectangle rect = this.Bounds;
@@ -352,7 +352,7 @@ namespace Epsitec.Common.Widgets
 		
 		protected override void OnAdornerChanged()
 		{
-			this.UpdateClientGeometry();
+			this.UpdateGeometry();
 			base.OnAdornerChanged();
 		}
 

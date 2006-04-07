@@ -21,7 +21,7 @@ namespace Epsitec.Common.UI.Controllers
 			this.caption_label = new StaticText (panel);
 			
 			this.caption_label.Anchor        = AnchorStyles.Top | AnchorStyles.LeftAndRight;
-			this.caption_label.AnchorMargins = new Drawing.Margins (0, 0, 8, 0);
+			this.caption_label.Margins = new Drawing.Margins (0, 0, 8, 0);
 			
 			this.OnCaptionChanged ();
 		}

@@ -45,7 +45,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 				ResizeKnob resize = new ResizeKnob(this.window.Root);
 				resize.Anchor = AnchorStyles.BottomRight;
-				resize.AnchorMargins = new Margins(0, 0, 0, 0);
+				resize.Margins = new Margins(0, 0, 0, 0);
 				ToolTip.Default.SetToolTip(resize, Res.Strings.Dialog.Tooltip.Resize);
 
 				//	Crée les onglets.
@@ -53,7 +53,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.book.Arrows = TabBookArrows.Stretch;
 				this.book.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.TopAndBottom;
 				this.book.ActivePageChanged += new EventHandler(this.HandleBookActivePageChanged);
-				this.book.AnchorMargins = new Margins(6, 6, 6, 34);
+				this.book.Margins = new Margins(6, 6, 6, 34);
 
 				TabPage bookList = new TabPage();
 				bookList.Name = "List";
@@ -79,11 +79,11 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				label.Text = Res.Strings.Dialog.Glyphs.Family.List;
 				label.Width = 50;
 				label.Anchor = AnchorStyles.TopLeft;
-				label.AnchorMargins = new Margins(6, 0, 6+3, 0);
+				label.Margins = new Margins(6, 0, 6+3, 0);
 
 				this.family = new TextFieldCombo(bookList);
 				this.family.Anchor = AnchorStyles.Top|AnchorStyles.LeftAndRight;
-				this.family.AnchorMargins = new Margins(6+50, 6, 6, 0);
+				this.family.Margins = new Margins(6+50, 6, 6, 0);
 				this.family.IsReadOnly = true;
 				this.family.TabIndex = tabIndex++;
 				this.family.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
@@ -101,7 +101,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 				this.list = new ScrollList(bookList);
 				this.list.Dock = DockStyle.Fill;
-				this.list.DockMargins = new Margins(6, 6, 6+20+4, 6);
+				this.list.Margins = new Margins (6, 6, 6+20+4, 6);
 				this.list.TabIndex = tabIndex++;
 				this.list.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 				this.list.SelectedIndexChanged += new EventHandler(this.HandleGlyphSelected);
@@ -116,11 +116,11 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				fontFaceLabel.Text = Res.Strings.Dialog.Glyphs.FontFace;
 				fontFaceLabel.Width = 50;
 				fontFaceLabel.Anchor = AnchorStyles.TopLeft;
-				fontFaceLabel.AnchorMargins = new Margins(6, 0, 6+3, 0);
+				fontFaceLabel.Margins = new Margins(6, 0, 6+3, 0);
 
 				this.fieldFontFace = new FontFaceCombo(bookArray);
 				this.fieldFontFace.Anchor = AnchorStyles.Top|AnchorStyles.LeftAndRight;
-				this.fieldFontFace.AnchorMargins = new Margins(6+50, 6+20+21+3, 6, 0);
+				this.fieldFontFace.Margins = new Margins(6+50, 6+20+21+3, 6, 0);
 				this.fieldFontFace.IsReadOnly = true;
 				this.fieldFontFace.TabIndex = tabIndex++;
 				this.fieldFontFace.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
@@ -137,7 +137,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.buttonFilter.AutoFocus = false;
 				this.buttonFilter.ButtonStyle = ButtonStyle.ActivableIcon;
 				this.buttonFilter.Anchor = AnchorStyles.Top|AnchorStyles.Right;
-				this.buttonFilter.AnchorMargins = new Margins(6+50, 6+20+3, 6, 0);
+				this.buttonFilter.Margins = new Margins(6+50, 6+20+3, 6, 0);
 				this.buttonFilter.TabIndex = tabIndex++;
 				this.buttonFilter.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 				ToolTip.Default.SetToolTip(this.buttonFilter, DocumentEditor.GetRes("Action.TextFontFilter"));
@@ -146,11 +146,11 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				fontStyleLabel.Text = Res.Strings.Dialog.Glyphs.FontStyle;
 				fontStyleLabel.Width = 50;
 				fontStyleLabel.Anchor = AnchorStyles.TopLeft;
-				fontStyleLabel.AnchorMargins = new Margins(6, 0, 6+20+4+3, 0);
+				fontStyleLabel.Margins = new Margins(6, 0, 6+20+4+3, 0);
 
 				this.fieldFontStyle = new TextFieldCombo(bookArray);
 				this.fieldFontStyle.Anchor = AnchorStyles.Top|AnchorStyles.LeftAndRight;
-				this.fieldFontStyle.AnchorMargins = new Margins(6+50, 6+20+21+3, 6+20+4, 0);
+				this.fieldFontStyle.Margins = new Margins(6+50, 6+20+21+3, 6+20+4, 0);
 				this.fieldFontStyle.IsReadOnly = true;
 				this.fieldFontStyle.TabIndex = tabIndex++;
 				this.fieldFontStyle.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
@@ -163,7 +163,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.currentFont.Width = 20;
 				this.currentFont.Height = 20+5+20;
 				this.currentFont.Anchor = AnchorStyles.TopRight;
-				this.currentFont.AnchorMargins = new Margins(0, 6, 6, 0);
+				this.currentFont.Margins = new Margins(0, 6, 6, 0);
 				this.currentFont.TabIndex = tabIndex++;
 				this.currentFont.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 				this.currentFont.Clicked += new MessageEventHandler(this.HandleCurrentFontClicked);
@@ -171,7 +171,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 				this.array = new GlyphArray(bookArray);
 				this.array.Dock = DockStyle.Fill;
-				this.array.DockMargins = new Margins(6, 6, 6+20+4+20+4, 6+20+4);
+				this.array.Margins = new Margins (6, 6, 6+20+4+20+4, 6+20+4);
 				this.array.TabIndex = tabIndex++;
 				this.array.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 				this.array.SetFont(this.fontFace, this.fontStyle);
@@ -181,14 +181,14 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 				this.status = new TextField(bookArray);
 				this.status.Anchor = AnchorStyles.Bottom|AnchorStyles.LeftAndRight;
-				this.status.AnchorMargins = new Margins(6, 4+80+6, 0, 6);
+				this.status.Margins = new Margins(6, 4+80+6, 0, 6);
 				this.status.IsReadOnly = true;
 
 				this.slider = new HSlider(bookArray);
 				this.slider.Width = 80;
 				this.slider.Height = 14;
 				this.slider.Anchor = AnchorStyles.Bottom|AnchorStyles.Right;
-				this.slider.AnchorMargins = new Margins(6, 6, 0, 9);
+				this.slider.Margins = new Margins(6, 6, 0, 9);
 				this.slider.TabIndex = tabIndex++;
 				this.slider.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 				this.slider.MinValue = 20.0M;
@@ -206,11 +206,11 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				label = new StaticText(bookAlternates);
 				label.Text = Res.Strings.Dialog.Glyphs.Alternates.Help;
 				label.Anchor = AnchorStyles.Top|AnchorStyles.LeftAndRight;
-				label.AnchorMargins = new Margins(6, 6, 6, 0);
+				label.Margins = new Margins(6, 6, 6, 0);
 
 				this.alternatesArray = new GlyphArray(bookAlternates);
 				this.alternatesArray.Dock = DockStyle.Fill;
-				this.alternatesArray.DockMargins = new Margins(6, 6, 6+20, 6+20+4);
+				this.alternatesArray.Margins = new Margins (6, 6, 6+20, 6+20+4);
 				this.alternatesArray.TabIndex = tabIndex++;
 				this.alternatesArray.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 				this.alternatesArray.SelectedIndex = -1;
@@ -220,14 +220,14 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 				this.alternatesStatus = new TextField(bookAlternates);
 				this.alternatesStatus.Anchor = AnchorStyles.Bottom|AnchorStyles.LeftAndRight;
-				this.alternatesStatus.AnchorMargins = new Margins(6, 4+80+6, 0, 6);
+				this.alternatesStatus.Margins = new Margins(6, 4+80+6, 0, 6);
 				this.alternatesStatus.IsReadOnly = true;
 
 				this.alternatesSlider = new HSlider(bookAlternates);
 				this.alternatesSlider.Width = 80;
 				this.alternatesSlider.Height = 14;
 				this.alternatesSlider.Anchor = AnchorStyles.Bottom|AnchorStyles.Right;
-				this.alternatesSlider.AnchorMargins = new Margins(6, 6, 0, 9);
+				this.alternatesSlider.Margins = new Margins(6, 6, 0, 9);
 				this.alternatesSlider.TabIndex = tabIndex++;
 				this.alternatesSlider.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 				this.alternatesSlider.MinValue = 20.0M;
@@ -246,7 +246,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				buttonOk.Text = Res.Strings.Dialog.Glyphs.Button.Insert;
 				buttonOk.ButtonStyle = ButtonStyle.DefaultAccept;
 				buttonOk.Anchor = AnchorStyles.BottomLeft;
-				buttonOk.AnchorMargins = new Margins(6, 0, 0, 6);
+				buttonOk.Margins = new Margins(6, 0, 0, 6);
 				buttonOk.Clicked += new MessageEventHandler(this.HandleButtonInsertClicked);
 				buttonOk.TabIndex = 1000;
 				buttonOk.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
@@ -256,7 +256,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				buttonClose.Width = 75;
 				buttonClose.Text = Res.Strings.Dialog.Button.Close;
 				buttonClose.Anchor = AnchorStyles.BottomLeft;
-				buttonClose.AnchorMargins = new Margins(6+75+10, 0, 0, 6);
+				buttonClose.Margins = new Margins(6+75+10, 0, 0, 6);
 				buttonClose.Clicked += new MessageEventHandler(this.HandleButtonCloseClicked);
 				buttonClose.TabIndex = 1001;
 				buttonClose.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;

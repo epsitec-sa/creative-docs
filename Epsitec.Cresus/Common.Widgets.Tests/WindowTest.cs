@@ -156,14 +156,12 @@ namespace Epsitec.Common.Widgets
 			CheckButton button = new CheckButton ();
 			VScroller scroller = new VScroller ();
 			
-			button.Location = new Point (10, 10);
-			button.Size     = new Size (60, 24);
+			button.Bounds   = new Rectangle (10, 10, 60, 24);
 			button.Text     = "Test";
 			button.SetParent (back);
 			button.Clicked += new MessageEventHandler(button_Clicked);
 			
-			scroller.Location = new Point (80, 10);
-			scroller.Size = new Size(17, 180);
+			scroller.Bounds = new Rectangle (80, 10, 17, 180);
 			scroller.MaxValue = 1.0M;
 			scroller.VisibleRangeRatio = 0.1M;
 			scroller.Value = 0.0M;
@@ -583,7 +581,7 @@ namespace Epsitec.Common.Widgets
 		private void button_Clicked(object sender, MessageEventArgs e)
 		{
 			Widget button = sender as Widget;
-			button.Location = new Point (button.Location.X, button.Location.Y + 5);
+			button.Bounds = new Rectangle (button.Location.X, button.Location.Y + 5, button.Width, button.Height);
 		}
 
 		private void Window_ApplicationActivated(object sender)

@@ -12,7 +12,7 @@ namespace Epsitec.Common.Widgets
 	/// <summary>
 	/// Visual.
 	/// </summary>
-	public class Visual : Types.DependencyObject, ICommandDispatcherHost
+	public class Visual : Types.DependencyObject, ICommandDispatcherHost, IClientInfo, System.IEquatable<Visual>
 	{
 		public Visual()
 		{
@@ -129,30 +129,6 @@ namespace Epsitec.Common.Widgets
 				this.SetValue (Visual.AnchorProperty, value);
 			}
 		}
-		
-		public Drawing.Margins					AnchorMargins
-		{
-			get
-			{
-				return new Drawing.Margins (this.left, this.right, this.top, this.bottom);
-			}
-			set
-			{
-				Drawing.Margins oldValue = this.AnchorMargins;
-				Drawing.Margins newValue = value;
-
-				if (oldValue != newValue)
-				{
-					this.left   = value.Left;
-					this.right  = value.Right;
-					this.bottom = value.Bottom;
-					this.top    = value.Top;
-					
-					this.InvalidateProperty (Visual.AnchorMarginsProperty, oldValue, newValue);
-				}
-			}
-		}
-		
 		public DockStyle						Dock
 		{
 			get
@@ -164,28 +140,48 @@ namespace Epsitec.Common.Widgets
 				this.SetValue (Visual.DockProperty, value);
 			}
 		}
-		
-		public Drawing.Margins					DockPadding
+		public Drawing.Margins					Margins
 		{
 			get
 			{
-				return (Drawing.Margins) this.GetValue (Visual.DockPaddingProperty);
+				return (Drawing.Margins) this.GetValue (Visual.MarginsProperty);
 			}
 			set
 			{
-				this.SetValue (Visual.DockPaddingProperty, value);
+				this.SetValue (Visual.MarginsProperty, value);
 			}
 		}
-		
-		public Drawing.Margins					DockMargins
+		public Drawing.Margins					Padding
 		{
 			get
 			{
-				return (Drawing.Margins) this.GetValue (Visual.DockMarginsProperty);
+				return (Drawing.Margins) this.GetValue (Visual.PaddingProperty);
 			}
 			set
 			{
-				this.SetValue (Visual.DockMarginsProperty, value);
+				this.SetValue (Visual.PaddingProperty, value);
+			}
+		}
+		public HorizontalAlignment				HorizontalAlignment
+		{
+			get
+			{
+				return (HorizontalAlignment) this.GetValue (Visual.HorizontalAlignmentProperty);
+			}
+			set
+			{
+				this.SetValue (Visual.HorizontalAlignmentProperty, value);
+			}
+		}
+		public VerticalAlignment				VerticalAlignment
+		{
+			get
+			{
+				return (VerticalAlignment) this.GetValue (Visual.VerticalAlignmentProperty);
+			}
+			set
+			{
+				this.SetValue (Visual.VerticalAlignmentProperty, value);
 			}
 		}
 		
@@ -210,21 +206,46 @@ namespace Epsitec.Common.Widgets
 			}
 			set
 			{
-				Drawing.Rectangle bounds = this.Bounds;
+				if (this.PreferredSize != value)
+				{
+					this.PreferredSize = value;
+				}
+
+				double width = value.Width;
+				double height = value.Height;
 				
-				bounds.Size = value;
-				
-				this.Bounds = bounds;
+				if ((this.width != width) ||
+					(this.height != height))
+				{
+					if (this.parent == null)
+					{
+						this.SetBounds (this.x, this.y, width, height);
+					}
+					else
+					{
+						Drawing.Size host = parent.Client.Size;
+
+						double right = host.Width - this.x - width;
+						double top = host.Height - this.y - height;
+						
+						if ((this.Anchor == AnchorStyles.None) &&
+							(this.Dock == DockStyle.None))
+						{
+							this.SetBounds (this.x, this.y, width, height);
+						}
+
+						Layouts.LayoutContext.AddToMeasureQueue (this);
+					}
+				}
 			}
 		}
-		
 		public Drawing.Point					Location
 		{
 			get
 			{
-				return new Drawing.Point (this.left, this.bottom);
+				return new Drawing.Point (this.x, this.y);
 			}
-			set
+			private set
 			{
 				Drawing.Rectangle bounds = this.Bounds;
 				
@@ -255,16 +276,14 @@ namespace Epsitec.Common.Widgets
 					this.PreferredSize = value.Size;
 				}
 				
-				if ((this.left != left) ||
-					(this.bottom != bottom) ||
+				if ((this.x != left) ||
+					(this.y != bottom) ||
 					(this.width != width) ||
 					(this.height != height))
 				{
-					this.SuspendLayout ();
-					
 					if (this.parent == null)
 					{
-						this.WriteBounds (left, bottom, width, height);
+						this.SetBounds (left, bottom, width, height);
 					}
 					else
 					{
@@ -273,49 +292,80 @@ namespace Epsitec.Common.Widgets
 						double right = host.Width - left - width;
 						double top = host.Height - bottom - height;
 						
-						this.AnchorMargins = new Drawing.Margins (left, right, top, bottom);
+						this.Margins = new Drawing.Margins (left, right, top, bottom);
 
 						if ((this.Anchor == AnchorStyles.None) &&
 							(this.Dock == DockStyle.None))
 						{
-							this.WriteBounds (left, bottom, width, height);
+							this.SetBounds (left, bottom, width, height);
 						}
-						else
-						{
-						}
+						
+						Layouts.LayoutContext.AddToMeasureQueue (this);
 					}
-
-					this.NotifyGeometryChanged ();
-					this.ResumeLayout ();
 				}
 			}
 		}
 
-		private void WriteBounds(double left, double bottom, double width, double height)
-		{
-			this.SetBounds (new Drawing.Rectangle (left, bottom, width, height));
-		}
 		
 		public Drawing.Size						PreferredSize
 		{
 			get
 			{
-				return (Drawing.Size) this.GetValue (Visual.PreferredSizeProperty);
+				return new Drawing.Size (this.PreferredWidth, this.PreferredHeight);
 			}
 			set
 			{
-				this.SetValue (Visual.PreferredSizeProperty, value);
+				double width = value.Width;
+				double height = value.Height;
+
+				this.SetValue (Visual.PreferredWidthProperty, width);
+				this.SetValue (Visual.PreferredHeightProperty, height);
 			}
 		}
-		
-		public Widget.ClientInfo				Client
+		public double							PreferredWidth
 		{
 			get
 			{
-				return new Widget.ClientInfo (this.Size);
+				return (double) this.GetValue (Visual.PreferredWidthProperty);
+			}
+			set
+			{
+				this.SetValue (Visual.PreferredWidthProperty, value);
+			}
+		}
+		public double							PreferredHeight
+		{
+			get
+			{
+				return (double) this.GetValue (Visual.PreferredHeightProperty);
+			}
+			set
+			{
+				this.SetValue (Visual.PreferredHeightProperty, value);
+			}
+		}
+		public double							ActualWidth
+		{
+			get
+			{
+				return this.width;
+			}
+		}
+		public double							ActualHeight
+		{
+			get
+			{
+				return this.height;
 			}
 		}
 		
+		public IClientInfo						Client
+		{
+			get
+			{
+				return this;
+			}
+		}
 		
 		public virtual Drawing.Margins			InternalPadding
 		{
@@ -362,7 +412,7 @@ namespace Epsitec.Common.Widgets
 			{
 				return this.Bounds.Left;
 			}
-			set
+			private set
 			{
 				Drawing.Rectangle bounds = this.Bounds;
 				
@@ -378,7 +428,7 @@ namespace Epsitec.Common.Widgets
 			{
 				return this.Bounds.Right;
 			}
-			set
+			private set
 			{
 				Drawing.Rectangle bounds = this.Bounds;
 				
@@ -394,7 +444,7 @@ namespace Epsitec.Common.Widgets
 			{
 				return this.Bounds.Top;
 			}
-			set
+			private set
 			{
 				Drawing.Rectangle bounds = this.Bounds;
 				
@@ -410,7 +460,7 @@ namespace Epsitec.Common.Widgets
 			{
 				return this.Bounds.Bottom;
 			}
-			set
+			private set
 			{
 				Drawing.Rectangle bounds = this.Bounds;
 				
@@ -424,15 +474,15 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.Bounds.Width;
+				return this.width;
 			}
 			set
 			{
-				Drawing.Rectangle bounds = this.Bounds;
+				Drawing.Size size = this.Size;
 				
-				bounds.Width = value;
+				size.Width = value;
 				
-				this.Bounds = bounds;
+				this.Size = size;
 			}
 		}
 		
@@ -440,15 +490,15 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.Bounds.Height;
+				return this.height;
 			}
 			set
 			{
-				Drawing.Rectangle bounds = this.Bounds;
+				Drawing.Size size = this.Size;
 				
-				bounds.Height = value;
+				size.Height = value;
 				
-				this.Bounds = bounds;
+				this.Size = size;
 			}
 		}
 		
@@ -457,23 +507,69 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return (Drawing.Size) this.GetValue (Visual.MinSizeProperty);
+				return new Drawing.Size (this.MinWidth, this.MinHeight);
 			}
 			set
 			{
-				this.SetValue (Visual.MinSizeProperty, value);
+				this.MinWidth  = value.Width;
+				this.MinHeight = value.Height;
 			}
 		}
-		
 		public Drawing.Size						MaxSize
 		{
 			get
 			{
-				return (Drawing.Size) this.GetValue (Visual.MaxSizeProperty);
+				return new Drawing.Size (this.MaxWidth, this.MaxHeight);
 			}
 			set
 			{
-				this.SetValue (Visual.MaxSizeProperty, value);
+				this.MaxWidth  = value.Width;
+				this.MaxHeight = value.Height;
+			}
+		}
+
+		public double							MinWidth
+		{
+			get
+			{
+				return (double) this.GetValue (Visual.MinWidthProperty);
+			}
+			set
+			{
+				this.SetValue (Visual.MinWidthProperty, value);
+			}
+		}
+		public double							MaxWidth
+		{
+			get
+			{
+				return (double) this.GetValue (Visual.MaxWidthProperty);
+			}
+			set
+			{
+				this.SetValue (Visual.MaxWidthProperty, value);
+			}
+		}
+		public double							MinHeight
+		{
+			get
+			{
+				return (double) this.GetValue (Visual.MinHeightProperty);
+			}
+			set
+			{
+				this.SetValue (Visual.MinHeightProperty, value);
+			}
+		}
+		public double							MaxHeight
+		{
+			get
+			{
+				return (double) this.GetValue (Visual.MaxHeightProperty);
+			}
+			set
+			{
+				this.SetValue (Visual.MaxHeightProperty, value);
 			}
 		}
 		
@@ -682,14 +778,6 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		internal bool							IsLayoutSuspended
-		{
-			get
-			{
-				return this.suspend_layout_counter > 0 ? true : false;
-			}
-		}
-		
 		public bool								HasChildren
 		{
 			get
@@ -712,6 +800,27 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		public IEnumerable<Visual>				AllChildren
+		{
+			get
+			{
+				if (this.HasChildren)
+				{
+					foreach (Visual child in this.children)
+					{
+						if (child.HasChildren)
+						{
+							foreach (Visual subChild in child.AllChildren)
+							{
+								yield return subChild;
+							}
+						}
+						yield return child;
+					}
+				}
+			}
+		}
+
 		
 		
 		internal int GetCommandCacheId()
@@ -723,23 +832,29 @@ namespace Epsitec.Common.Widgets
 		{
 			this.command_cache_id = value;
 		}
-		
-		
+
+
+
+		private void SetBounds(double left, double bottom, double width, double height)
+		{
+			this.SetBounds (new Drawing.Rectangle (left, bottom, width, height));
+		}
 		
 		internal virtual void SetBounds(Drawing.Rectangle value)
 		{
 			Drawing.Rectangle old_value = this.Bounds;
 
-			this.left   = value.Left;
-			this.bottom = value.Bottom;
+			this.x = value.Left;
+			this.y = value.Bottom;
 			this.width  = value.Width;
 			this.height = value.Height;
 			
-			Drawing.Rectangle new_value = this.Bounds;
+			Drawing.Rectangle new_value = value;
 			
 			if (old_value != new_value)
 			{
-				this.UpdateClientGeometry ();
+				this.Arrange (Helpers.VisualTree.FindLayoutContext (this));
+				this.SetBoundsOverride (old_value, new_value);
 				
 				Visual parent = this.Parent;
 				
@@ -755,44 +870,67 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		internal void NotifyGeometryChanged()
+		protected virtual void SetBoundsOverride(Drawing.Rectangle oldRect, Drawing.Rectangle newRect)
 		{
-			this.NotifyLayoutChanged ();
-			this.NotifyParentLayoutChanged ();
 		}
-		
-		internal void NotifyLayoutChanged()
-		{
-			if (this.currently_updating_layout > 0)
-			{
-				return;
-			}
-			
-			this.has_layout_changed = true;
-			
-			if (this.suspend_layout_counter == 0)
-			{
-				this.ExecutePendingLayoutOperations ();
-			}
-		}
-		
-		internal void NotifyParentLayoutChanged()
-		{
-			Visual parent = this.Parent;
-			
-			if (parent != null)
-			{
-				parent.NotifyLayoutChanged ();
-			}
-			else
-			{
-				this.NotifyLayoutChanged ();
-			}
-		}
-		
+
 		internal void NotifyDisplayChanged()
 		{
 			this.Invalidate ();
+		}
+
+
+		public void Measure(Layouts.LayoutContext context)
+		{
+			Drawing.Size min = Drawing.Size.Zero;
+			Drawing.Size max = Drawing.Size.PositiveInfinity;
+
+			this.MeasureMinMax (ref min, ref max);
+
+			Drawing.Size desired = this.GetDesiredSize ();
+			
+			context.DefineMinWidth (this, min.Width);
+			context.DefineMinHeight (this, min.Height);
+			context.DefineMaxWidth (this, max.Width);
+			context.DefineMaxHeight (this, max.Height);
+			
+			context.DefineDesiredWidth (this, desired.Width);
+			context.DefineDesiredHeight (this, desired.Height);
+		}
+		public void Arrange(Layouts.LayoutContext context)
+		{
+			if (this.HasChildren)
+			{
+				IEnumerable<Visual> children = this.Children;
+
+				Drawing.Rectangle rect = this.Client.Bounds;
+				
+				rect.Deflate (this.Padding);
+				rect.Deflate (this.InternalPadding);
+
+				Layouts.LayoutEngine.AnchorEngine.UpdateLayout (this, rect, children);
+				Layouts.LayoutEngine.DockEngine.UpdateLayout (this, rect, children);
+
+				this.ManualArrange ();
+			}
+			
+			context.RemoveVisualFromArrangeQueue (this);
+		}
+
+		protected virtual void ManualArrange()
+		{
+		}
+
+		protected virtual void MeasureMinMax(ref Drawing.Size min, ref Drawing.Size max)
+		{
+			min.Width = System.Math.Max (min.Width, this.MinWidth);
+			min.Height = System.Math.Max (min.Height, this.MinHeight);
+			max.Width = System.Math.Min (max.Width, this.MaxWidth);
+			max.Height = System.Math.Min (max.Height, this.MaxHeight);
+		}
+		protected virtual Drawing.Size GetDesiredSize()
+		{
+			return this.PreferredSize;
 		}
 		
 		
@@ -854,30 +992,9 @@ namespace Epsitec.Common.Widgets
 		
 		public void SuspendLayout()
 		{
-			this.suspend_layout_counter++;
 		}
 		
 		public void ResumeLayout()
-		{
-			this.ResumeLayout (true);
-		}
-		
-		public void ResumeLayout(bool update)
-		{
-			if (this.suspend_layout_counter > 0)
-			{
-				this.suspend_layout_counter--;
-			}
-			if (this.suspend_layout_counter == 0)
-			{
-				if (update)
-				{
-					this.ExecutePendingLayoutOperations ();
-				}
-			}
-		}
-		
-		public virtual void ExecutePendingLayoutOperations()
 		{
 		}
 		
@@ -910,11 +1027,16 @@ namespace Epsitec.Common.Widgets
 			Visual that = o as Visual;
 			return that.Bounds;
 		}
-		
-		private static void SetBoundsValue(DependencyObject o, object value)
+
+		private static object GetActualWidthValue(DependencyObject o)
 		{
 			Visual that = o as Visual;
-			that.Bounds = (Drawing.Rectangle) value;
+			return that.ActualWidth;
+		}
+		private static object GetActualHeightValue(DependencyObject o)
+		{
+			Visual that = o as Visual;
+			return that.ActualHeight;
 		}
 		
 		private static object GetSizeValue(DependencyObject o)
@@ -1020,18 +1142,6 @@ namespace Epsitec.Common.Widgets
 			that.OnSizeChanged (new DependencyPropertyChangedEventArgs (Visual.SizeProperty, old_value, new_value));
 		}
 		
-		private static void NotifyMinSizeChanged(DependencyObject o, object old_value, object new_value)
-		{
-			Visual that = o as Visual;
-			that.OnMinSizeChanged (new DependencyPropertyChangedEventArgs (Visual.MinSizeProperty, old_value, new_value));
-		}
-		
-		private static void NotifyMaxSizeChanged(DependencyObject o, object old_value, object new_value)
-		{
-			Visual that = o as Visual;
-			that.OnMaxSizeChanged (new DependencyPropertyChangedEventArgs (Visual.MaxSizeProperty, old_value, new_value));
-		}
-		
 		private static void NotifyParentChanged(DependencyObject o, object old_value, object new_value)
 		{
 			Visual that = o as Visual;
@@ -1058,14 +1168,6 @@ namespace Epsitec.Common.Widgets
 		
 		
 		protected virtual void OnSizeChanged(Types.DependencyPropertyChangedEventArgs e)
-		{
-		}
-		
-		protected virtual void OnMinSizeChanged(Types.DependencyPropertyChangedEventArgs e)
-		{
-		}
-		
-		protected virtual void OnMaxSizeChanged(Types.DependencyPropertyChangedEventArgs e)
 		{
 		}
 		
@@ -1107,11 +1209,6 @@ namespace Epsitec.Common.Widgets
 		protected virtual void OnCommandDispatchersChanged(Types.DependencyPropertyChangedEventArgs e)
 		{
 			Helpers.VisualTree.InvalidateCommandDispatcher (this);
-		}
-		
-		
-		protected virtual void UpdateClientGeometry()
-		{
 		}
 		
 		
@@ -1245,17 +1342,26 @@ namespace Epsitec.Common.Widgets
 		public static readonly DependencyProperty WindowProperty				= DependencyProperty.RegisterReadOnly ("Window", typeof (Window), typeof (Visual), new VisualPropertyMetadata (null, VisualPropertyMetadataOptions.InheritsValue | VisualPropertyMetadataOptions.ChangesSilently));
 		
 		public static readonly DependencyProperty AnchorProperty				= DependencyProperty.Register ("Anchor", typeof (AnchorStyles), typeof (Visual), new VisualPropertyMetadata (AnchorStyles.None, VisualPropertyMetadataOptions.AffectsArrange));
-		public static readonly DependencyProperty AnchorMarginsProperty			= DependencyProperty.Register ("AnchorMargins", typeof (Drawing.Margins), typeof (Visual), new VisualPropertyMetadata (Drawing.Margins.Zero, VisualPropertyMetadataOptions.AffectsArrange));
 		public static readonly DependencyProperty DockProperty					= DependencyProperty.Register ("Dock", typeof (DockStyle), typeof (Visual), new VisualPropertyMetadata (DockStyle.None, VisualPropertyMetadataOptions.AffectsArrange));
-		public static readonly DependencyProperty DockPaddingProperty			= DependencyProperty.Register ("DockPadding", typeof (Drawing.Margins), typeof (Visual), new VisualPropertyMetadata (Drawing.Margins.Zero, VisualPropertyMetadataOptions.AffectsArrange));
-		public static readonly DependencyProperty DockMarginsProperty			= DependencyProperty.Register ("DockMargins", typeof (Drawing.Margins), typeof (Visual), new VisualPropertyMetadata (Drawing.Margins.Zero, VisualPropertyMetadataOptions.AffectsArrange));
+		public static readonly DependencyProperty MarginsProperty				= DependencyProperty.Register ("Margins", typeof (Drawing.Margins), typeof (Visual), new VisualPropertyMetadata (Drawing.Margins.Zero, VisualPropertyMetadataOptions.AffectsArrange));
+		public static readonly DependencyProperty PaddingProperty				= DependencyProperty.Register ("Padding", typeof (Drawing.Margins), typeof (Visual), new VisualPropertyMetadata (Drawing.Margins.Zero, VisualPropertyMetadataOptions.AffectsChildrenLayout));
+		public static readonly DependencyProperty HorizontalAlignmentProperty	= DependencyProperty.Register ("HorizontalAlignment", typeof (HorizontalAlignment), typeof (Visual), new VisualPropertyMetadata (HorizontalAlignment.Stretch, VisualPropertyMetadataOptions.AffectsArrange));
+		public static readonly DependencyProperty VerticalAlignmentProperty		= DependencyProperty.Register ("VerticalAlignment", typeof (VerticalAlignment), typeof (Visual), new VisualPropertyMetadata (VerticalAlignment.Stretch, VisualPropertyMetadataOptions.AffectsArrange));
+		
 		public static readonly DependencyProperty ContainerLayoutModeProperty	= DependencyProperty.Register ("ContainerLayoutMode", typeof (ContainerLayoutMode), typeof (Visual), new VisualPropertyMetadata (ContainerLayoutMode.VerticalFlow, VisualPropertyMetadataOptions.AffectsChildrenLayout));
 		
-		public static readonly DependencyProperty BoundsProperty				= DependencyProperty.Register ("Bounds", typeof (Drawing.Rectangle), typeof (Visual), new DependencyPropertyMetadata (Drawing.Rectangle.Empty, new GetValueOverrideCallback (Visual.GetBoundsValue), new SetValueOverrideCallback (Visual.SetBoundsValue)));
+		public static readonly DependencyProperty BoundsProperty				= DependencyProperty.RegisterReadOnly ("Bounds", typeof (Drawing.Rectangle), typeof (Visual), new DependencyPropertyMetadata (Drawing.Rectangle.Empty, new GetValueOverrideCallback (Visual.GetBoundsValue)));
 		public static readonly DependencyProperty SizeProperty					= DependencyProperty.Register ("Size", typeof (Drawing.Size), typeof (Visual), new DependencyPropertyMetadata (new GetValueOverrideCallback (Visual.GetSizeValue), new SetValueOverrideCallback (Visual.SetSizeValue), new PropertyInvalidatedCallback (Visual.NotifySizeChanged)));
-		public static readonly DependencyProperty PreferredSizeProperty			= DependencyProperty.Register ("PreferredSize", typeof (Drawing.Size), typeof (Visual), new VisualPropertyMetadata (Drawing.Size.Empty, VisualPropertyMetadataOptions.AffectsArrange));
-		public static readonly DependencyProperty MinSizeProperty				= DependencyProperty.Register ("MinSize", typeof (Drawing.Size), typeof (Visual), new VisualPropertyMetadata (Drawing.Size.Empty, new PropertyInvalidatedCallback (Visual.NotifyMinSizeChanged), VisualPropertyMetadataOptions.AffectsArrange));
-		public static readonly DependencyProperty MaxSizeProperty				= DependencyProperty.Register ("MaxSize", typeof (Drawing.Size), typeof (Visual), new VisualPropertyMetadata (Drawing.Size.Infinite, new PropertyInvalidatedCallback (Visual.NotifyMaxSizeChanged), VisualPropertyMetadataOptions.AffectsArrange));
+		public static readonly DependencyProperty PreferredWidthProperty		= DependencyProperty.Register ("PreferredWidth", typeof (double), typeof (Visual), new VisualPropertyMetadata (double.NaN, VisualPropertyMetadataOptions.AffectsMeasure));
+		public static readonly DependencyProperty PreferredHeightProperty		= DependencyProperty.Register ("PreferredHeight", typeof (double), typeof (Visual), new VisualPropertyMetadata (double.NaN, VisualPropertyMetadataOptions.AffectsMeasure));
+		public static readonly DependencyProperty ActualWidthProperty			= DependencyProperty.RegisterReadOnly ("ActualWidth", typeof (double), typeof (Visual), new VisualPropertyMetadata (Visual.GetActualWidthValue, VisualPropertyMetadataOptions.None));
+		public static readonly DependencyProperty ActualHeightProperty			= DependencyProperty.RegisterReadOnly ("ActualHeight", typeof (double), typeof (Visual), new VisualPropertyMetadata (Visual.GetActualHeightValue, VisualPropertyMetadataOptions.None));
+		public static readonly DependencyProperty MinSizeProperty				= DependencyProperty.Register ("MinSize", typeof (Drawing.Size), typeof (Visual), new VisualPropertyMetadata (Drawing.Size.Zero, VisualPropertyMetadataOptions.AffectsMeasure));
+		public static readonly DependencyProperty MinWidthProperty				= DependencyProperty.Register ("MinWidth", typeof (double), typeof (Visual), new VisualPropertyMetadata (0.0, VisualPropertyMetadataOptions.AffectsMeasure));
+		public static readonly DependencyProperty MinHeightProperty				= DependencyProperty.Register ("MinHeight", typeof (double), typeof (Visual), new VisualPropertyMetadata (0.0, VisualPropertyMetadataOptions.AffectsMeasure));
+		public static readonly DependencyProperty MaxSizeProperty				= DependencyProperty.Register ("MaxSize", typeof (Drawing.Size), typeof (Visual), new VisualPropertyMetadata (Drawing.Size.MaxValue, VisualPropertyMetadataOptions.AffectsMeasure));
+		public static readonly DependencyProperty MaxWidthProperty				= DependencyProperty.Register ("MaxWidth", typeof (double), typeof (Visual), new VisualPropertyMetadata (double.PositiveInfinity, VisualPropertyMetadataOptions.AffectsMeasure));
+		public static readonly DependencyProperty MaxHeightProperty				= DependencyProperty.Register ("MaxHeight", typeof (double), typeof (Visual), new VisualPropertyMetadata (double.PositiveInfinity, VisualPropertyMetadataOptions.AffectsMeasure));
 		
 		public static readonly DependencyProperty VisibilityProperty			= DependencyProperty.Register ("Visibility", typeof (bool), typeof (Visual), new VisualPropertyMetadata (true, new SetValueOverrideCallback (Visual.SetVisibilityValue), VisualPropertyMetadataOptions.None));
 		public static readonly DependencyProperty EnableProperty				= DependencyProperty.Register ("Enable", typeof (bool), typeof (Visual), new VisualPropertyMetadata (true, new SetValueOverrideCallback (Visual.SetEnableValue), VisualPropertyMetadataOptions.None));
@@ -1286,13 +1392,12 @@ namespace Epsitec.Common.Widgets
 		
 		private int								command_cache_id = -1;
 		private short							visual_serial_id = Visual.next_serial_id++;
-		private short							suspend_layout_counter;
 		protected bool							has_layout_changed;
 		protected bool							have_children_changed;
 		protected byte							currently_updating_layout;
 
 
-		private double							left, right, top, bottom;
+		private double							x, y;
 		private double							width, height;
 		
 		private static short					next_serial_id;
@@ -1301,13 +1406,75 @@ namespace Epsitec.Common.Widgets
 
 		internal void SetParentVisual(Visual visual)
 		{
-			this.parent = visual;
+			if (visual == null)
+			{
+				Layouts.LayoutContext.RemoveFromQueues (this);
+				this.parent.Invalidate (this.Bounds);
+				this.parent = visual;
+			}
+			else
+			{
+				this.parent = visual;
+				Layouts.LayoutContext.AddToMeasureQueue (this);
+			}
 		}
 
 		internal void NotifyChildrenChanged()
 		{
 			//	TODO: ...
-			this.NotifyLayoutChanged ();
+			
+			Layouts.LayoutContext.AddToMeasureQueue (this);
+		}
+
+		#region IClientInfo Members
+
+		Drawing.Rectangle IClientInfo.Bounds
+		{
+			get
+			{
+				return new Drawing.Rectangle (0, 0, this.width, this.height);
+			}
+		}
+
+		Drawing.Size IClientInfo.Size
+		{
+			get
+			{
+				return new Drawing.Size (this.width, this.height);
+			}
+		}
+
+		#endregion
+
+		#region IEquatable<Visual> Members
+
+		public bool Equals(Visual other)
+		{
+			return object.ReferenceEquals (this, other);
+		}
+
+		#endregion
+
+		public override bool Equals(object obj)
+		{
+			return base.Equals (obj as Visual);
+		}
+
+		public override int GetHashCode()
+		{
+			return this.visual_serial_id;
+		}
+	}
+	
+	public interface IClientInfo
+	{
+		Drawing.Rectangle Bounds
+		{
+			get;
+		}
+		Drawing.Size Size
+		{
+			get;
 		}
 	}
 }

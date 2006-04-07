@@ -22,7 +22,7 @@ namespace Epsitec.Common.Widgets
 			this.items = new Collections.StringCollection(this);
 			this.items.AcceptsRichText = true;
 			
-			this.DockPadding = new Drawing.Margins(2, 2, 2, 2);
+			this.Padding = new Drawing.Margins(2, 2, 2, 2);
 			this.AutoFocus = true;
 			this.AutoDoubleClick = true;
 			this.InternalState |= InternalState.Focusable;
@@ -225,14 +225,14 @@ namespace Epsitec.Common.Widgets
 		public override Drawing.Size GetBestFitSize()
 		{
 			double margin = ScrollList.TextOffsetY * 2;
-			double height = this.lineHeight * this.items.Count;
-			double width  = this.Width;
+			double height = System.Math.Min (this.lineHeight * this.items.Count, this.MaxHeight);
+			double width  = this.PreferredWidth;
 			
 			double dy = height;
 			
 			dy += margin;
-			dy  = System.Math.Max(dy, this.MinSize.Height);
-			dy  = System.Math.Min(dy, this.MaxSize.Height);
+			dy  = System.Math.Max (dy, this.MinHeight);
+			dy  = System.Math.Min (dy, this.MaxHeight);
 			dy -= margin;
 			
 			int n = (int) (dy / this.lineHeight);
@@ -242,7 +242,7 @@ namespace Epsitec.Common.Widgets
 			return new Drawing.Size(width, height);
 		}
 
-		public Drawing.Size GetBestSize()
+		public Drawing.Size GetBestLineSize()
 		{
 			//	Donne les dimensions optimales pour la liste.
 			//	La largeur est la largeur la plus grande de tous les textes contenus dans Items.
@@ -277,25 +277,25 @@ namespace Epsitec.Common.Widgets
 			return new Drawing.Size(dx, dy);
 		}
 
-
+#if false
 		public bool AdjustHeight(ScrollAdjustMode mode)
 		{
 			//	Ajuste la hauteur pour afficher pile un nombre entier de lignes.
 			
-			double h = this.Client.Height-ScrollList.TextOffsetY*2;
+			double h = this.Client.Size.Height-ScrollList.TextOffsetY*2;
 			int count = (int)(h/this.lineHeight);
 			
 			return this.AdjustHeightToRows(mode, count);
 		}
 
-		public bool AdjustHeightToContent(ScrollAdjustMode mode, double minHeight, double maxHeight)
+		bool AdjustHeightToContent(ScrollAdjustMode mode, double min_height, double max_height)
 		{
 			//	Ajuste la hauteur pour afficher exactement le nombre de lignes contenues.
 			
 			double h = this.lineHeight*this.items.Count+ScrollList.TextOffsetY*2;
 			double hope = h;
-			h = System.Math.Max(h, minHeight);
-			h = System.Math.Min(h, maxHeight);
+			h = System.Math.Max(h, min_height);
+			h = System.Math.Min(h, max_height);
 			
 			if ( h == this.Height )
 			{
@@ -356,6 +356,7 @@ namespace Epsitec.Common.Widgets
 			this.Invalidate();
 			return true;
 		}
+#endif
 		
 		
 		public override Drawing.Rectangle GetShapeBounds()
@@ -433,13 +434,13 @@ namespace Epsitec.Common.Widgets
 		{
 			//	Sélectionne la ligne selon la souris.
 			
-			double y = this.Client.Height-pos.Y-1-ScrollList.TextOffsetY;
+			double y = this.Client.Size.Height-pos.Y-1-ScrollList.TextOffsetY;
 			double x = pos.X-this.margins.Left;
 			
 			if ( y < 0 ) return false;
 			if ( y >= this.visibleLines*this.lineHeight ) return false;
 			if ( x < 0 ) return false;
-			if ( x >= this.Client.Width-this.margins.Width ) return false;
+			if ( x >= this.Client.Size.Width-this.margins.Width ) return false;
 			
 			int line = (int)(y/this.lineHeight);
 			
@@ -557,7 +558,7 @@ namespace Epsitec.Common.Widgets
 						this.textLayouts[i] = new TextLayout();
 					}
 					
-					string text = this.items[i+this.firstLine];
+					string text = (i+this.firstLine < this.items.Count) ? this.items[i+this.firstLine] : "";
 					
 					this.textLayouts[i].ResourceManager = this.ResourceManager;
 					this.textLayouts[i].Text            = text;	//@	this.AutoResolveResRef ? this.ResourceManager.ResolveTextRef(text) : text;
@@ -570,11 +571,15 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		protected override void UpdateClientGeometry()
+		protected override void SetBoundsOverride(Drawing.Rectangle oldRect, Drawing.Rectangle newRect)
+		{
+			base.SetBoundsOverride(oldRect, newRect);
+			this.UpdateGeometry ();
+		}
+		
+		protected void UpdateGeometry()
 		{
 			//	Met à jour la géométrie de l'ascenseur de la liste.
-			
-			base.UpdateClientGeometry();
 			
 			if ( this.lineHeight == 0 )  return;
 
@@ -589,17 +594,17 @@ namespace Epsitec.Common.Widgets
 				this.UpdateMargins();
 				IAdorner adorner = Widgets.Adorners.Factory.Active;
 				Drawing.Rectangle rect = new Drawing.Rectangle();
-				rect.Right  = this.Client.Width-adorner.GeometryScrollerRightMargin;
+				rect.Right  = this.Client.Size.Width-adorner.GeometryScrollerRightMargin;
 				rect.Left   = rect.Right-this.scroller.Width;
 				rect.Bottom = adorner.GeometryScrollerBottomMargin+ScrollList.TextOffsetY-this.margins.Bottom;
-				rect.Top    = this.Client.Height-adorner.GeometryScrollerTopMargin-ScrollList.TextOffsetY+this.margins.Top;
+				rect.Top    = this.Client.Size.Height-adorner.GeometryScrollerTopMargin-ScrollList.TextOffsetY+this.margins.Top;
 				this.scroller.Bounds = rect;
 			}
 		}
 
 		protected override void OnAdornerChanged()
 		{
-			this.UpdateClientGeometry();
+			this.UpdateGeometry ();
 			this.UpdateMargins();
 			base.OnAdornerChanged();
 		}
@@ -633,7 +638,7 @@ namespace Epsitec.Common.Widgets
 			if ( this.scroller != null   &&
 				 this.scroller.IsVisible )
 			{
-				this.margins.Right = this.Client.Width - this.scroller.Left;
+				this.margins.Right = this.Client.Size.Width - this.scroller.Left;
 			}
 		}
 		
@@ -641,7 +646,7 @@ namespace Epsitec.Common.Widgets
 		{
 			//	Calcule la largeur utile pour le texte.
 			
-			return this.Client.Width - this.margins.Width;
+			return this.Client.Size.Width - this.margins.Width;
 		}
 
 

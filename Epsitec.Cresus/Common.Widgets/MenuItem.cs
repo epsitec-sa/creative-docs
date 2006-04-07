@@ -437,10 +437,14 @@ namespace Epsitec.Common.Widgets
 			base.Dispose (disposing);
 		}
 
-		protected override void UpdateClientGeometry()
+		protected override void SetBoundsOverride(Drawing.Rectangle oldRect, Drawing.Rectangle newRect)
 		{
-			base.UpdateClientGeometry();
-
+			base.SetBoundsOverride(oldRect, newRect);
+			this.UpdateGeometry ();
+		}
+		
+		protected void UpdateGeometry()
+		{
 			if ( this.text_only )
 			{
 				if ( this.TextLayout != null )  this.TextLayout.LayoutSize = this.mainTextSize;

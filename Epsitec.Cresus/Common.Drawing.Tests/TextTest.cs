@@ -45,8 +45,8 @@ namespace Epsitec.Common.Drawing
 				
 				this.story  = new TextStory ();
 				this.fitter = new TextFitter (this.story);
-				this.frame1 = new SimpleTextFrame (this.Client.Width * this.frame_ratio, this.Client.Height, 32);
-				this.frame2 = new SimpleTextFrame (this.Client.Width - this.frame1.Width, this.Client.Height, 32);
+				this.frame1 = new SimpleTextFrame (this.Client.Size.Width * this.frame_ratio, this.Client.Size.Height, 32);
+				this.frame2 = new SimpleTextFrame (this.Client.Size.Width - this.frame1.Width, this.Client.Size.Height, 32);
 				
 				this.frame1.PageNumber = 1;
 				this.frame2.PageNumber = 1;
@@ -253,11 +253,11 @@ namespace Epsitec.Common.Drawing
 			
 			private void UpdateFrameSizes()
 			{
-				this.frame1.Width  = this.Client.Width * this.frame_ratio;
-				this.frame1.Height = this.Client.Height;
+				this.frame1.Width  = this.Client.Size.Width * this.frame_ratio;
+				this.frame1.Height = this.Client.Size.Height;
 					
-				this.frame2.Width  = this.Client.Width - this.frame1.Width;
-				this.frame2.Height = this.Client.Height;
+				this.frame2.Width  = this.Client.Size.Width - this.frame1.Width;
+				this.frame2.Height = this.Client.Size.Height;
 				this.frame2.X      = this.frame1.Width + this.frame1.X;
 					
 				this.fitter.ClearAllMarks ();
@@ -431,19 +431,29 @@ namespace Epsitec.Common.Drawing
 				CheckButton cb7 = new CheckButton (this.window.Root);
 				
 				rb1.ActiveState = ActiveState.Yes;
-				
-				st1.Dock = DockStyle.Top; st1.DockMargins = new Margins (4, 4, 4, 4);
-				cb1.Dock = DockStyle.Top; cb1.DockMargins = new Margins (4, 4, 4, 0);
-				cb2.Dock = DockStyle.Top; cb2.DockMargins = new Margins (4, 4, 0, 0);
-				cb3.Dock = DockStyle.Top; cb3.DockMargins = new Margins (4, 4, 0, 0);
-				cb4.Dock = DockStyle.Top; cb4.DockMargins = new Margins (4, 4, 0, 0);
-				
-				rb1.Dock = DockStyle.Top; rb1.DockMargins = new Margins (4, 4, 4, 0);
-				rb2.Dock = DockStyle.Top; rb2.DockMargins = new Margins (4, 4, 0, 0);
-				
-				cb5.Dock = DockStyle.Top; cb5.DockMargins = new Margins (4, 4, 4, 0);
-				cb6.Dock = DockStyle.Top; cb6.DockMargins = new Margins (4, 4, 0, 0);
-				cb7.Dock = DockStyle.Top; cb7.DockMargins = new Margins (4, 4, 0, 0);
+
+				st1.Dock = DockStyle.Top;
+				st1.Margins = new Margins (4, 4, 4, 4);
+				cb1.Dock = DockStyle.Top;
+				cb1.Margins = new Margins (4, 4, 4, 0);
+				cb2.Dock = DockStyle.Top;
+				cb2.Margins = new Margins (4, 4, 0, 0);
+				cb3.Dock = DockStyle.Top;
+				cb3.Margins = new Margins (4, 4, 0, 0);
+				cb4.Dock = DockStyle.Top;
+				cb4.Margins = new Margins (4, 4, 0, 0);
+
+				rb1.Dock = DockStyle.Top;
+				rb1.Margins = new Margins (4, 4, 4, 0);
+				rb2.Dock = DockStyle.Top;
+				rb2.Margins = new Margins (4, 4, 0, 0);
+
+				cb5.Dock = DockStyle.Top;
+				cb5.Margins = new Margins (4, 4, 4, 0);
+				cb6.Dock = DockStyle.Top;
+				cb6.Margins = new Margins (4, 4, 0, 0);
+				cb7.Dock = DockStyle.Top;
+				cb7.Margins = new Margins (4, 4, 0, 0);
 				
 				st1.Text = "Réglages pour le rendu du pavé de texte :";
 				

@@ -124,14 +124,14 @@ namespace Epsitec.Common.UI.Widgets
 			this.toggle_button.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			this.toggle_button.Size          = new Drawing.Size (dim, dim);
 			this.toggle_button.Anchor        = AnchorStyles.TopLeft;
-			this.toggle_button.AnchorMargins = new Drawing.Margins (1, 0, 8, 0);
+			this.toggle_button.Margins = new Drawing.Margins (1, 0, 8, 0);
 			
 			this.extra_button.Clicked       += new MessageEventHandler (this.HandleExtraButtonClicked);
 			this.extra_button.TabIndex       = 1000;
 			this.extra_button.TabNavigation  = Widget.TabNavigationMode.ActivateOnTab;
 			this.extra_button.Size           = new Drawing.Size (dim, dim);
 			this.extra_button.Anchor         = AnchorStyles.TopRight;
-			this.extra_button.AnchorMargins  = new Drawing.Margins (0, 1, 8, 0);
+			this.extra_button.Margins  = new Drawing.Margins (0, 1, 8, 0);
 			
 			this.toggle_button.Visibility = (this.accept_toggle);
 			this.extra_button.Enable = this.accept_extra;
@@ -174,7 +174,7 @@ namespace Epsitec.Common.UI.Widgets
 			Widget widget = new FatWidget (this);
 			
 			widget.Anchor        = AnchorStyles.LeftAndRight | AnchorStyles.Top;
-			widget.AnchorMargins = margins;
+			widget.Margins = margins;
 			widget.Height        = this.DefaultHeight - 1;
 			
 			widget.Visibility = false;
@@ -207,7 +207,7 @@ namespace Epsitec.Common.UI.Widgets
 				this.Height = this.views[this.visible_view_index].Height + 1;
 			}
 			
-			this.ForceLayout ();
+//-			this.ForceLayout ();
 		}
 		
 		

@@ -957,7 +957,7 @@ namespace Epsitec.Common.Widgets
 					double dy = this.caption.Height;
 					double yy = 4;
 					
-					this.caption.Bounds = new Drawing.Rectangle (2, yy + height, this.Client.Width - 4, dy);
+					this.caption.Bounds = new Drawing.Rectangle (2, yy + height, this.Client.Size.Width - 4, dy);
 					
 					oy += yy;
 				}

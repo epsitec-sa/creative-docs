@@ -1203,7 +1203,7 @@ namespace Epsitec.Common.Document
 			this.moveInitialSel = false;
 			this.drawingContext.ConstrainFlush();
 			this.drawingContext.ConstrainAddHV(mouse);
-			this.ShaperHilite(null, Point.Empty);
+			this.ShaperHilite(null, Point.Zero);
 			this.selector.HiliteHandle(-1);
 			this.HiliteHandle(null, -1);
 			this.moveGlobal = -1;
@@ -1360,7 +1360,7 @@ namespace Epsitec.Common.Document
 
 				if ( this.DetectHandle(mouse, out obj, out rank) )
 				{
-					this.ShaperHilite(null, Point.Empty);
+					this.ShaperHilite(null, Point.Zero);
 					this.HiliteHandle(obj, rank);
 					this.ChangeMouseCursor(MouseCursorType.ShaperMove);
 				}
@@ -1369,7 +1369,7 @@ namespace Epsitec.Common.Document
 					obj = hiliteObj;
 					if ( obj == null )
 					{
-						this.ShaperHilite(null, Point.Empty);
+						this.ShaperHilite(null, Point.Zero);
 					}
 					else
 					{
@@ -1499,7 +1499,7 @@ namespace Epsitec.Common.Document
 
 		protected void EditMouseDown(Message message, Point mouse, int downCount)
 		{
-			this.editPosPress = Point.Empty;
+			this.editPosPress = Point.Zero;
 			Objects.DetectEditType handle;
 
 			if ( this.editFlowSelect != Objects.DetectEditType.Out )
@@ -1665,7 +1665,7 @@ namespace Epsitec.Common.Document
 
 			//	S'il n'y avait initialement aucun objet en édition et qu'on a cliqué sans bouger,
 			//	essayer de créer et d'éditer un nouveau TextBox2 ici.
-			if ( !this.editPosPress.IsEmpty && Point.Distance(mouse, this.editPosPress) <= this.drawingContext.MinimalSize )
+			if ( !this.editPosPress.IsZero && Point.Distance(mouse, this.editPosPress) <= this.drawingContext.MinimalSize )
 			{
 				Drawing.Rectangle box = this.GuidesSearchBox(this.editPosPress);
 				if ( box.IsEmpty )  return;
@@ -2034,7 +2034,7 @@ namespace Epsitec.Common.Document
 		{
 			//	Annule le hilite des objets.
 			this.Hilite(null);
-			this.ShaperHilite(null, Point.Empty);
+			this.ShaperHilite(null, Point.Zero);
 		}
 
 		protected void Hilite(Objects.Abstract item)
@@ -2685,7 +2685,7 @@ namespace Epsitec.Common.Document
 					line = new Widget(this.miniBarBalloon);
 					line.Height = button.DefaultHeight;
 					line.Dock = DockStyle.Top;
-					line.DockMargins = new Margins(0, 0, m, 0);
+					line.Margins = new Margins(0, 0, m, 0);
 					beginOfLine = false;
 				}
 
@@ -4291,7 +4291,7 @@ namespace Epsitec.Common.Document
 			graphics.LineWidth = initialWidth;
 
 			//	Dessine le cadre.
-			Rectangle rect = new Rectangle(0, 0, this.Client.Width, this.Client.Height);
+			Rectangle rect = new Rectangle(0, 0, this.Client.Size.Width, this.Client.Size.Height);
 			rect.Deflate(0.5);
 			graphics.AddRectangle(rect);
 			graphics.RenderSolid(adorner.ColorBorder);
@@ -4677,7 +4677,7 @@ namespace Epsitec.Common.Document
 		protected Objects.DetectEditType		editFlowSelect = Objects.DetectEditType.Out;
 		protected Objects.Abstract				editFlowSrc = null;
 		protected Objects.AbstractText			editFlowAfterCreate = null;
-		protected Point							editPosPress = Point.Empty;
+		protected Point							editPosPress = Point.Zero;
 		protected Drawing.Rectangle				editCreateRect = Drawing.Rectangle.Empty;
 
 		protected Point							miniBarClickPos;

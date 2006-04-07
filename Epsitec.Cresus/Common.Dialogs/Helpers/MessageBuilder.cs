@@ -21,7 +21,7 @@ namespace Epsitec.Common.Dialogs.Helpers
 			
 			widget_icon.Size          = new Drawing.Size (48, 48);
 			widget_icon.Anchor        = Widgets.AnchorStyles.TopLeft;
-			widget_icon.AnchorMargins = new Drawing.Margins (0, 0, 0, 0);
+			widget_icon.Margins = new Drawing.Margins (0, 0, 0, 0);
 			
 			double min_width = System.Math.Min (400, widget_text.TextLayout.SingleLineSize.Width+4);
 			
@@ -32,7 +32,7 @@ namespace Epsitec.Common.Dialogs.Helpers
 			
 			widget_text.TextBreakMode = Drawing.TextBreakMode.Hyphenate;
 			widget_text.Anchor        = Widgets.AnchorStyles.All;
-			widget_text.AnchorMargins = new Drawing.Margins (widget_icon.Width + 8, 0, 0, 0);
+			widget_text.Margins = new Drawing.Margins (widget_icon.Width + 8, 0, 0, 0);
 			
 			container.Size = new Drawing.Size (widget_icon.Width + 8 + width, System.Math.Max (widget_icon.Height, height));
 			

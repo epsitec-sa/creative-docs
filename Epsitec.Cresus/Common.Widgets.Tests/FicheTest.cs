@@ -289,8 +289,7 @@ namespace Epsitec.Common.Widgets
 			this.menu = new HMenu();
 			this.menu.Host = this.window;
 			this.menu.Name = "base";
-			this.menu.Location = new Point(0, rect.Height-this.menu.DefaultHeight);
-			this.menu.Size = new Size(rect.Width, this.menu.DefaultHeight);
+			this.menu.Size = new Size (rect.Width, this.menu.DefaultHeight);
 			this.menu.Dock = DockStyle.Top;
 			this.menu.Items.Add(new MenuItem ("file", "Fichier"));
 			this.menu.Items.Add(new MenuItem ("edit", "Edition"));
@@ -402,14 +401,14 @@ namespace Epsitec.Common.Widgets
 			TextFieldCombo    helpMenuItemCombo      = new TextFieldCombo ();
 			
 			helpMenuItemTextField.Dock = DockStyle.Fill;
-			helpMenuItemTextField.DockMargins = new Margins (1, 1, 1, 1);
+			helpMenuItemTextField.Margins = new Margins (1, 1, 1, 1);
 			helpMenuItemTextField.MinSize = new Size (100, 20);
 			helpMenuItemTextField.Text = "";
 			
 			helpMenuItemContainer1.Children.Add (helpMenuItemTextField);
 			
 			helpMenuItemCombo.Dock = DockStyle.Fill;
-			helpMenuItemCombo.DockMargins = new Margins (1, 1, 1, 1);
+			helpMenuItemCombo.Margins = new Margins (1, 1, 1, 1);
 			helpMenuItemCombo.MinSize = new Size (100, 20);
 			helpMenuItemCombo.Text = "";
 			
@@ -448,7 +447,7 @@ namespace Epsitec.Common.Widgets
 				b2.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 				b3.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 				
-				helpMenuItemContainer3.DockPadding = new Margins (0, 0, 4, 4);
+				helpMenuItemContainer3.Padding = new Margins (0, 0, 4, 4);
 				
 				helpMenuItemContainer3.Children.Add (b1);
 				helpMenuItemContainer3.Children.Add (b2);
@@ -470,7 +469,6 @@ namespace Epsitec.Common.Widgets
 			this.menu.Items[4].Submenu = helpMenu;
 
 			this.toolBar = new HToolBar();
-			this.toolBar.Location = new Point(0, rect.Height-this.menu.DefaultHeight-this.toolBar.DefaultHeight);
 			this.toolBar.Size = new Size(rect.Width, this.toolBar.DefaultHeight);
 			this.toolBar.Dock = DockStyle.Top;
 			this.toolBar.Items.Add (new IconButton (@"file:images/open.png"));
@@ -484,14 +482,14 @@ namespace Epsitec.Common.Widgets
 			Widget root = new Panel();
 //			root.SetClientAngle(0);
 //			root.SetClientZoom(1.0);
-			root.Location = new Point(0, 0);
-			root.Size = new Size(rect.Width, rect.Height-this.menu.DefaultHeight-this.toolBar.DefaultHeight);
+//-			root.Location = new Point(0, 0);
+//-			root.Size = new Size(rect.Width, rect.Height-this.menu.DefaultHeight-this.toolBar.DefaultHeight);
 			root.Dock = DockStyle.Fill;
 			root.SetParent (this.window.Root);
 			
 			this.pane = new PaneBook();
-			this.pane.Location = new Point(0, 0);
-			this.pane.Size = root.Size;
+//-			this.pane.Location = new Point(0, 0);
+//-			this.pane.Size = root.Size;
 			this.pane.PaneBookStyle = PaneBookStyle.LeftRight;
 			this.pane.PaneBehaviour = PaneBookBehaviour.Draft;
 			//this.pane.PaneBehaviour = PaneBookBehaviour.FollowMe;
@@ -513,12 +511,10 @@ namespace Epsitec.Common.Widgets
 			this.pane.Items.Add(this.rightPane);
 
 			this.subPane = new PaneBook();
-			this.subPane.Location = new Point(0, 0);
-			this.subPane.Size = new Size(this.leftPane.Width, this.leftPane.Height);
 			this.subPane.PaneBookStyle = PaneBookStyle.BottomTop;
 			this.subPane.PaneBehaviour = PaneBookBehaviour.Draft;
 			//this.subPane.PaneBehaviour = PaneBookBehaviour.FollowMe;
-			this.subPane.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
+			this.subPane.Anchor = AnchorStyles.All;
 			this.subPane.PaneSizeChanged += new EventHandler(this.pane_SizeChanged);
 			this.subPane.SetParent (this.leftPane);
 
@@ -655,15 +651,21 @@ namespace Epsitec.Common.Widgets
 
 		private void pane_SizeChanged(object sender)
 		{
+			if ((this.leftPane == null) ||
+				(this.topPane == null))
+			{
+				return;
+			}
+			
 			PaneBook pane = (PaneBook)sender;
 
 			if ( pane == this.pane )
 			{
-				this.listWidth = this.leftPane.Client.Width;
+				this.listWidth = this.leftPane.Client.Size.Width;
 			}
 			if ( pane == this.subPane )
 			{
-				this.critHeight = this.topPane.Client.Height;
+				this.critHeight = this.topPane.Client.Size.Height;
 			}
 			this.ResizeLayout();
 		}
@@ -679,37 +681,21 @@ namespace Epsitec.Common.Widgets
 		{
 			if ( !this.allWidgets )  return;
 
-			this.title.Location = new Point(10, this.topPane.Height-50);
-			this.title.Size = new Size(this.topPane.Width, 50);
-
-			this.editCrit.Location = new Point(10, this.topPane.Height-50-this.buttonHeight);
-			this.editCrit.Size = new Size(this.topPane.Width-this.buttonWidth-30, this.buttonHeight);
-
-			this.buttonSearch.Location = new Point(this.topPane.Width-this.buttonWidth-10, this.topPane.Height-50-this.buttonHeight);
-			this.buttonSearch.Size = new Size(this.buttonWidth, this.buttonHeight);
-
-			this.listCrit.Location = new Point(10, this.topPane.Height-50-this.buttonHeight-10-this.listCritHeight);
-			this.listCrit.Size = new Size(200, this.listCritHeight);
-
-			this.listLook.Location = new Point(220, this.topPane.Height-50-this.buttonHeight-10-this.listCritHeight);
-			this.listLook.Size = new Size(100, this.listCritHeight);
-
-			this.table.Location = new Point(10, 10);
-			this.table.Size = new Size(this.bottomPane.Width-20, this.bottomPane.Height-20);
+			this.title.Bounds = new Rectangle (10, this.topPane.Height-50, this.topPane.Width, 50);
+			this.editCrit.Bounds = new Rectangle (10, this.topPane.Height-50-this.buttonHeight, this.topPane.Width-this.buttonWidth-30, this.buttonHeight);
+			this.buttonSearch.Bounds = new Rectangle (this.topPane.Width-this.buttonWidth-10, this.topPane.Height-50-this.buttonHeight, this.buttonWidth, this.buttonHeight);
+			this.listCrit.Bounds = new Rectangle (10, this.topPane.Height-50-this.buttonHeight-10-this.listCritHeight, 200, this.listCritHeight);
+			this.listLook.Bounds = new Rectangle (220, this.topPane.Height-50-this.buttonHeight-10-this.listCritHeight, 100, this.listCritHeight);
+			this.table.Bounds = new Rectangle (10, 10, this.bottomPane.Width-20, this.bottomPane.Height-20);
 
 			double posy = this.rightPane.Height-10-this.buttonHeight;
 			double posx = this.labelWidth;
 
-			this.buttonCreate.Location = new Point(posx, posy);
-			this.buttonCreate.Size = new Size(this.buttonWidth, this.buttonHeight);
-
+			this.buttonCreate.Bounds = new Rectangle (posx, posy, this.buttonWidth, this.buttonHeight);
 			posx += this.buttonWidth+10;
-			this.buttonDuplicate.Location = new Point(posx, posy);
-			this.buttonDuplicate.Size = new Size(this.buttonWidth, this.buttonHeight);
-
+			this.buttonDuplicate.Bounds = new Rectangle (posx, posy, this.buttonWidth, this.buttonHeight);
 			posx += this.buttonWidth+10;
-			this.buttonDelete.Location = new Point(posx, posy);
-			this.buttonDelete.Size = new Size(this.buttonWidth, this.buttonHeight);
+			this.buttonDelete.Bounds = new Rectangle (posx, posy, this.buttonWidth, this.buttonHeight);
 
 			posy -= 10;
 			double maxWidth = this.rightPane.Width-this.labelWidth-10;
@@ -723,13 +709,11 @@ namespace Epsitec.Common.Widgets
 				double height = 8+defaultFontHeight*fd.lines;
 
 				StaticText st = (StaticText)this.staticTexts[x];
-				st.Location = new Point(0, posy-this.buttonHeight);
-				st.Size = new Size(this.labelWidth-10, this.buttonHeight);
+				st.Bounds = new Rectangle (0, posy-this.buttonHeight, this.labelWidth-10, this.buttonHeight);
 
 				AbstractTextField tf = this.textFields[x] as AbstractTextField;
-				tf.Location = new Point(this.labelWidth, posy-height);
-				double width = System.Math.Min(fd.max*7, maxWidth);
-				tf.Size = new Size(width, height);
+				double width = System.Math.Min (fd.max*7, maxWidth);
+				tf.Bounds = new Rectangle (this.labelWidth, posy-height, width, height);
 
 				double suppl = 4;
 				if ( fd.link )  suppl = -1;
@@ -738,12 +722,10 @@ namespace Epsitec.Common.Widgets
 
 			posy -= 10+this.buttonHeight;
 			posx = this.labelWidth;
-			this.buttonValidate.Location = new Point(posx, posy);
-			this.buttonValidate.Size = new Size(this.buttonWidth, this.buttonHeight);
+			this.buttonValidate.Bounds = new Rectangle (posx, posy, this.buttonWidth, this.buttonHeight);
 
 			posx += this.buttonWidth+10;
-			this.buttonCancel.Location = new Point(posx, posy);
-			this.buttonCancel.Size = new Size(this.buttonWidth, this.buttonHeight);
+			this.buttonCancel.Bounds = new Rectangle (posx, posy, this.buttonWidth, this.buttonHeight);
 		}
 
 		protected void InitTable()

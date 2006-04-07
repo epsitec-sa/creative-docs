@@ -15,7 +15,7 @@ namespace Epsitec.Common.Document.Containers
 			this.helpText = new StaticText(this);
 			this.helpText.Text = Res.Strings.Container.Help.Principal;
 			this.helpText.Dock = DockStyle.Top;
-			this.helpText.DockMargins = new Margins(0, 0, -2, 7);
+			this.helpText.Margins = new Margins(0, 0, -2, 7);
 
 			this.CreateSelectorToolBar();
 			this.CreateAggregateToolBar();
@@ -25,7 +25,7 @@ namespace Epsitec.Common.Document.Containers
 			this.detailButton = new CheckButton();
 			this.detailButton.Text = Res.Strings.Container.Principal.Button.Detail;
 			this.detailButton.Dock = DockStyle.Top;
-			this.detailButton.DockMargins = new Margins(0, 0, 5, 5);
+			this.detailButton.Margins = new Margins(0, 0, 5, 5);
 			this.detailButton.TabIndex = 1;
 			this.detailButton.TabNavigation = Widget.TabNavigationMode.ActivateOnTab | Widget.TabNavigationMode.ForwardToChildren | Widget.TabNavigationMode.ForwardOnly;
 			this.detailButton.Clicked +=new MessageEventHandler(this.HandleDetailButtonClicked);
@@ -43,7 +43,7 @@ namespace Epsitec.Common.Document.Containers
 			this.colorSelector.ColorPalette.ColorCollection = this.document.GlobalSettings.ColorCollection;
 			this.colorSelector.HasCloseButton = true;
 			this.colorSelector.Dock = DockStyle.Bottom;
-			this.colorSelector.DockMargins = new Margins(0, 0, 10, 0);
+			this.colorSelector.Margins = new Margins(0, 0, 10, 0);
 			this.colorSelector.Changed += new EventHandler(this.HandleColorSelectorChanged);
 			this.colorSelector.CloseClicked += new EventHandler(this.HandleColorSelectorClosed);
 			this.colorSelector.TabIndex = 100;
@@ -91,7 +91,7 @@ namespace Epsitec.Common.Document.Containers
 			//	Crée la toolbar pour les sélections.
 			this.selectorToolBar = new HToolBar(this);
 			this.selectorToolBar.Dock = DockStyle.Top;
-			this.selectorToolBar.DockMargins = new Margins(0, 0, 0, 5);
+			this.selectorToolBar.Margins = new Margins(0, 0, 0, 5);
 
 //-			System.Diagnostics.Debug.Assert(this.selectorToolBar.CommandDispatcher != null);
 			
@@ -126,7 +126,7 @@ namespace Epsitec.Common.Document.Containers
 			selectorStretchType.GlyphShape = GlyphShape.ArrowDown;
 			selectorStretchType.ButtonStyle = ButtonStyle.ToolItem;
 			selectorStretchType.Width = 14;
-			selectorStretchType.DockMargins = new Margins(-1, 0, 0, 0);
+			selectorStretchType.Margins = new Margins(-1, 0, 0, 0);
 			ToolTip.Default.SetToolTip(selectorStretchType, Res.Strings.Container.Principal.Button.StretchType);
 			this.selectorToolBar.Items.Add(selectorStretchType);
 
@@ -164,7 +164,7 @@ namespace Epsitec.Common.Document.Containers
 			//	Crée la toolbar pour les agrégats.
 			this.aggregateToolBar = new HToolBar(this);
 			this.aggregateToolBar.Dock = DockStyle.Top;
-			this.aggregateToolBar.DockMargins = new Margins(0, 0, 0, 5);
+			this.aggregateToolBar.Margins = new Margins(0, 0, 0, 5);
 
 //-			System.Diagnostics.Debug.Assert(this.aggregateToolBar.CommandDispatcher != null);
 
@@ -179,7 +179,7 @@ namespace Epsitec.Common.Document.Containers
 			this.aggregateCombo.IsDeep = true;
 			this.aggregateCombo.Width = 130;
 			this.aggregateCombo.Dock = DockStyle.Left;
-			this.aggregateCombo.DockMargins = new Margins(0, 0, 1, 1);
+			this.aggregateCombo.Margins = new Margins(0, 0, 1, 1);
 			this.aggregateCombo.TextChanged += new EventHandler(this.HandleAggregateComboChanged);
 			this.aggregateCombo.ComboClosed += new EventHandler(this.HandleAggregateComboClosed);
 			ToolTip.Default.SetToolTip(this.aggregateCombo, Res.Strings.Container.Principal.Button.AggregateCombo);
@@ -223,7 +223,7 @@ namespace Epsitec.Common.Document.Containers
 			//	Crée la toolbar pour le texte.
 			this.textToolBar = new HToolBar(this);
 			this.textToolBar.Dock = DockStyle.Top;
-			this.textToolBar.DockMargins = new Margins(0, 0, 0, 5);
+			this.textToolBar.Margins = new Margins(0, 0, 0, 5);
 
 			StaticText st = new StaticText(this.textToolBar);
 			st.Text = Res.Strings.TextPanel.Filter.Title;
@@ -295,7 +295,7 @@ namespace Epsitec.Common.Document.Containers
 			//	Crée le panneau pour les sélections.
 			this.selectorPanel = new Panel(this);
 			this.selectorPanel.Dock = DockStyle.Top;
-			this.selectorPanel.DockMargins = new Margins(0, 0, 0, 5);
+			this.selectorPanel.Margins = new Margins(0, 0, 0, 5);
 			this.selectorPanel.Hide();
 
 			this.selectorName = new TextFieldCombo(this.selectorPanel);
@@ -310,7 +310,7 @@ namespace Epsitec.Common.Document.Containers
 			this.selectorGo.Text = Res.Strings.Container.Principal.Button.SelGo;
 			this.selectorGo.Width = 80;
 			this.selectorGo.Dock = DockStyle.Left;
-			this.selectorGo.DockMargins = new Margins(3, 0, 0, 0);
+			this.selectorGo.Margins = new Margins(3, 0, 0, 0);
 			this.selectorGo.Pressed += new MessageEventHandler(this.HandleSelectorGo);
 			ToolTip.Default.SetToolTip(this.selectorGo, Res.Strings.Container.Principal.Button.SelGoHelp);
 
@@ -443,7 +443,7 @@ namespace Epsitec.Common.Document.Containers
 						button.Text = text;
 						button.Alignment = ContentAlignment.MiddleLeft;
 						button.Dock = DockStyle.Top;
-						button.DockMargins = new Margins(10, 10, topMargin, 0);
+						button.Margins = new Margins(10, 10, topMargin, 0);
 						button.SetParent(this.scrollable.Panel);
 					}
 
@@ -467,7 +467,7 @@ namespace Epsitec.Common.Document.Containers
 							panel.TabIndex = index++;
 							panel.TabNavigation = Widget.TabNavigationMode.ActivateOnTab | Widget.TabNavigationMode.ForwardToChildren | Widget.TabNavigationMode.ForwardOnly;
 							panel.Dock = DockStyle.Top;
-							panel.DockMargins = new Margins(0, 1, tm, -1);
+							panel.Margins = new Margins(0, 1, tm, -1);
 							panel.IsExtendedSize = this.document.Modifier.IsTextPanelExtended(panel);
 							panel.OriginColorChanged += new EventHandler(this.HandleOriginColorChanged);
 							panel.SetParent(this.scrollable.Panel);
@@ -510,7 +510,7 @@ namespace Epsitec.Common.Document.Containers
 					panel.TabIndex = index++;
 					panel.TabNavigation = Widget.TabNavigationMode.ActivateOnTab | Widget.TabNavigationMode.ForwardToChildren | Widget.TabNavigationMode.ForwardOnly;
 					panel.Dock = DockStyle.Top;
-					panel.DockMargins = new Margins(0, 1, topMargin, -1);
+					panel.Margins = new Margins(0, 1, topMargin, -1);
 					panel.SetParent(this.scrollable.Panel);
 
 					if ( panel.Property.Type == this.originColorType )

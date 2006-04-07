@@ -167,15 +167,15 @@ namespace Epsitec.Common.Widgets
 		{
 			get { return this.arrowDown; }
 		}
-		
-		
-		protected override void UpdateClientGeometry()
+
+
+		protected override void SetBoundsOverride(Drawing.Rectangle oldRect, Drawing.Rectangle newRect)
 		{
-			base.UpdateClientGeometry();
+			base.SetBoundsOverride (oldRect, newRect);
 			this.UpdateGeometry ();
 		}
 		
-		protected virtual void UpdateGeometry()
+		protected void UpdateGeometry()
 		{
 			if ((this.arrowDown == null) ||
 				(this.arrowUp == null))
@@ -510,7 +510,7 @@ namespace Epsitec.Common.Widgets
 			
 			Widgets.Direction dir   = this.is_vertical ? Direction.Up : Direction.Left;
 			WidgetState       state = this.PaintState;
-			
+
 			//	Dessine le fond.
 			adorner.PaintScrollerBackground (graphics, this.Client.Bounds, this.thumbRect, this.tabRect, state & ~WidgetState.Entered, dir);
 			

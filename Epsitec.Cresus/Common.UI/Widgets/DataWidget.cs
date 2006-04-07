@@ -261,18 +261,18 @@ namespace Epsitec.Common.UI.Widgets
 				caption.Text            = this.source.Caption;
 				caption.Anchor          = AnchorStyles.TopLeft;
 				caption.Width           = this.caption_width;
-				caption.AnchorMargins   = new Drawing.Margins (0, 0, 0, 0);
+				caption.Margins   = new Drawing.Margins (0, 0, 0, 0);
 			}
 			
 			text_field.TabIndex      = 1;
 			text_field.Anchor        = AnchorStyles.Top | AnchorStyles.LeftAndRight;
-			text_field.AnchorMargins = new Drawing.Margins (this.has_caption ? this.caption_width : 0, 0, 0, 0);
+			text_field.Margins = new Drawing.Margins (this.has_caption ? this.caption_width : 0, 0, 0, 0);
 			
 			Widget.BaseLineAlign (text_field, caption);
-			
-			this.DefineBestFitSize (this.caption_width + text_field.GetBestFitSize ().Width, text_field.MinSize.Height);
-			
-			this.MinSize = new Drawing.Size (this.caption_width + text_field.MinSize.Width, text_field.MinSize.Height);
+
+			this.DefineBestFitSize (this.caption_width + text_field.GetBestFitSize ().Width, text_field.MinHeight);
+
+			this.MinSize = new Drawing.Size (this.caption_width + text_field.MinWidth, text_field.MinHeight);
 			
 			Engine.BindWidget (this.source, text_field);
 		}
@@ -293,18 +293,18 @@ namespace Epsitec.Common.UI.Widgets
 				caption.Text            = this.source.Caption;
 				caption.Anchor          = AnchorStyles.TopLeft;
 				caption.Width           = this.caption_width;
-				caption.AnchorMargins   = new Drawing.Margins (0, 0, 0, 0);
+				caption.Margins   = new Drawing.Margins (0, 0, 0, 0);
 			}
 			
 			text_field.TabIndex      = 1;
 			text_field.Anchor        = AnchorStyles.Top | AnchorStyles.LeftAndRight;
-			text_field.AnchorMargins = new Drawing.Margins (this.has_caption ? this.caption_width : 0, 0, 0, 0);
+			text_field.Margins = new Drawing.Margins (this.has_caption ? this.caption_width : 0, 0, 0, 0);
 			
 			Widget.BaseLineAlign (text_field, caption);
-			
-			this.DefineBestFitSize (this.caption_width + text_field.GetBestFitSize ().Width, text_field.MinSize.Height);
-			
-			this.MinSize = new Drawing.Size (this.caption_width + text_field.MinSize.Width, text_field.MinSize.Height);
+
+			this.DefineBestFitSize (this.caption_width + text_field.GetBestFitSize ().Width, text_field.MinHeight);
+
+			this.MinSize = new Drawing.Size (this.caption_width + text_field.MinWidth, text_field.MinHeight);
 			
 			Engine.BindWidget (this.source, text_field);
 		}
@@ -331,7 +331,7 @@ namespace Epsitec.Common.UI.Widgets
 				this.widget_container.ResourceManager = this.ResourceManager;
 				this.widget_container.Dock = DockStyle.Fill;
 				this.widget_container.Text = this.source.Caption;
-				this.widget_container.DockPadding = new Drawing.Margins (4, 0, 4, 4);
+				this.widget_container.Padding = new Drawing.Margins (4, 0, 4, 4);
 			}
 			else
 			{
@@ -374,8 +374,8 @@ namespace Epsitec.Common.UI.Widgets
 					//	On pourrait ajouter un espace vertical entre les boutons radio; les
 					//	informations de distance pourraient venir de IGuideAlignHint, par
 					//	exemple...
-					
-//					button.DockMargins = new Drawing.Margins (0, 0, 2, 0);
+
+					//button.Margins = new Drawing.Margins (0, 0, 2, 0);
 				}
 			}
 			
@@ -409,7 +409,7 @@ namespace Epsitec.Common.UI.Widgets
 				this.widget_container.ResourceManager = this.ResourceManager;
 				this.widget_container.Dock = DockStyle.Fill;
 				this.widget_container.Text = this.source.Caption;
-				this.widget_container.DockPadding = new Drawing.Margins (4, 0, 4, 4);
+				this.widget_container.Padding = new Drawing.Margins (4, 0, 4, 4);
 			}
 			else
 			{
@@ -466,18 +466,18 @@ namespace Epsitec.Common.UI.Widgets
 				caption.Text            = this.source.Caption;
 				caption.Anchor          = AnchorStyles.TopLeft;
 				caption.Width           = this.caption_width;
-				caption.AnchorMargins   = new Drawing.Margins (0, 0, 0, 0);
+				caption.Margins   = new Drawing.Margins (0, 0, 0, 0);
 			}
 			
 			button.TabIndex      = 1;
 			button.Anchor        = AnchorStyles.Top | AnchorStyles.LeftAndRight;
-			button.AnchorMargins = new Drawing.Margins (this.has_caption ? this.caption_width : 0, 0, 0, 0);
+			button.Margins = new Drawing.Margins (this.has_caption ? this.caption_width : 0, 0, 0, 0);
 			
 			Widget.BaseLineAlign (button, caption);
-			
-			this.DefineBestFitSize (this.caption_width + button.GetBestFitSize ().Width, button.MinSize.Height);
-			
-			this.MinSize = new Drawing.Size (this.caption_width + button.MinSize.Width, button.MinSize.Height);
+
+			this.DefineBestFitSize (this.caption_width + button.GetBestFitSize ().Width, button.MinHeight);
+
+			this.MinSize = new Drawing.Size (this.caption_width + button.MinWidth, button.MinHeight);
 			
 			Engine.BindWidget (this.source, button);
 		}
@@ -517,8 +517,8 @@ namespace Epsitec.Common.UI.Widgets
 					break;
 			}
 			
-			double frame_width  = this.widget_container.InternalPadding.Width  + this.widget_container.DockPadding.Width;
-			double frame_height = this.widget_container.InternalPadding.Height + this.widget_container.DockPadding.Height;
+			double frame_width  = this.widget_container.InternalPadding.Width  + this.widget_container.Padding.Width;
+			double frame_height = this.widget_container.InternalPadding.Height + this.widget_container.Padding.Height;
 			
 			this.DefineBestFitSize (table_width + frame_width, table_height + frame_height);
 			
@@ -589,8 +589,8 @@ namespace Epsitec.Common.UI.Widgets
 				int row    = 0;
 				int column = 0;
 				
-				double width  = this.widget_container.Client.Bounds.Width  - this.widget_container.InternalPadding.Width  - this.widget_container.DockPadding.Width;
-				double height = this.widget_container.Client.Bounds.Height - this.widget_container.InternalPadding.Height - this.widget_container.DockPadding.Height;
+				double width  = this.widget_container.Client.Bounds.Width  - this.widget_container.InternalPadding.Width  - this.widget_container.Padding.Width;
+				double height = this.widget_container.Client.Bounds.Height - this.widget_container.InternalPadding.Height - this.widget_container.Padding.Height;
 				
 				double ox = 0;
 				double oy = 0;
@@ -605,8 +605,8 @@ namespace Epsitec.Common.UI.Widgets
 						{
 							widget.Dock   = DockStyle.None;
 							widget.Anchor = AnchorStyles.None;
-							widget.Bounds = new Drawing.Rectangle (this.widget_container.Client.Bounds.Left   + this.widget_container.InternalPadding.Left   + this.widget_container.DockPadding.Left + ox,
-								/**/                               this.widget_container.Client.Bounds.Bottom + this.widget_container.InternalPadding.Bottom + this.widget_container.DockPadding.Bottom + height - cell_size.Height - oy,
+							widget.Bounds = new Drawing.Rectangle (this.widget_container.Client.Bounds.Left   + this.widget_container.InternalPadding.Left   + this.widget_container.Padding.Left + ox,
+								/**/                               this.widget_container.Client.Bounds.Bottom + this.widget_container.InternalPadding.Bottom + this.widget_container.Padding.Bottom + height - cell_size.Height - oy,
 								/**/                               cell_size.Width, cell_size.Height);
 							
 							ox += cell_size.Width;
@@ -631,8 +631,8 @@ namespace Epsitec.Common.UI.Widgets
 						{
 							widget.Dock   = DockStyle.None;
 							widget.Anchor = AnchorStyles.None;
-							widget.Bounds = new Drawing.Rectangle (this.widget_container.Client.Bounds.Left   + this.widget_container.InternalPadding.Left   + this.widget_container.DockPadding.Left + ox,
-								/**/                               this.widget_container.Client.Bounds.Bottom + this.widget_container.InternalPadding.Bottom + this.widget_container.DockPadding.Bottom + height - cell_size.Height - oy,
+							widget.Bounds = new Drawing.Rectangle (this.widget_container.Client.Bounds.Left   + this.widget_container.InternalPadding.Left   + this.widget_container.Padding.Left + ox,
+								/**/                               this.widget_container.Client.Bounds.Bottom + this.widget_container.InternalPadding.Bottom + this.widget_container.Padding.Bottom + height - cell_size.Height - oy,
 								/**/                               cell_size.Width, cell_size.Height);
 							
 							oy += cell_size.Height;

@@ -45,8 +45,8 @@ namespace Epsitec.Common.Widgets
 		
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clip_rect)
 		{
-			double dx = this.Client.Width;
-			double dy = this.Client.Height;
+			double dx = this.Client.Size.Width;
+			double dy = this.Client.Size.Height;
 			
 			Color color_text = this.IsFocused ? Color.FromRgb (0.0, 0.0, 0.5) : Color.FromRgb (0.0, 0.0, 0.0);
 			Color color_back = this.IsFocused ? Color.FromRgb (0.8, 0.8, 1.0) : Color.FromRgb (1.0, 1.0, 1.0);

@@ -10,7 +10,7 @@ namespace Epsitec.Common.Widgets
 			this.items = new Collections.WidgetCollection(this);
 			this.items.AutoEmbedding = true;
 
-			this.DockPadding = new Drawing.Margins(1, 1, 2, 1);
+			this.Padding = new Drawing.Margins(1, 1, 2, 1);
 		}
 		
 		public StatusBar(Widget embedder) : this()

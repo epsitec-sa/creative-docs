@@ -35,7 +35,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 				ResizeKnob resize = new ResizeKnob(this.window.Root);
 				resize.Anchor = AnchorStyles.BottomRight;
-				resize.AnchorMargins = new Margins(0, 0, 0, 0);
+				resize.Margins = new Margins(0, 0, 0, 0);
 				ToolTip.Default.SetToolTip(resize, Res.Strings.Dialog.Tooltip.Resize);
 
 				this.tabIndex = 0;
@@ -44,7 +44,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.help.IsReadOnly = true;
 				this.help.Height = 84;
 				this.help.Dock = DockStyle.Top;
-				this.help.DockMargins = new Margins(6, 6, 6, 0);
+				this.help.Margins = new Margins (6, 6, 6, 0);
 
 				System.Text.StringBuilder b = new System.Text.StringBuilder();
 				string chip = "<list type=\"fix\" width=\"1.5\"/>";
@@ -74,7 +74,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.table.StyleV |= CellArrayStyles.Separator;
 				this.table.DefHeight = 16;
 				this.table.Dock = DockStyle.Fill;
-				this.table.DockMargins = new Margins(6, 6, 6, 34);
+				this.table.Margins = new Margins (6, 6, 6, 34);
 
 				//	Bouton de fermeture.
 				double posx = 6;
@@ -83,7 +83,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				buttonClose.Text = Res.Strings.Dialog.Button.Close;
 				buttonClose.ButtonStyle = ButtonStyle.DefaultAccept;
 				buttonClose.Anchor = AnchorStyles.BottomLeft;
-				buttonClose.AnchorMargins = new Margins(posx, 0, 0, 6);
+				buttonClose.Margins = new Margins(posx, 0, 0, 6);
 				buttonClose.Clicked += new MessageEventHandler(this.HandleButtonCloseClicked);
 				buttonClose.TabIndex = this.tabIndex++;
 				buttonClose.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
@@ -95,7 +95,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				buttonHelp.Width = 75;
 				buttonHelp.Text = Res.Strings.Dialog.Button.Help;
 				buttonHelp.Anchor = AnchorStyles.BottomLeft;
-				buttonHelp.AnchorMargins = new Margins(posx, 0, 0, 6);
+				buttonHelp.Margins = new Margins(posx, 0, 0, 6);
 				buttonHelp.Clicked += new MessageEventHandler(this.HandleButtonHelpClicked);
 				buttonHelp.TabIndex = this.tabIndex++;
 				buttonHelp.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
@@ -109,7 +109,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.pagePrev.Width = dim;
 				this.pagePrev.Height = dim;
 				this.pagePrev.Anchor = AnchorStyles.BottomLeft;
-				this.pagePrev.AnchorMargins = new Margins(posx, 0, 0, 6);
+				this.pagePrev.Margins = new Margins(posx, 0, 0, 6);
 				this.pagePrev.Clicked += new MessageEventHandler(this.HandlePagePrevClicked);
 				this.pagePrev.TabIndex = this.tabIndex++;
 				this.pagePrev.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
@@ -120,7 +120,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.pageMenu.Width = dim*2.0;
 				this.pageMenu.Height = dim;
 				this.pageMenu.Anchor = AnchorStyles.BottomLeft;
-				this.pageMenu.AnchorMargins = new Margins(posx, 0, 0, 6);
+				this.pageMenu.Margins = new Margins(posx, 0, 0, 6);
 				this.pageMenu.Clicked += new MessageEventHandler(this.HandlePageMenuClicked);
 				this.pageMenu.TabIndex = this.tabIndex++;
 				this.pageMenu.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
@@ -132,7 +132,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.pageNext.Width = dim;
 				this.pageNext.Height = dim;
 				this.pageNext.Anchor = AnchorStyles.BottomLeft;
-				this.pageNext.AnchorMargins = new Margins(posx, 0, 0, 6);
+				this.pageNext.Margins = new Margins(posx, 0, 0, 6);
 				this.pageNext.Clicked += new MessageEventHandler(this.HandlePageNextClicked);
 				this.pageNext.TabIndex = this.tabIndex++;
 				this.pageNext.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
@@ -144,7 +144,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.buttonCurrent.Width = 100;
 				this.buttonCurrent.Text = Res.Strings.Dialog.PageStack.Button.Current;
 				this.buttonCurrent.Anchor = AnchorStyles.BottomLeft;
-				this.buttonCurrent.AnchorMargins = new Margins(posx, 0, 0, 6);
+				this.buttonCurrent.Margins = new Margins(posx, 0, 0, 6);
 				this.buttonCurrent.Clicked += new MessageEventHandler(this.HandleButtonCurrentClicked);
 				this.buttonCurrent.TabIndex = this.tabIndex++;
 				this.buttonCurrent.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;

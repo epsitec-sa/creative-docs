@@ -305,7 +305,7 @@ namespace Epsitec.Common.Dialogs
 			button.IconName = "manifest:Epsitec.Common.Dialogs.Images.StartDesigner.icon";
 			button.Clicked += new Widgets.MessageEventHandler (this.HandleDesignerActivatorClicked);
 			button.Anchor   = Widgets.AnchorStyles.BottomLeft;
-			button.AnchorMargins = new Drawing.Margins (0, 0, 0, 0);
+			button.Margins = new Drawing.Margins (0, 0, 0, 0);
 			
 			this.designer_activator_widget = button;
 		}

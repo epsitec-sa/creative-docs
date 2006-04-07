@@ -91,7 +91,7 @@ namespace Epsitec.Common.Types
 			}
 			else
 			{
-				return this.GetValueBase (property);
+				return this.GetValueBase (property, metadata);
 			}
 		}
 		public object GetValueBase(DependencyProperty property)
@@ -109,7 +109,7 @@ namespace Epsitec.Common.Types
 					(this.inheritedPropertyCache.TryGetValue (this, property, out value)))
 				{
 					//	Re-use cached value.
-					System.Diagnostics.Debug.WriteLine ("Reuse cached value " + (value == null ? "<null>" : value.ToString ()));
+				//-	System.Diagnostics.Debug.WriteLine ("Reuse cached value " + (value == null ? "<null>" : value.ToString ()));
 				}
 				else
 				{
@@ -135,13 +135,107 @@ namespace Epsitec.Common.Types
 			}
 			else
 			{
-				this.SetValueBase (property, value);
+				this.SetValueBase (property, value, metadata);
 			}
 		}
 		public void SetValueBase(DependencyProperty property, object value)
 		{
 			DependencyPropertyMetadata metadata = property.GetMetadata (this);
 
+			this.SetValueBase (property, value, metadata);
+		}
+		public void ClearValueBase(DependencyProperty property)
+		{
+			DependencyPropertyMetadata metadata = property.GetMetadata (this);
+
+			this.ClearValueBase (property, metadata);
+		}
+
+		public object CoerceValue(DependencyProperty property, object value)
+		{
+			DependencyPropertyMetadata metadata = property.GetMetadata (this);
+
+			if (metadata.CoerceValue != null)
+			{
+				return metadata.CoerceValue (this, property, value);
+			}
+			else
+			{
+				return value;
+			}
+		}
+
+		public object GetLocalValue(DependencyProperty property)
+		{
+			object value;
+			
+			if (this.properties.TryGetValue (property, out value))
+			{
+				return value;
+			}
+			else
+			{
+				return UndefinedValue.Instance;
+			}
+		}
+		public bool TryGetLocalValue(DependencyProperty property, out object value)
+		{
+			if (this.properties.TryGetValue (property, out value))
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+		public void SetLocalValue(DependencyProperty property, object value)
+		{
+			this.properties[property] = value;
+		}
+		public void ClearLocalValue(DependencyProperty property)
+		{
+			this.properties.Remove (property);
+		}
+		public bool ContainsLocalValue(DependencyProperty property)
+		{
+			return this.properties.ContainsKey (property);
+		}
+
+		public void InvalidateProperty(DependencyProperty property, object old_value, object new_value)
+		{
+			DependencyPropertyMetadata metadata = property.GetMetadata (this);
+
+			this.InvalidateProperty (property, old_value, new_value, metadata);
+		}
+
+		#region Private Methods with DependencyPropertyMetadata
+		
+		private object GetValueBase(DependencyProperty property, DependencyPropertyMetadata metadata)
+		{
+			object value = this.GetLocalValue (property);
+
+			//	Si la valeur n'est pas définie localement, il faut déterminer la
+			//	valeur réelle (par défaut, héritée, etc.)
+
+			if (value == UndefinedValue.Instance)
+			{
+				if ((metadata.InheritsValue) &&
+					(this.inheritedPropertyCache.TryGetValue (this, property, out value)))
+				{
+					//	Re-use cached value.
+					//-	System.Diagnostics.Debug.WriteLine ("Reuse cached value " + (value == null ? "<null>" : value.ToString ()));
+				}
+				else
+				{
+					value = metadata.CreateDefaultValue ();
+				}
+			}
+
+			return value;
+		}
+		private void SetValueBase(DependencyProperty property, object value, DependencyPropertyMetadata metadata)
+		{
 			if (metadata.InheritsValue)
 			{
 				this.SetLocalValue (property, value);
@@ -162,14 +256,12 @@ namespace Epsitec.Common.Types
 				}
 				else if ((old_value == null) || (!old_value.Equals (new_value)))
 				{
-					this.InvalidateProperty (property, old_value, new_value);
+					this.InvalidateProperty (property, old_value, new_value, metadata);
 				}
 			}
 		}
-		public void ClearValueBase(DependencyProperty property)
+		private void ClearValueBase(DependencyProperty property, DependencyPropertyMetadata metadata)
 		{
-			DependencyPropertyMetadata metadata = property.GetMetadata (this);
-
 			if (metadata.InheritsValue)
 			{
 				this.ClearLocalValue (property);
@@ -190,55 +282,12 @@ namespace Epsitec.Common.Types
 				}
 				else if ((old_value == null) || (!old_value.Equals (new_value)))
 				{
-					this.InvalidateProperty (property, old_value, new_value);
+					this.InvalidateProperty (property, old_value, new_value, metadata);
 				}
 			}
 		}
-
-		public object CoerceValue(DependencyProperty property, object value)
+		private void InvalidateProperty(DependencyProperty property, object old_value, object new_value, DependencyPropertyMetadata metadata)
 		{
-			DependencyPropertyMetadata metadata = property.GetMetadata (this);
-
-			if (metadata.CoerceValue != null)
-			{
-				return metadata.CoerceValue (this, property, value);
-			}
-			else
-			{
-				return value;
-			}
-		}
-		
-		public object GetLocalValue(DependencyProperty property)
-		{
-			object value;
-			
-			if (this.properties.TryGetValue (property, out value))
-			{
-				return value;
-			}
-			else
-			{
-				return UndefinedValue.Instance;
-			}
-		}
-		public void SetLocalValue(DependencyProperty property, object value)
-		{
-			this.properties[property] = value;
-		}
-		public void ClearLocalValue(DependencyProperty property)
-		{
-			this.properties.Remove (property);
-		}
-		public bool ContainsLocalValue(DependencyProperty property)
-		{
-			return this.properties.ContainsKey (property);
-		}
-
-		public void InvalidateProperty(DependencyProperty property, object old_value, object new_value)
-		{
-			DependencyPropertyMetadata metadata = property.GetMetadata (this);
-
 			if (metadata.NotifyPropertyInvalidated (this, old_value, new_value))
 			{
 				if (this.HasEventHandlerForProperty (property))
@@ -251,6 +300,8 @@ namespace Epsitec.Common.Types
 			}
 		}
 		
+		#endregion
+
 		public void AddEventHandler(DependencyProperty property, PropertyChangedEventHandler handler)
 		{
 			if (this.propertyEvents == null)

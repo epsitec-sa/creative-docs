@@ -97,12 +97,12 @@ namespace Epsitec.Common.Document.Containers
 			group.Height = 45;
 			group.Text = title;
 			group.Dock = DockStyle.Top;
-			group.DockMargins = new Margins(0, 0, 0, 10);
+			group.Margins = new Margins(0, 0, 0, 10);
 			group.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 
 			bar = new HToolBar(group);
 			bar.Dock = DockStyle.Top;
-			bar.DockMargins = new Margins(0, 0, 0, 10);
+			bar.Margins = new Margins(0, 0, 0, 10);
 			bar.TabIndex = this.tabIndex++;
 			bar.TabNavigation = Widget.TabNavigationMode.ForwardTabActive;
 		}

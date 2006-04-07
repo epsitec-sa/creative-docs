@@ -1,4 +1,4 @@
-//	Copyright © 2003-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Widgets
@@ -25,11 +25,11 @@ namespace Epsitec.Common.Widgets
 		public void DefineWidget(Widget widget, Drawing.Size initial_size, Drawing.Margins margins)
 		{
 			this.WindowSize = initial_size + margins.Size;
-			
-			widget.Dock     = DockStyle.None;
-			widget.Size     = initial_size;
-			widget.SetParent (this.Root);
-			widget.Location = new Drawing.Point (margins.Bottom, margins.Left);
+
+			widget.Dock     = DockStyle.Fill;
+
+			this.Root.Padding = margins;
+			this.Root.Children.Add (widget);
 			
 			this.MarkForRepaint ();
 		}

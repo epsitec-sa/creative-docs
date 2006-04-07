@@ -212,6 +212,7 @@
     <Compile Include="AlphaBar.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="AnchorStyles.cs" />
     <Compile Include="Animation.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -319,6 +320,13 @@
     <Compile Include="CommandState.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Layouts\LayoutMode.cs" />
+    <Compile Include="Layouts\NoOpLayoutEngine.cs" />
+    <Compile Include="Layouts\LayoutContext.cs" />
+    <Compile Include="Layouts\LayoutMeasure.cs" />
+    <Compile Include="VerticalAlignment.cs" />
+    <Compile Include="HorizontalAlignment.cs" />
+    <Compile Include="DockStyle.cs" />
     <Compile Include="DefocusAction.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -424,16 +432,16 @@
     <Compile Include="KeyCode.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Layouts\AnchorLayout.cs">
+    <Compile Include="Layouts\AnchorLayoutEngine.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Layouts\DockLayout.cs">
+    <Compile Include="Layouts\DockLayoutEngine.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Layouts\Events.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Layouts\ILayout.cs">
+    <Compile Include="Layouts\ILayoutEngine.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Layouts\LayoutEngine.cs">
