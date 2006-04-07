@@ -51,6 +51,7 @@ namespace Epsitec.Common.Widgets
 				this.DrawingScale    = model.DrawingScale;
 				this.VerticalMark    = model.VerticalMark;
 				this.LayoutSize      = model.LayoutSize;
+				this.Alignment       = model.Alignment;
 			}
 		}
 		
