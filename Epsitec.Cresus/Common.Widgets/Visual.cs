@@ -853,8 +853,8 @@ namespace Epsitec.Common.Widgets
 			
 			if (old_value != new_value)
 			{
-				this.Arrange (Helpers.VisualTree.FindLayoutContext (this));
 				this.SetBoundsOverride (old_value, new_value);
+				this.Arrange (Helpers.VisualTree.FindLayoutContext (this));
 				
 				Visual parent = this.Parent;
 				

@@ -116,15 +116,15 @@ namespace Epsitec.Common.Document.Containers
 			this.panelMisc = new Widget(this);
 			this.panelMisc.Dock = DockStyle.Bottom;
 			this.panelMisc.Margins = new Margins(0, 0, 5, 0);
-			this.panelMisc.Height = 70;
+			this.panelMisc.PreferredHeight = 70;
 			this.panelMisc.TabIndex = 98;
 			this.panelMisc.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 			
 			this.panelButton = new Widget(this.panelMisc);
 			this.panelButton.Dock = DockStyle.Left;
 			this.panelButton.Margins = new Margins(0, 0, 0, 0);
-			this.panelButton.Width = 126;
-			this.panelButton.Height = this.panelMisc.Height;
+			this.panelButton.PreferredWidth = 126;
+			this.panelButton.PreferredHeight = this.panelMisc.PreferredHeight;
 			this.panelButton.TabIndex = 1;
 			this.panelButton.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 			
@@ -158,8 +158,8 @@ namespace Epsitec.Common.Document.Containers
 			this.radioGroupPrint = new GroupBox(this.panelMisc);
 			this.radioGroupPrint.Dock = DockStyle.Right;
 			this.radioGroupPrint.Margins = new Margins(0, 0, 0, 4);
-			this.radioGroupPrint.Width = 106;
-			this.radioGroupPrint.Height = this.panelMisc.Height;
+			this.radioGroupPrint.PreferredWidth = 106;
+			this.radioGroupPrint.PreferredHeight = this.panelMisc.PreferredHeight;
 			this.radioGroupPrint.Text = Res.Strings.Container.Layers.Button.PrintGroup;
 			this.radioGroupPrint.TabIndex = 2;
 			this.radioGroupPrint.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
@@ -210,12 +210,12 @@ namespace Epsitec.Common.Document.Containers
 			this.toolBarName.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 
 			StaticText st = new StaticText();
-			st.Width = 80;
+			st.PreferredWidth = 80;
 			st.Text = Res.Strings.Panel.LayerName.Label.Name;
 			this.toolBarName.Items.Add(st);
 
 			this.name = new TextField();
-			this.name.Width = 140;
+			this.name.PreferredWidth = 140;
 			this.name.Margins = new Margins(0, 0, 1, 1);
 			this.name.TextChanged += new EventHandler(this.HandleNameTextChanged);
 			this.name.TabIndex = 1;
