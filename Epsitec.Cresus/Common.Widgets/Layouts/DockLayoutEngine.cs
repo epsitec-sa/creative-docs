@@ -35,9 +35,6 @@ namespace Epsitec.Common.Widgets.Layouts
 				}
 				
 				Drawing.Rectangle bounds;
-				bounds = child.Bounds;
-				bounds.Inflate (child.Margins);
-
 				Drawing.Size size = LayoutContext.GetResultingMeasuredSize (child);
 
 				if (size == Drawing.Size.NegativeInfinity)
