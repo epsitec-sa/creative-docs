@@ -87,6 +87,11 @@ namespace Epsitec.Common.Designer
 			for ( int i=0 ; i<modules.Length ; i++ )
 			{
 				Module module = new Module(this.resourcePrefix, modules[i]);
+
+				Viewer viewer = new Viewer(module);
+				module.Modifier.AttachViewer(viewer);
+				module.Modifier.ActiveViewer = viewer;
+				
 				this.moduleList.Add(module);
 			}
 

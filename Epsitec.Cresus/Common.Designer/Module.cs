@@ -18,10 +18,21 @@ namespace Epsitec.Common.Designer
 
 			this.bundles = new ResourceBundleCollection(this.resourceManager);
 			this.bundles.LoadBundles(this.resourceManager.ActivePrefix, this.resourceManager.GetBundleIds(ids[0], ResourceLevel.All));
+
+			this.modifier = new Modifier(this);
+		}
+
+		public Modifier Modifier
+		{
+			get
+			{
+				return this.modifier;
+			}
 		}
 
 
 		protected ResourceManager			resourceManager;
 		protected ResourceBundleCollection	bundles;
+		protected Modifier					modifier;
 	}
 }
