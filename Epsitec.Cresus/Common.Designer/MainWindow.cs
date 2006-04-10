@@ -21,10 +21,10 @@ namespace Epsitec.Common.Designer
 		public MainWindow()
 		{
 			this.resourcePrefix = "file";
-			this.moduleList = new System.Collections.ArrayList();
+			this.moduleInfoList = new List<ModuleInfo>();
 		}
-		
-		public void Show()
+
+		public void Show(Window parent, CommandDispatcher commandDispatcher)
 		{
 			//	Crée et montre la fenêtre de l'éditeur.
 			if ( this.window == null )
@@ -40,13 +40,20 @@ namespace Epsitec.Common.Designer
 				this.window.Root.MinSize = new Size(400, 250);
 				this.window.Text = Res.Strings.Application.Title;
 				this.window.PreventAutoClose = true;
+				//?this.window.Owner = parent;
 				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowAboutCloseClicked);
 
 #if false
 				this.commandDispatcher = new CommandDispatcher("ResDesigner", CommandDispatcherLevel.Primary);
+				//?this.commandDispatcher.RegisterController(this.window.Root);
 				this.commandDispatcher.RegisterController(this);
 				this.commandDispatcher.Focus();
+				this.window.Root.AttachCommandDispatcher(this.commandDispatcher);
 				this.window.AttachCommandDispatcher(this.commandDispatcher);
+#else
+				this.commandDispatcher = commandDispatcher;
+				//?this.window.AttachCommandDispatcher(this.commandDispatcher);
+				//?this.window.Root.AttachCommandDispatcher(this.commandDispatcher);
 #endif
 
 				this.hToolBar = new HToolBar(this.window.Root);
@@ -78,21 +85,36 @@ namespace Epsitec.Common.Designer
 				this.ribbonOper.Margins = new Margins(0, 0, this.hToolBar.Height, 0);
 				this.ribbonOper.Visibility = true;
 
+				this.info = new StatusBar(this.window.Root);
+				this.info.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Bottom;
+				this.info.Margins = new Margins(0, 22-5, 0, 0);
+
+				this.bookModules = new TabBook(this.window.Root);
+				this.bookModules.Anchor = AnchorStyles.All;
+				this.bookModules.Margins = new Margins(0, 0, this.hToolBar.Height+1, this.info.Height+1);
+				this.bookModules.Arrows = TabBookArrows.Right;
+				this.bookModules.HasCloseButton = true;
+				this.bookModules.CloseButton.Command = "Close";
+				this.bookModules.ActivePageChanged += new EventHandler(this.HandleBookModulesActivePageChanged);
+				ToolTip.Default.SetToolTip(this.bookModules.CloseButton, Res.Strings.Action.Close);
+
 				this.ribbonActive = this.ribbonMain;
 				this.ActiveRibbon(this.ribbonActive);
 			}
 
+			//	Ouvre tous les modules trouvés.
 			string[] modules = Resources.GetModuleNames(this.resourcePrefix);
 
 			for ( int i=0 ; i<modules.Length ; i++ )
 			{
 				Module module = new Module(this.resourcePrefix, modules[i]);
 
-				Viewer viewer = new Viewer(module);
-				module.Modifier.AttachViewer(viewer);
-				module.Modifier.ActiveViewer = viewer;
-				
-				this.moduleList.Add(module);
+				ModuleInfo mi = new ModuleInfo();
+				mi.Module = module;
+				this.moduleInfoList.Insert(++this.currentModule, mi);
+				this.CreateModuleLayout();
+
+				this.bookModules.ActivePage = mi.TabPage;
 			}
 
 			this.window.ShowDialog();
@@ -165,6 +187,94 @@ namespace Epsitec.Common.Designer
 		}
 
 
+		#region Modules manager
+		protected void CreateModuleLayout()
+		{
+			ModuleInfo mi = this.CurrentModuleInfo;
+
+			mi.TabPage = new TabPage();
+			mi.TabPage.TabTitle = mi.Module.Name;
+			this.bookModules.Items.Insert(this.currentModule, mi.TabPage);
+
+			Viewer viewer = new Viewer(mi.Module);
+			mi.Module.Modifier.AttachViewer(viewer);
+			mi.Module.Modifier.ActiveViewer = viewer;
+		}
+
+
+		private void HandleBookModulesActivePageChanged(object sender)
+		{
+			//	L'onglet pour le module courant a été cliqué.
+			if ( this.ignoreChange )  return;
+
+			int total = this.bookModules.PageCount;
+			for ( int i=0 ; i<total ; i++ )
+			{
+				ModuleInfo di = this.moduleInfoList[i];
+				if ( di.TabPage == this.bookModules.ActivePage )
+				{
+					this.UseModule(i);
+					return;
+				}
+			}
+		}
+
+		protected bool IsCurrentModule
+		{
+			//	Indique s'il existe un module courant.
+			get
+			{
+				return (this.currentModule >= 0);
+			}
+		}
+
+		protected ModuleInfo CurrentModuleInfo
+		{
+			//	Retourne le ModuleInfo courant.
+			get
+			{
+				if ( this.currentModule < 0 )  return null;
+				return this.moduleInfoList[this.currentModule];
+			}
+		}
+
+		protected Module CurrentModule
+		{
+			//	Retourne le Module courant.
+			get
+			{
+				if ( this.currentModule < 0 )  return null;
+				return this.CurrentModuleInfo.Module;
+			}
+		}
+
+		protected void UseModule(int rank)
+		{
+			//	Utilise un module ouvert.
+			if ( this.ignoreChange )  return;
+
+			this.currentModule = rank;
+
+			if ( rank >= 0 )
+			{
+				this.ignoreChange = true;
+				this.bookModules.ActivePage = this.CurrentModuleInfo.TabPage;
+				this.ignoreChange = false;
+
+				int total = this.bookModules.PageCount;
+				for ( int i=0 ; i<total ; i++ )
+				{
+					ModuleInfo mi = this.moduleInfoList[i];
+				}
+			}
+			else
+			{
+			}
+		}
+		#endregion
+
+
+		#region Ribbons manager
 		protected void ActiveRibbon(RibbonContainer active)
 		{
 			//	Active un ruban.
@@ -178,8 +288,7 @@ namespace Epsitec.Common.Designer
 			this.ribbonOperButton.ActiveState = (this.ribbonOper == this.ribbonActive) ? ActiveState.Yes : ActiveState.No;
 
 			double h = this.RibbonHeight;
-			//?this.vToolBar.Margins = new Margins(0, 0, this.hToolBar.Height+h, this.info.Height);
-			//?this.bookDocuments.Margins = new Margins(this.vToolBar.Width+1, this.panelsWidth+2, this.hToolBar.Height+h+1, this.info.Height+1);
+			this.bookModules.Margins = new Margins(1, 2, this.hToolBar.Height+h+1, this.info.Height+1);
 
 			//?this.ResumeLayout();
 		}
@@ -193,7 +302,6 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		
 		private void HandleRibbonPressed(object sender, MessageEventArgs e)
 		{
 			//	Le bouton pour activer/désactiver un ruban a été cliqué.
@@ -205,11 +313,27 @@ namespace Epsitec.Common.Designer
 
 			this.ActiveRibbon(ribbon.IsVisible ? null : ribbon);
 		}
+		#endregion
+
 
 		private void HandleWindowAboutCloseClicked(object sender)
 		{
-			this.window.Hide ();
+			this.window.Hide();
 		}
+
+
+		#region ModuleInfo class
+		protected class ModuleInfo
+		{
+			public Module						Module;
+			public TabPage						TabPage;
+
+			public void Dispose()
+			{
+				if ( this.TabPage != null )  this.TabPage.Dispose();
+			}
+		}
+		#endregion
 
 
 		protected Window						window;
@@ -220,9 +344,13 @@ namespace Epsitec.Common.Designer
 		protected RibbonContainer				ribbonMain;
 		protected RibbonContainer				ribbonOper;
 		protected RibbonContainer				ribbonActive;
+		protected TabBook						bookModules;
+		protected StatusBar						info;
 
 		protected string						resourcePrefix;
-		protected System.Collections.ArrayList	moduleList;
+		protected List<ModuleInfo>				moduleInfoList;
+		protected int							currentModule = -1;
 		protected double						ribbonHeight = 71;
+		protected bool							ignoreChange = false;
 	}
 }

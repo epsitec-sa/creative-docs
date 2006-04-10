@@ -7,12 +7,14 @@ namespace Epsitec.Common.Designer
 	/// <summary>
 	/// Description d'un module de ressources ouvert par l'application Designer.
 	/// </summary>
-	class Module
+	public class Module
 	{
 		public Module(string resourcePrefix, string moduleName)
 		{
+			this.name = moduleName;
+
 			this.resourceManager = new ResourceManager();
-			this.resourceManager.SetupApplication(moduleName);
+			this.resourceManager.SetupApplication(this.name);
 			this.resourceManager.ActivePrefix = resourcePrefix;
 			string[] ids = this.resourceManager.GetBundleIds("*", ResourceLevel.Default);
 
@@ -30,7 +32,16 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
+		public string Name
+		{
+			get
+			{
+				return this.name;
+			}
+		}
 
+
+		protected string					name;
 		protected ResourceManager			resourceManager;
 		protected ResourceBundleCollection	bundles;
 		protected Modifier					modifier;

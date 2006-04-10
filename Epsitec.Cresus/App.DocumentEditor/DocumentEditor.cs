@@ -3489,7 +3489,7 @@ namespace Epsitec.App.DocumentEditor
 		void CommandResDesigner(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			this.resDesignerMainWindow = new Epsitec.Common.Designer.MainWindow();
-			this.resDesignerMainWindow.Show();
+			this.resDesignerMainWindow.Show(this.Window, this.commandDispatcher);
 		}
 
 		[Command ("DebugBboxThin")]

@@ -8,7 +8,7 @@ namespace Epsitec.Common.Designer
 	/// <summary>
 	/// Permet de modifier les ressources d'un module.
 	/// </summary>
-	class Modifier
+	public class Modifier
 	{
 		public Modifier(Module module)
 		{
