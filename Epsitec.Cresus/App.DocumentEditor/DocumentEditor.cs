@@ -3550,8 +3550,6 @@ namespace Epsitec.App.DocumentEditor
 		protected void InitCommands()
 		{
 			//	Initialise toutes les commandes.
-			this.MakeIconList();
-
 			this.toolSelectState = this.CreateCommandState("ToolSelect", "Select", "ToolSelect", KeyCode.AlphaS);
 			this.toolGlobalState = this.CreateCommandState("ToolGlobal", "Global", "ToolGlobal", KeyCode.AlphaG);
 			this.toolShaperState = this.CreateCommandState("ToolShaper", "Shaper", "ToolShaper", KeyCode.AlphaA);
@@ -3861,28 +3859,6 @@ namespace Epsitec.App.DocumentEditor
 			cs.Statefull   = statefull;
 
 			return cs;
-		}
-
-		protected void MakeIconList()
-		{
-			//	Construit la liste de toutes les icônes existantes.
-			System.Text.RegularExpressions.Regex regex = Common.Support.RegexFactory.FromSimpleJoker("*.icon", Common.Support.RegexFactory.Options.IgnoreCase);
-			string[] list = Common.Support.ImageProvider.GetManifestResourceNames(regex);
-			
-			this.iconList = new System.Collections.Hashtable();
-
-			foreach ( string icon in list )
-			{
-				string[] parts = icon.Split('.');  // partage "Epsitec.App.DocumentEditor.Images.Icon.icon"
-				if ( parts.Length >= 2 )
-				{
-					string quick = parts[parts.Length-2];  // prend l'avant-dernière partie (avant le .icon)
-					if ( !this.iconList.ContainsKey(quick) )
-					{
-						this.iconList.Add(quick, quick);
-					}
-				}
-			}
 		}
 
 
@@ -5621,8 +5597,6 @@ namespace Epsitec.App.DocumentEditor
 		protected Dialogs.Settings				dlgSettings;
 		protected Dialogs.Splash				dlgSplash;
 		protected Dialogs.Update				dlgUpdate;
-
-		protected System.Collections.Hashtable	iconList;
 
 		protected CommandState					toolSelectState;
 		protected CommandState					toolGlobalState;
