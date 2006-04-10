@@ -38,7 +38,7 @@ namespace Epsitec.Common.Designer
 				
 				this.window.WindowSize = new Size(600, 400);
 				this.window.Root.MinSize = new Size(400, 250);
-				this.window.Text = "Ressources Editor";
+				this.window.Text = Res.Strings.Application.Title;
 				this.window.PreventAutoClose = true;
 				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowAboutCloseClicked);
 
@@ -52,12 +52,12 @@ namespace Epsitec.Common.Designer
 				this.hToolBar = new HToolBar(this.window.Root);
 				this.hToolBar.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top;
 
-				this.ribbonMainButton = new RibbonButton("", "Principal");
+				this.ribbonMainButton = new RibbonButton("", Res.Strings.Ribbon.Main);
 				this.ribbonMainButton.Size = this.ribbonMainButton.RequiredSize;
 				this.ribbonMainButton.Pressed += new MessageEventHandler(this.HandleRibbonPressed);
 				this.hToolBar.Items.Add(this.ribbonMainButton);
 
-				this.ribbonOperButton = new RibbonButton("", "Opérations");
+				this.ribbonOperButton = new RibbonButton("", Res.Strings.Ribbon.Oper);
 				this.ribbonOperButton.Size = this.ribbonOperButton.RequiredSize;
 				this.ribbonOperButton.Pressed += new MessageEventHandler(this.HandleRibbonPressed);
 				this.hToolBar.Items.Add(this.ribbonOperButton);
