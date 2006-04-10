@@ -3485,11 +3485,11 @@ namespace Epsitec.App.DocumentEditor
 		}
 
 
-		[Command ("ResEditor")]
-		void CommandResEditor(CommandDispatcher dispatcher, CommandEventArgs e)
+		[Command("ResDesigner")]
+		void CommandResDesigner(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.resEditorMainWindow = new Epsitec.Common.Designer.MainWindow();
-			this.resEditorMainWindow.Show();
+			this.resDesignerMainWindow = new Epsitec.Common.Designer.MainWindow();
+			this.resDesignerMainWindow.Show();
 		}
 
 		[Command ("DebugBboxThin")]
@@ -3769,7 +3769,7 @@ namespace Epsitec.App.DocumentEditor
 			this.arraySwapRowState = this.CreateCommandState("ArraySwapRow");
 			this.arrayLookState = this.CreateCommandState("ArrayLook");
 
-			this.resEditorState = this.CreateCommandState ("ResEditor");
+			this.resDesignerState = this.CreateCommandState("ResDesigner");
 			this.debugBboxThinState = this.CreateCommandState ("DebugBboxThin");
 			this.debugBboxGeomState = this.CreateCommandState("DebugBboxGeom");
 			this.debugBboxFullState = this.CreateCommandState("DebugBboxFull");
@@ -5582,7 +5582,7 @@ namespace Epsitec.App.DocumentEditor
 		protected bool							askKey = false;
 		protected MouseCursor					lastMouseCursor = MouseCursor.AsArrow;
 		protected VersionChecker				checker;
-		protected Common.Designer.MainWindow	resEditorMainWindow;
+		protected Common.Designer.MainWindow	resDesignerMainWindow;
 
 		protected CommandDispatcher				commandDispatcher;
 
@@ -5819,7 +5819,7 @@ namespace Epsitec.App.DocumentEditor
 		protected CommandState					arraySwapColumnState;
 		protected CommandState					arraySwapRowState;
 		protected CommandState					arrayLookState;
-		protected CommandState					resEditorState;
+		protected CommandState					resDesignerState;
 		protected CommandState					debugBboxThinState;
 		protected CommandState					debugBboxGeomState;
 		protected CommandState					debugBboxFullState;

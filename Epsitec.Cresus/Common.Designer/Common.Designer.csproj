@@ -31,12 +31,18 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MainWindow.cs" />
+    <Compile Include="Misc.cs" />
+    <Compile Include="Module.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Res.cs" />
+    <Compile Include="Ribbons\Abstract.cs" />
+    <Compile Include="Ribbons\Clipboard.cs" />
+    <Compile Include="Ribbons\File.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common.Drawing.Agg\Common.Drawing.Agg.csproj">
@@ -69,6 +75,16 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Images\Duplicate.icon" />
+    <EmbeddedResource Include="Images\Down.icon" />
+    <EmbeddedResource Include="Images\Delete.icon" />
+    <EmbeddedResource Include="Images\Cut.icon" />
+    <EmbeddedResource Include="Images\Copy.icon" />
+    <EmbeddedResource Include="Images\Open.icon" />
+    <EmbeddedResource Include="Images\Paste.icon" />
+    <EmbeddedResource Include="Images\Up.icon" />
+    <EmbeddedResource Include="Images\Save.icon" />
+    <EmbeddedResource Include="Images\New.icon" />
     <None Include="Resources\Designer\Strings.00.resource" />
     <None Include="Resources\Designer\Strings.en.resource" />
   </ItemGroup>
