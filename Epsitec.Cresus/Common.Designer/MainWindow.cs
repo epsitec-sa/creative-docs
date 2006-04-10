@@ -285,6 +285,8 @@ namespace Epsitec.Common.Designer
 			this.bookModules.Items.Insert(this.currentModule, mi.TabPage);
 
 			Viewer viewer = new Viewer(mi.Module);
+			viewer.SetParent(mi.TabPage);
+			viewer.Anchor = AnchorStyles.All;
 			mi.Module.Modifier.AttachViewer(viewer);
 			mi.Module.Modifier.ActiveViewer = viewer;
 		}
