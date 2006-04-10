@@ -14,16 +14,29 @@ namespace Epsitec.Common.Designer
 		{
 			this.module = module;
 
-			this.primaryCulture = new TextField(this);
-			this.primaryCulture.IsReadOnly = true;
-			this.primaryCulture.Width = 200;
-			this.primaryCulture.Anchor = AnchorStyles.Left | AnchorStyles.Top;
-			this.primaryCulture.Margins = new Margins(10, 0, 10, 0);
+			this.book = new PaneBook(this);
+			this.book.Dock = DockStyle.Fill;
 
-			this.secondaryCulture = new TextFieldCombo(this);
-			this.secondaryCulture.Width = 200;
-			this.secondaryCulture.Anchor = AnchorStyles.Left | AnchorStyles.Top;
-			this.secondaryCulture.Margins = new Margins(10+200+10, 0, 10, 0);
+			this.primaryPage = new PanePage();
+			this.primaryPage.PaneRelativeSize = 50;
+			this.primaryPage.PaneMinSize = 100;
+			this.book.Items.Add(this.primaryPage);
+
+			this.secondaryPage = new PanePage();
+			this.secondaryPage.PaneRelativeSize = 50;
+			this.secondaryPage.PaneMinSize = 100;
+			this.book.Items.Add(this.secondaryPage);
+
+			this.primaryCulture = new TextField(this.primaryPage);
+			this.primaryCulture.IsReadOnly = true;
+			this.primaryCulture.Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
+			this.primaryCulture.Margins = new Margins(10, 10, 10, 10);
+
+			this.secondaryCulture = new TextFieldCombo(this.secondaryPage);
+			this.secondaryCulture.IsReadOnly = true;
+			this.secondaryCulture.Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
+			this.secondaryCulture.Margins = new Margins(10, 10, 10, 10);
+			this.secondaryCulture.ComboClosed += new EventHandler(this.HandleSecondaryCultureComboClosed);
 
 			this.UpdateCultures();
 		}
@@ -37,30 +50,60 @@ namespace Epsitec.Common.Designer
 		{
 			ResourceBundleCollection bundles = this.module.Bundles;
 
-			ResourceBundle def = bundles[ResourceLevel.Default];
-			this.primaryCulture.Text = Misc.LongCulture(def.Culture.Name);
+			this.primaryBundle = bundles[ResourceLevel.Default];
+			this.primaryCulture.Text = Misc.LongCulture(this.primaryBundle.Culture.Name);
 
-			string first = "";
+			this.secondaryBundle = null;
 			this.secondaryCulture.Items.Clear();
 			for ( int b=0 ; b<bundles.Count ; b++ )
 			{
 				ResourceBundle bundle = bundles[b];
-				if ( bundle != def )
+				if ( bundle != this.primaryBundle )
 				{
-					string culture = Misc.LongCulture(bundle.Culture.Name);
-					this.secondaryCulture.Items.Add(culture);
-					if ( first == "" )
+					this.secondaryCulture.Items.Add(Misc.LongCulture(bundle.Culture.Name));
+					if ( this.secondaryBundle == null )
 					{
-						first = culture;
+						this.secondaryBundle = bundle;
 					}
 				}
 			}
-			this.secondaryCulture.Text = first;
+
+			if ( this.secondaryBundle == null )
+			{
+				this.secondaryCulture.Text = "";
+			}
+			else
+			{
+				this.secondaryCulture.Text = Misc.LongCulture(this.secondaryBundle.Culture.Name);
+			}
+		}
+
+
+		void HandleSecondaryCultureComboClosed(object sender)
+		{
+			//	Changement de la culture secondaire.
+			ResourceBundleCollection bundles = this.module.Bundles;
+
+			for ( int b=0 ; b<bundles.Count ; b++ )
+			{
+				ResourceBundle bundle = bundles[b];
+
+				if ( Misc.LongCulture(bundle.Culture.Name) == secondaryCulture.Text )
+				{
+					this.secondaryBundle = bundle;
+					break;
+				}
+			}
 		}
 
 
 		protected Module					module;
+		protected PaneBook					book;
+		protected PanePage					primaryPage;
+		protected PanePage					secondaryPage;
 		protected TextField					primaryCulture;
 		protected TextFieldCombo			secondaryCulture;
+		protected ResourceBundle			primaryBundle;
+		protected ResourceBundle			secondaryBundle;
 	}
 }
