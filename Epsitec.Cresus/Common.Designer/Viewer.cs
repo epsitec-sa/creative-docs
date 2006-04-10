@@ -38,7 +38,7 @@ namespace Epsitec.Common.Designer
 			ResourceBundleCollection bundles = this.module.Bundles;
 
 			ResourceBundle def = bundles[ResourceLevel.Default];
-			this.primaryCulture.Text = def.Culture.Name;
+			this.primaryCulture.Text = Misc.LongCulture(def.Culture.Name);
 
 			string first = "";
 			this.secondaryCulture.Items.Clear();
@@ -47,10 +47,11 @@ namespace Epsitec.Common.Designer
 				ResourceBundle bundle = bundles[b];
 				if ( bundle != def )
 				{
-					this.secondaryCulture.Items.Add(bundle.Culture.Name);
+					string culture = Misc.LongCulture(bundle.Culture.Name);
+					this.secondaryCulture.Items.Add(culture);
 					if ( first == "" )
 					{
-						first = bundle.Culture.Name;
+						first = culture;
 					}
 				}
 			}

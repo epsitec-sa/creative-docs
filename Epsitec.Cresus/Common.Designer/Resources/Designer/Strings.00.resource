@@ -30,4 +30,9 @@
   <data name="Misc.Extract">Extrait</data>
   <data name="Misc.ExtractOf">de</data>
 
+  <data name="Culture.fr">Français</data>
+  <data name="Culture.en">Anglais</data>
+  <data name="Culture.de">Allemand</data>
+  <data name="Culture.ch">Suisse</data>
+
 </bundle>
