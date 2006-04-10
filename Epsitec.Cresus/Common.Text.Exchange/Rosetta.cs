@@ -9,6 +9,109 @@ using System.Text;
 namespace Epsitec.Common.Text.Exchange
 {
 
+	#region class SpanStyle
+	class SpanStyle
+	{
+		public SpanStyle(string fontname, double fontsize, string fontcolor)
+		{
+			SetFontFamily (fontname);
+			SetFontSize (fontsize);
+			SetColor (fontcolor);
+		}
+		
+		public void ClearFontSize()
+		{
+		}
+
+		public void ClearFontFamily()
+		{
+		}
+
+		public void ClearColor()
+		{
+		}
+
+		public void Clear()
+		{
+			ClearFontSize ();
+			ClearFontFamily ();
+			ClearColor ();
+		}
+
+		public void SetFontSize(double size)
+		{
+			fontSize = size;
+		}
+
+		public void SetFontFamily(string family)
+		{
+			fontFamily = family;
+		}
+
+		public void SetColor(string color)
+		{
+			fontColor = color;
+		}
+
+		public void SetColor(int r, int g, int b)
+		{
+		}
+
+		public string ToString()
+		{
+			string result;
+
+			result = string.Format ("font-size:{0}pt;font-family:\"{1}\";color:{2}", fontSize, fontFamily, fontColor);
+
+			return result;
+		}
+
+		public static bool IsEqual(SpanStyle s1, SpanStyle s2)
+		{
+			if (s1 == null && s2 == null)
+			{
+				return true ;
+			}
+
+			if (s1 == null || s2 == null)
+			{
+				return false ;
+			}
+
+			return s1.fontSize == s2.fontSize &&
+				   s1.fontFamily == s2.fontFamily &&
+				   s1.fontColor == s2.fontColor;
+		}
+
+#if false
+		public bool Equals(SpanStyle style)
+		{
+			return style.fontSize == this.fontSize &&
+				   style.fontFamily == this.fontFamily &&
+				   style.fontColor == style.fontColor;
+		}
+
+		public static bool operator==(SpanStyle s1, SpanStyle s2)
+		{
+			if ((s1 == null && s2 != null) || (s1 != null && s2 == null))
+				return false;
+
+			return s1.Equals (s2);
+		}
+
+		public static bool operator!=(SpanStyle s1, SpanStyle s2)
+		{
+			return !s1.Equals (s2);
+		}
+#endif
+
+		private double fontSize;
+		private string fontFamily;
+		private string fontColor;
+
+	}
+	#endregion
+
 
 	public class MSClipboardHtmlHeader
 	{
@@ -155,7 +258,9 @@ namespace Epsitec.Common.Text.Exchange
 			tagStorageList.Add (HtmlTagType.Subscript, new TagStoreage (this, HtmlTagType.Subscript));
 			tagStorageList.Add (HtmlTagType.Superscript, new TagStoreage (this, HtmlTagType.Superscript));
 			tagStorageList.Add (HtmlTagType.Underlined, new TagStoreage (this, HtmlTagType.Underlined));
-
+#if USE_SPAN
+			tagStorageList.Add (HtmlTagType.Span, new TagStoreage (this, HtmlTagType.Span));
+#endif
 			this.mshtml = new MSClipboardHtmlHeader ();
 			this.output.AppendLine ("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">");
 			this.output.AppendLine ("<HTML><HEAD>") ;
@@ -230,11 +335,18 @@ namespace Epsitec.Common.Text.Exchange
 
 		public void AppendText(string thestring)
 		{
+#if USE_SPAN
+			TagStoreage ts = tagStorageList[HtmlTagType.Span];
+			ts.SetSpanStyle (new SpanStyle (this.fontFace, this.fontSize, this.fontColor));
+#endif
+			
 			foreach (System.Collections.Generic.KeyValuePair<HtmlTagType, TagStoreage> kv in this.tagStorageList)
 			{
 				kv.Value.ProcessIt ();
 			}
 	
+#if USE_SPAN
+#else
 			if (this.precedFontFace != this.fontFace)
 			{
 				if (this.precedFontFace.Length != 0)
@@ -279,7 +391,7 @@ namespace Epsitec.Common.Text.Exchange
 				}
 			}
 			this.precedfontColor = this.fontColor;			
-			
+#endif		
 
 			this.precedParagraphMode = this.paragraphMode;
 
@@ -437,6 +549,7 @@ namespace Epsitec.Common.Text.Exchange
 			HtmlTagWithParam tag = new HtmlTagWithParam (HtmlTagType.Paragraph, attributeName, attributeValue);
 
 			this.output.Append (tag.TagToString (HtmlTagMode.Open));
+			this.IncOpenTags (tag.GetHtmlTagType ());
 			this.openTagsStack.Push (tag);
 		}
 
@@ -452,17 +565,24 @@ namespace Epsitec.Common.Text.Exchange
 
 		static private string GetHtmlTag(string tagstring, HtmlTagMode tagMode)
 		{
-			return GetHtmlTag (tagstring, tagMode, null, null);
+			return GetHtmlTag (tagstring, tagMode, null, null, false);
 		}
 
-		static private string GetHtmlTag(string tagstring, HtmlTagMode tagMode, string parametername, string parametervalue)
+		static private string GetHtmlTag(string tagstring, HtmlTagMode tagMode, string parametername, string parametervalue, bool useapostroph)
 		{
 			string retval = "";
 			string tagcontent;
 
 			if (parametername != null)
 			{
-				tagcontent = string.Format ("{0} {1}=\"{2}\"", tagstring, parametername, parametervalue);
+				if (useapostroph)
+				{
+					tagcontent = string.Format ("{0} {1}='{2}'", tagstring, parametername, parametervalue);
+				}
+				else
+				{
+					tagcontent = string.Format ("{0} {1}=\"{2}\"", tagstring, parametername, parametervalue);
+				}
 			}
 			else
 			{
@@ -483,17 +603,33 @@ namespace Epsitec.Common.Text.Exchange
 			return retval;
 		}
 
-		private void ProcessTag(ref bool precedent, ref bool current, HtmlTagType tag)
+		private void ProcessTag(ref bool precedent, ref bool current, ref SpanStyle precdingStyle, ref SpanStyle currentStyle, HtmlTagType tag)
 		{
-			if (precedent && !current)
+			if (precdingStyle == null && currentStyle == null)
 			{
-				this.CloseTag (tag);
+				if (precedent && !current)
+				{
+					this.CloseTag (tag);
+				}
+				if (!precedent && current)
+				{
+					this.OpenTag (tag);
+				}
+				precedent = current;
 			}
-			if (!precedent && current)
+			else
 			{
-				this.OpenTag (tag);
+				if (!SpanStyle.IsEqual (precdingStyle, currentStyle))
+				{
+					if (this.TagIsOnStack(tag))
+					{
+						this.CloseTag (tag);
+					}
+					this.OpenTag (tag, "style", string.Concat("'",currentStyle.ToString (), "'"));
+				}
+
+				precdingStyle = currentStyle;
 			}
-			precedent = current;
 		}
 
 		private class TagStoreage
@@ -506,7 +642,13 @@ namespace Epsitec.Common.Text.Exchange
 
 			public void ProcessIt()
 			{
-				this.htmltext.ProcessTag (ref this.precedingstate, ref this.currentstate, this.tag);
+				this.htmltext.ProcessTag (ref this.precedingstate, ref this.currentstate, 
+					ref this.precedingspanstyle, ref this.currentspanstyle, this.tag);
+			}
+
+			public void SetSpanStyle(SpanStyle st)
+			{
+				this.currentspanstyle = st;
 			}
 
 			public void Clear()
@@ -519,13 +661,50 @@ namespace Epsitec.Common.Text.Exchange
 				currentstate = setit;
 			}
 
+
+			public  int nbopen;
 			private bool precedingstate;
 			private bool currentstate;
+			private SpanStyle precedingspanstyle;
+			private SpanStyle currentspanstyle;
 			private HtmlTagType tag;
 			private HtmlText htmltext;
 
 			//private System.Collections.Generic.Dictionary 
 		}
+
+		private void IncOpenTags(HtmlTagType tag)
+		{
+			TagStoreage ts;
+
+			if (tagStorageList.TryGetValue (tag, out ts))
+			{
+				tagStorageList[tag].nbopen++;
+			}
+		}
+
+		private void DecOpenTags(HtmlTagType tag)
+		{
+			TagStoreage ts ;
+
+			if (tagStorageList.TryGetValue (tag, out ts))
+			{
+				ts.nbopen--;
+			}
+		}
+
+		private int NbOfOpenTags(HtmlTagType tag)
+		{
+			TagStoreage ts ;
+
+			if (tagStorageList.TryGetValue (tag, out ts))
+			{
+				return ts.nbopen;
+			}
+
+			return 0;
+		}
+
 
 		private System.Collections.Generic.Dictionary<HtmlTagType, TagStoreage> tagStorageList = 
 			new System.Collections.Generic.Dictionary<HtmlTagType, TagStoreage> ();
@@ -572,6 +751,16 @@ namespace Epsitec.Common.Text.Exchange
 			line = output.ToString ();
 		}
 
+		private bool TagIsOnStack(HtmlTagType tagtype)
+		{
+			foreach (HtmlTagWithParam t in this.openTagsStack)
+			{
+				if (t.GetHtmlTagType () == tagtype)
+					return true;
+			}
+			return false;
+		}
+
 		private void CloseTag(HtmlTagType tagtoclose)
 		{
 			HtmlTagWithParam tag = new HtmlTagWithParam (tagtoclose, null, null);
@@ -609,6 +798,7 @@ namespace Epsitec.Common.Text.Exchange
 					if ((closeAlsoParagraphs || tag.GetHtmlTagType () != HtmlTagType.Paragraph) && tagonstack.IsSameTag (tag))
 					{
 						this.output.Append (tag.TagToString (HtmlTagMode.Close));
+						this.DecOpenTags (tag.GetHtmlTagType ());
 						this.tagsToClose.RemoveAt (i);
 						i--;
 						this.openTagsStack.Pop ();
@@ -623,13 +813,14 @@ namespace Epsitec.Common.Text.Exchange
 			this.pendingTags.Clear ();
 			while (this.tagsToClose.Count > 0)
 			{
-				CloseTagsIfPossible (closeAlsoParagraphs);
+				this.CloseTagsIfPossible (closeAlsoParagraphs);
 
 				if (this.tagsToClose.Count > 0)
 				{
 					HtmlTagWithParam topTag = this.openTagsStack.Pop ();
 					pendingTags.Push (topTag);
 					this.output.Append (topTag.TagToString (HtmlTagMode.Close));
+					this.DecOpenTags (topTag.GetHtmlTagType ());
 				}
 			}
 
@@ -643,6 +834,7 @@ namespace Epsitec.Common.Text.Exchange
 				HtmlTagWithParam tag;
 				tag = this.pendingTags.Pop ();
 				this.output.Append (tag.TagToString (HtmlTagMode.Open));
+				this.IncOpenTags (tag.GetHtmlTagType ());
 				this.openTagsStack.Push (tag);
 			}
 			this.pendingTags.Clear ();
@@ -656,6 +848,7 @@ namespace Epsitec.Common.Text.Exchange
 				HtmlTagWithParam tag;
 				tag = openTagsStack.Pop ();
 				this.output.Append (tag.TagToString (HtmlTagMode.Close));
+				this.DecOpenTags (tag.GetHtmlTagType ());
 			}
 		}
 
@@ -667,6 +860,7 @@ namespace Epsitec.Common.Text.Exchange
 			{
 				string tagString = tag.TagToString (HtmlTagMode.Open);
 				this.output.Append (tagString);
+				this.IncOpenTags (tag.GetHtmlTagType ());
 				this.openTagsStack.Push (tag);
 			}
 
@@ -684,6 +878,10 @@ namespace Epsitec.Common.Text.Exchange
 			Paragraph,
 			Superscript,
 			Subscript
+#if USE_SPAN
+				,
+			Span
+#endif
 		}
 
 		private enum HtmlTagMode
@@ -721,16 +919,19 @@ namespace Epsitec.Common.Text.Exchange
 						retval = HtmlText.GetHtmlTag ("s", tagmode);
 						break;
 					case HtmlTagType.Paragraph:
-						retval = HtmlText.GetHtmlTag ("p", tagmode, this.parametername, this.parametervalue);
+						retval = HtmlText.GetHtmlTag ("p", tagmode, this.parametername, this.parametervalue, false);
 						break;
 					case HtmlTagType.Font:
-						retval = HtmlText.GetHtmlTag ("font", tagmode, this.parametername, this.parametervalue);
+						retval = HtmlText.GetHtmlTag ("font", tagmode, this.parametername, this.parametervalue, false);
 						break;
 					case HtmlTagType.Subscript:
 						retval = HtmlText.GetHtmlTag ("sub", tagmode);
 						break;
 					case HtmlTagType.Superscript:
 						retval = HtmlText.GetHtmlTag ("sup", tagmode);
+						break;
+					case HtmlTagType.Span:
+						retval = HtmlText.GetHtmlTag ("span", tagmode, this.parametername, this.parametervalue, true);
 						break;
 				}
 
@@ -881,12 +1082,16 @@ namespace Epsitec.Common.Text.Exchange
 					htmlText.SetUnderlined (textWrapper.Active.IsUnderlineDefined);
 					htmlText.SetStrikeout (textWrapper.Active.IsStrikeoutDefined);
 
+					SimpleXScript xscript = GetSimpleXScript (textWrapper);
+					htmlText.SetSimpleXScript (xscript);
+
 					htmlText.SetFontFace (textWrapper.Active.FontFace);
 					htmlText.SetFontSize (textWrapper.Active.IsFontSizeDefined ? textWrapper.Active.FontSize : 0);
 					htmlText.SetFontColor (textWrapper.Active.Color);
 
-					SimpleXScript xscript = GetSimpleXScript (textWrapper);
-					htmlText.SetSimpleXScript (xscript);
+#if USE_SPAN
+					//htmlText.ProcessSpan ();
+#endif
 
 					htmlText.AppendText (runText);
 				}
