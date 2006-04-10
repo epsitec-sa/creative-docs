@@ -39,6 +39,7 @@
     <Compile Include="Misc.cs" />
     <Compile Include="Modifier.cs" />
     <Compile Include="Module.cs" />
+    <Compile Include="MyWidgets\StringArray.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Res.cs" />
     <Compile Include="Ribbons\Abstract.cs" />
