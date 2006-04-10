@@ -24,14 +24,17 @@ namespace Epsitec.Common.Text.Exchange
 		
 		public void ClearFontSize()
 		{
+			this.fontSize = 0;
 		}
 
 		public void ClearFontFamily()
 		{
+			this.fontFamily = "";
 		}
 
 		public void ClearColor()
 		{
+			this.fontColor = "";
 		}
 
 		public void Clear()
@@ -406,6 +409,7 @@ namespace Epsitec.Common.Text.Exchange
 
 			this.TransformSpecialHtmlChars (ref thestring);
 			this.output.Append (thestring);
+			this.paragraphStarted = false;
 		}
 
 		public void SetSimpleXScript(Rosetta.SimpleXScript xscript)
@@ -552,12 +556,19 @@ namespace Epsitec.Common.Text.Exchange
 			HtmlTagWithParam tag = new HtmlTagWithParam (HtmlTagType.Paragraph, attributeName, attributeValue);
 
 			this.output.Append (tag.TagToString (HtmlTagMode.Open));
+			this.paragraphStarted = true;
 			this.IncOpenTags (tag.GetHtmlTagType ());
 			this.openTagsStack.Push (tag);
 		}
 
 		public void CloseParagraph(Wrappers.JustificationMode JustificationMode)
 		{
+			if (this.paragraphStarted)
+			{
+				// on est au début d'un paragraphe, il faut ajouter un NBSP, sinon le paragraphe vide est ignéroi
+				this.output.Append (new string((char)0xA0, 1));
+				//this.output.Append ("xxxx");
+			}
 			this.CloseOpenTagsOnStack (true);
 			this.ClearTags ();
 			this.output.Append ("\r\n");
@@ -656,7 +667,21 @@ namespace Epsitec.Common.Text.Exchange
 
 			public void Clear()
 			{
+#if false
 				this.precedingstate = this.currentstate = false ;
+				if (this.precedingspanstyle != null)
+				{
+					this.precedingspanstyle.Clear ();
+				}
+
+				if (this.currentspanstyle != null)
+				{
+					this.currentspanstyle.Clear ();
+				}
+#else
+				this.precedingspanstyle = null;
+				this.currentspanstyle = null;
+#endif
 			}
 
 			public void Set(bool setit)
@@ -961,6 +986,7 @@ namespace Epsitec.Common.Text.Exchange
 		private Wrappers.JustificationMode paragraphMode = Wrappers.JustificationMode.Unknown;
 		private Wrappers.JustificationMode precedParagraphMode = Wrappers.JustificationMode.Unknown;
 		private bool paragraphNotModeSet = true;
+		private bool paragraphStarted = false;
 
 		private string fontColor = "";
 		private string precedfontColor = "";
@@ -1019,7 +1045,7 @@ namespace Epsitec.Common.Text.Exchange
 			Normalscript
 		} ;
 
-		static SimpleXScript GetSimpleXScript(Wrappers.TextWrapper wrapper)
+		static private SimpleXScript GetSimpleXScript(Wrappers.TextWrapper wrapper)
 		{
 
 			if (wrapper.Active.IsXscriptDefined)
@@ -1036,6 +1062,8 @@ namespace Epsitec.Common.Text.Exchange
 				return SimpleXScript.Normalscript;
 			}
 		}
+
+
 
 		public static void TestCode(TextStory story, TextNavigator navigator)
 		{
@@ -1124,8 +1152,7 @@ namespace Epsitec.Common.Text.Exchange
 
 			System.Diagnostics.Debug.WriteLine ("Code de test 1 appelé.");
 		}
-
-
+		
 		#region TestCode1
 		public static void TestCode1(TextStory story, TextNavigator navigator)
 		{
