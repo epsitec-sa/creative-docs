@@ -38,6 +38,8 @@ namespace Epsitec.Common.Designer
 			this.secondaryCulture.Margins = new Margins(10, 10, 10, 10);
 			this.secondaryCulture.ComboClosed += new EventHandler(this.HandleSecondaryCultureComboClosed);
 
+			this.primaryArray = new MyWidgets.StringArray(this.primaryPage);
+
 			this.UpdateCultures();
 		}
 
@@ -105,5 +107,6 @@ namespace Epsitec.Common.Designer
 		protected TextFieldCombo			secondaryCulture;
 		protected ResourceBundle			primaryBundle;
 		protected ResourceBundle			secondaryBundle;
+		protected MyWidgets.StringArray		primaryArray;
 	}
 }
