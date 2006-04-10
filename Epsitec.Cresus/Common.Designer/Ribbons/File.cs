@@ -14,9 +14,10 @@ namespace Epsitec.Common.Designer.Ribbons
 		{
 			this.title.Text = Res.Strings.Action.FileMain;
 
-			this.buttonNew       = this.CreateIconButton("New", "Large");
-			this.buttonOpen      = this.CreateIconButton("Open", "Large");
-			this.buttonSave      = this.CreateIconButton("Save", "Large");
+			this.buttonOpen   = this.CreateIconButton("Open", "Large");
+			this.buttonSave   = this.CreateIconButton("Save", "Large");
+			this.buttonNew    = this.CreateIconButton("New");
+			this.buttonSaveAs = this.CreateIconButton("SaveAs");
 			
 			this.UpdateClientGeometry();
 		}
@@ -35,7 +36,7 @@ namespace Epsitec.Common.Designer.Ribbons
 			//	Retourne la largeur standard.
 			get
 			{
-				return 8 + 22*1.5*3 + 8;
+				return 8 + 22*1.5*2 + 4 + 22*1;
 			}
 		}
 
@@ -54,16 +55,27 @@ namespace Epsitec.Common.Designer.Ribbons
 			rect.Width  = dx*1.5;
 			rect.Height = dy*1.5;
 			rect.Offset(0, dy*0.5);
-			this.buttonNew.Bounds = rect;
-			rect.Offset(dx*1.5, 0);
 			this.buttonOpen.Bounds = rect;
 			rect.Offset(dx*1.5, 0);
 			this.buttonSave.Bounds = rect;
+
+			rect = this.UsefulZone;
+			rect.Width  = dx;
+			rect.Height = dy;
+			rect.Offset(dx*1.5*2+4, dy+5);
+			this.buttonNew.Bounds = rect;
+
+			rect = this.UsefulZone;
+			rect.Width  = dx;
+			rect.Height = dy;
+			rect.Offset(dx*1.5*2+4, 0);
+			this.buttonSaveAs.Bounds = rect;
 		}
 
 
-		protected IconButton				buttonNew;
 		protected IconButton				buttonOpen;
 		protected IconButton				buttonSave;
+		protected IconButton				buttonNew;
+		protected IconButton				buttonSaveAs;
 	}
 }

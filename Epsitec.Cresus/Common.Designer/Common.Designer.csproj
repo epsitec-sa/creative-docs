@@ -85,6 +85,7 @@
     <EmbeddedResource Include="Images\Up.icon" />
     <EmbeddedResource Include="Images\Save.icon" />
     <EmbeddedResource Include="Images\New.icon" />
+    <EmbeddedResource Include="Images\SaveAs.icon" />
     <None Include="Resources\Designer\Strings.00.resource" />
     <None Include="Resources\Designer\Strings.en.resource" />
   </ItemGroup>
