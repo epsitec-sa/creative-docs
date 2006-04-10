@@ -57,6 +57,11 @@ namespace Epsitec.Common.Designer
 				this.ribbonMainButton.Pressed += new MessageEventHandler(this.HandleRibbonPressed);
 				this.hToolBar.Items.Add(this.ribbonMainButton);
 
+				this.ribbonOperButton = new RibbonButton("", "Opérations");
+				this.ribbonOperButton.Size = this.ribbonOperButton.RequiredSize;
+				this.ribbonOperButton.Pressed += new MessageEventHandler(this.HandleRibbonPressed);
+				this.hToolBar.Items.Add(this.ribbonOperButton);
+
 				this.ribbonMain = new RibbonContainer(this.window.Root);
 				this.ribbonMain.Name = "Main";
 				this.ribbonMain.Height = this.ribbonHeight;
@@ -66,16 +71,15 @@ namespace Epsitec.Common.Designer
 				this.ribbonMain.Items.Add(new Ribbons.File());
 				this.ribbonMain.Items.Add(new Ribbons.Clipboard());
 
-				//	Bouton de fermeture.
-				Button buttonClose = new Button(this.window.Root);
-				buttonClose.PreferredWidth = 75;
-				buttonClose.Text = "Close";
-				buttonClose.ButtonStyle = ButtonStyle.DefaultAccept;
-				buttonClose.Anchor = AnchorStyles.BottomLeft;
-				buttonClose.Margins = new Margins(10, 0, 0, 10);
-				buttonClose.Clicked += new MessageEventHandler(this.HandleAboutButtonCloseClicked);
-				buttonClose.TabIndex = 1000;
-				buttonClose.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+				this.ribbonOper = new RibbonContainer(this.window.Root);
+				this.ribbonOper.Name = "Oper";
+				this.ribbonOper.Height = this.ribbonHeight;
+				this.ribbonOper.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top;
+				this.ribbonOper.Margins = new Margins(0, 0, this.hToolBar.Height, 0);
+				this.ribbonOper.Visibility = true;
+
+				this.ribbonActive = this.ribbonMain;
+				this.ActiveRibbon(this.ribbonActive);
 			}
 
 			string[] modules = Resources.GetModuleNames(this.resourcePrefix);
@@ -163,8 +167,10 @@ namespace Epsitec.Common.Designer
 
 			//?this.SuspendLayout();
 			this.ribbonMain.Visibility = (this.ribbonMain == this.ribbonActive);
+			this.ribbonOper.Visibility = (this.ribbonOper == this.ribbonActive);
 
 			this.ribbonMainButton.ActiveState = (this.ribbonMain == this.ribbonActive) ? ActiveState.Yes : ActiveState.No;
+			this.ribbonOperButton.ActiveState = (this.ribbonOper == this.ribbonActive) ? ActiveState.Yes : ActiveState.No;
 
 			double h = this.RibbonHeight;
 			//?this.vToolBar.Margins = new Margins(0, 0, this.hToolBar.Height+h, this.info.Height);
@@ -189,6 +195,7 @@ namespace Epsitec.Common.Designer
 			RibbonButton button = sender as RibbonButton;
 			RibbonContainer ribbon = null;
 			if ( button == this.ribbonMainButton )  ribbon = this.ribbonMain;
+			if ( button == this.ribbonOperButton )  ribbon = this.ribbonOper;
 			if ( ribbon == null )  return;
 
 			this.ActiveRibbon(ribbon.IsVisible ? null : ribbon);
@@ -199,17 +206,14 @@ namespace Epsitec.Common.Designer
 			this.window.Hide ();
 		}
 
-		private void HandleAboutButtonCloseClicked(object sender, MessageEventArgs e)
-		{
-			this.window.Hide ();
-		}
-
 
 		protected Window						window;
 		protected CommandDispatcher				commandDispatcher;
 		protected HToolBar						hToolBar;
 		protected RibbonButton					ribbonMainButton;
+		protected RibbonButton					ribbonOperButton;
 		protected RibbonContainer				ribbonMain;
+		protected RibbonContainer				ribbonOper;
 		protected RibbonContainer				ribbonActive;
 
 		protected string						resourcePrefix;
