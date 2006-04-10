@@ -13,6 +13,9 @@ namespace Epsitec.Common.Designer
 		static MainWindow()
 		{
 			Res.Initialise(typeof(MainWindow), "Designer");
+
+			ImageProvider.Default.EnableLongLifeCache = true;
+			ImageProvider.Default.PrefillManifestIconCache();
 		}
 
 		public MainWindow()
@@ -38,6 +41,30 @@ namespace Epsitec.Common.Designer
 				this.window.Text = "Ressources Editor";
 				this.window.PreventAutoClose = true;
 				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowAboutCloseClicked);
+
+#if false
+				this.commandDispatcher = new CommandDispatcher("ResDesigner", CommandDispatcherLevel.Primary);
+				this.commandDispatcher.RegisterController(this);
+				this.commandDispatcher.Focus();
+				this.window.AttachCommandDispatcher(this.commandDispatcher);
+#endif
+
+				this.hToolBar = new HToolBar(this.window.Root);
+				this.hToolBar.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top;
+
+				this.ribbonMainButton = new RibbonButton("", "Principal");
+				this.ribbonMainButton.Size = this.ribbonMainButton.RequiredSize;
+				this.ribbonMainButton.Pressed += new MessageEventHandler(this.HandleRibbonPressed);
+				this.hToolBar.Items.Add(this.ribbonMainButton);
+
+				this.ribbonMain = new RibbonContainer(this.window.Root);
+				this.ribbonMain.Name = "Main";
+				this.ribbonMain.Height = this.ribbonHeight;
+				this.ribbonMain.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top;
+				this.ribbonMain.Margins = new Margins(0, 0, this.hToolBar.Height, 0);
+				this.ribbonMain.Visibility = true;
+				this.ribbonMain.Items.Add(new Ribbons.File());
+				this.ribbonMain.Items.Add(new Ribbons.Clipboard());
 
 				//	Bouton de fermeture.
 				Button buttonClose = new Button(this.window.Root);
@@ -129,6 +156,44 @@ namespace Epsitec.Common.Designer
 		}
 
 
+		protected void ActiveRibbon(RibbonContainer active)
+		{
+			//	Active un ruban.
+			this.ribbonActive = active;
+
+			//?this.SuspendLayout();
+			this.ribbonMain.Visibility = (this.ribbonMain == this.ribbonActive);
+
+			this.ribbonMainButton.ActiveState = (this.ribbonMain == this.ribbonActive) ? ActiveState.Yes : ActiveState.No;
+
+			double h = this.RibbonHeight;
+			//?this.vToolBar.Margins = new Margins(0, 0, this.hToolBar.Height+h, this.info.Height);
+			//?this.bookDocuments.Margins = new Margins(this.vToolBar.Width+1, this.panelsWidth+2, this.hToolBar.Height+h+1, this.info.Height+1);
+
+			//?this.ResumeLayout();
+		}
+
+		protected double RibbonHeight
+		{
+			//	Retourne la hauteur utilisée par les rubans.
+			get
+			{
+				return (this.ribbonActive == null) ? 0 : this.ribbonHeight;
+			}
+		}
+
+		
+		private void HandleRibbonPressed(object sender, MessageEventArgs e)
+		{
+			//	Le bouton pour activer/désactiver un ruban a été cliqué.
+			RibbonButton button = sender as RibbonButton;
+			RibbonContainer ribbon = null;
+			if ( button == this.ribbonMainButton )  ribbon = this.ribbonMain;
+			if ( ribbon == null )  return;
+
+			this.ActiveRibbon(ribbon.IsVisible ? null : ribbon);
+		}
+
 		private void HandleWindowAboutCloseClicked(object sender)
 		{
 			this.window.Hide ();
@@ -141,10 +206,14 @@ namespace Epsitec.Common.Designer
 
 
 		protected Window						window;
+		protected CommandDispatcher				commandDispatcher;
 		protected HToolBar						hToolBar;
-		//?protected Ribbons.RibbonButton			ribbonMainButton;
+		protected RibbonButton					ribbonMainButton;
+		protected RibbonContainer				ribbonMain;
+		protected RibbonContainer				ribbonActive;
 
 		protected string						resourcePrefix;
 		protected System.Collections.ArrayList	moduleList;
+		protected double						ribbonHeight = 71;
 	}
 }
