@@ -39,6 +39,8 @@ namespace Epsitec.Common.Designer
 			this.secondaryCulture.ComboClosed += new EventHandler(this.HandleSecondaryCultureComboClosed);
 
 			this.primaryArray = new MyWidgets.StringArray(this.primaryPage);
+			this.primaryArray.Anchor = AnchorStyles.All;
+			this.primaryArray.Margins = new Margins(10, 10, 40, 10);
 
 			this.UpdateCultures();
 		}
