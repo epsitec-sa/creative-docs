@@ -99,6 +99,17 @@ namespace Epsitec.Common.Designer.MyWidgets
 					this.stringList[i].Paint(rect.BottomLeft, graphics);
 				}
 
+				if ( i == 0 )
+				{
+					graphics.AddLine(rect.Left, rect.Top+0.5, rect.Right, rect.Top+0.5);
+				}
+
+				graphics.AddLine(rect.Left+0.5, rect.Bottom, rect.Left+0.5, rect.Top);
+				graphics.AddLine(rect.Right-0.5, rect.Bottom, rect.Right-0.5, rect.Top);
+				graphics.AddLine(rect.Left, rect.Bottom+0.5, rect.Right, rect.Bottom+0.5);
+
+				graphics.RenderSolid(Color.FromBrightness(0));
+
 				rect.Offset(0, -this.lineHeight);
 			}
 		}
