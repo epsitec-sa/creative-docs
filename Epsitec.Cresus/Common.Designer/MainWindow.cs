@@ -43,7 +43,7 @@ namespace Epsitec.Common.Designer
 				//?this.window.Owner = parent;
 				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowAboutCloseClicked);
 
-#if false
+#if true
 				this.commandDispatcher = new CommandDispatcher("ResDesigner", CommandDispatcherLevel.Primary);
 				//?this.commandDispatcher.RegisterController(this.window.Root);
 				this.commandDispatcher.RegisterController(this);
@@ -55,6 +55,8 @@ namespace Epsitec.Common.Designer
 				//?this.window.AttachCommandDispatcher(this.commandDispatcher);
 				//?this.window.Root.AttachCommandDispatcher(this.commandDispatcher);
 #endif
+
+				this.InitCommands();
 
 				this.hToolBar = new HToolBar(this.window.Root);
 				this.hToolBar.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top;
@@ -187,6 +189,39 @@ namespace Epsitec.Common.Designer
 		}
 
 
+		#region Commands manager
+		[Command ("Close")]
+		void CommandClose(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			//?if ( !this.AutoSave(dispatcher) )  return;
+			this.CloseModule();
+		}
+
+		protected void InitCommands()
+		{
+			this.newState = this.CreateCommandState("New", KeyCode.ModifierControl|KeyCode.AlphaN);
+			this.openState = this.CreateCommandState("Open", KeyCode.ModifierControl|KeyCode.AlphaO);
+			this.saveState = this.CreateCommandState("Save", KeyCode.ModifierControl|KeyCode.AlphaS);
+			this.saveAsState = this.CreateCommandState("SaveAs");
+			this.closeState = this.CreateCommandState("Close", KeyCode.ModifierControl|KeyCode.FuncF4);
+			this.cutState = this.CreateCommandState("Cut", KeyCode.ModifierControl|KeyCode.AlphaX);
+			this.copyState = this.CreateCommandState("Copy", KeyCode.ModifierControl|KeyCode.AlphaC);
+			this.pasteState = this.CreateCommandState("Paste", KeyCode.ModifierControl|KeyCode.AlphaV);
+		}
+
+		protected CommandState CreateCommandState(string command, params Widgets.Shortcut[] shortcuts)
+		{
+			//	Crée un nouveau CommandState.
+			CommandState cs = new CommandState(command, this.commandDispatcher, shortcuts);
+
+			cs.IconName    = command;
+			cs.LongCaption = Res.Strings.GetString("Action."+command);
+
+			return cs;
+		}
+		#endregion
+
+
 		#region Modules manager
 		protected void CreateModuleLayout()
 		{
@@ -271,6 +306,34 @@ namespace Epsitec.Common.Designer
 			{
 			}
 		}
+
+		protected void CloseModule()
+		{
+			//	Ferme le module courant.
+			int rank = this.currentModule;
+			if ( rank < 0 )  return;
+
+			ModuleInfo mi = this.CurrentModuleInfo;
+			this.currentModule = -1;
+			this.moduleInfoList.RemoveAt(rank);
+			this.ignoreChange = true;
+			this.bookModules.Items.RemoveAt(rank);
+			this.ignoreChange = false;
+			mi.Module.Dispose();
+			mi.Dispose();
+
+			if ( rank >= this.bookModules.PageCount )
+			{
+				rank = this.bookModules.PageCount-1;
+			}
+			this.UseModule(rank);
+			//?this.UpdateCloseCommand();
+
+			if ( this.CurrentModule == null )
+			{
+				this.ActiveRibbon(this.ribbonMain);
+			}
+		}
 		#endregion
 
 
@@ -352,5 +415,14 @@ namespace Epsitec.Common.Designer
 		protected int							currentModule = -1;
 		protected double						ribbonHeight = 71;
 		protected bool							ignoreChange = false;
+
+		protected CommandState					newState;
+		protected CommandState					openState;
+		protected CommandState					saveState;
+		protected CommandState					saveAsState;
+		protected CommandState					closeState;
+		protected CommandState					cutState;
+		protected CommandState					copyState;
+		protected CommandState					pasteState;
 	}
 }

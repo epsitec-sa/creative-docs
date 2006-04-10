@@ -16,6 +16,10 @@ namespace Epsitec.Common.Designer
 			this.attachViewers = new System.Collections.ArrayList();
 		}
 
+		public void Dispose()
+		{
+		}
+
 
 		#region Viewers
 		public Viewer ActiveViewer

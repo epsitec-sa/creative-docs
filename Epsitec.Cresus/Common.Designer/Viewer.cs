@@ -15,6 +15,10 @@ namespace Epsitec.Common.Designer
 			this.module = module;
 		}
 
+		public void Dispose()
+		{
+		}
+
 
 		protected Module					module;
 	}

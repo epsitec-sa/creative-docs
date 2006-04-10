@@ -24,6 +24,12 @@ namespace Epsitec.Common.Designer
 			this.modifier = new Modifier(this);
 		}
 
+		public void Dispose()
+		{
+			this.modifier.Dispose();
+		}
+
+
 		public Modifier Modifier
 		{
 			get
