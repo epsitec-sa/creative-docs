@@ -7,7 +7,7 @@ namespace Epsitec.Common.Document.Ribbons
 	/// <summary>
 	/// La classe RibbonContainer permet de réaliser des rubans horizontaux.
 	/// </summary>
-	public class RibbonContainer : AbstractToolBar
+	public class RibbonContainer : Common.Widgets.RibbonContainer
 	{
 		public RibbonContainer()
 		{
@@ -18,32 +18,6 @@ namespace Epsitec.Common.Document.Ribbons
 			this.SetEmbedder(embedder);
 		}
 
-
-		public override double DefaultHeight
-		{
-			//	Retourne la hauteur standard d'une barre.
-			get
-			{
-				return 66;
-			}
-		}
-		
-		protected double LabelHeight
-		{
-			//	Retourne la hauteur pour le label supérieur.
-			get
-			{
-				return 14;
-			}
-		}
-
-		public override DockStyle DefaultIconDockStyle
-		{
-			get
-			{
-				return DockStyle.Left;
-			}
-		}
 
 		public void NotifyChanged(string changed)
 		{
@@ -79,15 +53,6 @@ namespace Epsitec.Common.Document.Ribbons
 				if ( ribbon == null )  continue;
 				ribbon.SetDocument(type, install, debug, gs, document);
 			}
-		}
-
-		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
-		{
-			IAdorner adorner = Epsitec.Common.Widgets.Adorners.Factory.Active;
-
-			Rectangle rect = this.Client.Bounds;
-			WidgetState state = this.PaintState;
-			adorner.PaintRibbonTabBackground(graphics, rect, this.LabelHeight, state);
 		}
 	}
 }

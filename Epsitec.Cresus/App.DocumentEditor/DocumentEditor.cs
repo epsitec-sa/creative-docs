@@ -680,22 +680,22 @@ namespace Epsitec.App.DocumentEditor
 			}
 #endif
 
-			this.ribbonMainButton = new Ribbons.RibbonButton("", Res.Strings.Ribbon.Main);
+			this.ribbonMainButton = new RibbonButton("", Res.Strings.Ribbon.Main);
 			this.ribbonMainButton.Size = this.ribbonMainButton.RequiredSize;
 			this.ribbonMainButton.Pressed += new MessageEventHandler (this.HandleRibbonPressed);
 			this.hToolBar.Items.Add(this.ribbonMainButton);
 
-			this.ribbonGeomButton = new Ribbons.RibbonButton("", Res.Strings.Ribbon.Geom);
+			this.ribbonGeomButton = new RibbonButton("", Res.Strings.Ribbon.Geom);
 			this.ribbonGeomButton.Size = this.ribbonGeomButton.RequiredSize;
 			this.ribbonGeomButton.Pressed += new MessageEventHandler (this.HandleRibbonPressed);
 			this.hToolBar.Items.Add(this.ribbonGeomButton);
 
-			this.ribbonOperButton = new Ribbons.RibbonButton("", Res.Strings.Ribbon.Oper);
+			this.ribbonOperButton = new RibbonButton("", Res.Strings.Ribbon.Oper);
 			this.ribbonOperButton.Size = this.ribbonOperButton.RequiredSize;
 			this.ribbonOperButton.Pressed += new MessageEventHandler (this.HandleRibbonPressed);
 			this.hToolBar.Items.Add(this.ribbonOperButton);
 
-			this.ribbonTextButton = new Ribbons.RibbonButton("", Res.Strings.Ribbon.Text);
+			this.ribbonTextButton = new RibbonButton("", Res.Strings.Ribbon.Text);
 			this.ribbonTextButton.Size = this.ribbonTextButton.RequiredSize;
 			this.ribbonTextButton.Pressed += new MessageEventHandler (this.HandleRibbonPressed);
 			this.hToolBar.Items.Add(this.ribbonTextButton);
@@ -877,7 +877,7 @@ namespace Epsitec.App.DocumentEditor
 			//	Supprime tous les IconButtons.
 			foreach ( Widget widget in this.hToolBar.Children.Widgets )
 			{
-				if ( widget is Ribbons.RibbonButton )  continue;
+				if ( widget is RibbonButton )  continue;
 				widget.Dispose();
 			}
 
@@ -1327,7 +1327,7 @@ namespace Epsitec.App.DocumentEditor
 		private void HandleRibbonPressed(object sender, MessageEventArgs e)
 		{
 			//	Le bouton pour activer/désactiver un ruban a été cliqué.
-			Ribbons.RibbonButton button = sender as Ribbons.RibbonButton;
+			RibbonButton button = sender as RibbonButton;
 			Ribbons.RibbonContainer ribbon = null;
 			if ( button == this.ribbonMainButton )  ribbon = this.ribbonMain;
 			if ( button == this.ribbonGeomButton )  ribbon = this.ribbonGeom;
@@ -5589,10 +5589,10 @@ namespace Epsitec.App.DocumentEditor
 		protected HMenu							menu;
 		protected VMenu							fileMenu;
 		protected HToolBar						hToolBar;
-		protected Ribbons.RibbonButton			ribbonMainButton;
-		protected Ribbons.RibbonButton			ribbonGeomButton;
-		protected Ribbons.RibbonButton			ribbonOperButton;
-		protected Ribbons.RibbonButton			ribbonTextButton;
+		protected RibbonButton					ribbonMainButton;
+		protected RibbonButton					ribbonGeomButton;
+		protected RibbonButton					ribbonOperButton;
+		protected RibbonButton					ribbonTextButton;
 		protected Ribbons.RibbonContainer		ribbonMain;
 		protected Ribbons.RibbonContainer		ribbonGeom;
 		protected Ribbons.RibbonContainer		ribbonOper;
