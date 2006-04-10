@@ -5,6 +5,9 @@
 
 using System.Text;
 
+// Il faudrait trouver comment accéder à Epsitec.Common.Document.Modifier.FontSizeScale (254.0 / 72.0) 
+//
+
 
 namespace Epsitec.Common.Text.Exchange
 {
@@ -433,7 +436,7 @@ namespace Epsitec.Common.Text.Exchange
 
 		public void SetFontSize(double fontSize)
 		{
-			this.fontSize = (int) (fontSize / (254.0 / 72.0));
+			this.fontSize = (int) (fontSize / /* Epsitec.Common.Document.Modifier.FontSizeScale*/ (254.0 / 72.0));
 		}
 
 		static private int[] htmlfontsizes =
@@ -625,7 +628,7 @@ namespace Epsitec.Common.Text.Exchange
 					{
 						this.CloseTag (tag);
 					}
-					this.OpenTag (tag, "style", string.Concat("'",currentStyle.ToString (), "'"));
+					this.OpenTag (tag, "style", currentStyle.ToString ());
 				}
 
 				precdingStyle = currentStyle;
@@ -962,8 +965,8 @@ namespace Epsitec.Common.Text.Exchange
 		private string fontColor = "";
 		private string precedfontColor = "";
 
-		private int fontSize = 0;
-		private int precedfontSize = 0;
+		private double fontSize = 0;
+		private double precedfontSize = 0;
 
 		private string fontFace = "";
 		private string precedFontFace = "";
@@ -1089,10 +1092,6 @@ namespace Epsitec.Common.Text.Exchange
 					htmlText.SetFontSize (textWrapper.Active.IsFontSizeDefined ? textWrapper.Active.FontSize : 0);
 					htmlText.SetFontColor (textWrapper.Active.Color);
 
-#if USE_SPAN
-					//htmlText.ProcessSpan ();
-#endif
-
 					htmlText.AppendText (runText);
 				}
 
@@ -1118,18 +1117,10 @@ namespace Epsitec.Common.Text.Exchange
 
 			htmlText.Terminate ();
 
-#if true
 			System.Windows.Forms.DataObject data = new System.Windows.Forms.DataObject ();
 			data.SetData (System.Windows.Forms.DataFormats.Text, true, htmlText.rawText);
 			data.SetData (System.Windows.Forms.DataFormats.Html, true, htmlText.HtmlStream);
 			System.Windows.Forms.Clipboard.SetDataObject (data, true);
-#else
-			//System.Windows.Forms.Clipboard.SetData (System.Windows.Forms.DataFormats.Html, htmlText.MemoryStream);
-			System.Windows.Forms.Clipboard.Clear ();
-			System.Windows.Forms.Clipboard.SetData (System.Windows.Forms.DataFormats.Text, "Test");
-			System.Windows.Forms.Clipboard.SetData (System.Windows.Forms.DataFormats.Html, htmlText.MemoryStream);
-			// System.Windows.Forms.Clipboard.SetData (System.Windows.Forms.DataFormats.Text, "Test");
-#endif
 
 			System.Diagnostics.Debug.WriteLine ("Code de test 1 appelé.");
 		}
