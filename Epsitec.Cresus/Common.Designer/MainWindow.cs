@@ -173,7 +173,7 @@ namespace Epsitec.Common.Designer
 			this.info.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Bottom;
 			this.info.Margins = new Margins(0, 22-5, 0, 0);
 
-			this.InfoAdd("ModuleInfo", 200);
+			this.InfoAdd("CurrentModule", 200);
 
 			StatusBar infoMisc = new StatusBar(this.window.Root);
 			infoMisc.Width = 22;
@@ -210,6 +210,35 @@ namespace Epsitec.Common.Designer
 			int i = this.info.Children.Count-1;
 			this.info.Items[i].Name = name;
 			return field;
+		}
+
+		protected void UpdateInfoCurrentModule()
+		{
+			System.Text.StringBuilder builder = new System.Text.StringBuilder();
+
+			ModuleInfo mi = this.CurrentModuleInfo;
+			if ( mi != null )
+			{
+				ResourceBundleCollection bundles = mi.Module.Bundles;
+
+				for ( int b=0 ; b<bundles.Count ; b++ )
+				{
+					ResourceBundle bundle = bundles[b];
+
+					if ( b > 0 )
+					{
+						builder.Append(", ");
+					}
+
+					builder.Append(bundle.Culture.Name);
+					builder.Append(":");
+					builder.Append(bundle.FieldCount);
+				}
+			}
+
+			StatusField field = this.info.Items["CurrentModule"] as StatusField;
+			field.Text = builder.ToString();
+			field.Invalidate();
 		}
 
 
@@ -320,14 +349,11 @@ namespace Epsitec.Common.Designer
 				this.bookModules.ActivePage = this.CurrentModuleInfo.TabPage;
 				this.ignoreChange = false;
 
-				int total = this.bookModules.PageCount;
-				for ( int i=0 ; i<total ; i++ )
-				{
-					ModuleInfo mi = this.moduleInfoList[i];
-				}
+				this.UpdateInfoCurrentModule();
 			}
 			else
 			{
+				this.UpdateInfoCurrentModule();
 			}
 		}
 

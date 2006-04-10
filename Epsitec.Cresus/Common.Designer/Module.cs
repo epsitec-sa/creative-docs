@@ -16,6 +16,7 @@ namespace Epsitec.Common.Designer
 			this.resourceManager = new ResourceManager();
 			this.resourceManager.SetupApplication(this.name);
 			this.resourceManager.ActivePrefix = resourcePrefix;
+
 			string[] ids = this.resourceManager.GetBundleIds("*", ResourceLevel.Default);
 
 			this.bundles = new ResourceBundleCollection(this.resourceManager);
@@ -43,6 +44,22 @@ namespace Epsitec.Common.Designer
 			get
 			{
 				return this.name;
+			}
+		}
+
+		public ResourceManager ResourceManager
+		{
+			get
+			{
+				return this.resourceManager;
+			}
+		}
+
+		public ResourceBundleCollection Bundles
+		{
+			get
+			{
+				return this.bundles;
 			}
 		}
 
