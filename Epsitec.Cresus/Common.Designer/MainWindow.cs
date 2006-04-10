@@ -36,72 +36,21 @@ namespace Epsitec.Common.Designer
 												WindowStyles.CanMaximize |
 												WindowStyles.HasCloseButton;
 				
-				this.window.WindowSize = new Size(600, 400);
-				this.window.Root.MinSize = new Size(400, 250);
+				this.window.WindowSize = new Size(600, 500);
+				this.window.Root.MinSize = new Size(500, 400);
 				this.window.Text = Res.Strings.Application.Title;
 				this.window.PreventAutoClose = true;
 				//?this.window.Owner = parent;
 				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowAboutCloseClicked);
 
-#if true
 				this.commandDispatcher = new CommandDispatcher("ResDesigner", CommandDispatcherLevel.Primary);
-				//?this.commandDispatcher.RegisterController(this.window.Root);
 				this.commandDispatcher.RegisterController(this);
 				this.commandDispatcher.Focus();
 				this.window.Root.AttachCommandDispatcher(this.commandDispatcher);
 				this.window.AttachCommandDispatcher(this.commandDispatcher);
-#else
-				this.commandDispatcher = commandDispatcher;
-				//?this.window.AttachCommandDispatcher(this.commandDispatcher);
-				//?this.window.Root.AttachCommandDispatcher(this.commandDispatcher);
-#endif
 
 				this.InitCommands();
-
-				this.hToolBar = new HToolBar(this.window.Root);
-				this.hToolBar.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top;
-
-				this.ribbonMainButton = new RibbonButton("", Res.Strings.Ribbon.Main);
-				this.ribbonMainButton.Size = this.ribbonMainButton.RequiredSize;
-				this.ribbonMainButton.Pressed += new MessageEventHandler(this.HandleRibbonPressed);
-				this.hToolBar.Items.Add(this.ribbonMainButton);
-
-				this.ribbonOperButton = new RibbonButton("", Res.Strings.Ribbon.Oper);
-				this.ribbonOperButton.Size = this.ribbonOperButton.RequiredSize;
-				this.ribbonOperButton.Pressed += new MessageEventHandler(this.HandleRibbonPressed);
-				this.hToolBar.Items.Add(this.ribbonOperButton);
-
-				this.ribbonMain = new RibbonContainer(this.window.Root);
-				this.ribbonMain.Name = "Main";
-				this.ribbonMain.Height = this.ribbonHeight;
-				this.ribbonMain.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top;
-				this.ribbonMain.Margins = new Margins(0, 0, this.hToolBar.Height, 0);
-				this.ribbonMain.Visibility = true;
-				this.ribbonMain.Items.Add(new Ribbons.File());
-				this.ribbonMain.Items.Add(new Ribbons.Clipboard());
-
-				this.ribbonOper = new RibbonContainer(this.window.Root);
-				this.ribbonOper.Name = "Oper";
-				this.ribbonOper.Height = this.ribbonHeight;
-				this.ribbonOper.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top;
-				this.ribbonOper.Margins = new Margins(0, 0, this.hToolBar.Height, 0);
-				this.ribbonOper.Visibility = true;
-
-				this.info = new StatusBar(this.window.Root);
-				this.info.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Bottom;
-				this.info.Margins = new Margins(0, 22-5, 0, 0);
-
-				this.bookModules = new TabBook(this.window.Root);
-				this.bookModules.Anchor = AnchorStyles.All;
-				this.bookModules.Margins = new Margins(0, 0, this.hToolBar.Height+1, this.info.Height+1);
-				this.bookModules.Arrows = TabBookArrows.Right;
-				this.bookModules.HasCloseButton = true;
-				this.bookModules.CloseButton.Command = "Close";
-				this.bookModules.ActivePageChanged += new EventHandler(this.HandleBookModulesActivePageChanged);
-				ToolTip.Default.SetToolTip(this.bookModules.CloseButton, Res.Strings.Action.Close);
-
-				this.ribbonActive = this.ribbonMain;
-				this.ActiveRibbon(this.ribbonActive);
+				this.CreateLayout();
 			}
 
 			//	Ouvre tous les modules trouvés.
@@ -186,6 +135,81 @@ namespace Epsitec.Common.Designer
 			this.window.ShowDialog();
 			this.UpdateFields();
 #endif
+		}
+
+
+		protected void CreateLayout()
+		{
+			this.hToolBar = new HToolBar(this.window.Root);
+			this.hToolBar.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top;
+
+			this.ribbonMainButton = new RibbonButton("", Res.Strings.Ribbon.Main);
+			this.ribbonMainButton.Size = this.ribbonMainButton.RequiredSize;
+			this.ribbonMainButton.Pressed += new MessageEventHandler(this.HandleRibbonPressed);
+			this.hToolBar.Items.Add(this.ribbonMainButton);
+
+			this.ribbonOperButton = new RibbonButton("", Res.Strings.Ribbon.Oper);
+			this.ribbonOperButton.Size = this.ribbonOperButton.RequiredSize;
+			this.ribbonOperButton.Pressed += new MessageEventHandler(this.HandleRibbonPressed);
+			this.hToolBar.Items.Add(this.ribbonOperButton);
+
+			this.ribbonMain = new RibbonContainer(this.window.Root);
+			this.ribbonMain.Name = "Main";
+			this.ribbonMain.Height = this.ribbonHeight;
+			this.ribbonMain.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top;
+			this.ribbonMain.Margins = new Margins(0, 0, this.hToolBar.Height, 0);
+			this.ribbonMain.Visibility = true;
+			this.ribbonMain.Items.Add(new Ribbons.File());
+			this.ribbonMain.Items.Add(new Ribbons.Clipboard());
+
+			this.ribbonOper = new RibbonContainer(this.window.Root);
+			this.ribbonOper.Name = "Oper";
+			this.ribbonOper.Height = this.ribbonHeight;
+			this.ribbonOper.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top;
+			this.ribbonOper.Margins = new Margins(0, 0, this.hToolBar.Height, 0);
+			this.ribbonOper.Visibility = true;
+
+			this.info = new StatusBar(this.window.Root);
+			this.info.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Bottom;
+			this.info.Margins = new Margins(0, 22-5, 0, 0);
+
+			this.InfoAdd("ModuleInfo", 200);
+
+			StatusBar infoMisc = new StatusBar(this.window.Root);
+			infoMisc.Width = 22;
+			infoMisc.Anchor = AnchorStyles.BottomRight;
+			infoMisc.Margins = new Margins(0, 0, 0, 0);
+
+			IconSeparator sep = new IconSeparator(infoMisc);
+			sep.Height = infoMisc.Height-1.0;
+			sep.Anchor = AnchorStyles.BottomLeft;
+
+			this.resize = new ResizeKnob(infoMisc);
+			this.resize.Anchor = AnchorStyles.BottomRight;
+			//?ToolTip.Default.SetToolTip(this.resize, Res.Strings.Dialog.Tooltip.Resize);
+
+			this.bookModules = new TabBook(this.window.Root);
+			this.bookModules.Anchor = AnchorStyles.All;
+			this.bookModules.Margins = new Margins(0, 0, this.hToolBar.Height+1, this.info.Height+1);
+			this.bookModules.Arrows = TabBookArrows.Right;
+			this.bookModules.HasCloseButton = true;
+			this.bookModules.CloseButton.Command = "Close";
+			this.bookModules.ActivePageChanged += new EventHandler(this.HandleBookModulesActivePageChanged);
+			ToolTip.Default.SetToolTip(this.bookModules.CloseButton, Res.Strings.Action.Close);
+
+			this.ribbonActive = this.ribbonMain;
+			this.ActiveRibbon(this.ribbonActive);
+		}
+
+		protected StatusField InfoAdd(string name, double width)
+		{
+			StatusField field = new StatusField();
+			field.Width = width;
+			this.info.Items.Add(field);
+
+			int i = this.info.Children.Count-1;
+			this.info.Items[i].Name = name;
+			return field;
 		}
 
 
@@ -409,6 +433,7 @@ namespace Epsitec.Common.Designer
 		protected RibbonContainer				ribbonActive;
 		protected TabBook						bookModules;
 		protected StatusBar						info;
+		protected ResizeKnob					resize;
 
 		protected string						resourcePrefix;
 		protected List<ModuleInfo>				moduleInfoList;
