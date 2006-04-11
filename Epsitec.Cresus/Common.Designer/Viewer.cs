@@ -35,6 +35,10 @@ namespace Epsitec.Common.Designer
 			this.secondaryArray.Name = "Secondary";
 			this.secondaryArray.CellsQuantityChanged += new EventHandler(this.HandleArrayCellsQuantityChanged);
 
+			this.scroller = new VScroller(this);
+			this.scroller.IsInverted = true;
+			this.scroller.ValueChanged += new EventHandler(this.HandleScrollerValueChanged);
+
 			this.UpdateCultures();
 		}
 
@@ -45,6 +49,7 @@ namespace Epsitec.Common.Designer
 
 		protected void UpdateCultures()
 		{
+			//	Met à jour les widgets pour les cultures.
 			ResourceBundleCollection bundles = this.module.Bundles;
 
 			this.primaryBundle = bundles[ResourceLevel.Default];
@@ -79,6 +84,7 @@ namespace Epsitec.Common.Designer
 
 		protected void UpdateLabelsIndex()
 		{
+			//	Construit l'index en fonction des ressources primaires.
 			this.labelsIndex.Clear();
 
 			foreach (ResourceBundle.Field field in this.primaryBundle.Fields)
@@ -89,36 +95,81 @@ namespace Epsitec.Common.Designer
 
 		protected void UpdateArrays(string name)
 		{
+			//	Met à jour un tableau (donc une colonne).
 			int first = this.firstIndex;
 			int total = System.Math.Min(this.labelsIndex.Count, this.labelsArray.LineCount);
 
 			for ( int i=0 ; i<total ; i++ )
 			{
-				ResourceBundle.Field primaryField = this.primaryBundle[this.labelsIndex[first+i]];
-				ResourceBundle.Field secondaryField = this.secondaryBundle[this.labelsIndex[first+i]];
-
-				if ( name == "Labels" )
+				if (name == "Labels")
 				{
-					this.labelsArray.SetLineString(i, primaryField.Name);
-				}
-
-				if ( name == "Primary" )
-				{
-					this.primaryArray.SetLineString(i, primaryField.AsString);
-				}
-
-				if ( name == "Secondary" )
-				{
-					if (secondaryField == null)
+					if (first+i < this.labelsIndex.Count)
 					{
-						this.secondaryArray.SetLineString(i, "");
+						ResourceBundle.Field primaryField = this.primaryBundle[this.labelsIndex[first+i]];
+						this.labelsArray.SetLineString(i, primaryField.Name);
 					}
 					else
 					{
-						this.secondaryArray.SetLineString(i, secondaryField.AsString);
+						this.labelsArray.SetLineString(i, "");
+					}
+				}
+
+				if (name == "Primary")
+				{
+					if (first+i < this.labelsIndex.Count)
+					{
+						ResourceBundle.Field primaryField = this.primaryBundle[this.labelsIndex[first+i]];
+						this.primaryArray.SetLineString(i, primaryField.AsString);
+					}
+					else
+					{
+						this.primaryArray.SetLineString(i, "");
+					}
+				}
+
+				if (name == "Secondary")
+				{
+					if (first+i < this.labelsIndex.Count)
+					{
+						ResourceBundle.Field secondaryField = this.secondaryBundle[this.labelsIndex[first+i]];
+
+						if (secondaryField == null)
+						{
+							this.secondaryArray.SetLineString(i, "");
+						}
+						else
+						{
+							this.secondaryArray.SetLineString(i, secondaryField.AsString);
+						}
+					}
+					else
+					{
+						this.secondaryArray.SetLineString(i, "");
 					}
 				}
 			}
+		}
+
+		protected void UpdateScroller()
+		{
+			this.ignoreChange = true;
+
+			if (this.labelsIndex.Count <= this.labelsArray.LineCount)
+			{
+				this.scroller.Enable = false;
+			}
+			else
+			{
+				this.scroller.Enable = true;
+				this.scroller.MinValue = (decimal) 0;
+				this.scroller.MaxValue = (decimal) (this.labelsIndex.Count - this.labelsArray.LineCount);
+				this.scroller.Value = (decimal) this.firstIndex;
+				this.scroller.VisibleRangeRatio = (decimal) this.labelsArray.LineCount / (decimal) this.labelsIndex.Count;
+				this.scroller.LargeChange = (decimal) this.labelsArray.LineCount-1;
+				this.scroller.SmallChange = (decimal) 1;
+			}
+
+			this.ignoreChange = false;
 		}
 
 
@@ -131,6 +182,7 @@ namespace Epsitec.Common.Designer
 
 			Rectangle box = this.Client.Bounds;
 			box.Deflate(10);
+			box.Width -= this.scroller.Width;
 			Rectangle part;
 			Rectangle rect;
 
@@ -157,6 +209,12 @@ namespace Epsitec.Common.Designer
 			rect.Left = rect.Right-1;
 			rect.Right = part.Right;
 			this.secondaryArray.Bounds = rect;
+
+			rect = box;
+			rect.Left = rect.Right;
+			rect.Width = scroller.Width;
+			rect.Top -= 22+5;
+			this.scroller.Bounds = rect;
 		}
 
 		
@@ -180,14 +238,24 @@ namespace Epsitec.Common.Designer
 		void HandleArrayCellsQuantityChanged(object sender)
 		{
 			MyWidgets.StringArray array = sender as MyWidgets.StringArray;
-
 			this.UpdateArrays(array.Name);
+			this.UpdateScroller();
+		}
+
+		void HandleScrollerValueChanged(object sender)
+		{
+			if ( this.ignoreChange )  return;
+			this.firstIndex = (int) System.Math.Floor(this.scroller.DoubleValue+0.5);
+			this.UpdateArrays("Labels");
+			this.UpdateArrays("Primary");
+			this.UpdateArrays("Secondary");
 		}
 
 
 		protected Module					module;
 		protected List<string>				labelsIndex;
 		protected int						firstIndex;
+		protected bool						ignoreChange = false;
 
 		protected TextField					primaryCulture;
 		protected TextFieldCombo			secondaryCulture;
@@ -196,6 +264,7 @@ namespace Epsitec.Common.Designer
 		protected MyWidgets.StringArray		labelsArray;
 		protected MyWidgets.StringArray		primaryArray;
 		protected MyWidgets.StringArray		secondaryArray;
+		protected VScroller					scroller;
 		protected double					labelsWidth = 150;
 		protected double					primaryWidth = 200;
 	}
