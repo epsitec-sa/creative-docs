@@ -10,6 +10,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 	/// </summary>
 	public class StringArray : Widget
 	{
+		public enum CellState
+		{
+			Normal,
+			Selected,
+			Warning,
+		}
+
+
 		public StringArray() : base()
 		{
 		}
@@ -43,27 +51,43 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Nombre total de ligne en fonction de la hauteur du widget et de la hauteur d'une ligne.
 			get
 			{
-				if ( this.stringList == null )  return 0;
-				return this.stringList.Length;
+				if ( this.cells == null )  return 0;
+				return this.cells.Length;
 			}
 		}
 
 		public void SetLineString(int index, string text)
 		{
 			//	Spécifie le texte contenu dans une ligne.
-			if ( this.stringList == null )  return;
-			if ( index < 0 || index >= this.stringList.Length )  return;
-			this.stringList[index].Text = text;
+			if ( this.cells == null )  return;
+			if ( index < 0 || index >= this.cells.Length )  return;
+			this.cells[index].TextLayout.Text = text;
 			this.Invalidate();
 		}
 
 		public string GetLineString(int index)
 		{
 			//	Retourne le texte contenu dans une ligne.
-			if (this.stringList == null)
-				return null;
-			if ( index < 0 || index >= this.stringList.Length )  return null;
-			return this.stringList[index].Text;
+			if ( this.cells == null )  return null;
+			if ( index < 0 || index >= this.cells.Length )  return null;
+			return this.cells[index].TextLayout.Text;
+		}
+
+		public void SetLineState(int index, CellState state)
+		{
+			//	Spécifie l'état d'une ligne.
+			if ( this.cells == null )  return;
+			if ( index < 0 || index >= this.cells.Length )  return;
+			this.cells[index].State = state;
+			this.Invalidate();
+		}
+
+		public CellState GetLineState(int index)
+		{
+			//	Retourne l'état d'une ligne.
+			if ( this.cells == null )  return CellState.Normal;
+			if ( index < 0 || index >= this.cells.Length )  return CellState.Normal;
+			return this.cells[index].State;
 		}
 
 
@@ -74,13 +98,15 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			int length = (int) (this.Client.Bounds.Height/this.lineHeight);
 			length = System.Math.Max(length, 1);
-			if ( this.stringList == null || this.stringList.Length != length )
+			if ( this.cells == null || this.cells.Length != length )
 			{
-				this.stringList = new TextLayout[length];
-				for ( int i=0 ; i<this.stringList.Length ; i++ )
+				this.cells = new Cell[length];
+				for ( int i=0 ; i<this.cells.Length ; i++ )
 				{
-					this.stringList[i] = new TextLayout();
-					this.stringList[i].Alignment = ContentAlignment.MiddleLeft;
+					this.cells[i] = new Cell();
+					this.cells[i].TextLayout = new TextLayout();
+					this.cells[i].TextLayout.Alignment = ContentAlignment.MiddleLeft;
+					this.cells[i].State = CellState.Normal;
 				}
 
 				this.OnCellsQuantityChanged();
@@ -89,22 +115,35 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
-			if ( this.stringList == null )  return;
+			if ( this.cells == null )  return;
 
 			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
 			Rectangle rect = this.Client.Bounds;
-			double h = rect.Height/this.stringList.Length;
+			double h = rect.Height/this.cells.Length;
 			rect.Bottom = rect.Top-h;
 
-			for ( int i=0 ; i<this.stringList.Length ; i++ )
+			for ( int i=0 ; i<this.cells.Length ; i++ )
 			{
-				if ( this.stringList[i].Text != null )
+				Color backColor = adorner.ColorTextBackground;
+				if ( this.cells[i].State == CellState.Selected )
 				{
-					this.stringList[i].LayoutSize = new Size(rect.Width-5, rect.Height);
-					this.stringList[i].Paint(new Point(rect.Left+5, rect.Bottom), graphics);
+					backColor = adorner.ColorCaption;
+				}
+				if ( this.cells[i].State == CellState.Warning )
+				{
+					backColor = Color.FromRgb(1, 0.5, 0.5);
 				}
 
-				if ( i < this.stringList.Length-1 )
+				graphics.AddFilledRectangle(rect);
+				graphics.RenderSolid(backColor);
+
+				if ( this.cells[i].TextLayout.Text != null )
+				{
+					this.cells[i].TextLayout.LayoutSize = new Size(rect.Width-5, rect.Height);
+					this.cells[i].TextLayout.Paint(new Point(rect.Left+5, rect.Bottom), graphics);
+				}
+
+				if ( i < this.cells.Length-1 )
 				{
 					Point p1 = new Point(rect.Left, rect.Bottom);
 					Point p2 = new Point(rect.Right, rect.Bottom);
@@ -113,6 +152,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 					p1.Y += 0.5;
 					p2.Y += 0.5;
 					graphics.AddLine(p1, p2);
+					graphics.RenderSolid(adorner.ColorBorder);
 				}
 
 				rect.Offset(0, -h);
@@ -136,8 +176,17 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		public event Support.EventHandler CellsQuantityChanged;
 
-		
+
+		#region Cell class
+		protected class Cell
+		{
+			public TextLayout				TextLayout;
+			public CellState				State;
+		}
+		#endregion
+
+
 		protected double					lineHeight = 20;
-		protected TextLayout[]				stringList;
+		protected Cell[]					cells;
 	}
 }
