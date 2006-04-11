@@ -8,7 +8,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 	/// <summary>
 	/// Tableau d'une colonne de TextLayout.
 	/// </summary>
-	public class StringArray : Widget
+	public class StringList : Widget
 	{
 		public enum CellState
 		{
@@ -17,17 +17,15 @@ namespace Epsitec.Common.Designer.MyWidgets
 		}
 
 
-		public StringArray() : base()
+		public StringList() : base()
 		{
-			this.dragBehavior = new Widgets.Behaviors.DragBehavior(this, true, false);
-
 			this.AutoEngage = true;
 			this.AutoRepeat = true;
 
 			this.InternalState |= InternalState.Engageable;
 		}
 
-		public StringArray(Widget embedder) : this()
+		public StringList(Widget embedder) : this()
 		{
 			this.SetEmbedder(embedder);
 		}
@@ -140,6 +138,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 						this.OnDraggingCellSelectionChanged();
 					}
 					this.isDragging = true;
+					message.Captured = true;
 					message.Consumer = this;
 					return;
 				}
@@ -154,26 +153,49 @@ namespace Epsitec.Common.Designer.MyWidgets
 							this.CellSelected = cell;
 							this.OnDraggingCellSelectionChanged();
 						}
+						message.Captured = true;
 						message.Consumer = this;
 						return;
 					}
 				}
-				
+
 				if (message.Type == MessageType.MouseUp)
 				{
 					int cell = this.Detect(pos);
 					this.CellSelected = cell;
 					this.OnFinalCellSelectionChanged();
 					this.isDragging = false;
+					message.Captured = true;
+					message.Consumer = this;
+					return;
+				}
+
+				if (message.Type == MessageType.MouseLeave)
+				{
+					message.Captured = true;
 					message.Consumer = this;
 					return;
 				}
 			}
 
-			if (!this.dragBehavior.ProcessMessage(message, pos))
+			if (message.Type == MessageType.KeyDown)
 			{
-				base.ProcessMessage(message, pos);
+				if (message.KeyCode == KeyCode.ArrowUp)
+				{
+					this.CellSelected = this.CellSelected-1;
+					this.OnDraggingCellSelectionChanged();
+					this.OnFinalCellSelectionChanged();
+				}
+
+				if (message.KeyCode == KeyCode.ArrowDown)
+				{
+					this.CellSelected = this.CellSelected+1;
+					this.OnDraggingCellSelectionChanged();
+					this.OnFinalCellSelectionChanged();
+				}
 			}
+
+			base.ProcessMessage(message, pos);
 		}
 
 		protected int Detect(Point pos)
@@ -221,19 +243,20 @@ namespace Epsitec.Common.Designer.MyWidgets
 			for ( int i=0 ; i<this.cells.Length ; i++ )
 			{
 				Color backColor = adorner.ColorTextBackground;
-				if ( this.cells[i].Selected )
+				if (this.cells[i].Selected)
 				{
 					backColor = adorner.ColorCaption;
 				}
-				else if ( this.cells[i].State == CellState.Warning )
-				{
-					backColor = Color.FromRgb(1, 0.5, 0.5);
-				}
-
 				graphics.AddFilledRectangle(rect);
 				graphics.RenderSolid(backColor);
 
-				if ( this.cells[i].TextLayout.Text != null )
+				if ( this.cells[i].State == CellState.Warning )
+				{
+					graphics.AddFilledRectangle(rect);
+					graphics.RenderSolid(Color.FromAlphaRgb(0.2, 1,0,0));  // rouge semi-transparent
+				}
+
+				if (this.cells[i].TextLayout.Text != null)
 				{
 					this.cells[i].TextLayout.LayoutSize = new Size(rect.Width-5, rect.Height);
 					this.cells[i].TextLayout.Paint(new Point(rect.Left+5, rect.Bottom), graphics);
@@ -309,9 +332,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 		#endregion
 
 
-		protected double						lineHeight = 20;
-		protected Cell[]						cells;
-		protected bool							isDragging = false;
-		private Widgets.Behaviors.DragBehavior	dragBehavior;
+		protected double					lineHeight = 20;
+		protected Cell[]					cells;
+		protected bool						isDragging = false;
 	}
 }
