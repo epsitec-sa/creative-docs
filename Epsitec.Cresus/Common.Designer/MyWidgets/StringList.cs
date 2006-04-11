@@ -19,10 +19,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		public StringList() : base()
 		{
-			this.AutoEngage = true;
-			this.AutoRepeat = true;
-
-			this.InternalState |= InternalState.Engageable;
 		}
 
 		public StringList(Widget embedder) : this()
