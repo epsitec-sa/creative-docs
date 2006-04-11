@@ -269,7 +269,13 @@ namespace Epsitec.Common.Designer
 
 
 		#region Commands manager
-		[Command ("Close")]
+		[Command("Save")]
+		void CommandSave(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.CurrentModule.Save();
+		}
+
+		[Command("Close")]
 		void CommandClose(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			//?if ( !this.AutoSave(dispatcher) )  return;
