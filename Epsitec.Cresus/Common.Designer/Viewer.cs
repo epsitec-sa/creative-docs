@@ -41,6 +41,7 @@ namespace Epsitec.Common.Designer
 			this.primaryArray = new MyWidgets.StringArray(this.primaryPage);
 			this.primaryArray.Anchor = AnchorStyles.All;
 			this.primaryArray.Margins = new Margins(10, 10, 40, 10);
+			this.primaryArray.SizeChanged += new EventHandler(this.HandlePrimaryArraySizeChanged);
 
 			this.UpdateCultures();
 		}
@@ -101,7 +102,17 @@ namespace Epsitec.Common.Designer
 		}
 
 
-		protected Module					module;
+		void HandlePrimaryArraySizeChanged(object sender)
+		{
+			for ( int i=0 ; i<this.primaryBundle.FieldCount ; i++ )
+			{
+				ResourceBundle.Field field = this.primaryBundle[i];
+				this.primaryArray.SetLineString(i, field.AsString);
+			}
+		}
+
+
+		protected Module module;
 		protected PaneBook					book;
 		protected PanePage					primaryPage;
 		protected PanePage					secondaryPage;
