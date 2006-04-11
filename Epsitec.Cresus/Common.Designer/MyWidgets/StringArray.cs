@@ -149,21 +149,18 @@ namespace Epsitec.Common.Designer.MyWidgets
 			return this.columns[column].GetLineString(row);
 		}
 
-		public void SetLineState(int row, StringList.CellState state)
+		public void SetLineState(int column, int row, StringList.CellState state)
 		{
 			//	Spécifie l'état d'une ligne.
 			if ( this.columns == null )  return;
-			for (int i=0; i<this.columns.Length; i++)
-			{
-				this.columns[i].SetLineState(row, state);
-			}
+			this.columns[column].SetLineState(row, state);
 		}
 
-		public StringList.CellState GetLineState(int row)
+		public StringList.CellState GetLineState(int column, int row)
 		{
 			//	Retourne l'état d'une ligne.
 			if ( this.columns == null )  return StringList.CellState.Normal;
-			return this.columns[0].GetLineState(row);
+			return this.columns[column].GetLineState(row);
 	}
 
 		public int TotalRows
@@ -198,6 +195,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				{
 					this.selectedRow = value;
 					this.UpdateSelectedRow();
+					this.OnSelectedRowChanged();
 				}
 			}
 		}
@@ -212,10 +210,15 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			set
 			{
+				value = System.Math.Min(value, this.TotalRows-this.LineCount);
+				value = System.Math.Max(value, 0);
+
 				if (this.firstVisibleRow != value)
 				{
 					this.firstVisibleRow = value;
 					this.UpdateSelectedRow();
+					this.UpdateScroller();
+					this.OnCellsContentChanged();
 				}
 			}
 		}
@@ -233,7 +236,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			this.ignoreChange = true;
 
-			if (this.totalRows <= this.columns[0].LineCount)
+			if (this.totalRows <= this.LineCount)
 			{
 				this.scroller.Enable = false;
 			}
@@ -241,16 +244,45 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				this.scroller.Enable = true;
 				this.scroller.MinValue = (decimal) 0;
-				this.scroller.MaxValue = (decimal) (this.totalRows - this.columns[0].LineCount);
+				this.scroller.MaxValue = (decimal) (this.totalRows - this.LineCount);
 				this.scroller.Value = (decimal) this.firstVisibleRow;
-				this.scroller.VisibleRangeRatio = (decimal) this.columns[0].LineCount / (decimal) this.totalRows;
-				this.scroller.LargeChange = (decimal) this.columns[0].LineCount-1;
+				this.scroller.VisibleRangeRatio = (decimal) this.LineCount / (decimal) this.totalRows;
+				this.scroller.LargeChange = (decimal) this.LineCount-1;
 				this.scroller.SmallChange = (decimal) 1;
 			}
 
 			this.ignoreChange = false;
 		}
 
+
+		protected override void ProcessMessage(Message message, Drawing.Point pos)
+		{
+			if (this.IsEnabled == false)
+			{
+				return;
+			}
+
+			if (message.Type == MessageType.MouseWheel)
+			{
+				if (message.Wheel > 0)  this.FirstVisibleRow -= 3;
+				if (message.Wheel < 0)  this.FirstVisibleRow += 3;
+			}
+
+			if (message.Type == MessageType.KeyDown)
+			{
+				if (message.KeyCode == KeyCode.ArrowUp)
+				{
+					this.FirstVisibleRow --;
+				}
+
+				if (message.KeyCode == KeyCode.ArrowDown)
+				{
+					this.FirstVisibleRow ++;
+				}
+			}
+
+			base.ProcessMessage(message, pos);
+		}
 
 		protected override void UpdateClientGeometry()
 		{
@@ -311,13 +343,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 
 			this.SelectedRow = this.firstVisibleRow + sel;
-			this.OnSelectedRowChanged();
 		}
 
 		void HandleScrollerValueChanged(object sender)
 		{
 			this.FirstVisibleRow = (int) System.Math.Floor(this.scroller.Value+0.5M);
-			this.OnCellsContentChanged();
 		}
 		#endregion
 

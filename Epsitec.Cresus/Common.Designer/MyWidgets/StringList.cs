@@ -195,23 +195,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 				}
 			}
 
-			if (message.Type == MessageType.KeyDown)
-			{
-				if (message.KeyCode == KeyCode.ArrowUp)
-				{
-					this.CellSelected = this.CellSelected-1;
-					this.OnDraggingCellSelectionChanged();
-					this.OnFinalCellSelectionChanged();
-				}
-
-				if (message.KeyCode == KeyCode.ArrowDown)
-				{
-					this.CellSelected = this.CellSelected+1;
-					this.OnDraggingCellSelectionChanged();
-					this.OnFinalCellSelectionChanged();
-				}
-			}
-
 			base.ProcessMessage(message, pos);
 		}
 
