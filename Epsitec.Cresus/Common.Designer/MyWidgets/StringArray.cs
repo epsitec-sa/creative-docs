@@ -12,9 +12,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 	{
 		public StringArray() : base()
 		{
-			this.AutoEngage = true;
+			this.AutoEngage = false;
+			this.AutoFocus  = true;
 			this.AutoRepeat = true;
 
+			this.InternalState |= InternalState.Focusable;
 			this.InternalState |= InternalState.Engageable;
 
 			this.scroller = new VScroller(this);
@@ -138,7 +140,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Spécifie le texte contenu dans une ligne.
 			if ( this.columns == null )  return;
 			if ( column < 0 || column >= this.columns.Length )  return;
-			this.columns[column].SetLineString(row, text);
+			this.columns[column].SetLineString(row-this.firstVisibleRow, text);
 		}
 
 		public string GetLineString(int column, int row)
@@ -146,21 +148,21 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Retourne le texte contenu dans une ligne.
 			if ( this.columns == null )  return null;
 			if ( column < 0 || column >= this.columns.Length )  return null;
-			return this.columns[column].GetLineString(row);
+			return this.columns[column].GetLineString(row-this.firstVisibleRow);
 		}
 
 		public void SetLineState(int column, int row, StringList.CellState state)
 		{
 			//	Spécifie l'état d'une ligne.
 			if ( this.columns == null )  return;
-			this.columns[column].SetLineState(row, state);
+			this.columns[column].SetLineState(row-this.firstVisibleRow, state);
 		}
 
 		public StringList.CellState GetLineState(int column, int row)
 		{
 			//	Retourne l'état d'une ligne.
 			if ( this.columns == null )  return StringList.CellState.Normal;
-			return this.columns[column].GetLineState(row);
+			return this.columns[column].GetLineState(row-this.firstVisibleRow);
 	}
 
 		public int TotalRows

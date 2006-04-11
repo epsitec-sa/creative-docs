@@ -32,6 +32,9 @@ namespace Epsitec.Common.Designer
 			this.array.CellsContentChanged += new EventHandler(this.HandleArrayCellsContentChanged);
 			this.array.SelectedRowChanged += new EventHandler(this.HandleArraySelectedRowChanged);
 
+			this.primaryEdit = new TextFieldMulti(this);
+			this.secondaryEdit = new TextFieldMulti(this);
+
 			this.UpdateCultures();
 		}
 
@@ -108,17 +111,17 @@ namespace Epsitec.Common.Designer
 					ResourceBundle.Field primaryField = this.primaryBundle[this.labelsIndex[first+i]];
 					ResourceBundle.Field secondaryField = this.secondaryBundle[this.labelsIndex[first+i]];
 
-					this.array.SetLineString(0, i, primaryField.Name);
-					this.UpdateArrayField(1, i, primaryField);
-					this.UpdateArrayField(2, i, secondaryField);
+					this.array.SetLineString(0, first+i, primaryField.Name);
+					this.UpdateArrayField(1, first+i, primaryField);
+					this.UpdateArrayField(2, first+i, secondaryField);
 				}
 				else
 				{
-					this.array.SetLineString(0, i, "");
-					this.array.SetLineString(1, i, "");
-					this.array.SetLineString(2, i, "");
-					this.array.SetLineState(1, i, MyWidgets.StringList.CellState.Normal);
-					this.array.SetLineState(2, i, MyWidgets.StringList.CellState.Normal);
+					this.array.SetLineString(0, first+i, "");
+					this.array.SetLineString(1, first+i, "");
+					this.array.SetLineString(2, first+i, "");
+					this.array.SetLineState(1, first+i, MyWidgets.StringList.CellState.Normal);
+					this.array.SetLineState(2, first+i, MyWidgets.StringList.CellState.Normal);
 				}
 			}
 		}
@@ -155,17 +158,27 @@ namespace Epsitec.Common.Designer
 			//	Il faut obligatoirement s'occuper d'abord de this.array, puisque les autres
 			//	widgets dépendent des largeurs relatives de ses colonnes.
 			rect = box;
-			rect.Top -= 22+5;
+			rect.Top -= 20+5;
+			rect.Bottom += 47+5;
 			this.array.Bounds = rect;
 
 			rect = box;
-			rect.Bottom = rect.Top-22;
+			rect.Bottom = rect.Top-20;
 			rect.Left += this.array.GetColumnsAbsoluteWidth(0);
 			rect.Width = this.array.GetColumnsAbsoluteWidth(1)+1;
 			this.primaryCulture.Bounds = rect;
 			rect.Left = rect.Right-1;
 			rect.Width = this.array.GetColumnsAbsoluteWidth(2);
 			this.secondaryCulture.Bounds = rect;
+
+			rect = box;
+			rect.Top = rect.Bottom+47;
+			rect.Left += this.array.GetColumnsAbsoluteWidth(0);
+			rect.Width = this.array.GetColumnsAbsoluteWidth(1)+1;
+			this.primaryEdit.Bounds = rect;
+			rect.Left = rect.Right-1;
+			rect.Width = this.array.GetColumnsAbsoluteWidth(2);
+			this.secondaryEdit.Bounds = rect;
 		}
 
 		
@@ -198,6 +211,28 @@ namespace Epsitec.Common.Designer
 
 		void HandleArraySelectedRowChanged(object sender)
 		{
+			int sel = this.array.SelectedRow;
+			string text;
+
+			text = this.array.GetLineString(1, sel);
+			if (text == null)
+			{
+				this.primaryEdit.Text = "";
+			}
+			else
+			{
+				this.primaryEdit.Text = text;
+			}
+
+			text = this.array.GetLineString(2, sel);
+			if (text == null)
+			{
+				this.secondaryEdit.Text = "";
+			}
+			else
+			{
+				this.secondaryEdit.Text = text;
+			}
 		}
 
 
@@ -210,5 +245,7 @@ namespace Epsitec.Common.Designer
 		protected ResourceBundle			primaryBundle;
 		protected ResourceBundle			secondaryBundle;
 		protected MyWidgets.StringArray		array;
+		protected TextFieldMulti			primaryEdit;
+		protected TextFieldMulti			secondaryEdit;
 	}
 }
