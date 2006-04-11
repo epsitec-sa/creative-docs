@@ -23,6 +23,7 @@ namespace Epsitec.Common.Designer
 			this.bundles.LoadBundles(this.resourceManager.ActivePrefix, this.resourceManager.GetBundleIds(ids[0], ResourceLevel.All));
 
 			this.modifier = new Modifier(this);
+			this.notifier = new Notifier(this);
 		}
 
 		public void Dispose()
@@ -36,6 +37,14 @@ namespace Epsitec.Common.Designer
 			get
 			{
 				return this.modifier;
+			}
+		}
+
+		public Notifier Notifier
+		{
+			get
+			{
+				return this.notifier;
 			}
 		}
 
@@ -68,5 +77,6 @@ namespace Epsitec.Common.Designer
 		protected ResourceManager			resourceManager;
 		protected ResourceBundleCollection	bundles;
 		protected Modifier					modifier;
+		protected Notifier					notifier;
 	}
 }

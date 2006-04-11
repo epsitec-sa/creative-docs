@@ -21,6 +21,25 @@ namespace Epsitec.Common.Designer
 		}
 
 
+		public bool IsDirty
+		{
+			//	Indique si le module est à jour ou non.
+			get
+			{
+				return this.isDirty;
+			}
+
+			set
+			{
+				if (this.isDirty != value)
+				{
+					this.isDirty = value;
+					this.module.Notifier.NotifySaveChanged();
+				}
+			}
+		}
+
+
 		#region Viewers
 		public Viewer ActiveViewer
 		{
@@ -59,6 +78,7 @@ namespace Epsitec.Common.Designer
 
 		
 		protected Module						module;
+		protected bool							isDirty = false;
 		protected Viewer						activeViewer;
 		protected System.Collections.ArrayList	attachViewers;
 	}
