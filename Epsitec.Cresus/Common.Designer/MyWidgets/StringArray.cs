@@ -13,7 +13,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 		public enum CellState
 		{
 			Normal,
-			Selected,
 			Warning,
 		}
 
@@ -90,6 +89,23 @@ namespace Epsitec.Common.Designer.MyWidgets
 			return this.cells[index].State;
 		}
 
+		public void SetLineSelected(int index, bool selected)
+		{
+			//	Spécifie l'état d'une ligne.
+			if ( this.cells == null )  return;
+			if ( index < 0 || index >= this.cells.Length )  return;
+			this.cells[index].Selected = selected;
+			this.Invalidate();
+		}
+
+		public bool GetLineSelected(int index)
+		{
+			//	Retourne l'état d'une ligne.
+			if ( this.cells == null )  return false;
+			if ( index < 0 || index >= this.cells.Length )  return false;
+			return this.cells[index].Selected;
+		}
+
 
 		protected override void UpdateClientGeometry()
 		{
@@ -107,6 +123,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 					this.cells[i].TextLayout = new TextLayout();
 					this.cells[i].TextLayout.Alignment = ContentAlignment.MiddleLeft;
 					this.cells[i].State = CellState.Normal;
+					this.cells[i].Selected = false;
 				}
 
 				this.OnCellsQuantityChanged();
@@ -125,11 +142,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 			for ( int i=0 ; i<this.cells.Length ; i++ )
 			{
 				Color backColor = adorner.ColorTextBackground;
-				if ( this.cells[i].State == CellState.Selected )
+				if ( this.cells[i].Selected )
 				{
 					backColor = adorner.ColorCaption;
 				}
-				if ( this.cells[i].State == CellState.Warning )
+				else if ( this.cells[i].State == CellState.Warning )
 				{
 					backColor = Color.FromRgb(1, 0.5, 0.5);
 				}
@@ -182,6 +199,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			public TextLayout				TextLayout;
 			public CellState				State;
+			public bool						Selected;
 		}
 		#endregion
 
