@@ -219,6 +219,8 @@ namespace Epsitec.Common.Designer
 			int sel = this.array.SelectedRow;
 			string text;
 
+			this.ignoreChange = true;
+
 			text = this.array.GetLineString(1, sel);
 			if (text == null)
 			{
@@ -238,10 +240,14 @@ namespace Epsitec.Common.Designer
 			{
 				this.secondaryEdit.Text = text;
 			}
+
+			this.ignoreChange = false;
 		}
 
 		void HandleEditTextChanged(object sender)
 		{
+			if ( this.ignoreChange )  return;
+
 			TextFieldMulti edit = sender as TextFieldMulti;
 			int sel = this.array.SelectedRow;
 			int column = (edit == this.primaryEdit) ? 1 : 2;
@@ -249,6 +255,8 @@ namespace Epsitec.Common.Designer
 
 			this.array.SetLineString(column, sel, edit.Text);
 			this.array.SetLineState(column, sel, state);
+
+			this.module.Modifier.IsDirty = true;
 		}
 
 

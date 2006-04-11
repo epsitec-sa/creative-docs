@@ -41,6 +41,7 @@ namespace Epsitec.Common.Designer
 				this.window.Text = Res.Strings.Application.Title;
 				this.window.PreventAutoClose = true;
 				//?this.window.Owner = parent;
+				this.window.AsyncNotification += new EventHandler(this.HandleWindowAsyncNotification);
 				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowAboutCloseClicked);
 
 				this.commandDispatcher = new CommandDispatcher("ResDesigner", CommandDispatcherLevel.Primary);
@@ -64,6 +65,7 @@ namespace Epsitec.Common.Designer
 				mi.Module = module;
 				this.moduleInfoList.Insert(++this.currentModule, mi);
 				this.CreateModuleLayout();
+				this.ConnectEvents();
 
 				this.bookModules.ActivePage = mi.TabPage;
 			}
@@ -242,6 +244,30 @@ namespace Epsitec.Common.Designer
 		}
 
 
+		protected void ConnectEvents()
+		{
+			//	On s'enregistre auprès du module pour tous les événements.
+			this.CurrentModule.Notifier.SaveChanged += new SimpleEventHandler(this.HandleSaveChanged);
+		}
+
+		private void HandleSaveChanged()
+		{
+			//	Appelé par le module lorsque l'état "enregistrer" a changé.
+			if (this.IsCurrentModule)
+			{
+				bool isDirty = this.CurrentModule.Modifier.IsDirty;
+				this.saveState.Enable = isDirty;
+				this.saveAsState.Enable = isDirty;
+				//?this.UpdateBookDocuments();
+			}
+			else
+			{
+				this.saveState.Enable = false;
+				this.saveAsState.Enable = false;
+			}
+		}
+
+
 		#region Commands manager
 		[Command ("Close")]
 		void CommandClose(CommandDispatcher dispatcher, CommandEventArgs e)
@@ -352,10 +378,12 @@ namespace Epsitec.Common.Designer
 				this.ignoreChange = false;
 
 				this.UpdateInfoCurrentModule();
+				this.CurrentModule.Notifier.NotifyAllChanged();
 			}
 			else
 			{
 				this.UpdateInfoCurrentModule();
+				this.HandleSaveChanged();
 			}
 		}
 
@@ -430,6 +458,12 @@ namespace Epsitec.Common.Designer
 		}
 		#endregion
 
+
+		private void HandleWindowAsyncNotification(object sender)
+		{
+			if ( this.currentModule < 0 )  return;
+			this.CurrentModule.Notifier.GenerateEvents();
+		}
 
 		private void HandleWindowAboutCloseClicked(object sender)
 		{
