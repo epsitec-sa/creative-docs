@@ -6,7 +6,7 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Designer.MyWidgets
 {
 	/// <summary>
-	/// Tableau d'une colonne de TextLayout.
+	/// Tableau d'une colonne de TextLayout (vus comme des string).
 	/// </summary>
 	public class StringList : Widget
 	{
@@ -45,6 +45,23 @@ namespace Epsitec.Common.Designer.MyWidgets
 				{
 					this.lineHeight = value;
 					this.UpdateClientGeometry();
+				}
+			}
+		}
+
+		public double RelativeWidth
+		{
+			//	Largeur relative (dans n'importe quelle unité) de la colonne.
+			get
+			{
+				return this.relativeWidth;
+			}
+
+			set
+			{
+				if ( this.relativeWidth != value )
+				{
+					this.relativeWidth = value;
 				}
 			}
 		}
@@ -287,7 +304,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		#region Events handler
 		protected virtual void OnCellsQuantityChanged()
 		{
-			//	Génère un événement pour dire que le nombre de cellules à changé.
+			//	Génère un événement pour dire que le nombre de cellules a changé.
 			if (this.CellsQuantityChanged != null)  // qq'un écoute ?
 			{
 				this.CellsQuantityChanged(this);
@@ -333,6 +350,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 
 		protected double					lineHeight = 20;
+		protected double					relativeWidth = 0;
 		protected Cell[]					cells;
 		protected bool						isDragging = false;
 	}
