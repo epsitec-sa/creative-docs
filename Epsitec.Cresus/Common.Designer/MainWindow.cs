@@ -258,7 +258,7 @@ namespace Epsitec.Common.Designer
 				bool isDirty = this.CurrentModule.Modifier.IsDirty;
 				this.saveState.Enable = isDirty;
 				this.saveAsState.Enable = isDirty;
-				//?this.UpdateBookDocuments();
+				this.UpdateBookModules();
 			}
 			else
 			{
@@ -413,6 +413,15 @@ namespace Epsitec.Common.Designer
 			{
 				this.ActiveRibbon(this.ribbonMain);
 			}
+		}
+
+		protected void UpdateBookModules()
+		{
+			//	Met à jour le nom de l'onglet des modules.
+			if ( !this.IsCurrentModule )  return;
+			TabPage tab = this.bookModules.Items[this.currentModule] as TabPage;
+			tab.TabTitle = Misc.ExtractName(this.CurrentModule.Name, this.CurrentModule.Modifier.IsDirty);
+			this.bookModules.UpdateAfterChanges();
 		}
 		#endregion
 
