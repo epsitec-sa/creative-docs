@@ -611,8 +611,6 @@ namespace Epsitec.Common.Text.Exchange
 				case HtmlTagMode.Close:
 					retval = string.Concat ("</", tagstring, ">");
 					break;
-				case HtmlTagMode.StartOnly:
-					break;
 			}
 			return retval;
 		}
@@ -681,6 +679,8 @@ namespace Epsitec.Common.Text.Exchange
 #else
 				this.precedingspanstyle = null;
 				this.currentspanstyle = null;
+				this.currentstate = false;
+				this.precedingstate = false;
 #endif
 			}
 
@@ -915,8 +915,7 @@ namespace Epsitec.Common.Text.Exchange
 		private enum HtmlTagMode
 		{
 			Open,
-			Close,
-			StartOnly
+			Close
 		}
 
 		private class HtmlTagWithParam
@@ -1162,6 +1161,8 @@ namespace Epsitec.Common.Text.Exchange
 			System.Windows.Forms.Clipboard clipboard;
 			System.Text.StringBuilder output = new System.Text.StringBuilder ();
 
+			story.DisableOpletQueue ();
+
 			while (true)
 			{
 				int runLength = navigator.GetRunLength (1000000);
@@ -1228,6 +1229,7 @@ namespace Epsitec.Common.Text.Exchange
 				}
 			}
 
+			story.EnableOpletQueue ();
 			System.Windows.Forms.Clipboard.SetData (System.Windows.Forms.DataFormats.Html, output);
 
 			System.Diagnostics.Debug.WriteLine ("Code de test 1 appelé.");
