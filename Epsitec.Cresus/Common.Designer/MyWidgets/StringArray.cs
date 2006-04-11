@@ -79,7 +79,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 				for ( int i=0 ; i<this.stringList.Length ; i++ )
 				{
 					this.stringList[i] = new TextLayout();
+					this.stringList[i].Alignment = ContentAlignment.MiddleLeft;
 				}
+
+				this.OnSizeChanged();
 			}
 		}
 
@@ -87,34 +90,52 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			if ( this.stringList == null )  return;
 
+			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
 			Rectangle rect = this.Client.Bounds;
-			rect.Height = this.lineHeight;
-			rect.Offset(0, this.lineHeight*(this.stringList.Length-1));
+			double h = rect.Height/this.stringList.Length;
+			rect.Bottom = rect.Top-h;
 
 			for ( int i=0 ; i<this.stringList.Length ; i++ )
 			{
 				if ( this.stringList[i].Text != null )
 				{
-					this.stringList[i].LayoutSize = rect.Size;
-					this.stringList[i].Paint(rect.BottomLeft, graphics);
+					this.stringList[i].LayoutSize = new Size(rect.Width-5, rect.Height);
+					this.stringList[i].Paint(new Point(rect.Left+5, rect.Bottom), graphics);
 				}
 
-				if ( i == 0 )
+				if ( i < this.stringList.Length-1 )
 				{
-					graphics.AddLine(rect.Left, rect.Top+0.5, rect.Right, rect.Top+0.5);
+					Point p1 = new Point(rect.Left, rect.Bottom);
+					Point p2 = new Point(rect.Right, rect.Bottom);
+					graphics.Align(ref p1);
+					graphics.Align(ref p2);
+					p1.Y += 0.5;
+					p2.Y += 0.5;
+					graphics.AddLine(p1, p2);
 				}
 
-				graphics.AddLine(rect.Left+0.5, rect.Bottom, rect.Left+0.5, rect.Top);
-				graphics.AddLine(rect.Right-0.5, rect.Bottom, rect.Right-0.5, rect.Top);
-				graphics.AddLine(rect.Left, rect.Bottom+0.5, rect.Right, rect.Bottom+0.5);
-
-				graphics.RenderSolid(Color.FromBrightness(0));
-
-				rect.Offset(0, -this.lineHeight);
+				rect.Offset(0, -h);
 			}
+
+			rect = this.Client.Bounds;
+			rect.Deflate(0.5);
+			graphics.AddRectangle(rect);
+			graphics.RenderSolid(adorner.ColorBorder);
 		}
 
 
+		protected virtual void OnSizeChanged()
+		{
+			//	Génère un événement pour dire que la taille a changé.
+			if ( this.SizeChanged != null )  // qq'un écoute ?
+			{
+				this.SizeChanged(this);
+			}
+		}
+
+		public event Support.EventHandler SizeChanged;
+
+		
 		protected double					lineHeight = 20;
 		protected TextLayout[]				stringList;
 	}
