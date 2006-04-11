@@ -488,7 +488,7 @@ namespace Epsitec.Common.Designer
 
 			public void Dispose()
 			{
-				if ( this.TabPage != null )  this.TabPage.Dispose();
+				//?if ( this.TabPage != null )  this.TabPage.Dispose();
 			}
 		}
 		#endregion
