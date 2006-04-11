@@ -26,14 +26,20 @@ namespace Epsitec.Common.Designer
 			this.labelsArray = new MyWidgets.StringArray(this);
 			this.labelsArray.Name = "Labels";
 			this.labelsArray.CellsQuantityChanged += new EventHandler(this.HandleArrayCellsQuantityChanged);
+			this.labelsArray.DraggingCellSelectionChanged += new EventHandler(this.HandleArrayDraggingCellSelectionChanged);
+			this.labelsArray.DraggingCellSelectionChanged += new EventHandler(this.HandleArrayFinalCellSelectionChanged);
 
 			this.primaryArray = new MyWidgets.StringArray(this);
 			this.primaryArray.Name = "Primary";
 			this.primaryArray.CellsQuantityChanged += new EventHandler(this.HandleArrayCellsQuantityChanged);
+			this.primaryArray.DraggingCellSelectionChanged += new EventHandler(this.HandleArrayDraggingCellSelectionChanged);
+			this.primaryArray.DraggingCellSelectionChanged += new EventHandler(this.HandleArrayFinalCellSelectionChanged);
 
 			this.secondaryArray = new MyWidgets.StringArray(this);
 			this.secondaryArray.Name = "Secondary";
 			this.secondaryArray.CellsQuantityChanged += new EventHandler(this.HandleArrayCellsQuantityChanged);
+			this.secondaryArray.DraggingCellSelectionChanged += new EventHandler(this.HandleArrayDraggingCellSelectionChanged);
+			this.secondaryArray.DraggingCellSelectionChanged += new EventHandler(this.HandleArrayFinalCellSelectionChanged);
 
 			this.scroller = new VScroller(this);
 			this.scroller.IsInverted = true;
@@ -42,8 +48,22 @@ namespace Epsitec.Common.Designer
 			this.UpdateCultures();
 		}
 
-		public void Dispose()
+		protected override void Dispose(bool disposing)
 		{
+			if (disposing)
+			{
+				this.secondaryCulture.ComboClosed -= new EventHandler(this.HandleSecondaryCultureComboClosed);
+				this.labelsArray.CellsQuantityChanged -= new EventHandler(this.HandleArrayCellsQuantityChanged);
+				this.labelsArray.DraggingCellSelectionChanged -= new EventHandler(this.HandleArrayDraggingCellSelectionChanged);
+				this.labelsArray.DraggingCellSelectionChanged -= new EventHandler(this.HandleArrayFinalCellSelectionChanged);
+				this.primaryArray.CellsQuantityChanged -= new EventHandler(this.HandleArrayCellsQuantityChanged);
+				this.primaryArray.DraggingCellSelectionChanged -= new EventHandler(this.HandleArrayDraggingCellSelectionChanged);
+				this.primaryArray.DraggingCellSelectionChanged -= new EventHandler(this.HandleArrayFinalCellSelectionChanged);
+				this.secondaryArray.CellsQuantityChanged -= new EventHandler(this.HandleArrayCellsQuantityChanged);
+				this.secondaryArray.DraggingCellSelectionChanged -= new EventHandler(this.HandleArrayDraggingCellSelectionChanged);
+				this.secondaryArray.DraggingCellSelectionChanged -= new EventHandler(this.HandleArrayFinalCellSelectionChanged);
+				this.scroller.ValueChanged -= new EventHandler(this.HandleScrollerValueChanged);
+			}
 		}
 
 
@@ -240,6 +260,19 @@ namespace Epsitec.Common.Designer
 			MyWidgets.StringArray array = sender as MyWidgets.StringArray;
 			this.UpdateArrays(array.Name);
 			this.UpdateScroller();
+		}
+
+		void HandleArrayDraggingCellSelectionChanged(object sender)
+		{
+			MyWidgets.StringArray array = sender as MyWidgets.StringArray;
+			int sel = array.CellSelected;
+			this.labelsArray.CellSelected = sel;
+			this.primaryArray.CellSelected = sel;
+			this.secondaryArray.CellSelected = sel;
+		}
+
+		void HandleArrayFinalCellSelectionChanged(object sender)
+		{
 		}
 
 		void HandleScrollerValueChanged(object sender)
