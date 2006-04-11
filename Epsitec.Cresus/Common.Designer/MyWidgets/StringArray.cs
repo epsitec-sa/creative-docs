@@ -19,6 +19,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		public StringArray() : base()
 		{
+			this.dragBehavior = new Widgets.Behaviors.DragBehavior(this, true, false);
+
+			this.AutoEngage = true;
+			this.AutoRepeat = true;
+
+			this.InternalState |= InternalState.Engageable;
 		}
 
 		public StringArray(Widget embedder) : this()
@@ -89,23 +95,96 @@ namespace Epsitec.Common.Designer.MyWidgets
 			return this.cells[index].State;
 		}
 
-		public void SetLineSelected(int index, bool selected)
+		public int CellSelected
 		{
-			//	Spécifie l'état d'une ligne.
-			if ( this.cells == null )  return;
-			if ( index < 0 || index >= this.cells.Length )  return;
-			this.cells[index].Selected = selected;
-			this.Invalidate();
+			//	Cellule sélectionnée.
+			get
+			{
+				for (int i=0; i<this.cells.Length; i++)
+				{
+					if ( this.cells[i].Selected )  return i;
+				}
+				return -1;
+			}
+
+			set
+			{
+				for (int i=0; i<this.cells.Length; i++)
+				{
+					bool selected = (i == value);
+					if (this.cells[i].Selected != selected)
+					{
+						this.cells[i].Selected = selected;
+						this.Invalidate();
+					}
+				}
+			}
 		}
 
-		public bool GetLineSelected(int index)
+
+		protected override void ProcessMessage(Message message, Drawing.Point pos)
 		{
-			//	Retourne l'état d'une ligne.
-			if ( this.cells == null )  return false;
-			if ( index < 0 || index >= this.cells.Length )  return false;
-			return this.cells[index].Selected;
+			if (this.IsEnabled == false)
+			{
+				return;
+			}
+
+			if (message.IsMouseType)
+			{
+				if (message.Type == MessageType.MouseDown)
+				{
+					int cell = this.Detect(pos);
+					if (this.CellSelected != cell)
+					{
+						this.CellSelected = cell;
+						this.OnDraggingCellSelectionChanged();
+					}
+					this.isDragging = true;
+					message.Consumer = this;
+					return;
+				}
+
+				if (message.Type == MessageType.MouseMove)
+				{
+					if (this.isDragging)
+					{
+						int cell = this.Detect(pos);
+						if (this.CellSelected != cell)
+						{
+							this.CellSelected = cell;
+							this.OnDraggingCellSelectionChanged();
+						}
+						message.Consumer = this;
+						return;
+					}
+				}
+				
+				if (message.Type == MessageType.MouseUp)
+				{
+					int cell = this.Detect(pos);
+					this.CellSelected = cell;
+					this.OnFinalCellSelectionChanged();
+					this.isDragging = false;
+					message.Consumer = this;
+					return;
+				}
+			}
+
+			if (!this.dragBehavior.ProcessMessage(message, pos))
+			{
+				base.ProcessMessage(message, pos);
+			}
 		}
 
+		protected int Detect(Point pos)
+		{
+			//	Détecte la cellule visée par la souris.
+			Rectangle box = this.Client.Bounds;
+			if ( !box.Contains(pos) )  return -1;
+			double py = box.Height-(pos.Y-box.Bottom);
+			double h = box.Height/this.cells.Length;
+			return (int) (py/h);
+		}
 
 		protected override void UpdateClientGeometry()
 		{
@@ -182,9 +261,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 		}
 
 
+		#region Events handler
 		protected virtual void OnCellsQuantityChanged()
 		{
-			//	Génère un événement pour dire que la taille a changé.
+			//	Génère un événement pour dire que le nombre de cellules à changé.
 			if (this.CellsQuantityChanged != null)  // qq'un écoute ?
 			{
 				this.CellsQuantityChanged(this);
@@ -192,6 +272,31 @@ namespace Epsitec.Common.Designer.MyWidgets
 		}
 
 		public event Support.EventHandler CellsQuantityChanged;
+
+
+		protected virtual void OnDraggingCellSelectionChanged()
+		{
+			//	Génère un événement pour dire qu'une cellule a été sélectionnée.
+			if (this.DraggingCellSelectionChanged != null)  // qq'un écoute ?
+			{
+				this.DraggingCellSelectionChanged(this);
+			}
+		}
+
+		public event Support.EventHandler DraggingCellSelectionChanged;
+
+
+		protected virtual void OnFinalCellSelectionChanged()
+		{
+			//	Génère un événement pour dire qu'une cellule a été sélectionnée.
+			if (this.FinalCellSelectionChanged != null)  // qq'un écoute ?
+			{
+				this.FinalCellSelectionChanged(this);
+			}
+		}
+
+		public event Support.EventHandler FinalCellSelectionChanged;
+		#endregion
 
 
 		#region Cell class
@@ -204,7 +309,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 		#endregion
 
 
-		protected double					lineHeight = 20;
-		protected Cell[]					cells;
+		protected double						lineHeight = 20;
+		protected Cell[]						cells;
+		protected bool							isDragging = false;
+		private Widgets.Behaviors.DragBehavior	dragBehavior;
 	}
 }
