@@ -33,7 +33,10 @@ namespace Epsitec.Common.Designer
 			this.array.SelectedRowChanged += new EventHandler(this.HandleArraySelectedRowChanged);
 
 			this.primaryEdit = new TextFieldMulti(this);
+			this.primaryEdit.TextChanged += new EventHandler(this.HandleEditTextChanged);
+
 			this.secondaryEdit = new TextFieldMulti(this);
+			this.secondaryEdit.TextChanged += new EventHandler(this.HandleEditTextChanged);
 
 			this.UpdateCultures();
 		}
@@ -46,6 +49,8 @@ namespace Epsitec.Common.Designer
 				this.array.CellsQuantityChanged -= new EventHandler(this.HandleArrayCellsQuantityChanged);
 				this.array.CellsContentChanged -= new EventHandler(this.HandleArrayCellsContentChanged);
 				this.array.SelectedRowChanged -= new EventHandler(this.HandleArraySelectedRowChanged);
+				this.primaryEdit.TextChanged -= new EventHandler(this.HandleEditTextChanged);
+				this.secondaryEdit.TextChanged -= new EventHandler(this.HandleEditTextChanged);
 			}
 		}
 
@@ -233,6 +238,17 @@ namespace Epsitec.Common.Designer
 			{
 				this.secondaryEdit.Text = text;
 			}
+		}
+
+		void HandleEditTextChanged(object sender)
+		{
+			TextFieldMulti edit = sender as TextFieldMulti;
+			int sel = this.array.SelectedRow;
+			int column = (edit == this.primaryEdit) ? 1 : 2;
+			MyWidgets.StringList.CellState state = (edit.Text == "") ? MyWidgets.StringList.CellState.Warning : MyWidgets.StringList.CellState.Normal;
+
+			this.array.SetLineString(column, sel, edit.Text);
+			this.array.SetLineState(column, sel, state);
 		}
 
 
