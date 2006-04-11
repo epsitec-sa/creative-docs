@@ -107,47 +107,47 @@ namespace Epsitec.Common.Designer
 					{
 						ResourceBundle.Field primaryField = this.primaryBundle[this.labelsIndex[first+i]];
 						this.labelsArray.SetLineString(i, primaryField.Name);
+						this.labelsArray.SetLineState(i, MyWidgets.StringArray.CellState.Normal);
 					}
 					else
 					{
 						this.labelsArray.SetLineString(i, "");
+						this.labelsArray.SetLineState(i, MyWidgets.StringArray.CellState.Warning);
 					}
 				}
 
 				if (name == "Primary")
 				{
-					if (first+i < this.labelsIndex.Count)
-					{
-						ResourceBundle.Field primaryField = this.primaryBundle[this.labelsIndex[first+i]];
-						this.primaryArray.SetLineString(i, primaryField.AsString);
-					}
-					else
-					{
-						this.primaryArray.SetLineString(i, "");
-					}
+					this.UpdateArraysField(this.primaryBundle, this.primaryArray, first, i);
 				}
 
 				if (name == "Secondary")
 				{
-					if (first+i < this.labelsIndex.Count)
-					{
-						ResourceBundle.Field secondaryField = this.secondaryBundle[this.labelsIndex[first+i]];
+					this.UpdateArraysField(this.secondaryBundle, this.secondaryArray, first, i);
+				}
+			}
+		}
 
-						if (secondaryField == null)
-						{
-							this.secondaryArray.SetLineString(i, "");
-						}
-						else
-						{
-							this.secondaryArray.SetLineString(i, secondaryField.AsString);
-						}
-					}
-					else
+		protected void UpdateArraysField(ResourceBundle bundle, MyWidgets.StringArray array, int first, int i)
+		{
+			if (first+i < this.labelsIndex.Count)
+			{
+				ResourceBundle.Field field = bundle[this.labelsIndex[first+i]];
+
+				if (field != null)
+				{
+					string text = field.AsString;
+					if (text != null && text != "")
 					{
-						this.secondaryArray.SetLineString(i, "");
+						array.SetLineString(i, text);
+						array.SetLineState(i, MyWidgets.StringArray.CellState.Normal);
+						return;
 					}
 				}
 			}
+
+			array.SetLineString(i, "");
+			array.SetLineState(i, MyWidgets.StringArray.CellState.Warning);
 		}
 
 		protected void UpdateScroller()
