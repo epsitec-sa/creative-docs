@@ -236,7 +236,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			double h = rect.Height/this.cells.Length;
 			rect.Bottom = rect.Top-h;
 
-			for ( int i=0 ; i<this.cells.Length ; i++ )
+			for (int i=0; i<this.cells.Length; i++)
 			{
 				Color backColor = adorner.ColorTextBackground;
 				if (this.cells[i].Selected)
@@ -246,10 +246,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 				graphics.AddFilledRectangle(rect);
 				graphics.RenderSolid(backColor);
 
-				if ( this.cells[i].State == CellState.Warning )
+				if (this.cells[i].State == CellState.Warning)
 				{
 					graphics.AddFilledRectangle(rect);
-					graphics.RenderSolid(Color.FromAlphaRgb(0.2, 1,0,0));  // rouge semi-transparent
+					graphics.RenderSolid(Color.FromAlphaRgb(0.2, 1, 0, 0));  // rouge semi-transparent
 				}
 
 				if (this.cells[i].TextLayout.Text != null)
@@ -258,17 +258,21 @@ namespace Epsitec.Common.Designer.MyWidgets
 					this.cells[i].TextLayout.Paint(new Point(rect.Left+5, rect.Bottom), graphics);
 				}
 
-				if ( i < this.cells.Length-1 )
-				{
-					Point p1 = new Point(rect.Left, rect.Bottom);
-					Point p2 = new Point(rect.Right, rect.Bottom);
-					graphics.Align(ref p1);
-					graphics.Align(ref p2);
-					p1.Y += 0.5;
-					p2.Y += 0.5;
-					graphics.AddLine(p1, p2);
-					graphics.RenderSolid(adorner.ColorBorder);
-				}
+				rect.Offset(0, -h);
+			}
+
+			rect = this.Client.Bounds;
+			rect.Bottom = rect.Top-h;
+
+			for (int i=0; i<this.cells.Length-1; i++)
+			{
+				Point p1 = new Point(rect.Left, rect.Bottom);
+				Point p2 = new Point(rect.Right, rect.Bottom);
+				graphics.Align(ref p1);
+				graphics.Align(ref p2);
+				p1.Y += 0.5;
+				p2.Y += 0.5;
+				graphics.AddLine(p1, p2);
 
 				rect.Offset(0, -h);
 			}
