@@ -23,27 +23,14 @@ namespace Epsitec.Common.Designer
 			this.secondaryCulture.IsReadOnly = true;
 			this.secondaryCulture.ComboClosed += new EventHandler(this.HandleSecondaryCultureComboClosed);
 
-			this.labelsArray = new MyWidgets.StringList(this);
-			this.labelsArray.Name = "Labels";
-			this.labelsArray.CellsQuantityChanged += new EventHandler(this.HandleArrayCellsQuantityChanged);
-			this.labelsArray.DraggingCellSelectionChanged += new EventHandler(this.HandleArrayDraggingCellSelectionChanged);
-			this.labelsArray.DraggingCellSelectionChanged += new EventHandler(this.HandleArrayFinalCellSelectionChanged);
-
-			this.primaryArray = new MyWidgets.StringList(this);
-			this.primaryArray.Name = "Primary";
-			this.primaryArray.CellsQuantityChanged += new EventHandler(this.HandleArrayCellsQuantityChanged);
-			this.primaryArray.DraggingCellSelectionChanged += new EventHandler(this.HandleArrayDraggingCellSelectionChanged);
-			this.primaryArray.DraggingCellSelectionChanged += new EventHandler(this.HandleArrayFinalCellSelectionChanged);
-
-			this.secondaryArray = new MyWidgets.StringList(this);
-			this.secondaryArray.Name = "Secondary";
-			this.secondaryArray.CellsQuantityChanged += new EventHandler(this.HandleArrayCellsQuantityChanged);
-			this.secondaryArray.DraggingCellSelectionChanged += new EventHandler(this.HandleArrayDraggingCellSelectionChanged);
-			this.secondaryArray.DraggingCellSelectionChanged += new EventHandler(this.HandleArrayFinalCellSelectionChanged);
-
-			this.scroller = new VScroller(this);
-			this.scroller.IsInverted = true;
-			this.scroller.ValueChanged += new EventHandler(this.HandleScrollerValueChanged);
+			this.array = new MyWidgets.StringArray(this);
+			this.array.Columns = 3;
+			this.array.SetColumnsRelativeWidth(0, 0.2);
+			this.array.SetColumnsRelativeWidth(1, 0.4);
+			this.array.SetColumnsRelativeWidth(2, 0.4);
+			this.array.CellsQuantityChanged += new EventHandler(this.HandleArrayCellsQuantityChanged);
+			this.array.CellsContentChanged += new EventHandler(this.HandleArrayCellsContentChanged);
+			this.array.SelectedRowChanged += new EventHandler(this.HandleArraySelectedRowChanged);
 
 			this.UpdateCultures();
 		}
@@ -53,16 +40,9 @@ namespace Epsitec.Common.Designer
 			if (disposing)
 			{
 				this.secondaryCulture.ComboClosed -= new EventHandler(this.HandleSecondaryCultureComboClosed);
-				this.labelsArray.CellsQuantityChanged -= new EventHandler(this.HandleArrayCellsQuantityChanged);
-				this.labelsArray.DraggingCellSelectionChanged -= new EventHandler(this.HandleArrayDraggingCellSelectionChanged);
-				this.labelsArray.DraggingCellSelectionChanged -= new EventHandler(this.HandleArrayFinalCellSelectionChanged);
-				this.primaryArray.CellsQuantityChanged -= new EventHandler(this.HandleArrayCellsQuantityChanged);
-				this.primaryArray.DraggingCellSelectionChanged -= new EventHandler(this.HandleArrayDraggingCellSelectionChanged);
-				this.primaryArray.DraggingCellSelectionChanged -= new EventHandler(this.HandleArrayFinalCellSelectionChanged);
-				this.secondaryArray.CellsQuantityChanged -= new EventHandler(this.HandleArrayCellsQuantityChanged);
-				this.secondaryArray.DraggingCellSelectionChanged -= new EventHandler(this.HandleArrayDraggingCellSelectionChanged);
-				this.secondaryArray.DraggingCellSelectionChanged -= new EventHandler(this.HandleArrayFinalCellSelectionChanged);
-				this.scroller.ValueChanged -= new EventHandler(this.HandleScrollerValueChanged);
+				this.array.CellsQuantityChanged -= new EventHandler(this.HandleArrayCellsQuantityChanged);
+				this.array.CellsContentChanged -= new EventHandler(this.HandleArrayCellsContentChanged);
+				this.array.SelectedRowChanged -= new EventHandler(this.HandleArraySelectedRowChanged);
 			}
 		}
 
@@ -113,87 +93,32 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		protected void UpdateArrays(string name)
+		protected void UpdateArray()
 		{
-			//	Met à jour un tableau (donc une colonne).
-			int first = this.firstIndex;
-			int total = System.Math.Min(this.labelsIndex.Count, this.labelsArray.LineCount);
+			//	Met à jour tout le contenu du tableau.
+			int first = this.array.FirstVisibleRow;
+			int total = System.Math.Min(this.labelsIndex.Count, this.array.LineCount);
+
+			this.array.TotalRows = this.labelsIndex.Count;
 
 			for ( int i=0 ; i<total ; i++ )
 			{
-				if (name == "Labels")
+				if (first+i < this.labelsIndex.Count)
 				{
-					this.labelsArray.CellSelected = this.selIndex-this.firstIndex;
+					ResourceBundle.Field primaryField = this.primaryBundle[this.labelsIndex[first+i]];
+					ResourceBundle.Field secondaryField = this.secondaryBundle[this.labelsIndex[first+i]];
 
-					if (first+i < this.labelsIndex.Count)
-					{
-						ResourceBundle.Field primaryField = this.primaryBundle[this.labelsIndex[first+i]];
-						this.labelsArray.SetLineString(i, primaryField.Name);
-						this.labelsArray.SetLineState(i, MyWidgets.StringList.CellState.Normal);
-					}
-					else
-					{
-						this.labelsArray.SetLineString(i, "");
-						this.labelsArray.SetLineState(i, MyWidgets.StringList.CellState.Warning);
-					}
+					this.array.SetLineString(0, i, primaryField.Name);
+					this.array.SetLineString(1, i, primaryField.AsString);
+					this.array.SetLineString(2, i, secondaryField.AsString);
 				}
-
-				if (name == "Primary")
+				else
 				{
-					this.UpdateArraysField(this.primaryBundle, this.primaryArray, first, i);
-				}
-
-				if (name == "Secondary")
-				{
-					this.UpdateArraysField(this.secondaryBundle, this.secondaryArray, first, i);
+					this.array.SetLineString(0, i, "");
+					this.array.SetLineString(1, i, "");
+					this.array.SetLineString(2, i, "");
 				}
 			}
-		}
-
-		protected void UpdateArraysField(ResourceBundle bundle, MyWidgets.StringList array, int first, int i)
-		{
-			array.CellSelected = this.selIndex-this.firstIndex;
-
-			if (first+i < this.labelsIndex.Count)
-			{
-				ResourceBundle.Field field = bundle[this.labelsIndex[first+i]];
-
-				if (field != null)
-				{
-					string text = field.AsString;
-					if (text != null && text != "")
-					{
-						array.SetLineString(i, text);
-						array.SetLineState(i, MyWidgets.StringList.CellState.Normal);
-						return;
-					}
-				}
-			}
-
-			array.SetLineString(i, "");
-			array.SetLineState(i, MyWidgets.StringList.CellState.Warning);
-		}
-
-		protected void UpdateScroller()
-		{
-			this.ignoreChange = true;
-
-			if (this.labelsIndex.Count <= this.labelsArray.LineCount)
-			{
-				this.scroller.Enable = false;
-			}
-			else
-			{
-				this.scroller.Enable = true;
-				this.scroller.MinValue = (decimal) 0;
-				this.scroller.MaxValue = (decimal) (this.labelsIndex.Count - this.labelsArray.LineCount);
-				this.scroller.Value = (decimal) this.firstIndex;
-				this.scroller.VisibleRangeRatio = (decimal) this.labelsArray.LineCount / (decimal) this.labelsIndex.Count;
-				this.scroller.LargeChange = (decimal) this.labelsArray.LineCount-1;
-				this.scroller.SmallChange = (decimal) 1;
-			}
-
-			this.ignoreChange = false;
 		}
 
 
@@ -206,39 +131,22 @@ namespace Epsitec.Common.Designer
 
 			Rectangle box = this.Client.Bounds;
 			box.Deflate(10);
-			box.Width -= this.scroller.Width;
-			Rectangle part;
 			Rectangle rect;
 
-			part = box;
-			part.Bottom = part.Top-22;
-
-			rect = part;
-			rect.Left += this.labelsWidth;
-			rect.Width = this.primaryWidth+1;
-			this.primaryCulture.Bounds = rect;
-			rect.Left = rect.Right-1;
-			rect.Right = part.Right;
-			this.secondaryCulture.Bounds = rect;
-
-			part.Top = part.Bottom-5;
-			part.Bottom = box.Bottom;
-
-			rect = part;
-			rect.Width = this.labelsWidth+1;
-			this.labelsArray.Bounds = rect;
-			rect.Left = rect.Right-1;
-			rect.Width = this.primaryWidth+1;
-			this.primaryArray.Bounds = rect;
-			rect.Left = rect.Right-1;
-			rect.Right = part.Right;
-			this.secondaryArray.Bounds = rect;
+			//	Il faut obligatoirement s'occuper d'abord de this.array, puisque les autres
+			//	widgets dépendent des largeurs relatives de ses colonnes.
+			rect = box;
+			rect.Top -= 22+5;
+			this.array.Bounds = rect;
 
 			rect = box;
-			rect.Left = rect.Right;
-			rect.Width = scroller.Width;
-			rect.Top -= 22+5;
-			this.scroller.Bounds = rect;
+			rect.Bottom = rect.Top-22;
+			rect.Left += this.array.GetColumnsAbsoluteWidth(0);
+			rect.Width = this.array.GetColumnsAbsoluteWidth(1)+1;
+			this.primaryCulture.Bounds = rect;
+			rect.Left = rect.Right-1;
+			rect.Width = this.array.GetColumnsAbsoluteWidth(2);
+			this.secondaryCulture.Bounds = rect;
 		}
 
 		
@@ -261,54 +169,27 @@ namespace Epsitec.Common.Designer
 
 		void HandleArrayCellsQuantityChanged(object sender)
 		{
-			MyWidgets.StringList array = sender as MyWidgets.StringList;
-			this.UpdateArrays(array.Name);
-			this.UpdateScroller();
+			this.UpdateArray();
 		}
 
-		void HandleArrayDraggingCellSelectionChanged(object sender)
+		void HandleArrayCellsContentChanged(object sender)
 		{
-			MyWidgets.StringList array = sender as MyWidgets.StringList;
-			int sel = array.CellSelected;
-
-			this.labelsArray.CellSelected = sel;
-			this.primaryArray.CellSelected = sel;
-			this.secondaryArray.CellSelected = sel;
+			this.UpdateArray();
 		}
 
-		void HandleArrayFinalCellSelectionChanged(object sender)
+		void HandleArraySelectedRowChanged(object sender)
 		{
-			MyWidgets.StringList array = sender as MyWidgets.StringList;
-			int sel = array.CellSelected;
-
-			this.selIndex = this.firstIndex+sel;
-		}
-
-		void HandleScrollerValueChanged(object sender)
-		{
-			if ( this.ignoreChange )  return;
-			this.firstIndex = (int) System.Math.Floor(this.scroller.DoubleValue+0.5);
-			this.UpdateArrays("Labels");
-			this.UpdateArrays("Primary");
-			this.UpdateArrays("Secondary");
 		}
 
 
 		protected Module					module;
 		protected List<string>				labelsIndex;
-		protected int						firstIndex = 0;
-		protected int						selIndex = -1;
 		protected bool						ignoreChange = false;
 
 		protected TextField					primaryCulture;
 		protected TextFieldCombo			secondaryCulture;
 		protected ResourceBundle			primaryBundle;
 		protected ResourceBundle			secondaryBundle;
-		protected MyWidgets.StringList		labelsArray;
-		protected MyWidgets.StringList		primaryArray;
-		protected MyWidgets.StringList		secondaryArray;
-		protected VScroller					scroller;
-		protected double					labelsWidth = 150;
-		protected double					primaryWidth = 200;
+		protected MyWidgets.StringArray		array;
 	}
 }
