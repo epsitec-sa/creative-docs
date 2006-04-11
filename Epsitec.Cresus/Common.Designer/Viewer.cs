@@ -23,19 +23,19 @@ namespace Epsitec.Common.Designer
 			this.secondaryCulture.IsReadOnly = true;
 			this.secondaryCulture.ComboClosed += new EventHandler(this.HandleSecondaryCultureComboClosed);
 
-			this.labelsArray = new MyWidgets.StringArray(this);
+			this.labelsArray = new MyWidgets.StringList(this);
 			this.labelsArray.Name = "Labels";
 			this.labelsArray.CellsQuantityChanged += new EventHandler(this.HandleArrayCellsQuantityChanged);
 			this.labelsArray.DraggingCellSelectionChanged += new EventHandler(this.HandleArrayDraggingCellSelectionChanged);
 			this.labelsArray.DraggingCellSelectionChanged += new EventHandler(this.HandleArrayFinalCellSelectionChanged);
 
-			this.primaryArray = new MyWidgets.StringArray(this);
+			this.primaryArray = new MyWidgets.StringList(this);
 			this.primaryArray.Name = "Primary";
 			this.primaryArray.CellsQuantityChanged += new EventHandler(this.HandleArrayCellsQuantityChanged);
 			this.primaryArray.DraggingCellSelectionChanged += new EventHandler(this.HandleArrayDraggingCellSelectionChanged);
 			this.primaryArray.DraggingCellSelectionChanged += new EventHandler(this.HandleArrayFinalCellSelectionChanged);
 
-			this.secondaryArray = new MyWidgets.StringArray(this);
+			this.secondaryArray = new MyWidgets.StringList(this);
 			this.secondaryArray.Name = "Secondary";
 			this.secondaryArray.CellsQuantityChanged += new EventHandler(this.HandleArrayCellsQuantityChanged);
 			this.secondaryArray.DraggingCellSelectionChanged += new EventHandler(this.HandleArrayDraggingCellSelectionChanged);
@@ -129,12 +129,12 @@ namespace Epsitec.Common.Designer
 					{
 						ResourceBundle.Field primaryField = this.primaryBundle[this.labelsIndex[first+i]];
 						this.labelsArray.SetLineString(i, primaryField.Name);
-						this.labelsArray.SetLineState(i, MyWidgets.StringArray.CellState.Normal);
+						this.labelsArray.SetLineState(i, MyWidgets.StringList.CellState.Normal);
 					}
 					else
 					{
 						this.labelsArray.SetLineString(i, "");
-						this.labelsArray.SetLineState(i, MyWidgets.StringArray.CellState.Warning);
+						this.labelsArray.SetLineState(i, MyWidgets.StringList.CellState.Warning);
 					}
 				}
 
@@ -150,7 +150,7 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		protected void UpdateArraysField(ResourceBundle bundle, MyWidgets.StringArray array, int first, int i)
+		protected void UpdateArraysField(ResourceBundle bundle, MyWidgets.StringList array, int first, int i)
 		{
 			array.CellSelected = this.selIndex-this.firstIndex;
 
@@ -164,14 +164,14 @@ namespace Epsitec.Common.Designer
 					if (text != null && text != "")
 					{
 						array.SetLineString(i, text);
-						array.SetLineState(i, MyWidgets.StringArray.CellState.Normal);
+						array.SetLineState(i, MyWidgets.StringList.CellState.Normal);
 						return;
 					}
 				}
 			}
 
 			array.SetLineString(i, "");
-			array.SetLineState(i, MyWidgets.StringArray.CellState.Warning);
+			array.SetLineState(i, MyWidgets.StringList.CellState.Warning);
 		}
 
 		protected void UpdateScroller()
@@ -261,14 +261,14 @@ namespace Epsitec.Common.Designer
 
 		void HandleArrayCellsQuantityChanged(object sender)
 		{
-			MyWidgets.StringArray array = sender as MyWidgets.StringArray;
+			MyWidgets.StringList array = sender as MyWidgets.StringList;
 			this.UpdateArrays(array.Name);
 			this.UpdateScroller();
 		}
 
 		void HandleArrayDraggingCellSelectionChanged(object sender)
 		{
-			MyWidgets.StringArray array = sender as MyWidgets.StringArray;
+			MyWidgets.StringList array = sender as MyWidgets.StringList;
 			int sel = array.CellSelected;
 
 			this.labelsArray.CellSelected = sel;
@@ -278,7 +278,7 @@ namespace Epsitec.Common.Designer
 
 		void HandleArrayFinalCellSelectionChanged(object sender)
 		{
-			MyWidgets.StringArray array = sender as MyWidgets.StringArray;
+			MyWidgets.StringList array = sender as MyWidgets.StringList;
 			int sel = array.CellSelected;
 
 			this.selIndex = this.firstIndex+sel;
@@ -304,9 +304,9 @@ namespace Epsitec.Common.Designer
 		protected TextFieldCombo			secondaryCulture;
 		protected ResourceBundle			primaryBundle;
 		protected ResourceBundle			secondaryBundle;
-		protected MyWidgets.StringArray		labelsArray;
-		protected MyWidgets.StringArray		primaryArray;
-		protected MyWidgets.StringArray		secondaryArray;
+		protected MyWidgets.StringList		labelsArray;
+		protected MyWidgets.StringList		primaryArray;
+		protected MyWidgets.StringList		secondaryArray;
 		protected VScroller					scroller;
 		protected double					labelsWidth = 150;
 		protected double					primaryWidth = 200;
