@@ -54,6 +54,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			if ( this.stringList == null )  return;
 			if ( index < 0 || index >= this.stringList.Length )  return;
 			this.stringList[index].Text = text;
+			this.Invalidate();
 		}
 
 		public string GetLineString(int index)

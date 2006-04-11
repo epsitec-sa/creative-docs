@@ -14,6 +14,8 @@ namespace Epsitec.Common.Designer
 		{
 			this.module = module;
 
+			this.labelsIndex = new List<string>();
+
 			this.primaryCulture = new TextField(this);
 			this.primaryCulture.IsReadOnly = true;
 
@@ -21,8 +23,17 @@ namespace Epsitec.Common.Designer
 			this.secondaryCulture.IsReadOnly = true;
 			this.secondaryCulture.ComboClosed += new EventHandler(this.HandleSecondaryCultureComboClosed);
 
+			this.labelsArray = new MyWidgets.StringArray(this);
+			this.labelsArray.Name = "Labels";
+			this.labelsArray.CellsQuantityChanged += new EventHandler(this.HandleArrayCellsQuantityChanged);
+
 			this.primaryArray = new MyWidgets.StringArray(this);
-			this.primaryArray.CellsQuantityChanged += new EventHandler(this.HandlePrimaryArrayCellsQuantityChanged);
+			this.primaryArray.Name = "Primary";
+			this.primaryArray.CellsQuantityChanged += new EventHandler(this.HandleArrayCellsQuantityChanged);
+
+			this.secondaryArray = new MyWidgets.StringArray(this);
+			this.secondaryArray.Name = "Secondary";
+			this.secondaryArray.CellsQuantityChanged += new EventHandler(this.HandleArrayCellsQuantityChanged);
 
 			this.UpdateCultures();
 		}
@@ -62,6 +73,52 @@ namespace Epsitec.Common.Designer
 			{
 				this.secondaryCulture.Text = Misc.LongCulture(this.secondaryBundle.Culture.Name);
 			}
+
+			this.UpdateLabelsIndex();
+		}
+
+		protected void UpdateLabelsIndex()
+		{
+			this.labelsIndex.Clear();
+
+			foreach (ResourceBundle.Field field in this.primaryBundle.Fields)
+			{
+				this.labelsIndex.Add(field.Name);
+			}
+		}
+
+		protected void UpdateArrays(string name)
+		{
+			int first = this.firstIndex;
+			int total = System.Math.Min(this.labelsIndex.Count, this.labelsArray.LineCount);
+
+			for ( int i=0 ; i<total ; i++ )
+			{
+				ResourceBundle.Field primaryField = this.primaryBundle[this.labelsIndex[first+i]];
+				ResourceBundle.Field secondaryField = this.secondaryBundle[this.labelsIndex[first+i]];
+
+				if ( name == "Labels" )
+				{
+					this.labelsArray.SetLineString(i, primaryField.Name);
+				}
+
+				if ( name == "Primary" )
+				{
+					this.primaryArray.SetLineString(i, primaryField.AsString);
+				}
+
+				if ( name == "Secondary" )
+				{
+					if (secondaryField == null)
+					{
+						this.secondaryArray.SetLineString(i, "");
+					}
+					else
+					{
+						this.secondaryArray.SetLineString(i, secondaryField.AsString);
+					}
+				}
+			}
 		}
 
 
@@ -73,7 +130,7 @@ namespace Epsitec.Common.Designer
 			if ( this.primaryCulture == null )  return;
 
 			Rectangle box = this.Client.Bounds;
-			box.Deflate(5);
+			box.Deflate(10);
 			Rectangle part;
 			Rectangle rect;
 
@@ -81,9 +138,10 @@ namespace Epsitec.Common.Designer
 			part.Bottom = part.Top-22;
 
 			rect = part;
-			rect.Width = 200;
+			rect.Left += this.labelsWidth;
+			rect.Width = this.primaryWidth+1;
 			this.primaryCulture.Bounds = rect;
-			rect.Left = part.Left+200;
+			rect.Left = rect.Right-1;
 			rect.Right = part.Right;
 			this.secondaryCulture.Bounds = rect;
 
@@ -91,8 +149,14 @@ namespace Epsitec.Common.Designer
 			part.Bottom = box.Bottom;
 
 			rect = part;
-			rect.Width = 200;
+			rect.Width = this.labelsWidth+1;
+			this.labelsArray.Bounds = rect;
+			rect.Left = rect.Right-1;
+			rect.Width = this.primaryWidth+1;
 			this.primaryArray.Bounds = rect;
+			rect.Left = rect.Right-1;
+			rect.Right = part.Right;
+			this.secondaryArray.Bounds = rect;
 		}
 
 		
@@ -113,21 +177,26 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		void HandlePrimaryArrayCellsQuantityChanged(object sender)
+		void HandleArrayCellsQuantityChanged(object sender)
 		{
-			for ( int i=0 ; i<this.primaryBundle.FieldCount ; i++ )
-			{
-				ResourceBundle.Field field = this.primaryBundle[i];
-				this.primaryArray.SetLineString(i, field.AsString);
-			}
+			MyWidgets.StringArray array = sender as MyWidgets.StringArray;
+
+			this.UpdateArrays(array.Name);
 		}
 
 
 		protected Module					module;
+		protected List<string>				labelsIndex;
+		protected int						firstIndex;
+
 		protected TextField					primaryCulture;
 		protected TextFieldCombo			secondaryCulture;
 		protected ResourceBundle			primaryBundle;
 		protected ResourceBundle			secondaryBundle;
+		protected MyWidgets.StringArray		labelsArray;
 		protected MyWidgets.StringArray		primaryArray;
+		protected MyWidgets.StringArray		secondaryArray;
+		protected double					labelsWidth = 150;
+		protected double					primaryWidth = 200;
 	}
 }
