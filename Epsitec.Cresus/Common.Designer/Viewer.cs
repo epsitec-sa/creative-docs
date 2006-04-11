@@ -109,16 +109,35 @@ namespace Epsitec.Common.Designer
 					ResourceBundle.Field secondaryField = this.secondaryBundle[this.labelsIndex[first+i]];
 
 					this.array.SetLineString(0, i, primaryField.Name);
-					this.array.SetLineString(1, i, primaryField.AsString);
-					this.array.SetLineString(2, i, secondaryField.AsString);
+					this.UpdateArrayField(1, i, primaryField);
+					this.UpdateArrayField(2, i, secondaryField);
 				}
 				else
 				{
 					this.array.SetLineString(0, i, "");
 					this.array.SetLineString(1, i, "");
 					this.array.SetLineString(2, i, "");
+					this.array.SetLineState(1, i, MyWidgets.StringList.CellState.Normal);
+					this.array.SetLineState(2, i, MyWidgets.StringList.CellState.Normal);
 				}
 			}
+		}
+
+		protected void UpdateArrayField(int row, int column, ResourceBundle.Field field)
+		{
+			if (field != null)
+			{
+				string text = field.AsString;
+				if (text != null && text != "")
+				{
+					this.array.SetLineString(row, column, text);
+					this.array.SetLineState(row, column, MyWidgets.StringList.CellState.Normal);
+					return;
+				}
+			}
+
+			this.array.SetLineString(row, column, "");
+			this.array.SetLineState(row, column, MyWidgets.StringList.CellState.Warning);
 		}
 
 
