@@ -41,7 +41,7 @@ namespace Epsitec.Common.Designer
 			this.primaryArray = new MyWidgets.StringArray(this.primaryPage);
 			this.primaryArray.Anchor = AnchorStyles.All;
 			this.primaryArray.Margins = new Margins(10, 10, 40, 10);
-			this.primaryArray.SizeChanged += new EventHandler(this.HandlePrimaryArraySizeChanged);
+			this.primaryArray.CellsQuantityChanged += new EventHandler(this.HandlePrimaryArrayCellsQuantityChanged);
 
 			this.UpdateCultures();
 		}
@@ -102,7 +102,7 @@ namespace Epsitec.Common.Designer
 		}
 
 
-		void HandlePrimaryArraySizeChanged(object sender)
+		void HandlePrimaryArrayCellsQuantityChanged(object sender)
 		{
 			for ( int i=0 ; i<this.primaryBundle.FieldCount ; i++ )
 			{

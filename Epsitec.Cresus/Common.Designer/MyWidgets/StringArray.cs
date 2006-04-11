@@ -82,7 +82,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 					this.stringList[i].Alignment = ContentAlignment.MiddleLeft;
 				}
 
-				this.OnSizeChanged();
+				this.OnCellsQuantityChanged();
 			}
 		}
 
@@ -124,16 +124,16 @@ namespace Epsitec.Common.Designer.MyWidgets
 		}
 
 
-		protected virtual void OnSizeChanged()
+		protected virtual void OnCellsQuantityChanged()
 		{
 			//	Génère un événement pour dire que la taille a changé.
-			if ( this.SizeChanged != null )  // qq'un écoute ?
+			if (this.CellsQuantityChanged != null)  // qq'un écoute ?
 			{
-				this.SizeChanged(this);
+				this.CellsQuantityChanged(this);
 			}
 		}
 
-		public event Support.EventHandler SizeChanged;
+		public event Support.EventHandler CellsQuantityChanged;
 
 		
 		protected double					lineHeight = 20;
