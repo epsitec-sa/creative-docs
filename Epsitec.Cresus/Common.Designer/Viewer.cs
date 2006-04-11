@@ -123,6 +123,8 @@ namespace Epsitec.Common.Designer
 			{
 				if (name == "Labels")
 				{
+					this.labelsArray.CellSelected = this.selIndex-this.firstIndex;
+
 					if (first+i < this.labelsIndex.Count)
 					{
 						ResourceBundle.Field primaryField = this.primaryBundle[this.labelsIndex[first+i]];
@@ -150,6 +152,8 @@ namespace Epsitec.Common.Designer
 
 		protected void UpdateArraysField(ResourceBundle bundle, MyWidgets.StringArray array, int first, int i)
 		{
+			array.CellSelected = this.selIndex-this.firstIndex;
+
 			if (first+i < this.labelsIndex.Count)
 			{
 				ResourceBundle.Field field = bundle[this.labelsIndex[first+i]];
@@ -266,6 +270,7 @@ namespace Epsitec.Common.Designer
 		{
 			MyWidgets.StringArray array = sender as MyWidgets.StringArray;
 			int sel = array.CellSelected;
+
 			this.labelsArray.CellSelected = sel;
 			this.primaryArray.CellSelected = sel;
 			this.secondaryArray.CellSelected = sel;
@@ -273,6 +278,10 @@ namespace Epsitec.Common.Designer
 
 		void HandleArrayFinalCellSelectionChanged(object sender)
 		{
+			MyWidgets.StringArray array = sender as MyWidgets.StringArray;
+			int sel = array.CellSelected;
+
+			this.selIndex = this.firstIndex+sel;
 		}
 
 		void HandleScrollerValueChanged(object sender)
@@ -287,7 +296,8 @@ namespace Epsitec.Common.Designer
 
 		protected Module					module;
 		protected List<string>				labelsIndex;
-		protected int						firstIndex;
+		protected int						firstIndex = 0;
+		protected int						selIndex = -1;
 		protected bool						ignoreChange = false;
 
 		protected TextField					primaryCulture;
