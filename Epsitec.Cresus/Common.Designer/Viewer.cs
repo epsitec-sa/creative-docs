@@ -14,33 +14,14 @@ namespace Epsitec.Common.Designer
 		{
 			this.module = module;
 
-			this.book = new PaneBook(this);
-			this.book.Dock = DockStyle.Fill;
-
-			this.primaryPage = new PanePage();
-			this.primaryPage.PaneRelativeSize = 50;
-			this.primaryPage.PaneMinSize = 100;
-			this.book.Items.Add(this.primaryPage);
-
-			this.secondaryPage = new PanePage();
-			this.secondaryPage.PaneRelativeSize = 50;
-			this.secondaryPage.PaneMinSize = 100;
-			this.book.Items.Add(this.secondaryPage);
-
-			this.primaryCulture = new TextField(this.primaryPage);
+			this.primaryCulture = new TextField(this);
 			this.primaryCulture.IsReadOnly = true;
-			this.primaryCulture.Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
-			this.primaryCulture.Margins = new Margins(10, 10, 10, 10);
 
-			this.secondaryCulture = new TextFieldCombo(this.secondaryPage);
+			this.secondaryCulture = new TextFieldCombo(this);
 			this.secondaryCulture.IsReadOnly = true;
-			this.secondaryCulture.Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
-			this.secondaryCulture.Margins = new Margins(10, 10, 10, 10);
 			this.secondaryCulture.ComboClosed += new EventHandler(this.HandleSecondaryCultureComboClosed);
 
-			this.primaryArray = new MyWidgets.StringArray(this.primaryPage);
-			this.primaryArray.Anchor = AnchorStyles.All;
-			this.primaryArray.Margins = new Margins(10, 10, 40, 10);
+			this.primaryArray = new MyWidgets.StringArray(this);
 			this.primaryArray.CellsQuantityChanged += new EventHandler(this.HandlePrimaryArrayCellsQuantityChanged);
 
 			this.UpdateCultures();
@@ -84,6 +65,37 @@ namespace Epsitec.Common.Designer
 		}
 
 
+		protected override void UpdateClientGeometry()
+		{
+			//	Met à jour la géométrie.
+			base.UpdateClientGeometry();
+
+			if ( this.primaryCulture == null )  return;
+
+			Rectangle box = this.Client.Bounds;
+			box.Deflate(5);
+			Rectangle part;
+			Rectangle rect;
+
+			part = box;
+			part.Bottom = part.Top-22;
+
+			rect = part;
+			rect.Width = 200;
+			this.primaryCulture.Bounds = rect;
+			rect.Left = part.Left+200;
+			rect.Right = part.Right;
+			this.secondaryCulture.Bounds = rect;
+
+			part.Top = part.Bottom-5;
+			part.Bottom = box.Bottom;
+
+			rect = part;
+			rect.Width = 200;
+			this.primaryArray.Bounds = rect;
+		}
+
+		
 		void HandleSecondaryCultureComboClosed(object sender)
 		{
 			//	Changement de la culture secondaire.
@@ -101,7 +113,6 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-
 		void HandlePrimaryArrayCellsQuantityChanged(object sender)
 		{
 			for ( int i=0 ; i<this.primaryBundle.FieldCount ; i++ )
@@ -112,10 +123,7 @@ namespace Epsitec.Common.Designer
 		}
 
 
-		protected Module module;
-		protected PaneBook					book;
-		protected PanePage					primaryPage;
-		protected PanePage					secondaryPage;
+		protected Module					module;
 		protected TextField					primaryCulture;
 		protected TextFieldCombo			secondaryCulture;
 		protected ResourceBundle			primaryBundle;
