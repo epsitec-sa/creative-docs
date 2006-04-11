@@ -73,6 +73,18 @@ namespace Epsitec.Common.Designer
 		}
 
 
+		public void Save()
+		{
+			//	Enregistre tout le module.
+			ResourceBundleCollection bundles = this.Bundles;
+			foreach (ResourceBundle bundle in bundles)
+			{
+				this.ResourceManager.SetBundle(bundle, ResourceSetMode.UpdateOnly);
+			}
+			this.modifier.IsDirty = false;
+		}
+
+
 		protected string					name;
 		protected ResourceManager			resourceManager;
 		protected ResourceBundleCollection	bundles;
