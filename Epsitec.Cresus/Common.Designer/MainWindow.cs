@@ -24,7 +24,7 @@ namespace Epsitec.Common.Designer
 			this.moduleInfoList = new List<ModuleInfo>();
 		}
 
-		public void Show(Window parent, CommandDispatcher commandDispatcher)
+		public void Show(Window parent)
 		{
 			//	Crée et montre la fenêtre de l'éditeur.
 			if ( this.window == null )
@@ -42,13 +42,16 @@ namespace Epsitec.Common.Designer
 				this.window.PreventAutoClose = true;
 				//?this.window.Owner = parent;
 				this.window.AsyncNotification += new EventHandler(this.HandleWindowAsyncNotification);
-				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowAboutCloseClicked);
+				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowCloseClicked);
 
 				this.commandDispatcher = new CommandDispatcher("ResDesigner", CommandDispatcherLevel.Primary);
 				this.commandDispatcher.RegisterController(this);
 				this.commandDispatcher.Focus();
 				this.window.Root.AttachCommandDispatcher(this.commandDispatcher);
 				this.window.AttachCommandDispatcher(this.commandDispatcher);
+
+				this.dlgGlyphs = new Dialogs.Glyphs(this);
+				this.dlgGlyphs.Closed += new EventHandler(this.HandleDlgClosed);
 
 				this.InitCommands();
 				this.CreateLayout();
@@ -139,6 +142,14 @@ namespace Epsitec.Common.Designer
 #endif
 		}
 
+		public Window Window
+		{
+			get
+			{
+				return this.window;
+			}
+		}
+
 
 		protected void CreateLayout()
 		{
@@ -203,7 +214,7 @@ namespace Epsitec.Common.Designer
 
 			this.resize = new ResizeKnob(infoMisc);
 			this.resize.Anchor = AnchorStyles.BottomRight;
-			//?ToolTip.Default.SetToolTip(this.resize, Res.Strings.Dialog.Tooltip.Resize);
+			ToolTip.Default.SetToolTip(this.resize, Res.Strings.Dialog.Tooltip.Resize);
 
 			this.bookModules = new TabBook(this.window.Root);
 			this.bookModules.Anchor = AnchorStyles.All;
@@ -297,6 +308,21 @@ namespace Epsitec.Common.Designer
 			this.CloseModule();
 		}
 
+		[Command("Glyphs")]
+		void CommandGlyphs(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			if (this.glyphsState.ActiveState == ActiveState.No)
+			{
+				this.dlgGlyphs.Show();
+				this.glyphsState.ActiveState = ActiveState.Yes;
+			}
+			else
+			{
+				this.dlgGlyphs.Hide();
+				this.glyphsState.ActiveState = ActiveState.No;
+			}
+		}
+
 		protected void InitCommands()
 		{
 			this.newState = this.CreateCommandState("New", KeyCode.ModifierControl|KeyCode.AlphaN);
@@ -381,7 +407,7 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		protected Module CurrentModule
+		public Module CurrentModule
 		{
 			//	Retourne le Module courant.
 			get
@@ -498,14 +524,24 @@ namespace Epsitec.Common.Designer
 		#endregion
 
 
+		private void HandleDlgClosed(object sender)
+		{
+			//	Un dialogue a été fermé.
+			if (sender == this.dlgGlyphs)
+			{
+				this.glyphsState.ActiveState = ActiveState.No;
+			}
+		}
+
 		private void HandleWindowAsyncNotification(object sender)
 		{
 			if ( this.currentModule < 0 )  return;
 			this.CurrentModule.Notifier.GenerateEvents();
 		}
 
-		private void HandleWindowAboutCloseClicked(object sender)
+		private void HandleWindowCloseClicked(object sender)
 		{
+			this.dlgGlyphs.Hide();
 			this.window.Hide();
 		}
 
@@ -537,6 +573,7 @@ namespace Epsitec.Common.Designer
 		protected TabBook						bookModules;
 		protected StatusBar						info;
 		protected ResizeKnob					resize;
+		protected Dialogs.Glyphs				dlgGlyphs;
 
 		protected string						resourcePrefix;
 		protected List<ModuleInfo>				moduleInfoList;
