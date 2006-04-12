@@ -93,6 +93,9 @@ namespace Epsitec.Common.Designer.Dialogs
 			}
 
 			this.window.Show();
+
+			this.fieldFilter.Focus();
+			this.fieldFilter.SelectAll();
 		}
 
 
@@ -138,7 +141,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			{
 				this.fieldFilter.Items.Remove(this.fieldFilter.Text);
 			}
-			this.fieldFilter.Items.Add(this.fieldFilter.Text);
+			this.fieldFilter.Items.Insert(0, this.fieldFilter.Text);
 		}
 
 		private void HandleButtonAllClicked(object sender, MessageEventArgs e)
