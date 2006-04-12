@@ -67,6 +67,7 @@
   <data name="Dialog.Search.Radio.Reverse">En arrière</data>
   <data name="Dialog.Search.Radio.Normal">En avant</data>
   <data name="Dialog.Search.Check.Case">Respecter la casse</data>
+  <data name="Dialog.Search.Check.About">Chercher dans les commentaires</data>
   <data name="Dialog.Search.Button.Insert">Chercher</data>
 
   <data name="Misc.NoTitle">&lt;i&gt;sans titre&lt;/i&gt;</data>

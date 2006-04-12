@@ -366,7 +366,7 @@ namespace Epsitec.Common.Designer
 		void CommandAccess(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			if ( !this.IsCurrentModule )  return;
-			this.CurrentModule.Modifier.ActiveViewer.ChangeAccess(e.CommandName);
+			this.CurrentModule.Modifier.ActiveViewer.DoAccess(e.CommandName);
 		}
 
 		protected void InitCommands()

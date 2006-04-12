@@ -98,7 +98,7 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		public void DoSearch(string search, bool isReverse, bool isCase)
+		public void DoSearch(string search, bool isReverse, bool isCase, bool isAbout)
 		{
 			//	Effectue une recherche.
 			int sel = this.array.SelectedRow;
@@ -113,6 +113,9 @@ namespace Epsitec.Common.Designer
 			{
 				search = search.ToLower();
 			}
+
+			int column = -1;
+			int index = -1;
 
 			for (int i=0; i<this.labelsIndex.Count; i++)
 			{
@@ -131,25 +134,77 @@ namespace Epsitec.Common.Designer
 				string label     = this.labelsIndex[sel];
 				string primary   = this.primaryBundle[label].AsString;
 				string secondary = this.secondaryBundle[label].AsString;
+				string pAbout    = this.primaryBundle[label].About;
+				string sAbout    = this.secondaryBundle[label].About;
+
 				if ( secondary == null )  secondary = "";
+				if ( pAbout    == null )  pAbout    = "";
+				if ( sAbout    == null )  sAbout    = "";
 
 				if (!isCase)
 				{
 					label     = label.ToLower();
 					primary   = primary.ToLower();
 					secondary = secondary.ToLower();
+					pAbout    = pAbout.ToLower();
+					sAbout    = sAbout.ToLower();
 				}
 
-				if ( label.Contains(search)     )  break;
-				if ( primary.Contains(search)   )  break;
-				if ( secondary.Contains(search) )  break;
+				if (label.Contains(search))
+				{
+					break;
+				}
+
+				index = primary.IndexOf(search);
+				if (index != -1)
+				{
+					column = 1;
+					break;
+				}
+
+				index = secondary.IndexOf(search);
+				if (index != -1)
+				{
+					column = 2;
+					break;
+				}
+
+				if (isAbout)
+				{
+					index = pAbout.IndexOf(search);
+					if (index != -1)
+					{
+						column = 3;
+						break;
+					}
+
+					index = sAbout.IndexOf(search);
+					if (index != -1)
+					{
+						column = 4;
+						break;
+					}
+				}
 			}
 
 			this.array.SelectedRow = sel;
 			this.array.ShowSelectedRow();
+
+			AbstractTextField edit = null;
+			if (column == 1)  edit = this.primaryEdit;
+			if (column == 2)  edit = this.secondaryEdit;
+			if (column == 3)  edit = this.primaryAbout;
+			if (column == 4)  edit = this.secondaryAbout;
+			if (edit != null)
+			{
+				edit.Focus();
+				edit.CursorFrom  = index;
+				edit.CursorTo    = index+search.Length;
+				edit.CursorAfter = false;
+			}
 		}
 
-		public void ChangeFilter(string filter, bool isBegin, bool isCase)
+		public void DoFilter(string filter, bool isBegin, bool isCase)
 		{
 			//	Change le filtre des ressources visibles.
 			string label = "";
@@ -167,7 +222,7 @@ namespace Epsitec.Common.Designer
 			this.array.ShowSelectedRow();
 		}
 
-		public void ChangeAccess(string name)
+		public void DoAccess(string name)
 		{
 			//	Change la ressource visible.
 			int sel = this.array.SelectedRow;
