@@ -14,6 +14,10 @@ namespace Epsitec.Common.Designer.Ribbons
 		{
 			this.title.Text = Res.Strings.Ribbon.Section.Access;
 
+			this.buttonAccessFirst = this.CreateIconButton("AccessFirst");
+			this.buttonAccessPrev = this.CreateIconButton("AccessPrev");
+			this.buttonAccessNext = this.CreateIconButton("AccessNext");
+			this.buttonAccessLast = this.CreateIconButton("AccessLast");
 			this.buttonFilter = this.CreateIconButton("Filter");
 			this.buttonSearch = this.CreateIconButton("Search");
 			
@@ -53,12 +57,27 @@ namespace Epsitec.Common.Designer.Ribbons
 			rect.Width  = dx;
 			rect.Height = dy;
 			rect.Offset(0, dy+5);
+			this.buttonAccessFirst.Bounds = rect;
+			rect.Offset(dx, 0);
+			this.buttonAccessPrev.Bounds = rect;
+			rect.Offset(dx, 0);
+			this.buttonAccessNext.Bounds = rect;
+			rect.Offset(dx, 0);
+			this.buttonAccessLast.Bounds = rect;
+
+			rect = this.UsefulZone;
+			rect.Width  = dx;
+			rect.Height = dy;
 			this.buttonFilter.Bounds = rect;
 			rect.Offset(dx, 0);
 			this.buttonSearch.Bounds = rect;
 		}
 
 
+		protected IconButton				buttonAccessFirst;
+		protected IconButton				buttonAccessPrev;
+		protected IconButton				buttonAccessNext;
+		protected IconButton				buttonAccessLast;
 		protected IconButton				buttonFilter;
 		protected IconButton				buttonSearch;
 	}

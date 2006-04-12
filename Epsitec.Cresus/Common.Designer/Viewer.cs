@@ -116,6 +116,20 @@ namespace Epsitec.Common.Designer
 			this.array.ShowSelectedRow();
 		}
 
+		public void ChangeAccess(string name)
+		{
+			//	Change la ressource visible.
+			int sel = this.array.SelectedRow;
+
+			if ( name == "AccessFirst" )  sel = 0;
+			if ( name == "AccessPrev"  )  sel --;
+			if ( name == "AccessNext"  )  sel ++;
+			if ( name == "AccessLast"  )  sel = 1000000;
+
+			this.array.SelectedRow = sel;
+			this.array.ShowSelectedRow();
+		}
+
 
 		protected void UpdateCultures()
 		{

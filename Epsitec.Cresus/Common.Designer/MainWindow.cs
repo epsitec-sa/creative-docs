@@ -359,6 +359,16 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
+		[Command("AccessFirst")]
+		[Command("AccessPrev")]
+		[Command("AccessNext")]
+		[Command("AccessLast")]
+		void CommandAccess(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			if ( !this.IsCurrentModule )  return;
+			this.CurrentModule.Modifier.ActiveViewer.ChangeAccess(e.CommandName);
+		}
+
 		protected void InitCommands()
 		{
 			this.newState = this.CreateCommandState("New", KeyCode.ModifierControl|KeyCode.AlphaN);
@@ -377,6 +387,10 @@ namespace Epsitec.Common.Designer
 			this.glyphsState = this.CreateCommandState("Glyphs");
 			this.filterState = this.CreateCommandState("Filter");
 			this.searchState = this.CreateCommandState("Search");
+			this.accessFirstState = this.CreateCommandState("AccessFirst");
+			this.accessPrevState = this.CreateCommandState("AccessPrev");
+			this.accessNextState = this.CreateCommandState("AccessNext");
+			this.accessLastState = this.CreateCommandState("AccessLast");
 		}
 
 		protected CommandState CreateCommandState(string command, params Widgets.Shortcut[] shortcuts)
@@ -650,5 +664,9 @@ namespace Epsitec.Common.Designer
 		protected CommandState					glyphsState;
 		protected CommandState					filterState;
 		protected CommandState					searchState;
+		protected CommandState					accessFirstState;
+		protected CommandState					accessPrevState;
+		protected CommandState					accessNextState;
+		protected CommandState					accessLastState;
 	}
 }
