@@ -193,6 +193,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			set
 			{
+				value = System.Math.Max(value, -1);
+				value = System.Math.Min(value, this.TotalRows-1);
+
 				if (this.selectedRow != value)
 				{
 					this.selectedRow = value;

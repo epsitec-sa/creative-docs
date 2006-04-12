@@ -109,6 +109,10 @@
     <EmbeddedResource Include="Images\Glyphs.icon" />
     <EmbeddedResource Include="Images\Filter.icon" />
     <EmbeddedResource Include="Images\Search.icon" />
+    <EmbeddedResource Include="Images\AccessLast.icon" />
+    <EmbeddedResource Include="Images\AccessNext.icon" />
+    <EmbeddedResource Include="Images\AccessFirst.icon" />
+    <EmbeddedResource Include="Images\AccessPrev.icon" />
     <None Include="Resources\Designer\Strings.00.resource" />
     <None Include="Resources\Designer\Strings.en.resource" />
   </ItemGroup>
