@@ -46,6 +46,7 @@
     <Compile Include="Res.cs" />
     <Compile Include="Ribbons\Abstract.cs" />
     <Compile Include="Ribbons\Clipboard.cs" />
+    <Compile Include="Ribbons\Character.cs" />
     <Compile Include="Ribbons\File.cs" />
     <Compile Include="Viewer.cs" />
   </ItemGroup>

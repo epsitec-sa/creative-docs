@@ -28,6 +28,13 @@
   <data name="Action.Delete">Supprimer</data>
   <data name="Action.Duplicate">Dupliquer</data>
 
+  <data name="Action.Character">Caractère</data>
+  <data name="Action.FontBold">Gras</data>
+  <data name="Action.FontItalic">Italique</data>
+  <data name="Action.FontUnderlined">Souligné</data>
+  <data name="Action.Glyphs">Caractères spéciaux...</data>
+  <data name="Action.Filter">Filtrer les ressources visibles...</data>
+
   <data name="Misc.NoTitle">&lt;i&gt;sans titre&lt;/i&gt;</data>
   <data name="Misc.Copy">Copie</data>
   <data name="Misc.CopyOf">de</data>

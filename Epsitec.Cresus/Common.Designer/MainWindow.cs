@@ -182,6 +182,7 @@ namespace Epsitec.Common.Designer
 			this.ribbonText.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top;
 			this.ribbonText.Margins = new Margins(0, 0, this.hToolBar.Height, 0);
 			this.ribbonText.Visibility = true;
+			this.ribbonText.Items.Add(new Ribbons.Character());
 			this.ribbonText.Items.Add(new Ribbons.Clipboard());
 
 			this.info = new StatusBar(this.window.Root);
@@ -305,6 +306,10 @@ namespace Epsitec.Common.Designer
 			this.cutState = this.CreateCommandState("Cut", KeyCode.ModifierControl|KeyCode.AlphaX);
 			this.copyState = this.CreateCommandState("Copy", KeyCode.ModifierControl|KeyCode.AlphaC);
 			this.pasteState = this.CreateCommandState("Paste", KeyCode.ModifierControl|KeyCode.AlphaV);
+			this.fontBoldState = this.CreateCommandState("FontBold", KeyCode.ModifierControl|KeyCode.AlphaB);
+			this.fontItalicState = this.CreateCommandState("FontItalic", KeyCode.ModifierControl|KeyCode.AlphaI);
+			this.fontUnderlinedState = this.CreateCommandState("FontUnderlined", KeyCode.ModifierControl|KeyCode.AlphaU);
+			this.glyphsState = this.CreateCommandState("Glyphs");
 		}
 
 		protected CommandState CreateCommandState(string command, params Widgets.Shortcut[] shortcuts)
@@ -544,5 +549,9 @@ namespace Epsitec.Common.Designer
 		protected CommandState					cutState;
 		protected CommandState					copyState;
 		protected CommandState					pasteState;
+		protected CommandState					fontBoldState;
+		protected CommandState					fontItalicState;
+		protected CommandState					fontUnderlinedState;
+		protected CommandState					glyphsState;
 	}
 }
