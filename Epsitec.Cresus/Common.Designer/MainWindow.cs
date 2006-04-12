@@ -155,6 +155,11 @@ namespace Epsitec.Common.Designer
 			this.ribbonOperButton.Pressed += new MessageEventHandler(this.HandleRibbonPressed);
 			this.hToolBar.Items.Add(this.ribbonOperButton);
 
+			this.ribbonTextButton = new RibbonButton("", Res.Strings.Ribbon.Text);
+			this.ribbonTextButton.Size = this.ribbonTextButton.RequiredSize;
+			this.ribbonTextButton.Pressed += new MessageEventHandler(this.HandleRibbonPressed);
+			this.hToolBar.Items.Add(this.ribbonTextButton);
+
 			this.ribbonMain = new RibbonContainer(this.window.Root);
 			this.ribbonMain.Name = "Main";
 			this.ribbonMain.Height = this.ribbonHeight;
@@ -170,6 +175,14 @@ namespace Epsitec.Common.Designer
 			this.ribbonOper.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top;
 			this.ribbonOper.Margins = new Margins(0, 0, this.hToolBar.Height, 0);
 			this.ribbonOper.Visibility = true;
+
+			this.ribbonText = new RibbonContainer(this.window.Root);
+			this.ribbonText.Name = "Text";
+			this.ribbonText.Height = this.ribbonHeight;
+			this.ribbonText.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top;
+			this.ribbonText.Margins = new Margins(0, 0, this.hToolBar.Height, 0);
+			this.ribbonText.Visibility = true;
+			this.ribbonText.Items.Add(new Ribbons.Clipboard());
 
 			this.info = new StatusBar(this.window.Root);
 			this.info.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Bottom;
@@ -441,9 +454,11 @@ namespace Epsitec.Common.Designer
 			//?this.SuspendLayout();
 			this.ribbonMain.Visibility = (this.ribbonMain == this.ribbonActive);
 			this.ribbonOper.Visibility = (this.ribbonOper == this.ribbonActive);
+			this.ribbonText.Visibility = (this.ribbonText == this.ribbonActive);
 
 			this.ribbonMainButton.ActiveState = (this.ribbonMain == this.ribbonActive) ? ActiveState.Yes : ActiveState.No;
 			this.ribbonOperButton.ActiveState = (this.ribbonOper == this.ribbonActive) ? ActiveState.Yes : ActiveState.No;
+			this.ribbonTextButton.ActiveState = (this.ribbonText == this.ribbonActive) ? ActiveState.Yes : ActiveState.No;
 
 			double h = this.RibbonHeight;
 			this.bookModules.Margins = new Margins(1, 2, this.hToolBar.Height+h+1, this.info.Height+1);
@@ -467,6 +482,7 @@ namespace Epsitec.Common.Designer
 			RibbonContainer ribbon = null;
 			if ( button == this.ribbonMainButton )  ribbon = this.ribbonMain;
 			if ( button == this.ribbonOperButton )  ribbon = this.ribbonOper;
+			if ( button == this.ribbonTextButton )  ribbon = this.ribbonText;
 			if ( ribbon == null )  return;
 
 			this.ActiveRibbon(ribbon.IsVisible ? null : ribbon);
@@ -505,8 +521,10 @@ namespace Epsitec.Common.Designer
 		protected HToolBar						hToolBar;
 		protected RibbonButton					ribbonMainButton;
 		protected RibbonButton					ribbonOperButton;
+		protected RibbonButton					ribbonTextButton;
 		protected RibbonContainer				ribbonMain;
 		protected RibbonContainer				ribbonOper;
+		protected RibbonContainer				ribbonText;
 		protected RibbonContainer				ribbonActive;
 		protected TabBook						bookModules;
 		protected StatusBar						info;
