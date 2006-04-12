@@ -79,7 +79,6 @@ namespace Epsitec.Common.Designer.Dialogs
 				buttonOk.Clicked += new MessageEventHandler(this.HandleButtonInsertClicked);
 				buttonOk.TabIndex = tabIndex++;
 				buttonOk.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-				ToolTip.Default.SetToolTip(buttonOk, Res.Strings.Dialog.Glyphs.Tooltip.Insert);
 
 				Button buttonClose = new Button(this.window.Root);
 				buttonClose.Width = 75;
@@ -89,7 +88,6 @@ namespace Epsitec.Common.Designer.Dialogs
 				buttonClose.Clicked += new MessageEventHandler(this.HandleButtonCloseClicked);
 				buttonClose.TabIndex = tabIndex++;
 				buttonClose.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-				ToolTip.Default.SetToolTip(buttonClose, Res.Strings.Dialog.Tooltip.Close);
 			}
 
 			this.window.Show();
@@ -98,6 +96,8 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		protected void EditInsert()
 		{
+			//	Insère le glyphe sélectionné dans le tableau dans la ligne éditable
+			//	qui avait le focus.
 			if ( this.array.SelectedIndex == -1 )  return;
 
 			int code = this.array.IndexToUnicode(array.SelectedIndex);
@@ -160,7 +160,6 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		protected string					fontFace;
 		protected string					fontStyle;
-		protected bool						ignoreChanged = false;
 
 		protected GlyphArray				array;
 		protected TextField					status;

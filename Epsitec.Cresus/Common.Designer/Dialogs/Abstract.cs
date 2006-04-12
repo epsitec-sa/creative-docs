@@ -72,5 +72,6 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected MainWindow					mainWindow;
 		protected Window						parentWindow;
 		protected Window						window;
+		protected bool							ignoreChanged = false;
 	}
 }

@@ -11,6 +11,7 @@
   <data name="Ribbon.Section.Clipboard">Presse-papiers</data>
   <data name="Ribbon.Section.Select">Sélection</data>
   <data name="Ribbon.Section.Character">Caractère</data>
+  <data name="Ribbon.Section.Access">Accès</data>
 
   <data name="String.Edit">Texte</data>
   <data name="String.About">Commentaire</data>
@@ -35,6 +36,7 @@
   <data name="Action.FontUnderlined">Souligné</data>
   <data name="Action.Glyphs">Caractères spéciaux...</data>
   <data name="Action.Filter">Filtrer les ressources visibles...</data>
+  <data name="Action.Search">Recherche d'une ressource...</data>
 
   <data name="Dialog.Button.Close">Fermer</data>
   <data name="Dialog.Button.OK">D'accord</data>
@@ -46,8 +48,13 @@
 
   <data name="Dialog.Glyphs.Title">Caractères spéciaux</data>
   <data name="Dialog.Glyphs.Button.Insert">Insérer</data>
-  <data name="Dialog.Glyphs.Tooltip.Insert">Insérer dans le texte</data>
   <data name="Dialog.Glyphs.Tooltip.ArraySize">Taille de l'aperçu</data>
+
+  <data name="Dialog.Filter.Title">Filtre pour les ressources</data>
+  <data name="Dialog.Filter.Button.Insert">Filtrer</data>
+
+  <data name="Dialog.Search.Title">Recherche d'une ressource</data>
+  <data name="Dialog.Search.Button.Insert">Chercher</data>
 
   <data name="Misc.NoTitle">&lt;i&gt;sans titre&lt;/i&gt;</data>
   <data name="Misc.Copy">Copie</data>

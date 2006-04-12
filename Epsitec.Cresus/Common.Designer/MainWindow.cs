@@ -51,7 +51,12 @@ namespace Epsitec.Common.Designer
 				this.window.AttachCommandDispatcher(this.commandDispatcher);
 
 				this.dlgGlyphs = new Dialogs.Glyphs(this);
+				this.dlgFilter = new Dialogs.Filter(this);
+				this.dlgSearch = new Dialogs.Search(this);
+
 				this.dlgGlyphs.Closed += new EventHandler(this.HandleDlgClosed);
+				this.dlgFilter.Closed += new EventHandler(this.HandleDlgClosed);
+				this.dlgSearch.Closed += new EventHandler(this.HandleDlgClosed);
 
 				this.InitCommands();
 				this.CreateLayout();
@@ -178,6 +183,7 @@ namespace Epsitec.Common.Designer
 			this.ribbonMain.Margins = new Margins(0, 0, this.hToolBar.Height, 0);
 			this.ribbonMain.Visibility = true;
 			this.ribbonMain.Items.Add(new Ribbons.File());
+			this.ribbonMain.Items.Add(new Ribbons.Access());
 			this.ribbonMain.Items.Add(new Ribbons.Clipboard());
 
 			this.ribbonOper = new RibbonContainer(this.window.Root);
@@ -323,6 +329,36 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
+		[Command("Filter")]
+		void CommandFilter(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			if (this.filterState.ActiveState == ActiveState.No)
+			{
+				this.dlgFilter.Show();
+				this.filterState.ActiveState = ActiveState.Yes;
+			}
+			else
+			{
+				this.dlgFilter.Hide();
+				this.filterState.ActiveState = ActiveState.No;
+			}
+		}
+
+		[Command("Search")]
+		void CommandSearch(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			if (this.searchState.ActiveState == ActiveState.No)
+			{
+				this.dlgSearch.Show();
+				this.searchState.ActiveState = ActiveState.Yes;
+			}
+			else
+			{
+				this.dlgSearch.Hide();
+				this.searchState.ActiveState = ActiveState.No;
+			}
+		}
+
 		protected void InitCommands()
 		{
 			this.newState = this.CreateCommandState("New", KeyCode.ModifierControl|KeyCode.AlphaN);
@@ -339,6 +375,8 @@ namespace Epsitec.Common.Designer
 			this.fontItalicState = this.CreateCommandState("FontItalic", KeyCode.ModifierControl|KeyCode.AlphaI);
 			this.fontUnderlinedState = this.CreateCommandState("FontUnderlined", KeyCode.ModifierControl|KeyCode.AlphaU);
 			this.glyphsState = this.CreateCommandState("Glyphs");
+			this.filterState = this.CreateCommandState("Filter");
+			this.searchState = this.CreateCommandState("Search");
 		}
 
 		protected CommandState CreateCommandState(string command, params Widgets.Shortcut[] shortcuts)
@@ -531,6 +569,16 @@ namespace Epsitec.Common.Designer
 			{
 				this.glyphsState.ActiveState = ActiveState.No;
 			}
+
+			if (sender == this.dlgFilter)
+			{
+				this.filterState.ActiveState = ActiveState.No;
+			}
+			
+			if (sender == this.dlgSearch)
+			{
+				this.searchState.ActiveState = ActiveState.No;
+			}
 		}
 
 		private void HandleWindowAsyncNotification(object sender)
@@ -542,6 +590,9 @@ namespace Epsitec.Common.Designer
 		private void HandleWindowCloseClicked(object sender)
 		{
 			this.dlgGlyphs.Hide();
+			this.dlgFilter.Hide();
+			this.dlgSearch.Hide();
+
 			this.window.Hide();
 		}
 
@@ -574,6 +625,8 @@ namespace Epsitec.Common.Designer
 		protected StatusBar						info;
 		protected ResizeKnob					resize;
 		protected Dialogs.Glyphs				dlgGlyphs;
+		protected Dialogs.Filter				dlgFilter;
+		protected Dialogs.Search				dlgSearch;
 
 		protected string						resourcePrefix;
 		protected List<ModuleInfo>				moduleInfoList;
@@ -595,5 +648,7 @@ namespace Epsitec.Common.Designer
 		protected CommandState					fontItalicState;
 		protected CommandState					fontUnderlinedState;
 		protected CommandState					glyphsState;
+		protected CommandState					filterState;
+		protected CommandState					searchState;
 	}
 }
