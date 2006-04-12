@@ -235,6 +235,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			if (this.SelectedRow != -1)
 			{
+				if (this.SelectedRow >= this.FirstVisibleRow && this.SelectedRow < this.FirstVisibleRow+this.LineCount)
+				{
+					return;
+				}
+
 				first = this.SelectedRow;
 				first = System.Math.Min(first+this.LineCount/2, this.TotalRows);
 				first = System.Math.Max(first-this.LineCount, 0);
