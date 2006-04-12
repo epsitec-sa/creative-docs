@@ -32,11 +32,19 @@ namespace Epsitec.Common.Designer
 			this.array.CellsContentChanged += new EventHandler(this.HandleArrayCellsContentChanged);
 			this.array.SelectedRowChanged += new EventHandler(this.HandleArraySelectedRowChanged);
 
+			this.labelEdit = new StaticText(this);
+			this.labelEdit.Alignment = ContentAlignment.MiddleRight;
+			this.labelEdit.Text = Res.Strings.String.Edit;
+
 			this.primaryEdit = new TextFieldMulti(this);
 			this.primaryEdit.TextChanged += new EventHandler(this.HandleEditTextChanged);
 
 			this.secondaryEdit = new TextFieldMulti(this);
 			this.secondaryEdit.TextChanged += new EventHandler(this.HandleEditTextChanged);
+
+			this.labelAbout = new StaticText(this);
+			this.labelAbout.Alignment = ContentAlignment.MiddleRight;
+			this.labelAbout.Text = Res.Strings.String.About;
 
 			this.primaryAbout = new TextField(this);
 			this.primaryAbout.TextChanged += new EventHandler(this.HandleAboutTextChanged);
@@ -187,6 +195,8 @@ namespace Epsitec.Common.Designer
 			rect = box;
 			rect.Top = rect.Bottom+47+20+5;
 			rect.Bottom = rect.Top-47;
+			rect.Width = this.array.GetColumnsAbsoluteWidth(0)-5;
+			this.labelEdit.Bounds = rect;
 			rect.Left += this.array.GetColumnsAbsoluteWidth(0);
 			rect.Width = this.array.GetColumnsAbsoluteWidth(1)+1;
 			this.primaryEdit.Bounds = rect;
@@ -197,6 +207,8 @@ namespace Epsitec.Common.Designer
 			rect = box;
 			rect.Top = rect.Bottom+20;
 			rect.Bottom = rect.Top-20;
+			rect.Width = this.array.GetColumnsAbsoluteWidth(0)-5;
+			this.labelAbout.Bounds = rect;
 			rect.Left += this.array.GetColumnsAbsoluteWidth(0);
 			rect.Width = this.array.GetColumnsAbsoluteWidth(1)+1;
 			this.primaryAbout.Bounds = rect;
@@ -332,8 +344,10 @@ namespace Epsitec.Common.Designer
 		protected ResourceBundle			primaryBundle;
 		protected ResourceBundle			secondaryBundle;
 		protected MyWidgets.StringArray		array;
+		protected StaticText				labelEdit;
 		protected TextFieldMulti			primaryEdit;
 		protected TextFieldMulti			secondaryEdit;
+		protected StaticText				labelAbout;
 		protected TextField					primaryAbout;
 		protected TextField					secondaryAbout;
 	}
