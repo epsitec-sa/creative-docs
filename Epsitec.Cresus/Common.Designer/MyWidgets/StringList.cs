@@ -264,8 +264,15 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 				if (this.cells[i].TextLayout.Text != null)
 				{
+					WidgetState state = WidgetState.Enabled;
+					if (this.cells[i].Selected)
+					{
+						state |= WidgetState.Selected;
+					}
+					Color color = adorner.ColorText(state);
+
 					this.cells[i].TextLayout.LayoutSize = new Size(rect.Width-5, rect.Height);
-					this.cells[i].TextLayout.Paint(new Point(rect.Left+5, rect.Bottom), graphics);
+					this.cells[i].TextLayout.Paint(new Point(rect.Left+5, rect.Bottom), graphics, Rectangle.MaxValue, color, GlyphPaintStyle.Normal);
 				}
 
 				rect.Offset(0, -h);
