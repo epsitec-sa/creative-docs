@@ -35,6 +35,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Dialogs\Abstract.cs" />
+    <Compile Include="Dialogs\GlyphArray.cs" />
+    <Compile Include="Dialogs\Glyphs.cs" />
     <Compile Include="MainWindow.cs" />
     <Compile Include="Misc.cs" />
     <Compile Include="Modifier.cs" />
@@ -63,6 +66,10 @@
     <ProjectReference Include="..\Common.IO\Common.IO.csproj">
       <Project>{5A67ED63-98AC-4FC2-9E25-0AFA3229B9D0}</Project>
       <Name>Common.IO</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Common.OpenType\Common.OpenType.csproj">
+      <Project>{7703436A-1D8D-46AA-BB44-699AE5EAAA2F}</Project>
+      <Name>Common.OpenType</Name>
     </ProjectReference>
     <ProjectReference Include="..\Common.Support.Events\Common.Support.Events.csproj">
       <Project>{EAF258A4-E107-4466-A3E1-9FC072557940}</Project>

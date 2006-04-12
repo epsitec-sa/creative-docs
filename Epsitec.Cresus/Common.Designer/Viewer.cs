@@ -37,20 +37,28 @@ namespace Epsitec.Common.Designer
 			this.labelEdit.Text = Res.Strings.String.Edit;
 
 			this.primaryEdit = new TextFieldMulti(this);
+			this.primaryEdit.Name = "PrimaryEdit";
 			this.primaryEdit.TextChanged += new EventHandler(this.HandleEditTextChanged);
+			this.primaryEdit.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
 
 			this.secondaryEdit = new TextFieldMulti(this);
+			this.secondaryEdit.Name = "SecondaryEdit";
 			this.secondaryEdit.TextChanged += new EventHandler(this.HandleEditTextChanged);
+			this.secondaryEdit.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
 
 			this.labelAbout = new StaticText(this);
 			this.labelAbout.Alignment = ContentAlignment.MiddleRight;
 			this.labelAbout.Text = Res.Strings.String.About;
 
 			this.primaryAbout = new TextField(this);
+			this.primaryAbout.Name = "PrimaryAbout";
 			this.primaryAbout.TextChanged += new EventHandler(this.HandleAboutTextChanged);
+			this.primaryAbout.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
 
 			this.secondaryAbout = new TextField(this);
+			this.secondaryAbout.Name = "SecondaryAbout";
 			this.secondaryAbout.TextChanged += new EventHandler(this.HandleAboutTextChanged);
+			this.secondaryAbout.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
 
 			this.UpdateCultures();
 		}
@@ -60,13 +68,32 @@ namespace Epsitec.Common.Designer
 			if (disposing)
 			{
 				this.secondaryCulture.ComboClosed -= new EventHandler(this.HandleSecondaryCultureComboClosed);
+				
 				this.array.CellsQuantityChanged -= new EventHandler(this.HandleArrayCellsQuantityChanged);
 				this.array.CellsContentChanged -= new EventHandler(this.HandleArrayCellsContentChanged);
 				this.array.SelectedRowChanged -= new EventHandler(this.HandleArraySelectedRowChanged);
+				
 				this.primaryEdit.TextChanged -= new EventHandler(this.HandleEditTextChanged);
+				this.primaryEdit.KeyboardFocusChanged -= new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
+
 				this.secondaryEdit.TextChanged -= new EventHandler(this.HandleEditTextChanged);
+				this.secondaryEdit.KeyboardFocusChanged -= new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
+
 				this.primaryAbout.TextChanged -= new EventHandler(this.HandleAboutTextChanged);
+				this.primaryAbout.KeyboardFocusChanged -= new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
+
 				this.secondaryAbout.TextChanged -= new EventHandler(this.HandleAboutTextChanged);
+				this.secondaryAbout.KeyboardFocusChanged -= new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
+			}
+		}
+
+
+		public AbstractTextField CurrentTextField
+		{
+			//	Retourne le texte éditable en cours d'édition.
+			get
+			{
+				return this.currentTextField;
 			}
 		}
 
@@ -335,6 +362,17 @@ namespace Epsitec.Common.Designer
 		}
 
 
+		void HandleEditKeyboardFocusChanged(object sender, Epsitec.Common.Types.DependencyPropertyChangedEventArgs e)
+		{
+			bool focused = (bool) e.NewValue;
+
+			if (focused)
+			{
+				this.currentTextField = sender as AbstractTextField;
+			}
+		}
+
+
 		protected Module					module;
 		protected List<string>				labelsIndex;
 		protected bool						ignoreChange = false;
@@ -350,5 +388,6 @@ namespace Epsitec.Common.Designer
 		protected StaticText				labelAbout;
 		protected TextField					primaryAbout;
 		protected TextField					secondaryAbout;
+		protected AbstractTextField			currentTextField;
 	}
 }

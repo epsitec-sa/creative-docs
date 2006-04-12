@@ -55,6 +55,33 @@ namespace Epsitec.Common.Designer
 		}
 
 
+		static public string GetUnicodeName(int code)
+		{
+			//	Retourne le nom d'un caractère Unicode.
+			if ( code == 0 )  return "";
+
+			string text = TextBreak.GetUnicodeName(code);
+
+			bool minus = false;
+			for( int i=0 ; i<text.Length ; i++ )
+			{
+				if ( text[i] >= 'a' && text[i] <= 'z' )
+				{
+					minus = true;  // contient une lettre minuscule
+					break;
+				}
+			}
+
+			if ( !minus )  // aucune minuscule dans le texte ?
+			{
+				//	Première lettre en majuscule, le reste en minuscules.
+				text = string.Format("{0}{1}", text.Substring(0, 1).ToUpper(), text.Substring(1, text.Length-1).ToLower());
+			}
+
+			return text;
+		}
+
+		
 		static public string Bold(string text)
 		{
 			//	Retourne le texte en gras.

@@ -36,6 +36,19 @@
   <data name="Action.Glyphs">Caractères spéciaux...</data>
   <data name="Action.Filter">Filtrer les ressources visibles...</data>
 
+  <data name="Dialog.Button.Close">Fermer</data>
+  <data name="Dialog.Button.OK">D'accord</data>
+  <data name="Dialog.Button.Cancel">Annuler</data>
+  <data name="Dialog.Button.Help">Aide</data>
+  <data name="Dialog.Tooltip.Close">Fermer ce dialogue</data>
+  <data name="Dialog.Tooltip.Help">Texte explicatif</data>
+  <data name="Dialog.Tooltip.Resize">Redimensionner la fenêtre</data>
+
+  <data name="Dialog.Glyphs.Title">Caractères spéciaux</data>
+  <data name="Dialog.Glyphs.Button.Insert">Insérer</data>
+  <data name="Dialog.Glyphs.Tooltip.Insert">Insérer dans le texte</data>
+  <data name="Dialog.Glyphs.Tooltip.ArraySize">Taille de l'aperçu</data>
+
   <data name="Misc.NoTitle">&lt;i&gt;sans titre&lt;/i&gt;</data>
   <data name="Misc.Copy">Copie</data>
   <data name="Misc.CopyOf">de</data>
