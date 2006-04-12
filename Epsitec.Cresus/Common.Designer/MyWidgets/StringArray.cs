@@ -225,6 +225,21 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
+		public void ShowSelectedRow()
+		{
+			//	Montre la ligne sélectionnée.
+			int first = 0;
+
+			if (this.SelectedRow != -1)
+			{
+				first = this.SelectedRow;
+				first = System.Math.Min(first+this.LineCount/2, this.TotalRows);
+				first = System.Math.Max(first-this.LineCount, 0);
+			}
+
+			this.FirstVisibleRow = first;
+		}
+
 
 		protected void UpdateSelectedRow()
 		{

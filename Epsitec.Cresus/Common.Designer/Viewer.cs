@@ -101,10 +101,19 @@ namespace Epsitec.Common.Designer
 		public void ChangeFilter(string filter, bool isBegin, bool isCase)
 		{
 			//	Change le filtre des ressources visibles.
+			string label = "";
+			int sel = this.array.SelectedRow;
+			if (sel != -1 && sel < this.labelsIndex.Count)
+			{
+				label = this.labelsIndex[sel];
+			}
+
 			this.UpdateLabelsIndex(filter, isBegin, isCase);
-			this.array.SelectedRow = -1;
-			this.array.FirstVisibleRow = 0;
 			this.UpdateArray();
+
+			sel = this.labelsIndex.IndexOf(label);
+			this.array.SelectedRow = sel;
+			this.array.ShowSelectedRow();
 		}
 
 
