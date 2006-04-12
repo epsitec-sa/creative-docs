@@ -7,6 +7,9 @@
   <data name="Ribbon.Main">Principal</data>
   <data name="Ribbon.Oper">Opérations</data>
 
+  <data name="String.Edit">Texte</data>
+  <data name="String.About">Commentaire</data>
+
   <data name="Action.FileMain">Fichier</data>
   <data name="Action.New">Nouveau</data>
   <data name="Action.Open">Ouvrir...</data>
