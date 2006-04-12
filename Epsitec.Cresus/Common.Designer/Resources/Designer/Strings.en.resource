@@ -11,7 +11,6 @@
   <data name="String.Edit">Text</data>
   <data name="String.About">About</data>
 
-  <data name="Action.FileMain">File</data>
   <data name="Action.New">New</data>
   <data name="Action.Open">Open...</data>
   <data name="Action.Close">Close</data>
@@ -21,7 +20,6 @@
   <data name="Action.LastFiles">Recent files</data>
   <data name="Action.Quit">Quit</data>
 
-  <data name="Action.Clipboard">Clipboard</data>
   <data name="Action.Cut">Cut</data>
   <data name="Action.Copy">Copy</data>
   <data name="Action.Paste">Paste</data>

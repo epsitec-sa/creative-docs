@@ -12,7 +12,7 @@ namespace Epsitec.Common.Designer.Ribbons
 	{
 		public Clipboard() : base()
 		{
-			this.title.Text = Res.Strings.Action.Clipboard;
+			this.title.Text = Res.Strings.Ribbon.Section.Clipboard;
 
 			this.buttonCut   = this.CreateIconButton("Cut");
 			this.buttonCopy  = this.CreateIconButton("Copy");

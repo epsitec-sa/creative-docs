@@ -12,7 +12,7 @@ namespace Epsitec.Common.Designer.Ribbons
 	{
 		public File() : base()
 		{
-			this.title.Text = Res.Strings.Action.FileMain;
+			this.title.Text = Res.Strings.Ribbon.Section.File;
 
 			this.buttonOpen   = this.CreateIconButton("Open", "Large");
 			this.buttonSave   = this.CreateIconButton("Save", "Large");
