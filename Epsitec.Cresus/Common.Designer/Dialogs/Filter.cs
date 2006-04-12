@@ -99,21 +99,6 @@ namespace Epsitec.Common.Designer.Dialogs
 		}
 
 
-		public string StringFilter
-		{
-			get
-			{
-				return this.fieldFilter.Text;
-			}
-
-			set
-			{
-				this.fieldFilter.Text = value;
-			}
-		}
-
-
-
 		private void HandleWindowCloseClicked(object sender)
 		{
 			this.parentWindow.MakeActive();
@@ -137,11 +122,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			bool isCase  = (this.checkCase.ActiveState == ActiveState.Yes);
 			module.Modifier.ActiveViewer.ChangeFilter(this.fieldFilter.Text, isBegin, isCase);
 
-			if (this.fieldFilter.Items.Contains(this.fieldFilter.Text))
-			{
-				this.fieldFilter.Items.Remove(this.fieldFilter.Text);
-			}
-			this.fieldFilter.Items.Insert(0, this.fieldFilter.Text);
+			Misc.ComboMenuAdd(this.fieldFilter, this.fieldFilter.Text);
 		}
 
 		private void HandleButtonAllClicked(object sender, MessageEventArgs e)

@@ -55,6 +55,17 @@ namespace Epsitec.Common.Designer
 		}
 
 
+		static public void ComboMenuAdd(TextFieldCombo combo, string text)
+		{
+			//	Ajoute un texte dans le combo-menu.
+			if ( combo.Items.Contains(text) )
+			{
+				combo.Items.Remove(text);
+			}
+			combo.Items.Insert(0, text);
+		}
+
+
 		static public string GetUnicodeName(int code)
 		{
 			//	Retourne le nom d'un caractère Unicode.
