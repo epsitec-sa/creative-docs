@@ -35,8 +35,10 @@ namespace Epsitec.Common.Designer
 												WindowStyles.CanMinimize |
 												WindowStyles.CanMaximize |
 												WindowStyles.HasCloseButton;
-				
-				this.window.WindowSize = new Size(600, 500);
+
+				Point parentCenter = parent.WindowBounds.Center;
+
+				this.window.WindowBounds = new Rectangle(parentCenter.X-600/2, parentCenter.Y-500/2, 600, 500);
 				this.window.Root.MinSize = new Size(500, 400);
 				this.window.Text = Res.Strings.Application.Title;
 				this.window.PreventAutoClose = true;
