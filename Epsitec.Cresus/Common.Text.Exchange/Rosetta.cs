@@ -282,7 +282,7 @@ namespace Epsitec.Common.Text.Exchange
 		{
 			get
 			{
-				return memoryStream;
+				return this.memoryStream;
 			}
 		}
 
@@ -324,6 +324,7 @@ namespace Epsitec.Common.Text.Exchange
 
 			this.memoryStream = new System.IO.MemoryStream (blob);
 
+#if false
 			char[] chararray = new char[length];
 
 			for (i = 0; i < length; i++)
@@ -331,7 +332,7 @@ namespace Epsitec.Common.Text.Exchange
 				chararray[i] = (char) blob[i];
 			}
 			string test = new string (chararray);
-
+#endif
 		}
 
 		public override string ToString()
@@ -440,7 +441,7 @@ namespace Epsitec.Common.Text.Exchange
 
 		public void SetFontSize(double fontSize)
 		{
-			this.fontSize = (int) (fontSize / /* Epsitec.Common.Document.Modifier.FontSizeScale*/ (254.0 / 72.0));
+			this.fontSize = (int) (fontSize / /* Epsitec.Common.Document.Modifier.FontSizeScale*/ FontSizeFactor);
 		}
 
 		static private int[] htmlfontsizes =
@@ -576,6 +577,9 @@ namespace Epsitec.Common.Text.Exchange
 
 			this.NewParagraph (JustificationMode);
 		}
+
+		public const double FontSizeFactor = 254.0 / 72.0 ;
+
 
 		static private string GetHtmlTag(string tagstring, HtmlTagMode tagMode)
 		{
@@ -1064,7 +1068,7 @@ namespace Epsitec.Common.Text.Exchange
 
 
 
-		public static void TestCode(TextStory story, TextNavigator navigator)
+		public static void TestCode2(TextStory story, TextNavigator navigator)
 		{
 			Wrappers.TextWrapper textWrapper = new Wrappers.TextWrapper ();
 			Wrappers.ParagraphWrapper paraWrapper = new Wrappers.ParagraphWrapper ();
@@ -1152,7 +1156,7 @@ namespace Epsitec.Common.Text.Exchange
 			System.Diagnostics.Debug.WriteLine ("Code de test 1 appelé.");
 		}
 		
-		#region TestCode1
+		
 		public static void TestCode1(TextStory story, TextNavigator navigator)
 		{
 			Wrappers.TextWrapper textWrapper = new Wrappers.TextWrapper ();
@@ -1234,7 +1238,45 @@ namespace Epsitec.Common.Text.Exchange
 
 			System.Diagnostics.Debug.WriteLine ("Code de test 1 appelé.");
 		}
-		#endregion
+		
+
+		public static void TestCode(TextStory story, TextNavigator navigator)
+		{
+			Wrappers.TextWrapper textWrapper = new Wrappers.TextWrapper ();
+			Wrappers.ParagraphWrapper paraWrapper = new Wrappers.ParagraphWrapper ();
+
+			textWrapper.Attach (navigator);
+			paraWrapper.Attach (navigator);
+
+#if false
+			textWrapper.SuspendSynchronizations ();
+			textWrapper.Defined.FontFace = "Times New Roman";
+			textWrapper.Defined.FontStyle = "Regular";
+			textWrapper.Defined.FontSize = 12 * HtmlText.FontSizeFactor;
+			textWrapper.Defined.Units = Properties.SizeUnits.Points;
+			textWrapper.ResumeSynchronizations ();
+#endif
+			navigator.Insert ("Hello you world !");
+			navigator.Insert (Unicode.Code.ParagraphSeparator);
+			navigator.Insert ("The End.");
+			navigator.MoveTo (TextNavigator.Target.LineStart, 0);
+			navigator.MoveTo (TextNavigator.Target.CharacterPrevious, 1);
+			navigator.MoveTo (TextNavigator.Target.WordStart, 2);
+
+			textWrapper.SuspendSynchronizations ();
+			textWrapper.Defined.InvertItalic = true;
+			textWrapper.ResumeSynchronizations ();
+
+			navigator.Insert ("wonderful ");
+
+			textWrapper.SuspendSynchronizations ();
+			textWrapper.Defined.ClearInvertItalic ();
+			textWrapper.ResumeSynchronizations ();
+
+			navigator.Insert ("and beautiful ");
+
+			navigator.MoveTo (0, 0);
+		}
 
 	}
 }
