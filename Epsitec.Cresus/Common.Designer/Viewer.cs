@@ -98,6 +98,57 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
+		public void DoSearch(string search, bool isReverse, bool isCase)
+		{
+			//	Effectue une recherche.
+			int sel = this.array.SelectedRow;
+			if (sel == -1)
+			{
+				sel = 0;
+			}
+
+			int dir = isReverse ? -1 : 1;
+
+			if (!isCase)
+			{
+				search = search.ToLower();
+			}
+
+			for (int i=0; i<this.labelsIndex.Count; i++)
+			{
+				sel += dir;
+
+				if (sel >= this.labelsIndex.Count)
+				{
+					sel = 0;
+				}
+
+				if (sel < 0)
+				{
+					sel = this.labelsIndex.Count-1;
+				}
+
+				string label     = this.labelsIndex[sel];
+				string primary   = this.primaryBundle[label].AsString;
+				string secondary = this.secondaryBundle[label].AsString;
+				if ( secondary == null )  secondary = "";
+
+				if (!isCase)
+				{
+					label     = label.ToLower();
+					primary   = primary.ToLower();
+					secondary = secondary.ToLower();
+				}
+
+				if ( label.Contains(search)     )  break;
+				if ( primary.Contains(search)   )  break;
+				if ( secondary.Contains(search) )  break;
+			}
+
+			this.array.SelectedRow = sel;
+			this.array.ShowSelectedRow();
+		}
+
 		public void ChangeFilter(string filter, bool isBegin, bool isCase)
 		{
 			//	Change le filtre des ressources visibles.
