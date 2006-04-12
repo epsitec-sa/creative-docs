@@ -38,6 +38,12 @@ namespace Epsitec.Common.Designer
 			this.secondaryEdit = new TextFieldMulti(this);
 			this.secondaryEdit.TextChanged += new EventHandler(this.HandleEditTextChanged);
 
+			this.primaryAbout = new TextField(this);
+			this.primaryAbout.TextChanged += new EventHandler(this.HandleAboutTextChanged);
+
+			this.secondaryAbout = new TextField(this);
+			this.secondaryAbout.TextChanged += new EventHandler(this.HandleAboutTextChanged);
+
 			this.UpdateCultures();
 		}
 
@@ -51,6 +57,8 @@ namespace Epsitec.Common.Designer
 				this.array.SelectedRowChanged -= new EventHandler(this.HandleArraySelectedRowChanged);
 				this.primaryEdit.TextChanged -= new EventHandler(this.HandleEditTextChanged);
 				this.secondaryEdit.TextChanged -= new EventHandler(this.HandleEditTextChanged);
+				this.primaryAbout.TextChanged -= new EventHandler(this.HandleAboutTextChanged);
+				this.secondaryAbout.TextChanged -= new EventHandler(this.HandleAboutTextChanged);
 			}
 		}
 
@@ -164,7 +172,7 @@ namespace Epsitec.Common.Designer
 			//	widgets dépendent des largeurs relatives de ses colonnes.
 			rect = box;
 			rect.Top -= 20+5;
-			rect.Bottom += 47+5;
+			rect.Bottom += 47+5+20+5;
 			this.array.Bounds = rect;
 
 			rect = box;
@@ -177,13 +185,37 @@ namespace Epsitec.Common.Designer
 			this.secondaryCulture.Bounds = rect;
 
 			rect = box;
-			rect.Top = rect.Bottom+47;
+			rect.Top = rect.Bottom+47+20+5;
+			rect.Bottom = rect.Top-47;
 			rect.Left += this.array.GetColumnsAbsoluteWidth(0);
 			rect.Width = this.array.GetColumnsAbsoluteWidth(1)+1;
 			this.primaryEdit.Bounds = rect;
 			rect.Left = rect.Right-1;
 			rect.Width = this.array.GetColumnsAbsoluteWidth(2);
 			this.secondaryEdit.Bounds = rect;
+
+			rect = box;
+			rect.Top = rect.Bottom+20;
+			rect.Bottom = rect.Top-20;
+			rect.Left += this.array.GetColumnsAbsoluteWidth(0);
+			rect.Width = this.array.GetColumnsAbsoluteWidth(1)+1;
+			this.primaryAbout.Bounds = rect;
+			rect.Left = rect.Right-1;
+			rect.Width = this.array.GetColumnsAbsoluteWidth(2);
+			this.secondaryAbout.Bounds = rect;
+		}
+
+
+		protected void SetTextField(AbstractTextField field, string text)
+		{
+			if (text == null)
+			{
+				field.Text = "";
+			}
+			else
+			{
+				field.Text = text;
+			}
 		}
 
 		
@@ -216,29 +248,25 @@ namespace Epsitec.Common.Designer
 
 		void HandleArraySelectedRowChanged(object sender)
 		{
-			int sel = this.array.SelectedRow;
-			string text;
-
 			this.ignoreChange = true;
 
-			text = this.array.GetLineString(1, sel);
-			if (text == null)
+			int sel = this.array.SelectedRow;
+			if ( sel == -1 )
 			{
 				this.primaryEdit.Text = "";
-			}
-			else
-			{
-				this.primaryEdit.Text = text;
-			}
-
-			text = this.array.GetLineString(2, sel);
-			if (text == null)
-			{
 				this.secondaryEdit.Text = "";
+				this.primaryAbout.Text = "";
+				this.secondaryAbout.Text = "";
 			}
 			else
 			{
-				this.secondaryEdit.Text = text;
+				string label = this.labelsIndex[sel];
+
+				this.SetTextField(this.primaryEdit, this.primaryBundle[label].AsString);
+				this.SetTextField(this.secondaryEdit, this.secondaryBundle[label].AsString);
+
+				this.SetTextField(this.primaryAbout, this.primaryBundle[label].About);
+				this.SetTextField(this.secondaryAbout, this.secondaryBundle[label].About);
 			}
 
 			this.ignoreChange = false;
@@ -249,12 +277,47 @@ namespace Epsitec.Common.Designer
 			if ( this.ignoreChange )  return;
 
 			TextFieldMulti edit = sender as TextFieldMulti;
+			string text = edit.Text;
 			int sel = this.array.SelectedRow;
-			int column = (edit == this.primaryEdit) ? 1 : 2;
-			MyWidgets.StringList.CellState state = (edit.Text == "") ? MyWidgets.StringList.CellState.Warning : MyWidgets.StringList.CellState.Normal;
+			string label = this.labelsIndex[sel];
 
-			this.array.SetLineString(column, sel, edit.Text);
+			if (edit == this.primaryEdit)
+			{
+				this.primaryBundle[label].SetStringValue(text);
+			}
+
+			if (edit == this.secondaryEdit)
+			{
+				this.secondaryBundle[label].SetStringValue(text);
+			}
+
+			int column = (edit == this.primaryEdit) ? 1 : 2;
+			MyWidgets.StringList.CellState state = (text == "") ? MyWidgets.StringList.CellState.Warning : MyWidgets.StringList.CellState.Normal;
+
+			this.array.SetLineString(column, sel, text);
 			this.array.SetLineState(column, sel, state);
+
+			this.module.Modifier.IsDirty = true;
+		}
+
+		void HandleAboutTextChanged(object sender)
+		{
+			if ( this.ignoreChange )  return;
+
+			TextField edit = sender as TextField;
+			string text = edit.Text;
+			int sel = this.array.SelectedRow;
+			string label = this.labelsIndex[sel];
+
+			if (edit == this.primaryAbout)
+			{
+				this.primaryBundle[label].SetAbout(text);
+			}
+
+			if (edit == this.secondaryAbout)
+			{
+				this.secondaryBundle[label].SetAbout(text);
+			}
 
 			this.module.Modifier.IsDirty = true;
 		}
@@ -271,5 +334,7 @@ namespace Epsitec.Common.Designer
 		protected MyWidgets.StringArray		array;
 		protected TextFieldMulti			primaryEdit;
 		protected TextFieldMulti			secondaryEdit;
+		protected TextField					primaryAbout;
+		protected TextField					secondaryAbout;
 	}
 }
