@@ -98,6 +98,15 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
+		public void ChangeFilter(string filter)
+		{
+			//	Change le filtre des ressources visibles.
+			this.UpdateLabelsIndex(filter);
+			this.array.SelectedRow = -1;
+			this.array.FirstVisibleRow = 0;
+			this.UpdateArray();
+		}
+
 
 		protected void UpdateCultures()
 		{
@@ -131,16 +140,24 @@ namespace Epsitec.Common.Designer
 				this.secondaryCulture.Text = Misc.LongCulture(this.secondaryBundle.Culture.Name);
 			}
 
-			this.UpdateLabelsIndex();
+			this.UpdateLabelsIndex("");
 		}
 
-		protected void UpdateLabelsIndex()
+		protected void UpdateLabelsIndex(string filter)
 		{
 			//	Construit l'index en fonction des ressources primaires.
 			this.labelsIndex.Clear();
 
 			foreach (ResourceBundle.Field field in this.primaryBundle.Fields)
 			{
+				if (filter != "")
+				{
+					if (!field.Name.Contains(filter))
+					{
+						continue;
+					}
+				}
+
 				this.labelsIndex.Add(field.Name);
 			}
 		}
@@ -148,12 +165,10 @@ namespace Epsitec.Common.Designer
 		protected void UpdateArray()
 		{
 			//	Met à jour tout le contenu du tableau.
-			int first = this.array.FirstVisibleRow;
-			int total = System.Math.Min(this.labelsIndex.Count, this.array.LineCount);
-
 			this.array.TotalRows = this.labelsIndex.Count;
 
-			for ( int i=0 ; i<total ; i++ )
+			int first = this.array.FirstVisibleRow;
+			for (int i=0; i<this.array.LineCount; i++)
 			{
 				if (first+i < this.labelsIndex.Count)
 				{
@@ -161,6 +176,7 @@ namespace Epsitec.Common.Designer
 					ResourceBundle.Field secondaryField = this.secondaryBundle[this.labelsIndex[first+i]];
 
 					this.array.SetLineString(0, first+i, primaryField.Name);
+					this.array.SetLineState(0, first+i, MyWidgets.StringList.CellState.Normal);
 					this.UpdateArrayField(1, first+i, primaryField);
 					this.UpdateArrayField(2, first+i, secondaryField);
 				}
@@ -169,8 +185,9 @@ namespace Epsitec.Common.Designer
 					this.array.SetLineString(0, first+i, "");
 					this.array.SetLineString(1, first+i, "");
 					this.array.SetLineString(2, first+i, "");
-					this.array.SetLineState(1, first+i, MyWidgets.StringList.CellState.Normal);
-					this.array.SetLineState(2, first+i, MyWidgets.StringList.CellState.Normal);
+					this.array.SetLineState(0, first+i, MyWidgets.StringList.CellState.Disabled);
+					this.array.SetLineState(1, first+i, MyWidgets.StringList.CellState.Disabled);
+					this.array.SetLineState(2, first+i, MyWidgets.StringList.CellState.Disabled);
 				}
 			}
 		}
@@ -291,6 +308,12 @@ namespace Epsitec.Common.Designer
 			this.ignoreChange = true;
 
 			int sel = this.array.SelectedRow;
+
+			if (sel >= this.labelsIndex.Count)
+			{
+				sel = -1;
+			}
+
 			if ( sel == -1 )
 			{
 				this.primaryEdit.Enable = false;

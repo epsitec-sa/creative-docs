@@ -20,12 +20,12 @@ namespace Epsitec.Common.Designer.Dialogs
 			{
 				this.window = new Window();
 				this.window.MakeSecondaryWindow();
-				this.window.PreventAutoClose = true;
+				this.window.MakeFixedSizeWindow();
+				this.window.MakeToolWindow();
 				this.WindowInit("Search", 300, 260, true);
 				this.window.Text = Res.Strings.Dialog.Search.Title;
 				this.window.Owner = this.parentWindow;
 				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowCloseClicked);
-				this.window.Root.MinSize = new Size(200, 200);
 
 				int tabIndex = 0;
 

@@ -51,6 +51,7 @@
   <data name="Dialog.Glyphs.Tooltip.ArraySize">Taille de l'aperçu</data>
 
   <data name="Dialog.Filter.Title">Filtre pour les ressources</data>
+  <data name="Dialog.Filter.Label">Filtre</data>
   <data name="Dialog.Filter.Button.Insert">Filtrer</data>
 
   <data name="Dialog.Search.Title">Recherche d'une ressource</data>

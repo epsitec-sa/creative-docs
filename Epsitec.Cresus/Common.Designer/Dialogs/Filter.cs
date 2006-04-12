@@ -20,14 +20,25 @@ namespace Epsitec.Common.Designer.Dialogs
 			{
 				this.window = new Window();
 				this.window.MakeSecondaryWindow();
-				this.window.PreventAutoClose = true;
-				this.WindowInit("Filter", 300, 260, true);
+				this.window.MakeFixedSizeWindow();
+				this.window.MakeToolWindow();
+				this.WindowInit("Filter", 250, 80, true);
 				this.window.Text = Res.Strings.Dialog.Filter.Title;
 				this.window.Owner = this.parentWindow;
 				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowCloseClicked);
-				this.window.Root.MinSize = new Size(200, 200);
 
 				int tabIndex = 0;
+
+				StaticText label = new StaticText(this.window.Root);
+				label.Text = Res.Strings.Dialog.Filter.Label;
+				label.Width = 40;
+				label.Anchor = AnchorStyles.TopLeft;
+				label.Margins = new Margins(6, 0, 6, 0);
+
+				this.fieldFilter = new TextFieldCombo(this.window.Root);
+				this.fieldFilter.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+				this.fieldFilter.Margins = new Margins(6+40, 6, 6, 0);
+				this.fieldFilter.TabIndex = tabIndex++;
 
 				//	Boutons de fermeture.
 				Button buttonOk = new Button(this.window.Root);
@@ -36,7 +47,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				buttonOk.ButtonStyle = ButtonStyle.DefaultAccept;
 				buttonOk.Anchor = AnchorStyles.BottomLeft;
 				buttonOk.Margins = new Margins(6, 0, 0, 6);
-				buttonOk.Clicked += new MessageEventHandler(this.HandleButtonInsertClicked);
+				buttonOk.Clicked += new MessageEventHandler(this.HandleButtonFilterClicked);
 				buttonOk.TabIndex = tabIndex++;
 				buttonOk.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
@@ -51,6 +62,20 @@ namespace Epsitec.Common.Designer.Dialogs
 			}
 
 			this.window.Show();
+		}
+
+
+		public string StringFilter
+		{
+			get
+			{
+				return this.fieldFilter.Text;
+			}
+
+			set
+			{
+				this.fieldFilter.Text = value;
+			}
 		}
 
 
@@ -69,11 +94,16 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.OnClosed();
 		}
 
-		private void HandleButtonInsertClicked(object sender, MessageEventArgs e)
+		private void HandleButtonFilterClicked(object sender, MessageEventArgs e)
 		{
+			Module module = this.mainWindow.CurrentModule;
+			if ( module == null )  return;
+
+			this.fieldFilter.Items.Add(this.fieldFilter.Text);
+			module.Modifier.ActiveViewer.ChangeFilter(this.fieldFilter.Text);
 		}
 
 
-
+		protected TextFieldCombo				fieldFilter;
 	}
 }
