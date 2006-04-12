@@ -14,6 +14,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			Normal,
 			Warning,
+			Disabled,
 		}
 
 
@@ -238,18 +239,27 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			for (int i=0; i<this.cells.Length; i++)
 			{
+				Rectangle cell = rect;
+				graphics.Align(ref cell);
+
 				Color backColor = adorner.ColorTextBackground;
 				if (this.cells[i].Selected)
 				{
 					backColor = adorner.ColorCaption;
 				}
-				graphics.AddFilledRectangle(rect);
+				graphics.AddFilledRectangle(cell);
 				graphics.RenderSolid(backColor);
 
 				if (this.cells[i].State == CellState.Warning)
 				{
-					graphics.AddFilledRectangle(rect);
+					graphics.AddFilledRectangle(cell);
 					graphics.RenderSolid(Color.FromAlphaRgb(0.2, 1, 0, 0));  // rouge semi-transparent
+				}
+
+				if (this.cells[i].State == CellState.Disabled)
+				{
+					graphics.AddFilledRectangle(cell);
+					graphics.RenderSolid(adorner.ColorText(WidgetState.None));
 				}
 
 				if (this.cells[i].TextLayout.Text != null)
