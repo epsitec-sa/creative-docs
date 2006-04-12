@@ -61,6 +61,7 @@ namespace Epsitec.Common.Designer
 			this.secondaryAbout.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
 
 			this.UpdateCultures();
+			this.HandleArraySelectedRowChanged(null);
 		}
 
 		protected override void Dispose(bool disposing)
@@ -292,6 +293,11 @@ namespace Epsitec.Common.Designer
 			int sel = this.array.SelectedRow;
 			if ( sel == -1 )
 			{
+				this.primaryEdit.Enable = false;
+				this.secondaryEdit.Enable = false;
+				this.primaryAbout.Enable = false;
+				this.secondaryAbout.Enable = false;
+
 				this.primaryEdit.Text = "";
 				this.secondaryEdit.Text = "";
 				this.primaryAbout.Text = "";
@@ -299,6 +305,11 @@ namespace Epsitec.Common.Designer
 			}
 			else
 			{
+				this.primaryEdit.Enable = true;
+				this.secondaryEdit.Enable = true;
+				this.primaryAbout.Enable = true;
+				this.secondaryAbout.Enable = true;
+
 				string label = this.labelsIndex[sel];
 
 				this.SetTextField(this.primaryEdit, this.primaryBundle[label].AsString);
