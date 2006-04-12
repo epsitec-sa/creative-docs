@@ -3488,6 +3488,7 @@ namespace Epsitec.App.DocumentEditor
 		[Command("ResDesigner")]
 		void CommandResDesigner(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
+			this.dlgSplash.Hide();
 			this.resDesignerMainWindow = new Epsitec.Common.Designer.MainWindow();
 			this.resDesignerMainWindow.Show(this.Window);
 		}

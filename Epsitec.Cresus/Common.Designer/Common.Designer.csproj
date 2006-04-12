@@ -36,6 +36,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Dialogs\Abstract.cs" />
+    <Compile Include="Dialogs\Search.cs" />
+    <Compile Include="Dialogs\Filter.cs" />
     <Compile Include="Dialogs\GlyphArray.cs" />
     <Compile Include="Dialogs\Glyphs.cs" />
     <Compile Include="MainWindow.cs" />
@@ -50,6 +52,7 @@
     <Compile Include="Ribbons\Abstract.cs" />
     <Compile Include="Ribbons\Clipboard.cs" />
     <Compile Include="Ribbons\Character.cs" />
+    <Compile Include="Ribbons\Access.cs" />
     <Compile Include="Ribbons\File.cs" />
     <Compile Include="Ribbons\Select.cs" />
     <Compile Include="Viewer.cs" />
@@ -105,6 +108,7 @@
     <EmbeddedResource Include="Images\FontUnderlined.icon" />
     <EmbeddedResource Include="Images\Glyphs.icon" />
     <EmbeddedResource Include="Images\Filter.icon" />
+    <EmbeddedResource Include="Images\Search.icon" />
     <None Include="Resources\Designer\Strings.00.resource" />
     <None Include="Resources\Designer\Strings.en.resource" />
   </ItemGroup>
