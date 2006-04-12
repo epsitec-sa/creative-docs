@@ -98,10 +98,10 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		public void ChangeFilter(string filter)
+		public void ChangeFilter(string filter, bool isBegin, bool isCase)
 		{
 			//	Change le filtre des ressources visibles.
-			this.UpdateLabelsIndex(filter);
+			this.UpdateLabelsIndex(filter, isBegin, isCase);
 			this.array.SelectedRow = -1;
 			this.array.FirstVisibleRow = 0;
 			this.UpdateArray();
@@ -140,21 +140,45 @@ namespace Epsitec.Common.Designer
 				this.secondaryCulture.Text = Misc.LongCulture(this.secondaryBundle.Culture.Name);
 			}
 
-			this.UpdateLabelsIndex("");
+			this.UpdateLabelsIndex("", false, false);
 		}
 
-		protected void UpdateLabelsIndex(string filter)
+		protected void UpdateLabelsIndex(string filter, bool isBegin, bool isCase)
 		{
 			//	Construit l'index en fonction des ressources primaires.
 			this.labelsIndex.Clear();
+
+			if (!isCase)
+			{
+				filter = filter.ToLower();
+			}
 
 			foreach (ResourceBundle.Field field in this.primaryBundle.Fields)
 			{
 				if (filter != "")
 				{
-					if (!field.Name.Contains(filter))
+					if (isCase)
 					{
-						continue;
+						if (isBegin)
+						{
+							if (!field.Name.StartsWith(filter))  continue;
+						}
+						else
+						{
+							if (!field.Name.Contains(filter))  continue;
+						}
+					}
+					else
+					{
+						string name = field.Name.ToLower();
+						if (isBegin)
+						{
+							if (!name.StartsWith(filter))  continue;
+						}
+						else
+						{
+							if (!name.Contains(filter))  continue;
+						}
 					}
 				}
 

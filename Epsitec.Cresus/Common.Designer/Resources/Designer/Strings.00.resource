@@ -52,7 +52,11 @@
 
   <data name="Dialog.Filter.Title">Filtre pour les ressources</data>
   <data name="Dialog.Filter.Label">Filtre</data>
+  <data name="Dialog.Filter.Radio.Begin">Au début</data>
+  <data name="Dialog.Filter.Radio.Any">N'importe où</data>
+  <data name="Dialog.Filter.Check.Case">Respecter la casse</data>
   <data name="Dialog.Filter.Button.Insert">Filtrer</data>
+  <data name="Dialog.Filter.Button.All">Tout</data>
 
   <data name="Dialog.Search.Title">Recherche d'une ressource</data>
   <data name="Dialog.Search.Button.Insert">Chercher</data>
