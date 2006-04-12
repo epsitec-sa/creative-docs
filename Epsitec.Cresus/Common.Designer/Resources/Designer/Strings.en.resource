@@ -6,6 +6,7 @@
 
   <data name="Ribbon.Main">Documents</data>
   <data name="Ribbon.Oper">Operations</data>
+  <data name="Ribbon.Text">Text</data>
 
   <data name="String.Edit">Text</data>
   <data name="String.About">About</data>
