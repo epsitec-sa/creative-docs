@@ -175,6 +175,7 @@ namespace Epsitec.Common.Designer
 			this.ribbonOper.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top;
 			this.ribbonOper.Margins = new Margins(0, 0, this.hToolBar.Height, 0);
 			this.ribbonOper.Visibility = true;
+			this.ribbonOper.Items.Add(new Ribbons.Select());
 
 			this.ribbonText = new RibbonContainer(this.window.Root);
 			this.ribbonText.Name = "Text";
@@ -306,6 +307,8 @@ namespace Epsitec.Common.Designer
 			this.cutState = this.CreateCommandState("Cut", KeyCode.ModifierControl|KeyCode.AlphaX);
 			this.copyState = this.CreateCommandState("Copy", KeyCode.ModifierControl|KeyCode.AlphaC);
 			this.pasteState = this.CreateCommandState("Paste", KeyCode.ModifierControl|KeyCode.AlphaV);
+			this.deleteState = this.CreateCommandState("Delete", KeyCode.Delete);
+			this.duplicateState = this.CreateCommandState("Duplicate", KeyCode.ModifierControl|KeyCode.AlphaD);
 			this.fontBoldState = this.CreateCommandState("FontBold", KeyCode.ModifierControl|KeyCode.AlphaB);
 			this.fontItalicState = this.CreateCommandState("FontItalic", KeyCode.ModifierControl|KeyCode.AlphaI);
 			this.fontUnderlinedState = this.CreateCommandState("FontUnderlined", KeyCode.ModifierControl|KeyCode.AlphaU);
@@ -549,6 +552,8 @@ namespace Epsitec.Common.Designer
 		protected CommandState					cutState;
 		protected CommandState					copyState;
 		protected CommandState					pasteState;
+		protected CommandState					deleteState;
+		protected CommandState					duplicateState;
 		protected CommandState					fontBoldState;
 		protected CommandState					fontItalicState;
 		protected CommandState					fontUnderlinedState;

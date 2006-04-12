@@ -7,11 +7,14 @@
   <data name="Ribbon.Main">Principal</data>
   <data name="Ribbon.Oper">Opérations</data>
   <data name="Ribbon.Text">Texte</data>
+  <data name="Ribbon.Section.File">Fichier</data>
+  <data name="Ribbon.Section.Clipboard">Presse-papiers</data>
+  <data name="Ribbon.Section.Select">Sélection</data>
+  <data name="Ribbon.Section.Character">Caractère</data>
 
   <data name="String.Edit">Texte</data>
   <data name="String.About">Commentaire</data>
 
-  <data name="Action.FileMain">Fichier</data>
   <data name="Action.New">Nouveau</data>
   <data name="Action.Open">Ouvrir...</data>
   <data name="Action.Close">Fermer</data>
@@ -21,14 +24,12 @@
   <data name="Action.LastFiles">Fichiers récents</data>
   <data name="Action.Quit">Quitter</data>
 
-  <data name="Action.Clipboard">Presse-papiers</data>
   <data name="Action.Cut">Couper</data>
   <data name="Action.Copy">Copier</data>
   <data name="Action.Paste">Coller</data>
   <data name="Action.Delete">Supprimer</data>
   <data name="Action.Duplicate">Dupliquer</data>
 
-  <data name="Action.Character">Caractère</data>
   <data name="Action.FontBold">Gras</data>
   <data name="Action.FontItalic">Italique</data>
   <data name="Action.FontUnderlined">Souligné</data>

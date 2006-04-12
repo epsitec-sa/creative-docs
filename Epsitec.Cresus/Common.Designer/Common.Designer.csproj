@@ -48,6 +48,7 @@
     <Compile Include="Ribbons\Clipboard.cs" />
     <Compile Include="Ribbons\Character.cs" />
     <Compile Include="Ribbons\File.cs" />
+    <Compile Include="Ribbons\Select.cs" />
     <Compile Include="Viewer.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -12,7 +12,7 @@ namespace Epsitec.Common.Designer.Ribbons
 	{
 		public Character() : base()
 		{
-			this.title.Text = Res.Strings.Action.Character;
+			this.title.Text = Res.Strings.Ribbon.Section.Character;
 
 			this.buttonBold       = this.CreateIconButton("FontBold");
 			this.buttonItalic     = this.CreateIconButton("FontItalic");
