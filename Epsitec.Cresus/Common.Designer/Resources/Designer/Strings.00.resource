@@ -51,7 +51,7 @@
   <data name="Dialog.Glyphs.Tooltip.ArraySize">Taille de l'aperçu</data>
 
   <data name="Dialog.Filter.Title">Filtre pour les ressources</data>
-  <data name="Dialog.Filter.Label">Filtre</data>
+  <data name="Dialog.Filter.Label">Critère</data>
   <data name="Dialog.Filter.Radio.Begin">Au début</data>
   <data name="Dialog.Filter.Radio.Any">N'importe où</data>
   <data name="Dialog.Filter.Check.Case">Respecter la casse</data>
