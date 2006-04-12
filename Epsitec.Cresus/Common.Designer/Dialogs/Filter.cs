@@ -120,7 +120,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 			bool isBegin = (this.radioBegin.ActiveState == ActiveState.Yes);
 			bool isCase  = (this.checkCase.ActiveState == ActiveState.Yes);
-			module.Modifier.ActiveViewer.ChangeFilter(this.fieldFilter.Text, isBegin, isCase);
+			module.Modifier.ActiveViewer.DoFilter(this.fieldFilter.Text, isBegin, isCase);
 
 			Misc.ComboMenuAdd(this.fieldFilter, this.fieldFilter.Text);
 		}
@@ -130,7 +130,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			Module module = this.mainWindow.CurrentModule;
 			if ( module == null )  return;
 
-			module.Modifier.ActiveViewer.ChangeFilter("", false, false);
+			module.Modifier.ActiveViewer.DoFilter("", false, false);
 		}
 
 

@@ -22,7 +22,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.window.MakeSecondaryWindow();
 				this.window.MakeFixedSizeWindow();
 				this.window.MakeToolWindow();
-				this.WindowInit("Search", 257, 140, true);
+				this.WindowInit("Search", 257, 160, true);
 				this.window.Text = Res.Strings.Dialog.Search.Title;
 				this.window.Owner = this.parentWindow;
 				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowCloseClicked);
@@ -61,6 +61,12 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.checkCase.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
 				this.checkCase.Margins = new Margins(6+60, 6, 6+32+16*2+4, 0);
 				this.checkCase.TabIndex = tabIndex++;
+
+				this.checkAbout = new CheckButton(this.window.Root);
+				this.checkAbout.Text = Res.Strings.Dialog.Search.Check.About;
+				this.checkAbout.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+				this.checkAbout.Margins = new Margins(6+60, 6, 6+32+16*3+4, 0);
+				this.checkAbout.TabIndex = tabIndex++;
 
 				//	Boutons de fermeture.
 				Button buttonOk = new Button(this.window.Root);
@@ -111,8 +117,9 @@ namespace Epsitec.Common.Designer.Dialogs
 			if ( module == null )  return;
 
 			bool isReverse = (this.radioReverse.ActiveState == ActiveState.Yes);
-			bool isCase    = (this.checkCase.ActiveState == ActiveState.Yes);
-			module.Modifier.ActiveViewer.DoSearch(this.fieldSearch.Text, isReverse, isCase);
+			bool isCase    = (this.checkCase.ActiveState    == ActiveState.Yes);
+			bool isAbout   = (this.checkAbout.ActiveState   == ActiveState.Yes);
+			module.Modifier.ActiveViewer.DoSearch(this.fieldSearch.Text, isReverse, isCase, isAbout);
 
 			Misc.ComboMenuAdd(this.fieldSearch, this.fieldSearch.Text);
 		}
@@ -122,5 +129,6 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected RadioButton					radioReverse;
 		protected RadioButton					radioNormal;
 		protected CheckButton					checkCase;
+		protected CheckButton					checkAbout;
 	}
 }
