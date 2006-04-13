@@ -35,6 +35,7 @@ namespace Epsitec.Common.Designer
 
 		public DesignerMode Mode
 		{
+			//	Retourne le mode de fonctionnement du logiciel.
 			get
 			{
 				return this.mode;
@@ -59,6 +60,7 @@ namespace Epsitec.Common.Designer
 
 		public string Name
 		{
+			//	Retourne le nom du module.
 			get
 			{
 				return this.name;
@@ -79,18 +81,6 @@ namespace Epsitec.Common.Designer
 			{
 				return this.bundles;
 			}
-		}
-
-
-		public void Save()
-		{
-			//	Enregistre tout le module.
-			ResourceBundleCollection bundles = this.Bundles;
-			foreach (ResourceBundle bundle in bundles)
-			{
-				this.ResourceManager.SetBundle(bundle, ResourceSetMode.UpdateOnly);
-			}
-			this.modifier.IsDirty = false;
 		}
 
 

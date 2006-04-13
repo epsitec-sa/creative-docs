@@ -304,8 +304,20 @@ namespace Epsitec.Common.Support
 		{
 			return this[name].IsEmpty == false;
 		}
-		
-		
+
+
+		public int IndexOf(Field field)
+		{
+			for (int i=0; i<this.fields.Length; i++)
+			{
+				if (this.fields[i] == field)
+				{
+					return i;
+				}
+			}
+			return -1;
+		}
+
 		public void Insert(Field field)
 		{
 			this.Insert (this.fields.Length, field);
