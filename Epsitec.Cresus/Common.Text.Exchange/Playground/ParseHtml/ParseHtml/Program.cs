@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Text;
 using System.IO;
 using System.Windows.Forms;
-using System.Runtime.InteropServices;
+// using System.Runtime.InteropServices;
 
 // place de jeux pour essayer de lire correctement du texte en format "HTML Format"
 // depuis le presse-papiers.
 
-namespace ParseHtml
+namespace Epsitec.Common.Text.Exchange
 {
-
+#if false
 	class HtmlClipBoardReader
 	{
 		[DllImport ("user32.dll", SetLastError=true)]
@@ -77,22 +77,25 @@ namespace ParseHtml
 			return "";
 		}
 	}
+#endif
+	
 
 	class Program
 	{
+#if false
 		static string ReadClipboard()
 		{
+
 			HtmlClipBoardReader clipboardreader = new HtmlClipBoardReader();
 
 			clipboardreader.ReadHtmlClipboard ();
 
 
-#if false
 			string returnHtmlText =	 Clipboard.GetText (TextDataFormat.Html);
 			return returnHtmlText;
-#endif
 
-#if false
+
+			
 			string str = HtmlReadClipboard ();
 
 			System.Windows.Forms.DataObject data = new System.Windows.Forms.DataObject ();
@@ -130,18 +133,20 @@ namespace ParseHtml
 				Console.Write (o);
 				return o;
 			}
-#endif
+
 			return "";
 		}
+#endif
 
-		
 		[STAThread]
 		static void Main(string[] args)
 		{
 			// Create an instance of StreamReader to read from a file.
 			// The using statement also closes the StreamReader.
 
-			string s = ReadClipboard ();
+			// string s = NativeHtmlClipboardReader.ReadClipBoard ();
+
+			string s = NativeHtmlClipboardReader.ReadClipBoardHtml ();
 #if false
 			using (StreamReader sr = new StreamReader ("file.txt"))
 			{

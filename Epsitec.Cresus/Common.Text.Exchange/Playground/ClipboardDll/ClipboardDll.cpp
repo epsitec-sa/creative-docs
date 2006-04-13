@@ -1,44 +1,42 @@
-// ClipboardDll.cpp : Defines the entry point for the DLL application.
+//	Copyright © 2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Responsable: Michael WALZ
+//  DLL pour lire le contenu du presse-papier en format "HTML format".
+//  Depuis .net il semble impossible d'obtenir le texte html sans que certains
+//	caractères encodé avec UTF-8 ne soient mutilés
 //
+//	Attention: extern "C" est nécessaire, sinon on se retrouve avec le nom "mangled" dans la DLL
 
 #include "stdafx.h"
-
 
 #ifdef _MANAGED
 #pragma managed(push, off)
 #endif
 
+#define EXPORT extern "C" __declspec( dllexport )
+
+#
 BOOL APIENTRY DllMain( HMODULE hModule,
                        DWORD  ul_reason_for_call,
                        LPVOID lpReserved
 					 )
 {
-#if 0
-	TCHAR buffer[100] ;
-	wsprintf (buffer, L"reason = %d, reserved = %d", ul_reason_for_call, lpReserved) ;
-	MessageBox(0, buffer, L"2", 0);
-#endif
     return TRUE;
-}
-
-
-
-// extern "C" est nécessaire, sinon on se retrouve avec le nom "mangled" dans la DLL
-
-extern "C" __declspec( dllexport ) int TestEntry(int value)
-{
-	return 2*value ;
 }
 
 
 static HANDLE globalLockHandle ;
 static int clipboardSize ;
 
-extern "C" __declspec( dllexport ) BYTE *ReadHtmlFromClipboard()
+
+// retourne un pointeur sur les octets du presse-papiers
+// retourne NULL si OpenClipboard ne fonctionne pas.
+
+EXPORT BYTE *ReadHtmlFromClipboard()
 {
   if (OpenClipboard(NULL))
   {
-	  globalLockHandle = GetClipboardData(CF_TEXT) ;
+	  UINT format = RegisterClipboardFormat(L"HTML Format") ;
+	  globalLockHandle = GetClipboardData(format) ;
 
 	  if (globalLockHandle != NULL)
 	  {
@@ -55,18 +53,21 @@ extern "C" __declspec( dllexport ) BYTE *ReadHtmlFromClipboard()
 }
 
 
-extern "C" __declspec( dllexport ) int GetClipboardSize()
+// retourne la taille du contenu du presse-papiers. ReadHtmlFromClipboard() doit
+// avoir été appllé auparavant
+
+EXPORT int GetClipboardSize()
 {
 	return clipboardSize ;
 }
 
+// libère la mémoire allouée lors du ReadHtmlFromClipboard()
 
-extern "C" __declspec( dllexport ) void FreeClipboard()
+EXPORT void FreeClipboard()
 {
 	GlobalUnlock(globalLockHandle) ;
 	GlobalFree(globalLockHandle) ;
 }
-
 
 
 #ifdef _MANAGED
