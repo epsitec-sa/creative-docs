@@ -8,7 +8,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 	/// <summary>
 	/// Tableau d'une colonne de TextLayout (vus comme des string).
 	/// </summary>
-	public class StringList : Widget
+	public class StringList : Widget, Widgets.Helpers.IToolTipHost
 	{
 		public enum CellState
 		{
@@ -20,6 +20,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		public StringList() : base()
 		{
+			this.AutoEngage = false;
+			this.AutoFocus  = true;
+
+			this.InternalState |= InternalState.Focusable;
+			this.InternalState |= InternalState.Engageable;
 		}
 
 		public StringList(Widget embedder) : this()
@@ -130,6 +135,20 @@ namespace Epsitec.Common.Designer.MyWidgets
 						this.Invalidate();
 					}
 				}
+			}
+		}
+
+		public bool IsDynamicsToolTips
+		{
+			//	Faut-il générer les tooltips dynamiques ?
+			get
+			{
+				return this.isDynamicsToolTips;
+			}
+
+			set
+			{
+				this.isDynamicsToolTips = value;
 			}
 		}
 
@@ -301,6 +320,28 @@ namespace Epsitec.Common.Designer.MyWidgets
 		}
 
 
+		#region Helpers.IToolTipHost
+		public object GetToolTipCaption(Point pos)
+		{
+			//	Donne l'objet (string ou widget) pour le tooltip en fonction de la position.
+			if ( !this.isDynamicsToolTips )  return null;
+			return this.GetTooltipEditedText(pos);
+		}
+
+		protected string GetTooltipEditedText(Point pos)
+		{
+			//	Donne le texte du tooltip en fonction de la position.
+			int row = this.Detect(pos);
+			if ( row != -1 )
+			{
+				return this.GetLineString(row);
+			}
+
+			return null;  // pas de tooltip
+		}
+		#endregion
+
+
 		#region Events handler
 		protected virtual void OnCellsQuantityChanged()
 		{
@@ -352,6 +393,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected double					lineHeight = 20;
 		protected double					relativeWidth = 0;
 		protected Cell[]					cells;
+		protected bool						isDynamicsToolTips = false;
 		protected bool						isDragging = false;
 	}
 }

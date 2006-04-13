@@ -29,7 +29,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.window.Text = Res.Strings.Dialog.Glyphs.Title;
 				this.window.Owner = this.parentWindow;
 				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowCloseClicked);
-				this.window.Root.MinSize = new Size(200, 200);
+				this.window.Root.MinSize = new Size(200, 150);
 
 				ResizeKnob resize = new ResizeKnob(this.window.Root);
 				resize.Anchor = AnchorStyles.BottomRight;

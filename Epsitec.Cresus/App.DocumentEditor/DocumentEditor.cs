@@ -3485,12 +3485,20 @@ namespace Epsitec.App.DocumentEditor
 		}
 
 
-		[Command("ResDesigner")]
-		void CommandResDesigner(CommandDispatcher dispatcher, CommandEventArgs e)
+		[Command ("ResDesignerBuild")]
+		void CommandResDesignerBuild(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			this.dlgSplash.Hide();
 			this.resDesignerMainWindow = new Epsitec.Common.Designer.MainWindow();
-			this.resDesignerMainWindow.Show(this.Window);
+			this.resDesignerMainWindow.Show(this.Window, Epsitec.Common.Designer.DesignerMode.Build);
+		}
+
+		[Command ("ResDesignerTranslate")]
+		void CommandResDesignerTranslate(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.dlgSplash.Hide();
+			this.resDesignerMainWindow = new Epsitec.Common.Designer.MainWindow();
+			this.resDesignerMainWindow.Show(this.Window, Epsitec.Common.Designer.DesignerMode.Translate);
 		}
 
 		[Command ("DebugBboxThin")]
@@ -3768,7 +3776,8 @@ namespace Epsitec.App.DocumentEditor
 			this.arraySwapRowState = this.CreateCommandState("ArraySwapRow");
 			this.arrayLookState = this.CreateCommandState("ArrayLook");
 
-			this.resDesignerState = this.CreateCommandState("ResDesigner");
+			this.resDesignerBuildState = this.CreateCommandState("ResDesignerBuild");
+			this.resDesignerTranslateState = this.CreateCommandState("ResDesignerTranslate");
 			this.debugBboxThinState = this.CreateCommandState ("DebugBboxThin");
 			this.debugBboxGeomState = this.CreateCommandState("DebugBboxGeom");
 			this.debugBboxFullState = this.CreateCommandState("DebugBboxFull");
@@ -5794,7 +5803,8 @@ namespace Epsitec.App.DocumentEditor
 		protected CommandState					arraySwapColumnState;
 		protected CommandState					arraySwapRowState;
 		protected CommandState					arrayLookState;
-		protected CommandState					resDesignerState;
+		protected CommandState					resDesignerBuildState;
+		protected CommandState					resDesignerTranslateState;
 		protected CommandState					debugBboxThinState;
 		protected CommandState					debugBboxGeomState;
 		protected CommandState					debugBboxFullState;

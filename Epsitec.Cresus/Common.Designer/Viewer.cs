@@ -16,21 +16,32 @@ namespace Epsitec.Common.Designer
 
 			this.labelsIndex = new List<string>();
 
+			int tabIndex = 0;
+
 			this.primaryCulture = new TextField(this);
 			this.primaryCulture.IsReadOnly = true;
+			this.primaryCulture.TabIndex = tabIndex++;
+			this.primaryCulture.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			this.secondaryCulture = new TextFieldCombo(this);
 			this.secondaryCulture.IsReadOnly = true;
 			this.secondaryCulture.ComboClosed += new EventHandler(this.HandleSecondaryCultureComboClosed);
+			this.secondaryCulture.TabIndex = tabIndex++;
+			this.secondaryCulture.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			this.array = new MyWidgets.StringArray(this);
 			this.array.Columns = 3;
-			this.array.SetColumnsRelativeWidth(0, 0.2);
-			this.array.SetColumnsRelativeWidth(1, 0.4);
-			this.array.SetColumnsRelativeWidth(2, 0.4);
+			this.array.SetColumnsRelativeWidth(0, 0.30);
+			this.array.SetColumnsRelativeWidth(1, 0.35);
+			this.array.SetColumnsRelativeWidth(2, 0.35);
+			this.array.SetDynamicsToolTips(0, true);
+			this.array.SetDynamicsToolTips(1, false);
+			this.array.SetDynamicsToolTips(2, false);
 			this.array.CellsQuantityChanged += new EventHandler(this.HandleArrayCellsQuantityChanged);
 			this.array.CellsContentChanged += new EventHandler(this.HandleArrayCellsContentChanged);
 			this.array.SelectedRowChanged += new EventHandler(this.HandleArraySelectedRowChanged);
+			this.array.TabIndex = tabIndex++;
+			this.array.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			this.labelEdit = new StaticText(this);
 			this.labelEdit.Alignment = ContentAlignment.MiddleRight;
@@ -40,11 +51,15 @@ namespace Epsitec.Common.Designer
 			this.primaryEdit.Name = "PrimaryEdit";
 			this.primaryEdit.TextChanged += new EventHandler(this.HandleEditTextChanged);
 			this.primaryEdit.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
+			this.primaryEdit.TabIndex = tabIndex++;
+			this.primaryEdit.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			this.secondaryEdit = new TextFieldMulti(this);
 			this.secondaryEdit.Name = "SecondaryEdit";
 			this.secondaryEdit.TextChanged += new EventHandler(this.HandleEditTextChanged);
 			this.secondaryEdit.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
+			this.secondaryEdit.TabIndex = tabIndex++;
+			this.secondaryEdit.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			this.labelAbout = new StaticText(this);
 			this.labelAbout.Alignment = ContentAlignment.MiddleRight;
@@ -54,11 +69,15 @@ namespace Epsitec.Common.Designer
 			this.primaryAbout.Name = "PrimaryAbout";
 			this.primaryAbout.TextChanged += new EventHandler(this.HandleAboutTextChanged);
 			this.primaryAbout.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
+			this.primaryAbout.TabIndex = tabIndex++;
+			this.primaryAbout.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			this.secondaryAbout = new TextField(this);
 			this.secondaryAbout.Name = "SecondaryAbout";
 			this.secondaryAbout.TextChanged += new EventHandler(this.HandleAboutTextChanged);
 			this.secondaryAbout.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
+			this.secondaryAbout.TabIndex = tabIndex++;
+			this.secondaryAbout.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			this.UpdateCultures();
 			this.HandleArraySelectedRowChanged(null);
@@ -197,6 +216,7 @@ namespace Epsitec.Common.Designer
 			if (column == 4)  edit = this.secondaryAbout;
 			if (edit != null)
 			{
+				this.Window.MakeActive();
 				edit.Focus();
 				edit.CursorFrom  = index;
 				edit.CursorTo    = index+search.Length;
@@ -220,6 +240,7 @@ namespace Epsitec.Common.Designer
 			sel = this.labelsIndex.IndexOf(label);
 			this.array.SelectedRow = sel;
 			this.array.ShowSelectedRow();
+			this.module.Notifier.NotifyInfoAccessChanged();
 		}
 
 		public void DoAccess(string name)
@@ -234,6 +255,112 @@ namespace Epsitec.Common.Designer
 
 			this.array.SelectedRow = sel;
 			this.array.ShowSelectedRow();
+			this.module.Notifier.NotifyInfoAccessChanged();
+		}
+
+		public void DoDelete()
+		{
+			//	Supprime la ressource sélectionnée.
+			int sel = this.array.SelectedRow;
+			if ( sel == -1 )  return;
+
+			this.primaryBundle.Remove(sel);
+
+			this.labelsIndex.RemoveAt(sel);
+			this.UpdateArray();
+
+			sel = System.Math.Min(sel, this.labelsIndex.Count-1);
+			this.array.SelectedRow = sel;
+			this.array.ShowSelectedRow();
+			this.module.Notifier.NotifyInfoAccessChanged();
+			this.module.Modifier.IsDirty = true;
+		}
+
+		public void DoDuplicate()
+		{
+			//	Duplique la ressource sélectionnée.
+			int sel = this.array.SelectedRow;
+			if ( sel == -1 )  return;
+
+			string name = this.labelsIndex[sel];
+			string newName = Misc.CopyName(name);
+			int newSel = sel+1;
+
+			ResourceBundle.Field field = this.primaryBundle[sel];
+			ResourceBundle.Field newField = new ResourceBundle.Field(this.primaryBundle, field.Xml);
+			newField.SetName(newName);
+			this.primaryBundle.Insert(newSel, newField);
+
+			field = this.secondaryBundle[name];
+			if ( field != null )
+			{
+				newField = new ResourceBundle.Field(this.secondaryBundle, field.Xml);
+				newField.SetName(newName);
+				this.secondaryBundle.Add(newField);
+			}
+
+			this.labelsIndex.Insert(newSel, newName);
+			this.UpdateArray();
+
+			this.array.SelectedRow = newSel;
+			this.array.ShowSelectedRow();
+			this.module.Notifier.NotifyInfoAccessChanged();
+			this.module.Modifier.IsDirty = true;
+		}
+
+		public void DoMove(int direction)
+		{
+			//	Déplace la ressource sélectionnée.
+			int sel = this.array.SelectedRow;
+			if ( sel == -1 )  return;
+
+			int newSel = sel+direction;
+			if ( newSel < 0 || newSel >= this.labelsIndex.Count )  return;
+
+			ResourceBundle.Field field = this.primaryBundle[sel];
+			this.primaryBundle.Remove(sel);
+			this.primaryBundle.Insert(newSel, field);
+
+			string label = this.labelsIndex[sel];
+			this.labelsIndex.RemoveAt(sel);
+			this.labelsIndex.Insert(newSel, label);
+			this.UpdateArray();
+
+			this.array.SelectedRow = newSel;
+			this.array.ShowSelectedRow();
+			this.module.Notifier.NotifyInfoAccessChanged();
+			this.module.Modifier.IsDirty = true;
+		}
+
+		public string InfoAccessText
+		{
+			//	Donne le texte d'information sur l'accès en cours.
+			get
+			{
+				System.Text.StringBuilder builder = new System.Text.StringBuilder();
+
+				int sel = this.array.SelectedRow;
+				if (sel == -1)
+				{
+					builder.Append("-");
+				}
+				else
+				{
+					builder.Append((sel+1).ToString());
+				}
+
+				builder.Append("/");
+				builder.Append(this.labelsIndex.Count.ToString());
+
+				if (this.labelsIndex.Count < this.primaryBundle.FieldCount)
+				{
+					builder.Append(" (");
+					builder.Append(this.primaryBundle.FieldCount.ToString());
+					builder.Append(")");
+				}
+
+				return builder.ToString();
+			}
 		}
 
 
@@ -494,6 +621,8 @@ namespace Epsitec.Common.Designer
 				this.SetTextField(this.primaryAbout, this.primaryBundle[label].About);
 				this.SetTextField(this.secondaryAbout, this.secondaryBundle[label].About);
 			}
+
+			this.module.Notifier.NotifyInfoAccessChanged();
 
 			this.ignoreChange = false;
 		}

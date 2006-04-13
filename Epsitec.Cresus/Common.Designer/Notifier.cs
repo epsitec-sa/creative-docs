@@ -41,8 +41,19 @@ namespace Epsitec.Common.Designer
 			//	Indique que tout a changé.
 			if ( !this.enable )  return;
 
+			this.modeChanged = true;
 			this.saveChanged = true;
+			this.infoAccessChanged = true;
 
+			this.NotifyAsync();
+		}
+
+		public void NotifyModeChanged()
+		{
+			//	Indique que les informations sur le document ont changé.
+			//	Nom du document, taille, etc.
+			if ( !this.enable )  return;
+			this.modeChanged = true;
 			this.NotifyAsync();
 		}
 
@@ -52,6 +63,15 @@ namespace Epsitec.Common.Designer
 			//	Nom du document, taille, etc.
 			if ( !this.enable )  return;
 			this.saveChanged = true;
+			this.NotifyAsync();
+		}
+
+		public void NotifyInfoAccessChanged()
+		{
+			//	Indique que les informations sur le document ont changé.
+			//	Nom du document, taille, etc.
+			if ( !this.enable )  return;
+			this.infoAccessChanged = true;
 			this.NotifyAsync();
 		}
 
@@ -71,13 +91,33 @@ namespace Epsitec.Common.Designer
 		{
 			//	Génère tous les événements pour informer des changements, en fonction
 			//	des NotifyXYZ fait précédemment.
+			if (this.modeChanged)
+			{
+				this.OnModeChanged();
+				this.modeChanged = false;
+			}
+
 			if (this.saveChanged)
 			{
 				this.OnSaveChanged();
 				this.saveChanged = false;
 			}
+
+			if (this.infoAccessChanged)
+			{
+				this.OnInfoAccessChanged();
+				this.infoAccessChanged = false;
+			}
 		}
 
+
+		protected void OnModeChanged()
+		{
+			if (this.ModeChanged != null)  // qq'un écoute ?
+			{
+				this.ModeChanged();
+			}
+		}
 
 		protected void OnSaveChanged()
 		{
@@ -87,13 +127,23 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
+		protected void OnInfoAccessChanged()
+		{
+			if (this.InfoAccessChanged != null)  // qq'un écoute ?
+			{
+				this.InfoAccessChanged();
+			}
+		}
 
 
-
+		public event SimpleEventHandler			ModeChanged;
 		public event SimpleEventHandler			SaveChanged;
+		public event SimpleEventHandler			InfoAccessChanged;
 
 		protected Module						module;
 		protected bool							enable = true;
+		protected bool							modeChanged;
 		protected bool							saveChanged;
+		protected bool							infoAccessChanged;
 	}
 }

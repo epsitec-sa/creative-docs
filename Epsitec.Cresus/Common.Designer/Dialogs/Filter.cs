@@ -42,7 +42,6 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.fieldFilter.TabIndex = tabIndex++;
 
 				this.radioBegin = new RadioButton(this.window.Root);
-				this.radioBegin.ActiveState = ActiveState.Yes;
 				this.radioBegin.Group = "Part";
 				this.radioBegin.Text = Res.Strings.Dialog.Filter.Radio.Begin;
 				this.radioBegin.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
@@ -50,6 +49,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.radioBegin.TabIndex = tabIndex++;
 
 				this.radioAny = new RadioButton(this.window.Root);
+				this.radioAny.ActiveState = ActiveState.Yes;
 				this.radioAny.Group = "Part";
 				this.radioAny.Text = Res.Strings.Dialog.Filter.Radio.Any;
 				this.radioAny.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;

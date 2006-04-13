@@ -16,6 +16,8 @@ namespace Epsitec.Common.Designer.Ribbons
 
 			this.buttonDelete    = this.CreateIconButton("Delete", "Large");
 			this.buttonDuplicate = this.CreateIconButton("Duplicate", "Large");
+			this.buttonUp        = this.CreateIconButton("Up");
+			this.buttonDown      = this.CreateIconButton("Down");
 
 			this.UpdateClientGeometry();
 		}
@@ -34,7 +36,7 @@ namespace Epsitec.Common.Designer.Ribbons
 			//	Retourne la largeur standard.
 			get
 			{
-				return 8 + 22*1.5*2;
+				return 8 + 22*1.5*2 + 4 + 22*1;
 			}
 		}
 
@@ -56,10 +58,24 @@ namespace Epsitec.Common.Designer.Ribbons
 			this.buttonDelete.Bounds = rect;
 			rect.Offset(dx*1.5, 0);
 			this.buttonDuplicate.Bounds = rect;
+
+			rect = this.UsefulZone;
+			rect.Width  = dx;
+			rect.Height = dy;
+			rect.Offset(dx*1.5*2+4, dy+5);
+			this.buttonUp.Bounds = rect;
+
+			rect = this.UsefulZone;
+			rect.Width  = dx;
+			rect.Height = dy;
+			rect.Offset(dx*1.5*2+4, 0);
+			this.buttonDown.Bounds = rect;
 		}
 
 
 		protected IconButton				buttonDelete;
 		protected IconButton				buttonDuplicate;
+		protected IconButton				buttonUp;
+		protected IconButton				buttonDown;
 	}
 }

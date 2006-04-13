@@ -14,7 +14,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			this.AutoEngage = false;
 			this.AutoFocus  = true;
-			this.AutoRepeat = true;
 
 			this.InternalState |= InternalState.Focusable;
 			this.InternalState |= InternalState.Engageable;
@@ -65,6 +64,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 					this.columns[i] = new StringList(this);
 					this.columns[i].DraggingCellSelectionChanged += new EventHandler(this.HandleDraggingCellSelectionChanged);
 					this.columns[i].FinalCellSelectionChanged += new EventHandler(this.HandleFinalCellSelectionChanged);
+					ToolTip.Default.SetToolTip(this.columns[i], "*");
 				}
 				this.columns[this.columns.Length-1].CellsQuantityChanged += new EventHandler(this.HandleCellsQuantityChanged);
 			}
@@ -163,7 +163,19 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Retourne l'état d'une ligne.
 			if ( this.columns == null )  return StringList.CellState.Normal;
 			return this.columns[column].GetLineState(row-this.firstVisibleRow);
-	}
+		}
+
+		public void SetDynamicsToolTips(int column, bool state)
+		{
+			//	Spécifie si une colonne génère des tooltips dynamiques.
+			this.columns[column].IsDynamicsToolTips = state;
+		}
+
+		public bool GetDynamicsToolTips(int column)
+		{
+			//	Retourne si une colonne génère des tooltips dynamiques.
+			return this.columns[column].IsDynamicsToolTips;
+		}
 
 		public int TotalRows
 		{
@@ -297,12 +309,80 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				if (message.KeyCode == KeyCode.ArrowUp)
 				{
-					this.FirstVisibleRow --;
+					if (message.IsControlPressed)
+					{
+						this.FirstVisibleRow--;
+					}
+					else
+					{
+						this.SelectedRow--;
+						this.ShowSelectedRow();
+					}
 				}
 
 				if (message.KeyCode == KeyCode.ArrowDown)
 				{
-					this.FirstVisibleRow ++;
+					if (message.IsControlPressed)
+					{
+						this.FirstVisibleRow++;
+					}
+					else
+					{
+						this.SelectedRow++;
+						this.ShowSelectedRow();
+					}
+				}
+
+				if (message.KeyCode == KeyCode.PageUp)
+				{
+					if (message.IsControlPressed)
+					{
+						this.FirstVisibleRow = this.FirstVisibleRow-this.LineCount;
+					}
+					else
+					{
+						this.SelectedRow = this.SelectedRow-this.LineCount;
+						this.ShowSelectedRow();
+					}
+				}
+
+				if (message.KeyCode == KeyCode.PageDown)
+				{
+					if (message.IsControlPressed)
+					{
+						this.FirstVisibleRow = this.FirstVisibleRow+this.LineCount;
+					}
+					else
+					{
+						this.SelectedRow = this.SelectedRow+this.LineCount;
+						this.ShowSelectedRow();
+					}
+				}
+
+				if (message.KeyCode == KeyCode.Home)
+				{
+					if (message.IsControlPressed)
+					{
+						this.FirstVisibleRow = 0;
+					}
+					else
+					{
+						this.SelectedRow = 0;
+						this.ShowSelectedRow();
+					}
+				}
+
+				if (message.KeyCode == KeyCode.End)
+				{
+					if (message.IsControlPressed)
+					{
+						this.FirstVisibleRow = 100000;
+					}
+					else
+					{
+						this.SelectedRow = 100000;
+						this.ShowSelectedRow();
+					}
 				}
 			}
 
