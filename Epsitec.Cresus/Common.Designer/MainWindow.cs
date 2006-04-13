@@ -367,7 +367,7 @@ namespace Epsitec.Common.Designer
 		[Command("Save")]
 		void CommandSave(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.CurrentModule.Save();
+			this.CurrentModule.Modifier.Save();
 		}
 
 		[Command("Close")]

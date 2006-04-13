@@ -276,7 +276,8 @@ namespace Epsitec.Common.Designer
 			int sel = this.array.SelectedRow;
 			if ( sel == -1 )  return;
 
-			this.primaryBundle.Remove(sel);
+			string name = this.labelsIndex[sel];
+			this.module.Modifier.Delete(name);
 
 			this.labelsIndex.RemoveAt(sel);
 			this.UpdateArray();
@@ -296,21 +297,9 @@ namespace Epsitec.Common.Designer
 
 			string name = this.labelsIndex[sel];
 			string newName = Misc.CopyName(name);
+			this.module.Modifier.Duplicate(name, newName);
+
 			int newSel = sel+1;
-
-			ResourceBundle.Field field = this.primaryBundle[sel];
-			ResourceBundle.Field newField = new ResourceBundle.Field(this.primaryBundle, field.Xml);
-			newField.SetName(newName);
-			this.primaryBundle.Insert(newSel, newField);
-
-			field = this.secondaryBundle[name];
-			if ( field != null )
-			{
-				newField = new ResourceBundle.Field(this.secondaryBundle, field.Xml);
-				newField.SetName(newName);
-				this.secondaryBundle.Add(newField);
-			}
-
 			this.labelsIndex.Insert(newSel, newName);
 			this.UpdateArray();
 
@@ -326,16 +315,12 @@ namespace Epsitec.Common.Designer
 			int sel = this.array.SelectedRow;
 			if ( sel == -1 )  return;
 
+			string name = this.labelsIndex[sel];
+			if ( !this.module.Modifier.Move(name, direction) )  return;
+		
 			int newSel = sel+direction;
-			if ( newSel < 0 || newSel >= this.labelsIndex.Count )  return;
-
-			ResourceBundle.Field field = this.primaryBundle[sel];
-			this.primaryBundle.Remove(sel);
-			this.primaryBundle.Insert(newSel, field);
-
-			string label = this.labelsIndex[sel];
 			this.labelsIndex.RemoveAt(sel);
-			this.labelsIndex.Insert(newSel, label);
+			this.labelsIndex.Insert(newSel, name);
 			this.UpdateArray();
 
 			this.array.SelectedRow = newSel;
@@ -703,8 +688,9 @@ namespace Epsitec.Common.Designer
 			if (edit == this.labelEdit)
 			{
 				this.labelsIndex[sel] = text;
-				this.primaryBundle[label].SetName(text);
-				this.secondaryBundle[label].SetName(text);
+				this.module.Modifier.Rename(label, text);
+				//?this.primaryBundle[label].SetName(text);
+				//?this.secondaryBundle[label].SetName(text);
 				column = 0;
 			}
 

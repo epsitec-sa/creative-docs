@@ -40,6 +40,92 @@ namespace Epsitec.Common.Designer
 		}
 
 
+		public void Save()
+		{
+			//	Enregistre toutes les cultures du module.
+			ResourceBundleCollection bundles = this.module.Bundles;
+			foreach (ResourceBundle bundle in bundles)
+			{
+				this.module.ResourceManager.SetBundle(bundle, ResourceSetMode.UpdateOnly);
+			}
+			this.IsDirty = false;
+		}
+
+		public void Delete(string name)
+		{
+			//	Supprime une ressource dans toutes les cultures du module.
+			ResourceBundleCollection bundles = this.module.Bundles;
+			foreach (ResourceBundle bundle in bundles)
+			{
+				bundle.Remove(name);
+			}
+			this.IsDirty = false;
+		}
+
+		public void Duplicate(string name, string newName)
+		{
+			//	Duplique une ressource dans toutes les cultures du module.
+			ResourceBundleCollection bundles = this.module.Bundles;
+			ResourceBundle defaultBundle = bundles[ResourceLevel.Default];
+			int index = this.GetDefaultIndex(name);
+			foreach (ResourceBundle bundle in bundles)
+			{
+				ResourceBundle.Field field = bundle[name];
+				if (field == null || field.Name == null)  continue;
+				ResourceBundle.Field newField = new ResourceBundle.Field(bundle, field.Xml);
+				newField.SetName(newName);
+
+				if (bundle == defaultBundle)
+				{
+					bundle.Insert(index+1, newField);
+				}
+				else
+				{
+					bundle.Add(newField);
+				}
+			}
+			this.IsDirty = false;
+		}
+
+		public bool Move(string name, int direction)
+		{
+			//	Déplace une ressource dans la culture par défaut du module.
+			ResourceBundleCollection bundles = this.module.Bundles;
+			ResourceBundle defaultBundle = bundles[ResourceLevel.Default];
+			int index = this.GetDefaultIndex(name);
+			if (index+direction < 0 || index+direction >= defaultBundle.FieldCount)
+			{
+				return false;
+			}
+
+			ResourceBundle.Field field = defaultBundle[index];
+			defaultBundle.Remove(index);
+			defaultBundle.Insert(index+direction, field);
+			this.IsDirty = false;
+			return true;
+		}
+
+		public void Rename(string name, string newName)
+		{
+			//	Renomme une ressource dans toutes les cultures du module.
+			ResourceBundleCollection bundles = this.module.Bundles;
+			foreach (ResourceBundle bundle in bundles)
+			{
+				bundle[name].SetName(newName);
+			}
+			this.IsDirty = false;
+		}
+
+		protected int GetDefaultIndex(string name)
+		{
+			//	Cherche l'index d'une ressource d'après son nom.
+			ResourceBundleCollection bundles = this.module.Bundles;
+			ResourceBundle defaultBundle = bundles[ResourceLevel.Default];
+			ResourceBundle.Field field = defaultBundle[name];
+			return defaultBundle.IndexOf(field);
+		}
+
+
 		#region Viewers
 		public Viewer ActiveViewer
 		{
