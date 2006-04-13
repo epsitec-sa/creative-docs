@@ -689,8 +689,6 @@ namespace Epsitec.Common.Designer
 			{
 				this.labelsIndex[sel] = text;
 				this.module.Modifier.Rename(label, text);
-				//?this.primaryBundle[label].SetName(text);
-				//?this.secondaryBundle[label].SetName(text);
 				column = 0;
 			}
 
@@ -702,6 +700,7 @@ namespace Epsitec.Common.Designer
 
 			if (edit == this.secondaryEdit)
 			{
+				this.module.Modifier.CreateIfNecessary(this.secondaryBundle, label);
 				this.secondaryBundle[label].SetStringValue(text);
 				column = 2;
 			}
@@ -714,6 +713,7 @@ namespace Epsitec.Common.Designer
 
 			if (edit == this.secondaryAbout)
 			{
+				this.module.Modifier.CreateIfNecessary(this.secondaryBundle, label);
 				this.secondaryBundle[label].SetAbout(text);
 				column = 4;
 			}

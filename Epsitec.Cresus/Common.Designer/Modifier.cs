@@ -116,6 +116,19 @@ namespace Epsitec.Common.Designer
 			this.IsDirty = false;
 		}
 
+		public void CreateIfNecessary(ResourceBundle bundle, string name)
+		{
+			//	Crée une ressource secondaire, si nécessaire.
+			ResourceBundle.Field field = bundle[name];
+			if (field == null || field.Name == null)
+			{
+				// TODO: comment créer un nouveau ResourceBundle.Field ???
+				ResourceBundle.Field newField = new ResourceBundle.Field(bundle, bundle.XmlDocument);
+				newField.SetName(name);
+				bundle.Add(newField);
+			}
+		}
+
 		protected int GetDefaultIndex(string name)
 		{
 			//	Cherche l'index d'une ressource d'après son nom.

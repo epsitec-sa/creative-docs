@@ -1158,7 +1158,7 @@ namespace Epsitec.Common.Support
 				this.data   = bundle;
 				this.type   = ResourceFieldType.Bundle;
 			}
-			
+
 			
 			public string					Name
 			{
