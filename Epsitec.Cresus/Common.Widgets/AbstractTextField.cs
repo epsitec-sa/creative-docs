@@ -203,6 +203,22 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		public void ProcessCut()
+		{
+			this.copyPasteBehavior.ProcessCopy();
+			this.copyPasteBehavior.ProcessDelete();
+		}
+
+		public void ProcessCopy()
+		{
+			this.copyPasteBehavior.ProcessCopy();
+		}
+
+		public void ProcessPaste()
+		{
+			this.copyPasteBehavior.ProcessPaste();
+		}
+
 		public override Drawing.Point GetBaseLine()
 		{
 			if ( this.TextLayout != null )
