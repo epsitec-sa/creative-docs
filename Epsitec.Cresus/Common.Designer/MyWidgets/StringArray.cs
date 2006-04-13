@@ -305,6 +305,56 @@ namespace Epsitec.Common.Designer.MyWidgets
 				if (message.Wheel < 0)  this.FirstVisibleRow += 3;
 			}
 
+			if (message.Type == MessageType.MouseDown)
+			{
+				this.WidthDraggingBegin(pos);
+				if (this.widthDraggingRank != -1)
+				{
+					message.Captured = true;
+					message.Consumer = this;
+					return;
+				}
+			}
+
+			if (message.Type == MessageType.MouseMove)
+			{
+				if (this.widthDraggingRank == -1)
+				{
+					// TODO: pourquoi ça ne marche pas (clignottements insupportables) ?
+#if false
+					MouseCursor cursor = MouseCursor.AsArrow;
+
+					if (this.WidthDraggingDetect(pos) != -1)
+					{
+						cursor = MouseCursor.AsVSplit;
+					}
+
+					if (this.MouseCursor != cursor)
+					{
+						this.MouseCursor = cursor;
+					}
+#endif
+				}
+				else
+				{
+					this.WidthDraggingMove(pos);
+					message.Captured = true;
+					message.Consumer = this;
+					return;
+				}
+			}
+
+			if (message.Type == MessageType.MouseUp)
+			{
+				if (this.widthDraggingRank != -1)
+				{
+					this.WidthDraggingEnd(pos);
+					message.Captured = true;
+					message.Consumer = this;
+					return;
+				}
+			}
+
 			if (message.Type == MessageType.KeyDown)
 			{
 				if (message.KeyCode == KeyCode.ArrowUp)
@@ -389,6 +439,74 @@ namespace Epsitec.Common.Designer.MyWidgets
 			base.ProcessMessage(message, pos);
 		}
 
+
+		#region WidthDragging
+		protected bool WidthDraggingBegin(Point pos)
+		{
+			this.widthDraggingRank = this.WidthDraggingDetect(pos);
+			if ( this.widthDraggingRank == -1 )  return false;
+
+			this.widthDraggingAbsolutes = new double[this.columns.Length+1];
+			double x = this.Client.Bounds.Left;
+			this.widthDraggingAbsolutes[0] = x;
+			for (int i=0; i<this.columns.Length; i++)
+			{
+				x += this.GetColumnsAbsoluteWidth(i);
+				this.widthDraggingAbsolutes[i+1] = x;
+			}
+
+			this.widthDraggingMin = this.widthDraggingAbsolutes[this.widthDraggingRank+0]+20;
+			this.widthDraggingMax = this.widthDraggingAbsolutes[this.widthDraggingRank+2]-20;
+			
+			this.widthDraggingPos = pos.X;
+			this.Invalidate();
+			return true;
+		}
+
+		protected void WidthDraggingMove(Point pos)
+		{
+			pos.X = System.Math.Max(pos.X, this.widthDraggingMin);
+			pos.X = System.Math.Min(pos.X, this.widthDraggingMax);
+			if (this.widthDraggingPos != pos.X)
+			{
+				this.widthDraggingPos = pos.X;
+				this.Invalidate();
+			}
+		}
+
+		protected void WidthDraggingEnd(Point pos)
+		{
+			this.widthDraggingAbsolutes[this.widthDraggingRank+1] = this.widthDraggingPos;
+
+			for (int i=0; i<this.columns.Length; i++)
+			{
+				double w = this.widthDraggingAbsolutes[i+1]-this.widthDraggingAbsolutes[i];
+				this.SetColumnsRelativeWidth(i, w);
+			}
+			this.UpdateClientGeometry();
+
+			this.widthDraggingRank = -1;
+			this.Invalidate();
+			this.OnColumnsWidthChanged();
+		}
+
+		protected int WidthDraggingDetect(Point pos)
+		{
+			//	Détecte dans quel séparateur de colonne est la souris.
+			double x = this.Client.Bounds.Left;
+			for (int i=0; i<this.columns.Length-1; i++)
+			{
+				x += this.GetColumnsAbsoluteWidth(i);
+				if (pos.X >= x-StringList.WidthDraggingDetectMargin && pos.X <= x+StringList.WidthDraggingDetectMargin)
+				{
+					return i;
+				}
+			}
+			return -1;
+		}
+		#endregion
+
+
 		protected override void UpdateClientGeometry()
 		{
 			//	Met à jour la géométrie.
@@ -417,6 +535,22 @@ namespace Epsitec.Common.Designer.MyWidgets
 			rect = this.Client.Bounds;
 			rect.Left = rect.Right-this.scroller.Width;
 			this.scroller.Bounds = rect;
+		}
+
+
+		protected override void PaintForegroundImplementation(Graphics graphics, Rectangle clipRect)
+		{
+			if (this.widthDraggingRank != -1)
+			{
+				IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
+				Rectangle rect = this.Client.Bounds;
+				rect.Left  = this.widthDraggingPos-StringList.WidthDraggingDetectMargin;
+				rect.Right = this.widthDraggingPos+StringList.WidthDraggingDetectMargin;
+				graphics.Align(ref rect);
+
+				graphics.AddFilledRectangle(rect);
+				graphics.RenderSolid(adorner.ColorBorder);
+			}
 		}
 
 
@@ -458,6 +592,18 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 
 		#region Events handler
+		protected virtual void OnColumnsWidthChanged()
+		{
+			//	Génère un événement pour dire que la largeur de colonnes a changé.
+			if (this.ColumnsWidthChanged != null)  // qq'un écoute ?
+			{
+				this.ColumnsWidthChanged(this);
+			}
+		}
+
+		public event Support.EventHandler ColumnsWidthChanged;
+
+
 		protected virtual void OnCellsQuantityChanged()
 		{
 			//	Génère un événement pour dire que le nombre de cellules a changé.
@@ -501,5 +647,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected int						selectedRow = -1;
 		protected int						firstVisibleRow = 0;
 		protected bool						ignoreChange = false;
+
+		protected int						widthDraggingRank = -1;
+		protected double[]					widthDraggingAbsolutes;
+		protected double					widthDraggingMin;
+		protected double					widthDraggingMax;
+		protected double					widthDraggingPos;
 	}
 }
