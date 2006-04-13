@@ -13,8 +13,8 @@
   <data name="Ribbon.Section.Character">Caractère</data>
   <data name="Ribbon.Section.Access">Accès</data>
 
-  <data name="String.Edit">Texte</data>
-  <data name="String.About">Commentaire</data>
+  <data name="String.Edit">Textes</data>
+  <data name="String.About">Commentaires</data>
 
   <data name="Action.New">Nouveau</data>
   <data name="Action.Open">Ouvrir...</data>

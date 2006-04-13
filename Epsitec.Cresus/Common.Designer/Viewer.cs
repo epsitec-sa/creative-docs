@@ -43,9 +43,18 @@ namespace Epsitec.Common.Designer
 			this.array.TabIndex = tabIndex++;
 			this.array.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
-			this.labelEdit = new StaticText(this);
-			this.labelEdit.Alignment = ContentAlignment.MiddleRight;
-			this.labelEdit.Text = Res.Strings.String.Edit;
+			this.labelStatic = new StaticText(this);
+			this.labelStatic.Alignment = ContentAlignment.MiddleRight;
+			this.labelStatic.Text = Res.Strings.String.Edit;
+			this.labelStatic.Visibility = (this.module.Mode != DesignerMode.Build);
+
+			this.labelEdit = new TextFieldMulti(this);
+			this.labelEdit.Name = "LabelEdit";
+			this.labelEdit.TextChanged += new EventHandler(this.HandleEditTextChanged);
+			this.labelEdit.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
+			this.labelEdit.TabIndex = tabIndex++;
+			this.labelEdit.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.labelEdit.Visibility = (this.module.Mode == DesignerMode.Build);
 
 			this.primaryEdit = new TextFieldMulti(this);
 			this.primaryEdit.Name = "PrimaryEdit";
@@ -92,7 +101,10 @@ namespace Epsitec.Common.Designer
 				this.array.CellsQuantityChanged -= new EventHandler(this.HandleArrayCellsQuantityChanged);
 				this.array.CellsContentChanged -= new EventHandler(this.HandleArrayCellsContentChanged);
 				this.array.SelectedRowChanged -= new EventHandler(this.HandleArraySelectedRowChanged);
-				
+
+				this.labelEdit.TextChanged -= new EventHandler(this.HandleEditTextChanged);
+				this.labelEdit.KeyboardFocusChanged -= new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
+
 				this.primaryEdit.TextChanged -= new EventHandler(this.HandleEditTextChanged);
 				this.primaryEdit.KeyboardFocusChanged -= new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
 
@@ -521,6 +533,8 @@ namespace Epsitec.Common.Designer
 			rect.Top = rect.Bottom+47+20+5;
 			rect.Bottom = rect.Top-47;
 			rect.Width = this.array.GetColumnsAbsoluteWidth(0)-5;
+			this.labelStatic.Bounds = rect;
+			rect.Width += 5+1;
 			this.labelEdit.Bounds = rect;
 			rect.Left += this.array.GetColumnsAbsoluteWidth(0);
 			rect.Width = this.array.GetColumnsAbsoluteWidth(1)+1;
@@ -596,11 +610,13 @@ namespace Epsitec.Common.Designer
 
 			if ( sel == -1 )
 			{
+				this.labelEdit.Enable = false;
 				this.primaryEdit.Enable = false;
 				this.secondaryEdit.Enable = false;
 				this.primaryAbout.Enable = false;
 				this.secondaryAbout.Enable = false;
 
+				this.labelEdit.Text = "";
 				this.primaryEdit.Text = "";
 				this.secondaryEdit.Text = "";
 				this.primaryAbout.Text = "";
@@ -608,12 +624,15 @@ namespace Epsitec.Common.Designer
 			}
 			else
 			{
+				this.labelEdit.Enable = true;
 				this.primaryEdit.Enable = true;
 				this.secondaryEdit.Enable = true;
 				this.primaryAbout.Enable = true;
 				this.secondaryAbout.Enable = true;
 
 				string label = this.labelsIndex[sel];
+
+				this.SetTextField(this.labelEdit, label);
 
 				this.SetTextField(this.primaryEdit, this.primaryBundle[label].AsString);
 				this.SetTextField(this.secondaryEdit, this.secondaryBundle[label].AsString);
@@ -635,18 +654,28 @@ namespace Epsitec.Common.Designer
 			string text = edit.Text;
 			int sel = this.array.SelectedRow;
 			string label = this.labelsIndex[sel];
+			int column = -1;
+
+			if (edit == this.labelEdit)
+			{
+				this.labelsIndex[sel] = text;
+				this.primaryBundle[label].SetName(text);
+				this.secondaryBundle[label].SetName(text);
+				column = 0;
+			}
 
 			if (edit == this.primaryEdit)
 			{
 				this.primaryBundle[label].SetStringValue(text);
+				column = 1;
 			}
 
 			if (edit == this.secondaryEdit)
 			{
 				this.secondaryBundle[label].SetStringValue(text);
+				column = 2;
 			}
 
-			int column = (edit == this.primaryEdit) ? 1 : 2;
 			MyWidgets.StringList.CellState state = (text == "") ? MyWidgets.StringList.CellState.Warning : MyWidgets.StringList.CellState.Normal;
 
 			this.array.SetLineString(column, sel, text);
@@ -698,7 +727,8 @@ namespace Epsitec.Common.Designer
 		protected ResourceBundle			primaryBundle;
 		protected ResourceBundle			secondaryBundle;
 		protected MyWidgets.StringArray		array;
-		protected StaticText				labelEdit;
+		protected StaticText				labelStatic;
+		protected TextFieldMulti			labelEdit;
 		protected TextFieldMulti			primaryEdit;
 		protected TextFieldMulti			secondaryEdit;
 		protected StaticText				labelAbout;

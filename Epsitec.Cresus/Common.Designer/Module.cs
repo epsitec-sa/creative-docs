@@ -9,8 +9,9 @@ namespace Epsitec.Common.Designer
 	/// </summary>
 	public class Module
 	{
-		public Module(string resourcePrefix, string moduleName)
+		public Module(DesignerMode mode, string resourcePrefix, string moduleName)
 		{
+			this.mode = mode;
 			this.name = moduleName;
 
 			this.resourceManager = new ResourceManager();
@@ -31,6 +32,14 @@ namespace Epsitec.Common.Designer
 			this.modifier.Dispose();
 		}
 
+
+		public DesignerMode Mode
+		{
+			get
+			{
+				return this.mode;
+			}
+		}
 
 		public Modifier Modifier
 		{
@@ -85,6 +94,7 @@ namespace Epsitec.Common.Designer
 		}
 
 
+		protected DesignerMode				mode;
 		protected string					name;
 		protected ResourceManager			resourceManager;
 		protected ResourceBundleCollection	bundles;
