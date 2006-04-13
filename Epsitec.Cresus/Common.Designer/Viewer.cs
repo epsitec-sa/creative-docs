@@ -50,7 +50,7 @@ namespace Epsitec.Common.Designer
 
 			this.labelEdit = new TextFieldMulti(this);
 			this.labelEdit.Name = "LabelEdit";
-			this.labelEdit.TextChanged += new EventHandler(this.HandleEditTextChanged);
+			this.labelEdit.TextChanged += new EventHandler(this.HandleTextChanged);
 			this.labelEdit.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
 			this.labelEdit.TabIndex = tabIndex++;
 			this.labelEdit.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
@@ -58,14 +58,14 @@ namespace Epsitec.Common.Designer
 
 			this.primaryEdit = new TextFieldMulti(this);
 			this.primaryEdit.Name = "PrimaryEdit";
-			this.primaryEdit.TextChanged += new EventHandler(this.HandleEditTextChanged);
+			this.primaryEdit.TextChanged += new EventHandler(this.HandleTextChanged);
 			this.primaryEdit.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
 			this.primaryEdit.TabIndex = tabIndex++;
 			this.primaryEdit.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			this.secondaryEdit = new TextFieldMulti(this);
 			this.secondaryEdit.Name = "SecondaryEdit";
-			this.secondaryEdit.TextChanged += new EventHandler(this.HandleEditTextChanged);
+			this.secondaryEdit.TextChanged += new EventHandler(this.HandleTextChanged);
 			this.secondaryEdit.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
 			this.secondaryEdit.TabIndex = tabIndex++;
 			this.secondaryEdit.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
@@ -76,14 +76,14 @@ namespace Epsitec.Common.Designer
 
 			this.primaryAbout = new TextField(this);
 			this.primaryAbout.Name = "PrimaryAbout";
-			this.primaryAbout.TextChanged += new EventHandler(this.HandleAboutTextChanged);
+			this.primaryAbout.TextChanged += new EventHandler(this.HandleTextChanged);
 			this.primaryAbout.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
 			this.primaryAbout.TabIndex = tabIndex++;
 			this.primaryAbout.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			this.secondaryAbout = new TextField(this);
 			this.secondaryAbout.Name = "SecondaryAbout";
-			this.secondaryAbout.TextChanged += new EventHandler(this.HandleAboutTextChanged);
+			this.secondaryAbout.TextChanged += new EventHandler(this.HandleTextChanged);
 			this.secondaryAbout.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
 			this.secondaryAbout.TabIndex = tabIndex++;
 			this.secondaryAbout.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
@@ -102,19 +102,19 @@ namespace Epsitec.Common.Designer
 				this.array.CellsContentChanged -= new EventHandler(this.HandleArrayCellsContentChanged);
 				this.array.SelectedRowChanged -= new EventHandler(this.HandleArraySelectedRowChanged);
 
-				this.labelEdit.TextChanged -= new EventHandler(this.HandleEditTextChanged);
+				this.labelEdit.TextChanged -= new EventHandler(this.HandleTextChanged);
 				this.labelEdit.KeyboardFocusChanged -= new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
 
-				this.primaryEdit.TextChanged -= new EventHandler(this.HandleEditTextChanged);
+				this.primaryEdit.TextChanged -= new EventHandler(this.HandleTextChanged);
 				this.primaryEdit.KeyboardFocusChanged -= new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
 
-				this.secondaryEdit.TextChanged -= new EventHandler(this.HandleEditTextChanged);
+				this.secondaryEdit.TextChanged -= new EventHandler(this.HandleTextChanged);
 				this.secondaryEdit.KeyboardFocusChanged -= new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
 
-				this.primaryAbout.TextChanged -= new EventHandler(this.HandleAboutTextChanged);
+				this.primaryAbout.TextChanged -= new EventHandler(this.HandleTextChanged);
 				this.primaryAbout.KeyboardFocusChanged -= new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
 
-				this.secondaryAbout.TextChanged -= new EventHandler(this.HandleAboutTextChanged);
+				this.secondaryAbout.TextChanged -= new EventHandler(this.HandleTextChanged);
 				this.secondaryAbout.KeyboardFocusChanged -= new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
 			}
 		}
@@ -342,6 +342,35 @@ namespace Epsitec.Common.Designer
 			this.array.ShowSelectedRow();
 			this.module.Notifier.NotifyInfoAccessChanged();
 			this.module.Modifier.IsDirty = true;
+		}
+
+		public void DoClipboard(string name)
+		{
+			//	Effectue une action avec le bloc-notes.
+			if ( this.currentTextField == null )  return;
+		}
+
+		public void DoFont(string name)
+		{
+			//	Effectue une modification de typographie.
+			if ( this.currentTextField == null )  return;
+
+			if ( name == "FontBold" )
+			{
+				this.currentTextField.TextNavigator.SelectionBold = !this.currentTextField.TextNavigator.SelectionBold;
+			}
+
+			if ( name == "FontItalic" )
+			{
+				this.currentTextField.TextNavigator.SelectionItalic = !this.currentTextField.TextNavigator.SelectionItalic;
+			}
+
+			if ( name == "FontUnderlined" )
+			{
+				this.currentTextField.TextNavigator.SelectionUnderlined = !this.currentTextField.TextNavigator.SelectionUnderlined;
+			}
+
+			this.HandleTextChanged(this.currentTextField);
 		}
 
 		public string InfoAccessText
@@ -646,11 +675,11 @@ namespace Epsitec.Common.Designer
 			this.ignoreChange = false;
 		}
 
-		void HandleEditTextChanged(object sender)
+		void HandleTextChanged(object sender)
 		{
 			if ( this.ignoreChange )  return;
 
-			TextFieldMulti edit = sender as TextFieldMulti;
+			AbstractTextField edit = sender as AbstractTextField;
 			string text = edit.Text;
 			int sel = this.array.SelectedRow;
 			string label = this.labelsIndex[sel];
@@ -676,31 +705,24 @@ namespace Epsitec.Common.Designer
 				column = 2;
 			}
 
-			MyWidgets.StringList.CellState state = (text == "") ? MyWidgets.StringList.CellState.Warning : MyWidgets.StringList.CellState.Normal;
-
-			this.array.SetLineString(column, sel, text);
-			this.array.SetLineState(column, sel, state);
-
-			this.module.Modifier.IsDirty = true;
-		}
-
-		void HandleAboutTextChanged(object sender)
-		{
-			if ( this.ignoreChange )  return;
-
-			TextField edit = sender as TextField;
-			string text = edit.Text;
-			int sel = this.array.SelectedRow;
-			string label = this.labelsIndex[sel];
-
 			if (edit == this.primaryAbout)
 			{
 				this.primaryBundle[label].SetAbout(text);
+				column = 3;
 			}
 
 			if (edit == this.secondaryAbout)
 			{
 				this.secondaryBundle[label].SetAbout(text);
+				column = 4;
+			}
+
+			if (column < 3)
+			{
+				MyWidgets.StringList.CellState state = (text == "") ? MyWidgets.StringList.CellState.Warning : MyWidgets.StringList.CellState.Normal;
+
+				this.array.SetLineString(column, sel, text);
+				this.array.SetLineState(column, sel, state);
 			}
 
 			this.module.Modifier.IsDirty = true;

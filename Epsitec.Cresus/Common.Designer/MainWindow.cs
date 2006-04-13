@@ -460,6 +460,24 @@ namespace Epsitec.Common.Designer
 			this.CurrentModule.Modifier.ActiveViewer.DoMove(1);
 		}
 
+		[Command("Cut")]
+		[Command("Copy")]
+		[Command("Paste")]
+		void CommandClipboard(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			if ( !this.IsCurrentModule )  return;
+			this.CurrentModule.Modifier.ActiveViewer.DoClipboard(e.CommandName);
+		}
+
+		[Command("FontBold")]
+		[Command("FontItalic")]
+		[Command("FontUnderlined")]
+		void CommandFont(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			if ( !this.IsCurrentModule )  return;
+			this.CurrentModule.Modifier.ActiveViewer.DoFont(e.CommandName);
+		}
+
 		protected void InitCommands()
 		{
 			this.newState = this.CreateCommandState("New", KeyCode.ModifierControl|KeyCode.AlphaN);
