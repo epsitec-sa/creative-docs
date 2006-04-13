@@ -164,23 +164,29 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				if (message.Type == MessageType.MouseDown)
 				{
-					int cell = this.Detect(pos);
+					int cell = this.Detect(pos, true);
 					if (this.CellSelected != cell)
 					{
-						this.CellSelected = cell;
-						this.OnDraggingCellSelectionChanged();
+						if (cell != -1)
+						{
+							this.CellSelected = cell;
+							this.OnDraggingCellSelectionChanged();
+						}
 					}
-					this.isDragging = true;
-					message.Captured = true;
-					message.Consumer = this;
-					return;
+					if (cell != -1)
+					{
+						this.isDragging = true;
+						message.Captured = true;
+						message.Consumer = this;
+						return;
+					}
 				}
 
 				if (message.Type == MessageType.MouseMove)
 				{
 					if (this.isDragging)
 					{
-						int cell = this.Detect(pos);
+						int cell = this.Detect(pos, false);
 						if (this.CellSelected != cell)
 						{
 							this.CellSelected = cell;
@@ -194,7 +200,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 				if (message.Type == MessageType.MouseUp)
 				{
-					int cell = this.Detect(pos);
+					int cell = this.Detect(pos, false);
 					this.CellSelected = cell;
 					this.OnFinalCellSelectionChanged();
 					this.isDragging = false;
@@ -214,10 +220,17 @@ namespace Epsitec.Common.Designer.MyWidgets
 			base.ProcessMessage(message, pos);
 		}
 
-		protected int Detect(Point pos)
+		protected int Detect(Point pos, bool margins)
 		{
 			//	Détecte la cellule visée par la souris.
 			Rectangle box = this.Client.Bounds;
+			
+			if (margins)
+			{
+				box.Left  += StringList.WidthDraggingDetectMargin;
+				box.Right -= StringList.WidthDraggingDetectMargin;
+			}
+
 			if ( !box.Contains(pos) )  return -1;
 			double py = box.Height-(pos.Y-box.Bottom);
 			double h = box.Height/this.cells.Length;
@@ -331,7 +344,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected string GetTooltipEditedText(Point pos)
 		{
 			//	Donne le texte du tooltip en fonction de la position.
-			int row = this.Detect(pos);
+			int row = this.Detect(pos, false);
 			if ( row != -1 )
 			{
 				return this.GetLineString(row);
@@ -389,6 +402,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 		}
 		#endregion
 
+
+		public static readonly double		WidthDraggingDetectMargin = 2;
 
 		protected double					lineHeight = 20;
 		protected double					relativeWidth = 0;

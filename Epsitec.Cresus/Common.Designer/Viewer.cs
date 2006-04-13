@@ -37,6 +37,7 @@ namespace Epsitec.Common.Designer
 			this.array.SetDynamicsToolTips(0, true);
 			this.array.SetDynamicsToolTips(1, false);
 			this.array.SetDynamicsToolTips(2, false);
+			this.array.ColumnsWidthChanged += new EventHandler(this.HandleArrayColumnsWidthChanged);
 			this.array.CellsQuantityChanged += new EventHandler(this.HandleArrayCellsQuantityChanged);
 			this.array.CellsContentChanged += new EventHandler(this.HandleArrayCellsContentChanged);
 			this.array.SelectedRowChanged += new EventHandler(this.HandleArraySelectedRowChanged);
@@ -97,7 +98,8 @@ namespace Epsitec.Common.Designer
 			if (disposing)
 			{
 				this.secondaryCulture.ComboClosed -= new EventHandler(this.HandleSecondaryCultureComboClosed);
-				
+
+				this.array.ColumnsWidthChanged -= new EventHandler(this.HandleArrayColumnsWidthChanged);
 				this.array.CellsQuantityChanged -= new EventHandler(this.HandleArrayCellsQuantityChanged);
 				this.array.CellsContentChanged -= new EventHandler(this.HandleArrayCellsContentChanged);
 				this.array.SelectedRowChanged -= new EventHandler(this.HandleArraySelectedRowChanged);
@@ -614,6 +616,11 @@ namespace Epsitec.Common.Designer
 					break;
 				}
 			}
+		}
+
+		void HandleArrayColumnsWidthChanged(object sender)
+		{
+			this.UpdateClientGeometry();
 		}
 
 		void HandleArrayCellsQuantityChanged(object sender)
