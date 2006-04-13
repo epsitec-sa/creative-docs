@@ -70,6 +70,7 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
+				EmbedManifest="false"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -88,6 +89,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				CommandLine="@echo on&#x0D;&#x0A;copy $(OutDir)\$(TargetFileName) $(SolutionDir)\..\TestMyDllCall\TestMyDllCall\bin\Debug&#x0D;&#x0A;"
 			/>
 		</Configuration>
 		<Configuration
@@ -163,6 +165,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				CommandLine="@echo on&#x0D;&#x0A;copy $(OutDir)\$(TargetFileName) $(SolutionDir)\..\TestMyDllCall\TestMyDllCall\bin\Debug&#x0D;&#x0A;"
 			/>
 		</Configuration>
 	</Configurations>
