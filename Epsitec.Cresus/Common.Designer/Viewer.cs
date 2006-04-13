@@ -348,6 +348,21 @@ namespace Epsitec.Common.Designer
 		{
 			//	Effectue une action avec le bloc-notes.
 			if ( this.currentTextField == null )  return;
+
+			if ( name == "Cut" )
+			{
+				this.currentTextField.ProcessCut();
+			}
+
+			if ( name == "Copy" )
+			{
+				this.currentTextField.ProcessCopy();
+			}
+
+			if ( name == "Paste" )
+			{
+				this.currentTextField.ProcessPaste();
+			}
 		}
 
 		public void DoFont(string name)
