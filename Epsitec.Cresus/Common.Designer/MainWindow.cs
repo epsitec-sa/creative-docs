@@ -5,6 +5,12 @@ using Epsitec.Common.Drawing;
 
 namespace Epsitec.Common.Designer
 {
+	public enum DesignerMode
+	{
+		Build,
+		Translate,
+	}
+
 	/// <summary>
 	/// Fenêtre principale de l'éditeur de ressources.
 	/// </summary>
@@ -24,9 +30,11 @@ namespace Epsitec.Common.Designer
 			this.moduleInfoList = new List<ModuleInfo>();
 		}
 
-		public void Show(Window parent)
+		public void Show(Window parent, DesignerMode mode)
 		{
 			//	Crée et montre la fenêtre de l'éditeur.
+			this.mode = mode;
+
 			if ( this.window == null )
 			{
 				this.window = new Window();
@@ -149,9 +157,19 @@ namespace Epsitec.Common.Designer
 
 		public Window Window
 		{
+			//	Retourne la fenêtre principale de l'application.
 			get
 			{
 				return this.window;
+			}
+		}
+
+		public DesignerMode Mode
+		{
+			//	Retourne le mode de fonctionnement de l'application.
+			get
+			{
+				return this.mode;
 			}
 		}
 
@@ -169,7 +187,7 @@ namespace Epsitec.Common.Designer
 			this.ribbonOperButton = new RibbonButton("", Res.Strings.Ribbon.Oper);
 			this.ribbonOperButton.Size = this.ribbonOperButton.RequiredSize;
 			this.ribbonOperButton.Pressed += new MessageEventHandler(this.HandleRibbonPressed);
-			this.hToolBar.Items.Add(this.ribbonOperButton);
+			//?this.hToolBar.Items.Add(this.ribbonOperButton);
 
 			this.ribbonTextButton = new RibbonButton("", Res.Strings.Ribbon.Text);
 			this.ribbonTextButton.Size = this.ribbonTextButton.RequiredSize;
@@ -184,6 +202,7 @@ namespace Epsitec.Common.Designer
 			this.ribbonMain.Visibility = true;
 			this.ribbonMain.Items.Add(new Ribbons.File());
 			this.ribbonMain.Items.Add(new Ribbons.Access());
+			this.ribbonMain.Items.Add(new Ribbons.Select());
 			this.ribbonMain.Items.Add(new Ribbons.Clipboard());
 
 			this.ribbonOper = new RibbonContainer(this.window.Root);
@@ -192,7 +211,6 @@ namespace Epsitec.Common.Designer
 			this.ribbonOper.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top;
 			this.ribbonOper.Margins = new Margins(0, 0, this.hToolBar.Height, 0);
 			this.ribbonOper.Visibility = true;
-			this.ribbonOper.Items.Add(new Ribbons.Select());
 
 			this.ribbonText = new RibbonContainer(this.window.Root);
 			this.ribbonText.Name = "Text";
@@ -207,7 +225,8 @@ namespace Epsitec.Common.Designer
 			this.info.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Bottom;
 			this.info.Margins = new Margins(0, 22-5, 0, 0);
 
-			this.InfoAdd("CurrentModule", 200);
+			this.InfoAdd("InfoCurrentModule", 200);
+			this.InfoAdd("InfoAccess", 120);
 
 			StatusBar infoMisc = new StatusBar(this.window.Root);
 			infoMisc.Width = 22;
@@ -235,6 +254,8 @@ namespace Epsitec.Common.Designer
 			this.ActiveRibbon(this.ribbonActive);
 		}
 
+
+		#region Info manager
 		protected StatusField InfoAdd(string name, double width)
 		{
 			StatusField field = new StatusField();
@@ -270,16 +291,52 @@ namespace Epsitec.Common.Designer
 				}
 			}
 
-			StatusField field = this.info.Items["CurrentModule"] as StatusField;
+			StatusField field = this.info.Items["InfoCurrentModule"] as StatusField;
 			field.Text = builder.ToString();
 			field.Invalidate();
 		}
+
+		protected void UpdateInfoAccess()
+		{
+			string text = "";
+			Module module = this.CurrentModule;
+			if (module != null)
+			{
+				text = module.Modifier.ActiveViewer.InfoAccessText;
+			}
+			StatusField field = this.info.Items["InfoAccess"] as StatusField;
+			field.Text = text;
+			field.Invalidate();
+		}
+		#endregion
 
 
 		protected void ConnectEvents()
 		{
 			//	On s'enregistre auprès du module pour tous les événements.
-			this.CurrentModule.Notifier.SaveChanged += new SimpleEventHandler(this.HandleSaveChanged);
+			this.CurrentModule.Notifier.ModeChanged       += new SimpleEventHandler(this.HandleModeChanged);
+			this.CurrentModule.Notifier.SaveChanged       += new SimpleEventHandler(this.HandleSaveChanged);
+			this.CurrentModule.Notifier.InfoAccessChanged += new SimpleEventHandler(this.HandleInfoAccessChanged);
+		}
+
+		private void HandleModeChanged()
+		{
+			//	Appelé lorsque le mode de fonctionnement a changé.
+			if (this.IsCurrentModule)
+			{
+				bool build = (this.mode == DesignerMode.Build);
+				this.deleteState.Enable = build;
+				this.duplicateState.Enable = build;
+				this.upState.Enable = build;
+				this.downState.Enable = build;
+			}
+			else
+			{
+				this.deleteState.Enable = false;
+				this.duplicateState.Enable = false;
+				this.upState.Enable = false;
+				this.downState.Enable = false;
+			}
 		}
 
 		private void HandleSaveChanged()
@@ -297,6 +354,12 @@ namespace Epsitec.Common.Designer
 				this.saveState.Enable = false;
 				this.saveAsState.Enable = false;
 			}
+		}
+
+		private void HandleInfoAccessChanged()
+		{
+			//	Appelé par le module lorsque l'information sur l'accès a changé.
+			this.UpdateInfoAccess();
 		}
 
 
@@ -369,6 +432,34 @@ namespace Epsitec.Common.Designer
 			this.CurrentModule.Modifier.ActiveViewer.DoAccess(e.CommandName);
 		}
 
+		[Command("Delete")]
+		void CommandDelete(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			if ( !this.IsCurrentModule )  return;
+			this.CurrentModule.Modifier.ActiveViewer.DoDelete();
+		}
+
+		[Command("Duplicate")]
+		void CommandDuplicate(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			if ( !this.IsCurrentModule )  return;
+			this.CurrentModule.Modifier.ActiveViewer.DoDuplicate();
+		}
+
+		[Command("Up")]
+		void CommandUp(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			if ( !this.IsCurrentModule )  return;
+			this.CurrentModule.Modifier.ActiveViewer.DoMove(-1);
+		}
+
+		[Command("Down")]
+		void CommandDown(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			if ( !this.IsCurrentModule )  return;
+			this.CurrentModule.Modifier.ActiveViewer.DoMove(1);
+		}
+
 		protected void InitCommands()
 		{
 			this.newState = this.CreateCommandState("New", KeyCode.ModifierControl|KeyCode.AlphaN);
@@ -381,6 +472,8 @@ namespace Epsitec.Common.Designer
 			this.pasteState = this.CreateCommandState("Paste", KeyCode.ModifierControl|KeyCode.AlphaV);
 			this.deleteState = this.CreateCommandState("Delete", KeyCode.Delete);
 			this.duplicateState = this.CreateCommandState("Duplicate", KeyCode.ModifierControl|KeyCode.AlphaD);
+			this.upState = this.CreateCommandState("Up");
+			this.downState = this.CreateCommandState("Down");
 			this.fontBoldState = this.CreateCommandState("FontBold", KeyCode.ModifierControl|KeyCode.AlphaB);
 			this.fontItalicState = this.CreateCommandState("FontItalic", KeyCode.ModifierControl|KeyCode.AlphaI);
 			this.fontUnderlinedState = this.CreateCommandState("FontUnderlined", KeyCode.ModifierControl|KeyCode.AlphaU);
@@ -625,6 +718,7 @@ namespace Epsitec.Common.Designer
 		#endregion
 
 
+		protected DesignerMode					mode;
 		protected Window						window;
 		protected CommandDispatcher				commandDispatcher;
 		protected HToolBar						hToolBar;
@@ -658,6 +752,8 @@ namespace Epsitec.Common.Designer
 		protected CommandState					pasteState;
 		protected CommandState					deleteState;
 		protected CommandState					duplicateState;
+		protected CommandState					upState;
+		protected CommandState					downState;
 		protected CommandState					fontBoldState;
 		protected CommandState					fontItalicState;
 		protected CommandState					fontUnderlinedState;

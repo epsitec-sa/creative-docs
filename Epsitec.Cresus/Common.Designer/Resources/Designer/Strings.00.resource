@@ -28,8 +28,10 @@
   <data name="Action.Cut">Couper</data>
   <data name="Action.Copy">Copier</data>
   <data name="Action.Paste">Coller</data>
-  <data name="Action.Delete">Supprimer</data>
-  <data name="Action.Duplicate">Dupliquer</data>
+  <data name="Action.Delete">Supprimer la ressource sélectionnée</data>
+  <data name="Action.Duplicate">Dupliquer la ressource sélectionnée</data>
+  <data name="Action.Up">Monter la ressource sélectionnée</data>
+  <data name="Action.Down">Descendre la ressource sélectionnée</data>
 
   <data name="Action.FontBold">Gras</data>
   <data name="Action.FontItalic">Italique</data>
