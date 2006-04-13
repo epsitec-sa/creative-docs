@@ -75,7 +75,7 @@ namespace Epsitec.Common.Designer
 
 			for ( int i=0 ; i<modules.Length ; i++ )
 			{
-				Module module = new Module(this.resourcePrefix, modules[i]);
+				Module module = new Module(this.mode, this.resourcePrefix, modules[i]);
 
 				ModuleInfo mi = new ModuleInfo();
 				mi.Module = module;
