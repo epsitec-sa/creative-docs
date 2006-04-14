@@ -119,7 +119,7 @@ namespace Epsitec.Common.Designer
 			this.IsDirty = false;
 		}
 
-		public void CreateIfNecessary(ResourceBundle bundle, string name)
+		public void CreateIfNecessary(ResourceBundle bundle, string name, int id)
 		{
 			//	Crée une ressource secondaire, si nécessaire.
 			ResourceBundle.Field field = bundle[name];
@@ -127,6 +127,13 @@ namespace Epsitec.Common.Designer
 			{
 				ResourceBundle.Field newField = bundle.CreateField(ResourceFieldType.Data);
 				newField.SetName(name);
+
+				if (id != -1)
+				{
+					newField.SetModificationId(id);
+					this.IdAlreadyChangedAdd(name);
+				}
+
 				bundle.Add(newField);
 			}
 		}

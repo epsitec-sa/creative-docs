@@ -877,7 +877,7 @@ namespace Epsitec.Common.Designer
 
 			if (edit == this.secondaryEdit)
 			{
-				this.module.Modifier.CreateIfNecessary(this.secondaryBundle, label);
+				this.module.Modifier.CreateIfNecessary(this.secondaryBundle, label, this.primaryBundle[label].ModificationId);
 				this.secondaryBundle[label].SetStringValue(text);
 				this.UpdateModificationId(this.secondaryBundle[label], this.primaryBundle[label], label);
 				this.UpdateArrayField(1, sel, this.primaryBundle[label], this.secondaryBundle[label]);
@@ -891,7 +891,7 @@ namespace Epsitec.Common.Designer
 
 			if (edit == this.secondaryAbout)
 			{
-				this.module.Modifier.CreateIfNecessary(this.secondaryBundle, label);
+				this.module.Modifier.CreateIfNecessary(this.secondaryBundle, label, -1);
 				this.secondaryBundle[label].SetAbout(text);
 			}
 
