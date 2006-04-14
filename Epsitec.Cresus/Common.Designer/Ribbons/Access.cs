@@ -14,10 +14,8 @@ namespace Epsitec.Common.Designer.Ribbons
 		{
 			this.title.Text = Res.Strings.Ribbon.Section.Access;
 
-			this.buttonFilter = this.CreateIconButton("Filter");
-			this.buttonSearch = this.CreateIconButton("Search");
-
-			this.separator1 = new IconSeparator(this);
+			this.buttonFilter = this.CreateIconButton("Filter", "Large");
+			this.buttonSearch = this.CreateIconButton("Search", "Large");
 
 			this.buttonAccessFirst = this.CreateIconButton("AccessFirst");
 			this.buttonAccessLast = this.CreateIconButton("AccessLast");
@@ -25,7 +23,7 @@ namespace Epsitec.Common.Designer.Ribbons
 			this.buttonAccessPrev = this.CreateIconButton("AccessPrev");
 			this.buttonAccessNext = this.CreateIconButton("AccessNext");
 
-			this.separator2 = new IconSeparator(this);
+			this.separator1 = new IconSeparator(this);
 
 			this.buttonWarningPrev = this.CreateIconButton("WarningPrev");
 			this.buttonWarningNext = this.CreateIconButton("WarningNext");
@@ -51,7 +49,7 @@ namespace Epsitec.Common.Designer.Ribbons
 			//	Retourne la largeur standard.
 			get
 			{
-				return 8 + 22*1 + this.separatorWidth + 22*2 + this.separatorWidth + 22*3;
+				return 8 + 22*1.5*2 + 4 + 22*2 + this.separatorWidth + 22*3;
 			}
 		}
 
@@ -67,21 +65,22 @@ namespace Epsitec.Common.Designer.Ribbons
 			double dy = this.buttonFilter.DefaultHeight;
 
 			Rectangle rect = this.UsefulZone;
-			rect.Left += dx*1;
+			rect.Left += dx*1.5*2+4 + dx*2;
 			rect.Width = this.separatorWidth;
 			this.separator1.Bounds = rect;
 
 			rect = this.UsefulZone;
-			rect.Left += dx*1 + this.separatorWidth + dx*2;
-			rect.Width = this.separatorWidth;
-			this.separator2.Bounds = rect;
+			rect.Width  = dx*1.5;
+			rect.Height = dy*1.5;
+			rect.Offset(0, dy*0.5);
+			this.buttonFilter.Bounds = rect;
+			rect.Offset(dx*1.5, 0);
+			this.buttonSearch.Bounds = rect;
 
 			rect = this.UsefulZone;
 			rect.Width  = dx;
 			rect.Height = dy;
-			rect.Offset(0, dy+5);
-			this.buttonFilter.Bounds = rect;
-			rect.Offset(dx+this.separatorWidth, 0);
+			rect.Offset(dx*1.5*2+4, dy+5);
 			this.buttonAccessFirst.Bounds = rect;
 			rect.Offset(dx, 0);
 			this.buttonAccessPrev.Bounds = rect;
@@ -95,8 +94,7 @@ namespace Epsitec.Common.Designer.Ribbons
 			rect = this.UsefulZone;
 			rect.Width  = dx;
 			rect.Height = dy;
-			this.buttonSearch.Bounds = rect;
-			rect.Offset(dx+this.separatorWidth, 0);
+			rect.Offset(dx*1.5*2+4, 0);
 			this.buttonAccessLast.Bounds = rect;
 			rect.Offset(dx, 0);
 			this.buttonAccessNext.Bounds = rect;
@@ -109,12 +107,11 @@ namespace Epsitec.Common.Designer.Ribbons
 
 		protected IconButton				buttonFilter;
 		protected IconButton				buttonSearch;
-		protected IconSeparator				separator1;
 		protected IconButton				buttonAccessFirst;
 		protected IconButton				buttonAccessLast;
 		protected IconButton				buttonAccessPrev;
 		protected IconButton				buttonAccessNext;
-		protected IconSeparator				separator2;
+		protected IconSeparator				separator1;
 		protected IconButton				buttonWarningPrev;
 		protected IconButton				buttonWarningNext;
 		protected IconButton				buttonModificationPrev;
