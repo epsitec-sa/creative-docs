@@ -8,32 +8,6 @@ namespace Epsitec.Common.Designer
 	/// </summary>
 	public class Misc
 	{
-		static public string LongCulture(string shortCulture)
-		{
-			//	Conversion d'une culture courte en version longue plus explicite.
-			//	"fr-CH"  ->  "Français (Suisse)"
-			if ( shortCulture.Length == 5 && shortCulture[2] == '-' )
-			{
-				return string.Format("{0} ({1})", Misc.Culture2(shortCulture.Substring(0, 2)), Misc.Culture2(shortCulture.Substring(3, 2)));
-			}
-
-			return Misc.Culture2(shortCulture);
-		}
-
-		static protected string Culture2(string culture)
-		{
-			switch ( culture.ToLower() )
-			{
-				case "fr":  return Res.Strings.Culture.fr;
-				case "en":  return Res.Strings.Culture.en;
-				case "de":  return Res.Strings.Culture.de;
-				case "ch":  return Res.Strings.Culture.ch;
-			}
-
-			return culture;
-		}
-
-
 		static public string Resume(string text)
 		{
 			//	Retourne une version résumée à environ 20 caractères au maximum.

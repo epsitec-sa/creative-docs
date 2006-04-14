@@ -548,7 +548,7 @@ namespace Epsitec.Common.Designer
 			ResourceBundleCollection bundles = this.module.Bundles;
 
 			this.primaryBundle = bundles[ResourceLevel.Default];
-			this.primaryCulture.Text = Misc.LongCulture(this.primaryBundle.Culture.Name);
+			this.primaryCulture.Text = this.primaryBundle.Culture.DisplayName;
 
 			this.secondaryBundle = null;
 			this.secondaryCulture.Items.Clear();
@@ -557,7 +557,7 @@ namespace Epsitec.Common.Designer
 				ResourceBundle bundle = bundles[b];
 				if ( bundle != this.primaryBundle )
 				{
-					this.secondaryCulture.Items.Add(Misc.LongCulture(bundle.Culture.Name));
+					this.secondaryCulture.Items.Add(bundle.Culture.DisplayName);
 					if ( this.secondaryBundle == null )
 					{
 						this.secondaryBundle = bundle;
@@ -571,7 +571,7 @@ namespace Epsitec.Common.Designer
 			}
 			else
 			{
-				this.secondaryCulture.Text = Misc.LongCulture(this.secondaryBundle.Culture.Name);
+				this.secondaryCulture.Text = this.secondaryBundle.Culture.DisplayName;
 			}
 
 			this.UpdateLabelsIndex("", false, false);
@@ -779,7 +779,7 @@ namespace Epsitec.Common.Designer
 			{
 				ResourceBundle bundle = bundles[b];
 
-				if ( Misc.LongCulture(bundle.Culture.Name) == secondaryCulture.Text )
+				if ( bundle.Culture.DisplayName == secondaryCulture.Text )
 				{
 					this.secondaryBundle = bundle;
 					break;
