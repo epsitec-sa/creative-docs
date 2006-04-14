@@ -205,15 +205,31 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			set
 			{
-				value = System.Math.Max(value, -1);
-				value = System.Math.Min(value, this.TotalRows-1);
+				this.SetSelectedRow(value, -1);
+			}
+		}
 
-				if (this.selectedRow != value)
-				{
-					this.selectedRow = value;
-					this.UpdateSelectedRow();
-					this.OnSelectedRowChanged();
-				}
+		protected void SetSelectedRow(int row, int column)
+		{
+			this.selectedColumn = column;
+
+			row = System.Math.Max(row, -1);
+			row = System.Math.Min(row, this.TotalRows-1);
+
+			if (this.selectedRow != row)
+			{
+				this.selectedRow = row;
+				this.UpdateSelectedRow();
+				this.OnSelectedRowChanged();
+			}
+		}
+
+		public int SelectedColumn
+		{
+			//	Colonne dans laquelle on a cliqué pour sélectionner la ligne.
+			get
+			{
+				return this.selectedColumn;
 			}
 		}
 
@@ -575,13 +591,19 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			MyWidgets.StringList array = sender as MyWidgets.StringList;
 			int sel = array.CellSelected;
+			int column = -1;
 
 			for (int i=0; i<this.columns.Length; i++)
 			{
 				this.columns[i].CellSelected = sel;
+
+				if (this.columns[i] == sender)
+				{
+					column = i;
+				}
 			}
 
-			this.SelectedRow = this.firstVisibleRow + sel;
+			this.SetSelectedRow(this.firstVisibleRow+sel, column);
 		}
 
 		void HandleScrollerValueChanged(object sender)
@@ -645,6 +667,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected VScroller					scroller;
 		protected int						totalRows;
 		protected int						selectedRow = -1;
+		protected int						selectedColumn = -1;
 		protected int						firstVisibleRow = 0;
 		protected bool						ignoreChange = false;
 
