@@ -274,7 +274,7 @@ namespace Epsitec.Common.Designer
 
 		public void DoModification(string name)
 		{
-			//	Change la ressource visible.
+			//	Change la ressource modifiée visible.
 			int sel = this.array.SelectedRow;
 
 			if (name == "ModificationClear")
@@ -304,6 +304,7 @@ namespace Epsitec.Common.Designer
 					sel = 0;
 				}
 
+				int column = -1;
 				int dir = (name == "ModificationPrev") ? -1 : 1;
 
 				for (int i=0; i<this.labelsIndex.Count; i++)
@@ -324,26 +325,44 @@ namespace Epsitec.Common.Designer
 					int primary   = this.primaryBundle[label].ModificationId;
 					int secondary = this.secondaryBundle[label].ModificationId;
 
-					if (primary != secondary)
+					if (primary < secondary)
 					{
+						column = 1;
+						break;
+					}
+
+					if (primary > secondary)
+					{
+						column = 2;
 						break;
 					}
 				}
 
 				this.array.SelectedRow = sel;
 				this.array.ShowSelectedRow();
+
+				AbstractTextField edit = null;
+				if (column == 1)  edit = this.primaryEdit;
+				if (column == 2)  edit = this.secondaryEdit;
+				if (edit != null)
+				{
+					this.Window.MakeActive();
+					edit.Focus();
+					edit.SelectAll();
+				}
 			}
 		}
 
 		public void DoWarning(string name)
 		{
-			//	Change la ressource visible.
+			//	Change la ressource manquante visible.
 			int sel = this.array.SelectedRow;
 			if (sel == -1)
 			{
 				sel = 0;
 			}
 
+			int column = -1;
 			int dir = (name == "WarningPrev") ? -1 : 1;
 
 			for (int i=0; i<this.labelsIndex.Count; i++)
@@ -367,12 +386,23 @@ namespace Epsitec.Common.Designer
 					 this.secondaryBundle[label].AsString == null ||
 					 this.secondaryBundle[label].AsString == ""   )
 				{
+					column = 2;
 					break;
 				}
 			}
 
 			this.array.SelectedRow = sel;
 			this.array.ShowSelectedRow();
+
+			AbstractTextField edit = null;
+			if (column == 1)  edit = this.primaryEdit;
+			if (column == 2)  edit = this.secondaryEdit;
+			if (edit != null)
+			{
+				this.Window.MakeActive();
+				edit.Focus();
+				edit.SelectAll();
+			}
 		}
 
 		public void DoDelete()
@@ -634,7 +664,7 @@ namespace Epsitec.Common.Designer
 						secondaryId = secondaryField.ModificationId;
 					}
 
-					if (primaryId < secondaryId)  // éventuellement pas à jour ?
+					if (primaryId < secondaryId)  // éventuellement pas à jour (fond jaune) ?
 					{
 						this.array.SetLineState(column, row, MyWidgets.StringList.CellState.Modified);
 					}
