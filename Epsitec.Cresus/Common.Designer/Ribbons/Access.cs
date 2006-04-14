@@ -52,7 +52,6 @@ namespace Epsitec.Common.Designer.Ribbons
 			get
 			{
 				return 8 + 22*1 + this.separatorWidth + 22*2 + this.separatorWidth + 22*3;
-				return 8 + 22*6;
 			}
 		}
 
