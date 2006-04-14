@@ -84,8 +84,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Spécifie le texte contenu dans une ligne.
 			if ( this.cells == null )  return;
 			if ( index < 0 || index >= this.cells.Length )  return;
-			this.cells[index].TextLayout.Text = text;
-			this.Invalidate();
+
+			if ( this.cells[index].TextLayout.Text != text )
+			{
+				this.cells[index].TextLayout.Text = text;
+				this.Invalidate();
+			}
 		}
 
 		public string GetLineString(int index)
@@ -101,8 +105,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Spécifie l'état d'une ligne.
 			if ( this.cells == null )  return;
 			if ( index < 0 || index >= this.cells.Length )  return;
-			this.cells[index].State = state;
-			this.Invalidate();
+
+			if ( this.cells[index].State != state )
+			{
+				this.cells[index].State = state;
+				this.Invalidate();
+			}
 		}
 
 		public CellState GetLineState(int index)
@@ -292,7 +300,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				if (this.cells[i].State == CellState.Modified)
 				{
 					graphics.AddFilledRectangle(cell);
-					graphics.RenderSolid(Color.FromAlphaRgb(0.5, 1, 1, 0));  // jaune semi-transparent
+					graphics.RenderSolid(Color.FromAlphaRgb(0.5, 1, 0.8, 0));  // jaune semi-transparent
 				}
 
 				if (this.cells[i].State == CellState.Disabled)
