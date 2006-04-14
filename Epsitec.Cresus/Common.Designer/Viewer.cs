@@ -531,7 +531,7 @@ namespace Epsitec.Common.Designer
 						secondaryId = secondaryField.ModificationId;
 					}
 
-					if (primaryId < secondaryId)
+					if (primaryId < secondaryId)  // peut-être pas à jour ?
 					{
 						this.array.SetLineState(row, column, MyWidgets.StringList.CellState.Modified);
 					}
@@ -718,6 +718,7 @@ namespace Epsitec.Common.Designer
 			if (edit == this.primaryEdit)
 			{
 				this.primaryBundle[label].SetStringValue(text);
+				this.primaryBundle[label].SetModificationId(this.secondaryBundle[label].ModificationId);
 				column = 1;
 			}
 
@@ -725,6 +726,7 @@ namespace Epsitec.Common.Designer
 			{
 				this.module.Modifier.CreateIfNecessary(this.secondaryBundle, label);
 				this.secondaryBundle[label].SetStringValue(text);
+				this.secondaryBundle[label].SetModificationId(this.primaryBundle[label].ModificationId);
 				column = 2;
 			}
 
