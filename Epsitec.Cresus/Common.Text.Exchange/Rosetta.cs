@@ -4,6 +4,7 @@
 #define USE_SPAN
 
 using System.Text;
+using System.Collections.Generic;
 
 // Il faudrait trouver comment accéder à Epsitec.Common.Document.Modifier.FontSizeScale (254.0 / 72.0) 
 //
@@ -13,13 +14,13 @@ namespace Epsitec.Common.Text.Exchange
 {
 
 	#region class SpanStyle
-	class SpanStyle
+	internal class SpanStyle : System.IEquatable<SpanStyle>
 	{
 		public SpanStyle(string fontname, double fontsize, string fontcolor)
 		{
-			SetFontFamily (fontname);
-			SetFontSize (fontsize);
-			SetColor (fontcolor);
+			this.SetFontFamily (fontname);
+			this.SetFontSize (fontsize);
+			this.SetColor (fontcolor);
 		}
 		
 		public void ClearFontSize()
@@ -39,82 +40,87 @@ namespace Epsitec.Common.Text.Exchange
 
 		public void Clear()
 		{
-			ClearFontSize ();
-			ClearFontFamily ();
-			ClearColor ();
+			this.ClearFontSize ();
+			this.ClearFontFamily ();
+			this.ClearColor ();
 		}
 
 		public void SetFontSize(double size)
 		{
-			fontSize = size;
+			this.fontSize = size;
 		}
 
 		public void SetFontFamily(string family)
 		{
-			fontFamily = family;
+			this.fontFamily = family;
 		}
 
 		public void SetColor(string color)
 		{
-			fontColor = color;
+			this.fontColor = color;
 		}
 
 		public void SetColor(int r, int g, int b)
 		{
 		}
 
-		public string ToString()
+		public override string ToString()
 		{
 			string result;
 
-			result = string.Format ("font-size:{0}pt;font-family:\"{1}\";color:{2}", fontSize, fontFamily, fontColor);
+			result = string.Format ("font-size:{0}pt;font-family:\"{1}\";color:{2}", this.fontSize, this.fontFamily, this.fontColor);
 
 			return result;
 		}
+		
+		
+		
 
-		public static bool IsEqual(SpanStyle s1, SpanStyle s2)
+		#region IEquatable<SpanStyle> Members
+
+		public bool Equals(SpanStyle other)
 		{
-			if (s1 == null && s2 == null)
-			{
-				return true ;
-			}
-
-			if (s1 == null || s2 == null)
-			{
-				return false ;
-			}
-
-			return s1.fontSize == s2.fontSize &&
-				   s1.fontFamily == s2.fontFamily &&
-				   s1.fontColor == s2.fontColor;
+			return this == other;
 		}
 
-#if false
-		public bool Equals(SpanStyle style)
+		#endregion
+
+		public override bool Equals(object obj)
 		{
-			return style.fontSize == this.fontSize &&
-				   style.fontFamily == this.fontFamily &&
-				   style.fontColor == style.fontColor;
+			return this.Equals (obj as SpanStyle);
+		}
+
+		public override int GetHashCode()
+		{
+			return this.fontSize.GetHashCode () ^ this.fontFamily.GetHashCode () ^ this.fontColor.GetHashCode ();
 		}
 
 		public static bool operator==(SpanStyle s1, SpanStyle s2)
 		{
-			if ((s1 == null && s2 != null) || (s1 != null && s2 == null))
+			if (System.Object.ReferenceEquals (s1, s2))
+			{
+				return true;
+			}
+			if (System.Object.ReferenceEquals (s1, null) ||
+				System.Object.ReferenceEquals (s2, null))
+			{
 				return false;
+			}
 
-			return s1.Equals (s2);
+			return s1.fontSize == s2.fontSize
+				&& s1.fontFamily == s2.fontFamily
+				&& s1.fontColor == s2.fontColor;
 		}
 
 		public static bool operator!=(SpanStyle s1, SpanStyle s2)
 		{
-			return !s1.Equals (s2);
+			return !(s1 == s2);
 		}
-#endif
+
 
 		private double fontSize;
 		private string fontFamily;
 		private string fontColor;
-
 	}
 	#endregion
 
@@ -168,7 +174,7 @@ namespace Epsitec.Common.Text.Exchange
 			UpdateOffset ("<ENDHTML>", offset + offsetHtml);
 		}
 
-		public string ToString()
+		public override string ToString()
 		{
 			return this.text.ToString() ;
 		}
@@ -236,7 +242,7 @@ namespace Epsitec.Common.Text.Exchange
 #endif
 		}
 
-		public new string ToString()
+		public override string ToString()
 		{
 			StringBuilder tmpBuilder = new StringBuilder ();
 
@@ -635,7 +641,7 @@ namespace Epsitec.Common.Text.Exchange
 			}
 			else
 			{
-				if (!SpanStyle.IsEqual (precdingStyle, currentStyle))
+				if (precdingStyle != currentStyle)
 				{
 					if (this.TagIsOnStack(tag))
 					{
