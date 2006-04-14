@@ -275,6 +275,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
 			Rectangle rect = this.Client.Bounds;
+
+			graphics.AddFilledRectangle(rect);
+			graphics.RenderSolid(adorner.ColorTextBackground);
+
 			double h = rect.Height/this.cells.Length;
 			rect.Bottom = rect.Top-h;
 
@@ -283,13 +287,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 				Rectangle cell = rect;
 				graphics.Align(ref cell);
 
-				Color backColor = adorner.ColorTextBackground;
+				WidgetState state = this.PaintState;
 				if (this.cells[i].Selected)
 				{
-					backColor = adorner.ColorCaption;
+					state |= WidgetState.Selected;
 				}
-				graphics.AddFilledRectangle(cell);
-				graphics.RenderSolid(backColor);
+				adorner.PaintCellBackground(graphics, cell, state);
 
 				if (this.cells[i].State == CellState.Warning)
 				{
@@ -311,7 +314,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 				if (this.cells[i].TextLayout.Text != null)
 				{
-					WidgetState state = WidgetState.Enabled;
+					state = WidgetState.Enabled;
 					if (this.cells[i].Selected)
 					{
 						state |= WidgetState.Selected;
