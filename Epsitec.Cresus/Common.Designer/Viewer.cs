@@ -276,12 +276,103 @@ namespace Epsitec.Common.Designer
 		{
 			//	Change la ressource visible.
 			int sel = this.array.SelectedRow;
+
+			if (name == "ModificationClear")
+			{
+				if (sel == -1)  return;
+				string label = this.labelsIndex[sel];
+				if (this.secondaryBundle[label] == null || this.secondaryBundle[label].Name == null)  return;
+
+				if (this.primaryBundle[label].ModificationId < this.secondaryBundle[label].ModificationId)
+				{
+					this.primaryBundle[label].SetModificationId(this.secondaryBundle[label].ModificationId);
+					this.UpdateArray();
+					this.module.Modifier.IsDirty = true;
+				}
+
+				if (this.secondaryBundle[label].ModificationId < this.primaryBundle[label].ModificationId)
+				{
+					this.secondaryBundle[label].SetModificationId(this.primaryBundle[label].ModificationId);
+					this.UpdateArray();
+					this.module.Modifier.IsDirty = true;
+				}
+			}
+			else
+			{
+				if (sel == -1)
+				{
+					sel = 0;
+				}
+
+				int dir = (name == "ModificationPrev") ? -1 : 1;
+
+				for (int i=0; i<this.labelsIndex.Count; i++)
+				{
+					sel += dir;
+
+					if (sel >= this.labelsIndex.Count)
+					{
+						sel = 0;
+					}
+
+					if (sel < 0)
+					{
+						sel = this.labelsIndex.Count-1;
+					}
+
+					string label  = this.labelsIndex[sel];
+					int primary   = this.primaryBundle[label].ModificationId;
+					int secondary = this.secondaryBundle[label].ModificationId;
+
+					if (primary != secondary)
+					{
+						break;
+					}
+				}
+
+				this.array.SelectedRow = sel;
+				this.array.ShowSelectedRow();
+			}
 		}
 
 		public void DoWarning(string name)
 		{
 			//	Change la ressource visible.
 			int sel = this.array.SelectedRow;
+			if (sel == -1)
+			{
+				sel = 0;
+			}
+
+			int dir = (name == "WarningPrev") ? -1 : 1;
+
+			for (int i=0; i<this.labelsIndex.Count; i++)
+			{
+				sel += dir;
+
+				if (sel >= this.labelsIndex.Count)
+				{
+					sel = 0;
+				}
+
+				if (sel < 0)
+				{
+					sel = this.labelsIndex.Count-1;
+				}
+
+				string label = this.labelsIndex[sel];
+
+				if ( this.secondaryBundle[label] == null          ||
+					 this.secondaryBundle[label].Name == null     ||
+					 this.secondaryBundle[label].AsString == null ||
+					 this.secondaryBundle[label].AsString == ""   )
+				{
+					break;
+				}
+			}
+
+			this.array.SelectedRow = sel;
+			this.array.ShowSelectedRow();
 		}
 
 		public void DoDelete()

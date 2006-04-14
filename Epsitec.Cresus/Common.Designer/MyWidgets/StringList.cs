@@ -286,13 +286,13 @@ namespace Epsitec.Common.Designer.MyWidgets
 				if (this.cells[i].State == CellState.Warning)
 				{
 					graphics.AddFilledRectangle(cell);
-					graphics.RenderSolid(Color.FromAlphaRgb(0.2, 1, 0, 0));  // rouge semi-transparent
+					graphics.RenderSolid(Color.FromAlphaRgb(0.4, 1, 0, 0));  // rouge semi-transparent
 				}
 
 				if (this.cells[i].State == CellState.Modified)
 				{
 					graphics.AddFilledRectangle(cell);
-					graphics.RenderSolid(Color.FromAlphaRgb(0.3, 1, 1, 0));  // jaune semi-transparent
+					graphics.RenderSolid(Color.FromAlphaRgb(0.5, 1, 1, 0));  // jaune semi-transparent
 				}
 
 				if (this.cells[i].State == CellState.Disabled)
