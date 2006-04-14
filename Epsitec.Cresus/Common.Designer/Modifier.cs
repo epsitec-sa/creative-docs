@@ -151,6 +151,12 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
+		public void IdAlreadyChangedRemove(string name)
+		{
+			//	Supprime une ressource dans la liste des ressources déjà modifiées.
+			this.idAlreadyChangedList.Remove(name);
+		}
+
 		public bool IdAlreadyChangedExist(string name)
 		{
 			//	Indique si une ressource a déjà été modifiée.
