@@ -14,6 +14,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			Normal,
 			Warning,
+			Modified,
 			Disabled,
 		}
 
@@ -286,6 +287,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 				{
 					graphics.AddFilledRectangle(cell);
 					graphics.RenderSolid(Color.FromAlphaRgb(0.2, 1, 0, 0));  // rouge semi-transparent
+				}
+
+				if (this.cells[i].State == CellState.Modified)
+				{
+					graphics.AddFilledRectangle(cell);
+					graphics.RenderSolid(Color.FromAlphaRgb(0.3, 1, 1, 0));  // jaune semi-transparent
 				}
 
 				if (this.cells[i].State == CellState.Disabled)
