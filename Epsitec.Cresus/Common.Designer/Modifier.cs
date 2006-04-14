@@ -14,6 +14,7 @@ namespace Epsitec.Common.Designer
 		{
 			this.module = module;
 			this.attachViewers = new System.Collections.ArrayList();
+			this.idAlreadyChangedList = new List<string>();
 		}
 
 		public void Dispose()
@@ -140,6 +141,24 @@ namespace Epsitec.Common.Designer
 		}
 
 
+		#region Identifier already changed
+		public void IdAlreadyChangedAdd(string name)
+		{
+			//	Ajoute une ressource dans la liste des ressources déjà modifiées.
+			if (!this.idAlreadyChangedList.Contains(name))
+			{
+				this.idAlreadyChangedList.Add(name);
+			}
+		}
+
+		public bool IdAlreadyChangedExist(string name)
+		{
+			//	Indique si une ressource a déjà été modifiée.
+			return this.idAlreadyChangedList.Contains(name);
+		}
+		#endregion
+
+
 		#region Viewers
 		public Viewer ActiveViewer
 		{
@@ -181,5 +200,6 @@ namespace Epsitec.Common.Designer
 		protected bool							isDirty = false;
 		protected Viewer						activeViewer;
 		protected System.Collections.ArrayList	attachViewers;
+		protected List<string>					idAlreadyChangedList;
 	}
 }
