@@ -119,6 +119,8 @@ namespace Epsitec.Common.Designer
 				this.secondaryAbout.TextChanged -= new EventHandler(this.HandleTextChanged);
 				this.secondaryAbout.KeyboardFocusChanged -= new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
 			}
+
+			base.Dispose (disposing);
 		}
 
 
