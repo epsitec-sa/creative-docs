@@ -746,16 +746,17 @@ namespace Epsitec.Common.Designer
 
 
 		#region ModuleInfo class
-		protected class ModuleInfo
+		protected class ModuleInfo : System.IDisposable
 		{
 			public Module						Module;
 			public TabPage						TabPage;
 
+			#region IDisposable Members
 			public void Dispose()
 			{
-				// TODO: pourquoi ça plante ?
-				//?if ( this.TabPage != null )  this.TabPage.Dispose();
+				if ( this.TabPage != null )  this.TabPage.Dispose();
 			}
+			#endregion
 		}
 		#endregion
 
