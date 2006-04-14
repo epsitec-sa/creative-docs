@@ -598,7 +598,7 @@ namespace Epsitec.Common.Designer
 			{
 				if (first+i < this.labelsIndex.Count)
 				{
-					ResourceBundle.Field primaryField = this.primaryBundle[this.labelsIndex[first+i]];
+					ResourceBundle.Field primaryField   = this.primaryBundle[this.labelsIndex[first+i]];
 					ResourceBundle.Field secondaryField = this.secondaryBundle[this.labelsIndex[first+i]];
 
 					this.array.SetLineString(0, first+i, primaryField.Name);
@@ -618,14 +618,14 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		protected void UpdateArrayField(int row, int column, ResourceBundle.Field field, ResourceBundle.Field secondaryField)
+		protected void UpdateArrayField(int column, int row, ResourceBundle.Field field, ResourceBundle.Field secondaryField)
 		{
 			if (field != null)
 			{
 				string text = field.AsString;
 				if (text != null && text != "")
 				{
-					this.array.SetLineString(row, column, text);
+					this.array.SetLineString(column, row, text);
 
 					int primaryId = field.ModificationId;
 					int secondaryId = primaryId;
@@ -634,21 +634,21 @@ namespace Epsitec.Common.Designer
 						secondaryId = secondaryField.ModificationId;
 					}
 
-					if (primaryId < secondaryId)  // peut-être pas à jour ?
+					if (primaryId < secondaryId)  // éventuellement pas à jour ?
 					{
-						this.array.SetLineState(row, column, MyWidgets.StringList.CellState.Modified);
+						this.array.SetLineState(column, row, MyWidgets.StringList.CellState.Modified);
 					}
 					else
 					{
-						this.array.SetLineState(row, column, MyWidgets.StringList.CellState.Normal);
+						this.array.SetLineState(column, row, MyWidgets.StringList.CellState.Normal);
 					}
 
 					return;
 				}
 			}
 
-			this.array.SetLineString(row, column, "");
-			this.array.SetLineState(row, column, MyWidgets.StringList.CellState.Warning);
+			this.array.SetLineString(column, row, "");
+			this.array.SetLineState(column, row, MyWidgets.StringList.CellState.Warning);
 		}
 
 
@@ -716,6 +716,19 @@ namespace Epsitec.Common.Designer
 			else
 			{
 				field.Text = text;
+			}
+		}
+
+		protected void UpdateModificationId(ResourceBundle.Field primary, ResourceBundle.Field secondary)
+		{
+			//	Gestion des fonds jaunes lorsqu'un texte est modifié.
+			if (primary.ModificationId == secondary.ModificationId)
+			{
+				primary.SetModificationId(secondary.ModificationId+1);
+			}
+			else if (primary.ModificationId < secondary.ModificationId)
+			{
+				primary.SetModificationId(secondary.ModificationId);
 			}
 		}
 
@@ -809,49 +822,40 @@ namespace Epsitec.Common.Designer
 			string text = edit.Text;
 			int sel = this.array.SelectedRow;
 			string label = this.labelsIndex[sel];
-			int column = -1;
 
 			if (edit == this.labelEdit)
 			{
 				this.labelsIndex[sel] = text;
 				this.module.Modifier.Rename(label, text);
-				column = 0;
+				this.array.SetLineString(0, sel, text);
 			}
 
 			if (edit == this.primaryEdit)
 			{
 				this.primaryBundle[label].SetStringValue(text);
-				this.primaryBundle[label].SetModificationId(this.secondaryBundle[label].ModificationId);
-				column = 1;
+				this.UpdateModificationId(this.primaryBundle[label], this.secondaryBundle[label]);
+				this.UpdateArrayField(1, sel, this.primaryBundle[label], this.secondaryBundle[label]);
+				this.UpdateArrayField(2, sel, this.secondaryBundle[label], this.primaryBundle[label]);
 			}
 
 			if (edit == this.secondaryEdit)
 			{
 				this.module.Modifier.CreateIfNecessary(this.secondaryBundle, label);
 				this.secondaryBundle[label].SetStringValue(text);
-				this.secondaryBundle[label].SetModificationId(this.primaryBundle[label].ModificationId);
-				column = 2;
+				this.UpdateModificationId(this.secondaryBundle[label], this.primaryBundle[label]);
+				this.UpdateArrayField(1, sel, this.primaryBundle[label], this.secondaryBundle[label]);
+				this.UpdateArrayField(2, sel, this.secondaryBundle[label], this.primaryBundle[label]);
 			}
 
 			if (edit == this.primaryAbout)
 			{
 				this.primaryBundle[label].SetAbout(text);
-				column = 3;
 			}
 
 			if (edit == this.secondaryAbout)
 			{
 				this.module.Modifier.CreateIfNecessary(this.secondaryBundle, label);
 				this.secondaryBundle[label].SetAbout(text);
-				column = 4;
-			}
-
-			if (column < 3)
-			{
-				MyWidgets.StringList.CellState state = (text == "") ? MyWidgets.StringList.CellState.Warning : MyWidgets.StringList.CellState.Normal;
-
-				this.array.SetLineString(column, sel, text);
-				this.array.SetLineState(column, sel, state);
 			}
 
 			this.module.Modifier.IsDirty = true;
