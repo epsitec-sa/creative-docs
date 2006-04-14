@@ -201,9 +201,9 @@ namespace Epsitec.Common.Designer
 			this.ribbonMain.Margins = new Margins(0, 0, this.hToolBar.Height, 0);
 			this.ribbonMain.Visibility = true;
 			this.ribbonMain.Items.Add(new Ribbons.File());
+			this.ribbonMain.Items.Add(new Ribbons.Clipboard());
 			this.ribbonMain.Items.Add(new Ribbons.Access());
 			this.ribbonMain.Items.Add(new Ribbons.Select());
-			this.ribbonMain.Items.Add(new Ribbons.Clipboard());
 
 			this.ribbonOper = new RibbonContainer(this.window.Root);
 			this.ribbonOper.Name = "Oper";
@@ -533,6 +533,7 @@ namespace Epsitec.Common.Designer
 
 			cs.IconName    = command;
 			cs.LongCaption = Res.Strings.GetString("Action."+command);
+			cs.Statefull   = (command == "FontBold" || command == "FontItalic" || command == "FontUnderlined");
 
 			return cs;
 		}
@@ -752,6 +753,7 @@ namespace Epsitec.Common.Designer
 
 			public void Dispose()
 			{
+				// TODO: pourquoi ça plante ?
 				//?if ( this.TabPage != null )  this.TabPage.Dispose();
 			}
 		}
