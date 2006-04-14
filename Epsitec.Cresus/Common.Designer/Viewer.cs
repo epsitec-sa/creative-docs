@@ -851,10 +851,16 @@ namespace Epsitec.Common.Designer
 				if (column == 0)  edit = this.labelEdit;
 				if (column == 1)  edit = this.primaryEdit;
 				if (column == 2)  edit = this.secondaryEdit;
-				if (edit != null)
+				if (edit != null && edit.Visibility)
 				{
 					edit.Focus();
 					edit.SelectAll();
+				}
+				else
+				{
+					this.labelEdit.Cursor = 100000;
+					this.primaryEdit.Cursor = 100000;
+					this.secondaryEdit.Cursor = 100000;
 				}
 			}
 
