@@ -524,7 +524,7 @@ namespace Epsitec.Common.Widgets
 		{
 			TextFieldComboMenu menu = new TextFieldComboMenu ();
 			
-			menu.Size = new Drawing.Size (this.Width, 200);
+			menu.MinWidth = this.Width;
 			
 			this.scroll_list = new ScrollList ();
 			this.scroll_list.ScrollListStyle = ScrollListStyle.Menu;
