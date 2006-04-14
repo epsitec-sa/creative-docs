@@ -113,6 +113,11 @@
     <EmbeddedResource Include="Images\AccessNext.icon" />
     <EmbeddedResource Include="Images\AccessFirst.icon" />
     <EmbeddedResource Include="Images\AccessPrev.icon" />
+    <EmbeddedResource Include="Images\WarningPrev.icon" />
+    <EmbeddedResource Include="Images\ModificationPrev.icon" />
+    <EmbeddedResource Include="Images\ModificationClear.icon" />
+    <EmbeddedResource Include="Images\ModificationNext.icon" />
+    <EmbeddedResource Include="Images\WarningNext.icon" />
     <None Include="Resources\Designer\Strings.00.resource" />
     <None Include="Resources\Designer\Strings.en.resource" />
   </ItemGroup>

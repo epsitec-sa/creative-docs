@@ -272,6 +272,18 @@ namespace Epsitec.Common.Designer
 			this.module.Notifier.NotifyInfoAccessChanged();
 		}
 
+		public void DoModification(string name)
+		{
+			//	Change la ressource visible.
+			int sel = this.array.SelectedRow;
+		}
+
+		public void DoWarning(string name)
+		{
+			//	Change la ressource visible.
+			int sel = this.array.SelectedRow;
+		}
+
 		public void DoDelete()
 		{
 			//	Supprime la ressource sélectionnée.
