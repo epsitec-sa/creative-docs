@@ -80,6 +80,9 @@ namespace Epsitec.Common.Widgets
 				
 				double width  = size.Width + this.Padding.Width;
 				double height = size.Height + this.Padding.Height;
+
+				width = System.Math.Max (width, this.MinWidth);
+				height = System.Math.Max (height, this.MinHeight);
 				
 				System.Diagnostics.Debug.WriteLine (string.Format ("AdjustSize from {0}:{1} to {2}:{3}", this.Width, this.Height, width, height));
 				
