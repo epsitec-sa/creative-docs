@@ -73,9 +73,10 @@ namespace Epsitec.Common.Designer
 			{
 				ResourceBundle.Field field = bundle[name];
 				if (field == null || field.Name == null)  continue;
-				// TODO: vérifier si c'est bien ainsi qu'il faut créer un ResourceBundle.Field !
-				ResourceBundle.Field newField = new ResourceBundle.Field(bundle, field.Xml);
+				ResourceBundle.Field newField = bundle.CreateField(ResourceFieldType.Data);
 				newField.SetName(newName);
+				newField.SetStringValue(field.AsString);
+				newField.SetAbout(field.About);
 
 				if (bundle == defaultBundle)
 				{
@@ -124,8 +125,7 @@ namespace Epsitec.Common.Designer
 			ResourceBundle.Field field = bundle[name];
 			if (field == null || field.Name == null)
 			{
-				// TODO: comment créer un nouveau ResourceBundle.Field ???
-				ResourceBundle.Field newField = new ResourceBundle.Field(bundle, bundle.XmlDocument);
+				ResourceBundle.Field newField = bundle.CreateField(ResourceFieldType.Data);
 				newField.SetName(name);
 				bundle.Add(newField);
 			}
