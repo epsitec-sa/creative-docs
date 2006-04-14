@@ -500,8 +500,8 @@ namespace Epsitec.Common.Designer
 
 					this.array.SetLineString(0, first+i, primaryField.Name);
 					this.array.SetLineState(0, first+i, MyWidgets.StringList.CellState.Normal);
-					this.UpdateArrayField(1, first+i, primaryField);
-					this.UpdateArrayField(2, first+i, secondaryField);
+					this.UpdateArrayField(1, first+i, primaryField, secondaryField);
+					this.UpdateArrayField(2, first+i, secondaryField, primaryField);
 				}
 				else
 				{
@@ -515,7 +515,7 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		protected void UpdateArrayField(int row, int column, ResourceBundle.Field field)
+		protected void UpdateArrayField(int row, int column, ResourceBundle.Field field, ResourceBundle.Field secondaryField)
 		{
 			if (field != null)
 			{
@@ -523,7 +523,23 @@ namespace Epsitec.Common.Designer
 				if (text != null && text != "")
 				{
 					this.array.SetLineString(row, column, text);
-					this.array.SetLineState(row, column, MyWidgets.StringList.CellState.Normal);
+
+					int primaryId = field.ModificationId;
+					int secondaryId = primaryId;
+					if (secondaryField != null)
+					{
+						secondaryId = secondaryField.ModificationId;
+					}
+
+					if (primaryId < secondaryId)
+					{
+						this.array.SetLineState(row, column, MyWidgets.StringList.CellState.Modified);
+					}
+					else
+					{
+						this.array.SetLineState(row, column, MyWidgets.StringList.CellState.Normal);
+					}
+
 					return;
 				}
 			}
