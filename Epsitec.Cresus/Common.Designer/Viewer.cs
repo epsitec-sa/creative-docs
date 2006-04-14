@@ -807,10 +807,12 @@ namespace Epsitec.Common.Designer
 			this.ignoreChange = true;
 
 			int sel = this.array.SelectedRow;
+			int column = this.array.SelectedColumn;
 
 			if (sel >= this.labelsIndex.Count)
 			{
 				sel = -1;
+				column = -1;
 			}
 
 			if ( sel == -1 )
@@ -844,6 +846,16 @@ namespace Epsitec.Common.Designer
 
 				this.SetTextField(this.primaryAbout, this.primaryBundle[label].About);
 				this.SetTextField(this.secondaryAbout, this.secondaryBundle[label].About);
+
+				AbstractTextField edit = null;
+				if (column == 0)  edit = this.labelEdit;
+				if (column == 1)  edit = this.primaryEdit;
+				if (column == 2)  edit = this.secondaryEdit;
+				if (edit != null)
+				{
+					edit.Focus();
+					edit.SelectAll();
+				}
 			}
 
 			this.module.Notifier.NotifyInfoAccessChanged();
