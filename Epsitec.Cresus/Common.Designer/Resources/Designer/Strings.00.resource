@@ -40,9 +40,14 @@
   <data name="Action.Filter">Filtrer les ressources visibles...</data>
   <data name="Action.Search">Recherche d'une ressource...</data>
   <data name="Action.AccessFirst">Première ressource</data>
+  <data name="Action.AccessLast">Dernière ressource</data>
   <data name="Action.AccessPrev">Ressource précédente</data>
   <data name="Action.AccessNext">Ressource suivante</data>
-  <data name="Action.AccessLast">Dernière ressource</data>
+  <data name="Action.WarningPrev">Ressource manquante précédente</data>
+  <data name="Action.WarningNext">Ressource manquante suivante</data>
+  <data name="Action.ModificationPrev">Ressource modifiée précédente</data>
+  <data name="Action.ModificationNext">Ressource modifiée suivante</data>
+  <data name="Action.ModificationClear">Annuler la modification</data>
 
   <data name="Dialog.Button.Close">Fermer</data>
   <data name="Dialog.Button.OK">D'accord</data>

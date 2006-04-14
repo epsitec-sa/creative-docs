@@ -432,6 +432,23 @@ namespace Epsitec.Common.Designer
 			this.CurrentModule.Modifier.ActiveViewer.DoAccess(e.CommandName);
 		}
 
+		[Command("ModificationClear")]
+		[Command("ModificationPrev")]
+		[Command("ModificationNext")]
+		void CommandModification(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			if ( !this.IsCurrentModule )  return;
+			this.CurrentModule.Modifier.ActiveViewer.DoModification(e.CommandName);
+		}
+
+		[Command("WarningPrev")]
+		[Command("WarningNext")]
+		void CommandWarning(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			if ( !this.IsCurrentModule )  return;
+			this.CurrentModule.Modifier.ActiveViewer.DoWarning(e.CommandName);
+		}
+
 		[Command("Delete")]
 		void CommandDelete(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
@@ -502,6 +519,11 @@ namespace Epsitec.Common.Designer
 			this.accessPrevState = this.CreateCommandState("AccessPrev");
 			this.accessNextState = this.CreateCommandState("AccessNext");
 			this.accessLastState = this.CreateCommandState("AccessLast");
+			this.modificationClearState = this.CreateCommandState("ModificationClear");
+			this.modificationPrevState = this.CreateCommandState("ModificationPrev");
+			this.modificationNextState = this.CreateCommandState("ModificationNext");
+			this.warningPrevState = this.CreateCommandState("WarningPrev");
+			this.warningNextState = this.CreateCommandState("WarningNext");
 		}
 
 		protected CommandState CreateCommandState(string command, params Widgets.Shortcut[] shortcuts)
@@ -782,5 +804,10 @@ namespace Epsitec.Common.Designer
 		protected CommandState					accessPrevState;
 		protected CommandState					accessNextState;
 		protected CommandState					accessLastState;
+		protected CommandState					modificationClearState;
+		protected CommandState					modificationPrevState;
+		protected CommandState					modificationNextState;
+		protected CommandState					warningPrevState;
+		protected CommandState					warningNextState;
 	}
 }
