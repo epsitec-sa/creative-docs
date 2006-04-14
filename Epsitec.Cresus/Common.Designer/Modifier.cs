@@ -13,7 +13,7 @@ namespace Epsitec.Common.Designer
 		public Modifier(Module module)
 		{
 			this.module = module;
-			this.attachViewers = new System.Collections.ArrayList();
+			this.attachViewers = new List<Viewer>();
 			this.idAlreadyChangedList = new List<string>();
 		}
 
@@ -185,7 +185,7 @@ namespace Epsitec.Common.Designer
 			this.attachViewers.Remove(viewer);
 		}
 
-		public System.Collections.ArrayList AttachViewers
+		public List<Viewer> AttachViewers
 		{
 			//	Liste des visualisateurs attachés au module.
 			get
@@ -199,7 +199,7 @@ namespace Epsitec.Common.Designer
 		protected Module						module;
 		protected bool							isDirty = false;
 		protected Viewer						activeViewer;
-		protected System.Collections.ArrayList	attachViewers;
+		protected List<Viewer>					attachViewers;
 		protected List<string>					idAlreadyChangedList;
 	}
 }
