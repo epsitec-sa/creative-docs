@@ -749,16 +749,21 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		protected void UpdateModificationId(ResourceBundle.Field primary, ResourceBundle.Field secondary)
+		protected void UpdateModificationId(ResourceBundle.Field primary, ResourceBundle.Field secondary, string name)
 		{
 			//	Gestion des fonds jaunes lorsqu'un texte est modifié.
 			if (primary.ModificationId == secondary.ModificationId)
 			{
-				primary.SetModificationId(secondary.ModificationId+1);
+				if (!this.module.Modifier.IdAlreadyChangedExist(name))
+				{
+					primary.SetModificationId(secondary.ModificationId+1);
+					this.module.Modifier.IdAlreadyChangedAdd(name);
+				}
 			}
 			else if (primary.ModificationId < secondary.ModificationId)
 			{
 				primary.SetModificationId(secondary.ModificationId);
+				this.module.Modifier.IdAlreadyChangedAdd(name);
 			}
 		}
 
@@ -863,7 +868,7 @@ namespace Epsitec.Common.Designer
 			if (edit == this.primaryEdit)
 			{
 				this.primaryBundle[label].SetStringValue(text);
-				this.UpdateModificationId(this.primaryBundle[label], this.secondaryBundle[label]);
+				this.UpdateModificationId(this.primaryBundle[label], this.secondaryBundle[label], label);
 				this.UpdateArrayField(1, sel, this.primaryBundle[label], this.secondaryBundle[label]);
 				this.UpdateArrayField(2, sel, this.secondaryBundle[label], this.primaryBundle[label]);
 			}
@@ -872,7 +877,7 @@ namespace Epsitec.Common.Designer
 			{
 				this.module.Modifier.CreateIfNecessary(this.secondaryBundle, label);
 				this.secondaryBundle[label].SetStringValue(text);
-				this.UpdateModificationId(this.secondaryBundle[label], this.primaryBundle[label]);
+				this.UpdateModificationId(this.secondaryBundle[label], this.primaryBundle[label], label);
 				this.UpdateArrayField(1, sel, this.primaryBundle[label], this.secondaryBundle[label]);
 				this.UpdateArrayField(2, sel, this.secondaryBundle[label], this.primaryBundle[label]);
 			}
