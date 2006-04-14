@@ -296,6 +296,8 @@ namespace Epsitec.Common.Designer
 					this.UpdateArray();
 					this.module.Modifier.IsDirty = true;
 				}
+
+				this.module.Modifier.IdAlreadyChangedRemove(label);
 			}
 			else
 			{
