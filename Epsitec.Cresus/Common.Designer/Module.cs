@@ -80,7 +80,7 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		public void NewBundle(string name)
+		public ResourceBundle NewBundle(string name)
 		{
 			//	Crée un nouveau bundle pour une culture donnée.
 			string prefix = this.resourceManager.ActivePrefix;
@@ -89,12 +89,12 @@ namespace Epsitec.Common.Designer
 
 			//	Pour l'instant, l'éditeur ne sait gérer que des bundles de type "String",
 			//	donc on force ici explicitement ce type :
-			
-			bundle.DefineType ("String");
-			
-			this.resourceManager.SetBundle (bundle, ResourceSetMode.CreateOnly);
+			bundle.DefineType("String");
+			this.resourceManager.SetBundle(bundle, ResourceSetMode.CreateOnly);
 			
 			this.UpdateBundles();
+
+			return bundle;
 		}
 
 		protected void UpdateBundles()
