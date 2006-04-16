@@ -581,12 +581,11 @@ namespace Epsitec.Common.Support
 		{
 			byte[] data;
 			
-			using (System.IO.StringWriter stream = new System.IO.StringWriter ())
+			using (System.IO.MemoryStream stream = new System.IO.MemoryStream ())
 			{
 				System.Xml.XmlDocument xmldoc = this.CreateXmlDocument (true);
 				xmldoc.Save (stream);
-				stream.Flush ();
-				data = System.Text.Encoding.UTF8.GetBytes (stream.ToString ());
+				data = stream.ToArray ();
 			}
 			
 			return data;

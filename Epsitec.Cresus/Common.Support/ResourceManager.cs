@@ -474,7 +474,8 @@ namespace Epsitec.Common.Support
 			}
 			
 			if ((bundle != null) &&
-				(bundle.IsEmpty))
+				(bundle.IsEmpty) &&
+				(bundle.Type == ""))
 			{
 				bundle = null;
 			}

@@ -85,8 +85,15 @@ namespace Epsitec.Common.Designer
 			//	Crée un nouveau bundle pour une culture donnée.
 			string prefix = this.resourceManager.ActivePrefix;
 			System.Globalization.CultureInfo culture = new System.Globalization.CultureInfo("de");
-			ResourceBundle.Create(this.resourceManager, prefix, this.name, ResourceLevel.Localized, culture);
+			ResourceBundle bundle = ResourceBundle.Create (this.resourceManager, prefix, this.bundles.Name, ResourceLevel.Localized, culture);
 
+			//	Pour l'instant, l'éditeur ne sait gérer que des bundles de type "String",
+			//	donc on force ici explicitement ce type :
+			
+			bundle.DefineType ("String");
+			
+			this.resourceManager.SetBundle (bundle, ResourceSetMode.CreateOnly);
+			
 			this.UpdateBundles();
 		}
 
