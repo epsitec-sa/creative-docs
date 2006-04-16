@@ -46,7 +46,7 @@ namespace Epsitec.Common.Designer
 
 			this.labelStatic = new StaticText(this);
 			this.labelStatic.Alignment = ContentAlignment.MiddleRight;
-			this.labelStatic.Text = Res.Strings.String.Edit;
+			this.labelStatic.Text = Res.Strings.Viewer.Edit;
 			this.labelStatic.Visibility = (this.module.Mode != DesignerMode.Build);
 
 			this.labelEdit = new TextFieldMulti(this);
@@ -73,7 +73,7 @@ namespace Epsitec.Common.Designer
 
 			this.labelAbout = new StaticText(this);
 			this.labelAbout.Alignment = ContentAlignment.MiddleRight;
-			this.labelAbout.Text = Res.Strings.String.About;
+			this.labelAbout.Text = Res.Strings.Viewer.About;
 
 			this.primaryAbout = new TextField(this);
 			this.primaryAbout.Name = "PrimaryAbout";
@@ -120,7 +120,7 @@ namespace Epsitec.Common.Designer
 				this.secondaryAbout.KeyboardFocusChanged -= new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
 			}
 
-			base.Dispose (disposing);
+			base.Dispose(disposing);
 		}
 
 
@@ -547,6 +547,8 @@ namespace Epsitec.Common.Designer
 		protected void UpdateCultures()
 		{
 			//	Met à jour les widgets pour les cultures.
+			this.ignoreChange = true;
+
 			ResourceBundleCollection bundles = this.module.Bundles;
 
 			this.primaryBundle = bundles[ResourceLevel.Default];
@@ -566,6 +568,7 @@ namespace Epsitec.Common.Designer
 					}
 				}
 			}
+			this.secondaryCulture.Items.Add(Res.Strings.Viewer.NewCulture);
 
 			if ( this.secondaryBundle == null )
 			{
@@ -577,6 +580,8 @@ namespace Epsitec.Common.Designer
 			}
 
 			this.UpdateLabelsIndex("", false, false);
+
+			this.ignoreChange = false;
 		}
 
 		protected void UpdateLabelsIndex(string filter, bool isBegin, bool isCase)
@@ -775,15 +780,29 @@ namespace Epsitec.Common.Designer
 		void HandleSecondaryCultureComboClosed(object sender)
 		{
 			//	Changement de la culture secondaire.
+			if ( this.ignoreChange )  return;
+
 			ResourceBundleCollection bundles = this.module.Bundles;
 
-			for ( int b=0 ; b<bundles.Count ; b++ )
+			if (this.secondaryCulture.Text == Res.Strings.Viewer.NewCulture)
+			{
+				string name = "de";
+				this.module.NewBundle(name);
+				this.UpdateCultures();
+
+				this.ignoreChange = false;
+				this.secondaryCulture.Text = name;
+				this.ignoreChange = true;
+			}
+
+			for (int b=0; b<bundles.Count; b++)
 			{
 				ResourceBundle bundle = bundles[b];
 
-				if ( bundle.Culture.NativeName == secondaryCulture.Text )
+				if (bundle.Culture.NativeName == this.secondaryCulture.Text)
 				{
 					this.secondaryBundle = bundle;
+					this.UpdateArray();
 					break;
 				}
 			}
