@@ -13,6 +13,7 @@
   <data name="Ribbon.Section.Character">Caractère</data>
   <data name="Ribbon.Section.Access">Accès</data>
 
+  <data name="Viewer.Reference">Référence [{0}]</data>
   <data name="Viewer.Edit">Textes</data>
   <data name="Viewer.About">Commentaires</data>
   <data name="Viewer.NewCulture">&lt;i&gt;Nouvelle culture&lt;/i&gt;</data>

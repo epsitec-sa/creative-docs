@@ -552,7 +552,7 @@ namespace Epsitec.Common.Designer
 			ResourceBundleCollection bundles = this.module.Bundles;
 
 			this.primaryBundle = bundles[ResourceLevel.Default];
-			this.primaryCulture.Text = this.primaryBundle.Culture.NativeName;
+			this.primaryCulture.Text = string.Format(Res.Strings.Viewer.Reference, this.primaryBundle.Culture.NativeName);
 
 			this.secondaryBundle = null;
 			this.secondaryCulture.Items.Clear();
@@ -782,19 +782,18 @@ namespace Epsitec.Common.Designer
 			//	Changement de la culture secondaire.
 			if ( this.ignoreChange )  return;
 
-			ResourceBundleCollection bundles = this.module.Bundles;
-
 			if (this.secondaryCulture.Text == Res.Strings.Viewer.NewCulture)
 			{
 				string name = "de";
-				this.module.NewBundle(name);
+				ResourceBundle bundle = this.module.NewBundle(name);
 				this.UpdateCultures();
 
 				this.ignoreChange = false;
-				this.secondaryCulture.Text = name;
+				this.secondaryCulture.Text = bundle.Culture.NativeName;
 				this.ignoreChange = true;
 			}
 
+			ResourceBundleCollection bundles = this.module.Bundles;
 			for (int b=0; b<bundles.Count; b++)
 			{
 				ResourceBundle bundle = bundles[b];
