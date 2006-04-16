@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <!-- Ressources françaises pour le projet Common.Designer -->
 
-<bundle type="String">
+<bundle type="String" culture="fr">
   <data name="Application.Title">Editeur de ressources</data>
 
   <data name="Ribbon.Main">Principal</data>

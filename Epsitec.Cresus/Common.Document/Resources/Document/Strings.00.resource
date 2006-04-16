@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <!-- Ressources françaises pour le projet Common.Document -->
 
-<bundle type="String">
+<bundle type="String" culture="fr">
 	<data name="Dialog.Title">Crésus</data>
 	
 	<data name="Dialog.Button.Browse">Parcourir...</data>
