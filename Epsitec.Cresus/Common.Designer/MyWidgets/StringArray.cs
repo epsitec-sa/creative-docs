@@ -34,7 +34,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				this.scroller.ValueChanged -= new EventHandler(this.HandleScrollerValueChanged);
 			}
-			base.Dispose (disposing);
+
+			base.Dispose(disposing);
 		}
 
 

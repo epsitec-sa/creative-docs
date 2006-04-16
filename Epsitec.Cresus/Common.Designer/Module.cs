@@ -18,10 +18,7 @@ namespace Epsitec.Common.Designer
 			this.resourceManager.SetupApplication(this.name);
 			this.resourceManager.ActivePrefix = resourcePrefix;
 
-			string[] ids = this.resourceManager.GetBundleIds("*", ResourceLevel.Default);
-
-			this.bundles = new ResourceBundleCollection(this.resourceManager);
-			this.bundles.LoadBundles(this.resourceManager.ActivePrefix, this.resourceManager.GetBundleIds(ids[0], ResourceLevel.All));
+			this.UpdateBundles();
 
 			this.modifier = new Modifier(this);
 			this.notifier = new Notifier(this);
@@ -81,6 +78,24 @@ namespace Epsitec.Common.Designer
 			{
 				return this.bundles;
 			}
+		}
+
+		public void NewBundle(string name)
+		{
+			//	Crée un nouveau bundle pour une culture donnée.
+			string prefix = this.resourceManager.ActivePrefix;
+			System.Globalization.CultureInfo culture = new System.Globalization.CultureInfo("de");
+			ResourceBundle.Create(this.resourceManager, prefix, this.name, ResourceLevel.Localized, culture);
+
+			this.UpdateBundles();
+		}
+
+		protected void UpdateBundles()
+		{
+			string[] ids = this.resourceManager.GetBundleIds("*", ResourceLevel.Default);
+
+			this.bundles = new ResourceBundleCollection(this.resourceManager);
+			this.bundles.LoadBundles(this.resourceManager.ActivePrefix, this.resourceManager.GetBundleIds(ids[0], ResourceLevel.All));
 		}
 
 

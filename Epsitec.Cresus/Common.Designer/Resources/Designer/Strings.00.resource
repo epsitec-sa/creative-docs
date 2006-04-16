@@ -13,8 +13,9 @@
   <data name="Ribbon.Section.Character">Caractère</data>
   <data name="Ribbon.Section.Access">Accès</data>
 
-  <data name="String.Edit">Textes</data>
-  <data name="String.About">Commentaires</data>
+  <data name="Viewer.Edit">Textes</data>
+  <data name="Viewer.About">Commentaires</data>
+  <data name="Viewer.NewCulture">&lt;i&gt;Nouvelle culture&lt;/i&gt;</data>
 
   <data name="Action.New">Nouveau</data>
   <data name="Action.Open">Ouvrir...</data>

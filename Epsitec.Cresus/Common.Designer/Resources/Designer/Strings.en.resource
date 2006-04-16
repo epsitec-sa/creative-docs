@@ -8,9 +8,6 @@
   <data name="Ribbon.Oper">Operations</data>
   <data name="Ribbon.Text">Text</data>
 
-  <data name="String.Edit">Text</data>
-  <data name="String.About">About</data>
-
   <data name="Action.New">New</data>
   <data name="Action.Open">Open...</data>
   <data name="Action.Close">Close</data>
