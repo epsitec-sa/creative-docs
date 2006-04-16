@@ -540,6 +540,7 @@ namespace Epsitec.Common.Support
 			string name_attr  = this.GetAttributeValue (xmlroot, "name");
 			string type_attr  = this.GetAttributeValue (xmlroot, "type");
 			string about_attr = this.GetAttributeValue (xmlroot, "about");
+			string culture_attr = this.GetAttributeValue (xmlroot, "culture");
 			
 			if ((name_attr != null) && (name_attr != ""))
 			{
@@ -556,6 +557,10 @@ namespace Epsitec.Common.Support
 			if ((about_attr != null) && (about_attr != ""))
 			{
 				this.about = about_attr;
+			}
+			if ((culture_attr != null) && (culture_attr != ""))
+			{
+				this.culture = new CultureInfo (culture_attr);
 			}
 			
 			ArrayList list = new ArrayList ();
@@ -608,14 +613,16 @@ namespace Epsitec.Common.Support
 		
 		public System.Xml.XmlNode CreateXmlNode(System.Xml.XmlDocument xmldoc)
 		{
-			System.Xml.XmlElement   bundle_node = xmldoc.CreateElement ("bundle");
-			System.Xml.XmlAttribute name_attr   = xmldoc.CreateAttribute ("name");
-			System.Xml.XmlAttribute type_attr   = xmldoc.CreateAttribute ("type");
-			System.Xml.XmlAttribute about_attr  = xmldoc.CreateAttribute ("about");
+			System.Xml.XmlElement   bundle_node  = xmldoc.CreateElement ("bundle");
+			System.Xml.XmlAttribute name_attr    = xmldoc.CreateAttribute ("name");
+			System.Xml.XmlAttribute type_attr    = xmldoc.CreateAttribute ("type");
+			System.Xml.XmlAttribute about_attr   = xmldoc.CreateAttribute ("about");
+			System.Xml.XmlAttribute culture_attr = xmldoc.CreateAttribute ("culture");
 			
-			name_attr.Value  = this.name;
-			type_attr.Value  = this.type;
-			about_attr.Value = this.about;
+			name_attr.Value    = this.name;
+			type_attr.Value    = this.type;
+			about_attr.Value   = this.about;
+			culture_attr.Value = this.culture.TwoLetterISOLanguageName;
 			
 			if (name_attr.Value != "")
 			{
@@ -628,6 +635,10 @@ namespace Epsitec.Common.Support
 			if (about_attr.Value != "")
 			{
 				bundle_node.Attributes.Append (about_attr);
+			}
+			if (culture_attr.Value != "")
+			{
+				bundle_node.Attributes.Append (culture_attr);
 			}
 			
 			for (int i = 0; i < this.fields.Length; i++)
