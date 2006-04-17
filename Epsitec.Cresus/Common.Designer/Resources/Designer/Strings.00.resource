@@ -84,6 +84,8 @@
   <data name="Dialog.NewCulture.Title">Culture à créer</data>
   <data name="Dialog.NewCulture.Label">Culture</data>
   <data name="Dialog.NewCulture.Button.Create">Créer</data>
+  
+  <data name="Dialog.DeleteCulture.Question">Voulez-vous supprimer la culture {0} ?</data>
 
   <data name="Misc.NoTitle">&lt;i&gt;sans titre&lt;/i&gt;</data>
   <data name="Misc.Copy">Copie</data>

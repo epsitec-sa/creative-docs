@@ -728,6 +728,7 @@ namespace Epsitec.Common.Designer
 		#endregion
 
 
+		#region Dialogs
 		public string DlgNewCulture()
 		{
 			//	Ouvre le dialogue pour choisir la culture à créer.
@@ -735,6 +736,36 @@ namespace Epsitec.Common.Designer
 			return this.dlgNewCulture.Culture;
 		}
 
+		public Common.Dialogs.DialogResult DialogQuestion(string question)
+		{
+			//	Affiche le dialogue pour signaler une erreur.
+			if ( this.Window == null )  return Common.Dialogs.DialogResult.None;
+
+			string title = Res.Strings.Application.Title;
+			string icon = "manifest:Epsitec.Common.Dialogs.Images.Question.icon";
+			string message = question;
+
+			Common.Dialogs.IDialog dialog = Common.Dialogs.Message.CreateYesNo(title, icon, message, "", "", this.commandDispatcher);
+			dialog.Owner = this.Window;
+			dialog.OpenDialog();
+			return dialog.Result;
+		}
+
+		public Common.Dialogs.DialogResult DialogError(string error)
+		{
+			//	Affiche le dialogue pour signaler une erreur.
+			if ( this.Window == null )  return Common.Dialogs.DialogResult.None;
+			if ( error == "" )  return Common.Dialogs.DialogResult.None;
+
+			string title = Res.Strings.Application.Title;
+			string icon = "manifest:Epsitec.Common.Dialogs.Images.Warning.icon";
+			string message = error;
+
+			Common.Dialogs.IDialog dialog = Common.Dialogs.Message.CreateOk(title, icon, message, "", this.commandDispatcher);
+			dialog.Owner = this.Window;
+			dialog.OpenDialog();
+			return dialog.Result;
+		}
 
 		private void HandleDlgClosed(object sender)
 		{
@@ -754,6 +785,8 @@ namespace Epsitec.Common.Designer
 				this.searchState.ActiveState = ActiveState.No;
 			}
 		}
+		#endregion
+
 
 		private void HandleWindowAsyncNotification(object sender)
 		{
