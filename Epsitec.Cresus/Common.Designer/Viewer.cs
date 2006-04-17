@@ -547,8 +547,6 @@ namespace Epsitec.Common.Designer
 		protected void UpdateCultures()
 		{
 			//	Met à jour les widgets pour les cultures.
-			this.ignoreChange = true;
-
 			ResourceBundleCollection bundles = this.module.Bundles;
 
 			this.primaryBundle = bundles[ResourceLevel.Default];
@@ -570,7 +568,9 @@ namespace Epsitec.Common.Designer
 			}
 			this.secondaryCulture.Items.Add(Res.Strings.Viewer.NewCulture);
 
-			if ( this.secondaryBundle == null )
+			bool iic = this.ignoreChange;
+			this.ignoreChange = true;
+			if (this.secondaryBundle == null)
 			{
 				this.secondaryCulture.Text = "";
 			}
@@ -578,10 +578,9 @@ namespace Epsitec.Common.Designer
 			{
 				this.secondaryCulture.Text = this.secondaryBundle.Culture.NativeName;
 			}
+			this.ignoreChange = iic;
 
 			this.UpdateLabelsIndex("", false, false);
-
-			this.ignoreChange = false;
 		}
 
 		protected void UpdateLabelsIndex(string filter, bool isBegin, bool isCase)
@@ -788,9 +787,10 @@ namespace Epsitec.Common.Designer
 				ResourceBundle bundle = this.module.NewBundle(name);
 				this.UpdateCultures();
 
+				bool iic = this.ignoreChange;
 				this.ignoreChange = false;
 				this.secondaryCulture.Text = bundle.Culture.NativeName;
-				this.ignoreChange = true;
+				this.ignoreChange = iic;
 			}
 
 			ResourceBundleCollection bundles = this.module.Bundles;
@@ -802,6 +802,7 @@ namespace Epsitec.Common.Designer
 				{
 					this.secondaryBundle = bundle;
 					this.UpdateArray();
+					this.HandleArraySelectedRowChanged(null);
 					break;
 				}
 			}
@@ -824,6 +825,7 @@ namespace Epsitec.Common.Designer
 
 		void HandleArraySelectedRowChanged(object sender)
 		{
+			bool iic = this.ignoreChange;
 			this.ignoreChange = true;
 
 			int sel = this.array.SelectedRow;
@@ -884,9 +886,9 @@ namespace Epsitec.Common.Designer
 				}
 			}
 
-			this.module.Notifier.NotifyInfoAccessChanged();
+			this.ignoreChange = iic;
 
-			this.ignoreChange = false;
+			this.module.Notifier.NotifyInfoAccessChanged();
 		}
 
 		void HandleTextChanged(object sender)
