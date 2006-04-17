@@ -75,14 +75,14 @@ namespace Epsitec.Common.Designer
 			this.labelAbout.Alignment = ContentAlignment.MiddleRight;
 			this.labelAbout.Text = Res.Strings.Viewer.About;
 
-			this.primaryAbout = new TextField(this);
+			this.primaryAbout = new TextFieldMulti(this);
 			this.primaryAbout.Name = "PrimaryAbout";
 			this.primaryAbout.TextChanged += new EventHandler(this.HandleTextChanged);
 			this.primaryAbout.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
 			this.primaryAbout.TabIndex = tabIndex++;
 			this.primaryAbout.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
-			this.secondaryAbout = new TextField(this);
+			this.secondaryAbout = new TextFieldMulti(this);
 			this.secondaryAbout.Name = "SecondaryAbout";
 			this.secondaryAbout.TextChanged += new EventHandler(this.HandleTextChanged);
 			this.secondaryAbout.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
@@ -701,15 +701,21 @@ namespace Epsitec.Common.Designer
 			box.Deflate(10);
 			Rectangle rect;
 
+			int lines = System.Math.Max((int)box.Height/50, 4);
+			int editLines = lines*3/4;
+			int aboutLines = lines-editLines;
+			double editHeight = editLines*13+8;
+			double aboutHeight = aboutLines*13+8;
+
 			//	Il faut obligatoirement s'occuper d'abord de this.array, puisque les autres
 			//	widgets dépendent des largeurs relatives de ses colonnes.
 			rect = box;
-			rect.Top -= 20+5;
-			rect.Bottom += 47+5+20+5;
+			rect.Top -= aboutHeight+5;
+			rect.Bottom += editHeight+5+aboutHeight+5;
 			this.array.Bounds = rect;
 
 			rect = box;
-			rect.Bottom = rect.Top-20;
+			rect.Bottom = rect.Top-aboutHeight;
 			rect.Left += this.array.GetColumnsAbsoluteWidth(0);
 			rect.Width = this.array.GetColumnsAbsoluteWidth(1)+1;
 			this.primaryCulture.Bounds = rect;
@@ -718,8 +724,8 @@ namespace Epsitec.Common.Designer
 			this.secondaryCulture.Bounds = rect;
 
 			rect = box;
-			rect.Top = rect.Bottom+47+20+5;
-			rect.Bottom = rect.Top-47;
+			rect.Top = rect.Bottom+editHeight+aboutHeight+5;
+			rect.Bottom = rect.Top-editHeight;
 			rect.Width = this.array.GetColumnsAbsoluteWidth(0)-5;
 			this.labelStatic.Bounds = rect;
 			rect.Width += 5+1;
@@ -732,8 +738,8 @@ namespace Epsitec.Common.Designer
 			this.secondaryEdit.Bounds = rect;
 
 			rect = box;
-			rect.Top = rect.Bottom+20;
-			rect.Bottom = rect.Top-20;
+			rect.Top = rect.Bottom+aboutHeight;
+			rect.Bottom = rect.Top-aboutHeight;
 			rect.Width = this.array.GetColumnsAbsoluteWidth(0)-5;
 			this.labelAbout.Bounds = rect;
 			rect.Left += this.array.GetColumnsAbsoluteWidth(0);
@@ -964,8 +970,8 @@ namespace Epsitec.Common.Designer
 		protected TextFieldMulti			primaryEdit;
 		protected TextFieldMulti			secondaryEdit;
 		protected StaticText				labelAbout;
-		protected TextField					primaryAbout;
-		protected TextField					secondaryAbout;
+		protected TextFieldMulti			primaryAbout;
+		protected TextFieldMulti			secondaryAbout;
 		protected AbstractTextField			currentTextField;
 	}
 }
