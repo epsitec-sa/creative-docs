@@ -100,7 +100,7 @@ namespace Epsitec.Common.Designer
 			return false;
 		}
 
-		public ResourceBundle NewBundle(string name)
+		public ResourceBundle NewCulture(string name)
 		{
 			//	Crée un nouveau bundle pour une culture donnée.
 			string prefix = this.resourceManager.ActivePrefix;
@@ -115,6 +115,14 @@ namespace Epsitec.Common.Designer
 			this.UpdateBundles();
 
 			return bundle;
+		}
+
+		public void DeleteCulture(ResourceBundle bundle)
+		{
+			//	Supprime une culture.
+			// TODO: la suppression ne fonctionne pas !
+			this.resourceManager.RemoveBundle("Strings", ResourceLevel.Localized, bundle.Culture);
+			this.UpdateBundles();
 		}
 
 		protected void UpdateBundles()

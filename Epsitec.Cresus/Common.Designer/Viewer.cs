@@ -473,7 +473,8 @@ namespace Epsitec.Common.Designer
 			//	Crée une nouvelle culture.
 			string name = this.module.MainWindow.DlgNewCulture();
 			if ( name == null )  return;
-			ResourceBundle bundle = this.module.NewBundle(name);
+			ResourceBundle bundle = this.module.NewCulture(name);
+
 			this.UpdateCultures();
 
 			bool iic = this.ignoreChange;
@@ -487,6 +488,10 @@ namespace Epsitec.Common.Designer
 		public void DoDeleteCulture()
 		{
 			//	Supprime la culture courante.
+			this.module.DeleteCulture(this.secondaryBundle);
+
+			this.UpdateCultures();
+			this.HandleSecondaryCultureComboClosed(null);
 		}
 
 		public void DoClipboard(string name)
