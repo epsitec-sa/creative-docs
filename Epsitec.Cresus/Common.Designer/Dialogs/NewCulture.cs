@@ -82,7 +82,8 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		protected void UpdateCombo()
 		{
-			string[] cultures = { "fr", "en", "de", "it", "es", "pt", "da", "sv", "no", "ru", "cs" };
+			//?string[] cultures = { "fr", "en", "de", "it", "es", "pt", "da", "sv", "no", "ru", "cs" };
+			string[] cultures = { "fr", "en", "de", "it", "es", "pt" };
 
 			Module module = this.mainWindow.CurrentModule;
 
@@ -99,7 +100,9 @@ namespace Epsitec.Common.Designer.Dialogs
 			foreach (string name in this.cultureList)
 			{
 				System.Globalization.CultureInfo culture = new System.Globalization.CultureInfo(name);
-				this.cultureWidget.Items.Add(culture.NativeName);
+
+				string text = string.Format("{0} / {1}", culture.DisplayName, culture.NativeName);
+				this.cultureWidget.Items.Add(text);
 			}
 			this.cultureWidget.SelectedIndex = 0;
 		}

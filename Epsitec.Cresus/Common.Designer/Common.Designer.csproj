@@ -60,6 +60,10 @@
     <Compile Include="Viewer.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Common.Dialogs\Common.Dialogs.csproj">
+      <Project>{560DFD49-3052-4F41-A4C3-6216E6135DC9}</Project>
+      <Name>Common.Dialogs</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Common.Drawing.Agg\Common.Drawing.Agg.csproj">
       <Project>{7D73AD35-D078-4B4C-AF30-434C6A377058}</Project>
       <Name>Common.Drawing.Agg</Name>
