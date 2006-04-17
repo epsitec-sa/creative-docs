@@ -12,11 +12,11 @@
   <data name="Ribbon.Section.Select">Sélection</data>
   <data name="Ribbon.Section.Character">Caractère</data>
   <data name="Ribbon.Section.Access">Accès</data>
+  <data name="Ribbon.Section.Culture">Culture</data>
 
   <data name="Viewer.Reference">Référence [{0}]</data>
   <data name="Viewer.Edit">Textes</data>
   <data name="Viewer.About">Commentaires</data>
-  <data name="Viewer.NewCulture">&lt;i&gt;Nouvelle culture&lt;/i&gt;</data>
 
   <data name="Action.New">Nouveau</data>
   <data name="Action.Open">Ouvrir...</data>
@@ -34,6 +34,8 @@
   <data name="Action.Duplicate">Dupliquer la ressource sélectionnée</data>
   <data name="Action.Up">Monter la ressource sélectionnée</data>
   <data name="Action.Down">Descendre la ressource sélectionnée</data>
+  <data name="Action.NewCulture">Créer une nouvelle culture</data>
+  <data name="Action.DeleteCulture">Supprimer la culture sélectionnée</data>
 
   <data name="Action.FontBold">Gras</data>
   <data name="Action.FontItalic">Italique</data>
@@ -78,6 +80,10 @@
   <data name="Dialog.Search.Check.Case">Respecter la casse</data>
   <data name="Dialog.Search.Check.About">Chercher dans les commentaires</data>
   <data name="Dialog.Search.Button.Insert">Chercher</data>
+
+  <data name="Dialog.NewCulture.Title">Culture à créer</data>
+  <data name="Dialog.NewCulture.Label">Culture</data>
+  <data name="Dialog.NewCulture.Button.Create">Créer</data>
 
   <data name="Misc.NoTitle">&lt;i&gt;sans titre&lt;/i&gt;</data>
   <data name="Misc.Copy">Copie</data>

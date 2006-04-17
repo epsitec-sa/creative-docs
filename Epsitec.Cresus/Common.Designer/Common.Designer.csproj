@@ -36,6 +36,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Dialogs\Abstract.cs" />
+    <Compile Include="Dialogs\NewCulture.cs" />
     <Compile Include="Dialogs\Search.cs" />
     <Compile Include="Dialogs\Filter.cs" />
     <Compile Include="Dialogs\GlyphArray.cs" />
@@ -53,6 +54,7 @@
     <Compile Include="Ribbons\Clipboard.cs" />
     <Compile Include="Ribbons\Character.cs" />
     <Compile Include="Ribbons\Access.cs" />
+    <Compile Include="Ribbons\Culture.cs" />
     <Compile Include="Ribbons\File.cs" />
     <Compile Include="Ribbons\Select.cs" />
     <Compile Include="Viewer.cs" />
@@ -118,6 +120,8 @@
     <EmbeddedResource Include="Images\ModificationClear.icon" />
     <EmbeddedResource Include="Images\ModificationNext.icon" />
     <EmbeddedResource Include="Images\WarningNext.icon" />
+    <EmbeddedResource Include="Images\NewCulture.icon" />
+    <EmbeddedResource Include="Images\DeleteCulture.icon" />
     <None Include="Resources\Designer\Strings.00.resource" />
     <None Include="Resources\Designer\Strings.en.resource" />
   </ItemGroup>

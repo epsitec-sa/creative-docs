@@ -58,9 +58,10 @@ namespace Epsitec.Common.Designer
 				this.window.Root.AttachCommandDispatcher(this.commandDispatcher);
 				this.window.AttachCommandDispatcher(this.commandDispatcher);
 
-				this.dlgGlyphs = new Dialogs.Glyphs(this);
-				this.dlgFilter = new Dialogs.Filter(this);
-				this.dlgSearch = new Dialogs.Search(this);
+				this.dlgGlyphs     = new Dialogs.Glyphs(this);
+				this.dlgFilter     = new Dialogs.Filter(this);
+				this.dlgSearch     = new Dialogs.Search(this);
+				this.dlgNewCulture = new Dialogs.NewCulture(this);
 
 				this.dlgGlyphs.Closed += new EventHandler(this.HandleDlgClosed);
 				this.dlgFilter.Closed += new EventHandler(this.HandleDlgClosed);
@@ -75,7 +76,7 @@ namespace Epsitec.Common.Designer
 
 			for ( int i=0 ; i<modules.Length ; i++ )
 			{
-				Module module = new Module(this.mode, this.resourcePrefix, modules[i]);
+				Module module = new Module(this, this.mode, this.resourcePrefix, modules[i]);
 
 				ModuleInfo mi = new ModuleInfo();
 				mi.Module = module;
@@ -202,6 +203,7 @@ namespace Epsitec.Common.Designer
 			this.ribbonMain.Visibility = true;
 			this.ribbonMain.Items.Add(new Ribbons.File());
 			this.ribbonMain.Items.Add(new Ribbons.Clipboard());
+			this.ribbonMain.Items.Add(new Ribbons.Culture());
 			this.ribbonMain.Items.Add(new Ribbons.Access());
 			this.ribbonMain.Items.Add(new Ribbons.Select());
 
@@ -449,6 +451,20 @@ namespace Epsitec.Common.Designer
 			this.CurrentModule.Modifier.ActiveViewer.DoWarning(e.CommandName);
 		}
 
+		[Command("NewCulture")]
+		void CommandNewCulture(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			if ( !this.IsCurrentModule )  return;
+			this.CurrentModule.Modifier.ActiveViewer.DoNewCulture();
+		}
+
+		[Command("DeleteCulture")]
+		void CommandDeleteCulture(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			if ( !this.IsCurrentModule )  return;
+			this.CurrentModule.Modifier.ActiveViewer.DoDeleteCulture();
+		}
+
 		[Command("Delete")]
 		void CommandDelete(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
@@ -524,6 +540,8 @@ namespace Epsitec.Common.Designer
 			this.modificationNextState = this.CreateCommandState("ModificationNext");
 			this.warningPrevState = this.CreateCommandState("WarningPrev");
 			this.warningNextState = this.CreateCommandState("WarningNext");
+			this.newCultureState = this.CreateCommandState("NewCulture");
+			this.deleteCultureState = this.CreateCommandState("DeleteCulture");
 		}
 
 		protected CommandState CreateCommandState(string command, params Widgets.Shortcut[] shortcuts)
@@ -710,6 +728,14 @@ namespace Epsitec.Common.Designer
 		#endregion
 
 
+		public string DlgNewCulture()
+		{
+			//	Ouvre le dialogue pour choisir la culture à créer.
+			this.dlgNewCulture.Show();
+			return this.dlgNewCulture.Culture;
+		}
+
+
 		private void HandleDlgClosed(object sender)
 		{
 			//	Un dialogue a été fermé.
@@ -778,6 +804,7 @@ namespace Epsitec.Common.Designer
 		protected Dialogs.Glyphs				dlgGlyphs;
 		protected Dialogs.Filter				dlgFilter;
 		protected Dialogs.Search				dlgSearch;
+		protected Dialogs.NewCulture			dlgNewCulture;
 
 		protected string						resourcePrefix;
 		protected List<ModuleInfo>				moduleInfoList;
@@ -812,5 +839,7 @@ namespace Epsitec.Common.Designer
 		protected CommandState					modificationNextState;
 		protected CommandState					warningPrevState;
 		protected CommandState					warningNextState;
+		protected CommandState					newCultureState;
+		protected CommandState					deleteCultureState;
 	}
 }
