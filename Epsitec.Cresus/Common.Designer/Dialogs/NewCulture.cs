@@ -24,7 +24,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.window.MakeFixedSizeWindow();
 				this.window.Root.WindowStyles = WindowStyles.None;
 				this.window.PreventAutoClose = true;
-				this.WindowInit("NewCulture", 257, 140, true);
+				this.WindowInit("NewCulture", 172, 160, true);
 				this.window.Text = Res.Strings.Dialog.NewCulture.Title;
 				this.window.Owner = this.parentWindow;
 
@@ -34,13 +34,13 @@ namespace Epsitec.Common.Designer.Dialogs
 				label.Text = Res.Strings.Dialog.NewCulture.Label;
 				label.Alignment = ContentAlignment.MiddleLeft;
 				label.Width = 40;
-				label.Anchor = AnchorStyles.TopLeft;
-				label.Margins = new Margins(6, 0, 6+3, 0);
+				label.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+				label.Margins = new Margins(6, 6, 6+3, 0);
 
 				this.cultureWidget = new ScrollList(this.window.Root);
 				this.cultureWidget.Height = 90;
 				this.cultureWidget.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-				this.cultureWidget.Margins = new Margins(6+40, 6, 6, 0);
+				this.cultureWidget.Margins = new Margins(6, 6, 6+22, 0);
 				this.cultureWidget.TabIndex = tabIndex++;
 
 				//	Boutons de fermeture.
@@ -56,7 +56,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 				Button buttonClose = new Button(this.window.Root);
 				buttonClose.Width = 75;
-				buttonClose.Text = Res.Strings.Dialog.Button.Close;
+				buttonClose.Text = Res.Strings.Dialog.Button.Cancel;
 				buttonClose.Anchor = AnchorStyles.BottomLeft;
 				buttonClose.Margins = new Margins(6+75+10, 0, 0, 6);
 				buttonClose.Clicked += new MessageEventHandler(this.HandleButtonCloseClicked);
@@ -64,7 +64,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				buttonClose.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			}
 
-			this.UpdateCombo();
+			this.UpdateList();
 
 			this.window.ShowDialog();
 		}
@@ -80,13 +80,16 @@ namespace Epsitec.Common.Designer.Dialogs
 		}
 
 
-		protected void UpdateCombo()
+		protected void UpdateList()
 		{
+			//	Met à jour la ScrollList des cultures, en enlevant celles qui font déjà
+			//	partie du bundle.
 			//?string[] cultures = { "fr", "en", "de", "it", "es", "pt", "da", "sv", "no", "ru", "cs" };
 			string[] cultures = { "fr", "en", "de", "it", "es", "pt" };
 
 			Module module = this.mainWindow.CurrentModule;
 
+			//	Construit la liste des cultures inexistantes dans le bundle.
 			this.cultureList = new List<string>();
 			foreach (string name in cultures)
 			{
@@ -96,15 +99,16 @@ namespace Epsitec.Common.Designer.Dialogs
 				}
 			}
 
+			//	Remplit la ScrollList.
 			this.cultureWidget.Items.Clear();
 			foreach (string name in this.cultureList)
 			{
 				System.Globalization.CultureInfo culture = new System.Globalization.CultureInfo(name);
 
-				string text = string.Format("{0} / {1}", culture.DisplayName, culture.NativeName);
+				string text = string.Format("<b>{0}</b> / {1}", culture.DisplayName, culture.NativeName);
 				this.cultureWidget.Items.Add(text);
 			}
-			this.cultureWidget.SelectedIndex = 0;
+			this.cultureWidget.SelectedIndex = 0;  // sélectionne en priorité la première culture de la liste
 		}
 
 
