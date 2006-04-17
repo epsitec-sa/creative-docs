@@ -468,6 +468,27 @@ namespace Epsitec.Common.Designer
 			this.module.Modifier.IsDirty = true;
 		}
 
+		public void DoNewCulture()
+		{
+			//	Crée une nouvelle culture.
+			string name = this.module.MainWindow.DlgNewCulture();
+			if ( name == null )  return;
+			ResourceBundle bundle = this.module.NewBundle(name);
+			this.UpdateCultures();
+
+			bool iic = this.ignoreChange;
+			this.ignoreChange = false;
+			this.secondaryCulture.Text = bundle.Culture.NativeName;
+			this.ignoreChange = iic;
+
+			this.HandleSecondaryCultureComboClosed(null);
+		}
+
+		public void DoDeleteCulture()
+		{
+			//	Supprime la culture courante.
+		}
+
 		public void DoClipboard(string name)
 		{
 			//	Effectue une action avec le bloc-notes.
@@ -566,7 +587,6 @@ namespace Epsitec.Common.Designer
 					}
 				}
 			}
-			this.secondaryCulture.Items.Add(Res.Strings.Viewer.NewCulture);
 
 			bool iic = this.ignoreChange;
 			this.ignoreChange = true;
@@ -702,7 +722,7 @@ namespace Epsitec.Common.Designer
 			Rectangle rect;
 
 			int lines = System.Math.Max((int)box.Height/50, 4);
-			int editLines = lines*3/4;
+			int editLines = lines*2/3;
 			int aboutLines = lines-editLines;
 			double editHeight = editLines*13+8;
 			double aboutHeight = aboutLines*13+8;
@@ -710,12 +730,12 @@ namespace Epsitec.Common.Designer
 			//	Il faut obligatoirement s'occuper d'abord de this.array, puisque les autres
 			//	widgets dépendent des largeurs relatives de ses colonnes.
 			rect = box;
-			rect.Top -= aboutHeight+5;
+			rect.Top -= 20+5;
 			rect.Bottom += editHeight+5+aboutHeight+5;
 			this.array.Bounds = rect;
 
 			rect = box;
-			rect.Bottom = rect.Top-aboutHeight;
+			rect.Bottom = rect.Top-20;
 			rect.Left += this.array.GetColumnsAbsoluteWidth(0);
 			rect.Width = this.array.GetColumnsAbsoluteWidth(1)+1;
 			this.primaryCulture.Bounds = rect;
@@ -786,18 +806,6 @@ namespace Epsitec.Common.Designer
 		{
 			//	Changement de la culture secondaire.
 			if ( this.ignoreChange )  return;
-
-			if (this.secondaryCulture.Text == Res.Strings.Viewer.NewCulture)
-			{
-				string name = "de";
-				ResourceBundle bundle = this.module.NewBundle(name);
-				this.UpdateCultures();
-
-				bool iic = this.ignoreChange;
-				this.ignoreChange = false;
-				this.secondaryCulture.Text = bundle.Culture.NativeName;
-				this.ignoreChange = iic;
-			}
 
 			ResourceBundleCollection bundles = this.module.Bundles;
 			for (int b=0; b<bundles.Count; b++)

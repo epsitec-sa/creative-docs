@@ -9,8 +9,9 @@ namespace Epsitec.Common.Designer
 	/// </summary>
 	public class Module
 	{
-		public Module(DesignerMode mode, string resourcePrefix, string moduleName)
+		public Module(MainWindow mainWindow, DesignerMode mode, string resourcePrefix, string moduleName)
 		{
+			this.mainWindow = mainWindow;
 			this.mode = mode;
 			this.name = moduleName;
 
@@ -29,6 +30,14 @@ namespace Epsitec.Common.Designer
 			this.modifier.Dispose();
 		}
 
+
+		public MainWindow MainWindow
+		{
+			get
+			{
+				return this.mainWindow;
+			}
+		}
 
 		public DesignerMode Mode
 		{
@@ -80,11 +89,22 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
+		public bool IsExistingCulture(string name)
+		{
+			//	Indique si une culture donnée existe.
+			for (int b=0; b<this.bundles.Count; b++)
+			{
+				ResourceBundle bundle = this.bundles[b];
+				if ( name == bundle.Culture.Name )  return true;
+			}
+			return false;
+		}
+
 		public ResourceBundle NewBundle(string name)
 		{
 			//	Crée un nouveau bundle pour une culture donnée.
 			string prefix = this.resourceManager.ActivePrefix;
-			System.Globalization.CultureInfo culture = new System.Globalization.CultureInfo("de");
+			System.Globalization.CultureInfo culture = new System.Globalization.CultureInfo(name);
 			ResourceBundle bundle = ResourceBundle.Create (this.resourceManager, prefix, this.bundles.Name, ResourceLevel.Localized, culture);
 
 			//	Pour l'instant, l'éditeur ne sait gérer que des bundles de type "String",
@@ -106,6 +126,7 @@ namespace Epsitec.Common.Designer
 		}
 
 
+		protected MainWindow				mainWindow;
 		protected DesignerMode				mode;
 		protected string					name;
 		protected ResourceManager			resourceManager;
