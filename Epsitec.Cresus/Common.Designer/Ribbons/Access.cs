@@ -28,7 +28,7 @@ namespace Epsitec.Common.Designer.Ribbons
 			this.buttonModificationPrev  = this.CreateIconButton("ModificationPrev");
 			this.buttonModificationNext  = this.CreateIconButton("ModificationNext");
 			this.buttonModificationAll   = this.CreateIconButton("ModificationAll");
-			this.buttonModificationClear = this.CreateIconButton("ModificationClear");
+			this.buttonModificationClear = this.CreateIconButton("ModificationClear", "Large");
 
 			this.UpdateClientGeometry();
 		}
@@ -47,7 +47,7 @@ namespace Epsitec.Common.Designer.Ribbons
 			//	Retourne la largeur standard.
 			get
 			{
-				return 8 + 22*1.5*2 + 4 + 22*2 + this.separatorWidth + 22*2;
+				return 8 + 22*1.5*2 + 4 + 22*2 + this.separatorWidth + 22*2 + 4 + 22*1.5*1;
 			}
 		}
 
@@ -74,6 +74,8 @@ namespace Epsitec.Common.Designer.Ribbons
 			this.buttonFilter.Bounds = rect;
 			rect.Offset(dx*1.5, 0);
 			this.buttonSearch.Bounds = rect;
+			rect.Offset(dx*1.5+8+dx*4+this.separatorWidth, 0);
+			this.buttonModificationClear.Bounds = rect;
 
 			rect = this.UsefulZone;
 			rect.Width  = dx;
@@ -96,8 +98,6 @@ namespace Epsitec.Common.Designer.Ribbons
 			this.buttonAccessNext.Bounds = rect;
 			rect.Offset(dx+this.separatorWidth, 0);
 			this.buttonModificationNext.Bounds = rect;
-			rect.Offset(dx, 0);
-			this.buttonModificationClear.Bounds = rect;
 		}
 
 
