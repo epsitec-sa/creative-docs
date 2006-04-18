@@ -434,6 +434,7 @@ namespace Epsitec.Common.Designer
 			this.CurrentModule.Modifier.ActiveViewer.DoAccess(e.CommandName);
 		}
 
+		[Command("ModificationAll")]
 		[Command("ModificationClear")]
 		[Command("ModificationPrev")]
 		[Command("ModificationNext")]
@@ -535,6 +536,7 @@ namespace Epsitec.Common.Designer
 			this.accessPrevState = this.CreateCommandState("AccessPrev");
 			this.accessNextState = this.CreateCommandState("AccessNext");
 			this.accessLastState = this.CreateCommandState("AccessLast");
+			this.modificationAllState = this.CreateCommandState("ModificationAll");
 			this.modificationClearState = this.CreateCommandState("ModificationClear");
 			this.modificationPrevState = this.CreateCommandState("ModificationPrev");
 			this.modificationNextState = this.CreateCommandState("ModificationNext");
@@ -867,6 +869,7 @@ namespace Epsitec.Common.Designer
 		protected CommandState					accessPrevState;
 		protected CommandState					accessNextState;
 		protected CommandState					accessLastState;
+		protected CommandState					modificationAllState;
 		protected CommandState					modificationClearState;
 		protected CommandState					modificationPrevState;
 		protected CommandState					modificationNextState;

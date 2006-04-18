@@ -126,6 +126,7 @@
     <EmbeddedResource Include="Images\WarningNext.icon" />
     <EmbeddedResource Include="Images\NewCulture.icon" />
     <EmbeddedResource Include="Images\DeleteCulture.icon" />
+    <EmbeddedResource Include="Images\ModificationAll.icon" />
     <None Include="Resources\Designer\Strings.00.resource" />
     <None Include="Resources\Designer\Strings.en.resource" />
   </ItemGroup>

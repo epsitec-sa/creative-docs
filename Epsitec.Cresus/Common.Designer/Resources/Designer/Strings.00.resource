@@ -51,7 +51,8 @@
   <data name="Action.WarningNext">Ressource manquante suivante</data>
   <data name="Action.ModificationPrev">Ressource modifiée précédente</data>
   <data name="Action.ModificationNext">Ressource modifiée suivante</data>
-  <data name="Action.ModificationClear">Annuler la modification</data>
+  <data name="Action.ModificationAll">Toutes les ressources secondaires devront être modifiées</data>
+  <data name="Action.ModificationClear">Modification de la ressource secondaire terminée</data>
 
   <data name="Dialog.Button.Close">Fermer</data>
   <data name="Dialog.Button.OK">D'accord</data>

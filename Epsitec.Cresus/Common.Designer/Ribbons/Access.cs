@@ -28,8 +28,9 @@ namespace Epsitec.Common.Designer.Ribbons
 			this.buttonWarningPrev = this.CreateIconButton("WarningPrev");
 			this.buttonWarningNext = this.CreateIconButton("WarningNext");
 
-			this.buttonModificationPrev = this.CreateIconButton("ModificationPrev");
-			this.buttonModificationNext = this.CreateIconButton("ModificationNext");
+			this.buttonModificationPrev  = this.CreateIconButton("ModificationPrev");
+			this.buttonModificationNext  = this.CreateIconButton("ModificationNext");
+			this.buttonModificationAll   = this.CreateIconButton("ModificationAll");
 			this.buttonModificationClear = this.CreateIconButton("ModificationClear");
 
 			this.UpdateClientGeometry();
@@ -89,7 +90,7 @@ namespace Epsitec.Common.Designer.Ribbons
 			rect.Offset(dx, 0);
 			this.buttonModificationPrev.Bounds = rect;
 			rect.Offset(dx, 0);
-			this.buttonModificationClear.Bounds = rect;
+			this.buttonModificationAll.Bounds = rect;
 
 			rect = this.UsefulZone;
 			rect.Width  = dx;
@@ -102,6 +103,8 @@ namespace Epsitec.Common.Designer.Ribbons
 			this.buttonWarningNext.Bounds = rect;
 			rect.Offset(dx, 0);
 			this.buttonModificationNext.Bounds = rect;
+			rect.Offset(dx, 0);
+			this.buttonModificationClear.Bounds = rect;
 		}
 
 
@@ -116,6 +119,7 @@ namespace Epsitec.Common.Designer.Ribbons
 		protected IconButton				buttonWarningNext;
 		protected IconButton				buttonModificationPrev;
 		protected IconButton				buttonModificationNext;
+		protected IconButton				buttonModificationAll;
 		protected IconButton				buttonModificationClear;
 	}
 }
