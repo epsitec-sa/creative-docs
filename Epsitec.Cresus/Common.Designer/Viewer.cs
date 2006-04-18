@@ -279,27 +279,25 @@ namespace Epsitec.Common.Designer
 			//	Change la ressource modifiée visible.
 			int sel = this.array.SelectedRow;
 
-			if (name == "ModificationClear")
+			if (name == "ModificationAll")
+			{
+				if (sel == -1)  return;
+				string label = this.labelsIndex[sel];
+				if (this.primaryBundle[label] == null || this.primaryBundle[label].Name == null)  return;
+
+				this.primaryBundle[label].SetModificationId(this.primaryBundle[label].ModificationId+1);
+				this.UpdateArray();
+				this.module.Modifier.IsDirty = true;
+			}
+			else if (name == "ModificationClear")
 			{
 				if (sel == -1)  return;
 				string label = this.labelsIndex[sel];
 				if (this.secondaryBundle[label] == null || this.secondaryBundle[label].Name == null)  return;
 
-				if (this.primaryBundle[label].ModificationId < this.secondaryBundle[label].ModificationId)
-				{
-					this.primaryBundle[label].SetModificationId(this.secondaryBundle[label].ModificationId);
-					this.UpdateArray();
-					this.module.Modifier.IsDirty = true;
-				}
-
-				if (this.secondaryBundle[label].ModificationId < this.primaryBundle[label].ModificationId)
-				{
-					this.secondaryBundle[label].SetModificationId(this.primaryBundle[label].ModificationId);
-					this.UpdateArray();
-					this.module.Modifier.IsDirty = true;
-				}
-
-				this.module.Modifier.IdAlreadyChangedRemove(label);
+				this.secondaryBundle[label].SetModificationId(this.primaryBundle[label].ModificationId);
+				this.UpdateArray();
+				this.module.Modifier.IsDirty = true;
 			}
 			else
 			{
@@ -328,12 +326,6 @@ namespace Epsitec.Common.Designer
 					string label  = this.labelsIndex[sel];
 					int primary   = this.primaryBundle[label].ModificationId;
 					int secondary = this.secondaryBundle[label].ModificationId;
-
-					if (primary < secondary)
-					{
-						column = 1;
-						break;
-					}
 
 					if (primary > secondary)
 					{
@@ -792,24 +784,6 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		protected void UpdateModificationId(ResourceBundle.Field primary, ResourceBundle.Field secondary, string name)
-		{
-			//	Gestion des fonds jaunes lorsqu'un texte est modifié.
-			if (primary.ModificationId == secondary.ModificationId)
-			{
-				if (!this.module.Modifier.IdAlreadyChangedExist(name))
-				{
-					primary.SetModificationId(secondary.ModificationId+1);
-					this.module.Modifier.IdAlreadyChangedAdd(name);
-				}
-			}
-			else if (primary.ModificationId < secondary.ModificationId)
-			{
-				primary.SetModificationId(secondary.ModificationId);
-				this.module.Modifier.IdAlreadyChangedAdd(name);
-			}
-		}
-
 		
 		void HandleSecondaryCultureComboClosed(object sender)
 		{
@@ -933,7 +907,6 @@ namespace Epsitec.Common.Designer
 			if (edit == this.primaryEdit)
 			{
 				this.primaryBundle[label].SetStringValue(text);
-				this.UpdateModificationId(this.primaryBundle[label], this.secondaryBundle[label], label);
 				this.UpdateArrayField(1, sel, this.primaryBundle[label], this.secondaryBundle[label]);
 				this.UpdateArrayField(2, sel, this.secondaryBundle[label], this.primaryBundle[label]);
 			}
@@ -942,7 +915,6 @@ namespace Epsitec.Common.Designer
 			{
 				this.module.Modifier.CreateIfNecessary(this.secondaryBundle, label, this.primaryBundle[label].ModificationId);
 				this.secondaryBundle[label].SetStringValue(text);
-				this.UpdateModificationId(this.secondaryBundle[label], this.primaryBundle[label], label);
 				this.UpdateArrayField(1, sel, this.primaryBundle[label], this.secondaryBundle[label]);
 				this.UpdateArrayField(2, sel, this.secondaryBundle[label], this.primaryBundle[label]);
 			}
