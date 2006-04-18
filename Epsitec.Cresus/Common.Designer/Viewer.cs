@@ -778,10 +778,12 @@ namespace Epsitec.Common.Designer
 			int count = this.labelsIndex.Count;
 			bool build = (this.module.Mode == DesignerMode.Build);
 
+			bool all = false;
 			bool modified = false;
 			if (sel != -1)
 			{
 				string label = this.labelsIndex[sel];
+				all = this.module.Modifier.IsModificationAll(label);
 				if (this.secondaryBundle[label] != null && this.secondaryBundle[label].Name != null)
 				{
 					modified = (this.primaryBundle[label].ModificationId > this.secondaryBundle[label].ModificationId);
@@ -802,7 +804,7 @@ namespace Epsitec.Common.Designer
 			this.GetCommandState("AccessLast").Enable = (sel != -1 && sel < count-1);
 			this.GetCommandState("AccessNext").Enable = (sel != -1 && sel < count-1);
 
-			this.GetCommandState("ModificationAll").Enable = (sel != -1);
+			this.GetCommandState("ModificationAll").Enable = (sel != -1 && all);
 			this.GetCommandState("ModificationClear").Enable = (sel != -1 && modified);
 
 			this.GetCommandState("Delete").Enable = (sel != -1 && build);

@@ -136,6 +136,26 @@ namespace Epsitec.Common.Designer
 			this.IsDirty = false;
 		}
 
+		public bool IsModificationAll(string name)
+		{
+			//	Donne l'état de la commande ModificationAll.
+			ResourceBundleCollection bundles = this.module.Bundles;
+			ResourceBundle defaultBundle = bundles[ResourceLevel.Default];
+			int id = defaultBundle[name].ModificationId;
+			int count = 0;
+			foreach (ResourceBundle bundle in bundles)
+			{
+				if (bundle != defaultBundle)
+				{
+					if (bundle[name].ModificationId < id)
+					{
+						count ++;
+					}
+				}
+			}
+			return (count != bundles.Count-1);
+		}
+
 		public void CreateIfNecessary(ResourceBundle bundle, string name, int id)
 		{
 			//	Crée une ressource secondaire, si nécessaire.
