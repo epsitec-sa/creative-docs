@@ -11,6 +11,8 @@ namespace Epsitec.Common.Designer
 	{
 		public Module(MainWindow mainWindow, DesignerMode mode, string resourcePrefix, string moduleName)
 		{
+			this.UniqueIDCreate();
+
 			this.mainWindow = mainWindow;
 			this.mode = mode;
 			this.name = moduleName;
@@ -124,6 +126,27 @@ namespace Epsitec.Common.Designer
 			this.bundles = new ResourceBundleCollection(this.resourceManager);
 			this.bundles.LoadBundles(this.resourceManager.ActivePrefix, this.resourceManager.GetBundleIds(ids[0], ResourceLevel.All));
 		}
+
+
+		#region UniqueID
+		protected void UniqueIDCreate()
+		{
+			//	Assigne un numéro unique à ce module.
+			this.uniqueID = Module.uniqueIDGenerator++;
+		}
+
+		public string UniqueName
+		{
+			//	Retourne un nom unique pour ce module.
+			get
+			{
+				return string.Concat("Module-", this.uniqueID.ToString(System.Globalization.CultureInfo.InvariantCulture));
+			}
+		}
+
+		protected static int				uniqueIDGenerator = 0;
+		protected int						uniqueID;
+		#endregion
 
 
 		protected MainWindow				mainWindow;

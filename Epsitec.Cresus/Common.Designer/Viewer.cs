@@ -23,12 +23,6 @@ namespace Epsitec.Common.Designer
 			this.primaryCulture.TabIndex = tabIndex++;
 			this.primaryCulture.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
-			this.secondaryCulture = new TextFieldCombo(this);
-			this.secondaryCulture.IsReadOnly = true;
-			this.secondaryCulture.ComboClosed += new EventHandler(this.HandleSecondaryCultureComboClosed);
-			this.secondaryCulture.TabIndex = tabIndex++;
-			this.secondaryCulture.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-
 			this.array = new MyWidgets.StringArray(this);
 			this.array.Columns = 3;
 			this.array.SetColumnsRelativeWidth(0, 0.30);
@@ -97,8 +91,6 @@ namespace Epsitec.Common.Designer
 		{
 			if (disposing)
 			{
-				this.secondaryCulture.ComboClosed -= new EventHandler(this.HandleSecondaryCultureComboClosed);
-
 				this.array.ColumnsWidthChanged -= new EventHandler(this.HandleArrayColumnsWidthChanged);
 				this.array.CellsQuantityChanged -= new EventHandler(this.HandleArrayCellsQuantityChanged);
 				this.array.CellsContentChanged -= new EventHandler(this.HandleArrayCellsContentChanged);
@@ -486,13 +478,9 @@ namespace Epsitec.Common.Designer
 			ResourceBundle bundle = this.module.NewCulture(name);
 
 			this.UpdateCultures();
-
-			bool iic = this.ignoreChange;
-			this.ignoreChange = false;
-			this.secondaryCulture.Text = bundle.Culture.NativeName;
-			this.ignoreChange = iic;
-
-			this.HandleSecondaryCultureComboClosed(null);
+			this.UpdateSelectedCulture(bundle.Culture.NativeName);
+			this.UpdateArray();
+			this.UpdateClientGeometry();
 		}
 
 		public void DoDeleteCulture()
@@ -505,7 +493,12 @@ namespace Epsitec.Common.Designer
 			this.module.DeleteCulture(this.secondaryBundle);
 
 			this.UpdateCultures();
-			this.HandleSecondaryCultureComboClosed(null);
+			if (this.secondaryBundle != null)
+			{
+				this.UpdateSelectedCulture(this.secondaryBundle.Culture.NativeName);
+			}
+			this.UpdateArray();
+			this.UpdateClientGeometry();
 		}
 
 		public void DoClipboard(string name)
@@ -590,37 +583,84 @@ namespace Epsitec.Common.Designer
 			//	Met à jour les widgets pour les cultures.
 			ResourceBundleCollection bundles = this.module.Bundles;
 
+			if (this.secondaryCultures != null)
+			{
+				foreach (IconButtonMark button in this.secondaryCultures)
+				{
+					button.Clicked -= new MessageEventHandler(this.HandleSecondaryCultureClicked);
+					button.Dispose();
+				}
+				this.secondaryCultures = null;
+			}
+
 			this.primaryBundle = bundles[ResourceLevel.Default];
 			this.primaryCulture.Text = string.Format(Res.Strings.Viewer.Reference, this.primaryBundle.Culture.NativeName);
 
 			this.secondaryBundle = null;
-			this.secondaryCulture.Items.Clear();
-			for ( int b=0 ; b<bundles.Count ; b++ )
+
+			if (bundles.Count-1 > 0)
 			{
-				ResourceBundle bundle = bundles[b];
-				if ( bundle != this.primaryBundle )
+				this.secondaryCultures = new IconButtonMark[bundles.Count-1];
+				int i = 0;
+				for (int b=0; b<bundles.Count; b++)
 				{
-					this.secondaryCulture.Items.Add(bundle.Culture.NativeName);
-					if ( this.secondaryBundle == null )
+					ResourceBundle bundle = bundles[b];
+					if (bundle != this.primaryBundle)
 					{
-						this.secondaryBundle = bundle;
+						this.secondaryCultures[i] = new IconButtonMark(this);
+						this.secondaryCultures[i].ButtonStyle = ButtonStyle.ActivableIcon;
+						this.secondaryCultures[i].SiteMark = SiteMark.OnBottom;
+						this.secondaryCultures[i].MarkDimension = 5;
+						this.secondaryCultures[i].Name = bundle.Culture.NativeName;
+						this.secondaryCultures[i].Text = bundle.Culture.NativeName;
+						this.secondaryCultures[i].Clicked += new MessageEventHandler(this.HandleSecondaryCultureClicked);
+
+						if (this.secondaryBundle == null)
+						{
+							this.secondaryBundle = bundle;
+						}
+
+						i++;
 					}
 				}
 			}
 
-			bool iic = this.ignoreChange;
-			this.ignoreChange = true;
-			if (this.secondaryBundle == null)
+			if (this.secondaryBundle != null)
 			{
-				this.secondaryCulture.Text = "";
+				this.UpdateSelectedCulture(this.secondaryBundle.Culture.NativeName);
 			}
-			else
-			{
-				this.secondaryCulture.Text = this.secondaryBundle.Culture.NativeName;
-			}
-			this.ignoreChange = iic;
 
 			this.UpdateLabelsIndex("", false, false);
+		}
+
+		protected void UpdateSelectedCulture(string name)
+		{
+			//	Sélectionne le widget correspondant à la culture secondaire.
+			ResourceBundleCollection bundles = this.module.Bundles;
+
+			this.secondaryBundle = null;
+			for (int b=0; b<bundles.Count; b++)
+			{
+				ResourceBundle bundle = bundles[b];
+				if (bundle.Culture.NativeName == name)
+				{
+					this.secondaryBundle = bundle;
+				}
+			}
+
+			if (this.secondaryCultures == null)  return;
+
+			for (int i=0; i<this.secondaryCultures.Length; i++)
+			{
+				if (this.secondaryCultures[i].Name == name)
+				{
+					this.secondaryCultures[i].ActiveState = ActiveState.Yes;
+				}
+				else
+				{
+					this.secondaryCultures[i].ActiveState = ActiveState.No;
+				}
+			}
 		}
 
 		protected void UpdateLabelsIndex(string filter, bool isBegin, bool isCase)
@@ -788,24 +828,41 @@ namespace Epsitec.Common.Designer
 			int lines = System.Math.Max((int)box.Height/50, 4);
 			int editLines = lines*2/3;
 			int aboutLines = lines-editLines;
+			double cultureHeight = 20;
 			double editHeight = editLines*13+8;
 			double aboutHeight = aboutLines*13+8;
 
 			//	Il faut obligatoirement s'occuper d'abord de this.array, puisque les autres
 			//	widgets dépendent des largeurs relatives de ses colonnes.
 			rect = box;
-			rect.Top -= 20+5;
+			rect.Top -= cultureHeight+5;
 			rect.Bottom += editHeight+5+aboutHeight+5;
 			this.array.Bounds = rect;
 
 			rect = box;
-			rect.Bottom = rect.Top-20;
+			rect.Bottom = rect.Top-cultureHeight;
 			rect.Left += this.array.GetColumnsAbsoluteWidth(0);
 			rect.Width = this.array.GetColumnsAbsoluteWidth(1)+1;
 			this.primaryCulture.Bounds = rect;
-			rect.Left = rect.Right-1;
-			rect.Width = this.array.GetColumnsAbsoluteWidth(2);
-			this.secondaryCulture.Bounds = rect;
+
+			if (this.secondaryCultures != null)
+			{
+				rect.Left = rect.Right-1;
+				rect.Width = this.array.GetColumnsAbsoluteWidth(2);
+				rect.Bottom -= 5;
+				double w = System.Math.Floor(rect.Width/this.secondaryCultures.Length);
+				for (int i=0; i<this.secondaryCultures.Length; i++)
+				{
+					Rectangle r = rect;
+					r.Left += w*i;
+					r.Width = w;
+					if (i == this.secondaryCultures.Length-1)
+					{
+						r.Right = rect.Right;
+					}
+					this.secondaryCultures[i].Bounds = r;
+				}
+			}
 
 			rect = box;
 			rect.Top = rect.Bottom+editHeight+aboutHeight+5;
@@ -848,24 +905,12 @@ namespace Epsitec.Common.Designer
 		}
 
 		
-		void HandleSecondaryCultureComboClosed(object sender)
+		void HandleSecondaryCultureClicked(object sender, MessageEventArgs e)
 		{
-			//	Changement de la culture secondaire.
-			if ( this.ignoreChange )  return;
-
-			ResourceBundleCollection bundles = this.module.Bundles;
-			for (int b=0; b<bundles.Count; b++)
-			{
-				ResourceBundle bundle = bundles[b];
-
-				if (bundle.Culture.NativeName == this.secondaryCulture.Text)
-				{
-					this.secondaryBundle = bundle;
-					this.UpdateArray();
-					this.HandleArraySelectedRowChanged(null);
-					break;
-				}
-			}
+			IconButtonMark button = sender as IconButtonMark;
+			this.UpdateSelectedCulture(button.Name);
+			this.UpdateArray();
+			this.HandleArraySelectedRowChanged(null);
 		}
 
 		void HandleArrayColumnsWidthChanged(object sender)
@@ -1013,7 +1058,7 @@ namespace Epsitec.Common.Designer
 		protected bool						ignoreChange = false;
 
 		protected TextField					primaryCulture;
-		protected TextFieldCombo			secondaryCulture;
+		protected IconButtonMark[]			secondaryCultures;
 		protected ResourceBundle			primaryBundle;
 		protected ResourceBundle			secondaryBundle;
 		protected MyWidgets.StringArray		array;
