@@ -47,7 +47,6 @@
     <Compile Include="Module.cs" />
     <Compile Include="MyWidgets\StringArray.cs" />
     <Compile Include="MyWidgets\StringList.cs" />
-    <Compile Include="Notifier.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Res.cs" />
     <Compile Include="Ribbons\Abstract.cs" />
