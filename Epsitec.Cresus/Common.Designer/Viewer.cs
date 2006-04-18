@@ -265,7 +265,7 @@ namespace Epsitec.Common.Designer
 			sel = this.labelsIndex.IndexOf(label);
 			this.array.SelectedRow = sel;
 			this.array.ShowSelectedRow();
-			this.module.Notifier.NotifyInfoAccessChanged();
+			this.UpdateCommands();
 		}
 
 		public void DoAccess(string name)
@@ -280,7 +280,7 @@ namespace Epsitec.Common.Designer
 
 			this.array.SelectedRow = sel;
 			this.array.ShowSelectedRow();
-			this.module.Notifier.NotifyInfoAccessChanged();
+			this.UpdateCommands();
 		}
 
 		public void DoModification(string name)
@@ -434,7 +434,7 @@ namespace Epsitec.Common.Designer
 			sel = System.Math.Min(sel, this.labelsIndex.Count-1);
 			this.array.SelectedRow = sel;
 			this.array.ShowSelectedRow();
-			this.module.Notifier.NotifyInfoAccessChanged();
+			this.UpdateCommands();
 			this.module.Modifier.IsDirty = true;
 		}
 
@@ -454,7 +454,7 @@ namespace Epsitec.Common.Designer
 
 			this.array.SelectedRow = newSel;
 			this.array.ShowSelectedRow();
-			this.module.Notifier.NotifyInfoAccessChanged();
+			this.UpdateCommands();
 			this.module.Modifier.IsDirty = true;
 		}
 
@@ -474,7 +474,7 @@ namespace Epsitec.Common.Designer
 
 			this.array.SelectedRow = newSel;
 			this.array.ShowSelectedRow();
-			this.module.Notifier.NotifyInfoAccessChanged();
+			this.UpdateCommands();
 			this.module.Modifier.IsDirty = true;
 		}
 
@@ -551,6 +551,7 @@ namespace Epsitec.Common.Designer
 
 			this.HandleTextChanged(this.currentTextField);
 		}
+
 
 		public string InfoAccessText
 		{
@@ -728,6 +729,50 @@ namespace Epsitec.Common.Designer
 			this.array.SetLineState(column, row, MyWidgets.StringList.CellState.Warning);
 		}
 
+		public void UpdateCommands()
+		{
+			//	Met à jour les commandes en fonction de la ressource sélectionnée.
+			int sel = this.array.SelectedRow;
+			int count = this.labelsIndex.Count;
+			bool build = (this.module.Mode == DesignerMode.Build);
+
+			this.GetCommandState("Save").Enable = this.module.Modifier.IsDirty;
+			this.GetCommandState("SaveAs").Enable = true;
+
+			this.GetCommandState("NewCulture").Enable = true;
+			this.GetCommandState("DeleteCulture").Enable = true;
+
+			this.GetCommandState("Filter").Enable = true;
+			this.GetCommandState("Search").Enable = true;
+
+			this.GetCommandState("AccessFirst").Enable = (sel != -1 && sel > 0);
+			this.GetCommandState("AccessPrev").Enable = (sel != -1 && sel > 0);
+			this.GetCommandState("AccessLast").Enable = (sel != -1 && sel < count-1);
+			this.GetCommandState("AccessNext").Enable = (sel != -1 && sel < count-1);
+
+			this.GetCommandState("ModificationAll").Enable = (sel != -1);
+			this.GetCommandState("ModificationClear").Enable = (sel != -1);
+
+			this.GetCommandState("Delete").Enable = (sel != -1 && build);
+			this.GetCommandState("Duplicate").Enable = (sel != -1 && build);
+
+			this.GetCommandState("Up").Enable = (sel != -1 && sel > 0 && build);
+			this.GetCommandState("Down").Enable = (sel != -1 && sel < count-1 && build);
+
+			this.GetCommandState("FontBold").Enable = (sel != -1);
+			this.GetCommandState("FontItalic").Enable = (sel != -1);
+			this.GetCommandState("FontUnderlined").Enable = (sel != -1);
+			this.GetCommandState("Glyphs").Enable = (sel != -1);
+
+			this.module.MainWindow.UpdateInfoCurrentModule();
+			this.module.MainWindow.UpdateInfoAccess();
+		}
+
+		protected CommandState GetCommandState(string command)
+		{
+			return this.module.MainWindow.GetCommandState(command);
+		}
+
 
 		protected override void UpdateClientGeometry()
 		{
@@ -903,7 +948,7 @@ namespace Epsitec.Common.Designer
 
 			this.ignoreChange = iic;
 
-			this.module.Notifier.NotifyInfoAccessChanged();
+			this.UpdateCommands();
 		}
 
 		void HandleTextChanged(object sender)

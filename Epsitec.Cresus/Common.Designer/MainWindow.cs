@@ -49,7 +49,6 @@ namespace Epsitec.Common.Designer
 				this.window.Root.MinSize = new Size(500, 400);
 				this.window.Text = Res.Strings.Application.Title;
 				this.window.PreventAutoClose = true;
-				this.window.AsyncNotification += new EventHandler(this.HandleWindowAsyncNotification);
 				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowCloseClicked);
 
 				this.commandDispatcher = new CommandDispatcher("ResDesigner", CommandDispatcherLevel.Primary);
@@ -82,7 +81,6 @@ namespace Epsitec.Common.Designer
 				mi.Module = module;
 				this.moduleInfoList.Insert(++this.currentModule, mi);
 				this.CreateModuleLayout();
-				this.ConnectEvents();
 
 				this.bookModules.ActivePage = mi.TabPage;
 			}
@@ -203,8 +201,8 @@ namespace Epsitec.Common.Designer
 			this.ribbonMain.Visibility = true;
 			this.ribbonMain.Items.Add(new Ribbons.File());
 			this.ribbonMain.Items.Add(new Ribbons.Clipboard());
-			this.ribbonMain.Items.Add(new Ribbons.Culture());
 			this.ribbonMain.Items.Add(new Ribbons.Access());
+			this.ribbonMain.Items.Add(new Ribbons.Culture());
 			this.ribbonMain.Items.Add(new Ribbons.Select());
 
 			this.ribbonOper = new RibbonContainer(this.window.Root);
@@ -269,7 +267,7 @@ namespace Epsitec.Common.Designer
 			return field;
 		}
 
-		protected void UpdateInfoCurrentModule()
+		public void UpdateInfoCurrentModule()
 		{
 			System.Text.StringBuilder builder = new System.Text.StringBuilder();
 
@@ -294,75 +292,33 @@ namespace Epsitec.Common.Designer
 			}
 
 			StatusField field = this.info.Items["InfoCurrentModule"] as StatusField;
-			field.Text = builder.ToString();
-			field.Invalidate();
+			string text = builder.ToString();
+
+			if (field.Text != text)
+			{
+				field.Text = text;
+				field.Invalidate();
+			}
 		}
 
-		protected void UpdateInfoAccess()
+		public void UpdateInfoAccess()
 		{
 			string text = "";
 			Module module = this.CurrentModule;
-			if (module != null)
+			if (module != null && module.Modifier.ActiveViewer!= null)
 			{
 				text = module.Modifier.ActiveViewer.InfoAccessText;
 			}
+
 			StatusField field = this.info.Items["InfoAccess"] as StatusField;
-			field.Text = text;
-			field.Invalidate();
+
+			if (field.Text != text)
+			{
+				field.Text = text;
+				field.Invalidate();
+			}
 		}
 		#endregion
-
-
-		protected void ConnectEvents()
-		{
-			//	On s'enregistre auprès du module pour tous les événements.
-			this.CurrentModule.Notifier.ModeChanged       += new SimpleEventHandler(this.HandleModeChanged);
-			this.CurrentModule.Notifier.SaveChanged       += new SimpleEventHandler(this.HandleSaveChanged);
-			this.CurrentModule.Notifier.InfoAccessChanged += new SimpleEventHandler(this.HandleInfoAccessChanged);
-		}
-
-		private void HandleModeChanged()
-		{
-			//	Appelé lorsque le mode de fonctionnement a changé.
-			if (this.IsCurrentModule)
-			{
-				bool build = (this.mode == DesignerMode.Build);
-				this.deleteState.Enable = build;
-				this.duplicateState.Enable = build;
-				this.upState.Enable = build;
-				this.downState.Enable = build;
-			}
-			else
-			{
-				this.deleteState.Enable = false;
-				this.duplicateState.Enable = false;
-				this.upState.Enable = false;
-				this.downState.Enable = false;
-			}
-		}
-
-		private void HandleSaveChanged()
-		{
-			//	Appelé par le module lorsque l'état "enregistrer" a changé.
-			if (this.IsCurrentModule)
-			{
-				bool isDirty = this.CurrentModule.Modifier.IsDirty;
-				this.saveState.Enable = isDirty;
-				this.saveAsState.Enable = isDirty;
-				this.UpdateBookModules();
-			}
-			else
-			{
-				this.saveState.Enable = false;
-				this.saveAsState.Enable = false;
-			}
-		}
-
-		private void HandleInfoAccessChanged()
-		{
-			//	Appelé par le module lorsque l'information sur l'accès a changé.
-			this.UpdateInfoAccess();
-		}
 
 
 		#region Commands manager
@@ -512,6 +468,12 @@ namespace Epsitec.Common.Designer
 			this.CurrentModule.Modifier.ActiveViewer.DoFont(e.CommandName);
 		}
 
+		public CommandState GetCommandState(string command)
+		{
+			//	Retourne le CommandState d'une commande.
+			return this.commandDispatcher.FindCommandState(command);
+		}
+
 		protected void InitCommands()
 		{
 			this.newState = this.CreateCommandState("New", KeyCode.ModifierControl|KeyCode.AlphaN);
@@ -636,13 +598,38 @@ namespace Epsitec.Common.Designer
 				this.bookModules.ActivePage = this.CurrentModuleInfo.TabPage;
 				this.ignoreChange = false;
 
-				this.UpdateInfoCurrentModule();
-				this.CurrentModule.Notifier.NotifyAllChanged();
+				this.CurrentModule.Modifier.ActiveViewer.UpdateCommands();
 			}
 			else
 			{
+				this.saveState.Enable = false;
+				this.saveAsState.Enable = false;
+				this.cutState.Enable = false;
+				this.copyState.Enable = false;
+				this.pasteState.Enable = false;
+				this.newCultureState.Enable = false;
+				this.deleteCultureState.Enable = false;
+				this.filterState.Enable = false;
+				this.searchState.Enable = false;
+				this.accessFirstState.Enable = false;
+				this.accessLastState.Enable = false;
+				this.accessPrevState.Enable = false;
+				this.accessNextState.Enable = false;
+				this.modificationPrevState.Enable = false;
+				this.modificationNextState.Enable = false;
+				this.modificationAllState.Enable = false;
+				this.modificationClearState.Enable = false;
+				this.deleteState.Enable = false;
+				this.duplicateState.Enable = false;
+				this.upState.Enable = false;
+				this.downState.Enable = false;
+				this.fontBoldState.Enable = false;
+				this.fontItalicState.Enable = false;
+				this.fontUnderlinedState.Enable = false;
+				this.glyphsState.Enable = false;
+
 				this.UpdateInfoCurrentModule();
-				this.HandleSaveChanged();
+				this.UpdateInfoAccess();
 			}
 		}
 
@@ -789,12 +776,6 @@ namespace Epsitec.Common.Designer
 		}
 		#endregion
 
-
-		private void HandleWindowAsyncNotification(object sender)
-		{
-			if ( this.currentModule < 0 )  return;
-			this.CurrentModule.Notifier.GenerateEvents();
-		}
 
 		private void HandleWindowCloseClicked(object sender)
 		{

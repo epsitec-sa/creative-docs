@@ -22,7 +22,6 @@ namespace Epsitec.Common.Designer
 			this.UpdateBundles();
 
 			this.modifier = new Modifier(this);
-			this.notifier = new Notifier(this);
 		}
 
 		public void Dispose()
@@ -56,13 +55,6 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		public Notifier Notifier
-		{
-			get
-			{
-				return this.notifier;
-			}
-		}
 
 		public string Name
 		{
@@ -140,6 +132,5 @@ namespace Epsitec.Common.Designer
 		protected ResourceManager			resourceManager;
 		protected ResourceBundleCollection	bundles;
 		protected Modifier					modifier;
-		protected Notifier					notifier;
 	}
 }

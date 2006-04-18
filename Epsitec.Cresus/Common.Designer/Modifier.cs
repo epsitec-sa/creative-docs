@@ -34,7 +34,7 @@ namespace Epsitec.Common.Designer
 				if (this.isDirty != value)
 				{
 					this.isDirty = value;
-					this.module.Notifier.NotifySaveChanged();
+					this.module.MainWindow.GetCommandState("Save").Enable = this.isDirty;
 				}
 			}
 		}
