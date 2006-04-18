@@ -79,10 +79,12 @@ namespace Epsitec.Common.Designer
 
 				if (bundle == defaultBundle)
 				{
+					newField.SetModificationId(1);
 					bundle.Insert(index+1, newField);
 				}
 				else
 				{
+					newField.SetModificationId(0);
 					bundle.Add(newField);
 				}
 			}
@@ -114,6 +116,22 @@ namespace Epsitec.Common.Designer
 			foreach (ResourceBundle bundle in bundles)
 			{
 				bundle[name].SetName(newName);
+			}
+			this.IsDirty = false;
+		}
+
+		public void ModificationClearAll(string name)
+		{
+			//	Considère une ressource comme à jour dans toutes les cultures secondaires du module.
+			ResourceBundleCollection bundles = this.module.Bundles;
+			ResourceBundle defaultBundle = bundles[ResourceLevel.Default];
+			int id = defaultBundle[name].ModificationId;
+			foreach (ResourceBundle bundle in bundles)
+			{
+				if (bundle != defaultBundle)
+				{
+					bundle[name].SetModificationId(id);
+				}
 			}
 			this.IsDirty = false;
 		}
