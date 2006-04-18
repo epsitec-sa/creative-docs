@@ -288,6 +288,7 @@ namespace Epsitec.Common.Designer
 
 				this.primaryBundle[label].SetModificationId(this.primaryBundle[label].ModificationId+1);
 				this.UpdateArray();
+				this.UpdateCommands();
 				this.module.Modifier.IsDirty = true;
 			}
 			else if (name == "ModificationClear")
@@ -298,6 +299,7 @@ namespace Epsitec.Common.Designer
 
 				this.secondaryBundle[label].SetModificationId(this.primaryBundle[label].ModificationId);
 				this.UpdateArray();
+				this.UpdateCommands();
 				this.module.Modifier.IsDirty = true;
 			}
 			else
@@ -776,6 +778,16 @@ namespace Epsitec.Common.Designer
 			int count = this.labelsIndex.Count;
 			bool build = (this.module.Mode == DesignerMode.Build);
 
+			bool modified = false;
+			if (sel != -1)
+			{
+				string label = this.labelsIndex[sel];
+				if (this.secondaryBundle[label] != null && this.secondaryBundle[label].Name != null)
+				{
+					modified = (this.primaryBundle[label].ModificationId > this.secondaryBundle[label].ModificationId);
+				}
+			}
+
 			this.GetCommandState("Save").Enable = this.module.Modifier.IsDirty;
 			this.GetCommandState("SaveAs").Enable = true;
 
@@ -791,7 +803,7 @@ namespace Epsitec.Common.Designer
 			this.GetCommandState("AccessNext").Enable = (sel != -1 && sel < count-1);
 
 			this.GetCommandState("ModificationAll").Enable = (sel != -1);
-			this.GetCommandState("ModificationClear").Enable = (sel != -1);
+			this.GetCommandState("ModificationClear").Enable = (sel != -1 && modified);
 
 			this.GetCommandState("Delete").Enable = (sel != -1 && build);
 			this.GetCommandState("Duplicate").Enable = (sel != -1 && build);
