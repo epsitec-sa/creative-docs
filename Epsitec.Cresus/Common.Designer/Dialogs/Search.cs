@@ -22,7 +22,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.window.MakeSecondaryWindow();
 				this.window.MakeFixedSizeWindow();
 				this.window.MakeToolWindow();
-				this.WindowInit("Search", 257, 160, true);
+				this.WindowInit("Search", 340, 220, true);
 				this.window.Text = Res.Strings.Dialog.Search.Title;
 				this.window.Owner = this.parentWindow;
 				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowCloseClicked);
@@ -62,11 +62,39 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.checkCase.Margins = new Margins(6+60, 6, 6+32+16*2+4, 0);
 				this.checkCase.TabIndex = tabIndex++;
 
-				this.checkAbout = new CheckButton(this.window.Root);
-				this.checkAbout.Text = Res.Strings.Dialog.Search.Check.About;
-				this.checkAbout.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-				this.checkAbout.Margins = new Margins(6+60, 6, 6+32+16*3+4, 0);
-				this.checkAbout.TabIndex = tabIndex++;
+				this.checkLabel = new CheckButton(this.window.Root);
+				this.checkLabel.Text = Res.Strings.Dialog.Search.Check.Label;
+				this.checkLabel.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+				this.checkLabel.Margins = new Margins(6+60, 6, 6+32+16*3+8, 0);
+				this.checkLabel.TabIndex = tabIndex++;
+
+				this.checkPrimaryText = new CheckButton(this.window.Root);
+				this.checkPrimaryText.ActiveState = ActiveState.Yes;
+				this.checkPrimaryText.Text = Res.Strings.Dialog.Search.Check.PrimaryText;
+				this.checkPrimaryText.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+				this.checkPrimaryText.Margins = new Margins(6+60, 6, 6+32+16*4+8, 0);
+				this.checkPrimaryText.TabIndex = tabIndex++;
+
+				this.checkSecondaryText = new CheckButton(this.window.Root);
+				this.checkSecondaryText.ActiveState = ActiveState.Yes;
+				this.checkSecondaryText.Text = Res.Strings.Dialog.Search.Check.SecondaryText;
+				this.checkSecondaryText.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+				this.checkSecondaryText.Margins = new Margins(6+60, 6, 6+32+16*5+8, 0);
+				this.checkSecondaryText.TabIndex = tabIndex++;
+
+				this.checkPrimaryAbout = new CheckButton(this.window.Root);
+				this.checkPrimaryAbout.ActiveState = ActiveState.Yes;
+				this.checkPrimaryAbout.Text = Res.Strings.Dialog.Search.Check.PrimaryAbout;
+				this.checkPrimaryAbout.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+				this.checkPrimaryAbout.Margins = new Margins(6+60, 6, 6+32+16*6+8, 0);
+				this.checkPrimaryAbout.TabIndex = tabIndex++;
+
+				this.checkSecondaryAbout = new CheckButton(this.window.Root);
+				this.checkSecondaryAbout.ActiveState = ActiveState.Yes;
+				this.checkSecondaryAbout.Text = Res.Strings.Dialog.Search.Check.SecondaryAbout;
+				this.checkSecondaryAbout.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+				this.checkSecondaryAbout.Margins = new Margins(6+60, 6, 6+32+16*7+8, 0);
+				this.checkSecondaryAbout.TabIndex = tabIndex++;
 
 				//	Boutons de fermeture.
 				Button buttonOk = new Button(this.window.Root);
@@ -116,10 +144,14 @@ namespace Epsitec.Common.Designer.Dialogs
 			Module module = this.mainWindow.CurrentModule;
 			if ( module == null )  return;
 
-			bool isReverse = (this.radioReverse.ActiveState == ActiveState.Yes);
-			bool isCase    = (this.checkCase.ActiveState    == ActiveState.Yes);
-			bool isAbout   = (this.checkAbout.ActiveState   == ActiveState.Yes);
-			module.Modifier.ActiveViewer.DoSearch(this.fieldSearch.Text, isReverse, isCase, isAbout);
+			bool isReverse        = (this.radioReverse.ActiveState         == ActiveState.Yes);
+			bool isCase           = (this.checkCase.ActiveState            == ActiveState.Yes);
+			bool inLabel          = (this.checkLabel.ActiveState           == ActiveState.Yes);
+			bool inPrimaryText    = (this.checkPrimaryText.ActiveState     == ActiveState.Yes);
+			bool inSecondaryText  = (this.checkSecondaryText.ActiveState   == ActiveState.Yes);
+			bool inPrimaryAbout   = (this.checkPrimaryAbout.ActiveState    == ActiveState.Yes);
+			bool inSecondaryAbout = (this.checkSecondaryAbout.ActiveState  == ActiveState.Yes);
+			module.Modifier.ActiveViewer.DoSearch(this.fieldSearch.Text, isReverse, isCase, inLabel, inPrimaryText, inSecondaryText, inPrimaryAbout, inSecondaryAbout);
 
 			Misc.ComboMenuAdd(this.fieldSearch, this.fieldSearch.Text);
 		}
@@ -129,6 +161,10 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected RadioButton					radioReverse;
 		protected RadioButton					radioNormal;
 		protected CheckButton					checkCase;
-		protected CheckButton					checkAbout;
+		protected CheckButton					checkLabel;
+		protected CheckButton					checkPrimaryText;
+		protected CheckButton					checkSecondaryText;
+		protected CheckButton					checkPrimaryAbout;
+		protected CheckButton					checkSecondaryAbout;
 	}
 }
