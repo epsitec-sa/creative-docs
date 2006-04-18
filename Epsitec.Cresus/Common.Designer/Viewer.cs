@@ -327,6 +327,15 @@ namespace Epsitec.Common.Designer
 					int primary   = this.primaryBundle[label].ModificationId;
 					int secondary = this.secondaryBundle[label].ModificationId;
 
+					if ( this.secondaryBundle[label] == null          ||
+						 this.secondaryBundle[label].Name == null     ||
+						 this.secondaryBundle[label].AsString == null ||
+						 this.secondaryBundle[label].AsString == ""   )
+					{
+						column = 2;
+						break;
+					}
+
 					if (primary > secondary)
 					{
 						column = 2;

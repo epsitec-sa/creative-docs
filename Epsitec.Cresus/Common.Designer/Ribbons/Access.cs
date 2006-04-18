@@ -25,9 +25,6 @@ namespace Epsitec.Common.Designer.Ribbons
 
 			this.separator1 = new IconSeparator(this);
 
-			this.buttonWarningPrev = this.CreateIconButton("WarningPrev");
-			this.buttonWarningNext = this.CreateIconButton("WarningNext");
-
 			this.buttonModificationPrev  = this.CreateIconButton("ModificationPrev");
 			this.buttonModificationNext  = this.CreateIconButton("ModificationNext");
 			this.buttonModificationAll   = this.CreateIconButton("ModificationAll");
@@ -50,7 +47,7 @@ namespace Epsitec.Common.Designer.Ribbons
 			//	Retourne la largeur standard.
 			get
 			{
-				return 8 + 22*1.5*2 + 4 + 22*2 + this.separatorWidth + 22*3;
+				return 8 + 22*1.5*2 + 4 + 22*2 + this.separatorWidth + 22*2;
 			}
 		}
 
@@ -86,8 +83,6 @@ namespace Epsitec.Common.Designer.Ribbons
 			rect.Offset(dx, 0);
 			this.buttonAccessPrev.Bounds = rect;
 			rect.Offset(dx+this.separatorWidth, 0);
-			this.buttonWarningPrev.Bounds = rect;
-			rect.Offset(dx, 0);
 			this.buttonModificationPrev.Bounds = rect;
 			rect.Offset(dx, 0);
 			this.buttonModificationAll.Bounds = rect;
@@ -100,8 +95,6 @@ namespace Epsitec.Common.Designer.Ribbons
 			rect.Offset(dx, 0);
 			this.buttonAccessNext.Bounds = rect;
 			rect.Offset(dx+this.separatorWidth, 0);
-			this.buttonWarningNext.Bounds = rect;
-			rect.Offset(dx, 0);
 			this.buttonModificationNext.Bounds = rect;
 			rect.Offset(dx, 0);
 			this.buttonModificationClear.Bounds = rect;
@@ -115,8 +108,6 @@ namespace Epsitec.Common.Designer.Ribbons
 		protected IconButton				buttonAccessPrev;
 		protected IconButton				buttonAccessNext;
 		protected IconSeparator				separator1;
-		protected IconButton				buttonWarningPrev;
-		protected IconButton				buttonWarningNext;
 		protected IconButton				buttonModificationPrev;
 		protected IconButton				buttonModificationNext;
 		protected IconButton				buttonModificationAll;
