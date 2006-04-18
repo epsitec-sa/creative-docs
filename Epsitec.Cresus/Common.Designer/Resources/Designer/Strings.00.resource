@@ -79,7 +79,11 @@
   <data name="Dialog.Search.Radio.Reverse">En arrière</data>
   <data name="Dialog.Search.Radio.Normal">En avant</data>
   <data name="Dialog.Search.Check.Case">Respecter la casse</data>
-  <data name="Dialog.Search.Check.About">Chercher dans les commentaires</data>
+  <data name="Dialog.Search.Check.Label">Chercher dans les noms</data>
+  <data name="Dialog.Search.Check.PrimaryText">Chercher dans les textes de référence</data>
+  <data name="Dialog.Search.Check.SecondaryText">Chercher dans les textes secondaires</data>
+  <data name="Dialog.Search.Check.PrimaryAbout">Chercher dans les commentaires de référence</data>
+  <data name="Dialog.Search.Check.SecondaryAbout">Chercher dans les commentaires secondaires</data>
   <data name="Dialog.Search.Button.Insert">Chercher</data>
 
   <data name="Dialog.NewCulture.Title">Culture à créer</data>

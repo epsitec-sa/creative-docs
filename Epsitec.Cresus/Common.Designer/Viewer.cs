@@ -133,7 +133,7 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		public void DoSearch(string search, bool isReverse, bool isCase, bool isAbout)
+		public void DoSearch(string search, bool isReverse, bool isCase, bool inLabel, bool inPrimaryText, bool inSecondaryText, bool inPrimaryAbout, bool inSecondaryAbout)
 		{
 			//	Effectue une recherche.
 			int sel = this.array.SelectedRow;
@@ -185,26 +185,32 @@ namespace Epsitec.Common.Designer
 					sAbout    = sAbout.ToLower();
 				}
 
-				if (label.Contains(search))
+				if (inLabel && label.Contains(search))
 				{
 					break;
 				}
 
-				index = primary.IndexOf(search);
-				if (index != -1)
+				if (inPrimaryText)
 				{
-					column = 1;
-					break;
+					index = primary.IndexOf(search);
+					if (index != -1)
+					{
+						column = 1;
+						break;
+					}
 				}
 
-				index = secondary.IndexOf(search);
-				if (index != -1)
+				if (inSecondaryText)
 				{
-					column = 2;
-					break;
+					index = secondary.IndexOf(search);
+					if (index != -1)
+					{
+						column = 2;
+						break;
+					}
 				}
 
-				if (isAbout)
+				if (inPrimaryAbout)
 				{
 					index = pAbout.IndexOf(search);
 					if (index != -1)
@@ -212,7 +218,10 @@ namespace Epsitec.Common.Designer
 						column = 3;
 						break;
 					}
+				}
 
+				if (inSecondaryAbout)
+				{
 					index = sAbout.IndexOf(search);
 					if (index != -1)
 					{
