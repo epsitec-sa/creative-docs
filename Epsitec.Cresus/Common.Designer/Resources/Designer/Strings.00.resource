@@ -43,7 +43,7 @@
   <data name="Action.FontUnderlined">Souligné</data>
   <data name="Action.Glyphs">Caractères spéciaux...</data>
   <data name="Action.Filter">Filtrer les ressources visibles...</data>
-  <data name="Action.Search">Recherche d'une ressource...</data>
+  <data name="Action.Search">Rechercher une ressource...</data>
   <data name="Action.AccessFirst">Première ressource</data>
   <data name="Action.AccessLast">Dernière ressource</data>
   <data name="Action.AccessPrev">Ressource précédente</data>
