@@ -18,8 +18,11 @@ namespace Epsitec.Common.Designer
 
 			int tabIndex = 0;
 
-			this.primaryCulture = new TextField(this);
-			this.primaryCulture.IsReadOnly = true;
+			this.primaryCulture = new IconButtonMark(this);
+			this.primaryCulture.ButtonStyle = ButtonStyle.ActivableIcon;
+			this.primaryCulture.SiteMark = SiteMark.OnBottom;
+			this.primaryCulture.MarkDimension = 5;
+			this.primaryCulture.ActiveState = ActiveState.Yes;
 			this.primaryCulture.TabIndex = tabIndex++;
 			this.primaryCulture.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
@@ -854,7 +857,7 @@ namespace Epsitec.Common.Designer
 			this.array.Bounds = rect;
 
 			rect = box;
-			rect.Bottom = rect.Top-cultureHeight;
+			rect.Bottom = rect.Top-cultureHeight-5;
 			rect.Left += this.array.GetColumnsAbsoluteWidth(0);
 			rect.Width = this.array.GetColumnsAbsoluteWidth(1)+1;
 			this.primaryCulture.Bounds = rect;
@@ -863,7 +866,6 @@ namespace Epsitec.Common.Designer
 			{
 				rect.Left = rect.Right-1;
 				rect.Width = this.array.GetColumnsAbsoluteWidth(2);
-				rect.Bottom -= 5;
 				double w = System.Math.Floor(rect.Width/this.secondaryCultures.Length);
 				for (int i=0; i<this.secondaryCultures.Length; i++)
 				{
@@ -1071,7 +1073,7 @@ namespace Epsitec.Common.Designer
 		protected List<string>				labelsIndex;
 		protected bool						ignoreChange = false;
 
-		protected TextField					primaryCulture;
+		protected IconButtonMark			primaryCulture;
 		protected IconButtonMark[]			secondaryCultures;
 		protected ResourceBundle			primaryBundle;
 		protected ResourceBundle			secondaryBundle;
