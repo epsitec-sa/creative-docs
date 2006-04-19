@@ -10,7 +10,7 @@ namespace Epsitec.Common.Designer
 	{
 		static public string CultureLongName(System.Globalization.CultureInfo culture)
 		{
-			//	Retourne le nom long d'une culture.
+			//	Retourne le nom long d'une culture, par exemple "Italiano (Italian, IT)".
 			return string.Format("{0} ({1}, {2})", Misc.CultureName(culture), culture.DisplayName, Misc.CultureShortName(culture));
 		}
 
