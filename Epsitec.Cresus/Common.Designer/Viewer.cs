@@ -875,12 +875,12 @@ namespace Epsitec.Common.Designer
 			rect = box;
 			rect.Bottom = rect.Top-cultureHeight-5;
 			rect.Left += this.array.GetColumnsAbsoluteWidth(0);
-			rect.Width = this.array.GetColumnsAbsoluteWidth(1)+1;
+			rect.Width = this.array.GetColumnsAbsoluteWidth(1)-1;
 			this.primaryCulture.Bounds = rect;
 
 			if (this.secondaryCultures != null)
 			{
-				rect.Left = rect.Right-1;
+				rect.Left = rect.Right+2;
 				rect.Width = this.array.GetColumnsAbsoluteWidth(2);
 				double w = System.Math.Floor(rect.Width/this.secondaryCultures.Length);
 				for (int i=0; i<this.secondaryCultures.Length; i++)
