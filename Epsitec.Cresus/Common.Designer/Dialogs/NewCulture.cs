@@ -84,14 +84,11 @@ namespace Epsitec.Common.Designer.Dialogs
 		{
 			//	Met à jour la ScrollList des cultures, en enlevant celles qui font déjà
 			//	partie du bundle.
-			//?string[] cultures = { "fr", "en", "de", "it", "es", "pt", "da", "sv", "no", "ru", "cs" };
-			string[] cultures = { "fr", "en", "de", "it", "es", "pt" };
-
 			Module module = this.mainWindow.CurrentModule;
 
 			//	Construit la liste des cultures inexistantes dans le bundle.
 			this.cultureList = new List<string>();
-			foreach (string name in cultures)
+			foreach (string name in NewCulture.Cultures)
 			{
 				if (!module.IsExistingCulture(name))
 				{
@@ -105,7 +102,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			{
 				System.Globalization.CultureInfo culture = new System.Globalization.CultureInfo(name);
 
-				string text = string.Format("<b>{0}</b> / {1}", culture.DisplayName, culture.NativeName);
+				string text = string.Format("{0} ({1})", culture.NativeName, culture.DisplayName);
 				this.cultureWidget.Items.Add(text);
 			}
 			this.cultureWidget.SelectedIndex = 0;  // sélectionne en priorité la première culture de la liste
@@ -129,7 +126,10 @@ namespace Epsitec.Common.Designer.Dialogs
 		}
 
 
-		protected ScrollList					cultureWidget;
+		public static string[] Cultures = { "fr", "en", "de", "it", "es", "pt" };
+
+		
+		protected ScrollList cultureWidget;
 		protected List<string>					cultureList;
 	}
 }
