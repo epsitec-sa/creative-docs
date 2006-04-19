@@ -266,8 +266,8 @@ namespace Epsitec.Common.Designer
 				{
 					this.Window.MakeActive();
 					edit.Focus();
-					edit.CursorFrom  = searcher.Index;
-					edit.CursorTo    = searcher.Index+searcher.Length;
+					edit.CursorFrom  = edit.TextLayout.FindIndexFromOffset(searcher.Index);
+					edit.CursorTo    = edit.TextLayout.FindIndexFromOffset(searcher.Index+searcher.Length);
 					edit.CursorAfter = false;
 				}
 			}
