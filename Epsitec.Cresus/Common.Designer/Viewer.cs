@@ -23,6 +23,7 @@ namespace Epsitec.Common.Designer
 			this.primaryCulture.SiteMark = SiteMark.OnBottom;
 			this.primaryCulture.MarkDimension = 5;
 			this.primaryCulture.ActiveState = ActiveState.Yes;
+			this.primaryCulture.AutoFocus = false;
 			this.primaryCulture.TabIndex = tabIndex++;
 			this.primaryCulture.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
@@ -483,7 +484,7 @@ namespace Epsitec.Common.Designer
 			ResourceBundle bundle = this.module.NewCulture(name);
 
 			this.UpdateCultures();
-			this.UpdateSelectedCulture(bundle.Culture.NativeName);
+			this.UpdateSelectedCulture(Misc.CultureName(bundle.Culture));
 			this.UpdateArray();
 			this.UpdateClientGeometry();
 			this.UpdateCommands();
@@ -493,7 +494,7 @@ namespace Epsitec.Common.Designer
 		public void DoDeleteCulture()
 		{
 			//	Supprime la culture courante.
-			string question = string.Format(Res.Strings.Dialog.DeleteCulture.Question, this.secondaryBundle.Culture.NativeName);
+			string question = string.Format(Res.Strings.Dialog.DeleteCulture.Question, Misc.CultureName(this.secondaryBundle.Culture));
 			Common.Dialogs.DialogResult result = this.module.MainWindow.DialogQuestion(question);
 			if ( result != Epsitec.Common.Dialogs.DialogResult.Yes )  return;
 
@@ -502,7 +503,7 @@ namespace Epsitec.Common.Designer
 			this.UpdateCultures();
 			if (this.secondaryBundle != null)
 			{
-				this.UpdateSelectedCulture(this.secondaryBundle.Culture.NativeName);
+				this.UpdateSelectedCulture(Misc.CultureName(this.secondaryBundle.Culture));
 			}
 			this.UpdateArray();
 			this.UpdateClientGeometry();
@@ -603,20 +604,21 @@ namespace Epsitec.Common.Designer
 			}
 
 			this.primaryBundle = bundles[ResourceLevel.Default];
-			this.primaryCulture.Text = string.Format(Res.Strings.Viewer.Reference, this.primaryBundle.Culture.NativeName);
+			this.primaryCulture.Text = string.Format(Res.Strings.Viewer.Reference, Misc.CultureName(this.primaryBundle.Culture));
 
 			this.secondaryBundle = null;
 
 			if (bundles.Count-1 > 0)
 			{
-				List<string> list = new List<string>();
+				List<CultureInfo> list = new List<CultureInfo>();
 
 				for (int b=0; b<bundles.Count; b++)
 				{
 					ResourceBundle bundle = bundles[b];
 					if (bundle != this.primaryBundle)
 					{
-						list.Add(bundle.Culture.NativeName);
+						CultureInfo info = new CultureInfo(bundle.Culture);
+						list.Add(info);
 
 						if (this.secondaryBundle == null)
 						{
@@ -625,7 +627,7 @@ namespace Epsitec.Common.Designer
 					}
 				}
 
-				list.Sort();
+				list.Sort(Viewer.CompareCultureInfo);
 				
 				this.secondaryCultures = new IconButtonMark[list.Count];
 				for (int i=0; i<list.Count; i++)
@@ -634,15 +636,17 @@ namespace Epsitec.Common.Designer
 					this.secondaryCultures[i].ButtonStyle = ButtonStyle.ActivableIcon;
 					this.secondaryCultures[i].SiteMark = SiteMark.OnBottom;
 					this.secondaryCultures[i].MarkDimension = 5;
-					this.secondaryCultures[i].Name = list[i];
-					this.secondaryCultures[i].Text = list[i];
+					this.secondaryCultures[i].Name = list[i].Name;
+					this.secondaryCultures[i].Text = list[i].Name;
+					this.secondaryCultures[i].AutoFocus = false;
 					this.secondaryCultures[i].Clicked += new MessageEventHandler(this.HandleSecondaryCultureClicked);
+					ToolTip.Default.SetToolTip(this.secondaryCultures[i], list[i].Tooltip);
 				}
 			}
 
 			if (this.secondaryBundle != null)
 			{
-				this.UpdateSelectedCulture(this.secondaryBundle.Culture.NativeName);
+				this.UpdateSelectedCulture(Misc.CultureName(this.secondaryBundle.Culture));
 			}
 
 			this.UpdateLabelsIndex("", false, false);
@@ -657,7 +661,7 @@ namespace Epsitec.Common.Designer
 			for (int b=0; b<bundles.Count; b++)
 			{
 				ResourceBundle bundle = bundles[b];
-				if (bundle.Culture.NativeName == name)
+				if (Misc.CultureName(bundle.Culture) == name)
 				{
 					this.secondaryBundle = bundle;
 				}
@@ -1079,6 +1083,42 @@ namespace Epsitec.Common.Designer
 				this.currentTextField = sender as AbstractTextField;
 			}
 		}
+
+
+		#region CultureInfo
+		protected class CultureInfo
+		{
+			public CultureInfo(System.Globalization.CultureInfo culture)
+			{
+				this.name = Misc.CultureName(culture);
+				this.tooltip = Misc.CultureLongName(culture);
+			}
+
+			public string Name
+			{
+				get
+				{
+					return this.name;
+				}
+			}
+
+			public string Tooltip
+			{
+				get
+				{
+					return this.tooltip;
+				}
+			}
+
+			protected string			name;
+			protected string			tooltip;
+		}
+
+		protected static int CompareCultureInfo(CultureInfo a, CultureInfo b)
+		{
+			return a.Name.CompareTo(b.Name);
+		}
+		#endregion
 
 
 		protected Module					module;
