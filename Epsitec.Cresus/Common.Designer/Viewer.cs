@@ -88,7 +88,8 @@ namespace Epsitec.Common.Designer
 			this.secondaryAbout.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			this.UpdateCultures();
-			this.HandleArraySelectedRowChanged(null);
+			this.UpdateEdit();
+			this.UpdateCommands();
 		}
 
 		protected override void Dispose(bool disposing)
@@ -788,6 +789,75 @@ namespace Epsitec.Common.Designer
 			this.array.SetLineState(column, row, MyWidgets.StringList.CellState.Warning);
 		}
 
+		protected void UpdateEdit()
+		{
+			//	Met à jour les lignes éditables en fonction de la sélection dans le tableau.
+			bool iic = this.ignoreChange;
+			this.ignoreChange = true;
+
+			int sel = this.array.SelectedRow;
+			int column = this.array.SelectedColumn;
+
+			if (sel >= this.labelsIndex.Count)
+			{
+				sel = -1;
+				column = -1;
+			}
+
+			if ( sel == -1 )
+			{
+				this.labelEdit.Enable = false;
+				this.primaryEdit.Enable = false;
+				this.secondaryEdit.Enable = false;
+				this.primaryAbout.Enable = false;
+				this.secondaryAbout.Enable = false;
+
+				this.labelEdit.Text = "";
+				this.primaryEdit.Text = "";
+				this.secondaryEdit.Text = "";
+				this.primaryAbout.Text = "";
+				this.secondaryAbout.Text = "";
+			}
+			else
+			{
+				this.labelEdit.Enable = true;
+				this.primaryEdit.Enable = true;
+				this.secondaryEdit.Enable = true;
+				this.primaryAbout.Enable = true;
+				this.secondaryAbout.Enable = true;
+
+				string label = this.labelsIndex[sel];
+
+				this.SetTextField(this.labelEdit, label);
+
+				this.SetTextField(this.primaryEdit, this.primaryBundle[label].AsString);
+				this.SetTextField(this.secondaryEdit, this.secondaryBundle[label].AsString);
+
+				this.SetTextField(this.primaryAbout, this.primaryBundle[label].About);
+				this.SetTextField(this.secondaryAbout, this.secondaryBundle[label].About);
+
+				AbstractTextField edit = null;
+				if (column == 0)  edit = this.labelEdit;
+				if (column == 1)  edit = this.primaryEdit;
+				if (column == 2)  edit = this.secondaryEdit;
+				if (edit != null && edit.Visibility)
+				{
+					edit.Focus();
+					edit.SelectAll();
+				}
+				else
+				{
+					this.labelEdit.Cursor = 100000;
+					this.primaryEdit.Cursor = 100000;
+					this.secondaryEdit.Cursor = 100000;
+				}
+			}
+
+			this.ignoreChange = iic;
+
+			this.UpdateCommands();
+		}
+
 		public void UpdateCommands()
 		{
 			//	Met à jour les commandes en fonction de la ressource sélectionnée.
@@ -943,7 +1013,8 @@ namespace Epsitec.Common.Designer
 			IconButtonMark button = sender as IconButtonMark;
 			this.UpdateSelectedCulture(button.Name);
 			this.UpdateArray();
-			this.HandleArraySelectedRowChanged(null);
+			this.UpdateEdit();
+			this.UpdateCommands();
 		}
 
 		void HandleArrayColumnsWidthChanged(object sender)
@@ -963,69 +1034,7 @@ namespace Epsitec.Common.Designer
 
 		void HandleArraySelectedRowChanged(object sender)
 		{
-			bool iic = this.ignoreChange;
-			this.ignoreChange = true;
-
-			int sel = this.array.SelectedRow;
-			int column = this.array.SelectedColumn;
-
-			if (sel >= this.labelsIndex.Count)
-			{
-				sel = -1;
-				column = -1;
-			}
-
-			if ( sel == -1 )
-			{
-				this.labelEdit.Enable = false;
-				this.primaryEdit.Enable = false;
-				this.secondaryEdit.Enable = false;
-				this.primaryAbout.Enable = false;
-				this.secondaryAbout.Enable = false;
-
-				this.labelEdit.Text = "";
-				this.primaryEdit.Text = "";
-				this.secondaryEdit.Text = "";
-				this.primaryAbout.Text = "";
-				this.secondaryAbout.Text = "";
-			}
-			else
-			{
-				this.labelEdit.Enable = true;
-				this.primaryEdit.Enable = true;
-				this.secondaryEdit.Enable = true;
-				this.primaryAbout.Enable = true;
-				this.secondaryAbout.Enable = true;
-
-				string label = this.labelsIndex[sel];
-
-				this.SetTextField(this.labelEdit, label);
-
-				this.SetTextField(this.primaryEdit, this.primaryBundle[label].AsString);
-				this.SetTextField(this.secondaryEdit, this.secondaryBundle[label].AsString);
-
-				this.SetTextField(this.primaryAbout, this.primaryBundle[label].About);
-				this.SetTextField(this.secondaryAbout, this.secondaryBundle[label].About);
-
-				AbstractTextField edit = null;
-				if (column == 0)  edit = this.labelEdit;
-				if (column == 1)  edit = this.primaryEdit;
-				if (column == 2)  edit = this.secondaryEdit;
-				if (edit != null && edit.Visibility)
-				{
-					edit.Focus();
-					edit.SelectAll();
-				}
-				else
-				{
-					this.labelEdit.Cursor = 100000;
-					this.primaryEdit.Cursor = 100000;
-					this.secondaryEdit.Cursor = 100000;
-				}
-			}
-
-			this.ignoreChange = iic;
-
+			this.UpdateEdit();
 			this.UpdateCommands();
 		}
 
