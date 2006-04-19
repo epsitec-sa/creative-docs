@@ -122,9 +122,13 @@
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ExchangeStringBuilder.cs" />
+    <Compile Include="HtmlText.cs" />
+    <Compile Include="MsClipboardHtmlHeader.cs" />
     <Compile Include="Rosetta.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="SpanStyle.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
