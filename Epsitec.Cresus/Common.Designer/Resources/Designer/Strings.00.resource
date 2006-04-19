@@ -14,7 +14,7 @@
   <data name="Ribbon.Section.Access">Accès</data>
   <data name="Ribbon.Section.Culture">Culture</data>
 
-  <data name="Viewer.Reference">Référence [{0}]</data>
+  <data name="Viewer.Reference">&lt;b&gt;{0}&lt;/b&gt; (référence)</data>
   <data name="Viewer.Edit">Textes</data>
   <data name="Viewer.About">Commentaires</data>
 
@@ -86,6 +86,7 @@
   <data name="Dialog.Search.Check.PrimaryAbout">Chercher dans les commentaires de référence</data>
   <data name="Dialog.Search.Check.SecondaryAbout">Chercher dans les commentaires secondaires</data>
   <data name="Dialog.Search.Button.Insert">Chercher</data>
+  <data name="Dialog.Search.Error">Pas trouvé !</data>
 
   <data name="Dialog.NewCulture.Title">Culture à créer</data>
   <data name="Dialog.NewCulture.Label">Choix de la culture à créer</data>

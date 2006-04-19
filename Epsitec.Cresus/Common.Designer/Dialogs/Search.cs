@@ -144,14 +144,15 @@ namespace Epsitec.Common.Designer.Dialogs
 			Module module = this.mainWindow.CurrentModule;
 			if ( module == null )  return;
 
-			bool isReverse        = (this.radioReverse.ActiveState         == ActiveState.Yes);
-			bool isCase           = (this.checkCase.ActiveState            == ActiveState.Yes);
-			bool inLabel          = (this.checkLabel.ActiveState           == ActiveState.Yes);
-			bool inPrimaryText    = (this.checkPrimaryText.ActiveState     == ActiveState.Yes);
-			bool inSecondaryText  = (this.checkSecondaryText.ActiveState   == ActiveState.Yes);
-			bool inPrimaryAbout   = (this.checkPrimaryAbout.ActiveState    == ActiveState.Yes);
-			bool inSecondaryAbout = (this.checkSecondaryAbout.ActiveState  == ActiveState.Yes);
-			module.Modifier.ActiveViewer.DoSearch(this.fieldSearch.Text, isReverse, isCase, inLabel, inPrimaryText, inSecondaryText, inPrimaryAbout, inSecondaryAbout);
+			Searcher.SearchingMode mode = Searcher.SearchingMode.None;
+			if (this.radioReverse.ActiveState         == ActiveState.Yes)  mode |= Searcher.SearchingMode.Reverse;
+			if (this.checkCase.ActiveState            == ActiveState.Yes)  mode |= Searcher.SearchingMode.CaseSensitive;
+			if (this.checkLabel.ActiveState           == ActiveState.Yes)  mode |= Searcher.SearchingMode.SearchInLabel;
+			if (this.checkPrimaryText.ActiveState     == ActiveState.Yes)  mode |= Searcher.SearchingMode.SearchInPrimaryText;
+			if (this.checkSecondaryText.ActiveState   == ActiveState.Yes)  mode |= Searcher.SearchingMode.SearchInSecondaryText;
+			if (this.checkPrimaryAbout.ActiveState    == ActiveState.Yes)  mode |= Searcher.SearchingMode.SearchInPrimaryAbout;
+			if (this.checkSecondaryAbout.ActiveState  == ActiveState.Yes)  mode |= Searcher.SearchingMode.SearchInSecondaryAbout;
+			module.Modifier.ActiveViewer.DoSearch(this.fieldSearch.Text, mode);
 
 			Misc.ComboMenuAdd(this.fieldSearch, this.fieldSearch.Text);
 		}
