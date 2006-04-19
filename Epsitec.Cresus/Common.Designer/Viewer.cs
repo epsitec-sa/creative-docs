@@ -436,7 +436,7 @@ namespace Epsitec.Common.Designer
 			this.module.Modifier.IsDirty = true;
 		}
 
-		public void DoDuplicate()
+		public void DoDuplicate(bool duplicate)
 		{
 			//	Duplique la ressource sélectionnée.
 			int sel = this.array.SelectedRow;
@@ -444,7 +444,7 @@ namespace Epsitec.Common.Designer
 
 			string name = this.labelsIndex[sel];
 			string newName = Misc.CopyName(name);
-			this.module.Modifier.Duplicate(name, newName);
+			this.module.Modifier.Duplicate(name, newName, duplicate);
 
 			int newSel = sel+1;
 			this.labelsIndex.Insert(newSel, newName);
@@ -827,6 +827,7 @@ namespace Epsitec.Common.Designer
 			this.GetCommandState("ModificationClear").Enable = (sel != -1 && modified);
 
 			this.GetCommandState("Delete").Enable = (sel != -1 && build);
+			this.GetCommandState("Create").Enable = (sel != -1 && build);
 			this.GetCommandState("Duplicate").Enable = (sel != -1 && build);
 
 			this.GetCommandState("Up").Enable = (sel != -1 && sel > 0 && build);

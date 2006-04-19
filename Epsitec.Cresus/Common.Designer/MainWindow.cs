@@ -285,7 +285,7 @@ namespace Epsitec.Common.Designer
 						builder.Append(", ");
 					}
 
-					builder.Append(bundle.Culture.Name);
+					builder.Append(Misc.CultureShortName(bundle.Culture));
 					builder.Append(":");
 					builder.Append(bundle.FieldCount);
 				}
@@ -429,11 +429,18 @@ namespace Epsitec.Common.Designer
 			this.CurrentModule.Modifier.ActiveViewer.DoDelete();
 		}
 
+		[Command("Create")]
+		void CommandCreate(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			if ( !this.IsCurrentModule )  return;
+			this.CurrentModule.Modifier.ActiveViewer.DoDuplicate(false);
+		}
+
 		[Command("Duplicate")]
 		void CommandDuplicate(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			if ( !this.IsCurrentModule )  return;
-			this.CurrentModule.Modifier.ActiveViewer.DoDuplicate();
+			this.CurrentModule.Modifier.ActiveViewer.DoDuplicate(true);
 		}
 
 		[Command("Up")]
@@ -484,8 +491,9 @@ namespace Epsitec.Common.Designer
 			this.cutState = this.CreateCommandState("Cut", KeyCode.ModifierControl|KeyCode.AlphaX);
 			this.copyState = this.CreateCommandState("Copy", KeyCode.ModifierControl|KeyCode.AlphaC);
 			this.pasteState = this.CreateCommandState("Paste", KeyCode.ModifierControl|KeyCode.AlphaV);
-			this.deleteState = this.CreateCommandState("Delete", KeyCode.Delete);
-			this.duplicateState = this.CreateCommandState("Duplicate", KeyCode.ModifierControl|KeyCode.AlphaD);
+			this.deleteState = this.CreateCommandState("Delete");
+			this.createState = this.CreateCommandState("Create");
+			this.duplicateState = this.CreateCommandState("Duplicate");
 			this.upState = this.CreateCommandState("Up");
 			this.downState = this.CreateCommandState("Down");
 			this.fontBoldState = this.CreateCommandState("FontBold", KeyCode.ModifierControl|KeyCode.AlphaB);
@@ -495,13 +503,13 @@ namespace Epsitec.Common.Designer
 			this.filterState = this.CreateCommandState("Filter");
 			this.searchState = this.CreateCommandState("Search");
 			this.accessFirstState = this.CreateCommandState("AccessFirst");
-			this.accessPrevState = this.CreateCommandState("AccessPrev");
-			this.accessNextState = this.CreateCommandState("AccessNext");
+			this.accessPrevState = this.CreateCommandState("AccessPrev", KeyCode.FuncF6);
+			this.accessNextState = this.CreateCommandState("AccessNext", KeyCode.FuncF7);
 			this.accessLastState = this.CreateCommandState("AccessLast");
 			this.modificationAllState = this.CreateCommandState("ModificationAll");
-			this.modificationClearState = this.CreateCommandState("ModificationClear");
+			this.modificationClearState = this.CreateCommandState("ModificationClear", KeyCode.FuncF9);
 			this.modificationPrevState = this.CreateCommandState("ModificationPrev");
-			this.modificationNextState = this.CreateCommandState("ModificationNext");
+			this.modificationNextState = this.CreateCommandState("ModificationNext", KeyCode.FuncF8);
 			this.warningPrevState = this.CreateCommandState("WarningPrev");
 			this.warningNextState = this.CreateCommandState("WarningNext");
 			this.newCultureState = this.CreateCommandState("NewCulture");
@@ -620,6 +628,7 @@ namespace Epsitec.Common.Designer
 				this.modificationAllState.Enable = false;
 				this.modificationClearState.Enable = false;
 				this.deleteState.Enable = false;
+				this.createState.Enable = false;
 				this.duplicateState.Enable = false;
 				this.upState.Enable = false;
 				this.downState.Enable = false;
@@ -837,6 +846,7 @@ namespace Epsitec.Common.Designer
 		protected CommandState					copyState;
 		protected CommandState					pasteState;
 		protected CommandState					deleteState;
+		protected CommandState					createState;
 		protected CommandState					duplicateState;
 		protected CommandState					upState;
 		protected CommandState					downState;

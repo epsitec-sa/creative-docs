@@ -62,7 +62,7 @@ namespace Epsitec.Common.Designer
 			this.IsDirty = false;
 		}
 
-		public void Duplicate(string name, string newName)
+		public void Duplicate(string name, string newName, bool duplicate)
 		{
 			//	Duplique une ressource dans toutes les cultures du module.
 			ResourceBundleCollection bundles = this.module.Bundles;
@@ -74,8 +74,11 @@ namespace Epsitec.Common.Designer
 				if (field == null || field.Name == null)  continue;
 				ResourceBundle.Field newField = bundle.CreateField(ResourceFieldType.Data);
 				newField.SetName(newName);
-				newField.SetStringValue(field.AsString);
-				newField.SetAbout(field.About);
+				if (duplicate)
+				{
+					newField.SetStringValue(field.AsString);
+					newField.SetAbout(field.About);
+				}
 
 				if (bundle == defaultBundle)
 				{

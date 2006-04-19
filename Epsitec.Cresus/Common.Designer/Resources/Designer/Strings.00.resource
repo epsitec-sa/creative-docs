@@ -31,6 +31,7 @@
   <data name="Action.Copy">Copier</data>
   <data name="Action.Paste">Coller</data>
   <data name="Action.Delete">Supprimer la ressource sélectionnée</data>
+  <data name="Action.Create">Créer une ressource après la ressource sélectionnée</data>
   <data name="Action.Duplicate">Dupliquer la ressource sélectionnée</data>
   <data name="Action.Up">Monter la ressource sélectionnée</data>
   <data name="Action.Down">Descendre la ressource sélectionnée</data>
