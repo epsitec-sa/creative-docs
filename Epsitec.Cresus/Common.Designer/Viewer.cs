@@ -443,7 +443,7 @@ namespace Epsitec.Common.Designer
 			if ( sel == -1 )  return;
 
 			string name = this.labelsIndex[sel];
-			string newName = Misc.CopyName(name);
+			string newName = this.module.Modifier.GetDuplicateName(name);
 			this.module.Modifier.Duplicate(name, newName, duplicate);
 
 			int newSel = sel+1;

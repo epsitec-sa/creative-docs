@@ -177,6 +177,44 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
+		public string GetDuplicateName(string baseName)
+		{
+			//	Retourne le nom à utiliser lorsqu'un nom existant est dupliqué.
+			ResourceBundleCollection bundles = this.module.Bundles;
+			ResourceBundle defaultBundle = bundles[ResourceLevel.Default];
+
+			int numberLength = 0;
+			while (baseName.Length > 0)
+			{
+				char last = baseName[baseName.Length-1-numberLength];
+				if (last >= '0' && last <= '9')
+				{
+					numberLength ++;
+				}
+				else
+				{
+					break;
+				}
+			}
+
+			int nextNumber = 2;
+			if (numberLength > 0)
+			{
+				nextNumber = int.Parse(baseName.Substring(baseName.Length-numberLength))+1;
+				baseName = baseName.Substring(0, baseName.Length-numberLength);
+			}
+
+			string newName = baseName;
+			for (int i=nextNumber; i<nextNumber+100; i++)
+			{
+				newName = string.Concat(baseName, i.ToString(System.Globalization.CultureInfo.InvariantCulture));
+				ResourceBundle.Field field = defaultBundle[newName];
+				if ( field == null || field.Name == null )  break;
+			}
+
+			return newName;
+		}
+
 		protected int GetDefaultIndex(string name)
 		{
 			//	Cherche l'index d'une ressource d'après son nom.
