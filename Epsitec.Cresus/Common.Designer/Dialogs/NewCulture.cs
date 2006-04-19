@@ -124,10 +124,11 @@ namespace Epsitec.Common.Designer.Dialogs
 		}
 
 
+		//	Liste des cultures qu'il est possible de créer, par ordre d'importance.
 		public static string[] Cultures = { "fr", "en", "de", "it", "es", "pt" };
 
 		
-		protected ScrollList cultureWidget;
+		protected ScrollList					cultureWidget;
 		protected List<string>					cultureList;
 	}
 }

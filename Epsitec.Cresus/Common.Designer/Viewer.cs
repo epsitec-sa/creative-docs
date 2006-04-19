@@ -135,7 +135,7 @@ namespace Epsitec.Common.Designer
 			int sel = this.array.SelectedRow;
 			if (sel == -1)
 			{
-				sel = 0;
+				sel = isReverse ? 0 : this.labelsIndex.Count-1;
 			}
 
 			int dir = isReverse ? -1 : 1;
@@ -310,7 +310,7 @@ namespace Epsitec.Common.Designer
 			{
 				if (sel == -1)
 				{
-					sel = 0;
+					sel = (name == "ModificationPrev") ? 0 : this.labelsIndex.Count-1;
 				}
 
 				int column = -1;
@@ -1116,6 +1116,7 @@ namespace Epsitec.Common.Designer
 
 		protected static int CompareCultureInfo(CultureInfo a, CultureInfo b)
 		{
+			//	Compare deux CultureInfo, afin que les noms soient dans l'ordre alphabétique.
 			return a.Name.CompareTo(b.Name);
 		}
 		#endregion
