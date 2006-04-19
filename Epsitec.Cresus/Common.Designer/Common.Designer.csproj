@@ -56,6 +56,7 @@
     <Compile Include="Ribbons\Culture.cs" />
     <Compile Include="Ribbons\File.cs" />
     <Compile Include="Ribbons\Select.cs" />
+    <Compile Include="Searcher.cs" />
     <Compile Include="Viewer.cs" />
   </ItemGroup>
   <ItemGroup>

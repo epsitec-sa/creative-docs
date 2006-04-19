@@ -130,18 +130,19 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		public void DoSearch(string search, bool isReverse, bool isCase, bool inLabel, bool inPrimaryText, bool inSecondaryText, bool inPrimaryAbout, bool inSecondaryAbout)
+		public void DoSearch(string search, Searcher.SearchingMode mode)
 		{
 			//	Effectue une recherche.
+#if false
 			int sel = this.array.SelectedRow;
 			if (sel == -1)
 			{
-				sel = isReverse ? 0 : this.labelsIndex.Count-1;
+				sel = ((mode&Searcher.SearchingMode.Reverse) != 0) ? 0 : this.labelsIndex.Count-1;
 			}
 
-			int dir = isReverse ? -1 : 1;
+			int dir = ((mode&Searcher.SearchingMode.Reverse) != 0) ? -1 : 1;
 
-			if (!isCase)
+			if ((mode&Searcher.SearchingMode.CaseSensitive) == 0)
 			{
 				search = search.ToLower();
 			}
@@ -173,7 +174,7 @@ namespace Epsitec.Common.Designer
 				if ( pAbout    == null )  pAbout    = "";
 				if ( sAbout    == null )  sAbout    = "";
 
-				if (!isCase)
+				if ((mode&Searcher.SearchingMode.CaseSensitive) == 0)
 				{
 					label     = label.ToLower();
 					primary   = primary.ToLower();
@@ -182,12 +183,12 @@ namespace Epsitec.Common.Designer
 					sAbout    = sAbout.ToLower();
 				}
 
-				if (inLabel && label.Contains(search))
+				if (((mode&Searcher.SearchingMode.SearchInLabel) != 0) && label.Contains(search))
 				{
 					break;
 				}
 
-				if (inPrimaryText)
+				if ((mode&Searcher.SearchingMode.SearchInPrimaryText) != 0)
 				{
 					index = primary.IndexOf(search);
 					if (index != -1)
@@ -197,7 +198,7 @@ namespace Epsitec.Common.Designer
 					}
 				}
 
-				if (inSecondaryText)
+				if ((mode&Searcher.SearchingMode.SearchInSecondaryText) != 0)
 				{
 					index = secondary.IndexOf(search);
 					if (index != -1)
@@ -207,7 +208,7 @@ namespace Epsitec.Common.Designer
 					}
 				}
 
-				if (inPrimaryAbout)
+				if ((mode&Searcher.SearchingMode.SearchInPrimaryAbout) != 0)
 				{
 					index = pAbout.IndexOf(search);
 					if (index != -1)
@@ -217,7 +218,7 @@ namespace Epsitec.Common.Designer
 					}
 				}
 
-				if (inSecondaryAbout)
+				if ((mode&Searcher.SearchingMode.SearchInSecondaryAbout) != 0)
 				{
 					index = sAbout.IndexOf(search);
 					if (index != -1)
@@ -244,6 +245,37 @@ namespace Epsitec.Common.Designer
 				edit.CursorTo    = index+search.Length;
 				edit.CursorAfter = false;
 			}
+#endif
+
+#if true
+			Searcher searcher = new Searcher(this.labelsIndex, this.primaryBundle, this.secondaryBundle);
+			searcher.FixStarting(mode, this.array.SelectedRow, this.currentTextField);
+
+			if (searcher.Search(search))
+			{
+				this.array.SelectedRow = searcher.Row;
+				this.array.ShowSelectedRow();
+
+				AbstractTextField edit = null;
+				if (searcher.Field == 0)  edit = this.labelEdit;
+				if (searcher.Field == 1)  edit = this.primaryEdit;
+				if (searcher.Field == 2)  edit = this.secondaryEdit;
+				if (searcher.Field == 3)  edit = this.primaryAbout;
+				if (searcher.Field == 4)  edit = this.secondaryAbout;
+				if (edit != null && edit.Visibility)
+				{
+					this.Window.MakeActive();
+					edit.Focus();
+					edit.CursorFrom  = searcher.Index;
+					edit.CursorTo    = searcher.Index+search.Length;
+					edit.CursorAfter = false;
+				}
+			}
+			else
+			{
+				this.module.MainWindow.DialogError(Res.Strings.Dialog.Search.Error);
+			}
+#endif
 		}
 
 		public void DoFilter(string filter, bool isBegin, bool isCase)
