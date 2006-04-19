@@ -486,6 +486,8 @@ namespace Epsitec.Common.Designer
 			this.UpdateSelectedCulture(bundle.Culture.NativeName);
 			this.UpdateArray();
 			this.UpdateClientGeometry();
+			this.UpdateCommands();
+			this.module.Modifier.IsDirty = true;
 		}
 
 		public void DoDeleteCulture()
@@ -504,6 +506,8 @@ namespace Epsitec.Common.Designer
 			}
 			this.UpdateArray();
 			this.UpdateClientGeometry();
+			this.UpdateCommands();
+			this.module.Modifier.IsDirty = true;
 		}
 
 		public void DoClipboard(string name)
@@ -799,10 +803,12 @@ namespace Epsitec.Common.Designer
 				}
 			}
 
+			bool newCulture = (this.module.Bundles.Count < Dialogs.NewCulture.Cultures.Length);
+
 			this.GetCommandState("Save").Enable = this.module.Modifier.IsDirty;
 			this.GetCommandState("SaveAs").Enable = true;
 
-			this.GetCommandState("NewCulture").Enable = true;
+			this.GetCommandState("NewCulture").Enable = newCulture;
 			this.GetCommandState("DeleteCulture").Enable = true;
 
 			this.GetCommandState("Filter").Enable = true;
