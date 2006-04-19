@@ -37,7 +37,7 @@ namespace Epsitec.Common.Text.Exchange.Html
 		{
 			get
 			{
-				return mName;
+				return mName.ToLower();
 			}
 			set
 			{

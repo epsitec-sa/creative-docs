@@ -139,20 +139,59 @@ namespace Epsitec.Common.Text.Exchange
 		}
 #endif
 
+
 		static void ProcessNodes(HtmlNodeCollection nodes)
 		{
+			bool italique = false;
+			bool bold = false;
 			foreach (HtmlNode node in nodes)
 			{
 				string s = node.ToString ();
 				if (node is HtmlElement)
 				{
 					HtmlElement element = node as HtmlElement;
-					Console.WriteLine ("Element: {0}", element.ToString ()) ;
+
+					if (element.Name == "i")
+					{
+						Console.WriteLine (">>> italic on");
+						italique = true;
+					}
+
+					if (element.Name == "b")
+					{
+						Console.WriteLine (">>> bold on");
+						bold = true;
+					}
+
+#if false
+					Console.WriteLine ("Element: {0}", element.Name) ;
+					if (element.Attributes.Count > 0)
+					{
+						foreach (HtmlAttribute attribute in element.Attributes)
+						{
+							Console.WriteLine (" Arribute: {0} = {1}", attribute.Name, attribute.Value);
+						}
+					}
+#endif
 					ProcessNodes (element.Nodes);
+
+					if (italique)
+					{
+						Console.WriteLine (">>> italic off");
+						italique = false;
+					}
+
+					if (bold)
+					{
+						Console.WriteLine (">>> bold off");
+						bold = false;
+					}
+
 				}
 				else
 				{
-					Console.WriteLine ("Text: ");
+					HtmlText text = node as HtmlText;
+					Console.WriteLine ("Text: {0}", text.Text);
 				}
 			}
 		}
@@ -179,8 +218,6 @@ namespace Epsitec.Common.Text.Exchange
 			HtmlDocument thehtmldoc = new HtmlDocument (line, false);
 
 			ProcessNodes (thehtmldoc.Nodes);
-
-
 
 #endif
 		}
