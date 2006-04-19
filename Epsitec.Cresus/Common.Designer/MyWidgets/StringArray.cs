@@ -213,6 +213,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected void SetSelectedRow(int row, int column)
 		{
+			//	Sélectionne une ligne, en indiquant également la colonne cliquée, pour SelectedColumn.
 			this.selectedColumn = column;
 
 			row = System.Math.Max(row, -1);
@@ -222,8 +223,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				this.selectedRow = row;
 				this.UpdateSelectedRow();
-				this.OnSelectedRowChanged();
 			}
+
+			//	Il faut envoyer l'événement même si la ligne n'a pas changé !
+			this.OnSelectedRowChanged();
 		}
 
 		public int SelectedColumn
