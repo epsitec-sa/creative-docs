@@ -38,7 +38,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="HtmlParser\HtmlAttribute.cs" />
     <Compile Include="HtmlClipboardReader.cs" />
+    <Compile Include="HtmlParser\HtmlDocument.cs" />
+    <Compile Include="HtmlParser\HtmlElement.cs" />
+    <Compile Include="HtmlParser\HtmlEncoder.cs" />
+    <Compile Include="HtmlParser\HtmlNode.cs" />
+    <Compile Include="HtmlParser\HtmlParser.cs" />
+    <Compile Include="HtmlParser\HtmlText.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

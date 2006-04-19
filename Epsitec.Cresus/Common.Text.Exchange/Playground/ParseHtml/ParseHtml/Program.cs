@@ -2,7 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
-using System.Windows.Forms;
+using Epsitec.Common.Text.Exchange.Html;
+
 // using System.Runtime.InteropServices;
 
 // place de jeux pour essayer de lire correctement du texte en format "HTML Format"
@@ -138,6 +139,24 @@ namespace Epsitec.Common.Text.Exchange
 		}
 #endif
 
+		static void ProcessNodes(HtmlNodeCollection nodes)
+		{
+			foreach (HtmlNode node in nodes)
+			{
+				string s = node.ToString ();
+				if (node is HtmlElement)
+				{
+					HtmlElement element = node as HtmlElement;
+					Console.WriteLine ("Element: {0}", element.ToString ()) ;
+					ProcessNodes (element.Nodes);
+				}
+				else
+				{
+					Console.WriteLine ("Text: ");
+				}
+			}
+		}
+
 		[STAThread]
 		static void Main(string[] args)
 		{
@@ -146,18 +165,23 @@ namespace Epsitec.Common.Text.Exchange
 
 			// string s = NativeHtmlClipboardReader.ReadClipBoard ();
 
-			string s = NativeHtmlClipboardReader.ReadClipBoardHtml ();
-#if false
-			using (StreamReader sr = new StreamReader ("file.txt"))
+//			string s = NativeHtmlClipboardReader.ReadClipBoardHtml ();
+#if true
+			String line;
+			using (StreamReader sr = new StreamReader ("test.htm"))
 			{
-				String line;
 				// Read and display lines from the file until the end of 
 				// the file is reached.
-				while ((line = sr.ReadLine ()) != null)
-				{
-					Console.WriteLine (line);
-				}
+
+				line = sr.ReadToEnd ();
 			}
+
+			HtmlDocument thehtmldoc = new HtmlDocument (line, false);
+
+			ProcessNodes (thehtmldoc.Nodes);
+
+
+
 #endif
 		}
 	}
