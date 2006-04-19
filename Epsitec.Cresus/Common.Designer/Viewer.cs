@@ -605,28 +605,34 @@ namespace Epsitec.Common.Designer
 
 			if (bundles.Count-1 > 0)
 			{
-				this.secondaryCultures = new IconButtonMark[bundles.Count-1];
-				int i = 0;
+				List<string> list = new List<string>();
+
 				for (int b=0; b<bundles.Count; b++)
 				{
 					ResourceBundle bundle = bundles[b];
 					if (bundle != this.primaryBundle)
 					{
-						this.secondaryCultures[i] = new IconButtonMark(this);
-						this.secondaryCultures[i].ButtonStyle = ButtonStyle.ActivableIcon;
-						this.secondaryCultures[i].SiteMark = SiteMark.OnBottom;
-						this.secondaryCultures[i].MarkDimension = 5;
-						this.secondaryCultures[i].Name = bundle.Culture.NativeName;
-						this.secondaryCultures[i].Text = bundle.Culture.NativeName;
-						this.secondaryCultures[i].Clicked += new MessageEventHandler(this.HandleSecondaryCultureClicked);
+						list.Add(bundle.Culture.NativeName);
 
 						if (this.secondaryBundle == null)
 						{
 							this.secondaryBundle = bundle;
 						}
-
-						i++;
 					}
+				}
+
+				list.Sort();
+				
+				this.secondaryCultures = new IconButtonMark[list.Count];
+				for (int i=0; i<list.Count; i++)
+				{
+					this.secondaryCultures[i] = new IconButtonMark(this);
+					this.secondaryCultures[i].ButtonStyle = ButtonStyle.ActivableIcon;
+					this.secondaryCultures[i].SiteMark = SiteMark.OnBottom;
+					this.secondaryCultures[i].MarkDimension = 5;
+					this.secondaryCultures[i].Name = list[i];
+					this.secondaryCultures[i].Text = list[i];
+					this.secondaryCultures[i].Clicked += new MessageEventHandler(this.HandleSecondaryCultureClicked);
 				}
 			}
 
