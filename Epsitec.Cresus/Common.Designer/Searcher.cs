@@ -68,11 +68,11 @@ namespace Epsitec.Common.Designer
 
 					if ((this.mode & SearchingMode.Reverse) == 0)  // en avant ?
 					{
-						this.starting.Index = System.Math.Min(edit.CursorFrom, edit.CursorTo);
+						this.starting.Index = edit.TextLayout.FindOffsetFromIndex(System.Math.Min(edit.CursorFrom, edit.CursorTo), true);
 					}
 					else  // en arrière ?
 					{
-						this.starting.Index = System.Math.Max(edit.CursorFrom, edit.CursorTo);
+						this.starting.Index = edit.TextLayout.FindOffsetFromIndex(System.Math.Max(edit.CursorFrom, edit.CursorTo), false);
 					}
 				}
 			}
@@ -115,6 +115,10 @@ namespace Epsitec.Common.Designer
 
 						if (this.current.Index >= searching.Length)
 						{
+							//	Voilà le fonctionnement étrange de LastIndexOf:
+							//	string text = "CreativeDocs";
+							//	int i = text.LastIndexOf("Docs", 11);
+							//	i vaut 8
 							int index = text.LastIndexOf(searching, this.current.Index-1);
 							if (index != -1)
 							{
