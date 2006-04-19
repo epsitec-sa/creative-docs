@@ -202,7 +202,10 @@ namespace Epsitec.Common.Designer
 			this.ribbonMain.Items.Add(new Ribbons.File());
 			this.ribbonMain.Items.Add(new Ribbons.Clipboard());
 			this.ribbonMain.Items.Add(new Ribbons.Culture());
-			this.ribbonMain.Items.Add(new Ribbons.Select());
+			if (this.mode == DesignerMode.Build)
+			{
+				this.ribbonMain.Items.Add(new Ribbons.Select());
+			}
 			this.ribbonMain.Items.Add(new Ribbons.Access());
 
 			this.ribbonOper = new RibbonContainer(this.window.Root);
