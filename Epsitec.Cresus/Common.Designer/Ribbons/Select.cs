@@ -14,8 +14,9 @@ namespace Epsitec.Common.Designer.Ribbons
 		{
 			this.title.Text = Res.Strings.Ribbon.Section.Select;
 
-			this.buttonDelete    = this.CreateIconButton("Delete", "Large");
+			this.buttonCreate    = this.CreateIconButton("Create", "Large");
 			this.buttonDuplicate = this.CreateIconButton("Duplicate", "Large");
+			this.buttonDelete    = this.CreateIconButton("Delete");
 			this.buttonUp        = this.CreateIconButton("Up");
 			this.buttonDown      = this.CreateIconButton("Down");
 
@@ -36,7 +37,7 @@ namespace Epsitec.Common.Designer.Ribbons
 			//	Retourne la largeur standard.
 			get
 			{
-				return 8 + 22*1.5*2 + 4 + 22*1;
+				return 8 + 22*1.5*2 + 4 + 22*2;
 			}
 		}
 
@@ -55,7 +56,7 @@ namespace Epsitec.Common.Designer.Ribbons
 			rect.Width  = dx*1.5;
 			rect.Height = dy*1.5;
 			rect.Offset(0, dy*0.5);
-			this.buttonDelete.Bounds = rect;
+			this.buttonCreate.Bounds = rect;
 			rect.Offset(dx*1.5, 0);
 			this.buttonDuplicate.Bounds = rect;
 
@@ -63,18 +64,21 @@ namespace Epsitec.Common.Designer.Ribbons
 			rect.Width  = dx;
 			rect.Height = dy;
 			rect.Offset(dx*1.5*2+4, dy+5);
+			this.buttonDelete.Bounds = rect;
+			rect.Offset(dx, 0);
 			this.buttonUp.Bounds = rect;
 
 			rect = this.UsefulZone;
 			rect.Width  = dx;
 			rect.Height = dy;
-			rect.Offset(dx*1.5*2+4, 0);
+			rect.Offset(dx*1.5*2+4+dx, 0);
 			this.buttonDown.Bounds = rect;
 		}
 
 
-		protected IconButton				buttonDelete;
+		protected IconButton				buttonCreate;
 		protected IconButton				buttonDuplicate;
+		protected IconButton				buttonDelete;
 		protected IconButton				buttonUp;
 		protected IconButton				buttonDown;
 	}
