@@ -267,7 +267,7 @@ namespace Epsitec.Common.Designer
 					this.Window.MakeActive();
 					edit.Focus();
 					edit.CursorFrom  = searcher.Index;
-					edit.CursorTo    = searcher.Index+search.Length;
+					edit.CursorTo    = searcher.Index+searcher.Length;
 					edit.CursorAfter = false;
 				}
 			}

@@ -66,7 +66,14 @@ namespace Epsitec.Common.Designer
 						case "SecondaryAbout":  this.starting.Field = 4;  break;
 					}
 
-					this.starting.Index = edit.Cursor;
+					if ((this.mode & SearchingMode.Reverse) == 0)  // en avant ?
+					{
+						this.starting.Index = System.Math.Min(edit.CursorFrom, edit.CursorTo);
+					}
+					else  // en arrière ?
+					{
+						this.starting.Index = System.Math.Max(edit.CursorFrom, edit.CursorTo);
+					}
 				}
 			}
 
@@ -76,35 +83,56 @@ namespace Epsitec.Common.Designer
 		public bool Search(string searching)
 		{
 			//	Effectue la recherche.
+			this.searching = searching;
+
 			if ((this.mode & SearchingMode.CaseSensitive) == 0)
 			{
 				searching = searching.ToLower();
 			}
 
-			while (true)
+			do
 			{
-				if (!this.MoveCurrentCursor())
-				{
-					return false;
-				}
-
 				string text = this.GetText;
-				if (text == null)
+				if (text != null)
 				{
-					continue;
-				}
+					if ((this.mode & SearchingMode.Reverse) == 0)  // en avant ?
+					{
+						this.current.Index ++;  // commence par avancer d'un caractère
+						if (this.current.Index <= text.Length-searching.Length)
+						{
+							int index = text.IndexOf(searching, this.current.Index);
+							if (index != -1)
+							{
+								this.current.Index = index;
+								return true;  // trouvé dans le même champ
+							}
+						}
+					}
+					else  // en arrière ?
+					{
+						this.current.Index --;  // commence par reculer d'un caractère
+						this.current.Index = System.Math.Min(this.current.Index, text.Length);
 
-				int index = text.IndexOf(searching);
-				if (index != -1)
-				{
-					this.current.Index = index;
-					return true;
+						if (this.current.Index >= searching.Length)
+						{
+							int index = text.LastIndexOf(searching, this.current.Index-1);
+							if (index != -1)
+							{
+								this.current.Index = index;
+								return true;  // trouvé dans le même champ
+							}
+						}
+					}
 				}
 			}
+			while (this.MoveCurrentCursor());
+
+			return false;
 		}
 
 		public int Row
 		{
+			//	Ligne atteinte.
 			get
 			{
 				return this.current.Row;
@@ -113,6 +141,7 @@ namespace Epsitec.Common.Designer
 
 		public int Field
 		{
+			//	Champ éditable atteint (0..4).
 			get
 			{
 				return this.current.Field;
@@ -121,18 +150,30 @@ namespace Epsitec.Common.Designer
 
 		public int Index
 		{
+			//	Index atteint dans le texte.
 			get
 			{
 				return this.current.Index;
 			}
 		}
 
+		public int Length
+		{
+			//	Longueur de la chaîne trouvée.
+			get
+			{
+				return this.searching.Length;
+			}
+		}
+
 
 		protected bool MoveCurrentCursor()
 		{
-			//	Avance le curseur sur le row/field suivant.
+			//	Avance le curseur sur le row/field/index suivant.
+			//	Retourne false si on atteint de nouveau le début (et donc que la recherche est terminée).
 			if ((this.mode & SearchingMode.Reverse) == 0)  // en avant ?
 			{
+				this.current.Index = -1;
 				this.current.Field++;
 				if (this.current.Field >= 5)
 				{
@@ -146,6 +187,7 @@ namespace Epsitec.Common.Designer
 			}
 			else  // en arrière ?
 			{
+				this.current.Index = 1000000;
 				this.current.Field--;
 				if (this.current.Field < 0)
 				{
@@ -158,17 +200,12 @@ namespace Epsitec.Common.Designer
 				}
 			}
 
-			if (Cursor.Compare(this.current, this.starting) == 0)
-			{
-				return false;
-			}
-
-			return true;
+			return (Cursor.Compare(this.current, this.starting) != 0);
 		}
 
 		protected string GetText
 		{
-			//	Retourne le texte à la position du curseur courant.
+			//	Retourne le texte à la position du curseur courant (en fonction de row/field).
 			get
 			{
 				string label = this.labelsIndex[this.current.Row];
@@ -280,6 +317,7 @@ namespace Epsitec.Common.Designer
 		protected ResourceBundle		primaryBundle;
 		protected ResourceBundle		secondaryBundle;
 		protected SearchingMode			mode;
+		protected string				searching;
 		protected Cursor				starting;
 		protected Cursor				current;
 	}
