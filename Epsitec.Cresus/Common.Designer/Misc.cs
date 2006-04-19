@@ -8,6 +8,27 @@ namespace Epsitec.Common.Designer
 	/// </summary>
 	public class Misc
 	{
+		static public string CultureLongName(System.Globalization.CultureInfo culture)
+		{
+			//	Retourne le nom long d'une culture.
+			return string.Format("{0} ({1}, {2})", Misc.CultureName(culture), culture.DisplayName, Misc.CultureShortName(culture));
+		}
+
+		static public string CultureShortName(System.Globalization.CultureInfo culture)
+		{
+			//	Retourne le nom court (2 lettres) d'une culture.
+			return culture.IetfLanguageTag.ToUpper();
+		}
+
+		static public string CultureName(System.Globalization.CultureInfo culture)
+		{
+			//	Retourne le nom standard d'une culture.
+			string text = culture.NativeName;
+			text = string.Concat(text.Substring(0, 1).ToUpper(), text.Substring(1));
+			return text;
+		}
+
+
 		static public string Resume(string text)
 		{
 			//	Retourne une version résumée à environ 20 caractères au maximum.
