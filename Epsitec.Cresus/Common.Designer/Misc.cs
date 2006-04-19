@@ -17,15 +17,27 @@ namespace Epsitec.Common.Designer
 		static public string CultureShortName(System.Globalization.CultureInfo culture)
 		{
 			//	Retourne le nom court (2 lettres) d'une culture.
-			return culture.IetfLanguageTag.ToUpper();
+			return Misc.ProperName(culture.IetfLanguageTag);
 		}
 
 		static public string CultureName(System.Globalization.CultureInfo culture)
 		{
 			//	Retourne le nom standard d'une culture.
-			string text = culture.NativeName;
-			text = string.Concat(text.Substring(0, 1).ToUpper(), text.Substring(1));
-			return text;
+			return Misc.ProperName(culture.NativeName);
+		}
+
+
+		static public string ProperName(string text)
+		{
+			//	Retourne le texte avec une majuscule au début.
+			if (text.Length <= 1)
+			{
+				return text.ToUpper();
+			}
+			else
+			{
+				return string.Concat(text.Substring(0, 1).ToUpper(), text.Substring(1));
+			}
 		}
 
 
