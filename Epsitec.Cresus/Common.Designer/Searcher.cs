@@ -265,7 +265,7 @@ namespace Epsitec.Common.Designer
 			return Searcher.IndexOf(text, value, startIndex, count, mode);
 		}
 
-		static public int IndexOf(string text, string value, int startIndex, int count, SearchingMode mode)
+		static protected int IndexOf(string text, string value, int startIndex, int count, SearchingMode mode)
 		{
 			//	Cherche l'index de 'value' dans 'text' (un peu comme string.IndexOf), mais avec quelques
 			//	options supplémentaires.
