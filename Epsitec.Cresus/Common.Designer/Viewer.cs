@@ -1032,6 +1032,7 @@ namespace Epsitec.Common.Designer
 
 		void HandleEditKeyboardFocusChanged(object sender, Epsitec.Common.Types.DependencyPropertyChangedEventArgs e)
 		{
+			//	Appelé lorsqu'une ligne éditable voit son focus changé.
 			bool focused = (bool) e.NewValue;
 
 			if (focused)
