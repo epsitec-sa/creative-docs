@@ -29,7 +29,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <OutputPath>bin\Debug\</OutputPath>
-    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <BaseAddress>285212672</BaseAddress>
     <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
     <ConfigurationOverrideFile>
@@ -52,7 +52,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <OutputPath>bin\Release\</OutputPath>
-    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <BaseAddress>285212672</BaseAddress>
     <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
     <ConfigurationOverrideFile>
@@ -123,6 +123,14 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ExchangeStringBuilder.cs" />
+    <Compile Include="HtmlClipboardReader.cs" />
+    <Compile Include="HtmlParser\HtmlAttribute.cs" />
+    <Compile Include="HtmlParser\HtmlDocument.cs" />
+    <Compile Include="HtmlParser\HtmlElement.cs" />
+    <Compile Include="HtmlParser\HtmlEncoder.cs" />
+    <Compile Include="HtmlParser\HtmlNode.cs" />
+    <Compile Include="HtmlParser\HtmlParser.cs" />
+    <Compile Include="HtmlParser\HtmlText.cs" />
     <Compile Include="HtmlText.cs" />
     <Compile Include="MsClipboardHtmlHeader.cs" />
     <Compile Include="Rosetta.cs">
