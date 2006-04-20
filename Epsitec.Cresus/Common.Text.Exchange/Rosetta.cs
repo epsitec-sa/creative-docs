@@ -5,6 +5,7 @@
 
 using System.Text;
 using System.Collections.Generic;
+using Epsitec.Common.Text.Exchange.HtmlParser;
 
 // Il faudrait trouver comment accéder à Epsitec.Common.Document.Modifier.FontSizeScale (254.0 / 72.0) 
 //
@@ -152,7 +153,6 @@ namespace Epsitec.Common.Text.Exchange
 			Wrappers.TextWrapper textWrapper = new Wrappers.TextWrapper ();
 			Wrappers.ParagraphWrapper paraWrapper = new Wrappers.ParagraphWrapper ();
 
-			System.Windows.Forms.Clipboard clipboard;
 			System.Text.StringBuilder output = new System.Text.StringBuilder ();
 
 			story.DisableOpletQueue ();
@@ -232,15 +232,21 @@ namespace Epsitec.Common.Text.Exchange
 
 		public static void TestCode(TextStory story, TextNavigator navigator)
 		{
+			string s = NativeHtmlClipboardReader.ReadClipBoardHtml ();
 
-			NativeHtmlClipboardReader reader;
-			byte[] b = NativeHtmlClipboardReader.ReadClipBoard ();
+			if (s.Length == 0)
+				return;
+
+			HtmlDocument thehtmldoc = new HtmlDocument (s, false);
 
 			Wrappers.TextWrapper textWrapper = new Wrappers.TextWrapper ();
 			Wrappers.ParagraphWrapper paraWrapper = new Wrappers.ParagraphWrapper ();
 
 			textWrapper.Attach (navigator);
 			paraWrapper.Attach (navigator);
+
+			HtmlToTextWriter theWriter = new HtmlToTextWriter (thehtmldoc, textWrapper, paraWrapper, navigator);
+			theWriter.ProcessIt ();
 
 #if false
 			textWrapper.SuspendSynchronizations ();
@@ -249,7 +255,7 @@ namespace Epsitec.Common.Text.Exchange
 			textWrapper.Defined.FontSize = 12 * HtmlText.FontSizeFactor;
 			textWrapper.Defined.Units = Properties.SizeUnits.Points;
 			textWrapper.ResumeSynchronizations ();
-#endif
+
 			navigator.Insert ("Hello you world !");
 			navigator.Insert (Unicode.Code.ParagraphSeparator);
 			navigator.Insert ("The End.");
@@ -270,9 +276,7 @@ namespace Epsitec.Common.Text.Exchange
 			navigator.Insert ("and beautiful ");
 
 			navigator.MoveTo (0, 0);
-
-
-
+#endif
 
 		}
 
