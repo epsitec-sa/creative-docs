@@ -11,13 +11,14 @@ namespace Epsitec.Common.Designer
 			None                   = 0x00000000,
 			CaseSensitive          = 0x00000001,
 			WholeWord              = 0x00000002,
-			Reverse                = 0x00000004,
+			AtBeginning            = 0x00000004,
+			Reverse                = 0x00000008,
 
-			SearchInLabel          = 0x00000010,
-			SearchInPrimaryText    = 0x00000020,
-			SearchInSecondaryText  = 0x00000040,
-			SearchInPrimaryAbout   = 0x00000080,
-			SearchInSecondaryAbout = 0x00000100,
+			SearchInLabel          = 0x00000100,
+			SearchInPrimaryText    = 0x00000200,
+			SearchInSecondaryText  = 0x00000400,
+			SearchInPrimaryAbout   = 0x00000800,
+			SearchInSecondaryAbout = 0x00001000,
 		}
 
 		public Searcher(List<string> labelsIndex, ResourceBundle primaryBundle, ResourceBundle secondaryBundle)
@@ -290,8 +291,8 @@ namespace Epsitec.Common.Designer
 
 			if ((mode&SearchingMode.CaseSensitive) == 0)  // é = e ?
 			{
-				text = Searcher.RemoveAccent(text);
-				value = Searcher.RemoveAccent(value);
+				text = Searcher.RemoveAccent(text.ToLower());
+				value = Searcher.RemoveAccent(value.ToLower());
 			}
 
 			if ((mode&SearchingMode.WholeWord) != 0)  // mot entier ?
