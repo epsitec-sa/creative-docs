@@ -21,6 +21,7 @@ namespace Epsitec.Common.Designer
 			SearchInSecondaryAbout = 0x00001000,
 		}
 
+
 		public Searcher(List<string> labelsIndex, ResourceBundle primaryBundle, ResourceBundle secondaryBundle)
 		{
 			this.labelsIndex = labelsIndex;
@@ -40,15 +41,15 @@ namespace Epsitec.Common.Designer
 			{
 				if ((this.mode&SearchingMode.Reverse) == 0)  // en avant ?
 				{
-					this.starting.Row   = this.labelsIndex.Count-1;  // à la fin
-					this.starting.Field = 4;
-					this.starting.Index = 1000000;
+					this.starting.Row   = 0;  // au début
+					this.starting.Field = 0;
+					this.starting.Index = -1;
 				}
 				else  // en arrière ?
 				{
-					this.starting.Row   = 0;  // au début
-					this.starting.Field = 0;
-					this.starting.Index = 0;
+					this.starting.Row   = this.labelsIndex.Count-1;  // à la fin
+					this.starting.Field = 4;
+					this.starting.Index = 1000000;
 				}
 			}
 			else
@@ -90,7 +91,7 @@ namespace Epsitec.Common.Designer
 
 			if ((this.mode&SearchingMode.CaseSensitive) == 0)
 			{
-				searching = searching.ToLower();
+				searching = Searcher.RemoveAccent(searching.ToLower());
 			}
 
 			do
@@ -131,6 +132,64 @@ namespace Epsitec.Common.Designer
 			}
 			while (this.MoveCurrentCursor());
 
+			return false;
+		}
+
+		public int Count(string searching)
+		{
+			//	Effectue le décompte.
+			this.searching = searching;
+
+			if ((this.mode&SearchingMode.CaseSensitive) == 0)
+			{
+				searching = Searcher.RemoveAccent(searching.ToLower());
+			}
+
+			int count = 0;
+			do
+			{
+				string text = this.GetText;
+				if (text != null)
+				{
+					if ((this.mode&SearchingMode.Reverse) == 0)  // en avant ?
+					{
+						this.current.Index ++;  // commence par avancer d'un caractère
+						if (this.current.Index <= text.Length-searching.Length)
+						{
+							int index = Searcher.IndexOf(text, searching, this.current.Index, this.mode);
+							if (index != -1)
+							{
+								this.current.Index = index;
+								count ++;
+							}
+						}
+					}
+					else  // en arrière ?
+					{
+						this.current.Index --;  // commence par reculer d'un caractère
+						this.current.Index = System.Math.Min(this.current.Index, text.Length);
+
+						if (this.current.Index >= searching.Length)
+						{
+							this.current.Index -= searching.Length;
+							int index = Searcher.IndexOf(text, searching, this.current.Index, this.mode);
+							if (index != -1)
+							{
+								this.current.Index = index;
+								count ++;
+							}
+						}
+					}
+				}
+			}
+			while (this.MoveCurrentCursor());
+
+			return count;
+		}
+
+		public bool Replace(string searching, string replacment)
+		{
+			//	Effectue la substitution.
 			return false;
 		}
 
@@ -242,7 +301,7 @@ namespace Epsitec.Common.Designer
 
 				if ((this.mode&SearchingMode.CaseSensitive) == 0 && text != null)
 				{
-					text = text.ToLower();
+					text = Searcher.RemoveAccent(text.ToLower());
 				}
 
 				return text;
@@ -250,9 +309,10 @@ namespace Epsitec.Common.Designer
 		}
 
 
-		#region InfexOf
+		#region IndexOf
 		static public int IndexOf(string text, string value, int startIndex, SearchingMode mode)
 		{
+			//	Cherche l'index de 'value' dans 'text'.
 			int count;
 			if ((mode&SearchingMode.Reverse) != 0)  // en arrière ?
 			{
@@ -289,10 +349,9 @@ namespace Epsitec.Common.Designer
 				return -1;
 			}
 
-			if ((mode&SearchingMode.CaseSensitive) == 0)  // é = e ?
+			if ((mode&SearchingMode.CaseSensitive) == 0)
 			{
 				text = Searcher.RemoveAccent(text.ToLower());
-				value = Searcher.RemoveAccent(value.ToLower());
 			}
 
 			if ((mode&SearchingMode.WholeWord) != 0)  // mot entier ?
@@ -360,7 +419,7 @@ namespace Epsitec.Common.Designer
 
 
 		#region Accents
-		static protected string RemoveAccent(string s)
+		static public string RemoveAccent(string s)
 		{
 			//	Retourne la même chaîne sans accent (é -> e).
 			System.Text.StringBuilder builder;

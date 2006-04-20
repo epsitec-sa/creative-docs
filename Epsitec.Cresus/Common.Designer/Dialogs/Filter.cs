@@ -22,7 +22,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.window.MakeSecondaryWindow();
 				this.window.MakeFixedSizeWindow();
 				this.window.MakeToolWindow();
-				this.WindowInit("Filter", 257, 150, true);
+				this.WindowInit("Filter", 270, 150, true);
 				this.window.Text = Res.Strings.Dialog.Filter.Title;
 				this.window.Owner = this.parentWindow;
 				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowCloseClicked);
@@ -83,7 +83,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				buttonAll.Width = 75;
 				buttonAll.Text = Res.Strings.Dialog.Filter.Button.All;
 				buttonAll.Anchor = AnchorStyles.BottomLeft;
-				buttonAll.Margins = new Margins(6+75+10, 0, 0, 6);
+				buttonAll.Margins = new Margins(6+75+5, 0, 0, 6);
 				buttonAll.Clicked += new MessageEventHandler(this.HandleButtonAllClicked);
 				buttonAll.TabIndex = tabIndex++;
 				buttonAll.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
@@ -91,8 +91,8 @@ namespace Epsitec.Common.Designer.Dialogs
 				Button buttonClose = new Button(this.window.Root);
 				buttonClose.Width = 75;
 				buttonClose.Text = Res.Strings.Dialog.Button.Close;
-				buttonClose.Anchor = AnchorStyles.BottomLeft;
-				buttonClose.Margins = new Margins(6+75+10+75+10, 0, 0, 6);
+				buttonClose.Anchor = AnchorStyles.BottomRight;
+				buttonClose.Margins = new Margins(0, 6, 0, 6);
 				buttonClose.Clicked += new MessageEventHandler(this.HandleButtonCloseClicked);
 				buttonClose.TabIndex = tabIndex++;
 				buttonClose.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
@@ -107,6 +107,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		private void HandleWindowCloseClicked(object sender)
 		{
+			//	TODO: si on ferme la fenêtre ainsi, on ne peut plus la rouvrir !
 			this.parentWindow.MakeActive();
 			this.window.Hide();
 			this.OnClosed();

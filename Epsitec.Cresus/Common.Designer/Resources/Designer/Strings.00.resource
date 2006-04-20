@@ -43,7 +43,7 @@
   <data name="Action.FontUnderlined">Souligné</data>
   <data name="Action.Glyphs">Caractères spéciaux...</data>
   <data name="Action.Filter">Filtrer les ressources visibles...</data>
-  <data name="Action.Search">Rechercher une ressource...</data>
+  <data name="Action.Search">Rechercher et remplacer...</data>
   <data name="Action.AccessFirst">Première ressource</data>
   <data name="Action.AccessLast">Dernière ressource</data>
   <data name="Action.AccessPrev">Ressource précédente</data>
@@ -67,7 +67,7 @@
   <data name="Dialog.Glyphs.Button.Insert">Insérer</data>
   <data name="Dialog.Glyphs.Tooltip.ArraySize">Taille de l'aperçu</data>
 
-  <data name="Dialog.Filter.Title">Filtre pour les ressources</data>
+  <data name="Dialog.Filter.Title">Filtre pour les noms des ressources</data>
   <data name="Dialog.Filter.Label">Critère</data>
   <data name="Dialog.Filter.Radio.Begin">Au début</data>
   <data name="Dialog.Filter.Radio.Any">N'importe où</data>
@@ -76,22 +76,23 @@
   <data name="Dialog.Filter.Button.Insert">Filtrer</data>
   <data name="Dialog.Filter.Button.All">Tout</data>
 
-  <data name="Dialog.Search.Title">Recherche d'une ressource</data>
+  <data name="Dialog.Search.Title">Rechercher et remplacer</data>
   <data name="Dialog.Search.Label">Rechercher</data>
   <data name="Dialog.Search.Replace">Remplacer par</data>
   <data name="Dialog.Search.Radio.Reverse">En arrière</data>
   <data name="Dialog.Search.Radio.Normal">En avant</data>
   <data name="Dialog.Search.Check.Case">Respecter la casse</data>
   <data name="Dialog.Search.Check.Word">Mots entiers</data>
-  <data name="Dialog.Search.Check.Label">Chercher dans les noms</data>
-  <data name="Dialog.Search.Check.PrimaryText">Chercher dans les textes de référence</data>
-  <data name="Dialog.Search.Check.SecondaryText">Chercher dans les textes secondaires</data>
-  <data name="Dialog.Search.Check.PrimaryAbout">Chercher dans les commentaires de référence</data>
-  <data name="Dialog.Search.Check.SecondaryAbout">Chercher dans les commentaires secondaires</data>
-  <data name="Dialog.Search.Button.Search">Chercher</data>
+  <data name="Dialog.Search.Check.Label">Rechercher dans les noms</data>
+  <data name="Dialog.Search.Check.PrimaryText">Rechercher dans les textes de référence</data>
+  <data name="Dialog.Search.Check.SecondaryText">Rechercher dans les textes secondaires</data>
+  <data name="Dialog.Search.Check.PrimaryAbout">Rechercher dans les commentaires de référence</data>
+  <data name="Dialog.Search.Check.SecondaryAbout">Rechercher dans les commentaires secondaires</data>
+  <data name="Dialog.Search.Button.Search">Rechercher</data>
   <data name="Dialog.Search.Button.Count">Compter</data>
   <data name="Dialog.Search.Button.Replace">Remplacer</data>
-  <data name="Dialog.Search.Error">Pas trouvé !</data>
+  <data name="Dialog.Search.Message.Count">{0} occurrences trouvées.</data>
+  <data name="Dialog.Search.Message.Error">Pas trouvé !</data>
 
   <data name="Dialog.NewCulture.Title">Culture à créer</data>
   <data name="Dialog.NewCulture.Label">Choix de la culture à créer</data>

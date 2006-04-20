@@ -752,6 +752,20 @@ namespace Epsitec.Common.Designer
 			return dialog.Result;
 		}
 
+		public Common.Dialogs.DialogResult DialogMessage(string message)
+		{
+			//	Affiche le dialogue pour signaler une erreur.
+			if ( this.Window == null )  return Common.Dialogs.DialogResult.None;
+
+			string title = Res.Strings.Application.Title;
+			string icon = "manifest:Epsitec.Common.Dialogs.Images.Information.icon";
+
+			Common.Dialogs.IDialog dialog = Common.Dialogs.Message.CreateOk(title, icon, message, "", this.commandDispatcher);
+			dialog.Owner = this.Window;
+			dialog.OpenDialog();
+			return dialog.Result;
+		}
+
 		public Common.Dialogs.DialogResult DialogError(string error)
 		{
 			//	Affiche le dialogue pour signaler une erreur.

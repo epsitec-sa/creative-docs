@@ -211,6 +211,9 @@
     <EmbeddedResource Include="Images\StartDesigner.icon" />
     <EmbeddedResource Include="Images\Warning.icon" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Images\Information.icon" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>
