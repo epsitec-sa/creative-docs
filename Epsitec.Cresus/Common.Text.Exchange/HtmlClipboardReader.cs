@@ -25,7 +25,7 @@ namespace Epsitec.Common.Text.Exchange
 
 				pBuffer = ReadHtmlFromClipboard ();
 
-				if (pBuffer != null)
+				if (pBuffer != null && (int)pBuffer != 1)
 				{
 
 					size = GetClipboardSize ();
@@ -50,6 +50,12 @@ namespace Epsitec.Common.Text.Exchange
 		public static string ReadClipBoardHtml()
 		{
 			byte [] clipboardBytes = ReadClipBoard() ;
+
+			if (clipboardBytes == null)
+			{
+				return "";
+			}
+
 			sbyte[] startbytes = new sbyte[200] ;
 			StringBuilder sb = new StringBuilder() ;
 
