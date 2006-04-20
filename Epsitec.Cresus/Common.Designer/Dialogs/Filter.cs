@@ -22,7 +22,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.window.MakeSecondaryWindow();
 				this.window.MakeFixedSizeWindow();
 				this.window.MakeToolWindow();
-				this.WindowInit("Filter", 257, 140, true);
+				this.WindowInit("Filter", 257, 150, true);
 				this.window.Text = Res.Strings.Dialog.Filter.Title;
 				this.window.Owner = this.parentWindow;
 				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowCloseClicked);
@@ -61,6 +61,12 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.checkCase.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
 				this.checkCase.Margins = new Margins(6+40, 6, 6+32+16*2+4, 0);
 				this.checkCase.TabIndex = tabIndex++;
+
+				this.checkWord = new CheckButton(this.window.Root);
+				this.checkWord.Text = Res.Strings.Dialog.Filter.Check.Word;
+				this.checkWord.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+				this.checkWord.Margins = new Margins(6+40, 6, 6+32+16*3+4, 0);
+				this.checkWord.TabIndex = tabIndex++;
 
 				//	Boutons de fermeture.
 				Button buttonOk = new Button(this.window.Root);
@@ -118,9 +124,11 @@ namespace Epsitec.Common.Designer.Dialogs
 			Module module = this.mainWindow.CurrentModule;
 			if ( module == null )  return;
 
-			bool isBegin = (this.radioBegin.ActiveState == ActiveState.Yes);
-			bool isCase  = (this.checkCase.ActiveState == ActiveState.Yes);
-			module.Modifier.ActiveViewer.DoFilter(this.fieldFilter.Text, isBegin, isCase);
+			Searcher.SearchingMode mode = Searcher.SearchingMode.None;
+			if (this.radioBegin.ActiveState == ActiveState.Yes)  mode |= Searcher.SearchingMode.AtBeginning;
+			if (this.checkCase.ActiveState  == ActiveState.Yes)  mode |= Searcher.SearchingMode.CaseSensitive;
+			if (this.checkWord.ActiveState  == ActiveState.Yes)  mode |= Searcher.SearchingMode.WholeWord;
+			module.Modifier.ActiveViewer.DoFilter(this.fieldFilter.Text, mode);
 
 			Misc.ComboMenuAdd(this.fieldFilter, this.fieldFilter.Text);
 		}
@@ -130,7 +138,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			Module module = this.mainWindow.CurrentModule;
 			if ( module == null )  return;
 
-			module.Modifier.ActiveViewer.DoFilter("", false, false);
+			module.Modifier.ActiveViewer.DoFilter("", Searcher.SearchingMode.None);
 		}
 
 
@@ -138,5 +146,6 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected RadioButton					radioBegin;
 		protected RadioButton					radioAny;
 		protected CheckButton					checkCase;
+		protected CheckButton					checkWord;
 	}
 }
