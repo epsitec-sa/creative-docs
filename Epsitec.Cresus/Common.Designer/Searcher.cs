@@ -82,6 +82,7 @@ namespace Epsitec.Common.Designer
 			}
 
 			this.starting.CopyTo(this.current);
+			this.limitOverflow = false;
 		}
 
 		public bool Search(string searching)
@@ -119,8 +120,7 @@ namespace Epsitec.Common.Designer
 
 						if (this.current.Index >= searching.Length)
 						{
-							this.current.Index -= searching.Length;
-							int index = Searcher.IndexOf(text, searching, this.current.Index, this.mode);
+							int index = Searcher.IndexOf(text, searching, this.current.Index-1, this.mode);
 							if (index != -1)
 							{
 								this.current.Index = index;
@@ -140,6 +140,12 @@ namespace Epsitec.Common.Designer
 			//	Effectue le décompte.
 			this.searching = searching;
 
+			this.mode &= ~SearchingMode.Reverse;
+			this.starting.Row   = 0;  // au début
+			this.starting.Field = 0;
+			this.starting.Index = -1;
+			this.starting.CopyTo(this.current);
+
 			if ((this.mode&SearchingMode.CaseSensitive) == 0)
 			{
 				searching = Searcher.RemoveAccent(searching.ToLower());
@@ -151,33 +157,16 @@ namespace Epsitec.Common.Designer
 				string text = this.GetText;
 				if (text != null)
 				{
-					if ((this.mode&SearchingMode.Reverse) == 0)  // en avant ?
+				same:
+					this.current.Index ++;  // commence par avancer d'un caractère
+					if (this.current.Index <= text.Length-searching.Length)
 					{
-						this.current.Index ++;  // commence par avancer d'un caractère
-						if (this.current.Index <= text.Length-searching.Length)
+						int index = Searcher.IndexOf(text, searching, this.current.Index, this.mode);
+						if (index != -1)
 						{
-							int index = Searcher.IndexOf(text, searching, this.current.Index, this.mode);
-							if (index != -1)
-							{
-								this.current.Index = index;
-								count ++;
-							}
-						}
-					}
-					else  // en arrière ?
-					{
-						this.current.Index --;  // commence par reculer d'un caractère
-						this.current.Index = System.Math.Min(this.current.Index, text.Length);
-
-						if (this.current.Index >= searching.Length)
-						{
-							this.current.Index -= searching.Length;
-							int index = Searcher.IndexOf(text, searching, this.current.Index, this.mode);
-							if (index != -1)
-							{
-								this.current.Index = index;
-								count ++;
-							}
+							this.current.Index = index;
+							count ++;
+							goto same;
 						}
 					}
 				}
@@ -245,8 +234,10 @@ namespace Epsitec.Common.Designer
 					if (this.current.Row >= this.labelsIndex.Count)
 					{
 						this.current.Row = 0;
+						this.limitOverflow = true;
 					}
 				}
+				return (!this.limitOverflow || Cursor.Compare(this.current, this.starting) < 0);
 			}
 			else  // en arrière ?
 			{
@@ -259,11 +250,11 @@ namespace Epsitec.Common.Designer
 					if (this.current.Row < 0)
 					{
 						this.current.Row = this.labelsIndex.Count-1;
+						this.limitOverflow = true;
 					}
 				}
+				return (!this.limitOverflow || Cursor.Compare(this.current, this.starting) > 0);
 			}
-
-			return (Cursor.Compare(this.current, this.starting) != 0);
 		}
 
 		protected string GetText
@@ -272,39 +263,33 @@ namespace Epsitec.Common.Designer
 			get
 			{
 				string label = this.labelsIndex[this.current.Row];
-				string text = null;
 
 				if (this.current.Field == 0 && (this.mode&SearchingMode.SearchInLabel) != 0)
 				{
-					text = label;
+					return label;
 				}
 
 				if (this.current.Field == 1 && (this.mode&SearchingMode.SearchInPrimaryText) != 0)
 				{
-					text = this.primaryBundle[label].AsString;
+					return this.primaryBundle[label].AsString;
 				}
 
 				if (this.current.Field == 2 && (this.mode&SearchingMode.SearchInSecondaryText) != 0)
 				{
-					text = this.secondaryBundle[label].AsString;
+					return this.secondaryBundle[label].AsString;
 				}
 
 				if (this.current.Field == 3 && (this.mode&SearchingMode.SearchInPrimaryAbout) != 0)
 				{
-					text = this.primaryBundle[label].About;
+					return this.primaryBundle[label].About;
 				}
 
 				if (this.current.Field == 4 && (this.mode&SearchingMode.SearchInSecondaryAbout) != 0)
 				{
-					text = this.secondaryBundle[label].About;
+					return this.secondaryBundle[label].About;
 				}
 
-				if ((this.mode&SearchingMode.CaseSensitive) == 0 && text != null)
-				{
-					text = Searcher.RemoveAccent(text.ToLower());
-				}
-
-				return text;
+				return null;
 			}
 		}
 
@@ -557,5 +542,6 @@ namespace Epsitec.Common.Designer
 		protected string				searching;
 		protected Cursor				starting;
 		protected Cursor				current;
+		protected bool					limitOverflow;
 	}
 }
