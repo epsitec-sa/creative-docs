@@ -70,7 +70,7 @@ namespace Epsitec.Common.Text.Exchange
 
 			System.Windows.Forms.Clipboard clipboard;
 
-			HtmlText htmlText = new HtmlText ();
+			HtmlTextOut htmlText = new HtmlTextOut ();
 			bool newParagraph = true;
 
 			navigator.MoveTo (0, 0);
@@ -232,6 +232,10 @@ namespace Epsitec.Common.Text.Exchange
 
 		public static void TestCode(TextStory story, TextNavigator navigator)
 		{
+
+			NativeHtmlClipboardReader reader;
+			byte[] b = NativeHtmlClipboardReader.ReadClipBoard ();
+
 			Wrappers.TextWrapper textWrapper = new Wrappers.TextWrapper ();
 			Wrappers.ParagraphWrapper paraWrapper = new Wrappers.ParagraphWrapper ();
 
@@ -266,6 +270,10 @@ namespace Epsitec.Common.Text.Exchange
 			navigator.Insert ("and beautiful ");
 
 			navigator.MoveTo (0, 0);
+
+
+
+
 		}
 
 	}

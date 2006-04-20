@@ -8,9 +8,9 @@ using System.Text;
 
 namespace Epsitec.Common.Text.Exchange
 {
-	public class HtmlText
+	public class HtmlTextOut
 	{
-		public HtmlText()
+		public HtmlTextOut()
 		{
 			this.tagStorageList.Add (HtmlTagType.Bold, new TagStoreage (this, HtmlTagType.Bold));
 			this.tagStorageList.Add (HtmlTagType.Italic, new TagStoreage (this, HtmlTagType.Italic));
@@ -209,7 +209,7 @@ namespace Epsitec.Common.Text.Exchange
 
 			int i;
 
-			for (i = 0; i <= HtmlText.htmlfontsizes.Length; i++)
+			for (i = 0; i <= HtmlTextOut.htmlfontsizes.Length; i++)
 			{
 				if (pointsize <= htmlfontsizes[i])
 					break;
@@ -404,7 +404,7 @@ namespace Epsitec.Common.Text.Exchange
 
 		private class TagStoreage
 		{
-			public TagStoreage(HtmlText htmltext, HtmlTagType tag)
+			public TagStoreage(HtmlTextOut htmltext, HtmlTagType tag)
 			{
 				this.tag = tag;
 				this.htmltext = htmltext;
@@ -454,7 +454,7 @@ namespace Epsitec.Common.Text.Exchange
 			private SpanStyle precedingspanstyle;
 			private SpanStyle currentspanstyle;
 			private HtmlTagType tag;
-			private HtmlText htmltext;
+			private HtmlTextOut htmltext;
 
 			//private System.Collections.Generic.Dictionary 
 		}
@@ -692,31 +692,31 @@ namespace Epsitec.Common.Text.Exchange
 				switch (this.htmltag)
 				{
 					case HtmlTagType.Italic:
-						retval = HtmlText.GetHtmlTag ("i", tagmode);
+						retval = HtmlTextOut.GetHtmlTag ("i", tagmode);
 						break;
 					case HtmlTagType.Bold:
-						retval = HtmlText.GetHtmlTag ("b", tagmode);
+						retval = HtmlTextOut.GetHtmlTag ("b", tagmode);
 						break;
 					case HtmlTagType.Underlined:
-						retval = HtmlText.GetHtmlTag ("u", tagmode);
+						retval = HtmlTextOut.GetHtmlTag ("u", tagmode);
 						break;
 					case HtmlTagType.Strikeout:
-						retval = HtmlText.GetHtmlTag ("s", tagmode);
+						retval = HtmlTextOut.GetHtmlTag ("s", tagmode);
 						break;
 					case HtmlTagType.Paragraph:
-						retval = HtmlText.GetHtmlTag ("p", tagmode, this.parametername, this.parametervalue, false);
+						retval = HtmlTextOut.GetHtmlTag ("p", tagmode, this.parametername, this.parametervalue, false);
 						break;
 					case HtmlTagType.Font:
-						retval = HtmlText.GetHtmlTag ("font", tagmode, this.parametername, this.parametervalue, false);
+						retval = HtmlTextOut.GetHtmlTag ("font", tagmode, this.parametername, this.parametervalue, false);
 						break;
 					case HtmlTagType.Subscript:
-						retval = HtmlText.GetHtmlTag ("sub", tagmode);
+						retval = HtmlTextOut.GetHtmlTag ("sub", tagmode);
 						break;
 					case HtmlTagType.Superscript:
-						retval = HtmlText.GetHtmlTag ("sup", tagmode);
+						retval = HtmlTextOut.GetHtmlTag ("sup", tagmode);
 						break;
 					case HtmlTagType.Span:
-						retval = HtmlText.GetHtmlTag ("span", tagmode, this.parametername, this.parametervalue, true);
+						retval = HtmlTextOut.GetHtmlTag ("span", tagmode, this.parametername, this.parametervalue, true);
 						break;
 				}
 

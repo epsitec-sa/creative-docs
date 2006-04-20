@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
-using Epsitec.Common.Text.Exchange.Html;
+using Epsitec.Common.Text.Exchange.HtmlParser;
 
 // using System.Runtime.InteropServices;
 
@@ -144,12 +144,19 @@ namespace Epsitec.Common.Text.Exchange
 		{
 			bool italique = false;
 			bool bold = false;
+			bool span = false;
 			foreach (HtmlNode node in nodes)
 			{
 				string s = node.ToString ();
 				if (node is HtmlElement)
 				{
 					HtmlElement element = node as HtmlElement;
+
+					if (element.Name == "span")
+					{
+						Console.WriteLine (">>> span on");
+						span = true;
+					}
 
 					if (element.Name == "i")
 					{
@@ -180,12 +187,20 @@ namespace Epsitec.Common.Text.Exchange
 						Console.WriteLine (">>> italic off");
 						italique = false;
 					}
+					if (span)
+					{
+						Console.WriteLine (">>> span off");
+						span = false;
+					}
+
 
 					if (bold)
 					{
 						Console.WriteLine (">>> bold off");
 						bold = false;
 					}
+
+
 
 				}
 				else
@@ -207,7 +222,7 @@ namespace Epsitec.Common.Text.Exchange
 //			string s = NativeHtmlClipboardReader.ReadClipBoardHtml ();
 #if true
 			String line;
-			using (StreamReader sr = new StreamReader ("test.htm"))
+			using (StreamReader sr = new StreamReader ("test1.htm"))
 			{
 				// Read and display lines from the file until the end of 
 				// the file is reached.
