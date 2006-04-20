@@ -10,7 +10,9 @@ namespace Epsitec.Common.Designer
 		{
 			None                   = 0x00000000,
 			CaseSensitive          = 0x00000001,
-			Reverse                = 0x00000002,
+			WholeWord              = 0x00000002,
+			Reverse                = 0x00000004,
+
 			SearchInLabel          = 0x00000010,
 			SearchInPrimaryText    = 0x00000020,
 			SearchInSecondaryText  = 0x00000040,
@@ -35,7 +37,7 @@ namespace Epsitec.Common.Designer
 
 			if (row == -1)
 			{
-				if ((this.mode & SearchingMode.Reverse) == 0)  // en avant ?
+				if ((this.mode&SearchingMode.Reverse) == 0)  // en avant ?
 				{
 					this.starting.Row   = this.labelsIndex.Count-1;  // à la fin
 					this.starting.Field = 4;
@@ -66,7 +68,7 @@ namespace Epsitec.Common.Designer
 						case "SecondaryAbout":  this.starting.Field = 4;  break;
 					}
 
-					if ((this.mode & SearchingMode.Reverse) == 0)  // en avant ?
+					if ((this.mode&SearchingMode.Reverse) == 0)  // en avant ?
 					{
 						this.starting.Index = edit.TextLayout.FindOffsetFromIndex(System.Math.Min(edit.CursorFrom, edit.CursorTo), true);
 					}
@@ -85,7 +87,7 @@ namespace Epsitec.Common.Designer
 			//	Effectue la recherche.
 			this.searching = searching;
 
-			if ((this.mode & SearchingMode.CaseSensitive) == 0)
+			if ((this.mode&SearchingMode.CaseSensitive) == 0)
 			{
 				searching = searching.ToLower();
 			}
@@ -95,12 +97,12 @@ namespace Epsitec.Common.Designer
 				string text = this.GetText;
 				if (text != null)
 				{
-					if ((this.mode & SearchingMode.Reverse) == 0)  // en avant ?
+					if ((this.mode&SearchingMode.Reverse) == 0)  // en avant ?
 					{
 						this.current.Index ++;  // commence par avancer d'un caractère
 						if (this.current.Index <= text.Length-searching.Length)
 						{
-							int index = text.IndexOf(searching, this.current.Index);
+							int index = Searcher.IndexOf(text, searching, this.current.Index, this.mode);
 							if (index != -1)
 							{
 								this.current.Index = index;
@@ -115,11 +117,8 @@ namespace Epsitec.Common.Designer
 
 						if (this.current.Index >= searching.Length)
 						{
-							//	Voilà le fonctionnement étrange de LastIndexOf:
-							//	string text = "CreativeDocs";
-							//	int i = text.LastIndexOf("Docs", 11);
-							//	i vaut 8
-							int index = text.LastIndexOf(searching, this.current.Index-1);
+							this.current.Index -= searching.Length;
+							int index = Searcher.IndexOf(text, searching, this.current.Index, this.mode);
 							if (index != -1)
 							{
 								this.current.Index = index;
@@ -175,7 +174,7 @@ namespace Epsitec.Common.Designer
 		{
 			//	Avance le curseur sur le row/field/index suivant.
 			//	Retourne false si on atteint de nouveau le début (et donc que la recherche est terminée).
-			if ((this.mode & SearchingMode.Reverse) == 0)  // en avant ?
+			if ((this.mode&SearchingMode.Reverse) == 0)  // en avant ?
 			{
 				this.current.Index = -1;
 				this.current.Field++;
@@ -215,32 +214,32 @@ namespace Epsitec.Common.Designer
 				string label = this.labelsIndex[this.current.Row];
 				string text = null;
 
-				if (this.current.Field == 0 && (this.mode & SearchingMode.SearchInLabel) != 0)
+				if (this.current.Field == 0 && (this.mode&SearchingMode.SearchInLabel) != 0)
 				{
 					text = label;
 				}
 
-				if (this.current.Field == 1 && (this.mode & SearchingMode.SearchInPrimaryText) != 0)
+				if (this.current.Field == 1 && (this.mode&SearchingMode.SearchInPrimaryText) != 0)
 				{
 					text = this.primaryBundle[label].AsString;
 				}
 
-				if (this.current.Field == 2 && (this.mode & SearchingMode.SearchInSecondaryText) != 0)
+				if (this.current.Field == 2 && (this.mode&SearchingMode.SearchInSecondaryText) != 0)
 				{
 					text = this.secondaryBundle[label].AsString;
 				}
 
-				if (this.current.Field == 3 && (this.mode & SearchingMode.SearchInPrimaryAbout) != 0)
+				if (this.current.Field == 3 && (this.mode&SearchingMode.SearchInPrimaryAbout) != 0)
 				{
 					text = this.primaryBundle[label].About;
 				}
 
-				if (this.current.Field == 4 && (this.mode & SearchingMode.SearchInSecondaryAbout) != 0)
+				if (this.current.Field == 4 && (this.mode&SearchingMode.SearchInSecondaryAbout) != 0)
 				{
 					text = this.secondaryBundle[label].About;
 				}
 
-				if ((this.mode & SearchingMode.CaseSensitive) == 0 && text != null)
+				if ((this.mode&SearchingMode.CaseSensitive) == 0 && text != null)
 				{
 					text = text.ToLower();
 				}
@@ -248,6 +247,180 @@ namespace Epsitec.Common.Designer
 				return text;
 			}
 		}
+
+
+		#region InfexOf
+		static public int IndexOf(string text, string value, int startIndex, SearchingMode mode)
+		{
+			int count;
+			if ((mode&SearchingMode.Reverse) != 0)  // en arrière ?
+			{
+				count = startIndex+1;
+			}
+			else	// en avant ?
+			{
+				count = text.Length-startIndex;
+			}
+
+			return Searcher.IndexOf(text, value, startIndex, count, mode);
+		}
+
+		static public int IndexOf(string text, string value, int startIndex, int count, SearchingMode mode)
+		{
+			//	Cherche l'index de 'value' dans 'text' (un peu comme string.IndexOf), mais avec quelques
+			//	options supplémentaires.
+			//	Lorsqu'on recule (SearchingMode.Reverse), 'startIndex' est à la fin (sur le premier
+			//	caractère cherché) et 'count' est positif (mais compte de droite à gauche).
+			//	Cette façon absurde de procéder est celle de string.LastIndexOf !
+			if ((mode&SearchingMode.Reverse) != 0)  // en arrière ?
+			{
+				startIndex = System.Math.Min(startIndex, text.Length);
+				count = System.Math.Min(count, startIndex+1);
+			}
+			else	// en avant ?
+			{
+				startIndex = System.Math.Max(startIndex, 0);
+				count = System.Math.Min(count, text.Length-startIndex);
+			}
+
+			if (count <= 0 || text.Length < value.Length)
+			{
+				return -1;
+			}
+
+			if ((mode&SearchingMode.CaseSensitive) == 0)  // é = e ?
+			{
+				text = Searcher.RemoveAccent(text);
+				value = Searcher.RemoveAccent(value);
+			}
+
+			if ((mode&SearchingMode.WholeWord) != 0)  // mot entier ?
+			{
+				if ((mode&SearchingMode.Reverse) != 0)  // en arrière ?
+				{
+					int begin = startIndex-count+1;
+					while (true)
+					{
+						startIndex = text.LastIndexOf(value, startIndex, count);
+						if (startIndex == -1)  return -1;
+						if (Searcher.IsWholeWord(text, startIndex, value.Length))  return startIndex;
+						startIndex--;
+						count = startIndex-begin+1;
+						if (startIndex < 0)  return -1;
+					}
+				}
+				else	// en avant ?
+				{
+					int length = startIndex+count;
+					while (true)
+					{
+						startIndex = text.IndexOf(value, startIndex, count);
+						if (startIndex == -1)  return -1;
+						if (Searcher.IsWholeWord(text, startIndex, value.Length))  return startIndex;
+						startIndex++;
+						count = length-startIndex;
+						if (count <= 0)  return -1;
+					}
+				}
+			}
+			else
+			{
+				if ((mode&SearchingMode.Reverse) != 0)  // en arrière ?
+				{
+					return text.LastIndexOf(value, startIndex, count);
+				}
+				else	// en avant ?
+				{
+					return text.IndexOf(value, startIndex, count);
+				}
+			}
+		}
+
+		static protected bool IsWholeWord(string text, int index, int count)
+		{
+			//	Vérifie si un mot et précédé et suivi d'un caractère séparateur de mots.
+			if (index > 0)
+			{
+				char c1 = text[index-1];
+				char c2 = text[index];
+				if (!Text.Unicode.IsWordStart(c2, c1))  return false;
+			}
+
+			if (index+count < text.Length)
+			{
+				char c1 = text[index+count-1];
+				char c2 = text[index+count];
+				if (!Text.Unicode.IsWordEnd(c2, c1))  return false;
+			}
+
+			return true;
+		}
+		#endregion
+
+
+		#region Accents
+		static protected string RemoveAccent(string s)
+		{
+			//	Retourne la même chaîne sans accent (é -> e).
+			System.Text.StringBuilder builder;
+				
+			builder = new System.Text.StringBuilder(s.Length);
+			for ( int i=0 ; i<s.Length ; i++ )
+			{
+				builder.Append(Searcher.RemoveAccent(s[i]));
+			}
+			return builder.ToString();
+		}
+
+		static protected char RemoveAccent(char c)
+		{
+			//	Retourne le même caractère sans accent (é -> e).
+			//	TODO: traiter tous les accents unicode ?
+			char lower = System.Char.ToLower(c);
+			char cc = lower;
+
+			switch ( cc )
+			{
+				case 'á':
+				case 'à':
+				case 'â':
+				case 'ä':
+				case 'ã':  cc = 'a';  break;
+
+				case 'ç':  cc = 'c';  break;
+
+				case 'é':
+				case 'è':
+				case 'ê':
+				case 'ë':  cc = 'e';  break;
+
+				case 'í':
+				case 'ì':
+				case 'î':
+				case 'ï':  cc = 'i';  break;
+
+				case 'ñ':  cc = 'n';  break;
+
+				case 'ó':
+				case 'ò':
+				case 'ô':
+				case 'ö':
+				case 'õ':  cc = 'o';  break;
+
+				case 'ú':
+				case 'ù':
+				case 'û':
+				case 'ü':  cc = 'u';  break;
+			}
+
+			if ( lower != c )  // a-t-on utilisé une majuscule transformée en minuscule ?
+			{
+				cc = System.Char.ToUpper(cc);  // remet en majuscule
+			}
+
+			return cc;
+		}
+		#endregion
 
 
 		#region Cursor
