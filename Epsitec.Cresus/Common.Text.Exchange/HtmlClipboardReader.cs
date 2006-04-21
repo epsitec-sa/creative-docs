@@ -1,7 +1,7 @@
 //	Copyright © 2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Michael WALZ
 //  
-//  PROVISOIRE: Le lecture du presse papier avec Clipboard.Win32.dll fait tout déconner avec des plantées des
+//  [MW:MYSTERE] PROVISOIRE: Le lecture du presse papier avec Clipboard.Win32.dll fait tout déconner avec des plantées des
 //  plus bizarres au bout de 2 ou 3 collages. Donc pour l'instant on utilise la lecture buggé du format HTML
 //  dans le presse-papiers de .net
 
@@ -53,7 +53,7 @@ namespace Epsitec.Common.Text.Exchange
 
 		}
 
-#if false  // code qui déconne
+#if false  // code qui déconne [MW:MYSTERE]
 		public static string ReadClipBoardHtml()
 		{
 			byte [] clipboardBytes = ReadClipBoard() ;
@@ -63,7 +63,7 @@ namespace Epsitec.Common.Text.Exchange
 				return "";
 			}
 
-			sbyte[] startbytes = new sbyte[200] ;
+			sbyte[] startbytes = new sbyte[200] ; // 200 un peu cochon
 			StringBuilder sb = new StringBuilder() ;
 
 			for (int i = 0; i < 200; i++)
@@ -104,7 +104,7 @@ namespace Epsitec.Common.Text.Exchange
 				return s ;
 
 
-			string startstring = s.Substring (0, 200);
+			string startstring = s.Substring (0, 200); // 200 un peu cochon
 
 			const string starthtml = "StartHTML:";
 			int startHtmlIndex = startstring.IndexOf (starthtml);

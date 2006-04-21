@@ -19,6 +19,25 @@ namespace Epsitec.Common.Text.Exchange
 		public void ProcessIt()
 		{
 			//this.navigator.Insert ("Hello you world !");
+
+			textWrapper.Defined.ClearInvertItalic ();
+			textWrapper.Defined.ClearColor ();
+			//textWrapper.Defined.ClearConditions ();
+			textWrapper.Defined.ClearFontFace ();
+			//textWrapper.Defined.ClearFontFeatures ();
+			//textWrapper.Defined.ClearFontGlue ();
+			textWrapper.Defined.ClearFontSize ();
+			//textWrapper.Defined.ClearFontStyle ();
+			textWrapper.Defined.ClearInvertBold ();
+			textWrapper.Defined.ClearInvertItalic ();
+			textWrapper.Defined.ClearStrikeout() ;
+			//textWrapper.Defined.ClearTextBox ();
+			//textWrapper.Defined.ClearTextMarker ();
+			textWrapper.Defined.ClearUnderline ();
+			//textWrapper.Defined.ClearUnits ();
+			//textWrapper.Defined.ClearUserTags ();
+			textWrapper.Defined.ClearXscript ();
+
 			ProcessNodes (this.htmlDoc.Nodes);
 		}
 
@@ -28,6 +47,7 @@ namespace Epsitec.Common.Text.Exchange
 		{
 			bool italique = false;
 			bool bold = false;
+			bool sup = false;
 			bool span = false;
 
 			foreach (HtmlNode node in nodes)
@@ -39,60 +59,57 @@ namespace Epsitec.Common.Text.Exchange
 
 					if (element.Name == "span")
 					{
-						span = true;
+						ProcessNodes (element.Nodes);
 					}
-
-					if (element.Name == "i" || element.Name == "em")
+					else if (element.Name == "i" || element.Name == "em")
 					{
-						italique = true;
 						textWrapper.SuspendSynchronizations ();
 						textWrapper.Defined.InvertItalic = true;
 						textWrapper.ResumeSynchronizations ();
-					}
-
-					if (element.Name == "b" || element.Name == "strong")
-					{ 
-						bold = true;
-						textWrapper.SuspendSynchronizations ();
-						textWrapper.Defined.InvertBold = true;
-						textWrapper.ResumeSynchronizations ();
-
-					}
-
-#if false
-					Console.WriteLine ("Element: {0}", element.Name) ;
-					if (element.Attributes.Count > 0)
-					{
-						foreach (HtmlAttribute attribute in element.Attributes)
-						{
-							Console.WriteLine (" Arribute: {0} = {1}", attribute.Name, attribute.Value);
-						}
-					}
-#endif
-					ProcessNodes (element.Nodes);
-
-					if (italique)
-					{
+						ProcessNodes (element.Nodes);
 						textWrapper.SuspendSynchronizations ();
 						textWrapper.Defined.InvertItalic = false;
 						textWrapper.ResumeSynchronizations ();
 					}
-					if (span)
-					{
-					}
-
-					if (bold)
-					{
+					else if (element.Name == "b" || element.Name == "strong")
+					{ 
+						textWrapper.SuspendSynchronizations ();
+						textWrapper.Defined.InvertBold = true;
+						textWrapper.ResumeSynchronizations ();
+						ProcessNodes (element.Nodes);
 						textWrapper.SuspendSynchronizations ();
 						textWrapper.Defined.InvertBold = false;
 						textWrapper.ResumeSynchronizations ();
+					} // [MW:MYSTERE] <sup> et <sub> ne fonctionnent pas
+					else if (element.Name == "sup")
+					{
+						textWrapper.SuspendSynchronizations ();
+						textWrapper.Defined.Xscript.Offset += 0.25;
+						textWrapper.ResumeSynchronizations ();
+						ProcessNodes (element.Nodes);
+						textWrapper.SuspendSynchronizations ();
+						textWrapper.Defined.Xscript.Offset -= 0.25;
+						textWrapper.ResumeSynchronizations ();
 					}
-
+					else if (element.Name == "sub")
+					{
+						textWrapper.SuspendSynchronizations ();
+						textWrapper.Defined.Xscript.Offset -= 0.25;
+						textWrapper.ResumeSynchronizations ();
+						ProcessNodes (element.Nodes);
+						textWrapper.SuspendSynchronizations ();
+						textWrapper.Defined.Xscript.Offset += 0.25;
+						textWrapper.ResumeSynchronizations ();
+					}
+					else
+					{
+						// element html inconnu, on traite l'intérieur sans s'occuper de l'élément lui même
+						ProcessNodes (element.Nodes);
+					}
 				}
 				else
 				{
 					HtmlText text = node as HtmlText;
-					//Console.WriteLine ("Text: {0}", text.Text);
 					this.navigator.Insert (text.Text);
 				}
 			}
