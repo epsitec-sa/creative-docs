@@ -132,8 +132,10 @@
     <EmbeddedResource Include="Images\DeleteCulture.icon" />
     <EmbeddedResource Include="Images\ModificationAll.icon" />
     <EmbeddedResource Include="Images\Create.icon" />
-    <EmbeddedResource Include="Images\SearchUp.icon" />
-    <EmbeddedResource Include="Images\SearchDown.icon" />
+    <EmbeddedResource Include="Images\ArrowUp.icon" />
+    <EmbeddedResource Include="Images\ArrowDown.icon" />
+    <EmbeddedResource Include="Images\SearchPrev.icon" />
+    <EmbeddedResource Include="Images\SearchNext.icon" />
     <None Include="Resources\Designer\Strings.00.resource" />
     <None Include="Resources\Designer\Strings.en.resource" />
   </ItemGroup>

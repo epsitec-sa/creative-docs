@@ -79,8 +79,6 @@
   <data name="Dialog.Search.Title">Rechercher et remplacer</data>
   <data name="Dialog.Search.Label">Rechercher</data>
   <data name="Dialog.Search.Replace">Remplacer par</data>
-  <data name="Dialog.Search.Radio.Reverse">En arrière</data>
-  <data name="Dialog.Search.Radio.Normal">En avant</data>
   <data name="Dialog.Search.Check.Case">Respecter la casse</data>
   <data name="Dialog.Search.Check.Word">Mots entiers</data>
   <data name="Dialog.Search.Check.Label">Rechercher dans les noms</data>
@@ -91,6 +89,7 @@
   <data name="Dialog.Search.Button.Search">Rechercher</data>
   <data name="Dialog.Search.Button.Count">Compter</data>
   <data name="Dialog.Search.Button.Replace">Remplacer</data>
+  <data name="Dialog.Search.Button.ReplaceAll">Remplacer tout</data>
   <data name="Dialog.Search.Message.Count">{0} occurrences trouvées.</data>
   <data name="Dialog.Search.Message.Error">Pas trouvé !</data>
 
