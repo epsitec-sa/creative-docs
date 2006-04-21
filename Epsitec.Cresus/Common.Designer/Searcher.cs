@@ -88,12 +88,7 @@ namespace Epsitec.Common.Designer
 		public bool Search(string searching)
 		{
 			//	Effectue la recherche.
-			this.searching = searching;
-
-			if ((this.mode&SearchingMode.CaseSensitive) == 0)
-			{
-				searching = Searcher.RemoveAccent(searching.ToLower());
-			}
+			this.InitSearching(searching);
 
 			do
 			{
@@ -116,12 +111,7 @@ namespace Epsitec.Common.Designer
 		public int Count(string searching)
 		{
 			//	Effectue le décompte.
-			this.searching = searching;
-
-			if ((this.mode&SearchingMode.CaseSensitive) == 0)
-			{
-				searching = Searcher.RemoveAccent(searching.ToLower());
-			}
+			this.InitSearching(searching);
 
 			this.mode &= ~SearchingMode.Reverse;
 			this.starting.Row   = 0;  // au début
@@ -150,22 +140,13 @@ namespace Epsitec.Common.Designer
 			return count;
 		}
 
-		public bool Replace(string searching, string replacment)
+		public bool Replace(string searching)
 		{
-			//	Effectue la substitution.
-			this.searching = searching;
-
-			if ((this.mode&SearchingMode.CaseSensitive) == 0)
-			{
-				searching = Searcher.RemoveAccent(searching.ToLower());
-			}
+			//	Effectue la recherche pour la substitution, mais pas la substitution elle-même.
+			this.InitSearching(searching);
 
 			if (this.Find())
 			{
-				string text = this.RessourceText;
-				text.Remove(this.current.Index, searching.Length);
-				text.Insert(this.current.Index, replacment);
-				this.RessourceText = text;
 				return true;
 			}
 
@@ -182,10 +163,6 @@ namespace Epsitec.Common.Designer
 
 				if (this.Find())
 				{
-					string text = this.RessourceText;
-					text.Remove(this.current.Index, searching.Length);
-					text.Insert(this.current.Index, replacment);
-					this.RessourceText = text;
 					return true;
 				}
 			}
@@ -230,6 +207,16 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
+
+		protected void InitSearching(string searching)
+		{
+			this.searching = searching;
+
+			if ((this.mode&SearchingMode.CaseSensitive) == 0)
+			{
+				this.searching = Searcher.RemoveAccent(this.searching.ToLower());
+			}
+		}
 
 		protected bool Find()
 		{
@@ -338,36 +325,6 @@ namespace Epsitec.Common.Designer
 				}
 
 				return null;
-			}
-
-			set
-			{
-				string label = this.labelsIndex[this.current.Row];
-
-				if (this.current.Field == 0 && (this.mode&SearchingMode.SearchInLabel) != 0)
-				{
-					// TODO:
-				}
-
-				if (this.current.Field == 1 && (this.mode&SearchingMode.SearchInPrimaryText) != 0)
-				{
-					this.primaryBundle[label].SetStringValue(value);
-				}
-
-				if (this.current.Field == 2 && (this.mode&SearchingMode.SearchInSecondaryText) != 0)
-				{
-					this.secondaryBundle[label].SetStringValue(value);
-				}
-
-				if (this.current.Field == 3 && (this.mode&SearchingMode.SearchInPrimaryAbout) != 0)
-				{
-					this.primaryBundle[label].SetAbout(value);
-				}
-
-				if (this.current.Field == 4 && (this.mode&SearchingMode.SearchInSecondaryAbout) != 0)
-				{
-					this.secondaryBundle[label].SetAbout(value);
-				}
 			}
 		}
 

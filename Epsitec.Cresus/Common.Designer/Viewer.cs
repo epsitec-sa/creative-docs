@@ -182,14 +182,64 @@ namespace Epsitec.Common.Designer
 
 		public void DoReplace(string search, string replace, Searcher.SearchingMode mode)
 		{
-			//	Effectue une recherche.
+			//	Effectue un remplacement.
 			Searcher searcher = new Searcher(this.labelsIndex, this.primaryBundle, this.secondaryBundle);
 			searcher.FixStarting(mode, this.array.SelectedRow, this.currentTextField);
 
-			if (searcher.Search(search))
+			if (searcher.Replace(search))
 			{
 				this.array.SelectedRow = searcher.Row;
 				this.array.ShowSelectedRow();
+
+				string label = this.labelsIndex[searcher.Row];
+				string text = "";
+
+				if (searcher.Field == 0)
+				{
+					text = label;
+					text = text.Remove(searcher.Index, searcher.Length);
+					text = text.Insert(searcher.Index, replace);
+
+					this.labelsIndex[searcher.Row] = text;
+					this.module.Modifier.Rename(label, text);
+					this.array.SetLineString(0, searcher.Row, text);
+				}
+
+				if (searcher.Field == 1)
+				{
+					text = this.primaryBundle[label].AsString;
+					text = text.Remove(searcher.Index, searcher.Length);
+					text = text.Insert(searcher.Index, replace);
+					this.primaryBundle[label].SetStringValue(text);
+
+					this.UpdateArrayField(1, searcher.Row, this.primaryBundle[label], this.secondaryBundle[label]);
+				}
+
+				if (searcher.Field == 2)
+				{
+					text = this.secondaryBundle[label].AsString;
+					text = text.Remove(searcher.Index, searcher.Length);
+					text = text.Insert(searcher.Index, replace);
+					this.secondaryBundle[label].SetStringValue(text);
+
+					this.UpdateArrayField(2, searcher.Row, this.secondaryBundle[label], this.primaryBundle[label]);
+				}
+
+				if (searcher.Field == 3)
+				{
+					text = this.primaryBundle[label].About;
+					text = text.Remove(searcher.Index, searcher.Length);
+					text = text.Insert(searcher.Index, replace);
+					this.primaryBundle[label].SetAbout(text);
+				}
+
+				if (searcher.Field == 4)
+				{
+					text = this.secondaryBundle[label].About;
+					text = text.Remove(searcher.Index, searcher.Length);
+					text = text.Insert(searcher.Index, replace);
+					this.secondaryBundle[label].SetAbout(text);
+				}
 
 				AbstractTextField edit = null;
 				if (searcher.Field == 0)  edit = this.labelEdit;
@@ -201,8 +251,13 @@ namespace Epsitec.Common.Designer
 				{
 					this.Window.MakeActive();
 					edit.Focus();
+
+					this.ignoreChange = true;
+					edit.Text = text;
+					this.ignoreChange = false;
+					
 					edit.CursorFrom  = edit.TextLayout.FindIndexFromOffset(searcher.Index);
-					edit.CursorTo    = edit.TextLayout.FindIndexFromOffset(searcher.Index+searcher.Length);
+					edit.CursorTo    = edit.TextLayout.FindIndexFromOffset(searcher.Index+replace.Length);
 					edit.CursorAfter = false;
 				}
 			}
@@ -210,6 +265,11 @@ namespace Epsitec.Common.Designer
 			{
 				this.module.MainWindow.DialogError(Res.Strings.Dialog.Search.Message.Error);
 			}
+		}
+
+		public void DoReplaceAll(string search, string replace, Searcher.SearchingMode mode)
+		{
+			//	Effectue un 'remplacer tout'.
 		}
 
 		public void DoFilter(string filter, Searcher.SearchingMode mode)
@@ -1009,14 +1069,12 @@ namespace Epsitec.Common.Designer
 			{
 				this.primaryBundle[label].SetStringValue(text);
 				this.UpdateArrayField(1, sel, this.primaryBundle[label], this.secondaryBundle[label]);
-				this.UpdateArrayField(2, sel, this.secondaryBundle[label], this.primaryBundle[label]);
 			}
 
 			if (edit == this.secondaryEdit)
 			{
 				this.module.Modifier.CreateIfNecessary(this.secondaryBundle, label, this.primaryBundle[label].ModificationId);
 				this.secondaryBundle[label].SetStringValue(text);
-				this.UpdateArrayField(1, sel, this.primaryBundle[label], this.secondaryBundle[label]);
 				this.UpdateArrayField(2, sel, this.secondaryBundle[label], this.primaryBundle[label]);
 			}
 
