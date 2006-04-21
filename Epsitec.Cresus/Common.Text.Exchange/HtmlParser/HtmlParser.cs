@@ -523,6 +523,32 @@ namespace Epsitec.Common.Text.Exchange.HtmlParser
 
 		#region HTML tokeniser
 
+		private string RemoveEndOfLines(string s)
+		{
+			StringBuilder b = new StringBuilder ();
+
+			foreach (char c in s)
+			{
+				if (c != '\n' && c != '\r' && c != '\0')
+				{
+					b.Append (c);
+				}
+			}
+
+			return b.ToString ();
+		}
+
+		private bool OnlyEndOfLines(string s)
+		{
+			foreach (char c in s)
+			{
+				if (c != '\n' && c != '\r')
+					return false;
+			}
+
+			return true;
+		}
+
 		/// <summary>
 		/// This will tokenise the HTML input string.
 		/// </summary>
@@ -556,12 +582,20 @@ namespace Epsitec.Common.Text.Exchange.HtmlParser
 						int next_index = input.IndexOf( "<" , i );
 						if( next_index == -1 )
 						{
-							tokens.Add( input.Substring( i ) );
+							string sub = input.Substring (i);
+							sub = RemoveEndOfLines (sub);
+							tokens.Add (sub);
 							break;
 						}
 						else
 						{
-							tokens.Add( input.Substring( i , next_index - i ) );
+							string sub = input.Substring (i, next_index - i);
+							if (!OnlyEndOfLines(sub))
+							{
+								sub = RemoveEndOfLines (sub);
+								tokens.Add (sub);
+							}
+
 							i = next_index;
 						}
 					}

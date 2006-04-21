@@ -237,7 +237,7 @@ namespace Epsitec.Common.Text.Exchange
 			if (s.Length == 0)
 				return;
 
-			HtmlDocument thehtmldoc = new HtmlDocument (s, false);
+			HtmlDocument thehtmldoc = new HtmlDocument (s, true);
 
 			Wrappers.TextWrapper textWrapper = new Wrappers.TextWrapper ();
 			Wrappers.ParagraphWrapper paraWrapper = new Wrappers.ParagraphWrapper ();
