@@ -104,7 +104,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonSearchPrev = new Button(this.window.Root);
 				this.buttonSearchPrev.Name = "SearchPrev";
 				this.buttonSearchPrev.Width = 85;
-				this.buttonSearchPrev.Text = string.Concat(Res.Strings.Dialog.Search.Button.Search, " ", Misc.Image("ArrowUp"));
+				this.buttonSearchPrev.Text = string.Concat(Res.Strings.Dialog.Search.Button.Search, " ", Misc.Image("SearchPrevButton"));
 				this.buttonSearchPrev.Anchor = AnchorStyles.BottomLeft;
 				this.buttonSearchPrev.Margins = new Margins(6+(85+5)*0, 0, 0, 6+30);
 				this.buttonSearchPrev.Clicked += new MessageEventHandler(this.HandleButtonSearchClicked);
@@ -124,7 +124,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonReplacePrev = new Button(this.window.Root);
 				this.buttonReplacePrev.Name = "ReplacePrev";
 				this.buttonReplacePrev.Width = 85;
-				this.buttonReplacePrev.Text = string.Concat(Res.Strings.Dialog.Search.Button.Replace, " ", Misc.Image("ArrowUp"));
+				this.buttonReplacePrev.Text = string.Concat(Res.Strings.Dialog.Search.Button.Replace, " ", Misc.Image("SearchPrevButton"));
 				this.buttonReplacePrev.Anchor = AnchorStyles.BottomLeft;
 				this.buttonReplacePrev.Margins = new Margins(6+(85+5)*2, 0, 0, 6+30);
 				this.buttonReplacePrev.Clicked += new MessageEventHandler(this.HandleButtonReplaceClicked);
@@ -135,7 +135,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonSearchNext = new Button(this.window.Root);
 				this.buttonSearchNext.Name = "buttonSearchNext";
 				this.buttonSearchNext.Width = 85;
-				this.buttonSearchNext.Text = string.Concat(Res.Strings.Dialog.Search.Button.Search, " ", Misc.Image("ArrowDown"));
+				this.buttonSearchNext.Text = string.Concat(Res.Strings.Dialog.Search.Button.Search, " ", Misc.Image("SearchNextButton"));
 				this.buttonSearchNext.ButtonStyle = ButtonStyle.DefaultAccept;
 				this.buttonSearchNext.Anchor = AnchorStyles.BottomLeft;
 				this.buttonSearchNext.Margins = new Margins(6+(85+5)*0, 0, 0, 6);
@@ -156,7 +156,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonReplaceNext = new Button(this.window.Root);
 				this.buttonReplaceNext.Name = "ReplaceNext";
 				this.buttonReplaceNext.Width = 85;
-				this.buttonReplaceNext.Text = string.Concat(Res.Strings.Dialog.Search.Button.Replace, " ", Misc.Image("ArrowDown"));
+				this.buttonReplaceNext.Text = string.Concat(Res.Strings.Dialog.Search.Button.Replace, " ", Misc.Image("SearchNextButton"));
 				this.buttonReplaceNext.Anchor = AnchorStyles.BottomLeft;
 				this.buttonReplaceNext.Margins = new Margins(6+(85+5)*2, 0, 0, 6);
 				this.buttonReplaceNext.Clicked += new MessageEventHandler(this.HandleButtonReplaceClicked);
