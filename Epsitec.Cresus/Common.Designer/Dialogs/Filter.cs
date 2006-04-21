@@ -22,7 +22,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.window.MakeSecondaryWindow();
 				this.window.MakeFixedSizeWindow();
 				this.window.MakeToolWindow();
-				this.WindowInit("Filter", 270, 150, true);
+				this.WindowInit("Filter", 270, 114, true);
 				this.window.Text = Res.Strings.Dialog.Filter.Title;
 				this.window.Owner = this.parentWindow;
 				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowCloseClicked);
@@ -43,33 +43,37 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.fieldFilter.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 				this.radioBegin = new RadioButton(this.window.Root);
+				this.radioBegin.Width = 120;
 				this.radioBegin.Group = "Part";
 				this.radioBegin.Text = Res.Strings.Dialog.Filter.Radio.Begin;
-				this.radioBegin.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-				this.radioBegin.Margins = new Margins(6+40, 6, 6+32+16*0, 0);
+				this.radioBegin.Anchor = AnchorStyles.Top | AnchorStyles.Left;
+				this.radioBegin.Margins = new Margins(6, 6, 6+32+16*0, 0);
 				this.radioBegin.TabIndex = tabIndex++;
 				this.radioBegin.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 				this.radioAny = new RadioButton(this.window.Root);
+				this.radioAny.Width = 120;
 				this.radioAny.ActiveState = ActiveState.Yes;
 				this.radioAny.Group = "Part";
 				this.radioAny.Text = Res.Strings.Dialog.Filter.Radio.Any;
-				this.radioAny.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-				this.radioAny.Margins = new Margins(6+40, 6, 6+32+16*1, 0);
+				this.radioAny.Anchor = AnchorStyles.Top | AnchorStyles.Left;
+				this.radioAny.Margins = new Margins(6, 6, 6+32+16*1, 0);
 				this.radioAny.TabIndex = tabIndex++;
 				this.radioAny.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 				this.checkCase = new CheckButton(this.window.Root);
+				this.checkCase.Width = 120;
 				this.checkCase.Text = Res.Strings.Dialog.Filter.Check.Case;
-				this.checkCase.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-				this.checkCase.Margins = new Margins(6+40, 6, 6+32+16*2+4, 0);
+				this.checkCase.Anchor = AnchorStyles.Top | AnchorStyles.Left;
+				this.checkCase.Margins = new Margins(6+120, 6, 6+32+16*0, 0);
 				this.checkCase.TabIndex = tabIndex++;
 				this.checkCase.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 				this.checkWord = new CheckButton(this.window.Root);
+				this.checkWord.Width = 120;
 				this.checkWord.Text = Res.Strings.Dialog.Filter.Check.Word;
-				this.checkWord.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-				this.checkWord.Margins = new Margins(6+40, 6, 6+32+16*3+4, 0);
+				this.checkWord.Anchor = AnchorStyles.Top | AnchorStyles.Left;
+				this.checkWord.Margins = new Margins(6+120, 6, 6+32+16*1, 0);
 				this.checkWord.TabIndex = tabIndex++;
 				this.checkWord.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
