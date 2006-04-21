@@ -93,6 +93,7 @@
   <data name="Dialog.Search.Button.Replace">Remplacer</data>
   <data name="Dialog.Search.Button.ReplaceAll">Remplacer tout</data>
   <data name="Dialog.Search.Message.Count">{0} occurrences trouvées.</data>
+  <data name="Dialog.Search.Message.Replace">{0} occurrences remplacées.</data>
   <data name="Dialog.Search.Message.Error">Pas trouvé !</data>
 
   <data name="Dialog.NewCulture.Title">Culture à créer</data>
