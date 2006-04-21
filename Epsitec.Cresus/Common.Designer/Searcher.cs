@@ -30,7 +30,7 @@ namespace Epsitec.Common.Designer
 			this.mode = SearchingMode.SearchInPrimaryText | SearchingMode.SearchInSecondaryText;
 		}
 
-		public void FixStarting(SearchingMode mode, int row, AbstractTextField edit)
+		public void FixStarting(SearchingMode mode, int row, AbstractTextField edit, bool lastActionIsReplace)
 		{
 			//	Fixe la position de départ de la recherche.
 			this.mode = mode;
@@ -72,11 +72,25 @@ namespace Epsitec.Common.Designer
 
 					if ((this.mode&SearchingMode.Reverse) == 0)  // en avant ?
 					{
-						this.starting.Index = edit.TextLayout.FindOffsetFromIndex(System.Math.Min(edit.CursorFrom, edit.CursorTo), false);
+						if (lastActionIsReplace)  // saute la sélection ?
+						{
+							this.starting.Index = edit.TextLayout.FindOffsetFromIndex(System.Math.Max(edit.CursorFrom, edit.CursorTo), false);
+						}
+						else
+						{
+							this.starting.Index = edit.TextLayout.FindOffsetFromIndex(System.Math.Min(edit.CursorFrom, edit.CursorTo), true);
+						}
 					}
 					else  // en arrière ?
 					{
-						this.starting.Index = edit.TextLayout.FindOffsetFromIndex(System.Math.Max(edit.CursorFrom, edit.CursorTo), true);
+						if (lastActionIsReplace)  // saute la séleciton ?
+						{
+							this.starting.Index = edit.TextLayout.FindOffsetFromIndex(System.Math.Min(edit.CursorFrom, edit.CursorTo), true);
+						}
+						else
+						{
+							this.starting.Index = edit.TextLayout.FindOffsetFromIndex(System.Math.Max(edit.CursorFrom, edit.CursorTo), false);
+						}
 					}
 				}
 			}
@@ -140,10 +154,19 @@ namespace Epsitec.Common.Designer
 			return count;
 		}
 
-		public bool Replace(string searching)
+		public bool Replace(string searching, bool fromBeginning)
 		{
 			//	Effectue la recherche pour la substitution, mais pas la substitution elle-même.
 			this.InitSearching(searching);
+
+			if (fromBeginning)
+			{
+				this.mode &= ~SearchingMode.Reverse;
+				this.starting.Row   = 0;  // au début
+				this.starting.Field = 0;
+				this.starting.Index = -1;
+				this.starting.CopyTo(this.current);
+			}
 
 			if (this.Find())
 			{
@@ -169,6 +192,12 @@ namespace Epsitec.Common.Designer
 			while (this.MoveCurrentCursor());
 
 			return false;
+		}
+
+		public void Skip(int length)
+		{
+			//	Saute les caractères sélectionnés, après un Replace, pendant le ReplaceAll.
+			this.current.Index += length;
 		}
 
 		public int Row
