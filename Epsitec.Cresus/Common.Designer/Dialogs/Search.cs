@@ -84,6 +84,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.checkLabel.Margins = new Margins(90+20*0, 0, 5, 0);
 				this.checkLabel.TabIndex = tabIndex++;
 				this.checkLabel.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+				this.checkLabel.ActiveStateChanged += new EventHandler(this.HandleCheckActiveStateChanged);
 				ToolTip.Default.SetToolTip(this.checkLabel, Res.Strings.Dialog.Search.Check.Label);
 
 				this.checkPrimaryText = new CheckButton(group);
@@ -92,6 +93,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.checkPrimaryText.Margins = new Margins(90+20*1, 0, 5, 0);
 				this.checkPrimaryText.TabIndex = tabIndex++;
 				this.checkPrimaryText.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+				this.checkPrimaryText.ActiveStateChanged += new EventHandler(this.HandleCheckActiveStateChanged);
 				ToolTip.Default.SetToolTip(this.checkPrimaryText, Res.Strings.Dialog.Search.Check.PrimaryText);
 
 				this.checkSecondaryText = new CheckButton(group);
@@ -100,6 +102,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.checkSecondaryText.Margins = new Margins(90+20*2, 0, 5, 0);
 				this.checkSecondaryText.TabIndex = tabIndex++;
 				this.checkSecondaryText.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+				this.checkSecondaryText.ActiveStateChanged += new EventHandler(this.HandleCheckActiveStateChanged);
 				ToolTip.Default.SetToolTip(this.checkSecondaryText, Res.Strings.Dialog.Search.Check.SecondaryText);
 
 				this.checkPrimaryAbout = new CheckButton(group);
@@ -107,6 +110,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.checkPrimaryAbout.Margins = new Margins(90+20*1, 0, 21, 0);
 				this.checkPrimaryAbout.TabIndex = tabIndex++;
 				this.checkPrimaryAbout.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+				this.checkPrimaryAbout.ActiveStateChanged += new EventHandler(this.HandleCheckActiveStateChanged);
 				ToolTip.Default.SetToolTip(this.checkPrimaryAbout, Res.Strings.Dialog.Search.Check.PrimaryAbout);
 
 				this.checkSecondaryAbout = new CheckButton(group);
@@ -114,6 +118,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.checkSecondaryAbout.Margins = new Margins(90+20*2, 0, 21, 0);
 				this.checkSecondaryAbout.TabIndex = tabIndex++;
 				this.checkSecondaryAbout.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+				this.checkSecondaryAbout.ActiveStateChanged += new EventHandler(this.HandleCheckActiveStateChanged);
 				ToolTip.Default.SetToolTip(this.checkSecondaryAbout, Res.Strings.Dialog.Search.Check.SecondaryAbout);
 
 				this.checkCase = new CheckButton(this.window.Root);
@@ -248,12 +253,29 @@ namespace Epsitec.Common.Designer.Dialogs
 			}
 		}
 
-		void HandleFieldSearchTextChanged(object sender)
+
+		public bool IsActionsEnabled
+		{
+			//	Indique si l'ensemble des actions de recherches est actif ou non.
+			get
+			{
+				if (this.fieldSearch == null )  return false;
+				if (this.fieldSearch.Text == "")  return false;
+
+				return (this.checkLabel.ActiveState == ActiveState.Yes ||
+						this.checkPrimaryText.ActiveState == ActiveState.Yes ||
+						this.checkSecondaryText.ActiveState == ActiveState.Yes ||
+						this.checkPrimaryAbout.ActiveState == ActiveState.Yes ||
+						this.checkSecondaryAbout.ActiveState == ActiveState.Yes);
+			}
+		}
+
+		protected void UpdateButtons()
 		{
 			Module module = this.mainWindow.CurrentModule;
 			if (module == null)  return;
 
-			bool enable = (this.fieldSearch.Text != "");
+			bool enable = this.IsActionsEnabled;
 
 			this.buttonSearchPrev.Enable = enable;
 			this.buttonSearchNext.Enable = enable;
@@ -265,6 +287,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.mainWindow.GetCommandState("SearchPrev").Enable = enable;
 			this.mainWindow.GetCommandState("SearchNext").Enable = enable;
 		}
+
 
 		private void HandleWindowCloseClicked(object sender)
 		{
@@ -281,8 +304,21 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.OnClosed();
 		}
 
+		void HandleFieldSearchTextChanged(object sender)
+		{
+			//	Le texte à chercher a changé.
+			this.UpdateButtons();
+		}
+
+		void HandleCheckActiveStateChanged(object sender)
+		{
+			//	Un bouton 'où rechercher' a été cliqué.
+			this.UpdateButtons();
+		}
+
 		private void HandleButtonSearchClicked(object sender, MessageEventArgs e)
 		{
+			//	Rechercher en avant ou en arrière.
 			Button button = sender as Button;
 
 			Module module = this.mainWindow.CurrentModule;
@@ -301,6 +337,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		private void HandleButtonCountClicked(object sender, MessageEventArgs e)
 		{
+			//	Compter.
 			Module module = this.mainWindow.CurrentModule;
 			if ( module == null )  return;
 
@@ -311,6 +348,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		private void HandleButtonReplaceClicked(object sender, MessageEventArgs e)
 		{
+			//	Remplacer en avant ou en arrière.
 			Button button = sender as Button;
 
 			Module module = this.mainWindow.CurrentModule;
@@ -330,6 +368,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		private void HandleButtonReplaceAllClicked(object sender, MessageEventArgs e)
 		{
+			//	Rechercher tout.
 			Module module = this.mainWindow.CurrentModule;
 			if ( module == null )  return;
 
