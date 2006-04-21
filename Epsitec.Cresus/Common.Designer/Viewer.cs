@@ -183,6 +183,11 @@ namespace Epsitec.Common.Designer
 		public void DoReplace(string search, string replace, Searcher.SearchingMode mode)
 		{
 			//	Effectue un remplacement.
+			if (this.module.Mode == DesignerMode.Translate)
+			{
+				mode &= ~Searcher.SearchingMode.SearchInLabel;
+			}
+
 			Searcher searcher = new Searcher(this.labelsIndex, this.primaryBundle, this.secondaryBundle);
 			searcher.FixStarting(mode, this.array.SelectedRow, this.currentTextField);
 
