@@ -42,7 +42,6 @@ EXPORT BYTE *ReadHtmlFromClipboard()
 	  {
 		BYTE* pData = (BYTE*)GlobalLock(globalLockHandle);
 		clipboardSize = GlobalSize(globalLockHandle);
-		CloseClipboard() ;
 		return pData ;
 	  }
 	  
@@ -67,6 +66,7 @@ EXPORT void FreeClipboard()
 {
 	GlobalUnlock(globalLockHandle) ;
 	GlobalFree(globalLockHandle) ;
+	CloseClipboard() ;
 }
 
 
