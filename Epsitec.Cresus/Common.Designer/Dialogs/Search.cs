@@ -54,56 +54,72 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.fieldReplace.Margins = new Margins(6+80, 6, 6+28, 0);
 				this.fieldReplace.TabIndex = tabIndex++;
 
-				this.checkCase = new CheckButton(this.window.Root);
-				this.checkCase.Text = Res.Strings.Dialog.Search.Check.Case;
-				this.checkCase.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-				this.checkCase.Margins = new Margins(6+80, 150+6, 6+70+16*0, 0);
-				this.checkCase.TabIndex = tabIndex++;
-
-				this.checkWord = new CheckButton(this.window.Root);
-				this.checkWord.Text = Res.Strings.Dialog.Search.Check.Word;
-				this.checkWord.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-				this.checkWord.Margins = new Margins(6+80, 150+6, 6+70+16*1, 0);
-				this.checkWord.TabIndex = tabIndex++;
-
 				GroupBox group = new GroupBox(this.window.Root);
 				group.Text = Res.Strings.Dialog.Search.Check.Who;
-				group.Width = 150;
+				group.Width = 160;
 				group.Height = 60;
-				group.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-				group.Margins = new Margins(0, 6, 6+58+16*0, 0);
+				group.Anchor = AnchorStyles.Top | AnchorStyles.Left;
+				group.Margins = new Margins(6, 0, 6+58+16*0, 0);
+
+				label = new StaticText(group);
+				label.Width = 80;
+				label.Alignment = ContentAlignment.MiddleRight;
+				label.Text = Res.Strings.Viewer.Edit;
+				label.Anchor = AnchorStyles.Top | AnchorStyles.Left;
+				label.Margins = new Margins(0, 0, 5, 0);
+
+				label = new StaticText(group);
+				label.Width = 80;
+				label.Alignment = ContentAlignment.MiddleRight;
+				label.Text = Res.Strings.Viewer.About;
+				label.Anchor = AnchorStyles.Top | AnchorStyles.Left;
+				label.Margins = new Margins(0, 0, 21, 0);
 
 				this.checkLabel = new CheckButton(group);
 				this.checkLabel.Anchor = AnchorStyles.Top | AnchorStyles.Left;
-				this.checkLabel.Margins = new Margins(50+20*0, 0, 5, 0);
+				this.checkLabel.Margins = new Margins(90+20*0, 0, 5, 0);
 				this.checkLabel.TabIndex = tabIndex++;
 				ToolTip.Default.SetToolTip(this.checkLabel, Res.Strings.Dialog.Search.Check.Label);
 
 				this.checkPrimaryText = new CheckButton(group);
 				this.checkPrimaryText.ActiveState = ActiveState.Yes;
 				this.checkPrimaryText.Anchor = AnchorStyles.Top | AnchorStyles.Left;
-				this.checkPrimaryText.Margins = new Margins(50+20*1, 0, 5, 0);
+				this.checkPrimaryText.Margins = new Margins(90+20*1, 0, 5, 0);
 				this.checkPrimaryText.TabIndex = tabIndex++;
 				ToolTip.Default.SetToolTip(this.checkPrimaryText, Res.Strings.Dialog.Search.Check.PrimaryText);
 
 				this.checkSecondaryText = new CheckButton(group);
 				this.checkSecondaryText.ActiveState = ActiveState.Yes;
 				this.checkSecondaryText.Anchor = AnchorStyles.Top | AnchorStyles.Left;
-				this.checkSecondaryText.Margins = new Margins(50+20*2, 0, 5, 0);
+				this.checkSecondaryText.Margins = new Margins(90+20*2, 0, 5, 0);
 				this.checkSecondaryText.TabIndex = tabIndex++;
 				ToolTip.Default.SetToolTip(this.checkSecondaryText, Res.Strings.Dialog.Search.Check.SecondaryText);
 
 				this.checkPrimaryAbout = new CheckButton(group);
 				this.checkPrimaryAbout.Anchor = AnchorStyles.Top | AnchorStyles.Left;
-				this.checkPrimaryAbout.Margins = new Margins(50+20*1, 0, 21, 0);
+				this.checkPrimaryAbout.Margins = new Margins(90+20*1, 0, 21, 0);
 				this.checkPrimaryAbout.TabIndex = tabIndex++;
 				ToolTip.Default.SetToolTip(this.checkPrimaryAbout, Res.Strings.Dialog.Search.Check.PrimaryAbout);
 
 				this.checkSecondaryAbout = new CheckButton(group);
 				this.checkSecondaryAbout.Anchor = AnchorStyles.Top | AnchorStyles.Left;
-				this.checkSecondaryAbout.Margins = new Margins(50+20*2, 0, 21, 0);
+				this.checkSecondaryAbout.Margins = new Margins(90+20*2, 0, 21, 0);
 				this.checkSecondaryAbout.TabIndex = tabIndex++;
 				ToolTip.Default.SetToolTip(this.checkSecondaryAbout, Res.Strings.Dialog.Search.Check.SecondaryAbout);
+
+				this.checkCase = new CheckButton(this.window.Root);
+				this.checkCase.Width = 130;
+				this.checkCase.Text = Res.Strings.Dialog.Search.Check.Case;
+				this.checkCase.Anchor = AnchorStyles.Top | AnchorStyles.Left;
+				this.checkCase.Margins = new Margins(6+180, 0, 6+79+16*0, 0);
+				this.checkCase.TabIndex = tabIndex++;
+
+				this.checkWord = new CheckButton(this.window.Root);
+				this.checkWord.Width = 130;
+				this.checkWord.Text = Res.Strings.Dialog.Search.Check.Word;
+				this.checkWord.Anchor = AnchorStyles.Top | AnchorStyles.Left;
+				this.checkWord.Margins = new Margins(6+180, 0, 6+79+16*1, 0);
+				this.checkWord.TabIndex = tabIndex++;
 
 				//	Boutons de fermeture.
 				this.buttonSearchPrev = new Button(this.window.Root);
