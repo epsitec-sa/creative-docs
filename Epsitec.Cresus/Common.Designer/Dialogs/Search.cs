@@ -22,7 +22,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.window.MakeSecondaryWindow();
 				this.window.MakeFixedSizeWindow();
 				this.window.MakeToolWindow();
-				this.WindowInit("Search", 375, 256, true);
+				this.WindowInit("Search", 375, 200, true);
 				this.window.Text = Res.Strings.Dialog.Search.Title;
 				this.window.Owner = this.parentWindow;
 				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowCloseClicked);
@@ -57,48 +57,53 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.checkCase = new CheckButton(this.window.Root);
 				this.checkCase.Text = Res.Strings.Dialog.Search.Check.Case;
 				this.checkCase.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-				this.checkCase.Margins = new Margins(6+80, 6, 6+58+16*0, 0);
+				this.checkCase.Margins = new Margins(6+80, 150+6, 6+70+16*0, 0);
 				this.checkCase.TabIndex = tabIndex++;
 
 				this.checkWord = new CheckButton(this.window.Root);
 				this.checkWord.Text = Res.Strings.Dialog.Search.Check.Word;
 				this.checkWord.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-				this.checkWord.Margins = new Margins(6+80, 6, 6+58+16*1, 0);
+				this.checkWord.Margins = new Margins(6+80, 150+6, 6+70+16*1, 0);
 				this.checkWord.TabIndex = tabIndex++;
 
-				this.checkLabel = new CheckButton(this.window.Root);
-				this.checkLabel.Text = Res.Strings.Dialog.Search.Check.Label;
-				this.checkLabel.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-				this.checkLabel.Margins = new Margins(6+80, 6, 6+58+16*2+4, 0);
+				GroupBox group = new GroupBox(this.window.Root);
+				group.Text = Res.Strings.Dialog.Search.Check.Who;
+				group.Width = 150;
+				group.Height = 60;
+				group.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+				group.Margins = new Margins(0, 6, 6+58+16*0, 0);
+
+				this.checkLabel = new CheckButton(group);
+				this.checkLabel.Anchor = AnchorStyles.Top | AnchorStyles.Left;
+				this.checkLabel.Margins = new Margins(50+20*0, 0, 5, 0);
 				this.checkLabel.TabIndex = tabIndex++;
+				ToolTip.Default.SetToolTip(this.checkLabel, Res.Strings.Dialog.Search.Check.Label);
 
-				this.checkPrimaryText = new CheckButton(this.window.Root);
+				this.checkPrimaryText = new CheckButton(group);
 				this.checkPrimaryText.ActiveState = ActiveState.Yes;
-				this.checkPrimaryText.Text = Res.Strings.Dialog.Search.Check.PrimaryText;
-				this.checkPrimaryText.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-				this.checkPrimaryText.Margins = new Margins(6+80, 6, 6+58+16*3+4, 0);
+				this.checkPrimaryText.Anchor = AnchorStyles.Top | AnchorStyles.Left;
+				this.checkPrimaryText.Margins = new Margins(50+20*1, 0, 5, 0);
 				this.checkPrimaryText.TabIndex = tabIndex++;
+				ToolTip.Default.SetToolTip(this.checkPrimaryText, Res.Strings.Dialog.Search.Check.PrimaryText);
 
-				this.checkSecondaryText = new CheckButton(this.window.Root);
+				this.checkSecondaryText = new CheckButton(group);
 				this.checkSecondaryText.ActiveState = ActiveState.Yes;
-				this.checkSecondaryText.Text = Res.Strings.Dialog.Search.Check.SecondaryText;
-				this.checkSecondaryText.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-				this.checkSecondaryText.Margins = new Margins(6+80, 6, 6+58+16*4+4, 0);
+				this.checkSecondaryText.Anchor = AnchorStyles.Top | AnchorStyles.Left;
+				this.checkSecondaryText.Margins = new Margins(50+20*2, 0, 5, 0);
 				this.checkSecondaryText.TabIndex = tabIndex++;
+				ToolTip.Default.SetToolTip(this.checkSecondaryText, Res.Strings.Dialog.Search.Check.SecondaryText);
 
-				this.checkPrimaryAbout = new CheckButton(this.window.Root);
-				this.checkPrimaryAbout.ActiveState = ActiveState.Yes;
-				this.checkPrimaryAbout.Text = Res.Strings.Dialog.Search.Check.PrimaryAbout;
-				this.checkPrimaryAbout.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-				this.checkPrimaryAbout.Margins = new Margins(6+80, 6, 6+58+16*5+4, 0);
+				this.checkPrimaryAbout = new CheckButton(group);
+				this.checkPrimaryAbout.Anchor = AnchorStyles.Top | AnchorStyles.Left;
+				this.checkPrimaryAbout.Margins = new Margins(50+20*1, 0, 21, 0);
 				this.checkPrimaryAbout.TabIndex = tabIndex++;
+				ToolTip.Default.SetToolTip(this.checkPrimaryAbout, Res.Strings.Dialog.Search.Check.PrimaryAbout);
 
-				this.checkSecondaryAbout = new CheckButton(this.window.Root);
-				this.checkSecondaryAbout.ActiveState = ActiveState.Yes;
-				this.checkSecondaryAbout.Text = Res.Strings.Dialog.Search.Check.SecondaryAbout;
-				this.checkSecondaryAbout.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-				this.checkSecondaryAbout.Margins = new Margins(6+80, 6, 6+58+16*6+4, 0);
+				this.checkSecondaryAbout = new CheckButton(group);
+				this.checkSecondaryAbout.Anchor = AnchorStyles.Top | AnchorStyles.Left;
+				this.checkSecondaryAbout.Margins = new Margins(50+20*2, 0, 21, 0);
 				this.checkSecondaryAbout.TabIndex = tabIndex++;
+				ToolTip.Default.SetToolTip(this.checkSecondaryAbout, Res.Strings.Dialog.Search.Check.SecondaryAbout);
 
 				//	Boutons de fermeture.
 				this.buttonSearchPrev = new Button(this.window.Root);

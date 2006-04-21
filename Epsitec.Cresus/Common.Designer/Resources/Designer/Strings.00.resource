@@ -83,6 +83,7 @@
   <data name="Dialog.Search.Replace">Remplacer par</data>
   <data name="Dialog.Search.Check.Case">Respecter la casse</data>
   <data name="Dialog.Search.Check.Word">Mots entiers</data>
+  <data name="Dialog.Search.Check.Who">Où chercher :</data>
   <data name="Dialog.Search.Check.Label">Rechercher dans les noms</data>
   <data name="Dialog.Search.Check.PrimaryText">Rechercher dans les textes de référence</data>
   <data name="Dialog.Search.Check.SecondaryText">Rechercher dans les textes secondaires</data>
