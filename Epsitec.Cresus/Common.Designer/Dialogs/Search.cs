@@ -111,25 +111,25 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonSearchPrev.TabIndex = tabIndex++;
 				this.buttonSearchPrev.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
-				this.buttonCount = new Button(this.window.Root);
-				this.buttonCount.Name = "Count";
-				this.buttonCount.Width = 85;
-				this.buttonCount.Text = Res.Strings.Dialog.Search.Button.Count;
-				this.buttonCount.Anchor = AnchorStyles.BottomLeft;
-				this.buttonCount.Margins = new Margins(6+(85+5)*1, 0, 0, 6+30);
-				this.buttonCount.Clicked += new MessageEventHandler(this.HandleButtonCountClicked);
-				this.buttonCount.TabIndex = tabIndex++;
-				this.buttonCount.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-
 				this.buttonReplacePrev = new Button(this.window.Root);
 				this.buttonReplacePrev.Name = "ReplacePrev";
 				this.buttonReplacePrev.Width = 85;
 				this.buttonReplacePrev.Text = string.Concat(Res.Strings.Dialog.Search.Button.Replace, " ", Misc.Image("SearchPrevButton"));
 				this.buttonReplacePrev.Anchor = AnchorStyles.BottomLeft;
-				this.buttonReplacePrev.Margins = new Margins(6+(85+5)*2, 0, 0, 6+30);
+				this.buttonReplacePrev.Margins = new Margins(6+(85+5)*1, 0, 0, 6+30);
 				this.buttonReplacePrev.Clicked += new MessageEventHandler(this.HandleButtonReplaceClicked);
 				this.buttonReplacePrev.TabIndex = tabIndex++;
 				this.buttonReplacePrev.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+
+				this.buttonCount = new Button(this.window.Root);
+				this.buttonCount.Name = "Count";
+				this.buttonCount.Width = 85;
+				this.buttonCount.Text = Res.Strings.Dialog.Search.Button.Count;
+				this.buttonCount.Anchor = AnchorStyles.BottomLeft;
+				this.buttonCount.Margins = new Margins(6+(85+5)*2, 0, 0, 6+30);
+				this.buttonCount.Clicked += new MessageEventHandler(this.HandleButtonCountClicked);
+				this.buttonCount.TabIndex = tabIndex++;
+				this.buttonCount.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 
 				this.buttonSearchNext = new Button(this.window.Root);
@@ -143,25 +143,25 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonSearchNext.TabIndex = tabIndex++;
 				this.buttonSearchNext.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
-				this.buttonReplaceAll = new Button(this.window.Root);
-				this.buttonReplaceAll.Name = "ReplaceAll";
-				this.buttonReplaceAll.Width = 85;
-				this.buttonReplaceAll.Text = Res.Strings.Dialog.Search.Button.ReplaceAll;
-				this.buttonReplaceAll.Anchor = AnchorStyles.BottomLeft;
-				this.buttonReplaceAll.Margins = new Margins(6+(85+5)*1, 0, 0, 6);
-				this.buttonReplaceAll.Clicked += new MessageEventHandler(this.HandleButtonReplaceAllClicked);
-				this.buttonReplaceAll.TabIndex = tabIndex++;
-				this.buttonReplaceAll.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-
 				this.buttonReplaceNext = new Button(this.window.Root);
 				this.buttonReplaceNext.Name = "ReplaceNext";
 				this.buttonReplaceNext.Width = 85;
 				this.buttonReplaceNext.Text = string.Concat(Res.Strings.Dialog.Search.Button.Replace, " ", Misc.Image("SearchNextButton"));
 				this.buttonReplaceNext.Anchor = AnchorStyles.BottomLeft;
-				this.buttonReplaceNext.Margins = new Margins(6+(85+5)*2, 0, 0, 6);
+				this.buttonReplaceNext.Margins = new Margins(6+(85+5)*1, 0, 0, 6);
 				this.buttonReplaceNext.Clicked += new MessageEventHandler(this.HandleButtonReplaceClicked);
 				this.buttonReplaceNext.TabIndex = tabIndex++;
 				this.buttonReplaceNext.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+
+				this.buttonReplaceAll = new Button(this.window.Root);
+				this.buttonReplaceAll.Name = "ReplaceAll";
+				this.buttonReplaceAll.Width = 85;
+				this.buttonReplaceAll.Text = Res.Strings.Dialog.Search.Button.ReplaceAll;
+				this.buttonReplaceAll.Anchor = AnchorStyles.BottomLeft;
+				this.buttonReplaceAll.Margins = new Margins(6+(85+5)*2, 0, 0, 6);
+				this.buttonReplaceAll.Clicked += new MessageEventHandler(this.HandleButtonReplaceAllClicked);
+				this.buttonReplaceAll.TabIndex = tabIndex++;
+				this.buttonReplaceAll.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 				Button buttonClose = new Button(this.window.Root);
 				buttonClose.Width = 75;

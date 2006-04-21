@@ -266,6 +266,8 @@ namespace Epsitec.Common.Designer
 					edit.CursorTo    = edit.TextLayout.FindIndexFromOffset(searcher.Index+replace.Length);
 					edit.CursorAfter = false;
 				}
+
+				this.module.Modifier.IsDirty = true;
 			}
 			else
 			{
@@ -276,6 +278,79 @@ namespace Epsitec.Common.Designer
 		public void DoReplaceAll(string search, string replace, Searcher.SearchingMode mode)
 		{
 			//	Effectue un 'remplacer tout'.
+			if (this.module.Mode == DesignerMode.Translate)
+			{
+				mode &= ~Searcher.SearchingMode.SearchInLabel;
+			}
+
+			Searcher searcher = new Searcher(this.labelsIndex, this.primaryBundle, this.secondaryBundle);
+			searcher.FixStarting(mode, this.array.SelectedRow, this.currentTextField);
+
+			int count = 0;
+			while (searcher.Replace(search))
+			{
+				count ++;
+
+				string label = this.labelsIndex[searcher.Row];
+				string text = "";
+
+				if (searcher.Field == 0)
+				{
+					text = label;
+					text = text.Remove(searcher.Index, searcher.Length);
+					text = text.Insert(searcher.Index, replace);
+
+					this.labelsIndex[searcher.Row] = text;
+					this.module.Modifier.Rename(label, text);
+				}
+
+				if (searcher.Field == 1)
+				{
+					text = this.primaryBundle[label].AsString;
+					text = text.Remove(searcher.Index, searcher.Length);
+					text = text.Insert(searcher.Index, replace);
+					this.primaryBundle[label].SetStringValue(text);
+				}
+
+				if (searcher.Field == 2)
+				{
+					text = this.secondaryBundle[label].AsString;
+					text = text.Remove(searcher.Index, searcher.Length);
+					text = text.Insert(searcher.Index, replace);
+					this.secondaryBundle[label].SetStringValue(text);
+				}
+
+				if (searcher.Field == 3)
+				{
+					text = this.primaryBundle[label].About;
+					text = text.Remove(searcher.Index, searcher.Length);
+					text = text.Insert(searcher.Index, replace);
+					this.primaryBundle[label].SetAbout(text);
+				}
+
+				if (searcher.Field == 4)
+				{
+					text = this.secondaryBundle[label].About;
+					text = text.Remove(searcher.Index, searcher.Length);
+					text = text.Insert(searcher.Index, replace);
+					this.secondaryBundle[label].SetAbout(text);
+				}
+			}
+
+			if (count == 0)
+			{
+				this.module.MainWindow.DialogError(Res.Strings.Dialog.Search.Message.Error);
+			}
+			else
+			{
+				this.UpdateArray();
+				this.UpdateEdit();
+				this.UpdateCommands();
+				this.module.Modifier.IsDirty = true;
+
+				string text = string.Format(Res.Strings.Dialog.Search.Message.Replace, count.ToString());
+				this.module.MainWindow.DialogMessage(text);
+			}
 		}
 
 		public void DoFilter(string filter, Searcher.SearchingMode mode)
