@@ -44,6 +44,8 @@
   <data name="Action.Glyphs">Caractères spéciaux...</data>
   <data name="Action.Filter">Filtrer les ressources visibles...</data>
   <data name="Action.Search">Rechercher et remplacer...</data>
+  <data name="Action.SearchPrev">Rechercher en arrière</data>
+  <data name="Action.SearchNext">Rechercher en avant</data>
   <data name="Action.AccessFirst">Première ressource</data>
   <data name="Action.AccessLast">Dernière ressource</data>
   <data name="Action.AccessPrev">Ressource précédente</data>

@@ -17,6 +17,9 @@ namespace Epsitec.Common.Designer.Ribbons
 			this.buttonFilter = this.CreateIconButton("Filter", "Large");
 			this.buttonSearch = this.CreateIconButton("Search", "Large");
 
+			this.buttonSearchPrev = this.CreateIconButton("SearchPrev");
+			this.buttonSearchNext = this.CreateIconButton("SearchNext");
+
 			this.buttonAccessFirst = this.CreateIconButton("AccessFirst");
 			this.buttonAccessLast = this.CreateIconButton("AccessLast");
 
@@ -47,7 +50,7 @@ namespace Epsitec.Common.Designer.Ribbons
 			//	Retourne la largeur standard.
 			get
 			{
-				return 8 + 22*1.5*2 + 4 + 22*2 + this.separatorWidth + 22*2 + 4 + 22*1.5*1;
+				return 8 + 22*1.5*2 + 4 + 22*3 + this.separatorWidth + 22*2 + 4 + 22*1.5*1;
 			}
 		}
 
@@ -63,7 +66,7 @@ namespace Epsitec.Common.Designer.Ribbons
 			double dy = this.buttonFilter.DefaultHeight;
 
 			Rectangle rect = this.UsefulZone;
-			rect.Left += dx*1.5*2+4 + dx*2;
+			rect.Left += dx*1.5*2+4 + dx*3;
 			rect.Width = this.separatorWidth;
 			this.separator1.Bounds = rect;
 
@@ -74,13 +77,15 @@ namespace Epsitec.Common.Designer.Ribbons
 			this.buttonFilter.Bounds = rect;
 			rect.Offset(dx*1.5, 0);
 			this.buttonSearch.Bounds = rect;
-			rect.Offset(dx*1.5+8+dx*4+this.separatorWidth, 0);
+			rect.Offset(dx*1.5+8+dx*5+this.separatorWidth, 0);
 			this.buttonModificationClear.Bounds = rect;
 
 			rect = this.UsefulZone;
 			rect.Width  = dx;
 			rect.Height = dy;
 			rect.Offset(dx*1.5*2+4, dy+5);
+			this.buttonSearchPrev.Bounds = rect;
+			rect.Offset(dx, 0);
 			this.buttonAccessFirst.Bounds = rect;
 			rect.Offset(dx, 0);
 			this.buttonAccessPrev.Bounds = rect;
@@ -93,6 +98,8 @@ namespace Epsitec.Common.Designer.Ribbons
 			rect.Width  = dx;
 			rect.Height = dy;
 			rect.Offset(dx*1.5*2+4, 0);
+			this.buttonSearchNext.Bounds = rect;
+			rect.Offset(dx, 0);
 			this.buttonAccessLast.Bounds = rect;
 			rect.Offset(dx, 0);
 			this.buttonAccessNext.Bounds = rect;
@@ -103,6 +110,8 @@ namespace Epsitec.Common.Designer.Ribbons
 
 		protected IconButton				buttonFilter;
 		protected IconButton				buttonSearch;
+		protected IconButton				buttonSearchPrev;
+		protected IconButton				buttonSearchNext;
 		protected IconButton				buttonAccessFirst;
 		protected IconButton				buttonAccessLast;
 		protected IconButton				buttonAccessPrev;

@@ -40,6 +40,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.fieldSearch.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
 				this.fieldSearch.Margins = new Margins(6+80, 6, 6, 0);
 				this.fieldSearch.TabIndex = tabIndex++;
+				this.fieldSearch.TextChanged += new EventHandler(this.HandleFieldSearchTextChanged);
 
 				label = new StaticText(this.window.Root);
 				label.Text = Res.Strings.Dialog.Search.Replace;
@@ -179,20 +180,48 @@ namespace Epsitec.Common.Designer.Dialogs
 		}
 
 
-		protected Searcher.SearchingMode Mode
+		public string Searching
+		{
+			get
+			{
+				if (this.fieldSearch == null)
+				{
+					return "";
+				}
+				else
+				{
+					return this.fieldSearch.Text;
+				}
+			}
+		}
+
+		public Searcher.SearchingMode Mode
 		{
 			get
 			{
 				Searcher.SearchingMode mode = Searcher.SearchingMode.None;
-				if (this.checkCase.ActiveState            == ActiveState.Yes)  mode |= Searcher.SearchingMode.CaseSensitive;
-				if (this.checkWord.ActiveState            == ActiveState.Yes)  mode |= Searcher.SearchingMode.WholeWord;
-				if (this.checkLabel.ActiveState           == ActiveState.Yes)  mode |= Searcher.SearchingMode.SearchInLabel;
-				if (this.checkPrimaryText.ActiveState     == ActiveState.Yes)  mode |= Searcher.SearchingMode.SearchInPrimaryText;
-				if (this.checkSecondaryText.ActiveState   == ActiveState.Yes)  mode |= Searcher.SearchingMode.SearchInSecondaryText;
-				if (this.checkPrimaryAbout.ActiveState    == ActiveState.Yes)  mode |= Searcher.SearchingMode.SearchInPrimaryAbout;
-				if (this.checkSecondaryAbout.ActiveState  == ActiveState.Yes)  mode |= Searcher.SearchingMode.SearchInSecondaryAbout;
+				if (this.checkCase != null)
+				{
+					if (this.checkCase.ActiveState            == ActiveState.Yes)  mode |= Searcher.SearchingMode.CaseSensitive;
+					if (this.checkWord.ActiveState            == ActiveState.Yes)  mode |= Searcher.SearchingMode.WholeWord;
+					if (this.checkLabel.ActiveState           == ActiveState.Yes)  mode |= Searcher.SearchingMode.SearchInLabel;
+					if (this.checkPrimaryText.ActiveState     == ActiveState.Yes)  mode |= Searcher.SearchingMode.SearchInPrimaryText;
+					if (this.checkSecondaryText.ActiveState   == ActiveState.Yes)  mode |= Searcher.SearchingMode.SearchInSecondaryText;
+					if (this.checkPrimaryAbout.ActiveState    == ActiveState.Yes)  mode |= Searcher.SearchingMode.SearchInPrimaryAbout;
+					if (this.checkSecondaryAbout.ActiveState  == ActiveState.Yes)  mode |= Searcher.SearchingMode.SearchInSecondaryAbout;
+				}
 				return mode;
 			}
+		}
+
+		void HandleFieldSearchTextChanged(object sender)
+		{
+			Module module = this.mainWindow.CurrentModule;
+			if (module == null)  return;
+
+			bool enable = (this.fieldSearch.Text != "");
+			this.mainWindow.GetCommandState("SearchPrev").Enable = enable;
+			this.mainWindow.GetCommandState("SearchNext").Enable = enable;
 		}
 
 		private void HandleWindowCloseClicked(object sender)

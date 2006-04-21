@@ -383,6 +383,21 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
+		[Command("SearchPrev")]
+		[Command("SearchNext")]
+		void CommandSearchDirect(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			string searching = this.dlgSearch.Searching;
+			Searcher.SearchingMode mode = this.dlgSearch.Mode;
+
+			if (e.CommandName == "SearchPrev")
+			{
+				mode |= Searcher.SearchingMode.Reverse;
+			}
+
+			this.CurrentModule.Modifier.ActiveViewer.DoSearch(searching, mode);
+		}
+
 		[Command("AccessFirst")]
 		[Command("AccessPrev")]
 		[Command("AccessNext")]
@@ -505,6 +520,8 @@ namespace Epsitec.Common.Designer
 			this.glyphsState = this.CreateCommandState("Glyphs");
 			this.filterState = this.CreateCommandState("Filter");
 			this.searchState = this.CreateCommandState("Search");
+			this.searchPrevState = this.CreateCommandState("SearchPrev");
+			this.searchNextState = this.CreateCommandState("SearchNext");
 			this.accessFirstState = this.CreateCommandState("AccessFirst");
 			this.accessPrevState = this.CreateCommandState("AccessPrev", KeyCode.FuncF6);
 			this.accessNextState = this.CreateCommandState("AccessNext", KeyCode.FuncF7);
@@ -622,6 +639,8 @@ namespace Epsitec.Common.Designer
 				this.deleteCultureState.Enable = false;
 				this.filterState.Enable = false;
 				this.searchState.Enable = false;
+				this.searchPrevState.Enable = false;
+				this.searchNextState.Enable = false;
 				this.accessFirstState.Enable = false;
 				this.accessLastState.Enable = false;
 				this.accessPrevState.Enable = false;
@@ -735,6 +754,14 @@ namespace Epsitec.Common.Designer
 			//	Ouvre le dialogue pour choisir la culture à créer.
 			this.dlgNewCulture.Show();
 			return this.dlgNewCulture.Culture;
+		}
+
+		public Dialogs.Search DialogSearch
+		{
+			get
+			{
+				return this.dlgSearch;
+			}
 		}
 
 		public Common.Dialogs.DialogResult DialogQuestion(string question)
@@ -873,6 +900,8 @@ namespace Epsitec.Common.Designer
 		protected CommandState					glyphsState;
 		protected CommandState					filterState;
 		protected CommandState					searchState;
+		protected CommandState					searchPrevState;
+		protected CommandState					searchNextState;
 		protected CommandState					accessFirstState;
 		protected CommandState					accessPrevState;
 		protected CommandState					accessNextState;

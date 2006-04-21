@@ -823,6 +823,8 @@ namespace Epsitec.Common.Designer
 				}
 			}
 
+			bool search = (this.module.MainWindow.DialogSearch.Searching != "");
+			
 			bool newCulture = (this.module.Bundles.Count < Dialogs.NewCulture.Cultures.Length);
 
 			this.GetCommandState("Save").Enable = this.module.Modifier.IsDirty;
@@ -833,6 +835,9 @@ namespace Epsitec.Common.Designer
 
 			this.GetCommandState("Filter").Enable = true;
 			this.GetCommandState("Search").Enable = true;
+
+			this.GetCommandState("SearchPrev").Enable = search;
+			this.GetCommandState("SearchNext").Enable = search;
 
 			this.GetCommandState("AccessFirst").Enable = (sel != -1 && sel > 0);
 			this.GetCommandState("AccessPrev").Enable = (sel != -1 && sel > 0);
