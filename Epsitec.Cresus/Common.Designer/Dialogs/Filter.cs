@@ -40,6 +40,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.fieldFilter.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
 				this.fieldFilter.Margins = new Margins(6+40, 6, 6, 0);
 				this.fieldFilter.TabIndex = tabIndex++;
+				this.fieldFilter.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 				this.radioBegin = new RadioButton(this.window.Root);
 				this.radioBegin.Group = "Part";
@@ -47,6 +48,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.radioBegin.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
 				this.radioBegin.Margins = new Margins(6+40, 6, 6+32+16*0, 0);
 				this.radioBegin.TabIndex = tabIndex++;
+				this.radioBegin.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 				this.radioAny = new RadioButton(this.window.Root);
 				this.radioAny.ActiveState = ActiveState.Yes;
@@ -55,18 +57,21 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.radioAny.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
 				this.radioAny.Margins = new Margins(6+40, 6, 6+32+16*1, 0);
 				this.radioAny.TabIndex = tabIndex++;
+				this.radioAny.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 				this.checkCase = new CheckButton(this.window.Root);
 				this.checkCase.Text = Res.Strings.Dialog.Filter.Check.Case;
 				this.checkCase.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
 				this.checkCase.Margins = new Margins(6+40, 6, 6+32+16*2+4, 0);
 				this.checkCase.TabIndex = tabIndex++;
+				this.checkCase.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 				this.checkWord = new CheckButton(this.window.Root);
 				this.checkWord.Text = Res.Strings.Dialog.Filter.Check.Word;
 				this.checkWord.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
 				this.checkWord.Margins = new Margins(6+40, 6, 6+32+16*3+4, 0);
 				this.checkWord.TabIndex = tabIndex++;
+				this.checkWord.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 				//	Boutons de fermeture.
 				Button buttonOk = new Button(this.window.Root);
