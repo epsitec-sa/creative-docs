@@ -101,67 +101,67 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.checkSecondaryAbout.TabIndex = tabIndex++;
 
 				//	Boutons de fermeture.
-				Button buttonSearchPrev = new Button(this.window.Root);
-				buttonSearchPrev.Name = "SearchPrev";
-				buttonSearchPrev.Width = 85;
-				buttonSearchPrev.Text = string.Concat(Res.Strings.Dialog.Search.Button.Search, " ", Misc.Image("ArrowUp"));
-				buttonSearchPrev.Anchor = AnchorStyles.BottomLeft;
-				buttonSearchPrev.Margins = new Margins(6+(85+5)*0, 0, 0, 6+30);
-				buttonSearchPrev.Clicked += new MessageEventHandler(this.HandleButtonSearchClicked);
-				buttonSearchPrev.TabIndex = tabIndex++;
-				buttonSearchPrev.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+				this.buttonSearchPrev = new Button(this.window.Root);
+				this.buttonSearchPrev.Name = "SearchPrev";
+				this.buttonSearchPrev.Width = 85;
+				this.buttonSearchPrev.Text = string.Concat(Res.Strings.Dialog.Search.Button.Search, " ", Misc.Image("ArrowUp"));
+				this.buttonSearchPrev.Anchor = AnchorStyles.BottomLeft;
+				this.buttonSearchPrev.Margins = new Margins(6+(85+5)*0, 0, 0, 6+30);
+				this.buttonSearchPrev.Clicked += new MessageEventHandler(this.HandleButtonSearchClicked);
+				this.buttonSearchPrev.TabIndex = tabIndex++;
+				this.buttonSearchPrev.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
-				Button buttonCount = new Button(this.window.Root);
-				buttonCount.Name = "Count";
-				buttonCount.Width = 85;
-				buttonCount.Text = Res.Strings.Dialog.Search.Button.Count;
-				buttonCount.Anchor = AnchorStyles.BottomLeft;
-				buttonCount.Margins = new Margins(6+(85+5)*1, 0, 0, 6+30);
-				buttonCount.Clicked += new MessageEventHandler(this.HandleButtonCountClicked);
-				buttonCount.TabIndex = tabIndex++;
-				buttonCount.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+				this.buttonCount = new Button(this.window.Root);
+				this.buttonCount.Name = "Count";
+				this.buttonCount.Width = 85;
+				this.buttonCount.Text = Res.Strings.Dialog.Search.Button.Count;
+				this.buttonCount.Anchor = AnchorStyles.BottomLeft;
+				this.buttonCount.Margins = new Margins(6+(85+5)*1, 0, 0, 6+30);
+				this.buttonCount.Clicked += new MessageEventHandler(this.HandleButtonCountClicked);
+				this.buttonCount.TabIndex = tabIndex++;
+				this.buttonCount.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
-				Button buttonReplacePrev = new Button(this.window.Root);
-				buttonReplacePrev.Name = "ReplacePrev";
-				buttonReplacePrev.Width = 85;
-				buttonReplacePrev.Text = string.Concat(Res.Strings.Dialog.Search.Button.Replace, " ", Misc.Image("ArrowUp"));
-				buttonReplacePrev.Anchor = AnchorStyles.BottomLeft;
-				buttonReplacePrev.Margins = new Margins(6+(85+5)*2, 0, 0, 6+30);
-				buttonReplacePrev.Clicked += new MessageEventHandler(this.HandleButtonReplaceClicked);
-				buttonReplacePrev.TabIndex = tabIndex++;
-				buttonReplacePrev.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+				this.buttonReplacePrev = new Button(this.window.Root);
+				this.buttonReplacePrev.Name = "ReplacePrev";
+				this.buttonReplacePrev.Width = 85;
+				this.buttonReplacePrev.Text = string.Concat(Res.Strings.Dialog.Search.Button.Replace, " ", Misc.Image("ArrowUp"));
+				this.buttonReplacePrev.Anchor = AnchorStyles.BottomLeft;
+				this.buttonReplacePrev.Margins = new Margins(6+(85+5)*2, 0, 0, 6+30);
+				this.buttonReplacePrev.Clicked += new MessageEventHandler(this.HandleButtonReplaceClicked);
+				this.buttonReplacePrev.TabIndex = tabIndex++;
+				this.buttonReplacePrev.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 
-				Button buttonSearchNext = new Button(this.window.Root);
-				buttonSearchNext.Name = "buttonSearchNext";
-				buttonSearchNext.Width = 85;
-				buttonSearchNext.Text = string.Concat(Res.Strings.Dialog.Search.Button.Search, " ", Misc.Image("ArrowDown"));
-				buttonSearchNext.ButtonStyle = ButtonStyle.DefaultAccept;
-				buttonSearchNext.Anchor = AnchorStyles.BottomLeft;
-				buttonSearchNext.Margins = new Margins(6+(85+5)*0, 0, 0, 6);
-				buttonSearchNext.Clicked += new MessageEventHandler(this.HandleButtonSearchClicked);
-				buttonSearchNext.TabIndex = tabIndex++;
-				buttonSearchNext.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+				this.buttonSearchNext = new Button(this.window.Root);
+				this.buttonSearchNext.Name = "buttonSearchNext";
+				this.buttonSearchNext.Width = 85;
+				this.buttonSearchNext.Text = string.Concat(Res.Strings.Dialog.Search.Button.Search, " ", Misc.Image("ArrowDown"));
+				this.buttonSearchNext.ButtonStyle = ButtonStyle.DefaultAccept;
+				this.buttonSearchNext.Anchor = AnchorStyles.BottomLeft;
+				this.buttonSearchNext.Margins = new Margins(6+(85+5)*0, 0, 0, 6);
+				this.buttonSearchNext.Clicked += new MessageEventHandler(this.HandleButtonSearchClicked);
+				this.buttonSearchNext.TabIndex = tabIndex++;
+				this.buttonSearchNext.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
-				Button buttonReplaceAll = new Button(this.window.Root);
-				buttonReplaceAll.Name = "ReplaceAll";
-				buttonReplaceAll.Width = 85;
-				buttonReplaceAll.Text = Res.Strings.Dialog.Search.Button.ReplaceAll;
-				buttonReplaceAll.Anchor = AnchorStyles.BottomLeft;
-				buttonReplaceAll.Margins = new Margins(6+(85+5)*1, 0, 0, 6);
-				buttonReplaceAll.Clicked += new MessageEventHandler(this.HandleButtonReplaceAllClicked);
-				buttonReplaceAll.TabIndex = tabIndex++;
-				buttonReplaceAll.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+				this.buttonReplaceAll = new Button(this.window.Root);
+				this.buttonReplaceAll.Name = "ReplaceAll";
+				this.buttonReplaceAll.Width = 85;
+				this.buttonReplaceAll.Text = Res.Strings.Dialog.Search.Button.ReplaceAll;
+				this.buttonReplaceAll.Anchor = AnchorStyles.BottomLeft;
+				this.buttonReplaceAll.Margins = new Margins(6+(85+5)*1, 0, 0, 6);
+				this.buttonReplaceAll.Clicked += new MessageEventHandler(this.HandleButtonReplaceAllClicked);
+				this.buttonReplaceAll.TabIndex = tabIndex++;
+				this.buttonReplaceAll.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
-				Button buttonReplaceNext = new Button(this.window.Root);
-				buttonReplaceNext.Name = "ReplaceNext";
-				buttonReplaceNext.Width = 85;
-				buttonReplaceNext.Text = string.Concat(Res.Strings.Dialog.Search.Button.Replace, " ", Misc.Image("ArrowDown"));
-				buttonReplaceNext.Anchor = AnchorStyles.BottomLeft;
-				buttonReplaceNext.Margins = new Margins(6+(85+5)*2, 0, 0, 6);
-				buttonReplaceNext.Clicked += new MessageEventHandler(this.HandleButtonReplaceClicked);
-				buttonReplaceNext.TabIndex = tabIndex++;
-				buttonReplaceNext.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+				this.buttonReplaceNext = new Button(this.window.Root);
+				this.buttonReplaceNext.Name = "ReplaceNext";
+				this.buttonReplaceNext.Width = 85;
+				this.buttonReplaceNext.Text = string.Concat(Res.Strings.Dialog.Search.Button.Replace, " ", Misc.Image("ArrowDown"));
+				this.buttonReplaceNext.Anchor = AnchorStyles.BottomLeft;
+				this.buttonReplaceNext.Margins = new Margins(6+(85+5)*2, 0, 0, 6);
+				this.buttonReplaceNext.Clicked += new MessageEventHandler(this.HandleButtonReplaceClicked);
+				this.buttonReplaceNext.TabIndex = tabIndex++;
+				this.buttonReplaceNext.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 				Button buttonClose = new Button(this.window.Root);
 				buttonClose.Width = 75;
@@ -171,6 +171,8 @@ namespace Epsitec.Common.Designer.Dialogs
 				buttonClose.Clicked += new MessageEventHandler(this.HandleButtonCloseClicked);
 				buttonClose.TabIndex = tabIndex++;
 				buttonClose.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+
+				this.HandleFieldSearchTextChanged(null);
 			}
 
 			this.window.Show();
@@ -220,6 +222,14 @@ namespace Epsitec.Common.Designer.Dialogs
 			if (module == null)  return;
 
 			bool enable = (this.fieldSearch.Text != "");
+
+			this.buttonSearchPrev.Enable = enable;
+			this.buttonSearchNext.Enable = enable;
+			this.buttonCount.Enable = enable;
+			this.buttonReplaceAll.Enable = enable;
+			this.buttonReplacePrev.Enable = enable;
+			this.buttonReplaceNext.Enable = enable;
+
 			this.mainWindow.GetCommandState("SearchPrev").Enable = enable;
 			this.mainWindow.GetCommandState("SearchNext").Enable = enable;
 		}
@@ -307,5 +317,11 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected CheckButton					checkSecondaryText;
 		protected CheckButton					checkPrimaryAbout;
 		protected CheckButton					checkSecondaryAbout;
+		protected Button						buttonSearchPrev;
+		protected Button						buttonSearchNext;
+		protected Button						buttonCount;
+		protected Button						buttonReplaceAll;
+		protected Button						buttonReplacePrev;
+		protected Button						buttonReplaceNext;
 	}
 }
