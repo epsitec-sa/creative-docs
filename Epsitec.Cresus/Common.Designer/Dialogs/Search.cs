@@ -301,7 +301,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			Module module = this.mainWindow.CurrentModule;
 			if ( module == null )  return;
 
-			module.Modifier.ActiveViewer.DoReplace(this.fieldSearch.Text, this.fieldReplace.Text, this.Mode);
+			module.Modifier.ActiveViewer.DoReplaceAll(this.fieldSearch.Text, this.fieldReplace.Text, this.Mode);
 
 			Misc.ComboMenuAdd(this.fieldSearch, this.fieldSearch.Text);
 			Misc.ComboMenuAdd(this.fieldReplace, this.fieldReplace.Text);
