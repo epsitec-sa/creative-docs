@@ -50,6 +50,7 @@ namespace Epsitec.Common.Designer
 			this.labelEdit = new TextFieldMulti(this);
 			this.labelEdit.Name = "LabelEdit";
 			this.labelEdit.TextChanged += new EventHandler(this.HandleTextChanged);
+			this.labelEdit.CursorChanged += new EventHandler(this.HandleCursorChanged);
 			this.labelEdit.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
 			this.labelEdit.TabIndex = tabIndex++;
 			this.labelEdit.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
@@ -58,6 +59,7 @@ namespace Epsitec.Common.Designer
 			this.primaryEdit = new TextFieldMulti(this);
 			this.primaryEdit.Name = "PrimaryEdit";
 			this.primaryEdit.TextChanged += new EventHandler(this.HandleTextChanged);
+			this.primaryEdit.CursorChanged += new EventHandler(this.HandleCursorChanged);
 			this.primaryEdit.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
 			this.primaryEdit.TabIndex = tabIndex++;
 			this.primaryEdit.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
@@ -65,6 +67,7 @@ namespace Epsitec.Common.Designer
 			this.secondaryEdit = new TextFieldMulti(this);
 			this.secondaryEdit.Name = "SecondaryEdit";
 			this.secondaryEdit.TextChanged += new EventHandler(this.HandleTextChanged);
+			this.secondaryEdit.CursorChanged += new EventHandler(this.HandleCursorChanged);
 			this.secondaryEdit.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
 			this.secondaryEdit.TabIndex = tabIndex++;
 			this.secondaryEdit.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
@@ -76,6 +79,7 @@ namespace Epsitec.Common.Designer
 			this.primaryAbout = new TextFieldMulti(this);
 			this.primaryAbout.Name = "PrimaryAbout";
 			this.primaryAbout.TextChanged += new EventHandler(this.HandleTextChanged);
+			this.primaryAbout.CursorChanged += new EventHandler(this.HandleCursorChanged);
 			this.primaryAbout.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
 			this.primaryAbout.TabIndex = tabIndex++;
 			this.primaryAbout.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
@@ -83,6 +87,7 @@ namespace Epsitec.Common.Designer
 			this.secondaryAbout = new TextFieldMulti(this);
 			this.secondaryAbout.Name = "SecondaryAbout";
 			this.secondaryAbout.TextChanged += new EventHandler(this.HandleTextChanged);
+			this.secondaryAbout.CursorChanged += new EventHandler(this.HandleCursorChanged);
 			this.secondaryAbout.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
 			this.secondaryAbout.TabIndex = tabIndex++;
 			this.secondaryAbout.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
@@ -103,18 +108,23 @@ namespace Epsitec.Common.Designer
 				this.array.SelectedRowChanged -= new EventHandler(this.HandleArraySelectedRowChanged);
 
 				this.labelEdit.TextChanged -= new EventHandler(this.HandleTextChanged);
+				this.labelEdit.CursorChanged -= new EventHandler(this.HandleCursorChanged);
 				this.labelEdit.KeyboardFocusChanged -= new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
 
 				this.primaryEdit.TextChanged -= new EventHandler(this.HandleTextChanged);
+				this.primaryEdit.CursorChanged -= new EventHandler(this.HandleCursorChanged);
 				this.primaryEdit.KeyboardFocusChanged -= new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
 
 				this.secondaryEdit.TextChanged -= new EventHandler(this.HandleTextChanged);
+				this.secondaryEdit.CursorChanged -= new EventHandler(this.HandleCursorChanged);
 				this.secondaryEdit.KeyboardFocusChanged -= new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
 
 				this.primaryAbout.TextChanged -= new EventHandler(this.HandleTextChanged);
+				this.primaryAbout.CursorChanged -= new EventHandler(this.HandleCursorChanged);
 				this.primaryAbout.KeyboardFocusChanged -= new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
 
 				this.secondaryAbout.TextChanged -= new EventHandler(this.HandleTextChanged);
+				this.secondaryAbout.CursorChanged -= new EventHandler(this.HandleCursorChanged);
 				this.secondaryAbout.KeyboardFocusChanged -= new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
 			}
 
@@ -135,10 +145,12 @@ namespace Epsitec.Common.Designer
 		{
 			//	Effectue une recherche.
 			Searcher searcher = new Searcher(this.labelsIndex, this.primaryBundle, this.secondaryBundle);
-			searcher.FixStarting(mode, this.array.SelectedRow, this.currentTextField);
+			searcher.FixStarting(mode, this.array.SelectedRow, this.currentTextField, false);
 
 			if (searcher.Search(search))
 			{
+				this.lastActionIsReplace = false;
+
 				this.array.SelectedRow = searcher.Row;
 				this.array.ShowSelectedRow();
 
@@ -150,11 +162,15 @@ namespace Epsitec.Common.Designer
 				if (searcher.Field == 4)  edit = this.secondaryAbout;
 				if (edit != null && edit.Visibility)
 				{
+					this.ignoreChange = true;
+
 					this.Window.MakeActive();
 					edit.Focus();
 					edit.CursorFrom  = edit.TextLayout.FindIndexFromOffset(searcher.Index);
 					edit.CursorTo    = edit.TextLayout.FindIndexFromOffset(searcher.Index+searcher.Length);
 					edit.CursorAfter = false;
+
+					this.ignoreChange = false;
 				}
 			}
 			else
@@ -167,7 +183,7 @@ namespace Epsitec.Common.Designer
 		{
 			//	Effectue une recherche.
 			Searcher searcher = new Searcher(this.labelsIndex, this.primaryBundle, this.secondaryBundle);
-			searcher.FixStarting(mode, this.array.SelectedRow, this.currentTextField);
+			searcher.FixStarting(mode, this.array.SelectedRow, this.currentTextField, false);
 
 			int count = searcher.Count(search);
 			if (count == 0)
@@ -190,10 +206,12 @@ namespace Epsitec.Common.Designer
 			}
 
 			Searcher searcher = new Searcher(this.labelsIndex, this.primaryBundle, this.secondaryBundle);
-			searcher.FixStarting(mode, this.array.SelectedRow, this.currentTextField);
+			searcher.FixStarting(mode, this.array.SelectedRow, this.currentTextField, this.lastActionIsReplace);
 
-			if (searcher.Replace(search))
+			if (searcher.Replace(search, false))
 			{
+				this.lastActionIsReplace = true;
+
 				this.array.SelectedRow = searcher.Row;
 				this.array.ShowSelectedRow();
 
@@ -255,16 +273,16 @@ namespace Epsitec.Common.Designer
 				if (searcher.Field == 4)  edit = this.secondaryAbout;
 				if (edit != null && edit.Visibility)
 				{
+					this.ignoreChange = true;
+
 					this.Window.MakeActive();
 					edit.Focus();
-
-					this.ignoreChange = true;
 					edit.Text = text;
-					this.ignoreChange = false;
-					
 					edit.CursorFrom  = edit.TextLayout.FindIndexFromOffset(searcher.Index);
 					edit.CursorTo    = edit.TextLayout.FindIndexFromOffset(searcher.Index+replace.Length);
 					edit.CursorAfter = false;
+
+					this.ignoreChange = false;
 				}
 
 				this.module.Modifier.IsDirty = true;
@@ -284,11 +302,13 @@ namespace Epsitec.Common.Designer
 			}
 
 			Searcher searcher = new Searcher(this.labelsIndex, this.primaryBundle, this.secondaryBundle);
-			searcher.FixStarting(mode, this.array.SelectedRow, this.currentTextField);
+			searcher.FixStarting(mode, this.array.SelectedRow, this.currentTextField, false);
 
 			int count = 0;
-			while (searcher.Replace(search))
+			bool fromBeginning = true;
+			while (searcher.Replace(search, fromBeginning))
 			{
+				fromBeginning = false;
 				count ++;
 
 				string label = this.labelsIndex[searcher.Row];
@@ -335,6 +355,8 @@ namespace Epsitec.Common.Designer
 					text = text.Insert(searcher.Index, replace);
 					this.secondaryBundle[label].SetAbout(text);
 				}
+
+				searcher.Skip(replace.Length);  // saute les caractères sélectionnés
 			}
 
 			if (count == 0)
@@ -1229,6 +1251,13 @@ namespace Epsitec.Common.Designer
 			this.module.Modifier.IsDirty = true;
 		}
 
+		void HandleCursorChanged(object sender)
+		{
+			if ( this.ignoreChange )  return;
+
+			this.lastActionIsReplace = false;
+		}
+
 
 		void HandleEditKeyboardFocusChanged(object sender, Epsitec.Common.Types.DependencyPropertyChangedEventArgs e)
 		{
@@ -1282,6 +1311,7 @@ namespace Epsitec.Common.Designer
 		protected Module					module;
 		protected List<string>				labelsIndex;
 		protected bool						ignoreChange = false;
+		protected bool						lastActionIsReplace = false;
 
 		protected IconButtonMark			primaryCulture;
 		protected IconButtonMark[]			secondaryCultures;
