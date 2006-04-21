@@ -89,6 +89,7 @@ namespace Epsitec.Common.Designer
 
 			this.UpdateCultures();
 			this.UpdateEdit();
+			this.UpdateModifiers();
 			this.UpdateCommands();
 		}
 
@@ -324,6 +325,7 @@ namespace Epsitec.Common.Designer
 
 				this.primaryBundle[label].SetModificationId(this.primaryBundle[label].ModificationId+1);
 				this.UpdateArray();
+				this.UpdateModifiers();
 				this.UpdateCommands();
 				this.module.Modifier.IsDirty = true;
 			}
@@ -335,6 +337,7 @@ namespace Epsitec.Common.Designer
 
 				this.secondaryBundle[label].SetModificationId(this.primaryBundle[label].ModificationId);
 				this.UpdateArray();
+				this.UpdateModifiers();
 				this.UpdateCommands();
 				this.module.Modifier.IsDirty = true;
 			}
@@ -518,6 +521,7 @@ namespace Epsitec.Common.Designer
 			this.UpdateCultures();
 			this.UpdateSelectedCulture(Misc.CultureName(bundle.Culture));
 			this.UpdateArray();
+			this.UpdateModifiers();
 			this.UpdateClientGeometry();
 			this.UpdateCommands();
 			this.module.Modifier.IsDirty = true;
@@ -538,6 +542,7 @@ namespace Epsitec.Common.Designer
 				this.UpdateSelectedCulture(Misc.CultureName(this.secondaryBundle.Culture));
 			}
 			this.UpdateArray();
+			this.UpdateModifiers();
 			this.UpdateClientGeometry();
 			this.UpdateCommands();
 			this.module.Modifier.IsDirty = true;
@@ -635,6 +640,15 @@ namespace Epsitec.Common.Designer
 				this.secondaryCultures = null;
 			}
 
+			if (this.secondaryModifiers != null)
+			{
+				foreach (ColorSample sample in this.secondaryModifiers)
+				{
+					sample.Dispose();
+				}
+				this.secondaryModifiers = null;
+			}
+
 			this.primaryBundle = bundles[ResourceLevel.Default];
 			this.primaryCulture.Text = string.Format(Res.Strings.Viewer.Reference, Misc.CultureName(this.primaryBundle.Culture));
 
@@ -674,6 +688,15 @@ namespace Epsitec.Common.Designer
 					this.secondaryCultures[i].Clicked += new MessageEventHandler(this.HandleSecondaryCultureClicked);
 					ToolTip.Default.SetToolTip(this.secondaryCultures[i], list[i].Tooltip);
 				}
+
+				this.secondaryModifiers = new ColorSample[list.Count];
+				for (int i=0; i<list.Count; i++)
+				{
+					this.secondaryModifiers[i] = new ColorSample(this);
+					this.secondaryModifiers[i].Name = list[i].Name;
+					this.secondaryModifiers[i].AutoFocus = false;
+					this.secondaryModifiers[i].Passive = true;
+				}
 			}
 
 			if (this.secondaryBundle != null)
@@ -689,16 +712,7 @@ namespace Epsitec.Common.Designer
 			//	Sélectionne le widget correspondant à la culture secondaire.
 			ResourceBundleCollection bundles = this.module.Bundles;
 
-			this.secondaryBundle = null;
-			for (int b=0; b<bundles.Count; b++)
-			{
-				ResourceBundle bundle = bundles[b];
-				if (Misc.CultureName(bundle.Culture) == name)
-				{
-					this.secondaryBundle = bundle;
-				}
-			}
-
+			this.secondaryBundle = this.module.GetCulture(name);
 			if (this.secondaryCultures == null)  return;
 
 			for (int i=0; i<this.secondaryCultures.Length; i++)
@@ -783,13 +797,16 @@ namespace Epsitec.Common.Designer
 						secondaryId = secondaryField.ModificationId;
 					}
 
+					MyWidgets.StringList.CellState state = MyWidgets.StringList.CellState.Normal;
 					if (primaryId < secondaryId)  // éventuellement pas à jour (fond jaune) ?
 					{
-						this.array.SetLineState(column, row, MyWidgets.StringList.CellState.Modified);
+						state = MyWidgets.StringList.CellState.Modified;
 					}
-					else
+
+					if (this.array.GetLineState(column, row) != state)
 					{
-						this.array.SetLineState(column, row, MyWidgets.StringList.CellState.Normal);
+						this.array.SetLineState(column, row, state);
+						this.UpdateModifiers();
 					}
 
 					return;
@@ -798,6 +815,39 @@ namespace Epsitec.Common.Designer
 
 			this.array.SetLineString(column, row, "");
 			this.array.SetLineState(column, row, MyWidgets.StringList.CellState.Warning);
+		}
+
+		protected void UpdateModifiers()
+		{
+			//	Met à jour les indicateurs de modifications.
+			int sel = this.array.SelectedRow;
+			string label = null;
+			if (sel != -1)
+			{
+				label = this.labelsIndex[sel];
+			}
+
+			ResourceBundle defaultBundle = this.module.Bundles[ResourceLevel.Default];
+
+			for (int i=0; i<this.secondaryModifiers.Length; i++)
+			{
+				ColorSample sample = this.secondaryModifiers[i];
+
+				bool modified = false;
+
+				ResourceBundle bundle = this.module.GetCulture(sample.Name);
+				if (bundle != null && label != null)
+				{
+					modified = (defaultBundle[label].ModificationId > bundle[label].ModificationId);
+				}
+
+				RichColor color = RichColor.FromBrightness(1);
+				if (modified)
+				{
+					color = RichColor.FromRgb(0.91, 0.81, 0.41);  // jaune
+				}
+				sample.Color = color;
+			}
 		}
 
 		protected void UpdateEdit()
@@ -943,6 +993,7 @@ namespace Epsitec.Common.Designer
 
 			Rectangle box = this.Client.Bounds;
 			box.Deflate(10);
+			box.Top -= 4;
 			Rectangle rect;
 
 			int lines = System.Math.Max((int)box.Height/50, 4);
@@ -980,6 +1031,11 @@ namespace Epsitec.Common.Designer
 						r.Right = rect.Right;
 					}
 					this.secondaryCultures[i].Bounds = r;
+
+					r.Bottom = r.Top-1;
+					r.Height = 6;
+					r.Width ++;
+					this.secondaryModifiers[i].Bounds = r;
 				}
 			}
 
@@ -1051,6 +1107,7 @@ namespace Epsitec.Common.Designer
 		void HandleArraySelectedRowChanged(object sender)
 		{
 			this.UpdateEdit();
+			this.UpdateModifiers();
 			this.UpdateCommands();
 		}
 
@@ -1153,6 +1210,7 @@ namespace Epsitec.Common.Designer
 
 		protected IconButtonMark			primaryCulture;
 		protected IconButtonMark[]			secondaryCultures;
+		protected ColorSample[]				secondaryModifiers;
 		protected ResourceBundle			primaryBundle;
 		protected ResourceBundle			secondaryBundle;
 		protected MyWidgets.StringArray		array;

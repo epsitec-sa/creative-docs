@@ -83,6 +83,17 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
+		public ResourceBundle GetCulture(string name)
+		{
+			//	Cherche le bundle d'une culture.
+			for (int b=0; b<this.bundles.Count; b++)
+			{
+				ResourceBundle bundle = this.bundles[b];
+				if (Misc.CultureName(bundle.Culture) == name)  return bundle;
+			}
+			return null;
+		}
+
 		public bool IsExistingCulture(string name)
 		{
 			//	Indique si une culture donnée existe.

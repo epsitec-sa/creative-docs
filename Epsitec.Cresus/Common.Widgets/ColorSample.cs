@@ -124,6 +124,19 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		public bool								Passive
+		{
+			get
+			{
+				return this.passive;
+			}
+			
+			set
+			{
+				this.passive = value;
+			}
+		}
+		
 
 		public void AttachColorCollection(Drawing.ColorCollection list, int index)
 		{
@@ -310,6 +323,12 @@ namespace Epsitec.Common.Widgets
 		protected override void ProcessMessage(Message message, Drawing.Point pos)
 		{
 			//	Gestion d'un événement.
+			if (this.passive)
+			{
+				base.ProcessMessage(message, pos);
+				return;
+			}
+
 			ColorSample dragHost = this.GetProperty("DragHost") as ColorSample;
 			
 			//	Est-ce que l'événement clavier est reçu dans un échantillon en
@@ -516,5 +535,6 @@ namespace Epsitec.Common.Widgets
 		protected int							rank = -1;
 		protected int							column = -1;
 		protected int							row = -1;
+		protected bool							passive = false;
 	}
 }
