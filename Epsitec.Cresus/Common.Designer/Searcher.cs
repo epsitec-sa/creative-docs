@@ -72,11 +72,11 @@ namespace Epsitec.Common.Designer
 
 					if ((this.mode&SearchingMode.Reverse) == 0)  // en avant ?
 					{
-						this.starting.Index = edit.TextLayout.FindOffsetFromIndex(System.Math.Min(edit.CursorFrom, edit.CursorTo), true);
+						this.starting.Index = edit.TextLayout.FindOffsetFromIndex(System.Math.Min(edit.CursorFrom, edit.CursorTo), false);
 					}
 					else  // en arrière ?
 					{
-						this.starting.Index = edit.TextLayout.FindOffsetFromIndex(System.Math.Max(edit.CursorFrom, edit.CursorTo), false);
+						this.starting.Index = edit.TextLayout.FindOffsetFromIndex(System.Math.Max(edit.CursorFrom, edit.CursorTo), true);
 					}
 				}
 			}
