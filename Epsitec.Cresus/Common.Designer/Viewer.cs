@@ -1035,7 +1035,7 @@ namespace Epsitec.Common.Designer
 				}
 			}
 
-			bool search = (this.module.MainWindow.DialogSearch.Searching != "");
+			bool search = this.module.MainWindow.DialogSearch.IsActionsEnabled;
 			
 			bool newCulture = (this.module.Bundles.Count < Dialogs.NewCulture.Cultures.Length);
 
@@ -1179,6 +1179,7 @@ namespace Epsitec.Common.Designer
 		
 		void HandleSecondaryCultureClicked(object sender, MessageEventArgs e)
 		{
+			//	Un bouton pour changer de culture secondaire a été cliqué.
 			IconButtonMark button = sender as IconButtonMark;
 			this.UpdateSelectedCulture(button.Name);
 			this.UpdateArray();
@@ -1188,21 +1189,25 @@ namespace Epsitec.Common.Designer
 
 		void HandleArrayColumnsWidthChanged(object sender)
 		{
+			//	La largeur des colonnes a changé.
 			this.UpdateClientGeometry();
 		}
 
 		void HandleArrayCellsQuantityChanged(object sender)
 		{
+			//	Le nombre de lignes a changé.
 			this.UpdateArray();
 		}
 
 		void HandleArrayCellsContentChanged(object sender)
 		{
+			//	Le contenu des cellules a changé.
 			this.UpdateArray();
 		}
 
 		void HandleArraySelectedRowChanged(object sender)
 		{
+			//	La ligne sélectionnée a changé.
 			this.UpdateEdit();
 			this.UpdateModifiers();
 			this.UpdateCommands();
@@ -1210,6 +1215,7 @@ namespace Epsitec.Common.Designer
 
 		void HandleTextChanged(object sender)
 		{
+			//	Un texte éditable a changé.
 			if ( this.ignoreChange )  return;
 
 			AbstractTextField edit = sender as AbstractTextField;
@@ -1253,6 +1259,7 @@ namespace Epsitec.Common.Designer
 
 		void HandleCursorChanged(object sender)
 		{
+			//	Le curseur a été déplacé dans un texte éditable.
 			if ( this.ignoreChange )  return;
 
 			this.lastActionIsReplace = false;
@@ -1261,7 +1268,7 @@ namespace Epsitec.Common.Designer
 
 		void HandleEditKeyboardFocusChanged(object sender, Epsitec.Common.Types.DependencyPropertyChangedEventArgs e)
 		{
-			//	Appelé lorsqu'une ligne éditable voit son focus changé.
+			//	Appelé lorsqu'une ligne éditable voit son focus changer.
 			bool focused = (bool) e.NewValue;
 
 			if (focused)
