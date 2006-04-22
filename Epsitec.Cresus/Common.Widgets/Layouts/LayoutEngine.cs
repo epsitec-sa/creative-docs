@@ -46,6 +46,7 @@ namespace Epsitec.Common.Widgets.Layouts
 			
 			return LayoutEngine.NoOpEngine;
 		}
+
 		public static LayoutMode GetLayoutMode(Visual visual)
 		{
 			if (visual.Dock != DockStyle.None)
@@ -59,8 +60,21 @@ namespace Epsitec.Common.Widgets.Layouts
 
 			return LayoutMode.None;
 		}
-		
-		private static ILayoutEngine					dock_engine   = new DockLayoutEngine ();
+		public static LayoutMode GetLayoutMode(DockStyle dock, AnchorStyles anchor)
+		{
+			if (dock != DockStyle.None)
+			{
+				return LayoutMode.Docked;
+			}
+			if (anchor != AnchorStyles.None)
+			{
+				return LayoutMode.Anchored;
+			}
+
+			return LayoutMode.None;
+		}
+
+		private static ILayoutEngine dock_engine   = new DockLayoutEngine ();
 		private static ILayoutEngine					anchor_engine = new AnchorLayoutEngine ();
 		private static ILayoutEngine					no_op_engine  = new NoOpLayoutEngine ();
 	}

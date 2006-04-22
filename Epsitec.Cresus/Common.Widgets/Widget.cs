@@ -42,7 +42,6 @@ namespace Epsitec.Common.Widgets
 		None				= 0,
 		
 		ChildrenChanged		= 0x00000001,		//	enfants ajoutés/supprimés
-		ChildrenDocked		= 0x00000004,		//	certains enfants spécifient un DockStyle
 		
 		Embedded			= 0x00000008,		//	=> widget appartient au parent (widgets composés)
 		
@@ -1053,7 +1052,17 @@ namespace Epsitec.Common.Widgets
 		
 		public bool									HasDockedChildren
 		{
-			get { return (this.internal_state & InternalState.ChildrenDocked) != 0; }
+			get
+			{
+				if (this.HasChildren)
+				{
+					return this.Children.DockLayoutCount > 0;
+				}
+				else
+				{
+					return false;
+				}
+			}
 		}
 		
 
@@ -3283,7 +3292,6 @@ namespace Epsitec.Common.Widgets
 			if ((this.internal_state & InternalState.ChildrenChanged) != 0)
 			{
 				this.internal_state &= ~InternalState.ChildrenChanged;
-				this.UpdateHasDockedChildren ();
 			}
 
 			this.UpdateMinMaxBasedOnDockedChildren ();
@@ -3314,29 +3322,6 @@ namespace Epsitec.Common.Widgets
 			base.OnChildrenChanged ();
 
 			this.internal_state |= InternalState.ChildrenChanged;
-		}
-		
-		protected void UpdateHasDockedChildren()
-		{
-			//	Met à jour le flag interne qui indique s'il y a des widgets dans l'état
-			//	docked, ou non.
-			
-			lock (this)
-			{
-				this.internal_state &= ~InternalState.ChildrenDocked;
-
-				if (this.HasChildren)
-				{
-					foreach (Visual child in this.Children)
-					{
-						if (child.Dock != DockStyle.None)
-						{
-							this.internal_state |= InternalState.ChildrenDocked;
-							break;
-						}
-					}
-				}
-			}
 		}
 		
 		protected virtual void UpdateMinMaxBasedOnDockedChildren()
@@ -3495,189 +3480,6 @@ namespace Epsitec.Common.Widgets
 			
 			this.AutoMinSize = this.MapClientToParent (new Drawing.Size (min_width, min_height));
 			this.AutoMaxSize = this.MapClientToParent (new Drawing.Size (max_width, max_height));
-		}
-		
-		protected void UpdateDockedChildrenLayout(Widget[] children)
-		{
-			if (this.HasDockedChildren == false)
-			{
-				return;
-			}
-			
-//			System.Diagnostics.Debug.Assert (this.client_info != null);
-			System.Diagnostics.Debug.Assert (this.HasChildren);
-			
-			System.Collections.Queue fill_queue = null;
-			Drawing.Rectangle client_rect = this.Client.Bounds;
-			Drawing.Rectangle bounds;
-			
-			client_rect.Deflate (this.Padding);
-			client_rect.Deflate (this.InternalPadding);
-			
-			double push_dx = 0;
-			double push_dy = 0;
-			
-			for (int i = 0; i < children.Length; i++)
-			{
-				Widget child = children[i];
-				
-				if (child.Dock == DockStyle.None)
-				{
-					//	Saute les widgets qui ne sont pas "docked", car ils doivent être
-					//	positionnés par d'autres moyens.
-					
-					continue;
-				}
-				
-				if (child.Visibility == false)
-				{
-					continue;
-				}
-				
-				bounds = child.Bounds;
-				bounds.Inflate (child.Margins);
-
-				double dx = child.PreferredWidth;
-				double dy = child.PreferredHeight;
-
-				if (double.IsNaN (dx))
-				{
-					dx = child.Width;		//	TODO: améliorer
-				}
-				if (double.IsNaN (dy))
-				{
-					dy = child.Height;		//	TODO: améliorer
-				}
-
-				dx += child.Margins.Width;
-				dy += child.Margins.Height;
-				
-				switch (child.Dock)
-				{
-					case DockStyle.Top:
-						bounds = new Drawing.Rectangle (client_rect.Left, client_rect.Top - dy, client_rect.Width, dy);
-						bounds.Deflate (child.Margins);
-						child.SetBounds (bounds);
-						client_rect.Top -= dy;
-						break;
-						
-					case DockStyle.Bottom:
-						bounds = new Drawing.Rectangle (client_rect.Left, client_rect.Bottom, client_rect.Width, dy);
-						bounds.Deflate (child.Margins);
-						child.SetBounds (bounds);
-						client_rect.Bottom += dy;
-						break;
-					
-					case DockStyle.Left:
-						bounds = new Drawing.Rectangle (client_rect.Left, client_rect.Bottom, dx, client_rect.Height);
-						bounds.Deflate (child.Margins);
-						child.SetBounds (bounds);
-						client_rect.Left += dx;
-						break;
-					
-					case DockStyle.Right:
-						bounds = new Drawing.Rectangle (client_rect.Right - dx, client_rect.Bottom, dx, client_rect.Height);
-						bounds.Deflate (child.Margins);
-						child.SetBounds (bounds);
-						client_rect.Right -= dx;
-						break;
-					
-					case DockStyle.Fill:
-						if (fill_queue == null)
-						{
-							fill_queue = new System.Collections.Queue ();
-						}
-						fill_queue.Enqueue (child);
-						break;
-				}
-			}
-			
-			if (fill_queue != null)
-			{
-				int n = fill_queue.Count;
-				
-				double fill_dx = client_rect.Width;
-				double fill_dy = client_rect.Height;
-				
-				switch (this.ContainerLayoutMode)
-				{
-					case ContainerLayoutMode.HorizontalFlow:
-						foreach (Widget child in fill_queue)
-						{
-							double min_dx = child.MinWidth;
-							double new_dx = fill_dx / n;
-							
-							if (new_dx < min_dx)
-							{
-								push_dx += min_dx - new_dx;
-								new_dx   = min_dx;
-							}
-							
-							bounds = new Drawing.Rectangle (client_rect.Left, client_rect.Bottom, new_dx, client_rect.Height);
-							bounds.Deflate (child.Margins);
-						
-							child.SetBounds (bounds);
-							client_rect.Left += new_dx;
-						}
-						break;
-					
-					case ContainerLayoutMode.VerticalFlow:
-						foreach (Widget child in fill_queue)
-						{
-							double min_dy = child.MinHeight;
-							double new_dy = fill_dy / n;
-							
-							if (new_dy < min_dy)
-							{
-								push_dy += min_dy - new_dy;
-								new_dy   = min_dy;
-							}
-							
-							bounds = new Drawing.Rectangle (client_rect.Left, client_rect.Top - new_dy, client_rect.Width, new_dy);
-							bounds.Deflate (child.Margins);
-							
-							child.SetBounds (bounds);
-							client_rect.Top -= new_dy;
-						}
-						break;
-				}
-			}
-			
-			if (push_dy > 0)
-			{
-				for (int i = 0; i < children.Length; i++)
-				{
-					Widget child = children[i];
-					
-					if ((child.Dock != DockStyle.Bottom) ||
-						(child.Visibility == false))
-					{
-						continue;
-					}
-					
-					bounds = child.Bounds;
-					bounds.Offset (0, - push_dy);
-					child.SetBounds (bounds);
-				}
-			}
-			
-			if (push_dx > 0)
-			{
-				for (int i = 0; i < children.Length; i++)
-				{
-					Widget child = children[i];
-					
-					if ((child.Dock != DockStyle.Right) ||
-						(child.Visibility == false))
-					{
-						continue;
-					}
-					
-					bounds = child.Bounds;
-					bounds.Offset (push_dx, 0);
-					child.SetBounds (bounds);
-				}
-			}
 		}
 		
 		
