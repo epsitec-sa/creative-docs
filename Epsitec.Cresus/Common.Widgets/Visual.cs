@@ -1183,7 +1183,34 @@ namespace Epsitec.Common.Widgets
 			Visual that = o as Visual;
 			that.OnCommandDispatchersChanged (new DependencyPropertyChangedEventArgs (Visual.CommandDispatchersProperty, old_value, new_value));
 		}
-		
+
+		private static void NotifyAnchorChanged(DependencyObject o, object old_value, object new_value)
+		{
+			Visual that = o as Visual;
+			
+			if (that.parent != null)
+			{
+				DockStyle dock = that.Dock;
+				AnchorStyles anchorOld = (AnchorStyles) old_value;
+				AnchorStyles anchorNew = (AnchorStyles) new_value;
+				
+				that.parent.children.UpdateLayoutStatistics (dock, dock, anchorOld, anchorNew);
+			}
+		}
+
+		private static void NotifyDockChanged(DependencyObject o, object old_value, object new_value)
+		{
+			Visual that = o as Visual;
+
+			if (that.parent != null)
+			{
+				DockStyle dockOld = (DockStyle) old_value;
+				DockStyle dockNew = (DockStyle) new_value;
+				AnchorStyles anchor = that.Anchor;
+
+				that.parent.children.UpdateLayoutStatistics (dockOld, dockNew, anchor, anchor);
+			}
+		}
 		
 		protected virtual void OnSizeChanged(Types.DependencyPropertyChangedEventArgs e)
 		{
@@ -1358,9 +1385,9 @@ namespace Epsitec.Common.Widgets
 		public static readonly DependencyProperty ChildrenProperty				= DependencyObjectTree.ChildrenProperty.AddOwner (typeof (Visual), new DependencyPropertyMetadata (new GetValueOverrideCallback (Visual.GetChildrenValue)));
 		public static readonly DependencyProperty HasChildrenProperty			= DependencyObjectTree.HasChildrenProperty.AddOwner (typeof (Visual), new DependencyPropertyMetadata (new GetValueOverrideCallback (Visual.GetHasChildrenValue)));
 		public static readonly DependencyProperty WindowProperty				= DependencyProperty.RegisterReadOnly ("Window", typeof (Window), typeof (Visual), new VisualPropertyMetadata (null, VisualPropertyMetadataOptions.InheritsValue | VisualPropertyMetadataOptions.ChangesSilently));
-		
-		public static readonly DependencyProperty AnchorProperty				= DependencyProperty.Register ("Anchor", typeof (AnchorStyles), typeof (Visual), new VisualPropertyMetadata (AnchorStyles.None, VisualPropertyMetadataOptions.AffectsArrange));
-		public static readonly DependencyProperty DockProperty					= DependencyProperty.Register ("Dock", typeof (DockStyle), typeof (Visual), new VisualPropertyMetadata (DockStyle.None, VisualPropertyMetadataOptions.AffectsArrange));
+
+		public static readonly DependencyProperty AnchorProperty				= DependencyProperty.Register ("Anchor", typeof (AnchorStyles), typeof (Visual), new VisualPropertyMetadata (AnchorStyles.None, Visual.NotifyAnchorChanged, VisualPropertyMetadataOptions.AffectsArrange));
+		public static readonly DependencyProperty DockProperty					= DependencyProperty.Register ("Dock", typeof (DockStyle), typeof (Visual), new VisualPropertyMetadata (DockStyle.None, Visual.NotifyDockChanged, VisualPropertyMetadataOptions.AffectsArrange));
 		public static readonly DependencyProperty MarginsProperty				= DependencyProperty.Register ("Margins", typeof (Drawing.Margins), typeof (Visual), new VisualPropertyMetadata (Drawing.Margins.Zero, VisualPropertyMetadataOptions.AffectsArrange));
 		public static readonly DependencyProperty PaddingProperty				= DependencyProperty.Register ("Padding", typeof (Drawing.Margins), typeof (Visual), new VisualPropertyMetadata (Drawing.Margins.Zero, VisualPropertyMetadataOptions.AffectsChildrenLayout));
 		public static readonly DependencyProperty HorizontalAlignmentProperty	= DependencyProperty.Register ("HorizontalAlignment", typeof (HorizontalAlignment), typeof (Visual), new VisualPropertyMetadata (HorizontalAlignment.Stretch, VisualPropertyMetadataOptions.AffectsArrange));

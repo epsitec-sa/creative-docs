@@ -26,6 +26,23 @@ namespace Epsitec.Common.Widgets.Collections
 				return widgets;
 			}
 		}
+		
+		public int								AnchorLayoutCount
+		{
+			get
+			{
+				this.VerifyLayoutStatistics ();
+				return this.anchorLayoutCount;
+			}
+		}
+		public int								DockLayoutCount
+		{
+			get
+			{
+				this.VerifyLayoutStatistics ();
+				return this.dockLayoutCount;
+			}
+		}
 
 		public Visual FindNext(Visual find)
 		{
@@ -71,6 +88,12 @@ namespace Epsitec.Common.Widgets.Collections
 				this.NotifyChanges (snapshot);
 			}
 		}
+
+		internal void UpdateLayoutStatistics(DockStyle dockOld, DockStyle dockNew, AnchorStyles anchorOld, AnchorStyles anchorNew)
+		{
+			this.UpdateLayoutStatistics (dockOld, anchorOld, -1);
+			this.UpdateLayoutStatistics (dockNew, anchorNew, 1);
+		}
 		
 		private void NotifyChanges(Snapshot snapshot)
 		{
@@ -95,6 +118,8 @@ namespace Epsitec.Common.Widgets.Collections
 
 				visual.SetParentVisual (this.host);
 				visual.InheritedPropertyCache.InheritValuesFromParent (visual, this.host);
+
+				this.UpdateLayoutStatistics (visual, 1);
 			}
 			else if (this.host == parent)
 			{
@@ -116,6 +141,7 @@ namespace Epsitec.Common.Widgets.Collections
 				
 				visual.SetParentVisual (this.host);
 				visual.InheritedPropertyCache.InheritValuesFromParent (visual, this.host);
+				this.UpdateLayoutStatistics (visual, 1);
 			}
 			
 			System.Diagnostics.Debug.Assert (visual.Parent == this.host);
@@ -132,10 +158,62 @@ namespace Epsitec.Common.Widgets.Collections
 			
 			visual.SetParentVisual (null);
 			visual.InheritedPropertyCache.ClearAllValues (visual);
+			this.UpdateLayoutStatistics (visual, -1);
 
 			System.Diagnostics.Debug.Assert (visual.Parent == null);
 			
 			this.NotifyChanged ();
+		}
+
+		[System.Diagnostics.Conditional ("DEBUG")]
+		private void VerifyLayoutStatistics()
+		{
+			int dock = 0;
+			int anchor = 0;
+			
+			foreach (Visual visual in this.visuals)
+			{
+				switch (Layouts.LayoutEngine.GetLayoutMode (visual))
+				{
+					case Layouts.LayoutMode.Docked:
+						dock++;
+						break;
+
+					case Epsitec.Common.Widgets.Layouts.LayoutMode.Anchored:
+						anchor++;
+						break;
+				}
+			}
+
+			System.Diagnostics.Debug.Assert (dock == this.dockLayoutCount);
+			System.Diagnostics.Debug.Assert (anchor == this.anchorLayoutCount);
+		}
+
+		private void UpdateLayoutStatistics(Visual visual, int increment)
+		{
+			switch (Layouts.LayoutEngine.GetLayoutMode (visual))
+			{
+				case Layouts.LayoutMode.Docked:
+					this.dockLayoutCount += increment;
+					break;
+				
+				case Epsitec.Common.Widgets.Layouts.LayoutMode.Anchored:
+					this.anchorLayoutCount += increment;
+					break;
+			}
+		}
+		private void UpdateLayoutStatistics(DockStyle dock, AnchorStyles anchor, int increment)
+		{
+			switch (Layouts.LayoutEngine.GetLayoutMode (dock, anchor))
+			{
+				case Layouts.LayoutMode.Docked:
+					this.dockLayoutCount += increment;
+					break;
+
+				case Epsitec.Common.Widgets.Layouts.LayoutMode.Anchored:
+					this.anchorLayoutCount += increment;
+					break;
+			}
 		}
 
 		private void NotifyChanged()
@@ -433,5 +511,8 @@ namespace Epsitec.Common.Widgets.Collections
 		
 		private Visual							host;
 		private List<Visual>					visuals = new List<Visual> ();
+		
+		private int								dockLayoutCount;
+		private int								anchorLayoutCount;
 	}
 }
