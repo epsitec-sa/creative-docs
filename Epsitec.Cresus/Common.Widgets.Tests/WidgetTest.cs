@@ -590,10 +590,16 @@ namespace Epsitec.Common.Widgets
 			Assert.IsTrue (widget.Left  == 20, "AnchorStyles.Right, widget.Left not OK");
 			
 			root.Width = 140;
+			
+			Layouts.LayoutContext.SyncArrange (root);
+			
 			Assert.IsTrue (widget.Left  == 40, "AnchorStyles.Right, widget.Left not OK");
 			Assert.IsTrue (widget.Width == 80, "AnchorStyles.Right, widget.Width not OK");
 			
 			root.Width = 120;
+
+			Layouts.LayoutContext.SyncArrange (root);
+
 			Assert.IsTrue (widget.Left == 20);
 			Assert.IsTrue (widget.Width == 80);
 			
@@ -980,16 +986,143 @@ namespace Epsitec.Common.Widgets
 //			
 //			Assert.IsTrue (Epsitec.Common.Drawing.Transform.Multiply (t1, t2).Equals (new Epsitec.Common.Drawing.Transform ()));
 		}
-		
-		[Test] public void CheckDocking()
+
+		[Test]
+		public void CheckInteractiveAnchor()
 		{
-			Window window = new Window();
-			
-			window.ClientSize = new Size(400, 300);
-			window.Text = "CheckDocking";
+			Window window = new Window ();
+
+			window.ClientSize = new Size (400, 300);
+			window.Text = "CheckInteractiveAnchor";
 			window.Root.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
 			window.Root.Padding = new Margins (8, 8, 5, 5);
-			
+
+			Button button;
+			button = new Button ();
+			button.Size = new Size (40, 24);
+			button.Text = "A";
+			button.Margins = new Margins (0, 0, 0, 0);
+			button.Anchor = AnchorStyles.Left | AnchorStyles.TopAndBottom;
+			window.Root.Children.Add (button);
+
+			button = new Button ();
+			button.Size = new Size (40, 24);
+			button.Text = "A1";
+			button.Margins = new Margins (40, 0, 0, 0);
+			button.Anchor = AnchorStyles.Left | AnchorStyles.TopAndBottom;
+			button.VerticalAlignment = VerticalAlignment.Top;
+			window.Root.Children.Add (button);
+
+			button = new Button ();
+			button.Size = new Size (40, 24);
+			button.Text = "A2";
+			button.Margins = new Margins (80, 0, 0, 0);
+			button.Anchor = AnchorStyles.Left | AnchorStyles.TopAndBottom;
+			button.VerticalAlignment = VerticalAlignment.Center;
+			window.Root.Children.Add (button);
+
+			button = new Button ();
+			button.Size = new Size (40, 24);
+			button.Text = "A3";
+			button.Margins = new Margins (120, 0, 0, 0);
+			button.Anchor = AnchorStyles.Left | AnchorStyles.TopAndBottom;
+			button.VerticalAlignment = VerticalAlignment.Bottom;
+			window.Root.Children.Add (button);
+
+			button = new Button ();
+			button.Size = new Size (40, 24);
+			button.Text = "B";
+			button.Margins = new Margins (160, 0, 0, 0);
+			button.Anchor = AnchorStyles.Left | AnchorStyles.TopAndBottom;
+			window.Root.Children.Add (button);
+
+			button = new Button ();
+			button.Size = new Size (40, 24);
+			button.Text = "C";
+			button.Margins = new Margins (0, 0, 0, 0);
+			button.Anchor = AnchorStyles.Right | AnchorStyles.TopAndBottom;
+			window.Root.Children.Add (button);
+
+			button = new Button ();
+			button.Size = new Size (40, 24);
+			button.Text = "D";
+			button.Margins = new Margins (200, 40, 0, 0);
+			button.Anchor = AnchorStyles.Top | AnchorStyles.LeftAndRight;
+			window.Root.Children.Add (button);
+
+			button = new Button ();
+			button.Size = new Size (40, 24);
+			button.Text = "E";
+			button.Margins = new Margins (200, 40, 0, 0);
+			button.Anchor = AnchorStyles.Bottom | AnchorStyles.LeftAndRight;
+			window.Root.Children.Add (button);
+
+			button = new Button ();
+			button.Size = new Size (40, 24);
+			button.Text = "E1";
+			button.Margins = new Margins (200, 40, 0, 24);
+			button.Anchor = AnchorStyles.Bottom | AnchorStyles.LeftAndRight;
+			button.HorizontalAlignment = HorizontalAlignment.Left;
+			window.Root.Children.Add (button);
+
+			button = new Button ();
+			button.Size = new Size (40, 24);
+			button.Text = "E2";
+			button.Margins = new Margins (200, 40, 0, 48);
+			button.Anchor = AnchorStyles.Bottom | AnchorStyles.LeftAndRight;
+			button.HorizontalAlignment = HorizontalAlignment.Center;
+			window.Root.Children.Add (button);
+
+			button = new Button ();
+			button.Size = new Size (40, 24);
+			button.Text = "E3";
+			button.Margins = new Margins (200, 40, 0, 72);
+			button.Anchor = AnchorStyles.Bottom | AnchorStyles.LeftAndRight;
+			button.HorizontalAlignment = HorizontalAlignment.Right;
+			window.Root.Children.Add (button);
+
+			button = new Button ();
+			button.Size = new Size (40, 24);
+			button.Text = "F";
+			button.Margins = new Margins (200, 40, 24, 96);
+			button.Anchor = AnchorStyles.Left | AnchorStyles.TopAndBottom;
+			window.Root.Children.Add (button);
+
+			button = new Button ();
+			button.Size = new Size (40, 24);
+			button.Text = "G";
+			button.Margins = new Margins (240, 40, 24, 96);
+			button.Anchor = AnchorStyles.Right | AnchorStyles.TopAndBottom;
+			window.Root.Children.Add (button);
+
+			button = new Button ();
+			button.Size = new Size (40, 24);
+			button.Text = "H";
+			button.Margins = new Margins (240, 80, 24, 96);
+			button.Anchor = AnchorStyles.Left | AnchorStyles.TopAndBottom;
+			window.Root.Children.Add (button);
+
+			button = new Button ();
+			button.Size = new Size (40, 24);
+			button.Text = "I";
+			button.Margins = new Margins (240, 80, 24, 96);
+			button.Anchor = AnchorStyles.Right | AnchorStyles.TopAndBottom;
+			window.Root.Children.Add (button);
+
+			window.Show ();
+			Window.RunInTestEnvironment (window);
+		}
+
+		[Test]
+		public void CheckInteractiveDock()
+		{
+			Window window = new Window ();
+
+			window.ClientSize = new Size (400, 300);
+			window.Text = "CheckInteractiveDock";
+			window.Root.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
+			window.Root.Padding = new Margins (8, 8, 5, 5);
+
 			Button button;
 			button = new Button ();
 			button.Size = new Size (40, 24);
@@ -1019,22 +1152,22 @@ namespace Epsitec.Common.Widgets
 			window.Root.Children.Add (button);
 
 			button = new Button ();
-			button.Size = new Size(40, 24);
+			button.Size = new Size (40, 24);
 			button.Text = "B";
 			button.Dock = DockStyle.Left;
-			window.Root.Children.Add(button);
-			
-			button = new Button();
-			button.Size = new Size(40, 24);
+			window.Root.Children.Add (button);
+
+			button = new Button ();
+			button.Size = new Size (40, 24);
 			button.Text = "C";
 			button.Dock = DockStyle.Right;
-			window.Root.Children.Add(button);
-			
-			button = new Button();
-			button.Size = new Size(40, 24);
+			window.Root.Children.Add (button);
+
+			button = new Button ();
+			button.Size = new Size (40, 24);
 			button.Text = "D";
 			button.Dock = DockStyle.Top;
-			window.Root.Children.Add(button);
+			window.Root.Children.Add (button);
 
 			button = new Button ();
 			button.Size = new Size (40, 24);
@@ -1064,34 +1197,35 @@ namespace Epsitec.Common.Widgets
 			window.Root.Children.Add (button);
 
 			button = new Button ();
-			button.Size = new Size(40, 24);
+			button.Size = new Size (40, 24);
 			button.Text = "F";
 			button.Dock = DockStyle.Left;
-			window.Root.Children.Add(button);
-			
-			button = new Button();
-			button.Size = new Size(40, 24);
+			window.Root.Children.Add (button);
+
+			button = new Button ();
+			button.Size = new Size (40, 24);
 			button.Text = "G";
 			button.Dock = DockStyle.Right;
-			window.Root.Children.Add(button);
-			
-			button = new Button();
-			button.Size = new Size(40, 24);
+			window.Root.Children.Add (button);
+
+			button = new Button ();
+			button.Size = new Size (40, 24);
 			button.Text = "H";
 			button.Dock = DockStyle.Fill;
-			window.Root.Children.Add(button);
-			
-			button = new Button();
-			button.Size = new Size(40, 24);
+			window.Root.Children.Add (button);
+
+			button = new Button ();
+			button.Size = new Size (40, 24);
 			button.Text = "I";
 			button.Dock = DockStyle.Fill;
-			window.Root.Children.Add(button);
-			
+			window.Root.Children.Add (button);
+
 			window.Show ();
 			Window.RunInTestEnvironment (window);
 		}
-		
-		[Test] public void CheckAliveWidgets()
+
+		[Test]
+		public void CheckAliveWidgets()
 		{
 			System.Console.Out.WriteLine ("{0} widgets and {1} windows alive before GC.Collect", Widget.DebugAliveWidgetsCount, Window.DebugAliveWindowsCount);
 			System.GC.Collect ();
