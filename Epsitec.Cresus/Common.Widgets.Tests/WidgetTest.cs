@@ -1048,6 +1048,7 @@ namespace Epsitec.Common.Widgets
 			button.Text = "D";
 			button.Margins = new Margins (200, 40, 0, 0);
 			button.Anchor = AnchorStyles.Top | AnchorStyles.LeftAndRight;
+			button.MinWidth = 30;
 			window.Root.Children.Add (button);
 
 			button = new Button ();
@@ -1086,6 +1087,7 @@ namespace Epsitec.Common.Widgets
 			button.Text = "F";
 			button.Margins = new Margins (200, 40, 24, 96);
 			button.Anchor = AnchorStyles.Left | AnchorStyles.TopAndBottom;
+			button.MinHeight = 30;
 			window.Root.Children.Add (button);
 
 			button = new Button ();

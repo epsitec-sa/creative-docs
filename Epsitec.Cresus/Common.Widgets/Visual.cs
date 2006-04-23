@@ -955,11 +955,15 @@ namespace Epsitec.Common.Widgets
 
 			if (this.HasChildren)
 			{
+				IEnumerable<Visual> children = this.children;
+
 				if (this.children.DockLayoutCount > 0)
 				{
-					IEnumerable<Visual> children = this.Children;
-
 					Layouts.LayoutEngine.DockEngine.UpdateMinMax (this, children, ref min, ref max);
+				}
+				if (this.children.AnchorLayoutCount > 0)
+				{
+					Layouts.LayoutEngine.AnchorEngine.UpdateMinMax (this, children, ref min, ref max);
 				}
 			}
 		}

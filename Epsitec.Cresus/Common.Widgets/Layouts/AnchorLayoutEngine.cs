@@ -100,6 +100,110 @@ namespace Epsitec.Common.Widgets.Layouts
 		
 		public void UpdateMinMax(Visual container, IEnumerable<Visual> children, ref Drawing.Size min_size, ref Drawing.Size max_size)
 		{
+			//	Décompose les dimensions comme suit :
+			//
+			//	|											  |
+			//	|<---min_ox1--->| zone de travail |<-min_ox2->|
+			//	|											  |
+			//	|<-------------------min_dx------------------>|
+			//
+			//	Idem par analogie pour dy.
+
+			double min_ox1 = 0;
+			double min_ox2 = 0;
+			double min_oy1 = 0;
+			double min_oy2 = 0;
+
+			double min_dx = 0;
+			double min_dy = 0;
+			double max_dx = 1000000;
+			double max_dy = 1000000;
+
+			foreach (Visual child in children)
+			{
+				if ((child.Dock != DockStyle.None) ||
+					(child.Anchor == AnchorStyles.None))
+				{
+					//	Saute les widgets qui sont "docked" dans le parent, car ils sont traités
+					//	ailleurs. Ceux qui ne sont pas ancrés ne contribuent pas non plus.
+
+					continue;
+				}
+
+				if (child.Visibility == false)
+				{
+					continue;
+				}
+
+				Drawing.Margins margins = child.Margins;
+
+				Layouts.LayoutMeasure measure_dx = Layouts.LayoutMeasure.GetWidth (child);
+				Layouts.LayoutMeasure measure_dy = Layouts.LayoutMeasure.GetHeight (child);
+
+				AnchorStyles anchor = child.Anchor;
+
+				switch (anchor & AnchorStyles.LeftAndRight)
+				{
+					case AnchorStyles.Left:
+						min_ox1 = System.Math.Max (min_ox1, margins.Left);
+						min_dx  = System.Math.Max (min_dx, margins.Left + measure_dx.Min);
+						break;
+
+					case AnchorStyles.Right:
+						min_ox2 = System.Math.Max (min_ox2, margins.Right);
+						min_dx  = System.Math.Max (min_dx, margins.Left + measure_dx.Min);
+						break;
+
+					case AnchorStyles.LeftAndRight:
+						min_ox1 = System.Math.Max (min_ox1, margins.Left);
+						min_ox2 = System.Math.Max (min_ox2, margins.Right);
+						min_dx  = System.Math.Max (min_dx, margins.Width + measure_dx.Min);
+						break;
+				}
+
+				switch (anchor & AnchorStyles.TopAndBottom)
+				{
+					case AnchorStyles.Bottom:
+						min_oy1 = System.Math.Max (min_oy1, margins.Bottom);
+						min_dy  = System.Math.Max (min_dy, margins.Bottom + measure_dy.Min);
+						break;
+
+					case AnchorStyles.Top:
+						min_oy2 = System.Math.Max (min_oy2, margins.Top);
+						min_dy  = System.Math.Max (min_dy, margins.Bottom + measure_dy.Min);
+						break;
+
+					case AnchorStyles.TopAndBottom:
+						min_oy1 = System.Math.Max (min_oy1, margins.Bottom);
+						min_oy2 = System.Math.Max (min_oy2, margins.Top);
+						min_dy  = System.Math.Max (min_dy, margins.Height + measure_dy.Min);
+						break;
+				}
+			}
+
+			double pad_width  = container.Padding.Width  + container.InternalPadding.Width;
+			double pad_height = container.Padding.Height + container.InternalPadding.Height;
+
+			double min_width  = min_dx + pad_width;
+			double min_height = min_dy + pad_height;
+			double max_width  = max_dx + pad_width;
+			double max_height = max_dy + pad_height;
+
+			//	Tous les calculs ont été faits en coordonnées client, il faut donc encore transformer
+			//	ces dimensions en coordonnées parents.
+
+			min_size = Helpers.VisualTree.MapVisualToParent (container, new Drawing.Size (min_width, min_height));
+			max_size = Helpers.VisualTree.MapVisualToParent (container, new Drawing.Size (max_width, max_height));
+
+			Widget widget = container as Widget;
+
+			//	TODO: supprimer ce hack (AutoMinSize et AutoMaxSize ne devraient plus exister)
+
+			if (widget != null)
+			{
+				widget.AutoMinSize = min_size;
+				widget.AutoMaxSize = max_size;
+			}
 		}
 		
 		private static void SetChildBounds(Visual child, Drawing.Rectangle bounds)
