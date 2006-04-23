@@ -444,6 +444,12 @@ namespace Epsitec.Common.Widgets
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
 			
 			this.menu = this.CreateMenu ();
+
+			if (this.menu == null)
+			{
+				return;
+			}
+			
 			this.menu.ShowAsComboList (this, this.MapClientToScreen (new Drawing.Point (0, 0)), this.Button);
 			
 			if (this.scroll_list != null)
@@ -519,6 +525,12 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		public static void AdjustComboSize(Widget parent, AbstractMenu menu)
+		{
+			menu.AdjustSize ();
+			
+			MenuItem.SetMenuHost (parent, new MenuHost (menu));
+		}
 		
 		protected virtual AbstractMenu CreateMenu()
 		{
@@ -534,10 +546,8 @@ namespace Epsitec.Common.Widgets
 			//	Remplit la liste :
 			
 			this.CopyItemsToComboList (this.scroll_list.Items);
-			
-			menu.AdjustSize ();
-			
-			MenuItem.SetMenuHost (this, new MenuHost (menu));
+
+			TextFieldCombo.AdjustComboSize (this, menu);
 			
 			return menu;
 		}

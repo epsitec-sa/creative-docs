@@ -260,8 +260,7 @@ namespace Epsitec.Common.Document.Containers
 			this.dummyChildrens.IsReadOnly = true;
 			this.dummyChildrens.Width = 185;
 			this.dummyChildrens.Margins = new Margins(0, 0, 1, 1);
-			this.dummyChildrens.Clicked += new MessageEventHandler(this.HandleMenuChildrensClicked);
-			this.dummyChildrens.Button.Clicked += new MessageEventHandler(this.HandleMenuChildrensClicked);
+			this.dummyChildrens.ComboOpenPressed += new EventHandler(this.HandleMenuChildrensOpenPressed);
 			this.childrensToolBar.Items.Add(this.dummyChildrens);
 			ToolTip.Default.SetToolTip(this.dummyChildrens, Res.Strings.Panel.AggregateChildrens.Tooltip.Name);
 
@@ -1266,30 +1265,18 @@ namespace Epsitec.Common.Document.Containers
 			this.name.Focus();
 		}
 
-		private void HandleMenuChildrensClicked(object sender, MessageEventArgs e)
+		private void HandleMenuChildrensOpenPressed(object sender)
 		{
 			//	Crée un nouveau parent.
 			Widget widget = this.dummyChildrens;
-			Point pos = widget.MapClientToScreen(new Point(0, 1));
-			VMenu menu = this.CreateMenuChildrens(pos);
+			VMenu menu = this.CreateMenuChildrens();
 			if ( menu == null )  return;
 			menu.Host = this;
-
-			ScreenInfo info = ScreenInfo.Find(pos);
-			Drawing.Rectangle area = info.WorkingArea;
-
-			if ( pos.Y-menu.Height < area.Bottom )  // dépasse en bas ?
-			{
-				pos = widget.MapClientToScreen(new Drawing.Point(0, widget.Height));
-				pos.Y += menu.Height;  // déroule contre le haut ?
-			}
-
-			if ( pos.X+menu.Width > area.Right )  // dépasse à droite ?
-			{
-				pos.X -= pos.X+menu.Width-area.Right;
-			}
-
-			menu.ShowAsContextMenu(this.Window, pos);
+			menu.MinWidth = widget.Width;
+			
+			TextFieldCombo.AdjustComboSize (widget, menu);
+			
+			menu.ShowAsComboList (widget, Drawing.Point.Zero, this.dummyChildrens.Button);
 		}
 
 
@@ -1316,7 +1303,7 @@ namespace Epsitec.Common.Document.Containers
 				pos.X -= pos.X+menu.Width-area.Right;
 			}
 
-			menu.ShowAsContextMenu(this.Window, pos);
+			menu.ShowAsComboList (this, pos, button);
 		}
 
 		private void HandleButtonStyleDelete(object sender, MessageEventArgs e)
@@ -1515,7 +1502,7 @@ namespace Epsitec.Common.Document.Containers
 
 		
 		#region MenuChildrens
-		protected VMenu CreateMenuChildrens(Point pos)
+		protected VMenu CreateMenuChildrens()
 		{
 			//	Construit le menu pour choisir un enfant à ajouter.
 			VMenu menu = new VMenu();

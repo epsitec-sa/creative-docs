@@ -462,7 +462,7 @@ namespace Epsitec.Common.Document.TextPanels
 				pos.X -= pos.X+menu.Width-area.Right;
 			}
 
-			menu.ShowAsContextMenu(this.Window, pos);
+			menu.ShowAsComboList (this, pos, this.buttonType);
 		}
 
 		private void HandleMenuPressed(object sender, MessageEventArgs e)

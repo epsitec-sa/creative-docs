@@ -298,7 +298,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			VMenu menu = this.CreatePagesMenu();
 			menu.Host = button.Window;
 			pos.Y += menu.Height;
-			menu.ShowAsContextMenu(button.Window, pos);
+			menu.ShowAsComboList (button, pos, button);
 		}
 
 		public VMenu CreatePagesMenu()

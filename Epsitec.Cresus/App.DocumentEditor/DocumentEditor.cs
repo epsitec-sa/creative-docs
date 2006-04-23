@@ -2946,8 +2946,8 @@ namespace Epsitec.App.DocumentEditor
 			{
 				pos.X = wa.Right-menu.Width;
 			}
-			
-			menu.ShowAsContextMenu(this.Window, pos);
+
+			menu.ShowAsComboList (this, pos, button);
 			this.WidgetStretchTypeMenuEngaged(true, true);
 		}
 
@@ -3324,7 +3324,7 @@ namespace Epsitec.App.DocumentEditor
 			VMenu menu = this.CreatePagesMenu();
 			menu.Host = this;
 			pos.Y += menu.Height;
-			menu.ShowAsContextMenu(this.Window, pos);
+			menu.ShowAsComboList (this, pos, button);
 		}
 
 		[Command ("PageSelect")]
@@ -3407,7 +3407,7 @@ namespace Epsitec.App.DocumentEditor
 			VMenu menu = this.CreateLayersMenu();
 			menu.Host = this;
 			pos.X -= menu.Width;
-			menu.ShowAsContextMenu(this.Window, pos);
+			menu.ShowAsComboList (this, pos, button);
 		}
 
 		[Command ("LayerSelect")]

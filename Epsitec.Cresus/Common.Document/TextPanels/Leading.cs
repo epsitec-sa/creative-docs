@@ -283,7 +283,7 @@ namespace Epsitec.Common.Document.TextPanels
 			VMenu menu = this.CreateMenu();
 			pos.X -= menu.Width;
 			menu.Host = this;
-			menu.ShowAsContextMenu(this.Window, pos);
+			menu.ShowAsComboList (this, pos, button);
 		}
 
 		private void HandleButtonAlignFirstClicked(object sender, MessageEventArgs e)
