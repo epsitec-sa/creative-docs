@@ -260,7 +260,7 @@ namespace Epsitec.Common.Document.Containers
 			this.dummyChildrens.IsReadOnly = true;
 			this.dummyChildrens.Width = 185;
 			this.dummyChildrens.Margins = new Margins(0, 0, 1, 1);
-			this.dummyChildrens.ComboOpenPressed += new EventHandler(this.HandleMenuChildrensOpenPressed);
+			this.dummyChildrens.ComboOpenPressed += new EventHandler(this.HandleMenuChildrenOpenPressed);
 			this.childrensToolBar.Items.Add(this.dummyChildrens);
 			ToolTip.Default.SetToolTip(this.dummyChildrens, Res.Strings.Panel.AggregateChildrens.Tooltip.Name);
 
@@ -1265,7 +1265,7 @@ namespace Epsitec.Common.Document.Containers
 			this.name.Focus();
 		}
 
-		private void HandleMenuChildrensOpenPressed(object sender)
+		private void HandleMenuChildrenOpenPressed(object sender)
 		{
 			//	Crée un nouveau parent.
 			Widget widget = this.dummyChildrens;

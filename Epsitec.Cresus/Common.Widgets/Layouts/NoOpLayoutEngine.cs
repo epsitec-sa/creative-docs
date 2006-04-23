@@ -10,5 +10,9 @@ namespace Epsitec.Common.Widgets.Layouts
 		public void UpdateLayout(Visual container, Drawing.Rectangle rect, IEnumerable<Visual> children)
 		{
 		}
+
+		public void UpdateMinMax(Visual container, IEnumerable<Visual> children, ref Drawing.Size min_size, ref Drawing.Size max_size)
+		{
+		}
 	}
 }

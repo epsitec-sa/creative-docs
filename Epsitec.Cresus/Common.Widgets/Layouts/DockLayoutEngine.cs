@@ -185,8 +185,8 @@ namespace Epsitec.Common.Widgets.Layouts
 				}
 			}
 		}
-		
-		public void UpdateMinMax(Visual container, System.Collections.ICollection children, ref Drawing.Size min_size, ref Drawing.Size max_size)
+
+		public void UpdateMinMax(Visual container, IEnumerable<Visual> children, ref Drawing.Size min_size, ref Drawing.Size max_size)
 		{
 			//	Décompose les dimensions comme suit :
 			//

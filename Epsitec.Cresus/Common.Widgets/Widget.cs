@@ -3294,7 +3294,7 @@ namespace Epsitec.Common.Widgets
 				this.internal_state &= ~InternalState.ChildrenChanged;
 			}
 
-			this.UpdateMinMaxBasedOnDockedChildren ();
+//			this.UpdateMinMaxBasedOnDockedChildren ();
 			
 			base.MeasureMinMax (ref min, ref max);
 

@@ -97,5 +97,9 @@ namespace Epsitec.Common.Widgets.Layouts
 				child.SetBounds (Drawing.Rectangle.FromPoints (x1, y1, x2, y2));
 			}
 		}
+		
+		public void UpdateMinMax(Visual container, IEnumerable<Visual> children, ref Drawing.Size min_size, ref Drawing.Size max_size)
+		{
+		}
 	}
 }
