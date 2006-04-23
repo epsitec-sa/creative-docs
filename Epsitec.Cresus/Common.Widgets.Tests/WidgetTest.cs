@@ -991,13 +991,34 @@ namespace Epsitec.Common.Widgets
 			window.Root.Padding = new Margins (8, 8, 5, 5);
 			
 			Button button;
-			button = new Button();
-			button.Size = new Size(40, 24);
+			button = new Button ();
+			button.Size = new Size (40, 24);
 			button.Text = "A";
 			button.Dock = DockStyle.Left;
-			window.Root.Children.Add(button);
-			
-			button = new Button();
+			window.Root.Children.Add (button);
+
+			button = new Button ();
+			button.Size = new Size (40, 24);
+			button.Text = "A1";
+			button.Dock = DockStyle.Left;
+			button.VerticalAlignment = VerticalAlignment.Top;
+			window.Root.Children.Add (button);
+
+			button = new Button ();
+			button.Size = new Size (40, 24);
+			button.Text = "A2";
+			button.Dock = DockStyle.Left;
+			button.VerticalAlignment = VerticalAlignment.Center;
+			window.Root.Children.Add (button);
+
+			button = new Button ();
+			button.Size = new Size (40, 24);
+			button.Text = "A3";
+			button.Dock = DockStyle.Left;
+			button.VerticalAlignment = VerticalAlignment.Bottom;
+			window.Root.Children.Add (button);
+
+			button = new Button ();
 			button.Size = new Size(40, 24);
 			button.Text = "B";
 			button.Dock = DockStyle.Left;
@@ -1014,14 +1035,35 @@ namespace Epsitec.Common.Widgets
 			button.Text = "D";
 			button.Dock = DockStyle.Top;
 			window.Root.Children.Add(button);
-			
-			button = new Button();
-			button.Size = new Size(40, 24);
+
+			button = new Button ();
+			button.Size = new Size (40, 24);
 			button.Text = "E";
 			button.Dock = DockStyle.Bottom;
-			window.Root.Children.Add(button);
-			
-			button = new Button();
+			window.Root.Children.Add (button);
+
+			button = new Button ();
+			button.Size = new Size (40, 24);
+			button.Text = "E1";
+			button.Dock = DockStyle.Bottom;
+			button.HorizontalAlignment = HorizontalAlignment.Left;
+			window.Root.Children.Add (button);
+
+			button = new Button ();
+			button.Size = new Size (40, 24);
+			button.Text = "E2";
+			button.Dock = DockStyle.Bottom;
+			button.HorizontalAlignment = HorizontalAlignment.Center;
+			window.Root.Children.Add (button);
+
+			button = new Button ();
+			button.Size = new Size (40, 24);
+			button.Text = "E3";
+			button.Dock = DockStyle.Bottom;
+			button.HorizontalAlignment = HorizontalAlignment.Right;
+			window.Root.Children.Add (button);
+
+			button = new Button ();
 			button.Size = new Size(40, 24);
 			button.Text = "F";
 			button.Dock = DockStyle.Left;
