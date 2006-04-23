@@ -102,8 +102,8 @@ namespace Epsitec.Common.Widgets.Layouts
 		{
 			double min_dx = 0;
 			double min_dy = 0;
-			double max_dx = 1000000;
-			double max_dy = 1000000;
+			double max_dx = double.PositiveInfinity;
+			double max_dy = double.PositiveInfinity;
 
 			foreach (Visual child in children)
 			{

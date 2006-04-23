@@ -210,8 +210,8 @@ namespace Epsitec.Common.Widgets.Layouts
 			
 			double min_dx = 0;
 			double min_dy = 0;
-			double max_dx = 1000000;
-			double max_dy = 1000000;
+			double max_dx = double.PositiveInfinity;
+			double max_dy = double.PositiveInfinity;
 			
 			double fill_min_dx = 0;
 			double fill_min_dy = 0;
@@ -313,12 +313,12 @@ namespace Epsitec.Common.Widgets.Layouts
 			
 			if (fill_max_dx == 0)
 			{
-				fill_max_dx = 1000000;
+				fill_max_dx = double.PositiveInfinity;
 			}
 			
 			if (fill_max_dy == 0)
 			{
-				fill_max_dy = 1000000;
+				fill_max_dy = double.PositiveInfinity;
 			}
 			
 			double pad_width  = container.Padding.Width  + container.InternalPadding.Width;
