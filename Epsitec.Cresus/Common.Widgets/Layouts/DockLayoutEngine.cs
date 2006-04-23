@@ -62,28 +62,28 @@ namespace Epsitec.Common.Widgets.Layouts
 					case DockStyle.Top:
 						bounds = new Drawing.Rectangle (client.Left, client.Top - dy, client.Width, dy);
 						bounds.Deflate (child.Margins);
-						child.SetBounds (bounds);
+						DockLayoutEngine.SetChildBounds (child, bounds);
 						client.Top -= dy;
 						break;
 						
 					case DockStyle.Bottom:
 						bounds = new Drawing.Rectangle (client.Left, client.Bottom, client.Width, dy);
 						bounds.Deflate (child.Margins);
-						child.SetBounds (bounds);
+						DockLayoutEngine.SetChildBounds (child, bounds);
 						client.Bottom += dy;
 						break;
 					
 					case DockStyle.Left:
 						bounds = new Drawing.Rectangle (client.Left, client.Bottom, dx, client.Height);
 						bounds.Deflate (child.Margins);
-						child.SetBounds (bounds);
+						DockLayoutEngine.SetChildBounds (child, bounds);
 						client.Left += dx;
 						break;
 					
 					case DockStyle.Right:
 						bounds = new Drawing.Rectangle (client.Right - dx, client.Bottom, dx, client.Height);
 						bounds.Deflate (child.Margins);
-						child.SetBounds (bounds);
+						DockLayoutEngine.SetChildBounds (child, bounds);
 						client.Right -= dx;
 						break;
 					
@@ -121,8 +121,8 @@ namespace Epsitec.Common.Widgets.Layouts
 							
 							bounds = new Drawing.Rectangle (client.Left, client.Bottom, new_dx, client.Height);
 							bounds.Deflate (child.Margins);
-							
-							child.SetBounds (bounds);
+
+							DockLayoutEngine.SetChildBounds (child, bounds);
 							client.Left += new_dx;
 						}
 						break;
@@ -141,8 +141,8 @@ namespace Epsitec.Common.Widgets.Layouts
 							
 							bounds = new Drawing.Rectangle (client.Left, client.Top - new_dy, client.Width, new_dy);
 							bounds.Deflate (child.Margins);
-							
-							child.SetBounds (bounds);
+
+							DockLayoutEngine.SetChildBounds (child, bounds);
 							client.Top -= new_dy;
 						}
 						break;
@@ -245,9 +245,13 @@ namespace Epsitec.Common.Widgets.Layouts
 				}
 
 				Drawing.Size margins = child.Margins.Size;
-				Drawing.Size min = child.ResultingMinSize + margins;
-				Drawing.Size max = child.ResultingMaxSize + margins;
-				
+
+				Layouts.LayoutMeasure measure_dx = Layouts.LayoutMeasure.GetWidth (child);
+				Layouts.LayoutMeasure measure_dy = Layouts.LayoutMeasure.GetHeight (child);
+
+				Drawing.Size min = new Drawing.Size (measure_dx.Min + margins.Width, measure_dy.Min + margins.Height);
+				Drawing.Size max = new Drawing.Size (measure_dx.Max + margins.Width, measure_dy.Max + margins.Width);
+
 				switch (child.Dock)
 				{
 					case DockStyle.Top:
@@ -255,7 +259,7 @@ namespace Epsitec.Common.Widgets.Layouts
 						min_dy  = System.Math.Max (min_dy, child.Height + min_oy);
 						min_oy += child.Height + margins.Height;
 						max_dx  = System.Math.Min (max_dx, max.Width    + max_ox);
-						//						max_dy  = System.Math.Min (max_dy, child.Height + max_oy);
+//						max_dy  = System.Math.Min (max_dy, child.Height + max_oy);
 						max_oy += child.Height + margins.Height;
 						break;
 					
@@ -264,7 +268,7 @@ namespace Epsitec.Common.Widgets.Layouts
 						min_dy  = System.Math.Max (min_dy, child.Height + min_oy);
 						min_oy += child.Height + margins.Height;
 						max_dx  = System.Math.Min (max_dx, max.Width    + max_ox);
-						//						max_dy  = System.Math.Min (max_dy, child.Height + max_oy);
+//						max_dy  = System.Math.Min (max_dy, child.Height + max_oy);
 						max_oy += child.Height + margins.Height;
 						break;
 						
@@ -272,7 +276,7 @@ namespace Epsitec.Common.Widgets.Layouts
 						min_dx  = System.Math.Max (min_dx, child.Width  + min_ox);
 						min_dy  = System.Math.Max (min_dy, min.Height   + min_oy);
 						min_ox += child.Width + margins.Width;
-						//						max_dx  = System.Math.Min (max_dx, child.Width  + max_ox);
+//						max_dx  = System.Math.Min (max_dx, child.Width  + max_ox);
 						max_dy  = System.Math.Min (max_dy, max.Height   + max_oy);
 						max_ox += child.Width + margins.Width;
 						break;
@@ -281,7 +285,7 @@ namespace Epsitec.Common.Widgets.Layouts
 						min_dx  = System.Math.Max (min_dx, child.Width  + min_ox);
 						min_dy  = System.Math.Max (min_dy, min.Height   + min_oy);
 						min_ox += child.Width + margins.Width;
-						//						max_dx  = System.Math.Min (max_dx, child.Width  + max_ox);
+//						max_dx  = System.Math.Min (max_dx, child.Width  + max_ox);
 						max_dy  = System.Math.Min (max_dy, max.Height   + max_oy);
 						max_ox += child.Width + margins.Width;
 						break;
@@ -330,6 +334,58 @@ namespace Epsitec.Common.Widgets.Layouts
 			
 			min_size = Helpers.VisualTree.MapVisualToParent (container, new Drawing.Size (min_width, min_height));
 			max_size = Helpers.VisualTree.MapVisualToParent (container, new Drawing.Size (max_width, max_height));
+
+			Widget widget = container as Widget;
+			
+			//	TODO: supprimer ce hack (AutoMinSize et AutoMaxSize ne devraient plus exister)
+			
+			if (widget != null)
+			{
+				widget.AutoMinSize = min_size;
+				widget.AutoMaxSize = max_size;
+			}
+		}
+
+		private static void SetChildBounds(Visual child, Drawing.Rectangle bounds)
+		{
+			double dx = child.PreferredWidth;
+			double dy = child.PreferredHeight;
+			
+			switch (child.VerticalAlignment)
+			{
+				case VerticalAlignment.Stretch:
+					break;
+				case VerticalAlignment.Top:
+					bounds.Bottom = bounds.Top - dy;
+					break;
+				case VerticalAlignment.Center:
+					double h = bounds.Height;
+					bounds.Top = bounds.Top - (h - dy) / 2;
+					bounds.Bottom = bounds.Bottom + (h - dy) / 2;
+					break;
+				case VerticalAlignment.Bottom:
+					bounds.Top = bounds.Bottom + dy;
+					break;
+			}
+			
+			switch (child.HorizontalAlignment)
+			{
+				case HorizontalAlignment.Stretch:
+					break;
+				case HorizontalAlignment.Left:
+					bounds.Right = bounds.Left + dx;
+					break;
+				case HorizontalAlignment.Center:
+					double w = bounds.Width;
+					bounds.Left = bounds.Left + (w - dx) / 2;
+					bounds.Right = bounds.Right - (w - dx) / 2;
+					break;
+				case HorizontalAlignment.Right:
+					bounds.Left = bounds.Right - dx;
+					break;
+			}
+
+			child.SetBounds (bounds);
 		}
 	}
 }
