@@ -100,20 +100,6 @@ namespace Epsitec.Common.Widgets.Layouts
 		
 		public void UpdateMinMax(Visual container, IEnumerable<Visual> children, ref Drawing.Size min_size, ref Drawing.Size max_size)
 		{
-			//	Décompose les dimensions comme suit :
-			//
-			//	|											  |
-			//	|<---min_ox1--->| zone de travail |<-min_ox2->|
-			//	|											  |
-			//	|<-------------------min_dx------------------>|
-			//
-			//	Idem par analogie pour dy.
-
-			double min_ox1 = 0;
-			double min_ox2 = 0;
-			double min_oy1 = 0;
-			double min_oy2 = 0;
-
 			double min_dx = 0;
 			double min_dy = 0;
 			double max_dx = 1000000;
@@ -145,38 +131,36 @@ namespace Epsitec.Common.Widgets.Layouts
 				switch (anchor & AnchorStyles.LeftAndRight)
 				{
 					case AnchorStyles.Left:
-						min_ox1 = System.Math.Max (min_ox1, margins.Left);
-						min_dx  = System.Math.Max (min_dx, margins.Left + measure_dx.Min);
+						min_dx = System.Math.Max (min_dx, margins.Left + System.Math.Max (measure_dx.Min, measure_dx.Desired));
+						max_dx = System.Math.Min (max_dx, margins.Left + System.Math.Min (measure_dx.Max, measure_dx.Desired));
 						break;
 
 					case AnchorStyles.Right:
-						min_ox2 = System.Math.Max (min_ox2, margins.Right);
-						min_dx  = System.Math.Max (min_dx, margins.Left + measure_dx.Min);
+						min_dx = System.Math.Max (min_dx, margins.Right + System.Math.Max (measure_dx.Min, measure_dx.Desired));
+						max_dx = System.Math.Min (max_dx, margins.Right + System.Math.Min (measure_dx.Max, measure_dx.Desired));
 						break;
 
 					case AnchorStyles.LeftAndRight:
-						min_ox1 = System.Math.Max (min_ox1, margins.Left);
-						min_ox2 = System.Math.Max (min_ox2, margins.Right);
-						min_dx  = System.Math.Max (min_dx, margins.Width + measure_dx.Min);
+						min_dx = System.Math.Max (min_dx, margins.Width + measure_dx.Min);
+						max_dx = System.Math.Min (max_dx, margins.Width + measure_dx.Max);
 						break;
 				}
 
 				switch (anchor & AnchorStyles.TopAndBottom)
 				{
 					case AnchorStyles.Bottom:
-						min_oy1 = System.Math.Max (min_oy1, margins.Bottom);
-						min_dy  = System.Math.Max (min_dy, margins.Bottom + measure_dy.Min);
+						min_dy = System.Math.Max (min_dy, margins.Bottom + System.Math.Max (measure_dy.Min, measure_dy.Desired));
+						max_dy = System.Math.Min (max_dy, margins.Bottom + System.Math.Min (measure_dy.Max, measure_dy.Desired));
 						break;
 
 					case AnchorStyles.Top:
-						min_oy2 = System.Math.Max (min_oy2, margins.Top);
-						min_dy  = System.Math.Max (min_dy, margins.Bottom + measure_dy.Min);
+						min_dy = System.Math.Max (min_dy, margins.Top + System.Math.Max (measure_dy.Min, measure_dy.Desired));
+						max_dy = System.Math.Min (max_dy, margins.Top + System.Math.Min (measure_dy.Max, measure_dy.Desired));
 						break;
 
 					case AnchorStyles.TopAndBottom:
-						min_oy1 = System.Math.Max (min_oy1, margins.Bottom);
-						min_oy2 = System.Math.Max (min_oy2, margins.Top);
-						min_dy  = System.Math.Max (min_dy, margins.Height + measure_dy.Min);
+						min_dy = System.Math.Max (min_dy, margins.Height + measure_dy.Min);
+						max_dy = System.Math.Min (max_dy, margins.Height + measure_dy.Max);
 						break;
 				}
 			}
