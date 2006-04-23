@@ -204,6 +204,29 @@ namespace Epsitec.Common.Widgets.Layouts
 			}
 		}
 
+		public static void SyncMeasure(Visual visual)
+		{
+			if (visual != null)
+			{
+				int depth;
+				LayoutContext context = Helpers.VisualTree.GetLayoutContext (visual, out depth);
+				context.ExecuteMeasure ();
+			}
+		}
+		public static void SyncArrange(Visual visual)
+		{
+			if (visual != null)
+			{
+				int depth;
+				LayoutContext context = Helpers.VisualTree.GetLayoutContext (visual, out depth);
+
+				while ((context.ArrangeQueueLength != 0) || (context.MeasureQueueLength != 0))
+				{
+					context.ExecuteArrange ();
+				}
+			}
+		}
+
 		public void ExecuteMeasure()
 		{
 			//	Measure all widgets which have been queued to be measured. Start

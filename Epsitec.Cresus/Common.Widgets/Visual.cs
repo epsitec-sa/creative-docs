@@ -926,8 +926,15 @@ namespace Epsitec.Common.Widgets
 				rect.Deflate (this.Padding);
 				rect.Deflate (this.InternalPadding);
 
-				Layouts.LayoutEngine.AnchorEngine.UpdateLayout (this, rect, children);
-				Layouts.LayoutEngine.DockEngine.UpdateLayout (this, rect, children);
+				if (this.children.AnchorLayoutCount > 0)
+				{
+					Layouts.LayoutEngine.AnchorEngine.UpdateLayout (this, rect, children);
+				}
+				
+				if (this.children.DockLayoutCount > 0)
+				{
+					Layouts.LayoutEngine.DockEngine.UpdateLayout (this, rect, children);
+				}
 
 				this.ManualArrange ();
 			}
@@ -945,6 +952,16 @@ namespace Epsitec.Common.Widgets
 			min.Height = System.Math.Max (min.Height, this.MinHeight);
 			max.Width = System.Math.Min (max.Width, this.MaxWidth);
 			max.Height = System.Math.Min (max.Height, this.MaxHeight);
+
+			if (this.HasChildren)
+			{
+				if (this.children.DockLayoutCount > 0)
+				{
+					IEnumerable<Visual> children = this.Children;
+
+					Layouts.LayoutEngine.DockEngine.UpdateMinMax (this, children, ref min, ref max);
+				}
+			}
 		}
 		protected virtual Drawing.Size GetDesiredSize()
 		{
