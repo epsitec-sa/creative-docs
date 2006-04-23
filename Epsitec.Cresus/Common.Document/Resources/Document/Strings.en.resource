@@ -287,9 +287,9 @@
 	<data name="Panel.AggregateCategory.Character">Character</data>
 	<data name="Panel.AggregateName.Label.Name">Name</data>
 	<data name="Panel.AggregateName.Tooltip.Name">Style name</data>
-	<data name="Panel.AggregateChildrens.Label.Name">Based on</data>
-	<data name="Panel.AggregateChildrens.Tooltip.Name">Base styles</data>
-	<data name="Panel.AggregateChildrens.Tooltip.Menu">Select the attached base styles</data>
+	<data name="Panel.AggregateChildren.Label.Name">Based on</data>
+	<data name="Panel.AggregateChildren.Tooltip.Name">Base styles</data>
+	<data name="Panel.AggregateChildren.Tooltip.Menu">Select the attached base styles</data>
 
 	<data name="Panel.Arc.Short.Initial">α1</data>
 	<data name="Panel.Arc.Short.Final">α2</data>
@@ -1080,8 +1080,8 @@
 	<data name="Action.AggregateFree">Free style</data>
 	<data name="Action.AggregateStyleNew">Add property to current style</data>
 	<data name="Action.AggregateStyleDelete">Remove property from current style</data>
-	<data name="Action.AggregateChildrensNew">Add base style to current style</data>
-	<data name="Action.AggregateChildrensDelete">Remove base style from current style</data>
+	<data name="Action.AggregateChildrenNew">Add base style to current style</data>
+	<data name="Action.AggregateChildrenDelete">Remove base style from current style</data>
 	
 	<data name="Action.GuideNewH">New horizontal guide</data>
 	<data name="Action.GuideNewV">New vertical guide</data>

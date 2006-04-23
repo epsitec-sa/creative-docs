@@ -13,7 +13,7 @@ namespace Epsitec.Common.Document
 		StylesInsideAggregate,		// styles utilisés par un agrégat
 		AggregatesInsideDocument,	// liste des agrégats du document
 		AggregatesInsideObject,		// liste des agrégats d'un objet
-		AggregatesChildrens,		// liste des agrégats fils
+		AggregatesChildren,			// liste des agrégats fils
 		Guides,						// liste des repères
 		TextFlows,					// flux de textes
 		ObjectsChain,				// chaîne d'objets pour un flux de textes

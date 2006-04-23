@@ -15,8 +15,8 @@ namespace Epsitec.Common.Document
 				public static string AdjustHeight { get { return GetText ("Strings", "Action", "AdjustHeight"); } }
 				public static string AdjustWidth { get { return GetText ("Strings", "Action", "AdjustWidth"); } }
 				public static string AggregateChange { get { return GetText ("Strings", "Action", "AggregateChange"); } }
-				public static string AggregateChildrensDelete { get { return GetText ("Strings", "Action", "AggregateChildrensDelete"); } }
-				public static string AggregateChildrensNew { get { return GetText ("Strings", "Action", "AggregateChildrensNew"); } }
+				public static string AggregateChildrenDelete { get { return GetText ("Strings", "Action", "AggregateChildrenDelete"); } }
+				public static string AggregateChildrenNew { get { return GetText ("Strings", "Action", "AggregateChildrenNew"); } }
 				public static string AggregateDelete { get { return GetText ("Strings", "Action", "AggregateDelete"); } }
 				public static string AggregateDown { get { return GetText ("Strings", "Action", "AggregateDown"); } }
 				public static string AggregateDuplicate { get { return GetText ("Strings", "Action", "AggregateDuplicate"); } }
@@ -966,17 +966,17 @@ namespace Epsitec.Common.Document
 					public static string Paragraph { get { return GetText ("Strings", "Panel", "AggregateCategory", "Paragraph"); } }
 				}
 				
-				public sealed class AggregateChildrens
+				public sealed class AggregateChildren
 				{
 					public sealed class Label
 					{
-						public static string Name { get { return GetText ("Strings", "Panel", "AggregateChildrens", "Label", "Name"); } }
+						public static string Name { get { return GetText ("Strings", "Panel", "AggregateChildren", "Label", "Name"); } }
 					}
 					
 					public sealed class Tooltip
 					{
-						public static string Menu { get { return GetText ("Strings", "Panel", "AggregateChildrens", "Tooltip", "Menu"); } }
-						public static string Name { get { return GetText ("Strings", "Panel", "AggregateChildrens", "Tooltip", "Name"); } }
+						public static string Menu { get { return GetText ("Strings", "Panel", "AggregateChildren", "Tooltip", "Menu"); } }
+						public static string Name { get { return GetText ("Strings", "Panel", "AggregateChildren", "Tooltip", "Name"); } }
 					}
 				}
 				

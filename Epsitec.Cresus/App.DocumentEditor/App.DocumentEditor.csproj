@@ -245,8 +245,8 @@
     <EmbeddedResource Include="Images\ActiveYes.icon" />
     <EmbeddedResource Include="Images\AdjustHeight.icon" />
     <EmbeddedResource Include="Images\AdjustWidth.icon" />
-    <EmbeddedResource Include="Images\AggregateChildrens.icon" />
-    <EmbeddedResource Include="Images\AggregateChildrensNew.icon" />
+    <EmbeddedResource Include="Images\AggregateChildren.icon" />
+    <EmbeddedResource Include="Images\AggregateChildrenNew.icon" />
     <EmbeddedResource Include="Images\AggregateDelete.icon" />
     <EmbeddedResource Include="Images\AggregateDown.icon" />
     <EmbeddedResource Include="Images\AggregateDuplicate.icon" />
