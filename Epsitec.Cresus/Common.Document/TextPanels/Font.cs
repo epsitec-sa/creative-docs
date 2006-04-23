@@ -425,7 +425,7 @@ namespace Epsitec.Common.Document.TextPanels
 			}
 
 			menu.Host = this;
-			menu.ShowAsContextMenu(this.Window, pos);
+			menu.ShowAsComboList (this, pos, button);
 		}
 
 		protected VMenu BuildFeaturesMenu(string face, string style, string[] features)
@@ -692,7 +692,7 @@ namespace Epsitec.Common.Document.TextPanels
 			VMenu menu = this.CreateMenu();
 			pos.X -= menu.Width;
 			menu.Host = this;
-			menu.ShowAsContextMenu(this.Window, pos);
+			menu.ShowAsComboList (this, pos, button);
 		}
 
 		private void HandleGlueValueChanged(object sender)

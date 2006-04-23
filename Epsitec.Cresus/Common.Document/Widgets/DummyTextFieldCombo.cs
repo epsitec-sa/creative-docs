@@ -21,6 +21,17 @@ namespace Epsitec.Common.Document.Widgets
 
 		protected override void OpenCombo()
 		{
+			this.OnComboOpenPressed ();
 		}
+
+		protected virtual void OnComboOpenPressed()
+		{
+			if (this.ComboOpenPressed != null)
+			{
+				this.ComboOpenPressed (this);
+			}
+		}
+		
+		public event Support.EventHandler		ComboOpenPressed;
 	}
 }

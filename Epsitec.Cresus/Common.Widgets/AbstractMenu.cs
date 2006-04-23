@@ -141,7 +141,11 @@ namespace Epsitec.Common.Widgets
 			
 			if (this.IsVertical)
 			{
-				this.Size = this.GetBestFitSize ();
+				Drawing.Size size = this.GetBestFitSize ();
+
+				this.Size = size;
+				
+				Layouts.LayoutContext.SyncArrange (this);
 			}
 		}
 		
@@ -191,6 +195,8 @@ namespace Epsitec.Common.Widgets
 		
 		public void ShowAsComboList(Widget parent, Drawing.Point pos, Widget button)
 		{
+			this.AdjustSize ();
+
 			Window.ResetMouseCursor ();
 			
 			MenuWindow window = MenuItem.GetMenuWindow (this) as MenuWindow;
@@ -250,7 +256,13 @@ namespace Epsitec.Common.Widgets
 			
 			dx += this.shadow.Width  + this.margins.Width;
 			dy += this.shadow.Height + this.margins.Height;
+
+			dx = System.Math.Max (this.MinWidth, dx);
+			dx = System.Math.Min (this.MaxWidth, dx);
 			
+			dy = System.Math.Max (this.MinHeight, dy);
+			dy = System.Math.Min (this.MaxHeight, dy);
+
 			return new Drawing.Size (dx, dy);
 		}
 
