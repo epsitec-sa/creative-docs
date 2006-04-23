@@ -287,9 +287,9 @@
 	<data name="Panel.AggregateCategory.Character">Caractère</data>
 	<data name="Panel.AggregateName.Label.Name">Nom</data>
 	<data name="Panel.AggregateName.Tooltip.Name">Nom du style</data>
-	<data name="Panel.AggregateChildrens.Label.Name">Basé sur</data>
-	<data name="Panel.AggregateChildrens.Tooltip.Name">Styles de base</data>
-	<data name="Panel.AggregateChildrens.Tooltip.Menu">Choix des styles de base</data>
+	<data name="Panel.AggregateChildren.Label.Name">Basé sur</data>
+	<data name="Panel.AggregateChildren.Tooltip.Name">Styles de base</data>
+	<data name="Panel.AggregateChildren.Tooltip.Menu">Choix des styles de base</data>
 
 	<data name="Panel.Arc.Short.Initial">α1</data>
 	<data name="Panel.Arc.Short.Final">α2</data>
@@ -1080,8 +1080,8 @@
 	<data name="Action.AggregateFree">Libèrer le style</data>
 	<data name="Action.AggregateStyleNew">Créer un attribut pour le style</data>
 	<data name="Action.AggregateStyleDelete">Supprimer un attribut du style</data>
-	<data name="Action.AggregateChildrensNew">Ajouter un style de base</data>
-	<data name="Action.AggregateChildrensDelete">Supprimer le style de base</data>
+	<data name="Action.AggregateChildrenNew">Ajouter un style de base</data>
+	<data name="Action.AggregateChildrenDelete">Supprimer le style de base</data>
 	
 	<data name="Action.GuideNewH">Nouveau repère horizontal</data>
 	<data name="Action.GuideNewV">Nouveau repère vertical</data>

@@ -85,7 +85,7 @@ namespace Epsitec.Common.Document.Containers
 			this.characterList.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			this.CreateNameToolBar();
-			this.CreateChildrensToolBar();
+			this.CreateChildrenToolBar();
 
 			//	Sélectionneur.
 			this.CreateSelectorToolBar();
@@ -240,35 +240,35 @@ namespace Epsitec.Common.Document.Containers
 			ToolTip.Default.SetToolTip(this.buttonAggregateDelete, Res.Strings.Action.AggregateDelete);
 		}
 
-		protected void CreateChildrensToolBar()
+		protected void CreateChildrenToolBar()
 		{
 			//	Crée la toolbar pour le choix des enfants.
-			this.childrensToolBar = new HToolBar(this.bottomPage);
-			this.childrensToolBar.Dock = DockStyle.Top;
-			this.childrensToolBar.Margins = new Margins(0, 0, 0, 0);
-			this.childrensToolBar.TabIndex = 95;
-			this.childrensToolBar.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
+			this.childrenToolBar = new HToolBar(this.bottomPage);
+			this.childrenToolBar.Dock = DockStyle.Top;
+			this.childrenToolBar.Margins = new Margins(0, 0, 0, 0);
+			this.childrenToolBar.TabIndex = 95;
+			this.childrenToolBar.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 
 			StaticText st = new StaticText();
 			st.Width = 45;
 			st.Margins = new Margins(0, 5, 0, 0);
-			st.Text = Res.Strings.Panel.AggregateChildrens.Label.Name;
+			st.Text = Res.Strings.Panel.AggregateChildren.Label.Name;
 			st.Alignment = ContentAlignment.MiddleRight;
-			this.childrensToolBar.Items.Add(st);
+			this.childrenToolBar.Items.Add(st);
 
-			this.dummyChildrens = new Widgets.DummyTextFieldCombo();
-			this.dummyChildrens.IsReadOnly = true;
-			this.dummyChildrens.Width = 185;
-			this.dummyChildrens.Margins = new Margins(0, 0, 1, 1);
-			this.dummyChildrens.ComboOpenPressed += new EventHandler(this.HandleMenuChildrenOpenPressed);
-			this.childrensToolBar.Items.Add(this.dummyChildrens);
-			ToolTip.Default.SetToolTip(this.dummyChildrens, Res.Strings.Panel.AggregateChildrens.Tooltip.Name);
+			this.dummyChildren = new Widgets.DummyTextFieldCombo();
+			this.dummyChildren.IsReadOnly = true;
+			this.dummyChildren.Width = 185;
+			this.dummyChildren.Margins = new Margins(0, 0, 1, 1);
+			this.dummyChildren.ComboOpenPressed += new EventHandler(this.HandleMenuChildrenOpenPressed);
+			this.childrenToolBar.Items.Add(this.dummyChildren);
+			ToolTip.Default.SetToolTip(this.dummyChildren, Res.Strings.Panel.AggregateChildren.Tooltip.Name);
 
-			this.nameChildrens = new StaticText(this.dummyChildrens);
-			this.nameChildrens.Dock = DockStyle.Fill;
-			this.nameChildrens.Margins = new Margins(2, 2, 0, 0);
-			this.nameChildrens.TabIndex = 1;
-			this.nameChildrens.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.nameChildren = new StaticText(this.dummyChildren);
+			this.nameChildren.Dock = DockStyle.Fill;
+			this.nameChildren.Margins = new Margins(2, 2, 0, 0);
+			this.nameChildren.TabIndex = 1;
+			this.nameChildren.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 		}
 
 		protected void CreateNameToolBar()
@@ -381,7 +381,7 @@ namespace Epsitec.Common.Document.Containers
 			this.characterList.UpdateContents();
 			
 			this.UpdateAggregateName();
-			this.UpdateAggregateChildrens();
+			this.UpdateAggregateChildren();
 			this.UpdateToolBar();
 			this.UpdateSelector();
 			this.UpdatePanel();
@@ -651,7 +651,7 @@ namespace Epsitec.Common.Document.Containers
 			this.ignoreChanged = false;
 		}
 
-		protected void UpdateAggregateChildrens()
+		protected void UpdateAggregateChildren()
 		{
 			//	Met à jour le panneau pour éditer les enfants de l'agrégat sélectionné.
 			System.Text.StringBuilder builder = new System.Text.StringBuilder();
@@ -662,15 +662,15 @@ namespace Epsitec.Common.Document.Containers
 
 				if ( agg != null )
 				{
-					foreach ( Properties.Aggregate property in agg.Childrens )
+					foreach ( Properties.Aggregate property in agg.Children )
 					{
 						if ( builder.Length != 0 )  builder.Append(", ");
 						builder.Append(property.AggregateName);
 					}
 				}
 
-				this.dummyChildrens.Enable = true;
-				this.nameChildrens.Enable = true;
+				this.dummyChildren.Enable = true;
+				this.nameChildren.Enable = true;
 			}
 
 			if ( this.category == StyleCategory.Paragraph || this.category == StyleCategory.Character )
@@ -690,8 +690,8 @@ namespace Epsitec.Common.Document.Containers
 					}
 				}
 
-				this.dummyChildrens.Enable = (sel != 0);
-				this.nameChildrens.Enable = (sel != 0);
+				this.dummyChildren.Enable = (sel != 0);
+				this.nameChildren.Enable = (sel != 0);
 			}
 
 			int overflow = builder.Length-30;  // nb de caractères en "trop"
@@ -702,7 +702,7 @@ namespace Epsitec.Common.Document.Containers
 				builder.Append("</font>");
 			}
 
-			this.nameChildrens.Text = builder.ToString();
+			this.nameChildren.Text = builder.ToString();
 		}
 
 		protected void UpdatePanel()
@@ -920,7 +920,7 @@ namespace Epsitec.Common.Document.Containers
 					this.category = value;
 					this.UpdateCategory();
 					this.UpdatePanel();
-					this.UpdateAggregateChildrens();
+					this.UpdateAggregateChildren();
 				}
 			}
 		}
@@ -1204,7 +1204,7 @@ namespace Epsitec.Common.Document.Containers
 			this.UpdateSelector();
 			this.UpdatePanel();
 			this.UpdateAggregateName();
-			this.UpdateAggregateChildrens();
+			this.UpdateAggregateChildren();
 			this.ShowSelection();
 		}
 
@@ -1253,7 +1253,7 @@ namespace Epsitec.Common.Document.Containers
 			this.UpdateSelector();
 			this.UpdatePanel();
 			this.UpdateAggregateName();
-			this.UpdateAggregateChildrens();
+			this.UpdateAggregateChildren();
 			this.ShowSelection();
 		}
 
@@ -1268,15 +1268,15 @@ namespace Epsitec.Common.Document.Containers
 		private void HandleMenuChildrenOpenPressed(object sender)
 		{
 			//	Crée un nouveau parent.
-			Widget widget = this.dummyChildrens;
-			VMenu menu = this.CreateMenuChildrens();
+			Widget widget = this.dummyChildren;
+			VMenu menu = this.CreateMenuChildren();
 			if ( menu == null )  return;
 			menu.Host = this;
 			menu.MinWidth = widget.Width;
 			
 			TextFieldCombo.AdjustComboSize (widget, menu);
 			
-			menu.ShowAsComboList (widget, Drawing.Point.Zero, this.dummyChildrens.Button);
+			menu.ShowAsComboList (widget, Drawing.Point.Zero, this.dummyChildren.Button);
 		}
 
 
@@ -1501,8 +1501,8 @@ namespace Epsitec.Common.Document.Containers
 		#endregion
 
 		
-		#region MenuChildrens
-		protected VMenu CreateMenuChildrens()
+		#region MenuChildren
+		protected VMenu CreateMenuChildren()
 		{
 			//	Construit le menu pour choisir un enfant à ajouter.
 			VMenu menu = new VMenu();
@@ -1516,11 +1516,11 @@ namespace Epsitec.Common.Document.Containers
 					Properties.Aggregate agg = this.document.Aggregates[i] as Properties.Aggregate;
 					if ( agg == currentAgg )  continue;
 
-					bool active = currentAgg.Childrens.Contains(agg);
+					bool active = currentAgg.Children.Contains(agg);
 					string icon = Misc.Icon(active ? "ActiveYes" : "ActiveNo");
 					string line = agg.AggregateName;
-					MenuItem item = new MenuItem("ChildrensNew", icon, line, "", i.ToString(System.Globalization.CultureInfo.InvariantCulture));
-					item.Pressed += new MessageEventHandler(this.HandleMenuChildrensPressed);
+					MenuItem item = new MenuItem("ChildrenNew", icon, line, "", i.ToString(System.Globalization.CultureInfo.InvariantCulture));
+					item.Pressed += new MessageEventHandler(this.HandleMenuChildrenPressed);
 					menu.Items.Add(item);
 					used ++;
 				}
@@ -1544,8 +1544,8 @@ namespace Epsitec.Common.Document.Containers
 					bool active = Styles.ContainsStyle(currentStyle.ParentStyles, style);
 					string icon = Misc.Icon(active ? "RadioYes" : "RadioNo");
 					string line = Misc.UserTextStyleName(this.document.TextContext.StyleList.StyleMap.GetCaption(style));
-					MenuItem item = new MenuItem("ChildrensNew", icon, line, "", i.ToString(System.Globalization.CultureInfo.InvariantCulture));
-					item.Pressed += new MessageEventHandler(this.HandleMenuChildrensPressed);
+					MenuItem item = new MenuItem("ChildrenNew", icon, line, "", i.ToString(System.Globalization.CultureInfo.InvariantCulture));
+					item.Pressed += new MessageEventHandler(this.HandleMenuChildrenPressed);
 					menu.Items.Add(item);
 					used ++;
 				}
@@ -1567,8 +1567,8 @@ namespace Epsitec.Common.Document.Containers
 					bool active = Styles.ContainsStyle(currentStyle.ParentStyles, style);
 					string icon = Misc.Icon(active ? "ActiveYes" : "ActiveNo");
 					string line = Misc.UserTextStyleName(this.document.TextContext.StyleList.StyleMap.GetCaption(style));
-					MenuItem item = new MenuItem("ChildrensNew", icon, line, "", (i+10000).ToString(System.Globalization.CultureInfo.InvariantCulture));
-					item.Pressed += new MessageEventHandler(this.HandleMenuChildrensPressed);
+					MenuItem item = new MenuItem("ChildrenNew", icon, line, "", (i+10000).ToString(System.Globalization.CultureInfo.InvariantCulture));
+					item.Pressed += new MessageEventHandler(this.HandleMenuChildrenPressed);
 					menu.Items.Add(item);
 					used ++;
 				}
@@ -1591,8 +1591,8 @@ namespace Epsitec.Common.Document.Containers
 					bool active = Styles.ContainsStyle(currentStyle.ParentStyles, style);
 					string icon = Misc.Icon(active ? "ActiveYes" : "ActiveNo");
 					string line = Misc.UserTextStyleName(this.document.TextContext.StyleList.StyleMap.GetCaption(style));
-					MenuItem item = new MenuItem("ChildrensNew", icon, line, "", (i+10000).ToString(System.Globalization.CultureInfo.InvariantCulture));
-					item.Pressed += new MessageEventHandler(this.HandleMenuChildrensPressed);
+					MenuItem item = new MenuItem("ChildrenNew", icon, line, "", (i+10000).ToString(System.Globalization.CultureInfo.InvariantCulture));
+					item.Pressed += new MessageEventHandler(this.HandleMenuChildrenPressed);
 					menu.Items.Add(item);
 					used ++;
 				}
@@ -1612,7 +1612,7 @@ namespace Epsitec.Common.Document.Containers
 			return false;
 		}
 
-		private void HandleMenuChildrensPressed(object sender, MessageEventArgs e)
+		private void HandleMenuChildrenPressed(object sender, MessageEventArgs e)
 		{
 			MenuItem item = sender as MenuItem;
 			int i = System.Int32.Parse(item.Name, System.Globalization.CultureInfo.InvariantCulture);
@@ -1621,13 +1621,13 @@ namespace Epsitec.Common.Document.Containers
 			{
 				Properties.Aggregate menuAgg = this.document.Aggregates[i] as Properties.Aggregate;
 				Properties.Aggregate currentAgg = this.GetAggregate();
-				if ( currentAgg.Childrens.Contains(menuAgg) )
+				if ( currentAgg.Children.Contains(menuAgg) )
 				{
-					this.document.Modifier.AggregateChildrensDelete(currentAgg, menuAgg);
+					this.document.Modifier.AggregateChildrenDelete(currentAgg, menuAgg);
 				}
 				else
 				{
-					this.document.Modifier.AggregateChildrensNew(currentAgg, menuAgg);
+					this.document.Modifier.AggregateChildrenNew(currentAgg, menuAgg);
 				}
 			}
 
@@ -1670,12 +1670,12 @@ namespace Epsitec.Common.Document.Containers
 				string op;
 				if ( parents.Contains(newStyle) )
 				{
-					op = Res.Strings.Action.AggregateChildrensDelete;
+					op = Res.Strings.Action.AggregateChildrenDelete;
 					parents.Remove(newStyle);
 				}
 				else
 				{
-					op = Res.Strings.Action.AggregateChildrensNew;
+					op = Res.Strings.Action.AggregateChildrenNew;
 					parents.Add(newStyle);
 				}
 
@@ -1764,9 +1764,9 @@ namespace Epsitec.Common.Document.Containers
 		protected HToolBar					nameToolBar;
 		protected TextField					name;
 
-		protected HToolBar					childrensToolBar;
-		protected Widgets.DummyTextFieldCombo dummyChildrens;
-		protected StaticText				nameChildrens;
+		protected HToolBar					childrenToolBar;
+		protected Widgets.DummyTextFieldCombo dummyChildren;
+		protected StaticText				nameChildren;
 
 		protected Widget					selectorContainer;
 		protected Widget					selectorToolBar;
@@ -1782,7 +1782,7 @@ namespace Epsitec.Common.Document.Containers
 		protected ColorSelector				colorSelector;
 
 		protected int						index;
-		protected bool						isChildrensExtended = false;
+		protected bool						isChildrenExtended = false;
 		protected bool						oneShootSelectName = false;
 		protected bool						ignoreChanged = false;
 	}

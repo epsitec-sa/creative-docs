@@ -3084,7 +3084,7 @@ namespace Epsitec.Common.Document
 			return bbox;
 		}
 
-		public void GroupUpdateChildrens()
+		public void GroupUpdateChildren()
 		{
 			//	Adapte les dimensions de tous les groupes fils.
 			DrawingContext context = this.ActiveViewer.DrawingContext;
@@ -5893,9 +5893,9 @@ namespace Epsitec.Common.Document
 				for ( int i=0 ; i<this.document.Aggregates.Count ; i++ )
 				{
 					Properties.Aggregate a = this.document.Aggregates[i] as Properties.Aggregate;
-					if ( a.Childrens.Contains(agg) )
+					if ( a.Children.Contains(agg) )
 					{
-						a.Childrens.Remove(agg);
+						a.Children.Remove(agg);
 					}
 				}
 
@@ -6042,26 +6042,26 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		public void AggregateChildrensNew(Properties.Aggregate agg, Properties.Aggregate newAgg)
+		public void AggregateChildrenNew(Properties.Aggregate agg, Properties.Aggregate newAgg)
 		{
 			//	Ajoute un enfant à un agrégat.
 			if ( this.ActiveViewer.IsCreating )  return;
 			this.document.IsDirtySerialize = true;
 
-			using ( this.OpletQueueBeginAction(Res.Strings.Action.AggregateChildrensNew) )
+			using (this.OpletQueueBeginAction (Res.Strings.Action.AggregateChildrenNew))
 			{
 				UndoableList aggregates = this.document.Aggregates;
 				int ins = aggregates.IndexOf(newAgg);
 				int rank = 0;
-				while ( rank < agg.Childrens.Count )
+				while ( rank < agg.Children.Count )
 				{
-					Properties.Aggregate children = agg.Childrens[rank] as Properties.Aggregate;
+					Properties.Aggregate children = agg.Children[rank] as Properties.Aggregate;
 					if ( ins < aggregates.IndexOf(children) )  break;
 					rank ++;
 				}
 				
-				agg.Childrens.Insert(rank, newAgg);
-				agg.Childrens.Selected = rank;
+				agg.Children.Insert(rank, newAgg);
+				agg.Children.Selected = rank;
 
 				DrawingContext context = this.ActiveViewer.DrawingContext;
 				Objects.Abstract doc = context.RootObject(0);
@@ -6079,18 +6079,18 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		public void AggregateChildrensDelete(Properties.Aggregate agg, Properties.Aggregate delAgg)
+		public void AggregateChildrenDelete(Properties.Aggregate agg, Properties.Aggregate delAgg)
 		{
 			//	Supprime un enfant à un agrégat.
 			if ( this.ActiveViewer.IsCreating )  return;
 			this.document.IsDirtySerialize = true;
 
-			using ( this.OpletQueueBeginAction(Res.Strings.Action.AggregateChildrensDelete) )
+			using (this.OpletQueueBeginAction (Res.Strings.Action.AggregateChildrenDelete))
 			{
-				agg.Childrens.Remove(delAgg);
+				agg.Children.Remove(delAgg);
 
-				int sel = System.Math.Min(agg.Childrens.Selected, agg.Childrens.Count-1);
-				agg.Childrens.Selected = sel;
+				int sel = System.Math.Min(agg.Children.Selected, agg.Children.Count-1);
+				agg.Children.Selected = sel;
 
 				DrawingContext context = this.ActiveViewer.DrawingContext;
 				Objects.Abstract doc = context.RootObject(0);

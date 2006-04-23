@@ -15,7 +15,7 @@ namespace Epsitec.Common.Document.Properties
 		{
 			this.document = document;
 			this.styles = new UndoableList(this.document, UndoableListType.StylesInsideAggregate);
-			this.childrens = new UndoableList(this.document, UndoableListType.AggregatesChildrens);
+			this.children = new UndoableList (this.document, UndoableListType.AggregatesChildren);
 		}
 
 
@@ -46,12 +46,12 @@ namespace Epsitec.Common.Document.Properties
 			}
 		}
 
-		public UndoableList Childrens
+		public UndoableList Children
 		{
 			//	Liste des fils de l'agrégat.
 			get
 			{
-				return this.childrens;
+				return this.children;
 			}
 		}
 
@@ -85,12 +85,12 @@ namespace Epsitec.Common.Document.Properties
 			Properties.Abstract property = this.Property(type);
 			if ( property != null )  return property;
 
-			if ( this.childrens.Count != 0 )
+			if ( this.children.Count != 0 )
 			{
 				//	Cherche depuis la fin, pour obtenir le même ordre que les styles de texte.
-				for ( int i=this.childrens.Count-1 ; i>=0 ; i-- )
+				for ( int i=this.children.Count-1 ; i>=0 ; i-- )
 				{
-					Properties.Aggregate children = this.childrens[i] as Properties.Aggregate;
+					Properties.Aggregate children = this.children[i] as Properties.Aggregate;
 					property = children.PropertyDeep(type, deep+1);
 					if ( property != null )  return property;
 				}
@@ -121,9 +121,9 @@ namespace Epsitec.Common.Document.Properties
 
 				if ( agg == this )  return true;
 
-				if ( this.childrens.Count != 0 )
+				if ( this.children.Count != 0 )
 				{
-					foreach ( Properties.Aggregate children in this.childrens )
+					foreach ( Properties.Aggregate children in this.children )
 					{
 						if ( children.IsUsedByObject(obj, deep+1) )  return true;
 					}
@@ -156,14 +156,14 @@ namespace Epsitec.Common.Document.Properties
 			//	Copie tout l'agrégat.
 			dst.aggregateName = this.aggregateName;
 			this.styles.CopyTo(dst.styles);
-			this.childrens.CopyTo(dst.childrens);
+			this.children.CopyTo(dst.children);
 		}
 
 		public void DuplicateTo(Aggregate dst)
 		{
 			//	Duplique tout l'agrégat.
 			dst.aggregateName = this.aggregateName;
-			this.childrens.CopyTo(dst.childrens);
+			this.children.CopyTo(dst.children);
 
 			foreach ( Properties.Abstract srcProp in this.styles )
 			{
@@ -252,7 +252,7 @@ namespace Epsitec.Common.Document.Properties
 			//	Sérialise l'agrégat.
 			info.AddValue("AggregateName", this.aggregateName);
 			info.AddValue("Styles", this.styles);
-			info.AddValue("Childrens", this.childrens);
+			info.AddValue("Children", this.children);
 		}
 
 		protected Aggregate(SerializationInfo info, StreamingContext context)
@@ -262,13 +262,17 @@ namespace Epsitec.Common.Document.Properties
 			this.aggregateName = info.GetString("AggregateName");
 			this.styles = (UndoableList) info.GetValue("Styles", typeof(UndoableList));
 
-			if ( this.document.IsRevisionGreaterOrEqual(1,0,27) )
+			if (this.document.IsRevisionGreaterOrEqual (2, 0, 0))
 			{
-				this.childrens = (UndoableList) info.GetValue("Childrens", typeof(UndoableList));
+				this.children = (UndoableList) info.GetValue ("Children", typeof (UndoableList));
+			}
+			else if (this.document.IsRevisionGreaterOrEqual (1, 0, 27))
+			{
+				this.children = (UndoableList) info.GetValue ("Childrens", typeof (UndoableList));
 			}
 			else
 			{
-				this.childrens = new UndoableList(this.document, UndoableListType.AggregatesChildrens);
+				this.children = new UndoableList (this.document, UndoableListType.AggregatesChildren);
 			}
 		}
 		#endregion
@@ -277,6 +281,6 @@ namespace Epsitec.Common.Document.Properties
 		protected Document						document;
 		protected string						aggregateName = "";
 		protected UndoableList					styles;
-		protected UndoableList					childrens;
+		protected UndoableList					children;
 	}
 }

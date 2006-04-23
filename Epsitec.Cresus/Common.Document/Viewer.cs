@@ -933,7 +933,7 @@ namespace Epsitec.Common.Document
 						{
 							this.selector.MoveProcess(this.moveGlobal, this.moveStart, this.drawingContext);
 							this.MoveGlobalProcess(this.selector);
-							this.document.Modifier.GroupUpdateChildrens();
+							this.document.Modifier.GroupUpdateChildren ();
 							this.document.Modifier.GroupUpdateParents();
 						}
 
@@ -1098,7 +1098,7 @@ namespace Epsitec.Common.Document
 			else if ( this.moveGlobal != -1 )  // déplace le modificateur global ?
 			{
 				this.selector.MoveEnding(this.moveGlobal, mouse, this.drawingContext);
-				this.document.Modifier.GroupUpdateChildrens();
+				this.document.Modifier.GroupUpdateChildren ();
 				this.document.Modifier.GroupUpdateParents();
 			}
 			else if ( this.moveObject != null )
@@ -1126,7 +1126,7 @@ namespace Epsitec.Common.Document
 				}
 				else
 				{
-					this.document.Modifier.GroupUpdateChildrens();
+					this.document.Modifier.GroupUpdateChildren ();
 					this.document.Modifier.GroupUpdateParents();
 
 					this.moveHandle = -1;
@@ -1445,7 +1445,7 @@ namespace Epsitec.Common.Document
 					this.moveObject.MoveSelectedSegmentEnding(this.moveSelectedSegment, mouse, this.drawingContext);
 				}
 
-				this.document.Modifier.GroupUpdateChildrens();
+				this.document.Modifier.GroupUpdateChildren ();
 				this.document.Modifier.GroupUpdateParents();
 
 				this.moveHandle = -1;
