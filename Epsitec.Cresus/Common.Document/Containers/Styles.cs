@@ -1274,9 +1274,8 @@ namespace Epsitec.Common.Document.Containers
 			menu.Host = this;
 			menu.MinWidth = widget.Width;
 			
-			TextFieldCombo.AdjustComboSize (widget, menu);
-			
-			menu.ShowAsComboList (widget, Drawing.Point.Zero, this.dummyChildren.Button);
+			TextFieldCombo.AdjustComboSize(widget, menu);
+			menu.ShowAsComboList(widget, Drawing.Point.Zero, this.dummyChildren.Button);
 		}
 
 
@@ -1288,6 +1287,7 @@ namespace Epsitec.Common.Document.Containers
 			Point pos = button.MapClientToScreen(new Point(0,0));
 			VMenu menu = this.CreateMenuTypes(pos);
 			menu.Host = this;
+			menu.MinWidth = button.Width;
 
 			ScreenInfo info = ScreenInfo.Find(pos);
 			Drawing.Rectangle area = info.WorkingArea;
@@ -1303,7 +1303,8 @@ namespace Epsitec.Common.Document.Containers
 				pos.X -= pos.X+menu.Width-area.Right;
 			}
 
-			menu.ShowAsComboList (this, pos, button);
+			TextFieldCombo.AdjustComboSize(button, menu);
+			menu.ShowAsComboList(this, pos, button);
 		}
 
 		private void HandleButtonStyleDelete(object sender, MessageEventArgs e)

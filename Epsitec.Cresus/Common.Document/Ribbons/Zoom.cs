@@ -174,6 +174,8 @@ namespace Epsitec.Common.Document.Ribbons
 			VMenu menu = Menus.ZoomMenu.CreateZoomMenu(context.Zoom, context.ZoomPage, null);
 			if ( menu == null )  return;
 			menu.Host = this;
+			menu.MinWidth = button.Width;
+			TextFieldCombo.AdjustComboSize(button, menu);
 			menu.ShowAsComboList(button, pos, button);
 		}
 
