@@ -760,7 +760,7 @@ namespace Epsitec.App.DocumentEditor
 
 			this.info = new StatusBar(this);
 			this.info.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Bottom;
-			this.info.Margins = new Margins(0, 22-5, 0, 0);
+			this.info.Margins = new Margins(0, 0, 0, 0);
 
 			this.InfoAdd("DeselectAll");
 			this.InfoAdd("SelectAll");
@@ -806,17 +806,12 @@ namespace Epsitec.App.DocumentEditor
 			this.InfoAdd("StatusMouse", 110);
 			this.InfoAdd("StatusModif", 300);
 
-			StatusBar infoMisc = new StatusBar(this);
-			infoMisc.Width = 22;
-			infoMisc.Anchor = AnchorStyles.BottomRight;
-			infoMisc.Margins = new Margins(0, 0, 0, 0);
-
-			IconSeparator sep = new IconSeparator(infoMisc);
-			sep.Height = infoMisc.Height-1.0;
-			sep.Anchor = AnchorStyles.BottomLeft;
-
-			this.resize = new ResizeKnob(infoMisc);
-			this.resize.Anchor = AnchorStyles.BottomRight;
+			this.info.Items["StatusModif"].Dock = DockStyle.Fill;
+			
+			this.resize = new ResizeKnob();
+			this.resize.Margins = new Margins (2, 0, 0, 0);
+			this.info.Items.Add (this.resize);
+			this.resize.Dock = DockStyle.Right;
 			ToolTip.Default.SetToolTip(this.resize, Res.Strings.Dialog.Tooltip.Resize);
 
 			this.vToolBar = new VToolBar(this);
@@ -1302,7 +1297,7 @@ namespace Epsitec.App.DocumentEditor
 		protected StatusField InfoAdd(string name, double width)
 		{
 			StatusField field = new StatusField();
-			field.Width = width;
+			field.PreferredWidth = width;
 			this.info.Items.Add(field);
 
 			int i = this.info.Children.Count-1;
@@ -1317,7 +1312,7 @@ namespace Epsitec.App.DocumentEditor
 			IconButton button = new IconButton(cs.Name, Misc.Icon(cs.IconName), cs.Name);
 			button.PreferredIconSize = Misc.IconPreferredSize("Small");
 			double h = this.info.DefaultHeight-3;
-			button.Size = new Size(h, h);
+			button.PreferredSize = new Size(h, h);
 			this.info.Items.Add(button);
 			ToolTip.Default.SetToolTip(button, Misc.GetTextWithShortcut(cs));
 			return button;
@@ -3941,6 +3936,9 @@ namespace Epsitec.App.DocumentEditor
 		{
 			//	Appelé par le document lorsque la position de la souris a changé.
 			//	TODO: [PA] Parfois, this.info.Items est nul après avoir cliqué la case de fermeture de la fenêtre !
+			
+			System.Diagnostics.Debug.Assert (this.info.Items != null);
+			
 			if ( this.info.Items == null )  return;
 
 			StatusField field = this.info.Items["StatusMouse"] as StatusField;

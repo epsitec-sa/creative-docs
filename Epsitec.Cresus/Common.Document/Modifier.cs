@@ -493,7 +493,7 @@ namespace Epsitec.Common.Document
 				value /= this.realResolution*10.0;  // *10 -> un digit de moins
 				value = System.Math.Floor(value+0.5);
 				value *= this.realResolution*10.0;
-				return value.ToString();
+				return string.Format(this.realFormatSpecifier, value);
 			}
 		}
 
@@ -527,6 +527,7 @@ namespace Epsitec.Common.Document
 				case RealUnitType.DimensionMillimeter:
 					this.realScale = 10.0;
 					this.realResolution = 0.01;
+					this.realFormatSpecifier = "{0:F1}";
 					this.realShortNameUnitDimension = Res.Strings.Units.Short.Millimeter;
 					this.realLongNameUnitDimension  = Res.Strings.Units.Long.Millimeter;
 					break;
@@ -534,6 +535,7 @@ namespace Epsitec.Common.Document
 				case RealUnitType.DimensionCentimeter:
 					this.realScale = 100.0;
 					this.realResolution = 0.001;
+					this.realFormatSpecifier = "{0:F2}";
 					this.realShortNameUnitDimension = Res.Strings.Units.Short.Centimeter;
 					this.realLongNameUnitDimension  = Res.Strings.Units.Long.Centimeter;
 					break;
@@ -541,6 +543,7 @@ namespace Epsitec.Common.Document
 				case RealUnitType.DimensionInch:
 					this.realScale = 254.0;
 					this.realResolution = 0.0001;
+					this.realFormatSpecifier = "{0:F3}";
 					this.realShortNameUnitDimension = Res.Strings.Units.Short.Inch;
 					this.realLongNameUnitDimension  = Res.Strings.Units.Long.Inch;
 					break;
@@ -548,6 +551,7 @@ namespace Epsitec.Common.Document
 				default:
 					this.realScale = 1.0;
 					this.realResolution = 1.0;
+					this.realFormatSpecifier = "{0:F1}";
 					this.realShortNameUnitDimension = "";
 					this.realLongNameUnitDimension  = "";
 					break;
@@ -6476,6 +6480,7 @@ namespace Epsitec.Common.Document
 		protected RealUnitType					realUnitDimension;
 		protected double						realScale;
 		protected double						realResolution;
+		protected string						realFormatSpecifier;
 		protected string						realShortNameUnitDimension;
 		protected string						realLongNameUnitDimension;
 		protected Point							duplicateMove;
