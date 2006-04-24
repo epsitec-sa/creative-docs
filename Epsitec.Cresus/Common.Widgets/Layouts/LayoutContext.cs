@@ -313,15 +313,29 @@ namespace Epsitec.Common.Widgets.Layouts
 			while (this.arrangeQueue.Count > 0)
 			{
 				VisualNode node = this.arrangeQueue.Keys[0];
+				Visual visual = node.Visual;
 
-				node.Visual.Arrange (this);
+				if (node.Depth == 1)
+				{
+					if (visual is WindowRoot)
+					{
+						//	Nothing to do for the window root. The size is
+						//	managed by the window.
+					}
+					else
+					{
+						visual.SetBounds (new Drawing.Rectangle (0, 0, visual.PreferredWidth, visual.PreferredHeight));
+					}
+				}
+
+				visual.Arrange (this);
 				
 				this.totalArrangeCount++;
 
 				if (this.measureQueue.Count > 0)
 				{
-					this.arrangeQueue[node] = node.Visual;
-					this.arrangeMap[node.Visual] = node;
+					this.arrangeQueue[node] = visual;
+					this.arrangeMap[visual] = node;
 					break;
 				}
 			}
