@@ -529,8 +529,20 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				double width  = System.Math.Max (this.MinWidth, this.auto_min_size.Width);
-				double height = System.Math.Max (this.MinHeight, this.auto_min_size.Height);
+				double width  = this.MinWidth;
+				double height = this.MinHeight;
+
+				Layouts.LayoutMeasure measure_dx = Layouts.LayoutMeasure.GetWidth (this);
+				Layouts.LayoutMeasure measure_dy = Layouts.LayoutMeasure.GetHeight (this);
+
+				if (measure_dx != null)
+				{
+					width = System.Math.Max (width, measure_dx.Min);
+				}
+				if (measure_dy != null)
+				{
+					height = System.Math.Max (height, measure_dy.Min);
+				}
 				
 				return new Drawing.Size (width, height);
 			}
@@ -540,9 +552,21 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				double width  = System.Math.Min (this.MaxWidth, this.auto_max_size.Width);
-				double height = System.Math.Min (this.MaxHeight, this.auto_max_size.Height);
-				
+				double width  = this.MaxWidth;
+				double height = this.MaxHeight;
+
+				Layouts.LayoutMeasure measure_dx = Layouts.LayoutMeasure.GetWidth (this);
+				Layouts.LayoutMeasure measure_dy = Layouts.LayoutMeasure.GetHeight (this);
+
+				if (measure_dx != null)
+				{
+					width = System.Math.Min (width, measure_dx.Max);
+				}
+				if (measure_dy != null)
+				{
+					height = System.Math.Min (height, measure_dy.Max);
+				}
+
 				return new Drawing.Size (width, height);
 			}
 		}
@@ -4442,8 +4466,6 @@ namespace Epsitec.Common.Widgets
 		private InternalState					internal_state;
 		private WidgetState						widget_state;
 		
-		private Drawing.Size					auto_min_size	= new Drawing.Size (0, 0);
-		private Drawing.Size					auto_max_size	= new Drawing.Size (1000000, 1000000);
 		private System.Collections.ArrayList	hypertext_list;
 		private HypertextInfo					hypertext;
 		

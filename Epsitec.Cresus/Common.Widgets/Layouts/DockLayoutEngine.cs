@@ -335,14 +335,14 @@ namespace Epsitec.Common.Widgets.Layouts
 			min_size = Helpers.VisualTree.MapVisualToParent (container, new Drawing.Size (min_width, min_height));
 			max_size = Helpers.VisualTree.MapVisualToParent (container, new Drawing.Size (max_width, max_height));
 
-			Widget widget = container as Widget;
-			
-			//	TODO: supprimer ce hack (AutoMinSize et AutoMaxSize ne devraient plus exister)
-			
-			if (widget != null)
+			Layouts.LayoutContext context = Layouts.LayoutContext.GetLayoutContext (container);
+
+			if (context != null)
 			{
-//				widget.AutoMinSize = min_size;
-//				widget.AutoMaxSize = max_size;
+				context.DefineMinWidth (container, min_size.Width);
+				context.DefineMinHeight (container, min_size.Height);
+				context.DefineMaxWidth (container, max_size.Width);
+				context.DefineMaxHeight (container, max_size.Height);
 			}
 		}
 
