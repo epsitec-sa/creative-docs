@@ -22,6 +22,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.window.MakeSecondaryWindow();
 				this.window.MakeFixedSizeWindow();
 				this.window.MakeToolWindow();
+				this.window.PreventAutoClose = true;
 				this.WindowInit("Filter", 270, 114, true);
 				this.window.Text = Res.Strings.Dialog.Filter.Title;
 				this.window.Owner = this.parentWindow;
@@ -116,7 +117,6 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		private void HandleWindowCloseClicked(object sender)
 		{
-			//	TODO: si on ferme la fenêtre ainsi, on ne peut plus la rouvrir !
 			this.parentWindow.MakeActive();
 			this.window.Hide();
 			this.OnClosed();
