@@ -341,7 +341,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				if (this.widthDraggingRank == -1)
 				{
-					if (this.WidthDraggingDetect (pos) != -1)
+					if (this.WidthDraggingDetect(pos) != -1)
 					{
 						this.MouseCursor = MouseCursor.AsVSplit;
 						message.Consumer = this;
@@ -514,7 +514,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			for (int i=0; i<this.columns.Length-1; i++)
 			{
 				x += this.GetColumnsAbsoluteWidth(i);
-				if (pos.X >= x-StringList.WidthDraggingDetectMargin && pos.X <= x+StringList.WidthDraggingDetectMargin)
+				if (pos.X > x-StringList.WidthDraggingDetectMargin && pos.X < x+StringList.WidthDraggingDetectMargin)
 				{
 					return i;
 				}
