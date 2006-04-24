@@ -65,7 +65,34 @@ namespace Epsitec.Common.Text.Exchange
 
 		private void ProcessSpan(HtmlElement element)
 		{
-			ProcessNodes (element.Nodes);
+			string style = string.Empty;
+
+			foreach (HtmlAttribute attr in element.Attributes)
+			{
+				switch (attr.Name)
+				{
+					case "style":
+						style = attr.Value;
+						break;
+				}
+			}
+
+			if (style.Length > 0)
+			{
+				SpanStyleElements spanstyleelements = new SpanStyleElements (style);
+
+				foreach (string t in spanstyleelements)
+				{
+					string x = spanstyleelements[t];
+				}
+
+				ProcessNodes (element.Nodes);
+
+			}
+			else
+			{
+				ProcessNodes (element.Nodes);
+			}
 		}
 
 		private void ProcessItalic(HtmlElement element)
@@ -131,9 +158,9 @@ namespace Epsitec.Common.Text.Exchange
 
 		private void ProcessFont(HtmlElement element)
 		{
-			string fontface = "";
-			string fontsize = "";
-			string fontcolor = "" ;
+			string fontface = string.Empty;
+			string fontsize = string.Empty;
+			string fontcolor = string.Empty ;
 
 			foreach (HtmlAttribute attr in element.Attributes)
 			{

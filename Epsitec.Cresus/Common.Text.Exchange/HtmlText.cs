@@ -26,7 +26,7 @@ namespace Epsitec.Common.Text.Exchange
 			this.output.AppendLine ("<HTML><HEAD>");
 			this.output.AppendLine ("<STYLE></STYLE>");
 			this.output.AppendLine ("</HEAD>");
-			this.output.AppendLine ("");
+			this.output.AppendLine (string.Empty);
 			this.output.AppendLine ("<BODY>");
 			this.output.AppendLine ("<!--StartFragment-->");
 			this.mshtml.UpdateStartFragment (this.output.Length);
@@ -58,7 +58,7 @@ namespace Epsitec.Common.Text.Exchange
 			this.output.AppendLine ("<BODY>");
 			this.output.Append ("<HTML>");
 			this.mshtml.UpdateEndHtml (this.output.Length);
-			this.output.AppendLine ("");
+			this.output.AppendLine (string.Empty);
 
 			byte[] headerbytes = mshtml.GetBytes ();
 			int length = headerbytes.Length + this.output.Length;
@@ -229,7 +229,7 @@ namespace Epsitec.Common.Text.Exchange
 			if (fontFace != null)
 				this.fontFace = fontFace;
 			else
-				this.fontFace = "";
+				this.fontFace = string.Empty;
 		}
 
 		public void SetFontColor(string fontcolor)
@@ -246,7 +246,7 @@ namespace Epsitec.Common.Text.Exchange
 			}
 			else
 			{
-				this.fontColor = "";
+				this.fontColor = string.Empty;
 			}
 		}
 
@@ -346,7 +346,7 @@ namespace Epsitec.Common.Text.Exchange
 
 		static private string GetHtmlTag(string tagstring, HtmlTagMode tagMode, string parametername, string parametervalue, bool useapostroph)
 		{
-			string retval = "";
+			string retval = string.Empty;
 			string tagcontent;
 
 			if (parametername != null)
@@ -505,14 +505,14 @@ namespace Epsitec.Common.Text.Exchange
 			this.precedParagraphMode = Wrappers.JustificationMode.Unknown;
 			this.paragraphNotModeSet = true;
 
-			this.fontColor = "";
-			this.precedfontColor = "";
+			this.fontColor = string.Empty;
+			this.precedfontColor = string.Empty;
 
 			this.fontSize = 0;
 			this.precedfontSize = 0;
 
-			this.fontFace = "";
-			this.precedFontFace = "";
+			this.fontFace = string.Empty;
+			this.precedFontFace = string.Empty;
 
 			foreach (System.Collections.Generic.KeyValuePair<HtmlTagType, TagStoreage> kv in this.tagStorageList)
 			{
@@ -691,7 +691,7 @@ namespace Epsitec.Common.Text.Exchange
 
 			public string TagToString(HtmlTagMode tagmode)
 			{
-				string retval = "";
+				string retval = string.Empty;
 
 				switch (this.htmltag)
 				{
@@ -749,14 +749,14 @@ namespace Epsitec.Common.Text.Exchange
 		private bool paragraphNotModeSet = true;
 		private bool paragraphStarted = false;
 
-		private string fontColor = "";
-		private string precedfontColor = "";
+		private string fontColor = string.Empty;
+		private string precedfontColor = string.Empty;
 
 		private double fontSize = 0;
 		private double precedfontSize = 0;
 
-		private string fontFace = "";
-		private string precedFontFace = "";
+		private string fontFace = string.Empty;
+		private string precedFontFace = string.Empty;
 
 
 		private ExchangeStringBuilder output = new ExchangeStringBuilder ();
