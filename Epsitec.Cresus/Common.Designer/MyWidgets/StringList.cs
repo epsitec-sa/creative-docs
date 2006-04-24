@@ -171,6 +171,16 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			if (message.IsMouseType)
 			{
+				StringArray array = this.Parent as StringArray;
+
+				if (array != null)
+				{
+					if (array.ProcessListMessage (this, message, pos))
+					{
+						return;
+					}
+				}
+				
 				if (message.Type == MessageType.MouseDown)
 				{
 					int cell = this.Detect(pos, true);
