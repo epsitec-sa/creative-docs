@@ -71,13 +71,17 @@ namespace Epsitec.Common.Designer
 			foreach (ResourceBundle bundle in bundles)
 			{
 				ResourceBundle.Field field = bundle[name];
-				if (field == null || field.Name == null)  continue;
 				ResourceBundle.Field newField = bundle.CreateField(ResourceFieldType.Data);
 				newField.SetName(newName);
 				if (duplicate)
 				{
+					if (field == null || field.Name == null)  continue;
 					newField.SetStringValue(field.AsString);
 					newField.SetAbout(field.About);
+				}
+				else
+				{
+					newField.SetStringValue("");
 				}
 
 				if (bundle == defaultBundle)
