@@ -122,6 +122,8 @@ namespace Epsitec.Common.Designer
 			ResourceBundleCollection bundles = this.module.Bundles;
 			foreach (ResourceBundle bundle in bundles)
 			{
+				ResourceBundle.Field field = bundle[name];
+				if (field == null || field.Name == null)  continue;
 				bundle[name].SetName(newName);
 			}
 			this.IsDirty = false;
@@ -183,7 +185,7 @@ namespace Epsitec.Common.Designer
 
 		public bool IsExistingName(string baseName)
 		{
-			//	Indique si un non existe.
+			//	Indique si un nom existe.
 			ResourceBundleCollection bundles = this.module.Bundles;
 			ResourceBundle defaultBundle = bundles[ResourceLevel.Default];
 
