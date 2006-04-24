@@ -328,7 +328,7 @@ namespace Epsitec.Common.Document.Containers
 			this.buttonStyleNew = new IconButton(this.selectorContainer);
 			this.buttonStyleNew.IconName = Misc.Icon("AggregateStyleNew");
 			this.buttonStyleNew.AutoFocus = false;
-			this.buttonStyleNew.Clicked += new MessageEventHandler(this.HandleButtonStyleNew);
+			this.buttonStyleNew.Pressed += new MessageEventHandler(this.HandleButtonStyleNew);
 			this.buttonStyleNew.Dock = DockStyle.Right;
 			this.buttonStyleNew.Margins = new Margins(0, 0, 0, 6);
 			this.buttonStyleNew.TabIndex = 2;
@@ -1284,27 +1284,12 @@ namespace Epsitec.Common.Document.Containers
 			//	Crée une nouvelle propriété.
 			System.Diagnostics.Debug.Assert(this.category == StyleCategory.Graphic);
 			IconButton button = sender as IconButton;
-			Point pos = button.MapClientToScreen(new Point(0,0));
-			VMenu menu = this.CreateMenuTypes(pos);
+			VMenu menu = this.CreateMenuTypes(Drawing.Point.Zero);
 			menu.Host = this;
 			menu.MinWidth = button.Width;
-
-			ScreenInfo info = ScreenInfo.Find(pos);
-			Drawing.Rectangle area = info.WorkingArea;
-
-			if ( pos.Y-menu.Height < area.Bottom )  // dépasse en bas ?
-			{
-				pos = button.MapClientToScreen(new Drawing.Point(0, button.Height));
-				pos.Y += menu.Height;  // déroule contre le haut ?
-			}
-
-			if ( pos.X+menu.Width > area.Right )  // dépasse à droite ?
-			{
-				pos.X -= pos.X+menu.Width-area.Right;
-			}
-
+			
 			TextFieldCombo.AdjustComboSize(button, menu);
-			menu.ShowAsComboList(this, pos, button);
+			menu.ShowAsComboList(button, Drawing.Point.Zero, button);
 		}
 
 		private void HandleButtonStyleDelete(object sender, MessageEventArgs e)
