@@ -105,6 +105,10 @@
       <Project>{5A67ED63-98AC-4FC2-9E25-0AFA3229B9D0}</Project>
       <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
     </ProjectReference>
+    <ProjectReference Include="..\Common.Support.Events\Common.Support.Events.csproj">
+      <Project>{EAF258A4-E107-4466-A3E1-9FC072557940}</Project>
+      <Name>Common.Support.Events</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Common.Support.Implementation\Common.Support.Implementation.csproj">
       <Name>Common.Support.Implementation</Name>
       <Project>{5ABF5752-A44A-4D8B-B4F0-D64CF5E74B2D}</Project>
@@ -156,6 +160,7 @@
     <Compile Include="CommandDispatcherTest.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="EventsTest.cs" />
     <Compile Include="EmptyEnumeratorTest.cs">
       <SubType>Code</SubType>
     </Compile>

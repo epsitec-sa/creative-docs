@@ -77,6 +77,8 @@
     <Reference Include="System">
       <Name>System</Name>
     </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs">
@@ -88,6 +90,7 @@
     <Compile Include="EventHandlers.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="WeakDelegate.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Epsitec.Cresus.snk" />
