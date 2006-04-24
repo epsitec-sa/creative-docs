@@ -64,7 +64,7 @@ namespace Epsitec.Common.Widgets
 				
 				foreach (Widget widget in widgets)
 				{
-					if (widget.CanFocus)
+					if (widget.AcceptsFocus)
 					{
 						if (widget.IsFocused)
 						{

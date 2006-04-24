@@ -1151,7 +1151,7 @@ namespace Epsitec.Common.Widgets
 			Widget focus = this.FindLogicalFocus ();
 							
 			if ((focus != null) &&
-				(focus.CanFocus) &&
+				(focus.AcceptsFocus) &&
 				(focus.IsFocused != true))
 			{
 				focus.Focus ();
@@ -1958,7 +1958,7 @@ namespace Epsitec.Common.Widgets
 		{
 			if ((widget != null) &&
 				(widget.IsFocused == false) &&
-				(widget.CanFocus) &&
+				(widget.AcceptsFocus) &&
 				(widget != this.focused_widget))
 			{
 				//	On va réaliser un changement de focus. Mais pour cela, il faut que le widget

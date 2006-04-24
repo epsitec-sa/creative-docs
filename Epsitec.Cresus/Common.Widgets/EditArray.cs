@@ -443,7 +443,7 @@ namespace Epsitec.Common.Widgets
 						Widget edition_widget = this.Columns[column].EditionWidget;
 						
 						if ((edition_widget != null) &&
-							(edition_widget.AcceptDefocus == false))
+							(edition_widget.AcceptsDefocus == false))
 						{
 							return false;
 						}
