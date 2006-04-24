@@ -219,6 +219,10 @@ namespace Epsitec.Common.Text.Exchange
 			return htmlsize;
 		}
 
+		static public int HtmlFontSizeTopointFontSize(int htmlsize)
+		{
+			return HtmlTextOut.htmlfontsizes[htmlsize - 1];
+		}
 
 		public void SetFontFace(string fontFace)
 		{
