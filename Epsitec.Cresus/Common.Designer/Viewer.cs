@@ -47,9 +47,9 @@ namespace Epsitec.Common.Designer
 			this.labelStatic.Text = Res.Strings.Viewer.Edit;
 			this.labelStatic.Visibility = (this.module.Mode != DesignerMode.Build);
 
-			this.labelEdit = new TextFieldMulti(this);
+			this.labelEdit = new TextFieldEx(this);
 			this.labelEdit.Name = "LabelEdit";
-			this.labelEdit.TextChanged += new EventHandler(this.HandleTextChanged);
+			this.labelEdit.EditionAccepted += new EventHandler(this.HandleTextChanged);
 			this.labelEdit.CursorChanged += new EventHandler(this.HandleCursorChanged);
 			this.labelEdit.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
 			this.labelEdit.TabIndex = tabIndex++;
@@ -107,7 +107,7 @@ namespace Epsitec.Common.Designer
 				this.array.CellsContentChanged -= new EventHandler(this.HandleArrayCellsContentChanged);
 				this.array.SelectedRowChanged -= new EventHandler(this.HandleArraySelectedRowChanged);
 
-				this.labelEdit.TextChanged -= new EventHandler(this.HandleTextChanged);
+				this.labelEdit.EditionAccepted -= new EventHandler(this.HandleTextChanged);
 				this.labelEdit.CursorChanged -= new EventHandler(this.HandleCursorChanged);
 				this.labelEdit.KeyboardFocusChanged -= new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
 
@@ -1091,7 +1091,7 @@ namespace Epsitec.Common.Designer
 			Rectangle box = this.Client.Bounds;
 			box.Deflate(10);
 			box.Top -= 4;
-			Rectangle rect;
+			Rectangle rect, r;
 
 			int lines = System.Math.Max((int)box.Height/50, 4);
 			int editLines = lines*2/3;
@@ -1120,7 +1120,7 @@ namespace Epsitec.Common.Designer
 				double w = System.Math.Floor(rect.Width/this.secondaryCultures.Length);
 				for (int i=0; i<this.secondaryCultures.Length; i++)
 				{
-					Rectangle r = rect;
+					r = rect;
 					r.Left += w*i;
 					r.Width = w;
 					if (i == this.secondaryCultures.Length-1)
@@ -1142,7 +1142,9 @@ namespace Epsitec.Common.Designer
 			rect.Width = this.array.GetColumnsAbsoluteWidth(0)-5;
 			this.labelStatic.Bounds = rect;
 			rect.Width += 5+1;
-			this.labelEdit.Bounds = rect;
+			r = rect;
+			r.Bottom = r.Top-21;
+			this.labelEdit.Bounds = r;
 			rect.Left += this.array.GetColumnsAbsoluteWidth(0);
 			rect.Width = this.array.GetColumnsAbsoluteWidth(1)+1;
 			this.primaryEdit.Bounds = rect;
@@ -1327,7 +1329,7 @@ namespace Epsitec.Common.Designer
 		protected ResourceBundle			secondaryBundle;
 		protected MyWidgets.StringArray		array;
 		protected StaticText				labelStatic;
-		protected TextFieldMulti			labelEdit;
+		protected TextFieldEx				labelEdit;
 		protected TextFieldMulti			primaryEdit;
 		protected TextFieldMulti			secondaryEdit;
 		protected StaticText				labelAbout;
