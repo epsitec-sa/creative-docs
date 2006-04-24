@@ -476,13 +476,13 @@ namespace Epsitec.Common.Widgets
 				{
 					page.Visibility = true;
 					page.TabButton.ActiveState = ActiveState.Yes;
-					page.TabButton.InheritParentFocus = true;
+					page.TabButton.InheritsParentFocus = true;
 				}
 				else
 				{
 					page.Visibility = false;
 					page.TabButton.ActiveState = ActiveState.No;
-					page.TabButton.InheritParentFocus = false;
+					page.TabButton.InheritsParentFocus = false;
 				}
 			}
 		}
