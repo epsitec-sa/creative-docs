@@ -863,7 +863,7 @@ namespace Epsitec.App.DocumentEditor
 			this.bookDocuments.ActivePageChanged += new EventHandler(this.HandleBookDocumentsActivePageChanged);
 			ToolTip.Default.SetToolTip(this.bookDocuments.CloseButton, Res.Strings.Tooltip.TabBook.Close);
 
-			this.ActiveRibbon(this.ribbonMain);
+			this.SetActiveRibbon(this.ribbonMain);
 		}
 
 		public void UpdateQuickCommands()
@@ -1330,7 +1330,7 @@ namespace Epsitec.App.DocumentEditor
 			if ( button == this.ribbonTextButton )  ribbon = this.ribbonText;
 			if ( ribbon == null )  return;
 
-			this.ActiveRibbon(ribbon.IsVisible ? null : ribbon);
+			this.SetActiveRibbon(ribbon.IsVisible ? null : ribbon);
 		}
 
 		protected Ribbons.RibbonContainer GetRibbon(string name)
@@ -1359,7 +1359,7 @@ namespace Epsitec.App.DocumentEditor
 			return null;
 		}
 
-		protected void ActiveRibbon(Ribbons.RibbonContainer active)
+		protected void SetActiveRibbon(Ribbons.RibbonContainer active)
 		{
 			//	Active un ruban.
 			this.ribbonActive = active;
@@ -4848,7 +4848,7 @@ namespace Epsitec.App.DocumentEditor
 				ribbon = this.LastRibbon(name.Substring(1));
 			}
 
-			this.ActiveRibbon(ribbon);
+			this.SetActiveRibbon(ribbon);
 		}
 		
 		private void HandleBookPanelShowPage(string page, string sub)
@@ -5319,7 +5319,7 @@ namespace Epsitec.App.DocumentEditor
 
 			if ( this.CurrentDocument == null )
 			{
-				this.ActiveRibbon(this.ribbonMain);
+				this.SetActiveRibbon(this.ribbonMain);
 			}
 		}
 

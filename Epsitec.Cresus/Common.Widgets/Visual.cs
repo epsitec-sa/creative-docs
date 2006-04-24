@@ -611,6 +611,7 @@ namespace Epsitec.Common.Widgets
 					}
 					else
 					{
+						this.Invalidate ();
 						this.SetValueBase (Visual.IsVisibleProperty, false);
 					}
 				}
