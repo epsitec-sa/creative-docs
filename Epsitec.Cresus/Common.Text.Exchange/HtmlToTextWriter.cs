@@ -63,7 +63,130 @@ namespace Epsitec.Common.Text.Exchange
 			ProcessNodes (this.htmlDoc.Nodes);
 		}
 
-		
+		private void ProcessSpan(HtmlElement element)
+		{
+			ProcessNodes (element.Nodes);
+		}
+
+		private void ProcessItalic(HtmlElement element)
+		{
+			this.textWrapper.SuspendSynchronizations ();
+			this.textWrapper.Defined.InvertItalic = true;
+			this.textWrapper.ResumeSynchronizations ();
+			ProcessNodes (element.Nodes);
+			this.textWrapper.SuspendSynchronizations ();
+			this.textWrapper.Defined.InvertItalic = false;
+			this.textWrapper.ResumeSynchronizations ();
+		}
+
+		private void ProcessBold(HtmlElement element)
+		{
+			this.textWrapper.SuspendSynchronizations ();
+			this.textWrapper.Defined.InvertBold = true;
+			this.textWrapper.ResumeSynchronizations ();
+			ProcessNodes (element.Nodes);
+			this.textWrapper.SuspendSynchronizations ();
+			this.textWrapper.Defined.InvertBold = false;
+			this.textWrapper.ResumeSynchronizations ();
+		}
+
+
+
+		private void ProcessSup(HtmlElement element)
+		{
+			this.textWrapper.SuspendSynchronizations ();
+			FillSuperscriptDefinition (this.textWrapper.Defined.Xscript);
+			this.textWrapper.ResumeSynchronizations ();
+			ProcessNodes (element.Nodes);
+			this.textWrapper.SuspendSynchronizations ();
+			this.textWrapper.Defined.ClearXscript ();
+			this.textWrapper.ResumeSynchronizations ();
+
+		}
+
+		private void ProcessSub(HtmlElement element)
+		{
+			this.textWrapper.SuspendSynchronizations ();
+			FillSubscriptDefinition (this.textWrapper.Defined.Xscript);
+			this.textWrapper.ResumeSynchronizations ();
+			ProcessNodes (element.Nodes);
+			this.textWrapper.SuspendSynchronizations ();
+			this.textWrapper.Defined.ClearXscript ();
+			this.textWrapper.ResumeSynchronizations ();
+		}
+
+		private void ProcessUnderline(HtmlElement element)
+		{
+			this.textWrapper.SuspendSynchronizations ();
+
+			this.FillUnderlineDefinition (this.textWrapper.Defined.Underline);
+
+			this.textWrapper.ResumeSynchronizations ();
+			ProcessNodes (element.Nodes);
+			this.textWrapper.SuspendSynchronizations ();
+			this.textWrapper.Defined.ClearUnderline ();
+			this.textWrapper.ResumeSynchronizations ();
+
+		}
+
+		private void ProcessFont(HtmlElement element)
+		{
+			string fontface = "";
+			string fontsize = "";
+			string fontcolor = "" ;
+
+			foreach (HtmlAttribute attr in element.Attributes)
+			{
+				switch (attr.Name)
+				{
+					case "face":
+						fontface = attr.Value;
+						break;
+					case "size":
+						fontsize = attr.Value;
+						break;
+					case "color":
+						fontcolor = attr.Value;
+						break;
+				}
+			}
+
+			string oldfontface = this.textWrapper.Defined.FontFace;
+			string oldfontcolor = this.textWrapper.Defined.Color;
+			double oldfontsize = this.textWrapper.Defined.FontSize;
+
+			this.textWrapper.SuspendSynchronizations ();
+
+			if (fontface.Length > 0)
+			{
+				this.textWrapper.Defined.FontFace = fontface;
+			}
+
+			if (fontsize.Length > 0)
+			{
+				this.textWrapper.Defined.FontSize = HtmlTextOut.HtmlFontSizeTopointFontSize (Int32.Parse (fontsize)) * HtmlTextOut.FontSizeFactor;
+				this.textWrapper.Defined.Units = Common.Text.Properties.SizeUnits.Points;
+			}
+
+			if (fontcolor.Length > 0)
+			{
+				// this.textWrapper.Defined.Color = ... ;
+				Epsitec.Common.Drawing.RichColor richcolor = Epsitec.Common.Drawing.RichColor.FromHexa (fontcolor.Substring (1));
+				this.textWrapper.Defined.Color = Epsitec.Common.Drawing.RichColor.ToString(richcolor);
+			}
+
+			this.textWrapper.ResumeSynchronizations ();
+
+			ProcessNodes (element.Nodes);
+
+			this.textWrapper.SuspendSynchronizations ();
+			this.textWrapper.Defined.FontFace = oldfontface;
+			this.textWrapper.Defined.Color = oldfontcolor;
+			this.textWrapper.ResumeSynchronizations ();
+
+		}
+
+
 		private void ProcessNodes(HtmlNodeCollection nodes)
 		{
 			foreach (HtmlNode node in nodes)
@@ -75,102 +198,31 @@ namespace Epsitec.Common.Text.Exchange
 
 					if (element.Name == "span")
 					{
-						ProcessNodes (element.Nodes);
+						this.ProcessSpan (element);
 					}
 					else if (element.Name == "i" || element.Name == "em")
 					{
-						this.textWrapper.SuspendSynchronizations ();
-						this.textWrapper.Defined.InvertItalic = true;
-						this.textWrapper.ResumeSynchronizations ();
-						ProcessNodes (element.Nodes);
-						this.textWrapper.SuspendSynchronizations ();
-						this.textWrapper.Defined.InvertItalic = false;
-						this.textWrapper.ResumeSynchronizations ();
+						this.ProcessItalic (element);
 					}
 					else if (element.Name == "b" || element.Name == "strong")
-					{ 
-						this.textWrapper.SuspendSynchronizations ();
-						this.textWrapper.Defined.InvertBold = true;
-						this.textWrapper.ResumeSynchronizations ();
-						ProcessNodes (element.Nodes);
-						this.textWrapper.SuspendSynchronizations ();
-						this.textWrapper.Defined.InvertBold = false;
-						this.textWrapper.ResumeSynchronizations ();
+					{
+						this.ProcessBold (element);
 					}
 					else if (element.Name == "sup")
 					{
-						this.textWrapper.SuspendSynchronizations ();
-						FillSuperscriptDefinition (this.textWrapper.Defined.Xscript);
-						this.textWrapper.ResumeSynchronizations ();
-						ProcessNodes (element.Nodes);
-						this.textWrapper.SuspendSynchronizations ();
-						this.textWrapper.Defined.ClearXscript ();
-						this.textWrapper.ResumeSynchronizations ();
+						this.ProcessSup (element);
 					}
 					else if (element.Name == "sub")
 					{
-						this.textWrapper.SuspendSynchronizations ();
-						FillSubscriptDefinition (this.textWrapper.Defined.Xscript);
-						this.textWrapper.ResumeSynchronizations ();
-						ProcessNodes (element.Nodes);
-						this.textWrapper.SuspendSynchronizations ();
-						this.textWrapper.Defined.ClearXscript ();
-						this.textWrapper.ResumeSynchronizations ();
+						this.ProcessSub (element);
 					}
 					else if (element.Name == "u")
 					{
-						this.textWrapper.SuspendSynchronizations ();
-
-						this.FillUnderlineDefinition (this.textWrapper.Defined.Underline);
-
-						this.textWrapper.ResumeSynchronizations ();
-						ProcessNodes (element.Nodes);
-						this.textWrapper.SuspendSynchronizations ();
-						this.textWrapper.Defined.ClearUnderline ();
-						this.textWrapper.ResumeSynchronizations ();
+						this.ProcessUnderline (element);
 					}
 					else if (element.Name == "font")
 					{
-						string fontface = "";
-						string fontsize = "";
-
-						foreach (HtmlAttribute attr in element.Attributes)
-						{
-							switch (attr.Name)
-							{
-								case "face":
-									fontface = attr.Value ;
-									break ;
-								case "size":
-									fontsize = attr.Value ;
-									break ;
-							}
-						}
-
-						string oldfontface = this.textWrapper.Defined.FontFace;
-						double oldfontsize = this.textWrapper.Defined.FontSize;
-
-						this.textWrapper.SuspendSynchronizations ();
-
-						if (fontface.Length > 0)
-						{
-							this.textWrapper.Defined.FontFace = fontface;
-						}
-
-						if (fontsize.Length > 0)
-						{
-							this.textWrapper.Defined.FontSize = HtmlTextOut.HtmlFontSizeTopointFontSize (Int32.Parse (fontsize)) * HtmlTextOut.FontSizeFactor;
-							this.textWrapper.Defined.Units = Common.Text.Properties.SizeUnits.Points;
-						}
-
-						this.textWrapper.ResumeSynchronizations ();
-
-						ProcessNodes (element.Nodes);
-
-						this.textWrapper.SuspendSynchronizations ();
-						this.textWrapper.Defined.FontFace = oldfontface;
-						this.textWrapper.Defined.FontSize = oldfontsize;
-						this.textWrapper.ResumeSynchronizations ();
+						this.ProcessFont (element);
 					}
 					else
 					{
