@@ -1227,6 +1227,21 @@ namespace Epsitec.Common.Designer
 
 			if (edit == this.labelEdit)
 			{
+				if (this.labelsIndex[sel] == text)
+				{
+					return;
+				}
+
+				if (this.module.Modifier.IsExistingName(text))
+				{
+					this.ignoreChange = true;
+					edit.Text = this.labelsIndex[sel];
+					this.ignoreChange = false;
+
+					this.module.MainWindow.DialogError(Res.Strings.Error.NameAlreadyExist);
+					return;
+				}
+
 				this.labelsIndex[sel] = text;
 				this.module.Modifier.Rename(label, text);
 				this.array.SetLineString(0, sel, text);
