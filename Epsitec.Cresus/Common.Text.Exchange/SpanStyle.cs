@@ -7,6 +7,11 @@ using System.Text;
 
 namespace Epsitec.Common.Text.Exchange
 {
+	/// <summary>
+	/// La classe SpanStyle gère la création de la valeur de l'attribut style du tag html <span ...>
+	/// Par exempe: "span style='font-size:8.0pt;font-family: ....'>"
+	/// </summary>
+	/// 
 	public class SpanStyle : System.IEquatable<SpanStyle>
 	{
 		public SpanStyle(string fontname, double fontsize, string fontcolor)
