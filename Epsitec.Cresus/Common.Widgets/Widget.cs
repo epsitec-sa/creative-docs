@@ -525,44 +525,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public virtual Drawing.Size					AutoMinSize
-		{
-			get
-			{
-				return this.auto_min_size;
-			}
-			set
-			{
-				if (this.auto_min_size != value)
-				{
-					object old_value = this.MinSize;
-					this.auto_min_size = value;
-					object new_value = this.MinSize;
-					
-					this.InvalidateProperty (Visual.MinSizeProperty, old_value, new_value);
-				}
-			}
-		}
-		
-		public virtual Drawing.Size					AutoMaxSize
-		{
-			get
-			{
-				return this.auto_max_size;
-			}
-			set
-			{
-				if (this.auto_max_size != value)
-				{
-					object old_value = this.MaxSize;
-					this.auto_max_size = value;
-					object new_value = this.MaxSize;
-					
-					this.InvalidateProperty (Visual.MaxSizeProperty, old_value, new_value);
-				}
-			}
-		}
-		
 		public Drawing.Size							RealMinSize
 		{
 			get
@@ -3287,21 +3249,6 @@ namespace Epsitec.Common.Widgets
 			this.UpdateClientGeometry ();
 		}
 
-		protected override void MeasureMinMax(ref Drawing.Size min, ref Drawing.Size max)
-		{
-			if ((this.internal_state & InternalState.ChildrenChanged) != 0)
-			{
-				this.internal_state &= ~InternalState.ChildrenChanged;
-			}
-
-			base.MeasureMinMax (ref min, ref max);
-
-			min.Width  = System.Math.Max (min.Width, this.auto_min_size.Width);
-			min.Height = System.Math.Max (min.Height, this.auto_min_size.Height);
-			max.Width  = System.Math.Min (max.Width, this.auto_max_size.Width);
-			max.Height = System.Math.Min (max.Height, this.auto_max_size.Height);
-		}
-		
 		protected virtual void UpdateClientGeometry()
 		{
 		}
@@ -3315,13 +3262,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		protected override void OnChildrenChanged()
-		{
-			base.OnChildrenChanged ();
-
-			this.internal_state |= InternalState.ChildrenChanged;
-		}
-		
 		
 		public virtual void PaintHandler(Drawing.Graphics graphics, Drawing.Rectangle repaint, IPaintFilter paint_filter)
 		{

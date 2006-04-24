@@ -185,8 +185,8 @@ namespace Epsitec.Common.Widgets.Layouts
 
 			if (widget != null)
 			{
-				widget.AutoMinSize = min_size;
-				widget.AutoMaxSize = max_size;
+//				widget.AutoMinSize = min_size;
+//				widget.AutoMaxSize = max_size;
 			}
 		}
 		
