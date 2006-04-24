@@ -207,7 +207,7 @@ namespace Epsitec.Common.Text.Exchange
 
 				if (textWrapper.Active.IsFontFaceDefined)
 				{
-					System.Console.Out.WriteLine ("- Font Face: {0}", textWrapper.Active.FontFace, textWrapper.Active.FontStyle, textWrapper.Active.InvertItalic ? "(italic)" : "");
+					System.Console.Out.WriteLine ("- Font Face: {0}", textWrapper.Active.FontFace, textWrapper.Active.FontStyle, textWrapper.Active.InvertItalic ? "(italic)" : string.Empty);
 				}
 				if (textWrapper.Active.IsFontStyleDefined)
 				{

@@ -131,6 +131,7 @@
     <Compile Include="HtmlParser\HtmlNode.cs" />
     <Compile Include="HtmlParser\HtmlParser.cs" />
     <Compile Include="HtmlParser\HtmlText.cs" />
+    <Compile Include="HtmlParser\SpanStyleElements.cs" />
     <Compile Include="HtmlText.cs" />
     <Compile Include="HtmlToTextWriter.cs" />
     <Compile Include="MsClipboardHtmlHeader.cs" />

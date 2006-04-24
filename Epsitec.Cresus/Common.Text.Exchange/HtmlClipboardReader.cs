@@ -60,7 +60,7 @@ namespace Epsitec.Common.Text.Exchange
 
 			if (clipboardBytes == null)
 			{
-				return "";
+				return string.Empty;
 			}
 
 			sbyte[] startbytes = new sbyte[200] ; // 200 un peu cochon
@@ -94,7 +94,7 @@ namespace Epsitec.Common.Text.Exchange
 		// code provisoire qui ne déconne pas mais qui foire avec le problème UTF-8, pas grave pour le debug
 		public static string ReadClipBoardHtml()
 		{
-			string s = "";
+			string s = string.Empty;
 			if (System.Windows.Forms.Clipboard.ContainsText (System.Windows.Forms.TextDataFormat.Html))
 			{
 				s = System.Windows.Forms.Clipboard.GetText (System.Windows.Forms.TextDataFormat.Html);
