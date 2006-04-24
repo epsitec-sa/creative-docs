@@ -178,6 +178,8 @@ namespace Epsitec.Common.Widgets
 		public void ShowSelected(ScrollShowMode mode)
 		{
 			//	Rend la ligne sélectionnée visible.
+
+			Layouts.LayoutContext.SyncArrange (this);
 			
 			if ( this.selectedLine == -1 ) return;
 			if ( this.selectedLine >= this.firstLine && this.selectedLine <  this.firstLine+this.visibleLines ) return;

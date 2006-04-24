@@ -468,16 +468,19 @@ namespace Epsitec.Common.Document.Widgets
 				{
 					this.selectedLine = value;
 
-					if ( this.selectedLine <  this.firstLine ||
-						 this.selectedLine >= this.firstLine+this.samples.Length )  // sélection cachée ?
+					if (this.samples.Length > 0)
 					{
-						int first = this.selectedLine;
-						first = System.Math.Min(first+this.samples.Length/2, this.fontList.Count-1);
-						first = System.Math.Max(first-(this.samples.Length-1), 0);
-						this.firstLine = first;  // montre la sélection
-					}
+						if ((this.selectedLine <  this.firstLine) ||
+							(this.selectedLine >= this.firstLine+this.samples.Length))  // sélection cachée ?
+						{
+							int first = this.selectedLine;
+							first = System.Math.Min (first+this.samples.Length/2, this.fontList.Count-1);
+							first = System.Math.Max (first-(this.samples.Length-1), 0);
+							this.firstLine = first;  // montre la sélection
+						}
 
-					this.UpdateContents();
+						this.UpdateContents ();
+					}
 				}
 			}
 		}
@@ -542,11 +545,11 @@ namespace Epsitec.Common.Document.Widgets
 		public void UpdateList()
 		{
 			//	Met à jour le contenu de la liste.
-			for ( int i=0 ; i<samples.Length ; i++ )
+			for (int i=0; i<this.samples.Length; i++)
 			{
 				int ii = this.firstLine+i;
-				
-				if ( ii < this.fontList.Count )
+
+				if (ii < this.fontList.Count)
 				{
 					Common.OpenType.FontIdentity id = this.fontList[ii] as Common.OpenType.FontIdentity;
 					this.samples[i].FontIdentity = id;
@@ -554,11 +557,11 @@ namespace Epsitec.Common.Document.Widgets
 					string prefix = "";
 					string face   = id.InvariantFaceName;
 					string suffix = "";
-					if ( ii < this.quickCount )  // police rapide ?
+					if (ii < this.quickCount)  // police rapide ?
 					{
-						if ( ii < 9 )  // police rapide avec un raccourci [1]..[9] ?
+						if (ii < 9)  // police rapide avec un raccourci [1]..[9] ?
 						{
-							prefix = string.Format("{0}: <b>", (ii+1).ToString(System.Globalization.CultureInfo.InvariantCulture));
+							prefix = string.Format ("{0}: <b>", (ii+1).ToString (System.Globalization.CultureInfo.InvariantCulture));
 							suffix = "</b>";
 						}
 						else	// police rapide sans raccourci
@@ -567,23 +570,23 @@ namespace Epsitec.Common.Document.Widgets
 							suffix = "</b>";
 						}
 					}
-					this.samples[i].SetFontFace(prefix, face, suffix);
+					this.samples[i].SetFontFace (prefix, face, suffix);
 					this.samples[i].IsSampleAbc = this.sampleAbc;
 
-					if ( this.selectedList == null )  // sélection unique ?
+					if (this.selectedList == null)  // sélection unique ?
 					{
 						this.samples[i].ActiveState = (ii == this.selectedLine) ? ActiveState.Yes : ActiveState.No;
 					}
 					else	// sélection multiple ?
 					{
 						face = this.samples[i].FontIdentity.InvariantFaceName;
-						this.samples[i].ActiveState = this.selectedList.Contains(face) ? ActiveState.Yes : ActiveState.No;
+						this.samples[i].ActiveState = this.selectedList.Contains (face) ? ActiveState.Yes : ActiveState.No;
 					}
 				}
 				else
 				{
 					this.samples[i].FontIdentity = null;
-					this.samples[i].SetFontFace(null, null, null);
+					this.samples[i].SetFontFace (null, null, null);
 					this.samples[i].IsSampleAbc  = false;
 					this.samples[i].ActiveState  = ActiveState.No;
 				}
