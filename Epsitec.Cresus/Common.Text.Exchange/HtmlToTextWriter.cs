@@ -45,11 +45,6 @@ namespace Epsitec.Common.Text.Exchange
 
 		private void ProcessNodes(HtmlNodeCollection nodes)
 		{
-			bool italique = false;
-			bool bold = false;
-			bool sup = false;
-			bool span = false;
-
 			foreach (HtmlNode node in nodes)
 			{
 				string s = node.ToString ();
@@ -99,6 +94,49 @@ namespace Epsitec.Common.Text.Exchange
 						ProcessNodes (element.Nodes);
 						textWrapper.SuspendSynchronizations ();
 						textWrapper.Defined.Xscript.Offset += 0.25;
+						textWrapper.ResumeSynchronizations ();
+					}
+					else if (element.Name == "font")
+					{
+						string fontface = "";
+						string fontsize = "";
+
+						foreach (HtmlAttribute attr in element.Attributes)
+						{
+							switch (attr.Name)
+							{
+								case "face":
+									fontface = attr.Value ;
+									break ;
+								case "size":
+									fontsize = attr.Value ;
+									break ;
+							}
+						}
+
+						string oldfontface = textWrapper.Defined.FontFace;
+						double oldfontsize = textWrapper.Defined.FontSize;
+
+						textWrapper.SuspendSynchronizations ();
+
+						if (fontface.Length > 0)
+						{
+							textWrapper.Defined.FontFace = fontface;
+						}
+
+						if (fontsize.Length > 0)
+						{
+							textWrapper.Defined.FontSize = HtmlTextOut.HtmlFontSizeTopointFontSize (Int32.Parse (fontsize)) * HtmlTextOut.FontSizeFactor;
+							textWrapper.Defined.Units = Common.Text.Properties.SizeUnits.Points;
+						}
+
+						textWrapper.ResumeSynchronizations ();
+
+						ProcessNodes (element.Nodes);
+
+						textWrapper.SuspendSynchronizations ();
+						textWrapper.Defined.FontFace = oldfontface;
+						textWrapper.Defined.FontSize = oldfontsize;
 						textWrapper.ResumeSynchronizations ();
 					}
 					else
