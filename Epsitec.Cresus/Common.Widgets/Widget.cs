@@ -791,12 +791,6 @@ namespace Epsitec.Common.Widgets
 			set
 			{
 				this.internal_state = value;
-				
-//				this.AutoCapture = (this.internal_state & InternalState.AutoCapture) != 0;
-//				this.AutoEngage  = (this.internal_state & InternalState.AutoEngage) != 0;
-//				this.AutoFocus   = (this.internal_state & InternalState.AutoFocus) != 0;
-//				this.AutoRepeat  = (this.internal_state & InternalState.AutoRepeat) != 0;
-//				this.AutoToggle  = (this.internal_state & InternalState.AutoToggle) != 0;
 			}
 		}
 		
@@ -894,15 +888,6 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public virtual bool							CanFocus
-		{
-			get
-			{
-				return ((this.internal_state & InternalState.Focusable) != 0)
-					&& (!this.IsFrozen);
-			}
-		}
-		
 		public bool									CanSelect
 		{
 			get { return ((this.internal_state & InternalState.Selectable) != 0) && !this.IsFrozen; }
@@ -912,14 +897,23 @@ namespace Epsitec.Common.Widgets
 		{
 			get { return ((this.internal_state & InternalState.Engageable) != 0) && this.IsEnabled && !this.IsFrozen; }
 		}
-		
-		public bool									AcceptDefocus
+
+		public bool									AcceptsFocus
+		{
+			get
+			{
+				return ((this.internal_state & InternalState.Focusable) != 0)
+					&& (!this.IsFrozen);
+			}
+		}
+		public bool									AcceptsDefocus
 		{
 			get
 			{
 				return this.InternalAboutToLoseFocus (Widget.TabNavigationDir.None, Widget.TabNavigationMode.Passive);
 			}
 		}
+		
 		public bool									PossibleContainer
 		{
 			get { return ((this.internal_state & InternalState.PossibleContainer) != 0) && !this.IsFrozen; }
