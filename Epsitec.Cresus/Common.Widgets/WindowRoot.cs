@@ -37,20 +37,6 @@ namespace Epsitec.Common.Widgets
 				return this.window;
 			}
 		}
-		public override bool					Visibility
-		{
-			get
-			{
-				return base.Visibility;
-			}
-			set
-			{
-				if (value != true)
-				{
-					throw new System.ArgumentException ("WindowRoot.Visibility cannot be set to false");
-				}
-			}
-		}
 		
 #if false //#fix
 		public override CommandDispatcher		CommandDispatcher
@@ -155,26 +141,20 @@ namespace Epsitec.Common.Widgets
 
 		public bool DoesVisualContainKeyboardFocus(Visual visual)
 		{
+			//	Retourne true si le visual passé en entrée contient le focus,
+			//	ou qu'un de ses enfants contient le focus.
+
+			this.RefreshFocusChain ();
+			
 			return this.focus_chain.Contains (visual);
 		}
 		
 		public override void MessageHandler(Message message, Drawing.Point pos)
 		{
 			message.WindowRoot = this;
-
-			if (this.focus_chain.Count == 0)
-			{
-				Widget widget = this.window.FocusedWidget;
-
-				while (widget != null)
-				{
-					this.focus_chain.Add (widget);
-					widget = widget.Parent;
-				}
-			}
-			
 			base.MessageHandler (message, pos);
 		}
+
 		
 		public override void Invalidate(Drawing.Rectangle rect)
 		{
@@ -209,6 +189,23 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		internal void RefreshFocusChain()
+		{
+			//	Si la chaîne des widgets décrivant les widgets contenant le
+			//	focus n'existe pas, on la construit
+
+			if (this.focus_chain.Count == 0)
+			{
+				Widget widget = this.window.FocusedWidget;
+
+				while (widget != null)
+				{
+					this.focus_chain.Add (widget);
+					widget = widget.Parent;
+				}
+			}
+		}
+		
 		internal void ClearFocusChain()
 		{
 			this.focus_chain.Clear ();
