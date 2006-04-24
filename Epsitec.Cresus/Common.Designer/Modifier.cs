@@ -181,6 +181,16 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
+		public bool IsExistingName(string baseName)
+		{
+			//	Indique si un non existe.
+			ResourceBundleCollection bundles = this.module.Bundles;
+			ResourceBundle defaultBundle = bundles[ResourceLevel.Default];
+
+			ResourceBundle.Field field = defaultBundle[baseName];
+			return (field != null && field.Name != null);
+		}
+
 		public string GetDuplicateName(string baseName)
 		{
 			//	Retourne le nom à utiliser lorsqu'un nom existant est dupliqué.
