@@ -341,8 +341,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				if (this.widthDraggingRank == -1)
 				{
-					// TODO: pourquoi ça ne marche pas (clignottements insupportables) ?
-#if true
 					if (this.WidthDraggingDetect (pos) != -1)
 					{
 						this.MouseCursor = MouseCursor.AsVSplit;
@@ -353,7 +351,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 					{
 						this.MouseCursor = MouseCursor.AsArrow;
 					}
-#endif
 				}
 				else
 				{

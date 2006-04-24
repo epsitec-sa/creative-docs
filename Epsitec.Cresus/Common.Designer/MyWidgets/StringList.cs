@@ -421,7 +421,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		#endregion
 
 
-		public static readonly double		WidthDraggingDetectMargin = 2;
+		public static readonly double		WidthDraggingDetectMargin = 3;
 
 		protected double					lineHeight = 20;
 		protected double					relativeWidth = 0;

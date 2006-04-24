@@ -497,11 +497,11 @@ namespace Epsitec.Common.Widgets
 				if (this.mouse_cursor != value)
 				{
 					this.mouse_cursor = value;
-					
-					if (this.IsEntered)
-					{
-						this.Window.MouseCursor = this.MouseCursor;
-					}
+				}
+				
+				if (this.IsEntered)
+				{
+					this.Window.MouseCursor = this.MouseCursor;
 				}
 			}
 		}
