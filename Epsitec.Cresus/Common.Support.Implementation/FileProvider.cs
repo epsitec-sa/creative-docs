@@ -349,8 +349,23 @@ namespace Epsitec.Common.Support.Implementation
 		
 		public override bool Remove(string id, Epsitec.Common.Support.ResourceLevel level, System.Globalization.CultureInfo culture)
 		{
-			//	TODO:  Add FileProvider.Remove implementation
-			throw new ResourceException ("Not implemented");
+			if (this.culture != culture)
+			{
+				this.SelectLocale (culture);
+			}
+
+			string path = this.GetPathFromId (id, level);
+
+			if (path != null)
+			{
+				if (System.IO.File.Exists (path))
+				{
+					System.IO.File.Delete (path);
+					return true;
+				}
+			}
+
+			return false;
 		}
 		
 		

@@ -313,6 +313,23 @@ namespace Epsitec.Common.Designer.MyWidgets
 		}
 
 
+		internal bool ProcessListMessage(StringList list, Message message, Drawing.Point pos)
+		{
+			//	Avant que StringList ne traite ses messages, il nous appelle afin
+			//	que nous ayons une chance de détecter le drag sur les colonnes de
+			//	séparation... avant que StringList ne nous mange l'événement sous
+			//	notre nez.
+			
+			this.ProcessMessage (message, list.MapClientToParent (pos));
+			
+			if (message.Consumer == this)
+			{
+				return true;
+			}
+			
+			return false;
+		}
+		
 		protected override void ProcessMessage(Message message, Drawing.Point pos)
 		{
 			if (this.IsEnabled == false)
