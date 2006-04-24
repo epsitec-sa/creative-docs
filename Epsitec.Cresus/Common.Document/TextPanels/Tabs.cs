@@ -439,6 +439,7 @@ namespace Epsitec.Common.Document.TextPanels
 			if ( !this.ParagraphWrapper.IsAttached )  return;
 			if ( this.tabSelected == null )  return;
 
+			IconButton button = sender as IconButton;
 			double tabPos;
 			TextTabType type;
 			Objects.AbstractText.GetTextTab(this.document, this.tabSelected, out tabPos, out type);
@@ -447,6 +448,7 @@ namespace Epsitec.Common.Document.TextPanels
 			VMenu menu = Widgets.HRuler.CreateMenu(new MessageEventHandler(this.HandleMenuPressed), type);
 			if ( menu == null )  return;
 			menu.Host = this;
+			menu.MinWidth = button.Width;
 
 			ScreenInfo info = ScreenInfo.Find(pos);
 			Drawing.Rectangle area = info.WorkingArea;
@@ -462,7 +464,8 @@ namespace Epsitec.Common.Document.TextPanels
 				pos.X -= pos.X+menu.Width-area.Right;
 			}
 
-			menu.ShowAsComboList (this, pos, this.buttonType);
+			TextFieldCombo.AdjustComboSize(button, menu);
+			menu.ShowAsComboList(this, pos, this.buttonType);
 		}
 
 		private void HandleMenuPressed(object sender, MessageEventArgs e)

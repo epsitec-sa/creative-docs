@@ -84,6 +84,8 @@ namespace Epsitec.Common.Document.Ribbons
 			Point pos = button.MapClientToScreen(new Point(0, 1));
 			VMenu menu = this.document.Modifier.CreateUndoRedoMenu(null);
 			menu.Host = this;
+			menu.MinWidth = button.Width;
+			TextFieldCombo.AdjustComboSize(button, menu);
 			menu.ShowAsComboList(button, pos, button);
 		}
 

@@ -65,6 +65,8 @@ namespace Epsitec.Common.Document.Ribbons
 			VMenu menu = this.BuildOthersMenu();
 			if ( menu == null )  return;
 			menu.Host = this;
+			menu.MinWidth = button.Width;
+			TextFieldCombo.AdjustComboSize(button, menu);
 			menu.ShowAsComboList(button, pos, button);
 		}
 
