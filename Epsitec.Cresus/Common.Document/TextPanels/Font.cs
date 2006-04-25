@@ -406,28 +406,13 @@ namespace Epsitec.Common.Document.TextPanels
 			string style = this.TextWrapper.Active.FontStyle;
 			string[] features = this.TextWrapper.Active.FontFeatures;
 
-			Point pos = button.MapClientToScreen(new Point(0, 1));
 			VMenu menu = this.BuildFeaturesMenu(face, style, features);
 			if ( menu == null )  return;
-
-			ScreenInfo info = ScreenInfo.Find(pos);
-			Drawing.Rectangle area = info.WorkingArea;
-			
-			if ( pos.Y-menu.Height < area.Bottom )  // dépasse en bas ?
-			{
-				pos = button.MapClientToScreen(new Drawing.Point(0, button.Height-1));
-				pos.Y += menu.Height;  // déroule contre le haut ?
-			}
-
-			if ( pos.X+menu.Width > area.Right )  // dépasse à droite ?
-			{
-				pos.X -= pos.X+menu.Width-area.Right;
-			}
 
 			menu.Host = this;
 			menu.MinWidth = button.Width;
 			TextFieldCombo.AdjustComboSize(button, menu);
-			menu.ShowAsComboList(this, pos, button);
+			menu.ShowAsComboList(button, Point.Zero, button);
 		}
 
 		protected VMenu BuildFeaturesMenu(string face, string style, string[] features)
@@ -690,13 +675,11 @@ namespace Epsitec.Common.Document.TextPanels
 		{
 			Button button = sender as Button;
 			if ( button == null )  return;
-			Point pos = button.MapClientToScreen(new Point(button.Width, 0));
 			VMenu menu = this.CreateMenu();
-			pos.X -= menu.Width;
 			menu.Host = this;
-			menu.MinWidth = button.Width;
-			TextFieldCombo.AdjustComboSize(button, menu);
-			menu.ShowAsComboList(this, pos, button);
+			menu.MinWidth = this.fontSize.Width+button.Width;
+			TextFieldCombo.AdjustComboSize(this.fontSize, menu);
+			menu.ShowAsComboList(this.fontSize, Point.Zero, this.fontSize);
 		}
 
 		private void HandleGlueValueChanged(object sender)

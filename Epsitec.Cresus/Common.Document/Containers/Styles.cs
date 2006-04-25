@@ -1273,23 +1273,20 @@ namespace Epsitec.Common.Document.Containers
 			if ( menu == null )  return;
 			menu.Host = this;
 			menu.MinWidth = widget.Width;
-			
 			TextFieldCombo.AdjustComboSize(widget, menu);
-			menu.ShowAsComboList(widget, Drawing.Point.Zero, this.dummyChildren.Button);
+			menu.ShowAsComboList(widget, Point.Zero, this.dummyChildren.Button);
 		}
-
 
 		private void HandleButtonStyleNew(object sender, MessageEventArgs e)
 		{
 			//	Crée une nouvelle propriété.
 			System.Diagnostics.Debug.Assert(this.category == StyleCategory.Graphic);
 			IconButton button = sender as IconButton;
-			VMenu menu = this.CreateMenuTypes(Drawing.Point.Zero);
+			VMenu menu = this.CreateMenuTypes();
 			menu.Host = this;
 			menu.MinWidth = button.Width;
-			
 			TextFieldCombo.AdjustComboSize(button, menu);
-			menu.ShowAsComboList(button, Drawing.Point.Zero, button);
+			menu.ShowAsComboList(button, Point.Zero, button);
 		}
 
 		private void HandleButtonStyleDelete(object sender, MessageEventArgs e)
@@ -1435,7 +1432,7 @@ namespace Epsitec.Common.Document.Containers
 
 
 		#region MenuTypes
-		protected VMenu CreateMenuTypes(Point pos)
+		protected VMenu CreateMenuTypes()
 		{
 			//	Construit le menu pour choisir le style.
 			Properties.Aggregate agg = this.GetAggregate();

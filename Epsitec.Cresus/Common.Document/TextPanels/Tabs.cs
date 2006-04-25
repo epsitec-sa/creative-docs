@@ -444,28 +444,12 @@ namespace Epsitec.Common.Document.TextPanels
 			TextTabType type;
 			Objects.AbstractText.GetTextTab(this.document, this.tabSelected, out tabPos, out type);
 
-			Point pos = this.buttonType.MapClientToScreen(new Point(0, 1));
 			VMenu menu = Widgets.HRuler.CreateMenu(new MessageEventHandler(this.HandleMenuPressed), type);
 			if ( menu == null )  return;
 			menu.Host = this;
 			menu.MinWidth = button.Width;
-
-			ScreenInfo info = ScreenInfo.Find(pos);
-			Drawing.Rectangle area = info.WorkingArea;
-
-			if ( pos.Y-menu.Height < area.Bottom )  // dépasse en bas ?
-			{
-				pos = this.buttonType.MapClientToScreen(new Drawing.Point(0, this.buttonType.Height-1));
-				pos.Y += menu.Height;  // déroule contre le haut ?
-			}
-
-			if ( pos.X+menu.Width > area.Right )  // dépasse à droite ?
-			{
-				pos.X -= pos.X+menu.Width-area.Right;
-			}
-
 			TextFieldCombo.AdjustComboSize(button, menu);
-			menu.ShowAsComboList(this, pos, this.buttonType);
+			menu.ShowAsComboList(button, Point.Zero, this.buttonType);
 		}
 
 		private void HandleMenuPressed(object sender, MessageEventArgs e)

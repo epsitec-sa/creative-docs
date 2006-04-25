@@ -279,13 +279,11 @@ namespace Epsitec.Common.Document.TextPanels
 		{
 			Button button = sender as Button;
 			if ( button == null )  return;
-			Point pos = button.MapClientToScreen(new Point(button.Width, 0));
 			VMenu menu = this.CreateMenu();
-			pos.X -= menu.Width;
 			menu.Host = this;
-			menu.MinWidth = button.Width;
-			TextFieldCombo.AdjustComboSize(button, menu);
-			menu.ShowAsComboList(this, pos, button);
+			menu.MinWidth = this.fieldLeading.Width+button.Width;
+			TextFieldCombo.AdjustComboSize(this.fieldLeading, menu);
+			menu.ShowAsComboList(this.fieldLeading, Point.Zero, this.fieldLeading);
 		}
 
 		private void HandleButtonAlignFirstClicked(object sender, MessageEventArgs e)
