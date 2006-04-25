@@ -19,7 +19,7 @@ namespace Epsitec.Common.Widgets
 			Widgets.Adorners.Factory.SetActive("LookRoyale");
 			
 			this.window = new Window();
-			this.window.Root.LayoutChanged += new EventHandler(this.Root_LayoutChanged);
+//@			this.window.Root.LayoutChanged += new EventHandler(this.Root_LayoutChanged);
 			
 			this.window.ClientSize = new Size(1024, 768);
 			this.window.Text = "Crésus-fiche";
