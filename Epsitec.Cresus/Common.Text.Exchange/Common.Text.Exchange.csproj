@@ -134,6 +134,7 @@
     <Compile Include="HtmlParser\SpanStyleElements.cs" />
     <Compile Include="HtmlText.cs" />
     <Compile Include="HtmlToTextWriter.cs" />
+    <Compile Include="Misc.cs" />
     <Compile Include="MsClipboardHtmlHeader.cs" />
     <Compile Include="Rosetta.cs">
       <SubType>Code</SubType>
