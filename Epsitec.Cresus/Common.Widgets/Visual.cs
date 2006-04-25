@@ -579,26 +579,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public Drawing.Size						ResultingMinSize
-		{
-			get
-			{
-				//	TODO: tenir compte de la taille des enfants
-				return this.MinSize;
-			}
-		}
-		
-		public Drawing.Size						ResultingMaxSize
-		{
-			get
-			{
-				//	TODO: tenir compte de la taille des enfants
-				return this.MaxSize;
-			}
-		}
-		
-		
-		public bool						Visibility
+		public bool								Visibility
 		{
 			get
 			{
