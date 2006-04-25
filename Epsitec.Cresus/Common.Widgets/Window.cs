@@ -1763,12 +1763,7 @@ namespace Epsitec.Common.Widgets
 				if (context != null)
 				{
 					total = context.TotalArrangeCount;
-
-					while ((context.ArrangeQueueLength != 0) || (context.MeasureQueueLength != 0))
-					{
-						context.ExecuteArrange ();
-						counter++;
-					}
+					counter = context.SyncArrange ();
 				}
 
 				if (counter > 0)

@@ -229,7 +229,15 @@ namespace Epsitec.Common.Widgets.Layouts
 					break;
 			}
 
-			child.SetBounds (bounds);
+			Drawing.Rectangle oldBounds = child.Bounds;
+			Drawing.Rectangle newBounds = bounds;
+			
+			child.SetBounds (newBounds);
+
+			if (oldBounds != newBounds)
+			{
+				child.Arrange (Helpers.VisualTree.FindLayoutContext (child));
+			}
 		}
 	}
 }
