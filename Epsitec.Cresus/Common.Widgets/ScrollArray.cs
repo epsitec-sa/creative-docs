@@ -1699,7 +1699,7 @@ invalid:	row    = -1;
 				bounds.Right = rect.Right + this.slider_dim / 2;
 				rect.Left    = rect.Right;
 				
-//@				slider.ZOrder = i;
+				slider.ZOrder = i;
 				slider.Bounds = bounds;
 				slider.Visibility = (this.columns[i].Elasticity == 0);
 			}

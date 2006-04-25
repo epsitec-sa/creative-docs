@@ -71,6 +71,42 @@ namespace Epsitec.Common.Widgets.Collections
 				return this.visuals[index-1];
 			}
 		}
+
+		public int ZOrderOf(Visual visual)
+		{
+			int index = this.IndexOf (visual);
+
+			if (index < 0)
+			{
+				return -1;
+			}
+			
+			return this.Count - index - 1;
+		}
+		public void ChangeZOrder(Visual visual, int z)
+		{
+			if (this.Contains (visual) == false)
+			{
+				throw new System.ArgumentException ("Cannot change Z order of visual; it does not belong to this children collection");
+			}
+
+			z = System.Math.Max (0, z);
+			z = System.Math.Min (z, this.Count-1);
+
+			int newIndex = this.Count - z - 1;
+			int oldIndex = this.IndexOf (visual);
+			
+			if (oldIndex < newIndex)
+			{
+				this.visuals.RemoveAt (oldIndex);
+				this.visuals.Insert (newIndex-1, visual);
+			}
+			else if (oldIndex > newIndex)
+			{
+				this.visuals.RemoveAt (oldIndex);
+				this.visuals.Insert (newIndex, visual);
+			}
+		}
 		
 		public void AddRange(IEnumerable<Visual> collection)
 		{

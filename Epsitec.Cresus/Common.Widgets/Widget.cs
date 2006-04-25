@@ -854,37 +854,16 @@ namespace Epsitec.Common.Widgets
 				{
 					return -1;
 				}
-				
-				Widget[] siblings = this.Parent.Children.Widgets;
-				int      bottom_z = siblings.Length;
-				
-				for (int i = 0; i < bottom_z; i++)
-				{
-					if (siblings[i] == this)
-					{
-						return bottom_z - i - 1;
-					}
-				}
-				
-				return -1;
+
+				return this.Parent.Children.ZOrderOf (this);
 			}
-//			set
-//			{
-//				if (this.Parent == null)
-//				{
-//					throw new System.InvalidOperationException ("Cannot change Z-order of an orphan.");
-//				}
-//				
-//				if ((value < 0) ||
-//					(value >= this.Parent.Children.Count))
-//				{
-//					throw new System.ArgumentOutOfRangeException ("value", value, "Invalid Z-order specified.");
-//				}
-//				
-//				this.Parent.Children.ChangeZOrder (this, value);
-//				
-//				System.Diagnostics.Debug.Assert (this.ZOrder == value);
-//			}
+			set
+			{
+				if (this.Parent != null)
+				{
+					this.Parent.Children.ChangeZOrder (this, value);
+				}
+			}
 		}
 		
 		
@@ -4313,7 +4292,6 @@ namespace Epsitec.Common.Widgets
 		public event Support.EventHandler			PreparePaint;
 		public event Support.EventHandler			AdornerChanged;
 		public event Support.EventHandler			CultureChanged;
-		public event Support.EventHandler			LayoutChanged;
 		
 		public event MessageEventHandler			Pressed;
 		public event MessageEventHandler			Released;
