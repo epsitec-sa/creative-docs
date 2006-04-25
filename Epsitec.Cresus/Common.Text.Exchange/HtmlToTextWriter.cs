@@ -28,6 +28,7 @@ namespace Epsitec.Common.Text.Exchange
 	/// La classe HtmlToTextWriter s'occupe d'écrire un texte html sous forme de HtmlDocument (arbre html parsé)
 	/// dans un pavé de text par son Wrapper.TextWrapper
 	/// </summary>
+	/// 
 	class HtmlToTextWriter
 	{
 		public HtmlToTextWriter (HtmlDocument thehtmldoc, Wrappers.TextWrapper textWrapper, Wrappers.ParagraphWrapper paraWrapper, TextNavigator navigator)
@@ -63,11 +64,11 @@ namespace Epsitec.Common.Text.Exchange
 			ProcessNodes (this.htmlDoc.Nodes);
 		}
 
-		private void ProcessSpan(HtmlElement element)
+		private void ProcessSpan(HtmlElement htmlelement)
 		{
 			string style = string.Empty;
 
-			foreach (HtmlAttribute attr in element.Attributes)
+			foreach (HtmlAttribute attr in htmlelement.Attributes)
 			{
 				switch (attr.Name)
 				{
@@ -77,21 +78,76 @@ namespace Epsitec.Common.Text.Exchange
 				}
 			}
 
+			string fontface = string.Empty;
+			string fontsize = string.Empty;
+			string fontcolor = string.Empty;
+
 			if (style.Length > 0)
 			{
 				SpanStyleElements spanstyleelements = new SpanStyleElements (style);
 
-				foreach (string t in spanstyleelements)
+				foreach (string element in spanstyleelements)
 				{
-					string x = spanstyleelements[t];
+					string value = spanstyleelements[element];
+
+					if (element == "font-size")
+					{
+						fontsize = value;
+						fontsize = fontsize.Trim (HtmlToTextWriter.quotesForTrim);
+					}
+					if (element == "font-family")
+					{
+						fontface = spanstyleelements[element];
+					}
+					if (element == "color")
+					{
+						fontcolor = spanstyleelements[element];
+					}
 				}
 
-				ProcessNodes (element.Nodes);
+				HtmlFontProperties oldfontprops = SaveFontProps ();
 
+				this.textWrapper.SuspendSynchronizations ();
+
+				if (fontface.Length > 0)
+				{
+					this.textWrapper.Defined.FontFace = fontface;
+				}
+
+				if (fontsize.Length > 0)
+				{
+					int ptindex = fontsize.LastIndexOf ("pt");
+
+					if (ptindex != -1)
+					{
+						fontsize = fontsize.Substring (0, ptindex);
+						this.textWrapper.Defined.FontSize = double.Parse (fontsize) * HtmlTextOut.FontSizeFactor;
+						this.textWrapper.Defined.Units = Common.Text.Properties.SizeUnits.Points;
+					}
+					else
+					{
+						fontsize = string.Empty;
+					}
+				}
+
+				if (fontcolor.Length > 0)
+				{
+					// this.textWrapper.Defined.Color = ... ;
+					Epsitec.Common.Drawing.RichColor richcolor = Epsitec.Common.Drawing.RichColor.FromHexa (fontcolor.Substring (1));
+					this.textWrapper.Defined.Color = Epsitec.Common.Drawing.RichColor.ToString (richcolor);
+				}
+
+				this.textWrapper.ResumeSynchronizations ();
+
+				ProcessNodes (htmlelement.Nodes);
+
+				this.textWrapper.SuspendSynchronizations ();
+				this.RestoreFontProps (oldfontprops);
+				this.textWrapper.ResumeSynchronizations ();
 			}
 			else
 			{
-				ProcessNodes (element.Nodes);
+				ProcessNodes (htmlelement.Nodes);
 			}
 		}
 
@@ -162,6 +218,8 @@ namespace Epsitec.Common.Text.Exchange
 			string fontsize = string.Empty;
 			string fontcolor = string.Empty ;
 
+			
+
 			foreach (HtmlAttribute attr in element.Attributes)
 			{
 				switch (attr.Name)
@@ -178,10 +236,8 @@ namespace Epsitec.Common.Text.Exchange
 				}
 			}
 
-			string oldfontface = this.textWrapper.Defined.FontFace;
-			string oldfontcolor = this.textWrapper.Defined.Color;
-			double oldfontsize = this.textWrapper.Defined.FontSize;
-
+			HtmlFontProperties oldfontprops = SaveFontProps();
+			
 			this.textWrapper.SuspendSynchronizations ();
 
 			if (fontface.Length > 0)
@@ -207,10 +263,25 @@ namespace Epsitec.Common.Text.Exchange
 			ProcessNodes (element.Nodes);
 
 			this.textWrapper.SuspendSynchronizations ();
-			this.textWrapper.Defined.FontFace = oldfontface;
-			this.textWrapper.Defined.Color = oldfontcolor;
+			this.RestoreFontProps (oldfontprops);
 			this.textWrapper.ResumeSynchronizations ();
 
+		}
+
+		private HtmlFontProperties SaveFontProps()
+		{
+			HtmlFontProperties props = new HtmlFontProperties ();
+			props.FontFace  = this.textWrapper.Defined.FontFace;
+			props.FontColor = this.textWrapper.Defined.Color;
+			props.FontSize  = this.textWrapper.Defined.FontSize;
+			return props;
+		}
+
+		private void RestoreFontProps(HtmlFontProperties oldprops)
+		{
+			this.textWrapper.Defined.FontFace = oldprops.FontFace;
+			this.textWrapper.Defined.Color = oldprops.FontColor;
+			this.textWrapper.Defined.FontSize = oldprops.FontSize;
 		}
 
 
@@ -309,11 +380,66 @@ namespace Epsitec.Common.Text.Exchange
 		}
 
 
-
-
 		private HtmlDocument htmlDoc;
 		private Wrappers.TextWrapper textWrapper;
 		private Wrappers.ParagraphWrapper paraWrapper;
 		private TextNavigator navigator;
+
+		private static char[] quotesForTrim = "\"".ToCharArray ();
+
 	}
+
+
+	struct HtmlFontProperties
+	{
+
+		string fontFace;
+		double fontSize;
+		string fontColor;
+
+
+		public HtmlFontProperties(string fontface, double fontsize, string fontcolor)
+		{
+			this.fontFace = fontface;
+			this.fontColor = fontcolor;
+			this.fontSize = fontsize;			
+		}
+
+		public string FontFace
+		{
+			get
+			{
+				return fontFace;
+			}
+			set
+			{
+				fontFace = value;
+			}
+		}
+
+		public string FontColor
+		{
+			get
+			{
+				return fontColor;
+			}
+			set
+			{
+				fontColor = value;
+			}
+		}
+
+		public double FontSize
+		{
+			get
+			{
+				return fontSize;
+			}
+			set
+			{
+				fontSize = value;
+			}
+		}
+	}
+
 }
