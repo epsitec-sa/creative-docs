@@ -283,7 +283,7 @@ namespace Epsitec.Common.Document.TextPanels
 			menu.Host = this;
 			menu.MinWidth = this.fieldLeading.Width+button.Width;
 			TextFieldCombo.AdjustComboSize(this.fieldLeading, menu);
-			menu.ShowAsComboList(this.fieldLeading, Point.Zero, this.fieldLeading);
+			menu.ShowAsComboList(this.fieldLeading, Point.Zero, button);
 		}
 
 		private void HandleButtonAlignFirstClicked(object sender, MessageEventArgs e)

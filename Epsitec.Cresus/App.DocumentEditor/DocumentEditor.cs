@@ -2928,37 +2928,31 @@ namespace Epsitec.App.DocumentEditor
 			DocumentInfo di = this.CurrentDocumentInfo;
 			HToolBar toolbar = di.containerPrincipal.SelectorToolBar;
 			Widget button = toolbar.FindChild("SelectorStretch");
-			if ( button == null )  return;
-			Point pos = button.MapClientToScreen(new Point(0, 1));
+			Widget type = toolbar.FindChild("SelectorStretchType");
+			if (button == null)  return;
 			VMenu menu = di.containerPrincipal.CreateStretchTypeMenu(null);
 			menu.Host = this;
 			menu.Behavior.Accepted += new EventHandler(this.HandleStretchTypeMenuAccepted);
 			menu.Behavior.Rejected += new EventHandler(this.HandleStretchTypeMenuRejected);
-
-			ScreenInfo si = ScreenInfo.Find(pos);
-			Drawing.Rectangle wa = si.WorkingArea;
-			if ( pos.X+menu.Width > wa.Right )
-			{
-				pos.X = wa.Right-menu.Width;
-			}
-
-			menu.ShowAsComboList (this, pos, button);
-			this.WidgetStretchTypeMenuEngaged(true, true);
+			menu.MinWidth = button.Width+type.Width;
+			TextFieldCombo.AdjustComboSize(button, menu);
+			menu.ShowAsComboList(button, Point.Zero, type);
+			this.WidgetStretchTypeMenuEngaged(true);
 		}
 
 		private void HandleStretchTypeMenuAccepted(object sender)
 		{
-			this.WidgetStretchTypeMenuEngaged(false, true);
+			this.WidgetStretchTypeMenuEngaged(true);
 		}
 
 		private void HandleStretchTypeMenuRejected(object sender)
 		{
 			Viewer viewer = this.CurrentDocument.Modifier.ActiveViewer;
 			bool activate = (viewer.SelectorType == SelectorType.Stretcher);
-			this.WidgetStretchTypeMenuEngaged(false, activate);
+			this.WidgetStretchTypeMenuEngaged(activate);
 		}
 
-		protected void WidgetStretchTypeMenuEngaged(bool engaged, bool activate)
+		protected void WidgetStretchTypeMenuEngaged(bool activate)
 		{
 			Widget button;
 
@@ -2968,9 +2962,6 @@ namespace Epsitec.App.DocumentEditor
 
 			button = toolbar.FindChild("SelectorStretch");
 			if ( button != null )  button.ActiveState = activate ? ActiveState.Yes : ActiveState.No;
-			
-			button = toolbar.FindChild("SelectorStretchType");
-			if ( button != null )  button.ActiveState = engaged ? ActiveState.Yes : ActiveState.No;
 		}
 
 		[Command ("SelectorStretchTypeDo")]
@@ -3319,7 +3310,7 @@ namespace Epsitec.App.DocumentEditor
 			VMenu menu = this.CreatePagesMenu();
 			menu.Host = this;
 			pos.Y += menu.Height;
-			menu.ShowAsComboList (this, pos, button);
+			menu.ShowAsComboList(this, pos, button);
 		}
 
 		[Command ("PageSelect")]
@@ -3402,7 +3393,7 @@ namespace Epsitec.App.DocumentEditor
 			VMenu menu = this.CreateLayersMenu();
 			menu.Host = this;
 			pos.X -= menu.Width;
-			menu.ShowAsComboList (this, pos, button);
+			menu.ShowAsComboList(this, pos, button);
 		}
 
 		[Command ("LayerSelect")]

@@ -679,7 +679,7 @@ namespace Epsitec.Common.Document.TextPanels
 			menu.Host = this;
 			menu.MinWidth = this.fontSize.Width+button.Width;
 			TextFieldCombo.AdjustComboSize(this.fontSize, menu);
-			menu.ShowAsComboList(this.fontSize, Point.Zero, this.fontSize);
+			menu.ShowAsComboList(this.fontSize, Point.Zero, button);
 		}
 
 		private void HandleGlueValueChanged(object sender)
