@@ -1665,7 +1665,7 @@ namespace Epsitec.Common.Widgets
 			{
 				if ( this.focusedWidget != null )
 				{
-					this.focusedWidget.KeyboardFocusChanged -= new PropertyChangedEventHandler (this.HandleFocusedWidgetIsKeyboardFocusedChanged);
+					this.focusedWidget.KeyboardFocusChanged -= new PropertyChangedEventHandler (this.HandleFocusedWidgetKeyboardFocusChanged);
 					this.focusedWidget.PreProcessing -= new MessageEventHandler(this.HandleFocusedWidgetPreProcessing);
 					this.focusedWidget = null;
 				}
@@ -1678,14 +1678,14 @@ namespace Epsitec.Common.Widgets
 					
 					System.Diagnostics.Debug.Assert( this.focusedWidget != null );
 					
-					this.focusedWidget.KeyboardFocusChanged += new PropertyChangedEventHandler (this.HandleFocusedWidgetIsKeyboardFocusedChanged);
+					this.focusedWidget.KeyboardFocusChanged += new PropertyChangedEventHandler (this.HandleFocusedWidgetKeyboardFocusChanged);
 					this.focusedWidget.PreProcessing += new MessageEventHandler(this.HandleFocusedWidgetPreProcessing);
 				}
 			}
 		}
 
 		
-		private void HandleFocusedWidgetIsKeyboardFocusedChanged(object sender, Types.DependencyPropertyChangedEventArgs e)
+		private void HandleFocusedWidgetKeyboardFocusChanged(object sender, Types.DependencyPropertyChangedEventArgs e)
 		{
 			bool focused = (bool) e.NewValue;
 			

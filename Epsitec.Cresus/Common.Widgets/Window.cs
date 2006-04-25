@@ -1122,19 +1122,19 @@ namespace Epsitec.Common.Widgets
 		
 		public void AttachLogicalFocus(Widget widget)
 		{
-			this.logical_focus_list.Remove (widget);
-			this.logical_focus_list.Add (widget);
+			this.logical_focus_stack.Remove (widget);
+			this.logical_focus_stack.Insert (0, widget);
 		}
 		
 		public void DetachLogicalFocus(Widget widget)
 		{
-			this.logical_focus_list.Remove (widget);
+			this.logical_focus_stack.Remove (widget);
 		}
 		
 		
 		public Widget FindLogicalFocus()
 		{
-			foreach (Widget widget in this.logical_focus_list)
+			foreach (Widget widget in this.logical_focus_stack)
 			{
 				if ((widget.IsVisible) &&
 					(widget.IsEnabled))
@@ -1966,7 +1966,7 @@ namespace Epsitec.Common.Widgets
 				//	focus soient d'accord...
 				
 				if ((this.focused_widget == null) ||
-					(this.focused_widget.InternalAboutToLoseFocus (Widget.TabNavigationDir.None, Widget.TabNavigationMode.Passive)))
+					(this.focused_widget.AcceptsDefocus && this.focused_widget.InternalAboutToLoseFocus (Widget.TabNavigationDir.None, Widget.TabNavigationMode.Passive)))
 				{
 					Widget focus;
 					
@@ -2346,7 +2346,7 @@ namespace Epsitec.Common.Widgets
 		private Widget							initially_engaged_widget;
 		private Timer							timer;
 		private MouseCursor						window_cursor;
-		private System.Collections.ArrayList	logical_focus_list = new System.Collections.ArrayList ();
+		private System.Collections.ArrayList	logical_focus_stack = new System.Collections.ArrayList ();
 		
 		private CommandDispatcher				dispatcher;
 		private System.Collections.Queue		cmd_queue = new System.Collections.Queue ();

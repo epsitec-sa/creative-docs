@@ -441,11 +441,14 @@ namespace Epsitec.Common.Widgets
 						(column < this.max_columns))
 					{
 						Widget edition_widget = this.Columns[column].EditionWidget;
-						
-						if ((edition_widget != null) &&
-							(edition_widget.AcceptsDefocus == false))
+
+						if (edition_widget != null)
 						{
-							return false;
+							if ((edition_widget.AcceptsDefocus == false) ||
+								(edition_widget.InternalAboutToLoseFocus (Widget.TabNavigationDir.None, Widget.TabNavigationMode.Passive) == false))
+							{
+								return false;
+							}
 						}
 					}
 				}
