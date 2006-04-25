@@ -3,7 +3,7 @@
 
 /// Problèmes non résolus:
 /// 1)
-///		Pour les tags html sup, sub et u les paramètres supplémentaires sont hard codées de la même façon
+///		Pour les tags html sup, sub et u les paramètres supplémentaires sont hardcodées de la même façon
 ///		que dans la classe Epsitec.Common.Document.Wappers du fichier Common.Text/Wrappers.cs,
 ///		chercher commentaires [HARDCODE]
 ///		D'ailleurs les méthodes Fill*Definition(...) ont été copiées depuis Common.Text/Wrappers.cs
@@ -15,8 +15,6 @@
 ///		Dans la fonction ProcessIt () il faut voir si les divers Clear...() sont appelées correctement
 ///		
 	
-
-
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -93,12 +91,13 @@ namespace Epsitec.Common.Text.Exchange
 					if (element == "font-size")
 					{
 						fontsize = value;
-						fontsize = fontsize.Trim (HtmlToTextWriter.quotesForTrim);
 					}
+
 					if (element == "font-family")
 					{
 						fontface = spanstyleelements[element];
 					}
+
 					if (element == "color")
 					{
 						fontcolor = spanstyleelements[element];
@@ -121,8 +120,18 @@ namespace Epsitec.Common.Text.Exchange
 					if (ptindex != -1)
 					{
 						fontsize = fontsize.Substring (0, ptindex);
-						this.textWrapper.Defined.FontSize = double.Parse (fontsize) * HtmlTextOut.FontSizeFactor;
-						this.textWrapper.Defined.Units = Common.Text.Properties.SizeUnits.Points;
+						double size = Misc.ParseDouble(fontsize);
+
+						if (size != 0.0)
+						{
+							size = size * HtmlTextOut.FontSizeFactor;
+
+							if (size != 0)
+							{
+								this.textWrapper.Defined.FontSize = size;
+								this.textWrapper.Defined.Units = Common.Text.Properties.SizeUnits.Points;
+							}
+						}
 					}
 					else
 					{
@@ -132,8 +141,7 @@ namespace Epsitec.Common.Text.Exchange
 
 				if (fontcolor.Length > 0)
 				{
-					// this.textWrapper.Defined.Color = ... ;
-					Epsitec.Common.Drawing.RichColor richcolor = Epsitec.Common.Drawing.RichColor.FromHexa (fontcolor.Substring (1));
+					Epsitec.Common.Drawing.RichColor richcolor = Epsitec.Common.Drawing.RichColor.FromName (fontcolor);
 					this.textWrapper.Defined.Color = Epsitec.Common.Drawing.RichColor.ToString (richcolor);
 				}
 
@@ -247,14 +255,19 @@ namespace Epsitec.Common.Text.Exchange
 
 			if (fontsize.Length > 0)
 			{
-				this.textWrapper.Defined.FontSize = HtmlTextOut.HtmlFontSizeTopointFontSize (Int32.Parse (fontsize)) * HtmlTextOut.FontSizeFactor;
-				this.textWrapper.Defined.Units = Common.Text.Properties.SizeUnits.Points;
+				int size = Misc.ParseInt (fontsize);
+
+				if (size != 0)
+				{
+					this.textWrapper.Defined.FontSize = HtmlTextOut.HtmlFontSizeTopointFontSize (size) * HtmlTextOut.FontSizeFactor;
+					this.textWrapper.Defined.Units = Common.Text.Properties.SizeUnits.Points;
+				}
 			}
 
 			if (fontcolor.Length > 0)
 			{
 				// this.textWrapper.Defined.Color = ... ;
-				Epsitec.Common.Drawing.RichColor richcolor = Epsitec.Common.Drawing.RichColor.FromHexa (fontcolor.Substring (1));
+				Epsitec.Common.Drawing.RichColor richcolor = Epsitec.Common.Drawing.RichColor.FromName (fontcolor);
 				this.textWrapper.Defined.Color = Epsitec.Common.Drawing.RichColor.ToString(richcolor);
 			}
 
@@ -384,9 +397,6 @@ namespace Epsitec.Common.Text.Exchange
 		private Wrappers.TextWrapper textWrapper;
 		private Wrappers.ParagraphWrapper paraWrapper;
 		private TextNavigator navigator;
-
-		private static char[] quotesForTrim = "\"".ToCharArray ();
-
 	}
 
 
