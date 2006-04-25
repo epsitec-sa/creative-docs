@@ -220,11 +220,23 @@ namespace Epsitec.Common.Widgets.Layouts
 				int depth;
 				LayoutContext context = Helpers.VisualTree.GetLayoutContext (visual, out depth);
 
-				while ((context.ArrangeQueueLength != 0) || (context.MeasureQueueLength != 0))
-				{
-					context.ExecuteArrange ();
-				}
+				context.SyncArrange ();
 			}
+		}
+
+		internal int SyncArrange()
+		{
+			int counter = 0;
+			
+			while ((this.ArrangeQueueLength != 0) || (this.MeasureQueueLength != 0))
+			{
+				this.ExecuteArrange ();
+				counter++;
+			}
+
+			this.StartNewLayoutPass ();
+			
+			return counter;
 		}
 
 		public void ExecuteMeasure()

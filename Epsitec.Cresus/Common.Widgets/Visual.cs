@@ -844,8 +844,6 @@ namespace Epsitec.Common.Widgets
 			if (old_value != new_value)
 			{
 				this.SetBoundsOverride (old_value, new_value);
-				this.Arrange (Helpers.VisualTree.FindLayoutContext (this));
-
 				this.invalidate_pending = true;
 			}
 			if (this.invalidate_pending)
