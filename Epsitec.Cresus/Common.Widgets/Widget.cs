@@ -898,7 +898,7 @@ namespace Epsitec.Common.Widgets
 			get { return ((this.internal_state & InternalState.Engageable) != 0) && this.IsEnabled && !this.IsFrozen; }
 		}
 
-		public bool									AcceptsFocus
+		public virtual bool							AcceptsFocus
 		{
 			get
 			{
@@ -906,11 +906,11 @@ namespace Epsitec.Common.Widgets
 					&& (!this.IsFrozen);
 			}
 		}
-		public bool									AcceptsDefocus
+		public virtual bool							AcceptsDefocus
 		{
 			get
 			{
-				return this.InternalAboutToLoseFocus (Widget.TabNavigationDir.None, Widget.TabNavigationMode.Passive);
+				return true;
 			}
 		}
 		
@@ -2436,23 +2436,23 @@ namespace Epsitec.Common.Widgets
 		public Widget			FindFocusedChild()
 		{
 			Window window = this.Window;
+			Widget focused = (window == null) ? null : window.FocusedWidget;
 			
-			if (window != null)
+			if (focused != null)
 			{
-				if (window.FocusedWidget != null)
+				//	Il y a un widget avec le focus. Ca peut être nous, un de nos descendants
+				//	ou un autre widget sans aucun lien.
+				
+				if (this.KeyboardFocus)
 				{
-					//	Il y a un widget avec le focus. Ca peut être nous, un de nos descendants
-					//	ou un autre widget sans aucun lien.
+					System.Diagnostics.Debug.Assert (this == focused);
 					
-					if (this.KeyboardFocus)
-					{
-						return this;
-					}
-					
-					if (Helpers.VisualTree.IsDescendant (this, window.FocusedWidget))
-					{
-						return window.FocusedWidget;
-					}
+					return this;
+				}
+				
+				if (Helpers.VisualTree.IsDescendant (this, focused))
+				{
+					return focused;
 				}
 			}
 			
@@ -2723,8 +2723,8 @@ namespace Epsitec.Common.Widgets
 			{
 				widget = this;
 			}
-			
-			widget.SetFocused (true);
+
+			widget.Focus ();
 		}
 		
 		public Widget FindTabWidget(TabNavigationDir dir, TabNavigationMode mode)
