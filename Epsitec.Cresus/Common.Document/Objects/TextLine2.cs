@@ -1024,8 +1024,10 @@ namespace Epsitec.Common.Document.Objects
 
 			SelectedSegment.Update(this.selectedSegments, this);
 
+			this.UpdateGeometry();
 			this.SetDirtyBbox();
 			this.document.Notifier.NotifyArea(this.BoundingBox);
+			this.textFlow.NotifyAreaFlow();
 		}
 
 		public override void MoveSelectedSegmentEnding(int rank, Point pos, DrawingContext drawingContext)
