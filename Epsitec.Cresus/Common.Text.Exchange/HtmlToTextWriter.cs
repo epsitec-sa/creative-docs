@@ -226,8 +226,6 @@ namespace Epsitec.Common.Text.Exchange
 			string fontsize = string.Empty;
 			string fontcolor = string.Empty ;
 
-			
-
 			foreach (HtmlAttribute attr in element.Attributes)
 			{
 				switch (attr.Name)
@@ -278,7 +276,20 @@ namespace Epsitec.Common.Text.Exchange
 			this.textWrapper.SuspendSynchronizations ();
 			this.RestoreFontProps (oldfontprops);
 			this.textWrapper.ResumeSynchronizations ();
+		}
 
+		private void ProcessBr(HtmlElement element)
+		{
+			string breakstring = new string ((char) Epsitec.Common.Text.Unicode.Code.LineSeparator, 1);
+			this.navigator.Insert (breakstring);
+			ProcessNodes (element.Nodes);
+		}
+
+		private void ProcessP(HtmlElement element)
+		{
+			string breakstring = new string ((char) Epsitec.Common.Text.Unicode.Code.ParagraphSeparator, 1);
+			this.navigator.Insert (breakstring);
+			ProcessNodes (element.Nodes);
 		}
 
 		private HtmlFontProperties SaveFontProps()
@@ -334,6 +345,14 @@ namespace Epsitec.Common.Text.Exchange
 					else if (element.Name == "font")
 					{
 						this.ProcessFont (element);
+					}
+					else if (element.Name == "br" || element.Name =="<br />")
+					{
+						this.ProcessBr (element);
+					}
+					else if (element.Name == "p")
+					{
+						this.ProcessP (element);
 					}
 					else
 					{
@@ -402,11 +421,9 @@ namespace Epsitec.Common.Text.Exchange
 
 	struct HtmlFontProperties
 	{
-
 		string fontFace;
 		double fontSize;
 		string fontColor;
-
 
 		public HtmlFontProperties(string fontface, double fontsize, string fontcolor)
 		{
