@@ -1226,6 +1226,155 @@ namespace Epsitec.Common.Widgets
 			Window.RunInTestEnvironment (window);
 		}
 
+		private class FlowPanel : Widget
+		{
+			public FlowPanel()
+			{
+			}
+
+			protected override void MeasureMinMax(ref Size min, ref Size max)
+			{
+				base.MeasureMinMax (ref min, ref max);
+
+				double width = 0;
+				double height = 0;
+				double dy = 0;
+				int column = 0;
+
+				foreach (Widget child in this.Children)
+				{
+					if (column > this.columns)
+					{
+						min.Width = System.Math.Max (min.Width, width);
+						column = 0;
+						width = 0;
+						height += dy;
+						dy = 0;
+					}
+
+					width += child.PreferredWidth;
+					dy = System.Math.Max (dy, child.PreferredHeight);
+				}
+				
+				height += dy;
+				
+				min.Height = System.Math.Max (min.Height, height);
+
+				System.Diagnostics.Debug.WriteLine ("Min height: " + min.Height);
+			}
+
+			protected override void ManualArrange()
+			{
+				base.ManualArrange ();
+
+				Drawing.Rectangle rect = this.Client.Bounds;
+				
+				rect.Deflate (this.Padding);
+				rect.Deflate (this.InternalPadding);
+
+				double x = 0;
+				double y = 0;
+				double dy = 0;
+				
+				int column = 0;
+
+				foreach (Widget child in this.Children)
+				{
+					if (column >= this.columns)
+					{
+						column = 0;
+						x = 0;
+						y += dy;
+						dy = 0;
+					}
+					
+					child.Bounds = new Drawing.Rectangle (rect.Left + x, rect.Top - y - child.PreferredHeight, child.PreferredWidth, child.PreferredHeight);
+
+					dy = System.Math.Max (dy, child.PreferredHeight);
+					
+					x += child.PreferredWidth;
+
+					if ((x > rect.Width) &&
+						(column > 0))
+					{
+						if (column < this.columns)
+						{
+							this.columns = column;
+							this.lines = (this.Children.Count + this.columns - 1) / this.columns;
+							
+							Layouts.LayoutContext.AddToMeasureQueue (this);
+							Layouts.LayoutContext.AddToArrangeQueue (this.Parent);
+							return;
+						}
+					}
+					
+					column++;
+				}
+			}
+
+			protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clip_rect)
+			{
+				graphics.AddRectangle (this.Client.Bounds);
+				graphics.RenderSolid (Drawing.Color.FromName ("Black"));
+			}
+			
+			protected override void OnChildrenChanged()
+			{
+				base.OnChildrenChanged ();
+
+				this.columns = this.Children.Count;
+				this.lines = 1;
+			}
+
+			private int lines;
+			private int columns;
+		}
+
+		[Test]
+		public void CheckInteractiveFlow()
+		{
+			Window window = new Window ();
+
+			window.ClientSize = new Size (400, 300);
+			window.Text = "CheckInteractiveFlow";
+			window.Root.Padding = new Margins (8, 8, 5, 5);
+
+			Button button;
+			FlowPanel panel;
+			
+			panel = new FlowPanel ();
+			panel.Dock = DockStyle.Top;
+			window.Root.Children.Add (panel);
+
+			button = new Button ();
+			button.PreferredSize = new Size (40, 40);
+			button.Text = "A";
+			panel.Children.Add (button);
+
+			button = new Button ();
+			button.PreferredSize = new Size (40, 40);
+			button.Text = "B";
+			panel.Children.Add (button);
+
+			button = new Button ();
+			button.PreferredSize = new Size (40, 40);
+			button.Text = "C";
+			panel.Children.Add (button);
+
+			button = new Button ();
+			button.PreferredSize = new Size (40, 40);
+			button.Text = "D";
+			panel.Children.Add (button);
+			
+			button = new Button ();
+			button.PreferredHeight = 24;
+			button.Text = "Below flow panel";
+			button.Dock = DockStyle.Top;
+			window.Root.Children.Add (button);
+			
+			window.Show ();
+			Window.RunInTestEnvironment (window);
+		}
 		[Test]
 		public void CheckAliveWidgets()
 		{
