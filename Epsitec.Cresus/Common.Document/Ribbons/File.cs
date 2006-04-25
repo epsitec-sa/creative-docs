@@ -105,13 +105,12 @@ namespace Epsitec.Common.Document.Ribbons
 			//	Bouton pour ouvrir le menu des derniers fichiers cliqué.
 			GlyphButton button = sender as GlyphButton;
 			if ( button == null )  return;
-			Point pos = button.MapClientToScreen(new Point(0, 1));
 			VMenu menu = this.BuildLastFilenamesMenu();
 			if ( menu == null )  return;
 			menu.Host = this;
 			menu.MinWidth = button.Width;
 			TextFieldCombo.AdjustComboSize(button, menu);
-			menu.ShowAsComboList(button, pos, button);
+			menu.ShowAsComboList(button, Point.Zero, button);
 		}
 
 		protected VMenu BuildLastFilenamesMenu()

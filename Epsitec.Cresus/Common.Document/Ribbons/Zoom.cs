@@ -169,14 +169,13 @@ namespace Epsitec.Common.Document.Ribbons
 			if ( this.document == null )  return;
 			GlyphButton button = sender as GlyphButton;
 			if ( button == null )  return;
-			Point pos = button.MapClientToScreen(new Point(0, 1));
 			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
 			VMenu menu = Menus.ZoomMenu.CreateZoomMenu(context.Zoom, context.ZoomPage, null);
 			if ( menu == null )  return;
 			menu.Host = this;
 			menu.MinWidth = button.Width;
 			TextFieldCombo.AdjustComboSize(button, menu);
-			menu.ShowAsComboList(button, pos, button);
+			menu.ShowAsComboList(button, Point.Zero, button);
 		}
 
 
