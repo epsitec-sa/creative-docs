@@ -42,6 +42,14 @@ namespace Epsitec.Common.Widgets.Layouts
 			}
 		}
 
+		internal int							PassId
+		{
+			get
+			{
+				return this.passId;
+			}
+		}
+		
 		public void StartNewLayoutPass()
 		{
 			this.measureQueue.Clear ();

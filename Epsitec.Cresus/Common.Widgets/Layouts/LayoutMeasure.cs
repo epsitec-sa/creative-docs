@@ -55,6 +55,18 @@ namespace Epsitec.Common.Widgets.Layouts
 			}
 		}
 
+		public bool SamePassIdAsLayoutContext(Visual visual)
+		{
+			LayoutContext context = Helpers.VisualTree.FindLayoutContext (visual);
+			
+			if (context == null)
+			{
+				return false;
+			}
+			
+			return context.PassId == this.passId;
+		}
+		
 		internal void ClearHasChanged()
 		{
 			this.hasChanged = false;

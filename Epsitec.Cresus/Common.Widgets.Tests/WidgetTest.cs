@@ -1232,8 +1232,23 @@ namespace Epsitec.Common.Widgets
 			{
 			}
 
+			public override Margins InternalPadding
+			{
+				get
+				{
+					return new Drawing.Margins (1, 1, 1, 1);
+				}
+			}
+			
 			protected override void MeasureMinMax(ref Size min, ref Size max)
 			{
+				Layouts.LayoutMeasure measureHeight = Layouts.LayoutMeasure.GetHeight (this);
+
+				if (!measureHeight.SamePassIdAsLayoutContext (this))
+				{
+//					this.ResetColumnLineCount ();
+				}
+				
 				base.MeasureMinMax (ref min, ref max);
 
 				double width = 0;
@@ -1243,7 +1258,7 @@ namespace Epsitec.Common.Widgets
 
 				foreach (Widget child in this.Children)
 				{
-					if (column > this.columns)
+					if (column >= this.columns)
 					{
 						min.Width = System.Math.Max (min.Width, width);
 						column = 0;
@@ -1254,13 +1269,12 @@ namespace Epsitec.Common.Widgets
 
 					width += child.PreferredWidth;
 					dy = System.Math.Max (dy, child.PreferredHeight);
+					column++;
 				}
 				
 				height += dy;
 				
-				min.Height = System.Math.Max (min.Height, height);
-
-				System.Diagnostics.Debug.WriteLine ("Min height: " + min.Height);
+				min.Height = System.Math.Max (min.Height, height + this.Padding.Height + this.InternalPadding.Height);
 			}
 
 			protected override void ManualArrange()
@@ -1284,13 +1298,7 @@ namespace Epsitec.Common.Widgets
 					{
 						column = 0;
 						x = 0;
-						y += dy;
-						dy = 0;
 					}
-					
-					child.Bounds = new Drawing.Rectangle (rect.Left + x, rect.Top - y - child.PreferredHeight, child.PreferredWidth, child.PreferredHeight);
-
-					dy = System.Math.Max (dy, child.PreferredHeight);
 					
 					x += child.PreferredWidth;
 
@@ -1303,13 +1311,47 @@ namespace Epsitec.Common.Widgets
 							this.lines = (this.Children.Count + this.columns - 1) / this.columns;
 							
 							Layouts.LayoutContext.AddToMeasureQueue (this);
-							Layouts.LayoutContext.AddToArrangeQueue (this.Parent);
 							return;
 						}
 					}
 					
 					column++;
 				}
+
+				if (this.Width > this.lastWidth)
+				{
+					this.ResetColumnLineCount ();
+					
+					this.lastWidth = this.Width;
+					
+					Layouts.LayoutContext.AddToMeasureQueue (this);
+					return;
+				}
+
+				x = 0;
+				y = 0;
+				dy = 0;
+
+				column = 0;
+
+				foreach (Widget child in this.Children)
+				{
+					if (column >= this.columns)
+					{
+						column = 0;
+						x = 0;
+						y += dy;
+						dy = 0;
+					}
+
+					child.Bounds = new Drawing.Rectangle (rect.Left + x, rect.Top - y - child.PreferredHeight, child.PreferredWidth, child.PreferredHeight);
+
+					dy = System.Math.Max (dy, child.PreferredHeight);
+					x += child.PreferredWidth;
+					column++;
+				}
+				
+				this.lastWidth = this.Width;
 			}
 
 			protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clip_rect)
@@ -1321,11 +1363,16 @@ namespace Epsitec.Common.Widgets
 			protected override void OnChildrenChanged()
 			{
 				base.OnChildrenChanged ();
-
+				this.ResetColumnLineCount ();
+			}
+			
+			private void ResetColumnLineCount()
+			{
 				this.columns = this.Children.Count;
 				this.lines = 1;
 			}
 
+			private double lastWidth;
 			private int lines;
 			private int columns;
 		}
@@ -1365,11 +1412,17 @@ namespace Epsitec.Common.Widgets
 			button.PreferredSize = new Size (40, 40);
 			button.Text = "D";
 			panel.Children.Add (button);
-			
+
+			button = new Button ();
+			button.PreferredSize = new Size (40, 40);
+			button.Text = "E";
+			panel.Children.Add (button);
+
 			button = new Button ();
 			button.PreferredHeight = 24;
 			button.Text = "Below flow panel";
 			button.Dock = DockStyle.Top;
+			button.Margins = new Drawing.Margins (0, 0, 2, 0);
 			window.Root.Children.Add (button);
 			
 			window.Show ();
