@@ -73,6 +73,7 @@
   <data name="Dialog.Filter.Label">Critère</data>
   <data name="Dialog.Filter.Radio.Begin">Au début</data>
   <data name="Dialog.Filter.Radio.Any">N'importe où</data>
+  <data name="Dialog.Filter.Radio.Jocker">Avec des jockers</data>
   <data name="Dialog.Filter.Check.Case">Respecter la casse</data>
   <data name="Dialog.Filter.Check.Word">Mots entiers</data>
   <data name="Dialog.Filter.Button.Insert">Filtrer</data>

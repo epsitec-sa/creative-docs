@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
 using Epsitec.Common.Drawing;
@@ -835,13 +836,31 @@ namespace Epsitec.Common.Designer
 				filter = Searcher.RemoveAccent(filter.ToLower());
 			}
 
+			Regex regex = null;
+			if ((mode&Searcher.SearchingMode.Jocker) != 0)
+			{
+				regex = RegexFactory.FromSimpleJoker(filter, RegexFactory.Options.None);
+			}
+
 			foreach (ResourceBundle.Field field in this.primaryBundle.Fields)
 			{
 				if (filter != "")
 				{
-					int index = Searcher.IndexOf(field.Name, filter, 0, mode);
-					if ( index == -1 )  continue;
-					if ( (mode&Searcher.SearchingMode.AtBeginning) != 0 && index != 0 )  continue;
+					if ((mode&Searcher.SearchingMode.Jocker) != 0)
+					{
+						string text = field.Name;
+						if ((mode&Searcher.SearchingMode.CaseSensitive) == 0)
+						{
+							text = Searcher.RemoveAccent(text.ToLower());
+						}
+						if (!regex.IsMatch(text))  continue;
+					}
+					else
+					{
+						int index = Searcher.IndexOf(field.Name, filter, 0, mode);
+						if (index == -1)  continue;
+						if ((mode&Searcher.SearchingMode.AtBeginning) != 0 && index != 0)  continue;
+					}
 				}
 
 				this.labelsIndex.Add(field.Name);
