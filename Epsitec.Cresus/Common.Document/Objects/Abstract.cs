@@ -2789,12 +2789,7 @@ namespace Epsitec.Common.Document.Objects
 				return true;
 			}
 
-			if ( this.IsSelected )
-			{
-				return !context.PreviewActive;
-			}
-
-			return false;
+			return !context.PreviewActive;
 		}
 
 		public System.Collections.ArrayList GetComplexSurfacesPDF(IPaintPort port)
