@@ -279,6 +279,8 @@ namespace Epsitec.Common.Text
 		{
 			//	On n'a pas le droit d'insérer des tabulateurs avec cette méthode,
 			//	car il faudrait connaître la position à atteindre :
+
+			//  [MW] Est-ce qu'il y a besoin de tester ça en mode Release ??
 			
 			foreach (char c in text)
 			{
