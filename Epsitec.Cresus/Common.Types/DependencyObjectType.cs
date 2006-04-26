@@ -176,23 +176,6 @@ namespace Epsitec.Common.Types
 			
 			return null;
 		}
-		public DependencyProperty GetProperty(DependencyProperty property)
-		{
-			if (this.lookup == null)
-			{
-				this.BuildPropertyList ();
-			}
-
-			for (int i = 0; i < this.standardPropertiesArray.Length; i++)
-			{
-				if (this.standardPropertiesArray[i] == property)
-				{
-					return property;
-				}
-			}
-			
-			return null;
-		}
 
 		public static DependencyObjectType FromSystemType(System.Type type)
 		{
