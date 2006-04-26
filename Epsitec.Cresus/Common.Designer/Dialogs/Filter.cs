@@ -23,7 +23,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.window.MakeFixedSizeWindow();
 				this.window.MakeToolWindow();
 				this.window.PreventAutoClose = true;
-				this.WindowInit("Filter", 270, 114, true);
+				this.WindowInit("Filter", 270, 130, true);
 				this.window.Text = Res.Strings.Dialog.Filter.Title;
 				this.window.Owner = this.parentWindow;
 				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowCloseClicked);
@@ -61,6 +61,16 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.radioAny.Margins = new Margins(6, 6, 6+32+16*1, 0);
 				this.radioAny.TabIndex = tabIndex++;
 				this.radioAny.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+
+				this.radioJocker = new RadioButton(this.window.Root);
+				this.radioJocker.Width = 120;
+				this.radioJocker.Group = "Part";
+				this.radioJocker.Text = Res.Strings.Dialog.Filter.Radio.Jocker;
+				this.radioJocker.Anchor = AnchorStyles.Top | AnchorStyles.Left;
+				this.radioJocker.Margins = new Margins(6, 6, 6+32+16*2, 0);
+				this.radioJocker.TabIndex = tabIndex++;
+				this.radioJocker.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+				this.radioJocker.ActiveStateChanged += new EventHandler(this.HandleRadioJockerActiveStateChanged);
 
 				this.checkCase = new CheckButton(this.window.Root);
 				this.checkCase.Width = 120;
@@ -129,15 +139,21 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.OnClosed();
 		}
 
+		void HandleRadioJockerActiveStateChanged(object sender)
+		{
+			this.checkWord.Enable = (this.radioJocker.ActiveState == ActiveState.No);
+		}
+
 		private void HandleButtonFilterClicked(object sender, MessageEventArgs e)
 		{
 			Module module = this.mainWindow.CurrentModule;
 			if ( module == null )  return;
 
 			Searcher.SearchingMode mode = Searcher.SearchingMode.None;
-			if (this.radioBegin.ActiveState == ActiveState.Yes)  mode |= Searcher.SearchingMode.AtBeginning;
-			if (this.checkCase.ActiveState  == ActiveState.Yes)  mode |= Searcher.SearchingMode.CaseSensitive;
-			if (this.checkWord.ActiveState  == ActiveState.Yes)  mode |= Searcher.SearchingMode.WholeWord;
+			if (this.radioBegin.ActiveState  == ActiveState.Yes)  mode |= Searcher.SearchingMode.AtBeginning;
+			if (this.radioJocker.ActiveState == ActiveState.Yes)  mode |= Searcher.SearchingMode.Jocker;
+			if (this.checkCase.ActiveState   == ActiveState.Yes)  mode |= Searcher.SearchingMode.CaseSensitive;
+			if (this.checkWord.ActiveState   == ActiveState.Yes)  mode |= Searcher.SearchingMode.WholeWord;
 			module.Modifier.ActiveViewer.DoFilter(this.fieldFilter.Text, mode);
 
 			Misc.ComboMenuAdd(this.fieldFilter, this.fieldFilter.Text);
@@ -155,6 +171,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected TextFieldCombo				fieldFilter;
 		protected RadioButton					radioBegin;
 		protected RadioButton					radioAny;
+		protected RadioButton					radioJocker;
 		protected CheckButton					checkCase;
 		protected CheckButton					checkWord;
 	}

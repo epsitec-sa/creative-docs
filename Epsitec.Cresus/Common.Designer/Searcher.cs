@@ -12,7 +12,8 @@ namespace Epsitec.Common.Designer
 			CaseSensitive          = 0x00000001,
 			WholeWord              = 0x00000002,
 			AtBeginning            = 0x00000004,
-			Reverse                = 0x00000008,
+			Jocker                 = 0x00000008,
+			Reverse                = 0x00000010,
 
 			SearchInLabel          = 0x00000100,
 			SearchInPrimaryText    = 0x00000200,
