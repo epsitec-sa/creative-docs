@@ -39,9 +39,6 @@ namespace Epsitec.Common.Text.Exchange
 
 		public void ProcessIt()
 		{
-			//this.navigator.Insert ("Hello you world !");
-
-			this.textWrapper.Defined.ClearInvertItalic ();
 			this.textWrapper.Defined.ClearColor ();
 			//this.textWrapper.Defined.ClearConditions ();
 			this.textWrapper.Defined.ClearFontFace ();
@@ -161,6 +158,19 @@ namespace Epsitec.Common.Text.Exchange
 
 		private void ProcessItalic(HtmlElement element)
 		{
+#if false	// voir avec Pierre si c'est mieux de faire comme ça
+			using (CresusWrapper w = new CresusWrapper (this))
+			{
+				w.InvertItalic = true;
+			}
+
+			ProcessNodes (element.Nodes);
+
+			using (CresusWrapper w = new CresusWrapper (this))
+			{
+				w.InvertItalic = false;
+			}
+#else
 			this.textWrapper.SuspendSynchronizations ();
 			this.textWrapper.Defined.InvertItalic = true;
 			this.textWrapper.ResumeSynchronizations ();
@@ -168,6 +178,7 @@ namespace Epsitec.Common.Text.Exchange
 			this.textWrapper.SuspendSynchronizations ();
 			this.textWrapper.Defined.InvertItalic = false;
 			this.textWrapper.ResumeSynchronizations ();
+#endif
 		}
 
 		private void ProcessBold(HtmlElement element)
@@ -257,14 +268,13 @@ namespace Epsitec.Common.Text.Exchange
 
 				if (size != 0)
 				{
-					this.textWrapper.Defined.FontSize = HtmlTextOut.HtmlFontSizeTopointFontSize (size) * HtmlTextOut.FontSizeFactor;
+					this.textWrapper.Defined.FontSize = HtmlTextOut.HtmlFontSizeToPointFontSize (size) * HtmlTextOut.FontSizeFactor;
 					this.textWrapper.Defined.Units = Common.Text.Properties.SizeUnits.Points;
 				}
 			}
 
 			if (fontcolor.Length > 0)
 			{
-				// this.textWrapper.Defined.Color = ... ;
 				Epsitec.Common.Drawing.RichColor richcolor = Epsitec.Common.Drawing.RichColor.FromName (fontcolor);
 				this.textWrapper.Defined.Color = Epsitec.Common.Drawing.RichColor.ToString(richcolor);
 			}
@@ -272,24 +282,27 @@ namespace Epsitec.Common.Text.Exchange
 			this.textWrapper.ResumeSynchronizations ();
 
 			ProcessNodes (element.Nodes);
-
+#if false // c'est là que ça foire
 			this.textWrapper.SuspendSynchronizations ();
 			this.RestoreFontProps (oldfontprops);
 			this.textWrapper.ResumeSynchronizations ();
+#endif
 		}
 
 		private void ProcessBr(HtmlElement element)
 		{
-			string breakstring = new string ((char) Epsitec.Common.Text.Unicode.Code.LineSeparator, 1);
-			this.navigator.Insert (breakstring);
+			this.navigator.Insert (Epsitec.Common.Text.Unicode.Code.LineSeparator);
 			ProcessNodes (element.Nodes);
 		}
 
 		private void ProcessP(HtmlElement element)
 		{
-			string breakstring = new string ((char) Epsitec.Common.Text.Unicode.Code.ParagraphSeparator, 1);
-			this.navigator.Insert (breakstring);
 			ProcessNodes (element.Nodes);
+#if false	// pour tester on insère le texte "<p>" au lieu d'un vrai séparateur de paragraphes
+			this.navigator.Insert (Epsitec.Common.Text.Unicode.Code.ParagraphSeparator);
+#else
+			this.navigator.Insert ("<p>");
+#endif
 		}
 
 		private HtmlFontProperties SaveFontProps()
@@ -318,46 +331,53 @@ namespace Epsitec.Common.Text.Exchange
 				{
 					HtmlElement element = node as HtmlElement;
 
-					if (element.Name == "span")
+					switch (element.Name)
 					{
-						this.ProcessSpan (element);
-					}
-					else if (element.Name == "i" || element.Name == "em")
-					{
-						this.ProcessItalic (element);
-					}
-					else if (element.Name == "b" || element.Name == "strong")
-					{
-						this.ProcessBold (element);
-					}
-					else if (element.Name == "sup")
-					{
-						this.ProcessSup (element);
-					}
-					else if (element.Name == "sub")
-					{
-						this.ProcessSub (element);
-					}
-					else if (element.Name == "u")
-					{
-						this.ProcessUnderline (element);
-					}
-					else if (element.Name == "font")
-					{
-						this.ProcessFont (element);
-					}
-					else if (element.Name == "br" || element.Name =="<br />")
-					{
-						this.ProcessBr (element);
-					}
-					else if (element.Name == "p")
-					{
-						this.ProcessP (element);
-					}
-					else
-					{
-						// element html inconnu, on traite l'intérieur sans s'occuper de l'élément lui même
-						ProcessNodes (element.Nodes);
+						case "span":
+							this.ProcessSpan (element);
+							break ;
+					
+						case "i":
+						case "em":
+							this.ProcessItalic (element);
+							break ;
+					
+						case "b" :
+						case "strong" :
+							this.ProcessBold (element);
+							break ;
+					
+						case "sup" :
+							this.ProcessSup (element);
+							break ;
+					
+						case "sub" :
+							this.ProcessSub (element);
+							break ;
+
+						case "u" :
+							this.ProcessUnderline (element);
+							break;
+
+#if true	// ne traite pas <font> pour des raisons de recherche de bug
+						case "font" :
+							this.ProcessFont (element);
+							break ;
+#endif
+						
+						case "br" :
+						case "<br />" :
+							this.ProcessBr (element);
+							break ;
+
+							case "p" :
+							this.ProcessP (element);
+							break ;
+						
+						default :
+							// element html inconnu, on traite l'intérieur sans s'occuper de l'élément lui même
+							ProcessNodes (element.Nodes);
+							break;
 					}
 				}
 				else
@@ -411,11 +431,28 @@ namespace Epsitec.Common.Text.Exchange
 			xline.DrawStyle      = null;
 		}
 
-
+		private CresusWrapper cresusWrapper;
 		private HtmlDocument htmlDoc;
 		private Wrappers.TextWrapper textWrapper;
 		private Wrappers.ParagraphWrapper paraWrapper;
 		private TextNavigator navigator;
+
+		public Wrappers.TextWrapper TextWrapper
+		{
+			get
+			{
+				return textWrapper;
+			}
+		}
+
+		public TextNavigator Navigator
+		{
+			get
+			{
+				return navigator;
+			}
+		}
+
 	}
 
 
