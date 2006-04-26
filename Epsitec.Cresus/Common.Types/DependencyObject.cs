@@ -370,10 +370,14 @@ namespace Epsitec.Common.Types
 			{
 				throw new System.ArgumentNullException ("binding");
 			}
-			
+
 			if (this.bindings == null)
 			{
 				this.bindings = new BindingExpressionDictionary ();
+			}
+			else
+			{
+				this.ClearBinding (property);
 			}
 			
 			this.bindings[property] = BindingExpression.BindToTarget (this, property, binding);
