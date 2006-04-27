@@ -80,6 +80,25 @@ namespace Epsitec.Common.Text.Wrappers
 			this.state.Keys.CopyTo (properties, 0);
 			return properties;
 		}
+
+		public void ClearDefinedProperties()
+		{
+			StateProperty[] properties = this.GetDefinedProperties ();
+
+			if (properties.Length > 0)
+			{
+				this.wrapper.SuspendSynchronizations ();
+				
+				foreach (StateProperty property in properties)
+				{
+					this.state.Remove (property);
+					this.flags[property] = true;
+					this.wrapper.Synchronize (this, property);
+				}
+				
+				this.wrapper.ResumeSynchronizations ();
+			}
+		}
 		
 		internal void FlagAllDefinedProperties()
 		{
