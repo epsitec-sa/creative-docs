@@ -1250,6 +1250,7 @@ namespace Epsitec.Common.Designer
 				{
 					this.ignoreChange = true;
 					edit.Text = this.labelsIndex[sel];
+					edit.SelectAll();
 					this.ignoreChange = false;
 
 					this.module.MainWindow.DialogError(Res.Strings.Error.InvalidLabel);
@@ -1258,6 +1259,7 @@ namespace Epsitec.Common.Designer
 
 				this.ignoreChange = true;
 				edit.Text = text;
+				edit.SelectAll();
 				this.ignoreChange = false;
 
 				if (this.labelsIndex[sel] == text)  // label inchangé ?
@@ -1269,6 +1271,7 @@ namespace Epsitec.Common.Designer
 				{
 					this.ignoreChange = true;
 					edit.Text = this.labelsIndex[sel];
+					edit.SelectAll();
 					this.ignoreChange = false;
 
 					this.module.MainWindow.DialogError(Res.Strings.Error.NameAlreadyExist);

@@ -119,7 +119,7 @@ namespace Epsitec.Common.Designer
 					}
 					else if (c >= 'A' && c <= 'Z')
 					{
-						builder.Append(System.Char.ToLower(c));
+						builder.Append(c);
 					}
 					else if (c >= 'a' && c <= 'z')
 					{
