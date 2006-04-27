@@ -1246,7 +1246,21 @@ namespace Epsitec.Common.Designer
 
 			if (edit == this.labelEdit)
 			{
-				if (this.labelsIndex[sel] == text)
+				if (!Misc.IsValidLabel(ref text))
+				{
+					this.ignoreChange = true;
+					edit.Text = this.labelsIndex[sel];
+					this.ignoreChange = false;
+
+					this.module.MainWindow.DialogError(Res.Strings.Error.InvalidLabel);
+					return;
+				}
+
+				this.ignoreChange = true;
+				edit.Text = text;
+				this.ignoreChange = false;
+
+				if (this.labelsIndex[sel] == text)  // label inchangé ?
 				{
 					return;
 				}

@@ -109,7 +109,8 @@
   <data name="Misc.CopyOf">de</data>
   <data name="Misc.Extract">Extrait</data>
   <data name="Misc.ExtractOf">de</data>
-  
+
+  <data name="Error.InvalidLabel">Le nom contient un ou plusieurs caractères invalides !</data>
   <data name="Error.NameAlreadyExist">Impossible d'utiliser ce nom, car il existe déjà !</data>
 
 </bundle>

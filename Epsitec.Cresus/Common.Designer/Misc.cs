@@ -62,6 +62,81 @@ namespace Epsitec.Common.Designer
 		}
 
 
+		static public bool IsValidLabel(ref string label)
+		{
+			//	Vérifie si un nom de label est correct.
+			label = Searcher.RemoveAccent(label);
+
+			string[] list = label.Split('.');
+			System.Text.StringBuilder builder = new System.Text.StringBuilder(label.Length);
+			for (int i=0; i<list.Length; i++)
+			{
+				if (!IsValidName(ref list[i]))  return false;
+
+				if (i > 0)  builder.Append('.');
+				builder.Append(list[i]);
+			}
+
+			label = builder.ToString();
+			return true;
+		}
+
+		static protected bool IsValidName(ref string name)
+		{
+			//	Vérifie si un nom commence par une lettre puis est suivi de lettres ou de chiffres.
+			//	Le nom retourné commence par une majuscule suivie de minuscules.
+			if (name.Length == 0)
+			{
+				return false;
+			}
+
+			System.Text.StringBuilder builder = new System.Text.StringBuilder(name.Length);
+			bool first = true;
+			foreach (char c in name)
+			{
+				if (first)
+				{
+					if (c >= 'A' && c <= 'Z')
+					{
+						builder.Append(c);
+						first = false;
+					}
+					else if (c >= 'a' && c <= 'z')
+					{
+						builder.Append(System.Char.ToUpper(c));
+						first = false;
+					}
+					else
+					{
+						return false;
+					}
+				}
+				else
+				{
+					if (c >= '0' && c <= '9')
+					{
+						builder.Append(c);
+					}
+					else if (c >= 'A' && c <= 'Z')
+					{
+						builder.Append(System.Char.ToLower(c));
+					}
+					else if (c >= 'a' && c <= 'z')
+					{
+						builder.Append(c);
+					}
+					else
+					{
+						return false;
+					}
+				}
+			}
+
+			name = builder.ToString();
+			return true;
+		}
+
+
 		static public void ComboMenuAdd(TextFieldCombo combo, string text)
 		{
 			//	Ajoute un texte dans le combo-menu.
