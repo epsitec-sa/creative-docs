@@ -39,23 +39,7 @@ namespace Epsitec.Common.Text.Exchange
 
 		public void ProcessIt()
 		{
-			this.textWrapper.Defined.ClearColor ();
-			//this.textWrapper.Defined.ClearConditions ();
-			this.textWrapper.Defined.ClearFontFace ();
-			//this.textWrapper.Defined.ClearFontFeatures ();
-			//this.textWrapper.Defined.ClearFontGlue ();
-			this.textWrapper.Defined.ClearFontSize ();
-			//this.textWrapper.Defined.ClearFontStyle ();
-			this.textWrapper.Defined.ClearInvertBold ();
-			this.textWrapper.Defined.ClearInvertItalic ();
-			this.textWrapper.Defined.ClearStrikeout() ;
-			//this.textWrapper.Defined.ClearTextBox ();
-			//this.textWrapper.Defined.ClearTextMarker ();
-			this.textWrapper.Defined.ClearUnderline ();
-			//this.textWrapper.Defined.ClearUnits ();
-			//this.textWrapper.Defined.ClearUserTags ();
-			this.textWrapper.Defined.ClearXscript ();
-
+			this.textWrapper.Defined.ClearDefinedProperties ();
 			ProcessNodes (this.htmlDoc.Nodes);
 		}
 
@@ -282,7 +266,7 @@ namespace Epsitec.Common.Text.Exchange
 			this.textWrapper.ResumeSynchronizations ();
 
 			ProcessNodes (element.Nodes);
-#if false // c'est là que ça foire
+#if true // c'est là que ça foire
 			this.textWrapper.SuspendSynchronizations ();
 			this.RestoreFontProps (oldfontprops);
 			this.textWrapper.ResumeSynchronizations ();
@@ -298,7 +282,7 @@ namespace Epsitec.Common.Text.Exchange
 		private void ProcessP(HtmlElement element)
 		{
 			ProcessNodes (element.Nodes);
-#if false	// pour tester on insère le texte "<p>" au lieu d'un vrai séparateur de paragraphes
+#if true	// pour tester on insère le texte "<p>" au lieu d'un vrai séparateur de paragraphes
 			this.navigator.Insert (Epsitec.Common.Text.Unicode.Code.ParagraphSeparator);
 #else
 			this.navigator.Insert ("<p>");
@@ -308,17 +292,34 @@ namespace Epsitec.Common.Text.Exchange
 		private HtmlFontProperties SaveFontProps()
 		{
 			HtmlFontProperties props = new HtmlFontProperties ();
+			props.IsFontFaceDefined = this.textWrapper.Defined.IsFontFaceDefined;
 			props.FontFace  = this.textWrapper.Defined.FontFace;
-			props.FontColor = this.textWrapper.Defined.Color;
+
+			props.IsColorDefined = this.textWrapper.Defined.IsColorDefined;
+			props.Color = this.textWrapper.Defined.Color;
+
+			props.IsFontSizeDefined = this.textWrapper.Defined.IsFontSizeDefined;
 			props.FontSize  = this.textWrapper.Defined.FontSize;
+
+			props.IsUnitsDefined = this.textWrapper.Defined.IsUnitsDefined;
+			props.Units = this.textWrapper.Defined.Units;
+
 			return props;
 		}
 
 		private void RestoreFontProps(HtmlFontProperties oldprops)
 		{
-			this.textWrapper.Defined.FontFace = oldprops.FontFace;
-			this.textWrapper.Defined.Color = oldprops.FontColor;
-			this.textWrapper.Defined.FontSize = oldprops.FontSize;
+			if (oldprops.IsFontFaceDefined)
+				this.textWrapper.Defined.FontFace = oldprops.FontFace;
+
+			if (oldprops.IsColorDefined)
+				this.textWrapper.Defined.Color = oldprops.Color;
+
+			if (oldprops.IsFontSizeDefined)
+				this.textWrapper.Defined.FontSize = oldprops.FontSize;
+
+			if (oldprops.IsUnitsDefined)
+				this.textWrapper.Defined.Units = oldprops.Units;
 		}
 
 
@@ -460,13 +461,72 @@ namespace Epsitec.Common.Text.Exchange
 	{
 		string fontFace;
 		double fontSize;
-		string fontColor;
+		string color;
+		Text.Properties.SizeUnits units;
+		bool isFontFaceDefined;
+		bool isColorDefined;
+		bool isFontSizeDefined;
+		bool isUnitsDefined;
 
-		public HtmlFontProperties(string fontface, double fontsize, string fontcolor)
+		public bool IsUnitsDefined
 		{
-			this.fontFace = fontface;
-			this.fontColor = fontcolor;
-			this.fontSize = fontsize;			
+			get
+			{
+				return isUnitsDefined;
+			}
+			set
+			{
+				isUnitsDefined = value;
+			}
+		}
+
+		public bool IsFontSizeDefined
+		{
+			get
+			{
+				return isFontSizeDefined;
+			}
+			set
+			{
+				isFontSizeDefined = value;
+			}
+		}
+
+		public bool IsFontFaceDefined
+		{
+			get
+			{
+				return isFontFaceDefined;
+			}
+			set
+			{
+				isFontFaceDefined = value;
+			}
+		}
+
+
+		public bool IsColorDefined
+		{
+			get
+			{
+				return isColorDefined;
+			}
+			set
+			{
+				isColorDefined = value;
+			}
+		}
+
+		public Text.Properties.SizeUnits Units
+		{
+			get
+			{
+				return units;
+			}
+			set
+			{
+				units = value;
+			}
 		}
 
 		public string FontFace
@@ -481,15 +541,15 @@ namespace Epsitec.Common.Text.Exchange
 			}
 		}
 
-		public string FontColor
+		public string Color
 		{
 			get
 			{
-				return fontColor;
+				return color;
 			}
 			set
 			{
-				fontColor = value;
+				color = value;
 			}
 		}
 
