@@ -289,6 +289,13 @@ namespace Epsitec.Common.Text.Exchange
 #endif
 		}
 
+		private void ProcessDiv(HtmlElement element)
+		{
+			ProcessNodes (element.Nodes);
+			this.navigator.Insert (Epsitec.Common.Text.Unicode.Code.LineSeparator);
+		}
+
+
 		private HtmlFontProperties SaveFontProps()
 		{
 			HtmlFontProperties props = new HtmlFontProperties ();
@@ -371,10 +378,14 @@ namespace Epsitec.Common.Text.Exchange
 							this.ProcessBr (element);
 							break ;
 
-							case "p" :
+						case "p" :
 							this.ProcessP (element);
 							break ;
-						
+
+						case "div":
+							this.ProcessDiv (element);
+							break;
+
 						default :
 							// element html inconnu, on traite l'intérieur sans s'occuper de l'élément lui même
 							ProcessNodes (element.Nodes);
