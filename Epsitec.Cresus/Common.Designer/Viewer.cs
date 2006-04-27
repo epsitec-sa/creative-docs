@@ -221,9 +221,22 @@ namespace Epsitec.Common.Designer
 
 				if (searcher.Field == 0)
 				{
+					string validReplace = replace;
+					if (!Misc.IsValidLabel(ref validReplace))
+					{
+						this.module.MainWindow.DialogError(Res.Strings.Error.InvalidLabel);
+						return;
+					}
+
+					if (this.module.Modifier.IsExistingName(validReplace))
+					{
+						this.module.MainWindow.DialogError(Res.Strings.Error.NameAlreadyExist);
+						return;
+					}
+
 					text = label;
 					text = text.Remove(searcher.Index, searcher.Length);
-					text = text.Insert(searcher.Index, replace);
+					text = text.Insert(searcher.Index, validReplace);
 
 					this.labelsIndex[searcher.Row] = text;
 					this.module.Modifier.Rename(label, text);
