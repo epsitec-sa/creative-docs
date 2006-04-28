@@ -40,6 +40,12 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		public void Synchronize()
+		{
+			this.UpdateTarget (BindingUpdateMode.Reset);
+			this.UpdateSource ();
+		}
+		
 		public void UpdateSource()
 		{
 			this.AssertBinding ();

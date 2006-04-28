@@ -357,11 +357,13 @@ namespace Epsitec.Common.Types
 			DependencyPropertyPath pp2 = new DependencyPropertyPath ("abc");
 			DependencyPropertyPath pp3 = new DependencyPropertyPath ("{0}.{1}", MyObject.FooProperty, MyObject.NameProperty);
 			DependencyPropertyPath pp4 = new DependencyPropertyPath ("Bar.{0}", MyObject.XyzProperty);
+			DependencyPropertyPath pp5 = new DependencyPropertyPath ("{*}", MyObject.FooProperty, MyObject.NameProperty);
 
 			Assert.AreEqual (null, pp1.GetFullPath ());
 			Assert.AreEqual ("abc", pp2.GetFullPath ());
 			Assert.AreEqual ("Foo.Name", pp3.GetFullPath ());
 			Assert.AreEqual ("Bar.Xyz", pp4.GetFullPath ());
+			Assert.AreEqual ("Foo.Name", pp5.GetFullPath ());
 			Assert.IsTrue (pp2.Elements.IsNull);
 			Assert.AreEqual (0, pp2.Elements.Length);
 			Assert.AreEqual ("Foo.Name.Bar.Xyz", DependencyPropertyPath.Combine (pp3, pp4).GetFullPath ());
