@@ -53,10 +53,23 @@ namespace Epsitec.Common.Types
 			else
 			{
 				string[] args = new string[this.elements.Length];
+				System.Text.StringBuilder full = new System.Text.StringBuilder ();
 
 				for (int i = 0; i < args.Length; i++)
 				{
 					args[i] = this.elements[i].Name;
+					
+					if (full.Length > 0)
+					{
+						full.Append (".");
+					}
+					
+					full.Append (args[i]);
+				}
+
+				while (this.path.Contains ("{*}"))
+				{
+					this.path = this.path.Replace ("{*}", full.ToString ());
 				}
 
 				return string.Format (System.Globalization.CultureInfo.InvariantCulture, this.path, args);
