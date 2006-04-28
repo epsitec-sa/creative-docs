@@ -32,12 +32,23 @@ namespace Epsitec.Common.Text.Exchange
 
 		/// <summary>
 		/// Convertit un string en int. Si la conversion foire, retourne 0
+		/// En plus le nombre peut s'arrêter sur un caractère non numérique
 		/// </summary>
 		/// <param name="str">string à convertir</param>
 		/// <returns>valeur convertie</returns>
 		public static int ParseInt(string str)
 		{
-			int value = 0;
+			int value;
+
+			int i ;
+
+			for (i = str.Length - 1; i >= 0; i--)
+			{
+				if (char.IsDigit (str[i]))
+					break;
+			}
+
+			str = str.Substring (0, i + 1);
 
 			try
 			{
@@ -45,7 +56,7 @@ namespace Epsitec.Common.Text.Exchange
 			}
 			catch
 			{
-
+				value = 0;
 			}
 
 			return value;

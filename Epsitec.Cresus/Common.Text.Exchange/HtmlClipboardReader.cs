@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Runtime.InteropServices;
+using System.IO;
 
 namespace Epsitec.Common.Text.Exchange
 {
@@ -41,10 +42,19 @@ namespace Epsitec.Common.Text.Exchange
 
 		}
 
-#if true  // code qui déconne [MW:MYSTERE]
+#if true  
+				
 		public static string ReadClipBoardHtml()
 		{
+#if false
 			byte [] clipboardBytes = ReadClipBoard() ;
+#else
+			FileStream filestream = File.Open ("clipboard.txt", FileMode.Open) ;
+			BinaryReader binReader = new BinaryReader (filestream);
+			byte[] clipboardBytes = clipboardBytes = binReader.ReadBytes((int)filestream.Length);
+			filestream.Close() ;
+			
+#endif
 
 			if (clipboardBytes == null)
 			{
@@ -68,9 +78,8 @@ namespace Epsitec.Common.Text.Exchange
 			if (startHtmlIndex > 0)
 			{
 				startHtmlIndex += starthtml.Length;
-				string nhtmlindex = startstring.Substring (startHtmlIndex, 9);
-
-				index = Int32.Parse (nhtmlindex);
+				string nhtmlindex = startstring.Substring (startHtmlIndex, 15);		// 15 == bonne reserve pour la longueur de l'offset
+				index = Misc.ParseInt (nhtmlindex);
 			}
 
 			string htmlstring = Encoding.UTF8.GetString (clipboardBytes, index, clipboardBytes.Length - index);

@@ -212,8 +212,8 @@ namespace Epsitec.Common.Text.Exchange
 			this.textWrapper.SuspendSynchronizations ();
 			this.textWrapper.Defined.ClearUnderline ();
 			this.textWrapper.ResumeSynchronizations ();
-
 		}
+
 
 		private void ProcessFont(HtmlElement element)
 		{
@@ -329,7 +329,21 @@ namespace Epsitec.Common.Text.Exchange
 				this.textWrapper.Defined.Units = oldprops.Units;
 		}
 
+		private void ProcessStyleNodes(HtmlNodeCollection nodes)
+		{
+			foreach (HtmlNode node in nodes)
+			{
+				string s = node.ToString ();
+			}
+		}
 
+
+		private void ProcessStyle(HtmlElement element)
+		{
+			ProcessStyleNodes (element.Nodes);
+		}
+
+		
 		private void ProcessNodes(HtmlNodeCollection nodes)
 		{
 			foreach (HtmlNode node in nodes)
@@ -384,6 +398,10 @@ namespace Epsitec.Common.Text.Exchange
 
 						case "div":
 							this.ProcessDiv (element);
+							break;
+
+						case "style":
+							this.ProcessStyle (element);
 							break;
 
 						default :
