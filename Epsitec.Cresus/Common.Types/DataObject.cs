@@ -17,6 +17,10 @@ namespace Epsitec.Common.Types
 		{
 			o.SetValue (DataObject.DataContextProperty, value);
 		}
+		public static void ClearDataContext(DependencyObject o)
+		{
+			o.ClearValueBase (DataObject.DataContextProperty);
+		}
 		
 		public static DependencyProperty DataContextProperty = DependencyProperty.RegisterAttached ("DataContext", typeof (Binding), typeof (DataObject), new DependencyPropertyMetadataWithInheritance ());
 	}

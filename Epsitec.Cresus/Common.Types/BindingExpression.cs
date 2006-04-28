@@ -356,7 +356,7 @@ namespace Epsitec.Common.Types
 		{
 			this.InternalUpdateTarget (e.NewValue);
 		}
-		private void HandleBreadcrumbChanged(object sender, DependencyPropertyChangedEventArgs e)
+		private void HandleBreadcrumbsChanged(object sender, DependencyPropertyChangedEventArgs e)
 		{
 			this.RefreshSourceBinding ();
 		}
@@ -371,7 +371,7 @@ namespace Epsitec.Common.Types
 			{
 				foreach (SourcePropertyPair pair in list)
 				{
-					pair.Source.AddEventHandler (pair.Property, expression.HandleBreadcrumbChanged);
+					pair.Source.AddEventHandler (pair.Property, expression.HandleBreadcrumbsChanged);
 				}
 			}
 		}
@@ -385,7 +385,7 @@ namespace Epsitec.Common.Types
 			{
 				foreach (SourcePropertyPair pair in list)
 				{
-					pair.Source.RemoveEventHandler (pair.Property, expression.HandleBreadcrumbChanged);
+					pair.Source.RemoveEventHandler (pair.Property, expression.HandleBreadcrumbsChanged);
 				}
 			}
 		}
