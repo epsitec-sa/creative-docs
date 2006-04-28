@@ -15,45 +15,33 @@ namespace Epsitec.Common.Text.Exchange
 	public class NativeHtmlClipboardReader
 	{
 		[DllImport ("Clipboard.Win32.dll")]
-		private static unsafe extern byte* ReadHtmlFromClipboard();
+		private static unsafe extern int ReadHtmlFromClipboard(System.IntPtr handle);
 
 		[DllImport ("Clipboard.Win32.dll")]
-		private static extern int GetClipboardSize();
+		private static extern int ReadClipboardData(byte[] buffer, int size);
 
 		[DllImport ("Clipboard.Win32.dll")]
-		private static extern void FreeClipboard();
+		private static extern void FreeClipboardData();
 
 		public static byte[] ReadClipBoard()
 		{
-			int size;
-			unsafe
+			int size = NativeHtmlClipboardReader.ReadHtmlFromClipboard (System.IntPtr.Zero);
+
+			if (size > 0)
 			{
-				byte* pBuffer;
+				byte[] buffer = new byte[size];
+				
+				NativeHtmlClipboardReader.ReadClipboardData (buffer, size);
+				NativeHtmlClipboardReader.FreeClipboardData ();
 
-				pBuffer = ReadHtmlFromClipboard ();
-
-				if (pBuffer != null && (int)pBuffer != 1)
-				{
-					size = GetClipboardSize ();
-
-					byte[] managedBuffer = new byte[size];
-
-					for (int i = 0; i < size; i++)
-					{
-						managedBuffer[i] = pBuffer[i];
-					}
-
-					FreeClipboard ();
-
-					return managedBuffer;
-				}
+				return buffer;
 			}
 
 			return null;
 
 		}
 
-#if false  // code qui déconne [MW:MYSTERE]
+#if true  // code qui déconne [MW:MYSTERE]
 		public static string ReadClipBoardHtml()
 		{
 			byte [] clipboardBytes = ReadClipBoard() ;
@@ -90,7 +78,6 @@ namespace Epsitec.Common.Text.Exchange
 
 		}
 #else
-
 		// code provisoire qui ne déconne pas mais qui foire avec le problème UTF-8, pas grave pour le debug
 		public static string ReadClipBoardHtml()
 		{
