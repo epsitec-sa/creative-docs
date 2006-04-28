@@ -46,7 +46,9 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
-				return (this.path == null) || (this.path.Length == 0);
+				string full = this.GetFullPath ();
+
+				return (full == null) || (full.Length == 0);
 			}
 		}
 
