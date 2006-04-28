@@ -42,6 +42,13 @@ namespace Epsitec.Common.Types
 				this.elements = value.ToArray ();
 			}
 		}
+		public bool								IsEmpty
+		{
+			get
+			{
+				return (this.path == null) || (this.path.Length == 0);
+			}
+		}
 
 		public string GetFullPath()
 		{

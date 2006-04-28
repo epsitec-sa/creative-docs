@@ -178,7 +178,8 @@ namespace Epsitec.Common.Types
 			source = root as DependencyObject;
 			
 			if ((source != null) &&
-				(path != null))
+				(path != null) &&
+				(path.IsEmpty == false))
 			{
 				//	Resolve the path to get at the real source element, starting
 				//	at the root.
