@@ -130,6 +130,7 @@ namespace Epsitec.Common.Types
 			expression.targetObject = target;
 			expression.targetPropery = property;
 
+			expression.InternalAttachToTarget ();
 			expression.AttachToSource ();
 			expression.UpdateTarget (BindingUpdateMode.Reset);
 			
@@ -145,6 +146,7 @@ namespace Epsitec.Common.Types
 
 			this.binding.Remove (this);
 			this.InternalDetachFromSource ();
+			this.InternalDetachFromTarget ();
 			this.SetDataContext (null);
 			
 			this.binding = null;
@@ -298,11 +300,33 @@ namespace Epsitec.Common.Types
 
 		private void InternalUpdateSource()
 		{
-			//	TODO: update source
+			this.InternalUpdateSource (this.targetObject.GetValue (this.targetPropery));
 		}
 		private void InternalUpdateSource(object value)
 		{
-			//	TODO: update source
+			if (this.targetUpdateCounter == 0)
+			{
+				System.Threading.Interlocked.Increment (ref this.sourceUpdateCounter);
+
+				try
+				{
+					DependencyObject source;
+
+					switch (this.sourceType)
+					{
+						case BindingSourceType.PropertyObject:
+							source = this.sourceObject as DependencyObject;
+							source.SetValue (this.sourceProperty, value);
+							break;
+						case BindingSourceType.SourceItself:
+							throw new System.InvalidOperationException ("Cannot update source: BindingSourceType set to SourceItself");
+					}
+				}
+				finally
+				{
+					System.Threading.Interlocked.Decrement (ref this.sourceUpdateCounter);
+				}
+			}
 		}
 		private void InternalUpdateTarget()
 		{
@@ -322,7 +346,19 @@ namespace Epsitec.Common.Types
 		}
 		private void InternalUpdateTarget(object value)
 		{
-			this.targetObject.SetValue (this.targetPropery, value);
+			if (this.sourceUpdateCounter == 0)
+			{
+				System.Threading.Interlocked.Increment (ref this.targetUpdateCounter);
+				
+				try
+				{
+					this.targetObject.SetValue (this.targetPropery, value);
+				}
+				finally
+				{
+					System.Threading.Interlocked.Decrement (ref this.targetUpdateCounter);
+				}
+			}
 		}
 
 		private void InternalAttachToSource()
@@ -358,6 +394,15 @@ namespace Epsitec.Common.Types
 			this.sourceType        = BindingSourceType.None;
 			this.sourceBreadcrumbs = null;
 		}
+		
+		private void InternalAttachToTarget()
+		{
+			this.targetObject.AddEventHandler (this.targetPropery, this.HandleTargetPropertyChanged);
+		}
+		private void InternalDetachFromTarget()
+		{
+			this.targetObject.RemoveEventHandler (this.targetPropery, this.HandleTargetPropertyChanged);
+		}
 
 		private void HandleSourcePropertyChanged(object sender, DependencyPropertyChangedEventArgs e)
 		{
@@ -366,6 +411,10 @@ namespace Epsitec.Common.Types
 		private void HandleBreadcrumbsChanged(object sender, DependencyPropertyChangedEventArgs e)
 		{
 			this.RefreshSourceBinding ();
+		}
+		private void HandleTargetPropertyChanged(object sender, DependencyPropertyChangedEventArgs e)
+		{
+			this.InternalUpdateSource (e.NewValue);
 		}
 
 		private static void Attach(BindingExpression expression, DependencyObject source, DependencyProperty property)
@@ -427,12 +476,14 @@ namespace Epsitec.Common.Types
 		#endregion
 
 		private Binding							binding;
-		private DependencyObject				targetObject;
-		private DependencyProperty				targetPropery;
+		private DependencyObject				targetObject;			//	immutable
+		private DependencyProperty				targetPropery;			//	immutable
 		private object							sourceObject;
 		private DependencyProperty				sourceProperty;
 		private BindingSourceType				sourceType;
 		private List<SourcePropertyPair>		sourceBreadcrumbs;
 		private Binding							dataContext;
+		private int								sourceUpdateCounter;
+		private int								targetUpdateCounter;
 	}
 }

@@ -162,6 +162,20 @@ namespace Epsitec.Common.Types
 			
 			mySource1.Sibling = myData2;
 			Assert.AreEqual (888, myTarget.Xyz);
+
+			//		mySource1 --Sibling--> myData2 --Xyz--> 555 <==== myTarget --Xyz
+
+			Assert.AreEqual (888, myData2.Xyz);
+			Assert.AreEqual (888, myTarget.Xyz);
+			myTarget.Xyz = 555;
+			Assert.AreEqual (555, myData2.Xyz);
+			Assert.AreEqual (555, myTarget.Xyz);
+
+			//		mySource1 --Sibling--> myData2 --Xyz--> 333 ====> myTarget --Xyz
+			
+			myData2.Xyz = 333;
+			Assert.AreEqual (333, myData2.Xyz);
+			Assert.AreEqual (333, myTarget.Xyz);
 		}
 
 		[Test]
