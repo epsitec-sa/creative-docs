@@ -316,7 +316,7 @@ namespace Epsitec.Common.Types
 					{
 						case BindingSourceType.PropertyObject:
 							source = this.sourceObject as DependencyObject;
-							source.SetValue (this.sourceProperty, value);
+							BindingExpression.SetValue (source, this.sourceProperty, value);
 							break;
 						case BindingSourceType.SourceItself:
 							throw new System.InvalidOperationException ("Cannot update source: BindingSourceType set to SourceItself");
@@ -328,6 +328,7 @@ namespace Epsitec.Common.Types
 				}
 			}
 		}
+		
 		private void InternalUpdateTarget()
 		{
 			DependencyObject source;
@@ -352,7 +353,7 @@ namespace Epsitec.Common.Types
 				
 				try
 				{
-					this.targetObject.SetValue (this.targetPropery, value);
+					BindingExpression.SetValue (this.targetObject, this.TargetProperty, value);
 				}
 				finally
 				{
@@ -417,6 +418,17 @@ namespace Epsitec.Common.Types
 			this.InternalUpdateSource (e.NewValue);
 		}
 
+		private static void SetValue(DependencyObject target, DependencyProperty property, object value)
+		{
+			if (target != null)
+			{
+				if (value != Binding.DoNothing)
+				{
+					target.SetValue (property, value);
+				}
+			}
+		}
+		
 		private static void Attach(BindingExpression expression, DependencyObject source, DependencyProperty property)
 		{
 			source.AddEventHandler (property, expression.HandleSourcePropertyChanged);

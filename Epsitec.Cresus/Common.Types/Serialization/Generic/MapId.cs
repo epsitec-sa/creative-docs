@@ -51,6 +51,12 @@ namespace Epsitec.Common.Types.Serialization.Generic
 		
 		public bool Record(T value)
 		{
+			//	Record the value and associate an id to the object.
+			//	Record also the value's type.
+			
+			//	Return true if the object leads to a new definition,
+			//	false if the object was already known.
+			
 			if (value == null)
 			{
 				//	Nothing to do: null values are remembered as null. No need to
@@ -85,6 +91,8 @@ namespace Epsitec.Common.Types.Serialization.Generic
 		}
 		public void RecordType(System.Type type)
 		{
+			//	Record the specified type, if it was not yet known.
+			
 			if (this.typeInformation.ContainsKey (type) == false)
 			{
 				this.types.Add (type);

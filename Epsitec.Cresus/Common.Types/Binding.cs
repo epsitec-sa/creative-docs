@@ -11,6 +11,24 @@ namespace Epsitec.Common.Types
 		public Binding()
 		{
 		}
+		public Binding(object source) : this (BindingMode.TwoWay, source)
+		{
+		}
+		public Binding(object source, string path) : this (BindingMode.TwoWay, source, path)
+		{
+		}
+		public Binding(BindingMode mode, object source)
+		{
+			this.Mode = mode;
+			this.Source = source;
+		}
+		public Binding(BindingMode mode, object source, string path)
+		{
+			this.Mode = mode;
+			this.Source = source;
+			this.Path = new DependencyPropertyPath (path);
+		}
+
 		
 		public BindingMode						Mode
 		{
@@ -215,7 +233,7 @@ namespace Epsitec.Common.Types
 			#endregion
 		}
 		
-		public static readonly object			DoNothing = new object ();
+		public static readonly object			DoNothing = new object ();	//	setting a value of DoNothing in BindingExpression does nothing
 
 		private BindingMode						mode;
 		private object							source;

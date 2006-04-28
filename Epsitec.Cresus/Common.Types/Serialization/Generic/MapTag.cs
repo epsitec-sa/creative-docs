@@ -44,7 +44,7 @@ namespace Epsitec.Common.Types.Serialization.Generic
 				return this.tagToValueLookup.Count;
 			}
 		}
-		public int								UsedTagCount
+		public int								UsedValueCount
 		{
 			get
 			{
@@ -74,6 +74,11 @@ namespace Epsitec.Common.Types.Serialization.Generic
 		{
 			int count;
 
+			if (this.valueToTagLookup.ContainsKey (value) == false)
+			{
+				throw new System.ArgumentException ("Value is not known");
+			}
+			
 			if (this.valueCounters.TryGetValue (value, out count))
 			{
 				this.valueCounters[value] = count+1;

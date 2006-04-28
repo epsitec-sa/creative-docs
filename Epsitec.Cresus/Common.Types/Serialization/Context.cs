@@ -25,6 +25,9 @@ namespace Epsitec.Common.Types.Serialization
 		{
 			get
 			{
+				//	The ObjectMap allows to map between known objects and their
+				//	id, and map between the known types and their index.
+				
 				return this.objMap;
 			}
 		}
@@ -32,6 +35,9 @@ namespace Epsitec.Common.Types.Serialization
 		{
 			get
 			{
+				//	The ExternalMap is used to name (with tags) all known objects
+				//	which are to be treated as external to the serialized graph.
+				
 				return this.externalMap;
 			}
 		}
@@ -39,6 +45,10 @@ namespace Epsitec.Common.Types.Serialization
 		{
 			get
 			{
+				//	The UnknownMap records all objects which could not be resolved
+				//	as belonging to the graph or to the external objects (these are
+				//	usually objects referenced as binding sources).
+				
 				return this.unknownMap;
 			}
 		}
@@ -108,7 +118,7 @@ namespace Epsitec.Common.Types.Serialization
 			int id = this.ObjectMap.ValueCount;
 			int typeId = this.reader.ReadObjectDefinition (id);
 
-			DependencyObjectType type = DependencyObjectType.FromSystemType (this.objMap.GetType (typeId));
+			DependencyObjectType type = DependencyObjectType.FromSystemType (this.ObjectMap.GetType (typeId));
 			DependencyObject value = type.CreateEmptyObject ();
 			
 			this.ObjectMap.Record (value);
@@ -152,7 +162,7 @@ namespace Epsitec.Common.Types.Serialization
 			
 			if (property.IsAttached)
 			{
-				int typeId = this.objMap.GetTypeIndex (property.OwnerType);
+				int typeId = this.ObjectMap.GetTypeIndex (property.OwnerType);
 				string typeTag = Context.IdToString (typeId);
 				return string.Concat (typeTag, ".", property.Name);
 			}
@@ -175,7 +185,7 @@ namespace Epsitec.Common.Types.Serialization
 				string typeTag = args[0];
 				string shortName = args[1];
 
-				System.Type sysType = this.objMap.GetType (Context.ParseId (typeTag));
+				System.Type sysType = this.ObjectMap.GetType (Context.ParseId (typeTag));
 				DependencyObjectType objType = DependencyObjectType.FromSystemType (sysType);
 
 				return objType.GetProperty (shortName);
@@ -201,7 +211,7 @@ namespace Epsitec.Common.Types.Serialization
 			DependencyObject obj = value as DependencyObject;
 			
 			if ((obj != null) &&
-				(this.objMap.IsValueDefined (obj)))
+				(this.ObjectMap.IsValueDefined (obj)))
 			{
 				return MarkupExtension.ObjRefToString (obj, this);
 			}
