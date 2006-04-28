@@ -24,49 +24,91 @@ BOOL APIENTRY DllMain( HMODULE hModule,
 }
 
 
-static HANDLE globalLockHandle ;
-static int clipboardSize ;
+static void* clipboardData = NULL;
+static int   clipboardSize = 0;
+static int   clipboardHtmlFormat = RegisterClipboardFormat(L"HTML Format");
 
 
-// retourne un pointeur sur les octets du presse-papiers
-// retourne NULL si OpenClipboard ne fonctionne pas.
+// retourne la taille des données contenues dans le clipboard, ou 0 si
+// aucune donnée compatible HTML n'a été trouvée.
 
-EXPORT BYTE *ReadHtmlFromClipboard()
+EXPORT int ReadHtmlFromClipboard(HWND mainWindow)
 {
-  if (OpenClipboard(NULL))
-  {
-	  UINT format = RegisterClipboardFormat(L"HTML Format") ;
-	  globalLockHandle = GetClipboardData(format) ;
-
-	  if (globalLockHandle != NULL)
-	  {
-		BYTE* pData = (BYTE*)GlobalLock(globalLockHandle);
-		clipboardSize = GlobalSize(globalLockHandle);
-		return pData ;
-	  }
-	  
-	  return (BYTE*)1 ;
-  }
-
-  return NULL ;
+	if (clipboardData != NULL)
+	{
+		free (clipboardData);
+		clipboardData = NULL;
+	}
+	
+	clipboardData = NULL;
+	clipboardSize = 0;
+	
+	if (!IsClipboardFormatAvailable (clipboardHtmlFormat))
+	{
+		return 0;
+	}
+	if (OpenClipboard(mainWindow))
+	{
+		HGLOBAL globalLockHandle = GetClipboardData(clipboardHtmlFormat);
+		
+		if (globalLockHandle != NULL)
+		{
+			BYTE* pData = (BYTE*)GlobalLock(globalLockHandle);
+			
+			if (pData != NULL)
+			{
+				clipboardSize = GlobalSize(globalLockHandle);
+				clipboardData = malloc(clipboardSize);
+				
+				if (clipboardData != NULL)
+				{
+					memcpy(clipboardData, pData, clipboardSize);
+				}
+				else
+				{
+					clipboardSize = 0;
+				}
+				
+				GlobalUnlock(globalLockHandle);
+			}
+		}
+		
+		CloseClipboard();
+	}
+	
+	return clipboardSize;
 }
 
 
-// retourne la taille du contenu du presse-papiers. ReadHtmlFromClipboard() doit
-// avoir été appllé auparavant
+// copie les données du clipboard dans le buffer passé en entrée; le buffer
+// doit avoir une taille suffisante pour recevoir les données et il faut
+// avoir appelé ReadHtmlFromClipboard avant...
 
-EXPORT int GetClipboardSize()
+EXPORT void ReadClipboardData(BYTE* buffer, int size)
 {
-	return clipboardSize ;
+	if (size > clipboardSize)
+	{
+		size = clipboardSize;
+	}
+	
+	if (clipboardData != NULL)
+	{
+		memcpy(buffer, clipboardData, size);
+	}
 }
+
 
 // libère la mémoire allouée lors du ReadHtmlFromClipboard()
 
-EXPORT void FreeClipboard()
+EXPORT void FreeClipboardData()
 {
-	GlobalUnlock(globalLockHandle) ;
-	GlobalFree(globalLockHandle) ;
-	CloseClipboard() ;
+	if (clipboardData != NULL)
+	{
+		free (clipboardData);
+		
+		clipboardData = NULL;
+		clipboardSize = 0;
+	}
 }
 
 
