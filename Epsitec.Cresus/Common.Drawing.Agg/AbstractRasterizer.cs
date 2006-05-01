@@ -1,4 +1,4 @@
-//	Copyright © 2003-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Drawing
@@ -77,6 +77,8 @@ namespace Epsitec.Common.Drawing
 		public abstract void Render(Renderers.Solid renderer);
 		public abstract void Render(Renderers.Image renderer);
 		public abstract void Render(Renderers.Gradient renderer);
+
+		public abstract bool HitTest(double x, double y);
 		
 		public void AddOutline(Path path)
 		{

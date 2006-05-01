@@ -1,4 +1,4 @@
-//	Copyright © 2003-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Drawing
@@ -134,6 +134,15 @@ namespace Epsitec.Common.Drawing
 			this.CreateOnTheFly ();
 			AntiGrain.Rasterizer.RenderGradient (this.agg_ras, renderer.Handle);
 			AntiGrain.Rasterizer.Clear (this.agg_ras);
+		}
+
+		public override bool HitTest(double x, double y)
+		{
+			int xx = (int) (x + 0.5);
+			int yy = (int) (y + 0.5);
+			
+			this.CreateOnTheFly ();
+			return AntiGrain.Rasterizer.HitTest (this.agg_ras, xx, yy);
 		}
 		
 		
