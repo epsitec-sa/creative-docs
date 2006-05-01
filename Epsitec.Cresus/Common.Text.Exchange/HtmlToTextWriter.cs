@@ -60,6 +60,7 @@ namespace Epsitec.Common.Text.Exchange
 			string fontface = string.Empty;
 			string fontsize = string.Empty;
 			string fontcolor = string.Empty;
+			bool isSpaceRun = false;
 
 			if (style.Length > 0)
 			{
@@ -82,6 +83,11 @@ namespace Epsitec.Common.Text.Exchange
 					if (element == "color")
 					{
 						fontcolor = spanstyleelements[element];
+					}
+
+					if (element == "mso-spacerun" && spanstyleelements[element] == "yes")
+					{
+						isSpaceRun = true;
 					}
 				}
 
@@ -318,15 +324,23 @@ namespace Epsitec.Common.Text.Exchange
 		{
 			if (oldprops.IsFontFaceDefined)
 				this.textWrapper.Defined.FontFace = oldprops.FontFace;
+			else
+				this.textWrapper.Defined.ClearFontFace ();
 
 			if (oldprops.IsColorDefined)
 				this.textWrapper.Defined.Color = oldprops.Color;
+			else
+				this.textWrapper.Defined.ClearColor ();
 
 			if (oldprops.IsFontSizeDefined)
 				this.textWrapper.Defined.FontSize = oldprops.FontSize;
+			else
+				this.textWrapper.Defined.ClearFontSize ();
 
 			if (oldprops.IsUnitsDefined)
 				this.textWrapper.Defined.Units = oldprops.Units;
+			else
+				this.textWrapper.Defined.ClearUnits ();
 		}
 
 		private void ProcessStyleNodes(HtmlNodeCollection nodes)

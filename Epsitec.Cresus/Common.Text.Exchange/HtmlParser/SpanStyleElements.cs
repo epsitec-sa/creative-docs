@@ -49,7 +49,7 @@ namespace Epsitec.Common.Text.Exchange.HtmlParser
 
 		private static char[] semicolonseparators = ";".ToCharArray ();
 		private static char[] colonseparators = ":".ToCharArray ();
-		private static char[] quotestotrim = " '\"".ToCharArray ();
+		private static char[] quotestotrim = " '\"\r\n".ToCharArray ();
 
 	}
 }
