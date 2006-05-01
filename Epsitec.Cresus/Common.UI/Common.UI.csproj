@@ -123,6 +123,9 @@
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Data\Field.cs" />
+    <Compile Include="Data\Record.cs" />
+    <Compile Include="Data\Representation.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
