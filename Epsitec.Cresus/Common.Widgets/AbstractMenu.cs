@@ -575,26 +575,50 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void OnAccepted()
 		{
-			if (this.Accepted != null)
+			Support.EventHandler handler = (Support.EventHandler) this.GetUserEventHandler ("Accepted");
+			
+			if (handler != null)
 			{
-				this.Accepted (this);
+				handler (this);
 			}
 		}
 		
 		protected virtual void OnRejected()
 		{
-			if (this.Rejected != null)
+			Support.EventHandler handler = (Support.EventHandler) this.GetUserEventHandler ("Rejected");
+			
+			if (handler != null)
 			{
-				this.Rejected (this);
+				handler (this);
 			}
 		}
 		
 		
-		public event Support.EventHandler		Accepted;
-		public event Support.EventHandler		Rejected;
+		public event Support.EventHandler		Accepted
+		{
+			add
+			{
+				this.AddUserEventHandler ("Accepted", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler ("Accepted", value);
+			}
+		}
+		public event Support.EventHandler		Rejected
+		{
+			add
+			{
+				this.AddUserEventHandler ("Rejected", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler ("Rejected", value);
+			}
+		}
 		
-		protected Drawing.Margins				margins = new Drawing.Margins (2,2,2,2);
-		protected Drawing.Margins				shadow  = Drawing.Margins.Zero;
+		private Drawing.Margins					margins = new Drawing.Margins (2,2,2,2);
+		private Drawing.Margins					shadow  = Drawing.Margins.Zero;
 		private MenuItemCollection				items;
 		private ICommandDispatcherHost			host;
 		private double							icon_width;
