@@ -152,11 +152,22 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
-				return this.canSerialize;
+				return this.canSerializeReadOnly;
 			}
 			set
 			{
-				this.canSerialize = value;
+				this.canSerializeReadOnly = value;
+			}
+		}
+		public bool								CanSerializeReadWrite
+		{
+			get
+			{
+				return this.canSerializeReadWrite;
+			}
+			set
+			{
+				this.canSerializeReadWrite = value;
 			}
 		}
 		public virtual bool						PropertyNotifiesChanges
@@ -170,7 +181,7 @@ namespace Epsitec.Common.Types
 
 		public DependencyPropertyMetadata MakeReadOnlySerializable()
 		{
-			this.canSerialize = true;
+			this.canSerializeReadOnly = true;
 			return this;
 		}
 
@@ -240,6 +251,7 @@ namespace Epsitec.Common.Types
 		private PropertyInvalidatedCallback		propertyInvalidated;
 		private ValidateValueCallback			validateValueCallback;
 		private CoerceValueCallback				coerceValueCallback;
-		private bool							canSerialize;
+		private bool							canSerializeReadOnly;
+		private bool							canSerializeReadWrite = true;
 	}
 }

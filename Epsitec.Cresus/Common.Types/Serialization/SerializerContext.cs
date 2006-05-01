@@ -43,8 +43,8 @@ namespace Epsitec.Common.Types.Serialization
 			{
 				DependencyPropertyMetadata metadata = entry.Property.GetMetadata (obj);
 
-				if ((entry.Property.IsReadWrite) ||
-					(metadata.CanSerializeReadOnly))
+				if ((entry.Property.IsReadWrite && metadata.CanSerializeReadWrite) ||
+					(entry.Property.IsReadOnly && metadata.CanSerializeReadOnly))
 				{
 					if (obj.GetBinding (entry.Property) == null)
 					{
