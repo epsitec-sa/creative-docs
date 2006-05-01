@@ -320,10 +320,13 @@
     <Compile Include="CommandState.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Controllers\AbstractController.cs" />
+    <Compile Include="IController.cs" />
     <Compile Include="Layouts\LayoutMode.cs" />
     <Compile Include="Layouts\NoOpLayoutEngine.cs" />
     <Compile Include="Layouts\LayoutContext.cs" />
     <Compile Include="Layouts\LayoutMeasure.cs" />
+    <Compile Include="Placeholder.cs" />
     <Compile Include="RibbonButton.cs" />
     <Compile Include="RibbonContainer.cs" />
     <Compile Include="VerticalAlignment.cs" />

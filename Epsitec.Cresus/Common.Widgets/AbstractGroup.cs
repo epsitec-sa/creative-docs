@@ -1,4 +1,4 @@
-//	Copyright © 2003-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Widgets
@@ -7,9 +7,6 @@ namespace Epsitec.Common.Widgets
 	/// La classe AbstractGroup sert de base aux autres classes qui
 	/// implémentent des groupes de widgets.
 	/// </summary>
-	
-	[Support.SuppressBundleSupport]
-	
 	public abstract class AbstractGroup : Widget
 	{
 		public AbstractGroup()
@@ -31,10 +28,11 @@ namespace Epsitec.Common.Widgets
 			}
 			set
 			{
-				value &= ~ (TabNavigationMode.ForwardToChildren | TabNavigationMode.ForwardOnly);
-				value |= TabNavigationMode.ForwardToChildren | TabNavigationMode.ForwardOnly;
+				//	Un groupe transmet toujours les pressions de TAB à ses enfants
+				//	sans les consommer lui-même; c'est pourquoi on rajoute les deux
+				//	bits ci-dessous :
 				
-				this.SetTabNavigation (value);
+				this.SetTabNavigation (value | TabNavigationMode.ForwardToChildren | TabNavigationMode.ForwardOnly);
 			}
 		}
 		
