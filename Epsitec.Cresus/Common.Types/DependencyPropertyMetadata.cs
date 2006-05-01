@@ -1,6 +1,8 @@
 //	Copyright © 2005-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
+using System.Collections.Generic;
+
 namespace Epsitec.Common.Types
 {
 	/// <summary>
@@ -139,6 +141,13 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		public virtual bool						HasSerializationFilter
+		{
+			get
+			{
+				return false;
+			}
+		}
 		public bool								CanSerializeReadOnly
 		{
 			get
@@ -163,6 +172,24 @@ namespace Epsitec.Common.Types
 		{
 			this.canSerialize = true;
 			return this;
+		}
+
+		public virtual bool FilterSerializableItem(DependencyObject item)
+		{
+			return true;
+		}
+		public virtual IEnumerable<DependencyObject> FilterSerializableCollection(IEnumerable<DependencyObject> collection, DependencyProperty property)
+		{
+			//	Skip items in collection which may not be serialized.
+			
+			if (this.HasSerializationFilter)
+			{
+				return this.ReallyFilterSerializableCollection (collection);
+			}
+			else
+			{
+				return collection;
+			}
 		}
 		
 		public virtual object CreateDefaultValue()
@@ -192,6 +219,17 @@ namespace Epsitec.Common.Types
 			if (this.PropertyInvalidated != null)
 			{
 				this.PropertyInvalidated (sender, old_value, new_value);
+			}
+		}
+
+		protected IEnumerable<DependencyObject> ReallyFilterSerializableCollection(IEnumerable<DependencyObject> collection)
+		{
+			foreach (Types.DependencyObject item in collection)
+			{
+				if (this.FilterSerializableItem (item))
+				{
+					yield return item;
+				}
 			}
 		}
 		

@@ -1,6 +1,8 @@
 //	Copyright © 2005-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
+using System.Collections.Generic;
+
 namespace Epsitec.Common.Widgets.Helpers
 {
 	/// <summary>
@@ -114,11 +116,35 @@ namespace Epsitec.Common.Widgets.Helpers
 				return this.inheritsValue;
 			}
 		}
+		public override bool					HasSerializationFilter
+		{
+			get
+			{
+				return true;
+			}
+		}
 		public override bool					PropertyNotifiesChanges
 		{
 			get
 			{
 				return this.notifiesChanges;
+			}
+		}
+
+		public override bool FilterSerializableItem(Types.DependencyObject item)
+		{
+			//	Return true for items which may be serialized.
+			
+			Widget widget = item as Widget;
+			
+			if ((widget != null) &&
+				(widget.IsEmbedded))
+			{
+				return false;
+			}
+			else
+			{
+				return true;
 			}
 		}
 		
