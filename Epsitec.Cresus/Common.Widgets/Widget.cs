@@ -681,7 +681,13 @@ namespace Epsitec.Common.Widgets
 		
 		public bool									IsEmbedded
 		{
-			get { return (this.internal_state & InternalState.Embedded) != 0; }
+			//	Un widget qui retourne IsEmbedded = true n'a pas besoin d'être sérialisé
+			//	quand son parent est sérialisé, car il est construit et géré par le parent.
+			//	Voir le constructeur Widget(Widget) et Widget.SetEmbedder.
+			get
+			{
+				return (this.internal_state & InternalState.Embedded) != 0;
+			}
 		}
 		
 		public bool									IsEditionEnabled

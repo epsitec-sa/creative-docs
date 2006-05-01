@@ -64,9 +64,13 @@ namespace Epsitec.Common.Types.Serialization
 						{
 							//	This is an internal reference. Record it as {Object _nnn}.
 
-							string markup = MarkupExtension.ObjRefToString (dependencyObjectValue, this);
-
-							this.writer.WriteObjectFieldValue (obj, this.GetPropertyName (entry.Property), markup);
+							if ((metadata.HasSerializationFilter == false) ||
+								(metadata.FilterSerializableItem (dependencyObjectValue)))
+							{
+								string markup = MarkupExtension.ObjRefToString (dependencyObjectValue, this);
+								this.writer.WriteObjectFieldValue (obj, this.GetPropertyName (entry.Property), markup);
+							}
+							
 							continue;
 						}
 
@@ -78,10 +82,15 @@ namespace Epsitec.Common.Types.Serialization
 
 							if (dependencyObjectCollection.Count > 0)
 							{
-								string markup = MarkupExtension.CollectionToString (dependencyObjectCollection, this);
+								string markup = MarkupExtension.CollectionToString (metadata.FilterSerializableCollection (dependencyObjectCollection, entry.Property), this);
 
-								this.writer.WriteObjectFieldValue (obj, this.GetPropertyName (entry.Property), markup);
+								if ((markup != null) &&
+									(markup.Length > 0))
+								{
+									this.writer.WriteObjectFieldValue (obj, this.GetPropertyName (entry.Property), markup);
+								}
 							}
+							
 							continue;
 						}
 

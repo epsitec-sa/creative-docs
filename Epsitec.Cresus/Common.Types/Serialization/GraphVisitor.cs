@@ -39,7 +39,12 @@ namespace Epsitec.Common.Types.Serialization
 
 							if (dependencyObjectValue != null)
 							{
-								GraphVisitor.VisitSerializableNodes (dependencyObjectValue, context);
+								if ((metadata.HasSerializationFilter == false) ||
+									(metadata.FilterSerializableItem (dependencyObjectValue)))
+								{
+									GraphVisitor.VisitSerializableNodes (dependencyObjectValue, context);
+								}
+								
 								continue;
 							}
 
@@ -47,7 +52,7 @@ namespace Epsitec.Common.Types.Serialization
 
 							if (dependencyObjectCollection != null)
 							{
-								foreach (DependencyObject node in dependencyObjectCollection)
+								foreach (DependencyObject node in metadata.FilterSerializableCollection (dependencyObjectCollection, entry.Property))
 								{
 									GraphVisitor.VisitSerializableNodes (node, context);
 								}

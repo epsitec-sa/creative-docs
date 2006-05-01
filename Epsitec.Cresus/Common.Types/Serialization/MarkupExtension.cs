@@ -140,7 +140,7 @@ namespace Epsitec.Common.Types.Serialization
 		{
 			return string.Concat ("{ObjRef ", Context.IdToString (context.ObjectMap.GetId (value)), "}");
 		}
-		public static string CollectionToString(ICollection<DependencyObject> collection, SerializerContext context)
+		public static string CollectionToString(IEnumerable<DependencyObject> collection, SerializerContext context)
 		{
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 
@@ -181,7 +181,7 @@ namespace Epsitec.Common.Types.Serialization
 			}
 
 			buffer.Append ("}");
-			return buffer.ToString ();
+			return (i < 0) ? null : buffer.ToString ();
 		}
 
 		public static object Resolve(Context context, string markup)
