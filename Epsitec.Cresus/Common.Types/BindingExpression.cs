@@ -180,6 +180,7 @@ namespace Epsitec.Common.Types
 			source = root as DependencyObject;
 			
 			if ((source != null) &&
+				(source != Binding.DoNothing) &&
 				(path != null) &&
 				(path.IsEmpty == false))
 			{
@@ -201,7 +202,8 @@ namespace Epsitec.Common.Types
 						
 						source = source.GetValue (property) as DependencyObject;
 						
-						if (source == null)
+						if ((source == null) ||
+							(source == Binding.DoNothing))
 						{
 							return false;
 						}
@@ -225,7 +227,8 @@ namespace Epsitec.Common.Types
 				return true;
 			}
 
-			if (source != null)
+			if ((source != null) &&
+				(source != Binding.DoNothing))
 			{
 				type = BindingSourceType.SourceItself;
 				return true;
