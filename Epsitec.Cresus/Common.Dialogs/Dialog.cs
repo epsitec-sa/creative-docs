@@ -371,7 +371,7 @@ namespace Epsitec.Common.Dialogs
 			
 			if (factory != null)
 			{
-				IDialogDesigner designer = factory.CreateDialogDesigner (UI.InterfaceType.DialogWindow);
+				IDialogDesigner designer = factory.CreateDialogDesigner ();
 				
 				designer.IsEditOnlyInterface = true;
 				

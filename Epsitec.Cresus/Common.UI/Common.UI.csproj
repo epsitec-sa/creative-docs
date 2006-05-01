@@ -11,8 +11,7 @@
     <AssemblyKeyContainerName>
     </AssemblyKeyContainerName>
     <AssemblyName>Common.UI</AssemblyName>
-    <AssemblyOriginatorKeyFile>
-    </AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>..\Epsitec.Cresus.snk</AssemblyOriginatorKeyFile>
     <DefaultClientScript>JScript</DefaultClientScript>
     <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
     <DefaultTargetSchema>IE50</DefaultTargetSchema>
@@ -26,6 +25,7 @@
     </FileUpgradeFlags>
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
+    <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <OutputPath>bin\Debug\</OutputPath>
@@ -120,154 +120,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AbstractPanel.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Adapters\AbstractAdapter.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Adapters\AbstractEnumAdapter.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Adapters\AbstractStringAdapter.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Adapters\BooleanAdapter.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Adapters\ControllerAttribute.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Adapters\DataFolderAdapter.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Adapters\DecimalAdapter.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Adapters\EnumAdapter.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Adapters\FlagsAdapter.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Adapters\IAdapter.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Adapters\LayoutAdapter.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Adapters\Num1Adapter.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Adapters\Num2Adapter.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Adapters\StringAdapter.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="AssemblyInfo.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Binders\AbstractBinder.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Binders\DataFolderBinder.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Binders\DataValueBinder.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Binders\IBinder.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Binders\PropertyBinder.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Controllers\AbstractConstrainedController.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Controllers\AbstractController.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Controllers\BooleanController.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Controllers\CaptionOnlyController.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Controllers\ControllerFactory.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Controllers\DataFolderController.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Controllers\EnumController.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Controllers\FlagsController.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Controllers\IController.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Controllers\LayoutController.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Controllers\Num1Controller.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Controllers\Num2Controller.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Controllers\StringController.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Controllers\WidgetDataFolderController.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Controllers\WidgetFlagController.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Controllers\WidgetNamedSelController.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Controllers\WidgetStateController.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Controllers\WidgetTextController.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Controllers\WidgetValueController.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Data\Field.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Data\Record.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Data\Representation.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Engine.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="InterfaceType.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="SyncReason.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Widgets\DataWidget.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Widgets\DataWidgetValidator.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Widgets\ISelfBindingWidget.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Widgets\PropPane.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
