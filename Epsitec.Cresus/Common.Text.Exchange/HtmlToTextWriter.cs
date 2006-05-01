@@ -40,7 +40,7 @@ namespace Epsitec.Common.Text.Exchange
 		public void ProcessIt()
 		{
 			this.textWrapper.Defined.ClearDefinedProperties ();
-			ProcessNodes (this.htmlDoc.Nodes);
+			this.ProcessNodes (this.htmlDoc.Nodes);
 		}
 
 		private void ProcessSpan(HtmlElement htmlelement)
@@ -60,7 +60,6 @@ namespace Epsitec.Common.Text.Exchange
 			string fontface = string.Empty;
 			string fontsize = string.Empty;
 			string fontcolor = string.Empty;
-			bool isSpaceRun = false;
 
 			if (style.Length > 0)
 			{
@@ -87,62 +86,71 @@ namespace Epsitec.Common.Text.Exchange
 
 					if (element == "mso-spacerun" && spanstyleelements[element] == "yes")
 					{
-						isSpaceRun = true;
+						this.IsSpacerun = true;
 					}
 				}
 
-				HtmlFontProperties oldfontprops = SaveFontProps ();
-
-				this.textWrapper.SuspendSynchronizations ();
-
-				if (fontface.Length > 0)
+				if (this.IsSpacerun)
 				{
-					this.textWrapper.Defined.FontFace = fontface;
+					this.IsSpacerun = true;
+					this.ProcessNodes (htmlelement.Nodes);
+					this.IsSpacerun = false;
 				}
-
-				if (fontsize.Length > 0)
+				else
 				{
-					int ptindex = fontsize.LastIndexOf ("pt");
+					HtmlFontProperties oldfontprops = SaveFontProps ();
 
-					if (ptindex != -1)
+					this.textWrapper.SuspendSynchronizations ();
+
+					if (fontface.Length > 0)
 					{
-						fontsize = fontsize.Substring (0, ptindex);
-						double size = Misc.ParseDouble(fontsize);
+						this.textWrapper.Defined.FontFace = fontface;
+					}
 
-						if (size != 0.0)
+					if (fontsize.Length > 0)
+					{
+						int ptindex = fontsize.LastIndexOf ("pt");
+
+						if (ptindex != -1)
 						{
-							size = size * HtmlTextOut.FontSizeFactor;
+							fontsize = fontsize.Substring (0, ptindex);
+							double size = Misc.ParseDouble (fontsize);
 
-							if (size != 0)
+							if (size != 0.0)
 							{
-								this.textWrapper.Defined.FontSize = size;
-								this.textWrapper.Defined.Units = Common.Text.Properties.SizeUnits.Points;
+								size = size * HtmlTextOut.FontSizeFactor;
+
+								if (size != 0)
+								{
+									this.textWrapper.Defined.FontSize = size;
+									this.textWrapper.Defined.Units = Common.Text.Properties.SizeUnits.Points;
+								}
 							}
 						}
+						else
+						{
+							fontsize = string.Empty;
+						}
 					}
-					else
+
+					if (fontcolor.Length > 0)
 					{
-						fontsize = string.Empty;
+						Epsitec.Common.Drawing.RichColor richcolor = Epsitec.Common.Drawing.RichColor.FromName (fontcolor);
+						this.textWrapper.Defined.Color = Epsitec.Common.Drawing.RichColor.ToString (richcolor);
 					}
+
+					this.textWrapper.ResumeSynchronizations ();
+
+					this.ProcessNodes (htmlelement.Nodes);
+
+					this.textWrapper.SuspendSynchronizations ();
+					this.RestoreFontProps (oldfontprops);
+					this.textWrapper.ResumeSynchronizations ();
 				}
-
-				if (fontcolor.Length > 0)
-				{
-					Epsitec.Common.Drawing.RichColor richcolor = Epsitec.Common.Drawing.RichColor.FromName (fontcolor);
-					this.textWrapper.Defined.Color = Epsitec.Common.Drawing.RichColor.ToString (richcolor);
-				}
-
-				this.textWrapper.ResumeSynchronizations ();
-
-				ProcessNodes (htmlelement.Nodes);
-
-				this.textWrapper.SuspendSynchronizations ();
-				this.RestoreFontProps (oldfontprops);
-				this.textWrapper.ResumeSynchronizations ();
 			}
 			else
 			{
-				ProcessNodes (htmlelement.Nodes);
+				this.ProcessNodes (htmlelement.Nodes);
 			}
 		}
 
@@ -154,7 +162,7 @@ namespace Epsitec.Common.Text.Exchange
 				w.InvertItalic = true;
 			}
 
-			ProcessNodes (element.Nodes);
+			this.ProcessNodes (element.Nodes);
 
 			using (CresusWrapper w = new CresusWrapper (this))
 			{
@@ -164,7 +172,7 @@ namespace Epsitec.Common.Text.Exchange
 			this.textWrapper.SuspendSynchronizations ();
 			this.textWrapper.Defined.InvertItalic = true;
 			this.textWrapper.ResumeSynchronizations ();
-			ProcessNodes (element.Nodes);
+			this.ProcessNodes (element.Nodes);
 			this.textWrapper.SuspendSynchronizations ();
 			this.textWrapper.Defined.InvertItalic = false;
 			this.textWrapper.ResumeSynchronizations ();
@@ -176,7 +184,7 @@ namespace Epsitec.Common.Text.Exchange
 			this.textWrapper.SuspendSynchronizations ();
 			this.textWrapper.Defined.InvertBold = true;
 			this.textWrapper.ResumeSynchronizations ();
-			ProcessNodes (element.Nodes);
+			this.ProcessNodes (element.Nodes);
 			this.textWrapper.SuspendSynchronizations ();
 			this.textWrapper.Defined.InvertBold = false;
 			this.textWrapper.ResumeSynchronizations ();
@@ -189,7 +197,7 @@ namespace Epsitec.Common.Text.Exchange
 			this.textWrapper.SuspendSynchronizations ();
 			FillSuperscriptDefinition (this.textWrapper.Defined.Xscript);
 			this.textWrapper.ResumeSynchronizations ();
-			ProcessNodes (element.Nodes);
+			this.ProcessNodes (element.Nodes);
 			this.textWrapper.SuspendSynchronizations ();
 			this.textWrapper.Defined.ClearXscript ();
 			this.textWrapper.ResumeSynchronizations ();
@@ -201,7 +209,7 @@ namespace Epsitec.Common.Text.Exchange
 			this.textWrapper.SuspendSynchronizations ();
 			FillSubscriptDefinition (this.textWrapper.Defined.Xscript);
 			this.textWrapper.ResumeSynchronizations ();
-			ProcessNodes (element.Nodes);
+			this.ProcessNodes (element.Nodes);
 			this.textWrapper.SuspendSynchronizations ();
 			this.textWrapper.Defined.ClearXscript ();
 			this.textWrapper.ResumeSynchronizations ();
@@ -214,7 +222,7 @@ namespace Epsitec.Common.Text.Exchange
 			this.FillUnderlineDefinition (this.textWrapper.Defined.Underline);
 
 			this.textWrapper.ResumeSynchronizations ();
-			ProcessNodes (element.Nodes);
+			this.ProcessNodes (element.Nodes);
 			this.textWrapper.SuspendSynchronizations ();
 			this.textWrapper.Defined.ClearUnderline ();
 			this.textWrapper.ResumeSynchronizations ();
@@ -271,7 +279,7 @@ namespace Epsitec.Common.Text.Exchange
 
 			this.textWrapper.ResumeSynchronizations ();
 
-			ProcessNodes (element.Nodes);
+			this.ProcessNodes (element.Nodes);
 #if true // c'est là que ça foire
 			this.textWrapper.SuspendSynchronizations ();
 			this.RestoreFontProps (oldfontprops);
@@ -282,12 +290,12 @@ namespace Epsitec.Common.Text.Exchange
 		private void ProcessBr(HtmlElement element)
 		{
 			this.navigator.Insert (Epsitec.Common.Text.Unicode.Code.LineSeparator);
-			ProcessNodes (element.Nodes);
+			this.ProcessNodes (element.Nodes);
 		}
 
 		private void ProcessP(HtmlElement element)
 		{
-			ProcessNodes (element.Nodes);
+			this.ProcessNodes (element.Nodes);
 #if true	// pour tester on insère le texte "<p>" au lieu d'un vrai séparateur de paragraphes
 			this.navigator.Insert (Epsitec.Common.Text.Unicode.Code.ParagraphSeparator);
 #else
@@ -297,7 +305,7 @@ namespace Epsitec.Common.Text.Exchange
 
 		private void ProcessDiv(HtmlElement element)
 		{
-			ProcessNodes (element.Nodes);
+			this.ProcessNodes (element.Nodes);
 			this.navigator.Insert (Epsitec.Common.Text.Unicode.Code.LineSeparator);
 		}
 
@@ -420,18 +428,31 @@ namespace Epsitec.Common.Text.Exchange
 
 						default :
 							// element html inconnu, on traite l'intérieur sans s'occuper de l'élément lui même
-							ProcessNodes (element.Nodes);
+							this.ProcessNodes (element.Nodes);
 							break;
 					}
 				}
 				else
 				{
 					HtmlText text = node as HtmlText;
-					this.navigator.Insert (text.Text);
+
+					if (this.IsSpacerun)
+					{
+						string str = this.TransformSpaceRun (text.Text);
+						this.navigator.Insert (str);
+					}
+					else
+					{
+						this.navigator.Insert (text.Text);
+					}
 				}
 			}
 		}
 
+		private string TransformSpaceRun(string input)
+		{
+			return input.Replace((char)(0xa0), ' ') ;
+		}
 
 		private void FillSubscriptDefinition(Common.Text.Wrappers.TextWrapper.XscriptDefinition xscript)
 		{
@@ -480,6 +501,8 @@ namespace Epsitec.Common.Text.Exchange
 		private Wrappers.TextWrapper textWrapper;
 		private Wrappers.ParagraphWrapper paraWrapper;
 		private TextNavigator navigator;
+
+		private bool IsSpacerun = false;
 
 		public Wrappers.TextWrapper TextWrapper
 		{

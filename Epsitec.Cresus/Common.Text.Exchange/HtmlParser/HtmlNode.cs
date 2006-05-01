@@ -8,6 +8,8 @@ namespace Epsitec.Common.Text.Exchange.HtmlParser
 	/// The HtmlNode is the base for all objects that may appear in HTML. Currently, 
 	/// this implemention only supports HtmlText and HtmlElement node types.
 	/// </summary>
+	/// 
+	[System.Diagnostics.DebuggerNonUserCode]
 	public abstract class HtmlNode
 	{
 		protected HtmlElement mParent;

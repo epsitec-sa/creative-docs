@@ -6,7 +6,8 @@ namespace Epsitec.Common.Text.Exchange.HtmlParser
 	/// <summary>
 	/// The HtmlText node represents a simple piece of text from the document.
 	/// </summary>
-	public class HtmlText: HtmlNode
+	
+	public class HtmlText : HtmlNode
 	{
 		protected string mText;
 
