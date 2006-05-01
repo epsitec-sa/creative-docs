@@ -295,18 +295,60 @@ namespace Epsitec.Common.Text.Exchange
 
 		private void ProcessP(HtmlElement element)
 		{
+			if (this.pendingP)
+			{
+				pendingP = false;
+				this.navigator.Insert (Epsitec.Common.Text.Unicode.Code.ParagraphSeparator);
+			}
+
 			this.ProcessNodes (element.Nodes);
-#if true	// pour tester on insère le texte "<p>" au lieu d'un vrai séparateur de paragraphes
-			this.navigator.Insert (Epsitec.Common.Text.Unicode.Code.ParagraphSeparator);
-#else
-			this.navigator.Insert ("<p>");
-#endif
+			this.pendingP = true;
 		}
 
 		private void ProcessDiv(HtmlElement element)
 		{
+			if (this.pendingDiv)
+			{
+				pendingDiv = false;
+				this.navigator.Insert (Epsitec.Common.Text.Unicode.Code.ParagraphSeparator);
+			}
+
+			string alignMode = string.Empty;
+
+			foreach (HtmlAttribute attr in element.Attributes)
+			{
+				switch (attr.Name)
+				{
+					case "align":
+						alignMode = attr.Value;
+						break;
+				}
+			}
+
+
+			bool justificationModeDefined = false;
+			Wrappers.JustificationMode oldjustificationmode = this.paraWrapper.Defined.JustificationMode;
+
+			if (alignMode.Length > 0 && alignMode == "center")
+			{
+				this.paraWrapper.SuspendSynchronizations ();
+				justificationModeDefined = this.paraWrapper.Defined.IsJustificationModeDefined;
+				this.paraWrapper.Defined.JustificationMode = Wrappers.JustificationMode.JustifyCenter ;
+				this.paraWrapper.ResumeSynchronizations ();
+			}
+
 			this.ProcessNodes (element.Nodes);
-			this.navigator.Insert (Epsitec.Common.Text.Unicode.Code.LineSeparator);
+
+			if (justificationModeDefined)
+			{
+				this.paraWrapper.SuspendSynchronizations ();
+				this.paraWrapper.Defined.JustificationMode = oldjustificationmode;
+				this.paraWrapper.ResumeSynchronizations ();
+			}
+			else
+				this.paraWrapper.Defined.ClearJustificationMode();
+
+			this.pendingDiv = true;
 		}
 
 
@@ -503,6 +545,9 @@ namespace Epsitec.Common.Text.Exchange
 		private TextNavigator navigator;
 
 		private bool IsSpacerun = false;
+
+		private bool pendingDiv = false;
+		private bool pendingP = false;
 
 		public Wrappers.TextWrapper TextWrapper
 		{

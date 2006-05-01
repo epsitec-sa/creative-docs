@@ -46,7 +46,7 @@ namespace Epsitec.Common.Text.Exchange
 				
 		public static string ReadClipBoardHtml()
 		{
-#if false
+#if true
 			byte [] clipboardBytes = ReadClipBoard() ;
 #else
 			FileStream filestream = File.Open ("clipboard.txt", FileMode.Open) ;
