@@ -9,6 +9,6 @@ namespace Epsitec.Common.Dialogs
 	/// </summary>
 	public interface IDialogDesignerFactory
 	{
-		IDialogDesigner CreateDialogDesigner(UI.InterfaceType type);
+		IDialogDesigner CreateDialogDesigner();
 	}
 }
