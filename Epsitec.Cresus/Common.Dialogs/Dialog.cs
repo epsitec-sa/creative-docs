@@ -215,7 +215,7 @@ namespace Epsitec.Common.Dialogs
 			{
 				if (this.data != null)
 				{
-					UI.Engine.BindWidgets (this.data, this.window.Root);
+//-					UI.Engine.BindWidgets (this.data, this.window.Root);
 				}
 			}
 		}
