@@ -321,8 +321,8 @@ namespace Epsitec.Common.Widgets.Layouts
 				fill_max_dy = double.PositiveInfinity;
 			}
 			
-			double pad_width  = container.Padding.Width  + container.InternalPadding.Width;
-			double pad_height = container.Padding.Height + container.InternalPadding.Height;
+			double pad_width  = container.Padding.Width  + container.GetInternalPadding ().Width;
+			double pad_height = container.Padding.Height + container.GetInternalPadding ().Height;
 			
 			double min_width  = System.Math.Max (min_dx, fill_min_dx + min_ox) + pad_width;
 			double min_height = System.Math.Max (min_dy, fill_min_dy + min_oy) + pad_height;

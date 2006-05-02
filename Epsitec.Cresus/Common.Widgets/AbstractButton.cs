@@ -39,14 +39,11 @@ namespace Epsitec.Common.Widgets
 			
 			return base.GetBaseLine ();
 		}
-		
-		
-		public override Drawing.Rectangle GetShapeBounds()
+
+
+		public override Drawing.Margins GetShapeMargins()
 		{
-			IAdorner adorner = Widgets.Adorners.Factory.Active;
-			Drawing.Rectangle rect = this.Client.Bounds;
-			rect.Inflate(adorner.GeometryButtonShapeBounds);
-			return rect;
+			return Widgets.Adorners.Factory.Active.GeometryButtonShapeBounds;
 		}
 
 		

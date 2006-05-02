@@ -156,12 +156,9 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public override Drawing.Margins		InternalPadding
+		public override Drawing.Margins GetInternalPadding()
 		{
-			get
-			{
-				return new Drawing.Margins (2, 2, this.TabHeight + 2, 2);
-			}
+			return new Drawing.Margins (2, 2, this.TabHeight + 2, 2);
 		}
 		
 		public TabPageCollection			Items
@@ -806,13 +803,10 @@ namespace Epsitec.Common.Widgets
 			base.ProcessMessage(message, pos);
 		}
 
-		
-		public override Drawing.Rectangle GetShapeBounds()
+
+		public override Drawing.Margins GetShapeMargins()
 		{
-			IAdorner adorner = Widgets.Adorners.Factory.Active;
-			Drawing.Rectangle rect = this.Client.Bounds;
-			rect.Inflate(adorner.GeometryListShapeBounds);
-			return rect;
+			return Widgets.Adorners.Factory.Active.GeometryListShapeBounds;
 		}
 
 		

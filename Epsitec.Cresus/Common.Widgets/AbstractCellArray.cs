@@ -248,17 +248,14 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public override Drawing.Margins InternalPadding
+		public override Drawing.Margins GetInternalPadding()
 		{
-			get
-			{
-				Drawing.Margins padding = new Drawing.Margins (this.margins.Left+this.leftMargin,
-					/**/									   this.margins.Right+this.rightMargin,
-					/**/									   this.margins.Top+this.topMargin,
-					/**/									   this.margins.Bottom+this.bottomMargin);
-				
-				return padding;
-			}
+			Drawing.Margins padding = new Drawing.Margins (this.margins.Left+this.leftMargin,
+				/**/									   this.margins.Right+this.rightMargin,
+				/**/									   this.margins.Top+this.topMargin,
+				/**/									   this.margins.Bottom+this.bottomMargin);
+			
+			return padding;
 		}
 
 		public virtual Cell this[int column, int row]
@@ -1250,7 +1247,7 @@ namespace Epsitec.Common.Widgets
 		public void ShowCell(int showRow, int showColumn)
 		{
 			Drawing.Rectangle rect = this.Client.Bounds;
-			rect.Deflate(this.InternalPadding);
+			rect.Deflate(this.GetInternalPadding ());
 
 			if ( (this.styleV & CellArrayStyles.Stretch) == 0 &&
 				 (this.styleH & CellArrayStyles.SelectLine) == 0 &&
@@ -1511,12 +1508,9 @@ namespace Epsitec.Common.Widgets
 			base.OnAdornerChanged();
 		}
 
-		public override Drawing.Rectangle GetShapeBounds()
+		public override Drawing.Margins GetShapeMargins()
 		{
-			IAdorner adorner = Widgets.Adorners.Factory.Active;
-			Drawing.Rectangle rect = this.Client.Bounds;
-			rect.Inflate(adorner.GeometryListShapeBounds);
-			return rect;
+			return Widgets.Adorners.Factory.Active.GeometryListShapeBounds;
 		}
 
 		protected void UpdateScrollers()
@@ -1932,7 +1926,7 @@ namespace Epsitec.Common.Widgets
 
 			WidgetState state = this.PaintState;
 			Drawing.Rectangle rect = this.Client.Bounds;
-			rect.Deflate(this.InternalPadding);
+			rect.Deflate(this.GetInternalPadding ());
 			rect.Inflate(-0.5, -0.5);
 
 			graphics.LineWidth = 1;

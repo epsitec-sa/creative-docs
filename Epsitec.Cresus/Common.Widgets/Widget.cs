@@ -56,18 +56,7 @@ namespace Epsitec.Common.Widgets
 		PossibleContainer	= 0x01000000,		//	widget peut être la cible d'un drag & drop en mode édition
 		EditionEnabled		= 0x02000000,		//	widget peut être édité
 		
-		SyncPaint			= 0x20000000,		//	peinture synchrone
-		
 		DebugActive			= 0x80000000		//	widget marqué pour le debug
-	}
-	#endregion
-	
-	#region ContainerLayoutMode enum
-	public enum ContainerLayoutMode : byte
-	{
-		None				= 0,				//	pas de préférence					
-		HorizontalFlow		= 1,				//	remplit horizontalement
-		VerticalFlow		= 2					//	remplit verticalement
 	}
 	#endregion
 	
@@ -1559,19 +1548,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public void SetSyncPaint(bool enabled)
-		{
-			if (enabled)
-			{
-				this.internal_state |= InternalState.SyncPaint;
-			}
-			else
-			{
-				this.internal_state &= ~InternalState.SyncPaint;
-			}
-		}
-		
-		
 		public CommandState GetCommandState()
 		{
 			if (this.IsCommand)
@@ -1782,17 +1758,6 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public virtual Drawing.Rectangle GetPaintBounds()
-		{
-			return this.GetShapeBounds ();
-		}
-		
-		
-		public virtual Drawing.Rectangle GetShapeBounds()
-		{
-			return this.Client.Bounds;
-		}
-		
 		public virtual Drawing.Rectangle GetClipBounds()
 		{
 			return this.GetShapeBounds ();
@@ -1813,78 +1778,34 @@ namespace Epsitec.Common.Widgets
 			return clip;
 		}
 		
-		public override void Invalidate()
+		public override void InvalidateRectangle(Drawing.Rectangle rect, bool sync)
 		{
-			bool invalidate = false;
-			
-			if (this.IsVisible)
+			if (this.Parent != null)
 			{
-				invalidate = true;
-			}
-			else
-			{
-				Window window = this.Window;
-				
-				if ((window == null) ||
-					(window.IsVisible == false))
+				if (sync)
 				{
-					invalidate = true;
-				}
-			}
-			
-			if (invalidate)
-			{
-				this.Invalidate (this.GetPaintBounds ());
-			}
-		}
-		
-		public override void Invalidate(Drawing.Rectangle rect)
-		{
-			bool invalidate = false;
-			
-			if (this.IsVisible)
-			{
-				invalidate = true;
-			}
-			else
-			{
-				Window window = this.Window;
-				
-				if ((window == null) ||
-					(window.IsVisible == false))
-				{
-					invalidate = true;
-				}
-			}
-			
-			if (invalidate)
-			{
-				if (this.Parent != null)
-				{
-					if ((this.InternalState & InternalState.SyncPaint) != 0)
+					Window window = this.Window;
+					
+					if (window != null)
 					{
-						Window window = this.Window;
-						
-						if (window != null)
+						if (window.IsSyncPaintDisabled)
 						{
-							if (window.IsSyncPaintDisabled)
-							{
-								this.Parent.Invalidate (this.MapClientToParent (rect));
-							}
-							else
-							{
-								window.SynchronousRepaint ();
-								this.Parent.Invalidate (this.MapClientToParent (rect));
-								window.PaintFilter = new WidgetPaintFilter (this);
-								window.SynchronousRepaint ();
-								window.PaintFilter = null;
-							}
+							this.Parent.Invalidate (this.MapClientToParent (rect));
+						}
+						else
+						{
+							window.SynchronousRepaint ();
+							
+							window.PaintFilter = new WidgetPaintFilter (this);
+							window.MarkForRepaint (this.MapClientToRoot (rect));
+							window.SynchronousRepaint ();
+							window.PaintFilter = null;
 						}
 					}
-					else
-					{
-						this.Parent.Invalidate (this.MapClientToParent (rect));
-					}
+				}
+				else
+				{
+					this.Parent.Invalidate (this.MapClientToParent (rect));
 				}
 			}
 		}

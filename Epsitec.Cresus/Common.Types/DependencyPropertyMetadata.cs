@@ -184,6 +184,12 @@ namespace Epsitec.Common.Types
 			this.canSerializeReadOnly = true;
 			return this;
 		}
+		public DependencyPropertyMetadata MakeNotSerializable()
+		{
+			this.canSerializeReadOnly = false;
+			this.canSerializeReadWrite = false;
+			return this;
+		}
 
 		public virtual bool FilterSerializableItem(DependencyObject item)
 		{

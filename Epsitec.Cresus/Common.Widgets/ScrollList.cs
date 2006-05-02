@@ -359,18 +359,20 @@ namespace Epsitec.Common.Widgets
 			return true;
 		}
 #endif
-		
-		
-		public override Drawing.Rectangle GetShapeBounds()
+
+
+		public override Drawing.Margins GetShapeMargins()
 		{
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
-			Drawing.Rectangle rect = this.Client.Bounds;
-			rect.Inflate(adorner.GeometryListShapeBounds);
-			if ( this.scrollListStyle == ScrollListStyle.Menu )
+			
+			Drawing.Margins margins = adorner.GeometryListShapeBounds;
+
+			if (this.scrollListStyle == ScrollListStyle.Menu)
 			{
-				rect.Inflate(adorner.GeometryMenuShadow);
+				margins += adorner.GeometryMenuShadow;
 			}
-			return rect;
+			
+			return margins;
 		}
 
 		protected override void ProcessMessage(Message message, Drawing.Point pos)

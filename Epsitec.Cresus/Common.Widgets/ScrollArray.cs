@@ -1519,16 +1519,11 @@ invalid:	row    = -1;
 			base.SetBoundsOverride(oldRect, newRect);
 			this.UpdateGeometry ();
 		}
-		
-		
-		public override Drawing.Rectangle GetShapeBounds()
+
+
+		public override Drawing.Margins GetShapeMargins()
 		{
-			IAdorner          adorner = Widgets.Adorners.Factory.Active;
-			Drawing.Rectangle rect    = this.Client.Bounds;
-			
-			rect.Inflate (adorner.GeometryListShapeBounds);
-			
-			return rect;
+			return Widgets.Adorners.Factory.Active.GeometryListShapeBounds;
 		}
 		
 		

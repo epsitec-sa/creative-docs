@@ -636,7 +636,7 @@ namespace Epsitec.Common.Widgets
 			window.ForceLayout ();
 
 			Rectangle inside = tab.Client.Bounds;
-			inside.Deflate (tab.InternalPadding);
+			inside.Deflate (tab.GetInternalPadding ());
 
 			//	Crée l'onglet 1.
 			TabPage page1 = new TabPage();
@@ -1209,7 +1209,7 @@ namespace Epsitec.Common.Widgets
 
 			VScroller scrollv = new VScroller();
 			scrollv.Name = "Scroller";
-			scrollv.Bounds = new Rectangle (10, 10, 17, tb.Client.Bounds.Height-tb.InternalPadding.Height-20);
+			scrollv.Bounds = new Rectangle (10, 10, 17, tb.Client.Bounds.Height-tb.GetInternalPadding ().Height-20);
 			scrollv.MaxValue = 10;
 			scrollv.VisibleRangeRatio = 0.3M;
 			scrollv.Value = 1;
@@ -1293,7 +1293,7 @@ namespace Epsitec.Common.Widgets
 		private void HandleAdd(object sender, MessageEventArgs e)
 		{
 			Rectangle inside = this.tabBook.Client.Bounds;
-			inside.Deflate(this.tabBook.InternalPadding);
+			inside.Deflate(this.tabBook.GetInternalPadding ());
 			TabPage page = new TabPage();
 			page.Bounds = inside;
 			page.TabTitle = "Nouveau";

@@ -156,21 +156,21 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
-		public override void Invalidate(Drawing.Rectangle rect)
+		public override void InvalidateRectangle(Drawing.Rectangle rect, bool sync)
 		{
 			System.Diagnostics.Debug.Assert (this.Parent == null);
 			
 			if (this.window != null)
 			{
-				if ((this.InternalState & InternalState.SyncPaint) != 0)
+				if (sync)
 				{
 					this.window.SynchronousRepaint ();
-					this.window.MarkForRepaint (this.MapClientToParent (rect));
+					this.window.MarkForRepaint (rect);
 					this.window.SynchronousRepaint ();
 				}
 				else
 				{
-					this.window.MarkForRepaint (this.MapClientToParent (rect));
+					this.window.MarkForRepaint (rect);
 				}
 			}
 		}

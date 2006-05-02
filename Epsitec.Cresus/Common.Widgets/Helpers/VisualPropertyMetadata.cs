@@ -167,7 +167,7 @@ namespace Epsitec.Common.Widgets.Helpers
 
 			if (this.affectsDisplay)
 			{
-				visual.NotifyDisplayChanged ();
+				visual.Invalidate ();
 			}
 
 			//	Layout support :

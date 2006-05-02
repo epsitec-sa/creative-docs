@@ -45,24 +45,27 @@ namespace Epsitec.Common.Widgets
 				return new Drawing.Point (CheckButton.CheckWidth, 0);
 			}
 		}
-		
-		
-		public override Drawing.Rectangle GetShapeBounds()
+
+
+		public override Drawing.Margins GetShapeMargins()
 		{
-			Drawing.Rectangle rect = base.GetShapeBounds ();
-			
 			if ((this.TextLayout != null) &&
 				(this.Text.Length > 0))
 			{
-				Drawing.Rectangle text_rect = this.TextLayout.StandardRectangle;
-				
-				text_rect.Offset (this.LabelOffset);
-				text_rect.Inflate (1, 1);
-				
-				rect.MergeWith (text_rect);
+				Drawing.Rectangle rect = this.TextLayout.StandardRectangle;
+				Drawing.Rectangle bounds = this.Client.Bounds;
+
+				rect.Offset (this.LabelOffset);
+				rect.Inflate (1, 1);
+
+				rect.MergeWith (bounds);
+
+				return new Drawing.Margins (bounds.Left - rect.Left, rect.Right - bounds.Right, rect.Top - bounds.Top, bounds.Bottom - rect.Bottom);
 			}
-			
-			return rect;
+			else
+			{
+				return base.GetShapeMargins ();
+			}
 		}
 		
 		public override Drawing.Size GetBestFitSize()

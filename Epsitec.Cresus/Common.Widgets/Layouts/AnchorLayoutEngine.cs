@@ -165,8 +165,8 @@ namespace Epsitec.Common.Widgets.Layouts
 				}
 			}
 
-			double pad_width  = container.Padding.Width  + container.InternalPadding.Width;
-			double pad_height = container.Padding.Height + container.InternalPadding.Height;
+			double pad_width  = container.Padding.Width  + container.GetInternalPadding ().Width;
+			double pad_height = container.Padding.Height + container.GetInternalPadding ().Height;
 
 			double min_width  = min_dx + pad_width;
 			double min_height = min_dy + pad_height;

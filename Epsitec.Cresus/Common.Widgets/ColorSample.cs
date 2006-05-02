@@ -309,15 +309,18 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		#endregion
-		
-		
-		public override Drawing.Rectangle GetShapeBounds()
+
+
+		public override Drawing.Margins GetShapeMargins()
 		{
-			if ( this.possibleSource )
+			if (this.possibleSource)
 			{
-				return new Drawing.Rectangle (-5, -5, this.Client.Size.Width+10, this.Client.Size.Height+10);
+				return new Drawing.Margins (5, 5, 5, 5);
 			}
-			return this.Client.Bounds;
+			else
+			{
+				return base.GetShapeMargins ();
+			}
 		}
 
 		protected override void ProcessMessage(Message message, Drawing.Point pos)

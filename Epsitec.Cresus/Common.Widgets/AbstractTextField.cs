@@ -235,35 +235,32 @@ namespace Epsitec.Common.Widgets
 			return base.GetBaseLine ();
 		}
 		
-		public override Drawing.Margins			InternalPadding
+		public override Drawing.Margins GetInternalPadding()
 		{
-			get
+			Drawing.Margins padding = this.margins;
+			
+			if ( this.navigator != null && this.textFieldStyle != TextFieldStyle.Flat )
 			{
-				Drawing.Margins padding = this.margins;
-				
-				if ( this.navigator != null && this.textFieldStyle != TextFieldStyle.Flat )
+				if ( this.Client.Size.Height < 18 )
 				{
-					if ( this.Client.Size.Height < 18 )
+					if (this.Client.Size.Height >= 15)
 					{
-						if (this.Client.Size.Height >= 15)
-						{
-							double x = AbstractTextField.FrameMargin/2;
-							double y = AbstractTextField.FrameMargin/2;
-							
-							padding = padding + new Drawing.Margins (x, x, y, y);
-						}
-					}
-					else
-					{
-						double x = AbstractTextField.FrameMargin;
-						double y = AbstractTextField.FrameMargin;
-							
+						double x = AbstractTextField.FrameMargin/2;
+						double y = AbstractTextField.FrameMargin/2;
+						
 						padding = padding + new Drawing.Margins (x, x, y, y);
 					}
 				}
-				
-				return padding;
+				else
+				{
+					double x = AbstractTextField.FrameMargin;
+					double y = AbstractTextField.FrameMargin;
+						
+					padding = padding + new Drawing.Margins (x, x, y, y);
+				}
 			}
+			
+			return padding;
 		}
 		
 		public virtual Drawing.Rectangle		InnerTextBounds
@@ -271,7 +268,7 @@ namespace Epsitec.Common.Widgets
 			get
 			{
 				Drawing.Rectangle rect = this.Client.Bounds;
-				rect.Deflate (this.InternalPadding);
+				rect.Deflate (this.GetInternalPadding ());
 
 				if (this.Client.Size.Height < 18 && this.textFieldStyle != TextFieldStyle.Flat)
 				{
@@ -1417,7 +1414,7 @@ namespace Epsitec.Common.Widgets
 			Drawing.Point     pos       = this.InnerTextBounds.Location - this.scrollOffset + new Drawing.Point(0, 1);
 			Drawing.Rectangle rText     = this.InnerTextBounds;
 			Drawing.Rectangle rInside   = this.Client.Bounds;
-			rInside.Deflate (this.InternalPadding);
+			rInside.Deflate (this.GetInternalPadding ());
 			Drawing.Rectangle rSaveClip = graphics.SaveClippingRectangle();
 			Drawing.Rectangle rClip     = rInside;
 			Drawing.Rectangle rFill     = this.Client.Bounds;
@@ -1574,12 +1571,9 @@ namespace Epsitec.Common.Widgets
 			return false;
 		}
 		
-		public override Drawing.Rectangle GetShapeBounds()
+		public override Drawing.Margins GetShapeMargins()
 		{
-			IAdorner adorner = Widgets.Adorners.Factory.Active;
-			Drawing.Rectangle rect = this.Client.Bounds;
-			rect.Inflate(adorner.GeometryTextFieldShapeBounds);
-			return rect;
+			return Widgets.Adorners.Factory.Active.GeometryTextFieldShapeBounds;
 		}
 
 		

@@ -262,6 +262,7 @@
     <Compile Include="CheckButton.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ContainerLayoutMode.cs" />
     <Compile Include="Collections\FlatChildrenCollection.cs" />
     <Compile Include="Collections\HostedShortcutCollection.cs">
       <SubType>Code</SubType>
@@ -321,6 +322,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Controllers\AbstractController.cs" />
+    <Compile Include="Helpers\IClientInfo.cs" />
     <Compile Include="IController.cs" />
     <Compile Include="Layouts\LayoutMode.cs" />
     <Compile Include="Layouts\NoOpLayoutEngine.cs" />

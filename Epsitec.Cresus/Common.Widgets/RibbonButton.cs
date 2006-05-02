@@ -57,12 +57,9 @@ namespace Epsitec.Common.Widgets
 		#endregion
 		
 		
-		public override Drawing.Rectangle GetShapeBounds()
+		public override Drawing.Margins GetShapeMargins()
 		{
-			IAdorner adorner = Epsitec.Common.Widgets.Adorners.Factory.Active;
-			Drawing.Rectangle rect = this.Client.Bounds;
-			rect.Inflate(adorner.GeometryRibbonShapeBounds);
-			return rect;
+			return Epsitec.Common.Widgets.Adorners.Factory.Active.GeometryRibbonShapeBounds;
 		}
 
 

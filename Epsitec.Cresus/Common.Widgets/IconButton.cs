@@ -170,20 +170,17 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		
-		public override Drawing.Rectangle GetShapeBounds()
+
+		public override Drawing.Margins GetShapeMargins()
 		{
-			IAdorner adorner = Widgets.Adorners.Factory.Active;
-			Drawing.Rectangle rect = this.Client.Bounds;
-			if ( (this.PaintState&WidgetState.ThreeState) == 0 )
+			if ((this.PaintState&WidgetState.ThreeState) == 0)
 			{
-				rect.Inflate(adorner.GeometryToolShapeBounds);
+				return Widgets.Adorners.Factory.Active.GeometryToolShapeBounds;
 			}
 			else
 			{
-				rect.Inflate(adorner.GeometryThreeStateShapeBounds);
+				return Widgets.Adorners.Factory.Active.GeometryThreeStateShapeBounds;
 			}
-			return rect;
 		}
 		
 		

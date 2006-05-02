@@ -266,31 +266,26 @@ namespace Epsitec.Common.Widgets
 			return new Drawing.Size (dx, dy);
 		}
 
-		public override void Invalidate(Drawing.Rectangle rect)
+		public override void InvalidateRectangle(Drawing.Rectangle rect, bool sync)
 		{
 			if (this.IsHorizontal && this.IsVisible)
 			{
-				if (this.Parent != null)
+				Window window = this.Window;
+				
+				if ((window != null) &&
+					(window.IsSyncPaintDisabled == false))
 				{
-					Window window = this.Window;
+					window.SynchronousRepaint ();
 					
-					if (window != null)
-					{
-						if (window.IsSyncPaintDisabled == false)
-						{
-							window.SynchronousRepaint ();
-							
-							this.Parent.Invalidate (this.MapClientToParent (rect));
-							
-							window.SynchronousRepaint ();
-							
-							return;
-						}
-					}
+					this.RootParent.Invalidate (this.MapClientToRoot (rect));
+					
+					window.SynchronousRepaint ();
+					
+					return;
 				}
 			}
 			
-			base.Invalidate(rect);
+			base.InvalidateRectangle (rect, sync);
 		}
 		
 		

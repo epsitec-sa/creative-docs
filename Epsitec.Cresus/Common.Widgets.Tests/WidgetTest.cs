@@ -1231,12 +1231,9 @@ namespace Epsitec.Common.Widgets
 			{
 			}
 
-			public override Margins InternalPadding
+			public override Margins GetInternalPadding()
 			{
-				get
-				{
-					return new Drawing.Margins (1, 1, 1, 1);
-				}
+				return new Drawing.Margins (1, 1, 1, 1);
 			}
 			
 			protected override void MeasureMinMax(ref Size min, ref Size max)
@@ -1273,7 +1270,7 @@ namespace Epsitec.Common.Widgets
 				
 				height += dy;
 				
-				min.Height = System.Math.Max (min.Height, height + this.Padding.Height + this.InternalPadding.Height);
+				min.Height = System.Math.Max (min.Height, height + this.Padding.Height + this.GetInternalPadding ().Height);
 			}
 
 			protected override void ManualArrange()
@@ -1283,7 +1280,7 @@ namespace Epsitec.Common.Widgets
 				Drawing.Rectangle rect = this.Client.Bounds;
 				
 				rect.Deflate (this.Padding);
-				rect.Deflate (this.InternalPadding);
+				rect.Deflate (this.GetInternalPadding ());
 
 				double x = 0;
 				double y = 0;
