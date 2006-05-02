@@ -129,6 +129,7 @@
     <Compile Include="ConverterTest.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="HostedTest.cs" />
     <Compile Include="SerializationTest.cs" />
     <Compile Include="DataGraphTest.cs">
       <SubType>Code</SubType>
