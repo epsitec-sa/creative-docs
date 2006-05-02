@@ -5,17 +5,36 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Types
 {
+	/// <summary>
+	/// The HostedList class implements a list of T with notifications to the
+	/// host when the contents changes (insertion and removal of items).
+	/// </summary>
+	/// <typeparam name="T">Type of items stored in list</typeparam>
 	public class HostedList<T> : IList<T>
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="T:HostedList&lt;T&gt;"/> class.
+		/// </summary>
+		/// <param name="host">The host which must be notified.</param>
 		public HostedList(IListHost<T> host)
 		{
 			this.host = host;
 		}
+		
+		/// <summary>
+		/// Initializes a new instance of the <see cref="T:HostedList&lt;T&gt;"/> class.
+		/// </summary>
+		/// <param name="insertionCallback">The insertion callback.</param>
+		/// <param name="removalCallback">The removal callback.</param>
 		public HostedList(Callback insertionCallback, Callback removalCallback)
 		{
 			this.host = new CallbackRelay (insertionCallback, removalCallback);
 		}
 
+		/// <summary>
+		/// Adds the collection of items to the list.
+		/// </summary>
+		/// <param name="collection">Items to add</param>
 		public void AddRange(IEnumerable<T> collection)
 		{
 			foreach (T item in collection)
@@ -24,6 +43,10 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		/// <summary>
+		/// Converts the list to an array.
+		/// </summary>
+		/// <returns>An array of T</returns>
 		public T[] ToArray()
 		{
 			return this.list.ToArray ();
@@ -163,6 +186,14 @@ namespace Epsitec.Common.Types
 			
 			#region IListHost<T> Members
 
+			public HostedList<T> Items
+			{
+				get
+				{
+					throw new System.Exception ("The method or operation is not implemented.");
+				}
+			}
+			
 			public void NotifyListInsertion(T item)
 			{
 				this.insertionCallback (item);
