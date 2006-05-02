@@ -101,8 +101,10 @@
     <Compile Include="AbstractStringConverter.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="AbstractStructuredData.cs" />
     <Compile Include="DependencyObjectList.cs" />
     <Compile Include="InheritedPropertyCache.cs" />
+    <Compile Include="IStructuredData.cs" />
     <Compile Include="ITypeConverter.cs" />
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
