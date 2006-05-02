@@ -102,6 +102,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="AbstractStructuredData.cs" />
+    <Compile Include="HostedList.cs" />
+    <Compile Include="IListHost.cs" />
+    <Compile Include="StructuredDataFieldCollection.cs" />
     <Compile Include="DependencyObjectList.cs" />
     <Compile Include="InheritedPropertyCache.cs" />
     <Compile Include="IStructuredData.cs" />
@@ -262,6 +265,8 @@
     <Compile Include="StringType.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="StructuredDataField.cs" />
+    <Compile Include="StructuredDataRecord.cs" />
     <Compile Include="Tags.cs">
       <SubType>Code</SubType>
     </Compile>
