@@ -41,8 +41,6 @@ namespace Epsitec.Common.Widgets
 	{
 		None				= 0,
 		
-		ChildrenChanged		= 0x00000001,		//	enfants ajoutés/supprimés
-		
 		Embedded			= 0x00000008,		//	=> widget appartient au parent (widgets composés)
 		
 		Focusable			= 0x00000010,
@@ -69,8 +67,6 @@ namespace Epsitec.Common.Widgets
 	{
 		public Widget()
 		{
-//-			this.AddEventHandler (Types.DependencyObjectTree.ChildrenProperty, this.HandleWidgetChildrenChanged);
-			
 			if (Support.ObjectBundler.IsBooting)
 			{
 				//	N'initialise rien, car cela prend passablement de temps... et de toute
@@ -99,11 +95,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-//-		void HandleWidgetChildrenChanged(object sender, Epsitec.Common.Types.DependencyPropertyChangedEventArgs e)
-//-		{
-//-			System.Diagnostics.Debug.WriteLine (string.Format ("{0} has {1} children", this.ToString (), this.HasChildren ? this.Children.Count.ToString () : "no"));
-//-		}
-		
 		public Widget(Widget embedder) : this()
 		{
 			this.SetEmbedder (embedder);
@@ -4085,18 +4076,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		protected override void OnSizeChanged(Types.DependencyPropertyChangedEventArgs e)
-		{
-		}
-		
-		protected virtual void OnLocationChanged()
-		{
-			if (this.LocationChanged != null)
-			{
-				this.LocationChanged (this);
-			}
-		}
-		
 		
 		
 		
@@ -4243,7 +4222,6 @@ namespace Epsitec.Common.Widgets
 		public event Support.EventHandler			TextDefined;
 		public event Support.EventHandler			TextChanged;
 		public event Support.EventHandler			NameChanged;
-		public event Support.EventHandler			LocationChanged;
 		#endregion
 		
 		#region Various enums

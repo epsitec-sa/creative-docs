@@ -706,7 +706,7 @@ namespace Epsitec.Common.Widgets
 
 				if (oldValue.Size != newValue.Size)
 				{
-					this.InvalidateProperty (Visual.SizeProperty, oldValue.Size, newValue.Size);
+					//	TODO: on pourrait générer un événement ici
 				}
 			}
 			
@@ -906,8 +906,8 @@ namespace Epsitec.Common.Widgets
 		public virtual void InvalidateRectangle(Drawing.Rectangle rect, bool sync)
 		{
 		}
-		
-		internal void SetLayoutDirtyFlag()
+
+		internal void SetDirtyLayoutFlag()
 		{
 			this.dirtyLayout = true;
 		}
@@ -917,7 +917,8 @@ namespace Epsitec.Common.Widgets
 			if (visual == null)
 			{
 				Layouts.LayoutContext.RemoveFromQueues (this);
-				this.parent.Invalidate (this.Bounds);
+				
+				this.Invalidate ();
 				this.parent = visual;
 			}
 			else
@@ -944,17 +945,20 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		#region Internal Methods for FlatChildrenCollection
+
 		internal void NotifyChildrenChanged()
 		{
-			//	TODO: ...
-
 			Layouts.LayoutContext.AddToMeasureQueue (this);
 
 			this.OnChildrenChanged ();
 		}
 
+		#endregion
+
 		protected virtual void OnChildrenChanged()
 		{
+			//	TODO: si besoin, rajouter un jour un événement ChildrenChanged
 		}
 
 		#region Helpers.IClientInfo Members
@@ -988,13 +992,15 @@ namespace Epsitec.Common.Widgets
 
 		public override bool Equals(object obj)
 		{
-			return base.Equals (obj as Visual);
+			return this.Equals (obj as Visual);
 		}
 
 		public override int GetHashCode()
 		{
 			return this.visualSerialId;
 		}
+		
+		
 		static Visual()
 		{
 		}
@@ -1018,33 +1024,16 @@ namespace Epsitec.Common.Widgets
 			return that.HasChildren;
 		}
 
-		private static object GetBoundsValue(DependencyObject o)
-		{
-			Visual that = o as Visual;
-			return that.Bounds;
-		}
-
 		private static object GetActualWidthValue(DependencyObject o)
 		{
 			Visual that = o as Visual;
 			return that.ActualWidth;
 		}
+		
 		private static object GetActualHeightValue(DependencyObject o)
 		{
 			Visual that = o as Visual;
 			return that.ActualHeight;
-		}
-		
-		private static object GetSizeValue(DependencyObject o)
-		{
-			Visual that = o as Visual;
-			return that.Size;
-		}
-		
-		private static void SetSizeValue(DependencyObject o, object value)
-		{
-			Visual that = o as Visual;
-			that.Size = (Drawing.Size) value;
 		}
 		
 		private static void SetKeyboardFocusValue(DependencyObject o, object value)
@@ -1138,12 +1127,6 @@ namespace Epsitec.Common.Widgets
 			that.Visibility = (bool) value;
 		}
 
-		private static void NotifySizeChanged(DependencyObject o, object oldValue, object newValue)
-		{
-			Visual that = o as Visual;
-			that.OnSizeChanged (new DependencyPropertyChangedEventArgs (Visual.SizeProperty, oldValue, newValue));
-		}
-
 		private static void NotifyParentChanged(DependencyObject o, object oldValue, object newValue)
 		{
 			Visual that = o as Visual;
@@ -1188,16 +1171,12 @@ namespace Epsitec.Common.Widgets
 
 			if (that.parent != null)
 			{
+				AnchorStyles anchor = that.Anchor;
 				DockStyle dockOld = (DockStyle) oldValue;
 				DockStyle dockNew = (DockStyle) newValue;
-				AnchorStyles anchor = that.Anchor;
 
 				that.parent.children.UpdateLayoutStatistics (dockOld, dockNew, anchor, anchor);
 			}
-		}
-		
-		protected virtual void OnSizeChanged(Types.DependencyPropertyChangedEventArgs e)
-		{
 		}
 		
 		protected virtual void OnParentChanged(Types.DependencyPropertyChangedEventArgs e)
@@ -1241,42 +1220,6 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public event PropertyChangedEventHandler	MaxSizeChanged
-		{
-			add
-			{
-				this.AddEventHandler (Visual.MaxSizeProperty, value);
-			}
-			remove
-			{
-				this.RemoveEventHandler (Visual.MaxSizeProperty, value);
-			}
-		}
-		
-		public event PropertyChangedEventHandler	MinSizeChanged
-		{
-			add
-			{
-				this.AddEventHandler (Visual.MinSizeProperty, value);
-			}
-			remove
-			{
-				this.RemoveEventHandler (Visual.MinSizeProperty, value);
-			}
-		}
-		
-		public event PropertyChangedEventHandler	SizeChanged
-		{
-			add
-			{
-				this.AddEventHandler (Visual.SizeProperty, value);
-			}
-			remove
-			{
-				this.RemoveEventHandler (Visual.SizeProperty, value);
-			}
-		}
-
 		public event PropertyChangedEventHandler	ParentChanged
 		{
 			add
@@ -1286,18 +1229,6 @@ namespace Epsitec.Common.Widgets
 			remove
 			{
 				this.RemoveEventHandler (Visual.ParentProperty, value);
-			}
-		}
-
-		public event PropertyChangedEventHandler	ChildrenChanged
-		{
-			add
-			{
-				this.AddEventHandler (Visual.ChildrenProperty, value);
-			}
-			remove
-			{
-				this.RemoveEventHandler (Visual.ChildrenProperty, value);
 			}
 		}
 
@@ -1363,19 +1294,14 @@ namespace Epsitec.Common.Widgets
 		public static readonly DependencyProperty PaddingProperty				= DependencyProperty.Register ("Padding", typeof (Drawing.Margins), typeof (Visual), new VisualPropertyMetadata (Drawing.Margins.Zero, VisualPropertyMetadataOptions.AffectsChildrenLayout));
 		public static readonly DependencyProperty HorizontalAlignmentProperty	= DependencyProperty.Register ("HorizontalAlignment", typeof (HorizontalAlignment), typeof (Visual), new VisualPropertyMetadata (HorizontalAlignment.Stretch, VisualPropertyMetadataOptions.AffectsArrange));
 		public static readonly DependencyProperty VerticalAlignmentProperty		= DependencyProperty.Register ("VerticalAlignment", typeof (VerticalAlignment), typeof (Visual), new VisualPropertyMetadata (VerticalAlignment.Stretch, VisualPropertyMetadataOptions.AffectsArrange));
-		
 		public static readonly DependencyProperty ContainerLayoutModeProperty	= DependencyProperty.Register ("ContainerLayoutMode", typeof (ContainerLayoutMode), typeof (Visual), new VisualPropertyMetadata (ContainerLayoutMode.VerticalFlow, VisualPropertyMetadataOptions.AffectsChildrenLayout));
 
-		public static readonly DependencyProperty BoundsProperty				= DependencyProperty.RegisterReadOnly ("Bounds", typeof (Drawing.Rectangle), typeof (Visual), new DependencyPropertyMetadata (Drawing.Rectangle.Empty, new GetValueOverrideCallback (Visual.GetBoundsValue)));
-		public static readonly DependencyProperty SizeProperty					= DependencyProperty.Register ("Size", typeof (Drawing.Size), typeof (Visual), new DependencyPropertyMetadata (new GetValueOverrideCallback (Visual.GetSizeValue), new SetValueOverrideCallback (Visual.SetSizeValue), new PropertyInvalidatedCallback (Visual.NotifySizeChanged)));
 		public static readonly DependencyProperty PreferredWidthProperty		= DependencyProperty.Register ("PreferredWidth", typeof (double), typeof (Visual), new VisualPropertyMetadata (double.NaN, VisualPropertyMetadataOptions.AffectsMeasure));
 		public static readonly DependencyProperty PreferredHeightProperty		= DependencyProperty.Register ("PreferredHeight", typeof (double), typeof (Visual), new VisualPropertyMetadata (double.NaN, VisualPropertyMetadataOptions.AffectsMeasure));
 		public static readonly DependencyProperty ActualWidthProperty			= DependencyProperty.RegisterReadOnly ("ActualWidth", typeof (double), typeof (Visual), new VisualPropertyMetadata (Visual.GetActualWidthValue, VisualPropertyMetadataOptions.None));
 		public static readonly DependencyProperty ActualHeightProperty			= DependencyProperty.RegisterReadOnly ("ActualHeight", typeof (double), typeof (Visual), new VisualPropertyMetadata (Visual.GetActualHeightValue, VisualPropertyMetadataOptions.None));
-		public static readonly DependencyProperty MinSizeProperty				= DependencyProperty.Register ("MinSize", typeof (Drawing.Size), typeof (Visual), new VisualPropertyMetadata (Drawing.Size.Zero, VisualPropertyMetadataOptions.AffectsMeasure));
 		public static readonly DependencyProperty MinWidthProperty				= DependencyProperty.Register ("MinWidth", typeof (double), typeof (Visual), new VisualPropertyMetadata (0.0, VisualPropertyMetadataOptions.AffectsMeasure));
 		public static readonly DependencyProperty MinHeightProperty				= DependencyProperty.Register ("MinHeight", typeof (double), typeof (Visual), new VisualPropertyMetadata (0.0, VisualPropertyMetadataOptions.AffectsMeasure));
-		public static readonly DependencyProperty MaxSizeProperty				= DependencyProperty.Register ("MaxSize", typeof (Drawing.Size), typeof (Visual), new VisualPropertyMetadata (Drawing.Size.MaxValue, VisualPropertyMetadataOptions.AffectsMeasure));
 		public static readonly DependencyProperty MaxWidthProperty				= DependencyProperty.Register ("MaxWidth", typeof (double), typeof (Visual), new VisualPropertyMetadata (double.PositiveInfinity, VisualPropertyMetadataOptions.AffectsMeasure));
 		public static readonly DependencyProperty MaxHeightProperty				= DependencyProperty.Register ("MaxHeight", typeof (double), typeof (Visual), new VisualPropertyMetadata (double.PositiveInfinity, VisualPropertyMetadataOptions.AffectsMeasure));
 		

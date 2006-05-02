@@ -103,9 +103,9 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		protected override void OnSizeChanged(Types.DependencyPropertyChangedEventArgs e)
+		protected override void  SetBoundsOverride(Epsitec.Common.Drawing.Rectangle oldRect, Epsitec.Common.Drawing.Rectangle newRect)
 		{
-			base.OnSizeChanged (e);
+ 			 base.SetBoundsOverride(oldRect, newRect);
 			
 			if ((this.text_fitter != null) &&
 				(this.text_frame != null))

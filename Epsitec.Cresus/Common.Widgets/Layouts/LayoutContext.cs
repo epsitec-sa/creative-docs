@@ -165,7 +165,7 @@ namespace Epsitec.Common.Widgets.Layouts
 			this.measureQueue[node] = visual;
 			this.measureMap[visual] = node;
 
-			visual.SetLayoutDirtyFlag ();
+			visual.SetDirtyLayoutFlag ();
 		}
 		private void AddToArrangeQueue(Visual visual, int depth)
 		{

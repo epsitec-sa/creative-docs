@@ -35,9 +35,8 @@ namespace Epsitec.Common.Widgets
 			this.window = new Platform.Window (this);
 			this.timer  = new Timer ();
 			
-			this.root.Size = new Drawing.Size (this.window.ClientSize);
+			this.root.PreferredSize = new Drawing.Size (this.window.ClientSize);
 			this.root.Name = "Root";
-			this.root.MinSizeChanged += this.HandleRootMinSizeChanged;
 			
 			this.timer.TimeElapsed += this.HandleTimeElapsed;
 			this.timer.AutoRepeat = 0.050;
@@ -1230,7 +1229,6 @@ namespace Epsitec.Common.Widgets
 				
 				if (this.root != null)
 				{
-					this.root.MinSizeChanged -= this.HandleRootMinSizeChanged;
 					this.root.Dispose ();
 				}
 				
@@ -1350,7 +1348,6 @@ namespace Epsitec.Common.Widgets
 			}
 
 			this.ForceLayout ();
-			this.SyncMinSizeWithWindowRoot ();
 			
 			if (this.AboutToShowWindow != null)
 			{
@@ -1775,6 +1772,8 @@ namespace Epsitec.Common.Widgets
 			{
 				this.recursive_layout_count--;
 			}
+			
+			this.SyncMinSizeWithWindowRoot ();
 		}
 		
 		public static void ResetMouseCursor()
@@ -2233,14 +2232,6 @@ namespace Epsitec.Common.Widgets
 			this.timer.Stop ();
 		}
 
-		protected void HandleRootMinSizeChanged(object sender, Types.DependencyPropertyChangedEventArgs e)
-		{
-			if (this.IsVisible)
-			{
-				this.SyncMinSizeWithWindowRoot ();
-			}
-		}
-		
 		private void SyncMinSizeWithWindowRoot()
 		{
 			int width  = (int) (this.root.RealMinSize.Width + 0.5);
