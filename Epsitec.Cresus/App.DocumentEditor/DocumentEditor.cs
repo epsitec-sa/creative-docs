@@ -1383,7 +1383,6 @@ namespace Epsitec.App.DocumentEditor
 				this.ribbonList.RemoveAt(0);
 			}
 
-			this.SuspendLayout();
 			this.ribbonMain.Visibility = (this.ribbonMain == this.ribbonActive);
 			this.ribbonGeom.Visibility = (this.ribbonGeom == this.ribbonActive);
 			this.ribbonOper.Visibility = (this.ribbonOper == this.ribbonActive);
@@ -1404,7 +1403,6 @@ namespace Epsitec.App.DocumentEditor
 				DocumentInfo di = this.documents[i] as DocumentInfo;
 				di.bookPanels.Margins = new Margins(1, 1, this.hToolBar.Height+h+1, this.info.Height+1);
 			}
-			this.ResumeLayout();
 		}
 
 		protected double RibbonHeight

@@ -196,8 +196,6 @@ namespace Epsitec.Common.Widgets
 		
 		public virtual void RestoreFromBundle(Support.ObjectBundler bundler, Support.ResourceBundle bundle)
 		{
-//			this.SuspendLayout ();
-			
 			System.Diagnostics.Debug.Assert (this.resource_manager != null);
 			System.Diagnostics.Debug.Assert (this.resource_manager == bundler.ResourceManager);
 			
@@ -235,8 +233,6 @@ namespace Epsitec.Common.Widgets
 					validator.InternalAttach (this);
 				}
 			}
-			
-//			this.ResumeLayout ();
 		}
 		
 		public virtual void SerializeToBundle(Support.ObjectBundler bundler, Support.ResourceBundle bundle)

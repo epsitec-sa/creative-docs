@@ -709,7 +709,6 @@ namespace Epsitec.Common.Designer
 			//	Active un ruban.
 			this.ribbonActive = active;
 
-			//?this.SuspendLayout();
 			this.ribbonMain.Visibility = (this.ribbonMain == this.ribbonActive);
 			this.ribbonOper.Visibility = (this.ribbonOper == this.ribbonActive);
 			this.ribbonText.Visibility = (this.ribbonText == this.ribbonActive);
@@ -720,8 +719,6 @@ namespace Epsitec.Common.Designer
 
 			double h = this.RibbonHeight;
 			this.bookModules.Margins = new Margins(1, 2, this.hToolBar.Height+h+1, this.info.Height+1);
-
-			//?this.ResumeLayout();
 		}
 
 		protected double RibbonHeight

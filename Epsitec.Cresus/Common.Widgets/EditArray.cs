@@ -1274,7 +1274,6 @@ namespace Epsitec.Common.Widgets
 				{
 					AbstractToolBar toolbar = header.ToolBar;
 					
-					toolbar.SuspendLayout ();
 					toolbar.Items.Add (this.CreateIconButton ("StartReadOnly", "manifest:Epsitec.Common.Widgets.Images.TableReadOnly.icon", Res.Strings.EditArray.StartReadOnly));
 					toolbar.Items.Add (this.CreateIconButton ("StartEdition",  "manifest:Epsitec.Common.Widgets.Images.TableEdition.icon",  Res.Strings.EditArray.StartEdition, KeyCode.FuncF2));
 					toolbar.Items.Add (this.CreateIconButton ("StartSearch",   "manifest:Epsitec.Common.Widgets.Images.TableSearch.icon",   Res.Strings.EditArray.StartSearch, KeyCode.ModifierControl | KeyCode.AlphaF));
@@ -1284,7 +1283,6 @@ namespace Epsitec.Common.Widgets
 					toolbar.Items.Add (this.CreateIconButton ("Delete",        "manifest:Epsitec.Common.Widgets.Images.DeleteCell.icon",       Res.Strings.EditArray.Delete, KeyCode.Delete));
 					toolbar.Items.Add (this.CreateIconButton ("MoveUp",        "manifest:Epsitec.Common.Widgets.Images.MoveUpCell.icon",       Res.Strings.EditArray.MoveUp));
 					toolbar.Items.Add (this.CreateIconButton ("MoveDown",      "manifest:Epsitec.Common.Widgets.Images.MoveDownCell.icon",     Res.Strings.EditArray.MoveDown));
-					toolbar.ResumeLayout ();
 				}
 				
 				this.UpdateCommandStates ();

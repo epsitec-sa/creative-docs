@@ -907,15 +907,6 @@ namespace Epsitec.Common.Widgets
 		{
 		}
 		
-		public void SuspendLayout()
-		{
-		}
-		
-		public void ResumeLayout()
-		{
-		}
-
-
 		internal void SetLayoutDirtyFlag()
 		{
 			this.dirtyLayout = true;

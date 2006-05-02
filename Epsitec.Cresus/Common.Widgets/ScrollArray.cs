@@ -1658,7 +1658,6 @@ invalid:	row    = -1;
 			rect.Top    = this.table_bounds.Top + this.row_height;
 			
 			this.header.Bounds = rect;
-			this.header.SuspendLayout ();
 			
 			//	Place les boutons dans l'en-tête :
 			
@@ -1698,8 +1697,6 @@ invalid:	row    = -1;
 				slider.Bounds = bounds;
 				slider.Visibility = (this.columns[i].Elasticity == 0);
 			}
-			
-			this.header.ResumeLayout ();
 		}
 		
 		protected virtual void UpdateScrollerGeometry()

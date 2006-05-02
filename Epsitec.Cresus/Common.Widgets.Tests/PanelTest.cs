@@ -27,8 +27,6 @@ namespace Epsitec.Common.Widgets
 			surface.Panel.SurfaceSize = new Drawing.Size (400, 300);
 			surface.Panel.MinSize     = new Drawing.Size (200, 150);
 			
-			surface.SuspendLayout ();
-			
 			Button b1 = new Button ("Button 1");
 			Button b2 = new Button ("Button 2");
 			
@@ -102,8 +100,6 @@ namespace Epsitec.Common.Widgets
 			Assert.IsTrue (b2.Parent == surface.Panel);
 			Assert.IsTrue (surface.Panel.Parent == surface);
 			Assert.IsTrue (surface.Panel.Children.Count == 2+4+4);
-			
-			surface.ResumeLayout ();
 			
 			System.Console.Out.WriteLine ("Panel SurfaceSize = {0}", surface.Panel.SurfaceSize);
 			System.Console.Out.WriteLine ("Panel Bounds = {0}", surface.Panel.Bounds);
