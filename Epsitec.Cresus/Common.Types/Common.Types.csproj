@@ -264,8 +264,8 @@
     <Compile Include="StringType.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="StructuredDataField.cs" />
-    <Compile Include="StructuredDataRecord.cs" />
+    <Compile Include="StructuredRecordType.cs" />
+    <Compile Include="StructuredRecord.cs" />
     <Compile Include="Tags.cs">
       <SubType>Code</SubType>
     </Compile>
