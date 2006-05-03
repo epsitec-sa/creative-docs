@@ -79,10 +79,12 @@ namespace Epsitec.Common.Types
 			hostInt.Items.Remove (new KeyValuePair<string, int> ("A", 1));
 			hostInt.Items["D"] = 4;
 			hostInt.Items["E"] = 5;
-
+			
 			Assert.AreEqual (3, hostInt.Items["C"]);
 			Assert.AreEqual (4, hostInt.Items["D"]);
 			Assert.AreEqual (5, hostInt.Items["E"]);
+			Assert.IsTrue (hostInt.Items.ContainsKey ("E"));
+			Assert.IsTrue (hostInt.Items.ContainsValue (5));
 
 			hostInt.Items["E"] = 6;
 			hostInt.Items["E"] = 6;

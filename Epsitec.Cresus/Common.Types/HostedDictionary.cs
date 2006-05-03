@@ -13,68 +13,48 @@ namespace Epsitec.Common.Types
 	/// <typeparam name="V">Type of values stored in dictionary</typeparam>
 	public class HostedDictionary<K, V> : IDictionary<K, V>
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="T:HostedDictionary&lt;K, V&gt;"/> class.
+		/// </summary>
+		/// <param name="host">The host which must be notified.</param>
 		public HostedDictionary(IDictionaryHost<K,V> host)
 		{
 			this.host = host;
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="T:HostedDictionary&lt;K, V&gt;"/> class.
+		/// </summary>
+		/// <param name="insertionCallback">The insertion callback.</param>
+		/// <param name="removalCallback">The removal callback.</param>
 		public HostedDictionary(Callback insertionCallback, Callback removalCallback)
 		{
 			this.host = new CallbackRelay (insertionCallback, removalCallback);
 		}
 
-		
-		public delegate void Callback(K key, V value);
-
-		#region CallbackRelay Class
-
-		private class CallbackRelay : IDictionaryHost<K,V>
+		/// <summary>
+		/// Gets the comparer used for key equality testing.
+		/// </summary>
+		/// <value>The comparer.</value>
+		public IEqualityComparer<K> Comparer
 		{
-			public CallbackRelay(Callback insertionCallback, Callback removalCallback)
+			get
 			{
-				this.insertionCallback = insertionCallback;
-				this.removalCallback = removalCallback;
+				return this.dictionary.Comparer;
 			}
-
-			#region IDictionaryHost<K,V> Members
-
-			public HostedDictionary<K, V> Items
-			{
-				get
-				{
-					throw new System.Exception ("The method or operation is not implemented.");
-				}
-			}
-
-			public void NotifyDictionaryInsertion(K key, V value)
-			{
-				this.insertionCallback (key, value);
-			}
-
-			public void NotifyDictionaryRemoval(K key, V value)
-			{
-				this.removalCallback (key, value);
-			}
-
-			#endregion
-
-			private Callback insertionCallback;
-			private Callback removalCallback;
 		}
 
-		#endregion
-
-		private void NotifyInsertion(K key, V value)
+		/// <summary>
+		/// Determines whether the dictionary contains the specified value.
+		/// </summary>
+		/// <param name="value">The value to look for.</param>
+		/// <returns>
+		/// 	<c>true</c> if the dictionary contains the value; otherwise, <c>false</c>.
+		/// </returns>
+		public bool ContainsValue(V value)
 		{
-			this.host.NotifyDictionaryInsertion (key, value);
+			return this.dictionary.ContainsValue (value);
 		}
-		private void NotifyRemoval(K key, V value)
-		{
-			this.host.NotifyDictionaryRemoval (key, value);
-		}
-
-		private IDictionaryHost<K, V> host;
-		private Dictionary<K, V> dictionary = new Dictionary<K, V> ();
 
 		#region IDictionary<K,V> Members
 
@@ -235,5 +215,57 @@ namespace Epsitec.Common.Types
 		}
 
 		#endregion
+		
+		public delegate void Callback(K key, V value);
+
+		#region CallbackRelay Class
+
+		private class CallbackRelay : IDictionaryHost<K,V>
+		{
+			public CallbackRelay(Callback insertionCallback, Callback removalCallback)
+			{
+				this.insertionCallback = insertionCallback;
+				this.removalCallback = removalCallback;
+			}
+
+			#region IDictionaryHost<K,V> Members
+
+			public HostedDictionary<K, V> Items
+			{
+				get
+				{
+					throw new System.Exception ("The method or operation is not implemented.");
+				}
+			}
+
+			public void NotifyDictionaryInsertion(K key, V value)
+			{
+				this.insertionCallback (key, value);
+			}
+
+			public void NotifyDictionaryRemoval(K key, V value)
+			{
+				this.removalCallback (key, value);
+			}
+
+			#endregion
+
+			private Callback insertionCallback;
+			private Callback removalCallback;
+		}
+
+		#endregion
+
+		private void NotifyInsertion(K key, V value)
+		{
+			this.host.NotifyDictionaryInsertion (key, value);
+		}
+		private void NotifyRemoval(K key, V value)
+		{
+			this.host.NotifyDictionaryRemoval (key, value);
+		}
+
+		private IDictionaryHost<K, V> host;
+		private Dictionary<K, V> dictionary = new Dictionary<K, V> ();
 	}
 }
