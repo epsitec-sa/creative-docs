@@ -7,8 +7,11 @@ namespace Epsitec.Common.Types
 {
 	public class StructuredRecord
 	{
-		public StructuredRecord()
+		public StructuredRecord(StructuredRecordType type)
 		{
+			this.type = type;
 		}
+
+		private StructuredRecordType type;
 	}
 }
