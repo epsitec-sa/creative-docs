@@ -1,4 +1,4 @@
-//	Copyright © 2004-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2004-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Support
@@ -9,7 +9,7 @@ namespace Epsitec.Common.Support
 	/// <summary>
 	/// La classe Globals permet de stocker des variables globales à une application.
 	/// </summary>
-	public sealed class Globals : Data.IPropertyProvider
+	public sealed class Globals
 	{
 		private Globals()
 		{
@@ -90,7 +90,6 @@ namespace Epsitec.Common.Support
 		}
 		
 		
-		#region IPropertyProvider Members
 		public string[] GetPropertyNames()
 		{
 			if (this.property_hash == null)
@@ -136,7 +135,6 @@ namespace Epsitec.Common.Support
 				this.property_hash.Remove (key);
 			}
 		}
-		#endregion
 
 		#region DirectoriesAccessor class
 		public sealed class DirectoriesAccessor

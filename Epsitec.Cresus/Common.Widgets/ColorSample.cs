@@ -1,3 +1,8 @@
+//	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Responsable: Pierre ARNAUD
+
+using Epsitec.Common.Types;
+
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
@@ -241,8 +246,8 @@ namespace Epsitec.Common.Widgets
 			//	bien pu ajouter une variable à ColorSample, mais ça paraît du
 			//	gaspillage de mémoire d'avoir cette variable inutilisée pour
 			//	tous les ColorSample. Alors on utilise une "propriété" :
-			
-			widget.SetProperty("DragHost", this);
+
+			ColorSample.SetDragHost (widget, this);
 			
 			this.dragTarget = null;
 			this.dragOrigin = this.MapClientToScreen(new Drawing.Point(-5, -5));
@@ -330,7 +335,7 @@ namespace Epsitec.Common.Widgets
 				return;
 			}
 
-			ColorSample dragHost = this.GetProperty("DragHost") as ColorSample;
+			ColorSample dragHost = ColorSample.GetDragHost (this);
 			
 			//	Est-ce que l'événement clavier est reçu dans un échantillon en
 			//	cours de drag dans un DragWindow ? C'est possible, car le focus
@@ -517,9 +522,20 @@ namespace Epsitec.Common.Widgets
 				this.Changed(this);
 			}
 		}
-		
+
+		public static void SetDragHost(DependencyObject o, ColorSample value)
+		{
+			o.SetValue (ColorSample.DragHostProperty, value);
+		}
+
+		public static ColorSample GetDragHost(DependencyObject o)
+		{
+			return o.GetValue (ColorSample.DragHostProperty) as ColorSample;
+		}
 		
 		public event Support.EventHandler		Changed;
+
+		public static readonly DependencyProperty DragHostProperty = DependencyProperty.RegisterAttached ("DragHost", typeof (ColorSample), typeof (ColorSample));
 
 		
 		private Behaviors.DragBehavior			dragBehavior;

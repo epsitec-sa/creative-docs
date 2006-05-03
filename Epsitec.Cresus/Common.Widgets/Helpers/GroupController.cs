@@ -1,12 +1,15 @@
-//	Copyright © 2003-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
+
+using System.Collections.Generic;
+using Epsitec.Common.Types;
 
 namespace Epsitec.Common.Widgets.Helpers
 {
 	/// <summary>
 	/// La classe GroupController permet de gérer des groupes de widgets.
 	/// </summary>
-	public class GroupController : Types.IChange
+	public class GroupController : DependencyObject, Types.IChange
 	{
 		public GroupController(Widget parent, string group)
 		{
@@ -75,31 +78,21 @@ namespace Epsitec.Common.Widgets.Helpers
 			{
 				//	Trouve le contrôleur du groupe, lequel est en principe accessible depuis
 				//	le parent. S'il n'existe pas pour ce groupe, on le crée :
+
+				GroupControllerCollection collection = parent.GetValue (GroupController.ControllerCollectionProperty) as GroupControllerCollection;
 			
-				string prop_name  = "$radio$group controller$" + group;
-				object prop_value = parent.GetProperty (prop_name);
-			
-				if (prop_value == null)
+				if (collection == null)
 				{
-					Helpers.GroupController controller;
-					
-					controller = new Helpers.GroupController (parent, group);
-					prop_value = controller;
-					
-					Widget active = controller.FindActiveWidget ();
-					
-					controller.index = (active == null) ? -1 : active.Index;
-				
-					parent.SetProperty (prop_name, prop_value);
+					collection = new GroupControllerCollection (parent);
+					parent.SetValue (GroupController.ControllerCollectionProperty, collection);
 				}
-			
-				return prop_value as Helpers.GroupController;
+				
+				return collection.GetController (group);
 			}
 		
 			return null;
 		}
-		
-		
+
 		public void TurnOffAllButOne(Widget keep)
 		{
 			//	Eteint tous les boutons radio du groupe, sauf celui spécifié par
@@ -242,6 +235,41 @@ namespace Epsitec.Common.Widgets.Helpers
 		#region IChange Members
 		public event Support.EventHandler	Changed;
 		#endregion
+
+		#region GroupControllerCollection Class
+
+		private class GroupControllerCollection
+		{
+			public GroupControllerCollection(Widget parent)
+			{
+				this.parent = parent;
+			}
+
+			public GroupController GetController(string group)
+			{
+				GroupController controller;
+
+				if (this.dict.TryGetValue (group, out controller) == false)
+				{
+					controller = new GroupController (this.parent, group);
+
+					Widget active = controller.FindActiveWidget ();
+
+					controller.index = (active == null) ? -1 : active.Index;
+
+					this.dict[group] = controller;
+				}
+				
+				return controller;
+			}
+
+			private Widget parent;
+			private Dictionary<string, GroupController> dict = new Dictionary<string, GroupController> ();
+		}
+
+		#endregion
+
+		private static readonly DependencyProperty ControllerCollectionProperty = DependencyProperty.RegisterAttached ("ControllerCollection", typeof (GroupControllerCollection), typeof (GroupController), new DependencyPropertyMetadata ().MakeNotSerializable ());
 		
 		protected Widget					parent;
 		protected int						index;

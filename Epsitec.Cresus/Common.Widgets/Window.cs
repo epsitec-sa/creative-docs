@@ -14,7 +14,7 @@ namespace Epsitec.Common.Widgets
 	/// n'est pas un widget en tant que tel: Window.Root définit le widget à la
 	/// racine de la fenêtre.
 	/// </summary>
-	public class Window : Types.DependencyObject, Support.Data.IContainer, ICommandDispatcherHost, Support.Data.IPropertyProvider
+	public class Window : Types.DependencyObject, Support.Data.IContainer, ICommandDispatcherHost
 	{
 		public Window()
 		{
@@ -1018,59 +1018,6 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		#region IPropertyProvider Members
-		public string[] GetPropertyNames()
-		{
-			if (this.property_hash == null)
-			{
-				return new string[0];
-			}
-			
-			string[] names = new string[this.property_hash.Count];
-			this.property_hash.Keys.CopyTo (names, 0);
-			System.Array.Sort (names);
-			
-			return names;
-		}
-		
-		public void SetProperty(string key, object value)
-		{
-			if (this.property_hash == null)
-			{
-				this.property_hash = new System.Collections.Hashtable ();
-			}
-			
-			this.property_hash[key] = value;
-		}
-		
-		public object GetProperty(string key)
-		{
-			if (this.property_hash != null)
-			{
-				return this.property_hash[key];
-			}
-			
-			return null;
-		}
-		
-		public bool IsPropertyDefined(string key)
-		{
-			if (this.property_hash != null)
-			{
-				return this.property_hash.Contains (key);
-			}
-			
-			return false;
-		}
-		
-		public void ClearProperty(string key)
-		{
-			if (this.property_hash != null)
-			{
-				this.property_hash.Remove (key);
-			}
-		}
-		#endregion
 		
 		#region IContainer Members
 		public void NotifyComponentInsertion(Support.Data.ComponentCollection collection, Support.Data.IComponent component)
@@ -2349,7 +2296,6 @@ namespace Epsitec.Common.Widgets
 		private IPaintFilter					paint_filter;
 		
 		private System.Collections.Queue		post_paint_queue = new System.Collections.Queue ();
-		private System.Collections.Hashtable	property_hash;
 		
 		private Support.Data.ComponentCollection components;
 		

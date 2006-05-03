@@ -143,9 +143,6 @@
     <Compile Include="Data\INumValue.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Data\IPropertyProvider.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Data\IStringSelection.cs">
       <SubType>Code</SubType>
     </Compile>

@@ -55,7 +55,7 @@ namespace Epsitec.Common.Widgets
 	/// La classe Widget implémente la classe de base dont dérivent tous les
 	/// widgets de l'interface graphique ("controls" dans l'appellation Windows).
 	/// </summary>
-	public class Widget : Visual, Support.Data.IPropertyProvider, Collections.IShortcutCollectionHost
+	public class Widget : Visual, Collections.IShortcutCollectionHost
 	{
 		public Widget()
 		{
@@ -135,60 +135,6 @@ namespace Epsitec.Common.Widgets
 			}
 			
 			this.OnShortcutChanged ();
-		}
-		#endregion
-		
-		#region IPropertyProvider Members
-		public string[] GetPropertyNames()
-		{
-			if (this.property_hash == null)
-			{
-				return new string[0];
-			}
-			
-			string[] names = new string[this.property_hash.Count];
-			this.property_hash.Keys.CopyTo (names, 0);
-			System.Array.Sort (names);
-			
-			return names;
-		}
-		
-		public void SetProperty(string key, object value)
-		{
-			if (this.property_hash == null)
-			{
-				this.property_hash = new System.Collections.Hashtable ();
-			}
-			
-			this.property_hash[key] = value;
-		}
-		
-		public object GetProperty(string key)
-		{
-			if (this.property_hash != null)
-			{
-				return this.property_hash[key];
-			}
-			
-			return null;
-		}
-		
-		public bool IsPropertyDefined(string key)
-		{
-			if (this.property_hash != null)
-			{
-				return this.property_hash.Contains (key);
-			}
-			
-			return false;
-		}
-		
-		public void ClearProperty(string key)
-		{
-			if (this.property_hash != null)
-			{
-				this.property_hash.Remove (key);
-			}
 		}
 		#endregion
 		
@@ -3852,7 +3798,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		protected virtual void OnActiveStateChanged()
+		protected override void OnActiveStateChanged()
 		{
 			if ((this.ActiveState == ActiveState.Yes) &&
 				(this.Group != null) &&
@@ -4071,7 +4017,6 @@ namespace Epsitec.Common.Widgets
 		private Collections.ShortcutCollection	shortcuts;
 		private double							default_font_height;
 		private MouseCursor						mouse_cursor;
-		private System.Collections.Hashtable	property_hash;
 		private Support.ResourceManager			resource_manager;
 		private IValidator						validator;
 		

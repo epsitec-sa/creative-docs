@@ -1304,6 +1304,12 @@ namespace Epsitec.Common.Widgets
 				that.parent.children.UpdateLayoutStatistics (dockOld, dockNew, anchor, anchor);
 			}
 		}
+
+		private static void NotifyActiveStateChanged(DependencyObject o, object oldValue, object newValue)
+		{
+			Visual that = o as Visual;
+			that.OnActiveStateChanged ();
+		}
 		
 		protected virtual void OnParentChanged(Types.DependencyPropertyChangedEventArgs e)
 		{
@@ -1343,6 +1349,10 @@ namespace Epsitec.Common.Widgets
 		protected virtual void OnCommandDispatchersChanged(Types.DependencyPropertyChangedEventArgs e)
 		{
 			Helpers.VisualTree.InvalidateCommandDispatcher (this);
+		}
+
+		protected virtual void OnActiveStateChanged()
+		{
 		}
 		
 		
@@ -1430,7 +1440,7 @@ namespace Epsitec.Common.Widgets
 		public static readonly DependencyProperty MaxWidthProperty				= DependencyProperty.Register ("MaxWidth", typeof (double), typeof (Visual), new VisualPropertyMetadata (double.PositiveInfinity, VisualPropertyMetadataOptions.AffectsMeasure));
 		public static readonly DependencyProperty MaxHeightProperty				= DependencyProperty.Register ("MaxHeight", typeof (double), typeof (Visual), new VisualPropertyMetadata (double.PositiveInfinity, VisualPropertyMetadataOptions.AffectsMeasure));
 
-		public static readonly DependencyProperty ActiveStateProperty			= DependencyProperty.Register ("ActiveState", typeof (ActiveState), typeof (Visual), new VisualPropertyMetadata (ActiveState.No, VisualPropertyMetadataOptions.AffectsDisplay));
+		public static readonly DependencyProperty ActiveStateProperty			= DependencyProperty.Register ("ActiveState", typeof (ActiveState), typeof (Visual), new VisualPropertyMetadata (ActiveState.No, Visual.NotifyActiveStateChanged, VisualPropertyMetadataOptions.AffectsDisplay));
 		
 		public static readonly DependencyProperty VisibilityProperty			= DependencyProperty.Register ("Visibility", typeof (bool), typeof (Visual), new VisualPropertyMetadata (true, new SetValueOverrideCallback (Visual.SetVisibilityValue), VisualPropertyMetadataOptions.None));
 		public static readonly DependencyProperty EnableProperty				= DependencyProperty.Register ("Enable", typeof (bool), typeof (Visual), new VisualPropertyMetadata (true, new SetValueOverrideCallback (Visual.SetEnableValue), VisualPropertyMetadataOptions.None).MakeNotSerializable ());

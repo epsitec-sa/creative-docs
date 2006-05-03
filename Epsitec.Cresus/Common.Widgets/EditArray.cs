@@ -1,6 +1,7 @@
 //	Copyright © 2004-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
+#if false
 namespace Epsitec.Common.Widgets
 {
 	using PropertyChangedEventHandler=Epsitec.Common.Support.EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>;
@@ -1806,3 +1807,4 @@ namespace Epsitec.Common.Widgets
 		protected const string					prop_model_based = "$edit array$model based$";
 	}
 }
+#endif
