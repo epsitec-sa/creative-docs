@@ -1,7 +1,5 @@
 namespace Epsitec.Common.Widgets
 {
-	using BundleAttribute = Epsitec.Common.Support.BundleAttribute;
-	
 	/// <summary>
 	/// La classe ColorPalette propose une palette de couleurs sous forme d'un tableau.
 	/// Pour l'instant, le tableau est fixe et contient 2x8 échantillons.
@@ -10,15 +8,6 @@ namespace Epsitec.Common.Widgets
 	{
 		public ColorPalette()
 		{
-			if ( Support.ObjectBundler.IsBooting )
-			{
-				//	N'initialise rien, car cela prend passablement de temps... et de toute
-				//	manière, on n'a pas besoin de toutes ces informations pour pouvoir
-				//	utiliser IBundleSupport.
-				
-				return;
-			}
-			
 			this.nbColumns = 4;
 			this.nbRows = 8;
 			this.nbTotal = this.nbColumns*this.nbRows;

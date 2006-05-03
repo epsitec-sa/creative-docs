@@ -3,8 +3,6 @@
 
 namespace Epsitec.Common.Widgets
 {
-	using BundleAttribute  = Support.BundleAttribute;
-	
 	/// <summary>
 	/// La classe Panel représente un widget qui permet de grouper d'autres widgets
 	/// tout en limitant la surface affichée à une ouverture (aperture). Un Panel
@@ -23,7 +21,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		[Bundle]	public Drawing.Size			SurfaceSize
+		public Drawing.Size						SurfaceSize
 		{
 			//	La taille de la surface indique une taille minimale idéale, en-dessous de laquelle
 			//	le contenu ne sera plus entièrement visible. Scrollable utiliser cette information
@@ -46,7 +44,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		[Bundle]	public bool					IsAutoFitting
+		public bool								IsAutoFitting
 		{
 			get
 			{

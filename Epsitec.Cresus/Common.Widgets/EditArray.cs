@@ -5,8 +5,6 @@ namespace Epsitec.Common.Widgets
 {
 	using PropertyChangedEventHandler=Epsitec.Common.Support.EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>;
 	
-	using BundleAttribute = Support.BundleAttribute;
-	
 	/// <summary>
 	/// La classe EditArray implémente un ScrollArray éditable.
 	/// </summary>
@@ -927,7 +925,7 @@ namespace Epsitec.Common.Widgets
 						
 						if (model != null)
 						{
-							Support.ObjectBundler.Default.CopyObject (model, this.edit_widgets[i]);
+							//?Support.ObjectBundler.Default.CopyObject (model, this.edit_widgets[i]);
 							this.edit_widgets[i].SetProperty (EditArray.prop_model_based, true);
 						}
 						else
@@ -1739,7 +1737,7 @@ namespace Epsitec.Common.Widgets
 			}
 			
 			
-			[Bundle] public int					Column
+			public int							Column
 			{
 				get
 				{

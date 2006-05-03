@@ -1,7 +1,5 @@
 namespace Epsitec.Common.Widgets
 {
-	using BundleAttribute = Epsitec.Common.Support.BundleAttribute;
-	
 	/// <summary>
 	/// La classe ColorSample permet de représenter une couleur rgb.
 	/// </summary>

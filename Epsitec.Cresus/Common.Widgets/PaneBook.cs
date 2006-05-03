@@ -41,7 +41,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		[ Support.Bundle ("behaviour") ] public PaneBookBehaviour PaneBehaviour
+		public PaneBookBehaviour PaneBehaviour
 		{
 			//	Comportement lorsque la frontière est déplacée.
 			get
@@ -63,7 +63,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		[ Support.Bundle ("style") ] public PaneBookStyle PaneBookStyle
+		public PaneBookStyle PaneBookStyle
 		{
 			get
 			{

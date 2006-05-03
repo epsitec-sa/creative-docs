@@ -1,7 +1,5 @@
 namespace Epsitec.Common.Widgets
 {
-	using BundleAttribute = Epsitec.Common.Support.BundleAttribute;
-	
 	/// <summary>
 	/// La classe ColorWheel permet de choisir une couleur.
 	/// </summary>

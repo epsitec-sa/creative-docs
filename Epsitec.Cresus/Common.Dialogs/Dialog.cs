@@ -150,6 +150,7 @@ namespace Epsitec.Common.Dialogs
 			}
 			else
 			{
+#if false
 				Support.ObjectBundler bundler = new Support.ObjectBundler (this.resource_manager);
 				
 				Widgets.Widget root = bundler.CreateFromBundle (bundle) as Widgets.Widget;
@@ -163,6 +164,7 @@ namespace Epsitec.Common.Dialogs
 				
 				this.CreateDesignerActivatorWidget ();
 				this.AttachWindow ();
+#endif
 			}
 		}
 		

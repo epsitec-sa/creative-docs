@@ -193,14 +193,12 @@ namespace Epsitec.App.DocumentEditor
 			if ( this.resize == null || this.Window == null )  return;
 			this.resize.Enable = !this.Window.IsFullScreen;
 		}
-		
-#if false
-		protected override void OnSizeChanged(Epsitec.Common.Types.DependencyPropertyChangedEventArgs e)
+
+		protected override void SetBoundsOverride(Rectangle oldRect, Rectangle newRect)
 		{
-			base.OnSizeChanged(e);
+			base.SetBoundsOverride(oldRect, newRect);
 			this.HandleSizeChanged();
 		}
-#endif
 
 
 		protected override void Dispose(bool disposing)
@@ -4887,15 +4885,15 @@ namespace Epsitec.App.DocumentEditor
 
 			if ( bbox.IsInfinite )
 			{
-				//?viewer.SetSyncPaint(true);
+				viewer.SyncPaint = true;
 				viewer.Invalidate();
-				//?viewer.SetSyncPaint(false);
+				viewer.SyncPaint = false;
 			}
 			else
 			{
-				//?viewer.SetSyncPaint(true);
+				viewer.SyncPaint = true;
 				viewer.Invalidate(bbox);
-				//?viewer.SetSyncPaint(false);
+				viewer.SyncPaint = false;
 			}
 		}
 

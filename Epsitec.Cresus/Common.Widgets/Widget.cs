@@ -6,7 +6,6 @@ using System.Collections.Generic;
 namespace Epsitec.Common.Widgets
 {
 	using ContentAlignment = Drawing.ContentAlignment;
-	using BundleAttribute  = Support.BundleAttribute;
 	
 	
 	public delegate bool WalkWidgetCallback(Widget widget);
@@ -60,15 +59,6 @@ namespace Epsitec.Common.Widgets
 	{
 		public Widget()
 		{
-			if (Support.ObjectBundler.IsBooting)
-			{
-				//	N'initialise rien, car cela prend passablement de temps... et de toute
-				//	manière, on n'a pas besoin de toutes ces informations pour pouvoir
-				//	utiliser IBundleSupport.
-				
-				return;
-			}
-			
 			if (Widget.DebugDispose)
 			{
 				System.Diagnostics.Debug.WriteLine (string.Format ("{1}+ Created {0}", this.GetType ().Name, this.VisualSerialId));
@@ -108,7 +98,6 @@ namespace Epsitec.Common.Widgets
 			Res.Initialise (typeof (Widget), "Common.Widgets");
 			
 			Support.ImageProvider.Initialise ();
-			Support.ObjectBundler.Initialise ();
 			
 			System.Threading.Thread          thread  = System.Threading.Thread.CurrentThread;
 			System.Globalization.CultureInfo culture = thread.CurrentCulture;
@@ -828,7 +817,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		[Bundle]			public string			Text
+		public string								Text
 		{
 			get
 			{
@@ -949,7 +938,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		[Bundle]			public int				TabIndex
+		public int									TabIndex
 		{
 			get { return this.tab_index; }
 			set
@@ -1020,7 +1009,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		[Bundle]			public string			BindingInfo
+		public string								BindingInfo
 		{
 			get
 			{

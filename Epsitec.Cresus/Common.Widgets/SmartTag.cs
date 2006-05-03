@@ -3,8 +3,6 @@
 
 namespace Epsitec.Common.Widgets
 {
-	using BundleAttribute = Epsitec.Common.Support.BundleAttribute;
-	
 	/// <summary>
 	/// La classe SmartTag représente un Tag avec un menu associé.
 	/// </summary>
@@ -28,7 +26,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		[Bundle] public VMenu					Menu
+		public VMenu							Menu
 		{
 			get
 			{

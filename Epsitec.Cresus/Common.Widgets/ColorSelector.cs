@@ -1,7 +1,5 @@
 namespace Epsitec.Common.Widgets
 {
-	using BundleAttribute = Epsitec.Common.Support.BundleAttribute;
-	
 	/// <summary>
 	/// La classe ColorSelector permet de choisir une couleur.
 	/// </summary>
@@ -9,15 +7,6 @@ namespace Epsitec.Common.Widgets
 	{
 		public ColorSelector()
 		{
-			if ( Support.ObjectBundler.IsBooting )
-			{
-				//	N'initialise rien, car cela prend passablement de temps... et de toute
-				//	manière, on n'a pas besoin de toutes ces informations pour pouvoir
-				//	utiliser IBundleSupport.
-				
-				return;
-			}
-			
 			this.nbField = 4+3+4+1;
 			this.labels = new StaticText[this.nbField];
 			this.fields = new TextFieldSlider[this.nbField];

@@ -1113,11 +1113,6 @@ namespace Epsitec.Common.Widgets.Platform
 		
 		protected void ReallocatePixmap()
 		{
-			if (Support.ObjectBundler.IsBooting)
-			{
-				return;
-			}
-			
 			if (this.IsFrozen)
 			{
 				return;

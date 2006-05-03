@@ -3,7 +3,6 @@
 
 namespace Epsitec.Common.Widgets.Validators
 {
-	using BundleAttribute = Support.BundleAttribute;
 	using SuppressBundleSupportAttribute = Support.SuppressBundleSupportAttribute;
 	
 	/// <summary>

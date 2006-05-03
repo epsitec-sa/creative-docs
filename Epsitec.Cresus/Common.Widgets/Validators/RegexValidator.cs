@@ -3,8 +3,6 @@
 
 namespace Epsitec.Common.Widgets.Validators
 {
-	using BundleAttribute = Support.BundleAttribute;
-	
 	/// <summary>
 	/// La classe RegexValidator permet de valider un widget selon une expression
 	/// régulière.
@@ -36,7 +34,7 @@ namespace Epsitec.Common.Widgets.Validators
 		}
 		
 		
-		[Bundle] public bool							AcceptEmptyText
+		public bool										AcceptEmptyText
 		{
 			get
 			{
@@ -48,7 +46,7 @@ namespace Epsitec.Common.Widgets.Validators
 			}
 		}
 		
-		[Bundle] public string							Regex
+		public string									Regex
 		{
 			get
 			{

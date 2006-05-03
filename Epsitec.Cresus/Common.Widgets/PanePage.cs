@@ -1,7 +1,5 @@
 namespace Epsitec.Common.Widgets
 {
-	using BundleAttribute  = Support.BundleAttribute;
-	
 	/// <summary>
 	/// La classe PanePage représente une page du PaneBook.
 	/// </summary>
@@ -45,7 +43,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		[Bundle]	public double				PaneRelativeSize
+		public double							PaneRelativeSize
 		{
 			//	Largeur ou hauteur relative du panneau.
 			get
@@ -63,7 +61,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		[Bundle]	public double				PaneAbsoluteSize
+		public double							PaneAbsoluteSize
 		{
 			//	Largeur ou hauteur absolue (en points) du panneau.
 			get
@@ -82,7 +80,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		[Bundle]	public double				PaneMinSize
+		public double							PaneMinSize
 		{
 			//	Largeur ou hauteur minimale du panneau en points.
 			get
@@ -100,7 +98,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		[Bundle]	public double				PaneMaxSize
+		public double							PaneMaxSize
 		{
 			//	Largeur ou hauteur maximale du panneau en points.
 			get
@@ -118,7 +116,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		[Bundle]	public double				PaneHideSize
+		public double							PaneHideSize
 		{
 			//	Largeur ou hauteur maximale en dessous de laquelle le contenu est caché.
 			get
@@ -136,7 +134,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		[Bundle]	public double				PaneElasticity
+		public double							PaneElasticity
 		{
 			//	Elasticité du panneau (0=fixe, 1=élastique).
 			get
@@ -154,7 +152,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		[Bundle]	public bool					PaneToggle
+		public bool								PaneToggle
 		{
 			//	Mode du panneau.
 			get

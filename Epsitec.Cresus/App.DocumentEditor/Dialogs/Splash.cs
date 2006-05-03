@@ -48,7 +48,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				{
 					this.workInProgress.SetManualBounds(new Rectangle(21, 50, 350, 20));
 				}
-				//?this.workInProgress.SetSyncPaint(true);
+				this.workInProgress.SyncPaint = true;
 
 				this.window.Show();
 				Window.PumpEvents();

@@ -3,8 +3,6 @@
 
 namespace Epsitec.Common.Widgets
 {
-	using BundleAttribute = Epsitec.Common.Support.BundleAttribute;
-	
 	/// <summary>
 	/// La classe Tag implémente une petite étiquette (pastille) qui peut servir
 	/// à l'implémentation de "smart tags".
@@ -43,7 +41,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		[Bundle]	public Drawing.Color		Color
+		public Drawing.Color					Color
 		{
 			get
 			{
@@ -59,7 +57,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		[Bundle]	public Direction			Direction
+		public Direction						Direction
 		{
 			get
 			{

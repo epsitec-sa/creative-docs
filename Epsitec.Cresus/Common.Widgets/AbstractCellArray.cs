@@ -27,15 +27,6 @@ namespace Epsitec.Common.Widgets
 	{
 		public AbstractCellArray()
 		{
-			if ( Support.ObjectBundler.IsBooting )
-			{
-				//	N'initialise rien, car cela prend passablement de temps... et de toute
-				//	manière, on n'a pas besoin de toutes ces informations pour pouvoir
-				//	utiliser IBundleSupport.
-				
-				return;
-			}
-			
 			this.AutoFocus = true;
 			this.AutoDoubleClick = true;
 			this.InternalState |= InternalState.Focusable;

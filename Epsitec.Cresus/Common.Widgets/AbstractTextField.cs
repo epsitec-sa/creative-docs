@@ -2,8 +2,6 @@ using Epsitec.Common.Support;
 
 namespace Epsitec.Common.Widgets
 {
-	using BundleAttribute  = Epsitec.Common.Support.BundleAttribute;
-	
 	public enum TextFieldStyle
 	{
 		Flat,							// pas de cadre, ni de relief, fond blanc
@@ -32,15 +30,6 @@ namespace Epsitec.Common.Widgets
 	{
 		public AbstractTextField()
 		{
-			if ( Support.ObjectBundler.IsBooting )
-			{
-				//	N'initialise rien, car cela prend passablement de temps... et de toute
-				//	manière, on n'a pas besoin de toutes ces informations pour pouvoir
-				//	utiliser IBundleSupport.
-				
-				return;
-			}
-			
 			this.AutoEngage = false;
 			this.AutoFocus  = true;
 			this.AutoRepeat = true;

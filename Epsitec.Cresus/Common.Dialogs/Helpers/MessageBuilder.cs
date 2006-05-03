@@ -32,7 +32,7 @@ namespace Epsitec.Common.Dialogs.Helpers
 			
 			widget_text.TextBreakMode = Drawing.TextBreakMode.Hyphenate;
 			widget_text.Anchor        = Widgets.AnchorStyles.All;
-			widget_text.Margins = new Drawing.Margins (widget_icon.ActualWidth + 8, 0, 0, 0);
+			widget_text.Margins = new Drawing.Margins (widget_icon.PreferredWidth + 8, 0, 0, 0);
 			
 			container.PreferredSize = new Drawing.Size (widget_icon.PreferredWidth + 8 + width, System.Math.Max (widget_icon.PreferredHeight, height));
 			

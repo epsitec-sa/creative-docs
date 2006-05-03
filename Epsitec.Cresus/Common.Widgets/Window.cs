@@ -964,13 +964,13 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		[Bundle]			public string		Text
+		public string							Text
 		{
 			get { return this.text; }
 			set { this.window.Text = this.text = value; }
 		}
 
-		[Bundle]			public string		Name
+		public string							Name
 		{
 			get { return this.name; }
 			set { this.window.Name = this.name = value; }

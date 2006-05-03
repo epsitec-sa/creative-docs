@@ -3,7 +3,6 @@
 
 namespace Epsitec.Common.Widgets
 {
-	using BundleAttribute  = Support.BundleAttribute;
 	using ContentAlignment = Drawing.ContentAlignment;
 	
 	/// <summary>

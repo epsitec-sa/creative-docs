@@ -5,8 +5,6 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Widgets
 {
-	using BundleAttribute = Support.BundleAttribute;
-	
 	/// <summary>
 	/// La classe WindowRoot implémente le fond de chaque fenêtre. L'utilisateur obtient
 	/// en général une instance de WindowRoot en appelant Window.Root.
@@ -54,7 +52,7 @@ namespace Epsitec.Common.Widgets
 #endif
 		
 		
-		[Bundle] public WindowStyles			WindowStyles
+		public WindowStyles						WindowStyles
 		{
 			get
 			{
@@ -76,7 +74,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		[Bundle] public WindowType				WindowType
+		public WindowType						WindowType
 		{
 			get
 			{

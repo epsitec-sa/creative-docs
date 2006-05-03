@@ -3,8 +3,6 @@
 
 namespace Epsitec.Common.Widgets
 {
-	using BundleAttribute  = Support.BundleAttribute;
-	
 	/// <summary>
 	/// L'énumération ScrollableScrollerMode détermine comment Scrollable affiche les
 	/// ascenceurs (automatiquement, en fonction de la place disponible, ne jamais les
@@ -84,7 +82,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		[Bundle] public ScrollableScrollerMode	HorizontalScrollerMode
+		public ScrollableScrollerMode			HorizontalScrollerMode
 		{
 			get
 			{
@@ -100,7 +98,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		[Bundle] public ScrollableScrollerMode	VerticalScrollerMode
+		public ScrollableScrollerMode			VerticalScrollerMode
 		{
 			get
 			{

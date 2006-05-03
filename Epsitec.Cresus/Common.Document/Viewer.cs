@@ -2648,7 +2648,7 @@ namespace Epsitec.Common.Document
 			this.miniBar.MakeFloatingWindow();
 			this.miniBar.DisableMouseActivation();
 			this.miniBar.MakeLayeredWindow(true);
-			//?this.miniBar.Root.SetSyncPaint(true);
+			this.miniBar.Root.SyncPaint = true;
 			this.miniBar.WindowSize = this.miniBarRect.Size;
 			this.miniBar.WindowLocation = this.MapClientToScreen(this.miniBarRect.BottomLeft);
 			this.miniBar.Root.BackColor = Color.FromAlphaRgb(0, 1,1,1);

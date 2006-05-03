@@ -33,15 +33,6 @@ namespace Epsitec.Common.Widgets
 	{
 		public ScrollArray()
 		{
-			if (Support.ObjectBundler.IsBooting)
-			{
-				//	N'initialise rien, car cela prend passablement de temps... et de toute
-				//	manière, on n'a pas besoin de toutes ces informations pour pouvoir
-				//	utiliser IBundleSupport.
-				
-				return;
-			}
-			
 			this.columns = new ColumnDefinition[0];
 			
 			this.AutoFocus = true;
