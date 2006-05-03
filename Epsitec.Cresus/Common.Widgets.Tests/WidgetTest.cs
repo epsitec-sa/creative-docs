@@ -313,8 +313,8 @@ namespace Epsitec.Common.Widgets
 			Widget pane = new Widget ();
 			
 			pane.SetParent (window.Root);
-			pane.Width  = 80;
-			pane.Dock   = DockStyle.Right;
+			pane.PreferredWidth = 80;
+			pane.Dock = DockStyle.Right;
 			
 			TextFrameManager manager = new TextFrameManager (pane, frame);
 			
@@ -326,8 +326,8 @@ namespace Epsitec.Common.Widgets
 			frame.Focus ();
 			
 			TextFrame frame2 = new TextFrame (frame);
-			
-			frame2.Height  = 150;
+
+			frame2.PreferredHeight = 150;
 			frame2.Dock    = DockStyle.Bottom;
 			frame2.Margins = new Margins (4, 4, 4, 4);
 			frame2.SetParent (window.Root);
@@ -562,45 +562,45 @@ namespace Epsitec.Common.Widgets
 			Widget root = new Widget ();
 			Widget widget = new Widget ();
 			
-			root.Bounds = new Rectangle (0, 0, 120, 50);
+			root.SetManualBounds(new Rectangle (0, 0, 120, 50));
 			
 			root.Children.Add (widget);
 			
-			widget.Bounds = new Rectangle (20, 10, 80, 30);
+			widget.SetManualBounds(new Rectangle (20, 10, 80, 30));
 			widget.Anchor = AnchorStyles.Left;
 			widget.Margins = new Drawing.Margins (20, 0, 0, 0);
 			
 			Assert.IsTrue (widget.Anchor == AnchorStyles.Left);
+
+			root.PreferredWidth = 140;
+			Assert.IsTrue(widget.ActualLocation.X == 20);
+			Assert.IsTrue (widget.ActualWidth == 80);
+
+			root.PreferredWidth = 120;
+			Assert.IsTrue(widget.ActualLocation.X == 20);
+			Assert.IsTrue (widget.ActualWidth == 80);
 			
-			root.Width = 140;
-			Assert.IsTrue (widget.Left == 20);
-			Assert.IsTrue (widget.Width == 80);
-			
-			root.Width = 120;
-			Assert.IsTrue (widget.Left == 20);
-			Assert.IsTrue (widget.Width == 80);
-			
-			widget.Bounds = new Rectangle (20, 10, 80, 30);
+			widget.SetManualBounds(new Rectangle (20, 10, 80, 30));
 			widget.Anchor = AnchorStyles.Right;
 			widget.Margins = new Drawing.Margins (0, 20, 0, 0);
 			
 			Assert.IsTrue (widget.Anchor == AnchorStyles.Right);
-			Assert.IsTrue (widget.Right == 100, "AnchorStyles.Right, widget.Right not OK");
-			Assert.IsTrue (widget.Left  == 20, "AnchorStyles.Right, widget.Left not OK");
-			
-			root.Width = 140;
+			Assert.IsTrue (widget.ActualBounds.Right == 100, "AnchorStyles.Right, widget.Right not OK");
+			Assert.IsTrue (widget.ActualBounds.Left  == 20, "AnchorStyles.Right, widget.Left not OK");
+
+			root.PreferredWidth = 140;
 			
 			Layouts.LayoutContext.SyncArrange (root);
-			
-			Assert.IsTrue (widget.Left  == 40, "AnchorStyles.Right, widget.Left not OK");
-			Assert.IsTrue (widget.Width == 80, "AnchorStyles.Right, widget.Width not OK");
-			
-			root.Width = 120;
+
+			Assert.IsTrue (widget.ActualBounds.Left  == 40, "AnchorStyles.Right, widget.Left not OK");
+			Assert.IsTrue (widget.ActualBounds.Width == 80, "AnchorStyles.Right, widget.Width not OK");
+
+			root.PreferredWidth = 120;
 
 			Layouts.LayoutContext.SyncArrange (root);
 
-			Assert.IsTrue (widget.Left == 20);
-			Assert.IsTrue (widget.Width == 80);
+			Assert.IsTrue (widget.ActualBounds.Left == 20);
+			Assert.IsTrue (widget.ActualBounds.Width == 80);
 			
 			//	TODO: ...tests additionnels...
 		}
@@ -627,9 +627,9 @@ namespace Epsitec.Common.Widgets
 			StaticText text   = new StaticText ("<font size=\"300%\">Abcdefgh... Abcdefgh...</font>");
 			
 //-			text.SetClientZoom (3);
-			
-			text.Size     = new Drawing.Size (text.PreferredSize.Width / 2, text.PreferredSize.Height * 2) * 3;
-			text.Anchor   = AnchorStyles.TopLeft;
+
+			text.PreferredSize = new Drawing.Size(text.PreferredSize.Width / 2, text.PreferredSize.Height * 2) * 3;
+			text.Anchor = AnchorStyles.TopLeft;
 			text.Margins = new Drawing.Margins (10, 0, 10, 0);
 			text.SetParent (window.Root);
 			text.PaintForeground += new PaintEventHandler(this.CheckTextLayoutInfoPaintForeground);
@@ -644,22 +644,22 @@ namespace Epsitec.Common.Widgets
 			Widget root = new Widget ();
 			Widget widget = new Widget ();
 			
-			root.Bounds = new Rectangle (0, 0, 300, 200);
-			widget.Bounds = new Rectangle (30, 20, 50, 40);
-			
-			Assert.IsTrue (widget.Left == 30);
-			Assert.IsTrue (widget.Right == 80);
-			Assert.IsTrue (widget.Top == 60);
-			Assert.IsTrue (widget.Bottom == 20);
+			root.SetManualBounds(new Rectangle (0, 0, 300, 200));
+			widget.SetManualBounds(new Rectangle (30, 20, 50, 40));
+
+			Assert.IsTrue (widget.ActualBounds.Left == 30);
+			Assert.IsTrue (widget.ActualBounds.Right == 80);
+			Assert.IsTrue (widget.ActualBounds.Top == 60);
+			Assert.IsTrue (widget.ActualBounds.Bottom == 20);
 			Assert.IsTrue (widget.Client.Size.Width == 50);
 			Assert.IsTrue (widget.Client.Size.Height == 40);
 			
 			root.Children.Add (widget);
-			
-			Assert.IsTrue (widget.Left == 30);
-			Assert.IsTrue (widget.Right == 80);
-			Assert.IsTrue (widget.Top == 60);
-			Assert.IsTrue (widget.Bottom == 20);
+
+			Assert.IsTrue (widget.ActualBounds.Left == 30);
+			Assert.IsTrue (widget.ActualBounds.Right == 80);
+			Assert.IsTrue (widget.ActualBounds.Top == 60);
+			Assert.IsTrue (widget.ActualBounds.Bottom == 20);
 			
 			Point pt_test   = new Point (40, 35);
 			Point pt_client = widget.MapParentToClient (pt_test);
@@ -676,8 +676,8 @@ namespace Epsitec.Common.Widgets
 			Widget root = new Widget ();
 			Widget widget = new Widget ();
 
-			root.Bounds = new Rectangle (0, 0, 300, 200);
-			widget.Bounds = new Rectangle (30, 20, 50, 40);
+			root.SetManualBounds(new Rectangle (0, 0, 300, 200));
+			widget.SetManualBounds(new Rectangle (30, 20, 50, 40));
 			
 			root.Children.Add (widget);
 			
@@ -725,8 +725,8 @@ namespace Epsitec.Common.Widgets
 			Widget root = new Widget ();
 			Widget widget = new Widget ();
 
-			root.Bounds = new Rectangle (0, 0, 300, 200);
-			widget.Bounds = new Rectangle (30, 20, 50, 40);
+			root.SetManualBounds(new Rectangle (0, 0, 300, 200));
+			widget.SetManualBounds(new Rectangle (30, 20, 50, 40));
 			
 			root.Children.Add (widget);
 			
@@ -808,8 +808,8 @@ namespace Epsitec.Common.Widgets
 			Widget root = new Widget ();
 			Widget widget = new Widget ();
 
-			root.Bounds = new Rectangle (0, 0, 300, 200);
-			widget.Bounds = new Rectangle (30, 20, 50, 40);
+			root.SetManualBounds(new Rectangle (0, 0, 300, 200));
+			widget.SetManualBounds(new Rectangle (30, 20, 50, 40));
 			
 			root.Children.Add (widget);
 			
@@ -891,8 +891,8 @@ namespace Epsitec.Common.Widgets
 			Widget root = new Widget ();
 			Widget widget = new Widget ();
 
-			root.Bounds = new Rectangle (0, 0, 300, 200);
-			widget.Bounds = new Rectangle (30, 20, 50, 40);
+			root.SetManualBounds(new Rectangle (0, 0, 300, 200));
+			widget.SetManualBounds(new Rectangle (30, 20, 50, 40));
 			
 			root.Children.Add (widget);
 			
@@ -943,8 +943,8 @@ namespace Epsitec.Common.Widgets
 			Widget root = new Widget ();
 			Widget widget = new Widget ();
 
-			root.Bounds = new Rectangle (0, 0, 300, 200);
-			widget.Bounds = new Rectangle (30, 20, 50, 40);
+			root.SetManualBounds(new Rectangle (0, 0, 300, 200));
+			widget.SetManualBounds(new Rectangle (30, 20, 50, 40));
 			
 			root.Children.Add (widget);
 			
@@ -970,8 +970,8 @@ namespace Epsitec.Common.Widgets
 			Widget root = new Widget ();
 			Widget widget = new Widget ();
 
-			root.Bounds = new Rectangle (100, 150, 300, 200);
-			widget.Bounds = new Rectangle (30, 20, 50, 40);
+			root.SetManualBounds(new Rectangle (100, 150, 300, 200));
+			widget.SetManualBounds(new Rectangle (30, 20, 50, 40));
 			widget.SetParent (root);
 			
 //			widget.SetClientZoom (3);
@@ -998,14 +998,14 @@ namespace Epsitec.Common.Widgets
 
 			Button button;
 			button = new Button ();
-			button.Size = new Size (40, 24);
+			button.PreferredSize = new Size (40, 24);
 			button.Text = "A";
 			button.Margins = new Margins (0, 0, 0, 0);
 			button.Anchor = AnchorStyles.Left | AnchorStyles.TopAndBottom;
 			window.Root.Children.Add (button);
 
 			button = new Button ();
-			button.Size = new Size (40, 24);
+			button.PreferredSize = new Size(40, 24);
 			button.Text = "A1";
 			button.Margins = new Margins (40, 0, 0, 0);
 			button.Anchor = AnchorStyles.Left | AnchorStyles.TopAndBottom;
@@ -1013,7 +1013,7 @@ namespace Epsitec.Common.Widgets
 			window.Root.Children.Add (button);
 
 			button = new Button ();
-			button.Size = new Size (40, 24);
+			button.PreferredSize = new Size(40, 24);
 			button.Text = "A2";
 			button.Margins = new Margins (80, 0, 0, 0);
 			button.Anchor = AnchorStyles.Left | AnchorStyles.TopAndBottom;
@@ -1021,7 +1021,7 @@ namespace Epsitec.Common.Widgets
 			window.Root.Children.Add (button);
 
 			button = new Button ();
-			button.Size = new Size (40, 24);
+			button.PreferredSize = new Size(40, 24);
 			button.Text = "A3";
 			button.Margins = new Margins (120, 0, 0, 0);
 			button.Anchor = AnchorStyles.Left | AnchorStyles.TopAndBottom;
@@ -1029,21 +1029,21 @@ namespace Epsitec.Common.Widgets
 			window.Root.Children.Add (button);
 
 			button = new Button ();
-			button.Size = new Size (40, 24);
+			button.PreferredSize = new Size(40, 24);
 			button.Text = "B";
 			button.Margins = new Margins (160, 0, 0, 0);
 			button.Anchor = AnchorStyles.Left | AnchorStyles.TopAndBottom;
 			window.Root.Children.Add (button);
 
 			button = new Button ();
-			button.Size = new Size (40, 24);
+			button.PreferredSize = new Size(40, 24);
 			button.Text = "C";
 			button.Margins = new Margins (0, 0, 0, 0);
 			button.Anchor = AnchorStyles.Right | AnchorStyles.TopAndBottom;
 			window.Root.Children.Add (button);
 
 			button = new Button ();
-			button.Size = new Size (40, 24);
+			button.PreferredSize = new Size(40, 24);
 			button.Text = "D";
 			button.Margins = new Margins (200, 40, 0, 0);
 			button.Anchor = AnchorStyles.Top | AnchorStyles.LeftAndRight;
@@ -1051,14 +1051,14 @@ namespace Epsitec.Common.Widgets
 			window.Root.Children.Add (button);
 
 			button = new Button ();
-			button.Size = new Size (40, 24);
+			button.PreferredSize = new Size(40, 24);
 			button.Text = "E";
 			button.Margins = new Margins (200, 40, 0, 0);
 			button.Anchor = AnchorStyles.Bottom | AnchorStyles.LeftAndRight;
 			window.Root.Children.Add (button);
 
 			button = new Button ();
-			button.Size = new Size (40, 24);
+			button.PreferredSize = new Size(40, 24);
 			button.Text = "E1";
 			button.Margins = new Margins (200, 40, 0, 24);
 			button.Anchor = AnchorStyles.Bottom | AnchorStyles.LeftAndRight;
@@ -1066,7 +1066,7 @@ namespace Epsitec.Common.Widgets
 			window.Root.Children.Add (button);
 
 			button = new Button ();
-			button.Size = new Size (40, 24);
+			button.PreferredSize = new Size(40, 24);
 			button.Text = "E2";
 			button.Margins = new Margins (200, 40, 0, 48);
 			button.Anchor = AnchorStyles.Bottom | AnchorStyles.LeftAndRight;
@@ -1074,7 +1074,7 @@ namespace Epsitec.Common.Widgets
 			window.Root.Children.Add (button);
 
 			button = new Button ();
-			button.Size = new Size (40, 24);
+			button.PreferredSize = new Size(40, 24);
 			button.Text = "E3";
 			button.Margins = new Margins (200, 40, 0, 72);
 			button.Anchor = AnchorStyles.Bottom | AnchorStyles.LeftAndRight;
@@ -1082,7 +1082,7 @@ namespace Epsitec.Common.Widgets
 			window.Root.Children.Add (button);
 
 			button = new Button ();
-			button.Size = new Size (40, 24);
+			button.PreferredSize = new Size(40, 24);
 			button.Text = "F";
 			button.Margins = new Margins (200, 40, 24, 96);
 			button.Anchor = AnchorStyles.Left | AnchorStyles.TopAndBottom;
@@ -1090,21 +1090,21 @@ namespace Epsitec.Common.Widgets
 			window.Root.Children.Add (button);
 
 			button = new Button ();
-			button.Size = new Size (40, 24);
+			button.PreferredSize = new Size(40, 24);
 			button.Text = "G";
 			button.Margins = new Margins (240, 40, 24, 96);
 			button.Anchor = AnchorStyles.Right | AnchorStyles.TopAndBottom;
 			window.Root.Children.Add (button);
 
 			button = new Button ();
-			button.Size = new Size (40, 24);
+			button.PreferredSize = new Size(40, 24);
 			button.Text = "H";
 			button.Margins = new Margins (240, 80, 24, 96);
 			button.Anchor = AnchorStyles.Left | AnchorStyles.TopAndBottom;
 			window.Root.Children.Add (button);
 
 			button = new Button ();
-			button.Size = new Size (40, 24);
+			button.PreferredSize = new Size(40, 24);
 			button.Text = "I";
 			button.Margins = new Margins (240, 80, 24, 96);
 			button.Anchor = AnchorStyles.Right | AnchorStyles.TopAndBottom;
@@ -1126,97 +1126,97 @@ namespace Epsitec.Common.Widgets
 
 			Button button;
 			button = new Button ();
-			button.Size = new Size (40, 24);
+			button.PreferredSize = new Size(40, 24);
 			button.Text = "A";
 			button.Dock = DockStyle.Left;
 			window.Root.Children.Add (button);
 
 			button = new Button ();
-			button.Size = new Size (40, 24);
+			button.PreferredSize = new Size(40, 24);
 			button.Text = "A1";
 			button.Dock = DockStyle.Left;
 			button.VerticalAlignment = VerticalAlignment.Top;
 			window.Root.Children.Add (button);
 
 			button = new Button ();
-			button.Size = new Size (40, 24);
+			button.PreferredSize = new Size(40, 24);
 			button.Text = "A2";
 			button.Dock = DockStyle.Left;
 			button.VerticalAlignment = VerticalAlignment.Center;
 			window.Root.Children.Add (button);
 
 			button = new Button ();
-			button.Size = new Size (40, 24);
+			button.PreferredSize = new Size(40, 24);
 			button.Text = "A3";
 			button.Dock = DockStyle.Left;
 			button.VerticalAlignment = VerticalAlignment.Bottom;
 			window.Root.Children.Add (button);
 
 			button = new Button ();
-			button.Size = new Size (40, 24);
+			button.PreferredSize = new Size(40, 24);
 			button.Text = "B";
 			button.Dock = DockStyle.Left;
 			window.Root.Children.Add (button);
 
 			button = new Button ();
-			button.Size = new Size (40, 24);
+			button.PreferredSize = new Size(40, 24);
 			button.Text = "C";
 			button.Dock = DockStyle.Right;
 			window.Root.Children.Add (button);
 
 			button = new Button ();
-			button.Size = new Size (40, 24);
+			button.PreferredSize = new Size(40, 24);
 			button.Text = "D";
 			button.Dock = DockStyle.Top;
 			window.Root.Children.Add (button);
 
 			button = new Button ();
-			button.Size = new Size (40, 24);
+			button.PreferredSize = new Size(40, 24);
 			button.Text = "E";
 			button.Dock = DockStyle.Bottom;
 			window.Root.Children.Add (button);
 
 			button = new Button ();
-			button.Size = new Size (40, 24);
+			button.PreferredSize = new Size(40, 24);
 			button.Text = "E1";
 			button.Dock = DockStyle.Bottom;
 			button.HorizontalAlignment = HorizontalAlignment.Left;
 			window.Root.Children.Add (button);
 
 			button = new Button ();
-			button.Size = new Size (40, 24);
+			button.PreferredSize = new Size(40, 24);
 			button.Text = "E2";
 			button.Dock = DockStyle.Bottom;
 			button.HorizontalAlignment = HorizontalAlignment.Center;
 			window.Root.Children.Add (button);
 
 			button = new Button ();
-			button.Size = new Size (40, 24);
+			button.PreferredSize = new Size(40, 24);
 			button.Text = "E3";
 			button.Dock = DockStyle.Bottom;
 			button.HorizontalAlignment = HorizontalAlignment.Right;
 			window.Root.Children.Add (button);
 
 			button = new Button ();
-			button.Size = new Size (40, 24);
+			button.PreferredSize = new Size(40, 24);
 			button.Text = "F";
 			button.Dock = DockStyle.Left;
 			window.Root.Children.Add (button);
 
 			button = new Button ();
-			button.Size = new Size (40, 24);
+			button.PreferredSize = new Size(40, 24);
 			button.Text = "G";
 			button.Dock = DockStyle.Right;
 			window.Root.Children.Add (button);
 
 			button = new Button ();
-			button.Size = new Size (40, 24);
+			button.PreferredSize = new Size(40, 24);
 			button.Text = "H";
 			button.Dock = DockStyle.Fill;
 			window.Root.Children.Add (button);
 
 			button = new Button ();
-			button.Size = new Size (40, 24);
+			button.PreferredSize = new Size(40, 24);
 			button.Text = "I";
 			button.Dock = DockStyle.Fill;
 			window.Root.Children.Add (button);
@@ -1314,11 +1314,11 @@ namespace Epsitec.Common.Widgets
 					column++;
 				}
 
-				if (this.Width > this.lastWidth)
+				if (this.ActualWidth > this.lastWidth)
 				{
 					this.ResetColumnLineCount ();
 					
-					this.lastWidth = this.Width;
+					this.lastWidth = this.ActualWidth;
 					
 					Layouts.LayoutContext.AddToMeasureQueue (this);
 					return;
@@ -1340,14 +1340,14 @@ namespace Epsitec.Common.Widgets
 						dy = 0;
 					}
 
-					child.Bounds = new Drawing.Rectangle (rect.Left + x, rect.Top - y - child.PreferredHeight, child.PreferredWidth, child.PreferredHeight);
+					child.SetManualBounds(new Drawing.Rectangle (rect.Left + x, rect.Top - y - child.PreferredHeight, child.PreferredWidth, child.PreferredHeight));
 
 					dy = System.Math.Max (dy, child.PreferredHeight);
 					x += child.PreferredWidth;
 					column++;
 				}
 				
-				this.lastWidth = this.Width;
+				this.lastWidth = this.ActualWidth;
 			}
 
 			protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clip_rect)
@@ -1587,31 +1587,31 @@ namespace Epsitec.Common.Widgets
 			ColorSelector selector1, selector2;
 			
 			selector1 = new ColorSelector ();
-			selector1.Bounds = new Drawing.Rectangle (100, 10, 200, 200);
+			selector1.SetManualBounds(new Drawing.Rectangle (100, 10, 200, 200));
 			selector1.SetParent (window.Root);
 			selector1.Changed += new EventHandler (this.HandleSelectorChangedForeground);
 			
 			selector2 = new ColorSelector ();
-			selector2.Bounds = new Drawing.Rectangle (300, 10, 200, 200);
+			selector2.SetManualBounds(new Drawing.Rectangle (300, 10, 200, 200));
 			selector2.SetParent (window.Root);
 			selector2.Changed += new EventHandler (this.HandleSelectorChangedBackground);
 			
 			Tag tag;
 			
 			tag = new Tag ("", "tag1");
-			tag.Bounds = new Drawing.Rectangle (10, 10, 10, 10);
+			tag.SetManualBounds(new Drawing.Rectangle (10, 10, 10, 10));
 			tag.SetParent (window.Root);
 			
 			tag = new Tag ("", "tag2");
-			tag.Bounds = new Drawing.Rectangle (10, 25, 15, 15);
+			tag.SetManualBounds(new Drawing.Rectangle (10, 25, 15, 15));
 			tag.SetParent (window.Root);
 			
 			tag = new Tag ("", "tag3");
-			tag.Bounds = new Drawing.Rectangle (10, 45, 20, 20);
+			tag.SetManualBounds(new Drawing.Rectangle (10, 45, 20, 20));
 			tag.SetParent (window.Root);
 			
 			tag = new Tag ("", "tag4");
-			tag.Bounds = new Drawing.Rectangle (10, 70, 25, 25);
+			tag.SetManualBounds(new Drawing.Rectangle (10, 70, 25, 25));
 			tag.SetParent (window.Root);
 			
 			selector1.Color = new RichColor(tag.Color);

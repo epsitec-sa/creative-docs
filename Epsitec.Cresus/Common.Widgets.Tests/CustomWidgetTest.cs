@@ -32,8 +32,8 @@ namespace Epsitec.Common.Widgets
 			
 			double x = window.ClientSize.Width - 90;
 
-			a.Name = "A"; a.Margins = new Margins (0, 10, 0, 40); a.Size = new Size (80, 20); a.Text = "OK";     a.Anchor = AnchorStyles.BottomRight;
-			b.Name = "B"; b.Margins = new Margins (0, 10, 0, 10); b.Size = new Size (80, 20); b.Text = "Cancel"; b.Anchor = AnchorStyles.BottomRight;
+			a.Name = "A"; a.Margins = new Margins (0, 10, 0, 40); a.PreferredSize = new Size (80, 20); a.Text = "OK";     a.Anchor = AnchorStyles.BottomRight;
+			b.Name = "B"; b.Margins = new Margins (0, 10, 0, 10); b.PreferredSize = new Size (80, 20); b.Text = "Cancel"; b.Anchor = AnchorStyles.BottomRight;
 			
 			a.Clicked += new MessageEventHandler(this.HandleWidgetClicked);
 			b.Clicked += new MessageEventHandler(this.HandleWidgetClicked);

@@ -21,7 +21,7 @@ namespace Epsitec.Common.Widgets
 			Scrollable surface = new Scrollable ();
 			
 			surface.SetParent (window.Root);
-			surface.Bounds = window.Root.Client.Bounds;
+			surface.SetManualBounds(window.Root.Client.Bounds);
 			surface.Dock   = DockStyle.Fill;
 			
 			surface.Panel.SurfaceSize = new Drawing.Size (400, 300);
@@ -32,8 +32,8 @@ namespace Epsitec.Common.Widgets
 			
 			b1.SetParent (surface.Panel);
 			b2.SetParent (surface.Panel);
-			b1.Bounds = new Drawing.Rectangle (10, 20, b1.Width, b1.Height);
-			b2.Bounds = new Drawing.Rectangle (b1.Right+10, b1.Bottom, b2.Width, b2.Height);
+			b1.SetManualBounds(new Drawing.Rectangle(10, 20, b1.PreferredWidth, b1.PreferredHeight));
+			b2.SetManualBounds(new Drawing.Rectangle(b1.ActualBounds.Right+10, b1.ActualBounds.Bottom, b2.ActualWidth, b2.ActualHeight));
 			b1.Anchor   = AnchorStyles.TopLeft;
 			b2.Anchor   = AnchorStyles.TopLeft;
 			
@@ -102,16 +102,16 @@ namespace Epsitec.Common.Widgets
 			Assert.IsTrue (surface.Panel.Children.Count == 2+4+4);
 			
 			System.Console.Out.WriteLine ("Panel SurfaceSize = {0}", surface.Panel.SurfaceSize);
-			System.Console.Out.WriteLine ("Panel Bounds = {0}", surface.Panel.Bounds);
-			System.Console.Out.WriteLine ("Button Bounds = {0}, {1}", b1.Bounds, b2.Bounds);
+			System.Console.Out.WriteLine ("Panel Bounds = {0}", surface.Panel.ActualBounds);
+			System.Console.Out.WriteLine ("Button Bounds = {0}, {1}", b1.ActualBounds, b2.ActualBounds);
 			System.Console.Out.WriteLine ("Button Bounds (root relative) = {0}, {1}", b1.MapClientToRoot (b1.Client.Bounds), b2.MapClientToRoot (b2.Client.Bounds));
 			
 			window.Show ();
 			window.SynchronousRepaint ();
 			
 			System.Console.Out.WriteLine ("Panel SurfaceSize = {0}", surface.Panel.SurfaceSize);
-			System.Console.Out.WriteLine ("Panel Bounds = {0}", surface.Panel.Bounds);
-			System.Console.Out.WriteLine ("Button Bounds = {0}, {1}", b1.Bounds, b2.Bounds);
+			System.Console.Out.WriteLine ("Panel Bounds = {0}", surface.Panel.ActualBounds);
+			System.Console.Out.WriteLine ("Button Bounds = {0}, {1}", b1.ActualBounds, b2.ActualBounds);
 			System.Console.Out.WriteLine ("Button Bounds (root relative) = {0}, {1}", b1.MapClientToRoot (b1.Client.Bounds), b2.MapClientToRoot (b2.Client.Bounds));
 
 			Window.RunInTestEnvironment (window);
