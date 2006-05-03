@@ -9,14 +9,6 @@ namespace Epsitec.Common.Widgets
 	
 	public delegate bool WalkWidgetCallback(Widget widget);
 	
-	[System.Flags] public enum ActiveState
-	{
-		No			= 0,
-		Yes			= (int) WidgetState.ActiveYes,
-		Maybe		= (int) WidgetState.ActiveMaybe,
-	}
-	
-	
 	#region WidgetState enum
 	[System.Flags] public enum WidgetState : uint
 	{
@@ -24,7 +16,6 @@ namespace Epsitec.Common.Widgets
 		
 		ActiveYes		= 0x00000001,				//	=> mode ActiveState.Yes
 		ActiveMaybe		= 0x00000002,				//	=> mode ActiveState.Maybe
-		ActiveMask		= ActiveYes | ActiveMaybe,
 		
 		Enabled			= 0x00010000,				//	=> reçoit des événements
 		Focused			= 0x00020000,				//	=> reçoit les événements clavier
@@ -481,47 +472,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		
-		public bool									IsActive
-		{
-			get
-			{
-				return this.ActiveState == ActiveState.Yes;
-			}
-		}
-		
-		public bool									IsEntered
-		{
-			get
-			{
-				return (this.widget_state & WidgetState.Entered) != 0;
-			}
-		}
-		
-		public bool									IsSelected
-		{
-			get
-			{
-				return (this.widget_state & WidgetState.Selected) != 0;
-			}
-		}
-		
-		public bool									IsEngaged
-		{
-			get
-			{
-				return (this.widget_state & WidgetState.Engaged) != 0;
-			}
-		}
-		
-		public bool									IsError
-		{
-			get
-			{
-				return (this.widget_state & WidgetState.Error) != 0;
-			}
-		}
-		
 		public bool									IsEmbedded
 		{
 			//	Un widget qui retourne IsEmbedded = true n'a pas besoin d'être sérialisé
@@ -644,37 +594,26 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public ActiveState							ActiveState
-		{
-			get
-			{
-				return (ActiveState) (this.widget_state & WidgetState.ActiveMask);
-			}
-			set
-			{
-				if (this.ActiveState != value)
-				{
-					this.widget_state &= ~WidgetState.ActiveMask;
-					this.widget_state |= (WidgetState) value;
-					
-					this.OnActiveStateChanged ();
-					this.Invalidate (InvalidateReason.ActiveStateChanged);
-				}
-			}
-		}
-		
 		public WidgetState							PaintState
 		{
 			get
 			{
-				WidgetState mask  = WidgetState.ActiveMask |
-					/**/			WidgetState.Entered |
-					/**/			WidgetState.Engaged |
-					/**/			WidgetState.Selected |
-					/**/			WidgetState.Error;
-				
-				WidgetState state = this.widget_state & mask;
-				
+				if (this.IsEntered)
+				{
+					state |= WidgetState.Entered;
+				}
+				if (this.IsEngaged)
+				{
+					state |= WidgetState.Engaged;
+				}
+				if (this.Selected)
+				{
+					state |= WidgetState.Selected;
+				}
+				if (this.InError)
+				{
+					state |= WidgetState.Error;
+				}
 				if (this.IsEnabled)
 				{
 					state |= WidgetState.Enabled;
@@ -686,6 +625,16 @@ namespace Epsitec.Common.Widgets
 				if (this.AcceptThreeState)
 				{
 					state |= WidgetState.ThreeState;
+				}
+				switch (this.ActiveState)
+				{
+					case ActiveState.Yes:
+						state |= WidgetState.ActiveYes;
+						break;
+
+					case ActiveState.Maybe:
+						state |= WidgetState.ActiveMaybe;
+						break;
 				}
 				
 				return state;
@@ -1258,18 +1207,9 @@ namespace Epsitec.Common.Widgets
 		
 		public virtual void SetError(bool value)
 		{
-			if (this.IsError != value)
+			if (this.InError != value)
 			{
-				if (value)
-				{
-					this.widget_state |= WidgetState.Error;
-				}
-				else
-				{
-					this.widget_state &= ~WidgetState.Error;
-				}
-				
-				this.Invalidate ();
+				this.SetValue (Visual.InErrorProperty, value);
 			}
 		}
 		
@@ -1322,29 +1262,24 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public void SetSelected(bool selected)
+		public void SetSelected(bool value)
 		{
-			if ((this.widget_state & WidgetState.Selected) == 0)
+			if (this.IsSelected != value)
 			{
-				if (selected)
+				this.SetValue (Visual.SelectedProperty, value);
+				
+				if (value)
 				{
-					this.widget_state |= WidgetState.Selected;
 					this.OnSelected ();
-					this.Invalidate (InvalidateReason.SelectedChanged);
 				}
-			}
-			else
-			{
-				if (!selected)
+				else
 				{
-					this.widget_state &= ~WidgetState.Selected;
 					this.OnDeselected ();
-					this.Invalidate (InvalidateReason.SelectedChanged);
 				}
 			}
 		}
 		
-		public void SetEngaged(bool engaged)
+		public void SetEngaged(bool value)
 		{
 			Window window = this.Window;
 			
@@ -1357,30 +1292,25 @@ namespace Epsitec.Common.Widgets
 			{
 				return;
 			}
-			
-			if ((this.internal_state & InternalState.Frozen) != 0)
+
+			if (this.IsFrozen)
 			{
 				return;
 			}
 			
-			if ((this.widget_state & WidgetState.Engaged) == 0)
+			if (this.IsEngaged != value)
 			{
-				if (engaged)
+				this.SetValue (Visual.EngagedProperty, value);
+				
+				if (value)
 				{
-					this.widget_state |= WidgetState.Engaged;
 					window.EngagedWidget = this;
 					this.OnEngaged ();
-					this.Invalidate (InvalidateReason.EngagedChanged);
 				}
-			}
-			else
-			{
-				if (!engaged)
+				else
 				{
-					this.widget_state &= ~ WidgetState.Engaged;
 					window.EngagedWidget = null;
 					this.OnDisengaged ();
-					this.Invalidate (InvalidateReason.EngagedChanged);
 				}
 			}
 		}
@@ -1454,18 +1384,19 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		protected void SetEntered(bool entered)
+		protected void SetEntered(bool value)
 		{
-			if (this.IsEntered != entered)
+			if (this.IsEntered != value)
 			{
 				Window window = this.Window;
 				Message message = null;
 				
-				if (entered)
+				if (value)
 				{
 					Widget.ExitWidgetsNotParentOf (this);
 					Widget.entered_widgets.Add (this);
-					this.widget_state |= WidgetState.Entered;
+
+					this.SetValue (Visual.EnteredProperty, value);
 					
 					if ((this.Parent != null) &&
 						(this.Parent.IsEntered == false) &&
@@ -1481,7 +1412,8 @@ namespace Epsitec.Common.Widgets
 				else
 				{
 					Widget.entered_widgets.Remove (this);
-					this.widget_state &= ~ WidgetState.Entered;
+
+					this.SetValue (Visual.EnteredProperty, value);
 					
 					//	Il faut aussi supprimer les éventuels enfants encore marqués comme 'entered'.
 					//	Pour ce faire, on passe en revue tous les widgets à la recherche d'enfants

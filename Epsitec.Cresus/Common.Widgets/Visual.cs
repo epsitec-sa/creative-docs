@@ -78,7 +78,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		public Visual Parent
+		public Visual							Parent
 		{
 			get
 			{
@@ -425,8 +425,21 @@ namespace Epsitec.Common.Widgets
 				this.SetValue (Visual.MaxHeightProperty, value);
 			}
 		}
-		
-		
+
+
+		public ActiveState						ActiveState
+		{
+			get
+			{
+				return (ActiveState) this.GetValue (Visual.ActiveStateProperty);
+			}
+			set
+			{
+				this.SetValue (Visual.ActiveStateProperty, value);
+			}
+		}
+
+
 		public bool								Visibility
 		{
 			get
@@ -508,6 +521,46 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		public bool								IsActive
+		{
+			get
+			{
+				return this.ActiveState == ActiveState.Yes;
+			}
+		}
+		
+		public bool								IsEntered
+		{
+			get
+			{
+				return (bool) this.GetValue (Visual.EnteredProperty);
+			}
+		}
+
+		public bool								IsSelected
+		{
+			get
+			{
+				return (bool) this.GetValue (Visual.SelectedProperty);
+			}
+		}
+
+		public bool								IsEngaged
+		{
+			get
+			{
+				return (bool) this.GetValue (Visual.EngagedProperty);
+			}
+		}
+
+		public bool								InError
+		{
+			get
+			{
+				return (bool) this.GetValue (Visual.InErrorProperty);
+			}
+		}
+		
 
 		public bool								SyncPaint
 		{
@@ -1362,9 +1415,15 @@ namespace Epsitec.Common.Widgets
 		public static readonly DependencyProperty MinHeightProperty				= DependencyProperty.Register ("MinHeight", typeof (double), typeof (Visual), new VisualPropertyMetadata (0.0, VisualPropertyMetadataOptions.AffectsMeasure));
 		public static readonly DependencyProperty MaxWidthProperty				= DependencyProperty.Register ("MaxWidth", typeof (double), typeof (Visual), new VisualPropertyMetadata (double.PositiveInfinity, VisualPropertyMetadataOptions.AffectsMeasure));
 		public static readonly DependencyProperty MaxHeightProperty				= DependencyProperty.Register ("MaxHeight", typeof (double), typeof (Visual), new VisualPropertyMetadata (double.PositiveInfinity, VisualPropertyMetadataOptions.AffectsMeasure));
+
+		public static readonly DependencyProperty ActiveStateProperty			= DependencyProperty.Register ("ActiveState", typeof (ActiveState), typeof (Visual), new VisualPropertyMetadata (ActiveState.No, VisualPropertyMetadataOptions.AffectsDisplay));
 		
 		public static readonly DependencyProperty VisibilityProperty			= DependencyProperty.Register ("Visibility", typeof (bool), typeof (Visual), new VisualPropertyMetadata (true, new SetValueOverrideCallback (Visual.SetVisibilityValue), VisualPropertyMetadataOptions.None));
 		public static readonly DependencyProperty EnableProperty				= DependencyProperty.Register ("Enable", typeof (bool), typeof (Visual), new VisualPropertyMetadata (true, new SetValueOverrideCallback (Visual.SetEnableValue), VisualPropertyMetadataOptions.None));
+		public static readonly DependencyProperty EnteredProperty				= DependencyProperty.Register ("Entered", typeof (bool), typeof (Visual), new VisualPropertyMetadata (false, VisualPropertyMetadataOptions.AffectsDisplay));
+		public static readonly DependencyProperty SelectedProperty				= DependencyProperty.Register ("Selected", typeof (bool), typeof (Visual), new VisualPropertyMetadata (false, VisualPropertyMetadataOptions.AffectsDisplay));
+		public static readonly DependencyProperty EngagedProperty				= DependencyProperty.Register ("Engaged", typeof (bool), typeof (Visual), new VisualPropertyMetadata (false, VisualPropertyMetadataOptions.AffectsDisplay));
+		public static readonly DependencyProperty InErrorProperty				= DependencyProperty.Register ("InError", typeof (bool), typeof (Visual), new VisualPropertyMetadata (false, VisualPropertyMetadataOptions.AffectsDisplay));
 
 		public static readonly DependencyProperty InheritsParentFocusProperty	= DependencyProperty.Register ("InheritsParentFocus", typeof (bool), typeof (Visual), new VisualPropertyMetadata (false, Visual.SetInheritsParentFocus, VisualPropertyMetadataOptions.None));
 

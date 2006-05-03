@@ -322,6 +322,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Controllers\AbstractController.cs" />
+    <Compile Include="ActiveState.cs" />
     <Compile Include="Helpers\IClientInfo.cs" />
     <Compile Include="IController.cs" />
     <Compile Include="Layouts\LayoutMode.cs" />
