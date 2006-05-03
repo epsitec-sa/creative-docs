@@ -44,8 +44,8 @@ namespace Epsitec.Common.Dialogs
 			Button button2;
 			Button button3 = null;
 			
-			double dx = body.Width;
-			double dy = body.Height;
+			double dx = body.PreferredWidth;
+			double dy = body.PreferredHeight;
 			
 			dx = System.Math.Max (dx, 3*75+4*8);
 			
@@ -60,12 +60,12 @@ namespace Epsitec.Common.Dialogs
 			this.window.MakeSecondaryWindow ();
 			
 			body.SetParent (this.window.Root);
-			body.Bounds          = new Drawing.Rectangle (8, 16+24+16, dx, dy);
-			body.TabIndex        = 1;
-			body.TabNavigation   = Widget.TabNavigationMode.ForwardTabPassive;
+			body.SetManualBounds(new Drawing.Rectangle(8, 16+24+16, dx, dy));
+			body.TabIndex      = 1;
+			body.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 			
 			button1               = new Button (this.window.Root);
-			button1.Bounds        = new Drawing.Rectangle (this.window.Root.Width - 3*75 - 3*8, 16, 75, button1.Height);
+			button1.SetManualBounds(new Drawing.Rectangle(this.window.Root.ActualWidth - 3*75 - 3*8, 16, 75, button1.ActualHeight));
 			button1.Text          = Widgets.Res.Strings.Dialog.Button.Yes;
 			button1.Command       = "ValidateDialogYes";
 			button1.TabIndex      = 2;
@@ -73,7 +73,7 @@ namespace Epsitec.Common.Dialogs
 			button1.ButtonStyle   = ButtonStyle.DefaultAccept;
 			
 			button2               = new Button (this.window.Root);
-			button2.Bounds        = new Drawing.Rectangle (this.window.Root.Width - 2*75 - 2*8, 16, 75, button2.Height);
+			button2.SetManualBounds(new Drawing.Rectangle(this.window.Root.ActualWidth - 2*75 - 2*8, 16, 75, button2.ActualHeight));
 			button2.Text          = Widgets.Res.Strings.Dialog.Button.No;
 			button2.Command       = "ValidateDialogNo";
 			button2.TabIndex      = 3;
@@ -82,7 +82,7 @@ namespace Epsitec.Common.Dialogs
 			if (this.hide_cancel == false)
 			{
 				button3               = new Button (this.window.Root);
-				button3.Bounds        = new Drawing.Rectangle (this.window.Root.Width - 75 - 8, 16, 75, button3.Height);
+				button3.SetManualBounds(new Drawing.Rectangle(this.window.Root.ActualWidth - 75 - 8, 16, 75, button3.ActualHeight));
 				button3.Text          = Widgets.Res.Strings.Dialog.Button.Cancel;
 				button3.Name          = "Cancel";
 				button3.Command       = "QuitDialog";
@@ -91,7 +91,7 @@ namespace Epsitec.Common.Dialogs
 				button3.ButtonStyle   = ButtonStyle.DefaultCancel;
 			}
 			
-			AbstractMessageDialog.LayoutButtons (this.window.Root.Width, button1, button2, button3);
+			AbstractMessageDialog.LayoutButtons (this.window.Root.ActualWidth, button1, button2, button3);
 			
 			this.window.FocusedWidget = body.FindTabWidget (Widget.TabNavigationDir.Forwards, Widget.TabNavigationMode.ActivateOnTab);
 		}

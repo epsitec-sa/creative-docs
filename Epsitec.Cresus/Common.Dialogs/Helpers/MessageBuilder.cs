@@ -19,7 +19,7 @@ namespace Epsitec.Common.Dialogs.Helpers
 			Widgets.StaticImage widget_icon = new Widgets.StaticImage (container, icon_name);
 			Widgets.StaticText  widget_text = new Widgets.StaticText (container, message);
 			
-			widget_icon.Size          = new Drawing.Size (48, 48);
+			widget_icon.PreferredSize = new Drawing.Size (48, 48);
 			widget_icon.Anchor        = Widgets.AnchorStyles.TopLeft;
 			widget_icon.Margins = new Drawing.Margins (0, 0, 0, 0);
 			
@@ -32,9 +32,9 @@ namespace Epsitec.Common.Dialogs.Helpers
 			
 			widget_text.TextBreakMode = Drawing.TextBreakMode.Hyphenate;
 			widget_text.Anchor        = Widgets.AnchorStyles.All;
-			widget_text.Margins = new Drawing.Margins (widget_icon.Width + 8, 0, 0, 0);
+			widget_text.Margins = new Drawing.Margins (widget_icon.ActualWidth + 8, 0, 0, 0);
 			
-			container.Size = new Drawing.Size (widget_icon.Width + 8 + width, System.Math.Max (widget_icon.Height, height));
+			container.PreferredSize = new Drawing.Size (widget_icon.PreferredWidth + 8 + width, System.Math.Max (widget_icon.PreferredHeight, height));
 			
 			return container;
 		}
