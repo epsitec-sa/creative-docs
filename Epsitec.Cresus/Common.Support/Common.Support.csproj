@@ -122,9 +122,6 @@
     <Compile Include="AssemblyLoader.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="BundleAttribute.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Clipboard.cs">
       <SubType>Code</SubType>
     </Compile>
