@@ -510,7 +510,7 @@ namespace Epsitec.Common.Widgets
 		{
 			MenuItem item = widget as MenuItem;
 			
-			item.Size = item.GetBestFitSize ();
+			item.PreferredSize = item.GetBestFitSize ();
 			item.DefineMenuOrientation (this.MenuOrientation);
 			
 			this.Children.Add (item);

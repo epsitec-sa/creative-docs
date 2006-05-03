@@ -43,11 +43,11 @@ namespace Epsitec.Common.Widgets.Layouts
 
 				if (double.IsNaN (dx))
 				{
-					dx = child.Width;		//	TODO: améliorer
+					dx = child.ActualWidth;		//	TODO: améliorer
 				}
 				if (double.IsNaN (dy))
 				{
-					dy = child.Height;		//	TODO: améliorer
+					dy = child.ActualHeight;		//	TODO: améliorer
 				}
 				
 				switch (anchor_x)
@@ -61,8 +61,8 @@ namespace Epsitec.Common.Widgets.Layouts
 						x1 = x2 - dx;
 						break;
 					case AnchorStyles.None:							//	ne touche à rien...
-						x1 = child.Left;
-						x2 = child.Right;
+						x1 = child.ActualBounds.Left;
+						x2 = child.ActualBounds.Right;
 						break;
 					case AnchorStyles.LeftAndRight:					//	[x1] fixe à gauche, [x2] fixe à droite
 						x1 = client.Left + margins.Left;
@@ -83,8 +83,8 @@ namespace Epsitec.Common.Widgets.Layouts
 						y1 = y2 - dy;
 						break;
 					case AnchorStyles.None:							//	ne touche à rien...
-						y1 = child.Bottom;
-						y2 = child.Top;
+						y1 = child.ActualBounds.Bottom;
+						y2 = child.ActualBounds.Top;
 						break;
 					case AnchorStyles.TopAndBottom:					//	[y1] fixe en bas, [y2] fixe en haut
 						y1 = client.Bottom + margins.Bottom;
@@ -229,7 +229,7 @@ namespace Epsitec.Common.Widgets.Layouts
 					break;
 			}
 
-			Drawing.Rectangle oldBounds = child.Bounds;
+			Drawing.Rectangle oldBounds = child.ActualBounds;
 			Drawing.Rectangle newBounds = bounds;
 			
 			child.SetBounds (newBounds);

@@ -99,46 +99,6 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		#region IBundleSupport Members
-		public override string						PublicClassName
-		{
-			get { return "Window"; }
-		}
-		
-		public override void RestoreFromBundle(Support.ObjectBundler bundler, Support.ResourceBundle bundle)
-		{
-			string       name = this.Name;
-			Drawing.Size size = this.Size;
-			string       text = this.Text;
-			
-			WindowStyles window_styles = this.WindowStyles;
-			WindowType   window_type   = this.WindowType;
-			
-			this.window = new Window (this);
-			
-			this.window.Name             = name;
-			this.window.ClientSize       = size;
-			this.window.Text             = this.ResourceManager.ResolveTextRef (text);
-			this.window.WindowStyles     = window_styles;
-			this.window.WindowType       = window_type;
-			this.window.PreventAutoClose = true;
-			
-			this.Name = name;
-			this.Text = text;
-			
-			base.RestoreFromBundle (bundler, bundle);
-			
-			if (bundle["icon"].Type == Support.ResourceFieldType.Data)
-			{
-				this.window.Icon = this.ResourceManager.GetImage ("res:" + bundle["icon"].AsString);
-			}
-			
-			this.is_ready = true;
-			this.Invalidate ();
-		}
-		#endregion
-
-
 		public bool DoesVisualContainKeyboardFocus(Visual visual)
 		{
 			//	Retourne true si le visual passé en entrée contient le focus,
@@ -185,7 +145,7 @@ namespace Epsitec.Common.Widgets
 			}
 			else
 			{
-				return this.Size;
+				return this.PreferredSize;
 			}
 		}
 

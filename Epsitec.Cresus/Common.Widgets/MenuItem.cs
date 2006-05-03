@@ -636,7 +636,7 @@ namespace Epsitec.Common.Widgets
 				
 				widget.Dock = DockStyle.Fill;
 				
-				menu.Root.Size = size;
+				menu.Root.SetManualBounds (new Drawing.Rectangle (Drawing.Point.Zero, size));
 				menu.Root.Children.Add (widget);
 				menu.MenuType = MenuItem.GetParentMenuItem (widget) == null ? MenuType.Undefined : MenuType.Submenu;
 				

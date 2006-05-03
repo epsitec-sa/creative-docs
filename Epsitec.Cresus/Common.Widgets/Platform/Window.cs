@@ -1130,7 +1130,7 @@ namespace Epsitec.Common.Widgets.Platform
 			{
 				this.graphics.Pixmap.Clear ();
 				
-				this.widget_window.Root.Size = new Drawing.Size (width, height);
+				this.widget_window.Root.SetManualBounds (new Drawing.Rectangle (0, 0, width, height));
 				this.dirty_rectangle = new Drawing.Rectangle (0, 0, width, height);
 				this.dirty_region    = new Drawing.DirtyRegion ();
 				this.dirty_region.Add (this.dirty_rectangle);

@@ -47,11 +47,11 @@ namespace Epsitec.Common.Widgets.Layouts
 
 				if (double.IsNaN (dx))
 				{
-					dx = child.Width;		//	TODO: améliorer
+					dx = child.ActualWidth;		//	TODO: améliorer
 				}
 				if (double.IsNaN (dy))
 				{
-					dy = child.Height;		//	TODO: améliorer
+					dy = child.ActualHeight;		//	TODO: améliorer
 				}
 
 				dx += child.Margins.Width;
@@ -161,7 +161,7 @@ namespace Epsitec.Common.Widgets.Layouts
 						continue;
 					}
 					
-					bounds = child.Bounds;
+					bounds = child.ActualBounds;
 					bounds.Offset (0, - push_dy);
 					child.SetBounds (bounds);
 				}
@@ -179,7 +179,7 @@ namespace Epsitec.Common.Widgets.Layouts
 						continue;
 					}
 					
-					bounds = child.Bounds;
+					bounds = child.ActualBounds;
 					bounds.Offset (push_dx, 0);
 					child.SetBounds (bounds);
 				}
@@ -256,38 +256,38 @@ namespace Epsitec.Common.Widgets.Layouts
 				{
 					case DockStyle.Top:
 						min_dx  = System.Math.Max (min_dx, min.Width    + min_ox);
-						min_dy  = System.Math.Max (min_dy, child.Height + min_oy);
-						min_oy += child.Height + margins.Height;
+						min_dy  = System.Math.Max (min_dy, child.ActualHeight + min_oy);
+						min_oy += child.ActualHeight + margins.Height;
 						max_dx  = System.Math.Min (max_dx, max.Width    + max_ox);
 //						max_dy  = System.Math.Min (max_dy, child.Height + max_oy);
-						max_oy += child.Height + margins.Height;
+						max_oy += child.ActualHeight + margins.Height;
 						break;
 					
 					case DockStyle.Bottom:
 						min_dx  = System.Math.Max (min_dx, min.Width    + min_ox);
-						min_dy  = System.Math.Max (min_dy, child.Height + min_oy);
-						min_oy += child.Height + margins.Height;
+						min_dy  = System.Math.Max (min_dy, child.ActualHeight + min_oy);
+						min_oy += child.ActualHeight + margins.Height;
 						max_dx  = System.Math.Min (max_dx, max.Width    + max_ox);
 //						max_dy  = System.Math.Min (max_dy, child.Height + max_oy);
-						max_oy += child.Height + margins.Height;
+						max_oy += child.ActualHeight + margins.Height;
 						break;
 						
 					case DockStyle.Left:
-						min_dx  = System.Math.Max (min_dx, child.Width  + min_ox);
+						min_dx  = System.Math.Max (min_dx, child.ActualWidth  + min_ox);
 						min_dy  = System.Math.Max (min_dy, min.Height   + min_oy);
-						min_ox += child.Width + margins.Width;
+						min_ox += child.ActualWidth + margins.Width;
 //						max_dx  = System.Math.Min (max_dx, child.Width  + max_ox);
 						max_dy  = System.Math.Min (max_dy, max.Height   + max_oy);
-						max_ox += child.Width + margins.Width;
+						max_ox += child.ActualWidth + margins.Width;
 						break;
 					
 					case DockStyle.Right:
-						min_dx  = System.Math.Max (min_dx, child.Width  + min_ox);
+						min_dx  = System.Math.Max (min_dx, child.ActualWidth  + min_ox);
 						min_dy  = System.Math.Max (min_dy, min.Height   + min_oy);
-						min_ox += child.Width + margins.Width;
+						min_ox += child.ActualWidth + margins.Width;
 //						max_dx  = System.Math.Min (max_dx, child.Width  + max_ox);
 						max_dy  = System.Math.Min (max_dy, max.Height   + max_oy);
-						max_ox += child.Width + margins.Width;
+						max_ox += child.ActualWidth + margins.Width;
 						break;
 					
 					case DockStyle.Fill:
@@ -385,7 +385,7 @@ namespace Epsitec.Common.Widgets.Layouts
 					break;
 			}
 
-			Drawing.Rectangle oldBounds = child.Bounds;
+			Drawing.Rectangle oldBounds = child.ActualBounds;
 			Drawing.Rectangle newBounds = bounds;
 
 			child.SetBounds (newBounds);

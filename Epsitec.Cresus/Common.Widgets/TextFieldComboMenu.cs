@@ -89,11 +89,11 @@ namespace Epsitec.Common.Widgets
 				if ((this.Parent != null) &&
 					(this.RootParent is WindowRoot))
 				{
-					this.RootParent.Size = new Drawing.Size (width, height);
+					this.RootParent.SetManualBounds (new Drawing.Rectangle (0, 0, width, height));
 				}
 				else
 				{
-					this.Size = new Drawing.Size (width, height);
+					this.PreferredSize = new Drawing.Size (width, height);
 				}
 			}
 		}
