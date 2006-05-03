@@ -493,7 +493,7 @@ namespace Epsitec.Common.Widgets
 				mouse += ToolTip.offset;
 			}
 			
-			mouse.Y -= tip.ActualHeight;
+			mouse.Y -= tip.PreferredHeight;
 			
 			//	Modifie la position du tool-tip pour qu'il ne dépasse pas de l'écran.
 			
@@ -503,16 +503,17 @@ namespace Epsitec.Common.Widgets
 			{
 				mouse.Y = wa.Bottom;
 			}
-			if (mouse.X + tip.ActualWidth > wa.Right)  // dépasse à droite ?
+			if (mouse.X + tip.PreferredWidth > wa.Right)  // dépasse à droite ?
 			{
-				mouse.X = wa.Right - tip.ActualWidth;
+				mouse.X = wa.Right - tip.PreferredWidth;
 			}
 			
-			this.window.WindowBounds = new Drawing.Rectangle (mouse, tip.ActualSize);
+			this.window.WindowBounds = new Drawing.Rectangle (mouse, tip.PreferredSize);
 			this.window.Owner        = this.widget.Window;
 			
 			if (tip.Parent != this.window.Root)
 			{
+				tip.Dock = DockStyle.Fill;
 				this.window.Root.Children.Clear ();
 				this.window.Root.Children.Add (tip);
 			}
