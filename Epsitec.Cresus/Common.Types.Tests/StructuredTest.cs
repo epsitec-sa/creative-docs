@@ -1,5 +1,7 @@
-using NUnit.Framework;
+//	Copyright © 2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Responsable: Pierre ARNAUD
 
+using NUnit.Framework;
 using System.Collections.Generic;
 
 namespace Epsitec.Common.Types
@@ -7,24 +9,11 @@ namespace Epsitec.Common.Types
 	[TestFixture] public class StructuredTest
 	{
 		[Test]
-		public void CheckStructuredRecordType()
+		public void CheckStructuredRecordTypeIsPathValid()
 		{
 			StructuredRecordType record = new StructuredRecordType ();
-			StructuredRecordType subRec1 = new StructuredRecordType ();
-			StructuredRecordType subRec2 = new StructuredRecordType ();
 
-			record.Fields.Add ("Number1", new DecimalType ());
-			record.Fields.Add ("Text1", new StringType ());
-			record.Fields.Add ("Number2", new DecimalType (new DecimalRange (0.0M, 999.9M, 0.1M)));
-			
-			record.Fields.Add ("Personne", subRec1);
-
-			subRec1.Fields.Add ("Nom", new StringType ());
-			subRec1.Fields.Add ("Prénom", new StringType ());
-			subRec1.Fields.Add ("Adresse", subRec2);
-
-			subRec2.Fields.Add ("NPA", new DecimalType (1M, 99999M, 1M));
-			subRec2.Fields.Add ("Ville", new StringType ());
+			StructuredTest.Fill (record);
 
 			Assert.IsTrue (record.IsPathValid ("Number1"));
 			Assert.IsTrue (record.IsPathValid ("Number2"));
@@ -38,9 +27,40 @@ namespace Epsitec.Common.Types
 			Assert.IsTrue (record.IsPathValid ("Personne.Adresse"));
 			Assert.IsTrue (record.IsPathValid ("Personne.Adresse.NPA"));
 			Assert.IsTrue (record.IsPathValid ("Personne.Adresse.Ville"));
+		}
 
+		[Test]
+		public void CheckStructuredRecordTypeGetFieldType()
+		{
+			StructuredRecordType record = new StructuredRecordType ();
 
+			StructuredTest.Fill (record);
 
+			Assert.IsTrue (record.GetFieldType ("Number1") is DecimalType);
+			Assert.IsTrue (record.GetFieldType ("Text1") is StringType);
+			
+			Assert.IsTrue (record.GetFieldType ("Personne") is StructuredRecordType);
+			Assert.IsTrue (record.GetFieldType ("Personne.Adresse") is StructuredRecordType);
+			Assert.IsTrue (record.GetFieldType ("Personne.Adresse.NPA") is IntegerType);
+		}
+
+		private static void Fill(StructuredRecordType record)
+		{
+			StructuredRecordType subRec1 = new StructuredRecordType ();
+			StructuredRecordType subRec2 = new StructuredRecordType ();
+
+			record.Fields.Add ("Number1", new DecimalType ());
+			record.Fields.Add ("Text1", new StringType ());
+			record.Fields.Add ("Number2", new DecimalType (new DecimalRange (0.0M, 999.9M, 0.1M)));
+
+			record.Fields.Add ("Personne", subRec1);
+
+			subRec1.Fields.Add ("Nom", new StringType ());
+			subRec1.Fields.Add ("Prénom", new StringType ());
+			subRec1.Fields.Add ("Adresse", subRec2);
+
+			subRec2.Fields.Add ("NPA", new IntegerType (1, 999999));
+			subRec2.Fields.Add ("Ville", new StringType ());
 		}
 	}
 }

@@ -29,35 +29,39 @@ namespace Epsitec.Common.Types
 
 		public bool IsPathValid(string path)
 		{
+			return this.GetFieldType (path) != null;
+		}
+		
+		public INamedType GetFieldType(string path)
+		{
 			string[] names = StructuredRecordType.SplitPath (path);
 
 			if (names.Length == 0)
 			{
-				return false;
+				return null;
 			}
 
+			INamedType type = null;
 			StructuredRecordType record = this;
 
 			for (int i = 0; i < names.Length; i++)
 			{
 				if (record == null)
 				{
-					return false;
+					return null;
 				}
-				
-				INamedType value;
 
-				if (record.Fields.TryGetValue (names[i], out value))
+				if (record.Fields.TryGetValue (names[i], out type))
 				{
-					record = value as StructuredRecordType;
+					record = type as StructuredRecordType;
 				}
 				else
 				{
-					return false;
+					return null;
 				}
 			}
-			
-			return true;
+
+			return type;
 		}
 
 		public static string[] SplitPath(string path)
