@@ -133,7 +133,6 @@ namespace Epsitec.Common.Widgets
 			if (this.IsVertical)
 			{
 				this.PreferredSize = this.GetBestFitSize ();
-				
 				Layouts.LayoutContext.SyncArrange (this);
 			}
 		}
@@ -145,6 +144,8 @@ namespace Epsitec.Common.Widgets
 			Window.ResetMouseCursor ();
 			
 			MenuWindow window = MenuItem.GetMenuWindow (this) as MenuWindow;
+			
+			Layouts.LayoutContext.SyncArrange (this);
 			
 			pos.Y -= this.ActualHeight;
 			pos.X -= this.shadow.Left;
@@ -167,6 +168,8 @@ namespace Epsitec.Common.Widgets
 			
 			MenuWindow window = MenuItem.GetMenuWindow (this) as MenuWindow;
 			Window     owner  = parent.Window;
+
+			Layouts.LayoutContext.SyncArrange (this);
 			
 			pos.Y -= this.ActualHeight;
 			pos.X -= this.shadow.Left;
@@ -190,6 +193,8 @@ namespace Epsitec.Common.Widgets
 			
 			MenuWindow window = MenuItem.GetMenuWindow (this) as MenuWindow;
 			Window     owner  = parent.Window;
+
+			Layouts.LayoutContext.SyncArrange (this);
 			
 			pos.Y -= this.ActualHeight;
 			pos.X -= this.shadow.Left;

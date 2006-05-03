@@ -258,10 +258,14 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
+				if (this.dirtyLayout)
+				{
+					System.Diagnostics.Debug.WriteLine ("Dirty geometry in " + this.ToString ());
+				}
 				return true; //	this.dirtyLayout == false;
 			}
 		}
-		
+
 		public Drawing.Rectangle				ActualBounds
 		{
 			get
@@ -755,7 +759,7 @@ namespace Epsitec.Common.Widgets
 		
 		internal virtual void SetBounds(Drawing.Rectangle value)
 		{
-			Drawing.Rectangle oldValue = new Drawing.Rectangle (this.x, this.y, this.width, this.height);
+			Drawing.Rectangle oldValue = this.GetCurrentBounds ();
 			Drawing.Rectangle newValue = value;
 			
 			this.x      = value.Left;
@@ -789,6 +793,11 @@ namespace Epsitec.Common.Widgets
 			{
 				this.Invalidate ();
 			}
+		}
+
+		internal Drawing.Rectangle GetCurrentBounds()
+		{
+			return new Drawing.Rectangle (this.x, this.y, this.width, this.height);
 		}
 
 		protected virtual void SetBoundsOverride(Drawing.Rectangle oldRect, Drawing.Rectangle newRect)
@@ -1021,6 +1030,11 @@ namespace Epsitec.Common.Widgets
 		internal virtual void SetDirtyLayoutFlag()
 		{
 			this.dirtyLayout = true;
+		}
+		
+		internal virtual void ClearDirtyLayoutFlag()
+		{
+			this.dirtyLayout = false;
 		}
 
 		internal void SetParentVisual(Visual visual)

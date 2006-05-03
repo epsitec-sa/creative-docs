@@ -278,9 +278,9 @@ namespace Epsitec.Common.Widgets.Layouts
 				{
 					//	The visual has specified other measures. Its contents
 					//	will have to be arranged.
-					
+
 					this.AddToArrangeQueue (node.Visual, node.Depth);
-					
+
 					//	If the visual is either docked or anchored, then the
 					//	contents of the parent needs to be re-arranged too.
 
@@ -304,10 +304,14 @@ namespace Epsitec.Common.Widgets.Layouts
 
 							System.Diagnostics.Debug.Assert (Helpers.VisualTree.FindLayoutContext (node.Visual) == this);
 							System.Diagnostics.Debug.Assert (parent != null);
-							
+
 							this.AddToArrangeQueue (parent, depth);
 						}
 					}
+				}
+				else
+				{
+					node.Visual.ClearDirtyLayoutFlag ();
 				}
 
 				System.Diagnostics.Debug.Assert (this.cacheVisual == node.Visual);
