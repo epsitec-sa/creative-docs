@@ -1,6 +1,8 @@
 //	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
+using System.Collections.Generic;
+
 namespace Epsitec.Common.Widgets
 {
 	using ContentAlignment = Drawing.ContentAlignment;
@@ -80,9 +82,9 @@ namespace Epsitec.Common.Widgets
 			
 			this.PreferredSize = new Drawing.Size (this.DefaultWidth, this.DefaultHeight);
 			
-			lock (Widget.alive_widgets)
+			lock (Widget.aliveWidgets)
 			{
-				Widget.alive_widgets.Add (new System.WeakReference (this));
+				Widget.aliveWidgets.Add (new System.WeakReference (this));
 			}
 		}
 
@@ -258,11 +260,11 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return Widget.debug_dispose;
+				return Widget.debugDispose;
 			}
 			set
 			{
-				Widget.debug_dispose = value;
+				Widget.debugDispose = value;
 			}
 		}
 		
@@ -272,12 +274,12 @@ namespace Epsitec.Common.Widgets
 			{
 				System.Collections.ArrayList alive = new System.Collections.ArrayList ();
 				
-				lock (Widget.alive_widgets)
+				lock (Widget.aliveWidgets)
 				{
 					//	Passe en revue tous les widgets connus (même les décédés) et reconstruit
 					//	une liste ne contenant que les widgets vivants :
 					
-					foreach (System.WeakReference weak_ref in Widget.alive_widgets)
+					foreach (System.WeakReference weak_ref in Widget.aliveWidgets)
 					{
 						if (weak_ref.IsAlive)
 						{
@@ -288,7 +290,7 @@ namespace Epsitec.Common.Widgets
 					//	Remplace la liste des widgets connus par la liste à jour qui vient d'être
 					//	construite :
 					
-					Widget.alive_widgets = alive;
+					Widget.aliveWidgets = alive;
 				}
 				
 				return alive.Count;
@@ -301,9 +303,9 @@ namespace Epsitec.Common.Widgets
 			{
 				System.Collections.ArrayList alive = new System.Collections.ArrayList ();
 				
-				lock (Widget.alive_widgets)
+				lock (Widget.aliveWidgets)
 				{
-					foreach (System.WeakReference weak_ref in Widget.alive_widgets)
+					foreach (System.WeakReference weak_ref in Widget.aliveWidgets)
 					{
 						if (weak_ref.IsAlive)
 						{
@@ -1394,7 +1396,7 @@ namespace Epsitec.Common.Widgets
 				if (value)
 				{
 					Widget.ExitWidgetsNotParentOf (this);
-					Widget.entered_widgets.Add (this);
+					Widget.enteredWidgets.Add (this);
 
 					this.SetValue (Visual.EnteredProperty, value);
 					
@@ -1411,7 +1413,7 @@ namespace Epsitec.Common.Widgets
 				}
 				else
 				{
-					Widget.entered_widgets.Remove (this);
+					Widget.enteredWidgets.Remove (this);
 
 					this.SetValue (Visual.EnteredProperty, value);
 					
@@ -1421,9 +1423,9 @@ namespace Epsitec.Common.Widgets
 					
 					int i = 0;
 					
-					while (i < Widget.entered_widgets.Count)
+					while (i < Widget.enteredWidgets.Count)
 					{
-						Widget candidate = Widget.entered_widgets[i] as Widget;
+						Widget candidate = Widget.enteredWidgets[i];
 						
 						if (candidate.Parent == this)
 						{
@@ -1459,9 +1461,9 @@ namespace Epsitec.Common.Widgets
 		{
 			int i = 0;
 			
-			while (i < Widget.entered_widgets.Count)
+			while (i < Widget.enteredWidgets.Count)
 			{
-				Widget candidate = Widget.entered_widgets[i] as Widget;
+				Widget candidate = Widget.enteredWidgets[i];
 				
 				if (Helpers.VisualTree.IsAncestor (widget, candidate) == false)
 				{
@@ -1487,16 +1489,15 @@ namespace Epsitec.Common.Widgets
 		
 		public static void UpdateEntered(Window window, Message message)
 		{
-			int index = Widget.entered_widgets.Count;
+			int index = Widget.enteredWidgets.Count;
 			
 			while (index > 0)
 			{
 				index--;
 				
-				if (index < Widget.entered_widgets.Count)
+				if (index < Widget.enteredWidgets.Count)
 				{
-					Widget widget = Widget.entered_widgets[index] as Widget;
-					Widget.UpdateEntered (window, widget, message);
+					Widget.UpdateEntered (window, Widget.enteredWidgets[index], message);
 				}
 			}
 		}
@@ -2274,9 +2275,9 @@ namespace Epsitec.Common.Widgets
 			System.Collections.ArrayList list = new System.Collections.ArrayList ();
 			System.Collections.ArrayList dead = new System.Collections.ArrayList ();
 			
-			lock (Widget.alive_widgets)
+			lock (Widget.aliveWidgets)
 			{
-				foreach (System.WeakReference weak_ref in Widget.alive_widgets)
+				foreach (System.WeakReference weak_ref in Widget.aliveWidgets)
 				{
 					//	On utilise la liste des widgets connus qui permet d'avoir accès immédiatement
 					//	à tous les widgets sans nécessiter de descente récursive :
@@ -2307,7 +2308,7 @@ namespace Epsitec.Common.Widgets
 				
 				foreach (System.WeakReference weak_ref in dead)
 				{
-					Widget.alive_widgets.Remove (weak_ref);
+					Widget.aliveWidgets.Remove (weak_ref);
 				}
 			}
 			
@@ -4135,9 +4136,9 @@ namespace Epsitec.Common.Widgets
 		private Support.ResourceManager			resource_manager;
 		private IValidator						validator;
 		
-		static System.Collections.ArrayList		entered_widgets = new System.Collections.ArrayList ();
-		static System.Collections.ArrayList		alive_widgets   = new System.Collections.ArrayList ();
-		static bool								debug_dispose	= false;
+		static List<Widget>						enteredWidgets = new List<Widget> ();
+		static List<System.WeakReference>		aliveWidgets = new List<System.WeakReference> ();
+		static bool								debugDispose;
 		
 		private const string					prop_binding	= "$widget$binding$";
 	}
