@@ -261,7 +261,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				System.Collections.ArrayList alive = new System.Collections.ArrayList ();
+				List<System.WeakReference> alive = new List<System.WeakReference> ();
 				
 				lock (Widget.aliveWidgets)
 				{
@@ -330,8 +330,6 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 		}
-		
-		
 		
 		public ContentAlignment						Alignment
 		{
@@ -589,6 +587,8 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
+				WidgetState state = WidgetState.None;
+				
 				if (this.IsEntered)
 				{
 					state |= WidgetState.Entered;
@@ -597,7 +597,7 @@ namespace Epsitec.Common.Widgets
 				{
 					state |= WidgetState.Engaged;
 				}
-				if (this.Selected)
+				if (this.IsSelected)
 				{
 					state |= WidgetState.Selected;
 				}
