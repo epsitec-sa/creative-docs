@@ -285,8 +285,8 @@ namespace Epsitec.Common.Widgets
 				if (this.edit_bounds.IsValid)
 				{
 					bounds.Deflate (1, 1, 0, -1);
-					
-					this.edit_line.Bounds = bounds;
+
+					this.edit_line.SetManualBounds(bounds);
 					this.edit_line.Show ();
 					this.edit_line.UpdateGeometry ();
 					
@@ -344,9 +344,9 @@ namespace Epsitec.Common.Widgets
 			
 			if ((this.h_scroller.IsVisible) &&
 				(bounds.IsValid) &&
-				(bounds.Bottom <= this.h_scroller.Top))
+				(bounds.Bottom <= this.h_scroller.ActualBounds.Top))
 			{
-				bounds.Bottom = this.h_scroller.Top + 1;
+				bounds.Bottom = this.h_scroller.ActualBounds.Top + 1;
 			}
 			
 			return bounds;
@@ -690,7 +690,7 @@ namespace Epsitec.Common.Widgets
 					}
 					else
 					{
-						return 4 + this.LineHeight + this.caption.Height;
+						return 4 + this.LineHeight + this.caption.ActualHeight;
 					}
 				}
 			}
@@ -951,16 +951,16 @@ namespace Epsitec.Common.Widgets
 			public void UpdateGeometry()
 			{
 				double height = this.LineHeight;
-				double ox = -this.Bounds.X;
-				double oy = -this.Bounds.Y;
+				double ox = -this.ActualLocation.X;
+				double oy = -this.ActualLocation.Y;
 				
 				if ((this.caption != null) &&
 					(this.host.InteractionMode == ScrollInteractionMode.Search))
 				{
-					double dy = this.caption.Height;
+					double dy = this.caption.ActualHeight;
 					double yy = 4;
-					
-					this.caption.Bounds = new Drawing.Rectangle (2, yy + height, this.Client.Size.Width - 4, dy);
+
+					this.caption.SetManualBounds(new Drawing.Rectangle(2, yy + height, this.Client.Size.Width - 4, dy));
 					
 					oy += yy;
 				}
@@ -973,8 +973,8 @@ namespace Epsitec.Common.Widgets
 					{
 						cell.Offset (ox, oy);
 						cell.Height = height - 1;
-						
-						this.edit_widgets[i].Bounds = cell;
+
+						this.edit_widgets[i].SetManualBounds(cell);
 						this.edit_widgets[i].Show ();
 					}
 					else
@@ -1009,8 +1009,11 @@ namespace Epsitec.Common.Widgets
 						this.caption = new StaticText (this);
 					}
 					
-					this.caption.Text   = caption;
-					this.caption.Height = System.Math.Floor (this.caption.TextLayout.SingleLineSize.Height * 1.2);
+					this.caption.Text = caption;
+
+					Drawing.Rectangle rect = this.caption.ActualBounds;
+					rect.Height = System.Math.Floor (this.caption.TextLayout.SingleLineSize.Height * 1.2);
+					this.caption.SetManualBounds(rect);
 				}
 				
 				this.host.UpdateInnerTopMargin ();
@@ -1167,7 +1170,7 @@ namespace Epsitec.Common.Widgets
 				
 				if (this.is_toolbar_ok)
 				{
-					height += this.toolbar.Height;
+					height += this.toolbar.ActualHeight;
 				}
 				if (this.is_caption_ok)
 				{

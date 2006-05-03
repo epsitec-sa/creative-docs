@@ -380,7 +380,7 @@ namespace Epsitec.Common.Widgets
 			{
 				if ( page == this.ActivePage )  // est-ce la page active ?
 				{
-					Drawing.Rectangle rect = page.TabButton.Bounds;
+					Drawing.Rectangle rect = page.TabButton.ActualBounds;
 					begin = rect.Left;
 					end   = rect.Right;
 				}
@@ -579,7 +579,7 @@ namespace Epsitec.Common.Widgets
 					rect = new Drawing.Rectangle(0, this.Client.Size.Height-this.tabHeight, this.tabHeight, this.tabHeight);
 					rect.Deflate(2, 2);
 					rect.Offset(-2, 0);
-					this.arrowLeft.Bounds = rect;
+					this.arrowLeft.SetManualBounds(rect);
 					this.arrowLeft.Visibility = true;
 					this.arrowLeft.Enable = (this.scrollOffset > this.TabOffsetMin);
 
@@ -589,7 +589,7 @@ namespace Epsitec.Common.Widgets
 					rect = new Drawing.Rectangle(x, this.Client.Size.Height-this.tabHeight, this.tabHeight, this.tabHeight);
 					rect.Deflate(2, 2);
 					rect.Offset(2, 0);
-					this.arrowRight.Bounds = rect;
+					this.arrowRight.SetManualBounds(rect);
 					this.arrowRight.Visibility = true;
 					this.arrowRight.Enable = (this.scrollOffset < this.scrollTotalWidth-this.TabOffsetMax);
 				}
@@ -601,12 +601,12 @@ namespace Epsitec.Common.Widgets
 					Drawing.Rectangle rect = new Drawing.Rectangle(x, this.Client.Size.Height-this.tabHeight, this.tabHeight, this.tabHeight);
 					rect.Deflate(2, 2);
 					rect.Offset(6, 0);
-					this.arrowLeft.Bounds = rect;
+					this.arrowLeft.SetManualBounds(rect);
 					this.arrowLeft.Visibility = true;
 					this.arrowLeft.Enable = (this.scrollOffset > this.TabOffsetMin);
 
 					rect.Offset(this.tabHeight-4, 0);
-					this.arrowRight.Bounds = rect;
+					this.arrowRight.SetManualBounds(rect);
 					this.arrowRight.Visibility = true;
 					this.arrowRight.Enable = (this.scrollOffset < this.scrollTotalWidth-this.TabOffsetMax);
 				}
@@ -623,7 +623,7 @@ namespace Epsitec.Common.Widgets
 				if ( this.hasCloseButton )  x -= this.tabHeight-4;
 				Drawing.Rectangle rect = new Drawing.Rectangle(x, this.Client.Size.Height-this.tabHeight, this.tabHeight, this.tabHeight);
 				rect.Inflate(-2, -2);
-				this.buttonMenu.Bounds = rect;
+				this.buttonMenu.SetManualBounds(rect);
 				this.buttonMenu.Visibility = true;
 			}
 			else
@@ -635,7 +635,7 @@ namespace Epsitec.Common.Widgets
 			{
 				Drawing.Rectangle rect = new Drawing.Rectangle(this.Client.Size.Width-(this.tabHeight-2), this.Client.Size.Height-this.tabHeight, this.tabHeight, this.tabHeight);
 				rect.Inflate(-2, -2);
-				this.buttonClose.Bounds = rect;
+				this.buttonClose.SetManualBounds(rect);
 				this.buttonClose.Visibility = true;
 			}
 			else

@@ -26,8 +26,8 @@ namespace Epsitec.Common.Widgets
 			this.button.Name     = "Open";
 			this.button.Pressed += new MessageEventHandler (this.HandleButtonPressed);
 			
-			this.default_button_width = this.button.Width;
-			this.margins.Right        = this.button.Width;
+			this.default_button_width = this.button.DefaultWidth;
+			this.margins.Right        = this.button.DefaultWidth;
 		}
 		
 		public TextFieldCombo(Widget embedder) : this ()
@@ -184,7 +184,7 @@ namespace Epsitec.Common.Widgets
 			if (this.button != null)
 			{
 				this.margins.Right = this.button.Visibility ? this.default_button_width : 0;
-				this.button.Bounds = this.GetButtonBounds ();
+				this.button.SetManualBounds(this.GetButtonBounds());
 			}
 		}
 		
@@ -536,7 +536,7 @@ namespace Epsitec.Common.Widgets
 		{
 			TextFieldComboMenu menu = new TextFieldComboMenu ();
 			
-			menu.MinWidth = this.Width;
+			menu.MinWidth = this.ActualWidth;
 			
 			this.scroll_list = new ScrollList ();
 			this.scroll_list.ScrollListStyle = ScrollListStyle.Menu;
@@ -789,7 +789,7 @@ namespace Epsitec.Common.Widgets
 					this.menu.MaxSize = new Drawing.Size (this.menu.MaxWidth, max_height);
 					this.menu.AdjustSize ();
 					
-					size      = this.menu.Size;
+					size      = this.menu.ActualSize;
 					location  = pos;
 					animation = Animation.RollDown;
 				}
@@ -797,16 +797,16 @@ namespace Epsitec.Common.Widgets
 				{
 					//	Il faut dérouler le menu vers le haut.
 					
-					pos.Y += item.Height-2;
+					pos.Y += item.ActualHeight-2;
 					
 					max_height = working_area.Top - pos.Y;
 
 					this.menu.MaxSize = new Drawing.Size (this.menu.MaxWidth, max_height);
 					this.menu.AdjustSize ();
 					
-					pos.Y += this.menu.Height;
+					pos.Y += this.menu.ActualHeight;
 					
-					size      = this.menu.Size;
+					size      = this.menu.ActualSize;
 					location  = pos;
 					animation = Animation.RollUp;
 				}

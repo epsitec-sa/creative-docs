@@ -598,7 +598,7 @@ namespace Epsitec.Common.Widgets
 			r.Right  = rect.Left + hCircle;
 			r.Bottom = rect.Top - hCircle;
 			r.Top    = rect.Top;
-			this.circle.Bounds = r;
+			this.circle.SetManualBounds(r);
 			this.circle.Visibility = (visibleCircle);
 
 			double dx = System.Math.Floor((rect.Width-hCircle-10)/this.palette.Columns);
@@ -611,7 +611,7 @@ namespace Epsitec.Common.Widgets
 				r.Right = rect.Right+1;
 				r.Top = rect.Top;
 				r.Bottom = rect.Top-(dx*this.palette.Rows-1);
-				this.palette.Bounds = r;
+				this.palette.SetManualBounds(r);
 				this.palette.Show();
 			}
 			else
@@ -625,12 +625,12 @@ namespace Epsitec.Common.Widgets
 			{
 				r.Left  = 10;
 				r.Width = 12;
-				this.labels[i].Bounds = r;
+				this.labels[i].SetManualBounds(r);
 				this.labels[i].Visibility = (visibleFieldsRgb);
 
 				r.Left  = r.Right;
 				r.Width = 50;
-				this.fields[i].Bounds = r;
+				this.fields[i].SetManualBounds(r);
 				this.fields[i].Visibility = (visibleFieldsRgb);
 
 				r.Offset(0, -19);
@@ -642,12 +642,12 @@ namespace Epsitec.Common.Widgets
 			{
 				r.Left  = 10+70;
 				r.Width = 12;
-				this.labels[i].Bounds = r;
+				this.labels[i].SetManualBounds(r);
 				this.labels[i].Visibility = (visibleFieldsRgb);
 
 				r.Left  = r.Right;
 				r.Width = 50;
-				this.fields[i].Bounds = r;
+				this.fields[i].SetManualBounds(r);
 				this.fields[i].Visibility = (visibleFieldsRgb);
 
 				r.Offset(0, -19);
@@ -659,12 +659,12 @@ namespace Epsitec.Common.Widgets
 			{
 				r.Left  = 10;
 				r.Width = 12;
-				this.labels[i].Bounds = r;
+				this.labels[i].SetManualBounds(r);
 				this.labels[i].Visibility = (visibleFieldsCmyk);
 
 				r.Left  = r.Right;
 				r.Width = 50;
-				this.fields[i].Bounds = r;
+				this.fields[i].SetManualBounds(r);
 				this.fields[i].Visibility = (visibleFieldsCmyk);
 
 				r.Offset(0, -19);
@@ -674,24 +674,24 @@ namespace Epsitec.Common.Widgets
 			r.Bottom = r.Top-20;
 			r.Left  = 10+70;
 			r.Width = 12;
-			this.labels[10].Bounds = r;
+			this.labels[10].SetManualBounds(r);
 			this.labels[10].Visibility = (visibleFieldsCmyk);
 
 			r.Left  = r.Right;
 			r.Width = 50;
-			this.fields[10].Bounds = r;
+			this.fields[10].SetManualBounds(r);
 			this.fields[10].Visibility = (visibleFieldsCmyk);
 
 			r.Top    = rect.Bottom+3*19;
 			r.Bottom = r.Top-20;
 			r.Left  = 10;
 			r.Width = 12;
-			this.labels[11].Bounds = r;
+			this.labels[11].SetManualBounds(r);
 			this.labels[11].Visibility = (visibleFieldsGray);
 
 			r.Left  = r.Right;
 			r.Width = 50;
-			this.fields[11].Bounds = r;
+			this.fields[11].SetManualBounds(r);
 			this.fields[11].Visibility = (visibleFieldsGray);
 
 			r.Top    = rect.Bottom+3*19;
@@ -700,12 +700,12 @@ namespace Epsitec.Common.Widgets
 			{
 				r.Left  = 10+70+70;
 				r.Width = 12;
-				this.labels[i].Bounds = r;
+				this.labels[i].SetManualBounds(r);
 				this.labels[i].Visibility = (visibleFields);
 
 				r.Left  = r.Right;
 				r.Width = 50;
-				this.fields[i].Bounds = r;
+				this.fields[i].SetManualBounds(r);
 				this.fields[i].Visibility = (visibleFields);
 
 				r.Offset(0, -19);
@@ -713,19 +713,19 @@ namespace Epsitec.Common.Widgets
 			
 			r.Left  = 10+70+70;
 			r.Width = 12;
-			this.labelHexa.Bounds = r;
+			this.labelHexa.SetManualBounds(r);
 
 			r.Left  = r.Right;
 			r.Width = 50;
-			this.fieldHexa.Bounds = r;
+			this.fieldHexa.SetManualBounds(r);
 
 			r.Offset(0, -19);
 
 			r.Top    = r.Top-2;
 			r.Bottom = r.Bottom+1;
-			r.Right = this.fields[3].Right;
+			r.Right = this.fields[3].ActualBounds.Right;
 			r.Left  = r.Right - r.Height;
-			this.picker.Bounds = r;
+			this.picker.SetManualBounds(r);
 			this.picker.Visibility = (visibleFields);
 
 			if ( this.hasCloseButton )
@@ -734,8 +734,8 @@ namespace Epsitec.Common.Widgets
 				r.Width = 14;
 				r.Bottom = rect.Top-14;
 				r.Top = rect.Top;
-				
-				this.buttonClose.Bounds = r;
+
+				this.buttonClose.SetManualBounds(r);
 				this.buttonClose.Visibility = true;
 			}
 			else
@@ -747,11 +747,11 @@ namespace Epsitec.Common.Widgets
 			r.Width = 14;
 			r.Bottom = rect.Top-hCircle;
 			r.Height = 14;
-			this.buttonRgb.Bounds = r;
+			this.buttonRgb.SetManualBounds(r);
 			r.Offset(14, 0);
-			this.buttonCmyk.Bounds = r;
+			this.buttonCmyk.SetManualBounds(r);
 			r.Offset(14, 0);
-			this.buttonGray.Bounds = r;
+			this.buttonGray.SetManualBounds(r);
 		}
 		
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)

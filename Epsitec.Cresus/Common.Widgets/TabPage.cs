@@ -45,12 +45,12 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.tabButton.Bounds;
+				return this.tabButton.ActualBounds;
 			}
 
 			set
 			{
-				this.tabButton.Bounds = value;
+				this.tabButton.SetManualBounds(value);
 			}
 		}
 

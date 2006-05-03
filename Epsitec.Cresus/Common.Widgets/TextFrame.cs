@@ -131,7 +131,7 @@ namespace Epsitec.Common.Widgets
 		
 		protected override void PaintBackgroundImplementation(Epsitec.Common.Drawing.Graphics graphics, Epsitec.Common.Drawing.Rectangle clip_rect)
 		{
-			graphics.AddFilledRectangle (0, 0, this.Width, this.Height);
+			graphics.AddFilledRectangle (this.ActualBounds);
 			graphics.RenderSolid (Drawing.Color.FromBrightness (1.0));
 			
 			this.has_selection = false;

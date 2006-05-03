@@ -229,7 +229,7 @@ namespace Epsitec.Common.Widgets
 				double yFromTop = this.TextLayout.LayoutSize.Height - pos.Y;
 				double yFromBot = this.realSize.Height - yFromTop + shift.Y + 1;
 
-				return this.MapClientToParent(new Drawing.Point(shift.X, yFromBot)) - this.Location;
+				return this.MapClientToParent(new Drawing.Point(shift.X, yFromBot)) - this.ActualLocation;
 			}
 
 			return base.GetBaseLine ();
@@ -652,10 +652,10 @@ namespace Epsitec.Common.Widgets
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
 			Drawing.Rectangle rect = new Drawing.Rectangle();
 			
-			rect.Left   = this.Bounds.Width-this.margins.Right-adorner.GeometryComboRightMargin;
-			rect.Right  = this.Bounds.Width-adorner.GeometryComboRightMargin;
+			rect.Left   = this.ActualWidth-this.margins.Right-adorner.GeometryComboRightMargin;
+			rect.Right  = this.ActualWidth-adorner.GeometryComboRightMargin;
 			rect.Bottom = adorner.GeometryComboBottomMargin;
-			rect.Top    = this.Bounds.Height-adorner.GeometryComboTopMargin;
+			rect.Top    = this.ActualHeight-adorner.GeometryComboTopMargin;
 			
 			return rect;
 		}
@@ -964,9 +964,9 @@ namespace Epsitec.Common.Widgets
 			
 			ScreenInfo si = ScreenInfo.Find(mouse);
 			Drawing.Rectangle wa = si.WorkingArea;
-			if ( mouse.Y-this.contextMenu.Height < wa.Bottom )
+			if ( mouse.Y-this.contextMenu.ActualHeight < wa.Bottom )
 			{
-				mouse.Y = wa.Bottom+this.contextMenu.Height;
+				mouse.Y = wa.Bottom+this.contextMenu.ActualHeight;
 			}
 			
 //			this.contextMenu.AttachCommandDispatcher(this.CommandDispatchers[0]);

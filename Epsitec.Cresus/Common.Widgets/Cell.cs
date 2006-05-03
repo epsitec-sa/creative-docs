@@ -23,7 +23,7 @@ namespace Epsitec.Common.Widgets
 			if ((widget.Dock == DockStyle.None) &&
 				(widget.Anchor == AnchorStyles.None))
 			{
-				widget.Bounds = widget.Parent.Bounds;
+				widget.SetManualBounds(widget.Parent.ActualBounds);
 			}
 			
 			if ( this.cellArray != null )

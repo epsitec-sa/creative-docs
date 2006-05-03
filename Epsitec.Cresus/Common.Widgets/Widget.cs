@@ -87,7 +87,7 @@ namespace Epsitec.Common.Widgets
 			this.default_font_height = System.Math.Floor(this.DefaultFont.LineHeight*this.DefaultFontSize);
 			this.alignment           = this.DefaultAlignment;
 			
-			this.Size = new Drawing.Size (this.DefaultWidth, this.DefaultHeight);
+			this.PreferredSize = new Drawing.Size (this.DefaultWidth, this.DefaultHeight);
 			
 			lock (Widget.alive_widgets)
 			{
@@ -1741,7 +1741,7 @@ namespace Epsitec.Common.Widgets
 		
 		public virtual bool HitTest(Drawing.Point point)
 		{
-			return this.Bounds.Contains (point);
+			return this.ActualBounds.Contains (point);
 		}
 		
 		
@@ -1807,8 +1807,8 @@ namespace Epsitec.Common.Widgets
 		{
 			Drawing.Point result = new Drawing.Point ();
 			
-			result.X = point.X - this.Left;
-			result.Y = point.Y - this.Bottom;
+			result.X = point.X - this.ActualLocation.X;
+			result.Y = point.Y - this.ActualLocation.Y;
 			
 			return result;
 		}
@@ -1816,9 +1816,9 @@ namespace Epsitec.Common.Widgets
 		public virtual Drawing.Point MapClientToParent(Drawing.Point point)
 		{
 			Drawing.Point result = new Drawing.Point ();
-			
-			result.X = point.X + this.Left;
-			result.Y = point.Y + this.Bottom;
+
+			result.X = point.X + this.ActualLocation.X;
+			result.Y = point.Y + this.ActualLocation.Y;
 			
 			return result;
 		}
@@ -2043,9 +2043,9 @@ namespace Epsitec.Common.Widgets
 			double model_offset  = model.GetBaseLine ().Y;
 			double widget_offset = widget.GetBaseLine ().Y;
 			
-			double y_bottom = model.Bottom + model_offset - widget_offset;
+			double y_bottom = model.ActualLocation.Y + model_offset - widget_offset;
 			
-			widget.Bounds = new Drawing.Rectangle (widget.Left, y_bottom, widget.Width, widget.Height);
+			widget.SetManualBounds(new Drawing.Rectangle (widget.ActualLocation.X, y_bottom, widget.ActualWidth, widget.ActualHeight));
 		}
 		
 		
@@ -3200,7 +3200,7 @@ namespace Epsitec.Common.Widgets
 				
 				Drawing.Rectangle original_clipping  = graphics.SaveClippingRectangle ();
 				Drawing.Transform original_transform = graphics.Transform;
-				Drawing.Transform graphics_transform = Drawing.Transform.FromTranslation (this.Location);
+				Drawing.Transform graphics_transform = Drawing.Transform.FromTranslation (this.ActualLocation);
 				
 				graphics.SetClippingRectangle (bounds);
 				

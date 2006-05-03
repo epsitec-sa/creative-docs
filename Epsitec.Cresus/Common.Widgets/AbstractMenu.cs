@@ -143,7 +143,7 @@ namespace Epsitec.Common.Widgets
 			{
 				Drawing.Size size = this.GetBestFitSize ();
 
-				this.Size = size;
+				this.SetManualBounds(new Drawing.Rectangle(Drawing.Point.Zero, size));
 				
 				Layouts.LayoutContext.SyncArrange (this);
 			}
@@ -157,7 +157,7 @@ namespace Epsitec.Common.Widgets
 			
 			MenuWindow window = MenuItem.GetMenuWindow (this) as MenuWindow;
 			
-			pos.Y -= this.Height;
+			pos.Y -= this.ActualHeight;
 			pos.X -= this.shadow.Left;
 			pos.Y += this.shadow.Top;
 			
@@ -179,7 +179,7 @@ namespace Epsitec.Common.Widgets
 			MenuWindow window = MenuItem.GetMenuWindow (this) as MenuWindow;
 			Window     owner  = parent.Window;
 			
-			pos.Y -= this.Height;
+			pos.Y -= this.ActualHeight;
 			pos.X -= this.shadow.Left;
 			pos.Y += this.shadow.Top;
 			
@@ -202,7 +202,7 @@ namespace Epsitec.Common.Widgets
 			MenuWindow window = MenuItem.GetMenuWindow (this) as MenuWindow;
 			Window     owner  = parent.Window;
 			
-			pos.Y -= this.Height;
+			pos.Y -= this.ActualHeight;
 			pos.X -= this.shadow.Left;
 			pos.Y += this.shadow.Top;
 			
@@ -451,7 +451,7 @@ namespace Epsitec.Common.Widgets
 				}
 				else
 				{
-					Drawing.Point test = Helpers.VisualTree.MapVisualToScreen (item, new Drawing.Point (item.Width, 0));
+					Drawing.Point test = Helpers.VisualTree.MapVisualToScreen (item, new Drawing.Point (item.ActualWidth, 0));
 					
 					test.X += size.Width;
 					
@@ -464,7 +464,7 @@ namespace Epsitec.Common.Widgets
 						//	de son parent :
 						
 						animation = Animation.RollRight;
-						location  = Helpers.VisualTree.MapVisualToScreen (item, new Drawing.Point (item.Width, item.Height));
+						location  = Helpers.VisualTree.MapVisualToScreen (item, new Drawing.Point (item.ActualWidth, item.ActualHeight));
 						
 						location.X -= this.menu.shadow.Left;
 						location.Y -= size.Height - this.menu.shadow.Top - 1;
@@ -475,7 +475,7 @@ namespace Epsitec.Common.Widgets
 						//	le sous-menu à gauche :
 						
 						animation = Animation.RollLeft;
-						location  = Helpers.VisualTree.MapVisualToScreen (item, new Drawing.Point (0, item.Height));
+						location  = Helpers.VisualTree.MapVisualToScreen (item, new Drawing.Point (0, item.ActualHeight));
 						
 						location.X -= size.Width + this.menu.shadow.Left;
 						location.Y -= size.Height - this.menu.shadow.Top - 1;

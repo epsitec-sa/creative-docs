@@ -150,7 +150,7 @@ namespace Epsitec.Common.Widgets
 				System.Diagnostics.Debug.Assert(icon != null);
 
 				Rectangle rect = new Rectangle(corner.X, corner.Y-this.defaultButtonHeight, this.defaultButtonWidth, this.defaultButtonHeight);
-				icon.Bounds = rect;
+				icon.SetManualBounds(rect);
 				icon.Column = column;
 				icon.Row = row;
 				icon.Index = row * 1000 + column;

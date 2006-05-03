@@ -79,7 +79,7 @@ namespace Epsitec.Common.Widgets
 		protected void UpdateGeometry()
 		{
 			Drawing.Rectangle bounds = new Drawing.Rectangle(0, 0, this.DefaultWidth, this.DefaultHeight);
-			this.Bounds = this.MapClientToParent(bounds);
+			this.SetManualBounds(this.MapClientToParent(bounds));
 		}
 
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)

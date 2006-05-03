@@ -532,7 +532,7 @@ namespace Epsitec.Common.Widgets
 		protected void StretchColumns()
 		{
 			//	Adapte les largeurs des colonnes à la largeur du widget.
-			double areaWidth = this.Width-this.margins.Width-this.leftMargin-this.rightMargin;
+			double areaWidth = this.ActualWidth-this.margins.Width-this.leftMargin-this.rightMargin;
 			double totalWidth = 0;
 			for ( int i=0 ; i<this.maxColumns ; i++ )
 			{
@@ -550,7 +550,7 @@ namespace Epsitec.Common.Widgets
 		protected void StretchRows()
 		{
 			//	Adapte les hauteurs des lignes à la hauteur du widget.
-			double areaHeight = this.Height-this.margins.Height-this.bottomMargin-this.topMargin;
+			double areaHeight = this.ActualHeight-this.margins.Height-this.bottomMargin-this.topMargin;
 			double totalHeight = 0;
 			for ( int i=0 ; i<this.maxRows ; i++ )
 			{
@@ -1004,7 +1004,7 @@ namespace Epsitec.Common.Widgets
 		protected bool Detect(Drawing.Point pos, out int row, out int column)
 		{
 			//	Détecte dans quelle cellule est un point.
-			Drawing.Rectangle rect = this.container.Bounds;
+			Drawing.Rectangle rect = this.container.ActualBounds;
 
 			row = column = -1;
 			if ( !rect.Contains(pos) )  return false;
@@ -1329,11 +1329,11 @@ namespace Epsitec.Common.Widgets
 			if ( (this.styleV & CellArrayStyles.Header) != 0 )  this.leftMargin = this.headerWidth;
 			if ( (this.styleH & CellArrayStyles.Header) != 0 )  this.topMargin  = this.headerHeight;
 
-			Drawing.Rectangle rect = this.Bounds;
+			Drawing.Rectangle rect = this.ActualBounds;
 			Drawing.Rectangle iRect = new Drawing.Rectangle(this.margins.Left, this.margins.Bottom, rect.Width-this.margins.Width, rect.Height-this.margins.Height);
 
-			this.rightMargin  = this.showScrollerV ? this.scrollerV.Width-1 : 0;
-			this.bottomMargin = this.showScrollerH ? this.scrollerH.Height-1 : 0;
+			this.rightMargin  = this.showScrollerV ? this.scrollerV.ActualWidth-1 : 0;
+			this.bottomMargin = this.showScrollerH ? this.scrollerH.ActualHeight-1 : 0;
 
 			iRect.Left   += this.leftMargin;
 			iRect.Right  -= this.rightMargin;
@@ -1354,8 +1354,8 @@ namespace Epsitec.Common.Widgets
 			{
 				Drawing.Rectangle sRect = iRect;
 				sRect.Left  = sRect.Right-1;
-				sRect.Right = sRect.Left+this.scrollerV.Width;
-				this.scrollerV.Bounds = sRect;
+				sRect.Right = sRect.Left+this.scrollerV.ActualWidth;
+				this.scrollerV.SetManualBounds(sRect);
 				this.scrollerV.Show();
 			}
 			else
@@ -1368,8 +1368,8 @@ namespace Epsitec.Common.Widgets
 			{
 				Drawing.Rectangle sRect = iRect;
 				sRect.Top    = sRect.Bottom+1;
-				sRect.Bottom = sRect.Top-this.scrollerH.Height;
-				this.scrollerH.Bounds = sRect;
+				sRect.Bottom = sRect.Top-this.scrollerH.ActualHeight;
+				this.scrollerH.SetManualBounds(sRect);
 				this.scrollerH.Show();
 			}
 			else
@@ -1380,7 +1380,7 @@ namespace Epsitec.Common.Widgets
 			//	Positionne le container.
 			if ( this.container != null )
 			{
-				this.container.Bounds = iRect;
+				this.container.SetManualBounds(iRect);
 				this.UpdateArrayGeometry();
 			}
 
@@ -1396,7 +1396,7 @@ namespace Epsitec.Common.Widgets
 				hRect.Right  = iRect.Left;
 				hRect.Top    = iRect.Top;
 				hRect.Bottom = iRect.Bottom;
-				this.containerV.Bounds = hRect;
+				this.containerV.SetManualBounds(hRect);
 				this.containerV.Show();
 				if ( this.isGrimy )  this.containerV.Children.Clear();
 
@@ -1408,7 +1408,7 @@ namespace Epsitec.Common.Widgets
 					hRect.Bottom = hRect.Top-this.RetHeightRow(i);
 					HeaderButton button = this.FindButtonV(i);
 					button.Show();
-					button.Bounds = hRect;
+					button.SetManualBounds(hRect);
 					button.IsDynamic = ( (this.styleV & CellArrayStyles.Sort) != 0 );
 					if ( this.isGrimy )  this.containerV.Children.Add(button);
 					hRect.Top = hRect.Bottom;
@@ -1434,7 +1434,7 @@ namespace Epsitec.Common.Widgets
 						sRect.Bottom = hRect.Bottom-this.sliderDim/2;
 						sRect.Top    = hRect.Bottom+this.sliderDim/2;
 						slider.Show();
-						slider.Bounds = sRect;
+						slider.SetManualBounds(sRect);
 						if ( this.isGrimy )  this.containerV.Children.Add(slider);
 					}
 					hRect.Top = hRect.Bottom;
@@ -1453,7 +1453,7 @@ namespace Epsitec.Common.Widgets
 				hRect.Top    = iRect.Top+this.topMargin;
 				hRect.Left   = iRect.Left;
 				hRect.Right  = iRect.Right;
-				this.containerH.Bounds = hRect;
+				this.containerH.SetManualBounds(hRect);
 				this.containerH.Show();
 				if ( this.isGrimy )  this.containerH.Children.Clear();
 
@@ -1465,7 +1465,7 @@ namespace Epsitec.Common.Widgets
 					hRect.Right = hRect.Left+this.RetWidthColumn(i);
 					HeaderButton button = this.FindButtonH(i);
 					button.Show();
-					button.Bounds = hRect;
+					button.SetManualBounds(hRect);
 					button.IsDynamic = ( (this.styleH & CellArrayStyles.Sort) != 0 );
 					if ( this.isGrimy )  this.containerH.Children.Add(button);
 					hRect.Left = hRect.Right;
@@ -1491,7 +1491,7 @@ namespace Epsitec.Common.Widgets
 						sRect.Bottom = hRect.Bottom;
 						sRect.Top    = hRect.Top;
 						slider.Show();
-						slider.Bounds = sRect;
+						slider.SetManualBounds(sRect);
 						if ( this.isGrimy )  this.containerH.Children.Add(slider);
 					}
 					hRect.Left = hRect.Right;
@@ -1521,7 +1521,7 @@ namespace Epsitec.Common.Widgets
 			//	Traite l'ascenseur vertical.
 			if ( this.showScrollerV )
 			{
-				double areaHeight = this.Height-this.margins.Height-this.bottomMargin-this.topMargin;
+				double areaHeight = this.ActualHeight-this.margins.Height-this.bottomMargin-this.topMargin;
 				double totalHeight = 0;
 				for ( int i=0 ; i<this.maxRows ; i++ )
 				{
@@ -1552,7 +1552,7 @@ namespace Epsitec.Common.Widgets
 			//	Traite l'ascenseur horizontal.
 			if ( this.showScrollerH )
 			{
-				double areaWidth = this.Width-this.margins.Width-this.leftMargin-this.rightMargin;
+				double areaWidth = this.ActualWidth-this.margins.Width-this.leftMargin-this.rightMargin;
 				double totalWidth = 0;
 				
 				if ( this.isDraggingSlider )
@@ -1594,7 +1594,7 @@ namespace Epsitec.Common.Widgets
 			//	Met à jour la géométrie de toutes les cellules du tableau.
 			Cell focusedCell = null;
 			
-			Drawing.Rectangle rect = this.container.Bounds;
+			Drawing.Rectangle rect = this.container.ActualBounds;
 			double py = rect.Height+this.offsetV;
 			for ( int y=0 ; y<this.maxRows ; y++ )
 			{
@@ -1611,7 +1611,7 @@ namespace Epsitec.Common.Widgets
 					{
 						cRect.Left += 1;
 						cRect.Top  -= 1;  // laisse la place pour la grille
-						this.array[x,y].Bounds = cRect;
+						this.array[x, y].SetManualBounds(cRect);
 						this.array[x,y].SetParent (this.container);
 						this.array[x,y].Visibility = true;
 						this.array[x,y].SetArrayRank(this, x, y);

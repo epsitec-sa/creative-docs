@@ -384,7 +384,7 @@ namespace Epsitec.Common.Widgets
 					rect = new Drawing.Rectangle(px, py-height-1, width, height+1);
 					if ( column == this.columns-1 )  rect.Right  = lastRight;
 					if ( row    == this.rows-1    )  rect.Bottom = lastBottom;
-					this.buttonMain[i++].Bounds = rect;
+					this.buttonMain[i++].SetManualBounds(rect);
 
 					px += width;
 				}
@@ -395,12 +395,12 @@ namespace Epsitec.Common.Widgets
 			rect = box;
 			rect.Left = rect.Right-IconButtonsCombo.menuWidth;
 			rect.Bottom = rect.Top-System.Math.Floor(rect.Height*0.33);
-			this.buttonPrev.Bounds = rect;
+			this.buttonPrev.SetManualBounds(rect);
 			rect.Offset(0, -(rect.Height-1));
-			this.buttonNext.Bounds = rect;
+			this.buttonNext.SetManualBounds(rect);
 			rect.Offset(0, -(rect.Height+1));
 			rect.Bottom = box.Bottom;
-			this.buttonMenu.Bounds = rect;
+			this.buttonMenu.SetManualBounds(rect);
 		}
 
 		
@@ -612,7 +612,7 @@ namespace Epsitec.Common.Widgets
 
 			Drawing.Size size = this.scrollList.GetBestLineSize();
 			this.scrollList.LineHeight = size.Height;
-			menu.Size = new Drawing.Size(size.Width, 200);
+			menu.SetManualBounds(new Drawing.Rectangle(0, 0, size.Width, 200));
 			menu.AdjustSize();
 			MenuItem.SetMenuHost(this, new MenuHost(menu));
 			
@@ -814,7 +814,7 @@ namespace Epsitec.Common.Widgets
 					//	Il y a assez de place pour dérouler le menu vers le bas,
 					//	mais il faudra peut-être le raccourcir un bout :
 					
-					if ( this.menu.Height > maxHeight )  // pas assez de place en hauteur ?
+					if ( this.menu.ActualHeight > maxHeight )  // pas assez de place en hauteur ?
 					{
 						scrollWidth = 17;  // place pour l'ascenseur à droite
 					}
@@ -822,7 +822,7 @@ namespace Epsitec.Common.Widgets
 					this.menu.MaxSize = new Drawing.Size(this.menu.MaxSize.Width, maxHeight);
 					this.menu.AdjustSize();
 					
-					size      = this.menu.Size;
+					size      = this.menu.ActualSize;
 					location  = pos;
 					animation = Animation.RollDown;
 				}
@@ -830,11 +830,11 @@ namespace Epsitec.Common.Widgets
 				{
 					//	Il faut dérouler le menu vers le haut.
 					
-					pos.Y += item.Height-2;
+					pos.Y += item.ActualHeight-2;
 					
 					maxHeight = workingArea.Top - pos.Y;
 				
-					if ( this.menu.Height > maxHeight )  // pas assez de place en hauteur ?
+					if ( this.menu.ActualHeight > maxHeight )  // pas assez de place en hauteur ?
 					{
 						scrollWidth = 17;  // place pour l'ascenseur à droite
 					}
@@ -842,9 +842,9 @@ namespace Epsitec.Common.Widgets
 					this.menu.MaxSize = new Drawing.Size(this.menu.MaxSize.Width, maxHeight);
 					this.menu.AdjustSize();
 					
-					pos.Y += this.menu.Height;
+					pos.Y += this.menu.ActualHeight;
 					
-					size      = this.menu.Size;
+					size      = this.menu.ActualSize;
 					location  = pos;
 					animation = Animation.RollUp;
 				}

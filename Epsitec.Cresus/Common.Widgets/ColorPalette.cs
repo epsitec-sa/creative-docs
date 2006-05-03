@@ -381,7 +381,7 @@ namespace Epsitec.Common.Widgets
 				for ( int y=0 ; y<this.nbRows ; y++ )
 				{
 					Drawing.Rectangle r = new Drawing.Rectangle(pos.X, pos.Y, dx, dy);
-					this.palette[i].Bounds = r;
+					this.palette[i].SetManualBounds(r);
 					i ++;
 					pos.Y -= dy-1.0;
 				}
@@ -391,7 +391,7 @@ namespace Epsitec.Common.Widgets
 			if ( this.hasOptionButton )
 			{
 				Drawing.Rectangle r = new Drawing.Rectangle(rect.Left, rect.Top-14, 14, 14);
-				this.buttonOption.Bounds = r;
+				this.buttonOption.SetManualBounds(r);
 				this.buttonOption.Visibility = true;
 			}
 			else
@@ -427,8 +427,8 @@ namespace Epsitec.Common.Widgets
 			menu.Items.Add(new MenuItem("SavePalette", "", Res.Strings.ColorPalette.SavePalette, ""));
 			menu.AdjustSize();
 
-			Drawing.Point pos = button.MapClientToScreen(new Drawing.Point(0, button.Height));
-			pos.X -= menu.Width;
+			Drawing.Point pos = button.MapClientToScreen(new Drawing.Point(0, button.ActualHeight));
+			pos.X -= menu.ActualWidth;
 			menu.ShowAsContextMenu(this.Window, pos);
 		}
 

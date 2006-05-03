@@ -63,11 +63,11 @@ namespace Epsitec.Common.Widgets
 		{
 			base.OnClicked (e);
 			
-			Drawing.Point pos  = this.MapClientToScreen (new Drawing.Point (0, this.Height));
+			Drawing.Point pos  = this.MapClientToScreen (new Drawing.Point (0, this.ActualHeight));
 			VMenu         menu = this.GetMenu ();
 			
 			menu.Host = this;
-			pos.X    -= menu.Width;
+			pos.X    -= menu.ActualWidth;
 			
 			menu.ShowAsContextMenu (this.Window, pos);
 		}

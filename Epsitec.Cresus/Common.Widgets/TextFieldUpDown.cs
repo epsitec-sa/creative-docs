@@ -277,7 +277,7 @@ namespace Epsitec.Common.Widgets
 			base.UpdateGeometry ();
 			
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
-			Drawing.Rectangle rect = this.Bounds;
+			Drawing.Rectangle rect = this.ActualBounds;
 			double width = System.Math.Floor(rect.Height*adorner.GeometryUpDownWidthFactor);
 			this.margins.Right = width - AbstractTextField.FrameMargin;
 
@@ -293,11 +293,11 @@ namespace Epsitec.Common.Widgets
 
 				aRect.Bottom = adorner.GeometryUpDownBottomMargin;
 				aRect.Height = h;
-				this.arrowDown.Bounds = aRect;
+				this.arrowDown.SetManualBounds(aRect);
 
 				aRect.Bottom = rect.Height-adorner.GeometryUpDownTopMargin-h;
 				aRect.Height = h;
-				this.arrowUp.Bounds = aRect;
+				this.arrowUp.SetManualBounds(aRect);
 			}
 		}
 

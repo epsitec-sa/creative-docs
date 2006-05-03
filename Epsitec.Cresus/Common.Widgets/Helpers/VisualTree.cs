@@ -15,7 +15,7 @@ namespace Epsitec.Common.Widgets.Helpers
 		
 		public static Drawing.Point MapVisualToParent(Visual visual, Drawing.Point value)
 		{
-			Drawing.Rectangle bounds = visual.Bounds;
+			Drawing.Rectangle bounds = visual.ActualBounds;
 			
 			double x = value.X + bounds.Left;
 			double y = value.Y + bounds.Bottom;
@@ -30,7 +30,7 @@ namespace Epsitec.Common.Widgets.Helpers
 			
 			for ( ; visual != null; )
 			{
-				Drawing.Rectangle bounds = visual.Bounds;
+				Drawing.Rectangle bounds = visual.ActualBounds;
 				
 				x += bounds.Left;
 				y += bounds.Bottom;
@@ -43,7 +43,7 @@ namespace Epsitec.Common.Widgets.Helpers
 		
 		public static Drawing.Point MapParentToVisual(Visual visual, Drawing.Point value)
 		{
-			Drawing.Rectangle bounds = visual.Bounds;
+			Drawing.Rectangle bounds = visual.ActualBounds;
 			
 			double x = value.X - bounds.Left;
 			double y = value.Y - bounds.Bottom;
@@ -58,7 +58,7 @@ namespace Epsitec.Common.Widgets.Helpers
 			
 			for ( ; visual != null; )
 			{
-				Drawing.Rectangle bounds = visual.Bounds;
+				Drawing.Rectangle bounds = visual.ActualBounds;
 				
 				x -= bounds.Left;
 				y -= bounds.Bottom;

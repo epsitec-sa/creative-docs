@@ -146,7 +146,7 @@ namespace Epsitec.Common.Widgets
 		{
 			//	Indique si la souris est trop loin de la mini-palette.
 			Point p1 = this.MapClientToScreen(new Point(0, 0));
-			Point p2 = this.MapClientToScreen(new Point(this.Width, this.Height));
+			Point p2 = this.MapClientToScreen(new Point(this.ActualWidth, this.ActualHeight));
 			Rectangle rect = new Rectangle(p1, p2);
 
 			double dx = System.Math.Abs(mouse.X-rect.Center.X);

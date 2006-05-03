@@ -302,13 +302,13 @@ namespace Epsitec.Common.Widgets
 					rect.Left = start.X;
 					rect.Width = end.X-start.X-this.sliderDim;
 					this.Align(ref rect);
-					page.Bounds = rect;
+					page.SetManualBounds(rect);
 					page.Visibility = (rect.Width >= page.PaneHideSize);
 
 					rect.Left = end.X-this.sliderDim;
 					rect.Width = this.sliderDim;
 					this.Align(ref rect);
-					page.PaneButton.Bounds = rect;
+					page.PaneButton.SetManualBounds(rect);
 
 					if ( page.PaneToggle )
 					{
@@ -318,7 +318,7 @@ namespace Epsitec.Common.Widgets
 						arect.Left  -= 3;
 						arect.Right += 3;
 						arect.Top   = arect.Bottom+12;
-						page.GlyphButton.Bounds = arect;
+						page.GlyphButton.SetManualBounds(arect);
 
 						if ( this.RetSize(i) < (this.RetMinSize(i)+this.RetMaxSize(i))/2 )
 						{
@@ -343,12 +343,12 @@ namespace Epsitec.Common.Widgets
 					rect.Bottom = end.Y+this.sliderDim;
 					rect.Height = start.Y-end.Y-this.sliderDim;
 					this.Align(ref rect);
-					page.Bounds = rect;
+					page.SetManualBounds(rect);
 
 					rect.Bottom = end.Y;
 					rect.Height = this.sliderDim;
 					this.Align(ref rect);
-					page.PaneButton.Bounds = rect;
+					page.PaneButton.SetManualBounds(rect);
 
 					if ( page.PaneToggle )
 					{
@@ -358,7 +358,7 @@ namespace Epsitec.Common.Widgets
 						arect.Left   = arect.Right-12;
 						arect.Bottom -= 3;
 						arect.Top    += 3;
-						page.GlyphButton.Bounds = arect;
+						page.GlyphButton.SetManualBounds(arect);
 
 						if ( this.RetSize(i) < (this.RetMinSize(i)+this.RetMaxSize(i))/2 )
 						{
@@ -410,9 +410,9 @@ namespace Epsitec.Common.Widgets
 			{
 				case PaneBookBehaviour.Draft:
 					this.alphaBar = new AlphaBar();
-					this.alphaBar.Bounds = button.Bounds;
+					this.alphaBar.SetManualBounds(button.ActualBounds);
 					this.alphaBar.SetParent (this);
-					this.sliderDragRect = button.Bounds;
+					this.sliderDragRect = button.ActualBounds;
 
 					if ( this.type == PaneBookStyle.LeftRight )
 					{
@@ -554,7 +554,7 @@ namespace Epsitec.Common.Widgets
 			size = System.Math.Max(size, this.sliderDragMin);
 			size = System.Math.Min(size, this.sliderDragMax);
 
-			Drawing.Rectangle rect = this.alphaBar.Bounds;
+			Drawing.Rectangle rect = this.alphaBar.ActualBounds;
 
 			if ( this.type == PaneBookStyle.LeftRight )
 			{
@@ -569,7 +569,7 @@ namespace Epsitec.Common.Widgets
 				rect.Offset(0, this.sliderDragRect.Bottom);
 			}
 			this.Align(ref rect);
-			this.alphaBar.Bounds = rect;
+			this.alphaBar.SetManualBounds(rect);
 		}
 
 		protected void Align(ref Drawing.Rectangle rect)
@@ -800,8 +800,8 @@ namespace Epsitec.Common.Widgets
 
 			Drawing.Rectangle rect = this.Client.Bounds;
 			rect.Deflate (this.GetInternalPadding ());
-			
-			item.Bounds = rect;
+
+			item.SetManualBounds(rect);
 			item.PaneButton.PaneButtonStyle = ( this.type == PaneBookStyle.LeftRight ) ? PaneButtonStyle.Vertical : PaneButtonStyle.Horizontal;
 			
 			item.PaneButton.SetParent (this);

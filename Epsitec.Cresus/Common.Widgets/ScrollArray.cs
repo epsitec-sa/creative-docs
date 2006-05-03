@@ -345,9 +345,9 @@ namespace Epsitec.Common.Widgets
 				Drawing.Rectangle bounds = new Drawing.Rectangle ();
 				
 				bounds.Left   = this.table_bounds.Left;
-				bounds.Bottom = this.header.Top;
+				bounds.Bottom = this.header.ActualLocation.Y + this.header.ActualHeight;
 				bounds.Height = this.title_height;
-				bounds.Right  = this.v_scroller.Right;
+				bounds.Right  = this.v_scroller.ActualLocation.X + this.v_scroller.ActualWidth;
 				
 				return bounds;
 			}
@@ -1599,7 +1599,7 @@ invalid:	row    = -1;
 		protected virtual void UpdateTableBounds()
 		{
 			this.frame_margins = Widgets.Adorners.Factory.Active.GeometryArrayMargins;
-			this.table_margins = new Drawing.Margins (0, this.v_scroller.Width - 1, this.row_height + this.title_height, this.h_scroller.Height - 1);
+			this.table_margins = new Drawing.Margins (0, this.v_scroller.ActualWidth - 1, this.row_height + this.title_height, this.h_scroller.ActualHeight - 1);
 			
 			if (this.v_scroller.IsVisible == false)
 			{
@@ -1656,13 +1656,13 @@ invalid:	row    = -1;
 			
 			rect.Bottom = this.table_bounds.Top;
 			rect.Top    = this.table_bounds.Top + this.row_height;
-			
-			this.header.Bounds = rect;
+
+			this.header.SetManualBounds(rect);
 			
 			//	Place les boutons dans l'en-tête :
 			
 			rect.Bottom = 0;
-			rect.Top    = this.header.Height;
+			rect.Top    = this.header.ActualHeight;
 			rect.Left   = -this.offset;
 			
 			for (int i = 0; i < this.max_columns; i++)
@@ -1670,8 +1670,8 @@ invalid:	row    = -1;
 				HeaderButton button = this.FindButton (i);
 				
 				rect.Right = rect.Left + this.GetColumnWidth (i);
-				
-				button.Bounds = rect;
+
+				button.SetManualBounds(rect);
 				button.Show ();
 				
 				rect.Left  = rect.Right;
@@ -1680,7 +1680,7 @@ invalid:	row    = -1;
 			//	Place les sliders dans l'en-tête :
 			
 			rect.Bottom = 0;
-			rect.Top    = this.header.Height;
+			rect.Top    = this.header.ActualHeight;
 			rect.Left   = -this.offset;
 			
 			for (int i = 0; i < this.max_columns; i++)
@@ -1694,7 +1694,7 @@ invalid:	row    = -1;
 				rect.Left    = rect.Right;
 				
 				slider.ZOrder = i;
-				slider.Bounds = bounds;
+				slider.SetManualBounds(bounds);
 				slider.Visibility = (this.columns[i].Elasticity == 0);
 			}
 		}
@@ -1707,17 +1707,17 @@ invalid:	row    = -1;
 			
 			rect       = this.table_bounds;
 			rect.Left  = this.table_bounds.Right-1;
-			rect.Right = this.table_bounds.Right-1 + this.v_scroller.Width;
-			
-			this.v_scroller.Bounds = rect;
+			rect.Right = this.table_bounds.Right-1 + this.v_scroller.ActualWidth;
+
+			this.v_scroller.SetManualBounds(rect);
 			
 			//	Place l'ascenseur horizontal :
 			
 			rect        = this.table_bounds;
-			rect.Bottom = this.table_bounds.Bottom+1 - this.h_scroller.Height;
+			rect.Bottom = this.table_bounds.Bottom+1 - this.h_scroller.ActualHeight;
 			rect.Top    = this.table_bounds.Bottom+1;
-			
-			this.h_scroller.Bounds = rect;
+
+			this.h_scroller.SetManualBounds(rect);
 		}
 		
 		protected virtual void UpdateScrollers()
@@ -1890,7 +1890,7 @@ invalid:	row    = -1;
 		{
 			if (this.title_widget != null)
 			{
-				this.title_widget.Bounds = this.TitleBounds;
+				this.title_widget.SetManualBounds(this.TitleBounds);
 			}
 		}
 		
@@ -1903,9 +1903,9 @@ invalid:	row    = -1;
 				bounds.Inflate (0, 0, 0, 1);
 				
 				if ((this.h_scroller.IsVisible) &&
-					(bounds.Bottom < this.h_scroller.Top))
+					(bounds.Bottom < this.h_scroller.ActualBounds.Top))
 				{
-					bounds.Bottom = this.h_scroller.Top;
+					bounds.Bottom = this.h_scroller.ActualBounds.Top;
 				}
 				
 				if (bounds.IsSurfaceZero)
@@ -1914,7 +1914,7 @@ invalid:	row    = -1;
 				}
 				else
 				{
-					this.clip_widget.Bounds = bounds;
+					this.clip_widget.SetManualBounds(bounds);
 					this.clip_widget.Show ();
 					
 					double dx = System.Math.Min (this.row_height + 1, 18);
@@ -1929,10 +1929,10 @@ invalid:	row    = -1;
 						ox  = System.Math.Min (ox, x2);
 					}
 					
-					ox -= this.clip_widget.Bounds.X;
-					oy -= this.clip_widget.Bounds.Y;
-					
-					this.tag_widget.Bounds = new Drawing.Rectangle (ox, oy, dx, dy);
+					ox -= this.clip_widget.ActualLocation.X;
+					oy -= this.clip_widget.ActualLocation.Y;
+
+					this.tag_widget.SetManualBounds(new Drawing.Rectangle(ox, oy, dx, dy));
 				}
 			}
 		}

@@ -587,7 +587,7 @@ namespace Epsitec.Common.Widgets
 			
 			if ( this.lineHeight == 0 )  return;
 
-			this.visibleLines = (int)((this.Bounds.Height-ScrollList.TextOffsetY*2)/this.lineHeight);
+			this.visibleLines = (int)((this.ActualHeight-ScrollList.TextOffsetY*2)/this.lineHeight);
 			if ( this.visibleLines < 1 )  this.visibleLines = 1;
 			this.textLayouts = new TextLayout[this.visibleLines];
 			
@@ -599,10 +599,10 @@ namespace Epsitec.Common.Widgets
 				IAdorner adorner = Widgets.Adorners.Factory.Active;
 				Drawing.Rectangle rect = new Drawing.Rectangle();
 				rect.Right  = this.Client.Size.Width-adorner.GeometryScrollerRightMargin;
-				rect.Left   = rect.Right-this.scroller.Width;
+				rect.Left   = rect.Right-this.scroller.ActualWidth;
 				rect.Bottom = adorner.GeometryScrollerBottomMargin+ScrollList.TextOffsetY-this.margins.Bottom;
 				rect.Top    = this.Client.Size.Height-adorner.GeometryScrollerTopMargin-ScrollList.TextOffsetY+this.margins.Top;
-				this.scroller.Bounds = rect;
+				this.scroller.SetManualBounds(rect);
 			}
 		}
 
@@ -642,7 +642,7 @@ namespace Epsitec.Common.Widgets
 			if ( this.scroller != null   &&
 				 this.scroller.IsVisible )
 			{
-				this.margins.Right = this.Client.Size.Width - this.scroller.Left;
+				this.margins.Right = this.Client.Size.Width - this.scroller.ActualLocation.X;
 			}
 		}
 		
