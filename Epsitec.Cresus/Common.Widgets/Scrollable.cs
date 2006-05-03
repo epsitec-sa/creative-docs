@@ -117,57 +117,6 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public override void RestoreFromBundle(Support.ObjectBundler bundler, Support.ResourceBundle bundle)
-		{
-			//	Il ne faut pas sauver les widgets enfants du scrollable, car ils sont créés
-			//	explicitement dans le constructeur; par contre, il faut sauver le contenu du
-			//	panel :
-			
-			Support.ResourceBundle.FieldList widget_list = bundle["widgets"].AsList;
-			
-			if (widget_list != null)
-			{
-				//	Notre bundle contient une liste de sous-bundles contenant les descriptions des
-				//	widgets enfants. On les restitue nous-même et on les ajoute dans la liste des
-				//	enfants.
-				
-				foreach (Support.ResourceBundle.Field field in widget_list)
-				{
-					Support.ResourceBundle widget_bundle = field.AsBundle;
-					Widget widget = bundler.CreateFromBundle (widget_bundle) as Widget;
-					
-					this.Panel.Children.Add (widget);
-				}
-			}
-		}
-		
-		public override void SerializeToBundle(Support.ObjectBundler bundler, Support.ResourceBundle bundle)
-		{
-			if (this.HasChildren)
-			{
-				System.Collections.ArrayList list    = new System.Collections.ArrayList ();
-				Widget[]                     widgets = this.Panel.Children.Widgets;
-				
-				for (int i = 0; i < widgets.Length; i++)
-				{
-					if (! widgets[i].IsEmbedded)
-					{
-						Support.ResourceBundle child_bundle = bundler.CreateEmptyBundle (widgets[i].BundleName);
-						bundler.FillBundleFromObject (child_bundle, widgets[i]);
-						list.Add (child_bundle);
-					}
-				}
-				
-				if (list.Count > 0)
-				{
-					Support.ResourceBundle.Field field = bundle.CreateField (Support.ResourceFieldType.List, list);
-					field.SetName ("widgets");
-					bundle.Add (field);
-				}
-			}
-		}
-		
-		
 		protected override void Dispose(bool disposing)
 		{
 			if (disposing)

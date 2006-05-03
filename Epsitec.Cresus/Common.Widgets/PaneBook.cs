@@ -30,20 +30,6 @@ namespace Epsitec.Common.Widgets
 			this.SetEmbedder(embedder);
 		}
 		
-		#region Interface IBundleSupport
-		public override void RestoreFromBundle(Epsitec.Common.Support.ObjectBundler bundler, Epsitec.Common.Support.ResourceBundle bundle)
-		{
-			base.RestoreFromBundle (bundler, bundle);
-			this.items.RestoreFromBundle ("items", bundler, bundle);
-		}
-		
-		public override void SerializeToBundle(Support.ObjectBundler bundler, Support.ResourceBundle bundle)
-		{
-			base.SerializeToBundle (bundler, bundle);
-			this.items.SerializeToBundle ("items", bundler, bundle);
-		}
-		#endregion
-		
 		protected override void Dispose(bool disposing)
 		{
 			if ( disposing )

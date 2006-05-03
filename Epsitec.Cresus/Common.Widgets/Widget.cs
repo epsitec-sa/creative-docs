@@ -63,7 +63,7 @@ namespace Epsitec.Common.Widgets
 	/// La classe Widget implémente la classe de base dont dérivent tous les
 	/// widgets de l'interface graphique ("controls" dans l'appellation Windows).
 	/// </summary>
-	public class Widget : Visual, Support.IBundleSupport, Support.Data.IPropertyProvider, Collections.IShortcutCollectionHost
+	public class Widget : Visual, Support.Data.IPropertyProvider, Collections.IShortcutCollectionHost
 	{
 		public Widget()
 		{
@@ -153,139 +153,6 @@ namespace Epsitec.Common.Widgets
 			}
 			
 			this.OnShortcutChanged ();
-		}
-		#endregion
-		
-		#region Interface IBundleSupport
-		public virtual string				PublicClassName
-		{
-			get { return this.GetType ().Name; }
-		}
-		
-		public virtual string				BundleName
-		{
-			get
-			{
-				string name = this.Name;
-				
-				if (name == "")
-				{
-					return null;
-				}
-				
-				return name;
-			}
-		}
-		
-		void Support.IBundleSupport.AttachResourceManager(Support.ResourceManager resource_manager)
-		{
-			System.Diagnostics.Debug.Assert (this.resource_manager == null);
-			System.Diagnostics.Debug.Assert (resource_manager != null);
-			
-			this.ResourceManager = resource_manager;
-		}
-		
-		public virtual void RestoreFromBundle(Support.ObjectBundler bundler, Support.ResourceBundle bundle)
-		{
-			System.Diagnostics.Debug.Assert (this.resource_manager != null);
-			System.Diagnostics.Debug.Assert (this.resource_manager == bundler.ResourceManager);
-			
-			
-			//	L'ObjectBundler sait initialiser la plupart des propriétés simples (celles
-			//	qui sont marquées par l'attribut [Bundle]), mais il ne sait pas comment
-			//	restitue les enfants du widget :
-			
-			Support.ResourceBundle.FieldList widget_list = bundle["widgets"].AsList;
-			
-			if (widget_list != null)
-			{
-				//	Notre bundle contient une liste de sous-bundles contenant les descriptions des
-				//	widgets enfants. On les restitue nous-même et on les ajoute dans la liste des
-				//	enfants.
-				
-				foreach (Support.ResourceBundle.Field field in widget_list)
-				{
-					Support.ResourceBundle widget_bundle = field.AsBundle;
-					Widget widget = bundler.CreateFromBundle (widget_bundle) as Widget;
-					
-					this.Children.Add (widget);
-				}
-			}
-			
-			Support.ResourceBundle.FieldList validator_list = bundle["validators"].AsList;
-			
-			if (validator_list != null)
-			{
-				foreach (Support.ResourceBundle.Field field in validator_list)
-				{
-					Support.ResourceBundle validator_bundle = field.AsBundle;
-					Validators.AbstractValidator validator = bundler.CreateFromBundle (validator_bundle) as Validators.AbstractValidator;
-					
-					validator.InternalAttach (this);
-				}
-			}
-		}
-		
-		public virtual void SerializeToBundle(Support.ObjectBundler bundler, Support.ResourceBundle bundle)
-		{
-			if (this.HasChildren)
-			{
-				System.Collections.ArrayList list    = new System.Collections.ArrayList ();
-				Widget[]                     widgets = this.Children.Widgets;
-				
-				for (int i = 0; i < widgets.Length; i++)
-				{
-					if (! widgets[i].IsEmbedded)
-					{
-						Support.ResourceBundle child_bundle = bundler.CreateEmptyBundle (widgets[i].BundleName);
-						
-						bundler.FillBundleFromObject (child_bundle, widgets[i]);
-						
-						list.Add (child_bundle);
-					}
-				}
-				
-				if (list.Count > 0)
-				{
-					Support.ResourceBundle.Field field = bundle.CreateField (Support.ResourceFieldType.List, list);
-					field.SetName ("widgets");
-					bundle.Add (field);
-				}
-			}
-			
-			if (this.validator != null)
-			{
-				System.Collections.ArrayList list       = new System.Collections.ArrayList ();
-				IValidator[]                 validators = MulticastValidator.ToArray (this.validator);
-				
-				for (int i = 0; i < validators.Length; i++)
-				{
-					if (this.ShouldSerializeValidator (validators[i]) == false)
-					{
-						//	La classe ne veut pas que ce validateur soit sérialisé. On le saute donc tout
-						//	simplement.
-					}
-					else if (validators[i] is Support.IBundleSupport)
-					{
-						Support.ResourceBundle validator_bundle = bundler.CreateEmptyBundle (string.Format (System.Globalization.CultureInfo.InvariantCulture, "v{0}", i));
-						
-						bundler.FillBundleFromObject (validator_bundle, validators[i]);
-						
-						list.Add (validator_bundle);
-					}
-					else
-					{
-						System.Diagnostics.Debug.WriteLine (string.Format ("Validator {0} cannot be serialized.", validators[i].GetType ().Name));
-					}
-				}
-				
-				if (list.Count > 0)
-				{
-					Support.ResourceBundle.Field field = bundle.CreateField (Support.ResourceFieldType.List, list);
-					field.SetName ("validators");
-					bundle.Add (field);
-				}
-			}
 		}
 		#endregion
 		
