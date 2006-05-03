@@ -3924,11 +3924,14 @@ namespace Epsitec.App.DocumentEditor
 		private void HandleMouseChanged()
 		{
 			//	Appelé par le document lorsque la position de la souris a changé.
-			//	TODO: [PA] Parfois, this.info.Items est nul après avoir cliqué la case de fermeture de la fenêtre !
 			
-			System.Diagnostics.Debug.Assert (this.info.Items != null);
-			
-			if ( this.info.Items == null )  return;
+			if (this.info.Items == null)
+			{
+				//	Quand on tue l'application par ALT-F4, il se peut que l'on reçoive encore
+				//	des événements souris fantômes, alors que nous sommes déjà "morts".
+				
+				return;
+			}
 
 			StatusField field = this.info.Items["StatusMouse"] as StatusField;
 			field.Text = this.TextInfoMouse;

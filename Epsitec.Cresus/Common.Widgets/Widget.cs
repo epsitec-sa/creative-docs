@@ -1009,47 +1009,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public string								BindingInfo
-		{
-			get
-			{
-				if (this.IsPropertyDefined (Widget.prop_binding))
-				{
-					return this.GetProperty (Widget.prop_binding) as string;
-				}
-				
-				return null;
-			}
-			set
-			{
-				if (this.BindingInfo != value)
-				{
-					if (value == null)
-					{
-						this.ClearProperty (Widget.prop_binding);
-					}
-					else
-					{
-						this.SetProperty (Widget.prop_binding, value);
-					}
-					
-					this.OnBindingInfoChanged ();
-				}
-			}
-		}
-		
-		
-		#region Serialization support
-		protected virtual bool ShouldSerializeLocation()
-		{
-			return (this.Dock == DockStyle.None) && (this.Anchor == AnchorStyles.None);
-		}
-		
-		protected virtual bool ShouldSerializeSize()
-		{
-			return (this.Dock != DockStyle.Fill);
-		}
-		#endregion
 		
 		public virtual Drawing.Size GetBestFitSize()
 		{
@@ -3921,14 +3880,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		protected virtual void OnBindingInfoChanged()
-		{
-			if (this.BindingInfoChanged != null)
-			{
-				this.BindingInfoChanged (this);
-			}
-		}
-		
 		protected virtual void OnResourceManagerChanged()
 		{
 			if (this.ResourceManagerChanged != null)
@@ -3978,7 +3929,6 @@ namespace Epsitec.Common.Widgets
 		public event Support.EventHandler			HypertextHot;
 		public event MessageEventHandler			HypertextClicked;
 		public event Support.EventHandler			ValidatorChanged;
-		public event Support.EventHandler			BindingInfoChanged;
 		public event Support.EventHandler			ResourceManagerChanged;
 		
 		public event MessageEventHandler			PreProcessing;
@@ -4128,7 +4078,5 @@ namespace Epsitec.Common.Widgets
 		static List<Widget>						enteredWidgets = new List<Widget> ();
 		static List<System.WeakReference>		aliveWidgets = new List<System.WeakReference> ();
 		static bool								debugDispose;
-		
-		private const string					prop_binding	= "$widget$binding$";
 	}
 }

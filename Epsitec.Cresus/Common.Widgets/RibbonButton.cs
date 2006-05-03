@@ -44,19 +44,6 @@ namespace Epsitec.Common.Widgets
 
 
 		
-		#region Serialization support
-		protected override bool ShouldSerializeLocation()
-		{
-			return false;
-		}
-		
-		protected override bool ShouldSerializeSize()
-		{
-			return false;
-		}
-		#endregion
-		
-		
 		public override Drawing.Margins GetShapeMargins()
 		{
 			return Epsitec.Common.Widgets.Adorners.Factory.Active.GeometryRibbonShapeBounds;

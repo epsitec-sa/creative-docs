@@ -1433,11 +1433,11 @@ namespace Epsitec.Common.Widgets
 		public static readonly DependencyProperty ActiveStateProperty			= DependencyProperty.Register ("ActiveState", typeof (ActiveState), typeof (Visual), new VisualPropertyMetadata (ActiveState.No, VisualPropertyMetadataOptions.AffectsDisplay));
 		
 		public static readonly DependencyProperty VisibilityProperty			= DependencyProperty.Register ("Visibility", typeof (bool), typeof (Visual), new VisualPropertyMetadata (true, new SetValueOverrideCallback (Visual.SetVisibilityValue), VisualPropertyMetadataOptions.None));
-		public static readonly DependencyProperty EnableProperty				= DependencyProperty.Register ("Enable", typeof (bool), typeof (Visual), new VisualPropertyMetadata (true, new SetValueOverrideCallback (Visual.SetEnableValue), VisualPropertyMetadataOptions.None));
-		public static readonly DependencyProperty EnteredProperty				= DependencyProperty.Register ("Entered", typeof (bool), typeof (Visual), new VisualPropertyMetadata (false, VisualPropertyMetadataOptions.AffectsDisplay));
-		public static readonly DependencyProperty SelectedProperty				= DependencyProperty.Register ("Selected", typeof (bool), typeof (Visual), new VisualPropertyMetadata (false, VisualPropertyMetadataOptions.AffectsDisplay));
-		public static readonly DependencyProperty EngagedProperty				= DependencyProperty.Register ("Engaged", typeof (bool), typeof (Visual), new VisualPropertyMetadata (false, VisualPropertyMetadataOptions.AffectsDisplay));
-		public static readonly DependencyProperty InErrorProperty				= DependencyProperty.Register ("InError", typeof (bool), typeof (Visual), new VisualPropertyMetadata (false, VisualPropertyMetadataOptions.AffectsDisplay));
+		public static readonly DependencyProperty EnableProperty				= DependencyProperty.Register ("Enable", typeof (bool), typeof (Visual), new VisualPropertyMetadata (true, new SetValueOverrideCallback (Visual.SetEnableValue), VisualPropertyMetadataOptions.None).MakeNotSerializable ());
+		public static readonly DependencyProperty EnteredProperty				= DependencyProperty.Register ("Entered", typeof (bool), typeof (Visual), new VisualPropertyMetadata (false, VisualPropertyMetadataOptions.AffectsDisplay).MakeNotSerializable ());
+		public static readonly DependencyProperty SelectedProperty				= DependencyProperty.Register ("Selected", typeof (bool), typeof (Visual), new VisualPropertyMetadata (false, VisualPropertyMetadataOptions.AffectsDisplay).MakeNotSerializable ());
+		public static readonly DependencyProperty EngagedProperty				= DependencyProperty.Register ("Engaged", typeof (bool), typeof (Visual), new VisualPropertyMetadata (false, VisualPropertyMetadataOptions.AffectsDisplay).MakeNotSerializable ());
+		public static readonly DependencyProperty InErrorProperty				= DependencyProperty.Register ("InError", typeof (bool), typeof (Visual), new VisualPropertyMetadata (false, VisualPropertyMetadataOptions.AffectsDisplay).MakeNotSerializable ());
 
 		public static readonly DependencyProperty InheritsParentFocusProperty	= DependencyProperty.Register ("InheritsParentFocus", typeof (bool), typeof (Visual), new VisualPropertyMetadata (false, Visual.SetInheritsParentFocus, VisualPropertyMetadataOptions.None));
 
