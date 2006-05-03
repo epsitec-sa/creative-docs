@@ -557,54 +557,6 @@ namespace Epsitec.Common.Widgets
 		}
 		#endregion
 		
-		[Test] public void CheckAnchor()
-		{
-			Widget root = new Widget ();
-			Widget widget = new Widget ();
-			
-			root.SetManualBounds(new Rectangle (0, 0, 120, 50));
-			
-			root.Children.Add (widget);
-			
-			widget.SetManualBounds(new Rectangle (20, 10, 80, 30));
-			widget.Anchor = AnchorStyles.Left;
-			widget.Margins = new Drawing.Margins (20, 0, 0, 0);
-			
-			Assert.IsTrue (widget.Anchor == AnchorStyles.Left);
-
-			root.PreferredWidth = 140;
-			Assert.IsTrue(widget.ActualLocation.X == 20);
-			Assert.IsTrue (widget.ActualWidth == 80);
-
-			root.PreferredWidth = 120;
-			Assert.IsTrue(widget.ActualLocation.X == 20);
-			Assert.IsTrue (widget.ActualWidth == 80);
-			
-			widget.SetManualBounds(new Rectangle (20, 10, 80, 30));
-			widget.Anchor = AnchorStyles.Right;
-			widget.Margins = new Drawing.Margins (0, 20, 0, 0);
-			
-			Assert.IsTrue (widget.Anchor == AnchorStyles.Right);
-			Assert.IsTrue (widget.ActualBounds.Right == 100, "AnchorStyles.Right, widget.Right not OK");
-			Assert.IsTrue (widget.ActualBounds.Left  == 20, "AnchorStyles.Right, widget.Left not OK");
-
-			root.PreferredWidth = 140;
-			
-			Layouts.LayoutContext.SyncArrange (root);
-
-			Assert.IsTrue (widget.ActualBounds.Left  == 40, "AnchorStyles.Right, widget.Left not OK");
-			Assert.IsTrue (widget.ActualBounds.Width == 80, "AnchorStyles.Right, widget.Width not OK");
-
-			root.PreferredWidth = 120;
-
-			Layouts.LayoutContext.SyncArrange (root);
-
-			Assert.IsTrue (widget.ActualBounds.Left == 20);
-			Assert.IsTrue (widget.ActualBounds.Width == 80);
-			
-			//	TODO: ...tests additionnels...
-		}
-		
 		
 		[Test] public void CheckText()
 		{

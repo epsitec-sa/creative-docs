@@ -29,7 +29,7 @@ namespace Epsitec.Common.Widgets
 			Layouts.LayoutContext context = Helpers.VisualTree.GetLayoutContext (a);
 			
 			Assert.IsNotNull (context);
-			Assert.AreEqual (0, context.MeasureQueueLength);
+			Assert.AreEqual (4, context.MeasureQueueLength);
 			
 			context.StartNewLayoutPass ();
 
@@ -184,24 +184,29 @@ namespace Epsitec.Common.Widgets
 
 			Layouts.LayoutContext context = Helpers.VisualTree.GetLayoutContext (a);
 
+			context.ExecuteArrange ();
 			context.StartNewLayoutPass ();
 
+			Assert.AreEqual (0, context.MeasureQueueLength);
+			Assert.AreEqual (0, context.ArrangeQueueLength);
+			
 			b.Dock = DockStyle.Top;
 			c1.MinWidth = 20;
 			c1.MinHeight = 10;
 
-			Assert.AreEqual (1, context.MeasureQueueLength);
-			Assert.AreEqual (1, context.ArrangeQueueLength);
+			Assert.AreEqual (1, context.MeasureQueueLength);	//	c1 à mesurer
+			Assert.AreEqual (1, context.ArrangeQueueLength);	//	a à arranger
 
 			context.ExecuteMeasure ();
 
 			Assert.AreEqual (0, context.MeasureQueueLength);
-			Assert.AreEqual (2, context.ArrangeQueueLength);
+			Assert.AreEqual (3, context.ArrangeQueueLength);
 			
 			array = Types.Collection.ToArray (context.GetArrangeQueue ());
 
 			Assert.AreEqual (a, array[0]);
 			Assert.AreEqual (b, array[1]);
+			Assert.AreEqual (c1, array[2]);
 		}
 
 		[Test]
@@ -227,10 +232,15 @@ namespace Epsitec.Common.Widgets
 
 			//	Oublie tout ce qui a pu être généré par la construction de l'arbre
 			//	ci-dessus :
-			
+
+			context.ExecuteArrange ();
 			context.StartNewLayoutPass ();
 
-			a.SetManualBounds(new Drawing.Rectangle (0, 0, 100, 200));
+			Assert.AreEqual (0, context.MeasureQueueLength);
+			Assert.AreEqual (0, context.ArrangeQueueLength);
+
+			a.PreferredWidth = 100;
+			a.PreferredHeight = 200;
 
 			b.Dock = DockStyle.Fill;
 			b.Padding = new Drawing.Margins (5, 5, 10, 10);
@@ -258,9 +268,11 @@ namespace Epsitec.Common.Widgets
 
 			array = Types.Collection.ToArray (context.GetArrangeQueue ());
 
-			Assert.AreEqual (2, array.Length);
+			Assert.AreEqual (4, array.Length);
 			Assert.AreEqual (a, array[0]);
 			Assert.AreEqual (b, array[1]);
+			Assert.AreEqual (c1, array[2]);
+			Assert.AreEqual (c2, array[3]);
 
 			context.ExecuteArrange ();
 
@@ -297,9 +309,14 @@ namespace Epsitec.Common.Widgets
 			//	Oublie tout ce qui a pu être généré par la construction de l'arbre
 			//	ci-dessus :
 
+			context.ExecuteArrange ();
 			context.StartNewLayoutPass ();
 
-			a.SetManualBounds(new Drawing.Rectangle (0, 0, 100, 200));
+			Assert.AreEqual (0, context.MeasureQueueLength);
+			Assert.AreEqual (0, context.ArrangeQueueLength);
+
+			a.PreferredWidth = 100;
+			a.PreferredHeight = 200;
 
 			b.Anchor = AnchorStyles.All;
 			b.Margins = new Drawing.Margins (1, 1, 1, 1);
@@ -340,12 +357,6 @@ namespace Epsitec.Common.Widgets
 
 			context.ExecuteArrange ();
 
-			Assert.AreEqual (4, context.ArrangeQueueLength);
-			Assert.AreEqual (1, context.MeasureQueueLength);
-
-			context.ExecuteMeasure ();
-			context.ExecuteArrange ();
-
 			Assert.AreEqual (0, context.ArrangeQueueLength);
 			Assert.AreEqual (0, context.MeasureQueueLength);
 
@@ -358,6 +369,8 @@ namespace Epsitec.Common.Widgets
 		[Test]
 		public void CheckRealExample()
 		{
+			AdornerTest test = new AdornerTest ();
+			test.Initialise ();
 			Window window = AdornerTest.CreateAdornerWidgets ();
 			
 			Layouts.LayoutContext context = Helpers.VisualTree.GetLayoutContext (window.Root);

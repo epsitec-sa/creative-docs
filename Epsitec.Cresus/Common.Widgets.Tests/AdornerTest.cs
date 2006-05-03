@@ -897,7 +897,7 @@ namespace Epsitec.Common.Widgets
 			window.Text = "CheckAdornerBigText";
 
 			TextFieldMulti multi = new TextFieldMulti();
-			StaticText     stats = new StaticText();
+			this.stats = new StaticText();
 			
 			multi.Name = "Multi";
 //			multi.SetManualBounds(new Rectangle(10, 30, 380, 260));
@@ -927,17 +927,16 @@ namespace Epsitec.Common.Widgets
 			multi.Margins = new Margins(10, 10, 40, 30);
 			multi.Margins = new Margins(60, 60, 40, 30);
 			multi.SetParent (window.Root);
-			multi.SetProperty("stats", stats);
 			multi.SelectionChanged += new EventHandler(this.HandleMultiSelectionOrCursorChanged1);
 			multi.CursorChanged    += new EventHandler(this.HandleMultiSelectionOrCursorChanged1);
 			multi.TextChanged      += new EventHandler(this.HandleMultiSelectionOrCursorChanged1);
 			this.bigText = multi;
 			
 //			stats.SetManualBounds(new Rectangle(10, 2, 380, 26));
-			stats.PreferredHeight = 26;
-			stats.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.Bottom;
-			stats.Margins = new Margins(10, 10, 0, 2);
-			stats.SetParent (window.Root);
+			this.stats.PreferredHeight = 26;
+			this.stats.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.Bottom;
+			this.stats.Margins = new Margins (10, 10, 0, 2);
+			this.stats.SetParent (window.Root);
 
 			Button buttonBold = new Button();
 			buttonBold.Text = "<b>B</b>";
@@ -1067,9 +1066,8 @@ namespace Epsitec.Common.Widgets
 		private void HandleMultiSelectionOrCursorChanged1(object sender)
 		{
 			AbstractTextField text  = sender as AbstractTextField;
-			StaticText        stats = text.GetProperty("stats") as StaticText;
-			
-			stats.Text = string.Format("from={0},  to={1},  after={2}", text.CursorFrom, text.CursorTo, text.CursorAfter);
+
+			this.stats.Text = string.Format ("from={0},  to={1},  after={2}", text.CursorFrom, text.CursorTo, text.CursorAfter);
 		}
 
 		private void HandleMultiBold(object sender, MessageEventArgs e)
@@ -1839,5 +1837,6 @@ namespace Epsitec.Common.Widgets
 		protected TabBook			tabBook;
 		protected TextFieldMulti	bigText;
 
+		protected StaticText		stats;
 	}
 }
