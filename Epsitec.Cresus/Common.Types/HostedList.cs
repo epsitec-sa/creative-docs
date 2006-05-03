@@ -69,8 +69,8 @@ namespace Epsitec.Common.Types
 		public void RemoveAt(int index)
 		{
 			T item = this.list[index];
-			this.NotifyRemoval (item);
 			this.list.RemoveAt (index);
+			this.NotifyRemoval (item);
 		}
 
 		public T this[int index]
@@ -85,7 +85,7 @@ namespace Epsitec.Common.Types
 				{
 					this.NotifyRemoval (this.list[index]);
 					this.list[index] = value;
-					this.NotifyInsertion (this.list[index]);
+					this.NotifyInsertion (value);
 				}
 			}
 		}
@@ -102,14 +102,14 @@ namespace Epsitec.Common.Types
 
 		public void Clear()
 		{
+			this.list.Clear ();
+			
 			T[] array = this.list.ToArray ();
 
 			for (int i = array.Length-1; i >= 0; i--)
 			{
 				this.NotifyRemoval (array[i]);
 			}
-			
-			this.list.Clear ();
 		}
 
 		public bool Contains(T item)
@@ -142,8 +142,8 @@ namespace Epsitec.Common.Types
 		{
 			if (this.list.Contains (item))
 			{
-				this.NotifyRemoval (item);
 				this.list.Remove (item);
+				this.NotifyRemoval (item);
 				return true;
 			}
 			else
