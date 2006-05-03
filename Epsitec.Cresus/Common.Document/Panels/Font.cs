@@ -188,12 +188,12 @@ namespace Epsitec.Common.Document.Panels
 				r.Bottom = r.Top-20;
 				r.Left = rect.Left;
 				r.Right = rect.Right-20;
-				this.fontFace.Bounds = r;
+				this.fontFace.SetManualBounds(r);
 				this.fontFace.Visibility = true;
 
 				r.Left = rect.Right-20;
 				r.Right = rect.Right;
-				this.buttonFilter.Bounds = r;
+				this.buttonFilter.SetManualBounds(r);
 				this.buttonFilter.Visibility = true;
 
 				if ( this.IsLabelProperties )
@@ -202,34 +202,34 @@ namespace Epsitec.Common.Document.Panels
 					r.Left = rect.Left;
 					r.Right = rect.Right;
 					this.fontSize.LabelVisibility = true;
-					this.fontSize.Bounds = r;
+					this.fontSize.SetManualBounds(r);
 					this.fontSize.Visibility = true;
 
 					r.Offset(0, -25);
 					r.Left = rect.Left;
 					r.Right = rect.Right-Widgets.TextFieldLabel.DefaultTextWidth-Widgets.TextFieldLabel.DefaultMarginWidth;
-					this.labelColor.Bounds = r;
+					this.labelColor.SetManualBounds(r);
 					this.labelColor.Visibility = true;
 					r.Left = rect.Right-Widgets.TextFieldLabel.DefaultTextWidth;
 					r.Right = rect.Right;
-					this.fontColor.Bounds = r;
+					this.fontColor.SetManualBounds(r);
 					this.fontColor.Visibility = true;
 				}
 				else
 				{
 					r.Offset(0, -25);
-					r.Left = rect.Right-this.fontSize.Width-Widgets.TextFieldLabel.ShortWidth;
-					r.Width = this.fontSize.Width;
+					r.Left = rect.Right-this.fontSize.ActualWidth-Widgets.TextFieldLabel.ShortWidth;
+					r.Width = this.fontSize.ActualWidth;
 					this.fontSize.LabelVisibility = true;
-					this.fontSize.Bounds = r;
+					this.fontSize.SetManualBounds(r);
 					this.fontSize.Visibility = true;
 					r.Left = r.Right;
 					r.Width = Widgets.TextFieldLabel.DefaultLabelWidth;
-					this.labelColor.Bounds = r;
+					this.labelColor.SetManualBounds(r);
 					this.labelColor.Visibility = true;
 					r.Left = r.Right+Widgets.TextFieldLabel.DefaultMarginWidth;
 					r.Width = Widgets.TextFieldLabel.DefaultTextWidth;
-					this.fontColor.Bounds = r;
+					this.fontColor.SetManualBounds(r);
 					this.fontColor.Visibility = true;
 				}
 			}
@@ -238,14 +238,14 @@ namespace Epsitec.Common.Document.Panels
 				Rectangle r = rect;
 				r.Bottom = r.Top-20;
 				r.Right = rect.Right-Widgets.TextFieldLabel.DefaultTextWidth-5;
-				this.fontFace.Bounds = r;
+				this.fontFace.SetManualBounds(r);
 				this.fontFace.Visibility = true;
 				this.buttonFilter.Visibility = false;
 
 				r.Left = rect.Right-Widgets.TextFieldLabel.ShortWidth;
 				r.Width = Widgets.TextFieldLabel.ShortWidth;
 				this.fontSize.LabelVisibility = false;
-				this.fontSize.Bounds = r;
+				this.fontSize.SetManualBounds(r);
 				this.fontSize.Visibility = true;
 
 				this.labelColor.Visibility = false;

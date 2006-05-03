@@ -109,37 +109,37 @@ namespace Epsitec.Common.Document.TextPanels
 				{
 					r.Left = rect.Left;
 					r.Right = rect.Right-25;
-					this.fieldLeftMarginFirst.Bounds = r;
+					this.fieldLeftMarginFirst.SetManualBounds(r);
 					r.Offset(0, -25);
-					this.fieldLeftMarginBody.Bounds = r;
+					this.fieldLeftMarginBody.SetManualBounds(r);
 					r.Offset(0, -25);
-					this.fieldRightMargin.Bounds = r;
+					this.fieldRightMargin.SetManualBounds(r);
 					r.Offset(0, -25);
-					this.fieldLevel.Bounds = r;
+					this.fieldLevel.SetManualBounds(r);
 					this.fieldLevel.Visibility = true;
 
 					r.Left = rect.Right-20;
 					r.Width = 20;
-					this.buttonClear.Bounds = r;
+					this.buttonClear.SetManualBounds(r);
 				}
 				else
 				{
 					r.Left = rect.Left;
 					r.Width = 60;
-					this.fieldLeftMarginFirst.Bounds = r;
+					this.fieldLeftMarginFirst.SetManualBounds(r);
 					r.Offset(60, 0);
-					this.fieldLeftMarginBody.Bounds = r;
+					this.fieldLeftMarginBody.SetManualBounds(r);
 					r.Offset(60, 0);
-					this.fieldRightMargin.Bounds = r;
+					this.fieldRightMargin.SetManualBounds(r);
 
 					r.Offset(0, -25);
 					r.Left = rect.Left;
 					r.Width = 60;
-					this.fieldLevel.Bounds = r;
+					this.fieldLevel.SetManualBounds(r);
 					this.fieldLevel.Visibility = true;
 					r.Left = rect.Right-20;
 					r.Width = 20;
-					this.buttonClear.Bounds = r;
+					this.buttonClear.SetManualBounds(r);
 				}
 			}
 			else
@@ -149,11 +149,11 @@ namespace Epsitec.Common.Document.TextPanels
 
 				r.Left = rect.Left;
 				r.Width = 60;
-				this.fieldLeftMarginFirst.Bounds = r;
+				this.fieldLeftMarginFirst.SetManualBounds(r);
 				r.Offset(60, 0);
-				this.fieldLeftMarginBody.Bounds = r;
+				this.fieldLeftMarginBody.SetManualBounds(r);
 				r.Offset(60, 0);
-				this.fieldRightMargin.Bounds = r;
+				this.fieldRightMargin.SetManualBounds(r);
 
 				this.fieldLevel.Visibility = false;
 			}

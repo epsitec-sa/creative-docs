@@ -64,29 +64,29 @@ namespace Epsitec.Common.Document.Ribbons
 			Rectangle rect = this.UsefulZone;
 			rect.Left += dx*2;
 			rect.Width = this.separatorWidth;
-			this.separator.Bounds = rect;
+			this.separator.SetManualBounds(rect);
 
 			rect = this.UsefulZone;
 			rect.Width  = dx;
 			rect.Height = dy;
 			rect.Offset(0, dy+5);
-			this.buttonRotate90.Bounds = rect;
+			this.buttonRotate90.SetManualBounds(rect);
 			rect.Offset(dx, 0);
-			this.buttonRotate270.Bounds = rect;
+			this.buttonRotate270.SetManualBounds(rect);
 			rect.Offset(dx+this.separatorWidth, 0);
 			rect.Width = 25;
-			this.buttonRotateFreeCCW.Bounds = rect;
+			this.buttonRotateFreeCCW.SetManualBounds(rect);
 			rect.Offset(25, 0);
-			this.buttonRotateFreeCW.Bounds = rect;
+			this.buttonRotateFreeCW.SetManualBounds(rect);
 
 			rect = this.UsefulZone;
 			rect.Width  = dx;
 			rect.Height = dy;
 			rect.Offset(dx*0.5, 0);
-			this.buttonRotate180.Bounds = rect;
+			this.buttonRotate180.SetManualBounds(rect);
 			rect.Offset(dx*1.5+this.separatorWidth, 0);
 			rect.Width = 50;
-			this.fieldRotate.Bounds = rect;
+			this.fieldRotate.SetManualBounds(rect);
 		}
 
 
@@ -94,7 +94,7 @@ namespace Epsitec.Common.Document.Ribbons
 		{
 			//	Crée un champ éditable pour une rotation.
 			TextFieldReal field = new TextFieldReal(this);
-			field.Width = 50;
+			field.PreferredWidth = 50;
 			field.TabIndex = this.tabIndex++;
 			field.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			field.ValueChanged += new EventHandler(this.HandleFieldValueChanged);

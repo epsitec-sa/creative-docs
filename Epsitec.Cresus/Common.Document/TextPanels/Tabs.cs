@@ -105,16 +105,16 @@ namespace Epsitec.Common.Document.TextPanels
 
 			Rectangle r = rect;
 			r.Width = 126;
-			this.table.Bounds = r;
+			this.table.SetManualBounds(r);
 
 			r = rect;
 			r.Bottom = r.Top-20;
 			r.Left = r.Left+120+10+2;
 			r.Width = 20;
-			this.buttonNew.Bounds = r;
+			this.buttonNew.SetManualBounds(r);
 			this.buttonNew.Visibility = this.isExtendedSize;
 			r.Offset(20, 0);
-			this.buttonDelete.Bounds = r;
+			this.buttonDelete.SetManualBounds(r);
 			this.buttonDelete.Visibility = this.isExtendedSize;
 
 			r = rect;
@@ -122,7 +122,7 @@ namespace Epsitec.Common.Document.TextPanels
 			r.Bottom = r.Top-20;
 			r.Left = r.Left+120+10;
 			r.Width = 50;
-			this.fieldPos.Bounds = r;
+			this.fieldPos.SetManualBounds(r);
 			this.fieldPos.Visibility = this.isExtendedSize;
 
 			r = rect;
@@ -130,7 +130,7 @@ namespace Epsitec.Common.Document.TextPanels
 			r.Bottom = r.Top-20;
 			r.Left = r.Left+120+10+2;
 			r.Width = 50-3;
-			this.buttonType.Bounds = r;
+			this.buttonType.SetManualBounds(r);
 			this.buttonType.Visibility = this.isExtendedSize;
 		}
 
@@ -447,7 +447,7 @@ namespace Epsitec.Common.Document.TextPanels
 			VMenu menu = Widgets.HRuler.CreateMenu(new MessageEventHandler(this.HandleMenuPressed), type);
 			if ( menu == null )  return;
 			menu.Host = this;
-			menu.MinWidth = button.Width;
+			menu.MinWidth = button.ActualWidth;
 			TextFieldCombo.AdjustComboSize(button, menu);
 			menu.ShowAsComboList(button, Point.Zero, this.buttonType);
 		}

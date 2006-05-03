@@ -39,7 +39,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				label.Margins = new Margins (10, 10, 10, 10);
 
 				this.radio1 = new RadioButton(this.window.Root);
-				this.radio1.Height = radio1.Height*1.2;
+				this.radio1.PreferredHeight = radio1.PreferredHeight*1.2;
 //-				this.radio1.SetClientZoom(1.2);
 				this.radio1.Text = @"<font size=""120%"">" + Res.Strings.Dialog.Key.RadioDemo + "</font>";
 				this.radio1.Dock = DockStyle.Top;
@@ -50,7 +50,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.radio1.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 				this.radio2 = new RadioButton(this.window.Root);
-				this.radio2.Height = radio2.Height*1.2;
+				this.radio2.PreferredHeight = radio2.PreferredHeight*1.2;
 //-				this.radio2.SetClientZoom(1.2);
 				this.radio2.Text = @"<font size=""120%"">" + Res.Strings.Dialog.Key.RadioFull + "</font>";
 				this.radio2.Dock = DockStyle.Top;
@@ -66,52 +66,52 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.keyLabel.Margins = new Margins (10, 10, 20, 0);
 
 				Panel keys = new Panel(this.window.Root);
-				keys.Height = 20;
+				keys.PreferredHeight = 20;
 				keys.Dock = DockStyle.Top;
 				keys.Margins = new Margins (10, 0, 10, 0);
 				keys.TabIndex = this.tabIndex++;
 
 				this.key1 = new TextField(keys);
-				this.key1.Width = 50;
+				this.key1.PreferredWidth = 50;
 				this.key1.Dock = DockStyle.Left;
 				this.key1.TextChanged += new EventHandler(this.HandleKeyTextChanged);
 				this.key1.TabIndex = this.tabIndex++;
 				this.key1.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 				label = new StaticText(keys);
-				label.Width = 15;
+				label.PreferredWidth = 15;
 				label.Text = "-";
 				label.Alignment = ContentAlignment.MiddleCenter;
 				label.Dock = DockStyle.Left;
 
 				this.key2 = new TextField(keys);
-				this.key2.Width = 60;
+				this.key2.PreferredWidth = 60;
 				this.key2.Dock = DockStyle.Left;
 				this.key2.TextChanged += new EventHandler(this.HandleKeyTextChanged);
 				this.key2.TabIndex = this.tabIndex++;
 				this.key2.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 				label = new StaticText(keys);
-				label.Width = 15;
+				label.PreferredWidth = 15;
 				label.Text = "-";
 				label.Alignment = ContentAlignment.MiddleCenter;
 				label.Dock = DockStyle.Left;
 
 				this.key3 = new TextField(keys);
-				this.key3.Width = 40;
+				this.key3.PreferredWidth = 40;
 				this.key3.Dock = DockStyle.Left;
 				this.key3.TextChanged += new EventHandler(this.HandleKeyTextChanged);
 				this.key3.TabIndex = this.tabIndex++;
 				this.key3.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 				label = new StaticText(keys);
-				label.Width = 15;
+				label.PreferredWidth = 15;
 				label.Text = "-";
 				label.Alignment = ContentAlignment.MiddleCenter;
 				label.Dock = DockStyle.Left;
 
 				this.key4 = new TextField(keys);
-				this.key4.Width = 60;
+				this.key4.PreferredWidth = 60;
 				this.key4.Dock = DockStyle.Left;
 				this.key4.TextChanged += new EventHandler(this.HandleKeyTextChanged);
 				this.key4.TabIndex = this.tabIndex++;
@@ -119,7 +119,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 				//	Bouton OK.
 				this.buttonOK = new Button(this.window.Root);
-				this.buttonOK.Width = 75;
+				this.buttonOK.PreferredWidth = 75;
 				this.buttonOK.Text = Res.Strings.Dialog.Button.OK;
 				this.buttonOK.ButtonStyle = ButtonStyle.DefaultAccept;
 				this.buttonOK.Anchor = AnchorStyles.BottomLeft;
@@ -130,7 +130,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 				//	Bouton annuler.
 				this.buttonCancel = new Button(this.window.Root);
-				this.buttonCancel.Width = 75;
+				this.buttonCancel.PreferredWidth = 75;
 				this.buttonCancel.Text = Res.Strings.Dialog.Button.Cancel;
 				this.buttonCancel.ButtonStyle = ButtonStyle.DefaultCancel;
 				this.buttonCancel.Anchor = AnchorStyles.BottomLeft;

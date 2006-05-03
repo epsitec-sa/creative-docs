@@ -55,13 +55,13 @@ namespace Epsitec.Common.Designer.Ribbons
 			rect.Width  = dx;
 			rect.Height = dy;
 			rect.Offset(0, dy+5);
-			this.buttonBold.Bounds = rect;
+			this.buttonBold.SetManualBounds(rect);
 			rect.Offset(dx, 0);
-			this.buttonItalic.Bounds = rect;
+			this.buttonItalic.SetManualBounds(rect);
 			rect.Offset(dx, 0);
-			this.buttonUnderlined.Bounds = rect;
+			this.buttonUnderlined.SetManualBounds(rect);
 			rect.Offset(dx+5, 0);
-			this.buttonGlyphs.Bounds = rect;
+			this.buttonGlyphs.SetManualBounds(rect);
 		}
 
 

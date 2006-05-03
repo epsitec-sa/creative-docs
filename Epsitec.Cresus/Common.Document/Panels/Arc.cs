@@ -161,16 +161,16 @@ namespace Epsitec.Common.Document.Panels
 			Rectangle r = rect;
 			r.Bottom = r.Top-20;
 			r.Inflate(1);
-			this.grid.Bounds = r;
+			this.grid.SetManualBounds(r);
 
 			if ( this.isExtendedSize && this.IsLabelProperties )
 			{
 				r.Offset(0, -25);
 				r.Left = rect.Left;
 				r.Right = rect.Right;
-				this.fieldStarting.Bounds = r;
+				this.fieldStarting.SetManualBounds(r);
 				r.Offset(0, -25);
-				this.fieldEnding.Bounds = r;
+				this.fieldEnding.SetManualBounds(r);
 			}
 			else
 			{
@@ -179,10 +179,10 @@ namespace Epsitec.Common.Document.Panels
 				r.Offset(0, -25);
 				r.Left = rect.Right-w-w;
 				r.Width = w;
-				this.fieldStarting.Bounds = r;
+				this.fieldStarting.SetManualBounds(r);
 				r.Left = r.Right;
 				r.Width = w;
-				this.fieldEnding.Bounds = r;
+				this.fieldEnding.SetManualBounds(r);
 			}
 		}
 		

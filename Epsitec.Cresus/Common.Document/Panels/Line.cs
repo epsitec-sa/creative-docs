@@ -404,17 +404,17 @@ namespace Epsitec.Common.Document.Panels
 					r.Left = rect.Left;
 					r.Right = rect.Right;
 					r.Inflate(1);
-					this.grid.Bounds = r;
+					this.grid.SetManualBounds(r);
 
 					pTop -= 25;
 					r.Top = pTop;
 					r.Bottom = r.Top-20;
 					r.Left = rect.Left;
 					r.Width = 20;
-					this.nothingButton.Bounds = r;
+					this.nothingButton.SetManualBounds(r);
 					r.Left = r.Right;
 					r.Right = rect.Right;
-					this.field.Bounds = r;
+					this.field.SetManualBounds(r);
 					pTop -= 25;
 
 					Properties.StandardDashType type = (Properties.StandardDashType) this.grid.SelectedValue;
@@ -426,7 +426,7 @@ namespace Epsitec.Common.Document.Panels
 						r.Width = 180/3;
 						for ( int i=0 ; i<Properties.Line.DashMax ; i++ )
 						{
-							this.radioDashRank[i].Bounds = r;
+							this.radioDashRank[i].SetManualBounds(r);
 							r.Offset(r.Width, 0);
 						}
 
@@ -434,13 +434,13 @@ namespace Epsitec.Common.Document.Panels
 						r.Bottom = r.Top-20;
 						r.Left = rect.Left;
 						r.Right = rect.Right;
-						this.fieldDashPen.Bounds = r;
+						this.fieldDashPen.SetManualBounds(r);
 
 						r.Top = r.Bottom-2;
 						r.Bottom = r.Top-20;
 						r.Left = rect.Left;
 						r.Right = rect.Right;
-						this.fieldDashGap.Bounds = r;
+						this.fieldDashGap.SetManualBounds(r);
 
 						pTop -= 80;
 					}
@@ -450,7 +450,7 @@ namespace Epsitec.Common.Document.Panels
 						r.Bottom = r.Top-20;
 						r.Left = rect.Left;
 						r.Right = rect.Right;
-						this.fieldStandardLength.Bounds = r;
+						this.fieldStandardLength.SetManualBounds(r);
 						pTop -= 25;
 					}
 				}
@@ -461,23 +461,23 @@ namespace Epsitec.Common.Document.Panels
 					r.Left = rect.Left;
 					r.Width = 22*4;
 					r.Inflate(1);
-					this.grid.Bounds = r;
+					this.grid.SetManualBounds(r);
 
 					r.Top = pTop;
 					r.Bottom = r.Top-20;
 					r.Left = rect.Right-Widgets.TextFieldLabel.DefaultTextWidth-20;
 					r.Right = rect.Right-Widgets.TextFieldLabel.DefaultTextWidth;
-					this.nothingButton.Bounds = r;
+					this.nothingButton.SetManualBounds(r);
 					r.Left = rect.Right-Widgets.TextFieldLabel.DefaultTextWidth;
 					r.Right = rect.Right;
-					this.field.Bounds = r;
+					this.field.SetManualBounds(r);
 					pTop -= 25;
 
 					r.Top = pTop;
 					r.Bottom = r.Top-20;
 					r.Left = rect.Right-Widgets.TextFieldLabel.ShortWidth;
 					r.Right = rect.Right;
-					this.fieldStandardLength.Bounds = r;
+					this.fieldStandardLength.SetManualBounds(r);
 					pTop -= 25;
 
 					r.Top = pTop;
@@ -487,15 +487,15 @@ namespace Epsitec.Common.Document.Panels
 					for ( int i=0 ; i<Properties.Line.DashMax ; i++ )
 					{
 						if ( i == Properties.Line.DashMax-1 )  r.Width = 32;
-						this.radioDashRank[i].Bounds = r;
+						this.radioDashRank[i].SetManualBounds(r);
 						r.Offset(r.Width, 0);
 					}
 					r.Left = rect.Right-Widgets.TextFieldLabel.ShortWidth-Widgets.TextFieldLabel.ShortWidth;
 					r.Width = Widgets.TextFieldLabel.ShortWidth;
-					this.fieldDashPen.Bounds = r;
+					this.fieldDashPen.SetManualBounds(r);
 					r.Left = r.Right;
 					r.Width = Widgets.TextFieldLabel.ShortWidth;
-					this.fieldDashGap.Bounds = r;
+					this.fieldDashGap.SetManualBounds(r);
 					pTop -= 25;
 				}
 
@@ -504,10 +504,10 @@ namespace Epsitec.Common.Document.Panels
 				r.Left = rect.Left;
 				r.Width = 22*3;
 				r.Inflate(1);
-				this.gridCap.Bounds = r;
+				this.gridCap.SetManualBounds(r);
 				r.Left = rect.Right-22*3;
 				r.Right = rect.Right;
-				this.gridJoin.Bounds = r;
+				this.gridJoin.SetManualBounds(r);
 			}
 			else	// panneau réduit ?
 			{
@@ -516,16 +516,16 @@ namespace Epsitec.Common.Document.Panels
 				r.Left = rect.Left;
 				r.Width = 22*4;
 				r.Inflate(1);
-				this.grid.Bounds = r;
+				this.grid.SetManualBounds(r);
 
 				r.Top = pTop;
 				r.Bottom = r.Top-20;
 				r.Left = rect.Right-Widgets.TextFieldLabel.DefaultTextWidth-20;
 				r.Right = rect.Right-Widgets.TextFieldLabel.DefaultTextWidth;
-				this.nothingButton.Bounds = r;
+				this.nothingButton.SetManualBounds(r);
 				r.Left = rect.Right-Widgets.TextFieldLabel.DefaultTextWidth;
 				r.Right = rect.Right;
-				this.field.Bounds = r;
+				this.field.SetManualBounds(r);
 			}
 		}
 

@@ -113,10 +113,9 @@ namespace Epsitec.Common.Document.Panels
 		{
 			//	Indique que la hauteur du panneau a changé.
 			double h = this.DefaultHeight;
-			if ( this.Height != h )
+			if ( this.ActualHeight != h )
 			{
-				this.Height = h;
-//-				this.ForceLayout();
+				this.PreferredHeight = h;
 			}
 		}
 
@@ -268,7 +267,7 @@ namespace Epsitec.Common.Document.Panels
 			rect.Right -= this.extendedZoneWidth+5;
 			rect.Top -= 1;
 			rect.Bottom = rect.Top-this.LabelHeight;
-			this.label.Bounds = rect;
+			this.label.SetManualBounds(rect);
 			this.label.Visibility = (this.IsLabelProperties || this is ModColor);
 
 			rect = this.Client.Bounds;
@@ -276,12 +275,12 @@ namespace Epsitec.Common.Document.Panels
 			rect.Width = this.extendedZoneWidth;
 			rect.Top -= (this.IsLabelProperties || this is ModColor) ? 3 : 9;
 			rect.Bottom = rect.Top-13;
-			this.fixIcon.Bounds = rect;
-			this.hiliteButton.Bounds = rect;
+			this.fixIcon.SetManualBounds(rect);
+			this.hiliteButton.SetManualBounds(rect);
 
 			rect.Left = this.Client.Bounds.Right-this.extendedZoneWidth+1;
 			rect.Width = this.extendedZoneWidth-3;
-			this.extendedButton.Bounds = rect;
+			this.extendedButton.SetManualBounds(rect);
 
 			this.UpdateButtons();
 		}

@@ -39,7 +39,7 @@ namespace Epsitec.Common.Document.Containers
 			toolBar.Items.Add(new IconSeparator());
 
 			this.slider = new HSlider();
-			this.slider.Width = 100;
+			this.slider.PreferredWidth = 100;
 			this.slider.Margins = new Margins(0, 0, 4, 4);
 			this.slider.MinValue = 20.0M;
 			this.slider.MaxValue = 60.0M;

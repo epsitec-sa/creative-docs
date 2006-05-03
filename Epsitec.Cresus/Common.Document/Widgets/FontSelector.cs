@@ -212,7 +212,7 @@ namespace Epsitec.Common.Document.Widgets
 			//	Positionne l'ascenseur.
 			Rectangle r = rect;
 			r.Left = r.Right-this.scroller.DefaultWidth;
-			this.scroller.Bounds = r;
+			this.scroller.SetManualBounds(r);
 
 			//	Positionne les échantillons.
 			double top = rect.Top;
@@ -220,8 +220,8 @@ namespace Epsitec.Common.Document.Widgets
 			{
 				double h = this.sampleHeight+supplAll;
 				if ( i == lines-1 )  h += supplLast;  // dernière ligne ?
-				r = new Rectangle(rect.Left, top-h, rect.Width-this.scroller.Width, h);
-				this.samples[i].Bounds = r;
+				r = new Rectangle(rect.Left, top-h, rect.Width-this.scroller.ActualWidth, h);
+				this.samples[i].SetManualBounds(r);
 				this.samples[i].FontHeight = this.sampleHeight;
 
 				top -= h;
@@ -235,7 +235,7 @@ namespace Epsitec.Common.Document.Widgets
 			//	Dessine le cadre.
 			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
 			Rectangle rect = this.Client.Bounds;
-			rect.Width -= this.scroller.Width;
+			rect.Width -= this.scroller.ActualWidth;
 
 			Color frameColor = adorner.ColorTextFieldBorder(this.IsEnabled);
 
@@ -249,7 +249,7 @@ namespace Epsitec.Common.Document.Widgets
 			//	Gestion des événements clavier/souris.
 			if ( message.Type == MessageType.MouseDown )
 			{
-				if ( pos.X < this.Bounds.Right-this.scroller.Width )
+				if ( pos.X < this.ActualBounds.Right-this.scroller.ActualWidth )
 				{
 					int sel = this.Detect(pos);
 					if ( sel < this.fontList.Count )
@@ -446,7 +446,7 @@ namespace Epsitec.Common.Document.Widgets
 			//	Détecte la ligne visée par la souris.
 			for ( int i=0 ; i<this.samples.Length ; i++ )
 			{
-				if ( this.samples[i].Bounds.Contains(pos) )  return this.firstLine+i;
+				if ( this.samples[i].ActualBounds.Contains(pos) )  return this.firstLine+i;
 			}
 			return -1;
 		}

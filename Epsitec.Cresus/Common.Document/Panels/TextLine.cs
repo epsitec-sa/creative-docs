@@ -152,27 +152,27 @@ namespace Epsitec.Common.Document.Panels
 			r.Bottom = r.Top-20;
 			r.Width = 22*4;
 			r.Inflate(1);
-			this.gridHorizontal.Bounds = r;
+			this.gridHorizontal.SetManualBounds(r);
 
 			if ( this.isExtendedSize && this.IsLabelProperties )
 			{
 				r.Offset(0, -25);
 				r.Left = rect.Left;
 				r.Right = rect.Right;
-				this.fieldOffset.Bounds = r;
+				this.fieldOffset.SetManualBounds(r);
 
 				r.Offset(0, -25);
-				this.fieldAdd.Bounds = r;
+				this.fieldAdd.SetManualBounds(r);
 			}
 			else
 			{
 				r.Offset(0, -25);
 				r.Left = rect.Right-Widgets.TextFieldLabel.ShortWidth-Widgets.TextFieldLabel.ShortWidth-10;
 				r.Width = Widgets.TextFieldLabel.ShortWidth+10;
-				this.fieldOffset.Bounds = r;
+				this.fieldOffset.SetManualBounds(r);
 				r.Left = r.Right;
 				r.Width = Widgets.TextFieldLabel.ShortWidth;
-				this.fieldAdd.Bounds = r;
+				this.fieldAdd.SetManualBounds(r);
 			}
 		}
 		

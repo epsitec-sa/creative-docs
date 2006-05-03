@@ -76,7 +76,7 @@ namespace Epsitec.Common.Document.Panels
 
 			Rectangle r = rect;
 			r.Bottom = r.Top-20;
-			this.field.Bounds = r;
+			this.field.SetManualBounds(r);
 		}
 		
 		private void HandleTextChanged(object sender)

@@ -56,18 +56,18 @@ namespace Epsitec.Common.Document.Ribbons
 			rect.Width  = dx;
 			rect.Height = dy;
 			rect.Offset(0, dy+5);
-			this.buttonBooleanOr.Bounds = rect;
+			this.buttonBooleanOr.SetManualBounds(rect);
 			rect.Offset(dx, 0);
-			this.buttonBooleanAnd.Bounds = rect;
+			this.buttonBooleanAnd.SetManualBounds(rect);
 			rect.Offset(dx, 0);
-			this.buttonBooleanXor.Bounds = rect;
+			this.buttonBooleanXor.SetManualBounds(rect);
 
 			rect = this.UsefulZone;
 			rect.Width  = dx;
 			rect.Height = dy;
-			this.buttonBooleanFrontMinus.Bounds = rect;
+			this.buttonBooleanFrontMinus.SetManualBounds(rect);
 			rect.Offset(dx, 0);
-			this.buttonBooleanBackMinus.Bounds = rect;
+			this.buttonBooleanBackMinus.SetManualBounds(rect);
 		}
 
 

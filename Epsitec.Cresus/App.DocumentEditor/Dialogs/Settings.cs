@@ -33,7 +33,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowSettingsCloseClicked);
 
 				Panel topPart = new Panel(this.window.Root);
-				topPart.Height = 20;
+				topPart.PreferredHeight = 20;
 				topPart.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top;
 				topPart.Margins = new Margins(6, 6, 6, 0);
 
@@ -41,7 +41,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				RadioButton radio1 = new RadioButton(topPart);
 				radio1.Name = "RadioGlobal";
 				radio1.Text = Res.Strings.Dialog.Settings.RadioGlobal;
-				radio1.Width = 80;
+				radio1.PreferredWidth = 80;
 				radio1.Dock = DockStyle.Left;
 				radio1.ActiveStateChanged += new EventHandler(this.HandleRadioSettingsChanged);
 				radio1.Index = 1;
@@ -49,7 +49,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				RadioButton radio2 = new RadioButton(topPart);
 				radio2.Name = "RadioDocument";
 				radio2.Text = Res.Strings.Dialog.Settings.RadioDocument;
-				radio2.Width = 80;
+				radio2.PreferredWidth = 80;
 				radio2.Dock = DockStyle.Left;
 				radio2.ActiveState = ActiveState.Yes;
 				radio2.ActiveStateChanged += new EventHandler(this.HandleRadioSettingsChanged);
@@ -226,7 +226,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				toolBar.Items.Add(new IconSeparator());
 
 				this.quickList = new CellTable(bookQuick);
-				this.quickList.Height = 259;
+				this.quickList.PreferredHeight = 259;
 				this.quickList.DefHeight = 21;
 				this.quickList.Dock = DockStyle.Top;
 				this.quickList.StyleH = CellArrayStyles.Stretch | CellArrayStyles.Separator;
@@ -278,7 +278,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 				//	Bouton de fermeture.
 				Button buttonClose = new Button(this.window.Root);
-				buttonClose.Width = 75;
+				buttonClose.PreferredWidth = 75;
 				buttonClose.Text = Res.Strings.Dialog.Button.Close;
 				buttonClose.ButtonStyle = ButtonStyle.DefaultAccept;
 				buttonClose.Anchor = AnchorStyles.BottomLeft;
@@ -348,19 +348,19 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		{
 			//	Crée un widget combo.
 			Panel container = new Panel(parent);
-			container.Height = 22;
+			container.PreferredHeight = 22;
 			container.TabIndex = this.tabIndex++;
 			container.Dock = DockStyle.Top;
 			container.Margins = new Margins (10, 10, 0, 5);
 
 			StaticText text = new StaticText(container);
 			text.Text = label;
-			text.Width = 100;
+			text.PreferredWidth = 100;
 			text.Dock = DockStyle.Left;
 			text.Margins = new Margins (0, 0, 0, 0);
 
 			TextFieldCombo field = new TextFieldCombo(container);
-			field.Width = 160;
+			field.PreferredWidth = 160;
 			field.IsReadOnly = true;
 			field.Name = name;
 			field.SelectedIndexChanged += new EventHandler(this.HandleComboSettingsChanged);
@@ -375,19 +375,19 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		{
 			//	Crée un widget pour choisir un nom de fichier.
 			Panel container = new Panel(parent);
-			container.Height = 22;
+			container.PreferredHeight = 22;
 			container.TabIndex = this.tabIndex++;
 			container.Dock = DockStyle.Top;
 			container.Margins = new Margins (10, 10, 0, 5);
 
 			StaticText text = new StaticText(container);
 			text.Text = label;
-			text.Width = 100;
+			text.PreferredWidth = 100;
 			text.Dock = DockStyle.Left;
 			text.Margins = new Margins (0, 0, 0, 0);
 
 			TextField field = new TextField(container);
-			field.Width = 160-22;
+			field.PreferredWidth = 160-22;
 			field.Name = name;
 			field.TextChanged += new EventHandler(this.HandleTextSettingsChanged);
 			field.TabIndex = this.tabIndex++;
@@ -410,19 +410,19 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		{
 			//	Crée un widget textfield.
 			Panel container = new Panel(parent);
-			container.Height = 22;
+			container.PreferredHeight = 22;
 			container.TabIndex = this.tabIndex++;
 			container.Dock = DockStyle.Top;
 			container.Margins = new Margins (10, 10, 0, 5);
 
 			StaticText text = new StaticText(container);
 			text.Text = label;
-			text.Width = 100;
+			text.PreferredWidth = 100;
 			text.Dock = DockStyle.Left;
 			text.Margins = new Margins (0, 0, 0, 0);
 
 			TextFieldSlider field = new TextFieldSlider(container);
-			field.Width = 50;
+			field.PreferredWidth = 50;
 			field.Name = name;
 			field.ValueChanged += new EventHandler(this.HandleDoubleSettingsChanged);
 			field.TabIndex = this.tabIndex++;

@@ -33,19 +33,19 @@ namespace Epsitec.Common.Designer.Dialogs
 				StaticText label = new StaticText(this.window.Root);
 				label.Text = Res.Strings.Dialog.NewCulture.Label;
 				label.Alignment = ContentAlignment.MiddleLeft;
-				label.Width = 40;
+				label.PreferredWidth = 40;
 				label.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
 				label.Margins = new Margins(6, 6, 6+3, 0);
 
 				this.cultureWidget = new ScrollList(this.window.Root);
-				this.cultureWidget.Height = 90;
+				this.cultureWidget.PreferredHeight = 90;
 				this.cultureWidget.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
 				this.cultureWidget.Margins = new Margins(6, 6, 6+22, 0);
 				this.cultureWidget.TabIndex = tabIndex++;
 
 				//	Boutons de fermeture.
 				Button buttonOk = new Button(this.window.Root);
-				buttonOk.Width = 75;
+				buttonOk.PreferredWidth = 75;
 				buttonOk.Text = Res.Strings.Dialog.NewCulture.Button.Create;
 				buttonOk.ButtonStyle = ButtonStyle.DefaultAccept;
 				buttonOk.Anchor = AnchorStyles.BottomLeft;
@@ -55,7 +55,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				buttonOk.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 				Button buttonClose = new Button(this.window.Root);
-				buttonClose.Width = 75;
+				buttonClose.PreferredWidth = 75;
 				buttonClose.Text = Res.Strings.Dialog.Button.Cancel;
 				buttonClose.Anchor = AnchorStyles.BottomLeft;
 				buttonClose.Margins = new Margins(6+75+10, 0, 0, 6);

@@ -5373,8 +5373,8 @@ namespace Epsitec.Common.Document
 			DrawingContext context = this.ActiveViewer.DrawingContext;
 
 			if ( p1.X == p2.X || p1.Y == p2.Y )  return;
-			double fx = viewer.Width/(System.Math.Abs(p1.X-p2.X)*context.ScaleX);
-			double fy = viewer.Height/(System.Math.Abs(p1.Y-p2.Y)*context.ScaleY);
+			double fx = viewer.ActualWidth/(System.Math.Abs(p1.X-p2.X)*context.ScaleX);
+			double fy = viewer.ActualHeight/(System.Math.Abs(p1.Y-p2.Y)*context.ScaleY);
 			double factor = System.Math.Min(fx, fy);
 			this.ZoomChange(factor, (p1+p2)/2);
 		}
@@ -5386,7 +5386,7 @@ namespace Epsitec.Common.Document
 			DrawingContext context = this.ActiveViewer.DrawingContext;
 
 			if ( p1.X == p2.X )  return;
-			double factor = viewer.Width/(System.Math.Abs(p1.X-p2.X)*context.ScaleX);
+			double factor = viewer.ActualWidth/(System.Math.Abs(p1.X-p2.X)*context.ScaleX);
 			this.ZoomChange(factor, (p1+p2)/2);
 		}
 

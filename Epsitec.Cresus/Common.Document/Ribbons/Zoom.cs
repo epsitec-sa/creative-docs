@@ -78,35 +78,35 @@ namespace Epsitec.Common.Document.Ribbons
 			Rectangle rect = this.UsefulZone;
 			rect.Left += dx*4;
 			rect.Width = this.separatorWidth;
-			this.separator.Bounds = rect;
+			this.separator.SetManualBounds(rect);
 
 			rect = this.UsefulZone;
 			rect.Width  = dx;
 			rect.Height = dy;
 			rect.Offset(0, dy+5);
-			this.buttonZoomMin.Bounds = rect;
+			this.buttonZoomMin.SetManualBounds(rect);
 			rect.Offset(dx, 0);
-			this.buttonZoomPage.Bounds = rect;
+			this.buttonZoomPage.SetManualBounds(rect);
 			rect.Offset(dx, 0);
-			this.buttonZoomPageWidth.Bounds = rect;
+			this.buttonZoomPageWidth.SetManualBounds(rect);
 			rect.Offset(dx, 0);
-			this.buttonZoomDefault.Bounds = rect;
+			this.buttonZoomDefault.SetManualBounds(rect);
 			rect.Offset(dx+this.separatorWidth, -dy*0.5-5);
 			rect.Width = 50;
-			this.fieldZoom.Bounds = rect;
+			this.fieldZoom.SetManualBounds(rect);
 
 			rect = this.UsefulZone;
 			rect.Width  = dx;
 			rect.Height = dy;
-			this.buttonZoomSel.Bounds = rect;
+			this.buttonZoomSel.SetManualBounds(rect);
 			rect.Offset(dx, 0);
-			this.buttonZoomSelWidth.Bounds = rect;
+			this.buttonZoomSelWidth.SetManualBounds(rect);
 			rect.Offset(dx*2, 0);
-			this.buttonZoomPrev.Bounds = rect;
+			this.buttonZoomPrev.SetManualBounds(rect);
 			rect.Offset(dx+this.separatorWidth, 0);
 			rect.Width = 50;
 			rect.Height = dy*0.5;
-			this.buttonOthers.Bounds = rect;
+			this.buttonOthers.SetManualBounds(rect);
 		}
 
 
@@ -114,7 +114,7 @@ namespace Epsitec.Common.Document.Ribbons
 		{
 			//	Crée un champ éditable pour le zoom.
 			field = new TextFieldReal(this);
-			field.Width = 50;
+			field.PreferredWidth = 50;
 			field.TabIndex = this.tabIndex++;
 			field.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			field.ValueChanged += new EventHandler(this.HandleFieldValueChanged);
@@ -173,7 +173,7 @@ namespace Epsitec.Common.Document.Ribbons
 			VMenu menu = Menus.ZoomMenu.CreateZoomMenu(context.Zoom, context.ZoomPage, null);
 			if ( menu == null )  return;
 			menu.Host = this;
-			menu.MinWidth = button.Width;
+			menu.MinWidth = button.ActualWidth;
 			TextFieldCombo.AdjustComboSize(button, menu);
 			menu.ShowAsComboList(button, Point.Zero, button);
 		}

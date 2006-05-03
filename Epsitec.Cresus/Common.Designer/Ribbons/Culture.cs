@@ -53,9 +53,9 @@ namespace Epsitec.Common.Designer.Ribbons
 			rect.Width  = dx;
 			rect.Height = dy;
 			rect.Offset(0, dy+5);
-			this.buttonNewCulture.Bounds = rect;
+			this.buttonNewCulture.SetManualBounds(rect);
 			rect.Offset(dx, 0);
-			this.buttonDeleteCulture.Bounds = rect;
+			this.buttonDeleteCulture.SetManualBounds(rect);
 		}
 
 

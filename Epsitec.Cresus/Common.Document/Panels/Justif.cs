@@ -227,7 +227,7 @@ namespace Epsitec.Common.Document.Panels
 			r.Bottom = r.Top-20;
 			r.Width = 22*5;
 			r.Inflate(1);
-			this.gridHorizontal.Bounds = r;
+			this.gridHorizontal.SetManualBounds(r);
 
 			if ( this.isExtendedSize && this.IsLabelProperties )
 			{
@@ -235,21 +235,21 @@ namespace Epsitec.Common.Document.Panels
 				r.Left = rect.Left;
 				r.Width = 22*3;
 				r.Inflate(1);
-				this.gridVertical.Bounds = r;
+				this.gridVertical.SetManualBounds(r);
 				r.Left = rect.Right-22*4;
 				r.Width = 22*4;
 				r.Inflate(1);
-				this.gridOrientation.Bounds = r;
+				this.gridOrientation.SetManualBounds(r);
 
 				r.Offset(0, -28);
 				r.Bottom = r.Top-20;
 				r.Left = rect.Left;
 				r.Right = rect.Right;
-				this.fieldMarginH.Bounds = r;
+				this.fieldMarginH.SetManualBounds(r);
 
 				r.Offset(0, -25);
-				this.fieldMarginV.Bounds = r;
-				this.fieldOffsetV.Bounds = r;
+				this.fieldMarginV.SetManualBounds(r);
+				this.fieldOffsetV.SetManualBounds(r);
 			}
 			else
 			{
@@ -257,26 +257,26 @@ namespace Epsitec.Common.Document.Panels
 				r.Left = rect.Right-22*3;
 				r.Width = 22*3;
 				r.Inflate(1);
-				this.gridVertical.Bounds = r;
+				this.gridVertical.SetManualBounds(r);
 
 				r.Offset(0, -25);
 				r.Left = rect.Right-22*4;
 				r.Width = 22*4;
 				r.Inflate(1);
-				this.gridOrientation.Bounds = r;
+				this.gridOrientation.SetManualBounds(r);
 
 				r = rect;
 				r.Bottom = rect.Top-45;
 				r.Height = 20;
 				r.Width = Widgets.TextFieldLabel.ShortWidth+10;
-				this.fieldMarginH.Bounds = r;
+				this.fieldMarginH.SetManualBounds(r);
 
 				r = rect;
 				r.Bottom = rect.Top-70;
 				r.Height = 20;
 				r.Width = Widgets.TextFieldLabel.ShortWidth+10;
-				this.fieldMarginV.Bounds = r;
-				this.fieldOffsetV.Bounds = r;
+				this.fieldMarginV.SetManualBounds(r);
+				this.fieldOffsetV.SetManualBounds(r);
 			}
 		}
 		

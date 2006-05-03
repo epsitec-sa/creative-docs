@@ -57,20 +57,20 @@ namespace Epsitec.Common.Document.Ribbons
 			rect.Width  = dx;
 			rect.Height = dy;
 			rect.Offset(0, dy+5);
-			this.buttonCombine.Bounds = rect;
+			this.buttonCombine.SetManualBounds(rect);
 			rect.Offset(dx, 0);
-			this.buttonUncombine.Bounds = rect;
+			this.buttonUncombine.SetManualBounds(rect);
 
 			rect = this.UsefulZone;
 			rect.Width  = dx;
 			rect.Height = dy;
-			this.buttonToBezier.Bounds = rect;
+			this.buttonToBezier.SetManualBounds(rect);
 			rect.Offset(dx, 0);
-			this.buttonToPoly.Bounds = rect;
+			this.buttonToPoly.SetManualBounds(rect);
 			rect.Offset(dx, 0);
-			this.buttonToTextBox2.Bounds = rect;
+			this.buttonToTextBox2.SetManualBounds(rect);
 			rect.Offset(dx, 0);
-			this.buttonFragment.Bounds = rect;
+			this.buttonFragment.SetManualBounds(rect);
 		}
 
 

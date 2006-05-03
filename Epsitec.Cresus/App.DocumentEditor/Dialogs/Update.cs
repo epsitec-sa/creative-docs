@@ -31,25 +31,25 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowUpdateCloseClicked);
 
 				this.version = new StaticText(this.window.Root);
-				this.version.Height = this.version.Height*1.2;
+				this.version.PreferredHeight = this.version.PreferredHeight*1.2;
 //				this.version.SetClientZoom(1.2);
 				this.version.Dock = DockStyle.Top;
 				this.version.Margins = new Margins (10, 10, 10, 0);
 
 				this.limit = new StaticText(this.window.Root);
-				this.limit.Height = this.limit.Height*1.2;
+				this.limit.PreferredHeight = this.limit.PreferredHeight*1.2;
 //				this.limit.SetClientZoom(1.2);
 				this.limit.Dock = DockStyle.Top;
 				this.limit.Margins = new Margins(10, 10, 0, 10);
 
 				this.buy = new StaticText(this.window.Root);
-				this.buy.Height = 110;
+				this.buy.PreferredHeight = 110;
 				this.buy.Dock = DockStyle.Top;
 				this.buy.Margins = new Margins(10, 10, 0, 10);
 
 				//	Bouton de fermeture.
 				Button buttonClose = new Button(this.window.Root);
-				buttonClose.Width = 75;
+				buttonClose.PreferredWidth = 75;
 				buttonClose.Text = Res.Strings.Dialog.Button.Close;
 				buttonClose.ButtonStyle = ButtonStyle.DefaultAccept;
 				buttonClose.Anchor = AnchorStyles.BottomLeft;

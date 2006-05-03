@@ -52,7 +52,7 @@ namespace Epsitec.Common.Document.Ribbons
 			rect.Width  = dx;
 			rect.Height = dy;
 			rect.Offset(0, dy);
-			this.buttonOthers.Bounds = rect;
+			this.buttonOthers.SetManualBounds(rect);
 		}
 
 
@@ -64,7 +64,7 @@ namespace Epsitec.Common.Document.Ribbons
 			VMenu menu = this.BuildOthersMenu();
 			if ( menu == null )  return;
 			menu.Host = this;
-			menu.MinWidth = button.Width;
+			menu.MinWidth = button.ActualWidth;
 			TextFieldCombo.AdjustComboSize(button, menu);
 			menu.ShowAsComboList(button, Point.Zero, button);
 		}

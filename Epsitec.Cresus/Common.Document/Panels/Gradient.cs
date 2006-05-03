@@ -593,26 +593,26 @@ namespace Epsitec.Common.Document.Panels
 			r.Bottom = r.Top-20;
 			r.Left = rect.Right-Widgets.TextFieldLabel.DefaultTextWidth-20;
 			r.Width = 20;
-			this.nothingButton.Bounds = r;
+			this.nothingButton.SetManualBounds(r);
 
 			if ( type == Properties.GradientFillType.None )
 			{
 				r.Left = rect.Right-Widgets.TextFieldLabel.DefaultTextWidth;
 				r.Right = rect.Right;
-				this.fieldColor1.Bounds = r;
+				this.fieldColor1.SetManualBounds(r);
 			}
 			else
 			{
 				r.Left = rect.Right-20-8-20;
 				r.Right = rect.Right-20-8;
-				this.fieldColor1.Bounds = r;
+				this.fieldColor1.SetManualBounds(r);
 				r.Left = rect.Right-20;
 				r.Right = rect.Right;
-				this.fieldColor2.Bounds = r;
+				this.fieldColor2.SetManualBounds(r);
 
 				r.Left = rect.Right-20-8;
 				r.Right = rect.Right-20;
-				this.swapColor.Bounds = r;
+				this.swapColor.SetManualBounds(r);
 			}
 
 			if ( this.isExtendedSize )  // panneau étendu ?
@@ -622,7 +622,7 @@ namespace Epsitec.Common.Document.Panels
 				r.Left = rect.Left;
 				r.Width = 22*4;
 				r.Inflate(1);
-				this.grid.Bounds = r;
+				this.grid.SetManualBounds(r);
 				pTop -= 25;
 
 				if ( this.IsLabelProperties )  // étendu/détails ?
@@ -631,7 +631,7 @@ namespace Epsitec.Common.Document.Panels
 					r.Bottom = r.Top-20;
 					r.Left = rect.Right-Widgets.TextFieldLabel.DefaultTextWidth;
 					r.Right = rect.Right;
-					this.reset.Bounds = r;
+					this.reset.SetManualBounds(r);
 					pTop -= 25;
 
 					if ( type == Properties.GradientFillType.Linear ||
@@ -641,7 +641,7 @@ namespace Epsitec.Common.Document.Panels
 						r.Bottom = r.Top-20;
 						r.Left = rect.Left;
 						r.Right = rect.Right;
-						this.fieldAngle.Bounds = r;
+						this.fieldAngle.SetManualBounds(r);
 						pTop -= 25;
 					}
 
@@ -654,14 +654,14 @@ namespace Epsitec.Common.Document.Panels
 						r.Bottom = r.Top-20;
 						r.Left = rect.Left;
 						r.Right = rect.Right;
-						this.fieldRepeat.Bounds = r;
+						this.fieldRepeat.SetManualBounds(r);
 						pTop -= 25;
 
 						r.Top = pTop;
 						r.Bottom = r.Top-20;
 						r.Left = rect.Left;
 						r.Right = rect.Right;
-						this.fieldMiddle.Bounds = r;
+						this.fieldMiddle.SetManualBounds(r);
 						pTop -= 25;
 					}
 
@@ -675,7 +675,7 @@ namespace Epsitec.Common.Document.Panels
 						r.Bottom = r.Top-20;
 						r.Left = rect.Left;
 						r.Right = rect.Right;
-						this.fieldSmooth.Bounds = r;
+						this.fieldSmooth.SetManualBounds(r);
 						pTop -= 25;
 					}
 
@@ -689,7 +689,7 @@ namespace Epsitec.Common.Document.Panels
 						r.Width = 80;
 						for ( int i=0 ; i<Properties.Gradient.HatchMax ; i++ )
 						{
-							this.radioHatchRank[i].Bounds = r;
+							this.radioHatchRank[i].SetManualBounds(r);
 							r.Offset(r.Width, 0);
 						}
 						pTop -= 25;
@@ -698,24 +698,24 @@ namespace Epsitec.Common.Document.Panels
 						r.Bottom = r.Top-20;
 						r.Left = rect.Left;
 						r.Right = rect.Right;
-						this.fieldRepeat.Bounds = r;
-						this.fieldHatchAngle.Bounds = r;
+						this.fieldRepeat.SetManualBounds(r);
+						this.fieldHatchAngle.SetManualBounds(r);
 						pTop -= 25;
 
 						r.Top = pTop;
 						r.Bottom = r.Top-20;
 						r.Left = rect.Left;
 						r.Right = rect.Right;
-						this.fieldMiddle.Bounds = r;
-						this.fieldHatchWidth.Bounds = r;
+						this.fieldMiddle.SetManualBounds(r);
+						this.fieldHatchWidth.SetManualBounds(r);
 						pTop -= 25;
 					
 						r.Top = pTop;
 						r.Bottom = r.Top-20;
 						r.Left = rect.Left;
 						r.Right = rect.Right;
-						this.fieldSmooth.Bounds = r;
-						this.fieldHatchDistance.Bounds = r;
+						this.fieldSmooth.SetManualBounds(r);
+						this.fieldHatchDistance.SetManualBounds(r);
 						pTop -= 25;
 					}
 				}
@@ -725,18 +725,18 @@ namespace Epsitec.Common.Document.Panels
 					r.Bottom = r.Top-20;
 					r.Left = rect.Right-Widgets.TextFieldLabel.ShortWidth-20;
 					r.Width = 20;
-					this.reset.Bounds = r;
+					this.reset.SetManualBounds(r);
 
 					r.Left = rect.Right-Widgets.TextFieldLabel.ShortWidth;
 					r.Width = Widgets.TextFieldLabel.ShortWidth;
-					this.fieldAngle.Bounds = r;
+					this.fieldAngle.SetManualBounds(r);
 
 					r.Left = rect.Right-Widgets.TextFieldLabel.DefaultTextWidth;
 					r.Width = 16;
 					for ( int i=0 ; i<Properties.Gradient.HatchMax ; i++ )
 					{
 						if ( i == Properties.Gradient.HatchMax-1 )  r.Width = 32;
-						this.radioHatchRank[i].Bounds = r;
+						this.radioHatchRank[i].SetManualBounds(r);
 						r.Offset(r.Width, 0);
 					}
 					pTop -= 25;
@@ -745,16 +745,16 @@ namespace Epsitec.Common.Document.Panels
 					r.Bottom = r.Top-20;
 					r.Left = rect.Left;
 					r.Width = Widgets.TextFieldLabel.ShortWidth;
-					this.fieldRepeat.Bounds = r;
-					this.fieldHatchAngle.Bounds = r;
+					this.fieldRepeat.SetManualBounds(r);
+					this.fieldHatchAngle.SetManualBounds(r);
 					r.Left = r.Right;
 					r.Width = Widgets.TextFieldLabel.ShortWidth;
-					this.fieldMiddle.Bounds = r;
-					this.fieldHatchWidth.Bounds = r;
+					this.fieldMiddle.SetManualBounds(r);
+					this.fieldHatchWidth.SetManualBounds(r);
 					r.Left = r.Right;
 					r.Width = Widgets.TextFieldLabel.ShortWidth;
-					this.fieldSmooth.Bounds = r;
-					this.fieldHatchDistance.Bounds = r;
+					this.fieldSmooth.SetManualBounds(r);
+					this.fieldHatchDistance.SetManualBounds(r);
 				}
 			}
 			else	// panneau réduit ?
@@ -764,7 +764,7 @@ namespace Epsitec.Common.Document.Panels
 				r.Left = rect.Left;
 				r.Width = 22*4;
 				r.Inflate(1);
-				this.grid.Bounds = r;
+				this.grid.SetManualBounds(r);
 			}
 		}
 		

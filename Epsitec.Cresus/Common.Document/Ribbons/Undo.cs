@@ -54,14 +54,14 @@ namespace Epsitec.Common.Document.Ribbons
 			rect.Width  = dx*1.5;
 			rect.Height = dy*1.5;
 			rect.Offset(0, dy*0.5);
-			this.buttonUndo.Bounds = rect;
+			this.buttonUndo.SetManualBounds(rect);
 			rect.Offset(dx*1.5, 0);
-			this.buttonRedo.Bounds = rect;
+			this.buttonRedo.SetManualBounds(rect);
 
 			rect = this.UsefulZone;
 			rect.Width  = dx*1.5*2;
 			rect.Height = dy*0.5;
-			this.buttonList.Bounds = rect;
+			this.buttonList.SetManualBounds(rect);
 		}
 
 
@@ -83,7 +83,7 @@ namespace Epsitec.Common.Document.Ribbons
 			if ( button == null )  return;
 			VMenu menu = this.document.Modifier.CreateUndoRedoMenu(null);
 			menu.Host = this;
-			menu.MinWidth = button.Width;
+			menu.MinWidth = button.ActualWidth;
 			TextFieldCombo.AdjustComboSize(button, menu);
 			menu.ShowAsComboList(button, Point.Zero, button);
 		}

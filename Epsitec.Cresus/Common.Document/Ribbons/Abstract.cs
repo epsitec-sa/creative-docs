@@ -38,7 +38,7 @@ namespace Epsitec.Common.Document.Ribbons
 
 			if ( initialWidth != this.DefaultWidth )
 			{
-				this.Width = this.DefaultWidth;
+				this.PreferredWidth = this.DefaultWidth;
 			}
 		}
 

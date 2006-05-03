@@ -232,7 +232,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 			if ( this.scroller != null )
 			{
-				this.scroller.Bounds = new Rectangle(this.Client.Size.Width-this.scroller.Width, 0, this.scroller.Width, this.Client.Size.Height);
+				this.scroller.SetManualBounds(new Rectangle(this.Client.Size.Width-this.scroller.ActualWidth, 0, this.scroller.ActualWidth, this.Client.Size.Height));
 			}
 		}
 		
@@ -537,7 +537,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		{
 			//	Rectangle où dessiner les cellules.
 			Rectangle rect = this.Client.Bounds;
-			rect.Right -= this.scroller.Width+1.0;
+			rect.Right -= this.scroller.ActualWidth+1.0;
 			return rect;
 		}
 

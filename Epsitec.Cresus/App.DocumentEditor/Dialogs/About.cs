@@ -34,7 +34,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 				//	Bouton de fermeture.
 				Button buttonClose = new Button(this.window.Root);
-				buttonClose.Width = 75;
+				buttonClose.PreferredWidth = 75;
 				buttonClose.Text = Res.Strings.Dialog.Button.Close;
 				buttonClose.ButtonStyle = ButtonStyle.DefaultAccept;
 				buttonClose.Anchor = AnchorStyles.BottomLeft;
@@ -45,7 +45,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				ToolTip.Default.SetToolTip(buttonClose, Res.Strings.Dialog.Tooltip.Close);
 
 				StaticText www = new StaticText(this.window.Root);
-				www.Width = 400-280;
+				www.PreferredWidth = 400-280;
 				www.Text = string.Format("<a href=\"{0}\">{1}</a><br/>", Res.Strings.Dialog.About.Link, Res.Strings.Dialog.About.Web);
 				www.Alignment = ContentAlignment.MiddleLeft;
 				www.HypertextClicked += new MessageEventHandler(HandleLinkHypertextClicked);
@@ -66,7 +66,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		public static StaticText CreateWidgetSplash(Widget parent, InstallType type)
 		{
 			//	Crée les widgets pour l'image de bienvenue.
-			double y = parent.Height-200;
+			double y = parent.ActualHeight-200;
 
 			string res;
 			if ( type == InstallType.Freeware )
@@ -80,58 +80,58 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			string text = string.Format("<img src=\"{0}\"/>", res);
 			StaticText image = new StaticText(parent);
 			image.Text = text;
-			image.Bounds = new Rectangle (0, y, 400, 200);
+			image.SetManualBounds(new Rectangle (0, y, 400, 200));
 
 			if ( type == InstallType.Freeware )
 			{
 				string version = About.GetVersion();
 				StaticText sv = new StaticText(parent);
 				sv.Text = string.Format("<font size=\"80%\"><font size=\"140%\"><b>{0} {1}</b></font>    {2}</font>", Res.Strings.Dialog.About.Version, version, Res.Strings.Dialog.About.Language);
-				sv.Bounds = new Rectangle (10, y+5+12*1, 270, 14);
+				sv.SetManualBounds(new Rectangle(10, y+5+12*1, 270, 14));
 
 				StaticText ep = new StaticText(parent);
 				ep.Text = @"<font size=""80%"">" + Res.Strings.Dialog.About.Copyright + "</font>";
-				ep.Bounds = new Rectangle (10, y+5+12*0, 270, 14);
+				ep.SetManualBounds(new Rectangle(10, y+5+12*0, 270, 14));
 			}
 			else
 			{
 				string version = About.GetVersion();
 				StaticText sv = new StaticText(parent);
 				sv.Text = string.Format("<font size=\"80%\"><font size=\"140%\"><b>{0} {1}</b></font>    {2}</font>", Res.Strings.Dialog.About.Version, version, Res.Strings.Dialog.About.Language);
-				sv.Bounds = new Rectangle (22, y+5+12*2, 270, 14);
+				sv.SetManualBounds(new Rectangle(22, y+5+12*2, 270, 14));
 
 				string sk = About.GetKey();
 				if ( sk != null )
 				{
 					StaticText key = new StaticText(parent);
 					key.Text = string.Format(@"<font size=""80%"">{0}: {1}</font>", Res.Strings.Dialog.About.Key, sk);
-					key.Bounds = new Rectangle (22, y+5+12*1, 270, 14);
+					key.SetManualBounds(new Rectangle(22, y+5+12*1, 270, 14));
 				}
 
 				StaticText ep = new StaticText(parent);
 				ep.Text = @"<font size=""80%"">" + Res.Strings.Dialog.About.Copyright + "</font>";
-				ep.Bounds = new Rectangle (22, y+5+12*0, 270, 14);
+				ep.SetManualBounds(new Rectangle(22, y+5+12*0, 270, 14));
 			}
 
 			if ( type == InstallType.Demo )
 			{
 				StaticText warning = new StaticText(parent);
 				warning.Text = "<font size=\"250%\"><b>" + Res.Strings.Dialog.About.Demo + "</b></font>";
-				warning.Bounds = new Rectangle (280, y, 84, 40);
+				warning.SetManualBounds(new Rectangle(280, y, 84, 40));
 			}
 
 			if ( type == InstallType.Expired )
 			{
 				StaticText warning = new StaticText(parent);
 				warning.Text = "<font size=\"250%\"><b>" + Res.Strings.Dialog.About.Expired + "</b></font>";
-				warning.Bounds = new Rectangle (280, y, 84, 40);
+				warning.SetManualBounds(new Rectangle(280, y, 84, 40));
 			}
 
 			if ( type == InstallType.Freeware )
 			{
 				StaticText warning = new StaticText(parent);
 				warning.Text = "<font size=\"180%\"><b>" + Res.Strings.Dialog.About.Freeware + "</b></font>";
-				warning.Bounds = new Rectangle (280, y, 120, 40);
+				warning.SetManualBounds(new Rectangle(280, y, 120, 40));
 			}
 
 			return image;

@@ -1137,13 +1137,13 @@ namespace Epsitec.Common.Designer
 			rect = box;
 			rect.Top -= cultureHeight+5;
 			rect.Bottom += editHeight+5+aboutHeight+5;
-			this.array.Bounds = rect;
+			this.array.SetManualBounds(rect);
 
 			rect = box;
 			rect.Bottom = rect.Top-cultureHeight-5;
 			rect.Left += this.array.GetColumnsAbsoluteWidth(0);
 			rect.Width = this.array.GetColumnsAbsoluteWidth(1)-1;
-			this.primaryCulture.Bounds = rect;
+			this.primaryCulture.SetManualBounds(rect);
 
 			if (this.secondaryCultures != null)
 			{
@@ -1159,12 +1159,12 @@ namespace Epsitec.Common.Designer
 					{
 						r.Right = rect.Right;
 					}
-					this.secondaryCultures[i].Bounds = r;
+					this.secondaryCultures[i].SetManualBounds(r);
 
 					r.Bottom = r.Top-1;
 					r.Height = 6;
 					r.Width ++;
-					this.secondaryModifiers[i].Bounds = r;
+					this.secondaryModifiers[i].SetManualBounds(r);
 				}
 			}
 
@@ -1172,29 +1172,29 @@ namespace Epsitec.Common.Designer
 			rect.Top = rect.Bottom+editHeight+aboutHeight+5;
 			rect.Bottom = rect.Top-editHeight;
 			rect.Width = this.array.GetColumnsAbsoluteWidth(0)-5;
-			this.labelStatic.Bounds = rect;
+			this.labelStatic.SetManualBounds(rect);
 			rect.Width += 5+1;
 			r = rect;
 			r.Bottom = r.Top-21;
-			this.labelEdit.Bounds = r;
+			this.labelEdit.SetManualBounds(r);
 			rect.Left += this.array.GetColumnsAbsoluteWidth(0);
 			rect.Width = this.array.GetColumnsAbsoluteWidth(1)+1;
-			this.primaryEdit.Bounds = rect;
+			this.primaryEdit.SetManualBounds(rect);
 			rect.Left = rect.Right-1;
 			rect.Width = this.array.GetColumnsAbsoluteWidth(2);
-			this.secondaryEdit.Bounds = rect;
+			this.secondaryEdit.SetManualBounds(rect);
 
 			rect = box;
 			rect.Top = rect.Bottom+aboutHeight;
 			rect.Bottom = rect.Top-aboutHeight;
 			rect.Width = this.array.GetColumnsAbsoluteWidth(0)-5;
-			this.labelAbout.Bounds = rect;
+			this.labelAbout.SetManualBounds(rect);
 			rect.Left += this.array.GetColumnsAbsoluteWidth(0);
 			rect.Width = this.array.GetColumnsAbsoluteWidth(1)+1;
-			this.primaryAbout.Bounds = rect;
+			this.primaryAbout.SetManualBounds(rect);
 			rect.Left = rect.Right-1;
 			rect.Width = this.array.GetColumnsAbsoluteWidth(2);
-			this.secondaryAbout.Bounds = rect;
+			this.secondaryAbout.SetManualBounds(rect);
 		}
 
 

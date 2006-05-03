@@ -1458,10 +1458,10 @@ namespace Epsitec.Common.Document.TextPanels
 			r = rect;
 			r.Bottom = r.Top-20;
 			r.Right = rect.Right-25;
-			this.fieldType.Bounds = r;
+			this.fieldType.SetManualBounds(r);
 			r.Left = rect.Right-20;
 			r.Right = rect.Right;
-			this.buttonClear.Bounds = r;
+			this.buttonClear.SetManualBounds(r);
 
 			if ( this.isExtendedSize )  // panneau étendu ?
 			{
@@ -1469,63 +1469,63 @@ namespace Epsitec.Common.Document.TextPanels
 				r.Bottom = r.Top-20;
 				r.Left = rect.Left;
 				r.Width = 20;
-				this.buttonAdd.Bounds = r;
+				this.buttonAdd.SetManualBounds(r);
 				r.Offset(20, 0);
-				this.buttonSub.Bounds = r;
+				this.buttonSub.SetManualBounds(r);
 				r.Offset(20+10, 0);
-				this.buttonNone.Bounds = r;
+				this.buttonNone.SetManualBounds(r);
 				r.Offset(20, 0);
-				this.buttonLeft.Bounds = r;
+				this.buttonLeft.SetManualBounds(r);
 				r.Offset(20, 0);
-				this.buttonCenter.Bounds = r;
+				this.buttonCenter.SetManualBounds(r);
 				r.Offset(20, 0);
-				this.buttonRight.Bounds = r;
+				this.buttonRight.SetManualBounds(r);
 				r.Offset(20+10, 0);
-				this.buttonContinue.Bounds = r;
+				this.buttonContinue.SetManualBounds(r);
 
 				r.Offset(0, -25);
 				r.Left = rect.Left;
 				r.Right = rect.Right;
 				r.Bottom = r.Top-(23+17*4);
-				this.table.Bounds = r;
+				this.table.SetManualBounds(r);
 				this.table.Visibility = true;
 
 				r.Top = r.Bottom-5;
 				r.Bottom = r.Top-30;
 				r.Left = rect.Left;
 				r.Right = rect.Right;
-				this.buttonPerso.Bounds = r;
+				this.buttonPerso.SetManualBounds(r);
 
 				r.Bottom = r.Top-20;
 				r.Left = rect.Left;
 				r.Width = 20;
-				this.buttonSuppressBefore.Bounds = r;
+				this.buttonSuppressBefore.SetManualBounds(r);
 				r.Offset(20+10, 0);
 				r.Width = 30;
-				this.labelText.Bounds = r;
+				this.labelText.SetManualBounds(r);
 				r.Offset(30+3, 0);
 				r.Width = 60;
-				this.fieldText.Bounds = r;
+				this.fieldText.SetManualBounds(r);
 				r.Left = rect.Right-48;
 				r.Right = rect.Right;
-				this.colorText.Bounds = r;
+				this.colorText.SetManualBounds(r);
 
 				r.Left = rect.Left;
 				r.Right = rect.Right;
-				this.labelTabs.Bounds = r;
+				this.labelTabs.SetManualBounds(r);
 
 				r.Offset(0, -25);
 				r.Left = rect.Left;
 				r.Width = 90;
-				this.fieldTab.Bounds = r;
+				this.fieldTab.SetManualBounds(r);
 				r.Offset(90, 0);
-				this.fieldIndent.Bounds = r;
+				this.fieldIndent.SetManualBounds(r);
 
 				r.Left = rect.Left;
 				r.Width = 90;
-				this.fieldFontSize.Bounds = r;
+				this.fieldFontSize.SetManualBounds(r);
 				r.Offset(90, 0);
-				this.fieldFontOffset.Bounds = r;
+				this.fieldFontOffset.SetManualBounds(r);
 			}
 			else
 			{

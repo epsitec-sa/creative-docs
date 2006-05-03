@@ -205,7 +205,7 @@ namespace Epsitec.Common.Document.Panels
 				r.Bottom = r.Top-20;
 			}
 			r.Inflate(1);
-			this.grid.Bounds = r;
+			this.grid.SetManualBounds(r);
 
 			double w = Widgets.TextFieldLabel.ShortWidth+8;
 
@@ -213,25 +213,25 @@ namespace Epsitec.Common.Document.Panels
 			r.Bottom = r.Top-20;
 			r.Left = rect.Right-w-w;
 			r.Width = w;
-			this.fieldFactor[0].Bounds = r;
-			this.fieldScalar[0].Bounds = r;
+			this.fieldFactor[0].SetManualBounds(r);
+			this.fieldScalar[0].SetManualBounds(r);
 			r.Left = r.Right;
 			r.Width = w;
-			this.fieldFactor[2].Bounds = r;
+			this.fieldFactor[2].SetManualBounds(r);
 
 			r.Top = r.Bottom-5;
 			r.Bottom = r.Top-20;
 			r.Left = rect.Right-w-w;
 			r.Width = w;
-			this.fieldFactor[1].Bounds = r;
-			this.fieldScalar[1].Bounds = r;
+			this.fieldFactor[1].SetManualBounds(r);
+			this.fieldScalar[1].SetManualBounds(r);
 			r.Left = r.Right;
 			r.Width = w;
-			this.fieldFactor[3].Bounds = r;
+			this.fieldFactor[3].SetManualBounds(r);
 
 			r.Left = rect.Left;
 			r.Width = 24;
-			this.resetButton.Bounds = r;
+			this.resetButton.SetManualBounds(r);
 		}
 
 

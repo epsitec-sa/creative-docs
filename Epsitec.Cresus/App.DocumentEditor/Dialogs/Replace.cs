@@ -38,12 +38,12 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				StaticText labelFind = new StaticText(this.window.Root);
 				labelFind.Text = Res.Strings.Dialog.Replace.Label.Find;
 				labelFind.Alignment = ContentAlignment.MiddleLeft;
-				labelFind.Width = 80;
+				labelFind.PreferredWidth = 80;
 				labelFind.Anchor = AnchorStyles.TopLeft;
 				labelFind.Margins = new Margins(10, 0, 10+3, 0);
 
 				this.fieldFind = new TextFieldCombo(this.window.Root);
-				this.fieldFind.Width = 400-100;
+				this.fieldFind.PreferredWidth = 400-100;
 				this.fieldFind.Anchor = AnchorStyles.TopLeft;
 				this.fieldFind.Margins = new Margins(90, 0, 10, 0);
 				this.fieldFind.TabIndex = this.tabIndex++;
@@ -53,12 +53,12 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				StaticText labelReplace = new StaticText(this.window.Root);
 				labelReplace.Text = Res.Strings.Dialog.Replace.Label.Replace;
 				labelReplace.Alignment = ContentAlignment.MiddleLeft;
-				labelReplace.Width = 80;
+				labelReplace.PreferredWidth = 80;
 				labelReplace.Anchor = AnchorStyles.TopLeft;
 				labelReplace.Margins = new Margins(10, 0, 40+3, 0);
 
 				this.fieldReplace = new TextFieldCombo(this.window.Root);
-				this.fieldReplace.Width = 400-100;
+				this.fieldReplace.PreferredWidth = 400-100;
 				this.fieldReplace.Anchor = AnchorStyles.TopLeft;
 				this.fieldReplace.Margins = new Margins(90, 0, 40, 0);
 				this.fieldReplace.TabIndex = this.tabIndex++;
@@ -67,7 +67,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 				this.checkEqualMaj = new CheckButton(this.window.Root);
 				this.checkEqualMaj.Text = Res.Strings.Dialog.Replace.Button.EqualMaj;
-				this.checkEqualMaj.Width = 150;
+				this.checkEqualMaj.PreferredWidth = 150;
 				this.checkEqualMaj.Anchor = AnchorStyles.TopLeft;
 				this.checkEqualMaj.Margins = new Margins(10, 0, 72+18*0, 0);
 				this.checkEqualMaj.TabIndex = this.tabIndex++;
@@ -76,7 +76,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 				this.checkEqualAccent = new CheckButton(this.window.Root);
 				this.checkEqualAccent.Text = Res.Strings.Dialog.Replace.Button.EqualAccent;
-				this.checkEqualAccent.Width = 150;
+				this.checkEqualAccent.PreferredWidth = 150;
 				this.checkEqualAccent.Anchor = AnchorStyles.TopLeft;
 				this.checkEqualAccent.Margins = new Margins(10, 0, 72+18*1, 0);
 				this.checkEqualAccent.TabIndex = this.tabIndex++;
@@ -85,7 +85,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 				this.checkWholeWord = new CheckButton(this.window.Root);
 				this.checkWholeWord.Text = Res.Strings.Dialog.Replace.Button.WholeWord;
-				this.checkWholeWord.Width = 150;
+				this.checkWholeWord.PreferredWidth = 150;
 				this.checkWholeWord.Anchor = AnchorStyles.TopLeft;
 				this.checkWholeWord.Margins = new Margins(10, 0, 72+18*2, 0);
 				this.checkWholeWord.TabIndex = this.tabIndex++;
@@ -94,7 +94,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 				this.radioReverse = new RadioButton(this.window.Root, "Direction", 0);
 				this.radioReverse.Text = Res.Strings.Dialog.Replace.Button.Reverse;
-				this.radioReverse.Width = 90;
+				this.radioReverse.PreferredWidth = 90;
 				this.radioReverse.Anchor = AnchorStyles.TopLeft;
 				this.radioReverse.Margins = new Margins(200, 0, 72+18*0, 0);
 				this.radioReverse.TabIndex = this.tabIndex++;
@@ -103,7 +103,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 				this.radioNormal = new RadioButton(this.window.Root, "Direction", 1);
 				this.radioNormal.Text = Res.Strings.Dialog.Replace.Button.Normal;
-				this.radioNormal.Width = 90;
+				this.radioNormal.PreferredWidth = 90;
 				this.radioNormal.Anchor = AnchorStyles.TopLeft;
 				this.radioNormal.Margins = new Margins(200+100, 0, 72+18*0, 0);
 				this.radioNormal.TabIndex = this.tabIndex++;
@@ -112,7 +112,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 				//	Bouton Chercher.
 				this.buttonFind = new Button(this.window.Root);
-				this.buttonFind.Width = 75;
+				this.buttonFind.PreferredWidth = 75;
 				this.buttonFind.Text = Res.Strings.Dialog.Replace.Button.Find;
 				this.buttonFind.ButtonStyle = ButtonStyle.DefaultAccept;
 				this.buttonFind.Anchor = AnchorStyles.BottomLeft;
@@ -124,7 +124,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				//	Bouton Replacer.
 				this.buttonReplace = new Button(this.window.Root);
 				//?this.buttonReplace.Command = "GlyphsInsert";
-				this.buttonReplace.Width = 75;
+				this.buttonReplace.PreferredWidth = 75;
 				this.buttonReplace.Text = Res.Strings.Dialog.Replace.Button.Replace;
 				this.buttonReplace.Anchor = AnchorStyles.BottomLeft;
 				this.buttonReplace.Margins = new Margins(10+75+10, 0, 0, 10);
@@ -134,7 +134,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 				//	Bouton annuler.
 				this.buttonClose = new Button(this.window.Root);
-				this.buttonClose.Width = 75;
+				this.buttonClose.PreferredWidth = 75;
 				this.buttonClose.Text = Res.Strings.Dialog.Button.Close;
 				this.buttonClose.ButtonStyle = ButtonStyle.DefaultCancel;
 				this.buttonClose.Anchor = AnchorStyles.BottomLeft;

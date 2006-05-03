@@ -54,15 +54,15 @@ namespace Epsitec.Common.Designer.Ribbons
 			rect.Width  = dx;
 			rect.Height = dy;
 			rect.Offset(0, dy+5);
-			this.buttonCut.Bounds = rect;
+			this.buttonCut.SetManualBounds(rect);
 			rect.Offset(0, -dy-5);
-			this.buttonCopy.Bounds = rect;
+			this.buttonCopy.SetManualBounds(rect);
 
 			rect = this.UsefulZone;
 			rect.Width  = dx*1.5;
 			rect.Height = dy*1.5;
 			rect.Offset(dx+4, dy*0.5);
-			this.buttonPaste.Bounds = rect;
+			this.buttonPaste.SetManualBounds(rect);
 		}
 
 

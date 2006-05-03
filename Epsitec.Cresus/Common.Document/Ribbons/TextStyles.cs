@@ -236,14 +236,14 @@ namespace Epsitec.Common.Document.Ribbons
 			rect.Width  = dx+5;
 			rect.Height = dy;
 			rect.Offset(0, 3);
-			this.buttonCharacter.Bounds = rect;
+			this.buttonCharacter.SetManualBounds(rect);
 			rect.Offset(0, rect.Height-1);
-			this.buttonParagraph.Bounds = rect;
+			this.buttonParagraph.SetManualBounds(rect);
 
 			rect = this.UsefulZone;
 			rect.Left += dx+5;
 			rect.Width = 60*3;
-			this.comboStyle.Bounds = rect;
+			this.comboStyle.SetManualBounds(rect);
 		}
 
 

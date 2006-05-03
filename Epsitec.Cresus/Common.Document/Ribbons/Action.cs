@@ -64,25 +64,25 @@ namespace Epsitec.Common.Document.Ribbons
 			rect.Width  = dx*1.5;
 			rect.Height = dy*1.5;
 			rect.Offset(0, dy*0.5);
-			this.buttonSettings.Bounds = rect;
+			this.buttonSettings.SetManualBounds(rect);
 
 			rect = this.UsefulZone;
 			rect.Width  = dx;
 			rect.Height = dy;
 			rect.Offset(dx*1.5+4, dy+5);
-			this.buttonInfos.Bounds = rect;
+			this.buttonInfos.SetManualBounds(rect);
 			rect.Offset(dx, 0);
-			this.buttonPageStack.Bounds = rect;
+			this.buttonPageStack.SetManualBounds(rect);
 
 			rect = this.UsefulZone;
 			rect.Width  = dx;
 			rect.Height = dy;
 			rect.Offset(dx*1.5+4, 0);
-			this.buttonKey.Bounds = rect;
+			this.buttonKey.SetManualBounds(rect);
 			rect.Offset(dx, 0);
-			this.buttonUpdate.Bounds = rect;
+			this.buttonUpdate.SetManualBounds(rect);
 			rect.Offset(dx, 0);
-			this.buttonAbout.Bounds = rect;
+			this.buttonAbout.SetManualBounds(rect);
 		}
 
 

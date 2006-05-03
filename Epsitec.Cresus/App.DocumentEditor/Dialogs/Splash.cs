@@ -42,13 +42,13 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.workInProgress = new StaticText(image);
 				if ( this.editor.InstallType == InstallType.Freeware )
 				{
-					this.workInProgress.Bounds = new Rectangle(140, 50, 250, 20);
+					this.workInProgress.SetManualBounds(new Rectangle(140, 50, 250, 20));
 				}
 				else
 				{
-					this.workInProgress.Bounds = new Rectangle(21, 50, 350, 20);
+					this.workInProgress.SetManualBounds(new Rectangle(21, 50, 350, 20));
 				}
-				this.workInProgress.SetSyncPaint(true);
+				//?this.workInProgress.SetSyncPaint(true);
 
 				this.window.Show();
 				Window.PumpEvents();

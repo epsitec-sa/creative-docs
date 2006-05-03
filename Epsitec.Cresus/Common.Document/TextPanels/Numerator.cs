@@ -91,15 +91,15 @@ namespace Epsitec.Common.Document.TextPanels
 
 			r.Left = rect.Left;
 			r.Width = 80;
-			this.labelStart.Bounds = r;
+			this.labelStart.SetManualBounds(r);
 
 			r.Left = rect.Left+80+3;
 			r.Right = rect.Right-25;
-			this.fieldStart.Bounds = r;
+			this.fieldStart.SetManualBounds(r);
 			
 			r.Left = rect.Right-20;
 			r.Width = 20;
-			this.buttonClear.Bounds = r;
+			this.buttonClear.SetManualBounds(r);
 		}
 
 

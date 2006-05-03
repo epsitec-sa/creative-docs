@@ -253,7 +253,7 @@ namespace Epsitec.Common.Document.Panels
 					r.Bottom = r.Top-22*2;
 					r.Inflate(1);
 					this.grid[j].EnableEndOfLine = false;
-					this.grid[j].Bounds = r;
+					this.grid[j].SetManualBounds(r);
 					rect.Offset(0, -47);
 
 					int n = this.GetTotalTextField(j);
@@ -264,7 +264,7 @@ namespace Epsitec.Common.Document.Panels
 						r.Bottom = r.Top-20;
 						r.Left = rect.Left;
 						r.Right = rect.Right;
-						this.fieldLength[j].Bounds = r;
+						this.fieldLength[j].SetManualBounds(r);
 						rect.Offset(0, -25);
 					}
 
@@ -274,7 +274,7 @@ namespace Epsitec.Common.Document.Panels
 						r.Bottom = r.Top-20;
 						r.Left = rect.Left;
 						r.Right = rect.Right;
-						this.fieldEffect1[j].Bounds = r;
+						this.fieldEffect1[j].SetManualBounds(r);
 						rect.Offset(0, -25);
 					}
 
@@ -284,7 +284,7 @@ namespace Epsitec.Common.Document.Panels
 						r.Bottom = r.Top-20;
 						r.Left = rect.Left;
 						r.Right = rect.Right;
-						this.fieldEffect2[j].Bounds = r;
+						this.fieldEffect2[j].SetManualBounds(r);
 						rect.Offset(0, -25);
 					}
 
@@ -300,23 +300,23 @@ namespace Epsitec.Common.Document.Panels
 					}
 					r.Inflate(1);
 					this.grid[j].EnableEndOfLine = !(this.isExtendedSize && this.IsLabelProperties);
-					this.grid[j].Bounds = r;
+					this.grid[j].SetManualBounds(r);
 
 					r = rect;
 					r.Bottom = r.Top-20;
 					r.Left = r.Right-Widgets.TextFieldLabel.ShortWidth;
 					r.Width = Widgets.TextFieldLabel.ShortWidth;
-					this.fieldLength[j].Bounds = r;
+					this.fieldLength[j].SetManualBounds(r);
 
 					r.Offset(0, -22);
 					r.Left = r.Right-Widgets.TextFieldLabel.ShortWidth;
 					r.Width = Widgets.TextFieldLabel.ShortWidth;
-					this.fieldEffect1[j].Bounds = r;
+					this.fieldEffect1[j].SetManualBounds(r);
 
 					r.Offset(0, -22);
 					r.Left = r.Right-Widgets.TextFieldLabel.ShortWidth;
 					r.Width = Widgets.TextFieldLabel.ShortWidth;
-					this.fieldEffect2[j].Bounds = r;
+					this.fieldEffect2[j].SetManualBounds(r);
 
 					rect.Offset(0, -74);
 				}
@@ -327,16 +327,16 @@ namespace Epsitec.Common.Document.Panels
 			r.Width = 5+90;
 			r.Bottom = ps+4;
 			r.Height = 1;
-			this.separator1.Bounds = r;
+			this.separator1.SetManualBounds(r);
 			r.Right = rect.Right+5;
 			r.Left = rect.Left+90+20;
-			this.separator2.Bounds = r;
+			this.separator2.SetManualBounds(r);
 
 			r.Left = rect.Left+90;
 			r.Width = 20;
 			r.Bottom -= 6;
 			r.Height = 12;
-			this.swapArrow.Bounds = r;
+			this.swapArrow.SetManualBounds(r);
 		}
 
 		protected int GetTotalTextField(int j)

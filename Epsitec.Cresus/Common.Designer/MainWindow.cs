@@ -179,25 +179,25 @@ namespace Epsitec.Common.Designer
 			this.hToolBar.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top;
 
 			this.ribbonMainButton = new RibbonButton("", Res.Strings.Ribbon.Main);
-			this.ribbonMainButton.Size = this.ribbonMainButton.RequiredSize;
+			this.ribbonMainButton.PreferredSize = this.ribbonMainButton.RequiredSize;
 			this.ribbonMainButton.Pressed += new MessageEventHandler(this.HandleRibbonPressed);
 			this.hToolBar.Items.Add(this.ribbonMainButton);
 
 			this.ribbonOperButton = new RibbonButton("", Res.Strings.Ribbon.Oper);
-			this.ribbonOperButton.Size = this.ribbonOperButton.RequiredSize;
+			this.ribbonOperButton.PreferredSize = this.ribbonOperButton.RequiredSize;
 			this.ribbonOperButton.Pressed += new MessageEventHandler(this.HandleRibbonPressed);
 			//?this.hToolBar.Items.Add(this.ribbonOperButton);
 
 			this.ribbonTextButton = new RibbonButton("", Res.Strings.Ribbon.Text);
-			this.ribbonTextButton.Size = this.ribbonTextButton.RequiredSize;
+			this.ribbonTextButton.PreferredSize = this.ribbonTextButton.RequiredSize;
 			this.ribbonTextButton.Pressed += new MessageEventHandler(this.HandleRibbonPressed);
 			this.hToolBar.Items.Add(this.ribbonTextButton);
 
 			this.ribbonMain = new RibbonContainer(this.window.Root);
 			this.ribbonMain.Name = "Main";
-			this.ribbonMain.Height = this.ribbonHeight;
+			this.ribbonMain.PreferredHeight = this.ribbonHeight;
 			this.ribbonMain.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top;
-			this.ribbonMain.Margins = new Margins(0, 0, this.hToolBar.Height, 0);
+			this.ribbonMain.Margins = new Margins(0, 0, this.hToolBar.PreferredHeight, 0);
 			this.ribbonMain.Visibility = true;
 			this.ribbonMain.Items.Add(new Ribbons.File());
 			this.ribbonMain.Items.Add(new Ribbons.Clipboard());
@@ -210,16 +210,16 @@ namespace Epsitec.Common.Designer
 
 			this.ribbonOper = new RibbonContainer(this.window.Root);
 			this.ribbonOper.Name = "Oper";
-			this.ribbonOper.Height = this.ribbonHeight;
+			this.ribbonOper.PreferredHeight = this.ribbonHeight;
 			this.ribbonOper.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top;
-			this.ribbonOper.Margins = new Margins(0, 0, this.hToolBar.Height, 0);
+			this.ribbonOper.Margins = new Margins(0, 0, this.hToolBar.PreferredHeight, 0);
 			this.ribbonOper.Visibility = true;
 
 			this.ribbonText = new RibbonContainer(this.window.Root);
 			this.ribbonText.Name = "Text";
-			this.ribbonText.Height = this.ribbonHeight;
+			this.ribbonText.PreferredHeight = this.ribbonHeight;
 			this.ribbonText.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top;
-			this.ribbonText.Margins = new Margins(0, 0, this.hToolBar.Height, 0);
+			this.ribbonText.Margins = new Margins(0, 0, this.hToolBar.PreferredHeight, 0);
 			this.ribbonText.Visibility = true;
 			this.ribbonText.Items.Add(new Ribbons.Character());
 			this.ribbonText.Items.Add(new Ribbons.Clipboard());
@@ -232,12 +232,12 @@ namespace Epsitec.Common.Designer
 			this.InfoAdd("InfoAccess", 120);
 
 			StatusBar infoMisc = new StatusBar(this.window.Root);
-			infoMisc.Width = 22;
+			infoMisc.PreferredWidth = 22;
 			infoMisc.Anchor = AnchorStyles.BottomRight;
 			infoMisc.Margins = new Margins(0, 0, 0, 0);
 
 			IconSeparator sep = new IconSeparator(infoMisc);
-			sep.Height = infoMisc.Height-1.0;
+			sep.PreferredHeight = infoMisc.PreferredHeight-1.0;
 			sep.Anchor = AnchorStyles.BottomLeft;
 
 			this.resize = new ResizeKnob(infoMisc);
@@ -246,7 +246,7 @@ namespace Epsitec.Common.Designer
 
 			this.bookModules = new TabBook(this.window.Root);
 			this.bookModules.Anchor = AnchorStyles.All;
-			this.bookModules.Margins = new Margins(0, 0, this.hToolBar.Height+1, this.info.Height+1);
+			this.bookModules.Margins = new Margins(0, 0, this.hToolBar.PreferredHeight+1, this.info.PreferredHeight+1);
 			this.bookModules.Arrows = TabBookArrows.Right;
 			this.bookModules.HasCloseButton = true;
 			this.bookModules.CloseButton.Command = "Close";
@@ -262,7 +262,7 @@ namespace Epsitec.Common.Designer
 		protected StatusField InfoAdd(string name, double width)
 		{
 			StatusField field = new StatusField();
-			field.Width = width;
+			field.PreferredWidth = width;
 			this.info.Items.Add(field);
 
 			int i = this.info.Children.Count-1;
@@ -718,7 +718,7 @@ namespace Epsitec.Common.Designer
 			this.ribbonTextButton.ActiveState = (this.ribbonText == this.ribbonActive) ? ActiveState.Yes : ActiveState.No;
 
 			double h = this.RibbonHeight;
-			this.bookModules.Margins = new Margins(1, 2, this.hToolBar.Height+h+1, this.info.Height+1);
+			this.bookModules.Margins = new Margins(1, 2, this.hToolBar.PreferredHeight+h+1, this.info.PreferredHeight+1);
 		}
 
 		protected double RibbonHeight

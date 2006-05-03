@@ -42,7 +42,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 				this.help = new TextFieldMulti(this.window.Root);
 				this.help.IsReadOnly = true;
-				this.help.Height = 84;
+				this.help.PreferredHeight = 84;
 				this.help.Dock = DockStyle.Top;
 				this.help.Margins = new Margins (6, 6, 6, 0);
 
@@ -79,7 +79,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				//	Bouton de fermeture.
 				double posx = 6;
 				Button buttonClose = new Button(this.window.Root);
-				buttonClose.Width = 75;
+				buttonClose.PreferredWidth = 75;
 				buttonClose.Text = Res.Strings.Dialog.Button.Close;
 				buttonClose.ButtonStyle = ButtonStyle.DefaultAccept;
 				buttonClose.Anchor = AnchorStyles.BottomLeft;
@@ -90,9 +90,9 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				ToolTip.Default.SetToolTip(buttonClose, Res.Strings.Dialog.Tooltip.Close);
 
 				//	Bouton d'aide.
-				posx += buttonClose.Width+6;
+				posx += buttonClose.PreferredWidth+6;
 				Button buttonHelp = new Button(this.window.Root);
-				buttonHelp.Width = 75;
+				buttonHelp.PreferredWidth = 75;
 				buttonHelp.Text = Res.Strings.Dialog.Button.Help;
 				buttonHelp.Anchor = AnchorStyles.BottomLeft;
 				buttonHelp.Margins = new Margins(posx, 0, 0, 6);
@@ -101,13 +101,13 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				buttonHelp.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 				ToolTip.Default.SetToolTip(buttonHelp, Res.Strings.Dialog.Tooltip.Help);
 
-				double dim = buttonClose.Height;
+				double dim = buttonClose.PreferredHeight;
 
-				posx += buttonHelp.Width+30;
+				posx += buttonHelp.PreferredWidth+30;
 				this.pagePrev = new GlyphButton(this.window.Root);
 				this.pagePrev.GlyphShape = GlyphShape.ArrowLeft;
-				this.pagePrev.Width = dim;
-				this.pagePrev.Height = dim;
+				this.pagePrev.PreferredWidth = dim;
+				this.pagePrev.PreferredHeight = dim;
 				this.pagePrev.Anchor = AnchorStyles.BottomLeft;
 				this.pagePrev.Margins = new Margins(posx, 0, 0, 6);
 				this.pagePrev.Clicked += new MessageEventHandler(this.HandlePagePrevClicked);
@@ -115,10 +115,10 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.pagePrev.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 				ToolTip.Default.SetToolTip(this.pagePrev, DocumentEditor.GetRes("Action.PagePrev"));
 
-				posx += pagePrev.Width+1;
+				posx += pagePrev.PreferredWidth+1;
 				this.pageMenu = new Button(this.window.Root);
-				this.pageMenu.Width = dim*2.0;
-				this.pageMenu.Height = dim;
+				this.pageMenu.PreferredWidth = dim*2.0;
+				this.pageMenu.PreferredHeight = dim;
 				this.pageMenu.Anchor = AnchorStyles.BottomLeft;
 				this.pageMenu.Margins = new Margins(posx, 0, 0, 6);
 				this.pageMenu.Clicked += new MessageEventHandler(this.HandlePageMenuClicked);
@@ -126,11 +126,11 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.pageMenu.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 				ToolTip.Default.SetToolTip(this.pageMenu, DocumentEditor.GetRes("Action.PageMenu"));
 
-				posx += pageMenu.Width+1;
+				posx += pageMenu.PreferredWidth+1;
 				this.pageNext = new GlyphButton(this.window.Root);
 				this.pageNext.GlyphShape = GlyphShape.ArrowRight;
-				this.pageNext.Width = dim;
-				this.pageNext.Height = dim;
+				this.pageNext.PreferredWidth = dim;
+				this.pageNext.PreferredHeight = dim;
 				this.pageNext.Anchor = AnchorStyles.BottomLeft;
 				this.pageNext.Margins = new Margins(posx, 0, 0, 6);
 				this.pageNext.Clicked += new MessageEventHandler(this.HandlePageNextClicked);
@@ -139,9 +139,9 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				ToolTip.Default.SetToolTip(this.pageNext, DocumentEditor.GetRes("Action.PageNext"));
 
 				//	Bouton page courante.
-				posx += pageNext.Width+8;
+				posx += pageNext.PreferredWidth+8;
 				this.buttonCurrent = new Button(this.window.Root);
-				this.buttonCurrent.Width = 100;
+				this.buttonCurrent.PreferredWidth = 100;
 				this.buttonCurrent.Text = Res.Strings.Dialog.PageStack.Button.Current;
 				this.buttonCurrent.Anchor = AnchorStyles.BottomLeft;
 				this.buttonCurrent.Margins = new Margins(posx, 0, 0, 6);
@@ -294,10 +294,10 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		{
 			Button button = sender as Button;
 			if ( button == null )  return;
-			Point pos = button.MapClientToScreen(new Point(0, button.Height));
+			Point pos = button.MapClientToScreen(new Point(0, button.ActualHeight));
 			VMenu menu = this.CreatePagesMenu();
 			menu.Host = button.Window;
-			pos.Y += menu.Height;
+			pos.Y += menu.ActualHeight;
 			menu.ShowAsComboList (button, pos, button);
 		}
 

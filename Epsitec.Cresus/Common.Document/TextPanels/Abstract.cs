@@ -170,10 +170,9 @@ namespace Epsitec.Common.Document.TextPanels
 		{
 			//	Indique que la hauteur du panneau a changé.
 			double h = this.DefaultHeight;
-			if ( this.Height != h )
+			if ( this.ActualHeight != h )
 			{
-				this.Height = h;
-//-				this.ForceLayout();
+				this.PreferredHeight = h;
 			}
 		}
 
@@ -181,11 +180,11 @@ namespace Epsitec.Common.Document.TextPanels
 		{
 			//	Force la mise à jour de la hauteur du panneau.
 			double h = this.DefaultHeight;
-			if ( this.Height != h )
+			if ( this.ActualHeight != h )
 			{
 				//	Il faut modifier la hauteur du parent (normalement Containers.Styles.panelContainer)
 				//	qui contient ce panneau en mode DockStyle.Fill !
-				this.Parent.Height = h;
+				this.Parent.PreferredHeight = h;
 			}
 		}
 
@@ -225,24 +224,24 @@ namespace Epsitec.Common.Document.TextPanels
 
 			if ( this.extendedButton == null )  return;
 
-			Rectangle rect = this.Client.Bounds;
+			Rectangle rect = this.ActualBounds;
 			rect.Left += this.extendedZoneWidth+5;
 			rect.Right -= this.extendedZoneWidth+5;
 			rect.Top -= 1;
 			rect.Bottom = rect.Top-this.LabelHeight;
-			this.label.Bounds = rect;
+			this.label.SetManualBounds(rect);
 			this.label.Visibility = this.IsLabelProperties;
 
-			rect = this.Client.Bounds;
+			rect = this.ActualBounds;
 			rect.Left += 1;
 			rect.Width = this.extendedZoneWidth;
 			rect.Top -= this.IsLabelProperties ? 3 : 9;
 			rect.Bottom = rect.Top-13;
-			this.fixIcon.Bounds = rect;
+			this.fixIcon.SetManualBounds(rect);
 
 			rect.Left = this.Client.Bounds.Right-this.extendedZoneWidth+1;
 			rect.Width = this.extendedZoneWidth-3;
-			this.extendedButton.Bounds = rect;
+			this.extendedButton.SetManualBounds(rect);
 		}
 
 		protected void UpdateButtons()

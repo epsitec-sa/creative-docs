@@ -97,7 +97,7 @@ namespace Epsitec.Common.Document.Panels
 
 			Rectangle r = rect;
 			r.Left = r.Right-50;
-			this.field.Bounds = r;
+			this.field.SetManualBounds(r);
 		}
 		
 

@@ -101,7 +101,7 @@ namespace Epsitec.Common.Document.Containers
 
 			//	Conteneur du panneau.
 			this.panelContainer = new Widget(this.bottomScrollable.Panel);
-			this.panelContainer.Height = 0.0;
+			this.panelContainer.PreferredHeight = 0.0;
 			this.panelContainer.Dock = DockStyle.Top;
 			this.panelContainer.Margins = new Margins(0, 1, 0, 0);
 			this.panelContainer.TabIndex = 99;
@@ -123,7 +123,7 @@ namespace Epsitec.Common.Document.Containers
 			this.category = StyleCategory.Graphic;
 			this.UpdateCategory();
 
-			this.panelContainer.Height = 1;  // nécessaire pour mettre à jour la première fois !
+			this.panelContainer.PreferredHeight = 1;  // nécessaire pour mettre à jour la première fois !
 //-			this.panelContainer.ForceLayout();
 		}
 
@@ -131,7 +131,7 @@ namespace Epsitec.Common.Document.Containers
 		{
 			//	Crée les boutons radio pour le choix de la catégorie.
 			this.categoryContainer = new Widget(this.topPage);
-			this.categoryContainer.Height = 20+8;
+			this.categoryContainer.PreferredHeight = 20+8;
 			this.categoryContainer.Dock = DockStyle.Top;
 			this.categoryContainer.Margins = new Margins(0, 0, 0, 0);
 			this.categoryContainer.TabIndex = 1;
@@ -143,7 +143,7 @@ namespace Epsitec.Common.Document.Containers
 			this.categoryGraphic.Name = "Graphic";
 			this.categoryGraphic.ButtonStyle = ButtonStyle.ActivableIcon;
 			this.categoryGraphic.AutoFocus = false;
-			this.categoryGraphic.Width = 80;
+			this.categoryGraphic.PreferredWidth = 80;
 			this.categoryGraphic.Dock = DockStyle.Left;
 			this.categoryGraphic.Margins = new Margins(0, 0, 0, 0);
 			this.categoryGraphic.TabIndex = this.index++;
@@ -154,7 +154,7 @@ namespace Epsitec.Common.Document.Containers
 			this.categoryParagraph.Name = "Paragraph";
 			this.categoryParagraph.ButtonStyle = ButtonStyle.ActivableIcon;
 			this.categoryParagraph.AutoFocus = false;
-			this.categoryParagraph.Width = 80;
+			this.categoryParagraph.PreferredWidth = 80;
 			this.categoryParagraph.Dock = DockStyle.Left;
 			this.categoryParagraph.Margins = new Margins(0, 0, 0, 0);
 			this.categoryParagraph.TabIndex = this.index++;
@@ -165,7 +165,7 @@ namespace Epsitec.Common.Document.Containers
 			this.categoryCharacter.Name = "Character";
 			this.categoryCharacter.ButtonStyle = ButtonStyle.ActivableIcon;
 			this.categoryCharacter.AutoFocus = false;
-			this.categoryCharacter.Width = 80-1;
+			this.categoryCharacter.PreferredWidth = 80-1;
 			this.categoryCharacter.Dock = DockStyle.Left;
 			this.categoryCharacter.Margins = new Margins(0, 0, 0, 0);
 			this.categoryCharacter.TabIndex = this.index++;
@@ -250,7 +250,7 @@ namespace Epsitec.Common.Document.Containers
 			this.childrenToolBar.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 
 			StaticText st = new StaticText();
-			st.Width = 45;
+			st.PreferredWidth = 45;
 			st.Margins = new Margins(0, 5, 0, 0);
 			st.Text = Res.Strings.Panel.AggregateChildren.Label.Name;
 			st.Alignment = ContentAlignment.MiddleRight;
@@ -258,7 +258,7 @@ namespace Epsitec.Common.Document.Containers
 
 			this.dummyChildren = new Widgets.DummyTextFieldCombo();
 			this.dummyChildren.IsReadOnly = true;
-			this.dummyChildren.Width = 185;
+			this.dummyChildren.PreferredWidth = 185;
 			this.dummyChildren.Margins = new Margins(0, 0, 1, 1);
 			this.dummyChildren.ComboOpenPressed += new EventHandler(this.HandleMenuChildrenOpenPressed);
 			this.childrenToolBar.Items.Add(this.dummyChildren);
@@ -281,14 +281,14 @@ namespace Epsitec.Common.Document.Containers
 			this.nameToolBar.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 
 			StaticText st = new StaticText();
-			st.Width = 45;
+			st.PreferredWidth = 45;
 			st.Margins = new Margins(0, 5, 0, 0);
 			st.Text = Res.Strings.Panel.AggregateName.Label.Name;
 			st.Alignment = ContentAlignment.MiddleRight;
 			this.nameToolBar.Items.Add(st);
 
 			this.name = new TextField();
-			this.name.Width = 110;
+			this.name.PreferredWidth = 110;
 			this.name.Margins = new Margins(0, 0, 1, 1);
 			this.name.TextChanged += new EventHandler(this.HandleNameTextChanged);
 			this.name.AutoSelectOnFocus = true;
@@ -302,14 +302,14 @@ namespace Epsitec.Common.Document.Containers
 		{
 			//	Crée la toolbar pour le sélectionneur de panneaux.
 			this.selectorContainer = new Widget(this.bottomPage);
-			this.selectorContainer.Height = Styles.selectorSize+8;
+			this.selectorContainer.PreferredHeight = Styles.selectorSize+8;
 			this.selectorContainer.Dock = DockStyle.Top;
 			this.selectorContainer.Margins = new Margins(0, 0, 5, 0);
 			this.selectorContainer.TabIndex = 97;
 			this.selectorContainer.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 
 			this.selectorToolBar = new Widget(this.selectorContainer);
-			this.selectorToolBar.Height = Styles.selectorSize+8;
+			this.selectorToolBar.PreferredHeight = Styles.selectorSize+8;
 			this.selectorToolBar.Dock = DockStyle.Fill;
 			this.selectorToolBar.Margins = new Margins(0, 0, 0, 0);
 			this.selectorToolBar.TabIndex = 1;
@@ -531,7 +531,7 @@ namespace Epsitec.Common.Document.Containers
 						}
 					}
 
-					double width = System.Math.Floor(this.selectorToolBar.Width/total);
+					double width = System.Math.Floor(this.selectorToolBar.ActualWidth/total);
 					width = System.Math.Min(width, Styles.selectorSize);
 					double zoom = width/Styles.selectorSize;
 
@@ -600,8 +600,8 @@ namespace Epsitec.Common.Document.Containers
 			IconButtonMark button = new IconButtonMark(this.selectorToolBar);
 			button.Name = name;
 			button.IconName = Misc.Icon(icon);
-			button.Width = width;
-			button.Height = Styles.selectorSize+8;
+			button.PreferredWidth = width;
+			button.PreferredHeight = Styles.selectorSize+8;
 			button.Enable = enable;
 			button.AutoFocus = false;
 			button.ButtonStyle = ButtonStyle.ActivableIcon;
@@ -726,12 +726,12 @@ namespace Epsitec.Common.Document.Containers
 
 					this.styleBriefPanel = new StaticText(this.panelContainer);
 					this.styleBriefPanel.Alignment = ContentAlignment.TopLeft;
-					this.styleBriefPanel.Height = h;
+					this.styleBriefPanel.PreferredHeight = h;
 					this.styleBriefPanel.Dock = DockStyle.Fill;
 					this.styleBriefPanel.Margins = new Margins(5, -1000, 5, 5);  // dépasse largement à droite
 					this.styleBriefPanel.Text = brief;
 
-					this.panelContainer.Height = h;
+					this.panelContainer.PreferredHeight = h;
 //-					this.panelContainer.ForceLayout();
 					return;
 				}
@@ -739,7 +739,7 @@ namespace Epsitec.Common.Document.Containers
 				if ( this.panel != null && this.panel.Property.Type == property.Type )
 				{
 					this.panel.Property = property;
-					this.panelContainer.Height = this.panel.DefaultHeight;
+					this.panelContainer.PreferredHeight = this.panel.DefaultHeight;
 //-					this.panelContainer.ForceLayout();
 
 					if ( this.colorSelector.Visibility )
@@ -768,7 +768,7 @@ namespace Epsitec.Common.Document.Containers
 					this.panel.TabIndex = 1;
 					this.panel.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 
-					this.panelContainer.Height = this.panel.DefaultHeight;
+					this.panelContainer.PreferredHeight = this.panel.DefaultHeight;
 //-					this.panelContainer.ForceLayout();
 				}
 			}
@@ -794,12 +794,12 @@ namespace Epsitec.Common.Document.Containers
 
 					this.styleBriefPanel = new StaticText(this.panelContainer);
 					this.styleBriefPanel.Alignment = ContentAlignment.TopLeft;
-					this.styleBriefPanel.Height = h;
+					this.styleBriefPanel.PreferredHeight = h;
 					this.styleBriefPanel.Dock = DockStyle.Fill;
 					this.styleBriefPanel.Margins = new Margins(5, -1000, 5, 5);  // dépasse largement à droite
 					this.styleBriefPanel.Text = brief;
 
-					this.panelContainer.Height = h;
+					this.panelContainer.PreferredHeight = h;
 //-					this.panelContainer.ForceLayout();
 				}
 				else
@@ -814,7 +814,7 @@ namespace Epsitec.Common.Document.Containers
 					this.textPanel.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 					this.textPanel.UpdateAfterAttach();
 
-					this.panelContainer.Height = this.textPanel.DefaultHeight;
+					this.panelContainer.PreferredHeight = this.textPanel.DefaultHeight;
 //-					this.panelContainer.ForceLayout();
 				}
 			}
@@ -863,7 +863,7 @@ namespace Epsitec.Common.Document.Containers
 				this.styleBriefPanel = null;
 			}
 
-			this.panelContainer.Height = 0.0;
+			this.panelContainer.PreferredHeight = 0.0;
 //-			this.panelContainer.ForceLayout();
 		}
 
@@ -1272,7 +1272,7 @@ namespace Epsitec.Common.Document.Containers
 			VMenu menu = this.CreateMenuChildren();
 			if ( menu == null )  return;
 			menu.Host = this;
-			menu.MinWidth = widget.Width;
+			menu.MinWidth = widget.ActualWidth;
 			TextFieldCombo.AdjustComboSize(widget, menu);
 			menu.ShowAsComboList(widget, Point.Zero, this.dummyChildren.Button);
 		}
@@ -1284,7 +1284,7 @@ namespace Epsitec.Common.Document.Containers
 			IconButton button = sender as IconButton;
 			VMenu menu = this.CreateMenuTypes();
 			menu.Host = this;
-			menu.MinWidth = button.Width;
+			menu.MinWidth = button.ActualWidth;
 			TextFieldCombo.AdjustComboSize(button, menu);
 			menu.ShowAsComboList(button, Point.Zero, button);
 		}
@@ -1360,10 +1360,10 @@ namespace Epsitec.Common.Document.Containers
 				this.graphicList.UpdateRow(sel, true);
 
 				double h = this.panel.DefaultHeight;
-				if ( h != this.panelContainer.Height )
+				if ( h != this.panelContainer.ActualHeight )
 				{
-					this.panel.Height = h;
-					this.panelContainer.Height = h;
+					this.panel.PreferredHeight = h;
+					this.panelContainer.PreferredHeight = h;
 //-					this.panelContainer.ForceLayout();
 				}
 			}

@@ -52,7 +52,7 @@ namespace Epsitec.Common.Document.Ribbons
 			rect.Width  = dx*1.5;
 			rect.Height = dy*1.5;
 			rect.Offset(0, dy*0.5);
-			this.buttonReplace.Bounds = rect;
+			this.buttonReplace.SetManualBounds(rect);
 		}
 
 

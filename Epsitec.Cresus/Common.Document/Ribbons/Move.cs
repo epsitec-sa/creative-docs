@@ -65,22 +65,22 @@ namespace Epsitec.Common.Document.Ribbons
 			rect.Width  = dx;
 			rect.Height = dy;
 			rect.Offset(0, dy+5);
-			this.buttonMoveHi.Bounds = rect;
+			this.buttonMoveHi.SetManualBounds(rect);
 			rect.Offset(dx, 0);
-			this.buttonMoveH.Bounds = rect;
+			this.buttonMoveH.SetManualBounds(rect);
 			rect.Offset(dx, 0);
 			rect.Width = 50;
-			this.fieldMoveH.Bounds = rect;
+			this.fieldMoveH.SetManualBounds(rect);
 
 			rect = this.UsefulZone;
 			rect.Width  = dx;
 			rect.Height = dy;
-			this.buttonMoveVi.Bounds = rect;
+			this.buttonMoveVi.SetManualBounds(rect);
 			rect.Offset(dx, 0);
-			this.buttonMoveV.Bounds = rect;
+			this.buttonMoveV.SetManualBounds(rect);
 			rect.Offset(dx, 0);
 			rect.Width = 50;
-			this.fieldMoveV.Bounds = rect;
+			this.fieldMoveV.SetManualBounds(rect);
 		}
 
 
@@ -88,7 +88,7 @@ namespace Epsitec.Common.Document.Ribbons
 		{
 			//	Crée un champ éditable pour un déplacement.
 			field = new TextFieldReal(this);
-			field.Width = 50;
+			field.PreferredWidth = 50;
 			field.TabIndex = this.tabIndex++;
 			field.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			field.ValueChanged += new EventHandler(this.HandleFieldValueChanged);

@@ -308,51 +308,51 @@ namespace Epsitec.Common.Document.TextPanels
 
 				r.Left = rect.Left;
 				r.Right = rect.Right-20;
-				this.fontFace.Bounds = r;
+				this.fontFace.SetManualBounds(r);
 				r.Left = rect.Right-20;
 				r.Right = rect.Right;
-				this.buttonFilter.Bounds = r;
+				this.buttonFilter.SetManualBounds(r);
 
 				r.Offset(0, -25);
 				r.Left = rect.Left;
 				r.Width = 129;
-				this.fontStyle.Bounds = r;
+				this.fontStyle.SetManualBounds(r);
 				r.Offset(129+5, 0);
 				r.Width = 20;
-				this.fontFeatures.Bounds = r;
+				this.fontFeatures.SetManualBounds(r);
 				this.fontFeatures.Visibility = true;
 				r.Left = rect.Right-20;
 				r.Right = rect.Right;
-				this.buttonSettings.Bounds = r;
+				this.buttonSettings.SetManualBounds(r);
 				this.buttonSettings.Visibility = true;
 
 				r.Offset(0, -25);
 				r.Left = rect.Left;
 				r.Width = 69;
-				this.fontSize.Bounds = r;
+				this.fontSize.SetManualBounds(r);
 				r.Offset(69, 0);
 				r.Width = 20;
-				this.buttonSizeMenu.Bounds = r;
+				this.buttonSizeMenu.SetManualBounds(r);
 				r.Left = rect.Right-40;
 				r.Width = 40;
-				this.fontColor.Bounds = r;
+				this.fontColor.SetManualBounds(r);
 
 				r.Offset(0, -25);
 				r.Left = rect.Left;
 				r.Right = rect.Right-25;
-				this.fontGlue.Bounds = r;
+				this.fontGlue.SetManualBounds(r);
 				this.fontGlue.Visibility = true;
 				r.Left = rect.Right-20;
 				r.Width = 20;
-				this.buttonClear.Bounds = r;
+				this.buttonClear.SetManualBounds(r);
 
 				r.Offset(0, -25);
 				r.Left = rect.Left;
 				r.Right = rect.Right;
-				this.checkBold.Bounds = r;
+				this.checkBold.SetManualBounds(r);
 				this.checkBold.Visibility = (this.styleCategory == StyleCategory.Paragraph) ? false : true;
 				r.Offset(0, -18);
-				this.checkItalic.Bounds = r;
+				this.checkItalic.SetManualBounds(r);
 				this.checkItalic.Visibility = (this.styleCategory == StyleCategory.Paragraph) ? false : true;
 			}
 			else
@@ -362,29 +362,29 @@ namespace Epsitec.Common.Document.TextPanels
 
 				r.Left = rect.Left;
 				r.Right = rect.Right-20;
-				this.fontFace.Bounds = r;
+				this.fontFace.SetManualBounds(r);
 				r.Left = rect.Right-20;
 				r.Right = rect.Right;
-				this.buttonFilter.Bounds = r;
+				this.buttonFilter.SetManualBounds(r);
 
 				r.Offset(0, -25);
 				r.Left = rect.Left;
 				r.Right = rect.Right-25;
-				this.fontStyle.Bounds = r;
+				this.fontStyle.SetManualBounds(r);
 				r.Left = rect.Right-20;
 				r.Width = 20;
-				this.buttonClear.Bounds = r;
+				this.buttonClear.SetManualBounds(r);
 
 				r.Offset(0, -25);
 				r.Left = rect.Left;
 				r.Width = 69;
-				this.fontSize.Bounds = r;
+				this.fontSize.SetManualBounds(r);
 				r.Offset(69, 0);
 				r.Width = 20;
-				this.buttonSizeMenu.Bounds = r;
+				this.buttonSizeMenu.SetManualBounds(r);
 				r.Left = rect.Right-40;
 				r.Width = 40;
-				this.fontColor.Bounds = r;
+				this.fontColor.SetManualBounds(r);
 
 				this.fontFeatures.Visibility = false;
 				this.buttonSettings.Visibility = false;
@@ -410,7 +410,7 @@ namespace Epsitec.Common.Document.TextPanels
 			if ( menu == null )  return;
 
 			menu.Host = this;
-			menu.MinWidth = button.Width;
+			menu.MinWidth = button.ActualWidth;
 			TextFieldCombo.AdjustComboSize(button, menu);
 			menu.ShowAsComboList(button, Point.Zero, button);
 		}
@@ -677,7 +677,7 @@ namespace Epsitec.Common.Document.TextPanels
 			if ( button == null )  return;
 			VMenu menu = this.CreateMenu();
 			menu.Host = this;
-			menu.MinWidth = this.fontSize.Width+button.Width;
+			menu.MinWidth = this.fontSize.ActualWidth+button.ActualWidth;
 			TextFieldCombo.AdjustComboSize(this.fontSize, menu);
 			menu.ShowAsComboList(this.fontSize, Point.Zero, button);
 		}

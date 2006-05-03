@@ -65,30 +65,30 @@ namespace Epsitec.Common.Document.Ribbons
 			Rectangle rect = this.UsefulZone;
 			rect.Left += dx*2;
 			rect.Width = this.separatorWidth;
-			this.separator.Bounds = rect;
+			this.separator.SetManualBounds(rect);
 
 			rect = this.UsefulZone;
 			rect.Width  = dx;
 			rect.Height = dy;
 			rect.Offset(0, dy+5);
-			this.buttonScaleDiv2.Bounds = rect;
+			this.buttonScaleDiv2.SetManualBounds(rect);
 			rect.Offset(dx, 0);
-			this.buttonScaleMul2.Bounds = rect;
+			this.buttonScaleMul2.SetManualBounds(rect);
 			rect.Offset(dx+this.separatorWidth, 0);
 			rect.Width = 25;
-			this.buttonScaleDivFree.Bounds = rect;
+			this.buttonScaleDivFree.SetManualBounds(rect);
 			rect.Offset(25, 0);
-			this.buttonScaleMulFree.Bounds = rect;
+			this.buttonScaleMulFree.SetManualBounds(rect);
 
 			rect = this.UsefulZone;
 			rect.Width  = dx;
 			rect.Height = dy;
-			this.buttonMirrorH.Bounds = rect;
+			this.buttonMirrorH.SetManualBounds(rect);
 			rect.Offset(dx, 0);
-			this.buttonMirrorV.Bounds = rect;
+			this.buttonMirrorV.SetManualBounds(rect);
 			rect.Offset(dx+this.separatorWidth, 0);
 			rect.Width = 50;
-			this.fieldScale.Bounds = rect;
+			this.fieldScale.SetManualBounds(rect);
 		}
 
 
@@ -96,7 +96,7 @@ namespace Epsitec.Common.Document.Ribbons
 		{
 			//	Crée un champ éditable pour une échelle.
 			field = new TextFieldReal(this);
-			field.Width = 50;
+			field.PreferredWidth = 50;
 			field.TabIndex = this.tabIndex++;
 			field.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			field.ValueChanged += new EventHandler(this.HandleFieldValueChanged);

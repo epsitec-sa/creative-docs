@@ -108,19 +108,19 @@ namespace Epsitec.Common.Document.TextPanels
 				{
 					r.Left = rect.Left;
 					r.Width = 20;
-					this.buttonFrame.Bounds = r;
+					this.buttonFrame.SetManualBounds(r);
 					r.Left = rect.Right-20;
 					r.Width = 20;
-					this.buttonClear.Bounds = r;
+					this.buttonClear.SetManualBounds(r);
 				}
 				else
 				{
 					r.Left = rect.Left;
 					r.Width = 20;
-					this.buttonFrame.Bounds = r;
+					this.buttonFrame.SetManualBounds(r);
 					r.Left = rect.Right-20;
 					r.Width = 20;
-					this.buttonClear.Bounds = r;
+					this.buttonClear.SetManualBounds(r);
 				}
 			}
 			else
@@ -130,10 +130,10 @@ namespace Epsitec.Common.Document.TextPanels
 
 				r.Left = rect.Left;
 				r.Width = 20;
-				this.buttonFrame.Bounds = r;
+				this.buttonFrame.SetManualBounds(r);
 				r.Left = rect.Right-20;
 				r.Width = 20;
-				this.buttonClear.Bounds = r;
+				this.buttonClear.SetManualBounds(r);
 			}
 		}
 

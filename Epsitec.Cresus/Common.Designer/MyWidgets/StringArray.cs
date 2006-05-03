@@ -101,7 +101,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		public double GetColumnsAbsoluteWidth(int column)
 		{
 			//	Retourne la largeur absolue d'une colonne.
-			double w = this.Client.Bounds.Width - this.scroller.Width;
+			double w = this.Client.Bounds.Width - this.scroller.ActualWidth;
 			return System.Math.Floor(w*this.GetColumnsRelativeWidth(column)/this.ColumnsRelativeTotalWidth);
 		}
 
@@ -558,17 +558,17 @@ namespace Epsitec.Common.Designer.MyWidgets
 				}
 				else
 				{
-					rect.Right = this.Client.Bounds.Right-this.scroller.Width;
+					rect.Right = this.Client.Bounds.Right-this.scroller.ActualWidth;
 				}
 
-				this.columns[i].Bounds = rect;
+				this.columns[i].SetManualBounds(rect);
 
 				rect.Left = rect.Right-1;
 			}
 
 			rect = this.Client.Bounds;
-			rect.Left = rect.Right-this.scroller.Width;
-			this.scroller.Bounds = rect;
+			rect.Left = rect.Right-this.scroller.ActualWidth;
+			this.scroller.SetManualBounds(rect);
 		}
 
 

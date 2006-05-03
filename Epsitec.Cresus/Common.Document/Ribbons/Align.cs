@@ -76,58 +76,58 @@ namespace Epsitec.Common.Document.Ribbons
 			Rectangle rect = this.UsefulZone;
 			rect.Left += dx*3;
 			rect.Width = this.separatorWidth;
-			this.separator1.Bounds = rect;
+			this.separator1.SetManualBounds(rect);
 
 			rect = this.UsefulZone;
 			rect.Left += dx*3 + this.separatorWidth + dx*4;
 			rect.Width = this.separatorWidth;
-			this.separator2.Bounds = rect;
+			this.separator2.SetManualBounds(rect);
 
 			rect = this.UsefulZone;
 			rect.Left += dx*3 + this.separatorWidth + dx*4 + this.separatorWidth + dx;
 			rect.Width = this.separatorWidth;
-			this.separator3.Bounds = rect;
+			this.separator3.SetManualBounds(rect);
 
 			rect = this.UsefulZone;
 			rect.Width  = dx;
 			rect.Height = dy;
 			rect.Offset(0, dy+5);
-			this.buttonAlignLeft.Bounds = rect;
+			this.buttonAlignLeft.SetManualBounds(rect);
 			rect.Offset(dx, 0);
-			this.buttonAlignCenterX.Bounds = rect;
+			this.buttonAlignCenterX.SetManualBounds(rect);
 			rect.Offset(dx, 0);
-			this.buttonAlignRight.Bounds = rect;
+			this.buttonAlignRight.SetManualBounds(rect);
 			rect.Offset(dx+this.separatorWidth, 0);
-			this.buttonShareLeft.Bounds = rect;
+			this.buttonShareLeft.SetManualBounds(rect);
 			rect.Offset(dx, 0);
-			this.buttonShareCenterX.Bounds = rect;
+			this.buttonShareCenterX.SetManualBounds(rect);
 			rect.Offset(dx, 0);
-			this.buttonShareSpaceX.Bounds = rect;
+			this.buttonShareSpaceX.SetManualBounds(rect);
 			rect.Offset(dx, 0);
-			this.buttonShareRight.Bounds = rect;
+			this.buttonShareRight.SetManualBounds(rect);
 			rect.Offset(dx+this.separatorWidth, 0);
-			this.buttonAdjustWidth.Bounds = rect;
+			this.buttonAdjustWidth.SetManualBounds(rect);
 			rect.Offset(dx+this.separatorWidth, 0);
-			this.buttonAlignGrid.Bounds = rect;
+			this.buttonAlignGrid.SetManualBounds(rect);
 
 			rect = this.UsefulZone;
 			rect.Width  = dx;
 			rect.Height = dy;
-			this.buttonAlignTop.Bounds = rect;
+			this.buttonAlignTop.SetManualBounds(rect);
 			rect.Offset(dx, 0);
-			this.buttonAlignCenterY.Bounds = rect;
+			this.buttonAlignCenterY.SetManualBounds(rect);
 			rect.Offset(dx, 0);
-			this.buttonAlignBottom.Bounds = rect;
+			this.buttonAlignBottom.SetManualBounds(rect);
 			rect.Offset(dx+this.separatorWidth, 0);
-			this.buttonShareTop.Bounds = rect;
+			this.buttonShareTop.SetManualBounds(rect);
 			rect.Offset(dx, 0);
-			this.buttonShareCenterY.Bounds = rect;
+			this.buttonShareCenterY.SetManualBounds(rect);
 			rect.Offset(dx, 0);
-			this.buttonShareSpaceY.Bounds = rect;
+			this.buttonShareSpaceY.SetManualBounds(rect);
 			rect.Offset(dx, 0);
-			this.buttonShareBottom.Bounds = rect;
+			this.buttonShareBottom.SetManualBounds(rect);
 			rect.Offset(dx+this.separatorWidth, 0);
-			this.buttonAdjustHeight.Bounds = rect;
+			this.buttonAdjustHeight.SetManualBounds(rect);
 		}
 
 		

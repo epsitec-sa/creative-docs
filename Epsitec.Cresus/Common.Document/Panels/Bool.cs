@@ -70,7 +70,7 @@ namespace Epsitec.Common.Document.Panels
 
 			Rectangle rect = this.UsefulZone;
 			rect.Inflate(1);
-			this.grid.Bounds = rect;
+			this.grid.SetManualBounds(rect);
 		}
 		
 		private void HandleTypeChanged(object sender)

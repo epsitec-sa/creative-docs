@@ -122,7 +122,7 @@ namespace Epsitec.Common.Document.TextPanels
 			//	Crée le combo pour le StartMode.
 			TextFieldCombo combo = new TextFieldCombo(this);
 
-			combo.Width = 180;
+			combo.PreferredWidth = 180;
 			combo.IsReadOnly = true;
 
 			combo.Items.Add(Res.Strings.TextPanel.Keep.StartMode.Undefined);
@@ -186,72 +186,72 @@ namespace Epsitec.Common.Document.TextPanels
 				{
 					r.Left = rect.Left;
 					r.Width = 20;
-					this.buttonKeepNext.Bounds = r;
+					this.buttonKeepNext.SetManualBounds(r);
 					r.Offset(20, 0);
-					this.buttonKeepPrev.Bounds = r;
+					this.buttonKeepPrev.SetManualBounds(r);
 					r.Left = rect.Right-20;
 					r.Width = 20;
-					this.buttonClear.Bounds = r;
+					this.buttonClear.SetManualBounds(r);
 
 					r.Offset(0, -25);
 					r.Left = rect.Left;
 					r.Right = rect.Right;
-					this.fieldKeepStart.Bounds = r;
+					this.fieldKeepStart.SetManualBounds(r);
 					this.fieldKeepStart.Visibility = true;
 
 					r.Offset(0, -25);
 					r.Left = rect.Left;
 					r.Right = rect.Right;
-					this.fieldKeepEnd.Bounds = r;
+					this.fieldKeepEnd.SetManualBounds(r);
 					this.fieldKeepEnd.Visibility = true;
 
 					r.Offset(0, -25);
 					r.Left = rect.Left;
 					r.Right = rect.Right;
-					this.fieldStartMode.Bounds = r;
+					this.fieldStartMode.SetManualBounds(r);
 					this.fieldStartMode.Visibility = true;
 
 					r.Offset(0, -25);
 					r.Left = rect.Left;
 					r.Right = rect.Left+45-5;
-					this.labelNextStyle.Bounds = r;
+					this.labelNextStyle.SetManualBounds(r);
 					this.labelNextStyle.Visibility = this.isStyle;
 					r.Left = rect.Left+45;
 					r.Right = rect.Right;
-					this.fieldNextStyle.Bounds = r;
+					this.fieldNextStyle.SetManualBounds(r);
 					this.fieldNextStyle.Visibility = this.isStyle;
 				}
 				else
 				{
 					r.Left = rect.Left;
 					r.Width = 20;
-					this.buttonKeepNext.Bounds = r;
+					this.buttonKeepNext.SetManualBounds(r);
 					r.Offset(20, 0);
-					this.buttonKeepPrev.Bounds = r;
+					this.buttonKeepPrev.SetManualBounds(r);
 					r.Offset(20, 0);
 					r.Width = 60;
-					this.fieldKeepStart.Bounds = r;
+					this.fieldKeepStart.SetManualBounds(r);
 					r.Offset(60, 0);
-					this.fieldKeepEnd.Bounds = r;
+					this.fieldKeepEnd.SetManualBounds(r);
 
 					r.Left = rect.Right-20;
 					r.Width = 20;
-					this.buttonClear.Bounds = r;
+					this.buttonClear.SetManualBounds(r);
 
 					r.Offset(0, -25);
 					r.Left = rect.Left;
 					r.Right = rect.Right;
-					this.fieldStartMode.Bounds = r;
+					this.fieldStartMode.SetManualBounds(r);
 					this.fieldStartMode.Visibility = true;
 
 					r.Offset(0, -25);
 					r.Left = rect.Left;
 					r.Right = rect.Left+45-5;
-					this.labelNextStyle.Bounds = r;
+					this.labelNextStyle.SetManualBounds(r);
 					this.labelNextStyle.Visibility = this.isStyle;
 					r.Left = rect.Left+45;
 					r.Right = rect.Right;
-					this.fieldNextStyle.Bounds = r;
+					this.fieldNextStyle.SetManualBounds(r);
 					this.fieldNextStyle.Visibility = this.isStyle;
 				}
 			}
@@ -262,18 +262,18 @@ namespace Epsitec.Common.Document.TextPanels
 
 				r.Left = rect.Left;
 				r.Width = 20;
-				this.buttonKeepNext.Bounds = r;
+				this.buttonKeepNext.SetManualBounds(r);
 				r.Offset(20, 0);
-				this.buttonKeepPrev.Bounds = r;
+				this.buttonKeepPrev.SetManualBounds(r);
 				r.Offset(20, 0);
 				r.Width = 60;
-				this.fieldKeepStart.Bounds = r;
+				this.fieldKeepStart.SetManualBounds(r);
 				r.Offset(60, 0);
-				this.fieldKeepEnd.Bounds = r;
+				this.fieldKeepEnd.SetManualBounds(r);
 
 				r.Left = rect.Right-20;
 				r.Width = 20;
-				this.buttonClear.Bounds = r;
+				this.buttonClear.SetManualBounds(r);
 
 				this.fieldStartMode.Visibility = false;
 				this.labelNextStyle.Visibility = false;

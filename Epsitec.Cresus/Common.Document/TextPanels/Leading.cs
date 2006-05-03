@@ -112,50 +112,50 @@ namespace Epsitec.Common.Document.TextPanels
 				{
 					r.Left = rect.Left;
 					r.Width = 69;
-					this.fieldLeading.Bounds = r;
+					this.fieldLeading.SetManualBounds(r);
 					r.Offset(69, 0);
 					r.Width = 20;
-					this.buttonLeadingMenu.Bounds = r;
+					this.buttonLeadingMenu.SetManualBounds(r);
 
 					r.Left = rect.Right-20;
 					r.Width = 20;
-					this.buttonClear.Bounds = r;
+					this.buttonClear.SetManualBounds(r);
 
 					r.Offset(0, -25);
 					r.Left = rect.Left;
 					r.Width = 20;
-					this.buttonAlignFirst.Bounds = r;
+					this.buttonAlignFirst.SetManualBounds(r);
 					this.buttonAlignFirst.Visibility = true;
 					r.Offset(20, 0);
-					this.buttonAlignAll.Bounds = r;
+					this.buttonAlignAll.SetManualBounds(r);
 					this.buttonAlignAll.Visibility = true;
 					r.Offset(20+5, 0);
-					this.buttonSettings.Bounds = r;
+					this.buttonSettings.SetManualBounds(r);
 					this.buttonSettings.Visibility = true;
 				}
 				else
 				{
 					r.Left = rect.Left;
 					r.Width = 69;
-					this.fieldLeading.Bounds = r;
+					this.fieldLeading.SetManualBounds(r);
 					r.Offset(69, 0);
 					r.Width = 20;
-					this.buttonLeadingMenu.Bounds = r;
+					this.buttonLeadingMenu.SetManualBounds(r);
 
 					r.Left = rect.Right-20;
 					r.Width = 20;
-					this.buttonClear.Bounds = r;
+					this.buttonClear.SetManualBounds(r);
 
 					r.Offset(0, -25);
 					r.Left = rect.Left;
 					r.Width = 20;
-					this.buttonAlignFirst.Bounds = r;
+					this.buttonAlignFirst.SetManualBounds(r);
 					this.buttonAlignFirst.Visibility = true;
 					r.Offset(20, 0);
-					this.buttonAlignAll.Bounds = r;
+					this.buttonAlignAll.SetManualBounds(r);
 					this.buttonAlignAll.Visibility = true;
 					r.Offset(20+5, 0);
-					this.buttonSettings.Bounds = r;
+					this.buttonSettings.SetManualBounds(r);
 					this.buttonSettings.Visibility = true;
 				}
 			}
@@ -166,14 +166,14 @@ namespace Epsitec.Common.Document.TextPanels
 
 				r.Left = rect.Left;
 				r.Width = 69;
-				this.fieldLeading.Bounds = r;
+				this.fieldLeading.SetManualBounds(r);
 				r.Offset(69, 0);
 				r.Width = 20;
-				this.buttonLeadingMenu.Bounds = r;
+				this.buttonLeadingMenu.SetManualBounds(r);
 
 				r.Left = rect.Right-20;
 				r.Width = 20;
-				this.buttonClear.Bounds = r;
+				this.buttonClear.SetManualBounds(r);
 
 				this.buttonAlignFirst.Visibility = false;
 				this.buttonAlignAll.Visibility = false;
@@ -281,7 +281,7 @@ namespace Epsitec.Common.Document.TextPanels
 			if ( button == null )  return;
 			VMenu menu = this.CreateMenu();
 			menu.Host = this;
-			menu.MinWidth = this.fieldLeading.Width+button.Width;
+			menu.MinWidth = this.fieldLeading.ActualWidth+button.ActualWidth;
 			TextFieldCombo.AdjustComboSize(this.fieldLeading, menu);
 			menu.ShowAsComboList(this.fieldLeading, Point.Zero, button);
 		}
