@@ -35,7 +35,10 @@ namespace Epsitec.Common.Widgets
 			this.window = new Platform.Window (this);
 			this.timer  = new Timer ();
 			
-			this.root.PreferredSize = new Drawing.Size (this.window.ClientSize);
+			Drawing.Size size = new Drawing.Size (this.window.ClientSize);
+			
+			this.root.NotifyWindowSizeChanged (size.Width, size.Height);
+			
 			this.root.Name = "Root";
 			
 			this.timer.TimeElapsed += this.HandleTimeElapsed;
@@ -2234,13 +2237,16 @@ namespace Epsitec.Common.Widgets
 
 		private void SyncMinSizeWithWindowRoot()
 		{
-			int width  = (int) (this.root.RealMinSize.Width + 0.5);
-			int height = (int) (this.root.RealMinSize.Height + 0.5);
-			
-			width  += this.window.Size.Width  - this.window.ClientSize.Width;
-			height += this.window.Size.Height - this.window.ClientSize.Height;
-			
-			this.window.MinimumSize = new System.Drawing.Size (width, height);
+			if (this.window != null)
+			{
+				int width  = (int) (this.root.RealMinSize.Width + 0.5);
+				int height = (int) (this.root.RealMinSize.Height + 0.5);
+
+				width  += this.window.Size.Width  - this.window.ClientSize.Width;
+				height += this.window.Size.Height - this.window.ClientSize.Height;
+
+				this.window.MinimumSize = new System.Drawing.Size (width, height);
+			}
 		}
 
 		

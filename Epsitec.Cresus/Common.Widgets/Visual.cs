@@ -68,8 +68,17 @@ namespace Epsitec.Common.Widgets
 				this.SetValue (Visual.NameProperty, value);
 			}
 		}
-		
-		public Visual							Parent
+
+		public virtual Window					Window
+		{
+			get
+			{
+				return Helpers.VisualTree.GetWindow (this);
+			}
+		}
+
+
+		public Visual Parent
 		{
 			get
 			{
@@ -249,7 +258,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.dirtyLayout == false;
+				return true; //	this.dirtyLayout == false;
 			}
 		}
 		
@@ -257,7 +266,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				System.Diagnostics.Debug.Assert (this.dirtyLayout == false, "Layout dirty when calling ActualBounds");
+				System.Diagnostics.Debug.Assert (this.IsActualGeometryValid, "Layout dirty when calling ActualBounds");
 				return new Drawing.Rectangle (this.ActualLocation, this.ActualSize);
 			}
 		}
@@ -266,7 +275,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				System.Diagnostics.Debug.Assert (this.dirtyLayout == false, "Layout dirty when calling ActualLocation");
+				System.Diagnostics.Debug.Assert (this.IsActualGeometryValid, "Layout dirty when calling ActualLocation");
 				return new Drawing.Point (this.x, this.y);
 			}
 		}
@@ -275,7 +284,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				System.Diagnostics.Debug.Assert (this.dirtyLayout == false, "Layout dirty when calling ActualSize");
+				System.Diagnostics.Debug.Assert (this.IsActualGeometryValid, "Layout dirty when calling ActualSize");
 				return new Drawing.Size (this.width, this.height);
 			}
 		}
@@ -284,7 +293,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				System.Diagnostics.Debug.Assert (this.dirtyLayout == false, "Layout dirty when calling ActualWidth");
+				System.Diagnostics.Debug.Assert (this.IsActualGeometryValid, "Layout dirty when calling ActualWidth");
 				return this.width;
 			}
 		}
@@ -293,7 +302,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				System.Diagnostics.Debug.Assert (this.dirtyLayout == false, "Layout dirty when calling ActualHeight");
+				System.Diagnostics.Debug.Assert (this.IsActualGeometryValid, "Layout dirty when calling ActualHeight");
 				return this.height;
 			}
 		}
@@ -693,7 +702,7 @@ namespace Epsitec.Common.Widgets
 		
 		internal virtual void SetBounds(Drawing.Rectangle value)
 		{
-			Drawing.Rectangle oldValue = this.ActualBounds;
+			Drawing.Rectangle oldValue = new Drawing.Rectangle (this.x, this.y, this.width, this.height);
 			Drawing.Rectangle newValue = value;
 			
 			this.x      = value.Left;
@@ -898,6 +907,24 @@ namespace Epsitec.Common.Widgets
 					this.dirtyDisplay = false;
 				}
 			}
+			else
+			{
+				Window window = this.Window;
+				
+				if ((window != null) &&
+					(window.IsVisible == false))
+				{
+					if (this.dirtyLayout)
+					{
+						this.dirtyDisplay = true;
+					}
+					else
+					{
+						this.InvalidateRectangle (this.GetPaintBounds (), this.SyncPaint);
+						this.dirtyDisplay = false;
+					}
+				}
+			}
 		}
 
 		public void Invalidate(Drawing.Rectangle rect)
@@ -914,13 +941,31 @@ namespace Epsitec.Common.Widgets
 					this.dirtyDisplay = false;
 				}
 			}
+			else
+			{
+				Window window = this.Window;
+
+				if ((window != null) &&
+					(window.IsVisible == false))
+				{
+					if (this.dirtyLayout)
+					{
+						this.dirtyDisplay = true;
+					}
+					else
+					{
+						this.InvalidateRectangle (rect, this.SyncPaint);
+						this.dirtyDisplay = false;
+					}
+				}
+			}
 		}
 
 		public virtual void InvalidateRectangle(Drawing.Rectangle rect, bool sync)
 		{
 		}
 
-		internal void SetDirtyLayoutFlag()
+		internal virtual void SetDirtyLayoutFlag()
 		{
 			this.dirtyLayout = true;
 		}
@@ -964,6 +1009,7 @@ namespace Epsitec.Common.Widgets
 		{
 			Layouts.LayoutContext.AddToMeasureQueue (this);
 
+			this.Invalidate ();
 			this.OnChildrenChanged ();
 		}
 
@@ -1299,7 +1345,6 @@ namespace Epsitec.Common.Widgets
 		public static readonly DependencyProperty ParentProperty				= DependencyObjectTree.ParentProperty.AddOwner (typeof (Visual), new DependencyPropertyMetadata (new GetValueOverrideCallback (Visual.GetParentValue), new PropertyInvalidatedCallback (Visual.NotifyParentChanged)));
 		public static readonly DependencyProperty ChildrenProperty				= DependencyObjectTree.ChildrenProperty.AddOwner (typeof (Visual), new DependencyPropertyMetadata (new GetValueOverrideCallback (Visual.GetChildrenValue)));
 		public static readonly DependencyProperty HasChildrenProperty			= DependencyObjectTree.HasChildrenProperty.AddOwner (typeof (Visual), new DependencyPropertyMetadata (new GetValueOverrideCallback (Visual.GetHasChildrenValue)));
-		public static readonly DependencyProperty WindowProperty				= DependencyProperty.RegisterReadOnly ("Window", typeof (Window), typeof (Visual), new VisualPropertyMetadata (null, VisualPropertyMetadataOptions.InheritsValue | VisualPropertyMetadataOptions.ChangesSilently));
 
 		public static readonly DependencyProperty AnchorProperty				= DependencyProperty.Register ("Anchor", typeof (AnchorStyles), typeof (Visual), new VisualPropertyMetadata (AnchorStyles.None, Visual.NotifyAnchorChanged, VisualPropertyMetadataOptions.AffectsArrange));
 		public static readonly DependencyProperty DockProperty					= DependencyProperty.Register ("Dock", typeof (DockStyle), typeof (Visual), new VisualPropertyMetadata (DockStyle.None, Visual.NotifyDockChanged, VisualPropertyMetadataOptions.AffectsArrange));

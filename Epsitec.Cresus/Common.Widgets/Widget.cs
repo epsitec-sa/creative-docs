@@ -889,23 +889,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public virtual Window						Window
-		{
-			get
-			{
-				Widget root = this.RootParent;
-				
-				if ((root == null) ||
-					(root == this))
-				{
-					return null;
-				}
-				
-				return root.Window;
-			}
-		}
-		
-		
 		public virtual Support.OpletQueue			OpletQueue
 		{
 			get

@@ -435,7 +435,17 @@ namespace Epsitec.Common.Widgets
 			
 			this.SetValue (Visual.IsVisibleProperty, this.window.IsVisible);
 		}
+
+		internal void NotifyWindowSizeChanged(double width, double height)
+		{
+			this.SetManualBounds (new Drawing.Rectangle (0, 0, width, height));
+			
+			Layouts.LayoutContext.AddToArrangeQueue (this);
+		}
 		
+		internal override void SetDirtyLayoutFlag()
+		{
+		}
 		
 		
 		public event Support.EventHandler			WindowStylesChanged;
@@ -447,5 +457,6 @@ namespace Epsitec.Common.Widgets
 		protected Window							window;
 		protected bool								is_ready;
 		protected List<Visual>						focus_chain = new List<Visual> ();
+
 	}
 }

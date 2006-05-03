@@ -141,9 +141,7 @@ namespace Epsitec.Common.Widgets
 			
 			if (this.IsVertical)
 			{
-				Drawing.Size size = this.GetBestFitSize ();
-
-				this.SetManualBounds(new Drawing.Rectangle(Drawing.Point.Zero, size));
+				this.PreferredSize = this.GetBestFitSize ();
 				
 				Layouts.LayoutContext.SyncArrange (this);
 			}
