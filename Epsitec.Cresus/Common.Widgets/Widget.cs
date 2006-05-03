@@ -4119,7 +4119,6 @@ namespace Epsitec.Common.Widgets
 		
 		
 		private InternalState					internal_state;
-		private WidgetState						widget_state;
 		
 		private System.Collections.ArrayList	hypertext_list;
 		private HypertextInfo					hypertext;
