@@ -47,8 +47,8 @@ namespace Epsitec.Common.UI
 
 		public string[] GetFieldPaths(string path)
 		{
-			string rootName = StructuredRecordType.GetRootName (path);
-			string nextPath = StructuredRecordType.GetSubPath (path, 1);
+			string rootName = StructuredTree.GetRootName (path);
+			string nextPath = StructuredTree.GetSubPath (path, 1);
 			
 			IStructuredTree root = this.GetItemRecord (rootName).Data as IStructuredTree;
 
@@ -56,17 +56,23 @@ namespace Epsitec.Common.UI
 			{
 				return null;
 			}
+			string[] paths;
+			
+			if (nextPath.Length == 0)
+			{
+				paths = root.GetFieldNames ();
+			}
 			else
 			{
-				string[] paths = root.GetFieldPaths (nextPath);
-
-				for (int i = 0; i < paths.Length; i++)
-				{
-					paths[i] = StructuredRecordType.CreatePath (rootName, paths[i]);
-				}
-				
-				return paths;
+				paths = root.GetFieldPaths (nextPath);
 			}
+
+			for (int i = 0; i < paths.Length; i++)
+			{
+				paths[i] = StructuredTree.CreatePath (rootName, paths[i]);
+			}
+
+			return paths;
 		}
 
 		#endregion
