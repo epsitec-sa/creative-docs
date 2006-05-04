@@ -289,7 +289,7 @@ namespace Epsitec.Common.Widgets
 			this.menu = new HMenu();
 			this.menu.Host = this.window;
 			this.menu.Name = "base";
-			this.menu.PreferredSize = new Size (rect.Width, this.menu.DefaultHeight);
+			this.menu.PreferredSize = new Size (rect.Width, this.menu.PreferredHeight);
 			this.menu.Dock = DockStyle.Top;
 			this.menu.Items.Add(new MenuItem ("file", "Fichier"));
 			this.menu.Items.Add(new MenuItem ("edit", "Edition"));
@@ -469,7 +469,7 @@ namespace Epsitec.Common.Widgets
 			this.menu.Items[4].Submenu = helpMenu;
 
 			this.toolBar = new HToolBar();
-			this.toolBar.PreferredSize = new Size(rect.Width, this.toolBar.DefaultHeight);
+			this.toolBar.PreferredSize = new Size(rect.Width, this.toolBar.PreferredHeight);
 			this.toolBar.Dock = DockStyle.Top;
 			this.toolBar.Items.Add (new IconButton (@"file:images/open.png"));
 			this.toolBar.Items.Add (new IconButton (@"file:images/save.png"));
@@ -699,7 +699,7 @@ namespace Epsitec.Common.Widgets
 
 			posy -= 10;
 			double maxWidth = this.rightPane.ActualWidth-this.labelWidth-10;
-			double defaultFontHeight = this.rightPane.DefaultFontHeight;
+			double defaultFontHeight = Widget.DefaultFontHeight;
 			int nbField = this.db.TotalField;
 			for ( int x=0 ; x<nbField ; x++ )
 			{
