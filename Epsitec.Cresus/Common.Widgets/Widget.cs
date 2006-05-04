@@ -2759,24 +2759,14 @@ namespace Epsitec.Common.Widgets
 		
 		public virtual bool WalkChildren(WalkWidgetCallback callback)
 		{
-			if (this.HasChildren == false)
-			{
-				return true;
-			}
+			//	Retourne true si on a parcouru tous les enfants.
 			
-			Widget[] children = this.Children.Widgets;
-			int  children_num = children.Length;
-			
-			for (int i = 0; i < children_num; i++)
+			foreach (Widget child in this.GetAllChildren ())
 			{
-				Widget widget = children[i];
-				
-				if (!callback (widget))
+				if (!callback (child))
 				{
 					return false;
 				}
-				
-				widget.WalkChildren (callback);
 			}
 			
 			return true;
