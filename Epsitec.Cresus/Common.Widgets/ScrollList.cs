@@ -342,7 +342,7 @@ namespace Epsitec.Common.Widgets
 		{
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
 			
-			Drawing.Margins margins = adorner.GeometryListShapeBounds;
+			Drawing.Margins margins = adorner.GeometryListShapeMargins;
 
 			if (this.scrollListStyle == ScrollListStyle.Menu)
 			{

@@ -1514,7 +1514,7 @@ invalid:	row    = -1;
 
 		public override Drawing.Margins GetShapeMargins()
 		{
-			return Widgets.Adorners.Factory.Active.GeometryListShapeBounds;
+			return Widgets.Adorners.Factory.Active.GeometryListShapeMargins;
 		}
 		
 		

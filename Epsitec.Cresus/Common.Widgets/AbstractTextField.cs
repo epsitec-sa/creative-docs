@@ -1560,7 +1560,7 @@ namespace Epsitec.Common.Widgets
 		
 		public override Drawing.Margins GetShapeMargins()
 		{
-			return Widgets.Adorners.Factory.Active.GeometryTextFieldShapeBounds;
+			return Widgets.Adorners.Factory.Active.GeometryTextFieldShapeMargins;
 		}
 
 		

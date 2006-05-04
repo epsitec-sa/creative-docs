@@ -173,11 +173,11 @@ namespace Epsitec.Common.Widgets
 		{
 			if ((this.PaintState&WidgetPaintState.ThreeState) == 0)
 			{
-				return Widgets.Adorners.Factory.Active.GeometryToolShapeBounds;
+				return Widgets.Adorners.Factory.Active.GeometryToolShapeMargins;
 			}
 			else
 			{
-				return Widgets.Adorners.Factory.Active.GeometryThreeStateShapeBounds;
+				return Widgets.Adorners.Factory.Active.GeometryThreeStateShapeMargins;
 			}
 		}
 		

@@ -792,7 +792,7 @@ namespace Epsitec.Common.Widgets
 
 		public override Drawing.Margins GetShapeMargins()
 		{
-			return Widgets.Adorners.Factory.Active.GeometryListShapeBounds;
+			return Widgets.Adorners.Factory.Active.GeometryListShapeMargins;
 		}
 
 		

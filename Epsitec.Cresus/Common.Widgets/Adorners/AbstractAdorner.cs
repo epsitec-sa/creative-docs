@@ -212,42 +212,42 @@ namespace Epsitec.Common.Widgets.Adorners
 			get;
 		}
 
-		public abstract Drawing.Margins GeometryRadioShapeBounds
+		public abstract Drawing.Margins GeometryRadioShapeMargins
 		{
 			get;
 		}
 
-		public abstract Drawing.Margins GeometryGroupShapeBounds
+		public abstract Drawing.Margins GeometryGroupShapeMargins
 		{
 			get;
 		}
 
-		public abstract Drawing.Margins GeometryToolShapeBounds
+		public abstract Drawing.Margins GeometryToolShapeMargins
 		{
 			get;
 		}
 
-		public abstract Drawing.Margins GeometryThreeStateShapeBounds
+		public abstract Drawing.Margins GeometryThreeStateShapeMargins
 		{
 			get;
 		}
 
-		public abstract Drawing.Margins GeometryButtonShapeBounds
+		public abstract Drawing.Margins GeometryButtonShapeMargins
 		{
 			get;
 		}
 
-		public abstract Drawing.Margins GeometryRibbonShapeBounds
+		public abstract Drawing.Margins GeometryRibbonShapeMargins
 		{
 			get;
 		}
 
-		public abstract Drawing.Margins GeometryTextFieldShapeBounds
+		public abstract Drawing.Margins GeometryTextFieldShapeMargins
 		{
 			get;
 		}
 
-		public abstract Drawing.Margins GeometryListShapeBounds
+		public abstract Drawing.Margins GeometryListShapeMargins
 		{
 			get;
 		}

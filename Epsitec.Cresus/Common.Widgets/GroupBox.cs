@@ -77,7 +77,7 @@ namespace Epsitec.Common.Widgets
 
 		public override Drawing.Margins GetShapeMargins()
 		{
-			return Widgets.Adorners.Factory.Active.GeometryGroupShapeBounds;
+			return Widgets.Adorners.Factory.Active.GeometryGroupShapeMargins;
 		}
 
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)

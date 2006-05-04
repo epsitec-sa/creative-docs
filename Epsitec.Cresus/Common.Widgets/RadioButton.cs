@@ -64,7 +64,7 @@ namespace Epsitec.Common.Widgets
 
 				rect.Offset (this.LabelOffset);
 				rect.Inflate (1, 1);
-				rect.Inflate (Widgets.Adorners.Factory.Active.GeometryRadioShapeBounds);
+				rect.Inflate (Widgets.Adorners.Factory.Active.GeometryRadioShapeMargins);
 
 				rect.MergeWith (bounds);
 

@@ -46,7 +46,7 @@ namespace Epsitec.Common.Widgets
 		
 		public override Drawing.Margins GetShapeMargins()
 		{
-			return Epsitec.Common.Widgets.Adorners.Factory.Active.GeometryRibbonShapeBounds;
+			return Epsitec.Common.Widgets.Adorners.Factory.Active.GeometryRibbonShapeMargins;
 		}
 
 

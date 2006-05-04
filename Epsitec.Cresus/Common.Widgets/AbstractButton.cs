@@ -40,7 +40,7 @@ namespace Epsitec.Common.Widgets
 
 		public override Drawing.Margins GetShapeMargins()
 		{
-			return Widgets.Adorners.Factory.Active.GeometryButtonShapeBounds;
+			return Widgets.Adorners.Factory.Active.GeometryButtonShapeMargins;
 		}
 
 		

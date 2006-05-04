@@ -143,14 +143,14 @@ namespace Epsitec.Common.Widgets
 		Drawing.Margins GeometryMenuShadow { get; }
 		Drawing.Margins GeometryMenuMargins { get; }
 		Drawing.Margins GeometryArrayMargins { get; }
-		Drawing.Margins GeometryRadioShapeBounds { get; }
-		Drawing.Margins GeometryGroupShapeBounds { get; }
-		Drawing.Margins GeometryToolShapeBounds { get; }
-		Drawing.Margins GeometryThreeStateShapeBounds { get; }
-		Drawing.Margins GeometryButtonShapeBounds { get; }
-		Drawing.Margins GeometryRibbonShapeBounds { get; }
-		Drawing.Margins GeometryTextFieldShapeBounds { get; }
-		Drawing.Margins GeometryListShapeBounds { get; }
+		Drawing.Margins GeometryRadioShapeMargins { get; }
+		Drawing.Margins GeometryGroupShapeMargins { get; }
+		Drawing.Margins GeometryToolShapeMargins { get; }
+		Drawing.Margins GeometryThreeStateShapeMargins { get; }
+		Drawing.Margins GeometryButtonShapeMargins { get; }
+		Drawing.Margins GeometryRibbonShapeMargins { get; }
+		Drawing.Margins GeometryTextFieldShapeMargins { get; }
+		Drawing.Margins GeometryListShapeMargins { get; }
 		double GeometryComboRightMargin { get; }
 		double GeometryComboBottomMargin { get; }
 		double GeometryComboTopMargin { get; }
