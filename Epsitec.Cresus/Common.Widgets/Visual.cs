@@ -844,6 +844,8 @@ namespace Epsitec.Common.Widgets
 		
 		public void Arrange(Layouts.LayoutContext context)
 		{
+			this.dirtyLayout = false;
+
 			if (this.HasChildren)
 			{
 				IEnumerable<Visual> children = this.Children;
@@ -864,6 +866,11 @@ namespace Epsitec.Common.Widgets
 				}
 
 				this.ManualArrange ();
+			}
+
+			if (this.dirtyDisplay)
+			{
+				this.Invalidate ();
 			}
 			
 			context.RemoveVisualFromArrangeQueue (this);
