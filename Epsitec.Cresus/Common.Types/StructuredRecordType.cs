@@ -9,7 +9,7 @@ namespace Epsitec.Common.Types
 	/// The <c>StructuredRecordType</c> class describes the type of the data stored in
 	/// a <see cref="T:StructuredRecord"/> class.
 	/// </summary>
-	public class StructuredRecordType : INamedType
+	public class StructuredRecordType : INamedType, IStructuredTree
 	{
 		public StructuredRecordType()
 		{
@@ -64,18 +64,39 @@ namespace Epsitec.Common.Types
 			return type;
 		}
 
-		public static string[] SplitPath(string path)
+		#region IStructuredTree Members
+
+		public string[] GetFieldNames()
 		{
-			if ((path == null) ||
-				(path.Length == 0))
-			{
-				return StructuredRecordType.emptyPath;
-			}
-			else
-			{
-				return path.Split ('.');
-			}
+			string[] names = new string[this.fields.Count];
+			
+			this.fields.Keys.CopyTo (names, 0);
+
+			System.Array.Sort (names);
+			
+			return names;
 		}
+
+		public string[] GetFieldPaths(string path)
+		{
+			StructuredRecordType type = this.GetFieldType (path) as StructuredRecordType;
+
+			if (type == null)
+			{
+				return null;
+			}
+
+			string[] names = type.GetFieldNames ();
+
+			for (int i = 0; i < names.Length; i++)
+			{
+				names[i] = StructuredRecordType.CreatePath (path, names[i]);
+			}
+			
+			return names;
+		}
+
+		#endregion
 
 		#region INamedType Members
 
@@ -120,6 +141,31 @@ namespace Epsitec.Common.Types
 		}
 
 		#endregion
+
+		public static string[] SplitPath(string path)
+		{
+			if ((path == null) ||
+				(path.Length == 0))
+			{
+				return StructuredRecordType.emptyPath;
+			}
+			else
+			{
+				return path.Split ('.');
+			}
+		}
+
+		public static string CreatePath(params string[] names)
+		{
+			if (names.Length == 0)
+			{
+				return "";
+			}
+			else
+			{
+				return string.Join (".", names);
+			}
+		}
 
 		private void NotifyFieldInserted(string name, INamedType type)
 		{

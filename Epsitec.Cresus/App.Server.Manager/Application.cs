@@ -19,7 +19,7 @@ namespace Epsitec.Cresus.ServerManager
 			this.service_controller = new WindowsServiceController ();
 			
 			Dialog dialog = new Dialog (Epsitec.Common.Support.Resources.DefaultManager);
-			Record record = new Record ("Rec");
+			ObsoleteRecord record = new ObsoleteRecord ("Rec");
 			
 			record.AddField ("IsRunning", false);
 			
@@ -53,7 +53,7 @@ namespace Epsitec.Cresus.ServerManager
 		
 		private void HandleTimerTimeElapsed(object sender)
 		{
-			Field field = this.record["IsRunning"];
+			ObsoleteField field = this.record["IsRunning"];
 			field.Value = this.service_controller.IsRunning;
 			System.Diagnostics.Debug.WriteLine ("field set to " + field.Value);
 		}
@@ -94,7 +94,7 @@ namespace Epsitec.Cresus.ServerManager
 		private static Application				application;
 		private Window							main_window;
 		private WindowsServiceController		service_controller;
-		private Record							record;
+		private ObsoleteRecord							record;
 		private Dialog							dialog;
 		private Timer							timer;
 	}

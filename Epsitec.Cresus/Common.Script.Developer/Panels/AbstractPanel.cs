@@ -9,7 +9,7 @@ namespace Epsitec.Common.Script.Developer.Panels
 	/// <summary>
 	/// Classe de base (locale) pour l'implémentation des panneaux.
 	/// </summary>
-	public abstract class AbstractPanel : Common.UI.AbstractPanel
+	public abstract class AbstractPanel : Common.UI.ObsoleteAbstractPanel
 	{
 		public AbstractPanel()
 		{

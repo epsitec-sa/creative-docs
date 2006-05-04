@@ -7,25 +7,25 @@ namespace Epsitec.Common.UI.Data
 	/// La classe Field décrit un champ d'un Record, utilisé pour échanger des
 	/// données entre une application et son interface via mapper/binder/...
 	/// </summary>
-	public class Field : Types.IDataValue, Types.IChange
+	public class ObsoleteField : Types.IDataValue, Types.IChange
 	{
-		public Field()
+		public ObsoleteField()
 		{
 		}
 		
-		public Field(string name)
+		public ObsoleteField(string name)
 		{
 			this.name        = name;
 			this.caption     = null;
 			this.description = null;
 		}
 		
-		public Field(string name, object value) : this (name)
+		public ObsoleteField(string name, object value) : this (name)
 		{
 			this.DefineValue (value);
 		}
 		
-		public Field(string name, object value, Types.INamedType type) : this (name)
+		public ObsoleteField(string name, object value, Types.INamedType type) : this (name)
 		{
 			if (type == null)
 			{
@@ -42,7 +42,7 @@ namespace Epsitec.Common.UI.Data
 			}
 		}
 		
-		public Field(string name, object value, Types.INamedType type, Types.IDataConstraint constraint) : this (name, value, type)
+		public ObsoleteField(string name, object value, Types.INamedType type, Types.IDataConstraint constraint) : this (name, value, type)
 		{
 			this.DefineConstraint (constraint);
 		}
@@ -69,7 +69,7 @@ namespace Epsitec.Common.UI.Data
 			}
 		}
 		
-		public Record							Record
+		public ObsoleteRecord							Record
 		{
 			get
 			{
@@ -268,13 +268,13 @@ namespace Epsitec.Common.UI.Data
 		}
 		#endregion
 		
-		public Field Clone()
+		public ObsoleteField Clone()
 		{
-			return this.CloneCopyToNewObject (this.CloneNewObject ()) as Field;
+			return this.CloneCopyToNewObject (this.CloneNewObject ()) as ObsoleteField;
 		}
 		
 		
-		internal void AttachToRecord(Record record)
+		internal void AttachToRecord(ObsoleteRecord record)
 		{
 			System.Diagnostics.Debug.Assert (this.record == null);
 			System.Diagnostics.Debug.Assert (record != null);
@@ -282,7 +282,7 @@ namespace Epsitec.Common.UI.Data
 			this.record = record;
 		}
 		
-		internal void DetachFromRecord(Record record)
+		internal void DetachFromRecord(ObsoleteRecord record)
 		{
 			System.Diagnostics.Debug.Assert (this.record == record);
 			
@@ -292,7 +292,7 @@ namespace Epsitec.Common.UI.Data
 		
 		protected virtual object CloneNewObject()
 		{
-			return new Field ();
+			return new ObsoleteField ();
 		}
 		
 		protected virtual object CloneCopyToNewObject(object o)
@@ -301,7 +301,7 @@ namespace Epsitec.Common.UI.Data
 			//	seule la valeur présente un réel intérêt; celle-ci étant passée par valeur
 			//	(justement !) elle n'a pas besoin de traitement particulier.
 			
-			Field that = o as Field;
+			ObsoleteField that = o as ObsoleteField;
 			
 			that.name           = this.name;
 			that.caption        = this.caption;
@@ -317,9 +317,9 @@ namespace Epsitec.Common.UI.Data
 		}
 		
 		
-		public static Field CreateFromValue(Types.IDataValue value)
+		public static ObsoleteField CreateFromValue(Types.IDataValue value)
 		{
-			Field field = new Field (value.Name, null, value.DataType, value.DataConstraint);
+			ObsoleteField field = new ObsoleteField (value.Name, null, value.DataType, value.DataConstraint);
 			
 			field.DefineCaption (value.Caption);
 			field.DefineDescription (value.Description);
@@ -349,7 +349,7 @@ namespace Epsitec.Common.UI.Data
 		private Types.INamedType				type;
 		private Types.IDataConstraint			constraint;
 		
-		private Record							record;
+		private ObsoleteRecord							record;
 		private object							value;
 //-		private bool							is_value_valid;
 	}

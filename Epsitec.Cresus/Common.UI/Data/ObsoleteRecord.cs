@@ -10,37 +10,37 @@ namespace Epsitec.Common.UI.Data
 	/// La classe Record décrit un ensemble de champs utilisés pour échanger des
 	/// données entre une application et son interface via mapper/binder/...
 	/// </summary>
-	public class Record : Types.AbstractDataCollection, Types.IDataFolder, Types.IDataGraph, Types.IChange
+	public class ObsoleteRecord : Types.AbstractDataCollection, Types.IDataFolder, Types.IDataGraph, Types.IChange
 	{
-		public Record()
+		public ObsoleteRecord()
 		{
 			this.graph = new Types.DataGraph (this);
 		}
 		
-		public Record(string name) : this (name, null)
+		public ObsoleteRecord(string name) : this (name, null)
 		{
 		}
 		
-		public Record(string name, string prefix) : this ()
+		public ObsoleteRecord(string name, string prefix) : this ()
 		{
 			this.DefineName (name);
 			this.DefineResourcePrefix (prefix);
 		}
 		
 		
-		public new Field						this[string name]
+		public new ObsoleteField						this[string name]
 		{
 			get
 			{
-				return base[name] as Field;
+				return base[name] as ObsoleteField;
 			}
 		}
 
-		public new Field						this[int index]
+		public new ObsoleteField						this[int index]
 		{
 			get
 			{
-				return base[index] as Field;
+				return base[index] as ObsoleteField;
 			}
 		}
 		
@@ -82,7 +82,7 @@ namespace Epsitec.Common.UI.Data
 		
 		public override void Add(Types.IDataItem item)
 		{
-			Field field = item as Field;
+			ObsoleteField field = item as ObsoleteField;
 			
 			if (field == null)
 			{
@@ -100,7 +100,7 @@ namespace Epsitec.Common.UI.Data
 		{
 			if (base.Remove (item))
 			{
-				Field field = item as Field;
+				ObsoleteField field = item as ObsoleteField;
 				field.DetachFromRecord (this);
 				this.OnChanged ();
 				return true;
@@ -117,7 +117,7 @@ namespace Epsitec.Common.UI.Data
 			{
 				foreach (object field in fields)
 				{
-					if (!(field is Field))
+					if (!(field is ObsoleteField))
 					{
 						throw new System.ArgumentException ("Collection contains invalid field.", "fields");
 					}
@@ -125,7 +125,7 @@ namespace Epsitec.Common.UI.Data
 				
 				base.AddRange (fields);
 				
-				foreach (Field field in fields)
+				foreach (ObsoleteField field in fields)
 				{
 					field.AttachToRecord (this);
 				}
@@ -150,7 +150,7 @@ namespace Epsitec.Common.UI.Data
 			}
 			
 			Types.IDataItem[] items  = new Types.IDataItem[count];
-			List<Field>       fields = new List<Field> ();
+			List<ObsoleteField>       fields = new List<ObsoleteField> ();
 			
 			graph.Root.CopyTo (items, 0);
 			
@@ -158,7 +158,7 @@ namespace Epsitec.Common.UI.Data
 			{
 				if (items[i].Classes == Types.DataItemClasses.Value)
 				{
-					fields.Add (Field.CreateFromValue (items[i] as Types.IDataValue));
+					fields.Add (ObsoleteField.CreateFromValue (items[i] as Types.IDataValue));
 				}
 			}
 			
@@ -169,7 +169,7 @@ namespace Epsitec.Common.UI.Data
 		{
 			if (this.Count > 0)
 			{
-				foreach (Field field in this)
+				foreach (ObsoleteField field in this)
 				{
 					field.DetachFromRecord (this);
 				}
@@ -180,24 +180,24 @@ namespace Epsitec.Common.UI.Data
 		}
 		
 		
-		public Field AddField(string name)
+		public ObsoleteField AddField(string name)
 		{
-			return this.InitFieldAndAdd (new Field (name));
+			return this.InitFieldAndAdd (new ObsoleteField (name));
 		}
 		
-		public Field AddField(string name, object value)
+		public ObsoleteField AddField(string name, object value)
 		{
-			return this.InitFieldAndAdd (new Field (name, value));
+			return this.InitFieldAndAdd (new ObsoleteField (name, value));
 		}
 		
-		public Field AddField(string name, object value, Types.INamedType type)
+		public ObsoleteField AddField(string name, object value, Types.INamedType type)
 		{
-			return this.InitFieldAndAdd (new Field (name, value, type));
+			return this.InitFieldAndAdd (new ObsoleteField (name, value, type));
 		}
 		
-		public Field AddField(string name, object value, Types.INamedType type, Types.IDataConstraint constraint)
+		public ObsoleteField AddField(string name, object value, Types.INamedType type, Types.IDataConstraint constraint)
 		{
-			return this.InitFieldAndAdd (new Field (name, value, type, constraint));
+			return this.InitFieldAndAdd (new ObsoleteField (name, value, type, constraint));
 		}
 		
 		
@@ -215,11 +215,11 @@ namespace Epsitec.Common.UI.Data
 		}
 		
 		
-		public Record Clone()
+		public ObsoleteRecord Clone()
 		{
 			System.ICloneable cloneable = this;
 
-			return cloneable.Clone () as Record;
+			return cloneable.Clone () as ObsoleteRecord;
 		}
 		
 		
@@ -281,12 +281,12 @@ namespace Epsitec.Common.UI.Data
 		
 		protected override object CloneNewObject()
 		{
-			return new Record ();
+			return new ObsoleteRecord ();
 		}
 		
 		protected override object CloneCopyToNewObject(object o)
 		{
-			Record that = o as Record;
+			ObsoleteRecord that = o as ObsoleteRecord;
 			
 			base.CloneCopyToNewObject (o);
 			
@@ -296,7 +296,7 @@ namespace Epsitec.Common.UI.Data
 			return that;
 		}
 		
-		protected virtual Field InitFieldAndAdd(Field field)
+		protected virtual ObsoleteField InitFieldAndAdd(ObsoleteField field)
 		{
 			string field_name = field.Name;
 			
@@ -350,7 +350,7 @@ namespace Epsitec.Common.UI.Data
 			}
 		}
 		
-		protected virtual void OnFieldChanged(Field field)
+		protected virtual void OnFieldChanged(ObsoleteField field)
 		{
 			if (this.validator != null)
 			{
@@ -380,12 +380,12 @@ namespace Epsitec.Common.UI.Data
 		{
 			base.UpdateCachedItemArray ();
 			
-			this.fields = new Field[this.Count];
+			this.fields = new ObsoleteField[this.Count];
 			this.CopyTo (this.fields, 0);
 		}
 
 		
-		internal void NotifyFieldChanged(Field field)
+		internal void NotifyFieldChanged(ObsoleteField field)
 		{
 			this.OnFieldChanged (field);
 		}
@@ -394,7 +394,7 @@ namespace Epsitec.Common.UI.Data
 		#region RecordValidator Class
 		protected class RecordValidator : IValidator
 		{
-			public RecordValidator(Record record)
+			public RecordValidator(ObsoleteRecord record)
 			{
 				this.record = record;
 				this.state  = ValidationState.Dirty;
@@ -435,7 +435,7 @@ namespace Epsitec.Common.UI.Data
 			{
 				this.state = ValidationState.Unknown;
 				
-				foreach (Field field in this.record.CachedItemArray)
+				foreach (ObsoleteField field in this.record.CachedItemArray)
 				{
 					if (field.IsValueValid == false)
 					{
@@ -465,7 +465,7 @@ namespace Epsitec.Common.UI.Data
 			
 			public event Support.EventHandler	BecameDirty;
 			
-			private Record						record;
+			private ObsoleteRecord						record;
 			private ValidationState				state;
 		}
 		#endregion
@@ -473,7 +473,7 @@ namespace Epsitec.Common.UI.Data
 		public event Support.EventHandler		Changed;
 		public event Support.EventHandler		FieldChanged;
 		
-		private Field[]							fields;
+		private ObsoleteField[]							fields;
 		private Types.DataGraph					graph;
 		private string							name;
 		private string							resource_prefix;
