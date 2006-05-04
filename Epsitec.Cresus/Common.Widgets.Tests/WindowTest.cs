@@ -385,7 +385,7 @@ namespace Epsitec.Common.Widgets
 			
 			text.SetManualBounds(new Drawing.Rectangle (60, 15, 420, 50));
 			text.SetParent (window.Root);
-			text.Alignment = Drawing.ContentAlignment.TopLeft;
+			text.ContentAlignment = Drawing.ContentAlignment.TopLeft;
 			text.Text      = "<b>Group 1:</b> cannot be entered with TAB<br/>"
 				/**/       + "<b>Group 2:</b> can be focused and entered with TAB<br/>"
 				/**/       + "<b>Group 3:</b> cannot be focused, but can be entered with TAB<br/>";

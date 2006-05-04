@@ -83,7 +83,7 @@ namespace Epsitec.Common.Document.TextPanels
 			this.buttonSuppressBefore = this.CreateIconButton(Misc.Icon("SuppressBefore"), Res.Strings.TextPanel.Generator.Tooltip.SuppressBefore, new MessageEventHandler(this.HandleSuppressBeforeClicked));
 
 			this.labelText = new StaticText(this);
-			this.labelText.Alignment = ContentAlignment.MiddleRight;
+			this.labelText.ContentAlignment = ContentAlignment.MiddleRight;
 
 			this.fieldText = new TextFieldCombo(this);
 			this.fieldText.AutoFocus = false;
@@ -1365,7 +1365,7 @@ namespace Epsitec.Common.Document.TextPanels
 			if ( this.table[0, row].IsEmpty )
 			{
 				StaticText st = new StaticText();
-				st.Alignment = ContentAlignment.MiddleLeft;
+				st.ContentAlignment = ContentAlignment.MiddleLeft;
 				st.Dock = DockStyle.Fill;
 				st.Margins = new Drawing.Margins(2, 2, 0, 0);
 				this.table[0, row].Insert(st);
@@ -1374,7 +1374,7 @@ namespace Epsitec.Common.Document.TextPanels
 			if ( this.table[1, row].IsEmpty )
 			{
 				StaticText st = new StaticText();
-				st.Alignment = ContentAlignment.MiddleCenter;
+				st.ContentAlignment = ContentAlignment.MiddleCenter;
 				st.Dock = DockStyle.Fill;
 				st.Margins = new Drawing.Margins(2, 0, 0, 0);
 				this.table[1, row].Insert(st);
@@ -1391,7 +1391,7 @@ namespace Epsitec.Common.Document.TextPanels
 				else
 				{
 					StaticText st = new StaticText();
-					st.Alignment = ContentAlignment.MiddleCenter;
+					st.ContentAlignment = ContentAlignment.MiddleCenter;
 					st.Dock = DockStyle.Fill;
 					st.Margins = new Drawing.Margins(2, 0, 0, 0);
 					this.table[2, row].Insert(st);
@@ -1401,7 +1401,7 @@ namespace Epsitec.Common.Document.TextPanels
 			if ( this.table[3, row].IsEmpty )
 			{
 				StaticText st = new StaticText();
-				st.Alignment = ContentAlignment.MiddleCenter;
+				st.ContentAlignment = ContentAlignment.MiddleCenter;
 				st.Dock = DockStyle.Fill;
 				st.Margins = new Drawing.Margins(2, 0, 0, 0);
 				this.table[3, row].Insert(st);
@@ -1417,9 +1417,9 @@ namespace Epsitec.Common.Document.TextPanels
 			st = this.table[0, row].Children[0] as StaticText;
 			st.Text = this.GetResume(row);
 			string justif = this.GetValue(0, Part1.Generic, Part2.Disposition);
-			if ( justif == "Left"   )  st.Alignment = ContentAlignment.MiddleLeft;
-			if ( justif == "Center" )  st.Alignment = ContentAlignment.MiddleCenter;
-			if ( justif == "Right"  )  st.Alignment = ContentAlignment.MiddleRight;
+			if ( justif == "Left"   )  st.ContentAlignment = ContentAlignment.MiddleLeft;
+			if ( justif == "Center" )  st.ContentAlignment = ContentAlignment.MiddleCenter;
+			if ( justif == "Right"  )  st.ContentAlignment = ContentAlignment.MiddleRight;
 
 			st = this.table[1, row].Children[0] as StaticText;
 			s = this.GetResume(row, Part1.Prefix, false);

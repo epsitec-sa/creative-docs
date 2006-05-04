@@ -43,7 +43,7 @@ namespace Epsitec.Common.Widgets
 			this.InternalState &= ~InternalState.Focusable;
 			this.InternalState &= ~InternalState.Engageable;
 			
-			this.Alignment = Drawing.ContentAlignment.MiddleLeft;
+			this.ContentAlignment = Drawing.ContentAlignment.MiddleLeft;
 			
 			this.icon     = new TextLayout();
 			this.shortcut = new TextLayout();

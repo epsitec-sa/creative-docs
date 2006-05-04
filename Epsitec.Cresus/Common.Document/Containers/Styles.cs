@@ -253,7 +253,7 @@ namespace Epsitec.Common.Document.Containers
 			st.PreferredWidth = 45;
 			st.Margins = new Margins(0, 5, 0, 0);
 			st.Text = Res.Strings.Panel.AggregateChildren.Label.Name;
-			st.Alignment = ContentAlignment.MiddleRight;
+			st.ContentAlignment = ContentAlignment.MiddleRight;
 			this.childrenToolBar.Items.Add(st);
 
 			this.dummyChildren = new Widgets.DummyTextFieldCombo();
@@ -284,7 +284,7 @@ namespace Epsitec.Common.Document.Containers
 			st.PreferredWidth = 45;
 			st.Margins = new Margins(0, 5, 0, 0);
 			st.Text = Res.Strings.Panel.AggregateName.Label.Name;
-			st.Alignment = ContentAlignment.MiddleRight;
+			st.ContentAlignment = ContentAlignment.MiddleRight;
 			this.nameToolBar.Items.Add(st);
 
 			this.name = new TextField();
@@ -725,7 +725,7 @@ namespace Epsitec.Common.Document.Containers
 					double h = 5 + lines*14 + 5;
 
 					this.styleBriefPanel = new StaticText(this.panelContainer);
-					this.styleBriefPanel.Alignment = ContentAlignment.TopLeft;
+					this.styleBriefPanel.ContentAlignment = ContentAlignment.TopLeft;
 					this.styleBriefPanel.PreferredHeight = h;
 					this.styleBriefPanel.Dock = DockStyle.Fill;
 					this.styleBriefPanel.Margins = new Margins(5, -1000, 5, 5);  // dépasse largement à droite
@@ -793,7 +793,7 @@ namespace Epsitec.Common.Document.Containers
 					double h = 5 + lines*14 + 5;
 
 					this.styleBriefPanel = new StaticText(this.panelContainer);
-					this.styleBriefPanel.Alignment = ContentAlignment.TopLeft;
+					this.styleBriefPanel.ContentAlignment = ContentAlignment.TopLeft;
 					this.styleBriefPanel.PreferredHeight = h;
 					this.styleBriefPanel.Dock = DockStyle.Fill;
 					this.styleBriefPanel.Margins = new Margins(5, -1000, 5, 5);  // dépasse largement à droite

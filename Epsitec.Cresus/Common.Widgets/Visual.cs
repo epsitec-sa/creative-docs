@@ -10,6 +10,7 @@ namespace Epsitec.Common.Widgets
 	using FlatChildrenCollection=Collections.FlatChildrenCollection;
 	using VisualPropertyMetadata=Helpers.VisualPropertyMetadata;
 	using VisualPropertyMetadataOptions=Helpers.VisualPropertyMetadataOptions;
+	using ContentAlignment=Drawing.ContentAlignment;
 	
 	/// <summary>
 	/// Visual.
@@ -200,7 +201,19 @@ namespace Epsitec.Common.Widgets
 				this.SetValue (Visual.VerticalAlignmentProperty, value);
 			}
 		}
-		
+
+		public ContentAlignment					ContentAlignment
+		{
+			get
+			{
+				return (ContentAlignment) this.GetValue (Visual.ContentAlignmentProperty);
+			}
+			set
+			{
+				this.SetValue (Visual.ContentAlignmentProperty, value);
+			}
+		}
+
 		public ContainerLayoutMode				ContainerLayoutMode
 		{
 			get
@@ -1027,6 +1040,10 @@ namespace Epsitec.Common.Widgets
 		{
 		}
 
+		internal virtual void InvalidateTextLayout()
+		{
+		}
+
 		internal virtual void SetDirtyLayoutFlag()
 		{
 			this.dirtyLayout = true;
@@ -1429,6 +1446,7 @@ namespace Epsitec.Common.Widgets
 		public static readonly DependencyProperty PaddingProperty				= DependencyProperty.Register ("Padding", typeof (Drawing.Margins), typeof (Visual), new VisualPropertyMetadata (Drawing.Margins.Zero, VisualPropertyMetadataOptions.AffectsChildrenLayout));
 		public static readonly DependencyProperty HorizontalAlignmentProperty	= DependencyProperty.Register ("HorizontalAlignment", typeof (HorizontalAlignment), typeof (Visual), new VisualPropertyMetadata (HorizontalAlignment.Stretch, VisualPropertyMetadataOptions.AffectsArrange));
 		public static readonly DependencyProperty VerticalAlignmentProperty		= DependencyProperty.Register ("VerticalAlignment", typeof (VerticalAlignment), typeof (Visual), new VisualPropertyMetadata (VerticalAlignment.Stretch, VisualPropertyMetadataOptions.AffectsArrange));
+		public static readonly DependencyProperty ContentAlignmentProperty		= DependencyProperty.Register ("ContentAlignment", typeof (ContentAlignment), typeof (Visual), new VisualPropertyMetadata (ContentAlignment.MiddleLeft, VisualPropertyMetadataOptions.AffectsTextLayout));
 		public static readonly DependencyProperty ContainerLayoutModeProperty	= DependencyProperty.Register ("ContainerLayoutMode", typeof (ContainerLayoutMode), typeof (Visual), new VisualPropertyMetadata (ContainerLayoutMode.VerticalFlow, VisualPropertyMetadataOptions.AffectsChildrenLayout));
 
 		public static readonly DependencyProperty PreferredWidthProperty		= DependencyProperty.Register ("PreferredWidth", typeof (double), typeof (Visual), new VisualPropertyMetadata (double.NaN, VisualPropertyMetadataOptions.AffectsMeasure));

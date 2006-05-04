@@ -81,7 +81,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				label = new StaticText(keys);
 				label.PreferredWidth = 15;
 				label.Text = "-";
-				label.Alignment = ContentAlignment.MiddleCenter;
+				label.ContentAlignment = ContentAlignment.MiddleCenter;
 				label.Dock = DockStyle.Left;
 
 				this.key2 = new TextField(keys);
@@ -94,7 +94,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				label = new StaticText(keys);
 				label.PreferredWidth = 15;
 				label.Text = "-";
-				label.Alignment = ContentAlignment.MiddleCenter;
+				label.ContentAlignment = ContentAlignment.MiddleCenter;
 				label.Dock = DockStyle.Left;
 
 				this.key3 = new TextField(keys);
@@ -107,7 +107,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				label = new StaticText(keys);
 				label.PreferredWidth = 15;
 				label.Text = "-";
-				label.Alignment = ContentAlignment.MiddleCenter;
+				label.ContentAlignment = ContentAlignment.MiddleCenter;
 				label.Dock = DockStyle.Left;
 
 				this.key4 = new TextField(keys);

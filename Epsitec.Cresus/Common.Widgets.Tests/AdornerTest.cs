@@ -394,18 +394,18 @@ namespace Epsitec.Common.Widgets
 			
 			image1.SetManualBounds(new Rectangle (590, 15, 20, 20));
 			image1.ImageName = @"file:images/cut.png";
-			image1.Alignment = Drawing.ContentAlignment.BottomCenter;
+			image1.ContentAlignment = Drawing.ContentAlignment.BottomCenter;
 			image1.VerticalOffset = 0;
 
 			image2.SetManualBounds(new Rectangle (600, 15, 20, 20));
 			image2.ImageName = @"file:images/cut.png";
 			image2.VerticalOffset = 4;
-			image2.Alignment = Drawing.ContentAlignment.BottomCenter;
+			image2.ContentAlignment = Drawing.ContentAlignment.BottomCenter;
 
 			image3.SetManualBounds(new Rectangle (610, 15, 20, 20));
 			image3.ImageName = @"file:images/cut.png";
 			image3.VerticalOffset = 8;
-			image3.Alignment = Drawing.ContentAlignment.BottomCenter;
+			image3.ContentAlignment = Drawing.ContentAlignment.BottomCenter;
 			
 			Widget.BaseLineAlign (image1, image2);
 			Widget.BaseLineAlign (image1, image3);
@@ -415,16 +415,16 @@ namespace Epsitec.Common.Widgets
 
 			image4.SetManualBounds(new Rectangle (630, 15, 40, 20));
 			image4.ImageName = @"dyn:Xyz/random";
-			image4.Alignment = Drawing.ContentAlignment.BottomCenter;
+			image4.ContentAlignment = Drawing.ContentAlignment.BottomCenter;
 
 			image5.SetManualBounds(new Rectangle (630, 35, 40, 20));
 			image5.ImageName = @"dyn:Xyz/80";
-			image5.Alignment = Drawing.ContentAlignment.BottomCenter;
+			image5.ContentAlignment = Drawing.ContentAlignment.BottomCenter;
 
 			image6.SetManualBounds(new Rectangle (630, 55, 40, 20));
 			image6.ImageName = @"dyn:Xyz/60";
 			image6.ImageSize = new Drawing.Size (20, 12);
-			image6.Alignment = Drawing.ContentAlignment.BottomCenter;
+			image6.ContentAlignment = Drawing.ContentAlignment.BottomCenter;
 			
 			window.Root.Children.Add(image1);
 			window.Root.Children.Add(image2);
@@ -740,7 +740,7 @@ namespace Epsitec.Common.Widgets
 					StaticText tx = new StaticText();
 					tx.PaintTextStyle = PaintTextStyle.Array;
 					tx.Text = string.Format("L{0} C{1}", x+1, y+1);
-					tx.Alignment = ContentAlignment.MiddleLeft;
+					tx.ContentAlignment = ContentAlignment.MiddleLeft;
 					tx.Dock = Widgets.DockStyle.Fill;
 					table[x,y].Insert(tx);
 				}
@@ -915,9 +915,9 @@ namespace Epsitec.Common.Widgets
 #endif
 			multi.Text = s;
 
-			multi.Alignment = Drawing.ContentAlignment.TopLeft;
+			multi.ContentAlignment = Drawing.ContentAlignment.TopLeft;
 			multi.TextLayout.JustifMode = TextJustifMode.AllButLast;
-			//?multi.Alignment = Drawing.ContentAlignment.TopRight;
+			//?multi.ContentAlignment = Drawing.ContentAlignment.TopRight;
 			//?multi.TextLayout.JustifMode = TextJustifMode.NoLine;
 			multi.TextLayout.ShowLineBreak = true;
 			multi.TextLayout.ShowTab = true;
@@ -1331,7 +1331,7 @@ namespace Epsitec.Common.Widgets
 					StaticText text = new StaticText();
 					text.PaintTextStyle = PaintTextStyle.Array;
 					if ( x != 0 || y != 0 )  text.Text = string.Format("{0}.{1}", y+1, x+1);
-					text.Alignment = ContentAlignment.MiddleCenter;
+					text.ContentAlignment = ContentAlignment.MiddleCenter;
 					text.Dock = Widgets.DockStyle.Fill;
 					
 					if ( x == 2 && y == 2 )
@@ -1444,7 +1444,7 @@ namespace Epsitec.Common.Widgets
 					text.TextFieldStyle = TextFieldStyle.Flat;
 					if ( x != 1 )
 					{
-						text.Alignment = ContentAlignment.MiddleRight;
+						text.ContentAlignment = ContentAlignment.MiddleRight;
 					}
 					text.Text = texts[y*5+x];
 					text.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
@@ -1530,8 +1530,8 @@ namespace Epsitec.Common.Widgets
 					StaticText text = new StaticText();
 					text.PaintTextStyle = PaintTextStyle.Array;
 					text.Text = string.Format("L{0} C{1}", x+1, y+1);
-					text.Alignment = ContentAlignment.MiddleLeft;
-					//text.Alignment = ContentAlignment.BottomLeft;
+					text.ContentAlignment = ContentAlignment.MiddleLeft;
+					//text.ContentAlignment = ContentAlignment.BottomLeft;
 					//text.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
 					text.Dock = Widgets.DockStyle.Fill;
 					table[x,y].Insert(text);

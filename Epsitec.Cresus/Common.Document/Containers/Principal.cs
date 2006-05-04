@@ -440,7 +440,7 @@ namespace Epsitec.Common.Document.Containers
 						button.Command = cmd;
 						button.Name = name;
 						button.Text = text;
-						button.Alignment = ContentAlignment.MiddleLeft;
+						button.ContentAlignment = ContentAlignment.MiddleLeft;
 						button.Dock = DockStyle.Top;
 						button.Margins = new Margins(10, 10, topMargin, 0);
 						button.SetParent(this.scrollable.Panel);

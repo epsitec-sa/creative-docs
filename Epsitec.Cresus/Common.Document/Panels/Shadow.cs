@@ -47,15 +47,15 @@ namespace Epsitec.Common.Document.Panels
 
 			this.labelRadius = new StaticText(this);
 			this.labelRadius.Text = "R";
-			this.labelRadius.Alignment = ContentAlignment.MiddleCenter;
+			this.labelRadius.ContentAlignment = ContentAlignment.MiddleCenter;
 
 			this.labelOx = new StaticText(this);
 			this.labelOx.Text = "X";
-			this.labelOx.Alignment = ContentAlignment.MiddleCenter;
+			this.labelOx.ContentAlignment = ContentAlignment.MiddleCenter;
 
 			this.labelOy = new StaticText(this);
 			this.labelOy.Text = "Y";
-			this.labelOy.Alignment = ContentAlignment.MiddleCenter;
+			this.labelOy.ContentAlignment = ContentAlignment.MiddleCenter;
 
 			this.isNormalAndExtended = true;
 		}

@@ -19,7 +19,7 @@ namespace Epsitec.Common.Document.TextPanels
 			ToolTip.Default.SetToolTip(this.fixIcon, Res.Strings.TextPanel.Numerator.Title);
 
 			this.labelStart = new StaticText(this);
-			this.labelStart.Alignment = ContentAlignment.MiddleRight;
+			this.labelStart.ContentAlignment = ContentAlignment.MiddleRight;
 			this.labelStart.Text = Res.Strings.TextPanel.Numerator.Label.Start;
 
 			this.fieldStart = new TextField(this);

@@ -298,7 +298,7 @@ namespace Epsitec.Common.Widgets
 			{
 				this.realSize = this.InnerTextBounds.Size;
 				
-				base.TextLayout.Alignment  = this.Alignment;
+				base.TextLayout.Alignment  = this.ContentAlignment;
 				base.TextLayout.LayoutSize = this.GetTextLayoutSize ();
 
 				if (this.TextLayout.Text != null)

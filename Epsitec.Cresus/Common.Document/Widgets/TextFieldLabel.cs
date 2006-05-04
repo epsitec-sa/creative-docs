@@ -40,7 +40,7 @@ namespace Epsitec.Common.Document.Widgets
 			else
 			{
 				this.label = new StaticText(this);
-				this.label.Alignment = ContentAlignment.MiddleRight;
+				this.label.ContentAlignment = ContentAlignment.MiddleRight;
 				this.label.Dock = DockStyle.Fill;
 				this.label.Margins = new Margins(0, this.marginWidth, 0, 0);
 			}

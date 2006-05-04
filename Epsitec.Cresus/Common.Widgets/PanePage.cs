@@ -8,7 +8,7 @@ namespace Epsitec.Common.Widgets
 		public PanePage()
 		{
 			this.paneButton = new PaneButton(null);
-			this.paneButton.Alignment = Drawing.ContentAlignment.MiddleCenter;
+			this.paneButton.ContentAlignment = Drawing.ContentAlignment.MiddleCenter;
 
 			this.glyphButton = new GlyphButton(this);
 			this.glyphButton.ButtonStyle = ButtonStyle.Icon;

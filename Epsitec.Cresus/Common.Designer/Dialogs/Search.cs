@@ -32,7 +32,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 				StaticText label = new StaticText(this.window.Root);
 				label.Text = Res.Strings.Dialog.Search.Label;
-				label.Alignment = ContentAlignment.MiddleLeft;
+				label.ContentAlignment = ContentAlignment.MiddleLeft;
 				label.PreferredWidth = 80;
 				label.Anchor = AnchorStyles.TopLeft;
 				label.Margins = new Margins(6, 0, 6+3, 0);
@@ -46,7 +46,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 				label = new StaticText(this.window.Root);
 				label.Text = Res.Strings.Dialog.Search.Replace;
-				label.Alignment = ContentAlignment.MiddleLeft;
+				label.ContentAlignment = ContentAlignment.MiddleLeft;
 				label.PreferredWidth = 80;
 				label.Anchor = AnchorStyles.TopLeft;
 				label.Margins = new Margins(6, 0, 6+28+3, 0);
@@ -68,14 +68,14 @@ namespace Epsitec.Common.Designer.Dialogs
 
 				label = new StaticText(group);
 				label.PreferredWidth = 80;
-				label.Alignment = ContentAlignment.MiddleRight;
+				label.ContentAlignment = ContentAlignment.MiddleRight;
 				label.Text = Res.Strings.Viewer.Edit;
 				label.Anchor = AnchorStyles.Top | AnchorStyles.Left;
 				label.Margins = new Margins(0, 0, 5, 0);
 
 				label = new StaticText(group);
 				label.PreferredWidth = 80;
-				label.Alignment = ContentAlignment.MiddleRight;
+				label.ContentAlignment = ContentAlignment.MiddleRight;
 				label.Text = Res.Strings.Viewer.About;
 				label.Anchor = AnchorStyles.Top | AnchorStyles.Left;
 				label.Margins = new Margins(0, 0, 21, 0);

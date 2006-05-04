@@ -39,7 +39,7 @@ namespace Epsitec.Common.Document.TextPanels
 			this.fieldStartMode = CreateComboStartMode(new EventHandler(this.HandleStartModeChanged));
 
 			this.labelNextStyle = new StaticText(this);
-			this.labelNextStyle.Alignment = ContentAlignment.MiddleRight;
+			this.labelNextStyle.ContentAlignment = ContentAlignment.MiddleRight;
 			this.labelNextStyle.Text = Res.Strings.TextPanel.Keep.Short.NextStyle;
 
 			this.fieldNextStyle = new Widgets.StyleCombo(this);

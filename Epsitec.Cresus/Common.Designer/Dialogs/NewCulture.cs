@@ -32,7 +32,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 				StaticText label = new StaticText(this.window.Root);
 				label.Text = Res.Strings.Dialog.NewCulture.Label;
-				label.Alignment = ContentAlignment.MiddleLeft;
+				label.ContentAlignment = ContentAlignment.MiddleLeft;
 				label.PreferredWidth = 40;
 				label.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
 				label.Margins = new Margins(6, 6, 6+3, 0);

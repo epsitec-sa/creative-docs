@@ -44,7 +44,7 @@ namespace Epsitec.Common.Designer
 			this.array.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			this.labelStatic = new StaticText(this);
-			this.labelStatic.Alignment = ContentAlignment.MiddleRight;
+			this.labelStatic.ContentAlignment = ContentAlignment.MiddleRight;
 			this.labelStatic.Text = Res.Strings.Viewer.Edit;
 			this.labelStatic.Visibility = (this.module.Mode != DesignerMode.Build);
 
@@ -74,7 +74,7 @@ namespace Epsitec.Common.Designer
 			this.secondaryEdit.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			this.labelAbout = new StaticText(this);
-			this.labelAbout.Alignment = ContentAlignment.MiddleRight;
+			this.labelAbout.ContentAlignment = ContentAlignment.MiddleRight;
 			this.labelAbout.Text = Res.Strings.Viewer.About;
 
 			this.primaryAbout = new TextFieldMulti(this);

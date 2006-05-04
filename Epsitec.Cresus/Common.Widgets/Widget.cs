@@ -5,10 +5,9 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Widgets
 {
-	using ContentAlignment = Drawing.ContentAlignment;
 	
 	
-	public delegate bool WalkWidgetCallback(Widget widget);
+	public delegate bool WidgetWalkChildrenCallback(Widget widget);
 	
 	#region InternalState enum
 	[System.Flags] public enum InternalState : uint
@@ -50,7 +49,6 @@ namespace Epsitec.Common.Widgets
 			this.InternalState |= InternalState.AutoResolveResRef;
 			
 			this.default_font_height = System.Math.Floor(this.DefaultFont.LineHeight*this.DefaultFontSize);
-			this.alignment           = this.DefaultAlignment;
 			
 			this.PreferredSize = new Drawing.Size (this.DefaultWidth, this.DefaultHeight);
 			
@@ -259,23 +257,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public ContentAlignment						Alignment
-		{
-			get
-			{
-				return this.alignment;
-			}
-			set
-			{
-				if (this.alignment != value)
-				{
-					this.alignment = value;
-					this.UpdateTextLayout ();
-					this.Invalidate ();
-				}
-			}
-		}
-		
 		public Drawing.Size							RealMinSize
 		{
 			get
@@ -323,9 +304,9 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public virtual ContentAlignment				DefaultAlignment
+		public virtual Drawing.ContentAlignment		DefaultAlignment
 		{
-			get { return ContentAlignment.MiddleLeft; }
+			get { return Drawing.ContentAlignment.MiddleLeft; }
 		}
 
 		public virtual Drawing.Font					DefaultFont
@@ -1926,7 +1907,7 @@ namespace Epsitec.Common.Widgets
 			
 			CommandWidgetFinder finder = new CommandWidgetFinder ();
 			
-			this.WalkChildren (new WalkWidgetCallback (finder.Analyse));
+			this.WalkChildren (new WidgetWalkChildrenCallback (finder.Analyse));
 			
 			return finder.Widgets;
 		}
@@ -1939,7 +1920,7 @@ namespace Epsitec.Common.Widgets
 			
 			CommandWidgetFinder finder = new CommandWidgetFinder (command);
 			
-			this.WalkChildren (new WalkWidgetCallback (finder.Analyse));
+			this.WalkChildren (new WidgetWalkChildrenCallback (finder.Analyse));
 			
 			return finder.Widgets;
 		}
@@ -1952,7 +1933,7 @@ namespace Epsitec.Common.Widgets
 			
 			CommandWidgetFinder finder = new CommandWidgetFinder (regex);
 			
-			this.WalkChildren (new WalkWidgetCallback (finder.Analyse));
+			this.WalkChildren (new WidgetWalkChildrenCallback (finder.Analyse));
 			
 			return finder.Widgets;
 		}
@@ -1964,7 +1945,7 @@ namespace Epsitec.Common.Widgets
 			
 			CommandWidgetFinder finder = new CommandWidgetFinder (command);
 			
-			this.WalkChildren (new WalkWidgetCallback (finder.Analyse));
+			this.WalkChildren (new WidgetWalkChildrenCallback (finder.Analyse));
 			
 			if (finder.Widgets.Length > 0)
 			{
@@ -2757,7 +2738,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public virtual bool WalkChildren(WalkWidgetCallback callback)
+		public virtual bool WalkChildren(WidgetWalkChildrenCallback callback)
 		{
 			//	Retourne true si on a parcouru tous les enfants.
 			
@@ -2800,12 +2781,8 @@ namespace Epsitec.Common.Widgets
 		protected override void SetBoundsOverride(Drawing.Rectangle oldRect, Drawing.Rectangle newRect)
 		{
 			base.SetBoundsOverride(oldRect, newRect);
-			
-			if (this.TextLayout != null)
-			{
-				this.UpdateTextLayout ();
-			}
 
+			this.InvalidateTextLayout ();
 			this.UpdateClientGeometry ();
 		}
 
@@ -2817,11 +2794,20 @@ namespace Epsitec.Common.Widgets
 		{
 			if (this.text_layout != null)
 			{
-				this.text_layout.Alignment  = this.Alignment;
+				this.text_layout.Alignment  = this.ContentAlignment;
 				this.text_layout.LayoutSize = this.Client.Size;
 			}
 		}
 
+		internal override void InvalidateTextLayout()
+		{
+			base.InvalidateTextLayout ();
+			
+			if (this.TextLayout != null)
+			{
+				this.UpdateTextLayout ();
+			}
+		}
 		
 		public virtual void PaintHandler(Drawing.Graphics graphics, Drawing.Rectangle repaint, IPaintFilter paint_filter)
 		{
@@ -3983,7 +3969,6 @@ namespace Epsitec.Common.Widgets
 		
 		private string							text;
 		private TextLayout						text_layout;
-		private ContentAlignment				alignment;
 		private int								tab_index = 0;
 		private TabNavigationMode				tab_navigation_mode;
 		private Collections.ShortcutCollection	shortcuts;

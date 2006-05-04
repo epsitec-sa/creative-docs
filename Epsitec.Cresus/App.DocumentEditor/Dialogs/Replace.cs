@@ -37,7 +37,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 				StaticText labelFind = new StaticText(this.window.Root);
 				labelFind.Text = Res.Strings.Dialog.Replace.Label.Find;
-				labelFind.Alignment = ContentAlignment.MiddleLeft;
+				labelFind.ContentAlignment = ContentAlignment.MiddleLeft;
 				labelFind.PreferredWidth = 80;
 				labelFind.Anchor = AnchorStyles.TopLeft;
 				labelFind.Margins = new Margins(10, 0, 10+3, 0);
@@ -52,7 +52,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 				StaticText labelReplace = new StaticText(this.window.Root);
 				labelReplace.Text = Res.Strings.Dialog.Replace.Label.Replace;
-				labelReplace.Alignment = ContentAlignment.MiddleLeft;
+				labelReplace.ContentAlignment = ContentAlignment.MiddleLeft;
 				labelReplace.PreferredWidth = 80;
 				labelReplace.Anchor = AnchorStyles.TopLeft;
 				labelReplace.Margins = new Margins(10, 0, 40+3, 0);

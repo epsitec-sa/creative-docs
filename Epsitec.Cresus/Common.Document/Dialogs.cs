@@ -1528,7 +1528,7 @@ namespace Epsitec.Common.Document
 
 			StaticText text = new StaticText(container);
 			text.Text = Res.Strings.Dialog.Print.Range.To;
-			text.Alignment = ContentAlignment.MiddleCenter;
+			text.ContentAlignment = ContentAlignment.MiddleCenter;
 			text.PreferredHeight = 20;
 			text.PreferredWidth = 30;
 			text.Dock = DockStyle.Left;

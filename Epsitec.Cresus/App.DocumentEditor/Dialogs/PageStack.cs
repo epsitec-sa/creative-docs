@@ -270,7 +270,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				if ( this.table[column, row].IsEmpty )
 				{
 					StaticText st = new StaticText();
-					st.Alignment = (column==0 || column==2) ? ContentAlignment.MiddleCenter : ContentAlignment.MiddleLeft;
+					st.ContentAlignment = (column==0 || column==2) ? ContentAlignment.MiddleCenter : ContentAlignment.MiddleLeft;
 					st.Dock = DockStyle.Fill;
 					this.table[column, row].Insert(st);
 				}

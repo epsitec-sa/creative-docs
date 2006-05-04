@@ -654,7 +654,7 @@ namespace Epsitec.Common.Widgets
 			if ( this.TextLayout != null )
 			{
 				this.realSize = this.InnerTextBounds.Size;
-				this.TextLayout.Alignment  = this.Alignment;
+				this.TextLayout.Alignment  = this.ContentAlignment;
 				this.TextLayout.LayoutSize = this.GetTextLayoutSize();
 				
 				if ( this.TextLayout.Text != null )

@@ -676,7 +676,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 						else if ( column == 3 )  // texte de la commande ?
 						{
 							st = new StaticText();
-							st.Alignment = ContentAlignment.MiddleLeft;
+							st.ContentAlignment = ContentAlignment.MiddleLeft;
 							st.Dock = DockStyle.Fill;
 							st.Margins = new Margins (6, 0, 0, 0);
 							this.quickList[column, row].Insert(st);

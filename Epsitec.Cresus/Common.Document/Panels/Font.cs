@@ -48,7 +48,7 @@ namespace Epsitec.Common.Document.Panels
 			ToolTip.Default.SetToolTip(this.fontColor, Res.Strings.Panel.Font.Tooltip.Color);
 
 			this.labelColor = new StaticText(this);
-			this.labelColor.Alignment = ContentAlignment.MiddleRight;
+			this.labelColor.ContentAlignment = ContentAlignment.MiddleRight;
 
 			this.isNormalAndExtended = true;
 		}

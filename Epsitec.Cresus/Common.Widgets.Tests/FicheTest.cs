@@ -607,7 +607,7 @@ namespace Epsitec.Common.Widgets
 				this.listCrit.Items.Add(fd.name);
 
 				StaticText st = new StaticText();
-				st.Alignment = ContentAlignment.MiddleRight;
+				st.ContentAlignment = ContentAlignment.MiddleRight;
 				st.Text = fd.name;
 				this.rightPane.Children.Add(st);
 				this.staticTexts.Add(st);
@@ -618,7 +618,7 @@ namespace Epsitec.Common.Widgets
 				AbstractTextField tf = TextFieldAny.FromType (type);
 				tf.Name = fd.name;
 				tf.Text = "";
-				tf.Alignment = fd.alignment;
+				tf.ContentAlignment = fd.alignment;
 				tf.MaxChar = fd.max;
 				if ( fd.combo != "" )  this.InitCombo(tf, fd.combo);
 				tf.TextChanged += new EventHandler(this.tf_TextChanged);

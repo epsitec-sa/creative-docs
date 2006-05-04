@@ -238,7 +238,7 @@ namespace Epsitec.Common.Document.Containers
 				if ( this.table[column, row].IsEmpty )
 				{
 					StaticText st = new StaticText();
-					st.Alignment = (column==0) ? ContentAlignment.MiddleLeft : ContentAlignment.MiddleRight;
+					st.ContentAlignment = (column==0) ? ContentAlignment.MiddleLeft : ContentAlignment.MiddleRight;
 					st.Dock = DockStyle.Fill;
 					st.Margins = new Margins(4, 4, 0, 0);
 					this.table[column, row].Insert(st);

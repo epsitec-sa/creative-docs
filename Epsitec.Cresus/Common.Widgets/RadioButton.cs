@@ -104,7 +104,7 @@ namespace Epsitec.Common.Widgets
 			double dx = this.Client.Size.Width - offset.X;
 			double dy = this.Client.Size.Height;
 			
-			this.TextLayout.Alignment  = this.Alignment;
+			this.TextLayout.Alignment  = this.ContentAlignment;
 			this.TextLayout.LayoutSize = new Drawing.Size (dx, dy);
 		}
 		

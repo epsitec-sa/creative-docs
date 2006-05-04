@@ -47,7 +47,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				StaticText www = new StaticText(this.window.Root);
 				www.PreferredWidth = 400-280;
 				www.Text = string.Format("<a href=\"{0}\">{1}</a><br/>", Res.Strings.Dialog.About.Link, Res.Strings.Dialog.About.Web);
-				www.Alignment = ContentAlignment.MiddleLeft;
+				www.ContentAlignment = ContentAlignment.MiddleLeft;
 				www.HypertextClicked += new MessageEventHandler(HandleLinkHypertextClicked);
 				www.Anchor = AnchorStyles.BottomRight;
 				www.Margins = new Margins(0, 0, 0, 15);

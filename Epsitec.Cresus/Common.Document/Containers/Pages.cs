@@ -108,7 +108,7 @@ namespace Epsitec.Common.Document.Containers
 
 				StaticText labelLanguage = new StaticText(this.languageGroup);
 				labelLanguage.Text = Res.Strings.Container.Pages.Language.Label;
-				labelLanguage.Alignment = ContentAlignment.MiddleRight;
+				labelLanguage.ContentAlignment = ContentAlignment.MiddleRight;
 				labelLanguage.PreferredWidth = 94;
 				labelLanguage.Dock = DockStyle.Left;
 				labelLanguage.Margins = new Margins(0, 4, 0, 0);
@@ -133,7 +133,7 @@ namespace Epsitec.Common.Document.Containers
 
 				StaticText labelStyle = new StaticText(this.styleGroup);
 				labelStyle.Text = Res.Strings.Container.Pages.Style.Label;
-				labelStyle.Alignment = ContentAlignment.MiddleRight;
+				labelStyle.ContentAlignment = ContentAlignment.MiddleRight;
 				labelStyle.PreferredWidth = 94;
 				labelStyle.Dock = DockStyle.Left;
 				labelStyle.Margins = new Margins(0, 4, 0, 0);
@@ -157,7 +157,7 @@ namespace Epsitec.Common.Document.Containers
 
 			StaticText labelSize = new StaticText(this.pageSizeGroup);
 			labelSize.Text = Res.Strings.Container.Pages.Size.Label;
-			labelSize.Alignment = ContentAlignment.MiddleRight;
+			labelSize.ContentAlignment = ContentAlignment.MiddleRight;
 			labelSize.PreferredWidth = 94;
 			labelSize.Dock = DockStyle.Left;
 			labelSize.Margins = new Margins(0, 4, 0, 0);
@@ -490,7 +490,7 @@ namespace Epsitec.Common.Document.Containers
 				if ( this.table[column, row].IsEmpty )
 				{
 					StaticText st = new StaticText();
-					st.Alignment = (column==0) ? ContentAlignment.MiddleCenter : ContentAlignment.MiddleLeft;
+					st.ContentAlignment = (column==0) ? ContentAlignment.MiddleCenter : ContentAlignment.MiddleLeft;
 					st.Dock = DockStyle.Fill;
 					st.Margins = new Margins(4, 4, 0, 0);
 					this.table[column, row].Insert(st);
