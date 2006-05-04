@@ -72,8 +72,8 @@ namespace Epsitec.Common.Document.Ribbons
 
 			if ( this.buttonZoomMin == null )  return;
 
-			double dx = this.buttonZoomMin.DefaultWidth;
-			double dy = this.buttonZoomMin.DefaultHeight;
+			double dx = this.buttonZoomMin.PreferredWidth;
+			double dy = this.buttonZoomMin.PreferredHeight;
 
 			Rectangle rect = this.UsefulZone;
 			rect.Left += dx*4;

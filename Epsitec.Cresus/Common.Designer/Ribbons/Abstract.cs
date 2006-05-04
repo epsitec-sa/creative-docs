@@ -12,6 +12,8 @@ namespace Epsitec.Common.Designer.Ribbons
 	{
 		public Abstract()
 		{
+			this.PreferredWidth = this.DefaultWidth;
+			this.PreferredHeight = this.DefaultHeight;
 			this.title = new TextLayout();
 			this.title.DefaultFont     = this.DefaultFont;
 			this.title.DefaultFontSize = this.DefaultFontSize;
@@ -27,7 +29,7 @@ namespace Epsitec.Common.Designer.Ribbons
 		}
 
 		
-		public override double DefaultWidth
+		public virtual double DefaultWidth
 		{
 			//	Retourne la largeur standard.
 			get
@@ -36,7 +38,7 @@ namespace Epsitec.Common.Designer.Ribbons
 			}
 		}
 
-		public override double DefaultHeight
+		public virtual double DefaultHeight
 		{
 			//	Retourne la hauteur standard.
 			get

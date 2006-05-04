@@ -134,6 +134,7 @@ namespace Epsitec.Common.Document
 		}
 
 
+#if false
 		public override double DefaultWidth
 		{
 			//	Retourne la largeur standard d'une icône.
@@ -151,7 +152,7 @@ namespace Epsitec.Common.Document
 				return 22;
 			}
 		}
-
+#endif
 
 		public double MarkerVertical
 		{
@@ -2683,7 +2684,7 @@ namespace Epsitec.Common.Document
 					double m = (line == null) ? 0 : this.miniBarBalloon.Margin;
 					IconButton button = new IconButton();
 					line = new Widget(this.miniBarBalloon);
-					line.PreferredHeight = button.DefaultHeight;
+					line.PreferredHeight = button.PreferredHeight;
 					line.Dock = DockStyle.Top;
 					line.Margins = new Margins(0, 0, m, 0);
 					beginOfLine = false;

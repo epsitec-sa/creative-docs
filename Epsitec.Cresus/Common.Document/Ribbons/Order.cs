@@ -48,8 +48,8 @@ namespace Epsitec.Common.Document.Ribbons
 
 			if ( this.buttonDownAll == null )  return;
 
-			double dx = this.buttonDownAll.DefaultWidth;
-			double dy = this.buttonDownAll.DefaultHeight;
+			double dx = this.buttonDownAll.PreferredWidth;
+			double dy = this.buttonDownAll.PreferredHeight;
 
 			Rectangle rect = this.UsefulZone;
 			rect.Width  = dx*1.5;

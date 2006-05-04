@@ -806,7 +806,7 @@ namespace Epsitec.Common.Document
 			ib.TabIndex = this.tabIndex++;
 			ib.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ib.Dock = DockStyle.Left;
-			double m = System.Math.Floor((container.PreferredHeight-ib.DefaultHeight)/2);
+			double m = System.Math.Floor ((container.PreferredHeight-ib.PreferredHeight)/2);
 			ib.Margins = new Margins(-1, 8, m, m);
 			ib.Clicked += new MessageEventHandler(HandlePointActiveStateChanged);
 			ToolTip.Default.SetToolTip(ib, Res.Strings.Dialog.Point.Link);

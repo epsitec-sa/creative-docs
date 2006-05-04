@@ -71,7 +71,7 @@ namespace Epsitec.Common.Dialogs
 			StaticText label;
 			
 			label        = new StaticText (body);
-			label.SetManualBounds(new Drawing.Rectangle(0, body.ActualHeight - label.DefaultHeight, body.ActualWidth, label.DefaultHeight));
+			label.SetManualBounds (new Drawing.Rectangle (0, body.ActualHeight - label.PreferredHeight, body.ActualWidth, label.PreferredHeight));
 			label.Text   = this.caption;
 			
 			this.list = new ScrollList (body);

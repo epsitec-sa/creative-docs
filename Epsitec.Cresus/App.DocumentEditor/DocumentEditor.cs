@@ -1311,7 +1311,7 @@ namespace Epsitec.App.DocumentEditor
 
 			IconButton button = new IconButton(cs.Name, Misc.Icon(cs.IconName), cs.Name);
 			button.PreferredIconSize = Misc.IconPreferredSize("Small");
-			double h = this.info.DefaultHeight-3;
+			double h = this.info.PreferredHeight-3;
 			button.PreferredSize = new Size(h, h);
 			this.info.Items.Add(button);
 			ToolTip.Default.SetToolTip(button, Misc.GetTextWithShortcut(cs));

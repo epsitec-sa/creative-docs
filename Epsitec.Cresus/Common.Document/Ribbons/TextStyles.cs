@@ -229,8 +229,8 @@ namespace Epsitec.Common.Document.Ribbons
 			if ( this.comboStyle == null )  return;
 
 			Rectangle rect;
-			double dx = this.buttonParagraph.DefaultWidth;
-			double dy = this.buttonParagraph.DefaultHeight;
+			double dx = this.buttonParagraph.PreferredWidth;
+			double dy = this.buttonParagraph.PreferredHeight;
 
 			rect = this.UsefulZone;
 			rect.Width  = dx+5;

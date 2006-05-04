@@ -146,8 +146,8 @@ namespace Epsitec.Common.Document.Ribbons
 			if ( this.buttonBold == null )  return;
 
 			Rectangle rect;
-			double dx = this.buttonBold.DefaultWidth;
-			double dy = this.buttonBold.DefaultHeight;
+			double dx = this.buttonBold.PreferredWidth;
+			double dy = this.buttonBold.PreferredHeight;
 
 			rect = this.UsefulZone;
 			rect.Width = 75;

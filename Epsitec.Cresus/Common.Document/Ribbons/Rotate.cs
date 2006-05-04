@@ -58,8 +58,8 @@ namespace Epsitec.Common.Document.Ribbons
 
 			if ( this.buttonRotate90 == null )  return;
 
-			double dx = this.buttonRotate90.DefaultWidth;
-			double dy = this.buttonRotate90.DefaultHeight;
+			double dx = this.buttonRotate90.PreferredWidth;
+			double dy = this.buttonRotate90.PreferredHeight;
 
 			Rectangle rect = this.UsefulZone;
 			rect.Left += dx*2;

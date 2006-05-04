@@ -47,8 +47,8 @@ namespace Epsitec.Common.Designer.Ribbons
 
 			if ( this.buttonCut == null )  return;
 
-			double dx = this.buttonCut.DefaultWidth;
-			double dy = this.buttonCut.DefaultHeight;
+			double dx = this.buttonCut.PreferredWidth;
+			double dy = this.buttonCut.PreferredHeight;
 
 			Rectangle rect = this.UsefulZone;
 			rect.Width  = dx;

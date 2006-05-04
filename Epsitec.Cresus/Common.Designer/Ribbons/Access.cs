@@ -62,8 +62,8 @@ namespace Epsitec.Common.Designer.Ribbons
 
 			if ( this.buttonFilter == null )  return;
 
-			double dx = this.buttonFilter.DefaultWidth;
-			double dy = this.buttonFilter.DefaultHeight;
+			double dx = this.buttonFilter.PreferredWidth;
+			double dy = this.buttonFilter.PreferredHeight;
 
 			Rectangle rect = this.UsefulZone;
 			rect.Left += dx*1.5*2+4 + dx*3;

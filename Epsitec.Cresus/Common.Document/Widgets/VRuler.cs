@@ -19,6 +19,7 @@ namespace Epsitec.Common.Document.Widgets
 		}
 		
 		
+#if false
 		public override double DefaultWidth
 		{
 			get
@@ -26,6 +27,7 @@ namespace Epsitec.Common.Document.Widgets
 				return AbstractRuler.defaultBreadth;
 			}
 		}
+#endif
 
 
 		protected override void InvalidateBoxMarker()

@@ -17,7 +17,9 @@ namespace Epsitec.Common.Document.Panels
 			this.Entered += new MessageEventHandler(this.HandleMouseEntered);
 			this.Exited += new MessageEventHandler(this.HandleMouseExited);
 
-			this.label = new StaticText(this);
+			this.PreferredHeight = this.DefaultHeight;
+			
+			this.label = new StaticText (this);
 			this.fixIcon = new StaticText(this);
 
 			this.hiliteButton = new GlyphButton(this);
@@ -51,7 +53,7 @@ namespace Epsitec.Common.Document.Panels
 		}
 
 		
-		public override double DefaultHeight
+		public virtual double DefaultHeight
 		{
 			//	Retourne la hauteur standard.
 			get

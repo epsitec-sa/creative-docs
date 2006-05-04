@@ -48,8 +48,8 @@ namespace Epsitec.Common.Document.Ribbons
 
 			if ( this.buttonGlyphs == null )  return;
 
-			double dx = this.buttonGlyphs.DefaultWidth;
-			double dy = this.buttonGlyphs.DefaultHeight;
+			double dx = this.buttonGlyphs.PreferredWidth;
+			double dy = this.buttonGlyphs.PreferredHeight;
 
 			Rectangle rect = this.UsefulZone;
 

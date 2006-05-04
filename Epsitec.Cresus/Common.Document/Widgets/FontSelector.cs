@@ -211,7 +211,7 @@ namespace Epsitec.Common.Document.Widgets
 
 			//	Positionne l'ascenseur.
 			Rectangle r = rect;
-			r.Left = r.Right-this.scroller.DefaultWidth;
+			r.Left = r.Right-this.scroller.PreferredWidth;
 			this.scroller.SetManualBounds(r);
 
 			//	Positionne les échantillons.

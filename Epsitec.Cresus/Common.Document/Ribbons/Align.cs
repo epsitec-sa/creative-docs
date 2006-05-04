@@ -70,8 +70,8 @@ namespace Epsitec.Common.Document.Ribbons
 
 			if ( this.buttonAlignLeft == null )  return;
 
-			double dx = this.buttonAlignLeft.DefaultWidth;
-			double dy = this.buttonAlignLeft.DefaultHeight;
+			double dx = this.buttonAlignLeft.PreferredWidth;
+			double dy = this.buttonAlignLeft.PreferredHeight;
 
 			Rectangle rect = this.UsefulZone;
 			rect.Left += dx*3;

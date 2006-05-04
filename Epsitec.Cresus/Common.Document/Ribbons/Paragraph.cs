@@ -66,8 +66,8 @@ namespace Epsitec.Common.Document.Ribbons
 
 			if ( this.buttonClear == null )  return;
 
-			double dx = this.buttonClear.DefaultWidth;
-			double dy = this.buttonClear.DefaultHeight;
+			double dx = this.buttonClear.PreferredWidth;
+			double dy = this.buttonClear.PreferredHeight;
 
 			Rectangle rect = this.UsefulZone;
 			rect.Offset(0, dy+5);

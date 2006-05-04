@@ -33,6 +33,7 @@ namespace Epsitec.Common.Document.Widgets
 		}
 		
 		
+#if false
 		public override double DefaultHeight
 		{
 			get
@@ -40,7 +41,7 @@ namespace Epsitec.Common.Document.Widgets
 				return AbstractRuler.defaultBreadth;
 			}
 		}
-
+#endif
 
 		public override void WrappersAttach()
 		{

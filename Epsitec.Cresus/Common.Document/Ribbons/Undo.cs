@@ -47,8 +47,8 @@ namespace Epsitec.Common.Document.Ribbons
 
 			if ( this.buttonUndo == null )  return;
 
-			double dx = this.buttonUndo.DefaultWidth;
-			double dy = this.buttonUndo.DefaultHeight;
+			double dx = this.buttonUndo.PreferredWidth;
+			double dy = this.buttonUndo.PreferredHeight;
 
 			Rectangle rect = this.UsefulZone;
 			rect.Width  = dx*1.5;

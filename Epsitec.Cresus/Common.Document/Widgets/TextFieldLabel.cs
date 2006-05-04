@@ -125,7 +125,7 @@ namespace Epsitec.Common.Document.Widgets
 			base.Dispose(disposing);
 		}
 
-
+#if false
 		public override double DefaultWidth
 		{
 			//	Largeur par défaut.
@@ -134,6 +134,7 @@ namespace Epsitec.Common.Document.Widgets
 				return TextFieldLabel.ShortWidth;
 			}
 		}
+#endif
 
 
 		public bool ButtonUnitEnable

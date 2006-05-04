@@ -15,6 +15,9 @@ namespace Epsitec.Common.Document.Ribbons
 			this.title = new TextLayout();
 			this.title.DefaultFont     = this.DefaultFont;
 			this.title.DefaultFontSize = this.DefaultFontSize;
+
+			this.PreferredWidth = this.DefaultWidth;
+			this.PreferredHeight = this.DefaultHeight;
 		}
 		
 		protected override void Dispose(bool disposing)
@@ -55,7 +58,7 @@ namespace Epsitec.Common.Document.Ribbons
 		}
 
 		
-		public override double DefaultWidth
+		public virtual double DefaultWidth
 		{
 			//	Retourne la largeur standard.
 			get
@@ -64,7 +67,7 @@ namespace Epsitec.Common.Document.Ribbons
 			}
 		}
 
-		public override double DefaultHeight
+		public virtual double DefaultHeight
 		{
 			//	Retourne la hauteur standard.
 			get

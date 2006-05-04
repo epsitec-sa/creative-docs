@@ -46,8 +46,8 @@ namespace Epsitec.Common.Designer.Ribbons
 
 			if ( this.buttonNewCulture == null )  return;
 
-			double dx = this.buttonNewCulture.DefaultWidth;
-			double dy = this.buttonNewCulture.DefaultHeight;
+			double dx = this.buttonNewCulture.PreferredWidth;
+			double dy = this.buttonNewCulture.PreferredHeight;
 
 			Rectangle rect = this.UsefulZone;
 			rect.Width  = dx;

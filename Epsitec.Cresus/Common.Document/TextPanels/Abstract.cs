@@ -16,8 +16,10 @@ namespace Epsitec.Common.Document.TextPanels
 			this.document = document;
 			this.isStyle = isStyle;
 			this.styleCategory = styleCategory;
+
+			this.PreferredHeight = this.DefaultHeight;
 			
-			this.label = new StaticText(this);
+			this.label = new StaticText (this);
 			this.fixIcon = new StaticText(this);
 
 			this.extendedButton = new GlyphButton(this);
@@ -98,7 +100,7 @@ namespace Epsitec.Common.Document.TextPanels
 		}
 
 		
-		public override double DefaultHeight
+		public virtual double DefaultHeight
 		{
 			//	Retourne la hauteur standard.
 			get

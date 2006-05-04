@@ -60,8 +60,8 @@ namespace Epsitec.Common.Document.Ribbons
 
 			if ( this.buttonColorToRgb == null )  return;
 
-			double dx = this.buttonColorToRgb.DefaultWidth;
-			double dy = this.buttonColorToRgb.DefaultHeight;
+			double dx = this.buttonColorToRgb.PreferredWidth;
+			double dy = this.buttonColorToRgb.PreferredHeight;
 
 			Rectangle rect = this.UsefulZone;
 			rect.Left += dx*2;

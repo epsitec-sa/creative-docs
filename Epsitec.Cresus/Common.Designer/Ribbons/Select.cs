@@ -49,8 +49,8 @@ namespace Epsitec.Common.Designer.Ribbons
 
 			if ( this.buttonDelete == null )  return;
 
-			double dx = this.buttonDelete.DefaultWidth;
-			double dy = this.buttonDelete.DefaultHeight;
+			double dx = this.buttonDelete.PreferredWidth;
+			double dy = this.buttonDelete.PreferredHeight;
 
 			Rectangle rect = this.UsefulZone;
 			rect.Width  = dx*1.5;

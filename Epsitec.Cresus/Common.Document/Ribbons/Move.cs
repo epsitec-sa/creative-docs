@@ -58,8 +58,8 @@ namespace Epsitec.Common.Document.Ribbons
 
 			if ( this.buttonMoveH == null )  return;
 
-			double dx = this.buttonMoveH.DefaultWidth;
-			double dy = this.buttonMoveH.DefaultHeight;
+			double dx = this.buttonMoveH.PreferredWidth;
+			double dy = this.buttonMoveH.PreferredHeight;
 
 			Rectangle rect = this.UsefulZone;
 			rect.Width  = dx;
