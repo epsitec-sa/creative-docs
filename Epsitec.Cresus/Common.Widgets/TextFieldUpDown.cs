@@ -262,15 +262,30 @@ namespace Epsitec.Common.Widgets
 			
 			base.Dispose(disposing);
 		}
+
+		protected override void InitializeMargins()
+		{
+			base.InitializeMargins ();
+
+			if (this.IsActualGeometryValid)
+			{
+				IAdorner adorner = Widgets.Adorners.Factory.Active;
+				Drawing.Rectangle rect = this.ActualBounds;
+				double width = System.Math.Floor (rect.Height*adorner.GeometryUpDownWidthFactor);
+				this.margins.Right = width - AbstractTextField.FrameMargin;
+			}
+		}
 		
 		protected override void UpdateGeometry()
 		{
 			base.UpdateGeometry ();
+
+			this.InitializeMargins ();
 			
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
 			Drawing.Rectangle rect = this.ActualBounds;
-			double width = System.Math.Floor(rect.Height*adorner.GeometryUpDownWidthFactor);
-			this.margins.Right = width - AbstractTextField.FrameMargin;
+			
+			double width = this.margins.Right + AbstractTextField.FrameMargin;
 
 			if ( this.arrowUp   != null &&
 				 this.arrowDown != null )

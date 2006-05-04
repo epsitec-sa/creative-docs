@@ -41,8 +41,9 @@ namespace Epsitec.Common.Widgets
 			
 			this.ResetCursor();
 			this.MouseCursor = MouseCursor.AsIBeam;
-			
-			this.CreateTextLayout();
+
+			this.InitializeMargins ();
+			this.CreateTextLayout ();
 			
 			this.navigator = new TextNavigator(base.TextLayout);
 			this.navigator.AboutToChange += new Epsitec.Common.Support.EventHandler(this.HandleNavigatorAboutToChange);
@@ -659,6 +660,10 @@ namespace Epsitec.Common.Widgets
 		protected virtual Drawing.Size GetTextLayoutSize()
 		{
 			return new Drawing.Size(AbstractTextField.Infinity, this.realSize.Height);
+		}
+
+		protected virtual void InitializeMargins()
+		{
 		}
 
 		
@@ -1543,6 +1548,8 @@ namespace Epsitec.Common.Widgets
 			{
 				if ((pos.X >= this.margins.Left) &&
 					(pos.X <= this.Client.Size.Width - this.margins.Right) &&
+					(pos.Y >= this.margins.Bottom) &&
+					(pos.Y <= this.Client.Size.Height - this.margins.Top) &&
 					(this.navigator.IsReadOnly == false))
 				{
 					this.MouseCursor = MouseCursor.AsIBeam;

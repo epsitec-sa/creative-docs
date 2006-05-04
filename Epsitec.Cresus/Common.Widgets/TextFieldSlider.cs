@@ -88,8 +88,6 @@ namespace Epsitec.Common.Widgets
 		
 		protected override void UpdateGeometry()
 		{
-			this.margins.Bottom = TextFieldSlider.sliderHeight-AbstractTextField.FrameMargin;
-			
 			base.UpdateGeometry ();
 
 			if ( this.arrowUp == null )  return;
@@ -110,6 +108,12 @@ namespace Epsitec.Common.Widgets
 			{
 				this.slider.Value = this.Value;
 			}
+		}
+
+		protected override void InitializeMargins()
+		{
+			base.InitializeMargins ();
+			this.margins.Bottom = TextFieldSlider.sliderHeight-AbstractTextField.FrameMargin;
 		}
 
 		
