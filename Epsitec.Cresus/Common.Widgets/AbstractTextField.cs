@@ -223,23 +223,10 @@ namespace Epsitec.Common.Widgets
 			
 			if ( this.navigator != null && this.textFieldStyle != TextFieldStyle.Flat )
 			{
-				if ( this.Client.Size.Height < 18 )
-				{
-					if (this.Client.Size.Height >= 15)
-					{
-						double x = AbstractTextField.FrameMargin/2;
-						double y = AbstractTextField.FrameMargin/2;
-						
-						padding = padding + new Drawing.Margins (x, x, y, y);
-					}
-				}
-				else
-				{
-					double x = AbstractTextField.FrameMargin;
-					double y = AbstractTextField.FrameMargin;
-						
-					padding = padding + new Drawing.Margins (x, x, y, y);
-				}
+				double exceed = System.Math.Max((22-this.Client.Size.Height)/2, 0);
+				double x = AbstractTextField.FrameMargin-exceed;
+				double y = AbstractTextField.FrameMargin-exceed;
+				padding = padding + new Drawing.Margins(x, x, y, y);
 			}
 			
 			return padding;
@@ -250,20 +237,8 @@ namespace Epsitec.Common.Widgets
 			get
 			{
 				Drawing.Rectangle rect = this.Client.Bounds;
-				rect.Deflate (this.GetInternalPadding ());
-
-				if (this.Client.Size.Height < 18 && this.textFieldStyle != TextFieldStyle.Flat)
-				{
-					if (this.Client.Size.Height >= 17)
-					{
-						rect.Deflate(AbstractTextField.TextMargin/2, AbstractTextField.TextMargin/2);
-					}
-				}
-				else
-				{
-					rect.Deflate(AbstractTextField.TextMargin, AbstractTextField.TextMargin);
-				}
-				
+				rect.Deflate(this.GetInternalPadding());
+				rect.Deflate(AbstractTextField.TextMargin, AbstractTextField.TextMargin);
 				return rect;
 			}
 		}
@@ -1400,7 +1375,7 @@ namespace Epsitec.Common.Widgets
 			Drawing.Point     pos       = this.InnerTextBounds.Location - this.scrollOffset + new Drawing.Point(0, 1);
 			Drawing.Rectangle rText     = this.InnerTextBounds;
 			Drawing.Rectangle rInside   = this.Client.Bounds;
-			rInside.Deflate (this.GetInternalPadding ());
+			rInside.Deflate(this.GetInternalPadding());
 			Drawing.Rectangle rSaveClip = graphics.SaveClippingRectangle();
 			Drawing.Rectangle rClip     = rInside;
 			Drawing.Rectangle rFill     = this.Client.Bounds;

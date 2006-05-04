@@ -840,6 +840,26 @@ namespace Epsitec.Common.Widgets
 			page5.TabNavigation = Widget.TabNavigationMode.ActivateOnTab | Widget.TabNavigationMode.ForwardToChildren | Widget.TabNavigationMode.ForwardOnly;
 			tab.Items.Add(page5);
 
+			TextField text_1 = new TextField();
+			text_1.SetParent(page5);
+			text_1.SetManualBounds(new Drawing.Rectangle(10, page5.ActualHeight-30, 120, text_1.PreferredHeight-4));
+			text_1.TabIndex = 1;
+
+			TextField text_2 = new TextField();
+			text_2.SetParent(page5);
+			text_2.SetManualBounds(new Drawing.Rectangle(10, page5.ActualHeight-30-28, 120, text_2.PreferredHeight-2));
+			text_2.TabIndex = 2;
+
+			TextField text_3 = new TextField();
+			text_3.SetParent(page5);
+			text_3.SetManualBounds(new Drawing.Rectangle(10, page5.ActualHeight-30-28-28, 120, text_3.PreferredHeight));
+			text_3.TabIndex = 3;
+
+			TextField text_4 = new TextField();
+			text_4.SetParent(page5);
+			text_4.SetManualBounds(new Drawing.Rectangle(10, page5.ActualHeight-30-28-28-28, 120, text_4.PreferredHeight+2));
+			text_4.TabIndex = 4;
+
 			//	Crée l'onglet 6.
 			TabPage page6 = new TabPage();
 			page6.SetManualBounds(inside);
