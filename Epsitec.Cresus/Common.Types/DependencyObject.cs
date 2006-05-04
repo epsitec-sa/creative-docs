@@ -13,7 +13,7 @@ namespace Epsitec.Common.Types
 	/// qui permet une plus grande souplesse (valeurs par défaut, introspection,
 	/// sérialisation, styles, génération automatique d'événements, etc.)
 	/// </summary>
-	public abstract class DependencyObject : System.IDisposable, IInheritedPropertyCache, IStructuredData
+	public abstract class DependencyObject : System.IDisposable, IInheritedPropertyCache, IStructuredData, IStructuredTree
 	{
 		protected DependencyObject()
 		{
@@ -677,5 +677,28 @@ namespace Epsitec.Common.Types
 
 		static Dictionary<System.Type, TypeDeclaration>		declarations = new Dictionary<System.Type, TypeDeclaration> ();
 		static int											registeredPropertyCount;
+
+		#region IStructuredTree Members
+
+		string[] IStructuredTree.GetFieldNames()
+		{
+			ReadOnlyArray<DependencyProperty> properties = this.ObjectType.GetProperties ();
+
+			string[] names = new string[properties.Length];
+
+			for (int i = 0; i < properties.Length; i++)
+			{
+				names[i] = properties[i].Name;
+			}
+			
+			return names;
+		}
+
+		string[] IStructuredTree.GetFieldPaths(string path)
+		{
+			throw new System.Exception ("The method or operation is not implemented.");
+		}
+
+		#endregion
 	}
 }
