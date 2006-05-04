@@ -1511,10 +1511,16 @@ namespace Epsitec.Common.Widgets
 			graphics.RestoreClippingRectangle(rSaveClip);
 		}
 
+		protected override void UpdateClientGeometry()
+		{
+			base.UpdateClientGeometry ();
+			this.UpdateGeometry ();
+		}
+
 		protected sealed override void SetBoundsOverride(Drawing.Rectangle oldRect, Drawing.Rectangle newRect)
 		{
 			base.SetBoundsOverride(oldRect, newRect);
-			this.UpdateGeometry ();
+//			this.UpdateGeometry ();
 		}
 		
 		protected virtual void UpdateGeometry()

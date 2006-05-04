@@ -939,6 +939,29 @@ namespace Epsitec.Common.Widgets
 		}
 
 		[Test]
+		public void CheckTextFieldReal()
+		{
+			Window window = new Window ();
+
+			window.ClientSize = new Size (200, 200);
+			window.Text = "CheckTextFieldRead";
+			
+			window.Root.Padding = new Margins (8, 8, 5, 5);
+
+			TextFieldReal real = new TextFieldReal ();
+
+			real.PreferredWidth = 50;
+			real.Value = 10;
+			real.Anchor = AnchorStyles.TopLeft;
+			real.Margins = new Margins (0, 0, 0, 0);
+			
+			window.Root.Children.Add (real);
+			
+			window.Show ();
+			Window.RunInTestEnvironment (window);
+		}
+
+		[Test]
 		public void CheckInteractiveAnchor()
 		{
 			Window window = new Window ();
