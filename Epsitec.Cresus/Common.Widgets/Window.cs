@@ -1685,7 +1685,7 @@ namespace Epsitec.Common.Widgets
 
 		public void AsyncLayout()
 		{
-			if (this.is_async_layout_queued = false)
+			if (this.is_async_layout_queued == false)
 			{
 				this.is_async_layout_queued = true;
 				this.window.SendQueueCommand ();
