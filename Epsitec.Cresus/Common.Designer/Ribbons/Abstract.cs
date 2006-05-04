@@ -79,7 +79,7 @@ namespace Epsitec.Common.Designer.Ribbons
 			IAdorner adorner = Epsitec.Common.Widgets.Adorners.Factory.Active;
 
 			Rectangle rect = this.Client.Bounds;
-			WidgetState state = this.PaintState;
+			WidgetPaintState state = this.PaintState;
 			adorner.PaintRibbonSectionBackground(graphics, rect, this.LabelHeight, state);
 
 			Point pos = new Point(rect.Left+3, rect.Top-this.LabelHeight);

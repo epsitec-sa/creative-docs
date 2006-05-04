@@ -1894,7 +1894,7 @@ namespace Epsitec.Common.Widgets
 
 			//	Dessine le cadre et le fond du tableau.
 			Drawing.Rectangle rect = this.Client.Bounds;
-			WidgetState state = this.PaintState;
+			WidgetPaintState state = this.PaintState;
 			adorner.PaintArrayBackground(graphics, rect, state);
 
 #if false
@@ -1915,13 +1915,13 @@ namespace Epsitec.Common.Widgets
 			//	Dessine la grille par-dessus.
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
 
-			WidgetState state = this.PaintState;
+			WidgetPaintState state = this.PaintState;
 			Drawing.Rectangle rect = this.Client.Bounds;
 			rect.Deflate(this.GetInternalPadding ());
 			rect.Inflate(-0.5, -0.5);
 
 			graphics.LineWidth = 1;
-			Drawing.Color color = adorner.ColorTextFieldBorder((state&WidgetState.Enabled) != 0);
+			Drawing.Color color = adorner.ColorTextFieldBorder((state&WidgetPaintState.Enabled) != 0);
 
 			//	Dessine le rectangle englobant.
 			graphics.AddRectangle(rect);

@@ -101,7 +101,7 @@ namespace Epsitec.Common.Widgets
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
 			Drawing.Rectangle rect = this.Client.Bounds;
 
-			if ( (this.PaintState & WidgetState.Enabled) != 0 )
+			if ( (this.PaintState & WidgetPaintState.Enabled) != 0 )
 			{
 				adorner.PaintGlyph(graphics, rect, this.PaintState, GlyphShape.ResizeKnob, PaintTextStyle.Button);
 			}

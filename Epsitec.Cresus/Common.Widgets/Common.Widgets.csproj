@@ -675,6 +675,7 @@
     <Compile Include="WidgetPaintFilter.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="WidgetPaintState.cs" />
     <Compile Include="Window.cs">
       <SubType>Code</SubType>
     </Compile>

@@ -560,7 +560,7 @@ namespace Epsitec.Common.Widgets.Tools
 				Drawing.Color color_1 = Drawing.Color.FromAlphaRgb (0.3, 0.3, 0.8, 1.0);
 				Drawing.Color color_2 = Drawing.Color.FromRgb (0, 0, 0.7);
 				
-				if ((this.PaintState & WidgetState.Enabled) == 0)
+				if ((this.PaintState & WidgetPaintState.Enabled) == 0)
 				{
 					double bright = color_1.GetBrightness ();
 					

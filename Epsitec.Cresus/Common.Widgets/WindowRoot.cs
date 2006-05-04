@@ -393,7 +393,7 @@ namespace Epsitec.Common.Widgets
 			{
 				IAdorner adorner = Widgets.Adorners.Factory.Active;
 				Drawing.Rectangle rect = new Drawing.Rectangle(x1, y1, x2-x1, y2-y1);
-				adorner.PaintWindowBackground(graphics, this.Client.Bounds, rect, WidgetState.None);
+				adorner.PaintWindowBackground(graphics, this.Client.Bounds, rect, WidgetPaintState.None);
 			}
 		}
 		

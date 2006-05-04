@@ -297,10 +297,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 				Rectangle cell = rect;
 				graphics.Align(ref cell);
 
-				WidgetState state = this.PaintState;
+				WidgetPaintState state = this.PaintState;
 				if (this.cells[i].Selected)
 				{
-					state |= WidgetState.Selected;
+					state |= WidgetPaintState.Selected;
 				}
 				adorner.PaintCellBackground(graphics, cell, state);
 
@@ -319,15 +319,15 @@ namespace Epsitec.Common.Designer.MyWidgets
 				if (this.cells[i].State == CellState.Disabled)
 				{
 					graphics.AddFilledRectangle(cell);
-					graphics.RenderSolid(adorner.ColorText(WidgetState.None));
+					graphics.RenderSolid(adorner.ColorText(WidgetPaintState.None));
 				}
 
 				if (this.cells[i].TextLayout.Text != null)
 				{
-					state = WidgetState.Enabled;
+					state = WidgetPaintState.Enabled;
 					if (this.cells[i].Selected)
 					{
-						state |= WidgetState.Selected;
+						state |= WidgetPaintState.Selected;
 					}
 					Color color = adorner.ColorText(state);
 

@@ -381,7 +381,7 @@ namespace Epsitec.Common.Widgets
 			if (this.isForegroundFrame == false)  return;
 
 			IAdorner    adorner = Widgets.Adorners.Factory.Active;
-			WidgetState state   = this.PaintState;
+			WidgetPaintState state   = this.PaintState;
 			
 			Drawing.Rectangle rect  = this.Client.Bounds;
 			double margin_x = (this.v_scroller.Visibility) ? this.v_scroller.ActualWidth  : 0;

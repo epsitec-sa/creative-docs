@@ -21,9 +21,9 @@ namespace Epsitec.Common.Widgets
 		{
 			//	Dessine la croix.
 			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
-			WidgetState state = this.PaintState;
+			WidgetPaintState state = this.PaintState;
 			Drawing.Rectangle rect = this.Client.Bounds;
-			Drawing.Color color = adorner.ColorTextFieldBorder((state&WidgetState.Enabled) != 0);
+			Drawing.Color color = adorner.ColorTextFieldBorder((state&WidgetPaintState.Enabled) != 0);
 
 			graphics.AddLine(rect.BottomLeft, rect.TopRight);
 			graphics.AddLine(rect.BottomRight, rect.TopLeft);

@@ -80,7 +80,7 @@ namespace Epsitec.Common.Widgets
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
 			
 			Drawing.Rectangle rect  = this.Client.Bounds;
-			adorner.PaintToolBackground(graphics, rect, WidgetState.None, this.direction);
+			adorner.PaintToolBackground(graphics, rect, WidgetPaintState.None, this.direction);
 		}
 		
 		

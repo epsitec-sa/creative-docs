@@ -50,7 +50,7 @@ namespace Epsitec.Common.Widgets
 			IAdorner adorner = Epsitec.Common.Widgets.Adorners.Factory.Active;
 
 			Rectangle rect = this.Client.Bounds;
-			WidgetState state = this.PaintState;
+			WidgetPaintState state = this.PaintState;
 			adorner.PaintRibbonTabBackground(graphics, rect, this.LabelHeight, state);
 		}
 	}

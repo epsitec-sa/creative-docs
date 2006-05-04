@@ -509,10 +509,10 @@ namespace Epsitec.Common.Widgets
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
 			
 			Widgets.Direction dir   = this.is_vertical ? Direction.Up : Direction.Left;
-			WidgetState       state = this.PaintState;
+			WidgetPaintState       state = this.PaintState;
 
 			//	Dessine le fond.
-			adorner.PaintScrollerBackground (graphics, this.Client.Bounds, this.thumbRect, this.tabRect, state & ~WidgetState.Entered, dir);
+			adorner.PaintScrollerBackground (graphics, this.Client.Bounds, this.thumbRect, this.tabRect, state & ~WidgetPaintState.Entered, dir);
 			
 			//	Dessine la cabine.
 			if (this.thumbRect.IsValid && this.IsEnabled)
@@ -522,13 +522,13 @@ namespace Epsitec.Common.Widgets
 				
 				if (this.HiliteZone != Zone.Thumb)
 				{
-					state &= ~ WidgetState.Entered;
-					state &= ~ WidgetState.Engaged;
+					state &= ~ WidgetPaintState.Entered;
+					state &= ~ WidgetPaintState.Engaged;
 				}
 				if (this.is_dragging)
 				{
-					state |= WidgetState.Engaged;
-					state |= WidgetState.Entered;
+					state |= WidgetPaintState.Engaged;
+					state |= WidgetPaintState.Entered;
 				}
 				
 				adorner.PaintScrollerHandle(graphics, rect, this.tabRect, state, dir);

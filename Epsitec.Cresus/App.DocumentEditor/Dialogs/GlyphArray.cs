@@ -430,7 +430,7 @@ namespace Epsitec.Common.Widgets
 		{
 			//	Peinture du widget.
 			IAdorner    adorner = Widgets.Adorners.Factory.Active;
-			WidgetState state   = this.PaintState;
+			WidgetPaintState state   = this.PaintState;
 			
 			Rectangle area = this.DrawingArea();
 			int dx = this.TotalCellVisibleX();
@@ -457,7 +457,7 @@ namespace Epsitec.Common.Widgets
 						rect.Bottom = area.Top - cellHeight*(y+1);
 						rect.Height = cellHeight;
 
-						WidgetState cellState = WidgetState.Enabled;
+						WidgetPaintState cellState = WidgetPaintState.Enabled;
 						if ( first == this.selectedIndex && first < this.TotalCell )
 						{
 							TextLayout.SelectedArea[] areas = new TextLayout.SelectedArea[1];
@@ -465,7 +465,7 @@ namespace Epsitec.Common.Widgets
 							areas[0].Rect = rect;
 							adorner.PaintTextSelectionBackground(graphics, areas, state, PaintTextStyle.TextField, TextDisplayMode.Default);
 
-							cellState |= WidgetState.Selected;
+							cellState |= WidgetPaintState.Selected;
 						}
 
 						if ( font != null && first < this.TotalCell )

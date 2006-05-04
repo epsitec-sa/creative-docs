@@ -462,7 +462,7 @@ namespace Epsitec.Common.Widgets
 				graphics.AddRectangle(rect);
 				graphics.RenderSolid(adorner.ColorBorder);
 
-				if ( (this.PaintState&WidgetState.Focused) != 0 )
+				if ( (this.PaintState&WidgetPaintState.Focused) != 0 )
 				{
 					rect.Deflate(1, 1);
 					graphics.AddRectangle(rect);

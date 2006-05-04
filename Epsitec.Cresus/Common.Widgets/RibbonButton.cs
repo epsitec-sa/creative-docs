@@ -91,7 +91,7 @@ namespace Epsitec.Common.Widgets
 			IAdorner adorner = Epsitec.Common.Widgets.Adorners.Factory.Active;
 
 			Drawing.Rectangle rect  = this.Client.Bounds;
-			WidgetState       state = this.PaintState;
+			WidgetPaintState       state = this.PaintState;
 			Drawing.Point     pos   = new Drawing.Point();
 
 			adorner.PaintRibbonButtonBackground(graphics, rect, state);

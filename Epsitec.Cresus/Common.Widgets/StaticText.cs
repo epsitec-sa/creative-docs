@@ -95,7 +95,7 @@ namespace Epsitec.Common.Widgets
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
 			Drawing.Rectangle rect  = this.Client.Bounds;
-			WidgetState       state = this.PaintState;
+			WidgetPaintState       state = this.PaintState;
 			Drawing.Point     pos   = new Drawing.Point();
 			
 			if (this.BackColor.IsVisible)

@@ -87,7 +87,7 @@ namespace Epsitec.Common.Widgets
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
 
 			Drawing.Rectangle rect  = this.Client.Bounds;
-			WidgetState       state = this.PaintState;
+			WidgetPaintState       state = this.PaintState;
 			
 			if ( this.isHorizontal )
 			{

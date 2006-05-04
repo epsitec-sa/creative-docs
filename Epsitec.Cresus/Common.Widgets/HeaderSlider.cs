@@ -119,12 +119,12 @@ namespace Epsitec.Common.Widgets
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
 
 			Drawing.Rectangle rect  = this.Client.Bounds;
-			WidgetState       state = this.PaintState;
+			WidgetPaintState       state = this.PaintState;
 			
-			if ( (state & WidgetState.Entered) != 0 || this.mouseDown )
+			if ( (state & WidgetPaintState.Entered) != 0 || this.mouseDown )
 			{
-				state |= WidgetState.Entered;
-				state &= ~WidgetState.Focused;
+				state |= WidgetPaintState.Entered;
+				state &= ~WidgetPaintState.Focused;
 				adorner.PaintButtonBackground(graphics, rect, state, Direction.Up, ButtonStyle.HeaderSlider);
 			}
 		}

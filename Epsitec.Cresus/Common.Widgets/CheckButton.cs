@@ -95,7 +95,7 @@ namespace Epsitec.Common.Widgets
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
 
 			Drawing.Rectangle rect  = new Drawing.Rectangle (0, (this.Client.Size.Height-CheckButton.CheckHeight)/2, CheckButton.CheckHeight, CheckButton.CheckHeight);
-			WidgetState       state = this.PaintState;
+			WidgetPaintState       state = this.PaintState;
 			
 			adorner.PaintCheck (graphics, rect, state);
 			adorner.PaintGeneralTextLayout (graphics, clipRect, this.LabelOffset, this.TextLayout, state, PaintTextStyle.CheckButton, TextDisplayMode.Default, this.BackColor);

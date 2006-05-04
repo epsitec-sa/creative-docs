@@ -10,24 +10,6 @@ namespace Epsitec.Common.Widgets
 	
 	public delegate bool WalkWidgetCallback(Widget widget);
 	
-	#region WidgetState enum
-	[System.Flags] public enum WidgetState : uint
-	{
-		None			= 0x00000000,				//	=> neutre
-		
-		ActiveYes		= 0x00000001,				//	=> mode ActiveState.Yes
-		ActiveMaybe		= 0x00000002,				//	=> mode ActiveState.Maybe
-		
-		Enabled			= 0x00010000,				//	=> reçoit des événements
-		Focused			= 0x00020000,				//	=> reçoit les événements clavier
-		Entered			= 0x00040000,				//	=> contient la souris
-		Selected		= 0x00080000,				//	=> sélectionné
-		Engaged			= 0x00100000,				//	=> pression en cours
-		Error			= 0x00200000,				//	=> signale une erreur
-		ThreeState		= 0x00400000,				//	=> accepte 3 états
-	}
-	#endregion
-	
 	#region InternalState enum
 	[System.Flags] public enum InternalState : uint
 	{
@@ -529,48 +511,48 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public WidgetState							PaintState
+		public WidgetPaintState							PaintState
 		{
 			get
 			{
-				WidgetState state = WidgetState.None;
+				WidgetPaintState state = WidgetPaintState.None;
 				
 				if (this.IsEntered)
 				{
-					state |= WidgetState.Entered;
+					state |= WidgetPaintState.Entered;
 				}
 				if (this.IsEngaged)
 				{
-					state |= WidgetState.Engaged;
+					state |= WidgetPaintState.Engaged;
 				}
 				if (this.IsSelected)
 				{
-					state |= WidgetState.Selected;
+					state |= WidgetPaintState.Selected;
 				}
 				if (this.InError)
 				{
-					state |= WidgetState.Error;
+					state |= WidgetPaintState.Error;
 				}
 				if (this.IsEnabled)
 				{
-					state |= WidgetState.Enabled;
+					state |= WidgetPaintState.Enabled;
 				}
 				if (this.IsFocused)
 				{
-					state |= WidgetState.Focused;
+					state |= WidgetPaintState.Focused;
 				}
 				if (this.AcceptThreeState)
 				{
-					state |= WidgetState.ThreeState;
+					state |= WidgetPaintState.ThreeState;
 				}
 				switch (this.ActiveState)
 				{
 					case ActiveState.Yes:
-						state |= WidgetState.ActiveYes;
+						state |= WidgetPaintState.ActiveYes;
 						break;
 
 					case ActiveState.Maybe:
-						state |= WidgetState.ActiveMaybe;
+						state |= WidgetPaintState.ActiveMaybe;
 						break;
 				}
 				

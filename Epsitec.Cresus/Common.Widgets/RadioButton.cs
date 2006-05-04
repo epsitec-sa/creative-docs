@@ -115,7 +115,7 @@ namespace Epsitec.Common.Widgets
 			double y = (this.Client.Size.Height-RadioButton.RadioHeight) / 2;
 
 			Drawing.Rectangle rect  = new Drawing.Rectangle (0, y, RadioButton.RadioHeight, RadioButton.RadioHeight);
-			WidgetState       state = this.PaintState;
+			WidgetPaintState       state = this.PaintState;
 			
 			adorner.PaintRadio (graphics, rect, state);
 			adorner.PaintGeneralTextLayout (graphics, clipRect, this.LabelOffset, this.TextLayout, state, PaintTextStyle.RadioButton, TextDisplayMode.Default, this.BackColor);

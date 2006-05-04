@@ -171,7 +171,7 @@ namespace Epsitec.Common.Widgets
 
 		public override Drawing.Margins GetShapeMargins()
 		{
-			if ((this.PaintState&WidgetState.ThreeState) == 0)
+			if ((this.PaintState&WidgetPaintState.ThreeState) == 0)
 			{
 				return Widgets.Adorners.Factory.Active.GeometryToolShapeBounds;
 			}

@@ -2083,7 +2083,7 @@ invalid:	row    = -1;
 			
 			IAdorner          adorner = Widgets.Adorners.Factory.Active;
 			Drawing.Rectangle rect    = this.Client.Bounds;
-			WidgetState       state   = this.PaintState;
+			WidgetPaintState       state   = this.PaintState;
 			
 			adorner.PaintArrayBackground (graphics, rect, state);
 			
@@ -2134,14 +2134,14 @@ invalid:	row    = -1;
 				
 				int         row_line      = row + top;
 				int         num_add_lines = (this.edition_row == row_line)  ? this.edition_add_rows - delta : 0;
-				WidgetState widget_state  = state & (WidgetState.Enabled | WidgetState.Focused);
-				WidgetState text_state    = state & (WidgetState.Enabled);
+				WidgetPaintState widget_state  = state & (WidgetPaintState.Enabled | WidgetPaintState.Focused);
+				WidgetPaintState text_state    = state & (WidgetPaintState.Enabled);
 				
 				if ((this.selected_row == row_line) &&
 					(this.edition_row < 0))
 				{
-					widget_state |= WidgetState.Selected;
-					text_state   |= WidgetState.Selected;
+					widget_state |= WidgetPaintState.Selected;
+					text_state   |= WidgetPaintState.Selected;
 				}
 				
 				if (this.edition_row == row_line)
@@ -2171,7 +2171,7 @@ invalid:	row    = -1;
 			rect.Inflate (-0.5, -0.5);
 			graphics.LineWidth = 1;
 			
-			Drawing.Color color = adorner.ColorTextFieldBorder ((state & WidgetState.Enabled) != 0);
+			Drawing.Color color = adorner.ColorTextFieldBorder ((state & WidgetPaintState.Enabled) != 0);
 			
 			//	Dessine le rectangle englobant :
 			
@@ -2236,18 +2236,18 @@ invalid:	row    = -1;
 			
 			IAdorner          adorner = Widgets.Adorners.Factory.Active;
 			Drawing.Rectangle rect    = this.Client.Bounds;
-			WidgetState       state   = this.PaintState;
+			WidgetPaintState       state   = this.PaintState;
 			
 			adorner.PaintArrayForeground (graphics, rect, state);
 		}
 		
 		
-		protected virtual void PaintRowBackground(int row, int row_line, Drawing.Graphics graphics, IAdorner adorner, Drawing.Rectangle bounds, WidgetState state)
+		protected virtual void PaintRowBackground(int row, int row_line, Drawing.Graphics graphics, IAdorner adorner, Drawing.Rectangle bounds, WidgetPaintState state)
 		{
 			adorner.PaintCellBackground (graphics, bounds, state);
 		}
 		
-		protected virtual void PaintRowContents(int row, int row_line, Drawing.Graphics graphics, IAdorner adorner, Drawing.Rectangle bounds, WidgetState state, Drawing.Rectangle clip)
+		protected virtual void PaintRowContents(int row, int row_line, Drawing.Graphics graphics, IAdorner adorner, Drawing.Rectangle bounds, WidgetPaintState state, Drawing.Rectangle clip)
 		{
 			double x1 = bounds.X;
 			double y1 = bounds.Y + 0.5;
@@ -2275,7 +2275,7 @@ invalid:	row    = -1;
 			}
 		}
 		
-		protected virtual void PaintCellContents(int row_line, int column, Drawing.Graphics graphics, IAdorner adorner, Drawing.Point pos, WidgetState state, TextLayout layout)
+		protected virtual void PaintCellContents(int row_line, int column, Drawing.Graphics graphics, IAdorner adorner, Drawing.Point pos, WidgetPaintState state, TextLayout layout)
 		{
 			adorner.PaintGeneralTextLayout (graphics, Drawing.Rectangle.MaxValue, pos, layout, state, PaintTextStyle.Array, TextDisplayMode.Default, this.BackColor);
 		}

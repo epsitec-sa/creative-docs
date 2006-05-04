@@ -43,7 +43,7 @@ namespace Epsitec.Common.Widgets.Adorners
 		public override void PaintWindowBackground(Drawing.Graphics graphics,
 										  Drawing.Rectangle windowRect,
 										  Drawing.Rectangle paintRect,
-										  WidgetState state)
+										  WidgetPaintState state)
 		{
 			//	Dessine le fond d'une fenêtre.
 			graphics.AddFilledRectangle(paintRect);
@@ -52,14 +52,14 @@ namespace Epsitec.Common.Widgets.Adorners
 
 		public override void PaintGlyph(Drawing.Graphics graphics,
 							   Drawing.Rectangle rect,
-							   Widgets.WidgetState state,
+							   Widgets.WidgetPaintState state,
 							   GlyphShape type,
 							   PaintTextStyle style)
 		{
 			//	Dessine une icône simple (dans un bouton d'ascenseur par exemple).
 			Drawing.Color color = this.colorBlack;
 
-			if ( (state&WidgetState.Enabled) != 0 )
+			if ( (state&WidgetPaintState.Enabled) != 0 )
 			{
 				if ( type == GlyphShape.Reject )  color = Drawing.Color.FromRgb(0.5, 0.0, 0.0);  // rouge foncé
 				if ( type == GlyphShape.Accept )  color = Drawing.Color.FromRgb(0.0, 0.5, 0.0);  // vert foncé
@@ -74,7 +74,7 @@ namespace Epsitec.Common.Widgets.Adorners
 		
 		public override void PaintGlyph(Drawing.Graphics graphics,
 							   Drawing.Rectangle rect,
-							   Widgets.WidgetState state,
+							   Widgets.WidgetPaintState state,
 							   Drawing.Color color,
 							   GlyphShape type,
 							   PaintTextStyle style)
@@ -111,7 +111,7 @@ namespace Epsitec.Common.Widgets.Adorners
 				rect.Height = rect.Width;
 			}
 
-			if ( (state&WidgetState.Engaged) != 0 )  // bouton pressé ?
+			if ( (state&WidgetPaintState.Engaged) != 0 )  // bouton pressé ?
 			{
 				rect.Offset(1, -1);
 			}
@@ -275,12 +275,12 @@ namespace Epsitec.Common.Widgets.Adorners
 
 		public override void PaintCheck(Drawing.Graphics graphics,
 							   Drawing.Rectangle rect,
-							   Widgets.WidgetState state)
+							   Widgets.WidgetPaintState state)
 		{
 			//	Dessine un bouton à cocher sans texte.
 			graphics.Align(ref rect);
 			graphics.AddFilledRectangle(rect);
-			if ( (state&WidgetState.Engaged) != 0 )  // bouton pressé ?
+			if ( (state&WidgetPaintState.Engaged) != 0 )  // bouton pressé ?
 			{
 				graphics.RenderSolid(this.colorControl);
 			}
@@ -304,7 +304,7 @@ namespace Epsitec.Common.Widgets.Adorners
 			this.PaintL(graphics, rect, this.colorControlDarkDark, this.Opposite(shadow));
 			this.PaintL(graphics, rInside, this.colorControlDark, this.Opposite(shadow));
 
-			if ( (state&WidgetState.ActiveYes) != 0 )  // coché ?
+			if ( (state&WidgetPaintState.ActiveYes) != 0 )  // coché ?
 			{
 				Drawing.Point center = new Drawing.Point((rect.Left+rect.Right)/2, (rect.Bottom+rect.Top)/2);
 				using (Drawing.Path path = new Drawing.Path())
@@ -318,7 +318,7 @@ namespace Epsitec.Common.Widgets.Adorners
 					path.Close();
 					graphics.Rasterizer.AddSurface(path);
 				}
-				if ( (state&WidgetState.Enabled) != 0 )
+				if ( (state&WidgetPaintState.Enabled) != 0 )
 				{
 					graphics.RenderSolid(this.colorBlack);
 				}
@@ -328,11 +328,11 @@ namespace Epsitec.Common.Widgets.Adorners
 				}
 			}
 
-			if ( (state&WidgetState.ActiveMaybe) != 0 )  // 3ème état ?
+			if ( (state&WidgetPaintState.ActiveMaybe) != 0 )  // 3ème état ?
 			{
 				rect.Deflate(3);
 				graphics.AddFilledRectangle(rect);
-				if ( (state&WidgetState.Enabled) != 0 )
+				if ( (state&WidgetPaintState.Enabled) != 0 )
 				{
 					graphics.RenderSolid(this.colorBlack);
 				}
@@ -345,7 +345,7 @@ namespace Epsitec.Common.Widgets.Adorners
 
 		public override void PaintRadio(Drawing.Graphics graphics,
 							   Drawing.Rectangle rect,
-							   Widgets.WidgetState state)
+							   Widgets.WidgetPaintState state)
 		{
 			//	Dessine un bouton radio sans texte.
 			graphics.Align(ref rect);
@@ -363,7 +363,7 @@ namespace Epsitec.Common.Widgets.Adorners
 
 			rInside = rect;
 			rInside.Deflate(2);
-			if ( (state&WidgetState.Engaged) != 0 )  // bouton pressé ?
+			if ( (state&WidgetPaintState.Engaged) != 0 )  // bouton pressé ?
 			{
 				this.PaintCircle(graphics, rInside, this.colorControl);
 			}
@@ -372,11 +372,11 @@ namespace Epsitec.Common.Widgets.Adorners
 				this.PaintCircle(graphics, rInside, this.colorControlLightLight);
 			}
 
-			if ( (state&WidgetState.ActiveYes) != 0 )  // coché ?
+			if ( (state&WidgetPaintState.ActiveYes) != 0 )  // coché ?
 			{
 				rInside = rect;
 				rInside.Deflate(rect.Height*0.3);
-				if ( (state&WidgetState.Enabled) != 0 )
+				if ( (state&WidgetPaintState.Enabled) != 0 )
 				{
 					this.PaintCircle(graphics, rInside, this.colorBlack);
 				}
@@ -389,14 +389,14 @@ namespace Epsitec.Common.Widgets.Adorners
 
 		public override void PaintIcon(Drawing.Graphics graphics,
 							  Drawing.Rectangle rect,
-							  Widgets.WidgetState state,
+							  Widgets.WidgetPaintState state,
 							  string icon)
 		{
 		}
 
 		public override void PaintButtonBackground(Drawing.Graphics graphics,
 										  Drawing.Rectangle rect,
-										  Widgets.WidgetState state,
+										  Widgets.WidgetPaintState state,
 										  Widgets.Direction dir,
 										  Widgets.ButtonStyle style)
 		{
@@ -416,7 +416,7 @@ namespace Epsitec.Common.Widgets.Adorners
 				Drawing.Rectangle rInside = rect;
 				rInside.Deflate(1);
 
-				if ( (state&WidgetState.Engaged) != 0 )  // bouton pressé ?
+				if ( (state&WidgetPaintState.Engaged) != 0 )  // bouton pressé ?
 				{
 					//	Rectangle noir autour.
 					Drawing.Rectangle rOut = rect;
@@ -468,7 +468,7 @@ namespace Epsitec.Common.Widgets.Adorners
 				Drawing.Rectangle rInside = rect;
 				rInside.Deflate(1);
 
-				if ( (state&WidgetState.Engaged) != 0 )  // bouton pressé ?
+				if ( (state&WidgetPaintState.Engaged) != 0 )  // bouton pressé ?
 				{
 					shadow = this.Opposite(shadow);
 				}
@@ -492,7 +492,7 @@ namespace Epsitec.Common.Widgets.Adorners
 				Drawing.Rectangle rInside = rect;
 				rInside.Deflate(1);
 
-				if ( (state&WidgetState.Engaged) != 0 )  // bouton pressé ?
+				if ( (state&WidgetPaintState.Engaged) != 0 )  // bouton pressé ?
 				{
 					shadow = this.Opposite(shadow);
 				}
@@ -508,7 +508,7 @@ namespace Epsitec.Common.Widgets.Adorners
 			else if ( style == ButtonStyle.ToolItem )
 			{
 				graphics.AddFilledRectangle(rect);
-				if ( (state&WidgetState.ActiveYes) != 0 )   // bouton activé ?
+				if ( (state&WidgetPaintState.ActiveYes) != 0 )   // bouton activé ?
 				{
 					graphics.RenderSolid(this.colorControlLight);
 				}
@@ -520,11 +520,11 @@ namespace Epsitec.Common.Widgets.Adorners
 				graphics.LineWidth = 1;
 				graphics.LineCap = Drawing.CapStyle.Butt;
 
-				if ( (state&WidgetState.Engaged) != 0 )  // bouton pressé ?
+				if ( (state&WidgetPaintState.Engaged) != 0 )  // bouton pressé ?
 				{
 					shadow = this.Opposite(shadow);
 				}
-				if ( (state&WidgetState.ActiveYes) != 0 )   // bouton activé ?
+				if ( (state&WidgetPaintState.ActiveYes) != 0 )   // bouton activé ?
 				{
 					shadow = this.Opposite(shadow);
 				}
@@ -543,8 +543,8 @@ namespace Epsitec.Common.Widgets.Adorners
 				}
 
 				graphics.AddFilledRectangle(rect);
-				if ( (state&WidgetState.ActiveYes)   != 0 ||   // bouton activé ?
-					 (state&WidgetState.ActiveMaybe) != 0 )
+				if ( (state&WidgetPaintState.ActiveYes)   != 0 ||   // bouton activé ?
+					 (state&WidgetPaintState.ActiveMaybe) != 0 )
 				{
 					graphics.RenderSolid(this.colorControlLight);
 				}
@@ -556,11 +556,11 @@ namespace Epsitec.Common.Widgets.Adorners
 				graphics.LineWidth = 1;
 				graphics.LineCap = Drawing.CapStyle.Butt;
 
-				if ( (state&WidgetState.Engaged) != 0 )  // bouton pressé ?
+				if ( (state&WidgetPaintState.Engaged) != 0 )  // bouton pressé ?
 				{
 					shadow = this.Opposite(shadow);
 				}
-				if ( (state&WidgetState.ActiveYes) != 0 )   // bouton activé ?
+				if ( (state&WidgetPaintState.ActiveYes) != 0 )   // bouton activé ?
 				{
 					shadow = this.Opposite(shadow);
 				}
@@ -584,7 +584,7 @@ namespace Epsitec.Common.Widgets.Adorners
 			}
 			else if ( style == ButtonStyle.ListItem )
 			{
-				if ( (state&WidgetState.Selected) != 0 )
+				if ( (state&WidgetPaintState.Selected) != 0 )
 				{
 					graphics.AddFilledRectangle(rect);
 					graphics.RenderSolid(this.colorCaption);
@@ -596,7 +596,7 @@ namespace Epsitec.Common.Widgets.Adorners
 				graphics.RenderSolid(this.colorControl);
 			}
 
-			if ( (state&WidgetState.Focused) != 0 )
+			if ( (state&WidgetPaintState.Focused) != 0 )
 			{
 				Drawing.Rectangle rFocus = rect;
 				if ( System.Math.Min(rect.Width, rect.Height) < 16 )
@@ -614,13 +614,13 @@ namespace Epsitec.Common.Widgets.Adorners
 		public override void PaintButtonTextLayout(Drawing.Graphics graphics,
 										  Drawing.Point pos,
 										  TextLayout text,
-										  WidgetState state,
+										  WidgetPaintState state,
 										  ButtonStyle style)
 		{
 			//	Dessine le texte d'un bouton.
 			if ( text == null )  return;
 
-			if ( (state&WidgetState.Engaged) != 0 )  // bouton pressé ?
+			if ( (state&WidgetPaintState.Engaged) != 0 )  // bouton pressé ?
 			{
 				pos.X ++;
 				pos.Y --;
@@ -631,14 +631,14 @@ namespace Epsitec.Common.Widgets.Adorners
 			}
 			if ( style != ButtonStyle.Tab )
 			{
-				state &= ~WidgetState.Focused;
+				state &= ~WidgetPaintState.Focused;
 			}
 			this.PaintGeneralTextLayout(graphics, Drawing.Rectangle.MaxValue, pos, text, state, PaintTextStyle.Button, TextDisplayMode.Default, Drawing.Color.Empty);
 		}
 
 		public override void PaintButtonForeground(Drawing.Graphics graphics,
 										  Drawing.Rectangle rect,
-										  Widgets.WidgetState state,
+										  Widgets.WidgetPaintState state,
 										  Widgets.Direction dir,
 										  Widgets.ButtonStyle style)
 		{
@@ -646,7 +646,7 @@ namespace Epsitec.Common.Widgets.Adorners
 
 		public override void PaintTextFieldBackground(Drawing.Graphics graphics,
 											 Drawing.Rectangle rect,
-											 Widgets.WidgetState state,
+											 Widgets.WidgetPaintState state,
 											 Widgets.TextFieldStyle style,
 											 TextDisplayMode mode,
 											 bool readOnly)
@@ -658,9 +658,9 @@ namespace Epsitec.Common.Widgets.Adorners
 				 style == TextFieldStyle.UpDown )
 			{
 				graphics.AddFilledRectangle(rect);
-				if ( (state&WidgetState.Enabled) != 0 )  // bouton enable ?
+				if ( (state&WidgetPaintState.Enabled) != 0 )  // bouton enable ?
 				{
-					if ( (state&WidgetState.Error) != 0 )
+					if ( (state&WidgetPaintState.Error) != 0 )
 					{
 						graphics.RenderSolid(this.colorError);
 					}
@@ -699,7 +699,7 @@ namespace Epsitec.Common.Widgets.Adorners
 			else if ( style == TextFieldStyle.Simple )
 			{
 				graphics.AddFilledRectangle(rect);
-				if ( (state&WidgetState.Enabled) != 0 )  // bouton enable ?
+				if ( (state&WidgetPaintState.Enabled) != 0 )  // bouton enable ?
 				{
 					graphics.RenderSolid(this.colorControlLightLight);
 				}
@@ -710,7 +710,7 @@ namespace Epsitec.Common.Widgets.Adorners
 
 				rect.Deflate(0.5);
 				graphics.AddRectangle(rect);
-				if ( (state&WidgetState.Enabled) != 0 )  // bouton enable ?
+				if ( (state&WidgetPaintState.Enabled) != 0 )  // bouton enable ?
 				{
 					graphics.RenderSolid(this.colorBlack);
 				}
@@ -728,7 +728,7 @@ namespace Epsitec.Common.Widgets.Adorners
 
 		public override void PaintTextFieldForeground(Drawing.Graphics graphics,
 											 Drawing.Rectangle rect,
-											 Widgets.WidgetState state,
+											 Widgets.WidgetPaintState state,
 											 Widgets.TextFieldStyle style,
 											 TextDisplayMode mode,
 											 bool readOnly)
@@ -739,14 +739,14 @@ namespace Epsitec.Common.Widgets.Adorners
 											Drawing.Rectangle frameRect,
 											Drawing.Rectangle thumbRect,
 											Drawing.Rectangle tabRect,
-											Widgets.WidgetState state,
+											Widgets.WidgetPaintState state,
 											Widgets.Direction dir)
 		{
 			//	Dessine le fond d'un ascenseur.
 			graphics.AddFilledRectangle(frameRect);
 			graphics.RenderSolid(this.colorScrollerBack);
 
-			if ( !tabRect.IsSurfaceZero && (state&WidgetState.Engaged) != 0 )
+			if ( !tabRect.IsSurfaceZero && (state&WidgetPaintState.Engaged) != 0 )
 			{
 				graphics.AddFilledRectangle(tabRect);
 				graphics.RenderSolid(this.colorControlDarkDark);
@@ -756,18 +756,18 @@ namespace Epsitec.Common.Widgets.Adorners
 		public override void PaintScrollerHandle(Drawing.Graphics graphics,
 										Drawing.Rectangle thumbRect,
 										Drawing.Rectangle tabRect,
-										Widgets.WidgetState state,
+										Widgets.WidgetPaintState state,
 										Widgets.Direction dir)
 		{
 			//	Dessine la cabine d'un ascenseur.
-			state &= ~WidgetState.Engaged;
+			state &= ~WidgetPaintState.Engaged;
 			this.PaintButtonBackground(graphics, thumbRect, state, Direction.Up, ButtonStyle.Scroller);
 		}
 
 		public override void PaintScrollerForeground(Drawing.Graphics graphics,
 											Drawing.Rectangle thumbRect,
 											Drawing.Rectangle tabRect,
-											Widgets.WidgetState state,
+											Widgets.WidgetPaintState state,
 											Widgets.Direction dir)
 		{
 		}
@@ -776,7 +776,7 @@ namespace Epsitec.Common.Widgets.Adorners
 										  Drawing.Rectangle frameRect,
 										  Drawing.Rectangle thumbRect,
 										  Drawing.Rectangle tabRect,
-										  Widgets.WidgetState state,
+										  Widgets.WidgetPaintState state,
 										  Widgets.Direction dir)
 		{
 			//	Dessine le fond d'un potentiomètre linéaire.
@@ -792,7 +792,7 @@ namespace Epsitec.Common.Widgets.Adorners
 				graphics.AddLine(p1.X+0.5, p1.Y-0.5, p2.X-0.5, p2.Y-0.5);
 				graphics.RenderSolid(this.colorControlLightLight);
 
-				if ( !tabRect.IsSurfaceZero && (state&WidgetState.Engaged) != 0 )
+				if ( !tabRect.IsSurfaceZero && (state&WidgetPaintState.Engaged) != 0 )
 				{
 					graphics.AddLine(tabRect.Left, p1.Y+0.5, tabRect.Right, p2.Y+0.5);
 					graphics.AddLine(tabRect.Left, p1.Y-0.5, tabRect.Right, p2.Y-0.5);
@@ -811,7 +811,7 @@ namespace Epsitec.Common.Widgets.Adorners
 				graphics.AddLine(p1.X+0.5, p1.Y+0.5, p2.X+0.5, p2.Y-0.5);
 				graphics.RenderSolid(this.colorControlLightLight);
 
-				if ( !tabRect.IsSurfaceZero && (state&WidgetState.Engaged) != 0 )
+				if ( !tabRect.IsSurfaceZero && (state&WidgetPaintState.Engaged) != 0 )
 				{
 					graphics.AddLine(p1.X-0.5, tabRect.Bottom, p2.X-0.5, tabRect.Top);
 					graphics.AddLine(p1.X+0.5, tabRect.Bottom, p2.X+0.5, tabRect.Top);
@@ -823,7 +823,7 @@ namespace Epsitec.Common.Widgets.Adorners
 		public override void PaintSliderHandle(Drawing.Graphics graphics,
 									  Drawing.Rectangle thumbRect,
 									  Drawing.Rectangle tabRect,
-									  Widgets.WidgetState state,
+									  Widgets.WidgetPaintState state,
 									  Widgets.Direction dir)
 		{
 			//	Dessine la cabine d'un potentiomètre linéaire.
@@ -837,7 +837,7 @@ namespace Epsitec.Common.Widgets.Adorners
 			rInside.Deflate(1);
 
 			Direction shadow = Direction.Up;
-			if ( (state&WidgetState.Engaged) != 0 )  // bouton pressé ?
+			if ( (state&WidgetPaintState.Engaged) != 0 )  // bouton pressé ?
 			{
 				shadow = this.Opposite(shadow);
 			}
@@ -854,7 +854,7 @@ namespace Epsitec.Common.Widgets.Adorners
 		public override void PaintSliderForeground(Drawing.Graphics graphics,
 										  Drawing.Rectangle thumbRect,
 										  Drawing.Rectangle tabRect,
-										  Widgets.WidgetState state,
+										  Widgets.WidgetPaintState state,
 										  Widgets.Direction dir)
 		{
 		}
@@ -862,7 +862,7 @@ namespace Epsitec.Common.Widgets.Adorners
 		public override void PaintGroupBox(Drawing.Graphics graphics,
 								  Drawing.Rectangle frameRect,
 								  Drawing.Rectangle titleRect,
-								  Widgets.WidgetState state)
+								  Widgets.WidgetPaintState state)
 		{
 			//	Dessine le cadre d'un GroupBox.
 			Drawing.Rectangle rect = frameRect;
@@ -883,7 +883,7 @@ namespace Epsitec.Common.Widgets.Adorners
 		public override void PaintSepLine(Drawing.Graphics graphics,
 								 Drawing.Rectangle frameRect,
 								 Drawing.Rectangle titleRect,
-								 Widgets.WidgetState state,
+								 Widgets.WidgetPaintState state,
 								 Widgets.Direction dir)
 		{
 		}
@@ -891,7 +891,7 @@ namespace Epsitec.Common.Widgets.Adorners
 		public override void PaintFrameTitleBackground(Drawing.Graphics graphics,
 											  Drawing.Rectangle rect,
 											  Drawing.Rectangle titleRect,
-											  Widgets.WidgetState state,
+											  Widgets.WidgetPaintState state,
 											  Widgets.Direction dir)
 		{
 		}
@@ -899,21 +899,21 @@ namespace Epsitec.Common.Widgets.Adorners
 		public override void PaintFrameTitleForeground(Drawing.Graphics graphics,
 											  Drawing.Rectangle rect,
 											  Drawing.Rectangle titleRect,
-											  Widgets.WidgetState state,
+											  Widgets.WidgetPaintState state,
 											  Widgets.Direction dir)
 		{
 		}
 
 		public override void PaintFrameBody(Drawing.Graphics graphics,
 								   Drawing.Rectangle rect,
-								   Widgets.WidgetState state,
+								   Widgets.WidgetPaintState state,
 								   Widgets.Direction dir)
 		{
 		}
 
 		public override void PaintTabBand(Drawing.Graphics graphics,
 								 Drawing.Rectangle rect,
-								 Widgets.WidgetState state,
+								 Widgets.WidgetPaintState state,
 								 Widgets.Direction dir)
 		{
 			//	Dessine toute la bande sous les onglets.
@@ -923,7 +923,7 @@ namespace Epsitec.Common.Widgets.Adorners
 
 		public override void PaintTabFrame(Drawing.Graphics graphics,
 								  Drawing.Rectangle rect,
-								  Widgets.WidgetState state,
+								  Widgets.WidgetPaintState state,
 								  Widgets.Direction dir)
 		{
 			//	Dessine la zone principale sous les onglets.
@@ -946,7 +946,7 @@ namespace Epsitec.Common.Widgets.Adorners
 		public override void PaintTabAboveBackground(Drawing.Graphics graphics,
 											Drawing.Rectangle frameRect,
 											Drawing.Rectangle titleRect,
-											Widgets.WidgetState state,
+											Widgets.WidgetPaintState state,
 											Widgets.Direction dir)
 		{
 			//	Dessine l'onglet devant les autres.
@@ -964,7 +964,7 @@ namespace Epsitec.Common.Widgets.Adorners
 		public override void PaintTabAboveForeground(Drawing.Graphics graphics,
 											Drawing.Rectangle frameRect,
 											Drawing.Rectangle titleRect,
-											Widgets.WidgetState state,
+											Widgets.WidgetPaintState state,
 											Widgets.Direction dir)
 		{
 		}
@@ -972,7 +972,7 @@ namespace Epsitec.Common.Widgets.Adorners
 		public override void PaintTabSunkenBackground(Drawing.Graphics graphics,
 											 Drawing.Rectangle frameRect,
 											 Drawing.Rectangle titleRect,
-											 Widgets.WidgetState state,
+											 Widgets.WidgetPaintState state,
 											 Widgets.Direction dir)
 		{
 			//	Dessine un onglet derrière (non sélectionné).
@@ -983,7 +983,7 @@ namespace Epsitec.Common.Widgets.Adorners
 		protected void PaintTabBackground(Drawing.Graphics graphics,
 										  Drawing.Rectangle frameRect,
 										  Drawing.Rectangle titleRect,
-										  Widgets.WidgetState state,
+										  Widgets.WidgetPaintState state,
 										  Widgets.Direction dir)
 		{
 			//	Dessine un onglet quelconque.
@@ -1040,18 +1040,18 @@ namespace Epsitec.Common.Widgets.Adorners
 		public override void PaintTabSunkenForeground(Drawing.Graphics graphics,
 											 Drawing.Rectangle frameRect,
 											 Drawing.Rectangle titleRect,
-											 Widgets.WidgetState state,
+											 Widgets.WidgetPaintState state,
 											 Widgets.Direction dir)
 		{
 		}
 
 		public override void PaintArrayBackground(Drawing.Graphics graphics,
 										 Drawing.Rectangle rect,
-										 WidgetState state)
+										 WidgetPaintState state)
 		{
 			//	Dessine le fond d'un tableau.
 			graphics.AddFilledRectangle(rect);
-			if ( (state&WidgetState.Enabled) != 0 )  // bouton enable ?
+			if ( (state&WidgetPaintState.Enabled) != 0 )  // bouton enable ?
 			{
 				graphics.RenderSolid(this.colorControlLightLight);
 			}
@@ -1078,16 +1078,16 @@ namespace Epsitec.Common.Widgets.Adorners
 
 		public override void PaintArrayForeground(Drawing.Graphics graphics,
 										 Drawing.Rectangle rect,
-										 WidgetState state)
+										 WidgetPaintState state)
 		{
 		}
 
 		public override void PaintCellBackground(Drawing.Graphics graphics,
 										Drawing.Rectangle rect,
-										WidgetState state)
+										WidgetPaintState state)
 		{
 			//	Dessine le fond d'une cellule.
-			if ( (state&WidgetState.Selected) != 0 )
+			if ( (state&WidgetPaintState.Selected) != 0 )
 			{
 				graphics.AddFilledRectangle(rect);
 				graphics.RenderSolid(this.colorCaption);
@@ -1096,7 +1096,7 @@ namespace Epsitec.Common.Widgets.Adorners
 
 		public override void PaintHeaderBackground(Drawing.Graphics graphics,
 										  Drawing.Rectangle rect,
-										  WidgetState state,
+										  WidgetPaintState state,
 										  Direction dir)
 		{
 			//	Dessine le fond d'un bouton d'en-tête de tableau.
@@ -1105,14 +1105,14 @@ namespace Epsitec.Common.Widgets.Adorners
 
 		public override void PaintHeaderForeground(Drawing.Graphics graphics,
 										  Drawing.Rectangle rect,
-										  WidgetState state,
+										  WidgetPaintState state,
 										  Direction dir)
 		{
 		}
 
 		public override void PaintToolBackground(Drawing.Graphics graphics,
 										Drawing.Rectangle rect,
-										WidgetState state,
+										WidgetPaintState state,
 										Direction dir)
 		{
 			//	Dessine le fond d'une barre d'outil.
@@ -1129,14 +1129,14 @@ namespace Epsitec.Common.Widgets.Adorners
 
 		public override void PaintToolForeground(Drawing.Graphics graphics,
 										Drawing.Rectangle rect,
-										WidgetState state,
+										WidgetPaintState state,
 										Direction dir)
 		{
 		}
 
 		public override void PaintMenuBackground(Drawing.Graphics graphics,
 										Drawing.Rectangle rect,
-										WidgetState state,
+										WidgetPaintState state,
 										Direction dir,
 										Drawing.Rectangle parentRect,
 										double iconWidth)
@@ -1168,7 +1168,7 @@ namespace Epsitec.Common.Widgets.Adorners
 
 		public override void PaintMenuForeground(Drawing.Graphics graphics,
 										Drawing.Rectangle rect,
-										WidgetState state,
+										WidgetPaintState state,
 										Direction dir,
 										Drawing.Rectangle parentRect,
 										double iconWidth)
@@ -1177,7 +1177,7 @@ namespace Epsitec.Common.Widgets.Adorners
 
 		public override void PaintMenuItemBackground(Drawing.Graphics graphics,
 											Drawing.Rectangle rect,
-											WidgetState state,
+											WidgetPaintState state,
 											Direction dir,
 											MenuOrientation type,
 											MenuItemType itemType)
@@ -1185,7 +1185,7 @@ namespace Epsitec.Common.Widgets.Adorners
 			//	Dessine le fond d'une case de menu.
 			if ( itemType != MenuItemType.Default )
 			{
-				if ( (state&WidgetState.Enabled) != 0 )
+				if ( (state&WidgetPaintState.Enabled) != 0 )
 				{
 					graphics.AddFilledRectangle(rect);
 					graphics.RenderSolid(this.colorCaption);
@@ -1202,21 +1202,21 @@ namespace Epsitec.Common.Widgets.Adorners
 		public override void PaintMenuItemTextLayout(Drawing.Graphics graphics,
 											Drawing.Point pos,
 											TextLayout text,
-											WidgetState state,
+											WidgetPaintState state,
 											Direction dir,
 											MenuOrientation type,
 											MenuItemType itemType)
 		{
 			//	Dessine le texte d'un menu.
 			if ( text == null )  return;
-			state &= ~WidgetState.Focused;
+			state &= ~WidgetPaintState.Focused;
 			if ( itemType == MenuItemType.Default )
 			{
-				state &= ~WidgetState.Selected;
+				state &= ~WidgetPaintState.Selected;
 			}
 			else
 			{
-				state |= WidgetState.Selected;
+				state |= WidgetPaintState.Selected;
 			}
 			PaintTextStyle style = ( type == MenuOrientation.Horizontal ) ? PaintTextStyle.HMenu : PaintTextStyle.VMenu;
 			this.PaintGeneralTextLayout(graphics, Drawing.Rectangle.MaxValue, pos, text, state, style, TextDisplayMode.Default, Drawing.Color.Empty);
@@ -1224,7 +1224,7 @@ namespace Epsitec.Common.Widgets.Adorners
 
 		public override void PaintMenuItemForeground(Drawing.Graphics graphics,
 											Drawing.Rectangle rect,
-											WidgetState state,
+											WidgetPaintState state,
 											Direction dir,
 											MenuOrientation type,
 											MenuItemType itemType)
@@ -1234,7 +1234,7 @@ namespace Epsitec.Common.Widgets.Adorners
 
 		public override void PaintSeparatorBackground(Drawing.Graphics graphics,
 											 Drawing.Rectangle rect,
-											 WidgetState state,
+											 WidgetPaintState state,
 											 Direction dir,
 											 bool optional)
 		{
@@ -1278,7 +1278,7 @@ namespace Epsitec.Common.Widgets.Adorners
 
 		public override void PaintSeparatorForeground(Drawing.Graphics graphics,
 											 Drawing.Rectangle rect,
-											 WidgetState state,
+											 WidgetPaintState state,
 											 Direction dir,
 											 bool optional)
 		{
@@ -1286,7 +1286,7 @@ namespace Epsitec.Common.Widgets.Adorners
 
 		public override void PaintPaneButtonBackground(Drawing.Graphics graphics,
 											  Drawing.Rectangle rect,
-											  WidgetState state,
+											  WidgetPaintState state,
 											  Direction dir)
 		{
 			//	Dessine un bouton séparateur de panneaux.
@@ -1331,14 +1331,14 @@ namespace Epsitec.Common.Widgets.Adorners
 
 		public override void PaintPaneButtonForeground(Drawing.Graphics graphics,
 											  Drawing.Rectangle rect,
-											  WidgetState state,
+											  WidgetPaintState state,
 											  Direction dir)
 		{
 		}
 
 		public override void PaintStatusBackground(Drawing.Graphics graphics,
 										  Drawing.Rectangle rect,
-										  WidgetState state)
+										  WidgetPaintState state)
 		{
 			//	Dessine une ligne de statuts.
 			graphics.AddLine(rect.Left, rect.Top-0.5, rect.Right, rect.Top-0.5);
@@ -1347,13 +1347,13 @@ namespace Epsitec.Common.Widgets.Adorners
 
 		public override void PaintStatusForeground(Drawing.Graphics graphics,
 										  Drawing.Rectangle rect,
-										  WidgetState state)
+										  WidgetPaintState state)
 		{
 		}
 
 		public override void PaintStatusItemBackground(Drawing.Graphics graphics,
 											  Drawing.Rectangle rect,
-											  WidgetState state)
+											  WidgetPaintState state)
 		{
 			//	Dessine une case de statuts.
 			rect.Width -= 1;
@@ -1364,13 +1364,13 @@ namespace Epsitec.Common.Widgets.Adorners
 
 		public override void PaintStatusItemForeground(Drawing.Graphics graphics,
 											  Drawing.Rectangle rect,
-											  WidgetState state)
+											  WidgetPaintState state)
 		{
 		}
 
 		public override void PaintRibbonButtonBackground(Drawing.Graphics graphics,
 												Drawing.Rectangle rect,
-												WidgetState state)
+												WidgetPaintState state)
 		{
 			//	Dessine le bouton pour un ruban.
 			this.PaintButtonBackground(graphics, rect, state, Widgets.Direction.None, ButtonStyle.ToolItem);
@@ -1378,7 +1378,7 @@ namespace Epsitec.Common.Widgets.Adorners
 
 		public override void PaintRibbonButtonForeground(Drawing.Graphics graphics,
 												Drawing.Rectangle rect,
-												WidgetState state)
+												WidgetPaintState state)
 		{
 			//	Dessine le bouton pour un ruban.
 		}
@@ -1386,11 +1386,11 @@ namespace Epsitec.Common.Widgets.Adorners
 		public override void PaintRibbonButtonTextLayout(Drawing.Graphics graphics,
 												Drawing.Point pos,
 												TextLayout text,
-												WidgetState state)
+												WidgetPaintState state)
 		{
 			//	Dessine le texte d'un bouton du ruban.
 			if ( text == null )  return;
-			state &= ~WidgetState.Focused;
+			state &= ~WidgetPaintState.Focused;
 			PaintTextStyle style = PaintTextStyle.HMenu;
 			this.PaintGeneralTextLayout(graphics, Drawing.Rectangle.MaxValue, pos, text, state, style, TextDisplayMode.Default, Drawing.Color.Empty);
 		}
@@ -1398,7 +1398,7 @@ namespace Epsitec.Common.Widgets.Adorners
 		public override void PaintRibbonTabBackground(Drawing.Graphics graphics,
 											 Drawing.Rectangle rect,
 											 double titleHeight,
-											 WidgetState state)
+											 WidgetPaintState state)
 		{
 			//	Dessine la bande principale d'un ruban.
 			rect.Top -= titleHeight;
@@ -1416,7 +1416,7 @@ namespace Epsitec.Common.Widgets.Adorners
 		public override void PaintRibbonTabForeground(Drawing.Graphics graphics,
 											 Drawing.Rectangle rect,
 											 double titleHeight,
-											 WidgetState state)
+											 WidgetPaintState state)
 		{
 			//	Dessine la bande principale d'un ruban.
 		}
@@ -1424,7 +1424,7 @@ namespace Epsitec.Common.Widgets.Adorners
 		public override void PaintRibbonSectionBackground(Drawing.Graphics graphics,
 												 Drawing.Rectangle rect,
 												 double titleHeight,
-												 WidgetState state)
+												 WidgetPaintState state)
 		{
 			//	Dessine une section d'un ruban.
 			rect.Deflate(0.5);
@@ -1448,7 +1448,7 @@ namespace Epsitec.Common.Widgets.Adorners
 		public override void PaintRibbonSectionForeground(Drawing.Graphics graphics,
 												 Drawing.Rectangle rect,
 												 double titleHeight,
-												 WidgetState state)
+												 WidgetPaintState state)
 		{
 			//	Dessine une section d'un ruban.
 		}
@@ -1456,7 +1456,7 @@ namespace Epsitec.Common.Widgets.Adorners
 		public override void PaintRibbonSectionTextLayout(Drawing.Graphics graphics,
 												 Drawing.Point pos,
 												 TextLayout text,
-												 WidgetState state)
+												 WidgetPaintState state)
 		{
 			//	Dessine le texte du titre d'une section d'un ruban.
 			if ( text == null )  return;
@@ -1468,7 +1468,7 @@ namespace Epsitec.Common.Widgets.Adorners
 
 		public override void PaintTagBackground(Drawing.Graphics graphics,
 									   Drawing.Rectangle rect,
-									   WidgetState state,
+									   WidgetPaintState state,
 									   Drawing.Color color,
 									   Direction dir)
 		{
@@ -1488,7 +1488,7 @@ namespace Epsitec.Common.Widgets.Adorners
 
 			rInside = rect;
 			rInside.Deflate(2);
-			if ( color.IsEmpty || (state&WidgetState.Enabled) == 0 )
+			if ( color.IsEmpty || (state&WidgetPaintState.Enabled) == 0 )
 			{
 				this.PaintCircle(graphics, rInside, this.colorControl);
 			}
@@ -1503,7 +1503,7 @@ namespace Epsitec.Common.Widgets.Adorners
 
 		public override void PaintTagForeground(Drawing.Graphics graphics,
 									   Drawing.Rectangle rect,
-									   WidgetState state,
+									   WidgetPaintState state,
 									   Drawing.Color color,
 									   Direction dir)
 		{
@@ -1561,13 +1561,13 @@ namespace Epsitec.Common.Widgets.Adorners
 		
 		public override void PaintTextSelectionBackground(Drawing.Graphics graphics,
 												 TextLayout.SelectedArea[] areas,
-												 WidgetState state, PaintTextStyle style, TextDisplayMode mode)
+												 WidgetPaintState state, PaintTextStyle style, TextDisplayMode mode)
 		{
 			//	Dessine les zones rectanglaires correspondant aux caractères sélectionnés.
 			for ( int i=0 ; i<areas.Length ; i++ )
 			{
 				graphics.AddFilledRectangle(areas[i].Rect);
-				if ( (state&WidgetState.Focused) != 0 )
+				if ( (state&WidgetPaintState.Focused) != 0 )
 				{
 					graphics.RenderSolid(this.colorCaption);
 
@@ -1588,7 +1588,7 @@ namespace Epsitec.Common.Widgets.Adorners
 
 		public override void PaintTextSelectionForeground(Drawing.Graphics graphics,
 												 TextLayout.SelectedArea[] areas,
-												 WidgetState state, PaintTextStyle style, TextDisplayMode mode)
+												 WidgetPaintState state, PaintTextStyle style, TextDisplayMode mode)
 		{
 		}
 
@@ -1596,7 +1596,7 @@ namespace Epsitec.Common.Widgets.Adorners
 										   Drawing.Rectangle clipRect,
 										   Drawing.Point pos,
 										   TextLayout text,
-										   WidgetState state,
+										   WidgetPaintState state,
 										   PaintTextStyle style,
 										   TextDisplayMode mode,
 										   Drawing.Color backColor)
@@ -1613,9 +1613,9 @@ namespace Epsitec.Common.Widgets.Adorners
 
 			Drawing.TextStyle.DefineDefaultColor(this.colorBlack);
 
-			if ( (state&WidgetState.Enabled) != 0 )
+			if ( (state&WidgetPaintState.Enabled) != 0 )
 			{
-				if ( (state&WidgetState.Selected) != 0 )
+				if ( (state&WidgetPaintState.Selected) != 0 )
 				{
 					text.Paint(pos, graphics, clipRect, this.colorCaptionText, Drawing.GlyphPaintStyle.Selected);
 				}
@@ -1642,7 +1642,7 @@ namespace Epsitec.Common.Widgets.Adorners
 				text.Text = iText;
 			}
 
-			if ( (state&WidgetState.Focused) != 0 )
+			if ( (state&WidgetPaintState.Focused) != 0 )
 			{
 				Drawing.Rectangle rFocus = text.StandardRectangle;
 				rFocus.Offset(pos);
@@ -1909,11 +1909,11 @@ namespace Epsitec.Common.Widgets.Adorners
 			get { return this.colorControlLightLight; }
 		}
 
-		public override Drawing.Color ColorText(WidgetState state)
+		public override Drawing.Color ColorText(WidgetPaintState state)
 		{
-			if ( (state&WidgetState.Enabled) != 0 )
+			if ( (state&WidgetPaintState.Enabled) != 0 )
 			{
-				if ( (state&WidgetState.Selected) != 0 )
+				if ( (state&WidgetPaintState.Selected) != 0 )
 				{
 					return this.colorCaptionText;
 				}

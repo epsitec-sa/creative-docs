@@ -674,7 +674,7 @@ namespace Epsitec.Common.Widgets
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
 
 			Drawing.Rectangle rect  = this.Client.Bounds;
-			WidgetState       state = this.PaintState;
+			WidgetPaintState       state = this.PaintState;
 			
 			if ( this.scrollListStyle == ScrollListStyle.Menu )
 			{
@@ -696,7 +696,7 @@ namespace Epsitec.Common.Widgets
 				if ( this.textLayouts[i] == null )  break;
 
 				if ( i+this.firstLine == this.selectedLine &&
-					 (state&WidgetState.Enabled) != 0 )
+					 (state&WidgetPaintState.Enabled) != 0 )
 				{
 					TextLayout.SelectedArea[] areas = new TextLayout.SelectedArea[1];
 					areas[0] = new TextLayout.SelectedArea();
@@ -706,11 +706,11 @@ namespace Epsitec.Common.Widgets
 					areas[0].Rect.Height = this.lineHeight;
 					adorner.PaintTextSelectionBackground(graphics, areas, state, PaintTextStyle.TextField, TextDisplayMode.Default);
 
-					state |= WidgetState.Selected;
+					state |= WidgetPaintState.Selected;
 				}
 				else
 				{
-					state &= ~WidgetState.Selected;
+					state &= ~WidgetPaintState.Selected;
 				}
 
 				adorner.PaintButtonTextLayout(graphics, pos, this.textLayouts[i], state, ButtonStyle.ListItem);
