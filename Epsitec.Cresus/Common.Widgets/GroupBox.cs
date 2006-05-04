@@ -15,13 +15,10 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
-		public override Drawing.ContentAlignment	DefaultAlignment
+		static GroupBox()
 		{
-			//	Retourne l'alignement par défaut d'un bouton.
-			get
-			{
-				return Drawing.ContentAlignment.TopLeft;
-			}
+			Helpers.VisualPropertyMetadata metadata = new Helpers.VisualPropertyMetadata (Drawing.ContentAlignment.TopLeft, Helpers.VisualPropertyMetadataOptions.AffectsTextLayout);
+			Visual.ContentAlignmentProperty.OverrideMetadata (typeof (GroupBox), metadata);
 		}
 		
 		public override Drawing.Margins GetInternalPadding()

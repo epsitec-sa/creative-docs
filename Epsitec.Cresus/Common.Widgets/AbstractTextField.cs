@@ -176,14 +176,12 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public override Drawing.ContentAlignment DefaultAlignment
+		static AbstractTextField()
 		{
-			get
-			{
-				return Drawing.ContentAlignment.TopLeft;
-			}
+			Helpers.VisualPropertyMetadata metadata = new Helpers.VisualPropertyMetadata (Drawing.ContentAlignment.TopLeft, Helpers.VisualPropertyMetadataOptions.AffectsTextLayout);
+			Visual.ContentAlignmentProperty.OverrideMetadata (typeof (AbstractTextField), metadata);
 		}
-
+		
 		public override double					DefaultHeight
 		{
 			get

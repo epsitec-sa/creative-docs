@@ -39,12 +39,10 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public override ContentAlignment		DefaultAlignment
+		static RadioButton()
 		{
-			get
-			{
-				return Drawing.ContentAlignment.MiddleLeft;
-			}
+			Helpers.VisualPropertyMetadata metadata = new Helpers.VisualPropertyMetadata (Drawing.ContentAlignment.MiddleLeft, Helpers.VisualPropertyMetadataOptions.AffectsTextLayout);
+			Visual.ContentAlignmentProperty.OverrideMetadata (typeof (RadioButton), metadata);
 		}
 		
 		public Drawing.Point					LabelOffset

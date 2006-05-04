@@ -37,14 +37,12 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public override Drawing.ContentAlignment	DefaultAlignment
+		static StaticText()
 		{
-			get
-			{
-				return Drawing.ContentAlignment.MiddleLeft;
-			}
+			Helpers.VisualPropertyMetadata metadata = new Helpers.VisualPropertyMetadata (Drawing.ContentAlignment.MiddleLeft, Helpers.VisualPropertyMetadataOptions.AffectsTextLayout);
+			Visual.ContentAlignmentProperty.OverrideMetadata (typeof (StaticText), metadata);
 		}
-
+		
 #if false	//#fix
 		public override Drawing.Size				PreferredSize
 		{

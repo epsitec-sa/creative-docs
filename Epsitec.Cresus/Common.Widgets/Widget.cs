@@ -304,11 +304,6 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public virtual Drawing.ContentAlignment		DefaultAlignment
-		{
-			get { return Drawing.ContentAlignment.MiddleLeft; }
-		}
-
 		public virtual Drawing.Font					DefaultFont
 		{
 			get { return Drawing.Font.DefaultFont; }

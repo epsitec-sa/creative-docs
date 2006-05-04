@@ -20,16 +20,13 @@ namespace Epsitec.Common.Widgets
 		{
 			this.SetEmbedder(embedder);
 		}
-		
-		
-		public override Drawing.ContentAlignment	DefaultAlignment
+
+		static AbstractButton()
 		{
-			get
-			{
-				return Drawing.ContentAlignment.MiddleCenter;
-			}
+			Helpers.VisualPropertyMetadata metadata = new Helpers.VisualPropertyMetadata (Drawing.ContentAlignment.MiddleCenter, Helpers.VisualPropertyMetadataOptions.AffectsTextLayout);
+			Visual.ContentAlignmentProperty.OverrideMetadata (typeof (AbstractButton), metadata);
 		}
-		
+
 		public override Drawing.Point GetBaseLine()
 		{
 			if ( this.TextLayout != null )

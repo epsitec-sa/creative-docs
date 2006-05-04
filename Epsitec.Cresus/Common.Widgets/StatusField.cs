@@ -47,15 +47,12 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public override Drawing.ContentAlignment DefaultAlignment
+		static StatusField()
 		{
-			//	Retourne l'alignement par défaut d'un bouton.
-			get
-			{
-				return Drawing.ContentAlignment.MiddleLeft;
-			}
+			Helpers.VisualPropertyMetadata metadata = new Helpers.VisualPropertyMetadata (Drawing.ContentAlignment.MiddleLeft, Helpers.VisualPropertyMetadataOptions.AffectsTextLayout);
+			Visual.ContentAlignmentProperty.OverrideMetadata (typeof (StatusField), metadata);
 		}
-
+		
 #if false	//#fix
 		public override Drawing.Size PreferredSize
 		{

@@ -29,14 +29,12 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public override ContentAlignment		DefaultAlignment
+		static CheckButton()
 		{
-			get
-			{
-				return Drawing.ContentAlignment.MiddleLeft;
-			}
+			Helpers.VisualPropertyMetadata metadata = new Helpers.VisualPropertyMetadata (Drawing.ContentAlignment.MiddleLeft, Helpers.VisualPropertyMetadataOptions.AffectsTextLayout);
+			Visual.ContentAlignmentProperty.OverrideMetadata (typeof (CheckButton), metadata);
 		}
-
+		
 		public Drawing.Point					LabelOffset
 		{
 			get
