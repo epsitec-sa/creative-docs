@@ -58,8 +58,23 @@ namespace Epsitec.Common.Types
 		[Test]
 		public void CheckStructuredRecordTree()
 		{
-			StructuredRecordType record = new StructuredRecordType ();
-			StructuredTest.Fill (record);
+			StructuredRecordType type = new StructuredRecordType ();
+			StructuredRecord record = new StructuredRecord (null);
+
+			Assert.AreEqual (0, type.GetFieldNames ().Length);
+			Assert.AreEqual (0, record.GetFieldNames ().Length);
+
+			StructuredTest.Fill (type);
+
+			record = new StructuredRecord (type);
+
+			Assert.AreEqual ("Number1/Number2/Personne/Text1", string.Join ("/", type.GetFieldNames ()));
+			Assert.AreEqual ("Personne.Adresse/Personne.Nom/Personne.Prénom", string.Join ("/", type.GetFieldPaths ("Personne")));
+			Assert.AreEqual ("Personne.Adresse.NPA/Personne.Adresse.Ville", string.Join ("/", type.GetFieldPaths ("Personne.Adresse")));
+
+			Assert.IsNull (type.GetFieldPaths ("Number1"));
+			Assert.IsNull (type.GetFieldPaths ("Personne.Adresse.Ville"));
+			Assert.IsNull (type.GetFieldPaths ("X"));
 
 			Assert.AreEqual ("Number1/Number2/Personne/Text1", string.Join ("/", record.GetFieldNames ()));
 			Assert.AreEqual ("Personne.Adresse/Personne.Nom/Personne.Prénom", string.Join ("/", record.GetFieldPaths ("Personne")));
