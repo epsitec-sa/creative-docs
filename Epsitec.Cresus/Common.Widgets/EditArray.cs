@@ -577,7 +577,7 @@ namespace Epsitec.Common.Widgets
 		/// La classe EditWidget est utilisée comme conteneur pour les widgets en cours
 		/// d'édition. C'est elle qui gère la navigation au moyen de TAB.
 		/// </summary>
-		[Support.SuppressBundleSupport] protected class EditWidget : Widget
+		protected class EditWidget : Widget
 		{
 			public EditWidget(EditArray host)
 			{
@@ -1095,7 +1095,7 @@ namespace Epsitec.Common.Widgets
 		#endregion
 		
 		#region Header Class
-		[Support.SuppressBundleSupport] public class Header : Widget
+		public class Header : Widget
 		{
 			public Header(EditArray host)
 			{

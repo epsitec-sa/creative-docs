@@ -719,9 +719,6 @@
     <Content Include="Resources\Common.Widgets\Strings.00.resource" />
     <Content Include="Resources\Common.Widgets\Strings.en.resource" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="Epsitec.Cresus.snk" />
-  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>
