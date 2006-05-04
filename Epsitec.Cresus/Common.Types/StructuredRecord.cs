@@ -12,12 +12,27 @@ namespace Epsitec.Common.Types
 			this.type = type;
 		}
 
+		public StructuredRecordType Type
+		{
+			get
+			{
+				return this.type;
+			}
+		}
+
+		public bool IsDynamicType
+		{
+			get
+			{
+				return this.type == null;
+			}
+		}
 		
 		#region IStructuredTree Members
 
 		public string[] GetFieldNames()
 		{
-			if (this.type == null)
+			if (this.IsDynamicType)
 			{
 				return this.GetDynamicFieldNames ();
 			}
@@ -29,7 +44,7 @@ namespace Epsitec.Common.Types
 
 		public string[] GetFieldPaths(string path)
 		{
-			if (this.type == null)
+			if (this.IsDynamicType)
 			{
 				return this.GetDynamicFieldPaths (path);
 			}

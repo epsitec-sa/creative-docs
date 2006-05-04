@@ -81,19 +81,7 @@ namespace Epsitec.Common.Types
 		{
 			StructuredRecordType type = this.GetFieldType (path) as StructuredRecordType;
 
-			if (type == null)
-			{
-				return null;
-			}
-
-			string[] names = type.GetFieldNames ();
-
-			for (int i = 0; i < names.Length; i++)
-			{
-				names[i] = StructuredRecordType.CreatePath (path, names[i]);
-			}
-			
-			return names;
+			return StructuredRecordType.GetFieldPaths (path, type);
 		}
 
 		#endregion
@@ -147,7 +135,7 @@ namespace Epsitec.Common.Types
 			if ((path == null) ||
 				(path.Length == 0))
 			{
-				return StructuredRecordType.emptyPath;
+				return StructuredRecordType.EmptyPath;
 			}
 			else
 			{
@@ -167,6 +155,64 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		public static string GetSubPath(string path, int start)
+		{
+			if (start < 1)
+			{
+				return path;
+			}
+			
+			int pos = -1;
+
+			for (int i = 0; i < start; i++)
+			{
+				pos = path.IndexOf ('.', pos+1);
+
+				if (pos < 0)
+				{
+					return "";
+				}
+			}
+
+			return path.Substring (pos+1);
+		}
+
+		public static string GetRootName(string path)
+		{
+			if (path == null)
+			{
+				return path;
+			}
+
+			int pos = path.IndexOf ('.');
+
+			if (pos < 0)
+			{
+				return path;
+			}
+			else
+			{
+				return path.Substring (0, pos);
+			}
+		}
+
+		public static string[] GetFieldPaths(string path, IStructuredTree root)
+		{
+			if (root == null)
+			{
+				return null;
+			}
+
+			string[] names = root.GetFieldNames ();
+
+			for (int i = 0; i < names.Length; i++)
+			{
+				names[i] = StructuredRecordType.CreatePath (path, names[i]);
+			}
+
+			return names;
+		}
+
 		private void NotifyFieldInserted(string name, INamedType type)
 		{
 		}
@@ -175,7 +221,8 @@ namespace Epsitec.Common.Types
 		{
 		}
 
-		private static string[] emptyPath = new string[0];
+		public static readonly string[] EmptyPath = new string[0];
+		
 		private string name;
 		private string caption;
 		private string description;
