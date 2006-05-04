@@ -31,17 +31,13 @@ namespace Epsitec.Common.Document.Widgets
 		{
 			this.SetEmbedder(embedder);
 		}
-		
-		
-#if false
-		public override double DefaultHeight
+
+		static HRuler()
 		{
-			get
-			{
-				return AbstractRuler.defaultBreadth;
-			}
+			Common.Widgets.Helpers.VisualPropertyMetadata metadataDy = new Common.Widgets.Helpers.VisualPropertyMetadata(AbstractRuler.defaultBreadth, Common.Widgets.Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
+			Common.Widgets.Visual.PreferredHeightProperty.OverrideMetadata(typeof(HRuler), metadataDy);
 		}
-#endif
+
 
 		public override void WrappersAttach()
 		{
