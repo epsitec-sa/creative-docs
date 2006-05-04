@@ -956,6 +956,14 @@ namespace Epsitec.Common.Widgets
 			real.Margins = new Margins (0, 0, 0, 0);
 			
 			window.Root.Children.Add (real);
+
+			real = new TextFieldReal ();
+
+			real.PreferredWidth = 50;
+			real.Value = 10;
+			real.SetManualBounds (new Rectangle (8+50+4, 200-5-real.PreferredHeight, real.PreferredWidth, real.PreferredHeight));
+			
+			window.Root.Children.Add (real);
 			
 			window.Show ();
 			Window.RunInTestEnvironment (window);
