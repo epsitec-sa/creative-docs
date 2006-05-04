@@ -8,7 +8,6 @@ namespace Epsitec.Common.Document.TextPanels
 	/// <summary>
 	/// La classe Font permet de choisir une police de caractères.
 	/// </summary>
-	[SuppressBundleSupport]
 	public class Font : Abstract
 	{
 		public Font(Document document, bool isStyle, StyleCategory styleCategory) : base(document, isStyle, styleCategory)

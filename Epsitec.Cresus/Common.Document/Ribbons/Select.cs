@@ -7,7 +7,6 @@ namespace Epsitec.Common.Document.Ribbons
 	/// <summary>
 	/// La classe Select permet de gérer la sélection.
 	/// </summary>
-	[SuppressBundleSupport]
 	public class Select : Abstract
 	{
 		public Select() : base()

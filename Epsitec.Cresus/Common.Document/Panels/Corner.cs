@@ -7,7 +7,6 @@ namespace Epsitec.Common.Document.Panels
 	/// <summary>
 	/// La classe Corner permet de choisir un type de coin.
 	/// </summary>
-	[SuppressBundleSupport]
 	public class Corner : Abstract
 	{
 		public Corner(Document document) : base(document)

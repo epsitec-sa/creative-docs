@@ -7,7 +7,6 @@ namespace Epsitec.Common.Document.Ribbons
 	/// <summary>
 	/// La classe Order permet de choisir l'ordre de la sélection.
 	/// </summary>
-	[SuppressBundleSupport]
 	public class Order : Abstract
 	{
 		public Order() : base()

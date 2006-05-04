@@ -7,7 +7,6 @@ namespace Epsitec.Common.Document.Panels
 	/// <summary>
 	/// La classe Arrow permet de choisir un type d'extrémité.
 	/// </summary>
-	[SuppressBundleSupport]
 	public class Arrow : Abstract
 	{
 		public Arrow(Document document) : base(document)

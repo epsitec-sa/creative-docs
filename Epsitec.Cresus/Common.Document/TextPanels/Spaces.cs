@@ -8,7 +8,6 @@ namespace Epsitec.Common.Document.TextPanels
 	/// <summary>
 	/// La classe Spaces permet de choisir les marges verticales.
 	/// </summary>
-	[SuppressBundleSupport]
 	public class Spaces : Abstract
 	{
 		public Spaces(Document document, bool isStyle, StyleCategory styleCategory) : base(document, isStyle, styleCategory)

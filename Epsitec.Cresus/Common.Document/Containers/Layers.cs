@@ -7,7 +7,6 @@ namespace Epsitec.Common.Document.Containers
 	/// <summary>
 	/// La classe Containers.Layers contient tous les panneaux des calques.
 	/// </summary>
-	[SuppressBundleSupport]
 	public class Layers : Abstract
 	{
 		public Layers(Document document) : base(document)

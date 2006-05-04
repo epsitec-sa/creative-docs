@@ -7,7 +7,6 @@ namespace Epsitec.Common.Document.Panels
 	/// <summary>
 	/// La classe Color permet de choisir une couleur.
 	/// </summary>
-	[SuppressBundleSupport]
 	public class Color : Abstract
 	{
 		public Color(Document document) : base(document)

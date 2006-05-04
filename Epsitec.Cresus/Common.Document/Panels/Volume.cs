@@ -7,7 +7,6 @@ namespace Epsitec.Common.Document.Panels
 	/// <summary>
 	/// La classe Volume permet de choisir un objet volume 3d.
 	/// </summary>
-	[SuppressBundleSupport]
 	public class Volume : Abstract
 	{
 		public Volume(Document document) : base(document)

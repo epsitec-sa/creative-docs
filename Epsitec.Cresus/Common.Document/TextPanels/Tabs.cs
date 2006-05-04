@@ -8,7 +8,6 @@ namespace Epsitec.Common.Document.TextPanels
 	/// <summary>
 	/// La classe Tabs permet de choisir les groupements de paragraphes.
 	/// </summary>
-	[SuppressBundleSupport]
 	public class Tabs : Abstract
 	{
 		public Tabs(Document document, bool isStyle, StyleCategory styleCategory) : base(document, isStyle, styleCategory)

@@ -7,7 +7,6 @@ namespace Epsitec.Common.Document.Containers
 	/// <summary>
 	/// La classe Containers.Autos contient tous les panneaux des styles.
 	/// </summary>
-	[SuppressBundleSupport]
 	public class Autos : Abstract
 	{
 		public Autos(Document document) : base(document)

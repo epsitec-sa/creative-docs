@@ -25,7 +25,6 @@ namespace Epsitec.Common.Widgets
 	/// La classe TextField implémente la ligne éditable, tout en permettant
 	/// aussi de réaliser l'équivalent de la ComboBox Windows.
 	/// </summary>
-	[Support.SuppressBundleSupport]
 	public abstract class AbstractTextField : Widget, Types.IReadOnly
 	{
 		public AbstractTextField()
@@ -1392,7 +1391,7 @@ namespace Epsitec.Common.Widgets
 			
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
 
-			WidgetPaintState       state     = this.PaintState;
+			WidgetPaintState  state     = this.PaintState;
 			Drawing.Point     pos       = this.InnerTextBounds.Location - this.scrollOffset + new Drawing.Point(0, 1);
 			Drawing.Rectangle rText     = this.InnerTextBounds;
 			Drawing.Rectangle rInside   = this.Client.Bounds;

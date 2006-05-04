@@ -8,7 +8,6 @@ namespace Epsitec.Common.Document.TextPanels
 	/// <summary>
 	/// La classe Language permet de choisir la langue.
 	/// </summary>
-	[SuppressBundleSupport]
 	public class Language : Abstract
 	{
 		public Language(Document document, bool isStyle, StyleCategory styleCategory) : base(document, isStyle, styleCategory)

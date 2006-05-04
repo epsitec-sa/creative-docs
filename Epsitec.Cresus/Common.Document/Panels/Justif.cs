@@ -7,7 +7,6 @@ namespace Epsitec.Common.Document.Panels
 	/// <summary>
 	/// La classe Justif permet de choisir un mode de justification.
 	/// </summary>
-	[SuppressBundleSupport]
 	public class Justif : Abstract
 	{
 		public Justif(Document document) : base(document)

@@ -7,7 +7,6 @@ namespace Epsitec.Common.Document.Ribbons
 	/// <summary>
 	/// La classe Geom permet de modifier la géométrie de la sélection.
 	/// </summary>
-	[SuppressBundleSupport]
 	public class Geom : Abstract
 	{
 		public Geom() : base()

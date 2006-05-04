@@ -8,7 +8,6 @@ namespace Epsitec.Common.Document.Ribbons
 	/// <summary>
 	/// La classe Font permet de choisir la fonte du texte.
 	/// </summary>
-	[SuppressBundleSupport]
 	public class Font : Abstract
 	{
 		public Font() : base()

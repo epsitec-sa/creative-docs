@@ -4,7 +4,6 @@ namespace Epsitec.Common.Widgets
 	/// La classe AbstractSlider implémente la classe de base des potentiomètres linéaires
 	/// HSlider et VSlider.
 	/// </summary>
-	[Support.SuppressBundleSupport]
 	public abstract class AbstractSlider : Widget, Behaviors.IDragBehaviorHost, Support.Data.INumValue
 	{
 		protected AbstractSlider(bool vertical)

@@ -3,16 +3,11 @@
 
 namespace Epsitec.Common.Widgets.Validators
 {
-	using SuppressBundleSupportAttribute = Support.SuppressBundleSupportAttribute;
-	
 	/// <summary>
 	/// La classe AbstractTextValidator permet de simplifier l'implémentation de
 	/// l'interface IValidator dans les cas où le texte sert de source pour la
 	/// validation.
 	/// </summary>
-	
-	[SuppressBundleSupport]
-	
 	public abstract class AbstractTextValidator : AbstractValidator
 	{
 		public AbstractTextValidator(Widget widget) : base (widget)

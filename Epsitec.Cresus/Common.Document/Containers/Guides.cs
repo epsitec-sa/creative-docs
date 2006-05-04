@@ -7,7 +7,6 @@ namespace Epsitec.Common.Document.Containers
 	/// <summary>
 	/// La classe Containers.Guides contient tous les panneaux des repères.
 	/// </summary>
-	[SuppressBundleSupport]
 	public class Guides : Abstract
 	{
 		public Guides(Document document) : base(document)

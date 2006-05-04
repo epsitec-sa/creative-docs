@@ -7,7 +7,6 @@ namespace Epsitec.Common.Document.Ribbons
 	/// <summary>
 	/// La classe Insert permet de choisir un élément à insérer dans le texte.
 	/// </summary>
-	[SuppressBundleSupport]
 	public class Insert : Abstract
 	{
 		public Insert() : base()

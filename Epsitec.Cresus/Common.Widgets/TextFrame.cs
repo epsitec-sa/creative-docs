@@ -7,7 +7,6 @@ namespace Epsitec.Common.Widgets
 	/// La classe TextFrame permet de représenter du texte en associant un widget
 	/// à un frame (cf. Common.Text pour les concepts utilisés).
 	/// </summary>
-	[Support.SuppressBundleSupport]
 	public class TextFrame : Widget, Epsitec.Common.Text.ITextRenderer
 	{
 		public TextFrame()

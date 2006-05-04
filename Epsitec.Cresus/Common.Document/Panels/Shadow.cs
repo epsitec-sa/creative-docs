@@ -7,7 +7,6 @@ namespace Epsitec.Common.Document.Panels
 	/// <summary>
 	/// La classe Shadow permet de choisir une ombre.
 	/// </summary>
-	[SuppressBundleSupport]
 	public class Shadow : Abstract
 	{
 		public Shadow(Document document) : base(document)

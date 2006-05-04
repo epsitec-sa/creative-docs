@@ -7,7 +7,6 @@ namespace Epsitec.Common.Document.Ribbons
 	/// <summary>
 	/// La classe Zoom gère le zoom d'affichage.
 	/// </summary>
-	[SuppressBundleSupport]
 	public class Zoom : Abstract
 	{
 		public Zoom() : base()

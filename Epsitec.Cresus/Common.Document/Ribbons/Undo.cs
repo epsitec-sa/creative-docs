@@ -7,7 +7,6 @@ namespace Epsitec.Common.Document.Ribbons
 	/// <summary>
 	/// La classe Undo gère les commandes undo/redo.
 	/// </summary>
-	[SuppressBundleSupport]
 	public class Undo : Abstract
 	{
 		public Undo() : base()

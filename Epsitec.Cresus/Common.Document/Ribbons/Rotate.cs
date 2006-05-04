@@ -7,7 +7,6 @@ namespace Epsitec.Common.Document.Ribbons
 	/// <summary>
 	/// La classe Rotate permet de tourner la sélection.
 	/// </summary>
-	[SuppressBundleSupport]
 	public class Rotate : Abstract
 	{
 		public Rotate() : base()

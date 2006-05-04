@@ -7,7 +7,6 @@ namespace Epsitec.Common.Document.Ribbons
 	/// <summary>
 	/// La classe Move permet de déplacer la sélection.
 	/// </summary>
-	[SuppressBundleSupport]
 	public class Move : Abstract
 	{
 		public Move() : base()

@@ -8,7 +8,6 @@ namespace Epsitec.Common.Document.Containers
 	/// <summary>
 	/// La classe Containers.Styles contient tous les panneaux des styles.
 	/// </summary>
-	[SuppressBundleSupport]
 	public class Styles : Abstract
 	{
 		public Styles(Document document) : base(document)

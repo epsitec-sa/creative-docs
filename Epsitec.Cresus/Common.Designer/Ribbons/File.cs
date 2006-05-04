@@ -7,7 +7,6 @@ namespace Epsitec.Common.Designer.Ribbons
 	/// <summary>
 	/// La classe File correspond au menu fichiers.
 	/// </summary>
-	[SuppressBundleSupport]
 	public class File : Abstract
 	{
 		public File() : base()

@@ -8,7 +8,6 @@ namespace Epsitec.Common.Document.Ribbons
 	/// <summary>
 	/// La classe TextStyles permet de choisir un style de paragraphe ou de caractère.
 	/// </summary>
-	[SuppressBundleSupport]
 	public class TextStyles : Abstract
 	{
 		public TextStyles() : base()

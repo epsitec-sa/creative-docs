@@ -7,7 +7,6 @@ namespace Epsitec.Common.Document.Panels
 	/// <summary>
 	/// La classe Arc permet de choisir un mode d'arc de cercle ou d'ellipse.
 	/// </summary>
-	[SuppressBundleSupport]
 	public class Arc : Abstract
 	{
 		public Arc(Document document) : base(document)

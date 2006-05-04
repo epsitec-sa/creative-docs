@@ -7,7 +7,6 @@ namespace Epsitec.Common.Document.Containers
 	/// <summary>
 	/// La classe Containers.Operations contient toutes les opérations.
 	/// </summary>
-	[SuppressBundleSupport]
 	public class Operations : Abstract
 	{
 		public Operations(Document document) : base(document)

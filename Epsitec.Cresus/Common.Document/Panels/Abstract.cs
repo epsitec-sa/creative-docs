@@ -7,7 +7,6 @@ namespace Epsitec.Common.Document.Panels
 	/// <summary>
 	/// La classe Abstract est la classe de base pour tous les panels.
 	/// </summary>
-	[SuppressBundleSupport]
 	public abstract class Abstract : Common.Widgets.Widget
 	{
 		public Abstract(Document document)

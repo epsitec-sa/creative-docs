@@ -8,7 +8,6 @@ namespace Epsitec.Common.Document.Panels
 	/// <summary>
 	/// La classe Image permet de choisir un fichier image bitmap.
 	/// </summary>
-	[SuppressBundleSupport]
 	public class Image : Abstract
 	{
 		public Image(Document document) : base(document)

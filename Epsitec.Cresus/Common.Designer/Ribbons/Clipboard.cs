@@ -7,7 +7,6 @@ namespace Epsitec.Common.Designer.Ribbons
 	/// <summary>
 	/// La classe Clipboard permet de gérer le presse-papiers.
 	/// </summary>
-	[SuppressBundleSupport]
 	public class Clipboard : Abstract
 	{
 		public Clipboard() : base()

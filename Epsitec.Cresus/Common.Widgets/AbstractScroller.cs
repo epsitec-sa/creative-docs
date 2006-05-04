@@ -4,7 +4,6 @@ namespace Epsitec.Common.Widgets
 	/// La classe AbstractScroller implémente la classe de base des ascenseurs
 	/// HScroller et VScroller.
 	/// </summary>
-	[Support.SuppressBundleSupport]
 	public abstract class AbstractScroller : Widget, Behaviors.IDragBehaviorHost, Support.Data.INumValue
 	{
 		protected AbstractScroller(bool vertical)

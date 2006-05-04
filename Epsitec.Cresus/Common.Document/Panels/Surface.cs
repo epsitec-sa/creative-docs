@@ -7,7 +7,6 @@ namespace Epsitec.Common.Document.Panels
 	/// <summary>
 	/// La classe Surface permet de choisir un objet surface 2d.
 	/// </summary>
-	[SuppressBundleSupport]
 	public class Surface : Abstract
 	{
 		public Surface(Document document) : base(document)

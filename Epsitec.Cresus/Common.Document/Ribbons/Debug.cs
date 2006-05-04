@@ -7,7 +7,6 @@ namespace Epsitec.Common.Document.Ribbons
 	/// <summary>
 	/// La classe Debug donne accès aux commandes provisoires de debug.
 	/// </summary>
-	[SuppressBundleSupport]
 	public class Debug : Abstract
 	{
 		public Debug() : base()

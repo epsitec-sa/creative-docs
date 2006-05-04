@@ -7,7 +7,6 @@ namespace Epsitec.Common.Document
 	/// <summary>
 	/// Summary description for Viewer.
 	/// </summary>
-	[SuppressBundleSupport]
 	public class Viewer : Common.Widgets.Widget
 	{
 		protected enum MouseCursorType

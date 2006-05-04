@@ -7,7 +7,6 @@ namespace Epsitec.Common.Document.Panels
 	/// <summary>
 	/// La classe TextLine permet de choisir un mode de justification.
 	/// </summary>
-	[SuppressBundleSupport]
 	public class TextLine : Abstract
 	{
 		public TextLine(Document document) : base(document)

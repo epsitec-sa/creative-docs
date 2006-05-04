@@ -7,7 +7,6 @@ namespace Epsitec.Common.Document.Panels
 	/// <summary>
 	/// La classe Dimension permet de choisir un type de cotation.
 	/// </summary>
-	[SuppressBundleSupport]
 	public class Dimension : Abstract
 	{
 		public Dimension(Document document) : base(document)

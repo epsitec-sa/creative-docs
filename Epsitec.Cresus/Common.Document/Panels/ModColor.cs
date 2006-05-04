@@ -7,7 +7,6 @@ namespace Epsitec.Common.Document.Panels
 	/// <summary>
 	/// La classe ModColor permet de choisir une modification de couleur.
 	/// </summary>
-	[SuppressBundleSupport]
 	public class ModColor : Abstract
 	{
 		public ModColor(Document document) : base(document)

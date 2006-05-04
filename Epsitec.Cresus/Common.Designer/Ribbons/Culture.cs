@@ -7,7 +7,6 @@ namespace Epsitec.Common.Designer.Ribbons
 	/// <summary>
 	/// La classe Culture permet de gérer les cultures.
 	/// </summary>
-	[SuppressBundleSupport]
 	public class Culture : Abstract
 	{
 		public Culture() : base()

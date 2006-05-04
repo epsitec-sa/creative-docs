@@ -4,7 +4,6 @@ namespace Epsitec.Common.Widgets
 	/// La classe AbstractButton implémente les fonctions de base communes de tous
 	/// les boutons (notamment au niveau de la gestion des événements).
 	/// </summary>
-	[Support.SuppressBundleSupport]
 	public abstract class AbstractButton : Widget
 	{
 		public AbstractButton()

@@ -8,7 +8,6 @@ namespace Epsitec.Common.Document.TextPanels
 	/// <summary>
 	/// La classe Leading permet de choisir l'interligne.
 	/// </summary>
-	[SuppressBundleSupport]
 	public class Leading : Abstract
 	{
 		public Leading(Document document, bool isStyle, StyleCategory styleCategory) : base(document, isStyle, styleCategory)

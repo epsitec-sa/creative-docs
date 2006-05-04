@@ -7,7 +7,6 @@ namespace Epsitec.Common.Document.Ribbons
 	/// <summary>
 	/// La classe Bool permet de choisir les opérations booléennes.
 	/// </summary>
-	[SuppressBundleSupport]
 	public class Bool : Abstract
 	{
 		public Bool() : base()

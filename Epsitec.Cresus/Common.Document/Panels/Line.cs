@@ -7,7 +7,6 @@ namespace Epsitec.Common.Document.Panels
 	/// <summary>
 	/// La classe Line permet de choisir un mode de trait.
 	/// </summary>
-	[SuppressBundleSupport]
 	public class Line : Abstract
 	{
 		public Line(Document document) : base(document)

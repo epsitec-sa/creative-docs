@@ -7,7 +7,6 @@ namespace Epsitec.Common.Document.Ribbons
 	/// <summary>
 	/// La classe Replace gère les commandes chercher/remplacer.
 	/// </summary>
-	[SuppressBundleSupport]
 	public class Replace : Abstract
 	{
 		public Replace() : base()

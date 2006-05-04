@@ -8,7 +8,6 @@ namespace Epsitec.Common.Document.TextPanels
 	/// <summary>
 	/// La classe Abstract est la classe de base pour tous les panneaux des textes.
 	/// </summary>
-	[SuppressBundleSupport]
 	public abstract class Abstract : Common.Widgets.Widget
 	{
 		public Abstract(Document document, bool isStyle, StyleCategory styleCategory)

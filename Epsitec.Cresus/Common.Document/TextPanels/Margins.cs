@@ -8,7 +8,6 @@ namespace Epsitec.Common.Document.TextPanels
 	/// <summary>
 	/// La classe Margins permet de choisir les marges horizontales.
 	/// </summary>
-	[SuppressBundleSupport]
 	public class Margins : Abstract
 	{
 		public Margins(Document document, bool isStyle, StyleCategory styleCategory) : base(document, isStyle, styleCategory)

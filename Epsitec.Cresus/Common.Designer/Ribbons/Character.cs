@@ -7,7 +7,6 @@ namespace Epsitec.Common.Designer.Ribbons
 	/// <summary>
 	/// La classe Character permet de choisir la typographie des caractères.
 	/// </summary>
-	[SuppressBundleSupport]
 	public class Character : Abstract
 	{
 		public Character() : base()

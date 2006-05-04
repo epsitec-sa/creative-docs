@@ -7,7 +7,6 @@ namespace Epsitec.Common.Document.Containers
 	/// <summary>
 	/// La classe Containers.Pages contient tous les panneaux des pages.
 	/// </summary>
-	[SuppressBundleSupport]
 	public class Pages : Abstract
 	{
 		public Pages(Document document) : base(document)

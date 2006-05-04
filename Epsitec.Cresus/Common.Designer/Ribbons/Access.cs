@@ -7,7 +7,6 @@ namespace Epsitec.Common.Designer.Ribbons
 	/// <summary>
 	/// La classe Access permet de choisir comment accéder aux ressources.
 	/// </summary>
-	[SuppressBundleSupport]
 	public class Access : Abstract
 	{
 		public Access() : base()

@@ -21,7 +21,6 @@ namespace Epsitec.App.DocumentEditor
 	/// <summary>
 	/// La classe DocumentEditor représente l'éditeur de document complet.
 	/// </summary>
-	[SuppressBundleSupport]
 	public class DocumentEditor : Widgets.Widget
 	{
 		public DocumentEditor(DocumentType type)

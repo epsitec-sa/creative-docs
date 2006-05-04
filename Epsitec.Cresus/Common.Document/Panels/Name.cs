@@ -7,7 +7,6 @@ namespace Epsitec.Common.Document.Panels
 	/// <summary>
 	/// La classe Name permet de choisir une chaîne de caractères.
 	/// </summary>
-	[SuppressBundleSupport]
 	public class Name : Abstract
 	{
 		public Name(Document document) : base(document)

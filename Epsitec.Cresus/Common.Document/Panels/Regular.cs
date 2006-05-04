@@ -7,7 +7,6 @@ namespace Epsitec.Common.Document.Panels
 	/// <summary>
 	/// La classe Regular permet de choisir un type de polygone régulier.
 	/// </summary>
-	[SuppressBundleSupport]
 	public class Regular : Abstract
 	{
 		public Regular(Document document) : base(document)

@@ -8,7 +8,6 @@ namespace Epsitec.Common.Document.TextPanels
 	/// <summary>
 	/// La classe Generator permet de choisir les puces et les numérotations.
 	/// </summary>
-	[SuppressBundleSupport]
 	public class Generator : Abstract
 	{
 		//	Possibilités (level.part1.part2) :

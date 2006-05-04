@@ -7,7 +7,6 @@ namespace Epsitec.Common.Document.Ribbons
 	/// <summary>
 	/// La classe Scale permet de mettre à l'échelle la sélection.
 	/// </summary>
-	[SuppressBundleSupport]
 	public class Scale : Abstract
 	{
 		public Scale() : base()

@@ -8,7 +8,6 @@ namespace Epsitec.Common.Document.TextPanels
 	/// <summary>
 	/// La classe Keep permet de choisir les groupements de paragraphes.
 	/// </summary>
-	[SuppressBundleSupport]
 	public class Keep : Abstract
 	{
 		public Keep(Document document, bool isStyle, StyleCategory styleCategory) : base(document, isStyle, styleCategory)

@@ -7,7 +7,6 @@ namespace Epsitec.Common.Document.Panels
 	/// <summary>
 	/// La classe Bool permet de choisir une valeur booléenne.
 	/// </summary>
-	[SuppressBundleSupport]
 	public class Bool : Abstract
 	{
 		public Bool(Document document) : base(document)

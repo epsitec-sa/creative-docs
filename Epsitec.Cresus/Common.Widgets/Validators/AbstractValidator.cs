@@ -3,15 +3,10 @@
 
 namespace Epsitec.Common.Widgets.Validators
 {
-	using SuppressBundleSupportAttribute = Support.SuppressBundleSupportAttribute;
-	
 	/// <summary>
 	/// La classe AbstractValidator permet de simplifier l'implémentation de
 	/// l'interface IValidator en relation avec des widgets.
 	/// </summary>
-	
-	[SuppressBundleSupport]
-	
 	public abstract class AbstractValidator : IValidator, System.IDisposable
 	{
 		public AbstractValidator(Widget widget)

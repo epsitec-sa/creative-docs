@@ -7,7 +7,6 @@ namespace Epsitec.Common.Designer.Ribbons
 	/// <summary>
 	/// La classe Abstract est la classe de base pour toutes les sections de rubans.
 	/// </summary>
-	[SuppressBundleSupport]
 	public abstract class Abstract : Common.Widgets.Widget
 	{
 		public Abstract()

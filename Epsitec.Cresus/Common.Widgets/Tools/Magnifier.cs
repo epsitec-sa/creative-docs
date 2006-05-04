@@ -186,7 +186,6 @@ namespace Epsitec.Common.Widgets.Tools
 		private Window							zoom_window;
 		private bool							color_picker;
 		
-		[Support.SuppressBundleSupport]
 		public class ZoomView : Widget
 		{
 			public ZoomView(Magnifier magnifier)
@@ -526,7 +525,6 @@ namespace Epsitec.Common.Widgets.Tools
 			private Timer						timer;
 		}
 		
-		[Support.SuppressBundleSupport]
 		public class DragSource : Widget, Behaviors.IDragBehaviorHost
 		{
 			public DragSource()

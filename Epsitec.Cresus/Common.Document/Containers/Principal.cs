@@ -7,7 +7,6 @@ namespace Epsitec.Common.Document.Containers
 	/// <summary>
 	/// La classe Containers.Principal contient tous les panneaux des propriétés.
 	/// </summary>
-	[SuppressBundleSupport]
 	public class Principal : Abstract
 	{
 		public Principal(Document document) : base(document)

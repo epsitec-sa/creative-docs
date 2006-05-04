@@ -8,7 +8,6 @@ namespace Epsitec.Common.Document.TextPanels
 	/// <summary>
 	/// La classe Numerator permet de choisir les groupements de paragraphes.
 	/// </summary>
-	[SuppressBundleSupport]
 	public class Numerator : Abstract
 	{
 		public Numerator(Document document, bool isStyle, StyleCategory styleCategory) : base(document, isStyle, styleCategory)

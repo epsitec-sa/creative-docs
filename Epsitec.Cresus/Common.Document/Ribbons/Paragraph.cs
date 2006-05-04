@@ -8,7 +8,6 @@ namespace Epsitec.Common.Document.Ribbons
 	/// <summary>
 	/// La classe Paragraph permet de choisir le style de paragraphe du texte.
 	/// </summary>
-	[SuppressBundleSupport]
 	public class Paragraph : Abstract
 	{
 		public Paragraph() : base()

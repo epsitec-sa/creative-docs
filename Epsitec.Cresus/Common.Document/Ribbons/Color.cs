@@ -7,7 +7,6 @@ namespace Epsitec.Common.Document.Ribbons
 	/// <summary>
 	/// La classe Color permet de modifier les couleurs de la sélection.
 	/// </summary>
-	[SuppressBundleSupport]
 	public class Color : Abstract
 	{
 		public Color() : base()

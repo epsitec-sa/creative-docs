@@ -8,7 +8,6 @@ namespace Epsitec.Common.Document.TextPanels
 	/// <summary>
 	/// La classe Box permet de choisir un encadrement.
 	/// </summary>
-	[SuppressBundleSupport]
 	public class Box : Abstract
 	{
 		public Box(Document document, bool isStyle, StyleCategory styleCategory) : base(document, isStyle, styleCategory)

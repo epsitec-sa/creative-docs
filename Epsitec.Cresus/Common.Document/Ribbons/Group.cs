@@ -7,7 +7,6 @@ namespace Epsitec.Common.Document.Ribbons
 	/// <summary>
 	/// La classe Group permet de gérer les groupes.
 	/// </summary>
-	[SuppressBundleSupport]
 	public class Group : Abstract
 	{
 		public Group() : base()

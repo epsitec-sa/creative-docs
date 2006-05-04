@@ -8,7 +8,6 @@ namespace Epsitec.Common.Document.TextPanels
 	/// <summary>
 	/// La classe Xscript permet de définir les indices/exposants.
 	/// </summary>
-	[SuppressBundleSupport]
 	public class Xscript : Abstract
 	{
 		public Xscript(Document document, bool isStyle, StyleCategory styleCategory) : base(document, isStyle, styleCategory)

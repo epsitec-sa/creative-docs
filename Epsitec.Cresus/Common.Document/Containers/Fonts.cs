@@ -7,7 +7,6 @@ namespace Epsitec.Common.Document.Containers
 	/// <summary>
 	/// La classe Containers.Fonts contient tous les panneaux des repères.
 	/// </summary>
-	[SuppressBundleSupport]
 	public class Fonts : Abstract
 	{
 		public Fonts(Document document) : base(document)

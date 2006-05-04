@@ -7,7 +7,6 @@ namespace Epsitec.Common.Document.Panels
 	/// <summary>
 	/// La classe Gradient permet de choisir un dégradé de couleurs.
 	/// </summary>
-	[SuppressBundleSupport]
 	public class Gradient : Abstract
 	{
 		public Gradient(Document document) : base(document)

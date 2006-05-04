@@ -8,7 +8,6 @@ namespace Epsitec.Common.Document.TextPanels
 	/// <summary>
 	/// La classe Xline permet de choisir les soulignements.
 	/// </summary>
-	[SuppressBundleSupport]
 	public class Xline : Abstract
 	{
 		public Xline(Document document, bool isStyle, StyleCategory styleCategory) : base(document, isStyle, styleCategory)
