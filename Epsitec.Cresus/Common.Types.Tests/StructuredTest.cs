@@ -44,6 +44,32 @@ namespace Epsitec.Common.Types
 			Assert.IsTrue (record.GetFieldType ("Personne.Adresse.NPA") is IntegerType);
 		}
 
+		[Test]
+		public void CheckStructuredRecordPaths()
+		{
+			Assert.AreEqual ("a*b*c", string.Join ("*", StructuredRecordType.SplitPath ("a.b.c")));
+			Assert.AreEqual ("a.b.c.d", StructuredRecordType.CreatePath ("a", "b", "c.d"));
+			Assert.AreEqual ("", StructuredRecordType.CreatePath ());
+			Assert.AreEqual ("", StructuredRecordType.CreatePath (""));
+			Assert.AreEqual (0, StructuredRecordType.SplitPath (null).Length);
+			Assert.AreEqual (0, StructuredRecordType.SplitPath ("").Length);
+		}
+
+		[Test]
+		public void CheckStructuredRecordTree()
+		{
+			StructuredRecordType record = new StructuredRecordType ();
+			StructuredTest.Fill (record);
+
+			Assert.AreEqual ("Number1/Number2/Personne/Text1", string.Join ("/", record.GetFieldNames ()));
+			Assert.AreEqual ("Personne.Adresse/Personne.Nom/Personne.Prénom", string.Join ("/", record.GetFieldPaths ("Personne")));
+			Assert.AreEqual ("Personne.Adresse.NPA/Personne.Adresse.Ville", string.Join ("/", record.GetFieldPaths ("Personne.Adresse")));
+
+			Assert.IsNull (record.GetFieldPaths ("Number1"));
+			Assert.IsNull (record.GetFieldPaths ("Personne.Adresse.Ville"));
+			Assert.IsNull (record.GetFieldPaths ("X"));
+		}
+
 		private static void Fill(StructuredRecordType record)
 		{
 			StructuredRecordType subRec1 = new StructuredRecordType ();

@@ -13,10 +13,10 @@ namespace Epsitec.Common.Types
 	/// </summary>
 	public interface IStructuredData
 	{
-		void AttachListener(DependencyPropertyPath path, PropertyChangedEventHandler handler);
-		void DetachListener(DependencyPropertyPath path, PropertyChangedEventHandler handler);
+		void AttachListener(string path, PropertyChangedEventHandler handler);
+		void DetachListener(string path, PropertyChangedEventHandler handler);
 
-		object GetValue(DependencyPropertyPath path);
-		void SetValue(DependencyPropertyPath path, object value);
+		object GetValue(string path);
+		void SetValue(string path, object value);
 	}
 }

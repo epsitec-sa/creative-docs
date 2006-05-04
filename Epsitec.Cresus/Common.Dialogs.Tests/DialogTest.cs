@@ -77,7 +77,7 @@ namespace Epsitec.Common.Dialogs
 			Dialog           dialog     = new Dialog (Support.Resources.DefaultManager, "dialog_with_data");
 			DialogController controller = new DialogController (dialog);
 			
-			Record record = new Record ("Rec", "dialog_with_data_strings");
+			ObsoleteRecord record = new ObsoleteRecord ("Rec", "dialog_with_data_strings");
 			
 			record.AddField ("UserName", "Test", new Types.StringType (), new Support.RegexConstraint (Support.PredefinedRegex.Alpha));
 			record.AddField ("UserAge",  10);
@@ -144,7 +144,7 @@ namespace Epsitec.Common.Dialogs
 		
 		private void HandleFieldChanged(object sender)
 		{
-			Field field = sender as Field;
+			ObsoleteField field = sender as ObsoleteField;
 			
 			System.Diagnostics.Debug.WriteLine ("Field " + field.Name + " changed to " + field.Value.ToString () + (field.IsValueValid ? "" : "(invalid)"));
 		}
@@ -173,12 +173,12 @@ namespace Epsitec.Common.Dialogs
 			return new Source ("Hello", methods, values, "");
 		}
 		
-		public static Types.IDataValue[] CreateValues(out Common.UI.Data.Record record)
+		public static Types.IDataValue[] CreateValues(out Common.UI.Data.ObsoleteRecord record)
 		{
-			record  = new Epsitec.Common.UI.Data.Record ();
+			record  = new Epsitec.Common.UI.Data.ObsoleteRecord ();
 			
 			Types.IDataValue[]    values  = new Types.IDataValue[1];
-			Common.UI.Data.Field  field_1 = new Epsitec.Common.UI.Data.Field ("UserName", "anonymous", new Types.StringType ());
+			Common.UI.Data.ObsoleteField  field_1 = new Epsitec.Common.UI.Data.ObsoleteField ("UserName", "anonymous", new Types.StringType ());
 			
 			record.Add (field_1);
 			

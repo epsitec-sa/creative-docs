@@ -14,7 +14,7 @@ namespace Epsitec.Common.Script
 		
 		[Test] public void CheckSourceGeneration()
 		{
-			Common.UI.Data.Record record  = new Epsitec.Common.UI.Data.Record ();
+			Common.UI.Data.ObsoleteRecord record  = new Epsitec.Common.UI.Data.ObsoleteRecord ();
 			Types.IDataValue[]    values  = SourceTest.CreateValues (out record);
 			
 			Source source = SourceTest.CreateSource (values);
@@ -70,7 +70,7 @@ namespace Epsitec.Common.Script
 		
 		[Test] public void CheckScriptWrapper()
 		{
-			Common.UI.Data.Record record = new Epsitec.Common.UI.Data.Record ();
+			Common.UI.Data.ObsoleteRecord record = new Epsitec.Common.UI.Data.ObsoleteRecord ();
 			Types.IDataValue[]    values = SourceTest.CreateValues (out record);
 			Source                source = SourceTest.CreateSource (values);
 			
@@ -112,12 +112,12 @@ namespace Epsitec.Common.Script
 			return new Source ("Hello", methods, values, "");
 		}
 		
-		public static Types.IDataValue[] CreateValues(out Common.UI.Data.Record record)
+		public static Types.IDataValue[] CreateValues(out Common.UI.Data.ObsoleteRecord record)
 		{
-			record  = new Epsitec.Common.UI.Data.Record ();
+			record  = new Epsitec.Common.UI.Data.ObsoleteRecord ();
 			
 			Types.IDataValue[]    values  = new Types.IDataValue[1];
-			Common.UI.Data.Field  field_1 = new Epsitec.Common.UI.Data.Field ("UserName", "anonymous", new Types.StringType ());
+			Common.UI.Data.ObsoleteField  field_1 = new Epsitec.Common.UI.Data.ObsoleteField ("UserName", "anonymous", new Types.StringType ());
 			
 			record.Add (field_1);
 			

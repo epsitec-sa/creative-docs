@@ -1,4 +1,4 @@
-//	Copyright © 2004-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2004-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -9,9 +9,9 @@ namespace Epsitec.Common.UI
 	/// <summary>
 	/// La classe AbstractPanel est la base de toutes les classes XyzPanel.
 	/// </summary>
-	public abstract class AbstractPanel : ICommandDispatcherHost, System.IDisposable
+	public abstract class ObsoleteAbstractPanel : ICommandDispatcherHost, System.IDisposable
 	{
-		public AbstractPanel()
+		public ObsoleteAbstractPanel()
 		{
 		}
 		

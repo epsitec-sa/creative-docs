@@ -120,12 +120,13 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AbstractPanel.cs" />
+    <Compile Include="DataSourceCollection.cs" />
+    <Compile Include="ObsoleteAbstractPanel.cs" />
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Data\Field.cs" />
-    <Compile Include="Data\Record.cs" />
+    <Compile Include="Data\ObsoleteField.cs" />
+    <Compile Include="Data\ObsoleteRecord.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

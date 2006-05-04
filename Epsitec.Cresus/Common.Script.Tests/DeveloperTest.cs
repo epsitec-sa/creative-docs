@@ -15,7 +15,7 @@ namespace Epsitec.Common.Script
 		{
 			Assert.IsNotNull (Editor.Engine);
 			
-			Common.UI.Data.Record record = new Epsitec.Common.UI.Data.Record ();
+			Common.UI.Data.ObsoleteRecord record = new Epsitec.Common.UI.Data.ObsoleteRecord ();
 			Types.IDataValue[]    values = SourceTest.CreateValues (out record);
 			Source                source = SourceTest.CreateSource (values);
 			ScriptWrapper         script = new ScriptWrapper ();
@@ -31,7 +31,7 @@ namespace Epsitec.Common.Script
 		{
 			Widgets.Window window = new Widgets.Window ();
 			
-			Common.UI.Data.Record record = new Epsitec.Common.UI.Data.Record ();
+			Common.UI.Data.ObsoleteRecord record = new Epsitec.Common.UI.Data.ObsoleteRecord ();
 			Types.IDataValue[]    values = SourceTest.CreateValues (out record);
 			Source                source = SourceTest.CreateSource (values);
 			

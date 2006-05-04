@@ -15,9 +15,9 @@ namespace Epsitec.Common.Types
 
 		#region IStructuredData Members
 
-		public void AttachListener(DependencyPropertyPath path, Epsitec.Common.Support.EventHandler<DependencyPropertyChangedEventArgs> handler)
+		public void AttachListener(string path, Epsitec.Common.Support.EventHandler<DependencyPropertyChangedEventArgs> handler)
 		{
-			string key = path.GetFullPath ();
+			string key = path;
 			PropertyChangedEventHandler value;
 
 			if (this.listeners.TryGetValue (key, out value))
@@ -32,9 +32,9 @@ namespace Epsitec.Common.Types
 			this.listeners[key] = value;
 		}
 
-		public void DetachListener(DependencyPropertyPath path, Epsitec.Common.Support.EventHandler<DependencyPropertyChangedEventArgs> handler)
+		public void DetachListener(string path, Epsitec.Common.Support.EventHandler<DependencyPropertyChangedEventArgs> handler)
 		{
-			string key = path.GetFullPath ();
+			string key = path;
 			PropertyChangedEventHandler value;
 
 			if (this.listeners.TryGetValue (key, out value))
@@ -56,19 +56,17 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		public object GetValue(DependencyPropertyPath path)
+		public object GetValue(string path)
 		{
-			string fullPath = path.GetFullPath ();
-			object value = this.GetValueBase (fullPath);
-			this.UpdateCachedValue (fullPath, value);
+			object value = this.GetValueBase (path);
+			this.UpdateCachedValue (path, value);
 			return value;
 		}
 
-		public void SetValue(DependencyPropertyPath path, object value)
+		public void SetValue(string path, object value)
 		{
-			string fullPath = path.GetFullPath ();
-			this.SetValueBase (fullPath, value);
-			this.UpdateCachedValue (fullPath, value);
+			this.SetValueBase (path, value);
+			this.UpdateCachedValue (path, value);
 		}
 
 		#endregion
