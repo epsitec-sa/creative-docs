@@ -962,6 +962,17 @@ namespace Epsitec.Common.Widgets
 			real.PreferredWidth = 50;
 			real.Value = 10;
 			real.SetManualBounds (new Rectangle (8+50+4, 200-5-real.PreferredHeight, real.PreferredWidth, real.PreferredHeight));
+
+			Button button = new Button ();
+
+			Assert.AreEqual (Drawing.ContentAlignment.MiddleCenter, button.ContentAlignment);
+
+			button.Text = "X";
+			button.PreferredWidth = 40;
+			button.Anchor = AnchorStyles.TopLeft;
+			button.Margins = new Margins (0, 0, 40, 0);
+
+			window.Root.Children.Add (button);
 			
 			window.Show ();
 			Window.RunInTestEnvironment (window);

@@ -1311,8 +1311,8 @@ namespace Epsitec.Common.Widgets
 			Drawing.Rectangle rect = this.ActualBounds;
 			Drawing.Rectangle iRect = new Drawing.Rectangle(this.margins.Left, this.margins.Bottom, rect.Width-this.margins.Width, rect.Height-this.margins.Height);
 
-			this.rightMargin  = this.showScrollerV ? this.scrollerV.ActualWidth-1 : 0;
-			this.bottomMargin = this.showScrollerH ? this.scrollerH.ActualHeight-1 : 0;
+			this.rightMargin  = this.showScrollerV ? this.scrollerV.PreferredWidth-1 : 0;
+			this.bottomMargin = this.showScrollerH ? this.scrollerH.PreferredHeight-1 : 0;
 
 			iRect.Left   += this.leftMargin;
 			iRect.Right  -= this.rightMargin;
@@ -1333,7 +1333,7 @@ namespace Epsitec.Common.Widgets
 			{
 				Drawing.Rectangle sRect = iRect;
 				sRect.Left  = sRect.Right-1;
-				sRect.Right = sRect.Left+this.scrollerV.ActualWidth;
+				sRect.Right = sRect.Left+this.scrollerV.PreferredWidth;
 				this.scrollerV.SetManualBounds(sRect);
 				this.scrollerV.Show();
 			}
@@ -1347,7 +1347,7 @@ namespace Epsitec.Common.Widgets
 			{
 				Drawing.Rectangle sRect = iRect;
 				sRect.Top    = sRect.Bottom+1;
-				sRect.Bottom = sRect.Top-this.scrollerH.ActualHeight;
+				sRect.Bottom = sRect.Top-this.scrollerH.PreferredHeight;
 				this.scrollerH.SetManualBounds(sRect);
 				this.scrollerH.Show();
 			}

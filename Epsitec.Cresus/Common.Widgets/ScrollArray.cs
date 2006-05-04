@@ -1590,14 +1590,14 @@ invalid:	row    = -1;
 		protected virtual void UpdateTableBounds()
 		{
 			this.frame_margins = Widgets.Adorners.Factory.Active.GeometryArrayMargins;
-			this.table_margins = new Drawing.Margins (0, this.v_scroller.ActualWidth - 1, this.row_height + this.title_height, this.h_scroller.ActualHeight - 1);
+			this.table_margins = new Drawing.Margins (0, this.v_scroller.PreferredWidth - 1, this.row_height + this.title_height, this.h_scroller.PreferredHeight - 1);
 			
-			if (this.v_scroller.IsVisible == false)
+			if (this.v_scroller.Visibility == false)
 			{
 				this.table_margins.Right = 0;
 			}
-			
-			if (this.h_scroller.IsVisible == false)
+
+			if (this.h_scroller.Visibility == false)
 			{
 				this.table_margins.Bottom = 0;
 			}
@@ -1698,14 +1698,14 @@ invalid:	row    = -1;
 			
 			rect       = this.table_bounds;
 			rect.Left  = this.table_bounds.Right-1;
-			rect.Right = this.table_bounds.Right-1 + this.v_scroller.ActualWidth;
+			rect.Right = this.table_bounds.Right-1 + this.v_scroller.PreferredWidth;
 
 			this.v_scroller.SetManualBounds(rect);
 			
 			//	Place l'ascenseur horizontal :
 			
 			rect        = this.table_bounds;
-			rect.Bottom = this.table_bounds.Bottom+1 - this.h_scroller.ActualHeight;
+			rect.Bottom = this.table_bounds.Bottom+1 - this.h_scroller.PreferredHeight;
 			rect.Top    = this.table_bounds.Bottom+1;
 
 			this.h_scroller.SetManualBounds(rect);
@@ -1892,8 +1892,8 @@ invalid:	row    = -1;
 				Drawing.Rectangle bounds = this.GetRowBounds (this.SelectedIndex);
 				
 				bounds.Inflate (0, 0, 0, 1);
-				
-				if ((this.h_scroller.IsVisible) &&
+
+				if ((this.h_scroller.Visibility) &&
 					(bounds.Bottom < this.h_scroller.ActualBounds.Top))
 				{
 					bounds.Bottom = this.h_scroller.ActualBounds.Top;

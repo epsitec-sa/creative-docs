@@ -23,6 +23,9 @@ namespace Epsitec.Common.Widgets
 			//	it locally. Setting InheritsParentFocus will clear the definition.
 			
 			this.SetValueBase (Visual.IsFocusedProperty, false);
+
+			this.width = this.PreferredWidth;
+			this.height = this.PreferredHeight;
 		}
 		
 		

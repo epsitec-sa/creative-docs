@@ -1308,7 +1308,8 @@ namespace Epsitec.Common.Widgets
 			AdornerTest.CreateListLook(window.Root, 10, 10, null, -1);
 
 			StaticText title = new StaticText();
-			title.PreferredSize = new Size(280, 15);
+			title.PreferredWidth = 280;
+			title.PreferredHeight = 15;
 			title.Text = "Sélections possibles avec Ctrl et/ou Shift :";
 			title.Anchor = AnchorStyles.TopLeft;
 			title.Margins = new Margins(120, 0, 55, 0);
@@ -1398,7 +1399,8 @@ namespace Epsitec.Common.Widgets
 			AdornerTest.CreateListLook(window.Root, 10, 10, null, -1);
 
 			StaticText title = new StaticText();
-			title.SetManualBounds(new Rectangle (120, 245, 380, 15));
+			title.PreferredWidth = 380;
+			title.PreferredHeight = 15;
 			title.Text = "Tableau de lignes editables et redimensionnable :";
 			title.Anchor = AnchorStyles.TopLeft;
 			title.Margins = new Margins(120, 0, 55, 0);
@@ -1471,7 +1473,8 @@ namespace Epsitec.Common.Widgets
 			AdornerTest.CreateListLook (window.Root, 10, 10, null, -1);
 
 			StaticText title = new StaticText();
-			title.SetManualBounds(new Rectangle (120, 245, 280, 15));
+			title.PreferredWidth = 280;
+			title.PreferredHeight = 15;
 			title.Text = "Tableau redimensionnable non éditable :";
 			title.Anchor = AnchorStyles.TopLeft;
 			title.Margins = new Margins(120, 0, 55, 0);
