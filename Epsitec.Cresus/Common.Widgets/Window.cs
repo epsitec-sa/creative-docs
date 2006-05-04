@@ -1682,6 +1682,15 @@ namespace Epsitec.Common.Widgets
 				this.window.SendQueueCommand ();
 			}
 		}
+
+		public void AsyncLayout()
+		{
+			if (this.is_async_layout_queued = false)
+			{
+				this.is_async_layout_queued = true;
+				this.window.SendQueueCommand ();
+			}
+		}
 		
 		public void AsyncValidation()
 		{
@@ -1783,6 +1792,11 @@ namespace Epsitec.Common.Widgets
 			{
 				this.is_async_notification_queued = false;
 				this.OnAsyncNotification ();
+			}
+			if (this.is_async_layout_queued)
+			{
+				this.is_async_layout_queued = false;
+				this.ForceLayout ();
 			}
 		}
 		
@@ -2291,6 +2305,7 @@ namespace Epsitec.Common.Widgets
 		private System.Collections.Queue		cmd_queue = new System.Collections.Queue ();
 		private bool							is_dispose_queued;
 		private bool							is_async_notification_queued;
+		private bool							is_async_layout_queued;
 		private bool							is_disposed;
 		private bool							pending_validation;
 		private IPaintFilter					paint_filter;

@@ -783,7 +783,7 @@ namespace Epsitec.Common.Widgets
 			this.width  = value.Width;
 			this.height = value.Height;
 
-			this.dirtyLayout = false;
+			this.ClearDirtyLayoutFlag ();
 
 			if (oldValue != newValue)
 			{
@@ -844,7 +844,7 @@ namespace Epsitec.Common.Widgets
 		
 		public void Arrange(Layouts.LayoutContext context)
 		{
-			this.dirtyLayout = false;
+			this.ClearDirtyLayoutFlag ();
 
 			if (this.HasChildren)
 			{
@@ -1056,7 +1056,17 @@ namespace Epsitec.Common.Widgets
 
 		internal virtual void SetDirtyLayoutFlag()
 		{
-			this.dirtyLayout = true;
+			if (this.dirtyLayout == false)
+			{
+				this.dirtyLayout = true;
+				
+				Window window = this.Window;
+				
+				if (window != null)
+				{
+					window.AsyncLayout ();
+				}
+			}
 		}
 		
 		internal virtual void ClearDirtyLayoutFlag()
