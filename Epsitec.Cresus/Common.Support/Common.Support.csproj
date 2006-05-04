@@ -218,9 +218,6 @@
     <Compile Include="Serialization\Helper.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="SuppressBundleSupportAttribute.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Sync.cs">
       <SubType>Code</SubType>
     </Compile>
