@@ -13,7 +13,7 @@ namespace Epsitec.Common.Types
 	/// qui permet une plus grande souplesse (valeurs par défaut, introspection,
 	/// sérialisation, styles, génération automatique d'événements, etc.)
 	/// </summary>
-	public abstract class DependencyObject : System.IDisposable, IInheritedPropertyCache
+	public abstract class DependencyObject : System.IDisposable, IInheritedPropertyCache, IStructuredData
 	{
 		protected DependencyObject()
 		{
@@ -554,41 +554,6 @@ namespace Epsitec.Common.Types
 		}
 		#endregion
 
-		#region Private TypeDeclaration Class
-		private class TypeDeclaration : Dictionary<string, DependencyProperty>
-		{
-		}
-		#endregion
-
-		#region Private PropertyChangedEventDictionary Class
-		private class PropertyChangedEventDictionary : Dictionary<DependencyProperty, PropertyChangedEventHandler>
-		{
-		}
-		#endregion
-
-		#region Private UserEventDictionary Class
-		private class UserEventDictionary : Dictionary<string, System.Delegate>
-		{
-		}
-		#endregion
-
-		#region Private BindingExpressionDictionary Class
-		private class BindingExpressionDictionary : Dictionary<DependencyProperty, BindingExpression>
-		{
-		}
-		#endregion
-
-		Dictionary<DependencyProperty, object>				properties = new Dictionary<DependencyProperty, object> ();
-		BindingExpressionDictionary							bindings;
-		PropertyChangedEventDictionary						propertyEvents;
-		UserEventDictionary									userEvents;
-		InheritedPropertyCache								inheritedPropertyCache;
-		
-		DependencyObjectType								cachedType;
-
-		static Dictionary<System.Type, TypeDeclaration>		declarations = new Dictionary<System.Type, TypeDeclaration> ();
-		static int											registeredPropertyCount;
-
 		#region IInheritedPropertyCache Members
 
 		void IInheritedPropertyCache.ClearAllValues(DependencyObject node)
@@ -625,5 +590,92 @@ namespace Epsitec.Common.Types
 		}
 
 		#endregion
+
+		#region IStructuredData Members
+
+		void IStructuredData.AttachListener(string path, Epsitec.Common.Support.EventHandler<DependencyPropertyChangedEventArgs> handler)
+		{
+			DependencyProperty property = this.ObjectType.GetProperty (path);
+
+			if (property == null)
+			{
+				throw new System.ArgumentException (string.Format ("Path '{0}' cannot map to DependencyProperty", path));
+			}
+
+			this.AddEventHandler (property, handler);
+		}
+
+		void IStructuredData.DetachListener(string path, Epsitec.Common.Support.EventHandler<DependencyPropertyChangedEventArgs> handler)
+		{
+			DependencyProperty property = this.ObjectType.GetProperty (path);
+
+			if (property == null)
+			{
+				throw new System.ArgumentException (string.Format ("Path '{0}' cannot map to DependencyProperty", path));
+			}
+
+			this.RemoveEventHandler (property, handler);
+		}
+
+		object IStructuredData.GetValue(string path)
+		{
+			DependencyProperty property = this.ObjectType.GetProperty (path);
+
+			if (property == null)
+			{
+				throw new System.ArgumentException (string.Format ("Path '{0}' cannot map to DependencyProperty", path));
+			}
+
+			return this.GetValue (property);
+		}
+
+		void IStructuredData.SetValue(string path, object value)
+		{
+			DependencyProperty property = this.ObjectType.GetProperty (path);
+
+			if (property == null)
+			{
+				throw new System.ArgumentException (string.Format ("Path '{0}' cannot map to DependencyProperty", path));
+			}
+
+			this.SetValue (property, value);
+		}
+
+		#endregion
+
+		#region Private TypeDeclaration Class
+		private class TypeDeclaration : Dictionary<string, DependencyProperty>
+		{
+		}
+		#endregion
+
+		#region Private PropertyChangedEventDictionary Class
+		private class PropertyChangedEventDictionary : Dictionary<DependencyProperty, PropertyChangedEventHandler>
+		{
+		}
+		#endregion
+
+		#region Private UserEventDictionary Class
+		private class UserEventDictionary : Dictionary<string, System.Delegate>
+		{
+		}
+		#endregion
+
+		#region Private BindingExpressionDictionary Class
+		private class BindingExpressionDictionary : Dictionary<DependencyProperty, BindingExpression>
+		{
+		}
+		#endregion
+
+		Dictionary<DependencyProperty, object>				properties = new Dictionary<DependencyProperty, object> ();
+		BindingExpressionDictionary							bindings;
+		PropertyChangedEventDictionary						propertyEvents;
+		UserEventDictionary									userEvents;
+		InheritedPropertyCache								inheritedPropertyCache;
+		
+		DependencyObjectType								cachedType;
+
+		static Dictionary<System.Type, TypeDeclaration>		declarations = new Dictionary<System.Type, TypeDeclaration> ();
+		static int											registeredPropertyCount;
 	}
 }
