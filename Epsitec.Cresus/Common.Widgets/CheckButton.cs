@@ -21,18 +21,13 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
-		public override double					DefaultHeight
-		{
-			get
-			{
-				return System.Math.Ceiling (this.DefaultFontHeight + 1);
-			}
-		}
-
 		static CheckButton()
 		{
-			Helpers.VisualPropertyMetadata metadata = new Helpers.VisualPropertyMetadata (Drawing.ContentAlignment.MiddleLeft, Helpers.VisualPropertyMetadataOptions.AffectsTextLayout);
-			Visual.ContentAlignmentProperty.OverrideMetadata (typeof (CheckButton), metadata);
+			Helpers.VisualPropertyMetadata metadataAlign = new Helpers.VisualPropertyMetadata (Drawing.ContentAlignment.MiddleLeft, Helpers.VisualPropertyMetadataOptions.AffectsTextLayout);
+			Helpers.VisualPropertyMetadata metadataDy = new Helpers.VisualPropertyMetadata (Widget.DefaultFontHeight+1, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
+			
+			Visual.ContentAlignmentProperty.OverrideMetadata (typeof (CheckButton), metadataAlign);
+			Visual.PreferredHeightProperty.OverrideMetadata (typeof (CheckButton), metadataDy);
 		}
 		
 		public Drawing.Point					LabelOffset

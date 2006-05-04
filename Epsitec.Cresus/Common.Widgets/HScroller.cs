@@ -17,20 +17,14 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public override double				DefaultHeight
+		static HScroller()
 		{
-			get
-			{
-				return AbstractScroller.defaultBreadth;
-			}
-		}
-		
-		public override Drawing.Size		DefaultMinSize
-		{
-			get
-			{
-				return new Drawing.Size (AbstractScroller.minimalThumb+6, AbstractScroller.defaultBreadth);
-			}
+			Helpers.VisualPropertyMetadata metadataDx = new Helpers.VisualPropertyMetadata (AbstractScroller.minimalThumb+6, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
+			Helpers.VisualPropertyMetadata metadataDy = new Helpers.VisualPropertyMetadata (AbstractScroller.defaultBreadth, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
+
+			Visual.PreferredHeightProperty.OverrideMetadata (typeof (HScroller), metadataDy);
+			Visual.MinWidthProperty.OverrideMetadata (typeof (HScroller), metadataDx);
+			Visual.MinHeightProperty.OverrideMetadata (typeof (HScroller), metadataDy);
 		}
 	}
 }

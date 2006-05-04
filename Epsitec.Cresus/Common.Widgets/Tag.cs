@@ -30,16 +30,14 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public override double					DefaultWidth
+		static Tag()
 		{
-			get { return 18; }
-		}
+			Helpers.VisualPropertyMetadata metadataDx = new Helpers.VisualPropertyMetadata (18.0, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
+			Helpers.VisualPropertyMetadata metadataDy = new Helpers.VisualPropertyMetadata (18.0, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
 
-		public override double					DefaultHeight
-		{
-			get { return 18; }
+			Visual.PreferredWidthProperty.OverrideMetadata (typeof (Tag), metadataDx);
+			Visual.PreferredHeightProperty.OverrideMetadata (typeof (Tag), metadataDy);
 		}
-		
 		
 		public Drawing.Color					Color
 		{

@@ -322,7 +322,7 @@ namespace Epsitec.Common.Widgets
 		{
 			if (this.accept_reject_behavior != null)
 			{
-				this.margins.Right = this.mode == TextFieldExListMode.EditActive ? this.accept_reject_behavior.DefaultWidth : this.button.DefaultWidth;
+				this.margins.Right = this.mode == TextFieldExListMode.EditActive ? this.accept_reject_behavior.DefaultWidth : this.button.PreferredWidth;
 				this.accept_reject_behavior.UpdateButtonGeometry ();
 			}
 			

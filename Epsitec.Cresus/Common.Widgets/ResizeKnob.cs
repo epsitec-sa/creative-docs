@@ -35,14 +35,13 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public override double					DefaultWidth
+		static ResizeKnob()
 		{
-			get { return 15; }
-		}
-		
-		public override double					DefaultHeight
-		{
-			get { return 15; }
+			Helpers.VisualPropertyMetadata metadataDx = new Helpers.VisualPropertyMetadata (15.0, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
+			Helpers.VisualPropertyMetadata metadataDy = new Helpers.VisualPropertyMetadata (15.0, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
+
+			Visual.PreferredWidthProperty.OverrideMetadata (typeof (ResizeKnob), metadataDx);
+			Visual.PreferredHeightProperty.OverrideMetadata (typeof (ResizeKnob), metadataDy);
 		}
 		
 		

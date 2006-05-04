@@ -51,7 +51,7 @@ namespace Epsitec.Common.Widgets
 			this.icon.Alignment     = Drawing.ContentAlignment.MiddleLeft;
 			this.shortcut.Alignment = Drawing.ContentAlignment.MiddleLeft;
 			
-			this.submenu_mark_width = this.DefaultFontHeight;
+			this.submenu_mark_width = Widget.DefaultFontHeight;
 		}
 		
 		public MenuItem(Widget embedder) : this ()

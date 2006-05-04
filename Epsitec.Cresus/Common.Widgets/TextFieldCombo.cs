@@ -26,8 +26,8 @@ namespace Epsitec.Common.Widgets
 			this.button.Name     = "Open";
 			this.button.Pressed += new MessageEventHandler (this.HandleButtonPressed);
 			
-			this.default_button_width = this.button.DefaultWidth;
-			this.margins.Right        = this.button.DefaultWidth;
+			this.default_button_width = this.button.PreferredWidth;
+			this.margins.Right        = this.button.PreferredWidth;
 		}
 		
 		public TextFieldCombo(Widget embedder) : this ()

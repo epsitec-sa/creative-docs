@@ -29,18 +29,13 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public override double						DefaultHeight
-		{
-			get
-			{
-				return this.DefaultFontHeight;
-			}
-		}
-
 		static StaticText()
 		{
-			Helpers.VisualPropertyMetadata metadata = new Helpers.VisualPropertyMetadata (Drawing.ContentAlignment.MiddleLeft, Helpers.VisualPropertyMetadataOptions.AffectsTextLayout);
-			Visual.ContentAlignmentProperty.OverrideMetadata (typeof (StaticText), metadata);
+			Helpers.VisualPropertyMetadata metadataAlign = new Helpers.VisualPropertyMetadata (Drawing.ContentAlignment.MiddleLeft, Helpers.VisualPropertyMetadataOptions.AffectsTextLayout);
+			Helpers.VisualPropertyMetadata metadataHeight = new Helpers.VisualPropertyMetadata (Widget.DefaultFontHeight, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
+			
+			Visual.ContentAlignmentProperty.OverrideMetadata (typeof (StaticText), metadataAlign);
+			Visual.PreferredHeightProperty.OverrideMetadata (typeof (StaticText), metadataHeight);
 		}
 		
 #if false	//#fix

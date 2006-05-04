@@ -81,22 +81,14 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
-		public override double					DefaultWidth
+		static ColorPalette()
 		{
-			get
-			{
-				return 20*this.nbColumns-1;
-			}
-		}
+			Helpers.VisualPropertyMetadata metadataDx = new Helpers.VisualPropertyMetadata (80.0-1, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
+			Helpers.VisualPropertyMetadata metadataDy = new Helpers.VisualPropertyMetadata (160.0-1, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
 
-		public override double					DefaultHeight
-		{
-			get
-			{
-				return 20*this.nbRows-1;
-			}
+			Visual.PreferredWidthProperty.OverrideMetadata (typeof (ColorPalette), metadataDx);
+			Visual.PreferredHeightProperty.OverrideMetadata (typeof (ColorPalette), metadataDy);
 		}
-
 		public int								Columns
 		{
 			get

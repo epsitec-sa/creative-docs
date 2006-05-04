@@ -79,14 +79,13 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public override double					DefaultWidth
+		static GlyphButton()
 		{
-			get { return 17; }
-		}
-		
-		public override double					DefaultHeight
-		{
-			get { return 17; }
+			Helpers.VisualPropertyMetadata metadataDx = new Helpers.VisualPropertyMetadata (17.0, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
+			Helpers.VisualPropertyMetadata metadataDy = new Helpers.VisualPropertyMetadata (17.0, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
+
+			Visual.PreferredWidthProperty.OverrideMetadata (typeof (GlyphButton), metadataDx);
+			Visual.PreferredHeightProperty.OverrideMetadata (typeof (GlyphButton), metadataDy);
 		}
 
 

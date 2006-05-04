@@ -19,13 +19,11 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		public override double DefaultHeight
+		static RibbonContainer()
 		{
-			//	Retourne la hauteur standard d'une barre.
-			get
-			{
-				return 66;
-			}
+			Helpers.VisualPropertyMetadata metadataDy = new Helpers.VisualPropertyMetadata (66.0, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
+
+			Visual.PreferredHeightProperty.OverrideMetadata (typeof (RibbonContainer), metadataDy);
 		}
 		
 		protected double LabelHeight

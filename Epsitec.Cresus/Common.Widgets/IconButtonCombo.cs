@@ -36,15 +36,6 @@ namespace Epsitec.Common.Widgets
 			this.SetEmbedder(embedder);
 		}
 		
-		
-		public override double					DefaultWidth
-		{
-			//	Retourne la largeur standard.
-			get
-			{
-				return base.DefaultWidth + IconButtonCombo.menuWidth;
-			}
-		}
 
 		public virtual bool						IsComboOpen
 		{

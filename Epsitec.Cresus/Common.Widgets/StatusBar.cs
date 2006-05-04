@@ -18,13 +18,11 @@ namespace Epsitec.Common.Widgets
 			this.SetEmbedder(embedder);
 		}
 		
-		public override double DefaultHeight
+		static StatusBar()
 		{
-			//	Retourne la hauteur standard.
-			get
-			{
-				return this.DefaultFontHeight+6;
-			}
+			Helpers.VisualPropertyMetadata metadataDy = new Helpers.VisualPropertyMetadata (Widget.DefaultFontHeight+6, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
+
+			Visual.PreferredHeightProperty.OverrideMetadata (typeof (StatusBar), metadataDy);
 		}
 
 		public Collections.WidgetCollection		Items

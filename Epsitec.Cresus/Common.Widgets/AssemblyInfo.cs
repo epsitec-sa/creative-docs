@@ -16,7 +16,4 @@ using System.Runtime.InteropServices;
 
 [assembly: AssemblyVersion("1.1.3.0")]
 
-[assembly: AssemblyDelaySign(false)]
-[assembly: AssemblyKeyFile(@"..\..\..\Epsitec.Cresus.snk")]
-[assembly: AssemblyKeyName("")]
 [assembly: ComVisibleAttribute (false)]

@@ -16,22 +16,13 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public override double DefaultWidth
+		static ColorWheel()
 		{
-			//	Retourne la largeur standard.
-			get
-			{
-				return 100;
-			}
-		}
+			Helpers.VisualPropertyMetadata metadataDx = new Helpers.VisualPropertyMetadata (100.0, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
+			Helpers.VisualPropertyMetadata metadataDy = new Helpers.VisualPropertyMetadata (100.0, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
 
-		public override double DefaultHeight
-		{
-			//	Retourne la hauteur standard.
-			get
-			{
-				return 100;
-			}
+			Visual.PreferredWidthProperty.OverrideMetadata (typeof (ColorWheel), metadataDx);
+			Visual.PreferredHeightProperty.OverrideMetadata (typeof (ColorWheel), metadataDy);
 		}
 
 		public Drawing.RichColor Color

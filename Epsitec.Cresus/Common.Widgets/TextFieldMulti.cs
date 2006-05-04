@@ -17,7 +17,7 @@ namespace Epsitec.Common.Widgets
 			this.scroller.ValueChanged += new Support.EventHandler(this.HandleScrollerValueChanged);
 			//this.scroller.Dock = DockStyle.Right;
 			
-			this.margins.Right = this.scroller.DefaultWidth;
+			this.margins.Right = this.scroller.PreferredWidth;
 		}
 		
 		public TextFieldMulti(Widget embedder) : this()

@@ -50,8 +50,6 @@ namespace Epsitec.Common.Widgets
 			
 			this.default_font_height = System.Math.Floor(this.DefaultFont.LineHeight*this.DefaultFontSize);
 			
-			this.PreferredSize = new Drawing.Size (this.DefaultWidth, this.DefaultHeight);
-			
 			lock (Widget.aliveWidgets)
 			{
 				Widget.aliveWidgets.Add (new System.WeakReference (this));
@@ -314,29 +312,10 @@ namespace Epsitec.Common.Widgets
 			get { return Drawing.Font.DefaultFontSize; }
 		}
 		
-		public virtual double						DefaultWidth
+		public static double						DefaultFontHeight
 		{
-			get { return 80; }
+			get { return 12.0; }
 		}
-		public virtual double						DefaultHeight
-		{
-			get { return 20; }
-		}
-		public virtual double						DefaultFontHeight
-		{
-			get { return this.default_font_height; }
-		}
-		
-		public virtual Drawing.Size					DefaultMinSize
-		{
-			get { return new Drawing.Size (4, 4); }
-		}
-		
-		public virtual Drawing.Size					DefaultMaxSize
-		{
-			get { return Drawing.Size.MaxValue; }
-		}
-		
 		
 		public bool									IsCommand
 		{
@@ -916,7 +895,10 @@ namespace Epsitec.Common.Widgets
 		
 		public virtual Drawing.Size GetBestFitSize()
 		{
-			return new Drawing.Size (this.DefaultWidth, this.DefaultHeight);
+			Types.DependencyPropertyMetadata metadataDx = Visual.PreferredWidthProperty.GetMetadata (this);
+			Types.DependencyPropertyMetadata metadataDy = Visual.PreferredHeightProperty.GetMetadata (this);
+
+			return new Drawing.Size ((double) metadataDx.DefaultValue, (double) metadataDy.DefaultValue);
 		}
 		
 		public virtual Drawing.Point GetBaseLine()

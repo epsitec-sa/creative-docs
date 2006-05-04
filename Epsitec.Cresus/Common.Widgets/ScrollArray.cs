@@ -44,7 +44,7 @@ namespace Epsitec.Common.Widgets
 			this.frame_margins = adorner.GeometryArrayMargins;
 			this.table_margins = new Drawing.Margins ();
 			this.inner_margins = new Drawing.Margins ();
-			this.row_height    = System.Math.Floor (this.DefaultFontHeight * 1.25 + 0.5);
+			this.row_height    = System.Math.Floor (Widget.DefaultFontHeight * 1.25 + 0.5);
 			
 			this.header = new Widget (this);
 			this.v_scroller = new VScroller (this);
@@ -1584,7 +1584,7 @@ invalid:	row    = -1;
 		
 		protected virtual void UpdateRowHeight()
 		{
-			this.row_height = System.Math.Floor (this.DefaultFontHeight * 1.25 + 0.5);
+			this.row_height = System.Math.Floor (Widget.DefaultFontHeight * 1.25 + 0.5);
 		}
 		
 		protected virtual void UpdateTableBounds()

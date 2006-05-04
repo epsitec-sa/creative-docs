@@ -45,15 +45,13 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public override double			DefaultHeight
+		static Button()
 		{
-			//	Retourne la hauteur standard d'un bouton.
-			get
-			{
-				return this.DefaultFontHeight+10;
-			}
+			Helpers.VisualPropertyMetadata metadataDy = new Helpers.VisualPropertyMetadata (Widget.DefaultFontHeight+10, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
+			
+			Visual.PreferredHeightProperty.OverrideMetadata (typeof (Button), metadataDy);
 		}
-
+		
 		public ButtonStyle				ButtonStyle
 		{
 			get

@@ -22,7 +22,7 @@ namespace Epsitec.Common.Widgets
 			this.selectItemBehavior = new Behaviors.SelectItemBehavior(new Behaviors.SelectItemCallback(this.AutomaticItemSelection));
 			
 			this.scrollListStyle = ScrollListStyle.Normal;
-			this.lineHeight = this.DefaultFontHeight+1;
+			this.lineHeight = Widget.DefaultFontHeight+1;
 			this.scroller = new VScroller(null);
 			this.scroller.IsInverted = true;
 			this.scroller.SetParent(this);

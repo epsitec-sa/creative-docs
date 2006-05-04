@@ -11,12 +11,6 @@ namespace Epsitec.Common.Widgets
 			
 			this.items = new Collections.WidgetCollection (this);
 			this.items.AutoEmbedding = true;
-			
-			using (IconButton button = new IconButton ())
-			{
-				this.defaultButtonWidth  = button.DefaultWidth;
-				this.defaultButtonHeight = button.DefaultHeight;
-			}
 		}
 		
 		
@@ -127,8 +121,5 @@ namespace Epsitec.Common.Widgets
 		private DockStyle					iconDockStyle;
 		protected Direction					direction;
 		protected Collections.WidgetCollection	items;
-		
-		protected double					defaultButtonWidth;
-		protected double					defaultButtonHeight;
 	}
 }

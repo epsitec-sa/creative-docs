@@ -7,10 +7,7 @@ namespace Epsitec.Common.Widgets
 	{
 		public HToolBar()
 		{
-			this.direction     = Direction.Up;
-			
-			double m = (this.DefaultHeight-this.defaultButtonHeight)/2;
-			this.Padding = new Drawing.Margins(m, m, m, m);
+			this.direction = Direction.Up;
 		}
 		
 		public HToolBar(Widget embedder) : this()
@@ -19,13 +16,13 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		public override double				DefaultHeight
+		static HToolBar()
 		{
-			//	Retourne la hauteur standard d'une barre.
-			get
-			{
-				return 28;
-			}
+			Helpers.VisualPropertyMetadata metadataDy = new Helpers.VisualPropertyMetadata (28.0, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
+			Helpers.VisualPropertyMetadata metadataPadding = new Helpers.VisualPropertyMetadata (new Drawing.Margins (3, 3, 3, 3), Helpers.VisualPropertyMetadataOptions.AffectsChildrenLayout);
+
+			Visual.PreferredHeightProperty.OverrideMetadata (typeof (HToolBar), metadataDy);
+			Visual.PaddingProperty.OverrideMetadata (typeof (HToolBar), metadataPadding);
 		}
 		
 		public override DockStyle			DefaultIconDockStyle

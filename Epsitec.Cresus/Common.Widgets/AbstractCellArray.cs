@@ -34,7 +34,7 @@ namespace Epsitec.Common.Widgets
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
 			this.margins = adorner.GeometryArrayMargins;
 
-			double h = this.DefaultFontHeight+4;
+			double h = Widget.DefaultFontHeight+4;
 			this.defHeight = h;
 			this.minHeight = h;
 			this.headerHeight = h;
@@ -72,17 +72,6 @@ namespace Epsitec.Common.Widgets
 			base.Dispose(disposing);
 		}
 		
-		public override double				DefaultHeight
-		{
-			get { return 80; }
-		}
-		
-		public override double				DefaultWidth
-		{
-			get { return 80; }
-		}
-
-
 		public Drawing.Color				HiliteColor
 		{
 			get { return this.hiliteColor; }

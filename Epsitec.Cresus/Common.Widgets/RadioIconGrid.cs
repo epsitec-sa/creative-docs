@@ -16,12 +16,6 @@ namespace Epsitec.Common.Widgets
 			this.selectedValue = -1;
 			this.enableEndOfLine = true;
 
-			using ( IconButton button = new IconButton() )
-			{
-				this.defaultButtonWidth  = button.DefaultWidth;
-				this.defaultButtonHeight = button.DefaultHeight;
-			}
-			
 			this.controller = GroupController.GetGroupController(this, "GridGroup");
 			this.controller.Changed += new Support.EventHandler(this.HandleRadioChanged);
 		}
@@ -149,21 +143,21 @@ namespace Epsitec.Common.Widgets
 			{
 				System.Diagnostics.Debug.Assert(icon != null);
 
-				Rectangle rect = new Rectangle(corner.X, corner.Y-this.defaultButtonHeight, this.defaultButtonWidth, this.defaultButtonHeight);
+				Rectangle rect = new Rectangle(corner.X, corner.Y-icon.PreferredHeight, icon.PreferredWidth, icon.PreferredHeight);
 				icon.SetManualBounds(rect);
 				icon.Column = column;
 				icon.Row = row;
 				icon.Index = row * 1000 + column;
 				icon.Visibility = (box.Contains(rect));
 
-				corner.X += this.defaultButtonWidth;
+				corner.X += icon.PreferredWidth;
 				column ++;
 
-				if ( corner.X > this.Client.Bounds.Right-this.defaultButtonWidth ||
-					 (icon.EndOfLine && this.enableEndOfLine) )
+				if ((corner.X > this.Client.Bounds.Right-icon.PreferredWidth) ||
+					(icon.EndOfLine && this.enableEndOfLine))
 				{
 					corner.X = this.Client.Bounds.Left;
-					corner.Y -= this.defaultButtonHeight;
+					corner.Y -= icon.PreferredHeight;
 					column = 0;
 					row ++;
 				}
@@ -200,8 +194,6 @@ namespace Epsitec.Common.Widgets
 		protected GroupController				controller;
 		protected System.Collections.ArrayList	list;
 		protected int							selectedValue;
-		protected double						defaultButtonWidth;
-		protected double						defaultButtonHeight;
 		protected bool							enableEndOfLine;
 	}
 }

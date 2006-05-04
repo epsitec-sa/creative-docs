@@ -205,12 +205,11 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public override double					DefaultHeight
+		static ColorSelector()
 		{
-			get
-			{
-				return 221;
-			}
+			Helpers.VisualPropertyMetadata metadataDy = new Helpers.VisualPropertyMetadata (221.0, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
+
+			Visual.PreferredHeightProperty.OverrideMetadata (typeof (ColorSelector), metadataDy);
 		}
 
 		public Drawing.RichColor				Color

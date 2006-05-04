@@ -18,24 +18,6 @@ namespace Epsitec.Common.Widgets
 			this.Text = text;
 		}
 		
-		public override double DefaultWidth
-		{
-			//	Retourne la largeur standard.
-			get
-			{
-				return 120;
-			}
-		}
-
-		public override double DefaultHeight
-		{
-			//	Retourne la hauteur standard.
-			get
-			{
-				return this.DefaultFontHeight;
-			}
-		}
-
 		protected override void UpdateTextLayout()
 		{
 			if ( this.TextLayout != null )
@@ -49,8 +31,13 @@ namespace Epsitec.Common.Widgets
 
 		static StatusField()
 		{
-			Helpers.VisualPropertyMetadata metadata = new Helpers.VisualPropertyMetadata (Drawing.ContentAlignment.MiddleLeft, Helpers.VisualPropertyMetadataOptions.AffectsTextLayout);
-			Visual.ContentAlignmentProperty.OverrideMetadata (typeof (StatusField), metadata);
+			Helpers.VisualPropertyMetadata metadataAlign = new Helpers.VisualPropertyMetadata (Drawing.ContentAlignment.MiddleLeft, Helpers.VisualPropertyMetadataOptions.AffectsTextLayout);
+			Helpers.VisualPropertyMetadata metadataDx = new Helpers.VisualPropertyMetadata (120.0, Helpers.VisualPropertyMetadataOptions.AffectsTextLayout);
+			Helpers.VisualPropertyMetadata metadataDy = new Helpers.VisualPropertyMetadata (Widget.DefaultFontHeight, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
+
+			Visual.ContentAlignmentProperty.OverrideMetadata (typeof (StatusField), metadataAlign);
+			Visual.PreferredWidthProperty.OverrideMetadata (typeof (StatusField), metadataDx);
+			Visual.PreferredHeightProperty.OverrideMetadata (typeof (StatusField), metadataDy);
 		}
 		
 #if false	//#fix
