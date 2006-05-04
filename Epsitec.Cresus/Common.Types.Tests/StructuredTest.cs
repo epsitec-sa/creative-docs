@@ -45,14 +45,22 @@ namespace Epsitec.Common.Types
 		}
 
 		[Test]
-		public void CheckStructuredRecordPaths()
+		public void CheckStructuredTree()
 		{
-			Assert.AreEqual ("a*b*c", string.Join ("*", StructuredRecordType.SplitPath ("a.b.c")));
-			Assert.AreEqual ("a.b.c.d", StructuredRecordType.CreatePath ("a", "b", "c.d"));
-			Assert.AreEqual ("", StructuredRecordType.CreatePath ());
-			Assert.AreEqual ("", StructuredRecordType.CreatePath (""));
-			Assert.AreEqual (0, StructuredRecordType.SplitPath (null).Length);
-			Assert.AreEqual (0, StructuredRecordType.SplitPath ("").Length);
+			Assert.AreEqual ("a*b*c", string.Join ("*", StructuredTree.SplitPath ("a.b.c")));
+			Assert.AreEqual ("a.b.c.d", StructuredTree.CreatePath ("a", "b", "c.d"));
+			Assert.AreEqual ("", StructuredTree.CreatePath ());
+			Assert.AreEqual ("", StructuredTree.CreatePath (""));
+			Assert.AreEqual (0, StructuredTree.SplitPath (null).Length);
+			Assert.AreEqual (0, StructuredTree.SplitPath ("").Length);
+			Assert.AreEqual ("a.b.c.d", StructuredTree.GetSubPath ("a.b.c.d", 0));
+			Assert.AreEqual ("b.c.d", StructuredTree.GetSubPath ("a.b.c.d", 1));
+			Assert.AreEqual ("c.d", StructuredTree.GetSubPath ("a.b.c.d", 2));
+			Assert.AreEqual ("", StructuredTree.GetSubPath ("a.b.c.d", 10));
+			Assert.AreEqual ("a", StructuredTree.GetRootName ("a.b.c.d"));
+			Assert.AreEqual ("abc", StructuredTree.GetRootName ("abc"));
+			Assert.AreEqual ("", StructuredTree.GetRootName (""));
+			Assert.IsNull (StructuredTree.GetRootName (null));
 		}
 
 		[Test]
