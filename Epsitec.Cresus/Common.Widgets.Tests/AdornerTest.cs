@@ -758,52 +758,52 @@ namespace Epsitec.Common.Widgets
 			
 			TextFieldEx text_ex_1 = new TextFieldEx();
 			text_ex_1.SetParent (page3);
-			text_ex_1.SetManualBounds(new Drawing.Rectangle(10, page3.PreferredHeight-30, 120, text_ex_1.PreferredHeight));
+			text_ex_1.SetManualBounds(new Drawing.Rectangle(10, page3.ActualHeight-30, 120, text_ex_1.PreferredHeight));
 			text_ex_1.TabIndex = 1;
 			text_ex_1.EditionAccepted += new EventHandler (AdornerTest.HandleTextExEditionAccepted);
 			text_ex_1.EditionRejected += new EventHandler (AdornerTest.HandleTextExEditionRejected);
 			
 			TextFieldEx text_ex_2 = new TextFieldEx();
 			text_ex_2.SetParent (page3);
-			text_ex_2.SetManualBounds(new Drawing.Rectangle(10, page3.PreferredHeight-30-28, 120, text_ex_2.PreferredHeight));
+			text_ex_2.SetManualBounds(new Drawing.Rectangle(10, page3.ActualHeight-30-28, 120, text_ex_2.PreferredHeight));
 			text_ex_2.TabIndex = 2;
 			
 			TextFieldEx text_ex_3 = new TextFieldEx();
 			text_ex_3.SetParent (page3);
-			text_ex_3.SetManualBounds(new Drawing.Rectangle(10, page3.PreferredHeight-30-28-28, 120, text_ex_3.PreferredHeight));
+			text_ex_3.SetManualBounds(new Drawing.Rectangle(10, page3.ActualHeight-30-28-28, 120, text_ex_3.PreferredHeight));
 			text_ex_3.Enable = false;
 			text_ex_3.TabIndex = 3;
 			
 			TextFieldEx text_ex_4 = new TextFieldEx();
 			text_ex_4.SetParent (page3);
-			text_ex_4.SetManualBounds(new Drawing.Rectangle(10, page3.PreferredHeight-30-28-28-28, 120, text_ex_4.PreferredHeight));
+			text_ex_4.SetManualBounds(new Drawing.Rectangle(10, page3.ActualHeight-30-28-28-28, 120, text_ex_4.PreferredHeight));
 			text_ex_4.TabIndex = 4;
 			text_ex_4.ButtonShowCondition = ShowCondition.WhenModified;
 			
 			TextFieldEx text_ex_5 = new TextFieldEx();
 			text_ex_5.SetParent (page3);
-			text_ex_5.SetManualBounds(new Drawing.Rectangle(10, page3.PreferredHeight-30-28-28-28-28, 120, text_ex_5.PreferredHeight));
+			text_ex_5.SetManualBounds(new Drawing.Rectangle(10, page3.ActualHeight-30-28-28-28-28, 120, text_ex_5.PreferredHeight));
 			text_ex_5.TabIndex = 5;
 			text_ex_5.ButtonShowCondition = ShowCondition.WhenFocused;
 			text_ex_5.DefocusAction       = DefocusAction.AcceptEdition;
 			
 			TextFieldEx text_ex_6 = new TextFieldEx();
 			text_ex_6.SetParent (page3);
-			text_ex_6.SetManualBounds(new Drawing.Rectangle(10+120+5, page3.PreferredHeight-30, 120, text_ex_6.PreferredHeight));
+			text_ex_6.SetManualBounds(new Drawing.Rectangle(10+120+5, page3.ActualHeight-30, 120, text_ex_6.PreferredHeight));
 			text_ex_6.TabIndex = 6;
 			text_ex_6.ButtonShowCondition = ShowCondition.WhenModified;
 			text_ex_6.DefocusAction       = DefocusAction.Modal;
 			
 			TextFieldEx text_ex_7 = new TextFieldEx();
 			text_ex_7.SetParent (page3);
-			text_ex_7.SetManualBounds(new Drawing.Rectangle(10+120+5, page3.PreferredHeight-30-28, 120, text_ex_7.PreferredHeight));
+			text_ex_7.SetManualBounds(new Drawing.Rectangle(10+120+5, page3.ActualHeight-30-28, 120, text_ex_7.PreferredHeight));
 			text_ex_7.TabIndex = 7;
 			text_ex_7.ButtonShowCondition = ShowCondition.Never;
 			text_ex_7.DefocusAction       = DefocusAction.AcceptEdition;
 			
 			TextFieldEx text_ex_8 = new TextFieldEx();
 			text_ex_8.SetParent (page3);
-			text_ex_8.SetManualBounds(new Drawing.Rectangle(10+120+5, page3.PreferredHeight-30-28-28, 120, text_ex_8.PreferredHeight));
+			text_ex_8.SetManualBounds(new Drawing.Rectangle(10+120+5, page3.ActualHeight-30-28-28, 120, text_ex_8.PreferredHeight));
 			text_ex_8.TabIndex = 8;
 			text_ex_8.ButtonShowCondition = ShowCondition.WhenModified;
 			text_ex_8.DefocusAction       = DefocusAction.AutoAcceptOrRejectEdition;
