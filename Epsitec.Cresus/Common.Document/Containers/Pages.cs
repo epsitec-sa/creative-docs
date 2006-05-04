@@ -227,7 +227,7 @@ namespace Epsitec.Common.Document.Containers
 
 			this.radioAll = new RadioButton(this.radioMasterGroup);
 			this.radioAll.Dock = DockStyle.Top;
-			this.radioAll.Margins = new Margins(10, 10, 5, 0);
+			this.radioAll.Margins = new Margins(10, 10, 5, 2);
 			this.radioAll.Text = Res.Strings.Container.Pages.Button.MasterAll;
 			this.radioAll.ActiveStateChanged += new EventHandler(this.HandleRadioChanged);
 			this.radioAll.Index = 1;
@@ -236,7 +236,7 @@ namespace Epsitec.Common.Document.Containers
 
 			this.radioOdd = new RadioButton(this.radioMasterGroup);
 			this.radioOdd.Dock = DockStyle.Top;
-			this.radioOdd.Margins = new Margins(10, 10, 0, 0);
+			this.radioOdd.Margins = new Margins(10, 10, 0, 2);
 			this.radioOdd.Text = Res.Strings.Container.Pages.Button.MasterOdd;
 			this.radioOdd.ActiveStateChanged += new EventHandler(this.HandleRadioChanged);
 			this.radioOdd.Index = 2;
@@ -245,7 +245,7 @@ namespace Epsitec.Common.Document.Containers
 
 			this.radioEven = new RadioButton(this.radioMasterGroup);
 			this.radioEven.Dock = DockStyle.Top;
-			this.radioEven.Margins = new Margins(10, 10, 0, 0);
+			this.radioEven.Margins = new Margins(10, 10, 0, 2);
 			this.radioEven.Text = Res.Strings.Container.Pages.Button.MasterEven;
 			this.radioEven.ActiveStateChanged += new EventHandler(this.HandleRadioChanged);
 			this.radioEven.Index = 3;
@@ -254,7 +254,7 @@ namespace Epsitec.Common.Document.Containers
 
 			this.radioNone = new RadioButton(this.radioMasterGroup);
 			this.radioNone.Dock = DockStyle.Top;
-			this.radioNone.Margins = new Margins(10, 10, 0, 0);
+			this.radioNone.Margins = new Margins(10, 10, 0, 2);
 			this.radioNone.Text = Res.Strings.Container.Pages.Button.MasterNone;
 			this.radioNone.ActiveStateChanged += new EventHandler(this.HandleRadioChanged);
 			this.radioNone.Index = 4;
@@ -313,7 +313,7 @@ namespace Epsitec.Common.Document.Containers
 
 			this.radioNever = new RadioButton(this.radioGroupLeft);
 			this.radioNever.Dock = DockStyle.Top;
-			this.radioNever.Margins = new Margins(10, 0, 0, 0);
+			this.radioNever.Margins = new Margins(10, 0, 0, 2);
 			this.radioNever.Text = Res.Strings.Container.Pages.Button.SlaveNever;
 			this.radioNever.ActiveStateChanged += new EventHandler(this.HandleRadioChanged);
 			this.radioNever.Index = 1;
@@ -322,7 +322,7 @@ namespace Epsitec.Common.Document.Containers
 
 			this.radioDefault = new RadioButton(this.radioGroupLeft);
 			this.radioDefault.Dock = DockStyle.Top;
-			this.radioDefault.Margins = new Margins(10, 0, 0, 0);
+			this.radioDefault.Margins = new Margins(10, 0, 0, 2);
 			this.radioDefault.Text = Res.Strings.Container.Pages.Button.SlaveDefault;
 			this.radioDefault.ActiveStateChanged += new EventHandler(this.HandleRadioChanged);
 			this.radioDefault.Index = 2;
@@ -331,7 +331,7 @@ namespace Epsitec.Common.Document.Containers
 
 			this.radioSpecific = new RadioButton(this.radioGroupLeft);
 			this.radioSpecific.Dock = DockStyle.Top;
-			this.radioSpecific.Margins = new Margins(10, 0, 0, 0);
+			this.radioSpecific.Margins = new Margins(10, 0, 0, 2);
 			this.radioSpecific.Text = Res.Strings.Container.Pages.Button.SlaveSpecific;
 			this.radioSpecific.ActiveStateChanged += new EventHandler(this.HandleRadioChanged);
 			this.radioSpecific.Index = 3;
