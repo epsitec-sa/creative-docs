@@ -1877,6 +1877,7 @@ namespace Epsitec.Common.Widgets
 			button = new Button ();
 			button.Text = "1";
 			button.Dock = DockStyle.Left;
+			button.MinWidth = 20;
 			window.Root.Children.Add (button);
 
 			splitter = new VSplitter ();
@@ -1887,11 +1888,13 @@ namespace Epsitec.Common.Widgets
 			button = new Button ();
 			button.Text = "2";
 			button.Dock = DockStyle.Fill;
+			button.MinWidth = 20;
 			window.Root.Children.Add (button);
 
 			button = new Button ();
 			button.Text = "3";
 			button.Dock = DockStyle.Right;
+			button.MinWidth = 20;
 			window.Root.Children.Add (button);
 
 			splitter = new VSplitter ();
