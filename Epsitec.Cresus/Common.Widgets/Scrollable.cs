@@ -183,8 +183,8 @@ namespace Epsitec.Common.Widgets
 			
 			//	Place correctement les ascenceurs.
 
-			double margin_x = (this.v_scroller.Visibility) ? this.v_scroller.ActualWidth  : 0;
-			double margin_y = (this.h_scroller.Visibility) ? this.h_scroller.ActualHeight : 0;
+			double margin_x = (this.v_scroller.Visibility) ? this.v_scroller.PreferredWidth  : 0;
+			double margin_y = (this.h_scroller.Visibility) ? this.h_scroller.PreferredHeight : 0;
 			
 			double total_dx = this.Client.Size.Width;
 			double total_dy = this.Client.Size.Height;
@@ -214,8 +214,8 @@ namespace Epsitec.Common.Widgets
 			double total_dy = this.Client.Size.Height;
 			double panel_dx = this.panel.SurfaceWidth;
 			double panel_dy = this.panel.SurfaceHeight;
-			double margin_x = (this.v_scroller_mode == ScrollableScrollerMode.ShowAlways) ? this.v_scroller.ActualWidth : 0;
-			double margin_y = (this.h_scroller_mode == ScrollableScrollerMode.ShowAlways) ? this.h_scroller.ActualHeight : 0;
+			double margin_x = (this.v_scroller_mode == ScrollableScrollerMode.ShowAlways) ? this.v_scroller.PreferredWidth : 0;
+			double margin_y = (this.h_scroller_mode == ScrollableScrollerMode.ShowAlways) ? this.h_scroller.PreferredHeight : 0;
 			
 			double delta_dx;
 			double delta_dy;
@@ -235,7 +235,7 @@ namespace Epsitec.Common.Widgets
 					
 					if (margin_y == 0)
 					{
-						margin_y = this.h_scroller.ActualHeight;
+						margin_y = this.h_scroller.PreferredHeight;
 						continue;
 					}
 				}
@@ -247,7 +247,7 @@ namespace Epsitec.Common.Widgets
 					
 					if (margin_x == 0)
 					{
-						margin_x = this.v_scroller.ActualWidth;
+						margin_x = this.v_scroller.PreferredWidth;
 						continue;
 					}
 				}
@@ -384,8 +384,8 @@ namespace Epsitec.Common.Widgets
 			WidgetPaintState state   = this.PaintState;
 			
 			Drawing.Rectangle rect  = this.Client.Bounds;
-			double margin_x = (this.v_scroller.Visibility) ? this.v_scroller.ActualWidth  : 0;
-			double margin_y = (this.h_scroller.Visibility) ? this.h_scroller.ActualHeight : 0;
+			double margin_x = (this.v_scroller.Visibility) ? this.v_scroller.PreferredWidth  : 0;
+			double margin_y = (this.h_scroller.Visibility) ? this.h_scroller.PreferredHeight : 0;
 			rect.Right -= margin_x;
 			rect.Bottom += margin_y;
 			rect.Deflate (this.foregroundFrameMargins);
