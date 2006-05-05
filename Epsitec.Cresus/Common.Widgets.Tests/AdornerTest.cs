@@ -2005,7 +2005,57 @@ namespace Epsitec.Common.Widgets
 			window.Show ();
 			Window.RunInTestEnvironment (window);
 		}
-		
+
+		[Test]
+		public void CheckAdornerSplitter4()
+		{
+			Window window = new Window ();
+
+			window.ClientSize = new Size (500, 300);
+			window.Text = "CheckAdornerSplitter4";
+			window.Root.Padding = new Margins (8, 8, 5, 5);
+
+			StaticText text = new StaticText ();
+			text.PreferredHeight = 20;
+			text.Dock = DockStyle.Top;
+			text.Text = "Docking utilisé: Top + Fill + Bottom";
+			window.Root.Children.Add (text);
+
+			Button button;
+			HSplitter splitter;
+
+			button = new Button ();
+			button.Text = "1";
+			button.Dock = DockStyle.Top;
+			button.MinHeight = 20;
+			window.Root.Children.Add (button);
+
+			splitter = new HSplitter ();
+			splitter.PreferredHeight = 8;
+			splitter.Dock = DockStyle.Top;
+			window.Root.Children.Add (splitter);
+
+			button = new Button ();
+			button.Text = "2";
+			button.Dock = DockStyle.Fill;
+			button.MinHeight = 20;
+			window.Root.Children.Add (button);
+
+			button = new Button ();
+			button.Text = "3";
+			button.Dock = DockStyle.Bottom;
+			button.MinHeight = 20;
+			window.Root.Children.Add (button);
+
+			splitter = new HSplitter ();
+			splitter.PreferredHeight = 8;
+			splitter.Dock = DockStyle.Bottom;
+			window.Root.Children.Add (splitter);
+
+			window.Show ();
+			Window.RunInTestEnvironment (window);
+		}
+
 		protected TabBook tabBook;
 		protected TextFieldMulti	bigText;
 

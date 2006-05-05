@@ -56,8 +56,8 @@ namespace Epsitec.Common.Widgets
 				return;
 			}
 
-			Widget left;
-			Widget right;
+			Widget left, right;
+			Widget bottom, top;
 			
 			switch (this.Dock)
 			{
@@ -97,18 +97,47 @@ namespace Epsitec.Common.Widgets
 					}
 					else
 					{
-						throw new System.InvalidOperationException (string.Format ("Vertical splitter with DockStyle.{0}", this.Dock));
+						throw new System.InvalidOperationException (string.Format ("Invalid splitter with DockStyle.{0}", this.Dock));
 					}
 					break;
 
 				case DockStyle.Top:
 				case DockStyle.Bottom:
-					if (this.IsHorizontal)
+					if ((this.IsHorizontal) &&
+						(AbstractSplitter.GetBottomTopNeighbors (this, out bottom, out top)) &&
+						(bottom != null) &&
+						(top != null) &&
+						(bottom.IsActualGeometryValid) &&
+						(top.IsActualGeometryValid))
 					{
+						double dy = delta.Y;
+
+						double h1 = System.Math.Max (bottom.MinHeight, System.Math.Min (bottom.MaxHeight, bottom.ActualHeight + dy));
+						double h2 = System.Math.Max (top.MinHeight, System.Math.Min (top.MaxHeight, top.ActualHeight - dy));
+
+						if (dy != h1 - bottom.ActualHeight)
+						{
+							dy = h1 - bottom.ActualHeight;
+						}
+						else if (dy != top.ActualHeight - h2)
+						{
+							dy = top.ActualHeight - h2;
+						}
+
+						if (bottom.Dock != DockStyle.Fill)
+						{
+							bottom.PreferredHeight = bottom.ActualHeight + dy;
+						}
+						if (top.Dock != DockStyle.Fill)
+						{
+							top.PreferredHeight = top.ActualHeight - dy;
+						}
+
+						this.lastOffset.Y += dy;
 					}
 					else
 					{
-						throw new System.InvalidOperationException (string.Format ("Horizontal splitter with DockStyle.{0}", this.Dock));
+						throw new System.InvalidOperationException (string.Format ("Invalid splitter with DockStyle.{0}", this.Dock));
 					}
 					break;
 
@@ -123,6 +152,7 @@ namespace Epsitec.Common.Widgets
 		private void ProcessEndDragging(Epsitec.Common.Drawing.Point pos)
 		{
 		}
+
 
 		public static bool GetLeftRightNeighbors(Widget widget, out Widget left, out Widget right)
 		{
@@ -158,7 +188,7 @@ namespace Epsitec.Common.Widgets
 									{
 										right = siblings[j];
 									}
-									
+
 									break;
 								}
 							}
@@ -171,6 +201,57 @@ namespace Epsitec.Common.Widgets
 
 			left = null;
 			right = null;
+
+			return false;
+		}
+
+		public static bool GetBottomTopNeighbors(Widget widget, out Widget bottom, out Widget top)
+		{
+			Widget parent = widget.Parent;
+
+			if (parent != null)
+			{
+				Widget[] siblings = AbstractSplitter.GetBottomTopDockedSiblings (parent);
+
+				for (int i = 0; i < siblings.Length; i++)
+				{
+					if (siblings[i] == widget)
+					{
+						bottom = (i > 0) ? siblings[i-1] : null;
+						top = (i+1 < siblings.Length) ? siblings[i+1] : null;
+
+						if (((bottom == null) || (bottom.Dock != DockStyle.Fill)) &&
+							((top == null) || (top.Dock != DockStyle.Fill)))
+						{
+							//	Aucun des voisins directs n'utilise le mode Fill. S'il y a un
+							//	widget avec Fill quelque part, on va lui donner la préférence
+							//	pour répartir l'espace :
+
+							for (int j = 0; j < siblings.Length; j++)
+							{
+								if (siblings[j].Dock == DockStyle.Fill)
+								{
+									if (j < i)
+									{
+										bottom = siblings[j];
+									}
+									else
+									{
+										top = siblings[j];
+									}
+
+									break;
+								}
+							}
+						}
+
+						return true;
+					}
+				}
+			}
+
+			bottom = null;
+			top = null;
 
 			return false;
 		}
@@ -199,8 +280,36 @@ namespace Epsitec.Common.Widgets
 
 			leftWidgets.AddRange (fillWidgets);
 			leftWidgets.AddRange (rightWidgets);
-			
+
 			return leftWidgets.ToArray ();
+		}
+
+		public static Widget[] GetBottomTopDockedSiblings(Widget parent)
+		{
+			List<Widget> bottomWidgets = new List<Widget> ();
+			List<Widget> topWidgets = new List<Widget> ();
+			List<Widget> fillWidgets = new List<Widget> ();
+
+			foreach (Widget widget in parent.Children)
+			{
+				switch (widget.Dock)
+				{
+					case DockStyle.Bottom:
+						bottomWidgets.Add (widget);
+						break;
+					case DockStyle.Top:
+						topWidgets.Insert (0, widget);
+						break;
+					case DockStyle.Fill:
+						fillWidgets.Add (widget);
+						break;
+				}
+			}
+
+			bottomWidgets.AddRange (fillWidgets);
+			bottomWidgets.AddRange (topWidgets);
+
+			return bottomWidgets.ToArray ();
 		}
 
 		private Behaviors.DragBehavior dragBehavior;
