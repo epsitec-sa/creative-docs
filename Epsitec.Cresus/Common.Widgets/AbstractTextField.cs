@@ -223,9 +223,9 @@ namespace Epsitec.Common.Widgets
 			
 			if ( this.navigator != null && this.textFieldStyle != TextFieldStyle.Flat )
 			{
-				double exceed = System.Math.Max((22-this.Client.Size.Height)/2, 0);
-				double x = AbstractTextField.FrameMargin-exceed;
-				double y = AbstractTextField.FrameMargin-exceed;
+				double excess = System.Math.Max((22-this.Client.Size.Height)/2, 0);
+				double x = System.Math.Max (1, AbstractTextField.FrameMargin-excess);
+				double y = System.Math.Max (0, AbstractTextField.FrameMargin-excess);
 				padding = padding + new Drawing.Margins(x, x, y, y);
 			}
 			
