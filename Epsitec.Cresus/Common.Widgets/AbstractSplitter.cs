@@ -226,6 +226,17 @@ namespace Epsitec.Common.Widgets
 
 		#endregion
 
+		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
+		{
+			IAdorner adorner = Widgets.Adorners.Factory.Active;
+
+			Drawing.Rectangle rect  = this.Client.Bounds;
+			WidgetPaintState state = this.PaintState;
+			Direction dir = this.IsVertical ? Direction.Down : Direction.Right;
+
+			adorner.PaintPaneButtonBackground (graphics, rect, state, dir);
+		}
+		
 		private void ProcessDragging(Drawing.Point delta)
 		{
 			if (this.IsVertical)
@@ -391,33 +402,6 @@ namespace Epsitec.Common.Widgets
 			this.Parent.Invalidate ();
 		}
 
-		private static bool CheckCollapseWidth(Widget widget, double s1, double dx)
-		{
-			if (dx < 0)
-			{
-				s1 = System.Math.Max (s1, widget.MinWidth);
-			}
-			
-			s1 += dx;
-			
-			if (widget.Dock == DockStyle.Fill)
-			{
-				return false;
-			}
-
-			if ((s1 <= 0) ||
-				(s1 < widget.MinWidth-4))
-			{
-				//	TODO: ajouter test pour propriété "collapsable"
-				
-				return true;
-			}
-			else
-			{
-				return false;
-			}
-		}
-
 		private static double GetWidth(Widget widget)
 		{
 			if ((widget.IsVisible) &&
@@ -454,7 +438,8 @@ namespace Epsitec.Common.Widgets
 				w = widget.ActualWidth + dx;
 				w = System.Math.Min (widget.MaxWidth, w);
 
-				if (w < 5)
+				if ((w < 5) &&
+					(AbstractSplitter.GetAutoCollapseEnable (widget)))
 				{
 					w = 0;
 				}
@@ -467,13 +452,20 @@ namespace Epsitec.Common.Widgets
 			}
 			else
 			{
-				if (dx > 5)
+				if (AbstractSplitter.GetAutoCollapseEnable (widget))
 				{
-					return widget.MinWidth;
+					if (dx > 5)
+					{
+						return widget.MinWidth;
+					}
+					else
+					{
+						return 0;
+					}
 				}
 				else
 				{
-					return 0;
+					return dx;
 				}
 			}
 		}
@@ -488,7 +480,8 @@ namespace Epsitec.Common.Widgets
 				h = widget.ActualHeight + dy;
 				h = System.Math.Min (widget.MaxHeight, h);
 
-				if (h < 5)
+				if ((h < 5) &&
+					(AbstractSplitter.GetAutoCollapseEnable (widget)))
 				{
 					h = 0;
 				}
@@ -501,13 +494,20 @@ namespace Epsitec.Common.Widgets
 			}
 			else
 			{
-				if (dy > 5)
+				if (AbstractSplitter.GetAutoCollapseEnable (widget))
 				{
-					return widget.MinHeight;
+					if (dy > 5)
+					{
+						return widget.MinHeight;
+					}
+					else
+					{
+						return 0;
+					}
 				}
 				else
 				{
-					return 0;
+					return dy;
 				}
 			}
 		}

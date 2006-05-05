@@ -1878,8 +1878,9 @@ namespace Epsitec.Common.Widgets
 			button.Text = "1";
 			button.Dock = DockStyle.Left;
 			button.MinWidth = 20;
+			AbstractSplitter.SetAutoCollapseEnable (button, true);
 			window.Root.Children.Add (button);
-
+			
 			splitter = new VSplitter ();
 			splitter.PreferredWidth = 8;
 			splitter.Dock = DockStyle.Left;
@@ -1889,6 +1890,7 @@ namespace Epsitec.Common.Widgets
 			button.Text = "2";
 			button.Dock = DockStyle.Fill;
 			button.MinWidth = 20;
+			AbstractSplitter.SetAutoCollapseEnable (button, true);
 			window.Root.Children.Add (button);
 
 			button = new Button ();
@@ -1928,6 +1930,7 @@ namespace Epsitec.Common.Widgets
 			button.Text = "1";
 			button.Dock = DockStyle.Left;
 			button.MinWidth = 20;
+			AbstractSplitter.SetAutoCollapseEnable (button, true);
 			window.Root.Children.Add (button);
 
 			splitter = new VSplitter ();
@@ -1939,6 +1942,7 @@ namespace Epsitec.Common.Widgets
 			button.Text = "2";
 			button.Dock = DockStyle.Left;
 			button.MinWidth = 20;
+			AbstractSplitter.SetAutoCollapseEnable (button, true);
 			window.Root.Children.Add (button);
 
 			splitter = new VSplitter ();
@@ -1978,6 +1982,7 @@ namespace Epsitec.Common.Widgets
 			button.Text = "1";
 			button.Dock = DockStyle.Left;
 			button.MinWidth = 20;
+			AbstractSplitter.SetAutoCollapseEnable (button, true);
 			window.Root.Children.Add (button);
 
 			splitter = new VSplitter ();
@@ -1989,6 +1994,7 @@ namespace Epsitec.Common.Widgets
 			button.Text = "2";
 			button.Dock = DockStyle.Left;
 			button.MinWidth = 20;
+			AbstractSplitter.SetAutoCollapseEnable (button, true);
 			window.Root.Children.Add (button);
 
 			splitter = new VSplitter ();
@@ -2028,6 +2034,7 @@ namespace Epsitec.Common.Widgets
 			button.Text = "1";
 			button.Dock = DockStyle.Top;
 			button.MinHeight = 20;
+			AbstractSplitter.SetAutoCollapseEnable (button, true);
 			window.Root.Children.Add (button);
 
 			splitter = new HSplitter ();
@@ -2039,6 +2046,7 @@ namespace Epsitec.Common.Widgets
 			button.Text = "2";
 			button.Dock = DockStyle.Fill;
 			button.MinHeight = 20;
+			AbstractSplitter.SetAutoCollapseEnable (button, true);
 			window.Root.Children.Add (button);
 
 			button = new Button ();
