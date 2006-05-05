@@ -114,7 +114,8 @@ namespace Epsitec.Common.Document.Panels
 		{
 			//	Indique que la hauteur du panneau a changé.
 			double h = this.DefaultHeight;
-			if ( this.PreferredHeight != h )
+			if (this.PreferredHeight != h)  // plantée mystérieuse lorsque le splash disparaît
+			//?if (this.ActualHeight != h)  // un assert à l'ouverture de CrDoc
 			{
 				this.PreferredHeight = h;
 			}
