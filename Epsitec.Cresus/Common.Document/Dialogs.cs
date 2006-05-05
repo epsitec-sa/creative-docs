@@ -486,14 +486,15 @@ namespace Epsitec.Common.Document
 			sep.Margins = new Margins(0, 0, 3, 6);
 #else
 			Separator sep = new Separator(parent);
-			sep.PreferredWidth = parent.PreferredWidth;  // fenêtre trop grande
-			//?sep.PreferredWidth = parent.ActualWidth;  // beaucoup d'asserts à l'ouverture
+//@			sep.PreferredWidth = parent.PreferredWidth;  // fenêtre trop grande
+//@			//?sep.PreferredWidth = parent.ActualWidth;  // beaucoup d'asserts à l'ouverture
 			sep.PreferredHeight = 1;
 			sep.Dock = DockStyle.Top;
 			sep.Margins = new Margins(0, 0, 6, 3);
 
 			StaticText text = new StaticText(parent);
 			text.Text = Misc.Bold(labelText);
+			text.PreferredHeight = text.PreferredHeight + 2;
 			text.Dock = DockStyle.Top;
 			text.Margins = new Margins(10, 10, 2, 8);
 #endif
@@ -503,8 +504,8 @@ namespace Epsitec.Common.Document
 		{
 			//	Crée un séparateur pour un onglet.
 			Separator sep = new Separator(parent);
-			sep.PreferredWidth = parent.PreferredWidth;  // fenêtre trop grande
-			//?sep.PreferredWidth = parent.ActualWidth;  // beaucoup d'asserts à l'ouverture
+//@			sep.PreferredWidth = parent.PreferredWidth;  // fenêtre trop grande
+//@			//?sep.PreferredWidth = parent.ActualWidth;  // beaucoup d'asserts à l'ouverture
 			sep.PreferredHeight = 1;
 			sep.Dock = DockStyle.Top;
 			sep.Margins = new Margins(0, 0, 4, 6);
