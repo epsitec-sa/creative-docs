@@ -19,11 +19,12 @@ namespace Epsitec.Common.Widgets
 		
 		static HSlider()
 		{
-			Helpers.VisualPropertyMetadata metadataDx = new Helpers.VisualPropertyMetadata (AbstractSlider.minimalThumb+6, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
+			Helpers.VisualPropertyMetadata metadataMinDx = new Helpers.VisualPropertyMetadata (AbstractSlider.minimalThumb+6, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
+			Helpers.VisualPropertyMetadata metadataMinDy = new Helpers.VisualPropertyMetadata (AbstractSlider.defaultBreadth/2, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
 			Helpers.VisualPropertyMetadata metadataDy = new Helpers.VisualPropertyMetadata (AbstractSlider.defaultBreadth, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
 
-			Visual.MinWidthProperty.OverrideMetadata (typeof (HSlider), metadataDx);
-			Visual.MinHeightProperty.OverrideMetadata (typeof (HSlider), metadataDy);
+			Visual.MinWidthProperty.OverrideMetadata (typeof (HSlider), metadataMinDx);
+			Visual.MinHeightProperty.OverrideMetadata (typeof (HSlider), metadataMinDy);
 			Visual.PreferredHeightProperty.OverrideMetadata (typeof (HSlider), metadataDy);
 		}
 	}
