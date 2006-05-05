@@ -2,6 +2,7 @@
 //	Responsable: Pierre ARNAUD
 
 using System.Collections.Generic;
+using Epsitec.Common.Types;
 
 namespace Epsitec.Common.Widgets
 {
@@ -39,120 +40,6 @@ namespace Epsitec.Common.Widgets
 				base.ProcessMessage (message, pos);
 			}
 		}
-
-		private void ProcessDragging(Drawing.Point delta)
-		{
-			if (this.IsVertical)
-			{
-				delta.Y = 0;
-			}
-			else
-			{
-				delta.X = 0;
-			}
-
-			if (delta == Drawing.Point.Zero)
-			{
-				return;
-			}
-
-			Widget left, right;
-			Widget bottom, top;
-			
-			switch (this.Dock)
-			{
-				case DockStyle.Left:
-				case DockStyle.Right:
-					if ((this.IsVertical) &&
-						(AbstractSplitter.GetLeftRightNeighbors (this, out left, out right)) &&
-						(left != null) &&
-						(right != null) &&
-						(left.IsActualGeometryValid) &&
-						(right.IsActualGeometryValid))
-					{
-						double dx = delta.X;
-
-						double w1 = System.Math.Max (left.MinWidth, System.Math.Min (left.MaxWidth, left.ActualWidth + dx));
-						double w2 = System.Math.Max (right.MinWidth, System.Math.Min (right.MaxWidth, right.ActualWidth - dx));
-
-						if (dx != w1 - left.ActualWidth)
-						{
-							dx = w1 - left.ActualWidth;
-						}
-						else if (dx != right.ActualWidth - w2)
-						{
-							dx = right.ActualWidth - w2;
-						}
-
-						if (left.Dock != DockStyle.Fill)
-						{
-							left.PreferredWidth = left.ActualWidth + dx;
-						}
-						if (right.Dock != DockStyle.Fill)
-						{
-							right.PreferredWidth = right.ActualWidth - dx;
-						}
-
-						this.lastOffset.X += dx;
-					}
-					else
-					{
-						throw new System.InvalidOperationException (string.Format ("Invalid splitter with DockStyle.{0}", this.Dock));
-					}
-					break;
-
-				case DockStyle.Top:
-				case DockStyle.Bottom:
-					if ((this.IsHorizontal) &&
-						(AbstractSplitter.GetBottomTopNeighbors (this, out bottom, out top)) &&
-						(bottom != null) &&
-						(top != null) &&
-						(bottom.IsActualGeometryValid) &&
-						(top.IsActualGeometryValid))
-					{
-						double dy = delta.Y;
-
-						double h1 = System.Math.Max (bottom.MinHeight, System.Math.Min (bottom.MaxHeight, bottom.ActualHeight + dy));
-						double h2 = System.Math.Max (top.MinHeight, System.Math.Min (top.MaxHeight, top.ActualHeight - dy));
-
-						if (dy != h1 - bottom.ActualHeight)
-						{
-							dy = h1 - bottom.ActualHeight;
-						}
-						else if (dy != top.ActualHeight - h2)
-						{
-							dy = top.ActualHeight - h2;
-						}
-
-						if (bottom.Dock != DockStyle.Fill)
-						{
-							bottom.PreferredHeight = bottom.ActualHeight + dy;
-						}
-						if (top.Dock != DockStyle.Fill)
-						{
-							top.PreferredHeight = top.ActualHeight - dy;
-						}
-
-						this.lastOffset.Y += dy;
-					}
-					else
-					{
-						throw new System.InvalidOperationException (string.Format ("Invalid splitter with DockStyle.{0}", this.Dock));
-					}
-					break;
-
-				default:
-					throw new System.InvalidOperationException (string.Format ("Cannot drag splitter; DockStyle.{0}", this.Dock));
-			}
-
-			Layouts.LayoutContext.SyncArrange (this.Parent);
-			this.Parent.Invalidate ();
-		}
-
-		private void ProcessEndDragging(Epsitec.Common.Drawing.Point pos)
-		{
-		}
-
 
 		public static bool GetLeftRightNeighbors(Widget widget, out Widget left, out Widget right)
 		{
@@ -312,9 +199,6 @@ namespace Epsitec.Common.Widgets
 			return bottomWidgets.ToArray ();
 		}
 
-		private Behaviors.DragBehavior dragBehavior;
-		private Drawing.Point lastOffset;
-
 		#region IDragBehaviorHost Members
 
 		Epsitec.Common.Drawing.Point Epsitec.Common.Widgets.Behaviors.IDragBehaviorHost.DragLocation
@@ -333,7 +217,6 @@ namespace Epsitec.Common.Widgets
 
 		void Epsitec.Common.Widgets.Behaviors.IDragBehaviorHost.OnDragging(DragEventArgs e)
 		{
-			System.Diagnostics.Debug.WriteLine ("From:" + e.FromPoint + " To: " + e.ToPoint + " Offset: " + e.Offset + " Last: " + this.lastOffset);
 			this.ProcessDragging (e.ToPoint - this.lastOffset);
 		}
 
@@ -342,5 +225,307 @@ namespace Epsitec.Common.Widgets
 		}
 
 		#endregion
+
+		private void ProcessDragging(Drawing.Point delta)
+		{
+			if (this.IsVertical)
+			{
+				delta.Y = 0;
+			}
+			else
+			{
+				delta.X = 0;
+			}
+
+			if (delta == Drawing.Point.Zero)
+			{
+				return;
+			}
+
+			Widget left, right;
+			Widget bottom, top;
+
+			switch (this.Dock)
+			{
+				case DockStyle.Left:
+				case DockStyle.Right:
+					if ((this.IsVertical) &&
+						(AbstractSplitter.GetLeftRightNeighbors (this, out left, out right)) &&
+						(left != null) &&
+						(right != null) &&
+						(left.IsActualGeometryValid || !left.Visibility) &&
+						(right.IsActualGeometryValid || !right.Visibility))
+					{
+						double dx = delta.X;
+						
+						double s1 = AbstractSplitter.GetWidth (left);
+						double w1 = AbstractSplitter.GetUpdatedWidth (left, dx);
+
+						if (w1 == 0)
+						{
+							if (left.Visibility)
+							{
+								left.Visibility = false;
+							}
+						}
+						else
+						{
+							if (left.Visibility == false)
+							{
+								left.Visibility = true;
+							}
+						}
+
+						dx = w1 - s1;
+						
+						double s2 = AbstractSplitter.GetWidth (right);
+						double w2 = AbstractSplitter.GetUpdatedWidth (right, -dx);
+						
+						if (w2 == 0)
+						{
+							if (right.Visibility)
+							{
+								right.Visibility = false;
+							}
+						}
+						else
+						{
+							if (right.Visibility == false)
+							{
+								right.Visibility = true;
+							}
+						}
+
+						dx = s2 - w2;
+						
+						this.lastOffset.X += dx;
+
+						if (left.Dock != DockStyle.Fill)
+						{
+							left.PreferredWidth = s1+dx;
+						}
+						if (right.Dock != DockStyle.Fill)
+						{
+							right.PreferredWidth = s2-dx;
+						}
+					}
+					else
+					{
+						throw new System.InvalidOperationException (string.Format ("Invalid splitter with DockStyle.{0}", this.Dock));
+					}
+					break;
+
+				case DockStyle.Top:
+				case DockStyle.Bottom:
+					if ((this.IsHorizontal) &&
+						(AbstractSplitter.GetBottomTopNeighbors (this, out bottom, out top)) &&
+						(bottom != null) &&
+						(top != null) &&
+						(bottom.IsActualGeometryValid) &&
+						(top.IsActualGeometryValid))
+					{
+						double dy = delta.Y;
+
+						double s1 = AbstractSplitter.GetHeight (bottom);
+						double w1 = AbstractSplitter.GetUpdatedHeight (bottom, dy);
+
+						if (w1 == 0)
+						{
+							if (bottom.Visibility)
+							{
+								bottom.Visibility = false;
+							}
+						}
+						else
+						{
+							if (bottom.Visibility == false)
+							{
+								bottom.Visibility = true;
+							}
+						}
+
+						dy = w1 - s1;
+
+						double s2 = AbstractSplitter.GetHeight (top);
+						double w2 = AbstractSplitter.GetUpdatedHeight (top, -dy);
+
+						if (w2 == 0)
+						{
+							if (top.Visibility)
+							{
+								top.Visibility = false;
+							}
+						}
+						else
+						{
+							if (top.Visibility == false)
+							{
+								top.Visibility = true;
+							}
+						}
+
+						dy = s2 - w2;
+
+						this.lastOffset.X += dy;
+
+						if (bottom.Dock != DockStyle.Fill)
+						{
+							bottom.PreferredHeight = s1+dy;
+						}
+						if (top.Dock != DockStyle.Fill)
+						{
+							top.PreferredHeight = s2-dy;
+						}
+					}
+					else
+					{
+						throw new System.InvalidOperationException (string.Format ("Invalid splitter with DockStyle.{0}", this.Dock));
+					}
+					break;
+
+				default:
+					throw new System.InvalidOperationException (string.Format ("Cannot drag splitter; DockStyle.{0}", this.Dock));
+			}
+
+			Layouts.LayoutContext.SyncArrange (this.Parent);
+			this.Parent.Invalidate ();
+		}
+
+		private static bool CheckCollapseWidth(Widget widget, double s1, double dx)
+		{
+			if (dx < 0)
+			{
+				s1 = System.Math.Max (s1, widget.MinWidth);
+			}
+			
+			s1 += dx;
+			
+			if (widget.Dock == DockStyle.Fill)
+			{
+				return false;
+			}
+
+			if ((s1 <= 0) ||
+				(s1 < widget.MinWidth-4))
+			{
+				//	TODO: ajouter test pour propriété "collapsable"
+				
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+
+		private static double GetWidth(Widget widget)
+		{
+			if ((widget.IsVisible) &&
+				(widget.IsActualGeometryValid))
+			{
+				return widget.ActualWidth;
+			}
+			else
+			{
+				return 0;
+			}
+		}
+
+		private static double GetHeight(Widget widget)
+		{
+			if ((widget.IsVisible) &&
+				(widget.IsActualGeometryValid))
+			{
+				return widget.ActualHeight;
+			}
+			else
+			{
+				return 0;
+			}
+		}
+
+		private static double GetUpdatedWidth(Widget widget, double dx)
+		{
+			if ((widget.IsVisible) &&
+				(widget.IsActualGeometryValid))
+			{
+				double w;
+
+				w = widget.ActualWidth + dx;
+				w = System.Math.Min (widget.MaxWidth, w);
+
+				if (w < 5)
+				{
+					w = 0;
+				}
+				else
+				{
+					w = System.Math.Max (widget.MinWidth, w);
+				}
+
+				return w;
+			}
+			else
+			{
+				if (dx > 5)
+				{
+					return widget.MinWidth;
+				}
+				else
+				{
+					return 0;
+				}
+			}
+		}
+
+		private static double GetUpdatedHeight(Widget widget, double dy)
+		{
+			if ((widget.IsVisible) &&
+				(widget.IsActualGeometryValid))
+			{
+				double h;
+
+				h = widget.ActualHeight + dy;
+				h = System.Math.Min (widget.MaxHeight, h);
+
+				if (h < 5)
+				{
+					h = 0;
+				}
+				else
+				{
+					h = System.Math.Max (widget.MinHeight, h);
+				}
+
+				return h;
+			}
+			else
+			{
+				if (dy > 5)
+				{
+					return widget.MinHeight;
+				}
+				else
+				{
+					return 0;
+				}
+			}
+		}
+		
+		
+		public static bool GetAutoCollapseEnable(DependencyObject o)
+		{
+			return (bool) o.GetValue (AbstractSplitter.AutoCollapseEnableProperty);
+		}
+
+		public static void SetAutoCollapseEnable(DependencyObject o, bool value)
+		{
+			o.SetValue (AbstractSplitter.AutoCollapseEnableProperty, value);
+		}
+
+		public static readonly DependencyProperty AutoCollapseEnableProperty = DependencyProperty.RegisterAttached ("AutoCollapseEnable", typeof (bool), typeof (AbstractSplitter), new DependencyPropertyMetadata (false));
+		
+		private Behaviors.DragBehavior dragBehavior;
+		private Drawing.Point lastOffset;
 	}
 }
