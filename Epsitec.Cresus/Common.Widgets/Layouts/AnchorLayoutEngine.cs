@@ -229,7 +229,7 @@ namespace Epsitec.Common.Widgets.Layouts
 					break;
 			}
 
-			Drawing.Rectangle oldBounds = child.ActualBounds;
+			Drawing.Rectangle oldBounds = child.GetCurrentBounds ();
 			Drawing.Rectangle newBounds = bounds;
 			
 			child.SetBounds (newBounds);
