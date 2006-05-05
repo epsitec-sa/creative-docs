@@ -32,10 +32,10 @@ namespace Epsitec.Common.Widgets
 			
 			b1.SetParent (surface.Panel);
 			b2.SetParent (surface.Panel);
-			b1.SetManualBounds(new Drawing.Rectangle(10, 20, b1.PreferredWidth, b1.PreferredHeight));
-			b2.SetManualBounds(new Drawing.Rectangle(b1.ActualBounds.Right+10, b1.ActualBounds.Bottom, b2.ActualWidth, b2.ActualHeight));
-			b1.Anchor   = AnchorStyles.TopLeft;
-			b2.Anchor   = AnchorStyles.TopLeft;
+			b1.Margins = new Epsitec.Common.Drawing.Margins (10, 0, 0, 10);
+			b2.Margins = new Epsitec.Common.Drawing.Margins (10 + b1.PreferredWidth + 10, 0, 0, 10);
+			b1.Anchor = AnchorStyles.BottomLeft;
+			b2.Anchor = AnchorStyles.BottomLeft;
 			
 			StaticText  text;
 			RadioButton radio;
