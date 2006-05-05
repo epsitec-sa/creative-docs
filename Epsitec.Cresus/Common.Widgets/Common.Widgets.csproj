@@ -321,6 +321,9 @@
     </Compile>
     <Compile Include="Controllers\AbstractController.cs" />
     <Compile Include="ActiveState.cs" />
+    <Compile Include="AbstractSplitter.cs" />
+    <Compile Include="HSplitter.cs" />
+    <Compile Include="VSplitter.cs" />
     <Compile Include="Helpers\IClientInfo.cs" />
     <Compile Include="IController.cs" />
     <Compile Include="Layouts\LayoutMode.cs" />

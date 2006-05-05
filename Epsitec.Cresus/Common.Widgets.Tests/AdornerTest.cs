@@ -1856,6 +1856,52 @@ namespace Epsitec.Common.Widgets
 			Window.RunInTestEnvironment (window);
 		}
 
+		[Test]
+		public void CheckAdornerSplitter1()
+		{
+			Window window = new Window ();
+
+			window.ClientSize = new Size (500, 300);
+			window.Text = "CheckAdornerSplitter1";
+			window.Root.Padding = new Margins (8, 8, 5, 5);
+
+			StaticText text = new StaticText ();
+			text.PreferredHeight = 20;
+			text.Dock = DockStyle.Top;
+			text.Text = "Séparateurs implémentés avec deux VSplitter et du docking horizontal";
+			window.Root.Children.Add (text);
+
+			Button button;
+			VSplitter splitter;
+
+			button = new Button ();
+			button.Text = "1";
+			button.Dock = DockStyle.Left;
+			window.Root.Children.Add (button);
+
+			splitter = new VSplitter ();
+			splitter.PreferredWidth = 8;
+			splitter.Dock = DockStyle.Left;
+			window.Root.Children.Add (splitter);
+
+			button = new Button ();
+			button.Text = "2";
+			button.Dock = DockStyle.Fill;
+			window.Root.Children.Add (button);
+
+			button = new Button ();
+			button.Text = "3";
+			button.Dock = DockStyle.Right;
+			window.Root.Children.Add (button);
+
+			splitter = new VSplitter ();
+			splitter.PreferredWidth = 8;
+			splitter.Dock = DockStyle.Right;
+			window.Root.Children.Add (splitter);
+
+			window.Show ();
+			Window.RunInTestEnvironment (window);
+		}
 
 		protected TabBook			tabBook;
 		protected TextFieldMulti	bigText;
