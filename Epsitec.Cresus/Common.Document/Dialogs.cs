@@ -486,7 +486,7 @@ namespace Epsitec.Common.Document
 			sep.Margins = new Margins(0, 0, 3, 6);
 #else
 			Separator sep = new Separator(parent);
-			sep.PreferredWidth = parent.ActualWidth;
+			sep.PreferredWidth = parent.PreferredWidth;
 			sep.PreferredHeight = 1;
 			sep.Dock = DockStyle.Top;
 			sep.Margins = new Margins(0, 0, 6, 3);
@@ -502,7 +502,7 @@ namespace Epsitec.Common.Document
 		{
 			//	Crée un séparateur pour un onglet.
 			Separator sep = new Separator(parent);
-			sep.PreferredWidth = parent.ActualWidth;
+			sep.PreferredWidth = parent.PreferredWidth;
 			sep.PreferredHeight = 1;
 			sep.Dock = DockStyle.Top;
 			sep.Margins = new Margins(0, 0, 4, 6);
