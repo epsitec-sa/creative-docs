@@ -16,7 +16,7 @@ namespace Epsitec.Common.Widgets
 			this.InternalState &= ~InternalState.Focusable;
 
 			this.MouseCursor = this.IsVertical ? MouseCursor.AsVSplit : MouseCursor.AsHSplit;
-			this.dragBehavior = new Behaviors.DragBehavior (this, false, true);
+			this.dragBehavior = new Behaviors.DragBehavior (this, false, false);
 		}
 
 		public abstract bool IsVertical
@@ -86,6 +86,8 @@ namespace Epsitec.Common.Widgets
 
 						left.PreferredWidth = left.ActualWidth + dx;
 						right.PreferredWidth = right.ActualWidth - dx;
+
+						this.lastOffset.X += dx;
 					}
 					else
 					{
@@ -171,7 +173,6 @@ namespace Epsitec.Common.Widgets
 		}
 
 		private Behaviors.DragBehavior dragBehavior;
-		private Drawing.Point lastOrigin;
 		private Drawing.Point lastOffset;
 
 		#region IDragBehaviorHost Members
@@ -180,21 +181,20 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.lastOrigin;
+				return Drawing.Point.Zero;
 			}
 		}
 
 		bool Epsitec.Common.Widgets.Behaviors.IDragBehaviorHost.OnDragBegin(Epsitec.Common.Drawing.Point cursor)
 		{
-			this.lastOrigin = cursor;
 			this.lastOffset = Drawing.Point.Zero;
 			return true;
 		}
 
 		void Epsitec.Common.Widgets.Behaviors.IDragBehaviorHost.OnDragging(DragEventArgs e)
 		{
-			this.ProcessDragging (e.Offset - this.lastOffset);
-			this.lastOffset = e.Offset;
+			System.Diagnostics.Debug.WriteLine ("From:" + e.FromPoint + " To: " + e.ToPoint + " Offset: " + e.Offset + " Last: " + this.lastOffset);
+			this.ProcessDragging (e.ToPoint - this.lastOffset);
 		}
 
 		void Epsitec.Common.Widgets.Behaviors.IDragBehaviorHost.OnDragEnd()
