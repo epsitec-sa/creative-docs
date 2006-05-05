@@ -366,7 +366,7 @@ namespace Epsitec.Common.Widgets
 
 						dy = s2 - w2;
 
-						this.lastOffset.X += dy;
+						this.lastOffset.Y += dy;
 
 						if (bottom.Dock != DockStyle.Fill)
 						{
