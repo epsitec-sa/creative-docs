@@ -1788,15 +1788,15 @@ namespace Epsitec.Common.Widgets
 			{
 				this.Dispose ();
 			}
-			if (this.is_async_notification_queued)
-			{
-				this.is_async_notification_queued = false;
-				this.OnAsyncNotification ();
-			}
 			if (this.is_async_layout_queued)
 			{
 				this.is_async_layout_queued = false;
 				this.ForceLayout ();
+			}
+			if (this.is_async_notification_queued)
+			{
+				this.is_async_notification_queued = false;
+				this.OnAsyncNotification ();
 			}
 		}
 		

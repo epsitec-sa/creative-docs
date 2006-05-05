@@ -98,10 +98,19 @@ namespace Epsitec.Common.Widgets
 				if ( value != this.styleH )
 				{
 					this.styleH = value;
-					this.isDirty = true;
-					this.Invalidate();
+					this.MarkAsDirty ();
 				}
 			}
+		}
+
+		private void MarkAsDirty()
+		{
+			this.isDirty = true;
+			
+			Layouts.LayoutContext.AddToMeasureQueue (this);
+			Layouts.LayoutContext.AddToArrangeQueue (this);
+			
+			this.Invalidate ();
 		}
 		
 		public CellArrayStyles StyleV
@@ -117,8 +126,7 @@ namespace Epsitec.Common.Widgets
 				if ( value != this.styleV )
 				{
 					this.styleV = value;
-					this.isDirty = true;
-					this.Invalidate();
+					this.MarkAsDirty ();
 				}
 			}
 		}
@@ -136,8 +144,7 @@ namespace Epsitec.Common.Widgets
 				if ( value != this.offsetH )
 				{
 					this.offsetH = value;
-					this.isDirty = true;
-					this.Invalidate();
+					this.MarkAsDirty ();
 				}
 			}
 		}
@@ -155,8 +162,7 @@ namespace Epsitec.Common.Widgets
 				if ( value != this.offsetV )
 				{
 					this.offsetV = value;
-					this.isDirty = true;
-					this.Invalidate();
+					this.MarkAsDirty ();
 				}
 			}
 		}
@@ -277,8 +283,7 @@ namespace Epsitec.Common.Widgets
 			HeaderButton button = this.FindButtonV(rank);
 			button.Text = text;
 
-			this.isDirty = true;
-			this.Invalidate();
+			this.MarkAsDirty ();
 		}
 
 		public virtual void SetHeaderTextH(int rank, string text)
@@ -292,8 +297,7 @@ namespace Epsitec.Common.Widgets
 			HeaderButton button = this.FindButtonH(rank);
 			button.Text = text;
 
-			this.isDirty = true;
-			this.Invalidate();
+			this.MarkAsDirty ();
 		}
 
 		public virtual void SetHeaderSortV(int rank, SortMode mode)
@@ -395,8 +399,7 @@ namespace Epsitec.Common.Widgets
 				this.widthColumns[rank] = width;
 			}
 
-			this.isDirty = true;
-			this.Invalidate();
+			this.MarkAsDirty ();
 		}
 		
 		public virtual void HideColumns(int start, int count)
@@ -413,8 +416,7 @@ namespace Epsitec.Common.Widgets
 					this.widthColumns[i] = 0;
 				}
 			}
-			this.isDirty = true;
-			this.Invalidate();
+			this.MarkAsDirty ();
 		}
 		
 		public virtual void ShowColumns(int start, int count)
@@ -431,8 +433,7 @@ namespace Epsitec.Common.Widgets
 					this.widthColumns[i] = this.defWidth;
 				}
 			}
-			this.isDirty = true;
-			this.Invalidate();
+			this.MarkAsDirty ();
 		}
 		
 		public virtual double RetHeightRow(int rank)
@@ -467,8 +468,7 @@ namespace Epsitec.Common.Widgets
 				this.heightRows[rank] = height;
 			}
 
-			this.isDirty = true;
-			this.Invalidate();
+			this.MarkAsDirty ();
 		}
 		
 		public virtual void HideRows(int start, int count)
@@ -485,8 +485,7 @@ namespace Epsitec.Common.Widgets
 					this.heightRows[i] = 0;
 				}
 			}
-			this.isDirty = true;
-			this.Invalidate();
+			this.MarkAsDirty ();
 		}
 		
 		public virtual void ShowRows(int start, int count)
@@ -503,8 +502,7 @@ namespace Epsitec.Common.Widgets
 					this.heightRows[i] = this.defHeight;
 				}
 			}
-			this.isDirty = true;
-			this.Invalidate();
+			this.MarkAsDirty ();
 		}
 		
 
@@ -776,30 +774,26 @@ namespace Epsitec.Common.Widgets
 		{
 			//	Modifie la hauteur d'une ligne.
 			this.SetHeightRow(this.dragRank, this.dragDim+(this.dragPos-pos));
-			this.isDirty = true;
-			this.Invalidate();
+			this.MarkAsDirty ();
 		}
 
 		protected void DragMovedColumn(int column, double pos)
 		{
 			//	Modifie la largeur d'une colonne.
 			this.SetWidthColumn(this.dragRank, this.dragDim+(pos-this.dragPos));
-			this.isDirty = true;
-			this.Invalidate();
+			this.MarkAsDirty ();
 		}
 
 		protected void DragEndedRow(int row, double pos)
 		{
 			//	La hauteur d'une ligne a été modifiée.
-			this.isDirty = true;
-			this.Invalidate();
+			this.MarkAsDirty ();
 		}
 
 		protected void DragEndedColumn(int column, double pos)
 		{
 			//	La largeur d'une colonne a été modifiée.
-			this.isDirty = true;
-			this.Invalidate();
+			this.MarkAsDirty ();
 		}
 
 
@@ -1281,6 +1275,12 @@ namespace Epsitec.Common.Widgets
 			this.UpdateGeometry();
 		}
 
+		protected override void ArrangeOverride(Epsitec.Common.Widgets.Layouts.LayoutContext context)
+		{
+			base.ArrangeOverride (context);
+			this.Update ();
+		}
+		
 		protected override void SetBoundsOverride(Drawing.Rectangle oldRect, Drawing.Rectangle newRect)
 		{
 			base.SetBoundsOverride (oldRect, newRect);
@@ -1849,6 +1849,7 @@ namespace Epsitec.Common.Widgets
 			}
 
 			this.isGrimy = true;
+			this.MarkAsDirty ();
 		}
 
 
@@ -1878,7 +1879,10 @@ namespace Epsitec.Common.Widgets
 			//	Dessine le tableau.
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
 
-			this.Update();  // mis à jour si nécessaire
+			System.Diagnostics.Debug.Assert (this.isDirty == false);
+			System.Diagnostics.Debug.Assert (this.isGrimy == false);
+			
+//-			this.Update();  // mis à jour si nécessaire
 
 			//	Dessine le cadre et le fond du tableau.
 			Drawing.Rectangle rect = this.Client.Bounds;

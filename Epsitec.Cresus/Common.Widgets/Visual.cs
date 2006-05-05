@@ -278,7 +278,7 @@ namespace Epsitec.Common.Widgets
 				{
 					System.Diagnostics.Debug.WriteLine ("Dirty geometry in " + this.ToString ());
 				}
-				return true; //	this.dirtyLayout == false;
+				return this.dirtyLayout == false;
 			}
 		}
 
@@ -771,6 +771,7 @@ namespace Epsitec.Common.Widgets
 			System.Diagnostics.Debug.Assert (this.Dock == DockStyle.None);
 			
 			this.SetBounds (value);
+			this.Arrange (null);
 		}
 		
 		internal virtual void SetBounds(Drawing.Rectangle value)
@@ -826,6 +827,8 @@ namespace Epsitec.Common.Widgets
 
 		public void Measure(Layouts.LayoutContext context)
 		{
+			this.MeasureOverride (context);
+			
 			Drawing.Size min = Drawing.Size.Zero;
 			Drawing.Size max = Drawing.Size.PositiveInfinity;
 
@@ -845,6 +848,8 @@ namespace Epsitec.Common.Widgets
 		public void Arrange(Layouts.LayoutContext context)
 		{
 			this.ClearDirtyLayoutFlag ();
+
+			this.ArrangeOverride (context);
 
 			if (this.HasChildren)
 			{
@@ -872,8 +877,11 @@ namespace Epsitec.Common.Widgets
 			{
 				this.Invalidate ();
 			}
-			
-			context.RemoveVisualFromArrangeQueue (this);
+
+			if (context != null)
+			{
+				context.RemoveVisualFromArrangeQueue (this);
+			}
 		}
 
 		protected virtual void ManualArrange()
@@ -903,7 +911,15 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 		}
-		
+
+		protected virtual void MeasureOverride(Layouts.LayoutContext context)
+		{
+		}
+
+		protected virtual void ArrangeOverride(Layouts.LayoutContext context)
+		{
+		}
+
 		protected virtual Drawing.Size GetDesiredSize()
 		{
 			return this.PreferredSize;
