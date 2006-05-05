@@ -84,8 +84,14 @@ namespace Epsitec.Common.Widgets
 							dx = right.ActualWidth - w2;
 						}
 
-						left.PreferredWidth = left.ActualWidth + dx;
-						right.PreferredWidth = right.ActualWidth - dx;
+						if (left.Dock != DockStyle.Fill)
+						{
+							left.PreferredWidth = left.ActualWidth + dx;
+						}
+						if (right.Dock != DockStyle.Fill)
+						{
+							right.PreferredWidth = right.ActualWidth - dx;
+						}
 
 						this.lastOffset.X += dx;
 					}
@@ -132,6 +138,31 @@ namespace Epsitec.Common.Widgets
 					{
 						left = (i > 0) ? siblings[i-1] : null;
 						right = (i+1 < siblings.Length) ? siblings[i+1] : null;
+
+						if (((left == null) || (left.Dock != DockStyle.Fill)) &&
+							((right == null) || (right.Dock != DockStyle.Fill)))
+						{
+							//	Aucun des voisins directs n'utilise le mode Fill. S'il y a un
+							//	widget avec Fill quelque part, on va lui donner la préférence
+							//	pour répartir l'espace :
+
+							for (int j = 0; j < siblings.Length; j++)
+							{
+								if (siblings[j].Dock == DockStyle.Fill)
+								{
+									if (j < i)
+									{
+										left = siblings[j];
+									}
+									else
+									{
+										right = siblings[j];
+									}
+									
+									break;
+								}
+							}
+						}
 
 						return true;
 					}
