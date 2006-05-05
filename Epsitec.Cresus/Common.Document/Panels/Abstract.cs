@@ -114,7 +114,7 @@ namespace Epsitec.Common.Document.Panels
 		{
 			//	Indique que la hauteur du panneau a changé.
 			double h = this.DefaultHeight;
-			if ( this.ActualHeight != h )
+			if ( this.PreferredHeight != h )
 			{
 				this.PreferredHeight = h;
 			}
