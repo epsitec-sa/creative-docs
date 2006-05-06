@@ -1685,10 +1685,13 @@ namespace Epsitec.Common.Widgets
 
 		public void AsyncLayout()
 		{
-			if (this.is_async_layout_queued == false)
+			if (this.IsVisible)
 			{
-				this.is_async_layout_queued = true;
-				this.window.SendQueueCommand ();
+				if (this.is_async_layout_queued == false)
+				{
+					this.is_async_layout_queued = true;
+					this.window.SendQueueCommand ();
+				}
 			}
 		}
 		
@@ -2198,7 +2201,8 @@ namespace Epsitec.Common.Widgets
 
 		private void SyncMinSizeWithWindowRoot()
 		{
-			if (this.window != null)
+			if ((this.window != null) &&
+				(this.window.IsFixedSize == false))
 			{
 				int width  = (int) (this.root.RealMinSize.Width + 0.5);
 				int height = (int) (this.root.RealMinSize.Height + 0.5);

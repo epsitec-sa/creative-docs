@@ -109,6 +109,27 @@ namespace Epsitec.Common.Widgets.Platform
 			this.MinimizeBox     = false;
 			Window.DummyHandleEater (this.Handle);
 		}
+
+		internal bool IsFixedSize
+		{
+			get
+			{
+				switch (this.FormBorderStyle)
+				{
+					case System.Windows.Forms.FormBorderStyle.Fixed3D:
+					case System.Windows.Forms.FormBorderStyle.FixedDialog:
+					case System.Windows.Forms.FormBorderStyle.FixedSingle:
+					case System.Windows.Forms.FormBorderStyle.FixedToolWindow:
+					case System.Windows.Forms.FormBorderStyle.None:
+						return true;
+					case System.Windows.Forms.FormBorderStyle.Sizable:
+					case System.Windows.Forms.FormBorderStyle.SizableToolWindow:
+						return false;
+				}
+				
+				throw new System.InvalidOperationException (string.Format ("{0} not supported", this.FormBorderStyle));
+			}
+		}
 		
 		internal void MakeSecondaryWindow()
 		{

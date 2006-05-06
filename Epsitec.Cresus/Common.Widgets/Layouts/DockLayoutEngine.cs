@@ -252,42 +252,45 @@ namespace Epsitec.Common.Widgets.Layouts
 				Drawing.Size min = new Drawing.Size (measure_dx.Min + margins.Width, measure_dy.Min + margins.Height);
 				Drawing.Size max = new Drawing.Size (measure_dx.Max + margins.Width, measure_dy.Max + margins.Width);
 
+				double clientDx = measure_dx.Desired + margins.Width;
+				double clientDy = measure_dy.Desired + margins.Height;
+
 				switch (child.Dock)
 				{
 					case DockStyle.Top:
-						min_dx  = System.Math.Max (min_dx, min.Width    + min_ox);
-						min_dy  = System.Math.Max (min_dy, child.GetCurrentBounds ().Height + min_oy);
-						min_oy += child.GetCurrentBounds ().Height + margins.Height;
-						max_dx  = System.Math.Min (max_dx, max.Width    + max_ox);
+						min_dx  = System.Math.Max (min_dx, min.Width + min_ox);
+						min_dy  = System.Math.Max (min_dy, clientDy + min_oy);
+						min_oy += clientDy + margins.Height;
+						max_dx  = System.Math.Min (max_dx, max.Width + max_ox);
 //						max_dy  = System.Math.Min (max_dy, child.Height + max_oy);
-						max_oy += child.GetCurrentBounds ().Height + margins.Height;
+						max_oy += clientDy + margins.Height;
 						break;
 					
 					case DockStyle.Bottom:
-						min_dx  = System.Math.Max (min_dx, min.Width    + min_ox);
-						min_dy  = System.Math.Max (min_dy, child.GetCurrentBounds ().Height + min_oy);
-						min_oy += child.GetCurrentBounds ().Height + margins.Height;
-						max_dx  = System.Math.Min (max_dx, max.Width    + max_ox);
+						min_dx  = System.Math.Max (min_dx, min.Width + min_ox);
+						min_dy  = System.Math.Max (min_dy, clientDy + min_oy);
+						min_oy += clientDy + margins.Height;
+						max_dx  = System.Math.Min (max_dx, max.Width + max_ox);
 //						max_dy  = System.Math.Min (max_dy, child.Height + max_oy);
-						max_oy += child.GetCurrentBounds ().Height + margins.Height;
+						max_oy += clientDy + margins.Height;
 						break;
 						
 					case DockStyle.Left:
-						min_dx  = System.Math.Max (min_dx, child.GetCurrentBounds ().Width  + min_ox);
-						min_dy  = System.Math.Max (min_dy, min.Height   + min_oy);
-						min_ox += child.GetCurrentBounds ().Width + margins.Width;
-//						max_dx  = System.Math.Min (max_dx, child.Width  + max_ox);
-						max_dy  = System.Math.Min (max_dy, max.Height   + max_oy);
-						max_ox += child.GetCurrentBounds ().Width + margins.Width;
+						min_dx  = System.Math.Max (min_dx, clientDx + min_ox);
+						min_dy  = System.Math.Max (min_dy, min.Height + min_oy);
+						min_ox += clientDx + margins.Width;
+//						max_dx  = System.Math.Min (max_dx, child.Width + max_ox);
+						max_dy  = System.Math.Min (max_dy, max.Height + max_oy);
+						max_ox += clientDx + margins.Width;
 						break;
 					
 					case DockStyle.Right:
-						min_dx  = System.Math.Max (min_dx, child.GetCurrentBounds ().Width  + min_ox);
-						min_dy  = System.Math.Max (min_dy, min.Height   + min_oy);
-						min_ox += child.GetCurrentBounds ().Width + margins.Width;
-//						max_dx  = System.Math.Min (max_dx, child.Width  + max_ox);
-						max_dy  = System.Math.Min (max_dy, max.Height   + max_oy);
-						max_ox += child.GetCurrentBounds ().Width + margins.Width;
+						min_dx  = System.Math.Max (min_dx, clientDx + min_ox);
+						min_dy  = System.Math.Max (min_dy, min.Height + min_oy);
+						min_ox += clientDx + margins.Width;
+//						max_dx  = System.Math.Min (max_dx, child.Width + max_ox);
+						max_dy  = System.Math.Min (max_dy, max.Height + max_oy);
+						max_ox += clientDx + margins.Width;
 						break;
 					
 					case DockStyle.Fill:
