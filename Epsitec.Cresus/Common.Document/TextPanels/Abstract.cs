@@ -171,7 +171,7 @@ namespace Epsitec.Common.Document.TextPanels
 		{
 			//	Indique que la hauteur du panneau a changé.
 			double h = this.DefaultHeight;
-			if ( this.ActualHeight != h )
+//@			if ( this.ActualHeight != h )
 			{
 				this.PreferredHeight = h;
 			}
@@ -181,7 +181,7 @@ namespace Epsitec.Common.Document.TextPanels
 		{
 			//	Force la mise à jour de la hauteur du panneau.
 			double h = this.DefaultHeight;
-			if ( this.ActualHeight != h )
+//@			if ( this.ActualHeight != h )
 			{
 				//	Il faut modifier la hauteur du parent (normalement Containers.Styles.panelContainer)
 				//	qui contient ce panneau en mode DockStyle.Fill !
