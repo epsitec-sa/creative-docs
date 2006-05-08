@@ -3,6 +3,7 @@
 
 using System.Globalization;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace Epsitec.Common.Support
 {
@@ -23,7 +24,6 @@ namespace Epsitec.Common.Support
 		{
 			this.resource_providers     = new IResourceProvider[0];
 			this.resource_provider_hash = new System.Collections.Hashtable ();
-			this.bundle_providers       = new IBundleProvider[0];
 			this.culture                = CultureInfo.CurrentCulture;
 			
 			if ((path != null) &&
@@ -36,7 +36,7 @@ namespace Epsitec.Common.Support
 				this.default_path = System.IO.Directory.GetCurrentDirectory ();
 			}
 			
-			this.InternalInitialise ();
+			this.InternalInitialize ();
 		}
 		
 		
@@ -195,22 +195,12 @@ namespace Epsitec.Common.Support
 		
 		public void AddBundleProvider(IBundleProvider bundle_provider)
 		{
-			ArrayList list = new ArrayList ();
-			list.AddRange (this.bundle_providers);
-			list.Add (bundle_provider);
-			
-			this.bundle_providers = new IBundleProvider[list.Count];
-			list.CopyTo (this.bundle_providers);
+			this.bundleProviders.Add (bundle_provider);
 		}
 		
 		public void RemoveBundleProvider(IBundleProvider bundle_provider)
 		{
-			ArrayList list = new ArrayList ();
-			list.AddRange (this.bundle_providers);
-			list.Remove (bundle_provider);
-			
-			this.bundle_providers = new IBundleProvider[list.Count];
-			list.CopyTo (this.bundle_providers);
+			this.bundleProviders.Remove (bundle_provider);
 		}
 		
 		
@@ -438,7 +428,7 @@ namespace Epsitec.Common.Support
 			//	demandée n'est pas disponible chez eux. Si oui, c'est celle-ci qui sera
 			//	utilisée :
 			
-			foreach (IBundleProvider bundle_provider in this.bundle_providers)
+			foreach (IBundleProvider bundle_provider in this.bundleProviders)
 			{
 				bundle = bundle_provider.GetBundle (this, provider, resource_id, level, culture, recursion);
 				
@@ -451,25 +441,37 @@ namespace Epsitec.Common.Support
 			if (provider != null)
 			{
 				string prefix = provider.Prefix;
-				
-				switch (level)
+				string key = ResourceManager.CreateBundleKey (prefix, resource_id, level, culture);
+
+				if (this.bundleCache.TryGetValue (key, out bundle))
 				{
-					case ResourceLevel.Merged:
-						bundle = ResourceBundle.Create (this, prefix, resource_id, level, culture, recursion);
-						bundle.Compile (provider.GetData (resource_id, ResourceLevel.Default, culture));
-						bundle.Compile (provider.GetData (resource_id, ResourceLevel.Localized, culture));
-						bundle.Compile (provider.GetData (resource_id, ResourceLevel.Customized, culture));
-						break;
-					
-					case ResourceLevel.Default:
-					case ResourceLevel.Localized:
-					case ResourceLevel.Customized:
-						bundle = ResourceBundle.Create (this, prefix, resource_id, level, culture, recursion);
-						bundle.Compile (provider.GetData (resource_id, level, culture));
-						break;
-					
-					default:
-						throw new ResourceException (string.Format ("Invalid level {0} for resource '{1}'", level, id));
+					//	OK, on a trouvé un bundle dans le cache !
+				}
+				else
+				{
+					switch (level)
+					{
+						case ResourceLevel.Merged:
+							bundle = ResourceBundle.Create (this, prefix, resource_id, level, culture, recursion);
+							bundle.Compile (provider.GetData (resource_id, ResourceLevel.Default, culture));
+							bundle.Compile (provider.GetData (resource_id, ResourceLevel.Localized, culture));
+							bundle.Compile (provider.GetData (resource_id, ResourceLevel.Customized, culture));
+							break;
+
+						case ResourceLevel.Default:
+						case ResourceLevel.Localized:
+						case ResourceLevel.Customized:
+							bundle = ResourceBundle.Create (this, prefix, resource_id, level, culture, recursion);
+							bundle.Compile (provider.GetData (resource_id, level, culture));
+							break;
+
+						default:
+							throw new ResourceException (string.Format ("Invalid level {0} for resource '{1}'", level, id));
+					}
+
+					System.Diagnostics.Debug.Assert (bundle != null);
+
+					this.bundleCache[key] = bundle;
 				}
 			}
 			
@@ -482,7 +484,7 @@ namespace Epsitec.Common.Support
 			
 			return bundle;
 		}
-		
+
 		
 		public Drawing.Image GetImage(string name)
 		{
@@ -659,6 +661,11 @@ namespace Epsitec.Common.Support
 			
 			if (provider != null)
 			{
+				string prefix = provider.Prefix;
+				string key = ResourceManager.CreateBundleKey (prefix, resource_id, level, culture);
+				
+				this.bundleCache.Remove (key);
+				
 				if (provider.Remove (resource_id, level, culture))
 				{
 					return true;
@@ -676,11 +683,15 @@ namespace Epsitec.Common.Support
 				System.Diagnostics.Debug.WriteLine (string.Format ("Prefix '{0}' implemented by class {1}", this.resource_providers[i].Prefix, this.resource_providers[i].GetType ().Name));
 			}
 		}
-		
+
+		public void ClearBundleCache()
+		{
+			this.bundleCache.Clear ();
+		}
 		
 
 		
-		private void InternalInitialise()
+		private void InternalInitialize()
 		{
 			System.Collections.ArrayList providers = new System.Collections.ArrayList ();
 			System.Reflection.Assembly   assembly  = AssemblyLoader.Load ("Common.Support.Implementation");
@@ -713,7 +724,20 @@ namespace Epsitec.Common.Support
 			this.resource_providers = new IResourceProvider[providers.Count];
 			providers.CopyTo (this.resource_providers);
 		}
-		
+
+		private static string CreateBundleKey(string prefix, string resource_id, ResourceLevel level, CultureInfo culture)
+		{
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+
+			buffer.Append (prefix);
+			buffer.Append (resource_id);
+			buffer.Append ("~");
+			buffer.Append ((int) level);
+			buffer.Append ("~");
+			buffer.Append (culture.TwoLetterISOLanguageName);
+
+			return buffer.ToString ();
+		}
 		
 		
 		private void SelectLocale(CultureInfo culture)
@@ -763,12 +787,14 @@ namespace Epsitec.Common.Support
 		
 		
 		
-		private CultureInfo				culture;
-		private IResourceProvider[]		resource_providers;
-		private Hashtable				resource_provider_hash;
-		private string					application_name;
-		private string					default_prefix = "file";
-		private string					default_path;
-		private IBundleProvider[]		bundle_providers;
+		private CultureInfo						culture;
+		private IResourceProvider[]				resource_providers;
+		private Hashtable						resource_provider_hash;
+		private string							application_name;
+		private string							default_prefix = "file";
+		private string							default_path;
+		
+		List<IBundleProvider>					bundleProviders = new List<IBundleProvider> ();
+		Dictionary<string, ResourceBundle>		bundleCache = new Dictionary<string, ResourceBundle> ();
 	}
 }
