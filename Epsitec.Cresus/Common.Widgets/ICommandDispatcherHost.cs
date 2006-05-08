@@ -1,5 +1,7 @@
-//	Copyright © 2004-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2004-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
+
+using System.Collections.Generic;
 
 namespace Epsitec.Common.Widgets
 {
@@ -9,6 +11,6 @@ namespace Epsitec.Common.Widgets
 	/// </summary>
 	public interface ICommandDispatcherHost
 	{
-		CommandDispatcher[] CommandDispatchers { get; }
+		IEnumerable<CommandDispatcher> GetCommandDispatchers();
 	}
 }

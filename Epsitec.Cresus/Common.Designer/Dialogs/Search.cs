@@ -63,6 +63,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				group.PreferredHeight = 60;
 				group.Anchor = AnchorStyles.Top | AnchorStyles.Left;
 				group.Margins = new Margins(6, 0, 6+58+16*0, 0);
+				group.Padding = new Margins(5, 5, 5, 5);
 				group.TabIndex = tabIndex++;
 				group.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 
@@ -71,18 +72,19 @@ namespace Epsitec.Common.Designer.Dialogs
 				label.ContentAlignment = ContentAlignment.MiddleRight;
 				label.Text = Res.Strings.Viewer.Edit;
 				label.Anchor = AnchorStyles.Top | AnchorStyles.Left;
-				label.Margins = new Margins(0, 0, 5, 0);
+				label.Margins = new Margins(0, 0, 0, 0);
 
 				label = new StaticText(group);
 				label.PreferredWidth = 80;
 				label.ContentAlignment = ContentAlignment.MiddleRight;
 				label.Text = Res.Strings.Viewer.About;
 				label.Anchor = AnchorStyles.Top | AnchorStyles.Left;
-				label.Margins = new Margins(0, 0, 21, 0);
+				label.Margins = new Margins(0, 0, 16, 0);
 
 				this.checkLabel = new CheckButton(group);
 				this.checkLabel.Anchor = AnchorStyles.Top | AnchorStyles.Left;
-				this.checkLabel.Margins = new Margins(90+20*0, 0, 5, 0);
+				this.checkLabel.PreferredWidth = this.checkLabel.PreferredHeight;
+				this.checkLabel.Margins = new Margins (90+20*0, 0, 0, 0);
 				this.checkLabel.TabIndex = tabIndex++;
 				this.checkLabel.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 				this.checkLabel.ActiveStateChanged += new EventHandler(this.HandleCheckActiveStateChanged);
@@ -91,7 +93,8 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.checkPrimaryText = new CheckButton(group);
 				this.checkPrimaryText.ActiveState = ActiveState.Yes;
 				this.checkPrimaryText.Anchor = AnchorStyles.Top | AnchorStyles.Left;
-				this.checkPrimaryText.Margins = new Margins(90+20*1, 0, 5, 0);
+				this.checkPrimaryText.PreferredWidth = this.checkPrimaryText.PreferredHeight;
+				this.checkPrimaryText.Margins = new Margins (90+20*1, 0, 0, 0);
 				this.checkPrimaryText.TabIndex = tabIndex++;
 				this.checkPrimaryText.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 				this.checkPrimaryText.ActiveStateChanged += new EventHandler(this.HandleCheckActiveStateChanged);
@@ -100,7 +103,8 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.checkSecondaryText = new CheckButton(group);
 				this.checkSecondaryText.ActiveState = ActiveState.Yes;
 				this.checkSecondaryText.Anchor = AnchorStyles.Top | AnchorStyles.Left;
-				this.checkSecondaryText.Margins = new Margins(90+20*2, 0, 5, 0);
+				this.checkSecondaryText.PreferredWidth = this.checkSecondaryText.PreferredHeight;
+				this.checkSecondaryText.Margins = new Margins (90+20*2, 0, 0, 0);
 				this.checkSecondaryText.TabIndex = tabIndex++;
 				this.checkSecondaryText.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 				this.checkSecondaryText.ActiveStateChanged += new EventHandler(this.HandleCheckActiveStateChanged);
@@ -108,7 +112,8 @@ namespace Epsitec.Common.Designer.Dialogs
 
 				this.checkPrimaryAbout = new CheckButton(group);
 				this.checkPrimaryAbout.Anchor = AnchorStyles.Top | AnchorStyles.Left;
-				this.checkPrimaryAbout.Margins = new Margins(90+20*1, 0, 21, 0);
+				this.checkPrimaryAbout.PreferredWidth = this.checkPrimaryAbout.PreferredHeight;
+				this.checkPrimaryAbout.Margins = new Margins(90+20*1, 0, 16, 0);
 				this.checkPrimaryAbout.TabIndex = tabIndex++;
 				this.checkPrimaryAbout.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 				this.checkPrimaryAbout.ActiveStateChanged += new EventHandler(this.HandleCheckActiveStateChanged);
@@ -116,7 +121,8 @@ namespace Epsitec.Common.Designer.Dialogs
 
 				this.checkSecondaryAbout = new CheckButton(group);
 				this.checkSecondaryAbout.Anchor = AnchorStyles.Top | AnchorStyles.Left;
-				this.checkSecondaryAbout.Margins = new Margins(90+20*2, 0, 21, 0);
+				this.checkSecondaryAbout.PreferredWidth = this.checkSecondaryAbout.PreferredHeight;
+				this.checkSecondaryAbout.Margins = new Margins (90+20*2, 0, 16, 0);
 				this.checkSecondaryAbout.TabIndex = tabIndex++;
 				this.checkSecondaryAbout.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 				this.checkSecondaryAbout.ActiveStateChanged += new EventHandler(this.HandleCheckActiveStateChanged);

@@ -2,6 +2,7 @@
 //	Responsable: Pierre ARNAUD
 
 using Epsitec.Common.Support;
+using System.Collections.Generic;
 
 namespace Epsitec.Common.Widgets
 {
@@ -113,14 +114,10 @@ namespace Epsitec.Common.Widgets
 		}
 		
 #if false //#fix
-		public override CommandDispatcher[]		CommandDispatchers
+		public override IEnumerable<CommandDispatcher> GetCommandDispatchers()
 		{
-			get
-			{
-				ICommandDispatcherHost host = this.FindHost ();
-				
-				return host == null ? base.CommandDispatchers : host.CommandDispatchers;
-			}
+			ICommandDispatcherHost host = this.FindHost ();
+			return host == null ? base.GetCommandDispatchers () : host.GetCommandDispatchers ();
 		}
 #endif
 		

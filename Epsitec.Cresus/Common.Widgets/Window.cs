@@ -2,6 +2,7 @@
 //	Responsable: Pierre ARNAUD
 
 using Epsitec.Common.Support;
+using System.Collections.Generic;
 
 namespace Epsitec.Common.Widgets
 {
@@ -750,11 +751,11 @@ namespace Epsitec.Common.Widgets
 		
 		
 		#region ICommandDispatcherHost Members
-		public CommandDispatcher[]				CommandDispatchers
+		public IEnumerable<CommandDispatcher> GetCommandDispatchers()
 		{
-			get
+			if (this.dispatcher != null)
 			{
-				return CommandDispatcher.ToArray (this.dispatcher);
+				yield return this.dispatcher;
 			}
 		}
 		#endregion
@@ -1579,7 +1580,7 @@ namespace Epsitec.Common.Widgets
 			{
 				this.source      = source;
 				this.command     = command;
-				this.dispatchers = dispatcher.CommandDispatchers;
+				this.dispatchers = Types.Collection.ToArray<CommandDispatcher> (dispatcher.GetCommandDispatchers ());
 			}
 			
 			public QueueItem(Widget source)

@@ -2829,8 +2829,11 @@ namespace Epsitec.Common.Widgets
 		{
 			if (this.text_layout != null)
 			{
-				this.text_layout.Alignment  = this.ContentAlignment;
-				this.text_layout.LayoutSize = this.Client.Size;
+				if (this.IsActualGeometryValid)
+				{
+					this.text_layout.Alignment  = this.ContentAlignment;
+					this.text_layout.LayoutSize = this.Client.Size;
+				}
 			}
 		}
 
