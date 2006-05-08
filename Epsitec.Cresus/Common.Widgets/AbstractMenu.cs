@@ -1,6 +1,8 @@
 //	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
+using Epsitec.Common.Support;
+
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
@@ -328,8 +330,8 @@ namespace Epsitec.Common.Widgets
 		{
 			if (this.is_connected == false)
 			{
-				this.Behavior.Accepted += new Support.EventHandler (this.HandleBehaviorAccepted);
-				this.Behavior.Rejected += new Support.EventHandler (this.HandleBehaviorRejected);
+				this.Behavior.Accepted += new EventHandler (this.HandleBehaviorAccepted);
+				this.Behavior.Rejected += new EventHandler (this.HandleBehaviorRejected);
 				
 				this.is_connected = true;
 			}
@@ -346,8 +348,8 @@ namespace Epsitec.Common.Widgets
 					this.open_button = null;
 				}
 				
-				this.Behavior.Accepted -= new Support.EventHandler (this.HandleBehaviorAccepted);
-				this.Behavior.Rejected -= new Support.EventHandler (this.HandleBehaviorRejected);
+				this.Behavior.Accepted -= new EventHandler (this.HandleBehaviorAccepted);
+				this.Behavior.Rejected -= new EventHandler (this.HandleBehaviorRejected);
 				
 				this.is_connected = false;
 			}
@@ -563,7 +565,7 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void OnAccepted()
 		{
-			Support.EventHandler handler = (Support.EventHandler) this.GetUserEventHandler ("Accepted");
+			EventHandler handler = (EventHandler) this.GetUserEventHandler ("Accepted");
 			
 			if (handler != null)
 			{
@@ -573,7 +575,7 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void OnRejected()
 		{
-			Support.EventHandler handler = (Support.EventHandler) this.GetUserEventHandler ("Rejected");
+			EventHandler handler = (EventHandler) this.GetUserEventHandler ("Rejected");
 			
 			if (handler != null)
 			{
@@ -582,7 +584,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public event Support.EventHandler		Accepted
+		public event EventHandler				Accepted
 		{
 			add
 			{
@@ -593,7 +595,7 @@ namespace Epsitec.Common.Widgets
 				this.RemoveUserEventHandler ("Accepted", value);
 			}
 		}
-		public event Support.EventHandler		Rejected
+		public event EventHandler				Rejected
 		{
 			add
 			{

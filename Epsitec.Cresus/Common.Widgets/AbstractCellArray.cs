@@ -1,6 +1,8 @@
+using Epsitec.Common.Support;
+
 namespace Epsitec.Common.Widgets
 {
-	using PropertyChangedEventHandler = Epsitec.Common.Support.EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>;
+	using PropertyChangedEventHandler = EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>;
 	
 	[System.Flags] public enum CellArrayStyles
 	{
@@ -47,8 +49,8 @@ namespace Epsitec.Common.Widgets
 			this.container.InheritsParentFocus = true;
 			
 			this.scrollerV.IsInverted = true;  // de haut en bas
-			this.scrollerV.ValueChanged += new Support.EventHandler(this.HandleScrollerV);
-			this.scrollerH.ValueChanged += new Support.EventHandler(this.HandleScrollerH);
+			this.scrollerV.ValueChanged += new EventHandler(this.HandleScrollerV);
+			this.scrollerH.ValueChanged += new EventHandler(this.HandleScrollerH);
 		}
 		
 		
@@ -58,11 +60,11 @@ namespace Epsitec.Common.Widgets
 			{
 				if ( this.scrollerV != null )
 				{
-					this.scrollerV.ValueChanged -= new Support.EventHandler(this.HandleScrollerV);
+					this.scrollerV.ValueChanged -= new EventHandler(this.HandleScrollerV);
 				}
 				if ( this.scrollerH != null )
 				{
-					this.scrollerH.ValueChanged -= new Support.EventHandler(this.HandleScrollerH);
+					this.scrollerH.ValueChanged -= new EventHandler(this.HandleScrollerH);
 				}
 				
 				this.SetFocusedCell(null);
@@ -1146,36 +1148,44 @@ namespace Epsitec.Common.Widgets
 		protected virtual void OnSelectionChanged()
 		{
 			//	Génère un événement pour dire que la sélection a changé.
-			if ( this.SelectionChanged != null )  // qq'un écoute ?
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("SelectionChanged");
+
+			if (handler != null)
 			{
-				this.SelectionChanged(this);
+				handler(this);
 			}
 		}
 
 		protected virtual void OnFinalSelectionChanged()
 		{
 			//	Génère un événement pour dire que la sélection a changé.
-			if ( this.FinalSelectionChanged != null )  // qq'un écoute ?
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("FinalSelectionChanged");
+
+			if (handler != null)
 			{
-				this.FinalSelectionChanged(this);
+				handler(this);
 			}
 		}
 
 		protected virtual void OnSortChanged()
 		{
 			//	Génère un événement pour dire que le tri a changé.
-			if ( this.SortChanged != null )  // qq'un écoute ?
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("SortChanged");
+
+			if (handler != null)
 			{
-				this.SortChanged(this);
+				handler(this);
 			}
 		}
 
 		protected virtual void OnFlyOverChanged()
 		{
 			//	Génère un événement pour dire que la cellule survolée à changé.
-			if ( this.FlyOverChanged != null )  // qq'un écoute ?
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("FlyOverChanged");
+
+			if (handler != null)
 			{
-				this.FlyOverChanged(this);
+				handler(this);
 			}
 		}
 
@@ -1967,10 +1977,53 @@ namespace Epsitec.Common.Widgets
 		}
 		
 
-		public event Support.EventHandler SelectionChanged;
-		public event Support.EventHandler FinalSelectionChanged;
-		public event Support.EventHandler SortChanged;
-		public event Support.EventHandler FlyOverChanged;
+		public event EventHandler SelectionChanged
+		{
+			add
+			{
+				this.AddUserEventHandler("SelectionChanged", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("SelectionChanged", value);
+			}
+		}
+
+		public event EventHandler FinalSelectionChanged
+		{
+			add
+			{
+				this.AddUserEventHandler("FinalSelectionChanged", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("FinalSelectionChanged", value);
+			}
+		}
+
+		public event EventHandler SortChanged
+		{
+			add
+			{
+				this.AddUserEventHandler("SortChanged", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("SortChanged", value);
+			}
+		}
+
+		public event EventHandler FlyOverChanged
+		{
+			add
+			{
+				this.AddUserEventHandler("FlyOverChanged", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("FlyOverChanged", value);
+			}
+		}
 
 		protected bool							isDirty;
 		protected bool							isGrimy;
