@@ -2,6 +2,7 @@
 //	Responsable: Pierre ARNAUD
 
 using System.Collections.Generic;
+using Epsitec.Common.Support;
 
 namespace Epsitec.Common.Widgets
 {
@@ -400,17 +401,19 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual  void OnWindowStylesChanged()
 		{
-			if (this.WindowStylesChanged != null)
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("WindowStylesChanged");
+			if (handler != null)
 			{
-				this.WindowStylesChanged (this);
+				handler(this);
 			}
 		}
 		
 		protected virtual  void OnWindowTypeChanged()
 		{
-			if (this.WindowTypeChanged != null)
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("WindowTypeChanged");
+			if (handler != null)
 			{
-				this.WindowTypeChanged (this);
+				handler(this);
 			}
 		}
 		
@@ -446,8 +449,29 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public event Support.EventHandler			WindowStylesChanged;
-		public event Support.EventHandler			WindowTypeChanged;
+		public event EventHandler					WindowStylesChanged
+		{
+			add
+			{
+				this.AddUserEventHandler("WindowStylesChanged", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("WindowStylesChanged", value);
+			}
+		}
+
+		public event EventHandler					WindowTypeChanged
+		{
+			add
+			{
+				this.AddUserEventHandler("WindowTypeChanged", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("WindowTypeChanged", value);
+			}
+		}
 
 		
 		protected WindowStyles						window_styles;
