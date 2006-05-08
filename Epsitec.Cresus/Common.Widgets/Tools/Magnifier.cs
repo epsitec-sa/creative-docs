@@ -1,6 +1,8 @@
 //	Copyright © 2003-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
+using Epsitec.Common.Support;
+
 namespace Epsitec.Common.Widgets.Tools
 {
 	using Win32Api = Epsitec.Common.Widgets.Platform.Win32Api;
@@ -173,9 +175,9 @@ namespace Epsitec.Common.Widgets.Tools
 		}
 		
 		
-		public event Support.EventHandler		HotColorChanged;
-		public event Support.EventHandler		SampleRadiusChanged;
-		public event Support.EventHandler		DisplayRadiusChanged;
+		public event EventHandler				HotColorChanged;
+		public event EventHandler				SampleRadiusChanged;
+		public event EventHandler				DisplayRadiusChanged;
 		
 		
 		private Drawing.Color					hot_color;
@@ -493,7 +495,7 @@ namespace Epsitec.Common.Widgets.Tools
 					this.timer = new Timer ();
 					this.timer.AutoRepeat = 0.1;
 					this.timer.Delay = 0.1;
-					this.timer.TimeElapsed += new Support.EventHandler(HandleTimerTimeElapsed);
+					this.timer.TimeElapsed += new EventHandler(HandleTimerTimeElapsed);
 					this.timer.Start ();
 				}
 			}
@@ -629,7 +631,7 @@ namespace Epsitec.Common.Widgets.Tools
 				{
 					this.magnifier = new Magnifier ();
 					this.magnifier.IsColorPicker = true;
-					this.magnifier.HotColorChanged += new Support.EventHandler (this.HandleMagnifierHotColorChanged);
+					this.magnifier.HotColorChanged += new EventHandler (this.HandleMagnifierHotColorChanged);
 				}
 				
 				MouseCursor.Hide ();
@@ -670,14 +672,25 @@ namespace Epsitec.Common.Widgets.Tools
 			
 			protected virtual void OnHotColorChanged()
 			{
-				if (this.HotColorChanged != null)
+				EventHandler handler = (EventHandler) this.GetUserEventHandler("HotColorChanged");
+				if (handler != null)
 				{
-					this.HotColorChanged (this);
+					handler(this);
 				}
 			}
 			
 			
-			public event Support.EventHandler	HotColorChanged;
+			public event EventHandler			HotColorChanged
+			{
+				add
+				{
+					this.AddUserEventHandler("HotColorChanged", value);
+				}
+				remove
+				{
+					this.RemoveUserEventHandler("HotColorChanged", value);
+				}
+			}
 			
 			
 			private bool						is_sampling;
