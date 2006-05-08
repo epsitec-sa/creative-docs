@@ -223,7 +223,7 @@ namespace Epsitec.Common.UI
 			}
 			if (name == path)
 			{
-				throw new System.InvalidOperationException ("Use AddDataSource to add a data source, not SetValue");
+				throw new System.InvalidOperationException ("You cannot modify a AddDataSource with SetValue");
 			}
 
 			data.SetValue (StructuredTree.GetSubPath (path, 1), value);

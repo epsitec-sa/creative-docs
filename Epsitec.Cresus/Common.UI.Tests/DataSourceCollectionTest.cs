@@ -14,7 +14,7 @@ namespace Epsitec.Common.UI
 		{
 			DataSourceCollection collection = new DataSourceCollection ();
 			
-			Widgets.Visual source1 = new Epsitec.Common.Widgets.Visual ();
+			Widgets.Visual source1 = new Widgets.Visual ();
 			MySimpleDataSource source2 = new MySimpleDataSource ();
 
 			collection.AddDataSource ("A", source1);
@@ -75,8 +75,8 @@ namespace Epsitec.Common.UI
 		{
 			DataSourceCollection collection = new DataSourceCollection ();
 
-			Widgets.Visual source1 = new Epsitec.Common.Widgets.Visual ();
-			Widgets.Visual source2 = new Epsitec.Common.Widgets.Visual ();
+			Widgets.Visual source1 = new Widgets.Visual ();
+			Widgets.Visual source2 = new Widgets.Visual ();
 
 			source1.Name = "Source1";
 			source2.Name = "Source2";
@@ -96,6 +96,29 @@ namespace Epsitec.Common.UI
 			Assert.AreEqual (source2, context.ExternalMap.GetValue ("B"));
 			Assert.AreEqual (source1, collection.GetValue ("A"));
 			Assert.AreEqual (source2, collection.GetValue ("B"));
+		}
+
+		[Test]
+		[ExpectedException (typeof (System.InvalidOperationException))]
+		public void CheckSetValueEx1()
+		{
+			DataSourceCollection collection = new DataSourceCollection ();
+
+			Widgets.Visual source1 = new Widgets.Visual ();
+
+			collection.AddDataSource ("A", source1);
+			collection.SetValue ("A", source1);
+		}
+
+		[Test]
+		[ExpectedException (typeof (System.ArgumentException))]
+		public void CheckSetValueEx2()
+		{
+			DataSourceCollection collection = new DataSourceCollection ();
+
+			Widgets.Visual source1 = new Widgets.Visual ();
+
+			collection.SetValue ("A", source1);
 		}
 
 		private class MySimpleDataSource : IStructuredData
