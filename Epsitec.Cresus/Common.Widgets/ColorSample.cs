@@ -1,6 +1,7 @@
 //	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
+using Epsitec.Common.Support;
 using Epsitec.Common.Types;
 
 namespace Epsitec.Common.Widgets
@@ -517,9 +518,10 @@ namespace Epsitec.Common.Widgets
 		protected virtual void OnChanged()
 		{
 			//	Génère un événement pour dire que la couleur a changé.
-			if ( this.Changed != null )  // qq'un écoute ?
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("Changed");
+			if (handler != null)
 			{
-				this.Changed(this);
+				handler(this);
 			}
 		}
 
@@ -533,7 +535,17 @@ namespace Epsitec.Common.Widgets
 			return o.GetValue (ColorSample.DragHostProperty) as ColorSample;
 		}
 		
-		public event Support.EventHandler		Changed;
+		public event EventHandler				Changed
+		{
+			add
+			{
+				this.AddUserEventHandler("Changed", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("Changed", value);
+			}
+		}
 
 		public static readonly DependencyProperty DragHostProperty = DependencyProperty.RegisterAttached ("DragHost", typeof (ColorSample), typeof (ColorSample));
 

@@ -1,3 +1,5 @@
+using Epsitec.Common.Support;
+
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
@@ -299,13 +301,24 @@ namespace Epsitec.Common.Widgets
 		protected virtual void OnChanged()
 		{
 			//	Génère un événement pour dire ça a changé.
-			if ( this.Changed != null )  // qq'un écoute ?
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("Changed");
+			if (handler != null)
 			{
-				this.Changed(this);
+				handler(this);
 			}
 		}
 
-		public event Support.EventHandler Changed;
+		public event EventHandler			Changed
+		{
+			add
+			{
+				this.AddUserEventHandler("Changed", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("Changed", value);
+			}
+		}
 
 
 		//	Dessine un cercle inscrit dans un rectangle.
