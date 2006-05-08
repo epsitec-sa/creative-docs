@@ -14,7 +14,7 @@ namespace Epsitec.Common.Support
 	/// Implémentation d'un ResourceBundle basé sur un stockage interne de
 	/// l'information sous forme XML DOM.
 	/// </summary>
-	public class ResourceBundle : System.ICloneable, Types.IResourceBoundSource
+	public class ResourceBundle : System.ICloneable
 	{
 		public static ResourceBundle Create(ResourceManager resource_manager)
 		{
@@ -1000,8 +1000,8 @@ namespace Epsitec.Common.Support
 		{
 			return this.CloneCopyToNewObject (this.CloneNewObject ()) as ResourceBundle;
 		}
-		
-		
+
+
 		protected virtual object CloneNewObject()
 		{
 			return new ResourceBundle (this.manager);
@@ -1568,15 +1568,6 @@ namespace Epsitec.Common.Support
 		}
 		#endregion
 
-		#region IResourceBoundSource Members
-
-		object Epsitec.Common.Types.IResourceBoundSource.GetValue(string id)
-		{
-			return this[id].Data;
-		}
-
-		#endregion
-		
 		public event EventHandler FieldsChanged;
 		
 		protected string					name;

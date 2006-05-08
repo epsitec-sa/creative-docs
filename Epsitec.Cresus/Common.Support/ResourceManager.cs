@@ -93,7 +93,7 @@ namespace Epsitec.Common.Support
 			}
 			set
 			{
-				if (this.culture != value)
+				if (Resources.EqualCultures (this.culture, value) == false)
 				{
 					this.SelectLocale (value);
 				}
@@ -488,15 +488,8 @@ namespace Epsitec.Common.Support
 
 		public void Bind(Types.DependencyObject targetObject, Types.DependencyProperty targetProperty, string resourceId)
 		{
-			this.Bind (targetObject, targetProperty, resourceId, ResourceLevel.Merged, this.culture);
-		}
-
-		public void Bind(Types.DependencyObject targetObject, Types.DependencyProperty targetProperty, string resourceId, ResourceLevel level, CultureInfo culture)
-		{
-			if (culture == null)
-			{
-				culture = this.culture;
-			}
+			//	Attache la cible (object/propriété) avec la ressource décrite
+			//	par une ID complète (prefix + bundle + field).
 			
 			if ((targetObject == null) ||
 				(targetProperty == null) ||
@@ -508,18 +501,75 @@ namespace Epsitec.Common.Support
 			string bundleName;
 			string fieldName;
 
-			if (ResourceBundle.SplitTarget (resourceId, out bundleName, out fieldName))
+			if ((ResourceBundle.SplitTarget (resourceId, out bundleName, out fieldName)) &&
+				(bundleName.Length > 0) &&
+				(fieldName.Length > 0))
 			{
-				ResourceBundle bundle = this.GetBundle (bundleName, level, culture, 0);
+				BundleBindingProxy proxy = this.GetBundleBindingProxy (bundleName);
 
-				if (bundle != null)
+				if (proxy != null)
 				{
-					targetObject.SetBinding (targetProperty, new Types.Binding (Types.BindingMode.OneTime, bundle, fieldName));
+					Types.Binding binding = new Types.Binding (Types.BindingMode.OneTime, proxy, fieldName);
+
+					proxy.AddBinding (binding);
+					
+					targetObject.SetBinding (targetProperty, binding);
+
 					return;
 				}
 			}
 
-			throw new System.ArgumentException (string.Format ("Cannot bind to ressource '{0}'", resourceId));
+			throw new ResourceException (string.Format ("Cannot bind to ressource '{0}'", resourceId));
+		}
+
+		private BundleBindingProxy GetBundleBindingProxy(string bundleName)
+		{
+			//	Trouve le proxy qui liste les bindings pour le bundle spécifié.
+			
+			//	La liste des proxies est gérée par le gestionnaire de ressources
+			//	plutôt que le bundle lui-même, car il faut pouvoir passer d'une
+			//	culture active à une autre sans perdre les informations de
+			//	binding.
+			
+			BundleBindingProxy proxy;
+
+			if (this.bindingProxies.TryGetValue (bundleName, out proxy) == false)
+			{
+				//	Le proxy pour le bundle en question n'existe pas. Il faut
+				//	donc le créer :
+				
+				ResourceBundle bundle = this.GetBundle (bundleName, ResourceLevel.Merged, this.culture, 0);
+
+				if (bundle == null)
+				{
+					return null;
+				}
+				
+				proxy = new BundleBindingProxy (bundle);
+
+				System.Diagnostics.Debug.Assert (proxy.Bundle.PrefixedName == bundleName);
+				System.Diagnostics.Debug.Assert (Resources.EqualCultures (proxy.Bundle.Culture, this.culture));
+				
+				this.bindingProxies[bundleName] = proxy;
+			}
+
+			return proxy;
+		}
+
+		private void SyncBundleBindingProxies()
+		{
+			//	Met à jour tous les proxies en les synchronisant avec la culture
+			//	active.
+			
+			foreach (KeyValuePair<string, BundleBindingProxy> pair in this.bindingProxies)
+			{
+				string name = pair.Value.Bundle.PrefixedName;
+				
+				ResourceBundle oldBundle = pair.Value.Bundle;
+				ResourceBundle newBundle = this.GetBundle (name, ResourceLevel.Merged, this.culture);
+				
+				pair.Value.SwitchToBundle (newBundle);
+			}
 		}
 
 		
@@ -618,6 +668,29 @@ namespace Epsitec.Common.Support
 					if (field != null)
 					{
 						return field.AsString;
+					}
+				}
+			}
+			
+			return null;
+		}
+		
+		public object GetData(string id, ResourceLevel level, CultureInfo culture)
+		{
+			string bundle_name;
+			string field_name;
+			
+			if (ResourceBundle.SplitTarget (id, out bundle_name, out field_name))
+			{
+				ResourceBundle bundle = this.GetBundle (bundle_name, level, culture);
+			
+				if (bundle != null)
+				{
+					ResourceBundle.Field field = bundle[field_name];
+					
+					if (field != null)
+					{
+						return field.Data;
 					}
 				}
 			}
@@ -725,9 +798,9 @@ namespace Epsitec.Common.Support
 		{
 			this.bundleCache.Clear ();
 		}
-		
 
-		
+
+
 		private void InternalInitialize()
 		{
 			System.Collections.ArrayList providers = new System.Collections.ArrayList ();
@@ -764,9 +837,16 @@ namespace Epsitec.Common.Support
 
 		private static string CreateBundleKey(string prefix, string resource_id, ResourceLevel level, CultureInfo culture)
 		{
+			System.Diagnostics.Debug.Assert (prefix != null);
+			System.Diagnostics.Debug.Assert (prefix.Length > 0);
+			System.Diagnostics.Debug.Assert (prefix.Contains (":") == false);
+			System.Diagnostics.Debug.Assert (resource_id.Length > 0);
+			System.Diagnostics.Debug.Assert (resource_id.Contains ("#") == false);
+			
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 
 			buffer.Append (prefix);
+			buffer.Append (":");
 			buffer.Append (resource_id);
 			buffer.Append ("~");
 			buffer.Append ((int) level);
@@ -776,7 +856,6 @@ namespace Epsitec.Common.Support
 			return buffer.ToString ();
 		}
 		
-		
 		private void SelectLocale(CultureInfo culture)
 		{
 			this.culture = culture;
@@ -785,13 +864,15 @@ namespace Epsitec.Common.Support
 			{
 				this.resource_providers[i].SelectLocale (culture);
 			}
+
+			this.SyncBundleBindingProxies ();
 		}
 		
 		private IResourceProvider FindProvider(string full_id, out string local_id)
 		{
 			if (full_id != null)
 			{
-				int pos = full_id.IndexOf (":");
+				int pos = full_id.IndexOf (':');
 			
 				if (pos > 0)
 				{
@@ -821,9 +902,107 @@ namespace Epsitec.Common.Support
 			local_id = null;
 			return null;
 		}
-		
-		
-		
+
+		#region Private BundleBindingProxy Class
+
+		private class BundleBindingProxy : Types.IResourceBoundSource
+		{
+			public BundleBindingProxy(ResourceBundle bundle)
+			{
+				this.bundle = bundle;
+			}
+
+			public ResourceBundle				Bundle
+			{
+				get
+				{
+					return this.bundle;
+				}
+			}
+			
+			public void SwitchToBundle(ResourceBundle bundle)
+			{
+				if (this.bundle != bundle)
+				{
+					this.bundle = bundle;
+					this.SyncBindings ();
+				}
+			}
+
+			public void SyncBindings()
+			{
+				WeakBinding[] bindings = this.bindings.ToArray ();
+
+				for (int i = 0; i < bindings.Length; i++)
+				{
+					Types.Binding binding = bindings[i].Binding;
+
+					if (binding == null)
+					{
+						this.bindings.Remove (bindings[i]);
+					}
+					else
+					{
+						binding.UpdateTargets (Types.BindingUpdateMode.Reset);
+					}
+				}
+			}
+
+			public void AddBinding(Types.Binding binding)
+			{
+				this.bindings.Add (new WeakBinding (binding));
+			}
+
+			public void TrimBindingCache()
+			{
+				WeakBinding[] bindings = this.bindings.ToArray ();
+
+				for (int i = 0; i < bindings.Length; i++)
+				{
+					if (bindings[i].IsAlive == false)
+					{
+						this.bindings.Remove (bindings[i]);
+					}
+				}
+			}
+
+			#region IResourceBoundSource Members
+
+			object Epsitec.Common.Types.IResourceBoundSource.GetValue(string id)
+			{
+				System.Diagnostics.Debug.Assert (this.bundle != null);
+				System.Diagnostics.Debug.Assert (this.bundle.Contains (id));
+				
+				return this.bundle[id].Data;
+			}
+
+			#endregion
+
+			ResourceBundle						bundle;
+			List<WeakBinding>					bindings = new List<WeakBinding> ();
+		}
+
+		#endregion
+
+		#region Private WeakBinding Class
+
+		private class WeakBinding : System.WeakReference
+		{
+			public WeakBinding(Types.Binding binding) : base (binding)
+			{
+			}
+
+			public Types.Binding Binding
+			{
+				get
+				{
+					return this.Target as Types.Binding;
+				}
+			}
+		}
+
+		#endregion
+
 		private CultureInfo						culture;
 		private IResourceProvider[]				resource_providers;
 		private Hashtable						resource_provider_hash;
@@ -833,5 +1012,7 @@ namespace Epsitec.Common.Support
 		
 		List<IBundleProvider>					bundleProviders = new List<IBundleProvider> ();
 		Dictionary<string, ResourceBundle>		bundleCache = new Dictionary<string, ResourceBundle> ();
+		Dictionary<string, BundleBindingProxy>	bindingProxies = new Dictionary<string, BundleBindingProxy> ();
+		
 	}
 }
