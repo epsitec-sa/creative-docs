@@ -1,3 +1,5 @@
+using Epsitec.Common.Support;
+
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
@@ -196,14 +198,14 @@ namespace Epsitec.Common.Widgets
 				{
 					if ( this.colorCollection != null )
 					{
-						this.colorCollection.Changed -= new Support.EventHandler(this.HandleColorCollectionChanged);
+						this.colorCollection.Changed -= new EventHandler(this.HandleColorCollectionChanged);
 					}
 
 					this.colorCollection = value;
 
 					if ( this.colorCollection != null )
 					{
-						this.colorCollection.Changed += new Support.EventHandler(this.HandleColorCollectionChanged);
+						this.colorCollection.Changed += new EventHandler(this.HandleColorCollectionChanged);
 					}
 
 					for ( int i=0 ; i<this.nbTotal ; i++ )
@@ -432,24 +434,48 @@ namespace Epsitec.Common.Widgets
 		protected virtual void OnExport()
 		{
 			//	Génère un événement pour dire qu'on exporte une couleur.
-			if ( this.Export != null )  // qq'un écoute ?
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("Export");
+			if (handler != null)
 			{
-				this.Export(this);
+				handler(this);
 			}
 		}
 
 		protected virtual void OnImport()
 		{
 			//	Génère un événement pour dire qu'on importe une couleur.
-			if ( this.Import != null )  // qq'un écoute ?
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("Import");
+			if (handler != null)
 			{
-				this.Import(this);
+				handler(this);
 			}
 		}
 
 		
-		public event Support.EventHandler		Export;
-		public event Support.EventHandler		Import;
+		public event EventHandler				Export
+		{
+			add
+			{
+				this.AddUserEventHandler("Export", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("Export", value);
+			}
+		}
+
+		public event EventHandler				Import
+		{
+			add
+			{
+				this.AddUserEventHandler("Import", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("Import", value);
+			}
+		}
+
 
 		protected int							nbColumns;
 		protected int							nbRows;
