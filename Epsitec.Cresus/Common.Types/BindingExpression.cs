@@ -90,8 +90,8 @@ namespace Epsitec.Common.Types
 		}
 		internal void AttachToSource()
 		{
-			DependencyObject			sourceObject;
-			DependencyProperty			sourceProperty;
+			object						sourceObject;
+			object						sourceProperty;
 			BindingSourceType			sourceType;
 			List<SourcePropertyPair>	sourceBreadcrumbs;
 
@@ -165,29 +165,30 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		private bool FindDataSource(out DependencyObject source, out DependencyProperty property, out BindingSourceType type, out List<SourcePropertyPair> breadcrumbs)
+		private bool FindDataSource(out object objectSource, out object objectProperty, out BindingSourceType type, out List<SourcePropertyPair> breadcrumbs)
 		{
-			type        = BindingSourceType.None;
-			source      = null;
-			property    = null;
-			breadcrumbs = null;
+			type           = BindingSourceType.None;
+			objectSource   = null;
+			objectProperty = null;
+			breadcrumbs    = null;
 
 			object root;
-			DependencyPropertyPath path;
+			string path;
 
 			this.FindDataSourceRoot (out root, out path);
 
-			source = root as DependencyObject;
+			DependencyObject   source   = root as DependencyObject;
+			DependencyProperty property = null;
 			
 			if ((source != null) &&
 				(source != Binding.DoNothing) &&
 				(path != null) &&
-				(path.IsEmpty == false))
+				(path.Length > 0))
 			{
 				//	Resolve the path to get at the real source element, starting
 				//	at the root.
 
-				string[] elements = path.GetFullPath ().Split ('.');
+				string[] elements = path.Split ('.');
 				
 				for (int i = 0; i < elements.Length; i++)
 				{
@@ -219,6 +220,9 @@ namespace Epsitec.Common.Types
 
 				type = BindingSourceType.PropertyObject;
 				
+				objectSource = source;
+				objectProperty = property;
+				
 				//	If we have traversed several data source objects to arrive
 				//	at the leaf 'source', we will register with them in order
 				//	to detect changes; this is done in InternalAttachToSource,
@@ -226,17 +230,28 @@ namespace Epsitec.Common.Types
 
 				return true;
 			}
-
-			if ((source != null) &&
-				(source != Binding.DoNothing))
+			
+			if ((root != null) &&
+				(root != Binding.DoNothing))
 			{
-				type = BindingSourceType.SourceItself;
+				if (root is IResourceBoundSource)
+				{
+					type = BindingSourceType.Resource;
+				}
+				else
+				{
+					type = BindingSourceType.SourceItself;
+				}
+				
+				objectSource = root;
+				objectProperty = path;
+				
 				return true;
 			}
 			
 			return false;
 		}
-		private void FindDataSourceRoot(out object source, out DependencyPropertyPath path)
+		private void FindDataSourceRoot(out object source, out string path)
 		{
 			source = this.binding.Source;
 			path   = this.binding.Path;
@@ -319,10 +334,12 @@ namespace Epsitec.Common.Types
 					{
 						case BindingSourceType.PropertyObject:
 							source = this.sourceObject as DependencyObject;
-							BindingExpression.SetValue (source, this.sourceProperty, value);
+							BindingExpression.SetValue (source, (DependencyProperty) this.sourceProperty, value);
 							break;
 						case BindingSourceType.SourceItself:
 							throw new System.InvalidOperationException ("Cannot update source: BindingSourceType set to SourceItself");
+						case BindingSourceType.Resource:
+							throw new System.InvalidOperationException ("Cannot update source: BindingSourceType set to Resource");
 					}
 				}
 				finally
@@ -334,19 +351,7 @@ namespace Epsitec.Common.Types
 		
 		private void InternalUpdateTarget()
 		{
-			DependencyObject source;
-			
-			switch (this.sourceType)
-			{
-				case BindingSourceType.PropertyObject:
-					source = this.sourceObject as DependencyObject;
-					this.InternalUpdateTarget (source.GetValue (this.sourceProperty));
-					break;
-				case BindingSourceType.SourceItself:
-					source = this.sourceObject as DependencyObject;
-					this.InternalUpdateTarget (source);
-					break;
-			}
+			this.InternalUpdateTarget (this.GetSourceValue ());
 		}
 		private void InternalUpdateTarget(object value)
 		{
@@ -372,10 +377,12 @@ namespace Epsitec.Common.Types
 			switch (this.sourceType)
 			{
 				case BindingSourceType.PropertyObject:
-					BindingExpression.Attach (this, this.sourceObject as DependencyObject, this.sourceProperty);
+					BindingExpression.Attach (this, this.sourceObject as DependencyObject, (DependencyProperty) this.sourceProperty);
 					BindingExpression.Attach (this, this.sourceBreadcrumbs);
 					break;
 				case BindingSourceType.SourceItself:
+					break;
+				case BindingSourceType.Resource:
 					break;
 			}
 		}
@@ -386,10 +393,12 @@ namespace Epsitec.Common.Types
 			switch (this.sourceType)
 			{
 				case BindingSourceType.PropertyObject:
-					BindingExpression.Detach (this, this.sourceObject as DependencyObject, this.sourceProperty);
+					BindingExpression.Detach (this, this.sourceObject as DependencyObject, (DependencyProperty) this.sourceProperty);
 					BindingExpression.Detach (this, this.sourceBreadcrumbs);
 					break;
 				case BindingSourceType.SourceItself:
+					break;
+				case BindingSourceType.Resource:
 					break;
 			}
 
@@ -421,6 +430,35 @@ namespace Epsitec.Common.Types
 			this.InternalUpdateSource (e.NewValue);
 		}
 
+		private object GetSourceValue()
+		{
+			DependencyObject source;
+			IResourceBoundSource resource;
+			object data;
+
+			switch (this.sourceType)
+			{
+				case BindingSourceType.PropertyObject:
+					source = this.sourceObject as DependencyObject;
+					data   = source.GetValue ((DependencyProperty) this.sourceProperty);
+					break;
+
+				case BindingSourceType.SourceItself:
+					data = this.sourceObject;
+					break;
+				
+				case BindingSourceType.Resource:
+					resource = (IResourceBoundSource) this.sourceObject;
+					data = resource.GetValue ((string) this.sourceProperty);
+					break;
+
+				default:
+					throw new System.NotImplementedException (string.Format ("BindingSourceType.{0} not implemented", this.sourceType));
+			}
+
+			return data;
+		}
+		
 		private static void SetValue(DependencyObject target, DependencyProperty property, object value)
 		{
 			if (target != null)
@@ -494,7 +532,7 @@ namespace Epsitec.Common.Types
 		private DependencyObject				targetObject;			//	immutable
 		private DependencyProperty				targetPropery;			//	immutable
 		private object							sourceObject;
-		private DependencyProperty				sourceProperty;
+		private object							sourceProperty;
 		private BindingSourceType				sourceType;
 		private List<SourcePropertyPair>		sourceBreadcrumbs;
 		private Binding							dataContext;

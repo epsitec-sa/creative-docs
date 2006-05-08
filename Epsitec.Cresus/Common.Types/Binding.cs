@@ -26,7 +26,7 @@ namespace Epsitec.Common.Types
 		{
 			this.Mode = mode;
 			this.Source = source;
-			this.Path = new DependencyPropertyPath (path);
+			this.Path = path;
 		}
 
 		
@@ -62,7 +62,7 @@ namespace Epsitec.Common.Types
 				}
 			}
 		}
-		public DependencyPropertyPath			Path
+		public string							Path
 		{
 			get
 			{
@@ -304,7 +304,7 @@ namespace Epsitec.Common.Types
 
 		private BindingMode						mode;
 		private object							source;
-		private DependencyPropertyPath			path;
+		private string							path;
 		private string							elementName;
 		private int								deferCounter;
 		private State							state = State.SourceDetached;

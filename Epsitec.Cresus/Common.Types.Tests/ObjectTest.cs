@@ -75,7 +75,7 @@ namespace Epsitec.Common.Types
 			{
 				bindingName.Mode = BindingMode.TwoWay;
 				bindingName.Source = mySource;
-				bindingName.Path = new DependencyPropertyPath ("Name");
+				bindingName.Path = "Name";
 
 				myTarget.SetBinding (MyObject.FooProperty, bindingName);
 			}
@@ -84,7 +84,7 @@ namespace Epsitec.Common.Types
 			{
 				bindingXyz.Mode = BindingMode.TwoWay;
 				bindingXyz.Source = mySource;
-				bindingXyz.Path = new DependencyPropertyPath ("Sibling.Xyz");
+				bindingXyz.Path = "Sibling.Xyz";
 
 				myTarget.SetBinding (MyObject.XyzProperty, bindingXyz);
 			}
@@ -121,17 +121,17 @@ namespace Epsitec.Common.Types
 			myData2.Xyz = 888;
 
 			bindingContext.Source = mySource1;
-			bindingContext.Path = new DependencyPropertyPath ("Sibling");
+			bindingContext.Path = "Sibling";
 
 			//	myTarget --> bindingContext { source=mySource1, path=Sibling }
-			
+
 			DataObject.SetDataContext (myTarget, bindingContext);
 
 			bindingXyz.Mode = BindingMode.TwoWay;
-			bindingXyz.Path = new DependencyPropertyPath ("Xyz");
+			bindingXyz.Path = "Xyz";
 
 			myTarget.SetBinding (MyObject.XyzProperty, bindingXyz);
-			
+
 			//	myTarget -+-> binding { source=*, path=Xyz } sur propriété Xyz
 			//	          +-> bindingContext { source=mySource1, path=Sibling }
 			//
@@ -144,22 +144,22 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual (999, myTarget.Xyz);
 
 			//		mySource1 --Sibling--> myData1 --Xyz--> 777
-			
+
 			myData1.Xyz = 777;
 			Assert.AreEqual (777, myTarget.Xyz);
 
 			//		mySource2 --Sibling--> myData2 --Xyz--> 888
-			
+
 			bindingContext.Source = mySource2;
 			Assert.AreEqual (888, myTarget.Xyz);
 
 			//		mySource1 --Sibling--> myData1 --Xyz--> 777
-			
+
 			bindingContext.Source = mySource1;
 			Assert.AreEqual (777, myTarget.Xyz);
 
 			//		mySource1 --Sibling--> myData2 --Xyz--> 888
-			
+
 			mySource1.Sibling = myData2;
 			Assert.AreEqual (888, myTarget.Xyz);
 
@@ -172,10 +172,68 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual (555, myTarget.Xyz);
 
 			//		mySource1 --Sibling--> myData2 --Xyz--> 333 ====> myTarget --Xyz
-			
+
 			myData2.Xyz = 333;
 			Assert.AreEqual (333, myData2.Xyz);
 			Assert.AreEqual (333, myTarget.Xyz);
+		}
+
+		[Test]
+		public void CheckBinding3()
+		{
+			ResourceBoundData test = new ResourceBoundData ();
+			
+			Binding binding1 = new Binding (BindingMode.OneTime, test, "Abc");
+			Binding binding2 = new Binding (BindingMode.OneTime, test, "Xyz");
+
+			MyObject myData1 = new MyObject ();
+			MyObject myData2 = new MyObject ();
+
+			myData1.SetBinding (MyObject.NameProperty, binding1);
+			myData1.SetBinding (MyObject.FooProperty, binding2);
+			myData2.SetBinding (MyObject.NameProperty, binding1);
+			myData2.SetBinding (MyObject.FooProperty, binding2);
+
+			Assert.AreEqual ("[Abc]", myData1.Name);
+			Assert.AreEqual ("[Xyz]", myData1.Foo);
+			Assert.AreEqual ("[Abc]", myData2.Name);
+			Assert.AreEqual ("[Xyz]", myData2.Foo);
+
+			test.Suffix = "1";
+
+			binding1.UpdateTargets (BindingUpdateMode.Reset);
+			binding2.UpdateTargets (BindingUpdateMode.Default);
+
+			Assert.AreEqual ("[Abc1]", myData1.Name);
+			Assert.AreEqual ("[Xyz]", myData1.Foo);
+			Assert.AreEqual ("[Abc1]", myData2.Name);
+			Assert.AreEqual ("[Xyz]", myData2.Foo);
+		}
+
+		private class ResourceBoundData : IResourceBoundSource
+		{
+			public string Suffix
+			{
+				get
+				{
+					return this.suffix;
+				}
+				set
+				{
+					this.suffix = value;
+				}
+			}
+			
+			#region IResourceBoundSource Members
+
+			public object GetValue(string id)
+			{
+				return "[" + id + this.suffix + "]";
+			}
+
+			#endregion
+			
+			private string suffix = "";
 		}
 
 		[Test]

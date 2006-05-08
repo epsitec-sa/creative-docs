@@ -455,7 +455,7 @@ namespace Epsitec.Common.Types
 			
 			Binding binding = new Binding ();
 			binding.Source = xxx;
-			binding.Path = new DependencyPropertyPath ("Abc");
+			binding.Path = "Abc";
 
 			c1.SetBinding (MyItem.FriendProperty, binding);
 
@@ -648,7 +648,7 @@ namespace Epsitec.Common.Types
 			Binding dataContext = new Binding ();
 			
 			bindingQ.Source = a;
-			bindingQ.Path = new DependencyPropertyPath ("Friend.Price"); //("Children[0].Children[1]");
+			bindingQ.Path = "Friend.Price"; //("Children[0].Children[1]");
 			bindingQ.Mode = BindingMode.OneWay;
 
 			bindingR.Mode = BindingMode.OneWay;

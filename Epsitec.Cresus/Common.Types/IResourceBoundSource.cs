@@ -5,12 +5,8 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Types
 {
-	internal enum BindingSourceType
+	public interface IResourceBoundSource
 	{
-		None,
-		
-		PropertyObject,
-		SourceItself,
-		Resource
+		object GetValue(string id);
 	}
 }
