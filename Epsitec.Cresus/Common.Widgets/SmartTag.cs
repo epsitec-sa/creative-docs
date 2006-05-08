@@ -1,6 +1,8 @@
 //	Copyright © 2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Statut : OK/PA, 12/03/2004
 
+using Epsitec.Common.Support;
+
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
@@ -72,14 +74,26 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual  void OnPrepareMenu()
 		{
-			if (this.PrepareMenu != null)
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("PrepareMenu");
+			if (handler != null)
 			{
-				this.PrepareMenu (this);
+				handler(this);
 			}
 		}
 		
 		
-		public event Support.EventHandler		PrepareMenu;
+		public event EventHandler				PrepareMenu
+		{
+			add
+			{
+				this.AddUserEventHandler("PrepareMenu", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("PrepareMenu", value);
+			}
+		}
+
 		
 		protected VMenu							menu;
 		protected object						context;
