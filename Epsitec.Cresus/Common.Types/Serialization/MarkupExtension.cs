@@ -84,7 +84,7 @@ namespace Epsitec.Common.Types.Serialization
 
 			DependencyObject source = binding.Source as DependencyObject;
 			BindingMode mode = binding.Mode;
-			DependencyPropertyPath path = binding.Path;
+			string path = binding.Path;
 
 			if (source != null)
 			{
@@ -104,18 +104,14 @@ namespace Epsitec.Common.Types.Serialization
 				}
 			}
 
-			if (path != null)
+			if ((path != null) &&
+				(path.Length > 0))
 			{
-				string value = path.GetFullPath ();
+				buffer.Append (space);
+				space = ", ";
 
-				if (value.Length > 0)
-				{
-					buffer.Append (space);
-					space = ", ";
-
-					buffer.Append ("Path=");
-					buffer.Append (value);
-				}
+				buffer.Append ("Path=");
+				buffer.Append (path);
 			}
 
 			if (mode != BindingMode.None)
@@ -440,7 +436,7 @@ namespace Epsitec.Common.Types.Serialization
 					switch (elems[0])
 					{
 						case "Path":
-							binding.Path = new DependencyPropertyPath (elems[1]);
+							binding.Path = elems[1];
 							break;
 						case "Source":
 							binding.Source = context.ResolveFromMarkup (elems[1]);

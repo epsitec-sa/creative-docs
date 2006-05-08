@@ -391,12 +391,12 @@ namespace Epsitec.Common.Support
 		
 		public ResourceBundle GetBundle(string id)
 		{
-			return this.GetBundle (id, ResourceLevel.Merged, 0);
+			return this.GetBundle (id, ResourceLevel.Merged, this.culture, 0);
 		}
 		
 		public ResourceBundle GetBundle(string id, ResourceLevel level)
 		{
-			return this.GetBundle (id, level, 0);
+			return this.GetBundle (id, level, this.culture, 0);
 		}
 		
 		public ResourceBundle GetBundle(string id, ResourceLevel level, int recursion)
@@ -483,6 +483,22 @@ namespace Epsitec.Common.Support
 			}
 			
 			return bundle;
+		}
+
+
+		public void Bind(Types.DependencyObject o, Types.DependencyProperty property, string id)
+		{
+			this.Bind (o, property, id, ResourceLevel.Merged, this.culture);
+		}
+
+		public void Bind(Types.DependencyObject o, Types.DependencyProperty property, string id, ResourceLevel level, CultureInfo culture)
+		{
+			ResourceBundle bundle = this.GetBundle (id, level, culture, 0);
+
+			if (bundle == null)
+			{
+				o.SetBinding (property, new Types.Binding ());
+			}
 		}
 
 		

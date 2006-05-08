@@ -127,7 +127,7 @@ namespace Epsitec.Common.Types
 		{
 			return (p1 == p2) ? false : true;
 		}
-		
+
 		public static DependencyPropertyPath Combine(DependencyPropertyPath p1, DependencyPropertyPath p2)
 		{
 			if (p1 == null)
@@ -158,7 +158,30 @@ namespace Epsitec.Common.Types
 
 			return new DependencyPropertyPath (path);
 		}
-		
+
+		public static string Combine(string p1, string p2)
+		{
+			if (p1 == null)
+			{
+				return p2;
+			}
+			if (p2 == null)
+			{
+				return p1;
+			}
+
+			if (p1.Length == 0)
+			{
+				return p2;
+			}
+			if (p2.Length == 0)
+			{
+				return p1;
+			}
+			
+			return string.Concat (p1, ".", p2);
+		}
+
 		private string							path;
 		private DependencyProperty[]			elements;
 	}
