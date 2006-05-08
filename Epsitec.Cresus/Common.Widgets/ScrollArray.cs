@@ -1,6 +1,8 @@
 //	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
+using Epsitec.Common.Support;
+
 namespace Epsitec.Common.Widgets
 {
 	public enum ScrollShowMode
@@ -50,8 +52,8 @@ namespace Epsitec.Common.Widgets
 			this.v_scroller = new VScroller (this);
 			this.h_scroller = new HScroller (this);
 			this.v_scroller.IsInverted = true;
-			this.v_scroller.ValueChanged += new Support.EventHandler (this.HandleVScrollerChanged);
-			this.h_scroller.ValueChanged += new Support.EventHandler (this.HandleHScrollerChanged);
+			this.v_scroller.ValueChanged += new EventHandler (this.HandleVScrollerChanged);
+			this.h_scroller.ValueChanged += new EventHandler (this.HandleHScrollerChanged);
 			
 			this.is_dirty = true;
 		}
@@ -91,7 +93,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public Support.Data.ITextArrayStore		TextArrayStore
+		public Support.Data.ITextArrayStore			TextArrayStore
 		{
 			get
 			{
@@ -108,14 +110,14 @@ namespace Epsitec.Common.Widgets
 					
 					if (this.text_array_store != null)
 					{
-						this.text_array_store.StoreContentsChanged -= new Support.EventHandler (this.HandleStoreContentsChanged);
+						this.text_array_store.StoreContentsChanged -= new EventHandler (this.HandleStoreContentsChanged);
 					}
 					
 					this.text_array_store = value;
 					
 					if (this.text_array_store != null)
 					{
-						this.text_array_store.StoreContentsChanged += new Support.EventHandler (this.HandleStoreContentsChanged);
+						this.text_array_store.StoreContentsChanged += new EventHandler (this.HandleStoreContentsChanged);
 					}
 					
 					this.OnTextArrayStoreContentsChanged ();
@@ -1939,7 +1941,7 @@ invalid:	row    = -1;
 		{
 			base.OnResourceManagerChanged ();
 			
-			Support.ResourceManager resource_manager = this.ResourceManager;
+			ResourceManager resource_manager = this.ResourceManager;
 			
 			for (int i = 0; i < this.layouts.GetLength (0); i++)
 			{
@@ -1959,73 +1961,82 @@ invalid:	row    = -1;
 
 		protected virtual  void OnSelectedIndexChanging()
 		{
-			if (this.SelectedIndexChanging != null)
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("SelectedIndexChanging");
+			if (handler != null)
 			{
-				this.SelectedIndexChanging (this);
+				handler(this);
 			}
 		}
 		
 		protected virtual  void OnSelectedIndexChanged()
 		{
-			if (this.SelectedIndexChanged != null)
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("SelectedIndexChanged");
+			if (handler != null)
 			{
-				this.SelectedIndexChanged (this);
+				handler(this);
 			}
 		}
 		
 		protected virtual  void OnContentsChanged()
 		{
-			if (this.ContentsChanged != null)
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("ContentsChanged");
+			if (handler != null)
 			{
-				this.ContentsChanged (this);
+				handler(this);
 			}
 		}
 
 		protected virtual  void OnContentsInvalidated()
 		{
-			if (this.ContentsInvalidated != null)
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("ContentsInvalidated");
+			if (handler != null)
 			{
-				this.ContentsInvalidated (this);
+				handler(this);
 			}
 		}
 
 		protected virtual  void OnSortChanged()
 		{
-			if (this.SortChanged != null)
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("SortChanged");
+			if (handler != null)
 			{
-				this.SortChanged (this);
+				handler(this);
 			}
 		}
 
 		protected virtual  void OnLayoutUpdated()
 		{
-			if (this.LayoutUpdated != null)
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("LayoutUpdated");
+			if (handler != null)
 			{
-				this.LayoutUpdated (this);
+				handler(this);
 			}
 		}
 		
 		protected virtual  void OnTextArrayStoreContentsChanged()
 		{
-			if (this.TextArrayStoreContentsChanged != null)
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("TextArrayStoreContentsChanged");
+			if (handler != null)
 			{
-				this.TextArrayStoreContentsChanged (this);
+				handler(this);
 			}
 		}
 		
 		protected virtual  void OnInteractionModeChanging()
 		{
-			if (this.InteractionModeChanging != null)
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("InteractionModeChanging");
+			if (handler != null)
 			{
-				this.InteractionModeChanging (this);
+				handler(this);
 			}
 		}
 		
 		protected virtual  void OnInteractionModeChanged()
 		{
-			if (this.InteractionModeChanged != null)
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("InteractionModeChanged");
+			if (handler != null)
 			{
-				this.InteractionModeChanged (this);
+				handler(this);
 			}
 		}
 		
@@ -2332,15 +2343,114 @@ invalid:	row    = -1;
 		}
 		#endregion
 		
-		public event Support.EventHandler		InteractionModeChanging;
-		public event Support.EventHandler		InteractionModeChanged;
-		public event Support.EventHandler		ContentsChanged;
-		public event Support.EventHandler		ContentsInvalidated;
-		public event Support.EventHandler		SortChanged;
-		public event Support.EventHandler		LayoutUpdated;
-		public event Support.EventHandler		TextArrayStoreContentsChanged;
-		public event Support.EventHandler		SelectedIndexChanging;
-		public event Support.EventHandler		SelectedIndexChanged;
+		public event EventHandler				InteractionModeChanging
+		{
+			add
+			{
+				this.AddUserEventHandler("InteractionModeChanging", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("InteractionModeChanging", value);
+			}
+		}
+
+		public event EventHandler				InteractionModeChanged
+		{
+			add
+			{
+				this.AddUserEventHandler("InteractionModeChanged", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("InteractionModeChanged", value);
+			}
+		}
+
+		public event EventHandler				ContentsChanged
+		{
+			add
+			{
+				this.AddUserEventHandler("ContentsChanged", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("ContentsChanged", value);
+			}
+		}
+
+		public event EventHandler				ContentsInvalidated
+		{
+			add
+			{
+				this.AddUserEventHandler("ContentsInvalidated", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("ContentsInvalidated", value);
+			}
+		}
+
+		public event EventHandler				SortChanged
+		{
+			add
+			{
+				this.AddUserEventHandler("SortChanged", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("SortChanged", value);
+			}
+		}
+
+		public event EventHandler				LayoutUpdated
+		{
+			add
+			{
+				this.AddUserEventHandler("LayoutUpdated", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("LayoutUpdated", value);
+			}
+		}
+
+		public event EventHandler				TextArrayStoreContentsChanged
+		{
+			add
+			{
+				this.AddUserEventHandler("TextArrayStoreContentsChanged", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("TextArrayStoreContentsChanged", value);
+			}
+		}
+
+		public event EventHandler				SelectedIndexChanging
+		{
+			add
+			{
+				this.AddUserEventHandler("SelectedIndexChanging", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("SelectedIndexChanging", value);
+			}
+		}
+
+		public event EventHandler				SelectedIndexChanged
+		{
+			add
+			{
+				this.AddUserEventHandler("SelectedIndexChanged", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("SelectedIndexChanged", value);
+			}
+		}
+
 		
 		
 		#region ColumnDefinition Class
