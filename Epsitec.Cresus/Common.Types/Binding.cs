@@ -135,13 +135,47 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		public void UpdateTargets(BindingUpdateMode mode)
+		{
+			WeakBindingExpression[] expressions = this.expressions.ToArray ();
+
+			for (int i = 0; i < expressions.Length; i++)
+			{
+				BindingExpression item = expressions[i].Expression;
+
+				if (item == null)
+				{
+					this.expressions.Remove (expressions[i]);
+				}
+				else
+				{
+					item.UpdateTarget (mode);
+				}
+			}
+		}
+		
 		internal void Add(BindingExpression expression)
 		{
-			this.expressions.Add (expression);
+			//	The binding expression is referenced through a weak binding
+			//	by the binding itself, which allows for the expression to be
+			//	garbage collected when its property dies.
+			
+			this.expressions.Add (new WeakBindingExpression (expression));
 		}
 		internal void Remove(BindingExpression expression)
 		{
-			this.expressions.Remove (expression);
+			WeakBindingExpression[] expressions = this.expressions.ToArray ();
+			
+			for (int i = 0; i < expressions.Length; i++)
+			{
+				BindingExpression item = expressions[i].Expression;
+
+				if ((item == null) ||
+					(item == expression))
+				{
+					this.expressions.Remove (expressions[i]);
+				}
+			}
 		}
 
 		private void NotifyBeforeChange()
@@ -162,9 +196,14 @@ namespace Epsitec.Common.Types
 			{
 				this.state = State.SourceDetached;
 				
-				foreach (BindingExpression expression in this.expressions)
+				foreach (WeakBindingExpression item in this.expressions)
 				{
-					expression.DetachFromSource ();
+					BindingExpression expression = item.Expression;
+
+					if (expression != null)
+					{
+						expression.DetachFromSource ();
+					}
 				}
 			}
 		}
@@ -174,13 +213,40 @@ namespace Epsitec.Common.Types
 			{
 				this.state = State.SourceAttached;
 
-				foreach (BindingExpression expression in this.expressions)
+				foreach (WeakBindingExpression item in this.expressions)
 				{
-					expression.AttachToSource ();
-					expression.UpdateTarget (BindingUpdateMode.Reset);
+					BindingExpression expression = item.Expression;
+
+					if (expression != null)
+					{
+						expression.AttachToSource ();
+						expression.UpdateTarget (BindingUpdateMode.Reset);
+					}
 				}
 			}
 		}
+
+		#region Converter Class
+
+		public class Converter : ITypeConverter
+		{
+			#region ITypeConverter Members
+
+			public string ConvertToString(object value, IContextResolver context)
+			{
+				Binding binding = value as Binding;
+				return Serialization.MarkupExtension.BindingToString (context, binding);
+			}
+
+			public object ConvertFromString(string value, IContextResolver context)
+			{
+				return Serialization.MarkupExtension.BindingFromString (context, value);
+			}
+
+			#endregion
+		}
+
+		#endregion
 
 		#region Private DeferManager Class
 		private struct DeferManager : System.IDisposable
@@ -215,24 +281,25 @@ namespace Epsitec.Common.Types
 		}
 		#endregion
 
-		public class Converter : ITypeConverter
+		#region Private WeakBindingExpression Class
+
+		private class WeakBindingExpression : System.WeakReference
 		{
-			#region ITypeConverter Members
-
-			public string ConvertToString(object value, IContextResolver context)
+			public WeakBindingExpression(BindingExpression expression) : base (expression)
 			{
-				Binding binding = value as Binding;
-				return Serialization.MarkupExtension.BindingToString (context, binding);
 			}
 
-			public object ConvertFromString(string value, IContextResolver context)
+			public BindingExpression Expression
 			{
-				return Serialization.MarkupExtension.BindingFromString (context, value);
+				get
+				{
+					return base.Target as BindingExpression;
+				}
 			}
-
-			#endregion
 		}
-		
+
+		#endregion
+
 		public static readonly object			DoNothing = new object ();	//	setting a value of DoNothing in BindingExpression does nothing
 
 		private BindingMode						mode;
@@ -241,6 +308,6 @@ namespace Epsitec.Common.Types
 		private string							elementName;
 		private int								deferCounter;
 		private State							state = State.SourceDetached;
-		private List<BindingExpression>			expressions = new List<BindingExpression> ();
+		private List<WeakBindingExpression>		expressions = new List<WeakBindingExpression> ();
 	}
 }
