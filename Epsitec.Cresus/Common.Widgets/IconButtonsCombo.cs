@@ -5,7 +5,7 @@ using Epsitec.Common.Support;
 
 namespace Epsitec.Common.Widgets
 {
-	using PropertyChangedEventHandler=Epsitec.Common.Support.EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>;
+	using PropertyChangedEventHandler = EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>;
 
 	/// <summary>
 	/// La classe IconButtonsCombo implémente une liste de IconButton avec bouton "v"
@@ -516,7 +516,7 @@ namespace Epsitec.Common.Widgets
 				return;
 			}
 			
-			Support.CancelEventArgs cancelEvent = new Support.CancelEventArgs();
+			CancelEventArgs cancelEvent = new CancelEventArgs();
 			this.OnComboOpening(cancelEvent);
 			
 			if ( cancelEvent.Cancel )
@@ -533,13 +533,13 @@ namespace Epsitec.Common.Widgets
 				this.scrollList.ShowSelected(ScrollShowMode.Center);
 			}
 			
-			this.menu.Accepted += new Support.EventHandler(this.HandleMenuAccepted);
-			this.menu.Rejected += new Support.EventHandler(this.HandleMenuRejected);
+			this.menu.Accepted += new EventHandler(this.HandleMenuAccepted);
+			this.menu.Rejected += new EventHandler(this.HandleMenuRejected);
 			
 			if ( this.scrollList != null )
 			{
-				this.scrollList.SelectedIndexChanged += new Support.EventHandler(this.HandleScrollerSelectedIndexChanged);
-				this.scrollList.SelectionActivated   += new Support.EventHandler(this.HandleScrollListSelectionActivated);
+				this.scrollList.SelectedIndexChanged += new EventHandler(this.HandleScrollerSelectedIndexChanged);
+				this.scrollList.SelectionActivated   += new EventHandler(this.HandleScrollListSelectionActivated);
 			}
 			
 			this.OnComboOpened();
@@ -563,13 +563,13 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 
-			this.menu.Accepted -= new Support.EventHandler(this.HandleMenuAccepted);
-			this.menu.Rejected -= new Support.EventHandler(this.HandleMenuRejected);
+			this.menu.Accepted -= new EventHandler(this.HandleMenuAccepted);
+			this.menu.Rejected -= new EventHandler(this.HandleMenuRejected);
 			
 			if ( this.scrollList != null )
 			{
-				this.scrollList.SelectionActivated   -= new Support.EventHandler(this.HandleScrollListSelectionActivated);
-				this.scrollList.SelectedIndexChanged -= new Support.EventHandler(this.HandleScrollerSelectedIndexChanged);
+				this.scrollList.SelectionActivated   -= new EventHandler(this.HandleScrollListSelectionActivated);
+				this.scrollList.SelectedIndexChanged -= new EventHandler(this.HandleScrollerSelectedIndexChanged);
 				
 				this.scrollList.Dispose();
 				this.scrollList = null;
@@ -619,7 +619,7 @@ namespace Epsitec.Common.Widgets
 			return menu;
 		}
 		
-		protected virtual void OnComboOpening(Support.CancelEventArgs e)
+		protected virtual void OnComboOpening(CancelEventArgs e)
 		{
 			if ( this.ComboOpening != null )
 			{
