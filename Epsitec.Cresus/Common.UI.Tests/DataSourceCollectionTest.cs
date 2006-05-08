@@ -25,7 +25,9 @@ namespace Epsitec.Common.UI
 			collection.SetValue ("B.y", "foo");
 
 			Assert.AreEqual ("Source1", collection.GetValue ("A.Name"));
-			Assert.AreEqual (0, collection.GetValue ("A.Index"));
+			Assert.AreEqual (-1, collection.GetValue ("A.Index"));
+			Assert.AreEqual (1, collection.GetValue ("B.x"));
+			Assert.AreEqual ("foo", collection.GetValue ("B.y"));
 
 			foreach (string name in collection.GetFieldNames ())
 			{

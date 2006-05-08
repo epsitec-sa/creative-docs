@@ -3,6 +3,7 @@
 
 using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
+using System.Collections.Generic;
 
 namespace Epsitec.Common.UI
 {
@@ -55,11 +56,11 @@ namespace Epsitec.Common.UI
 			}
 		}
 		
-		public CommandDispatcher[]				CommandDispatchers
+		public IEnumerable<CommandDispatcher> GetCommandDispatchers()
 		{
-			get
+			if (this.dispatcher != null)
 			{
-				return CommandDispatcher.ToArray (this.dispatcher);
+				yield return this.dispatcher;
 			}
 		}
 		
@@ -87,7 +88,7 @@ namespace Epsitec.Common.UI
 		{
 			this.widget = new Widget ();
 			
-			this.widget.Size    = this.Size;
+			this.widget.PreferredSize = this.Size;
 			this.widget.MinSize = this.Size;
 			this.widget.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 			
