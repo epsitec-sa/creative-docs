@@ -242,9 +242,10 @@ namespace Epsitec.Common.Widgets
 			//	est fermé.
 			if ( this.IsComboOpen == false )
 			{
-				if ( this.SelectedIndexChanged != null )
+				EventHandler handler = (EventHandler) this.GetUserEventHandler("SelectedIndexChanged");
+				if (handler != null)
 				{
-					this.SelectedIndexChanged(this);
+					handler(this);
 				}
 			}
 		}
@@ -346,7 +347,7 @@ namespace Epsitec.Common.Widgets
 				return;
 			}
 			
-			Support.CancelEventArgs cancelEvent = new Support.CancelEventArgs();
+			CancelEventArgs cancelEvent = new CancelEventArgs();
 			this.OnComboOpening(cancelEvent);
 			
 			if ( cancelEvent.Cancel )
@@ -363,13 +364,13 @@ namespace Epsitec.Common.Widgets
 				this.scrollList.ShowSelected(ScrollShowMode.Center);
 			}
 			
-			this.menu.Accepted += new Support.EventHandler(this.HandleMenuAccepted);
-			this.menu.Rejected += new Support.EventHandler(this.HandleMenuRejected);
+			this.menu.Accepted += new EventHandler(this.HandleMenuAccepted);
+			this.menu.Rejected += new EventHandler(this.HandleMenuRejected);
 			
 			if ( this.scrollList != null )
 			{
-				this.scrollList.SelectedIndexChanged += new Support.EventHandler(this.HandleScrollerSelectedIndexChanged);
-				this.scrollList.SelectionActivated   += new Support.EventHandler(this.HandleScrollListSelectionActivated);
+				this.scrollList.SelectedIndexChanged += new EventHandler(this.HandleScrollerSelectedIndexChanged);
+				this.scrollList.SelectionActivated   += new EventHandler(this.HandleScrollListSelectionActivated);
 			}
 			
 			this.OnComboOpened();
@@ -393,13 +394,13 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 
-			this.menu.Accepted -= new Support.EventHandler(this.HandleMenuAccepted);
-			this.menu.Rejected -= new Support.EventHandler(this.HandleMenuRejected);
+			this.menu.Accepted -= new EventHandler(this.HandleMenuAccepted);
+			this.menu.Rejected -= new EventHandler(this.HandleMenuRejected);
 			
 			if ( this.scrollList != null )
 			{
-				this.scrollList.SelectionActivated   -= new Support.EventHandler(this.HandleScrollListSelectionActivated);
-				this.scrollList.SelectedIndexChanged -= new Support.EventHandler(this.HandleScrollerSelectedIndexChanged);
+				this.scrollList.SelectionActivated   -= new EventHandler(this.HandleScrollListSelectionActivated);
+				this.scrollList.SelectedIndexChanged -= new EventHandler(this.HandleScrollerSelectedIndexChanged);
 				
 				this.scrollList.Dispose();
 				this.scrollList = null;
@@ -449,31 +450,34 @@ namespace Epsitec.Common.Widgets
 			return menu;
 		}
 		
-		protected virtual void OnComboOpening(Support.CancelEventArgs e)
+		protected virtual void OnComboOpening(CancelEventArgs e)
 		{
-			if ( this.ComboOpening != null )
+			EventHandler<CancelEventArgs> handler = (EventHandler<CancelEventArgs>) this.GetUserEventHandler("ComboOpening");
+			if (handler != null)
 			{
-				this.ComboOpening(this, e);
+				handler(this, e);
 			}
 		}
 		
 		protected virtual void OnComboOpened()
 		{
 			System.Diagnostics.Debug.Assert(this.IsComboOpen == true);
-			
-			if ( this.ComboOpened != null )
+
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("ComboOpened");
+			if (handler != null)
 			{
-				this.ComboOpened(this);
+				handler(this);
 			}
 		}
 		
 		protected virtual void OnComboClosed()
 		{
 			System.Diagnostics.Debug.Assert(this.IsComboOpen == false);
-			
-			if ( this.ComboClosed != null )
+
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("ComboClosed");
+			if (handler != null)
 			{
-				this.ComboClosed(this);
+				handler(this);
 			}
 		}
 		
@@ -641,10 +645,54 @@ namespace Epsitec.Common.Widgets
 		#endregion
 		
 
-		public event EventHandler<CancelEventArgs> ComboOpening;
-		public event EventHandler				ComboOpened;
-		public event EventHandler				ComboClosed;
-		public event EventHandler				SelectedIndexChanged;
+		public event EventHandler<CancelEventArgs> ComboOpening
+		{
+			add
+			{
+				this.AddUserEventHandler("ComboOpening", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("ComboOpening", value);
+			}
+		}
+
+		public event EventHandler				ComboOpened
+		{
+			add
+			{
+				this.AddUserEventHandler("ComboOpened", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("ComboOpened", value);
+			}
+		}
+
+		public event EventHandler				ComboClosed
+		{
+			add
+			{
+				this.AddUserEventHandler("ComboClosed", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("ComboClosed", value);
+			}
+		}
+
+		public event EventHandler				SelectedIndexChanged
+		{
+			add
+			{
+				this.AddUserEventHandler("SelectedIndexChanged", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("SelectedIndexChanged", value);
+			}
+		}
+
 		
 		protected static readonly double		menuWidth = 12;
 		protected bool							isLiveUpdateEnabled	= true;
