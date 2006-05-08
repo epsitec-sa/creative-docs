@@ -20,7 +20,7 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonToTextBox2 = this.CreateIconButton("ToTextBox2");
 			this.buttonFragment   = this.CreateIconButton("Fragment");
 			
-			this.UpdateClientGeometry();
+//			this.UpdateClientGeometry();
 		}
 		
 		protected override void Dispose(bool disposing)

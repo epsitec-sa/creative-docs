@@ -25,7 +25,7 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonOpenModel = this.CreateIconButton("OpenModel");
 			this.buttonSaveModel = this.CreateIconButton("SaveModel");
 			
-			this.UpdateClientGeometry();
+//			this.UpdateClientGeometry();
 		}
 		
 		protected override void Dispose(bool disposing)

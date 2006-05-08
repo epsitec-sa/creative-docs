@@ -92,13 +92,16 @@ namespace Epsitec.Common.Widgets
 		{
 			System.Diagnostics.Debug.Assert (this.TextLayout != null);
 			
-			Drawing.Point offset = this.LabelOffset;
-			
-			double dx = this.Client.Size.Width - offset.X;
-			double dy = this.Client.Size.Height;
-			
-			this.TextLayout.Alignment  = this.ContentAlignment;
-			this.TextLayout.LayoutSize = new Drawing.Size (dx, dy);
+			if (this.IsActualGeometryValid)
+			{
+				Drawing.Point offset = this.LabelOffset;
+				
+				double dx = this.Client.Size.Width - offset.X;
+				double dy = this.Client.Size.Height;
+				
+				this.TextLayout.Alignment  = this.ContentAlignment;
+				this.TextLayout.LayoutSize = new Drawing.Size (dx, dy);
+			}
 		}
 		
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)

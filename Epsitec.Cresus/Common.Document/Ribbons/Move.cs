@@ -20,7 +20,7 @@ namespace Epsitec.Common.Document.Ribbons
 			this.CreateFieldMove(ref this.fieldMoveH, Res.Strings.Action.MoveValueX);
 			this.CreateFieldMove(ref this.fieldMoveV, Res.Strings.Action.MoveValueY);
 			
-			this.UpdateClientGeometry();
+//			this.UpdateClientGeometry();
 		}
 		
 		protected override void Dispose(bool disposing)

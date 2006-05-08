@@ -18,7 +18,7 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonQuad     = this.CreateIconButton("TextInsertQuad");
 			this.buttonGlyphs   = this.CreateIconButton("Glyphs");
 			
-			this.UpdateClientGeometry();
+//			this.UpdateClientGeometry();
 		}
 		
 		protected override void Dispose(bool disposing)

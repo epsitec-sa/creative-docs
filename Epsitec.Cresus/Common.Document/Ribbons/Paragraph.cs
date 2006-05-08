@@ -36,7 +36,7 @@ namespace Epsitec.Common.Document.Ribbons
 
 			this.buttonClear = this.CreateIconButton("ParagraphClear");
 
-			this.UpdateClientGeometry();
+//			this.UpdateClientGeometry();
 		}
 		
 		protected override void Dispose(bool disposing)

@@ -22,7 +22,7 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonLabels      = this.CreateIconButton("Labels");
 			this.buttonAggregates  = this.CreateIconButton("Aggregates");
 			
-			this.UpdateClientGeometry();
+//			this.UpdateClientGeometry();
 		}
 		
 		protected override void Dispose(bool disposing)

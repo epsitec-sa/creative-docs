@@ -44,7 +44,7 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonMW.Text = "MW";
 			this.buttonMW.Clicked += new MessageEventHandler(this.HandleButtonMWClicked);
 
-			this.UpdateClientGeometry();
+//			this.UpdateClientGeometry();
 		}
 		
 		protected override void Dispose(bool disposing)

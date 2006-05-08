@@ -24,7 +24,7 @@ namespace Epsitec.Common.Document.Ribbons
 			this.CreateFieldZoom(ref this.fieldZoom, Res.Strings.Action.ZoomValue);
 			this.buttonOthers = this.CreateMenuButton("", Res.Strings.Action.ZoomMenu, new MessageEventHandler(this.HandleOthersPressed));
 			
-			this.UpdateClientGeometry();
+//			this.UpdateClientGeometry();
 		}
 		
 		protected override void Dispose(bool disposing)

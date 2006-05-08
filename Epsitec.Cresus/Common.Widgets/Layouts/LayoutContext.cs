@@ -305,6 +305,7 @@ namespace Epsitec.Common.Widgets.Layouts
 							System.Diagnostics.Debug.Assert (Helpers.VisualTree.FindLayoutContext (node.Visual) == this);
 							System.Diagnostics.Debug.Assert (parent != null);
 
+							this.AddToMeasureQueue (parent, depth);
 							this.AddToArrangeQueue (parent, depth);
 						}
 					}

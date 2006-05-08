@@ -22,7 +22,7 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonScaleMulFree = this.CreateIconButton("ScaleMulFree");
 			this.CreateFieldScale(ref this.fieldScale, Res.Strings.Action.ScaleValue);
 			
-			this.UpdateClientGeometry();
+//			this.UpdateClientGeometry();
 		}
 		
 		protected override void Dispose(bool disposing)

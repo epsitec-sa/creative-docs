@@ -54,7 +54,7 @@ namespace Epsitec.Common.Document.Ribbons
 			// (*)	Ce nom permet de griser automatiquement les widgets lorsqu'il n'y a
 			//		pas de texte en édition.
 
-			this.UpdateClientGeometry();
+//			this.UpdateClientGeometry();
 			this.UpdateMode();
 		}
 		

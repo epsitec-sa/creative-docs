@@ -20,7 +20,7 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonInside  = this.CreateIconButton("Inside", "Large");
 			this.buttonOutside = this.CreateIconButton("Outside", "Large");
 			
-			this.UpdateClientGeometry();
+//			this.UpdateClientGeometry();
 		}
 		
 		protected override void Dispose(bool disposing)

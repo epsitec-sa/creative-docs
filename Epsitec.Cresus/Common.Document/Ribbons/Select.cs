@@ -28,7 +28,7 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonHideCancel   = this.CreateIconButton("HideCancel");
 			this.buttonHideHalf     = this.CreateIconButton("HideHalf");
 			
-			this.UpdateClientGeometry();
+//			this.UpdateClientGeometry();
 		}
 		
 		protected override void Dispose(bool disposing)
