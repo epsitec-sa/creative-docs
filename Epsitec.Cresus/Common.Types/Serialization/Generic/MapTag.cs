@@ -22,11 +22,19 @@ namespace Epsitec.Common.Types.Serialization.Generic
 				return this.valueToTagLookup.Keys;
 			}
 		}
+		
 		public IEnumerable<string>				RecordedTags
 		{
 			get
 			{
-				return this.tagToValueLookup.Keys;
+				if (this.sortedTagCache == null)
+				{
+					this.sortedTagCache = new string[this.tagToValueLookup.Count];
+					this.tagToValueLookup.Keys.CopyTo (this.sortedTagCache, 0);
+					System.Array.Sort (this.sortedTagCache);
+				}
+				
+				return this.sortedTagCache;
 			}
 		}
 		
@@ -68,6 +76,7 @@ namespace Epsitec.Common.Types.Serialization.Generic
 			
 			this.tagToValueLookup[tag] = value;
 			this.valueToTagLookup[value] = tag;
+			this.sortedTagCache = null;
 		}
 
 		public void IncrementUseValue(T value)
@@ -161,5 +170,6 @@ namespace Epsitec.Common.Types.Serialization.Generic
 		private Dictionary<string, T> tagToValueLookup = new Dictionary<string, T> ();
 		private Dictionary<T, string> valueToTagLookup = new Dictionary<T, string> ();
 		private Dictionary<T, int> valueCounters = new Dictionary<T, int> ();
+		private string[] sortedTagCache = null;
 	}
 }
