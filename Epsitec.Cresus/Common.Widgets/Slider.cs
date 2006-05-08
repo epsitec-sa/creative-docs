@@ -1,3 +1,5 @@
+using Epsitec.Common.Support;
+
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
@@ -105,7 +107,17 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public event Support.EventHandler	ValueChanged;
+		public event EventHandler			ValueChanged
+		{
+			add
+			{
+				this.AddUserEventHandler("ValueChanged", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("ValueChanged", value);
+			}
+		}
 		#endregion
 
 		public decimal						Logarithmic
@@ -265,9 +277,10 @@ namespace Epsitec.Common.Widgets
 
 		protected virtual void OnValueChanged()
 		{
-			if ( this.ValueChanged != null )  // qq'un écoute ?
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("ValueChanged");
+			if (handler != null)
 			{
-				this.ValueChanged(this);
+				handler(this);
 			}
 		}
 

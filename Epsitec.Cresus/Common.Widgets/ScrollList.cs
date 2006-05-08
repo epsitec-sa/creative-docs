@@ -1,6 +1,8 @@
 //	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
+using Epsitec.Common.Support;
+
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
@@ -26,7 +28,7 @@ namespace Epsitec.Common.Widgets
 			this.scroller = new VScroller(null);
 			this.scroller.IsInverted = true;
 			this.scroller.SetParent(this);
-			this.scroller.ValueChanged += new Support.EventHandler(this.HandleScrollerValueChanged);
+			this.scroller.ValueChanged += new EventHandler(this.HandleScrollerValueChanged);
 			this.scroller.Hide();
 			this.UpdateMargins();
 		}
@@ -43,7 +45,7 @@ namespace Epsitec.Common.Widgets
 			{
 				if ( this.scroller != null )
 				{
-					this.scroller.ValueChanged -= new Support.EventHandler(this.HandleScrollerValueChanged);
+					this.scroller.ValueChanged -= new EventHandler(this.HandleScrollerValueChanged);
 				}
 			}
 			
@@ -594,7 +596,7 @@ namespace Epsitec.Common.Widgets
 		{
 			base.OnResourceManagerChanged();
 			
-			Support.ResourceManager resourceManager = this.ResourceManager;
+			ResourceManager resourceManager = this.ResourceManager;
 			
 			for ( int i=0 ; i<this.textLayouts.GetLength(0) ; i++ )
 			{
@@ -649,20 +651,20 @@ namespace Epsitec.Common.Widgets
 		protected virtual void OnSelectedIndexChanged()
 		{
 			//	Génère un événement pour dire que la sélection dans la liste a changé.
-			
-			if ( this.SelectedIndexChanged != null )  // qq'un écoute ?
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("SelectedIndexChanged");
+			if (handler != null)
 			{
-				this.SelectedIndexChanged(this);
+				handler(this);
 			}
 		}
 
 		protected virtual void OnSelectionActivated()
 		{
 			//	Génère un événement pour dire que la sélection a été validée
-			
-			if ( this.SelectionActivated != null )
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("SelectionActivated");
+			if (handler != null)
 			{
-				this.SelectionActivated(this);
+				handler(this);
 			}
 		}
 
@@ -834,7 +836,17 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public event Support.EventHandler		SelectedIndexChanged;
+		public event EventHandler				SelectedIndexChanged
+		{
+			add
+			{
+				this.AddUserEventHandler("SelectedIndexChanged", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("SelectedIndexChanged", value);
+			}
+		}
 		#endregion
 		
 		private void HandleScrollerValueChanged(object sender)
@@ -845,7 +857,18 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		public event Support.EventHandler		SelectionActivated;
+		public event EventHandler				SelectionActivated
+		{
+			add
+			{
+				this.AddUserEventHandler("SelectionActivated", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("SelectionActivated", value);
+			}
+		}
+
 		
 		protected const double					TextOffsetX = 3;
 		protected const double					TextOffsetY = 2;
