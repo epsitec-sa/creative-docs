@@ -492,7 +492,7 @@ namespace Epsitec.Common.Widgets
 			int total = this.items.Count;
 			if ( total <= this.visibleLines )
 			{
-				if ( this.scroller.IsVisible )
+				if (this.scroller.Visibility)
 				{
 					this.scroller.Hide();
 					this.UpdateMargins();
@@ -505,8 +505,8 @@ namespace Epsitec.Common.Widgets
 				this.scroller.Value             = (decimal) (this.firstLine);
 				this.scroller.SmallChange       = 1;
 				this.scroller.LargeChange       = (decimal) (this.visibleLines/2.0);
-				
-				if ( !this.scroller.IsVisible )
+
+				if (!this.scroller.Visibility)
 				{
 					this.scroller.Show();
 					this.UpdateMargins();
@@ -576,7 +576,7 @@ namespace Epsitec.Common.Widgets
 				IAdorner adorner = Widgets.Adorners.Factory.Active;
 				Drawing.Rectangle rect = new Drawing.Rectangle();
 				rect.Right  = this.Client.Size.Width-adorner.GeometryScrollerRightMargin;
-				rect.Left   = rect.Right-this.scroller.ActualWidth;
+				rect.Left   = rect.Right-this.scroller.PreferredWidth;
 				rect.Bottom = adorner.GeometryScrollerBottomMargin+ScrollList.TextOffsetY-this.margins.Bottom;
 				rect.Top    = this.Client.Size.Height-adorner.GeometryScrollerTopMargin-ScrollList.TextOffsetY+this.margins.Top;
 				this.scroller.SetManualBounds(rect);
@@ -617,7 +617,7 @@ namespace Epsitec.Common.Widgets
 				/**/                           adorner.GeometryScrollListYMargin, adorner.GeometryScrollListYMargin);
 			
 			if ( this.scroller != null   &&
-				 this.scroller.IsVisible )
+				 this.scroller.Visibility )
 			{
 				this.margins.Right = this.Client.Size.Width - this.scroller.ActualLocation.X;
 			}

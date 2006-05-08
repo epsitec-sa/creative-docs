@@ -84,8 +84,6 @@ namespace Epsitec.Common.Widgets
 				width = System.Math.Max (width, this.MinWidth);
 				height = System.Math.Max (height, this.MinHeight);
 				
-				System.Diagnostics.Debug.WriteLine (string.Format ("AdjustSize from {0}:{1} to {2}:{3}", this.ActualWidth, this.ActualHeight, width, height));
-				
 				if ((this.Parent != null) &&
 					(this.RootParent is WindowRoot))
 				{

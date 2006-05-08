@@ -14,6 +14,9 @@ namespace Epsitec.Common.Widgets
 	{
 		None				= 0,
 		
+		Disposing			= 0x00000001,
+		Disposed			= 0x00000002,
+		
 		Embedded			= 0x00000008,		//	=> widget appartient au parent (widgets composés)
 		
 		Focusable			= 0x00000010,
@@ -125,6 +128,8 @@ namespace Epsitec.Common.Widgets
 			
 			if (disposing)
 			{
+				this.internal_state |= InternalState.Disposing;
+				
 				if (this.HasChildren)
 				{
 					Widget[] widgets = this.Children.Widgets;
@@ -145,6 +150,8 @@ namespace Epsitec.Common.Widgets
 					this.Disposed (this);
 					this.Disposed = null;
 				}
+				
+				this.internal_state |= InternalState.Disposed;
 			}
 		}
 		
@@ -402,6 +409,22 @@ namespace Epsitec.Common.Widgets
 				//	temps valide.
 				
 				return true;
+			}
+		}
+
+		public bool									IsDisposing
+		{
+			get
+			{
+				return (this.internal_state & InternalState.Disposing) != 0;
+			}
+		}
+
+		public bool									IsDisposed
+		{
+			get
+			{
+				return (this.internal_state & InternalState.Disposed) != 0;
 			}
 		}
 		
@@ -1281,7 +1304,7 @@ namespace Epsitec.Common.Widgets
 					
 					this.OnExited (new MessageEventArgs (message, Message.CurrentState.LastPosition));
 				}
-				
+
 				this.MessageHandler (message);
 				
 				if (window != null)
@@ -1422,22 +1445,36 @@ namespace Epsitec.Common.Widgets
 		
 		public virtual Drawing.Point MapParentToClient(Drawing.Point point)
 		{
-			Drawing.Point result = new Drawing.Point ();
-			
-			result.X = point.X - this.ActualLocation.X;
-			result.Y = point.Y - this.ActualLocation.Y;
-			
-			return result;
+			if (this.IsDisposing)
+			{
+				return point;
+			}
+			else
+			{
+				Drawing.Point result = new Drawing.Point ();
+
+				result.X = point.X - this.ActualLocation.X;
+				result.Y = point.Y - this.ActualLocation.Y;
+
+				return result;
+			}
 		}
 		
 		public virtual Drawing.Point MapClientToParent(Drawing.Point point)
 		{
-			Drawing.Point result = new Drawing.Point ();
+			if (this.IsDisposing)
+			{
+				return point;
+			}
+			else
+			{
+				Drawing.Point result = new Drawing.Point ();
 
-			result.X = point.X + this.ActualLocation.X;
-			result.Y = point.Y + this.ActualLocation.Y;
-			
-			return result;
+				result.X = point.X + this.ActualLocation.X;
+				result.Y = point.Y + this.ActualLocation.Y;
+
+				return result;
+			}
 		}
 		
 		public virtual Drawing.Point MapRootToClient(Drawing.Point point)
@@ -1457,18 +1494,25 @@ namespace Epsitec.Common.Widgets
 		
 		public virtual Drawing.Point MapClientToRoot(Drawing.Point point)
 		{
-			Widget iter = this;
-			
-			//	On a le choix entre une solution récursive et une solution itérative. La version
-			//	itérative devrait être un petit peu plus rapide ici.
-			
-			while (iter != null)
+			if (this.IsDisposing)
 			{
-				point = iter.MapClientToParent (point);
-				iter = iter.Parent;
+				return point;
 			}
-			
-			return point;
+			else
+			{
+				Widget iter = this;
+
+				//	On a le choix entre une solution récursive et une solution itérative. La version
+				//	itérative devrait être un petit peu plus rapide ici.
+
+				while (iter != null)
+				{
+					point = iter.MapClientToParent (point);
+					iter = iter.Parent;
+				}
+
+				return point;
+			}
 		}
 		
 		
@@ -1628,22 +1672,36 @@ namespace Epsitec.Common.Widgets
 		
 		public virtual Drawing.Size MapParentToClient(Drawing.Size size)
 		{
-			Drawing.Size result = new Drawing.Size ();
-			
-			result.Width  = size.Width;
-			result.Height = size.Height;
-			
-			return result;
+			if (this.IsDisposing)
+			{
+				return size;
+			}
+			else
+			{
+				Drawing.Size result = new Drawing.Size ();
+
+				result.Width  = size.Width;
+				result.Height = size.Height;
+
+				return result;
+			}
 		}
 		
 		public virtual Drawing.Size MapClientToParent(Drawing.Size size)
 		{
-			Drawing.Size result = new Drawing.Size ();
-			
-			result.Width  = size.Width;
-			result.Height = size.Height;
-			
-			return result;
+			if (this.IsDisposing)
+			{
+				return size;
+			}
+			else
+			{
+				Drawing.Size result = new Drawing.Size ();
+
+				result.Width  = size.Width;
+				result.Height = size.Height;
+
+				return result;
+			}
 		}
 		
 		
