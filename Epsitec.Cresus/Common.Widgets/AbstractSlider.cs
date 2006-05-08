@@ -1,3 +1,5 @@
+using Epsitec.Common.Support;
+
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
@@ -23,11 +25,11 @@ namespace Epsitec.Common.Widgets
 			this.arrowDown.GlyphShape = GlyphShape.Minus;
 			this.arrowUp.ButtonStyle = ButtonStyle.Slider;
 			this.arrowDown.ButtonStyle = ButtonStyle.Slider;
-			this.arrowUp.Engaged += new Support.EventHandler(this.HandleButton);
-			this.arrowDown.Engaged += new Support.EventHandler(this.HandleButton);
-			this.arrowUp.StillEngaged += new Support.EventHandler(this.HandleButton);
-			this.arrowDown.StillEngaged += new Support.EventHandler(this.HandleButton);
-			this.range.Changed += new Support.EventHandler(this.HandleRangeChanged);
+			this.arrowUp.Engaged += new EventHandler(this.HandleButton);
+			this.arrowDown.Engaged += new EventHandler(this.HandleButton);
+			this.arrowUp.StillEngaged += new EventHandler(this.HandleButton);
+			this.arrowDown.StillEngaged += new EventHandler(this.HandleButton);
+			this.range.Changed += new EventHandler(this.HandleRangeChanged);
 			this.arrowUp.AutoRepeat = true;
 			this.arrowDown.AutoRepeat = true;
 		}
@@ -42,11 +44,11 @@ namespace Epsitec.Common.Widgets
 		{
 			if ( disposing )
 			{
-				this.arrowUp.Engaged -= new Support.EventHandler(this.HandleButton);
-				this.arrowDown.Engaged -= new Support.EventHandler(this.HandleButton);
-				this.arrowUp.StillEngaged -= new Support.EventHandler(this.HandleButton);
-				this.arrowDown.StillEngaged -= new Support.EventHandler(this.HandleButton);
-				this.range.Changed -= new Support.EventHandler(this.HandleRangeChanged);
+				this.arrowUp.Engaged -= new EventHandler(this.HandleButton);
+				this.arrowDown.Engaged -= new EventHandler(this.HandleButton);
+				this.arrowUp.StillEngaged -= new EventHandler(this.HandleButton);
+				this.arrowDown.StillEngaged -= new EventHandler(this.HandleButton);
+				this.range.Changed -= new EventHandler(this.HandleRangeChanged);
 			}
 			
 			base.Dispose(disposing);
@@ -450,9 +452,12 @@ namespace Epsitec.Common.Widgets
 		protected virtual  void OnValueChanged()
 		{
 			this.UpdateInternalGeometry ();
-			if ( this.ValueChanged != null )  // qq'un écoute ?
+
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("ValueChanged");
+
+			if (handler != null)
 			{
-				this.ValueChanged(this);
+				handler(this);
 			}
 		}
 
@@ -658,7 +663,17 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public event Support.EventHandler	ValueChanged;
+		public event EventHandler			ValueChanged
+		{
+			add
+			{
+				this.AddUserEventHandler("ValueChanged", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("ValueChanged", value);
+			}
+		}
 		#endregion
 		
 		#region Zone enumeration
