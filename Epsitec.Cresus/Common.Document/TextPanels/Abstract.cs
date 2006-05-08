@@ -170,23 +170,15 @@ namespace Epsitec.Common.Document.TextPanels
 		public void HeightChanged()
 		{
 			//	Indique que la hauteur du panneau a changé.
-			double h = this.DefaultHeight;
-//@			if ( this.ActualHeight != h )
-			{
-				this.PreferredHeight = h;
-			}
+			this.PreferredHeight = this.DefaultHeight;
 		}
 
 		protected void ForceHeightChanged()
 		{
 			//	Force la mise à jour de la hauteur du panneau.
-			double h = this.DefaultHeight;
-//@			if ( this.ActualHeight != h )
-			{
-				//	Il faut modifier la hauteur du parent (normalement Containers.Styles.panelContainer)
-				//	qui contient ce panneau en mode DockStyle.Fill !
-				this.Parent.PreferredHeight = h;
-			}
+			//	Il faut modifier la hauteur du parent (normalement Containers.Styles.panelContainer)
+			//	qui contient ce panneau en mode DockStyle.Fill !
+			this.Parent.PreferredHeight = this.DefaultHeight;
 		}
 
 
@@ -225,7 +217,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 			if ( this.extendedButton == null )  return;
 
-			Rectangle rect = this.ActualBounds;
+			Rectangle rect = this.Client.Bounds;
 			rect.Left += this.extendedZoneWidth+5;
 			rect.Right -= this.extendedZoneWidth+5;
 			rect.Top -= 1;
@@ -233,7 +225,7 @@ namespace Epsitec.Common.Document.TextPanels
 			this.label.SetManualBounds(rect);
 			this.label.Visibility = this.IsLabelProperties;
 
-			rect = this.ActualBounds;
+			rect = this.Client.Bounds;
 			rect.Left += 1;
 			rect.Width = this.extendedZoneWidth;
 			rect.Top -= this.IsLabelProperties ? 3 : 9;
