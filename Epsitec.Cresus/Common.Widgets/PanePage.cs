@@ -1,3 +1,5 @@
+using Epsitec.Common.Support;
+
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
@@ -231,13 +233,25 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
-		public event Support.EventHandler		RankChanged;
+		public event EventHandler				RankChanged
+		{
+			add
+			{
+				this.AddUserEventHandler("RankChanged", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("RankChanged", value);
+			}
+		}
+
 		
 		protected virtual void OnRankChanged()
 		{
-			if ( this.RankChanged != null )
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("RankChanged");
+			if (handler != null)
 			{
-				this.RankChanged(this);
+				handler(this);
 			}
 		}
 		

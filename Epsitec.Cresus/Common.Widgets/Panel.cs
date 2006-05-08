@@ -1,6 +1,8 @@
 //	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
+using Epsitec.Common.Support;
+
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
@@ -152,23 +154,47 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void OnSurfaceSizeChanged()
 		{
-			if (this.SurfaceSizeChanged != null)
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("SurfaceSizeChanged");
+			if (handler != null)
 			{
-				this.SurfaceSizeChanged (this);
+				handler(this);
 			}
 		}
 		
 		protected virtual void OnIsAutoFittingChanged()
 		{
-			if (this.IsAutoFittingChanged != null)
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("IsAutoFittingChanged");
+			if (handler != null)
 			{
-				this.IsAutoFittingChanged (this);
+				handler(this);
 			}
 		}
 		
 		
-		public event Support.EventHandler		SurfaceSizeChanged;
-		public event Support.EventHandler		IsAutoFittingChanged;
+		public event EventHandler				SurfaceSizeChanged
+		{
+			add
+			{
+				this.AddUserEventHandler("SurfaceSizeChanged", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("SurfaceSizeChanged", value);
+			}
+		}
+
+		public event EventHandler				IsAutoFittingChanged
+		{
+			add
+			{
+				this.AddUserEventHandler("IsAutoFittingChanged", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("IsAutoFittingChanged", value);
+			}
+		}
+
 		
 		
 		protected Drawing.Rectangle				aperture;

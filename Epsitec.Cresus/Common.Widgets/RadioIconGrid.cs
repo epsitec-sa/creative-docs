@@ -1,3 +1,4 @@
+using Epsitec.Common.Support;
 using Epsitec.Common.Drawing;
 
 namespace Epsitec.Common.Widgets
@@ -17,7 +18,7 @@ namespace Epsitec.Common.Widgets
 			this.enableEndOfLine = true;
 
 			this.controller = GroupController.GetGroupController(this, "GridGroup");
-			this.controller.Changed += new Support.EventHandler(this.HandleRadioChanged);
+			this.controller.Changed += new EventHandler(this.HandleRadioChanged);
 		}
 
 		public RadioIconGrid(Widget embedder) : this()
@@ -44,7 +45,7 @@ namespace Epsitec.Common.Widgets
 					items[i].Dispose();
 				}
 				
-				this.controller.Changed -= new Support.EventHandler(this.HandleRadioChanged);
+				this.controller.Changed -= new EventHandler(this.HandleRadioChanged);
 				this.list = null;
 			}
 			
@@ -182,14 +183,26 @@ namespace Epsitec.Common.Widgets
 		protected virtual void OnSelectionChanged()
 		{
 			//	Génère un événement pour dire que la sélection a changé.
-			if ( this.SelectionChanged != null )  // qq'un écoute ?
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("SelectionChanged");
+			if (handler != null)
 			{
-				this.SelectionChanged(this);
+				handler(this);
 			}
 		}
 
 		
-		public event Support.EventHandler SelectionChanged;
+		public event EventHandler			SelectionChanged
+		{
+			add
+			{
+				this.AddUserEventHandler("SelectionChanged", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("SelectionChanged", value);
+			}
+		}
+
 
 		protected GroupController				controller;
 		protected System.Collections.ArrayList	list;
