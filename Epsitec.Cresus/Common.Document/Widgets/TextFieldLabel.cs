@@ -31,7 +31,7 @@ namespace Epsitec.Common.Document.Widgets
 			if ( this.type == Type.TextFieldUnit )
 			{
 				this.buttonUnit = new Button(this);
-				this.buttonUnit.Width = 20;
+				this.buttonUnit.PreferredWidth = 20;
 				this.buttonUnit.AutoFocus = false;
 				this.buttonUnit.Dock = DockStyle.Left;
 				this.buttonUnit.Margins = new Margins(0, 1, 0, 0);
@@ -40,7 +40,7 @@ namespace Epsitec.Common.Document.Widgets
 			else
 			{
 				this.label = new StaticText(this);
-				this.label.Alignment = ContentAlignment.MiddleRight;
+				this.label.ContentAlignment = ContentAlignment.MiddleRight;
 				this.label.Dock = DockStyle.Fill;
 				this.label.Margins = new Margins(0, this.marginWidth, 0, 0);
 			}
@@ -49,7 +49,7 @@ namespace Epsitec.Common.Document.Widgets
 			if ( this.type == Type.TextField )
 			{
 				this.textFieldSimple = new TextField(this);
-				this.textFieldSimple.Width = TextFieldLabel.DefaultTextWidth;
+				this.textFieldSimple.PreferredWidth = TextFieldLabel.DefaultTextWidth;
 				this.textFieldSimple.Dock = DockStyle.Right;
 				this.textFieldSimple.TabIndex = 0;
 				this.textFieldSimple.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
@@ -63,7 +63,7 @@ namespace Epsitec.Common.Document.Widgets
 			if ( this.type == Type.TextFieldReal )
 			{
 				this.textFieldReal = new TextFieldReal(this);
-				this.textFieldReal.Width = TextFieldLabel.DefaultTextWidth;
+				this.textFieldReal.PreferredWidth = TextFieldLabel.DefaultTextWidth;
 				this.textFieldReal.Dock = DockStyle.Right;
 				this.textFieldReal.TabIndex = 0;
 				this.textFieldReal.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
@@ -77,7 +77,7 @@ namespace Epsitec.Common.Document.Widgets
 			if ( this.type == Type.TextFieldUnit )
 			{
 				this.textFieldReal = new TextFieldReal(this);
-				this.textFieldReal.Width = TextFieldLabel.DefaultTextWidth;
+				this.textFieldReal.PreferredWidth = TextFieldLabel.DefaultTextWidth;
 				this.textFieldReal.Dock = DockStyle.None;
 				this.textFieldReal.TabIndex = 0;
 				this.textFieldReal.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
@@ -88,7 +88,7 @@ namespace Epsitec.Common.Document.Widgets
 				this.textFieldReal.SwallowReturn = true;
 
 				this.textFieldPercent = new TextFieldReal(this);
-				this.textFieldPercent.Width = TextFieldLabel.DefaultTextWidth;
+				this.textFieldPercent.PreferredWidth = TextFieldLabel.DefaultTextWidth;
 				this.textFieldPercent.Dock = DockStyle.None;
 				this.textFieldPercent.TabIndex = 0;
 				this.textFieldPercent.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
@@ -125,7 +125,7 @@ namespace Epsitec.Common.Document.Widgets
 			base.Dispose(disposing);
 		}
 
-
+#if false
 		public override double DefaultWidth
 		{
 			//	Largeur par défaut.
@@ -134,6 +134,7 @@ namespace Epsitec.Common.Document.Widgets
 				return TextFieldLabel.ShortWidth;
 			}
 		}
+#endif
 
 
 		public bool ButtonUnitEnable
@@ -379,8 +380,8 @@ namespace Epsitec.Common.Document.Widgets
 				string text = "";
 				if ( this.labelVisibility )
 				{
-					if ( this.label.Width < 80 )  text = this.labelShortText;
-					else                          text = this.labelLongText+" ";
+					if ( this.label.ActualWidth < 80 )  text = this.labelShortText;
+					else                                text = this.labelLongText+" ";
 				}
 
 				if ( this.label.Text != text )

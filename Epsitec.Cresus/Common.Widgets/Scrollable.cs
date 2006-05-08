@@ -3,8 +3,6 @@
 
 namespace Epsitec.Common.Widgets
 {
-	using BundleAttribute  = Support.BundleAttribute;
-	
 	/// <summary>
 	/// L'énumération ScrollableScrollerMode détermine comment Scrollable affiche les
 	/// ascenceurs (automatiquement, en fonction de la place disponible, ne jamais les
@@ -84,7 +82,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		[Bundle] public ScrollableScrollerMode	HorizontalScrollerMode
+		public ScrollableScrollerMode			HorizontalScrollerMode
 		{
 			get
 			{
@@ -100,7 +98,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		[Bundle] public ScrollableScrollerMode	VerticalScrollerMode
+		public ScrollableScrollerMode			VerticalScrollerMode
 		{
 			get
 			{
@@ -112,57 +110,6 @@ namespace Epsitec.Common.Widgets
 				{
 					this.v_scroller_mode = value;
 					this.UpdateGeometry ();
-				}
-			}
-		}
-		
-		
-		public override void RestoreFromBundle(Support.ObjectBundler bundler, Support.ResourceBundle bundle)
-		{
-			//	Il ne faut pas sauver les widgets enfants du scrollable, car ils sont créés
-			//	explicitement dans le constructeur; par contre, il faut sauver le contenu du
-			//	panel :
-			
-			Support.ResourceBundle.FieldList widget_list = bundle["widgets"].AsList;
-			
-			if (widget_list != null)
-			{
-				//	Notre bundle contient une liste de sous-bundles contenant les descriptions des
-				//	widgets enfants. On les restitue nous-même et on les ajoute dans la liste des
-				//	enfants.
-				
-				foreach (Support.ResourceBundle.Field field in widget_list)
-				{
-					Support.ResourceBundle widget_bundle = field.AsBundle;
-					Widget widget = bundler.CreateFromBundle (widget_bundle) as Widget;
-					
-					this.Panel.Children.Add (widget);
-				}
-			}
-		}
-		
-		public override void SerializeToBundle(Support.ObjectBundler bundler, Support.ResourceBundle bundle)
-		{
-			if (this.HasChildren)
-			{
-				System.Collections.ArrayList list    = new System.Collections.ArrayList ();
-				Widget[]                     widgets = this.Panel.Children.Widgets;
-				
-				for (int i = 0; i < widgets.Length; i++)
-				{
-					if (! widgets[i].IsEmbedded)
-					{
-						Support.ResourceBundle child_bundle = bundler.CreateEmptyBundle (widgets[i].BundleName);
-						bundler.FillBundleFromObject (child_bundle, widgets[i]);
-						list.Add (child_bundle);
-					}
-				}
-				
-				if (list.Count > 0)
-				{
-					Support.ResourceBundle.Field field = bundle.CreateField (Support.ResourceFieldType.List, list);
-					field.SetName ("widgets");
-					bundle.Add (field);
 				}
 			}
 		}
@@ -236,20 +183,20 @@ namespace Epsitec.Common.Widgets
 			
 			//	Place correctement les ascenceurs.
 
-			double margin_x = (this.v_scroller.Visibility) ? this.v_scroller.Width  : 0;
-			double margin_y = (this.h_scroller.Visibility) ? this.h_scroller.Height : 0;
+			double margin_x = (this.v_scroller.Visibility) ? this.v_scroller.PreferredWidth  : 0;
+			double margin_y = (this.h_scroller.Visibility) ? this.h_scroller.PreferredHeight : 0;
 			
 			double total_dx = this.Client.Size.Width;
 			double total_dy = this.Client.Size.Height;
 			
 			if (this.v_scroller.Visibility)
 			{
-				this.v_scroller.Bounds = new Drawing.Rectangle (total_dx - margin_x, margin_y, margin_x, total_dy - margin_y);
+				this.v_scroller.SetManualBounds(new Drawing.Rectangle(total_dx - margin_x, margin_y, margin_x, total_dy - margin_y));
 			}
 
 			if (this.h_scroller.Visibility)
 			{
-				this.h_scroller.Bounds = new Drawing.Rectangle (0, 0, total_dx - margin_x, margin_y);
+				this.h_scroller.SetManualBounds(new Drawing.Rectangle(0, 0, total_dx - margin_x, margin_y));
 			}
 		}
 		
@@ -267,8 +214,8 @@ namespace Epsitec.Common.Widgets
 			double total_dy = this.Client.Size.Height;
 			double panel_dx = this.panel.SurfaceWidth;
 			double panel_dy = this.panel.SurfaceHeight;
-			double margin_x = (this.v_scroller_mode == ScrollableScrollerMode.ShowAlways) ? this.v_scroller.Width : 0;
-			double margin_y = (this.h_scroller_mode == ScrollableScrollerMode.ShowAlways) ? this.h_scroller.Height : 0;
+			double margin_x = (this.v_scroller_mode == ScrollableScrollerMode.ShowAlways) ? this.v_scroller.PreferredWidth : 0;
+			double margin_y = (this.h_scroller_mode == ScrollableScrollerMode.ShowAlways) ? this.h_scroller.PreferredHeight : 0;
 			
 			double delta_dx;
 			double delta_dy;
@@ -288,7 +235,7 @@ namespace Epsitec.Common.Widgets
 					
 					if (margin_y == 0)
 					{
-						margin_y = this.h_scroller.Height;
+						margin_y = this.h_scroller.PreferredHeight;
 						continue;
 					}
 				}
@@ -300,7 +247,7 @@ namespace Epsitec.Common.Widgets
 					
 					if (margin_x == 0)
 					{
-						margin_x = this.v_scroller.Width;
+						margin_x = this.v_scroller.PreferredWidth;
 						continue;
 					}
 				}
@@ -377,7 +324,7 @@ namespace Epsitec.Common.Widgets
 			//	l'ouverture.
 			
 			this.panel_aperture = new Drawing.Rectangle (0, margin_y, vis_dx, vis_dy);
-			this.panel.Bounds   = new Drawing.Rectangle (-offset_x, total_dy - panel_dy + offset_y, panel_dx, panel_dy);
+			this.panel.SetManualBounds(new Drawing.Rectangle(-offset_x, total_dy - panel_dy + offset_y, panel_dx, panel_dy));
 			this.panel.Aperture = this.panel.MapParentToClient (this.panel_aperture);
 			
 			this.h_scroller.Visibility = (margin_y > 0);
@@ -434,11 +381,11 @@ namespace Epsitec.Common.Widgets
 			if (this.isForegroundFrame == false)  return;
 
 			IAdorner    adorner = Widgets.Adorners.Factory.Active;
-			WidgetState state   = this.PaintState;
+			WidgetPaintState state   = this.PaintState;
 			
 			Drawing.Rectangle rect  = this.Client.Bounds;
-			double margin_x = (this.v_scroller.Visibility) ? this.v_scroller.Width  : 0;
-			double margin_y = (this.h_scroller.Visibility) ? this.h_scroller.Height : 0;
+			double margin_x = (this.v_scroller.Visibility) ? this.v_scroller.PreferredWidth  : 0;
+			double margin_y = (this.h_scroller.Visibility) ? this.h_scroller.PreferredHeight : 0;
 			rect.Right -= margin_x;
 			rect.Bottom += margin_y;
 			rect.Deflate (this.foregroundFrameMargins);

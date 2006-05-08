@@ -1,7 +1,11 @@
+//	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Responsable: Pierre ARNAUD
+
+using Epsitec.Common.Support;
+using Epsitec.Common.Types;
+
 namespace Epsitec.Common.Widgets
 {
-	using BundleAttribute = Epsitec.Common.Support.BundleAttribute;
-	
 	/// <summary>
 	/// La classe ColorSample permet de représenter une couleur rgb.
 	/// </summary>
@@ -243,8 +247,8 @@ namespace Epsitec.Common.Widgets
 			//	bien pu ajouter une variable à ColorSample, mais ça paraît du
 			//	gaspillage de mémoire d'avoir cette variable inutilisée pour
 			//	tous les ColorSample. Alors on utilise une "propriété" :
-			
-			widget.SetProperty("DragHost", this);
+
+			ColorSample.SetDragHost (widget, this);
 			
 			this.dragTarget = null;
 			this.dragOrigin = this.MapClientToScreen(new Drawing.Point(-5, -5));
@@ -309,15 +313,18 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		#endregion
-		
-		
-		public override Drawing.Rectangle GetShapeBounds()
+
+
+		public override Drawing.Margins GetShapeMargins()
 		{
-			if ( this.possibleSource )
+			if (this.possibleSource)
 			{
-				return new Drawing.Rectangle (-5, -5, this.Client.Size.Width+10, this.Client.Size.Height+10);
+				return new Drawing.Margins (5, 5, 5, 5);
 			}
-			return this.Client.Bounds;
+			else
+			{
+				return base.GetShapeMargins ();
+			}
 		}
 
 		protected override void ProcessMessage(Message message, Drawing.Point pos)
@@ -329,7 +336,7 @@ namespace Epsitec.Common.Widgets
 				return;
 			}
 
-			ColorSample dragHost = this.GetProperty("DragHost") as ColorSample;
+			ColorSample dragHost = ColorSample.GetDragHost (this);
 			
 			//	Est-ce que l'événement clavier est reçu dans un échantillon en
 			//	cours de drag dans un DragWindow ? C'est possible, car le focus
@@ -456,7 +463,7 @@ namespace Epsitec.Common.Widgets
 				graphics.AddRectangle(rect);
 				graphics.RenderSolid(adorner.ColorBorder);
 
-				if ( (this.PaintState&WidgetState.Focused) != 0 )
+				if ( (this.PaintState&WidgetPaintState.Focused) != 0 )
 				{
 					rect.Deflate(1, 1);
 					graphics.AddRectangle(rect);
@@ -511,14 +518,36 @@ namespace Epsitec.Common.Widgets
 		protected virtual void OnChanged()
 		{
 			//	Génère un événement pour dire que la couleur a changé.
-			if ( this.Changed != null )  // qq'un écoute ?
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("Changed");
+			if (handler != null)
 			{
-				this.Changed(this);
+				handler(this);
 			}
 		}
+
+		public static void SetDragHost(DependencyObject o, ColorSample value)
+		{
+			o.SetValue (ColorSample.DragHostProperty, value);
+		}
+
+		public static ColorSample GetDragHost(DependencyObject o)
+		{
+			return o.GetValue (ColorSample.DragHostProperty) as ColorSample;
+		}
 		
-		
-		public event Support.EventHandler		Changed;
+		public event EventHandler				Changed
+		{
+			add
+			{
+				this.AddUserEventHandler("Changed", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("Changed", value);
+			}
+		}
+
+		public static readonly DependencyProperty DragHostProperty = DependencyProperty.RegisterAttached ("DragHost", typeof (ColorSample), typeof (ColorSample));
 
 		
 		private Behaviors.DragBehavior			dragBehavior;

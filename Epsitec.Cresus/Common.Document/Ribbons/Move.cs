@@ -7,7 +7,6 @@ namespace Epsitec.Common.Document.Ribbons
 	/// <summary>
 	/// La classe Move permet de déplacer la sélection.
 	/// </summary>
-	[SuppressBundleSupport]
 	public class Move : Abstract
 	{
 		public Move() : base()
@@ -21,7 +20,7 @@ namespace Epsitec.Common.Document.Ribbons
 			this.CreateFieldMove(ref this.fieldMoveH, Res.Strings.Action.MoveValueX);
 			this.CreateFieldMove(ref this.fieldMoveV, Res.Strings.Action.MoveValueY);
 			
-			this.UpdateClientGeometry();
+//			this.UpdateClientGeometry();
 		}
 		
 		protected override void Dispose(bool disposing)
@@ -58,29 +57,29 @@ namespace Epsitec.Common.Document.Ribbons
 
 			if ( this.buttonMoveH == null )  return;
 
-			double dx = this.buttonMoveH.DefaultWidth;
-			double dy = this.buttonMoveH.DefaultHeight;
+			double dx = this.buttonMoveH.PreferredWidth;
+			double dy = this.buttonMoveH.PreferredHeight;
 
 			Rectangle rect = this.UsefulZone;
 			rect.Width  = dx;
 			rect.Height = dy;
 			rect.Offset(0, dy+5);
-			this.buttonMoveHi.Bounds = rect;
+			this.buttonMoveHi.SetManualBounds(rect);
 			rect.Offset(dx, 0);
-			this.buttonMoveH.Bounds = rect;
+			this.buttonMoveH.SetManualBounds(rect);
 			rect.Offset(dx, 0);
 			rect.Width = 50;
-			this.fieldMoveH.Bounds = rect;
+			this.fieldMoveH.SetManualBounds(rect);
 
 			rect = this.UsefulZone;
 			rect.Width  = dx;
 			rect.Height = dy;
-			this.buttonMoveVi.Bounds = rect;
+			this.buttonMoveVi.SetManualBounds(rect);
 			rect.Offset(dx, 0);
-			this.buttonMoveV.Bounds = rect;
+			this.buttonMoveV.SetManualBounds(rect);
 			rect.Offset(dx, 0);
 			rect.Width = 50;
-			this.fieldMoveV.Bounds = rect;
+			this.fieldMoveV.SetManualBounds(rect);
 		}
 
 
@@ -88,7 +87,7 @@ namespace Epsitec.Common.Document.Ribbons
 		{
 			//	Crée un champ éditable pour un déplacement.
 			field = new TextFieldReal(this);
-			field.Width = 50;
+			field.PreferredWidth = 50;
 			field.TabIndex = this.tabIndex++;
 			field.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			field.ValueChanged += new EventHandler(this.HandleFieldValueChanged);

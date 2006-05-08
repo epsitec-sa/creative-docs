@@ -77,7 +77,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 				StaticText label = new StaticText(bookList);
 				label.Text = Res.Strings.Dialog.Glyphs.Family.List;
-				label.Width = 50;
+				label.PreferredWidth = 50;
 				label.Anchor = AnchorStyles.TopLeft;
 				label.Margins = new Margins(6, 0, 6+3, 0);
 
@@ -114,7 +114,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 				StaticText fontFaceLabel = new StaticText(bookArray);
 				fontFaceLabel.Text = Res.Strings.Dialog.Glyphs.FontFace;
-				fontFaceLabel.Width = 50;
+				fontFaceLabel.PreferredWidth = 50;
 				fontFaceLabel.Anchor = AnchorStyles.TopLeft;
 				fontFaceLabel.Margins = new Margins(6, 0, 6+3, 0);
 
@@ -129,8 +129,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.fieldFontFace.TextChanged += new EventHandler(this.HandleFontFaceChanged);
 
 				this.buttonFilter = new IconButton(bookArray);
-				this.buttonFilter.Width = 21;
-				this.buttonFilter.Height = 21;
+				this.buttonFilter.PreferredWidth = 21;
+				this.buttonFilter.PreferredHeight = 21;
 				this.buttonFilter.Command = "TextFontFilter";
 				this.buttonFilter.IconName = Misc.Icon("TextFontFilter");
 				this.buttonFilter.PreferredIconSize = Misc.IconPreferredSize("Normal");
@@ -144,7 +144,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 				StaticText fontStyleLabel = new StaticText(bookArray);
 				fontStyleLabel.Text = Res.Strings.Dialog.Glyphs.FontStyle;
-				fontStyleLabel.Width = 50;
+				fontStyleLabel.PreferredWidth = 50;
 				fontStyleLabel.Anchor = AnchorStyles.TopLeft;
 				fontStyleLabel.Margins = new Margins(6, 0, 6+20+4+3, 0);
 
@@ -160,8 +160,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 				this.currentFont = new GlyphButton(bookArray);
 				this.currentFont.GlyphShape = GlyphShape.ArrowLeft;
-				this.currentFont.Width = 20;
-				this.currentFont.Height = 20+5+20;
+				this.currentFont.PreferredWidth = 20;
+				this.currentFont.PreferredHeight = 20+5+20;
 				this.currentFont.Anchor = AnchorStyles.TopRight;
 				this.currentFont.Margins = new Margins(0, 6, 6, 0);
 				this.currentFont.TabIndex = tabIndex++;
@@ -185,8 +185,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.status.IsReadOnly = true;
 
 				this.slider = new HSlider(bookArray);
-				this.slider.Width = 80;
-				this.slider.Height = 14;
+				this.slider.PreferredWidth = 80;
+				this.slider.PreferredHeight = 14;
 				this.slider.Anchor = AnchorStyles.Bottom|AnchorStyles.Right;
 				this.slider.Margins = new Margins(6, 6, 0, 9);
 				this.slider.TabIndex = tabIndex++;
@@ -224,8 +224,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.alternatesStatus.IsReadOnly = true;
 
 				this.alternatesSlider = new HSlider(bookAlternates);
-				this.alternatesSlider.Width = 80;
-				this.alternatesSlider.Height = 14;
+				this.alternatesSlider.PreferredWidth = 80;
+				this.alternatesSlider.PreferredHeight = 14;
 				this.alternatesSlider.Anchor = AnchorStyles.Bottom|AnchorStyles.Right;
 				this.alternatesSlider.Margins = new Margins(6, 6, 0, 9);
 				this.alternatesSlider.TabIndex = tabIndex++;
@@ -242,7 +242,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				//	Boutons de fermeture.
 				Button buttonOk = new Button(this.window.Root);
 				buttonOk.Command = "GlyphsInsert";
-				buttonOk.Width = 75;
+				buttonOk.PreferredWidth = 75;
 				buttonOk.Text = Res.Strings.Dialog.Glyphs.Button.Insert;
 				buttonOk.ButtonStyle = ButtonStyle.DefaultAccept;
 				buttonOk.Anchor = AnchorStyles.BottomLeft;
@@ -253,7 +253,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				ToolTip.Default.SetToolTip(buttonOk, Res.Strings.Dialog.Glyphs.Tooltip.Insert);
 
 				Button buttonClose = new Button(this.window.Root);
-				buttonClose.Width = 75;
+				buttonClose.PreferredWidth = 75;
 				buttonClose.Text = Res.Strings.Dialog.Button.Close;
 				buttonClose.Anchor = AnchorStyles.BottomLeft;
 				buttonClose.Margins = new Margins(6+75+10, 0, 0, 6);

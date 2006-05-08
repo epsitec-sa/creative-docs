@@ -1,3 +1,5 @@
+using Epsitec.Common.Support;
+
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
@@ -7,19 +9,10 @@ namespace Epsitec.Common.Widgets
 	{
 		public TextFieldUpDown()
 		{
-			if ( Support.ObjectBundler.IsBooting )
-			{
-				//	N'initialise rien, car cela prend passablement de temps... et de toute
-				//	manière, on n'a pas besoin de toutes ces informations pour pouvoir
-				//	utiliser IBundleSupport.
-				
-				return;
-			}
-			
 			this.textFieldStyle = TextFieldStyle.UpDown;
 			this.TextNavigator.IsNumeric = true;
 			this.range = new Types.DecimalRange(0, 100, 1);
-			this.range.Changed += new Support.EventHandler(this.HandleDecimalRangeChanged);
+			this.range.Changed += new EventHandler(this.HandleDecimalRangeChanged);
 			
 			this.arrowUp = new GlyphButton(this);
 			this.arrowDown = new GlyphButton(this);
@@ -29,10 +22,10 @@ namespace Epsitec.Common.Widgets
 			this.arrowDown.GlyphShape = GlyphShape.ArrowDown;
 			this.arrowUp.ButtonStyle = ButtonStyle.UpDown;
 			this.arrowDown.ButtonStyle = ButtonStyle.UpDown;
-			this.arrowUp.Engaged += new Support.EventHandler(this.HandleButton);
-			this.arrowDown.Engaged += new Support.EventHandler(this.HandleButton);
-			this.arrowUp.StillEngaged += new Support.EventHandler(this.HandleButton);
-			this.arrowDown.StillEngaged += new Support.EventHandler(this.HandleButton);
+			this.arrowUp.Engaged += new EventHandler(this.HandleButton);
+			this.arrowDown.Engaged += new EventHandler(this.HandleButton);
+			this.arrowUp.StillEngaged += new EventHandler(this.HandleButton);
+			this.arrowDown.StillEngaged += new EventHandler(this.HandleButton);
 			this.arrowUp.AutoRepeat = true;
 			this.arrowDown.AutoRepeat = true;
 			
@@ -143,7 +136,17 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public event Support.EventHandler		ValueChanged;
+		public event EventHandler				ValueChanged
+		{
+			add
+			{
+				this.AddUserEventHandler("ValueChanged", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("ValueChanged", value);
+			}
+		}
 		#endregion
 		
 		public virtual bool						IsValueInRange
@@ -254,14 +257,14 @@ namespace Epsitec.Common.Widgets
 			{
 				if ( this.arrowUp != null )
 				{
-					this.arrowUp.Engaged -= new Support.EventHandler(this.HandleButton);
-					this.arrowUp.StillEngaged -= new Support.EventHandler(this.HandleButton);
+					this.arrowUp.Engaged -= new EventHandler(this.HandleButton);
+					this.arrowUp.StillEngaged -= new EventHandler(this.HandleButton);
 					this.arrowUp.Dispose();
 				}
 				if ( this.arrowDown != null )
 				{
-					this.arrowDown.Engaged -= new Support.EventHandler(this.HandleButton);
-					this.arrowDown.StillEngaged -= new Support.EventHandler(this.HandleButton);
+					this.arrowDown.Engaged -= new EventHandler(this.HandleButton);
+					this.arrowDown.StillEngaged -= new EventHandler(this.HandleButton);
 					this.arrowDown.Dispose();
 				}
 				
@@ -271,15 +274,30 @@ namespace Epsitec.Common.Widgets
 			
 			base.Dispose(disposing);
 		}
+
+		protected override void InitializeMargins()
+		{
+			base.InitializeMargins ();
+
+			if (this.IsActualGeometryValid)
+			{
+				IAdorner adorner = Widgets.Adorners.Factory.Active;
+				Drawing.Rectangle rect = this.ActualBounds;
+				double width = System.Math.Floor (rect.Height*adorner.GeometryUpDownWidthFactor);
+				this.margins.Right = width - AbstractTextField.FrameMargin;
+			}
+		}
 		
 		protected override void UpdateGeometry()
 		{
 			base.UpdateGeometry ();
+
+			this.InitializeMargins ();
 			
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
-			Drawing.Rectangle rect = this.Bounds;
-			double width = System.Math.Floor(rect.Height*adorner.GeometryUpDownWidthFactor);
-			this.margins.Right = width - AbstractTextField.FrameMargin;
+			Drawing.Rectangle rect = this.ActualBounds;
+			
+			double width = this.margins.Right + AbstractTextField.FrameMargin;
 
 			if ( this.arrowUp   != null &&
 				 this.arrowDown != null )
@@ -293,11 +311,11 @@ namespace Epsitec.Common.Widgets
 
 				aRect.Bottom = adorner.GeometryUpDownBottomMargin;
 				aRect.Height = h;
-				this.arrowDown.Bounds = aRect;
+				this.arrowDown.SetManualBounds(aRect);
 
 				aRect.Bottom = rect.Height-adorner.GeometryUpDownTopMargin-h;
 				aRect.Height = h;
-				this.arrowUp.Bounds = aRect;
+				this.arrowUp.SetManualBounds(aRect);
 			}
 		}
 
@@ -307,7 +325,7 @@ namespace Epsitec.Common.Widgets
 			{
 				this.realSize = this.InnerTextBounds.Size;
 				
-				base.TextLayout.Alignment  = this.Alignment;
+				base.TextLayout.Alignment  = this.ContentAlignment;
 				base.TextLayout.LayoutSize = this.GetTextLayoutSize ();
 
 				if (this.TextLayout.Text != null)
@@ -389,25 +407,28 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void OnValueChanged()
 		{
-			if ( this.ValueChanged != null )  // qq'un écoute ?
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("ValueChanged");
+			if (handler != null)
 			{
-				this.ValueChanged(this);
+				handler(this);
 			}
 		}
 		
 		protected virtual void OnDecimalRangeChanged()
 		{
-			if ( this.DecimalRangeChanged != null )
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("DecimalRangeChanged");
+			if (handler != null)
 			{
-				this.DecimalRangeChanged(this);
+				handler(this);
 			}
 		}
 		
 		protected virtual void OnTextSuffixChanged()
 		{
-			if ( this.TextSuffixChanged != null )
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("TextSuffixChanged");
+			if (handler != null)
 			{
-				this.TextSuffixChanged(this);
+				handler(this);
 			}
 		}
 		
@@ -471,7 +492,7 @@ namespace Epsitec.Common.Widgets
 				this.validator_1.Dispose ();
 			}
 			
-			this.validator_1 = new Validators.RegexValidator(this, Support.RegexFactory.LocalizedDecimalNum, this.IsDefaultValueDefined);
+			this.validator_1 = new Validators.RegexValidator(this, RegexFactory.LocalizedDecimalNum, this.IsDefaultValueDefined);
 			
 			if (this.validator_2 != null)
 			{
@@ -503,8 +524,29 @@ namespace Epsitec.Common.Widgets
 		
 		protected Types.DecimalRange			range;
 		
-		public event Support.EventHandler		DecimalRangeChanged;
-		public event Support.EventHandler		TextSuffixChanged;
+		public event EventHandler				DecimalRangeChanged
+		{
+			add
+			{
+				this.AddUserEventHandler("DecimalRangeChanged", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("DecimalRangeChanged", value);
+			}
+		}
+
+		public event EventHandler				TextSuffixChanged
+		{
+			add
+			{
+				this.AddUserEventHandler("TextSuffixChanged", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("TextSuffixChanged", value);
+			}
+		}
 		
 		protected string						textSuffix;
 		protected GlyphButton					arrowUp;

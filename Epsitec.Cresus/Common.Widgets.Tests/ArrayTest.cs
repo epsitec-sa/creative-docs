@@ -57,6 +57,7 @@ namespace Epsitec.Common.Widgets
 			Window.RunInTestEnvironment (window);
 		}
 		
+#if false
 		[Test] public void CheckEditArray()
 		{
 			Window window = new Window();
@@ -324,7 +325,7 @@ namespace Epsitec.Common.Widgets
 			
 			public event Support.EventHandler	StoreContentsChanged;
 		}
-		
+#endif		
 		
 		private void HandleSelectedIndexChanged(object sender)
 		{
@@ -350,6 +351,7 @@ namespace Epsitec.Common.Widgets
 			table.Invalidate ();
 		}
 
+#if false
 		private void HandleEditDoubleClicked(object sender, MessageEventArgs e)
 		{
 			EditArray table = sender as EditArray;
@@ -360,6 +362,7 @@ namespace Epsitec.Common.Widgets
 			System.Diagnostics.Debug.WriteLine ("Double-clicked : " + row + "," + column);
 			table.StartEdition (row, column);
 		}
+#endif
 
 		private void HandlePaintForeground(object sender, PaintEventArgs e)
 		{
@@ -373,6 +376,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+#if false
 		private void HandleTableEditTextChanged(object sender)
 		{
 			EditArray table = sender as EditArray;
@@ -398,6 +402,7 @@ namespace Epsitec.Common.Widgets
 				col_0_text.EditionRejected += new EventHandler(this.HandleColumnZeroEditionRejected);
 			}
 		}
+#endif
 		
 		private void HandleColumnZeroEditionAccepted(object sender)
 		{
@@ -410,7 +415,6 @@ namespace Epsitec.Common.Widgets
 			TextFieldEx text = sender as TextFieldEx;
 			System.Diagnostics.Debug.WriteLine (string.Format ("Edition rejected: {0}", text.Text));
 		}
-		
 		
 		private int			hilite_row		= -1;
 		private int			hilite_column	= -1;

@@ -7,7 +7,6 @@ namespace Epsitec.Common.Document.Panels
 	/// <summary>
 	/// La classe Volume permet de choisir un objet volume 3d.
 	/// </summary>
-	[SuppressBundleSupport]
 	public class Volume : Abstract
 	{
 		public Volume(Document document) : base(document)
@@ -156,7 +155,7 @@ namespace Epsitec.Common.Document.Panels
 			Rectangle r = rect;
 			r.Bottom = r.Top-20;
 			r.Inflate(1);
-			this.grid.Bounds = r;
+			this.grid.SetManualBounds(r);
 
 			if ( this.isExtendedSize && this.IsLabelProperties )
 			{
@@ -164,19 +163,19 @@ namespace Epsitec.Common.Document.Panels
 				r.Bottom = r.Top-20;
 				r.Left = rect.Left;
 				r.Right = rect.Right;
-				this.fieldRapport.Bounds = r;
+				this.fieldRapport.SetManualBounds(r);
 
 				r.Top = r.Bottom-5;
 				r.Bottom = r.Top-20;
 				r.Left = rect.Left;
 				r.Right = rect.Right;
-				this.fieldLeft.Bounds = r;
+				this.fieldLeft.SetManualBounds(r);
 
 				r.Top = r.Bottom-5;
 				r.Bottom = r.Top-20;
 				r.Left = rect.Left;
 				r.Right = rect.Right;
-				this.fieldRight.Bounds = r;
+				this.fieldRight.SetManualBounds(r);
 			}
 			else
 			{
@@ -184,15 +183,15 @@ namespace Epsitec.Common.Document.Panels
 				r.Bottom = r.Top-20;
 				r.Left = rect.Left;
 				r.Width = Widgets.TextFieldLabel.ShortWidth;
-				this.fieldRapport.Bounds = r;
+				this.fieldRapport.SetManualBounds(r);
 
 				r.Left = r.Right;
 				r.Width = Widgets.TextFieldLabel.ShortWidth;
-				this.fieldLeft.Bounds = r;
+				this.fieldLeft.SetManualBounds(r);
 
 				r.Left = r.Right;
 				r.Width = Widgets.TextFieldLabel.ShortWidth;
-				this.fieldRight.Bounds = r;
+				this.fieldRight.SetManualBounds(r);
 			}
 		}
 

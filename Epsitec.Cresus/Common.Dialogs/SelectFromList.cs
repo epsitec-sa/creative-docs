@@ -65,18 +65,18 @@ namespace Epsitec.Common.Dialogs
 			Widget body   = new Widget ();
 			double extra  = this.ExtraHeight;
 			double height = System.Math.Max (extra + 160, 200);
-			
-			body.Size = new Drawing.Size (320, height);
+
+			body.SetManualBounds(new Drawing.Rectangle(0, 0, 320, height));
 			
 			StaticText label;
 			
 			label        = new StaticText (body);
-			label.Bounds = new Drawing.Rectangle (0, body.Height - label.DefaultHeight, body.Width, label.DefaultHeight);
+			label.SetManualBounds (new Drawing.Rectangle (0, body.ActualHeight - label.PreferredHeight, body.ActualWidth, label.PreferredHeight));
 			label.Text   = this.caption;
 			
 			this.list = new ScrollList (body);
-			
-			this.list.Bounds  = new Drawing.Rectangle (0, extra, body.Width, label.Bottom - 4 - extra);
+
+			this.list.SetManualBounds(new Drawing.Rectangle(0, extra, body.ActualWidth, label.ActualLocation.Y - 4 - extra));
 			this.list.Items.AddRange (this.data);
 			this.list.TabIndex       = 1;
 			this.list.TabNavigation  = Widget.TabNavigationMode.ActivateOnTab;

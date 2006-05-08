@@ -1,6 +1,8 @@
 //	Copyright © 2005-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
+using System.Collections.Generic;
+
 namespace Epsitec.Common.Widgets.Helpers
 {
 	/// <summary>
@@ -15,7 +17,7 @@ namespace Epsitec.Common.Widgets.Helpers
 		
 		public static Drawing.Point MapVisualToParent(Visual visual, Drawing.Point value)
 		{
-			Drawing.Rectangle bounds = visual.Bounds;
+			Drawing.Rectangle bounds = visual.ActualBounds;
 			
 			double x = value.X + bounds.Left;
 			double y = value.Y + bounds.Bottom;
@@ -30,7 +32,7 @@ namespace Epsitec.Common.Widgets.Helpers
 			
 			for ( ; visual != null; )
 			{
-				Drawing.Rectangle bounds = visual.Bounds;
+				Drawing.Rectangle bounds = visual.ActualBounds;
 				
 				x += bounds.Left;
 				y += bounds.Bottom;
@@ -43,7 +45,7 @@ namespace Epsitec.Common.Widgets.Helpers
 		
 		public static Drawing.Point MapParentToVisual(Visual visual, Drawing.Point value)
 		{
-			Drawing.Rectangle bounds = visual.Bounds;
+			Drawing.Rectangle bounds = visual.ActualBounds;
 			
 			double x = value.X - bounds.Left;
 			double y = value.Y - bounds.Bottom;
@@ -58,7 +60,7 @@ namespace Epsitec.Common.Widgets.Helpers
 			
 			for ( ; visual != null; )
 			{
-				Drawing.Rectangle bounds = visual.Bounds;
+				Drawing.Rectangle bounds = visual.ActualBounds;
 				
 				x -= bounds.Left;
 				y -= bounds.Bottom;
@@ -602,7 +604,7 @@ namespace Epsitec.Common.Widgets.Helpers
 		{
 			while (visual != null)
 			{
-				VisualTree.GetDispatchers (list, visual.CommandDispatchers);
+				VisualTree.GetDispatchers (list, visual.GetCommandDispatchers ());
 				visual = visual.Parent;
 			}
 		}
@@ -618,22 +620,18 @@ namespace Epsitec.Common.Widgets.Helpers
 					VisualTree.GetDispatchers (list, parent);
 				}
 				
-				VisualTree.GetDispatchers (list, window.CommandDispatchers);
+				VisualTree.GetDispatchers (list, window.GetCommandDispatchers ());
 				window = window.Owner;
 			}
 		}
 		
-		private static void GetDispatchers(System.Collections.ArrayList list, CommandDispatcher[] dispatchers)
+		private static void GetDispatchers(System.Collections.ArrayList list, IEnumerable<CommandDispatcher> dispatchers)
 		{
-			if ((dispatchers != null) &&
-				(dispatchers.Length > 0))
+			foreach (CommandDispatcher dispatcher in dispatchers)
 			{
-				foreach (CommandDispatcher dispatcher in dispatchers)
+				if (list.Contains (dispatcher) == false)
 				{
-					if (list.Contains (dispatcher) == false)
-					{
-						VisualTree.GetDispatchers (list, dispatcher);
-					}
+					VisualTree.GetDispatchers (list, dispatcher);
 				}
 			}
 		}
@@ -644,7 +642,7 @@ namespace Epsitec.Common.Widgets.Helpers
 				(list.Contains (dispatcher) == false))
 			{
 				list.Add (dispatcher);
-				VisualTree.GetDispatchers (list, dispatcher.CommandDispatchers);
+				VisualTree.GetDispatchers (list, dispatcher.GetCommandDispatchers ());
 			}
 		}
 		#endregion

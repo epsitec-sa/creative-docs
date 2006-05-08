@@ -11,8 +11,7 @@
     <AssemblyKeyContainerName>
     </AssemblyKeyContainerName>
     <AssemblyName>Common.Widgets</AssemblyName>
-    <AssemblyOriginatorKeyFile>
-    </AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>..\Epsitec.Cresus.snk</AssemblyOriginatorKeyFile>
     <DefaultClientScript>JScript</DefaultClientScript>
     <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
     <DefaultTargetSchema>IE50</DefaultTargetSchema>
@@ -24,8 +23,7 @@
     </StartupObject>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
-    <UpgradeBackupLocation>
-    </UpgradeBackupLocation>
+    <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <OutputPath>bin\Debug\</OutputPath>
@@ -262,6 +260,7 @@
     <Compile Include="CheckButton.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ContainerLayoutMode.cs" />
     <Compile Include="Collections\FlatChildrenCollection.cs" />
     <Compile Include="Collections\HostedShortcutCollection.cs">
       <SubType>Code</SubType>
@@ -321,6 +320,11 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Controllers\AbstractController.cs" />
+    <Compile Include="ActiveState.cs" />
+    <Compile Include="AbstractSplitter.cs" />
+    <Compile Include="HSplitter.cs" />
+    <Compile Include="VSplitter.cs" />
+    <Compile Include="Helpers\IClientInfo.cs" />
     <Compile Include="IController.cs" />
     <Compile Include="Layouts\LayoutMode.cs" />
     <Compile Include="Layouts\NoOpLayoutEngine.cs" />
@@ -672,6 +676,7 @@
     <Compile Include="WidgetPaintFilter.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="WidgetPaintState.cs" />
     <Compile Include="Window.cs">
       <SubType>Code</SubType>
     </Compile>

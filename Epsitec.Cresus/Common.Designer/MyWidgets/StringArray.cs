@@ -101,7 +101,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		public double GetColumnsAbsoluteWidth(int column)
 		{
 			//	Retourne la largeur absolue d'une colonne.
-			double w = this.Client.Bounds.Width - this.scroller.Width;
+			double w = this.Client.Bounds.Width - this.scroller.PreferredWidth;
 			return System.Math.Floor(w*this.GetColumnsRelativeWidth(column)/this.ColumnsRelativeTotalWidth);
 		}
 
@@ -558,17 +558,17 @@ namespace Epsitec.Common.Designer.MyWidgets
 				}
 				else
 				{
-					rect.Right = this.Client.Bounds.Right-this.scroller.Width;
+					rect.Right = this.Client.Bounds.Right-this.scroller.PreferredWidth;
 				}
 
-				this.columns[i].Bounds = rect;
+				this.columns[i].SetManualBounds(rect);
 
 				rect.Left = rect.Right-1;
 			}
 
 			rect = this.Client.Bounds;
-			rect.Left = rect.Right-this.scroller.Width;
-			this.scroller.Bounds = rect;
+			rect.Left = rect.Right-this.scroller.PreferredWidth;
+			this.scroller.SetManualBounds(rect);
 		}
 
 
@@ -635,49 +635,93 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected virtual void OnColumnsWidthChanged()
 		{
 			//	Génère un événement pour dire que la largeur de colonnes a changé.
-			if (this.ColumnsWidthChanged != null)  // qq'un écoute ?
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("ColumnsWidthChanged");
+			if (handler != null)
 			{
-				this.ColumnsWidthChanged(this);
+				handler(this);
 			}
 		}
 
-		public event Support.EventHandler ColumnsWidthChanged;
+		public event Support.EventHandler ColumnsWidthChanged
+		{
+			add
+			{
+				this.AddUserEventHandler("ColumnsWidthChanged", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("ColumnsWidthChanged", value);
+			}
+		}
 
 
 		protected virtual void OnCellsQuantityChanged()
 		{
 			//	Génère un événement pour dire que le nombre de cellules a changé.
-			if (this.CellsQuantityChanged != null)  // qq'un écoute ?
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("CellsQuantityChanged");
+			if (handler != null)
 			{
-				this.CellsQuantityChanged(this);
+				handler(this);
 			}
 		}
 
-		public event Support.EventHandler CellsQuantityChanged;
+		public event Support.EventHandler CellsQuantityChanged
+		{
+			add
+			{
+				this.AddUserEventHandler("CellsQuantityChanged", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("CellsQuantityChanged", value);
+			}
+		}
 
 
 		protected virtual void OnCellsContentChanged()
 		{
 			//	Génère un événement pour dire que le contenu des cellules a changé.
-			if (this.CellsContentChanged != null)  // qq'un écoute ?
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("CellsContentChanged");
+			if (handler != null)
 			{
-				this.CellsContentChanged(this);
+				handler(this);
 			}
 		}
 
-		public event Support.EventHandler CellsContentChanged;
+		public event Support.EventHandler CellsContentChanged
+		{
+			add
+			{
+				this.AddUserEventHandler("CellsContentChanged", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("CellsContentChanged", value);
+			}
+		}
 
 
 		protected virtual void OnSelectedRowChanged()
 		{
 			//	Génère un événement pour dire que la ligne sélectionnée a changé.
-			if (this.SelectedRowChanged != null)  // qq'un écoute ?
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("SelectedRowChanged");
+			if (handler != null)
 			{
-				this.SelectedRowChanged(this);
+				handler(this);
 			}
 		}
 
-		public event Support.EventHandler SelectedRowChanged;
+		public event Support.EventHandler SelectedRowChanged
+		{
+			add
+			{
+				this.AddUserEventHandler("SelectedRowChanged", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("SelectedRowChanged", value);
+			}
+		}
 		#endregion
 
 

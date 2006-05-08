@@ -1,25 +1,18 @@
 //	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
+using Epsitec.Common.Support;
+using System.Collections.Generic;
+
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
 	/// La classe Menu représente un menu (horizontal ou vertical).
 	/// </summary>
-	[Support.SuppressBundleSupport]
 	public abstract class AbstractMenu : Widget, Collections.IWidgetCollectionHost
 	{
 		protected AbstractMenu()
 		{
-			if (Support.ObjectBundler.IsBooting)
-			{
-				//	N'initialise rien, car cela prend passablement de temps... et de toute
-				//	manière, on n'a pas besoin de toutes ces informations pour pouvoir
-				//	utiliser IBundleSupport.
-				
-				return;
-			}
-			
 			this.UpdateAdornerInformation ();
 			
 			this.items = new MenuItemCollection (this);
@@ -121,14 +114,10 @@ namespace Epsitec.Common.Widgets
 		}
 		
 #if false //#fix
-		public override CommandDispatcher[]		CommandDispatchers
+		public override IEnumerable<CommandDispatcher> GetCommandDispatchers()
 		{
-			get
-			{
-				ICommandDispatcherHost host = this.FindHost ();
-				
-				return host == null ? base.CommandDispatchers : host.CommandDispatchers;
-			}
+			ICommandDispatcherHost host = this.FindHost ();
+			return host == null ? base.GetCommandDispatchers () : host.GetCommandDispatchers ();
 		}
 #endif
 		
@@ -141,10 +130,7 @@ namespace Epsitec.Common.Widgets
 			
 			if (this.IsVertical)
 			{
-				Drawing.Size size = this.GetBestFitSize ();
-
-				this.Size = size;
-				
+				this.PreferredSize = this.GetBestFitSize ();
 				Layouts.LayoutContext.SyncArrange (this);
 			}
 		}
@@ -157,7 +143,9 @@ namespace Epsitec.Common.Widgets
 			
 			MenuWindow window = MenuItem.GetMenuWindow (this) as MenuWindow;
 			
-			pos.Y -= this.Height;
+			Layouts.LayoutContext.SyncArrange (this);
+			
+			pos.Y -= this.ActualHeight;
 			pos.X -= this.shadow.Left;
 			pos.Y += this.shadow.Top;
 			
@@ -178,8 +166,10 @@ namespace Epsitec.Common.Widgets
 			
 			MenuWindow window = MenuItem.GetMenuWindow (this) as MenuWindow;
 			Window     owner  = parent.Window;
+
+			Layouts.LayoutContext.SyncArrange (this);
 			
-			pos.Y -= this.Height;
+			pos.Y -= this.ActualHeight;
 			pos.X -= this.shadow.Left;
 			pos.Y += this.shadow.Top;
 			
@@ -201,8 +191,10 @@ namespace Epsitec.Common.Widgets
 			
 			MenuWindow window = MenuItem.GetMenuWindow (this) as MenuWindow;
 			Window     owner  = parent.Window;
+
+			Layouts.LayoutContext.SyncArrange (this);
 			
-			pos.Y -= this.Height;
+			pos.Y -= this.ActualHeight;
 			pos.X -= this.shadow.Left;
 			pos.Y += this.shadow.Top;
 			
@@ -266,31 +258,26 @@ namespace Epsitec.Common.Widgets
 			return new Drawing.Size (dx, dy);
 		}
 
-		public override void Invalidate(Drawing.Rectangle rect)
+		public override void InvalidateRectangle(Drawing.Rectangle rect, bool sync)
 		{
 			if (this.IsHorizontal && this.IsVisible)
 			{
-				if (this.Parent != null)
+				Window window = this.Window;
+				
+				if ((window != null) &&
+					(window.IsSyncPaintDisabled == false))
 				{
-					Window window = this.Window;
+					window.SynchronousRepaint ();
 					
-					if (window != null)
-					{
-						if (window.IsSyncPaintDisabled == false)
-						{
-							window.SynchronousRepaint ();
-							
-							this.Parent.Invalidate (this.MapClientToParent (rect));
-							
-							window.SynchronousRepaint ();
-							
-							return;
-						}
-					}
+					this.RootParent.Invalidate (this.MapClientToRoot (rect));
+					
+					window.SynchronousRepaint ();
+					
+					return;
 				}
 			}
 			
-			base.Invalidate(rect);
+			base.InvalidateRectangle (rect, sync);
 		}
 		
 		
@@ -340,8 +327,8 @@ namespace Epsitec.Common.Widgets
 		{
 			if (this.is_connected == false)
 			{
-				this.Behavior.Accepted += new Support.EventHandler (this.HandleBehaviorAccepted);
-				this.Behavior.Rejected += new Support.EventHandler (this.HandleBehaviorRejected);
+				this.Behavior.Accepted += new EventHandler (this.HandleBehaviorAccepted);
+				this.Behavior.Rejected += new EventHandler (this.HandleBehaviorRejected);
 				
 				this.is_connected = true;
 			}
@@ -358,8 +345,8 @@ namespace Epsitec.Common.Widgets
 					this.open_button = null;
 				}
 				
-				this.Behavior.Accepted -= new Support.EventHandler (this.HandleBehaviorAccepted);
-				this.Behavior.Rejected -= new Support.EventHandler (this.HandleBehaviorRejected);
+				this.Behavior.Accepted -= new EventHandler (this.HandleBehaviorAccepted);
+				this.Behavior.Rejected -= new EventHandler (this.HandleBehaviorRejected);
 				
 				this.is_connected = false;
 			}
@@ -456,7 +443,7 @@ namespace Epsitec.Common.Widgets
 				}
 				else
 				{
-					Drawing.Point test = Helpers.VisualTree.MapVisualToScreen (item, new Drawing.Point (item.Width, 0));
+					Drawing.Point test = Helpers.VisualTree.MapVisualToScreen (item, new Drawing.Point (item.ActualWidth, 0));
 					
 					test.X += size.Width;
 					
@@ -469,7 +456,7 @@ namespace Epsitec.Common.Widgets
 						//	de son parent :
 						
 						animation = Animation.RollRight;
-						location  = Helpers.VisualTree.MapVisualToScreen (item, new Drawing.Point (item.Width, item.Height));
+						location  = Helpers.VisualTree.MapVisualToScreen (item, new Drawing.Point (item.ActualWidth, item.ActualHeight));
 						
 						location.X -= this.menu.shadow.Left;
 						location.Y -= size.Height - this.menu.shadow.Top - 1;
@@ -480,7 +467,7 @@ namespace Epsitec.Common.Widgets
 						//	le sous-menu à gauche :
 						
 						animation = Animation.RollLeft;
-						location  = Helpers.VisualTree.MapVisualToScreen (item, new Drawing.Point (0, item.Height));
+						location  = Helpers.VisualTree.MapVisualToScreen (item, new Drawing.Point (0, item.ActualHeight));
 						
 						location.X -= size.Width + this.menu.shadow.Left;
 						location.Y -= size.Height - this.menu.shadow.Top - 1;
@@ -515,7 +502,7 @@ namespace Epsitec.Common.Widgets
 		{
 			MenuItem item = widget as MenuItem;
 			
-			item.Size = item.GetBestFitSize ();
+			item.PreferredSize = item.GetBestFitSize ();
 			item.DefineMenuOrientation (this.MenuOrientation);
 			
 			this.Children.Add (item);
@@ -575,8 +562,7 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void OnAccepted()
 		{
-			Support.EventHandler handler = (Support.EventHandler) this.GetUserEventHandler ("Accepted");
-			
+			EventHandler handler = (EventHandler) this.GetUserEventHandler ("Accepted");
 			if (handler != null)
 			{
 				handler (this);
@@ -585,8 +571,7 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void OnRejected()
 		{
-			Support.EventHandler handler = (Support.EventHandler) this.GetUserEventHandler ("Rejected");
-			
+			EventHandler handler = (EventHandler) this.GetUserEventHandler ("Rejected");
 			if (handler != null)
 			{
 				handler (this);
@@ -594,7 +579,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public event Support.EventHandler		Accepted
+		public event EventHandler				Accepted
 		{
 			add
 			{
@@ -605,7 +590,8 @@ namespace Epsitec.Common.Widgets
 				this.RemoveUserEventHandler ("Accepted", value);
 			}
 		}
-		public event Support.EventHandler		Rejected
+
+		public event EventHandler				Rejected
 		{
 			add
 			{

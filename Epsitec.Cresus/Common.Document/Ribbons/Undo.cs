@@ -7,7 +7,6 @@ namespace Epsitec.Common.Document.Ribbons
 	/// <summary>
 	/// La classe Undo gère les commandes undo/redo.
 	/// </summary>
-	[SuppressBundleSupport]
 	public class Undo : Abstract
 	{
 		public Undo() : base()
@@ -18,7 +17,7 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonRedo = this.CreateIconButton("Redo", "Large");
 			this.buttonList = this.CreateMenuButton ("UndoRedoList", Res.Strings.Action.UndoRedoList, new MessageEventHandler (this.HandleListPressed));
 			
-			this.UpdateClientGeometry();
+//			this.UpdateClientGeometry();
 		}
 		
 		protected override void Dispose(bool disposing)
@@ -47,21 +46,21 @@ namespace Epsitec.Common.Document.Ribbons
 
 			if ( this.buttonUndo == null )  return;
 
-			double dx = this.buttonUndo.DefaultWidth;
-			double dy = this.buttonUndo.DefaultHeight;
+			double dx = this.buttonUndo.PreferredWidth;
+			double dy = this.buttonUndo.PreferredHeight;
 
 			Rectangle rect = this.UsefulZone;
 			rect.Width  = dx*1.5;
 			rect.Height = dy*1.5;
 			rect.Offset(0, dy*0.5);
-			this.buttonUndo.Bounds = rect;
+			this.buttonUndo.SetManualBounds(rect);
 			rect.Offset(dx*1.5, 0);
-			this.buttonRedo.Bounds = rect;
+			this.buttonRedo.SetManualBounds(rect);
 
 			rect = this.UsefulZone;
 			rect.Width  = dx*1.5*2;
 			rect.Height = dy*0.5;
-			this.buttonList.Bounds = rect;
+			this.buttonList.SetManualBounds(rect);
 		}
 
 
@@ -83,7 +82,7 @@ namespace Epsitec.Common.Document.Ribbons
 			if ( button == null )  return;
 			VMenu menu = this.document.Modifier.CreateUndoRedoMenu(null);
 			menu.Host = this;
-			menu.MinWidth = button.Width;
+			menu.MinWidth = button.ActualWidth;
 			TextFieldCombo.AdjustComboSize(button, menu);
 			menu.ShowAsComboList(button, Point.Zero, button);
 		}

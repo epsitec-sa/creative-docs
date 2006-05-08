@@ -1425,8 +1425,8 @@ namespace Epsitec.Common.Drawing
 		{
 			WindowRoot root = sender as WindowRoot;
 			
-			int dx = (int) root.Width;
-			int dy = (int) root.Height;
+			int dx = (int) root.Client.Size.Width;
+			int dy = (int) root.Client.Size.Height;
 			
 			e.Graphics.SolidRenderer.Clear4Colors (10, 10, dx - 20, dy - 20,
 				Color.FromRgb (0.75, 0, 0),

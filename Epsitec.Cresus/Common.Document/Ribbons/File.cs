@@ -7,7 +7,6 @@ namespace Epsitec.Common.Document.Ribbons
 	/// <summary>
 	/// La classe File correspond au menu fichiers.
 	/// </summary>
-	[SuppressBundleSupport]
 	public class File : Abstract
 	{
 		public File() : base()
@@ -26,7 +25,7 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonOpenModel = this.CreateIconButton("OpenModel");
 			this.buttonSaveModel = this.CreateIconButton("SaveModel");
 			
-			this.UpdateClientGeometry();
+//			this.UpdateClientGeometry();
 		}
 		
 		protected override void Dispose(bool disposing)
@@ -55,48 +54,48 @@ namespace Epsitec.Common.Document.Ribbons
 
 			if ( this.buttonNew == null )  return;
 
-			double dx = this.buttonNew.DefaultWidth;
-			double dy = this.buttonNew.DefaultHeight;
+			double dx = this.buttonNew.PreferredWidth;
+			double dy = this.buttonNew.PreferredHeight;
 
 			Rectangle rect = this.UsefulZone;
 			rect.Left += 22*1.5*3 + 4 + 22*2;
 			rect.Width = this.separatorWidth;
-			this.separator.Bounds = rect;
+			this.separator.SetManualBounds(rect);
 
 			rect = this.UsefulZone;
 			rect.Width  = dx*1.5;
 			rect.Height = dy*1.5;
 			rect.Offset(0, dy*0.5);
-			this.buttonOpen.Bounds = rect;
+			this.buttonOpen.SetManualBounds(rect);
 			rect.Offset(dx*1.5, 0);
-			this.buttonSave.Bounds = rect;
+			this.buttonSave.SetManualBounds(rect);
 			rect.Offset(dx*1.5, 0);
-			this.buttonPrint.Bounds = rect;
+			this.buttonPrint.SetManualBounds(rect);
 
 			rect = this.UsefulZone;
 			rect.Width  = dx*1.5;
 			rect.Height = dy*0.5;
-			this.buttonLastFiles.Bounds = rect;
+			this.buttonLastFiles.SetManualBounds(rect);
 
 			rect = this.UsefulZone;
 			rect.Width  = dx;
 			rect.Height = dy;
 			rect.Offset(dx*1.5*3+4, dy+5);
-			this.buttonNew.Bounds = rect;
+			this.buttonNew.SetManualBounds(rect);
 			rect.Offset(dx, 0);
-			this.buttonExport.Bounds = rect;
+			this.buttonExport.SetManualBounds(rect);
 			rect.Offset(dx+this.separatorWidth, 0);
-			this.buttonOpenModel.Bounds = rect;
+			this.buttonOpenModel.SetManualBounds(rect);
 
 			rect = this.UsefulZone;
 			rect.Width  = dx;
 			rect.Height = dy;
 			rect.Offset(dx*1.5*3+4, 0);
-			this.buttonSaveAs.Bounds = rect;
+			this.buttonSaveAs.SetManualBounds(rect);
 			rect.Offset(dx, 0);
-			this.buttonCloseAll.Bounds = rect;
+			this.buttonCloseAll.SetManualBounds(rect);
 			rect.Offset(dx+this.separatorWidth, 0);
-			this.buttonSaveModel.Bounds = rect;
+			this.buttonSaveModel.SetManualBounds(rect);
 		}
 
 
@@ -108,7 +107,7 @@ namespace Epsitec.Common.Document.Ribbons
 			VMenu menu = this.BuildLastFilenamesMenu();
 			if ( menu == null )  return;
 			menu.Host = this;
-			menu.MinWidth = button.Width;
+			menu.MinWidth = button.ActualWidth;
 			TextFieldCombo.AdjustComboSize(button, menu);
 			menu.ShowAsComboList(button, Point.Zero, button);
 		}

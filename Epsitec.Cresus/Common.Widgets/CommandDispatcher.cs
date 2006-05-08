@@ -2,6 +2,7 @@
 //	Responsable: Pierre ARNAUD
 
 using System.Text.RegularExpressions;
+using System.Collections.Generic;
 
 namespace Epsitec.Common.Widgets
 {
@@ -483,19 +484,6 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public static CommandDispatcher[] ToArray(CommandDispatcher dispatcher)
-		{
-			if (dispatcher == null)
-			{
-				return new CommandDispatcher[0];
-			}
-			else
-			{
-				return new CommandDispatcher[] { dispatcher };
-			}
-		}
-		
-		
 		public static bool IsSimpleCommand(string command)
 		{
 			if (command == null)
@@ -640,18 +628,11 @@ namespace Epsitec.Common.Widgets
 		#endregion
 		
 		#region ICommandDispatcherHost Members
-		public CommandDispatcher[]				CommandDispatchers
+		public IEnumerable<CommandDispatcher> GetCommandDispatchers()
 		{
-			get
+			if (this.master != null)
 			{
-				if (this.master == null)
-				{
-					return new CommandDispatcher[0];
-				}
-				else
-				{
-					return new CommandDispatcher[1] { this.master };
-				}
+				yield return this.master;
 			}
 		}
 		#endregion

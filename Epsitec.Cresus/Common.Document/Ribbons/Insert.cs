@@ -7,7 +7,6 @@ namespace Epsitec.Common.Document.Ribbons
 	/// <summary>
 	/// La classe Insert permet de choisir un élément à insérer dans le texte.
 	/// </summary>
-	[SuppressBundleSupport]
 	public class Insert : Abstract
 	{
 		public Insert() : base()
@@ -19,7 +18,7 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonQuad     = this.CreateIconButton("TextInsertQuad");
 			this.buttonGlyphs   = this.CreateIconButton("Glyphs");
 			
-			this.UpdateClientGeometry();
+//			this.UpdateClientGeometry();
 		}
 		
 		protected override void Dispose(bool disposing)
@@ -48,8 +47,8 @@ namespace Epsitec.Common.Document.Ribbons
 
 			if ( this.buttonGlyphs == null )  return;
 
-			double dx = this.buttonGlyphs.DefaultWidth;
-			double dy = this.buttonGlyphs.DefaultHeight;
+			double dx = this.buttonGlyphs.PreferredWidth;
+			double dy = this.buttonGlyphs.PreferredHeight;
 
 			Rectangle rect = this.UsefulZone;
 
@@ -57,16 +56,16 @@ namespace Epsitec.Common.Document.Ribbons
 			rect.Width  = dx;
 			rect.Height = dy;
 			rect.Offset(0, dy+5);
-			this.buttonNewFrame.Bounds = rect;
+			this.buttonNewFrame.SetManualBounds(rect);
 			rect.Offset(20, 0);
-			this.buttonNewPage.Bounds = rect;
+			this.buttonNewPage.SetManualBounds(rect);
 
 			rect = this.UsefulZone;
 			rect.Width  = dx;
 			rect.Height = dy;
-			this.buttonQuad.Bounds = rect;
+			this.buttonQuad.SetManualBounds(rect);
 			rect.Offset(20, 0);
-			this.buttonGlyphs.Bounds = rect;
+			this.buttonGlyphs.SetManualBounds(rect);
 		}
 
 

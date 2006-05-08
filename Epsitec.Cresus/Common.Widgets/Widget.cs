@@ -1,47 +1,21 @@
 //	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
+using System.Collections.Generic;
+
 namespace Epsitec.Common.Widgets
 {
-	using ContentAlignment = Drawing.ContentAlignment;
-	using BundleAttribute  = Support.BundleAttribute;
 	
 	
-	public delegate bool WalkWidgetCallback(Widget widget);
-	
-	[System.Flags] public enum ActiveState
-	{
-		No			= 0,
-		Yes			= (int) WidgetState.ActiveYes,
-		Maybe		= (int) WidgetState.ActiveMaybe,
-	}
-	
-	
-	#region WidgetState enum
-	[System.Flags] public enum WidgetState : uint
-	{
-		None			= 0x00000000,				//	=> neutre
-		
-		ActiveYes		= 0x00000001,				//	=> mode ActiveState.Yes
-		ActiveMaybe		= 0x00000002,				//	=> mode ActiveState.Maybe
-		ActiveMask		= ActiveYes | ActiveMaybe,
-		
-		Enabled			= 0x00010000,				//	=> reçoit des événements
-		Focused			= 0x00020000,				//	=> reçoit les événements clavier
-		Entered			= 0x00040000,				//	=> contient la souris
-		Selected		= 0x00080000,				//	=> sélectionné
-		Engaged			= 0x00100000,				//	=> pression en cours
-		Error			= 0x00200000,				//	=> signale une erreur
-		ThreeState		= 0x00400000,				//	=> accepte 3 états
-	}
-	#endregion
+	public delegate bool WidgetWalkChildrenCallback(Widget widget);
 	
 	#region InternalState enum
 	[System.Flags] public enum InternalState : uint
 	{
 		None				= 0,
 		
-		ChildrenChanged		= 0x00000001,		//	enfants ajoutés/supprimés
+		Disposing			= 0x00000001,
+		Disposed			= 0x00000002,
 		
 		Embedded			= 0x00000008,		//	=> widget appartient au parent (widgets composés)
 		
@@ -56,18 +30,7 @@ namespace Epsitec.Common.Widgets
 		PossibleContainer	= 0x01000000,		//	widget peut être la cible d'un drag & drop en mode édition
 		EditionEnabled		= 0x02000000,		//	widget peut être édité
 		
-		SyncPaint			= 0x20000000,		//	peinture synchrone
-		
 		DebugActive			= 0x80000000		//	widget marqué pour le debug
-	}
-	#endregion
-	
-	#region ContainerLayoutMode enum
-	public enum ContainerLayoutMode : byte
-	{
-		None				= 0,				//	pas de préférence					
-		HorizontalFlow		= 1,				//	remplit horizontalement
-		VerticalFlow		= 2					//	remplit verticalement
 	}
 	#endregion
 	
@@ -76,21 +39,10 @@ namespace Epsitec.Common.Widgets
 	/// La classe Widget implémente la classe de base dont dérivent tous les
 	/// widgets de l'interface graphique ("controls" dans l'appellation Windows).
 	/// </summary>
-	public class Widget : Visual, Support.IBundleSupport, Support.Data.IPropertyProvider, Collections.IShortcutCollectionHost
+	public class Widget : Visual, Collections.IShortcutCollectionHost
 	{
 		public Widget()
 		{
-//-			this.AddEventHandler (Types.DependencyObjectTree.ChildrenProperty, this.HandleWidgetChildrenChanged);
-			
-			if (Support.ObjectBundler.IsBooting)
-			{
-				//	N'initialise rien, car cela prend passablement de temps... et de toute
-				//	manière, on n'a pas besoin de toutes ces informations pour pouvoir
-				//	utiliser IBundleSupport.
-				
-				return;
-			}
-			
 			if (Widget.DebugDispose)
 			{
 				System.Diagnostics.Debug.WriteLine (string.Format ("{1}+ Created {0}", this.GetType ().Name, this.VisualSerialId));
@@ -100,21 +52,13 @@ namespace Epsitec.Common.Widgets
 			this.InternalState |= InternalState.AutoResolveResRef;
 			
 			this.default_font_height = System.Math.Floor(this.DefaultFont.LineHeight*this.DefaultFontSize);
-			this.alignment           = this.DefaultAlignment;
 			
-			this.Size = new Drawing.Size (this.DefaultWidth, this.DefaultHeight);
-			
-			lock (Widget.alive_widgets)
+			lock (Widget.aliveWidgets)
 			{
-				Widget.alive_widgets.Add (new System.WeakReference (this));
+				Widget.aliveWidgets.Add (new System.WeakReference (this));
 			}
 		}
 
-//-		void HandleWidgetChildrenChanged(object sender, Epsitec.Common.Types.DependencyPropertyChangedEventArgs e)
-//-		{
-//-			System.Diagnostics.Debug.WriteLine (string.Format ("{0} has {1} children", this.ToString (), this.HasChildren ? this.Children.Count.ToString () : "no"));
-//-		}
-		
 		public Widget(Widget embedder) : this()
 		{
 			this.SetEmbedder (embedder);
@@ -135,7 +79,6 @@ namespace Epsitec.Common.Widgets
 			Res.Initialise (typeof (Widget), "Common.Widgets");
 			
 			Support.ImageProvider.Initialise ();
-			Support.ObjectBundler.Initialise ();
 			
 			System.Threading.Thread          thread  = System.Threading.Thread.CurrentThread;
 			System.Globalization.CultureInfo culture = thread.CurrentCulture;
@@ -176,197 +119,6 @@ namespace Epsitec.Common.Widgets
 		}
 		#endregion
 		
-		#region Interface IBundleSupport
-		public virtual string				PublicClassName
-		{
-			get { return this.GetType ().Name; }
-		}
-		
-		public virtual string				BundleName
-		{
-			get
-			{
-				string name = this.Name;
-				
-				if (name == "")
-				{
-					return null;
-				}
-				
-				return name;
-			}
-		}
-		
-		void Support.IBundleSupport.AttachResourceManager(Support.ResourceManager resource_manager)
-		{
-			System.Diagnostics.Debug.Assert (this.resource_manager == null);
-			System.Diagnostics.Debug.Assert (resource_manager != null);
-			
-			this.ResourceManager = resource_manager;
-		}
-		
-		public virtual void RestoreFromBundle(Support.ObjectBundler bundler, Support.ResourceBundle bundle)
-		{
-//			this.SuspendLayout ();
-			
-			System.Diagnostics.Debug.Assert (this.resource_manager != null);
-			System.Diagnostics.Debug.Assert (this.resource_manager == bundler.ResourceManager);
-			
-			
-			//	L'ObjectBundler sait initialiser la plupart des propriétés simples (celles
-			//	qui sont marquées par l'attribut [Bundle]), mais il ne sait pas comment
-			//	restitue les enfants du widget :
-			
-			Support.ResourceBundle.FieldList widget_list = bundle["widgets"].AsList;
-			
-			if (widget_list != null)
-			{
-				//	Notre bundle contient une liste de sous-bundles contenant les descriptions des
-				//	widgets enfants. On les restitue nous-même et on les ajoute dans la liste des
-				//	enfants.
-				
-				foreach (Support.ResourceBundle.Field field in widget_list)
-				{
-					Support.ResourceBundle widget_bundle = field.AsBundle;
-					Widget widget = bundler.CreateFromBundle (widget_bundle) as Widget;
-					
-					this.Children.Add (widget);
-				}
-			}
-			
-			Support.ResourceBundle.FieldList validator_list = bundle["validators"].AsList;
-			
-			if (validator_list != null)
-			{
-				foreach (Support.ResourceBundle.Field field in validator_list)
-				{
-					Support.ResourceBundle validator_bundle = field.AsBundle;
-					Validators.AbstractValidator validator = bundler.CreateFromBundle (validator_bundle) as Validators.AbstractValidator;
-					
-					validator.InternalAttach (this);
-				}
-			}
-			
-//			this.ResumeLayout ();
-		}
-		
-		public virtual void SerializeToBundle(Support.ObjectBundler bundler, Support.ResourceBundle bundle)
-		{
-			if (this.HasChildren)
-			{
-				System.Collections.ArrayList list    = new System.Collections.ArrayList ();
-				Widget[]                     widgets = this.Children.Widgets;
-				
-				for (int i = 0; i < widgets.Length; i++)
-				{
-					if (! widgets[i].IsEmbedded)
-					{
-						Support.ResourceBundle child_bundle = bundler.CreateEmptyBundle (widgets[i].BundleName);
-						
-						bundler.FillBundleFromObject (child_bundle, widgets[i]);
-						
-						list.Add (child_bundle);
-					}
-				}
-				
-				if (list.Count > 0)
-				{
-					Support.ResourceBundle.Field field = bundle.CreateField (Support.ResourceFieldType.List, list);
-					field.SetName ("widgets");
-					bundle.Add (field);
-				}
-			}
-			
-			if (this.validator != null)
-			{
-				System.Collections.ArrayList list       = new System.Collections.ArrayList ();
-				IValidator[]                 validators = MulticastValidator.ToArray (this.validator);
-				
-				for (int i = 0; i < validators.Length; i++)
-				{
-					if (this.ShouldSerializeValidator (validators[i]) == false)
-					{
-						//	La classe ne veut pas que ce validateur soit sérialisé. On le saute donc tout
-						//	simplement.
-					}
-					else if (validators[i] is Support.IBundleSupport)
-					{
-						Support.ResourceBundle validator_bundle = bundler.CreateEmptyBundle (string.Format (System.Globalization.CultureInfo.InvariantCulture, "v{0}", i));
-						
-						bundler.FillBundleFromObject (validator_bundle, validators[i]);
-						
-						list.Add (validator_bundle);
-					}
-					else
-					{
-						System.Diagnostics.Debug.WriteLine (string.Format ("Validator {0} cannot be serialized.", validators[i].GetType ().Name));
-					}
-				}
-				
-				if (list.Count > 0)
-				{
-					Support.ResourceBundle.Field field = bundle.CreateField (Support.ResourceFieldType.List, list);
-					field.SetName ("validators");
-					bundle.Add (field);
-				}
-			}
-		}
-		#endregion
-		
-		#region IPropertyProvider Members
-		public string[] GetPropertyNames()
-		{
-			if (this.property_hash == null)
-			{
-				return new string[0];
-			}
-			
-			string[] names = new string[this.property_hash.Count];
-			this.property_hash.Keys.CopyTo (names, 0);
-			System.Array.Sort (names);
-			
-			return names;
-		}
-		
-		public void SetProperty(string key, object value)
-		{
-			if (this.property_hash == null)
-			{
-				this.property_hash = new System.Collections.Hashtable ();
-			}
-			
-			this.property_hash[key] = value;
-		}
-		
-		public object GetProperty(string key)
-		{
-			if (this.property_hash != null)
-			{
-				return this.property_hash[key];
-			}
-			
-			return null;
-		}
-		
-		public bool IsPropertyDefined(string key)
-		{
-			if (this.property_hash != null)
-			{
-				return this.property_hash.Contains (key);
-			}
-			
-			return false;
-		}
-		
-		public void ClearProperty(string key)
-		{
-			if (this.property_hash != null)
-			{
-				this.property_hash.Remove (key);
-			}
-		}
-		#endregion
-		
 		protected override void Dispose(bool disposing)
 		{
 			if (Widget.DebugDispose)
@@ -376,6 +128,8 @@ namespace Epsitec.Common.Widgets
 			
 			if (disposing)
 			{
+				this.internal_state |= InternalState.Disposing;
+				
 				if (this.HasChildren)
 				{
 					Widget[] widgets = this.Children.Widgets;
@@ -396,6 +150,8 @@ namespace Epsitec.Common.Widgets
 					this.Disposed (this);
 					this.Disposed = null;
 				}
+				
+				this.internal_state |= InternalState.Disposed;
 			}
 		}
 		
@@ -424,11 +180,11 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return Widget.debug_dispose;
+				return Widget.debugDispose;
 			}
 			set
 			{
-				Widget.debug_dispose = value;
+				Widget.debugDispose = value;
 			}
 		}
 		
@@ -436,14 +192,14 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				System.Collections.ArrayList alive = new System.Collections.ArrayList ();
+				List<System.WeakReference> alive = new List<System.WeakReference> ();
 				
-				lock (Widget.alive_widgets)
+				lock (Widget.aliveWidgets)
 				{
 					//	Passe en revue tous les widgets connus (même les décédés) et reconstruit
 					//	une liste ne contenant que les widgets vivants :
 					
-					foreach (System.WeakReference weak_ref in Widget.alive_widgets)
+					foreach (System.WeakReference weak_ref in Widget.aliveWidgets)
 					{
 						if (weak_ref.IsAlive)
 						{
@@ -454,7 +210,7 @@ namespace Epsitec.Common.Widgets
 					//	Remplace la liste des widgets connus par la liste à jour qui vient d'être
 					//	construite :
 					
-					Widget.alive_widgets = alive;
+					Widget.aliveWidgets = alive;
 				}
 				
 				return alive.Count;
@@ -467,9 +223,9 @@ namespace Epsitec.Common.Widgets
 			{
 				System.Collections.ArrayList alive = new System.Collections.ArrayList ();
 				
-				lock (Widget.alive_widgets)
+				lock (Widget.aliveWidgets)
 				{
-					foreach (System.WeakReference weak_ref in Widget.alive_widgets)
+					foreach (System.WeakReference weak_ref in Widget.aliveWidgets)
 					{
 						if (weak_ref.IsAlive)
 						{
@@ -502,25 +258,6 @@ namespace Epsitec.Common.Widgets
 				if (this.IsEntered)
 				{
 					this.Window.MouseCursor = this.MouseCursor;
-				}
-			}
-		}
-		
-		
-		
-		public ContentAlignment						Alignment
-		{
-			get
-			{
-				return this.alignment;
-			}
-			set
-			{
-				if (this.alignment != value)
-				{
-					this.alignment = value;
-					this.UpdateTextLayout ();
-					this.Invalidate ();
 				}
 			}
 		}
@@ -572,11 +309,6 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public virtual ContentAlignment				DefaultAlignment
-		{
-			get { return ContentAlignment.MiddleLeft; }
-		}
-
 		public virtual Drawing.Font					DefaultFont
 		{
 			get { return Drawing.Font.DefaultFont; }
@@ -587,29 +319,10 @@ namespace Epsitec.Common.Widgets
 			get { return Drawing.Font.DefaultFontSize; }
 		}
 		
-		public virtual double						DefaultWidth
+		public static double						DefaultFontHeight
 		{
-			get { return 80; }
+			get { return 12.0; }
 		}
-		public virtual double						DefaultHeight
-		{
-			get { return 20; }
-		}
-		public virtual double						DefaultFontHeight
-		{
-			get { return this.default_font_height; }
-		}
-		
-		public virtual Drawing.Size					DefaultMinSize
-		{
-			get { return new Drawing.Size (4, 4); }
-		}
-		
-		public virtual Drawing.Size					DefaultMaxSize
-		{
-			get { return Drawing.Size.MaxValue; }
-		}
-		
 		
 		public bool									IsCommand
 		{
@@ -635,47 +348,6 @@ namespace Epsitec.Common.Widgets
 				}
 				
 				return false;
-			}
-		}
-		
-		
-		public bool									IsActive
-		{
-			get
-			{
-				return this.ActiveState == ActiveState.Yes;
-			}
-		}
-		
-		public bool									IsEntered
-		{
-			get
-			{
-				return (this.widget_state & WidgetState.Entered) != 0;
-			}
-		}
-		
-		public bool									IsSelected
-		{
-			get
-			{
-				return (this.widget_state & WidgetState.Selected) != 0;
-			}
-		}
-		
-		public bool									IsEngaged
-		{
-			get
-			{
-				return (this.widget_state & WidgetState.Engaged) != 0;
-			}
-		}
-		
-		public bool									IsError
-		{
-			get
-			{
-				return (this.widget_state & WidgetState.Error) != 0;
 			}
 		}
 		
@@ -737,6 +409,22 @@ namespace Epsitec.Common.Widgets
 				//	temps valide.
 				
 				return true;
+			}
+		}
+
+		public bool									IsDisposing
+		{
+			get
+			{
+				return (this.internal_state & InternalState.Disposing) != 0;
+			}
+		}
+
+		public bool									IsDisposed
+		{
+			get
+			{
+				return (this.internal_state & InternalState.Disposed) != 0;
 			}
 		}
 		
@@ -801,48 +489,49 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public ActiveState							ActiveState
+		public WidgetPaintState							PaintState
 		{
 			get
 			{
-				return (ActiveState) (this.widget_state & WidgetState.ActiveMask);
-			}
-			set
-			{
-				if (this.ActiveState != value)
+				WidgetPaintState state = WidgetPaintState.None;
+				
+				if (this.IsEntered)
 				{
-					this.widget_state &= ~WidgetState.ActiveMask;
-					this.widget_state |= (WidgetState) value;
-					
-					this.OnActiveStateChanged ();
-					this.Invalidate (InvalidateReason.ActiveStateChanged);
+					state |= WidgetPaintState.Entered;
 				}
-			}
-		}
-		
-		public WidgetState							PaintState
-		{
-			get
-			{
-				WidgetState mask  = WidgetState.ActiveMask |
-					/**/			WidgetState.Entered |
-					/**/			WidgetState.Engaged |
-					/**/			WidgetState.Selected |
-					/**/			WidgetState.Error;
-				
-				WidgetState state = this.widget_state & mask;
-				
+				if (this.IsEngaged)
+				{
+					state |= WidgetPaintState.Engaged;
+				}
+				if (this.IsSelected)
+				{
+					state |= WidgetPaintState.Selected;
+				}
+				if (this.InError)
+				{
+					state |= WidgetPaintState.Error;
+				}
 				if (this.IsEnabled)
 				{
-					state |= WidgetState.Enabled;
+					state |= WidgetPaintState.Enabled;
 				}
 				if (this.IsFocused)
 				{
-					state |= WidgetState.Focused;
+					state |= WidgetPaintState.Focused;
 				}
 				if (this.AcceptThreeState)
 				{
-					state |= WidgetState.ThreeState;
+					state |= WidgetPaintState.ThreeState;
+				}
+				switch (this.ActiveState)
+				{
+					case ActiveState.Yes:
+						state |= WidgetPaintState.ActiveYes;
+						break;
+
+					case ActiveState.Maybe:
+						state |= WidgetPaintState.ActiveMaybe;
+						break;
 				}
 				
 				return state;
@@ -912,23 +601,6 @@ namespace Epsitec.Common.Widgets
 				return base.Parent as Widget;
 			}
 		}
-		
-		public virtual Window						Window
-		{
-			get
-			{
-				Widget root = this.RootParent;
-				
-				if ((root == null) ||
-					(root == this))
-				{
-					return null;
-				}
-				
-				return root.Window;
-			}
-		}
-		
 		
 		public virtual Support.OpletQueue			OpletQueue
 		{
@@ -1051,7 +723,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		[Bundle]			public string			Text
+		public string								Text
 		{
 			get
 			{
@@ -1172,7 +844,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		[Bundle]			public int				TabIndex
+		public int									TabIndex
 		{
 			get { return this.tab_index; }
 			set
@@ -1243,51 +915,13 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		[Bundle]			public string			BindingInfo
-		{
-			get
-			{
-				if (this.IsPropertyDefined (Widget.prop_binding))
-				{
-					return this.GetProperty (Widget.prop_binding) as string;
-				}
-				
-				return null;
-			}
-			set
-			{
-				if (this.BindingInfo != value)
-				{
-					if (value == null)
-					{
-						this.ClearProperty (Widget.prop_binding);
-					}
-					else
-					{
-						this.SetProperty (Widget.prop_binding, value);
-					}
-					
-					this.OnBindingInfoChanged ();
-				}
-			}
-		}
-		
-		
-		#region Serialization support
-		protected virtual bool ShouldSerializeLocation()
-		{
-			return (this.Dock == DockStyle.None) && (this.Anchor == AnchorStyles.None);
-		}
-		
-		protected virtual bool ShouldSerializeSize()
-		{
-			return (this.Dock != DockStyle.Fill);
-		}
-		#endregion
 		
 		public virtual Drawing.Size GetBestFitSize()
 		{
-			return new Drawing.Size (this.DefaultWidth, this.DefaultHeight);
+			Types.DependencyPropertyMetadata metadataDx = Visual.PreferredWidthProperty.GetMetadata (this);
+			Types.DependencyPropertyMetadata metadataDy = Visual.PreferredHeightProperty.GetMetadata (this);
+
+			return new Drawing.Size ((double) metadataDx.DefaultValue, (double) metadataDy.DefaultValue);
 		}
 		
 		public virtual Drawing.Point GetBaseLine()
@@ -1432,18 +1066,9 @@ namespace Epsitec.Common.Widgets
 		
 		public virtual void SetError(bool value)
 		{
-			if (this.IsError != value)
+			if (this.InError != value)
 			{
-				if (value)
-				{
-					this.widget_state |= WidgetState.Error;
-				}
-				else
-				{
-					this.widget_state &= ~WidgetState.Error;
-				}
-				
-				this.Invalidate ();
+				this.SetValue (Visual.InErrorProperty, value);
 			}
 		}
 		
@@ -1496,29 +1121,24 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public void SetSelected(bool selected)
+		public void SetSelected(bool value)
 		{
-			if ((this.widget_state & WidgetState.Selected) == 0)
+			if (this.IsSelected != value)
 			{
-				if (selected)
+				this.SetValue (Visual.SelectedProperty, value);
+				
+				if (value)
 				{
-					this.widget_state |= WidgetState.Selected;
 					this.OnSelected ();
-					this.Invalidate (InvalidateReason.SelectedChanged);
 				}
-			}
-			else
-			{
-				if (!selected)
+				else
 				{
-					this.widget_state &= ~WidgetState.Selected;
 					this.OnDeselected ();
-					this.Invalidate (InvalidateReason.SelectedChanged);
 				}
 			}
 		}
 		
-		public void SetEngaged(bool engaged)
+		public void SetEngaged(bool value)
 		{
 			Window window = this.Window;
 			
@@ -1531,46 +1151,28 @@ namespace Epsitec.Common.Widgets
 			{
 				return;
 			}
-			
-			if ((this.internal_state & InternalState.Frozen) != 0)
+
+			if (this.IsFrozen)
 			{
 				return;
 			}
 			
-			if ((this.widget_state & WidgetState.Engaged) == 0)
+			if (this.IsEngaged != value)
 			{
-				if (engaged)
+				this.SetValue (Visual.EngagedProperty, value);
+				
+				if (value)
 				{
-					this.widget_state |= WidgetState.Engaged;
 					window.EngagedWidget = this;
 					this.OnEngaged ();
-					this.Invalidate (InvalidateReason.EngagedChanged);
 				}
-			}
-			else
-			{
-				if (!engaged)
+				else
 				{
-					this.widget_state &= ~ WidgetState.Engaged;
 					window.EngagedWidget = null;
 					this.OnDisengaged ();
-					this.Invalidate (InvalidateReason.EngagedChanged);
 				}
 			}
 		}
-		
-		public void SetSyncPaint(bool enabled)
-		{
-			if (enabled)
-			{
-				this.internal_state |= InternalState.SyncPaint;
-			}
-			else
-			{
-				this.internal_state &= ~InternalState.SyncPaint;
-			}
-		}
-		
 		
 		public CommandState GetCommandState()
 		{
@@ -1641,18 +1243,19 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		protected void SetEntered(bool entered)
+		protected void SetEntered(bool value)
 		{
-			if (this.IsEntered != entered)
+			if (this.IsEntered != value)
 			{
 				Window window = this.Window;
 				Message message = null;
 				
-				if (entered)
+				if (value)
 				{
 					Widget.ExitWidgetsNotParentOf (this);
-					Widget.entered_widgets.Add (this);
-					this.widget_state |= WidgetState.Entered;
+					Widget.enteredWidgets.Add (this);
+
+					this.SetValue (Visual.EnteredProperty, value);
 					
 					if ((this.Parent != null) &&
 						(this.Parent.IsEntered == false) &&
@@ -1667,8 +1270,9 @@ namespace Epsitec.Common.Widgets
 				}
 				else
 				{
-					Widget.entered_widgets.Remove (this);
-					this.widget_state &= ~ WidgetState.Entered;
+					Widget.enteredWidgets.Remove (this);
+
+					this.SetValue (Visual.EnteredProperty, value);
 					
 					//	Il faut aussi supprimer les éventuels enfants encore marqués comme 'entered'.
 					//	Pour ce faire, on passe en revue tous les widgets à la recherche d'enfants
@@ -1676,9 +1280,9 @@ namespace Epsitec.Common.Widgets
 					
 					int i = 0;
 					
-					while (i < Widget.entered_widgets.Count)
+					while (i < Widget.enteredWidgets.Count)
 					{
-						Widget candidate = Widget.entered_widgets[i] as Widget;
+						Widget candidate = Widget.enteredWidgets[i];
 						
 						if (candidate.Parent == this)
 						{
@@ -1700,7 +1304,7 @@ namespace Epsitec.Common.Widgets
 					
 					this.OnExited (new MessageEventArgs (message, Message.CurrentState.LastPosition));
 				}
-				
+
 				this.MessageHandler (message);
 				
 				if (window != null)
@@ -1714,9 +1318,9 @@ namespace Epsitec.Common.Widgets
 		{
 			int i = 0;
 			
-			while (i < Widget.entered_widgets.Count)
+			while (i < Widget.enteredWidgets.Count)
 			{
-				Widget candidate = Widget.entered_widgets[i] as Widget;
+				Widget candidate = Widget.enteredWidgets[i];
 				
 				if (Helpers.VisualTree.IsAncestor (widget, candidate) == false)
 				{
@@ -1742,16 +1346,15 @@ namespace Epsitec.Common.Widgets
 		
 		public static void UpdateEntered(Window window, Message message)
 		{
-			int index = Widget.entered_widgets.Count;
+			int index = Widget.enteredWidgets.Count;
 			
 			while (index > 0)
 			{
 				index--;
 				
-				if (index < Widget.entered_widgets.Count)
+				if (index < Widget.enteredWidgets.Count)
 				{
-					Widget widget = Widget.entered_widgets[index] as Widget;
-					Widget.UpdateEntered (window, widget, message);
+					Widget.UpdateEntered (window, Widget.enteredWidgets[index], message);
 				}
 			}
 		}
@@ -1778,20 +1381,9 @@ namespace Epsitec.Common.Widgets
 		
 		public virtual bool HitTest(Drawing.Point point)
 		{
-			return this.Bounds.Contains (point);
+			return this.ActualBounds.Contains (point);
 		}
 		
-		
-		public virtual Drawing.Rectangle GetPaintBounds()
-		{
-			return this.GetShapeBounds ();
-		}
-		
-		
-		public virtual Drawing.Rectangle GetShapeBounds()
-		{
-			return this.Client.Bounds;
-		}
 		
 		public virtual Drawing.Rectangle GetClipBounds()
 		{
@@ -1813,78 +1405,34 @@ namespace Epsitec.Common.Widgets
 			return clip;
 		}
 		
-		public override void Invalidate()
+		public override void InvalidateRectangle(Drawing.Rectangle rect, bool sync)
 		{
-			bool invalidate = false;
-			
-			if (this.IsVisible)
+			if (this.Parent != null)
 			{
-				invalidate = true;
-			}
-			else
-			{
-				Window window = this.Window;
-				
-				if ((window == null) ||
-					(window.IsVisible == false))
+				if (sync)
 				{
-					invalidate = true;
-				}
-			}
-			
-			if (invalidate)
-			{
-				this.Invalidate (this.GetPaintBounds ());
-			}
-		}
-		
-		public override void Invalidate(Drawing.Rectangle rect)
-		{
-			bool invalidate = false;
-			
-			if (this.IsVisible)
-			{
-				invalidate = true;
-			}
-			else
-			{
-				Window window = this.Window;
-				
-				if ((window == null) ||
-					(window.IsVisible == false))
-				{
-					invalidate = true;
-				}
-			}
-			
-			if (invalidate)
-			{
-				if (this.Parent != null)
-				{
-					if ((this.InternalState & InternalState.SyncPaint) != 0)
+					Window window = this.Window;
+					
+					if (window != null)
 					{
-						Window window = this.Window;
-						
-						if (window != null)
+						if (window.IsSyncPaintDisabled)
 						{
-							if (window.IsSyncPaintDisabled)
-							{
-								this.Parent.Invalidate (this.MapClientToParent (rect));
-							}
-							else
-							{
-								window.SynchronousRepaint ();
-								this.Parent.Invalidate (this.MapClientToParent (rect));
-								window.PaintFilter = new WidgetPaintFilter (this);
-								window.SynchronousRepaint ();
-								window.PaintFilter = null;
-							}
+							this.Parent.Invalidate (this.MapClientToParent (rect));
+						}
+						else
+						{
+							window.SynchronousRepaint ();
+							
+							window.PaintFilter = new WidgetPaintFilter (this);
+							window.MarkForRepaint (this.MapClientToRoot (rect));
+							window.SynchronousRepaint ();
+							window.PaintFilter = null;
 						}
 					}
-					else
-					{
-						this.Parent.Invalidate (this.MapClientToParent (rect));
-					}
+				}
+				else
+				{
+					this.Parent.Invalidate (this.MapClientToParent (rect));
 				}
 			}
 		}
@@ -1897,22 +1445,36 @@ namespace Epsitec.Common.Widgets
 		
 		public virtual Drawing.Point MapParentToClient(Drawing.Point point)
 		{
-			Drawing.Point result = new Drawing.Point ();
-			
-			result.X = point.X - this.Left;
-			result.Y = point.Y - this.Bottom;
-			
-			return result;
+			if (this.IsDisposing)
+			{
+				return point;
+			}
+			else
+			{
+				Drawing.Point result = new Drawing.Point ();
+
+				result.X = point.X - this.ActualLocation.X;
+				result.Y = point.Y - this.ActualLocation.Y;
+
+				return result;
+			}
 		}
 		
 		public virtual Drawing.Point MapClientToParent(Drawing.Point point)
 		{
-			Drawing.Point result = new Drawing.Point ();
-			
-			result.X = point.X + this.Left;
-			result.Y = point.Y + this.Bottom;
-			
-			return result;
+			if (this.IsDisposing)
+			{
+				return point;
+			}
+			else
+			{
+				Drawing.Point result = new Drawing.Point ();
+
+				result.X = point.X + this.ActualLocation.X;
+				result.Y = point.Y + this.ActualLocation.Y;
+
+				return result;
+			}
 		}
 		
 		public virtual Drawing.Point MapRootToClient(Drawing.Point point)
@@ -1932,18 +1494,25 @@ namespace Epsitec.Common.Widgets
 		
 		public virtual Drawing.Point MapClientToRoot(Drawing.Point point)
 		{
-			Widget iter = this;
-			
-			//	On a le choix entre une solution récursive et une solution itérative. La version
-			//	itérative devrait être un petit peu plus rapide ici.
-			
-			while (iter != null)
+			if (this.IsDisposing)
 			{
-				point = iter.MapClientToParent (point);
-				iter = iter.Parent;
+				return point;
 			}
-			
-			return point;
+			else
+			{
+				Widget iter = this;
+
+				//	On a le choix entre une solution récursive et une solution itérative. La version
+				//	itérative devrait être un petit peu plus rapide ici.
+
+				while (iter != null)
+				{
+					point = iter.MapClientToParent (point);
+					iter = iter.Parent;
+				}
+
+				return point;
+			}
 		}
 		
 		
@@ -2103,22 +1672,36 @@ namespace Epsitec.Common.Widgets
 		
 		public virtual Drawing.Size MapParentToClient(Drawing.Size size)
 		{
-			Drawing.Size result = new Drawing.Size ();
-			
-			result.Width  = size.Width;
-			result.Height = size.Height;
-			
-			return result;
+			if (this.IsDisposing)
+			{
+				return size;
+			}
+			else
+			{
+				Drawing.Size result = new Drawing.Size ();
+
+				result.Width  = size.Width;
+				result.Height = size.Height;
+
+				return result;
+			}
 		}
 		
 		public virtual Drawing.Size MapClientToParent(Drawing.Size size)
 		{
-			Drawing.Size result = new Drawing.Size ();
-			
-			result.Width  = size.Width;
-			result.Height = size.Height;
-			
-			return result;
+			if (this.IsDisposing)
+			{
+				return size;
+			}
+			else
+			{
+				Drawing.Size result = new Drawing.Size ();
+
+				result.Width  = size.Width;
+				result.Height = size.Height;
+
+				return result;
+			}
 		}
 		
 		
@@ -2135,9 +1718,9 @@ namespace Epsitec.Common.Widgets
 			double model_offset  = model.GetBaseLine ().Y;
 			double widget_offset = widget.GetBaseLine ().Y;
 			
-			double y_bottom = model.Bottom + model_offset - widget_offset;
+			double y_bottom = model.ActualLocation.Y + model_offset - widget_offset;
 			
-			widget.Bounds = new Drawing.Rectangle (widget.Left, y_bottom, widget.Width, widget.Height);
+			widget.SetManualBounds(new Drawing.Rectangle (widget.ActualLocation.X, y_bottom, widget.ActualWidth, widget.ActualHeight));
 		}
 		
 		
@@ -2359,7 +1942,7 @@ namespace Epsitec.Common.Widgets
 			
 			CommandWidgetFinder finder = new CommandWidgetFinder ();
 			
-			this.WalkChildren (new WalkWidgetCallback (finder.Analyse));
+			this.WalkChildren (new WidgetWalkChildrenCallback (finder.Analyse));
 			
 			return finder.Widgets;
 		}
@@ -2372,7 +1955,7 @@ namespace Epsitec.Common.Widgets
 			
 			CommandWidgetFinder finder = new CommandWidgetFinder (command);
 			
-			this.WalkChildren (new WalkWidgetCallback (finder.Analyse));
+			this.WalkChildren (new WidgetWalkChildrenCallback (finder.Analyse));
 			
 			return finder.Widgets;
 		}
@@ -2385,7 +1968,7 @@ namespace Epsitec.Common.Widgets
 			
 			CommandWidgetFinder finder = new CommandWidgetFinder (regex);
 			
-			this.WalkChildren (new WalkWidgetCallback (finder.Analyse));
+			this.WalkChildren (new WidgetWalkChildrenCallback (finder.Analyse));
 			
 			return finder.Widgets;
 		}
@@ -2397,7 +1980,7 @@ namespace Epsitec.Common.Widgets
 			
 			CommandWidgetFinder finder = new CommandWidgetFinder (command);
 			
-			this.WalkChildren (new WalkWidgetCallback (finder.Analyse));
+			this.WalkChildren (new WidgetWalkChildrenCallback (finder.Analyse));
 			
 			if (finder.Widgets.Length > 0)
 			{
@@ -2584,9 +2167,9 @@ namespace Epsitec.Common.Widgets
 			System.Collections.ArrayList list = new System.Collections.ArrayList ();
 			System.Collections.ArrayList dead = new System.Collections.ArrayList ();
 			
-			lock (Widget.alive_widgets)
+			lock (Widget.aliveWidgets)
 			{
-				foreach (System.WeakReference weak_ref in Widget.alive_widgets)
+				foreach (System.WeakReference weak_ref in Widget.aliveWidgets)
 				{
 					//	On utilise la liste des widgets connus qui permet d'avoir accès immédiatement
 					//	à tous les widgets sans nécessiter de descente récursive :
@@ -2617,7 +2200,7 @@ namespace Epsitec.Common.Widgets
 				
 				foreach (System.WeakReference weak_ref in dead)
 				{
-					Widget.alive_widgets.Remove (weak_ref);
+					Widget.aliveWidgets.Remove (weak_ref);
 				}
 			}
 			
@@ -3190,26 +2773,16 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public virtual bool WalkChildren(WalkWidgetCallback callback)
+		public virtual bool WalkChildren(WidgetWalkChildrenCallback callback)
 		{
-			if (this.HasChildren == false)
-			{
-				return true;
-			}
+			//	Retourne true si on a parcouru tous les enfants.
 			
-			Widget[] children = this.Children.Widgets;
-			int  children_num = children.Length;
-			
-			for (int i = 0; i < children_num; i++)
+			foreach (Widget child in this.GetAllChildren ())
 			{
-				Widget widget = children[i];
-				
-				if (!callback (widget))
+				if (!callback (child))
 				{
 					return false;
 				}
-				
-				widget.WalkChildren (callback);
 			}
 			
 			return true;
@@ -3243,12 +2816,8 @@ namespace Epsitec.Common.Widgets
 		protected override void SetBoundsOverride(Drawing.Rectangle oldRect, Drawing.Rectangle newRect)
 		{
 			base.SetBoundsOverride(oldRect, newRect);
-			
-			if (this.TextLayout != null)
-			{
-				this.UpdateTextLayout ();
-			}
 
+			this.InvalidateTextLayout ();
 			this.UpdateClientGeometry ();
 		}
 
@@ -3260,11 +2829,23 @@ namespace Epsitec.Common.Widgets
 		{
 			if (this.text_layout != null)
 			{
-				this.text_layout.Alignment  = this.Alignment;
-				this.text_layout.LayoutSize = this.Client.Size;
+				if (this.IsActualGeometryValid)
+				{
+					this.text_layout.Alignment  = this.ContentAlignment;
+					this.text_layout.LayoutSize = this.Client.Size;
+				}
 			}
 		}
 
+		internal override void InvalidateTextLayout()
+		{
+			base.InvalidateTextLayout ();
+			
+			if (this.TextLayout != null)
+			{
+				this.UpdateTextLayout ();
+			}
+		}
 		
 		public virtual void PaintHandler(Drawing.Graphics graphics, Drawing.Rectangle repaint, IPaintFilter paint_filter)
 		{
@@ -3292,7 +2873,7 @@ namespace Epsitec.Common.Widgets
 				
 				Drawing.Rectangle original_clipping  = graphics.SaveClippingRectangle ();
 				Drawing.Transform original_transform = graphics.Transform;
-				Drawing.Transform graphics_transform = Drawing.Transform.FromTranslation (this.Location);
+				Drawing.Transform graphics_transform = Drawing.Transform.FromTranslation (this.ActualLocation);
 				
 				graphics.SetClippingRectangle (bounds);
 				
@@ -4168,18 +3749,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		protected override void OnSizeChanged(Types.DependencyPropertyChangedEventArgs e)
-		{
-		}
-		
-		protected virtual void OnLocationChanged()
-		{
-			if (this.LocationChanged != null)
-			{
-				this.LocationChanged (this);
-			}
-		}
-		
 		
 		
 		
@@ -4225,7 +3794,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		protected virtual void OnActiveStateChanged()
+		protected override void OnActiveStateChanged()
 		{
 			if ((this.ActiveState == ActiveState.Yes) &&
 				(this.Group != null) &&
@@ -4250,14 +3819,6 @@ namespace Epsitec.Common.Widgets
 			if (this.ValidatorChanged != null)
 			{
 				this.ValidatorChanged (this);
-			}
-		}
-		
-		protected virtual void OnBindingInfoChanged()
-		{
-			if (this.BindingInfoChanged != null)
-			{
-				this.BindingInfoChanged (this);
 			}
 		}
 		
@@ -4310,7 +3871,6 @@ namespace Epsitec.Common.Widgets
 		public event Support.EventHandler			HypertextHot;
 		public event MessageEventHandler			HypertextClicked;
 		public event Support.EventHandler			ValidatorChanged;
-		public event Support.EventHandler			BindingInfoChanged;
 		public event Support.EventHandler			ResourceManagerChanged;
 		
 		public event MessageEventHandler			PreProcessing;
@@ -4326,7 +3886,6 @@ namespace Epsitec.Common.Widgets
 		public event Support.EventHandler			TextDefined;
 		public event Support.EventHandler			TextChanged;
 		public event Support.EventHandler			NameChanged;
-		public event Support.EventHandler			LocationChanged;
 		#endregion
 		
 		#region Various enums
@@ -4442,27 +4001,22 @@ namespace Epsitec.Common.Widgets
 		
 		
 		private InternalState					internal_state;
-		private WidgetState						widget_state;
 		
 		private System.Collections.ArrayList	hypertext_list;
 		private HypertextInfo					hypertext;
 		
 		private string							text;
 		private TextLayout						text_layout;
-		private ContentAlignment				alignment;
 		private int								tab_index = 0;
 		private TabNavigationMode				tab_navigation_mode;
 		private Collections.ShortcutCollection	shortcuts;
 		private double							default_font_height;
 		private MouseCursor						mouse_cursor;
-		private System.Collections.Hashtable	property_hash;
 		private Support.ResourceManager			resource_manager;
 		private IValidator						validator;
 		
-		static System.Collections.ArrayList		entered_widgets = new System.Collections.ArrayList ();
-		static System.Collections.ArrayList		alive_widgets   = new System.Collections.ArrayList ();
-		static bool								debug_dispose	= false;
-		
-		private const string					prop_binding	= "$widget$binding$";
+		static List<Widget>						enteredWidgets = new List<Widget> ();
+		static List<System.WeakReference>		aliveWidgets = new List<System.WeakReference> ();
+		static bool								debugDispose;
 	}
 }

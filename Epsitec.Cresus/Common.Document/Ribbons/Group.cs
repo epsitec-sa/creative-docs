@@ -7,7 +7,6 @@ namespace Epsitec.Common.Document.Ribbons
 	/// <summary>
 	/// La classe Group permet de gérer les groupes.
 	/// </summary>
-	[SuppressBundleSupport]
 	public class Group : Abstract
 	{
 		public Group() : base()
@@ -21,7 +20,7 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonInside  = this.CreateIconButton("Inside", "Large");
 			this.buttonOutside = this.CreateIconButton("Outside", "Large");
 			
-			this.UpdateClientGeometry();
+//			this.UpdateClientGeometry();
 		}
 		
 		protected override void Dispose(bool disposing)
@@ -50,31 +49,31 @@ namespace Epsitec.Common.Document.Ribbons
 
 			if ( this.buttonGroup == null )  return;
 
-			double dx = this.buttonGroup.DefaultWidth;
-			double dy = this.buttonGroup.DefaultHeight;
+			double dx = this.buttonGroup.PreferredWidth;
+			double dy = this.buttonGroup.PreferredHeight;
 
 			Rectangle rect = this.UsefulZone;
 			rect.Width  = dx;
 			rect.Height = dy;
 			rect.Offset(0, dy+5);
-			this.buttonGroup.Bounds = rect;
+			this.buttonGroup.SetManualBounds(rect);
 			rect.Offset(dx, 0);
-			this.buttonUngroup.Bounds = rect;
+			this.buttonUngroup.SetManualBounds(rect);
 
 			rect = this.UsefulZone;
 			rect.Width  = dx;
 			rect.Height = dy;
-			this.buttonMerge.Bounds = rect;
+			this.buttonMerge.SetManualBounds(rect);
 			rect.Offset(dx, 0);
-			this.buttonExtract.Bounds = rect;
+			this.buttonExtract.SetManualBounds(rect);
 
 			rect = this.UsefulZone;
 			rect.Width  = dx*1.5;
 			rect.Height = dy*1.5;
 			rect.Offset(dx*2+4, dy*0.5);
-			this.buttonInside.Bounds = rect;
+			this.buttonInside.SetManualBounds(rect);
 			rect.Offset(dx*1.5, 0);
-			this.buttonOutside.Bounds = rect;
+			this.buttonOutside.SetManualBounds(rect);
 		}
 
 

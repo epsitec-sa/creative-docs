@@ -21,26 +21,14 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public override double DefaultWidth
+		static IconSeparator()
 		{
-			//	Retourne la largeur standard d'une séparation.
-			get
-			{
-				//?return this.isHorizontal ? this.breadth : 22;
-				return this.breadth;
-			}
-		}
+			Helpers.VisualPropertyMetadata metadataDx = new Helpers.VisualPropertyMetadata (12.0, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
+			Helpers.VisualPropertyMetadata metadataDy = new Helpers.VisualPropertyMetadata (12.0, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
 
-		public override double DefaultHeight
-		{
-			//	Retourne la hauteur standard d'une séparation.
-			get
-			{
-				//?return this.isHorizontal ? 22 : this.breadth;
-				return this.breadth;
-			}
+			Visual.PreferredWidthProperty.OverrideMetadata (typeof (IconSeparator), metadataDx);
+			Visual.PreferredHeightProperty.OverrideMetadata (typeof (IconSeparator), metadataDy);
 		}
-
 		
 		public bool IsHorizontal
 		{
@@ -70,24 +58,19 @@ namespace Epsitec.Common.Widgets
 				if ( this.breadth != value )
 				{
 					this.breadth = value;
-					this.UpdateGeometry();
+					this.PreferredWidth = value;
+					this.PreferredHeight = value;
 				}
 			}
 		}
 		
 		
-		protected void UpdateGeometry()
-		{
-			Drawing.Rectangle bounds = new Drawing.Rectangle(0, 0, this.DefaultWidth, this.DefaultHeight);
-			this.Bounds = this.MapClientToParent(bounds);
-		}
-
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
 
 			Drawing.Rectangle rect  = this.Client.Bounds;
-			WidgetState       state = this.PaintState;
+			WidgetPaintState       state = this.PaintState;
 			
 			if ( this.isHorizontal )
 			{

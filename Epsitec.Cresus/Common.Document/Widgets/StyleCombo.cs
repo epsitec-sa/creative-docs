@@ -295,7 +295,7 @@ namespace Epsitec.Common.Document.Widgets
 					}
 					else	// déroule contre le haut ?
 					{
-						pos = Common.Widgets.Helpers.VisualTree.MapVisualToScreen(item, new Drawing.Point(0, item.Height-1));
+						pos = Common.Widgets.Helpers.VisualTree.MapVisualToScreen(item, new Drawing.Point(0, item.ActualHeight-1));
 						maxHeight = workingArea.Top-pos.Y;
 						if ( h > maxHeight )  // dépasse en haut ?
 						{

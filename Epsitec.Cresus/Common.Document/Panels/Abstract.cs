@@ -7,7 +7,6 @@ namespace Epsitec.Common.Document.Panels
 	/// <summary>
 	/// La classe Abstract est la classe de base pour tous les panels.
 	/// </summary>
-	[SuppressBundleSupport]
 	public abstract class Abstract : Common.Widgets.Widget
 	{
 		public Abstract(Document document)
@@ -17,7 +16,9 @@ namespace Epsitec.Common.Document.Panels
 			this.Entered += new MessageEventHandler(this.HandleMouseEntered);
 			this.Exited += new MessageEventHandler(this.HandleMouseExited);
 
-			this.label = new StaticText(this);
+			this.PreferredHeight = this.DefaultHeight;
+			
+			this.label = new StaticText (this);
 			this.fixIcon = new StaticText(this);
 
 			this.hiliteButton = new GlyphButton(this);
@@ -51,7 +52,7 @@ namespace Epsitec.Common.Document.Panels
 		}
 
 		
-		public override double DefaultHeight
+		public virtual double DefaultHeight
 		{
 			//	Retourne la hauteur standard.
 			get
@@ -112,12 +113,7 @@ namespace Epsitec.Common.Document.Panels
 		public void HeightChanged()
 		{
 			//	Indique que la hauteur du panneau a changé.
-			double h = this.DefaultHeight;
-			if ( this.Height != h )
-			{
-				this.Height = h;
-//-				this.ForceLayout();
-			}
+			this.PreferredHeight = this.DefaultHeight;
 		}
 
 		public bool IsLayoutDirect
@@ -268,7 +264,7 @@ namespace Epsitec.Common.Document.Panels
 			rect.Right -= this.extendedZoneWidth+5;
 			rect.Top -= 1;
 			rect.Bottom = rect.Top-this.LabelHeight;
-			this.label.Bounds = rect;
+			this.label.SetManualBounds(rect);
 			this.label.Visibility = (this.IsLabelProperties || this is ModColor);
 
 			rect = this.Client.Bounds;
@@ -276,12 +272,12 @@ namespace Epsitec.Common.Document.Panels
 			rect.Width = this.extendedZoneWidth;
 			rect.Top -= (this.IsLabelProperties || this is ModColor) ? 3 : 9;
 			rect.Bottom = rect.Top-13;
-			this.fixIcon.Bounds = rect;
-			this.hiliteButton.Bounds = rect;
+			this.fixIcon.SetManualBounds(rect);
+			this.hiliteButton.SetManualBounds(rect);
 
 			rect.Left = this.Client.Bounds.Right-this.extendedZoneWidth+1;
 			rect.Width = this.extendedZoneWidth-3;
-			this.extendedButton.Bounds = rect;
+			this.extendedButton.SetManualBounds(rect);
 
 			this.UpdateButtons();
 		}

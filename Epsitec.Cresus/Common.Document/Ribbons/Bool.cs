@@ -7,7 +7,6 @@ namespace Epsitec.Common.Document.Ribbons
 	/// <summary>
 	/// La classe Bool permet de choisir les opérations booléennes.
 	/// </summary>
-	[SuppressBundleSupport]
 	public class Bool : Abstract
 	{
 		public Bool() : base()
@@ -20,7 +19,7 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonBooleanFrontMinus = this.CreateIconButton("BooleanFrontMinus");
 			this.buttonBooleanBackMinus  = this.CreateIconButton("BooleanBackMinus");
 			
-			this.UpdateClientGeometry();
+//			this.UpdateClientGeometry();
 		}
 		
 		protected override void Dispose(bool disposing)
@@ -49,25 +48,25 @@ namespace Epsitec.Common.Document.Ribbons
 
 			if ( this.buttonBooleanOr == null )  return;
 
-			double dx = this.buttonBooleanOr.DefaultWidth;
-			double dy = this.buttonBooleanOr.DefaultHeight;
+			double dx = this.buttonBooleanOr.PreferredWidth;
+			double dy = this.buttonBooleanOr.PreferredHeight;
 
 			Rectangle rect = this.UsefulZone;
 			rect.Width  = dx;
 			rect.Height = dy;
 			rect.Offset(0, dy+5);
-			this.buttonBooleanOr.Bounds = rect;
+			this.buttonBooleanOr.SetManualBounds(rect);
 			rect.Offset(dx, 0);
-			this.buttonBooleanAnd.Bounds = rect;
+			this.buttonBooleanAnd.SetManualBounds(rect);
 			rect.Offset(dx, 0);
-			this.buttonBooleanXor.Bounds = rect;
+			this.buttonBooleanXor.SetManualBounds(rect);
 
 			rect = this.UsefulZone;
 			rect.Width  = dx;
 			rect.Height = dy;
-			this.buttonBooleanFrontMinus.Bounds = rect;
+			this.buttonBooleanFrontMinus.SetManualBounds(rect);
 			rect.Offset(dx, 0);
-			this.buttonBooleanBackMinus.Bounds = rect;
+			this.buttonBooleanBackMinus.SetManualBounds(rect);
 		}
 
 

@@ -8,7 +8,6 @@ namespace Epsitec.Common.Document.TextPanels
 	/// <summary>
 	/// La classe Justif permet de choisir un mode de justification.
 	/// </summary>
-	[SuppressBundleSupport]
 	public class Justif : Abstract
 	{
 		public Justif(Document document, bool isStyle, StyleCategory styleCategory) : base(document, isStyle, styleCategory)
@@ -83,21 +82,21 @@ namespace Epsitec.Common.Document.TextPanels
 			r.Bottom = r.Top-20;
 			r.Left = rect.Left;
 			r.Width = 20;
-			this.buttonAlignLeft.Bounds = r;
+			this.buttonAlignLeft.SetManualBounds(r);
 			r.Offset(20, 0);
-			this.buttonAlignCenter.Bounds = r;
+			this.buttonAlignCenter.SetManualBounds(r);
 			r.Offset(20, 0);
-			this.buttonAlignRight.Bounds = r;
+			this.buttonAlignRight.SetManualBounds(r);
 			r.Offset(20, 0);
-			this.buttonAlignJustif.Bounds = r;
+			this.buttonAlignJustif.SetManualBounds(r);
 			r.Offset(20, 0);
-			this.buttonAlignAll.Bounds = r;
+			this.buttonAlignAll.SetManualBounds(r);
 			r.Offset(25, 0);
-			this.buttonHyphen.Bounds = r;
+			this.buttonHyphen.SetManualBounds(r);
 
 			r.Left = rect.Right-20;
 			r.Width = 20;
-			this.buttonClear.Bounds = r;
+			this.buttonClear.SetManualBounds(r);
 		}
 
 

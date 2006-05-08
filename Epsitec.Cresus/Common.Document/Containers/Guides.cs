@@ -7,20 +7,19 @@ namespace Epsitec.Common.Document.Containers
 	/// <summary>
 	/// La classe Containers.Guides contient tous les panneaux des repères.
 	/// </summary>
-	[SuppressBundleSupport]
 	public class Guides : Abstract
 	{
 		public Guides(Document document) : base(document)
 		{
 			this.radioGroup = new Widget(this);
-			this.radioGroup.Height = 20;
+			this.radioGroup.PreferredHeight = 20;
 			this.radioGroup.Dock = DockStyle.Top;
 			this.radioGroup.Margins = new Margins(0, 0, 0, 0);
 			this.radioGroup.TabIndex = 1;
 			this.radioGroup.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 
 			this.radioGlobal = new RadioButton(this.radioGroup);
-			this.radioGlobal.Width = 80;
+			this.radioGlobal.PreferredWidth = 80;
 			this.radioGlobal.Text = Res.Strings.Container.Guides.RadioGlobal;
 			this.radioGlobal.Dock = DockStyle.Left;
 			this.radioGlobal.Margins = new Margins(0, 10, 0, 0);
@@ -30,7 +29,7 @@ namespace Epsitec.Common.Document.Containers
 			this.radioGlobal.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			this.radioPage = new RadioButton(this.radioGroup);
-			this.radioPage.Width = 100;
+			this.radioPage.PreferredWidth = 100;
 			this.radioPage.Text = Res.Strings.Container.Guides.RadioPage;
 			this.radioPage.Dock = DockStyle.Left;
 			this.radioPage.Margins = new Margins(0, 0, 0, 0);
@@ -116,15 +115,15 @@ namespace Epsitec.Common.Document.Containers
 			this.table.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			this.editGroup = new Widget(this);
-			this.editGroup.Width = this.Width;
-			this.editGroup.Height = 22;
+			this.editGroup.PreferredWidth = this.PreferredWidth;
+			this.editGroup.PreferredHeight = 22;
 			this.editGroup.Dock = DockStyle.Bottom;
 			this.editGroup.Margins = new Margins(0, 0, 5, 0);
 			this.editGroup.TabIndex = 4;
 			this.editGroup.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 
 			this.editType = new TextFieldCombo(this.editGroup);
-			this.editType.Width = 181;
+			this.editType.PreferredWidth = 181;
 			this.editType.IsReadOnly = true;
 			foreach ( int value in System.Enum.GetValues(typeof(Settings.GuideType)) )
 			{
@@ -141,7 +140,7 @@ namespace Epsitec.Common.Document.Containers
 
 			this.editPosition = new TextFieldReal(this.editGroup);
 			this.document.Modifier.AdaptTextFieldRealDimension(this.editPosition);
-			this.editPosition.Width = 60+10;
+			this.editPosition.PreferredWidth = 60+10;
 			this.editPosition.Dock = DockStyle.Left;
 			this.editPosition.Margins = new Margins(1, 0, 0, 0);
 			this.editPosition.ValueChanged += new EventHandler(this.HandleEditPositionChanged);
@@ -238,7 +237,7 @@ namespace Epsitec.Common.Document.Containers
 				if ( this.table[column, row].IsEmpty )
 				{
 					StaticText st = new StaticText();
-					st.Alignment = (column==0) ? ContentAlignment.MiddleLeft : ContentAlignment.MiddleRight;
+					st.ContentAlignment = (column==0) ? ContentAlignment.MiddleLeft : ContentAlignment.MiddleRight;
 					st.Dock = DockStyle.Fill;
 					st.Margins = new Margins(4, 4, 0, 0);
 					this.table[column, row].Insert(st);

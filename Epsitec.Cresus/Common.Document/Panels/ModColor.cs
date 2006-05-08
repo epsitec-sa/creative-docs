@@ -7,7 +7,6 @@ namespace Epsitec.Common.Document.Panels
 	/// <summary>
 	/// La classe ModColor permet de choisir une modification de couleur.
 	/// </summary>
-	[SuppressBundleSupport]
 	public class ModColor : Abstract
 	{
 		public ModColor(Document document) : base(document)
@@ -185,7 +184,7 @@ namespace Epsitec.Common.Document.Panels
 				{
 					if ( j*3+i >= 7 )  continue;
 					r.Width = Widgets.TextFieldLabel.ShortWidth;
-					this.fieldArray[j*3+i].Bounds = r;
+					this.fieldArray[j*3+i].SetManualBounds(r);
 					r.Left = r.Right;
 				}
 				rect.Offset(0, -24);
@@ -193,15 +192,15 @@ namespace Epsitec.Common.Document.Panels
 
 			r.Left = rect.Left+Widgets.TextFieldLabel.ShortWidth+Widgets.TextFieldLabel.DefaultLabelWidth+Widgets.TextFieldLabel.DefaultMarginWidth;
 			r.Right = rect.Right-24-1-24;
-			this.negativ.Bounds = r;
+			this.negativ.SetManualBounds(r);
 
 			r.Left = r.Right;
 			r.Width = 24;
-			this.draft.Bounds = r;
+			this.draft.SetManualBounds(r);
 
 			r.Left = r.Right+1;
 			r.Width = 24;
-			this.reset.Bounds = r;
+			this.reset.SetManualBounds(r);
 		}
 		
 		protected void ColoriseSliders()

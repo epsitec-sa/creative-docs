@@ -109,6 +109,27 @@ namespace Epsitec.Common.Widgets.Platform
 			this.MinimizeBox     = false;
 			Window.DummyHandleEater (this.Handle);
 		}
+
+		internal bool IsFixedSize
+		{
+			get
+			{
+				switch (this.FormBorderStyle)
+				{
+					case System.Windows.Forms.FormBorderStyle.Fixed3D:
+					case System.Windows.Forms.FormBorderStyle.FixedDialog:
+					case System.Windows.Forms.FormBorderStyle.FixedSingle:
+					case System.Windows.Forms.FormBorderStyle.FixedToolWindow:
+					case System.Windows.Forms.FormBorderStyle.None:
+						return true;
+					case System.Windows.Forms.FormBorderStyle.Sizable:
+					case System.Windows.Forms.FormBorderStyle.SizableToolWindow:
+						return false;
+				}
+				
+				throw new System.InvalidOperationException (string.Format ("{0} not supported", this.FormBorderStyle));
+			}
+		}
 		
 		internal void MakeSecondaryWindow()
 		{
@@ -1113,11 +1134,6 @@ namespace Epsitec.Common.Widgets.Platform
 		
 		protected void ReallocatePixmap()
 		{
-			if (Support.ObjectBundler.IsBooting)
-			{
-				return;
-			}
-			
 			if (this.IsFrozen)
 			{
 				return;
@@ -1130,7 +1146,7 @@ namespace Epsitec.Common.Widgets.Platform
 			{
 				this.graphics.Pixmap.Clear ();
 				
-				this.widget_window.Root.Size = new Drawing.Size (width, height);
+				this.widget_window.Root.NotifyWindowSizeChanged (width, height);
 				this.dirty_rectangle = new Drawing.Rectangle (0, 0, width, height);
 				this.dirty_region    = new Drawing.DirtyRegion ();
 				this.dirty_region.Add (this.dirty_rectangle);

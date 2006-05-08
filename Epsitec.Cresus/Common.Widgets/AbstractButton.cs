@@ -4,7 +4,6 @@ namespace Epsitec.Common.Widgets
 	/// La classe AbstractButton implémente les fonctions de base communes de tous
 	/// les boutons (notamment au niveau de la gestion des événements).
 	/// </summary>
-	[Support.SuppressBundleSupport]
 	public abstract class AbstractButton : Widget
 	{
 		public AbstractButton()
@@ -20,33 +19,27 @@ namespace Epsitec.Common.Widgets
 		{
 			this.SetEmbedder(embedder);
 		}
-		
-		
-		public override Drawing.ContentAlignment	DefaultAlignment
+
+		static AbstractButton()
 		{
-			get
-			{
-				return Drawing.ContentAlignment.MiddleCenter;
-			}
+			Helpers.VisualPropertyMetadata metadata = new Helpers.VisualPropertyMetadata (Drawing.ContentAlignment.MiddleCenter, Helpers.VisualPropertyMetadataOptions.AffectsTextLayout);
+			Visual.ContentAlignmentProperty.OverrideMetadata (typeof (AbstractButton), metadata);
 		}
-		
+
 		public override Drawing.Point GetBaseLine()
 		{
 			if ( this.TextLayout != null )
 			{
-				return this.MapClientToParent (this.TextLayout.GetLineOrigin (0)) - this.Location;
+				return this.MapClientToParent (this.TextLayout.GetLineOrigin (0)) - this.ActualLocation;
 			}
 			
 			return base.GetBaseLine ();
 		}
-		
-		
-		public override Drawing.Rectangle GetShapeBounds()
+
+
+		public override Drawing.Margins GetShapeMargins()
 		{
-			IAdorner adorner = Widgets.Adorners.Factory.Active;
-			Drawing.Rectangle rect = this.Client.Bounds;
-			rect.Inflate(adorner.GeometryButtonShapeBounds);
-			return rect;
+			return Widgets.Adorners.Factory.Active.GeometryButtonShapeMargins;
 		}
 
 		

@@ -1,36 +1,32 @@
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
-	/// La classe VSlider implémente le potentiomètre linéaire vertical.
+	/// La classe VScroller implémente l'ascenceur vertical.
 	/// </summary>
-	public class VSlider : AbstractSlider
+	public class VScroller : AbstractScroller
 	{
-		public VSlider() : base(true)
+		public VScroller()
+			: base (true)
 		{
 			this.ArrowUp.Name   = "Up";
 			this.ArrowDown.Name = "Down";
 		}
-		
-		public VSlider(Widget embedder) : this()
+
+		public VScroller(Widget embedder)
+			: this ()
 		{
-			this.SetEmbedder(embedder);
+			this.SetEmbedder (embedder);
 		}
-		
-		
-		public override double				DefaultWidth
+
+
+		static VScroller()
 		{
-			get
-			{
-				return AbstractSlider.defaultBreadth;
-			}
-		}
-		
-		public override Drawing.Size		DefaultMinSize
-		{
-			get
-			{
-				return new Drawing.Size (AbstractSlider.defaultBreadth, AbstractSlider.minimalThumb+6);
-			}
+			Helpers.VisualPropertyMetadata metadataDx = new Helpers.VisualPropertyMetadata (AbstractScroller.defaultBreadth, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
+			Helpers.VisualPropertyMetadata metadataDy = new Helpers.VisualPropertyMetadata (AbstractScroller.minimalThumb+6, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
+
+			Visual.PreferredWidthProperty.OverrideMetadata (typeof (VScroller), metadataDx);
+			Visual.MinWidthProperty.OverrideMetadata (typeof (VScroller), metadataDx);
+			Visual.MinHeightProperty.OverrideMetadata (typeof (VScroller), metadataDy);
 		}
 	}
 }

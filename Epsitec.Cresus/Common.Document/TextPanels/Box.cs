@@ -8,7 +8,6 @@ namespace Epsitec.Common.Document.TextPanels
 	/// <summary>
 	/// La classe Box permet de choisir un encadrement.
 	/// </summary>
-	[SuppressBundleSupport]
 	public class Box : Abstract
 	{
 		public Box(Document document, bool isStyle, StyleCategory styleCategory) : base(document, isStyle, styleCategory)
@@ -108,19 +107,19 @@ namespace Epsitec.Common.Document.TextPanels
 				{
 					r.Left = rect.Left;
 					r.Width = 20;
-					this.buttonFrame.Bounds = r;
+					this.buttonFrame.SetManualBounds(r);
 					r.Left = rect.Right-20;
 					r.Width = 20;
-					this.buttonClear.Bounds = r;
+					this.buttonClear.SetManualBounds(r);
 				}
 				else
 				{
 					r.Left = rect.Left;
 					r.Width = 20;
-					this.buttonFrame.Bounds = r;
+					this.buttonFrame.SetManualBounds(r);
 					r.Left = rect.Right-20;
 					r.Width = 20;
-					this.buttonClear.Bounds = r;
+					this.buttonClear.SetManualBounds(r);
 				}
 			}
 			else
@@ -130,10 +129,10 @@ namespace Epsitec.Common.Document.TextPanels
 
 				r.Left = rect.Left;
 				r.Width = 20;
-				this.buttonFrame.Bounds = r;
+				this.buttonFrame.SetManualBounds(r);
 				r.Left = rect.Right-20;
 				r.Width = 20;
-				this.buttonClear.Bounds = r;
+				this.buttonClear.SetManualBounds(r);
 			}
 		}
 

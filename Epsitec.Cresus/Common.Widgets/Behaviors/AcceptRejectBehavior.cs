@@ -29,7 +29,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 			{
 				if (this.IsVisible)
 				{
-					double height = this.host.Height;
+					double height = this.host.ActualHeight;
 					double width  = System.Math.Floor ((height - 4) * 15.0 / 17.0);
 					
 					return width + width - 1;
@@ -104,8 +104,8 @@ namespace Epsitec.Common.Widgets.Behaviors
 				rect_1.Right = rect_1.Left + rect_1.Width / 2 + 0.5;
 				rect_2.Left  = rect_1.Right - 1;
 				
-				this.button_accept.Bounds = rect_1;
-				this.button_reject.Bounds = rect_2;
+				this.button_accept.SetManualBounds(rect_1);
+				this.button_reject.SetManualBounds(rect_2);
 			}
 		}
 		

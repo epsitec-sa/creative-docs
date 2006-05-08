@@ -41,6 +41,7 @@ namespace Epsitec.Common.Script.Developer.Panels
 		}
 		
 		
+#if false
 		internal EditArray						EditArray
 		{
 			get
@@ -48,6 +49,7 @@ namespace Epsitec.Common.Script.Developer.Panels
 				return this.edit_array;
 			}
 		}
+#endif
 		
 		
 		protected virtual void DetachStore()
@@ -62,11 +64,12 @@ namespace Epsitec.Common.Script.Developer.Panels
 		{
 			if (this.edit_store != null)
 			{
+#if false
 				if (this.edit_array != null)
 				{
 					this.edit_array.TextArrayStore = this.edit_store;
 				}
-				
+#endif		
 				this.edit_store.StoreContentsChanged += new EventHandler(this.HandleEditStoreContentsChanged);
 			}
 		}
@@ -88,6 +91,7 @@ namespace Epsitec.Common.Script.Developer.Panels
 		
 		protected override void CreateWidgets(Widget parent)
 		{
+#if false
 			System.Diagnostics.Debug.Assert (this.edit_store != null);
 			System.Diagnostics.Debug.Assert (this.edit_array == null);
 			System.Diagnostics.Debug.Assert (this.local_dispatcher == null);
@@ -145,6 +149,7 @@ namespace Epsitec.Common.Script.Developer.Panels
 			title.Caption = "Method arguments";
 			
 			this.edit_array = edit;
+#endif
 		}
 		
 		
@@ -155,7 +160,9 @@ namespace Epsitec.Common.Script.Developer.Panels
 		
 		
 		protected Helpers.ParameterInfoStore	edit_store;
+#if false
 		protected EditArray						edit_array;
+#endif
 		protected CommandDispatcher				local_dispatcher;
 	}
 }

@@ -7,7 +7,6 @@ namespace Epsitec.Common.Document.Containers
 	/// <summary>
 	/// La classe Containers.Autos contient tous les panneaux des styles.
 	/// </summary>
-	[SuppressBundleSupport]
 	public class Autos : Abstract
 	{
 		public Autos(Document document) : base(document)
@@ -150,7 +149,7 @@ namespace Epsitec.Common.Document.Containers
 				if ( this.table[column, row].IsEmpty )
 				{
 					StaticText st = new StaticText();
-					st.Alignment = (column==2) ? ContentAlignment.MiddleCenter : ContentAlignment.MiddleLeft;
+					st.ContentAlignment = (column==2) ? ContentAlignment.MiddleCenter : ContentAlignment.MiddleLeft;
 					st.Dock = DockStyle.Fill;
 					this.table[column, row].Insert(st);
 				}

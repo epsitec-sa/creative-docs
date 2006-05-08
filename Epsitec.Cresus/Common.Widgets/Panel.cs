@@ -1,10 +1,10 @@
 //	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
+using Epsitec.Common.Support;
+
 namespace Epsitec.Common.Widgets
 {
-	using BundleAttribute  = Support.BundleAttribute;
-	
 	/// <summary>
 	/// La classe Panel représente un widget qui permet de grouper d'autres widgets
 	/// tout en limitant la surface affichée à une ouverture (aperture). Un Panel
@@ -23,7 +23,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		[Bundle]	public Drawing.Size			SurfaceSize
+		public Drawing.Size						SurfaceSize
 		{
 			//	La taille de la surface indique une taille minimale idéale, en-dessous de laquelle
 			//	le contenu ne sera plus entièrement visible. Scrollable utiliser cette information
@@ -46,7 +46,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		[Bundle]	public bool					IsAutoFitting
+		public bool								IsAutoFitting
 		{
 			get
 			{
@@ -154,23 +154,47 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void OnSurfaceSizeChanged()
 		{
-			if (this.SurfaceSizeChanged != null)
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("SurfaceSizeChanged");
+			if (handler != null)
 			{
-				this.SurfaceSizeChanged (this);
+				handler(this);
 			}
 		}
 		
 		protected virtual void OnIsAutoFittingChanged()
 		{
-			if (this.IsAutoFittingChanged != null)
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("IsAutoFittingChanged");
+			if (handler != null)
 			{
-				this.IsAutoFittingChanged (this);
+				handler(this);
 			}
 		}
 		
 		
-		public event Support.EventHandler		SurfaceSizeChanged;
-		public event Support.EventHandler		IsAutoFittingChanged;
+		public event EventHandler				SurfaceSizeChanged
+		{
+			add
+			{
+				this.AddUserEventHandler("SurfaceSizeChanged", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("SurfaceSizeChanged", value);
+			}
+		}
+
+		public event EventHandler				IsAutoFittingChanged
+		{
+			add
+			{
+				this.AddUserEventHandler("IsAutoFittingChanged", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("IsAutoFittingChanged", value);
+			}
+		}
+
 		
 		
 		protected Drawing.Rectangle				aperture;

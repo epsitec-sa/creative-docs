@@ -7,7 +7,6 @@ namespace Epsitec.Common.Document
 	/// <summary>
 	/// Summary description for Viewer.
 	/// </summary>
-	[SuppressBundleSupport]
 	public class Viewer : Common.Widgets.Widget
 	{
 		protected enum MouseCursorType
@@ -134,6 +133,7 @@ namespace Epsitec.Common.Document
 		}
 
 
+#if false
 		public override double DefaultWidth
 		{
 			//	Retourne la largeur standard d'une icône.
@@ -151,7 +151,7 @@ namespace Epsitec.Common.Document
 				return 22;
 			}
 		}
-
+#endif
 
 		public double MarkerVertical
 		{
@@ -2648,7 +2648,7 @@ namespace Epsitec.Common.Document
 			this.miniBar.MakeFloatingWindow();
 			this.miniBar.DisableMouseActivation();
 			this.miniBar.MakeLayeredWindow(true);
-			this.miniBar.Root.SetSyncPaint(true);
+			this.miniBar.Root.SyncPaint = true;
 			this.miniBar.WindowSize = this.miniBarRect.Size;
 			this.miniBar.WindowLocation = this.MapClientToScreen(this.miniBarRect.BottomLeft);
 			this.miniBar.Root.BackColor = Color.FromAlphaRgb(0, 1,1,1);
@@ -2683,7 +2683,7 @@ namespace Epsitec.Common.Document
 					double m = (line == null) ? 0 : this.miniBarBalloon.Margin;
 					IconButton button = new IconButton();
 					line = new Widget(this.miniBarBalloon);
-					line.Height = button.DefaultHeight;
+					line.PreferredHeight = button.PreferredHeight;
 					line.Dock = DockStyle.Top;
 					line.Margins = new Margins(0, 0, m, 0);
 					beginOfLine = false;
@@ -2692,7 +2692,7 @@ namespace Epsitec.Common.Document
 				if ( cmd == "" )  // séparateur ?
 				{
 					IconSeparator sep = new IconSeparator();
-					sep.Width = this.MiniBarCommandWidth(cmd);
+					sep.PreferredWidth = this.MiniBarCommandWidth(cmd);
 					sep.Dock = DockStyle.Left;
 					sep.SetParent(line);
 				}
@@ -2711,7 +2711,7 @@ namespace Epsitec.Common.Document
 						button.ButtonStyle = ButtonStyle.ActivableIcon;
 					}
 
-					button.Width = this.MiniBarCommandWidth(cmd);
+					button.PreferredWidth = this.MiniBarCommandWidth(cmd);
 					button.Dock = DockStyle.Left;
 					button.SetParent(line);
 					button.Clicked += new MessageEventHandler(this.HandleMiniBarButtonClicked);
@@ -3293,9 +3293,9 @@ namespace Epsitec.Common.Document
 
 			ScreenInfo si = ScreenInfo.Find(mouse);
 			Drawing.Rectangle wa = si.WorkingArea;
-			if ( mouse.Y-this.contextMenu.Height < wa.Bottom )
+			if ( mouse.Y-this.contextMenu.ActualHeight < wa.Bottom )
 			{
-				mouse.Y = wa.Bottom+this.contextMenu.Height;
+				mouse.Y = wa.Bottom+this.contextMenu.ActualHeight;
 			}
 			
 			this.contextMenu.ShowAsContextMenu(this.Window, mouse);
@@ -4179,14 +4179,14 @@ namespace Epsitec.Common.Document
 			
 			//	Ignore une zone de repeinture d'un pixel à gauche ou en haut,
 			//	à cause des règles qui chevauchent Viewer.
-			if ( clipRect.Right == 1              ||  // un pixel à gauche ?
-				 clipRect.Bottom == this.Height-1 )   // un pixel en haut ?
+			if ( clipRect.Right == 1                    ||  // un pixel à gauche ?
+				 clipRect.Bottom == this.ActualHeight-1 )   // un pixel en haut ?
 			{
 				return;  // ignore
 			}
 
-			if ( this.lastSize != this.Size     &&  // redimensionnement ?
-				 this.zoomType != ZoomType.None )   // zoom spécial ?
+			if ( this.lastSize != this.ActualSize &&  // redimensionnement ?
+				 this.zoomType != ZoomType.None   )   // zoom spécial ?
 			{
 				if ( this.zoomType == ZoomType.Page )
 				{
@@ -4197,7 +4197,7 @@ namespace Epsitec.Common.Document
 					this.drawingContext.ZoomPageWidthAndCenter();
 				}
 			}
-			this.lastSize = this.Size;
+			this.lastSize = this.ActualSize;
 
 			if ( this.drawingContext.IsZoomPage )
 			{

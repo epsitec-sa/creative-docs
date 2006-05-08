@@ -7,7 +7,6 @@ namespace Epsitec.Common.Document.Ribbons
 	/// <summary>
 	/// La classe Order permet de choisir l'ordre de la sélection.
 	/// </summary>
-	[SuppressBundleSupport]
 	public class Order : Abstract
 	{
 		public Order() : base()
@@ -19,7 +18,7 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonUpOne   = this.CreateIconButton("OrderUpOne");
 			this.buttonDownOne = this.CreateIconButton("OrderDownOne");
 			
-			this.UpdateClientGeometry();
+//			this.UpdateClientGeometry();
 		}
 		
 		protected override void Dispose(bool disposing)
@@ -48,24 +47,24 @@ namespace Epsitec.Common.Document.Ribbons
 
 			if ( this.buttonDownAll == null )  return;
 
-			double dx = this.buttonDownAll.DefaultWidth;
-			double dy = this.buttonDownAll.DefaultHeight;
+			double dx = this.buttonDownAll.PreferredWidth;
+			double dy = this.buttonDownAll.PreferredHeight;
 
 			Rectangle rect = this.UsefulZone;
 			rect.Width  = dx*1.5;
 			rect.Height = dy*1.5;
 			rect.Offset(0, dy*0.5+5);
-			this.buttonUpAll.Bounds = rect;
+			this.buttonUpAll.SetManualBounds(rect);
 			rect.Offset(dx*1.5, -dy*0.5-5);
-			this.buttonDownAll.Bounds = rect;
+			this.buttonDownAll.SetManualBounds(rect);
 
 			rect = this.UsefulZone;
 			rect.Width  = dx;
 			rect.Height = dy;
 			rect.Offset(dx*1.5*2+4, dy+5);
-			this.buttonUpOne.Bounds = rect;
+			this.buttonUpOne.SetManualBounds(rect);
 			rect.Offset(0, -dy-5);
-			this.buttonDownOne.Bounds = rect;
+			this.buttonDownOne.SetManualBounds(rect);
 		}
 
 

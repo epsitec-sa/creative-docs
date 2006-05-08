@@ -21,7 +21,6 @@ namespace Epsitec.App.DocumentEditor
 	/// <summary>
 	/// La classe DocumentEditor représente l'éditeur de document complet.
 	/// </summary>
-	[SuppressBundleSupport]
 	public class DocumentEditor : Widgets.Widget
 	{
 		public DocumentEditor(DocumentType type)
@@ -193,10 +192,10 @@ namespace Epsitec.App.DocumentEditor
 			if ( this.resize == null || this.Window == null )  return;
 			this.resize.Enable = !this.Window.IsFullScreen;
 		}
-		
-		protected override void OnSizeChanged(Epsitec.Common.Types.DependencyPropertyChangedEventArgs e)
+
+		protected override void SetBoundsOverride(Rectangle oldRect, Rectangle newRect)
 		{
-			base.OnSizeChanged(e);
+			base.SetBoundsOverride(oldRect, newRect);
 			this.HandleSizeChanged();
 		}
 
@@ -681,22 +680,22 @@ namespace Epsitec.App.DocumentEditor
 #endif
 
 			this.ribbonMainButton = new RibbonButton("", Res.Strings.Ribbon.Main);
-			this.ribbonMainButton.Size = this.ribbonMainButton.RequiredSize;
+			this.ribbonMainButton.PreferredSize = this.ribbonMainButton.RequiredSize;
 			this.ribbonMainButton.Pressed += new MessageEventHandler (this.HandleRibbonPressed);
 			this.hToolBar.Items.Add(this.ribbonMainButton);
 
 			this.ribbonGeomButton = new RibbonButton("", Res.Strings.Ribbon.Geom);
-			this.ribbonGeomButton.Size = this.ribbonGeomButton.RequiredSize;
+			this.ribbonGeomButton.PreferredSize = this.ribbonGeomButton.RequiredSize;
 			this.ribbonGeomButton.Pressed += new MessageEventHandler (this.HandleRibbonPressed);
 			this.hToolBar.Items.Add(this.ribbonGeomButton);
 
 			this.ribbonOperButton = new RibbonButton("", Res.Strings.Ribbon.Oper);
-			this.ribbonOperButton.Size = this.ribbonOperButton.RequiredSize;
+			this.ribbonOperButton.PreferredSize = this.ribbonOperButton.RequiredSize;
 			this.ribbonOperButton.Pressed += new MessageEventHandler (this.HandleRibbonPressed);
 			this.hToolBar.Items.Add(this.ribbonOperButton);
 
 			this.ribbonTextButton = new RibbonButton("", Res.Strings.Ribbon.Text);
-			this.ribbonTextButton.Size = this.ribbonTextButton.RequiredSize;
+			this.ribbonTextButton.PreferredSize = this.ribbonTextButton.RequiredSize;
 			this.ribbonTextButton.Pressed += new MessageEventHandler (this.HandleRibbonPressed);
 			this.hToolBar.Items.Add(this.ribbonTextButton);
 
@@ -704,9 +703,9 @@ namespace Epsitec.App.DocumentEditor
 
 			this.ribbonMain = new Ribbons.RibbonContainer(this);
 			this.ribbonMain.Name = "Main";
-			this.ribbonMain.Height = this.ribbonHeight;
+			this.ribbonMain.PreferredHeight = this.ribbonHeight;
 			this.ribbonMain.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top;
-			this.ribbonMain.Margins = new Margins(0, 0, this.hToolBar.Height, 0);
+			this.ribbonMain.Margins = new Margins(0, 0, this.hToolBar.PreferredHeight, 0);
 			this.ribbonMain.Visibility = true;
 			this.ribbonMain.Items.Add(new Ribbons.File());
 			this.ribbonMain.Items.Add(new Ribbons.Clipboard());
@@ -721,9 +720,9 @@ namespace Epsitec.App.DocumentEditor
 
 			this.ribbonGeom = new Ribbons.RibbonContainer(this);
 			this.ribbonGeom.Name = "Geom";
-			this.ribbonGeom.Height = this.ribbonHeight;
+			this.ribbonGeom.PreferredHeight = this.ribbonHeight;
 			this.ribbonGeom.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top;
-			this.ribbonGeom.Margins = new Margins(0, 0, this.hToolBar.Height, 0);
+			this.ribbonGeom.Margins = new Margins(0, 0, this.hToolBar.PreferredHeight, 0);
 			this.ribbonGeom.Visibility = false;
 			this.ribbonGeom.Items.Add(new Ribbons.Move());
 			this.ribbonGeom.Items.Add(new Ribbons.Rotate());
@@ -734,9 +733,9 @@ namespace Epsitec.App.DocumentEditor
 
 			this.ribbonOper = new Ribbons.RibbonContainer(this);
 			this.ribbonOper.Name = "Oper";
-			this.ribbonOper.Height = this.ribbonHeight;
+			this.ribbonOper.PreferredHeight = this.ribbonHeight;
 			this.ribbonOper.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top;
-			this.ribbonOper.Margins = new Margins(0, 0, this.hToolBar.Height, 0);
+			this.ribbonOper.Margins = new Margins(0, 0, this.hToolBar.PreferredHeight, 0);
 			this.ribbonOper.Visibility = false;
 			this.ribbonOper.Items.Add(new Ribbons.Order());
 			this.ribbonOper.Items.Add(new Ribbons.Group());
@@ -744,9 +743,9 @@ namespace Epsitec.App.DocumentEditor
 
 			this.ribbonText = new Ribbons.RibbonContainer(this);
 			this.ribbonText.Name = "Text";
-			this.ribbonText.Height = this.ribbonHeight;
+			this.ribbonText.PreferredHeight = this.ribbonHeight;
 			this.ribbonText.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top;
-			this.ribbonText.Margins = new Margins(0, 0, this.hToolBar.Height, 0);
+			this.ribbonText.Margins = new Margins(0, 0, this.hToolBar.PreferredHeight, 0);
 			this.ribbonText.Visibility = false;
 			this.ribbonText.Items.Add(new Ribbons.TextStyles());
 			this.ribbonText.Items.Add(new Ribbons.Paragraph());
@@ -791,7 +790,7 @@ namespace Epsitec.App.DocumentEditor
 
 			Widgets.HSlider slider = new HSlider();
 			slider.Name = "StatusZoomSlider";
-			slider.Width = 100;
+			slider.PreferredWidth = 100;
 			slider.Margins = new Margins(1, 1, 1, 1);
 			slider.MinValue = 0.1M;
 			slider.MaxValue = 16.0M;
@@ -816,7 +815,7 @@ namespace Epsitec.App.DocumentEditor
 
 			this.vToolBar = new VToolBar(this);
 			this.vToolBar.Anchor = AnchorStyles.TopAndBottom | AnchorStyles.Left;
-			this.vToolBar.Margins = new Margins(0, 0, this.hToolBar.Height+this.RibbonHeight, this.info.Height);
+			this.vToolBar.Margins = new Margins(0, 0, this.hToolBar.PreferredHeight+this.RibbonHeight, this.info.PreferredHeight);
 			this.VToolBarAdd(this.toolSelectState);
 			this.VToolBarAdd(this.toolGlobalState);
 			this.VToolBarAdd(this.toolShaperState);
@@ -854,9 +853,9 @@ namespace Epsitec.App.DocumentEditor
 			this.VToolBarAdd(null);
 
 			this.bookDocuments = new TabBook(this);
-			this.bookDocuments.Width = this.panelsWidth;
+			this.bookDocuments.PreferredWidth = this.panelsWidth;
 			this.bookDocuments.Anchor = AnchorStyles.All;
-			this.bookDocuments.Margins = new Margins(this.vToolBar.Width+this.RibbonHeight+1, this.panelsWidth+2, this.hToolBar.Height+1, this.info.Height+1);
+			this.bookDocuments.Margins = new Margins(this.vToolBar.PreferredWidth+this.RibbonHeight+1, this.panelsWidth+2, this.hToolBar.PreferredHeight+1, this.info.PreferredHeight+1);
 			this.bookDocuments.Arrows = TabBookArrows.Right;
 			this.bookDocuments.HasCloseButton = true;
 			this.bookDocuments.CloseButton.Command = "Close";
@@ -987,39 +986,39 @@ namespace Epsitec.App.DocumentEditor
 
 			//	Bande horizontale qui contient les boutons des pages et l'ascenseur.
 			Widget hBand = new Widget(mainViewParent);
-			hBand.Height = sw;
+			hBand.PreferredHeight = sw;
 			hBand.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Bottom;
 			hBand.Margins = new Margins(wm+lm, wm+sw+1, 0, wm);
 
 			GlyphButton quickPagePrev = new GlyphButton("PagePrev");
 			quickPagePrev.SetParent(hBand);
 			quickPagePrev.GlyphShape = GlyphShape.ArrowLeft;
-			quickPagePrev.Width = sw;
-			quickPagePrev.Height = sw;
+			quickPagePrev.PreferredWidth = sw;
+			quickPagePrev.PreferredHeight = sw;
 			quickPagePrev.Dock = DockStyle.Left;
 			ToolTip.Default.SetToolTip(quickPagePrev, DocumentEditor.GetRes("Action.PagePrev"));
 
 			di.quickPageMenu = new Button(hBand);
 			di.quickPageMenu.Command = "PageMenu";
 			di.quickPageMenu.Clicked += new MessageEventHandler(this.HandleQuickPageMenu);
-			di.quickPageMenu.Width = System.Math.Floor(sw*2.0);
-			di.quickPageMenu.Height = sw;
+			di.quickPageMenu.PreferredWidth = System.Math.Floor(sw*2.0);
+			di.quickPageMenu.PreferredHeight = sw;
 			di.quickPageMenu.Dock = DockStyle.Left;
 			ToolTip.Default.SetToolTip(di.quickPageMenu, DocumentEditor.GetRes("Action.PageMenu"));
 
 			GlyphButton quickPageNext = new GlyphButton("PageNext");
 			quickPageNext.SetParent(hBand);
 			quickPageNext.GlyphShape = GlyphShape.ArrowRight;
-			quickPageNext.Width = sw;
-			quickPageNext.Height = sw;
+			quickPageNext.PreferredWidth = sw;
+			quickPageNext.PreferredHeight = sw;
 			quickPageNext.Dock = DockStyle.Left;
 			ToolTip.Default.SetToolTip(quickPageNext, DocumentEditor.GetRes("Action.PageNext"));
 
 			Button quickPageNew = new Button(hBand);
 			quickPageNew.Command = "PageNew";
 			quickPageNew.Text = "<b>+</b>";
-			quickPageNew.Width = sw;
-			quickPageNew.Height = sw;
+			quickPageNew.PreferredWidth = sw;
+			quickPageNew.PreferredHeight = sw;
 			quickPageNew.Dock = DockStyle.Left;
 			quickPageNew.Margins = new Margins(2, 0, 0, 0);
 			ToolTip.Default.SetToolTip(quickPageNew, DocumentEditor.GetRes("Action.PageNew"));
@@ -1031,15 +1030,15 @@ namespace Epsitec.App.DocumentEditor
 
 			//	Bande verticale qui contient les boutons des calques et l'ascenseur.
 			Widget vBand = new Widget(mainViewParent);
-			vBand.Width = sw;
+			vBand.PreferredWidth = sw;
 			vBand.Anchor = AnchorStyles.TopAndBottom | AnchorStyles.Right;
 			vBand.Margins = new Margins(0, wm, 6+wm+tm, wm+sw+1);
 
 			Button quickLayerNew = new Button(vBand);
 			quickLayerNew.Command = "LayerNew";
 			quickLayerNew.Text = "<b>+</b>";
-			quickLayerNew.Width = sw;
-			quickLayerNew.Height = sw;
+			quickLayerNew.PreferredWidth = sw;
+			quickLayerNew.PreferredHeight = sw;
 			quickLayerNew.Dock = DockStyle.Top;
 			quickLayerNew.Margins = new Margins(0, 0, 0, 2);
 			ToolTip.Default.SetToolTip(quickLayerNew, DocumentEditor.GetRes("Action.LayerNew"));
@@ -1047,24 +1046,24 @@ namespace Epsitec.App.DocumentEditor
 			GlyphButton quickLayerNext = new GlyphButton("LayerNext");
 			quickLayerNext.SetParent(vBand);
 			quickLayerNext.GlyphShape = GlyphShape.ArrowUp;
-			quickLayerNext.Width = sw;
-			quickLayerNext.Height = sw;
+			quickLayerNext.PreferredWidth = sw;
+			quickLayerNext.PreferredHeight = sw;
 			quickLayerNext.Dock = DockStyle.Top;
 			ToolTip.Default.SetToolTip(quickLayerNext, DocumentEditor.GetRes("Action.LayerNext"));
 
 			di.quickLayerMenu = new Button(vBand);
 			di.quickLayerMenu.Command = "LayerMenu";
 			di.quickLayerMenu.Clicked += new MessageEventHandler(this.HandleQuickLayerMenu);
-			di.quickLayerMenu.Width = sw;
-			di.quickLayerMenu.Height = sw;
+			di.quickLayerMenu.PreferredWidth = sw;
+			di.quickLayerMenu.PreferredHeight = sw;
 			di.quickLayerMenu.Dock = DockStyle.Top;
 			ToolTip.Default.SetToolTip(di.quickLayerMenu, DocumentEditor.GetRes("Action.LayerMenu"));
 
 			GlyphButton quickLayerPrev = new GlyphButton("LayerPrev");
 			quickLayerPrev.SetParent(vBand);
 			quickLayerPrev.GlyphShape = GlyphShape.ArrowDown;
-			quickLayerPrev.Width = sw;
-			quickLayerPrev.Height = sw;
+			quickLayerPrev.PreferredWidth = sw;
+			quickLayerPrev.PreferredHeight = sw;
 			quickLayerPrev.Dock = DockStyle.Top;
 			ToolTip.Default.SetToolTip(quickLayerPrev, DocumentEditor.GetRes("Action.LayerPrev"));
 
@@ -1074,9 +1073,9 @@ namespace Epsitec.App.DocumentEditor
 			di.vScroller.Margins = new Margins(0, 0, 2, 0);
 
 			di.bookPanels = new TabBook(this);
-			di.bookPanels.Width = this.panelsWidth;
+			di.bookPanels.PreferredWidth = this.panelsWidth;
 			di.bookPanels.Anchor = AnchorStyles.TopAndBottom | AnchorStyles.Right;
-			di.bookPanels.Margins = new Margins(1, 1, this.hToolBar.Height+this.RibbonHeight+1, this.info.Height+1);
+			di.bookPanels.Margins = new Margins(1, 1, this.hToolBar.PreferredHeight+this.RibbonHeight+1, this.info.PreferredHeight+1);
 			di.bookPanels.Arrows = TabBookArrows.Stretch;
 			di.bookPanels.ActivePageChanged += new EventHandler(this.HandleBookPanelsActivePageChanged);
 
@@ -1311,7 +1310,7 @@ namespace Epsitec.App.DocumentEditor
 
 			IconButton button = new IconButton(cs.Name, Misc.Icon(cs.IconName), cs.Name);
 			button.PreferredIconSize = Misc.IconPreferredSize("Small");
-			double h = this.info.DefaultHeight-3;
+			double h = this.info.PreferredHeight-3;
 			button.PreferredSize = new Size(h, h);
 			this.info.Items.Add(button);
 			ToolTip.Default.SetToolTip(button, Misc.GetTextWithShortcut(cs));
@@ -1383,7 +1382,6 @@ namespace Epsitec.App.DocumentEditor
 				this.ribbonList.RemoveAt(0);
 			}
 
-			this.SuspendLayout();
 			this.ribbonMain.Visibility = (this.ribbonMain == this.ribbonActive);
 			this.ribbonGeom.Visibility = (this.ribbonGeom == this.ribbonActive);
 			this.ribbonOper.Visibility = (this.ribbonOper == this.ribbonActive);
@@ -1395,16 +1393,15 @@ namespace Epsitec.App.DocumentEditor
 			this.ribbonTextButton.ActiveState = (this.ribbonText == this.ribbonActive) ? ActiveState.Yes : ActiveState.No;
 
 			double h = this.RibbonHeight;
-			this.vToolBar.Margins = new Margins(0, 0, this.hToolBar.Height+h, this.info.Height);
-			this.bookDocuments.Margins = new Margins(this.vToolBar.Width+1, this.panelsWidth+2, this.hToolBar.Height+h+1, this.info.Height+1);
+			this.vToolBar.Margins = new Margins(0, 0, this.hToolBar.PreferredHeight+h, this.info.PreferredHeight);
+			this.bookDocuments.Margins = new Margins(this.vToolBar.PreferredWidth+1, this.panelsWidth+2, this.hToolBar.PreferredHeight+h+1, this.info.PreferredHeight+1);
 
 			int total = this.bookDocuments.PageCount;
 			for ( int i=0 ; i<total ; i++ )
 			{
 				DocumentInfo di = this.documents[i] as DocumentInfo;
-				di.bookPanels.Margins = new Margins(1, 1, this.hToolBar.Height+h+1, this.info.Height+1);
+				di.bookPanels.Margins = new Margins(1, 1, this.hToolBar.PreferredHeight+h+1, this.info.PreferredHeight+1);
 			}
-			this.ResumeLayout();
 		}
 
 		protected double RibbonHeight
@@ -1472,11 +1469,11 @@ namespace Epsitec.App.DocumentEditor
 			if ( !this.IsCurrentDocument )  return;
 			StatusField sf = sender as StatusField;
 			if ( sf == null )  return;
-			Point pos = sf.MapClientToScreen(new Point(0, sf.Height));
+			Point pos = sf.MapClientToScreen(new Point(0, sf.ActualHeight));
 			DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
 			VMenu menu = Menus.ZoomMenu.CreateZoomMenu(context.Zoom, context.ZoomPage, null);
 			menu.Host = this;
-			pos.Y += menu.Height;
+			pos.Y += menu.ActualHeight;
 			menu.ShowAsContextMenu(this.Window, pos);  // -> commandes "ZoomChange"
 		}
 
@@ -2934,7 +2931,7 @@ namespace Epsitec.App.DocumentEditor
 			menu.Host = this;
 			menu.Behavior.Accepted += new EventHandler(this.HandleStretchTypeMenuAccepted);
 			menu.Behavior.Rejected += new EventHandler(this.HandleStretchTypeMenuRejected);
-			menu.MinWidth = button.Width+type.Width;
+			menu.MinWidth = button.ActualWidth+type.ActualWidth;
 			TextFieldCombo.AdjustComboSize(button, menu);
 			menu.ShowAsComboList(button, Point.Zero, type);
 			this.WidgetStretchTypeMenuEngaged(true);
@@ -3306,10 +3303,10 @@ namespace Epsitec.App.DocumentEditor
 			//	Bouton "menu des pages" cliqué.
 			Button button = sender as Button;
 			if ( button == null )  return;
-			Point pos = button.MapClientToScreen(new Point(0, button.Height));
+			Point pos = button.MapClientToScreen(new Point(0, button.ActualHeight));
 			VMenu menu = this.CreatePagesMenu();
 			menu.Host = this;
-			pos.Y += menu.Height;
+			pos.Y += menu.ActualHeight;
 			menu.ShowAsComboList(this, pos, button);
 		}
 
@@ -3389,10 +3386,10 @@ namespace Epsitec.App.DocumentEditor
 			//	Bouton "menu des calques" cliqué.
 			Button button = sender as Button;
 			if ( button == null )  return;
-			Point pos = button.MapClientToScreen(new Point(0, button.Height));
+			Point pos = button.MapClientToScreen(new Point(0, button.ActualHeight));
 			VMenu menu = this.CreateLayersMenu();
 			menu.Host = this;
-			pos.X -= menu.Width;
+			pos.X -= menu.ActualWidth;
 			menu.ShowAsComboList(this, pos, button);
 		}
 
@@ -3926,11 +3923,14 @@ namespace Epsitec.App.DocumentEditor
 		private void HandleMouseChanged()
 		{
 			//	Appelé par le document lorsque la position de la souris a changé.
-			//	TODO: [PA] Parfois, this.info.Items est nul après avoir cliqué la case de fermeture de la fenêtre !
 			
-			System.Diagnostics.Debug.Assert (this.info.Items != null);
-			
-			if ( this.info.Items == null )  return;
+			if (this.info.Items == null)
+			{
+				//	Quand on tue l'application par ALT-F4, il se peut que l'on reçoive encore
+				//	des événements souris fantômes, alors que nous sommes déjà "morts".
+				
+				return;
+			}
 
 			StatusField field = this.info.Items["StatusMouse"] as StatusField;
 			field.Text = this.TextInfoMouse;
@@ -4887,15 +4887,15 @@ namespace Epsitec.App.DocumentEditor
 
 			if ( bbox.IsInfinite )
 			{
-				viewer.SetSyncPaint(true);
+				viewer.SyncPaint = true;
 				viewer.Invalidate();
-				viewer.SetSyncPaint(false);
+				viewer.SyncPaint = false;
 			}
 			else
 			{
-				viewer.SetSyncPaint(true);
+				viewer.SyncPaint = true;
 				viewer.Invalidate(bbox);
-				viewer.SetSyncPaint(false);
+				viewer.SyncPaint = false;
 			}
 		}
 

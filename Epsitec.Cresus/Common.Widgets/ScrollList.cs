@@ -1,6 +1,8 @@
 //	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
+using Epsitec.Common.Support;
+
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
@@ -10,15 +12,6 @@ namespace Epsitec.Common.Widgets
 	{
 		public ScrollList()
 		{
-			if ( Support.ObjectBundler.IsBooting )
-			{
-				//	N'initialise rien, car cela prend passablement de temps... et de toute
-				//	manière, on n'a pas besoin de toutes ces informations pour pouvoir
-				//	utiliser IBundleSupport.
-				
-				return;
-			}
-			
 			this.items = new Collections.StringCollection(this);
 			this.items.AcceptsRichText = true;
 			
@@ -31,11 +24,11 @@ namespace Epsitec.Common.Widgets
 			this.selectItemBehavior = new Behaviors.SelectItemBehavior(new Behaviors.SelectItemCallback(this.AutomaticItemSelection));
 			
 			this.scrollListStyle = ScrollListStyle.Normal;
-			this.lineHeight = this.DefaultFontHeight+1;
+			this.lineHeight = Widget.DefaultFontHeight+1;
 			this.scroller = new VScroller(null);
 			this.scroller.IsInverted = true;
 			this.scroller.SetParent(this);
-			this.scroller.ValueChanged += new Support.EventHandler(this.HandleScrollerValueChanged);
+			this.scroller.ValueChanged += new EventHandler(this.HandleScrollerValueChanged);
 			this.scroller.Hide();
 			this.UpdateMargins();
 		}
@@ -46,27 +39,13 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
-		#region Interface IBundleSupport
-		public override void RestoreFromBundle(Epsitec.Common.Support.ObjectBundler bundler, Epsitec.Common.Support.ResourceBundle bundle)
-		{
-			base.RestoreFromBundle(bundler, bundle);
-			this.items.RestoreFromBundle("items", bundler, bundle);
-		}
-		
-		public override void SerializeToBundle(Support.ObjectBundler bundler, Support.ResourceBundle bundle)
-		{
-			base.SerializeToBundle(bundler, bundle);
-			this.items.SerializeToBundle("items", bundler, bundle);
-		}
-		#endregion
-		
 		protected override void Dispose(bool disposing)
 		{
 			if ( disposing )
 			{
 				if ( this.scroller != null )
 				{
-					this.scroller.ValueChanged -= new Support.EventHandler(this.HandleScrollerValueChanged);
+					this.scroller.ValueChanged -= new EventHandler(this.HandleScrollerValueChanged);
 				}
 			}
 			
@@ -359,18 +338,20 @@ namespace Epsitec.Common.Widgets
 			return true;
 		}
 #endif
-		
-		
-		public override Drawing.Rectangle GetShapeBounds()
+
+
+		public override Drawing.Margins GetShapeMargins()
 		{
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
-			Drawing.Rectangle rect = this.Client.Bounds;
-			rect.Inflate(adorner.GeometryListShapeBounds);
-			if ( this.scrollListStyle == ScrollListStyle.Menu )
+			
+			Drawing.Margins margins = adorner.GeometryListShapeMargins;
+
+			if (this.scrollListStyle == ScrollListStyle.Menu)
 			{
-				rect.Inflate(adorner.GeometryMenuShadow);
+				margins += adorner.GeometryMenuShadow;
 			}
-			return rect;
+			
+			return margins;
 		}
 
 		protected override void ProcessMessage(Message message, Drawing.Point pos)
@@ -513,7 +494,7 @@ namespace Epsitec.Common.Widgets
 			int total = this.items.Count;
 			if ( total <= this.visibleLines )
 			{
-				if ( this.scroller.IsVisible )
+				if (this.scroller.Visibility)
 				{
 					this.scroller.Hide();
 					this.UpdateMargins();
@@ -526,8 +507,8 @@ namespace Epsitec.Common.Widgets
 				this.scroller.Value             = (decimal) (this.firstLine);
 				this.scroller.SmallChange       = 1;
 				this.scroller.LargeChange       = (decimal) (this.visibleLines/2.0);
-				
-				if ( !this.scroller.IsVisible )
+
+				if (!this.scroller.Visibility)
 				{
 					this.scroller.Show();
 					this.UpdateMargins();
@@ -585,7 +566,7 @@ namespace Epsitec.Common.Widgets
 			
 			if ( this.lineHeight == 0 )  return;
 
-			this.visibleLines = (int)((this.Bounds.Height-ScrollList.TextOffsetY*2)/this.lineHeight);
+			this.visibleLines = (int)((this.ActualHeight-ScrollList.TextOffsetY*2)/this.lineHeight);
 			if ( this.visibleLines < 1 )  this.visibleLines = 1;
 			this.textLayouts = new TextLayout[this.visibleLines];
 			
@@ -597,10 +578,10 @@ namespace Epsitec.Common.Widgets
 				IAdorner adorner = Widgets.Adorners.Factory.Active;
 				Drawing.Rectangle rect = new Drawing.Rectangle();
 				rect.Right  = this.Client.Size.Width-adorner.GeometryScrollerRightMargin;
-				rect.Left   = rect.Right-this.scroller.Width;
+				rect.Left   = rect.Right-this.scroller.PreferredWidth;
 				rect.Bottom = adorner.GeometryScrollerBottomMargin+ScrollList.TextOffsetY-this.margins.Bottom;
 				rect.Top    = this.Client.Size.Height-adorner.GeometryScrollerTopMargin-ScrollList.TextOffsetY+this.margins.Top;
-				this.scroller.Bounds = rect;
+				this.scroller.SetManualBounds(rect);
 			}
 		}
 
@@ -615,7 +596,7 @@ namespace Epsitec.Common.Widgets
 		{
 			base.OnResourceManagerChanged();
 			
-			Support.ResourceManager resourceManager = this.ResourceManager;
+			ResourceManager resourceManager = this.ResourceManager;
 			
 			for ( int i=0 ; i<this.textLayouts.GetLength(0) ; i++ )
 			{
@@ -638,9 +619,9 @@ namespace Epsitec.Common.Widgets
 				/**/                           adorner.GeometryScrollListYMargin, adorner.GeometryScrollListYMargin);
 			
 			if ( this.scroller != null   &&
-				 this.scroller.IsVisible )
+				 this.scroller.Visibility )
 			{
-				this.margins.Right = this.Client.Size.Width - this.scroller.Left;
+				this.margins.Right = this.Client.Size.Width - this.scroller.ActualLocation.X;
 			}
 		}
 		
@@ -670,20 +651,20 @@ namespace Epsitec.Common.Widgets
 		protected virtual void OnSelectedIndexChanged()
 		{
 			//	Génère un événement pour dire que la sélection dans la liste a changé.
-			
-			if ( this.SelectedIndexChanged != null )  // qq'un écoute ?
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("SelectedIndexChanged");
+			if (handler != null)
 			{
-				this.SelectedIndexChanged(this);
+				handler(this);
 			}
 		}
 
 		protected virtual void OnSelectionActivated()
 		{
 			//	Génère un événement pour dire que la sélection a été validée
-			
-			if ( this.SelectionActivated != null )
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("SelectionActivated");
+			if (handler != null)
 			{
-				this.SelectionActivated(this);
+				handler(this);
 			}
 		}
 
@@ -695,7 +676,7 @@ namespace Epsitec.Common.Widgets
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
 
 			Drawing.Rectangle rect  = this.Client.Bounds;
-			WidgetState       state = this.PaintState;
+			WidgetPaintState       state = this.PaintState;
 			
 			if ( this.scrollListStyle == ScrollListStyle.Menu )
 			{
@@ -717,7 +698,7 @@ namespace Epsitec.Common.Widgets
 				if ( this.textLayouts[i] == null )  break;
 
 				if ( i+this.firstLine == this.selectedLine &&
-					 (state&WidgetState.Enabled) != 0 )
+					 (state&WidgetPaintState.Enabled) != 0 )
 				{
 					TextLayout.SelectedArea[] areas = new TextLayout.SelectedArea[1];
 					areas[0] = new TextLayout.SelectedArea();
@@ -727,11 +708,11 @@ namespace Epsitec.Common.Widgets
 					areas[0].Rect.Height = this.lineHeight;
 					adorner.PaintTextSelectionBackground(graphics, areas, state, PaintTextStyle.TextField, TextDisplayMode.Default);
 
-					state |= WidgetState.Selected;
+					state |= WidgetPaintState.Selected;
 				}
 				else
 				{
-					state &= ~WidgetState.Selected;
+					state &= ~WidgetPaintState.Selected;
 				}
 
 				adorner.PaintButtonTextLayout(graphics, pos, this.textLayouts[i], state, ButtonStyle.ListItem);
@@ -855,7 +836,17 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public event Support.EventHandler		SelectedIndexChanged;
+		public event EventHandler				SelectedIndexChanged
+		{
+			add
+			{
+				this.AddUserEventHandler("SelectedIndexChanged", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("SelectedIndexChanged", value);
+			}
+		}
 		#endregion
 		
 		private void HandleScrollerValueChanged(object sender)
@@ -866,7 +857,18 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		public event Support.EventHandler		SelectionActivated;
+		public event EventHandler				SelectionActivated
+		{
+			add
+			{
+				this.AddUserEventHandler("SelectionActivated", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("SelectionActivated", value);
+			}
+		}
+
 		
 		protected const double					TextOffsetX = 3;
 		protected const double					TextOffsetY = 2;

@@ -2,6 +2,7 @@
 //	Responsable: Pierre ARNAUD
 
 using Epsitec.Common.Support;
+using System.Collections.Generic;
 
 namespace Epsitec.Common.Widgets
 {
@@ -14,7 +15,7 @@ namespace Epsitec.Common.Widgets
 	/// n'est pas un widget en tant que tel: Window.Root définit le widget à la
 	/// racine de la fenêtre.
 	/// </summary>
-	public class Window : Types.DependencyObject, Support.Data.IContainer, ICommandDispatcherHost, Support.Data.IPropertyProvider
+	public class Window : Types.DependencyObject, Support.Data.IContainer, ICommandDispatcherHost
 	{
 		public Window()
 		{
@@ -35,9 +36,11 @@ namespace Epsitec.Common.Widgets
 			this.window = new Platform.Window (this);
 			this.timer  = new Timer ();
 			
-			this.root.Size = new Drawing.Size (this.window.ClientSize);
+			Drawing.Size size = new Drawing.Size (this.window.ClientSize);
+			
+			this.root.NotifyWindowSizeChanged (size.Width, size.Height);
+			
 			this.root.Name = "Root";
-			this.root.MinSizeChanged += this.HandleRootMinSizeChanged;
 			
 			this.timer.TimeElapsed += this.HandleTimeElapsed;
 			this.timer.AutoRepeat = 0.050;
@@ -748,11 +751,11 @@ namespace Epsitec.Common.Widgets
 		
 		
 		#region ICommandDispatcherHost Members
-		public CommandDispatcher[]				CommandDispatchers
+		public IEnumerable<CommandDispatcher> GetCommandDispatchers()
 		{
-			get
+			if (this.dispatcher != null)
 			{
-				return CommandDispatcher.ToArray (this.dispatcher);
+				yield return this.dispatcher;
 			}
 		}
 		#endregion
@@ -962,13 +965,13 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		[Bundle]			public string		Text
+		public string							Text
 		{
 			get { return this.text; }
 			set { this.window.Text = this.text = value; }
 		}
 
-		[Bundle]			public string		Name
+		public string							Name
 		{
 			get { return this.name; }
 			set { this.window.Name = this.name = value; }
@@ -1016,59 +1019,6 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		#region IPropertyProvider Members
-		public string[] GetPropertyNames()
-		{
-			if (this.property_hash == null)
-			{
-				return new string[0];
-			}
-			
-			string[] names = new string[this.property_hash.Count];
-			this.property_hash.Keys.CopyTo (names, 0);
-			System.Array.Sort (names);
-			
-			return names;
-		}
-		
-		public void SetProperty(string key, object value)
-		{
-			if (this.property_hash == null)
-			{
-				this.property_hash = new System.Collections.Hashtable ();
-			}
-			
-			this.property_hash[key] = value;
-		}
-		
-		public object GetProperty(string key)
-		{
-			if (this.property_hash != null)
-			{
-				return this.property_hash[key];
-			}
-			
-			return null;
-		}
-		
-		public bool IsPropertyDefined(string key)
-		{
-			if (this.property_hash != null)
-			{
-				return this.property_hash.Contains (key);
-			}
-			
-			return false;
-		}
-		
-		public void ClearProperty(string key)
-		{
-			if (this.property_hash != null)
-			{
-				this.property_hash.Remove (key);
-			}
-		}
-		#endregion
 		
 		#region IContainer Members
 		public void NotifyComponentInsertion(Support.Data.ComponentCollection collection, Support.Data.IComponent component)
@@ -1230,7 +1180,6 @@ namespace Epsitec.Common.Widgets
 				
 				if (this.root != null)
 				{
-					this.root.MinSizeChanged -= this.HandleRootMinSizeChanged;
 					this.root.Dispose ();
 				}
 				
@@ -1350,7 +1299,6 @@ namespace Epsitec.Common.Widgets
 			}
 
 			this.ForceLayout ();
-			this.SyncMinSizeWithWindowRoot ();
 			
 			if (this.AboutToShowWindow != null)
 			{
@@ -1632,7 +1580,7 @@ namespace Epsitec.Common.Widgets
 			{
 				this.source      = source;
 				this.command     = command;
-				this.dispatchers = dispatcher.CommandDispatchers;
+				this.dispatchers = Types.Collection.ToArray<CommandDispatcher> (dispatcher.GetCommandDispatchers ());
 			}
 			
 			public QueueItem(Widget source)
@@ -1735,6 +1683,18 @@ namespace Epsitec.Common.Widgets
 				this.window.SendQueueCommand ();
 			}
 		}
+
+		public void AsyncLayout()
+		{
+			if (this.IsVisible)
+			{
+				if (this.is_async_layout_queued == false)
+				{
+					this.is_async_layout_queued = true;
+					this.window.SendQueueCommand ();
+				}
+			}
+		}
 		
 		public void AsyncValidation()
 		{
@@ -1775,6 +1735,8 @@ namespace Epsitec.Common.Widgets
 			{
 				this.recursive_layout_count--;
 			}
+			
+			this.SyncMinSizeWithWindowRoot ();
 		}
 		
 		public static void ResetMouseCursor()
@@ -1829,6 +1791,11 @@ namespace Epsitec.Common.Widgets
 			if (this.is_dispose_queued)
 			{
 				this.Dispose ();
+			}
+			if (this.is_async_layout_queued)
+			{
+				this.is_async_layout_queued = false;
+				this.ForceLayout ();
 			}
 			if (this.is_async_notification_queued)
 			{
@@ -2233,23 +2200,19 @@ namespace Epsitec.Common.Widgets
 			this.timer.Stop ();
 		}
 
-		protected void HandleRootMinSizeChanged(object sender, Types.DependencyPropertyChangedEventArgs e)
-		{
-			if (this.IsVisible)
-			{
-				this.SyncMinSizeWithWindowRoot ();
-			}
-		}
-		
 		private void SyncMinSizeWithWindowRoot()
 		{
-			int width  = (int) (this.root.RealMinSize.Width + 0.5);
-			int height = (int) (this.root.RealMinSize.Height + 0.5);
-			
-			width  += this.window.Size.Width  - this.window.ClientSize.Width;
-			height += this.window.Size.Height - this.window.ClientSize.Height;
-			
-			this.window.MinimumSize = new System.Drawing.Size (width, height);
+			if ((this.window != null) &&
+				(this.window.IsFixedSize == false))
+			{
+				int width  = (int) (this.root.RealMinSize.Width + 0.5);
+				int height = (int) (this.root.RealMinSize.Height + 0.5);
+
+				width  += this.window.Size.Width  - this.window.ClientSize.Width;
+				height += this.window.Size.Height - this.window.ClientSize.Height;
+
+				this.window.MinimumSize = new System.Drawing.Size (width, height);
+			}
 		}
 
 		
@@ -2347,12 +2310,12 @@ namespace Epsitec.Common.Widgets
 		private System.Collections.Queue		cmd_queue = new System.Collections.Queue ();
 		private bool							is_dispose_queued;
 		private bool							is_async_notification_queued;
+		private bool							is_async_layout_queued;
 		private bool							is_disposed;
 		private bool							pending_validation;
 		private IPaintFilter					paint_filter;
 		
 		private System.Collections.Queue		post_paint_queue = new System.Collections.Queue ();
-		private System.Collections.Hashtable	property_hash;
 		
 		private Support.Data.ComponentCollection components;
 		

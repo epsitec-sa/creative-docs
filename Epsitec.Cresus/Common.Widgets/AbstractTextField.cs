@@ -2,8 +2,6 @@ using Epsitec.Common.Support;
 
 namespace Epsitec.Common.Widgets
 {
-	using BundleAttribute  = Epsitec.Common.Support.BundleAttribute;
-	
 	public enum TextFieldStyle
 	{
 		Flat,							// pas de cadre, ni de relief, fond blanc
@@ -27,20 +25,10 @@ namespace Epsitec.Common.Widgets
 	/// La classe TextField implémente la ligne éditable, tout en permettant
 	/// aussi de réaliser l'équivalent de la ComboBox Windows.
 	/// </summary>
-	[Support.SuppressBundleSupport]
 	public abstract class AbstractTextField : Widget, Types.IReadOnly
 	{
 		public AbstractTextField()
 		{
-			if ( Support.ObjectBundler.IsBooting )
-			{
-				//	N'initialise rien, car cela prend passablement de temps... et de toute
-				//	manière, on n'a pas besoin de toutes ces informations pour pouvoir
-				//	utiliser IBundleSupport.
-				
-				return;
-			}
-			
 			this.AutoEngage = false;
 			this.AutoFocus  = true;
 			this.AutoRepeat = true;
@@ -53,16 +41,17 @@ namespace Epsitec.Common.Widgets
 			
 			this.ResetCursor();
 			this.MouseCursor = MouseCursor.AsIBeam;
-			
-			this.CreateTextLayout();
+
+			this.InitializeMargins ();
+			this.CreateTextLayout ();
 			
 			this.navigator = new TextNavigator(base.TextLayout);
-			this.navigator.AboutToChange += new Epsitec.Common.Support.EventHandler(this.HandleNavigatorAboutToChange);
-			this.navigator.TextDeleted += new Epsitec.Common.Support.EventHandler(this.HandleNavigatorTextDeleted);
-			this.navigator.TextInserted += new Epsitec.Common.Support.EventHandler(this.HandleNavigatorTextInserted);
-			this.navigator.CursorScrolled += new Epsitec.Common.Support.EventHandler(this.HandleNavigatorCursorScrolled);
-			this.navigator.CursorChanged += new Epsitec.Common.Support.EventHandler(this.HandleNavigatorCursorChanged);
-			this.navigator.StyleChanged += new Epsitec.Common.Support.EventHandler(this.HandleNavigatorStyleChanged);
+			this.navigator.AboutToChange += new EventHandler(this.HandleNavigatorAboutToChange);
+			this.navigator.TextDeleted += new EventHandler(this.HandleNavigatorTextDeleted);
+			this.navigator.TextInserted += new EventHandler(this.HandleNavigatorTextInserted);
+			this.navigator.CursorScrolled += new EventHandler(this.HandleNavigatorCursorScrolled);
+			this.navigator.CursorChanged += new EventHandler(this.HandleNavigatorCursorChanged);
+			this.navigator.StyleChanged += new EventHandler(this.HandleNavigatorStyleChanged);
 			this.textFieldStyle = TextFieldStyle.Normal;
 			
 			this.copyPasteBehavior = new Behaviors.CopyPasteBehavior(this);
@@ -86,7 +75,7 @@ namespace Epsitec.Common.Widgets
 			get { return this.navigator; }
 		}
 
-		public override Support.OpletQueue		OpletQueue
+		public override OpletQueue				OpletQueue
 		{
 			get
 			{
@@ -187,22 +176,15 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public override Drawing.ContentAlignment DefaultAlignment
+		static AbstractTextField()
 		{
-			get
-			{
-				return Drawing.ContentAlignment.TopLeft;
-			}
+			Helpers.VisualPropertyMetadata metadataAlign = new Helpers.VisualPropertyMetadata (Drawing.ContentAlignment.TopLeft, Helpers.VisualPropertyMetadataOptions.AffectsTextLayout);
+			Helpers.VisualPropertyMetadata metadataHeight = new Helpers.VisualPropertyMetadata (Widget.DefaultFontHeight + 2*(AbstractTextField.TextMargin+AbstractTextField.FrameMargin), Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
+			
+			Visual.ContentAlignmentProperty.OverrideMetadata (typeof (AbstractTextField), metadataAlign);
+			Visual.PreferredHeightProperty.OverrideMetadata (typeof (AbstractTextField), metadataHeight);
 		}
-
-		public override double					DefaultHeight
-		{
-			get
-			{
-				return this.DefaultFontHeight + 2*(AbstractTextField.TextMargin+AbstractTextField.FrameMargin);
-			}
-		}
-
+		
 		public void ProcessCut()
 		{
 			this.copyPasteBehavior.ProcessCopy();
@@ -229,41 +211,25 @@ namespace Epsitec.Common.Widgets
 				double yFromTop = this.TextLayout.LayoutSize.Height - pos.Y;
 				double yFromBot = this.realSize.Height - yFromTop + shift.Y + 1;
 
-				return this.MapClientToParent(new Drawing.Point(shift.X, yFromBot)) - this.Location;
+				return this.MapClientToParent(new Drawing.Point(shift.X, yFromBot)) - this.ActualLocation;
 			}
 
 			return base.GetBaseLine ();
 		}
 		
-		public override Drawing.Margins			InternalPadding
+		public override Drawing.Margins GetInternalPadding()
 		{
-			get
+			Drawing.Margins padding = this.margins;
+			
+			if ( this.navigator != null && this.textFieldStyle != TextFieldStyle.Flat )
 			{
-				Drawing.Margins padding = this.margins;
-				
-				if ( this.navigator != null && this.textFieldStyle != TextFieldStyle.Flat )
-				{
-					if ( this.Client.Size.Height < 18 )
-					{
-						if (this.Client.Size.Height >= 15)
-						{
-							double x = AbstractTextField.FrameMargin/2;
-							double y = AbstractTextField.FrameMargin/2;
-							
-							padding = padding + new Drawing.Margins (x, x, y, y);
-						}
-					}
-					else
-					{
-						double x = AbstractTextField.FrameMargin;
-						double y = AbstractTextField.FrameMargin;
-							
-						padding = padding + new Drawing.Margins (x, x, y, y);
-					}
-				}
-				
-				return padding;
+				double excess = System.Math.Max((22-this.Client.Size.Height)/2, 0);
+				double x = System.Math.Max (1, AbstractTextField.FrameMargin-excess);
+				double y = System.Math.Max (0, AbstractTextField.FrameMargin-excess);
+				padding = padding + new Drawing.Margins(x, x, y, y);
 			}
+			
+			return padding;
 		}
 		
 		public virtual Drawing.Rectangle		InnerTextBounds
@@ -271,20 +237,8 @@ namespace Epsitec.Common.Widgets
 			get
 			{
 				Drawing.Rectangle rect = this.Client.Bounds;
-				rect.Deflate (this.InternalPadding);
-
-				if (this.Client.Size.Height < 18 && this.textFieldStyle != TextFieldStyle.Flat)
-				{
-					if (this.Client.Size.Height >= 17)
-					{
-						rect.Deflate(AbstractTextField.TextMargin/2, AbstractTextField.TextMargin/2);
-					}
-				}
-				else
-				{
-					rect.Deflate(AbstractTextField.TextMargin, AbstractTextField.TextMargin);
-				}
-				
+				rect.Deflate(this.GetInternalPadding());
+				rect.Deflate(AbstractTextField.TextMargin, AbstractTextField.TextMargin);
 				return rect;
 			}
 		}
@@ -501,12 +455,12 @@ namespace Epsitec.Common.Widgets
 				{
 					if ( this.navigator != null )
 					{
-						this.navigator.AboutToChange -= new Epsitec.Common.Support.EventHandler(this.HandleNavigatorAboutToChange);
-						this.navigator.TextDeleted -= new Epsitec.Common.Support.EventHandler(this.HandleNavigatorTextDeleted);
-						this.navigator.TextInserted -= new Epsitec.Common.Support.EventHandler(this.HandleNavigatorTextInserted);
-						this.navigator.CursorScrolled -= new Epsitec.Common.Support.EventHandler(this.HandleNavigatorCursorScrolled);
-						this.navigator.CursorChanged -= new Epsitec.Common.Support.EventHandler(this.HandleNavigatorCursorChanged);
-						this.navigator.StyleChanged -= new Epsitec.Common.Support.EventHandler(this.HandleNavigatorStyleChanged);
+						this.navigator.AboutToChange -= new EventHandler(this.HandleNavigatorAboutToChange);
+						this.navigator.TextDeleted -= new EventHandler(this.HandleNavigatorTextDeleted);
+						this.navigator.TextInserted -= new EventHandler(this.HandleNavigatorTextInserted);
+						this.navigator.CursorScrolled -= new EventHandler(this.HandleNavigatorCursorScrolled);
+						this.navigator.CursorChanged -= new EventHandler(this.HandleNavigatorCursorChanged);
+						this.navigator.StyleChanged -= new EventHandler(this.HandleNavigatorStyleChanged);
 					}
 					
 					TextField.blinking = null;
@@ -655,10 +609,10 @@ namespace Epsitec.Common.Widgets
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
 			Drawing.Rectangle rect = new Drawing.Rectangle();
 			
-			rect.Left   = this.Bounds.Width-this.margins.Right-adorner.GeometryComboRightMargin;
-			rect.Right  = this.Bounds.Width-adorner.GeometryComboRightMargin;
+			rect.Left   = this.ActualWidth-this.margins.Right-adorner.GeometryComboRightMargin;
+			rect.Right  = this.ActualWidth-adorner.GeometryComboRightMargin;
 			rect.Bottom = adorner.GeometryComboBottomMargin;
-			rect.Top    = this.Bounds.Height-adorner.GeometryComboTopMargin;
+			rect.Top    = this.ActualHeight-adorner.GeometryComboTopMargin;
 			
 			return rect;
 		}
@@ -668,7 +622,7 @@ namespace Epsitec.Common.Widgets
 			if ( this.TextLayout != null )
 			{
 				this.realSize = this.InnerTextBounds.Size;
-				this.TextLayout.Alignment  = this.Alignment;
+				this.TextLayout.Alignment  = this.ContentAlignment;
 				this.TextLayout.LayoutSize = this.GetTextLayoutSize();
 				
 				if ( this.TextLayout.Text != null )
@@ -681,6 +635,10 @@ namespace Epsitec.Common.Widgets
 		protected virtual Drawing.Size GetTextLayoutSize()
 		{
 			return new Drawing.Size(AbstractTextField.Infinity, this.realSize.Height);
+		}
+
+		protected virtual void InitializeMargins()
+		{
 		}
 
 		
@@ -900,8 +858,8 @@ namespace Epsitec.Common.Widgets
 		{
 			this.contextMenu = new VMenu();
 			this.contextMenu.Host = this;
-			this.contextMenu.Accepted += new Support.EventHandler(this.HandleContextMenuAccepted);
-			this.contextMenu.Rejected += new Support.EventHandler(this.HandleContextMenuRejected);
+			this.contextMenu.Accepted += new EventHandler(this.HandleContextMenuAccepted);
+			this.contextMenu.Rejected += new EventHandler(this.HandleContextMenuRejected);
 
 			MenuItem mi;
 			bool sel = (this.TextNavigator.CursorFrom != this.TextNavigator.CursorTo);
@@ -967,9 +925,9 @@ namespace Epsitec.Common.Widgets
 			
 			ScreenInfo si = ScreenInfo.Find(mouse);
 			Drawing.Rectangle wa = si.WorkingArea;
-			if ( mouse.Y-this.contextMenu.Height < wa.Bottom )
+			if ( mouse.Y-this.contextMenu.ActualHeight < wa.Bottom )
 			{
-				mouse.Y = wa.Bottom+this.contextMenu.Height;
+				mouse.Y = wa.Bottom+this.contextMenu.ActualHeight;
 			}
 			
 //			this.contextMenu.AttachCommandDispatcher(this.CommandDispatchers[0]);
@@ -980,8 +938,8 @@ namespace Epsitec.Common.Widgets
 		{
 			if (this.contextMenu != null)
 			{
-				this.contextMenu.Accepted -= new Support.EventHandler(this.HandleContextMenuAccepted);
-				this.contextMenu.Rejected -= new Support.EventHandler(this.HandleContextMenuRejected);
+				this.contextMenu.Accepted -= new EventHandler(this.HandleContextMenuAccepted);
+				this.contextMenu.Rejected -= new EventHandler(this.HandleContextMenuRejected);
 				this.contextMenu.Dispose ();
 				this.contextMenu = null;
 			}
@@ -1042,7 +1000,7 @@ namespace Epsitec.Common.Widgets
 			
 			if ( this.AutoSelectOnFocus )
 			{
-				Support.CancelEventArgs cancelEvent = new Support.CancelEventArgs();
+				CancelEventArgs cancelEvent = new CancelEventArgs();
 				this.OnAutoSelecting(cancelEvent);
 				
 				if ( !cancelEvent.Cancel )
@@ -1053,7 +1011,7 @@ namespace Epsitec.Common.Widgets
 			
 			if ( this.AutoEraseOnFocus )
 			{
-				Support.CancelEventArgs cancelEvent = new Support.CancelEventArgs();
+				CancelEventArgs cancelEvent = new CancelEventArgs();
 				this.OnAutoErasing(cancelEvent);
 				
 				if ( !cancelEvent.Cancel )
@@ -1181,9 +1139,10 @@ namespace Epsitec.Common.Widgets
 		{
 			this.OnTextChanged();
 
-			if ( this.TextDeleted != null )  // qq'un écoute ?
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("TextDeleted");
+			if (handler != null)
 			{
-				this.TextDeleted(this);
+				handler(this);
 			}
 		}
 
@@ -1191,9 +1150,10 @@ namespace Epsitec.Common.Widgets
 		{
 			this.OnTextChanged();
 
-			if ( this.TextInserted != null )  // qq'un écoute ?
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("TextInserted");
+			if (handler != null)
 			{
-				this.TextInserted(this);
+				handler(this);
 			}
 		}
 
@@ -1206,10 +1166,11 @@ namespace Epsitec.Common.Widgets
 				
 				this.UpdateButtonVisibility ();
 			}
-			
-			if ( this.TextEdited != null )
+
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("TextEdited");
+			if (handler != null)
 			{
-				this.TextEdited(this);
+				handler(this);
 			}
 		}
 
@@ -1224,17 +1185,19 @@ namespace Epsitec.Common.Widgets
 			if ( this.navigator.Context.CursorFrom != this.navigator.Context.CursorTo ||
 				 this.lastCursorFrom != this.lastCursorTo )
 			{
-				if ( this.SelectionChanged != null )  // qq'un écoute ?
+				EventHandler handler = (EventHandler) this.GetUserEventHandler("SelectionChanged");
+				if (handler != null)
 				{
-					this.SelectionChanged(this);
+					handler(this);
 				}
 			}
 
 			if ( !silent && this.navigator.Context.CursorFrom == this.navigator.Context.CursorTo )
 			{
-				if ( this.CursorChanged != null )  // qq'un écoute ?
+				EventHandler handler = (EventHandler) this.GetUserEventHandler("CursorChanged");
+				if (handler != null)
 				{
-					this.CursorChanged(this);
+					handler(this);
 				}
 			}
 
@@ -1244,25 +1207,28 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void OnReadOnlyChanged()
 		{
-			if (this.ReadOnlyChanged != null)
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("ReadOnlyChanged");
+			if (handler != null)
 			{
-				this.ReadOnlyChanged (this);
+				handler(this);
 			}
 		}
 
-		protected virtual void OnAutoSelecting(Support.CancelEventArgs e)
+		protected virtual void OnAutoSelecting(CancelEventArgs e)
 		{
-			if ( this.AutoSelecting != null )
+			EventHandler<CancelEventArgs> handler = (EventHandler<CancelEventArgs>) this.GetUserEventHandler("AutoSelecting");
+			if (handler != null)
 			{
-				this.AutoSelecting(this, e);
+				handler(this, e);
 			}
 		}
 		
-		protected virtual void OnAutoErasing(Support.CancelEventArgs e)
+		protected virtual void OnAutoErasing(CancelEventArgs e)
 		{
-			if ( this.AutoErasing != null )
+			EventHandler<CancelEventArgs> handler = (EventHandler<CancelEventArgs>) this.GetUserEventHandler("AutoErasing");
+			if (handler != null)
 			{
-				this.AutoErasing(this, e);
+				handler(this, e);
 			}
 		}
 		
@@ -1270,30 +1236,33 @@ namespace Epsitec.Common.Widgets
 		protected virtual void OnEditionStarted()
 		{
 			System.Diagnostics.Debug.WriteLine ("Started Edition");
-			
-			if (this.EditionStarted != null)
+
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("EditionStarted");
+			if (handler != null)
 			{
-				this.EditionStarted (this);
+				handler(this);
 			}
 		}
 		
 		protected virtual void OnEditionAccepted()
 		{
 			System.Diagnostics.Debug.WriteLine ("Accepted Edition");
-			
-			if (this.EditionAccepted != null)
+
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("EditionAccepted");
+			if (handler != null)
 			{
-				this.EditionAccepted (this);
+				handler(this);
 			}
 		}
 		
 		protected virtual void OnEditionRejected()
 		{
 			System.Diagnostics.Debug.WriteLine ("Rejected Edition");
-			
-			if (this.EditionRejected != null)
+
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("EditionRejected");
+			if (handler != null)
 			{
-				this.EditionRejected (this);
+				handler(this);
 			}
 		}
 		
@@ -1400,7 +1369,7 @@ namespace Epsitec.Common.Widgets
 				//	premier TextField ne s'affiche, car sinon les WinForms semblent se
 				//	mélanger les pinceaux :
 				TextField.flashTimer = new Timer();
-				TextField.flashTimer.TimeElapsed += new Support.EventHandler(TextField.HandleFlashTimer);
+				TextField.flashTimer.TimeElapsed += new EventHandler(TextField.HandleFlashTimer);
 				TextField.flashTimerStarted = true;
 				
 				this.ResetCursor();
@@ -1413,11 +1382,11 @@ namespace Epsitec.Common.Widgets
 			
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
 
-			WidgetState       state     = this.PaintState;
+			WidgetPaintState  state     = this.PaintState;
 			Drawing.Point     pos       = this.InnerTextBounds.Location - this.scrollOffset + new Drawing.Point(0, 1);
 			Drawing.Rectangle rText     = this.InnerTextBounds;
 			Drawing.Rectangle rInside   = this.Client.Bounds;
-			rInside.Deflate (this.InternalPadding);
+			rInside.Deflate(this.GetInternalPadding());
 			Drawing.Rectangle rSaveClip = graphics.SaveClippingRectangle();
 			Drawing.Rectangle rClip     = rInside;
 			Drawing.Rectangle rFill     = this.Client.Bounds;
@@ -1436,7 +1405,7 @@ namespace Epsitec.Common.Widgets
 			{
 				//	Ne reproduit pas l'état sélectionné si on peint nous-même le fond
 				//	de la ligne éditable.
-				state &= ~WidgetState.Selected;
+				state &= ~WidgetPaintState.Selected;
 				adorner.PaintTextFieldBackground(graphics, rFill, state, this.textFieldStyle, this.textDisplayMode, this.navigator.IsReadOnly&&!this.IsCombo);
 			}
 			
@@ -1460,12 +1429,12 @@ namespace Epsitec.Common.Widgets
 					areas[0].Rect = rInside;
 					areas[0].Rect.Deflate(1, 1);
 					adorner.PaintTextSelectionBackground(graphics, areas, state, PaintTextStyle.TextField, this.textDisplayMode);
-					adorner.PaintGeneralTextLayout(graphics, clipRect, pos, textLayout, (state&~WidgetState.Focused)|WidgetState.Selected, PaintTextStyle.TextField, this.textDisplayMode, this.BackColor);
+					adorner.PaintGeneralTextLayout(graphics, clipRect, pos, textLayout, (state&~WidgetPaintState.Focused)|WidgetPaintState.Selected, PaintTextStyle.TextField, this.textDisplayMode, this.BackColor);
 					adorner.PaintFocusBox(graphics, areas[0].Rect);
 				}
 				else if ( from == to )
 				{
-					adorner.PaintGeneralTextLayout(graphics, clipRect, pos, textLayout, state&~WidgetState.Focused, PaintTextStyle.TextField, this.textDisplayMode, this.BackColor);
+					adorner.PaintGeneralTextLayout(graphics, clipRect, pos, textLayout, state&~WidgetPaintState.Focused, PaintTextStyle.TextField, this.textDisplayMode, this.BackColor);
 					visibleCursor = TextField.showCursor && this.Window.IsFocused && !this.Window.IsSubmenuOpen;
 				}
 				else if (this.Window.IsFocused == false)
@@ -1473,7 +1442,7 @@ namespace Epsitec.Common.Widgets
 					//	Il y a une sélection, mais la fenêtre n'a pas le focus; on ne peint
 					//	donc pas la sélection...
 					
-					adorner.PaintGeneralTextLayout (graphics, clipRect, pos, textLayout, state&~WidgetState.Focused, PaintTextStyle.TextField, this.textDisplayMode, this.BackColor);
+					adorner.PaintGeneralTextLayout (graphics, clipRect, pos, textLayout, state&~WidgetPaintState.Focused, PaintTextStyle.TextField, this.textDisplayMode, this.BackColor);
 					visibleCursor = false;
 				}
 				else
@@ -1486,20 +1455,20 @@ namespace Epsitec.Common.Widgets
 					TextLayout.SelectedArea[] areas = textLayout.FindTextRange(pos, from, to);
 					if ( areas.Length == 0 )
 					{
-						adorner.PaintGeneralTextLayout(graphics, clipRect, pos, textLayout, state&~WidgetState.Focused, PaintTextStyle.TextField, this.textDisplayMode, this.BackColor);
+						adorner.PaintGeneralTextLayout(graphics, clipRect, pos, textLayout, state&~WidgetPaintState.Focused, PaintTextStyle.TextField, this.textDisplayMode, this.BackColor);
 						visibleCursor = TextField.showCursor && this.Window.IsFocused && !this.Window.IsSubmenuOpen;
 					}
 					else
 					{
-						adorner.PaintGeneralTextLayout(graphics, clipRect, pos, textLayout, state&~(WidgetState.Focused|WidgetState.Selected), PaintTextStyle.TextField, this.textDisplayMode, this.BackColor);
+						adorner.PaintGeneralTextLayout(graphics, clipRect, pos, textLayout, state&~(WidgetPaintState.Focused|WidgetPaintState.Selected), PaintTextStyle.TextField, this.textDisplayMode, this.BackColor);
 					
 						for ( int i=0 ; i<areas.Length ; i++ )
 						{
 							areas[i].Rect.Offset(0, -1);
 							graphics.Align(ref areas[i].Rect);
 						}
-						WidgetState st = state;
-						if ( this.contextMenu != null )  st |= WidgetState.Focused;
+						WidgetPaintState st = state;
+						if ( this.contextMenu != null )  st |= WidgetPaintState.Focused;
 						adorner.PaintTextSelectionBackground(graphics, areas, st, PaintTextStyle.TextField, this.textDisplayMode);
 					
 						Drawing.Rectangle[] rects = new Drawing.Rectangle[areas.Length];
@@ -1509,7 +1478,7 @@ namespace Epsitec.Common.Widgets
 						}
 						graphics.SetClippingRectangles(rects);
 
-						adorner.PaintGeneralTextLayout(graphics, clipRect, pos, textLayout, (state&~WidgetState.Focused)|WidgetState.Selected, PaintTextStyle.TextField, this.textDisplayMode, this.BackColor);
+						adorner.PaintGeneralTextLayout(graphics, clipRect, pos, textLayout, (state&~WidgetPaintState.Focused)|WidgetPaintState.Selected, PaintTextStyle.TextField, this.textDisplayMode, this.BackColor);
 					}
 				}
 				
@@ -1527,16 +1496,22 @@ namespace Epsitec.Common.Widgets
 			}
 			else
 			{
-				adorner.PaintGeneralTextLayout(graphics, clipRect, pos, textLayout, state&~WidgetState.Focused, PaintTextStyle.TextField, this.textDisplayMode, this.BackColor);
+				adorner.PaintGeneralTextLayout(graphics, clipRect, pos, textLayout, state&~WidgetPaintState.Focused, PaintTextStyle.TextField, this.textDisplayMode, this.BackColor);
 			}
 
 			graphics.RestoreClippingRectangle(rSaveClip);
 		}
 
+		protected override void UpdateClientGeometry()
+		{
+			base.UpdateClientGeometry ();
+			this.UpdateGeometry ();
+		}
+
 		protected sealed override void SetBoundsOverride(Drawing.Rectangle oldRect, Drawing.Rectangle newRect)
 		{
 			base.SetBoundsOverride(oldRect, newRect);
-			this.UpdateGeometry ();
+//			this.UpdateGeometry ();
 		}
 		
 		protected virtual void UpdateGeometry()
@@ -1559,6 +1534,8 @@ namespace Epsitec.Common.Widgets
 			{
 				if ((pos.X >= this.margins.Left) &&
 					(pos.X <= this.Client.Size.Width - this.margins.Right) &&
+					(pos.Y >= this.margins.Bottom) &&
+					(pos.Y <= this.Client.Size.Height - this.margins.Top) &&
 					(this.navigator.IsReadOnly == false))
 				{
 					this.MouseCursor = MouseCursor.AsIBeam;
@@ -1574,12 +1551,9 @@ namespace Epsitec.Common.Widgets
 			return false;
 		}
 		
-		public override Drawing.Rectangle GetShapeBounds()
+		public override Drawing.Margins GetShapeMargins()
 		{
-			IAdorner adorner = Widgets.Adorners.Factory.Active;
-			Drawing.Rectangle rect = this.Client.Bounds;
-			rect.Inflate(adorner.GeometryTextFieldShapeBounds);
-			return rect;
+			return Widgets.Adorners.Factory.Active.GeometryTextFieldShapeMargins;
 		}
 
 		
@@ -1601,7 +1575,7 @@ namespace Epsitec.Common.Widgets
 			}
 			
 			
-			[Support.Command ("Copy")]		public void CommandCopy(CommandDispatcher dispatcher, CommandEventArgs e)
+			[Command ("Copy")]		public void CommandCopy(CommandDispatcher dispatcher, CommandEventArgs e)
 			{
 				string value = this.host.Selection;
 				
@@ -1610,16 +1584,16 @@ namespace Epsitec.Common.Widgets
 					value = this.host.Text;
 				}
 				
-				Support.Clipboard.WriteData data = new Support.Clipboard.WriteData ();
+				Clipboard.WriteData data = new Clipboard.WriteData ();
 				
 				data.WriteTextLayout (value);
 				data.WriteHtmlFragment (value);
-				Support.Clipboard.SetData (data);
+				Clipboard.SetData (data);
 				
 				e.Executed = true;
 			}
 			
-			[Support.Command ("Cut")]		public void CommandCut(CommandDispatcher dispatcher, CommandEventArgs e)
+			[Command ("Cut")]		public void CommandCut(CommandDispatcher dispatcher, CommandEventArgs e)
 			{
 				string value = this.host.Selection;
 				
@@ -1629,11 +1603,11 @@ namespace Epsitec.Common.Widgets
 					this.host.SelectAll ();
 				}
 				
-				Support.Clipboard.WriteData data = new Support.Clipboard.WriteData ();
+				Clipboard.WriteData data = new Clipboard.WriteData ();
 				
 				data.WriteTextLayout (value);
 				data.WriteHtmlFragment (value);
-				Support.Clipboard.SetData (data);
+				Clipboard.SetData (data);
 				
 				this.host.TextNavigator.DeleteSelection ();
 				this.host.SimulateEdited ();
@@ -1641,7 +1615,7 @@ namespace Epsitec.Common.Widgets
 				e.Executed = true;
 			}
 			
-			[Support.Command ("Delete")]	public void CommandDelete(CommandDispatcher dispatcher, CommandEventArgs e)
+			[Command ("Delete")]	public void CommandDelete(CommandDispatcher dispatcher, CommandEventArgs e)
 			{
 				string value = this.host.Selection;
 				
@@ -1656,16 +1630,16 @@ namespace Epsitec.Common.Widgets
 				e.Executed = true;
 			}
 			
-			[Support.Command ("SelectAll")]	public void CommandSelectAll(CommandDispatcher dispatcher, CommandEventArgs e)
+			[Command ("SelectAll")]	public void CommandSelectAll(CommandDispatcher dispatcher, CommandEventArgs e)
 			{
 				this.host.SelectAll ();
 				
 				e.Executed = true;
 			}
 			
-			[Support.Command ("Paste")]		public void CommandPaste(CommandDispatcher dispatcher, CommandEventArgs e)
+			[Command ("Paste")]		public void CommandPaste(CommandDispatcher dispatcher, CommandEventArgs e)
 			{
-				Support.Clipboard.ReadData data = Support.Clipboard.GetData ();
+				Clipboard.ReadData data = Clipboard.GetData ();
 				
 				string text_layout = data.ReadTextLayout ();
 				string html        = null;
@@ -1680,7 +1654,7 @@ namespace Epsitec.Common.Widgets
 					
 					if (html != null)
 					{
-						html = Support.Clipboard.ConvertHtmlToSimpleXml (html);
+						html = Clipboard.ConvertHtmlToSimpleXml (html);
 					}
 					else
 					{
@@ -1707,19 +1681,140 @@ namespace Epsitec.Common.Widgets
 			private AbstractTextField			host;
 		}
 		
-		public event EventHandler				TextEdited;
-		public event EventHandler				TextInserted;
-		public event EventHandler				TextDeleted;
-		public event EventHandler				SelectionChanged;
-		public event EventHandler				CursorChanged;
-		public event EventHandler				ReadOnlyChanged;
+
+		public event EventHandler				TextEdited
+		{
+			add
+			{
+				this.AddUserEventHandler("TextEdited", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("TextEdited", value);
+			}
+		}
+
+		public event EventHandler				TextInserted
+		{
+			add
+			{
+				this.AddUserEventHandler("TextInserted", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("TextInserted", value);
+			}
+		}
+
+		public event EventHandler				TextDeleted
+		{
+			add
+			{
+				this.AddUserEventHandler("TextDeleted", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("TextDeleted", value);
+			}
+		}
+
+		public event EventHandler				SelectionChanged
+		{
+			add
+			{
+				this.AddUserEventHandler("SelectionChanged", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("SelectionChanged", value);
+			}
+		}
+
+		public event EventHandler				CursorChanged
+		{
+			add
+			{
+				this.AddUserEventHandler("CursorChanged", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("CursorChanged", value);
+			}
+		}
+
+		public event EventHandler				ReadOnlyChanged
+		{
+			add
+			{
+				this.AddUserEventHandler("ReadOnlyChanged", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("ReadOnlyChanged", value);
+			}
+		}
+
 		
-		public event EventHandler<CancelEventArgs> AutoSelecting;
-		public event EventHandler<CancelEventArgs> AutoErasing;
+		public event EventHandler<CancelEventArgs> AutoSelecting
+		{
+			add
+			{
+				this.AddUserEventHandler("AutoSelecting", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("AutoSelecting", value);
+			}
+		}
+
+		public event EventHandler<CancelEventArgs> AutoErasing
+		{
+			add
+			{
+				this.AddUserEventHandler("AutoErasing", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("AutoErasing", value);
+			}
+		}
+
 		
-		public event EventHandler				EditionStarted;
-		public event EventHandler				EditionAccepted;
-		public event EventHandler				EditionRejected;
+		public event EventHandler				EditionStarted
+		{
+			add
+			{
+				this.AddUserEventHandler("EditionStarted", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("EditionStarted", value);
+			}
+		}
+
+		public event EventHandler				EditionAccepted
+		{
+			add
+			{
+				this.AddUserEventHandler("EditionAccepted", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("EditionAccepted", value);
+			}
+		}
+
+		public event EventHandler				EditionRejected
+		{
+			add
+			{
+				this.AddUserEventHandler("EditionRejected", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("EditionRejected", value);
+			}
+		}
 		
 		
 		internal static readonly double			TextMargin = 2;

@@ -93,7 +93,7 @@ namespace Epsitec.Common.Widgets
 			{
 				double dx = this.Client.Size.Width - HeaderButton.Margin*2;
 				double dy = this.Client.Size.Height;
-				this.TextLayout.Alignment = this.Alignment;
+				this.TextLayout.Alignment = this.ContentAlignment;
 				this.TextLayout.LayoutSize = new Drawing.Size(dx, dy);
 			}
 		}
@@ -103,13 +103,13 @@ namespace Epsitec.Common.Widgets
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
 
 			Drawing.Rectangle rect  = this.Client.Bounds;
-			WidgetState       state = this.PaintState;
+			WidgetPaintState       state = this.PaintState;
 			Drawing.Point     pos   = new Drawing.Point();
 
 			if ( !this.isDynamic )
 			{
-				state &= ~WidgetState.Engaged;
-				state &= ~WidgetState.Entered;
+				state &= ~WidgetPaintState.Engaged;
+				state &= ~WidgetPaintState.Entered;
 			}
 			
 			Direction dir = Direction.None;

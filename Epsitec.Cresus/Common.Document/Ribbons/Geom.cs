@@ -7,7 +7,6 @@ namespace Epsitec.Common.Document.Ribbons
 	/// <summary>
 	/// La classe Geom permet de modifier la géométrie de la sélection.
 	/// </summary>
-	[SuppressBundleSupport]
 	public class Geom : Abstract
 	{
 		public Geom() : base()
@@ -21,7 +20,7 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonToTextBox2 = this.CreateIconButton("ToTextBox2");
 			this.buttonFragment   = this.CreateIconButton("Fragment");
 			
-			this.UpdateClientGeometry();
+//			this.UpdateClientGeometry();
 		}
 		
 		protected override void Dispose(bool disposing)
@@ -50,27 +49,27 @@ namespace Epsitec.Common.Document.Ribbons
 
 			if ( this.buttonCombine == null )  return;
 
-			double dx = this.buttonCombine.DefaultWidth;
-			double dy = this.buttonCombine.DefaultHeight;
+			double dx = this.buttonCombine.PreferredWidth;
+			double dy = this.buttonCombine.PreferredHeight;
 
 			Rectangle rect = this.UsefulZone;
 			rect.Width  = dx;
 			rect.Height = dy;
 			rect.Offset(0, dy+5);
-			this.buttonCombine.Bounds = rect;
+			this.buttonCombine.SetManualBounds(rect);
 			rect.Offset(dx, 0);
-			this.buttonUncombine.Bounds = rect;
+			this.buttonUncombine.SetManualBounds(rect);
 
 			rect = this.UsefulZone;
 			rect.Width  = dx;
 			rect.Height = dy;
-			this.buttonToBezier.Bounds = rect;
+			this.buttonToBezier.SetManualBounds(rect);
 			rect.Offset(dx, 0);
-			this.buttonToPoly.Bounds = rect;
+			this.buttonToPoly.SetManualBounds(rect);
 			rect.Offset(dx, 0);
-			this.buttonToTextBox2.Bounds = rect;
+			this.buttonToTextBox2.SetManualBounds(rect);
 			rect.Offset(dx, 0);
-			this.buttonFragment.Bounds = rect;
+			this.buttonFragment.SetManualBounds(rect);
 		}
 
 

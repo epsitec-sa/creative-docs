@@ -7,7 +7,6 @@ namespace Epsitec.Common.Designer.Ribbons
 	/// <summary>
 	/// La classe File correspond au menu fichiers.
 	/// </summary>
-	[SuppressBundleSupport]
 	public class File : Abstract
 	{
 		public File() : base()
@@ -48,28 +47,28 @@ namespace Epsitec.Common.Designer.Ribbons
 
 			if ( this.buttonNew == null )  return;
 
-			double dx = this.buttonNew.DefaultWidth;
-			double dy = this.buttonNew.DefaultHeight;
+			double dx = this.buttonNew.PreferredWidth;
+			double dy = this.buttonNew.PreferredHeight;
 
 			Rectangle rect = this.UsefulZone;
 			rect.Width  = dx*1.5;
 			rect.Height = dy*1.5;
 			rect.Offset(0, dy*0.5);
-			this.buttonOpen.Bounds = rect;
+			this.buttonOpen.SetManualBounds(rect);
 			rect.Offset(dx*1.5, 0);
-			this.buttonSave.Bounds = rect;
+			this.buttonSave.SetManualBounds(rect);
 
 			rect = this.UsefulZone;
 			rect.Width  = dx;
 			rect.Height = dy;
 			rect.Offset(dx*1.5*2+4, dy+5);
-			this.buttonNew.Bounds = rect;
+			this.buttonNew.SetManualBounds(rect);
 
 			rect = this.UsefulZone;
 			rect.Width  = dx;
 			rect.Height = dy;
 			rect.Offset(dx*1.5*2+4, 0);
-			this.buttonSaveAs.Bounds = rect;
+			this.buttonSaveAs.SetManualBounds(rect);
 		}
 
 

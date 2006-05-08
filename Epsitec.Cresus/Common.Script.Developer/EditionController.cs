@@ -80,13 +80,13 @@ namespace Epsitec.Common.Script.Developer
 			this.compile_button.Shortcuts.Add (new Shortcut (KeyCode.FuncF7));
 			
 			this.find_prev_error_button = new Button ();
-			this.find_prev_error_button.Width = 20;
+			this.find_prev_error_button.PreferredWidth = 20;
 			this.find_prev_error_button.Text = "&lt;";
 			this.find_prev_error_button.Command = "FindNextError(-1)";
 			this.find_prev_error_button.Shortcuts.Add (new Shortcut (KeyCode.FuncF8 | KeyCode.ModifierShift));
 			
 			this.find_next_error_button = new Button ();
-			this.find_next_error_button.Width = 20;
+			this.find_next_error_button.PreferredWidth = 20;
 			this.find_next_error_button.Text = "&gt;";
 			this.find_next_error_button.Command = "FindNextError(1)";
 			this.find_next_error_button.Shortcuts.Add (new Shortcut (KeyCode.FuncF8));
@@ -431,6 +431,7 @@ namespace Epsitec.Common.Script.Developer
 		
 		private void HandleWindowFocusedWidgetChanged(object sender)
 		{
+#if false
 			EditArray edit  = this.panel.ParameterInfoPanel.EditArray;
 			bool      value = edit.ContainsKeyboardFocus;
 			
@@ -448,6 +449,7 @@ namespace Epsitec.Common.Script.Developer
 					}
 				}
 			}
+#endif
 		}
 		
 		private void HandleMethodNameWidgetTextChanged(object sender)

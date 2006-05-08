@@ -18,44 +18,28 @@ namespace Epsitec.Common.Widgets
 			this.Text = text;
 		}
 		
-		public override double DefaultWidth
-		{
-			//	Retourne la largeur standard.
-			get
-			{
-				return 120;
-			}
-		}
-
-		public override double DefaultHeight
-		{
-			//	Retourne la hauteur standard.
-			get
-			{
-				return this.DefaultFontHeight;
-			}
-		}
-
 		protected override void UpdateTextLayout()
 		{
 			if ( this.TextLayout != null )
 			{
 				double dx = this.Client.Size.Width - this.margin*2;
 				double dy = this.Client.Size.Height;
-				this.TextLayout.Alignment = this.Alignment;
+				this.TextLayout.Alignment = this.ContentAlignment;
 				this.TextLayout.LayoutSize = new Drawing.Size(dx, dy);
 			}
 		}
 
-		public override Drawing.ContentAlignment DefaultAlignment
+		static StatusField()
 		{
-			//	Retourne l'alignement par défaut d'un bouton.
-			get
-			{
-				return Drawing.ContentAlignment.MiddleLeft;
-			}
-		}
+			Helpers.VisualPropertyMetadata metadataAlign = new Helpers.VisualPropertyMetadata (Drawing.ContentAlignment.MiddleLeft, Helpers.VisualPropertyMetadataOptions.AffectsTextLayout);
+			Helpers.VisualPropertyMetadata metadataDx = new Helpers.VisualPropertyMetadata (120.0, Helpers.VisualPropertyMetadataOptions.AffectsTextLayout);
+			Helpers.VisualPropertyMetadata metadataDy = new Helpers.VisualPropertyMetadata (Widget.DefaultFontHeight, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
 
+			Visual.ContentAlignmentProperty.OverrideMetadata (typeof (StatusField), metadataAlign);
+			Visual.PreferredWidthProperty.OverrideMetadata (typeof (StatusField), metadataDx);
+			Visual.PreferredHeightProperty.OverrideMetadata (typeof (StatusField), metadataDy);
+		}
+		
 #if false	//#fix
 		public override Drawing.Size PreferredSize
 		{
@@ -76,7 +60,7 @@ namespace Epsitec.Common.Widgets
 			if ( this.TextLayout == null )  return;
 
 			Drawing.Rectangle rect  = this.Client.Bounds;
-			WidgetState       state = this.PaintState;
+			WidgetPaintState       state = this.PaintState;
 			Drawing.Point     pos   = new Drawing.Point();
 			
 			if ( this.BackColor.IsVisible )

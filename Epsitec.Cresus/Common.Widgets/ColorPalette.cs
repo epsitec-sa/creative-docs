@@ -1,7 +1,7 @@
+using Epsitec.Common.Support;
+
 namespace Epsitec.Common.Widgets
 {
-	using BundleAttribute = Epsitec.Common.Support.BundleAttribute;
-	
 	/// <summary>
 	/// La classe ColorPalette propose une palette de couleurs sous forme d'un tableau.
 	/// Pour l'instant, le tableau est fixe et contient 2x8 échantillons.
@@ -10,15 +10,6 @@ namespace Epsitec.Common.Widgets
 	{
 		public ColorPalette()
 		{
-			if ( Support.ObjectBundler.IsBooting )
-			{
-				//	N'initialise rien, car cela prend passablement de temps... et de toute
-				//	manière, on n'a pas besoin de toutes ces informations pour pouvoir
-				//	utiliser IBundleSupport.
-				
-				return;
-			}
-			
 			this.nbColumns = 4;
 			this.nbRows = 8;
 			this.nbTotal = this.nbColumns*this.nbRows;
@@ -92,22 +83,14 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
-		public override double					DefaultWidth
+		static ColorPalette()
 		{
-			get
-			{
-				return 20*this.nbColumns-1;
-			}
-		}
+			Helpers.VisualPropertyMetadata metadataDx = new Helpers.VisualPropertyMetadata (80.0-1, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
+			Helpers.VisualPropertyMetadata metadataDy = new Helpers.VisualPropertyMetadata (160.0-1, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
 
-		public override double					DefaultHeight
-		{
-			get
-			{
-				return 20*this.nbRows-1;
-			}
+			Visual.PreferredWidthProperty.OverrideMetadata (typeof (ColorPalette), metadataDx);
+			Visual.PreferredHeightProperty.OverrideMetadata (typeof (ColorPalette), metadataDy);
 		}
-
 		public int								Columns
 		{
 			get
@@ -215,14 +198,14 @@ namespace Epsitec.Common.Widgets
 				{
 					if ( this.colorCollection != null )
 					{
-						this.colorCollection.Changed -= new Support.EventHandler(this.HandleColorCollectionChanged);
+						this.colorCollection.Changed -= new EventHandler(this.HandleColorCollectionChanged);
 					}
 
 					this.colorCollection = value;
 
 					if ( this.colorCollection != null )
 					{
-						this.colorCollection.Changed += new Support.EventHandler(this.HandleColorCollectionChanged);
+						this.colorCollection.Changed += new EventHandler(this.HandleColorCollectionChanged);
 					}
 
 					for ( int i=0 ; i<this.nbTotal ; i++ )
@@ -381,7 +364,7 @@ namespace Epsitec.Common.Widgets
 				for ( int y=0 ; y<this.nbRows ; y++ )
 				{
 					Drawing.Rectangle r = new Drawing.Rectangle(pos.X, pos.Y, dx, dy);
-					this.palette[i].Bounds = r;
+					this.palette[i].SetManualBounds(r);
 					i ++;
 					pos.Y -= dy-1.0;
 				}
@@ -391,7 +374,7 @@ namespace Epsitec.Common.Widgets
 			if ( this.hasOptionButton )
 			{
 				Drawing.Rectangle r = new Drawing.Rectangle(rect.Left, rect.Top-14, 14, 14);
-				this.buttonOption.Bounds = r;
+				this.buttonOption.SetManualBounds(r);
 				this.buttonOption.Visibility = true;
 			}
 			else
@@ -427,8 +410,8 @@ namespace Epsitec.Common.Widgets
 			menu.Items.Add(new MenuItem("SavePalette", "", Res.Strings.ColorPalette.SavePalette, ""));
 			menu.AdjustSize();
 
-			Drawing.Point pos = button.MapClientToScreen(new Drawing.Point(0, button.Height));
-			pos.X -= menu.Width;
+			Drawing.Point pos = button.MapClientToScreen(new Drawing.Point(0, button.ActualHeight));
+			pos.X -= menu.ActualWidth;
 			menu.ShowAsContextMenu(this.Window, pos);
 		}
 
@@ -451,24 +434,48 @@ namespace Epsitec.Common.Widgets
 		protected virtual void OnExport()
 		{
 			//	Génère un événement pour dire qu'on exporte une couleur.
-			if ( this.Export != null )  // qq'un écoute ?
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("Export");
+			if (handler != null)
 			{
-				this.Export(this);
+				handler(this);
 			}
 		}
 
 		protected virtual void OnImport()
 		{
 			//	Génère un événement pour dire qu'on importe une couleur.
-			if ( this.Import != null )  // qq'un écoute ?
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("Import");
+			if (handler != null)
 			{
-				this.Import(this);
+				handler(this);
 			}
 		}
 
 		
-		public event Support.EventHandler		Export;
-		public event Support.EventHandler		Import;
+		public event EventHandler				Export
+		{
+			add
+			{
+				this.AddUserEventHandler("Export", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("Export", value);
+			}
+		}
+
+		public event EventHandler				Import
+		{
+			add
+			{
+				this.AddUserEventHandler("Import", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("Import", value);
+			}
+		}
+
 
 		protected int							nbColumns;
 		protected int							nbRows;

@@ -1598,7 +1598,7 @@ namespace Epsitec.Common.Document
 
 			//	Dessine l'échantillon "Abc".
 			double fontSize = rect.Height*0.85;
-			Color c = adorner.ColorText(WidgetState.Enabled);
+			Color c = adorner.ColorText(WidgetPaintState.Enabled);
 			Path path = Common.Widgets.Helpers.FontPreviewer.GetPathAbc(id, ox, oy, fontSize);
 				
 			if ( path != null )
@@ -1633,7 +1633,7 @@ namespace Epsitec.Common.Document
 
 			//	Dessine le nom de la police.
 			Rectangle r = new Rectangle(3, 0, 140-3, size.Height);
-			Color c = adorner.ColorText(WidgetState.Enabled);
+			Color c = adorner.ColorText(WidgetPaintState.Enabled);
 			TextLayout layout = new TextLayout();
 			layout.Text = TextLayout.ConvertToTaggedText(fontFace);
 			layout.Alignment = ContentAlignment.MiddleLeft;
@@ -1683,7 +1683,7 @@ namespace Epsitec.Common.Document
 
 			rect = new Rectangle(3, 0, size.Width-3, limit);
 			string text = Misc.UserTextStyleName(this.document.TextContext.StyleList.StyleMap.GetCaption(textStyle));
-			Color c = adorner.ColorText(WidgetState.Enabled);
+			Color c = adorner.ColorText(WidgetPaintState.Enabled);
 			this.DrawDynamicText(graphics, rect, text, limit*10/14, c, ContentAlignment.MiddleLeft);
 		}
 
@@ -1703,7 +1703,7 @@ namespace Epsitec.Common.Document
 
 			Rectangle r = new Rectangle(3, 0, limit-3, size.Height);
 			string text = Misc.UserTextStyleName(this.document.TextContext.StyleList.StyleMap.GetCaption(textStyle));
-			Color c = adorner.ColorText(WidgetState.Enabled);
+			Color c = adorner.ColorText(WidgetPaintState.Enabled);
 			this.DrawDynamicText(graphics, r, text, 0, c, ContentAlignment.MiddleLeft);
 
 			Rectangle rect = new Rectangle(limit, 0, size.Width-limit, size.Height);

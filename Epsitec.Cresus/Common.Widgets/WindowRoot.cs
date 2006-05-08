@@ -2,11 +2,10 @@
 //	Responsable: Pierre ARNAUD
 
 using System.Collections.Generic;
+using Epsitec.Common.Support;
 
 namespace Epsitec.Common.Widgets
 {
-	using BundleAttribute = Support.BundleAttribute;
-	
 	/// <summary>
 	/// La classe WindowRoot implémente le fond de chaque fenêtre. L'utilisateur obtient
 	/// en général une instance de WindowRoot en appelant Window.Root.
@@ -54,7 +53,7 @@ namespace Epsitec.Common.Widgets
 #endif
 		
 		
-		[Bundle] public WindowStyles			WindowStyles
+		public WindowStyles						WindowStyles
 		{
 			get
 			{
@@ -76,7 +75,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		[Bundle] public WindowType				WindowType
+		public WindowType						WindowType
 		{
 			get
 			{
@@ -99,46 +98,6 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		#region IBundleSupport Members
-		public override string						PublicClassName
-		{
-			get { return "Window"; }
-		}
-		
-		public override void RestoreFromBundle(Support.ObjectBundler bundler, Support.ResourceBundle bundle)
-		{
-			string       name = this.Name;
-			Drawing.Size size = this.Size;
-			string       text = this.Text;
-			
-			WindowStyles window_styles = this.WindowStyles;
-			WindowType   window_type   = this.WindowType;
-			
-			this.window = new Window (this);
-			
-			this.window.Name             = name;
-			this.window.ClientSize       = size;
-			this.window.Text             = this.ResourceManager.ResolveTextRef (text);
-			this.window.WindowStyles     = window_styles;
-			this.window.WindowType       = window_type;
-			this.window.PreventAutoClose = true;
-			
-			this.Name = name;
-			this.Text = text;
-			
-			base.RestoreFromBundle (bundler, bundle);
-			
-			if (bundle["icon"].Type == Support.ResourceFieldType.Data)
-			{
-				this.window.Icon = this.ResourceManager.GetImage ("res:" + bundle["icon"].AsString);
-			}
-			
-			this.is_ready = true;
-			this.Invalidate ();
-		}
-		#endregion
-
-
 		public bool DoesVisualContainKeyboardFocus(Visual visual)
 		{
 			//	Retourne true si le visual passé en entrée contient le focus,
@@ -156,21 +115,21 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
-		public override void Invalidate(Drawing.Rectangle rect)
+		public override void InvalidateRectangle(Drawing.Rectangle rect, bool sync)
 		{
 			System.Diagnostics.Debug.Assert (this.Parent == null);
 			
 			if (this.window != null)
 			{
-				if ((this.InternalState & InternalState.SyncPaint) != 0)
+				if (sync)
 				{
 					this.window.SynchronousRepaint ();
-					this.window.MarkForRepaint (this.MapClientToParent (rect));
+					this.window.MarkForRepaint (rect);
 					this.window.SynchronousRepaint ();
 				}
 				else
 				{
-					this.window.MarkForRepaint (this.MapClientToParent (rect));
+					this.window.MarkForRepaint (rect);
 				}
 			}
 		}
@@ -185,7 +144,7 @@ namespace Epsitec.Common.Widgets
 			}
 			else
 			{
-				return this.Size;
+				return this.PreferredSize;
 			}
 		}
 
@@ -435,24 +394,26 @@ namespace Epsitec.Common.Widgets
 			{
 				IAdorner adorner = Widgets.Adorners.Factory.Active;
 				Drawing.Rectangle rect = new Drawing.Rectangle(x1, y1, x2-x1, y2-y1);
-				adorner.PaintWindowBackground(graphics, this.Client.Bounds, rect, WidgetState.None);
+				adorner.PaintWindowBackground(graphics, this.Client.Bounds, rect, WidgetPaintState.None);
 			}
 		}
 		
 		
 		protected virtual  void OnWindowStylesChanged()
 		{
-			if (this.WindowStylesChanged != null)
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("WindowStylesChanged");
+			if (handler != null)
 			{
-				this.WindowStylesChanged (this);
+				handler(this);
 			}
 		}
 		
 		protected virtual  void OnWindowTypeChanged()
 		{
-			if (this.WindowTypeChanged != null)
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("WindowTypeChanged");
+			if (handler != null)
 			{
-				this.WindowTypeChanged (this);
+				handler(this);
 			}
 		}
 		
@@ -475,11 +436,42 @@ namespace Epsitec.Common.Widgets
 			
 			this.SetValue (Visual.IsVisibleProperty, this.window.IsVisible);
 		}
+
+		internal void NotifyWindowSizeChanged(double width, double height)
+		{
+			this.SetManualBounds (new Drawing.Rectangle (0, 0, width, height));
+			
+			Layouts.LayoutContext.AddToArrangeQueue (this);
+		}
+		
+		internal override void SetDirtyLayoutFlag()
+		{
+		}
 		
 		
-		
-		public event Support.EventHandler			WindowStylesChanged;
-		public event Support.EventHandler			WindowTypeChanged;
+		public event EventHandler					WindowStylesChanged
+		{
+			add
+			{
+				this.AddUserEventHandler("WindowStylesChanged", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("WindowStylesChanged", value);
+			}
+		}
+
+		public event EventHandler					WindowTypeChanged
+		{
+			add
+			{
+				this.AddUserEventHandler("WindowTypeChanged", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("WindowTypeChanged", value);
+			}
+		}
 
 		
 		protected WindowStyles						window_styles;
@@ -487,5 +479,6 @@ namespace Epsitec.Common.Widgets
 		protected Window							window;
 		protected bool								is_ready;
 		protected List<Visual>						focus_chain = new List<Visual> ();
+
 	}
 }

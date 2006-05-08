@@ -98,14 +98,14 @@ namespace Epsitec.Common.Script.Developer.Panels
 			this.text_name.ButtonShowCondition = ShowCondition.WhenModified;
 			
 			this.combo_type.Anchor        = AnchorStyles.LeftAndRight | AnchorStyles.Top;
-			this.combo_type.Margins = new Drawing.Margins (width, 0, this.text_name.Height + 2, 0);
+			this.combo_type.Margins = new Drawing.Margins (width, 0, this.text_name.PreferredHeight + 2, 0);
 			this.combo_type.IsReadOnly    = true;
 			
-			label_1.Anchor = AnchorStyles.TopLeft;
-			label_1.Width  = width;
+			label_1.Anchor         = AnchorStyles.TopLeft;
+			label_1.PreferredWidth = width;
 			
-			label_2.Anchor = AnchorStyles.TopLeft;
-			label_2.Width  = width;
+			label_2.Anchor         = AnchorStyles.TopLeft;
+			label_2.PreferredWidth = width;
 			
 			Widget.BaseLineAlign (this.text_name, label_1);
 			Widget.BaseLineAlign (this.combo_type, label_2);

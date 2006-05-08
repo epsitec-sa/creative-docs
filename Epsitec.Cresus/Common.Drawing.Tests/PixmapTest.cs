@@ -199,7 +199,6 @@ namespace Epsitec.Common.Drawing
 			Window.RunInTestEnvironment (window);
 		}
 		
-		[Support.SuppressBundleSupport]
 		protected class TestWidget : Widgets.Widget
 		{
 			public TestWidget(Pixmap[] stack)

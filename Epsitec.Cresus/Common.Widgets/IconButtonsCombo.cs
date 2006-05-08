@@ -5,7 +5,7 @@ using Epsitec.Common.Support;
 
 namespace Epsitec.Common.Widgets
 {
-	using PropertyChangedEventHandler=Epsitec.Common.Support.EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>;
+	using PropertyChangedEventHandler = EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>;
 
 	/// <summary>
 	/// La classe IconButtonsCombo implémente une liste de IconButton avec bouton "v"
@@ -384,7 +384,7 @@ namespace Epsitec.Common.Widgets
 					rect = new Drawing.Rectangle(px, py-height-1, width, height+1);
 					if ( column == this.columns-1 )  rect.Right  = lastRight;
 					if ( row    == this.rows-1    )  rect.Bottom = lastBottom;
-					this.buttonMain[i++].Bounds = rect;
+					this.buttonMain[i++].SetManualBounds(rect);
 
 					px += width;
 				}
@@ -395,12 +395,12 @@ namespace Epsitec.Common.Widgets
 			rect = box;
 			rect.Left = rect.Right-IconButtonsCombo.menuWidth;
 			rect.Bottom = rect.Top-System.Math.Floor(rect.Height*0.33);
-			this.buttonPrev.Bounds = rect;
+			this.buttonPrev.SetManualBounds(rect);
 			rect.Offset(0, -(rect.Height-1));
-			this.buttonNext.Bounds = rect;
+			this.buttonNext.SetManualBounds(rect);
 			rect.Offset(0, -(rect.Height+1));
 			rect.Bottom = box.Bottom;
-			this.buttonMenu.Bounds = rect;
+			this.buttonMenu.SetManualBounds(rect);
 		}
 
 		
@@ -409,18 +409,20 @@ namespace Epsitec.Common.Widgets
 			//	Ne notifie les changements d'index que lorsque le menu déroulant est fermé.
 			if ( this.IsComboOpen == false )
 			{
-				if ( this.SelectedIndexChanged != null )
+				EventHandler handler = (EventHandler) this.GetUserEventHandler("SelectedIndexChanged");
+				if (handler != null)
 				{
-					this.SelectedIndexChanged(this);
+					handler(this);
 				}
 			}
 		}
 
 		protected virtual void OnFirstIconChanged()
 		{
-			if ( this.FirstIconChanged != null )
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("FirstIconChanged");
+			if (handler != null)
 			{
-				this.FirstIconChanged(this);
+				handler(this);
 			}
 		}
 
@@ -516,7 +518,7 @@ namespace Epsitec.Common.Widgets
 				return;
 			}
 			
-			Support.CancelEventArgs cancelEvent = new Support.CancelEventArgs();
+			CancelEventArgs cancelEvent = new CancelEventArgs();
 			this.OnComboOpening(cancelEvent);
 			
 			if ( cancelEvent.Cancel )
@@ -533,13 +535,13 @@ namespace Epsitec.Common.Widgets
 				this.scrollList.ShowSelected(ScrollShowMode.Center);
 			}
 			
-			this.menu.Accepted += new Support.EventHandler(this.HandleMenuAccepted);
-			this.menu.Rejected += new Support.EventHandler(this.HandleMenuRejected);
+			this.menu.Accepted += new EventHandler(this.HandleMenuAccepted);
+			this.menu.Rejected += new EventHandler(this.HandleMenuRejected);
 			
 			if ( this.scrollList != null )
 			{
-				this.scrollList.SelectedIndexChanged += new Support.EventHandler(this.HandleScrollerSelectedIndexChanged);
-				this.scrollList.SelectionActivated   += new Support.EventHandler(this.HandleScrollListSelectionActivated);
+				this.scrollList.SelectedIndexChanged += new EventHandler(this.HandleScrollerSelectedIndexChanged);
+				this.scrollList.SelectionActivated   += new EventHandler(this.HandleScrollListSelectionActivated);
 			}
 			
 			this.OnComboOpened();
@@ -563,13 +565,13 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 
-			this.menu.Accepted -= new Support.EventHandler(this.HandleMenuAccepted);
-			this.menu.Rejected -= new Support.EventHandler(this.HandleMenuRejected);
+			this.menu.Accepted -= new EventHandler(this.HandleMenuAccepted);
+			this.menu.Rejected -= new EventHandler(this.HandleMenuRejected);
 			
 			if ( this.scrollList != null )
 			{
-				this.scrollList.SelectionActivated   -= new Support.EventHandler(this.HandleScrollListSelectionActivated);
-				this.scrollList.SelectedIndexChanged -= new Support.EventHandler(this.HandleScrollerSelectedIndexChanged);
+				this.scrollList.SelectionActivated   -= new EventHandler(this.HandleScrollListSelectionActivated);
+				this.scrollList.SelectedIndexChanged -= new EventHandler(this.HandleScrollerSelectedIndexChanged);
 				
 				this.scrollList.Dispose();
 				this.scrollList = null;
@@ -612,38 +614,41 @@ namespace Epsitec.Common.Widgets
 
 			Drawing.Size size = this.scrollList.GetBestLineSize();
 			this.scrollList.LineHeight = size.Height;
-			menu.Size = new Drawing.Size(size.Width, 200);
+			menu.SetManualBounds(new Drawing.Rectangle(0, 0, size.Width, 200));
 			menu.AdjustSize();
 			MenuItem.SetMenuHost(this, new MenuHost(menu));
 			
 			return menu;
 		}
 		
-		protected virtual void OnComboOpening(Support.CancelEventArgs e)
+		protected virtual void OnComboOpening(CancelEventArgs e)
 		{
-			if ( this.ComboOpening != null )
+			EventHandler<CancelEventArgs> handler = (EventHandler<CancelEventArgs>) this.GetUserEventHandler("ComboOpening");
+			if (handler != null)
 			{
-				this.ComboOpening(this, e);
+				handler(this, e);
 			}
 		}
 		
 		protected virtual void OnComboOpened()
 		{
 			System.Diagnostics.Debug.Assert(this.IsComboOpen == true);
-			
-			if ( this.ComboOpened != null )
+
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("ComboOpened");
+			if (handler != null)
 			{
-				this.ComboOpened(this);
+				handler(this);
 			}
 		}
 		
 		protected virtual void OnComboClosed()
 		{
 			System.Diagnostics.Debug.Assert(this.IsComboOpen == false);
-			
-			if ( this.ComboClosed != null )
+
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("ComboClosed");
+			if (handler != null)
 			{
-				this.ComboClosed(this);
+				handler(this);
 			}
 		}
 		
@@ -814,7 +819,7 @@ namespace Epsitec.Common.Widgets
 					//	Il y a assez de place pour dérouler le menu vers le bas,
 					//	mais il faudra peut-être le raccourcir un bout :
 					
-					if ( this.menu.Height > maxHeight )  // pas assez de place en hauteur ?
+					if ( this.menu.ActualHeight > maxHeight )  // pas assez de place en hauteur ?
 					{
 						scrollWidth = 17;  // place pour l'ascenseur à droite
 					}
@@ -822,7 +827,7 @@ namespace Epsitec.Common.Widgets
 					this.menu.MaxSize = new Drawing.Size(this.menu.MaxSize.Width, maxHeight);
 					this.menu.AdjustSize();
 					
-					size      = this.menu.Size;
+					size      = this.menu.ActualSize;
 					location  = pos;
 					animation = Animation.RollDown;
 				}
@@ -830,11 +835,11 @@ namespace Epsitec.Common.Widgets
 				{
 					//	Il faut dérouler le menu vers le haut.
 					
-					pos.Y += item.Height-2;
+					pos.Y += item.ActualHeight-2;
 					
 					maxHeight = workingArea.Top - pos.Y;
 				
-					if ( this.menu.Height > maxHeight )  // pas assez de place en hauteur ?
+					if ( this.menu.ActualHeight > maxHeight )  // pas assez de place en hauteur ?
 					{
 						scrollWidth = 17;  // place pour l'ascenseur à droite
 					}
@@ -842,9 +847,9 @@ namespace Epsitec.Common.Widgets
 					this.menu.MaxSize = new Drawing.Size(this.menu.MaxSize.Width, maxHeight);
 					this.menu.AdjustSize();
 					
-					pos.Y += this.menu.Height;
+					pos.Y += this.menu.ActualHeight;
 					
-					size      = this.menu.Size;
+					size      = this.menu.ActualSize;
 					location  = pos;
 					animation = Animation.RollUp;
 				}
@@ -866,11 +871,66 @@ namespace Epsitec.Common.Widgets
 		#endregion
 
 
-		public event EventHandler<CancelEventArgs> ComboOpening;
-		public event EventHandler				ComboOpened;
-		public event EventHandler				ComboClosed;
-		public event EventHandler				SelectedIndexChanged;
-		public event EventHandler				FirstIconChanged;
+		public event EventHandler<CancelEventArgs> ComboOpening
+		{
+			add
+			{
+				this.AddUserEventHandler("ComboOpening", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("ComboOpening", value);
+			}
+		}
+
+		public event EventHandler				ComboOpened
+		{
+			add
+			{
+				this.AddUserEventHandler("ComboOpened", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("ComboOpened", value);
+			}
+		}
+
+		public event EventHandler				ComboClosed
+		{
+			add
+			{
+				this.AddUserEventHandler("ComboClosed", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("ComboClosed", value);
+			}
+		}
+
+		public event EventHandler				SelectedIndexChanged
+		{
+			add
+			{
+				this.AddUserEventHandler("SelectedIndexChanged", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("SelectedIndexChanged", value);
+			}
+		}
+
+		public event EventHandler				FirstIconChanged
+		{
+			add
+			{
+				this.AddUserEventHandler("FirstIconChanged", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("FirstIconChanged", value);
+			}
+		}
+
 		
 		protected static readonly double		menuWidth = 12;
 		protected bool							isLiveUpdateEnabled	= true;

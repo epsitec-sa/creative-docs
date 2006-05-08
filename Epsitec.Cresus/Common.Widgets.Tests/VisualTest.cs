@@ -544,7 +544,6 @@ namespace Epsitec.Common.Widgets
 		}
 		struct Y : IZ
 		{
-			public int v;
 			public void Foo()
 			{
 			}

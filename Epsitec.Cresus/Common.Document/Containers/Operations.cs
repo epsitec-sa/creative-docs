@@ -7,7 +7,6 @@ namespace Epsitec.Common.Document.Containers
 	/// <summary>
 	/// La classe Containers.Operations contient toutes les opérations.
 	/// </summary>
-	[SuppressBundleSupport]
 	public class Operations : Abstract
 	{
 		public Operations(Document document) : base(document)
@@ -94,7 +93,7 @@ namespace Epsitec.Common.Document.Containers
 		{
 			//	Crée l'en-tête d'un groupe.
 			group = new GroupBox(this);
-			group.Height = 45;
+			group.PreferredHeight = 45;
 			group.Text = title;
 			group.Dock = DockStyle.Top;
 			group.Margins = new Margins(0, 0, 0, 10);
@@ -123,7 +122,7 @@ namespace Epsitec.Common.Document.Containers
 			//	Crée un champ éditable pour un déplacement.
 			field = new TextFieldReal();
 			this.document.Modifier.AdaptTextFieldRealDimension(field);
-			field.Width = 50;
+			field.PreferredWidth = 50;
 			if ( this.document.Type == DocumentType.Pictogram )
 			{
 				field.InternalValue = 1.0M;
@@ -143,7 +142,7 @@ namespace Epsitec.Common.Document.Containers
 			//	Crée un champ éditable pour une rotation.
 			field = new TextFieldReal();
 			this.document.Modifier.AdaptTextFieldRealAngle(field);
-			field.Width = 50;
+			field.PreferredWidth = 50;
 			field.InternalValue = 10.0M;
 			field.TabIndex = tabIndex++;
 			field.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
@@ -156,7 +155,7 @@ namespace Epsitec.Common.Document.Containers
 			//	Crée un champ éditable pour une échelle.
 			field = new TextFieldReal();
 			this.document.Modifier.AdaptTextFieldRealScalar(field);
-			field.Width = 50;
+			field.PreferredWidth = 50;
 			field.InternalMinValue = 1.0M;
 			field.InternalMaxValue = 2.0M;
 			field.DefaultValue = 1.0M;
@@ -174,7 +173,7 @@ namespace Epsitec.Common.Document.Containers
 			//	Crée un champ éditable pour une couleur.
 			field = new TextFieldReal();
 			this.document.Modifier.AdaptTextFieldRealPercent(field);
-			field.Width = 50;
+			field.PreferredWidth = 50;
 			field.InternalMinValue = 0.0M;
 			field.InternalMaxValue = 1.0M;
 			field.DefaultValue = 0.1M;

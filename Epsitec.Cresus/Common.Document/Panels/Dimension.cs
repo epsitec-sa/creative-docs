@@ -7,7 +7,6 @@ namespace Epsitec.Common.Document.Panels
 	/// <summary>
 	/// La classe Dimension permet de choisir un type de cotation.
 	/// </summary>
-	[SuppressBundleSupport]
 	public class Dimension : Abstract
 	{
 		public Dimension(Document document) : base(document)
@@ -213,14 +212,14 @@ namespace Epsitec.Common.Document.Panels
 			Rectangle r = rect;
 			r.Width = 22*3;
 			r.Inflate(1);
-			this.gridForm.Bounds = r;
+			this.gridForm.SetManualBounds(r);
 
 			r = rect;
 			r.Bottom = r.Top-20;
 			r.Left = r.Right-22*4;
 			r.Width = 22*4;
 			r.Inflate(1);
-			this.gridJustif.Bounds = r;
+			this.gridJustif.SetManualBounds(r);
 
 			if ( this.isExtendedSize && this.IsLabelProperties )
 			{
@@ -229,21 +228,21 @@ namespace Epsitec.Common.Document.Panels
 				r.Offset(0, -25);
 				r.Left = rect.Left;
 				r.Right = rect.Right;
-				this.addLength.Bounds = r;
+				this.addLength.SetManualBounds(r);
 
 				r.Offset(0, -25);
-				this.outLength.Bounds = r;
+				this.outLength.SetManualBounds(r);
 				
 				r.Offset(0, -25);
-				this.fontOffset.Bounds = r;
+				this.fontOffset.SetManualBounds(r);
 				
 				r.Offset(0, -25);
 				r.Left = rect.Left;
 				r.Width = 20;
-				this.rotateText.Bounds = r;
+				this.rotateText.SetManualBounds(r);
 				r.Left = r.Right;
 				r.Right = rect.Right;
-				this.dimensionText.Bounds = r;
+				this.dimensionText.SetManualBounds(r);
 			}
 			else
 			{
@@ -252,21 +251,21 @@ namespace Epsitec.Common.Document.Panels
 				r.Offset(0, -25);
 				r.Left = rect.Left;
 				r.Width = Widgets.TextFieldLabel.ShortWidth;
-				this.addLength.Bounds = r;
+				this.addLength.SetManualBounds(r);
 				r.Left = r.Right;
 				r.Width = Widgets.TextFieldLabel.ShortWidth;
-				this.outLength.Bounds = r;
+				this.outLength.SetManualBounds(r);
 				r.Left = r.Right+Widgets.TextFieldLabel.DefaultLabelWidth+Widgets.TextFieldLabel.DefaultMarginWidth;
 				r.Width = 20;
-				this.rotateText.Bounds = r;
+				this.rotateText.SetManualBounds(r);
 
 				r.Offset(0, -25);
 				r.Left = rect.Left;
 				r.Width = Widgets.TextFieldLabel.ShortWidth;
-				this.fontOffset.Bounds = r;
+				this.fontOffset.SetManualBounds(r);
 				r.Left = r.Right;
 				r.Width = Widgets.TextFieldLabel.ShortWidth;
-				this.dimensionText.Bounds = r;
+				this.dimensionText.SetManualBounds(r);
 			}
 		}
 		

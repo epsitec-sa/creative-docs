@@ -3,8 +3,6 @@
 
 namespace Epsitec.Common.Widgets
 {
-	using BundleAttribute = Epsitec.Common.Support.BundleAttribute;
-	
 	/// <summary>
 	/// La classe IconButton permet de dessiner de petits pictogrammes, en
 	/// particulier pour remplir une ToolBar.
@@ -37,26 +35,16 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public override double					DefaultWidth
+		static IconButton()
 		{
-			//	Retourne la largeur standard d'une icône.
-			get
-			{
-				return 22;
-			}
-		}
+			Helpers.VisualPropertyMetadata metadataDx = new Helpers.VisualPropertyMetadata (22.0, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
+			Helpers.VisualPropertyMetadata metadataDy = new Helpers.VisualPropertyMetadata (22.0, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
 
-		public override double					DefaultHeight
-		{
-			//	Retourne la hauteur standard d'une icône.
-			get
-			{
-				return 22;
-			}
+			Visual.PreferredWidthProperty.OverrideMetadata (typeof (IconButton), metadataDx);
+			Visual.PreferredHeightProperty.OverrideMetadata (typeof (IconButton), metadataDy);
 		}
-
 		
-		[Bundle ("Icon")] public string			IconName
+		public string							IconName
 		{
 			get
 			{
@@ -170,20 +158,17 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		
-		public override Drawing.Rectangle GetShapeBounds()
+
+		public override Drawing.Margins GetShapeMargins()
 		{
-			IAdorner adorner = Widgets.Adorners.Factory.Active;
-			Drawing.Rectangle rect = this.Client.Bounds;
-			if ( (this.PaintState&WidgetState.ThreeState) == 0 )
+			if ((this.PaintState&WidgetPaintState.ThreeState) == 0)
 			{
-				rect.Inflate(adorner.GeometryToolShapeBounds);
+				return Widgets.Adorners.Factory.Active.GeometryToolShapeMargins;
 			}
 			else
 			{
-				rect.Inflate(adorner.GeometryThreeStateShapeBounds);
+				return Widgets.Adorners.Factory.Active.GeometryThreeStateShapeMargins;
 			}
-			return rect;
 		}
 		
 		

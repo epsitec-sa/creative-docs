@@ -45,15 +45,13 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public override double			DefaultHeight
+		static Button()
 		{
-			//	Retourne la hauteur standard d'un bouton.
-			get
-			{
-				return this.DefaultFontHeight+10;
-			}
+			Helpers.VisualPropertyMetadata metadataDy = new Helpers.VisualPropertyMetadata (Widget.DefaultFontHeight+10, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
+			
+			Visual.PreferredHeightProperty.OverrideMetadata (typeof (Button), metadataDy);
 		}
-
+		
 		public ButtonStyle				ButtonStyle
 		{
 			get
@@ -93,24 +91,23 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public override Drawing.Rectangle GetShapeBounds()
+		public override Drawing.Margins GetShapeMargins()
 		{
-			IAdorner adorner = Widgets.Adorners.Factory.Active;
-			Drawing.Rectangle rect = this.Client.Bounds;
-
-			if ( this.buttonStyle == ButtonStyle.ActivableIcon )
+			if (this.buttonStyle == ButtonStyle.ActivableIcon)
 			{
-				if ( (this.PaintState&WidgetState.ThreeState) == 0 )
+				if ((this.PaintState&WidgetPaintState.ThreeState) == 0)
 				{
-					rect.Inflate(adorner.GeometryToolShapeBounds);
+					return Widgets.Adorners.Factory.Active.GeometryToolShapeMargins;
 				}
 				else
 				{
-					rect.Inflate(adorner.GeometryThreeStateShapeBounds);
+					return Widgets.Adorners.Factory.Active.GeometryThreeStateShapeMargins;
 				}
 			}
-
-			return rect;
+			else
+			{
+				return base.GetShapeMargins ();
+			}
 		}
 
 		
@@ -165,14 +162,14 @@ namespace Epsitec.Common.Widgets
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
 
 			Drawing.Rectangle rect  = this.Client.Bounds;
-			WidgetState       state = this.PaintState;
+			WidgetPaintState       state = this.PaintState;
 			Drawing.Point     pos   = new Drawing.Point (0, 0);
 			
-			if ( (state & WidgetState.Enabled) == 0 )
+			if ( (state & WidgetPaintState.Enabled) == 0 )
 			{
-				state &= ~WidgetState.Focused;
-				state &= ~WidgetState.Entered;
-				state &= ~WidgetState.Engaged;
+				state &= ~WidgetPaintState.Focused;
+				state &= ~WidgetPaintState.Entered;
+				state &= ~WidgetPaintState.Engaged;
 			}
 			
 			if ( this.BackColor.IsTransparent )
@@ -184,7 +181,7 @@ namespace Epsitec.Common.Widgets
 			{
 				//	Ne reproduit pas l'état sélectionné si on peint nous-même le fond du bouton.
 				
-				state &= ~WidgetState.Selected;
+				state &= ~WidgetPaintState.Selected;
 				adorner.PaintButtonBackground(graphics, rect, state, Direction.Down, this.buttonStyle);
 			}
 

@@ -1,10 +1,11 @@
+using Epsitec.Common.Support;
+
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
 	/// La classe AbstractScroller implémente la classe de base des ascenseurs
 	/// HScroller et VScroller.
 	/// </summary>
-	[Support.SuppressBundleSupport]
 	public abstract class AbstractScroller : Widget, Behaviors.IDragBehaviorHost, Support.Data.INumValue
 	{
 		protected AbstractScroller(bool vertical)
@@ -210,13 +211,13 @@ namespace Epsitec.Common.Widgets
 				bounds = new Drawing.Rectangle (0, rect.Height - arrow_length, rect.Width, arrow_length);
 				
 				this.arrowUp.Visibility = (arrow_length > 0);
-				this.arrowUp.Bounds    = bounds;
+				this.arrowUp.SetManualBounds(bounds);
 				this.arrowUp.GlyphShape = GlyphShape.ArrowUp;
 				
 				bounds = new Drawing.Rectangle (0, 0, rect.Width, arrow_length);
 				
 				this.arrowDown.Visibility = (arrow_length > 0);
-				this.arrowDown.Bounds    = bounds;
+				this.arrowDown.SetManualBounds(bounds);
 				this.arrowDown.GlyphShape = GlyphShape.ArrowDown;
 				
 				rect.Bottom += arrow_length;
@@ -229,13 +230,13 @@ namespace Epsitec.Common.Widgets
 				bounds = new Drawing.Rectangle (rect.Width - arrow_length, 0, arrow_length, rect.Height);
 				
 				this.arrowUp.Visibility = (arrow_length > 0);
-				this.arrowUp.Bounds    = bounds;
+				this.arrowUp.SetManualBounds(bounds);
 				this.arrowUp.GlyphShape = GlyphShape.ArrowRight;
 				
 				bounds = new Drawing.Rectangle (0, 0, arrow_length, rect.Height);
 				
 				this.arrowDown.Visibility = (arrow_length > 0);
-				this.arrowDown.Bounds    = bounds;
+				this.arrowDown.SetManualBounds(bounds);
 				this.arrowDown.GlyphShape = GlyphShape.ArrowLeft;
 				
 				rect.Left  += arrow_length;
@@ -478,9 +479,12 @@ namespace Epsitec.Common.Widgets
 		protected virtual  void OnValueChanged()
 		{
 			this.UpdateInternalGeometry ();
-			if ( this.ValueChanged != null )  // qq'un écoute ?
+
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("ValueChanged");
+
+			if (handler != null)
 			{
-				this.ValueChanged(this);
+				handler(this);
 			}
 		}
 
@@ -509,10 +513,10 @@ namespace Epsitec.Common.Widgets
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
 			
 			Widgets.Direction dir   = this.is_vertical ? Direction.Up : Direction.Left;
-			WidgetState       state = this.PaintState;
+			WidgetPaintState       state = this.PaintState;
 
 			//	Dessine le fond.
-			adorner.PaintScrollerBackground (graphics, this.Client.Bounds, this.thumbRect, this.tabRect, state & ~WidgetState.Entered, dir);
+			adorner.PaintScrollerBackground (graphics, this.Client.Bounds, this.thumbRect, this.tabRect, state & ~WidgetPaintState.Entered, dir);
 			
 			//	Dessine la cabine.
 			if (this.thumbRect.IsValid && this.IsEnabled)
@@ -522,13 +526,13 @@ namespace Epsitec.Common.Widgets
 				
 				if (this.HiliteZone != Zone.Thumb)
 				{
-					state &= ~ WidgetState.Entered;
-					state &= ~ WidgetState.Engaged;
+					state &= ~ WidgetPaintState.Entered;
+					state &= ~ WidgetPaintState.Engaged;
 				}
 				if (this.is_dragging)
 				{
-					state |= WidgetState.Engaged;
-					state |= WidgetState.Entered;
+					state |= WidgetPaintState.Engaged;
+					state |= WidgetPaintState.Entered;
 				}
 				
 				adorner.PaintScrollerHandle(graphics, rect, this.tabRect, state, dir);
@@ -636,7 +640,17 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public event Support.EventHandler	ValueChanged;
+		public event Support.EventHandler	ValueChanged
+		{
+			add
+			{
+				this.AddUserEventHandler("ValueChanged", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("ValueChanged", value);
+			}
+		}
 		#endregion
 		
 		#region Zone enumeration

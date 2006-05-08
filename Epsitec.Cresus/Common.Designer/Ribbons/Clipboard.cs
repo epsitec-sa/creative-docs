@@ -7,7 +7,6 @@ namespace Epsitec.Common.Designer.Ribbons
 	/// <summary>
 	/// La classe Clipboard permet de gérer le presse-papiers.
 	/// </summary>
-	[SuppressBundleSupport]
 	public class Clipboard : Abstract
 	{
 		public Clipboard() : base()
@@ -47,22 +46,22 @@ namespace Epsitec.Common.Designer.Ribbons
 
 			if ( this.buttonCut == null )  return;
 
-			double dx = this.buttonCut.DefaultWidth;
-			double dy = this.buttonCut.DefaultHeight;
+			double dx = this.buttonCut.PreferredWidth;
+			double dy = this.buttonCut.PreferredHeight;
 
 			Rectangle rect = this.UsefulZone;
 			rect.Width  = dx;
 			rect.Height = dy;
 			rect.Offset(0, dy+5);
-			this.buttonCut.Bounds = rect;
+			this.buttonCut.SetManualBounds(rect);
 			rect.Offset(0, -dy-5);
-			this.buttonCopy.Bounds = rect;
+			this.buttonCopy.SetManualBounds(rect);
 
 			rect = this.UsefulZone;
 			rect.Width  = dx*1.5;
 			rect.Height = dy*1.5;
 			rect.Offset(dx+4, dy*0.5);
-			this.buttonPaste.Bounds = rect;
+			this.buttonPaste.SetManualBounds(rect);
 		}
 
 

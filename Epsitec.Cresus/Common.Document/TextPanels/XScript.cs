@@ -8,7 +8,6 @@ namespace Epsitec.Common.Document.TextPanels
 	/// <summary>
 	/// La classe Xscript permet de définir les indices/exposants.
 	/// </summary>
-	[SuppressBundleSupport]
 	public class Xscript : Abstract
 	{
 		public Xscript(Document document, bool isStyle, StyleCategory styleCategory) : base(document, isStyle, styleCategory)
@@ -105,37 +104,37 @@ namespace Epsitec.Common.Document.TextPanels
 				{
 					r.Left = rect.Left;
 					r.Width = 20;
-					this.buttonSubscript.Bounds = r;
+					this.buttonSubscript.SetManualBounds(r);
 					r.Offset(20, 0);
-					this.buttonSuperscript.Bounds = r;
+					this.buttonSuperscript.SetManualBounds(r);
 
 					r.Left = rect.Right-20;
 					r.Width = 20;
-					this.buttonClear.Bounds = r;
+					this.buttonClear.SetManualBounds(r);
 
 					r.Offset(0, -25);
 					r.Left = rect.Left;
 					r.Right = rect.Right-25;
-					this.fieldScale.Bounds = r;
+					this.fieldScale.SetManualBounds(r);
 					r.Offset(0, -25);
-					this.fieldOffset.Bounds = r;
+					this.fieldOffset.SetManualBounds(r);
 				}
 				else
 				{
 					r.Left = rect.Left;
 					r.Width = 20;
-					this.buttonSubscript.Bounds = r;
+					this.buttonSubscript.SetManualBounds(r);
 					r.Offset(20, 0);
-					this.buttonSuperscript.Bounds = r;
+					this.buttonSuperscript.SetManualBounds(r);
 					r.Offset(20, 0);
 					r.Width = 60;
-					this.fieldScale.Bounds = r;
+					this.fieldScale.SetManualBounds(r);
 					r.Offset(60, 0);
-					this.fieldOffset.Bounds = r;
+					this.fieldOffset.SetManualBounds(r);
 
 					r.Left = rect.Right-20;
 					r.Width = 20;
-					this.buttonClear.Bounds = r;
+					this.buttonClear.SetManualBounds(r);
 				}
 			}
 			else
@@ -145,18 +144,18 @@ namespace Epsitec.Common.Document.TextPanels
 
 				r.Left = rect.Left;
 				r.Width = 20;
-				this.buttonSubscript.Bounds = r;
+				this.buttonSubscript.SetManualBounds(r);
 				r.Offset(20, 0);
-				this.buttonSuperscript.Bounds = r;
+				this.buttonSuperscript.SetManualBounds(r);
 				r.Offset(20, 0);
 				r.Width = 60;
-				this.fieldScale.Bounds = r;
+				this.fieldScale.SetManualBounds(r);
 				r.Offset(60, 0);
-				this.fieldOffset.Bounds = r;
+				this.fieldOffset.SetManualBounds(r);
 			
 				r.Left = rect.Right-20;
 				r.Width = 20;
-				this.buttonClear.Bounds = r;
+				this.buttonClear.SetManualBounds(r);
 			}
 		}
 

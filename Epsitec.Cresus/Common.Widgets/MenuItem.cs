@@ -43,7 +43,7 @@ namespace Epsitec.Common.Widgets
 			this.InternalState &= ~InternalState.Focusable;
 			this.InternalState &= ~InternalState.Engageable;
 			
-			this.Alignment = Drawing.ContentAlignment.MiddleLeft;
+			this.ContentAlignment = Drawing.ContentAlignment.MiddleLeft;
 			
 			this.icon     = new TextLayout();
 			this.shortcut = new TextLayout();
@@ -51,7 +51,7 @@ namespace Epsitec.Common.Widgets
 			this.icon.Alignment     = Drawing.ContentAlignment.MiddleLeft;
 			this.shortcut.Alignment = Drawing.ContentAlignment.MiddleLeft;
 			
-			this.submenu_mark_width = this.DefaultFontHeight;
+			this.submenu_mark_width = Widget.DefaultFontHeight;
 		}
 		
 		public MenuItem(Widget embedder) : this ()
@@ -465,7 +465,7 @@ namespace Epsitec.Common.Widgets
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
 
 			Drawing.Rectangle rect  = this.Client.Bounds;
-			WidgetState       state = this.PaintState;
+			WidgetPaintState       state = this.PaintState;
 			MenuItemType      iType = this.GetPaintItemType ();
 			Drawing.Point     pos   = new Drawing.Point();
 			
@@ -636,7 +636,7 @@ namespace Epsitec.Common.Widgets
 				
 				widget.Dock = DockStyle.Fill;
 				
-				menu.Root.Size = size;
+				menu.Root.SetManualBounds (new Drawing.Rectangle (Drawing.Point.Zero, size));
 				menu.Root.Children.Add (widget);
 				menu.MenuType = MenuItem.GetParentMenuItem (widget) == null ? MenuType.Undefined : MenuType.Submenu;
 				

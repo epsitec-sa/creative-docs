@@ -84,16 +84,14 @@ namespace Epsitec.Common.Widgets
 				width = System.Math.Max (width, this.MinWidth);
 				height = System.Math.Max (height, this.MinHeight);
 				
-				System.Diagnostics.Debug.WriteLine (string.Format ("AdjustSize from {0}:{1} to {2}:{3}", this.Width, this.Height, width, height));
-				
 				if ((this.Parent != null) &&
 					(this.RootParent is WindowRoot))
 				{
-					this.RootParent.Size = new Drawing.Size (width, height);
+					this.RootParent.SetManualBounds (new Drawing.Rectangle (0, 0, width, height));
 				}
 				else
 				{
-					this.Size = new Drawing.Size (width, height);
+					this.PreferredSize = new Drawing.Size (width, height);
 				}
 			}
 		}

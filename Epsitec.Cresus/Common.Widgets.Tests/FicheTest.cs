@@ -289,7 +289,7 @@ namespace Epsitec.Common.Widgets
 			this.menu = new HMenu();
 			this.menu.Host = this.window;
 			this.menu.Name = "base";
-			this.menu.Size = new Size (rect.Width, this.menu.DefaultHeight);
+			this.menu.PreferredSize = new Size (rect.Width, this.menu.PreferredHeight);
 			this.menu.Dock = DockStyle.Top;
 			this.menu.Items.Add(new MenuItem ("file", "Fichier"));
 			this.menu.Items.Add(new MenuItem ("edit", "Edition"));
@@ -423,9 +423,9 @@ namespace Epsitec.Common.Widgets
 				Button b2 = new Button ("B");
 				Button b3 = new Button ("C");
 				
-				b1.Size = new Size (20, 20);
-				b2.Size = new Size (20, 20);
-				b3.Size = new Size (20, 20);
+				b1.PreferredSize = new Size (20, 20);
+				b2.PreferredSize = new Size(20, 20);
+				b3.PreferredSize = new Size(20, 20);
 
 				b1.MinSize = new Size (20, 20);
 				b2.MinSize = new Size (20, 20);
@@ -469,7 +469,7 @@ namespace Epsitec.Common.Widgets
 			this.menu.Items[4].Submenu = helpMenu;
 
 			this.toolBar = new HToolBar();
-			this.toolBar.Size = new Size(rect.Width, this.toolBar.DefaultHeight);
+			this.toolBar.PreferredSize = new Size(rect.Width, this.toolBar.PreferredHeight);
 			this.toolBar.Dock = DockStyle.Top;
 			this.toolBar.Items.Add (new IconButton (@"file:images/open.png"));
 			this.toolBar.Items.Add (new IconButton (@"file:images/save.png"));
@@ -607,7 +607,7 @@ namespace Epsitec.Common.Widgets
 				this.listCrit.Items.Add(fd.name);
 
 				StaticText st = new StaticText();
-				st.Alignment = ContentAlignment.MiddleRight;
+				st.ContentAlignment = ContentAlignment.MiddleRight;
 				st.Text = fd.name;
 				this.rightPane.Children.Add(st);
 				this.staticTexts.Add(st);
@@ -618,7 +618,7 @@ namespace Epsitec.Common.Widgets
 				AbstractTextField tf = TextFieldAny.FromType (type);
 				tf.Name = fd.name;
 				tf.Text = "";
-				tf.Alignment = fd.alignment;
+				tf.ContentAlignment = fd.alignment;
 				tf.MaxChar = fd.max;
 				if ( fd.combo != "" )  this.InitCombo(tf, fd.combo);
 				tf.TextChanged += new EventHandler(this.tf_TextChanged);
@@ -681,25 +681,25 @@ namespace Epsitec.Common.Widgets
 		{
 			if ( !this.allWidgets )  return;
 
-			this.title.Bounds = new Rectangle (10, this.topPane.Height-50, this.topPane.Width, 50);
-			this.editCrit.Bounds = new Rectangle (10, this.topPane.Height-50-this.buttonHeight, this.topPane.Width-this.buttonWidth-30, this.buttonHeight);
-			this.buttonSearch.Bounds = new Rectangle (this.topPane.Width-this.buttonWidth-10, this.topPane.Height-50-this.buttonHeight, this.buttonWidth, this.buttonHeight);
-			this.listCrit.Bounds = new Rectangle (10, this.topPane.Height-50-this.buttonHeight-10-this.listCritHeight, 200, this.listCritHeight);
-			this.listLook.Bounds = new Rectangle (220, this.topPane.Height-50-this.buttonHeight-10-this.listCritHeight, 100, this.listCritHeight);
-			this.table.Bounds = new Rectangle (10, 10, this.bottomPane.Width-20, this.bottomPane.Height-20);
+			this.title.SetManualBounds(new Rectangle (10, this.topPane.ActualHeight-50, this.topPane.ActualWidth, 50));
+			this.editCrit.SetManualBounds(new Rectangle (10, this.topPane.ActualHeight-50-this.buttonHeight, this.topPane.ActualWidth-this.buttonWidth-30, this.buttonHeight));
+			this.buttonSearch.SetManualBounds(new Rectangle (this.topPane.ActualWidth-this.buttonWidth-10, this.topPane.ActualHeight-50-this.buttonHeight, this.buttonWidth, this.buttonHeight));
+			this.listCrit.SetManualBounds(new Rectangle (10, this.topPane.ActualHeight-50-this.buttonHeight-10-this.listCritHeight, 200, this.listCritHeight));
+			this.listLook.SetManualBounds(new Rectangle (220, this.topPane.ActualHeight-50-this.buttonHeight-10-this.listCritHeight, 100, this.listCritHeight));
+			this.table.SetManualBounds(new Rectangle (10, 10, this.bottomPane.ActualWidth-20, this.bottomPane.ActualHeight-20));
 
-			double posy = this.rightPane.Height-10-this.buttonHeight;
+			double posy = this.rightPane.ActualHeight-10-this.buttonHeight;
 			double posx = this.labelWidth;
 
-			this.buttonCreate.Bounds = new Rectangle (posx, posy, this.buttonWidth, this.buttonHeight);
+			this.buttonCreate.SetManualBounds(new Rectangle (posx, posy, this.buttonWidth, this.buttonHeight));
 			posx += this.buttonWidth+10;
-			this.buttonDuplicate.Bounds = new Rectangle (posx, posy, this.buttonWidth, this.buttonHeight);
+			this.buttonDuplicate.SetManualBounds(new Rectangle (posx, posy, this.buttonWidth, this.buttonHeight));
 			posx += this.buttonWidth+10;
-			this.buttonDelete.Bounds = new Rectangle (posx, posy, this.buttonWidth, this.buttonHeight);
+			this.buttonDelete.SetManualBounds(new Rectangle (posx, posy, this.buttonWidth, this.buttonHeight));
 
 			posy -= 10;
-			double maxWidth = this.rightPane.Width-this.labelWidth-10;
-			double defaultFontHeight = this.rightPane.DefaultFontHeight;
+			double maxWidth = this.rightPane.ActualWidth-this.labelWidth-10;
+			double defaultFontHeight = Widget.DefaultFontHeight;
 			int nbField = this.db.TotalField;
 			for ( int x=0 ; x<nbField ; x++ )
 			{
@@ -709,11 +709,11 @@ namespace Epsitec.Common.Widgets
 				double height = 8+defaultFontHeight*fd.lines;
 
 				StaticText st = (StaticText)this.staticTexts[x];
-				st.Bounds = new Rectangle (0, posy-this.buttonHeight, this.labelWidth-10, this.buttonHeight);
+				st.SetManualBounds(new Rectangle (0, posy-this.buttonHeight, this.labelWidth-10, this.buttonHeight));
 
 				AbstractTextField tf = this.textFields[x] as AbstractTextField;
 				double width = System.Math.Min (fd.max*7, maxWidth);
-				tf.Bounds = new Rectangle (this.labelWidth, posy-height, width, height);
+				tf.SetManualBounds(new Rectangle (this.labelWidth, posy-height, width, height));
 
 				double suppl = 4;
 				if ( fd.link )  suppl = -1;
@@ -722,10 +722,10 @@ namespace Epsitec.Common.Widgets
 
 			posy -= 10+this.buttonHeight;
 			posx = this.labelWidth;
-			this.buttonValidate.Bounds = new Rectangle (posx, posy, this.buttonWidth, this.buttonHeight);
+			this.buttonValidate.SetManualBounds(new Rectangle (posx, posy, this.buttonWidth, this.buttonHeight));
 
 			posx += this.buttonWidth+10;
-			this.buttonCancel.Bounds = new Rectangle (posx, posy, this.buttonWidth, this.buttonHeight);
+			this.buttonCancel.SetManualBounds(new Rectangle (posx, posy, this.buttonWidth, this.buttonHeight));
 		}
 
 		protected void InitTable()

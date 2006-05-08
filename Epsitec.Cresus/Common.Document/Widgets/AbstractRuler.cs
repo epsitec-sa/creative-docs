@@ -8,7 +8,6 @@ namespace Epsitec.Common.Document.Widgets
 	/// La classe AbstractRuler implémente la classe de base des règles
 	/// HRuler et VRuler.
 	/// </summary>
-	[Support.SuppressBundleSupport]
 	public abstract class AbstractRuler : Widget, Common.Widgets.Helpers.IToolTipHost
 	{
 		protected AbstractRuler(bool vertical)

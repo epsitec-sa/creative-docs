@@ -1,3 +1,4 @@
+using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Drawing;
 
@@ -26,12 +27,23 @@ namespace Epsitec.Common.Document.Widgets
 
 		protected virtual void OnComboOpenPressed()
 		{
-			if (this.ComboOpenPressed != null)
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("ComboOpenPressed");
+			if (handler != null)
 			{
-				this.ComboOpenPressed (this);
+				handler(this);
 			}
 		}
 		
-		public event Support.EventHandler		ComboOpenPressed;
+		public event EventHandler			ComboOpenPressed
+		{
+			add
+			{
+				this.AddUserEventHandler("ComboOpenPressed", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("ComboOpenPressed", value);
+			}
+		}
 	}
 }

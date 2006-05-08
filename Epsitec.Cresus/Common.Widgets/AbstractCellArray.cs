@@ -1,6 +1,8 @@
+using Epsitec.Common.Support;
+
 namespace Epsitec.Common.Widgets
 {
-	using PropertyChangedEventHandler = Epsitec.Common.Support.EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>;
+	using PropertyChangedEventHandler = EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>;
 	
 	[System.Flags] public enum CellArrayStyles
 	{
@@ -22,20 +24,10 @@ namespace Epsitec.Common.Widgets
 	/// La classe AbstractCellArray est la classe de base pour les tableaux
 	/// et les listes.
 	/// </summary>
-	[Support.SuppressBundleSupport]
 	public abstract class AbstractCellArray : AbstractGroup
 	{
 		public AbstractCellArray()
 		{
-			if ( Support.ObjectBundler.IsBooting )
-			{
-				//	N'initialise rien, car cela prend passablement de temps... et de toute
-				//	manière, on n'a pas besoin de toutes ces informations pour pouvoir
-				//	utiliser IBundleSupport.
-				
-				return;
-			}
-			
 			this.AutoFocus = true;
 			this.AutoDoubleClick = true;
 			this.InternalState |= InternalState.Focusable;
@@ -43,7 +35,7 @@ namespace Epsitec.Common.Widgets
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
 			this.margins = adorner.GeometryArrayMargins;
 
-			double h = this.DefaultFontHeight+4;
+			double h = Widget.DefaultFontHeight+4;
 			this.defHeight = h;
 			this.minHeight = h;
 			this.headerHeight = h;
@@ -57,8 +49,8 @@ namespace Epsitec.Common.Widgets
 			this.container.InheritsParentFocus = true;
 			
 			this.scrollerV.IsInverted = true;  // de haut en bas
-			this.scrollerV.ValueChanged += new Support.EventHandler(this.HandleScrollerV);
-			this.scrollerH.ValueChanged += new Support.EventHandler(this.HandleScrollerH);
+			this.scrollerV.ValueChanged += new EventHandler(this.HandleScrollerV);
+			this.scrollerH.ValueChanged += new EventHandler(this.HandleScrollerH);
 		}
 		
 		
@@ -68,11 +60,11 @@ namespace Epsitec.Common.Widgets
 			{
 				if ( this.scrollerV != null )
 				{
-					this.scrollerV.ValueChanged -= new Support.EventHandler(this.HandleScrollerV);
+					this.scrollerV.ValueChanged -= new EventHandler(this.HandleScrollerV);
 				}
 				if ( this.scrollerH != null )
 				{
-					this.scrollerH.ValueChanged -= new Support.EventHandler(this.HandleScrollerH);
+					this.scrollerH.ValueChanged -= new EventHandler(this.HandleScrollerH);
 				}
 				
 				this.SetFocusedCell(null);
@@ -81,17 +73,6 @@ namespace Epsitec.Common.Widgets
 			base.Dispose(disposing);
 		}
 		
-		public override double				DefaultHeight
-		{
-			get { return 80; }
-		}
-		
-		public override double				DefaultWidth
-		{
-			get { return 80; }
-		}
-
-
 		public Drawing.Color				HiliteColor
 		{
 			get { return this.hiliteColor; }
@@ -119,10 +100,19 @@ namespace Epsitec.Common.Widgets
 				if ( value != this.styleH )
 				{
 					this.styleH = value;
-					this.isDirty = true;
-					this.Invalidate();
+					this.MarkAsDirty ();
 				}
 			}
+		}
+
+		private void MarkAsDirty()
+		{
+			this.isDirty = true;
+			
+			Layouts.LayoutContext.AddToMeasureQueue (this);
+			Layouts.LayoutContext.AddToArrangeQueue (this);
+			
+			this.Invalidate ();
 		}
 		
 		public CellArrayStyles StyleV
@@ -138,8 +128,7 @@ namespace Epsitec.Common.Widgets
 				if ( value != this.styleV )
 				{
 					this.styleV = value;
-					this.isDirty = true;
-					this.Invalidate();
+					this.MarkAsDirty ();
 				}
 			}
 		}
@@ -157,8 +146,7 @@ namespace Epsitec.Common.Widgets
 				if ( value != this.offsetH )
 				{
 					this.offsetH = value;
-					this.isDirty = true;
-					this.Invalidate();
+					this.MarkAsDirty ();
 				}
 			}
 		}
@@ -176,8 +164,7 @@ namespace Epsitec.Common.Widgets
 				if ( value != this.offsetV )
 				{
 					this.offsetV = value;
-					this.isDirty = true;
-					this.Invalidate();
+					this.MarkAsDirty ();
 				}
 			}
 		}
@@ -248,17 +235,14 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public override Drawing.Margins InternalPadding
+		public override Drawing.Margins GetInternalPadding()
 		{
-			get
-			{
-				Drawing.Margins padding = new Drawing.Margins (this.margins.Left+this.leftMargin,
-					/**/									   this.margins.Right+this.rightMargin,
-					/**/									   this.margins.Top+this.topMargin,
-					/**/									   this.margins.Bottom+this.bottomMargin);
-				
-				return padding;
-			}
+			Drawing.Margins padding = new Drawing.Margins (this.margins.Left+this.leftMargin,
+				/**/									   this.margins.Right+this.rightMargin,
+				/**/									   this.margins.Top+this.topMargin,
+				/**/									   this.margins.Bottom+this.bottomMargin);
+			
+			return padding;
 		}
 
 		public virtual Cell this[int column, int row]
@@ -301,8 +285,7 @@ namespace Epsitec.Common.Widgets
 			HeaderButton button = this.FindButtonV(rank);
 			button.Text = text;
 
-			this.isDirty = true;
-			this.Invalidate();
+			this.MarkAsDirty ();
 		}
 
 		public virtual void SetHeaderTextH(int rank, string text)
@@ -316,8 +299,7 @@ namespace Epsitec.Common.Widgets
 			HeaderButton button = this.FindButtonH(rank);
 			button.Text = text;
 
-			this.isDirty = true;
-			this.Invalidate();
+			this.MarkAsDirty ();
 		}
 
 		public virtual void SetHeaderSortV(int rank, SortMode mode)
@@ -419,8 +401,7 @@ namespace Epsitec.Common.Widgets
 				this.widthColumns[rank] = width;
 			}
 
-			this.isDirty = true;
-			this.Invalidate();
+			this.MarkAsDirty ();
 		}
 		
 		public virtual void HideColumns(int start, int count)
@@ -437,8 +418,7 @@ namespace Epsitec.Common.Widgets
 					this.widthColumns[i] = 0;
 				}
 			}
-			this.isDirty = true;
-			this.Invalidate();
+			this.MarkAsDirty ();
 		}
 		
 		public virtual void ShowColumns(int start, int count)
@@ -455,8 +435,7 @@ namespace Epsitec.Common.Widgets
 					this.widthColumns[i] = this.defWidth;
 				}
 			}
-			this.isDirty = true;
-			this.Invalidate();
+			this.MarkAsDirty ();
 		}
 		
 		public virtual double RetHeightRow(int rank)
@@ -491,8 +470,7 @@ namespace Epsitec.Common.Widgets
 				this.heightRows[rank] = height;
 			}
 
-			this.isDirty = true;
-			this.Invalidate();
+			this.MarkAsDirty ();
 		}
 		
 		public virtual void HideRows(int start, int count)
@@ -509,8 +487,7 @@ namespace Epsitec.Common.Widgets
 					this.heightRows[i] = 0;
 				}
 			}
-			this.isDirty = true;
-			this.Invalidate();
+			this.MarkAsDirty ();
 		}
 		
 		public virtual void ShowRows(int start, int count)
@@ -527,15 +504,14 @@ namespace Epsitec.Common.Widgets
 					this.heightRows[i] = this.defHeight;
 				}
 			}
-			this.isDirty = true;
-			this.Invalidate();
+			this.MarkAsDirty ();
 		}
 		
 
 		protected void StretchColumns()
 		{
 			//	Adapte les largeurs des colonnes à la largeur du widget.
-			double areaWidth = this.Width-this.margins.Width-this.leftMargin-this.rightMargin;
+			double areaWidth = this.ActualWidth-this.margins.Width-this.leftMargin-this.rightMargin;
 			double totalWidth = 0;
 			for ( int i=0 ; i<this.maxColumns ; i++ )
 			{
@@ -553,7 +529,7 @@ namespace Epsitec.Common.Widgets
 		protected void StretchRows()
 		{
 			//	Adapte les hauteurs des lignes à la hauteur du widget.
-			double areaHeight = this.Height-this.margins.Height-this.bottomMargin-this.topMargin;
+			double areaHeight = this.ActualHeight-this.margins.Height-this.bottomMargin-this.topMargin;
 			double totalHeight = 0;
 			for ( int i=0 ; i<this.maxRows ; i++ )
 			{
@@ -800,30 +776,26 @@ namespace Epsitec.Common.Widgets
 		{
 			//	Modifie la hauteur d'une ligne.
 			this.SetHeightRow(this.dragRank, this.dragDim+(this.dragPos-pos));
-			this.isDirty = true;
-			this.Invalidate();
+			this.MarkAsDirty ();
 		}
 
 		protected void DragMovedColumn(int column, double pos)
 		{
 			//	Modifie la largeur d'une colonne.
 			this.SetWidthColumn(this.dragRank, this.dragDim+(pos-this.dragPos));
-			this.isDirty = true;
-			this.Invalidate();
+			this.MarkAsDirty ();
 		}
 
 		protected void DragEndedRow(int row, double pos)
 		{
 			//	La hauteur d'une ligne a été modifiée.
-			this.isDirty = true;
-			this.Invalidate();
+			this.MarkAsDirty ();
 		}
 
 		protected void DragEndedColumn(int column, double pos)
 		{
 			//	La largeur d'une colonne a été modifiée.
-			this.isDirty = true;
-			this.Invalidate();
+			this.MarkAsDirty ();
 		}
 
 
@@ -1007,7 +979,7 @@ namespace Epsitec.Common.Widgets
 		protected bool Detect(Drawing.Point pos, out int row, out int column)
 		{
 			//	Détecte dans quelle cellule est un point.
-			Drawing.Rectangle rect = this.container.Bounds;
+			Drawing.Rectangle rect = this.container.ActualBounds;
 
 			row = column = -1;
 			if ( !rect.Contains(pos) )  return false;
@@ -1176,36 +1148,44 @@ namespace Epsitec.Common.Widgets
 		protected virtual void OnSelectionChanged()
 		{
 			//	Génère un événement pour dire que la sélection a changé.
-			if ( this.SelectionChanged != null )  // qq'un écoute ?
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("SelectionChanged");
+
+			if (handler != null)
 			{
-				this.SelectionChanged(this);
+				handler(this);
 			}
 		}
 
 		protected virtual void OnFinalSelectionChanged()
 		{
 			//	Génère un événement pour dire que la sélection a changé.
-			if ( this.FinalSelectionChanged != null )  // qq'un écoute ?
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("FinalSelectionChanged");
+
+			if (handler != null)
 			{
-				this.FinalSelectionChanged(this);
+				handler(this);
 			}
 		}
 
 		protected virtual void OnSortChanged()
 		{
 			//	Génère un événement pour dire que le tri a changé.
-			if ( this.SortChanged != null )  // qq'un écoute ?
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("SortChanged");
+
+			if (handler != null)
 			{
-				this.SortChanged(this);
+				handler(this);
 			}
 		}
 
 		protected virtual void OnFlyOverChanged()
 		{
 			//	Génère un événement pour dire que la cellule survolée à changé.
-			if ( this.FlyOverChanged != null )  // qq'un écoute ?
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("FlyOverChanged");
+
+			if (handler != null)
 			{
-				this.FlyOverChanged(this);
+				handler(this);
 			}
 		}
 
@@ -1250,7 +1230,7 @@ namespace Epsitec.Common.Widgets
 		public void ShowCell(int showRow, int showColumn)
 		{
 			Drawing.Rectangle rect = this.Client.Bounds;
-			rect.Deflate(this.InternalPadding);
+			rect.Deflate(this.GetInternalPadding ());
 
 			if ( (this.styleV & CellArrayStyles.Stretch) == 0 &&
 				 (this.styleH & CellArrayStyles.SelectLine) == 0 &&
@@ -1305,6 +1285,12 @@ namespace Epsitec.Common.Widgets
 			this.UpdateGeometry();
 		}
 
+		protected override void ArrangeOverride(Epsitec.Common.Widgets.Layouts.LayoutContext context)
+		{
+			base.ArrangeOverride (context);
+			this.Update ();
+		}
+		
 		protected override void SetBoundsOverride(Drawing.Rectangle oldRect, Drawing.Rectangle newRect)
 		{
 			base.SetBoundsOverride (oldRect, newRect);
@@ -1332,11 +1318,11 @@ namespace Epsitec.Common.Widgets
 			if ( (this.styleV & CellArrayStyles.Header) != 0 )  this.leftMargin = this.headerWidth;
 			if ( (this.styleH & CellArrayStyles.Header) != 0 )  this.topMargin  = this.headerHeight;
 
-			Drawing.Rectangle rect = this.Bounds;
+			Drawing.Rectangle rect = this.ActualBounds;
 			Drawing.Rectangle iRect = new Drawing.Rectangle(this.margins.Left, this.margins.Bottom, rect.Width-this.margins.Width, rect.Height-this.margins.Height);
 
-			this.rightMargin  = this.showScrollerV ? this.scrollerV.Width-1 : 0;
-			this.bottomMargin = this.showScrollerH ? this.scrollerH.Height-1 : 0;
+			this.rightMargin  = this.showScrollerV ? this.scrollerV.PreferredWidth-1 : 0;
+			this.bottomMargin = this.showScrollerH ? this.scrollerH.PreferredHeight-1 : 0;
 
 			iRect.Left   += this.leftMargin;
 			iRect.Right  -= this.rightMargin;
@@ -1357,8 +1343,8 @@ namespace Epsitec.Common.Widgets
 			{
 				Drawing.Rectangle sRect = iRect;
 				sRect.Left  = sRect.Right-1;
-				sRect.Right = sRect.Left+this.scrollerV.Width;
-				this.scrollerV.Bounds = sRect;
+				sRect.Right = sRect.Left+this.scrollerV.PreferredWidth;
+				this.scrollerV.SetManualBounds(sRect);
 				this.scrollerV.Show();
 			}
 			else
@@ -1371,8 +1357,8 @@ namespace Epsitec.Common.Widgets
 			{
 				Drawing.Rectangle sRect = iRect;
 				sRect.Top    = sRect.Bottom+1;
-				sRect.Bottom = sRect.Top-this.scrollerH.Height;
-				this.scrollerH.Bounds = sRect;
+				sRect.Bottom = sRect.Top-this.scrollerH.PreferredHeight;
+				this.scrollerH.SetManualBounds(sRect);
 				this.scrollerH.Show();
 			}
 			else
@@ -1383,7 +1369,7 @@ namespace Epsitec.Common.Widgets
 			//	Positionne le container.
 			if ( this.container != null )
 			{
-				this.container.Bounds = iRect;
+				this.container.SetManualBounds(iRect);
 				this.UpdateArrayGeometry();
 			}
 
@@ -1399,7 +1385,7 @@ namespace Epsitec.Common.Widgets
 				hRect.Right  = iRect.Left;
 				hRect.Top    = iRect.Top;
 				hRect.Bottom = iRect.Bottom;
-				this.containerV.Bounds = hRect;
+				this.containerV.SetManualBounds(hRect);
 				this.containerV.Show();
 				if ( this.isGrimy )  this.containerV.Children.Clear();
 
@@ -1411,7 +1397,7 @@ namespace Epsitec.Common.Widgets
 					hRect.Bottom = hRect.Top-this.RetHeightRow(i);
 					HeaderButton button = this.FindButtonV(i);
 					button.Show();
-					button.Bounds = hRect;
+					button.SetManualBounds(hRect);
 					button.IsDynamic = ( (this.styleV & CellArrayStyles.Sort) != 0 );
 					if ( this.isGrimy )  this.containerV.Children.Add(button);
 					hRect.Top = hRect.Bottom;
@@ -1437,7 +1423,7 @@ namespace Epsitec.Common.Widgets
 						sRect.Bottom = hRect.Bottom-this.sliderDim/2;
 						sRect.Top    = hRect.Bottom+this.sliderDim/2;
 						slider.Show();
-						slider.Bounds = sRect;
+						slider.SetManualBounds(sRect);
 						if ( this.isGrimy )  this.containerV.Children.Add(slider);
 					}
 					hRect.Top = hRect.Bottom;
@@ -1456,7 +1442,7 @@ namespace Epsitec.Common.Widgets
 				hRect.Top    = iRect.Top+this.topMargin;
 				hRect.Left   = iRect.Left;
 				hRect.Right  = iRect.Right;
-				this.containerH.Bounds = hRect;
+				this.containerH.SetManualBounds(hRect);
 				this.containerH.Show();
 				if ( this.isGrimy )  this.containerH.Children.Clear();
 
@@ -1468,7 +1454,7 @@ namespace Epsitec.Common.Widgets
 					hRect.Right = hRect.Left+this.RetWidthColumn(i);
 					HeaderButton button = this.FindButtonH(i);
 					button.Show();
-					button.Bounds = hRect;
+					button.SetManualBounds(hRect);
 					button.IsDynamic = ( (this.styleH & CellArrayStyles.Sort) != 0 );
 					if ( this.isGrimy )  this.containerH.Children.Add(button);
 					hRect.Left = hRect.Right;
@@ -1494,7 +1480,7 @@ namespace Epsitec.Common.Widgets
 						sRect.Bottom = hRect.Bottom;
 						sRect.Top    = hRect.Top;
 						slider.Show();
-						slider.Bounds = sRect;
+						slider.SetManualBounds(sRect);
 						if ( this.isGrimy )  this.containerH.Children.Add(slider);
 					}
 					hRect.Left = hRect.Right;
@@ -1511,12 +1497,9 @@ namespace Epsitec.Common.Widgets
 			base.OnAdornerChanged();
 		}
 
-		public override Drawing.Rectangle GetShapeBounds()
+		public override Drawing.Margins GetShapeMargins()
 		{
-			IAdorner adorner = Widgets.Adorners.Factory.Active;
-			Drawing.Rectangle rect = this.Client.Bounds;
-			rect.Inflate(adorner.GeometryListShapeBounds);
-			return rect;
+			return Widgets.Adorners.Factory.Active.GeometryListShapeMargins;
 		}
 
 		protected void UpdateScrollers()
@@ -1527,7 +1510,7 @@ namespace Epsitec.Common.Widgets
 			//	Traite l'ascenseur vertical.
 			if ( this.showScrollerV )
 			{
-				double areaHeight = this.Height-this.margins.Height-this.bottomMargin-this.topMargin;
+				double areaHeight = this.ActualHeight-this.margins.Height-this.bottomMargin-this.topMargin;
 				double totalHeight = 0;
 				for ( int i=0 ; i<this.maxRows ; i++ )
 				{
@@ -1558,7 +1541,7 @@ namespace Epsitec.Common.Widgets
 			//	Traite l'ascenseur horizontal.
 			if ( this.showScrollerH )
 			{
-				double areaWidth = this.Width-this.margins.Width-this.leftMargin-this.rightMargin;
+				double areaWidth = this.ActualWidth-this.margins.Width-this.leftMargin-this.rightMargin;
 				double totalWidth = 0;
 				
 				if ( this.isDraggingSlider )
@@ -1600,7 +1583,7 @@ namespace Epsitec.Common.Widgets
 			//	Met à jour la géométrie de toutes les cellules du tableau.
 			Cell focusedCell = null;
 			
-			Drawing.Rectangle rect = this.container.Bounds;
+			Drawing.Rectangle rect = this.container.ActualBounds;
 			double py = rect.Height+this.offsetV;
 			for ( int y=0 ; y<this.maxRows ; y++ )
 			{
@@ -1617,7 +1600,7 @@ namespace Epsitec.Common.Widgets
 					{
 						cRect.Left += 1;
 						cRect.Top  -= 1;  // laisse la place pour la grille
-						this.array[x,y].Bounds = cRect;
+						this.array[x, y].SetManualBounds(cRect);
 						this.array[x,y].SetParent (this.container);
 						this.array[x,y].Visibility = true;
 						this.array[x,y].SetArrayRank(this, x, y);
@@ -1876,6 +1859,7 @@ namespace Epsitec.Common.Widgets
 			}
 
 			this.isGrimy = true;
+			this.MarkAsDirty ();
 		}
 
 
@@ -1905,11 +1889,14 @@ namespace Epsitec.Common.Widgets
 			//	Dessine le tableau.
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
 
-			this.Update();  // mis à jour si nécessaire
+			System.Diagnostics.Debug.Assert (this.isDirty == false);
+			System.Diagnostics.Debug.Assert (this.isGrimy == false);
+			
+//-			this.Update();  // mis à jour si nécessaire
 
 			//	Dessine le cadre et le fond du tableau.
 			Drawing.Rectangle rect = this.Client.Bounds;
-			WidgetState state = this.PaintState;
+			WidgetPaintState state = this.PaintState;
 			adorner.PaintArrayBackground(graphics, rect, state);
 
 #if false
@@ -1930,13 +1917,13 @@ namespace Epsitec.Common.Widgets
 			//	Dessine la grille par-dessus.
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
 
-			WidgetState state = this.PaintState;
+			WidgetPaintState state = this.PaintState;
 			Drawing.Rectangle rect = this.Client.Bounds;
-			rect.Deflate(this.InternalPadding);
+			rect.Deflate(this.GetInternalPadding ());
 			rect.Inflate(-0.5, -0.5);
 
 			graphics.LineWidth = 1;
-			Drawing.Color color = adorner.ColorTextFieldBorder((state&WidgetState.Enabled) != 0);
+			Drawing.Color color = adorner.ColorTextFieldBorder((state&WidgetPaintState.Enabled) != 0);
 
 			//	Dessine le rectangle englobant.
 			graphics.AddRectangle(rect);
@@ -1990,10 +1977,53 @@ namespace Epsitec.Common.Widgets
 		}
 		
 
-		public event Support.EventHandler SelectionChanged;
-		public event Support.EventHandler FinalSelectionChanged;
-		public event Support.EventHandler SortChanged;
-		public event Support.EventHandler FlyOverChanged;
+		public event EventHandler SelectionChanged
+		{
+			add
+			{
+				this.AddUserEventHandler("SelectionChanged", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("SelectionChanged", value);
+			}
+		}
+
+		public event EventHandler FinalSelectionChanged
+		{
+			add
+			{
+				this.AddUserEventHandler("FinalSelectionChanged", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("FinalSelectionChanged", value);
+			}
+		}
+
+		public event EventHandler SortChanged
+		{
+			add
+			{
+				this.AddUserEventHandler("SortChanged", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("SortChanged", value);
+			}
+		}
+
+		public event EventHandler FlyOverChanged
+		{
+			add
+			{
+				this.AddUserEventHandler("FlyOverChanged", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("FlyOverChanged", value);
+			}
+		}
 
 		protected bool							isDirty;
 		protected bool							isGrimy;

@@ -8,7 +8,6 @@ namespace Epsitec.Common.Document.Ribbons
 	/// <summary>
 	/// La classe Font permet de choisir la fonte du texte.
 	/// </summary>
-	[SuppressBundleSupport]
 	public class Font : Abstract
 	{
 		public Font() : base()
@@ -45,7 +44,7 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonMW.Text = "MW";
 			this.buttonMW.Clicked += new MessageEventHandler(this.HandleButtonMWClicked);
 
-			this.UpdateClientGeometry();
+//			this.UpdateClientGeometry();
 		}
 		
 		protected override void Dispose(bool disposing)
@@ -146,47 +145,47 @@ namespace Epsitec.Common.Document.Ribbons
 			if ( this.buttonBold == null )  return;
 
 			Rectangle rect;
-			double dx = this.buttonBold.DefaultWidth;
-			double dy = this.buttonBold.DefaultHeight;
+			double dx = this.buttonBold.PreferredWidth;
+			double dy = this.buttonBold.PreferredHeight;
 
 			rect = this.UsefulZone;
 			rect.Width = 75;
-			this.comboFont.Bounds = rect;
+			this.comboFont.SetManualBounds(rect);
 
 			rect = this.UsefulZone;
 			rect.Height = dy;
 			rect.Width = dx;
 			rect.Offset(80, dy+5);
-			this.buttonBold.Bounds = rect;
+			this.buttonBold.SetManualBounds(rect);
 			rect.Offset(dx, 0);
-			this.buttonItalic.Bounds = rect;
+			this.buttonItalic.SetManualBounds(rect);
 			rect.Offset(dx+5, 0);
-			this.buttonFontSizeMinus.Bounds = rect;
+			this.buttonFontSizeMinus.SetManualBounds(rect);
 			rect.Offset(dx, 0);
-			this.buttonFontSizePlus.Bounds = rect;
+			this.buttonFontSizePlus.SetManualBounds(rect);
 			rect.Offset(dx+35, 0);
-			this.buttonShowControl.Bounds = rect;
+			this.buttonShowControl.SetManualBounds(rect);
 
 			rect = this.UsefulZone;
 			rect.Height = dy;
 			rect.Width = dx;
 			rect.Offset(80, 0);
-			this.buttonUnderlined.Bounds = rect;
+			this.buttonUnderlined.SetManualBounds(rect);
 			rect.Offset(dx, 0);
-			this.buttonOverlined.Bounds = rect;
+			this.buttonOverlined.SetManualBounds(rect);
 			rect.Offset(dx+5, 0);
-			this.buttonStrikeout.Bounds = rect;
+			this.buttonStrikeout.SetManualBounds(rect);
 			rect.Offset(dx+5, 0);
-			this.buttonSubscript.Bounds = rect;
+			this.buttonSubscript.SetManualBounds(rect);
 			rect.Offset(dx, 0);
-			this.buttonSuperscript.Bounds = rect;
+			this.buttonSuperscript.SetManualBounds(rect);
 			rect.Offset(dx+10, 0);
-			this.buttonClear.Bounds = rect;
+			this.buttonClear.SetManualBounds(rect);
 
 			rect.Offset(dx+10, 0);
-			this.buttonStyle.Bounds = rect;
+			this.buttonStyle.SetManualBounds(rect);
 			rect.Offset(0, dy+5);
-			this.buttonMW.Bounds = rect;
+			this.buttonMW.SetManualBounds(rect);
 		}
 
 

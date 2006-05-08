@@ -7,7 +7,6 @@ namespace Epsitec.Common.Document.Panels
 	/// <summary>
 	/// La classe Shadow permet de choisir une ombre.
 	/// </summary>
-	[SuppressBundleSupport]
 	public class Shadow : Abstract
 	{
 		public Shadow(Document document) : base(document)
@@ -47,15 +46,15 @@ namespace Epsitec.Common.Document.Panels
 
 			this.labelRadius = new StaticText(this);
 			this.labelRadius.Text = "R";
-			this.labelRadius.Alignment = ContentAlignment.MiddleCenter;
+			this.labelRadius.ContentAlignment = ContentAlignment.MiddleCenter;
 
 			this.labelOx = new StaticText(this);
 			this.labelOx.Text = "X";
-			this.labelOx.Alignment = ContentAlignment.MiddleCenter;
+			this.labelOx.ContentAlignment = ContentAlignment.MiddleCenter;
 
 			this.labelOy = new StaticText(this);
 			this.labelOy.Text = "Y";
-			this.labelOy.Alignment = ContentAlignment.MiddleCenter;
+			this.labelOy.ContentAlignment = ContentAlignment.MiddleCenter;
 
 			this.isNormalAndExtended = true;
 		}
@@ -161,28 +160,28 @@ namespace Epsitec.Common.Document.Panels
 			r.Bottom = r.Top-20;
 			r.Left = rect.Right-50;
 			r.Right = rect.Right;
-			this.fieldColor.Bounds = r;
+			this.fieldColor.SetManualBounds(r);
 
 			r.Top = r.Bottom-5;
 			r.Bottom = r.Top-20;
 			r.Left = rect.Left;
 			r.Width = 14;
-			this.labelRadius.Bounds = r;
+			this.labelRadius.SetManualBounds(r);
 			r.Left = r.Right;
 			r.Width = 45;
-			this.fieldRadius.Bounds = r;
+			this.fieldRadius.SetManualBounds(r);
 			r.Left = r.Right;
 			r.Width = 13;
-			this.labelOx.Bounds = r;
+			this.labelOx.SetManualBounds(r);
 			r.Left = r.Right;
 			r.Width = 45;
-			this.fieldOx.Bounds = r;
+			this.fieldOx.SetManualBounds(r);
 			r.Left = r.Right;
 			r.Width = 13;
-			this.labelOy.Bounds = r;
+			this.labelOy.SetManualBounds(r);
 			r.Left = r.Right;
 			r.Width = 45;
-			this.fieldOy.Bounds = r;
+			this.fieldOy.SetManualBounds(r);
 		}
 		
 

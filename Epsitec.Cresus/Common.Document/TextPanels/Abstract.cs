@@ -8,7 +8,6 @@ namespace Epsitec.Common.Document.TextPanels
 	/// <summary>
 	/// La classe Abstract est la classe de base pour tous les panneaux des textes.
 	/// </summary>
-	[SuppressBundleSupport]
 	public abstract class Abstract : Common.Widgets.Widget
 	{
 		public Abstract(Document document, bool isStyle, StyleCategory styleCategory)
@@ -16,8 +15,10 @@ namespace Epsitec.Common.Document.TextPanels
 			this.document = document;
 			this.isStyle = isStyle;
 			this.styleCategory = styleCategory;
+
+			this.PreferredHeight = this.DefaultHeight;
 			
-			this.label = new StaticText(this);
+			this.label = new StaticText (this);
 			this.fixIcon = new StaticText(this);
 
 			this.extendedButton = new GlyphButton(this);
@@ -98,7 +99,7 @@ namespace Epsitec.Common.Document.TextPanels
 		}
 
 		
-		public override double DefaultHeight
+		public virtual double DefaultHeight
 		{
 			//	Retourne la hauteur standard.
 			get
@@ -169,24 +170,15 @@ namespace Epsitec.Common.Document.TextPanels
 		public void HeightChanged()
 		{
 			//	Indique que la hauteur du panneau a changé.
-			double h = this.DefaultHeight;
-			if ( this.Height != h )
-			{
-				this.Height = h;
-//-				this.ForceLayout();
-			}
+			this.PreferredHeight = this.DefaultHeight;
 		}
 
 		protected void ForceHeightChanged()
 		{
 			//	Force la mise à jour de la hauteur du panneau.
-			double h = this.DefaultHeight;
-			if ( this.Height != h )
-			{
-				//	Il faut modifier la hauteur du parent (normalement Containers.Styles.panelContainer)
-				//	qui contient ce panneau en mode DockStyle.Fill !
-				this.Parent.Height = h;
-			}
+			//	Il faut modifier la hauteur du parent (normalement Containers.Styles.panelContainer)
+			//	qui contient ce panneau en mode DockStyle.Fill !
+			this.Parent.PreferredHeight = this.DefaultHeight;
 		}
 
 
@@ -230,7 +222,7 @@ namespace Epsitec.Common.Document.TextPanels
 			rect.Right -= this.extendedZoneWidth+5;
 			rect.Top -= 1;
 			rect.Bottom = rect.Top-this.LabelHeight;
-			this.label.Bounds = rect;
+			this.label.SetManualBounds(rect);
 			this.label.Visibility = this.IsLabelProperties;
 
 			rect = this.Client.Bounds;
@@ -238,11 +230,11 @@ namespace Epsitec.Common.Document.TextPanels
 			rect.Width = this.extendedZoneWidth;
 			rect.Top -= this.IsLabelProperties ? 3 : 9;
 			rect.Bottom = rect.Top-13;
-			this.fixIcon.Bounds = rect;
+			this.fixIcon.SetManualBounds(rect);
 
 			rect.Left = this.Client.Bounds.Right-this.extendedZoneWidth+1;
 			rect.Width = this.extendedZoneWidth-3;
-			this.extendedButton.Bounds = rect;
+			this.extendedButton.SetManualBounds(rect);
 		}
 
 		protected void UpdateButtons()

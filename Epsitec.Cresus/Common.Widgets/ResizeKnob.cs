@@ -35,14 +35,13 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public override double					DefaultWidth
+		static ResizeKnob()
 		{
-			get { return 15; }
-		}
-		
-		public override double					DefaultHeight
-		{
-			get { return 15; }
+			Helpers.VisualPropertyMetadata metadataDx = new Helpers.VisualPropertyMetadata (15.0, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
+			Helpers.VisualPropertyMetadata metadataDy = new Helpers.VisualPropertyMetadata (15.0, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
+
+			Visual.PreferredWidthProperty.OverrideMetadata (typeof (ResizeKnob), metadataDx);
+			Visual.PreferredHeightProperty.OverrideMetadata (typeof (ResizeKnob), metadataDy);
 		}
 		
 		
@@ -101,7 +100,7 @@ namespace Epsitec.Common.Widgets
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
 			Drawing.Rectangle rect = this.Client.Bounds;
 
-			if ( (this.PaintState & WidgetState.Enabled) != 0 )
+			if ( (this.PaintState & WidgetPaintState.Enabled) != 0 )
 			{
 				adorner.PaintGlyph(graphics, rect, this.PaintState, GlyphShape.ResizeKnob, PaintTextStyle.Button);
 			}
