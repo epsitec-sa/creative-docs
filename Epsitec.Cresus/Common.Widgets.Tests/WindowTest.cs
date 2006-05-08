@@ -219,7 +219,7 @@ namespace Epsitec.Common.Widgets
 			window.AttachCommandDispatcher (dispatcher);
 			window.Root.AttachCommandDispatcher (dispatcher);
 			
-			Assert.AreSame (dispatcher, window.Root.CommandDispatchers[0]);
+			Assert.AreSame (dispatcher, Types.Collection.ToArray (window.Root.GetCommandDispatchers ())[0]);
 			
 			CommandState command_open = new CommandState ("Open", dispatcher, KeyCode.ModifierControl | KeyCode.AlphaO);
 			CommandState command_save = new CommandState ("Save", dispatcher, KeyCode.ModifierAlt | KeyCode.AlphaS);
