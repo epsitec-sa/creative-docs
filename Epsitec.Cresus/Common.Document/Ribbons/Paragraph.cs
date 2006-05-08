@@ -8,7 +8,6 @@ namespace Epsitec.Common.Document.Ribbons
 	/// <summary>
 	/// La classe Paragraph permet de choisir le style de paragraphe du texte.
 	/// </summary>
-	[SuppressBundleSupport]
 	public class Paragraph : Abstract
 	{
 		public Paragraph() : base()
@@ -37,7 +36,7 @@ namespace Epsitec.Common.Document.Ribbons
 
 			this.buttonClear = this.CreateIconButton("ParagraphClear");
 
-			this.UpdateClientGeometry();
+//			this.UpdateClientGeometry();
 		}
 		
 		protected override void Dispose(bool disposing)
@@ -66,31 +65,31 @@ namespace Epsitec.Common.Document.Ribbons
 
 			if ( this.buttonClear == null )  return;
 
-			double dx = this.buttonClear.DefaultWidth;
-			double dy = this.buttonClear.DefaultHeight;
+			double dx = this.buttonClear.PreferredWidth;
+			double dy = this.buttonClear.PreferredHeight;
 
 			Rectangle rect = this.UsefulZone;
 			rect.Offset(0, dy+5);
 			rect.Height = dy;
 			rect.Width = dx*1.5;
-			this.buttonJustif.Bounds = rect;
+			this.buttonJustif.SetManualBounds(rect);
 			rect.Offset(dx*1.5+5, 0);
 			rect.Width = dx;
-			this.buttonIndentMinus.Bounds = rect;
+			this.buttonIndentMinus.SetManualBounds(rect);
 			rect.Offset(dx, 0);
-			this.buttonIndentPlus.Bounds = rect;
+			this.buttonIndentPlus.SetManualBounds(rect);
 
 			rect = this.UsefulZone;
 			rect.Height = dy;
 			rect.Width = dx*1.5;
-			this.buttonLeading.Bounds = rect;
+			this.buttonLeading.SetManualBounds(rect);
 			rect.Offset(dx*1.5+5, 0);
 			rect.Width = dx;
-			this.buttonLeadingMinus.Bounds = rect;
+			this.buttonLeadingMinus.SetManualBounds(rect);
 			rect.Offset(dx, 0);
-			this.buttonLeadingPlus.Bounds = rect;
+			this.buttonLeadingPlus.SetManualBounds(rect);
 			rect.Offset(dx+10, 0);
-			this.buttonClear.Bounds = rect;
+			this.buttonClear.SetManualBounds(rect);
 		}
 
 

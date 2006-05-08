@@ -8,7 +8,6 @@ namespace Epsitec.Common.Document.TextPanels
 	/// <summary>
 	/// La classe Language permet de choisir la langue.
 	/// </summary>
-	[SuppressBundleSupport]
 	public class Language : Abstract
 	{
 		public Language(Document document, bool isStyle, StyleCategory styleCategory) : base(document, isStyle, styleCategory)
@@ -89,15 +88,15 @@ namespace Epsitec.Common.Document.TextPanels
 
 			r.Left = rect.Left;
 			r.Width = 100;
-			this.fieldLanguage.Bounds = r;
+			this.fieldLanguage.SetManualBounds(r);
 
 			r.Offset(105, 0);
 			r.Width = 20;
-			this.buttonHyphen.Bounds = r;
+			this.buttonHyphen.SetManualBounds(r);
 
 			r.Left = rect.Right-20;
 			r.Width = 20;
-			this.buttonClear.Bounds = r;
+			this.buttonClear.SetManualBounds(r);
 		}
 
 

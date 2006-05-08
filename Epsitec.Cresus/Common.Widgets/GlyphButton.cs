@@ -79,23 +79,19 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public override double					DefaultWidth
+		static GlyphButton()
 		{
-			get { return 17; }
+			Helpers.VisualPropertyMetadata metadataDx = new Helpers.VisualPropertyMetadata (17.0, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
+			Helpers.VisualPropertyMetadata metadataDy = new Helpers.VisualPropertyMetadata (17.0, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
+
+			Visual.PreferredWidthProperty.OverrideMetadata (typeof (GlyphButton), metadataDx);
+			Visual.PreferredHeightProperty.OverrideMetadata (typeof (GlyphButton), metadataDy);
 		}
-		
-		public override double					DefaultHeight
+
+
+		public override Drawing.Margins GetShapeMargins()
 		{
-			get { return 17; }
-		}
-		
-		
-		public override Drawing.Rectangle GetShapeBounds()
-		{
-			IAdorner adorner = Widgets.Adorners.Factory.Active;
-			Drawing.Rectangle rect = this.Client.Bounds;
-			rect.Inflate(adorner.GeometryToolShapeBounds);
-			return rect;
+			return Widgets.Adorners.Factory.Active.GeometryToolShapeMargins;
 		}
 		
 		

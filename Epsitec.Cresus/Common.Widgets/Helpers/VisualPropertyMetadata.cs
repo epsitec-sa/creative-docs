@@ -108,6 +108,18 @@ namespace Epsitec.Common.Widgets.Helpers
 				this.affectsChildrenLayout = value;
 			}
 		}
+		public bool								AffectsTextLayout
+		{
+			get
+			{
+				return this.affectsTextLayout;
+			}
+			set
+			{
+				this.affectsTextLayout = value;
+			}
+		}
+
 		
 		public override bool					InheritsValue
 		{
@@ -154,6 +166,7 @@ namespace Epsitec.Common.Widgets.Helpers
 			this.affectsMeasure	       = (flags & VisualPropertyMetadataOptions.AffectsMeasure) != 0;
 			this.affectsDisplay        = (flags & VisualPropertyMetadataOptions.AffectsDisplay) != 0;
 			this.affectsChildrenLayout = (flags & VisualPropertyMetadataOptions.AffectsChildrenLayout) != 0;
+			this.affectsTextLayout     = (flags & VisualPropertyMetadataOptions.AffectsTextLayout) != 0;
 			
 			this.inheritsValue         = (flags & VisualPropertyMetadataOptions.InheritsValue) != 0;
 			this.notifiesChanges       = (flags & VisualPropertyMetadataOptions.ChangesSilently) == 0;
@@ -167,7 +180,7 @@ namespace Epsitec.Common.Widgets.Helpers
 
 			if (this.affectsDisplay)
 			{
-				visual.NotifyDisplayChanged ();
+				visual.Invalidate ();
 			}
 
 			//	Layout support :
@@ -184,6 +197,10 @@ namespace Epsitec.Common.Widgets.Helpers
 			{
 				Layouts.LayoutContext.AddToArrangeQueue (visual);
 			}
+			if (this.affectsTextLayout)
+			{
+				visual.InvalidateTextLayout ();
+			}
 			
 			base.OnPropertyInvalidated (sender, old_value, new_value);
 		}
@@ -193,6 +210,7 @@ namespace Epsitec.Common.Widgets.Helpers
 		private bool							affectsArrange;
 		private bool							affectsMeasure;
 		private bool							affectsDisplay;
+		private bool							affectsTextLayout;
 		private bool							inheritsValue;
 		private bool							notifiesChanges;
 	}

@@ -32,8 +32,8 @@ namespace Epsitec.Common.Widgets
 			
 			double x = window.ClientSize.Width - 90;
 
-			a.Name = "A"; a.Margins = new Margins (0, 10, 0, 40); a.Size = new Size (80, 20); a.Text = "OK";     a.Anchor = AnchorStyles.BottomRight;
-			b.Name = "B"; b.Margins = new Margins (0, 10, 0, 10); b.Size = new Size (80, 20); b.Text = "Cancel"; b.Anchor = AnchorStyles.BottomRight;
+			a.Name = "A"; a.Margins = new Margins (0, 10, 0, 40); a.PreferredSize = new Size (80, 20); a.Text = "OK";     a.Anchor = AnchorStyles.BottomRight;
+			b.Name = "B"; b.Margins = new Margins (0, 10, 0, 10); b.PreferredSize = new Size (80, 20); b.Text = "Cancel"; b.Anchor = AnchorStyles.BottomRight;
 			
 			a.Clicked += new MessageEventHandler(this.HandleWidgetClicked);
 			b.Clicked += new MessageEventHandler(this.HandleWidgetClicked);
@@ -173,12 +173,12 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public override Rectangle GetShapeBounds()
+		public override Margins GetShapeMargins()
 		{
 			double growth = System.Math.Max (this.Client.Size.Width, this.Client.Size.Height) * 0.03;
 			double margin = 0.3 + (this.highlight ? growth : 0);
-			
-			return Rectangle.Inflate (base.GetShapeBounds (), margin, margin);
+
+			return new Drawing.Margins (margin, margin, margin, margin);
 		}
 
 		

@@ -54,8 +54,8 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.status.IsReadOnly = true;
 
 				this.slider = new HSlider(this.window.Root);
-				this.slider.Width = 80;
-				this.slider.Height = 14;
+				this.slider.PreferredWidth = 80;
+				this.slider.PreferredHeight = 14;
 				this.slider.Anchor = AnchorStyles.Bottom|AnchorStyles.Right;
 				this.slider.Margins = new Margins(6, 6, 0, 9+30);
 				this.slider.TabIndex = tabIndex++;
@@ -71,7 +71,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 				//	Boutons de fermeture.
 				Button buttonOk = new Button(this.window.Root);
-				buttonOk.Width = 75;
+				buttonOk.PreferredWidth = 75;
 				buttonOk.Text = Res.Strings.Dialog.Glyphs.Button.Insert;
 				buttonOk.ButtonStyle = ButtonStyle.DefaultAccept;
 				buttonOk.Anchor = AnchorStyles.BottomLeft;
@@ -81,7 +81,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				buttonOk.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 				Button buttonClose = new Button(this.window.Root);
-				buttonClose.Width = 75;
+				buttonClose.PreferredWidth = 75;
 				buttonClose.Text = Res.Strings.Dialog.Button.Close;
 				buttonClose.Anchor = AnchorStyles.BottomLeft;
 				buttonClose.Margins = new Margins(6+75+10, 0, 0, 6);

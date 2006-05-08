@@ -1,10 +1,11 @@
+using Epsitec.Common.Support;
+
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
 	/// La classe AbstractSlider implémente la classe de base des potentiomètres linéaires
 	/// HSlider et VSlider.
 	/// </summary>
-	[Support.SuppressBundleSupport]
 	public abstract class AbstractSlider : Widget, Behaviors.IDragBehaviorHost, Support.Data.INumValue
 	{
 		protected AbstractSlider(bool vertical)
@@ -24,11 +25,11 @@ namespace Epsitec.Common.Widgets
 			this.arrowDown.GlyphShape = GlyphShape.Minus;
 			this.arrowUp.ButtonStyle = ButtonStyle.Slider;
 			this.arrowDown.ButtonStyle = ButtonStyle.Slider;
-			this.arrowUp.Engaged += new Support.EventHandler(this.HandleButton);
-			this.arrowDown.Engaged += new Support.EventHandler(this.HandleButton);
-			this.arrowUp.StillEngaged += new Support.EventHandler(this.HandleButton);
-			this.arrowDown.StillEngaged += new Support.EventHandler(this.HandleButton);
-			this.range.Changed += new Support.EventHandler(this.HandleRangeChanged);
+			this.arrowUp.Engaged += new EventHandler(this.HandleButton);
+			this.arrowDown.Engaged += new EventHandler(this.HandleButton);
+			this.arrowUp.StillEngaged += new EventHandler(this.HandleButton);
+			this.arrowDown.StillEngaged += new EventHandler(this.HandleButton);
+			this.range.Changed += new EventHandler(this.HandleRangeChanged);
 			this.arrowUp.AutoRepeat = true;
 			this.arrowDown.AutoRepeat = true;
 		}
@@ -43,11 +44,11 @@ namespace Epsitec.Common.Widgets
 		{
 			if ( disposing )
 			{
-				this.arrowUp.Engaged -= new Support.EventHandler(this.HandleButton);
-				this.arrowDown.Engaged -= new Support.EventHandler(this.HandleButton);
-				this.arrowUp.StillEngaged -= new Support.EventHandler(this.HandleButton);
-				this.arrowDown.StillEngaged -= new Support.EventHandler(this.HandleButton);
-				this.range.Changed -= new Support.EventHandler(this.HandleRangeChanged);
+				this.arrowUp.Engaged -= new EventHandler(this.HandleButton);
+				this.arrowDown.Engaged -= new EventHandler(this.HandleButton);
+				this.arrowUp.StillEngaged -= new EventHandler(this.HandleButton);
+				this.arrowDown.StillEngaged -= new EventHandler(this.HandleButton);
+				this.range.Changed -= new EventHandler(this.HandleRangeChanged);
 			}
 			
 			base.Dispose(disposing);
@@ -186,12 +187,12 @@ namespace Epsitec.Common.Widgets
 				bounds = new Drawing.Rectangle (0, rect.Height - arrow_length, rect.Width, arrow_length);
 				
 				this.arrowUp.Visibility = (arrow_length > 0);
-				this.arrowUp.Bounds = bounds;
+				this.arrowUp.SetManualBounds(bounds);
 				
 				bounds = new Drawing.Rectangle (0, 0, rect.Width, arrow_length);
 				
 				this.arrowDown.Visibility = (arrow_length > 0);
-				this.arrowDown.Bounds = bounds;
+				this.arrowDown.SetManualBounds(bounds);
 				
 				rect.Bottom += arrow_length;
 				rect.Top    -= arrow_length;
@@ -203,12 +204,12 @@ namespace Epsitec.Common.Widgets
 				bounds = new Drawing.Rectangle (rect.Width - arrow_length, 0, arrow_length, rect.Height);
 				
 				this.arrowUp.Visibility = (arrow_length > 0);
-				this.arrowUp.Bounds = bounds;
+				this.arrowUp.SetManualBounds(bounds);
 				
 				bounds = new Drawing.Rectangle (0, 0, arrow_length, rect.Height);
 				
 				this.arrowDown.Visibility = (arrow_length > 0);
-				this.arrowDown.Bounds = bounds;
+				this.arrowDown.SetManualBounds(bounds);
 				
 				rect.Left  += arrow_length;
 				rect.Right -= arrow_length;
@@ -451,9 +452,12 @@ namespace Epsitec.Common.Widgets
 		protected virtual  void OnValueChanged()
 		{
 			this.UpdateInternalGeometry ();
-			if ( this.ValueChanged != null )  // qq'un écoute ?
+
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("ValueChanged");
+
+			if (handler != null)
 			{
-				this.ValueChanged(this);
+				handler(this);
 			}
 		}
 
@@ -482,10 +486,10 @@ namespace Epsitec.Common.Widgets
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
 			
 			Widgets.Direction dir   = this.is_vertical ? Direction.Up : Direction.Left;
-			WidgetState       state = this.PaintState;
+			WidgetPaintState       state = this.PaintState;
 			
 			//	Dessine le fond.
-			adorner.PaintSliderBackground (graphics, this.Client.Bounds, this.thumbRect, this.tabRect, state & ~WidgetState.Entered, dir);
+			adorner.PaintSliderBackground (graphics, this.Client.Bounds, this.thumbRect, this.tabRect, state & ~WidgetPaintState.Entered, dir);
 			
 			//	Dessine la cabine.
 			if (this.thumbRect.IsValid && this.IsEnabled)
@@ -495,13 +499,13 @@ namespace Epsitec.Common.Widgets
 				
 				if (this.HiliteZone != Zone.Thumb)
 				{
-					state &= ~ WidgetState.Entered;
-					state &= ~ WidgetState.Engaged;
+					state &= ~ WidgetPaintState.Entered;
+					state &= ~ WidgetPaintState.Engaged;
 				}
 				if (this.is_dragging)
 				{
-					state |= WidgetState.Engaged;
-					state |= WidgetState.Entered;
+					state |= WidgetPaintState.Engaged;
+					state |= WidgetPaintState.Entered;
 				}
 				
 				adorner.PaintSliderHandle(graphics, rect, this.tabRect, state, dir);
@@ -659,7 +663,17 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public event Support.EventHandler	ValueChanged;
+		public event EventHandler			ValueChanged
+		{
+			add
+			{
+				this.AddUserEventHandler("ValueChanged", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("ValueChanged", value);
+			}
+		}
 		#endregion
 		
 		#region Zone enumeration

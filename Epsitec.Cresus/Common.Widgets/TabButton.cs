@@ -15,10 +15,10 @@ namespace Epsitec.Common.Widgets
 		{
 			this.SetEmbedder(embedder);
 		}
-		
-		public override Drawing.Rectangle GetShapeBounds()
+
+		public override Drawing.Margins GetShapeMargins()
 		{
-			return new Drawing.Rectangle (-2, -2, this.Client.Size.Width+2, this.Client.Size.Height+2);
+			return new Drawing.Margins (2, 2, 2, 2);
 		}
 
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
@@ -27,7 +27,7 @@ namespace Epsitec.Common.Widgets
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
 
 			Drawing.Rectangle rect  = this.Client.Bounds;
-			WidgetState       state = this.PaintState;
+			WidgetPaintState       state = this.PaintState;
 			Drawing.Point     pos   = new Drawing.Point();
 
 			TabBook tabBook = this.Parent as TabBook;

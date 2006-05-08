@@ -7,7 +7,6 @@ namespace Epsitec.Common.Document.Containers
 	/// <summary>
 	/// La classe Containers.Principal contient tous les panneaux des propriétés.
 	/// </summary>
-	[SuppressBundleSupport]
 	public class Principal : Abstract
 	{
 		public Principal(Document document) : base(document)
@@ -125,7 +124,7 @@ namespace Epsitec.Common.Document.Containers
 			selectorStretchType.Name = "SelectorStretchType";
 			selectorStretchType.GlyphShape = GlyphShape.ArrowDown;
 			selectorStretchType.ButtonStyle = ButtonStyle.ToolItem;
-			selectorStretchType.Width = 14;
+			selectorStretchType.PreferredWidth = 14;
 			selectorStretchType.Margins = new Margins(-1, 0, 0, 0);
 			ToolTip.Default.SetToolTip(selectorStretchType, Res.Strings.Container.Principal.Button.StretchType);
 			this.selectorToolBar.Items.Add(selectorStretchType);
@@ -169,7 +168,7 @@ namespace Epsitec.Common.Document.Containers
 //-			System.Diagnostics.Debug.Assert(this.aggregateToolBar.CommandDispatcher != null);
 
 			StaticText st = new StaticText(this.aggregateToolBar);
-			st.Width = 30;
+			st.PreferredWidth = 30;
 			st.Dock = DockStyle.Left;
 			st.Text = Res.Strings.Container.Principal.Button.AggregateLabel;
 
@@ -177,7 +176,7 @@ namespace Epsitec.Common.Document.Containers
 			this.aggregateCombo.Document = this.document;
 			this.aggregateCombo.StyleCategory = StyleCategory.Graphic;
 			this.aggregateCombo.IsDeep = true;
-			this.aggregateCombo.Width = 130;
+			this.aggregateCombo.PreferredWidth = 130;
 			this.aggregateCombo.Dock = DockStyle.Left;
 			this.aggregateCombo.Margins = new Margins(0, 0, 1, 1);
 			this.aggregateCombo.TextChanged += new EventHandler(this.HandleAggregateComboChanged);
@@ -227,7 +226,7 @@ namespace Epsitec.Common.Document.Containers
 
 			StaticText st = new StaticText(this.textToolBar);
 			st.Text = Res.Strings.TextPanel.Filter.Title;
-			st.Width = 90;
+			st.PreferredWidth = 90;
 			st.Dock = DockStyle.Left;
 
 			this.textUsual = new IconButton(this.textToolBar);
@@ -299,7 +298,7 @@ namespace Epsitec.Common.Document.Containers
 			this.selectorPanel.Hide();
 
 			this.selectorName = new TextFieldCombo(this.selectorPanel);
-			this.selectorName.Width = 150;
+			this.selectorName.PreferredWidth = 150;
 			this.selectorName.Dock = DockStyle.Left;
 			this.selectorName.TextChanged += new EventHandler(this.HandleSelectorNameChanged);
 			this.selectorName.ComboOpening += new EventHandler<CancelEventArgs> (this.HandleSelectorNameComboOpening);
@@ -308,7 +307,7 @@ namespace Epsitec.Common.Document.Containers
 
 			this.selectorGo = new Button(this.selectorPanel);
 			this.selectorGo.Text = Res.Strings.Container.Principal.Button.SelGo;
-			this.selectorGo.Width = 80;
+			this.selectorGo.PreferredWidth = 80;
 			this.selectorGo.Dock = DockStyle.Left;
 			this.selectorGo.Margins = new Margins(3, 0, 0, 0);
 			this.selectorGo.Pressed += new MessageEventHandler(this.HandleSelectorGo);
@@ -436,11 +435,11 @@ namespace Epsitec.Common.Document.Containers
 					if ( cmd != "" )
 					{
 						Button button = new Button();
-						button.Height = 40;
+						button.PreferredHeight = 40;
 						button.Command = cmd;
 						button.Name = name;
 						button.Text = text;
-						button.Alignment = ContentAlignment.MiddleLeft;
+						button.ContentAlignment = ContentAlignment.MiddleLeft;
 						button.Dock = DockStyle.Top;
 						button.Margins = new Margins(10, 10, topMargin, 0);
 						button.SetParent(this.scrollable.Panel);

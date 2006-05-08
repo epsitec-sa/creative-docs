@@ -1,3 +1,5 @@
+using Epsitec.Common.Support;
+
 namespace Epsitec.Common.Widgets
 {
 	public enum HeaderSliderStyle
@@ -73,42 +75,45 @@ namespace Epsitec.Common.Widgets
 		protected virtual void OnDragStarted(MessageEventArgs e)
 		{
 			//	Le slider va être déplacé.
-			if ( this.DragStarted != null )  // qq'un écoute ?
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("DragStarted");
+			if (handler != null)
 			{
-				if ( e != null )
+				if (e != null)
 				{
 					e.Message.Consumer = this;
 				}
-				
-				this.DragStarted(this, e);
+
+				handler(this);
 			}
 		}
 
 		protected virtual void OnDragMoved(MessageEventArgs e)
 		{
 			//	Le slider est déplacé.
-			if ( this.DragMoved != null )  // qq'un écoute ?
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("DragMoved");
+			if (handler != null)
 			{
-				if ( e != null )
+				if (e != null)
 				{
 					e.Message.Consumer = this;
 				}
-				
-				this.DragMoved(this, e);
+
+				handler(this);
 			}
 		}
 
 		protected virtual void OnDragEnded(MessageEventArgs e)
 		{
 			//	Le slider est fini de déplacer.
-			if ( this.DragEnded != null )  // qq'un écoute ?
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("DragEnded");
+			if (handler != null)
 			{
-				if ( e != null )
+				if (e != null)
 				{
 					e.Message.Consumer = this;
 				}
-				
-				this.DragEnded(this, e);
+
+				handler(this);
 			}
 		}
 
@@ -119,20 +124,53 @@ namespace Epsitec.Common.Widgets
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
 
 			Drawing.Rectangle rect  = this.Client.Bounds;
-			WidgetState       state = this.PaintState;
+			WidgetPaintState state = this.PaintState;
 			
-			if ( (state & WidgetState.Entered) != 0 || this.mouseDown )
+			if ( (state & WidgetPaintState.Entered) != 0 || this.mouseDown )
 			{
-				state |= WidgetState.Entered;
-				state &= ~WidgetState.Focused;
+				state |= WidgetPaintState.Entered;
+				state &= ~WidgetPaintState.Focused;
 				adorner.PaintButtonBackground(graphics, rect, state, Direction.Up, ButtonStyle.HeaderSlider);
 			}
 		}
 		
 
-		public event MessageEventHandler	DragStarted;
-		public event MessageEventHandler	DragMoved;
-		public event MessageEventHandler	DragEnded;
+		public event MessageEventHandler	DragStarted
+		{
+			add
+			{
+				this.AddUserEventHandler("DragStarted", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("DragStarted", value);
+			}
+		}
+
+		public event MessageEventHandler	DragMoved
+		{
+			add
+			{
+				this.AddUserEventHandler("DragMoved", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("DragMoved", value);
+			}
+		}
+
+		public event MessageEventHandler	DragEnded
+		{
+			add
+			{
+				this.AddUserEventHandler("DragEnded", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("DragEnded", value);
+			}
+		}
+
 		
 		protected HeaderSliderStyle			headerSliderStyle;
 		protected bool						mouseDown = false;

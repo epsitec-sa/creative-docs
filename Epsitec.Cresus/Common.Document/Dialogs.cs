@@ -486,13 +486,15 @@ namespace Epsitec.Common.Document
 			sep.Margins = new Margins(0, 0, 3, 6);
 #else
 			Separator sep = new Separator(parent);
-			sep.Width = parent.Width;
-			sep.Height = 1;
+//@			sep.PreferredWidth = parent.PreferredWidth;  // fenêtre trop grande
+//@			//?sep.PreferredWidth = parent.ActualWidth;  // beaucoup d'asserts à l'ouverture
+			sep.PreferredHeight = 1;
 			sep.Dock = DockStyle.Top;
 			sep.Margins = new Margins(0, 0, 6, 3);
 
 			StaticText text = new StaticText(parent);
 			text.Text = Misc.Bold(labelText);
+			text.PreferredHeight = text.PreferredHeight + 2;
 			text.Dock = DockStyle.Top;
 			text.Margins = new Margins(10, 10, 2, 8);
 #endif
@@ -502,8 +504,9 @@ namespace Epsitec.Common.Document
 		{
 			//	Crée un séparateur pour un onglet.
 			Separator sep = new Separator(parent);
-			sep.Width = parent.Width;
-			sep.Height = 1;
+//@			sep.PreferredWidth = parent.PreferredWidth;  // fenêtre trop grande
+//@			//?sep.PreferredWidth = parent.ActualWidth;  // beaucoup d'asserts à l'ouverture
+			sep.PreferredHeight = 1;
 			sep.Dock = DockStyle.Top;
 			sep.Margins = new Margins(0, 0, 4, 6);
 		}
@@ -514,19 +517,19 @@ namespace Epsitec.Common.Document
 		{
 			//	Crée des widgets pour afficher un texte fixe.
 			Panel container = new Panel(parent);
-			container.Height = 18;
+			container.PreferredHeight = 18;
 			container.Dock = DockStyle.Top;
 			container.Margins = new Margins(10, 10, 0, 0);
 
 			StaticText text = new StaticText(container);
 			text.Text = label;
-			text.Width = 120;
+			text.PreferredWidth = 120;
 			text.Dock = DockStyle.Left;
 			text.Margins = new Margins(0, 0, 0, 0);
 
 			text = new StaticText(container);
 			text.Text = info;
-			text.Width = 150;
+			text.PreferredWidth = 150;
 			text.Dock = DockStyle.Left;
 			text.Margins = new Margins(0, 0, 0, 0);
 		}
@@ -543,7 +546,7 @@ namespace Epsitec.Common.Document
 
 			CheckButton check = new CheckButton(parent);
 			check.Text = sBool.Text;
-			check.Width = 100;
+			check.PreferredWidth = 100;
 			check.Name = sBool.Name;
 			check.ActiveState = sBool.Value ? ActiveState.Yes : ActiveState.No;
 			check.TabIndex = this.tabIndex++;
@@ -591,19 +594,19 @@ namespace Epsitec.Common.Document
 			if ( sDouble == null )  return;
 
 			Panel container = new Panel(parent);
-			container.Height = 22;
+			container.PreferredHeight = 22;
 			container.TabIndex = this.tabIndex++;
 			container.Dock = DockStyle.Top;
 			container.Margins = new Margins(10, 10, 0, sDouble.Info?0:5);
 
 			StaticText text = new StaticText(container);
 			text.Text = sDouble.Text;
-			text.Width = 120;
+			text.PreferredWidth = 120;
 			text.Dock = DockStyle.Left;
 			text.Margins = new Margins(0, 0, 0, 0);
 
 			TextFieldReal field = new TextFieldReal(container);
-			field.Width = 60;
+			field.PreferredWidth = 60;
 			field.Name = sDouble.Name;
 			field.TextSuffix = sDouble.Suffix;
 			if ( sDouble.Integer )
@@ -632,7 +635,7 @@ namespace Epsitec.Common.Document
 			if ( sDouble.Info )
 			{
 				container = new Panel(parent);
-				container.Height = 18;
+				container.PreferredHeight = 18;
 				container.TabIndex = this.tabIndex++;
 				container.Dock = DockStyle.Top;
 				container.Margins = new Margins(10, 10, 0, 5);
@@ -640,7 +643,7 @@ namespace Epsitec.Common.Document
 				text = new StaticText(container);
 				text.Name = sDouble.Name;
 				text.Text = "<font size=\"80%\">" + sDouble.GetInfo() + "</font>";
-				text.Width = 150;
+				text.PreferredWidth = 150;
 				text.Dock = DockStyle.Left;
 				text.Margins = new Margins(120, 0, 0, 0);
 				this.WidgetsTableAdd(text, ".Info");
@@ -704,33 +707,33 @@ namespace Epsitec.Common.Document
 			TextFieldReal field;
 
 			Panel container = new Panel(parent);
-			container.Height = 22+2+22;
+			container.PreferredHeight = 22+2+22;
 			container.TabIndex = this.tabIndex++;
 			container.Dock = DockStyle.Top;
 			container.Margins = new Margins(10, 10, 0, 5);
 
 			Panel containerXY = new Panel(container);
-			containerXY.Width = 120+60;
-			containerXY.Height = container.Height;
+			containerXY.PreferredWidth = 120+60;
+			containerXY.PreferredHeight = container.PreferredHeight;
 			containerXY.TabIndex = this.tabIndex++;
 			containerXY.Dock = DockStyle.Left;
 			containerXY.Margins = new Margins(0, 0, 0, 0);
 
 			Panel containerX = new Panel(containerXY);
-			containerX.Width = containerXY.Width;
-			containerX.Height = 22;
+			containerX.PreferredWidth = containerXY.PreferredWidth;
+			containerX.PreferredHeight = 22;
 			containerX.TabIndex = this.tabIndex++;
 			containerX.Dock = DockStyle.Top;
 			containerX.Margins = new Margins(0, 0, 0, 0);
 
 			text = new StaticText(containerX);
 			text.Text = sPoint.TextX;
-			text.Width = 120;
+			text.PreferredWidth = 120;
 			text.Dock = DockStyle.Left;
 			text.Margins = new Margins(0, 0, 0, 0);
 
 			field = new TextFieldReal(containerX);
-			field.Width = 60;
+			field.PreferredWidth = 60;
 			field.Name = sPoint.Name;
 			if ( sPoint.Integer )
 			{
@@ -755,20 +758,20 @@ namespace Epsitec.Common.Document
 			this.WidgetsTableAdd(field, ".X");
 
 			Panel containerY = new Panel(containerXY);
-			containerY.Width = containerXY.Width;
-			containerY.Height = 22;
+			containerY.PreferredWidth = containerXY.PreferredWidth;
+			containerY.PreferredHeight = 22;
 			containerY.TabIndex = this.tabIndex++;
 			containerY.Dock = DockStyle.Bottom;
 			containerY.Margins = new Margins(0, 0, 0, 0);
 
 			text = new StaticText(containerY);
 			text.Text = sPoint.TextY;
-			text.Width = 120;
+			text.PreferredWidth = 120;
 			text.Dock = DockStyle.Left;
 			text.Margins = new Margins(0, 0, 0, 0);
 
 			field = new TextFieldReal(containerY);
-			field.Width = 60;
+			field.PreferredWidth = 60;
 			field.Name = sPoint.Name;
 			if ( sPoint.Integer )
 			{
@@ -794,8 +797,8 @@ namespace Epsitec.Common.Document
 
 			Separator sep = new Separator(container);
 			sep.Name = sPoint.Name;
-			sep.Width = 1;
-			sep.Height = container.Height;
+			sep.PreferredWidth = 1;
+			sep.PreferredHeight = container.PreferredHeight;
 			sep.Dock = DockStyle.Left;
 			sep.Margins = new Margins(2, 0, 0, 0);
 			this.WidgetsTableAdd(sep, ".SepLink");
@@ -806,7 +809,7 @@ namespace Epsitec.Common.Document
 			ib.TabIndex = this.tabIndex++;
 			ib.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ib.Dock = DockStyle.Left;
-			double m = System.Math.Floor((container.Height-ib.DefaultHeight)/2);
+			double m = System.Math.Floor ((container.PreferredHeight-ib.PreferredHeight)/2);
 			ib.Margins = new Margins(-1, 8, m, m);
 			ib.Clicked += new MessageEventHandler(HandlePointActiveStateChanged);
 			ToolTip.Default.SetToolTip(ib, Res.Strings.Dialog.Point.Link);
@@ -817,21 +820,21 @@ namespace Epsitec.Common.Document
 				Button button;
 
 				Panel containerD = new Panel(container);
-				containerD.Width = 33;
+				containerD.PreferredWidth = 33;
 				containerD.TabIndex = this.tabIndex++;
 				containerD.Dock = DockStyle.Left;
 				containerD.Margins = new Margins(0, 0, 0, 0);
 
 				Panel containerDX = new Panel(containerD);
-				containerDX.Width = containerD.Width;
-				containerDX.Height = 22;
+				containerDX.PreferredWidth = containerD.PreferredWidth;
+				containerDX.PreferredHeight = 22;
 				containerDX.TabIndex = this.tabIndex++;
 				containerDX.Dock = DockStyle.Top;
 				containerDX.Margins = new Margins(0, 0, 0, 0);
 
 				button = new Button(containerDX);
 				button.ButtonStyle = ButtonStyle.Icon;
-				button.Width = 17;
+				button.PreferredWidth = 17;
 				button.Name = sPoint.Name;
 				button.Text = @"<font size=""80%"">" + "\u00F72</font>";  // /2
 //-				button.SetClientZoom(0.8);
@@ -844,7 +847,7 @@ namespace Epsitec.Common.Document
 
 				button = new Button(containerDX);
 				button.ButtonStyle = ButtonStyle.Icon;
-				button.Width = 17;
+				button.PreferredWidth = 17;
 				button.Name = sPoint.Name;
 				button.Text = @"<font size=""80%"">" + "\u00D72</font>";  // x2
 //-				button.SetClientZoom(0.8);
@@ -856,15 +859,15 @@ namespace Epsitec.Common.Document
 				this.WidgetsTableAdd(button, ".DoublerMulX");
 
 				Panel containerDY = new Panel(containerD);
-				containerDY.Width = containerD.Width;
-				containerDY.Height = 22;
+				containerDY.PreferredWidth = containerD.PreferredWidth;
+				containerDY.PreferredHeight = 22;
 				containerDY.TabIndex = this.tabIndex++;
 				containerDY.Dock = DockStyle.Top;
 				containerDY.Margins = new Margins(0, 0, 0, 0);
 
 				button = new Button(containerDY);
 				button.ButtonStyle = ButtonStyle.Icon;
-				button.Width = 17;
+				button.PreferredWidth = 17;
 				button.Name = sPoint.Name;
 				button.Text = @"<font size=""80%"">" + "\u00F72</font>";  // /2
 //-				button.SetClientZoom(0.8);
@@ -877,7 +880,7 @@ namespace Epsitec.Common.Document
 
 				button = new Button(containerDY);
 				button.ButtonStyle = ButtonStyle.Icon;
-				button.Width = 17;
+				button.PreferredWidth = 17;
 				button.Name = sPoint.Name;
 				button.Text = @"<font size=""80%"">" + "\u00D72</font>";  // x2
 //-				button.SetClientZoom(0.8);
@@ -1016,19 +1019,19 @@ namespace Epsitec.Common.Document
 			if ( sInteger == null )  return;
 
 			Panel container = new Panel(parent);
-			container.Height = 22;
+			container.PreferredHeight = 22;
 			container.TabIndex = this.tabIndex++;
 			container.Dock = DockStyle.Top;
 			container.Margins = new Margins(10, 10, 0, 5);
 
 			StaticText text = new StaticText(container);
 			text.Text = sInteger.Text;
-			text.Width = 120;
+			text.PreferredWidth = 120;
 			text.Dock = DockStyle.Left;
 			text.Margins = new Margins(0, 0, 0, 0);
 
 			TextFieldCombo field = new TextFieldCombo(container);
-			field.Width = 140;
+			field.PreferredWidth = 140;
 			field.IsReadOnly = true;
 			field.Name = sInteger.Name;
 			sInteger.InitCombo(field);
@@ -1083,7 +1086,7 @@ namespace Epsitec.Common.Document
 			if ( sString == null )  return;
 
 			Panel container = new Panel(parent);
-			container.Height = 22;
+			container.PreferredHeight = 22;
 			container.TabIndex = this.tabIndex++;
 			container.Dock = DockStyle.Top;
 			container.Margins = new Margins(10, 10, 0, 5);
@@ -1091,7 +1094,7 @@ namespace Epsitec.Common.Document
 			TextField field = new TextField(container);
 			field.Name = sString.Name;
 			field.Text = sString.Value;
-			field.Width = 177;
+			field.PreferredWidth = 177;
 			field.Dock = DockStyle.Left;
 			field.Margins = new Margins(0, 0, 0, 0);
 			field.TextChanged += new EventHandler(this.HandleFilenameTextChanged);
@@ -1100,7 +1103,7 @@ namespace Epsitec.Common.Document
 			Button button = new Button(container);
 			button.Name = sString.Name;
 			button.Text = Res.Strings.Dialog.Button.Browse;
-			button.Width = 80;
+			button.PreferredWidth = 80;
 			button.Dock = DockStyle.Left;
 			button.Margins = new Margins(3, 0, 0, 0);
 			button.Clicked += new MessageEventHandler(HandleFilenameButtonClicked);
@@ -1143,19 +1146,19 @@ namespace Epsitec.Common.Document
 		{
 			//	Crée un widget combo pour éditer le format d'une page.
 			Panel container = new Panel(parent);
-			container.Height = 22;
+			container.PreferredHeight = 22;
 			container.TabIndex = this.tabIndex++;
 			container.Dock = DockStyle.Top;
 			container.Margins = new Margins(10, 10, 0, 0);
 
 			StaticText text = new StaticText(container);
 			text.Text = Res.Strings.Dialog.Print.Paper.Direction;
-			text.Width = 120;
+			text.PreferredWidth = 120;
 			text.Dock = DockStyle.Left;
 			text.Margins = new Margins(0, 0, 0, 0);
 
 			RadioButton radio = new RadioButton(container);
-			radio.Width = 65;
+			radio.PreferredWidth = 65;
 			radio.Name = "PaperFormat.Portrait";
 			radio.Text = Res.Strings.Dialog.Print.Paper.Portrait;
 			radio.Clicked += new MessageEventHandler(this.HandlePaperActiveStateChanged);
@@ -1167,7 +1170,7 @@ namespace Epsitec.Common.Document
 			this.WidgetsTableAdd(radio, "");
 			
 			radio = new RadioButton(container);
-			radio.Width = 75;
+			radio.PreferredWidth = 75;
 			radio.Name = "PaperFormat.Landscape";
 			radio.Text = Res.Strings.Dialog.Print.Paper.Landscape;
 			radio.Clicked += new MessageEventHandler(this.HandlePaperActiveStateChanged);
@@ -1178,19 +1181,19 @@ namespace Epsitec.Common.Document
 			this.WidgetsTableAdd(radio, "");
 
 			container = new Panel(parent);
-			container.Height = 22;
+			container.PreferredHeight = 22;
 			container.TabIndex = this.tabIndex++;
 			container.Dock = DockStyle.Top;
 			container.Margins = new Margins(10, 10, 0, 5);
 
 			text = new StaticText(container);
 			text.Text = Res.Strings.Dialog.Print.Paper.PaperList;
-			text.Width = 120;
+			text.PreferredWidth = 120;
 			text.Dock = DockStyle.Left;
 			text.Margins = new Margins(0, 0, 0, 0);
 
 			TextFieldCombo field = new TextFieldCombo(container);
-			field.Width = 140;
+			field.PreferredWidth = 140;
 			field.IsReadOnly = true;
 			field.Name = "PaperFormat";
 
@@ -1378,7 +1381,7 @@ namespace Epsitec.Common.Document
 			if ( sString == null )  return;
 
 			Panel container = new Panel(parent);
-			container.Height = 22;
+			container.PreferredHeight = 22;
 			container.TabIndex = this.tabIndex++;
 			container.Dock = DockStyle.Top;
 			container.Margins = new Margins(10, 10, 0, 5);
@@ -1387,7 +1390,7 @@ namespace Epsitec.Common.Document
 			field.Name = sString.Name;
 			field.IsReadOnly = true;
 			field.Text = this.document.Settings.PrintInfo.PrintName;
-			field.Width = 177;
+			field.PreferredWidth = 177;
 			field.Dock = DockStyle.Left;
 			field.Margins = new Margins(0, 0, 0, 0);
 			field.ComboOpening += new EventHandler<CancelEventArgs> (this.HandlePrinterComboOpening);
@@ -1397,7 +1400,7 @@ namespace Epsitec.Common.Document
 			Button button = new Button(container);
 			button.Name = sString.Name;
 			button.Text = Res.Strings.Dialog.Print.Properties;
-			button.Width = 80;
+			button.PreferredWidth = 80;
 			button.Dock = DockStyle.Left;
 			button.Margins = new Margins(3, 0, 0, 0);
 			button.Clicked += new MessageEventHandler(HandlePrinterButtonClicked);
@@ -1477,8 +1480,8 @@ namespace Epsitec.Common.Document
 
 			radio = new RadioButton(parent);
 			radio.Text = Res.Strings.Dialog.Print.Range.All;
-			radio.Height = 20;
-			radio.Width = 100;
+			radio.PreferredHeight = 20;
+			radio.PreferredWidth = 100;
 			radio.Name = sRange.Name;
 			radio.ActiveState = (sRange.PrintRange == Settings.PrintRange.All) ? ActiveState.Yes : ActiveState.No;
 			radio.TabIndex = this.tabIndex++;
@@ -1491,15 +1494,15 @@ namespace Epsitec.Common.Document
 			
 			//	début from-to
 			Panel container = new Panel(parent);
-			container.Height = 20;
+			container.PreferredHeight = 20;
 			container.TabIndex = this.tabIndex++;
 			container.Dock = DockStyle.Top;
 			container.Margins = new Margins(10, 10, 0, 0);
 
 			radio = new RadioButton(container);
 			radio.Text = Res.Strings.Dialog.Print.Range.From;
-			radio.Height = 20;
-			radio.Width = 85;
+			radio.PreferredHeight = 20;
+			radio.PreferredWidth = 85;
 			radio.Name = sRange.Name;
 			radio.ActiveState = (sRange.PrintRange == Settings.PrintRange.FromTo) ? ActiveState.Yes : ActiveState.No;
 			radio.TabIndex = this.tabIndex++;
@@ -1511,8 +1514,8 @@ namespace Epsitec.Common.Document
 			this.WidgetsTableAdd(radio, ".FromTo");
 			
 			field = new TextFieldReal(container);
-			field.Height = 20;
-			field.Width = 50;
+			field.PreferredHeight = 20;
+			field.PreferredWidth = 50;
 			field.Name = sRange.Name;
 			this.document.Modifier.AdaptTextFieldRealScalar(field);
 			field.MinValue = (decimal) sRange.Min;
@@ -1528,15 +1531,15 @@ namespace Epsitec.Common.Document
 
 			StaticText text = new StaticText(container);
 			text.Text = Res.Strings.Dialog.Print.Range.To;
-			text.Alignment = ContentAlignment.MiddleCenter;
-			text.Height = 20;
-			text.Width = 30;
+			text.ContentAlignment = ContentAlignment.MiddleCenter;
+			text.PreferredHeight = 20;
+			text.PreferredWidth = 30;
 			text.Dock = DockStyle.Left;
 			text.Margins = new Margins(0, 0, 0, 0);
 
 			field = new TextFieldReal(container);
-			field.Height = 20;
-			field.Width = 50;
+			field.PreferredHeight = 20;
+			field.PreferredWidth = 50;
 			field.Name = sRange.Name;
 			this.document.Modifier.AdaptTextFieldRealScalar(field);
 			field.MinValue = (decimal) sRange.Min;
@@ -1553,8 +1556,8 @@ namespace Epsitec.Common.Document
 
 			radio = new RadioButton(parent);
 			radio.Text = Res.Strings.Dialog.Print.Range.Current;
-			radio.Height = 20;
-			radio.Width = 100;
+			radio.PreferredHeight = 20;
+			radio.PreferredWidth = 100;
 			radio.Name = sRange.Name;
 			radio.ActiveState = (sRange.PrintRange == Settings.PrintRange.Current) ? ActiveState.Yes : ActiveState.No;
 			radio.TabIndex = this.tabIndex++;

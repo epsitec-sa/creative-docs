@@ -232,7 +232,7 @@ namespace Epsitec.Common.Document.Objects
 					if ( !selbox.IsEmpty )
 					{
 						selbox = viewer.InternalToScreen(selbox);
-						double top = System.Math.Min(selbox.Top, viewer.Height-2);
+						double top = System.Math.Min(selbox.Top, viewer.ActualHeight-2);
 						Point mouse = viewer.InternalToScreen(pos);
 						distance = System.Math.Max(top-mouse.Y, 0);
 					}

@@ -7,7 +7,6 @@ namespace Epsitec.Common.Designer.Ribbons
 	/// <summary>
 	/// La classe Culture permet de gérer les cultures.
 	/// </summary>
-	[SuppressBundleSupport]
 	public class Culture : Abstract
 	{
 		public Culture() : base()
@@ -46,16 +45,16 @@ namespace Epsitec.Common.Designer.Ribbons
 
 			if ( this.buttonNewCulture == null )  return;
 
-			double dx = this.buttonNewCulture.DefaultWidth;
-			double dy = this.buttonNewCulture.DefaultHeight;
+			double dx = this.buttonNewCulture.PreferredWidth;
+			double dy = this.buttonNewCulture.PreferredHeight;
 
 			Rectangle rect = this.UsefulZone;
 			rect.Width  = dx;
 			rect.Height = dy;
 			rect.Offset(0, dy+5);
-			this.buttonNewCulture.Bounds = rect;
+			this.buttonNewCulture.SetManualBounds(rect);
 			rect.Offset(dx, 0);
-			this.buttonDeleteCulture.Bounds = rect;
+			this.buttonDeleteCulture.SetManualBounds(rect);
 		}
 
 

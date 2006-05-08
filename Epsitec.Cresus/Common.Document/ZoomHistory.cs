@@ -6,9 +6,6 @@ namespace Epsitec.Common.Document
 	/// <summary>
 	/// La classe ZoomHistory permet de mémoriser l'historique des zooms.
 	/// </summary>
-	
-	[SuppressBundleSupport]
-	
 	public class ZoomHistory
 	{
 		public class ZoomElement

@@ -3,8 +3,6 @@
 
 namespace Epsitec.Common.Widgets
 {
-	using BundleAttribute = Epsitec.Common.Support.BundleAttribute;
-	
 	/// <summary>
 	/// La classe Tag implémente une petite étiquette (pastille) qui peut servir
 	/// à l'implémentation de "smart tags".
@@ -32,18 +30,16 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public override double					DefaultWidth
+		static Tag()
 		{
-			get { return 18; }
-		}
+			Helpers.VisualPropertyMetadata metadataDx = new Helpers.VisualPropertyMetadata (18.0, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
+			Helpers.VisualPropertyMetadata metadataDy = new Helpers.VisualPropertyMetadata (18.0, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
 
-		public override double					DefaultHeight
-		{
-			get { return 18; }
+			Visual.PreferredWidthProperty.OverrideMetadata (typeof (Tag), metadataDx);
+			Visual.PreferredHeightProperty.OverrideMetadata (typeof (Tag), metadataDy);
 		}
 		
-		
-		[Bundle]	public Drawing.Color		Color
+		public Drawing.Color					Color
 		{
 			get
 			{
@@ -59,7 +55,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		[Bundle]	public Direction			Direction
+		public Direction						Direction
 		{
 			get
 			{
@@ -87,7 +83,7 @@ namespace Epsitec.Common.Widgets
 		{
 			IAdorner          adorner = Widgets.Adorners.Factory.Active;
 			Drawing.Rectangle rect    = this.Client.Bounds;
-			WidgetState       state   = this.PaintState;
+			WidgetPaintState       state   = this.PaintState;
 			
 			adorner.PaintTagBackground (graphics, rect, state, this.color, this.direction);
 			adorner.PaintGlyph (graphics, rect, state, this.GlyphShape, PaintTextStyle.Button);

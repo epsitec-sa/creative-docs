@@ -143,11 +143,11 @@ namespace Epsitec.Common.Drawing
 				this.fitter.GenerateAllMarks ();
 				this.Invalidate ();
 			}
-			
-			
-			protected override void OnSizeChanged(Types.DependencyPropertyChangedEventArgs e)
+
+
+			protected override void SetBoundsOverride(Rectangle oldRect, Rectangle newRect)
 			{
-				base.OnSizeChanged (e);
+				base.SetBoundsOverride (oldRect, newRect);
 				
 				if ((this.frame1 != null) &&
 					(this.frame2 != null) &&
@@ -159,7 +159,7 @@ namespace Epsitec.Common.Drawing
 			
 			protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clip_rect)
 			{
-				graphics.AddFilledRectangle (0, 0, this.Width, this.Height);
+				graphics.AddFilledRectangle (0, 0, this.Client.Size.Width, this.Client.Size.Height);
 				graphics.RenderSolid (Drawing.Color.FromBrightness (1.0));
 				
 				System.Diagnostics.Debug.WriteLine ("Paint called.");

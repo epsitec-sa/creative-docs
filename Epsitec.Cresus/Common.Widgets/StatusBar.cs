@@ -18,13 +18,11 @@ namespace Epsitec.Common.Widgets
 			this.SetEmbedder(embedder);
 		}
 		
-		public override double DefaultHeight
+		static StatusBar()
 		{
-			//	Retourne la hauteur standard.
-			get
-			{
-				return this.DefaultFontHeight+6;
-			}
+			Helpers.VisualPropertyMetadata metadataDy = new Helpers.VisualPropertyMetadata (Widget.DefaultFontHeight+6, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
+
+			Visual.PreferredHeightProperty.OverrideMetadata (typeof (StatusBar), metadataDy);
 		}
 
 		public Collections.WidgetCollection		Items
@@ -58,24 +56,10 @@ namespace Epsitec.Common.Widgets
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
 
 			Drawing.Rectangle rect  = this.Client.Bounds;
-			WidgetState       state = this.PaintState;
+			WidgetPaintState       state = this.PaintState;
 			adorner.PaintStatusBackground(graphics, rect, state);
 		}
 
-		
-		#region Interface IBundleSupport
-		public override void RestoreFromBundle(Epsitec.Common.Support.ObjectBundler bundler, Epsitec.Common.Support.ResourceBundle bundle)
-		{
-			base.RestoreFromBundle (bundler, bundle);
-			this.items.RestoreFromBundle ("items", bundler, bundle);
-		}
-		
-		public override void SerializeToBundle(Support.ObjectBundler bundler, Support.ResourceBundle bundle)
-		{
-			base.SerializeToBundle (bundler, bundle);
-			this.items.SerializeToBundle ("items", bundler, bundle);
-		}
-		#endregion
 		
 		#region IWidgetCollectionHost Members
 		Collections.WidgetCollection Collections.IWidgetCollectionHost.GetWidgetCollection()

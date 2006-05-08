@@ -3,16 +3,11 @@
 
 namespace Epsitec.Common.Widgets.Validators
 {
-	using SuppressBundleSupportAttribute = Support.SuppressBundleSupportAttribute;
-	
 	/// <summary>
 	/// La classe AbstractValidator permet de simplifier l'implémentation de
 	/// l'interface IValidator en relation avec des widgets.
 	/// </summary>
-	
-	[SuppressBundleSupport]
-	
-	public abstract class AbstractValidator : IValidator, System.IDisposable, Support.IBundleSupport
+	public abstract class AbstractValidator : IValidator, System.IDisposable
 	{
 		public AbstractValidator(Widget widget)
 		{
@@ -96,36 +91,6 @@ namespace Epsitec.Common.Widgets.Validators
 		}
 		
 		public event Support.EventHandler		BecameDirty;
-		#endregion
-		
-		#region IBundleSupport Members
-		public void AttachResourceManager(Support.ResourceManager resource_manager)
-		{
-		}
-			
-		public void SerializeToBundle(Support.ObjectBundler bundler, Support.ResourceBundle bundle)
-		{
-		}
-
-		public void RestoreFromBundle(Support.ObjectBundler bundler, Support.ResourceBundle bundle)
-		{
-		}
-
-		public string									BundleName
-		{
-			get
-			{
-				return null;
-			}
-		}
-
-		public string									PublicClassName
-		{
-			get
-			{
-				return this.GetType ().Name;
-			}
-		}
 		#endregion
 		
 		protected virtual void OnBecameDirty()

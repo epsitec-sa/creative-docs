@@ -29,22 +29,15 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public override double						DefaultHeight
+		static StaticText()
 		{
-			get
-			{
-				return this.DefaultFontHeight;
-			}
+			Helpers.VisualPropertyMetadata metadataAlign = new Helpers.VisualPropertyMetadata (Drawing.ContentAlignment.MiddleLeft, Helpers.VisualPropertyMetadataOptions.AffectsTextLayout);
+			Helpers.VisualPropertyMetadata metadataHeight = new Helpers.VisualPropertyMetadata (Widget.DefaultFontHeight, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
+			
+			Visual.ContentAlignmentProperty.OverrideMetadata (typeof (StaticText), metadataAlign);
+			Visual.PreferredHeightProperty.OverrideMetadata (typeof (StaticText), metadataHeight);
 		}
-
-		public override Drawing.ContentAlignment	DefaultAlignment
-		{
-			get
-			{
-				return Drawing.ContentAlignment.MiddleLeft;
-			}
-		}
-
+		
 #if false	//#fix
 		public override Drawing.Size				PreferredSize
 		{
@@ -59,7 +52,7 @@ namespace Epsitec.Common.Widgets
 		{
 			if (this.TextLayout != null)
 			{
-				return this.MapClientToParent (this.TextLayout.GetLineOrigin (0)) - this.Location;
+				return this.MapClientToParent (this.TextLayout.GetLineOrigin (0)) - this.ActualLocation;
 			}
 			
 			return base.GetBaseLine ();
@@ -95,7 +88,7 @@ namespace Epsitec.Common.Widgets
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
 			Drawing.Rectangle rect  = this.Client.Bounds;
-			WidgetState       state = this.PaintState;
+			WidgetPaintState       state = this.PaintState;
 			Drawing.Point     pos   = new Drawing.Point();
 			
 			if (this.BackColor.IsVisible)

@@ -7,7 +7,6 @@ namespace Epsitec.Common.Document.Panels
 	/// <summary>
 	/// La classe Name permet de choisir une chaîne de caractères.
 	/// </summary>
-	[SuppressBundleSupport]
 	public class Name : Abstract
 	{
 		public Name(Document document) : base(document)
@@ -76,7 +75,7 @@ namespace Epsitec.Common.Document.Panels
 
 			Rectangle r = rect;
 			r.Bottom = r.Top-20;
-			this.field.Bounds = r;
+			this.field.SetManualBounds(r);
 		}
 		
 		private void HandleTextChanged(object sender)

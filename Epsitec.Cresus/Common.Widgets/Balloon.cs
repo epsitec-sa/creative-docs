@@ -1,3 +1,4 @@
+using Epsitec.Common.Support;
 using Epsitec.Common.Drawing;
 
 namespace Epsitec.Common.Widgets
@@ -146,7 +147,7 @@ namespace Epsitec.Common.Widgets
 		{
 			//	Indique si la souris est trop loin de la mini-palette.
 			Point p1 = this.MapClientToScreen(new Point(0, 0));
-			Point p2 = this.MapClientToScreen(new Point(this.Width, this.Height));
+			Point p2 = this.MapClientToScreen(new Point(this.ActualWidth, this.ActualHeight));
 			Rectangle rect = new Rectangle(p1, p2);
 
 			double dx = System.Math.Abs(mouse.X-rect.Center.X);
@@ -181,13 +182,24 @@ namespace Epsitec.Common.Widgets
 		protected virtual void OnCloseNeeded()
 		{
 			//	Génère un événement pour dire que la fermeture est nécessaire.
-			if ( this.CloseNeeded != null )  // qq'un écoute ?
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("CloseNeeded");
+			if (handler != null)
 			{
-				this.CloseNeeded(this);
+				handler(this);
 			}
 		}
 
-		public event Support.EventHandler CloseNeeded;
+		public event EventHandler CloseNeeded
+		{
+			add
+			{
+				this.AddUserEventHandler("CloseNeeded", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("CloseNeeded", value);
+			}
+		}
 
 		
 		protected double					distance;

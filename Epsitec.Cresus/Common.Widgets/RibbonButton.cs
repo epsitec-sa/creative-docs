@@ -18,7 +18,7 @@ namespace Epsitec.Common.Widgets
 			this.InternalState &= ~InternalState.Focusable;
 			this.InternalState &= ~InternalState.Engageable;
 
-			this.Alignment = Drawing.ContentAlignment.MiddleLeft;
+			this.ContentAlignment = Drawing.ContentAlignment.MiddleLeft;
 		}
 		
 		public RibbonButton(Widget embedder) : this()
@@ -44,25 +44,9 @@ namespace Epsitec.Common.Widgets
 
 
 		
-		#region Serialization support
-		protected override bool ShouldSerializeLocation()
+		public override Drawing.Margins GetShapeMargins()
 		{
-			return false;
-		}
-		
-		protected override bool ShouldSerializeSize()
-		{
-			return false;
-		}
-		#endregion
-		
-		
-		public override Drawing.Rectangle GetShapeBounds()
-		{
-			IAdorner adorner = Epsitec.Common.Widgets.Adorners.Factory.Active;
-			Drawing.Rectangle rect = this.Client.Bounds;
-			rect.Inflate(adorner.GeometryRibbonShapeBounds);
-			return rect;
+			return Epsitec.Common.Widgets.Adorners.Factory.Active.GeometryRibbonShapeMargins;
 		}
 
 
@@ -107,7 +91,7 @@ namespace Epsitec.Common.Widgets
 			IAdorner adorner = Epsitec.Common.Widgets.Adorners.Factory.Active;
 
 			Drawing.Rectangle rect  = this.Client.Bounds;
-			WidgetState       state = this.PaintState;
+			WidgetPaintState       state = this.PaintState;
 			Drawing.Point     pos   = new Drawing.Point();
 
 			adorner.PaintRibbonButtonBackground(graphics, rect, state);

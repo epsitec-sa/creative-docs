@@ -7,7 +7,6 @@ namespace Epsitec.Common.Document.Ribbons
 	/// <summary>
 	/// La classe View définit les modes d'affichage.
 	/// </summary>
-	[SuppressBundleSupport]
 	public class View : Abstract
 	{
 		public View() : base()
@@ -23,7 +22,7 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonLabels      = this.CreateIconButton("Labels");
 			this.buttonAggregates  = this.CreateIconButton("Aggregates");
 			
-			this.UpdateClientGeometry();
+//			this.UpdateClientGeometry();
 		}
 		
 		protected override void Dispose(bool disposing)
@@ -52,31 +51,31 @@ namespace Epsitec.Common.Document.Ribbons
 
 			if ( this.buttonPreview == null )  return;
 
-			double dx = this.buttonPreview.DefaultWidth;
-			double dy = this.buttonPreview.DefaultHeight;
+			double dx = this.buttonPreview.PreferredWidth;
+			double dy = this.buttonPreview.PreferredHeight;
 
 			Rectangle rect = this.UsefulZone;
 			rect.Width  = dx;
 			rect.Height = dy;
 			rect.Offset(0, dy+5);
-			this.buttonPreview.Bounds = rect;
+			this.buttonPreview.SetManualBounds(rect);
 			rect.Offset(dx, 0);
-			this.buttonGrid.Bounds = rect;
+			this.buttonGrid.SetManualBounds(rect);
 			rect.Offset(dx, 0);
-			this.buttonTextGrid.Bounds = rect;
+			this.buttonTextGrid.SetManualBounds(rect);
 			rect.Offset(dx+5, 0);
-			this.buttonMagnet.Bounds = rect;
+			this.buttonMagnet.SetManualBounds(rect);
 			rect.Offset(dx, 0);
-			this.buttonMagnetLayer.Bounds = rect;
+			this.buttonMagnetLayer.SetManualBounds(rect);
 
 			rect = this.UsefulZone;
 			rect.Width  = dx;
 			rect.Height = dy;
-			this.buttonRulers.Bounds = rect;
+			this.buttonRulers.SetManualBounds(rect);
 			rect.Offset(dx, 0);
-			this.buttonLabels.Bounds = rect;
+			this.buttonLabels.SetManualBounds(rect);
 			rect.Offset(dx, 0);
-			this.buttonAggregates.Bounds = rect;
+			this.buttonAggregates.SetManualBounds(rect);
 		}
 
 

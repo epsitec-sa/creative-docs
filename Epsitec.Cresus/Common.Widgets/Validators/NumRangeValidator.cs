@@ -3,8 +3,6 @@
 
 namespace Epsitec.Common.Widgets.Validators
 {
-	using BundleAttribute = Support.BundleAttribute;
-	
 	/// <summary>
 	/// La classe NumRangeValidator permet de vérifier que la valeur est dans les
 	/// bornes requises.

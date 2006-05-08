@@ -304,65 +304,6 @@ namespace Epsitec.Common.Widgets.Collections
 		}
 		#endregion
 		
-		public void RestoreFromBundle(string items_name, Support.ObjectBundler bundler, Support.ResourceBundle bundle)
-		{
-			Support.ResourceBundle items = bundle[items_name].AsBundle;
-			
-			if (items != null)
-			{
-				string[] names = items.FieldNames;
-				System.Array.Sort (names);
-				
-				for (int i=0 ; i < names.Length; i++)
-				{
-					string name = names[i];
-					string item = items[name].AsString;
-					
-					if (item == null)
-					{
-						throw new Support.ResourceException (string.Format ("Item '{0}' is invalid.", name));
-					}
-					
-					this.Add (Support.ResourceBundle.ExtractSortName (name), item);
-				}
-			}
-		}
-		
-		public virtual void SerializeToBundle(string items_name, Support.ObjectBundler bundler, Support.ResourceBundle bundle)
-		{
-			int n = this.list.Count;
-			
-			if (n > 0)
-			{
-				Support.ResourceBundle items = bundler.CreateEmptyBundle (items_name);
-				Support.ResourceBundle.Field field;
-				
-				int digits = (n-1).ToString (System.Globalization.CultureInfo.InvariantCulture).Length;
-				
-				for (int i = 0; i < n; i++)
-				{
-					string name = this.names[i] as string;
-					string item = this.list[i] as string;
-					
-					field = items.CreateField (Support.ResourceFieldType.Data);
-					
-					if (name == null) name = "";
-					if (item == null) item = "";
-					
-					field.SetName (Support.ResourceBundle.MakeSortName (name, i, digits));
-					field.SetStringValue (item);
-					
-					items.Add (field);
-				}
-				
-				field = bundle.CreateField (Support.ResourceFieldType.Bundle, items);
-				field.SetName (items_name);
-				
-				bundle.Add (field);
-			}
-		}
-		
-		
 		protected virtual void HandleInsert(object item)
 		{
 		}

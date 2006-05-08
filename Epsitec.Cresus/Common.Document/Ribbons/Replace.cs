@@ -7,7 +7,6 @@ namespace Epsitec.Common.Document.Ribbons
 	/// <summary>
 	/// La classe Replace gère les commandes chercher/remplacer.
 	/// </summary>
-	[SuppressBundleSupport]
 	public class Replace : Abstract
 	{
 		public Replace() : base()
@@ -16,7 +15,7 @@ namespace Epsitec.Common.Document.Ribbons
 
 			this.buttonReplace = this.CreateIconButton("Replace", "Large");
 			
-			this.UpdateClientGeometry();
+//			this.UpdateClientGeometry();
 		}
 		
 		protected override void Dispose(bool disposing)
@@ -45,14 +44,14 @@ namespace Epsitec.Common.Document.Ribbons
 
 			if ( this.buttonReplace == null )  return;
 
-			double dx = this.buttonReplace.DefaultWidth;
-			double dy = this.buttonReplace.DefaultHeight;
+			double dx = this.buttonReplace.PreferredWidth;
+			double dy = this.buttonReplace.PreferredHeight;
 
 			Rectangle rect = this.UsefulZone;
 			rect.Width  = dx*1.5;
 			rect.Height = dy*1.5;
 			rect.Offset(0, dy*0.5);
-			this.buttonReplace.Bounds = rect;
+			this.buttonReplace.SetManualBounds(rect);
 		}
 
 

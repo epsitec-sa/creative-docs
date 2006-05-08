@@ -32,8 +32,8 @@ namespace Epsitec.Common.Designer.Dialogs
 
 				StaticText label = new StaticText(this.window.Root);
 				label.Text = Res.Strings.Dialog.Search.Label;
-				label.Alignment = ContentAlignment.MiddleLeft;
-				label.Width = 80;
+				label.ContentAlignment = ContentAlignment.MiddleLeft;
+				label.PreferredWidth = 80;
 				label.Anchor = AnchorStyles.TopLeft;
 				label.Margins = new Margins(6, 0, 6+3, 0);
 
@@ -46,8 +46,8 @@ namespace Epsitec.Common.Designer.Dialogs
 
 				label = new StaticText(this.window.Root);
 				label.Text = Res.Strings.Dialog.Search.Replace;
-				label.Alignment = ContentAlignment.MiddleLeft;
-				label.Width = 80;
+				label.ContentAlignment = ContentAlignment.MiddleLeft;
+				label.PreferredWidth = 80;
 				label.Anchor = AnchorStyles.TopLeft;
 				label.Margins = new Margins(6, 0, 6+28+3, 0);
 
@@ -59,30 +59,32 @@ namespace Epsitec.Common.Designer.Dialogs
 
 				GroupBox group = new GroupBox(this.window.Root);
 				group.Text = Res.Strings.Dialog.Search.Check.Who;
-				group.Width = 160;
-				group.Height = 60;
+				group.PreferredWidth = 160;
+				group.PreferredHeight = 60;
 				group.Anchor = AnchorStyles.Top | AnchorStyles.Left;
 				group.Margins = new Margins(6, 0, 6+58+16*0, 0);
+				group.Padding = new Margins(5, 5, 5, 5);
 				group.TabIndex = tabIndex++;
 				group.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 
 				label = new StaticText(group);
-				label.Width = 80;
-				label.Alignment = ContentAlignment.MiddleRight;
+				label.PreferredWidth = 80;
+				label.ContentAlignment = ContentAlignment.MiddleRight;
 				label.Text = Res.Strings.Viewer.Edit;
 				label.Anchor = AnchorStyles.Top | AnchorStyles.Left;
-				label.Margins = new Margins(0, 0, 5, 0);
+				label.Margins = new Margins(0, 0, 0, 0);
 
 				label = new StaticText(group);
-				label.Width = 80;
-				label.Alignment = ContentAlignment.MiddleRight;
+				label.PreferredWidth = 80;
+				label.ContentAlignment = ContentAlignment.MiddleRight;
 				label.Text = Res.Strings.Viewer.About;
 				label.Anchor = AnchorStyles.Top | AnchorStyles.Left;
-				label.Margins = new Margins(0, 0, 21, 0);
+				label.Margins = new Margins(0, 0, 16, 0);
 
 				this.checkLabel = new CheckButton(group);
 				this.checkLabel.Anchor = AnchorStyles.Top | AnchorStyles.Left;
-				this.checkLabel.Margins = new Margins(90+20*0, 0, 5, 0);
+				this.checkLabel.PreferredWidth = this.checkLabel.PreferredHeight;
+				this.checkLabel.Margins = new Margins (90+20*0, 0, 0, 0);
 				this.checkLabel.TabIndex = tabIndex++;
 				this.checkLabel.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 				this.checkLabel.ActiveStateChanged += new EventHandler(this.HandleCheckActiveStateChanged);
@@ -91,7 +93,8 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.checkPrimaryText = new CheckButton(group);
 				this.checkPrimaryText.ActiveState = ActiveState.Yes;
 				this.checkPrimaryText.Anchor = AnchorStyles.Top | AnchorStyles.Left;
-				this.checkPrimaryText.Margins = new Margins(90+20*1, 0, 5, 0);
+				this.checkPrimaryText.PreferredWidth = this.checkPrimaryText.PreferredHeight;
+				this.checkPrimaryText.Margins = new Margins (90+20*1, 0, 0, 0);
 				this.checkPrimaryText.TabIndex = tabIndex++;
 				this.checkPrimaryText.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 				this.checkPrimaryText.ActiveStateChanged += new EventHandler(this.HandleCheckActiveStateChanged);
@@ -100,7 +103,8 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.checkSecondaryText = new CheckButton(group);
 				this.checkSecondaryText.ActiveState = ActiveState.Yes;
 				this.checkSecondaryText.Anchor = AnchorStyles.Top | AnchorStyles.Left;
-				this.checkSecondaryText.Margins = new Margins(90+20*2, 0, 5, 0);
+				this.checkSecondaryText.PreferredWidth = this.checkSecondaryText.PreferredHeight;
+				this.checkSecondaryText.Margins = new Margins (90+20*2, 0, 0, 0);
 				this.checkSecondaryText.TabIndex = tabIndex++;
 				this.checkSecondaryText.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 				this.checkSecondaryText.ActiveStateChanged += new EventHandler(this.HandleCheckActiveStateChanged);
@@ -108,7 +112,8 @@ namespace Epsitec.Common.Designer.Dialogs
 
 				this.checkPrimaryAbout = new CheckButton(group);
 				this.checkPrimaryAbout.Anchor = AnchorStyles.Top | AnchorStyles.Left;
-				this.checkPrimaryAbout.Margins = new Margins(90+20*1, 0, 21, 0);
+				this.checkPrimaryAbout.PreferredWidth = this.checkPrimaryAbout.PreferredHeight;
+				this.checkPrimaryAbout.Margins = new Margins(90+20*1, 0, 16, 0);
 				this.checkPrimaryAbout.TabIndex = tabIndex++;
 				this.checkPrimaryAbout.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 				this.checkPrimaryAbout.ActiveStateChanged += new EventHandler(this.HandleCheckActiveStateChanged);
@@ -116,14 +121,15 @@ namespace Epsitec.Common.Designer.Dialogs
 
 				this.checkSecondaryAbout = new CheckButton(group);
 				this.checkSecondaryAbout.Anchor = AnchorStyles.Top | AnchorStyles.Left;
-				this.checkSecondaryAbout.Margins = new Margins(90+20*2, 0, 21, 0);
+				this.checkSecondaryAbout.PreferredWidth = this.checkSecondaryAbout.PreferredHeight;
+				this.checkSecondaryAbout.Margins = new Margins (90+20*2, 0, 16, 0);
 				this.checkSecondaryAbout.TabIndex = tabIndex++;
 				this.checkSecondaryAbout.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 				this.checkSecondaryAbout.ActiveStateChanged += new EventHandler(this.HandleCheckActiveStateChanged);
 				ToolTip.Default.SetToolTip(this.checkSecondaryAbout, Res.Strings.Dialog.Search.Check.SecondaryAbout);
 
 				this.checkCase = new CheckButton(this.window.Root);
-				this.checkCase.Width = 130;
+				this.checkCase.PreferredWidth = 130;
 				this.checkCase.Text = Res.Strings.Dialog.Search.Check.Case;
 				this.checkCase.Anchor = AnchorStyles.Top | AnchorStyles.Left;
 				this.checkCase.Margins = new Margins(6+180, 0, 6+79+16*0, 0);
@@ -131,7 +137,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.checkCase.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 				this.checkWord = new CheckButton(this.window.Root);
-				this.checkWord.Width = 130;
+				this.checkWord.PreferredWidth = 130;
 				this.checkWord.Text = Res.Strings.Dialog.Search.Check.Word;
 				this.checkWord.Anchor = AnchorStyles.Top | AnchorStyles.Left;
 				this.checkWord.Margins = new Margins(6+180, 0, 6+79+16*1, 0);
@@ -141,7 +147,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				//	Boutons de fermeture.
 				this.buttonSearchPrev = new Button(this.window.Root);
 				this.buttonSearchPrev.Name = "SearchPrev";
-				this.buttonSearchPrev.Width = 85;
+				this.buttonSearchPrev.PreferredWidth = 85;
 				this.buttonSearchPrev.Text = string.Concat(Res.Strings.Dialog.Search.Button.Search, " ", Misc.Image("SearchPrevButton"));
 				this.buttonSearchPrev.Anchor = AnchorStyles.BottomLeft;
 				this.buttonSearchPrev.Margins = new Margins(6+(85+5)*0, 0, 0, 6+30);
@@ -151,7 +157,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 				this.buttonReplacePrev = new Button(this.window.Root);
 				this.buttonReplacePrev.Name = "ReplacePrev";
-				this.buttonReplacePrev.Width = 85;
+				this.buttonReplacePrev.PreferredWidth = 85;
 				this.buttonReplacePrev.Text = string.Concat(Res.Strings.Dialog.Search.Button.Replace, " ", Misc.Image("SearchPrevButton"));
 				this.buttonReplacePrev.Anchor = AnchorStyles.BottomLeft;
 				this.buttonReplacePrev.Margins = new Margins(6+(85+5)*1, 0, 0, 6+30);
@@ -161,7 +167,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 				this.buttonCount = new Button(this.window.Root);
 				this.buttonCount.Name = "Count";
-				this.buttonCount.Width = 85;
+				this.buttonCount.PreferredWidth = 85;
 				this.buttonCount.Text = Res.Strings.Dialog.Search.Button.Count;
 				this.buttonCount.Anchor = AnchorStyles.BottomLeft;
 				this.buttonCount.Margins = new Margins(6+(85+5)*2, 0, 0, 6+30);
@@ -172,7 +178,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 				this.buttonSearchNext = new Button(this.window.Root);
 				this.buttonSearchNext.Name = "SearchNext";
-				this.buttonSearchNext.Width = 85;
+				this.buttonSearchNext.PreferredWidth = 85;
 				this.buttonSearchNext.Text = string.Concat(Res.Strings.Dialog.Search.Button.Search, " ", Misc.Image("SearchNextButton"));
 				this.buttonSearchNext.ButtonStyle = ButtonStyle.DefaultAccept;
 				this.buttonSearchNext.Anchor = AnchorStyles.BottomLeft;
@@ -183,7 +189,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 				this.buttonReplaceNext = new Button(this.window.Root);
 				this.buttonReplaceNext.Name = "ReplaceNext";
-				this.buttonReplaceNext.Width = 85;
+				this.buttonReplaceNext.PreferredWidth = 85;
 				this.buttonReplaceNext.Text = string.Concat(Res.Strings.Dialog.Search.Button.Replace, " ", Misc.Image("SearchNextButton"));
 				this.buttonReplaceNext.Anchor = AnchorStyles.BottomLeft;
 				this.buttonReplaceNext.Margins = new Margins(6+(85+5)*1, 0, 0, 6);
@@ -193,7 +199,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 				this.buttonReplaceAll = new Button(this.window.Root);
 				this.buttonReplaceAll.Name = "ReplaceAll";
-				this.buttonReplaceAll.Width = 85;
+				this.buttonReplaceAll.PreferredWidth = 85;
 				this.buttonReplaceAll.Text = Res.Strings.Dialog.Search.Button.ReplaceAll;
 				this.buttonReplaceAll.Anchor = AnchorStyles.BottomLeft;
 				this.buttonReplaceAll.Margins = new Margins(6+(85+5)*2, 0, 0, 6);
@@ -202,7 +208,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonReplaceAll.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 				Button buttonClose = new Button(this.window.Root);
-				buttonClose.Width = 75;
+				buttonClose.PreferredWidth = 75;
 				buttonClose.Text = Res.Strings.Dialog.Button.Close;
 				buttonClose.Anchor = AnchorStyles.BottomRight;
 				buttonClose.Margins = new Margins(0, 6, 0, 6);

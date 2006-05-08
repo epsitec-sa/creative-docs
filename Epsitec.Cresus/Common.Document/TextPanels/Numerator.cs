@@ -8,7 +8,6 @@ namespace Epsitec.Common.Document.TextPanels
 	/// <summary>
 	/// La classe Numerator permet de choisir les groupements de paragraphes.
 	/// </summary>
-	[SuppressBundleSupport]
 	public class Numerator : Abstract
 	{
 		public Numerator(Document document, bool isStyle, StyleCategory styleCategory) : base(document, isStyle, styleCategory)
@@ -19,7 +18,7 @@ namespace Epsitec.Common.Document.TextPanels
 			ToolTip.Default.SetToolTip(this.fixIcon, Res.Strings.TextPanel.Numerator.Title);
 
 			this.labelStart = new StaticText(this);
-			this.labelStart.Alignment = ContentAlignment.MiddleRight;
+			this.labelStart.ContentAlignment = ContentAlignment.MiddleRight;
 			this.labelStart.Text = Res.Strings.TextPanel.Numerator.Label.Start;
 
 			this.fieldStart = new TextField(this);
@@ -91,15 +90,15 @@ namespace Epsitec.Common.Document.TextPanels
 
 			r.Left = rect.Left;
 			r.Width = 80;
-			this.labelStart.Bounds = r;
+			this.labelStart.SetManualBounds(r);
 
 			r.Left = rect.Left+80+3;
 			r.Right = rect.Right-25;
-			this.fieldStart.Bounds = r;
+			this.fieldStart.SetManualBounds(r);
 			
 			r.Left = rect.Right-20;
 			r.Width = 20;
-			this.buttonClear.Bounds = r;
+			this.buttonClear.SetManualBounds(r);
 		}
 
 

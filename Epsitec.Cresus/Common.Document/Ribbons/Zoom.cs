@@ -7,7 +7,6 @@ namespace Epsitec.Common.Document.Ribbons
 	/// <summary>
 	/// La classe Zoom gère le zoom d'affichage.
 	/// </summary>
-	[SuppressBundleSupport]
 	public class Zoom : Abstract
 	{
 		public Zoom() : base()
@@ -25,7 +24,7 @@ namespace Epsitec.Common.Document.Ribbons
 			this.CreateFieldZoom(ref this.fieldZoom, Res.Strings.Action.ZoomValue);
 			this.buttonOthers = this.CreateMenuButton("", Res.Strings.Action.ZoomMenu, new MessageEventHandler(this.HandleOthersPressed));
 			
-			this.UpdateClientGeometry();
+//			this.UpdateClientGeometry();
 		}
 		
 		protected override void Dispose(bool disposing)
@@ -72,41 +71,41 @@ namespace Epsitec.Common.Document.Ribbons
 
 			if ( this.buttonZoomMin == null )  return;
 
-			double dx = this.buttonZoomMin.DefaultWidth;
-			double dy = this.buttonZoomMin.DefaultHeight;
+			double dx = this.buttonZoomMin.PreferredWidth;
+			double dy = this.buttonZoomMin.PreferredHeight;
 
 			Rectangle rect = this.UsefulZone;
 			rect.Left += dx*4;
 			rect.Width = this.separatorWidth;
-			this.separator.Bounds = rect;
+			this.separator.SetManualBounds(rect);
 
 			rect = this.UsefulZone;
 			rect.Width  = dx;
 			rect.Height = dy;
 			rect.Offset(0, dy+5);
-			this.buttonZoomMin.Bounds = rect;
+			this.buttonZoomMin.SetManualBounds(rect);
 			rect.Offset(dx, 0);
-			this.buttonZoomPage.Bounds = rect;
+			this.buttonZoomPage.SetManualBounds(rect);
 			rect.Offset(dx, 0);
-			this.buttonZoomPageWidth.Bounds = rect;
+			this.buttonZoomPageWidth.SetManualBounds(rect);
 			rect.Offset(dx, 0);
-			this.buttonZoomDefault.Bounds = rect;
+			this.buttonZoomDefault.SetManualBounds(rect);
 			rect.Offset(dx+this.separatorWidth, -dy*0.5-5);
 			rect.Width = 50;
-			this.fieldZoom.Bounds = rect;
+			this.fieldZoom.SetManualBounds(rect);
 
 			rect = this.UsefulZone;
 			rect.Width  = dx;
 			rect.Height = dy;
-			this.buttonZoomSel.Bounds = rect;
+			this.buttonZoomSel.SetManualBounds(rect);
 			rect.Offset(dx, 0);
-			this.buttonZoomSelWidth.Bounds = rect;
+			this.buttonZoomSelWidth.SetManualBounds(rect);
 			rect.Offset(dx*2, 0);
-			this.buttonZoomPrev.Bounds = rect;
+			this.buttonZoomPrev.SetManualBounds(rect);
 			rect.Offset(dx+this.separatorWidth, 0);
 			rect.Width = 50;
 			rect.Height = dy*0.5;
-			this.buttonOthers.Bounds = rect;
+			this.buttonOthers.SetManualBounds(rect);
 		}
 
 
@@ -114,7 +113,7 @@ namespace Epsitec.Common.Document.Ribbons
 		{
 			//	Crée un champ éditable pour le zoom.
 			field = new TextFieldReal(this);
-			field.Width = 50;
+			field.PreferredWidth = 50;
 			field.TabIndex = this.tabIndex++;
 			field.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			field.ValueChanged += new EventHandler(this.HandleFieldValueChanged);
@@ -173,7 +172,7 @@ namespace Epsitec.Common.Document.Ribbons
 			VMenu menu = Menus.ZoomMenu.CreateZoomMenu(context.Zoom, context.ZoomPage, null);
 			if ( menu == null )  return;
 			menu.Host = this;
-			menu.MinWidth = button.Width;
+			menu.MinWidth = button.ActualWidth;
 			TextFieldCombo.AdjustComboSize(button, menu);
 			menu.ShowAsComboList(button, Point.Zero, button);
 		}

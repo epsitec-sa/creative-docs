@@ -8,7 +8,6 @@ namespace Epsitec.Common.Document.TextPanels
 	/// <summary>
 	/// La classe Spaces permet de choisir les marges verticales.
 	/// </summary>
-	[SuppressBundleSupport]
 	public class Spaces : Abstract
 	{
 		public Spaces(Document document, bool isStyle, StyleCategory styleCategory) : base(document, isStyle, styleCategory)
@@ -101,23 +100,23 @@ namespace Epsitec.Common.Document.TextPanels
 				{
 					r.Left = rect.Left;
 					r.Right = rect.Right-25;
-					this.fieldBefore.Bounds = r;
+					this.fieldBefore.SetManualBounds(r);
 					r.Offset(0, -25);
-					this.fieldAfter.Bounds = r;
+					this.fieldAfter.SetManualBounds(r);
 					r.Left = rect.Right-20;
 					r.Width = 20;
-					this.buttonClear.Bounds = r;
+					this.buttonClear.SetManualBounds(r);
 				}
 				else
 				{
 					r.Left = rect.Left;
 					r.Width = 60;
-					this.fieldBefore.Bounds = r;
+					this.fieldBefore.SetManualBounds(r);
 					r.Offset(60, 0);
-					this.fieldAfter.Bounds = r;
+					this.fieldAfter.SetManualBounds(r);
 					r.Left = rect.Right-20;
 					r.Width = 20;
-					this.buttonClear.Bounds = r;
+					this.buttonClear.SetManualBounds(r);
 				}
 			}
 			else
@@ -127,12 +126,12 @@ namespace Epsitec.Common.Document.TextPanels
 
 				r.Left = rect.Left;
 				r.Width = 60;
-				this.fieldBefore.Bounds = r;
+				this.fieldBefore.SetManualBounds(r);
 				r.Offset(60, 0);
-				this.fieldAfter.Bounds = r;
+				this.fieldAfter.SetManualBounds(r);
 				r.Left = rect.Right-20;
 				r.Width = 20;
-				this.buttonClear.Bounds = r;
+				this.buttonClear.SetManualBounds(r);
 			}
 		}
 

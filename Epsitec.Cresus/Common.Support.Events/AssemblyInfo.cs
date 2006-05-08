@@ -16,9 +16,3 @@ using System.Runtime.InteropServices;
 
 [assembly: AssemblyVersion("2.0.0.0")]
 [assembly: ComVisibleAttribute (false)]
-
-[assembly: System.CLSCompliant (true)]
-namespace Epsitec.Common.Support
-{
-}
-

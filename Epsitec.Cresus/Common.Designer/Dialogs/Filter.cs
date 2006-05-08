@@ -32,8 +32,8 @@ namespace Epsitec.Common.Designer.Dialogs
 
 				StaticText label = new StaticText(this.window.Root);
 				label.Text = Res.Strings.Dialog.Filter.Label;
-				label.Alignment = ContentAlignment.MiddleLeft;
-				label.Width = 40;
+				label.ContentAlignment = ContentAlignment.MiddleLeft;
+				label.PreferredWidth = 40;
 				label.Anchor = AnchorStyles.TopLeft;
 				label.Margins = new Margins(6, 0, 6+3, 0);
 
@@ -44,7 +44,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.fieldFilter.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 				this.radioBegin = new RadioButton(this.window.Root);
-				this.radioBegin.Width = 120;
+				this.radioBegin.PreferredWidth = 120;
 				this.radioBegin.Group = "Part";
 				this.radioBegin.Text = Res.Strings.Dialog.Filter.Radio.Begin;
 				this.radioBegin.Anchor = AnchorStyles.Top | AnchorStyles.Left;
@@ -53,7 +53,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.radioBegin.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 				this.radioAny = new RadioButton(this.window.Root);
-				this.radioAny.Width = 120;
+				this.radioAny.PreferredWidth = 120;
 				this.radioAny.ActiveState = ActiveState.Yes;
 				this.radioAny.Group = "Part";
 				this.radioAny.Text = Res.Strings.Dialog.Filter.Radio.Any;
@@ -63,7 +63,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.radioAny.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 				this.radioJocker = new RadioButton(this.window.Root);
-				this.radioJocker.Width = 120;
+				this.radioJocker.PreferredWidth = 120;
 				this.radioJocker.Group = "Part";
 				this.radioJocker.Text = Res.Strings.Dialog.Filter.Radio.Jocker;
 				this.radioJocker.Anchor = AnchorStyles.Top | AnchorStyles.Left;
@@ -73,7 +73,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.radioJocker.ActiveStateChanged += new EventHandler(this.HandleRadioJockerActiveStateChanged);
 
 				this.checkCase = new CheckButton(this.window.Root);
-				this.checkCase.Width = 120;
+				this.checkCase.PreferredWidth = 120;
 				this.checkCase.Text = Res.Strings.Dialog.Filter.Check.Case;
 				this.checkCase.Anchor = AnchorStyles.Top | AnchorStyles.Left;
 				this.checkCase.Margins = new Margins(6+120, 6, 6+32+16*0, 0);
@@ -81,7 +81,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.checkCase.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 				this.checkWord = new CheckButton(this.window.Root);
-				this.checkWord.Width = 120;
+				this.checkWord.PreferredWidth = 120;
 				this.checkWord.Text = Res.Strings.Dialog.Filter.Check.Word;
 				this.checkWord.Anchor = AnchorStyles.Top | AnchorStyles.Left;
 				this.checkWord.Margins = new Margins(6+120, 6, 6+32+16*1, 0);
@@ -90,7 +90,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 				//	Boutons de fermeture.
 				Button buttonOk = new Button(this.window.Root);
-				buttonOk.Width = 75;
+				buttonOk.PreferredWidth = 75;
 				buttonOk.Text = Res.Strings.Dialog.Filter.Button.Insert;
 				buttonOk.ButtonStyle = ButtonStyle.DefaultAccept;
 				buttonOk.Anchor = AnchorStyles.BottomLeft;
@@ -100,7 +100,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				buttonOk.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 				Button buttonAll = new Button(this.window.Root);
-				buttonAll.Width = 75;
+				buttonAll.PreferredWidth = 75;
 				buttonAll.Text = Res.Strings.Dialog.Filter.Button.All;
 				buttonAll.Anchor = AnchorStyles.BottomLeft;
 				buttonAll.Margins = new Margins(6+75+5, 0, 0, 6);
@@ -109,7 +109,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				buttonAll.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 				Button buttonClose = new Button(this.window.Root);
-				buttonClose.Width = 75;
+				buttonClose.PreferredWidth = 75;
 				buttonClose.Text = Res.Strings.Dialog.Button.Close;
 				buttonClose.Anchor = AnchorStyles.BottomRight;
 				buttonClose.Margins = new Margins(0, 6, 0, 6);

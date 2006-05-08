@@ -15,28 +15,22 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
-		public override Drawing.ContentAlignment	DefaultAlignment
+		static GroupBox()
 		{
-			//	Retourne l'alignement par défaut d'un bouton.
-			get
-			{
-				return Drawing.ContentAlignment.TopLeft;
-			}
+			Helpers.VisualPropertyMetadata metadata = new Helpers.VisualPropertyMetadata (Drawing.ContentAlignment.TopLeft, Helpers.VisualPropertyMetadataOptions.AffectsTextLayout);
+			Visual.ContentAlignmentProperty.OverrideMetadata (typeof (GroupBox), metadata);
 		}
 		
-		public override Drawing.Margins				InternalPadding
+		public override Drawing.Margins GetInternalPadding()
 		{
-			get
-			{
-				Drawing.Rectangle frame  = this.FrameRectangle;
-				Drawing.Rectangle title  = this.TitleRectangle;
-				Drawing.Rectangle client = this.Client.Bounds;
-				
-				frame.Top = title.Bottom;
-				frame.Deflate (2, 2);
-				
-				return new Drawing.Margins (frame.Left - client.Left, client.Right - frame.Right, client.Top - frame.Top, frame.Bottom - client.Bottom);
-			}
+			Drawing.Rectangle frame  = this.FrameRectangle;
+			Drawing.Rectangle title  = this.TitleRectangle;
+			Drawing.Rectangle client = this.Client.Bounds;
+			
+			frame.Top = title.Bottom;
+			frame.Deflate (2, 2);
+			
+			return new Drawing.Margins (frame.Left - client.Left, client.Right - frame.Right, client.Top - frame.Top, frame.Bottom - client.Bottom);
 		}
 		
 		public Drawing.Point						TitleTextOffset
@@ -79,20 +73,18 @@ namespace Epsitec.Common.Widgets
 				return rect;
 			}
 		}
-		
-		
-		public override Drawing.Rectangle GetShapeBounds()
+
+
+		public override Drawing.Margins GetShapeMargins()
 		{
-			Drawing.Rectangle rect = base.GetShapeBounds();
-			rect.Inflate(Widgets.Adorners.Factory.Active.GeometryGroupShapeBounds);
-			return rect;
+			return Widgets.Adorners.Factory.Active.GeometryGroupShapeMargins;
 		}
 
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
 			//	Dessine le texte.
 			IAdorner    adorner = Widgets.Adorners.Factory.Active;
-			WidgetState state   = this.PaintState;
+			WidgetPaintState state   = this.PaintState;
 			
 #if false
 			Drawing.Rectangle rect  = this.Client.Bounds;

@@ -1,3 +1,5 @@
+using Epsitec.Common.Support;
+
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
@@ -11,12 +13,6 @@ namespace Epsitec.Common.Widgets
 			
 			this.items = new Collections.WidgetCollection (this);
 			this.items.AutoEmbedding = true;
-			
-			using (IconButton button = new IconButton ())
-			{
-				this.defaultButtonWidth  = button.DefaultWidth;
-				this.defaultButtonHeight = button.DefaultHeight;
-			}
 		}
 		
 		
@@ -80,23 +76,9 @@ namespace Epsitec.Common.Widgets
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
 			
 			Drawing.Rectangle rect  = this.Client.Bounds;
-			adorner.PaintToolBackground(graphics, rect, WidgetState.None, this.direction);
+			adorner.PaintToolBackground(graphics, rect, WidgetPaintState.None, this.direction);
 		}
 		
-		
-		#region Interface IBundleSupport
-		public override void RestoreFromBundle(Epsitec.Common.Support.ObjectBundler bundler, Epsitec.Common.Support.ResourceBundle bundle)
-		{
-			base.RestoreFromBundle (bundler, bundle);
-			this.items.RestoreFromBundle ("items", bundler, bundle);
-		}
-		
-		public override void SerializeToBundle(Support.ObjectBundler bundler, Support.ResourceBundle bundle)
-		{
-			base.SerializeToBundle (bundler, bundle);
-			this.items.SerializeToBundle ("items", bundler, bundle);
-		}
-		#endregion
 		
 		#region IWidgetCollectionHost Members
 		Collections.WidgetCollection Collections.IWidgetCollectionHost.GetWidgetCollection()
@@ -129,20 +111,28 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void OnItemsChanged()
 		{
-			if (this.ItemsChanged != null)
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("ItemsChanged");
+			if (handler != null)
 			{
-				this.ItemsChanged (this);
+				handler(this);
 			}
 		}
 		
 		
-		public event Support.EventHandler	ItemsChanged;
+		public event EventHandler			ItemsChanged
+		{
+			add
+			{
+				this.AddUserEventHandler("ItemsChanged", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("ItemsChanged", value);
+			}
+		}
 		
 		private DockStyle					iconDockStyle;
 		protected Direction					direction;
 		protected Collections.WidgetCollection	items;
-		
-		protected double					defaultButtonWidth;
-		protected double					defaultButtonHeight;
 	}
 }

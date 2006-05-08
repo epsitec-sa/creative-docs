@@ -7,7 +7,6 @@ namespace Epsitec.Common.Document.Ribbons
 	/// <summary>
 	/// La classe Select permet de gérer la sélection.
 	/// </summary>
-	[SuppressBundleSupport]
 	public class Select : Abstract
 	{
 		public Select() : base()
@@ -29,7 +28,7 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonHideCancel   = this.CreateIconButton("HideCancel");
 			this.buttonHideHalf     = this.CreateIconButton("HideHalf");
 			
-			this.UpdateClientGeometry();
+//			this.UpdateClientGeometry();
 		}
 		
 		protected override void Dispose(bool disposing)
@@ -58,49 +57,49 @@ namespace Epsitec.Common.Document.Ribbons
 
 			if ( this.buttonDelete == null )  return;
 
-			double dx = this.buttonDelete.DefaultWidth;
-			double dy = this.buttonDelete.DefaultHeight;
+			double dx = this.buttonDelete.PreferredWidth;
+			double dy = this.buttonDelete.PreferredHeight;
 
 			Rectangle rect = this.UsefulZone;
 			rect.Left += dx*1.5*2;
 			rect.Width = this.separatorWidth;
-			this.separatorV.Bounds = rect;
+			this.separatorV.SetManualBounds(rect);
 
 			rect = this.UsefulZone;
 			rect.Left += dx*1.5*2+this.separatorWidth*0.5;
 			rect.Bottom += dy;
 			rect.Height = 5;
-			this.separatorH.Bounds = rect;
+			this.separatorH.SetManualBounds(rect);
 
 			rect = this.UsefulZone;
 			rect.Width  = dx*1.5;
 			rect.Height = dy*1.5;
 			rect.Offset(0, dy*0.5);
-			this.buttonDelete.Bounds = rect;
+			this.buttonDelete.SetManualBounds(rect);
 			rect.Offset(dx*1.5, 0);
-			this.buttonDuplicate.Bounds = rect;
+			this.buttonDuplicate.SetManualBounds(rect);
 
 			rect = this.UsefulZone;
 			rect.Width  = dx;
 			rect.Height = dy;
 			rect.Offset(dx*1.5*2+this.separatorWidth, dy+5);
-			this.buttonDeselectAll.Bounds = rect;
+			this.buttonDeselectAll.SetManualBounds(rect);
 			rect.Offset(dx, 0);
-			this.buttonSelectAll.Bounds = rect;
+			this.buttonSelectAll.SetManualBounds(rect);
 			rect.Offset(dx, 0);
-			this.buttonSelectInvert.Bounds = rect;
+			this.buttonSelectInvert.SetManualBounds(rect);
 
 			rect = this.UsefulZone;
 			rect.Width  = dx;
 			rect.Height = dy;
 			rect.Offset(dx*1.5*2+this.separatorWidth, 0);
-			this.buttonHideSel.Bounds = rect;
+			this.buttonHideSel.SetManualBounds(rect);
 			rect.Offset(dx, 0);
-			this.buttonHideRest.Bounds = rect;
+			this.buttonHideRest.SetManualBounds(rect);
 			rect.Offset(dx, 0);
-			this.buttonHideCancel.Bounds = rect;
+			this.buttonHideCancel.SetManualBounds(rect);
 			rect.Offset(dx, 0);
-			this.buttonHideHalf.Bounds = rect;
+			this.buttonHideHalf.SetManualBounds(rect);
 		}
 
 

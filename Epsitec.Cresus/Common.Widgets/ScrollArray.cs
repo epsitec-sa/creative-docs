@@ -1,6 +1,8 @@
 //	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
+using Epsitec.Common.Support;
+
 namespace Epsitec.Common.Widgets
 {
 	public enum ScrollShowMode
@@ -33,15 +35,6 @@ namespace Epsitec.Common.Widgets
 	{
 		public ScrollArray()
 		{
-			if (Support.ObjectBundler.IsBooting)
-			{
-				//	N'initialise rien, car cela prend passablement de temps... et de toute
-				//	manière, on n'a pas besoin de toutes ces informations pour pouvoir
-				//	utiliser IBundleSupport.
-				
-				return;
-			}
-			
 			this.columns = new ColumnDefinition[0];
 			
 			this.AutoFocus = true;
@@ -53,14 +46,14 @@ namespace Epsitec.Common.Widgets
 			this.frame_margins = adorner.GeometryArrayMargins;
 			this.table_margins = new Drawing.Margins ();
 			this.inner_margins = new Drawing.Margins ();
-			this.row_height    = System.Math.Floor (this.DefaultFontHeight * 1.25 + 0.5);
+			this.row_height    = System.Math.Floor (Widget.DefaultFontHeight * 1.25 + 0.5);
 			
 			this.header = new Widget (this);
 			this.v_scroller = new VScroller (this);
 			this.h_scroller = new HScroller (this);
 			this.v_scroller.IsInverted = true;
-			this.v_scroller.ValueChanged += new Support.EventHandler (this.HandleVScrollerChanged);
-			this.h_scroller.ValueChanged += new Support.EventHandler (this.HandleHScrollerChanged);
+			this.v_scroller.ValueChanged += new EventHandler (this.HandleVScrollerChanged);
+			this.h_scroller.ValueChanged += new EventHandler (this.HandleHScrollerChanged);
 			
 			this.is_dirty = true;
 		}
@@ -100,7 +93,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public Support.Data.ITextArrayStore		TextArrayStore
+		public Support.Data.ITextArrayStore			TextArrayStore
 		{
 			get
 			{
@@ -117,14 +110,14 @@ namespace Epsitec.Common.Widgets
 					
 					if (this.text_array_store != null)
 					{
-						this.text_array_store.StoreContentsChanged -= new Support.EventHandler (this.HandleStoreContentsChanged);
+						this.text_array_store.StoreContentsChanged -= new EventHandler (this.HandleStoreContentsChanged);
 					}
 					
 					this.text_array_store = value;
 					
 					if (this.text_array_store != null)
 					{
-						this.text_array_store.StoreContentsChanged += new Support.EventHandler (this.HandleStoreContentsChanged);
+						this.text_array_store.StoreContentsChanged += new EventHandler (this.HandleStoreContentsChanged);
 					}
 					
 					this.OnTextArrayStoreContentsChanged ();
@@ -345,9 +338,9 @@ namespace Epsitec.Common.Widgets
 				Drawing.Rectangle bounds = new Drawing.Rectangle ();
 				
 				bounds.Left   = this.table_bounds.Left;
-				bounds.Bottom = this.header.Top;
+				bounds.Bottom = this.header.ActualLocation.Y + this.header.ActualHeight;
 				bounds.Height = this.title_height;
-				bounds.Right  = this.v_scroller.Right;
+				bounds.Right  = this.v_scroller.ActualLocation.X + this.v_scroller.ActualWidth;
 				
 				return bounds;
 			}
@@ -1519,16 +1512,11 @@ invalid:	row    = -1;
 			base.SetBoundsOverride(oldRect, newRect);
 			this.UpdateGeometry ();
 		}
-		
-		
-		public override Drawing.Rectangle GetShapeBounds()
+
+
+		public override Drawing.Margins GetShapeMargins()
 		{
-			IAdorner          adorner = Widgets.Adorners.Factory.Active;
-			Drawing.Rectangle rect    = this.Client.Bounds;
-			
-			rect.Inflate (adorner.GeometryListShapeBounds);
-			
-			return rect;
+			return Widgets.Adorners.Factory.Active.GeometryListShapeMargins;
 		}
 		
 		
@@ -1598,20 +1586,20 @@ invalid:	row    = -1;
 		
 		protected virtual void UpdateRowHeight()
 		{
-			this.row_height = System.Math.Floor (this.DefaultFontHeight * 1.25 + 0.5);
+			this.row_height = System.Math.Floor (Widget.DefaultFontHeight * 1.25 + 0.5);
 		}
 		
 		protected virtual void UpdateTableBounds()
 		{
 			this.frame_margins = Widgets.Adorners.Factory.Active.GeometryArrayMargins;
-			this.table_margins = new Drawing.Margins (0, this.v_scroller.Width - 1, this.row_height + this.title_height, this.h_scroller.Height - 1);
+			this.table_margins = new Drawing.Margins (0, this.v_scroller.PreferredWidth - 1, this.row_height + this.title_height, this.h_scroller.PreferredHeight - 1);
 			
-			if (this.v_scroller.IsVisible == false)
+			if (this.v_scroller.Visibility == false)
 			{
 				this.table_margins.Right = 0;
 			}
-			
-			if (this.h_scroller.IsVisible == false)
+
+			if (this.h_scroller.Visibility == false)
 			{
 				this.table_margins.Bottom = 0;
 			}
@@ -1661,14 +1649,13 @@ invalid:	row    = -1;
 			
 			rect.Bottom = this.table_bounds.Top;
 			rect.Top    = this.table_bounds.Top + this.row_height;
-			
-			this.header.Bounds = rect;
-			this.header.SuspendLayout ();
+
+			this.header.SetManualBounds(rect);
 			
 			//	Place les boutons dans l'en-tête :
 			
 			rect.Bottom = 0;
-			rect.Top    = this.header.Height;
+			rect.Top    = this.header.ActualHeight;
 			rect.Left   = -this.offset;
 			
 			for (int i = 0; i < this.max_columns; i++)
@@ -1676,8 +1663,8 @@ invalid:	row    = -1;
 				HeaderButton button = this.FindButton (i);
 				
 				rect.Right = rect.Left + this.GetColumnWidth (i);
-				
-				button.Bounds = rect;
+
+				button.SetManualBounds(rect);
 				button.Show ();
 				
 				rect.Left  = rect.Right;
@@ -1686,7 +1673,7 @@ invalid:	row    = -1;
 			//	Place les sliders dans l'en-tête :
 			
 			rect.Bottom = 0;
-			rect.Top    = this.header.Height;
+			rect.Top    = this.header.ActualHeight;
 			rect.Left   = -this.offset;
 			
 			for (int i = 0; i < this.max_columns; i++)
@@ -1700,11 +1687,9 @@ invalid:	row    = -1;
 				rect.Left    = rect.Right;
 				
 				slider.ZOrder = i;
-				slider.Bounds = bounds;
+				slider.SetManualBounds(bounds);
 				slider.Visibility = (this.columns[i].Elasticity == 0);
 			}
-			
-			this.header.ResumeLayout ();
 		}
 		
 		protected virtual void UpdateScrollerGeometry()
@@ -1715,17 +1700,17 @@ invalid:	row    = -1;
 			
 			rect       = this.table_bounds;
 			rect.Left  = this.table_bounds.Right-1;
-			rect.Right = this.table_bounds.Right-1 + this.v_scroller.Width;
-			
-			this.v_scroller.Bounds = rect;
+			rect.Right = this.table_bounds.Right-1 + this.v_scroller.PreferredWidth;
+
+			this.v_scroller.SetManualBounds(rect);
 			
 			//	Place l'ascenseur horizontal :
 			
 			rect        = this.table_bounds;
-			rect.Bottom = this.table_bounds.Bottom+1 - this.h_scroller.Height;
+			rect.Bottom = this.table_bounds.Bottom+1 - this.h_scroller.PreferredHeight;
 			rect.Top    = this.table_bounds.Bottom+1;
-			
-			this.h_scroller.Bounds = rect;
+
+			this.h_scroller.SetManualBounds(rect);
 		}
 		
 		protected virtual void UpdateScrollers()
@@ -1898,7 +1883,7 @@ invalid:	row    = -1;
 		{
 			if (this.title_widget != null)
 			{
-				this.title_widget.Bounds = this.TitleBounds;
+				this.title_widget.SetManualBounds(this.TitleBounds);
 			}
 		}
 		
@@ -1909,11 +1894,11 @@ invalid:	row    = -1;
 				Drawing.Rectangle bounds = this.GetRowBounds (this.SelectedIndex);
 				
 				bounds.Inflate (0, 0, 0, 1);
-				
-				if ((this.h_scroller.IsVisible) &&
-					(bounds.Bottom < this.h_scroller.Top))
+
+				if ((this.h_scroller.Visibility) &&
+					(bounds.Bottom < this.h_scroller.ActualBounds.Top))
 				{
-					bounds.Bottom = this.h_scroller.Top;
+					bounds.Bottom = this.h_scroller.ActualBounds.Top;
 				}
 				
 				if (bounds.IsSurfaceZero)
@@ -1922,7 +1907,7 @@ invalid:	row    = -1;
 				}
 				else
 				{
-					this.clip_widget.Bounds = bounds;
+					this.clip_widget.SetManualBounds(bounds);
 					this.clip_widget.Show ();
 					
 					double dx = System.Math.Min (this.row_height + 1, 18);
@@ -1937,10 +1922,10 @@ invalid:	row    = -1;
 						ox  = System.Math.Min (ox, x2);
 					}
 					
-					ox -= this.clip_widget.Bounds.X;
-					oy -= this.clip_widget.Bounds.Y;
-					
-					this.tag_widget.Bounds = new Drawing.Rectangle (ox, oy, dx, dy);
+					ox -= this.clip_widget.ActualLocation.X;
+					oy -= this.clip_widget.ActualLocation.Y;
+
+					this.tag_widget.SetManualBounds(new Drawing.Rectangle(ox, oy, dx, dy));
 				}
 			}
 		}
@@ -1956,7 +1941,7 @@ invalid:	row    = -1;
 		{
 			base.OnResourceManagerChanged ();
 			
-			Support.ResourceManager resource_manager = this.ResourceManager;
+			ResourceManager resource_manager = this.ResourceManager;
 			
 			for (int i = 0; i < this.layouts.GetLength (0); i++)
 			{
@@ -1976,73 +1961,82 @@ invalid:	row    = -1;
 
 		protected virtual  void OnSelectedIndexChanging()
 		{
-			if (this.SelectedIndexChanging != null)
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("SelectedIndexChanging");
+			if (handler != null)
 			{
-				this.SelectedIndexChanging (this);
+				handler(this);
 			}
 		}
 		
 		protected virtual  void OnSelectedIndexChanged()
 		{
-			if (this.SelectedIndexChanged != null)
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("SelectedIndexChanged");
+			if (handler != null)
 			{
-				this.SelectedIndexChanged (this);
+				handler(this);
 			}
 		}
 		
 		protected virtual  void OnContentsChanged()
 		{
-			if (this.ContentsChanged != null)
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("ContentsChanged");
+			if (handler != null)
 			{
-				this.ContentsChanged (this);
+				handler(this);
 			}
 		}
 
 		protected virtual  void OnContentsInvalidated()
 		{
-			if (this.ContentsInvalidated != null)
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("ContentsInvalidated");
+			if (handler != null)
 			{
-				this.ContentsInvalidated (this);
+				handler(this);
 			}
 		}
 
 		protected virtual  void OnSortChanged()
 		{
-			if (this.SortChanged != null)
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("SortChanged");
+			if (handler != null)
 			{
-				this.SortChanged (this);
+				handler(this);
 			}
 		}
 
 		protected virtual  void OnLayoutUpdated()
 		{
-			if (this.LayoutUpdated != null)
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("LayoutUpdated");
+			if (handler != null)
 			{
-				this.LayoutUpdated (this);
+				handler(this);
 			}
 		}
 		
 		protected virtual  void OnTextArrayStoreContentsChanged()
 		{
-			if (this.TextArrayStoreContentsChanged != null)
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("TextArrayStoreContentsChanged");
+			if (handler != null)
 			{
-				this.TextArrayStoreContentsChanged (this);
+				handler(this);
 			}
 		}
 		
 		protected virtual  void OnInteractionModeChanging()
 		{
-			if (this.InteractionModeChanging != null)
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("InteractionModeChanging");
+			if (handler != null)
 			{
-				this.InteractionModeChanging (this);
+				handler(this);
 			}
 		}
 		
 		protected virtual  void OnInteractionModeChanged()
 		{
-			if (this.InteractionModeChanged != null)
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("InteractionModeChanged");
+			if (handler != null)
 			{
-				this.InteractionModeChanged (this);
+				handler(this);
 			}
 		}
 		
@@ -2100,7 +2094,7 @@ invalid:	row    = -1;
 			
 			IAdorner          adorner = Widgets.Adorners.Factory.Active;
 			Drawing.Rectangle rect    = this.Client.Bounds;
-			WidgetState       state   = this.PaintState;
+			WidgetPaintState       state   = this.PaintState;
 			
 			adorner.PaintArrayBackground (graphics, rect, state);
 			
@@ -2151,14 +2145,14 @@ invalid:	row    = -1;
 				
 				int         row_line      = row + top;
 				int         num_add_lines = (this.edition_row == row_line)  ? this.edition_add_rows - delta : 0;
-				WidgetState widget_state  = state & (WidgetState.Enabled | WidgetState.Focused);
-				WidgetState text_state    = state & (WidgetState.Enabled);
+				WidgetPaintState widget_state  = state & (WidgetPaintState.Enabled | WidgetPaintState.Focused);
+				WidgetPaintState text_state    = state & (WidgetPaintState.Enabled);
 				
 				if ((this.selected_row == row_line) &&
 					(this.edition_row < 0))
 				{
-					widget_state |= WidgetState.Selected;
-					text_state   |= WidgetState.Selected;
+					widget_state |= WidgetPaintState.Selected;
+					text_state   |= WidgetPaintState.Selected;
 				}
 				
 				if (this.edition_row == row_line)
@@ -2188,7 +2182,7 @@ invalid:	row    = -1;
 			rect.Inflate (-0.5, -0.5);
 			graphics.LineWidth = 1;
 			
-			Drawing.Color color = adorner.ColorTextFieldBorder ((state & WidgetState.Enabled) != 0);
+			Drawing.Color color = adorner.ColorTextFieldBorder ((state & WidgetPaintState.Enabled) != 0);
 			
 			//	Dessine le rectangle englobant :
 			
@@ -2253,18 +2247,18 @@ invalid:	row    = -1;
 			
 			IAdorner          adorner = Widgets.Adorners.Factory.Active;
 			Drawing.Rectangle rect    = this.Client.Bounds;
-			WidgetState       state   = this.PaintState;
+			WidgetPaintState       state   = this.PaintState;
 			
 			adorner.PaintArrayForeground (graphics, rect, state);
 		}
 		
 		
-		protected virtual void PaintRowBackground(int row, int row_line, Drawing.Graphics graphics, IAdorner adorner, Drawing.Rectangle bounds, WidgetState state)
+		protected virtual void PaintRowBackground(int row, int row_line, Drawing.Graphics graphics, IAdorner adorner, Drawing.Rectangle bounds, WidgetPaintState state)
 		{
 			adorner.PaintCellBackground (graphics, bounds, state);
 		}
 		
-		protected virtual void PaintRowContents(int row, int row_line, Drawing.Graphics graphics, IAdorner adorner, Drawing.Rectangle bounds, WidgetState state, Drawing.Rectangle clip)
+		protected virtual void PaintRowContents(int row, int row_line, Drawing.Graphics graphics, IAdorner adorner, Drawing.Rectangle bounds, WidgetPaintState state, Drawing.Rectangle clip)
 		{
 			double x1 = bounds.X;
 			double y1 = bounds.Y + 0.5;
@@ -2292,7 +2286,7 @@ invalid:	row    = -1;
 			}
 		}
 		
-		protected virtual void PaintCellContents(int row_line, int column, Drawing.Graphics graphics, IAdorner adorner, Drawing.Point pos, WidgetState state, TextLayout layout)
+		protected virtual void PaintCellContents(int row_line, int column, Drawing.Graphics graphics, IAdorner adorner, Drawing.Point pos, WidgetPaintState state, TextLayout layout)
 		{
 			adorner.PaintGeneralTextLayout (graphics, Drawing.Rectangle.MaxValue, pos, layout, state, PaintTextStyle.Array, TextDisplayMode.Default, this.BackColor);
 		}
@@ -2349,15 +2343,114 @@ invalid:	row    = -1;
 		}
 		#endregion
 		
-		public event Support.EventHandler		InteractionModeChanging;
-		public event Support.EventHandler		InteractionModeChanged;
-		public event Support.EventHandler		ContentsChanged;
-		public event Support.EventHandler		ContentsInvalidated;
-		public event Support.EventHandler		SortChanged;
-		public event Support.EventHandler		LayoutUpdated;
-		public event Support.EventHandler		TextArrayStoreContentsChanged;
-		public event Support.EventHandler		SelectedIndexChanging;
-		public event Support.EventHandler		SelectedIndexChanged;
+		public event EventHandler				InteractionModeChanging
+		{
+			add
+			{
+				this.AddUserEventHandler("InteractionModeChanging", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("InteractionModeChanging", value);
+			}
+		}
+
+		public event EventHandler				InteractionModeChanged
+		{
+			add
+			{
+				this.AddUserEventHandler("InteractionModeChanged", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("InteractionModeChanged", value);
+			}
+		}
+
+		public event EventHandler				ContentsChanged
+		{
+			add
+			{
+				this.AddUserEventHandler("ContentsChanged", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("ContentsChanged", value);
+			}
+		}
+
+		public event EventHandler				ContentsInvalidated
+		{
+			add
+			{
+				this.AddUserEventHandler("ContentsInvalidated", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("ContentsInvalidated", value);
+			}
+		}
+
+		public event EventHandler				SortChanged
+		{
+			add
+			{
+				this.AddUserEventHandler("SortChanged", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("SortChanged", value);
+			}
+		}
+
+		public event EventHandler				LayoutUpdated
+		{
+			add
+			{
+				this.AddUserEventHandler("LayoutUpdated", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("LayoutUpdated", value);
+			}
+		}
+
+		public event EventHandler				TextArrayStoreContentsChanged
+		{
+			add
+			{
+				this.AddUserEventHandler("TextArrayStoreContentsChanged", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("TextArrayStoreContentsChanged", value);
+			}
+		}
+
+		public event EventHandler				SelectedIndexChanging
+		{
+			add
+			{
+				this.AddUserEventHandler("SelectedIndexChanging", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("SelectedIndexChanging", value);
+			}
+		}
+
+		public event EventHandler				SelectedIndexChanged
+		{
+			add
+			{
+				this.AddUserEventHandler("SelectedIndexChanged", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("SelectedIndexChanged", value);
+			}
+		}
+
 		
 		
 		#region ColumnDefinition Class

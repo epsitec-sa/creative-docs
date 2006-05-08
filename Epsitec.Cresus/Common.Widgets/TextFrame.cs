@@ -7,7 +7,6 @@ namespace Epsitec.Common.Widgets
 	/// La classe TextFrame permet de représenter du texte en associant un widget
 	/// à un frame (cf. Common.Text pour les concepts utilisés).
 	/// </summary>
-	[Support.SuppressBundleSupport]
 	public class TextFrame : Widget, Epsitec.Common.Text.ITextRenderer
 	{
 		public TextFrame()
@@ -22,7 +21,7 @@ namespace Epsitec.Common.Widgets
 			this.text_story     = new Epsitec.Common.Text.TextStory (this.oplet_queue, this.text_context);
 			this.text_fitter    = new Epsitec.Common.Text.TextFitter (this.text_story);
 			this.text_navigator = new Epsitec.Common.Text.TextNavigator (this.text_fitter);
-			this.text_frame     = new Epsitec.Common.Text.SimpleTextFrame (this.DefaultWidth, this.DefaultHeight);
+			this.text_frame     = new Epsitec.Common.Text.SimpleTextFrame (this.PreferredWidth, this.PreferredHeight);
 			
 			this.navigator = new TextNavigator2 ();
 			
@@ -55,7 +54,7 @@ namespace Epsitec.Common.Widgets
 			this.text_story     = story;
 			this.text_fitter    = fitter;
 			this.text_navigator = navigator;
-			this.text_frame     = new Epsitec.Common.Text.SimpleTextFrame (this.DefaultWidth, this.DefaultHeight);
+			this.text_frame     = new Epsitec.Common.Text.SimpleTextFrame (this.PreferredWidth, this.PreferredHeight);
 			
 			this.navigator = new TextNavigator2 ();
 			
@@ -103,9 +102,9 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		protected override void OnSizeChanged(Types.DependencyPropertyChangedEventArgs e)
+		protected override void  SetBoundsOverride(Epsitec.Common.Drawing.Rectangle oldRect, Epsitec.Common.Drawing.Rectangle newRect)
 		{
-			base.OnSizeChanged (e);
+ 			 base.SetBoundsOverride(oldRect, newRect);
 			
 			if ((this.text_fitter != null) &&
 				(this.text_frame != null))
@@ -131,7 +130,7 @@ namespace Epsitec.Common.Widgets
 		
 		protected override void PaintBackgroundImplementation(Epsitec.Common.Drawing.Graphics graphics, Epsitec.Common.Drawing.Rectangle clip_rect)
 		{
-			graphics.AddFilledRectangle (0, 0, this.Width, this.Height);
+			graphics.AddFilledRectangle (this.ActualBounds);
 			graphics.RenderSolid (Drawing.Color.FromBrightness (1.0));
 			
 			this.has_selection = false;

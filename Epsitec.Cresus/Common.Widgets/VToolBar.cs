@@ -8,9 +8,6 @@ namespace Epsitec.Common.Widgets
 		public VToolBar()
 		{
 			this.direction = Direction.Left;
-			
-			double m = (this.DefaultWidth-this.defaultButtonWidth)/2;
-			this.Padding = new Drawing.Margins(m, m, m, m);
 		}
 		
 		public VToolBar(Widget embedder) : this()
@@ -19,13 +16,13 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		public override double				DefaultWidth
+		static VToolBar()
 		{
-			//	Retourne la largeur standard d'une barre.
-			get
-			{
-				return 28;
-			}
+			Helpers.VisualPropertyMetadata metadataDx = new Helpers.VisualPropertyMetadata (28.0, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
+			Helpers.VisualPropertyMetadata metadataPadding = new Helpers.VisualPropertyMetadata (new Drawing.Margins (3, 3, 3, 3), Helpers.VisualPropertyMetadataOptions.AffectsChildrenLayout);
+			
+			Visual.PreferredWidthProperty.OverrideMetadata (typeof (VToolBar), metadataDx);
+			Visual.PaddingProperty.OverrideMetadata (typeof (VToolBar), metadataPadding);
 		}
 		
 		public override DockStyle			DefaultIconDockStyle

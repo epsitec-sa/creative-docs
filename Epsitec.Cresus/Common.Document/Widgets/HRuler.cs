@@ -31,14 +31,11 @@ namespace Epsitec.Common.Document.Widgets
 		{
 			this.SetEmbedder(embedder);
 		}
-		
-		
-		public override double DefaultHeight
+
+		static HRuler()
 		{
-			get
-			{
-				return AbstractRuler.defaultBreadth;
-			}
+			Common.Widgets.Helpers.VisualPropertyMetadata metadataDy = new Common.Widgets.Helpers.VisualPropertyMetadata(AbstractRuler.defaultBreadth, Common.Widgets.Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
+			Common.Widgets.Visual.PreferredHeightProperty.OverrideMetadata(typeof(HRuler), metadataDy);
 		}
 
 
@@ -392,7 +389,7 @@ namespace Epsitec.Common.Document.Widgets
 						rect.Offset(0.5, 0);
 
 						Common.Widgets.GlyphShape glyph = HRuler.ConvType2Glyph(tab.Type);
-						Common.Widgets.WidgetState state = Common.Widgets.WidgetState.Enabled;
+						Common.Widgets.WidgetPaintState state = Common.Widgets.WidgetPaintState.Enabled;
 						adorner.PaintGlyph(graphics, rect, state, colorGlyph, glyph, Common.Widgets.PaintTextStyle.Button);
 					}
 				}
@@ -421,7 +418,7 @@ namespace Epsitec.Common.Document.Widgets
 			rect.Offset(0.5, -1);
 
 			Common.Widgets.GlyphShape glyph = HRuler.ConvType2Glyph(this.tabToCreate);
-			adorner.PaintGlyph(graphics, rect, Common.Widgets.WidgetState.Enabled, glyph, Common.Widgets.PaintTextStyle.Button);
+			adorner.PaintGlyph(graphics, rect, Common.Widgets.WidgetPaintState.Enabled, glyph, Common.Widgets.PaintTextStyle.Button);
 		}
 		
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)

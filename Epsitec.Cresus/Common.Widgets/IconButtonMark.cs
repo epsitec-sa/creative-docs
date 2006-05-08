@@ -99,14 +99,14 @@ namespace Epsitec.Common.Widgets
 			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
 
 			Rectangle   rect  = this.Client.Bounds;
-			WidgetState state = this.PaintState;
+			WidgetPaintState state = this.PaintState;
 
-			bool enable = ((state & WidgetState.Enabled) != 0);
+			bool enable = ((state & WidgetPaintState.Enabled) != 0);
 			if ( !enable )
 			{
-				state &= ~WidgetState.Focused;
-				state &= ~WidgetState.Entered;
-				state &= ~WidgetState.Engaged;
+				state &= ~WidgetPaintState.Focused;
+				state &= ~WidgetPaintState.Entered;
+				state &= ~WidgetPaintState.Engaged;
 			}
 
 			if ( this.ActiveState == ActiveState.Yes )  // dessine la marque triangulaire ?
@@ -152,7 +152,7 @@ namespace Epsitec.Common.Widgets
 			}
 			
 			rect = this.IconButtonBounds;
-			state &= ~WidgetState.Selected;
+			state &= ~WidgetPaintState.Selected;
 			adorner.PaintButtonBackground(graphics, rect, state, Direction.Down, this.buttonStyle);
 
 			if ( this.innerZoom != 1.0 )

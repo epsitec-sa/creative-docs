@@ -17,14 +17,11 @@ namespace Epsitec.Common.Document.Widgets
 		{
 			this.SetEmbedder(embedder);
 		}
-		
-		
-		public override double DefaultWidth
+
+		static VRuler()
 		{
-			get
-			{
-				return AbstractRuler.defaultBreadth;
-			}
+			Common.Widgets.Helpers.VisualPropertyMetadata metadataDx = new Common.Widgets.Helpers.VisualPropertyMetadata(AbstractRuler.defaultBreadth, Common.Widgets.Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
+			Common.Widgets.Visual.PreferredWidthProperty.OverrideMetadata(typeof(VRuler), metadataDx);
 		}
 
 

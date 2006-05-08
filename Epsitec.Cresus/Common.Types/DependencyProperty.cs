@@ -398,10 +398,15 @@ namespace Epsitec.Common.Types
 			if (this.overriddenMetadata != null)
 			{
 				DependencyPropertyMetadata metadata;
-				
-				if (this.overriddenMetadata.TryGetValue (type, out metadata))
+
+				while (type != typeof (DependencyObject))
 				{
-					return metadata;
+					if (this.overriddenMetadata.TryGetValue (type, out metadata))
+					{
+						return metadata;
+					}
+					
+					type = type.BaseType;
 				}
 			}
 			

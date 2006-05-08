@@ -62,7 +62,7 @@ namespace Epsitec.Common.Dialogs
 				{
 					if (buttons[i] != null)
 					{
-						total_width += buttons[i].Width;
+						total_width += buttons[i].ActualWidth;
 					}
 				}
 				
@@ -76,9 +76,9 @@ namespace Epsitec.Common.Dialogs
 					{
 						if (buttons[i] != null)
 						{
-							buttons[i].Bounds = new Drawing.Rectangle (x, buttons[i].Bottom, buttons[i].Width, buttons[i].Height);
+							buttons[i].SetManualBounds(new Drawing.Rectangle(x, buttons[i].ActualLocation.Y, buttons[i].ActualWidth, buttons[i].ActualHeight));
 							
-							x += buttons[i].Width;
+							x += buttons[i].ActualWidth;
 							x += 8;
 						}
 					}

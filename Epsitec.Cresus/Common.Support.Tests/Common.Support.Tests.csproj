@@ -173,9 +173,6 @@
     <Compile Include="IOTest.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ObjectBundlerTest.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="ObjectDictMapperTest.cs">
       <SubType>Code</SubType>
     </Compile>

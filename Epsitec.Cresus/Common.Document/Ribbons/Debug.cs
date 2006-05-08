@@ -7,7 +7,6 @@ namespace Epsitec.Common.Document.Ribbons
 	/// <summary>
 	/// La classe Debug donne accès aux commandes provisoires de debug.
 	/// </summary>
-	[SuppressBundleSupport]
 	public class Debug : Abstract
 	{
 		public Debug() : base()
@@ -16,7 +15,7 @@ namespace Epsitec.Common.Document.Ribbons
 
 			this.buttonOthers = this.CreateMenuButton ("", "Debug menu...", new MessageEventHandler (this.HandleOthersPressed));
 			
-			this.UpdateClientGeometry();
+//			this.UpdateClientGeometry();
 		}
 		
 		protected override void Dispose(bool disposing)
@@ -45,14 +44,14 @@ namespace Epsitec.Common.Document.Ribbons
 
 			if ( this.buttonOthers == null )  return;
 
-			double dx = this.buttonOthers.DefaultWidth;
-			double dy = this.buttonOthers.DefaultHeight;
+			double dx = this.buttonOthers.PreferredWidth;
+			double dy = this.buttonOthers.PreferredHeight;
 
 			Rectangle rect = this.UsefulZone;
 			rect.Width  = dx;
 			rect.Height = dy;
 			rect.Offset(0, dy);
-			this.buttonOthers.Bounds = rect;
+			this.buttonOthers.SetManualBounds(rect);
 		}
 
 
@@ -64,7 +63,7 @@ namespace Epsitec.Common.Document.Ribbons
 			VMenu menu = this.BuildOthersMenu();
 			if ( menu == null )  return;
 			menu.Host = this;
-			menu.MinWidth = button.Width;
+			menu.MinWidth = button.ActualWidth;
 			TextFieldCombo.AdjustComboSize(button, menu);
 			menu.ShowAsComboList(button, Point.Zero, button);
 		}

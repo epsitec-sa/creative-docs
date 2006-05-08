@@ -8,7 +8,6 @@ namespace Epsitec.Common.Document.Panels
 	/// <summary>
 	/// La classe Image permet de choisir un fichier image bitmap.
 	/// </summary>
-	[SuppressBundleSupport]
 	public class Image : Abstract
 	{
 		public Image(Document document) : base(document)
@@ -139,31 +138,31 @@ namespace Epsitec.Common.Document.Panels
 
 			Rectangle r = rect;
 			r.Bottom = r.Top-20;
-			this.fieldFilename.Bounds = r;
+			this.fieldFilename.SetManualBounds(r);
 
 			r.Offset(0, -25);
 			r.Right = rect.Right-50-2;
-			this.buttonBrowse.Bounds = r;
+			this.buttonBrowse.SetManualBounds(r);
 			r.Left = rect.Right-50;
 			r.Right = rect.Right;
-			this.buttonUpdate.Bounds = r;
+			this.buttonUpdate.SetManualBounds(r);
 
 			r.Offset(0, -25);
 			r.Left = rect.Left;
 			r.Width = 70;
-			this.buttonMirrorH.Bounds = r;
+			this.buttonMirrorH.SetManualBounds(r);
 			r.Offset(80, 0);
-			this.buttonMirrorV.Bounds = r;
+			this.buttonMirrorV.SetManualBounds(r);
 
 			r.Offset(0, -20);
 			r.Left = rect.Left;
 			r.Right = rect.Right;
-			this.buttonHomo.Bounds = r;
+			this.buttonHomo.SetManualBounds(r);
 
 			r.Offset(0, -20);
 			r.Left = rect.Left;
 			r.Right = rect.Right;
-			this.buttonFilter.Bounds = r;
+			this.buttonFilter.SetManualBounds(r);
 
 			this.buttonMirrorH.Visibility = (this.isExtendedSize);
 			this.buttonMirrorV.Visibility = (this.isExtendedSize);

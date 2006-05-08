@@ -232,7 +232,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 			if ( this.scroller != null )
 			{
-				this.scroller.Bounds = new Rectangle(this.Client.Size.Width-this.scroller.Width, 0, this.scroller.Width, this.Client.Size.Height);
+				this.scroller.SetManualBounds(new Rectangle(this.Client.Size.Width-this.scroller.ActualWidth, 0, this.scroller.ActualWidth, this.Client.Size.Height));
 			}
 		}
 		
@@ -381,7 +381,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		{
 			//	Peinture du widget.
 			IAdorner    adorner = Widgets.Adorners.Factory.Active;
-			WidgetState state   = this.PaintState;
+			WidgetPaintState state   = this.PaintState;
 			
 			Rectangle area = this.DrawingArea();
 			int dx = this.TotalCellVisibleX();
@@ -411,7 +411,7 @@ namespace Epsitec.Common.Designer.Dialogs
 						rect.Bottom = area.Top - cellHeight*(y+1);
 						rect.Height = cellHeight;
 
-						WidgetState cellState = WidgetState.Enabled;
+						WidgetPaintState cellState = WidgetPaintState.Enabled;
 						if ( first == this.selectedIndex && first < this.TotalCell )
 						{
 							TextLayout.SelectedArea[] areas = new TextLayout.SelectedArea[1];
@@ -419,7 +419,7 @@ namespace Epsitec.Common.Designer.Dialogs
 							areas[0].Rect = rect;
 							adorner.PaintTextSelectionBackground(graphics, areas, state, PaintTextStyle.TextField, TextDisplayMode.Default);
 
-							cellState |= WidgetState.Selected;
+							cellState |= WidgetPaintState.Selected;
 						}
 
 						if ( font != null && first < this.TotalCell )
@@ -537,7 +537,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		{
 			//	Rectangle où dessiner les cellules.
 			Rectangle rect = this.Client.Bounds;
-			rect.Right -= this.scroller.Width+1.0;
+			rect.Right -= this.scroller.ActualWidth+1.0;
 			return rect;
 		}
 

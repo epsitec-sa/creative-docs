@@ -1,7 +1,7 @@
+using Epsitec.Common.Support;
+
 namespace Epsitec.Common.Widgets
 {
-	using BundleAttribute = Epsitec.Common.Support.BundleAttribute;
-	
 	/// <summary>
 	/// La classe ColorSelector permet de choisir une couleur.
 	/// </summary>
@@ -9,15 +9,6 @@ namespace Epsitec.Common.Widgets
 	{
 		public ColorSelector()
 		{
-			if ( Support.ObjectBundler.IsBooting )
-			{
-				//	N'initialise rien, car cela prend passablement de temps... et de toute
-				//	manière, on n'a pas besoin de toutes ces informations pour pouvoir
-				//	utiliser IBundleSupport.
-				
-				return;
-			}
-			
 			this.nbField = 4+3+4+1;
 			this.labels = new StaticText[this.nbField];
 			this.fields = new TextFieldSlider[this.nbField];
@@ -38,42 +29,42 @@ namespace Epsitec.Common.Widgets
 					this.fields[i].MinValue = 0;
 					this.fields[i].MaxValue = 255;
 					this.fields[i].Step = 10;
-					this.fields[i].EditionAccepted += new Support.EventHandler(this.HandleTextRgbChanged);
+					this.fields[i].EditionAccepted += new EventHandler(this.HandleTextRgbChanged);
 				}
 				else if ( i == 3 )  // a ?
 				{
 					this.fields[i].MinValue = 0;
 					this.fields[i].MaxValue = 255;
 					this.fields[i].Step = 10;
-					this.fields[i].EditionAccepted += new Support.EventHandler(this.HandleTextAlphaChanged);
+					this.fields[i].EditionAccepted += new EventHandler(this.HandleTextAlphaChanged);
 				}
 				else if ( i == 4 )  // t ?
 				{
 					this.fields[i].MinValue = 0;
 					this.fields[i].MaxValue = 360;
 					this.fields[i].Step = 10;
-					this.fields[i].EditionAccepted += new Support.EventHandler(this.HandleTextHsvChanged);
+					this.fields[i].EditionAccepted += new EventHandler(this.HandleTextHsvChanged);
 				}
 				else if ( i < 7 )  // s,i ?
 				{
 					this.fields[i].MinValue = 0;
 					this.fields[i].MaxValue = 100;
 					this.fields[i].Step = 5;
-					this.fields[i].EditionAccepted += new Support.EventHandler(this.HandleTextHsvChanged);
+					this.fields[i].EditionAccepted += new EventHandler(this.HandleTextHsvChanged);
 				}
 				else if ( i< 11 )  // c,m,y,k ?
 				{
 					this.fields[i].MinValue = 0;
 					this.fields[i].MaxValue = 100;
 					this.fields[i].Step = 5;
-					this.fields[i].EditionAccepted += new Support.EventHandler(this.HandleTextCmykChanged);
+					this.fields[i].EditionAccepted += new EventHandler(this.HandleTextCmykChanged);
 				}
 				else	// g ?
 				{
 					this.fields[i].MinValue = 0;
 					this.fields[i].MaxValue = 100;
 					this.fields[i].Step = 5;
-					this.fields[i].EditionAccepted += new Support.EventHandler(this.HandleTextGrayChanged);
+					this.fields[i].EditionAccepted += new EventHandler(this.HandleTextGrayChanged);
 				}
 			}
 
@@ -149,23 +140,23 @@ namespace Epsitec.Common.Widgets
 			this.fieldHexa.DefocusAction = DefocusAction.AutoAcceptOrRejectEdition;
 			this.fieldHexa.AutoSelectOnFocus = true;
 			this.fieldHexa.SwallowEscape = true;
-			this.fieldHexa.EditionAccepted += new Support.EventHandler(this.HandleTextHexaChanged);
+			this.fieldHexa.EditionAccepted += new EventHandler(this.HandleTextHexaChanged);
 			this.fieldHexa.TabIndex = 200;
 			this.fieldHexa.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldHexa, Res.Strings.ColorSelector.LongHexa);
 
 			this.circle = new ColorWheel(this);
-			this.circle.Changed += new Support.EventHandler(this.HandleCircleChanged);
+			this.circle.Changed += new EventHandler(this.HandleCircleChanged);
 
 			this.palette = new ColorPalette(this);
 			this.palette.HasOptionButton = true;
-			this.palette.Export += new Support.EventHandler(this.HandlePaletteExport);
-			this.palette.Import += new Support.EventHandler(this.HandlePaletteImport);
+			this.palette.Export += new EventHandler(this.HandlePaletteExport);
+			this.palette.Import += new EventHandler(this.HandlePaletteImport);
 			this.palette.TabIndex = 10;
 			this.palette.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 
 			this.picker = new Tools.Magnifier.DragSource(this);
-			this.picker.HotColorChanged += new Support.EventHandler(this.HandlePickerHotColorChanged);
+			this.picker.HotColorChanged += new EventHandler(this.HandlePickerHotColorChanged);
 			ToolTip.Default.SetToolTip(this.picker, Res.Strings.ColorSelector.Picker);
 
 			this.buttonClose = new GlyphButton(this);
@@ -177,7 +168,7 @@ namespace Epsitec.Common.Widgets
 			ToolTip.Default.SetToolTip(this.buttonClose, Res.Strings.ColorSelector.Close);
 			
 			this.colorSpaceController = Helpers.GroupController.GetGroupController(this, "ColorSpace");
-			this.colorSpaceController.Changed += new Support.EventHandler(this.HandleColorSpaceChanged);
+			this.colorSpaceController.Changed += new EventHandler(this.HandleColorSpaceChanged);
 			
 			this.buttonRgb = new IconButton(this);
 			this.buttonRgb.AutoRadio = true;
@@ -216,12 +207,11 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public override double					DefaultHeight
+		static ColorSelector()
 		{
-			get
-			{
-				return 221;
-			}
+			Helpers.VisualPropertyMetadata metadataDy = new Helpers.VisualPropertyMetadata (221.0, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
+
+			Visual.PreferredHeightProperty.OverrideMetadata (typeof (ColorSelector), metadataDy);
 		}
 
 		public Drawing.RichColor				Color
@@ -598,7 +588,7 @@ namespace Epsitec.Common.Widgets
 			r.Right  = rect.Left + hCircle;
 			r.Bottom = rect.Top - hCircle;
 			r.Top    = rect.Top;
-			this.circle.Bounds = r;
+			this.circle.SetManualBounds(r);
 			this.circle.Visibility = (visibleCircle);
 
 			double dx = System.Math.Floor((rect.Width-hCircle-10)/this.palette.Columns);
@@ -611,7 +601,7 @@ namespace Epsitec.Common.Widgets
 				r.Right = rect.Right+1;
 				r.Top = rect.Top;
 				r.Bottom = rect.Top-(dx*this.palette.Rows-1);
-				this.palette.Bounds = r;
+				this.palette.SetManualBounds(r);
 				this.palette.Show();
 			}
 			else
@@ -625,12 +615,12 @@ namespace Epsitec.Common.Widgets
 			{
 				r.Left  = 10;
 				r.Width = 12;
-				this.labels[i].Bounds = r;
+				this.labels[i].SetManualBounds(r);
 				this.labels[i].Visibility = (visibleFieldsRgb);
 
 				r.Left  = r.Right;
 				r.Width = 50;
-				this.fields[i].Bounds = r;
+				this.fields[i].SetManualBounds(r);
 				this.fields[i].Visibility = (visibleFieldsRgb);
 
 				r.Offset(0, -19);
@@ -642,12 +632,12 @@ namespace Epsitec.Common.Widgets
 			{
 				r.Left  = 10+70;
 				r.Width = 12;
-				this.labels[i].Bounds = r;
+				this.labels[i].SetManualBounds(r);
 				this.labels[i].Visibility = (visibleFieldsRgb);
 
 				r.Left  = r.Right;
 				r.Width = 50;
-				this.fields[i].Bounds = r;
+				this.fields[i].SetManualBounds(r);
 				this.fields[i].Visibility = (visibleFieldsRgb);
 
 				r.Offset(0, -19);
@@ -659,12 +649,12 @@ namespace Epsitec.Common.Widgets
 			{
 				r.Left  = 10;
 				r.Width = 12;
-				this.labels[i].Bounds = r;
+				this.labels[i].SetManualBounds(r);
 				this.labels[i].Visibility = (visibleFieldsCmyk);
 
 				r.Left  = r.Right;
 				r.Width = 50;
-				this.fields[i].Bounds = r;
+				this.fields[i].SetManualBounds(r);
 				this.fields[i].Visibility = (visibleFieldsCmyk);
 
 				r.Offset(0, -19);
@@ -674,24 +664,24 @@ namespace Epsitec.Common.Widgets
 			r.Bottom = r.Top-20;
 			r.Left  = 10+70;
 			r.Width = 12;
-			this.labels[10].Bounds = r;
+			this.labels[10].SetManualBounds(r);
 			this.labels[10].Visibility = (visibleFieldsCmyk);
 
 			r.Left  = r.Right;
 			r.Width = 50;
-			this.fields[10].Bounds = r;
+			this.fields[10].SetManualBounds(r);
 			this.fields[10].Visibility = (visibleFieldsCmyk);
 
 			r.Top    = rect.Bottom+3*19;
 			r.Bottom = r.Top-20;
 			r.Left  = 10;
 			r.Width = 12;
-			this.labels[11].Bounds = r;
+			this.labels[11].SetManualBounds(r);
 			this.labels[11].Visibility = (visibleFieldsGray);
 
 			r.Left  = r.Right;
 			r.Width = 50;
-			this.fields[11].Bounds = r;
+			this.fields[11].SetManualBounds(r);
 			this.fields[11].Visibility = (visibleFieldsGray);
 
 			r.Top    = rect.Bottom+3*19;
@@ -700,12 +690,12 @@ namespace Epsitec.Common.Widgets
 			{
 				r.Left  = 10+70+70;
 				r.Width = 12;
-				this.labels[i].Bounds = r;
+				this.labels[i].SetManualBounds(r);
 				this.labels[i].Visibility = (visibleFields);
 
 				r.Left  = r.Right;
 				r.Width = 50;
-				this.fields[i].Bounds = r;
+				this.fields[i].SetManualBounds(r);
 				this.fields[i].Visibility = (visibleFields);
 
 				r.Offset(0, -19);
@@ -713,19 +703,19 @@ namespace Epsitec.Common.Widgets
 			
 			r.Left  = 10+70+70;
 			r.Width = 12;
-			this.labelHexa.Bounds = r;
+			this.labelHexa.SetManualBounds(r);
 
 			r.Left  = r.Right;
 			r.Width = 50;
-			this.fieldHexa.Bounds = r;
+			this.fieldHexa.SetManualBounds(r);
 
 			r.Offset(0, -19);
 
 			r.Top    = r.Top-2;
 			r.Bottom = r.Bottom+1;
-			r.Right = this.fields[3].Right;
+			r.Right = this.fields[3].ActualBounds.Right;
 			r.Left  = r.Right - r.Height;
-			this.picker.Bounds = r;
+			this.picker.SetManualBounds(r);
 			this.picker.Visibility = (visibleFields);
 
 			if ( this.hasCloseButton )
@@ -734,8 +724,8 @@ namespace Epsitec.Common.Widgets
 				r.Width = 14;
 				r.Bottom = rect.Top-14;
 				r.Top = rect.Top;
-				
-				this.buttonClose.Bounds = r;
+
+				this.buttonClose.SetManualBounds(r);
 				this.buttonClose.Visibility = true;
 			}
 			else
@@ -747,11 +737,11 @@ namespace Epsitec.Common.Widgets
 			r.Width = 14;
 			r.Bottom = rect.Top-hCircle;
 			r.Height = 14;
-			this.buttonRgb.Bounds = r;
+			this.buttonRgb.SetManualBounds(r);
 			r.Offset(14, 0);
-			this.buttonCmyk.Bounds = r;
+			this.buttonCmyk.SetManualBounds(r);
 			r.Offset(14, 0);
-			this.buttonGray.Bounds = r;
+			this.buttonGray.SetManualBounds(r);
 		}
 		
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
@@ -771,49 +761,49 @@ namespace Epsitec.Common.Widgets
 				{
 					if ( i < 3 )
 					{
-						this.fields[i].EditionAccepted -= new Support.EventHandler(this.HandleTextRgbChanged);
+						this.fields[i].EditionAccepted -= new EventHandler(this.HandleTextRgbChanged);
 					}
 					else if ( i == 3 )
 					{
-						this.fields[i].EditionAccepted -= new Support.EventHandler(this.HandleTextAlphaChanged);
+						this.fields[i].EditionAccepted -= new EventHandler(this.HandleTextAlphaChanged);
 					}
 					else if ( i == 4 )
 					{
-						this.fields[i].EditionAccepted -= new Support.EventHandler(this.HandleTextHsvChanged);
+						this.fields[i].EditionAccepted -= new EventHandler(this.HandleTextHsvChanged);
 					}
 					else if ( i < 7 )
 					{
-						this.fields[i].EditionAccepted -= new Support.EventHandler(this.HandleTextHsvChanged);
+						this.fields[i].EditionAccepted -= new EventHandler(this.HandleTextHsvChanged);
 					}
 					else if ( i < 11 )
 					{
-						this.fields[i].EditionAccepted -= new Support.EventHandler(this.HandleTextCmykChanged);
+						this.fields[i].EditionAccepted -= new EventHandler(this.HandleTextCmykChanged);
 					}
 					else
 					{
-						this.fields[i].EditionAccepted -= new Support.EventHandler(this.HandleTextGrayChanged);
+						this.fields[i].EditionAccepted -= new EventHandler(this.HandleTextGrayChanged);
 					}
 				}
 				
 				if ( this.fieldHexa != null )
 				{
-					this.fieldHexa.EditionAccepted -= new Support.EventHandler(this.HandleTextHexaChanged);
+					this.fieldHexa.EditionAccepted -= new EventHandler(this.HandleTextHexaChanged);
 				}
 
 				if ( this.circle != null )
 				{
-					this.circle.Changed -= new Support.EventHandler(this.HandleCircleChanged);
+					this.circle.Changed -= new EventHandler(this.HandleCircleChanged);
 				}
 
 				if ( this.palette != null )
 				{
-					this.palette.Export -= new Support.EventHandler(this.HandlePaletteExport);
-					this.palette.Import -= new Support.EventHandler(this.HandlePaletteImport);
+					this.palette.Export -= new EventHandler(this.HandlePaletteExport);
+					this.palette.Import -= new EventHandler(this.HandlePaletteImport);
 				}
 
 				if ( this.picker != null )
 				{
-					this.picker.HotColorChanged -= new Support.EventHandler(this.HandlePickerHotColorChanged);
+					this.picker.HotColorChanged -= new EventHandler(this.HandlePickerHotColorChanged);
 				}
 			}
 			
@@ -952,17 +942,19 @@ namespace Epsitec.Common.Widgets
 		protected virtual void OnChanged()
 		{
 			//	Génère un événement pour dire ça a changé.
-			if ( this.Changed != null )  // qq'un écoute ?
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("Changed");
+			if (handler != null)
 			{
-				this.Changed(this);
+				handler(this);
 			}
 		}
 
 		protected virtual void OnCloseClicked()
 		{
-			if ( this.CloseClicked != null )
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("CloseClicked");
+			if (handler != null)
 			{
-				this.CloseClicked(this);
+				handler(this);
 			}
 		}
 		
@@ -985,8 +977,29 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		public event Support.EventHandler		Changed;
-		public event Support.EventHandler		CloseClicked;
+		public event EventHandler				Changed
+		{
+			add
+			{
+				this.AddUserEventHandler("Changed", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("Changed", value);
+			}
+		}
+
+		public event EventHandler				CloseClicked
+		{
+			add
+			{
+				this.AddUserEventHandler("CloseClicked", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("CloseClicked", value);
+			}
+		}
 
 		protected Drawing.RichColor				color = Drawing.RichColor.Empty;
 		protected ColorWheel					circle;

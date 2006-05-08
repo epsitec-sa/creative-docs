@@ -23,7 +23,7 @@ namespace Epsitec.Common.Widgets
 			this.window.Name = "ToolTip";
 			this.window.DisableMouseActivation ();
 			this.window.WindowBounds = new Drawing.Rectangle (0, 0, 8, 8);
-			this.window.Root.SetSyncPaint (true);
+			this.window.Root.SyncPaint = true;
 			
 			this.timer = new Timer ();
 			this.timer.TimeElapsed += new Support.EventHandler (this.HandleTimerTimeElapsed);
@@ -408,7 +408,7 @@ namespace Epsitec.Common.Widgets
 
 					case ToolTipBehaviour.FollowMouse:
 						mouse   += ToolTip.offset;
-						mouse.Y -= this.window.Root.Height;
+						mouse.Y -= this.window.Root.ActualHeight;
 						this.window.WindowLocation = mouse;
 						break;
 						
@@ -476,7 +476,8 @@ namespace Epsitec.Common.Widgets
 				double dx = size.Width + ToolTip.margin.X * 2;
 				double dy = size.Height + ToolTip.margin.Y * 2;
 				
-				tip.Bounds = new Drawing.Rectangle (0, 0, dx, dy);
+				tip.PreferredWidth = dx;
+				tip.PreferredHeight = dy;
 			}
 			else if (caption is Widget)
 			{
@@ -492,7 +493,7 @@ namespace Epsitec.Common.Widgets
 				mouse += ToolTip.offset;
 			}
 			
-			mouse.Y -= tip.Height;
+			mouse.Y -= tip.PreferredHeight;
 			
 			//	Modifie la position du tool-tip pour qu'il ne dépasse pas de l'écran.
 			
@@ -502,16 +503,17 @@ namespace Epsitec.Common.Widgets
 			{
 				mouse.Y = wa.Bottom;
 			}
-			if (mouse.X + tip.Width > wa.Right)  // dépasse à droite ?
+			if (mouse.X + tip.PreferredWidth > wa.Right)  // dépasse à droite ?
 			{
-				mouse.X = wa.Right - tip.Width;
+				mouse.X = wa.Right - tip.PreferredWidth;
 			}
 			
-			this.window.WindowBounds = new Drawing.Rectangle (mouse, tip.Size);
+			this.window.WindowBounds = new Drawing.Rectangle (mouse, tip.PreferredSize);
 			this.window.Owner        = this.widget.Window;
 			
 			if (tip.Parent != this.window.Root)
 			{
+				tip.Dock = DockStyle.Fill;
 				this.window.Root.Children.Clear ();
 				this.window.Root.Children.Add (tip);
 			}
@@ -551,7 +553,7 @@ namespace Epsitec.Common.Widgets
 				IAdorner adorner = Widgets.Adorners.Factory.Active;
 				
 				Drawing.Rectangle rect  = this.Client.Bounds;
-				WidgetState       state = this.PaintState;
+				WidgetPaintState       state = this.PaintState;
 				Drawing.Point     pos   = new Drawing.Point();
 				
 				pos.X += ToolTip.margin.X;  // à cause du Drawing.ContentAlignment.MiddleLeft

@@ -284,7 +284,7 @@ namespace Epsitec.Common.Document.Widgets
 				if ( this[0, row].IsEmpty )
 				{
 					StaticText st = new StaticText();
-					st.Alignment = ContentAlignment.MiddleCenter;
+					st.ContentAlignment = ContentAlignment.MiddleCenter;
 					st.Dock = DockStyle.Fill;
 					st.Margins = new Margins(2, 2, 0, 0);
 					this[0, row].Insert(st);
@@ -294,7 +294,7 @@ namespace Epsitec.Common.Document.Widgets
 			if ( this[nc, row].IsEmpty )
 			{
 				StaticText st = new StaticText();
-				st.Alignment = ContentAlignment.MiddleLeft;
+				st.ContentAlignment = ContentAlignment.MiddleLeft;
 				st.Dock = DockStyle.Fill;
 				st.Margins = new Margins(4, 4, 0, 0);
 				this[nc, row].Insert(st);

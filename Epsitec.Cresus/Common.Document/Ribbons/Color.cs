@@ -7,7 +7,6 @@ namespace Epsitec.Common.Document.Ribbons
 	/// <summary>
 	/// La classe Color permet de modifier les couleurs de la sélection.
 	/// </summary>
-	[SuppressBundleSupport]
 	public class Color : Abstract
 	{
 		public Color() : base()
@@ -24,7 +23,7 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonColorFillLight   = this.CreateIconButton("ColorFillLight");
 			this.CreateFieldColor(ref this.fieldColor, Res.Strings.Action.ColorValue);
 			
-			this.UpdateClientGeometry();
+//			this.UpdateClientGeometry();
 		}
 		
 		protected override void Dispose(bool disposing)
@@ -60,37 +59,37 @@ namespace Epsitec.Common.Document.Ribbons
 
 			if ( this.buttonColorToRgb == null )  return;
 
-			double dx = this.buttonColorToRgb.DefaultWidth;
-			double dy = this.buttonColorToRgb.DefaultHeight;
+			double dx = this.buttonColorToRgb.PreferredWidth;
+			double dy = this.buttonColorToRgb.PreferredHeight;
 
 			Rectangle rect = this.UsefulZone;
 			rect.Left += dx*2;
 			rect.Width = this.separatorWidth;
-			this.separator.Bounds = rect;
+			this.separator.SetManualBounds(rect);
 
 			rect = this.UsefulZone;
 			rect.Width  = dx;
 			rect.Height = dy;
 			rect.Offset(0, dy+5);
-			this.buttonColorToRgb.Bounds = rect;
+			this.buttonColorToRgb.SetManualBounds(rect);
 			rect.Offset(dx, 0);
-			this.buttonColorToCmyk.Bounds = rect;
+			this.buttonColorToCmyk.SetManualBounds(rect);
 			rect.Offset(dx+this.separatorWidth, 0);
-			this.buttonColorStrokeDark.Bounds = rect;
+			this.buttonColorStrokeDark.SetManualBounds(rect);
 			rect.Offset(dx, 0);
-			this.buttonColorStrokeLight.Bounds = rect;
+			this.buttonColorStrokeLight.SetManualBounds(rect);
 
 			rect = this.UsefulZone;
 			rect.Width  = dx;
 			rect.Height = dy;
-			this.buttonColorToGray.Bounds = rect;
+			this.buttonColorToGray.SetManualBounds(rect);
 			rect.Offset(dx*2+this.separatorWidth, 0);
-			this.buttonColorFillDark.Bounds = rect;
+			this.buttonColorFillDark.SetManualBounds(rect);
 			rect.Offset(dx, 0);
-			this.buttonColorFillLight.Bounds = rect;
+			this.buttonColorFillLight.SetManualBounds(rect);
 			rect.Offset(dx+5, dy*0.5);
 			rect.Width = 50;
-			this.fieldColor.Bounds = rect;
+			this.fieldColor.SetManualBounds(rect);
 		}
 
 
@@ -98,7 +97,7 @@ namespace Epsitec.Common.Document.Ribbons
 		{
 			//	Crée un champ éditable pour une couleur.
 			field = new TextFieldReal(this);
-			field.Width = 50;
+			field.PreferredWidth = 50;
 			field.TabIndex = tabIndex++;
 			field.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			field.ValueChanged += new EventHandler(this.HandleFieldValueChanged);

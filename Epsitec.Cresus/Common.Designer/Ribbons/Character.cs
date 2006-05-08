@@ -7,7 +7,6 @@ namespace Epsitec.Common.Designer.Ribbons
 	/// <summary>
 	/// La classe Character permet de choisir la typographie des caractères.
 	/// </summary>
-	[SuppressBundleSupport]
 	public class Character : Abstract
 	{
 		public Character() : base()
@@ -48,20 +47,20 @@ namespace Epsitec.Common.Designer.Ribbons
 
 			if ( this.buttonBold == null )  return;
 
-			double dx = this.buttonBold.DefaultWidth;
-			double dy = this.buttonBold.DefaultHeight;
+			double dx = this.buttonBold.PreferredWidth;
+			double dy = this.buttonBold.PreferredHeight;
 
 			Rectangle rect = this.UsefulZone;
 			rect.Width  = dx;
 			rect.Height = dy;
 			rect.Offset(0, dy+5);
-			this.buttonBold.Bounds = rect;
+			this.buttonBold.SetManualBounds(rect);
 			rect.Offset(dx, 0);
-			this.buttonItalic.Bounds = rect;
+			this.buttonItalic.SetManualBounds(rect);
 			rect.Offset(dx, 0);
-			this.buttonUnderlined.Bounds = rect;
+			this.buttonUnderlined.SetManualBounds(rect);
 			rect.Offset(dx+5, 0);
-			this.buttonGlyphs.Bounds = rect;
+			this.buttonGlyphs.SetManualBounds(rect);
 		}
 
 

@@ -1,7 +1,8 @@
-//	Copyright © 2004-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2004-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 using Epsitec.Common.Widgets;
+using System.Collections.Generic;
 
 namespace Epsitec.Common.Dialogs
 {
@@ -99,11 +100,11 @@ namespace Epsitec.Common.Dialogs
 		
 		
 		#region ICommandDispatcherHost Members
-		CommandDispatcher[] ICommandDispatcherHost.CommandDispatchers
+		public IEnumerable<CommandDispatcher> GetCommandDispatchers()
 		{
-			get
+			if (this.dispatcher != null)
 			{
-				return CommandDispatcher.ToArray (this.CommandDispatcher);
+				yield return this.dispatcher;
 			}
 		}
 		#endregion
@@ -150,6 +151,7 @@ namespace Epsitec.Common.Dialogs
 			}
 			else
 			{
+#if false
 				Support.ObjectBundler bundler = new Support.ObjectBundler (this.resource_manager);
 				
 				Widgets.Widget root = bundler.CreateFromBundle (bundle) as Widgets.Widget;
@@ -163,6 +165,7 @@ namespace Epsitec.Common.Dialogs
 				
 				this.CreateDesignerActivatorWidget ();
 				this.AttachWindow ();
+#endif
 			}
 		}
 		

@@ -7,7 +7,6 @@ namespace Epsitec.Common.Designer.Ribbons
 	/// <summary>
 	/// La classe Select permet de gérer la sélection.
 	/// </summary>
-	[SuppressBundleSupport]
 	public class Select : Abstract
 	{
 		public Select() : base()
@@ -49,30 +48,30 @@ namespace Epsitec.Common.Designer.Ribbons
 
 			if ( this.buttonDelete == null )  return;
 
-			double dx = this.buttonDelete.DefaultWidth;
-			double dy = this.buttonDelete.DefaultHeight;
+			double dx = this.buttonDelete.PreferredWidth;
+			double dy = this.buttonDelete.PreferredHeight;
 
 			Rectangle rect = this.UsefulZone;
 			rect.Width  = dx*1.5;
 			rect.Height = dy*1.5;
 			rect.Offset(0, dy*0.5);
-			this.buttonCreate.Bounds = rect;
+			this.buttonCreate.SetManualBounds(rect);
 			rect.Offset(dx*1.5, 0);
-			this.buttonDuplicate.Bounds = rect;
+			this.buttonDuplicate.SetManualBounds(rect);
 
 			rect = this.UsefulZone;
 			rect.Width  = dx;
 			rect.Height = dy;
 			rect.Offset(dx*1.5*2+4, dy+5);
-			this.buttonDelete.Bounds = rect;
+			this.buttonDelete.SetManualBounds(rect);
 			rect.Offset(dx, 0);
-			this.buttonUp.Bounds = rect;
+			this.buttonUp.SetManualBounds(rect);
 
 			rect = this.UsefulZone;
 			rect.Width  = dx;
 			rect.Height = dy;
 			rect.Offset(dx*1.5*2+4+dx, 0);
-			this.buttonDown.Bounds = rect;
+			this.buttonDown.SetManualBounds(rect);
 		}
 
 

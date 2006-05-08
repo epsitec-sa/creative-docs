@@ -7,7 +7,6 @@ namespace Epsitec.Common.Document.Panels
 	/// <summary>
 	/// La classe Regular permet de choisir un type de polygone régulier.
 	/// </summary>
-	[SuppressBundleSupport]
 	public class Regular : Abstract
 	{
 		public Regular(Document document) : base(document)
@@ -130,7 +129,7 @@ namespace Epsitec.Common.Document.Panels
 			r.Bottom = r.Top-20;
 			r.Width = 22*2;
 			r.Inflate(1);
-			this.grid.Bounds = r;
+			this.grid.SetManualBounds(r);
 
 			if ( this.isExtendedSize && this.IsLabelProperties )
 			{
@@ -138,14 +137,14 @@ namespace Epsitec.Common.Document.Panels
 				r.Bottom = r.Top-20;
 				r.Left = rect.Left+22*2;
 				r.Right = rect.Right;
-				this.fieldNbFaces.Bounds = r;
+				this.fieldNbFaces.SetManualBounds(r);
 
 				rect.Top = r.Bottom-5;
 				rect.Bottom = rect.Top-20;
 				r = rect;
 				r.Left = rect.Left;
 				r.Right = rect.Right;
-				this.fieldDeep.Bounds = r;
+				this.fieldDeep.SetManualBounds(r);
 			}
 			else
 			{
@@ -153,14 +152,14 @@ namespace Epsitec.Common.Document.Panels
 				r.Bottom = r.Top-20;
 				r.Left = rect.Right-Widgets.TextFieldLabel.ShortWidth;
 				r.Right = rect.Right;
-				this.fieldNbFaces.Bounds = r;
+				this.fieldNbFaces.SetManualBounds(r);
 
 				rect.Top = r.Bottom-5;
 				rect.Bottom = rect.Top-20;
 				r = rect;
 				r.Left = rect.Right-Widgets.TextFieldLabel.ShortWidth;
 				r.Right = rect.Right;
-				this.fieldDeep.Bounds = r;
+				this.fieldDeep.SetManualBounds(r);
 			}
 		}
 		

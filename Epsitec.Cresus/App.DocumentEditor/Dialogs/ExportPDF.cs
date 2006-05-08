@@ -60,7 +60,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 				//	Boutons de fermeture.
 				Button buttonOk = new Button(this.window.Root);
-				buttonOk.Width = 75;
+				buttonOk.PreferredWidth = 75;
 				buttonOk.Text = Res.Strings.Dialog.ExportPDF.Button.OK;
 				buttonOk.ButtonStyle = ButtonStyle.DefaultAccept;
 				buttonOk.Anchor = AnchorStyles.BottomLeft;
@@ -71,7 +71,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				ToolTip.Default.SetToolTip(buttonOk, Res.Strings.Dialog.ExportPDF.Tooltip.OK);
 
 				Button buttonCancel = new Button(this.window.Root);
-				buttonCancel.Width = 75;
+				buttonCancel.PreferredWidth = 75;
 				buttonCancel.Text = Res.Strings.Dialog.ExportPDF.Button.Cancel;
 				buttonCancel.Anchor = AnchorStyles.BottomLeft;
 				buttonCancel.Margins = new Margins(6+75+10, 0, 0, 6);

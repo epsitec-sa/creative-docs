@@ -1,3 +1,5 @@
+using Epsitec.Common.Support;
+
 namespace Epsitec.Common.Widgets
 {
 	public enum TabBookArrows
@@ -10,7 +12,6 @@ namespace Epsitec.Common.Widgets
 	/// <summary>
 	/// Summary description for TabBook.
 	/// </summary>
-	[Support.SuppressBundleSupport]
 	public class TabBook : AbstractGroup, Collections.IWidgetCollectionHost
 	{
 		public TabBook()
@@ -27,10 +28,10 @@ namespace Epsitec.Common.Widgets
 			this.arrowRight.GlyphShape = GlyphShape.ArrowRight;
 			this.arrowLeft.ButtonStyle = ButtonStyle.Scroller;
 			this.arrowRight.ButtonStyle = ButtonStyle.Scroller;
-			this.arrowLeft.Engaged += new Support.EventHandler(this.HandleScrollButton);
-			this.arrowRight.Engaged += new Support.EventHandler(this.HandleScrollButton);
-			this.arrowLeft.StillEngaged += new Support.EventHandler(this.HandleScrollButton);
-			this.arrowRight.StillEngaged += new Support.EventHandler(this.HandleScrollButton);
+			this.arrowLeft.Engaged += new EventHandler(this.HandleScrollButton);
+			this.arrowRight.Engaged += new EventHandler(this.HandleScrollButton);
+			this.arrowLeft.StillEngaged += new EventHandler(this.HandleScrollButton);
+			this.arrowRight.StillEngaged += new EventHandler(this.HandleScrollButton);
 			this.arrowLeft.AutoRepeat = true;
 			this.arrowRight.AutoRepeat = true;
 
@@ -53,28 +54,14 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		#region Interface IBundleSupport
-		public override void RestoreFromBundle(Epsitec.Common.Support.ObjectBundler bundler, Epsitec.Common.Support.ResourceBundle bundle)
-		{
-			base.RestoreFromBundle (bundler, bundle);
-			this.items.RestoreFromBundle ("items", bundler, bundle);
-		}
-		
-		public override void SerializeToBundle(Support.ObjectBundler bundler, Support.ResourceBundle bundle)
-		{
-			base.SerializeToBundle (bundler, bundle);
-			this.items.SerializeToBundle ("items", bundler, bundle);
-		}
-		#endregion
-		
 		protected override void Dispose(bool disposing)
 		{
 			if ( disposing )
 			{
-				this.arrowLeft.Engaged -= new Support.EventHandler(this.HandleScrollButton);
-				this.arrowRight.Engaged -= new Support.EventHandler(this.HandleScrollButton);
-				this.arrowLeft.StillEngaged -= new Support.EventHandler(this.HandleScrollButton);
-				this.arrowRight.StillEngaged -= new Support.EventHandler(this.HandleScrollButton);
+				this.arrowLeft.Engaged -= new EventHandler(this.HandleScrollButton);
+				this.arrowRight.Engaged -= new EventHandler(this.HandleScrollButton);
+				this.arrowLeft.StillEngaged -= new EventHandler(this.HandleScrollButton);
+				this.arrowRight.StillEngaged -= new EventHandler(this.HandleScrollButton);
 				this.buttonClose.Clicked -= new MessageEventHandler(this.HandleButtonCloseClicked);
 				this.buttonMenu.Clicked -= new MessageEventHandler(this.HandleButtonMenuClicked);
 				
@@ -156,12 +143,9 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public override Drawing.Margins		InternalPadding
+		public override Drawing.Margins GetInternalPadding()
 		{
-			get
-			{
-				return new Drawing.Margins (2, 2, this.TabHeight + 2, 2);
-			}
+			return new Drawing.Margins (2, 2, this.TabHeight + 2, 2);
 		}
 		
 		public TabPageCollection			Items
@@ -383,7 +367,7 @@ namespace Epsitec.Common.Widgets
 			{
 				if ( page == this.ActivePage )  // est-ce la page active ?
 				{
-					Drawing.Rectangle rect = page.TabButton.Bounds;
+					Drawing.Rectangle rect = page.TabButton.ActualBounds;
 					begin = rect.Left;
 					end   = rect.Right;
 				}
@@ -582,7 +566,7 @@ namespace Epsitec.Common.Widgets
 					rect = new Drawing.Rectangle(0, this.Client.Size.Height-this.tabHeight, this.tabHeight, this.tabHeight);
 					rect.Deflate(2, 2);
 					rect.Offset(-2, 0);
-					this.arrowLeft.Bounds = rect;
+					this.arrowLeft.SetManualBounds(rect);
 					this.arrowLeft.Visibility = true;
 					this.arrowLeft.Enable = (this.scrollOffset > this.TabOffsetMin);
 
@@ -592,7 +576,7 @@ namespace Epsitec.Common.Widgets
 					rect = new Drawing.Rectangle(x, this.Client.Size.Height-this.tabHeight, this.tabHeight, this.tabHeight);
 					rect.Deflate(2, 2);
 					rect.Offset(2, 0);
-					this.arrowRight.Bounds = rect;
+					this.arrowRight.SetManualBounds(rect);
 					this.arrowRight.Visibility = true;
 					this.arrowRight.Enable = (this.scrollOffset < this.scrollTotalWidth-this.TabOffsetMax);
 				}
@@ -604,12 +588,12 @@ namespace Epsitec.Common.Widgets
 					Drawing.Rectangle rect = new Drawing.Rectangle(x, this.Client.Size.Height-this.tabHeight, this.tabHeight, this.tabHeight);
 					rect.Deflate(2, 2);
 					rect.Offset(6, 0);
-					this.arrowLeft.Bounds = rect;
+					this.arrowLeft.SetManualBounds(rect);
 					this.arrowLeft.Visibility = true;
 					this.arrowLeft.Enable = (this.scrollOffset > this.TabOffsetMin);
 
 					rect.Offset(this.tabHeight-4, 0);
-					this.arrowRight.Bounds = rect;
+					this.arrowRight.SetManualBounds(rect);
 					this.arrowRight.Visibility = true;
 					this.arrowRight.Enable = (this.scrollOffset < this.scrollTotalWidth-this.TabOffsetMax);
 				}
@@ -626,7 +610,7 @@ namespace Epsitec.Common.Widgets
 				if ( this.hasCloseButton )  x -= this.tabHeight-4;
 				Drawing.Rectangle rect = new Drawing.Rectangle(x, this.Client.Size.Height-this.tabHeight, this.tabHeight, this.tabHeight);
 				rect.Inflate(-2, -2);
-				this.buttonMenu.Bounds = rect;
+				this.buttonMenu.SetManualBounds(rect);
 				this.buttonMenu.Visibility = true;
 			}
 			else
@@ -638,7 +622,7 @@ namespace Epsitec.Common.Widgets
 			{
 				Drawing.Rectangle rect = new Drawing.Rectangle(this.Client.Size.Width-(this.tabHeight-2), this.Client.Size.Height-this.tabHeight, this.tabHeight, this.tabHeight);
 				rect.Inflate(-2, -2);
-				this.buttonClose.Bounds = rect;
+				this.buttonClose.SetManualBounds(rect);
 				this.buttonClose.Visibility = true;
 			}
 			else
@@ -669,33 +653,37 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void OnCloseClicked()
 		{
-			if ( this.CloseClicked != null )
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("CloseClicked");
+			if (handler != null)
 			{
-				this.CloseClicked(this);
+				handler(this);
 			}
 		}
 		
 		protected virtual void OnMenuClicked()
 		{
-			if ( this.MenuClicked != null )
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("MenuClicked");
+			if (handler != null)
 			{
-				this.MenuClicked(this);
+				handler(this);
 			}
 		}
 		
 		protected virtual void OnPageCountChanged()
 		{
-			if ( this.PageCountChanged != null )
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("PageCountChanged");
+			if (handler != null)
 			{
-				this.PageCountChanged(this);
+				handler(this);
 			}
 		}
 		
 		protected virtual void OnActivePageChanged()
 		{
-			if ( this.ActivePageChanged != null )
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("ActivePageChanged");
+			if (handler != null)
 			{
-				this.ActivePageChanged(this);
+				handler(this);
 			}
 		}
 
@@ -718,7 +706,7 @@ namespace Epsitec.Common.Widgets
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
 
 			Drawing.Rectangle rect  = this.Client.Bounds;
-			WidgetState       state = this.PaintState;
+			WidgetPaintState       state = this.PaintState;
 
 			Drawing.Rectangle part = new Drawing.Rectangle();
 
@@ -806,13 +794,10 @@ namespace Epsitec.Common.Widgets
 			base.ProcessMessage(message, pos);
 		}
 
-		
-		public override Drawing.Rectangle GetShapeBounds()
+
+		public override Drawing.Margins GetShapeMargins()
 		{
-			IAdorner adorner = Widgets.Adorners.Factory.Active;
-			Drawing.Rectangle rect = this.Client.Bounds;
-			rect.Inflate(adorner.GeometryListShapeBounds);
-			return rect;
+			return Widgets.Adorners.Factory.Active.GeometryListShapeMargins;
 		}
 
 		
@@ -840,7 +825,7 @@ namespace Epsitec.Common.Widgets
 			
 			item.TabButton.SetParent (this);
 			item.TabButton.Pressed += new MessageEventHandler(this.HandleTabButton);
-			item.RankChanged += new Support.EventHandler(this.HandlePageRankChanged);
+			item.RankChanged += new EventHandler(this.HandlePageRankChanged);
 			this.isRefreshNeeded = true;
 			
 			this.UpdateVisiblePages();
@@ -854,7 +839,7 @@ namespace Epsitec.Common.Widgets
 			int     index = item.Index;
 			
 			item.TabButton.Clicked -= new MessageEventHandler(this.HandleTabButton);
-			item.RankChanged       -= new Support.EventHandler(this.HandlePageRankChanged);
+			item.RankChanged       -= new EventHandler(this.HandlePageRankChanged);
 			
 			this.Children.Remove(item);
 			this.Children.Remove(item.TabButton);
@@ -919,10 +904,54 @@ namespace Epsitec.Common.Widgets
 		}
 		#endregion
 		
-		public event Support.EventHandler	CloseClicked;
-		public event Support.EventHandler	MenuClicked;
-		public event Support.EventHandler	PageCountChanged;
-		public event Support.EventHandler	ActivePageChanged;
+		public event EventHandler			CloseClicked
+		{
+			add
+			{
+				this.AddUserEventHandler("CloseClicked", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("CloseClicked", value);
+			}
+		}
+
+		public event EventHandler			MenuClicked
+		{
+			add
+			{
+				this.AddUserEventHandler("MenuClicked", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("MenuClicked", value);
+			}
+		}
+
+		public event EventHandler			PageCountChanged
+		{
+			add
+			{
+				this.AddUserEventHandler("PageCountChanged", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("PageCountChanged", value);
+			}
+		}
+
+		public event EventHandler			ActivePageChanged
+		{
+			add
+			{
+				this.AddUserEventHandler("ActivePageChanged", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("ActivePageChanged", value);
+			}
+		}
+
 		
 		
 		private TabBookArrows				arrows;

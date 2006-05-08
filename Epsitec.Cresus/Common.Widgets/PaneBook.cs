@@ -1,3 +1,5 @@
+using Epsitec.Common.Support;
+
 namespace Epsitec.Common.Widgets
 {
 	public enum PaneBookStyle
@@ -30,20 +32,6 @@ namespace Epsitec.Common.Widgets
 			this.SetEmbedder(embedder);
 		}
 		
-		#region Interface IBundleSupport
-		public override void RestoreFromBundle(Epsitec.Common.Support.ObjectBundler bundler, Epsitec.Common.Support.ResourceBundle bundle)
-		{
-			base.RestoreFromBundle (bundler, bundle);
-			this.items.RestoreFromBundle ("items", bundler, bundle);
-		}
-		
-		public override void SerializeToBundle(Support.ObjectBundler bundler, Support.ResourceBundle bundle)
-		{
-			base.SerializeToBundle (bundler, bundle);
-			this.items.SerializeToBundle ("items", bundler, bundle);
-		}
-		#endregion
-		
 		protected override void Dispose(bool disposing)
 		{
 			if ( disposing )
@@ -55,7 +43,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		[ Support.Bundle ("behaviour") ] public PaneBookBehaviour PaneBehaviour
+		public PaneBookBehaviour PaneBehaviour
 		{
 			//	Comportement lorsque la frontière est déplacée.
 			get
@@ -77,7 +65,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		[ Support.Bundle ("style") ] public PaneBookStyle PaneBookStyle
+		public PaneBookStyle PaneBookStyle
 		{
 			get
 			{
@@ -302,13 +290,13 @@ namespace Epsitec.Common.Widgets
 					rect.Left = start.X;
 					rect.Width = end.X-start.X-this.sliderDim;
 					this.Align(ref rect);
-					page.Bounds = rect;
+					page.SetManualBounds(rect);
 					page.Visibility = (rect.Width >= page.PaneHideSize);
 
 					rect.Left = end.X-this.sliderDim;
 					rect.Width = this.sliderDim;
 					this.Align(ref rect);
-					page.PaneButton.Bounds = rect;
+					page.PaneButton.SetManualBounds(rect);
 
 					if ( page.PaneToggle )
 					{
@@ -318,7 +306,7 @@ namespace Epsitec.Common.Widgets
 						arect.Left  -= 3;
 						arect.Right += 3;
 						arect.Top   = arect.Bottom+12;
-						page.GlyphButton.Bounds = arect;
+						page.GlyphButton.SetManualBounds(arect);
 
 						if ( this.RetSize(i) < (this.RetMinSize(i)+this.RetMaxSize(i))/2 )
 						{
@@ -343,12 +331,12 @@ namespace Epsitec.Common.Widgets
 					rect.Bottom = end.Y+this.sliderDim;
 					rect.Height = start.Y-end.Y-this.sliderDim;
 					this.Align(ref rect);
-					page.Bounds = rect;
+					page.SetManualBounds(rect);
 
 					rect.Bottom = end.Y;
 					rect.Height = this.sliderDim;
 					this.Align(ref rect);
-					page.PaneButton.Bounds = rect;
+					page.PaneButton.SetManualBounds(rect);
 
 					if ( page.PaneToggle )
 					{
@@ -358,7 +346,7 @@ namespace Epsitec.Common.Widgets
 						arect.Left   = arect.Right-12;
 						arect.Bottom -= 3;
 						arect.Top    += 3;
-						page.GlyphButton.Bounds = arect;
+						page.GlyphButton.SetManualBounds(arect);
 
 						if ( this.RetSize(i) < (this.RetMinSize(i)+this.RetMaxSize(i))/2 )
 						{
@@ -410,9 +398,9 @@ namespace Epsitec.Common.Widgets
 			{
 				case PaneBookBehaviour.Draft:
 					this.alphaBar = new AlphaBar();
-					this.alphaBar.Bounds = button.Bounds;
+					this.alphaBar.SetManualBounds(button.ActualBounds);
 					this.alphaBar.SetParent (this);
-					this.sliderDragRect = button.Bounds;
+					this.sliderDragRect = button.ActualBounds;
 
 					if ( this.type == PaneBookStyle.LeftRight )
 					{
@@ -554,7 +542,7 @@ namespace Epsitec.Common.Widgets
 			size = System.Math.Max(size, this.sliderDragMin);
 			size = System.Math.Min(size, this.sliderDragMax);
 
-			Drawing.Rectangle rect = this.alphaBar.Bounds;
+			Drawing.Rectangle rect = this.alphaBar.ActualBounds;
 
 			if ( this.type == PaneBookStyle.LeftRight )
 			{
@@ -569,7 +557,7 @@ namespace Epsitec.Common.Widgets
 				rect.Offset(0, this.sliderDragRect.Bottom);
 			}
 			this.Align(ref rect);
-			this.alphaBar.Bounds = rect;
+			this.alphaBar.SetManualBounds(rect);
 		}
 
 		protected void Align(ref Drawing.Rectangle rect)
@@ -735,14 +723,26 @@ namespace Epsitec.Common.Widgets
 		protected virtual void OnPaneSizeChanged()
 		{
 			//	Génère un événement pour dire qu'une taille a changé.
-			if ( this.PaneSizeChanged != null )  // qq'un écoute ?
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("PaneSizeChanged");
+			if (handler != null)
 			{
-				this.PaneSizeChanged(this);
+				handler(this);
 			}
 		}
 
 
-		public event Support.EventHandler PaneSizeChanged;
+		public event EventHandler			PaneSizeChanged
+		{
+			add
+			{
+				this.AddUserEventHandler("PaneSizeChanged", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("PaneSizeChanged", value);
+			}
+		}
+
 
 		
 		//	Dessine le groupe de panneaux.
@@ -799,16 +799,16 @@ namespace Epsitec.Common.Widgets
 			System.Diagnostics.Debug.Assert (oldBook == this);
 
 			Drawing.Rectangle rect = this.Client.Bounds;
-			rect.Deflate (this.InternalPadding);
-			
-			item.Bounds = rect;
+			rect.Deflate (this.GetInternalPadding ());
+
+			item.SetManualBounds(rect);
 			item.PaneButton.PaneButtonStyle = ( this.type == PaneBookStyle.LeftRight ) ? PaneButtonStyle.Vertical : PaneButtonStyle.Horizontal;
 			
 			item.PaneButton.SetParent (this);
 			item.PaneButton.DragStarted += new MessageEventHandler(this.HandleSliderDragStarted);
 			item.PaneButton.DragMoved   += new MessageEventHandler(this.HandleSliderDragMoved);
 			item.PaneButton.DragEnded   += new MessageEventHandler(this.HandleSliderDragEnded);
-			item.RankChanged += new Support.EventHandler(this.HandlePageRankChanged);
+			item.RankChanged += new EventHandler(this.HandlePageRankChanged);
 			
 			item.GlyphButton.SetParent (this);
 			item.GlyphButton.Clicked += new MessageEventHandler(this.HandleGlyphButtonClicked);
@@ -823,7 +823,7 @@ namespace Epsitec.Common.Widgets
 			item.PaneButton.DragStarted -= new MessageEventHandler(this.HandleSliderDragStarted);
 			item.PaneButton.DragMoved   -= new MessageEventHandler(this.HandleSliderDragMoved);
 			item.PaneButton.DragEnded   -= new MessageEventHandler(this.HandleSliderDragEnded);
-			item.RankChanged -= new Support.EventHandler(this.HandlePageRankChanged);
+			item.RankChanged -= new EventHandler(this.HandlePageRankChanged);
 
 			item.GlyphButton.Clicked -= new MessageEventHandler(this.HandleGlyphButtonClicked);
 

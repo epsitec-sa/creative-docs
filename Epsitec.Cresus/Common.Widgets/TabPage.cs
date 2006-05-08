@@ -1,4 +1,4 @@
-using System;
+using Epsitec.Common.Support;
 
 namespace Epsitec.Common.Widgets
 {
@@ -10,7 +10,7 @@ namespace Epsitec.Common.Widgets
 		public TabPage()
 		{
 			this.tabButton = new TabButton(null);
-			this.tabButton.Alignment = Drawing.ContentAlignment.MiddleCenter;
+			this.tabButton.ContentAlignment = Drawing.ContentAlignment.MiddleCenter;
 			
 			this.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 		}
@@ -45,12 +45,12 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.tabButton.Bounds;
+				return this.tabButton.ActualBounds;
 			}
 
 			set
 			{
-				this.tabButton.Bounds = value;
+				this.tabButton.SetManualBounds(value);
 			}
 		}
 
@@ -116,13 +116,25 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public event Support.EventHandler		RankChanged;
+		public event EventHandler				RankChanged
+		{
+			add
+			{
+				this.AddUserEventHandler("RankChanged", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("RankChanged", value);
+			}
+		}
+
 		
 		protected virtual void OnRankChanged()
 		{
-			if ( this.RankChanged != null )
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("RankChanged");
+			if (handler != null)
 			{
-				this.RankChanged(this);
+				handler(this);
 			}
 		}
 

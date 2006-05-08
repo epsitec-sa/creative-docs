@@ -8,7 +8,6 @@ namespace Epsitec.Common.Document.TextPanels
 	/// <summary>
 	/// La classe Xline permet de choisir les soulignements.
 	/// </summary>
-	[SuppressBundleSupport]
 	public class Xline : Abstract
 	{
 		public Xline(Document document, bool isStyle, StyleCategory styleCategory) : base(document, isStyle, styleCategory)
@@ -213,30 +212,30 @@ namespace Epsitec.Common.Document.TextPanels
 				{
 					r.Left = rect.Left;
 					r.Width = 20;
-					this.buttonUnderlined.Bounds = r;
+					this.buttonUnderlined.SetManualBounds(r);
 					r.Offset(20, 0);
-					this.buttonOverlined.Bounds = r;
+					this.buttonOverlined.SetManualBounds(r);
 					r.Offset(20+5, 0);
-					this.buttonStrikeout.Bounds = r;
+					this.buttonStrikeout.SetManualBounds(r);
 
 					r.Left = rect.Right-20;
 					r.Width = 20;
-					this.buttonClear.Bounds = r;
+					this.buttonClear.SetManualBounds(r);
 
 					if ( isUnderlined )
 					{
 						r.Offset(0, -25);
 						r.Left = rect.Left;
 						r.Right = rect.Right-25;
-						this.fieldUnderlinedThickness.Bounds = r;
+						this.fieldUnderlinedThickness.SetManualBounds(r);
 						this.fieldUnderlinedThickness.Visibility = true;
 						r.Offset(0, -25);
-						this.fieldUnderlinedPosition.Bounds = r;
+						this.fieldUnderlinedPosition.SetManualBounds(r);
 						this.fieldUnderlinedPosition.Visibility = true;
 						r.Offset(0, -25);
 						r.Left = rect.Right-25-48;
 						r.Width = 48;
-						this.underlinedColor.Bounds = r;
+						this.underlinedColor.SetManualBounds(r);
 						this.underlinedColor.Visibility = true;
 					}
 					else
@@ -251,15 +250,15 @@ namespace Epsitec.Common.Document.TextPanels
 						r.Offset(0, -25);
 						r.Left = rect.Left;
 						r.Right = rect.Right-25;
-						this.fieldOverlinedThickness.Bounds = r;
+						this.fieldOverlinedThickness.SetManualBounds(r);
 						this.fieldOverlinedThickness.Visibility = true;
 						r.Offset(0, -25);
-						this.fieldOverlinedPosition.Bounds = r;
+						this.fieldOverlinedPosition.SetManualBounds(r);
 						this.fieldOverlinedPosition.Visibility = true;
 						r.Offset(0, -25);
 						r.Left = rect.Right-25-48;
 						r.Width = 48;
-						this.overlinedColor.Bounds = r;
+						this.overlinedColor.SetManualBounds(r);
 						this.overlinedColor.Visibility = true;
 					}
 					else
@@ -274,15 +273,15 @@ namespace Epsitec.Common.Document.TextPanels
 						r.Offset(0, -25);
 						r.Left = rect.Left;
 						r.Right = rect.Right-25;
-						this.fieldStrikeoutThickness.Bounds = r;
+						this.fieldStrikeoutThickness.SetManualBounds(r);
 						this.fieldStrikeoutThickness.Visibility = true;
 						r.Offset(0, -25);
-						this.fieldStrikeoutPosition.Bounds = r;
+						this.fieldStrikeoutPosition.SetManualBounds(r);
 						this.fieldStrikeoutPosition.Visibility = true;
 						r.Offset(0, -25);
 						r.Left = rect.Right-25-48;
 						r.Width = 48;
-						this.strikeoutColor.Bounds = r;
+						this.strikeoutColor.SetManualBounds(r);
 						this.strikeoutColor.Visibility = true;
 					}
 					else
@@ -296,28 +295,28 @@ namespace Epsitec.Common.Document.TextPanels
 				{
 					r.Left = rect.Left;
 					r.Width = 20;
-					this.buttonUnderlined.Bounds = r;
+					this.buttonUnderlined.SetManualBounds(r);
 					r.Offset(20, 0);
-					this.buttonOverlined.Bounds = r;
+					this.buttonOverlined.SetManualBounds(r);
 					r.Offset(20+5, 0);
-					this.buttonStrikeout.Bounds = r;
+					this.buttonStrikeout.SetManualBounds(r);
 					r.Left = rect.Right-20;
 					r.Width = 20;
-					this.buttonClear.Bounds = r;
+					this.buttonClear.SetManualBounds(r);
 
 					if ( isUnderlined )
 					{
 						r.Offset(0, -25);
 						r.Left = rect.Left;
 						r.Width = 60;
-						this.fieldUnderlinedThickness.Bounds = r;
+						this.fieldUnderlinedThickness.SetManualBounds(r);
 						this.fieldUnderlinedThickness.Visibility = true;
 						r.Offset(60, 0);
-						this.fieldUnderlinedPosition.Bounds = r;
+						this.fieldUnderlinedPosition.SetManualBounds(r);
 						this.fieldUnderlinedPosition.Visibility = true;
 						r.Offset(60+12, 0);
 						r.Width = 48;
-						this.underlinedColor.Bounds = r;
+						this.underlinedColor.SetManualBounds(r);
 						this.underlinedColor.Visibility = true;
 					}
 					else
@@ -332,14 +331,14 @@ namespace Epsitec.Common.Document.TextPanels
 						r.Offset(0, -25);
 						r.Left = rect.Left;
 						r.Width = 60;
-						this.fieldOverlinedThickness.Bounds = r;
+						this.fieldOverlinedThickness.SetManualBounds(r);
 						this.fieldOverlinedThickness.Visibility = true;
 						r.Offset(60, 0);
-						this.fieldOverlinedPosition.Bounds = r;
+						this.fieldOverlinedPosition.SetManualBounds(r);
 						this.fieldOverlinedPosition.Visibility = true;
 						r.Offset(60+12, 0);
 						r.Width = 48;
-						this.overlinedColor.Bounds = r;
+						this.overlinedColor.SetManualBounds(r);
 						this.overlinedColor.Visibility = true;
 					}
 					else
@@ -354,14 +353,14 @@ namespace Epsitec.Common.Document.TextPanels
 						r.Offset(0, -25);
 						r.Left = rect.Left;
 						r.Width = 60;
-						this.fieldStrikeoutThickness.Bounds = r;
+						this.fieldStrikeoutThickness.SetManualBounds(r);
 						this.fieldStrikeoutThickness.Visibility = true;
 						r.Offset(60, 0);
-						this.fieldStrikeoutPosition.Bounds = r;
+						this.fieldStrikeoutPosition.SetManualBounds(r);
 						this.fieldStrikeoutPosition.Visibility = true;
 						r.Offset(60+12, 0);
 						r.Width = 48;
-						this.strikeoutColor.Bounds = r;
+						this.strikeoutColor.SetManualBounds(r);
 						this.strikeoutColor.Visibility = true;
 					}
 					else
@@ -379,14 +378,14 @@ namespace Epsitec.Common.Document.TextPanels
 
 				r.Left = rect.Left;
 				r.Width = 20;
-				this.buttonUnderlined.Bounds = r;
+				this.buttonUnderlined.SetManualBounds(r);
 				r.Offset(20, 0);
-				this.buttonOverlined.Bounds = r;
+				this.buttonOverlined.SetManualBounds(r);
 				r.Offset(20+5, 0);
-				this.buttonStrikeout.Bounds = r;
+				this.buttonStrikeout.SetManualBounds(r);
 				r.Left = rect.Right-20;
 				r.Width = 20;
-				this.buttonClear.Bounds = r;
+				this.buttonClear.SetManualBounds(r);
 
 				this.fieldUnderlinedThickness.Visibility = false;
 				this.fieldUnderlinedPosition.Visibility = false;
@@ -480,7 +479,7 @@ namespace Epsitec.Common.Document.TextPanels
 			if ( this.signature != newSignature )
 			{
 				this.signature = newSignature;
-				this.Height = this.DefaultHeight;  // adapte la hauteur du panneau
+				this.PreferredHeight = this.DefaultHeight;  // adapte la hauteur du panneau
 				this.UpdateClientGeometry();
 			}
 		}

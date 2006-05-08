@@ -7,11 +7,12 @@ namespace Epsitec.Common.Designer.Ribbons
 	/// <summary>
 	/// La classe Abstract est la classe de base pour toutes les sections de rubans.
 	/// </summary>
-	[SuppressBundleSupport]
 	public abstract class Abstract : Common.Widgets.Widget
 	{
 		public Abstract()
 		{
+			this.PreferredWidth = this.DefaultWidth;
+			this.PreferredHeight = this.DefaultHeight;
 			this.title = new TextLayout();
 			this.title.DefaultFont     = this.DefaultFont;
 			this.title.DefaultFontSize = this.DefaultFontSize;
@@ -27,7 +28,7 @@ namespace Epsitec.Common.Designer.Ribbons
 		}
 
 		
-		public override double DefaultWidth
+		public virtual double DefaultWidth
 		{
 			//	Retourne la largeur standard.
 			get
@@ -36,7 +37,7 @@ namespace Epsitec.Common.Designer.Ribbons
 			}
 		}
 
-		public override double DefaultHeight
+		public virtual double DefaultHeight
 		{
 			//	Retourne la hauteur standard.
 			get
@@ -79,7 +80,7 @@ namespace Epsitec.Common.Designer.Ribbons
 			IAdorner adorner = Epsitec.Common.Widgets.Adorners.Factory.Active;
 
 			Rectangle rect = this.Client.Bounds;
-			WidgetState state = this.PaintState;
+			WidgetPaintState state = this.PaintState;
 			adorner.PaintRibbonSectionBackground(graphics, rect, this.LabelHeight, state);
 
 			Point pos = new Point(rect.Left+3, rect.Top-this.LabelHeight);

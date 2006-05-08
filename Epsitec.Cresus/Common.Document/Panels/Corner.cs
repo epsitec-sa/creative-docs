@@ -7,7 +7,6 @@ namespace Epsitec.Common.Document.Panels
 	/// <summary>
 	/// La classe Corner permet de choisir un type de coin.
 	/// </summary>
-	[SuppressBundleSupport]
 	public class Corner : Abstract
 	{
 		public Corner(Document document) : base(document)
@@ -212,41 +211,41 @@ namespace Epsitec.Common.Document.Panels
 				r.Bottom = r.Top-22*2;
 				r.Width = 22*8;
 				r.Inflate(1);
-				this.grid.Bounds = r;
+				this.grid.SetManualBounds(r);
 
 				r.Top = rect.Top-47;
 				r.Bottom = r.Top-20;
 				r.Left = rect.Left;
 				r.Right = rect.Right;
-				this.fieldRadius.Bounds = r;
+				this.fieldRadius.SetManualBounds(r);
 
 				r.Offset(0, -25);
-				this.fieldEffect1.Bounds = r;
+				this.fieldEffect1.SetManualBounds(r);
 
 				r.Offset(0, -25);
-				this.fieldEffect2.Bounds = r;
+				this.fieldEffect2.SetManualBounds(r);
 			}
 			else
 			{
 				r.Width = 22*5;
 				r.Inflate(1);
-				this.grid.Bounds = r;
+				this.grid.SetManualBounds(r);
 
 				r = rect;
 				r.Bottom = r.Top-20;
 				r.Left = rect.Right-Widgets.TextFieldLabel.ShortWidth;
 				r.Width = Widgets.TextFieldLabel.ShortWidth;
-				this.fieldRadius.Bounds = r;
+				this.fieldRadius.SetManualBounds(r);
 
 				r.Offset(0, -22);
 				r.Left = rect.Right-Widgets.TextFieldLabel.ShortWidth;
 				r.Width = Widgets.TextFieldLabel.ShortWidth;
-				this.fieldEffect1.Bounds = r;
+				this.fieldEffect1.SetManualBounds(r);
 
 				r.Offset(0, -22);
 				r.Left = rect.Right-Widgets.TextFieldLabel.ShortWidth;
 				r.Width = Widgets.TextFieldLabel.ShortWidth;
-				this.fieldEffect2.Bounds = r;
+				this.fieldEffect2.SetManualBounds(r);
 			}
 		}
 		

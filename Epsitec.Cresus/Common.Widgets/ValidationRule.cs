@@ -1,5 +1,7 @@
-//	Copyright © 2004-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2004-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
+
+using System.Collections.Generic;
 
 namespace Epsitec.Common.Widgets
 {
@@ -191,11 +193,11 @@ namespace Epsitec.Common.Widgets
 		#endregion
 		
 		#region ICommandDispatcherHost Members
-		public CommandDispatcher[]					CommandDispatchers
+		public IEnumerable<CommandDispatcher> GetCommandDispatchers()
 		{
-			get
+			if (this.dispatcher != null)
 			{
-				return CommandDispatcher.ToArray (this.dispatcher);
+				yield return this.dispatcher;
 			}
 		}
 		#endregion
@@ -364,7 +366,8 @@ namespace Epsitec.Common.Widgets
 				}
 				
 				value.BecameDirty += new Support.EventHandler (this.HandleBecameDirty);
-				
+
+#if false //#fix
 				if (this.host.CommandDispatchers != null)
 				{
 					//	Le validateur a été ajouté à une règle qui est liée à un CommandDispatcher
@@ -375,14 +378,13 @@ namespace Epsitec.Common.Widgets
 					
 					if (cdh != null)
 					{
-#if false //#fix
 						if (cdh.CommandDispatcher == null)
 						{
 							cdh.CommandDispatcher = this.host.CommandDispatcher;
 						}
-#endif
 					}
 				}
+#endif
 			}
 			
 			protected virtual void Detach(IValidator value)
@@ -451,8 +453,6 @@ namespace Epsitec.Common.Widgets
 			
 			public void Add(string value)
 			{
-				CommandDispatcher[] dispatcher = this.host.CommandDispatchers;
-				
 #if false //#fix
 				if (dispatcher != null)
 				{

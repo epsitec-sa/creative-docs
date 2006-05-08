@@ -17,20 +17,15 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public override double				DefaultHeight
+		static HSlider()
 		{
-			get
-			{
-				return AbstractSlider.defaultBreadth;
-			}
-		}
-		
-		public override Drawing.Size		DefaultMinSize
-		{
-			get
-			{
-				return new Drawing.Size (AbstractSlider.minimalThumb+6, AbstractSlider.defaultBreadth);
-			}
+			Helpers.VisualPropertyMetadata metadataMinDx = new Helpers.VisualPropertyMetadata (AbstractSlider.minimalThumb+6, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
+			Helpers.VisualPropertyMetadata metadataMinDy = new Helpers.VisualPropertyMetadata (AbstractSlider.defaultBreadth/2, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
+			Helpers.VisualPropertyMetadata metadataDy = new Helpers.VisualPropertyMetadata (AbstractSlider.defaultBreadth, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
+
+			Visual.MinWidthProperty.OverrideMetadata (typeof (HSlider), metadataMinDx);
+			Visual.MinHeightProperty.OverrideMetadata (typeof (HSlider), metadataMinDy);
+			Visual.PreferredHeightProperty.OverrideMetadata (typeof (HSlider), metadataDy);
 		}
 	}
 }

@@ -2,8 +2,6 @@ using System;
 
 namespace Epsitec.Common.Widgets
 {
-	using BundleAttribute  = Support.BundleAttribute;
-	
 	public enum TextFieldExListMode
 	{
 		Undefined,
@@ -21,15 +19,6 @@ namespace Epsitec.Common.Widgets
 	{
 		public TextFieldExList()
 		{
-			if (Support.ObjectBundler.IsBooting)
-			{
-				//	N'initialise rien, car cela prend passablement de temps... et de toute
-				//	manière, on n'a pas besoin de toutes ces informations pour pouvoir
-				//	utiliser IBundleSupport.
-				
-				return;
-			}
-			
 			this.accept_reject_behavior = new Behaviors.AcceptRejectBehavior (this);
 			this.accept_reject_behavior.CreateButtons ();
 			
@@ -65,7 +54,7 @@ namespace Epsitec.Common.Widgets
 
 		
 		
-		[Bundle] public string					PlaceHolder
+		public string							PlaceHolder
 		{
 			get
 			{
@@ -333,7 +322,7 @@ namespace Epsitec.Common.Widgets
 		{
 			if (this.accept_reject_behavior != null)
 			{
-				this.margins.Right = this.mode == TextFieldExListMode.EditActive ? this.accept_reject_behavior.DefaultWidth : this.button.DefaultWidth;
+				this.margins.Right = this.mode == TextFieldExListMode.EditActive ? this.accept_reject_behavior.DefaultWidth : this.button.PreferredWidth;
 				this.accept_reject_behavior.UpdateButtonGeometry ();
 			}
 			

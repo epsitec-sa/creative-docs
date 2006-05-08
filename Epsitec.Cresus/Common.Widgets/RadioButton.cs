@@ -3,7 +3,6 @@
 
 namespace Epsitec.Common.Widgets
 {
-	using BundleAttribute  = Support.BundleAttribute;
 	using ContentAlignment = Drawing.ContentAlignment;
 	
 	/// <summary>
@@ -32,20 +31,13 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public override double					DefaultHeight
+		static RadioButton()
 		{
-			get
-			{
-				return System.Math.Ceiling (this.DefaultFontHeight + 1);
-			}
-		}
-
-		public override ContentAlignment		DefaultAlignment
-		{
-			get
-			{
-				return Drawing.ContentAlignment.MiddleLeft;
-			}
+			Helpers.VisualPropertyMetadata metadataAlign = new Helpers.VisualPropertyMetadata (Drawing.ContentAlignment.MiddleLeft, Helpers.VisualPropertyMetadataOptions.AffectsTextLayout);
+			Helpers.VisualPropertyMetadata metadataDy = new Helpers.VisualPropertyMetadata (Widget.DefaultFontHeight+1, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
+			
+			Visual.ContentAlignmentProperty.OverrideMetadata (typeof (RadioButton), metadataAlign);
+			Visual.PreferredHeightProperty.OverrideMetadata (typeof (RadioButton), metadataDy);
 		}
 		
 		public Drawing.Point					LabelOffset
@@ -56,25 +48,27 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		
-		public override Drawing.Rectangle GetShapeBounds()
+
+		public override Drawing.Margins GetShapeMargins()
 		{
-			Drawing.Rectangle base_rect = base.GetShapeBounds ();
-			
-			if ((this.TextLayout == null) ||
-				(this.Text.Length == 0))
+			if ((this.TextLayout != null) &&
+				(this.Text.Length > 0))
 			{
-				return base_rect;
+				Drawing.Rectangle rect = this.TextLayout.StandardRectangle;
+				Drawing.Rectangle bounds = this.Client.Bounds;
+
+				rect.Offset (this.LabelOffset);
+				rect.Inflate (1, 1);
+				rect.Inflate (Widgets.Adorners.Factory.Active.GeometryRadioShapeMargins);
+
+				rect.MergeWith (bounds);
+
+				return new Drawing.Margins (bounds.Left - rect.Left, rect.Right - bounds.Right, rect.Top - bounds.Top, bounds.Bottom - rect.Bottom);
 			}
-			
-			Drawing.Rectangle text_rect = this.TextLayout.StandardRectangle;
-			
-			text_rect.Offset (this.LabelOffset);
-			text_rect.Inflate (1, 1);
-			text_rect.Inflate (Widgets.Adorners.Factory.Active.GeometryRadioShapeBounds);
-			base_rect.MergeWith (text_rect);
-			
-			return base_rect;
+			else
+			{
+				return base.GetShapeMargins ();
+			}
 		}
 
 		public override Drawing.Size GetBestFitSize()
@@ -98,13 +92,16 @@ namespace Epsitec.Common.Widgets
 		{
 			System.Diagnostics.Debug.Assert (this.TextLayout != null);
 			
-			Drawing.Point offset = this.LabelOffset;
-			
-			double dx = this.Client.Size.Width - offset.X;
-			double dy = this.Client.Size.Height;
-			
-			this.TextLayout.Alignment  = this.Alignment;
-			this.TextLayout.LayoutSize = new Drawing.Size (dx, dy);
+			if (this.IsActualGeometryValid)
+			{
+				Drawing.Point offset = this.LabelOffset;
+				
+				double dx = this.Client.Size.Width - offset.X;
+				double dy = this.Client.Size.Height;
+				
+				this.TextLayout.Alignment  = this.ContentAlignment;
+				this.TextLayout.LayoutSize = new Drawing.Size (dx, dy);
+			}
 		}
 		
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
@@ -114,7 +111,7 @@ namespace Epsitec.Common.Widgets
 			double y = (this.Client.Size.Height-RadioButton.RadioHeight) / 2;
 
 			Drawing.Rectangle rect  = new Drawing.Rectangle (0, y, RadioButton.RadioHeight, RadioButton.RadioHeight);
-			WidgetState       state = this.PaintState;
+			WidgetPaintState       state = this.PaintState;
 			
 			adorner.PaintRadio (graphics, rect, state);
 			adorner.PaintGeneralTextLayout (graphics, clipRect, this.LabelOffset, this.TextLayout, state, PaintTextStyle.RadioButton, TextDisplayMode.Default, this.BackColor);

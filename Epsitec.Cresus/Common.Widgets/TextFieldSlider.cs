@@ -7,15 +7,6 @@ namespace Epsitec.Common.Widgets
 	{
 		public TextFieldSlider()
 		{
-			if ( Support.ObjectBundler.IsBooting )
-			{
-				//	N'initialise rien, car cela prend passablement de temps... et de toute
-				//	manière, on n'a pas besoin de toutes ces informations pour pouvoir
-				//	utiliser IBundleSupport.
-				
-				return;
-			}
-			
 			this.slider = new Slider(this);
 			this.slider.HasFrame = false;
 			this.slider.ValueChanged += new Support.EventHandler(this.HandleSliderValueChanged);
@@ -97,8 +88,6 @@ namespace Epsitec.Common.Widgets
 		
 		protected override void UpdateGeometry()
 		{
-			this.margins.Bottom = TextFieldSlider.sliderHeight-AbstractTextField.FrameMargin;
-			
 			base.UpdateGeometry ();
 
 			if ( this.arrowUp == null )  return;
@@ -107,7 +96,7 @@ namespace Epsitec.Common.Widgets
 			Drawing.Rectangle rect = this.Client.Bounds;
 			rect.Width -= System.Math.Floor(rect.Height*adorner.GeometryUpDownWidthFactor)-1;
 			rect.Height = TextFieldSlider.sliderHeight;
-			this.slider.Bounds = rect;
+			this.slider.SetManualBounds(rect);
 		}
 
 		protected override void OnValueChanged()
@@ -119,6 +108,12 @@ namespace Epsitec.Common.Widgets
 			{
 				this.slider.Value = this.Value;
 			}
+		}
+
+		protected override void InitializeMargins()
+		{
+			base.InitializeMargins ();
+			this.margins.Bottom = TextFieldSlider.sliderHeight-AbstractTextField.FrameMargin;
 		}
 
 		

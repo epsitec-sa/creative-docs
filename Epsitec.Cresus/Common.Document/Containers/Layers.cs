@@ -7,7 +7,6 @@ namespace Epsitec.Common.Document.Containers
 	/// <summary>
 	/// La classe Containers.Layers contient tous les panneaux des calques.
 	/// </summary>
-	[SuppressBundleSupport]
 	public class Layers : Abstract
 	{
 		public Layers(Document document) : base(document)
@@ -166,7 +165,7 @@ namespace Epsitec.Common.Document.Containers
 
 			this.radioShowPrint = new RadioButton(this.radioGroupPrint);
 			this.radioShowPrint.Dock = DockStyle.Top;
-			this.radioShowPrint.Margins = new Margins(10, 10, 0, 0);
+			this.radioShowPrint.Margins = new Margins(10, 10, 0, 2);
 			this.radioShowPrint.Text = Res.Strings.Container.Layers.Button.PrintShow;
 			this.radioShowPrint.ActiveStateChanged += new EventHandler(this.HandleRadioPrintChanged);
 			this.radioShowPrint.Index = 1;
@@ -175,7 +174,7 @@ namespace Epsitec.Common.Document.Containers
 
 			this.radioDimmedPrint = new RadioButton(this.radioGroupPrint);
 			this.radioDimmedPrint.Dock = DockStyle.Top;
-			this.radioDimmedPrint.Margins = new Margins(10, 10, 0, 0);
+			this.radioDimmedPrint.Margins = new Margins(10, 10, 0, 2);
 			this.radioDimmedPrint.Text = Res.Strings.Container.Layers.Button.PrintDimmed;
 			this.radioDimmedPrint.ActiveStateChanged += new EventHandler(this.HandleRadioPrintChanged);
 			this.radioDimmedPrint.Index = 2;
@@ -184,7 +183,7 @@ namespace Epsitec.Common.Document.Containers
 
 			this.radioHidePrint = new RadioButton(this.radioGroupPrint);
 			this.radioHidePrint.Dock = DockStyle.Top;
-			this.radioHidePrint.Margins = new Margins(10, 10, 0, 0);
+			this.radioHidePrint.Margins = new Margins(10, 10, 0, 2);
 			this.radioHidePrint.Text = Res.Strings.Container.Layers.Button.PrintHide;
 			this.radioHidePrint.ActiveStateChanged += new EventHandler(this.HandleRadioPrintChanged);
 			this.radioHidePrint.Index = 3;
@@ -331,7 +330,7 @@ namespace Epsitec.Common.Document.Containers
 					else
 					{
 						StaticText st = new StaticText();
-						st.Alignment = (column==0) ? ContentAlignment.MiddleCenter : ContentAlignment.MiddleLeft;
+						st.ContentAlignment = (column==0) ? ContentAlignment.MiddleCenter : ContentAlignment.MiddleLeft;
 						st.Dock = DockStyle.Fill;
 						st.Margins = new Margins(4, 4, 0, 0);
 						this.table[column, row].Insert(st);

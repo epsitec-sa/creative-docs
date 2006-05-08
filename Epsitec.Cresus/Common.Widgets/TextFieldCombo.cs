@@ -26,8 +26,8 @@ namespace Epsitec.Common.Widgets
 			this.button.Name     = "Open";
 			this.button.Pressed += new MessageEventHandler (this.HandleButtonPressed);
 			
-			this.default_button_width = this.button.Width;
-			this.margins.Right        = this.button.Width;
+			this.default_button_width = this.button.PreferredWidth;
+			this.margins.Right        = this.button.PreferredWidth;
 		}
 		
 		public TextFieldCombo(Widget embedder) : this ()
@@ -184,7 +184,7 @@ namespace Epsitec.Common.Widgets
 			if (this.button != null)
 			{
 				this.margins.Right = this.button.Visibility ? this.default_button_width : 0;
-				this.button.Bounds = this.GetButtonBounds ();
+				this.button.SetManualBounds(this.GetButtonBounds());
 			}
 		}
 		
@@ -236,9 +236,11 @@ namespace Epsitec.Common.Widgets
 			
 			if (this.IsComboOpen == false)
 			{
-				if (this.SelectedIndexChanged != null)
+				EventHandler handler = (EventHandler) this.GetUserEventHandler("SelectedIndexChanged");
+
+				if (handler != null)
 				{
-					this.SelectedIndexChanged (this);
+					handler(this);
 				}
 			}
 		}
@@ -458,13 +460,13 @@ namespace Epsitec.Common.Widgets
 				this.scroll_list.ShowSelected (ScrollShowMode.Center);
 			}
 			
-			this.menu.Accepted += new Support.EventHandler (this.HandleMenuAccepted);
-			this.menu.Rejected += new Support.EventHandler (this.HandleMenuRejected);
+			this.menu.Accepted += new EventHandler (this.HandleMenuAccepted);
+			this.menu.Rejected += new EventHandler (this.HandleMenuRejected);
 			
 			if (this.scroll_list != null)
 			{
-				this.scroll_list.SelectedIndexChanged += new Support.EventHandler (this.HandleScrollerSelectedIndexChanged);
-				this.scroll_list.SelectionActivated   += new Support.EventHandler (this.HandleScrollListSelectionActivated);
+				this.scroll_list.SelectedIndexChanged += new EventHandler(this.HandleScrollerSelectedIndexChanged);
+				this.scroll_list.SelectionActivated   += new EventHandler(this.HandleScrollListSelectionActivated);
 			}
 			
 			this.StartEdition ();
@@ -489,13 +491,13 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 
-			this.menu.Accepted -= new Support.EventHandler (this.HandleMenuAccepted);
-			this.menu.Rejected -= new Support.EventHandler (this.HandleMenuRejected);
+			this.menu.Accepted -= new EventHandler(this.HandleMenuAccepted);
+			this.menu.Rejected -= new EventHandler(this.HandleMenuRejected);
 			
 			if (this.scroll_list != null)
 			{
-				this.scroll_list.SelectionActivated   -= new Support.EventHandler (this.HandleScrollListSelectionActivated);
-				this.scroll_list.SelectedIndexChanged -= new Support.EventHandler (this.HandleScrollerSelectedIndexChanged);
+				this.scroll_list.SelectionActivated   -= new EventHandler(this.HandleScrollListSelectionActivated);
+				this.scroll_list.SelectedIndexChanged -= new EventHandler(this.HandleScrollerSelectedIndexChanged);
 				
 				this.scroll_list.Dispose();
 				this.scroll_list = null;
@@ -536,7 +538,7 @@ namespace Epsitec.Common.Widgets
 		{
 			TextFieldComboMenu menu = new TextFieldComboMenu ();
 			
-			menu.MinWidth = this.Width;
+			menu.MinWidth = this.ActualWidth;
 			
 			this.scroll_list = new ScrollList ();
 			this.scroll_list.ScrollListStyle = ScrollListStyle.Menu;
@@ -554,9 +556,11 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void OnComboOpening(Support.CancelEventArgs e)
 		{
-			if (this.ComboOpening != null)
+			EventHandler<CancelEventArgs> handler = (EventHandler<CancelEventArgs>) this.GetUserEventHandler("ComboOpening");
+
+			if (handler != null)
 			{
-				this.ComboOpening (this, e);
+				handler(this, e);
 			}
 		}
 		
@@ -565,10 +569,12 @@ namespace Epsitec.Common.Widgets
 			System.Diagnostics.Debug.Assert (this.IsComboOpen == true);
 			
 			this.UpdateButtonVisibility ();
-			
-			if (this.ComboOpened != null)
+
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("ComboOpened");
+
+			if (handler != null)
 			{
-				this.ComboOpened (this);
+				handler(this);
 			}
 		}
 		
@@ -577,10 +583,12 @@ namespace Epsitec.Common.Widgets
 			System.Diagnostics.Debug.Assert (this.IsComboOpen == false);
 			
 			this.UpdateButtonVisibility ();
-			
-			if (this.ComboClosed != null)
+
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("ComboClosed");
+
+			if (handler != null)
 			{
-				this.ComboClosed (this);
+				handler(this);
 			}
 		}
 		
@@ -745,9 +753,19 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 		}
-		
-		
-		public event Support.EventHandler		SelectedIndexChanged;
+
+
+		public event EventHandler					SelectedIndexChanged
+		{
+			add
+			{
+				this.AddUserEventHandler("SelectedIndexChanged", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("SelectedIndexChanged", value);
+			}
+		}
 		#endregion
 		
 		#region CloseMode Enumeration
@@ -789,7 +807,7 @@ namespace Epsitec.Common.Widgets
 					this.menu.MaxSize = new Drawing.Size (this.menu.MaxWidth, max_height);
 					this.menu.AdjustSize ();
 					
-					size      = this.menu.Size;
+					size      = this.menu.ActualSize;
 					location  = pos;
 					animation = Animation.RollDown;
 				}
@@ -797,16 +815,16 @@ namespace Epsitec.Common.Widgets
 				{
 					//	Il faut dérouler le menu vers le haut.
 					
-					pos.Y += item.Height-2;
+					pos.Y += item.ActualHeight-2;
 					
 					max_height = working_area.Top - pos.Y;
 
 					this.menu.MaxSize = new Drawing.Size (this.menu.MaxWidth, max_height);
 					this.menu.AdjustSize ();
 					
-					pos.Y += this.menu.Height;
+					pos.Y += this.menu.ActualHeight;
 					
-					size      = this.menu.Size;
+					size      = this.menu.ActualSize;
 					location  = pos;
 					animation = Animation.RollUp;
 				}
@@ -825,10 +843,41 @@ namespace Epsitec.Common.Widgets
 		}
 		#endregion
 		
-		public event EventHandler<CancelEventArgs>	ComboOpening;
+		public event EventHandler<CancelEventArgs>	ComboOpening
+		{
+			add
+			{
+				this.AddUserEventHandler("ComboOpening", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("ComboOpening", value);
+			}
+		}
 		
-		public event EventHandler				ComboOpened;
-		public event EventHandler				ComboClosed;
+		public event EventHandler				ComboOpened
+		{
+			add
+			{
+				this.AddUserEventHandler("ComboOpened", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("ComboOpened", value);
+			}
+		}
+
+		public event EventHandler				ComboClosed
+		{
+			add
+			{
+				this.AddUserEventHandler("ComboClosed", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("ComboClosed", value);
+			}
+		}
 		
 		private Behaviors.SelectItemBehavior	select_item_behavior;
 		private ComboArrowMode					combo_arrow_mode		= ComboArrowMode.Open;

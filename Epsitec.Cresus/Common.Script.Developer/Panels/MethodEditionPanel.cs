@@ -69,8 +69,8 @@ namespace Epsitec.Common.Script.Developer.Panels
 			
 			panel.TabIndex      = 10;
 			panel.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
-			panel.Size = this.panel_size;
-			panel.Dock = DockStyle.Left;
+			panel.PreferredSize = this.panel_size;
+			panel.Dock          = DockStyle.Left;
 			
 			this.panel_proto = new MethodProtoPanel ();
 			this.panel_param = new ParameterInfoPanel ();

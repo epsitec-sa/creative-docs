@@ -297,10 +297,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 				Rectangle cell = rect;
 				graphics.Align(ref cell);
 
-				WidgetState state = this.PaintState;
+				WidgetPaintState state = this.PaintState;
 				if (this.cells[i].Selected)
 				{
-					state |= WidgetState.Selected;
+					state |= WidgetPaintState.Selected;
 				}
 				adorner.PaintCellBackground(graphics, cell, state);
 
@@ -319,15 +319,15 @@ namespace Epsitec.Common.Designer.MyWidgets
 				if (this.cells[i].State == CellState.Disabled)
 				{
 					graphics.AddFilledRectangle(cell);
-					graphics.RenderSolid(adorner.ColorText(WidgetState.None));
+					graphics.RenderSolid(adorner.ColorText(WidgetPaintState.None));
 				}
 
 				if (this.cells[i].TextLayout.Text != null)
 				{
-					state = WidgetState.Enabled;
+					state = WidgetPaintState.Enabled;
 					if (this.cells[i].Selected)
 					{
-						state |= WidgetState.Selected;
+						state |= WidgetPaintState.Selected;
 					}
 					Color color = adorner.ColorText(state);
 
@@ -387,37 +387,70 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected virtual void OnCellsQuantityChanged()
 		{
 			//	Génère un événement pour dire que le nombre de cellules a changé.
-			if (this.CellsQuantityChanged != null)  // qq'un écoute ?
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("CellsQuantityChanged");
+			if (handler != null)
 			{
-				this.CellsQuantityChanged(this);
+				handler(this);
 			}
 		}
 
-		public event Support.EventHandler CellsQuantityChanged;
+		public event Support.EventHandler CellsQuantityChanged
+		{
+			add
+			{
+				this.AddUserEventHandler("CellsQuantityChanged", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("CellsQuantityChanged", value);
+			}
+		}
 
 
 		protected virtual void OnDraggingCellSelectionChanged()
 		{
 			//	Génère un événement pour dire qu'une cellule a été sélectionnée.
-			if (this.DraggingCellSelectionChanged != null)  // qq'un écoute ?
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("DraggingCellSelectionChanged");
+			if (handler != null)
 			{
-				this.DraggingCellSelectionChanged(this);
+				handler(this);
 			}
 		}
 
-		public event Support.EventHandler DraggingCellSelectionChanged;
+		public event Support.EventHandler DraggingCellSelectionChanged
+		{
+			add
+			{
+				this.AddUserEventHandler("DraggingCellSelectionChanged", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("DraggingCellSelectionChanged", value);
+			}
+		}
 
 
 		protected virtual void OnFinalCellSelectionChanged()
 		{
 			//	Génère un événement pour dire qu'une cellule a été sélectionnée.
-			if (this.FinalCellSelectionChanged != null)  // qq'un écoute ?
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("FinalCellSelectionChanged");
+			if (handler != null)
 			{
-				this.FinalCellSelectionChanged(this);
+				handler(this);
 			}
 		}
 
-		public event Support.EventHandler FinalCellSelectionChanged;
+		public event Support.EventHandler FinalCellSelectionChanged
+		{
+			add
+			{
+				this.AddUserEventHandler("FinalCellSelectionChanged", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("FinalCellSelectionChanged", value);
+			}
+		}
 		#endregion
 
 

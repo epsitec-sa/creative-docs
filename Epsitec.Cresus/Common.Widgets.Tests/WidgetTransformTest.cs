@@ -15,9 +15,9 @@ namespace Epsitec.Common.Widgets
 			Window window = new Window ();
 			window.Text = "CheckWidgetTransform";
 			
-			TransformWidget a = new TransformWidget ();	a.Text = "A"; a.Bounds = new Rectangle (10, 10, 270, 200);
-			TransformWidget b = new TransformWidget (); b.Text = "B"; b.Bounds = new Rectangle (20, 20, 230, 160); //b.SetClientAngle (90);
-			TransformWidget c = new TransformWidget (); c.Text = "C"; c.Bounds = new Rectangle (20, 20, 120,  60); //c.SetClientAngle (-90);
+			TransformWidget a = new TransformWidget ();	a.Text = "A"; a.SetManualBounds(new Rectangle (10, 10, 270, 200));
+			TransformWidget b = new TransformWidget (); b.Text = "B"; b.SetManualBounds(new Rectangle (20, 20, 230, 160)); //b.SetClientAngle (90);
+			TransformWidget c = new TransformWidget (); c.Text = "C"; c.SetManualBounds(new Rectangle (20, 20, 120,  60)); //c.SetClientAngle (-90);
 			
 			a.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.TopAndBottom;
 			b.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.TopAndBottom;

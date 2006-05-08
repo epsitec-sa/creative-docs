@@ -26,7 +26,7 @@ namespace Epsitec.Common.Dialogs
 			button1.Text = "Ouvrir";
 			button1.Margins = new Margins (50, 0, 0, 50);
 			button1.Anchor = AnchorStyles.BottomLeft;
-			button1.Width = 100;
+			button1.PreferredWidth = 100;
 			button1.Clicked += new MessageEventHandler(this.button1_Clicked);
 			window.Root.Children.Add(button1);
 
@@ -34,7 +34,7 @@ namespace Epsitec.Common.Dialogs
 			button2.Text = "Enregistrer";
 			button2.Margins = new Margins (160, 0, 0, 50);
 			button2.Anchor = AnchorStyles.BottomLeft;
-			button2.Width = 100;
+			button2.PreferredWidth = 100;
 			button2.Clicked += new MessageEventHandler(this.button2_Clicked);
 			window.Root.Children.Add(button2);
 

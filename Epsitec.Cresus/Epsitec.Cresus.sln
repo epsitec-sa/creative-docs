@@ -143,6 +143,9 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Clipboard.Win32", "Common.Text.Exchange\Clipboard.Win32\ClipboardDll.vcproj", "{B4E1087F-2644-430B-A6D4-95B75D62398B}"
 EndProject
 Global
+	GlobalSection(DPCodeReviewSolutionGUID) = preSolution
+		DPCodeReviewSolutionGUID = {00000000-0000-0000-0000-000000000000}
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Debug|Mixed Platforms = Debug|Mixed Platforms
@@ -533,7 +536,6 @@ Global
 		{C3C59295-14DD-4AF7-B22A-0F8045DA671C}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{C3C59295-14DD-4AF7-B22A-0F8045DA671C}.Release|Win32.ActiveCfg = Release|Any CPU
 		{07E9B808-4ED7-4DAF-A550-CC69F03626B1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{07E9B808-4ED7-4DAF-A550-CC69F03626B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{07E9B808-4ED7-4DAF-A550-CC69F03626B1}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
 		{07E9B808-4ED7-4DAF-A550-CC69F03626B1}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
 		{07E9B808-4ED7-4DAF-A550-CC69F03626B1}.Debug|Win32.ActiveCfg = Debug|Any CPU
@@ -553,7 +555,6 @@ Global
 		{B92DB8DB-44A0-4DF4-A633-75B18922C614}.Release|Win32.ActiveCfg = Release
 		{B92DB8DB-44A0-4DF4-A633-75B18922C614}.Release|Win32.Build.0 = Release
 		{9FB52048-28B5-437B-B9B6-73B35148FAF8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9FB52048-28B5-437B-B9B6-73B35148FAF8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9FB52048-28B5-437B-B9B6-73B35148FAF8}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
 		{9FB52048-28B5-437B-B9B6-73B35148FAF8}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
 		{9FB52048-28B5-437B-B9B6-73B35148FAF8}.Debug|Win32.ActiveCfg = Debug|Any CPU
@@ -563,7 +564,6 @@ Global
 		{9FB52048-28B5-437B-B9B6-73B35148FAF8}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{9FB52048-28B5-437B-B9B6-73B35148FAF8}.Release|Win32.ActiveCfg = Release|Any CPU
 		{3E741450-319E-49CF-BFEC-35BE01CE0AFD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3E741450-319E-49CF-BFEC-35BE01CE0AFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3E741450-319E-49CF-BFEC-35BE01CE0AFD}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
 		{3E741450-319E-49CF-BFEC-35BE01CE0AFD}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
 		{3E741450-319E-49CF-BFEC-35BE01CE0AFD}.Debug|Win32.ActiveCfg = Debug|Any CPU
@@ -683,6 +683,7 @@ Global
 		{A70AD57E-0E80-48D7-8583-836C4758669D}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{A70AD57E-0E80-48D7-8583-836C4758669D}.Release|Win32.ActiveCfg = Release|Any CPU
 		{B4E1087F-2644-430B-A6D4-95B75D62398B}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{B4E1087F-2644-430B-A6D4-95B75D62398B}.Debug|Any CPU.Build.0 = Debug|Win32
 		{B4E1087F-2644-430B-A6D4-95B75D62398B}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
 		{B4E1087F-2644-430B-A6D4-95B75D62398B}.Debug|Mixed Platforms.Build.0 = Debug|Win32
 		{B4E1087F-2644-430B-A6D4-95B75D62398B}.Debug|Win32.ActiveCfg = Debug|Win32
@@ -695,8 +696,5 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(DPCodeReviewSolutionGUID) = preSolution
-		DPCodeReviewSolutionGUID = {00000000-0000-0000-0000-000000000000}
 	EndGlobalSection
 EndGlobal
