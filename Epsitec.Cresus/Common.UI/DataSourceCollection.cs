@@ -195,7 +195,14 @@ namespace Epsitec.Common.UI
 				throw new System.ArgumentException (string.Format ("Path '{0}' cannot be resolved", path));
 			}
 
-			return data.GetValue (StructuredTree.GetSubPath (path, 1));
+			if (name == path)
+			{
+				return record.Data;
+			}
+			else
+			{
+				return data.GetValue (StructuredTree.GetSubPath (path, 1));
+			}
 		}
 
 		/// <summary>
@@ -213,6 +220,10 @@ namespace Epsitec.Common.UI
 			if (data == null)
 			{
 				throw new System.ArgumentException (string.Format ("Path '{0}' cannot be resolved", path));
+			}
+			if (name == path)
+			{
+				throw new System.InvalidOperationException ("Use AddDataSource to add a data source, not SetValue");
 			}
 
 			data.SetValue (StructuredTree.GetSubPath (path, 1), value);

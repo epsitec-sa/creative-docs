@@ -69,6 +69,34 @@ namespace Epsitec.Common.UI
 				}
 			}
 		}
+		
+		[Test]
+		public void CheckSerializationContext()
+		{
+			DataSourceCollection collection = new DataSourceCollection ();
+
+			Widgets.Visual source1 = new Epsitec.Common.Widgets.Visual ();
+			Widgets.Visual source2 = new Epsitec.Common.Widgets.Visual ();
+
+			source1.Name = "Source1";
+			source2.Name = "Source2";
+
+			collection.AddDataSource ("B", source2);
+			collection.AddDataSource ("A", source1);
+
+			Types.Serialization.Context context = new Types.Serialization.Context ();
+
+			collection.FillSerializationContext (context);
+
+			Assert.AreEqual (2, context.ExternalMap.TagCount);
+			Assert.AreEqual ("A", Collection.ToArray<string> (context.ExternalMap.RecordedTags)[0]);
+			Assert.AreEqual ("B", Collection.ToArray<string> (context.ExternalMap.RecordedTags)[1]);
+
+			Assert.AreEqual (source1, context.ExternalMap.GetValue ("A"));
+			Assert.AreEqual (source2, context.ExternalMap.GetValue ("B"));
+			Assert.AreEqual (source1, collection.GetValue ("A"));
+			Assert.AreEqual (source2, collection.GetValue ("B"));
+		}
 
 		private class MySimpleDataSource : IStructuredData
 		{
