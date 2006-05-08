@@ -1,3 +1,4 @@
+using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.OpenType;
@@ -19,7 +20,7 @@ namespace Epsitec.Common.Document.Widgets
 
 			this.scroller = new VScroller(this);
 			this.scroller.IsInverted = true;  // zéro en haut
-			this.scroller.ValueChanged += new Epsitec.Common.Support.EventHandler(this.ScrollerValueChanged);
+			this.scroller.ValueChanged += new EventHandler(this.ScrollerValueChanged);
 			
 			this.samples = new Common.Document.Widgets.FontSample[0];
 		}
@@ -641,13 +642,24 @@ namespace Epsitec.Common.Document.Widgets
 		protected virtual void OnSelectionChanged()
 		{
 			//	Génère un événement pour dire que la fermeture est nécessaire.
-			if ( this.SelectionChanged != null )  // qq'un écoute ?
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("SelectionChanged");
+			if (handler != null)
 			{
-				this.SelectionChanged(this);
+				handler(this);
 			}
 		}
 
-		public event Support.EventHandler SelectionChanged;
+		public event EventHandler			SelectionChanged
+		{
+			add
+			{
+				this.AddUserEventHandler("SelectionChanged", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("SelectionChanged", value);
+			}
+		}
 
 		
 		protected double								sampleHeight = 30;
