@@ -593,6 +593,7 @@ namespace Epsitec.Common.Widgets
 				this.RemoveUserEventHandler ("Accepted", value);
 			}
 		}
+
 		public event EventHandler				Rejected
 		{
 			add

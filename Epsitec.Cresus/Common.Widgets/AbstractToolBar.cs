@@ -1,3 +1,5 @@
+using Epsitec.Common.Support;
+
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
@@ -109,14 +111,25 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void OnItemsChanged()
 		{
-			if (this.ItemsChanged != null)
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("ItemsChanged");
+			if (handler != null)
 			{
-				this.ItemsChanged (this);
+				handler(this);
 			}
 		}
 		
 		
-		public event Support.EventHandler	ItemsChanged;
+		public event EventHandler			ItemsChanged
+		{
+			add
+			{
+				this.AddUserEventHandler("ItemsChanged", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("ItemsChanged", value);
+			}
+		}
 		
 		private DockStyle					iconDockStyle;
 		protected Direction					direction;
