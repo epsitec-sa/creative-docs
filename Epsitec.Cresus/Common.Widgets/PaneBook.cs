@@ -1,3 +1,5 @@
+using Epsitec.Common.Support;
+
 namespace Epsitec.Common.Widgets
 {
 	public enum PaneBookStyle
@@ -721,14 +723,26 @@ namespace Epsitec.Common.Widgets
 		protected virtual void OnPaneSizeChanged()
 		{
 			//	Génère un événement pour dire qu'une taille a changé.
-			if ( this.PaneSizeChanged != null )  // qq'un écoute ?
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("PaneSizeChanged");
+			if (handler != null)
 			{
-				this.PaneSizeChanged(this);
+				handler(this);
 			}
 		}
 
 
-		public event Support.EventHandler PaneSizeChanged;
+		public event EventHandler			PaneSizeChanged
+		{
+			add
+			{
+				this.AddUserEventHandler("PaneSizeChanged", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("PaneSizeChanged", value);
+			}
+		}
+
 
 		
 		//	Dessine le groupe de panneaux.
@@ -794,7 +808,7 @@ namespace Epsitec.Common.Widgets
 			item.PaneButton.DragStarted += new MessageEventHandler(this.HandleSliderDragStarted);
 			item.PaneButton.DragMoved   += new MessageEventHandler(this.HandleSliderDragMoved);
 			item.PaneButton.DragEnded   += new MessageEventHandler(this.HandleSliderDragEnded);
-			item.RankChanged += new Support.EventHandler(this.HandlePageRankChanged);
+			item.RankChanged += new EventHandler(this.HandlePageRankChanged);
 			
 			item.GlyphButton.SetParent (this);
 			item.GlyphButton.Clicked += new MessageEventHandler(this.HandleGlyphButtonClicked);
@@ -809,7 +823,7 @@ namespace Epsitec.Common.Widgets
 			item.PaneButton.DragStarted -= new MessageEventHandler(this.HandleSliderDragStarted);
 			item.PaneButton.DragMoved   -= new MessageEventHandler(this.HandleSliderDragMoved);
 			item.PaneButton.DragEnded   -= new MessageEventHandler(this.HandleSliderDragEnded);
-			item.RankChanged -= new Support.EventHandler(this.HandlePageRankChanged);
+			item.RankChanged -= new EventHandler(this.HandlePageRankChanged);
 
 			item.GlyphButton.Clicked -= new MessageEventHandler(this.HandleGlyphButtonClicked);
 

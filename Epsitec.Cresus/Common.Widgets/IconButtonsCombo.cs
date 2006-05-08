@@ -409,18 +409,20 @@ namespace Epsitec.Common.Widgets
 			//	Ne notifie les changements d'index que lorsque le menu déroulant est fermé.
 			if ( this.IsComboOpen == false )
 			{
-				if ( this.SelectedIndexChanged != null )
+				EventHandler handler = (EventHandler) this.GetUserEventHandler("SelectedIndexChanged");
+				if (handler != null)
 				{
-					this.SelectedIndexChanged(this);
+					handler(this);
 				}
 			}
 		}
 
 		protected virtual void OnFirstIconChanged()
 		{
-			if ( this.FirstIconChanged != null )
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("FirstIconChanged");
+			if (handler != null)
 			{
-				this.FirstIconChanged(this);
+				handler(this);
 			}
 		}
 
@@ -621,29 +623,32 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void OnComboOpening(CancelEventArgs e)
 		{
-			if ( this.ComboOpening != null )
+			EventHandler<CancelEventArgs> handler = (EventHandler<CancelEventArgs>) this.GetUserEventHandler("ComboOpening");
+			if (handler != null)
 			{
-				this.ComboOpening(this, e);
+				handler(this, e);
 			}
 		}
 		
 		protected virtual void OnComboOpened()
 		{
 			System.Diagnostics.Debug.Assert(this.IsComboOpen == true);
-			
-			if ( this.ComboOpened != null )
+
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("ComboOpened");
+			if (handler != null)
 			{
-				this.ComboOpened(this);
+				handler(this);
 			}
 		}
 		
 		protected virtual void OnComboClosed()
 		{
 			System.Diagnostics.Debug.Assert(this.IsComboOpen == false);
-			
-			if ( this.ComboClosed != null )
+
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("ComboClosed");
+			if (handler != null)
 			{
-				this.ComboClosed(this);
+				handler(this);
 			}
 		}
 		
@@ -866,11 +871,66 @@ namespace Epsitec.Common.Widgets
 		#endregion
 
 
-		public event EventHandler<CancelEventArgs> ComboOpening;
-		public event EventHandler				ComboOpened;
-		public event EventHandler				ComboClosed;
-		public event EventHandler				SelectedIndexChanged;
-		public event EventHandler				FirstIconChanged;
+		public event EventHandler<CancelEventArgs> ComboOpening
+		{
+			add
+			{
+				this.AddUserEventHandler("ComboOpening", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("ComboOpening", value);
+			}
+		}
+
+		public event EventHandler				ComboOpened
+		{
+			add
+			{
+				this.AddUserEventHandler("ComboOpened", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("ComboOpened", value);
+			}
+		}
+
+		public event EventHandler				ComboClosed
+		{
+			add
+			{
+				this.AddUserEventHandler("ComboClosed", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("ComboClosed", value);
+			}
+		}
+
+		public event EventHandler				SelectedIndexChanged
+		{
+			add
+			{
+				this.AddUserEventHandler("SelectedIndexChanged", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("SelectedIndexChanged", value);
+			}
+		}
+
+		public event EventHandler				FirstIconChanged
+		{
+			add
+			{
+				this.AddUserEventHandler("FirstIconChanged", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("FirstIconChanged", value);
+			}
+		}
+
 		
 		protected static readonly double		menuWidth = 12;
 		protected bool							isLiveUpdateEnabled	= true;
