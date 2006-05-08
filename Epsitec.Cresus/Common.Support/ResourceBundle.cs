@@ -14,7 +14,7 @@ namespace Epsitec.Common.Support
 	/// Implémentation d'un ResourceBundle basé sur un stockage interne de
 	/// l'information sous forme XML DOM.
 	/// </summary>
-	public class ResourceBundle : System.ICloneable
+	public class ResourceBundle : System.ICloneable, Types.IResourceBoundSource
 	{
 		public static ResourceBundle Create(ResourceManager resource_manager)
 		{
@@ -1567,8 +1567,17 @@ namespace Epsitec.Common.Support
 			protected ResourceFieldType		type = ResourceFieldType.None;
 		}
 		#endregion
+
+		#region IResourceBoundSource Members
+
+		object Epsitec.Common.Types.IResourceBoundSource.GetValue(string id)
+		{
+			return this[id].Data;
+		}
+
+		#endregion
 		
-		public event EventHandler			FieldsChanged;
+		public event EventHandler FieldsChanged;
 		
 		protected string					name;
 		protected string					type;

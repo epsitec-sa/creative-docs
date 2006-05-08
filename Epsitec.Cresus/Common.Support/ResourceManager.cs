@@ -486,19 +486,40 @@ namespace Epsitec.Common.Support
 		}
 
 
-		public void Bind(Types.DependencyObject o, Types.DependencyProperty property, string id)
+		public void Bind(Types.DependencyObject targetObject, Types.DependencyProperty targetProperty, string resourceId)
 		{
-			this.Bind (o, property, id, ResourceLevel.Merged, this.culture);
+			this.Bind (targetObject, targetProperty, resourceId, ResourceLevel.Merged, this.culture);
 		}
 
-		public void Bind(Types.DependencyObject o, Types.DependencyProperty property, string id, ResourceLevel level, CultureInfo culture)
+		public void Bind(Types.DependencyObject targetObject, Types.DependencyProperty targetProperty, string resourceId, ResourceLevel level, CultureInfo culture)
 		{
-			ResourceBundle bundle = this.GetBundle (id, level, culture, 0);
-
-			if (bundle == null)
+			if (culture == null)
 			{
-				o.SetBinding (property, new Types.Binding ());
+				culture = this.culture;
 			}
+			
+			if ((targetObject == null) ||
+				(targetProperty == null) ||
+				(resourceId == null))
+			{
+				throw new System.ArgumentNullException ();
+			}
+			
+			string bundleName;
+			string fieldName;
+
+			if (ResourceBundle.SplitTarget (resourceId, out bundleName, out fieldName))
+			{
+				ResourceBundle bundle = this.GetBundle (bundleName, level, culture, 0);
+
+				if (bundle != null)
+				{
+					targetObject.SetBinding (targetProperty, new Types.Binding (Types.BindingMode.OneTime, bundle, fieldName));
+					return;
+				}
+			}
+
+			throw new System.ArgumentException (string.Format ("Cannot bind to ressource '{0}'", resourceId));
 		}
 
 		
