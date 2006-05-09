@@ -76,11 +76,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public override Margins GetShapeMargins()
-		{
-			return new Margins(0, 0, 0, 1);
-		}
-
 		protected override void UpdateClientGeometry()
 		{
 			//	Met à jour la géométrie de la case du menu.
@@ -97,12 +92,16 @@ namespace Epsitec.Common.Widgets
 			Rectangle rect = this.Client.Bounds;
 			WidgetPaintState state = this.PaintState;
 
-			if (this.ActiveState == ActiveState.Yes)
+			if (this.ActiveState != ActiveState.Yes)
 			{
-				rect.Bottom -= 1;
+				rect.Bottom += 1;
 			}
 
-			adorner.PaintRibbonButtonBackground(graphics, rect, state);
+			//?adorner.PaintRibbonButtonBackground(graphics, rect, state);
+			rect.Deflate(0.5);
+			graphics.AddRectangle(rect);
+			graphics.RenderSolid(Color.FromRgb(1,0,0));
+			rect.Inflate(0.5);
 
 			Point pos = new Point();
 			pos.X = (rect.Width-this.mainTextSize.Width)/2;
@@ -111,7 +110,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		public static readonly double	DefaultHeight = 25;
+		public static readonly double	DefaultHeight = 25+1;
 
 		protected double				marginHeader = 6;
 		protected Size					mainTextSize;

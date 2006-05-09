@@ -91,6 +91,38 @@ namespace Epsitec.Common.Widgets
 			p2s2.PreferredWidth = 100;
 			page2.Items.Add(p2s2);
 
+			//	Crée l'onglet 3.
+			RibbonPage page3 = new RibbonPage();
+			page3.RibbonTitle = "Edition";
+			page3.TabIndex = 2;
+			page3.TabNavigation = Widget.TabNavigationMode.ActivateOnTab | Widget.TabNavigationMode.ForwardToChildren | Widget.TabNavigationMode.ForwardOnly;
+			book.Items.Add(page3);
+
+			RibbonSection p3s1 = new RibbonSection();
+			p3s1.Title = "Lundi";
+			p3s1.PreferredWidth = 80;
+			page3.Items.Add(p3s1);
+
+			RibbonSection p3s2 = new RibbonSection();
+			p3s2.Title = "Mardi";
+			p3s2.PreferredWidth = 80;
+			page3.Items.Add(p3s2);
+
+			RibbonSection p3s3 = new RibbonSection();
+			p3s3.Title = "Mercredi";
+			p3s3.PreferredWidth = 80;
+			page3.Items.Add(p3s3);
+
+			RibbonSection p3s4 = new RibbonSection();
+			p3s4.Title = "Jeudi";
+			p3s4.PreferredWidth = 80;
+			page3.Items.Add(p3s4);
+
+			RibbonSection p3s5 = new RibbonSection();
+			p3s5.Title = "Vendredi";
+			p3s5.PreferredWidth = 80;
+			page3.Items.Add(p3s5);
+
 			book.ActivePage = page1;
 
 			Assert.IsFalse(window.IsVisible);
