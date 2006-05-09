@@ -307,12 +307,12 @@ namespace Epsitec.Common.Widgets
 				oldBook.items.Remove(item);
 			}
 
-			item.SetParent(this.pages);
+			item.SetEmbedder(this.pages);
 			item.Dock = DockStyle.Fill;
 			
 			System.Diagnostics.Debug.Assert(oldBook == this);
 
-			item.RibbonButton.SetParent(this.buttons);
+			item.RibbonButton.SetEmbedder(this.buttons);
 			item.RibbonButton.Dock = DockStyle.Left;
 			item.RibbonButton.Pressed += new MessageEventHandler(this.HandleRibbonButton);
 			item.RankChanged += new EventHandler(this.HandlePageRankChanged);
@@ -370,6 +370,7 @@ namespace Epsitec.Common.Widgets
 		{
 			public RibbonPageCollection(RibbonBook book) : base(book)
 			{
+				this.AutoEmbedding = false;
 			}
 
 			public new RibbonPage this[int index]
