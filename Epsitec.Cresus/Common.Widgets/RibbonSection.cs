@@ -10,8 +10,6 @@ namespace Epsitec.Common.Widgets
 	{
 		public RibbonSection()
 		{
-			this.PreferredWidth = this.DefaultWidth;
-			this.PreferredHeight = this.DefaultHeight;
 			this.title = new TextLayout();
 			this.title.DefaultFont     = this.DefaultFont;
 			this.title.DefaultFontSize = this.DefaultFontSize;
@@ -26,34 +24,6 @@ namespace Epsitec.Common.Widgets
 			base.Dispose(disposing);
 		}
 
-		
-		public virtual double DefaultWidth
-		{
-			//	Retourne la largeur standard.
-			get
-			{
-				return 8 + 22*2;
-			}
-		}
-
-		public virtual double DefaultHeight
-		{
-			//	Retourne la hauteur standard.
-			get
-			{
-				return this.LabelHeight + 8 + 22 + 5 + 22;
-			}
-		}
-
-		protected double LabelHeight
-		{
-			//	Retourne la hauteur pour le label supérieur.
-			get
-			{
-				return 14;
-			}
-		}
-
 
 		protected Rectangle UsefulZone
 		{
@@ -61,7 +31,7 @@ namespace Epsitec.Common.Widgets
 			get
 			{
 				Rectangle rect = this.Client.Bounds;
-				rect.Top -= this.LabelHeight;
+				rect.Top -= RibbonSection.LabelHeight;
 				rect.Deflate(4);
 				return rect;
 			}
@@ -80,13 +50,15 @@ namespace Epsitec.Common.Widgets
 
 			Rectangle rect = this.Client.Bounds;
 			WidgetPaintState state = this.PaintState;
-			adorner.PaintRibbonSectionBackground(graphics, rect, this.LabelHeight, state);
+			adorner.PaintRibbonSectionBackground(graphics, rect, RibbonSection.LabelHeight, state);
 
-			Point pos = new Point(rect.Left+3, rect.Top-this.LabelHeight);
-			this.title.LayoutSize = new Size(rect.Width-4, this.LabelHeight);
+			Point pos = new Point(rect.Left+3, rect.Top-RibbonSection.LabelHeight);
+			this.title.LayoutSize = new Size(rect.Width-4, RibbonSection.LabelHeight);
 			adorner.PaintRibbonSectionTextLayout(graphics, pos, this.title, state);
 		}
 
+
+		protected static readonly double	LabelHeight = 14;
 
 		protected TextLayout				title;
 		protected int						tabIndex = 0;

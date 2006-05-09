@@ -22,6 +22,14 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
+		static RibbonPage()
+		{
+			Helpers.VisualPropertyMetadata metadataHeight = new Helpers.VisualPropertyMetadata(RibbonPage.FixHeight, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
+			Visual.MinHeightProperty.OverrideMetadata(typeof(RibbonSection), metadataHeight);
+			Visual.PreferredHeightProperty.OverrideMetadata(typeof(RibbonSection), metadataHeight);
+		}
+
+		
 		public string							RibbonTitle
 		{
 			get
@@ -34,37 +42,10 @@ namespace Epsitec.Common.Widgets
 				if (this.ribbonButton.Text != value)
 				{
 					this.ribbonButton.Text = value;
-					if ( this.Book != null )
-					{
-						this.Book.UpdateButtons();
-					}
 				}
 			}
 		}
 
-		public Rectangle						TabBounds
-		{
-			get
-			{
-				return this.ribbonButton.ActualBounds;
-			}
-
-			set
-			{
-				this.ribbonButton.SetManualBounds(value);
-			}
-		}
-
-		public Size								TabSize
-		{
-			get
-			{
-				TextLayout tl = new TextLayout(this.ResourceManager);
-				tl.Text = this.ribbonButton.Text;
-				return tl.SingleLineSize;
-			}
-		}
-		
 		public RibbonButton						RibbonButton
 		{
 			get
@@ -82,20 +63,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public Direction						Direction
-		{
-			get
-			{
-				RibbonBook book = this.Book;
-				
-				if ( book == null )
-				{
-					return Direction.None;
-				}
-				
-				return book.Direction;
-			}
-		}
 		public int								Rank
 		{
 			get
@@ -143,7 +110,9 @@ namespace Epsitec.Common.Widgets
 			//	Dessine l'onglet.
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
 		}
-		
+
+
+		protected static readonly double		FixHeight = 14 + 8 + 22 + 5 + 22;
 
 		protected int							rank;
 		protected RibbonButton					ribbonButton;

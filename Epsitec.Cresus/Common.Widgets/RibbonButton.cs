@@ -42,6 +42,12 @@ namespace Epsitec.Common.Widgets
 		}
 
 
+		static RibbonButton()
+		{
+			Helpers.VisualPropertyMetadata metadataHeight = new Helpers.VisualPropertyMetadata(25, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
+			Visual.PreferredHeightProperty.OverrideMetadata(typeof(RibbonSection), metadataHeight);
+		}
+
 		
 		public override Margins GetShapeMargins()
 		{

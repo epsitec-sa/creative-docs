@@ -16,6 +16,12 @@ namespace Epsitec.Common.Widgets
 			this.InternalState &= ~InternalState.PossibleContainer;
 
 			this.TabNavigation = Widget.TabNavigationMode.ForwardTabActive;
+
+			this.buttons = new Widget(this);
+			this.buttons.Dock = DockStyle.Top;
+
+			this.pages = new Widget(this);
+			this.pages.Dock = DockStyle.Fill;
 		}
 		
 		public RibbonBook(Widget embedder) : this()
@@ -45,22 +51,15 @@ namespace Epsitec.Common.Widgets
 		
 		public override Margins GetInternalPadding()
 		{
-			return new Margins(2, 2, this.TabHeight + 2, 2);
+			return new Margins(2, 2, RibbonBook.TabHeight+2, 2);
 		}
+
 
 		public RibbonPageCollection			Items
 		{
 			get
 			{
 				return this.items;
-			}
-		}
-
-		public Direction					Direction
-		{
-			get
-			{
-				return this.direction;
 			}
 		}
 
@@ -105,14 +104,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public virtual double				TabHeight
-		{
-			get
-			{
-				return this.tabHeight;
-			}
-		}
-
 		
 		public void Clear()
 		{
@@ -154,12 +145,6 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
-		protected void UpdateDirection(Direction dir)
-		{
-			this.direction = dir;
-			this.Invalidate();
-		}
-		
 		protected void UpdateVisiblePages()
 		{
 			//	Met à jour la page visible. Toutes les autres sont cachées.
@@ -180,40 +165,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public void UpdateButtons()
-		{
-			//	Met à jour les boutons, en faisant disparaître les flèches si nécessaire.
-			this.UpdateRibbonButtons();
-		}
 
-		public void UpdateAfterChanges()
-		{
-			//	Met à jour les boutons après un changement (insertion ou suppression
-			//	d'un onglet, ou modification du texte d'un onglet).
-			this.UpdateButtons();
-		}
-
-		protected void UpdateRibbonButtons()
-		{
-			//	Met à jour tous les boutons des onglets.
-			if ( this.items == null )  return;
-			if ( this.items.Count == 0)  return;
-			
-			Rectangle rect = this.Client.Bounds;
-			rect.Bottom = rect.Top-this.TabHeight;
-
-			foreach (RibbonPage page in this.items)
-			{
-				Size size = page.TabSize;
-				double len = System.Math.Floor(size.Width+size.Height);
-
-				rect.Right = rect.Left+len;
-				page.TabBounds = rect;
-				rect.Left = rect.Right;
-			}
-		}
-
-		
 		protected virtual void HandlePageRankChanged(object sender)
 		{
 		}
@@ -238,17 +190,6 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		protected override void SetBoundsOverride(Rectangle oldRect, Rectangle newRect)
-		{
-			base.SetBoundsOverride(oldRect, newRect);
-			this.UpdateGeometry();
-		}
-		
-		protected void UpdateGeometry()
-		{
-			this.UpdateButtons();
-		}
-
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
 			//	Dessine le groupe d'onglets.
@@ -260,11 +201,11 @@ namespace Epsitec.Common.Widgets
 			Rectangle part = new Rectangle();
 
 			part = rect;
-			part.Bottom = part.Top-this.TabHeight;
+			part.Bottom = part.Top-RibbonBook.TabHeight;
 			//adorner.PaintTabBand(graphics, part, state, Direction.Down);
 			
 			part = rect;
-			part.Top -= this.TabHeight;
+			part.Top -= RibbonBook.TabHeight;
 			adorner.PaintTabFrame(graphics, part, state, Direction.Down);
 		}
 		
@@ -365,19 +306,18 @@ namespace Epsitec.Common.Widgets
 			{
 				oldBook.items.Remove(item);
 			}
-			
-			item.Anchor = AnchorStyles.All;
-			item.Margins = new Margins(0, 0, 0, 0);
+
+			item.SetParent(this.pages);
+			item.Dock = DockStyle.Fill;
 			
 			System.Diagnostics.Debug.Assert(oldBook == this);
 
-			item.RibbonButton.SetParent(this);
+			item.RibbonButton.SetParent(this.buttons);
+			item.RibbonButton.Dock = DockStyle.Left;
 			item.RibbonButton.Pressed += new MessageEventHandler(this.HandleRibbonButton);
 			item.RankChanged += new EventHandler(this.HandlePageRankChanged);
-			this.isRefreshNeeded = true;
 			
 			this.UpdateVisiblePages();
-			this.UpdateButtons();
 			this.OnPageCountChanged();
 		}
 
@@ -391,7 +331,6 @@ namespace Epsitec.Common.Widgets
 			
 			this.Children.Remove(item);
 			this.Children.Remove(item.RibbonButton);
-			this.isRefreshNeeded = true;
 			
 			if ( this.ActivePage == item )
 			{
@@ -409,7 +348,6 @@ namespace Epsitec.Common.Widgets
 		public void NotifyPostRemoval(Widget widget)
 		{
 			this.UpdateVisiblePages();
-			this.UpdateButtons();
 			this.OnPageCountChanged();
 		}
 		#endregion
@@ -477,11 +415,11 @@ namespace Epsitec.Common.Widgets
 		}
 
 
+		protected static readonly double	TabHeight = 28;
 
+		protected Widget					buttons;
+		protected Widget					pages;
 		private RibbonPageCollection		items;
 		private RibbonPage					activePage;
-		protected Direction					direction;
-		protected double					tabHeight = 20;
-		protected bool						isRefreshNeeded;
 	}
 }
