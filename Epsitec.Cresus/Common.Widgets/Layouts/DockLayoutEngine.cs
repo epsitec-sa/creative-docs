@@ -207,11 +207,11 @@ namespace Epsitec.Common.Widgets.Layouts
 			double min_oy = 0;
 			double max_ox = 0;
 			double max_oy = 0;
-			
-			double min_dx = 0;
-			double min_dy = 0;
-			double max_dx = double.PositiveInfinity;
-			double max_dy = double.PositiveInfinity;
+
+			double min_dx = min_size.Width;
+			double min_dy = min_size.Height;
+			double max_dx = max_size.Width;
+			double max_dy = max_size.Height;
 			
 			double fill_min_dx = 0;
 			double fill_min_dy = 0;
