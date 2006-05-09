@@ -17,7 +17,7 @@ namespace Epsitec.Common.Widgets
 			this.TabNavigation = Widget.TabNavigationMode.ForwardTabActive;
 
 			this.buttons = new Widget(this);
-			this.buttons.Padding = new Margins(0, 0, 2, 0);
+			this.buttons.Padding = new Margins(0, 0, RibbonBook.TopMargin, 0);
 			this.buttons.Dock = DockStyle.Top;
 
 			this.pages = new Widget(this);
@@ -404,11 +404,12 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		protected static readonly double	TabHeight = 28;
+		protected static readonly double	TopMargin = 3;
+		protected static readonly double	TabHeight = RibbonBook.TopMargin + RibbonButton.DefaultHeight;
 
 		protected Widget					buttons;
 		protected Widget					pages;
-		private RibbonPageCollection		items;
-		private RibbonPage					activePage;
+		protected RibbonPageCollection		items;
+		protected RibbonPage				activePage;
 	}
 }
