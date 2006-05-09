@@ -16,6 +16,8 @@ namespace Epsitec.Common.Widgets
 			this.ribbonButton.ContentAlignment = ContentAlignment.MiddleCenter;
 			
 			this.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
+
+			this.Padding = new Margins(3, 3, 3, 3);
 		}
 		
 		public RibbonPage(Widget embedder) : this()
@@ -133,6 +135,7 @@ namespace Epsitec.Common.Widgets
 			RibbonSection item = widget as RibbonSection;
 
 			item.SetEmbedder(this);
+			item.Margins = new Margins(0, 2, 0, 0);
 			item.Dock = DockStyle.Left;
 		}
 

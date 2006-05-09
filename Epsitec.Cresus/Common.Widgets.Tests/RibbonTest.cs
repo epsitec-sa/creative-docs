@@ -43,36 +43,36 @@ namespace Epsitec.Common.Widgets
 			//	Crée l'onglet 1.
 			RibbonPage page1 = new RibbonPage();
 			page1.RibbonTitle = "Principal";
-			page1.MinHeight = 71;
 			page1.TabIndex = 1;
 			page1.TabNavigation = Widget.TabNavigationMode.ActivateOnTab | Widget.TabNavigationMode.ForwardToChildren | Widget.TabNavigationMode.ForwardOnly;
 			book.Items.Add(page1);
 
-			RibbonSection s1p1 = new RibbonSection();
-			s1p1.MinHeight = 71;
-			s1p1.Title = "Rouge";
-			s1p1.PreferredWidth = 100;
-			page1.Items.Add(s1p1);
+			RibbonSection p1s1 = new RibbonSection();
+			p1s1.Title = "Rouge";
+			p1s1.PreferredWidth = 200;
+			page1.Items.Add(p1s1);
 
-			Button b1s1p1 = new Button(s1p1);
-			b1s1p1.Text = "A";
-			b1s1p1.PreferredWidth = 30;
-			b1s1p1.Dock = DockStyle.Left;
+			Button p1s1b1 = new Button(p1s1);
+			p1s1b1.Text = "A";
+			p1s1b1.PreferredWidth = 40;
+			p1s1b1.Margins = new Margins(0, 0, 0, 0);
+			p1s1b1.Dock = DockStyle.Left;
 
-			Button b2s1p1 = new Button(s1p1);
-			b2s1p1.Text = "B";
-			b2s1p1.PreferredWidth = 30;
-			b2s1p1.Dock = DockStyle.Left;
+			Button p1s1b2 = new Button(p1s1);
+			p1s1b2.Text = "B";
+			p1s1b2.PreferredWidth = 40;
+			p1s1b2.Margins = new Margins(5, 0, 0, 0);
+			p1s1b2.Dock = DockStyle.Left;
 
-			RibbonSection s2p1 = new RibbonSection();
-			s2p1.Title = "Vert";
-			s2p1.PreferredWidth = 100;
-			page1.Items.Add(s2p1);
+			RibbonSection p1s2 = new RibbonSection();
+			p1s2.Title = "Vert";
+			p1s2.PreferredWidth = 100;
+			page1.Items.Add(p1s2);
 
-			RibbonSection s3p1 = new RibbonSection();
-			s3p1.Title = "Bleu";
-			s3p1.PreferredWidth = 100;
-			page1.Items.Add(s3p1);
+			RibbonSection p1s3 = new RibbonSection();
+			p1s3.Title = "Bleu";
+			p1s3.PreferredWidth = 100;
+			page1.Items.Add(p1s3);
 
 			//	Crée l'onglet 2.
 			RibbonPage page2 = new RibbonPage();
@@ -81,15 +81,15 @@ namespace Epsitec.Common.Widgets
 			page2.TabNavigation = Widget.TabNavigationMode.ActivateOnTab | Widget.TabNavigationMode.ForwardToChildren | Widget.TabNavigationMode.ForwardOnly;
 			book.Items.Add(page2);
 
-			RibbonSection s1p2 = new RibbonSection();
-			s1p2.Title = "Lausanne";
-			s1p2.PreferredWidth = 150;
-			page2.Items.Add(s1p2);
+			RibbonSection p2s1 = new RibbonSection();
+			p2s1.Title = "Lausanne";
+			p2s1.PreferredWidth = 150;
+			page2.Items.Add(p2s1);
 
-			RibbonSection s2p2 = new RibbonSection();
-			s2p2.Title = "Genève";
-			s2p2.PreferredWidth = 100;
-			page2.Items.Add(s2p2);
+			RibbonSection p2s2 = new RibbonSection();
+			p2s2.Title = "Genève";
+			p2s2.PreferredWidth = 100;
+			page2.Items.Add(p2s2);
 
 			book.ActivePage = page1;
 

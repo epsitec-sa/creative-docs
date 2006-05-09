@@ -13,6 +13,8 @@ namespace Epsitec.Common.Widgets
 			this.title = new TextLayout();
 			this.title.DefaultFont     = this.DefaultFont;
 			this.title.DefaultFontSize = this.DefaultFontSize;
+
+			this.Padding = new Margins(5, 5, RibbonSection.LabelHeight+5, 5);
 		}
 		
 		protected override void Dispose(bool disposing)
@@ -64,7 +66,11 @@ namespace Epsitec.Common.Widgets
 
 			Rectangle rect = this.Client.Bounds;
 			WidgetPaintState state = this.PaintState;
-			adorner.PaintRibbonSectionBackground(graphics, rect, RibbonSection.LabelHeight, state);
+			//?adorner.PaintRibbonSectionBackground(graphics, rect, RibbonSection.LabelHeight, state);
+			rect.Deflate(0.5);
+			graphics.AddRectangle(rect);
+			graphics.RenderSolid(Color.FromBrightness(0));
+			rect.Inflate(0.5);
 
 			Point pos = new Point(rect.Left+3, rect.Top-RibbonSection.LabelHeight);
 			this.title.LayoutSize = new Size(rect.Width-4, RibbonSection.LabelHeight);
@@ -75,8 +81,5 @@ namespace Epsitec.Common.Widgets
 		protected static readonly double	LabelHeight = 14;
 
 		protected TextLayout				title;
-		protected int						tabIndex = 0;
-		protected bool						ignoreChange = false;
-		protected double					separatorWidth = 8;
 	}
 }
