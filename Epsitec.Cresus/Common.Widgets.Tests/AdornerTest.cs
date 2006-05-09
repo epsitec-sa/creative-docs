@@ -1618,7 +1618,7 @@ namespace Epsitec.Common.Widgets
 
 
 		
-		protected static void CreateListLook(Widget parent, double mx, double my, ToolTip tooltip, int tab)
+		public static void CreateListLook(Widget parent, double mx, double my, ToolTip tooltip, int tab)
 		{
 			//	Crée la liste pour changer de look.
 			ScrollList sl = new ScrollList();

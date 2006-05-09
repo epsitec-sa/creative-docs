@@ -1,4 +1,3 @@
-using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
 using Epsitec.Common.Drawing;
 
@@ -18,7 +17,7 @@ namespace Epsitec.Common.Widgets
 			this.InternalState &= ~InternalState.Focusable;
 			this.InternalState &= ~InternalState.Engageable;
 
-			this.ContentAlignment = Drawing.ContentAlignment.MiddleLeft;
+			this.ContentAlignment = ContentAlignment.MiddleLeft;
 		}
 		
 		public RibbonButton(Widget embedder) : this()
@@ -44,7 +43,7 @@ namespace Epsitec.Common.Widgets
 
 
 		
-		public override Drawing.Margins GetShapeMargins()
+		public override Margins GetShapeMargins()
 		{
 			return Epsitec.Common.Widgets.Adorners.Factory.Active.GeometryRibbonShapeMargins;
 		}
@@ -58,19 +57,19 @@ namespace Epsitec.Common.Widgets
 			this.AdjustSize(ref this.mainTextSize);
 		}
 
-		protected void AdjustSize(ref Drawing.Size size)
+		protected void AdjustSize(ref Size size)
 		{
 			//	Ajuste des dimensions d'un TextLayout.
 			size.Width  = System.Math.Ceiling(size.Width);
 			size.Height = System.Math.Ceiling(size.Height);
 		}
 
-		public Drawing.Size RequiredSize
+		public Size RequiredSize
 		{
 			//	Retourne les dimensions requises en fonction du contenu.
 			get
 			{
-				Drawing.Size size = new Drawing.Size(0, 0);
+				Size size = new Size(0, 0);
 				size.Width = this.marginHeader*2 + this.mainTextSize.Width;
 				size.Height = this.mainTextSize.Height;
 				return size;
@@ -85,14 +84,14 @@ namespace Epsitec.Common.Widgets
 			if ( this.TextLayout != null )  this.TextLayout.LayoutSize = this.mainTextSize;
 		}
 
-		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
+		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
 			//	Dessine la case.
 			IAdorner adorner = Epsitec.Common.Widgets.Adorners.Factory.Active;
 
-			Drawing.Rectangle rect  = this.Client.Bounds;
-			WidgetPaintState       state = this.PaintState;
-			Drawing.Point     pos   = new Drawing.Point();
+			Rectangle rect = this.Client.Bounds;
+			WidgetPaintState state = this.PaintState;
+			Point pos = new Point();
 
 			adorner.PaintRibbonButtonBackground(graphics, rect, state);
 
@@ -103,6 +102,6 @@ namespace Epsitec.Common.Widgets
 
 
 		protected double			marginHeader = 6;
-		protected Drawing.Size		mainTextSize;
+		protected Size				mainTextSize;
 	}
 }

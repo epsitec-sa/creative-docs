@@ -18,7 +18,7 @@ namespace Epsitec.Common.Widgets
 
 		public override Drawing.Margins GetShapeMargins()
 		{
-			return new Drawing.Margins (2, 2, 2, 2);
+			return new Drawing.Margins(2, 2, 2, 2);
 		}
 
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
@@ -27,7 +27,7 @@ namespace Epsitec.Common.Widgets
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
 
 			Drawing.Rectangle rect  = this.Client.Bounds;
-			WidgetPaintState       state = this.PaintState;
+			WidgetPaintState  state = this.PaintState;
 			Drawing.Point     pos   = new Drawing.Point();
 
 			TabBook tabBook = this.Parent as TabBook;
@@ -49,7 +49,7 @@ namespace Epsitec.Common.Widgets
 				pos.Y -= 1;
 			}
 			
-			if (this.Text != "")
+			if ( this.Text != "" )
 			{
 				Drawing.Size size = this.Client.Size;
 				size.Width -= 4;
