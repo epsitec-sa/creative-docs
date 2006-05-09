@@ -410,11 +410,23 @@ namespace Epsitec.Common.Types
 		
 		private void InternalAttachToTarget()
 		{
-			this.targetObject.AddEventHandler (this.targetPropery, this.HandleTargetPropertyChanged);
+			switch (this.binding.Mode)
+			{
+				case BindingMode.OneWayToSource:
+				case BindingMode.TwoWay:
+					this.targetObject.AddEventHandler (this.targetPropery, this.HandleTargetPropertyChanged);
+					break;
+			}
 		}
 		private void InternalDetachFromTarget()
 		{
-			this.targetObject.RemoveEventHandler (this.targetPropery, this.HandleTargetPropertyChanged);
+			switch (this.binding.Mode)
+			{
+				case BindingMode.OneWayToSource:
+				case BindingMode.TwoWay:
+					this.targetObject.RemoveEventHandler (this.targetPropery, this.HandleTargetPropertyChanged);
+					break;
+			}
 		}
 
 		private void HandleSourcePropertyChanged(object sender, DependencyPropertyChangedEventArgs e)
