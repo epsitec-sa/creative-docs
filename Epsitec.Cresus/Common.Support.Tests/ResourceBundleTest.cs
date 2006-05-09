@@ -345,7 +345,8 @@ namespace Epsitec.Common.Support
 		{
 			ResourceBundle bundle = ResourceBundle.Create (Resources.DefaultManager, "test");
 			string test_string =
-				"<bundle name='test'>\r\n" +
+				"<?xml version='1.0' encoding='utf-8'?>\r\n" +
+				"<bundle name='test' culture='fr'>\r\n" +
 				"  <data name='a'>Aà</data>\r\n" +
 				"  <bundle name='b'>\r\n" +
 				"    <data name='a'>B:A</data>\r\n" +
@@ -354,7 +355,7 @@ namespace Epsitec.Common.Support
 				"</bundle>";
 			System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding ();
 			byte[] test_data = encoding.GetBytes (test_string);
-			
+
 			bundle.Compile (test_data);
 			
 			byte[] live_data = bundle.CreateXmlAsData ();
@@ -367,14 +368,15 @@ namespace Epsitec.Common.Support
 		{
 			ResourceBundle bundle = ResourceBundle.Create (Resources.DefaultManager);
 			string test_string = 
-				"<bundle name=\"&quot;test&quot;\" type='String'>\r\n" +
+				"<?xml version='1.0' encoding='utf-8'?>\r\n" +
+				"<bundle name=\"&quot;test&quot;\" type='String' culture='fr'>\r\n" +
 				"  <data name='a'>\r\n" +
 				"    <ref target='strings#label.OK' />\r\n" +
 				"  </data>\r\n" +
 				"</bundle>";
 			System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding ();
 			byte[] test_data = encoding.GetBytes (test_string);
-			
+
 			bundle.Compile (test_data);
 			
 			Assert.AreEqual ("\"test\"", bundle.Name);
@@ -392,14 +394,15 @@ namespace Epsitec.Common.Support
 		{
 			ResourceBundle bundle = ResourceBundle.Create (Resources.DefaultManager, "test");
 			string test_string = 
-				"<bundle name='test'>\r\n" +
+				"<?xml version='1.0' encoding='utf-8'?>\r\n" +
+				"<bundle name='test' culture='fr'>\r\n" +
 				"  <ref target='file:button.cancel' />\r\n" +
 				"</bundle>";
 			System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding ();
 			byte[] test_data = encoding.GetBytes (test_string);
 			
 			bundle.RefInclusionEnabled = false;
-			
+
 			bundle.Compile (test_data);
 			
 			byte[] live_data = bundle.CreateXmlAsData ();
@@ -415,9 +418,12 @@ namespace Epsitec.Common.Support
 		[Test] public void CheckCreateXmlNode4()
 		{
 			ResourceBundle bundle = ResourceBundle.Create (Resources.DefaultManager);
+
+			bundle.DefineCulture (Resources.FindCultureInfo ("fr"));
 			
 			string test_string = 
-				"<bundle name='test' type='String' about='Simple description...'>\r\n" +
+				"<?xml version='1.0' encoding='utf-8'?>\r\n" +
+				"<bundle name='test' type='String' about='Simple description...' culture='fr'>\r\n" +
 				"  <data name='a'>A</data>\r\n" +
 				"  <data name='b'>&lt;b&gt;B  B&lt;/b&gt;</data>\r\n" +
 				"  <data name='c'>\r\n" +
@@ -494,6 +500,9 @@ namespace Epsitec.Common.Support
 		
 		static void XmlDumpIfDifferent(byte[] a, byte[] b, ResourceBundle bundle)
 		{
+			a = ResourceBundleTest.RemoveUtf8Header (a);
+			b = ResourceBundleTest.RemoveUtf8Header (b);
+			
 			if (ResourceBundleTest.XmlTestEqual (a, b) == false)
 			{
 				bundle.CreateXmlDocument (false).Save (System.Console.Out);
@@ -504,9 +513,25 @@ namespace Epsitec.Common.Support
 				ResourceBundleTest.XmlDumpData (b);
 			}
 		}
+
+		static byte[] RemoveUtf8Header(byte[] a)
+		{
+			if ((a[0] == 0xef) &&
+				(a[1] == 0xbb) &&
+				(a[2] == 0xbf))
+			{
+				byte[] copy = new byte[a.Length-3];
+				System.Array.Copy (a, 3, copy, 0, a.Length-3);
+				a = copy;
+			}
+			return a;
+		}
 		
 		static bool XmlTestEqual(byte[] a, byte[] b)
 		{
+			a = ResourceBundleTest.RemoveUtf8Header (a);
+			b = ResourceBundleTest.RemoveUtf8Header (b);
+			
 			if (a.Length != b.Length)
 			{
 				return false;
