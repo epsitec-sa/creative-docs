@@ -25,8 +25,8 @@ namespace Epsitec.Common.Widgets
 		static RibbonPage()
 		{
 			Helpers.VisualPropertyMetadata metadataHeight = new Helpers.VisualPropertyMetadata(RibbonPage.FixHeight, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
-			Visual.MinHeightProperty.OverrideMetadata(typeof(RibbonSection), metadataHeight);
-			Visual.PreferredHeightProperty.OverrideMetadata(typeof(RibbonSection), metadataHeight);
+			Visual.MinHeightProperty.OverrideMetadata(typeof(RibbonPage), metadataHeight);
+			Visual.PreferredHeightProperty.OverrideMetadata(typeof(RibbonPage), metadataHeight);
 		}
 
 		
