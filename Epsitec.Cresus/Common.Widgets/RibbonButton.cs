@@ -45,29 +45,24 @@ namespace Epsitec.Common.Widgets
 		static RibbonButton()
 		{
 			Helpers.VisualPropertyMetadata metadataHeight = new Helpers.VisualPropertyMetadata(25, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
-			Visual.PreferredHeightProperty.OverrideMetadata(typeof(RibbonSection), metadataHeight);
+			Visual.PreferredHeightProperty.OverrideMetadata(typeof(RibbonButton), metadataHeight);
+			Visual.MinHeightProperty.OverrideMetadata(typeof(RibbonButton), metadataHeight);
 		}
 
 		
-		public override Margins GetShapeMargins()
-		{
-			return Epsitec.Common.Widgets.Adorners.Factory.Active.GeometryRibbonShapeMargins;
-		}
-
-
 		protected override void OnTextChanged()
 		{
+			//	Appelé lorsque le texte du bouton change.
 			base.OnTextChanged();
 			
 			this.mainTextSize = this.TextLayout.SingleLineSize;
-			this.AdjustSize(ref this.mainTextSize);
-		}
+			this.mainTextSize.Width  = System.Math.Ceiling(this.mainTextSize.Width);
+			this.mainTextSize.Height = System.Math.Ceiling(this.mainTextSize.Height);
 
-		protected void AdjustSize(ref Size size)
-		{
-			//	Ajuste des dimensions d'un TextLayout.
-			size.Width  = System.Math.Ceiling(size.Width);
-			size.Height = System.Math.Ceiling(size.Height);
+			Size required = this.RequiredSize;
+			required.Height = System.Math.Max(required.Height, this.MinHeight);
+			this.MinSize = required;
+			this.PreferredWidth = required.Width;
 		}
 
 		public Size RequiredSize
@@ -75,10 +70,9 @@ namespace Epsitec.Common.Widgets
 			//	Retourne les dimensions requises en fonction du contenu.
 			get
 			{
-				Size size = new Size(0, 0);
-				size.Width = this.marginHeader*2 + this.mainTextSize.Width;
-				size.Height = this.mainTextSize.Height;
-				return size;
+				double dx = this.marginHeader*2 + this.mainTextSize.Width;
+				double dy = this.mainTextSize.Height;
+				return new Size(dx, dy);
 			}
 		}
 

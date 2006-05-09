@@ -32,10 +32,10 @@ namespace Epsitec.Common.Widgets
 			tip.Behaviour = ToolTipBehaviour.Normal;
 
 			//	Crée le widget pour permettre de changer d'adorner.
-			AdornerTest.CreateListLook(window.Root, 10, 100, tip, 1);
+			AdornerTest.CreateListLook(window.Root, 10, 200, tip, 1);
 
 			RibbonBook book = new RibbonBook();
-			book.Anchor = AnchorStyles.Top;
+			book.Dock = DockStyle.Top;
 			book.TabIndex = 2;
 			book.TabNavigation = Widget.TabNavigationMode.ActivateOnTab | Widget.TabNavigationMode.ForwardToChildren;
 			window.Root.Children.Add(book);
@@ -43,6 +43,7 @@ namespace Epsitec.Common.Widgets
 			//	Crée l'onglet 1.
 			RibbonPage page1 = new RibbonPage();
 			page1.RibbonTitle = "Principal";
+			//?page1.MinHeight = 71;
 			page1.TabIndex = 1;
 			page1.TabNavigation = Widget.TabNavigationMode.ActivateOnTab | Widget.TabNavigationMode.ForwardToChildren | Widget.TabNavigationMode.ForwardOnly;
 			book.Items.Add(page1);

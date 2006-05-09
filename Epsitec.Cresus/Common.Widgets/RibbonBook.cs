@@ -11,13 +11,13 @@ namespace Epsitec.Common.Widgets
 		public RibbonBook()
 		{
 			this.items = new RibbonPageCollection(this);
-			this.items.AutoEmbedding = true;
 			
 			this.InternalState &= ~InternalState.PossibleContainer;
 
 			this.TabNavigation = Widget.TabNavigationMode.ForwardTabActive;
 
 			this.buttons = new Widget(this);
+			this.buttons.Padding = new Margins(0, 0, 2, 0);
 			this.buttons.Dock = DockStyle.Top;
 
 			this.pages = new Widget(this);
@@ -49,12 +49,6 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
-		public override Margins GetInternalPadding()
-		{
-			return new Margins(2, 2, RibbonBook.TabHeight+2, 2);
-		}
-
-
 		public RibbonPageCollection			Items
 		{
 			get
@@ -285,12 +279,6 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		public override Margins GetShapeMargins()
-		{
-			return Widgets.Adorners.Factory.Active.GeometryListShapeMargins;
-		}
-
-		
 		#region IWidgetCollectionHost Members
 		Collections.WidgetCollection Collections.IWidgetCollectionHost.GetWidgetCollection()
 		{
@@ -310,7 +298,7 @@ namespace Epsitec.Common.Widgets
 			item.SetEmbedder(this.pages);
 			item.Dock = DockStyle.Fill;
 			
-			System.Diagnostics.Debug.Assert(oldBook == this);
+			//?System.Diagnostics.Debug.Assert(oldBook == this);
 
 			item.RibbonButton.SetEmbedder(this.buttons);
 			item.RibbonButton.Dock = DockStyle.Left;
