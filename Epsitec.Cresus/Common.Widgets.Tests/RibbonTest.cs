@@ -13,7 +13,14 @@ namespace Epsitec.Common.Widgets
 			Epsitec.Common.Widgets.Adorners.Factory.SetActive("LookMetal");
 		}
 
-		[Test] public void CheckRibbonWidgets()
+		[Test]
+		public void AutomatedTestEnvironment()
+		{
+			Epsitec.Common.Widgets.Window.RunningInAutomatedTestEnvironment = true;
+		}
+
+		[Test]
+		public void CheckRibbonWidgets()
 		{
 			Window.RunInTestEnvironment(RibbonTest.CreateAdornerWidgets());
 		}
