@@ -103,10 +103,7 @@ namespace Epsitec.Common.Widgets
 			graphics.RenderSolid(Color.FromRgb(1,0,0));
 			rect.Inflate(0.5);
 
-			Point pos = new Point();
-			pos.X = (rect.Width-this.mainTextSize.Width)/2;
-			pos.Y = (rect.Height-this.mainTextSize.Height)/2;
-			adorner.PaintRibbonButtonTextLayout(graphics, pos, this.TextLayout, state);
+			adorner.PaintRibbonButtonTextLayout(graphics, rect, this.TextLayout, state, this.ActiveState);
 		}
 
 

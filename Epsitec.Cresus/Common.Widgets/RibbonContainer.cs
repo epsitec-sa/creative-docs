@@ -49,7 +49,7 @@ namespace Epsitec.Common.Widgets
 
 			Rectangle rect = this.Client.Bounds;
 			WidgetPaintState state = this.PaintState;
-			adorner.PaintRibbonTabBackground(graphics, rect, this.LabelHeight, state);
+			adorner.PaintRibbonTabBackground(graphics, rect, state);
 		}
 	}
 }

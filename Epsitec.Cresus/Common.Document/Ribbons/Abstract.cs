@@ -146,6 +146,7 @@ namespace Epsitec.Common.Document.Ribbons
 
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
+#if false
 			IAdorner adorner = Epsitec.Common.Widgets.Adorners.Factory.Active;
 
 			Rectangle rect = this.Client.Bounds;
@@ -155,6 +156,7 @@ namespace Epsitec.Common.Document.Ribbons
 			Point pos = new Point(rect.Left+3, rect.Top-this.LabelHeight);
 			this.title.LayoutSize = new Size(rect.Width-4, this.LabelHeight);
 			adorner.PaintRibbonSectionTextLayout(graphics, pos, this.title, state);
+#endif
 		}
 
 

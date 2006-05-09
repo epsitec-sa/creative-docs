@@ -1610,9 +1610,40 @@ namespace Epsitec.Common.Widgets.Adorners
 		{
 		}
 
+		public override void PaintRibbonTabBackground(Drawing.Graphics graphics,
+											 Drawing.Rectangle rect,
+											 WidgetPaintState state)
+		{
+			//	Dessine la bande principale d'un ruban.
+		}
+
+		public override void PaintRibbonTabForeground(Drawing.Graphics graphics,
+											 Drawing.Rectangle rect,
+											 WidgetPaintState state)
+		{
+			//	Dessine la bande principale d'un ruban.
+		}
+
+		public override void PaintRibbonPageBackground(Drawing.Graphics graphics,
+											 Drawing.Rectangle rect,
+											 WidgetPaintState state)
+		{
+			//	Dessine la bande principale d'un ruban.
+			graphics.AddFilledRectangle(rect);
+			graphics.RenderSolid(this.colorControlLightLight);
+		}
+
+		public override void PaintRibbonPageForeground(Drawing.Graphics graphics,
+											 Drawing.Rectangle rect,
+											 WidgetPaintState state)
+		{
+			//	Dessine la bande principale d'un ruban.
+		}
+
 		public override void PaintRibbonButtonBackground(Drawing.Graphics graphics,
 												Drawing.Rectangle rect,
-												WidgetPaintState state)
+												WidgetPaintState state,
+												ActiveState active)
 		{
 			//	Dessine le bouton pour un ruban.
 			if ( (state&WidgetPaintState.Entered) != 0 ||  // bouton survolé ?
@@ -1640,19 +1671,25 @@ namespace Epsitec.Common.Widgets.Adorners
 
 		public override void PaintRibbonButtonForeground(Drawing.Graphics graphics,
 												Drawing.Rectangle rect,
-												WidgetPaintState state)
+												WidgetPaintState state,
+												ActiveState active)
 		{
 			//	Dessine le bouton pour un ruban.
 		}
 
 		public override void PaintRibbonButtonTextLayout(Drawing.Graphics graphics,
-												Drawing.Point pos,
+												Drawing.Rectangle rect,
 												TextLayout text,
-												WidgetPaintState state)
+												WidgetPaintState state,
+												ActiveState active)
 		{
 			//	Dessine le texte d'un bouton du ruban.
 			if ( text == null )  return;
 			state &= ~WidgetPaintState.Focused;
+
+			Drawing.Point pos = new Drawing.Point();
+			pos.X = (rect.Width-text.LayoutSize.Width)/2;
+			pos.Y = (rect.Height-text.LayoutSize.Height)/2;
 
 			Drawing.Color color = Drawing.Color.Empty;
 			if ( (state&WidgetPaintState.ActiveYes) != 0 )  // bouton activé ?
@@ -1663,28 +1700,8 @@ namespace Epsitec.Common.Widgets.Adorners
 			text.Paint(pos, graphics, Drawing.Rectangle.MaxValue, color, Drawing.GlyphPaintStyle.Normal);
 		}
 
-		public override void PaintRibbonTabBackground(Drawing.Graphics graphics,
-											 Drawing.Rectangle rect,
-											 double titleHeight,
-											 WidgetPaintState state)
-		{
-			//	Dessine la bande principale d'un ruban.
-			rect.Top -= titleHeight;
-			graphics.AddFilledRectangle(rect);
-			graphics.RenderSolid(this.colorControlLightLight);
-		}
-
-		public override void PaintRibbonTabForeground(Drawing.Graphics graphics,
-											 Drawing.Rectangle rect,
-											 double titleHeight,
-											 WidgetPaintState state)
-		{
-			//	Dessine la bande principale d'un ruban.
-		}
-
 		public override void PaintRibbonSectionBackground(Drawing.Graphics graphics,
 												 Drawing.Rectangle rect,
-												 double titleHeight,
 												 WidgetPaintState state)
 		{
 			//	Dessine une section d'un ruban.
@@ -1695,14 +1712,13 @@ namespace Epsitec.Common.Widgets.Adorners
 
 		public override void PaintRibbonSectionForeground(Drawing.Graphics graphics,
 												 Drawing.Rectangle rect,
-												 double titleHeight,
 												 WidgetPaintState state)
 		{
 			//	Dessine une section d'un ruban.
 		}
 
 		public override void PaintRibbonSectionTextLayout(Drawing.Graphics graphics,
-												 Drawing.Point pos,
+												 Drawing.Rectangle rect,
 												 TextLayout text,
 												 WidgetPaintState state)
 		{
@@ -1710,6 +1726,8 @@ namespace Epsitec.Common.Widgets.Adorners
 			if ( text == null )  return;
 
 			Drawing.TextStyle.DefineDefaultColor(this.colorBlack);
+			Drawing.Point pos = new Drawing.Point(rect.Left+3, rect.Bottom);
+			text.LayoutSize = new Drawing.Size(rect.Width-4, rect.Height);
 			text.Alignment = Drawing.ContentAlignment.MiddleLeft;
 			text.Paint(pos, graphics, Drawing.Rectangle.MaxValue, Drawing.Color.FromBrightness(1), Drawing.GlyphPaintStyle.Normal);
 		}

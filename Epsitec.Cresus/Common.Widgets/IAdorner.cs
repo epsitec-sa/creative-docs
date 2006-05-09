@@ -99,14 +99,16 @@ namespace Epsitec.Common.Widgets
 		void PaintStatusItemBackground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetPaintState state);
 		void PaintStatusItemForeground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetPaintState state);
 
-		void PaintRibbonButtonBackground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetPaintState state);
-		void PaintRibbonButtonForeground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetPaintState state);
-		void PaintRibbonButtonTextLayout(Drawing.Graphics graphics, Drawing.Point pos, TextLayout text, WidgetPaintState state);
-		void PaintRibbonTabBackground(Drawing.Graphics graphics, Drawing.Rectangle rect, double titleHeight, WidgetPaintState state);
-		void PaintRibbonTabForeground(Drawing.Graphics graphics, Drawing.Rectangle rect, double titleHeight, WidgetPaintState state);
-		void PaintRibbonSectionBackground(Drawing.Graphics graphics, Drawing.Rectangle rect, double titleHeight, WidgetPaintState state);
-		void PaintRibbonSectionForeground(Drawing.Graphics graphics, Drawing.Rectangle rect, double titleHeight, WidgetPaintState state);
-		void PaintRibbonSectionTextLayout(Drawing.Graphics graphics, Drawing.Point pos, TextLayout text, WidgetPaintState state);
+		void PaintRibbonTabBackground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetPaintState state);
+		void PaintRibbonTabForeground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetPaintState state);
+		void PaintRibbonPageBackground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetPaintState state);
+		void PaintRibbonPageForeground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetPaintState state);
+		void PaintRibbonButtonBackground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetPaintState state, ActiveState active);
+		void PaintRibbonButtonForeground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetPaintState state, ActiveState active);
+		void PaintRibbonButtonTextLayout(Drawing.Graphics graphics, Drawing.Rectangle rect, TextLayout text, WidgetPaintState state, ActiveState active);
+		void PaintRibbonSectionBackground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetPaintState state);
+		void PaintRibbonSectionForeground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetPaintState state);
+		void PaintRibbonSectionTextLayout(Drawing.Graphics graphics, Drawing.Rectangle rect, TextLayout text, WidgetPaintState state);
 
 		void PaintTagBackground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetPaintState state, Drawing.Color color, Direction dir);
 		void PaintTagForeground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetPaintState state, Drawing.Color color, Direction dir);
