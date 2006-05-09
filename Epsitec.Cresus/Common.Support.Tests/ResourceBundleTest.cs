@@ -9,6 +9,25 @@ namespace Epsitec.Common.Support
 		{
 			Resources.SetupApplication ("test");
 		}
+
+		[Test]
+		public void CheckBinding()
+		{
+			ResourceManager manager = new ResourceManager (this.GetType ());
+			Widgets.Visual visual = new Epsitec.Common.Widgets.Visual ();
+
+			manager.ActiveCulture = Resources.FindCultureInfo ("fr");
+
+			Assert.AreEqual ("Réglages", manager.GetData ("file:strings#title.SettingsWindow", ResourceLevel.Localized, null));
+
+			manager.Bind (visual, Widgets.Visual.NameProperty, "file:strings#title.SettingsWindow");
+
+			Assert.AreEqual ("Réglages", visual.Name);
+
+			manager.ActiveCulture = Resources.FindCultureInfo ("en");
+
+			Assert.AreEqual ("Settings", visual.Name);
+		}
 		
 		[Test] public void CheckCompile()
 		{
