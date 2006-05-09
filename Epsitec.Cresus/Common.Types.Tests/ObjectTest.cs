@@ -210,6 +210,76 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual ("[Xyz]", myData2.Foo);
 		}
 
+		[Test]
+		public void CheckBinding4()
+		{
+			ResourceBoundData test = new ResourceBoundData ();
+
+			Binding binding1 = new Binding (BindingMode.OneTime, test, "Abc");
+			Binding binding2 = new Binding (BindingMode.OneTime, test, "Xyz");
+
+			MyObject myData1 = new MyObject ();
+			MyObject myData2 = new MyObject ();
+			MyObject myData3 = new MyObject ();
+
+			myData1.SetBinding (MyObject.NameProperty, binding1);
+			myData1.SetBinding (MyObject.FooProperty, binding2);
+			myData2.SetBinding (MyObject.NameProperty, binding1);
+			myData2.SetBinding (MyObject.FooProperty, binding2);
+			myData3.SetBinding (MyObject.NameProperty, binding1);
+			myData3.SetBinding (MyObject.FooProperty, binding2);
+
+			Assert.AreEqual ("[Abc]", myData1.Name);
+			Assert.AreEqual ("[Xyz]", myData1.Foo);
+			Assert.AreEqual ("[Abc]", myData2.Name);
+			Assert.AreEqual ("[Xyz]", myData2.Foo);
+			Assert.AreEqual ("[Abc]", myData3.Name);
+			Assert.AreEqual ("[Xyz]", myData3.Foo);
+
+			test.Suffix = "1";
+
+			binding1.UpdateTargets (BindingUpdateMode.Reset);
+			binding2.UpdateTargets (BindingUpdateMode.Default);
+
+			Assert.AreEqual ("[Abc1]", myData1.Name);
+			Assert.AreEqual ("[Xyz]", myData1.Foo);
+			Assert.AreEqual ("[Abc1]", myData2.Name);
+			Assert.AreEqual ("[Xyz]", myData2.Foo);
+			Assert.AreEqual ("[Abc1]", myData3.Name);
+			Assert.AreEqual ("[Xyz]", myData3.Foo);
+
+			myData3.ClearBinding (MyObject.NameProperty);
+			myData3.ClearBinding (MyObject.FooProperty);
+
+			test.Suffix = "2";
+
+			binding1.UpdateTargets (BindingUpdateMode.Reset);
+
+			Assert.AreEqual ("[Abc2]", myData1.Name);
+			Assert.AreEqual ("[Abc2]", myData2.Name);
+			Assert.AreEqual ("[Abc1]", myData3.Name);
+
+			myData2.ClearBinding (MyObject.NameProperty);
+
+			test.Suffix = "3";
+
+			binding1.UpdateTargets (BindingUpdateMode.Reset);
+
+			Assert.AreEqual ("[Abc3]", myData1.Name);
+			Assert.AreEqual ("[Abc2]", myData2.Name);
+			Assert.AreEqual ("[Abc1]", myData3.Name);
+
+			myData1.ClearBinding (MyObject.NameProperty);
+
+			test.Suffix = "4";
+
+			binding1.UpdateTargets (BindingUpdateMode.Reset);
+
+			Assert.AreEqual ("[Abc3]", myData1.Name);
+			Assert.AreEqual ("[Abc2]", myData2.Name);
+			Assert.AreEqual ("[Abc1]", myData3.Name);
+		}
+
 		private class ResourceBoundData : IResourceBoundSource
 		{
 			public string Suffix

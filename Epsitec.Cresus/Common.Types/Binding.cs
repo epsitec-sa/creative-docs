@@ -137,7 +137,7 @@ namespace Epsitec.Common.Types
 
 		public void UpdateTargets(BindingUpdateMode mode)
 		{
-			WeakBindingExpression[] expressions = this.expressions.ToArray ();
+			WeakBindingExpression[] expressions = this.GetExpressions ();
 
 			for (int i = 0; i < expressions.Length; i++)
 			{
@@ -145,12 +145,116 @@ namespace Epsitec.Common.Types
 
 				if (item == null)
 				{
-					this.expressions.Remove (expressions[i]);
+					this.RemoveExpression (expressions[i]);
 				}
 				else
 				{
 					item.UpdateTarget (mode);
 				}
+			}
+		}
+
+		private WeakBindingExpression[] GetExpressions()
+		{
+			switch (this.count)
+			{
+				case BindingCount.None:
+					return new WeakBindingExpression[0];
+				case BindingCount.Single:
+					return new WeakBindingExpression[1] { (WeakBindingExpression) this.expressions };
+				case BindingCount.Several:
+					return (WeakBindingExpression[]) this.expressions;
+			}
+
+			throw new System.InvalidOperationException ();
+		}
+
+		private void RemoveExpression(WeakBindingExpression expression)
+		{
+			WeakBindingExpression[] expressions;
+			
+			switch (this.count)
+			{
+				case BindingCount.None:
+					break;
+				
+				case BindingCount.Single:
+					this.expressions = null;
+					this.count = BindingCount.None;
+					break;
+				
+				case BindingCount.Several:
+					expressions = (WeakBindingExpression[]) this.expressions;
+					
+					if (expressions.Length > 2)
+					{
+						WeakBindingExpression[] copy = new WeakBindingExpression[expressions.Length-1];
+
+						for (int i = 0, j = 0; i < expressions.Length; i++)
+						{
+							if (expressions[i] != expression)
+							{
+								copy[j++] = expressions[i];
+							}
+						}
+						
+						this.expressions = copy;
+					}
+					else if (expressions.Length == 2)
+					{
+						if (expressions[0] == expression)
+						{
+							this.expressions = expressions[1];
+							this.count = BindingCount.Single;
+						}
+						else if (expressions[1] == expression)
+						{
+							this.expressions = expressions[0];
+							this.count = BindingCount.Single;
+						}
+						else
+						{
+							throw new System.InvalidOperationException ();
+						}
+					}
+					else
+					{
+						throw new System.InvalidOperationException ();
+					}
+					
+					break;
+				
+				default:
+					throw new System.InvalidOperationException ();
+			}
+		}
+		private void AddExpression(WeakBindingExpression expression)
+		{
+			WeakBindingExpression[] expressions;
+			WeakBindingExpression[] copy;
+			
+			switch (this.count)
+			{
+				case BindingCount.None:
+					this.expressions = expression;
+					this.count = BindingCount.Single;
+					break;
+				
+				case BindingCount.Single:
+					this.expressions = new WeakBindingExpression[2] { (WeakBindingExpression) this.expressions, expression };
+					this.count = BindingCount.Several;
+					break;
+				
+				case BindingCount.Several:
+					expressions = (WeakBindingExpression[]) this.expressions;
+					copy = new WeakBindingExpression[expressions.Length+1];
+					expressions.CopyTo (copy, 0);
+					copy[expressions.Length] = expression;
+					this.expressions = copy;
+					break;
+
+				default:
+					throw new System.InvalidOperationException ();
 			}
 		}
 		
@@ -160,11 +264,11 @@ namespace Epsitec.Common.Types
 			//	by the binding itself, which allows for the expression to be
 			//	garbage collected when its property dies.
 			
-			this.expressions.Add (new WeakBindingExpression (expression));
+			this.AddExpression (new WeakBindingExpression (expression));
 		}
 		internal void Remove(BindingExpression expression)
 		{
-			WeakBindingExpression[] expressions = this.expressions.ToArray ();
+			WeakBindingExpression[] expressions = this.GetExpressions ();
 			
 			for (int i = 0; i < expressions.Length; i++)
 			{
@@ -173,7 +277,7 @@ namespace Epsitec.Common.Types
 				if ((item == null) ||
 					(item == expression))
 				{
-					this.expressions.Remove (expressions[i]);
+					this.RemoveExpression (expressions[i]);
 				}
 			}
 		}
@@ -196,7 +300,7 @@ namespace Epsitec.Common.Types
 			{
 				this.state = State.SourceDetached;
 				
-				foreach (WeakBindingExpression item in this.expressions)
+				foreach (WeakBindingExpression item in this.GetExpressions ())
 				{
 					BindingExpression expression = item.Expression;
 
@@ -213,7 +317,7 @@ namespace Epsitec.Common.Types
 			{
 				this.state = State.SourceAttached;
 
-				foreach (WeakBindingExpression item in this.expressions)
+				foreach (WeakBindingExpression item in this.GetExpressions ())
 				{
 					BindingExpression expression = item.Expression;
 
@@ -272,14 +376,23 @@ namespace Epsitec.Common.Types
 		#endregion
 
 		#region Private State Enumeration
-		private enum State
+
+		private enum State : byte
 		{
 			Invalid,
 			
 			SourceAttached,
 			SourceDetached
 		}
+
 		#endregion
+
+		private enum BindingCount : byte
+		{
+			None,
+			Single,
+			Several
+		}
 
 		#region Private WeakBindingExpression Class
 
@@ -308,6 +421,7 @@ namespace Epsitec.Common.Types
 		private string							elementName;
 		private int								deferCounter;
 		private State							state = State.SourceDetached;
-		private List<WeakBindingExpression>		expressions = new List<WeakBindingExpression> ();
+		private BindingCount					count = BindingCount.None;
+		private object							expressions;
 	}
 }
