@@ -72,9 +72,8 @@ namespace Epsitec.Common.Widgets
 			graphics.RenderSolid(Color.FromBrightness(0));
 			rect.Inflate(0.5);
 
-			Point pos = new Point(rect.Left+3, rect.Top-RibbonSection.LabelHeight);
-			this.title.LayoutSize = new Size(rect.Width-4, RibbonSection.LabelHeight);
-			adorner.PaintRibbonSectionTextLayout(graphics, pos, this.title, state);
+			rect.Bottom = rect.Top-RibbonSection.LabelHeight;
+			adorner.PaintRibbonSectionTextLayout(graphics, rect, this.title, state);
 		}
 
 
