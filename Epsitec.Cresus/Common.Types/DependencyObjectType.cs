@@ -275,7 +275,7 @@ namespace Epsitec.Common.Types
 				{
 					if (infos[i].FieldType == typeof (DependencyProperty))
 					{
-						System.Diagnostics.Debug.WriteLine (string.Format ("Initialized type {0}", this.Name));
+//						System.Diagnostics.Debug.WriteLine (string.Format ("Initialized type {0}", this.Name));
 						infos[i].GetValue (null);
 						break;
 					}

@@ -375,7 +375,7 @@ namespace Epsitec.Common.Widgets
 		{
 			if (this.sync_suspend_count > 0)
 			{
-				System.Diagnostics.Debug.WriteLine ("SynchronousRepaint called recursively !");
+//				System.Diagnostics.Debug.WriteLine ("SynchronousRepaint called recursively !");
 				return;
 			}
 
@@ -1728,7 +1728,7 @@ namespace Epsitec.Common.Widgets
 
 				if (counter > 0)
 				{
-					System.Diagnostics.Debug.WriteLine (string.Format ("Arranged {0} widgets in {1} passes", context.TotalArrangeCount - total, counter));
+//					System.Diagnostics.Debug.WriteLine (string.Format ("Arranged {0} widgets in {1} passes", context.TotalArrangeCount - total, counter));
 				}
 			}
 			finally
