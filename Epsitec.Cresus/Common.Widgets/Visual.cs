@@ -1157,7 +1157,7 @@ namespace Epsitec.Common.Widgets
 			{
 				if (this.IsActualGeometryValid == false)
 				{
-					System.Diagnostics.Debug.WriteLine ("Layout dirty when calling Client.Bounds");
+//					System.Diagnostics.Debug.WriteLine ("Layout dirty when calling Client.Bounds");
 				}
 				
 				return new Drawing.Rectangle (0, 0, this.width, this.height);
@@ -1170,7 +1170,7 @@ namespace Epsitec.Common.Widgets
 			{
 				if (this.IsActualGeometryValid == false)
 				{
-					System.Diagnostics.Debug.WriteLine ("Layout dirty when calling Client.Size");
+//					System.Diagnostics.Debug.WriteLine ("Layout dirty when calling Client.Size");
 				}
 
 				return new Drawing.Size (this.width, this.height);
