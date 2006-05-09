@@ -129,6 +129,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="RibbonSection.cs" />
     <Compile Include="AbstractButton.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -322,6 +323,8 @@
     <Compile Include="Controllers\AbstractController.cs" />
     <Compile Include="ActiveState.cs" />
     <Compile Include="AbstractSplitter.cs" />
+    <Compile Include="RibbonBook.cs" />
+    <Compile Include="RibbonPage.cs" />
     <Compile Include="HSplitter.cs" />
     <Compile Include="VSplitter.cs" />
     <Compile Include="Helpers\IClientInfo.cs" />
