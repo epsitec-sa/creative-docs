@@ -31,33 +31,30 @@ namespace Epsitec.Common.Widgets
 			ToolTip tip = new ToolTip();
 			tip.Behaviour = ToolTipBehaviour.Normal;
 
-			AdornerTest.CreateListLook(window.Root, 10, 10, tip, 1);
+			//	Crée le widget pour permettre de changer d'adorner.
+			AdornerTest.CreateListLook(window.Root, 10, 100, tip, 1);
 
-
-			RibbonBook tab = new RibbonBook();
-			tab.Anchor = AnchorStyles.All;
-			tab.Margins = new Margins(100, 10, 10, 10);
-			tab.TabIndex = 2;
-			tab.TabNavigation = Widget.TabNavigationMode.ActivateOnTab | Widget.TabNavigationMode.ForwardToChildren;
-			window.Root.Children.Add(tab);
-
-			window.ForceLayout();
+			RibbonBook book = new RibbonBook();
+			book.Anchor = AnchorStyles.Top;
+			book.TabIndex = 2;
+			book.TabNavigation = Widget.TabNavigationMode.ActivateOnTab | Widget.TabNavigationMode.ForwardToChildren;
+			window.Root.Children.Add(book);
 
 			//	Crée l'onglet 1.
 			RibbonPage page1 = new RibbonPage();
 			page1.RibbonTitle = "Principal";
 			page1.TabIndex = 1;
 			page1.TabNavigation = Widget.TabNavigationMode.ActivateOnTab | Widget.TabNavigationMode.ForwardToChildren | Widget.TabNavigationMode.ForwardOnly;
-			tab.Items.Add(page1);
+			book.Items.Add(page1);
 
 			//	Crée l'onglet 2.
 			RibbonPage page2 = new RibbonPage();
 			page2.RibbonTitle = "Edition";
 			page2.TabIndex = 2;
 			page2.TabNavigation = Widget.TabNavigationMode.ActivateOnTab | Widget.TabNavigationMode.ForwardToChildren | Widget.TabNavigationMode.ForwardOnly;
-			tab.Items.Add(page2);
+			book.Items.Add(page2);
 
-			tab.ActivePage = page1;
+			book.ActivePage = page1;
 
 			Assert.IsFalse(window.IsVisible);
 			Assert.IsFalse(window.Root.IsVisible);
