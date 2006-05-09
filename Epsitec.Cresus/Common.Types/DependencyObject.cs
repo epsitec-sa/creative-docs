@@ -390,6 +390,11 @@ namespace Epsitec.Common.Types
 			{
 				this.ClearBinding (properties[i]);
 			}
+
+			if (this.bindings.Count == 0)
+			{
+				this.bindings = null;
+			}
 		}
 		public void ClearBinding(DependencyProperty property)
 		{

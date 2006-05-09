@@ -804,6 +804,13 @@ namespace Epsitec.Common.Support
 			this.bundleCache.Clear ();
 		}
 
+		public void TrimBindingCache()
+		{
+			foreach (BundleBindingProxy proxy in this.bindingProxies.Values)
+			{
+				proxy.TrimBindingCache ();
+			}
+		}
 
 
 		private void InternalInitialize()
@@ -960,15 +967,17 @@ namespace Epsitec.Common.Support
 
 			public void TrimBindingCache()
 			{
-				WeakBinding[] bindings = this.bindings.ToArray ();
-
-				for (int i = 0; i < bindings.Length; i++)
+				List<WeakBinding> clean = new List<WeakBinding> ();
+				
+				foreach (WeakBinding binding in this.bindings)
 				{
-					if (bindings[i].IsAlive == false)
+					if (binding.IsAlive)
 					{
-						this.bindings.Remove (bindings[i]);
+						clean.Add (binding);
 					}
 				}
+
+				this.bindings = clean;
 			}
 
 			#region IResourceBoundSource Members

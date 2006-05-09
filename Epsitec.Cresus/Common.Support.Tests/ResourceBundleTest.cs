@@ -55,8 +55,6 @@ namespace Epsitec.Common.Support
 
 			List<Widgets.Visual> list = new List<Epsitec.Common.Widgets.Visual> ();
 
-			System.Console.Out.WriteLine ("Ready");
-			System.Console.Out.Flush ();
 //			System.Threading.Thread.Sleep (10*1000);
 			
 			stopwatch.Reset ();
@@ -80,15 +78,14 @@ namespace Epsitec.Common.Support
 
 			stopwatch.Stop ();
 
-			System.Console.Out.WriteLine ("Done");
-			System.Console.Out.Flush ();
 //			System.Threading.Thread.Sleep (10*1000);
 
 			long memory3 = System.GC.GetTotalMemory (true);
 
 			System.Console.Out.WriteLine ("Created {0} bindings in {1} ms", max, stopwatch.ElapsedMilliseconds);
 			System.Console.Out.WriteLine ("Visual:  {0} bytes/instance", (memory2-memory1) / max);
-			System.Console.Out.WriteLine ("Binding: {0} bytes/instance", (memory3-memory2) / max); 
+			System.Console.Out.WriteLine ("Binding: {0} bytes/instance", (memory3-memory2) / max);
+			System.Console.Out.Flush ();
 
 			stopwatch.Reset ();
 			stopwatch.Start ();
@@ -129,7 +126,32 @@ namespace Epsitec.Common.Support
 			long memory4 = System.GC.GetTotalMemory (true);
 
 			System.Console.Out.WriteLine ("Memory delta after switches: {0}", memory4-memory3);
+			System.Console.Out.Flush ();
+//			System.Threading.Thread.Sleep (10*1000);
+			
+			for (int i = 0; i < max; i++)
+			{
+				visual = list[i];
+				visual.ClearAllBindings ();
+			}
 
+			long memory5 = System.GC.GetTotalMemory (true);
+
+			System.Console.Out.WriteLine ("Memory delta after ClearAllBindings: {0} bytes/instance", (memory5-memory4)/max);
+			System.Console.Out.Flush ();
+
+			System.GC.Collect ();
+			manager.TrimBindingCache ();
+			System.GC.Collect ();
+			
+			long memory6 = System.GC.GetTotalMemory (true);
+
+			System.Console.Out.WriteLine ("Total memory delta after TrimBindingCache & GC: {0} bytes/instance", (memory6-memory4)/max);
+			System.Console.Out.Flush ();
+
+			Assert.IsTrue (System.Math.Abs ((memory4-memory6)/max - (memory3-memory2)/max) < 2);
+			
+//			System.Threading.Thread.Sleep (10*1000);
 		}
 
 		[Test]
