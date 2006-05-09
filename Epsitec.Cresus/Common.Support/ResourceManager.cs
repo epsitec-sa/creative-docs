@@ -677,6 +677,11 @@ namespace Epsitec.Common.Support
 		
 		public object GetData(string id, ResourceLevel level, CultureInfo culture)
 		{
+			if (culture == null)
+			{
+				culture = this.culture;
+			}
+			
 			string bundle_name;
 			string field_name;
 			
