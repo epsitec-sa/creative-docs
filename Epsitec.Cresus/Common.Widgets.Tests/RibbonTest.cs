@@ -43,7 +43,6 @@ namespace Epsitec.Common.Widgets
 			//	Crée l'onglet 1.
 			RibbonPage page1 = new RibbonPage();
 			page1.RibbonTitle = "Principal";
-			//?page1.MinHeight = 71;
 			page1.TabIndex = 1;
 			page1.TabNavigation = Widget.TabNavigationMode.ActivateOnTab | Widget.TabNavigationMode.ForwardToChildren | Widget.TabNavigationMode.ForwardOnly;
 			book.Items.Add(page1);
