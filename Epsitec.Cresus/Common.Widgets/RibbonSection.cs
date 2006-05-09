@@ -6,7 +6,7 @@ namespace Epsitec.Common.Widgets
 	/// <summary>
 	/// La classe RibbonSection est la classe de base pour toutes les sections de rubans.
 	/// </summary>
-	public abstract class RibbonSection : Widget
+	public class RibbonSection : Widget
 	{
 		public RibbonSection()
 		{
@@ -22,6 +22,20 @@ namespace Epsitec.Common.Widgets
 			}
 			
 			base.Dispose(disposing);
+		}
+
+
+		public string						Title
+		{
+			get
+			{
+				return this.title.Text;
+			}
+
+			set
+			{
+				this.title.Text = value;
+			}
 		}
 
 

@@ -6,10 +6,12 @@ namespace Epsitec.Common.Widgets
 	/// <summary>
 	/// La classe RibbonPage représente une page du RibbonBook.
 	/// </summary>
-	public class RibbonPage : AbstractGroup
+	public class RibbonPage : AbstractGroup, Collections.IWidgetCollectionHost
 	{
 		public RibbonPage()
 		{
+			this.items = new RibbonSectionCollection(this);
+
 			this.ribbonButton = new RibbonButton(null);
 			this.ribbonButton.ContentAlignment = ContentAlignment.MiddleCenter;
 			
@@ -80,7 +82,15 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 		}
-		
+
+		public RibbonSectionCollection			Items
+		{
+			get
+			{
+				return this.items;
+			}
+		}
+
 		
 		public event EventHandler				RankChanged
 		{
@@ -112,9 +122,63 @@ namespace Epsitec.Common.Widgets
 		}
 
 
+		#region IWidgetCollectionHost Members
+		Collections.WidgetCollection Collections.IWidgetCollectionHost.GetWidgetCollection()
+		{
+			return this.Items;
+		}
+
+		public void NotifyInsertion(Widget widget)
+		{
+			RibbonSection item = widget as RibbonSection;
+
+			item.SetEmbedder(this);
+			item.Dock = DockStyle.Left;
+		}
+
+		public void NotifyRemoval(Widget widget)
+		{
+			RibbonSection item = widget as RibbonSection;
+
+			this.Children.Remove(item);
+		}
+
+		public void NotifyPostRemoval(Widget widget)
+		{
+		}
+		#endregion
+
+		#region RibbonSectionCollection Class
+		public class RibbonSectionCollection : Collections.WidgetCollection
+		{
+			public RibbonSectionCollection(RibbonPage page) : base(page)
+			{
+				this.AutoEmbedding = true;
+			}
+
+			public new RibbonSection this[int index]
+			{
+				get
+				{
+					return base[index] as RibbonSection;
+				}
+			}
+
+			public new RibbonSection this[string name]
+			{
+				get
+				{
+					return base[name] as RibbonSection;
+				}
+			}
+		}
+		#endregion
+
+		
 		protected static readonly double		FixHeight = 14 + 8 + 22 + 5 + 22;
 
 		protected int							rank;
 		protected RibbonButton					ribbonButton;
+		protected RibbonSectionCollection		items;
 	}
 }
