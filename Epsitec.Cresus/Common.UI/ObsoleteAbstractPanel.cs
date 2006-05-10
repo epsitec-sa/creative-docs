@@ -10,7 +10,7 @@ namespace Epsitec.Common.UI
 	/// <summary>
 	/// La classe AbstractPanel est la base de toutes les classes XyzPanel.
 	/// </summary>
-	public abstract class ObsoleteAbstractPanel : ICommandDispatcherHost, System.IDisposable
+	public abstract class ObsoleteAbstractPanel : System.IDisposable
 	{
 		public ObsoleteAbstractPanel()
 		{

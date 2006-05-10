@@ -9,7 +9,7 @@ namespace Epsitec.Common.Widgets
 	/// La classe ValidationRule représente des règles de validation
 	/// pour des commandes.
 	/// </summary>
-	public class ValidationRule : IValidator, ICommandDispatcherHost
+	public class ValidationRule : IValidator
 	{
 		internal ValidationRule(CommandDispatcher dispatcher) : this ("*", true)
 		{
@@ -188,16 +188,6 @@ namespace Epsitec.Common.Widgets
 				{
 					validator.MakeDirty (deep);
 				}
-			}
-		}
-		#endregion
-		
-		#region ICommandDispatcherHost Members
-		public IEnumerable<CommandDispatcher> GetCommandDispatchers()
-		{
-			if (this.dispatcher != null)
-			{
-				yield return this.dispatcher;
 			}
 		}
 		#endregion
@@ -661,6 +651,7 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void OnDispatcherDefined()
 		{
+#if false
 			foreach (object o in this.validators)
 			{
 				ICommandDispatcherHost cdh = o as ICommandDispatcherHost;
@@ -677,6 +668,7 @@ namespace Epsitec.Common.Widgets
 			}
 			
 			this.command_states.Compile (this.dispatcher);
+#endif
 		}
 		
 		

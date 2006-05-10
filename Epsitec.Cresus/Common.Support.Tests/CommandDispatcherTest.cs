@@ -200,6 +200,7 @@ namespace Epsitec.Common.Support
 		}
 		#endregion
 		
+#if false
 		#region MyCommandState Class
 		class MyCommandState : CommandState
 		{
@@ -226,6 +227,7 @@ namespace Epsitec.Common.Support
 
 		}
 		#endregion
+#endif
 		
 		#region XyzTestController classes
 		public class BaseTestController

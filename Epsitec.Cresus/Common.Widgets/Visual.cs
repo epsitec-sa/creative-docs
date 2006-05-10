@@ -15,7 +15,7 @@ namespace Epsitec.Common.Widgets
 	/// <summary>
 	/// Visual.
 	/// </summary>
-	public class Visual : Types.DependencyObject, ICommandDispatcherHost, Helpers.IClientInfo, System.IEquatable<Visual>
+	public class Visual : Types.DependencyObject, Helpers.IClientInfo, System.IEquatable<Visual>
 	{
 		public Visual()
 		{

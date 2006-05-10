@@ -620,7 +620,7 @@ namespace Epsitec.Common.Widgets.Helpers
 					VisualTree.GetDispatchers (list, parent);
 				}
 				
-				VisualTree.GetDispatchers (list, window.GetCommandDispatchers ());
+				VisualTree.GetDispatchers (list, CommandDispatcher.GetDispatcher (window));
 				window = window.Owner;
 			}
 		}

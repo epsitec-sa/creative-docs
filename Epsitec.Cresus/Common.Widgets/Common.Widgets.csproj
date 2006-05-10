@@ -414,9 +414,6 @@
     <Compile Include="ICommandDispatcher.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ICommandDispatcherHost.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="IconButton.cs">
       <SubType>Code</SubType>
     </Compile>

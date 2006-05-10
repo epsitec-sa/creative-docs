@@ -10,7 +10,7 @@ namespace Epsitec.Common.Dialogs
 	/// La classe Dialog permet d'ouvrir et de gérer un dialogue à partir d'une
 	/// ressource et d'une source de données.
 	/// </summary>
-	public class Dialog : AbstractDialog, ICommandDispatcherHost
+	public class Dialog : AbstractDialog
 	{
 		public Dialog(Support.ResourceManager resource_manager)
 		{
@@ -98,16 +98,6 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 		
-		
-		#region ICommandDispatcherHost Members
-		public IEnumerable<CommandDispatcher> GetCommandDispatchers()
-		{
-			if (this.dispatcher != null)
-			{
-				yield return this.dispatcher;
-			}
-		}
-		#endregion
 		
 		public static IDialogDesignerFactory	DesignerFactory
 		{

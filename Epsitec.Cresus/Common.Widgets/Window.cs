@@ -17,7 +17,7 @@ namespace Epsitec.Common.Widgets
 	/// n'est pas un widget en tant que tel: Window.Root définit le widget à la
 	/// racine de la fenêtre.
 	/// </summary>
-	public class Window : Types.DependencyObject, Support.Data.IContainer, ICommandDispatcherHost
+	public class Window : Types.DependencyObject, Support.Data.IContainer
 	{
 		public Window()
 		{
@@ -751,16 +751,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		
-		#region ICommandDispatcherHost Members
-		public IEnumerable<CommandDispatcher> GetCommandDispatchers()
-		{
-			if (this.dispatcher != null)
-			{
-				yield return this.dispatcher;
-			}
-		}
-		#endregion
 		
 		public bool								PreventAutoClose
 		{

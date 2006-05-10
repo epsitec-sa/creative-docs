@@ -12,7 +12,7 @@ namespace Epsitec.Common.Widgets
 	/// La classe CommandDispatcher permet de gérer la distribution des
 	/// commandes de l'interface graphique vers les routines de traitement.
 	/// </summary>
-	public class CommandDispatcher : DependencyObject, ICommandDispatcherHost
+	public class CommandDispatcher : DependencyObject
 	{
 		static CommandDispatcher()
 		{
@@ -604,7 +604,6 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		#region ICommandDispatcherHost Members
 		public IEnumerable<CommandDispatcher> GetCommandDispatchers()
 		{
 			if (this.master != null)
@@ -612,7 +611,6 @@ namespace Epsitec.Common.Widgets
 				yield return this.master;
 			}
 		}
-		#endregion
 		
 		protected virtual void AttachToMaster(CommandDispatcher master)
 		{
