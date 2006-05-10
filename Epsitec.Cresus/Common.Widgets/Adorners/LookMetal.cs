@@ -16,6 +16,7 @@ namespace Epsitec.Common.Widgets.Adorners
 			double r,g,b;
 
 			this.colorBlack             = Drawing.Color.FromName("WindowFrame");
+			this.colorWhite             = Drawing.Color.FromBrightness(1);
 			this.colorControl           = Drawing.Color.FromName("Control");
 			this.colorControlLight      = Drawing.Color.FromName("ControlLight");
 			this.colorControlLightLight = Drawing.Color.FromName("ControlLightLight");
@@ -617,15 +618,15 @@ namespace Epsitec.Common.Widgets.Adorners
 					{
 						if ( (state&WidgetPaintState.Engaged) != 0 )  // bouton pressé ?
 						{
-							this.PaintImageButton(graphics, rInside, 43);
+							this.PaintImageButton(graphics, rInside, 30);
 						}
 						else if ( (state&WidgetPaintState.Entered) != 0 )  // bouton survolé ?
 						{
-							this.PaintImageButton(graphics, rInside, 43);
+							this.PaintImageButton(graphics, rInside, 30);
 						}
 						else
 						{
-							this.PaintImageButton(graphics, rInside, 42);
+							this.PaintImageButton(graphics, rInside, 29);
 						}
 					}
 					else
@@ -1651,7 +1652,6 @@ namespace Epsitec.Common.Widgets.Adorners
 											 WidgetPaintState state)
 		{
 			//	Dessine la bande principale d'un ruban.
-			this.PaintImageButton(graphics, rect, 41);
 		}
 
 		public override void PaintRibbonTabForeground(Drawing.Graphics graphics,
@@ -1666,7 +1666,11 @@ namespace Epsitec.Common.Widgets.Adorners
 											 WidgetPaintState state)
 		{
 			//	Dessine la bande principale d'un ruban.
-			this.PaintImageButton(graphics, rect, 40);
+			this.PaintImageButton(graphics, rect, 44);
+
+			graphics.AddLine(rect.Left, rect.Top-0.5, rect.Right, rect.Top-0.5);
+			graphics.AddLine(rect.Left, rect.Bottom+0.5, rect.Right, rect.Bottom+0.5);
+			graphics.RenderSolid(this.colorBorder);
 		}
 
 		public override void PaintRibbonPageForeground(Drawing.Graphics graphics,
@@ -1682,19 +1686,17 @@ namespace Epsitec.Common.Widgets.Adorners
 												ActiveState active)
 		{
 			//	Dessine le bouton pour un ruban.
-			rect.Bottom -= 3;
-
 			if ( (state&WidgetPaintState.ActiveYes) != 0 )   // bouton activé ?
 			{
-				if ( (state&WidgetPaintState.Entered) != 0 )  // bouton survolé ?
+				if ((state&WidgetPaintState.Entered) != 0)  // bouton survolé ?
 				{
-					this.PaintImageButton(graphics, rect, 26);
+					this.PaintImageButton(graphics, rect, 41);
 				}
 				else
 				{
-					if ( (state&WidgetPaintState.Enabled) != 0 )
+					if ((state&WidgetPaintState.Enabled) != 0)
 					{
-						this.PaintImageButton(graphics, rect, 24);
+						this.PaintImageButton(graphics, rect, 40);
 					}
 					else
 					{
@@ -1715,34 +1717,15 @@ namespace Epsitec.Common.Widgets.Adorners
 			}
 			else
 			{
-				rect.Top -= 2;
-				rect.Left  += 1;
-				rect.Right -= 1;
+				rect.Bottom += 1;
+
 				if ( (state&WidgetPaintState.Entered) != 0 )  // bouton survolé ?
 				{
 					this.PaintImageButton(graphics, rect, 26);
-				}
-				else
-				{
-					if ( (state&WidgetPaintState.Enabled) != 0 )
-					{
-						this.PaintImageButton(graphics, rect, 25);
-					}
-					else
-					{
-						this.PaintImageButton(graphics, rect, 27);
-					}
-				}
 
-				Drawing.Path pTitle = this.PathTopCornerRectangle(rect);
-				graphics.Rasterizer.AddOutline(pTitle, 1);
-				if ( (state&WidgetPaintState.Enabled) != 0 )
-				{
+					Drawing.Path pTitle = this.PathTopCornerRectangle(rect);
+					graphics.Rasterizer.AddOutline(pTitle, 1);
 					graphics.RenderSolid(this.colorBorder);
-				}
-				else
-				{
-					graphics.RenderSolid(this.colorDisabled);
 				}
 			}
 		}
@@ -1767,13 +1750,8 @@ namespace Epsitec.Common.Widgets.Adorners
 			Drawing.Point pos = new Drawing.Point();
 			pos.X = (rect.Width-text.LayoutSize.Width)/2;
 			pos.Y = (rect.Height-text.LayoutSize.Height)/2;
-			if ( (state&WidgetPaintState.ActiveYes) == 0 )   // bouton désactivé ?
-			{
-				pos.Y -= 2;
-			}
-			state &= ~WidgetPaintState.Focused;
-			PaintTextStyle style = PaintTextStyle.HMenu;
-			this.PaintGeneralTextLayout(graphics, Drawing.Rectangle.MaxValue, pos, text, state, style, TextDisplayMode.Default, Drawing.Color.Empty);
+
+			text.Paint(pos, graphics, Drawing.Rectangle.MaxValue, this.colorBlack, Drawing.GlyphPaintStyle.Normal);
 		}
 
 		public override void PaintRibbonSectionBackground(Drawing.Graphics graphics,
@@ -1781,13 +1759,12 @@ namespace Epsitec.Common.Widgets.Adorners
 												 WidgetPaintState state)
 		{
 			//	Dessine une section d'un ruban.
+			rect.Bottom += 14;
+			this.PaintImageButton(graphics, rect, 23);
+
 			rect.Deflate(0.5);
-
-			graphics.AddLine(rect.Left, rect.Top, rect.Left, rect.Bottom);
-			graphics.RenderSolid(Drawing.Color.FromRgb(176.0/255.0, 185.0/255.0, 209.0/255.0));
-
-			graphics.AddLine(rect.Right, rect.Top, rect.Right, rect.Bottom);
-			graphics.RenderSolid(Drawing.Color.FromRgb(255.0/255.0, 255.0/255.0, 255.0/255.0));
+			graphics.AddRectangle(rect);
+			graphics.RenderSolid(this.colorBorder);
 		}
 
 		public override void PaintRibbonSectionForeground(Drawing.Graphics graphics,
@@ -1809,9 +1786,7 @@ namespace Epsitec.Common.Widgets.Adorners
 			Drawing.Point pos = new Drawing.Point(rect.Left+3, rect.Bottom);
 			text.LayoutSize = new Drawing.Size(rect.Width-4, rect.Height);
 			text.Alignment = Drawing.ContentAlignment.MiddleLeft;
-			//?text.Paint(new Drawing.Point(pos.X+2.0, pos.Y-1.5), graphics, Drawing.Rectangle.MaxValue, Drawing.Color.FromBrightness(0.5), Drawing.GlyphPaintStyle.Normal);
-			//?text.Paint(new Drawing.Point(pos.X+1.0, pos.Y-0.7), graphics, Drawing.Rectangle.MaxValue, Drawing.Color.FromBrightness(0.0), Drawing.GlyphPaintStyle.Normal);
-			text.Paint(pos, graphics, Drawing.Rectangle.MaxValue, Drawing.Color.FromBrightness(1), Drawing.GlyphPaintStyle.Normal);
+			text.Paint(pos, graphics, Drawing.Rectangle.MaxValue, this.colorWhite, Drawing.GlyphPaintStyle.Normal);
 		}
 
 		public override void PaintTagBackground(Drawing.Graphics graphics,
@@ -2191,11 +2166,11 @@ namespace Epsitec.Common.Widgets.Adorners
 			icon.Top    = 256-32*(rank/8);
 			icon.Bottom = icon.Top-32;
 
-			if ( rank == 16 || rank == 17 || rank == 19 || rank == 21 || rank == 28 || rank == 40 || rank == 41 || rank >= 48 )
+			if ( rank == 16 || rank == 17 || rank == 19 || rank == 21 || rank == 28 || rank >= 48 )
 			{
 				this.PaintImageButton1(graphics, rect, icon);
 			}
-			else if ( rank == 24 || rank == 25 || rank == 26 || rank == 27 || rank == 32 || rank == 33 || rank == 34 || rank == 35 )
+			else if ( rank == 24 || rank == 25 || rank == 26 || rank == 27 || rank == 32 || rank == 33 || rank == 34 || rank == 35  || rank == 40 || rank == 41 || rank == 42 || rank == 43 )
 			{
 				this.PaintImageButton9(graphics, rect, 5, icon, 5);
 			}
