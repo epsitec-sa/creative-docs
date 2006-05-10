@@ -1647,17 +1647,7 @@ namespace Epsitec.Common.Widgets.Adorners
 											 WidgetPaintState state)
 		{
 			//	Dessine la bande principale d'un ruban.
-			this.PaintBackground(graphics, rect, rect, 0.95, 16.0, false);
-
-			graphics.AddLine(rect.Left, rect.Bottom+0.5, rect.Right, rect.Bottom+0.5);
-			graphics.RenderSolid(this.ColorBorder);
-
-			if (this.metalRenderer)
-			{
-				rect.Bottom -= 10;
-				rect.Top    += 10;
-				this.PaintRectShadow(graphics, rect, 3, 0.4, 0.3, false);
-			}
+			this.PaintImageButton(graphics, rect, 75);
 		}
 
 		public override void PaintRibbonPageForeground(Drawing.Graphics graphics,
@@ -1677,7 +1667,7 @@ namespace Epsitec.Common.Widgets.Adorners
 			{
 				rect.Top -= 2;
 			}
-			rect.Bottom -= 2;
+			rect.Bottom += 1;
 
 			if ( (state&WidgetPaintState.Entered) != 0 )  // bouton survolé ?
 			{
@@ -1733,16 +1723,25 @@ namespace Epsitec.Common.Widgets.Adorners
 												 WidgetPaintState state)
 		{
 			//	Dessine une section d'un ruban.
+			this.PaintBackground(graphics, fullRect, fullRect, 0.95, 16.0, false);
+
 			fullRect.Deflate(0.5);
-			graphics.AddLine(fullRect.Right, fullRect.Top, fullRect.Right, fullRect.Bottom);
+			graphics.AddRectangle(fullRect);
 			graphics.RenderSolid(this.ColorBorder);
+
+			if (this.metalRenderer)
+			{
+				fullRect.Bottom -= 10;
+				fullRect.Top    += 10;
+				this.PaintRectShadow(graphics, fullRect, 3, 0.4, 0.3, false);
+			}
 
 			if (text != null)
 			{
 				Drawing.TextStyle.DefineDefaultColor(this.colorBlack);
-				Drawing.Point pos = new Drawing.Point(textRect.Left+3, textRect.Bottom);
+				Drawing.Point pos = new Drawing.Point(textRect.Left+3, textRect.Bottom+1);
 				text.LayoutSize = new Drawing.Size(textRect.Width-4, textRect.Height);
-				text.Alignment = Drawing.ContentAlignment.MiddleLeft;
+				text.Alignment = Drawing.ContentAlignment.MiddleCenter;
 				text.Paint(pos, graphics, Drawing.Rectangle.MaxValue, Drawing.Color.FromBrightness(0), Drawing.GlyphPaintStyle.Normal);
 			}
 		}
