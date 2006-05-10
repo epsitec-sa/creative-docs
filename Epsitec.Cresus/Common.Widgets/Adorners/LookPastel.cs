@@ -1535,6 +1535,8 @@ namespace Epsitec.Common.Widgets.Adorners
 												ActiveState active)
 		{
 			//	Dessine le bouton pour un ruban.
+			rect.Bottom -= 4;  // pour cacher la partie inférieure
+
 			if ( (state&WidgetPaintState.Entered) != 0 )  // bouton survolé ?
 			{
 				rect.Deflate(0.5);
@@ -1593,18 +1595,18 @@ namespace Epsitec.Common.Widgets.Adorners
 												 WidgetPaintState state)
 		{
 			//	Dessine une section d'un ruban.
-			fullRect.Deflate(0.5);
-			graphics.AddLine(fullRect.Right, fullRect.Top, fullRect.Right, fullRect.Bottom);
-			graphics.RenderSolid(this.ColorBorder);
-
 			Drawing.Color topColor    = Drawing.Color.FromRgb(138.0/255.0, 178.0/255.0, 231.0/255.0);
 			Drawing.Color bottomColor = Drawing.Color.FromRgb(168.0/255.0, 215.0/255.0, 252.0/255.0);
 			this.GradientRect(graphics, textRect, bottomColor, topColor, 0);
 
+			fullRect.Deflate(0.5);
+			graphics.AddRectangle(fullRect);
+			graphics.RenderSolid(this.ColorBorder);
+
 			if (text != null)
 			{
 				Drawing.TextStyle.DefineDefaultColor(this.colorBlack);
-				Drawing.Point pos = new Drawing.Point(textRect.Left+3, textRect.Bottom);
+				Drawing.Point pos = new Drawing.Point(textRect.Left+3, textRect.Bottom+1);
 				text.LayoutSize = new Drawing.Size(textRect.Width-4, textRect.Height);
 				text.Alignment = Drawing.ContentAlignment.MiddleLeft;
 				text.Paint(pos, graphics, Drawing.Rectangle.MaxValue, Drawing.Color.FromBrightness(0), Drawing.GlyphPaintStyle.Normal);
