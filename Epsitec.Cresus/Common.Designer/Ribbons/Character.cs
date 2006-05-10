@@ -11,6 +11,9 @@ namespace Epsitec.Common.Designer.Ribbons
 	{
 		public Character() : base()
 		{
+			this.Title = Res.Strings.Ribbon.Section.Character;
+			this.PreferredWidth = 8 + 22*4 + 5;
+
 			this.buttonBold       = this.CreateIconButton("FontBold");
 			this.buttonItalic     = this.CreateIconButton("FontItalic");
 			this.buttonUnderlined = this.CreateIconButton("FontUnderlined");
@@ -26,24 +29,6 @@ namespace Epsitec.Common.Designer.Ribbons
 			}
 			
 			base.Dispose(disposing);
-		}
-
-		protected override double DefaultWidth
-		{
-			//	Retourne la largeur standard.
-			get
-			{
-				return 8 + 22*4 + 5;
-			}
-		}
-
-		protected override string DefaultTitle
-		{
-			//	Retourne le titre standard.
-			get
-			{
-				return Res.Strings.Ribbon.Section.Character;
-			}
 		}
 
 
