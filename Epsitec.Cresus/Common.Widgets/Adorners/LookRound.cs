@@ -1533,9 +1533,6 @@ namespace Epsitec.Common.Widgets.Adorners
 											 WidgetPaintState state)
 		{
 			//	Dessine la bande principale d'un ruban.
-			Drawing.Rectangle header = rect;
-			graphics.AddFilledRectangle(header);
-			graphics.RenderSolid(this.colorControlLight);
 		}
 
 		public override void PaintRibbonTabForeground(Drawing.Graphics graphics,
@@ -1550,9 +1547,12 @@ namespace Epsitec.Common.Widgets.Adorners
 											 WidgetPaintState state)
 		{
 			//	Dessine la bande principale d'un ruban.
+			graphics.AddFilledRectangle(rect);
+			graphics.RenderSolid(this.colorControlLight);
+
 			graphics.AddLine(rect.Left, rect.Top-0.5, rect.Right, rect.Top-0.5);
 			graphics.AddLine(rect.Left, rect.Bottom+0.5, rect.Right, rect.Bottom+0.5);
-			graphics.RenderSolid(Drawing.Color.FromBrightness(0.5));
+			graphics.RenderSolid(this.colorControlDarkDark);
 		}
 
 		public override void PaintRibbonPageForeground(Drawing.Graphics graphics,
@@ -1570,7 +1570,6 @@ namespace Epsitec.Common.Widgets.Adorners
 			//	Dessine le bouton pour un ruban.
 			if ( (state&WidgetPaintState.ActiveYes) != 0 )   // bouton activé ?
 			{
-				rect.Bottom -= 3;
 				double radius = System.Math.Min(rect.Width, rect.Height)/8;
 				Drawing.Path pTitle = this.PathTopRoundRectangle(rect, radius);
 
@@ -1606,35 +1605,35 @@ namespace Epsitec.Common.Widgets.Adorners
 			}
 			else
 			{
-				rect.Bottom -= 2;
-				rect.Top -= 2;
-				rect.Left  += 1;
-				rect.Right -= 1;
-
-				double radius = System.Math.Min(rect.Width, rect.Height)/8;
-				Drawing.Path pTitle = this.PathTopRoundRectangle(rect, radius);
-
-				graphics.Rasterizer.AddSurface(pTitle);
-				graphics.RenderSolid(this.colorControl);
-
 				if ( (state&WidgetPaintState.Entered) != 0 )  // bouton survolé ?
 				{
+					rect.Top    -= 2;
+					rect.Bottom += 1;
+					rect.Left   += 1;
+					rect.Right  -= 1;
+
+					double radius = System.Math.Min(rect.Width, rect.Height)/8;
+					Drawing.Path pTitle = this.PathTopRoundRectangle(rect, radius);
+
+					graphics.Rasterizer.AddSurface(pTitle);
+					graphics.RenderSolid(this.colorControl);
+
 					Drawing.Rectangle rHilite = rect;
 					rHilite.Bottom = rHilite.Top-3;
 					Drawing.Path pHilite = this.PathTopRoundRectangle(rHilite, radius);
 					graphics.Rasterizer.AddSurface(pHilite);
 					graphics.RenderSolid(this.colorHilite);
-				}
 
-				graphics.Rasterizer.AddOutline(pTitle, 1);
-				pTitle.Dispose();
-				if ( (state&WidgetPaintState.Enabled) != 0 )
-				{
-					graphics.RenderSolid(this.colorControlDarkDark);
-				}
-				else
-				{
-					graphics.RenderSolid(this.colorControlDark);
+					graphics.Rasterizer.AddOutline(pTitle, 1);
+					pTitle.Dispose();
+					if ( (state&WidgetPaintState.Enabled) != 0 )
+					{
+						graphics.RenderSolid(this.colorControlDarkDark);
+					}
+					else
+					{
+						graphics.RenderSolid(this.colorControlDark);
+					}
 				}
 			}
 		}
@@ -1676,18 +1675,16 @@ namespace Epsitec.Common.Widgets.Adorners
 												 WidgetPaintState state)
 		{
 			//	Dessine une section d'un ruban.
-			fullRect.Deflate(0.5);
-			graphics.AddLine(fullRect.Right, fullRect.Top, fullRect.Right, fullRect.Bottom);
-			graphics.RenderSolid(Drawing.Color.FromBrightness(0.5));
-
-			textRect.Deflate(0.5);
-			graphics.AddLine(textRect.Right, textRect.Top, textRect.Right, textRect.Bottom);
-			graphics.RenderSolid(Drawing.Color.FromBrightness(0.75));
+			Drawing.Path pRect = this.PathRoundRectangle(fullRect, 4.0);
+			graphics.Rasterizer.AddOutline(pRect, 1);
+			pRect.Dispose();
+			graphics.AddLine(textRect.Left, textRect.Top+0.5, textRect.Right, textRect.Top+0.5);
+			graphics.RenderSolid(this.colorControlDarkDark);
 
 			if (text != null)
 			{
 				Drawing.TextStyle.DefineDefaultColor(this.colorBlack);
-				Drawing.Point pos = new Drawing.Point(textRect.Left+3, textRect.Bottom);
+				Drawing.Point pos = new Drawing.Point(textRect.Left+3, textRect.Bottom+2);
 				text.LayoutSize = new Drawing.Size(textRect.Width-4, textRect.Height);
 				text.Alignment = Drawing.ContentAlignment.MiddleCenter;
 				text.Paint(pos, graphics, Drawing.Rectangle.MaxValue, Drawing.Color.FromBrightness(0), Drawing.GlyphPaintStyle.Normal);
