@@ -189,19 +189,15 @@ namespace Epsitec.Common.Widgets
 		{
 			//	Dessine le groupe d'onglets.
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
+			Rectangle rect;
 
-			Rectangle rect = this.Client.Bounds;
-			WidgetPaintState state = this.PaintState;
+			rect = this.Client.Bounds;
+			rect.Bottom = rect.Top-RibbonBook.TabHeight;
+			adorner.PaintRibbonTabBackground(graphics, rect, this.PaintState);
 
-			Rectangle part = new Rectangle();
-
-			part = rect;
-			part.Bottom = part.Top-RibbonBook.TabHeight;
-			//adorner.PaintTabBand(graphics, part, state, Direction.Down);
-			
-			part = rect;
-			part.Top -= RibbonBook.TabHeight;
-			adorner.PaintTabFrame(graphics, part, state, Direction.Down);
+			rect = this.Client.Bounds;
+			rect.Top -= RibbonBook.TabHeight;
+			adorner.PaintRibbonPageBackground(graphics, rect, this.PaintState);
 		}
 		
 		protected override void ProcessMessage(Message message, Point pos)
