@@ -1547,11 +1547,12 @@ namespace Epsitec.Common.Widgets.Adorners
 											 WidgetPaintState state)
 		{
 			//	Dessine la bande principale d'un ruban.
-			graphics.AddFilledRectangle(rect);
+			Drawing.Path pRect = this.PathRoundRectangle(rect, 6.0);
+
+			graphics.Rasterizer.AddSurface(pRect);
 			graphics.RenderSolid(this.colorControlLight);
 
-			graphics.AddLine(rect.Left, rect.Top-0.5, rect.Right, rect.Top-0.5);
-			graphics.AddLine(rect.Left, rect.Bottom+0.5, rect.Right, rect.Bottom+0.5);
+			graphics.Rasterizer.AddOutline(pRect, 1);
 			graphics.RenderSolid(this.colorControlDarkDark);
 		}
 
