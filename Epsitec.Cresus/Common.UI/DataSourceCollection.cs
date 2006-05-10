@@ -217,6 +217,19 @@ namespace Epsitec.Common.UI
 			data.SetValue (StructuredTree.GetSubPath (path, 1), value);
 		}
 
+		/// <summary>
+		/// Gets a value indicating whether this instance has immutable roots.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this instance has immutable roots; otherwise, <c>false</c>.
+		/// </value>
+		public bool HasImmutableRoots
+		{
+			get
+			{
+				return true;
+			}
+		}
 		#endregion
 
 		/// <summary>
