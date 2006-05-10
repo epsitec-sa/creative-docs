@@ -7,7 +7,8 @@ using System.Collections.Generic;
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
-	/// La classe Placeholder représente un conteneur
+	/// La classe Placeholder représente un conteneur utilisé par des widgets
+	/// intelligents, remplis par data binding.
 	/// </summary>
 	public class Placeholder : AbstractGroup
 	{
