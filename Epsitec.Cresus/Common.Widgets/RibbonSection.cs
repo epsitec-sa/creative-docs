@@ -47,7 +47,7 @@ namespace Epsitec.Common.Widgets
 			get
 			{
 				Rectangle rect = this.Client.Bounds;
-				rect.Top -= RibbonSection.LabelHeight;
+				rect.Bottom += RibbonSection.LabelHeight;
 				rect.Deflate(4);
 				return rect;
 			}
