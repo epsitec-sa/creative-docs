@@ -16,9 +16,10 @@ namespace Epsitec.Common.Dialogs
 			this.dialog_title         = dialog_title;
 			this.command_yes_template = command_yes_template;
 			this.command_no_template  = command_no_template;
-			this.command_dispatcher   = command_dispatcher;
 			this.private_dispatcher   = new CommandDispatcher ("Dialog", CommandDispatcherLevel.Secondary);
 			this.private_dispatcher.RegisterController (this);
+
+			CommandDispatcher.SetDispatcher (this, command_dispatcher);
 		}
 		
 		
@@ -26,15 +27,6 @@ namespace Epsitec.Common.Dialogs
 		{
 			get;
 		}
-		
-		public CommandDispatcher				CommandDispatcher
-		{
-			get
-			{
-				return this.private_dispatcher;
-			}
-		}
-		
 		
 		protected abstract Widget CreateBodyWidget();
 		protected override void   CreateWindow()
@@ -103,7 +95,7 @@ namespace Epsitec.Common.Dialogs
 			
 			if (this.command_yes_template != null)
 			{
-				this.DispatchWindow.QueueCommand (this, string.Format (this.command_yes_template, this.CommandArgs), this.command_dispatcher);
+				this.DispatchWindow.QueueCommand (this, string.Format (this.command_yes_template, this.CommandArgs));
 			}
 			
 			this.CloseDialog ();
@@ -115,7 +107,7 @@ namespace Epsitec.Common.Dialogs
 			
 			if (this.command_no_template != null)
 			{
-				this.DispatchWindow.QueueCommand (this, string.Format (this.command_no_template, this.CommandArgs), this.command_dispatcher);
+				this.DispatchWindow.QueueCommand (this, string.Format (this.command_no_template, this.CommandArgs));
 			}
 			
 			this.CloseDialog ();

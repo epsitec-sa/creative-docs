@@ -2702,7 +2702,7 @@ namespace Epsitec.Common.Document
 				}
 				else
 				{
-					CommandState cs = cd[cmd];
+					CommandState cs = cd.FindCommandState(cmd);
 
 					IconButton button = new IconButton(cs.Name, Misc.Icon(cs.IconName), cs.Name);
 				
@@ -3058,7 +3058,7 @@ namespace Epsitec.Common.Document
 				if ( list.Contains(cmd) )  return;  // déjà dans la liste ?
 
 				CommandDispatcher cd = this.GetCommandDispatcher();
-				CommandState cs = cd[cmd];
+				CommandState cs = cd.FindCommandState(cmd);
 				if ( cs != null )
 				{
 					if ( !cs.Enable )  return;

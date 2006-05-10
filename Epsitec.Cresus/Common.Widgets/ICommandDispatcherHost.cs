@@ -11,6 +11,5 @@ namespace Epsitec.Common.Widgets
 	/// </summary>
 	public interface ICommandDispatcherHost
 	{
-		IEnumerable<CommandDispatcher> GetCommandDispatchers();
 	}
 }

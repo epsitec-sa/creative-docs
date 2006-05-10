@@ -4,6 +4,8 @@
 using Epsitec.Common.Support;
 using System.Collections.Generic;
 
+using Epsitec.Common.Types;
+
 namespace Epsitec.Common.Widgets
 {
 	using PropertyChangedEventHandler = Epsitec.Common.Support.EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>;
@@ -1576,25 +1578,25 @@ namespace Epsitec.Common.Widgets
 		#region QueueItem class
 		protected class QueueItem
 		{
-			public QueueItem(object source, string command, ICommandDispatcherHost dispatcher)
-			{
-				this.source      = source;
-				this.command     = command;
-				this.dispatchers = Types.Collection.ToArray<CommandDispatcher> (dispatcher.GetCommandDispatchers ());
-			}
-			
 			public QueueItem(Widget source)
 			{
 				this.source      = source;
 				this.command     = source.Command;
 				this.dispatchers = Helpers.VisualTree.GetAllDispatchers (source);
 			}
-			
-			public QueueItem(Widget source, CommandState command)
+
+			public QueueItem(Widget source, string command)
 			{
 				this.source      = source;
-				this.command     = command.Name;
+				this.command     = command;
 				this.dispatchers = Helpers.VisualTree.GetAllDispatchers (source);
+			}
+
+			public QueueItem(DependencyObject source, string command)
+			{
+				this.source      = source;
+				this.command     = command;
+				this.dispatchers = new CommandDispatcher[1] { CommandDispatcher.GetDispatcher (source) };
 			}
 			
 			
@@ -1636,20 +1638,31 @@ namespace Epsitec.Common.Widgets
 		
 		public void QueueCommand(Widget source, CommandState command)
 		{
-			this.QueueCommand (new QueueItem (source, command));
+			this.QueueCommand (new QueueItem (source, command.Name));
 		}
-		
+
+		public void QueueCommand(Widget source, string name)
+		{
+			this.QueueCommand (new QueueItem (source, name));
+		}
+
+		public void QueueCommand(DependencyObject source, string name)
+		{
+			this.QueueCommand (new QueueItem (source, name));
+		}
+
+#if false		
 		public void QueueCommand(object source, string command)
 		{
 			this.QueueCommand (source, command, this);
 		}
 		
-		public void QueueCommand(object source, string command, ICommandDispatcherHost dispatcher)
+		public void QueueCommand(object source, string command, DependencyObject dispatcherHost)
 		{
-			this.QueueCommand (new QueueItem (source, command, dispatcher));
+			this.QueueCommand (new QueueItem (source, command, dispatcherHost));
 		}
-		
-		
+#endif
+
 		protected void QueueCommand(QueueItem item)
 		{
 			this.cmd_queue.Enqueue (item);

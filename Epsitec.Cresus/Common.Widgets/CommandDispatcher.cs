@@ -4,13 +4,15 @@
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
 
+using Epsitec.Common.Types;
+
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
 	/// La classe CommandDispatcher permet de gérer la distribution des
 	/// commandes de l'interface graphique vers les routines de traitement.
 	/// </summary>
-	public class CommandDispatcher : System.IDisposable, ICommandDispatcherHost
+	public class CommandDispatcher : DependencyObject, ICommandDispatcherHost
 	{
 		static CommandDispatcher()
 		{
@@ -93,23 +95,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		
-		
-		public CommandState						this[string command_name]
-		{
-			get
-			{
-				foreach (CommandState state in this.command_states)
-				{
-					if (state.Name == command_name)
-					{
-						return state;
-					}
-				}
-				
-				return null;
-			}
-		}
 		
 		
 		public string							Name
@@ -367,8 +352,8 @@ namespace Epsitec.Common.Widgets
 			
 			//	Retourne un object CommandState pour le nom spécifié; si l'objet n'existe pas encore,
 			//	il sera créé dynamiquement.
-			
-			return this[name];
+
+			return CommandState.Find (name);
 		}
 		
 		public CommandState FindCommandState(Shortcut shortcut)
@@ -619,14 +604,6 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		#region IDisposable Members
-		public void Dispose()
-		{
-			this.Dispose (true);
-			System.GC.SuppressFinalize (this);
-		}
-		#endregion
-		
 		#region ICommandDispatcherHost Members
 		public IEnumerable<CommandDispatcher> GetCommandDispatchers()
 		{
@@ -646,7 +623,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		protected virtual void Dispose(bool disposing)
+		protected override void Dispose(bool disposing)
 		{
 			if (disposing)
 			{
@@ -665,6 +642,8 @@ namespace Epsitec.Common.Widgets
 					CommandDispatcher.local_list.Remove (this);
 				}
 			}
+			
+			base.Dispose (disposing);
 		}
 		
 		
@@ -933,7 +912,23 @@ namespace Epsitec.Common.Widgets
 		private static void OnFocusedPrimaryDispatcherChanged(CommandDispatcher old_value, CommandDispatcher new_value)
 		{
 		}
+
+		public static CommandDispatcher GetDispatcher(DependencyObject obj)
+		{
+			return (CommandDispatcher) obj.GetValue (CommandDispatcher.DispatcherProperty);
+		}
+
+		public static void SetDispatcher(DependencyObject obj, CommandDispatcher value)
+		{
+			obj.SetValue (CommandDispatcher.DispatcherProperty, value);
+		}
+
+		public static void ClearDispatcher(DependencyObject obj)
+		{
+			obj.ClearValueBase (CommandDispatcher.DispatcherProperty);
+		}
 		
+		public static readonly DependencyProperty DispatcherProperty = DependencyProperty.RegisterAttached ("Dispatcher", typeof (CommandDispatcher), typeof (CommandDispatcher));
 		
 		public event Support.EventHandler		ValidationRuleBecameDirty;
 		public event Support.EventHandler		OpletQueueBindingChanged;

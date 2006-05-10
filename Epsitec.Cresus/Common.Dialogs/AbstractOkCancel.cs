@@ -93,9 +93,9 @@ namespace Epsitec.Common.Dialogs
 		{
 			this.result = DialogResult.Accept;
 			
-			if (this.command_template != null)
+			if (! string.IsNullOrEmpty (this.command_template))
 			{
-				this.DispatchWindow.QueueCommand (this, string.Format (this.command_template, this.CommandArgs), this.command_dispatcher);
+				this.DispatchWindow.QueueCommand (this, string.Format (this.command_template, this.CommandArgs));
 			}
 			
 			this.CloseDialog ();

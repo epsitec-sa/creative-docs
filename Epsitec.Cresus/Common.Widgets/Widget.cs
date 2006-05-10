@@ -2808,7 +2808,7 @@ namespace Epsitec.Common.Widgets
 			
 			if (window != null)
 			{
-				window.QueueCommand (this, command, this);
+				window.QueueCommand (this, command);
 			}
 		}
 		
