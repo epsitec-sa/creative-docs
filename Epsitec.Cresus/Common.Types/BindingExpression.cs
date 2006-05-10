@@ -234,19 +234,28 @@ namespace Epsitec.Common.Types
 			if ((root != null) &&
 				(root != Binding.DoNothing))
 			{
-				if (root is IResourceBoundSource)
+				if ((path != null) &&
+					(path.Length > 0))
 				{
-					type = BindingSourceType.Resource;
+					if (root is IResourceBoundSource)
+					{
+						type = BindingSourceType.Resource;
+						
+						objectSource   = root;
+						objectProperty = path;
+
+						return true;
+					}
 				}
 				else
 				{
 					type = BindingSourceType.SourceItself;
+					
+					objectSource   = root;
+					objectProperty = null;
+
+					return true;
 				}
-				
-				objectSource = root;
-				objectProperty = path;
-				
-				return true;
 			}
 			
 			return false;
@@ -272,6 +281,39 @@ namespace Epsitec.Common.Types
 			else
 			{
 				this.ClearDataContext ();
+			}
+
+			if ((path != null) &&
+				(path.Length > 0))
+			{
+				if (source is DependencyObject)
+				{
+					//	We walk DependencyObjects in the caller, ie in FindDataSource.
+				}
+				else if (source is IStructuredData)
+				{
+					//	A DependencyObject is an IStructuredData, so we must first
+					//	check for the DependencyObject type before checking for the
+					//	interface...
+					
+					IStructuredData data = source as IStructuredData;
+
+					string dataName = StructuredTree.GetRootName (path);
+					string dataPath = StructuredTree.GetSubPath (path, 1);
+
+					if (data.HasImmutableRoots)
+					{
+						//	For now, we don't support IStructuredData roots which may change
+						//	their contents.
+
+						source = data.GetValue (dataName);
+						path   = dataPath;
+					}
+					else
+					{
+						throw new System.NotImplementedException ("Mutable roots in IStructuredData are not supported");
+					}
+				}
 			}
 		}
 

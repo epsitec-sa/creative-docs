@@ -69,6 +69,13 @@ namespace Epsitec.Common.Types
 			this.UpdateCachedValue (path, value);
 		}
 
+		public bool HasImmutableRoots
+		{
+			get
+			{
+				return false;
+			}
+		}
 		#endregion
 
 		protected virtual object GetValueBase(string path)

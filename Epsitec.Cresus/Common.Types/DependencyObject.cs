@@ -646,6 +646,14 @@ namespace Epsitec.Common.Types
 			this.SetValue (property, value);
 		}
 
+		bool IStructuredData.HasImmutableRoots
+		{
+			get
+			{
+				return false;
+			}
+		}
+
 		#endregion
 
 		#region Private TypeDeclaration Class

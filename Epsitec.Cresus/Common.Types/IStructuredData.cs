@@ -18,5 +18,10 @@ namespace Epsitec.Common.Types
 
 		object GetValue(string path);
 		void SetValue(string path, object value);
+
+		bool HasImmutableRoots
+		{
+			get;
+		}
 	}
 }
