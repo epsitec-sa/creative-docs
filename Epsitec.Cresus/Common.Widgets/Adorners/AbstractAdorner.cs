@@ -18,8 +18,8 @@ namespace Epsitec.Common.Widgets.Adorners
 		
 		protected virtual void RefreshColors()
 		{
-			this.colorBlack             = Drawing.Color.FromRgb(0,0,0);
-			this.colorWhite             = Drawing.Color.FromRgb(1,1,1);
+			this.colorBlack             = Drawing.Color.FromBrightness(0);
+			this.colorWhite             = Drawing.Color.FromBrightness(1);
 			this.colorControl           = Drawing.Color.FromName("Control");
 			this.colorControlLight      = Drawing.Color.FromName("ControlLight");
 			this.colorControlLightLight = Drawing.Color.FromName("ControlLightLight");
