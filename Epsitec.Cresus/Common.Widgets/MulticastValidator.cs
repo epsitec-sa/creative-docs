@@ -15,15 +15,6 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public IValidator[]							Validators
-		{
-			get
-			{
-				return this.validators.Clone () as IValidator[];
-			}
-		}
-		
-		
 		#region IValidator Members
 		public ValidationState						State
 		{
@@ -122,7 +113,7 @@ namespace Epsitec.Common.Widgets
 			}
 			else
 			{
-				foreach (IValidator item in mv.Validators)
+				foreach (IValidator item in mv.validators)
 				{
 					this.AddValidator (item);
 				}
@@ -139,7 +130,7 @@ namespace Epsitec.Common.Widgets
 			}
 			else
 			{
-				foreach (IValidator item in mv.Validators)
+				foreach (IValidator item in mv.validators)
 				{
 					this.RemoveValidator (item);
 				}
@@ -265,21 +256,23 @@ namespace Epsitec.Common.Widgets
 		
 		public static IValidator[] ToArray(IValidator validator)
 		{
+			IValidator[] array;
 			MulticastValidator mv = validator as MulticastValidator;
 			
 			if (mv != null)
 			{
-				return mv.Validators;
+				array = new IValidator[mv.validators.Length];
+				mv.validators.CopyTo (array, 0);
 			}
-			
-			if (validator == null)
+			else if (validator == null)
 			{
-				return new IValidator[0];
+				array = new IValidator[0];
 			}
-			
-			IValidator[] array = new IValidator[1];
-			
-			array[0] = validator;
+			else
+			{
+				array = new IValidator[1];
+				array[0] = validator;
+			}
 			
 			return array;
 		}

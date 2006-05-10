@@ -879,7 +879,6 @@ namespace Epsitec.Common.Widgets
 		private CommandDispatcher				master;
 		
 		protected System.Collections.Hashtable	event_handlers    = new System.Collections.Hashtable ();
-		protected System.Collections.ArrayList	validation_states = new System.Collections.ArrayList ();
 		protected System.Collections.Stack		pending_commands  = new System.Collections.Stack ();
 		protected System.Collections.ArrayList	extra_dispatchers = new System.Collections.ArrayList ();
 		
