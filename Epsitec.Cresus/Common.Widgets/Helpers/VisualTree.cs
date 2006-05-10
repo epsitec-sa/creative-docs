@@ -415,7 +415,7 @@ namespace Epsitec.Common.Widgets.Helpers
 			
 			foreach (CommandDispatcher dispatcher in list)
 			{
-				CommandState command = dispatcher.FindCommandState (shortcut);
+				CommandState command = CommandState.Find (shortcut);
 				
 				if (command != null)
 				{

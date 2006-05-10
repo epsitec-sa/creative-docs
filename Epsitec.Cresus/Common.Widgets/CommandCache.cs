@@ -65,8 +65,6 @@ namespace Epsitec.Common.Widgets
 			
 			if (this.records[id].ClearCommand ())
 			{
-//				System.Diagnostics.Debug.WriteLine (string.Format ("Command {0}: cache invalidated", visual.CommandName));
-				
 				this.clear_count += 1;
 			}
 			

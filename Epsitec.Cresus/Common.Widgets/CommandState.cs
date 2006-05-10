@@ -196,6 +196,19 @@ namespace Epsitec.Common.Widgets
 			
 			return null;
 		}
+
+		public static CommandState Find(Shortcut shortcut)
+		{
+			foreach (CommandState command in CommandState.commands.Values)
+			{
+				if (command.Shortcuts.Match (shortcut))
+				{
+					return command;
+				}
+			}
+			
+			return null;
+		}
 		
 		
 		public override int GetHashCode()

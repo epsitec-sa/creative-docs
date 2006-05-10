@@ -202,14 +202,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public CommandState[]					CommandStates
-		{
-			get
-			{
-				return (CommandState[]) this.command_states.ToArray (typeof (CommandState));
-			}
-		}
-		
 		
 		public void AddValidationRule(ValidationRule validation_rule)
 		{
@@ -347,32 +339,9 @@ namespace Epsitec.Common.Widgets
 		
 		public CommandState FindCommandState(string name)
 		{
-			System.Diagnostics.Debug.Assert (name != null);
-			System.Diagnostics.Debug.Assert (name.Length > 0);
+			System.Diagnostics.Debug.Assert (! string.IsNullOrEmpty (name));
 			
-			//	Retourne un object CommandState pour le nom spécifié; si l'objet n'existe pas encore,
-			//	il sera créé dynamiquement.
-
 			return CommandState.Find (name);
-		}
-		
-		public CommandState FindCommandState(Shortcut shortcut)
-		{
-			foreach (CommandState command in this.command_states)
-			{
-				if (command.Shortcuts.Match (shortcut))
-				{
-					return command;
-				}
-			}
-			
-			return null;
-		}
-		
-		
-		internal void AddCommandState(CommandState command_state)
-		{
-			this.command_states.Add (command_state);
 		}
 		
 		
@@ -936,7 +905,6 @@ namespace Epsitec.Common.Widgets
 		private CommandDispatcher				master;
 		
 		protected System.Collections.Hashtable	event_handlers    = new System.Collections.Hashtable ();
-		protected System.Collections.ArrayList	command_states    = new System.Collections.ArrayList ();
 		protected System.Collections.ArrayList	validation_states = new System.Collections.ArrayList ();
 		protected System.Collections.Stack		pending_commands  = new System.Collections.Stack ();
 		protected System.Collections.ArrayList	extra_dispatchers = new System.Collections.ArrayList ();

@@ -266,15 +266,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-#if false
-				if (this.dirtyLayout)
-				{
-					System.Diagnostics.Debug.WriteLine ("Dirty geometry in " + this.ToString ());
-				}
-				return true;
-#else
 				return this.dirtyLayout == false;
-#endif
 			}
 		}
 
