@@ -1034,15 +1034,15 @@ namespace Epsitec.Common.Widgets
 		
 		public void AttachCommandDispatcher(CommandDispatcher value)
 		{
-			if (this.dispatcher != value)
+			if (CommandDispatcher.GetDispatcher (this) != value)
 			{
-				System.Diagnostics.Debug.Assert (this.dispatcher == null);
+				System.Diagnostics.Debug.Assert (CommandDispatcher.GetDispatcher (this) == null);
+
+				CommandDispatcher.SetDispatcher (this, value);
 				
-				this.dispatcher = value;
-				
-				if (this.dispatcher != null)
+				if (value != null)
 				{
-					this.dispatcher.ValidationRuleBecameDirty += this.HandleValidationRuleBecameDirty;
+					value.ValidationRuleBecameDirty += this.HandleValidationRuleBecameDirty;
 				}
 				
 				Helpers.VisualTree.InvalidateCommandDispatcher (this);
@@ -1051,11 +1051,12 @@ namespace Epsitec.Common.Widgets
 		
 		public void DetachCommandDispatcher(CommandDispatcher value)
 		{
-			if (this.dispatcher != null)
+			if (CommandDispatcher.GetDispatcher (this) != null)
 			{
-				System.Diagnostics.Debug.Assert (this.dispatcher == value);
+				System.Diagnostics.Debug.Assert (CommandDispatcher.GetDispatcher (this) == value);
+				CommandDispatcher.ClearDispatcher (this);
 				
-				this.dispatcher.ValidationRuleBecameDirty -= this.HandleValidationRuleBecameDirty;
+				value.ValidationRuleBecameDirty -= this.HandleValidationRuleBecameDirty;
 				
 				Helpers.VisualTree.InvalidateCommandDispatcher (this);
 			}
@@ -1163,11 +1164,10 @@ namespace Epsitec.Common.Widgets
 						}
 					}
 				}
-				
-				if (this.dispatcher != null)
+
+				if (CommandDispatcher.GetDispatcher (this) != null)
 				{
-					this.DetachCommandDispatcher (this.dispatcher);
-					this.dispatcher = null;
+					this.DetachCommandDispatcher (CommandDispatcher.GetDispatcher (this));
 				}
 				
 				if (this.root != null)
@@ -2309,7 +2309,6 @@ namespace Epsitec.Common.Widgets
 		private MouseCursor						window_cursor;
 		private System.Collections.ArrayList	logical_focus_stack = new System.Collections.ArrayList ();
 		
-		private CommandDispatcher				dispatcher;
 		private System.Collections.Queue		cmd_queue = new System.Collections.Queue ();
 		private bool							is_dispose_queued;
 		private bool							is_async_notification_queued;

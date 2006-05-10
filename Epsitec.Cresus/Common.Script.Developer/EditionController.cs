@@ -132,7 +132,7 @@ namespace Epsitec.Common.Script.Developer
 		
 		protected virtual void UpdateToolBar()
 		{
-			this.tool_bar.AttachCommandDispatcher (this.dispatcher);
+			CommandDispatcher.SetDispatcher (this.tool_bar, this.dispatcher);
 			
 			this.tool_bar.Items.Clear ();
 			this.tool_bar.Items.Add (IconButton.CreateSimple ("NewMethod", "manifest:Epsitec.Common.Script.Developer.Images.NewMethod.icon"));

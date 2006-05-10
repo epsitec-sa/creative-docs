@@ -604,14 +604,6 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public IEnumerable<CommandDispatcher> GetCommandDispatchers()
-		{
-			if (this.master != null)
-			{
-				yield return this.master;
-			}
-		}
-		
 		protected virtual void AttachToMaster(CommandDispatcher master)
 		{
 		}

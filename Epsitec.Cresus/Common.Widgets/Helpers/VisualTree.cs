@@ -604,7 +604,7 @@ namespace Epsitec.Common.Widgets.Helpers
 		{
 			while (visual != null)
 			{
-				VisualTree.GetDispatchers (list, visual.GetCommandDispatchers ());
+				VisualTree.GetDispatchers (list, CommandDispatcher.GetDispatcher (visual));
 				visual = visual.Parent;
 			}
 		}
@@ -642,7 +642,7 @@ namespace Epsitec.Common.Widgets.Helpers
 				(list.Contains (dispatcher) == false))
 			{
 				list.Add (dispatcher);
-				VisualTree.GetDispatchers (list, dispatcher.GetCommandDispatchers ());
+				VisualTree.GetDispatchers (list, CommandDispatcher.GetDispatcher (dispatcher));
 			}
 		}
 		#endregion

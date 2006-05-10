@@ -104,19 +104,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public IEnumerable<CommandDispatcher> GetCommandDispatchers()
-		{
-			CommandDispatcher[] dispatchers = (CommandDispatcher[]) this.GetValue (Visual.CommandDispatchersProperty);
-			
-			if (dispatchers != null)
-			{
-				foreach (CommandDispatcher dispatcher in dispatchers)
-				{
-					yield return dispatcher;
-				}
-			}
-		}
-		
 		public string							Command
 		{
 			get
@@ -295,7 +282,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				System.Diagnostics.Debug.Assert (this.IsActualGeometryValid, "Layout dirty when calling ActualBounds");
+				//System.Diagnostics.Debug.Assert (this.IsActualGeometryValid, "Layout dirty when calling ActualBounds");
 				return new Drawing.Rectangle (this.ActualLocation, this.ActualSize);
 			}
 		}
@@ -304,7 +291,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				System.Diagnostics.Debug.Assert (this.IsActualGeometryValid, "Layout dirty when calling ActualLocation");
+				//System.Diagnostics.Debug.Assert (this.IsActualGeometryValid, "Layout dirty when calling ActualLocation");
 				return new Drawing.Point (this.x, this.y);
 			}
 		}
@@ -313,7 +300,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				System.Diagnostics.Debug.Assert (this.IsActualGeometryValid, "Layout dirty when calling ActualSize");
+				//System.Diagnostics.Debug.Assert (this.IsActualGeometryValid, "Layout dirty when calling ActualSize");
 				return new Drawing.Size (this.width, this.height);
 			}
 		}
@@ -322,7 +309,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				System.Diagnostics.Debug.Assert (this.IsActualGeometryValid, "Layout dirty when calling ActualWidth");
+				//System.Diagnostics.Debug.Assert (this.IsActualGeometryValid, "Layout dirty when calling ActualWidth");
 				return this.width;
 			}
 		}
@@ -331,7 +318,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				System.Diagnostics.Debug.Assert (this.IsActualGeometryValid, "Layout dirty when calling ActualHeight");
+				//System.Diagnostics.Debug.Assert (this.IsActualGeometryValid, "Layout dirty when calling ActualHeight");
 				return this.height;
 			}
 		}
@@ -935,54 +922,6 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public void AttachCommandDispatcher(CommandDispatcher value)
-		{
-			System.Diagnostics.Debug.Assert (value != null);
-
-			CommandDispatcher[] dispatchers = (CommandDispatcher[]) this.GetValue (Visual.CommandDispatchersProperty);
-			
-			if ((dispatchers == null) ||
-				(dispatchers.Length == 0))
-			{
-				this.SetValueBase (Visual.CommandDispatchersProperty, new CommandDispatcher[] { value });
-			}
-			else if ((dispatchers.Length == 1) &&
-				/**/ (dispatchers[0] == value))
-			{
-				throw new System.InvalidOperationException ("Cannot attach same CommandDispatcher twice");
-			}
-			else
-			{
-				//	TODO: terminer AttachCommandDispatcher
-				
-				throw new System.NotImplementedException ("AttachCommandDispatcher not fully implemented");
-			}
-		}
-		
-		public void DetachCommandDispatcher(CommandDispatcher value)
-		{
-			System.Diagnostics.Debug.Assert (value != null);
-
-			CommandDispatcher[] dispatchers = (CommandDispatcher[]) this.GetValue (Visual.CommandDispatchersProperty);
-			
-			if ((dispatchers == null) ||
-				(dispatchers.Length == 0))
-			{
-				throw new System.InvalidOperationException ("Cannot detach unknown CommandDispatcher");
-			}
-			else if ((dispatchers.Length == 1) &&
-				/**/ (dispatchers[0] == value))
-			{
-				this.SetValueBase (Visual.CommandDispatchersProperty, null);
-			}
-			else
-			{
-				//	TODO: terminer DetachCommandDispatcher
-				
-				throw new System.NotImplementedException ("DetachCommandDispatcher not fully implemented");
-			}
-		}
-
 		public virtual Drawing.Margins GetShapeMargins()
 		{
 			return Drawing.Margins.Zero;
@@ -1305,14 +1244,6 @@ namespace Epsitec.Common.Widgets
 			return that.ContainsKeyboardFocus;
 		}
 		
-		private static object GetCommandDispatchersValue(DependencyObject o)
-		{
-			Visual that = o as Visual;
-			CommandDispatcher[] value = (CommandDispatcher[]) that.GetValueBase (Visual.CommandDispatchersProperty);
-			return value == null ? new CommandDispatcher[0] : value.Clone ();
-		}
-		
-		
 		private static void SetEnableValue(DependencyObject o, object value)
 		{
 			Visual that = o as Visual;
@@ -1341,12 +1272,6 @@ namespace Epsitec.Common.Widgets
 		{
 			Visual that = o as Visual;
 			that.OnCommandChanged (new DependencyPropertyChangedEventArgs (Visual.CommandProperty, oldValue, newValue));
-		}
-
-		private static void NotifyCommandDispatchersChanged(DependencyObject o, object oldValue, object newValue)
-		{
-			Visual that = o as Visual;
-			that.OnCommandDispatchersChanged (new DependencyPropertyChangedEventArgs (Visual.CommandDispatchersProperty, oldValue, newValue));
 		}
 
 		private static void NotifyAnchorChanged(DependencyObject o, object oldValue, object newValue)
@@ -1418,11 +1343,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		protected virtual void OnCommandDispatchersChanged(Types.DependencyPropertyChangedEventArgs e)
-		{
-			Helpers.VisualTree.InvalidateCommandDispatcher (this);
-		}
-
 		protected virtual void OnActiveStateChanged()
 		{
 		}
@@ -1544,7 +1464,6 @@ namespace Epsitec.Common.Widgets
 		
 		public static readonly DependencyProperty BackColorProperty				= DependencyProperty.Register ("BackColor", typeof (Drawing.Color), typeof (Visual), new VisualPropertyMetadata (Drawing.Color.Empty, VisualPropertyMetadataOptions.AffectsDisplay));
 		
-		public static readonly DependencyProperty CommandDispatchersProperty	= DependencyProperty.RegisterReadOnly ("CommandDispatchers", typeof (CommandDispatcher[]), typeof (Visual), new DependencyPropertyMetadata (null, new GetValueOverrideCallback (Visual.GetCommandDispatchersValue), new PropertyInvalidatedCallback (Visual.NotifyCommandDispatchersChanged)));
 		public static readonly DependencyProperty CommandProperty				= DependencyProperty.Register ("Command", typeof (string), typeof (Visual), new DependencyPropertyMetadata (null, new PropertyInvalidatedCallback (Visual.NotifyCommandChanged)));
 
 		private static short					nextSerialId = 1;

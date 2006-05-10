@@ -31,7 +31,8 @@ namespace Epsitec.App.DocumentEditor
 			this.commandDispatcher = new CommandDispatcher("DocumentEditor", CommandDispatcherLevel.Primary);
 			this.commandDispatcher.RegisterController(this);
 			this.commandDispatcher.Focus();
-			this.AttachCommandDispatcher(this.commandDispatcher);
+			
+			CommandDispatcher.SetDispatcher (this, this.commandDispatcher);
 			
 			this.type = type;
 			this.useArray = false;
@@ -259,38 +260,6 @@ namespace Epsitec.App.DocumentEditor
 		{
 			get { return this.commandDispatcher; }
 		}
-
-#if false //#fix
-		static DocumentEditor()
-		{
-			//	Toute modification de la propriété BackColor doit être répercutée
-			//	sur le slider. Le plus simple est d'utiliser un override callback
-			//	sur la propriété BackColor :
-			
-			Epsitec.Common.Types.PropertyMetadata metadata = new Epsitec.Common.Types.PropertyMetadata ();
-			
-			metadata.GetValueOverride = new Epsitec.Common.Types.GetValueOverrideCallback (DocumentEditor.GetCommandDispatchersValue);
-			
-			Visual.CommandDispatcherProperty.OverrideMetadata (typeof (DocumentEditor), metadata);
-		}
-		
-		
-		private static object GetCommandDispatchersValue(Epsitec.Common.Types.Object o)
-		{
-			DocumentEditor that = o as DocumentEditor;
-			
-			if ( that.commandDispatcher == null )
-			{
-				System.Diagnostics.Debug.WriteLine("*** Created Primary Command Dispatcher ***");
-				//	On crée son propre dispatcher, pour éviter de marcher sur les autres commandes.
-				that.commandDispatcher = new CommandDispatcher("DocumentEditor", CommandDispatcherLevel.Primary);
-				that.commandDispatcher.RegisterController(that);
-			}
-			
-			return that.commandDispatcher;
-		}
-#endif
-
 
 		public void MakeReadyToRun()
 		{

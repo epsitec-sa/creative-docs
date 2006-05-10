@@ -59,7 +59,9 @@ namespace Epsitec.Common.Widgets
 			
 			CommandDispatcher dispatcher = new CommandDispatcher ("TextField", CommandDispatcherLevel.Secondary);
 			dispatcher.RegisterController (new Dispatcher (this));
-			this.AttachCommandDispatcher (dispatcher);
+
+			CommandDispatcher.SetDispatcher (this, dispatcher);
+			
 			this.IsFocusedChanged += this.HandleIsFocusedChanged;
 		}
 		
@@ -929,8 +931,7 @@ namespace Epsitec.Common.Widgets
 			{
 				mouse.Y = wa.Bottom+this.contextMenu.ActualHeight;
 			}
-			
-//			this.contextMenu.AttachCommandDispatcher(this.CommandDispatchers[0]);
+
 			this.contextMenu.ShowAsContextMenu(this, mouse);
 		}
 		

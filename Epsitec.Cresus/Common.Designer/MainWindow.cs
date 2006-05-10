@@ -54,7 +54,7 @@ namespace Epsitec.Common.Designer
 				this.commandDispatcher = new CommandDispatcher("ResDesigner", CommandDispatcherLevel.Primary);
 				this.commandDispatcher.RegisterController(this);
 				this.commandDispatcher.Focus();
-				this.window.Root.AttachCommandDispatcher(this.commandDispatcher);
+				
 				this.window.AttachCommandDispatcher(this.commandDispatcher);
 
 				this.dlgGlyphs     = new Dialogs.Glyphs(this);

@@ -17,19 +17,6 @@ namespace Epsitec.Common.UI
 		}
 		
 		
-		public void SetCommandDispatcher(CommandDispatcher dispatcher)
-		{
-			if (this.dispatcher != dispatcher)
-			{
-				CommandDispatcher old_dispatcher = this.dispatcher;
-				this.dispatcher = dispatcher;
-				CommandDispatcher new_dispatcher = this.dispatcher;
-				
-				this.OnCommandDispatcherChanged (old_dispatcher, new_dispatcher);
-			}
-		}
-		
-		
 		public Drawing.Size						Size
 		{
 			get
@@ -45,25 +32,11 @@ namespace Epsitec.Common.UI
 				if (this.widget == null)
 				{
 					this.CreateWidget ();
-					
-					if (this.dispatcher != null)
-					{
-						this.widget.AttachCommandDispatcher (this.dispatcher);
-					}
 				}
 				
 				return this.widget;
 			}
 		}
-		
-		public IEnumerable<CommandDispatcher> GetCommandDispatchers()
-		{
-			if (this.dispatcher != null)
-			{
-				yield return this.dispatcher;
-			}
-		}
-		
 		
 		#region IDisposable Members
 		public void Dispose()
@@ -80,7 +53,6 @@ namespace Epsitec.Common.UI
 				this.widget.Dispose ();
 				
 				this.widget     = null;
-				this.dispatcher = null;
 			}
 		}
 		
@@ -97,18 +69,7 @@ namespace Epsitec.Common.UI
 
 		protected abstract void CreateWidgets(Widget parent);
 		
-		protected virtual void OnCommandDispatcherChanged(CommandDispatcher old_dispatcher, CommandDispatcher new_dispatcher)
-		{
-			if (this.widget != null)
-			{
-				this.widget.DetachCommandDispatcher (old_dispatcher);
-				this.widget.AttachCommandDispatcher (new_dispatcher);
-			}
-		}
-		
-		
 		protected Drawing.Size					size;
 		protected Widget						widget;
-		protected CommandDispatcher				dispatcher;
 	}
 }

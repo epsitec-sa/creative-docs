@@ -217,9 +217,6 @@ namespace Epsitec.Common.Widgets
 			dispatcher.RegisterController (new MyController ());
 
 			window.AttachCommandDispatcher (dispatcher);
-			window.Root.AttachCommandDispatcher (dispatcher);
-			
-			Assert.AreSame (dispatcher, Types.Collection.ToArray (window.Root.GetCommandDispatchers ())[0]);
 			
 			CommandState command_open = new CommandState ("Open", KeyCode.ModifierControl | KeyCode.AlphaO);
 			CommandState command_save = new CommandState ("Save", KeyCode.ModifierAlt | KeyCode.AlphaS);
