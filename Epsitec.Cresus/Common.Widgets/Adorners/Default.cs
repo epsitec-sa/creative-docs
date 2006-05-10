@@ -1373,6 +1373,8 @@ namespace Epsitec.Common.Widgets.Adorners
 											 WidgetPaintState state)
 		{
 			//	Dessine la bande principale d'un ruban.
+			graphics.AddFilledRectangle(rect);
+			graphics.RenderSolid(Drawing.Color.FromBrightness(this.colorControl.GetBrightness()-0.1));
 		}
 
 		public override void PaintRibbonTabForeground(Drawing.Graphics graphics,
@@ -1411,6 +1413,10 @@ namespace Epsitec.Common.Widgets.Adorners
 												ActiveState active)
 		{
 			//	Dessine le bouton pour un ruban.
+			if ( (state&WidgetPaintState.ActiveYes) == 0 )  return;  // bouton activé ?
+
+			rect.Bottom -= 4;  // pour cacher la partie inférieure !
+			state &= ~WidgetPaintState.ActiveYes;
 			this.PaintButtonBackground(graphics, rect, state, Widgets.Direction.None, ButtonStyle.ToolItem);
 		}
 
@@ -1456,18 +1462,12 @@ namespace Epsitec.Common.Widgets.Adorners
 			graphics.AddLine(fullRect.Right, fullRect.Bottom, fullRect.Right, fullRect.Top);
 			graphics.RenderSolid(this.colorControlDark);
 
-			textRect.Deflate(0.5);
-			graphics.AddLine(textRect.Left, textRect.Top, textRect.Left, textRect.Bottom);
-			graphics.RenderSolid(this.colorControlDark);
-			graphics.AddLine(textRect.Right, textRect.Top, textRect.Right, textRect.Bottom);
-			graphics.RenderSolid(this.colorControlLightLight);
-
 			if (text != null)
 			{
 				Drawing.TextStyle.DefineDefaultColor(this.colorBlack);
-				Drawing.Point pos = new Drawing.Point(textRect.Left+3, textRect.Bottom);
+				Drawing.Point pos = new Drawing.Point(textRect.Left+3, textRect.Bottom+2);
 				text.LayoutSize = new Drawing.Size(textRect.Width-4, textRect.Height);
-				text.Alignment = Drawing.ContentAlignment.MiddleLeft;
+				text.Alignment = Drawing.ContentAlignment.MiddleCenter;
 				text.Paint(pos, graphics, Drawing.Rectangle.MaxValue, Drawing.Color.FromBrightness(0), Drawing.GlyphPaintStyle.Normal);
 			}
 		}
