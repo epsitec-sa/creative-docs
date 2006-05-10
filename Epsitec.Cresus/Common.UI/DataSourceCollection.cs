@@ -67,18 +67,6 @@ namespace Epsitec.Common.UI
 			}
 		}
 
-		/// <summary>
-		/// Fills the serialization context ExternalMap property.
-		/// </summary>
-		/// <param name="context">The serialization context.</param>
-		public void FillSerializationContext(Types.Serialization.Context context)
-		{
-			foreach (ItemRecord record in this.items)
-			{
-				context.ExternalMap.Record (record.Name, record.Data);
-			}
-		}
-
 		#region IStructuredTree Members
 
 		/// <summary>

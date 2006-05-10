@@ -73,7 +73,10 @@ namespace Epsitec.Common.UI
 		[Test]
 		public void CheckSerializationContext()
 		{
+			Panel panel = new UI.Panel ();
 			DataSourceCollection collection = new DataSourceCollection ();
+
+			panel.DataSource = collection;
 
 			Widgets.Visual source1 = new Widgets.Visual ();
 			Widgets.Visual source2 = new Widgets.Visual ();
@@ -84,18 +87,16 @@ namespace Epsitec.Common.UI
 			collection.AddDataSource ("B", source2);
 			collection.AddDataSource ("A", source1);
 
-			Types.Serialization.Context context = new Types.Serialization.Context ();
-
-			collection.FillSerializationContext (context);
-
-			Assert.AreEqual (2, context.ExternalMap.TagCount);
-			Assert.AreEqual ("A", Collection.ToArray<string> (context.ExternalMap.RecordedTags)[0]);
-			Assert.AreEqual ("B", Collection.ToArray<string> (context.ExternalMap.RecordedTags)[1]);
-
-			Assert.AreEqual (source1, context.ExternalMap.GetValue ("A"));
-			Assert.AreEqual (source2, context.ExternalMap.GetValue ("B"));
 			Assert.AreEqual (source1, collection.GetValue ("A"));
 			Assert.AreEqual (source2, collection.GetValue ("B"));
+
+			Types.Serialization.Context context = new Types.Serialization.Context ();
+
+			panel.FillSerializationContext (context);
+
+			Assert.AreEqual (1, context.ExternalMap.TagCount);
+			Assert.AreEqual ("DataSource", Collection.ToArray<string> (context.ExternalMap.RecordedTags)[0]);
+			Assert.AreEqual (collection, context.ExternalMap.GetValue ("DataSource"));
 		}
 
 		[Test]

@@ -126,6 +126,7 @@
     </Compile>
     <Compile Include="Data\ObsoleteField.cs" />
     <Compile Include="Data\ObsoleteRecord.cs" />
+    <Compile Include="Panel.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
