@@ -3811,7 +3811,12 @@ namespace Epsitec.App.DocumentEditor
 		protected CommandState CreateCommandState(string command, params Widgets.Shortcut[] shortcuts)
 		{
 			//	Crée un nouveau CommandState.
-			CommandState cs = new CommandState(command, this.commandDispatcher, shortcuts);
+			CommandState cs = this.commandDispatcher.GetCommandState (command);
+
+			if (shortcuts.Length > 0)
+			{
+				cs.Shortcuts.AddRange (shortcuts);
+			}
 
 			cs.IconName    = command;
 			cs.LongCaption = DocumentEditor.GetRes("Action."+command);
@@ -3822,7 +3827,12 @@ namespace Epsitec.App.DocumentEditor
 		protected CommandState CreateCommandState(string command, bool statefull, params Widgets.Shortcut[] shortcuts)
 		{
 			//	Crée un nouveau CommandState.
-			CommandState cs = new CommandState(command, this.commandDispatcher, shortcuts);
+			CommandState cs = this.commandDispatcher.GetCommandState (command);
+
+			if (shortcuts.Length > 0)
+			{
+				cs.Shortcuts.AddRange (shortcuts);
+			}
 
 			cs.IconName    = command;
 			cs.LongCaption = DocumentEditor.GetRes("Action."+command);
@@ -3834,7 +3844,12 @@ namespace Epsitec.App.DocumentEditor
 		protected CommandState CreateCommandState(string command, string icon, string tooltip, params Widgets.Shortcut[] shortcuts)
 		{
 			//	Crée un nouveau CommandState.
-			CommandState cs = new CommandState(command, this.commandDispatcher, shortcuts);
+			CommandState cs = this.commandDispatcher.GetCommandState (command);
+
+			if (shortcuts.Length > 0)
+			{
+				cs.Shortcuts.AddRange (shortcuts);
+			}
 
 			cs.IconName    = icon;
 			cs.LongCaption = DocumentEditor.GetRes("Action."+tooltip);
@@ -3845,7 +3860,12 @@ namespace Epsitec.App.DocumentEditor
 		protected CommandState CreateCommandState(string command, string icon, string tooltip, bool statefull, params Widgets.Shortcut[] shortcuts)
 		{
 			//	Crée un nouveau CommandState.
-			CommandState cs = new CommandState(command, this.commandDispatcher, shortcuts);
+			CommandState cs = this.commandDispatcher.GetCommandState (command);
+
+			if (shortcuts.Length > 0)
+			{
+				cs.Shortcuts.AddRange (shortcuts);
+			}
 
 			cs.IconName    = icon;
 			cs.LongCaption = DocumentEditor.GetRes("Action."+tooltip);

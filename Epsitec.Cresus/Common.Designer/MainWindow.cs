@@ -539,7 +539,12 @@ namespace Epsitec.Common.Designer
 		protected CommandState CreateCommandState(string command, params Widgets.Shortcut[] shortcuts)
 		{
 			//	Crée un nouveau CommandState.
-			CommandState cs = new CommandState(command, this.commandDispatcher, shortcuts);
+			CommandState cs = this.commandDispatcher.GetCommandState (command);
+			
+			if (shortcuts.Length > 0)
+			{
+				cs.Shortcuts.AddRange (shortcuts);
+			}
 
 			cs.IconName    = command;
 			cs.LongCaption = Res.Strings.GetString("Action."+command);

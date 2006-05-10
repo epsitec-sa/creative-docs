@@ -350,11 +350,11 @@ namespace Epsitec.Common.Widgets
 			//	Retourne un object CommandState pour le nom spécifié; si l'objet n'existe pas encore,
 			//	il sera créé dynamiquement.
 			
-			CommandState state = this[name];
+			CommandState state = CommandState.Find (name);
 			
 			if (state == null)
 			{
-				state = new CommandState (name, this);
+				state = new CommandState (name);
 			}
 			
 			return state;

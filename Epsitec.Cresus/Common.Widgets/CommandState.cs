@@ -1,7 +1,7 @@
-//	Copyright © 2003-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
-using System.Text.RegularExpressions;
+using System.Collections.Generic;
 
 using Epsitec.Common.Widgets.Collections;
 using Epsitec.Common.Types;
@@ -9,30 +9,29 @@ using Epsitec.Common.Types;
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
-	/// La classe CommandState permet de représenter l'état d'une commande tout
-	/// en maintenant la synchronisation avec les widgets associés.
+	/// La classe <c>CommandState</c> permet de représenter l'état d'une commande tout
+	/// en maintenant la synchronisation avec l'état des widgets associés.
 	/// </summary>
-	public class CommandState : DependencyObject
+	public sealed class CommandState : DependencyObject, System.IEquatable<CommandState>
 	{
-		public CommandState(string name, CommandDispatcher dispatcher)
+		public CommandState(string name)
 		{
-			System.Diagnostics.Debug.Assert (name != null);
-			System.Diagnostics.Debug.Assert (name.Length > 0);
-			System.Diagnostics.Debug.Assert (dispatcher != null);
-			System.Diagnostics.Debug.Assert (dispatcher[name] == null, "CommandState created twice.", string.Format ("The CommandState {0} for dispatcher {1} already exists.\nIt cannot be created more than once.", name, dispatcher.Name));
-			
-			this.name       = name;
-			this.dispatcher = dispatcher;
-			
-			this.dispatcher.AddCommandState (this);
+			System.Diagnostics.Debug.Assert (string.IsNullOrEmpty (name) == false);
+
+			lock (CommandState.commands)
+			{
+				if (CommandState.commands.ContainsKey (name))
+				{
+					throw new System.ArgumentException (string.Format ("CommandState {0} already registered", name));
+				}
+
+				this.name = name;
+
+				CommandState.commands[name] = this;
+			}
 		}
 		
-		public CommandState(string name, CommandDispatcher dispatcher, Shortcut shortcut) : this (name, dispatcher)
-		{
-			this.Shortcuts.Add (shortcut);
-		}
-		
-		public CommandState(string name, CommandDispatcher dispatcher, params Shortcut[] shortcuts) : this (name, dispatcher)
+		public CommandState(string name, params Shortcut[] shortcuts) : this (name)
 		{
 			this.Shortcuts.AddRange (shortcuts);
 		}
@@ -43,14 +42,6 @@ namespace Epsitec.Common.Widgets
 			get
 			{
 				return this.name;
-			}
-		}
-		
-		public CommandDispatcher				CommandDispatcher
-		{
-			get
-			{
-				return this.dispatcher;
 			}
 		}
 		
@@ -91,7 +82,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public virtual bool						Enable
+		public bool								Enable
 		{
 			get
 			{
@@ -123,13 +114,13 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.active_state;
+				return this.activeState;
 			}
 			set
 			{
-				if (this.active_state != value)
+				if (this.activeState != value)
 				{
-					this.active_state = value;
+					this.activeState = value;
 					this.Synchronize ();
 				}
 			}
@@ -194,34 +185,16 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		protected Regex							Regex
+		public static CommandState Find(string commandName)
 		{
-			get
+			CommandState state;
+			
+			if (CommandState.commands.TryGetValue (commandName, out state))
 			{
-				if (this.regex == null)
-				{
-					this.regex = Support.RegexFactory.FromSimpleJoker (this.name, Support.RegexFactory.Options.None);
-				}
-				
-				return this.regex;
-			}
-		}
-		
-		
-		protected virtual void Synchronize()
-		{
-			CommandCache.Default.UpdateWidgets (this);
-		}
-		
-		
-		public static CommandState Find(string command_name, CommandDispatcher dispatcher)
-		{
-			if (dispatcher == null)
-			{
-				return null;
+				return state;
 			}
 			
-			return dispatcher.GetCommandState (command_name);
+			return null;
 		}
 		
 		
@@ -232,31 +205,39 @@ namespace Epsitec.Common.Widgets
 		
 		public override bool Equals(object obj)
 		{
-			if (this == obj)
-			{
-				return true;
-			}
-			
-			CommandState other = obj as CommandState;
-			
+			return this.Equals (obj as CommandState);
+		}
+
+		#region IEquatable<CommandState> Members
+
+		public bool Equals(CommandState other)
+		{
 			if (other == null)
 			{
 				return false;
 			}
-			
-			return this.name.Equals (other.name) && (this.dispatcher == other.dispatcher);
+			else
+			{
+				return this.name == other.name;
+			}
 		}
 
-		
-		protected virtual void OnIconNameChanged(DependencyPropertyChangedEventArgs e)
+		#endregion
+
+		private void Synchronize()
 		{
+			CommandCache.Default.UpdateWidgets (this);
 		}
 		
-		protected virtual void OnShortCaptionChanged(DependencyPropertyChangedEventArgs e)
+		private void OnIconNameChanged(DependencyPropertyChangedEventArgs e)
 		{
 		}
-		
-		protected virtual void OnLongCaptionChanged(DependencyPropertyChangedEventArgs e)
+
+		private void OnShortCaptionChanged(DependencyPropertyChangedEventArgs e)
+		{
+		}
+
+		private void OnLongCaptionChanged(DependencyPropertyChangedEventArgs e)
 		{
 		}
 		
@@ -302,14 +283,14 @@ namespace Epsitec.Common.Widgets
 		public static readonly DependencyProperty	LongCaptionProperty	= DependencyProperty.Register ("LongCaption", typeof (string), typeof (CommandState), new DependencyPropertyMetadata (null, new PropertyInvalidatedCallback (CommandState.NotifyLongCaptionChanged)));
 		
 		public static readonly DependencyProperty	AdvancedStateProperty = DependencyProperty.RegisterAttached ("AdvancedState", typeof (string), typeof (CommandState), new DependencyPropertyMetadata (null));
+
+		private static Dictionary<string, CommandState> commands = new Dictionary<string, CommandState> ();
 		
-		private ActiveState						active_state = ActiveState.No;
-		private bool							enable       = true;
+		private ActiveState						activeState = ActiveState.No;
+		private bool							enable = true;
 		private bool							statefull;
 		
 		private Collections.ShortcutCollection	shortcuts;
 		private string							name;
-		private CommandDispatcher				dispatcher;
-		private Regex							regex;
 	}
 }

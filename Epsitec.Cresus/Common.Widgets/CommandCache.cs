@@ -5,7 +5,7 @@ namespace Epsitec.Common.Widgets
 {
 	/// <summary>
 	/// La classe CommandCache permet de réaliser le lien entre des visuals et
-	/// leur CommandDispatcher & CommandState associé.
+	/// leur CommandState associé.
 	/// </summary>
 	public sealed class CommandCache
 	{

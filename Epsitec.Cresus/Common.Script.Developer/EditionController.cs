@@ -16,9 +16,9 @@ namespace Epsitec.Common.Script.Developer
 			this.dispatcher = new CommandDispatcher ("EditionController", CommandDispatcherLevel.Primary);
 			this.dispatcher.RegisterController (this);
 			
-			this.save_command_state = CommandState.Find ("SaveSource", this.dispatcher);
-			this.compile_command_state = CommandState.Find ("CompileSourceCode", this.dispatcher);
-			this.next_error_command_state = CommandState.Find ("FindNextError", this.dispatcher);
+			this.save_command_state = CommandState.Find ("SaveSource");
+			this.compile_command_state = CommandState.Find ("CompileSourceCode");
+			this.next_error_command_state = CommandState.Find ("FindNextError");
 		}
 		
 		
