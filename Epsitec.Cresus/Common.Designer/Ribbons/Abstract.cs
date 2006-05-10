@@ -11,27 +11,6 @@ namespace Epsitec.Common.Designer.Ribbons
 	{
 		public Abstract()
 		{
-			this.PreferredWidth = this.DefaultWidth;
-			this.Title = this.DefaultTitle;
-		}
-
-
-		protected virtual double DefaultWidth
-		{
-			//	Retourne la largeur standard.
-			get
-			{
-				return 8 + 22;
-			}
-		}
-
-		protected virtual string DefaultTitle
-		{
-			//	Retourne le titre standard.
-			get
-			{
-				return "";
-			}
 		}
 
 		
