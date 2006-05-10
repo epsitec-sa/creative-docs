@@ -808,9 +808,9 @@ namespace Epsitec.App.DocumentEditor
 			this.info.Items["StatusModif"].Dock = DockStyle.Fill;
 			
 			this.resize = new ResizeKnob();
-			this.resize.Margins = new Margins (2, 0, 0, 0);
-			this.info.Items.Add (this.resize);
-			this.resize.Dock = DockStyle.Right;
+			this.resize.Margins = new Margins(2, 0, 0, 0);
+			this.info.Items.Add(this.resize);
+			this.resize.Dock = DockStyle.Right;  // doit être fait après le Items.Add !
 			ToolTip.Default.SetToolTip(this.resize, Res.Strings.Dialog.Tooltip.Resize);
 
 			this.vToolBar = new VToolBar(this);
