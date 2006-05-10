@@ -1727,7 +1727,7 @@ namespace Epsitec.Common.Widgets.Adorners
 
 			fullRect.Deflate(0.5);
 			graphics.AddRectangle(fullRect);
-			graphics.RenderSolid(this.ColorBorder);
+			graphics.RenderSolid(Drawing.Color.FromRgb(63.0/255.0, 88.0/255.0, 143.0/255.0));
 
 			if (this.metalRenderer)
 			{
@@ -1736,10 +1736,14 @@ namespace Epsitec.Common.Widgets.Adorners
 				this.PaintRectShadow(graphics, fullRect, 3, 0.4, 0.3, false);
 			}
 
+			textRect.Top += 1;
+			this.PaintImageButton(graphics, textRect, 38);
+			textRect.Top -= 1;
+
 			if (text != null)
 			{
 				Drawing.TextStyle.DefineDefaultColor(this.colorBlack);
-				Drawing.Point pos = new Drawing.Point(textRect.Left+3, textRect.Bottom+1);
+				Drawing.Point pos = new Drawing.Point(textRect.Left+3, textRect.Bottom+1.5);
 				text.LayoutSize = new Drawing.Size(textRect.Width-4, textRect.Height);
 				text.Alignment = Drawing.ContentAlignment.MiddleCenter;
 				text.Paint(pos, graphics, Drawing.Rectangle.MaxValue, Drawing.Color.FromBrightness(0), Drawing.GlyphPaintStyle.Normal);

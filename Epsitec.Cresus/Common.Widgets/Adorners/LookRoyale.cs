@@ -1671,9 +1671,10 @@ namespace Epsitec.Common.Widgets.Adorners
 												ActiveState active)
 		{
 			//	Dessine le bouton pour un ruban.
-			if ( (state&WidgetPaintState.ActiveYes) != 0 )   // bouton activé ?
+			double radius = 5.0;
+
+			if ((state&WidgetPaintState.ActiveYes) != 0)   // bouton activé ?
 			{
-				double radius = System.Math.Min(rect.Width, rect.Height)/8;
 				Drawing.Path pTitle = this.PathTopRoundRectangle(rect, radius);
 
 				graphics.Rasterizer.AddSurface(pTitle);
@@ -1705,7 +1706,6 @@ namespace Epsitec.Common.Widgets.Adorners
 				rect.Left   += 1;
 				rect.Right  -= 1;
 
-				double radius = System.Math.Min(rect.Width, rect.Height)/8;
 				Drawing.Path pTitle = this.PathTopRoundRectangle(rect, radius);
 
 				this.PaintImageButton(graphics, rect, 18);

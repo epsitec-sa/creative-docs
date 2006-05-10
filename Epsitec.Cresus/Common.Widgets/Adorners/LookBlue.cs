@@ -1603,6 +1603,10 @@ namespace Epsitec.Common.Widgets.Adorners
 			graphics.Rasterizer.AddSurface(pRect);
 			graphics.RenderSolid(this.colorControlLight);
 
+			pRect = this.PathBottomRoundRectangle(textRect, 0);
+			graphics.Rasterizer.AddSurface(pRect);
+			graphics.RenderSolid(Drawing.Color.FromAlphaRgb(0.7, 178/255.0, 198.0/255.0, 221.0/255.0));
+
 			pRect = this.PathRoundRectangle(fullRect, 0);
 			graphics.Rasterizer.AddOutline(pRect, 1);
 			graphics.AddLine(textRect.Left, textRect.Top+0.5, textRect.Right, textRect.Top+0.5);
@@ -1611,9 +1615,9 @@ namespace Epsitec.Common.Widgets.Adorners
 			if (text != null)
 			{
 				Drawing.TextStyle.DefineDefaultColor(this.colorBlack);
-				Drawing.Point pos = new Drawing.Point(textRect.Left+3, textRect.Bottom+2);
+				Drawing.Point pos = new Drawing.Point(textRect.Left+3, textRect.Bottom+1.5);
 				text.LayoutSize = new Drawing.Size(textRect.Width-4, textRect.Height);
-				text.Alignment = Drawing.ContentAlignment.MiddleLeft;
+				text.Alignment = Drawing.ContentAlignment.MiddleCenter;
 				text.Paint(pos, graphics, Drawing.Rectangle.MaxValue, Drawing.Color.FromBrightness(0), Drawing.GlyphPaintStyle.Normal);
 			}
 		}
@@ -1912,6 +1916,30 @@ namespace Epsitec.Common.Widgets.Adorners
 			path.LineTo (ox+dx-radius-0.5, oy+dy-0.5);
 			path.CurveTo(ox+dx-0.5, oy+dy-0.5, ox+dx-0.5, oy+dy-radius-0.5);
 			path.LineTo (ox+dx-0.5, oy);
+
+			return path;
+		}
+
+		protected Drawing.Path PathBottomRoundRectangle(Drawing.Rectangle rect, double radius)
+		{
+			//	Crée le chemin d'un rectangle à coins arrondis en forme de "u".
+			double ox = rect.Left;
+			double oy = rect.Bottom;
+			double dx = rect.Width;
+			double dy = rect.Height;
+
+			if ( radius == 0 )
+			{
+				radius = System.Math.Min(dx, dy)/8;
+			}
+			
+			Drawing.Path path = new Drawing.Path();
+			path.MoveTo (ox+0.5, oy+dy);
+			path.LineTo (ox+0.5, oy+radius+0.5);
+			path.CurveTo(ox+0.5, oy+0.5, ox+radius+0.5, oy+0.5);
+			path.LineTo (ox+dx-radius-0.5, oy+0.5);
+			path.CurveTo(ox+dx-0.5, oy+0.5, ox+dx-0.5, oy+radius+0.5);
+			path.LineTo (ox+dx-0.5, oy+dy);
 
 			return path;
 		}

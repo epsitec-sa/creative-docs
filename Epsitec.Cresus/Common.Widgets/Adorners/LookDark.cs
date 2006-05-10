@@ -1673,6 +1673,8 @@ namespace Epsitec.Common.Widgets.Adorners
 			else
 			{
 				rect.Bottom += 1;
+				rect.Left   += 1;
+				rect.Right  -= 1;
 
 				if ((state&WidgetPaintState.Entered) != 0)  // bouton survolé ?
 				{

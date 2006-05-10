@@ -1453,12 +1453,6 @@ namespace Epsitec.Common.Widgets.Adorners
 		{
 			//	Dessine une section d'un ruban.
 			fullRect.Deflate(0.5);
-
-			graphics.AddLine(fullRect.Left, fullRect.Top, fullRect.Right, fullRect.Top);
-			graphics.AddLine(fullRect.Left, fullRect.Bottom, fullRect.Left, fullRect.Top);
-			graphics.RenderSolid(this.colorControlLightLight);
-
-			graphics.AddLine(fullRect.Left, fullRect.Bottom, fullRect.Right, fullRect.Bottom);
 			graphics.AddLine(fullRect.Right, fullRect.Bottom, fullRect.Right, fullRect.Top);
 			graphics.RenderSolid(this.colorControlDark);
 
