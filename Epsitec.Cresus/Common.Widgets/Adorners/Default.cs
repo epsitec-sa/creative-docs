@@ -1439,47 +1439,47 @@ namespace Epsitec.Common.Widgets.Adorners
 		}
 
 		public override void PaintRibbonSectionBackground(Drawing.Graphics graphics,
-												 Drawing.Rectangle rect,
-												 WidgetPaintState state)
-		{
-			//	Dessine une section d'un ruban.
-			rect.Deflate(0.5);
-
-			graphics.AddLine(rect.Left, rect.Top, rect.Right, rect.Top);
-			graphics.AddLine(rect.Left, rect.Bottom, rect.Left, rect.Top);
-			graphics.RenderSolid(this.colorControlLightLight);
-
-			graphics.AddLine(rect.Left, rect.Bottom, rect.Right, rect.Bottom);
-			graphics.AddLine(rect.Right, rect.Bottom, rect.Right, rect.Top);
-			graphics.RenderSolid(this.colorControlDark);
-		}
-
-		public override void PaintRibbonSectionForeground(Drawing.Graphics graphics,
-												 Drawing.Rectangle rect,
-												 WidgetPaintState state)
-		{
-			//	Dessine une section d'un ruban.
-		}
-
-		public override void PaintRibbonSectionTextLayout(Drawing.Graphics graphics,
-												 Drawing.Rectangle rect,
+												 Drawing.Rectangle fullRect,
+												 Drawing.Rectangle userRect,
+												 Drawing.Rectangle textRect,
 												 TextLayout text,
 												 WidgetPaintState state)
 		{
-			//	Dessine le texte du titre d'une section d'un ruban.
-			rect.Deflate(0.5);
-			graphics.AddLine(rect.Left, rect.Top, rect.Left, rect.Bottom);
-			graphics.RenderSolid(this.colorControlDark);
-			graphics.AddLine(rect.Right, rect.Top, rect.Right, rect.Bottom);
+			//	Dessine une section d'un ruban.
+			fullRect.Deflate(0.5);
+
+			graphics.AddLine(fullRect.Left, fullRect.Top, fullRect.Right, fullRect.Top);
+			graphics.AddLine(fullRect.Left, fullRect.Bottom, fullRect.Left, fullRect.Top);
 			graphics.RenderSolid(this.colorControlLightLight);
 
-			if (text == null)  return;
+			graphics.AddLine(fullRect.Left, fullRect.Bottom, fullRect.Right, fullRect.Bottom);
+			graphics.AddLine(fullRect.Right, fullRect.Bottom, fullRect.Right, fullRect.Top);
+			graphics.RenderSolid(this.colorControlDark);
 
-			Drawing.TextStyle.DefineDefaultColor(this.colorBlack);
-			Drawing.Point pos = new Drawing.Point(rect.Left+3, rect.Bottom);
-			text.LayoutSize = new Drawing.Size(rect.Width-4, rect.Height);
-			text.Alignment = Drawing.ContentAlignment.MiddleLeft;
-			text.Paint(pos, graphics, Drawing.Rectangle.MaxValue, Drawing.Color.FromBrightness(0), Drawing.GlyphPaintStyle.Normal);
+			textRect.Deflate(0.5);
+			graphics.AddLine(textRect.Left, textRect.Top, textRect.Left, textRect.Bottom);
+			graphics.RenderSolid(this.colorControlDark);
+			graphics.AddLine(textRect.Right, textRect.Top, textRect.Right, textRect.Bottom);
+			graphics.RenderSolid(this.colorControlLightLight);
+
+			if (text != null)
+			{
+				Drawing.TextStyle.DefineDefaultColor(this.colorBlack);
+				Drawing.Point pos = new Drawing.Point(textRect.Left+3, textRect.Bottom);
+				text.LayoutSize = new Drawing.Size(textRect.Width-4, textRect.Height);
+				text.Alignment = Drawing.ContentAlignment.MiddleLeft;
+				text.Paint(pos, graphics, Drawing.Rectangle.MaxValue, Drawing.Color.FromBrightness(0), Drawing.GlyphPaintStyle.Normal);
+			}
+		}
+
+		public override void PaintRibbonSectionForeground(Drawing.Graphics graphics,
+												 Drawing.Rectangle fullRect,
+												 Drawing.Rectangle userRect,
+												 Drawing.Rectangle textRect,
+												 TextLayout text,
+												 WidgetPaintState state)
+		{
+			//	Dessine une section d'un ruban.
 		}
 
 		public override void PaintTagBackground(Drawing.Graphics graphics,

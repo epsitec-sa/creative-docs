@@ -63,11 +63,16 @@ namespace Epsitec.Common.Widgets
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
 			IAdorner adorner = Epsitec.Common.Widgets.Adorners.Factory.Active;
-			Rectangle rect = this.Client.Bounds;
-			adorner.PaintRibbonSectionBackground(graphics, rect, this.PaintState);
 
-			rect.Top = rect.Bottom+RibbonSection.LabelHeight;
-			adorner.PaintRibbonSectionTextLayout(graphics, rect, this.title, this.PaintState);
+			Rectangle rect = this.Client.Bounds;
+
+			Rectangle userRect = rect;
+			userRect.Bottom += RibbonSection.LabelHeight;
+
+			Rectangle textRect = rect;
+			textRect.Top = textRect.Bottom+RibbonSection.LabelHeight;
+			
+			adorner.PaintRibbonSectionBackground(graphics, rect, userRect, textRect, this.title, this.PaintState);
 		}
 
 

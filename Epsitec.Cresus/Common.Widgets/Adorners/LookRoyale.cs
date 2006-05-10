@@ -1762,45 +1762,45 @@ namespace Epsitec.Common.Widgets.Adorners
 		}
 
 		public override void PaintRibbonSectionBackground(Drawing.Graphics graphics,
-												 Drawing.Rectangle rect,
+												 Drawing.Rectangle fullRect,
+												 Drawing.Rectangle userRect,
+												 Drawing.Rectangle textRect,
+												 TextLayout text,
 												 WidgetPaintState state)
 		{
 			//	Dessine une section d'un ruban.
-			Drawing.Path pRect = this.PathRoundRectangle(rect, 3.0);
+			Drawing.Path pFullRect = this.PathRoundRectangle(fullRect, 3.0);
 
-			graphics.Rasterizer.AddSurface(pRect);
+			graphics.Rasterizer.AddSurface(pFullRect);
 			graphics.RenderSolid(this.colorWindow);
 
-			graphics.Rasterizer.AddOutline(pRect, 1.0);
+			textRect.Top += 1;
+
+			Drawing.Path pTextRect = this.PathBottomRoundRectangle(textRect, 3.0);
+			graphics.Rasterizer.AddSurface(pTextRect);
+			graphics.RenderSolid(this.colorBorder);
+
+			if (text != null)
+			{
+				Drawing.TextStyle.DefineDefaultColor(this.colorBlack);
+				Drawing.Point pos = new Drawing.Point(textRect.Left+3, textRect.Bottom+1);
+				text.LayoutSize = new Drawing.Size(textRect.Width-4, textRect.Height);
+				text.Alignment = Drawing.ContentAlignment.MiddleCenter;
+				text.Paint(pos, graphics, Drawing.Rectangle.MaxValue, Drawing.Color.FromBrightness(1), Drawing.GlyphPaintStyle.Normal);
+			}
+
+			graphics.Rasterizer.AddOutline(pFullRect, 1.0);
 			graphics.RenderSolid(this.colorBorder);
 		}
 
 		public override void PaintRibbonSectionForeground(Drawing.Graphics graphics,
-												 Drawing.Rectangle rect,
-												 WidgetPaintState state)
-		{
-			//	Dessine une section d'un ruban.
-		}
-
-		public override void PaintRibbonSectionTextLayout(Drawing.Graphics graphics,
-												 Drawing.Rectangle rect,
+												 Drawing.Rectangle fullRect,
+												 Drawing.Rectangle userRect,
+												 Drawing.Rectangle textRect,
 												 TextLayout text,
 												 WidgetPaintState state)
 		{
-			//	Dessine le texte du titre d'une section d'un ruban.
-			rect.Top += 1;
-
-			Drawing.Path pRect = this.PathBottomRoundRectangle(rect, 3.0);
-			graphics.Rasterizer.AddSurface(pRect);
-			graphics.RenderSolid(this.colorBorder);
-
-			if ( text == null )  return;
-
-			Drawing.TextStyle.DefineDefaultColor(this.colorBlack);
-			Drawing.Point pos = new Drawing.Point(rect.Left+3, rect.Bottom+1);
-			text.LayoutSize = new Drawing.Size(rect.Width-4, rect.Height);
-			text.Alignment = Drawing.ContentAlignment.MiddleCenter;
-			text.Paint(pos, graphics, Drawing.Rectangle.MaxValue, Drawing.Color.FromBrightness(1), Drawing.GlyphPaintStyle.Normal);
+			//	Dessine une section d'un ruban.
 		}
 
 		public override void PaintTagBackground(Drawing.Graphics graphics,
