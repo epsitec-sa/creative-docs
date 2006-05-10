@@ -7,7 +7,7 @@ namespace Epsitec.Common.Widgets
 	/// La classe MulticastValidator représente le "et" logique d'un ensemble de
 	/// règles règles de validation.
 	/// </summary>
-	public class MulticastValidator : IValidator
+	public sealed class MulticastValidator : IValidator
 	{
 		public MulticastValidator()
 		{
@@ -103,8 +103,13 @@ namespace Epsitec.Common.Widgets
 		}
 		#endregion
 		
-		public virtual void Add(IValidator validator)
+		public void Add(IValidator validator)
 		{
+			if (validator == this)
+			{
+				throw new System.ArgumentException ("Circular reference");
+			}
+			
 			MulticastValidator mv = validator as MulticastValidator;
 			
 			if (mv == null)
@@ -120,8 +125,13 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public virtual void Remove(IValidator validator)
+		public void Remove(IValidator validator)
 		{
+			if (validator == this)
+			{
+				throw new System.ArgumentException ("Circular reference");
+			}
+
 			MulticastValidator mv = validator as MulticastValidator;
 			
 			if (mv == null)
@@ -138,7 +148,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		protected void AddValidator(IValidator validator)
+		private void AddValidator(IValidator validator)
 		{
 			System.Collections.ArrayList list = new System.Collections.ArrayList ();
 			list.AddRange (this.validators);
@@ -162,8 +172,8 @@ namespace Epsitec.Common.Widgets
 			
 			this.OnValidatorsChanged ();
 		}
-		
-		protected void RemoveValidator(IValidator validator)
+
+		private void RemoveValidator(IValidator validator)
 		{
 			System.Collections.ArrayList list = new System.Collections.ArrayList ();
 			list.AddRange (this.validators);
@@ -192,24 +202,24 @@ namespace Epsitec.Common.Widgets
 		{
 			this.MakeDirty (false);
 		}
-		
-		
-		protected virtual void OnUpdateState(ValidationState new_state)
+
+
+		private void OnUpdateState(ValidationState new_state)
 		{
 			System.Diagnostics.Debug.Assert (new_state != ValidationState.Dirty);
 			
 			this.state = new_state;
 		}
-		
-		protected virtual void OnBecameDirty()
+
+		private void OnBecameDirty()
 		{
 			if (this.BecameDirty != null)
 			{
 				this.BecameDirty (this);
 			}
 		}
-		
-		protected virtual void OnValidatorsChanged()
+
+		private void OnValidatorsChanged()
 		{
 			this.MakeDirty (false);
 		}
@@ -276,9 +286,9 @@ namespace Epsitec.Common.Widgets
 			
 			return array;
 		}
-		
-		
-		protected ValidationState					state = ValidationState.Dirty;
-		protected IValidator[]						validators;
+
+
+		private ValidationState state = ValidationState.Dirty;
+		private IValidator[] validators;
 	}
 }
