@@ -26,6 +26,7 @@ namespace Epsitec.Common.Widgets
 				}
 
 				this.name = name;
+				this.uniqueId = CommandState.nextUniqueId++;
 
 				CommandState.commands[name] = this;
 			}
@@ -78,6 +79,14 @@ namespace Epsitec.Common.Widgets
 			set
 			{
 				this.SetValue (CommandState.LongCaptionProperty, value);
+			}
+		}
+
+		public int								UniqueId
+		{
+			get
+			{
+				return this.uniqueId;
 			}
 		}
 		
@@ -228,7 +237,7 @@ namespace Epsitec.Common.Widgets
 		
 		public override int GetHashCode()
 		{
-			return this.name.GetHashCode ();
+			return this.uniqueId;
 		}
 		
 		public override bool Equals(object obj)
@@ -246,7 +255,7 @@ namespace Epsitec.Common.Widgets
 			}
 			else
 			{
-				return this.name == other.name;
+				return this.uniqueId == other.uniqueId;
 			}
 		}
 
@@ -313,7 +322,9 @@ namespace Epsitec.Common.Widgets
 		public static readonly DependencyProperty	AdvancedStateProperty = DependencyProperty.RegisterAttached ("AdvancedState", typeof (string), typeof (CommandState), new DependencyPropertyMetadata (null));
 
 		private static Dictionary<string, CommandState> commands = new Dictionary<string, CommandState> ();
-		
+		private static int nextUniqueId;
+
+		private int								uniqueId;
 		private ActiveState						activeState = ActiveState.No;
 		private bool							enable = true;
 		private bool							statefull;

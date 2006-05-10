@@ -308,8 +308,49 @@ namespace Epsitec.Common.Widgets.Helpers
 		{
 			return VisualTree.GetRoot (visual) as WindowRoot;
 		}
-		
-		
+
+		public static CommandContext GetCommandContext(Visual visual)
+		{
+			while (visual != null)
+			{
+				CommandContext context = CommandContext.GetContext (visual);
+
+				if (context != null)
+				{
+					return context;
+				}
+				
+				Visual parent = visual.Parent;
+
+				if (parent == null)
+				{
+					return VisualTree.GetCommandContext (visual.Window);
+				}
+				
+				visual = parent;
+			}
+			
+			return null;
+		}
+
+		public static CommandContext GetCommandContext(Window window)
+		{
+			while (window != null)
+			{
+				CommandContext context = CommandContext.GetContext (window);
+
+				if (context != null)
+				{
+					return context;
+				}
+				
+				window = window.Owner;
+			}
+			
+			return null;
+		}
+
+
 		public static Support.OpletQueue GetOpletQueue(Visual visual)
 		{
 			CommandDispatcher[] dispatchers = VisualTree.GetAllDispatchers (visual);
