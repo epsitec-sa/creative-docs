@@ -1503,7 +1503,7 @@ namespace Epsitec.Common.Widgets.Adorners
 											 WidgetPaintState state)
 		{
 			//	Dessine la bande principale d'un ruban.
-			this.PaintImageButton(graphics, rect, 0);
+			this.PaintImageButton(graphics, rect, 2);
 		}
 
 		public override void PaintRibbonPageForeground(Drawing.Graphics graphics,
@@ -1519,6 +1519,7 @@ namespace Epsitec.Common.Widgets.Adorners
 												ActiveState active)
 		{
 			//	Dessine le bouton pour un ruban.
+			rect.Bottom -= 8;  // pour cacher la partie inférieure
 			this.PaintButtonBackground(graphics, rect, state, Widgets.Direction.None, ButtonStyle.ToolItem);
 		}
 
@@ -1556,13 +1557,10 @@ namespace Epsitec.Common.Widgets.Adorners
 			//	Dessine une section d'un ruban.
 			this.PaintImageButton(graphics, fullRect, 0);
 
-			graphics.AddLine(textRect.Right, textRect.Top, textRect.Right, textRect.Bottom);
-			graphics.RenderSolid(this.colorBorder);
-
 			if (text != null)
 			{
 				Drawing.TextStyle.DefineDefaultColor(this.colorBlack);
-				Drawing.Point pos = new Drawing.Point(textRect.Left+3, textRect.Bottom);
+				Drawing.Point pos = new Drawing.Point(textRect.Left+3, textRect.Bottom+2);
 				text.LayoutSize = new Drawing.Size(textRect.Width-4, textRect.Height);
 				text.Alignment = Drawing.ContentAlignment.MiddleCenter;
 				text.Paint(pos, graphics, Drawing.Rectangle.MaxValue, Drawing.Color.FromBrightness(0), Drawing.GlyphPaintStyle.Normal);
