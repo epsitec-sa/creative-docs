@@ -45,6 +45,8 @@ namespace Epsitec.Common.Support
 			manager.GetData ("file:strings#title.SettingsWindow", ResourceLevel.Localized, null);
 			manager.ActiveCulture = Resources.FindCultureInfo ("fr");
 			manager.GetData ("file:strings#title.SettingsWindow", ResourceLevel.Localized, null);
+			
+			System.GC.Collect ();
 
 			long memory1 = System.GC.GetTotalMemory (true);
 			
@@ -150,6 +152,7 @@ namespace Epsitec.Common.Support
 			System.Console.Out.Flush ();
 
 			Assert.IsTrue (System.Math.Abs ((memory4-memory6)/max - (memory3-memory2)/max) < 2);
+			Assert.IsTrue ((memory3-memory2)/max < 314);
 			
 //			System.Threading.Thread.Sleep (10*1000);
 		}

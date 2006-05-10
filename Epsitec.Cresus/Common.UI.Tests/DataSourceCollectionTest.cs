@@ -71,7 +71,7 @@ namespace Epsitec.Common.UI
 		}
 		
 		[Test]
-		public void CheckSerializationContext()
+		public void CheckPanelSerializationContext()
 		{
 			Panel panel = new UI.Panel ();
 			DataSourceCollection collection = new DataSourceCollection ();
@@ -97,6 +97,16 @@ namespace Epsitec.Common.UI
 			Assert.AreEqual (1, context.ExternalMap.TagCount);
 			Assert.AreEqual ("DataSource", Collection.ToArray<string> (context.ExternalMap.RecordedTags)[0]);
 			Assert.AreEqual (collection, context.ExternalMap.GetValue ("DataSource"));
+
+			Widgets.Button b1 = new Epsitec.Common.Widgets.Button ();
+			Binding binding = new Binding (BindingMode.OneWay, null, "A.Name");
+			
+			b1.Dock = Widgets.DockStyle.Top;
+			b1.SetBinding (Widgets.Visual.NameProperty, binding);
+
+			panel.Children.Add (b1);
+
+			Assert.AreEqual (source1.Name, b1.Name);
 		}
 
 		[Test]

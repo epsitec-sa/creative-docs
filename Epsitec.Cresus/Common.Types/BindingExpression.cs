@@ -147,7 +147,7 @@ namespace Epsitec.Common.Types
 			this.binding.Remove (this);
 			this.InternalDetachFromSource ();
 			this.InternalDetachFromTarget ();
-			this.SetDataContext (null);
+			this.ClearDataContext ();
 			
 			this.binding = null;
 			this.targetObject = null;
@@ -271,7 +271,22 @@ namespace Epsitec.Common.Types
 			}
 			else
 			{
-				this.SetDataContext (null);
+				this.ClearDataContext ();
+			}
+		}
+
+		private void ClearDataContext()
+		{
+			if (this.dataContext != null)
+			{
+				this.dataContext.Remove (this);
+				this.dataContext = null;
+			}
+			
+			if (this.isDataContextBound)
+			{
+				this.targetObject.RemoveEventHandler (DataObject.DataContextProperty, this.HandleDataContextChanged);
+				this.isDataContextBound = false;
 			}
 		}
 
@@ -279,12 +294,9 @@ namespace Epsitec.Common.Types
 		{
 			if (this.dataContext != value)
 			{
-				bool wasRegistered = false;
-				
 				if (this.dataContext != null)
 				{
 					this.dataContext.Remove (this);
-					wasRegistered = true;
 				}
 				
 				this.dataContext = value;
@@ -295,19 +307,16 @@ namespace Epsitec.Common.Types
 				if (this.dataContext != null)
 				{
 					this.dataContext.Add (this);
-
-					if (!wasRegistered)
-					{
-						this.targetObject.AddEventHandler (DataObject.DataContextProperty, this.HandleDataContextChanged);
-					}
 				}
-				else
-				{
-					if (wasRegistered)
-					{
-						this.targetObject.RemoveEventHandler (DataObject.DataContextProperty, this.HandleDataContextChanged);
-					}
-				}
+			}
+			
+			//	Attach to data context changes in order to be informed if the
+			//	data context changes:
+			
+			if (this.isDataContextBound == false)
+			{
+				this.targetObject.AddEventHandler (DataObject.DataContextProperty, this.HandleDataContextChanged);
+				this.isDataContextBound = true;
 			}
 		}
 
@@ -351,7 +360,10 @@ namespace Epsitec.Common.Types
 		
 		private void InternalUpdateTarget()
 		{
-			this.InternalUpdateTarget (this.GetSourceValue ());
+			if (this.sourceType != BindingSourceType.None)
+			{
+				this.InternalUpdateTarget (this.GetSourceValue ());
+			}
 		}
 		private void InternalUpdateTarget(object value)
 		{
@@ -548,6 +560,7 @@ namespace Epsitec.Common.Types
 		private BindingSourceType				sourceType;
 		private List<SourcePropertyPair>		sourceBreadcrumbs;
 		private Binding							dataContext;
+		private bool							isDataContextBound;
 		private int								sourceUpdateCounter;
 		private int								targetUpdateCounter;
 	}

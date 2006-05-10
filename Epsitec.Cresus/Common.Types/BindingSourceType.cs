@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Types
 {
-	internal enum BindingSourceType
+	internal enum BindingSourceType : byte
 	{
 		None,
 		
