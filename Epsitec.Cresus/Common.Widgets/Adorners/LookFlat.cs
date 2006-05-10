@@ -1282,7 +1282,28 @@ namespace Epsitec.Common.Widgets.Adorners
 												ActiveState active)
 		{
 			//	Dessine le bouton pour un ruban.
-			this.PaintButtonBackground(graphics, rect, state, Widgets.Direction.None, ButtonStyle.ToolItem);
+			rect.Bottom += 1;
+
+			if ((state&WidgetPaintState.ActiveYes) != 0)   // bouton activé ?
+			{
+				graphics.AddFilledRectangle(rect);
+				if ((state&WidgetPaintState.Entered) != 0)  // bouton survolé ?
+				{
+					graphics.RenderSolid(this.colorCaption);
+				}
+				else
+				{
+					graphics.RenderSolid(this.colorControlBar);
+				}
+			}
+			else
+			{
+				if ((state&WidgetPaintState.Entered) != 0)  // bouton survolé ?
+				{
+					graphics.AddFilledRectangle(rect);
+					graphics.RenderSolid(this.colorCaption);
+				}
+			}
 		}
 
 		public override void PaintRibbonButtonForeground(Drawing.Graphics graphics,
