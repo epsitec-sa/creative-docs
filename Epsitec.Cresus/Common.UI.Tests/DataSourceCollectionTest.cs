@@ -107,6 +107,16 @@ namespace Epsitec.Common.UI
 			panel.Children.Add (b1);
 
 			Assert.AreEqual (source1.Name, b1.Name);
+
+			source1.Name = "X";
+
+			Assert.AreEqual ("X", source1.Name);
+			Assert.AreEqual ("X", b1.Name);
+
+			b1.Name = "Y";
+			
+			Assert.AreEqual ("X", source1.Name);
+			Assert.AreEqual ("Y", b1.Name);
 		}
 
 		[Test]
