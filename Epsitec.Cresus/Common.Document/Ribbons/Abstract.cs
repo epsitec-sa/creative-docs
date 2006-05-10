@@ -169,7 +169,7 @@ namespace Epsitec.Common.Document.Ribbons
 		protected IconButton CreateIconButton(string command, string iconSize)
 		{
 			//	Crée un bouton pour une commande, en précisant la taille préférée pour l'icône.
-			CommandState cs = CommandDispatcher.GetFocusedPrimaryDispatcher().GetCommandState(command);
+			CommandState cs = CommandState.Get (command);
 			IconButton button = new IconButton(this);
 
 			button.Command = command;
@@ -191,7 +191,7 @@ namespace Epsitec.Common.Document.Ribbons
 		protected IconButtonCombo CreateIconButtonCombo(string command)
 		{
 			//	Crée un bouton combo pour une commande.
-			CommandState cs = CommandDispatcher.GetFocusedPrimaryDispatcher().GetCommandState(command);
+			CommandState cs = CommandState.Get (command);
 			IconButtonCombo button = new IconButtonCombo(this);
 
 			button.Command = command;
@@ -234,7 +234,7 @@ namespace Epsitec.Common.Document.Ribbons
 		protected IconButtonsCombo CreateIconButtonsCombo(string command)
 		{
 			//	Crée un bouton combo pour une commande.
-			CommandState cs = CommandDispatcher.GetFocusedPrimaryDispatcher().GetCommandState(command);
+			CommandState cs = CommandState.Get (command);
 			IconButtonsCombo button = new IconButtonsCombo(this);
 
 			button.Command = command;

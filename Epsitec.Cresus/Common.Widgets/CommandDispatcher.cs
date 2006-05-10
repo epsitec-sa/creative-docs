@@ -319,32 +319,6 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public CommandState GetCommandState(string name)
-		{
-			System.Diagnostics.Debug.Assert (name != null);
-			System.Diagnostics.Debug.Assert (name.Length > 0);
-			
-			//	Retourne un object CommandState pour le nom spécifié; si l'objet n'existe pas encore,
-			//	il sera créé dynamiquement.
-			
-			CommandState state = CommandState.Find (name);
-			
-			if (state == null)
-			{
-				state = new CommandState (name);
-			}
-			
-			return state;
-		}
-		
-		public CommandState FindCommandState(string name)
-		{
-			System.Diagnostics.Debug.Assert (! string.IsNullOrEmpty (name));
-			
-			return CommandState.Find (name);
-		}
-		
-		
 		public void RegisterController(object controller)
 		{
 			if (controller != null)

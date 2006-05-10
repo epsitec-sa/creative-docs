@@ -859,7 +859,7 @@ namespace Epsitec.App.DocumentEditor
 						first = false;
 					}
 
-					CommandState cs = this.commandDispatcher.GetCommandState(cmd);
+					CommandState cs = CommandState.Get (cmd);
 					this.HToolBarAdd(cs);
 
 					if ( sep )
@@ -1188,7 +1188,7 @@ namespace Epsitec.App.DocumentEditor
 			}
 			else
 			{
-				CommandState cs = this.commandDispatcher.GetCommandState(command);
+				CommandState cs = CommandState.Get (command);
 
 				MenuItem item = new MenuItem(cs.Name, Misc.Icon(cs.IconName), cs.LongCaption, Misc.GetShortCut(cs), cs.Name);
 				vmenu.Items.Add(item);
@@ -1275,7 +1275,7 @@ namespace Epsitec.App.DocumentEditor
 
 		protected IconButton InfoAdd(string command)
 		{
-			CommandState cs = this.commandDispatcher.GetCommandState(command);
+			CommandState cs = CommandState.Get (command);
 
 			IconButton button = new IconButton(cs.Name, Misc.Icon(cs.IconName), cs.Name);
 			button.PreferredIconSize = Misc.IconPreferredSize("Small");
@@ -2272,7 +2272,7 @@ namespace Epsitec.App.DocumentEditor
 		void CommandCombo(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			IconButtonCombo combo = e.Source as IconButtonCombo;
-			CommandState cs = dispatcher.FindCommandState(e.CommandName);
+			CommandState cs = CommandState.Find (e.CommandName);
 			if ( combo != null && cs != null )
 			{
 				cs.AdvancedState = combo.SelectedName;
@@ -3780,7 +3780,7 @@ namespace Epsitec.App.DocumentEditor
 		protected CommandState CreateCommandState(string command, params Widgets.Shortcut[] shortcuts)
 		{
 			//	Crée un nouveau CommandState.
-			CommandState cs = this.commandDispatcher.GetCommandState (command);
+			CommandState cs = CommandState.Get (command);
 
 			if (shortcuts.Length > 0)
 			{
@@ -3796,7 +3796,7 @@ namespace Epsitec.App.DocumentEditor
 		protected CommandState CreateCommandState(string command, bool statefull, params Widgets.Shortcut[] shortcuts)
 		{
 			//	Crée un nouveau CommandState.
-			CommandState cs = this.commandDispatcher.GetCommandState (command);
+			CommandState cs = CommandState.Get (command);
 
 			if (shortcuts.Length > 0)
 			{
@@ -3813,7 +3813,7 @@ namespace Epsitec.App.DocumentEditor
 		protected CommandState CreateCommandState(string command, string icon, string tooltip, params Widgets.Shortcut[] shortcuts)
 		{
 			//	Crée un nouveau CommandState.
-			CommandState cs = this.commandDispatcher.GetCommandState (command);
+			CommandState cs = CommandState.Get (command);
 
 			if (shortcuts.Length > 0)
 			{
@@ -3829,7 +3829,7 @@ namespace Epsitec.App.DocumentEditor
 		protected CommandState CreateCommandState(string command, string icon, string tooltip, bool statefull, params Widgets.Shortcut[] shortcuts)
 		{
 			//	Crée un nouveau CommandState.
-			CommandState cs = this.commandDispatcher.GetCommandState (command);
+			CommandState cs = CommandState.Get (command);
 
 			if (shortcuts.Length > 0)
 			{

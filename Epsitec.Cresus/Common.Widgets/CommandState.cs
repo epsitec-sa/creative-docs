@@ -183,7 +183,22 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 		}
-		
+
+
+		public static CommandState Get(string commandName)
+		{
+			lock (CommandState.commands)
+			{
+				CommandState commandState = CommandState.Find (commandName);
+
+				if (commandState == null)
+				{
+					commandState = new CommandState (commandName);
+				}
+				
+				return commandState;
+			}
+		}
 		
 		public static CommandState Find(string commandName)
 		{

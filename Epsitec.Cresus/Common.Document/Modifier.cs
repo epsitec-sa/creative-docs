@@ -3792,18 +3792,18 @@ namespace Epsitec.Common.Document
 			}
 			else
 			{
-				cd.GetCommandState("ShaperHandleAdd").Enable = false;
-				cd.GetCommandState("ShaperHandleContinue").Enable = false;
-				cd.GetCommandState("ShaperHandleSub").Enable = false;
-				cd.GetCommandState("ShaperHandleToLine").Enable = false;
-				cd.GetCommandState("ShaperHandleToCurve").Enable = false;
-				cd.GetCommandState("ShaperHandleSym").Enable = false;
-				cd.GetCommandState("ShaperHandleSmooth").Enable = false;
-				cd.GetCommandState("ShaperHandleDis").Enable = false;
-				cd.GetCommandState("ShaperHandleInline").Enable = false;
-				cd.GetCommandState("ShaperHandleFree").Enable = false;
-				cd.GetCommandState("ShaperHandleSimply").Enable = false;
-				cd.GetCommandState("ShaperHandleCorner").Enable = false;
+				CommandState.Get ("ShaperHandleAdd").Enable = false;
+				CommandState.Get ("ShaperHandleContinue").Enable = false;
+				CommandState.Get ("ShaperHandleSub").Enable = false;
+				CommandState.Get ("ShaperHandleToLine").Enable = false;
+				CommandState.Get ("ShaperHandleToCurve").Enable = false;
+				CommandState.Get ("ShaperHandleSym").Enable = false;
+				CommandState.Get ("ShaperHandleSmooth").Enable = false;
+				CommandState.Get ("ShaperHandleDis").Enable = false;
+				CommandState.Get ("ShaperHandleInline").Enable = false;
+				CommandState.Get ("ShaperHandleFree").Enable = false;
+				CommandState.Get ("ShaperHandleSimply").Enable = false;
+				CommandState.Get ("ShaperHandleCorner").Enable = false;
 			}
 		}
 
@@ -3822,8 +3822,8 @@ namespace Epsitec.Common.Document
 
 		protected void ShaperHandleState(CommandDispatcher cd, string cmd, bool enable, System.Collections.ArrayList actives, string active)
 		{
-			cd.GetCommandState(cmd).Enable = enable;
-			cd.GetCommandState(cmd).ActiveState = actives.Contains(active) ? Common.Widgets.ActiveState.Yes : Common.Widgets.ActiveState.No;
+			CommandState.Get (cmd).Enable = enable;
+			CommandState.Get (cmd).ActiveState = actives.Contains (active) ? Common.Widgets.ActiveState.Yes : Common.Widgets.ActiveState.No;
 		}
 
 		public void ShaperHandleCommand(string cmd)

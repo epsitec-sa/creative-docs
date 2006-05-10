@@ -372,29 +372,11 @@ namespace Epsitec.Common.Widgets.Helpers
 				return null;
 			}
 			
-			System.Collections.ArrayList list = new System.Collections.ArrayList ();
+			CommandState command = CommandState.Find (name);
 			
-			VisualTree.GetDispatchers (list, visual);
-			VisualTree.GetDispatchers (list, Helpers.VisualTree.GetWindow (visual));
-			VisualTree.GetDispatchers (list, CommandDispatcher.GetFocusedPrimaryDispatcher ());
-			
-			foreach (CommandDispatcher dispatcher in list)
+			if (command != null)
 			{
-				CommandState command = dispatcher.FindCommandState (name);
-				
-				if (command != null)
-				{
-					return command;
-				}
-			}
-			
-			foreach (CommandDispatcher dispatcher in list)
-			{
-				if (dispatcher.ContainsCommandHandler (name))
-				{
-					System.Diagnostics.Debug.WriteLine ("Command '" + name + "' created in dispatcher '" + dispatcher.Name + "'.");
-					return dispatcher.GetCommandState (name);
-				}
+				return command;
 			}
 			
 			return null;

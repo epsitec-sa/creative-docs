@@ -583,7 +583,7 @@ namespace Epsitec.Common.Widgets
 				{
 					foreach (string name in this.names)
 					{
-						this.Add (dispatcher.GetCommandState (name));
+						this.Add (CommandState.Get (name));
 					}
 					
 					this.names.Clear ();

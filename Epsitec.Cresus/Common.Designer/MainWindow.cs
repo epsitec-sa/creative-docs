@@ -496,7 +496,7 @@ namespace Epsitec.Common.Designer
 		public CommandState GetCommandState(string command)
 		{
 			//	Retourne le CommandState d'une commande.
-			return this.commandDispatcher.FindCommandState(command);
+			return CommandState.Find (command);
 		}
 
 		protected void InitCommands()
@@ -539,7 +539,7 @@ namespace Epsitec.Common.Designer
 		protected CommandState CreateCommandState(string command, params Widgets.Shortcut[] shortcuts)
 		{
 			//	Crée un nouveau CommandState.
-			CommandState cs = this.commandDispatcher.GetCommandState (command);
+			CommandState cs = CommandState.Get (command);
 			
 			if (shortcuts.Length > 0)
 			{
