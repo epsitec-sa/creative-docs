@@ -1637,8 +1637,6 @@ namespace Epsitec.Common.Widgets.Adorners
 											 WidgetPaintState state)
 		{
 			//	Dessine la bande principale d'un ruban.
-			Drawing.Rectangle header = rect;
-			this.PaintImageButton(graphics, header, 8);
 		}
 
 		public override void PaintRibbonTabForeground(Drawing.Graphics graphics,
@@ -1653,10 +1651,11 @@ namespace Epsitec.Common.Widgets.Adorners
 											 WidgetPaintState state)
 		{
 			//	Dessine la bande principale d'un ruban.
+			this.PaintImageButton(graphics, rect, 23);
+
 			graphics.AddLine(rect.Left, rect.Top-0.5, rect.Right, rect.Top-0.5);
-			graphics.RenderSolid(this.colorBorder);
 			graphics.AddLine(rect.Left, rect.Bottom+0.5, rect.Right, rect.Bottom+0.5);
-			graphics.RenderSolid(this.colorWhite);
+			graphics.RenderSolid(this.colorBorder);
 		}
 
 		public override void PaintRibbonPageForeground(Drawing.Graphics graphics,
@@ -1672,8 +1671,6 @@ namespace Epsitec.Common.Widgets.Adorners
 												ActiveState active)
 		{
 			//	Dessine le bouton pour un ruban.
-			rect.Bottom -= 2;
-
 			if ( (state&WidgetPaintState.ActiveYes) != 0 )   // bouton activé ?
 			{
 				double radius = System.Math.Min(rect.Width, rect.Height)/8;
@@ -1703,9 +1700,10 @@ namespace Epsitec.Common.Widgets.Adorners
 			}
 			else
 			{
-				rect.Top -= 2;
-				rect.Left  += 1;
-				rect.Right -= 1;
+				rect.Top    -= 2;
+				rect.Bottom += 1;
+				rect.Left   += 1;
+				rect.Right  -= 1;
 
 				double radius = System.Math.Min(rect.Width, rect.Height)/8;
 				Drawing.Path pTitle = this.PathTopRoundRectangle(rect, radius);
@@ -1768,8 +1766,12 @@ namespace Epsitec.Common.Widgets.Adorners
 												 WidgetPaintState state)
 		{
 			//	Dessine une section d'un ruban.
-			rect.Deflate(0.5);
-			graphics.AddLine(rect.Right, rect.Top, rect.Right, rect.Bottom);
+			Drawing.Path pRect = this.PathRoundRectangle(rect, 3.0);
+
+			graphics.Rasterizer.AddSurface(pRect);
+			graphics.RenderSolid(this.colorWindow);
+
+			graphics.Rasterizer.AddOutline(pRect, 1.0);
 			graphics.RenderSolid(this.colorBorder);
 		}
 
@@ -1786,17 +1788,19 @@ namespace Epsitec.Common.Widgets.Adorners
 												 WidgetPaintState state)
 		{
 			//	Dessine le texte du titre d'une section d'un ruban.
-			rect.Deflate(0.5);
-			graphics.AddLine(rect.Right, rect.Top, rect.Right, rect.Bottom);
-			graphics.RenderSolid(Drawing.Color.FromRgb(167.0/255.0, 185.0/255.0, 208.0/255.0));
+			rect.Top += 1;
+
+			Drawing.Path pRect = this.PathBottomRoundRectangle(rect, 3.0);
+			graphics.Rasterizer.AddSurface(pRect);
+			graphics.RenderSolid(this.colorBorder);
 
 			if ( text == null )  return;
 
 			Drawing.TextStyle.DefineDefaultColor(this.colorBlack);
-			Drawing.Point pos = new Drawing.Point(rect.Left+3, rect.Bottom);
+			Drawing.Point pos = new Drawing.Point(rect.Left+3, rect.Bottom+1);
 			text.LayoutSize = new Drawing.Size(rect.Width-4, rect.Height);
-			text.Alignment = Drawing.ContentAlignment.MiddleLeft;
-			text.Paint(pos, graphics, Drawing.Rectangle.MaxValue, Drawing.Color.FromBrightness(0), Drawing.GlyphPaintStyle.Normal);
+			text.Alignment = Drawing.ContentAlignment.MiddleCenter;
+			text.Paint(pos, graphics, Drawing.Rectangle.MaxValue, Drawing.Color.FromBrightness(1), Drawing.GlyphPaintStyle.Normal);
 		}
 
 		public override void PaintTagBackground(Drawing.Graphics graphics,
@@ -2094,6 +2098,30 @@ namespace Epsitec.Common.Widgets.Adorners
 			return path;
 		}
 
+		protected Drawing.Path PathBottomRoundRectangle(Drawing.Rectangle rect, double radius)
+		{
+			//	Crée le chemin d'un rectangle à coins arrondis en forme de "u".
+			double ox = rect.Left;
+			double oy = rect.Bottom;
+			double dx = rect.Width;
+			double dy = rect.Height;
+
+			if ( radius == 0 )
+			{
+				radius = System.Math.Min(dx, dy)/8;
+			}
+			
+			Drawing.Path path = new Drawing.Path();
+			path.MoveTo (ox+0.5, oy+dy);
+			path.LineTo (ox+0.5, oy+radius+0.5);
+			path.CurveTo(ox+0.5, oy+0.5, ox+radius+0.5, oy+0.5);
+			path.LineTo (ox+dx-radius-0.5, oy+0.5);
+			path.CurveTo(ox+dx-0.5, oy+0.5, ox+dx-0.5, oy+radius+0.5);
+			path.LineTo (ox+dx-0.5, oy+dy);
+
+			return path;
+		}
+
 		protected Drawing.Path PathTopRectangle(Drawing.Rectangle rect)
 		{
 			//	Crée le chemin d'un rectangle en forme de "U" inversé.
@@ -2223,7 +2251,7 @@ namespace Epsitec.Common.Widgets.Adorners
 			icon.Bottom = icon.Top-32;
 
 			if ( rank ==  8 || rank ==  9 || rank == 10 || rank == 13 || rank == 14 ||
-				 rank == 16 || rank == 17 || rank == 21 || rank == 22 )
+				 rank == 16 || rank == 17 || rank == 21 || rank == 22 || rank == 23 )
 			{
 				this.PaintImageButton1(graphics, rect, icon);
 			}
