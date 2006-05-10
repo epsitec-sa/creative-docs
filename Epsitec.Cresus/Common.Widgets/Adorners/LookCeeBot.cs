@@ -1477,14 +1477,18 @@ namespace Epsitec.Common.Widgets.Adorners
 			//	Dessine une section d'un ruban.
 			this.PaintImageButton(graphics, fullRect, 16);
 
+			graphics.AddFilledRectangle(textRect);
+			graphics.RenderSolid(Drawing.Color.FromAlphaRgb(0.5, 255/255.0, 211.0/255.0, 175.0/255.0));
+
 			fullRect.Deflate(0.5);
 			graphics.AddRectangle(fullRect);
+			graphics.AddLine(textRect.Left, textRect.Top+0.5, textRect.Right, textRect.Top+0.5);
 			graphics.RenderSolid(this.ColorBorder);
 
 			if (text != null)
 			{
 				Drawing.TextStyle.DefineDefaultColor(this.colorBlack);
-				Drawing.Point pos = new Drawing.Point(textRect.Left+3, textRect.Bottom+2);
+				Drawing.Point pos = new Drawing.Point(textRect.Left+3, textRect.Bottom+1.5);
 				text.LayoutSize = new Drawing.Size(textRect.Width-4, textRect.Height);
 				text.Alignment = Drawing.ContentAlignment.MiddleCenter;
 				text.Paint(pos, graphics, Drawing.Rectangle.MaxValue, Drawing.Color.FromBrightness(0), Drawing.GlyphPaintStyle.Normal);
