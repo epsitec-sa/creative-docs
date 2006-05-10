@@ -88,22 +88,10 @@ namespace Epsitec.Common.Widgets
 		{
 			//	Dessine la case.
 			IAdorner adorner = Epsitec.Common.Widgets.Adorners.Factory.Active;
-
 			Rectangle rect = this.Client.Bounds;
-			WidgetPaintState state = this.PaintState;
 
-			if (this.ActiveState != ActiveState.Yes)
-			{
-				rect.Bottom += 1;
-			}
-
-			//?adorner.PaintRibbonButtonBackground(graphics, rect, state);
-			rect.Deflate(0.5);
-			graphics.AddRectangle(rect);
-			graphics.RenderSolid(Color.FromRgb(1,0,0));
-			rect.Inflate(0.5);
-
-			adorner.PaintRibbonButtonTextLayout(graphics, rect, this.TextLayout, state, this.ActiveState);
+			adorner.PaintRibbonButtonBackground(graphics, rect, this.PaintState, this.ActiveState);
+			adorner.PaintRibbonButtonTextLayout(graphics, rect, this.TextLayout, this.PaintState, this.ActiveState);
 		}
 
 

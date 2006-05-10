@@ -14,7 +14,7 @@ namespace Epsitec.Common.Widgets
 			this.title.DefaultFont     = this.DefaultFont;
 			this.title.DefaultFontSize = this.DefaultFontSize;
 
-			this.Padding = new Margins(5, 5, RibbonSection.LabelHeight+5, 5);
+			this.Padding = new Margins(5, 5, 5, RibbonSection.LabelHeight+5);
 		}
 		
 		protected override void Dispose(bool disposing)
@@ -63,17 +63,11 @@ namespace Epsitec.Common.Widgets
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
 			IAdorner adorner = Epsitec.Common.Widgets.Adorners.Factory.Active;
-
 			Rectangle rect = this.Client.Bounds;
-			WidgetPaintState state = this.PaintState;
-			//?adorner.PaintRibbonSectionBackground(graphics, rect, RibbonSection.LabelHeight, state);
-			rect.Deflate(0.5);
-			graphics.AddRectangle(rect);
-			graphics.RenderSolid(Color.FromBrightness(0));
-			rect.Inflate(0.5);
+			adorner.PaintRibbonSectionBackground(graphics, rect, this.PaintState);
 
-			rect.Bottom = rect.Top-RibbonSection.LabelHeight;
-			adorner.PaintRibbonSectionTextLayout(graphics, rect, this.title, state);
+			rect.Top = rect.Bottom+RibbonSection.LabelHeight;
+			adorner.PaintRibbonSectionTextLayout(graphics, rect, this.title, this.PaintState);
 		}
 
 
