@@ -1488,7 +1488,7 @@ namespace Epsitec.Common.Widgets.Adorners
 											 WidgetPaintState state)
 		{
 			//	Dessine la bande principale d'un ruban.
-			Drawing.Path pRect = this.PathRoundRectangle(rect, 0);
+			Drawing.Path pRect = this.PathRoundRectangle(rect, 6.0);
 
 			graphics.Rasterizer.AddSurface(pRect);
 			graphics.RenderSolid(this.colorCaptionLight);
@@ -1512,7 +1512,7 @@ namespace Epsitec.Common.Widgets.Adorners
 			//	Dessine le bouton pour un ruban.
 			if ( (state&WidgetPaintState.ActiveYes) != 0 )   // bouton activé ?
 			{
-				Drawing.Path pTitle = this.PathTopRoundRectangle(rect, 0);
+				Drawing.Path pTitle = this.PathTopRoundRectangle(rect, 6.0);
 
 				graphics.Rasterizer.AddSurface(pTitle);
 				if ( (state&WidgetPaintState.Enabled) != 0 )
@@ -1528,7 +1528,7 @@ namespace Epsitec.Common.Widgets.Adorners
 				{
 					Drawing.Rectangle rHilite = rect;
 					rHilite.Bottom = rHilite.Top-3;
-					Drawing.Path pHilite = this.PathTopRoundRectangle(rHilite, 0);
+					Drawing.Path pHilite = this.PathTopRoundRectangle(rHilite, 6.0);
 					graphics.Rasterizer.AddSurface(pHilite);
 					graphics.RenderSolid(this.colorHilite);
 				}
@@ -1545,14 +1545,14 @@ namespace Epsitec.Common.Widgets.Adorners
 					rect.Left   += 1;
 					rect.Right  -= 1;
 
-					Drawing.Path pTitle = this.PathTopRoundRectangle(rect, 0);
+					Drawing.Path pTitle = this.PathTopRoundRectangle(rect, 6.0);
 
 					graphics.Rasterizer.AddSurface(pTitle);
 					graphics.RenderSolid(this.colorControl);
 
 					Drawing.Rectangle rHilite = rect;
 					rHilite.Bottom = rHilite.Top-3;
-					Drawing.Path pHilite = this.PathTopRoundRectangle(rHilite, 0);
+					Drawing.Path pHilite = this.PathTopRoundRectangle(rHilite, 6.0);
 					graphics.Rasterizer.AddSurface(pHilite);
 					graphics.RenderSolid(this.colorHilite);
 
@@ -1599,15 +1599,15 @@ namespace Epsitec.Common.Widgets.Adorners
 												 WidgetPaintState state)
 		{
 			//	Dessine une section d'un ruban.
-			Drawing.Path pRect = this.PathTopRoundRectangle(userRect, 0);
+			Drawing.Path pRect = this.PathTopRoundRectangle(userRect, 3.0);
 			graphics.Rasterizer.AddSurface(pRect);
 			graphics.RenderSolid(this.colorControlLight);
 
-			pRect = this.PathBottomRoundRectangle(textRect, 0);
+			pRect = this.PathBottomRoundRectangle(textRect, 3.0);
 			graphics.Rasterizer.AddSurface(pRect);
 			graphics.RenderSolid(Drawing.Color.FromAlphaRgb(0.7, 178/255.0, 198.0/255.0, 221.0/255.0));
 
-			pRect = this.PathRoundRectangle(fullRect, 0);
+			pRect = this.PathRoundRectangle(fullRect, 3.0);
 			graphics.Rasterizer.AddOutline(pRect, 1);
 			graphics.AddLine(textRect.Left, textRect.Top+0.5, textRect.Right, textRect.Top+0.5);
 			graphics.RenderSolid(this.colorControlDarkDark);
