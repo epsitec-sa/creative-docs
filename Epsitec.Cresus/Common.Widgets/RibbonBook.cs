@@ -285,6 +285,7 @@ namespace Epsitec.Common.Widgets
 		public void NotifyInsertion(Widget widget)
 		{
 			RibbonPage item = widget as RibbonPage;
+			if (item == null)  return;
 			RibbonBook oldBook = item.Book;
 			
 			if (oldBook != null && oldBook != this)
@@ -309,6 +310,7 @@ namespace Epsitec.Common.Widgets
 		public void NotifyRemoval(Widget widget)
 		{
 			RibbonPage item = widget as RibbonPage;
+			if (item == null)  return;
 			int index = item.Index;
 
 			item.RibbonButton.Clicked -= new MessageEventHandler(this.HandleRibbonButton);
@@ -332,6 +334,9 @@ namespace Epsitec.Common.Widgets
 		
 		public void NotifyPostRemoval(Widget widget)
 		{
+			RibbonPage item = widget as RibbonPage;
+			if (item == null)  return;
+
 			this.UpdateVisiblePages();
 			this.OnPageCountChanged();
 		}
