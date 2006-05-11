@@ -396,22 +396,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public bool									IsValid
-		{
-			get
-			{
-				if (this.Validator != null)
-				{
-					return this.Validator.IsValid;
-				}
-				
-				//	Un widget qui n'a pas de validateur est considéré comme étant en tout
-				//	temps valide.
-				
-				return true;
-			}
-		}
-
 		public bool									IsDisposing
 		{
 			get

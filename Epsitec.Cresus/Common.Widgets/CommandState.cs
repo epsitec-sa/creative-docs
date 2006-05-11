@@ -319,6 +319,24 @@ namespace Epsitec.Common.Widgets
 			CommandState that = o as CommandState;
 			that.OnLongCaptionChanged (new DependencyPropertyChangedEventArgs (CommandState.LongCaptionProperty, old_value, new_value));
 		}
+
+		
+		public static string[] SplitGroupNames(string groups)
+		{
+			if (string.IsNullOrEmpty (groups))
+			{
+				return new string[0];
+			}
+			else
+			{
+				return groups.Split ('|');
+			}
+		}
+
+		public static string JoinGroupNames(params string[] groups)
+		{
+			return string.Join ("|", groups);
+		}
 		
 		 
 		public static void SetAdvancedState(DependencyObject obj, string value)

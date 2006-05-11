@@ -19,6 +19,8 @@ namespace Epsitec.Common.Widgets
 	{
 		public Visual()
 		{
+			this.visualSerialId = System.Threading.Interlocked.Increment (ref Visual.nextSerialId);
+			
 			//	Since IsFocused would be automatically inherited, we have to define
 			//	it locally. Setting InheritsParentFocus will clear the definition.
 			
@@ -29,7 +31,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		internal short							VisualSerialId
+		internal long							VisualSerialId
 		{
 			get
 			{
@@ -561,6 +563,21 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		public bool								IsValid
+		{
+			get
+			{
+				if (this.Validator != null)
+				{
+					return this.Validator.IsValid;
+				}
+				else
+				{
+					return true;
+				}
+			}
+		}
+
 		public bool								InError
 		{
 			get
@@ -583,6 +600,26 @@ namespace Epsitec.Common.Widgets
 			get
 			{
 				return this.ContainsLocalValue (Visual.ValidatorProperty);
+			}
+		}
+
+		public string							ValidationGroups
+		{
+			get
+			{
+				return (string) this.GetValue (Visual.ValidationGroupsProperty);
+			}
+			set
+			{
+				this.SetValue (Visual.ValidationGroupsProperty, value);
+			}
+		}
+
+		public bool								HasValidationGroups
+		{
+			get
+			{
+				return this.ContainsLocalValue (Visual.ValidationGroupsProperty);
 			}
 		}
 
@@ -1142,7 +1179,7 @@ namespace Epsitec.Common.Widgets
 
 		public override int GetHashCode()
 		{
-			return this.visualSerialId;
+			return (int) this.visualSerialId;
 		}
 		
 		
@@ -1460,6 +1497,7 @@ namespace Epsitec.Common.Widgets
 		public static readonly DependencyProperty ContainsKeyboardFocusProperty	= DependencyProperty.RegisterReadOnly ("ContainsKeyboardFocus", typeof (bool), typeof (Visual), new VisualPropertyMetadata (false, new GetValueOverrideCallback (Visual.GetContainsKeyboardFocusValue), VisualPropertyMetadataOptions.ChangesSilently));
 
 		public static readonly DependencyProperty ValidatorProperty				= DependencyProperty.RegisterReadOnly ("Validator", typeof (IValidator), typeof (Visual), new DependencyPropertyMetadata (null));
+		public static readonly DependencyProperty ValidationGroupsProperty		= DependencyProperty.Register ("ValidationGroups", typeof (string), typeof (Visual), new DependencyPropertyMetadata (null));
 
 		public static readonly DependencyProperty SyncPaintProperty				= DependencyProperty.Register ("SyncPaint", typeof (bool), typeof (Visual), new DependencyPropertyMetadata (false));
 		public static readonly DependencyProperty AutoCaptureProperty			= DependencyProperty.Register ("AutoCapture", typeof (bool), typeof (Visual), new DependencyPropertyMetadata (true));
@@ -1476,10 +1514,10 @@ namespace Epsitec.Common.Widgets
 		
 		public static readonly DependencyProperty CommandProperty				= DependencyProperty.Register ("Command", typeof (string), typeof (Visual), new DependencyPropertyMetadata (null, new PropertyInvalidatedCallback (Visual.NotifyCommandChanged)));
 
-		private static short					nextSerialId = 1;
+		private static long						nextSerialId = 1;
 		
 		private int								commandCacheId = -1;
-		private short							visualSerialId = Visual.nextSerialId++;
+		private long							visualSerialId;
 		private bool							dirtyLayout;
 		private bool							dirtyDisplay;
 

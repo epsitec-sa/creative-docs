@@ -503,7 +503,7 @@ namespace Epsitec.Common.Widgets.Layouts
 			
 			public override int GetHashCode()
 			{
-				return this.visual.VisualSerialId;
+				return (int) this.visual.VisualSerialId;
 			}
 			public override bool Equals(object obj)
 			{

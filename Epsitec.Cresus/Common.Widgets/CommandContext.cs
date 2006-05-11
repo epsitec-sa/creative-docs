@@ -222,7 +222,7 @@ namespace Epsitec.Common.Widgets
 
 		#endregion
 
-		#region Private Record Struct
+		#region Private Record Structure
 		
 		private struct Record
 		{
