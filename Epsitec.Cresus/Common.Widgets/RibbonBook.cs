@@ -16,15 +16,16 @@ namespace Epsitec.Common.Widgets
 
 			this.TabNavigation = Widget.TabNavigationMode.ForwardTabActive;
 
-			//	Partie supérieure, qui contiendra les boutons et les commandes rapides.
-			this.buttons = new Widget(this);
-			this.buttons.Margins = new Margins(10, 0, 0, -1);
-			this.buttons.Padding = new Margins(0, 0, RibbonBook.TopMargin, 0);
-			this.buttons.Dock = DockStyle.Top;
-
 			//	Partie inférieure, qui contiendra les pages.
 			this.pages = new Widget(this);
 			this.pages.Dock = DockStyle.Fill;
+
+			//	Partie supérieure, qui contiendra les boutons et les commandes rapides.
+			//	Créé en deuxième, pour dessiner les boutons par-dessus les pages !
+			this.buttons = new Widget(this);
+			this.buttons.Margins = new Margins(10, 0, 0, -1);  // -1 -> un pixel de chevauchement avec this.pages
+			this.buttons.Padding = new Margins(0, 0, RibbonBook.TopMargin, 0);
+			this.buttons.Dock = DockStyle.Top;
 		}
 		
 		public RibbonBook(Widget embedder) : this()
@@ -132,11 +133,18 @@ namespace Epsitec.Common.Widgets
 
 				if (page.RibbonButton == button)
 				{
-					this.ActivePage = page;
-					
-					if ( button.AutoFocus )
+					if (this.ActivePage == page)
 					{
-						this.Focus();
+						this.ActivePage = null;
+					}
+					else
+					{
+						this.ActivePage = page;
+
+						if (button.AutoFocus)
+						{
+							this.Focus();
+						}
 					}
 					
 					break;
@@ -197,15 +205,9 @@ namespace Epsitec.Common.Widgets
 		{
 			//	Dessine le groupe d'onglets.
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
-			Rectangle rect;
-
-			rect = this.Client.Bounds;
+			Rectangle rect = this.Client.Bounds;
 			rect.Bottom = rect.Top-RibbonBook.TabHeight;
 			adorner.PaintRibbonTabBackground(graphics, rect, this.PaintState);
-
-			rect = this.Client.Bounds;
-			rect.Top -= RibbonBook.TabHeight;
-			adorner.PaintRibbonPageBackground(graphics, rect, this.PaintState);
 		}
 		
 		protected override void ProcessMessage(Message message, Point pos)

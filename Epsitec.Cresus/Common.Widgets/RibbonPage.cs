@@ -121,6 +121,8 @@ namespace Epsitec.Common.Widgets
 		{
 			//	Dessine l'onglet.
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
+			Rectangle rect = this.Client.Bounds;
+			adorner.PaintRibbonPageBackground(graphics, rect, this.PaintState);
 		}
 
 
