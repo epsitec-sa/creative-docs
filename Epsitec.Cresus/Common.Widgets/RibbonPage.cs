@@ -25,7 +25,7 @@ namespace Epsitec.Common.Widgets
 			this.SetEmbedder(embedder);
 		}
 
-		
+
 		static RibbonPage()
 		{
 			Helpers.VisualPropertyMetadata metadataHeight = new Helpers.VisualPropertyMetadata(RibbonPage.FixHeight, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
@@ -33,7 +33,7 @@ namespace Epsitec.Common.Widgets
 			Visual.PreferredHeightProperty.OverrideMetadata(typeof(RibbonPage), metadataHeight);
 		}
 
-		
+
 		public string							RibbonTitle
 		{
 			get
