@@ -567,9 +567,11 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				if (this.Validator != null)
+				IValidator validator = this.Validator;
+				
+				if (validator != null)
 				{
-					return this.Validator.IsValid;
+					return validator.IsValid;
 				}
 				else
 				{
@@ -1187,6 +1189,11 @@ namespace Epsitec.Common.Widgets
 		{
 		}
 
+		private static object GetIsValidValue(DependencyObject o)
+		{
+			Visual that = o as Visual;
+			return that.IsValid;
+		}
 
 		private static object GetParentValue(DependencyObject o)
 		{
@@ -1496,6 +1503,7 @@ namespace Epsitec.Common.Widgets
 		public static readonly DependencyProperty KeyboardFocusProperty			= DependencyProperty.RegisterReadOnly ("KeyboardFocus", typeof (bool), typeof (Visual), new VisualPropertyMetadata (false, new SetValueOverrideCallback (Visual.SetKeyboardFocusValue), VisualPropertyMetadataOptions.AffectsDisplay));
 		public static readonly DependencyProperty ContainsKeyboardFocusProperty	= DependencyProperty.RegisterReadOnly ("ContainsKeyboardFocus", typeof (bool), typeof (Visual), new VisualPropertyMetadata (false, new GetValueOverrideCallback (Visual.GetContainsKeyboardFocusValue), VisualPropertyMetadataOptions.ChangesSilently));
 
+		public static readonly DependencyProperty IsValidProperty				= DependencyProperty.RegisterReadOnly ("IsValid", typeof (bool), typeof (Visual), new DependencyPropertyMetadata (Visual.GetIsValidValue));
 		public static readonly DependencyProperty ValidatorProperty				= DependencyProperty.RegisterReadOnly ("Validator", typeof (IValidator), typeof (Visual), new DependencyPropertyMetadata (null));
 		public static readonly DependencyProperty ValidationGroupsProperty		= DependencyProperty.Register ("ValidationGroups", typeof (string), typeof (Visual), new DependencyPropertyMetadata (null));
 

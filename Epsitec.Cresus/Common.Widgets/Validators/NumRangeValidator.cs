@@ -29,16 +29,16 @@ namespace Epsitec.Common.Widgets.Validators
 		
 		public override void Validate()
 		{
-			Support.Data.INumValue num = this.widget as Support.Data.INumValue;
+			Support.Data.INumValue num = this.Widget as Support.Data.INumValue;
 			Types.DecimalRange range = new Types.DecimalRange (num.MinValue, num.MaxValue, num.Resolution);
 			
 			if (range.CheckInRange (num.Value))
 			{
-				this.state = ValidationState.Ok;
+				this.SetState (ValidationState.Ok);
 			}
 			else
 			{
-				this.state = ValidationState.Error;
+				this.SetState (ValidationState.Error);
 			}
 		}
 		
@@ -47,7 +47,7 @@ namespace Epsitec.Common.Widgets.Validators
 		{
 			base.AttachWidget (widget);
 			
-			Support.Data.INumValue num = this.widget as Support.Data.INumValue;
+			Support.Data.INumValue num = this.Widget as Support.Data.INumValue;
 			
 			num.ValueChanged += new Support.EventHandler (this.HandleValueChanged);
 		}
@@ -56,7 +56,7 @@ namespace Epsitec.Common.Widgets.Validators
 		{
 			base.DetachWidget (widget);
 			
-			Support.Data.INumValue num = this.widget as Support.Data.INumValue;
+			Support.Data.INumValue num = this.Widget as Support.Data.INumValue;
 			
 			num.ValueChanged -= new Support.EventHandler (this.HandleValueChanged);
 		}

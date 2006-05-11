@@ -17,7 +17,7 @@ namespace Epsitec.Common.Widgets.Validators
 		
 		public override void Validate()
 		{
-			string text = this.widget.Text;
+			string text = this.Widget.Text;
 			
 			this.ValidateText (text);
 		}

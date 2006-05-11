@@ -1708,6 +1708,15 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		public void AsyncValidation(Widget widget)
+		{
+			if (! this.async_validation_list.Contains (widget))
+			{
+				this.async_validation_list.Add (widget);
+				this.AsyncValidation ();
+			}
+		}
+
 		public void ForceLayout()
 		{
 			if (this.recursive_layout_count > 0)
@@ -1809,10 +1818,22 @@ namespace Epsitec.Common.Widgets
 		
 		internal void DispatchValidation()
 		{
+			Widget[] widgets = this.async_validation_list.ToArray ();
+			
+			this.async_validation_list.Clear ();
 			this.pending_validation = false;
-			CommandDispatcher.SyncAllValidationRules ();
+
+			for (int i = 0; i < widgets.Length; i++)
+			{
+				if (widgets[i].IsDisposed)
+				{
+					continue;
+				}
+
+				widgets[i].Validate ();
+			}
 		}
-		
+
 		internal void DispatchMessage(Message message)
 		{
 			this.DispatchMessage (message, null);
@@ -2314,7 +2335,10 @@ namespace Epsitec.Common.Widgets
 		private bool							is_async_notification_queued;
 		private bool							is_async_layout_queued;
 		private bool							is_disposed;
+		
 		private bool							pending_validation;
+		private List<Widget>					async_validation_list = new List<Widget> ();
+		
 		private IPaintFilter					paint_filter;
 		
 		private System.Collections.Queue		post_paint_queue = new System.Collections.Queue ();

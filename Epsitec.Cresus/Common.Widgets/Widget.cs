@@ -17,6 +17,8 @@ namespace Epsitec.Common.Widgets
 		Disposing			= 0x00000001,
 		Disposed			= 0x00000002,
 		
+		WasValid			= 0x00000004,
+		
 		Embedded			= 0x00000008,		//	=> widget appartient au parent (widgets composés)
 		
 		Focusable			= 0x00000010,
@@ -47,7 +49,8 @@ namespace Epsitec.Common.Widgets
 			{
 				System.Diagnostics.Debug.WriteLine (string.Format ("{1}+ Created {0}", this.GetType ().Name, this.VisualSerialId));
 			}
-			
+
+			this.InternalState |= InternalState.WasValid;
 			this.InternalState |= InternalState.AutoMnemonic;
 			this.InternalState |= InternalState.AutoResolveResRef;
 			
@@ -953,16 +956,37 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 		}
+
 		
+		internal void AsyncValidation()
+		{
+			Window window = this.Window;
+			
+			if (window != null)
+			{
+				window.AsyncValidation (this);
+			}
+		}
 		
 		public virtual void Validate()
 		{
-			if (this.Validator != null)
+			bool oldValid = (this.internal_state & InternalState.WasValid) != 0;
+			bool newValid = this.IsValid;
+
+			if (oldValid != newValid)
 			{
-				if (this.Validator.State == ValidationState.Dirty)
+				if (newValid)
 				{
-					this.Validator.Validate ();
+					this.internal_state |= InternalState.WasValid;
 				}
+				else
+				{
+					this.internal_state &= ~InternalState.WasValid;
+				}
+
+				this.InvalidateProperty (Visual.IsValidProperty, oldValid, newValid);
+				
+				this.SetError (newValid == false);
 			}
 		}
 		
@@ -1022,8 +1046,7 @@ namespace Epsitec.Common.Widgets
 				System.Diagnostics.Debug.Assert (this.Parent == newParent);
 			}
 		}
-		
-		
+
 		public virtual void SetFrozen(bool frozen)
 		{
 			if ((this.internal_state & InternalState.Frozen) == 0)

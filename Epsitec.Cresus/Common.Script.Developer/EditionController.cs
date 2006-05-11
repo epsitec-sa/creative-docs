@@ -514,8 +514,6 @@ namespace Epsitec.Common.Script.Developer
 			
 			protected override void ValidateText(string text)
 			{
-				this.state = ValidationState.Ok;
-				
 				int max = this.controller.Source.Methods.Length;
 				
 				for (int i = 0; i < max; i++)
@@ -524,11 +522,13 @@ namespace Epsitec.Common.Script.Developer
 					{
 						if (this.controller.Source.Methods[i].Name == text)
 						{
-							this.state = ValidationState.Error;
+							this.SetState (ValidationState.Error);
 							return;
 						}
 					}
 				}
+				
+				this.SetState (ValidationState.Ok);
 			}
 			
 			protected EditionController			controller;
