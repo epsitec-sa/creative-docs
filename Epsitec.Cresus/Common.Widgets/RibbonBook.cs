@@ -37,7 +37,7 @@ namespace Epsitec.Common.Widgets
 		{
 			if ( disposing )
 			{
-				RibbonPage[] pages = new RibbonPage[this.items.Count];
+				Widget[] pages = new Widget[this.items.Count];
 				this.items.CopyTo(pages, 0);
 				
 				for (int i=0; i<pages.Length; i++)
