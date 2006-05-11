@@ -837,9 +837,9 @@ namespace Epsitec.Common.Widgets
 		{
 			TabPage item  = widget as TabPage;
 			int     index = item.Index;
-			
-			item.TabButton.Clicked -= new MessageEventHandler(this.HandleTabButton);
-			item.RankChanged       -= new EventHandler(this.HandlePageRankChanged);
+
+			item.TabButton.Pressed -= new MessageEventHandler(this.HandleTabButton);
+			item.RankChanged -= new EventHandler(this.HandlePageRankChanged);
 			
 			this.Children.Remove(item);
 			this.Children.Remove(item.TabButton);
