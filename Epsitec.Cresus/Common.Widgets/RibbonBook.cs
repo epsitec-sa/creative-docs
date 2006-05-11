@@ -309,8 +309,6 @@ namespace Epsitec.Common.Widgets
 				item.SetEmbedder(this.pages);
 				item.Dock = DockStyle.Fill;
 
-				//?System.Diagnostics.Debug.Assert(oldBook == this);
-
 				item.RibbonButton.SetEmbedder(this.buttons);
 				item.RibbonButton.Dock = DockStyle.Left;
 				item.RibbonButton.Pressed += new MessageEventHandler(this.HandleRibbonButton);
@@ -332,11 +330,11 @@ namespace Epsitec.Common.Widgets
 			{
 				int index = item.Index;
 
-				item.RibbonButton.Clicked -= new MessageEventHandler(this.HandleRibbonButton);
+				item.RibbonButton.Pressed -= new MessageEventHandler(this.HandleRibbonButton);
 				item.RankChanged -= new EventHandler(this.HandlePageRankChanged);
 
-				this.Children.Remove(item);
-				this.Children.Remove(item.RibbonButton);
+				this.pages.Children.Remove(item);
+				this.buttons.Children.Remove(item.RibbonButton);
 
 				if (this.ActivePage == item)
 				{
