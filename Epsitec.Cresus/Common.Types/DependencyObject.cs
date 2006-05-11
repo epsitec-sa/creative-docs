@@ -124,10 +124,7 @@ namespace Epsitec.Common.Types
 		{
 			DependencyPropertyMetadata metadata = property.GetMetadata (this);
 
-			if (metadata.CoerceValue != null)
-			{
-				value = metadata.CoerceValue (this, property, value);
-			}
+			value = this.CoerceValue (property, metadata, value);
 			
 			if (metadata.SetValueOverride != null)
 			{
@@ -154,15 +151,7 @@ namespace Epsitec.Common.Types
 		public object CoerceValue(DependencyProperty property, object value)
 		{
 			DependencyPropertyMetadata metadata = property.GetMetadata (this);
-
-			if (metadata.CoerceValue != null)
-			{
-				return metadata.CoerceValue (this, property, value);
-			}
-			else
-			{
-				return value;
-			}
+			return this.CoerceValue (property, metadata, value);
 		}
 
 		public object GetLocalValue(DependencyProperty property)
@@ -297,6 +286,17 @@ namespace Epsitec.Common.Types
 
 					handler (this, args);
 				}
+			}
+		}
+		private object CoerceValue(DependencyProperty property, DependencyPropertyMetadata metadata, object value)
+		{
+			if (metadata.CoerceValue != null)
+			{
+				return metadata.CoerceValue (this, property, value);
+			}
+			else
+			{
+				return value;
 			}
 		}
 		
