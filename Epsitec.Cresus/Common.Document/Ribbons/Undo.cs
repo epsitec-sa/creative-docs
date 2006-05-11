@@ -11,7 +11,8 @@ namespace Epsitec.Common.Document.Ribbons
 	{
 		public Undo() : base()
 		{
-			this.title.Text = Res.Strings.Action.UndoMain;
+			this.Title = Res.Strings.Action.UndoMain;
+			this.PreferredWidth = 8 + 22*1.5*2;
 
 			this.buttonUndo = this.CreateIconButton("Undo", "Large");
 			this.buttonRedo = this.CreateIconButton("Redo", "Large");
@@ -27,15 +28,6 @@ namespace Epsitec.Common.Document.Ribbons
 			}
 			
 			base.Dispose(disposing);
-		}
-
-		public override double DefaultWidth
-		{
-			//	Retourne la largeur standard.
-			get
-			{
-				return 8 + 22*1.5*2;
-			}
 		}
 
 

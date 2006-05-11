@@ -11,7 +11,8 @@ namespace Epsitec.Common.Document.Ribbons
 	{
 		public Replace() : base()
 		{
-			this.title.Text = Res.Strings.Action.ReplaceMain;
+			this.Title = Res.Strings.Action.ReplaceMain;
+			this.PreferredWidth = 8 + 22*1.5*2;
 
 			this.buttonReplace = this.CreateIconButton("Replace", "Large");
 			
@@ -25,15 +26,6 @@ namespace Epsitec.Common.Document.Ribbons
 			}
 			
 			base.Dispose(disposing);
-		}
-
-		public override double DefaultWidth
-		{
-			//	Retourne la largeur standard.
-			get
-			{
-				return 8 + 22*1.5*2;
-			}
 		}
 
 

@@ -11,7 +11,8 @@ namespace Epsitec.Common.Document.Ribbons
 	{
 		public Debug() : base()
 		{
-			this.title.Text = "Debug";
+			this.Title = "Debug";
+			this.PreferredWidth = 8 + 40;
 
 			this.buttonOthers = this.CreateMenuButton ("", "Debug menu...", new MessageEventHandler (this.HandleOthersPressed));
 			
@@ -25,15 +26,6 @@ namespace Epsitec.Common.Document.Ribbons
 			}
 			
 			base.Dispose(disposing);
-		}
-
-		public override double DefaultWidth
-		{
-			//	Retourne la largeur standard.
-			get
-			{
-				return 8 + 40;
-			}
 		}
 
 

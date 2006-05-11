@@ -11,7 +11,8 @@ namespace Epsitec.Common.Document.Ribbons
 	{
 		public Rotate() : base()
 		{
-			this.title.Text = Res.Strings.Action.RotateMain;
+			this.Title = Res.Strings.Action.RotateMain;
+			this.PreferredWidth = 8 + 22*2 + this.separatorWidth + 50;
 
 			this.buttonRotate90      = this.CreateIconButton("Rotate90");
 			this.buttonRotate270     = this.CreateIconButton("Rotate270");
@@ -38,15 +39,6 @@ namespace Epsitec.Common.Document.Ribbons
 			base.SetDocument(type, install, debug, gs, document);
 
 			this.AdaptFieldRot(this.fieldRotate);
-		}
-
-		public override double DefaultWidth
-		{
-			//	Retourne la largeur standard.
-			get
-			{
-				return 8 + 22*2 + this.separatorWidth + 50;
-			}
 		}
 
 

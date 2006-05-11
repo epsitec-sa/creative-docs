@@ -12,7 +12,8 @@ namespace Epsitec.Common.Document.Ribbons
 	{
 		public TextStyles() : base()
 		{
-			this.title.Text = Res.Strings.Action.TextStylesMain;
+			this.Title = Res.Strings.Action.TextStylesMain;
+			this.PreferredWidth = 5+20+5+60*3+5;
 
 			this.buttonParagraph = new IconButtonMark(this);
 			//?this.buttonParagraph.Command = "TextEditing";  // (*)
@@ -137,16 +138,6 @@ namespace Epsitec.Common.Document.Ribbons
 			//	déplacement du curseur.
 			if ( this.document == null )  return;
 			this.UpdateSelectedStyle();
-		}
-
-
-		public override double DefaultWidth
-		{
-			//	Retourne la largeur standard.
-			get
-			{
-				return 5+20+5+60*3+5;
-			}
 		}
 
 
