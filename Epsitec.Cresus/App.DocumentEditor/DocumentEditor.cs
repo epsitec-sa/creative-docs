@@ -617,7 +617,7 @@ namespace Epsitec.App.DocumentEditor
 
 			//	Crée le RibbonBook unique qui remplace le traditionnel menu.
 			this.ribbonBook = new RibbonBook(this);
-			this.ribbonBook.PreferredHeight = 123;
+			this.ribbonBook.PreferredHeight = 105;
 			this.ribbonBook.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top;
 			this.ribbonBook.ActivePageChanged += new EventHandler(this.HandleRibbonBookActivePageChanged);
 
@@ -675,7 +675,7 @@ namespace Epsitec.App.DocumentEditor
 
 			this.UpdateQuickCommands();
 
-			this.ribbonActive = this.ribbonMain;
+			this.SetActiveRibbon(this.ribbonMain);
 
 			this.info = new StatusBar(this);
 			this.info.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Bottom;
@@ -775,7 +775,7 @@ namespace Epsitec.App.DocumentEditor
 			this.bookDocuments = new TabBook(this);
 			this.bookDocuments.PreferredWidth = this.panelsWidth;
 			this.bookDocuments.Anchor = AnchorStyles.All;
-			this.bookDocuments.Margins = new Margins(this.vToolBar.PreferredWidth, this.panelsWidth+2, this.RibbonHeight+1, this.info.PreferredHeight+1);
+			this.bookDocuments.Margins = new Margins(this.vToolBar.PreferredWidth, this.panelsWidth+2, this.RibbonHeight+3, this.info.PreferredHeight+1);
 			this.bookDocuments.Arrows = TabBookArrows.Right;
 			this.bookDocuments.HasCloseButton = true;
 			this.bookDocuments.CloseButton.Command = "Close";
@@ -789,7 +789,7 @@ namespace Epsitec.App.DocumentEditor
 		{
 			//	Met à jour toutes les icônes de la partie rapide, à droite des choix du ruban actif.
 			//	Supprime tous les IconButtons.
-			foreach ( Widget widget in this.ribbonBook.Children.Widgets )
+			foreach ( Widget widget in this.ribbonBook.Items )
 			{
 				if ( widget is RibbonPage )  continue;
 				widget.Dispose();
@@ -995,7 +995,7 @@ namespace Epsitec.App.DocumentEditor
 			di.bookPanels = new TabBook(this);
 			di.bookPanels.PreferredWidth = this.panelsWidth;
 			di.bookPanels.Anchor = AnchorStyles.TopAndBottom | AnchorStyles.Right;
-			di.bookPanels.Margins = new Margins(1, 1, this.RibbonHeight+1, this.info.PreferredHeight+1);
+			di.bookPanels.Margins = new Margins(1, 1, this.RibbonHeight+3, this.info.PreferredHeight+1);
 			di.bookPanels.Arrows = TabBookArrows.Stretch;
 			di.bookPanels.ActivePageChanged += new EventHandler(this.HandleBookPanelsActivePageChanged);
 
@@ -1294,8 +1294,9 @@ namespace Epsitec.App.DocumentEditor
 		protected void RibbonsNotifyChanged(string changed)
 		{
 			//	Passe en revue toutes les sections de toutes les pages.
-			foreach (RibbonPage page in this.ribbonBook.Items)
+			foreach (Widget widget in this.ribbonBook.Items)
 			{
+				RibbonPage page = widget as RibbonPage;
 				if (page == null)  continue;
 
 				foreach (Ribbons.Abstract section in page.Items)
@@ -1308,8 +1309,9 @@ namespace Epsitec.App.DocumentEditor
 		protected void RibbonsNotifyTextStylesChanged(System.Collections.ArrayList textStyleList)
 		{
 			//	Passe en revue toutes les sections de toutes les pages.
-			foreach (RibbonPage page in this.ribbonBook.Items)
+			foreach (Widget widget in this.ribbonBook.Items)
 			{
+				RibbonPage page = widget as RibbonPage;
 				if (page == null)  continue;
 
 				foreach (Ribbons.Abstract section in page.Items)
@@ -1322,8 +1324,9 @@ namespace Epsitec.App.DocumentEditor
 		protected void RibbonsNotifyTextStylesChanged()
 		{
 			//	Passe en revue toutes les sections de toutes les pages.
-			foreach (RibbonPage page in this.ribbonBook.Items)
+			foreach (Widget widget in this.ribbonBook.Items)
 			{
+				RibbonPage page = widget as RibbonPage;
 				if (page == null)  continue;
 
 				foreach (Ribbons.Abstract section in page.Items)
@@ -1336,8 +1339,9 @@ namespace Epsitec.App.DocumentEditor
 		protected void RibbonsSetDocument(DocumentType type, InstallType install, DebugMode debugMode, Settings.GlobalSettings gs, Document document)
 		{
 			//	Passe en revue toutes les sections de toutes les pages.
-			foreach (RibbonPage page in this.ribbonBook.Items)
+			foreach (Widget widget in this.ribbonBook.Items)
 			{
+				RibbonPage page = widget as RibbonPage;
 				if (page == null)  continue;
 
 				foreach (Ribbons.Abstract section in page.Items)
@@ -5521,7 +5525,7 @@ namespace Epsitec.App.DocumentEditor
 		protected StatusBar						info;
 		protected ResizeKnob					resize;
 		protected TabBook						bookDocuments;
-		protected double						ribbonHeight = 123;
+		protected double						ribbonHeight = 105;
 		protected double						panelsWidth = 252;
 		protected bool							ignoreChange;
 		protected int							tabIndex;
