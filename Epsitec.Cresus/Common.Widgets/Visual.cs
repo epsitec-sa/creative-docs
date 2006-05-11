@@ -568,7 +568,23 @@ namespace Epsitec.Common.Widgets
 				return (bool) this.GetValue (Visual.InErrorProperty);
 			}
 		}
-		
+
+
+		public IValidator						Validator
+		{
+			get
+			{
+				return (IValidator) this.GetValue (Visual.ValidatorProperty);
+			}
+		}
+
+		public bool								HasValidator
+		{
+			get
+			{
+				return this.ContainsLocalValue (Visual.ValidatorProperty);
+			}
+		}
 
 		public bool								SyncPaint
 		{
@@ -1442,6 +1458,8 @@ namespace Epsitec.Common.Widgets
 		
 		public static readonly DependencyProperty KeyboardFocusProperty			= DependencyProperty.RegisterReadOnly ("KeyboardFocus", typeof (bool), typeof (Visual), new VisualPropertyMetadata (false, new SetValueOverrideCallback (Visual.SetKeyboardFocusValue), VisualPropertyMetadataOptions.AffectsDisplay));
 		public static readonly DependencyProperty ContainsKeyboardFocusProperty	= DependencyProperty.RegisterReadOnly ("ContainsKeyboardFocus", typeof (bool), typeof (Visual), new VisualPropertyMetadata (false, new GetValueOverrideCallback (Visual.GetContainsKeyboardFocusValue), VisualPropertyMetadataOptions.ChangesSilently));
+
+		public static readonly DependencyProperty ValidatorProperty				= DependencyProperty.RegisterReadOnly ("Validator", typeof (IValidator), typeof (Visual), new DependencyPropertyMetadata (null));
 
 		public static readonly DependencyProperty SyncPaintProperty				= DependencyProperty.Register ("SyncPaint", typeof (bool), typeof (Visual), new DependencyPropertyMetadata (false));
 		public static readonly DependencyProperty AutoCaptureProperty			= DependencyProperty.Register ("AutoCapture", typeof (bool), typeof (Visual), new DependencyPropertyMetadata (true));

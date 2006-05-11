@@ -907,14 +907,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public IValidator							Validator
-		{
-			get
-			{
-				return this.validator;
-			}
-		}
-		
 		
 		public virtual Drawing.Size GetBestFitSize()
 		{
@@ -993,33 +985,37 @@ namespace Epsitec.Common.Widgets
 		
 		internal void AddValidator(IValidator value)
 		{
-			this.validator = MulticastValidator.Combine (this.validator, value);
+			this.SetValue (Visual.ValidatorProperty, MulticastValidator.Combine (this.Validator, value));
 			this.OnValidatorChanged ();
 		}
 		
 		internal void RemoveValidator(IValidator value)
 		{
-			if (this.validator != null)
+			if (this.Validator != null)
 			{
-				MulticastValidator mv = this.validator as MulticastValidator;
+				IValidator validator = this.Validator;
+				MulticastValidator mv = validator as MulticastValidator;
 				
 				if (mv != null)
 				{
-					mv.Remove (value);
-					this.validator = MulticastValidator.Simplify (mv);
+					validator = MulticastValidator.Remove (mv, value);
 				}
-				else if (this.validator == value)
+				else if (validator == value)
 				{
-					this.validator = null;
+					validator = null;
+				}
+
+				if (validator == null)
+				{
+					this.ClearValueBase (Visual.ValidatorProperty);
+				}
+				else
+				{
+					this.SetValue (Visual.ValidatorProperty, validator);
 				}
 				
 				this.OnValidatorChanged ();
 			}
-		}
-		
-		protected virtual bool ShouldSerializeValidator(IValidator validator)
-		{
-			return true;
 		}
 		
 		
@@ -3743,9 +3739,9 @@ namespace Epsitec.Common.Widgets
 			{
 				this.TextChanged (this);
 			}
-			if (this.validator != null)
+			if (this.Validator != null)
 			{
-				this.validator.MakeDirty (true);
+				this.Validator.MakeDirty (true);
 			}
 		}
 		
@@ -4013,7 +4009,6 @@ namespace Epsitec.Common.Widgets
 		private double							default_font_height;
 		private MouseCursor						mouse_cursor;
 		private Support.ResourceManager			resource_manager;
-		private IValidator						validator;
 		
 		static List<Widget>						enteredWidgets = new List<Widget> ();
 		static List<System.WeakReference>		aliveWidgets = new List<System.WeakReference> ();

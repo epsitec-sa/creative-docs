@@ -89,6 +89,18 @@ namespace Epsitec.Common.Widgets
 				return this.uniqueId;
 			}
 		}
+
+		public string							Group
+		{
+			get
+			{
+				return (string) this.GetValue (CommandState.GroupProperty);
+			}
+			set
+			{
+				this.SetValue (CommandState.GroupProperty, value);
+			}
+		}
 		
 		
 		public bool								Enable
@@ -265,6 +277,11 @@ namespace Epsitec.Common.Widgets
 		{
 			CommandCache.Default.UpdateWidgets (this);
 		}
+
+		private void OnGroupChanged(DependencyPropertyChangedEventArgs e)
+		{
+			CommandCache.Default.Invalidate (this);
+		}
 		
 		private void OnIconNameChanged(DependencyPropertyChangedEventArgs e)
 		{
@@ -277,7 +294,13 @@ namespace Epsitec.Common.Widgets
 		private void OnLongCaptionChanged(DependencyPropertyChangedEventArgs e)
 		{
 		}
-		
+
+
+		private static void NotifyGroupChanged(DependencyObject o, object old_value, object new_value)
+		{
+			CommandState that = o as CommandState;
+			that.OnGroupChanged (new DependencyPropertyChangedEventArgs (CommandState.GroupProperty, old_value, new_value));
+		}
 		
 		private static void NotifyIconNameChanged(DependencyObject o, object old_value, object new_value)
 		{
@@ -314,10 +337,11 @@ namespace Epsitec.Common.Widgets
 		{
 			return obj.GetValue (CommandState.AdvancedStateProperty) as string;
 		}
-		
-		public static readonly DependencyProperty	IconNameProperty = DependencyProperty.Register ("IconName", typeof (string), typeof (CommandState), new DependencyPropertyMetadata (null, new PropertyInvalidatedCallback (CommandState.NotifyIconNameChanged)));
-		public static readonly DependencyProperty	ShortCaptionProperty = DependencyProperty.Register ("ShortCaption", typeof (string), typeof (CommandState), new DependencyPropertyMetadata (null, new PropertyInvalidatedCallback (CommandState.NotifyShortCaptionChanged)));
-		public static readonly DependencyProperty	LongCaptionProperty	= DependencyProperty.Register ("LongCaption", typeof (string), typeof (CommandState), new DependencyPropertyMetadata (null, new PropertyInvalidatedCallback (CommandState.NotifyLongCaptionChanged)));
+
+		public static readonly DependencyProperty GroupProperty			= DependencyProperty.Register ("Group", typeof (string), typeof (CommandState), new DependencyPropertyMetadata (null, new PropertyInvalidatedCallback (CommandState.NotifyGroupChanged)));
+		public static readonly DependencyProperty IconNameProperty		= DependencyProperty.Register ("IconName", typeof (string), typeof (CommandState), new DependencyPropertyMetadata (null, new PropertyInvalidatedCallback (CommandState.NotifyIconNameChanged)));
+		public static readonly DependencyProperty ShortCaptionProperty	= DependencyProperty.Register ("ShortCaption", typeof (string), typeof (CommandState), new DependencyPropertyMetadata (null, new PropertyInvalidatedCallback (CommandState.NotifyShortCaptionChanged)));
+		public static readonly DependencyProperty LongCaptionProperty	= DependencyProperty.Register ("LongCaption", typeof (string), typeof (CommandState), new DependencyPropertyMetadata (null, new PropertyInvalidatedCallback (CommandState.NotifyLongCaptionChanged)));
 		
 		public static readonly DependencyProperty	AdvancedStateProperty = DependencyProperty.RegisterAttached ("AdvancedState", typeof (string), typeof (CommandState), new DependencyPropertyMetadata (null));
 

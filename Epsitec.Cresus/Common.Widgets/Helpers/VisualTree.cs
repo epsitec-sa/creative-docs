@@ -319,17 +319,17 @@ namespace Epsitec.Common.Widgets.Helpers
 				{
 					return context;
 				}
-				
+
 				Visual parent = visual.Parent;
 
 				if (parent == null)
 				{
 					return VisualTree.GetCommandContext (visual.Window);
 				}
-				
+
 				visual = parent;
 			}
-			
+
 			return null;
 		}
 
@@ -343,13 +343,64 @@ namespace Epsitec.Common.Widgets.Helpers
 				{
 					return context;
 				}
-				
+
 				window = window.Owner;
 			}
-			
+
 			return null;
 		}
 
+		public static ValidationContext GetValidationContext(Visual visual)
+		{
+			while (visual != null)
+			{
+				ValidationContext context = ValidationContext.GetContext (visual);
+
+				if (context != null)
+				{
+					return context;
+				}
+
+				Visual parent = visual.Parent;
+
+				if (parent == null)
+				{
+					return VisualTree.GetValidationContext (visual.Window);
+				}
+
+				visual = parent;
+			}
+
+			return null;
+		}
+
+		public static ValidationContext GetValidationContext(Window window)
+		{
+			while (window != null)
+			{
+				ValidationContext context = ValidationContext.GetContext (window);
+
+				if (context != null)
+				{
+					return context;
+				}
+
+				window = window.Owner;
+			}
+
+			return null;
+		}
+
+		public static void RefreshValidationContext(Visual visual)
+		{
+			ValidationContext context = VisualTree.GetValidationContext (visual);
+
+			if (context != null)
+			{
+				context.Refresh (visual);
+			}
+		}
+		
 
 		public static Support.OpletQueue GetOpletQueue(Visual visual)
 		{

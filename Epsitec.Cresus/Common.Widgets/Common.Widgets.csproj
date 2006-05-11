@@ -130,6 +130,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CommandContext.cs" />
+    <Compile Include="ValidationContext.cs" />
     <Compile Include="RibbonSection.cs" />
     <Compile Include="AbstractButton.cs">
       <SubType>Code</SubType>
