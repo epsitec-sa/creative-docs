@@ -260,37 +260,37 @@ namespace Epsitec.Common.Widgets.Layouts
 					case DockStyle.Top:
 						min_dx  = System.Math.Max (min_dx, min.Width + min_ox);
 						min_dy  = System.Math.Max (min_dy, clientDy + min_oy);
-						min_oy += clientDy + margins.Height;
+						min_oy += clientDy;
 						max_dx  = System.Math.Min (max_dx, max.Width + max_ox);
 //						max_dy  = System.Math.Min (max_dy, child.Height + max_oy);
-						max_oy += clientDy + margins.Height;
+						max_oy += clientDy;
 						break;
 					
 					case DockStyle.Bottom:
 						min_dx  = System.Math.Max (min_dx, min.Width + min_ox);
 						min_dy  = System.Math.Max (min_dy, clientDy + min_oy);
-						min_oy += clientDy + margins.Height;
+						min_oy += clientDy;
 						max_dx  = System.Math.Min (max_dx, max.Width + max_ox);
 //						max_dy  = System.Math.Min (max_dy, child.Height + max_oy);
-						max_oy += clientDy + margins.Height;
+						max_oy += clientDy;
 						break;
 						
 					case DockStyle.Left:
 						min_dx  = System.Math.Max (min_dx, clientDx + min_ox);
 						min_dy  = System.Math.Max (min_dy, min.Height + min_oy);
-						min_ox += clientDx + margins.Width;
+						min_ox += clientDx;
 //						max_dx  = System.Math.Min (max_dx, child.Width + max_ox);
 						max_dy  = System.Math.Min (max_dy, max.Height + max_oy);
-						max_ox += clientDx + margins.Width;
+						max_ox += clientDx;
 						break;
 					
 					case DockStyle.Right:
 						min_dx  = System.Math.Max (min_dx, clientDx + min_ox);
 						min_dy  = System.Math.Max (min_dy, min.Height + min_oy);
-						min_ox += clientDx + margins.Width;
+						min_ox += clientDx;
 //						max_dx  = System.Math.Min (max_dx, child.Width + max_ox);
 						max_dy  = System.Math.Min (max_dy, max.Height + max_oy);
-						max_ox += clientDx + margins.Width;
+						max_ox += clientDx;
 						break;
 					
 					case DockStyle.Fill:
