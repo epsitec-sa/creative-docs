@@ -17,6 +17,14 @@ namespace Epsitec.Common.Widgets
 		{
 		}
 
+		public IEnumerable<CommandDispatcher> Dispatchers
+		{
+			get
+			{
+				return this.dispatcherChain.Dispatchers;
+			}
+		}
+
 		/// <summary>
 		/// Sets the local enable state of the command.
 		/// </summary>
@@ -158,6 +166,12 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		internal void UpdateDispatcherChain(Visual visual)
+		{
+			this.dispatcherChain.BuildChain (visual);
+		}
+
+
 		#region Private Methods
 
 		private void NotifyCommandEnableChanged(CommandState command)
@@ -276,5 +290,6 @@ namespace Epsitec.Common.Widgets
 		private Dictionary<int, bool> commandEnables = new Dictionary<int, bool> ();
 		private Dictionary<string, int> groupDisables = new Dictionary<string, int> ();
 		private Dictionary<long, Record> records = new Dictionary<long, Record> ();
+		private CommandDispatcherChain dispatcherChain = new CommandDispatcherChain ();
 	}
 }
