@@ -143,7 +143,7 @@ namespace Epsitec.Common.Widgets
 			{
 				if (this.records[i].Command == command)
 				{
-					this.UpdateWidget (this.records[i].Visual as Widget, enable, active, advanced);
+					this.UpdateWidget (this.records[i].Visual as Widget, command, enable, active, advanced);
 					
 					count++;
 				}
@@ -323,15 +323,26 @@ namespace Epsitec.Common.Widgets
 					ActiveState active   = command.ActiveState;
 					string      advanced = command.AdvancedState;
 					
-					this.UpdateWidget (this.records[index].Visual as Widget, enable, active, advanced);
+					this.UpdateWidget (this.records[index].Visual as Widget, command, enable, active, advanced);
 				}
 			}
 		}
 		
-		private void UpdateWidget(Widget widget, bool enable, ActiveState active, string advanced)
+		private void UpdateWidget(Widget widget, CommandState command, bool enable, ActiveState active, string advanced)
 		{
 			if (widget != null)
 			{
+				if (enable)
+				{
+					CommandContext context = Helpers.VisualTree.GetCommandContext (widget);
+
+					if ((context != null) &&
+					(context.GetLocalEnable (command) == false))
+					{
+						enable = false;
+					}
+				}
+				
 				widget.Enable      = enable;
 				widget.ActiveState = active;
 				
