@@ -775,7 +775,7 @@ namespace Epsitec.App.DocumentEditor
 			this.bookDocuments = new TabBook(this);
 			this.bookDocuments.PreferredWidth = this.panelsWidth;
 			this.bookDocuments.Dock = DockStyle.Fill;
-			this.bookDocuments.Margins = new Margins(0, 0, 3, 1);
+			this.bookDocuments.Margins = new Margins(1, 0, 3, 1);
 			this.bookDocuments.Arrows = TabBookArrows.Right;
 			this.bookDocuments.HasCloseButton = true;
 			this.bookDocuments.CloseButton.Command = "Close";
@@ -1257,6 +1257,7 @@ namespace Epsitec.App.DocumentEditor
 		{
 			//	Active un ruban.
 			this.ribbonActive = active;
+			this.ribbonBook.ActivePage = active;
 
 			if ( this.ribbonList == null )
 			{

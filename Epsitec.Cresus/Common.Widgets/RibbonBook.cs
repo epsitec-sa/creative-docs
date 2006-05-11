@@ -16,13 +16,15 @@ namespace Epsitec.Common.Widgets
 
 			this.TabNavigation = Widget.TabNavigationMode.ForwardTabActive;
 
-			this.pages = new Widget(this);
-			this.pages.Dock = DockStyle.Fill;
-
+			//	Partie supérieure, qui contiendra les boutons et les commandes rapides.
 			this.buttons = new Widget(this);
 			this.buttons.Margins = new Margins(10, 0, 0, -1);
 			this.buttons.Padding = new Margins(0, 0, RibbonBook.TopMargin, 0);
 			this.buttons.Dock = DockStyle.Top;
+
+			//	Partie inférieure, qui contiendra les pages.
+			this.pages = new Widget(this);
+			this.pages.Dock = DockStyle.Fill;
 		}
 		
 		public RibbonBook(Widget embedder) : this()
@@ -299,8 +301,8 @@ namespace Epsitec.Common.Widgets
 			}
 			else
 			{
+				//	Si la page à insérer est dans un autre book, on l'y enlève.
 				RibbonBook oldBook = item.Book;
-
 				if (oldBook != null && oldBook != this)
 				{
 					oldBook.items.Remove(item);
