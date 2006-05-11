@@ -618,10 +618,10 @@ namespace Epsitec.App.DocumentEditor
 			//	Crée le RibbonBook unique qui remplace le traditionnel menu.
 			this.ribbonBook = new RibbonBook(this);
 			this.ribbonBook.PreferredHeight = 105;
-			this.ribbonBook.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top;
+			this.ribbonBook.Dock = DockStyle.Top;
 			this.ribbonBook.ActivePageChanged += new EventHandler(this.HandleRibbonBookActivePageChanged);
 
-			//	Crée les différentes page du ruban.
+			//	Crée les différentes pages du ruban.
 			this.ribbonMain = new RibbonPage();
 			this.ribbonMain.Name = "Main";
 			this.ribbonMain.RibbonTitle = Res.Strings.Ribbon.Main;
@@ -675,11 +675,9 @@ namespace Epsitec.App.DocumentEditor
 
 			this.UpdateQuickCommands();
 
-			this.SetActiveRibbon(this.ribbonMain);
-
+			//	Crée la barre de status.
 			this.info = new StatusBar(this);
-			this.info.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Bottom;
-			this.info.Margins = new Margins(0, 0, 0, 0);
+			this.info.Dock = DockStyle.Bottom;
 
 			this.InfoAdd("DeselectAll");
 			this.InfoAdd("SelectAll");
@@ -733,9 +731,10 @@ namespace Epsitec.App.DocumentEditor
 			this.resize.Dock = DockStyle.Right;  // doit être fait après le Items.Add !
 			ToolTip.Default.SetToolTip(this.resize, Res.Strings.Dialog.Tooltip.Resize);
 
+			//	Crée la barre d'outils verticale gauche.
 			this.vToolBar = new VToolBar(this);
-			this.vToolBar.Anchor = AnchorStyles.TopAndBottom | AnchorStyles.Left;
-			this.vToolBar.Margins = new Margins(0, 0, this.RibbonHeight, this.info.PreferredHeight);
+			this.vToolBar.Dock = DockStyle.Left;
+
 			this.VToolBarAdd(this.toolSelectState);
 			this.VToolBarAdd(this.toolGlobalState);
 			this.VToolBarAdd(this.toolShaperState);
@@ -772,10 +771,11 @@ namespace Epsitec.App.DocumentEditor
 			}
 			this.VToolBarAdd(null);
 
+			//	Crée la partie pour les documents.
 			this.bookDocuments = new TabBook(this);
 			this.bookDocuments.PreferredWidth = this.panelsWidth;
-			this.bookDocuments.Anchor = AnchorStyles.All;
-			this.bookDocuments.Margins = new Margins(this.vToolBar.PreferredWidth, this.panelsWidth+2, this.RibbonHeight+3, this.info.PreferredHeight+1);
+			this.bookDocuments.Dock = DockStyle.Fill;
+			this.bookDocuments.Margins = new Margins(0, 0, 3, 1);
 			this.bookDocuments.Arrows = TabBookArrows.Right;
 			this.bookDocuments.HasCloseButton = true;
 			this.bookDocuments.CloseButton.Command = "Close";
@@ -994,8 +994,8 @@ namespace Epsitec.App.DocumentEditor
 
 			di.bookPanels = new TabBook(this);
 			di.bookPanels.PreferredWidth = this.panelsWidth;
-			di.bookPanels.Anchor = AnchorStyles.TopAndBottom | AnchorStyles.Right;
-			di.bookPanels.Margins = new Margins(1, 1, this.RibbonHeight+3, this.info.PreferredHeight+1);
+			di.bookPanels.Dock = DockStyle.Right;
+			di.bookPanels.Margins = new Margins(1, 1, 3, 1);
 			di.bookPanels.Arrows = TabBookArrows.Stretch;
 			di.bookPanels.ActivePageChanged += new EventHandler(this.HandleBookPanelsActivePageChanged);
 
