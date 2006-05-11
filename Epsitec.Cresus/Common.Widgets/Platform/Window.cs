@@ -176,7 +176,6 @@ namespace Epsitec.Common.Widgets.Platform
 			
 			this.is_animating_active_window = true;
 			this.WindowBounds = bounds;
-			this.widget_window.ForceLayout ();
 			this.MarkForRepaint ();
 			this.RefreshGraphics ();
 			
@@ -1232,6 +1231,22 @@ namespace Epsitec.Common.Widgets.Platform
 		
 		internal void SynchronousRepaint()
 		{
+			if (this.is_layout_in_progress)
+			{
+				return;
+			}
+
+			this.is_layout_in_progress = true;
+
+			try
+			{
+				this.widget_window.ForceLayout ();
+			}
+			finally
+			{
+				this.is_layout_in_progress = false;
+			}
+			
 			if (this.dirty_rectangle.IsValid)
 			{
 				this.Update ();
@@ -1819,24 +1834,40 @@ namespace Epsitec.Common.Widgets.Platform
 		
 		protected bool RefreshGraphics()
 		{
+			if (this.is_layout_in_progress)
+			{
+				return false;
+			}
+
+			this.is_layout_in_progress = true;
+			
+			try
+			{
+				this.widget_window.ForceLayout ();
+			}
+			finally
+			{
+				this.is_layout_in_progress = false;
+			}
+
 			if (this.IsFrozen)
 			{
 				return false;
 			}
-			
+
 			if (this.dirty_rectangle.IsValid)
 			{
-				Drawing.Rectangle   repaint = this.dirty_rectangle;
+				Drawing.Rectangle repaint = this.dirty_rectangle;
 				Drawing.Rectangle[] strips  = this.dirty_region.GenerateStrips ();
-				
+
 				this.dirty_rectangle = Drawing.Rectangle.Empty;
 				this.dirty_region = new Drawing.DirtyRegion ();
-				
+
 				this.widget_window.RefreshGraphics (this.graphics, repaint, strips);
-				
+
 				return true;
 			}
-			
+
 			return false;
 		}
 		
@@ -2008,6 +2039,7 @@ namespace Epsitec.Common.Widgets.Platform
 		private bool							is_dispatch_pending;
 		private bool							is_pixmap_ok;
 		private bool							is_size_move_in_progress;
+		private bool							is_layout_in_progress;
 		private int								disable_sync_paint;
 		
 		private static bool						is_app_active;
