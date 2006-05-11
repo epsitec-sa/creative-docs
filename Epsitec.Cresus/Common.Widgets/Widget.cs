@@ -1264,7 +1264,7 @@ namespace Epsitec.Common.Widgets
 						this.Parent.SetEntered (true);
 					}
 					
-					message = Message.FromMouseEvent (MessageType.MouseEnter, null, null);
+					message = Message.CreateDummyMessage (MessageType.MouseEnter);
 					
 					this.OnEntered (new MessageEventArgs (message, Message.CurrentState.LastPosition));
 				}
@@ -1299,8 +1299,8 @@ namespace Epsitec.Common.Widgets
 							i++;
 						}
 					}
-					
-					message = Message.FromMouseEvent (MessageType.MouseLeave, null, null);
+
+					message = Message.CreateDummyMessage (MessageType.MouseLeave);
 					
 					this.OnExited (new MessageEventArgs (message, Message.CurrentState.LastPosition));
 				}
@@ -3013,17 +3013,25 @@ namespace Epsitec.Common.Widgets
 		
 		public void MessageHandler(Message message)
 		{
-			Drawing.Point point = message.Cursor;
-			
-			point = this.MapRootToClient (point);
-			point = this.MapClientToParent (point);
+			Drawing.Point point;
+
+			if (message.IsDummy)
+			{
+				point = Drawing.Point.Zero;
+			}
+			else
+			{
+				point = message.Cursor;
+				point = this.MapRootToClient (point);
+				point = this.MapClientToParent (point);
+			}
 			
 			this.MessageHandler (message, point);
 		}
 		
 		public virtual void MessageHandler(Message message, Drawing.Point pos)
 		{
-			Drawing.Point client_pos = this.MapParentToClient (pos);
+			Drawing.Point client_pos = message.IsDummy ? pos : this.MapParentToClient (pos);
 			
 			if (! this.PreProcessMessage (message, client_pos))
 			{
