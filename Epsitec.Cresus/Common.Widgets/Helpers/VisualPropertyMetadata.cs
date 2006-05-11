@@ -191,7 +191,13 @@ namespace Epsitec.Common.Widgets.Helpers
 			}
 			if (this.affectsArrange)
 			{
-				Layouts.LayoutContext.AddToArrangeQueue (visual.Parent);
+				Visual parent = visual.Parent;
+
+				if (parent != null)
+				{
+					Layouts.LayoutContext.AddToMeasureQueue (parent);
+					Layouts.LayoutContext.AddToArrangeQueue (parent);
+				}
 			}
 			if (this.affectsChildrenLayout)
 			{
