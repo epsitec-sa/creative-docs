@@ -1512,7 +1512,7 @@ namespace Epsitec.Common.Widgets.Adorners
 			//	Dessine le bouton pour un ruban.
 			if ( (state&WidgetPaintState.ActiveYes) != 0 )   // bouton activé ?
 			{
-				Drawing.Path pTitle = this.PathTopRoundRectangle(rect, 6.0);
+				Drawing.Path pTitle = this.PathTabRoundRectangle(rect, 6.0);
 
 				graphics.Rasterizer.AddSurface(pTitle);
 				if ( (state&WidgetPaintState.Enabled) != 0 )
@@ -1542,8 +1542,8 @@ namespace Epsitec.Common.Widgets.Adorners
 				{
 					rect.Top    -= 2;
 					rect.Bottom += 1;
-					rect.Left   += 1;
-					rect.Right  -= 1;
+					rect.Left   += 2;
+					rect.Right  -= 2;
 
 					Drawing.Path pTitle = this.PathTopRoundRectangle(rect, 6.0);
 
@@ -1916,6 +1916,34 @@ namespace Epsitec.Common.Widgets.Adorners
 			path.LineTo (ox+dx-radius-0.5, oy+dy-0.5);
 			path.CurveTo(ox+dx-0.5, oy+dy-0.5, ox+dx-0.5, oy+dy-radius-0.5);
 			path.LineTo (ox+dx-0.5, oy);
+
+			return path;
+		}
+
+		protected Drawing.Path PathTabRoundRectangle(Drawing.Rectangle rect, double radius)
+		{
+			//	Crée le chemin d'un rectangle à coins arrondis en forme de "U" évasé inversé.
+			double ox = rect.Left;
+			double oy = rect.Bottom;
+			double dx = rect.Width;
+			double dy = rect.Height;
+
+			if ( radius == 0 )
+			{
+				radius = System.Math.Min(dx, dy)/3;
+			}
+			
+			Drawing.Path path = new Drawing.Path();
+			path.MoveTo (ox-radius-0.5, oy);
+			path.LineTo (ox-radius-0.5, oy+0.5);
+			path.CurveTo(ox+0.5, oy, ox+0.5, oy+radius+0.5);
+			path.LineTo (ox+0.5, oy+dy-radius-0.5);
+			path.CurveTo(ox+0.5, oy+dy-0.5, ox+radius+0.5, oy+dy-0.5);
+			path.LineTo (ox+dx-radius-0.5, oy+dy-0.5);
+			path.CurveTo(ox+dx-0.5, oy+dy-0.5, ox+dx-0.5, oy+dy-radius-0.5);
+			path.LineTo (ox+dx-0.5, oy+radius+0.5);
+			path.CurveTo(ox+dx-0.5, oy+0.5, ox+dx+radius-0.5, oy+0.5);
+			path.LineTo (ox+dx+radius-0.5, oy);
 
 			return path;
 		}

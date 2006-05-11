@@ -1630,7 +1630,7 @@ namespace Epsitec.Common.Widgets.Adorners
 		{
 			//	Dessine la bande principale d'un ruban.
 			graphics.AddFilledRectangle(rect);
-			graphics.RenderSolid(this.colorControlLight);
+			graphics.RenderSolid(this.colorControlLightLight);
 
 			graphics.AddLine(rect.Left, rect.Top-0.5, rect.Right, rect.Top-0.5);
 			graphics.AddLine(rect.Left, rect.Bottom+0.5, rect.Right, rect.Bottom+0.5);
@@ -1656,7 +1656,7 @@ namespace Epsitec.Common.Widgets.Adorners
 				Drawing.Path pTitle = this.PathTopCornerRectangle(rect);
 
 				graphics.Rasterizer.AddSurface(pTitle);
-				graphics.RenderSolid(this.colorControlLight);
+				graphics.RenderSolid(this.colorControlLightLight);
 
 				if ((state&WidgetPaintState.Entered) != 0)  // bouton survolé ?
 				{
