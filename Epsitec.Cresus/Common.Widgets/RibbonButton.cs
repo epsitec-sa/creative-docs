@@ -49,7 +49,12 @@ namespace Epsitec.Common.Widgets
 			Visual.MinHeightProperty.OverrideMetadata(typeof(RibbonButton), metadataHeight);
 		}
 
-		
+
+		public override Drawing.Margins GetShapeMargins()
+		{
+			return new Drawing.Margins(5, 5, 0, 0);
+		}
+
 		protected override void OnTextChanged()
 		{
 			//	Appelé lorsque le texte du bouton change.

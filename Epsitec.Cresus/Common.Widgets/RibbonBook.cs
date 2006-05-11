@@ -23,8 +23,8 @@ namespace Epsitec.Common.Widgets
 			//	Partie supérieure, qui contiendra les boutons et les commandes rapides.
 			//	Créé en deuxième, pour dessiner les boutons par-dessus les pages !
 			this.buttons = new Widget(this);
-			this.buttons.Margins = new Margins(10, 0, 0, -1);  // -1 -> un pixel de chevauchement avec this.pages
-			this.buttons.Padding = new Margins(0, 0, RibbonBook.TopMargin, 0);
+			this.buttons.Margins = new Margins(0, 0, 0, -1);  // -1 -> un pixel de chevauchement avec this.pages
+			this.buttons.Padding = new Margins(12, 0, RibbonBook.TopMargin, 0);
 			this.buttons.Dock = DockStyle.Top;
 		}
 		
