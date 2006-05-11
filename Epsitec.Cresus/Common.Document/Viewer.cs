@@ -2653,7 +2653,7 @@ namespace Epsitec.Common.Document
 			this.miniBar.WindowLocation = this.MapClientToScreen(this.miniBarRect.BottomLeft);
 			this.miniBar.Root.BackColor = Color.FromAlphaRgb(0, 1,1,1);
 			this.miniBar.Owner = this.Window;
-			this.miniBar.AttachCommandDispatcher(this.GetCommandDispatcher());
+			this.miniBar.AttachDispatcher(this.GetCommandDispatcher());
 
 			this.miniBarBalloon = new Balloon();
 			this.miniBarBalloon.Hot = this.miniBarHot;

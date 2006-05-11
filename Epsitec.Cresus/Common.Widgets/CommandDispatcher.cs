@@ -66,8 +66,6 @@ namespace Epsitec.Common.Widgets
 				this.level = level;
 				this.id    = CommandDispatcher.unique_id++;
 				
-				this.validation_rule = new ValidationRule (this);
-				
 				switch (level)
 				{
 					case CommandDispatcherLevel.Root:
@@ -183,14 +181,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public ValidationRule					ValidationRule
-		{
-			get
-			{
-				return this.validation_rule;
-			}
-		}
-		
 		public string[]							CommandNames
 		{
 			get
@@ -200,12 +190,6 @@ namespace Epsitec.Common.Widgets
 				System.Array.Sort (names);
 				return names;
 			}
-		}
-		
-		
-		public void AddValidationRule(ValidationRule validation_rule)
-		{
-			this.ValidationRule.AddValidator (validation_rule);
 		}
 		
 		
@@ -310,15 +294,6 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public void SyncValidationRule()
-		{
-			if (this.validation_rule.State == ValidationState.Dirty)
-			{
-				this.validation_rule.Validate ();
-			}
-		}
-		
-		
 		public void RegisterController(object controller)
 		{
 			if (controller != null)
@@ -388,20 +363,6 @@ namespace Epsitec.Common.Widgets
 			return this.event_handlers.Contains (name);
 		}
 		
-		
-		#region Internal use only
-		public static void SyncAllValidationRules()
-		{
-			foreach (CommandDispatcher dispatcher in CommandDispatcher.global_list)
-			{
-				dispatcher.SyncValidationRule ();
-			}
-			foreach (CommandDispatcher dispatcher in CommandDispatcher.local_list)
-			{
-				dispatcher.SyncValidationRule ();
-			}
-		}
-		#endregion
 		
 		public static CommandDispatcher GetFocusedPrimaryDispatcher()
 		{
@@ -677,12 +638,6 @@ namespace Epsitec.Common.Widgets
 		}
 		#endregion
 		
-		internal void NotifyValidationRuleBecameDirty()
-		{
-			this.OnValidationRuleBecameDirty ();
-		}
-		
-		
 		protected void RegisterMethod(object controller, System.Reflection.MethodInfo info)
 		{
 			//	Ne parcourt que les attributs au niveau d'implémentation actuel (pas les classes dérivées,
@@ -815,14 +770,6 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		protected void OnValidationRuleBecameDirty()
-		{
-			if (this.ValidationRuleBecameDirty != null)
-			{
-				this.ValidationRuleBecameDirty (this);
-			}
-		}
-		
 		protected void OnOpletQueueBindingChanged()
 		{
 			if (this.OpletQueueBindingChanged != null)
@@ -863,7 +810,6 @@ namespace Epsitec.Common.Widgets
 		
 		public static readonly DependencyProperty DispatcherProperty = DependencyProperty.RegisterAttached ("Dispatcher", typeof (CommandDispatcher), typeof (CommandDispatcher));
 		
-		public event Support.EventHandler		ValidationRuleBecameDirty;
 		public event Support.EventHandler		OpletQueueBindingChanged;
 		public event Support.EventHandler		CommandDispatched;
 		
@@ -882,7 +828,6 @@ namespace Epsitec.Common.Widgets
 		protected System.Collections.Stack		pending_commands  = new System.Collections.Stack ();
 		protected System.Collections.ArrayList	extra_dispatchers = new System.Collections.ArrayList ();
 		
-		protected ValidationRule				validation_rule;
 		protected bool							aborted;
 		protected Support.OpletQueue			oplet_queue;
 		

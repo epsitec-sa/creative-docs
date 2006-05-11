@@ -639,9 +639,6 @@
     <Compile Include="ToolTip.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ValidationRule.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Validators\AbstractTextValidator.cs">
       <SubType>Code</SubType>
     </Compile>

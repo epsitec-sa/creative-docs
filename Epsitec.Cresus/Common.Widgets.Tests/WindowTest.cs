@@ -216,7 +216,7 @@ namespace Epsitec.Common.Widgets
 			CommandDispatcher dispatcher = CommandDispatcher.Default;
 			dispatcher.RegisterController (new MyController ());
 
-			window.AttachCommandDispatcher (dispatcher);
+			window.AttachDispatcher (dispatcher);
 			
 			CommandState command_open = new CommandState ("Open", KeyCode.ModifierControl | KeyCode.AlphaO);
 			CommandState command_save = new CommandState ("Save", KeyCode.ModifierAlt | KeyCode.AlphaS);

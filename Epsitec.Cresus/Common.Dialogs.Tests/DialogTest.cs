@@ -86,7 +86,7 @@ namespace Epsitec.Common.Dialogs
 			
 			record.FieldChanged += new Support.EventHandler (this.HandleFieldChanged);
 			
-			dialog.AddRule (record.Validator, "Ok;Apply");
+//			dialog.AddRule (record.Validator, "Ok;Apply");
 			dialog.AddController (controller);
 			
 			Assert.AreEqual ("Test", record["UserName"].Value);

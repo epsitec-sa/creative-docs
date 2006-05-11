@@ -987,6 +987,16 @@ namespace Epsitec.Common.Widgets
 				this.InvalidateProperty (Visual.IsValidProperty, oldValid, newValid);
 				
 				this.SetError (newValid == false);
+				
+				if (this.HasValidationGroups)
+				{
+					ValidationContext context = Helpers.VisualTree.GetValidationContext (this);
+
+					if (context != null)
+					{
+						context.UpdateValidity (this);
+					}
+				}
 			}
 		}
 		

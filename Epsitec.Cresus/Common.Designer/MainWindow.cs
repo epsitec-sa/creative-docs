@@ -55,7 +55,7 @@ namespace Epsitec.Common.Designer
 				this.commandDispatcher.RegisterController(this);
 				this.commandDispatcher.Focus();
 				
-				this.window.AttachCommandDispatcher(this.commandDispatcher);
+				this.window.AttachDispatcher(this.commandDispatcher);
 
 				this.dlgGlyphs     = new Dialogs.Glyphs(this);
 				this.dlgFilter     = new Dialogs.Filter(this);

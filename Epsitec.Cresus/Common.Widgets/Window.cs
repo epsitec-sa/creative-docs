@@ -1032,7 +1032,7 @@ namespace Epsitec.Common.Widgets
 		#endregion
 		
 		
-		public void AttachCommandDispatcher(CommandDispatcher value)
+		public void AttachDispatcher(CommandDispatcher value)
 		{
 			if (CommandDispatcher.GetDispatcher (this) != value)
 			{
@@ -1040,23 +1040,16 @@ namespace Epsitec.Common.Widgets
 
 				CommandDispatcher.SetDispatcher (this, value);
 				
-				if (value != null)
-				{
-					value.ValidationRuleBecameDirty += this.HandleValidationRuleBecameDirty;
-				}
-				
 				Helpers.VisualTree.InvalidateCommandDispatcher (this);
 			}
 		}
 		
-		public void DetachCommandDispatcher(CommandDispatcher value)
+		public void DetachDispatcher(CommandDispatcher value)
 		{
 			if (CommandDispatcher.GetDispatcher (this) != null)
 			{
 				System.Diagnostics.Debug.Assert (CommandDispatcher.GetDispatcher (this) == value);
 				CommandDispatcher.ClearDispatcher (this);
-				
-				value.ValidationRuleBecameDirty -= this.HandleValidationRuleBecameDirty;
 				
 				Helpers.VisualTree.InvalidateCommandDispatcher (this);
 			}
@@ -1167,7 +1160,7 @@ namespace Epsitec.Common.Widgets
 
 				if (CommandDispatcher.GetDispatcher (this) != null)
 				{
-					this.DetachCommandDispatcher (CommandDispatcher.GetDispatcher (this));
+					this.DetachDispatcher (CommandDispatcher.GetDispatcher (this));
 				}
 				
 				if (this.root != null)
@@ -1778,12 +1771,6 @@ namespace Epsitec.Common.Widgets
 				widget.DispatchDummyMouseUpEvent (button, this.capturing_cursor);
 			}
 		}
-		
-		private void HandleValidationRuleBecameDirty(object sender)
-		{
-			this.AsyncValidation ();
-		}
-		
 		
 		internal void DispatchQueuedCommands()
 		{

@@ -25,7 +25,9 @@ namespace Epsitec.Common.Widgets
 		public void UpdateValidity(Visual visual)
 		{
 			CommandContext context = Helpers.VisualTree.GetCommandContext (visual);
+			
 			bool enable = ValidationContext.GetVisualValidity (visual);
+			
 			Record record = new Record (visual.VisualSerialId, visual.ValidationGroups, enable);
 			
 			int index = this.records.BinarySearch (record);
