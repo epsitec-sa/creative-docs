@@ -1659,10 +1659,6 @@ namespace Epsitec.Common.Widgets.Adorners
 			Drawing.Point pos = new Drawing.Point();
 			pos.X = (rect.Width-text.LayoutSize.Width)/2;
 			pos.Y = (rect.Height-text.LayoutSize.Height)/2;
-			if ( (state&WidgetPaintState.ActiveYes) == 0 )   // bouton désactivé ?
-			{
-				pos.Y -= 2;
-			}
 			state &= ~WidgetPaintState.Focused;
 			PaintTextStyle style = PaintTextStyle.HMenu;
 			this.PaintGeneralTextLayout(graphics, Drawing.Rectangle.MaxValue, pos, text, state, style, TextDisplayMode.Default, Drawing.Color.Empty);

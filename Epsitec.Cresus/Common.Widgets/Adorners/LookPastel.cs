@@ -1535,31 +1535,33 @@ namespace Epsitec.Common.Widgets.Adorners
 												ActiveState active)
 		{
 			//	Dessine le bouton pour un ruban.
-			rect.Bottom -= 4;  // pour cacher la partie inférieure
-
-			if ( (state&WidgetPaintState.Entered) != 0 )  // bouton survolé ?
+			if ((state&WidgetPaintState.ActiveYes) != 0)   // bouton activé ?
 			{
-				rect.Deflate(0.5);
-				graphics.AddRectangle(rect);
-				graphics.RenderSolid(this.ColorOutline(state));
-			}
+				rect.Bottom -= 4;  // pour cacher la partie inférieure
 
-			if ( (state&WidgetPaintState.Engaged) != 0 )   // bouton pressé ?
-			{
-				rect.Deflate(0.5);
-				graphics.AddRectangle(rect);
-				graphics.RenderSolid(this.ColorOutline(state));
-			}
-
-			if ( (state&WidgetPaintState.ActiveYes) != 0 )   // bouton activé ?
-			{
 				Drawing.Rectangle rInside = rect;
 				rInside.Deflate(1);
-				this.PaintImageButton(graphics, rInside, 8);
+				if ( (state&WidgetPaintState.Entered) != 0 )  // bouton survolé ?
+				{
+					this.PaintImageButton(graphics, rInside, 13);
+				}
+				else
+				{
+					this.PaintImageButton(graphics, rInside, 8);
+				}
 
 				rect.Deflate(0.5);
 				graphics.AddRectangle(rect);
 				graphics.RenderSolid(this.ColorOutline(state));
+			}
+			else
+			{
+				if ( (state&WidgetPaintState.Entered) != 0 )  // bouton survolé ?
+				{
+					Drawing.Rectangle rInside = rect;
+					rInside.Deflate(1);
+					this.PaintImageButton(graphics, rInside, 13);
+				}
 			}
 		}
 
