@@ -617,7 +617,6 @@ namespace Epsitec.App.DocumentEditor
 
 			//	Crée le RibbonBook unique qui remplace le traditionnel menu.
 			this.ribbonBook = new RibbonBook(this);
-			this.ribbonBook.PreferredHeight = 105;
 			this.ribbonBook.Dock = DockStyle.Top;
 			this.ribbonBook.ActivePageChanged += new EventHandler(this.HandleRibbonBookActivePageChanged);
 
@@ -1277,19 +1276,6 @@ namespace Epsitec.App.DocumentEditor
 			{
 				this.ribbonList.RemoveAt(0);
 			}
-
-#if false
-			double h = this.RibbonHeight;
-			this.vToolBar.Margins = new Margins(0, 0, this.hToolBar.PreferredHeight+h, this.info.PreferredHeight);
-			this.bookDocuments.Margins = new Margins(this.vToolBar.PreferredWidth+1, this.panelsWidth+2, this.hToolBar.PreferredHeight+h+1, this.info.PreferredHeight+1);
-
-			int total = this.bookDocuments.PageCount;
-			for ( int i=0 ; i<total ; i++ )
-			{
-				DocumentInfo di = this.documents[i] as DocumentInfo;
-				di.bookPanels.Margins = new Margins(1, 1, this.hToolBar.PreferredHeight+h+1, this.info.PreferredHeight+1);
-			}
-#endif
 		}
 
 		protected void RibbonsNotifyChanged(string changed)
@@ -1368,15 +1354,6 @@ namespace Epsitec.App.DocumentEditor
 				this.ribbonBook.Items.Add(button);
 				ToolTip.Default.SetToolTip(button, Misc.GetTextWithShortcut(cs));
 				return button;
-			}
-		}
-
-		protected double RibbonHeight
-		{
-			//	Retourne la hauteur utilisée par les rubans.
-			get
-			{
-				return (this.ribbonActive == null) ? 0 : this.ribbonHeight;
 			}
 		}
 		#endregion
@@ -5526,7 +5503,6 @@ namespace Epsitec.App.DocumentEditor
 		protected StatusBar						info;
 		protected ResizeKnob					resize;
 		protected TabBook						bookDocuments;
-		protected double						ribbonHeight = 105;
 		protected double						panelsWidth = 252;
 		protected bool							ignoreChange;
 		protected int							tabIndex;
