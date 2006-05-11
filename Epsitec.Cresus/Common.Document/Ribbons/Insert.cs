@@ -11,7 +11,8 @@ namespace Epsitec.Common.Document.Ribbons
 	{
 		public Insert() : base()
 		{
-			this.title.Text = Res.Strings.Action.Text.Insert;
+			this.Title = Res.Strings.Action.Text.Insert;
+			this.PreferredWidth = 8 + 22*2;
 
 			this.buttonNewFrame = this.CreateIconButton("TextInsertNewFrame");
 			this.buttonNewPage  = this.CreateIconButton("TextInsertNewPage");
@@ -28,15 +29,6 @@ namespace Epsitec.Common.Document.Ribbons
 			}
 			
 			base.Dispose(disposing);
-		}
-
-		public override double DefaultWidth
-		{
-			//	Retourne la largeur standard.
-			get
-			{
-				return 8 + 22*2;
-			}
 		}
 
 

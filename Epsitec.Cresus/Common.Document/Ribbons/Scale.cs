@@ -11,7 +11,8 @@ namespace Epsitec.Common.Document.Ribbons
 	{
 		public Scale() : base()
 		{
-			this.title.Text = Res.Strings.Action.ScaleMain;
+			this.Title = Res.Strings.Action.ScaleMain;
+			this.PreferredWidth = 8 + 22*2 + this.separatorWidth + 50;
 
 			this.buttonScaleDiv2    = this.CreateIconButton("ScaleDiv2");
 			this.buttonScaleMul2    = this.CreateIconButton("ScaleMul2");
@@ -39,15 +40,6 @@ namespace Epsitec.Common.Document.Ribbons
 			base.SetDocument(type, install, debug, gs, document);
 
 			this.AdaptFieldScale(this.fieldScale);
-		}
-
-		public override double DefaultWidth
-		{
-			//	Retourne la largeur standard.
-			get
-			{
-				return 8 + 22*2 + this.separatorWidth + 50;
-			}
 		}
 
 

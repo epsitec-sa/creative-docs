@@ -11,7 +11,8 @@ namespace Epsitec.Common.Document.Ribbons
 	{
 		public Action() : base()
 		{
-			this.title.Text = Res.Strings.Action.ActionMain;
+			this.Title = Res.Strings.Action.ActionMain;
+			this.PreferredWidth = 8 + 22*1.5 + 4 + 22*3;
 
 			this.buttonSettings  = this.CreateIconButton("Settings", "Large");
 			this.buttonInfos     = this.CreateIconButton("Infos");
@@ -37,15 +38,6 @@ namespace Epsitec.Common.Document.Ribbons
 			base.SetDocument(type, install, debug, gs, document);
 
 			this.buttonKey.Visibility = (this.installType != InstallType.Freeware);
-		}
-
-		public override double DefaultWidth
-		{
-			//	Retourne la largeur standard.
-			get
-			{
-				return 8 + 22*1.5 + 4 + 22*3;
-			}
 		}
 
 

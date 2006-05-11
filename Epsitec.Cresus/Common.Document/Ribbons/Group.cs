@@ -11,7 +11,8 @@ namespace Epsitec.Common.Document.Ribbons
 	{
 		public Group() : base()
 		{
-			this.title.Text = Res.Strings.Action.GroupMain;
+			this.Title = Res.Strings.Action.GroupMain;
+			this.PreferredWidth = 8 + 22*2 + 4 + 22*1.5*2;
 
 			this.buttonGroup   = this.CreateIconButton("Group");
 			this.buttonUngroup = this.CreateIconButton("Ungroup");
@@ -30,15 +31,6 @@ namespace Epsitec.Common.Document.Ribbons
 			}
 			
 			base.Dispose(disposing);
-		}
-
-		public override double DefaultWidth
-		{
-			//	Retourne la largeur standard.
-			get
-			{
-				return 8 + 22*2 + 4 + 22*1.5*2;
-			}
 		}
 
 

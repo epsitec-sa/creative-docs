@@ -11,7 +11,8 @@ namespace Epsitec.Common.Document.Ribbons
 	{
 		public Bool() : base()
 		{
-			this.title.Text = Res.Strings.Action.BooleanMain;
+			this.Title = Res.Strings.Action.BooleanMain;
+			this.PreferredWidth = 8 + 22*3;
 
 			this.buttonBooleanOr         = this.CreateIconButton("BooleanOr");
 			this.buttonBooleanAnd        = this.CreateIconButton("BooleanAnd");
@@ -29,15 +30,6 @@ namespace Epsitec.Common.Document.Ribbons
 			}
 			
 			base.Dispose(disposing);
-		}
-
-		public override double DefaultWidth
-		{
-			//	Retourne la largeur standard.
-			get
-			{
-				return 8 + 22*3;
-			}
 		}
 
 

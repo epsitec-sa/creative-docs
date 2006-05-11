@@ -11,7 +11,8 @@ namespace Epsitec.Common.Document.Ribbons
 	{
 		public Geom() : base()
 		{
-			this.title.Text = Res.Strings.Action.GeometryMain;
+			this.Title = Res.Strings.Action.GeometryMain;
+			this.PreferredWidth = 8 + 22*4;
 
 			this.buttonCombine    = this.CreateIconButton("Combine");
 			this.buttonUncombine  = this.CreateIconButton("Uncombine");
@@ -30,15 +31,6 @@ namespace Epsitec.Common.Document.Ribbons
 			}
 			
 			base.Dispose(disposing);
-		}
-
-		public override double DefaultWidth
-		{
-			//	Retourne la largeur standard.
-			get
-			{
-				return 8 + 22*4;
-			}
 		}
 
 

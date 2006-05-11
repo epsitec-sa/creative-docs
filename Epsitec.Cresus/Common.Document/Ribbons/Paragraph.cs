@@ -12,7 +12,8 @@ namespace Epsitec.Common.Document.Ribbons
 	{
 		public Paragraph() : base()
 		{
-			this.title.Text = Res.Strings.Action.ParagraphMain;
+			this.Title = Res.Strings.Action.ParagraphMain;
+			this.PreferredWidth = 123;
 
 			this.buttonJustif = this.CreateIconButtonCombo("ParagraphJustif");
 			this.AddIconButtonCombo(this.buttonJustif, "ParagraphJustifLeft",   "JustifHLeft",   Res.Strings.Property.Justif.JustifHLeft);
@@ -46,15 +47,6 @@ namespace Epsitec.Common.Document.Ribbons
 			}
 			
 			base.Dispose(disposing);
-		}
-
-		public override double DefaultWidth
-		{
-			//	Retourne la largeur standard.
-			get
-			{
-				return 123;
-			}
 		}
 
 
