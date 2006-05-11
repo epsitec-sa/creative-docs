@@ -9,6 +9,6 @@ namespace Epsitec.Common.Types
 	/// </summary>
 	public interface IDataConstraint
 	{
-		bool CheckConstraint(object value);
+		bool ValidateValue(object value);
 	}
 }

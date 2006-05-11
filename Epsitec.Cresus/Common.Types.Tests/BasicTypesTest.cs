@@ -37,11 +37,11 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual ("Third" , et[ 3].Name);
 			Assert.AreEqual ("Extra" , et[99].Name);
 			
-			Assert.IsTrue (et.CheckConstraint ("3"));
-			Assert.IsTrue (et.CheckConstraint (-1));
-			Assert.IsTrue (et.CheckConstraint ("Extra"));
-			Assert.IsFalse (et.CheckConstraint (18));
-			Assert.IsFalse (et.CheckConstraint ("{Other}"));
+			Assert.IsTrue (et.ValidateValue ("3"));
+			Assert.IsTrue (et.ValidateValue (-1));
+			Assert.IsTrue (et.ValidateValue ("Extra"));
+			Assert.IsFalse (et.ValidateValue (18));
+			Assert.IsFalse (et.ValidateValue ("{Other}"));
 		}
 		
 		[Test] public void CheckEnumType2()
@@ -72,11 +72,11 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual ("Flag3", et[4].Name);
 			Assert.AreEqual ("Flag4", et[8].Name);
 			
-			Assert.IsTrue (et.CheckConstraint ("0"));
-			Assert.IsTrue (et.CheckConstraint (0xf));
-			Assert.IsTrue (et.CheckConstraint ("Flag1, Flag2"));
-			Assert.IsFalse (et.CheckConstraint (0x18));
-			Assert.IsFalse (et.CheckConstraint ("{Other}"));
+			Assert.IsTrue (et.ValidateValue ("0"));
+			Assert.IsTrue (et.ValidateValue (0xf));
+			Assert.IsTrue (et.ValidateValue ("Flag1, Flag2"));
+			Assert.IsFalse (et.ValidateValue (0x18));
+			Assert.IsFalse (et.ValidateValue ("{Other}"));
 		}
 		
 		[Test] public void CheckEnumType3()
@@ -128,11 +128,11 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual ("Third" , et[ 3].Name);
 			Assert.AreEqual ("Extra" , et[99].Name);
 			
-			Assert.IsTrue (et.CheckConstraint ("3"));
-			Assert.IsTrue (et.CheckConstraint (-1));
-			Assert.IsTrue (et.CheckConstraint ("Extra"));
-			Assert.IsFalse (et.CheckConstraint (18));
-			Assert.IsTrue (et.CheckConstraint ("{Other}"));
+			Assert.IsTrue (et.ValidateValue ("3"));
+			Assert.IsTrue (et.ValidateValue (-1));
+			Assert.IsTrue (et.ValidateValue ("Extra"));
+			Assert.IsFalse (et.ValidateValue (18));
+			Assert.IsTrue (et.ValidateValue ("{Other}"));
 		}
 
 		[Test]

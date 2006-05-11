@@ -74,7 +74,7 @@ namespace Epsitec.Common.Support
 		
 		
 		#region IDataConstraint Members
-		public bool CheckConstraint(object value)
+		public bool ValidateValue(object value)
 		{
 			string text;
 			
