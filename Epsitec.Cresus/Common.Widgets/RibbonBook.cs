@@ -32,8 +32,15 @@ namespace Epsitec.Common.Widgets
 		{
 			this.SetEmbedder(embedder);
 		}
-		
-		
+
+
+		static RibbonBook()
+		{
+			Helpers.VisualPropertyMetadata metadataHeight = new Helpers.VisualPropertyMetadata(RibbonBook.TabHeight, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
+			Visual.MinHeightProperty.OverrideMetadata(typeof(RibbonBook), metadataHeight);
+		}
+
+
 		protected override void Dispose(bool disposing)
 		{
 			if ( disposing )
