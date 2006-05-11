@@ -280,7 +280,7 @@ namespace Epsitec.Common.Widgets
 
 		private void OnGroupChanged(DependencyPropertyChangedEventArgs e)
 		{
-			CommandCache.Default.Invalidate (this);
+			CommandCache.Default.InvalidateCommand (this);
 		}
 		
 		private void OnIconNameChanged(DependencyPropertyChangedEventArgs e)

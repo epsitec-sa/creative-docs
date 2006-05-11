@@ -1347,7 +1347,7 @@ namespace Epsitec.Common.Widgets
 			}
 			else
 			{
-				CommandCache.Default.Invalidate (this);
+				CommandCache.Default.InvalidateVisual (this);
 			}
 		}
 		

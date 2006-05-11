@@ -162,7 +162,12 @@ namespace Epsitec.Common.Widgets
 
 		private void NotifyCommandEnableChanged(CommandState command)
 		{
-			CommandCache.Default.Invalidate (command);
+			CommandCache.Default.InvalidateCommand (command);
+		}
+
+		private void NotifyGroupEnableChanged(string group)
+		{
+			CommandCache.Default.InvalidateGroup (group);
 		}
 
 		private void IncrementGroupDisable(string group)
@@ -181,6 +186,7 @@ namespace Epsitec.Common.Widgets
 				else
 				{
 					this.groupDisables[group] = 1;
+					this.NotifyGroupEnableChanged (group);
 				}
 			}
 		}
@@ -204,6 +210,7 @@ namespace Epsitec.Common.Widgets
 					else
 					{
 						this.groupDisables.Remove (group);
+						this.NotifyGroupEnableChanged (group);
 					}
 				}
 				else

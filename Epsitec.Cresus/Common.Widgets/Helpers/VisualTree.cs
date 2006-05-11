@@ -256,7 +256,7 @@ namespace Epsitec.Common.Widgets.Helpers
 		{
 			if (visual != null)
 			{
-				CommandCache.Default.Invalidate (visual);
+				CommandCache.Default.InvalidateVisual (visual);
 				
 				if (visual.HasChildren)
 				{

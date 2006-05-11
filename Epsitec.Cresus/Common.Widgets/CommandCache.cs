@@ -54,7 +54,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public void Invalidate(Visual visual)
+		public void InvalidateVisual(Visual visual)
 		{
 			int id = visual.GetCommandCacheId ();
 			
@@ -71,7 +71,7 @@ namespace Epsitec.Common.Widgets
 			this.RequestAsyncSynchronization ();
 		}
 		
-		public void Invalidate(CommandState command)
+		public void InvalidateCommand(CommandState command)
 		{
 			for (int i = 0; i < this.records.Length; i++)
 			{
@@ -86,7 +86,25 @@ namespace Epsitec.Common.Widgets
 			
 			this.RequestAsyncSynchronization ();
 		}
-		
+
+		public void InvalidateGroup(string group)
+		{
+			for (int i = 0; i < this.records.Length; i++)
+			{
+				CommandState command = this.records[i].Command;
+				
+				if ((command != null) &&
+					(command.Group == group))
+				{
+					if (this.records[i].ClearCommand ())
+					{
+						this.clear_count += 1;
+					}
+				}
+			}
+
+			this.RequestAsyncSynchronization ();
+		}
 		
 		public void RequestAsyncSynchronization()
 		{
