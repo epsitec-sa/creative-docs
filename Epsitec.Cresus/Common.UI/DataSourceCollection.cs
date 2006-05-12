@@ -193,6 +193,28 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		public object GetValueType(string path)
+		{
+			string name = StructuredTree.GetRootName (path);
+
+			ItemRecord record = this.GetItemRecord (name);
+			IStructuredData data = record.Data;
+
+			if (data == null)
+			{
+				throw new System.ArgumentException (string.Format ("Path '{0}' cannot be resolved", path));
+			}
+
+			if (name == path)
+			{
+				return record.Data;
+			}
+			else
+			{
+				return data.GetValueType (StructuredTree.GetSubPath (path, 1));
+			}
+		}
+
 		/// <summary>
 		/// Sets the value for the specified path.
 		/// </summary>

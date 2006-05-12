@@ -120,6 +120,28 @@ namespace Epsitec.Common.UI
 		}
 
 		[Test]
+		public void CheckGetValueType()
+		{
+			DataSourceCollection collection = new DataSourceCollection ();
+
+			Widgets.Visual source1 = new Widgets.Visual ();
+			MySimpleDataSource source2 = new MySimpleDataSource ();
+
+			source1.Name = "Source1";
+			source2.SetValue ("Name", "Petrus");
+			source2.SetValue ("BirthDateYear", 1972);
+
+			collection.AddDataSource ("B", source2);
+			collection.AddDataSource ("A", source1);
+
+			Assert.AreEqual (source1, collection.GetValueType ("A"));
+			Assert.AreEqual (source2, collection.GetValueType ("B"));
+			Assert.AreEqual (Widgets.Visual.NameProperty, collection.GetValueType ("A.Name"));
+			Assert.AreEqual (typeof (string), collection.GetValueType ("B.Name"));
+			Assert.AreEqual (typeof (int), collection.GetValueType ("B.BirthDateYear"));
+		}
+
+		[Test]
 		[ExpectedException (typeof (System.InvalidOperationException))]
 		public void CheckSetValueEx1()
 		{
@@ -163,6 +185,11 @@ namespace Epsitec.Common.UI
 			public object GetValue(string path)
 			{
 				return this.data[path];
+			}
+
+			public object GetValueType(string path)
+			{
+				return this.data[path].GetType ();
 			}
 
 			public void SetValue(string path, object value)
