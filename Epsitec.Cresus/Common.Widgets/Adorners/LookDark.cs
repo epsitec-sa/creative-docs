@@ -1722,6 +1722,9 @@ namespace Epsitec.Common.Widgets.Adorners
 												 WidgetPaintState state)
 		{
 			//	Dessine une section d'un ruban.
+			graphics.AddFilledRectangle(textRect);
+			graphics.RenderSolid(this.colorControlDarkDark);
+
 			fullRect.Deflate(0.5);
 			graphics.AddLine(fullRect.Right, fullRect.Top, fullRect.Right, fullRect.Bottom);
 			graphics.RenderSolid(this.ColorBorder);

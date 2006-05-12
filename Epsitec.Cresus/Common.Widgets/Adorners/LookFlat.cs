@@ -1612,13 +1612,13 @@ namespace Epsitec.Common.Widgets.Adorners
 
 			Drawing.Path path = new Drawing.Path();
 
-			double t = 4.0;
-			double b = t - rect.Height*0.25;
+			double t = 5.0;
+			double b = t - rect.Height*0.4;
 
 			path.MoveTo(ox+b, oy);
 			path.LineTo(ox+t, oy+dy-0.5);
-			path.LineTo(ox+dx-t, oy+dy-0.5);
-			path.LineTo(ox+dx-b, oy);
+			path.LineTo(ox+dx-0.5, oy+dy-0.5);
+			path.LineTo(ox+dx-0.5, oy);
 
 			return path;
 		}
