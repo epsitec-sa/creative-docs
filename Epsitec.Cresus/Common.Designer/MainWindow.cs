@@ -214,6 +214,7 @@ namespace Epsitec.Common.Designer
 			this.resize.Dock = DockStyle.Right;  // doit être fait après le Items.Add !
 			ToolTip.Default.SetToolTip(this.resize, Res.Strings.Dialog.Tooltip.Resize);
 
+			//	Crée le TabBook principal pour les modules ouverts.
 			this.bookModules = new TabBook(this.window.Root);
 			this.bookModules.Dock = DockStyle.Fill;
 			this.bookModules.Margins = new Margins(0, 0, 3, 0);
@@ -534,7 +535,7 @@ namespace Epsitec.Common.Designer
 			mi.TabPage.TabTitle = mi.Module.Name;
 			this.bookModules.Items.Insert(this.currentModule, mi.TabPage);
 
-			Viewer viewer = new Viewer(mi.Module);
+			Viewer.Strings viewer = new Viewer.Strings(mi.Module);
 			viewer.SetParent(mi.TabPage);
 			viewer.Anchor = AnchorStyles.All;
 			mi.Module.Modifier.AttachViewer(viewer);

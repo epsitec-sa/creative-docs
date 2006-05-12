@@ -4,14 +4,14 @@ using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
 using Epsitec.Common.Drawing;
 
-namespace Epsitec.Common.Designer
+namespace Epsitec.Common.Designer.Viewer
 {
 	/// <summary>
 	/// Permet de représenter les ressources d'un module.
 	/// </summary>
-	public class Viewer : Widget
+	public class Strings : Abstract
 	{
-		public Viewer(Module module)
+		public Strings(Module module) : base(module)
 		{
 			this.module = module;
 
@@ -133,7 +133,7 @@ namespace Epsitec.Common.Designer
 		}
 
 
-		public AbstractTextField CurrentTextField
+		public override AbstractTextField CurrentTextField
 		{
 			//	Retourne le texte éditable en cours d'édition.
 			get
@@ -142,7 +142,7 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		public void DoSearch(string search, Searcher.SearchingMode mode)
+		public override void DoSearch(string search, Searcher.SearchingMode mode)
 		{
 			//	Effectue une recherche.
 			Searcher searcher = new Searcher(this.labelsIndex, this.primaryBundle, this.secondaryBundle);
@@ -180,7 +180,7 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		public void DoCount(string search, Searcher.SearchingMode mode)
+		public override void DoCount(string search, Searcher.SearchingMode mode)
 		{
 			//	Effectue une recherche.
 			Searcher searcher = new Searcher(this.labelsIndex, this.primaryBundle, this.secondaryBundle);
@@ -198,7 +198,7 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		public void DoReplace(string search, string replace, Searcher.SearchingMode mode)
+		public override void DoReplace(string search, string replace, Searcher.SearchingMode mode)
 		{
 			//	Effectue un remplacement.
 			if (this.module.Mode == DesignerMode.Translate)
@@ -307,7 +307,7 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		public void DoReplaceAll(string search, string replace, Searcher.SearchingMode mode)
+		public override void DoReplaceAll(string search, string replace, Searcher.SearchingMode mode)
 		{
 			//	Effectue un 'remplacer tout'.
 			if (this.module.Mode == DesignerMode.Translate)
@@ -389,7 +389,7 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		public void DoFilter(string filter, Searcher.SearchingMode mode)
+		public override void DoFilter(string filter, Searcher.SearchingMode mode)
 		{
 			//	Change le filtre des ressources visibles.
 			string label = "";
@@ -408,7 +408,7 @@ namespace Epsitec.Common.Designer
 			this.UpdateCommands();
 		}
 
-		public void DoAccess(string name)
+		public override void DoAccess(string name)
 		{
 			//	Change la ressource visible.
 			int sel = this.array.SelectedRow;
@@ -423,7 +423,7 @@ namespace Epsitec.Common.Designer
 			this.UpdateCommands();
 		}
 
-		public void DoModification(string name)
+		public override void DoModification(string name)
 		{
 			//	Change la ressource modifiée visible.
 			int sel = this.array.SelectedRow;
@@ -511,7 +511,7 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		public void DoWarning(string name)
+		public override void DoWarning(string name)
 		{
 			//	Change la ressource manquante visible.
 			int sel = this.array.SelectedRow;
@@ -563,7 +563,7 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		public void DoDelete()
+		public override void DoDelete()
 		{
 			//	Supprime la ressource sélectionnée.
 			int sel = this.array.SelectedRow;
@@ -582,7 +582,7 @@ namespace Epsitec.Common.Designer
 			this.module.Modifier.IsDirty = true;
 		}
 
-		public void DoDuplicate(bool duplicate)
+		public override void DoDuplicate(bool duplicate)
 		{
 			//	Duplique la ressource sélectionnée.
 			int sel = this.array.SelectedRow;
@@ -602,7 +602,7 @@ namespace Epsitec.Common.Designer
 			this.module.Modifier.IsDirty = true;
 		}
 
-		public void DoMove(int direction)
+		public override void DoMove(int direction)
 		{
 			//	Déplace la ressource sélectionnée.
 			int sel = this.array.SelectedRow;
@@ -622,7 +622,7 @@ namespace Epsitec.Common.Designer
 			this.module.Modifier.IsDirty = true;
 		}
 
-		public void DoNewCulture()
+		public override void DoNewCulture()
 		{
 			//	Crée une nouvelle culture.
 			string name = this.module.MainWindow.DlgNewCulture();
@@ -638,7 +638,7 @@ namespace Epsitec.Common.Designer
 			this.module.Modifier.IsDirty = true;
 		}
 
-		public void DoDeleteCulture()
+		public override void DoDeleteCulture()
 		{
 			//	Supprime la culture courante.
 			string question = string.Format(Res.Strings.Dialog.DeleteCulture.Question, Misc.CultureName(this.secondaryBundle.Culture));
@@ -659,7 +659,7 @@ namespace Epsitec.Common.Designer
 			this.module.Modifier.IsDirty = true;
 		}
 
-		public void DoClipboard(string name)
+		public override void DoClipboard(string name)
 		{
 			//	Effectue une action avec le bloc-notes.
 			if ( this.currentTextField == null )  return;
@@ -680,7 +680,7 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		public void DoFont(string name)
+		public override void DoFont(string name)
 		{
 			//	Effectue une modification de typographie.
 			if ( this.currentTextField == null )  return;
@@ -704,7 +704,7 @@ namespace Epsitec.Common.Designer
 		}
 
 
-		public string InfoAccessText
+		public override string InfoAccessText
 		{
 			//	Donne le texte d'information sur l'accès en cours.
 			get
@@ -784,7 +784,7 @@ namespace Epsitec.Common.Designer
 					}
 				}
 
-				list.Sort(Viewer.CompareCultureInfo);
+				list.Sort(Strings.CompareCultureInfo);
 				
 				this.secondaryCultures = new IconButtonMark[list.Count];
 				for (int i=0; i<list.Count; i++)
@@ -1048,7 +1048,7 @@ namespace Epsitec.Common.Designer
 			this.UpdateCommands();
 		}
 
-		public void UpdateCommands()
+		public override void UpdateCommands()
 		{
 			//	Met à jour les commandes en fonction de la ressource sélectionnée.
 			int sel = this.array.SelectedRow;

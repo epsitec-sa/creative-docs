@@ -13,7 +13,7 @@ namespace Epsitec.Common.Designer
 		public Modifier(Module module)
 		{
 			this.module = module;
-			this.attachViewers = new List<Viewer>();
+			this.attachViewers = new List<Viewer.Abstract>();
 		}
 
 		public void Dispose()
@@ -242,7 +242,7 @@ namespace Epsitec.Common.Designer
 
 
 		#region Viewers
-		public Viewer ActiveViewer
+		public Viewer.Abstract ActiveViewer
 		{
 			//	Un seul visualisateur privilégié peut être actif.
 			get
@@ -255,19 +255,19 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		public void AttachViewer(Viewer viewer)
+		public void AttachViewer(Viewer.Abstract viewer)
 		{
 			//	Attache un nouveau visualisateur à ce module.
 			this.attachViewers.Add(viewer);
 		}
 
-		public void DetachViewer(Viewer viewer)
+		public void DetachViewer(Viewer.Abstract viewer)
 		{
 			//	Détache un visualisateur de ce module.
 			this.attachViewers.Remove(viewer);
 		}
 
-		public List<Viewer> AttachViewers
+		public List<Viewer.Abstract> AttachViewers
 		{
 			//	Liste des visualisateurs attachés au module.
 			get
@@ -280,7 +280,7 @@ namespace Epsitec.Common.Designer
 		
 		protected Module						module;
 		protected bool							isDirty = false;
-		protected Viewer						activeViewer;
-		protected List<Viewer>					attachViewers;
+		protected Viewer.Abstract				activeViewer;
+		protected List<Viewer.Abstract>			attachViewers;
 	}
 }
