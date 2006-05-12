@@ -14,9 +14,13 @@
   <data name="Ribbon.Section.Access">Accès</data>
   <data name="Ribbon.Section.Culture">Culture</data>
 
-  <data name="Viewer.Reference">&lt;b&gt;{0}&lt;/b&gt; (référence)</data>
-  <data name="Viewer.Edit">Textes</data>
-  <data name="Viewer.About">Commentaires</data>
+  <data name="BundleType.Strings">Textes</data>
+  <data name="BundleType.Panels">Interfaces</data>
+  <data name="BundleType.Scripts">Scripts</data>
+
+  <data name="Viewers.Strings.Reference">&lt;b&gt;{0}&lt;/b&gt; (référence)</data>
+  <data name="Viewers.Strings.Edit">Textes</data>
+  <data name="Viewers.Strings.About">Commentaires</data>
 
   <data name="Action.New">Nouveau</data>
   <data name="Action.Open">Ouvrir...</data>

@@ -45,7 +45,8 @@ namespace Epsitec.Common.Designer.Viewers
 
 			this.labelStatic = new StaticText(this);
 			this.labelStatic.ContentAlignment = ContentAlignment.MiddleRight;
-			this.labelStatic.Text = Res.Strings.Viewer.Edit;
+			//?this.labelStatic.Text = Res.Strings.Viewers.Strings.Edit;
+			this.labelStatic.Text = "Textes";
 			this.labelStatic.Visibility = (this.module.Mode != DesignerMode.Build);
 
 			this.labelEdit = new TextFieldEx(this);
@@ -75,7 +76,8 @@ namespace Epsitec.Common.Designer.Viewers
 
 			this.labelAbout = new StaticText(this);
 			this.labelAbout.ContentAlignment = ContentAlignment.MiddleRight;
-			this.labelAbout.Text = Res.Strings.Viewer.About;
+			//?this.labelAbout.Text = Res.Strings.Viewers.Strings.About;
+			this.labelAbout.Text = "Commentaires";
 
 			this.primaryAbout = new TextFieldMulti(this);
 			this.primaryAbout.Name = "PrimaryAbout";
@@ -761,7 +763,8 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 
 			this.primaryBundle = bundles[ResourceLevel.Default];
-			this.primaryCulture.Text = string.Format(Res.Strings.Viewer.Reference, Misc.CultureName(this.primaryBundle.Culture));
+			//?this.primaryCulture.Text = string.Format(Res.Strings.Viewers.Strings.Reference, Misc.CultureName(this.primaryBundle.Culture));
+			this.primaryCulture.Text = string.Format("<b>{0}</b> (référence)", Misc.CultureName(this.primaryBundle.Culture));
 
 			this.secondaryBundle = null;
 
