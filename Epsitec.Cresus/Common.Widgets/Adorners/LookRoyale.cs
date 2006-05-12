@@ -1777,8 +1777,8 @@ namespace Epsitec.Common.Widgets.Adorners
 			textRect.Top += 1;
 
 			Drawing.Path pTextRect = this.PathBottomRoundRectangle(textRect, 3.0);
-			graphics.Rasterizer.AddSurface(pTextRect);
-			graphics.RenderSolid(this.colorBorder);
+			Drawing.Color topColor = Drawing.Color.FromRgb(156.0/255.0, 179.0/255.0, 206.0/255.0);
+			this.GradientPath(graphics, pTextRect, this.colorBorder, topColor, 0);
 
 			if (text != null)
 			{
@@ -2220,6 +2220,55 @@ namespace Epsitec.Common.Widgets.Adorners
 			t.Scale(rect.Width/100/2, rect.Height/100/2);
 			t.Translate(center);
 //			t.RotateDeg(0, center);
+			graphics.GradientRenderer.Transform = t;
+			graphics.RenderGradient();
+			graphics.GradientRenderer.Transform = ot;
+		}
+
+		protected void GradientPath(Drawing.Graphics graphics,
+									Drawing.Path path,
+									Drawing.Color bottomColor,
+									Drawing.Color topColor,
+									double angle)
+		{
+			graphics.Rasterizer.AddSurface(path);
+			this.Gradient(graphics, path.ComputeBounds(), bottomColor, topColor, angle);
+		}
+
+		protected void GradientRect(Drawing.Graphics graphics,
+									Drawing.Rectangle rect,
+									Drawing.Color bottomColor,
+									Drawing.Color topColor,
+									double angle)
+		{
+			Drawing.Path path = new Drawing.Path();
+			path.MoveTo(rect.BottomLeft);
+			path.LineTo(rect.TopLeft);
+			path.LineTo(rect.TopRight);
+			path.LineTo(rect.BottomRight);
+			path.Close();
+			graphics.Rasterizer.AddSurface(path);
+			this.Gradient(graphics, rect, bottomColor, topColor, angle);
+		}
+
+		protected void Gradient(Drawing.Graphics graphics,
+								Drawing.Rectangle rect,
+								Drawing.Color bottomColor,
+								Drawing.Color topColor,
+								double angle)
+		{
+			graphics.FillMode = Drawing.FillMode.NonZero;
+			graphics.GradientRenderer.Fill = Drawing.GradientFill.Y;
+			graphics.GradientRenderer.SetColors(bottomColor, topColor);
+			graphics.GradientRenderer.SetParameters(-100, 100);
+			
+			Drawing.Transform ot = graphics.GradientRenderer.Transform;
+			Drawing.Transform t = new Drawing.Transform();
+			Drawing.Point center = rect.Center;
+			if ( angle == 0 )  t.Scale(rect.Width/100/2, rect.Height/100/2);
+			else               t.Scale(rect.Height/100/2, rect.Width/100/2);
+			t.Translate(center);
+			t.RotateDeg(angle, center);
 			graphics.GradientRenderer.Transform = t;
 			graphics.RenderGradient();
 			graphics.GradientRenderer.Transform = ot;

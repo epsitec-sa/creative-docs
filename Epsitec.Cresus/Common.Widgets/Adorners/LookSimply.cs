@@ -1278,19 +1278,16 @@ namespace Epsitec.Common.Widgets.Adorners
 										Direction dir)
 		{
 			//	Dessine le fond d'une barre d'outil.
-			if ( dir == Direction.Up )
+			if (dir == Direction.Left)
 			{
-				graphics.AddLine(rect.Left, rect.Top-0.5, rect.Right, rect.Top-0.5);
-				graphics.AddLine(rect.Left, rect.Bottom+0.5, rect.Right, rect.Bottom+0.5);
-				graphics.RenderSolid(Drawing.Color.FromBrightness(0.5));
+				rect.Top    -= 1;
+				rect.Bottom += 1;
+				rect.Left   += 1;
 			}
 
-			if ( dir == Direction.Left )
-			{
-				graphics.AddLine(rect.Left+0.5, rect.Bottom, rect.Left+0.5, rect.Top);
-				graphics.AddLine(rect.Right-0.5, rect.Bottom, rect.Right-0.5, rect.Top);
-				graphics.RenderSolid(Drawing.Color.FromBrightness(0.5));
-			}
+			rect.Deflate(0.5);
+			graphics.AddRectangle(rect);
+			graphics.RenderSolid(Drawing.Color.FromBrightness(0.5));
 		}
 
 		public override void PaintToolForeground(Drawing.Graphics graphics,
