@@ -535,7 +535,7 @@ namespace Epsitec.Common.Designer
 			mi.TabPage.TabTitle = mi.Module.Name;
 			this.bookModules.Items.Insert(this.currentModule, mi.TabPage);
 
-			Viewer.Strings viewer = new Viewer.Strings(mi.Module);
+			Viewers.Strings viewer = new Viewers.Strings(mi.Module);
 			viewer.SetParent(mi.TabPage);
 			viewer.Anchor = AnchorStyles.All;
 			mi.Module.Modifier.AttachViewer(viewer);

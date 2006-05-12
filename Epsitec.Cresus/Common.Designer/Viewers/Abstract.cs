@@ -4,7 +4,7 @@ using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
 using Epsitec.Common.Drawing;
 
-namespace Epsitec.Common.Designer.Viewer
+namespace Epsitec.Common.Designer.Viewers
 {
 	/// <summary>
 	/// Permet de représenter les ressources d'un module.
