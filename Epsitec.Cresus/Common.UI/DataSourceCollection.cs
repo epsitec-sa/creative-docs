@@ -207,7 +207,7 @@ namespace Epsitec.Common.UI
 
 			if (name == path)
 			{
-				return record.Data;
+				return Types.TypeRosetta.GetTypeObjectFromValue (record.Data);
 			}
 			else
 			{

@@ -12,7 +12,7 @@ namespace Epsitec.Common.Types
 			this.type = type;
 		}
 
-		public StructuredRecordType Type
+		public StructuredRecordType StructuredRecordType
 		{
 			get
 			{

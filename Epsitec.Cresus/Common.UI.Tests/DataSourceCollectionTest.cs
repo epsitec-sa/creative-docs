@@ -127,18 +127,23 @@ namespace Epsitec.Common.UI
 			Widgets.Visual source1 = new Widgets.Visual ();
 			MySimpleDataSource source2 = new MySimpleDataSource ();
 
-			source1.Name = "Source1";
 			source2.SetValue ("Name", "Petrus");
 			source2.SetValue ("BirthDateYear", 1972);
 
 			collection.AddDataSource ("B", source2);
 			collection.AddDataSource ("A", source1);
-
-			Assert.AreEqual (source1, collection.GetValueType ("A"));
-			Assert.AreEqual (source2, collection.GetValueType ("B"));
+			
+			Assert.AreEqual (DependencyObjectType.FromSystemType (typeof (Widgets.Visual)), collection.GetValueType ("A"));
+			Assert.AreEqual (typeof (MySimpleDataSource), collection.GetValueType ("B"));
 			Assert.AreEqual (Widgets.Visual.NameProperty, collection.GetValueType ("A.Name"));
 			Assert.AreEqual (typeof (string), collection.GetValueType ("B.Name"));
 			Assert.AreEqual (typeof (int), collection.GetValueType ("B.BirthDateYear"));
+
+			Assert.AreEqual (typeof (Widgets.Visual), Types.TypeRosetta.GetSystemTypeFromTypeObject (collection.GetValueType ("A")));
+			Assert.AreEqual (typeof (MySimpleDataSource), Types.TypeRosetta.GetSystemTypeFromTypeObject (collection.GetValueType ("B")));
+			Assert.AreEqual (typeof (string), Types.TypeRosetta.GetSystemTypeFromTypeObject (collection.GetValueType ("A.Name")));
+			Assert.AreEqual (typeof (string), Types.TypeRosetta.GetSystemTypeFromTypeObject (collection.GetValueType ("B.Name")));
+			Assert.AreEqual (typeof (int), Types.TypeRosetta.GetSystemTypeFromTypeObject (collection.GetValueType ("B.BirthDateYear")));
 		}
 
 		[Test]
