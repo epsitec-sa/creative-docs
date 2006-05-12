@@ -1653,8 +1653,7 @@ namespace Epsitec.Common.Widgets.Adorners
 			//	Dessine le bouton pour un ruban.
 			if ((state&WidgetPaintState.ActiveYes) != 0)  // bouton activé ?
 			{
-				Drawing.Path pTitle = this.PathTopCornerRectangle(rect);
-
+				Drawing.Path pTitle = this.PathTabCornerRectangle(rect);
 				graphics.Rasterizer.AddSurface(pTitle);
 				graphics.RenderSolid(this.colorControlLightLight);
 
@@ -1662,7 +1661,7 @@ namespace Epsitec.Common.Widgets.Adorners
 				{
 					Drawing.Rectangle rHilite = rect;
 					rHilite.Bottom = rHilite.Top-2;
-					Drawing.Path pHilite = this.PathTopCornerRectangle(rHilite);
+					Drawing.Path pHilite = this.PathTabCornerRectangle(rHilite);
 					graphics.Rasterizer.AddSurface(pHilite);
 					graphics.RenderSolid(this.colorHilite);
 				}
@@ -1672,19 +1671,18 @@ namespace Epsitec.Common.Widgets.Adorners
 			}
 			else
 			{
-				rect.Bottom += 1;
-				rect.Left   += 1;
-				rect.Right  -= 1;
-
 				if ((state&WidgetPaintState.Entered) != 0)  // bouton survolé ?
 				{
+					Drawing.Path pTitle = this.PathTabCornerRectangle(rect);
+					graphics.Rasterizer.AddSurface(pTitle);
+					graphics.RenderSolid(this.colorControlDarkDark);
+
 					Drawing.Rectangle rHilite = rect;
 					rHilite.Bottom = rHilite.Top-2;
-					Drawing.Path pHilite = this.PathTopCornerRectangle(rHilite);
+					Drawing.Path pHilite = this.PathTabCornerRectangle(rHilite);
 					graphics.Rasterizer.AddSurface(pHilite);
 					graphics.RenderSolid(this.colorHilite);
 
-					Drawing.Path pTitle = this.PathTopCornerRectangle(rect);
 					graphics.Rasterizer.AddOutline(pTitle, 1);
 					graphics.RenderSolid(this.ColorBorder);
 				}
@@ -2048,6 +2046,27 @@ namespace Epsitec.Common.Widgets.Adorners
 				path.LineTo(ox+dx-0.5, oy+dy-0.5);
 				path.LineTo(ox+dx-0.5, oy);
 			}
+
+			return path;
+		}
+
+		protected Drawing.Path PathTabCornerRectangle(Drawing.Rectangle rect)
+		{
+			//	Crée le chemin d'un trapèze à base large.
+			double ox = rect.Left;
+			double oy = rect.Bottom;
+			double dx = rect.Width;
+			double dy = rect.Height;
+
+			Drawing.Path path = new Drawing.Path();
+
+			double t = 4.0;
+			double b = t - rect.Height*0.25;
+
+			path.MoveTo(ox+b, oy);
+			path.LineTo(ox+t, oy+dy-0.5);
+			path.LineTo(ox+dx-t, oy+dy-0.5);
+			path.LineTo(ox+dx-b, oy);
 
 			return path;
 		}
