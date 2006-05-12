@@ -216,14 +216,11 @@ namespace Epsitec.Common.Widgets
 			CommandDispatcher dispatcher = CommandDispatcher.Default;
 			dispatcher.RegisterController (new MyController ());
 
-			window.AttachCommandDispatcher (dispatcher);
-			window.Root.AttachCommandDispatcher (dispatcher);
+			window.AttachDispatcher (dispatcher);
 			
-			Assert.AreSame (dispatcher, Types.Collection.ToArray (window.Root.GetCommandDispatchers ())[0]);
-			
-			CommandState command_open = new CommandState ("Open", dispatcher, KeyCode.ModifierControl | KeyCode.AlphaO);
-			CommandState command_save = new CommandState ("Save", dispatcher, KeyCode.ModifierAlt | KeyCode.AlphaS);
-			CommandState command_cut  = new CommandState ("ClipCut", dispatcher, KeyCode.ModifierControl | KeyCode.AlphaX);
+			CommandState command_open = new CommandState ("Open", KeyCode.ModifierControl | KeyCode.AlphaO);
+			CommandState command_save = new CommandState ("Save", KeyCode.ModifierAlt | KeyCode.AlphaS);
+			CommandState command_cut  = new CommandState ("ClipCut", KeyCode.ModifierControl | KeyCode.AlphaX);
 			
 			Button      button;
 			GroupBox    group;

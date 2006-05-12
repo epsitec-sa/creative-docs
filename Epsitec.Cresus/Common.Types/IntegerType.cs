@@ -66,7 +66,7 @@ namespace Epsitec.Common.Types
 		#endregion
 		
 		#region IDataConstraint Members
-		public bool CheckConstraint(object value)
+		public bool ValidateValue(object value)
 		{
 			if ((value is int) &&
 				(this.range != null))

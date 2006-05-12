@@ -28,7 +28,14 @@ namespace Epsitec.Common.Widgets.Validators
 			this.widget = widget;
 			this.AttachWidget (this.widget);
 		}
-		
+
+		public Widget Widget
+		{
+			get
+			{
+				return this.widget;
+			}
+		}
 		
 		#region IDisposable Members
 		public void Dispose()
@@ -50,7 +57,11 @@ namespace Epsitec.Common.Widgets.Validators
 				}
 			}
 		}
-		
+
+		protected virtual void SetState(ValidationState state)
+		{
+			this.state = state;
+		}
 		
 		#region IValidator Members
 		public ValidationState					State
@@ -95,6 +106,11 @@ namespace Epsitec.Common.Widgets.Validators
 		
 		protected virtual void OnBecameDirty()
 		{
+			if (this.widget != null)
+			{
+				this.widget.AsyncValidation ();
+			}
+			
 			if (this.BecameDirty != null)
 			{
 				this.BecameDirty (this);
@@ -112,7 +128,7 @@ namespace Epsitec.Common.Widgets.Validators
 		}
 		
 		
-		protected ValidationState				state;
-		protected Widget						widget;
+		private ValidationState					state;
+		private Widget							widget;
 	}
 }

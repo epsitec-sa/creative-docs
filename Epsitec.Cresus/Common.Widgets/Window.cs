@@ -4,6 +4,8 @@
 using Epsitec.Common.Support;
 using System.Collections.Generic;
 
+using Epsitec.Common.Types;
+
 namespace Epsitec.Common.Widgets
 {
 	using PropertyChangedEventHandler = Epsitec.Common.Support.EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>;
@@ -15,7 +17,7 @@ namespace Epsitec.Common.Widgets
 	/// n'est pas un widget en tant que tel: Window.Root définit le widget à la
 	/// racine de la fenêtre.
 	/// </summary>
-	public class Window : Types.DependencyObject, Support.Data.IContainer, ICommandDispatcherHost
+	public class Window : Types.DependencyObject, Support.Data.IContainer
 	{
 		public Window()
 		{
@@ -733,16 +735,6 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		#region ICommandDispatcherHost Members
-		public IEnumerable<CommandDispatcher> GetCommandDispatchers()
-		{
-			if (this.dispatcher != null)
-			{
-				yield return this.dispatcher;
-			}
-		}
-		#endregion
-		
 		public bool								PreventAutoClose
 		{
 			get
@@ -1023,30 +1015,24 @@ namespace Epsitec.Common.Widgets
 		#endregion
 		
 		
-		public void AttachCommandDispatcher(CommandDispatcher value)
+		public void AttachDispatcher(CommandDispatcher value)
 		{
-			if (this.dispatcher != value)
+			if (CommandDispatcher.GetDispatcher (this) != value)
 			{
-				System.Diagnostics.Debug.Assert (this.dispatcher == null);
-				
-				this.dispatcher = value;
-				
-				if (this.dispatcher != null)
-				{
-					this.dispatcher.ValidationRuleBecameDirty += this.HandleValidationRuleBecameDirty;
-				}
+				System.Diagnostics.Debug.Assert (CommandDispatcher.GetDispatcher (this) == null);
+
+				CommandDispatcher.SetDispatcher (this, value);
 				
 				Helpers.VisualTree.InvalidateCommandDispatcher (this);
 			}
 		}
 		
-		public void DetachCommandDispatcher(CommandDispatcher value)
+		public void DetachDispatcher(CommandDispatcher value)
 		{
-			if (this.dispatcher != null)
+			if (CommandDispatcher.GetDispatcher (this) != null)
 			{
-				System.Diagnostics.Debug.Assert (this.dispatcher == value);
-				
-				this.dispatcher.ValidationRuleBecameDirty -= this.HandleValidationRuleBecameDirty;
+				System.Diagnostics.Debug.Assert (CommandDispatcher.GetDispatcher (this) == value);
+				CommandDispatcher.ClearDispatcher (this);
 				
 				Helpers.VisualTree.InvalidateCommandDispatcher (this);
 			}
@@ -1154,11 +1140,10 @@ namespace Epsitec.Common.Widgets
 						}
 					}
 				}
-				
-				if (this.dispatcher != null)
+
+				if (CommandDispatcher.GetDispatcher (this) != null)
 				{
-					this.DetachCommandDispatcher (this.dispatcher);
-					this.dispatcher = null;
+					this.DetachDispatcher (CommandDispatcher.GetDispatcher (this));
 				}
 				
 				if (this.root != null)
@@ -1559,25 +1544,18 @@ namespace Epsitec.Common.Widgets
 		#region QueueItem class
 		protected class QueueItem
 		{
-			public QueueItem(object source, string command, ICommandDispatcherHost dispatcher)
+			public QueueItem(Widget source, string command)
 			{
 				this.source      = source;
 				this.command     = command;
-				this.dispatchers = Types.Collection.ToArray<CommandDispatcher> (dispatcher.GetCommandDispatchers ());
-			}
-			
-			public QueueItem(Widget source)
-			{
-				this.source      = source;
-				this.command     = source.Command;
 				this.dispatchers = Helpers.VisualTree.GetAllDispatchers (source);
 			}
-			
-			public QueueItem(Widget source, CommandState command)
+
+			public QueueItem(DependencyObject source, string command)
 			{
 				this.source      = source;
-				this.command     = command.Name;
-				this.dispatchers = Helpers.VisualTree.GetAllDispatchers (source);
+				this.command     = command;
+				this.dispatchers = new CommandDispatcher[1] { CommandDispatcher.GetDispatcher (source) };
 			}
 			
 			
@@ -1612,27 +1590,17 @@ namespace Epsitec.Common.Widgets
 		}
 		#endregion
 		
-		public void QueueCommand(Widget source)
+		public void QueueCommand(Widget source, string name)
 		{
-			this.QueueCommand (new QueueItem (source));
+			this.QueueCommand (new QueueItem (source, name));
 		}
-		
-		public void QueueCommand(Widget source, CommandState command)
+
+		public void QueueCommand(DependencyObject source, string name)
 		{
-			this.QueueCommand (new QueueItem (source, command));
+			this.QueueCommand (new QueueItem (source, name));
 		}
-		
-		public void QueueCommand(object source, string command)
-		{
-			this.QueueCommand (source, command, this);
-		}
-		
-		public void QueueCommand(object source, string command, ICommandDispatcherHost dispatcher)
-		{
-			this.QueueCommand (new QueueItem (source, command, dispatcher));
-		}
-		
-		
+
+
 		protected void QueueCommand(QueueItem item)
 		{
 			this.cmd_queue.Enqueue (item);
@@ -1685,6 +1653,15 @@ namespace Epsitec.Common.Widgets
 			{
 				this.pending_validation = true;
 				this.window.SendValidation ();
+			}
+		}
+
+		public void AsyncValidation(Widget widget)
+		{
+			if (! this.async_validation_list.Contains (widget))
+			{
+				this.async_validation_list.Add (widget);
+				this.AsyncValidation ();
 			}
 		}
 
@@ -1750,12 +1727,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		private void HandleValidationRuleBecameDirty(object sender)
-		{
-			this.AsyncValidation ();
-		}
-		
-		
 		internal void DispatchQueuedCommands()
 		{
 			while (this.cmd_queue.Count > 0)
@@ -1789,10 +1760,22 @@ namespace Epsitec.Common.Widgets
 		
 		internal void DispatchValidation()
 		{
+			Widget[] widgets = this.async_validation_list.ToArray ();
+			
+			this.async_validation_list.Clear ();
 			this.pending_validation = false;
-			CommandDispatcher.SyncAllValidationRules ();
+
+			for (int i = 0; i < widgets.Length; i++)
+			{
+				if (widgets[i].IsDisposed)
+				{
+					continue;
+				}
+
+				widgets[i].Validate ();
+			}
 		}
-		
+
 		internal void DispatchMessage(Message message)
 		{
 			this.DispatchMessage (message, null);
@@ -2286,13 +2269,15 @@ namespace Epsitec.Common.Widgets
 		private MouseCursor						window_cursor;
 		private System.Collections.ArrayList	logical_focus_stack = new System.Collections.ArrayList ();
 		
-		private CommandDispatcher				dispatcher;
 		private System.Collections.Queue		cmd_queue = new System.Collections.Queue ();
 		private bool							is_dispose_queued;
 		private bool							is_async_notification_queued;
 		private bool							is_async_layout_queued;
 		private bool							is_disposed;
+		
 		private bool							pending_validation;
+		private List<Widget>					async_validation_list = new List<Widget> ();
+		
 		private IPaintFilter					paint_filter;
 		
 		private System.Collections.Queue		post_paint_queue = new System.Collections.Queue ();

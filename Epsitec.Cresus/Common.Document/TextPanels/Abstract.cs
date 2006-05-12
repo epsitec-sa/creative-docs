@@ -337,7 +337,7 @@ namespace Epsitec.Common.Document.TextPanels
 		protected IconButton CreateIconButton(string command, string iconSize)
 		{
 			//	Crée un bouton pour une commande, en précisant la taille préférée pour l'icône.
-			CommandState cs = CommandDispatcher.GetFocusedPrimaryDispatcher().GetCommandState(command);
+			CommandState cs = CommandState.Get (command);
 			IconButton button = new IconButton(this);
 
 			button.Command = command;

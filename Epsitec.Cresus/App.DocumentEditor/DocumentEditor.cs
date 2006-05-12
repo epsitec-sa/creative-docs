@@ -31,7 +31,8 @@ namespace Epsitec.App.DocumentEditor
 			this.commandDispatcher = new CommandDispatcher("DocumentEditor", CommandDispatcherLevel.Primary);
 			this.commandDispatcher.RegisterController(this);
 			this.commandDispatcher.Focus();
-			this.AttachCommandDispatcher(this.commandDispatcher);
+			
+			CommandDispatcher.SetDispatcher (this, this.commandDispatcher);
 			
 			this.type = type;
 			this.useArray = false;
@@ -259,38 +260,6 @@ namespace Epsitec.App.DocumentEditor
 		{
 			get { return this.commandDispatcher; }
 		}
-
-#if false //#fix
-		static DocumentEditor()
-		{
-			//	Toute modification de la propriété BackColor doit être répercutée
-			//	sur le slider. Le plus simple est d'utiliser un override callback
-			//	sur la propriété BackColor :
-			
-			Epsitec.Common.Types.PropertyMetadata metadata = new Epsitec.Common.Types.PropertyMetadata ();
-			
-			metadata.GetValueOverride = new Epsitec.Common.Types.GetValueOverrideCallback (DocumentEditor.GetCommandDispatchersValue);
-			
-			Visual.CommandDispatcherProperty.OverrideMetadata (typeof (DocumentEditor), metadata);
-		}
-		
-		
-		private static object GetCommandDispatchersValue(Epsitec.Common.Types.Object o)
-		{
-			DocumentEditor that = o as DocumentEditor;
-			
-			if ( that.commandDispatcher == null )
-			{
-				System.Diagnostics.Debug.WriteLine("*** Created Primary Command Dispatcher ***");
-				//	On crée son propre dispatcher, pour éviter de marcher sur les autres commandes.
-				that.commandDispatcher = new CommandDispatcher("DocumentEditor", CommandDispatcherLevel.Primary);
-				that.commandDispatcher.RegisterController(that);
-			}
-			
-			return that.commandDispatcher;
-		}
-#endif
-
 
 		public void MakeReadyToRun()
 		{
@@ -809,7 +778,7 @@ namespace Epsitec.App.DocumentEditor
 						first = false;
 					}
 
-					CommandState cs = this.commandDispatcher.GetCommandState(cmd);
+					CommandState cs = CommandState.Get (cmd);
 					this.RibbonAdd(cs);
 
 					if ( sep )
@@ -1138,7 +1107,7 @@ namespace Epsitec.App.DocumentEditor
 			}
 			else
 			{
-				CommandState cs = this.commandDispatcher.GetCommandState(command);
+				CommandState cs = CommandState.Get (command);
 
 				MenuItem item = new MenuItem(cs.Name, Misc.Icon(cs.IconName), cs.LongCaption, Misc.GetShortCut(cs), cs.Name);
 				vmenu.Items.Add(item);
@@ -1206,7 +1175,7 @@ namespace Epsitec.App.DocumentEditor
 
 		protected IconButton InfoAdd(string command)
 		{
-			CommandState cs = this.commandDispatcher.GetCommandState(command);
+			CommandState cs = CommandState.Get (command);
 
 			IconButton button = new IconButton(cs.Name, Misc.Icon(cs.IconName), cs.Name);
 			button.PreferredIconSize = Misc.IconPreferredSize("Small");
@@ -2248,7 +2217,7 @@ namespace Epsitec.App.DocumentEditor
 		void CommandCombo(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			IconButtonCombo combo = e.Source as IconButtonCombo;
-			CommandState cs = dispatcher.FindCommandState(e.CommandName);
+			CommandState cs = CommandState.Find (e.CommandName);
 			if ( combo != null && cs != null )
 			{
 				cs.AdvancedState = combo.SelectedName;
@@ -3758,7 +3727,12 @@ namespace Epsitec.App.DocumentEditor
 		protected CommandState CreateCommandState(string command, params Widgets.Shortcut[] shortcuts)
 		{
 			//	Crée un nouveau CommandState.
-			CommandState cs = new CommandState(command, this.commandDispatcher, shortcuts);
+			CommandState cs = CommandState.Get (command);
+
+			if (shortcuts.Length > 0)
+			{
+				cs.Shortcuts.AddRange (shortcuts);
+			}
 
 			cs.IconName    = command;
 			cs.LongCaption = DocumentEditor.GetRes("Action."+command);
@@ -3769,7 +3743,12 @@ namespace Epsitec.App.DocumentEditor
 		protected CommandState CreateCommandState(string command, bool statefull, params Widgets.Shortcut[] shortcuts)
 		{
 			//	Crée un nouveau CommandState.
-			CommandState cs = new CommandState(command, this.commandDispatcher, shortcuts);
+			CommandState cs = CommandState.Get (command);
+
+			if (shortcuts.Length > 0)
+			{
+				cs.Shortcuts.AddRange (shortcuts);
+			}
 
 			cs.IconName    = command;
 			cs.LongCaption = DocumentEditor.GetRes("Action."+command);
@@ -3781,7 +3760,12 @@ namespace Epsitec.App.DocumentEditor
 		protected CommandState CreateCommandState(string command, string icon, string tooltip, params Widgets.Shortcut[] shortcuts)
 		{
 			//	Crée un nouveau CommandState.
-			CommandState cs = new CommandState(command, this.commandDispatcher, shortcuts);
+			CommandState cs = CommandState.Get (command);
+
+			if (shortcuts.Length > 0)
+			{
+				cs.Shortcuts.AddRange (shortcuts);
+			}
 
 			cs.IconName    = icon;
 			cs.LongCaption = DocumentEditor.GetRes("Action."+tooltip);
@@ -3792,7 +3776,12 @@ namespace Epsitec.App.DocumentEditor
 		protected CommandState CreateCommandState(string command, string icon, string tooltip, bool statefull, params Widgets.Shortcut[] shortcuts)
 		{
 			//	Crée un nouveau CommandState.
-			CommandState cs = new CommandState(command, this.commandDispatcher, shortcuts);
+			CommandState cs = CommandState.Get (command);
+
+			if (shortcuts.Length > 0)
+			{
+				cs.Shortcuts.AddRange (shortcuts);
+			}
 
 			cs.IconName    = icon;
 			cs.LongCaption = DocumentEditor.GetRes("Action."+tooltip);

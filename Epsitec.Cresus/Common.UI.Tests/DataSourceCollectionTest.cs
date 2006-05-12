@@ -120,6 +120,33 @@ namespace Epsitec.Common.UI
 		}
 
 		[Test]
+		public void CheckGetValueType()
+		{
+			DataSourceCollection collection = new DataSourceCollection ();
+
+			Widgets.Visual source1 = new Widgets.Visual ();
+			MySimpleDataSource source2 = new MySimpleDataSource ();
+
+			source2.SetValue ("Name", "Petrus");
+			source2.SetValue ("BirthDateYear", 1972);
+
+			collection.AddDataSource ("B", source2);
+			collection.AddDataSource ("A", source1);
+			
+			Assert.AreEqual (DependencyObjectType.FromSystemType (typeof (Widgets.Visual)), collection.GetValueTypeObject ("A"));
+			Assert.AreEqual (typeof (MySimpleDataSource), collection.GetValueTypeObject ("B"));
+			Assert.AreEqual (Widgets.Visual.NameProperty, collection.GetValueTypeObject ("A.Name"));
+			Assert.AreEqual (typeof (string), collection.GetValueTypeObject ("B.Name"));
+			Assert.AreEqual (typeof (int), collection.GetValueTypeObject ("B.BirthDateYear"));
+
+			Assert.AreEqual (typeof (Widgets.Visual), Types.TypeRosetta.GetSystemTypeFromTypeObject (collection.GetValueTypeObject ("A")));
+			Assert.AreEqual (typeof (MySimpleDataSource), Types.TypeRosetta.GetSystemTypeFromTypeObject (collection.GetValueTypeObject ("B")));
+			Assert.AreEqual (typeof (string), Types.TypeRosetta.GetSystemTypeFromTypeObject (collection.GetValueTypeObject ("A.Name")));
+			Assert.AreEqual (typeof (string), Types.TypeRosetta.GetSystemTypeFromTypeObject (collection.GetValueTypeObject ("B.Name")));
+			Assert.AreEqual (typeof (int), Types.TypeRosetta.GetSystemTypeFromTypeObject (collection.GetValueTypeObject ("B.BirthDateYear")));
+		}
+
+		[Test]
 		[ExpectedException (typeof (System.InvalidOperationException))]
 		public void CheckSetValueEx1()
 		{
@@ -163,6 +190,11 @@ namespace Epsitec.Common.UI
 			public object GetValue(string path)
 			{
 				return this.data[path];
+			}
+
+			public object GetValueTypeObject(string path)
+			{
+				return this.data[path].GetType ();
 			}
 
 			public void SetValue(string path, object value)

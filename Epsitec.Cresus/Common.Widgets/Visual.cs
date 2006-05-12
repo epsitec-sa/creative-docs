@@ -15,10 +15,12 @@ namespace Epsitec.Common.Widgets
 	/// <summary>
 	/// Visual.
 	/// </summary>
-	public class Visual : Types.DependencyObject, ICommandDispatcherHost, Helpers.IClientInfo, System.IEquatable<Visual>
+	public class Visual : Types.DependencyObject, Helpers.IClientInfo, System.IEquatable<Visual>
 	{
 		public Visual()
 		{
+			this.visualSerialId = System.Threading.Interlocked.Increment (ref Visual.nextSerialId);
+			
 			//	Since IsFocused would be automatically inherited, we have to define
 			//	it locally. Setting InheritsParentFocus will clear the definition.
 			
@@ -29,7 +31,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		internal short							VisualSerialId
+		internal long							VisualSerialId
 		{
 			get
 			{
@@ -100,19 +102,6 @@ namespace Epsitec.Common.Widgets
 					{
 						value.Children.Add (this);
 					}
-				}
-			}
-		}
-		
-		public IEnumerable<CommandDispatcher> GetCommandDispatchers()
-		{
-			CommandDispatcher[] dispatchers = (CommandDispatcher[]) this.GetValue (Visual.CommandDispatchersProperty);
-			
-			if (dispatchers != null)
-			{
-				foreach (CommandDispatcher dispatcher in dispatchers)
-				{
-					yield return dispatcher;
 				}
 			}
 		}
@@ -279,15 +268,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-#if false
-				if (this.dirtyLayout)
-				{
-					System.Diagnostics.Debug.WriteLine ("Dirty geometry in " + this.ToString ());
-				}
-				return true;
-#else
 				return this.dirtyLayout == false;
-#endif
 			}
 		}
 
@@ -597,6 +578,23 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		public bool								IsValid
+		{
+			get
+			{
+				IValidator validator = this.Validator;
+				
+				if (validator != null)
+				{
+					return validator.IsValid;
+				}
+				else
+				{
+					return true;
+				}
+			}
+		}
+
 		public bool								InError
 		{
 			get
@@ -604,7 +602,43 @@ namespace Epsitec.Common.Widgets
 				return (bool) this.GetValue (Visual.InErrorProperty);
 			}
 		}
-		
+
+
+		public IValidator						Validator
+		{
+			get
+			{
+				return (IValidator) this.GetValue (Visual.ValidatorProperty);
+			}
+		}
+
+		public bool								HasValidator
+		{
+			get
+			{
+				return this.ContainsLocalValue (Visual.ValidatorProperty);
+			}
+		}
+
+		public string							ValidationGroups
+		{
+			get
+			{
+				return (string) this.GetValue (Visual.ValidationGroupsProperty);
+			}
+			set
+			{
+				this.SetValue (Visual.ValidationGroupsProperty, value);
+			}
+		}
+
+		public bool								HasValidationGroups
+		{
+			get
+			{
+				return this.ContainsLocalValue (Visual.ValidationGroupsProperty);
+			}
+		}
 
 		public bool								SyncPaint
 		{
@@ -950,54 +984,6 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public void AttachCommandDispatcher(CommandDispatcher value)
-		{
-			System.Diagnostics.Debug.Assert (value != null);
-
-			CommandDispatcher[] dispatchers = (CommandDispatcher[]) this.GetValue (Visual.CommandDispatchersProperty);
-			
-			if ((dispatchers == null) ||
-				(dispatchers.Length == 0))
-			{
-				this.SetValueBase (Visual.CommandDispatchersProperty, new CommandDispatcher[] { value });
-			}
-			else if ((dispatchers.Length == 1) &&
-				/**/ (dispatchers[0] == value))
-			{
-				throw new System.InvalidOperationException ("Cannot attach same CommandDispatcher twice");
-			}
-			else
-			{
-				//	TODO: terminer AttachCommandDispatcher
-				
-				throw new System.NotImplementedException ("AttachCommandDispatcher not fully implemented");
-			}
-		}
-		
-		public void DetachCommandDispatcher(CommandDispatcher value)
-		{
-			System.Diagnostics.Debug.Assert (value != null);
-
-			CommandDispatcher[] dispatchers = (CommandDispatcher[]) this.GetValue (Visual.CommandDispatchersProperty);
-			
-			if ((dispatchers == null) ||
-				(dispatchers.Length == 0))
-			{
-				throw new System.InvalidOperationException ("Cannot detach unknown CommandDispatcher");
-			}
-			else if ((dispatchers.Length == 1) &&
-				/**/ (dispatchers[0] == value))
-			{
-				this.SetValueBase (Visual.CommandDispatchersProperty, null);
-			}
-			else
-			{
-				//	TODO: terminer DetachCommandDispatcher
-				
-				throw new System.NotImplementedException ("DetachCommandDispatcher not fully implemented");
-			}
-		}
-
 		public virtual Drawing.Margins GetShapeMargins()
 		{
 			return Drawing.Margins.Zero;
@@ -1208,7 +1194,7 @@ namespace Epsitec.Common.Widgets
 
 		public override int GetHashCode()
 		{
-			return this.visualSerialId;
+			return (int) this.visualSerialId;
 		}
 		
 		
@@ -1216,6 +1202,11 @@ namespace Epsitec.Common.Widgets
 		{
 		}
 
+		private static object GetIsValidValue(DependencyObject o)
+		{
+			Visual that = o as Visual;
+			return that.IsValid;
+		}
 
 		private static object GetParentValue(DependencyObject o)
 		{
@@ -1318,14 +1309,6 @@ namespace Epsitec.Common.Widgets
 			return that.ContainsKeyboardFocus;
 		}
 		
-		private static object GetCommandDispatchersValue(DependencyObject o)
-		{
-			Visual that = o as Visual;
-			CommandDispatcher[] value = (CommandDispatcher[]) that.GetValueBase (Visual.CommandDispatchersProperty);
-			return value == null ? new CommandDispatcher[0] : value.Clone ();
-		}
-		
-		
 		private static void SetEnableValue(DependencyObject o, object value)
 		{
 			Visual that = o as Visual;
@@ -1354,12 +1337,6 @@ namespace Epsitec.Common.Widgets
 		{
 			Visual that = o as Visual;
 			that.OnCommandChanged (new DependencyPropertyChangedEventArgs (Visual.CommandProperty, oldValue, newValue));
-		}
-
-		private static void NotifyCommandDispatchersChanged(DependencyObject o, object oldValue, object newValue)
-		{
-			Visual that = o as Visual;
-			that.OnCommandDispatchersChanged (new DependencyPropertyChangedEventArgs (Visual.CommandDispatchersProperty, oldValue, newValue));
 		}
 
 		private static void NotifyAnchorChanged(DependencyObject o, object oldValue, object newValue)
@@ -1427,15 +1404,10 @@ namespace Epsitec.Common.Widgets
 			}
 			else
 			{
-				CommandCache.Default.Invalidate (this);
+				CommandCache.Default.InvalidateVisual (this);
 			}
 		}
 		
-		protected virtual void OnCommandDispatchersChanged(Types.DependencyPropertyChangedEventArgs e)
-		{
-			Helpers.VisualTree.InvalidateCommandDispatcher (this);
-		}
-
 		protected virtual void OnActiveStateChanged()
 		{
 		}
@@ -1544,6 +1516,10 @@ namespace Epsitec.Common.Widgets
 		public static readonly DependencyProperty KeyboardFocusProperty			= DependencyProperty.RegisterReadOnly ("KeyboardFocus", typeof (bool), typeof (Visual), new VisualPropertyMetadata (false, new SetValueOverrideCallback (Visual.SetKeyboardFocusValue), VisualPropertyMetadataOptions.AffectsDisplay));
 		public static readonly DependencyProperty ContainsKeyboardFocusProperty	= DependencyProperty.RegisterReadOnly ("ContainsKeyboardFocus", typeof (bool), typeof (Visual), new VisualPropertyMetadata (false, new GetValueOverrideCallback (Visual.GetContainsKeyboardFocusValue), VisualPropertyMetadataOptions.ChangesSilently));
 
+		public static readonly DependencyProperty IsValidProperty				= DependencyProperty.RegisterReadOnly ("IsValid", typeof (bool), typeof (Visual), new DependencyPropertyMetadata (Visual.GetIsValidValue));
+		public static readonly DependencyProperty ValidatorProperty				= DependencyProperty.RegisterReadOnly ("Validator", typeof (IValidator), typeof (Visual), new DependencyPropertyMetadata (null));
+		public static readonly DependencyProperty ValidationGroupsProperty		= DependencyProperty.Register ("ValidationGroups", typeof (string), typeof (Visual), new DependencyPropertyMetadata (null));
+
 		public static readonly DependencyProperty SyncPaintProperty				= DependencyProperty.Register ("SyncPaint", typeof (bool), typeof (Visual), new DependencyPropertyMetadata (false));
 		public static readonly DependencyProperty AutoCaptureProperty			= DependencyProperty.Register ("AutoCapture", typeof (bool), typeof (Visual), new DependencyPropertyMetadata (true));
 		public static readonly DependencyProperty AutoFocusProperty				= DependencyProperty.Register ("AutoFocus", typeof (bool), typeof (Visual), new DependencyPropertyMetadata (false));
@@ -1557,13 +1533,12 @@ namespace Epsitec.Common.Widgets
 		
 		public static readonly DependencyProperty BackColorProperty				= DependencyProperty.Register ("BackColor", typeof (Drawing.Color), typeof (Visual), new VisualPropertyMetadata (Drawing.Color.Empty, VisualPropertyMetadataOptions.AffectsDisplay));
 		
-		public static readonly DependencyProperty CommandDispatchersProperty	= DependencyProperty.RegisterReadOnly ("CommandDispatchers", typeof (CommandDispatcher[]), typeof (Visual), new DependencyPropertyMetadata (null, new GetValueOverrideCallback (Visual.GetCommandDispatchersValue), new PropertyInvalidatedCallback (Visual.NotifyCommandDispatchersChanged)));
 		public static readonly DependencyProperty CommandProperty				= DependencyProperty.Register ("Command", typeof (string), typeof (Visual), new DependencyPropertyMetadata (null, new PropertyInvalidatedCallback (Visual.NotifyCommandChanged)));
 
-		private static short					nextSerialId = 1;
+		private static long						nextSerialId = 1;
 		
 		private int								commandCacheId = -1;
-		private short							visualSerialId = Visual.nextSerialId++;
+		private long							visualSerialId;
 		private bool							dirtyLayout;
 		private bool							dirtyDisplay;
 

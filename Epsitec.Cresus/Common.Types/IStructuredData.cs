@@ -17,6 +17,7 @@ namespace Epsitec.Common.Types
 		void DetachListener(string path, PropertyChangedEventHandler handler);
 
 		object GetValue(string path);
+		object GetValueTypeObject(string path);
 		void SetValue(string path, object value);
 
 		bool HasImmutableRoots

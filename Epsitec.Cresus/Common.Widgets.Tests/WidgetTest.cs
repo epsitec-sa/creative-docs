@@ -1503,7 +1503,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		static CommandState open_state = CommandDispatcher.Default.GetCommandState ("open");
+		static CommandState open_state = CommandState.Get ("open");
 		
 		[Test] public void CheckFindChildBasedOnName()
 		{

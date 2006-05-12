@@ -200,6 +200,7 @@ namespace Epsitec.Common.Support
 		}
 		#endregion
 		
+#if false
 		#region MyCommandState Class
 		class MyCommandState : CommandState
 		{
@@ -226,6 +227,7 @@ namespace Epsitec.Common.Support
 
 		}
 		#endregion
+#endif
 		
 		#region XyzTestController classes
 		public class BaseTestController
@@ -317,6 +319,7 @@ namespace Epsitec.Common.Support
 		}
 		#endregion
 		
+#if false
 		[Test] public void CheckValidators()
 		{
 			CommandDispatcher dispatcher = new CommandDispatcher ();
@@ -366,7 +369,7 @@ namespace Epsitec.Common.Support
 			Assert.AreEqual (ValidationState.Dirty, v11.State);
 			Assert.AreEqual (ValidationState.Dirty, v2.State);
 		}
-		
+#endif
 		
 		static System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 	}

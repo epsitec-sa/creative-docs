@@ -80,11 +80,11 @@ namespace Epsitec.Common.Widgets.Validators
 			if (((this.accept_empty) && (text.Length == 0)) ||
 				((text.Length > 0)) && (this.regex.IsMatch (text)))
 			{
-				this.state = ValidationState.Ok;
+				this.SetState (ValidationState.Ok);
 			}
 			else
 			{
-				this.state = ValidationState.Error;
+				this.SetState (ValidationState.Error);
 			}
 		}
 		

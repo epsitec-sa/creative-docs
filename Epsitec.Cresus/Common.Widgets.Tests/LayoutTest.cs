@@ -248,15 +248,15 @@ namespace Epsitec.Common.Widgets
 			c1.Dock = DockStyle.Top;
 			c2.Dock = DockStyle.Top;
 
-			c1.PreferredHeight = 20;
+			c1.PreferredHeight = 25;
 			c2.PreferredHeight = 30;
 
 			array = Types.Collection.ToArray (context.GetMeasureQueue ());
 
 			Assert.AreEqual (3, array.Length);
-			Assert.AreEqual (c1, array[0]);
-			Assert.AreEqual (c2, array[1]);
-			Assert.AreEqual (a, array[2]);
+			Assert.AreEqual (c1.Name, array[0].Name);
+			Assert.AreEqual (c2.Name, array[1].Name);
+			Assert.AreEqual (a.Name, array[2].Name);
 
 			array = Types.Collection.ToArray (context.GetArrangeQueue ());
 

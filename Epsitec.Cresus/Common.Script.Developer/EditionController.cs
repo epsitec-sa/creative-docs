@@ -16,9 +16,9 @@ namespace Epsitec.Common.Script.Developer
 			this.dispatcher = new CommandDispatcher ("EditionController", CommandDispatcherLevel.Primary);
 			this.dispatcher.RegisterController (this);
 			
-			this.save_command_state = CommandState.Find ("SaveSource", this.dispatcher);
-			this.compile_command_state = CommandState.Find ("CompileSourceCode", this.dispatcher);
-			this.next_error_command_state = CommandState.Find ("FindNextError", this.dispatcher);
+			this.save_command_state = CommandState.Find ("SaveSource");
+			this.compile_command_state = CommandState.Find ("CompileSourceCode");
+			this.next_error_command_state = CommandState.Find ("FindNextError");
 		}
 		
 		
@@ -132,7 +132,7 @@ namespace Epsitec.Common.Script.Developer
 		
 		protected virtual void UpdateToolBar()
 		{
-			this.tool_bar.AttachCommandDispatcher (this.dispatcher);
+			CommandDispatcher.SetDispatcher (this.tool_bar, this.dispatcher);
 			
 			this.tool_bar.Items.Clear ();
 			this.tool_bar.Items.Add (IconButton.CreateSimple ("NewMethod", "manifest:Epsitec.Common.Script.Developer.Images.NewMethod.icon"));
@@ -514,8 +514,6 @@ namespace Epsitec.Common.Script.Developer
 			
 			protected override void ValidateText(string text)
 			{
-				this.state = ValidationState.Ok;
-				
 				int max = this.controller.Source.Methods.Length;
 				
 				for (int i = 0; i < max; i++)
@@ -524,11 +522,13 @@ namespace Epsitec.Common.Script.Developer
 					{
 						if (this.controller.Source.Methods[i].Name == text)
 						{
-							this.state = ValidationState.Error;
+							this.SetState (ValidationState.Error);
 							return;
 						}
 					}
 				}
+				
+				this.SetState (ValidationState.Ok);
 			}
 			
 			protected EditionController			controller;
