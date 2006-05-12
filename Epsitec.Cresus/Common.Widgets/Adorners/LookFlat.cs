@@ -1286,7 +1286,9 @@ namespace Epsitec.Common.Widgets.Adorners
 
 			if ((state&WidgetPaintState.ActiveYes) != 0)   // bouton activé ?
 			{
-				graphics.AddFilledRectangle(rect);
+				Drawing.Path pTitle = this.PathTabCornerRectangle(rect);
+				graphics.Rasterizer.AddSurface(pTitle);
+
 				if ((state&WidgetPaintState.Entered) != 0)  // bouton survolé ?
 				{
 					graphics.RenderSolid(this.colorCaption);
@@ -1300,7 +1302,8 @@ namespace Epsitec.Common.Widgets.Adorners
 			{
 				if ((state&WidgetPaintState.Entered) != 0)  // bouton survolé ?
 				{
-					graphics.AddFilledRectangle(rect);
+					Drawing.Path pTitle = this.PathTabCornerRectangle(rect);
+					graphics.Rasterizer.AddSurface(pTitle);
 					graphics.RenderSolid(this.colorCaption);
 				}
 			}
@@ -1595,6 +1598,27 @@ namespace Epsitec.Common.Widgets.Adorners
 			path.LineTo (ox+dx-radius-0.5, oy+dy-0.5);
 			path.CurveTo(ox+dx-0.5, oy+dy-0.5, ox+dx-0.5, oy+dy-radius-0.5);
 			path.LineTo (ox+dx-0.5, oy);
+
+			return path;
+		}
+
+		protected Drawing.Path PathTabCornerRectangle(Drawing.Rectangle rect)
+		{
+			//	Crée le chemin d'un trapèze à base large.
+			double ox = rect.Left;
+			double oy = rect.Bottom;
+			double dx = rect.Width;
+			double dy = rect.Height;
+
+			Drawing.Path path = new Drawing.Path();
+
+			double t = 4.0;
+			double b = t - rect.Height*0.25;
+
+			path.MoveTo(ox+b, oy);
+			path.LineTo(ox+t, oy+dy-0.5);
+			path.LineTo(ox+dx-t, oy+dy-0.5);
+			path.LineTo(ox+dx-b, oy);
 
 			return path;
 		}

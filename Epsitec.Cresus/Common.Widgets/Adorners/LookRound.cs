@@ -1672,7 +1672,12 @@ namespace Epsitec.Common.Widgets.Adorners
 												 WidgetPaintState state)
 		{
 			//	Dessine une section d'un ruban.
-			Drawing.Path pRect = this.PathRoundRectangle(fullRect, 4.0);
+			Drawing.Path pRect = this.PathBottomRoundRectangle(textRect, 4.0);
+			graphics.Rasterizer.AddSurface(pRect);
+			pRect.Dispose();
+			graphics.RenderSolid(this.colorWindow);
+
+			pRect = this.PathRoundRectangle(fullRect, 4.0);
 			graphics.Rasterizer.AddOutline(pRect, 1);
 			pRect.Dispose();
 			graphics.AddLine(textRect.Left, textRect.Top+0.5, textRect.Right, textRect.Top+0.5);
@@ -1977,6 +1982,30 @@ namespace Epsitec.Common.Widgets.Adorners
 			path.LineTo (ox+dx-radius-0.5, oy+dy-0.5);
 			path.CurveTo(ox+dx-0.5, oy+dy-0.5, ox+dx-0.5, oy+dy-radius-0.5);
 			path.LineTo (ox+dx-0.5, oy);
+
+			return path;
+		}
+
+		protected Drawing.Path PathBottomRoundRectangle(Drawing.Rectangle rect, double radius)
+		{
+			//	Crée le chemin d'un rectangle à coins arrondis en forme de "u".
+			double ox = rect.Left;
+			double oy = rect.Bottom;
+			double dx = rect.Width;
+			double dy = rect.Height;
+
+			if ( radius == 0 )
+			{
+				radius = System.Math.Min(dx, dy)/3;
+			}
+			
+			Drawing.Path path = new Drawing.Path();
+			path.MoveTo (ox+0.5, oy+dy);
+			path.LineTo (ox+0.5, oy+radius+0.5);
+			path.CurveTo(ox+0.5, oy+0.5, ox+radius+0.5, oy+0.5);
+			path.LineTo (ox+dx-radius-0.5, oy+0.5);
+			path.CurveTo(ox+dx-0.5, oy+0.5, ox+dx-0.5, oy+radius+0.5);
+			path.LineTo (ox+dx-0.5, oy+dy);
 
 			return path;
 		}

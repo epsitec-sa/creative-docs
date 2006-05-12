@@ -1599,7 +1599,7 @@ namespace Epsitec.Common.Widgets.Adorners
 			//	Dessine une section d'un ruban.
 			Drawing.Color topColor    = Drawing.Color.FromRgb(138.0/255.0, 178.0/255.0, 231.0/255.0);
 			Drawing.Color bottomColor = Drawing.Color.FromRgb(168.0/255.0, 215.0/255.0, 252.0/255.0);
-			this.GradientRect(graphics, textRect, bottomColor, topColor, 0);
+			this.GradientRect(graphics, textRect, bottomColor, topColor, 90);
 
 			fullRect.Deflate(0.5);
 			graphics.AddRectangle(fullRect);
