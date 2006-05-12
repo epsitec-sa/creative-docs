@@ -133,17 +133,17 @@ namespace Epsitec.Common.UI
 			collection.AddDataSource ("B", source2);
 			collection.AddDataSource ("A", source1);
 			
-			Assert.AreEqual (DependencyObjectType.FromSystemType (typeof (Widgets.Visual)), collection.GetValueType ("A"));
-			Assert.AreEqual (typeof (MySimpleDataSource), collection.GetValueType ("B"));
-			Assert.AreEqual (Widgets.Visual.NameProperty, collection.GetValueType ("A.Name"));
-			Assert.AreEqual (typeof (string), collection.GetValueType ("B.Name"));
-			Assert.AreEqual (typeof (int), collection.GetValueType ("B.BirthDateYear"));
+			Assert.AreEqual (DependencyObjectType.FromSystemType (typeof (Widgets.Visual)), collection.GetValueTypeObject ("A"));
+			Assert.AreEqual (typeof (MySimpleDataSource), collection.GetValueTypeObject ("B"));
+			Assert.AreEqual (Widgets.Visual.NameProperty, collection.GetValueTypeObject ("A.Name"));
+			Assert.AreEqual (typeof (string), collection.GetValueTypeObject ("B.Name"));
+			Assert.AreEqual (typeof (int), collection.GetValueTypeObject ("B.BirthDateYear"));
 
-			Assert.AreEqual (typeof (Widgets.Visual), Types.TypeRosetta.GetSystemTypeFromTypeObject (collection.GetValueType ("A")));
-			Assert.AreEqual (typeof (MySimpleDataSource), Types.TypeRosetta.GetSystemTypeFromTypeObject (collection.GetValueType ("B")));
-			Assert.AreEqual (typeof (string), Types.TypeRosetta.GetSystemTypeFromTypeObject (collection.GetValueType ("A.Name")));
-			Assert.AreEqual (typeof (string), Types.TypeRosetta.GetSystemTypeFromTypeObject (collection.GetValueType ("B.Name")));
-			Assert.AreEqual (typeof (int), Types.TypeRosetta.GetSystemTypeFromTypeObject (collection.GetValueType ("B.BirthDateYear")));
+			Assert.AreEqual (typeof (Widgets.Visual), Types.TypeRosetta.GetSystemTypeFromTypeObject (collection.GetValueTypeObject ("A")));
+			Assert.AreEqual (typeof (MySimpleDataSource), Types.TypeRosetta.GetSystemTypeFromTypeObject (collection.GetValueTypeObject ("B")));
+			Assert.AreEqual (typeof (string), Types.TypeRosetta.GetSystemTypeFromTypeObject (collection.GetValueTypeObject ("A.Name")));
+			Assert.AreEqual (typeof (string), Types.TypeRosetta.GetSystemTypeFromTypeObject (collection.GetValueTypeObject ("B.Name")));
+			Assert.AreEqual (typeof (int), Types.TypeRosetta.GetSystemTypeFromTypeObject (collection.GetValueTypeObject ("B.BirthDateYear")));
 		}
 
 		[Test]
@@ -192,7 +192,7 @@ namespace Epsitec.Common.UI
 				return this.data[path];
 			}
 
-			public object GetValueType(string path)
+			public object GetValueTypeObject(string path)
 			{
 				return this.data[path].GetType ();
 			}

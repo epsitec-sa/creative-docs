@@ -193,7 +193,7 @@ namespace Epsitec.Common.UI
 			}
 		}
 
-		public object GetValueType(string path)
+		public object GetValueTypeObject(string path)
 		{
 			string name = StructuredTree.GetRootName (path);
 
@@ -211,7 +211,7 @@ namespace Epsitec.Common.UI
 			}
 			else
 			{
-				return data.GetValueType (StructuredTree.GetSubPath (path, 1));
+				return data.GetValueTypeObject (StructuredTree.GetSubPath (path, 1));
 			}
 		}
 

@@ -63,7 +63,7 @@ namespace Epsitec.Common.Types
 			return value;
 		}
 
-		public object GetValueType(string path)
+		public object GetValueTypeObject(string path)
 		{
 			//	TODO: ...
 

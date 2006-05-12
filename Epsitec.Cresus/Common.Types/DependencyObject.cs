@@ -634,7 +634,7 @@ namespace Epsitec.Common.Types
 			return this.GetValue (property);
 		}
 
-		object IStructuredData.GetValueType(string path)
+		object IStructuredData.GetValueTypeObject(string path)
 		{
 			DependencyProperty property = this.ObjectType.GetProperty (path);
 

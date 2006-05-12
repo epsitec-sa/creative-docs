@@ -132,6 +132,8 @@
     <Compile Include="CommandContext.cs" />
     <Compile Include="CommandDispatcherChain.cs" />
     <Compile Include="CommandContextChain.cs" />
+    <Compile Include="Controllers\Factory.cs" />
+    <Compile Include="ControllerAttribute.cs" />
     <Compile Include="ValidationContext.cs" />
     <Compile Include="RibbonSection.cs" />
     <Compile Include="AbstractButton.cs">

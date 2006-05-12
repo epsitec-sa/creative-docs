@@ -9,5 +9,11 @@ namespace Epsitec.Common.Widgets
 	{
 		void CreateUserInterface();
 		void DisposeUserInterface();
+
+		Placeholder Placeholder
+		{
+			get;
+			set;
+		}
 	}
 }
