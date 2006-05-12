@@ -19,7 +19,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			this.buttonStrings = new IconButtonMark(this);
 			this.buttonStrings.Text = Res.Strings.BundleType.Strings;
-			this.buttonStrings.Name = "Texts";
+			this.buttonStrings.Name = "Strings";
 			this.buttonStrings.ButtonStyle = ButtonStyle.ActivableIcon;
 			this.buttonStrings.SiteMark = SiteMark.OnBottom;
 			this.buttonStrings.MarkDimension = 5;
@@ -78,6 +78,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				{
 					this.currentType = value;
 					this.UpdateButtons();
+					this.OnTypeChanged();
 				}
 			}
 		}
@@ -85,7 +86,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected void UpdateButtons()
 		{
-			this.buttonStrings.ActiveState = (this.currentType == "Texts"  ) ? ActiveState.Yes : ActiveState.No;
+			this.buttonStrings.ActiveState = (this.currentType == "Strings") ? ActiveState.Yes : ActiveState.No;
 			this.buttonPanels .ActiveState = (this.currentType == "Panels" ) ? ActiveState.Yes : ActiveState.No;
 			this.buttonScripts.ActiveState = (this.currentType == "Scripts") ? ActiveState.Yes : ActiveState.No;
 		}
@@ -98,7 +99,32 @@ namespace Epsitec.Common.Designer.MyWidgets
 		}
 
 
-		protected string					currentType = "Texts";
+		#region Events handler
+		protected virtual void OnTypeChanged()
+		{
+			//	Génère un événement pour dire qu'une cellule a été sélectionnée.
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("TypeChanged");
+			if (handler != null)
+			{
+				handler(this);
+			}
+		}
+
+		public event Support.EventHandler TypeChanged
+		{
+			add
+			{
+				this.AddUserEventHandler("TypeChanged", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("TypeChanged", value);
+			}
+		}
+		#endregion
+
+
+		protected string					currentType = "Strings";
 		protected IconButtonMark			buttonStrings;
 		protected IconButtonMark			buttonPanels;
 		protected IconButtonMark			buttonScripts;

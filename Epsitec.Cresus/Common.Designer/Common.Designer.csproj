@@ -60,6 +60,7 @@
     <Compile Include="Searcher.cs" />
     <Compile Include="UserInterface.cs" />
     <Compile Include="Viewers\Abstract.cs" />
+    <Compile Include="Viewers\Panels.cs" />
     <Compile Include="Viewers\Strings.cs" />
   </ItemGroup>
   <ItemGroup>
