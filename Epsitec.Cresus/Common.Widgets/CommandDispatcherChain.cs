@@ -36,9 +36,17 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public void BuildChain(Visual visual)
+		public static IEnumerable<CommandDispatcher> EmptyDispatcherEnumeration
 		{
-			this.chain.Clear ();
+			get
+			{
+				yield break;
+			}
+		}
+
+		public static CommandDispatcherChain BuildChain(Visual visual)
+		{
+			CommandDispatcherChain that = null;
 
 			Visual item = visual;
 			Window window = visual.Window;
@@ -49,7 +57,12 @@ namespace Epsitec.Common.Widgets
 
 				if (dispatcher != null)
 				{
-					this.chain.Add (new System.WeakReference (dispatcher));
+					if (that == null)
+					{
+						that = new CommandDispatcherChain ();
+					}
+					
+					that.chain.Add (new System.WeakReference (dispatcher));
 				}
 
 				item = item.Parent;
@@ -61,13 +74,20 @@ namespace Epsitec.Common.Widgets
 				
 				if (dispatcher != null)
 				{
-					this.chain.Add (new System.WeakReference (dispatcher));
+					if (that == null)
+					{
+						that = new CommandDispatcherChain ();
+					}
+					
+					that.chain.Add (new System.WeakReference (dispatcher));
 				}
 
 				window = window.Owner;
 			}
 			
 			//	TODO: ajouter ici la notion d'application/module/document
+			
+			return that;
 		}
 
 		List<System.WeakReference> chain = new List<System.WeakReference> ();

@@ -21,7 +21,14 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.dispatcherChain.Dispatchers;
+				if (this.dispatcherChain == null)
+				{
+					return CommandDispatcherChain.EmptyDispatcherEnumeration;
+				}
+				else
+				{
+					return this.dispatcherChain.Dispatchers;
+				}
 			}
 		}
 
@@ -168,7 +175,7 @@ namespace Epsitec.Common.Widgets
 
 		internal void UpdateDispatcherChain(Visual visual)
 		{
-			this.dispatcherChain.BuildChain (visual);
+			this.dispatcherChain = CommandDispatcherChain.BuildChain (visual);
 		}
 
 
@@ -290,6 +297,6 @@ namespace Epsitec.Common.Widgets
 		private Dictionary<int, bool> commandEnables = new Dictionary<int, bool> ();
 		private Dictionary<string, int> groupDisables = new Dictionary<string, int> ();
 		private Dictionary<long, Record> records = new Dictionary<long, Record> ();
-		private CommandDispatcherChain dispatcherChain = new CommandDispatcherChain ();
+		private CommandDispatcherChain dispatcherChain;
 	}
 }

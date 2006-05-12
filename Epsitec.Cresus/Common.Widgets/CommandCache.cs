@@ -352,10 +352,10 @@ namespace Epsitec.Common.Widgets
 			{
 				if (enable)
 				{
-					CommandContext context = Helpers.VisualTree.GetCommandContext (widget);
+					CommandContextChain chain = CommandContextChain.BuildChain (widget);
 
-					if ((context != null) &&
-					(context.GetLocalEnable (command) == false))
+					if ((chain != null) &&
+						(chain.IsDisabled (command)))
 					{
 						enable = false;
 					}
