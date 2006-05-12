@@ -57,6 +57,7 @@
     <Compile Include="Ribbons\File.cs" />
     <Compile Include="Ribbons\Select.cs" />
     <Compile Include="Searcher.cs" />
+    <Compile Include="UserInterface.cs" />
     <Compile Include="Viewers\Abstract.cs" />
     <Compile Include="Viewers\Strings.cs" />
   </ItemGroup>
@@ -96,6 +97,10 @@
     <ProjectReference Include="..\Common.Types\Common.Types.csproj">
       <Project>{8960D1EA-3B82-49A1-9D44-F92F467209FF}</Project>
       <Name>Common.Types</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Common.UI\Common.UI.csproj">
+      <Project>{BDF75452-AAB1-4E62-82D5-AE23F35C6319}</Project>
+      <Name>Common.UI</Name>
     </ProjectReference>
     <ProjectReference Include="..\Common.Widgets\Common.Widgets.csproj">
       <Project>{C84C2E19-04B7-4244-86F6-E4CAFA3FDA7B}</Project>
