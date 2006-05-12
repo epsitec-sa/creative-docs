@@ -256,7 +256,7 @@ namespace Epsitec.Common.Widgets.Helpers
 		{
 			if (visual != null)
 			{
-				CommandCache.Default.Invalidate (visual);
+				CommandCache.Default.InvalidateVisual (visual);
 				
 				if (visual.HasChildren)
 				{
@@ -308,8 +308,100 @@ namespace Epsitec.Common.Widgets.Helpers
 		{
 			return VisualTree.GetRoot (visual) as WindowRoot;
 		}
+
+		public static CommandContext GetCommandContext(Visual visual)
+		{
+			while (visual != null)
+			{
+				CommandContext context = CommandContext.GetContext (visual);
+
+				if (context != null)
+				{
+					return context;
+				}
+
+				Visual parent = visual.Parent;
+
+				if (parent == null)
+				{
+					return VisualTree.GetCommandContext (visual.Window);
+				}
+
+				visual = parent;
+			}
+
+			return null;
+		}
+
+		public static CommandContext GetCommandContext(Window window)
+		{
+			while (window != null)
+			{
+				CommandContext context = CommandContext.GetContext (window);
+
+				if (context != null)
+				{
+					return context;
+				}
+
+				window = window.Owner;
+			}
+
+			return null;
+		}
+
+		public static ValidationContext GetValidationContext(Visual visual)
+		{
+			while (visual != null)
+			{
+				ValidationContext context = ValidationContext.GetContext (visual);
+
+				if (context != null)
+				{
+					return context;
+				}
+
+				Visual parent = visual.Parent;
+
+				if (parent == null)
+				{
+					return VisualTree.GetValidationContext (visual.Window);
+				}
+
+				visual = parent;
+			}
+
+			return null;
+		}
+
+		public static ValidationContext GetValidationContext(Window window)
+		{
+			while (window != null)
+			{
+				ValidationContext context = ValidationContext.GetContext (window);
+
+				if (context != null)
+				{
+					return context;
+				}
+
+				window = window.Owner;
+			}
+
+			return null;
+		}
+
+		public static void RefreshValidationContext(Visual visual)
+		{
+			ValidationContext context = VisualTree.GetValidationContext (visual);
+
+			if (context != null)
+			{
+				context.Refresh (visual);
+			}
+		}
 		
-		
+
 		public static Support.OpletQueue GetOpletQueue(Visual visual)
 		{
 			CommandDispatcher[] dispatchers = VisualTree.GetAllDispatchers (visual);
@@ -372,29 +464,11 @@ namespace Epsitec.Common.Widgets.Helpers
 				return null;
 			}
 			
-			System.Collections.ArrayList list = new System.Collections.ArrayList ();
+			CommandState command = CommandState.Find (name);
 			
-			VisualTree.GetDispatchers (list, visual);
-			VisualTree.GetDispatchers (list, Helpers.VisualTree.GetWindow (visual));
-			VisualTree.GetDispatchers (list, CommandDispatcher.GetFocusedPrimaryDispatcher ());
-			
-			foreach (CommandDispatcher dispatcher in list)
+			if (command != null)
 			{
-				CommandState command = dispatcher.FindCommandState (name);
-				
-				if (command != null)
-				{
-					return command;
-				}
-			}
-			
-			foreach (CommandDispatcher dispatcher in list)
-			{
-				if (dispatcher.ContainsCommandHandler (name))
-				{
-					System.Diagnostics.Debug.WriteLine ("Command '" + name + "' created in dispatcher '" + dispatcher.Name + "'.");
-					return dispatcher.GetCommandState (name);
-				}
+				return command;
 			}
 			
 			return null;
@@ -415,7 +489,7 @@ namespace Epsitec.Common.Widgets.Helpers
 			
 			foreach (CommandDispatcher dispatcher in list)
 			{
-				CommandState command = dispatcher.FindCommandState (shortcut);
+				CommandState command = CommandState.Find (shortcut);
 				
 				if (command != null)
 				{
@@ -604,7 +678,7 @@ namespace Epsitec.Common.Widgets.Helpers
 		{
 			while (visual != null)
 			{
-				VisualTree.GetDispatchers (list, visual.GetCommandDispatchers ());
+				VisualTree.GetDispatchers (list, CommandDispatcher.GetDispatcher (visual));
 				visual = visual.Parent;
 			}
 		}
@@ -620,7 +694,7 @@ namespace Epsitec.Common.Widgets.Helpers
 					VisualTree.GetDispatchers (list, parent);
 				}
 				
-				VisualTree.GetDispatchers (list, window.GetCommandDispatchers ());
+				VisualTree.GetDispatchers (list, CommandDispatcher.GetDispatcher (window));
 				window = window.Owner;
 			}
 		}
@@ -642,7 +716,7 @@ namespace Epsitec.Common.Widgets.Helpers
 				(list.Contains (dispatcher) == false))
 			{
 				list.Add (dispatcher);
-				VisualTree.GetDispatchers (list, dispatcher.GetCommandDispatchers ());
+				VisualTree.GetDispatchers (list, CommandDispatcher.GetDispatcher (dispatcher));
 			}
 		}
 		#endregion

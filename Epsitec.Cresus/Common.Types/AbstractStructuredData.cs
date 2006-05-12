@@ -63,6 +63,13 @@ namespace Epsitec.Common.Types
 			return value;
 		}
 
+		public object GetValueTypeObject(string path)
+		{
+			//	TODO: ...
+
+			throw new System.NotImplementedException ();
+		}
+
 		public void SetValue(string path, object value)
 		{
 			this.SetValueBase (path, value);

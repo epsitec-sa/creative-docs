@@ -274,6 +274,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="TypeConverterAttribute.cs" />
+    <Compile Include="TypeRosetta.cs" />
     <Compile Include="UndefinedValue.cs">
       <SubType>Code</SubType>
     </Compile>

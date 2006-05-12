@@ -1,13 +1,15 @@
 //	Copyright © 2004-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
+using Epsitec.Common.Types;
+
 namespace Epsitec.Common.Dialogs
 {
 	/// <summary>
 	/// La classe AbstractDialog implémente l'interface IDialog et offre les
 	/// méthodes de base pour ouvrir et fermer un dialogue.
 	/// </summary>
-	public abstract class AbstractDialog : IDialog
+	public abstract class AbstractDialog : DependencyObject, IDialog
 	{
 		public AbstractDialog()
 		{

@@ -4,13 +4,15 @@
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
 
+using Epsitec.Common.Types;
+
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
 	/// La classe CommandDispatcher permet de gérer la distribution des
 	/// commandes de l'interface graphique vers les routines de traitement.
 	/// </summary>
-	public class CommandDispatcher : System.IDisposable, ICommandDispatcherHost
+	public class CommandDispatcher : DependencyObject
 	{
 		static CommandDispatcher()
 		{
@@ -64,8 +66,6 @@ namespace Epsitec.Common.Widgets
 				this.level = level;
 				this.id    = CommandDispatcher.unique_id++;
 				
-				this.validation_rule = new ValidationRule (this);
-				
 				switch (level)
 				{
 					case CommandDispatcherLevel.Root:
@@ -93,23 +93,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		
-		
-		public CommandState						this[string command_name]
-		{
-			get
-			{
-				foreach (CommandState state in this.command_states)
-				{
-					if (state.Name == command_name)
-					{
-						return state;
-					}
-				}
-				
-				return null;
-			}
-		}
 		
 		
 		public string							Name
@@ -198,14 +181,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public ValidationRule					ValidationRule
-		{
-			get
-			{
-				return this.validation_rule;
-			}
-		}
-		
 		public string[]							CommandNames
 		{
 			get
@@ -215,20 +190,6 @@ namespace Epsitec.Common.Widgets
 				System.Array.Sort (names);
 				return names;
 			}
-		}
-		
-		public CommandState[]					CommandStates
-		{
-			get
-			{
-				return (CommandState[]) this.command_states.ToArray (typeof (CommandState));
-			}
-		}
-		
-		
-		public void AddValidationRule(ValidationRule validation_rule)
-		{
-			this.ValidationRule.AddValidator (validation_rule);
 		}
 		
 		
@@ -333,64 +294,6 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public void SyncValidationRule()
-		{
-			if (this.validation_rule.State == ValidationState.Dirty)
-			{
-				this.validation_rule.Validate ();
-			}
-		}
-		
-		
-		public CommandState GetCommandState(string name)
-		{
-			System.Diagnostics.Debug.Assert (name != null);
-			System.Diagnostics.Debug.Assert (name.Length > 0);
-			
-			//	Retourne un object CommandState pour le nom spécifié; si l'objet n'existe pas encore,
-			//	il sera créé dynamiquement.
-			
-			CommandState state = this[name];
-			
-			if (state == null)
-			{
-				state = new CommandState (name, this);
-			}
-			
-			return state;
-		}
-		
-		public CommandState FindCommandState(string name)
-		{
-			System.Diagnostics.Debug.Assert (name != null);
-			System.Diagnostics.Debug.Assert (name.Length > 0);
-			
-			//	Retourne un object CommandState pour le nom spécifié; si l'objet n'existe pas encore,
-			//	il sera créé dynamiquement.
-			
-			return this[name];
-		}
-		
-		public CommandState FindCommandState(Shortcut shortcut)
-		{
-			foreach (CommandState command in this.command_states)
-			{
-				if (command.Shortcuts.Match (shortcut))
-				{
-					return command;
-				}
-			}
-			
-			return null;
-		}
-		
-		
-		internal void AddCommandState(CommandState command_state)
-		{
-			this.command_states.Add (command_state);
-		}
-		
-		
 		public void RegisterController(object controller)
 		{
 			if (controller != null)
@@ -460,20 +363,6 @@ namespace Epsitec.Common.Widgets
 			return this.event_handlers.Contains (name);
 		}
 		
-		
-		#region Internal use only
-		public static void SyncAllValidationRules()
-		{
-			foreach (CommandDispatcher dispatcher in CommandDispatcher.global_list)
-			{
-				dispatcher.SyncValidationRule ();
-			}
-			foreach (CommandDispatcher dispatcher in CommandDispatcher.local_list)
-			{
-				dispatcher.SyncValidationRule ();
-			}
-		}
-		#endregion
 		
 		public static CommandDispatcher GetFocusedPrimaryDispatcher()
 		{
@@ -619,24 +508,6 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		#region IDisposable Members
-		public void Dispose()
-		{
-			this.Dispose (true);
-			System.GC.SuppressFinalize (this);
-		}
-		#endregion
-		
-		#region ICommandDispatcherHost Members
-		public IEnumerable<CommandDispatcher> GetCommandDispatchers()
-		{
-			if (this.master != null)
-			{
-				yield return this.master;
-			}
-		}
-		#endregion
-		
 		protected virtual void AttachToMaster(CommandDispatcher master)
 		{
 		}
@@ -646,7 +517,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		protected virtual void Dispose(bool disposing)
+		protected override void Dispose(bool disposing)
 		{
 			if (disposing)
 			{
@@ -665,6 +536,8 @@ namespace Epsitec.Common.Widgets
 					CommandDispatcher.local_list.Remove (this);
 				}
 			}
+			
+			base.Dispose (disposing);
 		}
 		
 		
@@ -764,12 +637,6 @@ namespace Epsitec.Common.Widgets
 			protected int						count;
 		}
 		#endregion
-		
-		internal void NotifyValidationRuleBecameDirty()
-		{
-			this.OnValidationRuleBecameDirty ();
-		}
-		
 		
 		protected void RegisterMethod(object controller, System.Reflection.MethodInfo info)
 		{
@@ -903,14 +770,6 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		protected void OnValidationRuleBecameDirty()
-		{
-			if (this.ValidationRuleBecameDirty != null)
-			{
-				this.ValidationRuleBecameDirty (this);
-			}
-		}
-		
 		protected void OnOpletQueueBindingChanged()
 		{
 			if (this.OpletQueueBindingChanged != null)
@@ -933,9 +792,24 @@ namespace Epsitec.Common.Widgets
 		private static void OnFocusedPrimaryDispatcherChanged(CommandDispatcher old_value, CommandDispatcher new_value)
 		{
 		}
+
+		public static CommandDispatcher GetDispatcher(DependencyObject obj)
+		{
+			return (CommandDispatcher) obj.GetValue (CommandDispatcher.DispatcherProperty);
+		}
+
+		public static void SetDispatcher(DependencyObject obj, CommandDispatcher value)
+		{
+			obj.SetValue (CommandDispatcher.DispatcherProperty, value);
+		}
+
+		public static void ClearDispatcher(DependencyObject obj)
+		{
+			obj.ClearValueBase (CommandDispatcher.DispatcherProperty);
+		}
 		
+		public static readonly DependencyProperty DispatcherProperty = DependencyProperty.RegisterAttached ("Dispatcher", typeof (CommandDispatcher), typeof (CommandDispatcher));
 		
-		public event Support.EventHandler		ValidationRuleBecameDirty;
 		public event Support.EventHandler		OpletQueueBindingChanged;
 		public event Support.EventHandler		CommandDispatched;
 		
@@ -951,12 +825,9 @@ namespace Epsitec.Common.Widgets
 		private CommandDispatcher				master;
 		
 		protected System.Collections.Hashtable	event_handlers    = new System.Collections.Hashtable ();
-		protected System.Collections.ArrayList	command_states    = new System.Collections.ArrayList ();
-		protected System.Collections.ArrayList	validation_states = new System.Collections.ArrayList ();
 		protected System.Collections.Stack		pending_commands  = new System.Collections.Stack ();
 		protected System.Collections.ArrayList	extra_dispatchers = new System.Collections.ArrayList ();
 		
-		protected ValidationRule				validation_rule;
 		protected bool							aborted;
 		protected Support.OpletQueue			oplet_queue;
 		

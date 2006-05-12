@@ -37,22 +37,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-#if false //#fix
-		public override CommandDispatcher		CommandDispatcher
-		{
-			get
-			{
-				if (this.window != null)
-				{
-					return this.window.CommandDispatcher;
-				}
-				
-				return null;
-			}
-		}
-#endif
-		
-		
 		public WindowStyles						WindowStyles
 		{
 			get
@@ -246,7 +230,7 @@ namespace Epsitec.Common.Widgets
 					
 					if (command != null)
 					{
-						window.QueueCommand (widget, command);
+						window.QueueCommand (widget, command.Name);
 						return true;
 					}
 					

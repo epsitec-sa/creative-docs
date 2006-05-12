@@ -94,7 +94,7 @@ namespace Epsitec.App.DocumentEditor
 			this.editor.Dock = DockStyle.Fill;
 			this.editor.SetParent(this.mainWindow.Root);
 			
-			this.mainWindow.AttachCommandDispatcher (this.editor.CommandDispatcher);
+			this.mainWindow.AttachDispatcher (this.editor.CommandDispatcher);
 			this.mainWindow.Show();
 			this.mainWindow.MakeActive();
 

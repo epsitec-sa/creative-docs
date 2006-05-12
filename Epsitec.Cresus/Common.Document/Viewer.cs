@@ -2653,7 +2653,7 @@ namespace Epsitec.Common.Document
 			this.miniBar.WindowLocation = this.MapClientToScreen(this.miniBarRect.BottomLeft);
 			this.miniBar.Root.BackColor = Color.FromAlphaRgb(0, 1,1,1);
 			this.miniBar.Owner = this.Window;
-			this.miniBar.AttachCommandDispatcher(this.GetCommandDispatcher());
+			this.miniBar.AttachDispatcher(this.GetCommandDispatcher());
 
 			this.miniBarBalloon = new Balloon();
 			this.miniBarBalloon.Hot = this.miniBarHot;
@@ -2702,7 +2702,7 @@ namespace Epsitec.Common.Document
 				}
 				else
 				{
-					CommandState cs = cd[cmd];
+					CommandState cs = CommandState.Find (cmd);
 
 					IconButton button = new IconButton(cs.Name, Misc.Icon(cs.IconName), cs.Name);
 				
@@ -3057,8 +3057,7 @@ namespace Epsitec.Common.Document
 			{
 				if ( list.Contains(cmd) )  return;  // déjà dans la liste ?
 
-				CommandDispatcher cd = this.GetCommandDispatcher();
-				CommandState cs = cd[cmd];
+				CommandState cs = CommandState.Find (cmd);
 				if ( cs != null )
 				{
 					if ( !cs.Enable )  return;

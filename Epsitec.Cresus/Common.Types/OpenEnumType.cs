@@ -47,14 +47,14 @@ namespace Epsitec.Common.Types
 		}
 		
 		
-		public override bool CheckConstraint(object value)
+		public override bool ValidateValue(object value)
 		{
 			if ((OpenEnumType.IsCustomName (value as string)) ||
-				(base.CheckConstraint (value)))
+				(base.ValidateValue (value)))
 			{
 				if (this.constraint != null)
 				{
-					return this.constraint.CheckConstraint (value);
+					return this.constraint.ValidateValue (value);
 				}
 				
 				return true;

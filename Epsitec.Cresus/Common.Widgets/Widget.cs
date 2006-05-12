@@ -17,6 +17,8 @@ namespace Epsitec.Common.Widgets
 		Disposing			= 0x00000001,
 		Disposed			= 0x00000002,
 		
+		WasValid			= 0x00000004,
+		
 		Embedded			= 0x00000008,		//	=> widget appartient au parent (widgets composés)
 		
 		Focusable			= 0x00000010,
@@ -47,7 +49,8 @@ namespace Epsitec.Common.Widgets
 			{
 				System.Diagnostics.Debug.WriteLine (string.Format ("{1}+ Created {0}", this.GetType ().Name, this.VisualSerialId));
 			}
-			
+
+			this.InternalState |= InternalState.WasValid;
 			this.InternalState |= InternalState.AutoMnemonic;
 			this.InternalState |= InternalState.AutoResolveResRef;
 			
@@ -396,22 +399,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public bool									IsValid
-		{
-			get
-			{
-				if (this.Validator != null)
-				{
-					return this.Validator.IsValid;
-				}
-				
-				//	Un widget qui n'a pas de validateur est considéré comme étant en tout
-				//	temps valide.
-				
-				return true;
-			}
-		}
-
 		public bool									IsDisposing
 		{
 			get
@@ -907,14 +894,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public IValidator							Validator
-		{
-			get
-			{
-				return this.validator;
-			}
-		}
-		
 		
 		public virtual Drawing.Size GetBestFitSize()
 		{
@@ -977,15 +956,46 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 		}
+
 		
+		internal void AsyncValidation()
+		{
+			Window window = this.Window;
+			
+			if (window != null)
+			{
+				window.AsyncValidation (this);
+			}
+		}
 		
 		public virtual void Validate()
 		{
-			if (this.Validator != null)
+			bool oldValid = (this.internal_state & InternalState.WasValid) != 0;
+			bool newValid = this.IsValid;
+
+			if (oldValid != newValid)
 			{
-				if (this.Validator.State == ValidationState.Dirty)
+				if (newValid)
 				{
-					this.Validator.Validate ();
+					this.internal_state |= InternalState.WasValid;
+				}
+				else
+				{
+					this.internal_state &= ~InternalState.WasValid;
+				}
+
+				this.InvalidateProperty (Visual.IsValidProperty, oldValid, newValid);
+				
+				this.SetError (newValid == false);
+				
+				if (this.HasValidationGroups)
+				{
+					ValidationContext context = Helpers.VisualTree.GetValidationContext (this);
+
+					if (context != null)
+					{
+						context.UpdateValidity (this);
+					}
 				}
 			}
 		}
@@ -993,33 +1003,37 @@ namespace Epsitec.Common.Widgets
 		
 		internal void AddValidator(IValidator value)
 		{
-			this.validator = MulticastValidator.Combine (this.validator, value);
+			this.SetValue (Visual.ValidatorProperty, MulticastValidator.Combine (this.Validator, value));
 			this.OnValidatorChanged ();
 		}
 		
 		internal void RemoveValidator(IValidator value)
 		{
-			if (this.validator != null)
+			if (this.Validator != null)
 			{
-				MulticastValidator mv = this.validator as MulticastValidator;
+				IValidator validator = this.Validator;
+				MulticastValidator mv = validator as MulticastValidator;
 				
 				if (mv != null)
 				{
-					mv.Remove (value);
-					this.validator = MulticastValidator.Simplify (mv);
+					validator = MulticastValidator.Remove (mv, value);
 				}
-				else if (this.validator == value)
+				else if (validator == value)
 				{
-					this.validator = null;
+					validator = null;
+				}
+
+				if (validator == null)
+				{
+					this.ClearValueBase (Visual.ValidatorProperty);
+				}
+				else
+				{
+					this.SetValue (Visual.ValidatorProperty, validator);
 				}
 				
 				this.OnValidatorChanged ();
 			}
-		}
-		
-		protected virtual bool ShouldSerializeValidator(IValidator validator)
-		{
-			return true;
 		}
 		
 		
@@ -1042,8 +1056,7 @@ namespace Epsitec.Common.Widgets
 				System.Diagnostics.Debug.Assert (this.Parent == newParent);
 			}
 		}
-		
-		
+
 		public virtual void SetFrozen(bool frozen)
 		{
 			if ((this.internal_state & InternalState.Frozen) == 0)
@@ -2797,7 +2810,7 @@ namespace Epsitec.Common.Widgets
 				
 				if (window != null)
 				{
-					window.QueueCommand (this);
+					window.QueueCommand (this, this.Command);
 				}
 			}
 		}
@@ -2808,7 +2821,7 @@ namespace Epsitec.Common.Widgets
 			
 			if (window != null)
 			{
-				window.QueueCommand (this, command, this);
+				window.QueueCommand (this, command);
 			}
 		}
 		
@@ -3751,9 +3764,9 @@ namespace Epsitec.Common.Widgets
 			{
 				this.TextChanged (this);
 			}
-			if (this.validator != null)
+			if (this.Validator != null)
 			{
-				this.validator.MakeDirty (true);
+				this.Validator.MakeDirty (true);
 			}
 		}
 		
@@ -4021,7 +4034,6 @@ namespace Epsitec.Common.Widgets
 		private double							default_font_height;
 		private MouseCursor						mouse_cursor;
 		private Support.ResourceManager			resource_manager;
-		private IValidator						validator;
 		
 		static List<Widget>						enteredWidgets = new List<Widget> ();
 		static List<System.WeakReference>		aliveWidgets = new List<System.WeakReference> ();

@@ -1,5 +1,7 @@
-//	Copyright © 2004-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2004-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
+
+using System.Collections.Generic;
 
 namespace Epsitec.Common.Widgets
 {
@@ -7,22 +9,12 @@ namespace Epsitec.Common.Widgets
 	/// La classe MulticastValidator représente le "et" logique d'un ensemble de
 	/// règles règles de validation.
 	/// </summary>
-	public class MulticastValidator : IValidator
+	public sealed class MulticastValidator : IValidator
 	{
 		public MulticastValidator()
 		{
 			this.validators = new IValidator[0];
 		}
-		
-		
-		public IValidator[]							Validators
-		{
-			get
-			{
-				return this.validators.Clone () as IValidator[];
-			}
-		}
-		
 		
 		#region IValidator Members
 		public ValidationState						State
@@ -112,8 +104,13 @@ namespace Epsitec.Common.Widgets
 		}
 		#endregion
 		
-		public virtual void Add(IValidator validator)
+		public void Add(IValidator validator)
 		{
+			if (validator == this)
+			{
+				throw new System.ArgumentException ("Circular reference");
+			}
+			
 			MulticastValidator mv = validator as MulticastValidator;
 			
 			if (mv == null)
@@ -122,15 +119,20 @@ namespace Epsitec.Common.Widgets
 			}
 			else
 			{
-				foreach (IValidator item in mv.Validators)
+				foreach (IValidator item in mv.validators)
 				{
 					this.AddValidator (item);
 				}
 			}
 		}
 		
-		public virtual void Remove(IValidator validator)
+		public void Remove(IValidator validator)
 		{
+			if (validator == this)
+			{
+				throw new System.ArgumentException ("Circular reference");
+			}
+
 			MulticastValidator mv = validator as MulticastValidator;
 			
 			if (mv == null)
@@ -139,90 +141,13 @@ namespace Epsitec.Common.Widgets
 			}
 			else
 			{
-				foreach (IValidator item in mv.Validators)
+				foreach (IValidator item in mv.validators)
 				{
 					this.RemoveValidator (item);
 				}
 			}
 		}
-		
-		
-		protected void AddValidator(IValidator validator)
-		{
-			System.Collections.ArrayList list = new System.Collections.ArrayList ();
-			list.AddRange (this.validators);
-			
-			if (list.Contains (validator))
-			{
-				throw new System.InvalidOperationException ("Cannot insert twice same IValidator.");
-			}
-			if (validator == null)
-			{
-				throw new System.ArgumentNullException ("validator", "Expected an IValidator.");
-			}
-			
-			list.Add (validator);
-			
-			IValidator[] validators = new IValidator[list.Count];
-			list.CopyTo (validators);
-			
-			validator.BecameDirty += new Support.EventHandler (this.HandleBecameDirty);
-			this.validators = validators;
-			
-			this.OnValidatorsChanged ();
-		}
-		
-		protected void RemoveValidator(IValidator validator)
-		{
-			System.Collections.ArrayList list = new System.Collections.ArrayList ();
-			list.AddRange (this.validators);
-			
-			if (! list.Contains (validator))
-			{
-				throw new System.InvalidOperationException ("Cannot remove IValidator, not found.");
-			}
-			if (validator == null)
-			{
-				throw new System.ArgumentNullException ("validator", "Expected an IValidator.");
-			}
-			
-			list.Remove (validator);
-			IValidator[] validators = new IValidator[list.Count];
-			list.CopyTo (validators);
-			
-			validator.BecameDirty -= new Support.EventHandler (this.HandleBecameDirty);
-			this.validators = validators;
-			
-			this.OnValidatorsChanged ();
-		}
-		
-		
-		private void HandleBecameDirty(object sender)
-		{
-			this.MakeDirty (false);
-		}
-		
-		
-		protected virtual void OnUpdateState(ValidationState new_state)
-		{
-			System.Diagnostics.Debug.Assert (new_state != ValidationState.Dirty);
-			
-			this.state = new_state;
-		}
-		
-		protected virtual void OnBecameDirty()
-		{
-			if (this.BecameDirty != null)
-			{
-				this.BecameDirty (this);
-			}
-		}
-		
-		protected virtual void OnValidatorsChanged()
-		{
-			this.MakeDirty (false);
-		}
-		
+
 		
 		public static IValidator Combine(IValidator validator_a, IValidator validator_b)
 		{
@@ -242,6 +167,37 @@ namespace Epsitec.Common.Widgets
 			mv.Add (validator_b);
 			
 			return mv;
+		}
+
+		public static IValidator Remove(IValidator validator_a, IValidator validator_b)
+		{
+			if (validator_a == null)
+			{
+				return null;
+			}
+			if (validator_b == null)
+			{
+				return validator_a;
+			}
+
+			MulticastValidator mv = validator_a as MulticastValidator;
+
+			if (mv == null)
+			{
+				foreach (IValidator item in MulticastValidator.GetValidators (validator_b))
+				{
+					if (item == validator_a)
+					{
+						return null;
+					}
+				}
+				
+				return validator_a;
+			}
+
+			mv.Remove (validator_b);
+
+			return MulticastValidator.Simplify (mv);
 		}
 		
 		public static IValidator Simplify(IValidator validator)
@@ -263,29 +219,108 @@ namespace Epsitec.Common.Widgets
 			return validator;
 		}
 		
-		public static IValidator[] ToArray(IValidator validator)
+		public static IEnumerable<IValidator> GetValidators(IValidator validator)
 		{
-			MulticastValidator mv = validator as MulticastValidator;
-			
-			if (mv != null)
+			if (validator != null)
 			{
-				return mv.Validators;
+				MulticastValidator mv = validator as MulticastValidator;
+
+				if (mv == null)
+				{
+					yield return validator;
+				}
+				else
+				{
+					for (int i = 0; i < mv.validators.Length; i++)
+					{
+						yield return mv.validators[i];
+					}
+				}
 			}
-			
+		}
+
+
+		#region Private Management Methods
+
+		private void AddValidator(IValidator validator)
+		{
+			System.Collections.ArrayList list = new System.Collections.ArrayList ();
+			list.AddRange (this.validators);
+
+			if (list.Contains (validator))
+			{
+				throw new System.InvalidOperationException ("Cannot insert twice same IValidator.");
+			}
 			if (validator == null)
 			{
-				return new IValidator[0];
+				throw new System.ArgumentNullException ("validator", "Expected an IValidator.");
 			}
-			
-			IValidator[] array = new IValidator[1];
-			
-			array[0] = validator;
-			
-			return array;
+
+			list.Add (validator);
+
+			IValidator[] validators = new IValidator[list.Count];
+			list.CopyTo (validators);
+
+			validator.BecameDirty += new Support.EventHandler (this.HandleBecameDirty);
+			this.validators = validators;
+
+			this.OnValidatorsChanged ();
 		}
-		
-		
-		protected ValidationState					state = ValidationState.Dirty;
-		protected IValidator[]						validators;
+
+		private void RemoveValidator(IValidator validator)
+		{
+			System.Collections.ArrayList list = new System.Collections.ArrayList ();
+			list.AddRange (this.validators);
+
+			if (!list.Contains (validator))
+			{
+				throw new System.InvalidOperationException ("Cannot remove IValidator, not found.");
+			}
+			if (validator == null)
+			{
+				throw new System.ArgumentNullException ("validator", "Expected an IValidator.");
+			}
+
+			list.Remove (validator);
+			IValidator[] validators = new IValidator[list.Count];
+			list.CopyTo (validators);
+
+			validator.BecameDirty -= new Support.EventHandler (this.HandleBecameDirty);
+			this.validators = validators;
+
+			this.OnValidatorsChanged ();
+		}
+
+
+		private void HandleBecameDirty(object sender)
+		{
+			this.MakeDirty (false);
+		}
+
+
+		private void OnUpdateState(ValidationState new_state)
+		{
+			System.Diagnostics.Debug.Assert (new_state != ValidationState.Dirty);
+
+			this.state = new_state;
+		}
+
+		private void OnBecameDirty()
+		{
+			if (this.BecameDirty != null)
+			{
+				this.BecameDirty (this);
+			}
+		}
+
+		private void OnValidatorsChanged()
+		{
+			this.MakeDirty (false);
+		}
+
+		#endregion
+
+		private ValidationState state = ValidationState.Dirty;
+		private IValidator[] validators;
 	}
 }

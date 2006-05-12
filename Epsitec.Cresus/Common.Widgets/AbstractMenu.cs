@@ -2,6 +2,8 @@
 //	Responsable: Pierre ARNAUD
 
 using Epsitec.Common.Support;
+using Epsitec.Common.Types;
+
 using System.Collections.Generic;
 
 namespace Epsitec.Common.Widgets
@@ -84,7 +86,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public ICommandDispatcherHost			Host
+		public DependencyObject					Host
 		{
 			get
 			{
@@ -112,15 +114,6 @@ namespace Epsitec.Common.Widgets
 				return this.margins;
 			}
 		}
-		
-#if false //#fix
-		public override IEnumerable<CommandDispatcher> GetCommandDispatchers()
-		{
-			ICommandDispatcherHost host = this.FindHost ();
-			return host == null ? base.GetCommandDispatchers () : host.GetCommandDispatchers ();
-		}
-#endif
-		
 		
 		public virtual void AdjustSize()
 		{
@@ -383,7 +376,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		private ICommandDispatcherHost FindHost()
+		private DependencyObject FindHost()
 		{
 			if (this.host != null)
 			{
@@ -400,7 +393,7 @@ namespace Epsitec.Common.Widgets
 				
 				if (menu != null)
 				{
-					ICommandDispatcherHost host = menu.FindHost ();
+					DependencyObject host = menu.FindHost ();
 					
 					if (host != null)
 					{
@@ -606,7 +599,7 @@ namespace Epsitec.Common.Widgets
 		private Drawing.Margins					margins = new Drawing.Margins (2,2,2,2);
 		private Drawing.Margins					shadow  = Drawing.Margins.Zero;
 		private MenuItemCollection				items;
-		private ICommandDispatcherHost			host;
+		private DependencyObject				host;
 		private double							icon_width;
 		private Widget							open_button;
 		private bool							is_connected;

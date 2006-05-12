@@ -54,8 +54,8 @@ namespace Epsitec.Common.Designer
 				this.commandDispatcher = new CommandDispatcher("ResDesigner", CommandDispatcherLevel.Primary);
 				this.commandDispatcher.RegisterController(this);
 				this.commandDispatcher.Focus();
-				this.window.Root.AttachCommandDispatcher(this.commandDispatcher);
-				this.window.AttachCommandDispatcher(this.commandDispatcher);
+				
+				this.window.AttachDispatcher(this.commandDispatcher);
 
 				this.dlgGlyphs     = new Dialogs.Glyphs(this);
 				this.dlgFilter     = new Dialogs.Filter(this);
@@ -466,7 +466,7 @@ namespace Epsitec.Common.Designer
 		public CommandState GetCommandState(string command)
 		{
 			//	Retourne le CommandState d'une commande.
-			return this.commandDispatcher.FindCommandState(command);
+			return CommandState.Find (command);
 		}
 
 		protected void InitCommands()
@@ -509,7 +509,12 @@ namespace Epsitec.Common.Designer
 		protected CommandState CreateCommandState(string command, params Widgets.Shortcut[] shortcuts)
 		{
 			//	Crée un nouveau CommandState.
-			CommandState cs = new CommandState(command, this.commandDispatcher, shortcuts);
+			CommandState cs = CommandState.Get (command);
+			
+			if (shortcuts.Length > 0)
+			{
+				cs.Shortcuts.AddRange (shortcuts);
+			}
 
 			cs.IconName    = command;
 			cs.LongCaption = Res.Strings.GetString("Action."+command);

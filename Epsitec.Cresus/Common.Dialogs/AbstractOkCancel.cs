@@ -53,7 +53,7 @@ namespace Epsitec.Common.Dialogs
 			this.window.Name             = "Dialog";
 			this.window.ClientSize       = new Drawing.Size (dx+2*8, dy+2*16+24+16);
 			this.window.PreventAutoClose = true;
-			this.window.AttachCommandDispatcher (this.private_dispatcher);
+			this.window.AttachDispatcher (this.private_dispatcher);
 			this.window.MakeFixedSizeWindow ();
 			this.window.MakeButtonlessWindow ();
 			this.window.MakeSecondaryWindow ();
@@ -93,9 +93,9 @@ namespace Epsitec.Common.Dialogs
 		{
 			this.result = DialogResult.Accept;
 			
-			if (this.command_template != null)
+			if (! string.IsNullOrEmpty (this.command_template))
 			{
-				this.DispatchWindow.QueueCommand (this, string.Format (this.command_template, this.CommandArgs), this.command_dispatcher);
+				this.DispatchWindow.QueueCommand (this, string.Format (this.command_template, this.CommandArgs));
 			}
 			
 			this.CloseDialog ();

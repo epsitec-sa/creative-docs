@@ -61,6 +61,7 @@ namespace Epsitec.Common.Types
 
 		public void Insert(int index, T item)
 		{
+			this.NotifyBeforeInsertion (item);
 			this.list.Insert (index, item);
 			this.NotifyInsertion (item);
 		}
@@ -83,6 +84,7 @@ namespace Epsitec.Common.Types
 			{
 				if (EqualityComparer<T>.Default.Equals (this.list[index], value) == false)
 				{
+					this.NotifyBeforeInsertion (value);
 					this.NotifyRemoval (this.list[index]);
 					this.list[index] = value;
 					this.NotifyInsertion (value);
@@ -96,6 +98,7 @@ namespace Epsitec.Common.Types
 
 		public void Add(T item)
 		{
+			this.NotifyBeforeInsertion (item);
 			this.list.Add (item);
 			this.NotifyInsertion (item);
 		}
@@ -212,11 +215,16 @@ namespace Epsitec.Common.Types
 
 		#endregion
 
-		private void NotifyInsertion(T item)
+		protected virtual void NotifyBeforeInsertion(T item)
+		{
+		}
+
+		protected virtual void NotifyInsertion(T item)
 		{
 			this.host.NotifyListInsertion (item);
 		}
-		private void NotifyRemoval(T item)
+		
+		protected virtual void NotifyRemoval(T item)
 		{
 			this.host.NotifyListRemoval (item);
 		}

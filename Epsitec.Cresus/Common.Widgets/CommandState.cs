@@ -1,7 +1,7 @@
-//	Copyright © 2003-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
-using System.Text.RegularExpressions;
+using System.Collections.Generic;
 
 using Epsitec.Common.Widgets.Collections;
 using Epsitec.Common.Types;
@@ -9,30 +9,30 @@ using Epsitec.Common.Types;
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
-	/// La classe CommandState permet de représenter l'état d'une commande tout
-	/// en maintenant la synchronisation avec les widgets associés.
+	/// La classe <c>CommandState</c> permet de représenter l'état d'une commande tout
+	/// en maintenant la synchronisation avec l'état des widgets associés.
 	/// </summary>
-	public class CommandState : DependencyObject
+	public sealed class CommandState : DependencyObject, System.IEquatable<CommandState>
 	{
-		public CommandState(string name, CommandDispatcher dispatcher)
+		public CommandState(string name)
 		{
-			System.Diagnostics.Debug.Assert (name != null);
-			System.Diagnostics.Debug.Assert (name.Length > 0);
-			System.Diagnostics.Debug.Assert (dispatcher != null);
-			System.Diagnostics.Debug.Assert (dispatcher[name] == null, "CommandState created twice.", string.Format ("The CommandState {0} for dispatcher {1} already exists.\nIt cannot be created more than once.", name, dispatcher.Name));
-			
-			this.name       = name;
-			this.dispatcher = dispatcher;
-			
-			this.dispatcher.AddCommandState (this);
+			System.Diagnostics.Debug.Assert (string.IsNullOrEmpty (name) == false);
+
+			lock (CommandState.commands)
+			{
+				if (CommandState.commands.ContainsKey (name))
+				{
+					throw new System.ArgumentException (string.Format ("CommandState {0} already registered", name));
+				}
+
+				this.name = name;
+				this.uniqueId = CommandState.nextUniqueId++;
+
+				CommandState.commands[name] = this;
+			}
 		}
 		
-		public CommandState(string name, CommandDispatcher dispatcher, Shortcut shortcut) : this (name, dispatcher)
-		{
-			this.Shortcuts.Add (shortcut);
-		}
-		
-		public CommandState(string name, CommandDispatcher dispatcher, params Shortcut[] shortcuts) : this (name, dispatcher)
+		public CommandState(string name, params Shortcut[] shortcuts) : this (name)
 		{
 			this.Shortcuts.AddRange (shortcuts);
 		}
@@ -43,14 +43,6 @@ namespace Epsitec.Common.Widgets
 			get
 			{
 				return this.name;
-			}
-		}
-		
-		public CommandDispatcher				CommandDispatcher
-		{
-			get
-			{
-				return this.dispatcher;
 			}
 		}
 		
@@ -89,9 +81,29 @@ namespace Epsitec.Common.Widgets
 				this.SetValue (CommandState.LongCaptionProperty, value);
 			}
 		}
+
+		public int								UniqueId
+		{
+			get
+			{
+				return this.uniqueId;
+			}
+		}
+
+		public string							Group
+		{
+			get
+			{
+				return (string) this.GetValue (CommandState.GroupProperty);
+			}
+			set
+			{
+				this.SetValue (CommandState.GroupProperty, value);
+			}
+		}
 		
 		
-		public virtual bool						Enable
+		public bool								Enable
 		{
 			get
 			{
@@ -123,13 +135,13 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.active_state;
+				return this.activeState;
 			}
 			set
 			{
-				if (this.active_state != value)
+				if (this.activeState != value)
 				{
-					this.active_state = value;
+					this.activeState = value;
 					this.Synchronize ();
 				}
 			}
@@ -192,74 +204,103 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 		}
-		
-		
-		protected Regex							Regex
+
+
+		public static CommandState Get(string commandName)
 		{
-			get
+			lock (CommandState.commands)
 			{
-				if (this.regex == null)
+				CommandState commandState = CommandState.Find (commandName);
+
+				if (commandState == null)
 				{
-					this.regex = Support.RegexFactory.FromSimpleJoker (this.name, Support.RegexFactory.Options.None);
+					commandState = new CommandState (commandName);
 				}
 				
-				return this.regex;
+				return commandState;
 			}
 		}
 		
-		
-		protected virtual void Synchronize()
+		public static CommandState Find(string commandName)
 		{
-			CommandCache.Default.UpdateWidgets (this);
-		}
-		
-		
-		public static CommandState Find(string command_name, CommandDispatcher dispatcher)
-		{
-			if (dispatcher == null)
+			CommandState state;
+			
+			if (CommandState.commands.TryGetValue (commandName, out state))
 			{
-				return null;
+				return state;
 			}
 			
-			return dispatcher.GetCommandState (command_name);
+			return null;
+		}
+
+		public static CommandState Find(Shortcut shortcut)
+		{
+			foreach (CommandState command in CommandState.commands.Values)
+			{
+				if (command.Shortcuts.Match (shortcut))
+				{
+					return command;
+				}
+			}
+			
+			return null;
 		}
 		
 		
 		public override int GetHashCode()
 		{
-			return this.name.GetHashCode ();
+			return this.uniqueId;
 		}
 		
 		public override bool Equals(object obj)
 		{
-			if (this == obj)
-			{
-				return true;
-			}
-			
-			CommandState other = obj as CommandState;
-			
+			return this.Equals (obj as CommandState);
+		}
+
+		#region IEquatable<CommandState> Members
+
+		public bool Equals(CommandState other)
+		{
 			if (other == null)
 			{
 				return false;
 			}
-			
-			return this.name.Equals (other.name) && (this.dispatcher == other.dispatcher);
+			else
+			{
+				return this.uniqueId == other.uniqueId;
+			}
 		}
 
-		
-		protected virtual void OnIconNameChanged(DependencyPropertyChangedEventArgs e)
+		#endregion
+
+		private void Synchronize()
 		{
+			CommandCache.Default.UpdateWidgets (this);
+		}
+
+		private void OnGroupChanged(DependencyPropertyChangedEventArgs e)
+		{
+			CommandCache.Default.InvalidateCommand (this);
 		}
 		
-		protected virtual void OnShortCaptionChanged(DependencyPropertyChangedEventArgs e)
+		private void OnIconNameChanged(DependencyPropertyChangedEventArgs e)
 		{
 		}
-		
-		protected virtual void OnLongCaptionChanged(DependencyPropertyChangedEventArgs e)
+
+		private void OnShortCaptionChanged(DependencyPropertyChangedEventArgs e)
 		{
 		}
-		
+
+		private void OnLongCaptionChanged(DependencyPropertyChangedEventArgs e)
+		{
+		}
+
+
+		private static void NotifyGroupChanged(DependencyObject o, object old_value, object new_value)
+		{
+			CommandState that = o as CommandState;
+			that.OnGroupChanged (new DependencyPropertyChangedEventArgs (CommandState.GroupProperty, old_value, new_value));
+		}
 		
 		private static void NotifyIconNameChanged(DependencyObject o, object old_value, object new_value)
 		{
@@ -277,6 +318,24 @@ namespace Epsitec.Common.Widgets
 		{
 			CommandState that = o as CommandState;
 			that.OnLongCaptionChanged (new DependencyPropertyChangedEventArgs (CommandState.LongCaptionProperty, old_value, new_value));
+		}
+
+		
+		public static string[] SplitGroupNames(string groups)
+		{
+			if (string.IsNullOrEmpty (groups))
+			{
+				return new string[0];
+			}
+			else
+			{
+				return groups.Split ('|');
+			}
+		}
+
+		public static string JoinGroupNames(params string[] groups)
+		{
+			return string.Join ("|", groups);
 		}
 		
 		 
@@ -296,20 +355,23 @@ namespace Epsitec.Common.Widgets
 		{
 			return obj.GetValue (CommandState.AdvancedStateProperty) as string;
 		}
-		
-		public static readonly DependencyProperty	IconNameProperty = DependencyProperty.Register ("IconName", typeof (string), typeof (CommandState), new DependencyPropertyMetadata (null, new PropertyInvalidatedCallback (CommandState.NotifyIconNameChanged)));
-		public static readonly DependencyProperty	ShortCaptionProperty = DependencyProperty.Register ("ShortCaption", typeof (string), typeof (CommandState), new DependencyPropertyMetadata (null, new PropertyInvalidatedCallback (CommandState.NotifyShortCaptionChanged)));
-		public static readonly DependencyProperty	LongCaptionProperty	= DependencyProperty.Register ("LongCaption", typeof (string), typeof (CommandState), new DependencyPropertyMetadata (null, new PropertyInvalidatedCallback (CommandState.NotifyLongCaptionChanged)));
+
+		public static readonly DependencyProperty GroupProperty			= DependencyProperty.Register ("Group", typeof (string), typeof (CommandState), new DependencyPropertyMetadata (null, new PropertyInvalidatedCallback (CommandState.NotifyGroupChanged)));
+		public static readonly DependencyProperty IconNameProperty		= DependencyProperty.Register ("IconName", typeof (string), typeof (CommandState), new DependencyPropertyMetadata (null, new PropertyInvalidatedCallback (CommandState.NotifyIconNameChanged)));
+		public static readonly DependencyProperty ShortCaptionProperty	= DependencyProperty.Register ("ShortCaption", typeof (string), typeof (CommandState), new DependencyPropertyMetadata (null, new PropertyInvalidatedCallback (CommandState.NotifyShortCaptionChanged)));
+		public static readonly DependencyProperty LongCaptionProperty	= DependencyProperty.Register ("LongCaption", typeof (string), typeof (CommandState), new DependencyPropertyMetadata (null, new PropertyInvalidatedCallback (CommandState.NotifyLongCaptionChanged)));
 		
 		public static readonly DependencyProperty	AdvancedStateProperty = DependencyProperty.RegisterAttached ("AdvancedState", typeof (string), typeof (CommandState), new DependencyPropertyMetadata (null));
-		
-		private ActiveState						active_state = ActiveState.No;
-		private bool							enable       = true;
+
+		private static Dictionary<string, CommandState> commands = new Dictionary<string, CommandState> ();
+		private static int nextUniqueId;
+
+		private int								uniqueId;
+		private ActiveState						activeState = ActiveState.No;
+		private bool							enable = true;
 		private bool							statefull;
 		
 		private Collections.ShortcutCollection	shortcuts;
 		private string							name;
-		private CommandDispatcher				dispatcher;
-		private Regex							regex;
 	}
 }

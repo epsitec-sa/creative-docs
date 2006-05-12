@@ -140,7 +140,7 @@ namespace Epsitec.Common.Types
 		
 		
 		#region IDataConstraint Members
-		public virtual bool CheckConstraint(object value)
+		public virtual bool ValidateValue(object value)
 		{
 			try
 			{

@@ -368,21 +368,6 @@ namespace Epsitec.Common.Widgets
 			return true;
 		}
 		
-		protected override bool ShouldSerializeValidator(IValidator validator)
-		{
-			if ((this.validator_1 == validator) ||
-				(this.validator_2 == validator))
-			{
-				//	On ne sérialise pas le validateur interne qui est là juste pour
-				//	s'assurer que la valeur est bien un nombre.
-				
-				return false;
-			}
-			
-			return base.ShouldSerializeValidator (validator);
-		}
-
-		
 		protected override void OnAdornerChanged()
 		{
 			this.UpdateGeometry();

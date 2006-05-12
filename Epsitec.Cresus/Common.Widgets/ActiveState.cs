@@ -3,7 +3,7 @@
 
 namespace Epsitec.Common.Widgets
 {
-	public enum ActiveState
+	public enum ActiveState : byte
 	{
 		No=0,
 		Yes=1,

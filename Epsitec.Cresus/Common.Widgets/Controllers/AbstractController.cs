@@ -16,7 +16,9 @@ namespace Epsitec.Common.Widgets.Controllers
 		{
 		}
 
-		public Placeholder						Placeholder
+		#region IController Members
+
+		public Placeholder Placeholder
 		{
 			get
 			{
@@ -39,8 +41,6 @@ namespace Epsitec.Common.Widgets.Controllers
 			}
 		}
 		
-		#region IController Members
-
 		public void CreateUserInterface()
 		{
 			if (this.placeholder != null)
@@ -102,14 +102,30 @@ namespace Epsitec.Common.Widgets.Controllers
 
 		private static object GetPlaceholderValue(DependencyObject o)
 		{
-			AbstractController that = o as AbstractController;
-			return that.Placeholder;
+			IController that = o as IController;
+			
+			if (that != null)
+			{
+				return that.Placeholder;
+			}
+			else
+			{
+				return o.GetValueBase (AbstractController.PlaceholderProperty);
+			}
 		}
 
 		private static void SetPlaceholderValue(DependencyObject o, object value)
 		{
-			AbstractController that = o as AbstractController;
-			that.Placeholder = (Placeholder) value;
+			IController that = o as IController;
+
+			if (that != null)
+			{
+				that.Placeholder = (Placeholder) value;
+			}
+			else
+			{
+				o.SetValueBase (AbstractController.PlaceholderProperty, value);
+			}
 		}
 		
 		#endregion

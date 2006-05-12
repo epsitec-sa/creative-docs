@@ -5,7 +5,7 @@ namespace Epsitec.Common.Widgets
 {
 	/// <summary>
 	/// La classe CommandCache permet de réaliser le lien entre des visuals et
-	/// leur CommandDispatcher & CommandState associé.
+	/// leur CommandState associé.
 	/// </summary>
 	public sealed class CommandCache
 	{
@@ -54,7 +54,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public void Invalidate(Visual visual)
+		public void InvalidateVisual(Visual visual)
 		{
 			int id = visual.GetCommandCacheId ();
 			
@@ -65,15 +65,13 @@ namespace Epsitec.Common.Widgets
 			
 			if (this.records[id].ClearCommand ())
 			{
-//				System.Diagnostics.Debug.WriteLine (string.Format ("Command {0}: cache invalidated", visual.CommandName));
-				
 				this.clear_count += 1;
 			}
 			
 			this.RequestAsyncSynchronization ();
 		}
 		
-		public void Invalidate(CommandState command)
+		public void InvalidateCommand(CommandState command)
 		{
 			for (int i = 0; i < this.records.Length; i++)
 			{
@@ -88,7 +86,25 @@ namespace Epsitec.Common.Widgets
 			
 			this.RequestAsyncSynchronization ();
 		}
-		
+
+		public void InvalidateGroup(string group)
+		{
+			for (int i = 0; i < this.records.Length; i++)
+			{
+				CommandState command = this.records[i].Command;
+				
+				if ((command != null) &&
+					(command.Group == group))
+				{
+					if (this.records[i].ClearCommand ())
+					{
+						this.clear_count += 1;
+					}
+				}
+			}
+
+			this.RequestAsyncSynchronization ();
+		}
 		
 		public void RequestAsyncSynchronization()
 		{
@@ -145,7 +161,7 @@ namespace Epsitec.Common.Widgets
 			{
 				if (this.records[i].Command == command)
 				{
-					this.UpdateWidget (this.records[i].Visual as Widget, enable, active, advanced);
+					this.UpdateWidget (this.records[i].Visual as Widget, command, enable, active, advanced);
 					
 					count++;
 				}
@@ -325,15 +341,26 @@ namespace Epsitec.Common.Widgets
 					ActiveState active   = command.ActiveState;
 					string      advanced = command.AdvancedState;
 					
-					this.UpdateWidget (this.records[index].Visual as Widget, enable, active, advanced);
+					this.UpdateWidget (this.records[index].Visual as Widget, command, enable, active, advanced);
 				}
 			}
 		}
 		
-		private void UpdateWidget(Widget widget, bool enable, ActiveState active, string advanced)
+		private void UpdateWidget(Widget widget, CommandState command, bool enable, ActiveState active, string advanced)
 		{
 			if (widget != null)
 			{
+				if (enable)
+				{
+					CommandContextChain chain = CommandContextChain.BuildChain (widget);
+
+					if ((chain != null) &&
+						(chain.IsDisabled (command)))
+					{
+						enable = false;
+					}
+				}
+				
 				widget.Enable      = enable;
 				widget.ActiveState = active;
 				
