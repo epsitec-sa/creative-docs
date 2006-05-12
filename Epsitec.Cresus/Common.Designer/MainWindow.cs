@@ -85,7 +85,7 @@ namespace Epsitec.Common.Designer
 				this.bookModules.ActivePage = mi.TabPage;
 			}
 
-			this.window.ShowDialog();
+			this.window.Show();
 
 #if false
 			for (int i = 0; i < modules.Length; i++)
