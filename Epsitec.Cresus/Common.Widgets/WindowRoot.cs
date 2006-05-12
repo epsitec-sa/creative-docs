@@ -230,7 +230,7 @@ namespace Epsitec.Common.Widgets
 					
 					if (command != null)
 					{
-						window.QueueCommand (widget, command);
+						window.QueueCommand (widget, command.Name);
 						return true;
 					}
 					

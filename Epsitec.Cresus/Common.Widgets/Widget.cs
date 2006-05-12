@@ -2810,7 +2810,7 @@ namespace Epsitec.Common.Widgets
 				
 				if (window != null)
 				{
-					window.QueueCommand (this);
+					window.QueueCommand (this, this.Command);
 				}
 			}
 		}

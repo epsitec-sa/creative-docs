@@ -1561,13 +1561,6 @@ namespace Epsitec.Common.Widgets
 		#region QueueItem class
 		protected class QueueItem
 		{
-			public QueueItem(Widget source)
-			{
-				this.source      = source;
-				this.command     = source.Command;
-				this.dispatchers = Helpers.VisualTree.GetAllDispatchers (source);
-			}
-
 			public QueueItem(Widget source, string command)
 			{
 				this.source      = source;
@@ -1614,16 +1607,6 @@ namespace Epsitec.Common.Widgets
 		}
 		#endregion
 		
-		public void QueueCommand(Widget source)
-		{
-			this.QueueCommand (new QueueItem (source));
-		}
-		
-		public void QueueCommand(Widget source, CommandState command)
-		{
-			this.QueueCommand (new QueueItem (source, command.Name));
-		}
-
 		public void QueueCommand(Widget source, string name)
 		{
 			this.QueueCommand (new QueueItem (source, name));
@@ -1634,17 +1617,6 @@ namespace Epsitec.Common.Widgets
 			this.QueueCommand (new QueueItem (source, name));
 		}
 
-#if false		
-		public void QueueCommand(object source, string command)
-		{
-			this.QueueCommand (source, command, this);
-		}
-		
-		public void QueueCommand(object source, string command, DependencyObject dispatcherHost)
-		{
-			this.QueueCommand (new QueueItem (source, command, dispatcherHost));
-		}
-#endif
 
 		protected void QueueCommand(QueueItem item)
 		{
