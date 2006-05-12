@@ -381,6 +381,8 @@ namespace Epsitec.Common.Types
 			}
 			
 			this.bindings[property] = BindingExpression.BindToTarget (this, property, binding);
+
+			this.OnBindingChanged (property);
 		}
 		public void ClearAllBindings()
 		{
@@ -399,13 +401,16 @@ namespace Epsitec.Common.Types
 		public void ClearBinding(DependencyProperty property)
 		{
 			BindingExpression bindingExpression;
+			
 			if ((this.bindings != null) &&
 				(this.bindings.TryGetValue (property, out bindingExpression)))
 			{
 				bindingExpression.Dispose ();
 				this.bindings.Remove (property);
+				this.OnBindingChanged (property);
 			}
 		}
+
 		public bool IsDataBound(DependencyProperty property)
 		{
 			if ((this.bindings != null) &&
@@ -498,6 +503,13 @@ namespace Epsitec.Common.Types
 
 				this.inheritedPropertyCache.SetValue (this, property, parent.GetValue (property));
 			}
+		}
+
+		private void OnBindingChanged(DependencyProperty property)
+		{
+			//	TODO: générer l'événement "BindingChanged"
+
+			throw new System.Exception ("The method or operation is not implemented.");
 		}
 		
 		internal static void Register(DependencyProperty property, System.Type ownerType)
