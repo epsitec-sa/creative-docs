@@ -554,18 +554,7 @@ namespace Epsitec.Common.Designer
 			}
 
 			string type = mi.BundleType.CurrentType;
-
-			Viewers.Abstract viewer = null;
-
-			if (type == "Strings")
-			{
-				viewer = new Viewers.Strings(mi.Module);
-			}
-
-			if (type == "Panels")
-			{
-				viewer = new Viewers.Panels(mi.Module);
-			}
+			Viewers.Abstract viewer = Viewers.Abstract.Create(type, mi.Module);
 
 			if (viewer != null)
 			{

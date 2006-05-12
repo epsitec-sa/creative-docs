@@ -26,6 +26,15 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
+		public static Abstract Create(string type, Module module)
+		{
+			//	Crée un Viewer d'un type donné.
+			if (type == "Strings")  return new Strings(module);
+			if (type == "Panels" )  return new Panels(module);
+			return null;
+		}
+
+
 		public virtual AbstractTextField CurrentTextField
 		{
 			//	Retourne le texte éditable en cours d'édition.
