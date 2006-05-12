@@ -535,14 +535,50 @@ namespace Epsitec.Common.Designer
 			mi.TabPage.TabTitle = mi.Module.Name;
 			this.bookModules.Items.Insert(this.currentModule, mi.TabPage);
 
-			MyWidgets.BundleType type = new MyWidgets.BundleType(mi.TabPage);
-			type.Dock = DockStyle.Top;
+			mi.BundleType = new MyWidgets.BundleType(mi.TabPage);
+			mi.BundleType.Dock = DockStyle.Top;
+			mi.BundleType.TypeChanged += new EventHandler(this.HandleTypeChanged);
 
-			Viewers.Strings viewer = new Viewers.Strings(mi.Module);
-			viewer.SetParent(mi.TabPage);
-			viewer.Dock = DockStyle.Fill;
-			mi.Module.Modifier.AttachViewer(viewer);
-			mi.Module.Modifier.ActiveViewer = viewer;
+			this.CreateViewerLayout();
+		}
+
+		protected void CreateViewerLayout()
+		{
+			ModuleInfo mi = this.CurrentModuleInfo;
+
+			Viewers.Abstract actual = mi.Module.Modifier.ActiveViewer;
+			if (actual != null)
+			{
+				mi.Module.Modifier.DetachViewer(actual);
+				mi.TabPage.Children.Remove(actual);
+			}
+
+			string type = mi.BundleType.CurrentType;
+
+			Viewers.Abstract viewer = null;
+
+			if (type == "Strings")
+			{
+				viewer = new Viewers.Strings(mi.Module);
+			}
+
+			if (type == "Panels")
+			{
+				viewer = new Viewers.Panels(mi.Module);
+			}
+
+			if (viewer != null)
+			{
+				viewer.SetParent(mi.TabPage);
+				viewer.Dock = DockStyle.Fill;
+				mi.Module.Modifier.AttachViewer(viewer);
+				mi.Module.Modifier.ActiveViewer = viewer;
+			}
+		}
+
+		void HandleTypeChanged(object sender)
+		{
+			this.CreateViewerLayout();
 		}
 
 
@@ -780,6 +816,7 @@ namespace Epsitec.Common.Designer
 		{
 			public Module						Module;
 			public TabPage						TabPage;
+			public MyWidgets.BundleType			BundleType;
 
 			#region IDisposable Members
 			public void Dispose()

@@ -13,8 +13,6 @@ namespace Epsitec.Common.Designer.Viewers
 	{
 		public Strings(Module module) : base(module)
 		{
-			this.module = module;
-
 			this.labelsIndex = new List<string>();
 
 			int tabIndex = 0;
@@ -1381,7 +1379,6 @@ namespace Epsitec.Common.Designer.Viewers
 		#endregion
 
 
-		protected Module					module;
 		protected List<string>				labelsIndex;
 		protected bool						ignoreChange = false;
 		protected bool						lastActionIsReplace = false;
