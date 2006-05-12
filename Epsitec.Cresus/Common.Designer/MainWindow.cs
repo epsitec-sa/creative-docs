@@ -535,9 +535,12 @@ namespace Epsitec.Common.Designer
 			mi.TabPage.TabTitle = mi.Module.Name;
 			this.bookModules.Items.Insert(this.currentModule, mi.TabPage);
 
+			MyWidgets.BundleType type = new MyWidgets.BundleType(mi.TabPage);
+			type.Dock = DockStyle.Top;
+
 			Viewers.Strings viewer = new Viewers.Strings(mi.Module);
 			viewer.SetParent(mi.TabPage);
-			viewer.Anchor = AnchorStyles.All;
+			viewer.Dock = DockStyle.Fill;
 			mi.Module.Modifier.AttachViewer(viewer);
 			mi.Module.Modifier.ActiveViewer = viewer;
 		}

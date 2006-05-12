@@ -45,6 +45,7 @@
     <Compile Include="Misc.cs" />
     <Compile Include="Modifier.cs" />
     <Compile Include="Module.cs" />
+    <Compile Include="MyWidgets\BundleType.cs" />
     <Compile Include="MyWidgets\StringArray.cs" />
     <Compile Include="MyWidgets\StringList.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
