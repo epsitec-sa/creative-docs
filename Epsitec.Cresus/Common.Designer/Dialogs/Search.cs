@@ -70,14 +70,14 @@ namespace Epsitec.Common.Designer.Dialogs
 				label = new StaticText(group);
 				label.PreferredWidth = 80;
 				label.ContentAlignment = ContentAlignment.MiddleRight;
-				label.Text = Res.Strings.Viewer.Edit;
+				label.Text = Res.Strings.Viewers.Strings.Edit;
 				label.Anchor = AnchorStyles.Top | AnchorStyles.Left;
 				label.Margins = new Margins(0, 0, 0, 0);
 
 				label = new StaticText(group);
 				label.PreferredWidth = 80;
 				label.ContentAlignment = ContentAlignment.MiddleRight;
-				label.Text = Res.Strings.Viewer.About;
+				label.Text = Res.Strings.Viewers.Strings.About;
 				label.Anchor = AnchorStyles.Top | AnchorStyles.Left;
 				label.Margins = new Margins(0, 0, 16, 0);
 
