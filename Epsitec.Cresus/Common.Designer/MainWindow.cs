@@ -568,6 +568,7 @@ namespace Epsitec.Common.Designer
 		void HandleTypeChanged(object sender)
 		{
 			this.CreateViewerLayout();
+			this.CurrentModule.Modifier.ActiveViewer.UpdateCommands();
 		}
 
 
