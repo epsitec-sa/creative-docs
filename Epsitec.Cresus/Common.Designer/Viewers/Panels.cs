@@ -124,9 +124,42 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
-		protected void UpdateCultures()
+		public override void UpdateCommands()
 		{
-			//	Met à jour les widgets pour les cultures.
+			//	Met à jour les commandes en fonction de la ressource sélectionnée.
+			this.GetCommandState("Save").Enable = this.module.Modifier.IsDirty;
+			this.GetCommandState("SaveAs").Enable = true;
+
+			this.GetCommandState("NewCulture").Enable = false;
+			this.GetCommandState("DeleteCulture").Enable = false;
+
+			this.GetCommandState("Filter").Enable = false;
+			this.GetCommandState("Search").Enable = false;
+
+			this.GetCommandState("SearchPrev").Enable = false;
+			this.GetCommandState("SearchNext").Enable = false;
+
+			this.GetCommandState("AccessFirst").Enable = false;
+			this.GetCommandState("AccessPrev").Enable = false;
+			this.GetCommandState("AccessLast").Enable = false;
+			this.GetCommandState("AccessNext").Enable = false;
+
+			this.GetCommandState("ModificationPrev").Enable = false;
+			this.GetCommandState("ModificationNext").Enable = false;
+			this.GetCommandState("ModificationAll").Enable = false;
+			this.GetCommandState("ModificationClear").Enable = false;
+
+			this.GetCommandState("Delete").Enable = false;
+			this.GetCommandState("Create").Enable = false;
+			this.GetCommandState("Duplicate").Enable = false;
+
+			this.GetCommandState("Up").Enable = false;
+			this.GetCommandState("Down").Enable = false;
+
+			this.GetCommandState("FontBold").Enable = false;
+			this.GetCommandState("FontItalic").Enable = false;
+			this.GetCommandState("FontUnderlined").Enable = false;
+			this.GetCommandState("Glyphs").Enable = false;
 		}
 
 	}

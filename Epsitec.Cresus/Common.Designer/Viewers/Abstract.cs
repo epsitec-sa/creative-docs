@@ -135,6 +135,11 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Met à jour les commandes en fonction de la ressource sélectionnée.
 		}
 
+		protected CommandState GetCommandState(string command)
+		{
+			return this.module.MainWindow.GetCommandState(command);
+		}
+
 
 		protected Module					module;
 	}

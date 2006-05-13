@@ -1086,6 +1086,8 @@ namespace Epsitec.Common.Designer.Viewers
 			this.GetCommandState("AccessLast").Enable = (sel != -1 && sel < count-1);
 			this.GetCommandState("AccessNext").Enable = (sel != -1 && sel < count-1);
 
+			this.GetCommandState("ModificationPrev").Enable = true;
+			this.GetCommandState("ModificationNext").Enable = true;
 			this.GetCommandState("ModificationAll").Enable = (sel != -1 && all);
 			this.GetCommandState("ModificationClear").Enable = (sel != -1 && modified);
 
@@ -1103,11 +1105,6 @@ namespace Epsitec.Common.Designer.Viewers
 
 			this.module.MainWindow.UpdateInfoCurrentModule();
 			this.module.MainWindow.UpdateInfoAccess();
-		}
-
-		protected CommandState GetCommandState(string command)
-		{
-			return this.module.MainWindow.GetCommandState(command);
 		}
 
 
