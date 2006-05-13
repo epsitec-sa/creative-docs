@@ -54,8 +54,6 @@
   <data name="Action.AccessLast">Dernière ressource</data>
   <data name="Action.AccessPrev">Ressource précédente</data>
   <data name="Action.AccessNext">Ressource suivante</data>
-  <data name="Action.WarningPrev">Ressource manquante précédente</data>
-  <data name="Action.WarningNext">Ressource manquante suivante</data>
   <data name="Action.ModificationPrev">Ressource modifiée précédente</data>
   <data name="Action.ModificationNext">Ressource modifiée suivante</data>
   <data name="Action.ModificationAll">Toutes les ressources secondaires devront être modifiées</data>

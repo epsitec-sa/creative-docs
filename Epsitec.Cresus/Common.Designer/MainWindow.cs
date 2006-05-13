@@ -389,14 +389,6 @@ namespace Epsitec.Common.Designer
 			this.CurrentModule.Modifier.ActiveViewer.DoModification(e.CommandName);
 		}
 
-		[Command("WarningPrev")]
-		[Command("WarningNext")]
-		void CommandWarning(CommandDispatcher dispatcher, CommandEventArgs e)
-		{
-			if ( !this.IsCurrentModule )  return;
-			this.CurrentModule.Modifier.ActiveViewer.DoWarning(e.CommandName);
-		}
-
 		[Command("NewCulture")]
 		void CommandNewCulture(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
@@ -501,8 +493,6 @@ namespace Epsitec.Common.Designer
 			this.modificationClearState = this.CreateCommandState("ModificationClear", KeyCode.FuncF9);
 			this.modificationPrevState = this.CreateCommandState("ModificationPrev");
 			this.modificationNextState = this.CreateCommandState("ModificationNext", KeyCode.FuncF8);
-			this.warningPrevState = this.CreateCommandState("WarningPrev");
-			this.warningNextState = this.CreateCommandState("WarningNext");
 			this.newCultureState = this.CreateCommandState("NewCulture");
 			this.deleteCultureState = this.CreateCommandState("DeleteCulture");
 		}
@@ -868,8 +858,6 @@ namespace Epsitec.Common.Designer
 		protected CommandState					modificationClearState;
 		protected CommandState					modificationPrevState;
 		protected CommandState					modificationNextState;
-		protected CommandState					warningPrevState;
-		protected CommandState					warningNextState;
 		protected CommandState					newCultureState;
 		protected CommandState					deleteCultureState;
 	}

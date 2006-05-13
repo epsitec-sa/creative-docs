@@ -509,58 +509,6 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 		}
 
-		public override void DoWarning(string name)
-		{
-			//	Change la ressource manquante visible.
-			int sel = this.array.SelectedRow;
-			if (sel == -1)
-			{
-				sel = 0;
-			}
-
-			int column = -1;
-			int dir = (name == "WarningPrev") ? -1 : 1;
-
-			for (int i=0; i<this.labelsIndex.Count; i++)
-			{
-				sel += dir;
-
-				if (sel >= this.labelsIndex.Count)
-				{
-					sel = 0;
-				}
-
-				if (sel < 0)
-				{
-					sel = this.labelsIndex.Count-1;
-				}
-
-				string label = this.labelsIndex[sel];
-
-				if ( this.secondaryBundle[label] == null          ||
-					 this.secondaryBundle[label].Name == null     ||
-					 this.secondaryBundle[label].AsString == null ||
-					 this.secondaryBundle[label].AsString == ""   )
-				{
-					column = 2;
-					break;
-				}
-			}
-
-			this.array.SelectedRow = sel;
-			this.array.ShowSelectedRow();
-
-			AbstractTextField edit = null;
-			if (column == 1)  edit = this.primaryEdit;
-			if (column == 2)  edit = this.secondaryEdit;
-			if (edit != null)
-			{
-				this.Window.MakeActive();
-				edit.Focus();
-				edit.SelectAll();
-			}
-		}
-
 		public override void DoDelete()
 		{
 			//	Supprime la ressource sélectionnée.

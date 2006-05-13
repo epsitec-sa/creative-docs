@@ -79,11 +79,6 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Change la ressource modifiée visible.
 		}
 
-		public virtual void DoWarning(string name)
-		{
-			//	Change la ressource manquante visible.
-		}
-
 		public virtual void DoDelete()
 		{
 			//	Supprime la ressource sélectionnée.
