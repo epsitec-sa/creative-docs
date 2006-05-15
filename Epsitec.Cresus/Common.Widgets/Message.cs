@@ -266,6 +266,10 @@ namespace Epsitec.Common.Widgets
 		}
 
 
+		internal void MarkAsDummyMessage()
+		{
+			this.is_dummy_message = true;
+		}
 
 		public static Message CreateDummyMessage(MessageType type)
 		{
