@@ -31,6 +31,7 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Crée un Viewer d'un type donné.
 			if (type == "Strings")  return new Strings(module);
 			if (type == "Panels" )  return new Panels(module);
+			if (type == "Scripts")  return new Scripts(module);
 			return null;
 		}
 
