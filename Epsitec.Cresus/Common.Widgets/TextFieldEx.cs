@@ -168,7 +168,9 @@ namespace Epsitec.Common.Widgets
 			if (this.accept_reject_behavior.IsVisible != show)
 			{
 				this.accept_reject_behavior.SetVisible (show);
-				
+
+				this.Window.ForceLayout ();
+
 				this.UpdateButtonGeometry ();
 				this.UpdateButtonEnable ();
 				this.UpdateTextLayout ();

@@ -941,6 +941,7 @@ namespace Epsitec.Common.Widgets.Platform
 				System.Windows.Forms.Keys alt_f4 = System.Windows.Forms.Keys.F4 | System.Windows.Forms.Keys.Alt;
 				System.Windows.Forms.KeyEventArgs fake_event = new System.Windows.Forms.KeyEventArgs (alt_f4);
 				Message message = Message.FromKeyEvent (MessageType.KeyDown, fake_event);
+				message.MarkAsDummyMessage ();
 				this.DispatchMessage (message);
 			}
 		}
