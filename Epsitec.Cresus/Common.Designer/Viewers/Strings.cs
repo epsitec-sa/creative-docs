@@ -131,15 +131,6 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
-		public override AbstractTextField CurrentTextField
-		{
-			//	Retourne le texte éditable en cours d'édition.
-			get
-			{
-				return this.currentTextField;
-			}
-		}
-
 		public override void DoSearch(string search, Searcher.SearchingMode mode)
 		{
 			//	Effectue une recherche.
@@ -1275,18 +1266,6 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
-		void HandleEditKeyboardFocusChanged(object sender, Epsitec.Common.Types.DependencyPropertyChangedEventArgs e)
-		{
-			//	Appelé lorsqu'une ligne éditable voit son focus changer.
-			bool focused = (bool) e.NewValue;
-
-			if (focused)
-			{
-				this.currentTextField = sender as AbstractTextField;
-			}
-		}
-
-
 		#region CultureInfo
 		protected class CultureInfo
 		{
@@ -1325,7 +1304,6 @@ namespace Epsitec.Common.Designer.Viewers
 
 
 		protected List<string>				labelsIndex;
-		protected bool						ignoreChange = false;
 		protected bool						lastActionIsReplace = false;
 
 		protected IconButtonMark			primaryCulture;
@@ -1341,6 +1319,5 @@ namespace Epsitec.Common.Designer.Viewers
 		protected StaticText				labelAbout;
 		protected TextFieldMulti			primaryAbout;
 		protected TextFieldMulti			secondaryAbout;
-		protected AbstractTextField			currentTextField;
 	}
 }
