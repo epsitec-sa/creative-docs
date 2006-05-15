@@ -13,6 +13,30 @@ namespace Epsitec.Common.Designer.Viewers
 	{
 		public Panels(Module module) : base(module)
 		{
+			int tabIndex = 0;
+
+			Widget left = new Widget(this);
+			left.MinWidth = 200;
+			left.PreferredWidth = 200;
+			left.Dock = DockStyle.Left;
+
+			this.labelEdit = new TextFieldEx(left);
+			this.labelEdit.Name = "LabelEdit";
+			this.labelEdit.Margins = new Margins(10, 10, 10, 10);
+			this.labelEdit.Dock = DockStyle.Bottom;
+			//?this.labelEdit.EditionAccepted += new EventHandler(this.HandleTextChanged);
+			//?this.labelEdit.CursorChanged += new EventHandler(this.HandleCursorChanged);
+			//?this.labelEdit.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
+			this.labelEdit.TabIndex = tabIndex++;
+			this.labelEdit.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.labelEdit.Visibility = (this.module.Mode == DesignerMode.Build);
+
+			this.list = new MyWidgets.StringList(left);
+			this.list.Margins = new Margins(10, 10, 10, 0);
+			this.list.Dock = DockStyle.Fill;
+			this.list.TabIndex = tabIndex++;
+			this.list.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+
 			StaticText s = new StaticText(this);
 			s.Text = "<b>TODO:</b> <i>Editeur d'interfaces...</i>";
 			s.Margins = new Margins(20, 0, 0, 0);
@@ -157,5 +181,9 @@ namespace Epsitec.Common.Designer.Viewers
 			this.GetCommandState("Glyphs").Enable = false;
 		}
 
+
+
+		protected MyWidgets.StringList		list;
+		protected TextFieldEx				labelEdit;
 	}
 }
