@@ -22,7 +22,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			this.labelEdit = new TextFieldEx(left);
 			this.labelEdit.Name = "LabelEdit";
-			this.labelEdit.Margins = new Margins(10, 10, 10, 10);
+			this.labelEdit.Margins = new Margins(10, 10, 0, 10);
 			this.labelEdit.Dock = DockStyle.Bottom;
 			this.labelEdit.EditionAccepted += new EventHandler(this.HandleTextChanged);
 			this.labelEdit.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
@@ -31,7 +31,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.labelEdit.Visibility = (this.module.Mode == DesignerMode.Build);
 
 			this.list = new MyWidgets.StringList(left);
-			this.list.Margins = new Margins(10, 10, 10, 0);
+			this.list.Margins = new Margins(10, 10, 10, 10);
 			this.list.Dock = DockStyle.Fill;
 			this.list.TabIndex = tabIndex++;
 			this.list.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
