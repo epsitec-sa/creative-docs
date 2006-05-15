@@ -24,9 +24,8 @@ namespace Epsitec.Common.Designer.Viewers
 			this.labelEdit.Name = "LabelEdit";
 			this.labelEdit.Margins = new Margins(10, 10, 10, 10);
 			this.labelEdit.Dock = DockStyle.Bottom;
-			//?this.labelEdit.EditionAccepted += new EventHandler(this.HandleTextChanged);
-			//?this.labelEdit.CursorChanged += new EventHandler(this.HandleCursorChanged);
-			//?this.labelEdit.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
+			this.labelEdit.EditionAccepted += new EventHandler(this.HandleTextChanged);
+			this.labelEdit.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
 			this.labelEdit.TabIndex = tabIndex++;
 			this.labelEdit.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			this.labelEdit.Visibility = (this.module.Mode == DesignerMode.Build);
@@ -38,29 +37,29 @@ namespace Epsitec.Common.Designer.Viewers
 			this.list.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			this.edit = new TextFieldMulti(this);
-			edit.TextLayout.DefaultFont = Font.GetFont("Courier New", "Regular");
-			edit.Margins = new Margins(0, 10, 10, 10);
-			edit.Dock = DockStyle.Fill;
+			this.edit.TextLayout.DefaultFont = Font.GetFont("Courier New", "Regular");
+			this.edit.Margins = new Margins(0, 10, 10, 10);
+			this.edit.Dock = DockStyle.Fill;
+			this.edit.EditionAccepted += new EventHandler(this.HandleTextChanged);
+			this.edit.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
+			this.edit.TabIndex = tabIndex++;
+			this.edit.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 		}
 
 		protected override void Dispose(bool disposing)
 		{
 			if (disposing)
 			{
+				this.labelEdit.EditionAccepted -= new EventHandler(this.HandleTextChanged);
+				this.labelEdit.KeyboardFocusChanged -= new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
+
+				this.edit.EditionAccepted -= new EventHandler(this.HandleTextChanged);
+				this.edit.KeyboardFocusChanged -= new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
 			}
 
 			base.Dispose(disposing);
 		}
 
-
-		public override AbstractTextField CurrentTextField
-		{
-			//	Retourne le texte éditable en cours d'édition.
-			get
-			{
-				return null;
-			}
-		}
 
 		public override void DoSearch(string search, Searcher.SearchingMode mode)
 		{
@@ -181,6 +180,14 @@ namespace Epsitec.Common.Designer.Viewers
 			this.GetCommandState("Glyphs").Enable = false;
 		}
 
+
+		void HandleTextChanged(object sender)
+		{
+			//	Un texte éditable a changé.
+			if ( this.ignoreChange )  return;
+
+			AbstractTextField edit = sender as AbstractTextField;
+		}
 
 
 		protected MyWidgets.StringList		list;

@@ -41,7 +41,7 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Retourne le texte éditable en cours d'édition.
 			get
 			{
-				return null;
+				return this.currentTextField;
 			}
 		}
 
@@ -137,6 +137,20 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
+		protected void HandleEditKeyboardFocusChanged(object sender, Epsitec.Common.Types.DependencyPropertyChangedEventArgs e)
+		{
+			//	Appelé lorsqu'une ligne éditable voit son focus changer.
+			bool focused = (bool) e.NewValue;
+
+			if (focused)
+			{
+				this.currentTextField = sender as AbstractTextField;
+			}
+		}
+
+
 		protected Module					module;
+		protected bool						ignoreChange = false;
+		protected AbstractTextField			currentTextField;
 	}
 }
