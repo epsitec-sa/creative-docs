@@ -171,6 +171,8 @@ namespace Epsitec.Common.Designer
 		#endregion
 
 
+		public static readonly string		PanelPreffix = "P.";
+
 		protected MainWindow				mainWindow;
 		protected DesignerMode				mode;
 		protected string					name;

@@ -30,7 +30,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.labelEdit.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			this.labelEdit.Visibility = (this.module.Mode == DesignerMode.Build);
 
-			this.array = new MyWidgets.StringArray(this);
+			this.array = new MyWidgets.StringArray(left);
 			this.array.Columns = 1;
 			this.array.SetColumnsRelativeWidth(0, 1.00);
 			this.array.SetDynamicsToolTips(0, true);
@@ -76,7 +76,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		public override void DoCount(string search, Searcher.SearchingMode mode)
 		{
-			//	Effectue une recherche.
+			//	Effectue un comptage.
 		}
 
 		public override void DoReplace(string search, string replace, Searcher.SearchingMode mode)
@@ -145,16 +145,14 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Met à jour les commandes en fonction de la ressource sélectionnée.
 			base.UpdateCommands();
 
-			int sel = this.SelectedRow;
+			int sel = this.array.SelectedRow;
 			int count = this.labelsIndex.Count;
 			bool build = (this.module.Mode == DesignerMode.Build);
 
 			this.GetCommandState("NewCulture").Enable = false;
 			this.GetCommandState("DeleteCulture").Enable = false;
 
-			this.GetCommandState("Filter").Enable = false;
 			this.GetCommandState("Search").Enable = false;
-
 			this.GetCommandState("SearchPrev").Enable = false;
 			this.GetCommandState("SearchNext").Enable = false;
 
@@ -162,13 +160,6 @@ namespace Epsitec.Common.Designer.Viewers
 			this.GetCommandState("ModificationNext").Enable = false;
 			this.GetCommandState("ModificationAll").Enable = false;
 			this.GetCommandState("ModificationClear").Enable = false;
-
-			this.GetCommandState("Delete").Enable = false;
-			this.GetCommandState("Create").Enable = false;
-			this.GetCommandState("Duplicate").Enable = false;
-
-			this.GetCommandState("Up").Enable = false;
-			this.GetCommandState("Down").Enable = false;
 
 			this.GetCommandState("FontBold").Enable = false;
 			this.GetCommandState("FontItalic").Enable = false;
