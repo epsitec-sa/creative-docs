@@ -139,20 +139,6 @@ namespace Epsitec.Common.Designer.Viewers
 		protected override void UpdateLabelsIndex(string filter, Searcher.SearchingMode mode)
 		{
 			//	Construit l'index en fonction des ressources primaires.
-			this.resourceNames = this.module.ResourceManager.GetBundleIds(Module.PanelPreffix+"*", "Panel", ResourceLevel.Default);
-
-			if (this.resourceNames.Length == 0)
-			{
-				string prefix = this.module.ResourceManager.ActivePrefix;
-				System.Globalization.CultureInfo culture = this.module.BaseCulture;
-				ResourceBundle bundle = ResourceBundle.Create(this.module.ResourceManager, prefix, Module.PanelPreffix+"New", ResourceLevel.Default, culture);
-
-				bundle.DefineType("Panel");
-				this.module.ResourceManager.SetBundle(bundle, ResourceSetMode.CreateOnly);
-
-				this.resourceNames = this.module.ResourceManager.GetBundleIds(Module.PanelPreffix+"*", "Panel", ResourceLevel.Default);
-			}
-
 			this.labelsIndex.Clear();
 
 			if ((mode&Searcher.SearchingMode.CaseSensitive) == 0)
@@ -166,7 +152,8 @@ namespace Epsitec.Common.Designer.Viewers
 				regex = RegexFactory.FromSimpleJoker(filter, RegexFactory.Options.None);
 			}
 
-			foreach (string name in this.resourceNames)
+			string[] panelNames = this.module.PanelNames;
+			foreach (string name in panelNames)
 			{
 				if (filter != "")
 				{
@@ -268,6 +255,5 @@ namespace Epsitec.Common.Designer.Viewers
 
 
 		protected TextFieldEx				labelEdit;
-		protected string[]					resourceNames;
 	}
 }

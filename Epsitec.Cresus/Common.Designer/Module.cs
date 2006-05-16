@@ -130,7 +130,30 @@ namespace Epsitec.Common.Designer
 			this.UpdateBundles();
 		}
 
-		public System.Globalization.CultureInfo BaseCulture
+		public string[] PanelNames
+		{
+			//	Retourne la liste des noms des panneaux.
+			get
+			{
+				string[] panelNames = this.resourceManager.GetBundleIds(Module.PanelPreffix+"*", "Panel", ResourceLevel.Default);
+
+				if (panelNames.Length == 0)
+				{
+					string prefix = this.resourceManager.ActivePrefix;
+					System.Globalization.CultureInfo culture = this.BaseCulture;
+					ResourceBundle bundle = ResourceBundle.Create(this.resourceManager, prefix, Module.PanelPreffix+Res.Strings.Viewers.Panels.New, ResourceLevel.Default, culture);
+
+					bundle.DefineType("Panel");
+					this.resourceManager.SetBundle(bundle, ResourceSetMode.CreateOnly);
+
+					panelNames = this.resourceManager.GetBundleIds(Module.PanelPreffix+"*", "Panel", ResourceLevel.Default);
+				}
+
+				return panelNames;
+			}
+		}
+
+		protected System.Globalization.CultureInfo BaseCulture
 		{
 			//	Retourne la culture de base, définie par les ressources "Strings".
 			get
