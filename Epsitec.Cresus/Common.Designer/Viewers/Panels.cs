@@ -103,7 +103,7 @@ namespace Epsitec.Common.Designer.Viewers
 			if ( sel == -1 )  return;
 
 			string name = this.labelsIndex[sel];
-			string newName = this.module.Modifier.GetDuplicateName(name);
+			string newName = this.GetDuplicateName(name);
 			ResourceBundle bundle = this.module.NewPanel(newName);
 
 			int newSel = sel+1;
@@ -274,6 +274,51 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
+		protected bool IsExistingName(string baseName)
+		{
+			//	Indique si un nom existe.
+			string[] panelNames = this.module.PanelNames;
+			return (Misc.IndexOfString(panelNames, baseName) != -1);
+		}
+
+		protected string GetDuplicateName(string baseName)
+		{
+			//	Retourne le nom à utiliser lorsqu'un nom existant est dupliqué.
+			ResourceBundleCollection bundles = this.module.Bundles;
+
+			int numberLength = 0;
+			while (baseName.Length > 0)
+			{
+				char last = baseName[baseName.Length-1-numberLength];
+				if (last >= '0' && last <= '9')
+				{
+					numberLength ++;
+				}
+				else
+				{
+					break;
+				}
+			}
+
+			int nextNumber = 2;
+			if (numberLength > 0)
+			{
+				nextNumber = int.Parse(baseName.Substring(baseName.Length-numberLength))+1;
+				baseName = baseName.Substring(0, baseName.Length-numberLength);
+			}
+
+			string[] panelNames = this.module.PanelNames;
+			string newName = baseName;
+			for (int i=nextNumber; i<nextNumber+100; i++)
+			{
+				newName = string.Concat(baseName, i.ToString(System.Globalization.CultureInfo.InvariantCulture));
+				if (Misc.IndexOfString(panelNames, newName) == -1)  break;
+			}
+
+			return newName;
+		}
+
+		
 		void HandleArrayCellsQuantityChanged(object sender)
 		{
 			//	Le nombre de lignes a changé.
