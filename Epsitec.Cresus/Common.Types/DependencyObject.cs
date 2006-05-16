@@ -429,6 +429,17 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		public static void CopyAttachedProperties(DependencyObject source, DependencyObject destination)
+		{
+			foreach (DependencyProperty property in source.properties.Keys)
+			{
+				if (property.IsAttached)
+				{
+					destination.SetValue (property, source.GetValue (property));
+				}
+			}
+		}
+		
 		protected void AddUserEventHandler(string name, System.Delegate handler)
 		{
 			if (this.userEvents == null)
