@@ -14,7 +14,7 @@ namespace Epsitec.Common.Support
 	/// Implémentation d'un ResourceBundle basé sur un stockage interne de
 	/// l'information sous forme XML DOM.
 	/// </summary>
-	public class ResourceBundle : System.ICloneable
+	public class ResourceBundle : Types.DependencyObject, System.ICloneable
 	{
 		public static ResourceBundle Create(ResourceManager resource_manager)
 		{
@@ -1047,6 +1047,8 @@ namespace Epsitec.Common.Support
 			that.level   = this.level;
 			that.culture = this.culture;
 			that.rank    = this.rank;
+
+			Types.DependencyObject.CopyAttachedProperties (this, that);
 			
 			that.Compile (this.CreateXmlAsData ());
 			
