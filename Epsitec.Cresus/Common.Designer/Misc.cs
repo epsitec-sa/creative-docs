@@ -8,6 +8,16 @@ namespace Epsitec.Common.Designer
 	/// </summary>
 	public class Misc
 	{
+		static public int IndexOfString(string[] list, string searched)
+		{
+			//	Cherche l'index d'une chaîne dans une liste de chaînes.
+			for (int i=0; i<list.Length; i++)
+			{
+				if (list[i] == searched)  return i;
+			}
+			return -1;
+		}
+
 		static public string CultureLongName(System.Globalization.CultureInfo culture)
 		{
 			//	Retourne le nom long d'une culture, par exemple "Italiano (Italian, IT)".

@@ -215,7 +215,7 @@ namespace Epsitec.Common.Designer.Viewers
 						return;
 					}
 
-					if (this.module.Modifier.IsExistingName(validReplace))
+					if (this.IsExistingName(validReplace))
 					{
 						this.module.MainWindow.DialogError(Res.Strings.Error.NameAlreadyExist);
 						return;
@@ -490,7 +490,7 @@ namespace Epsitec.Common.Designer.Viewers
 			if ( sel == -1 )  return;
 
 			string name = this.labelsIndex[sel];
-			string newName = this.module.Modifier.GetDuplicateName(name);
+			string newName = this.GetDuplicateName(name);
 			this.module.Modifier.Duplicate(name, newName, duplicate);
 
 			int newSel = sel+1;
@@ -1061,6 +1061,54 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 		}
 
+		protected bool IsExistingName(string baseName)
+		{
+			//	Indique si un nom existe.
+			ResourceBundleCollection bundles = this.module.Bundles;
+			ResourceBundle defaultBundle = bundles[ResourceLevel.Default];
+
+			ResourceBundle.Field field = defaultBundle[baseName];
+			return (field != null && field.Name != null);
+		}
+
+		protected string GetDuplicateName(string baseName)
+		{
+			//	Retourne le nom à utiliser lorsqu'un nom existant est dupliqué.
+			ResourceBundleCollection bundles = this.module.Bundles;
+
+			int numberLength = 0;
+			while (baseName.Length > 0)
+			{
+				char last = baseName[baseName.Length-1-numberLength];
+				if (last >= '0' && last <= '9')
+				{
+					numberLength ++;
+				}
+				else
+				{
+					break;
+				}
+			}
+
+			int nextNumber = 2;
+			if (numberLength > 0)
+			{
+				nextNumber = int.Parse(baseName.Substring(baseName.Length-numberLength))+1;
+				baseName = baseName.Substring(0, baseName.Length-numberLength);
+			}
+
+			ResourceBundle defaultBundle = bundles[ResourceLevel.Default];
+			string newName = baseName;
+			for (int i=nextNumber; i<nextNumber+100; i++)
+			{
+				newName = string.Concat(baseName, i.ToString(System.Globalization.CultureInfo.InvariantCulture));
+				ResourceBundle.Field field = defaultBundle[newName];
+				if ( field == null || field.Name == null )  break;
+			}
+
+			return newName;
+		}
+
 		
 		void HandleSecondaryCultureClicked(object sender, MessageEventArgs e)
 		{
@@ -1131,7 +1179,7 @@ namespace Epsitec.Common.Designer.Viewers
 					return;
 				}
 
-				if (this.module.Modifier.IsExistingName(text))
+				if (this.IsExistingName(text))
 				{
 					this.ignoreChange = true;
 					edit.Text = this.labelsIndex[sel];
