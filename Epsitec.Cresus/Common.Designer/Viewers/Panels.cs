@@ -101,13 +101,14 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Duplique la ressource sélectionnée.
 			int sel = this.array.SelectedRow;
 			if ( sel == -1 )  return;
+			int newSel = sel+1;
 
 			string name = this.labelsIndex[sel];
 			string newName = this.GetDuplicateName(name);
 			ResourceBundle bundle = this.module.NewPanel(newName);
-
-			int newSel = sel+1;
 			bundle.DefineRank(newSel);
+			this.module.WriteBundle(bundle);
+
 			this.labelsIndex.Insert(newSel, newName);
 			this.UpdateArray();
 
@@ -120,6 +121,36 @@ namespace Epsitec.Common.Designer.Viewers
 		public override void DoMove(int direction)
 		{
 			//	Déplace la ressource sélectionnée.
+			int sel = this.array.SelectedRow;
+			if ( sel == -1 )  return;
+
+			int newSel = sel+direction;
+			System.Diagnostics.Debug.Assert(newSel >= 0 && newSel < this.labelsIndex.Count);
+
+			string name1 = this.labelsIndex[sel];
+			string name2 = this.labelsIndex[newSel];
+
+			ResourceBundle bundle1 = this.module.LoadPanelBundle(name1);
+			ResourceBundle bundle2 = this.module.LoadPanelBundle(name2);
+			System.Diagnostics.Debug.Assert(bundle1 != null);
+			System.Diagnostics.Debug.Assert(bundle2 != null);
+
+			int r1 = bundle1.Rank;
+			int r2 = bundle2.Rank;
+			bundle1.DefineRank(r2);
+			bundle2.DefineRank(r1);  // permute les rangs
+
+			this.module.WriteBundle(bundle1);
+			this.module.WriteBundle(bundle2);
+
+			this.labelsIndex.RemoveAt(sel);
+			this.labelsIndex.Insert(newSel, name1);
+			this.UpdateArray();
+
+			this.array.SelectedRow = newSel;
+			this.array.ShowSelectedRow();
+			this.UpdateCommands();
+			this.module.Modifier.IsDirty = true;
 		}
 
 		public override void DoNewCulture()
@@ -195,12 +226,7 @@ namespace Epsitec.Common.Designer.Viewers
 			{
 				if (first+i < this.labelsIndex.Count)
 				{
-					string text = this.labelsIndex[first+i];
-					if (text.StartsWith(Module.PanelPreffix))
-					{
-						text = text.Remove(0, Module.PanelPreffix.Length);
-					}
-
+					string text = Module.RemovePanelPrefix(this.labelsIndex[first+i]);
 					this.array.SetLineString(0, first+i, text);
 					this.array.SetLineState(0, first+i, MyWidgets.StringList.CellState.Normal);
 				}
@@ -234,7 +260,7 @@ namespace Epsitec.Common.Designer.Viewers
 			{
 				this.labelEdit.Enable = true;
 
-				string label = this.labelsIndex[sel];
+				string label = Module.RemovePanelPrefix(this.labelsIndex[sel]);
 				this.labelEdit.Text = label;
 				this.labelEdit.Focus();
 				this.labelEdit.SelectAll();

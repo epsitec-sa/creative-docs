@@ -128,24 +128,39 @@ namespace Epsitec.Common.Designer
 			this.UpdateBundles();
 		}
 
+		protected void UpdateBundles()
+		{
+			string[] ids = this.resourceManager.GetBundleIds("*", "String", ResourceLevel.Default);
+			System.Diagnostics.Debug.Assert(ids.Length == 1);
+
+			this.bundles = new ResourceBundleCollection(this.resourceManager);
+			this.bundles.LoadBundles(this.resourceManager.ActivePrefix, this.resourceManager.GetBundleIds(ids[0], ResourceLevel.All));
+		}
+
+
+		#region Panels
 		public string[] PanelNames
 		{
 			//	Retourne la liste des noms des panneaux.
 			get
 			{
-				string[] panelNames = this.resourceManager.GetBundleIds(Module.PanelPreffix+"*", "Panel", ResourceLevel.Default);
+				string[] panelNames = this.resourceManager.GetBundleIds(Module.PanelPrefix+"*", "Panel", ResourceLevel.Default);
 
+				//	S'il n'existe aucun panneau, crée un premier panneau vide.
+				//	Ceci est nécessaire, car il n'existe pas de commande pour créer un panneau à partir
+				//	de rien, mais seulement une commande pour dupliquer un panneau existant.
 				if (panelNames.Length == 0)
 				{
 					string prefix = this.resourceManager.ActivePrefix;
 					System.Globalization.CultureInfo culture = this.BaseCulture;
-					ResourceBundle bundle = ResourceBundle.Create(this.resourceManager, prefix, Module.PanelPreffix+Res.Strings.Viewers.Panels.New, ResourceLevel.Default, culture);
+					ResourceBundle bundle = ResourceBundle.Create(this.resourceManager, prefix, Module.PanelPrefix+Res.Strings.Viewers.Panels.New, ResourceLevel.Default, culture);
 
 					bundle.DefineType("Panel");
 					bundle.DefineRank(0);
-					this.resourceManager.SetBundle(bundle, ResourceSetMode.CreateOnly);
+					this.WriteBundle(bundle);
 
-					panelNames = this.resourceManager.GetBundleIds(Module.PanelPreffix+"*", "Panel", ResourceLevel.Default);
+					panelNames = this.resourceManager.GetBundleIds(Module.PanelPrefix+"*", "Panel", ResourceLevel.Default);
+					System.Diagnostics.Debug.Assert(panelNames.Length == 1);
 				}
 
 				return panelNames;
@@ -158,9 +173,7 @@ namespace Epsitec.Common.Designer
 			string prefix = this.resourceManager.ActivePrefix;
 			System.Globalization.CultureInfo culture = BaseCulture;
 			ResourceBundle bundle = ResourceBundle.Create(this.resourceManager, prefix, name, ResourceLevel.Default, culture);
-
 			bundle.DefineType("Panel");
-			this.resourceManager.SetBundle(bundle, ResourceSetMode.CreateOnly);
 
 			return bundle;
 		}
@@ -168,6 +181,41 @@ namespace Epsitec.Common.Designer
 		public void DeletePanel(string name)
 		{
 			//	Supprime une ressource de type panneau.
+		}
+
+		public ResourceBundle LoadPanelBundle(string label)
+		{
+			//	Retourne le bundle d'un panneau.
+			label = Module.AddPanelPrefix(label);
+			return this.resourceManager.GetBundle(label);
+		}
+
+		public static string RemovePanelPrefix(string name)
+		{
+			//	Enlève le préfixe "P." s'il existe.
+			if (name.StartsWith(Module.PanelPrefix))
+			{
+				name = name.Remove(0, Module.PanelPrefix.Length);
+			}
+			return name;
+		}
+
+		public static string AddPanelPrefix(string name)
+		{
+			//	Ajoute le préfixe "P." s'il n'existe pas.
+			if (!name.StartsWith(Module.PanelPrefix))
+			{
+				name = Module.PanelPrefix + name;
+			}
+			return name;
+		}
+		#endregion
+
+
+		public void WriteBundle(ResourceBundle bundle)
+		{
+			//	Sérialise un bundle.
+			this.resourceManager.SetBundle(bundle, ResourceSetMode.CreateOnly);
 		}
 
 		protected System.Globalization.CultureInfo BaseCulture
@@ -178,15 +226,6 @@ namespace Epsitec.Common.Designer
 				ResourceBundle res = this.bundles[ResourceLevel.Default];
 				return res.Culture;
 			}
-		}
-
-		protected void UpdateBundles()
-		{
-			string[] ids = this.resourceManager.GetBundleIds("*", "String", ResourceLevel.Default);
-			System.Diagnostics.Debug.Assert(ids.Length == 1);
-
-			this.bundles = new ResourceBundleCollection(this.resourceManager);
-			this.bundles.LoadBundles(this.resourceManager.ActivePrefix, this.resourceManager.GetBundleIds(ids[0], ResourceLevel.All));
 		}
 
 
@@ -211,7 +250,7 @@ namespace Epsitec.Common.Designer
 		#endregion
 
 
-		public static readonly string		PanelPreffix = "P.";
+		protected static readonly string	PanelPrefix = "P.";
 
 		protected MainWindow				mainWindow;
 		protected DesignerMode				mode;
