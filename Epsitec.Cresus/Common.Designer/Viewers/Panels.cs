@@ -140,8 +140,9 @@ namespace Epsitec.Common.Designer.Viewers
 			bundle1.DefineRank(r2);
 			bundle2.DefineRank(r1);  // permute les rangs
 
-			this.module.WriteBundle(bundle1);
-			this.module.WriteBundle(bundle2);
+			// Met à jour les bundles en les sérialisant:
+			this.module.UpdateBundle(bundle1);
+			this.module.UpdateBundle(bundle2);
 
 			this.labelsIndex.RemoveAt(sel);
 			this.labelsIndex.Insert(newSel, name1);
