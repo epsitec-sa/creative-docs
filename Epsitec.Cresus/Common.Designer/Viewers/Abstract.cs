@@ -67,7 +67,7 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Effectue un 'remplacer tout'.
 		}
 
-		public virtual void DoFilter(string filter, Searcher.SearchingMode mode)
+		public void DoFilter(string filter, Searcher.SearchingMode mode)
 		{
 			//	Change le filtre des ressources visibles.
 			string label = "";
@@ -86,7 +86,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.UpdateCommands();
 		}
 
-		public virtual void DoAccess(string name)
+		public void DoAccess(string name)
 		{
 			//	Change la ressource visible.
 			int sel = this.array.SelectedRow;

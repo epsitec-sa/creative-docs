@@ -112,8 +112,6 @@ namespace Epsitec.Common.Designer
 			System.Globalization.CultureInfo culture = new System.Globalization.CultureInfo(name);
 			ResourceBundle bundle = ResourceBundle.Create(this.resourceManager, prefix, this.bundles.Name, ResourceLevel.Localized, culture);
 
-			//	Pour l'instant, l'éditeur ne sait gérer que des bundles de type "String",
-			//	donc on force ici explicitement ce type :
 			bundle.DefineType("String");
 			this.resourceManager.SetBundle(bundle, ResourceSetMode.CreateOnly);
 			
@@ -144,6 +142,7 @@ namespace Epsitec.Common.Designer
 					ResourceBundle bundle = ResourceBundle.Create(this.resourceManager, prefix, Module.PanelPreffix+Res.Strings.Viewers.Panels.New, ResourceLevel.Default, culture);
 
 					bundle.DefineType("Panel");
+					bundle.DefineRank(0);
 					this.resourceManager.SetBundle(bundle, ResourceSetMode.CreateOnly);
 
 					panelNames = this.resourceManager.GetBundleIds(Module.PanelPreffix+"*", "Panel", ResourceLevel.Default);
@@ -151,6 +150,24 @@ namespace Epsitec.Common.Designer
 
 				return panelNames;
 			}
+		}
+
+		public ResourceBundle NewPanel(string name)
+		{
+			//	Crée une nouvelle ressource de type panneau.
+			string prefix = this.resourceManager.ActivePrefix;
+			System.Globalization.CultureInfo culture = BaseCulture;
+			ResourceBundle bundle = ResourceBundle.Create(this.resourceManager, prefix, name, ResourceLevel.Default, culture);
+
+			bundle.DefineType("Panel");
+			this.resourceManager.SetBundle(bundle, ResourceSetMode.CreateOnly);
+
+			return bundle;
+		}
+
+		public void DeletePanel(string name)
+		{
+			//	Supprime une ressource de type panneau.
 		}
 
 		protected System.Globalization.CultureInfo BaseCulture
