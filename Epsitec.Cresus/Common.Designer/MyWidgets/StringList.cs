@@ -375,7 +375,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 			int row = this.Detect(pos, false);
 			if ( row != -1 )
 			{
-				return this.GetLineString(row);
+				string text = this.GetLineString(row);
+				if (text != "")
+				{
+					return text;
+				}
 			}
 
 			return null;  // pas de tooltip
