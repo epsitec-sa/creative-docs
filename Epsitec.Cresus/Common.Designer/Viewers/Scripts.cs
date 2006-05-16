@@ -89,16 +89,6 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Effectue un 'remplacer tout'.
 		}
 
-		public override void DoFilter(string filter, Searcher.SearchingMode mode)
-		{
-			//	Change le filtre des ressources visibles.
-		}
-
-		public override void DoAccess(string name)
-		{
-			//	Change la ressource visible.
-		}
-
 		public override void DoModification(string name)
 		{
 			//	Change la ressource modifiée visible.

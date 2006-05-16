@@ -48,6 +48,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			this.UpdateLabelsIndex("", Searcher.SearchingMode.None);
 			this.UpdateArray();
+			this.UpdateEdit();
 		}
 
 		protected override void Dispose(bool disposing)
@@ -85,16 +86,6 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Effectue un 'remplacer tout'.
 		}
 
-		public override void DoFilter(string filter, Searcher.SearchingMode mode)
-		{
-			//	Change le filtre des ressources visibles.
-		}
-
-		public override void DoAccess(string name)
-		{
-			//	Change la ressource visible.
-		}
-
 		public override void DoModification(string name)
 		{
 			//	Change la ressource modifiée visible.
@@ -108,6 +99,22 @@ namespace Epsitec.Common.Designer.Viewers
 		public override void DoDuplicate(bool duplicate)
 		{
 			//	Duplique la ressource sélectionnée.
+			int sel = this.array.SelectedRow;
+			if ( sel == -1 )  return;
+
+			string name = this.labelsIndex[sel];
+			string newName = this.module.Modifier.GetDuplicateName(name);
+			ResourceBundle bundle = this.module.NewPanel(newName);
+
+			int newSel = sel+1;
+			bundle.DefineRank(newSel);
+			this.labelsIndex.Insert(newSel, newName);
+			this.UpdateArray();
+
+			this.array.SelectedRow = newSel;
+			this.array.ShowSelectedRow();
+			this.UpdateCommands();
+			this.module.Modifier.IsDirty = true;
 		}
 
 		public override void DoMove(int direction)
@@ -205,6 +212,40 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 		}
 
+		protected void UpdateEdit()
+		{
+			//	Met à jour les lignes éditables en fonction de la sélection dans le tableau.
+			bool iic = this.ignoreChange;
+			this.ignoreChange = true;
+
+			int sel = this.array.SelectedRow;
+
+			if (sel >= this.labelsIndex.Count)
+			{
+				sel = -1;
+			}
+
+			if ( sel == -1 )
+			{
+				this.labelEdit.Enable = false;
+				this.labelEdit.Text = "";
+			}
+			else
+			{
+				this.labelEdit.Enable = true;
+
+				string label = this.labelsIndex[sel];
+				this.labelEdit.Text = label;
+				this.labelEdit.Focus();
+				this.labelEdit.SelectAll();
+			}
+
+			this.ignoreChange = iic;
+
+			this.UpdateCommands();
+		}
+
+		
 		public override void UpdateCommands()
 		{
 			//	Met à jour les commandes en fonction de la ressource sélectionnée.
@@ -242,6 +283,7 @@ namespace Epsitec.Common.Designer.Viewers
 		void HandleArraySelectedRowChanged(object sender)
 		{
 			//	La ligne sélectionnée a changé.
+			this.UpdateEdit();
 			this.UpdateCommands();
 		}
 
