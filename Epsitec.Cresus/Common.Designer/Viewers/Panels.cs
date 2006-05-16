@@ -30,22 +30,32 @@ namespace Epsitec.Common.Designer.Viewers
 			this.labelEdit.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			this.labelEdit.Visibility = (this.module.Mode == DesignerMode.Build);
 
-			this.list = new MyWidgets.StringList(left);
-			this.list.Margins = new Margins(10, 10, 10, 10);
-			this.list.Dock = DockStyle.Fill;
-			this.list.TabIndex = tabIndex++;
-			this.list.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.array = new MyWidgets.StringArray(left);
+			this.array.Columns = 1;
+			this.array.SetColumnsRelativeWidth(0, 1.00);
+			this.array.SetDynamicsToolTips(0, true);
+			this.array.Margins = new Margins(10, 10, 10, 10);
+			this.array.Dock = DockStyle.Fill;
+			this.array.CellsQuantityChanged += new EventHandler(this.HandleArrayCellsQuantityChanged);
+			this.array.SelectedRowChanged += new EventHandler(this.HandleArraySelectedRowChanged);
+			this.array.TabIndex = tabIndex++;
+			this.array.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			StaticText s = new StaticText(this);
 			s.Text = "<b>TODO:</b> <i>Editeur d'interfaces...</i>";
 			s.Margins = new Margins(20, 0, 0, 0);
 			s.Dock = DockStyle.Fill;
+
+			this.UpdateLabelsIndex("", Searcher.SearchingMode.None);
 		}
 
 		protected override void Dispose(bool disposing)
 		{
 			if (disposing)
 			{
+				this.array.CellsQuantityChanged -= new EventHandler(this.HandleArrayCellsQuantityChanged);
+				this.array.SelectedRowChanged -= new EventHandler(this.HandleArraySelectedRowChanged);
+
 				this.labelEdit.EditionAccepted -= new EventHandler(this.HandleTextChanged);
 				this.labelEdit.KeyboardFocusChanged -= new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
 			}
@@ -125,21 +135,92 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
-		public override string InfoAccessText
+		protected void UpdateLabelsIndex(string filter, Searcher.SearchingMode mode)
 		{
-			//	Donne le texte d'information sur l'accès en cours.
-			get
+			//	Construit l'index en fonction des ressources primaires.
+			this.resourceNames = this.module.ResourceManager.GetBundleIds("P.*", "Panel", ResourceLevel.Default);
+
+			if (this.resourceNames.Length == 0)
 			{
-				return "";
+				string prefix = this.module.ResourceManager.ActivePrefix;
+				System.Globalization.CultureInfo culture = this.module.BaseCulture;
+				ResourceBundle bundle = ResourceBundle.Create(this.module.ResourceManager, prefix, "P.New", ResourceLevel.Default, culture);
+
+				bundle.DefineType("Panel");
+				this.module.ResourceManager.SetBundle(bundle, ResourceSetMode.CreateOnly);
+
+				this.resourceNames = this.module.ResourceManager.GetBundleIds("P.*", "Panel", ResourceLevel.Default);
 			}
+
+			this.labelsIndex.Clear();
+
+			if ((mode&Searcher.SearchingMode.CaseSensitive) == 0)
+			{
+				filter = Searcher.RemoveAccent(filter.ToLower());
+			}
+
+			Regex regex = null;
+			if ((mode&Searcher.SearchingMode.Jocker) != 0)
+			{
+				regex = RegexFactory.FromSimpleJoker(filter, RegexFactory.Options.None);
+			}
+
+			foreach (string name in this.resourceNames)
+			{
+				if (filter != "")
+				{
+					if ((mode&Searcher.SearchingMode.Jocker) != 0)
+					{
+						string text = name;
+						if ((mode&Searcher.SearchingMode.CaseSensitive) == 0)
+						{
+							text = Searcher.RemoveAccent(text.ToLower());
+						}
+						if (!regex.IsMatch(text))  continue;
+					}
+					else
+					{
+						int index = Searcher.IndexOf(name, filter, 0, mode);
+						if (index == -1)  continue;
+						if ((mode&Searcher.SearchingMode.AtBeginning) != 0 && index != 0)  continue;
+					}
+				}
+
+				this.labelsIndex.Add(name);
+			}
+
+			this.UpdateArray();
 		}
 
+		protected void UpdateArray()
+		{
+			//	Met à jour tout le contenu du tableau.
+			this.array.TotalRows = this.labelsIndex.Count;
+
+			int first = this.array.FirstVisibleRow;
+			for (int i=0; i<this.array.LineCount; i++)
+			{
+				if (first+i < this.labelsIndex.Count)
+				{
+					this.array.SetLineString(0, first+i, this.labelsIndex[first+i]);
+					this.array.SetLineState(0, first+i, MyWidgets.StringList.CellState.Normal);
+				}
+				else
+				{
+					this.array.SetLineString(0, first+i, "");
+					this.array.SetLineState(0, first+i, MyWidgets.StringList.CellState.Disabled);
+				}
+			}
+		}
 
 		public override void UpdateCommands()
 		{
 			//	Met à jour les commandes en fonction de la ressource sélectionnée.
-			this.GetCommandState("Save").Enable = this.module.Modifier.IsDirty;
-			this.GetCommandState("SaveAs").Enable = true;
+			base.UpdateCommands();
+
+			int sel = this.SelectedRow;
+			int count = this.labelsIndex.Count;
+			bool build = (this.module.Mode == DesignerMode.Build);
 
 			this.GetCommandState("NewCulture").Enable = false;
 			this.GetCommandState("DeleteCulture").Enable = false;
@@ -149,11 +230,6 @@ namespace Epsitec.Common.Designer.Viewers
 
 			this.GetCommandState("SearchPrev").Enable = false;
 			this.GetCommandState("SearchNext").Enable = false;
-
-			this.GetCommandState("AccessFirst").Enable = false;
-			this.GetCommandState("AccessPrev").Enable = false;
-			this.GetCommandState("AccessLast").Enable = false;
-			this.GetCommandState("AccessNext").Enable = false;
 
 			this.GetCommandState("ModificationPrev").Enable = false;
 			this.GetCommandState("ModificationNext").Enable = false;
@@ -174,6 +250,18 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
+		void HandleArrayCellsQuantityChanged(object sender)
+		{
+			//	Le nombre de lignes a changé.
+			this.UpdateArray();
+		}
+
+		void HandleArraySelectedRowChanged(object sender)
+		{
+			//	La ligne sélectionnée a changé.
+			this.UpdateCommands();
+		}
+
 		void HandleTextChanged(object sender)
 		{
 			//	Un texte éditable a changé.
@@ -183,7 +271,7 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
-		protected MyWidgets.StringList		list;
 		protected TextFieldEx				labelEdit;
+		protected string[]					resourceNames;
 	}
 }
