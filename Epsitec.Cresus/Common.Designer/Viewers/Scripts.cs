@@ -30,11 +30,16 @@ namespace Epsitec.Common.Designer.Viewers
 			this.labelEdit.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			this.labelEdit.Visibility = (this.module.Mode == DesignerMode.Build);
 
-			this.list = new MyWidgets.StringList(left);
-			this.list.Margins = new Margins(10, 10, 10, 10);
-			this.list.Dock = DockStyle.Fill;
-			this.list.TabIndex = tabIndex++;
-			this.list.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.array = new MyWidgets.StringArray(this);
+			this.array.Columns = 1;
+			this.array.SetColumnsRelativeWidth(0, 1.00);
+			this.array.SetDynamicsToolTips(0, true);
+			this.array.Margins = new Margins(10, 10, 10, 10);
+			this.array.Dock = DockStyle.Fill;
+			this.array.CellsQuantityChanged += new EventHandler(this.HandleArrayCellsQuantityChanged);
+			this.array.SelectedRowChanged += new EventHandler(this.HandleArraySelectedRowChanged);
+			this.array.TabIndex = tabIndex++;
+			this.array.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			this.edit = new TextFieldMulti(this);
 			this.edit.TextLayout.DefaultFont = Font.GetFont("Courier New", "Regular");
@@ -50,6 +55,9 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			if (disposing)
 			{
+				this.array.CellsQuantityChanged -= new EventHandler(this.HandleArrayCellsQuantityChanged);
+				this.array.SelectedRowChanged -= new EventHandler(this.HandleArraySelectedRowChanged);
+
 				this.labelEdit.EditionAccepted -= new EventHandler(this.HandleTextChanged);
 				this.labelEdit.KeyboardFocusChanged -= new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
 
@@ -132,21 +140,14 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
-		public override string InfoAccessText
-		{
-			//	Donne le texte d'information sur l'accès en cours.
-			get
-			{
-				return "";
-			}
-		}
-
-
 		public override void UpdateCommands()
 		{
 			//	Met à jour les commandes en fonction de la ressource sélectionnée.
-			this.GetCommandState("Save").Enable = this.module.Modifier.IsDirty;
-			this.GetCommandState("SaveAs").Enable = true;
+			base.UpdateCommands();
+
+			int sel = this.SelectedRow;
+			int count = this.labelsIndex.Count;
+			bool build = (this.module.Mode == DesignerMode.Build);
 
 			this.GetCommandState("NewCulture").Enable = false;
 			this.GetCommandState("DeleteCulture").Enable = false;
@@ -156,11 +157,6 @@ namespace Epsitec.Common.Designer.Viewers
 
 			this.GetCommandState("SearchPrev").Enable = false;
 			this.GetCommandState("SearchNext").Enable = false;
-
-			this.GetCommandState("AccessFirst").Enable = false;
-			this.GetCommandState("AccessPrev").Enable = false;
-			this.GetCommandState("AccessLast").Enable = false;
-			this.GetCommandState("AccessNext").Enable = false;
 
 			this.GetCommandState("ModificationPrev").Enable = false;
 			this.GetCommandState("ModificationNext").Enable = false;
@@ -181,6 +177,18 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
+		void HandleArrayCellsQuantityChanged(object sender)
+		{
+			//	Le nombre de lignes a changé.
+			//?this.UpdateArray();
+		}
+
+		void HandleArraySelectedRowChanged(object sender)
+		{
+			//	La ligne sélectionnée a changé.
+			this.UpdateCommands();
+		}
+
 		void HandleTextChanged(object sender)
 		{
 			//	Un texte éditable a changé.
@@ -190,7 +198,6 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
-		protected MyWidgets.StringList		list;
 		protected TextFieldEx				labelEdit;
 		protected TextFieldMulti			edit;
 	}

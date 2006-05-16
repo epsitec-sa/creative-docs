@@ -14,6 +14,8 @@ namespace Epsitec.Common.Designer.Viewers
 		public Abstract(Module module)
 		{
 			this.module = module;
+
+			this.labelsIndex = new List<string>();
 		}
 
 		protected override void Dispose(bool disposing)
@@ -116,12 +118,49 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
-		public virtual string InfoAccessText
+		protected int SelectedRow
+		{
+			get
+			{
+				return this.array.SelectedRow;
+			}
+
+			set
+			{
+				this.array.SelectedRow = value;
+			}
+		}
+
+		public string InfoAccessText
 		{
 			//	Donne le texte d'information sur l'accès en cours.
 			get
 			{
-				return "";
+				System.Text.StringBuilder builder = new System.Text.StringBuilder();
+
+				int sel = this.SelectedRow;
+				if (sel == -1)
+				{
+					builder.Append("-");
+				}
+				else
+				{
+					builder.Append((sel+1).ToString());
+				}
+
+				builder.Append("/");
+				builder.Append(this.labelsIndex.Count.ToString());
+
+#if false
+				if (this.labelsIndex.Count < this.primaryBundle.FieldCount)
+				{
+					builder.Append(" (");
+					builder.Append(this.primaryBundle.FieldCount.ToString());
+					builder.Append(")");
+				}
+#endif
+
+				return builder.ToString();
 			}
 		}
 
@@ -129,6 +168,17 @@ namespace Epsitec.Common.Designer.Viewers
 		public virtual void UpdateCommands()
 		{
 			//	Met à jour les commandes en fonction de la ressource sélectionnée.
+			int sel = this.SelectedRow;
+			int count = this.labelsIndex.Count;
+			bool build = (this.module.Mode == DesignerMode.Build);
+
+			this.GetCommandState("Save").Enable = this.module.Modifier.IsDirty;
+			this.GetCommandState("SaveAs").Enable = true;
+
+			this.GetCommandState("AccessFirst").Enable = (sel != -1 && sel > 0);
+			this.GetCommandState("AccessPrev").Enable = (sel != -1 && sel > 0);
+			this.GetCommandState("AccessLast").Enable = (sel != -1 && sel < count-1);
+			this.GetCommandState("AccessNext").Enable = (sel != -1 && sel < count-1);
 		}
 
 		protected CommandState GetCommandState(string command)
@@ -150,7 +200,9 @@ namespace Epsitec.Common.Designer.Viewers
 
 
 		protected Module					module;
+		protected List<string>				labelsIndex;
 		protected bool						ignoreChange = false;
 		protected AbstractTextField			currentTextField;
+		protected MyWidgets.StringArray		array;
 	}
 }
