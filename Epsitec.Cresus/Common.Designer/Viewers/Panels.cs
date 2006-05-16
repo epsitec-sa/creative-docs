@@ -47,6 +47,7 @@ namespace Epsitec.Common.Designer.Viewers
 			s.Dock = DockStyle.Fill;
 
 			this.UpdateLabelsIndex("", Searcher.SearchingMode.None);
+			this.UpdateArray();
 		}
 
 		protected override void Dispose(bool disposing)
@@ -71,7 +72,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		public override void DoCount(string search, Searcher.SearchingMode mode)
 		{
-			//	Effectue une recherche.
+			//	Effectue un comptage.
 		}
 
 		public override void DoReplace(string search, string replace, Searcher.SearchingMode mode)
@@ -135,21 +136,21 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
-		protected void UpdateLabelsIndex(string filter, Searcher.SearchingMode mode)
+		protected override void UpdateLabelsIndex(string filter, Searcher.SearchingMode mode)
 		{
 			//	Construit l'index en fonction des ressources primaires.
-			this.resourceNames = this.module.ResourceManager.GetBundleIds("P.*", "Panel", ResourceLevel.Default);
+			this.resourceNames = this.module.ResourceManager.GetBundleIds(Module.PanelPreffix+"*", "Panel", ResourceLevel.Default);
 
 			if (this.resourceNames.Length == 0)
 			{
 				string prefix = this.module.ResourceManager.ActivePrefix;
 				System.Globalization.CultureInfo culture = this.module.BaseCulture;
-				ResourceBundle bundle = ResourceBundle.Create(this.module.ResourceManager, prefix, "P.New", ResourceLevel.Default, culture);
+				ResourceBundle bundle = ResourceBundle.Create(this.module.ResourceManager, prefix, Module.PanelPreffix+"New", ResourceLevel.Default, culture);
 
 				bundle.DefineType("Panel");
 				this.module.ResourceManager.SetBundle(bundle, ResourceSetMode.CreateOnly);
 
-				this.resourceNames = this.module.ResourceManager.GetBundleIds("P.*", "Panel", ResourceLevel.Default);
+				this.resourceNames = this.module.ResourceManager.GetBundleIds(Module.PanelPreffix+"*", "Panel", ResourceLevel.Default);
 			}
 
 			this.labelsIndex.Clear();
@@ -188,11 +189,9 @@ namespace Epsitec.Common.Designer.Viewers
 
 				this.labelsIndex.Add(name);
 			}
-
-			this.UpdateArray();
 		}
 
-		protected void UpdateArray()
+		protected override void UpdateArray()
 		{
 			//	Met à jour tout le contenu du tableau.
 			this.array.TotalRows = this.labelsIndex.Count;
@@ -202,7 +201,13 @@ namespace Epsitec.Common.Designer.Viewers
 			{
 				if (first+i < this.labelsIndex.Count)
 				{
-					this.array.SetLineString(0, first+i, this.labelsIndex[first+i]);
+					string text = this.labelsIndex[first+i];
+					if (text.StartsWith(Module.PanelPreffix))
+					{
+						text = text.Remove(0, Module.PanelPreffix.Length);
+					}
+
+					this.array.SetLineString(0, first+i, text);
 					this.array.SetLineState(0, first+i, MyWidgets.StringList.CellState.Normal);
 				}
 				else
@@ -218,16 +223,14 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Met à jour les commandes en fonction de la ressource sélectionnée.
 			base.UpdateCommands();
 
-			int sel = this.SelectedRow;
+			int sel = this.array.SelectedRow;
 			int count = this.labelsIndex.Count;
 			bool build = (this.module.Mode == DesignerMode.Build);
 
 			this.GetCommandState("NewCulture").Enable = false;
 			this.GetCommandState("DeleteCulture").Enable = false;
 
-			this.GetCommandState("Filter").Enable = false;
 			this.GetCommandState("Search").Enable = false;
-
 			this.GetCommandState("SearchPrev").Enable = false;
 			this.GetCommandState("SearchNext").Enable = false;
 
@@ -235,13 +238,6 @@ namespace Epsitec.Common.Designer.Viewers
 			this.GetCommandState("ModificationNext").Enable = false;
 			this.GetCommandState("ModificationAll").Enable = false;
 			this.GetCommandState("ModificationClear").Enable = false;
-
-			this.GetCommandState("Delete").Enable = false;
-			this.GetCommandState("Create").Enable = false;
-			this.GetCommandState("Duplicate").Enable = false;
-
-			this.GetCommandState("Up").Enable = false;
-			this.GetCommandState("Down").Enable = false;
 
 			this.GetCommandState("FontBold").Enable = false;
 			this.GetCommandState("FontItalic").Enable = false;

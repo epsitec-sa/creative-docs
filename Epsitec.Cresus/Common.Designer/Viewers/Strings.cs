@@ -133,13 +133,13 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			//	Effectue une recherche.
 			Searcher searcher = new Searcher(this.labelsIndex, this.primaryBundle, this.secondaryBundle);
-			searcher.FixStarting(mode, this.SelectedRow, this.currentTextField, false);
+			searcher.FixStarting(mode, this.array.SelectedRow, this.currentTextField, false);
 
 			if (searcher.Search(search))
 			{
 				this.lastActionIsReplace = false;
 
-				this.SelectedRow = searcher.Row;
+				this.array.SelectedRow = searcher.Row;
 				this.array.ShowSelectedRow();
 
 				AbstractTextField edit = null;
@@ -169,9 +169,9 @@ namespace Epsitec.Common.Designer.Viewers
 
 		public override void DoCount(string search, Searcher.SearchingMode mode)
 		{
-			//	Effectue une recherche.
+			//	Effectue un comptage.
 			Searcher searcher = new Searcher(this.labelsIndex, this.primaryBundle, this.secondaryBundle);
-			searcher.FixStarting(mode, this.SelectedRow, this.currentTextField, false);
+			searcher.FixStarting(mode, this.array.SelectedRow, this.currentTextField, false);
 
 			int count = searcher.Count(search);
 			if (count == 0)
@@ -194,13 +194,13 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 
 			Searcher searcher = new Searcher(this.labelsIndex, this.primaryBundle, this.secondaryBundle);
-			searcher.FixStarting(mode, this.SelectedRow, this.currentTextField, this.lastActionIsReplace);
+			searcher.FixStarting(mode, this.array.SelectedRow, this.currentTextField, this.lastActionIsReplace);
 
 			if (searcher.Replace(search, false))
 			{
 				this.lastActionIsReplace = true;
 
-				this.SelectedRow = searcher.Row;
+				this.array.SelectedRow = searcher.Row;
 				this.array.ShowSelectedRow();
 
 				string label = this.labelsIndex[searcher.Row];
@@ -303,7 +303,7 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 
 			Searcher searcher = new Searcher(this.labelsIndex, this.primaryBundle, this.secondaryBundle);
-			searcher.FixStarting(mode, this.SelectedRow, this.currentTextField, false);
+			searcher.FixStarting(mode, this.array.SelectedRow, this.currentTextField, false);
 
 			int count = 0;
 			bool fromBeginning = true;
@@ -376,44 +376,10 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 		}
 
-		public override void DoFilter(string filter, Searcher.SearchingMode mode)
-		{
-			//	Change le filtre des ressources visibles.
-			string label = "";
-			int sel = this.SelectedRow;
-			if (sel != -1 && sel < this.labelsIndex.Count)
-			{
-				label = this.labelsIndex[sel];
-			}
-
-			this.UpdateLabelsIndex(filter, mode);
-			this.UpdateArray();
-
-			sel = this.labelsIndex.IndexOf(label);
-			this.SelectedRow = sel;
-			this.array.ShowSelectedRow();
-			this.UpdateCommands();
-		}
-
-		public override void DoAccess(string name)
-		{
-			//	Change la ressource visible.
-			int sel = this.SelectedRow;
-
-			if ( name == "AccessFirst" )  sel = 0;
-			if ( name == "AccessPrev"  )  sel --;
-			if ( name == "AccessNext"  )  sel ++;
-			if ( name == "AccessLast"  )  sel = 1000000;
-
-			this.SelectedRow = sel;
-			this.array.ShowSelectedRow();
-			this.UpdateCommands();
-		}
-
 		public override void DoModification(string name)
 		{
 			//	Change la ressource modifiée visible.
-			int sel = this.SelectedRow;
+			int sel = this.array.SelectedRow;
 
 			if (name == "ModificationAll")
 			{
@@ -483,7 +449,7 @@ namespace Epsitec.Common.Designer.Viewers
 					}
 				}
 
-				this.SelectedRow = sel;
+				this.array.SelectedRow = sel;
 				this.array.ShowSelectedRow();
 
 				AbstractTextField edit = null;
@@ -501,7 +467,7 @@ namespace Epsitec.Common.Designer.Viewers
 		public override void DoDelete()
 		{
 			//	Supprime la ressource sélectionnée.
-			int sel = this.SelectedRow;
+			int sel = this.array.SelectedRow;
 			if ( sel == -1 )  return;
 
 			string name = this.labelsIndex[sel];
@@ -511,7 +477,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.UpdateArray();
 
 			sel = System.Math.Min(sel, this.labelsIndex.Count-1);
-			this.SelectedRow = sel;
+			this.array.SelectedRow = sel;
 			this.array.ShowSelectedRow();
 			this.UpdateCommands();
 			this.module.Modifier.IsDirty = true;
@@ -520,7 +486,7 @@ namespace Epsitec.Common.Designer.Viewers
 		public override void DoDuplicate(bool duplicate)
 		{
 			//	Duplique la ressource sélectionnée.
-			int sel = this.SelectedRow;
+			int sel = this.array.SelectedRow;
 			if ( sel == -1 )  return;
 
 			string name = this.labelsIndex[sel];
@@ -531,7 +497,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.labelsIndex.Insert(newSel, newName);
 			this.UpdateArray();
 
-			this.SelectedRow = newSel;
+			this.array.SelectedRow = newSel;
 			this.array.ShowSelectedRow();
 			this.UpdateCommands();
 			this.module.Modifier.IsDirty = true;
@@ -540,7 +506,7 @@ namespace Epsitec.Common.Designer.Viewers
 		public override void DoMove(int direction)
 		{
 			//	Déplace la ressource sélectionnée.
-			int sel = this.SelectedRow;
+			int sel = this.array.SelectedRow;
 			if ( sel == -1 )  return;
 
 			string name = this.labelsIndex[sel];
@@ -551,7 +517,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.labelsIndex.Insert(newSel, name);
 			this.UpdateArray();
 
-			this.SelectedRow = newSel;
+			this.array.SelectedRow = newSel;
 			this.array.ShowSelectedRow();
 			this.UpdateCommands();
 			this.module.Modifier.IsDirty = true;
@@ -742,7 +708,7 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 		}
 
-		protected void UpdateLabelsIndex(string filter, Searcher.SearchingMode mode)
+		protected override void UpdateLabelsIndex(string filter, Searcher.SearchingMode mode)
 		{
 			//	Construit l'index en fonction des ressources primaires.
 			this.labelsIndex.Clear();
@@ -783,7 +749,7 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 		}
 
-		protected void UpdateArray()
+		protected override void UpdateArray()
 		{
 			//	Met à jour tout le contenu du tableau.
 			this.array.TotalRows = this.labelsIndex.Count;
@@ -852,7 +818,7 @@ namespace Epsitec.Common.Designer.Viewers
 		protected void UpdateModifiers()
 		{
 			//	Met à jour les indicateurs de modifications.
-			int sel = this.SelectedRow;
+			int sel = this.array.SelectedRow;
 			string label = null;
 			if (sel != -1)
 			{
@@ -888,7 +854,7 @@ namespace Epsitec.Common.Designer.Viewers
 			bool iic = this.ignoreChange;
 			this.ignoreChange = true;
 
-			int sel = this.SelectedRow;
+			int sel = this.array.SelectedRow;
 			int column = this.array.SelectedColumn;
 
 			if (sel >= this.labelsIndex.Count)
@@ -956,7 +922,7 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Met à jour les commandes en fonction de la ressource sélectionnée.
 			base.UpdateCommands();
 
-			int sel = this.SelectedRow;
+			int sel = this.array.SelectedRow;
 			int count = this.labelsIndex.Count;
 			bool build = (this.module.Mode == DesignerMode.Build);
 
@@ -979,9 +945,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.GetCommandState("NewCulture").Enable = newCulture;
 			this.GetCommandState("DeleteCulture").Enable = true;
 
-			this.GetCommandState("Filter").Enable = true;
 			this.GetCommandState("Search").Enable = true;
-
 			this.GetCommandState("SearchPrev").Enable = search;
 			this.GetCommandState("SearchNext").Enable = search;
 
@@ -989,13 +953,6 @@ namespace Epsitec.Common.Designer.Viewers
 			this.GetCommandState("ModificationNext").Enable = true;
 			this.GetCommandState("ModificationAll").Enable = (sel != -1 && all);
 			this.GetCommandState("ModificationClear").Enable = (sel != -1 && modified);
-
-			this.GetCommandState("Delete").Enable = (sel != -1 && build);
-			this.GetCommandState("Create").Enable = (sel != -1 && build);
-			this.GetCommandState("Duplicate").Enable = (sel != -1 && build);
-
-			this.GetCommandState("Up").Enable = (sel != -1 && sel > 0 && build);
-			this.GetCommandState("Down").Enable = (sel != -1 && sel < count-1 && build);
 
 			this.GetCommandState("FontBold").Enable = (sel != -1);
 			this.GetCommandState("FontItalic").Enable = (sel != -1);
@@ -1148,7 +1105,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			AbstractTextField edit = sender as AbstractTextField;
 			string text = edit.Text;
-			int sel = this.SelectedRow;
+			int sel = this.array.SelectedRow;
 			string label = this.labelsIndex[sel];
 
 			if (edit == this.labelEdit)

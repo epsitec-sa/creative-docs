@@ -54,7 +54,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		public virtual void DoCount(string search, Searcher.SearchingMode mode)
 		{
-			//	Effectue un décompte.
+			//	Effectue un comptage.
 		}
 
 		public virtual void DoReplace(string search, string replace, Searcher.SearchingMode mode)
@@ -70,11 +70,35 @@ namespace Epsitec.Common.Designer.Viewers
 		public virtual void DoFilter(string filter, Searcher.SearchingMode mode)
 		{
 			//	Change le filtre des ressources visibles.
+			string label = "";
+			int sel = this.array.SelectedRow;
+			if (sel != -1 && sel < this.labelsIndex.Count)
+			{
+				label = this.labelsIndex[sel];
+			}
+
+			this.UpdateLabelsIndex(filter, mode);
+			this.UpdateArray();
+
+			sel = this.labelsIndex.IndexOf(label);
+			this.array.SelectedRow = sel;
+			this.array.ShowSelectedRow();
+			this.UpdateCommands();
 		}
 
 		public virtual void DoAccess(string name)
 		{
 			//	Change la ressource visible.
+			int sel = this.array.SelectedRow;
+
+			if ( name == "AccessFirst" )  sel = 0;
+			if ( name == "AccessPrev"  )  sel --;
+			if ( name == "AccessNext"  )  sel ++;
+			if ( name == "AccessLast"  )  sel = 1000000;
+
+			this.array.SelectedRow = sel;
+			this.array.ShowSelectedRow();
+			this.UpdateCommands();
 		}
 
 		public virtual void DoModification(string name)
@@ -118,19 +142,6 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
-		protected int SelectedRow
-		{
-			get
-			{
-				return this.array.SelectedRow;
-			}
-
-			set
-			{
-				this.array.SelectedRow = value;
-			}
-		}
-
 		public string InfoAccessText
 		{
 			//	Donne le texte d'information sur l'accès en cours.
@@ -138,7 +149,7 @@ namespace Epsitec.Common.Designer.Viewers
 			{
 				System.Text.StringBuilder builder = new System.Text.StringBuilder();
 
-				int sel = this.SelectedRow;
+				int sel = this.array.SelectedRow;
 				if (sel == -1)
 				{
 					builder.Append("-");
@@ -165,20 +176,37 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
+		protected virtual void UpdateLabelsIndex(string filter, Searcher.SearchingMode mode)
+		{
+		}
+
+		protected virtual void UpdateArray()
+		{
+		}
+
 		public virtual void UpdateCommands()
 		{
 			//	Met à jour les commandes en fonction de la ressource sélectionnée.
-			int sel = this.SelectedRow;
+			int sel = this.array.SelectedRow;
 			int count = this.labelsIndex.Count;
 			bool build = (this.module.Mode == DesignerMode.Build);
 
 			this.GetCommandState("Save").Enable = this.module.Modifier.IsDirty;
 			this.GetCommandState("SaveAs").Enable = true;
 
+			this.GetCommandState("Filter").Enable = true;
+
 			this.GetCommandState("AccessFirst").Enable = (sel != -1 && sel > 0);
 			this.GetCommandState("AccessPrev").Enable = (sel != -1 && sel > 0);
 			this.GetCommandState("AccessLast").Enable = (sel != -1 && sel < count-1);
 			this.GetCommandState("AccessNext").Enable = (sel != -1 && sel < count-1);
+
+			this.GetCommandState("Delete").Enable = (sel != -1 && build);
+			this.GetCommandState("Create").Enable = (sel != -1 && build);
+			this.GetCommandState("Duplicate").Enable = (sel != -1 && build);
+
+			this.GetCommandState("Up").Enable = (sel != -1 && sel > 0 && build);
+			this.GetCommandState("Down").Enable = (sel != -1 && sel < count-1 && build);
 		}
 
 		protected CommandState GetCommandState(string command)
@@ -202,7 +230,7 @@ namespace Epsitec.Common.Designer.Viewers
 		protected Module					module;
 		protected List<string>				labelsIndex;
 		protected bool						ignoreChange = false;
-		protected AbstractTextField			currentTextField;
 		protected MyWidgets.StringArray		array;
+		protected AbstractTextField			currentTextField;
 	}
 }
