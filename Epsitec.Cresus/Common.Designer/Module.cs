@@ -187,7 +187,7 @@ namespace Epsitec.Common.Designer
 		{
 			//	Retourne le bundle d'un panneau.
 			label = Module.AddPanelPrefix(label);
-			return this.resourceManager.GetBundle(label);
+			return this.resourceManager.GetBundle(label, ResourceLevel.Default);
 		}
 
 		public static string RemovePanelPrefix(string name)
@@ -215,7 +215,13 @@ namespace Epsitec.Common.Designer
 		public void WriteBundle(ResourceBundle bundle)
 		{
 			//	Sérialise un bundle.
-			this.resourceManager.SetBundle(bundle, ResourceSetMode.CreateOnly);
+			this.resourceManager.SetBundle (bundle, ResourceSetMode.CreateOnly);
+		}
+
+		public void UpdateBundle(ResourceBundle bundle)
+		{
+			//	Sérialise un bundle en écrasant l'ancien.
+			this.resourceManager.SetBundle (bundle, ResourceSetMode.UpdateOnly);
 		}
 
 		protected System.Globalization.CultureInfo BaseCulture
