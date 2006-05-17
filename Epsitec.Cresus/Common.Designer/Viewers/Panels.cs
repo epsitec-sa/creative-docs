@@ -16,7 +16,7 @@ namespace Epsitec.Common.Designer.Viewers
 			int tabIndex = 0;
 
 			Widget left = new Widget(this);
-			left.MinWidth = 200;
+			left.MinWidth = 80;
 			left.PreferredWidth = 200;
 			left.Dock = DockStyle.Left;
 
@@ -40,6 +40,10 @@ namespace Epsitec.Common.Designer.Viewers
 			this.array.SelectedRowChanged += new EventHandler(this.HandleArraySelectedRowChanged);
 			this.array.TabIndex = tabIndex++;
 			this.array.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+
+			VSplitter splitter = new VSplitter(this);
+			splitter.PreferredWidth = 4;
+			splitter.Dock = DockStyle.Left;
 
 			StaticText s = new StaticText(this);
 			s.Text = "<b>TODO:</b> <i>Editeur d'interfaces...</i>";
