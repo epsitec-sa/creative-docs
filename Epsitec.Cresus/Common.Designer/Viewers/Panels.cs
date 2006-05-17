@@ -62,15 +62,15 @@ namespace Epsitec.Common.Designer.Viewers
 			this.tabBook = new TabBook(this);
 			this.tabBook.PreferredWidth = 150;
 			this.tabBook.Arrows = TabBookArrows.Stretch;
-			this.tabBook.Margins = new Margins(0, 1, 3, 1);
+			this.tabBook.Margins = new Margins(0, 1, 1, 1);
 			this.tabBook.Dock = DockStyle.Right;
 
 			this.tabPageProperties = new TabPage();
-			this.tabPageProperties.TabTitle = "Propriétés";
+			this.tabPageProperties.TabTitle = Res.Strings.Viewers.Panels.TabProperties;
 			this.tabBook.Items.Add(this.tabPageProperties);
 
 			this.tabPageStyles = new TabPage();
-			this.tabPageStyles.TabTitle = "Styles";
+			this.tabPageStyles.TabTitle = Res.Strings.Viewers.Panels.TabStyles;
 			this.tabBook.Items.Add(this.tabPageStyles);
 
 			this.tabBook.ActivePage = this.tabPageProperties;
