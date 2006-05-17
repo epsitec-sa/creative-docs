@@ -51,6 +51,11 @@ namespace Epsitec.Common.Designer
 
 			this.module.PanelsWrite();
 
+			foreach (Viewers.Abstract viewer in this.attachViewers)
+			{
+				viewer.Update();
+			}
+
 			this.IsDirty = false;
 		}
 
