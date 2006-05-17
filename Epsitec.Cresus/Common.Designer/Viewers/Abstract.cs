@@ -184,6 +184,11 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 		}
 
+		public virtual void Update()
+		{
+			//	Met à jour le contenu du Viewer.
+		}
+
 		public virtual void UpdateCommands()
 		{
 			//	Met à jour les commandes en fonction de la ressource sélectionnée.

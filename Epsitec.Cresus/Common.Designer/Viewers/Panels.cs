@@ -296,7 +296,15 @@ namespace Epsitec.Common.Designer.Viewers
 			this.UpdateCommands();
 		}
 
-		
+
+		public override void Update()
+		{
+			//	Met à jour le contenu du Viewer.
+			this.UpdateArray();
+			this.UpdateEdit();
+			this.UpdateCommands();
+		}
+
 		public override void UpdateCommands()
 		{
 			//	Met à jour les commandes en fonction de la ressource sélectionnée.
