@@ -48,6 +48,9 @@ namespace Epsitec.Common.Designer
 			{
 				this.module.ResourceManager.SetBundle(bundle, ResourceSetMode.UpdateOnly);
 			}
+
+			this.module.PanelsWrite();
+
 			this.IsDirty = false;
 		}
 

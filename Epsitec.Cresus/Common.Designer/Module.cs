@@ -183,6 +183,8 @@ namespace Epsitec.Common.Designer
 		public void PanelsWrite()
 		{
 			//	Enregistre toutes les modifications effectuées dans les ressources de type 'Panel'.
+			if (this.panelsList == null)  return;
+
 			for (int i=0; i<this.panelsList.Count; i++)
 			{
 				LoadedBundle loaded = this.panelsList[i];
