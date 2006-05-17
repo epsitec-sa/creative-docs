@@ -345,6 +345,15 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
+		protected override int InfoAccessTotalCount
+		{
+			get
+			{
+				return this.module.PanelsCount;
+			}
+		}
+
+		
 		protected Widget ToolBarAdd(CommandState cs)
 		{
 			//	Ajoute une icône.
