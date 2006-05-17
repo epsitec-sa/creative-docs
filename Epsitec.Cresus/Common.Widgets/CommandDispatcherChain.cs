@@ -77,8 +77,11 @@ namespace Epsitec.Common.Widgets
 					{
 						that = new CommandDispatcherChain ();
 					}
-					
-					that.chain.Add (new System.WeakReference (dispatcher));
+
+					if (CommandDispatcherChain.Contains (that.chain, dispatcher) == false)
+					{
+						that.chain.Add (new System.WeakReference (dispatcher));
+					}
 				}
 
 				item = item.Parent;
@@ -94,8 +97,11 @@ namespace Epsitec.Common.Widgets
 					{
 						that = new CommandDispatcherChain ();
 					}
-					
-					that.chain.Add (new System.WeakReference (dispatcher));
+
+					if (CommandDispatcherChain.Contains (that.chain, dispatcher) == false)
+					{
+						that.chain.Add (new System.WeakReference (dispatcher));
+					}
 				}
 
 				window = window.Owner;
@@ -126,6 +132,19 @@ namespace Epsitec.Common.Widgets
 			}
 			
 			return that;
+		}
+
+		private static bool Contains(IEnumerable<System.WeakReference> chain, CommandDispatcher dispatcher)
+		{
+			foreach (System.WeakReference item in chain)
+			{
+				if (item.Target == dispatcher)
+				{
+					return true;
+				}
+			}
+
+			return false;
 		}
 
 		List<System.WeakReference> chain = new List<System.WeakReference> ();

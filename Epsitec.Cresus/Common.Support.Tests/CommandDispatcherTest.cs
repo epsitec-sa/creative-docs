@@ -261,6 +261,7 @@ namespace Epsitec.Common.Support
 				CommandDispatcherTest.buffer.Append ("bd/");
 			}
 			
+#if false //#fix
 			[Command ("cancel-multiple")] public void CancelMultiple(CommandDispatcher dispatcher, CommandEventArgs e)
 			{
 				if (dispatcher.HasPendingMultipleCommands)
@@ -273,6 +274,7 @@ namespace Epsitec.Common.Support
 					CommandDispatcherTest.buffer.Append ("cm/");
 				}
 			}
+#endif
 			
 			public virtual void PublicE()
 			{
