@@ -44,6 +44,15 @@ namespace Epsitec.Common.Designer.Viewers
 			VSplitter splitter = new VSplitter(this);
 			splitter.Dock = DockStyle.Left;
 
+			this.toolBar = new VToolBar(this);
+			this.toolBar.Margins = new Margins(0, 0, 0, 0);
+			this.toolBar.Dock = DockStyle.Left;
+			this.ToolBarAdd(CommandState.Get("ToolSelect"));
+			this.ToolBarAdd(CommandState.Get("ToolGlobal"));
+			this.ToolBarAdd(CommandState.Get("ToolEdit"));
+			this.ToolBarAdd(CommandState.Get("ToolZoom"));
+			this.ToolBarAdd(CommandState.Get("ToolHand"));
+
 			StaticText s = new StaticText(this);
 			s.Text = "<b>TODO:</b> <i>Editeur d'interfaces...</i>";
 			s.Margins = new Margins(20, 0, 0, 0);
@@ -333,6 +342,26 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
+		protected Widget ToolBarAdd(CommandState cs)
+		{
+			//	Ajoute une icône.
+			if (cs == null)
+			{
+				IconSeparator sep = new IconSeparator();
+				sep.IsHorizontal = false;
+				this.toolBar.Items.Add(sep);
+				return sep;
+			}
+			else
+			{
+				IconButton button = new IconButton(cs.Name, Misc.Icon(cs.IconName), cs.Name);
+				this.toolBar.Items.Add(button);
+				ToolTip.Default.SetToolTip(button, Misc.GetTextWithShortcut(cs));
+				return button;
+			}
+		}
+
+
 		protected bool IsExistingName(string baseName)
 		{
 			//	Indique si un nom existe.
@@ -407,5 +436,6 @@ namespace Epsitec.Common.Designer.Viewers
 
 
 		protected TextFieldEx				labelEdit;
+		protected VToolBar					toolBar;
 	}
 }

@@ -495,6 +495,11 @@ namespace Epsitec.Common.Designer
 			this.modificationNextState = this.CreateCommandState("ModificationNext", KeyCode.FuncF8);
 			this.newCultureState = this.CreateCommandState("NewCulture");
 			this.deleteCultureState = this.CreateCommandState("DeleteCulture");
+			this.toolSelectState = this.CreateCommandState("ToolSelect");
+			this.toolGlobalState = this.CreateCommandState("ToolGlobal");
+			this.toolEditState = this.CreateCommandState("ToolEdit");
+			this.toolZoomState = this.CreateCommandState("ToolZoom");
+			this.toolHandState = this.CreateCommandState("ToolHand");
 		}
 
 		protected CommandState CreateCommandState(string command, params Widgets.Shortcut[] shortcuts)
@@ -860,5 +865,10 @@ namespace Epsitec.Common.Designer
 		protected CommandState					modificationNextState;
 		protected CommandState					newCultureState;
 		protected CommandState					deleteCultureState;
+		protected CommandState					toolSelectState;
+		protected CommandState					toolGlobalState;
+		protected CommandState					toolEditState;
+		protected CommandState					toolZoomState;
+		protected CommandState					toolHandState;
 	}
 }
