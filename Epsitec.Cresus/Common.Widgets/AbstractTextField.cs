@@ -1416,7 +1416,7 @@ namespace Epsitec.Common.Widgets
 			rClip = this.MapClientToRoot(rClip);
 			graphics.SetClippingRectangle(rClip);
 			
-			if ( this.KeyboardFocus || this.contextMenu != null )
+			if ( (this.KeyboardFocus && this.IsEnabled) || this.contextMenu != null )
 			{
 				bool visibleCursor = false;
 				
@@ -1485,7 +1485,7 @@ namespace Epsitec.Common.Widgets
 				
 				if ( !this.navigator.IsReadOnly && visibleCursor && this.KeyboardFocus )
 				{
-					//	Dessine le curseur :
+					//	Dessine le curseur, sauf si le menu contextuel est affiché :
 					Drawing.Point p1, p2;
 					if ( textLayout.FindTextCursor(this.navigator.Context, out p1, out p2) )
 					{
@@ -1497,6 +1497,8 @@ namespace Epsitec.Common.Widgets
 			}
 			else
 			{
+				//	On n'a pas le focus...
+				
 				adorner.PaintGeneralTextLayout(graphics, clipRect, pos, textLayout, state&~WidgetPaintState.Focused, PaintTextStyle.TextField, this.textDisplayMode, this.BackColor);
 			}
 
