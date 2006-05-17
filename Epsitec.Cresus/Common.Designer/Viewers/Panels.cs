@@ -17,6 +17,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			Widget left = new Widget(this);
 			left.MinWidth = 80;
+			left.MaxWidth = 400;
 			left.PreferredWidth = 200;
 			left.Dock = DockStyle.Left;
 
@@ -53,10 +54,26 @@ namespace Epsitec.Common.Designer.Viewers
 			this.ToolBarAdd(CommandState.Get("ToolZoom"));
 			this.ToolBarAdd(CommandState.Get("ToolHand"));
 
-			StaticText s = new StaticText(this);
-			s.Text = "<b>TODO:</b> <i>Editeur d'interfaces...</i>";
-			s.Margins = new Margins(20, 0, 0, 0);
-			s.Dock = DockStyle.Fill;
+			this.container = new MyWidgets.Frame(this);
+			this.container.MinWidth = 100;
+			this.container.Margins = new Margins(1, 1, 1, 1);
+			this.container.Dock = DockStyle.Fill;
+
+			this.tabBook = new TabBook(this);
+			this.tabBook.PreferredWidth = 150;
+			this.tabBook.Arrows = TabBookArrows.Stretch;
+			this.tabBook.Margins = new Margins(0, 1, 3, 1);
+			this.tabBook.Dock = DockStyle.Right;
+
+			this.tabPageProperties = new TabPage();
+			this.tabPageProperties.TabTitle = "Propriétés";
+			this.tabBook.Items.Add(this.tabPageProperties);
+
+			this.tabPageStyles = new TabPage();
+			this.tabPageStyles.TabTitle = "Styles";
+			this.tabBook.Items.Add(this.tabPageStyles);
+
+			this.tabBook.ActivePage = this.tabPageProperties;
 
 			this.module.PanelsRead();
 
@@ -449,5 +466,9 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected TextFieldEx				labelEdit;
 		protected VToolBar					toolBar;
+		protected MyWidgets.Frame			container;
+		protected TabBook					tabBook;
+		protected TabPage					tabPageProperties;
+		protected TabPage					tabPageStyles;
 	}
 }
