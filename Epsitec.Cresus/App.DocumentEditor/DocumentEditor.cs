@@ -28,9 +28,8 @@ namespace Epsitec.App.DocumentEditor
 			//	On crée son propre dispatcher, pour éviter de marcher sur les autres commandes.
 			
 			System.Diagnostics.Debug.WriteLine("*** Created Primary Command Dispatcher ***");
-			this.commandDispatcher = new CommandDispatcher("DocumentEditor", CommandDispatcherLevel.Primary);
+			this.commandDispatcher = new CommandDispatcher("Common.DocumentEditor", CommandDispatcherLevel.Primary);
 			this.commandDispatcher.RegisterController(this);
-			this.commandDispatcher.Focus();
 			
 			CommandDispatcher.SetDispatcher (this, this.commandDispatcher);
 			

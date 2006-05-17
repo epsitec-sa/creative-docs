@@ -1546,16 +1546,22 @@ namespace Epsitec.Common.Widgets
 		{
 			public QueueItem(Widget source, string command)
 			{
-				this.source      = source;
-				this.command     = command;
-				this.dispatchers = Helpers.VisualTree.GetAllDispatchers (source);
+				this.source  = source;
+				this.command = command;
+				this.chain   = CommandDispatcherChain.BuildChain (source);
+				
+				System.Diagnostics.Debug.Assert (this.chain != null);
+				System.Diagnostics.Debug.Assert (this.chain.IsEmpty == false);
 			}
 
 			public QueueItem(DependencyObject source, string command)
 			{
-				this.source      = source;
-				this.command     = command;
-				this.dispatchers = new CommandDispatcher[1] { CommandDispatcher.GetDispatcher (source) };
+				this.source  = source;
+				this.command = command;
+				this.chain   = CommandDispatcherChain.BuildChain (source);
+				
+				System.Diagnostics.Debug.Assert (this.chain != null);
+				System.Diagnostics.Debug.Assert (this.chain.IsEmpty == false);
 			}
 			
 			
@@ -1575,18 +1581,18 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 			
-			public CommandDispatcher[]			CommandDispatchers
+			public CommandDispatcherChain		Chain
 			{
 				get
 				{
-					return this.dispatchers;
+					return this.chain;
 				}
 			}
 			
 			
 			protected object					source;
 			protected string					command;
-			protected CommandDispatcher[]		dispatchers;
+			protected CommandDispatcherChain	chain;
 		}
 		#endregion
 		
@@ -1734,12 +1740,10 @@ namespace Epsitec.Common.Widgets
 				QueueItem item    = this.cmd_queue.Dequeue () as QueueItem;
 				object    source  = item.Source;
 				string    command = item.Command;
+
+				System.Diagnostics.Debug.Assert (item.Chain.IsEmpty == false);
 				
-				CommandDispatcher[] dispatchers = item.CommandDispatchers;
-				
-//-				System.Diagnostics.Debug.Assert (dispatchers.Length > 0);
-				
-				CommandDispatcher.Dispatch (dispatchers, command, source);
+				CommandDispatcher.Dispatch (item.Chain.Dispatchers, command, source);
 			}
 			
 			if (this.is_dispose_queued)

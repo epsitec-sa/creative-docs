@@ -6,6 +6,7 @@ using System.Collections.Generic;
 namespace Epsitec.Common.Types
 {
 	using PropertyChangedEventHandler = Epsitec.Common.Support.EventHandler<DependencyPropertyChangedEventArgs>;
+	using BindingChangedEventHandler = Epsitec.Common.Support.EventHandler<BindingChangedEventArgs>;
 
 	/// <summary>
 	/// La classe DependencyObject représente un objet dont les propriétés sont
@@ -381,6 +382,8 @@ namespace Epsitec.Common.Types
 			}
 			
 			this.bindings[property] = BindingExpression.BindToTarget (this, property, binding);
+
+			this.OnBindingChanged (property);
 		}
 		public void ClearAllBindings()
 		{
@@ -399,13 +402,16 @@ namespace Epsitec.Common.Types
 		public void ClearBinding(DependencyProperty property)
 		{
 			BindingExpression bindingExpression;
+			
 			if ((this.bindings != null) &&
 				(this.bindings.TryGetValue (property, out bindingExpression)))
 			{
 				bindingExpression.Dispose ();
 				this.bindings.Remove (property);
+				this.OnBindingChanged (property);
 			}
 		}
+
 		public bool IsDataBound(DependencyProperty property)
 		{
 			if ((this.bindings != null) &&
@@ -508,6 +514,16 @@ namespace Epsitec.Common.Types
 				//	that as the locally cached value.
 
 				this.inheritedPropertyCache.SetValue (this, property, parent.GetValue (property));
+			}
+		}
+
+		private void OnBindingChanged(DependencyProperty property)
+		{
+			BindingChangedEventHandler handler = (BindingChangedEventHandler) this.GetUserEventHandler (DependencyObject.BindingChangedString);
+
+			if (handler != null)
+			{
+				handler (this, new BindingChangedEventArgs (property));
 			}
 		}
 		
@@ -702,6 +718,20 @@ namespace Epsitec.Common.Types
 		{
 		}
 		#endregion
+		
+		public event BindingChangedEventHandler				BindingChanged
+		{
+			add
+			{
+				this.AddUserEventHandler (DependencyObject.BindingChangedString, value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler (DependencyObject.BindingChangedString, value);
+			}
+		}
+
+		private const string								BindingChangedString = "BindingChanged";
 
 		Dictionary<DependencyProperty, object>				properties = new Dictionary<DependencyProperty, object> ();
 		BindingExpressionDictionary							bindings;

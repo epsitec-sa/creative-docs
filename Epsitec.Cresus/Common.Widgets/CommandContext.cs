@@ -39,6 +39,11 @@ namespace Epsitec.Common.Widgets
 		/// <param name="value">Enable if set to <c>true</c>, disable otherwise.</param>
 		public void SetLocalEnable(CommandState command, bool value)
 		{
+			if (command == null)
+			{
+				return;
+			}
+			
 			bool oldValue;
 			bool newValue = value;
 
@@ -67,6 +72,16 @@ namespace Epsitec.Common.Widgets
 					this.NotifyCommandEnableChanged (command);
 				}
 			}
+		}
+
+		/// <summary>
+		/// Sets the local enable state of the command.
+		/// </summary>
+		/// <param name="commandName">The command name.</param>
+		/// <param name="value">Enable if set to <c>true</c>, disable otherwise.</param>
+		public void SetLocalEnable(string commandName, bool value)
+		{
+			this.SetLocalEnable (CommandState.Find (commandName), value);
 		}
 
 		/// <summary>
@@ -275,16 +290,31 @@ namespace Epsitec.Common.Widgets
 
 		#endregion
 
+
+		/// <summary>
+		/// Gets the <c>CommandContext</c> from the <c>DependencyObject</c>.
+		/// </summary>
+		/// <param name="obj">The dependency object.</param>
+		/// <returns></returns>
 		public static CommandContext GetContext(DependencyObject obj)
 		{
 			return (CommandContext) obj.GetValue (CommandContext.ContextProperty);
 		}
-		
+
+		/// <summary>
+		/// Sets the <c>CommandContext</c> for the <c>DependencyObject</c>.
+		/// </summary>
+		/// <param name="obj">The dependency object.</param>
+		/// <param name="context">The context.</param>
 		public static void SetContext(DependencyObject obj, CommandContext context)
 		{
 			obj.SetValue (CommandContext.ContextProperty, context);
 		}
 
+		/// <summary>
+		/// Clears the <c>CommandContext</c> for the <c>DependencyObject</c>.
+		/// </summary>
+		/// <param name="obj">The dependency object.</param>
 		public static void ClearContext(DependencyObject obj)
 		{
 			obj.ClearValueBase (CommandContext.ContextProperty);
