@@ -52,11 +52,11 @@ namespace Epsitec.Common.Designer
 				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowCloseClicked);
 
 				this.commandDispatcher = new CommandDispatcher("Common.Designer", CommandDispatcherLevel.Primary);
-				this.commandContext = new CommandContext ();
+				this.commandContext = new CommandContext();
 				this.commandDispatcher.RegisterController(this);
 				
-				CommandDispatcher.SetDispatcher (this.window, this.commandDispatcher);
-				CommandContext.SetContext (this.window, this.commandContext);
+				CommandDispatcher.SetDispatcher(this.window, this.commandDispatcher);
+				CommandContext.SetContext(this.window, this.commandContext);
 
 				this.dlgGlyphs     = new Dialogs.Glyphs(this);
 				this.dlgFilter     = new Dialogs.Filter(this);
