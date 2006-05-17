@@ -201,7 +201,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.GetCommandState("AccessLast").Enable = (sel != -1 && sel < count-1);
 			this.GetCommandState("AccessNext").Enable = (sel != -1 && sel < count-1);
 
-			this.GetCommandState("Delete").Enable = (sel != -1 && build);
+			this.GetCommandState("Delete").Enable = (sel != -1 && count > 0 && build);
 			this.GetCommandState("Create").Enable = (sel != -1 && build);
 			this.GetCommandState("Duplicate").Enable = (sel != -1 && build);
 
