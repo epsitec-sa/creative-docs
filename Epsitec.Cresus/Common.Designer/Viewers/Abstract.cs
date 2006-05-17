@@ -202,8 +202,20 @@ namespace Epsitec.Common.Designer.Viewers
 			int count = this.labelsIndex.Count;
 			bool build = (this.module.Mode == DesignerMode.Build);
 
-			this.GetCommandState("Save").Enable = this.module.Modifier.IsDirty;
-			this.GetCommandState("SaveAs").Enable = true;
+			////////////////////////////////////////////////////////////////////
+			//	TODO:
+			//	
+			//	Dans tout le code de "designer", remplacer les :
+			//
+			//			GetCommandState("xxx").Enable = ...
+			//
+			//	par des :
+			//	
+			//			CommandContext.SetLocalEnable("xxx", ...);
+			////////////////////////////////////////////////////////////////////
+
+			this.CommandContext.SetLocalEnable ("Save", this.module.Modifier.IsDirty);
+			this.CommandContext.SetLocalEnable ("SaveAs", true);
 
 			this.GetCommandState("Filter").Enable = true;
 
@@ -218,6 +230,14 @@ namespace Epsitec.Common.Designer.Viewers
 
 			this.GetCommandState("Up").Enable = (sel != -1 && sel > 0 && build);
 			this.GetCommandState("Down").Enable = (sel != -1 && sel < count-1 && build);
+		}
+
+		protected CommandContext CommandContext
+		{
+			get
+			{
+				return this.module.MainWindow.CommandContext;
+			}
 		}
 
 		protected CommandState GetCommandState(string command)
