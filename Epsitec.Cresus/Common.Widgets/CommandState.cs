@@ -127,7 +127,10 @@ namespace Epsitec.Common.Widgets
 			}
 			set
 			{
-				this.statefull = value;
+				if (this.statefull != value)
+				{
+					this.statefull = value;
+				}
 			}
 		}
 		
