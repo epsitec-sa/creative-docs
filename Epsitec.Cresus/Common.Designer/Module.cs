@@ -237,6 +237,12 @@ namespace Epsitec.Common.Designer
 			return this.panelsList[index].Name;
 		}
 
+		public bool PanelNewest(int index)
+		{
+			//	Indique si une ressource de type 'Panel' est renommable.
+			return this.panelsList[index].Newest;
+		}
+
 		public ResourceBundle PanelBundle(int index)
 		{
 			//	Donne une ressource de type 'Panel'.

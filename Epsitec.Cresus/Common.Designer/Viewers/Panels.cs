@@ -219,8 +219,16 @@ namespace Epsitec.Common.Designer.Viewers
 			{
 				if (first+i < this.labelsIndex.Count)
 				{
-					string text = this.labelsIndex[first+i];
-					this.array.SetLineString(0, first+i, text);
+					string label = this.labelsIndex[first+i];
+					int index = this.module.PanelIndex(label);
+					bool newest = this.module.PanelNewest(index);
+
+					if (newest)
+					{
+						label = Misc.Italic(label);
+					}
+					
+					this.array.SetLineString(0, first+i, label);
 					this.array.SetLineState(0, first+i, MyWidgets.StringList.CellState.Normal);
 				}
 				else
@@ -251,12 +259,22 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 			else
 			{
-				this.labelEdit.Enable = true;
-
 				string label = this.labelsIndex[sel];
+				int index = this.module.PanelIndex(label);
+				bool newest = this.module.PanelNewest(index);
+
+				this.labelEdit.Enable = newest;
 				this.labelEdit.Text = label;
-				this.labelEdit.Focus();
-				this.labelEdit.SelectAll();
+
+				if (newest)
+				{
+					this.labelEdit.Focus();
+					this.labelEdit.SelectAll();
+				}
+				else
+				{
+					this.labelEdit.Cursor = 100000;
+				}
 			}
 
 			this.ignoreChange = iic;
