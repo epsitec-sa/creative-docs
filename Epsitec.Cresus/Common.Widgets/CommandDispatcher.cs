@@ -32,25 +32,27 @@ namespace Epsitec.Common.Widgets
 			//	parenthèses.
 			
 			string regex_1 = @"\A(?<name>([a-zA-Z](\w|(\.\w))*))" +
-				//	<---- nom valide ---->
+				//	                      <---- nom valide --->
 				/**/       @"\s*\(\s*((((?<arg>(" +
 				/**/                          @"(\""[^\""]{0,}\"")|" +
-				//	<-- guillemets -->
+				//	                            <-- guillemets -->
 				/**/                          @"(\'[^\']{0,}\')|" +
-				//	<-- apostr. -->
+				//	                            <-- apostr. -->
 				/**/                          @"((\-|\+)?((\d{1,12}(\.\d{0,12})?0*)|(\d{0,12}\.(\d{0,12})?0*)))|" +
-				//	<----------- valeur décimale avec signe en option ------------>
+				//	                            <----------- valeur décimale avec signe en option ------------>
 				/**/                          @"([a-zA-Z](\w|(\.\w))*)))" +
-				//	<---- nom valide ---->
+				//	                            <---- nom valide ---->
 				/**/                         @"((\s*\,\s*)|(\s*\)\s*\z)))*)|(\)\s*))\z";
 			
 			RegexOptions options = RegexOptions.Compiled | RegexOptions.ExplicitCapture;
 			
-			CommandDispatcher.command_arg_regex  = new Regex (regex_1, options);
-			CommandDispatcher default_dispatcher = new CommandDispatcher ("default", CommandDispatcherLevel.Root);
+			CommandDispatcher.commandArgRegex = new Regex (regex_1, options);
+			CommandDispatcher.commandAttributeType = typeof (Support.CommandAttribute);
 			
-			System.Diagnostics.Debug.Assert (default_dispatcher == CommandDispatcher.default_dispatcher);
-			System.Diagnostics.Debug.Assert (default_dispatcher.id == 0);
+			CommandDispatcher defaultDispatcher = new CommandDispatcher ("default", CommandDispatcherLevel.Root);
+			
+			System.Diagnostics.Debug.Assert (defaultDispatcher == CommandDispatcher.defaultDispatcher);
+			System.Diagnostics.Debug.Assert (defaultDispatcher.id == 0);
 		}
 		
 		
@@ -69,9 +71,9 @@ namespace Epsitec.Common.Widgets
 				switch (level)
 				{
 					case CommandDispatcherLevel.Root:
-						if (CommandDispatcher.default_dispatcher == null)
+						if (CommandDispatcher.defaultDispatcher == null)
 						{
-							CommandDispatcher.default_dispatcher = this;
+							CommandDispatcher.defaultDispatcher = this;
 						}
 						else
 						{
@@ -193,28 +195,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public void Focus()
-		{
-			if (this.Level == CommandDispatcherLevel.Primary)
-			{
-				CommandDispatcher old_focused = null;
-				CommandDispatcher new_focused = this;
-				
-				lock (CommandDispatcher.global_exclusion)
-				{
-					old_focused = CommandDispatcher.focused_primary_dispatcher;
-					CommandDispatcher.focused_primary_dispatcher = new_focused;
-				}
-				
-				if (old_focused != new_focused)
-				{
-					CommandDispatcher.OnFocusedPrimaryDispatcherChanged (old_focused, new_focused);
-				}
-			}
-		}
-		
-		
-		public static void Dispatch(System.Collections.ICollection dispatchers, string command, object source)
+		public static void Dispatch(System.Collections.IEnumerable dispatchers, string command, object source)
 		{
 			foreach (CommandDispatcher dispatcher in dispatchers)
 			{
@@ -303,7 +284,7 @@ namespace Epsitec.Common.Widgets
 				
 				for (int i = 0; i < members.Length; i++)
 				{
-					if ((members[i].IsDefined (CommandDispatcher.command_attr_type, true)) &&
+					if ((members[i].IsDefined (CommandDispatcher.commandAttributeType, true)) &&
 						(members[i].MemberType == System.Reflection.MemberTypes.Method))
 					{
 						System.Reflection.MethodInfo info = members[i] as System.Reflection.MethodInfo;
@@ -364,15 +345,6 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public static CommandDispatcher GetFocusedPrimaryDispatcher()
-		{
-			lock (CommandDispatcher.global_exclusion)
-			{
-				return CommandDispatcher.focused_primary_dispatcher;
-			}
-		}
-		
-		
 		public static bool IsSimpleCommand(string command)
 		{
 			if (command == null)
@@ -426,7 +398,7 @@ namespace Epsitec.Common.Widgets
 				return new string[0];
 			}
 			
-			Match match = CommandDispatcher.command_arg_regex.Match (command);
+			Match match = CommandDispatcher.commandArgRegex.Match (command);
 			
 			if ((match.Success) &&
 				(match.Groups.Count == 3))
@@ -643,7 +615,7 @@ namespace Epsitec.Common.Widgets
 			//	Ne parcourt que les attributs au niveau d'implémentation actuel (pas les classes dérivées,
 			//	ni les classes parent). Le parcours des parent est assuré par l'appelant.
 			
-			object[] attributes = info.GetCustomAttributes (CommandDispatcher.command_attr_type, false);
+			object[] attributes = info.GetCustomAttributes (CommandDispatcher.commandAttributeType, false);
 			
 			foreach (Support.CommandAttribute attribute in attributes)
 			{
@@ -815,7 +787,7 @@ namespace Epsitec.Common.Widgets
 		
 		public static CommandDispatcher			Default
 		{
-			get { return CommandDispatcher.default_dispatcher; }
+			get { return CommandDispatcher.defaultDispatcher; }
 		}
 		
 		
@@ -835,11 +807,10 @@ namespace Epsitec.Common.Widgets
 		static System.Collections.ArrayList		global_list = new System.Collections.ArrayList ();
 		static System.Collections.ArrayList		local_list  = new System.Collections.ArrayList ();
 		
-		static Regex							command_arg_regex;
-		static System.Type						command_attr_type = typeof (Support.CommandAttribute);
+		static Regex							commandArgRegex;
+		static System.Type						commandAttributeType;
 		
-		static CommandDispatcher				default_dispatcher;
-		static CommandDispatcher				focused_primary_dispatcher;
+		static CommandDispatcher				defaultDispatcher;
 		static long								unique_id;
 	}
 }

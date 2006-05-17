@@ -14,6 +14,22 @@ namespace Epsitec.Common.Widgets
 		{
 		}
 
+		public bool IsEmpty
+		{
+			get
+			{
+				for (int i = 0; i < this.chain.Count; i++)
+				{
+					if (this.chain[i].IsAlive)
+					{
+						return false;
+					}
+				}
+				
+				return true;
+			}
+		}
+
 		public IEnumerable<CommandDispatcher> Dispatchers
 		{
 			get
@@ -86,6 +102,28 @@ namespace Epsitec.Common.Widgets
 			}
 			
 			//	TODO: ajouter ici la notion d'application/module/document
+			
+			return that;
+		}
+		
+		public static CommandDispatcherChain BuildChain(DependencyObject obj)
+		{
+			CommandDispatcherChain that = null;
+
+			if (obj != null)
+			{
+				CommandDispatcher dispatcher = CommandDispatcher.GetDispatcher (obj);
+
+				if (dispatcher != null)
+				{
+					if (that != null)
+					{
+						that = new CommandDispatcherChain ();
+					}
+					
+					that.chain.Add (new System.WeakReference (dispatcher));
+				}
+			}
 			
 			return that;
 		}

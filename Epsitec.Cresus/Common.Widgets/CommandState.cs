@@ -223,6 +223,11 @@ namespace Epsitec.Common.Widgets
 		
 		public static CommandState Find(string commandName)
 		{
+			if (string.IsNullOrEmpty (commandName))
+			{
+				return null;
+			}
+			
 			CommandState state;
 			
 			if (CommandState.commands.TryGetValue (commandName, out state))

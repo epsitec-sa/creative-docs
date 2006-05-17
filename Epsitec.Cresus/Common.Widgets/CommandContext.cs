@@ -39,6 +39,11 @@ namespace Epsitec.Common.Widgets
 		/// <param name="value">Enable if set to <c>true</c>, disable otherwise.</param>
 		public void SetLocalEnable(CommandState command, bool value)
 		{
+			if (command == null)
+			{
+				return;
+			}
+			
 			bool oldValue;
 			bool newValue = value;
 
@@ -67,6 +72,11 @@ namespace Epsitec.Common.Widgets
 					this.NotifyCommandEnableChanged (command);
 				}
 			}
+		}
+
+		public void SetLocalEnable(string commandName, bool value)
+		{
+			this.SetLocalEnable (CommandState.Find (commandName), value);
 		}
 
 		/// <summary>

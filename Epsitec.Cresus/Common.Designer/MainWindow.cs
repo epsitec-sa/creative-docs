@@ -51,11 +51,12 @@ namespace Epsitec.Common.Designer
 				this.window.PreventAutoClose = true;
 				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowCloseClicked);
 
-				this.commandDispatcher = new CommandDispatcher("ResDesigner", CommandDispatcherLevel.Primary);
+				this.commandDispatcher = new CommandDispatcher("Common.Designer", CommandDispatcherLevel.Primary);
+				this.commandContext = new CommandContext ();
 				this.commandDispatcher.RegisterController(this);
-				this.commandDispatcher.Focus();
 				
-				this.window.AttachDispatcher(this.commandDispatcher);
+				CommandDispatcher.SetDispatcher (this.window, this.commandDispatcher);
+				CommandContext.SetContext (this.window, this.commandContext);
 
 				this.dlgGlyphs     = new Dialogs.Glyphs(this);
 				this.dlgFilter     = new Dialogs.Filter(this);
@@ -172,6 +173,13 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
+		public CommandContext CommandContext
+		{
+			get
+			{
+				return this.commandContext;
+			}
+		}
 
 		protected void CreateLayout()
 		{
@@ -811,6 +819,7 @@ namespace Epsitec.Common.Designer
 		protected DesignerMode					mode;
 		protected Window						window;
 		protected CommandDispatcher				commandDispatcher;
+		protected CommandContext				commandContext;
 		protected RibbonBook					ribbonBook;
 		protected RibbonPage					ribbonMain;
 		protected RibbonPage					ribbonText;
