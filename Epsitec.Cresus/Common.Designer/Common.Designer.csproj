@@ -145,6 +145,11 @@
     <EmbeddedResource Include="Images\SearchNextButton.icon" />
     <EmbeddedResource Include="Images\SearchPrev.icon" />
     <EmbeddedResource Include="Images\SearchNext.icon" />
+    <EmbeddedResource Include="Images\ToolSelect.icon" />
+    <EmbeddedResource Include="Images\ToolGlobal.icon" />
+    <EmbeddedResource Include="Images\ToolEdit.icon" />
+    <EmbeddedResource Include="Images\ToolHand.icon" />
+    <EmbeddedResource Include="Images\ToolZoom.icon" />
     <None Include="Resources\Designer\Strings.00.resource" />
     <None Include="Resources\Designer\Strings.en.resource" />
   </ItemGroup>
