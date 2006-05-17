@@ -42,7 +42,6 @@ namespace Epsitec.Common.Designer.Viewers
 			this.array.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			VSplitter splitter = new VSplitter(this);
-			splitter.PreferredWidth = 4;
 			splitter.Dock = DockStyle.Left;
 
 			StaticText s = new StaticText(this);
