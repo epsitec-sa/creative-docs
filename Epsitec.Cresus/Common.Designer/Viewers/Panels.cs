@@ -49,6 +49,8 @@ namespace Epsitec.Common.Designer.Viewers
 			s.Margins = new Margins(20, 0, 0, 0);
 			s.Dock = DockStyle.Fill;
 
+			this.module.PanelsRead();
+
 			this.UpdateLabelsIndex("", Searcher.SearchingMode.None);
 			this.UpdateArray();
 			this.UpdateEdit();
@@ -108,9 +110,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			string name = this.labelsIndex[sel];
 			string newName = this.GetDuplicateName(name);
-			ResourceBundle bundle = this.module.NewPanel(newName);
-			bundle.DefineRank(newSel);
-			this.module.WriteBundle(bundle);
+			this.module.PanelCreate(newName, this.module.PanelIndex(name)+1);
 
 			this.labelsIndex.Insert(newSel, newName);
 			this.UpdateArray();
@@ -133,19 +133,7 @@ namespace Epsitec.Common.Designer.Viewers
 			string name1 = this.labelsIndex[sel];
 			string name2 = this.labelsIndex[newSel];
 
-			ResourceBundle bundle1 = this.module.LoadPanelBundle(name1);
-			ResourceBundle bundle2 = this.module.LoadPanelBundle(name2);
-			System.Diagnostics.Debug.Assert(bundle1 != null);
-			System.Diagnostics.Debug.Assert(bundle2 != null);
-
-			int r1 = bundle1.Rank;
-			int r2 = bundle2.Rank;
-			bundle1.DefineRank(r2);
-			bundle2.DefineRank(r1);  // permute les rangs
-
-			// Met à jour les bundles en les sérialisant:
-			this.module.UpdateBundle(bundle1);
-			this.module.UpdateBundle(bundle2);
+			this.module.PanelMove(name1, this.module.PanelIndex(name2));
 
 			this.labelsIndex.RemoveAt(sel);
 			this.labelsIndex.Insert(newSel, name1);
@@ -194,9 +182,10 @@ namespace Epsitec.Common.Designer.Viewers
 				regex = RegexFactory.FromSimpleJoker(filter, RegexFactory.Options.None);
 			}
 
-			string[] panelNames = this.module.PanelNames;
-			foreach (string name in panelNames)
+			for (int i=0; i<this.module.PanelsCount; i++)
 			{
+				string name = this.module.PanelName(i);
+
 				if (filter != "")
 				{
 					if ((mode&Searcher.SearchingMode.Jocker) != 0)
@@ -230,7 +219,7 @@ namespace Epsitec.Common.Designer.Viewers
 			{
 				if (first+i < this.labelsIndex.Count)
 				{
-					string text = Module.RemovePanelPrefix(this.labelsIndex[first+i]);
+					string text = this.labelsIndex[first+i];
 					this.array.SetLineString(0, first+i, text);
 					this.array.SetLineState(0, first+i, MyWidgets.StringList.CellState.Normal);
 				}
@@ -264,7 +253,7 @@ namespace Epsitec.Common.Designer.Viewers
 			{
 				this.labelEdit.Enable = true;
 
-				string label = Module.RemovePanelPrefix(this.labelsIndex[sel]);
+				string label = this.labelsIndex[sel];
 				this.labelEdit.Text = label;
 				this.labelEdit.Focus();
 				this.labelEdit.SelectAll();
@@ -307,15 +296,12 @@ namespace Epsitec.Common.Designer.Viewers
 		protected bool IsExistingName(string baseName)
 		{
 			//	Indique si un nom existe.
-			string[] panelNames = this.module.PanelNames;
-			return (Misc.IndexOfString(panelNames, baseName) != -1);
+			return (this.module.PanelIndex(baseName) != -1);
 		}
 
 		protected string GetDuplicateName(string baseName)
 		{
 			//	Retourne le nom à utiliser lorsqu'un nom existant est dupliqué.
-			ResourceBundleCollection bundles = this.module.Bundles;
-
 			int numberLength = 0;
 			while (baseName.Length > 0)
 			{
@@ -337,12 +323,11 @@ namespace Epsitec.Common.Designer.Viewers
 				baseName = baseName.Substring(0, baseName.Length-numberLength);
 			}
 
-			string[] panelNames = this.module.PanelNames;
 			string newName = baseName;
 			for (int i=nextNumber; i<nextNumber+100; i++)
 			{
 				newName = string.Concat(baseName, i.ToString(System.Globalization.CultureInfo.InvariantCulture));
-				if (Misc.IndexOfString(panelNames, newName) == -1)  break;
+				if ( !this.IsExistingName(newName) )  break;
 			}
 
 			return newName;
