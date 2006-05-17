@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
@@ -139,58 +140,166 @@ namespace Epsitec.Common.Designer
 
 
 		#region Panels
-		public string[] PanelNames
+		public void PanelsRead()
 		{
-			//	Retourne la liste des noms des panneaux.
-			get
-			{
-				string[] panelNames = this.resourceManager.GetBundleIds(Module.PanelPrefix+"*", "Panel", ResourceLevel.Default);
+			//	Charge toutes les ressources de type 'Panel'.
+			if (this.panelsList != null)  return;
 
+			this.panelsList = new List<LoadedBundle>();
+			this.panelsToDelete = new List<LoadedBundle>();
+
+			string[] names = this.resourceManager.GetBundleIds(Module.AddPanelPrefix("*"), "Panel", ResourceLevel.Default);
+			if (names.Length == 0)
+			{
 				//	S'il n'existe aucun panneau, crée un premier panneau vide.
 				//	Ceci est nécessaire, car il n'existe pas de commande pour créer un panneau à partir
 				//	de rien, mais seulement une commande pour dupliquer un panneau existant.
-				if (panelNames.Length == 0)
+				string prefix = this.resourceManager.ActivePrefix;
+				string name = Module.AddPanelPrefix(Res.Strings.Viewers.Panels.New);
+				System.Globalization.CultureInfo culture = this.BaseCulture;
+				ResourceBundle bundle = ResourceBundle.Create(this.resourceManager, prefix, name, ResourceLevel.Default, culture);
+
+				bundle.DefineType("Panel");
+				bundle.DefineRank(0);
+
+				LoadedBundle loaded = new LoadedBundle(Module.RemovePanelPrefix(name), bundle);
+				loaded.Newest = true;
+				this.panelsList.Add(loaded);
+			}
+			else
+			{
+				foreach (string name in names)
 				{
-					string prefix = this.resourceManager.ActivePrefix;
-					System.Globalization.CultureInfo culture = this.BaseCulture;
-					ResourceBundle bundle = ResourceBundle.Create(this.resourceManager, prefix, Module.PanelPrefix+Res.Strings.Viewers.Panels.New, ResourceLevel.Default, culture);
+					ResourceBundle bundle = this.resourceManager.GetBundle(name, ResourceLevel.Default);
 
-					bundle.DefineType("Panel");
-					bundle.DefineRank(0);
-					this.WriteBundle(bundle);
-
-					panelNames = this.resourceManager.GetBundleIds(Module.PanelPrefix+"*", "Panel", ResourceLevel.Default);
-					System.Diagnostics.Debug.Assert(panelNames.Length == 1);
+					LoadedBundle loaded = new LoadedBundle(Module.RemovePanelPrefix(name), bundle);
+					this.panelsList.Add(loaded);
 				}
 
-				return panelNames;
+				this.panelsList.Sort();  // trie selon les rangs
 			}
 		}
 
-		public ResourceBundle NewPanel(string name)
+		public void PanelsWrite()
 		{
-			//	Crée une nouvelle ressource de type panneau.
+			//	Enregistre toutes les modifications effectuées dans les ressources de type 'Panel'.
+			for (int i=0; i<this.panelsList.Count; i++)
+			{
+				LoadedBundle loaded = this.panelsList[i];
+
+				loaded.Bundle.DefineName(Module.AddPanelPrefix(loaded.Name));
+				loaded.Bundle.DefineRank(i);
+
+				if (loaded.Newest)
+				{
+					this.resourceManager.SetBundle(loaded.Bundle, ResourceSetMode.CreateOnly);
+					loaded.Newest = false;
+				}
+				else
+				{
+					this.resourceManager.SetBundle(loaded.Bundle, ResourceSetMode.UpdateOnly);
+				}
+			}
+
+			//	Supprime tous les panneaux mis dans la liste 'à supprimer'.
+			foreach (LoadedBundle loaded in this.panelsToDelete)
+			{
+				this.resourceManager.RemoveBundle(Module.AddPanelPrefix(loaded.Name), ResourceLevel.Default, loaded.Bundle.Culture);
+			}
+			this.panelsToDelete.Clear();
+		}
+
+		public int PanelsCount
+		{
+			//	Retourne le nombre total de ressources de type 'Panel'.
+			get
+			{
+				return this.panelsList.Count;
+			}
+		}
+
+		public int PanelIndex(string name)
+		{
+			//	Donne l'index d'une ressource de type 'Panel'.
+			for (int i=0; i<this.panelsList.Count; i++)
+			{
+				if (this.panelsList[i].Name == name)
+				{
+					return i;
+				}
+			}
+			return -1;
+		}
+
+		public string PanelName(int index)
+		{
+			//	Donne le nom d'une ressource de type 'Panel'.
+			return this.panelsList[index].Name;
+		}
+
+		public ResourceBundle PanelBundle(int index)
+		{
+			//	Donne une ressource de type 'Panel'.
+			return this.panelsList[index].Bundle;
+		}
+
+		public void PanelMove(string name, int newIndex)
+		{
+			//	Déplace une ressource de type 'Panel'.
+			int actualIndex = this.PanelIndex(name);
+			System.Diagnostics.Debug.Assert(actualIndex != -1);
+
+			LoadedBundle loaded = this.panelsList[actualIndex];
+			this.panelsList.RemoveAt(actualIndex);
+			this.panelsList.Insert(newIndex, loaded);
+		}
+
+		public void PanelRename(string actualName, string newName)
+		{
+			//	Renomme une ressource de type 'Panel'.
+			int index = this.PanelIndex(actualName);
+			System.Diagnostics.Debug.Assert(index != -1);
+
+			LoadedBundle loaded = this.panelsList[index];
+			System.Diagnostics.Debug.Assert(loaded.Newest);
+			loaded.Name = newName;
+		}
+
+		public void PanelCreate(string name, int index)
+		{
+			//	Crée une nouvelle ressource de type 'Panel'.
+			name = Module.AddPanelPrefix(name);
 			string prefix = this.resourceManager.ActivePrefix;
-			System.Globalization.CultureInfo culture = BaseCulture;
+			System.Globalization.CultureInfo culture = this.BaseCulture;
 			ResourceBundle bundle = ResourceBundle.Create(this.resourceManager, prefix, name, ResourceLevel.Default, culture);
+
 			bundle.DefineType("Panel");
 
-			return bundle;
+			LoadedBundle loaded = new LoadedBundle(Module.RemovePanelPrefix(name), bundle);
+			loaded.Newest = true;
+
+			this.panelsList.Insert(index, loaded);
 		}
 
-		public void DeletePanel(string name)
+		public void PanelDelete(string name)
 		{
-			//	Supprime une ressource de type panneau.
+			//	Supprime une ressource de type 'Panel'.
+			int index = this.PanelIndex(name);
+			System.Diagnostics.Debug.Assert(index != -1);
+
+			LoadedBundle loaded = this.panelsList[index];
+
+			this.panelsList.RemoveAt(index);
+
+			//	S'il ne s'agit pas d'une nouvelle ressource, il faut l'ajouter dans la liste
+			//	des ressources à détruire (lors du PanelsWrite).
+			if (!loaded.Newest)
+			{
+				this.panelsToDelete.Add(loaded);
+			}
 		}
 
-		public ResourceBundle LoadPanelBundle(string label)
-		{
-			//	Retourne le bundle d'un panneau.
-			label = Module.AddPanelPrefix(label);
-			return this.resourceManager.GetBundle(label, ResourceLevel.Default);
-		}
-
-		public static string RemovePanelPrefix(string name)
+		protected static string RemovePanelPrefix(string name)
 		{
 			//	Enlève le préfixe "P." s'il existe.
 			if (name.StartsWith(Module.PanelPrefix))
@@ -200,7 +309,7 @@ namespace Epsitec.Common.Designer
 			return name;
 		}
 
-		public static string AddPanelPrefix(string name)
+		protected static string AddPanelPrefix(string name)
 		{
 			//	Ajoute le préfixe "P." s'il n'existe pas.
 			if (!name.StartsWith(Module.PanelPrefix))
@@ -212,17 +321,28 @@ namespace Epsitec.Common.Designer
 		#endregion
 
 
-		public void WriteBundle(ResourceBundle bundle)
+		#region LoadedBundle
+		protected class LoadedBundle : System.IComparable
 		{
-			//	Sérialise un bundle.
-			this.resourceManager.SetBundle (bundle, ResourceSetMode.CreateOnly);
-		}
+			public LoadedBundle(string name, ResourceBundle bundle)
+			{
+				this.Name   = name;
+				this.Bundle = bundle;
+				this.Newest = false;
+			}
 
-		public void UpdateBundle(ResourceBundle bundle)
-		{
-			//	Sérialise un bundle en écrasant l'ancien.
-			this.resourceManager.SetBundle (bundle, ResourceSetMode.UpdateOnly);
+			public string				Name;
+			public ResourceBundle		Bundle;
+			public bool					Newest;
+
+			public int CompareTo(object obj)
+			{
+				LoadedBundle that = obj as LoadedBundle;
+				return this.Bundle.Rank.CompareTo(that.Bundle.Rank);
+			}
 		}
+		#endregion
+
 
 		protected System.Globalization.CultureInfo BaseCulture
 		{
@@ -263,6 +383,8 @@ namespace Epsitec.Common.Designer
 		protected string					name;
 		protected ResourceManager			resourceManager;
 		protected ResourceBundleCollection	bundles;
+		protected List<LoadedBundle>		panelsList;
+		protected List<LoadedBundle>		panelsToDelete;
 		protected Modifier					modifier;
 	}
 }
