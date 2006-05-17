@@ -480,7 +480,7 @@ namespace Epsitec.Common.Drawing
 
 		public void TabCopyTo(TextStyle dst)
 		{
-			this.CheckForDefaultStyle ();
+			dst.CheckForDefaultStyle ();
 			dst.tabs.Clear();
 			foreach ( Tab tab in this.tabs )
 			{
@@ -490,7 +490,6 @@ namespace Epsitec.Common.Drawing
 		
 		public void TabCopyTo(out Tab[] dst)
 		{
-			this.CheckForDefaultStyle ();
 			dst = new Tab[this.tabs.Count];
 			for ( int i=0 ; i<this.tabs.Count ; i++ )
 			{

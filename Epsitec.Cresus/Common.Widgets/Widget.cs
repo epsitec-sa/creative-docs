@@ -589,7 +589,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public virtual Support.OpletQueue			OpletQueue
+		public Support.OpletQueue					OpletQueue
 		{
 			get
 			{

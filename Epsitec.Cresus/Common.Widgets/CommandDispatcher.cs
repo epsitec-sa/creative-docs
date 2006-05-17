@@ -133,6 +133,14 @@ namespace Epsitec.Common.Widgets
 			{
 				return this.oplet_queue;
 			}
+			set
+			{
+				if (this.oplet_queue != value)
+				{
+					this.oplet_queue = value;
+					this.OnOpletQueueBindingChanged ();
+				}
+			}
 		}
 		
 		public string[]							CommandNames

@@ -44,9 +44,9 @@ namespace Epsitec.Common.Widgets
 
 			this.InitializeMargins ();
 			this.CreateTextLayout ();
-			
-			this.navigator = new TextNavigator(base.TextLayout);
-			this.navigator.AboutToChange += new EventHandler(this.HandleNavigatorAboutToChange);
+
+			this.navigator = new TextNavigator (base.TextLayout);
+			this.navigator.AboutToChange += new EventHandler (this.HandleNavigatorAboutToChange);
 			this.navigator.TextDeleted += new EventHandler(this.HandleNavigatorTextDeleted);
 			this.navigator.TextInserted += new EventHandler(this.HandleNavigatorTextInserted);
 			this.navigator.CursorScrolled += new EventHandler(this.HandleNavigatorCursorScrolled);
@@ -56,7 +56,7 @@ namespace Epsitec.Common.Widgets
 			
 			this.copyPasteBehavior = new Behaviors.CopyPasteBehavior(this);
 			this.OnCursorChanged(true);
-			
+
 			CommandDispatcher dispatcher = new CommandDispatcher ("TextField", CommandDispatcherLevel.Secondary);
 			dispatcher.RegisterController (new Dispatcher (this));
 
@@ -77,19 +77,6 @@ namespace Epsitec.Common.Widgets
 			get { return this.navigator; }
 		}
 
-		public override OpletQueue				OpletQueue
-		{
-			get
-			{
-				return this.navigator.OpletQueue;
-			}
-			set
-			{
-				this.navigator.OpletQueue = value;
-			}
-		}
-
-		
 		public virtual bool						IsCombo
 		{
 			get
@@ -446,7 +433,17 @@ namespace Epsitec.Common.Widgets
 				this.initial_text = value;
 			}
 		}
-		
+
+		public void DefineOpletQueue(OpletQueue queue)
+		{
+			CommandDispatcher dispatcher = CommandDispatcher.GetDispatcher (this);
+
+			System.Diagnostics.Debug.Assert (dispatcher != null);
+			System.Diagnostics.Debug.Assert (this.navigator != null);
+			
+			this.navigator.OpletQueue = queue;
+			dispatcher.OpletQueue = queue;
+		}
 
 		protected override void Dispose(bool disposing)
 		{
@@ -1079,6 +1076,8 @@ namespace Epsitec.Common.Widgets
 
 		private void HandleIsFocusedChanged(object sender, Types.DependencyPropertyChangedEventArgs e)
 		{
+			System.Diagnostics.Debug.Assert (Helpers.VisualTree.GetOpletQueue (this) == this.navigator.OpletQueue);
+			
 			bool focused = (bool) e.NewValue;
 			
 			if (focused)

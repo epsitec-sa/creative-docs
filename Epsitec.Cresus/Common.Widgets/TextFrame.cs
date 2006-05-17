@@ -67,21 +67,14 @@ namespace Epsitec.Common.Widgets
 			
 			this.navigator.TextChanged += new Support.EventHandler (this.HandleTextChanged);
 			this.navigator.CursorMoved += new Support.EventHandler (this.HandleCursorMoved);
+
+			CommandDispatcher dispatcher = new CommandDispatcher ("TextFrame", CommandDispatcherLevel.Secondary);
+
+			dispatcher.OpletQueue = this.oplet_queue;
+
+			CommandDispatcher.SetDispatcher (this, dispatcher);
 			
 			this.marker_selected = this.text_context.Markers.Selected;
-		}
-		
-		
-		public override Support.OpletQueue		OpletQueue
-		{
-			get
-			{
-				return this.oplet_queue;
-			}
-			set
-			{
-				throw new System.InvalidOperationException ("Cannot set OpletQueue on Widget.");
-			}
 		}
 		
 		
