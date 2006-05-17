@@ -162,16 +162,22 @@ namespace Epsitec.Common.Designer.Viewers
 				builder.Append("/");
 				builder.Append(this.labelsIndex.Count.ToString());
 
-#if false
-				if (this.labelsIndex.Count < this.primaryBundle.FieldCount)
+				if (this.labelsIndex.Count < this.InfoAccessTotalCount)
 				{
 					builder.Append(" (");
-					builder.Append(this.primaryBundle.FieldCount.ToString());
+					builder.Append(this.InfoAccessTotalCount.ToString());
 					builder.Append(")");
 				}
-#endif
 
 				return builder.ToString();
+			}
+		}
+
+		protected virtual int InfoAccessTotalCount
+		{
+			get
+			{
+				return this.labelsIndex.Count;
 			}
 		}
 

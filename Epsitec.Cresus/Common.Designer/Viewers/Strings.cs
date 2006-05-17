@@ -964,6 +964,15 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
+		protected override int InfoAccessTotalCount
+		{
+			get
+			{
+				return this.primaryBundle.FieldCount;
+			}
+		}
+
+		
 		protected override void UpdateClientGeometry()
 		{
 			//	Met à jour la géométrie.
