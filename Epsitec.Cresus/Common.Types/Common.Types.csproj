@@ -98,6 +98,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="AbstractStructuredData.cs" />
+    <Compile Include="BindingChangedEventArgs.cs" />
     <Compile Include="IResourceBoundSource.cs" />
     <Compile Include="StructuredTree.cs" />
     <Compile Include="IStructuredTree.cs" />

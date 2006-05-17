@@ -32,25 +32,27 @@ namespace Epsitec.Common.Widgets
 			//	parenthèses.
 			
 			string regex_1 = @"\A(?<name>([a-zA-Z](\w|(\.\w))*))" +
-				//	<---- nom valide ---->
+				//	                      <---- nom valide --->
 				/**/       @"\s*\(\s*((((?<arg>(" +
 				/**/                          @"(\""[^\""]{0,}\"")|" +
-				//	<-- guillemets -->
+				//	                            <-- guillemets -->
 				/**/                          @"(\'[^\']{0,}\')|" +
-				//	<-- apostr. -->
+				//	                            <-- apostr. -->
 				/**/                          @"((\-|\+)?((\d{1,12}(\.\d{0,12})?0*)|(\d{0,12}\.(\d{0,12})?0*)))|" +
-				//	<----------- valeur décimale avec signe en option ------------>
+				//	                            <----------- valeur décimale avec signe en option ------------>
 				/**/                          @"([a-zA-Z](\w|(\.\w))*)))" +
-				//	<---- nom valide ---->
+				//	                            <---- nom valide ---->
 				/**/                         @"((\s*\,\s*)|(\s*\)\s*\z)))*)|(\)\s*))\z";
 			
 			RegexOptions options = RegexOptions.Compiled | RegexOptions.ExplicitCapture;
 			
-			CommandDispatcher.command_arg_regex  = new Regex (regex_1, options);
-			CommandDispatcher default_dispatcher = new CommandDispatcher ("default", CommandDispatcherLevel.Root);
+			CommandDispatcher.commandArgRegex = new Regex (regex_1, options);
+			CommandDispatcher.commandAttributeType = typeof (Support.CommandAttribute);
 			
-			System.Diagnostics.Debug.Assert (default_dispatcher == CommandDispatcher.default_dispatcher);
-			System.Diagnostics.Debug.Assert (default_dispatcher.id == 0);
+			CommandDispatcher defaultDispatcher = new CommandDispatcher ("default", CommandDispatcherLevel.Root);
+			
+			System.Diagnostics.Debug.Assert (defaultDispatcher == CommandDispatcher.defaultDispatcher);
+			System.Diagnostics.Debug.Assert (defaultDispatcher.id == 1);
 		}
 		
 		
@@ -60,18 +62,18 @@ namespace Epsitec.Common.Widgets
 		
 		public CommandDispatcher(string name, CommandDispatcherLevel level)
 		{
-			lock (CommandDispatcher.global_exclusion)
+			lock (CommandDispatcher.exclusion)
 			{
 				this.name  = name;
 				this.level = level;
-				this.id    = CommandDispatcher.unique_id++;
+				this.id    = System.Threading.Interlocked.Increment (ref CommandDispatcher.nextId);
 				
 				switch (level)
 				{
 					case CommandDispatcherLevel.Root:
-						if (CommandDispatcher.default_dispatcher == null)
+						if (CommandDispatcher.defaultDispatcher == null)
 						{
-							CommandDispatcher.default_dispatcher = this;
+							CommandDispatcher.defaultDispatcher = this;
 						}
 						else
 						{
@@ -80,11 +82,7 @@ namespace Epsitec.Common.Widgets
 						break;
 					
 					case CommandDispatcherLevel.Secondary:
-						CommandDispatcher.local_list.Add (this);
-						break;
-					
 					case CommandDispatcherLevel.Primary:
-						CommandDispatcher.global_list.Add (this);
 						break;
 					
 					default:
@@ -110,45 +108,8 @@ namespace Epsitec.Common.Widgets
 				return this.level;
 			}
 		}
-		
-		public CommandDispatcher				Master
-		{
-			get
-			{
-				return this.master;
-			}
-			set
-			{
-				if (this.master != value)
-				{
-					if (this.master != null)
-					{
-						this.DetachFromMaster (this.master);
-					}
-					
-					this.master = value;
-					
-					if (this.master != null)
-					{
-						this.AttachToMaster (this.master);
-					}
-				}
-			}
-		}
-		
-		
-		public bool								Aborted
-		{
-			get
-			{
-				return this.aborted;
-			}
-			set
-			{
-				this.aborted = value;
-			}
-		}
-		
+
+#if false //#fix
 		public bool								HasPendingMultipleCommands
 		{
 			get
@@ -164,6 +125,7 @@ namespace Epsitec.Common.Widgets
 				return this.pending_commands.Peek () as string;
 			}
 		}
+#endif
 		
 		public Support.OpletQueue				OpletQueue
 		{
@@ -193,28 +155,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public void Focus()
-		{
-			if (this.Level == CommandDispatcherLevel.Primary)
-			{
-				CommandDispatcher old_focused = null;
-				CommandDispatcher new_focused = this;
-				
-				lock (CommandDispatcher.global_exclusion)
-				{
-					old_focused = CommandDispatcher.focused_primary_dispatcher;
-					CommandDispatcher.focused_primary_dispatcher = new_focused;
-				}
-				
-				if (old_focused != new_focused)
-				{
-					CommandDispatcher.OnFocusedPrimaryDispatcherChanged (old_focused, new_focused);
-				}
-			}
-		}
-		
-		
-		public static void Dispatch(System.Collections.ICollection dispatchers, string command, object source)
+		public static void Dispatch(System.Collections.IEnumerable dispatchers, string command, object source)
 		{
 			foreach (CommandDispatcher dispatcher in dispatchers)
 			{
@@ -228,7 +169,6 @@ namespace Epsitec.Common.Widgets
 		
 		public bool InternalDispatch(string command, object source)
 		{
-			this.aborted = false;
 			
 #if false //#fix
 			//	L'appelant peut spécifier une ou plusieurs commandes. Dans ce dernier cas, les
@@ -274,6 +214,9 @@ namespace Epsitec.Common.Widgets
 #endif
 			bool handled = false;
 			
+#if true //#fix
+			handled = this.InternalDispatchSingleCommand (command, source);
+#else
 			try
 			{
 				this.pending_commands.Push (null);
@@ -283,15 +226,18 @@ namespace Epsitec.Common.Widgets
 			{
 				this.pending_commands.Pop ();
 			}
-			
+#endif
+
 			return handled;
 		}
 		
+#if false //#fix
 		public void InternalCancelTopPendingMultipleCommands()
 		{
 			this.pending_commands.Pop ();
 			this.pending_commands.Push (null);
 		}
+#endif
 		
 		
 		public void RegisterController(object controller)
@@ -303,7 +249,7 @@ namespace Epsitec.Common.Widgets
 				
 				for (int i = 0; i < members.Length; i++)
 				{
-					if ((members[i].IsDefined (CommandDispatcher.command_attr_type, true)) &&
+					if ((members[i].IsDefined (CommandDispatcher.commandAttributeType, true)) &&
 						(members[i].MemberType == System.Reflection.MemberTypes.Method))
 					{
 						System.Reflection.MethodInfo info = members[i] as System.Reflection.MethodInfo;
@@ -364,15 +310,6 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public static CommandDispatcher GetFocusedPrimaryDispatcher()
-		{
-			lock (CommandDispatcher.global_exclusion)
-			{
-				return CommandDispatcher.focused_primary_dispatcher;
-			}
-		}
-		
-		
 		public static bool IsSimpleCommand(string command)
 		{
 			if (command == null)
@@ -426,7 +363,7 @@ namespace Epsitec.Common.Widgets
 				return new string[0];
 			}
 			
-			Match match = CommandDispatcher.command_arg_regex.Match (command);
+			Match match = CommandDispatcher.commandArgRegex.Match (command);
 			
 			if ((match.Success) &&
 				(match.Groups.Count == 3))
@@ -508,33 +445,11 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		protected virtual void AttachToMaster(CommandDispatcher master)
-		{
-		}
-		
-		protected virtual void DetachFromMaster(CommandDispatcher master)
-		{
-		}
-		
 		
 		protected override void Dispose(bool disposing)
 		{
 			if (disposing)
 			{
-				if (this.master != null)
-				{
-					this.DetachFromMaster (this.master);
-					this.master = null;
-				}
-				
-				if (CommandDispatcher.global_list.Contains (this))
-				{
-					CommandDispatcher.global_list.Remove (this);
-				}
-				if (CommandDispatcher.local_list.Contains (this))
-				{
-					CommandDispatcher.local_list.Remove (this);
-				}
 			}
 			
 			base.Dispose (disposing);
@@ -643,7 +558,7 @@ namespace Epsitec.Common.Widgets
 			//	Ne parcourt que les attributs au niveau d'implémentation actuel (pas les classes dérivées,
 			//	ni les classes parent). Le parcours des parent est assuré par l'appelant.
 			
-			object[] attributes = info.GetCustomAttributes (CommandDispatcher.command_attr_type, false);
+			object[] attributes = info.GetCustomAttributes (CommandDispatcher.commandAttributeType, false);
 			
 			foreach (Support.CommandAttribute attribute in attributes)
 			{
@@ -815,31 +730,26 @@ namespace Epsitec.Common.Widgets
 		
 		public static CommandDispatcher			Default
 		{
-			get { return CommandDispatcher.default_dispatcher; }
+			get { return CommandDispatcher.defaultDispatcher; }
 		}
 		
 		
 		private string							name;
 		private CommandDispatcherLevel			level;
 		private long							id;
-		private CommandDispatcher				master;
 		
 		protected System.Collections.Hashtable	event_handlers    = new System.Collections.Hashtable ();
-		protected System.Collections.Stack		pending_commands  = new System.Collections.Stack ();
+//#		protected System.Collections.Stack		pending_commands  = new System.Collections.Stack ();
 		protected System.Collections.ArrayList	extra_dispatchers = new System.Collections.ArrayList ();
 		
-		protected bool							aborted;
 		protected Support.OpletQueue			oplet_queue;
 		
-		static object							global_exclusion = new object ();
-		static System.Collections.ArrayList		global_list = new System.Collections.ArrayList ();
-		static System.Collections.ArrayList		local_list  = new System.Collections.ArrayList ();
+		static object							exclusion = new object ();
 		
-		static Regex							command_arg_regex;
-		static System.Type						command_attr_type = typeof (Support.CommandAttribute);
+		static Regex							commandArgRegex;
+		static System.Type						commandAttributeType;
 		
-		static CommandDispatcher				default_dispatcher;
-		static CommandDispatcher				focused_primary_dispatcher;
-		static long								unique_id;
+		static CommandDispatcher				defaultDispatcher;
+		static long								nextId;
 	}
 }

@@ -320,7 +320,7 @@ namespace Epsitec.Common.Widgets
 			
 			if (visual != null)
 			{
-				CommandState command = Helpers.VisualTree.GetCommandState (visual);
+				CommandState command = CommandState.Find (visual.CommandName);
 				
 				if ((this.clear_count > 0) &&
 					(this.records[index].Command == null))

@@ -14,6 +14,22 @@ namespace Epsitec.Common.Widgets
 		{
 		}
 
+		public bool IsEmpty
+		{
+			get
+			{
+				for (int i = 0; i < this.chain.Count; i++)
+				{
+					if (this.chain[i].IsAlive)
+					{
+						return false;
+					}
+				}
+				
+				return true;
+			}
+		}
+
 		public IEnumerable<CommandDispatcher> Dispatchers
 		{
 			get
@@ -61,8 +77,11 @@ namespace Epsitec.Common.Widgets
 					{
 						that = new CommandDispatcherChain ();
 					}
-					
-					that.chain.Add (new System.WeakReference (dispatcher));
+
+					if (CommandDispatcherChain.Contains (that.chain, dispatcher) == false)
+					{
+						that.chain.Add (new System.WeakReference (dispatcher));
+					}
 				}
 
 				item = item.Parent;
@@ -78,8 +97,11 @@ namespace Epsitec.Common.Widgets
 					{
 						that = new CommandDispatcherChain ();
 					}
-					
-					that.chain.Add (new System.WeakReference (dispatcher));
+
+					if (CommandDispatcherChain.Contains (that.chain, dispatcher) == false)
+					{
+						that.chain.Add (new System.WeakReference (dispatcher));
+					}
 				}
 
 				window = window.Owner;
@@ -88,6 +110,41 @@ namespace Epsitec.Common.Widgets
 			//	TODO: ajouter ici la notion d'application/module/document
 			
 			return that;
+		}
+		
+		public static CommandDispatcherChain BuildChain(DependencyObject obj)
+		{
+			CommandDispatcherChain that = null;
+
+			if (obj != null)
+			{
+				CommandDispatcher dispatcher = CommandDispatcher.GetDispatcher (obj);
+
+				if (dispatcher != null)
+				{
+					if (that != null)
+					{
+						that = new CommandDispatcherChain ();
+					}
+					
+					that.chain.Add (new System.WeakReference (dispatcher));
+				}
+			}
+			
+			return that;
+		}
+
+		private static bool Contains(IEnumerable<System.WeakReference> chain, CommandDispatcher dispatcher)
+		{
+			foreach (System.WeakReference item in chain)
+			{
+				if (item.Target == dispatcher)
+				{
+					return true;
+				}
+			}
+
+			return false;
 		}
 
 		List<System.WeakReference> chain = new List<System.WeakReference> ();
