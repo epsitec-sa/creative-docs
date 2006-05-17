@@ -99,6 +99,20 @@ namespace Epsitec.Common.Designer.Viewers
 		public override void DoDelete()
 		{
 			//	Supprime la ressource sélectionnée.
+			int sel = this.array.SelectedRow;
+			if ( sel == -1 )  return;
+
+			string name = this.labelsIndex[sel];
+			this.module.PanelDelete(name);
+
+			this.labelsIndex.RemoveAt(sel);
+			this.UpdateArray();
+
+			sel = System.Math.Min(sel, this.labelsIndex.Count-1);
+			this.array.SelectedRow = sel;
+			this.array.ShowSelectedRow();
+			this.UpdateCommands();
+			this.module.Modifier.IsDirty = true;
 		}
 
 		public override void DoDuplicate(bool duplicate)
