@@ -147,7 +147,7 @@ namespace Epsitec.Common.Widgets
 
 			b.Dock = DockStyle.Top;
 
-			Assert.AreEqual (0, context.MeasureQueueLength);
+			Assert.AreEqual (1, context.MeasureQueueLength);
 			Assert.AreEqual (1, context.ArrangeQueueLength);
 
 			array = Types.Collection.ToArray (context.GetArrangeQueue ());
@@ -156,7 +156,7 @@ namespace Epsitec.Common.Widgets
 
 			b.Padding = new Drawing.Margins (5, 5, 5, 5);
 
-			Assert.AreEqual (0, context.MeasureQueueLength);
+			Assert.AreEqual (1, context.MeasureQueueLength);
 			Assert.AreEqual (2, context.ArrangeQueueLength);
 
 			array = Types.Collection.ToArray (context.GetArrangeQueue ());
@@ -194,8 +194,8 @@ namespace Epsitec.Common.Widgets
 			c1.MinWidth = 20;
 			c1.MinHeight = 10;
 
-			Assert.AreEqual (1, context.MeasureQueueLength);	//	c1 à mesurer
-			Assert.AreEqual (1, context.ArrangeQueueLength);	//	a à arranger
+			Assert.AreEqual (2, context.MeasureQueueLength);	//	"c1" et "a" à mesurer
+			Assert.AreEqual (1, context.ArrangeQueueLength);	//	"a" à arranger
 
 			context.ExecuteMeasure ();
 
@@ -253,10 +253,11 @@ namespace Epsitec.Common.Widgets
 
 			array = Types.Collection.ToArray (context.GetMeasureQueue ());
 
-			Assert.AreEqual (3, array.Length);
+			Assert.AreEqual (4, array.Length);
 			Assert.AreEqual (c1.Name, array[0].Name);
 			Assert.AreEqual (c2.Name, array[1].Name);
-			Assert.AreEqual (a.Name, array[2].Name);
+			Assert.AreEqual (b.Name, array[2].Name);
+			Assert.AreEqual (a.Name, array[3].Name);
 
 			array = Types.Collection.ToArray (context.GetArrangeQueue ());
 
@@ -334,10 +335,11 @@ namespace Epsitec.Common.Widgets
 
 			array = Types.Collection.ToArray (context.GetMeasureQueue ());
 
-			Assert.AreEqual (3, array.Length);
+			Assert.AreEqual (4, array.Length);
 			Assert.AreEqual (c1, array[0]);
 			Assert.AreEqual (c2, array[1]);
-			Assert.AreEqual (a, array[2]);
+			Assert.AreEqual (b, array[2]);
+			Assert.AreEqual (a, array[3]);
 
 			array = Types.Collection.ToArray (context.GetArrangeQueue ());
 
