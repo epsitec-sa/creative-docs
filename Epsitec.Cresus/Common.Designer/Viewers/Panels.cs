@@ -371,6 +371,16 @@ namespace Epsitec.Common.Designer.Viewers
 			if ( this.ignoreChange )  return;
 
 			AbstractTextField edit = sender as AbstractTextField;
+			string newName = edit.Text;
+			int sel = this.array.SelectedRow;
+			string actualName = this.labelsIndex[sel];
+
+			this.module.PanelRename(actualName, newName);
+
+			this.labelsIndex[sel] = newName;
+			this.UpdateArray();
+
+			this.module.Modifier.IsDirty = true;
 		}
 
 
