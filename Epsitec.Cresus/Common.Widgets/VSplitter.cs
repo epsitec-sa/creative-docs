@@ -15,6 +15,12 @@ namespace Epsitec.Common.Widgets
 			this.SetEmbedder (embedder);
 		}
 
+		static VSplitter()
+		{
+			Helpers.VisualPropertyMetadata metadataWidth = new Helpers.VisualPropertyMetadata(4.0, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
+			Visual.PreferredWidthProperty.OverrideMetadata(typeof(VSplitter), metadataWidth);
+		}
+
 		public override bool IsVertical
 		{
 			get
