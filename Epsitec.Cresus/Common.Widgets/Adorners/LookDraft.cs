@@ -1445,34 +1445,34 @@ namespace Epsitec.Common.Widgets.Adorners
 		}
 
 		public override void PaintRibbonSectionBackground(Drawing.Graphics graphics,
-												 Drawing.Rectangle rect,
-												 WidgetPaintState state)
-		{
-			//	Dessine une section d'un ruban.
-			rect.Left = rect.Right-2;
-			this.PaintSeparatorBackground(graphics, rect, state, Direction.Right, false);
-		}
-
-		public override void PaintRibbonSectionForeground(Drawing.Graphics graphics,
-												 Drawing.Rectangle rect,
-												 WidgetPaintState state)
-		{
-			//	Dessine une section d'un ruban.
-		}
-
-		public override void PaintRibbonSectionTextLayout(Drawing.Graphics graphics,
-												 Drawing.Rectangle rect,
+												 Drawing.Rectangle fullRect,
+												 Drawing.Rectangle userRect,
+												 Drawing.Rectangle textRect,
 												 TextLayout text,
 												 WidgetPaintState state)
 		{
-			//	Dessine le texte du titre d'une section d'un ruban.
-			if ( text == null )  return;
+			//	Dessine une section d'un ruban.
+			fullRect.Left = fullRect.Right-2;
+			this.PaintSeparatorBackground(graphics, fullRect, state, Direction.Right, false);
 
-			Drawing.TextStyle.DefineDefaultColor(this.colorBlack);
-			Drawing.Point pos = new Drawing.Point(rect.Left+3, rect.Bottom);
-			text.LayoutSize = new Drawing.Size(rect.Width-4, rect.Height);
-			text.Alignment = Drawing.ContentAlignment.MiddleCenter;
-			text.Paint(pos, graphics, Drawing.Rectangle.MaxValue, Drawing.Color.FromBrightness(0), Drawing.GlyphPaintStyle.Normal);
+			if (text != null)
+			{
+				Drawing.TextStyle.DefineDefaultColor(this.colorBlack);
+				Drawing.Point pos = new Drawing.Point(textRect.Left+3, textRect.Bottom);
+				text.LayoutSize = new Drawing.Size(textRect.Width-4, textRect.Height);
+				text.Alignment = Drawing.ContentAlignment.MiddleCenter;
+				text.Paint(pos, graphics, Drawing.Rectangle.MaxValue, Drawing.Color.FromBrightness(0), Drawing.GlyphPaintStyle.Normal);
+			}
+		}
+
+		public override void PaintRibbonSectionForeground(Drawing.Graphics graphics,
+												 Drawing.Rectangle fullRect,
+												 Drawing.Rectangle userRect,
+												 Drawing.Rectangle textRect,
+												 TextLayout text,
+												 WidgetPaintState state)
+		{
+			//	Dessine une section d'un ruban.
 		}
 
 		public override void PaintTagBackground(Drawing.Graphics graphics,

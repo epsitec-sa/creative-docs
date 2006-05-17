@@ -11,7 +11,8 @@ namespace Epsitec.Common.Document.Ribbons
 	{
 		public Align() : base()
 		{
-			this.title.Text = Res.Strings.Action.AlignMain;
+			this.Title = Res.Strings.Action.AlignMain;
+			this.PreferredWidth = 8 + 22*3 + this.separatorWidth + 22*4 + this.separatorWidth + 22 + this.separatorWidth + 22;
 
 			this.buttonAlignLeft    = this.CreateIconButton("AlignLeft");
 			this.buttonAlignCenterX = this.CreateIconButton("AlignCenterX");
@@ -50,15 +51,6 @@ namespace Epsitec.Common.Document.Ribbons
 			}
 			
 			base.Dispose(disposing);
-		}
-
-		public override double DefaultWidth
-		{
-			//	Retourne la largeur standard.
-			get
-			{
-				return 8 + 22*3 + this.separatorWidth + 22*4 + this.separatorWidth + 22 + this.separatorWidth + 22;
-			}
 		}
 
 

@@ -26,7 +26,11 @@ namespace Epsitec.Common.Widgets
 			this.cursor = Message.state.window_cursor;
 			this.button = MouseButtons.None;
 		}
-		
+
+		public bool							IsDummy
+		{
+			get { return this.is_dummy_message; }
+		}
 		
 		public bool							FilterNoChildren
 		{
@@ -260,9 +264,39 @@ namespace Epsitec.Common.Widgets
 				return false;
 			}
 		}
-		
-		
-		
+
+
+		internal void MarkAsDummyMessage()
+		{
+			this.is_dummy_message = true;
+		}
+
+		public static Message CreateDummyMessage(MessageType type)
+		{
+			Message message = new Message ();
+			
+			message.type      = type;
+			message.button    = Message.state.buttons;
+			message.modifiers = Message.state.modifiers;
+
+			if (message.IsMouseType)
+			{
+				message.filter_no_children  = false;
+				message.filter_only_focused = false;
+				message.filter_only_on_hit  = true;
+			}
+			else if (message.IsKeyType)
+			{
+				message.filter_no_children  = false;
+				message.filter_only_focused = true;
+				message.filter_only_on_hit  = false;
+			}
+			
+			message.is_dummy_message = true;
+			
+			return message;
+		}
+
 		public static void ResetButtonDownCounter()
 		{
 			Message.state.button_down_count = 0;
@@ -937,6 +971,7 @@ namespace Epsitec.Common.Widgets
 		private bool						is_handled;
 		private bool						is_non_client;
 		private bool						is_swallowed;
+		private bool						is_dummy_message;
 		private bool						force_capture;
 		private WindowRoot					window_root;
 		private Widget						in_widget;

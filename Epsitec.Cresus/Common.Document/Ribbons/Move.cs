@@ -11,7 +11,8 @@ namespace Epsitec.Common.Document.Ribbons
 	{
 		public Move() : base()
 		{
-			this.title.Text = Res.Strings.Action.MoveMain;
+			this.Title = Res.Strings.Action.MoveMain;
+			this.PreferredWidth = 8 + 22*2 + 50;
 
 			this.buttonMoveHi = this.CreateIconButton("MoveLeftFree");
 			this.buttonMoveH  = this.CreateIconButton("MoveRightFree");
@@ -38,15 +39,6 @@ namespace Epsitec.Common.Document.Ribbons
 
 			this.AdaptFieldMove(this.fieldMoveH);
 			this.AdaptFieldMove(this.fieldMoveV);
-		}
-
-		public override double DefaultWidth
-		{
-			//	Retourne la largeur standard.
-			get
-			{
-				return 8 + 22*2 + 50;
-			}
 		}
 
 

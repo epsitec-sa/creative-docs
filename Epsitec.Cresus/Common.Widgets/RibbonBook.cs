@@ -16,12 +16,15 @@ namespace Epsitec.Common.Widgets
 
 			this.TabNavigation = Widget.TabNavigationMode.ForwardTabActive;
 
+			//	Partie inférieure, qui contiendra les pages.
 			this.pages = new Widget(this);
 			this.pages.Dock = DockStyle.Fill;
 
+			//	Partie supérieure, qui contiendra les boutons et les commandes rapides.
+			//	Créé en deuxième, pour dessiner les boutons par-dessus les pages !
 			this.buttons = new Widget(this);
-			this.buttons.Margins = new Margins(10, 0, 0, -1);
-			this.buttons.Padding = new Margins(0, 0, RibbonBook.TopMargin, 0);
+			this.buttons.Margins = new Margins(0, 0, 0, -1);  // -1 -> un pixel de chevauchement avec this.pages
+			this.buttons.Padding = new Margins(12, 0, RibbonBook.TopMargin, 0);
 			this.buttons.Dock = DockStyle.Top;
 		}
 		
@@ -29,13 +32,20 @@ namespace Epsitec.Common.Widgets
 		{
 			this.SetEmbedder(embedder);
 		}
-		
-		
+
+
+		static RibbonBook()
+		{
+			Helpers.VisualPropertyMetadata metadataHeight = new Helpers.VisualPropertyMetadata(RibbonBook.TabHeight, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
+			Visual.MinHeightProperty.OverrideMetadata(typeof(RibbonBook), metadataHeight);
+		}
+
+
 		protected override void Dispose(bool disposing)
 		{
 			if ( disposing )
 			{
-				RibbonPage[] pages = new RibbonPage[this.items.Count];
+				Widget[] pages = new Widget[this.items.Count];
 				this.items.CopyTo(pages, 0);
 				
 				for (int i=0; i<pages.Length; i++)
@@ -123,15 +133,25 @@ namespace Epsitec.Common.Widgets
 			if ( !(sender is RibbonButton) )  return;
 			RibbonButton button = sender as RibbonButton;
 
-			foreach (RibbonPage page in this.items)
+			foreach (Widget widget in this.items)
 			{
+				RibbonPage page = widget as RibbonPage;
+				if (page == null)  continue;
+
 				if (page.RibbonButton == button)
 				{
-					this.ActivePage = page;
-					
-					if ( button.AutoFocus )
+					if (this.ActivePage == page)
 					{
-						this.Focus();
+						this.ActivePage = null;
+					}
+					else
+					{
+						this.ActivePage = page;
+
+						if (button.AutoFocus)
+						{
+							this.Focus();
+						}
 					}
 					
 					break;
@@ -143,8 +163,11 @@ namespace Epsitec.Common.Widgets
 		protected void UpdateVisiblePages()
 		{
 			//	Met à jour la page visible. Toutes les autres sont cachées.
-			foreach (RibbonPage page in this.items)
+			foreach (Widget widget in this.items)
 			{
+				RibbonPage page = widget as RibbonPage;
+				if (page == null)  continue;
+
 				if ( page == this.ActivePage )  // est-ce la page active ?
 				{
 					page.Visibility = true;
@@ -189,15 +212,9 @@ namespace Epsitec.Common.Widgets
 		{
 			//	Dessine le groupe d'onglets.
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
-			Rectangle rect;
-
-			rect = this.Client.Bounds;
+			Rectangle rect = this.Client.Bounds;
 			rect.Bottom = rect.Top-RibbonBook.TabHeight;
 			adorner.PaintRibbonTabBackground(graphics, rect, this.PaintState);
-
-			rect = this.Client.Bounds;
-			rect.Top -= RibbonBook.TabHeight;
-			adorner.PaintRibbonPageBackground(graphics, rect, this.PaintState);
 		}
 		
 		protected override void ProcessMessage(Message message, Point pos)
@@ -285,55 +302,73 @@ namespace Epsitec.Common.Widgets
 		public void NotifyInsertion(Widget widget)
 		{
 			RibbonPage item = widget as RibbonPage;
-			RibbonBook oldBook = item.Book;
-			
-			if (oldBook != null && oldBook != this)
+			if (item == null)
 			{
-				oldBook.items.Remove(item);
+				widget.SetEmbedder(this.buttons);
+				widget.Margins = new Margins(0, 0, 2, 2);
+				widget.Dock = DockStyle.Left;
 			}
+			else
+			{
+				//	Si la page à insérer est dans un autre book, on l'y enlève.
+				RibbonBook oldBook = item.Book;
+				if (oldBook != null && oldBook != this)
+				{
+					oldBook.items.Remove(item);
+				}
 
-			item.SetEmbedder(this.pages);
-			item.Dock = DockStyle.Fill;
-			
-			//?System.Diagnostics.Debug.Assert(oldBook == this);
+				item.SetEmbedder(this.pages);
+				item.Dock = DockStyle.Fill;
 
-			item.RibbonButton.SetEmbedder(this.buttons);
-			item.RibbonButton.Dock = DockStyle.Left;
-			item.RibbonButton.Pressed += new MessageEventHandler(this.HandleRibbonButton);
-			item.RankChanged += new EventHandler(this.HandlePageRankChanged);
-			
-			this.UpdateVisiblePages();
-			this.OnPageCountChanged();
+				item.RibbonButton.SetEmbedder(this.buttons);
+				item.RibbonButton.Dock = DockStyle.Left;
+				item.RibbonButton.Pressed += new MessageEventHandler(this.HandleRibbonButton);
+				item.RankChanged += new EventHandler(this.HandlePageRankChanged);
+
+				this.UpdateVisiblePages();
+				this.OnPageCountChanged();
+			}
 		}
 
 		public void NotifyRemoval(Widget widget)
 		{
 			RibbonPage item = widget as RibbonPage;
-			int index = item.Index;
-
-			item.RibbonButton.Clicked -= new MessageEventHandler(this.HandleRibbonButton);
-			item.RankChanged -= new EventHandler(this.HandlePageRankChanged);
-			
-			this.Children.Remove(item);
-			this.Children.Remove(item.RibbonButton);
-			
-			if ( this.ActivePage == item )
+			if (item == null)
 			{
-				int n = this.PageCount - 1;
-				
-				if ( index >= n )
+				this.buttons.Children.Remove(widget);
+			}
+			else
+			{
+				int index = item.Index;
+
+				item.RibbonButton.Pressed -= new MessageEventHandler(this.HandleRibbonButton);
+				item.RankChanged -= new EventHandler(this.HandlePageRankChanged);
+
+				this.pages.Children.Remove(item);
+				this.buttons.Children.Remove(item.RibbonButton);
+
+				if (this.ActivePage == item)
 				{
-					index = n - 1;
+					int n = this.PageCount - 1;
+
+					if (index >= n)
+					{
+						index = n - 1;
+					}
+
+					this.ActivePageIndex = index;
 				}
-				
-				this.ActivePageIndex = index;
 			}
 		}
 		
 		public void NotifyPostRemoval(Widget widget)
 		{
-			this.UpdateVisiblePages();
-			this.OnPageCountChanged();
+			RibbonPage item = widget as RibbonPage;
+			if (item != null)
+			{
+				this.UpdateVisiblePages();
+				this.OnPageCountChanged();
+			}
 		}
 		#endregion
 

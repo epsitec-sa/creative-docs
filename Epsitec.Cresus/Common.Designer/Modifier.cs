@@ -13,7 +13,7 @@ namespace Epsitec.Common.Designer
 		public Modifier(Module module)
 		{
 			this.module = module;
-			this.attachViewers = new List<Viewer>();
+			this.attachViewers = new List<Viewers.Abstract>();
 		}
 
 		public void Dispose()
@@ -183,54 +183,6 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		public bool IsExistingName(string baseName)
-		{
-			//	Indique si un nom existe.
-			ResourceBundleCollection bundles = this.module.Bundles;
-			ResourceBundle defaultBundle = bundles[ResourceLevel.Default];
-
-			ResourceBundle.Field field = defaultBundle[baseName];
-			return (field != null && field.Name != null);
-		}
-
-		public string GetDuplicateName(string baseName)
-		{
-			//	Retourne le nom à utiliser lorsqu'un nom existant est dupliqué.
-			ResourceBundleCollection bundles = this.module.Bundles;
-			ResourceBundle defaultBundle = bundles[ResourceLevel.Default];
-
-			int numberLength = 0;
-			while (baseName.Length > 0)
-			{
-				char last = baseName[baseName.Length-1-numberLength];
-				if (last >= '0' && last <= '9')
-				{
-					numberLength ++;
-				}
-				else
-				{
-					break;
-				}
-			}
-
-			int nextNumber = 2;
-			if (numberLength > 0)
-			{
-				nextNumber = int.Parse(baseName.Substring(baseName.Length-numberLength))+1;
-				baseName = baseName.Substring(0, baseName.Length-numberLength);
-			}
-
-			string newName = baseName;
-			for (int i=nextNumber; i<nextNumber+100; i++)
-			{
-				newName = string.Concat(baseName, i.ToString(System.Globalization.CultureInfo.InvariantCulture));
-				ResourceBundle.Field field = defaultBundle[newName];
-				if ( field == null || field.Name == null )  break;
-			}
-
-			return newName;
-		}
-
 		protected int GetDefaultIndex(string name)
 		{
 			//	Cherche l'index d'une ressource d'après son nom.
@@ -242,7 +194,7 @@ namespace Epsitec.Common.Designer
 
 
 		#region Viewers
-		public Viewer ActiveViewer
+		public Viewers.Abstract ActiveViewer
 		{
 			//	Un seul visualisateur privilégié peut être actif.
 			get
@@ -255,19 +207,19 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		public void AttachViewer(Viewer viewer)
+		public void AttachViewer(Viewers.Abstract viewer)
 		{
 			//	Attache un nouveau visualisateur à ce module.
 			this.attachViewers.Add(viewer);
 		}
 
-		public void DetachViewer(Viewer viewer)
+		public void DetachViewer(Viewers.Abstract viewer)
 		{
 			//	Détache un visualisateur de ce module.
 			this.attachViewers.Remove(viewer);
 		}
 
-		public List<Viewer> AttachViewers
+		public List<Viewers.Abstract> AttachViewers
 		{
 			//	Liste des visualisateurs attachés au module.
 			get
@@ -280,7 +232,7 @@ namespace Epsitec.Common.Designer
 		
 		protected Module						module;
 		protected bool							isDirty = false;
-		protected Viewer						activeViewer;
-		protected List<Viewer>					attachViewers;
+		protected Viewers.Abstract				activeViewer;
+		protected List<Viewers.Abstract>		attachViewers;
 	}
 }

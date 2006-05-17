@@ -15,6 +15,7 @@ namespace Epsitec.Common.Widgets.Adorners
 		{
 			//	Initialise les couleurs en fonction des réglages de Windows.
 			this.colorBlack          = Drawing.Color.FromRgb(  0.0/255.0,   0.0/255.0,   0.0/255.0);
+			this.colorWhite          = Drawing.Color.FromRgb(255.0/255.0, 255.0/255.0, 255.0/255.0);
 			this.colorControl        = Drawing.Color.FromRgb( 53.0/255.0, 146.0/255.0, 255.0/255.0);
 			this.colorCaption        = Drawing.Color.FromRgb(187.0/255.0, 119.0/255.0,  36.0/255.0);
 			this.colorCaptionNF      = Drawing.Color.FromRgb(240.0/255.0, 204.0/255.0, 134.0/255.0);
@@ -1517,11 +1518,11 @@ namespace Epsitec.Common.Widgets.Adorners
 		{
 			//	Dessine la bande principale d'un ruban.
 			graphics.AddFilledRectangle(rect);
-			graphics.RenderSolid(Drawing.Color.FromAlphaRgb(0.4, 1.0, 1.0, 1.0));
+			graphics.RenderSolid(Drawing.Color.FromAlphaRgb(0.3, 1.0, 1.0, 1.0));
 
 			graphics.AddLine(rect.Left, rect.Top-0.5, rect.Right, rect.Top-0.5);
 			graphics.AddLine(rect.Left, rect.Bottom+0.5, rect.Right, rect.Bottom+0.5);
-			graphics.RenderSolid(this.ColorBorder);
+			graphics.RenderSolid(this.colorBlack);
 		}
 
 		public override void PaintRibbonPageForeground(Drawing.Graphics graphics,
@@ -1537,30 +1538,9 @@ namespace Epsitec.Common.Widgets.Adorners
 												ActiveState active)
 		{
 			//	Dessine le bouton pour un ruban.
-			rect.Bottom -= 2;
-
 			if ( (state&WidgetPaintState.ActiveYes) != 0 )   // bouton activé ?
 			{
-				if ( (state&WidgetPaintState.Entered) != 0 )  // bouton survolé ?
-				{
-					this.PaintImageButton(graphics, rect, 14);
-				}
-				else
-				{
-					if ( (state&WidgetPaintState.Enabled) != 0 )
-					{
-						this.PaintImageButton(graphics, rect, 8);
-					}
-					else
-					{
-						this.PaintImageButton(graphics, rect, 12);
-					}
-				}
-			}
-			else
-			{
-				rect.Top -= 2;
-				if ( (state&WidgetPaintState.Entered) != 0 )  // bouton survolé ?
+				if ((state&WidgetPaintState.Entered) != 0)  // bouton survolé ?
 				{
 					this.PaintImageButton(graphics, rect, 14);
 				}
@@ -1574,6 +1554,16 @@ namespace Epsitec.Common.Widgets.Adorners
 					{
 						this.PaintImageButton(graphics, rect, 12);
 					}
+				}
+			}
+			else
+			{
+				rect.Top    -= 2;
+				rect.Bottom += 1;
+
+				if ((state&WidgetPaintState.Entered) != 0)  // bouton survolé ?
+				{
+					this.PaintImageButton(graphics, rect, 8);
 				}
 			}
 		}
@@ -1598,44 +1588,50 @@ namespace Epsitec.Common.Widgets.Adorners
 			Drawing.Point pos = new Drawing.Point();
 			pos.X = (rect.Width-text.LayoutSize.Width)/2;
 			pos.Y = (rect.Height-text.LayoutSize.Height)/2;
-			if ( (state&WidgetPaintState.ActiveYes) == 0 )   // bouton désactivé ?
+
+			Drawing.Color color;
+			if ((state&WidgetPaintState.ActiveYes) != 0)   // bouton activé ?
 			{
-				pos.Y -= 2;
+				color = this.colorBlack;
 			}
-			state &= ~WidgetPaintState.Focused;
-			this.PaintButtonTextLayout(graphics, pos, text, state, Widgets.ButtonStyle.Tab);
+			else
+			{
+				color = this.colorWhite;
+			}
+
+			text.Paint(pos, graphics, Drawing.Rectangle.MaxValue, color, Drawing.GlyphPaintStyle.Normal);
 		}
 
 		public override void PaintRibbonSectionBackground(Drawing.Graphics graphics,
-												 Drawing.Rectangle rect,
-												 WidgetPaintState state)
-		{
-			//	Dessine une section d'un ruban.
-			rect.Deflate(0.5);
-			graphics.AddLine(rect.Right, rect.Top, rect.Right, rect.Bottom);
-			graphics.RenderSolid(this.colorBorder);
-		}
-
-		public override void PaintRibbonSectionForeground(Drawing.Graphics graphics,
-												 Drawing.Rectangle rect,
-												 WidgetPaintState state)
-		{
-			//	Dessine une section d'un ruban.
-		}
-
-		public override void PaintRibbonSectionTextLayout(Drawing.Graphics graphics,
-												 Drawing.Rectangle rect,
+												 Drawing.Rectangle fullRect,
+												 Drawing.Rectangle userRect,
+												 Drawing.Rectangle textRect,
 												 TextLayout text,
 												 WidgetPaintState state)
 		{
-			//	Dessine le texte du titre d'une section d'un ruban.
-			if ( text == null )  return;
+			//	Dessine une section d'un ruban.
+			fullRect.Deflate(0.5);
+			graphics.AddLine(fullRect.Right, fullRect.Top, fullRect.Right, fullRect.Bottom);
+			graphics.RenderSolid(this.colorBorder);
 
-			Drawing.TextStyle.DefineDefaultColor(this.colorBlack);
-			Drawing.Point pos = new Drawing.Point(rect.Left+3, rect.Bottom);
-			text.LayoutSize = new Drawing.Size(rect.Width-4, rect.Height);
-			text.Alignment = Drawing.ContentAlignment.MiddleLeft;
-			text.Paint(pos, graphics, Drawing.Rectangle.MaxValue, Drawing.Color.FromBrightness(1), Drawing.GlyphPaintStyle.Normal);
+			if (text != null)
+			{
+				Drawing.TextStyle.DefineDefaultColor(this.colorBlack);
+				Drawing.Point pos = new Drawing.Point(textRect.Left+3, textRect.Bottom);
+				text.LayoutSize = new Drawing.Size(textRect.Width-4, textRect.Height);
+				text.Alignment = Drawing.ContentAlignment.MiddleLeft;
+				text.Paint(pos, graphics, Drawing.Rectangle.MaxValue, this.colorBlack, Drawing.GlyphPaintStyle.Normal);
+			}
+		}
+
+		public override void PaintRibbonSectionForeground(Drawing.Graphics graphics,
+												 Drawing.Rectangle fullRect,
+												 Drawing.Rectangle userRect,
+												 Drawing.Rectangle textRect,
+												 TextLayout text,
+												 WidgetPaintState state)
+		{
+			//	Dessine une section d'un ruban.
 		}
 
 		public override void PaintTagBackground(Drawing.Graphics graphics,

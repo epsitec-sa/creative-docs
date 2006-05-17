@@ -4,19 +4,15 @@ using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
 using Epsitec.Common.Drawing;
 
-namespace Epsitec.Common.Designer
+namespace Epsitec.Common.Designer.Viewers
 {
 	/// <summary>
 	/// Permet de représenter les ressources d'un module.
 	/// </summary>
-	public class Viewer : Widget
+	public class Strings : Abstract
 	{
-		public Viewer(Module module)
+		public Strings(Module module) : base(module)
 		{
-			this.module = module;
-
-			this.labelsIndex = new List<string>();
-
 			int tabIndex = 0;
 
 			this.primaryCulture = new IconButtonMark(this);
@@ -45,7 +41,7 @@ namespace Epsitec.Common.Designer
 
 			this.labelStatic = new StaticText(this);
 			this.labelStatic.ContentAlignment = ContentAlignment.MiddleRight;
-			this.labelStatic.Text = Res.Strings.Viewer.Edit;
+			this.labelStatic.Text = Res.Strings.Viewers.Strings.Edit;
 			this.labelStatic.Visibility = (this.module.Mode != DesignerMode.Build);
 
 			this.labelEdit = new TextFieldEx(this);
@@ -75,7 +71,7 @@ namespace Epsitec.Common.Designer
 
 			this.labelAbout = new StaticText(this);
 			this.labelAbout.ContentAlignment = ContentAlignment.MiddleRight;
-			this.labelAbout.Text = Res.Strings.Viewer.About;
+			this.labelAbout.Text = Res.Strings.Viewers.Strings.About;
 
 			this.primaryAbout = new TextFieldMulti(this);
 			this.primaryAbout.Name = "PrimaryAbout";
@@ -133,16 +129,7 @@ namespace Epsitec.Common.Designer
 		}
 
 
-		public AbstractTextField CurrentTextField
-		{
-			//	Retourne le texte éditable en cours d'édition.
-			get
-			{
-				return this.currentTextField;
-			}
-		}
-
-		public void DoSearch(string search, Searcher.SearchingMode mode)
+		public override void DoSearch(string search, Searcher.SearchingMode mode)
 		{
 			//	Effectue une recherche.
 			Searcher searcher = new Searcher(this.labelsIndex, this.primaryBundle, this.secondaryBundle);
@@ -180,9 +167,9 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		public void DoCount(string search, Searcher.SearchingMode mode)
+		public override void DoCount(string search, Searcher.SearchingMode mode)
 		{
-			//	Effectue une recherche.
+			//	Effectue un comptage.
 			Searcher searcher = new Searcher(this.labelsIndex, this.primaryBundle, this.secondaryBundle);
 			searcher.FixStarting(mode, this.array.SelectedRow, this.currentTextField, false);
 
@@ -198,7 +185,7 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		public void DoReplace(string search, string replace, Searcher.SearchingMode mode)
+		public override void DoReplace(string search, string replace, Searcher.SearchingMode mode)
 		{
 			//	Effectue un remplacement.
 			if (this.module.Mode == DesignerMode.Translate)
@@ -228,7 +215,7 @@ namespace Epsitec.Common.Designer
 						return;
 					}
 
-					if (this.module.Modifier.IsExistingName(validReplace))
+					if (this.IsExistingName(validReplace))
 					{
 						this.module.MainWindow.DialogError(Res.Strings.Error.NameAlreadyExist);
 						return;
@@ -307,7 +294,7 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		public void DoReplaceAll(string search, string replace, Searcher.SearchingMode mode)
+		public override void DoReplaceAll(string search, string replace, Searcher.SearchingMode mode)
 		{
 			//	Effectue un 'remplacer tout'.
 			if (this.module.Mode == DesignerMode.Translate)
@@ -389,41 +376,7 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		public void DoFilter(string filter, Searcher.SearchingMode mode)
-		{
-			//	Change le filtre des ressources visibles.
-			string label = "";
-			int sel = this.array.SelectedRow;
-			if (sel != -1 && sel < this.labelsIndex.Count)
-			{
-				label = this.labelsIndex[sel];
-			}
-
-			this.UpdateLabelsIndex(filter, mode);
-			this.UpdateArray();
-
-			sel = this.labelsIndex.IndexOf(label);
-			this.array.SelectedRow = sel;
-			this.array.ShowSelectedRow();
-			this.UpdateCommands();
-		}
-
-		public void DoAccess(string name)
-		{
-			//	Change la ressource visible.
-			int sel = this.array.SelectedRow;
-
-			if ( name == "AccessFirst" )  sel = 0;
-			if ( name == "AccessPrev"  )  sel --;
-			if ( name == "AccessNext"  )  sel ++;
-			if ( name == "AccessLast"  )  sel = 1000000;
-
-			this.array.SelectedRow = sel;
-			this.array.ShowSelectedRow();
-			this.UpdateCommands();
-		}
-
-		public void DoModification(string name)
+		public override void DoModification(string name)
 		{
 			//	Change la ressource modifiée visible.
 			int sel = this.array.SelectedRow;
@@ -511,59 +464,7 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		public void DoWarning(string name)
-		{
-			//	Change la ressource manquante visible.
-			int sel = this.array.SelectedRow;
-			if (sel == -1)
-			{
-				sel = 0;
-			}
-
-			int column = -1;
-			int dir = (name == "WarningPrev") ? -1 : 1;
-
-			for (int i=0; i<this.labelsIndex.Count; i++)
-			{
-				sel += dir;
-
-				if (sel >= this.labelsIndex.Count)
-				{
-					sel = 0;
-				}
-
-				if (sel < 0)
-				{
-					sel = this.labelsIndex.Count-1;
-				}
-
-				string label = this.labelsIndex[sel];
-
-				if ( this.secondaryBundle[label] == null          ||
-					 this.secondaryBundle[label].Name == null     ||
-					 this.secondaryBundle[label].AsString == null ||
-					 this.secondaryBundle[label].AsString == ""   )
-				{
-					column = 2;
-					break;
-				}
-			}
-
-			this.array.SelectedRow = sel;
-			this.array.ShowSelectedRow();
-
-			AbstractTextField edit = null;
-			if (column == 1)  edit = this.primaryEdit;
-			if (column == 2)  edit = this.secondaryEdit;
-			if (edit != null)
-			{
-				this.Window.MakeActive();
-				edit.Focus();
-				edit.SelectAll();
-			}
-		}
-
-		public void DoDelete()
+		public override void DoDelete()
 		{
 			//	Supprime la ressource sélectionnée.
 			int sel = this.array.SelectedRow;
@@ -582,14 +483,14 @@ namespace Epsitec.Common.Designer
 			this.module.Modifier.IsDirty = true;
 		}
 
-		public void DoDuplicate(bool duplicate)
+		public override void DoDuplicate(bool duplicate)
 		{
 			//	Duplique la ressource sélectionnée.
 			int sel = this.array.SelectedRow;
 			if ( sel == -1 )  return;
 
 			string name = this.labelsIndex[sel];
-			string newName = this.module.Modifier.GetDuplicateName(name);
+			string newName = this.GetDuplicateName(name);
 			this.module.Modifier.Duplicate(name, newName, duplicate);
 
 			int newSel = sel+1;
@@ -602,7 +503,7 @@ namespace Epsitec.Common.Designer
 			this.module.Modifier.IsDirty = true;
 		}
 
-		public void DoMove(int direction)
+		public override void DoMove(int direction)
 		{
 			//	Déplace la ressource sélectionnée.
 			int sel = this.array.SelectedRow;
@@ -622,7 +523,7 @@ namespace Epsitec.Common.Designer
 			this.module.Modifier.IsDirty = true;
 		}
 
-		public void DoNewCulture()
+		public override void DoNewCulture()
 		{
 			//	Crée une nouvelle culture.
 			string name = this.module.MainWindow.DlgNewCulture();
@@ -638,7 +539,7 @@ namespace Epsitec.Common.Designer
 			this.module.Modifier.IsDirty = true;
 		}
 
-		public void DoDeleteCulture()
+		public override void DoDeleteCulture()
 		{
 			//	Supprime la culture courante.
 			string question = string.Format(Res.Strings.Dialog.DeleteCulture.Question, Misc.CultureName(this.secondaryBundle.Culture));
@@ -659,7 +560,7 @@ namespace Epsitec.Common.Designer
 			this.module.Modifier.IsDirty = true;
 		}
 
-		public void DoClipboard(string name)
+		public override void DoClipboard(string name)
 		{
 			//	Effectue une action avec le bloc-notes.
 			if ( this.currentTextField == null )  return;
@@ -680,7 +581,7 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		public void DoFont(string name)
+		public override void DoFont(string name)
 		{
 			//	Effectue une modification de typographie.
 			if ( this.currentTextField == null )  return;
@@ -701,38 +602,6 @@ namespace Epsitec.Common.Designer
 			}
 
 			this.HandleTextChanged(this.currentTextField);
-		}
-
-
-		public string InfoAccessText
-		{
-			//	Donne le texte d'information sur l'accès en cours.
-			get
-			{
-				System.Text.StringBuilder builder = new System.Text.StringBuilder();
-
-				int sel = this.array.SelectedRow;
-				if (sel == -1)
-				{
-					builder.Append("-");
-				}
-				else
-				{
-					builder.Append((sel+1).ToString());
-				}
-
-				builder.Append("/");
-				builder.Append(this.labelsIndex.Count.ToString());
-
-				if (this.labelsIndex.Count < this.primaryBundle.FieldCount)
-				{
-					builder.Append(" (");
-					builder.Append(this.primaryBundle.FieldCount.ToString());
-					builder.Append(")");
-				}
-
-				return builder.ToString();
-			}
 		}
 
 
@@ -761,7 +630,7 @@ namespace Epsitec.Common.Designer
 			}
 
 			this.primaryBundle = bundles[ResourceLevel.Default];
-			this.primaryCulture.Text = string.Format(Res.Strings.Viewer.Reference, Misc.CultureName(this.primaryBundle.Culture));
+			this.primaryCulture.Text = string.Format(Res.Strings.Viewers.Strings.Reference, Misc.CultureName(this.primaryBundle.Culture));
 
 			this.secondaryBundle = null;
 
@@ -784,7 +653,7 @@ namespace Epsitec.Common.Designer
 					}
 				}
 
-				list.Sort(Viewer.CompareCultureInfo);
+				list.Sort(Strings.CompareCultureInfo);
 				
 				this.secondaryCultures = new IconButtonMark[list.Count];
 				for (int i=0; i<list.Count; i++)
@@ -839,7 +708,7 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		protected void UpdateLabelsIndex(string filter, Searcher.SearchingMode mode)
+		protected override void UpdateLabelsIndex(string filter, Searcher.SearchingMode mode)
 		{
 			//	Construit l'index en fonction des ressources primaires.
 			this.labelsIndex.Clear();
@@ -880,7 +749,7 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		protected void UpdateArray()
+		protected override void UpdateArray()
 		{
 			//	Met à jour tout le contenu du tableau.
 			this.array.TotalRows = this.labelsIndex.Count;
@@ -1048,9 +917,11 @@ namespace Epsitec.Common.Designer
 			this.UpdateCommands();
 		}
 
-		public void UpdateCommands()
+		public override void UpdateCommands()
 		{
 			//	Met à jour les commandes en fonction de la ressource sélectionnée.
+			base.UpdateCommands();
+
 			int sel = this.array.SelectedRow;
 			int count = this.labelsIndex.Count;
 			bool build = (this.module.Mode == DesignerMode.Build);
@@ -1071,32 +942,17 @@ namespace Epsitec.Common.Designer
 			
 			bool newCulture = (this.module.Bundles.Count < Dialogs.NewCulture.Cultures.Length);
 
-			this.GetCommandState("Save").Enable = this.module.Modifier.IsDirty;
-			this.GetCommandState("SaveAs").Enable = true;
-
 			this.GetCommandState("NewCulture").Enable = newCulture;
 			this.GetCommandState("DeleteCulture").Enable = true;
 
-			this.GetCommandState("Filter").Enable = true;
 			this.GetCommandState("Search").Enable = true;
-
 			this.GetCommandState("SearchPrev").Enable = search;
 			this.GetCommandState("SearchNext").Enable = search;
 
-			this.GetCommandState("AccessFirst").Enable = (sel != -1 && sel > 0);
-			this.GetCommandState("AccessPrev").Enable = (sel != -1 && sel > 0);
-			this.GetCommandState("AccessLast").Enable = (sel != -1 && sel < count-1);
-			this.GetCommandState("AccessNext").Enable = (sel != -1 && sel < count-1);
-
+			this.GetCommandState("ModificationPrev").Enable = true;
+			this.GetCommandState("ModificationNext").Enable = true;
 			this.GetCommandState("ModificationAll").Enable = (sel != -1 && all);
 			this.GetCommandState("ModificationClear").Enable = (sel != -1 && modified);
-
-			this.GetCommandState("Delete").Enable = (sel != -1 && build);
-			this.GetCommandState("Create").Enable = (sel != -1 && build);
-			this.GetCommandState("Duplicate").Enable = (sel != -1 && build);
-
-			this.GetCommandState("Up").Enable = (sel != -1 && sel > 0 && build);
-			this.GetCommandState("Down").Enable = (sel != -1 && sel < count-1 && build);
 
 			this.GetCommandState("FontBold").Enable = (sel != -1);
 			this.GetCommandState("FontItalic").Enable = (sel != -1);
@@ -1105,11 +961,6 @@ namespace Epsitec.Common.Designer
 
 			this.module.MainWindow.UpdateInfoCurrentModule();
 			this.module.MainWindow.UpdateInfoAccess();
-		}
-
-		protected CommandState GetCommandState(string command)
-		{
-			return this.module.MainWindow.GetCommandState(command);
 		}
 
 
@@ -1210,6 +1061,54 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
+		protected bool IsExistingName(string baseName)
+		{
+			//	Indique si un nom existe.
+			ResourceBundleCollection bundles = this.module.Bundles;
+			ResourceBundle defaultBundle = bundles[ResourceLevel.Default];
+
+			ResourceBundle.Field field = defaultBundle[baseName];
+			return (field != null && field.Name != null);
+		}
+
+		protected string GetDuplicateName(string baseName)
+		{
+			//	Retourne le nom à utiliser lorsqu'un nom existant est dupliqué.
+			ResourceBundleCollection bundles = this.module.Bundles;
+
+			int numberLength = 0;
+			while (baseName.Length > 0)
+			{
+				char last = baseName[baseName.Length-1-numberLength];
+				if (last >= '0' && last <= '9')
+				{
+					numberLength ++;
+				}
+				else
+				{
+					break;
+				}
+			}
+
+			int nextNumber = 2;
+			if (numberLength > 0)
+			{
+				nextNumber = int.Parse(baseName.Substring(baseName.Length-numberLength))+1;
+				baseName = baseName.Substring(0, baseName.Length-numberLength);
+			}
+
+			ResourceBundle defaultBundle = bundles[ResourceLevel.Default];
+			string newName = baseName;
+			for (int i=nextNumber; i<nextNumber+100; i++)
+			{
+				newName = string.Concat(baseName, i.ToString(System.Globalization.CultureInfo.InvariantCulture));
+				ResourceBundle.Field field = defaultBundle[newName];
+				if ( field == null || field.Name == null )  break;
+			}
+
+			return newName;
+		}
+
 		
 		void HandleSecondaryCultureClicked(object sender, MessageEventArgs e)
 		{
@@ -1280,7 +1179,7 @@ namespace Epsitec.Common.Designer
 					return;
 				}
 
-				if (this.module.Modifier.IsExistingName(text))
+				if (this.IsExistingName(text))
 				{
 					this.ignoreChange = true;
 					edit.Text = this.labelsIndex[sel];
@@ -1332,18 +1231,6 @@ namespace Epsitec.Common.Designer
 		}
 
 
-		void HandleEditKeyboardFocusChanged(object sender, Epsitec.Common.Types.DependencyPropertyChangedEventArgs e)
-		{
-			//	Appelé lorsqu'une ligne éditable voit son focus changer.
-			bool focused = (bool) e.NewValue;
-
-			if (focused)
-			{
-				this.currentTextField = sender as AbstractTextField;
-			}
-		}
-
-
 		#region CultureInfo
 		protected class CultureInfo
 		{
@@ -1381,9 +1268,6 @@ namespace Epsitec.Common.Designer
 		#endregion
 
 
-		protected Module					module;
-		protected List<string>				labelsIndex;
-		protected bool						ignoreChange = false;
 		protected bool						lastActionIsReplace = false;
 
 		protected IconButtonMark			primaryCulture;
@@ -1391,7 +1275,6 @@ namespace Epsitec.Common.Designer
 		protected ColorSample[]				secondaryModifiers;
 		protected ResourceBundle			primaryBundle;
 		protected ResourceBundle			secondaryBundle;
-		protected MyWidgets.StringArray		array;
 		protected StaticText				labelStatic;
 		protected TextFieldEx				labelEdit;
 		protected TextFieldMulti			primaryEdit;
@@ -1399,6 +1282,5 @@ namespace Epsitec.Common.Designer
 		protected StaticText				labelAbout;
 		protected TextFieldMulti			primaryAbout;
 		protected TextFieldMulti			secondaryAbout;
-		protected AbstractTextField			currentTextField;
 	}
 }

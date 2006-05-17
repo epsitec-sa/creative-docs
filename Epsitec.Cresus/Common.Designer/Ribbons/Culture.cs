@@ -11,7 +11,8 @@ namespace Epsitec.Common.Designer.Ribbons
 	{
 		public Culture() : base()
 		{
-			this.title.Text = Res.Strings.Ribbon.Section.Culture;
+			this.Title = Res.Strings.Ribbon.Section.Culture;
+			this.PreferredWidth = 8 + 22*2;
 
 			this.buttonNewCulture    = this.CreateIconButton("NewCulture");
 			this.buttonDeleteCulture = this.CreateIconButton("DeleteCulture");
@@ -26,15 +27,6 @@ namespace Epsitec.Common.Designer.Ribbons
 			}
 			
 			base.Dispose(disposing);
-		}
-
-		public override double DefaultWidth
-		{
-			//	Retourne la largeur standard.
-			get
-			{
-				return 8 + 22*2;
-			}
 		}
 
 

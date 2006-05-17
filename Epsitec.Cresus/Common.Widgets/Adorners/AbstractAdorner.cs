@@ -124,9 +124,8 @@ namespace Epsitec.Common.Widgets.Adorners
 		public abstract void PaintRibbonButtonBackground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetPaintState state, ActiveState active);
 		public abstract void PaintRibbonButtonForeground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetPaintState state, ActiveState active);
 		public abstract void PaintRibbonButtonTextLayout(Drawing.Graphics graphics, Drawing.Rectangle rect, TextLayout text, WidgetPaintState state, ActiveState active);
-		public abstract void PaintRibbonSectionBackground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetPaintState state);
-		public abstract void PaintRibbonSectionForeground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetPaintState state);
-		public abstract void PaintRibbonSectionTextLayout(Drawing.Graphics graphics, Drawing.Rectangle rect, TextLayout text, WidgetPaintState state);
+		public abstract void PaintRibbonSectionBackground(Drawing.Graphics graphics, Drawing.Rectangle fullRect, Drawing.Rectangle userRect, Drawing.Rectangle textRect, TextLayout text, WidgetPaintState state);
+		public abstract void PaintRibbonSectionForeground(Drawing.Graphics graphics, Drawing.Rectangle fullRect, Drawing.Rectangle userRect, Drawing.Rectangle textRect, TextLayout text, WidgetPaintState state);
 		public abstract void PaintTagBackground(Drawing.Graphics graphics, Drawing.Rectangle rect, Widgets.WidgetPaintState state, Drawing.Color color, Widgets.Direction dir);
 		public abstract void PaintTagForeground(Drawing.Graphics graphics, Drawing.Rectangle rect, Widgets.WidgetPaintState state, Drawing.Color color, Widgets.Direction dir);
 		public abstract void PaintTooltipBackground(Drawing.Graphics graphics, Drawing.Rectangle rect);

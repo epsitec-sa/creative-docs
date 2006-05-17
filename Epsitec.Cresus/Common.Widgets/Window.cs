@@ -375,26 +375,9 @@ namespace Epsitec.Common.Widgets
 		
 		public void SynchronousRepaint()
 		{
-			if (this.sync_suspend_count > 0)
+			if (this.window != null)
 			{
-//				System.Diagnostics.Debug.WriteLine ("SynchronousRepaint called recursively !");
-				return;
-			}
-
-			try
-			{
-				this.sync_suspend_count++;
-
-				this.ForceLayout ();
-				
-				if (this.window != null)
-				{
-					this.window.SynchronousRepaint ();
-				}
-			}
-			finally
-			{
-				this.sync_suspend_count--;
+				this.window.SynchronousRepaint ();
 			}
 		}
 		
@@ -2070,8 +2053,6 @@ namespace Epsitec.Common.Widgets
 		
 		internal void RefreshGraphics(Drawing.Graphics graphics, Drawing.Rectangle repaint, Drawing.Rectangle[] strips)
 		{
-			this.ForceLayout ();
-			
 			if (strips.Length > 1)
 			{
 				//	On doit repeindre toute une série de rectangles :
@@ -2276,7 +2257,6 @@ namespace Epsitec.Common.Widgets
 		private bool							window_location_set;
 		
 		private int								show_count;
-		private int								sync_suspend_count;
 		private int								recursive_layout_count;
 		private Widget							last_in_widget;
 		private Widget							capturing_widget;

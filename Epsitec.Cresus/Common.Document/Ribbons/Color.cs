@@ -11,7 +11,8 @@ namespace Epsitec.Common.Document.Ribbons
 	{
 		public Color() : base()
 		{
-			this.title.Text = Res.Strings.Action.ColorMain;
+			this.Title = Res.Strings.Action.ColorMain;
+			this.PreferredWidth = 8 + 22*2 + this.separatorWidth + 22*2 + 5 + 50;
 
 			this.buttonColorToRgb  = this.CreateIconButton("ColorToRgb");
 			this.buttonColorToCmyk = this.CreateIconButton("ColorToCmyk");
@@ -40,15 +41,6 @@ namespace Epsitec.Common.Document.Ribbons
 			base.SetDocument(type, install, debug, gs, document);
 
 			this.AdaptFieldColor(this.fieldColor);
-		}
-
-		public override double DefaultWidth
-		{
-			//	Retourne la largeur standard.
-			get
-			{
-				return 8 + 22*2 + this.separatorWidth + 22*2 + 5 + 50;
-			}
 		}
 
 

@@ -25,7 +25,7 @@ namespace Epsitec.Common.Widgets
 			this.SetEmbedder(embedder);
 		}
 
-		
+
 		static RibbonPage()
 		{
 			Helpers.VisualPropertyMetadata metadataHeight = new Helpers.VisualPropertyMetadata(RibbonPage.FixHeight, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
@@ -33,7 +33,7 @@ namespace Epsitec.Common.Widgets
 			Visual.PreferredHeightProperty.OverrideMetadata(typeof(RibbonPage), metadataHeight);
 		}
 
-		
+
 		public string							RibbonTitle
 		{
 			get
@@ -121,6 +121,8 @@ namespace Epsitec.Common.Widgets
 		{
 			//	Dessine l'onglet.
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
+			Rectangle rect = this.Client.Bounds;
+			adorner.PaintRibbonPageBackground(graphics, rect, this.PaintState);
 		}
 
 

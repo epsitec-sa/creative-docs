@@ -85,7 +85,7 @@ namespace Epsitec.Common.Designer
 				this.bookModules.ActivePage = mi.TabPage;
 			}
 
-			this.window.ShowDialog();
+			this.window.Show();
 
 #if false
 			for (int i = 0; i < modules.Length; i++)
@@ -175,30 +175,14 @@ namespace Epsitec.Common.Designer
 
 		protected void CreateLayout()
 		{
-			this.hToolBar = new HToolBar(this.window.Root);
-			this.hToolBar.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top;
+			this.ribbonBook = new RibbonBook(this.window.Root);
+			this.ribbonBook.Dock = DockStyle.Top;
 
-			this.ribbonMainButton = new RibbonButton("", Res.Strings.Ribbon.Main);
-			this.ribbonMainButton.PreferredSize = this.ribbonMainButton.RequiredSize;
-			this.ribbonMainButton.Pressed += new MessageEventHandler(this.HandleRibbonPressed);
-			this.hToolBar.Items.Add(this.ribbonMainButton);
+			//	Crée le ruban principal.
+			this.ribbonMain = new RibbonPage();
+			this.ribbonMain.RibbonTitle = Res.Strings.Ribbon.Main;
+			this.ribbonBook.Items.Add(this.ribbonMain);
 
-			this.ribbonOperButton = new RibbonButton("", Res.Strings.Ribbon.Oper);
-			this.ribbonOperButton.PreferredSize = this.ribbonOperButton.RequiredSize;
-			this.ribbonOperButton.Pressed += new MessageEventHandler(this.HandleRibbonPressed);
-			//?this.hToolBar.Items.Add(this.ribbonOperButton);
-
-			this.ribbonTextButton = new RibbonButton("", Res.Strings.Ribbon.Text);
-			this.ribbonTextButton.PreferredSize = this.ribbonTextButton.RequiredSize;
-			this.ribbonTextButton.Pressed += new MessageEventHandler(this.HandleRibbonPressed);
-			this.hToolBar.Items.Add(this.ribbonTextButton);
-
-			this.ribbonMain = new RibbonContainer(this.window.Root);
-			this.ribbonMain.Name = "Main";
-			this.ribbonMain.PreferredHeight = this.ribbonHeight;
-			this.ribbonMain.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top;
-			this.ribbonMain.Margins = new Margins(0, 0, this.hToolBar.PreferredHeight, 0);
-			this.ribbonMain.Visibility = true;
 			this.ribbonMain.Items.Add(new Ribbons.File());
 			this.ribbonMain.Items.Add(new Ribbons.Clipboard());
 			this.ribbonMain.Items.Add(new Ribbons.Culture());
@@ -208,45 +192,32 @@ namespace Epsitec.Common.Designer
 			}
 			this.ribbonMain.Items.Add(new Ribbons.Access());
 
-			this.ribbonOper = new RibbonContainer(this.window.Root);
-			this.ribbonOper.Name = "Oper";
-			this.ribbonOper.PreferredHeight = this.ribbonHeight;
-			this.ribbonOper.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top;
-			this.ribbonOper.Margins = new Margins(0, 0, this.hToolBar.PreferredHeight, 0);
-			this.ribbonOper.Visibility = true;
+			//	Crée le ruban du texte.
+			this.ribbonText = new RibbonPage();
+			this.ribbonText.RibbonTitle = Res.Strings.Ribbon.Text;
+			this.ribbonBook.Items.Add(this.ribbonText);
 
-			this.ribbonText = new RibbonContainer(this.window.Root);
-			this.ribbonText.Name = "Text";
-			this.ribbonText.PreferredHeight = this.ribbonHeight;
-			this.ribbonText.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top;
-			this.ribbonText.Margins = new Margins(0, 0, this.hToolBar.PreferredHeight, 0);
-			this.ribbonText.Visibility = true;
 			this.ribbonText.Items.Add(new Ribbons.Character());
 			this.ribbonText.Items.Add(new Ribbons.Clipboard());
 
+			//	Crée la barre de status.
 			this.info = new StatusBar(this.window.Root);
-			this.info.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Bottom;
-			this.info.Margins = new Margins(0, 22-5, 0, 0);
+			this.info.Dock = DockStyle.Bottom;
+			this.info.Margins = new Margins(0, 0, 0, 0);
 
 			this.InfoAdd("InfoCurrentModule", 200);
 			this.InfoAdd("InfoAccess", 120);
 
-			StatusBar infoMisc = new StatusBar(this.window.Root);
-			infoMisc.PreferredWidth = 22;
-			infoMisc.Anchor = AnchorStyles.BottomRight;
-			infoMisc.Margins = new Margins(0, 0, 0, 0);
-
-			IconSeparator sep = new IconSeparator(infoMisc);
-			sep.PreferredHeight = infoMisc.PreferredHeight-1.0;
-			sep.Anchor = AnchorStyles.BottomLeft;
-
-			this.resize = new ResizeKnob(infoMisc);
-			this.resize.Anchor = AnchorStyles.BottomRight;
+			this.resize = new ResizeKnob();
+			this.resize.Margins = new Margins(2, 0, 0, 0);
+			this.info.Items.Add(this.resize);
+			this.resize.Dock = DockStyle.Right;  // doit être fait après le Items.Add !
 			ToolTip.Default.SetToolTip(this.resize, Res.Strings.Dialog.Tooltip.Resize);
 
+			//	Crée le TabBook principal pour les modules ouverts.
 			this.bookModules = new TabBook(this.window.Root);
-			this.bookModules.Anchor = AnchorStyles.All;
-			this.bookModules.Margins = new Margins(0, 0, this.hToolBar.PreferredHeight+1, this.info.PreferredHeight+1);
+			this.bookModules.Dock = DockStyle.Fill;
+			this.bookModules.Margins = new Margins(0, 0, 3, 0);
 			this.bookModules.Arrows = TabBookArrows.Right;
 			this.bookModules.HasCloseButton = true;
 			this.bookModules.CloseButton.Command = "Close";
@@ -254,7 +225,7 @@ namespace Epsitec.Common.Designer
 			ToolTip.Default.SetToolTip(this.bookModules.CloseButton, Res.Strings.Action.Close);
 
 			this.ribbonActive = this.ribbonMain;
-			this.ActiveRibbon(this.ribbonActive);
+			this.ribbonBook.ActivePage = this.ribbonMain;
 		}
 
 
@@ -418,14 +389,6 @@ namespace Epsitec.Common.Designer
 			this.CurrentModule.Modifier.ActiveViewer.DoModification(e.CommandName);
 		}
 
-		[Command("WarningPrev")]
-		[Command("WarningNext")]
-		void CommandWarning(CommandDispatcher dispatcher, CommandEventArgs e)
-		{
-			if ( !this.IsCurrentModule )  return;
-			this.CurrentModule.Modifier.ActiveViewer.DoWarning(e.CommandName);
-		}
-
 		[Command("NewCulture")]
 		void CommandNewCulture(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
@@ -530,8 +493,6 @@ namespace Epsitec.Common.Designer
 			this.modificationClearState = this.CreateCommandState("ModificationClear", KeyCode.FuncF9);
 			this.modificationPrevState = this.CreateCommandState("ModificationPrev");
 			this.modificationNextState = this.CreateCommandState("ModificationNext", KeyCode.FuncF8);
-			this.warningPrevState = this.CreateCommandState("WarningPrev");
-			this.warningNextState = this.CreateCommandState("WarningNext");
 			this.newCultureState = this.CreateCommandState("NewCulture");
 			this.deleteCultureState = this.CreateCommandState("DeleteCulture");
 		}
@@ -564,11 +525,40 @@ namespace Epsitec.Common.Designer
 			mi.TabPage.TabTitle = mi.Module.Name;
 			this.bookModules.Items.Insert(this.currentModule, mi.TabPage);
 
-			Viewer viewer = new Viewer(mi.Module);
-			viewer.SetParent(mi.TabPage);
-			viewer.Anchor = AnchorStyles.All;
-			mi.Module.Modifier.AttachViewer(viewer);
-			mi.Module.Modifier.ActiveViewer = viewer;
+			mi.BundleType = new MyWidgets.BundleType(mi.TabPage);
+			mi.BundleType.Dock = DockStyle.Top;
+			mi.BundleType.TypeChanged += new EventHandler(this.HandleTypeChanged);
+
+			this.CreateViewerLayout();
+		}
+
+		protected void CreateViewerLayout()
+		{
+			ModuleInfo mi = this.CurrentModuleInfo;
+
+			Viewers.Abstract actual = mi.Module.Modifier.ActiveViewer;
+			if (actual != null)
+			{
+				mi.Module.Modifier.DetachViewer(actual);
+				mi.TabPage.Children.Remove(actual);
+			}
+
+			string type = mi.BundleType.CurrentType;
+			Viewers.Abstract viewer = Viewers.Abstract.Create(type, mi.Module);
+
+			if (viewer != null)
+			{
+				viewer.SetParent(mi.TabPage);
+				viewer.Dock = DockStyle.Fill;
+				mi.Module.Modifier.AttachViewer(viewer);
+				mi.Module.Modifier.ActiveViewer = viewer;
+			}
+		}
+
+		void HandleTypeChanged(object sender)
+		{
+			this.CreateViewerLayout();
+			this.CurrentModule.Modifier.ActiveViewer.UpdateCommands();
 		}
 
 
@@ -693,7 +683,8 @@ namespace Epsitec.Common.Designer
 
 			if ( this.CurrentModule == null )
 			{
-				this.ActiveRibbon(this.ribbonMain);
+				this.ribbonActive = this.ribbonMain;
+				this.ribbonBook.ActivePage = this.ribbonMain;
 			}
 		}
 
@@ -704,48 +695,6 @@ namespace Epsitec.Common.Designer
 			TabPage tab = this.bookModules.Items[this.currentModule] as TabPage;
 			tab.TabTitle = Misc.ExtractName(this.CurrentModule.Name, this.CurrentModule.Modifier.IsDirty);
 			this.bookModules.UpdateAfterChanges();
-		}
-		#endregion
-
-
-		#region Ribbons manager
-		protected void ActiveRibbon(RibbonContainer active)
-		{
-			//	Active un ruban.
-			this.ribbonActive = active;
-
-			this.ribbonMain.Visibility = (this.ribbonMain == this.ribbonActive);
-			this.ribbonOper.Visibility = (this.ribbonOper == this.ribbonActive);
-			this.ribbonText.Visibility = (this.ribbonText == this.ribbonActive);
-
-			this.ribbonMainButton.ActiveState = (this.ribbonMain == this.ribbonActive) ? ActiveState.Yes : ActiveState.No;
-			this.ribbonOperButton.ActiveState = (this.ribbonOper == this.ribbonActive) ? ActiveState.Yes : ActiveState.No;
-			this.ribbonTextButton.ActiveState = (this.ribbonText == this.ribbonActive) ? ActiveState.Yes : ActiveState.No;
-
-			double h = this.RibbonHeight;
-			this.bookModules.Margins = new Margins(1, 2, this.hToolBar.PreferredHeight+h+1, this.info.PreferredHeight+1);
-		}
-
-		protected double RibbonHeight
-		{
-			//	Retourne la hauteur utilisée par les rubans.
-			get
-			{
-				return (this.ribbonActive == null) ? 0 : this.ribbonHeight;
-			}
-		}
-
-		private void HandleRibbonPressed(object sender, MessageEventArgs e)
-		{
-			//	Le bouton pour activer/désactiver un ruban a été cliqué.
-			RibbonButton button = sender as RibbonButton;
-			RibbonContainer ribbon = null;
-			if ( button == this.ribbonMainButton )  ribbon = this.ribbonMain;
-			if ( button == this.ribbonOperButton )  ribbon = this.ribbonOper;
-			if ( button == this.ribbonTextButton )  ribbon = this.ribbonText;
-			if ( ribbon == null )  return;
-
-			this.ActiveRibbon(ribbon.IsVisible ? null : ribbon);
 		}
 		#endregion
 
@@ -847,6 +796,7 @@ namespace Epsitec.Common.Designer
 		{
 			public Module						Module;
 			public TabPage						TabPage;
+			public MyWidgets.BundleType			BundleType;
 
 			#region IDisposable Members
 			public void Dispose()
@@ -861,14 +811,10 @@ namespace Epsitec.Common.Designer
 		protected DesignerMode					mode;
 		protected Window						window;
 		protected CommandDispatcher				commandDispatcher;
-		protected HToolBar						hToolBar;
-		protected RibbonButton					ribbonMainButton;
-		protected RibbonButton					ribbonOperButton;
-		protected RibbonButton					ribbonTextButton;
-		protected RibbonContainer				ribbonMain;
-		protected RibbonContainer				ribbonOper;
-		protected RibbonContainer				ribbonText;
-		protected RibbonContainer				ribbonActive;
+		protected RibbonBook					ribbonBook;
+		protected RibbonPage					ribbonMain;
+		protected RibbonPage					ribbonText;
+		protected RibbonPage					ribbonActive;
 		protected TabBook						bookModules;
 		protected StatusBar						info;
 		protected ResizeKnob					resize;
@@ -912,8 +858,6 @@ namespace Epsitec.Common.Designer
 		protected CommandState					modificationClearState;
 		protected CommandState					modificationPrevState;
 		protected CommandState					modificationNextState;
-		protected CommandState					warningPrevState;
-		protected CommandState					warningNextState;
 		protected CommandState					newCultureState;
 		protected CommandState					deleteCultureState;
 	}

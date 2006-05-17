@@ -12,7 +12,8 @@ namespace Epsitec.Common.Document.Ribbons
 	{
 		public Font() : base()
 		{
-			this.title.Text = Res.Strings.Action.FontMain;
+			this.Title = Res.Strings.Action.FontMain;
+			this.PreferredWidth = 240;
 
 			this.comboFont = this.CreateIconButtonsCombo("TextEditing");
 			this.comboFont.SetColumnsAndRows(2, 2);
@@ -61,7 +62,12 @@ namespace Epsitec.Common.Document.Ribbons
 			//	Indique quel est le document actif, puisque les rubans sont globaux à l'application.
 			base.SetDocument(type, install, debug, gs, document);
 
-			if ( this.document == null )
+			if (this.debugMode == DebugMode.DebugCommands)
+			{
+				this.PreferredWidth = 240+40;
+			}
+
+			if (this.document == null)
 			{
 				this.comboFont.SelectedName = null;
 				this.comboFont.Enable = false;
@@ -96,23 +102,6 @@ namespace Epsitec.Common.Document.Ribbons
 			//	déplacement du curseur.
 			if ( this.document == null )  return;
 			this.UpdateSelectedFont();
-		}
-
-
-		public override double DefaultWidth
-		{
-			//	Retourne la largeur standard.
-			get
-			{
-				if ( this.debugMode == DebugMode.DebugCommands )
-				{
-					return 240+40;
-				}
-				else
-				{
-					return 240;
-				}
-			}
 		}
 
 

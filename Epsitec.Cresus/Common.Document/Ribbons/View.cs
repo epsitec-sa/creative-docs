@@ -11,7 +11,8 @@ namespace Epsitec.Common.Document.Ribbons
 	{
 		public View() : base()
 		{
-			this.title.Text = Res.Strings.Action.ViewMain;
+			this.Title = Res.Strings.Action.ViewMain;
+			this.PreferredWidth = 8 + 22*5 + 5;
 
 			this.buttonPreview     = this.CreateIconButton("Preview");
 			this.buttonGrid        = this.CreateIconButton("Grid");
@@ -32,15 +33,6 @@ namespace Epsitec.Common.Document.Ribbons
 			}
 			
 			base.Dispose(disposing);
-		}
-
-		public override double DefaultWidth
-		{
-			//	Retourne la largeur standard.
-			get
-			{
-				return 8 + 22*5 + 5;
-			}
 		}
 
 

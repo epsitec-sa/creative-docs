@@ -14,9 +14,15 @@
   <data name="Ribbon.Section.Access">Accès</data>
   <data name="Ribbon.Section.Culture">Culture</data>
 
-  <data name="Viewer.Reference">&lt;b&gt;{0}&lt;/b&gt; (référence)</data>
-  <data name="Viewer.Edit">Textes</data>
-  <data name="Viewer.About">Commentaires</data>
+  <data name="BundleType.Strings">Textes</data>
+  <data name="BundleType.Panels">Interfaces</data>
+  <data name="BundleType.Scripts">Scripts</data>
+
+  <data name="Viewers.Strings.Reference">&lt;b&gt;{0}&lt;/b&gt; (référence)</data>
+  <data name="Viewers.Strings.Edit">Textes</data>
+  <data name="Viewers.Strings.About">Commentaires</data>
+  
+  <data name="Viewers.Panels.New">New</data>
 
   <data name="Action.New">Nouveau</data>
   <data name="Action.Open">Ouvrir...</data>
@@ -50,8 +56,6 @@
   <data name="Action.AccessLast">Dernière ressource</data>
   <data name="Action.AccessPrev">Ressource précédente</data>
   <data name="Action.AccessNext">Ressource suivante</data>
-  <data name="Action.WarningPrev">Ressource manquante précédente</data>
-  <data name="Action.WarningNext">Ressource manquante suivante</data>
   <data name="Action.ModificationPrev">Ressource modifiée précédente</data>
   <data name="Action.ModificationNext">Ressource modifiée suivante</data>
   <data name="Action.ModificationAll">Toutes les ressources secondaires devront être modifiées</data>

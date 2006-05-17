@@ -11,7 +11,8 @@ namespace Epsitec.Common.Designer.Ribbons
 	{
 		public Clipboard() : base()
 		{
-			this.title.Text = Res.Strings.Ribbon.Section.Clipboard;
+			this.Title = Res.Strings.Ribbon.Section.Clipboard;
+			this.PreferredWidth = 8 + 22 + 4 + 22*1.5;
 
 			this.buttonCut   = this.CreateIconButton("Cut");
 			this.buttonCopy  = this.CreateIconButton("Copy");
@@ -27,15 +28,6 @@ namespace Epsitec.Common.Designer.Ribbons
 			}
 			
 			base.Dispose(disposing);
-		}
-
-		public override double DefaultWidth
-		{
-			//	Retourne la largeur standard.
-			get
-			{
-				return 8 + 22 + 4 + 22*1.5;
-			}
 		}
 
 

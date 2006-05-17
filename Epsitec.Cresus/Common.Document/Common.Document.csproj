@@ -490,9 +490,6 @@
     <Compile Include="Ribbons\Replace.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Ribbons\RibbonContainer.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Ribbons\Rotate.cs">
       <SubType>Code</SubType>
     </Compile>

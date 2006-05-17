@@ -14,7 +14,7 @@ namespace Epsitec.Common.Support
 	/// Implémentation d'un ResourceBundle basé sur un stockage interne de
 	/// l'information sous forme XML DOM.
 	/// </summary>
-	public class ResourceBundle : System.ICloneable
+	public class ResourceBundle : Types.DependencyObject, System.ICloneable
 	{
 		public static ResourceBundle Create(ResourceManager resource_manager)
 		{
@@ -106,6 +106,14 @@ namespace Epsitec.Common.Support
 			get
 			{
 				return this.about;
+			}
+		}
+
+		public int							Rank
+		{
+			get
+			{
+				return this.rank;
 			}
 		}
 		
@@ -266,6 +274,11 @@ namespace Epsitec.Common.Support
 		public void DefineAbout(string about)
 		{
 			this.about = about;
+		}
+
+		public void DefineRank(int rank)
+		{
+			this.rank = rank;
 		}
 		
 		public void DefineManager(ResourceManager resource_manager)
@@ -541,6 +554,7 @@ namespace Epsitec.Common.Support
 			string type_attr  = this.GetAttributeValue (xmlroot, "type");
 			string about_attr = this.GetAttributeValue (xmlroot, "about");
 			string culture_attr = this.GetAttributeValue (xmlroot, "culture");
+			string rank_attr  = this.GetAttributeValue (xmlroot, "rank");
 			
 			if ((name_attr != null) && (name_attr != ""))
 			{
@@ -561,6 +575,15 @@ namespace Epsitec.Common.Support
 			if ((culture_attr != null) && (culture_attr != ""))
 			{
 				this.culture = new CultureInfo (culture_attr);
+			}
+			
+			if (string.IsNullOrEmpty (rank_attr))
+			{
+				this.rank = -1;
+			}
+			else
+			{
+				this.rank = System.Int32.Parse (rank_attr, System.Globalization.CultureInfo.InvariantCulture);
 			}
 			
 			ArrayList list = new ArrayList ();
@@ -618,11 +641,13 @@ namespace Epsitec.Common.Support
 			System.Xml.XmlAttribute type_attr    = xmldoc.CreateAttribute ("type");
 			System.Xml.XmlAttribute about_attr   = xmldoc.CreateAttribute ("about");
 			System.Xml.XmlAttribute culture_attr = xmldoc.CreateAttribute ("culture");
+			System.Xml.XmlAttribute rank_attr    = xmldoc.CreateAttribute ("rank");
 			
 			name_attr.Value    = this.name;
 			type_attr.Value    = this.type;
 			about_attr.Value   = this.about;
 			culture_attr.Value = this.culture.TwoLetterISOLanguageName;
+			rank_attr.Value    = this.rank < 0 ? "" : this.rank.ToString (System.Globalization.CultureInfo.InvariantCulture);
 			
 			if (name_attr.Value != "")
 			{
@@ -639,6 +664,10 @@ namespace Epsitec.Common.Support
 			if (culture_attr.Value != "")
 			{
 				bundle_node.Attributes.Append (culture_attr);
+			}
+			if (rank_attr.Value != "")
+			{
+				bundle_node.Attributes.Append (rank_attr);
 			}
 			
 			for (int i = 0; i < this.fields.Length; i++)
@@ -1017,6 +1046,9 @@ namespace Epsitec.Common.Support
 			that.prefix  = this.prefix;
 			that.level   = this.level;
 			that.culture = this.culture;
+			that.rank    = this.rank;
+
+			Types.DependencyObject.CopyAttachedProperties (this, that);
 			
 			that.Compile (this.CreateXmlAsData ());
 			
@@ -1584,5 +1616,6 @@ namespace Epsitec.Common.Support
 		protected bool						ref_inclusion = true;
 		protected bool						auto_merge    = true;
 		protected CultureInfo				culture;
+		protected int						rank = -1;
 	}
 }

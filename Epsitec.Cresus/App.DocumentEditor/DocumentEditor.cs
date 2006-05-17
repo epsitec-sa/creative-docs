@@ -584,115 +584,44 @@ namespace Epsitec.App.DocumentEditor
 			this.menu.Items[i++].Submenu = helpMenu;
 #endif
 
-			this.hToolBar = new HToolBar(this);
-			this.hToolBar.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top;
-#if false
-			this.HToolBarAdd("New");
-			this.HToolBarAdd("Open");
-			this.HToolBarAdd("Save");
-			this.HToolBarAdd("SaveAs");
-			this.HToolBarAdd("Print");
-			this.HToolBarAdd("Export");
-			this.HToolBarAdd(null);
-			this.HToolBarAdd("Delete");
-			this.HToolBarAdd("Duplicate");
-			this.HToolBarAdd(null);
-			this.HToolBarAdd("Cut");
-			this.HToolBarAdd("Copy");
-			this.HToolBarAdd("Paste");
-			this.HToolBarAdd(null);
+			//	Crée le RibbonBook unique qui remplace le traditionnel menu.
+			this.ribbonBook = new RibbonBook(this);
+			this.ribbonBook.Dock = DockStyle.Top;
+			this.ribbonBook.ActivePageChanged += new EventHandler(this.HandleRibbonBookActivePageChanged);
 
-			this.HToolBarAdd("Undo");
-
-			GlyphButton undoRedoList = new GlyphButton("UndoRedoList");
-			undoRedoList.Name = "UndoRedoList";
-			undoRedoList.GlyphShape = GlyphShape.ArrowDown;
-			undoRedoList.ButtonStyle = ButtonStyle.ToolItem;
-			undoRedoList.Width = 14;
-			undoRedoList.Margins = new Margins(-1, 0, 0, 0);
-			ToolTip.Default.SetToolTip(undoRedoList, DocumentEditor.GetRes("Action.UndoRedoList"));
-			this.hToolBar.Items.Add(undoRedoList);
-
-			Widget buttonRedo = this.HToolBarAdd("Redo");
-			buttonRedo.Margins = new Margins(-1, 0, 0, 0);
-
-			this.HToolBarAdd(null);
-
-			this.HToolBarAdd("OrderDownAll");
-			this.HToolBarAdd("OrderDownOne");
-			this.HToolBarAdd("OrderUpOne");
-			this.HToolBarAdd("OrderUpAll");
-			this.HToolBarAdd(null);
-			this.HToolBarAdd("Group");
-			this.HToolBarAdd("Merge");
-			this.HToolBarAdd("Extract");
-			this.HToolBarAdd("Ungroup");
-			this.HToolBarAdd("Inside");
-			this.HToolBarAdd("Outside");
-			this.HToolBarAdd(null);
-			this.HToolBarAdd("Preview");
-			this.HToolBarAdd("Grid");
-			this.HToolBarAdd("Magnet");
-			this.HToolBarAdd("Labels");
-			this.HToolBarAdd("Aggregates");
-			this.HToolBarAdd("Settings");
-			this.HToolBarAdd("Infos");
-			this.HToolBarAdd("Glyphs");
-			this.HToolBarAdd(null);
-			if ( this.useArray )
-			{
-				this.HToolBarAdd("ArrayFrame");
-				this.HToolBarAdd("ArrayHoriz");
-				this.HToolBarAdd("ArrayVerti");
-				this.HToolBarAdd(null);
-			}
-#endif
-
-			this.ribbonMainButton = new RibbonButton("", Res.Strings.Ribbon.Main);
-			this.ribbonMainButton.PreferredSize = this.ribbonMainButton.RequiredSize;
-			this.ribbonMainButton.Pressed += new MessageEventHandler (this.HandleRibbonPressed);
-			this.hToolBar.Items.Add(this.ribbonMainButton);
-
-			this.ribbonGeomButton = new RibbonButton("", Res.Strings.Ribbon.Geom);
-			this.ribbonGeomButton.PreferredSize = this.ribbonGeomButton.RequiredSize;
-			this.ribbonGeomButton.Pressed += new MessageEventHandler (this.HandleRibbonPressed);
-			this.hToolBar.Items.Add(this.ribbonGeomButton);
-
-			this.ribbonOperButton = new RibbonButton("", Res.Strings.Ribbon.Oper);
-			this.ribbonOperButton.PreferredSize = this.ribbonOperButton.RequiredSize;
-			this.ribbonOperButton.Pressed += new MessageEventHandler (this.HandleRibbonPressed);
-			this.hToolBar.Items.Add(this.ribbonOperButton);
-
-			this.ribbonTextButton = new RibbonButton("", Res.Strings.Ribbon.Text);
-			this.ribbonTextButton.PreferredSize = this.ribbonTextButton.RequiredSize;
-			this.ribbonTextButton.Pressed += new MessageEventHandler (this.HandleRibbonPressed);
-			this.hToolBar.Items.Add(this.ribbonTextButton);
-
-			this.UpdateQuickCommands();
-
-			this.ribbonMain = new Ribbons.RibbonContainer(this);
+			//	Crée les différentes pages du ruban.
+			this.ribbonMain = new RibbonPage();
 			this.ribbonMain.Name = "Main";
-			this.ribbonMain.PreferredHeight = this.ribbonHeight;
-			this.ribbonMain.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top;
-			this.ribbonMain.Margins = new Margins(0, 0, this.hToolBar.PreferredHeight, 0);
-			this.ribbonMain.Visibility = true;
+			this.ribbonMain.RibbonTitle = Res.Strings.Ribbon.Main;
+			this.ribbonBook.Items.Add(this.ribbonMain);
+
+			this.ribbonGeom = new RibbonPage();
+			this.ribbonGeom.Name = "Geom";
+			this.ribbonGeom.RibbonTitle = Res.Strings.Ribbon.Geom;
+			this.ribbonBook.Items.Add(this.ribbonGeom);
+
+			this.ribbonOper = new RibbonPage();
+			this.ribbonOper.Name = "Oper";
+			this.ribbonOper.RibbonTitle = Res.Strings.Ribbon.Oper;
+			this.ribbonBook.Items.Add(this.ribbonOper);
+
+			this.ribbonText = new RibbonPage();
+			this.ribbonText.Name = "Text";
+			this.ribbonText.RibbonTitle = Res.Strings.Ribbon.Text;
+			this.ribbonBook.Items.Add(this.ribbonText);
+
+			//	Peuble les pages des rubans par les sections.
 			this.ribbonMain.Items.Add(new Ribbons.File());
 			this.ribbonMain.Items.Add(new Ribbons.Clipboard());
 			this.ribbonMain.Items.Add(new Ribbons.Undo());
 			this.ribbonMain.Items.Add(new Ribbons.Select());
 			this.ribbonMain.Items.Add(new Ribbons.View());
 			this.ribbonMain.Items.Add(new Ribbons.Action());
-			if ( this.debugMode == DebugMode.DebugCommands )
+			if (this.debugMode == DebugMode.DebugCommands)
 			{
 				this.ribbonMain.Items.Add(new Ribbons.Debug());
 			}
 
-			this.ribbonGeom = new Ribbons.RibbonContainer(this);
-			this.ribbonGeom.Name = "Geom";
-			this.ribbonGeom.PreferredHeight = this.ribbonHeight;
-			this.ribbonGeom.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top;
-			this.ribbonGeom.Margins = new Margins(0, 0, this.hToolBar.PreferredHeight, 0);
-			this.ribbonGeom.Visibility = false;
 			this.ribbonGeom.Items.Add(new Ribbons.Move());
 			this.ribbonGeom.Items.Add(new Ribbons.Rotate());
 			this.ribbonGeom.Items.Add(new Ribbons.Scale());
@@ -700,22 +629,10 @@ namespace Epsitec.App.DocumentEditor
 			this.ribbonGeom.Items.Add(new Ribbons.Bool());
 			this.ribbonGeom.Items.Add(new Ribbons.Geom());
 
-			this.ribbonOper = new Ribbons.RibbonContainer(this);
-			this.ribbonOper.Name = "Oper";
-			this.ribbonOper.PreferredHeight = this.ribbonHeight;
-			this.ribbonOper.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top;
-			this.ribbonOper.Margins = new Margins(0, 0, this.hToolBar.PreferredHeight, 0);
-			this.ribbonOper.Visibility = false;
 			this.ribbonOper.Items.Add(new Ribbons.Order());
 			this.ribbonOper.Items.Add(new Ribbons.Group());
 			this.ribbonOper.Items.Add(new Ribbons.Color());
 
-			this.ribbonText = new Ribbons.RibbonContainer(this);
-			this.ribbonText.Name = "Text";
-			this.ribbonText.PreferredHeight = this.ribbonHeight;
-			this.ribbonText.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top;
-			this.ribbonText.Margins = new Margins(0, 0, this.hToolBar.PreferredHeight, 0);
-			this.ribbonText.Visibility = false;
 			this.ribbonText.Items.Add(new Ribbons.TextStyles());
 			this.ribbonText.Items.Add(new Ribbons.Paragraph());
 			this.ribbonText.Items.Add(new Ribbons.Font());
@@ -724,11 +641,11 @@ namespace Epsitec.App.DocumentEditor
 			this.ribbonText.Items.Add(new Ribbons.Replace());
 			this.ribbonText.Items.Add(new Ribbons.Insert());
 
-			this.ribbonActive = this.ribbonMain;
+			this.UpdateQuickCommands();
 
+			//	Crée la barre de status.
 			this.info = new StatusBar(this);
-			this.info.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Bottom;
-			this.info.Margins = new Margins(0, 0, 0, 0);
+			this.info.Dock = DockStyle.Bottom;
 
 			this.InfoAdd("DeselectAll");
 			this.InfoAdd("SelectAll");
@@ -777,14 +694,15 @@ namespace Epsitec.App.DocumentEditor
 			this.info.Items["StatusModif"].Dock = DockStyle.Fill;
 			
 			this.resize = new ResizeKnob();
-			this.resize.Margins = new Margins (2, 0, 0, 0);
-			this.info.Items.Add (this.resize);
-			this.resize.Dock = DockStyle.Right;
+			this.resize.Margins = new Margins(2, 0, 0, 0);
+			this.info.Items.Add(this.resize);
+			this.resize.Dock = DockStyle.Right;  // doit être fait après le Items.Add !
 			ToolTip.Default.SetToolTip(this.resize, Res.Strings.Dialog.Tooltip.Resize);
 
+			//	Crée la barre d'outils verticale gauche.
 			this.vToolBar = new VToolBar(this);
-			this.vToolBar.Anchor = AnchorStyles.TopAndBottom | AnchorStyles.Left;
-			this.vToolBar.Margins = new Margins(0, 0, this.hToolBar.PreferredHeight+this.RibbonHeight, this.info.PreferredHeight);
+			this.vToolBar.Dock = DockStyle.Left;
+
 			this.VToolBarAdd(this.toolSelectState);
 			this.VToolBarAdd(this.toolGlobalState);
 			this.VToolBarAdd(this.toolShaperState);
@@ -821,10 +739,11 @@ namespace Epsitec.App.DocumentEditor
 			}
 			this.VToolBarAdd(null);
 
+			//	Crée la partie pour les documents.
 			this.bookDocuments = new TabBook(this);
 			this.bookDocuments.PreferredWidth = this.panelsWidth;
-			this.bookDocuments.Anchor = AnchorStyles.All;
-			this.bookDocuments.Margins = new Margins(this.vToolBar.PreferredWidth+this.RibbonHeight+1, this.panelsWidth+2, this.hToolBar.PreferredHeight+1, this.info.PreferredHeight+1);
+			this.bookDocuments.Dock = DockStyle.Fill;
+			this.bookDocuments.Margins = new Margins(1, 0, 3, 1);
 			this.bookDocuments.Arrows = TabBookArrows.Right;
 			this.bookDocuments.HasCloseButton = true;
 			this.bookDocuments.CloseButton.Command = "Close";
@@ -838,9 +757,9 @@ namespace Epsitec.App.DocumentEditor
 		{
 			//	Met à jour toutes les icônes de la partie rapide, à droite des choix du ruban actif.
 			//	Supprime tous les IconButtons.
-			foreach ( Widget widget in this.hToolBar.Children.Widgets )
+			foreach ( Widget widget in this.ribbonBook.Items )
 			{
-				if ( widget is RibbonButton )  continue;
+				if ( widget is RibbonPage )  continue;
 				widget.Dispose();
 			}
 
@@ -855,16 +774,16 @@ namespace Epsitec.App.DocumentEditor
 				{
 					if ( first )  // première icône ?
 					{
-						this.HToolBarAdd(null);  // séparateur au début
+						this.RibbonAdd(null);  // séparateur au début
 						first = false;
 					}
 
 					CommandState cs = CommandState.Get (cmd);
-					this.HToolBarAdd(cs);
+					this.RibbonAdd(cs);
 
 					if ( sep )
 					{
-						this.HToolBarAdd(null);  // séparateur après l'icône
+						this.RibbonAdd(null);  // séparateur après l'icône
 					}
 				}
 			}
@@ -1043,8 +962,8 @@ namespace Epsitec.App.DocumentEditor
 
 			di.bookPanels = new TabBook(this);
 			di.bookPanels.PreferredWidth = this.panelsWidth;
-			di.bookPanels.Anchor = AnchorStyles.TopAndBottom | AnchorStyles.Right;
-			di.bookPanels.Margins = new Margins(1, 1, this.hToolBar.PreferredHeight+this.RibbonHeight+1, this.info.PreferredHeight+1);
+			di.bookPanels.Dock = DockStyle.Right;
+			di.bookPanels.Margins = new Margins(1, 1, 3, 1);
 			di.bookPanels.Arrows = TabBookArrows.Stretch;
 			di.bookPanels.ActivePageChanged += new EventHandler(this.HandleBookPanelsActivePageChanged);
 
@@ -1224,25 +1143,6 @@ namespace Epsitec.App.DocumentEditor
 			}
 		}
 
-		protected Widget HToolBarAdd(CommandState cs)
-		{
-			//	Ajoute une icône.
-			if ( cs == null )
-			{
-				IconSeparator sep = new IconSeparator();
-				sep.IsHorizontal = true;
-				this.hToolBar.Items.Add(sep);
-				return sep;
-			}
-			else
-			{
-				IconButton button = new IconButton(cs.Name, Misc.Icon(cs.IconName), cs.Name);
-				this.hToolBar.Items.Add(button);
-				ToolTip.Default.SetToolTip(button, Misc.GetTextWithShortcut(cs));
-				return button;
-			}
-		}
-
 		protected Widget VToolBarAdd(CommandState cs)
 		{
 			//	Ajoute une icône.
@@ -1287,21 +1187,15 @@ namespace Epsitec.App.DocumentEditor
 		}
 
 
-		private void HandleRibbonPressed(object sender, MessageEventArgs e)
+		#region Ribbons
+		void HandleRibbonBookActivePageChanged(object sender)
 		{
-			//	Le bouton pour activer/désactiver un ruban a été cliqué.
-			RibbonButton button = sender as RibbonButton;
-			Ribbons.RibbonContainer ribbon = null;
-			if ( button == this.ribbonMainButton )  ribbon = this.ribbonMain;
-			if ( button == this.ribbonGeomButton )  ribbon = this.ribbonGeom;
-			if ( button == this.ribbonOperButton )  ribbon = this.ribbonOper;
-			if ( button == this.ribbonTextButton )  ribbon = this.ribbonText;
-			if ( ribbon == null )  return;
-
-			this.SetActiveRibbon(ribbon.IsVisible ? null : ribbon);
+			//	Le ruban actif a été changé (nouvelle page visible).
+			RibbonPage page = this.ribbonBook.ActivePage;
+			this.SetActiveRibbon(page);
 		}
 
-		protected Ribbons.RibbonContainer GetRibbon(string name)
+		protected RibbonPage GetRibbon(string name)
 		{
 			//	Donne le ruban correspondant à un nom.
 			if ( name == this.ribbonMain.Name )  return this.ribbonMain;
@@ -1311,7 +1205,7 @@ namespace Epsitec.App.DocumentEditor
 			return null;
 		}
 
-		protected Ribbons.RibbonContainer LastRibbon(string notName)
+		protected RibbonPage LastRibbon(string notName)
 		{
 			//	Cherche le dernier ruban utilisé différent d'un nom donné.
 			if ( this.ribbonList == null )  return null;
@@ -1327,10 +1221,11 @@ namespace Epsitec.App.DocumentEditor
 			return null;
 		}
 
-		protected void SetActiveRibbon(Ribbons.RibbonContainer active)
+		protected void SetActiveRibbon(RibbonPage active)
 		{
 			//	Active un ruban.
 			this.ribbonActive = active;
+			this.ribbonBook.ActivePage = active;
 
 			if ( this.ribbonList == null )
 			{
@@ -1350,37 +1245,87 @@ namespace Epsitec.App.DocumentEditor
 			{
 				this.ribbonList.RemoveAt(0);
 			}
-
-			this.ribbonMain.Visibility = (this.ribbonMain == this.ribbonActive);
-			this.ribbonGeom.Visibility = (this.ribbonGeom == this.ribbonActive);
-			this.ribbonOper.Visibility = (this.ribbonOper == this.ribbonActive);
-			this.ribbonText.Visibility = (this.ribbonText == this.ribbonActive);
-
-			this.ribbonMainButton.ActiveState = (this.ribbonMain == this.ribbonActive) ? ActiveState.Yes : ActiveState.No;
-			this.ribbonGeomButton.ActiveState = (this.ribbonGeom == this.ribbonActive) ? ActiveState.Yes : ActiveState.No;
-			this.ribbonOperButton.ActiveState = (this.ribbonOper == this.ribbonActive) ? ActiveState.Yes : ActiveState.No;
-			this.ribbonTextButton.ActiveState = (this.ribbonText == this.ribbonActive) ? ActiveState.Yes : ActiveState.No;
-
-			double h = this.RibbonHeight;
-			this.vToolBar.Margins = new Margins(0, 0, this.hToolBar.PreferredHeight+h, this.info.PreferredHeight);
-			this.bookDocuments.Margins = new Margins(this.vToolBar.PreferredWidth+1, this.panelsWidth+2, this.hToolBar.PreferredHeight+h+1, this.info.PreferredHeight+1);
-
-			int total = this.bookDocuments.PageCount;
-			for ( int i=0 ; i<total ; i++ )
-			{
-				DocumentInfo di = this.documents[i] as DocumentInfo;
-				di.bookPanels.Margins = new Margins(1, 1, this.hToolBar.PreferredHeight+h+1, this.info.PreferredHeight+1);
-			}
 		}
 
-		protected double RibbonHeight
+		protected void RibbonsNotifyChanged(string changed)
 		{
-			//	Retourne la hauteur utilisée par les rubans.
-			get
+			//	Passe en revue toutes les sections de toutes les pages.
+			foreach (Widget widget in this.ribbonBook.Items)
 			{
-				return (this.ribbonActive == null) ? 0 : this.ribbonHeight;
+				RibbonPage page = widget as RibbonPage;
+				if (page == null)  continue;
+
+				foreach (Ribbons.Abstract section in page.Items)
+				{
+					section.NotifyChanged(changed);
+				}
 			}
 		}
+
+		protected void RibbonsNotifyTextStylesChanged(System.Collections.ArrayList textStyleList)
+		{
+			//	Passe en revue toutes les sections de toutes les pages.
+			foreach (Widget widget in this.ribbonBook.Items)
+			{
+				RibbonPage page = widget as RibbonPage;
+				if (page == null)  continue;
+
+				foreach (Ribbons.Abstract section in page.Items)
+				{
+					section.NotifyTextStylesChanged(textStyleList);
+				}
+			}
+		}
+
+		protected void RibbonsNotifyTextStylesChanged()
+		{
+			//	Passe en revue toutes les sections de toutes les pages.
+			foreach (Widget widget in this.ribbonBook.Items)
+			{
+				RibbonPage page = widget as RibbonPage;
+				if (page == null)  continue;
+
+				foreach (Ribbons.Abstract section in page.Items)
+				{
+					section.NotifyTextStylesChanged();
+				}
+			}
+		}
+
+		protected void RibbonsSetDocument(DocumentType type, InstallType install, DebugMode debugMode, Settings.GlobalSettings gs, Document document)
+		{
+			//	Passe en revue toutes les sections de toutes les pages.
+			foreach (Widget widget in this.ribbonBook.Items)
+			{
+				RibbonPage page = widget as RibbonPage;
+				if (page == null)  continue;
+
+				foreach (Ribbons.Abstract section in page.Items)
+				{
+					section.SetDocument(type, install, debugMode, gs, document);
+				}
+			}
+		}
+
+		protected Widget RibbonAdd(CommandState cs)
+		{
+			//	Ajoute une icône.
+			if (cs == null)
+			{
+				IconSeparator sep = new IconSeparator();
+				sep.IsHorizontal = true;
+				this.ribbonBook.Items.Add(sep);
+				return sep;
+			}
+			else
+			{
+				IconButton button = new IconButton(cs.Name, Misc.Icon(cs.IconName), cs.Name);
+				this.ribbonBook.Items.Add(button);
+				ToolTip.Default.SetToolTip(button, Misc.GetTextWithShortcut(cs));
+				return button;
+			}
+		}
+		#endregion
 
 
 		private void HandleDlgClosed(object sender)
@@ -2325,6 +2270,7 @@ namespace Epsitec.App.DocumentEditor
 		}
 #endif
 
+#if false
 		protected void WidgetUndoRedoMenuEngaged(bool engaged)
 		{
 			Widget button;
@@ -2338,6 +2284,7 @@ namespace Epsitec.App.DocumentEditor
 			button = this.hToolBar.FindChild("Redo");
 			if ( button != null )  button.ActiveState = engaged ? ActiveState.Yes : ActiveState.No;
 		}
+#endif
 
 		[Command ("UndoRedoListDo")]
 		void CommandUndoRedoListDo(CommandDispatcher dispatcher, CommandEventArgs e)
@@ -4408,10 +4355,7 @@ namespace Epsitec.App.DocumentEditor
 		private void HandleTextChanged()
 		{
 			//	Appelé par le document lorsque le texte en édition a changé.
-			this.ribbonMain.NotifyTextStylesChanged();
-			this.ribbonGeom.NotifyTextStylesChanged();
-			this.ribbonOper.NotifyTextStylesChanged();
-			this.ribbonText.NotifyTextStylesChanged();
+			this.RibbonsNotifyTextStylesChanged();
 
 			this.dlgGlyphs.SetAlternatesDirty();
 		}
@@ -4691,10 +4635,7 @@ namespace Epsitec.App.DocumentEditor
 				this.textFontSampleAbcState.ActiveState = ActiveState.No;
 			}
 				
-			this.ribbonMain.NotifyChanged("FontsSettingsChanged");
-			this.ribbonGeom.NotifyChanged("FontsSettingsChanged");
-			this.ribbonOper.NotifyChanged("FontsSettingsChanged");
-			this.ribbonText.NotifyChanged("FontsSettingsChanged");
+			this.RibbonsNotifyChanged("FontsSettingsChanged");
 		}
 
 		private void HandleGuidesChanged()
@@ -4779,19 +4720,13 @@ namespace Epsitec.App.DocumentEditor
 				di.containerStyles.SetDirtyTextStyles(textStyleList);
 			}
 
-			this.ribbonMain.NotifyTextStylesChanged(textStyleList);
-			this.ribbonGeom.NotifyTextStylesChanged(textStyleList);
-			this.ribbonOper.NotifyTextStylesChanged(textStyleList);
-			this.ribbonText.NotifyTextStylesChanged(textStyleList);
+			this.RibbonsNotifyTextStylesChanged(textStyleList);
 		}
 
 		private void HandleTextStyleListChanged()
 		{
 			//	Appelé lorsqu'un style de texte a été ajouté ou supprimé.
-			this.ribbonMain.NotifyChanged("TextStyleListChanged");
-			this.ribbonGeom.NotifyChanged("TextStyleListChanged");
-			this.ribbonOper.NotifyChanged("TextStyleListChanged");
-			this.ribbonText.NotifyChanged("TextStyleListChanged");
+			this.RibbonsNotifyChanged("TextStyleListChanged");
 		}
 
 		private void HandleSelNamesChanged()
@@ -4821,7 +4756,7 @@ namespace Epsitec.App.DocumentEditor
 		private void HandleRibbonCommand(string name)
 		{
 			//	Appelé par le document lorsqu'il faut changer de ruban.
-			Ribbons.RibbonContainer ribbon = this.GetRibbon(name);
+			RibbonPage ribbon = this.GetRibbon(name);
 
 			if ( name.Length > 0 && name[0] == '!' )
 			{
@@ -5230,10 +5165,7 @@ namespace Epsitec.App.DocumentEditor
 				this.CurrentDocument.HRuler = di.hRuler;
 				this.CurrentDocument.VRuler = di.vRuler;
 
-				this.ribbonMain.SetDocument(this.type, this.installType, this.debugMode, this.globalSettings, this.CurrentDocument);
-				this.ribbonGeom.SetDocument(this.type, this.installType, this.debugMode, this.globalSettings, this.CurrentDocument);
-				this.ribbonOper.SetDocument(this.type, this.installType, this.debugMode, this.globalSettings, this.CurrentDocument);
-				this.ribbonText.SetDocument(this.type, this.installType, this.debugMode, this.globalSettings, this.CurrentDocument);
+				this.RibbonsSetDocument(this.type, this.installType, this.debugMode, this.globalSettings, this.CurrentDocument);
 
 				this.CommandStateShake(this.pageNextState);
 				this.CommandStateShake(this.pagePrevState);
@@ -5246,10 +5178,7 @@ namespace Epsitec.App.DocumentEditor
 			}
 			else
 			{
-				this.ribbonMain.SetDocument(this.type, this.installType, this.debugMode, this.globalSettings, null);
-				this.ribbonGeom.SetDocument(this.type, this.installType, this.debugMode, this.globalSettings, null);
-				this.ribbonOper.SetDocument(this.type, this.installType, this.debugMode, this.globalSettings, null);
-				this.ribbonText.SetDocument(this.type, this.installType, this.debugMode, this.globalSettings, null);
+				this.RibbonsSetDocument(this.type, this.installType, this.debugMode, this.globalSettings, null);
 
 				this.HandleDocumentChanged();
 				this.HandleMouseChanged();
@@ -5552,22 +5481,17 @@ namespace Epsitec.App.DocumentEditor
 
 		protected HMenu							menu;
 		protected VMenu							fileMenu;
-		protected HToolBar						hToolBar;
-		protected RibbonButton					ribbonMainButton;
-		protected RibbonButton					ribbonGeomButton;
-		protected RibbonButton					ribbonOperButton;
-		protected RibbonButton					ribbonTextButton;
-		protected Ribbons.RibbonContainer		ribbonMain;
-		protected Ribbons.RibbonContainer		ribbonGeom;
-		protected Ribbons.RibbonContainer		ribbonOper;
-		protected Ribbons.RibbonContainer		ribbonText;
-		protected Ribbons.RibbonContainer		ribbonActive;
+		protected RibbonBook					ribbonBook;
+		protected RibbonPage					ribbonMain;
+		protected RibbonPage					ribbonGeom;
+		protected RibbonPage					ribbonOper;
+		protected RibbonPage					ribbonText;
+		protected RibbonPage					ribbonActive;
 		protected System.Collections.ArrayList	ribbonList;
 		protected VToolBar						vToolBar;
 		protected StatusBar						info;
 		protected ResizeKnob					resize;
 		protected TabBook						bookDocuments;
-		protected double						ribbonHeight = 71;
 		protected double						panelsWidth = 252;
 		protected bool							ignoreChange;
 		protected int							tabIndex;

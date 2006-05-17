@@ -11,7 +11,8 @@ namespace Epsitec.Common.Document.Ribbons
 	{
 		public Zoom() : base()
 		{
-			this.title.Text = Res.Strings.Action.ZoomMain;
+			this.Title = Res.Strings.Action.ZoomMain;
+			this.PreferredWidth = 8 + 22*4 + this.separatorWidth + 50;
 
 			this.buttonZoomMin       = this.CreateIconButton("ZoomMin");
 			this.buttonZoomPage      = this.CreateIconButton("ZoomPage");
@@ -52,15 +53,6 @@ namespace Epsitec.Common.Document.Ribbons
 
 			this.AdaptFieldZoom(this.fieldZoom);
 			this.buttonOthers.Enable = (this.document != null);
-		}
-
-		public override double DefaultWidth
-		{
-			//	Retourne la largeur standard.
-			get
-			{
-				return 8 + 22*4 + this.separatorWidth + 50;
-			}
 		}
 
 

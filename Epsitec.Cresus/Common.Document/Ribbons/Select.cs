@@ -11,7 +11,8 @@ namespace Epsitec.Common.Document.Ribbons
 	{
 		public Select() : base()
 		{
-			this.title.Text = Res.Strings.Action.SelectMain;
+			this.Title = Res.Strings.Action.SelectMain;
+			this.PreferredWidth = 8 + 22*1.5*2 + this.separatorWidth + 22*4;
 
 			this.buttonDelete    = this.CreateIconButton("Delete", "Large");
 			this.buttonDuplicate = this.CreateIconButton("Duplicate", "Large");
@@ -38,15 +39,6 @@ namespace Epsitec.Common.Document.Ribbons
 			}
 			
 			base.Dispose(disposing);
-		}
-
-		public override double DefaultWidth
-		{
-			//	Retourne la largeur standard.
-			get
-			{
-				return 8 + 22*1.5*2 + this.separatorWidth + 22*4;
-			}
 		}
 
 

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 namespace Epsitec.Common.Types
 {
 	using PropertyChangedEventHandler = Epsitec.Common.Support.EventHandler<DependencyPropertyChangedEventArgs>;
+	using BindingChangedEventHandler = Epsitec.Common.Support.EventHandler<BindingChangedEventArgs>;
 
 	/// <summary>
 	/// La classe DependencyObject représente un objet dont les propriétés sont
@@ -434,6 +435,17 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		public static void CopyAttachedProperties(DependencyObject source, DependencyObject destination)
+		{
+			foreach (DependencyProperty property in source.properties.Keys)
+			{
+				if (property.IsAttached)
+				{
+					destination.SetValue (property, source.GetValue (property));
+				}
+			}
+		}
+		
 		protected void AddUserEventHandler(string name, System.Delegate handler)
 		{
 			if (this.userEvents == null)
@@ -507,9 +519,12 @@ namespace Epsitec.Common.Types
 
 		private void OnBindingChanged(DependencyProperty property)
 		{
-			//	TODO: générer l'événement "BindingChanged"
+			BindingChangedEventHandler handler = (BindingChangedEventHandler) this.GetUserEventHandler (DependencyObject.BindingChangedString);
 
-			throw new System.Exception ("The method or operation is not implemented.");
+			if (handler != null)
+			{
+				handler (this, new BindingChangedEventArgs (property));
+			}
 		}
 		
 		internal static void Register(DependencyProperty property, System.Type ownerType)
@@ -703,6 +718,20 @@ namespace Epsitec.Common.Types
 		{
 		}
 		#endregion
+		
+		public event BindingChangedEventHandler				BindingChanged
+		{
+			add
+			{
+				this.AddUserEventHandler (DependencyObject.BindingChangedString, value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler (DependencyObject.BindingChangedString, value);
+			}
+		}
+
+		private const string								BindingChangedString = "BindingChanged";
 
 		Dictionary<DependencyProperty, object>				properties = new Dictionary<DependencyProperty, object> ();
 		BindingExpressionDictionary							bindings;

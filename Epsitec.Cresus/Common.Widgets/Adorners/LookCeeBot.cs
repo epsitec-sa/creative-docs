@@ -1419,7 +1419,11 @@ namespace Epsitec.Common.Widgets.Adorners
 											 WidgetPaintState state)
 		{
 			//	Dessine la bande principale d'un ruban.
-			this.PaintImageButton(graphics, rect, 16);
+			this.PaintImageButton(graphics, rect, 29);
+
+			rect.Deflate(0.5);
+			graphics.AddRectangle(rect);
+			graphics.RenderSolid(this.ColorBorder);
 		}
 
 		public override void PaintRibbonPageForeground(Drawing.Graphics graphics,
@@ -1435,6 +1439,7 @@ namespace Epsitec.Common.Widgets.Adorners
 												ActiveState active)
 		{
 			//	Dessine le bouton pour un ruban.
+			rect.Bottom -= 5;  // pour cacher la partie inférieure
 			this.PaintButtonBackground(graphics, rect, state, Widgets.Direction.None, ButtonStyle.ToolItem);
 		}
 
@@ -1463,35 +1468,41 @@ namespace Epsitec.Common.Widgets.Adorners
 		}
 
 		public override void PaintRibbonSectionBackground(Drawing.Graphics graphics,
-												 Drawing.Rectangle rect,
-												 WidgetPaintState state)
-		{
-			//	Dessine une section d'un ruban.
-			rect.Deflate(0.5);
-			graphics.AddLine(rect.Right, rect.Top, rect.Right, rect.Bottom);
-			graphics.RenderSolid(this.ColorBorder);
-		}
-
-		public override void PaintRibbonSectionForeground(Drawing.Graphics graphics,
-												 Drawing.Rectangle rect,
-												 WidgetPaintState state)
-		{
-			//	Dessine une section d'un ruban.
-		}
-
-		public override void PaintRibbonSectionTextLayout(Drawing.Graphics graphics,
-												 Drawing.Rectangle rect,
+												 Drawing.Rectangle fullRect,
+												 Drawing.Rectangle userRect,
+												 Drawing.Rectangle textRect,
 												 TextLayout text,
 												 WidgetPaintState state)
 		{
-			//	Dessine le texte du titre d'une section d'un ruban.
-			if ( text == null )  return;
+			//	Dessine une section d'un ruban.
+			this.PaintImageButton(graphics, fullRect, 16);
 
-			Drawing.TextStyle.DefineDefaultColor(this.colorBlack);
-			Drawing.Point pos = new Drawing.Point(rect.Left+3, rect.Bottom);
-			text.LayoutSize = new Drawing.Size(rect.Width-4, rect.Height);
-			text.Alignment = Drawing.ContentAlignment.MiddleLeft;
-			text.Paint(pos, graphics, Drawing.Rectangle.MaxValue, Drawing.Color.FromBrightness(0), Drawing.GlyphPaintStyle.Normal);
+			graphics.AddFilledRectangle(textRect);
+			graphics.RenderSolid(Drawing.Color.FromAlphaRgb(0.5, 255/255.0, 211.0/255.0, 175.0/255.0));
+
+			fullRect.Deflate(0.5);
+			graphics.AddRectangle(fullRect);
+			graphics.AddLine(textRect.Left, textRect.Top+0.5, textRect.Right, textRect.Top+0.5);
+			graphics.RenderSolid(this.ColorBorder);
+
+			if (text != null)
+			{
+				Drawing.TextStyle.DefineDefaultColor(this.colorBlack);
+				Drawing.Point pos = new Drawing.Point(textRect.Left+3, textRect.Bottom+1.5);
+				text.LayoutSize = new Drawing.Size(textRect.Width-4, textRect.Height);
+				text.Alignment = Drawing.ContentAlignment.MiddleCenter;
+				text.Paint(pos, graphics, Drawing.Rectangle.MaxValue, Drawing.Color.FromBrightness(0), Drawing.GlyphPaintStyle.Normal);
+			}
+		}
+
+		public override void PaintRibbonSectionForeground(Drawing.Graphics graphics,
+												 Drawing.Rectangle fullRect,
+												 Drawing.Rectangle userRect,
+												 Drawing.Rectangle textRect,
+												 TextLayout text,
+												 WidgetPaintState state)
+		{
+			//	Dessine une section d'un ruban.
 		}
 
 		public override void PaintTagBackground(Drawing.Graphics graphics,
@@ -1889,6 +1900,10 @@ namespace Epsitec.Common.Widgets.Adorners
 			if ( rank == 16 || rank == 17 || rank == 18 || rank == 21 || rank == 27 || rank == 44 )
 			{
 				this.PaintImageButton1(graphics, rect, icon);
+			}
+			else if ( rank == 29 )
+			{
+				this.PaintImageButton9(graphics, rect, 6, icon, 6);
 			}
 			else
 			{

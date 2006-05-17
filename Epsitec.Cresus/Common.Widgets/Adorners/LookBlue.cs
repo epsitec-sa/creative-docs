@@ -1474,9 +1474,6 @@ namespace Epsitec.Common.Widgets.Adorners
 											 WidgetPaintState state)
 		{
 			//	Dessine la bande principale d'un ruban.
-			Drawing.Rectangle header = rect;
-			graphics.AddFilledRectangle(header);
-			graphics.RenderSolid(this.colorCaptionLight);
 		}
 
 		public override void PaintRibbonTabForeground(Drawing.Graphics graphics,
@@ -1491,12 +1488,12 @@ namespace Epsitec.Common.Widgets.Adorners
 											 WidgetPaintState state)
 		{
 			//	Dessine la bande principale d'un ruban.
-			graphics.AddFilledRectangle(rect);
-			graphics.RenderSolid(this.colorControlLight);
+			Drawing.Path pRect = this.PathRoundRectangle(rect, 6.0);
 
-			graphics.AddLine(rect.Left, rect.Top-0.5, rect.Right, rect.Top-0.5);
-			graphics.AddLine(rect.Left, rect.Bottom-0.5, rect.Right, rect.Bottom-0.5);
-			graphics.AddLine(rect.Left, rect.Bottom+0.5, rect.Right, rect.Bottom+0.5);
+			graphics.Rasterizer.AddSurface(pRect);
+			graphics.RenderSolid(this.colorCaptionLight);
+
+			graphics.Rasterizer.AddOutline(pRect, 1);
 			graphics.RenderSolid(this.colorControlDarkDark);
 		}
 
@@ -1513,11 +1510,9 @@ namespace Epsitec.Common.Widgets.Adorners
 												ActiveState active)
 		{
 			//	Dessine le bouton pour un ruban.
-			rect.Bottom -= 3;
-
 			if ( (state&WidgetPaintState.ActiveYes) != 0 )   // bouton activé ?
 			{
-				Drawing.Path pTitle = this.PathTopRoundRectangle(rect, 0);
+				Drawing.Path pTitle = this.PathTabRoundRectangle(rect, 6.0);
 
 				graphics.Rasterizer.AddSurface(pTitle);
 				if ( (state&WidgetPaintState.Enabled) != 0 )
@@ -1533,7 +1528,7 @@ namespace Epsitec.Common.Widgets.Adorners
 				{
 					Drawing.Rectangle rHilite = rect;
 					rHilite.Bottom = rHilite.Top-3;
-					Drawing.Path pHilite = this.PathTopRoundRectangle(rHilite, 0);
+					Drawing.Path pHilite = this.PathTopRoundRectangle(rHilite, 6.0);
 					graphics.Rasterizer.AddSurface(pHilite);
 					graphics.RenderSolid(this.colorHilite);
 				}
@@ -1543,26 +1538,27 @@ namespace Epsitec.Common.Widgets.Adorners
 			}
 			else
 			{
-				rect.Top -= 2;
-				rect.Left  += 1;
-				rect.Right -= 1;
-
-				Drawing.Path pTitle = this.PathTopRoundRectangle(rect, 0);
-
-				graphics.Rasterizer.AddSurface(pTitle);
-				graphics.RenderSolid(this.colorControl);
-
 				if ( (state&WidgetPaintState.Entered) != 0 )  // bouton survolé ?
 				{
+					rect.Top    -= 2;
+					rect.Bottom += 1;
+					rect.Left   += 2;
+					rect.Right  -= 2;
+
+					Drawing.Path pTitle = this.PathTopRoundRectangle(rect, 6.0);
+
+					graphics.Rasterizer.AddSurface(pTitle);
+					graphics.RenderSolid(this.colorControl);
+
 					Drawing.Rectangle rHilite = rect;
 					rHilite.Bottom = rHilite.Top-3;
-					Drawing.Path pHilite = this.PathTopRoundRectangle(rHilite, 0);
+					Drawing.Path pHilite = this.PathTopRoundRectangle(rHilite, 6.0);
 					graphics.Rasterizer.AddSurface(pHilite);
 					graphics.RenderSolid(this.colorHilite);
-				}
 
-				graphics.Rasterizer.AddOutline(pTitle, 1);
-				graphics.RenderSolid(this.colorControlDarkDark);
+					graphics.Rasterizer.AddOutline(pTitle, 1);
+					graphics.RenderSolid(this.colorControlDarkDark);
+				}
 			}
 		}
 
@@ -1596,35 +1592,44 @@ namespace Epsitec.Common.Widgets.Adorners
 		}
 
 		public override void PaintRibbonSectionBackground(Drawing.Graphics graphics,
-												 Drawing.Rectangle rect,
-												 WidgetPaintState state)
-		{
-			//	Dessine une section d'un ruban.
-			rect.Deflate(0.5);
-			graphics.AddLine(rect.Right, rect.Top, rect.Right, rect.Bottom);
-			graphics.RenderSolid(this.ColorBorder);
-		}
-
-		public override void PaintRibbonSectionForeground(Drawing.Graphics graphics,
-												 Drawing.Rectangle rect,
-												 WidgetPaintState state)
-		{
-			//	Dessine une section d'un ruban.
-		}
-
-		public override void PaintRibbonSectionTextLayout(Drawing.Graphics graphics,
-												 Drawing.Rectangle rect,
+												 Drawing.Rectangle fullRect,
+												 Drawing.Rectangle userRect,
+												 Drawing.Rectangle textRect,
 												 TextLayout text,
 												 WidgetPaintState state)
 		{
-			//	Dessine le texte du titre d'une section d'un ruban.
-			if ( text == null )  return;
+			//	Dessine une section d'un ruban.
+			Drawing.Path pRect = this.PathTopRoundRectangle(userRect, 3.0);
+			graphics.Rasterizer.AddSurface(pRect);
+			graphics.RenderSolid(this.colorControlLight);
 
-			Drawing.TextStyle.DefineDefaultColor(this.colorBlack);
-			Drawing.Point pos = new Drawing.Point(rect.Left+3, rect.Bottom);
-			text.LayoutSize = new Drawing.Size(rect.Width-4, rect.Height);
-			text.Alignment = Drawing.ContentAlignment.MiddleLeft;
-			text.Paint(pos, graphics, Drawing.Rectangle.MaxValue, Drawing.Color.FromBrightness(0), Drawing.GlyphPaintStyle.Normal);
+			pRect = this.PathBottomRoundRectangle(textRect, 3.0);
+			graphics.Rasterizer.AddSurface(pRect);
+			graphics.RenderSolid(Drawing.Color.FromAlphaRgb(0.7, 178/255.0, 198.0/255.0, 221.0/255.0));
+
+			pRect = this.PathRoundRectangle(fullRect, 3.0);
+			graphics.Rasterizer.AddOutline(pRect, 1);
+			graphics.AddLine(textRect.Left, textRect.Top+0.5, textRect.Right, textRect.Top+0.5);
+			graphics.RenderSolid(this.colorControlDarkDark);
+
+			if (text != null)
+			{
+				Drawing.TextStyle.DefineDefaultColor(this.colorBlack);
+				Drawing.Point pos = new Drawing.Point(textRect.Left+3, textRect.Bottom+1.5);
+				text.LayoutSize = new Drawing.Size(textRect.Width-4, textRect.Height);
+				text.Alignment = Drawing.ContentAlignment.MiddleCenter;
+				text.Paint(pos, graphics, Drawing.Rectangle.MaxValue, Drawing.Color.FromBrightness(0), Drawing.GlyphPaintStyle.Normal);
+			}
+		}
+
+		public override void PaintRibbonSectionForeground(Drawing.Graphics graphics,
+												 Drawing.Rectangle fullRect,
+												 Drawing.Rectangle userRect,
+												 Drawing.Rectangle textRect,
+												 TextLayout text,
+												 WidgetPaintState state)
+		{
+			//	Dessine une section d'un ruban.
 		}
 
 		public override void PaintTagBackground(Drawing.Graphics graphics,
@@ -1911,6 +1916,58 @@ namespace Epsitec.Common.Widgets.Adorners
 			path.LineTo (ox+dx-radius-0.5, oy+dy-0.5);
 			path.CurveTo(ox+dx-0.5, oy+dy-0.5, ox+dx-0.5, oy+dy-radius-0.5);
 			path.LineTo (ox+dx-0.5, oy);
+
+			return path;
+		}
+
+		protected Drawing.Path PathTabRoundRectangle(Drawing.Rectangle rect, double radius)
+		{
+			//	Crée le chemin d'un rectangle à coins arrondis en forme de "U" évasé inversé.
+			double ox = rect.Left;
+			double oy = rect.Bottom;
+			double dx = rect.Width;
+			double dy = rect.Height;
+
+			if ( radius == 0 )
+			{
+				radius = System.Math.Min(dx, dy)/3;
+			}
+			
+			Drawing.Path path = new Drawing.Path();
+			path.MoveTo (ox-radius-0.5, oy);
+			path.LineTo (ox-radius-0.5, oy+0.5);
+			path.CurveTo(ox+0.5, oy, ox+0.5, oy+radius+0.5);
+			path.LineTo (ox+0.5, oy+dy-radius-0.5);
+			path.CurveTo(ox+0.5, oy+dy-0.5, ox+radius+0.5, oy+dy-0.5);
+			path.LineTo (ox+dx-radius-0.5, oy+dy-0.5);
+			path.CurveTo(ox+dx-0.5, oy+dy-0.5, ox+dx-0.5, oy+dy-radius-0.5);
+			path.LineTo (ox+dx-0.5, oy+radius+0.5);
+			path.CurveTo(ox+dx-0.5, oy+0.5, ox+dx+radius-0.5, oy+0.5);
+			path.LineTo (ox+dx+radius-0.5, oy);
+
+			return path;
+		}
+
+		protected Drawing.Path PathBottomRoundRectangle(Drawing.Rectangle rect, double radius)
+		{
+			//	Crée le chemin d'un rectangle à coins arrondis en forme de "u".
+			double ox = rect.Left;
+			double oy = rect.Bottom;
+			double dx = rect.Width;
+			double dy = rect.Height;
+
+			if ( radius == 0 )
+			{
+				radius = System.Math.Min(dx, dy)/8;
+			}
+			
+			Drawing.Path path = new Drawing.Path();
+			path.MoveTo (ox+0.5, oy+dy);
+			path.LineTo (ox+0.5, oy+radius+0.5);
+			path.CurveTo(ox+0.5, oy+0.5, ox+radius+0.5, oy+0.5);
+			path.LineTo (ox+dx-radius-0.5, oy+0.5);
+			path.CurveTo(ox+dx-0.5, oy+0.5, ox+dx-0.5, oy+radius+0.5);
+			path.LineTo (ox+dx-0.5, oy+dy);
 
 			return path;
 		}

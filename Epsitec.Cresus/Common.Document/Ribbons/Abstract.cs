@@ -7,16 +7,10 @@ namespace Epsitec.Common.Document.Ribbons
 	/// <summary>
 	/// La classe Abstract est la classe de base pour toutes les sections de rubans.
 	/// </summary>
-	public abstract class Abstract : Common.Widgets.Widget
+	public abstract class Abstract : RibbonSection
 	{
 		public Abstract()
 		{
-			this.title = new TextLayout();
-			this.title.DefaultFont     = this.DefaultFont;
-			this.title.DefaultFontSize = this.DefaultFontSize;
-
-			this.PreferredWidth = this.DefaultWidth;
-			this.PreferredHeight = this.DefaultHeight;
 		}
 		
 		protected override void Dispose(bool disposing)
@@ -30,18 +24,11 @@ namespace Epsitec.Common.Document.Ribbons
 
 		public virtual void SetDocument(DocumentType type, InstallType install, DebugMode debugMode, Settings.GlobalSettings gs, Document document)
 		{
-			double initialWidth = this.DefaultWidth;
-
 			this.documentType = type;
 			this.installType = install;
 			this.debugMode = debugMode;
 			this.globalSettings = gs;
 			this.document = document;
-
-			if ( initialWidth != this.DefaultWidth )
-			{
-				this.PreferredWidth = this.DefaultWidth;
-			}
 		}
 
 		public virtual void NotifyChanged(string changed)
@@ -54,53 +41,6 @@ namespace Epsitec.Common.Document.Ribbons
 
 		public virtual void NotifyTextStylesChanged()
 		{
-		}
-
-		
-		public virtual double DefaultWidth
-		{
-			//	Retourne la largeur standard.
-			get
-			{
-				return 8 + 22*2;
-			}
-		}
-
-		public virtual double DefaultHeight
-		{
-			//	Retourne la hauteur standard.
-			get
-			{
-				return this.LabelHeight + 8 + 22 + 5 + 22;
-			}
-		}
-
-		protected double LabelHeight
-		{
-			//	Retourne la hauteur pour le label supérieur.
-			get
-			{
-				return 14;
-			}
-		}
-
-
-		protected Rectangle UsefulZone
-		{
-			//	Retourne la zone rectangulaire utile pour les widgets.
-			get
-			{
-				Rectangle rect = this.Client.Bounds;
-				rect.Top -= this.LabelHeight;
-				rect.Deflate(4);
-				return rect;
-			}
-		}
-
-		protected override void UpdateClientGeometry()
-		{
-			//	Met à jour la géométrie.
-			base.UpdateClientGeometry();
 		}
 
 
@@ -142,22 +82,6 @@ namespace Epsitec.Common.Document.Ribbons
 		}
 
 		public event EventHandler OriginColorChanged;
-
-
-		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
-		{
-#if false
-			IAdorner adorner = Epsitec.Common.Widgets.Adorners.Factory.Active;
-
-			Rectangle rect = this.Client.Bounds;
-			WidgetPaintState state = this.PaintState;
-			adorner.PaintRibbonSectionBackground(graphics, rect, this.LabelHeight, state);
-
-			Point pos = new Point(rect.Left+3, rect.Top-this.LabelHeight);
-			this.title.LayoutSize = new Size(rect.Width-4, this.LabelHeight);
-			adorner.PaintRibbonSectionTextLayout(graphics, pos, this.title, state);
-#endif
-		}
 
 
 		protected IconButton CreateIconButton(string command)
@@ -319,7 +243,6 @@ namespace Epsitec.Common.Document.Ribbons
 		protected DebugMode					debugMode;
 		protected Settings.GlobalSettings	globalSettings;
 		protected Document					document;
-		protected TextLayout				title;
 		protected int						tabIndex = 0;
 		protected bool						ignoreChange = false;
 		protected double					separatorWidth = 8;

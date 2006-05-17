@@ -11,7 +11,8 @@ namespace Epsitec.Common.Designer.Ribbons
 	{
 		public Select() : base()
 		{
-			this.title.Text = Res.Strings.Ribbon.Section.Select;
+			this.Title = Res.Strings.Ribbon.Section.Select;
+			this.PreferredWidth = 8 + 22*1.5*2 + 4 + 22*2;
 
 			this.buttonCreate    = this.CreateIconButton("Create", "Large");
 			this.buttonDuplicate = this.CreateIconButton("Duplicate", "Large");
@@ -29,15 +30,6 @@ namespace Epsitec.Common.Designer.Ribbons
 			}
 			
 			base.Dispose(disposing);
-		}
-
-		public override double DefaultWidth
-		{
-			//	Retourne la largeur standard.
-			get
-			{
-				return 8 + 22*1.5*2 + 4 + 22*2;
-			}
 		}
 
 

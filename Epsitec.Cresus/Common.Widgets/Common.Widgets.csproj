@@ -341,7 +341,6 @@
     <Compile Include="Layouts\LayoutMeasure.cs" />
     <Compile Include="Placeholder.cs" />
     <Compile Include="RibbonButton.cs" />
-    <Compile Include="RibbonContainer.cs" />
     <Compile Include="VerticalAlignment.cs" />
     <Compile Include="HorizontalAlignment.cs" />
     <Compile Include="DockStyle.cs" />
