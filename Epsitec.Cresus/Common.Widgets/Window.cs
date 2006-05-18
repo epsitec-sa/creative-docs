@@ -1015,18 +1015,6 @@ namespace Epsitec.Common.Widgets
 		#endregion
 		
 		
-		public void AttachDispatcher(CommandDispatcher value)
-		{
-			if (CommandDispatcher.GetDispatcher (this) != value)
-			{
-				System.Diagnostics.Debug.Assert (CommandDispatcher.GetDispatcher (this) == null);
-
-				CommandDispatcher.SetDispatcher (this, value);
-				
-				Helpers.VisualTree.InvalidateCommandDispatcher (this);
-			}
-		}
-		
 		public void DetachDispatcher(CommandDispatcher value)
 		{
 			if (CommandDispatcher.GetDispatcher (this) != null)
@@ -1141,10 +1129,7 @@ namespace Epsitec.Common.Widgets
 					}
 				}
 
-				if (CommandDispatcher.GetDispatcher (this) != null)
-				{
-					this.DetachDispatcher (CommandDispatcher.GetDispatcher (this));
-				}
+				CommandDispatcher.ClearDispatcher (this);
 				
 				if (this.root != null)
 				{
