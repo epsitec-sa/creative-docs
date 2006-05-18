@@ -63,6 +63,15 @@
   <data name="Action.ModificationAll">Toutes les ressources secondaires devront être modifiées</data>
   <data name="Action.ModificationClear">Modification de la ressource secondaire terminée</data>
 
+  <data name="Action.ToolSelect">Sélectionner</data>
+  <data name="Action.ToolGlobal">Rectangle de sélection</data>
+  <data name="Action.ToolEdit">Editer</data>
+  <data name="Action.ToolZoom">Loupe</data>
+  <data name="Action.ToolHand">Main</data>
+  <data name="Action.ObjectLine">Séparateur</data>
+  <data name="Action.ObjectButton">Bouton</data>
+  <data name="Action.ObjectText">Texte éditable</data>
+
   <data name="Dialog.Button.Close">Fermer</data>
   <data name="Dialog.Button.OK">D'accord</data>
   <data name="Dialog.Button.Cancel">Annuler</data>

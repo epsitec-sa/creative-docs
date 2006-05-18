@@ -517,14 +517,14 @@ namespace Epsitec.Common.Designer
 			this.modificationNextState = this.CreateCommandState("ModificationNext", KeyCode.FuncF8);
 			this.newCultureState = this.CreateCommandState("NewCulture");
 			this.deleteCultureState = this.CreateCommandState("DeleteCulture");
-			this.toolSelectState = this.CreateCommandState("ToolSelect");
-			this.toolGlobalState = this.CreateCommandState("ToolGlobal");
-			this.toolEditState = this.CreateCommandState("ToolEdit");
-			this.toolZoomState = this.CreateCommandState("ToolZoom");
-			this.toolHandState = this.CreateCommandState("ToolHand");
-			this.objectLineState = this.CreateCommandState("ObjectLine");
-			this.objectButtonState = this.CreateCommandState("ObjectButton");
-			this.objectTextState = this.CreateCommandState("ObjectText");
+			this.toolSelectState = this.CreateCommandState("ToolSelect", KeyCode.AlphaS);
+			this.toolGlobalState = this.CreateCommandState("ToolGlobal", KeyCode.AlphaG);
+			this.toolEditState = this.CreateCommandState("ToolEdit", KeyCode.AlphaE);
+			this.toolZoomState = this.CreateCommandState("ToolZoom", KeyCode.AlphaZ);
+			this.toolHandState = this.CreateCommandState("ToolHand", KeyCode.AlphaH);
+			this.objectLineState = this.CreateCommandState("ObjectLine", KeyCode.AlphaL);
+			this.objectButtonState = this.CreateCommandState("ObjectButton", KeyCode.AlphaB);
+			this.objectTextState = this.CreateCommandState("ObjectText", KeyCode.AlphaT);
 		}
 
 		protected Command CreateCommandState(string command, params Widgets.Shortcut[] shortcuts)
