@@ -66,6 +66,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.container.ChildrenLayoutMode = Widgets.Layouts.LayoutMode.Anchored;
 			this.container.Margins = new Margins(1, 1, 1, 1);
 			this.container.Dock = DockStyle.Fill;
+			this.container.ChildrenChanged += new EventHandler(this.HandleContainerChildrenChanged);
 
 			this.tabBook = new TabBook(this);
 			this.tabBook.PreferredWidth = 150;
@@ -88,6 +89,10 @@ namespace Epsitec.Common.Designer.Viewers
 			this.UpdateLabelsIndex("", Searcher.SearchingMode.None);
 			this.UpdateArray();
 			this.UpdateEdit();
+		}
+
+		void HandleContainerChildrenChanged(object sender)
+		{
 		}
 
 		protected override void Dispose(bool disposing)
