@@ -619,9 +619,6 @@ namespace Epsitec.Common.Widgets
 		{
 			//	Transmet la commande à ceux qui sont intéressés
 
-			System.Diagnostics.Debug.Assert (contextChain != null);
-			System.Diagnostics.Debug.Assert (contextChain.IsEmpty == false);
-			
 			string commandName = CommandDispatcher.ExtractCommandName (commandLine);
 			
 			if (commandName == null)
@@ -645,6 +642,9 @@ namespace Epsitec.Common.Widgets
 			}
 			else
 			{
+				System.Diagnostics.Debug.Assert (contextChain != null);
+				System.Diagnostics.Debug.Assert (contextChain.IsEmpty == false);
+				
 				commandState = contextChain.GetCommandState (command, out commandContext);
 
 				System.Diagnostics.Debug.Assert (commandContext != null);

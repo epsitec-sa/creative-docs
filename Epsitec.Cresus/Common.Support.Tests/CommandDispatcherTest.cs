@@ -35,12 +35,12 @@ namespace Epsitec.Common.Support
 			
 			//	Vérifie que le dispatch se fait correctement.
 			
-			dispatcher.InternalDispatch ("private-base-a", null);
-			dispatcher.InternalDispatch ("private-base-x", null);
-			dispatcher.InternalDispatch ("protected-base-b", null);
-			dispatcher.InternalDispatch ("public-base-virtual-c", null);
-			dispatcher.InternalDispatch ("public-base-d", null);
-			dispatcher.InternalDispatch ("public-base-virtual-e", null);	//	n'existe pas
+			dispatcher.InternalDispatch (null, "private-base-a", null);
+			dispatcher.InternalDispatch (null, "private-base-x", null);
+			dispatcher.InternalDispatch (null, "protected-base-b", null);
+			dispatcher.InternalDispatch (null, "public-base-virtual-c", null);
+			dispatcher.InternalDispatch (null, "public-base-d", null);
+			dispatcher.InternalDispatch (null, "public-base-virtual-e", null);	//	n'existe pas
 			
 			Assert.AreEqual ("ba/bx/bb/bc/bd/", CommandDispatcherTest.buffer.ToString ());
 		}
@@ -55,10 +55,10 @@ namespace Epsitec.Common.Support
 			CommandDispatcherTest.buffer.Length = 0;
 			
 			//	Vérifie que le dispatch se fait correctement.
-			
-			dispatcher.InternalDispatch ("private-base-a -> protected-base-b -> public-base-virtual-c", null);
-			dispatcher.InternalDispatch ("private-base-a -> cancel-multiple", null);
-			dispatcher.InternalDispatch ("private-base-a -> cancel-multiple -> protected-base-b -> public-base-virtual-c", null);
+
+			dispatcher.InternalDispatch (null, "private-base-a -> protected-base-b -> public-base-virtual-c", null);
+			dispatcher.InternalDispatch (null, "private-base-a -> cancel-multiple", null);
+			dispatcher.InternalDispatch (null, "private-base-a -> cancel-multiple -> protected-base-b -> public-base-virtual-c", null);
 			
 			Assert.AreEqual ("ba/bb/bc/ba/cm/ba/CM/", CommandDispatcherTest.buffer.ToString ());
 		}
@@ -74,17 +74,17 @@ namespace Epsitec.Common.Support
 			
 			//	Vérifie que le dispatch se fait correctement, et que la visibilité des méthodes
 			//	est bien respectée.
-			
-			dispatcher.InternalDispatch ("private-base-a", null);			//	privé, pas accessible dans la version dérivée
-			dispatcher.InternalDispatch ("private-base-x", null);			//	privé, pas accessible dans la version dérivée
-			dispatcher.InternalDispatch ("protected-base-b", null);			//	accessible et surchargé par 'new' -> visible
-			dispatcher.InternalDispatch ("public-base-virtual-c", null);	//	accessible et surchargé par 'override' -> pas visible
-			dispatcher.InternalDispatch ("public-base-d", null);			//	accessible et non surchargé -> visible
-			dispatcher.InternalDispatch ("public-base-virtual-e", null);	//	accessible mais non marqué :-)
-			dispatcher.InternalDispatch ("private-derived-a", null);		//	privé, accessible localement -> visible
-			dispatcher.InternalDispatch ("protected-new-b", null);			//	accessible, surcharge la base -> visible
-			dispatcher.InternalDispatch ("public-override-c", null);		//	accessible, surcharge la base -> visible
-			dispatcher.InternalDispatch ("public-override-e", null);		//	accessible, surcharge la base -> visible
+
+			dispatcher.InternalDispatch (null, "private-base-a", null);			//	privé, pas accessible dans la version dérivée
+			dispatcher.InternalDispatch (null, "private-base-x", null);			//	privé, pas accessible dans la version dérivée
+			dispatcher.InternalDispatch (null, "protected-base-b", null);		//	accessible et surchargé par 'new' -> visible
+			dispatcher.InternalDispatch (null, "public-base-virtual-c", null);	//	accessible et surchargé par 'override' -> pas visible
+			dispatcher.InternalDispatch (null, "public-base-d", null);			//	accessible et non surchargé -> visible
+			dispatcher.InternalDispatch (null, "public-base-virtual-e", null);	//	accessible mais non marqué :-)
+			dispatcher.InternalDispatch (null, "private-derived-a", null);		//	privé, accessible localement -> visible
+			dispatcher.InternalDispatch (null, "protected-new-b", null);		//	accessible, surcharge la base -> visible
+			dispatcher.InternalDispatch (null, "public-override-c", null);		//	accessible, surcharge la base -> visible
+			dispatcher.InternalDispatch (null, "public-override-e", null);		//	accessible, surcharge la base -> visible
 			
 			Assert.AreEqual ("bb/bd/da/db/dc/de/", CommandDispatcherTest.buffer.ToString ());
 		}
