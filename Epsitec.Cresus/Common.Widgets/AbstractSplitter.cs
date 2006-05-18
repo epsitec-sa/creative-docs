@@ -436,7 +436,7 @@ namespace Epsitec.Common.Widgets
 				double w;
 
 				w = widget.ActualWidth + dx;
-				w = System.Math.Min (widget.MaxWidth, w);
+				w = System.Math.Min (widget.RealMaxSize.Width, w);
 
 				if ((w < 5) &&
 					(AbstractSplitter.GetAutoCollapseEnable (widget)))
@@ -445,7 +445,7 @@ namespace Epsitec.Common.Widgets
 				}
 				else
 				{
-					w = System.Math.Max (widget.MinWidth, w);
+					w = System.Math.Max (widget.RealMinSize.Width, w);
 				}
 
 				return w;
@@ -456,7 +456,7 @@ namespace Epsitec.Common.Widgets
 				{
 					if (dx > 5)
 					{
-						return widget.MinWidth;
+						return widget.RealMinSize.Width;
 					}
 					else
 					{
@@ -478,7 +478,7 @@ namespace Epsitec.Common.Widgets
 				double h;
 
 				h = widget.ActualHeight + dy;
-				h = System.Math.Min (widget.MaxHeight, h);
+				h = System.Math.Min (widget.RealMaxSize.Height, h);
 
 				if ((h < 5) &&
 					(AbstractSplitter.GetAutoCollapseEnable (widget)))
@@ -487,7 +487,7 @@ namespace Epsitec.Common.Widgets
 				}
 				else
 				{
-					h = System.Math.Max (widget.MinHeight, h);
+					h = System.Math.Max (widget.RealMinSize.Height, h);
 				}
 
 				return h;
@@ -498,7 +498,7 @@ namespace Epsitec.Common.Widgets
 				{
 					if (dy > 5)
 					{
-						return widget.MinHeight;
+						return widget.RealMinSize.Height;
 					}
 					else
 					{
