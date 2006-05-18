@@ -55,6 +55,7 @@
     <Compile Include="Ribbons\Clipboard.cs" />
     <Compile Include="Ribbons\Character.cs" />
     <Compile Include="Ribbons\Access.cs" />
+    <Compile Include="Ribbons\PanelSelect.cs" />
     <Compile Include="Ribbons\Culture.cs" />
     <Compile Include="Ribbons\File.cs" />
     <Compile Include="Ribbons\Select.cs" />
@@ -161,6 +162,11 @@
     <EmbeddedResource Include="Images\CursorPen.icon" />
     <EmbeddedResource Include="Images\CursorZoom.icon" />
     <EmbeddedResource Include="Images\CursorEdit.icon" />
+    <EmbeddedResource Include="Images\PanelSelectAll.icon" />
+    <EmbeddedResource Include="Images\PanelSelectInvert.icon" />
+    <EmbeddedResource Include="Images\PanelDeselectAll.icon" />
+    <EmbeddedResource Include="Images\PanelDuplicate.icon" />
+    <EmbeddedResource Include="Images\PanelDelete.icon" />
     <None Include="Resources\Designer\Strings.00.resource" />
     <None Include="Resources\Designer\Strings.en.resource" />
   </ItemGroup>

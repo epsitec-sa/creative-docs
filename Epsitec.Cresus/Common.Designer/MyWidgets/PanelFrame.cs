@@ -449,9 +449,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 		#region Paint
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
-			//	Dessine le texte.
+			//	Dessine le panneau.
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
 
+			//	Dessine les surfaces inutilisées.
 			Rectangle bounds = this.RealBounds;
 			Rectangle box = this.Client.Bounds;
 
@@ -469,9 +470,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 				graphics.RenderSolid(Color.FromAlphaRgb(0.2, 0.5, 0.5, 0.5));
 			}
 
+			//	Dessine les objets sélectionnés.
 			if (this.selectedObjects.Count > 0)
 			{
-				//	Dessine les objets sélectionnés.
 				foreach ( Widget obj in this.selectedObjects)
 				{
 					Rectangle rect = obj.ActualBounds;
@@ -487,6 +488,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				}
 			}
 
+			//	Dessine l'objet survolé.
 			if (!this.hilitedRectangle.IsEmpty)
 			{
 				graphics.AddFilledRectangle(this.hilitedRectangle);
