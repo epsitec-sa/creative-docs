@@ -12,7 +12,7 @@ namespace Epsitec.Common.Widgets
 	/// La classe <c>Command</c> permet de représenter l'état d'une commande tout
 	/// en maintenant la synchronisation avec l'état des widgets associés.
 	/// </summary>
-	public sealed class Command : DependencyObject, System.IEquatable<Command>
+	public sealed class Command : DependencyObject, System.IEquatable<Command>, Types.INamedType
 	{
 		public Command(string name)
 		{
@@ -54,6 +54,11 @@ namespace Epsitec.Common.Widgets
 			}
 			set
 			{
+				if (this.locked)
+				{
+					throw new Exceptions.CommandLockedException (this.Name);
+				}
+				
 				this.SetValue (Command.IconNameProperty, value);
 			}
 		}
@@ -66,6 +71,11 @@ namespace Epsitec.Common.Widgets
 			}
 			set
 			{
+				if (this.locked)
+				{
+					throw new Exceptions.CommandLockedException (this.Name);
+				}
+
 				this.SetValue (Command.ShortCaptionProperty, value);
 			}
 		}
@@ -78,6 +88,11 @@ namespace Epsitec.Common.Widgets
 			}
 			set
 			{
+				if (this.locked)
+				{
+					throw new Exceptions.CommandLockedException (this.Name);
+				}
+
 				this.SetValue (Command.LongCaptionProperty, value);
 			}
 		}
@@ -98,6 +113,11 @@ namespace Epsitec.Common.Widgets
 			}
 			set
 			{
+				if (this.locked)
+				{
+					throw new Exceptions.CommandLockedException (this.Name);
+				}
+
 				this.SetValue (Command.GroupProperty, value);
 			}
 		}
@@ -118,6 +138,11 @@ namespace Epsitec.Common.Widgets
 			}
 			set
 			{
+				if (this.locked)
+				{
+					throw new Exceptions.CommandLockedException (this.Name);
+				}
+
 				if (this.statefull != value)
 				{
 					this.statefull = value;
@@ -163,6 +188,22 @@ namespace Epsitec.Common.Widgets
 				{
 					return false;
 				}
+			}
+		}
+
+		public bool								IsReadOnly
+		{
+			get
+			{
+				return this.locked;
+			}
+		}
+
+		public bool								IsReadWrite
+		{
+			get
+			{
+				return !this.locked;
 			}
 		}
 
@@ -260,6 +301,50 @@ namespace Epsitec.Common.Widgets
 
 		#endregion
 
+		#region INamedType Members
+
+		System.Type INamedType.SystemType
+		{
+			get
+			{
+				return typeof (Command);
+			}
+		}
+
+		#endregion
+
+		#region INameCaption Members
+
+		string INameCaption.Caption
+		{
+			get
+			{
+				return this.ShortCaption;
+			}
+		}
+
+		string INameCaption.Description
+		{
+			get
+			{
+				return this.LongCaption;
+			}
+		}
+
+		#endregion
+
+		#region IName Members
+
+		string IName.Name
+		{
+			get
+			{
+				return this.Name;
+			}
+		}
+
+		#endregion
+
 		#region Private EmptyState Class
 
 		private class EmptyState : CommandState
@@ -275,6 +360,15 @@ namespace Epsitec.Common.Widgets
 		{
 			CommandCache.Default.InvalidateCommand (this);
 		}
+
+		#region Internal Methods
+
+		internal void Lockdown()
+		{
+			this.locked = true;
+		}
+		
+		#endregion
 
 		#region Private Event Handlers
 
@@ -355,6 +449,7 @@ namespace Epsitec.Common.Widgets
 		private DependencyObjectType			stateObjectType;
 		private int								uniqueId;
 		private bool							statefull;
+		private bool							locked;
 		
 		private Collections.ShortcutCollection	shortcuts;
 		private string							name;

@@ -16,7 +16,7 @@ namespace Epsitec.Common.Widgets
 		
 		public CommandState(Command command)
 		{
-			this.command = command;
+			this.DefineCommand (command);
 		}
 		
 		public Command							Command
@@ -80,6 +80,7 @@ namespace Epsitec.Common.Widgets
 		internal void DefineCommand(Command command)
 		{
 			this.command = command;
+			this.command.Lockdown ();
 		}
 
 		#endregion
@@ -107,6 +108,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 		public static readonly DependencyProperty AdvancedStateProperty = DependencyProperty.RegisterAttached ("AdvancedState", typeof (string), typeof (CommandState), new DependencyPropertyMetadata (null));
+		public static readonly DependencyProperty CommandProperty = DependencyProperty.RegisterReadOnly ("Command", typeof (Command), typeof (CommandState));
 
 		private Command							command;
 		private ActiveState						activeState = ActiveState.No;

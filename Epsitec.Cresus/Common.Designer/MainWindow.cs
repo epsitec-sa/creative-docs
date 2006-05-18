@@ -517,18 +517,20 @@ namespace Epsitec.Common.Designer
 			//	Crée une nouvelle commande et son command state associé.
 			
 			Command command = Command.Get (commandName);
-			CommandState state = this.CommandContext.GetCommandState (command);
-			
-			if (shortcuts.Length > 0)
+
+			if (command.IsReadWrite)
 			{
-				command.Shortcuts.AddRange (shortcuts);
+				if (shortcuts.Length > 0)
+				{
+					command.Shortcuts.AddRange (shortcuts);
+				}
+
+				command.IconName    = commandName;
+				command.LongCaption = Res.Strings.GetString ("Action."+commandName);
+				command.Statefull   = (commandName == "FontBold" || commandName == "FontItalic" || commandName == "FontUnderlined");
 			}
 
-			command.IconName    = commandName;
-			command.LongCaption = Res.Strings.GetString("Action."+commandName);
-			command.Statefull   = (commandName == "FontBold" || commandName == "FontItalic" || commandName == "FontUnderlined");
-
-			return state;
+			return this.CommandContext.GetCommandState (command);
 		}
 		#endregion
 

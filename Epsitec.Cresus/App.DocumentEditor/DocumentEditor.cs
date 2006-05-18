@@ -3751,18 +3751,20 @@ namespace Epsitec.App.DocumentEditor
 		{
 			//	Crée un nouveau Command + CommandState.
 			Command command = Epsitec.Common.Widgets.Command.Get (commandName);
-			CommandState state = this.CommandContext.GetCommandState (command);
 
-			if (shortcuts.Length > 0)
+			if (command.IsReadWrite)
 			{
-				command.Shortcuts.AddRange (shortcuts);
+				if (shortcuts.Length > 0)
+				{
+					command.Shortcuts.AddRange (shortcuts);
+				}
+
+				command.IconName    = icon;
+				command.LongCaption = DocumentEditor.GetRes ("Action."+tooltip);
+				command.Statefull   = statefull;
 			}
 
-			command.IconName    = icon;
-			command.LongCaption = DocumentEditor.GetRes ("Action."+tooltip);
-			command.Statefull   = statefull;
-
-			return state;
+			return this.CommandContext.GetCommandState (command);
 		}
 
 
