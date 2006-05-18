@@ -101,7 +101,14 @@ namespace Epsitec.Common.Widgets
 				this.SetValue (Command.GroupProperty, value);
 			}
 		}
-		
+
+		public DependencyObjectType				StateObjectType
+		{
+			get
+			{
+				return this.stateObjectType;
+			}
+		}
 		
 		public bool								Enable
 		{
@@ -208,6 +215,17 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		public CommandState CreateState()
+		{
+			if (this.stateObjectType != null)
+			{
+				return this.stateObjectType.CreateEmptyObject () as CommandState;
+			}
+			else
+			{
+				return Command.CreateEmptyState ();
+			}
+		}
 
 		public static Command Get(string commandName)
 		{
@@ -253,7 +271,11 @@ namespace Epsitec.Common.Widgets
 			
 			return null;
 		}
-		
+
+		public void DefineStateObjectType(DependencyObjectType objectType)
+		{
+			this.stateObjectType = objectType;
+		}
 		
 		public override int GetHashCode()
 		{
@@ -281,9 +303,16 @@ namespace Epsitec.Common.Widgets
 
 		#endregion
 
+		private class EmptyState : CommandState
+		{
+			public EmptyState()
+			{
+			}
+		}
+
 		private void Synchronize()
 		{
-			CommandCache.Default.UpdateWidgets (this);
+			CommandCache.Default.InvalidateCommand (this);
 		}
 
 		private void OnGroupChanged(DependencyPropertyChangedEventArgs e)
@@ -345,7 +374,11 @@ namespace Epsitec.Common.Widgets
 		{
 			return string.Join ("|", groups);
 		}
-		
+
+		public static CommandState CreateEmptyState()
+		{
+			return new EmptyState ();
+		}
 		 
 		public static void SetAdvancedState(DependencyObject obj, string value)
 		{
@@ -369,11 +402,12 @@ namespace Epsitec.Common.Widgets
 		public static readonly DependencyProperty ShortCaptionProperty	= DependencyProperty.Register ("ShortCaption", typeof (string), typeof (Command), new DependencyPropertyMetadata (null, new PropertyInvalidatedCallback (Command.NotifyShortCaptionChanged)));
 		public static readonly DependencyProperty LongCaptionProperty	= DependencyProperty.Register ("LongCaption", typeof (string), typeof (Command), new DependencyPropertyMetadata (null, new PropertyInvalidatedCallback (Command.NotifyLongCaptionChanged)));
 		
-		public static readonly DependencyProperty	AdvancedStateProperty = DependencyProperty.RegisterAttached ("AdvancedState", typeof (string), typeof (Command), new DependencyPropertyMetadata (null));
+		public static readonly DependencyProperty AdvancedStateProperty = DependencyProperty.RegisterAttached ("AdvancedState", typeof (string), typeof (Command), new DependencyPropertyMetadata (null));
 
 		private static Dictionary<string, Command> commands = new Dictionary<string, Command> ();
 		private static int nextUniqueId;
 
+		private DependencyObjectType			stateObjectType;
 		private int								uniqueId;
 		private ActiveState						activeState = ActiveState.No;
 		private bool							enable = true;

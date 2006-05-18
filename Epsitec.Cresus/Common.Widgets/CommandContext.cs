@@ -188,6 +188,14 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		internal bool TryGetCommandState(Command command, out CommandState state)
+		{
+			//	TODO: retrieve CommandState in current context
+			
+			state = null;
+			return false;
+		}
+		
 		internal void UpdateDispatcherChain(Visual visual)
 		{
 			this.dispatcherChain = CommandDispatcherChain.BuildChain (visual);
@@ -308,7 +316,12 @@ namespace Epsitec.Common.Widgets
 		/// <param name="context">The context.</param>
 		public static void SetContext(DependencyObject obj, CommandContext context)
 		{
-			obj.SetValue (CommandContext.ContextProperty, context);
+			if (CommandContext.GetContext (obj) != context)
+			{
+				obj.SetValue (CommandContext.ContextProperty, context);
+
+				CommandCache.Default.InvalidateContext (context);
+			}
 		}
 
 		/// <summary>
@@ -317,7 +330,17 @@ namespace Epsitec.Common.Widgets
 		/// <param name="obj">The dependency object.</param>
 		public static void ClearContext(DependencyObject obj)
 		{
-			obj.ClearValueBase (CommandContext.ContextProperty);
+			if (obj.ContainsLocalValue (CommandContext.ContextProperty))
+			{
+				CommandContext context = CommandContext.GetContext (obj);
+				
+				obj.ClearValueBase (CommandContext.ContextProperty);
+
+				if (context != null)
+				{
+					CommandCache.Default.InvalidateContext (context);
+				}
+			}
 		}
 		
 		

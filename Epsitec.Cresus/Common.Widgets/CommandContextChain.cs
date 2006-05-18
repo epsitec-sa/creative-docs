@@ -107,6 +107,32 @@ namespace Epsitec.Common.Widgets
 
 			return that;
 		}
+		
+		public CommandState FindCommandState(Command command, out CommandContext context)
+		{
+			if ((this.chain != null) &&
+				(this.chain.Count > 0))
+			{
+				foreach (System.WeakReference item in this.chain)
+				{
+					context = item.Target as CommandContext;
+
+					if (context != null)
+					{
+						CommandState state;
+						
+						if (context.TryGetCommandState (command, out state))
+						{
+							return state;
+						}
+					}
+				}
+			}
+
+			context = null;
+			
+			return null;
+		}
 
 		List<System.WeakReference> chain = new List<System.WeakReference> ();
 	}
