@@ -237,6 +237,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldArray[5].TextFieldReal.InternalValue =    0.0M;  // B
 			this.fieldArray[6].TextFieldReal.InternalValue =  -75.0M;  // A
 			this.negativ.ActiveState = ActiveState.No;
+			this.OnChanged();
 		}
 
 		private void HandleReset(object sender, MessageEventArgs e)
@@ -249,6 +250,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldArray[5].TextFieldReal.InternalValue = 0.0M;
 			this.fieldArray[6].TextFieldReal.InternalValue = 0.0M;
 			this.negativ.ActiveState = ActiveState.No;
+			this.OnChanged();
 		}
 
 		protected Widgets.TextFieldLabel[]	fieldArray;
