@@ -1,4 +1,4 @@
-//	Copyright © 2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2005-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Widgets.Collections
@@ -87,8 +87,14 @@ namespace Epsitec.Common.Widgets.Collections
 		
 		public int  Add(Shortcut value)
 		{
-			int index = this.list.Add (value);
-			this.NotifyCollectionChanged ();
+			int index = this.list.IndexOf (value);
+			
+			if (index == -1)
+			{
+				index = this.list.Add (value);
+				this.NotifyCollectionChanged ();
+			}
+			
 			return index;
 		}
 		
@@ -114,19 +120,6 @@ namespace Epsitec.Common.Widgets.Collections
 		public bool Contains(Shortcut value)
 		{
 			return this.list.Contains (value);
-		}
-		
-		public bool Match(Shortcut value)
-		{
-			foreach (Shortcut shortcut in this.list)
-			{
-				if (shortcut.Match (value))
-				{
-					return true;
-				}
-			}
-			
-			return false;
 		}
 		
 		public void Dispose()

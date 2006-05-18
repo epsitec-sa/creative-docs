@@ -3308,7 +3308,7 @@ namespace Epsitec.Common.Widgets
 		protected virtual bool ProcessShortcut(Shortcut shortcut)
 		{
 			if ((this.shortcuts != null) &&
-				(this.shortcuts.Match (shortcut)))
+				(this.shortcuts.Contains (shortcut)))
 			{
 				this.OnShortcutPressed ();
 				return true;

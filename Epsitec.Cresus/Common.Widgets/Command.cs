@@ -261,7 +261,7 @@ namespace Epsitec.Common.Widgets
 		{
 			foreach (Command command in Command.commands.Values)
 			{
-				if (command.Shortcuts.Match (shortcut))
+				if (command.Shortcuts.Contains (shortcut))
 				{
 					return command;
 				}
