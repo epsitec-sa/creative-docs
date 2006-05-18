@@ -8,7 +8,7 @@ using Epsitec.Common.Types;
 
 namespace Epsitec.Common.Widgets
 {
-	public class MultiCommand : Command
+	public class MultiCommand : Command, IEnumType
 	{
 		public MultiCommand(string name) : base (name)
 		{
@@ -49,6 +49,8 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		#region MultiState Class
+
 		private class MultiState : CommandState
 		{
 			public MultiState()
@@ -65,11 +67,6 @@ namespace Epsitec.Common.Widgets
 				{
 					this.SetValue (MultiState.SelectedCommandProperty, value);
 				}
-			}
-
-			protected override void OverrideDefineCommand()
-			{
-				base.OverrideDefineCommand ();
 			}
 
 			private static object CoerceSelectedCommandValue(DependencyObject obj, DependencyProperty property, object value)
@@ -105,6 +102,140 @@ namespace Epsitec.Common.Widgets
 
 			public static DependencyProperty SelectedCommandProperty;
 		}
+
+		#endregion
+
+		#region CommandEnumValue Class
+		
+		private class CommandEnumValue : IEnumValue
+		{
+			public CommandEnumValue(int rank, Command command)
+			{
+				this.rank = rank;
+				this.command = command;
+			}
+			
+			#region IEnumValue Members
+
+			int IEnumValue.Rank
+			{
+				get
+				{
+					return this.rank;
+				}
+			}
+
+			bool IEnumValue.IsHidden
+			{
+				get
+				{
+					return false;
+				}
+			}
+
+			#endregion
+
+			#region INameCaption Members
+
+			string INameCaption.Caption
+			{
+				get
+				{
+					return this.command.Caption;
+				}
+			}
+
+			string INameCaption.Description
+			{
+				get
+				{
+					return this.command.Description;
+				}
+			}
+
+			#endregion
+
+			#region IName Members
+
+			string IName.Name
+			{
+				get
+				{
+					return this.command.Name;
+				}
+			}
+
+			#endregion
+
+			private int rank;
+			private INamedType command;
+		}
+
+		#endregion
+
+		#region IEnumType Members
+
+		IEnumValue[] IEnumType.Values
+		{
+			get
+			{
+				CommandEnumValue[] values = new CommandEnumValue[this.commands.Count];
+
+				for (int i = 0; i < this.commands.Count; i++)
+				{
+					values[i] = new CommandEnumValue (i, this.commands[i]);
+				}
+				
+				return values;
+			}
+		}
+
+		IEnumValue IEnumType.this[string name]
+		{
+			get
+			{
+				int rank = 0;
+				
+				foreach (Command command in this.commands)
+				{
+					if (command.Name == name)
+					{
+						return new CommandEnumValue (rank, command);
+					}
+					
+					rank++;
+				}
+				
+				return null;
+			}
+		}
+
+		IEnumValue IEnumType.this[int rank]
+		{
+			get
+			{
+				return new CommandEnumValue (rank, this.commands[rank]);
+			}
+		}
+
+		bool IEnumType.IsCustomizable
+		{
+			get
+			{
+				return false;
+			}
+		}
+
+		bool IEnumType.IsDefinedAsFlags
+		{
+			get
+			{
+				return false;
+			}
+		}
+
+		#endregion
+
 
 		public static Command GetSelectedCommand(CommandState state)
 		{

@@ -334,7 +334,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return typeof (Command);
+				return this.GetType ();
 			}
 		}
 

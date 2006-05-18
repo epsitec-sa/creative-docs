@@ -269,7 +269,29 @@ namespace Epsitec.Common.Support
 			MultiCommand.SetSelectedCommand (state, commandC);
 		}
 
+		[Test]
+		public void CheckCommandMultiCommandEnum()
+		{
+			MultiCommand command = new MultiCommand ("TestMultiY");
 
+			Command commandA = Command.Get ("TestCmdA");
+			Command commandB = Command.Get ("TestCmdB");
+			Command commandC = Command.Get ("TestCmdC");
+
+			command.AddRange (new Command[] { commandA, commandB, commandC });
+
+			Types.IEnumType type = command;
+
+			Assert.IsNotNull (type);
+			Assert.AreEqual (3, type.Values.Length);
+			Assert.AreEqual (0, type[0].Rank);
+			Assert.AreEqual (0, type["TestCmdA"].Rank);
+			Assert.AreEqual (1, type["TestCmdB"].Rank);
+			Assert.AreEqual (2, type["TestCmdC"].Rank);
+			Assert.AreEqual ("TestCmdA", type[0].Name);
+			Assert.IsFalse (type.IsCustomizable);
+			Assert.IsFalse (type.IsDefinedAsFlags);
+		}
 
 		private void HandleCommandTestMulti(CommandDispatcher sender, CommandEventArgs e)
 		{
