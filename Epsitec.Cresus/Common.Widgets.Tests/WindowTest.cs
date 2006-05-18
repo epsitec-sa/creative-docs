@@ -210,10 +210,9 @@ namespace Epsitec.Common.Widgets
 
 //-			Assert.IsNotNull (window.CommandDispatchers[0]);
 //-			Assert.IsNotNull (window.Root.CommandDispatchers[0]);
+
+			CommandDispatcher dispatcher = new CommandDispatcher ();
 			
-//-			CommandDispatcher dispatcher = window.CommandDispatchers[0];
-			
-			CommandDispatcher dispatcher = CommandDispatcher.Default;
 			dispatcher.RegisterController (new MyController ());
 
 			window.AttachDispatcher (dispatcher);
