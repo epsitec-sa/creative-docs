@@ -310,6 +310,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			toRepaint.Inflate(1);
 			this.Invalidate(toRepaint);
+			this.Invalidate();  // TODO: faire mieux !
 		}
 
 		protected void HiliteRectangle(Rectangle rect)
@@ -432,6 +433,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			if (this.creatingObject != null)
 			{
 				this.creatingObject.Margins = new Margins(pos.X, 0, 0, pos.Y);
+				this.Invalidate();  // TODO: faire mieux !
 			}
 		}
 
@@ -449,6 +451,23 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			//	Dessine le texte.
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
+
+			Rectangle bounds = this.RealBounds;
+			Rectangle box = this.Client.Bounds;
+
+			if (bounds.Top < box.Top)
+			{
+				Rectangle part = new Rectangle(box.Left, bounds.Top, box.Width, box.Top-bounds.Top);
+				graphics.AddFilledRectangle(part);
+				graphics.RenderSolid(Color.FromAlphaRgb(0.2, 0.5, 0.5, 0.5));
+			}
+
+			if (bounds.Right < box.Right)
+			{
+				Rectangle part = new Rectangle(bounds.Right, box.Bottom, box.Right-bounds.Right, bounds.Height);
+				graphics.AddFilledRectangle(part);
+				graphics.RenderSolid(Color.FromAlphaRgb(0.2, 0.5, 0.5, 0.5));
+			}
 
 			if (this.selectedObjects.Count > 0)
 			{
@@ -472,6 +491,24 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				graphics.AddFilledRectangle(this.hilitedRectangle);
 				graphics.RenderSolid(this.HiliteSurfaceColor);
+			}
+		}
+
+		protected Rectangle RealBounds
+		{
+			get
+			{
+				Rectangle bounds = Rectangle.Empty;
+
+				foreach (Widget obj in this.panel.Children)
+				{
+					bounds = Rectangle.Union(bounds, obj.ActualBounds);
+				}
+
+				bounds.Left = 0;
+				bounds.Bottom = 0;
+
+				return bounds;
 			}
 		}
 
