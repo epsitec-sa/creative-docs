@@ -7,6 +7,8 @@ namespace Epsitec.Common.Widgets.Layouts
 	{
 		None,
 		Docked,
-		Anchored
+		Anchored,
+		Stacked,
+		Grid,
 	}
 }
