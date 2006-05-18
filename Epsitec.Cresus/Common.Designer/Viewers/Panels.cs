@@ -86,7 +86,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.panelFrame.MinHeight = 100;
 			this.panelFrame.Anchor = AnchorStyles.All;
 			this.panelFrame.Panel = this.panelWidget;
-			this.panelFrame.ChildrenChanged += new EventHandler(this.HandlePanelFrameChildrenChanged);
+			this.panelFrame.ChildrenAdded += new EventHandler(this.HandlePanelFrameChildrenAdded);
 
 			this.tabBook = new TabBook(this);
 			this.tabBook.PreferredWidth = 150;
@@ -109,10 +109,6 @@ namespace Epsitec.Common.Designer.Viewers
 			this.UpdateLabelsIndex("", Searcher.SearchingMode.None);
 			this.UpdateArray();
 			this.UpdateEdit();
-		}
-
-		void HandlePanelFrameChildrenChanged(object sender)
-		{
 		}
 
 		protected override void Dispose(bool disposing)
@@ -503,8 +499,9 @@ namespace Epsitec.Common.Designer.Viewers
 			this.module.Modifier.IsDirty = true;
 		}
 
-
-
+		void HandlePanelFrameChildrenAdded(object sender)
+		{
+		}
 
 
 		protected TextFieldEx				labelEdit;
