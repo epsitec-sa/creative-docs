@@ -32,14 +32,20 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				case MessageType.MouseDown:
 					this.OnMouseDown(pos);
+					message.Captured = true;
+					message.Consumer = this;
 					break;
 
 				case MessageType.MouseMove:
 					this.OnMouseMove(pos);
+					message.Captured = true;
+					message.Consumer = this;
 					break;
 
 				case MessageType.MouseUp:
 					this.OnMouseUp(pos);
+					message.Captured = true;
+					message.Consumer = this;
 					break;
 			}
 		}
