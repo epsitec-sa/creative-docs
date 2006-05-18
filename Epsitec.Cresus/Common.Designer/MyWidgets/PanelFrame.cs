@@ -215,6 +215,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				}
 			}
 
+			this.OnChildrenSelected();
 			this.Invalidate();
 		}
 
@@ -261,6 +262,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Sélectionne un objet.
 			this.selectedObjects.Clear();
 			this.selectedObjects.Add(obj);
+			this.OnChildrenSelected();
 			this.Invalidate();
 		}
 
@@ -270,6 +272,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			if (this.selectedObjects.Count > 0)
 			{
 				this.selectedObjects.Clear();
+				this.OnChildrenSelected();
 				this.Invalidate();
 			}
 		}
@@ -409,17 +412,39 @@ namespace Epsitec.Common.Designer.MyWidgets
 					rect.Deflate(0.5);
 
 					graphics.AddFilledRectangle(rect);
-					graphics.RenderSolid(this.selectedSurfaceColor);
+					graphics.RenderSolid(this.HiliteSurfaceColor);
 
+					graphics.LineWidth = 3;
 					graphics.AddRectangle(rect);
-					graphics.RenderSolid(this.selectedOutlineColor);
+					graphics.RenderSolid(this.HiliteOutlineColor);
+					graphics.LineWidth = 1;
 				}
 			}
 
 			if (!this.hilitedRectangle.IsEmpty)
 			{
 				graphics.AddFilledRectangle(this.hilitedRectangle);
-				graphics.RenderSolid(this.hilitedSurfaceColor);
+				graphics.RenderSolid(this.HiliteSurfaceColor);
+			}
+		}
+
+		protected Color HiliteOutlineColor
+		{
+			//	Couleur lorsqu'un objet est survolé par la souris.
+			get
+			{
+				IAdorner adorner = Epsitec.Common.Widgets.Adorners.Factory.Active;
+				return Color.FromColor(adorner.ColorCaption, 0.8);
+			}
+		}
+
+		protected Color HiliteSurfaceColor
+		{
+			//	Couleur lorsqu'un objet est survolé par la souris.
+			get
+			{
+				IAdorner adorner = Epsitec.Common.Widgets.Adorners.Factory.Active;
+				return Color.FromColor(adorner.ColorCaption, 0.4);
 			}
 		}
 
@@ -527,9 +552,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected string					tool = "ToolSelect";
 		protected Widget					creatingObject;
 		protected List<Widget>				selectedObjects = new List<Widget>();
-		protected Color						selectedOutlineColor = Color.FromAlphaRgb(1, 1,0.5,0);
-		protected Color						selectedSurfaceColor = Color.FromAlphaRgb(0.3, 1,0.5,0);
-		protected Color						hilitedSurfaceColor = Color.FromAlphaRgb(0.1, 1,0.5,0);
 		protected Rectangle					hilitedRectangle = Rectangle.Empty;
 
 		protected Image						mouseCursorArrow = null;
