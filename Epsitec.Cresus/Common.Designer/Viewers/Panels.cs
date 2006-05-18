@@ -11,6 +11,17 @@ namespace Epsitec.Common.Designer.Viewers
 	/// </summary>
 	public class Panels : Abstract
 	{
+		protected enum MouseCursorType
+		{
+			Arrow,
+			ArrowPlus,
+			Global,
+			Hand,
+			Edit,
+			Pen,
+			Zoom,
+		}
+
 		public Panels(Module module) : base(module)
 		{
 			int tabIndex = 0;
@@ -446,17 +457,90 @@ namespace Epsitec.Common.Designer.Viewers
 		#region Drawing select
 		protected void SelectDown(Point pos)
 		{
-			//	Sélection, souris pressée.
+			//	Sélection ponctuelle, souris pressée.
 		}
 
 		protected void SelectMove(Point pos)
 		{
-			//	Sélection, souris déplacée.
+			//	Sélection ponctuelle, souris déplacée.
+			this.ChangeMouseCursor(MouseCursorType.Arrow);
 		}
 
 		protected void SelectUp(Point pos)
 		{
-			//	Sélection, souris relâchée.
+			//	Sélection ponctuelle, souris relâchée.
+		}
+		#endregion
+
+		#region Drawing global
+		protected void GlobalDown(Point pos)
+		{
+			//	Sélection rectangulaire, souris pressée.
+		}
+
+		protected void GlobalMove(Point pos)
+		{
+			//	Sélection rectangulaire, souris déplacée.
+			this.ChangeMouseCursor(MouseCursorType.Global);
+		}
+
+		protected void GlobalUp(Point pos)
+		{
+			//	Sélection rectangulaire, souris relâchée.
+		}
+		#endregion
+
+		#region Drawing edit
+		protected void EditDown(Point pos)
+		{
+			//	Edition, souris pressée.
+		}
+
+		protected void EditMove(Point pos)
+		{
+			//	Edition, souris déplacée.
+			this.ChangeMouseCursor(MouseCursorType.Edit);
+		}
+
+		protected void EditUp(Point pos)
+		{
+			//	Edition, souris relâchée.
+		}
+		#endregion
+
+		#region Drawing zoom
+		protected void ZoomDown(Point pos)
+		{
+			//	Loupe, souris pressée.
+		}
+
+		protected void ZoomMove(Point pos)
+		{
+			//	Loupe, souris déplacée.
+			this.ChangeMouseCursor(MouseCursorType.Zoom);
+		}
+
+		protected void ZoomUp(Point pos)
+		{
+			//	Loupe, souris relâchée.
+		}
+		#endregion
+
+		#region Drawing hand
+		protected void HandDown(Point pos)
+		{
+			//	Main, souris pressée.
+		}
+
+		protected void HandMove(Point pos)
+		{
+			//	Main, souris déplacée.
+			this.ChangeMouseCursor(MouseCursorType.Hand);
+		}
+
+		protected void HandUp(Point pos)
+		{
+			//	Main, souris relâchée.
 		}
 		#endregion
 
@@ -491,6 +575,8 @@ namespace Epsitec.Common.Designer.Viewers
 		protected void ObjectMove(string tool, Point pos)
 		{
 			//	Dessin d'un objet, souris déplacée.
+			this.ChangeMouseCursor(MouseCursorType.Pen);
+
 			if (this.creatingObject != null)
 			{
 				this.creatingObject.Margins = new Margins(pos.X, 0, 0, pos.Y);
@@ -561,6 +647,26 @@ namespace Epsitec.Common.Designer.Viewers
 				this.SelectDown(pos);
 			}
 
+			if (this.tool == "ToolGlobal")
+			{
+				this.GlobalDown(pos);
+			}
+
+			if (this.tool == "ToolEdit")
+			{
+				this.EditDown(pos);
+			}
+
+			if (this.tool == "ToolZoom")
+			{
+				this.ZoomDown(pos);
+			}
+
+			if (this.tool == "ToolHand")
+			{
+				this.HandDown(pos);
+			}
+
 			if (this.tool.StartsWith("Object"))
 			{
 				this.ObjectDown(this.tool, pos);
@@ -573,6 +679,26 @@ namespace Epsitec.Common.Designer.Viewers
 			if (this.tool == "ToolSelect")
 			{
 				this.SelectMove(pos);
+			}
+
+			if (this.tool == "ToolGlobal")
+			{
+				this.GlobalMove(pos);
+			}
+
+			if (this.tool == "ToolEdit")
+			{
+				this.EditMove(pos);
+			}
+
+			if (this.tool == "ToolZoom")
+			{
+				this.ZoomMove(pos);
+			}
+
+			if (this.tool == "ToolHand")
+			{
+				this.HandMove(pos);
 			}
 
 			if (this.tool.StartsWith("Object"))
@@ -589,11 +715,86 @@ namespace Epsitec.Common.Designer.Viewers
 				this.SelectUp(pos);
 			}
 
+			if (this.tool == "ToolGlobal")
+			{
+				this.GlobalUp(pos);
+			}
+
+			if (this.tool == "ToolEdit")
+			{
+				this.EditUp(pos);
+			}
+
+			if (this.tool == "ToolZoom")
+			{
+				this.ZoomUp(pos);
+			}
+
+			if (this.tool == "ToolHand")
+			{
+				this.HandUp(pos);
+			}
+
 			if (this.tool.StartsWith("Object"))
 			{
 				this.ObjectUp(this.tool, pos);
 			}
 		}
+
+
+		#region MouseCursor
+		protected void ChangeMouseCursor(MouseCursorType cursor)
+		{
+			//	Change le sprite de la souris.
+			switch (cursor)
+			{
+				case MouseCursorType.Arrow:
+					this.MouseCursorImage(ref this.mouseCursorArrow, Misc.Icon("CursorArrow"));
+					break;
+
+				case MouseCursorType.ArrowPlus:
+					this.MouseCursorImage(ref this.mouseCursorArrowPlus, Misc.Icon("CursorArrowPlus"));
+					break;
+
+				case MouseCursorType.Global:
+					this.MouseCursorImage(ref this.mouseCursorGlobal, Misc.Icon("CursorGlobal"));
+					break;
+
+				case MouseCursorType.Edit:
+					this.MouseCursorImage(ref this.mouseCursorEdit, Misc.Icon("CursorEdit"));
+					break;
+
+				case MouseCursorType.Hand:
+					this.MouseCursorImage(ref this.mouseCursorHand, Misc.Icon("CursorHand"));
+					break;
+
+				case MouseCursorType.Pen:
+					this.MouseCursorImage(ref this.mouseCursorPen, Misc.Icon("CursorPen"));
+					break;
+
+				case MouseCursorType.Zoom:
+					this.MouseCursorImage(ref this.mouseCursorZoom, Misc.Icon("CursorZoom"));
+					break;
+
+				default:
+					this.MouseCursor = MouseCursor.AsArrow;
+					break;
+			}
+
+			this.Window.MouseCursor = this.MouseCursor;
+		}
+
+		protected void MouseCursorImage(ref Image image, string name)
+		{
+			//	Choix du sprite de la souris.
+			if (image == null)
+			{
+				image = Support.Resources.DefaultManager.GetImage(name);
+			}
+
+			this.MouseCursor = MouseCursor.FromImage(image);
+		}
+		#endregion
 
 
 		protected TextFieldEx				labelEdit;
@@ -603,5 +804,13 @@ namespace Epsitec.Common.Designer.Viewers
 		protected TabPage					tabPageProperties;
 		protected TabPage					tabPageObjects;
 		protected Widget					creatingObject;
+
+		protected Image						mouseCursorArrow = null;
+		protected Image						mouseCursorArrowPlus = null;
+		protected Image						mouseCursorGlobal = null;
+		protected Image						mouseCursorEdit = null;
+		protected Image						mouseCursorPen = null;
+		protected Image						mouseCursorZoom = null;
+		protected Image						mouseCursorHand = null;
 	}
 }
