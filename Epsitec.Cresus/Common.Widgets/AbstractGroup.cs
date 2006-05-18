@@ -1,6 +1,8 @@
 //	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
+using Epsitec.Common.Types;
+
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
@@ -43,5 +45,20 @@ namespace Epsitec.Common.Widgets
 			
 			base.TabNavigation = value;
 		}
+
+
+		#region ChildrenLayoutMode
+		public static Layouts.LayoutMode GetChildrenLayoutMode(DependencyObject o)
+		{
+			return (Layouts.LayoutMode) o.GetValue(AbstractGroup.ChildrenLayoutModeProperty);
+		}
+
+		public static void SetChildrenLayoutMode(DependencyObject o, Layouts.LayoutMode value)
+		{
+			o.SetValue(AbstractGroup.ChildrenLayoutModeProperty, value);
+		}
+
+		public static readonly DependencyProperty ChildrenLayoutModeProperty = DependencyProperty.RegisterAttached("ChildrenLayoutMode", typeof(Layouts.LayoutMode), typeof(AbstractGroup), new DependencyPropertyMetadata(false));
+		#endregion
 	}
 }
