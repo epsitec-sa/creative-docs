@@ -12,7 +12,7 @@ namespace Epsitec.Common.Widgets
 	/// La classe <c>Command</c> permet de représenter l'état d'une commande tout
 	/// en maintenant la synchronisation avec l'état des widgets associés.
 	/// </summary>
-	public sealed class Command : DependencyObject, System.IEquatable<Command>, Types.INamedType
+	public class Command : DependencyObject, System.IEquatable<Command>, Types.INamedType
 	{
 		public Command(string name)
 		{
@@ -30,6 +30,8 @@ namespace Epsitec.Common.Widgets
 
 				Command.commands[name] = this;
 			}
+
+			this.stateObjectType = Types.DependencyObjectType.FromSystemType (typeof (SimpleState));
 		}
 		
 		public Command(string name, params Shortcut[] shortcuts) : this (name)
@@ -226,14 +228,12 @@ namespace Epsitec.Common.Widgets
 			{
 				CommandState state = this.stateObjectType.CreateEmptyObject () as CommandState;
 				
-				state.DefineCommand (this);
+				this.InitializeDefaultState (state);
 				
 				return state;
 			}
-			else
-			{
-				return Command.CreateEmptyState (this);
-			}
+			
+			return null;
 		}
 
 		
@@ -372,11 +372,11 @@ namespace Epsitec.Common.Widgets
 
 		#endregion
 
-		#region Private EmptyState Class
+		#region Private SimpleState Class
 
-		private class EmptyState : CommandState
+		private class SimpleState : CommandState
 		{
-			public EmptyState(Command command) : base (command)
+			public SimpleState()
 			{
 			}
 		}
@@ -438,6 +438,11 @@ namespace Epsitec.Common.Widgets
 
 		#endregion
 
+		protected virtual void InitializeDefaultState(CommandState state)
+		{
+			state.DefineCommand (this);
+		}
+
 		public static string[] SplitGroupNames(string groups)
 		{
 			if (string.IsNullOrEmpty (groups))
@@ -455,9 +460,11 @@ namespace Epsitec.Common.Widgets
 			return string.Join ("|", groups);
 		}
 
-		public static CommandState CreateEmptyState(Command command)
+		public static CommandState CreateSimpleState(Command command)
 		{
-			return new EmptyState (command);
+			CommandState state = new SimpleState ();
+			state.DefineCommand (command);
+			return state;
 		}
 
 		public static readonly DependencyProperty GroupProperty			= DependencyProperty.Register ("Group", typeof (string), typeof (Command), new DependencyPropertyMetadata (null, new PropertyInvalidatedCallback (Command.NotifyGroupChanged)));

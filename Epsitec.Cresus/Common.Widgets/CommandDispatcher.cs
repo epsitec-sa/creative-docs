@@ -143,11 +143,11 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public static void Dispatch(CommandDispatcherChain commandChain, CommandContextChain contextChain, string command, object source)
+		public static void Dispatch(CommandDispatcherChain dispatcherChain, CommandContextChain contextChain, string command, object source)
 		{
-			if (commandChain != null)
+			if (dispatcherChain != null)
 			{
-				foreach (CommandDispatcher dispatcher in commandChain.Dispatchers)
+				foreach (CommandDispatcher dispatcher in dispatcherChain.Dispatchers)
 				{
 					if (dispatcher.InternalDispatch (contextChain, command, source))
 					{
@@ -626,10 +626,14 @@ namespace Epsitec.Common.Widgets
 				return false;
 			}
 
+			int loopCounter = 0;
+
 			Command command = Command.Find (commandName);
 			CommandContext commandContext;
 			CommandState commandState;
 
+		again:
+			
 			if ((command == null) ||
 				(command.IsReadWrite))
 			{
@@ -664,11 +668,12 @@ namespace Epsitec.Common.Widgets
 			System.Diagnostics.Debug.Assert (commandLength == 1);
 			System.Diagnostics.Debug.Assert (commandName.IndexOf ("*") < 0, "Found '*' in command name.", "The command '" + commandLine + "' may not contain a '*' in its name.\nPlease fix the command name definition source code.");
 			System.Diagnostics.Debug.Assert (commandName.IndexOf (".") < 0, "Found '.' in command name.", "The command '" + commandLine + "' may not contain a '.' in its name.\nPlease fix the command name definition source code.");
-			
+
 			CommandEventArgs e = new CommandEventArgs (source, command, commandArgs, commandContext, commandState);
 
 			EventSlot slot;
 			int handled = 0;
+			
 			
 			if (this.eventHandlers.TryGetValue (commandName, out slot))
 			{
@@ -696,6 +701,25 @@ namespace Epsitec.Common.Widgets
 			
 			if (handled == 0)
 			{
+				if (loopCounter++ > 10)
+				{
+					throw new Exceptions.InfiniteCommandLoopException ();
+				}
+				
+				if ((commandState != null) &&
+					(command is MultiCommand))
+				{
+					command = MultiCommand.GetSelectedCommand (commandState);
+					
+					if (command != null)
+					{
+						commandName = command.Name;
+						commandLine = commandName;
+
+						goto again;
+					}
+				}
+				
 				System.Diagnostics.Debug.WriteLine ("Command '" + commandName + "' not handled.");
 				return false;
 			}

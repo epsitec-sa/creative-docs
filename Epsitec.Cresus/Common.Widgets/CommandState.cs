@@ -81,11 +81,17 @@ namespace Epsitec.Common.Widgets
 		{
 			this.command = command;
 			this.command.Lockdown ();
+
+			this.OverrideDefineCommand ();
 		}
 
 		#endregion
 
-		private void Synchronize()
+		protected virtual void OverrideDefineCommand()
+		{
+		}
+		
+		protected void Synchronize()
 		{
 			CommandCache.Default.InvalidateState (this);
 		}

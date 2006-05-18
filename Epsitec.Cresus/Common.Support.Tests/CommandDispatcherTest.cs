@@ -82,6 +82,9 @@ namespace Epsitec.Common.Support
 
 			stateA = contextA.GetCommandState (command);
 
+			Assert.IsNotNull (stateA);
+			Assert.AreEqual ("SimpleState", stateA.GetType ().Name);
+			
 			stateA.Enable = false;
 			
 			Assert.IsTrue (v3.Enable);
@@ -108,6 +111,146 @@ namespace Epsitec.Common.Support
 			CommandCache.Default.Synchronize ();
 			Assert.IsFalse (v3.Enable);
 			Assert.AreEqual (stateA, chain.GetCommandState (command.Name));
+		}
+
+		[Test]
+		public void CheckCommandMultiCommand()
+		{
+			MultiCommand command = new MultiCommand ("TestMulti");
+
+			Command commandA = Command.Get ("TestCmdA");
+			Command commandB = Command.Get ("TestCmdB");
+			Command commandC = Command.Get ("TestCmdC");
+
+			command.Add (commandA);
+			command.Add (commandB);
+			command.Add (commandC);
+
+			CommandContext context = new CommandContext ();
+			CommandDispatcher dispatcher = new CommandDispatcher ();
+
+			dispatcher.Register (command.Name, this.HandleCommandTestMulti);
+			dispatcher.Register (commandA.Name, this.HandleCommandTestMulti);
+			dispatcher.Register (commandB.Name, this.HandleCommandTestMulti);
+			dispatcher.Register (commandC.Name, this.HandleCommandTestMulti);
+
+			Visual v1 = new Visual ();
+
+			CommandContext.SetContext (v1, context);
+			CommandDispatcher.SetDispatcher (v1, dispatcher);
+
+			CommandContextChain contextChain;
+			CommandDispatcherChain dispatcherChain;
+
+			contextChain = CommandContextChain.BuildChain (v1);
+			dispatcherChain = CommandDispatcherChain.BuildChain (v1);
+
+			CommandState state = context.GetCommandState (command);
+			CommandState stateA = context.GetCommandState (commandA);
+			CommandState stateB = context.GetCommandState (commandB);
+			CommandState stateC = context.GetCommandState (commandC);
+
+			state.Enable = true;
+
+			CommandDispatcherTest.buffer.Length = 0;
+			CommandDispatcher.Dispatch (dispatcherChain, contextChain, command.Name, this);
+			Assert.AreEqual ("<CommandMulti:TestMulti-null>", CommandDispatcherTest.buffer.ToString ());
+
+			MultiCommand.SetSelectedCommand (state, commandA);
+
+			CommandDispatcherTest.buffer.Length = 0;
+			CommandDispatcher.Dispatch (dispatcherChain, contextChain, command.Name, this);
+			Assert.AreEqual ("<CommandMulti:TestMulti-TestCmdA>", CommandDispatcherTest.buffer.ToString ());
+
+			dispatcher.Unregister (command.Name, this.HandleCommandTestMulti);
+
+			CommandDispatcherTest.buffer.Length = 0;
+			CommandDispatcher.Dispatch (dispatcherChain, contextChain, command.Name, this);
+			Assert.AreEqual ("<CommandMulti:TestCmdA-null>", CommandDispatcherTest.buffer.ToString ());
+
+			MultiCommand.SetSelectedCommand (state, commandB);
+
+			CommandDispatcherTest.buffer.Length = 0;
+			CommandDispatcher.Dispatch (dispatcherChain, contextChain, command.Name, this);
+			Assert.AreEqual ("<CommandMulti:TestCmdB-null>", CommandDispatcherTest.buffer.ToString ());
+
+			MultiCommand.SetSelectedCommand (state, null);
+
+			CommandDispatcherTest.buffer.Length = 0;
+			CommandDispatcher.Dispatch (dispatcherChain, contextChain, command.Name, this);
+			Assert.AreEqual ("", CommandDispatcherTest.buffer.ToString ());
+		}
+		
+		[Test]
+		[ExpectedException (typeof (System.ArgumentException))]
+		public void CheckCommandMultiCommandEx1()
+		{
+			Command command = Command.Get ("TestCmdA");
+
+			CommandContext context = new CommandContext ();
+			CommandDispatcher dispatcher = new CommandDispatcher ();
+
+			dispatcher.Register (command.Name, this.HandleCommandTestMulti);
+
+			Visual v1 = new Visual ();
+
+			CommandContext.SetContext (v1, context);
+			CommandDispatcher.SetDispatcher (v1, dispatcher);
+
+			CommandContextChain contextChain;
+			CommandDispatcherChain dispatcherChain;
+
+			contextChain = CommandContextChain.BuildChain (v1);
+			dispatcherChain = CommandDispatcherChain.BuildChain (v1);
+
+			CommandState state = context.GetCommandState (command);
+
+			MultiCommand.SetSelectedCommand (state, null);
+		}
+
+		[Test]
+		[ExpectedException (typeof (Widgets.Exceptions.InfiniteCommandLoopException))]
+		public void CheckCommandMultiCommandEx2()
+		{
+			MultiCommand command = new MultiCommand ("TestMultiX");
+
+			command.Add (command);
+
+			CommandContext context = new CommandContext ();
+			CommandDispatcher dispatcher = new CommandDispatcher ();
+
+			Visual v1 = new Visual ();
+
+			CommandContext.SetContext (v1, context);
+			CommandDispatcher.SetDispatcher (v1, dispatcher);
+
+			CommandContextChain contextChain;
+			CommandDispatcherChain dispatcherChain;
+
+			contextChain = CommandContextChain.BuildChain (v1);
+			dispatcherChain = CommandDispatcherChain.BuildChain (v1);
+
+			CommandState state = context.GetCommandState (command);
+			
+			MultiCommand.SetSelectedCommand (state, command);
+
+			CommandDispatcher.Dispatch (dispatcherChain, contextChain, command.Name, this);
+		}
+
+
+		private void HandleCommandTestMulti(CommandDispatcher sender, CommandEventArgs e)
+		{
+			Assert.AreEqual (this, e.Source);
+			Assert.IsNotNull (e.CommandState);
+
+			Command command = (e.Command is MultiCommand) ? MultiCommand.GetSelectedCommand (e.CommandState) : null;
+
+			e.Executed = true;
+			CommandDispatcherTest.buffer.Append ("<CommandMulti:");
+			CommandDispatcherTest.buffer.Append (e.CommandName);
+			CommandDispatcherTest.buffer.Append ("-");
+			CommandDispatcherTest.buffer.Append (command == null ? "null" : command.Name);
+			CommandDispatcherTest.buffer.Append (">");
 		}
 		
 		[Test] public void CheckDispatch()
