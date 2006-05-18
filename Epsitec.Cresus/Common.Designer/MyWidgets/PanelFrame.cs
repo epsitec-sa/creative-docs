@@ -205,7 +205,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 			Widget obj = this.Detect(pos);
 			if (obj != null)
 			{
-				this.selectedObjects.Add(obj);
+				if (this.selectedObjects.Contains(obj))
+				{
+					this.selectedObjects.Remove(obj);
+				}
+				else
+				{
+					this.selectedObjects.Add(obj);
+				}
 			}
 
 			this.Invalidate();
@@ -215,6 +222,19 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			//	Sélection ponctuelle, souris déplacée.
 			this.ChangeMouseCursor(MouseCursorType.Arrow);
+
+			Widget obj = this.Detect(pos);
+			Rectangle rect = Rectangle.Empty;
+			if (obj != null)
+			{
+				rect = obj.ActualBounds;
+			}
+
+			if (this.hilitedRectangle != rect)
+			{
+				this.hilitedRectangle = rect;
+				this.Invalidate();
+			}
 		}
 
 		protected void SelectUp(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
@@ -382,13 +402,24 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			if (this.selectedObjects.Count > 0)
 			{
+				//	Dessine les objets sélectionnés.
 				foreach ( Widget obj in this.selectedObjects)
 				{
 					Rectangle rect = obj.ActualBounds;
 					rect.Deflate(0.5);
+
+					graphics.AddFilledRectangle(rect);
+					graphics.RenderSolid(this.selectedSurfaceColor);
+
 					graphics.AddRectangle(rect);
-					graphics.RenderSolid(Color.FromRgb(1,0,0));
+					graphics.RenderSolid(this.selectedOutlineColor);
 				}
+			}
+
+			if (!this.hilitedRectangle.IsEmpty)
+			{
+				graphics.AddFilledRectangle(this.hilitedRectangle);
+				graphics.RenderSolid(this.hilitedSurfaceColor);
 			}
 		}
 
@@ -496,6 +527,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected string					tool = "ToolSelect";
 		protected Widget					creatingObject;
 		protected List<Widget>				selectedObjects = new List<Widget>();
+		protected Color						selectedOutlineColor = Color.FromAlphaRgb(1, 1,0.5,0);
+		protected Color						selectedSurfaceColor = Color.FromAlphaRgb(0.3, 1,0.5,0);
+		protected Color						hilitedSurfaceColor = Color.FromAlphaRgb(0.1, 1,0.5,0);
+		protected Rectangle					hilitedRectangle = Rectangle.Empty;
 
 		protected Image						mouseCursorArrow = null;
 		protected Image						mouseCursorArrowPlus = null;
