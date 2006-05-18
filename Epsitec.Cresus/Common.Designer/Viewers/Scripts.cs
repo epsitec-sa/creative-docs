@@ -16,7 +16,8 @@ namespace Epsitec.Common.Designer.Viewers
 			int tabIndex = 0;
 
 			Widget left = new Widget(this);
-			left.MinWidth = 200;
+			left.MinWidth = 0;
+			left.MaxWidth = 400;
 			left.PreferredWidth = 200;
 			left.Dock = DockStyle.Left;
 
@@ -41,9 +42,12 @@ namespace Epsitec.Common.Designer.Viewers
 			this.array.TabIndex = tabIndex++;
 			this.array.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
+			VSplitter splitter = new VSplitter(this);
+			splitter.Dock = DockStyle.Left;
+
 			this.edit = new TextFieldMulti(this);
 			this.edit.TextLayout.DefaultFont = Font.GetFont("Courier New", "Regular");
-			this.edit.Margins = new Margins(0, 10, 10, 10);
+			this.edit.Margins = new Margins(10, 10, 10, 10);
 			this.edit.Dock = DockStyle.Fill;
 			this.edit.EditionAccepted += new EventHandler(this.HandleTextChanged);
 			this.edit.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
