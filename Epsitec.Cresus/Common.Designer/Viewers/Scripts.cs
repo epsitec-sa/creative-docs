@@ -16,7 +16,7 @@ namespace Epsitec.Common.Designer.Viewers
 			int tabIndex = 0;
 
 			Widget left = new Widget(this);
-			left.MinWidth = 0;
+			left.MinWidth = 80;
 			left.MaxWidth = 400;
 			left.PreferredWidth = 200;
 			left.Dock = DockStyle.Left;
