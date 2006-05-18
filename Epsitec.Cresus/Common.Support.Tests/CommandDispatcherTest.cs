@@ -22,7 +22,82 @@ namespace Epsitec.Common.Support
 			
 			dispatcher.RegisterController (broken);
 		}
-		
+
+		[Test] public void CheckCommandContext()
+		{
+			Command command = new Command ("TestSave");
+
+			command.ShortCaption = "Enregistre";
+			command.LongCaption = "Enregistre le document ouvert";
+			command.IconName = "save.icon";
+			command.Shortcuts.Add (new Shortcut ('S', ModifierKeys.Control));
+
+			Assert.AreEqual ("TestSave", command.Name);
+			Assert.IsTrue (command.IsReadWrite);
+			Assert.IsFalse (command.IsReadOnly);
+
+			CommandContext contextA = new CommandContext ();
+			CommandContext contextB = new CommandContext ();
+
+			Visual v1 = new Visual ();
+			Visual v2 = new Visual ();
+			Visual v3 = new Visual ();
+
+			v1.Children.Add (v2);
+			v2.Children.Add (v3);
+
+			CommandContext.SetContext (v1, contextA);
+			CommandContext.SetContext (v2, contextB);
+
+			CommandContextChain chain;
+
+			chain = CommandContextChain.BuildChain (v1);
+
+			Assert.AreEqual (1, Types.Collection.Count (chain.Contexts));
+			Assert.AreEqual (contextA, Types.Collection.ToArray (chain.Contexts)[0]);
+
+			chain = CommandContextChain.BuildChain (v2);
+
+			Assert.AreEqual (2, Types.Collection.Count (chain.Contexts));
+			Assert.AreEqual (contextB, Types.Collection.ToArray (chain.Contexts)[0]);
+			Assert.AreEqual (contextA, Types.Collection.ToArray (chain.Contexts)[1]);
+
+			chain = CommandContextChain.BuildChain (v3);
+
+			Assert.AreEqual (2, Types.Collection.Count (chain.Contexts));
+			Assert.AreEqual (contextB, Types.Collection.ToArray (chain.Contexts)[0]);
+			Assert.AreEqual (contextA, Types.Collection.ToArray (chain.Contexts)[1]);
+
+			v3.Command = "TestSave";
+
+			Assert.AreEqual ("TestSave", v3.Command);
+			Assert.AreEqual ("TestSave", v3.CommandName);
+			
+			CommandCache.Default.Synchronize ();
+
+			Assert.IsTrue (v3.Enable);
+
+			CommandState stateA;
+			CommandState stateB;
+
+			stateA = contextA.GetCommandState (command);
+
+			stateA.Enable = false;
+			
+			Assert.IsTrue (v3.Enable);
+			CommandCache.Default.Synchronize ();
+			Assert.IsFalse (v3.Enable);
+			Assert.AreEqual (stateA, chain.GetCommandState (command.Name));
+
+			stateB = contextB.GetCommandState (command);
+
+			Assert.AreNotEqual (stateA, stateB);
+			Assert.AreEqual (stateB, chain.GetCommandState (command.Name));
+			
+			Assert.IsFalse(v3.Enable);
+			CommandCache.Default.Synchronize ();
+			Assert.IsTrue (v3.Enable);
+		}
 		
 		[Test] public void CheckDispatch()
 		{

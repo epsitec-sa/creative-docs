@@ -251,6 +251,8 @@ namespace Epsitec.Common.Widgets
 			{
 				this.states[command.UniqueId] = state;
 			}
+
+			CommandCache.Default.InvalidateCommand (command);
 		}
 		
 		internal void UpdateDispatcherChain(Visual visual)

@@ -382,24 +382,23 @@ namespace Epsitec.Common.Widgets
 						bool enable = state.Enable;
 						ActiveState active = state.ActiveState;
 						string advanced = state.AdvancedState;
-						Widget widget = this.records[index].Visual as Widget;
 
-						this.UpdateWidget (widget, command, enable, active, advanced);
+						this.UpdateVisual (visual, command, enable, active, advanced);
 					}
 				}
 			}
 		}
 		
-		private void UpdateWidget(Widget widget, Command command, bool enable, ActiveState active, string advanced)
+		private void UpdateVisual(Visual visual, Command command, bool enable, ActiveState active, string advanced)
 		{
-			if (widget != null)
+			if (visual != null)
 			{
-				widget.Enable      = enable;
-				widget.ActiveState = active;
+				visual.Enable      = enable;
+				visual.ActiveState = active;
 				
 				if (advanced != null)
 				{
-					CommandState.SetAdvancedState (widget, advanced);
+					CommandState.SetAdvancedState (visual, advanced);
 				}
 			}
 		}
