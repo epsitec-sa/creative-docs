@@ -399,7 +399,7 @@ namespace Epsitec.Common.Widgets
 				
 				if (advanced != null)
 				{
-					Command.SetAdvancedState (widget, advanced);
+					CommandState.SetAdvancedState (widget, advanced);
 				}
 			}
 		}

@@ -125,38 +125,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public ActiveState						ActiveState
-		{
-			get
-			{
-				return this.activeState;
-			}
-			set
-			{
-				if (this.activeState != value)
-				{
-					this.activeState = value;
-					this.Synchronize ();
-				}
-			}
-		}
-		
-		public string							AdvancedState
-		{
-			get
-			{
-				return Command.GetAdvancedState (this);
-			}
-			set
-			{
-				if (this.AdvancedState != value)
-				{
-					Command.SetAdvancedState (this, value);
-					this.Synchronize ();
-				}
-			}
-		}
-		
 		public ShortcutCollection				Shortcuts
 		{
 			get
@@ -219,14 +187,14 @@ namespace Epsitec.Common.Widgets
 		{
 			lock (Command.commands)
 			{
-				Command commandState = Command.Find (commandName);
+				Command command = Command.Find (commandName);
 
-				if (commandState == null)
+				if (command == null)
 				{
-					commandState = new Command (commandName);
+					command = new Command (commandName);
 				}
 				
-				return commandState;
+				return command;
 			}
 		}
 		
@@ -367,37 +335,17 @@ namespace Epsitec.Common.Widgets
 		{
 			return new EmptyState (command);
 		}
-		 
-		public static void SetAdvancedState(DependencyObject obj, string value)
-		{
-			if (value == null)
-			{
-				obj.ClearValueBase (Command.AdvancedStateProperty);
-			}
-			else
-			{
-				obj.SetValue (Command.AdvancedStateProperty, value);
-			}
-		}
-		
-		public static string GetAdvancedState(DependencyObject obj)
-		{
-			return obj.GetValue (Command.AdvancedStateProperty) as string;
-		}
 
 		public static readonly DependencyProperty GroupProperty			= DependencyProperty.Register ("Group", typeof (string), typeof (Command), new DependencyPropertyMetadata (null, new PropertyInvalidatedCallback (Command.NotifyGroupChanged)));
 		public static readonly DependencyProperty IconNameProperty		= DependencyProperty.Register ("IconName", typeof (string), typeof (Command), new DependencyPropertyMetadata (null, new PropertyInvalidatedCallback (Command.NotifyIconNameChanged)));
 		public static readonly DependencyProperty ShortCaptionProperty	= DependencyProperty.Register ("ShortCaption", typeof (string), typeof (Command), new DependencyPropertyMetadata (null, new PropertyInvalidatedCallback (Command.NotifyShortCaptionChanged)));
 		public static readonly DependencyProperty LongCaptionProperty	= DependencyProperty.Register ("LongCaption", typeof (string), typeof (Command), new DependencyPropertyMetadata (null, new PropertyInvalidatedCallback (Command.NotifyLongCaptionChanged)));
 		
-		public static readonly DependencyProperty AdvancedStateProperty = DependencyProperty.RegisterAttached ("AdvancedState", typeof (string), typeof (Command), new DependencyPropertyMetadata (null));
-
 		private static Dictionary<string, Command> commands = new Dictionary<string, Command> ();
 		private static int nextUniqueId;
 
 		private DependencyObjectType			stateObjectType;
 		private int								uniqueId;
-		private ActiveState						activeState = ActiveState.No;
 		private bool							statefull;
 		
 		private Collections.ShortcutCollection	shortcuts;

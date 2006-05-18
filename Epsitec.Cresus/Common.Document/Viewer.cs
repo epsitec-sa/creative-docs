@@ -2702,11 +2702,11 @@ namespace Epsitec.Common.Document
 				}
 				else
 				{
-					Command cs = Common.Widgets.Command.Find (cmd);
+					Command c = Common.Widgets.Command.Find (cmd);
 
-					IconButton button = new IconButton(cs.Name, Misc.Icon(cs.IconName), cs.Name);
+					IconButton button = new IconButton(c.Name, Misc.Icon(c.IconName), c.Name);
 				
-					if ( cs.Statefull )
+					if ( c.Statefull )
 					{
 						button.ButtonStyle = ButtonStyle.ActivableIcon;
 					}
@@ -2716,7 +2716,7 @@ namespace Epsitec.Common.Document
 					button.SetParent(line);
 					button.Clicked += new MessageEventHandler(this.HandleMiniBarButtonClicked);
 
-					ToolTip.Default.SetToolTip(button, Misc.GetTextWithShortcut(cs));
+					ToolTip.Default.SetToolTip(button, Misc.GetTextWithShortcut(c));
 				}
 			}
 			this.miniBarCmds = null;

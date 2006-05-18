@@ -187,7 +187,7 @@ namespace Epsitec.Common.Widgets
 
 		public CommandState CreateCommandState(string commandName)
 		{
-			return this.CreateCommandState (Command.Find (commandName));
+			return this.CreateCommandState (Command.Get (commandName));
 		}
 		
 		public CommandState CreateCommandState(Command command)

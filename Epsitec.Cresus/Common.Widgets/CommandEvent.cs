@@ -1,4 +1,4 @@
-//	Copyright © 2003-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Widgets
@@ -9,10 +9,10 @@ namespace Epsitec.Common.Widgets
 	/// </summary>
 	public class CommandEventArgs : System.EventArgs
 	{
-		public CommandEventArgs(object source, string command_name, string[] args)
+		public CommandEventArgs(object source, string commandName, string[] args)
 		{
 			this.source  = source;
-			this.command = command_name;
+			this.command = commandName;
 			this.args    = args;
 		}
 		

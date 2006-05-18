@@ -28,7 +28,7 @@ namespace Epsitec.Common.Widgets
 			this.buttonMenu.Name = "Open";
 			this.buttonMenu.Pressed += new MessageEventHandler(this.HandleButtonPressed);
 
-			this.AddEventHandler (Widgets.Command.AdvancedStateProperty, new PropertyChangedEventHandler (this.HandleAdvancedStatePropertyChanged));
+			this.AddEventHandler (Widgets.CommandState.AdvancedStateProperty, new PropertyChangedEventHandler (this.HandleAdvancedStatePropertyChanged));
 		}
 		
 		public IconButtonCombo(Widget embedder) : this()
@@ -182,7 +182,7 @@ namespace Epsitec.Common.Widgets
 				this.buttonMenu.Dispose();
 				this.buttonMenu = null;
 
-				this.RemoveEventHandler (Widgets.Command.AdvancedStateProperty, new PropertyChangedEventHandler (this.HandleAdvancedStatePropertyChanged));
+				this.RemoveEventHandler (Widgets.CommandState.AdvancedStateProperty, new PropertyChangedEventHandler (this.HandleAdvancedStatePropertyChanged));
 			}
 			
 			base.Dispose(disposing);

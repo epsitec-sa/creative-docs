@@ -244,27 +244,27 @@ namespace Epsitec.Common.Designer
 		}
 
 
-		static public string GetShortCut(Command cs)
+		static public string GetShortCut(Command command)
 		{
 			//	Retourne le nom des touches associées à une commande.
-			if (cs == null || cs.HasShortcuts == false)
+			if (command == null || command.HasShortcuts == false)
 				return null;
 
-			return cs.PreferredShortcut.ToString();
+			return command.PreferredShortcut.ToString();
 		}
 
-		static public string GetTextWithShortcut(Command cs)
+		static public string GetTextWithShortcut(Command command)
 		{
 			//	Donne le nom d'une commande, avec le raccourci clavier éventuel entre parenthèses.
-			string shortcut = Misc.GetShortCut(cs);
+			string shortcut = Misc.GetShortCut(command);
 
 			if (shortcut == null)
 			{
-				return cs.LongCaption;
+				return command.LongCaption;
 			}
 			else
 			{
-				return string.Format("{0} ({1})", cs.LongCaption, shortcut);
+				return string.Format("{0} ({1})", command.LongCaption, shortcut);
 			}
 		}
 

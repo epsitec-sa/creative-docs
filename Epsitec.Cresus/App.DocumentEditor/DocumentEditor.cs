@@ -786,8 +786,8 @@ namespace Epsitec.App.DocumentEditor
 						first = false;
 					}
 
-					Command cs = Widgets.Command.Get (cmd);
-					this.RibbonAdd(cs);
+					Command c = Widgets.Command.Get (cmd);
+					this.RibbonAdd(c);
 
 					if ( sep )
 					{
@@ -1115,9 +1115,9 @@ namespace Epsitec.App.DocumentEditor
 			}
 			else
 			{
-				Command cs = Widgets.Command.Get (command);
+				Command c = Widgets.Command.Get (command);
 
-				MenuItem item = new MenuItem(cs.Name, Misc.Icon(cs.IconName), cs.LongCaption, Misc.GetShortCut(cs), cs.Name);
+				MenuItem item = new MenuItem(c.Name, Misc.Icon(c.IconName), c.LongCaption, Misc.GetShortCut(c), c.Name);
 				vmenu.Items.Add(item);
 			}
 		}
@@ -1151,10 +1151,10 @@ namespace Epsitec.App.DocumentEditor
 			}
 		}
 
-		protected Widget VToolBarAdd(Command cs)
+		protected Widget VToolBarAdd(Command command)
 		{
 			//	Ajoute une icône.
-			if ( cs == null )
+			if ( command == null )
 			{
 				IconSeparator sep = new IconSeparator();
 				sep.IsHorizontal = false;
@@ -1163,9 +1163,9 @@ namespace Epsitec.App.DocumentEditor
 			}
 			else
 			{
-				IconButton button = new IconButton(cs.Name, Misc.Icon(cs.IconName), cs.Name);
+				IconButton button = new IconButton(command.Name, Misc.Icon(command.IconName), command.Name);
 				this.vToolBar.Items.Add(button);
-				ToolTip.Default.SetToolTip(button, Misc.GetTextWithShortcut(cs));
+				ToolTip.Default.SetToolTip(button, Misc.GetTextWithShortcut(command));
 				return button;
 			}
 		}
@@ -1181,16 +1181,16 @@ namespace Epsitec.App.DocumentEditor
 			return field;
 		}
 
-		protected IconButton InfoAdd(string command)
+		protected IconButton InfoAdd(string commandName)
 		{
-			Command cs = Widgets.Command.Get (command);
+			Command command = Widgets.Command.Get (commandName);
 
-			IconButton button = new IconButton(cs.Name, Misc.Icon(cs.IconName), cs.Name);
+			IconButton button = new IconButton(command.Name, Misc.Icon(command.IconName), command.Name);
 			button.PreferredIconSize = Misc.IconPreferredSize("Small");
 			double h = this.info.PreferredHeight-3;
 			button.PreferredSize = new Size(h, h);
 			this.info.Items.Add(button);
-			ToolTip.Default.SetToolTip(button, Misc.GetTextWithShortcut(cs));
+			ToolTip.Default.SetToolTip(button, Misc.GetTextWithShortcut(command));
 			return button;
 		}
 
@@ -1315,10 +1315,10 @@ namespace Epsitec.App.DocumentEditor
 			}
 		}
 
-		protected Widget RibbonAdd(Command cs)
+		protected Widget RibbonAdd(Command command)
 		{
 			//	Ajoute une icône.
-			if (cs == null)
+			if (command == null)
 			{
 				IconSeparator sep = new IconSeparator();
 				sep.IsHorizontal = true;
@@ -1327,9 +1327,9 @@ namespace Epsitec.App.DocumentEditor
 			}
 			else
 			{
-				IconButton button = new IconButton(cs.Name, Misc.Icon(cs.IconName), cs.Name);
+				IconButton button = new IconButton(command.Name, Misc.Icon(command.IconName), command.Name);
 				this.ribbonBook.Items.Add(button);
-				ToolTip.Default.SetToolTip(button, Misc.GetTextWithShortcut(cs));
+				ToolTip.Default.SetToolTip(button, Misc.GetTextWithShortcut(command));
 				return button;
 			}
 		}
@@ -2225,7 +2225,7 @@ namespace Epsitec.App.DocumentEditor
 		void CommandCombo(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			IconButtonCombo combo = e.Source as IconButtonCombo;
-			Command cs = Widgets.Command.Find (e.CommandName);
+			CommandState cs = this.commandContext.CreateCommandState (e.CommandName);
 			if ( combo != null && cs != null )
 			{
 				cs.AdvancedState = combo.SelectedName;

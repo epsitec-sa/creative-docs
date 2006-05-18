@@ -1501,9 +1501,9 @@ namespace Epsitec.Common.Widgets
 		{
 			WidgetTest.open_state.Enable = ! WidgetTest.open_state.Enable;
 		}
-		
-		
-		static Command open_state = Command.Get ("open");
+
+		static CommandContext context = new CommandContext ();
+		static CommandState open_state = WidgetTest.context.CreateCommandState ("open");
 		
 		[Test] public void CheckFindChildBasedOnName()
 		{

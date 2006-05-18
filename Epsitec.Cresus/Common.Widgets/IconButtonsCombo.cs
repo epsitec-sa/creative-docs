@@ -40,7 +40,7 @@ namespace Epsitec.Common.Widgets
 			this.buttonMenu.Pressed += new MessageEventHandler(this.HandleButtonMenuPressed);
 			ToolTip.Default.SetToolTip(this.buttonMenu, Res.Strings.IconButtonsCombo.Menu);
 			
-			this.AddEventHandler (Widgets.Command.AdvancedStateProperty, new PropertyChangedEventHandler(this.HandleAdvancedStatePropertyChanged));
+			this.AddEventHandler (Widgets.CommandState.AdvancedStateProperty, new PropertyChangedEventHandler(this.HandleAdvancedStatePropertyChanged));
 			this.AddEventHandler (Visual.AutoFocusProperty, new PropertyChangedEventHandler (this.HandleAutoFocusChanged));
 		}
 		
@@ -349,7 +349,7 @@ namespace Epsitec.Common.Widgets
 				this.buttonMenu.Dispose();
 				this.buttonMenu = null;
 
-				this.RemoveEventHandler (Widgets.Command.AdvancedStateProperty, new PropertyChangedEventHandler (this.HandleAdvancedStatePropertyChanged));
+				this.RemoveEventHandler (Widgets.CommandState.AdvancedStateProperty, new PropertyChangedEventHandler (this.HandleAdvancedStatePropertyChanged));
 				this.RemoveEventHandler(Visual.AutoFocusProperty, new PropertyChangedEventHandler(this.HandleAutoFocusChanged));
 			}
 			

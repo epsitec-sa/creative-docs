@@ -63,13 +63,13 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return Command.GetAdvancedState (this);
+				return CommandState.GetAdvancedState (this);
 			}
 			set
 			{
 				if (this.AdvancedState != value)
 				{
-					Command.SetAdvancedState (this, value);
+					CommandState.SetAdvancedState (this, value);
 					this.Synchronize ();
 				}
 			}
