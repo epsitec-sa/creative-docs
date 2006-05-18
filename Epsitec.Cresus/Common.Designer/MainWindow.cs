@@ -464,6 +464,20 @@ namespace Epsitec.Common.Designer
 			this.CurrentModule.Modifier.ActiveViewer.DoFont(e.CommandName);
 		}
 
+		[Command("ToolSelect")]
+		[Command("ToolGlobal")]
+		[Command("ToolEdit")]
+		[Command("ToolZoom")]
+		[Command("ToolHand")]
+		[Command("ObjectLine")]
+		[Command("ObjectButton")]
+		[Command("ObjectText")]
+		void CommandTool(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			if ( !this.IsCurrentModule )  return;
+			this.CurrentModule.Modifier.ActiveViewer.DoTool(e.CommandName);
+		}
+
 		public Command GetCommandState(string command)
 		{
 			//	Retourne le Command d'une commande.

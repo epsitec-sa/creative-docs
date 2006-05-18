@@ -141,6 +141,13 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Effectue une modification de typographie.
 		}
 
+		public void DoTool(string name)
+		{
+			//	Choix de l'outil.
+			this.tool = name;
+			this.UpdateCommands();
+		}
+
 
 		public string InfoAccessText
 		{
@@ -230,6 +237,20 @@ namespace Epsitec.Common.Designer.Viewers
 
 			this.GetCommandState("Up").Enable = (sel != -1 && sel > 0 && build);
 			this.GetCommandState("Down").Enable = (sel != -1 && sel < count-1 && build);
+
+			this.UpdateCommandTool("ToolSelect");
+			this.UpdateCommandTool("ToolGlobal");
+			this.UpdateCommandTool("ToolEdit");
+			this.UpdateCommandTool("ToolZoom");
+			this.UpdateCommandTool("ToolHand");
+			this.UpdateCommandTool("ObjectLine");
+			this.UpdateCommandTool("ObjectButton");
+			this.UpdateCommandTool("ObjectText");
+		}
+
+		protected void UpdateCommandTool(string name)
+		{
+			this.GetCommandState(name).ActiveState = (this.tool == name) ? ActiveState.Yes : ActiveState.No;
 		}
 
 		protected CommandContext CommandContext
@@ -263,5 +284,6 @@ namespace Epsitec.Common.Designer.Viewers
 		protected bool						ignoreChange = false;
 		protected MyWidgets.StringArray		array;
 		protected AbstractTextField			currentTextField;
+		protected string					tool = "ToolSelect";
 	}
 }
