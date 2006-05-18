@@ -20,10 +20,11 @@ namespace Epsitec.Common.Designer.Viewers
 			left.MaxWidth = 400;
 			left.PreferredWidth = 200;
 			left.Dock = DockStyle.Left;
+			left.Padding = new Margins(10, 10, 10, 10);
 
 			this.labelEdit = new TextFieldEx(left);
 			this.labelEdit.Name = "LabelEdit";
-			this.labelEdit.Margins = new Margins(10, 10, 0, 10);
+			this.labelEdit.Margins = new Margins(0, 0, 10, 0);
 			this.labelEdit.Dock = DockStyle.Bottom;
 			this.labelEdit.EditionAccepted += new EventHandler(this.HandleTextChanged);
 			this.labelEdit.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
@@ -35,7 +36,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.array.Columns = 1;
 			this.array.SetColumnsRelativeWidth(0, 1.00);
 			this.array.SetDynamicsToolTips(0, true);
-			this.array.Margins = new Margins(10, 10, 10, 10);
+			this.array.Margins = new Margins(0, 0, 0, 0);
 			this.array.Dock = DockStyle.Fill;
 			this.array.CellsQuantityChanged += new EventHandler(this.HandleArrayCellsQuantityChanged);
 			this.array.SelectedRowChanged += new EventHandler(this.HandleArraySelectedRowChanged);
@@ -44,6 +45,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			VSplitter splitter = new VSplitter(this);
 			splitter.Dock = DockStyle.Left;
+			VSplitter.SetAutoCollapseEnable(splitter, true);
 
 			this.edit = new TextFieldMulti(this);
 			this.edit.TextLayout.DefaultFont = Font.GetFont("Courier New", "Regular");
