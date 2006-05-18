@@ -26,6 +26,24 @@ namespace Epsitec.Common.Designer.MyWidgets
 		}
 
 
+		protected override void ProcessMessage(Message message, Drawing.Point pos)
+		{
+			switch (message.Type)
+			{
+				case MessageType.MouseDown:
+					this.OnMouseDown(pos);
+					break;
+
+				case MessageType.MouseMove:
+					this.OnMouseMove(pos);
+					break;
+
+				case MessageType.MouseUp:
+					this.OnMouseUp(pos);
+					break;
+			}
+		}
+
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
 			//	Dessine le texte.
@@ -37,5 +55,70 @@ namespace Epsitec.Common.Designer.MyWidgets
 			graphics.RenderSolid(adorner.ColorBorder);
 		}
 
+
+		#region Mouse events
+		protected virtual void OnMouseDown(Point pos)
+		{
+			EventHandler<Point> handler = (EventHandler<Point>) this.GetUserEventHandler("MouseDown");
+			if (handler != null)
+			{
+				handler(this, pos);
+			}
+		}
+
+		public event EventHandler<Point> MouseDown
+		{
+			add
+			{
+				this.AddUserEventHandler("MouseDown", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("MouseDown", value);
+			}
+		}
+
+		protected virtual void OnMouseMove(Point pos)
+		{
+			EventHandler<Point> handler = (EventHandler<Point>) this.GetUserEventHandler("MouseMove");
+			if (handler != null)
+			{
+				handler(this, pos);
+			}
+		}
+
+		public event EventHandler<Point> MouseMove
+		{
+			add
+			{
+				this.AddUserEventHandler("MouseMove", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("MouseMove", value);
+			}
+		}
+
+		protected virtual void OnMouseUp(Point pos)
+		{
+			EventHandler<Point> handler = (EventHandler<Point>) this.GetUserEventHandler("MouseUp");
+			if (handler != null)
+			{
+				handler(this, pos);
+			}
+		}
+
+		public event EventHandler<Point> MouseUp
+		{
+			add
+			{
+				this.AddUserEventHandler("MouseUp", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("MouseUp", value);
+			}
+		}
+		#endregion
 	}
 }
