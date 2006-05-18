@@ -21,8 +21,10 @@
   <data name="Viewers.Strings.Reference">&lt;b&gt;{0}&lt;/b&gt; (référence)</data>
   <data name="Viewers.Strings.Edit">Textes</data>
   <data name="Viewers.Strings.About">Commentaires</data>
-  
+
   <data name="Viewers.Panels.New">New</data>
+  <data name="Viewers.Panels.TabProperties">Propriétés</data>
+  <data name="Viewers.Panels.TabStyles">Styles</data>
 
   <data name="Action.New">Nouveau</data>
   <data name="Action.Open">Ouvrir...</data>

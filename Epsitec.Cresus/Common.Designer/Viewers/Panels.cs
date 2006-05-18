@@ -17,6 +17,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			Widget left = new Widget(this);
 			left.MinWidth = 80;
+			left.MaxWidth = 400;
 			left.PreferredWidth = 200;
 			left.Dock = DockStyle.Left;
 
@@ -44,10 +45,35 @@ namespace Epsitec.Common.Designer.Viewers
 			VSplitter splitter = new VSplitter(this);
 			splitter.Dock = DockStyle.Left;
 
-			StaticText s = new StaticText(this);
-			s.Text = "<b>TODO:</b> <i>Editeur d'interfaces...</i>";
-			s.Margins = new Margins(20, 0, 0, 0);
-			s.Dock = DockStyle.Fill;
+			this.toolBar = new VToolBar(this);
+			this.toolBar.Margins = new Margins(0, 0, 0, 0);
+			this.toolBar.Dock = DockStyle.Left;
+			this.ToolBarAdd(CommandState.Get("ToolSelect"));
+			this.ToolBarAdd(CommandState.Get("ToolGlobal"));
+			this.ToolBarAdd(CommandState.Get("ToolEdit"));
+			this.ToolBarAdd(CommandState.Get("ToolZoom"));
+			this.ToolBarAdd(CommandState.Get("ToolHand"));
+
+			this.container = new MyWidgets.Frame(this);
+			this.container.MinWidth = 100;
+			this.container.Margins = new Margins(1, 1, 1, 1);
+			this.container.Dock = DockStyle.Fill;
+
+			this.tabBook = new TabBook(this);
+			this.tabBook.PreferredWidth = 150;
+			this.tabBook.Arrows = TabBookArrows.Stretch;
+			this.tabBook.Margins = new Margins(0, 1, 1, 1);
+			this.tabBook.Dock = DockStyle.Right;
+
+			this.tabPageProperties = new TabPage();
+			this.tabPageProperties.TabTitle = Res.Strings.Viewers.Panels.TabProperties;
+			this.tabBook.Items.Add(this.tabPageProperties);
+
+			this.tabPageStyles = new TabPage();
+			this.tabPageStyles.TabTitle = Res.Strings.Viewers.Panels.TabStyles;
+			this.tabBook.Items.Add(this.tabPageStyles);
+
+			this.tabBook.ActivePage = this.tabPageProperties;
 
 			this.module.PanelsRead();
 
@@ -99,6 +125,20 @@ namespace Epsitec.Common.Designer.Viewers
 		public override void DoDelete()
 		{
 			//	Supprime la ressource sélectionnée.
+			int sel = this.array.SelectedRow;
+			if ( sel == -1 )  return;
+
+			string name = this.labelsIndex[sel];
+			this.module.PanelDelete(name);
+
+			this.labelsIndex.RemoveAt(sel);
+			this.UpdateArray();
+
+			sel = System.Math.Min(sel, this.labelsIndex.Count-1);
+			this.array.SelectedRow = sel;
+			this.array.ShowSelectedRow();
+			this.UpdateCommands();
+			this.module.Modifier.IsDirty = true;
 		}
 
 		public override void DoDuplicate(bool duplicate)
@@ -282,7 +322,15 @@ namespace Epsitec.Common.Designer.Viewers
 			this.UpdateCommands();
 		}
 
-		
+
+		public override void Update()
+		{
+			//	Met à jour le contenu du Viewer.
+			this.UpdateArray();
+			this.UpdateEdit();
+			this.UpdateCommands();
+		}
+
 		public override void UpdateCommands()
 		{
 			//	Met à jour les commandes en fonction de la ressource sélectionnée.
@@ -308,6 +356,38 @@ namespace Epsitec.Common.Designer.Viewers
 			this.GetCommandState("FontItalic").Enable = false;
 			this.GetCommandState("FontUnderlined").Enable = false;
 			this.GetCommandState("Glyphs").Enable = false;
+
+			this.module.MainWindow.UpdateInfoCurrentModule();
+			this.module.MainWindow.UpdateInfoAccess();
+		}
+
+
+		protected override int InfoAccessTotalCount
+		{
+			get
+			{
+				return this.module.PanelsCount;
+			}
+		}
+
+		
+		protected Widget ToolBarAdd(CommandState cs)
+		{
+			//	Ajoute une icône.
+			if (cs == null)
+			{
+				IconSeparator sep = new IconSeparator();
+				sep.IsHorizontal = false;
+				this.toolBar.Items.Add(sep);
+				return sep;
+			}
+			else
+			{
+				IconButton button = new IconButton(cs.Name, Misc.Icon(cs.IconName), cs.Name);
+				this.toolBar.Items.Add(button);
+				ToolTip.Default.SetToolTip(button, Misc.GetTextWithShortcut(cs));
+				return button;
+			}
 		}
 
 
@@ -385,5 +465,10 @@ namespace Epsitec.Common.Designer.Viewers
 
 
 		protected TextFieldEx				labelEdit;
+		protected VToolBar					toolBar;
+		protected MyWidgets.Frame			container;
+		protected TabBook					tabBook;
+		protected TabPage					tabPageProperties;
+		protected TabPage					tabPageStyles;
 	}
 }

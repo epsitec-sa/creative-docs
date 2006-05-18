@@ -48,6 +48,14 @@ namespace Epsitec.Common.Designer
 			{
 				this.module.ResourceManager.SetBundle(bundle, ResourceSetMode.UpdateOnly);
 			}
+
+			this.module.PanelsWrite();
+
+			foreach (Viewers.Abstract viewer in this.attachViewers)
+			{
+				viewer.Update();
+			}
+
 			this.IsDirty = false;
 		}
 

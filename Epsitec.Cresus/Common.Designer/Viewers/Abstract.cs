@@ -162,16 +162,22 @@ namespace Epsitec.Common.Designer.Viewers
 				builder.Append("/");
 				builder.Append(this.labelsIndex.Count.ToString());
 
-#if false
-				if (this.labelsIndex.Count < this.primaryBundle.FieldCount)
+				if (this.labelsIndex.Count < this.InfoAccessTotalCount)
 				{
 					builder.Append(" (");
-					builder.Append(this.primaryBundle.FieldCount.ToString());
+					builder.Append(this.InfoAccessTotalCount.ToString());
 					builder.Append(")");
 				}
-#endif
 
 				return builder.ToString();
+			}
+		}
+
+		protected virtual int InfoAccessTotalCount
+		{
+			get
+			{
+				return this.labelsIndex.Count;
 			}
 		}
 
@@ -182,6 +188,11 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected virtual void UpdateArray()
 		{
+		}
+
+		public virtual void Update()
+		{
+			//	Met à jour le contenu du Viewer.
 		}
 
 		public virtual void UpdateCommands()
@@ -202,7 +213,7 @@ namespace Epsitec.Common.Designer.Viewers
 			//	
 			//			CommandContext.SetLocalEnable("xxx", ...);
 			////////////////////////////////////////////////////////////////////
-			
+
 			this.CommandContext.SetLocalEnable ("Save", this.module.Modifier.IsDirty);
 			this.CommandContext.SetLocalEnable ("SaveAs", true);
 
@@ -213,7 +224,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.GetCommandState("AccessLast").Enable = (sel != -1 && sel < count-1);
 			this.GetCommandState("AccessNext").Enable = (sel != -1 && sel < count-1);
 
-			this.GetCommandState("Delete").Enable = (sel != -1 && build);
+			this.GetCommandState("Delete").Enable = (sel != -1 && count > 1 && build);
 			this.GetCommandState("Create").Enable = (sel != -1 && build);
 			this.GetCommandState("Duplicate").Enable = (sel != -1 && build);
 

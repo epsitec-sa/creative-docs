@@ -155,6 +155,9 @@ namespace Epsitec.Common.Designer.Viewers
 			this.GetCommandState("FontItalic").Enable = false;
 			this.GetCommandState("FontUnderlined").Enable = false;
 			this.GetCommandState("Glyphs").Enable = false;
+
+			this.module.MainWindow.UpdateInfoCurrentModule();
+			this.module.MainWindow.UpdateInfoAccess();
 		}
 
 
