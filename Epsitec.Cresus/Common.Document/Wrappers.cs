@@ -1497,7 +1497,7 @@ namespace Epsitec.Common.Document
 		{
 			//	Modifie l'état d'une commande.
 			if ( this.document.CommandDispatcher == null )  return;
-			CommandState cs = CommandState.Get (name);
+			Command cs = Command.Get (name);
 			System.Diagnostics.Debug.Assert(cs != null);
 			cs.Enable = enabled;
 		}
@@ -1506,7 +1506,7 @@ namespace Epsitec.Common.Document
 		{
 			//	Modifie l'état d'une commande.
 			if ( this.document.CommandDispatcher == null )  return;
-			CommandState cs = CommandState.Get (name);
+			Command cs = Command.Get (name);
 			System.Diagnostics.Debug.Assert(cs != null);
 			cs.Enable = enabled;
 			cs.ActiveState = state ? ActiveState.Yes : ActiveState.No;
@@ -1516,7 +1516,7 @@ namespace Epsitec.Common.Document
 		{
 			//	Modifie l'état d'une commande avancée.
 			if ( this.document.CommandDispatcher == null )  return;
-			CommandState cs = CommandState.Get (name);
+			Command cs = Command.Get (name);
 			System.Diagnostics.Debug.Assert(cs != null);
 			cs.Enable = enabled;
 			cs.AdvancedState = advanceState;

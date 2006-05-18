@@ -40,7 +40,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public bool IsDisabled(CommandState command)
+		public bool IsDisabled(Command command)
 		{
 			if ((this.chain != null) &&
 				(this.chain.Count > 0))

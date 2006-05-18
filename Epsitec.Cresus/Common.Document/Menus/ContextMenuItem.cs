@@ -73,7 +73,7 @@ namespace Epsitec.Common.Document.Menus
 		public static bool MenuAddItem(System.Collections.ArrayList list, string command)
 		{
 			//	Ajoute une case dans le menu.
-			CommandState cs = CommandState.Get (command);
+			Command cs = Common.Widgets.Command.Get (command);
 			if ( !cs.Enable )  return false;
 
 			ContextMenuItem item = new ContextMenuItem();

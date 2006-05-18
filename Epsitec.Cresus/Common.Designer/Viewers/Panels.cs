@@ -48,11 +48,11 @@ namespace Epsitec.Common.Designer.Viewers
 			this.toolBar = new VToolBar(this);
 			this.toolBar.Margins = new Margins(0, 0, 0, 0);
 			this.toolBar.Dock = DockStyle.Left;
-			this.ToolBarAdd(CommandState.Get("ToolSelect"));
-			this.ToolBarAdd(CommandState.Get("ToolGlobal"));
-			this.ToolBarAdd(CommandState.Get("ToolEdit"));
-			this.ToolBarAdd(CommandState.Get("ToolZoom"));
-			this.ToolBarAdd(CommandState.Get("ToolHand"));
+			this.ToolBarAdd (Widgets.Command.Get ("ToolSelect"));
+			this.ToolBarAdd (Widgets.Command.Get ("ToolGlobal"));
+			this.ToolBarAdd (Widgets.Command.Get ("ToolEdit"));
+			this.ToolBarAdd (Widgets.Command.Get ("ToolZoom"));
+			this.ToolBarAdd (Widgets.Command.Get ("ToolHand"));
 
 			this.container = new MyWidgets.Frame(this);
 			this.container.MinWidth = 100;
@@ -371,7 +371,7 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 		
-		protected Widget ToolBarAdd(CommandState cs)
+		protected Widget ToolBarAdd(Command cs)
 		{
 			//	Ajoute une icône.
 			if (cs == null)

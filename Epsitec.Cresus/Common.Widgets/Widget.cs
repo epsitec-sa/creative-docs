@@ -690,7 +690,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 
-		public CommandState							CommandState
+		public Command							CommandState
 		{
 			get
 			{
@@ -1187,7 +1187,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public CommandState GetCommandState()
+		public Command GetCommandState()
 		{
 			if (this.IsCommand)
 			{

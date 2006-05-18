@@ -689,7 +689,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				bool   sep  = GlobalSettings.QuickSep(xcmd);
 				string cmd  = GlobalSettings.QuickCmd(xcmd);
 
-				CommandState cs = CommandState.Find (cmd);
+				Command cs = Command.Find (cmd);
 
 				//	Bouton check pour déterminer la visibilité.
 				bt = this.quickList[0, row].Children[0] as CheckButton;
