@@ -35,11 +35,6 @@ namespace Epsitec.Common.Drawing.Agg
 		}
 		
 		
-		public static void TrapZeroPointer()
-		{
-			AntiGrain.Interface.DebugTrapZeroPointer ();
-		}
-		
 		
 		public static Library		Current
 		{
@@ -53,7 +48,7 @@ namespace Epsitec.Common.Drawing.Agg
 		{
 			get
 			{
-				return AntiGrain.Interface.DebugGetCycles ();
+				return 0;
 			}
 		}
 		
@@ -61,7 +56,7 @@ namespace Epsitec.Common.Drawing.Agg
 		{
 			get
 			{
-				return AntiGrain.Interface.DebugGetCycleDelta ();
+				return 1;
 			}
 		}
 		
