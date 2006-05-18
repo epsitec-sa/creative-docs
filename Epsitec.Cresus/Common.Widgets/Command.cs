@@ -128,6 +128,18 @@ namespace Epsitec.Common.Widgets
 			{
 				return this.stateObjectType;
 			}
+			set
+			{
+				if (this.locked)
+				{
+					throw new Exceptions.CommandLockedException (this.Name);
+				}
+
+				if (this.stateObjectType != value)
+				{
+					this.stateObjectType = value;
+				}
+			}
 		}
 		
 		public bool								Statefull
@@ -270,11 +282,6 @@ namespace Epsitec.Common.Widgets
 			return null;
 		}
 
-		public void DefineStateObjectType(DependencyObjectType objectType)
-		{
-			this.stateObjectType = objectType;
-		}
-		
 		public override int GetHashCode()
 		{
 			return this.uniqueId;
@@ -375,11 +382,6 @@ namespace Epsitec.Common.Widgets
 		}
 
 		#endregion
-
-		private void Synchronize()
-		{
-			CommandCache.Default.InvalidateCommand (this);
-		}
 
 		#region Internal Methods
 
