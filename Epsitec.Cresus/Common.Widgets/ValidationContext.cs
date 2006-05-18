@@ -187,7 +187,7 @@ namespace Epsitec.Common.Widgets
 		{
 			int disables;
 
-			foreach (string group in CommandState.SplitGroupNames (groups))
+			foreach (string group in Command.SplitGroupNames (groups))
 			{
 				if (this.groupDisables.TryGetValue (group, out disables))
 				{
@@ -208,7 +208,7 @@ namespace Epsitec.Common.Widgets
 		{
 			int disables;
 
-			foreach (string group in CommandState.SplitGroupNames (groups))
+			foreach (string group in Command.SplitGroupNames (groups))
 			{
 				if (this.groupDisables.TryGetValue (group, out disables))
 				{

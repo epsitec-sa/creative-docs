@@ -210,17 +210,16 @@ namespace Epsitec.Common.Widgets
 
 //-			Assert.IsNotNull (window.CommandDispatchers[0]);
 //-			Assert.IsNotNull (window.Root.CommandDispatchers[0]);
+
+			CommandDispatcher dispatcher = new CommandDispatcher ();
 			
-//-			CommandDispatcher dispatcher = window.CommandDispatchers[0];
-			
-			CommandDispatcher dispatcher = CommandDispatcher.Default;
 			dispatcher.RegisterController (new MyController ());
 
 			window.AttachDispatcher (dispatcher);
 			
-			CommandState command_open = new CommandState ("Open", KeyCode.ModifierControl | KeyCode.AlphaO);
-			CommandState command_save = new CommandState ("Save", KeyCode.ModifierAlt | KeyCode.AlphaS);
-			CommandState command_cut  = new CommandState ("ClipCut", KeyCode.ModifierControl | KeyCode.AlphaX);
+			Command command_open = new Command ("Open", KeyCode.ModifierControl | KeyCode.AlphaO);
+			Command command_save = new Command ("Save", KeyCode.ModifierAlt | KeyCode.AlphaS);
+			Command command_cut  = new Command ("ClipCut", KeyCode.ModifierControl | KeyCode.AlphaX);
 			
 			Button      button;
 			GroupBox    group;

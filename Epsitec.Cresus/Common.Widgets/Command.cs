@@ -9,30 +9,30 @@ using Epsitec.Common.Types;
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
-	/// La classe <c>CommandState</c> permet de représenter l'état d'une commande tout
+	/// La classe <c>Command</c> permet de représenter l'état d'une commande tout
 	/// en maintenant la synchronisation avec l'état des widgets associés.
 	/// </summary>
-	public sealed class CommandState : DependencyObject, System.IEquatable<CommandState>
+	public sealed class Command : DependencyObject, System.IEquatable<Command>
 	{
-		public CommandState(string name)
+		public Command(string name)
 		{
 			System.Diagnostics.Debug.Assert (string.IsNullOrEmpty (name) == false);
 
-			lock (CommandState.commands)
+			lock (Command.commands)
 			{
-				if (CommandState.commands.ContainsKey (name))
+				if (Command.commands.ContainsKey (name))
 				{
-					throw new System.ArgumentException (string.Format ("CommandState {0} already registered", name));
+					throw new System.ArgumentException (string.Format ("Command {0} already registered", name));
 				}
 
 				this.name = name;
-				this.uniqueId = CommandState.nextUniqueId++;
+				this.uniqueId = Command.nextUniqueId++;
 
-				CommandState.commands[name] = this;
+				Command.commands[name] = this;
 			}
 		}
 		
-		public CommandState(string name, params Shortcut[] shortcuts) : this (name)
+		public Command(string name, params Shortcut[] shortcuts) : this (name)
 		{
 			this.Shortcuts.AddRange (shortcuts);
 		}
@@ -50,11 +50,11 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return (string) this.GetValue (CommandState.IconNameProperty);
+				return (string) this.GetValue (Command.IconNameProperty);
 			}
 			set
 			{
-				this.SetValue (CommandState.IconNameProperty, value);
+				this.SetValue (Command.IconNameProperty, value);
 			}
 		}
 		
@@ -62,11 +62,11 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return (string) this.GetValue (CommandState.ShortCaptionProperty);
+				return (string) this.GetValue (Command.ShortCaptionProperty);
 			}
 			set
 			{
-				this.SetValue (CommandState.ShortCaptionProperty, value);
+				this.SetValue (Command.ShortCaptionProperty, value);
 			}
 		}
 		
@@ -74,11 +74,11 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return (string) this.GetValue (CommandState.LongCaptionProperty);
+				return (string) this.GetValue (Command.LongCaptionProperty);
 			}
 			set
 			{
-				this.SetValue (CommandState.LongCaptionProperty, value);
+				this.SetValue (Command.LongCaptionProperty, value);
 			}
 		}
 
@@ -94,11 +94,11 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return (string) this.GetValue (CommandState.GroupProperty);
+				return (string) this.GetValue (Command.GroupProperty);
 			}
 			set
 			{
-				this.SetValue (CommandState.GroupProperty, value);
+				this.SetValue (Command.GroupProperty, value);
 			}
 		}
 		
@@ -154,13 +154,13 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return CommandState.GetAdvancedState (this);
+				return Command.GetAdvancedState (this);
 			}
 			set
 			{
 				if (this.AdvancedState != value)
 				{
-					CommandState.SetAdvancedState (this, value);
+					Command.SetAdvancedState (this, value);
 					this.Synchronize ();
 				}
 			}
@@ -209,31 +209,31 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		public static CommandState Get(string commandName)
+		public static Command Get(string commandName)
 		{
-			lock (CommandState.commands)
+			lock (Command.commands)
 			{
-				CommandState commandState = CommandState.Find (commandName);
+				Command commandState = Command.Find (commandName);
 
 				if (commandState == null)
 				{
-					commandState = new CommandState (commandName);
+					commandState = new Command (commandName);
 				}
 				
 				return commandState;
 			}
 		}
 		
-		public static CommandState Find(string commandName)
+		public static Command Find(string commandName)
 		{
 			if (string.IsNullOrEmpty (commandName))
 			{
 				return null;
 			}
 			
-			CommandState state;
+			Command state;
 			
-			if (CommandState.commands.TryGetValue (commandName, out state))
+			if (Command.commands.TryGetValue (commandName, out state))
 			{
 				return state;
 			}
@@ -241,9 +241,9 @@ namespace Epsitec.Common.Widgets
 			return null;
 		}
 
-		public static CommandState Find(Shortcut shortcut)
+		public static Command Find(Shortcut shortcut)
 		{
-			foreach (CommandState command in CommandState.commands.Values)
+			foreach (Command command in Command.commands.Values)
 			{
 				if (command.Shortcuts.Match (shortcut))
 				{
@@ -262,12 +262,12 @@ namespace Epsitec.Common.Widgets
 		
 		public override bool Equals(object obj)
 		{
-			return this.Equals (obj as CommandState);
+			return this.Equals (obj as Command);
 		}
 
-		#region IEquatable<CommandState> Members
+		#region IEquatable<Command> Members
 
-		public bool Equals(CommandState other)
+		public bool Equals(Command other)
 		{
 			if (other == null)
 			{
@@ -306,26 +306,26 @@ namespace Epsitec.Common.Widgets
 
 		private static void NotifyGroupChanged(DependencyObject o, object old_value, object new_value)
 		{
-			CommandState that = o as CommandState;
-			that.OnGroupChanged (new DependencyPropertyChangedEventArgs (CommandState.GroupProperty, old_value, new_value));
+			Command that = o as Command;
+			that.OnGroupChanged (new DependencyPropertyChangedEventArgs (Command.GroupProperty, old_value, new_value));
 		}
 		
 		private static void NotifyIconNameChanged(DependencyObject o, object old_value, object new_value)
 		{
-			CommandState that = o as CommandState;
-			that.OnIconNameChanged (new DependencyPropertyChangedEventArgs (CommandState.IconNameProperty, old_value, new_value));
+			Command that = o as Command;
+			that.OnIconNameChanged (new DependencyPropertyChangedEventArgs (Command.IconNameProperty, old_value, new_value));
 		}
 		
 		private static void NotifyShortCaptionChanged(DependencyObject o, object old_value, object new_value)
 		{
-			CommandState that = o as CommandState;
-			that.OnShortCaptionChanged (new DependencyPropertyChangedEventArgs (CommandState.ShortCaptionProperty, old_value, new_value));
+			Command that = o as Command;
+			that.OnShortCaptionChanged (new DependencyPropertyChangedEventArgs (Command.ShortCaptionProperty, old_value, new_value));
 		}
 		
 		private static void NotifyLongCaptionChanged(DependencyObject o, object old_value, object new_value)
 		{
-			CommandState that = o as CommandState;
-			that.OnLongCaptionChanged (new DependencyPropertyChangedEventArgs (CommandState.LongCaptionProperty, old_value, new_value));
+			Command that = o as Command;
+			that.OnLongCaptionChanged (new DependencyPropertyChangedEventArgs (Command.LongCaptionProperty, old_value, new_value));
 		}
 
 		
@@ -351,27 +351,27 @@ namespace Epsitec.Common.Widgets
 		{
 			if (value == null)
 			{
-				obj.ClearValueBase (CommandState.AdvancedStateProperty);
+				obj.ClearValueBase (Command.AdvancedStateProperty);
 			}
 			else
 			{
-				obj.SetValue (CommandState.AdvancedStateProperty, value);
+				obj.SetValue (Command.AdvancedStateProperty, value);
 			}
 		}
 		
 		public static string GetAdvancedState(DependencyObject obj)
 		{
-			return obj.GetValue (CommandState.AdvancedStateProperty) as string;
+			return obj.GetValue (Command.AdvancedStateProperty) as string;
 		}
 
-		public static readonly DependencyProperty GroupProperty			= DependencyProperty.Register ("Group", typeof (string), typeof (CommandState), new DependencyPropertyMetadata (null, new PropertyInvalidatedCallback (CommandState.NotifyGroupChanged)));
-		public static readonly DependencyProperty IconNameProperty		= DependencyProperty.Register ("IconName", typeof (string), typeof (CommandState), new DependencyPropertyMetadata (null, new PropertyInvalidatedCallback (CommandState.NotifyIconNameChanged)));
-		public static readonly DependencyProperty ShortCaptionProperty	= DependencyProperty.Register ("ShortCaption", typeof (string), typeof (CommandState), new DependencyPropertyMetadata (null, new PropertyInvalidatedCallback (CommandState.NotifyShortCaptionChanged)));
-		public static readonly DependencyProperty LongCaptionProperty	= DependencyProperty.Register ("LongCaption", typeof (string), typeof (CommandState), new DependencyPropertyMetadata (null, new PropertyInvalidatedCallback (CommandState.NotifyLongCaptionChanged)));
+		public static readonly DependencyProperty GroupProperty			= DependencyProperty.Register ("Group", typeof (string), typeof (Command), new DependencyPropertyMetadata (null, new PropertyInvalidatedCallback (Command.NotifyGroupChanged)));
+		public static readonly DependencyProperty IconNameProperty		= DependencyProperty.Register ("IconName", typeof (string), typeof (Command), new DependencyPropertyMetadata (null, new PropertyInvalidatedCallback (Command.NotifyIconNameChanged)));
+		public static readonly DependencyProperty ShortCaptionProperty	= DependencyProperty.Register ("ShortCaption", typeof (string), typeof (Command), new DependencyPropertyMetadata (null, new PropertyInvalidatedCallback (Command.NotifyShortCaptionChanged)));
+		public static readonly DependencyProperty LongCaptionProperty	= DependencyProperty.Register ("LongCaption", typeof (string), typeof (Command), new DependencyPropertyMetadata (null, new PropertyInvalidatedCallback (Command.NotifyLongCaptionChanged)));
 		
-		public static readonly DependencyProperty	AdvancedStateProperty = DependencyProperty.RegisterAttached ("AdvancedState", typeof (string), typeof (CommandState), new DependencyPropertyMetadata (null));
+		public static readonly DependencyProperty	AdvancedStateProperty = DependencyProperty.RegisterAttached ("AdvancedState", typeof (string), typeof (Command), new DependencyPropertyMetadata (null));
 
-		private static Dictionary<string, CommandState> commands = new Dictionary<string, CommandState> ();
+		private static Dictionary<string, Command> commands = new Dictionary<string, Command> ();
 		private static int nextUniqueId;
 
 		private int								uniqueId;

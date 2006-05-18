@@ -225,8 +225,8 @@ namespace Epsitec.Common.Widgets
 				{
 					Widget widget = focused == null ? this : focused;
 					Window window = this.window;
-					
-					CommandState command = CommandState.Find (shortcut);
+
+					Command command = Widgets.Command.Find (shortcut);
 					
 					if (command != null)
 					{

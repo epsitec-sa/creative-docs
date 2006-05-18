@@ -3792,18 +3792,18 @@ namespace Epsitec.Common.Document
 			}
 			else
 			{
-				CommandState.Get ("ShaperHandleAdd").Enable = false;
-				CommandState.Get ("ShaperHandleContinue").Enable = false;
-				CommandState.Get ("ShaperHandleSub").Enable = false;
-				CommandState.Get ("ShaperHandleToLine").Enable = false;
-				CommandState.Get ("ShaperHandleToCurve").Enable = false;
-				CommandState.Get ("ShaperHandleSym").Enable = false;
-				CommandState.Get ("ShaperHandleSmooth").Enable = false;
-				CommandState.Get ("ShaperHandleDis").Enable = false;
-				CommandState.Get ("ShaperHandleInline").Enable = false;
-				CommandState.Get ("ShaperHandleFree").Enable = false;
-				CommandState.Get ("ShaperHandleSimply").Enable = false;
-				CommandState.Get ("ShaperHandleCorner").Enable = false;
+				Command.Get ("ShaperHandleAdd").Enable = false;
+				Command.Get ("ShaperHandleContinue").Enable = false;
+				Command.Get ("ShaperHandleSub").Enable = false;
+				Command.Get ("ShaperHandleToLine").Enable = false;
+				Command.Get ("ShaperHandleToCurve").Enable = false;
+				Command.Get ("ShaperHandleSym").Enable = false;
+				Command.Get ("ShaperHandleSmooth").Enable = false;
+				Command.Get ("ShaperHandleDis").Enable = false;
+				Command.Get ("ShaperHandleInline").Enable = false;
+				Command.Get ("ShaperHandleFree").Enable = false;
+				Command.Get ("ShaperHandleSimply").Enable = false;
+				Command.Get ("ShaperHandleCorner").Enable = false;
 			}
 		}
 
@@ -3822,8 +3822,8 @@ namespace Epsitec.Common.Document
 
 		protected void ShaperHandleState(CommandDispatcher cd, string cmd, bool enable, System.Collections.ArrayList actives, string active)
 		{
-			CommandState.Get (cmd).Enable = enable;
-			CommandState.Get (cmd).ActiveState = actives.Contains (active) ? Common.Widgets.ActiveState.Yes : Common.Widgets.ActiveState.No;
+			Command.Get (cmd).Enable = enable;
+			Command.Get (cmd).ActiveState = actives.Contains (active) ? Common.Widgets.ActiveState.Yes : Common.Widgets.ActiveState.No;
 		}
 
 		public void ShaperHandleCommand(string cmd)

@@ -131,37 +131,28 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.oplet_queue;
+				return this.opletQueue;
 			}
 			set
 			{
-				if (this.oplet_queue != value)
+				if (this.opletQueue != value)
 				{
-					this.oplet_queue = value;
+					this.opletQueue = value;
 					this.OnOpletQueueBindingChanged ();
 				}
 			}
 		}
 		
-		public string[]							CommandNames
+		public static void Dispatch(CommandDispatcherChain chain, string command, object source)
 		{
-			get
+			if (chain != null)
 			{
-				string[] names = new string[this.event_handlers.Keys.Count];
-				this.event_handlers.Keys.CopyTo (names, 0);
-				System.Array.Sort (names);
-				return names;
-			}
-		}
-		
-		
-		public static void Dispatch(System.Collections.IEnumerable dispatchers, string command, object source)
-		{
-			foreach (CommandDispatcher dispatcher in dispatchers)
-			{
-				if (dispatcher.InternalDispatch (command, source))
+				foreach (CommandDispatcher dispatcher in chain.Dispatchers)
 				{
-					break;
+					if (dispatcher.InternalDispatch (command, source))
+					{
+						break;
+					}
 				}
 			}
 		}
@@ -266,14 +257,10 @@ namespace Epsitec.Common.Widgets
 			
 			EventSlot slot;
 			
-			if (this.event_handlers.Contains (command))
-			{
-				slot = this.event_handlers[command] as EventSlot;
-			}
-			else
+			if (this.eventHandlers.TryGetValue (command, out slot) == false)
 			{
 				slot = new EventSlot (command);
-				this.event_handlers[command] = slot;
+				this.eventHandlers[command] = slot;
 			}
 			
 			slot.Register (handler);
@@ -281,38 +268,45 @@ namespace Epsitec.Common.Widgets
 		
 		public void Unregister(string command, CommandEventHandler handler)
 		{
-			if (this.event_handlers.Contains (command))
+			EventSlot slot;
+			
+			if (this.eventHandlers.TryGetValue (command, out slot))
 			{
-				EventSlot slot = this.event_handlers[command] as EventSlot;
-				
 				slot.Unregister (handler);
 				
 				if (slot.Count == 0)
 				{
-					this.event_handlers.Remove (command);
+					this.eventHandlers.Remove (command);
 				}
 			}
 		}
 		
 		public void Register(ICommandDispatcher extra)
 		{
-			this.extra_dispatchers.Add (extra);
+			if (this.extraDispatchers == null)
+			{
+				this.extraDispatchers = new List<ICommandDispatcher> ();
+			}
+			
+			this.extraDispatchers.Add (extra);
 		}
 		
 		public void Unregister(ICommandDispatcher extra)
 		{
-			this.extra_dispatchers.Remove (extra);
+			if (this.extraDispatchers != null)
+			{
+				this.extraDispatchers.Remove (extra);
+				
+				if (this.extraDispatchers.Count == 0)
+				{
+					this.extraDispatchers = null;
+				}
+			}
 		}
-		
-		public bool ContainsCommandHandler(string name)
-		{
-			return this.event_handlers.Contains (name);
-		}
-		
 		
 		public static bool IsSimpleCommand(string command)
 		{
-			if (command == null)
+			if (string.IsNullOrEmpty (command))
 			{
 				return true;
 			}
@@ -324,8 +318,7 @@ namespace Epsitec.Common.Widgets
 		
 		public static string   ExtractCommandName(string command)
 		{
-			if ((command == null) ||
-				(command.Length == 0))
+			if (string.IsNullOrEmpty (command))
 			{
 				return null;
 			}
@@ -351,7 +344,7 @@ namespace Epsitec.Common.Widgets
 		
 		public static string[] ExtractCommandArgs(string command)
 		{
-			if (command == null)
+			if (string.IsNullOrEmpty (command))
 			{
 				return new string[0];
 			}
@@ -642,11 +635,11 @@ namespace Epsitec.Common.Widgets
 			System.Diagnostics.Debug.Assert (command_name.IndexOf (".") < 0, "Found '.' in command name.", "The command '" + command + "' may not contain a '.' in its name.\nPlease fix the command name definition source code.");
 			
 			CommandEventArgs e = new CommandEventArgs (source, command_name, command_args);
+
+			EventSlot slot;
+			int handled = 0;
 			
-			EventSlot slot = this.event_handlers[command_name] as EventSlot;
-			int    handled = 0;
-			
-			if (slot != null)
+			if (this.eventHandlers.TryGetValue (command_name, out slot))
 			{
 				System.Diagnostics.Debug.WriteLine ("Command '" + command_name + "' fired.");
 				
@@ -655,12 +648,18 @@ namespace Epsitec.Common.Widgets
 					handled++;
 				}
 			}
-			
-			foreach (ICommandDispatcher extra in this.extra_dispatchers)
+
+			if ((this.extraDispatchers != null) &&
+				(this.extraDispatchers.Count > 0))
 			{
-				if (extra.DispatchCommand (this, e))
+				ICommandDispatcher[] extra = this.extraDispatchers.ToArray ();
+				
+				for (int i = 0; i < extra.Length; i++)
 				{
-					handled++;
+					if (extra[i].DispatchCommand (this, e))
+					{
+						handled++;
+					}
 				}
 			}
 			
@@ -704,10 +703,6 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		private static void OnFocusedPrimaryDispatcherChanged(CommandDispatcher old_value, CommandDispatcher new_value)
-		{
-		}
-
 		public static CommandDispatcher GetDispatcher(DependencyObject obj)
 		{
 			return (CommandDispatcher) obj.GetValue (CommandDispatcher.DispatcherProperty);
@@ -728,21 +723,15 @@ namespace Epsitec.Common.Widgets
 		public event Support.EventHandler		OpletQueueBindingChanged;
 		public event Support.EventHandler		CommandDispatched;
 		
-		public static CommandDispatcher			Default
-		{
-			get { return CommandDispatcher.defaultDispatcher; }
-		}
-		
-		
 		private string							name;
 		private CommandDispatcherLevel			level;
 		private long							id;
-		
-		protected System.Collections.Hashtable	event_handlers    = new System.Collections.Hashtable ();
+
+		protected Dictionary<string, EventSlot> eventHandlers    = new Dictionary<string, EventSlot> ();
 //#		protected System.Collections.Stack		pending_commands  = new System.Collections.Stack ();
-		protected System.Collections.ArrayList	extra_dispatchers = new System.Collections.ArrayList ();
+		protected List<ICommandDispatcher>		extraDispatchers;
 		
-		protected Support.OpletQueue			oplet_queue;
+		protected Support.OpletQueue			opletQueue;
 		
 		static object							exclusion = new object ();
 		

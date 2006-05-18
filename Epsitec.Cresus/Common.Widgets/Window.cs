@@ -1743,7 +1743,7 @@ namespace Epsitec.Common.Widgets
 
 				System.Diagnostics.Debug.Assert (item.Chain.IsEmpty == false);
 				
-				CommandDispatcher.Dispatch (item.Chain.Dispatchers, command, source);
+				CommandDispatcher.Dispatch (item.Chain, command, source);
 			}
 			
 			if (this.is_dispose_queued)

@@ -240,7 +240,7 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 		}
 
-		protected CommandState GetCommandState(string command)
+		protected Command GetCommandState(string command)
 		{
 			return this.module.MainWindow.GetCommandState(command);
 		}
