@@ -2225,7 +2225,7 @@ namespace Epsitec.App.DocumentEditor
 		void CommandCombo(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			IconButtonCombo combo = e.Source as IconButtonCombo;
-			CommandState cs = this.commandContext.CreateCommandState (e.CommandName);
+			CommandState cs = this.commandContext.GetCommandState (e.CommandName);
 			if ( combo != null && cs != null )
 			{
 				cs.AdvancedState = combo.SelectedName;
@@ -3751,7 +3751,7 @@ namespace Epsitec.App.DocumentEditor
 		{
 			//	Crée un nouveau Command + CommandState.
 			Command command = Epsitec.Common.Widgets.Command.Get (commandName);
-			CommandState state = this.CommandContext.CreateCommandState (command);
+			CommandState state = this.CommandContext.GetCommandState (command);
 
 			if (shortcuts.Length > 0)
 			{

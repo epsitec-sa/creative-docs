@@ -184,7 +184,7 @@ namespace Epsitec.Common.Designer
 		public CommandState GetCommandState(string command)
 		{
 			CommandContext context = this.CommandContext;
-			CommandState state = context.CreateCommandState (command);
+			CommandState state = context.GetCommandState (command);
 
 			return state;
 		}
@@ -517,7 +517,7 @@ namespace Epsitec.Common.Designer
 			//	Crée une nouvelle commande et son command state associé.
 			
 			Command command = Command.Get (commandName);
-			CommandState state = this.CommandContext.CreateCommandState (command);
+			CommandState state = this.CommandContext.GetCommandState (command);
 			
 			if (shortcuts.Length > 0)
 			{

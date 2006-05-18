@@ -299,7 +299,7 @@ namespace Epsitec.Common.Document
 		public CommandState GetCommandState(string command)
 		{
 			CommandContext context = this.CommandContext;
-			CommandState state = context.CreateCommandState (command);
+			CommandState state = context.GetCommandState (command);
 
 			return state;
 		}

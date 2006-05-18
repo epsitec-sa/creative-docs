@@ -1503,7 +1503,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 		static CommandContext context = new CommandContext ();
-		static CommandState open_state = WidgetTest.context.CreateCommandState ("open");
+		static CommandState open_state = WidgetTest.context.GetCommandState ("open");
 		
 		[Test] public void CheckFindChildBasedOnName()
 		{

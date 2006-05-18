@@ -129,9 +129,9 @@ namespace Epsitec.Common.Widgets
 
 					if (context != null)
 					{
-						CommandState state;
+						CommandState state = context.FindCommandState (command);
 						
-						if (context.TryGetCommandState (command, out state))
+						if (state != null)
 						{
 							return state;
 						}
@@ -145,7 +145,7 @@ namespace Epsitec.Common.Widgets
 					//	Create the command state in the root-level context.
 
 					context = root;
-					CommandState state = context.CreateCommandState (command);
+					CommandState state = context.GetCommandState (command);
 					
 					return state;
 				}

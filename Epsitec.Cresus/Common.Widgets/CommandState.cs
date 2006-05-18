@@ -75,11 +75,15 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		#region Internal Methods
+
 		internal void DefineCommand(Command command)
 		{
 			this.command = command;
 		}
-		
+
+		#endregion
+
 		private void Synchronize()
 		{
 			CommandCache.Default.InvalidateState (this);

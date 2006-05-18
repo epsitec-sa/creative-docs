@@ -151,7 +151,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		
 		public bool								HasShortcuts
 		{
 			get
@@ -167,7 +166,8 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public CommandState CreateState()
+		
+		public CommandState CreateDefaultState()
 		{
 			if (this.stateObjectType != null)
 			{
@@ -183,6 +183,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		
 		public static Command Get(string commandName)
 		{
 			lock (Command.commands)
@@ -259,6 +260,8 @@ namespace Epsitec.Common.Widgets
 
 		#endregion
 
+		#region Private EmptyState Class
+
 		private class EmptyState : CommandState
 		{
 			public EmptyState(Command command) : base (command)
@@ -266,10 +269,14 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		#endregion
+
 		private void Synchronize()
 		{
 			CommandCache.Default.InvalidateCommand (this);
 		}
+
+		#region Private Event Handlers
 
 		private void OnGroupChanged(DependencyPropertyChangedEventArgs e)
 		{
@@ -313,7 +320,8 @@ namespace Epsitec.Common.Widgets
 			that.OnLongCaptionChanged (new DependencyPropertyChangedEventArgs (Command.LongCaptionProperty, old_value, new_value));
 		}
 
-		
+		#endregion
+
 		public static string[] SplitGroupNames(string groups)
 		{
 			if (string.IsNullOrEmpty (groups))

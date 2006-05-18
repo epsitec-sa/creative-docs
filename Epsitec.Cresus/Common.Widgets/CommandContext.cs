@@ -13,10 +13,17 @@ namespace Epsitec.Common.Widgets
 	/// </summary>
 	public class CommandContext : DependencyObject
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="T:CommandContext"/> class.
+		/// </summary>
 		public CommandContext()
 		{
 		}
 
+		/// <summary>
+		/// Gets the dispatchers.
+		/// </summary>
+		/// <value>The dispatcher enumeration.</value>
 		public IEnumerable<CommandDispatcher> Dispatchers
 		{
 			get
@@ -185,22 +192,32 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public CommandState CreateCommandState(string commandName)
+		/// <summary>
+		/// Gets the state of the command.
+		/// </summary>
+		/// <param name="commandName">Name of the command.</param>
+		/// <returns>The command state.</returns>
+		public CommandState GetCommandState(string commandName)
 		{
-			return this.CreateCommandState (Command.Get (commandName));
+			return this.GetCommandState (Command.Get (commandName));
 		}
-		
-		public CommandState CreateCommandState(Command command)
-		{
-			CommandState state;
 
-			if (this.TryGetCommandState (command, out state))
+		/// <summary>
+		/// Gets the state of the command.
+		/// </summary>
+		/// <param name="command">The command.</param>
+		/// <returns>The command state.</returns>
+		public CommandState GetCommandState(Command command)
+		{
+			CommandState state = this.FindCommandState (command);
+
+			if (state == null)
 			{
 				return state;
 			}
 			else
 			{
-				state = command.CreateState ();
+				state = command.CreateDefaultState ();
 
 				this.SetCommandState (command, state);
 
@@ -208,15 +225,19 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		internal bool TryGetCommandState(Command command, out CommandState state)
+		#region Internal Methods
+		
+		internal CommandState FindCommandState(Command command)
 		{
+			CommandState state;
+			
 			if (this.states.TryGetValue (command.UniqueId, out state))
 			{
-				return true;
+				return state;
 			}
 			else
 			{
-				return false;
+				return null;
 			}
 		}
 
@@ -237,6 +258,7 @@ namespace Epsitec.Common.Widgets
 			this.dispatcherChain = CommandDispatcherChain.BuildChain (visual);
 		}
 
+		#endregion
 
 		#region Private Methods
 

@@ -18,9 +18,9 @@ namespace Epsitec.Common.Script.Developer
 			
 			this.dispatcher.RegisterController (this);
 			
-			this.save_command_state = this.context.CreateCommandState ("SaveSource");
-			this.compile_command_state = this.context.CreateCommandState ("CompileSourceCode");
-			this.next_error_command_state = this.context.CreateCommandState ("FindNextError");
+			this.save_command_state = this.context.GetCommandState ("SaveSource");
+			this.compile_command_state = this.context.GetCommandState ("CompileSourceCode");
+			this.next_error_command_state = this.context.GetCommandState ("FindNextError");
 		}
 		
 		
