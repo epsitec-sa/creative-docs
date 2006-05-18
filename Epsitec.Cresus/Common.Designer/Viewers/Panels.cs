@@ -45,7 +45,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			VSplitter splitter = new VSplitter(this);
 			splitter.Dock = DockStyle.Left;
-			VSplitter.SetAutoCollapseEnable(splitter, true);
+			VSplitter.SetAutoCollapseEnable(left, true);
 
 			this.toolBar = new VToolBar(this);
 			this.toolBar.Margins = new Margins(0, 0, 0, 0);

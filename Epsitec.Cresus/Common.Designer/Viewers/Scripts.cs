@@ -45,7 +45,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			VSplitter splitter = new VSplitter(this);
 			splitter.Dock = DockStyle.Left;
-			VSplitter.SetAutoCollapseEnable(splitter, true);
+			VSplitter.SetAutoCollapseEnable(left, true);
 
 			this.edit = new TextFieldMulti(this);
 			this.edit.TextLayout.DefaultFont = Font.GetFont("Courier New", "Regular");
