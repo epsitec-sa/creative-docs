@@ -69,9 +69,9 @@ namespace Epsitec.Common.Designer.Viewers
 			this.tabPageProperties.TabTitle = Res.Strings.Viewers.Panels.TabProperties;
 			this.tabBook.Items.Add(this.tabPageProperties);
 
-			this.tabPageStyles = new TabPage();
-			this.tabPageStyles.TabTitle = Res.Strings.Viewers.Panels.TabStyles;
-			this.tabBook.Items.Add(this.tabPageStyles);
+			this.tabPageObjects = new TabPage();
+			this.tabPageObjects.TabTitle = Res.Strings.Viewers.Panels.TabObjects;
+			this.tabBook.Items.Add(this.tabPageObjects);
 
 			this.tabBook.ActivePage = this.tabPageProperties;
 
@@ -469,6 +469,6 @@ namespace Epsitec.Common.Designer.Viewers
 		protected MyWidgets.Frame			container;
 		protected TabBook					tabBook;
 		protected TabPage					tabPageProperties;
-		protected TabPage					tabPageStyles;
+		protected TabPage					tabPageObjects;
 	}
 }

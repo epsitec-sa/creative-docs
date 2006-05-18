@@ -24,7 +24,7 @@
 
   <data name="Viewers.Panels.New">New</data>
   <data name="Viewers.Panels.TabProperties">Propriétés</data>
-  <data name="Viewers.Panels.TabStyles">Styles</data>
+  <data name="Viewers.Panels.TabObjects">Objets</data>
 
   <data name="Action.New">Nouveau</data>
   <data name="Action.Open">Ouvrir...</data>
