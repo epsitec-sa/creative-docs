@@ -13,6 +13,7 @@
   <data name="Ribbon.Section.Character">Caractère</data>
   <data name="Ribbon.Section.Access">Accès</data>
   <data name="Ribbon.Section.Culture">Culture</data>
+  <data name="Ribbon.Section.PanelSelect">Sélection objets</data>
 
   <data name="BundleType.Strings">Textes</data>
   <data name="BundleType.Panels">Interfaces</data>
@@ -62,6 +63,12 @@
   <data name="Action.ModificationNext">Ressource modifiée suivante</data>
   <data name="Action.ModificationAll">Toutes les ressources secondaires devront être modifiées</data>
   <data name="Action.ModificationClear">Modification de la ressource secondaire terminée</data>
+
+  <data name="Action.PanelDelete">Supprimer les objets sélectionnés</data>
+  <data name="Action.PanelDuplicate">Dupliquer les objets sélectionnés</data>
+  <data name="Action.PanelDeselectAll">Désélectionner tous les objets</data>
+  <data name="Action.PanelSelectAll">Sélectionner tous les objets</data>
+  <data name="Action.PanelSelectInvert">Inverser les objets sélectionnés</data>
 
   <data name="Action.ToolSelect">Sélectionner</data>
   <data name="Action.ToolGlobal">Rectangle de sélection</data>

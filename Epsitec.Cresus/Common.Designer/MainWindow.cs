@@ -200,6 +200,13 @@ namespace Epsitec.Common.Designer
 			}
 			this.ribbonMain.Items.Add(new Ribbons.Access());
 
+			//	Crée le ruban des opérations.
+			this.ribbonOper = new RibbonPage();
+			this.ribbonOper.RibbonTitle = Res.Strings.Ribbon.Oper;
+			this.ribbonBook.Items.Add(this.ribbonOper);
+
+			this.ribbonOper.Items.Add(new Ribbons.PanelSelect());
+
 			//	Crée le ruban du texte.
 			this.ribbonText = new RibbonPage();
 			this.ribbonText.RibbonTitle = Res.Strings.Ribbon.Text;
@@ -525,6 +532,11 @@ namespace Epsitec.Common.Designer
 			this.objectLineState = this.CreateCommandState("ObjectLine", KeyCode.AlphaL);
 			this.objectButtonState = this.CreateCommandState("ObjectButton", KeyCode.AlphaB);
 			this.objectTextState = this.CreateCommandState("ObjectText", KeyCode.AlphaT);
+			this.panelDeleteState = this.CreateCommandState("PanelDelete");
+			this.panelDuplicateState = this.CreateCommandState("PanelDuplicate");
+			this.panelDeselectAllState = this.CreateCommandState("PanelDeselectAll");
+			this.panelSelectAllState = this.CreateCommandState("PanelSelectAll");
+			this.panelSelectInvertState = this.CreateCommandState("PanelSelectInvert");
 		}
 
 		protected Command CreateCommandState(string command, params Widgets.Shortcut[] shortcuts)
@@ -844,6 +856,7 @@ namespace Epsitec.Common.Designer
 		protected CommandContext				commandContext;
 		protected RibbonBook					ribbonBook;
 		protected RibbonPage					ribbonMain;
+		protected RibbonPage					ribbonOper;
 		protected RibbonPage					ribbonText;
 		protected RibbonPage					ribbonActive;
 		protected TabBook						bookModules;
@@ -899,5 +912,10 @@ namespace Epsitec.Common.Designer
 		protected Command						objectLineState;
 		protected Command						objectButtonState;
 		protected Command						objectTextState;
+		protected Command						panelDeleteState;
+		protected Command						panelDuplicateState;
+		protected Command						panelDeselectAllState;
+		protected Command						panelSelectAllState;
+		protected Command						panelSelectInvertState;
 	}
 }
