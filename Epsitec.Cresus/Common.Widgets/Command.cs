@@ -285,18 +285,38 @@ namespace Epsitec.Common.Widgets
 			return this.Equals (obj as Command);
 		}
 
-		#region IEquatable<Command> Members
-
-		public bool Equals(Command other)
+		public static bool operator==(Command a, Command b)
 		{
-			if (other == null)
+			if (object.ReferenceEquals (a, b))
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+
+		public static bool operator!=(Command a, Command b)
+		{
+			if (object.ReferenceEquals (a, b))
 			{
 				return false;
 			}
 			else
 			{
-				return this.uniqueId == other.uniqueId;
+				return true;
 			}
+		}
+
+		#region IEquatable<Command> Members
+
+		public bool Equals(Command other)
+		{
+			//	Two commands can only be equal if they are represented by the same
+			//	instance in memory :
+			
+			return object.ReferenceEquals (this, other);
 		}
 
 		#endregion

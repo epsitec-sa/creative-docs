@@ -207,7 +207,7 @@ namespace Epsitec.Common.Widgets
 
 		public bool Equals(Shortcut other)
 		{
-			if (other == null)
+			if (object.ReferenceEquals (other, null))
 			{
 				return false;
 			}

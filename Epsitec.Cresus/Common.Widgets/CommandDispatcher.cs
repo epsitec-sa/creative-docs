@@ -143,22 +143,22 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public static void Dispatch(CommandDispatcherChain chain, string commandName, object source)
+		public static void Dispatch(CommandDispatcherChain commandChain, CommandContextChain contextChain, string command, object source)
 		{
-			if (chain != null)
+			if (commandChain != null)
 			{
-				foreach (CommandDispatcher dispatcher in chain.Dispatchers)
+				foreach (CommandDispatcher dispatcher in commandChain.Dispatchers)
 				{
-					if (dispatcher.InternalDispatch (commandName, source))
+					if (dispatcher.InternalDispatch (contextChain, command, source))
 					{
 						break;
 					}
 				}
 			}
 		}
-		
-		
-		public bool InternalDispatch(string commandName, object source)
+
+
+		public bool InternalDispatch(CommandContextChain contextChain, string command, object source)
 		{
 			
 #if false //#fix
@@ -206,7 +206,7 @@ namespace Epsitec.Common.Widgets
 			bool handled = false;
 			
 #if true //#fix
-			handled = this.InternalDispatchSingleCommand (commandName, source);
+			handled = this.InternalDispatchSingleCommand (contextChain, command, source);
 #else
 			try
 			{
@@ -613,35 +613,66 @@ namespace Epsitec.Common.Widgets
 			this.Register (attribute.CommandName, handler);
 			
 		}
-		
-		
-		protected bool InternalDispatchSingleCommand(string command, object source)
+
+
+		protected bool InternalDispatchSingleCommand(CommandContextChain contextChain, string commandLine, object source)
 		{
 			//	Transmet la commande à ceux qui sont intéressés
+
+			System.Diagnostics.Debug.Assert (contextChain != null);
+			System.Diagnostics.Debug.Assert (contextChain.IsEmpty == false);
 			
-			string command_name = CommandDispatcher.ExtractCommandName (command);
+			string commandName = CommandDispatcher.ExtractCommandName (commandLine);
 			
-			if (command_name == null)
+			if (commandName == null)
 			{
 				return false;
 			}
+
+			Command command = Command.Find (commandName);
+			CommandContext commandContext;
+			CommandState commandState;
+
+			if ((command == null) ||
+				(command.IsReadWrite))
+			{
+				//	The command will always be considered to be "enabled" if it
+				//	has never been defined as such or if no command state has ever
+				//	been created for it.
+
+				commandContext = null;
+				commandState = null;
+			}
+			else
+			{
+				commandState = contextChain.GetCommandState (command, out commandContext);
+
+				System.Diagnostics.Debug.Assert (commandContext != null);
+				System.Diagnostics.Debug.Assert (commandState != null);
+				System.Diagnostics.Debug.Assert (commandState.Command != null);
+
+				if (commandState.Enable == false)
+				{
+					return false;
+				}
+			}
 			
-			string[] command_elements = command_name.Split ('/');
-			int      command_length   = command_elements.Length;
-			string[] command_args     = CommandDispatcher.ExtractAndParseCommandArgs (command, source);
+			string[] commandElements = commandName.Split ('/');
+			int      commandLength   = commandElements.Length;
+			string[] commandArgs     = CommandDispatcher.ExtractAndParseCommandArgs (commandLine, source);
 			
-			System.Diagnostics.Debug.Assert (command_length == 1);
-			System.Diagnostics.Debug.Assert (command_name.IndexOf ("*") < 0, "Found '*' in command name.", "The command '" + command + "' may not contain a '*' in its name.\nPlease fix the command name definition source code.");
-			System.Diagnostics.Debug.Assert (command_name.IndexOf (".") < 0, "Found '.' in command name.", "The command '" + command + "' may not contain a '.' in its name.\nPlease fix the command name definition source code.");
+			System.Diagnostics.Debug.Assert (commandLength == 1);
+			System.Diagnostics.Debug.Assert (commandName.IndexOf ("*") < 0, "Found '*' in command name.", "The command '" + commandLine + "' may not contain a '*' in its name.\nPlease fix the command name definition source code.");
+			System.Diagnostics.Debug.Assert (commandName.IndexOf (".") < 0, "Found '.' in command name.", "The command '" + commandLine + "' may not contain a '.' in its name.\nPlease fix the command name definition source code.");
 			
-			CommandEventArgs e = new CommandEventArgs (source, command_name, command_args);
+			CommandEventArgs e = new CommandEventArgs (source, command, commandArgs, commandContext, commandState);
 
 			EventSlot slot;
 			int handled = 0;
 			
-			if (this.eventHandlers.TryGetValue (command_name, out slot))
+			if (this.eventHandlers.TryGetValue (commandName, out slot))
 			{
-				System.Diagnostics.Debug.WriteLine ("Command '" + command_name + "' fired.");
+				System.Diagnostics.Debug.WriteLine ("Command '" + commandName + "' fired.");
 				
 				if (slot.DispatchCommand (this, e))
 				{
@@ -665,7 +696,7 @@ namespace Epsitec.Common.Widgets
 			
 			if (handled == 0)
 			{
-				System.Diagnostics.Debug.WriteLine ("Command '" + command_name + "' not handled.");
+				System.Diagnostics.Debug.WriteLine ("Command '" + commandName + "' not handled.");
 				return false;
 			}
 			else
@@ -677,7 +708,7 @@ namespace Epsitec.Common.Widgets
 				}
 				else
 				{
-					System.Diagnostics.Debug.WriteLine ("Command '" + command_name + "' handled but not marked as executed.");
+					System.Diagnostics.Debug.WriteLine ("Command '" + commandName + "' handled but not marked as executed.");
 					return false;
 				}
 			}

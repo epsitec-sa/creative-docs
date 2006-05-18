@@ -54,6 +54,26 @@ namespace Epsitec.Common.Widgets
 		}
 
 		/// <summary>
+		/// Gets a value indicating whether this chain is empty.
+		/// </summary>
+		/// <value><c>true</c> if this chain is empty; otherwise, <c>false</c>.</value>
+		public bool IsEmpty
+		{
+			get
+			{
+				for (int i = 0; i < this.chain.Count; i++)
+				{
+					if (this.chain[i].IsAlive)
+					{
+						return false;
+					}
+				}
+
+				return true;
+			}
+		}
+
+		/// <summary>
 		/// Builds the command context chain based on a visual.
 		/// </summary>
 		/// <param name="visual">The visual from where to search for the command contexts.</param>
@@ -101,6 +121,43 @@ namespace Epsitec.Common.Widgets
 
 			//	TODO: ajouter ici la notion d'application/module/document
 
+			return that;
+		}
+
+		/// <summary>
+		/// Builds the command context chain based on a dependency object. The
+		/// resulting chain will either have zero or one element, unless the
+		/// dependency object maps to a <c>Visual</c>, in which case it can
+		/// have more elements.
+		/// </summary>
+		/// <param name="obj">The dependency object to consider.</param>
+		/// <returns>The command context chain.</returns>
+		public static CommandContextChain BuildChain(DependencyObject obj)
+		{
+			Visual visual = obj as Visual;
+
+			if (visual != null)
+			{
+				return CommandContextChain.BuildChain (visual);
+			}
+
+			CommandContextChain that = null;
+
+			if (obj != null)
+			{
+				CommandContext context = CommandContext.GetContext (obj);
+
+				if (context != null)
+				{
+					if (that == null)
+					{
+						that = new CommandContextChain ();
+					}
+
+					that.chain.Add (new System.WeakReference (context));
+				}
+			}
+			
 			return that;
 		}
 
