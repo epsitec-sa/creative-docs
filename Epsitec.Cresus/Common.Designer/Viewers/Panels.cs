@@ -60,13 +60,33 @@ namespace Epsitec.Common.Designer.Viewers
 			this.ToolBarAdd(Widgets.Command.Get("ObjectButton"));
 			this.ToolBarAdd(Widgets.Command.Get("ObjectText"));
 
-			this.container = new MyWidgets.PanelFrame(this);
-			this.container.MinWidth = 100;
-			this.container.MinHeight = 100;
-			this.container.ChildrenLayoutMode = Widgets.Layouts.LayoutMode.Anchored;
-			this.container.Margins = new Margins(1, 1, 1, 1);
-			this.container.Dock = DockStyle.Fill;
-			this.container.ChildrenChanged += new EventHandler(this.HandleContainerChildrenChanged);
+			this.scrollable = new Scrollable(this);
+			this.scrollable.MinWidth = 100;
+			this.scrollable.MinHeight = 100;
+			this.scrollable.Margins = new Margins(1, 1, 1, 1);
+			this.scrollable.Dock = DockStyle.Fill;
+			this.scrollable.HorizontalScrollerMode = ScrollableScrollerMode.ShowAlways;
+			this.scrollable.VerticalScrollerMode = ScrollableScrollerMode.ShowAlways;
+			this.scrollable.Panel.IsAutoFitting = true;
+			this.scrollable.IsForegroundFrame = true;
+			//?this.scrollable.ForegroundFrameMargins = new Margins(0, 1, 0, 1);
+
+			Widget container = new Widget(this.scrollable.Panel);
+			container.MinWidth = 100;
+			container.Dock = DockStyle.Fill;
+
+			this.panelWidget = new UI.Panel();
+			this.panelWidget.ChildrenLayoutMode = Widgets.Layouts.LayoutMode.Anchored;
+			this.panelWidget.Anchor = AnchorStyles.All;
+			this.panelWidget.SetParent(container);
+
+			//	Le PanelFrame est par-dessus le UI.Panel.
+			this.panelFrame = new MyWidgets.PanelFrame(container);
+			this.panelFrame.MinWidth = 100;
+			this.panelFrame.MinHeight = 100;
+			this.panelFrame.Anchor = AnchorStyles.All;
+			this.panelFrame.Panel = this.panelWidget;
+			this.panelFrame.ChildrenChanged += new EventHandler(this.HandlePanelFrameChildrenChanged);
 
 			this.tabBook = new TabBook(this);
 			this.tabBook.PreferredWidth = 150;
@@ -91,7 +111,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.UpdateEdit();
 		}
 
-		void HandleContainerChildrenChanged(object sender)
+		void HandlePanelFrameChildrenChanged(object sender)
 		{
 		}
 
@@ -222,7 +242,7 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			//	Choix de l'outil.
 			base.DoTool(name);
-			this.container.Tool = this.tool;
+			this.panelFrame.Tool = this.tool;
 		}
 
 
@@ -489,7 +509,9 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected TextFieldEx				labelEdit;
 		protected VToolBar					toolBar;
-		protected MyWidgets.PanelFrame		container;
+		protected Scrollable				scrollable;
+		protected UI.Panel					panelWidget;
+		protected MyWidgets.PanelFrame		panelFrame;
 		protected TabBook					tabBook;
 		protected TabPage					tabPageProperties;
 		protected TabPage					tabPageObjects;
