@@ -72,7 +72,38 @@ namespace Epsitec.Common.Widgets
 				base.OverrideDefineCommand ();
 			}
 
-			public static DependencyProperty SelectedCommandProperty = DependencyProperty.Register ("SelectedCommand", typeof (Command), typeof (MultiState));
+			private static object CoerceSelectedCommandValue(DependencyObject obj, DependencyProperty property, object value)
+			{
+				if (value == null)
+				{
+					return null;
+				}
+				
+				System.Diagnostics.Debug.Assert (property == MultiState.SelectedCommandProperty);
+				System.Diagnostics.Debug.Assert (obj is MultiState);
+
+				MultiState   state = (MultiState) obj;
+				MultiCommand multi = (MultiCommand) state.Command;
+				Command      command = (Command) value;
+
+				if (multi.commands.Contains (command))
+				{
+					return command;
+				}
+				
+				throw new System.ArgumentException ();
+			}
+
+			static MultiState()
+			{
+				DependencyPropertyMetadata metadata = new DependencyPropertyMetadata ();
+
+				metadata.CoerceValue = MultiState.CoerceSelectedCommandValue;
+				
+				MultiState.SelectedCommandProperty = DependencyProperty.Register ("SelectedCommand", typeof (Command), typeof (MultiState), metadata);
+			}
+
+			public static DependencyProperty SelectedCommandProperty;
 		}
 
 		public static Command GetSelectedCommand(CommandState state)

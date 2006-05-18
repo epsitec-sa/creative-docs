@@ -236,6 +236,39 @@ namespace Epsitec.Common.Support
 
 			CommandDispatcher.Dispatch (dispatcherChain, contextChain, command.Name, this);
 		}
+		
+		[Test]
+		[ExpectedException (typeof (System.ArgumentException))]
+		public void CheckCommandMultiCommandEx3()
+		{
+			MultiCommand command = new MultiCommand ("TestMultiY");
+
+			Command commandA = Command.Get ("TestCmdA");
+			Command commandB = Command.Get ("TestCmdB");
+			Command commandC = Command.Get ("TestCmdC");
+
+			command.Add (commandA);
+			command.Add (commandB);
+			
+			CommandContext context = new CommandContext ();
+			CommandDispatcher dispatcher = new CommandDispatcher ();
+
+			Visual v1 = new Visual ();
+
+			CommandContext.SetContext (v1, context);
+			CommandDispatcher.SetDispatcher (v1, dispatcher);
+
+			CommandContextChain contextChain;
+			CommandDispatcherChain dispatcherChain;
+
+			contextChain = CommandContextChain.BuildChain (v1);
+			dispatcherChain = CommandDispatcherChain.BuildChain (v1);
+
+			CommandState state = context.GetCommandState (command);
+
+			MultiCommand.SetSelectedCommand (state, commandC);
+		}
+
 
 
 		private void HandleCommandTestMulti(CommandDispatcher sender, CommandEventArgs e)
