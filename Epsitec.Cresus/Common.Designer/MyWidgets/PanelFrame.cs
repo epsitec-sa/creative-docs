@@ -197,12 +197,20 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void SelectDown(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
 			//	Sélection ponctuelle, souris pressée.
+			Widget obj = this.Detect(pos);  // objet visé par la souris
+
+			this.startingPos = pos;
+			this.dragging = false;
 			if (!isShiftPressed)
 			{
+				if (obj != null && this.selectedObjects.Contains(obj))
+				{
+					this.dragging = true;
+					return;
+				}
 				this.selectedObjects.Clear();
 			}
 
-			Widget obj = this.Detect(pos);
 			if (obj != null)
 			{
 				if (this.selectedObjects.Contains(obj))
@@ -224,23 +232,29 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Sélection ponctuelle, souris déplacée.
 			this.ChangeMouseCursor(MouseCursorType.Arrow);
 
-			Widget obj = this.Detect(pos);
-			Rectangle rect = Rectangle.Empty;
-			if (obj != null)
+			if (this.dragging)
 			{
-				rect = obj.ActualBounds;
+				Point move = pos-this.startingPos;
+				this.startingPos = pos;
+				this.MoveSelection(move);
+				this.HiliteRectangle(Rectangle.Empty);
 			}
-
-			if (this.hilitedRectangle != rect)
+			else
 			{
-				this.hilitedRectangle = rect;
-				this.Invalidate();
+				Widget obj = this.Detect(pos);
+				Rectangle rect = Rectangle.Empty;
+				if (obj != null)
+				{
+					rect = obj.ActualBounds;
+				}
+				this.HiliteRectangle(rect);
 			}
 		}
 
 		protected void SelectUp(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
 			//	Sélection ponctuelle, souris relâchée.
+			this.dragging = false;
 		}
 
 		protected Widget Detect(Point pos)
@@ -274,6 +288,38 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.selectedObjects.Clear();
 				this.OnChildrenSelected();
 				this.Invalidate();
+			}
+		}
+
+		protected void MoveSelection(Point move)
+		{
+			//	Déplace tous les objets sélectionnés.
+			Rectangle toRepaint = Rectangle.Empty;
+
+			foreach (Widget obj in this.selectedObjects)
+			{
+				toRepaint = Rectangle.Union(toRepaint, obj.ActualBounds);
+
+				Margins margin = obj.Margins;
+				margin.Left += move.X;
+				margin.Bottom += move.Y;
+				obj.Margins = margin;
+
+				toRepaint = Rectangle.Union(toRepaint, obj.ActualBounds);
+			}
+
+			toRepaint.Inflate(1);
+			this.Invalidate(toRepaint);
+		}
+
+		protected void HiliteRectangle(Rectangle rect)
+		{
+			//	Détermine la zone à mettre en évidence.
+			if (this.hilitedRectangle != rect)
+			{
+				this.Invalidate(this.hilitedRectangle);  // invalide l'ancienne zone
+				this.hilitedRectangle = rect;
+				this.Invalidate(this.hilitedRectangle);  // invalide la nouvelle zone
 			}
 		}
 		#endregion
@@ -398,6 +444,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		#endregion
 
 
+		#region Paint
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
 			//	Dessine le texte.
@@ -447,6 +494,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				return Color.FromColor(adorner.ColorCaption, 0.4);
 			}
 		}
+		#endregion
 
 
 		#region MouseCursor
@@ -553,6 +601,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected Widget					creatingObject;
 		protected List<Widget>				selectedObjects = new List<Widget>();
 		protected Rectangle					hilitedRectangle = Rectangle.Empty;
+		protected bool						dragging;
+		protected Point						startingPos;
 
 		protected Image						mouseCursorArrow = null;
 		protected Image						mouseCursorArrowPlus = null;
