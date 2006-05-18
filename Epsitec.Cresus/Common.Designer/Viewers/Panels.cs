@@ -48,14 +48,19 @@ namespace Epsitec.Common.Designer.Viewers
 			this.toolBar = new VToolBar(this);
 			this.toolBar.Margins = new Margins(0, 0, 0, 0);
 			this.toolBar.Dock = DockStyle.Left;
-			this.ToolBarAdd (Widgets.Command.Get ("ToolSelect"));
-			this.ToolBarAdd (Widgets.Command.Get ("ToolGlobal"));
-			this.ToolBarAdd (Widgets.Command.Get ("ToolEdit"));
-			this.ToolBarAdd (Widgets.Command.Get ("ToolZoom"));
-			this.ToolBarAdd (Widgets.Command.Get ("ToolHand"));
+			this.ToolBarAdd(Widgets.Command.Get("ToolSelect"));
+			this.ToolBarAdd(Widgets.Command.Get("ToolGlobal"));
+			this.ToolBarAdd(Widgets.Command.Get("ToolEdit"));
+			this.ToolBarAdd(Widgets.Command.Get("ToolZoom"));
+			this.ToolBarAdd(Widgets.Command.Get("ToolHand"));
+			this.ToolBarAdd(null);
+			this.ToolBarAdd(Widgets.Command.Get("ObjectLine"));
+			this.ToolBarAdd(Widgets.Command.Get("ObjectButton"));
+			this.ToolBarAdd(Widgets.Command.Get("ObjectText"));
 
 			this.container = new MyWidgets.Frame(this);
 			this.container.MinWidth = 100;
+			this.container.ChildrenLayoutMode = Widgets.Layouts.LayoutMode.Anchored;
 			this.container.Margins = new Margins(1, 1, 1, 1);
 			this.container.Dock = DockStyle.Fill;
 

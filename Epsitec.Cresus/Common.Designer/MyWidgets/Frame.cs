@@ -8,7 +8,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 	/// <summary>
 	/// Widget de type 'groupe' avec un cadre.
 	/// </summary>
-	public class Frame : Widget
+	public class Frame : AbstractGroup
 	{
 		public Frame() : base()
 		{

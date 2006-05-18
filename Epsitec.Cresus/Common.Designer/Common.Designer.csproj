@@ -151,6 +151,9 @@
     <EmbeddedResource Include="Images\ToolEdit.icon" />
     <EmbeddedResource Include="Images\ToolHand.icon" />
     <EmbeddedResource Include="Images\ToolZoom.icon" />
+    <EmbeddedResource Include="Images\ObjectButton.icon" />
+    <EmbeddedResource Include="Images\ObjectText.icon" />
+    <EmbeddedResource Include="Images\ObjectLine.icon" />
     <None Include="Resources\Designer\Strings.00.resource" />
     <None Include="Resources\Designer\Strings.en.resource" />
   </ItemGroup>
