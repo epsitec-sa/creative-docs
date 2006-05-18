@@ -777,7 +777,7 @@ namespace Epsitec.App.DocumentEditor
 						first = false;
 					}
 
-					CommandState cs = CommandState.Get (cmd);
+					Command cs = Widgets.Command.Get (cmd);
 					this.RibbonAdd(cs);
 
 					if ( sep )
@@ -1106,7 +1106,7 @@ namespace Epsitec.App.DocumentEditor
 			}
 			else
 			{
-				CommandState cs = CommandState.Get (command);
+				Command cs = Widgets.Command.Get (command);
 
 				MenuItem item = new MenuItem(cs.Name, Misc.Icon(cs.IconName), cs.LongCaption, Misc.GetShortCut(cs), cs.Name);
 				vmenu.Items.Add(item);
@@ -1142,7 +1142,7 @@ namespace Epsitec.App.DocumentEditor
 			}
 		}
 
-		protected Widget VToolBarAdd(CommandState cs)
+		protected Widget VToolBarAdd(Command cs)
 		{
 			//	Ajoute une icône.
 			if ( cs == null )
@@ -1174,7 +1174,7 @@ namespace Epsitec.App.DocumentEditor
 
 		protected IconButton InfoAdd(string command)
 		{
-			CommandState cs = CommandState.Get (command);
+			Command cs = Widgets.Command.Get (command);
 
 			IconButton button = new IconButton(cs.Name, Misc.Icon(cs.IconName), cs.Name);
 			button.PreferredIconSize = Misc.IconPreferredSize("Small");
@@ -1306,7 +1306,7 @@ namespace Epsitec.App.DocumentEditor
 			}
 		}
 
-		protected Widget RibbonAdd(CommandState cs)
+		protected Widget RibbonAdd(Command cs)
 		{
 			//	Ajoute une icône.
 			if (cs == null)
@@ -2216,7 +2216,7 @@ namespace Epsitec.App.DocumentEditor
 		void CommandCombo(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			IconButtonCombo combo = e.Source as IconButtonCombo;
-			CommandState cs = CommandState.Find (e.CommandName);
+			Command cs = Widgets.Command.Find (e.CommandName);
 			if ( combo != null && cs != null )
 			{
 				cs.AdvancedState = combo.SelectedName;
@@ -3723,10 +3723,10 @@ namespace Epsitec.App.DocumentEditor
 			this.moveDownShiftState  = this.CreateCommandState("MoveDownShift",  KeyCode.ModifierShift|KeyCode.ArrowDown);
 		}
 
-		protected CommandState CreateCommandState(string command, params Widgets.Shortcut[] shortcuts)
+		protected Command CreateCommandState(string command, params Widgets.Shortcut[] shortcuts)
 		{
-			//	Crée un nouveau CommandState.
-			CommandState cs = CommandState.Get (command);
+			//	Crée un nouveau Command.
+			Command cs = Widgets.Command.Get (command);
 
 			if (shortcuts.Length > 0)
 			{
@@ -3739,10 +3739,10 @@ namespace Epsitec.App.DocumentEditor
 			return cs;
 		}
 
-		protected CommandState CreateCommandState(string command, bool statefull, params Widgets.Shortcut[] shortcuts)
+		protected Command CreateCommandState(string command, bool statefull, params Widgets.Shortcut[] shortcuts)
 		{
-			//	Crée un nouveau CommandState.
-			CommandState cs = CommandState.Get (command);
+			//	Crée un nouveau Command.
+			Command cs = Widgets.Command.Get (command);
 
 			if (shortcuts.Length > 0)
 			{
@@ -3756,10 +3756,10 @@ namespace Epsitec.App.DocumentEditor
 			return cs;
 		}
 
-		protected CommandState CreateCommandState(string command, string icon, string tooltip, params Widgets.Shortcut[] shortcuts)
+		protected Command CreateCommandState(string command, string icon, string tooltip, params Widgets.Shortcut[] shortcuts)
 		{
-			//	Crée un nouveau CommandState.
-			CommandState cs = CommandState.Get (command);
+			//	Crée un nouveau Command.
+			Command cs = Widgets.Command.Get (command);
 
 			if (shortcuts.Length > 0)
 			{
@@ -3772,10 +3772,10 @@ namespace Epsitec.App.DocumentEditor
 			return cs;
 		}
 
-		protected CommandState CreateCommandState(string command, string icon, string tooltip, bool statefull, params Widgets.Shortcut[] shortcuts)
+		protected Command CreateCommandState(string command, string icon, string tooltip, bool statefull, params Widgets.Shortcut[] shortcuts)
 		{
-			//	Crée un nouveau CommandState.
-			CommandState cs = CommandState.Get (command);
+			//	Crée un nouveau Command.
+			Command cs = Widgets.Command.Get (command);
 
 			if (shortcuts.Length > 0)
 			{
@@ -3972,7 +3972,7 @@ namespace Epsitec.App.DocumentEditor
 			slider.Enable = this.IsCurrentDocument;
 		}
 
-		protected void UpdateTool(CommandState cs, string currentTool, bool isCreating, bool enabled)
+		protected void UpdateTool(Command cs, string currentTool, bool isCreating, bool enabled)
 		{
 			//	Met à jour une commande d'outil.
 			string tool = cs.Name;
@@ -5280,9 +5280,9 @@ namespace Epsitec.App.DocumentEditor
 			this.dlgSettings.Rebuild();
 		}
 
-		protected void CommandStateShake(CommandState state)
+		protected void CommandStateShake(Command state)
 		{
-			//	Secoue un CommandState pour le forcer à se remettre à jour.
+			//	Secoue un Command pour le forcer à se remettre à jour.
 			state.Enable = !state.Enable;
 			state.Enable = !state.Enable;
 		}
@@ -5509,244 +5509,244 @@ namespace Epsitec.App.DocumentEditor
 		protected Dialogs.Splash				dlgSplash;
 		protected Dialogs.Update				dlgUpdate;
 
-		protected CommandState					toolSelectState;
-		protected CommandState					toolGlobalState;
-		protected CommandState					toolShaperState;
-		protected CommandState					toolEditState;
-		protected CommandState					toolZoomState;
-		protected CommandState					toolHandState;
-		protected CommandState					toolPickerState;
-		protected CommandState					toolHotSpotState;
-		protected CommandState					toolLineState;
-		protected CommandState					toolRectangleState;
-		protected CommandState					toolCircleState;
-		protected CommandState					toolEllipseState;
-		protected CommandState					toolPolyState;
-		protected CommandState					toolBezierState;
-		protected CommandState					toolRegularState;
-		protected CommandState					toolSurfaceState;
-		protected CommandState					toolVolumeState;
-		protected CommandState					toolTextLineState;
-		protected CommandState					toolTextLine2State;
-		protected CommandState					toolTextBoxState;
-		protected CommandState					toolTextBox2State;
-		protected CommandState					toolArrayState;
-		protected CommandState					toolImageState;
-		protected CommandState					toolDimensionState;
-		protected CommandState					newState;
-		protected CommandState					openState;
-		protected CommandState					openModelState;
-		protected CommandState					saveState;
-		protected CommandState					saveAsState;
-		protected CommandState					saveModelState;
-		protected CommandState					closeState;
-		protected CommandState					closeAllState;
-		protected CommandState					forceSaveAllState;
-		protected CommandState					nextDocState;
-		protected CommandState					prevDocState;
-		protected CommandState					printState;
-		protected CommandState					exportState;
-		protected CommandState					glyphsState;
-		protected CommandState					glyphsInsertState;
-		protected CommandState					textEditingState;
-		protected CommandState					replaceState;
-		protected CommandState					findNextState;
-		protected CommandState					findPrevState;
-		protected CommandState					findDefNextState;
-		protected CommandState					findDefPrevState;
-		protected CommandState					deleteState;
-		protected CommandState					duplicateState;
-		protected CommandState					cutState;
-		protected CommandState					copyState;
-		protected CommandState					pasteState;
-		protected CommandState					fontBoldState;
-		protected CommandState					fontItalicState;
-		protected CommandState					fontUnderlinedState;
-		protected CommandState					fontOverlinedState;
-		protected CommandState					fontStrikeoutState;
-		protected CommandState					fontSubscriptState;
-		protected CommandState					fontSuperscriptState;
-		protected CommandState					fontSizePlusState;
-		protected CommandState					fontSizeMinusState;
-		protected CommandState					fontClearState;
-		protected CommandState					paragraphLeadingState;
-		protected CommandState					paragraphLeadingPlusState;
-		protected CommandState					paragraphLeadingMinusState;
-		protected CommandState					paragraphIndentPlusState;
-		protected CommandState					paragraphIndentMinusState;
-		protected CommandState					paragraphJustifState;
-		protected CommandState					paragraphClearState;
-		protected CommandState					orderUpOneState;
-		protected CommandState					orderDownOneState;
-		protected CommandState					orderUpAllState;
-		protected CommandState					orderDownAllState;
-		protected CommandState					moveLeftFreeState;
-		protected CommandState					moveRightFreeState;
-		protected CommandState					moveUpFreeState;
-		protected CommandState					moveDownFreeState;
-		protected CommandState					rotate90State;
-		protected CommandState					rotate180State;
-		protected CommandState					rotate270State;
-		protected CommandState					rotateFreeCCWState;
-		protected CommandState					rotateFreeCWState;
-		protected CommandState					mirrorHState;
-		protected CommandState					mirrorVState;
-		protected CommandState					scaleMul2State;
-		protected CommandState					scaleDiv2State;
-		protected CommandState					scaleMulFreeState;
-		protected CommandState					scaleDivFreeState;
-		protected CommandState					alignLeftState;
-		protected CommandState					alignCenterXState;
-		protected CommandState					alignRightState;
-		protected CommandState					alignTopState;
-		protected CommandState					alignCenterYState;
-		protected CommandState					alignBottomState;
-		protected CommandState					alignGridState;
-		protected CommandState					shareSpaceXState;
-		protected CommandState					shareLeftState;
-		protected CommandState					shareCenterXState;
-		protected CommandState					shareRightState;
-		protected CommandState					shareSpaceYState;
-		protected CommandState					shareTopState;
-		protected CommandState					shareCenterYState;
-		protected CommandState					shareBottomState;
-		protected CommandState					adjustWidthState;
-		protected CommandState					adjustHeightState;
-		protected CommandState					colorToRgbState;
-		protected CommandState					colorToCmykState;
-		protected CommandState					colorToGrayState;
-		protected CommandState					colorStrokeDarkState;
-		protected CommandState					colorStrokeLightState;
-		protected CommandState					colorFillDarkState;
-		protected CommandState					colorFillLightState;
-		protected CommandState					mergeState;
-		protected CommandState					extractState;
-		protected CommandState					groupState;
-		protected CommandState					ungroupState;
-		protected CommandState					insideState;
-		protected CommandState					outsideState;
-		protected CommandState					combineState;
-		protected CommandState					uncombineState;
-		protected CommandState					toBezierState;
-		protected CommandState					toPolyState;
-		protected CommandState					toTextBox2State;
-		protected CommandState					fragmentState;
-		protected CommandState					shaperHandleAddState;
-		protected CommandState					shaperHandleSubState;
-		protected CommandState					shaperHandleToLineState;
-		protected CommandState					shaperHandleToCurveState;
-		protected CommandState					shaperHandleSymState;
-		protected CommandState					shaperHandleSmoothState;
-		protected CommandState					shaperHandleDisState;
-		protected CommandState					shaperHandleInlineState;
-		protected CommandState					shaperHandleFreeState;
-		protected CommandState					shaperHandleSimplyState;
-		protected CommandState					shaperHandleCornerState;
-		protected CommandState					shaperHandleContinueState;
-		protected CommandState					booleanAndState;
-		protected CommandState					booleanOrState;
-		protected CommandState					booleanXorState;
-		protected CommandState					booleanFrontMinusState;
-		protected CommandState					booleanBackMinusState;
-		protected CommandState					undoState;
-		protected CommandState					redoState;
-		protected CommandState					undoRedoListState;
-		protected CommandState					deselectAllState;
-		protected CommandState					selectAllState;
-		protected CommandState					selectInvertState;
-		protected CommandState					selectorAutoState;
-		protected CommandState					selectorIndividualState;
-		protected CommandState					selectorScalerState;
-		protected CommandState					selectorStretchState;
-		protected CommandState					selectorStretchTypeState;
-		protected CommandState					selectTotalState;
-		protected CommandState					selectPartialState;
-		protected CommandState					selectorAdaptLine;
-		protected CommandState					selectorAdaptText;
-		protected CommandState					hideHalfState;
-		protected CommandState					hideSelState;
-		protected CommandState					hideRestState;
-		protected CommandState					hideCancelState;
-		protected CommandState					zoomMinState;
-		protected CommandState					zoomPageState;
-		protected CommandState					zoomPageWidthState;
-		protected CommandState					zoomDefaultState;
-		protected CommandState					zoomSelState;
-		protected CommandState					zoomSelWidthState;
-		protected CommandState					zoomPrevState;
-		protected CommandState					zoomSubState;
-		protected CommandState					zoomAddState;
-		protected CommandState					previewState;
-		protected CommandState					gridState;
-		protected CommandState					textGridState;
-		protected CommandState					textShowControlCharactersState;
-		protected CommandState					textFontFilterState;
-		protected CommandState					textFontSampleAbcState;
-		protected CommandState					textInsertQuadState;
-		protected CommandState					textInsertNewFrameState;
-		protected CommandState					textInsertNewPageState;
-		protected CommandState					magnetState;
-		protected CommandState					magnetLayerState;
-		protected CommandState					rulersState;
-		protected CommandState					labelsState;
-		protected CommandState					aggregatesState;
-		protected CommandState					arrayOutlineFrameState;
-		protected CommandState					arrayOutlineHorizState;
-		protected CommandState					arrayOutlineVertiState;
-		protected CommandState					arrayAddColumnLeftState;
-		protected CommandState					arrayAddColumnRightState;
-		protected CommandState					arrayAddRowTopState;
-		protected CommandState					arrayAddRowBottomState;
-		protected CommandState					arrayDelColumnState;
-		protected CommandState					arrayDelRowState;
-		protected CommandState					arrayAlignColumnState;
-		protected CommandState					arrayAlignRowState;
-		protected CommandState					arraySwapColumnState;
-		protected CommandState					arraySwapRowState;
-		protected CommandState					arrayLookState;
-		protected CommandState					resDesignerBuildState;
-		protected CommandState					resDesignerTranslateState;
-		protected CommandState					debugBboxThinState;
-		protected CommandState					debugBboxGeomState;
-		protected CommandState					debugBboxFullState;
-		protected CommandState					debugDirtyState;
-		protected CommandState					pagePrevState;
-		protected CommandState					pageNextState;
-		protected CommandState					pageMenuState;
-		protected CommandState					pageNewState;
-		protected CommandState					pageDuplicateState;
-		protected CommandState					pageUpState;
-		protected CommandState					pageDownState;
-		protected CommandState					pageDeleteState;
-		protected CommandState					layerPrevState;
-		protected CommandState					layerNextState;
-		protected CommandState					layerMenuState;
-		protected CommandState					layerNewState;
-		protected CommandState					layerDuplicateState;
-		protected CommandState					layerNewSelState;
-		protected CommandState					layerMergeUpState;
-		protected CommandState					layerMergeDownState;
-		protected CommandState					layerDeleteState;
-		protected CommandState					layerUpState;
-		protected CommandState					layerDownState;
-		protected CommandState					settingsState;
-		protected CommandState					infosState;
-		protected CommandState					aboutState;
-		protected CommandState					pageStackState;
-		protected CommandState					updateState;
-		protected CommandState					keyState;
-		protected CommandState					moveLeftNormState;
-		protected CommandState					moveRightNormState;
-		protected CommandState					moveUpNormState;
-		protected CommandState					moveDownNormState;
-		protected CommandState					moveLeftCtrlState;
-		protected CommandState					moveRightCtrlState;
-		protected CommandState					moveUpCtrlState;
-		protected CommandState					moveDownCtrlState;
-		protected CommandState					moveLeftShiftState;
-		protected CommandState					moveRightShiftState;
-		protected CommandState					moveUpShiftState;
-		protected CommandState					moveDownShiftState;
+		protected Command					toolSelectState;
+		protected Command					toolGlobalState;
+		protected Command					toolShaperState;
+		protected Command					toolEditState;
+		protected Command					toolZoomState;
+		protected Command					toolHandState;
+		protected Command					toolPickerState;
+		protected Command					toolHotSpotState;
+		protected Command					toolLineState;
+		protected Command					toolRectangleState;
+		protected Command					toolCircleState;
+		protected Command					toolEllipseState;
+		protected Command					toolPolyState;
+		protected Command					toolBezierState;
+		protected Command					toolRegularState;
+		protected Command					toolSurfaceState;
+		protected Command					toolVolumeState;
+		protected Command					toolTextLineState;
+		protected Command					toolTextLine2State;
+		protected Command					toolTextBoxState;
+		protected Command					toolTextBox2State;
+		protected Command					toolArrayState;
+		protected Command					toolImageState;
+		protected Command					toolDimensionState;
+		protected Command					newState;
+		protected Command					openState;
+		protected Command					openModelState;
+		protected Command					saveState;
+		protected Command					saveAsState;
+		protected Command					saveModelState;
+		protected Command					closeState;
+		protected Command					closeAllState;
+		protected Command					forceSaveAllState;
+		protected Command					nextDocState;
+		protected Command					prevDocState;
+		protected Command					printState;
+		protected Command					exportState;
+		protected Command					glyphsState;
+		protected Command					glyphsInsertState;
+		protected Command					textEditingState;
+		protected Command					replaceState;
+		protected Command					findNextState;
+		protected Command					findPrevState;
+		protected Command					findDefNextState;
+		protected Command					findDefPrevState;
+		protected Command					deleteState;
+		protected Command					duplicateState;
+		protected Command					cutState;
+		protected Command					copyState;
+		protected Command					pasteState;
+		protected Command					fontBoldState;
+		protected Command					fontItalicState;
+		protected Command					fontUnderlinedState;
+		protected Command					fontOverlinedState;
+		protected Command					fontStrikeoutState;
+		protected Command					fontSubscriptState;
+		protected Command					fontSuperscriptState;
+		protected Command					fontSizePlusState;
+		protected Command					fontSizeMinusState;
+		protected Command					fontClearState;
+		protected Command					paragraphLeadingState;
+		protected Command					paragraphLeadingPlusState;
+		protected Command					paragraphLeadingMinusState;
+		protected Command					paragraphIndentPlusState;
+		protected Command					paragraphIndentMinusState;
+		protected Command					paragraphJustifState;
+		protected Command					paragraphClearState;
+		protected Command					orderUpOneState;
+		protected Command					orderDownOneState;
+		protected Command					orderUpAllState;
+		protected Command					orderDownAllState;
+		protected Command					moveLeftFreeState;
+		protected Command					moveRightFreeState;
+		protected Command					moveUpFreeState;
+		protected Command					moveDownFreeState;
+		protected Command					rotate90State;
+		protected Command					rotate180State;
+		protected Command					rotate270State;
+		protected Command					rotateFreeCCWState;
+		protected Command					rotateFreeCWState;
+		protected Command					mirrorHState;
+		protected Command					mirrorVState;
+		protected Command					scaleMul2State;
+		protected Command					scaleDiv2State;
+		protected Command					scaleMulFreeState;
+		protected Command					scaleDivFreeState;
+		protected Command					alignLeftState;
+		protected Command					alignCenterXState;
+		protected Command					alignRightState;
+		protected Command					alignTopState;
+		protected Command					alignCenterYState;
+		protected Command					alignBottomState;
+		protected Command					alignGridState;
+		protected Command					shareSpaceXState;
+		protected Command					shareLeftState;
+		protected Command					shareCenterXState;
+		protected Command					shareRightState;
+		protected Command					shareSpaceYState;
+		protected Command					shareTopState;
+		protected Command					shareCenterYState;
+		protected Command					shareBottomState;
+		protected Command					adjustWidthState;
+		protected Command					adjustHeightState;
+		protected Command					colorToRgbState;
+		protected Command					colorToCmykState;
+		protected Command					colorToGrayState;
+		protected Command					colorStrokeDarkState;
+		protected Command					colorStrokeLightState;
+		protected Command					colorFillDarkState;
+		protected Command					colorFillLightState;
+		protected Command					mergeState;
+		protected Command					extractState;
+		protected Command					groupState;
+		protected Command					ungroupState;
+		protected Command					insideState;
+		protected Command					outsideState;
+		protected Command					combineState;
+		protected Command					uncombineState;
+		protected Command					toBezierState;
+		protected Command					toPolyState;
+		protected Command					toTextBox2State;
+		protected Command					fragmentState;
+		protected Command					shaperHandleAddState;
+		protected Command					shaperHandleSubState;
+		protected Command					shaperHandleToLineState;
+		protected Command					shaperHandleToCurveState;
+		protected Command					shaperHandleSymState;
+		protected Command					shaperHandleSmoothState;
+		protected Command					shaperHandleDisState;
+		protected Command					shaperHandleInlineState;
+		protected Command					shaperHandleFreeState;
+		protected Command					shaperHandleSimplyState;
+		protected Command					shaperHandleCornerState;
+		protected Command					shaperHandleContinueState;
+		protected Command					booleanAndState;
+		protected Command					booleanOrState;
+		protected Command					booleanXorState;
+		protected Command					booleanFrontMinusState;
+		protected Command					booleanBackMinusState;
+		protected Command					undoState;
+		protected Command					redoState;
+		protected Command					undoRedoListState;
+		protected Command					deselectAllState;
+		protected Command					selectAllState;
+		protected Command					selectInvertState;
+		protected Command					selectorAutoState;
+		protected Command					selectorIndividualState;
+		protected Command					selectorScalerState;
+		protected Command					selectorStretchState;
+		protected Command					selectorStretchTypeState;
+		protected Command					selectTotalState;
+		protected Command					selectPartialState;
+		protected Command					selectorAdaptLine;
+		protected Command					selectorAdaptText;
+		protected Command					hideHalfState;
+		protected Command					hideSelState;
+		protected Command					hideRestState;
+		protected Command					hideCancelState;
+		protected Command					zoomMinState;
+		protected Command					zoomPageState;
+		protected Command					zoomPageWidthState;
+		protected Command					zoomDefaultState;
+		protected Command					zoomSelState;
+		protected Command					zoomSelWidthState;
+		protected Command					zoomPrevState;
+		protected Command					zoomSubState;
+		protected Command					zoomAddState;
+		protected Command					previewState;
+		protected Command					gridState;
+		protected Command					textGridState;
+		protected Command					textShowControlCharactersState;
+		protected Command					textFontFilterState;
+		protected Command					textFontSampleAbcState;
+		protected Command					textInsertQuadState;
+		protected Command					textInsertNewFrameState;
+		protected Command					textInsertNewPageState;
+		protected Command					magnetState;
+		protected Command					magnetLayerState;
+		protected Command					rulersState;
+		protected Command					labelsState;
+		protected Command					aggregatesState;
+		protected Command					arrayOutlineFrameState;
+		protected Command					arrayOutlineHorizState;
+		protected Command					arrayOutlineVertiState;
+		protected Command					arrayAddColumnLeftState;
+		protected Command					arrayAddColumnRightState;
+		protected Command					arrayAddRowTopState;
+		protected Command					arrayAddRowBottomState;
+		protected Command					arrayDelColumnState;
+		protected Command					arrayDelRowState;
+		protected Command					arrayAlignColumnState;
+		protected Command					arrayAlignRowState;
+		protected Command					arraySwapColumnState;
+		protected Command					arraySwapRowState;
+		protected Command					arrayLookState;
+		protected Command					resDesignerBuildState;
+		protected Command					resDesignerTranslateState;
+		protected Command					debugBboxThinState;
+		protected Command					debugBboxGeomState;
+		protected Command					debugBboxFullState;
+		protected Command					debugDirtyState;
+		protected Command					pagePrevState;
+		protected Command					pageNextState;
+		protected Command					pageMenuState;
+		protected Command					pageNewState;
+		protected Command					pageDuplicateState;
+		protected Command					pageUpState;
+		protected Command					pageDownState;
+		protected Command					pageDeleteState;
+		protected Command					layerPrevState;
+		protected Command					layerNextState;
+		protected Command					layerMenuState;
+		protected Command					layerNewState;
+		protected Command					layerDuplicateState;
+		protected Command					layerNewSelState;
+		protected Command					layerMergeUpState;
+		protected Command					layerMergeDownState;
+		protected Command					layerDeleteState;
+		protected Command					layerUpState;
+		protected Command					layerDownState;
+		protected Command					settingsState;
+		protected Command					infosState;
+		protected Command					aboutState;
+		protected Command					pageStackState;
+		protected Command					updateState;
+		protected Command					keyState;
+		protected Command					moveLeftNormState;
+		protected Command					moveRightNormState;
+		protected Command					moveUpNormState;
+		protected Command					moveDownNormState;
+		protected Command					moveLeftCtrlState;
+		protected Command					moveRightCtrlState;
+		protected Command					moveUpCtrlState;
+		protected Command					moveDownCtrlState;
+		protected Command					moveLeftShiftState;
+		protected Command					moveRightShiftState;
+		protected Command					moveUpShiftState;
+		protected Command					moveDownShiftState;
 
 
 		protected class DocumentInfo

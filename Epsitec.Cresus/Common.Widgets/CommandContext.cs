@@ -9,7 +9,7 @@ namespace Epsitec.Common.Widgets
 {
 	/// <summary>
 	/// The <c>CommandContext</c> class is used to locally disable commands
-	/// defined by <c>CommandState</c>.
+	/// defined by <c>Command</c>.
 	/// </summary>
 	public class CommandContext : DependencyObject
 	{
@@ -37,7 +37,7 @@ namespace Epsitec.Common.Widgets
 		/// </summary>
 		/// <param name="command">The command.</param>
 		/// <param name="value">Enable if set to <c>true</c>, disable otherwise.</param>
-		public void SetLocalEnable(CommandState command, bool value)
+		public void SetLocalEnable(Command command, bool value)
 		{
 			if (command == null)
 			{
@@ -81,7 +81,7 @@ namespace Epsitec.Common.Widgets
 		/// <param name="value">Enable if set to <c>true</c>, disable otherwise.</param>
 		public void SetLocalEnable(string commandName, bool value)
 		{
-			this.SetLocalEnable (CommandState.Find (commandName), value);
+			this.SetLocalEnable (Command.Find (commandName), value);
 		}
 
 		/// <summary>
@@ -89,7 +89,7 @@ namespace Epsitec.Common.Widgets
 		/// </summary>
 		/// <param name="command">The command.</param>
 		/// <returns><c>false</c> if the command is disabled locally, <c>true</c> otherwise.</returns>
-		public bool GetLocalEnable(CommandState command)
+		public bool GetLocalEnable(Command command)
 		{
 			bool value;
 
@@ -196,7 +196,7 @@ namespace Epsitec.Common.Widgets
 
 		#region Private Methods
 
-		private void NotifyCommandEnableChanged(CommandState command)
+		private void NotifyCommandEnableChanged(Command command)
 		{
 			CommandCache.Default.InvalidateCommand (command);
 		}

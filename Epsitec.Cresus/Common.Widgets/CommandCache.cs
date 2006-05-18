@@ -5,7 +5,7 @@ namespace Epsitec.Common.Widgets
 {
 	/// <summary>
 	/// La classe CommandCache permet de réaliser le lien entre des visuals et
-	/// leur CommandState associé.
+	/// leur Command associé.
 	/// </summary>
 	public sealed class CommandCache
 	{
@@ -71,7 +71,7 @@ namespace Epsitec.Common.Widgets
 			this.RequestAsyncSynchronization ();
 		}
 		
-		public void InvalidateCommand(CommandState command)
+		public void InvalidateCommand(Command command)
 		{
 			for (int i = 0; i < this.records.Length; i++)
 			{
@@ -91,7 +91,7 @@ namespace Epsitec.Common.Widgets
 		{
 			for (int i = 0; i < this.records.Length; i++)
 			{
-				CommandState command = this.records[i].Command;
+				Command command = this.records[i].Command;
 				
 				if ((command != null) &&
 					(command.Group == group))
@@ -127,7 +127,7 @@ namespace Epsitec.Common.Widgets
 					if (this.records[i].IsDirty)
 					{
 						//	Nous avons trouvé un visual qui n'a pas encore de
-						//	CommandState attaché dans le cache.
+						//	Command attaché dans le cache.
 						
 						this.SynchronizeIndex (i);
 						
@@ -144,7 +144,7 @@ namespace Epsitec.Common.Widgets
 			this.synchronize = false;
 		}
 		
-		public void UpdateWidgets(CommandState command)
+		public void UpdateWidgets(Command command)
 		{
 			if (this.synchronize)
 			{
@@ -169,7 +169,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public CommandState GetCommandState(Visual visual)
+		public Command GetCommandState(Visual visual)
 		{
 			int id = visual.GetCommandCacheId ();
 			
@@ -198,7 +198,7 @@ namespace Epsitec.Common.Widgets
 				this.command = null;
 			}
 			
-			public Record(Visual visual, CommandState command)
+			public Record(Visual visual, Command command)
 			{
 				this.visual = new System.WeakReference (visual, false);
 				this.command = null;
@@ -242,7 +242,7 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 			
-			public CommandState					Command
+			public Command					Command
 			{
 				get
 				{
@@ -270,14 +270,14 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 			
-			public void SetCommand(CommandState command)
+			public void SetCommand(Command command)
 			{
 				this.command = command;
 			}
 			
 			
 			private System.WeakReference		visual;
-			private CommandState				command;
+			private Command				command;
 		}
 		#endregion
 		
@@ -320,7 +320,7 @@ namespace Epsitec.Common.Widgets
 			
 			if (visual != null)
 			{
-				CommandState command = CommandState.Find (visual.CommandName);
+				Command command = Command.Find (visual.CommandName);
 				
 				if ((this.clear_count > 0) &&
 					(this.records[index].Command == null))
@@ -346,7 +346,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		private void UpdateWidget(Widget widget, CommandState command, bool enable, ActiveState active, string advanced)
+		private void UpdateWidget(Widget widget, Command command, bool enable, ActiveState active, string advanced)
 		{
 			if (widget != null)
 			{
@@ -366,7 +366,7 @@ namespace Epsitec.Common.Widgets
 				
 				if (advanced != null)
 				{
-					CommandState.SetAdvancedState (widget, advanced);
+					Command.SetAdvancedState (widget, advanced);
 				}
 			}
 		}

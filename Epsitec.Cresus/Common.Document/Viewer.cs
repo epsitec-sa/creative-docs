@@ -2702,7 +2702,7 @@ namespace Epsitec.Common.Document
 				}
 				else
 				{
-					CommandState cs = CommandState.Find (cmd);
+					Command cs = Common.Widgets.Command.Find (cmd);
 
 					IconButton button = new IconButton(cs.Name, Misc.Icon(cs.IconName), cs.Name);
 				
@@ -3057,7 +3057,7 @@ namespace Epsitec.Common.Document
 			{
 				if ( list.Contains(cmd) )  return;  // déjà dans la liste ?
 
-				CommandState cs = CommandState.Find (cmd);
+				Command cs = Common.Widgets.Command.Find (cmd);
 				if ( cs != null )
 				{
 					if ( !cs.Enable )  return;

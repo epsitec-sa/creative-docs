@@ -16,9 +16,9 @@ namespace Epsitec.Common.Script.Developer
 			this.dispatcher = new CommandDispatcher ("EditionController", CommandDispatcherLevel.Primary);
 			this.dispatcher.RegisterController (this);
 			
-			this.save_command_state = CommandState.Find ("SaveSource");
-			this.compile_command_state = CommandState.Find ("CompileSourceCode");
-			this.next_error_command_state = CommandState.Find ("FindNextError");
+			this.save_command_state = Command.Find ("SaveSource");
+			this.compile_command_state = Command.Find ("CompileSourceCode");
+			this.next_error_command_state = Command.Find ("FindNextError");
 		}
 		
 		
@@ -738,8 +738,8 @@ namespace Epsitec.Common.Script.Developer
 		protected int							next_error;
 		protected bool							is_changing_page;
 		
-		protected CommandState					save_command_state;
-		protected CommandState					compile_command_state;
-		protected CommandState					next_error_command_state;
+		protected Command					save_command_state;
+		protected Command					compile_command_state;
+		protected Command					next_error_command_state;
 	}
 }
