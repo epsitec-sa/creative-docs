@@ -70,19 +70,19 @@ namespace Epsitec.Common.Designer.MyWidgets
 			switch (message.Type)
 			{
 				case MessageType.MouseDown:
-					this.ProcessMouseDown(pos);
+					this.ProcessMouseDown(pos, message.IsRightButton, message.IsControlPressed, message.IsShiftPressed);
 					message.Captured = true;
 					message.Consumer = this;
 					break;
 
 				case MessageType.MouseMove:
-					this.ProcessMouseMove(pos);
+					this.ProcessMouseMove(pos, message.IsRightButton, message.IsControlPressed, message.IsShiftPressed);
 					message.Captured = true;
 					message.Consumer = this;
 					break;
 
 				case MessageType.MouseUp:
-					this.ProcessMouseUp(pos);
+					this.ProcessMouseUp(pos, message.IsRightButton, message.IsControlPressed, message.IsShiftPressed);
 					message.Captured = true;
 					message.Consumer = this;
 					break;
@@ -90,218 +90,260 @@ namespace Epsitec.Common.Designer.MyWidgets
 		}
 
 		#region ProcessMouse
-		void ProcessMouseDown(Point pos)
+		void ProcessMouseDown(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
 			//	La souris a été pressée.
 			if (this.tool == "ToolSelect")
 			{
-				this.SelectDown(pos);
+				this.SelectDown(pos, isRightButton, isControlPressed, isShiftPressed);
 			}
 
 			if (this.tool == "ToolGlobal")
 			{
-				this.GlobalDown(pos);
+				this.GlobalDown(pos, isRightButton, isControlPressed, isShiftPressed);
 			}
 
 			if (this.tool == "ToolEdit")
 			{
-				this.EditDown(pos);
+				this.EditDown(pos, isRightButton, isControlPressed, isShiftPressed);
 			}
 
 			if (this.tool == "ToolZoom")
 			{
-				this.ZoomDown(pos);
+				this.ZoomDown(pos, isRightButton, isControlPressed, isShiftPressed);
 			}
 
 			if (this.tool == "ToolHand")
 			{
-				this.HandDown(pos);
+				this.HandDown(pos, isRightButton, isControlPressed, isShiftPressed);
 			}
 
 			if (this.tool.StartsWith("Object"))
 			{
-				this.ObjectDown(this.tool, pos);
+				this.ObjectDown(pos, isRightButton, isControlPressed, isShiftPressed);
 			}
 		}
 
-		void ProcessMouseMove(Point pos)
+		void ProcessMouseMove(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
 			//	La souris a été déplacée.
 			if (this.tool == "ToolSelect")
 			{
-				this.SelectMove(pos);
+				this.SelectMove(pos, isRightButton, isControlPressed, isShiftPressed);
 			}
 
 			if (this.tool == "ToolGlobal")
 			{
-				this.GlobalMove(pos);
+				this.GlobalMove(pos, isRightButton, isControlPressed, isShiftPressed);
 			}
 
 			if (this.tool == "ToolEdit")
 			{
-				this.EditMove(pos);
+				this.EditMove(pos, isRightButton, isControlPressed, isShiftPressed);
 			}
 
 			if (this.tool == "ToolZoom")
 			{
-				this.ZoomMove(pos);
+				this.ZoomMove(pos, isRightButton, isControlPressed, isShiftPressed);
 			}
 
 			if (this.tool == "ToolHand")
 			{
-				this.HandMove(pos);
+				this.HandMove(pos, isRightButton, isControlPressed, isShiftPressed);
 			}
 
 			if (this.tool.StartsWith("Object"))
 			{
-				this.ObjectMove(this.tool, pos);
+				this.ObjectMove(pos, isRightButton, isControlPressed, isShiftPressed);
 			}
 		}
 
-		void ProcessMouseUp(Point pos)
+		void ProcessMouseUp(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
 			//	La souris a été relâchée.
 			if (this.tool == "ToolSelect")
 			{
-				this.SelectUp(pos);
+				this.SelectUp(pos, isRightButton, isControlPressed, isShiftPressed);
 			}
 
 			if (this.tool == "ToolGlobal")
 			{
-				this.GlobalUp(pos);
+				this.GlobalUp(pos, isRightButton, isControlPressed, isShiftPressed);
 			}
 
 			if (this.tool == "ToolEdit")
 			{
-				this.EditUp(pos);
+				this.EditUp(pos, isRightButton, isControlPressed, isShiftPressed);
 			}
 
 			if (this.tool == "ToolZoom")
 			{
-				this.ZoomUp(pos);
+				this.ZoomUp(pos, isRightButton, isControlPressed, isShiftPressed);
 			}
 
 			if (this.tool == "ToolHand")
 			{
-				this.HandUp(pos);
+				this.HandUp(pos, isRightButton, isControlPressed, isShiftPressed);
 			}
 
 			if (this.tool.StartsWith("Object"))
 			{
-				this.ObjectUp(this.tool, pos);
+				this.ObjectUp(pos, isRightButton, isControlPressed, isShiftPressed);
 			}
 		}
 		#endregion
 
 		#region Drawing select
-		protected void SelectDown(Point pos)
+		protected void SelectDown(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
 			//	Sélection ponctuelle, souris pressée.
+			if (!isShiftPressed)
+			{
+				this.selectedObjects.Clear();
+			}
+
+			Widget obj = this.Detect(pos);
+			if (obj != null)
+			{
+				this.selectedObjects.Add(obj);
+			}
+
+			this.Invalidate();
 		}
 
-		protected void SelectMove(Point pos)
+		protected void SelectMove(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
 			//	Sélection ponctuelle, souris déplacée.
 			this.ChangeMouseCursor(MouseCursorType.Arrow);
 		}
 
-		protected void SelectUp(Point pos)
+		protected void SelectUp(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
 			//	Sélection ponctuelle, souris relâchée.
+		}
+
+		protected Widget Detect(Point pos)
+		{
+			//	Détecte l'objet visé par la souris.
+			for (int i=this.panel.Children.Count-1; i>=0; i--)
+			{
+				Widget widget = this.panel.Children[i] as Widget;
+				if (widget.ActualBounds.Contains(pos))
+				{
+					return widget;
+				}
+			}
+			return null;
+		}
+
+		protected void Select(Widget obj)
+		{
+			//	Sélectionne un objet.
+			this.selectedObjects.Clear();
+			this.selectedObjects.Add(obj);
+			this.Invalidate();
+		}
+
+		protected void DeselectAll()
+		{
+			//	Désélectionne tous les objets.
+			if (this.selectedObjects.Count > 0)
+			{
+				this.selectedObjects.Clear();
+				this.Invalidate();
+			}
 		}
 		#endregion
 
 		#region Drawing global
-		protected void GlobalDown(Point pos)
+		protected void GlobalDown(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
 			//	Sélection rectangulaire, souris pressée.
 		}
 
-		protected void GlobalMove(Point pos)
+		protected void GlobalMove(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
 			//	Sélection rectangulaire, souris déplacée.
 			this.ChangeMouseCursor(MouseCursorType.Global);
 		}
 
-		protected void GlobalUp(Point pos)
+		protected void GlobalUp(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
 			//	Sélection rectangulaire, souris relâchée.
 		}
 		#endregion
 
 		#region Drawing edit
-		protected void EditDown(Point pos)
+		protected void EditDown(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
 			//	Edition, souris pressée.
 		}
 
-		protected void EditMove(Point pos)
+		protected void EditMove(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
 			//	Edition, souris déplacée.
 			this.ChangeMouseCursor(MouseCursorType.Edit);
 		}
 
-		protected void EditUp(Point pos)
+		protected void EditUp(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
 			//	Edition, souris relâchée.
 		}
 		#endregion
 
 		#region Drawing zoom
-		protected void ZoomDown(Point pos)
+		protected void ZoomDown(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
 			//	Loupe, souris pressée.
 		}
 
-		protected void ZoomMove(Point pos)
+		protected void ZoomMove(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
 			//	Loupe, souris déplacée.
 			this.ChangeMouseCursor(MouseCursorType.Zoom);
 		}
 
-		protected void ZoomUp(Point pos)
+		protected void ZoomUp(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
 			//	Loupe, souris relâchée.
 		}
 		#endregion
 
 		#region Drawing hand
-		protected void HandDown(Point pos)
+		protected void HandDown(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
 			//	Main, souris pressée.
 		}
 
-		protected void HandMove(Point pos)
+		protected void HandMove(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
 			//	Main, souris déplacée.
 			this.ChangeMouseCursor(MouseCursorType.Hand);
 		}
 
-		protected void HandUp(Point pos)
+		protected void HandUp(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
 			//	Main, souris relâchée.
 		}
 		#endregion
 
 		#region Drawing object
-		protected void ObjectDown(string tool, Point pos)
+		protected void ObjectDown(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
 			//	Dessin d'un objet, souris pressée.
-			this.ContainerLock();
-
-			if (tool == "ObjectLine")
+			if (this.tool == "ObjectLine")
 			{
 				this.creatingObject = new Separator(this.panel);
 				this.creatingObject.PreferredHeight = 1;
 			}
 
-			if (tool == "ObjectButton")
+			if (this.tool == "ObjectButton")
 			{
 				this.creatingObject = new Button(this.panel);
 				this.creatingObject.Text = "Button";
 			}
-			
-			if (tool == "ObjectText")
+
+			if (this.tool == "ObjectText")
 			{
 				this.creatingObject = new TextField(this.panel);
 				this.creatingObject.Text = "TextField";
@@ -310,10 +352,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.creatingObject.Anchor = AnchorStyles.BottomLeft;
 			this.creatingObject.Margins = new Margins(pos.X, 0, 0, pos.Y);
 
-			this.OnChildrenChanged();
+			this.OnChildrenAdded();
 		}
 
-		protected void ObjectMove(string tool, Point pos)
+		protected void ObjectMove(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
 			//	Dessin d'un objet, souris déplacée.
 			this.ChangeMouseCursor(MouseCursorType.Pen);
@@ -324,30 +366,13 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
-		protected void ObjectUp(string tool, Point pos)
+		protected void ObjectUp(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
 			//	Dessin d'un objet, souris relâchée.
+			this.Select(this.creatingObject);
 			this.creatingObject = null;
-			this.ContainerUnlock();
 		}
 		#endregion
-
-		protected void ContainerLock()
-		{
-#if false  // TODO: génère des asserts 'dirty layout' !
-			this.container.MinSize = this.container.ActualSize;
-			this.container.MaxSize = this.container.ActualSize;
-#endif
-		}
-
-		protected void ContainerUnlock()
-		{
-#if false
-			this.container.MinSize = new Size(100, 100);
-			this.container.MaxSize = new Size(10000, 10000);
-#endif
-		}
-
 
 
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
@@ -355,10 +380,16 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Dessine le texte.
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
 
-			Rectangle rect = this.Client.Bounds;
-			rect.Deflate(0.5);
-			graphics.AddRectangle(rect);
-			graphics.RenderSolid(adorner.ColorBorder);
+			if (this.selectedObjects.Count > 0)
+			{
+				foreach ( Widget obj in this.selectedObjects)
+				{
+					Rectangle rect = obj.ActualBounds;
+					rect.Deflate(0.5);
+					graphics.AddRectangle(rect);
+					graphics.RenderSolid(Color.FromRgb(1,0,0));
+				}
+			}
 		}
 
 
@@ -417,33 +448,54 @@ namespace Epsitec.Common.Designer.MyWidgets
 		#endregion
 
 		#region Events
-		protected virtual void OnChildrenChanged()
+		protected virtual void OnChildrenAdded()
 		{
-			EventHandler handler = (EventHandler) this.GetUserEventHandler("ChildrenChanged");
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("ChildrenAdded");
 			if (handler != null)
 			{
 				handler(this);
 			}
 		}
 
-		public event EventHandler ChildrenChanged
+		public event EventHandler ChildrenAdded
 		{
 			add
 			{
-				this.AddUserEventHandler("ChildrenChanged", value);
+				this.AddUserEventHandler("ChildrenAdded", value);
 			}
 			remove
 			{
-				this.RemoveUserEventHandler("ChildrenChanged", value);
+				this.RemoveUserEventHandler("ChildrenAdded", value);
 			}
 		}
 
+		protected virtual void OnChildrenSelected()
+		{
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("ChildrenSelected");
+			if (handler != null)
+			{
+				handler(this);
+			}
+		}
+
+		public event EventHandler ChildrenSelected
+		{
+			add
+			{
+				this.AddUserEventHandler("ChildrenSelected", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("ChildrenSelected", value);
+			}
+		}
 		#endregion
 
 
 		protected UI.Panel					panel;
 		protected string					tool = "ToolSelect";
 		protected Widget					creatingObject;
+		protected List<Widget>				selectedObjects = new List<Widget>();
 
 		protected Image						mouseCursorArrow = null;
 		protected Image						mouseCursorArrowPlus = null;
