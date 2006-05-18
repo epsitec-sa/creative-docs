@@ -107,8 +107,16 @@ namespace Epsitec.Common.Widgets
 
 			return that;
 		}
+
+		public CommandState GetCommandState(string commandName)
+		{
+			Command command = Command.Get (commandName);
+			CommandContext context;
+			
+			return this.GetCommandState (command, out context);
+		}
 		
-		public CommandState FindCommandState(Command command, out CommandContext context)
+		public CommandState GetCommandState(Command command, out CommandContext context)
 		{
 			if ((this.chain != null) &&
 				(this.chain.Count > 0))

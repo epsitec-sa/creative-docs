@@ -110,22 +110,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public bool								Enable
-		{
-			get
-			{
-				return this.enable;
-			}
-			set
-			{
-				if (this.enable != value)
-				{
-					this.enable = value;
-					this.Synchronize ();
-				}
-			}
-		}
-		
 		public bool								Statefull
 		{
 			get
@@ -414,7 +398,6 @@ namespace Epsitec.Common.Widgets
 		private DependencyObjectType			stateObjectType;
 		private int								uniqueId;
 		private ActiveState						activeState = ActiveState.No;
-		private bool							enable = true;
 		private bool							statefull;
 		
 		private Collections.ShortcutCollection	shortcuts;

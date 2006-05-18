@@ -366,7 +366,7 @@ namespace Epsitec.Common.Widgets
 					(chain != null))
 				{
 					CommandContext context;
-					CommandState state = chain.FindCommandState (command, out context);
+					CommandState state = chain.GetCommandState (command, out context);
 
 					if ((state != null) &&
 						(context != null))

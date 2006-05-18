@@ -70,17 +70,17 @@ namespace Epsitec.Common.Document.Menus
 
 
 		#region StaticMethods
-		public static bool MenuAddItem(System.Collections.ArrayList list, string command)
+		public static bool MenuAddItem(CommandContext context, System.Collections.ArrayList list, string command)
 		{
 			//	Ajoute une case dans le menu.
-			Command cs = Common.Widgets.Command.Get (command);
+			CommandState cs = context.CreateCommandState (command);
 			if ( !cs.Enable )  return false;
 
 			ContextMenuItem item = new ContextMenuItem();
-			item.Command = cs.Name;
-			item.Name = cs.Name;
-			item.Icon = Misc.Icon(cs.IconName);
-			item.Text = cs.LongCaption;  // texte sans le raccourci clavier entre parenthèses
+			item.Command = cs.Command.Name;
+			item.Name = cs.Command.Name;
+			item.Icon = Misc.Icon (cs.Command.IconName);
+			item.Text = cs.Command.LongCaption;  // texte sans le raccourci clavier entre parenthèses
 			list.Add(item);
 			return true;
 		}

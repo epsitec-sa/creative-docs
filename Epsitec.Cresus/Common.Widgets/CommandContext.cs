@@ -67,10 +67,7 @@ namespace Epsitec.Common.Widgets
 					this.commandEnables[command.UniqueId] = false;
 				}
 
-				if (command.Enable)
-				{
-					this.NotifyCommandEnableChanged (command);
-				}
+				this.NotifyCommandEnableChanged (command);
 			}
 		}
 

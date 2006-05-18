@@ -512,21 +512,23 @@ namespace Epsitec.Common.Designer
 			this.toolHandState = this.CreateCommandState("ToolHand");
 		}
 
-		protected Command CreateCommandState(string command, params Widgets.Shortcut[] shortcuts)
+		protected CommandState CreateCommandState(string commandName, params Widgets.Shortcut[] shortcuts)
 		{
-			//	Crée un nouveau Command.
-			Command cs = Command.Get (command);
+			//	Crée une nouvelle commande et son command state associé.
+			
+			Command command = Command.Get (commandName);
+			CommandState state = this.CommandContext.CreateCommandState (command);
 			
 			if (shortcuts.Length > 0)
 			{
-				cs.Shortcuts.AddRange (shortcuts);
+				command.Shortcuts.AddRange (shortcuts);
 			}
 
-			cs.IconName    = command;
-			cs.LongCaption = Res.Strings.GetString("Action."+command);
-			cs.Statefull   = (command == "FontBold" || command == "FontItalic" || command == "FontUnderlined");
+			command.IconName    = commandName;
+			command.LongCaption = Res.Strings.GetString("Action."+commandName);
+			command.Statefull   = (commandName == "FontBold" || commandName == "FontItalic" || commandName == "FontUnderlined");
 
-			return cs;
+			return state;
 		}
 		#endregion
 
@@ -845,41 +847,41 @@ namespace Epsitec.Common.Designer
 		protected double						ribbonHeight = 71;
 		protected bool							ignoreChange = false;
 
-		protected Command					newState;
-		protected Command					openState;
-		protected Command					saveState;
-		protected Command					saveAsState;
-		protected Command					closeState;
-		protected Command					cutState;
-		protected Command					copyState;
-		protected Command					pasteState;
-		protected Command					deleteState;
-		protected Command					createState;
-		protected Command					duplicateState;
-		protected Command					upState;
-		protected Command					downState;
-		protected Command					fontBoldState;
-		protected Command					fontItalicState;
-		protected Command					fontUnderlinedState;
-		protected Command					glyphsState;
-		protected Command					filterState;
-		protected Command					searchState;
-		protected Command					searchPrevState;
-		protected Command					searchNextState;
-		protected Command					accessFirstState;
-		protected Command					accessPrevState;
-		protected Command					accessNextState;
-		protected Command					accessLastState;
-		protected Command					modificationAllState;
-		protected Command					modificationClearState;
-		protected Command					modificationPrevState;
-		protected Command					modificationNextState;
-		protected Command					newCultureState;
-		protected Command					deleteCultureState;
-		protected Command					toolSelectState;
-		protected Command					toolGlobalState;
-		protected Command					toolEditState;
-		protected Command					toolZoomState;
-		protected Command					toolHandState;
+		protected CommandState newState;
+		protected CommandState openState;
+		protected CommandState saveState;
+		protected CommandState saveAsState;
+		protected CommandState closeState;
+		protected CommandState cutState;
+		protected CommandState copyState;
+		protected CommandState pasteState;
+		protected CommandState deleteState;
+		protected CommandState createState;
+		protected CommandState duplicateState;
+		protected CommandState upState;
+		protected CommandState downState;
+		protected CommandState fontBoldState;
+		protected CommandState fontItalicState;
+		protected CommandState fontUnderlinedState;
+		protected CommandState glyphsState;
+		protected CommandState filterState;
+		protected CommandState searchState;
+		protected CommandState searchPrevState;
+		protected CommandState searchNextState;
+		protected CommandState accessFirstState;
+		protected CommandState accessPrevState;
+		protected CommandState accessNextState;
+		protected CommandState accessLastState;
+		protected CommandState modificationAllState;
+		protected CommandState modificationClearState;
+		protected CommandState modificationPrevState;
+		protected CommandState modificationNextState;
+		protected CommandState newCultureState;
+		protected CommandState deleteCultureState;
+		protected CommandState toolSelectState;
+		protected CommandState toolGlobalState;
+		protected CommandState toolEditState;
+		protected CommandState toolZoomState;
+		protected CommandState toolHandState;
 	}
 }

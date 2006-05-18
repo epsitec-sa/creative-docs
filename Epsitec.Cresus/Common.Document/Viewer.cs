@@ -3057,7 +3057,7 @@ namespace Epsitec.Common.Document
 			{
 				if ( list.Contains(cmd) )  return;  // déjà dans la liste ?
 
-				Command cs = Common.Widgets.Command.Find (cmd);
+				CommandState cs = this.document.GetCommandState (cmd);
 				if ( cs != null )
 				{
 					if ( !cs.Enable )  return;
@@ -3088,10 +3088,10 @@ namespace Epsitec.Common.Document
 				System.Collections.ArrayList listOrder = new System.Collections.ArrayList();
 
 				exist = false;
-				exist |= Menus.ContextMenuItem.MenuAddItem(listOrder, "OrderUpAll");
-				exist |= Menus.ContextMenuItem.MenuAddItem(listOrder, "OrderUpOne");
-				exist |= Menus.ContextMenuItem.MenuAddItem(listOrder, "OrderDownOne");
-				exist |= Menus.ContextMenuItem.MenuAddItem(listOrder, "OrderDownAll");
+				exist |= Menus.ContextMenuItem.MenuAddItem (this.document.CommandContext, listOrder, "OrderUpAll");
+				exist |= Menus.ContextMenuItem.MenuAddItem (this.document.CommandContext, listOrder, "OrderUpOne");
+				exist |= Menus.ContextMenuItem.MenuAddItem (this.document.CommandContext, listOrder, "OrderDownOne");
+				exist |= Menus.ContextMenuItem.MenuAddItem (this.document.CommandContext, listOrder, "OrderDownAll");
 
 				if ( Menus.ContextMenuItem.IsMenuActive(listOrder) )
 				{
@@ -3116,19 +3116,19 @@ namespace Epsitec.Common.Document
 				System.Collections.ArrayList listOper = new System.Collections.ArrayList();
 
 				exist = false;
-				exist |= Menus.ContextMenuItem.MenuAddItem(listOper, "Rotate90");
-				exist |= Menus.ContextMenuItem.MenuAddItem(listOper, "Rotate180");
-				exist |= Menus.ContextMenuItem.MenuAddItem(listOper, "Rotate270");
+				exist |= Menus.ContextMenuItem.MenuAddItem (this.document.CommandContext, listOper, "Rotate90");
+				exist |= Menus.ContextMenuItem.MenuAddItem (this.document.CommandContext, listOper, "Rotate180");
+				exist |= Menus.ContextMenuItem.MenuAddItem (this.document.CommandContext, listOper, "Rotate270");
 				if ( exist )  Menus.ContextMenuItem.MenuAddSep(listOper);
 
 				exist = false;
-				exist |= Menus.ContextMenuItem.MenuAddItem(listOper, "MirrorH");
-				exist |= Menus.ContextMenuItem.MenuAddItem(listOper, "MirrorV");
+				exist |= Menus.ContextMenuItem.MenuAddItem (this.document.CommandContext, listOper, "MirrorH");
+				exist |= Menus.ContextMenuItem.MenuAddItem (this.document.CommandContext, listOper, "MirrorV");
 				if ( exist )  Menus.ContextMenuItem.MenuAddSep(listOper);
 
 				exist = false;
-				exist |= Menus.ContextMenuItem.MenuAddItem(listOper, "ScaleDiv2");
-				exist |= Menus.ContextMenuItem.MenuAddItem(listOper, "ScaleMul2");
+				exist |= Menus.ContextMenuItem.MenuAddItem (this.document.CommandContext, listOper, "ScaleDiv2");
+				exist |= Menus.ContextMenuItem.MenuAddItem (this.document.CommandContext, listOper, "ScaleMul2");
 
 				if ( Menus.ContextMenuItem.IsMenuActive(listOper) )
 				{
@@ -3153,12 +3153,12 @@ namespace Epsitec.Common.Document
 				System.Collections.ArrayList listGeom = new System.Collections.ArrayList();
 
 				exist = false;
-				exist |= Menus.ContextMenuItem.MenuAddItem(listGeom, "Combine");
-				exist |= Menus.ContextMenuItem.MenuAddItem(listGeom, "Uncombine");
-				exist |= Menus.ContextMenuItem.MenuAddItem(listGeom, "ToBezier");
-				exist |= Menus.ContextMenuItem.MenuAddItem(listGeom, "ToPoly");
-				exist |= Menus.ContextMenuItem.MenuAddItem(listGeom, "ToTextBox2");
-				exist |= Menus.ContextMenuItem.MenuAddItem(listGeom, "Fragment");
+				exist |= Menus.ContextMenuItem.MenuAddItem (this.document.CommandContext, listGeom, "Combine");
+				exist |= Menus.ContextMenuItem.MenuAddItem (this.document.CommandContext, listGeom, "Uncombine");
+				exist |= Menus.ContextMenuItem.MenuAddItem (this.document.CommandContext, listGeom, "ToBezier");
+				exist |= Menus.ContextMenuItem.MenuAddItem (this.document.CommandContext, listGeom, "ToPoly");
+				exist |= Menus.ContextMenuItem.MenuAddItem (this.document.CommandContext, listGeom, "ToTextBox2");
+				exist |= Menus.ContextMenuItem.MenuAddItem (this.document.CommandContext, listGeom, "Fragment");
 
 				if ( Menus.ContextMenuItem.IsMenuActive(listGeom) )
 				{
@@ -3183,11 +3183,11 @@ namespace Epsitec.Common.Document
 				System.Collections.ArrayList listBool = new System.Collections.ArrayList();
 
 				exist = false;
-				exist |= Menus.ContextMenuItem.MenuAddItem(listBool, "BooleanOr");
-				exist |= Menus.ContextMenuItem.MenuAddItem(listBool, "BooleanAnd");
-				exist |= Menus.ContextMenuItem.MenuAddItem(listBool, "BooleanXor");
-				exist |= Menus.ContextMenuItem.MenuAddItem(listBool, "BooleanFrontMinus");
-				exist |= Menus.ContextMenuItem.MenuAddItem(listBool, "BooleanBackMinus");
+				exist |= Menus.ContextMenuItem.MenuAddItem (this.document.CommandContext, listBool, "BooleanOr");
+				exist |= Menus.ContextMenuItem.MenuAddItem (this.document.CommandContext, listBool, "BooleanAnd");
+				exist |= Menus.ContextMenuItem.MenuAddItem (this.document.CommandContext, listBool, "BooleanXor");
+				exist |= Menus.ContextMenuItem.MenuAddItem (this.document.CommandContext, listBool, "BooleanFrontMinus");
+				exist |= Menus.ContextMenuItem.MenuAddItem (this.document.CommandContext, listBool, "BooleanBackMinus");
 
 				if ( Menus.ContextMenuItem.IsMenuActive(listBool) )
 				{
@@ -3207,39 +3207,39 @@ namespace Epsitec.Common.Document
 			if ( globalMenu || nbSel == 0 )
 			{
 				exist = false;
-				exist |= Menus.ContextMenuItem.MenuAddItem(list, "DeselectAll");
-				exist |= Menus.ContextMenuItem.MenuAddItem(list, "SelectAll");
-				exist |= Menus.ContextMenuItem.MenuAddItem(list, "SelectInvert");
+				exist |= Menus.ContextMenuItem.MenuAddItem (this.document.CommandContext, list, "DeselectAll");
+				exist |= Menus.ContextMenuItem.MenuAddItem (this.document.CommandContext, list, "SelectAll");
+				exist |= Menus.ContextMenuItem.MenuAddItem (this.document.CommandContext, list, "SelectInvert");
 				if ( exist )  Menus.ContextMenuItem.MenuAddSep(list);
 
 				exist = false;
-				exist |= Menus.ContextMenuItem.MenuAddItem(list, "HideSel");
-				exist |= Menus.ContextMenuItem.MenuAddItem(list, "HideRest");
-				exist |= Menus.ContextMenuItem.MenuAddItem(list, "HideCancel");
+				exist |= Menus.ContextMenuItem.MenuAddItem (this.document.CommandContext, list, "HideSel");
+				exist |= Menus.ContextMenuItem.MenuAddItem (this.document.CommandContext, list, "HideRest");
+				exist |= Menus.ContextMenuItem.MenuAddItem (this.document.CommandContext, list, "HideCancel");
 				if ( exist )  Menus.ContextMenuItem.MenuAddSep(list);
 
 				exist = false;
-				exist |= Menus.ContextMenuItem.MenuAddItem(list, "ZoomMin");
+				exist |= Menus.ContextMenuItem.MenuAddItem (this.document.CommandContext, list, "ZoomMin");
 				if ( this.document.Type != DocumentType.Pictogram )
 				{
-					exist |= Menus.ContextMenuItem.MenuAddItem(list, "ZoomPage");
-					exist |= Menus.ContextMenuItem.MenuAddItem(list, "ZoomPageWidth");
+					exist |= Menus.ContextMenuItem.MenuAddItem (this.document.CommandContext, list, "ZoomPage");
+					exist |= Menus.ContextMenuItem.MenuAddItem (this.document.CommandContext, list, "ZoomPageWidth");
 				}
-				exist |= Menus.ContextMenuItem.MenuAddItem(list, "ZoomDefault");
-				exist |= Menus.ContextMenuItem.MenuAddItem(list, "ZoomSel");
+				exist |= Menus.ContextMenuItem.MenuAddItem (this.document.CommandContext, list, "ZoomDefault");
+				exist |= Menus.ContextMenuItem.MenuAddItem (this.document.CommandContext, list, "ZoomSel");
 				if ( this.document.Type != DocumentType.Pictogram )
 				{
-					exist |= Menus.ContextMenuItem.MenuAddItem(list, "ZoomSelWidth");
+					exist |= Menus.ContextMenuItem.MenuAddItem (this.document.CommandContext, list, "ZoomSelWidth");
 				}
-				exist |= Menus.ContextMenuItem.MenuAddItem(list, "ZoomPrev");
-				exist |= Menus.ContextMenuItem.MenuAddItem(list, "ZoomSub");
-				exist |= Menus.ContextMenuItem.MenuAddItem(list, "ZoomAdd");
+				exist |= Menus.ContextMenuItem.MenuAddItem (this.document.CommandContext, list, "ZoomPrev");
+				exist |= Menus.ContextMenuItem.MenuAddItem (this.document.CommandContext, list, "ZoomSub");
+				exist |= Menus.ContextMenuItem.MenuAddItem (this.document.CommandContext, list, "ZoomAdd");
 				if ( exist )  Menus.ContextMenuItem.MenuAddSep(list);
 
 				exist = false;
-				exist |= Menus.ContextMenuItem.MenuAddItem(list, "Outside");
-				exist |= Menus.ContextMenuItem.MenuAddItem(list, "Grid");
-				exist |= Menus.ContextMenuItem.MenuAddItem(list, "Magnet");
+				exist |= Menus.ContextMenuItem.MenuAddItem (this.document.CommandContext, list, "Outside");
+				exist |= Menus.ContextMenuItem.MenuAddItem (this.document.CommandContext, list, "Grid");
+				exist |= Menus.ContextMenuItem.MenuAddItem (this.document.CommandContext, list, "Magnet");
 			}
 			else
 			{
@@ -3252,35 +3252,35 @@ namespace Epsitec.Common.Document
 				}
 
 				exist = false;
-				exist |= Menus.ContextMenuItem.MenuAddItem(list, "Delete");
-				exist |= Menus.ContextMenuItem.MenuAddItem(list, "Duplicate");
-				exist |= Menus.ContextMenuItem.MenuAddItem(list, "Group");
-				exist |= Menus.ContextMenuItem.MenuAddItem(list, "Merge");
-				exist |= Menus.ContextMenuItem.MenuAddItem(list, "Extract");
-				exist |= Menus.ContextMenuItem.MenuAddItem(list, "Ungroup");
-				exist |= Menus.ContextMenuItem.MenuAddItem(list, "Inside");
-				exist |= Menus.ContextMenuItem.MenuAddItem(list, "Outside");
+				exist |= Menus.ContextMenuItem.MenuAddItem (this.document.CommandContext, list, "Delete");
+				exist |= Menus.ContextMenuItem.MenuAddItem (this.document.CommandContext, list, "Duplicate");
+				exist |= Menus.ContextMenuItem.MenuAddItem (this.document.CommandContext, list, "Group");
+				exist |= Menus.ContextMenuItem.MenuAddItem (this.document.CommandContext, list, "Merge");
+				exist |= Menus.ContextMenuItem.MenuAddItem (this.document.CommandContext, list, "Extract");
+				exist |= Menus.ContextMenuItem.MenuAddItem (this.document.CommandContext, list, "Ungroup");
+				exist |= Menus.ContextMenuItem.MenuAddItem (this.document.CommandContext, list, "Inside");
+				exist |= Menus.ContextMenuItem.MenuAddItem (this.document.CommandContext, list, "Outside");
 				if ( exist )  Menus.ContextMenuItem.MenuAddSep(list);
 
 				exist = false;
-				exist |= Menus.ContextMenuItem.MenuAddItem(list, "ZoomSel");
+				exist |= Menus.ContextMenuItem.MenuAddItem (this.document.CommandContext, list, "ZoomSel");
 				if ( this.document.Type != DocumentType.Pictogram )
 				{
-					exist |= Menus.ContextMenuItem.MenuAddItem(list, "ZoomSelWidth");
+					exist |= Menus.ContextMenuItem.MenuAddItem (this.document.CommandContext, list, "ZoomSelWidth");
 				}
 				if ( exist )  Menus.ContextMenuItem.MenuAddSep(list);
 
 				exist = false;
-				exist |= Menus.ContextMenuItem.MenuAddItem(list, "HideSel");
-				exist |= Menus.ContextMenuItem.MenuAddItem(list, "HideRest");
-				exist |= Menus.ContextMenuItem.MenuAddItem(list, "HideCancel");
+				exist |= Menus.ContextMenuItem.MenuAddItem (this.document.CommandContext, list, "HideSel");
+				exist |= Menus.ContextMenuItem.MenuAddItem (this.document.CommandContext, list, "HideRest");
+				exist |= Menus.ContextMenuItem.MenuAddItem (this.document.CommandContext, list, "HideCancel");
 				if ( exist )  Menus.ContextMenuItem.MenuAddSep(list);
 
 				exist = false;
-				exist |= Menus.ContextMenuItem.MenuAddSubmenu(list, this.contextMenuOrder, Misc.Icon("OrderUpAll"), Res.Strings.Action.OrderMain);
-				exist |= Menus.ContextMenuItem.MenuAddSubmenu(list, this.contextMenuOper,  Misc.Icon("MoveH"),      Res.Strings.Action.OperationMain);
-				exist |= Menus.ContextMenuItem.MenuAddSubmenu(list, this.contextMenuGeom,  Misc.Icon("Combine"),    Res.Strings.Action.GeometryMain);
-				exist |= Menus.ContextMenuItem.MenuAddSubmenu(list, this.contextMenuBool,  Misc.Icon("BooleanOr"),  Res.Strings.Action.BooleanMain);
+				exist |= Menus.ContextMenuItem.MenuAddSubmenu (list, this.contextMenuOrder, Misc.Icon ("OrderUpAll"), Res.Strings.Action.OrderMain);
+				exist |= Menus.ContextMenuItem.MenuAddSubmenu (list, this.contextMenuOper, Misc.Icon ("MoveH"), Res.Strings.Action.OperationMain);
+				exist |= Menus.ContextMenuItem.MenuAddSubmenu (list, this.contextMenuGeom, Misc.Icon ("Combine"), Res.Strings.Action.GeometryMain);
+				exist |= Menus.ContextMenuItem.MenuAddSubmenu (list, this.contextMenuBool, Misc.Icon ("BooleanOr"), Res.Strings.Action.BooleanMain);
 			}
 
 			this.contextMenu = new VMenu();
