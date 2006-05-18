@@ -508,6 +508,9 @@ namespace Epsitec.Common.Designer
 			this.toolEditState = this.CreateCommandState("ToolEdit");
 			this.toolZoomState = this.CreateCommandState("ToolZoom");
 			this.toolHandState = this.CreateCommandState("ToolHand");
+			this.objectLineState = this.CreateCommandState("ObjectLine");
+			this.objectButtonState = this.CreateCommandState("ObjectButton");
+			this.objectTextState = this.CreateCommandState("ObjectText");
 		}
 
 		protected Command CreateCommandState(string command, params Widgets.Shortcut[] shortcuts)
@@ -879,5 +882,8 @@ namespace Epsitec.Common.Designer
 		protected Command						toolEditState;
 		protected Command						toolZoomState;
 		protected Command						toolHandState;
+		protected Command						objectLineState;
+		protected Command						objectButtonState;
+		protected Command						objectTextState;
 	}
 }

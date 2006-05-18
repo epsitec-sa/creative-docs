@@ -48,6 +48,19 @@ namespace Epsitec.Common.Widgets
 
 
 		#region ChildrenLayoutMode
+		public Layouts.LayoutMode ChildrenLayoutMode
+		{
+			get
+			{
+				return (Layouts.LayoutMode) this.GetValue(AbstractGroup.ChildrenLayoutModeProperty);
+			}
+			
+			set
+			{
+				this.SetValue(AbstractGroup.ChildrenLayoutModeProperty, value);
+			}
+		}
+
 		public static Layouts.LayoutMode GetChildrenLayoutMode(DependencyObject o)
 		{
 			return (Layouts.LayoutMode) o.GetValue(AbstractGroup.ChildrenLayoutModeProperty);
