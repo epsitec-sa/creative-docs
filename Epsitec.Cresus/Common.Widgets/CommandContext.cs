@@ -211,7 +211,7 @@ namespace Epsitec.Common.Widgets
 		{
 			CommandState state = this.FindCommandState (command);
 
-			if (state == null)
+			if (state != null)
 			{
 				return state;
 			}
