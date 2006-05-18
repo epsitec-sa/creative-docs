@@ -154,6 +154,13 @@
     <EmbeddedResource Include="Images\ObjectButton.icon" />
     <EmbeddedResource Include="Images\ObjectText.icon" />
     <EmbeddedResource Include="Images\ObjectLine.icon" />
+    <EmbeddedResource Include="Images\CursorArrow.icon" />
+    <EmbeddedResource Include="Images\CursorArrowPlus.icon" />
+    <EmbeddedResource Include="Images\CursorGlobal.icon" />
+    <EmbeddedResource Include="Images\CursorHand.icon" />
+    <EmbeddedResource Include="Images\CursorPen.icon" />
+    <EmbeddedResource Include="Images\CursorZoom.icon" />
+    <EmbeddedResource Include="Images\CursorEdit.icon" />
     <None Include="Resources\Designer\Strings.00.resource" />
     <None Include="Resources\Designer\Strings.en.resource" />
   </ItemGroup>
