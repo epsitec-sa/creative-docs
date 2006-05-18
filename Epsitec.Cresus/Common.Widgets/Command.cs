@@ -441,6 +441,7 @@ namespace Epsitec.Common.Widgets
 		protected virtual void InitializeDefaultState(CommandState state)
 		{
 			state.DefineCommand (this);
+			TypeRosetta.SetTypeObject (state, this);
 		}
 
 		public static string[] SplitGroupNames(string groups)

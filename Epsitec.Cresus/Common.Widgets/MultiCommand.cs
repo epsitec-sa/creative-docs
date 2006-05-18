@@ -100,7 +100,7 @@ namespace Epsitec.Common.Widgets
 				MultiState.SelectedCommandProperty = DependencyProperty.Register ("SelectedCommand", typeof (Command), typeof (MultiState), metadata);
 			}
 
-			public static DependencyProperty SelectedCommandProperty;
+			public static readonly DependencyProperty SelectedCommandProperty;
 		}
 
 		#endregion

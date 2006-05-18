@@ -427,9 +427,9 @@ namespace Epsitec.Common.Types
 		
 		#endregion
 
-		public static DependencyProperty ParentProperty = DependencyProperty.RegisterReadOnly ("Parent", typeof (DependencyObject), typeof (DependencyObjectTree));
-		public static DependencyProperty ChildrenProperty = DependencyProperty.RegisterReadOnly ("Children", typeof (ICollection<DependencyObject>), typeof (DependencyObjectTree));
-		public static DependencyProperty HasChildrenProperty = DependencyProperty.RegisterReadOnly ("HasChildren", typeof (bool), typeof (DependencyObjectTree));
-		public static DependencyProperty NameProperty = DependencyProperty.Register ("Name", typeof (string), typeof (DependencyObjectTree));
+		public static readonly DependencyProperty ParentProperty = DependencyProperty.RegisterReadOnly ("Parent", typeof (DependencyObject), typeof (DependencyObjectTree));
+		public static readonly DependencyProperty ChildrenProperty = DependencyProperty.RegisterReadOnly ("Children", typeof (ICollection<DependencyObject>), typeof (DependencyObjectTree));
+		public static readonly DependencyProperty HasChildrenProperty = DependencyProperty.RegisterReadOnly ("HasChildren", typeof (bool), typeof (DependencyObjectTree));
+		public static readonly DependencyProperty NameProperty = DependencyProperty.Register ("Name", typeof (string), typeof (DependencyObjectTree));
 	}
 }

@@ -49,14 +49,24 @@ namespace Epsitec.Common.Types
 				return null;
 			}
 
+			DependencyObject dependencyObject = value as DependencyObject;
+
+			if (dependencyObject != null)
+			{
+				object type = TypeRosetta.GetTypeObject (dependencyObject);
+
+				if (type != null)
+				{
+					return type;
+				}
+			}
+
 			StructuredRecord structuredRecord = value as StructuredRecord;
 
 			if (structuredRecord != null)
 			{
 				return structuredRecord.StructuredRecordType;
 			}
-
-			DependencyObject dependencyObject = value as DependencyObject;
 
 			if (dependencyObject != null)
 			{
@@ -65,5 +75,23 @@ namespace Epsitec.Common.Types
 
 			return value.GetType ();
 		}
+
+
+		public static object GetTypeObject(DependencyObject obj)
+		{
+			return obj.GetValue (TypeRosetta.TypeObjectProperty);
+		}
+
+		public static void SetTypeObject(DependencyObject obj, object value)
+		{
+			obj.SetValue (TypeRosetta.TypeObjectProperty, value);
+		}
+
+		public static void ClearTypeObject(DependencyObject obj)
+		{
+			obj.ClearValueBase (TypeRosetta.TypeObjectProperty);
+		}
+		
+		public static readonly DependencyProperty TypeObjectProperty = DependencyProperty.RegisterAttached ("TypeObject", typeof (object), typeof (TypeRosetta));
 	}
 }

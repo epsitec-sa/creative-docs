@@ -291,6 +291,11 @@ namespace Epsitec.Common.Support
 			Assert.AreEqual ("TestCmdA", type[0].Name);
 			Assert.IsFalse (type.IsCustomizable);
 			Assert.IsFalse (type.IsDefinedAsFlags);
+
+			CommandContext context = new CommandContext ();
+			CommandState state = context.GetCommandState (command);
+
+			Assert.AreEqual (command, Types.TypeRosetta.GetTypeObjectFromValue (state));
 		}
 
 		private void HandleCommandTestMulti(CommandDispatcher sender, CommandEventArgs e)
