@@ -323,7 +323,7 @@
     <Compile Include="CommandEvent.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="CommandState.cs">
+    <Compile Include="Command.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Controllers\AbstractController.cs" />
