@@ -188,12 +188,51 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		public CommandState CreateCommandState(string commandName)
+		{
+			return this.CreateCommandState (Command.Find (commandName));
+		}
+		
+		public CommandState CreateCommandState(Command command)
+		{
+			CommandState state;
+
+			if (this.TryGetCommandState (command, out state))
+			{
+				return state;
+			}
+			else
+			{
+				state = command.CreateState ();
+
+				this.SetCommandState (command, state);
+
+				return state;
+			}
+		}
+
 		internal bool TryGetCommandState(Command command, out CommandState state)
 		{
-			//	TODO: retrieve CommandState in current context
-			
-			state = null;
-			return false;
+			if (this.states.TryGetValue (command.UniqueId, out state))
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+
+		internal void SetCommandState(Command command, CommandState state)
+		{
+			if (state == null)
+			{
+				this.states.Remove (command.UniqueId);
+			}
+			else
+			{
+				this.states[command.UniqueId] = state;
+			}
 		}
 		
 		internal void UpdateDispatcherChain(Visual visual)
@@ -350,6 +389,7 @@ namespace Epsitec.Common.Widgets
 		private Dictionary<int, bool> commandEnables = new Dictionary<int, bool> ();
 		private Dictionary<string, int> groupDisables = new Dictionary<string, int> ();
 		private Dictionary<long, Record> records = new Dictionary<long, Record> ();
+		private Dictionary<long, CommandState> states = new Dictionary<long, CommandState> ();
 		private CommandDispatcherChain dispatcherChain;
 	}
 }

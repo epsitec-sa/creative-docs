@@ -219,11 +219,15 @@ namespace Epsitec.Common.Widgets
 		{
 			if (this.stateObjectType != null)
 			{
-				return this.stateObjectType.CreateEmptyObject () as CommandState;
+				CommandState state = this.stateObjectType.CreateEmptyObject () as CommandState;
+				
+				state.DefineCommand (this);
+				
+				return state;
 			}
 			else
 			{
-				return Command.CreateEmptyState ();
+				return Command.CreateEmptyState (this);
 			}
 		}
 
@@ -305,7 +309,7 @@ namespace Epsitec.Common.Widgets
 
 		private class EmptyState : CommandState
 		{
-			public EmptyState()
+			public EmptyState(Command command) : base (command)
 			{
 			}
 		}
@@ -375,9 +379,9 @@ namespace Epsitec.Common.Widgets
 			return string.Join ("|", groups);
 		}
 
-		public static CommandState CreateEmptyState()
+		public static CommandState CreateEmptyState(Command command)
 		{
-			return new EmptyState ();
+			return new EmptyState (command);
 		}
 		 
 		public static void SetAdvancedState(DependencyObject obj, string value)

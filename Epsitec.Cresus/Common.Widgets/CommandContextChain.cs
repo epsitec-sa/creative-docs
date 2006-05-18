@@ -113,6 +113,8 @@ namespace Epsitec.Common.Widgets
 			if ((this.chain != null) &&
 				(this.chain.Count > 0))
 			{
+				CommandContext root = null;
+				
 				foreach (System.WeakReference item in this.chain)
 				{
 					context = item.Target as CommandContext;
@@ -125,7 +127,19 @@ namespace Epsitec.Common.Widgets
 						{
 							return state;
 						}
+
+						root = context;
 					}
+				}
+
+				if (root != null)
+				{
+					//	Create the command state in the root-level context.
+
+					context = root;
+					CommandState state = context.CreateCommandState (command);
+					
+					return state;
 				}
 			}
 

@@ -181,6 +181,14 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
+		public CommandState GetCommandState(string command)
+		{
+			CommandContext context = this.CommandContext;
+			CommandState state = context.CreateCommandState (command);
+
+			return state;
+		}
+		
 		protected void CreateLayout()
 		{
 			this.ribbonBook = new RibbonBook(this.window.Root);
@@ -462,12 +470,6 @@ namespace Epsitec.Common.Designer
 		{
 			if ( !this.IsCurrentModule )  return;
 			this.CurrentModule.Modifier.ActiveViewer.DoFont(e.CommandName);
-		}
-
-		public Command GetCommandState(string command)
-		{
-			//	Retourne le Command d'une commande.
-			return Command.Find (command);
 		}
 
 		protected void InitCommands()

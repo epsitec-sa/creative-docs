@@ -10,8 +10,21 @@ namespace Epsitec.Common.Widgets
 {
 	public class CommandState : DependencyObject
 	{
-		public CommandState()
+		internal CommandState()
 		{
+		}
+		
+		public CommandState(Command command)
+		{
+			this.command = command;
+		}
+		
+		public Command							Command
+		{
+			get
+			{
+				return this.command;
+			}
 		}
 		
 		public bool								Enable
@@ -62,6 +75,11 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		internal void DefineCommand(Command command)
+		{
+			this.command = command;
+		}
+		
 		private void Synchronize()
 		{
 			CommandCache.Default.InvalidateState (this);
@@ -86,6 +104,7 @@ namespace Epsitec.Common.Widgets
 
 		public static readonly DependencyProperty AdvancedStateProperty = DependencyProperty.RegisterAttached ("AdvancedState", typeof (string), typeof (CommandState), new DependencyPropertyMetadata (null));
 
+		private Command							command;
 		private ActiveState						activeState = ActiveState.No;
 		private bool							enable = true;
 	}
