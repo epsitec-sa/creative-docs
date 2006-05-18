@@ -58,7 +58,7 @@ namespace Epsitec.Common.Widgets
 			o.SetValue(AbstractGroup.ChildrenLayoutModeProperty, value);
 		}
 
-		public static readonly DependencyProperty ChildrenLayoutModeProperty = DependencyProperty.RegisterAttached("ChildrenLayoutMode", typeof(Layouts.LayoutMode), typeof(AbstractGroup), new DependencyPropertyMetadata(false));
+		public static readonly DependencyProperty ChildrenLayoutModeProperty = DependencyProperty.Register("ChildrenLayoutMode", typeof(Layouts.LayoutMode), typeof(AbstractGroup), new DependencyPropertyMetadata(Layouts.LayoutMode.None));
 		#endregion
 	}
 }
