@@ -89,14 +89,25 @@ namespace Epsitec.Common.Support
 			Assert.IsFalse (v3.Enable);
 			Assert.AreEqual (stateA, chain.GetCommandState (command.Name));
 
+			//	En créant un stateB dans contextB, on va se trouver plus près de v3
+			//	dans la chaîne des contextes des commandes. Du coup, c'est l'état de
+			//	stateB (enabled) qui l'emportera sur stateA (disabled) :
+			
 			stateB = contextB.GetCommandState (command);
 
 			Assert.AreNotEqual (stateA, stateB);
-			Assert.AreEqual (stateB, chain.GetCommandState (command.Name));
 			
 			Assert.IsFalse(v3.Enable);
 			CommandCache.Default.Synchronize ();
 			Assert.IsTrue (v3.Enable);
+			Assert.AreEqual (stateB, chain.GetCommandState (command.Name));
+
+			contextB.ClearCommandState (command);
+			
+			Assert.IsTrue (v3.Enable);
+			CommandCache.Default.Synchronize ();
+			Assert.IsFalse (v3.Enable);
+			Assert.AreEqual (stateA, chain.GetCommandState (command.Name));
 		}
 		
 		[Test] public void CheckDispatch()

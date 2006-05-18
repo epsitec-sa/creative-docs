@@ -225,6 +225,16 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		/// <summary>
+		/// Clears the state of the command; the <c>CommandState</c> associated with the command will
+		/// be removed from the command context.
+		/// </summary>
+		/// <param name="command">The command.</param>
+		public void ClearCommandState(Command command)
+		{
+			this.SetCommandState (command, null);
+		}
+		
 		#region Internal Methods
 		
 		internal CommandState FindCommandState(Command command)
