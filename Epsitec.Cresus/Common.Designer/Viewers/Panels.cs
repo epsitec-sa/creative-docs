@@ -65,6 +65,9 @@ namespace Epsitec.Common.Designer.Viewers
 			this.container.ChildrenLayoutMode = Widgets.Layouts.LayoutMode.Anchored;
 			this.container.Margins = new Margins(1, 1, 1, 1);
 			this.container.Dock = DockStyle.Fill;
+			this.container.MouseDown += new EventHandler<Point>(this.HandleContainerMouseDown);
+			this.container.MouseMove += new EventHandler<Point>(this.HandleContainerMouseMove);
+			this.container.MouseUp += new EventHandler<Point>(this.HandleContainerMouseUp);
 
 			this.tabBook = new TabBook(this);
 			this.tabBook.PreferredWidth = 150;
@@ -438,7 +441,67 @@ namespace Epsitec.Common.Designer.Viewers
 			return newName;
 		}
 
-		
+
+		#region Drawing select
+		protected void SelectDown(Point pos)
+		{
+			//	Sélection, souris pressée.
+		}
+
+		protected void SelectMove(Point pos)
+		{
+			//	Sélection, souris déplacée.
+		}
+
+		protected void SelectUp(Point pos)
+		{
+			//	Sélection, souris relâchée.
+		}
+		#endregion
+
+		#region Drawing object
+		protected void ObjectDown(string tool, Point pos)
+		{
+			//	Dessin d'un objet, souris pressée.
+			if (tool == "ObjectLine")
+			{
+				this.creatingObject = new Separator(this.container);
+				this.creatingObject.PreferredHeight = 1;
+			}
+
+			if (tool == "ObjectButton")
+			{
+				this.creatingObject = new Button(this.container);
+				this.creatingObject.Text = "Button";
+			}
+			
+			if (tool == "ObjectText")
+			{
+				this.creatingObject = new TextField(this.container);
+				this.creatingObject.Text = "TextField";
+			}
+
+			this.creatingObject.Anchor = AnchorStyles.BottomLeft;
+			this.creatingObject.Margins = new Margins(pos.X, 0, 0, pos.Y);
+		}
+
+		protected void ObjectMove(string tool, Point pos)
+		{
+			//	Dessin d'un objet, souris déplacée.
+			if (this.creatingObject != null)
+			{
+				this.creatingObject.Margins = new Margins(pos.X, 0, 0, pos.Y);
+			}
+		}
+
+		protected void ObjectUp(string tool, Point pos)
+		{
+			//	Dessin d'un objet, souris relâchée.
+			this.creatingObject = null;
+		}
+		#endregion
+
+
 		void HandleArrayCellsQuantityChanged(object sender)
 		{
 			//	Le nombre de lignes a changé.
@@ -470,6 +533,48 @@ namespace Epsitec.Common.Designer.Viewers
 			this.module.Modifier.IsDirty = true;
 		}
 
+		void HandleContainerMouseDown(object sender, Point pos)
+		{
+			//	La souris a été pressée dans l'objet 'container'.
+			if (this.tool == "ToolSelect")
+			{
+				this.SelectDown(pos);
+			}
+
+			if (this.tool.StartsWith("Object"))
+			{
+				this.ObjectDown(this.tool, pos);
+			}
+		}
+
+		void HandleContainerMouseMove(object sender, Point pos)
+		{
+			//	La souris a été déplacée dans l'objet 'container'.
+			if (this.tool == "ToolSelect")
+			{
+				this.SelectMove(pos);
+			}
+
+			if (this.tool.StartsWith("Object"))
+			{
+				this.ObjectMove(this.tool, pos);
+			}
+		}
+
+		void HandleContainerMouseUp(object sender, Point pos)
+		{
+			//	La souris a été relâchée dans l'objet 'container'.
+			if (this.tool == "ToolSelect")
+			{
+				this.SelectUp(pos);
+			}
+
+			if (this.tool.StartsWith("Object"))
+			{
+				this.ObjectUp(this.tool, pos);
+			}
+		}
+
 
 		protected TextFieldEx				labelEdit;
 		protected VToolBar					toolBar;
@@ -477,5 +582,6 @@ namespace Epsitec.Common.Designer.Viewers
 		protected TabBook					tabBook;
 		protected TabPage					tabPageProperties;
 		protected TabPage					tabPageObjects;
+		protected Widget					creatingObject;
 	}
 }
