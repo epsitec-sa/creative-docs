@@ -16,7 +16,7 @@ namespace Epsitec.Common.Designer.Viewers
 			int tabIndex = 0;
 
 			Widget left = new Widget(this);
-			left.MinWidth = 0;
+			left.MinWidth = 80;
 			left.MaxWidth = 400;
 			left.PreferredWidth = 200;
 			left.Dock = DockStyle.Left;
@@ -45,6 +45,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			VSplitter splitter = new VSplitter(this);
 			splitter.Dock = DockStyle.Left;
+			VSplitter.SetAutoCollapseEnable(splitter, true);
 
 			this.toolBar = new VToolBar(this);
 			this.toolBar.Margins = new Margins(0, 0, 0, 0);
