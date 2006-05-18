@@ -38,6 +38,19 @@ namespace Epsitec.Common.Designer.MyWidgets
 		}
 
 
+		public UI.Panel					Panel
+		{
+			get
+			{
+				return this.panel;
+			}
+
+			set
+			{
+				this.panel = value;
+			}
+		}
+
 		public string					Tool
 		{
 			get
@@ -76,6 +89,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
+		#region ProcessMouse
 		void ProcessMouseDown(Point pos)
 		{
 			//	La souris a été pressée.
@@ -177,7 +191,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.ObjectUp(this.tool, pos);
 			}
 		}
-
+		#endregion
 
 		#region Drawing select
 		protected void SelectDown(Point pos)
@@ -277,19 +291,19 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			if (tool == "ObjectLine")
 			{
-				this.creatingObject = new Separator(this);
+				this.creatingObject = new Separator(this.panel);
 				this.creatingObject.PreferredHeight = 1;
 			}
 
 			if (tool == "ObjectButton")
 			{
-				this.creatingObject = new Button(this);
+				this.creatingObject = new Button(this.panel);
 				this.creatingObject.Text = "Button";
 			}
 			
 			if (tool == "ObjectText")
 			{
-				this.creatingObject = new TextField(this);
+				this.creatingObject = new TextField(this.panel);
 				this.creatingObject.Text = "TextField";
 			}
 
@@ -427,7 +441,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 		#endregion
 
 
-		protected string					tool;
+		protected UI.Panel					panel;
+		protected string					tool = "ToolSelect";
 		protected Widget					creatingObject;
 
 		protected Image						mouseCursorArrow = null;
