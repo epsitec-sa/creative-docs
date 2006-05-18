@@ -62,6 +62,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			this.container = new MyWidgets.Frame(this);
 			this.container.MinWidth = 100;
+			this.container.MinHeight = 100;
 			this.container.ChildrenLayoutMode = Widgets.Layouts.LayoutMode.Anchored;
 			this.container.Margins = new Margins(1, 1, 1, 1);
 			this.container.Dock = DockStyle.Fill;
@@ -463,6 +464,8 @@ namespace Epsitec.Common.Designer.Viewers
 		protected void ObjectDown(string tool, Point pos)
 		{
 			//	Dessin d'un objet, souris pressée.
+			this.ContainerLock();
+
 			if (tool == "ObjectLine")
 			{
 				this.creatingObject = new Separator(this.container);
@@ -498,8 +501,25 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			//	Dessin d'un objet, souris relâchée.
 			this.creatingObject = null;
+			this.ContainerUnlock();
 		}
 		#endregion
+
+		protected void ContainerLock()
+		{
+#if false  // TODO: génère des asserts 'dirty layout' !
+			this.container.MinSize = this.container.ActualSize;
+			this.container.MaxSize = this.container.ActualSize;
+#endif
+		}
+
+		protected void ContainerUnlock()
+		{
+#if false
+			this.container.MinSize = new Size(100, 100);
+			this.container.MaxSize = new Size(10000, 10000);
+#endif
+		}
 
 
 		void HandleArrayCellsQuantityChanged(object sender)
