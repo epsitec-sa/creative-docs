@@ -87,6 +87,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.panelFrame.Anchor = AnchorStyles.All;
 			this.panelFrame.Panel = this.panelWidget;
 			this.panelFrame.ChildrenAdded += new EventHandler(this.HandlePanelFrameChildrenAdded);
+			this.panelFrame.ChildrenSelected += new EventHandler(this.HandlePanelFrameChildrenSelected);
 
 			this.tabBook = new TabBook(this);
 			this.tabBook.PreferredWidth = 150;
@@ -400,6 +401,15 @@ namespace Epsitec.Common.Designer.Viewers
 			this.GetCommandState("FontUnderlined").Enable = false;
 			this.GetCommandState("Glyphs").Enable = false;
 
+			int objSelected, objCount;
+			this.panelFrame.GetSelectionInfo(out objSelected, out objCount);
+
+			this.GetCommandState("PanelDelete").Enable = (objSelected != 0);
+			this.GetCommandState("PanelDuplicate").Enable = (objSelected != 0);
+			this.GetCommandState("PanelDeselectAll").Enable = (objSelected != 0);
+			this.GetCommandState("PanelSelectAll").Enable = (objSelected < objCount);
+			this.GetCommandState("PanelSelectInvert").Enable = (objCount > 0);
+
 			this.module.MainWindow.UpdateInfoCurrentModule();
 			this.module.MainWindow.UpdateInfoAccess();
 		}
@@ -508,6 +518,12 @@ namespace Epsitec.Common.Designer.Viewers
 
 		void HandlePanelFrameChildrenAdded(object sender)
 		{
+			this.UpdateCommands();
+		}
+
+		void HandlePanelFrameChildrenSelected(object sender)
+		{
+			this.UpdateCommands();
 		}
 
 

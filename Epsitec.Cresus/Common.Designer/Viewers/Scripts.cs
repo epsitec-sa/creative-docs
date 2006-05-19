@@ -162,6 +162,12 @@ namespace Epsitec.Common.Designer.Viewers
 			this.GetCommandState("FontUnderlined").Enable = false;
 			this.GetCommandState("Glyphs").Enable = false;
 
+			this.GetCommandState("PanelDelete").Enable = false;
+			this.GetCommandState("PanelDuplicate").Enable = false;
+			this.GetCommandState("PanelDeselectAll").Enable = false;
+			this.GetCommandState("PanelSelectAll").Enable = false;
+			this.GetCommandState("PanelSelectInvert").Enable = false;
+
 			this.module.MainWindow.UpdateInfoCurrentModule();
 			this.module.MainWindow.UpdateInfoAccess();
 		}
