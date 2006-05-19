@@ -90,9 +90,18 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
+		public void GetSelectionInfo(out int selected, out int count)
+		{
+			//	Donne des informations sur la sélection en cours.
+			selected = this.selectedObjects.Count;
+			count = this.panel.Children.Count;
+		}
+
 
 		protected override void ProcessMessage(Message message, Drawing.Point pos)
 		{
+			System.Diagnostics.Debug.WriteLine(message.Type.ToString());
+
 			switch (message.Type)
 			{
 				case MessageType.MouseDown:
