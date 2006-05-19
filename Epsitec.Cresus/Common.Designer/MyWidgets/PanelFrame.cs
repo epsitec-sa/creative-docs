@@ -431,22 +431,77 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void GlobalDown(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
 			//	Sélection rectangulaire, souris pressée.
+			Widget obj = this.Detect(pos);  // objet visé par la souris
+
+			this.startingPos = pos;
+			this.dragging = false;
+			this.rectangling = false;
+
+			if (!isShiftPressed)  // touche Shift relâchée ?
+			{
+				if (obj != null && this.selectedObjects.Contains(obj))
+				{
+					this.dragging = true;
+					return;
+				}
+				this.selectedObjects.Clear();
+			}
+
+			this.rectangling = true;
+
+			this.OnChildrenSelected();
+			this.Invalidate();
 		}
 
 		protected void GlobalMove(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
 			//	Sélection rectangulaire, souris déplacée.
-			this.ChangeMouseCursor(MouseCursorType.Global);
+			if (isShiftPressed)
+			{
+				this.ChangeMouseCursor(MouseCursorType.ArrowPlus);
+			}
+			else
+			{
+				this.ChangeMouseCursor(MouseCursorType.Global);
+			}
+
+			if (this.dragging)
+			{
+				Point move = pos-this.startingPos;
+				this.startingPos = pos;
+				this.MoveSelection(move);
+				this.HiliteRectangle(Rectangle.Empty);
+			}
+			else if (this.rectangling)
+			{
+				this.SelectRectangle(new Rectangle(this.startingPos, pos));
+			}
 		}
 
 		protected void GlobalUp(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
 			//	Sélection rectangulaire, souris relâchée.
+			this.dragging = false;
+
+			if (this.rectangling)
+			{
+				this.SelectObjectsInRectangle(this.selectedRectangle);
+				this.SelectRectangle(Rectangle.Empty);
+				this.rectangling = false;
+			}
 		}
 
 		protected void GlobalKeyChanged(bool isControlPressed, bool isShiftPressed)
 		{
 			//	Sélection rectangulaire, touche pressée ou relâchée.
+			if (isShiftPressed)
+			{
+				this.ChangeMouseCursor(MouseCursorType.ArrowPlus);
+			}
+			else
+			{
+				this.ChangeMouseCursor(MouseCursorType.Global);
+			}
 		}
 		#endregion
 
