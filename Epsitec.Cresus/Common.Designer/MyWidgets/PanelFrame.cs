@@ -87,6 +87,59 @@ namespace Epsitec.Common.Designer.MyWidgets
 				case "PanelSelectInvert":
 					this.SelectInvert();
 					break;
+
+				case "AlignLeft":
+					this.SelectAlign(-1, false);
+					break;
+
+				case "AlignCenterX":
+					this.SelectAlign(0, false);
+					break;
+
+				case "AlignRight":
+					this.SelectAlign(1, false);
+					break;
+
+				case "AlignTop":
+					this.SelectAlign(1, true);
+					break;
+
+				case "AlignCenterY":
+					this.SelectAlign(0, true);
+					break;
+
+				case "AlignBottom":
+					this.SelectAlign(-1, true);
+					break;
+
+				case "AdjustWidth":
+					this.SelectAdjust(false);
+					break;
+
+				case "AdjustHeight":
+					this.SelectAdjust(true);
+					break;
+
+				case "AlignGrid":
+					this.SelectAlignGrid();
+					break;
+
+				case "OrderUpAll":
+					this.SelectOrder(10000);
+					break;
+
+				case "OrderDownAll":
+					this.SelectOrder(-10000);
+					break;
+
+				case "OrderUpOne":
+					this.SelectOrder(1);
+					break;
+
+				case "OrderDownOne":
+					this.SelectOrder(-1);
+					break;
+
 			}
 		}
 
@@ -462,6 +515,194 @@ namespace Epsitec.Common.Designer.MyWidgets
 			toRepaint.Inflate(1);
 			this.Invalidate(toRepaint);
 			this.Invalidate();  // TODO: faire mieux !
+		}
+
+		protected void SelectAlign(int direction, bool isVertical)
+		{
+			//	Aligne tous les objets sélectionnés.
+			Rectangle bounds = this.SelectBounds;
+
+			if (isVertical)
+			{
+				if (direction < 0)  // en bas ?
+				{
+					foreach (Widget obj in this.selectedObjects)
+					{
+						this.ObjectPositionY(obj, bounds.Bottom);
+					}
+				}
+				else if (direction > 0)  // en haut ?
+				{
+					foreach (Widget obj in this.selectedObjects)
+					{
+						this.ObjectPositionY(obj, bounds.Top-this.ObjectSizeY(obj));
+					}
+				}
+				else  // centré verticalement ?
+				{
+					foreach (Widget obj in this.selectedObjects)
+					{
+						this.ObjectPositionY(obj, bounds.Center.Y-this.ObjectSizeY(obj)/2);
+					}
+				}
+			}
+			else
+			{
+				if (direction < 0)  // à gauche ?
+				{
+					foreach (Widget obj in this.selectedObjects)
+					{
+						this.ObjectPositionX(obj, bounds.Left);
+					}
+				}
+				else if (direction > 0)  // à droite ?
+				{
+					foreach (Widget obj in this.selectedObjects)
+					{
+						this.ObjectPositionX(obj, bounds.Right-this.ObjectSizeX(obj));
+					}
+				}
+				else  // centré horizontalement ?
+				{
+					foreach (Widget obj in this.selectedObjects)
+					{
+						this.ObjectPositionX(obj, bounds.Center.X-this.ObjectSizeX(obj)/2);
+					}
+				}
+			}
+
+			this.Invalidate();
+		}
+
+		protected void SelectAdjust(bool isVertical)
+		{
+			//	Ajuste les dimensions de tous les objets sélectionnés.
+			Rectangle bounds = this.SelectBounds;
+
+			if (isVertical)
+			{
+				foreach (Widget obj in this.selectedObjects)
+				{
+					this.ObjectPositionY(obj, bounds.Bottom);
+					this.ObjectSizeY(obj, bounds.Height);
+				}
+			}
+			else
+			{
+				foreach (Widget obj in this.selectedObjects)
+				{
+					this.ObjectPositionX(obj, bounds.Left);
+					this.ObjectSizeX(obj, bounds.Width);
+				}
+			}
+
+			this.Invalidate();
+		}
+
+		protected void SelectAlignGrid()
+		{
+			//	Aligne sur la grille tous les objets sélectionnés.
+			//	TODO:
+		}
+
+		protected void SelectOrder(int direction)
+		{
+			//	Modifie l'ordre de tous les objets sélectionnés.
+		}
+
+		protected Rectangle SelectBounds
+		{
+			//	Retourne le rectangle englobant tous les objets sélectionnés.
+			get
+			{
+				Rectangle bounds = Rectangle.Empty;
+
+				foreach (Widget obj in this.selectedObjects)
+				{
+					bounds = Rectangle.Union(bounds, obj.ActualBounds);
+				}
+
+				return bounds;
+			}
+		}
+
+		protected double ObjectPositionX(Widget obj)
+		{
+			//	Retourne l'origine gauche d'un objet.
+			return obj.Margins.Left;
+		}
+
+		protected double ObjectPositionY(Widget obj)
+		{
+			//	Retourne l'origine inférieure d'un objet.
+			return obj.Margins.Bottom;
+		}
+
+		protected Point ObjectPosition(Widget obj)
+		{
+			//	Retourne l'origine d'un objet.
+			return new Point(obj.Margins.Left, obj.Margins.Bottom);
+		}
+
+		protected void ObjectPositionX(Widget obj, double x)
+		{
+			//	Déplace l'origine gauche d'un objet.
+			Margins margins = obj.Margins;
+			margins.Left = x;
+			obj.Margins = margins;
+		}
+
+		protected void ObjectPositionY(Widget obj, double y)
+		{
+			//	Déplace l'origine inférieure d'un objet.
+			Margins margins = obj.Margins;
+			margins.Bottom = y;
+			obj.Margins = margins;
+		}
+
+		protected void ObjectPosition(Widget obj, Point pos)
+		{
+			//	Déplace l'origine d'un objet.
+			Margins margins = obj.Margins;
+			margins.Left = pos.X;
+			margins.Bottom = pos.Y;
+			obj.Margins = margins;
+		}
+
+		protected double ObjectSizeX(Widget obj)
+		{
+			//	Retourne la largeur d'un objet.
+			return obj.ActualWidth;
+		}
+
+		protected double ObjectSizeY(Widget obj)
+		{
+			//	Retourne la hauteur d'un objet.
+			return obj.ActualHeight;
+		}
+
+		protected Size ObjectSize(Widget obj)
+		{
+			//	Retourne les dimensions d'un objet.
+			return obj.ActualSize;
+		}
+
+		protected void ObjectSizeX(Widget obj, double dx)
+		{
+			//	Modifie la largeur d'un objet.
+			obj.PreferredWidth = dx;
+		}
+
+		protected void ObjectSizeY(Widget obj, double dy)
+		{
+			//	Modifie la hauteur d'un objet.
+			obj.PreferredHeight = dy;
+		}
+
+		protected void ObjectSize(Widget obj, Size size)
+		{
+			//	Modifie les dimensions d'un objet.
+			obj.PreferredSize = size;
 		}
 
 		protected void HiliteRectangle(Rectangle rect)
