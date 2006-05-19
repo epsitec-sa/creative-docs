@@ -30,6 +30,18 @@ namespace Epsitec.Common.Types
 		
 		#region IStructuredTree Members
 
+		public object GetFieldTypeObject(string name)
+		{
+			if (this.IsDynamicType)
+			{
+				return this.GetDynamicFieldTypeObject (name);
+			}
+			else
+			{
+				return this.type.GetFieldTypeObject (name);
+			}
+		}
+		
 		public string[] GetFieldNames()
 		{
 			if (this.IsDynamicType)
@@ -56,6 +68,11 @@ namespace Epsitec.Common.Types
 
 		#endregion
 
+		protected virtual object GetDynamicFieldTypeObject(string name)
+		{
+			return null;
+		}
+		
 		protected virtual string[] GetDynamicFieldNames()
 		{
 			return new string[0];

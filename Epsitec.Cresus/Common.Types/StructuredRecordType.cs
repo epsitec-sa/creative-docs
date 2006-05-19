@@ -29,10 +29,10 @@ namespace Epsitec.Common.Types
 
 		public bool IsPathValid(string path)
 		{
-			return this.GetFieldType (path) != null;
+			return this.GetFieldTypeFromPath (path) != null;
 		}
 		
-		public INamedType GetFieldType(string path)
+		public INamedType GetFieldTypeFromPath(string path)
 		{
 			string[] names = StructuredTree.SplitPath (path);
 
@@ -63,8 +63,22 @@ namespace Epsitec.Common.Types
 
 			return type;
 		}
-
+		
 		#region IStructuredTree Members
+
+		public object GetFieldTypeObject(string name)
+		{
+			INamedType type;
+
+			if (this.fields.TryGetValue (name, out type))
+			{
+				return type;
+			}
+			else
+			{
+				return null;
+			}
+		}
 
 		public string[] GetFieldNames()
 		{
@@ -79,7 +93,7 @@ namespace Epsitec.Common.Types
 
 		public string[] GetFieldPaths(string path)
 		{
-			StructuredRecordType type = this.GetFieldType (path) as StructuredRecordType;
+			StructuredRecordType type = this.GetFieldTypeFromPath (path) as StructuredRecordType;
 
 			return StructuredTree.GetFieldPaths (path, type);
 		}

@@ -746,6 +746,11 @@ namespace Epsitec.Common.Types
 
 		#region IStructuredTree Members
 
+		public object GetFieldTypeObject(string name)
+		{
+			return this.ObjectType.GetProperty (name);
+		}
+		
 		string[] IStructuredTree.GetFieldNames()
 		{
 			ReadOnlyArray<DependencyProperty> properties = this.ObjectType.GetProperties ();

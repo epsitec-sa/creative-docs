@@ -36,12 +36,12 @@ namespace Epsitec.Common.Types
 
 			StructuredTest.Fill (record);
 
-			Assert.IsTrue (record.GetFieldType ("Number1") is DecimalType);
-			Assert.IsTrue (record.GetFieldType ("Text1") is StringType);
+			Assert.IsTrue (record.GetFieldTypeFromPath ("Number1") is DecimalType);
+			Assert.IsTrue (record.GetFieldTypeFromPath ("Text1") is StringType);
 			
-			Assert.IsTrue (record.GetFieldType ("Personne") is StructuredRecordType);
-			Assert.IsTrue (record.GetFieldType ("Personne.Adresse") is StructuredRecordType);
-			Assert.IsTrue (record.GetFieldType ("Personne.Adresse.NPA") is IntegerType);
+			Assert.IsTrue (record.GetFieldTypeFromPath ("Personne") is StructuredRecordType);
+			Assert.IsTrue (record.GetFieldTypeFromPath ("Personne.Adresse") is StructuredRecordType);
+			Assert.IsTrue (record.GetFieldTypeFromPath ("Personne.Adresse.NPA") is IntegerType);
 		}
 
 		[Test]
@@ -91,6 +91,10 @@ namespace Epsitec.Common.Types
 			Assert.IsNull (record.GetFieldPaths ("Number1"));
 			Assert.IsNull (record.GetFieldPaths ("Personne.Adresse.Ville"));
 			Assert.IsNull (record.GetFieldPaths ("X"));
+
+			Assert.AreEqual (typeof (DecimalType), record.GetFieldTypeObject ("Number1").GetType ());
+			Assert.AreEqual (typeof (StringType), record.GetFieldTypeObject ("Text1").GetType ());
+			Assert.AreEqual (typeof (StructuredRecordType), record.GetFieldTypeObject ("Personne").GetType ());
 		}
 
 		private static void Fill(StructuredRecordType record)

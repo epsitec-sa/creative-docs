@@ -42,6 +42,32 @@ namespace Epsitec.Common.Types
 			return null;
 		}
 
+		public static INamedType GetNamedTypeFromTypeObject(object typeObject)
+		{
+			INamedType namedType = typeObject as INamedType;
+
+			if (namedType == null)
+			{
+				System.Type systemType = TypeRosetta.GetSystemTypeFromTypeObject (typeObject);
+
+				if (systemType == null)
+				{
+					//	No underlying System.Type exists for the specified type object.
+					//	This is not a valid type object.
+
+					throw new Exceptions.InvalidTypeObjectException (typeObject);
+				}
+				else
+				{
+					namedType = new AutomaticNamedType (systemType);
+				}
+			}
+
+			System.Diagnostics.Debug.Assert (namedType != null);
+
+			return namedType;
+		}
+
 		public static object GetTypeObjectFromValue(object value)
 		{
 			if (value == null)
@@ -76,8 +102,66 @@ namespace Epsitec.Common.Types
 			return value.GetType ();
 		}
 
-		#region Tools Class
+		#region AutomaticNamedType Class
+
+		private class AutomaticNamedType : INamedType
+		{
+			public AutomaticNamedType(System.Type type)
+			{
+				this.type = type;
+			}
+			
+			#region INamedType Members
+
+			public System.Type SystemType
+			{
+				get
+				{
+					return this.type;
+				}
+			}
+
+			#endregion
+
+			#region INameCaption Members
+
+			public string Caption
+			{
+				get
+				{
+					return null;
+				}
+			}
+
+			public string Description
+			{
+				get
+				{
+					return null;
+				}
+			}
+
+			#endregion
+
+			#region IName Members
+
+			public string Name
+			{
+				get
+				{
+					return this.type.FullName;
+				}
+			}
+
+			#endregion
+
+			private System.Type type;
+		}
 		
+		#endregion
+
+		#region Tools Class
+
 		private class Properties : DependencyObject
 		{
 		}

@@ -12,6 +12,8 @@ namespace Epsitec.Common.Types
 	/// </summary>
 	public interface IStructuredTree
 	{
+		object GetFieldTypeObject(string name);
+		
 		string[] GetFieldNames();
 		string[] GetFieldPaths(string path);
 	}

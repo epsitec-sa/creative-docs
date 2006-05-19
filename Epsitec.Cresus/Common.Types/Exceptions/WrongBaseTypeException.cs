@@ -4,8 +4,8 @@
 namespace Epsitec.Common.Types.Exceptions
 {
 	/// <summary>
-	/// The <c>CommandLockedException</c> is thrown when an attempt to modify a
-	/// locked command is done.
+	/// The <c>WrongBaseTypeException</c> is thrown when a class does not derive
+	/// from <c>DependencyObject</c> and tries to register a <c>DependencyProperty</c>.
 	/// </summary>
 	[System.Serializable]
 

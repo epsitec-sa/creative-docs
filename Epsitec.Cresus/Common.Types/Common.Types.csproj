@@ -99,6 +99,7 @@
     </Compile>
     <Compile Include="AbstractStructuredData.cs" />
     <Compile Include="BindingChangedEventArgs.cs" />
+    <Compile Include="Exceptions\InvalidTypeObjectException.cs" />
     <Compile Include="Exceptions\WrongBaseTypeException.cs" />
     <Compile Include="IResourceBoundSource.cs" />
     <Compile Include="StructuredTree.cs" />
