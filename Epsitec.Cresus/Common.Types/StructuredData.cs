@@ -5,22 +5,24 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Types
 {
-	public class StructuredData : IStructuredTypeProvider
+	public class StructuredData : IStructuredTypeProvider, IStructuredData
 	{
+		public StructuredData() : this (null)
+		{
+		}
+		
 		public StructuredData(StructuredType type)
 		{
 			this.type = type;
 		}
 
-		public StructuredType StructuredType
+		public IStructuredType StructuredType
 		{
 			get
 			{
 				if (this.type == null)
 				{
-					//	TODO: implement
-					throw new System.NotImplementedException ();
-					//return new DynamicStructuredType (this);
+					return new DynamicStructuredType (this);
 				}
 				else
 				{
@@ -38,7 +40,52 @@ namespace Epsitec.Common.Types
 
 		#endregion
 		
-		
+
+		#region IStructuredData Members
+
+		public void AttachListener(string path, Epsitec.Common.Support.EventHandler<DependencyPropertyChangedEventArgs> handler)
+		{
+			throw new System.Exception ("The method or operation is not implemented.");
+		}
+
+		public void DetachListener(string path, Epsitec.Common.Support.EventHandler<DependencyPropertyChangedEventArgs> handler)
+		{
+			throw new System.Exception ("The method or operation is not implemented.");
+		}
+
+		public string[] GetValueNames()
+		{
+			if (this.type == null)
+			{
+				//	TODO: ...
+
+				throw new System.NotImplementedException ();
+			}
+			else
+			{
+				return this.type.GetFieldNames ();
+			}
+		}
+
+		public object GetValue(string name)
+		{
+			return null;
+		}
+
+		public void SetValue(string name, object value)
+		{
+		}
+
+		public bool HasImmutableRoots
+		{
+			get
+			{
+				return true;
+			}
+		}
+
+		#endregion
+
 		private StructuredType type;
 	}
 }

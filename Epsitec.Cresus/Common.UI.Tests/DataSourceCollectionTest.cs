@@ -43,36 +43,28 @@ namespace Epsitec.Common.UI
 				IStructuredType tree = TypeRosetta.GetStructuredTypeFromTypeObject (type);
 
 				Assert.IsNotNull (data);
+				Assert.IsNotNull (tree);
 
-				if (tree != null)
+				System.Text.StringBuilder buffer1 = new System.Text.StringBuilder ();
+				System.Text.StringBuilder buffer2 = new System.Text.StringBuilder ();
+
+				foreach (string subPath in StructuredTree.GetFieldPaths (collection, name))
 				{
-					Assert.AreNotEqual ("B", name);
-					
-					System.Text.StringBuilder buffer1 = new System.Text.StringBuilder ();
-					System.Text.StringBuilder buffer2 = new System.Text.StringBuilder ();
+					buffer1.Append (subPath);
+					buffer1.Append (" ");
 
-					foreach (string subPath in StructuredTree.GetFieldPaths (collection, name))
-					{
-						buffer1.Append (subPath);
-						buffer1.Append (" ");
-
-						System.Console.Out.WriteLine ("  {0}", subPath);
-					}
-
-					foreach (string subPath in tree.GetFieldNames ())
-					{
-						buffer2.Append (name);
-						buffer2.Append (".");
-						buffer2.Append (subPath);
-						buffer2.Append (" ");
-					}
-
-					Assert.AreEqual (buffer1.ToString (), buffer2.ToString ());
+					System.Console.Out.WriteLine ("  {0}", subPath);
 				}
-				else
+
+				foreach (string subPath in tree.GetFieldNames ())
 				{
-					Assert.AreNotEqual ("A", name);
+					buffer2.Append (name);
+					buffer2.Append (".");
+					buffer2.Append (subPath);
+					buffer2.Append (" ");
 				}
+
+				Assert.AreEqual (buffer1.ToString (), buffer2.ToString ());
 			}
 		}
 		
@@ -144,13 +136,13 @@ namespace Epsitec.Common.UI
 			Assert.IsNotNull (type);
 			
 			Assert.AreEqual (DependencyObjectType.FromSystemType (typeof (Widgets.Visual)), StructuredTree.GetFieldType (type, "A"));
-			Assert.AreEqual (typeof (MySimpleDataSource), StructuredTree.GetFieldType (type, "B"));
+			Assert.AreEqual (typeof (DynamicStructuredType), StructuredTree.GetFieldType (type, "B").GetType ());
 			Assert.AreEqual (Widgets.Visual.NameProperty, StructuredTree.GetFieldType (type, "A.Name"));
 			Assert.AreEqual (typeof (string), StructuredTree.GetFieldType (type, "B.Name"));
 			Assert.AreEqual (typeof (int), StructuredTree.GetFieldType (type, "B.BirthDateYear"));
 
 			Assert.AreEqual (typeof (Widgets.Visual), Types.TypeRosetta.GetSystemTypeFromTypeObject (StructuredTree.GetFieldType (type, "A")));
-			Assert.AreEqual (typeof (MySimpleDataSource), Types.TypeRosetta.GetSystemTypeFromTypeObject (StructuredTree.GetFieldType (type, "B")));
+			Assert.AreEqual (null, Types.TypeRosetta.GetSystemTypeFromTypeObject (StructuredTree.GetFieldType (type, "B")));
 			Assert.AreEqual (typeof (string), Types.TypeRosetta.GetSystemTypeFromTypeObject (StructuredTree.GetFieldType (type, "A.Name")));
 			Assert.AreEqual (typeof (string), Types.TypeRosetta.GetSystemTypeFromTypeObject (StructuredTree.GetFieldType (type, "B.Name")));
 			Assert.AreEqual (typeof (int), Types.TypeRosetta.GetSystemTypeFromTypeObject (StructuredTree.GetFieldType (type, "B.BirthDateYear")));
@@ -169,7 +161,7 @@ namespace Epsitec.Common.UI
 		}
 
 		[Test]
-		[ExpectedException (typeof (System.ArgumentException))]
+		[ExpectedException (typeof (System.InvalidOperationException))]
 		public void CheckSetValueEx2()
 		{
 			DataSourceCollection collection = new DataSourceCollection ();
