@@ -971,7 +971,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Modifie l'ordre pour la touche Tab de tous les objets sélectionnés.
 			foreach (Widget obj in this.selectedObjects)
 			{
-				//	TODO:
+				int index = obj.TabIndex + direction;
+				index = System.Math.Max(index, 0);
+				index = System.Math.Min(index, this.panel.Children.Count-1);
+				obj.TabIndex = index;
 			}
 
 			this.Invalidate();
@@ -1129,7 +1132,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				foreach (Widget obj in this.panel.Children)
 				{
-					//?box = new Rectangle(obj.ActualBounds.Center-new Point(6, 5), new Size(12, 10));
 					box = new Rectangle(obj.ActualBounds.BottomLeft+new Point(1, 1), new Size(12, 10));
 
 					graphics.AddFilledRectangle(box);
@@ -1138,6 +1140,22 @@ namespace Epsitec.Common.Designer.MyWidgets
 					string text = (obj.ZOrder+1).ToString();
 					graphics.AddText(box.Left, box.Bottom, box.Width, box.Height, text, Font.DefaultFont, 9.0, ContentAlignment.MiddleCenter);
 					graphics.RenderSolid(Color.FromRgb(1,0,0));  // rouge
+				}
+			}
+
+			//	Dessine les numéros d'index.
+			if (this.showTabIndex)
+			{
+				foreach (Widget obj in this.panel.Children)
+				{
+					box = new Rectangle(obj.ActualBounds.BottomRight+new Point(-12-1, 1), new Size(12, 10));
+
+					graphics.AddFilledRectangle(box);
+					graphics.RenderSolid(Color.FromBrightness(1));
+
+					string text = (obj.TabIndex+1).ToString();
+					graphics.AddText(box.Left, box.Bottom, box.Width, box.Height, text, Font.DefaultFont, 9.0, ContentAlignment.MiddleCenter);
+					graphics.RenderSolid(Color.FromRgb(0, 0, 1));  // bleu
 				}
 			}
 
