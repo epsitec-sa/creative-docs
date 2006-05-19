@@ -410,6 +410,21 @@ namespace Epsitec.Common.Designer.Viewers
 			this.GetCommandState("PanelSelectAll").Enable = (objSelected < objCount);
 			this.GetCommandState("PanelSelectInvert").Enable = (objCount > 0);
 
+			this.GetCommandState("AlignLeft").Enable = (objSelected >= 2);
+			this.GetCommandState("AlignCenterX").Enable = (objSelected >= 2);
+			this.GetCommandState("AlignRight").Enable = (objSelected >= 2);
+			this.GetCommandState("AlignTop").Enable = (objSelected >= 2);
+			this.GetCommandState("AlignCenterY").Enable = (objSelected >= 2);
+			this.GetCommandState("AlignBottom").Enable = (objSelected >= 2);
+			this.GetCommandState("AdjustWidth").Enable = (objSelected >= 2);
+			this.GetCommandState("AdjustHeight").Enable = (objSelected >= 2);
+			this.GetCommandState("AlignGrid").Enable = (objSelected != 0);
+
+			this.GetCommandState("OrderUpAll").Enable = (objSelected != 0 && objCount >= 2);
+			this.GetCommandState("OrderDownAll").Enable = (objSelected != 0 && objCount >= 2);
+			this.GetCommandState("OrderUpOne").Enable = (objSelected != 0 && objCount >= 2);
+			this.GetCommandState("OrderDownOne").Enable = (objSelected != 0 && objCount >= 2);
+
 			this.module.MainWindow.UpdateInfoCurrentModule();
 			this.module.MainWindow.UpdateInfoAccess();
 		}

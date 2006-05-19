@@ -14,6 +14,8 @@
   <data name="Ribbon.Section.Access">Accès</data>
   <data name="Ribbon.Section.Culture">Culture</data>
   <data name="Ribbon.Section.PanelSelect">Sélection objets</data>
+  <data name="Ribbon.Section.Order">Ordre</data>
+  <data name="Ribbon.Section.Align">Alignement</data>
 
   <data name="BundleType.Strings">Textes</data>
   <data name="BundleType.Panels">Interfaces</data>
@@ -69,6 +71,21 @@
   <data name="Action.PanelDeselectAll">Désélectionner tous les objets</data>
   <data name="Action.PanelSelectAll">Sélectionner tous les objets</data>
   <data name="Action.PanelSelectInvert">Inverser les objets sélectionnés</data>
+
+  <data name="Action.AlignGrid">Alignement sur la grille magnétique</data>
+  <data name="Action.AlignLeft">Alignement à gauche</data>
+  <data name="Action.AlignCenterX">Alignement centré horizontalement</data>
+  <data name="Action.AlignRight">Alignement à droite</data>
+  <data name="Action.AlignTop">Alignement en haut</data>
+  <data name="Action.AlignCenterY">Alignement centré verticalement</data>
+  <data name="Action.AlignBottom">Alignement en bas</data>
+  <data name="Action.AdjustWidth">Largeurs identiques</data>
+  <data name="Action.AdjustHeight">Hauteurs identiques</data>
+
+  <data name="Action.OrderUpAll">Premier plan</data>
+  <data name="Action.OrderUpOne">En avant</data>
+  <data name="Action.OrderDownOne">En arrière</data>
+  <data name="Action.OrderDownAll">Arrière-plan</data>
 
   <data name="Action.ToolSelect">Sélectionner</data>
   <data name="Action.ToolGlobal">Rectangle de sélection</data>
