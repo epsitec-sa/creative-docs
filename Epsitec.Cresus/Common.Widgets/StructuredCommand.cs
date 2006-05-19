@@ -14,7 +14,7 @@ namespace Epsitec.Common.Widgets
 		{
 			this.StateObjectType = Types.DependencyObjectType.FromSystemType (typeof (StructuredState));
 		}
-
+		
 		#region IStructuredType Members
 
 		string[] IStructuredType.GetFieldNames()
@@ -29,11 +29,49 @@ namespace Epsitec.Common.Widgets
 		
 		#endregion
 
-		private class StructuredState : CommandState
+		private class StructuredState : CommandState, IStructuredData
 		{
 			public StructuredState()
 			{
 			}
+
+			#region IStructuredData Members
+
+			void IStructuredData.AttachListener(string path, Epsitec.Common.Support.EventHandler<DependencyPropertyChangedEventArgs> handler)
+			{
+				
+			}
+
+			void IStructuredData.DetachListener(string path, Epsitec.Common.Support.EventHandler<DependencyPropertyChangedEventArgs> handler)
+			{
+				
+			}
+
+			string[] IStructuredData.GetValueNames()
+			{
+				IStructuredType type = this.Command as IStructuredType;
+				return type.GetFieldNames ();
+			}
+
+			object IStructuredData.GetValue(string name)
+			{
+				return null;
+			}
+
+			void IStructuredData.SetValue(string name, object value)
+			{
+				
+			}
+
+			bool IStructuredData.HasImmutableRoots
+			{
+				get
+				{
+					return true;
+				}
+			}
+
+			#endregion
 		}
 	}
 }

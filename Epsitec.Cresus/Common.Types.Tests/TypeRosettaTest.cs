@@ -68,7 +68,7 @@ namespace Epsitec.Common.Types
 			MyObject obj2 = new MyObject ();
 
 			StructuredType objType1 = new StructuredType ();
-			StructuredRecord record = new StructuredRecord (objType1);
+			StructuredData record = new StructuredData (objType1);
 
 			MyData data = new MyData ();
 
@@ -90,7 +90,7 @@ namespace Epsitec.Common.Types
 			MyObject obj2 = new MyObject ();
 
 			StructuredType objType1 = new StructuredType ();
-			StructuredRecord record = new StructuredRecord (objType1);
+			StructuredData record = new StructuredData (objType1);
 
 			MyData data = new MyData ();
 

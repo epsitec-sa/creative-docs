@@ -5,6 +5,12 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Types
 {
+	/// <summary>
+	/// The <c>TypeRosetta</c> class is the Rosetta Stone for everything which
+	/// pertains to types. It is used to map between different type description
+	/// mechanisms and well-known types, such as <see cref="T:System.Type"/>,
+	/// <see cref="T:INamedType"/> or <see cref="T:IStructuredType"/>.
+	/// </summary>
 	public static class TypeRosetta
 	{
 		/// <summary>
@@ -78,6 +84,13 @@ namespace Epsitec.Common.Types
 			return namedType;
 		}
 
+		/// <summary>
+		/// Gets the structured type from type object. The <see cref="T:IStructuredType"/> can
+		/// then be used to query the type about its fields.
+		/// </summary>
+		/// <param name="type">The type object to convert.</param>
+		/// <returns>The structured type compatible with the type object, or <c>null</c> if it
+		/// canoot be derived from the type object.</returns>
 		public static IStructuredType GetStructuredTypeFromTypeObject(object type)
 		{
 			IStructuredType structuredType = type as IStructuredType;

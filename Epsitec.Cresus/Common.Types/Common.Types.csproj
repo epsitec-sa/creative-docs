@@ -97,7 +97,6 @@
     <Compile Include="AbstractStringConverter.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="AbstractStructuredData.cs" />
     <Compile Include="BindingChangedEventArgs.cs" />
     <Compile Include="IStructuredTypeProvider.cs" />
     <Compile Include="DynamicStructuredType.cs" />
@@ -271,7 +270,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="StructuredType.cs" />
-    <Compile Include="StructuredRecord.cs" />
+    <Compile Include="StructuredData.cs" />
     <Compile Include="Tags.cs">
       <SubType>Code</SubType>
     </Compile>

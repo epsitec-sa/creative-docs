@@ -5,9 +5,9 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Types
 {
-	public class StructuredRecord : IStructuredTypeProvider
+	public class StructuredData : IStructuredTypeProvider
 	{
-		public StructuredRecord(StructuredType type)
+		public StructuredData(StructuredType type)
 		{
 			this.type = type;
 		}
