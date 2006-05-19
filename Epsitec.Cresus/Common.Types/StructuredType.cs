@@ -19,6 +19,21 @@ namespace Epsitec.Common.Types
 			this.description = null;
 		}
 
+		public void AddField(string name, INamedType type)
+		{
+			if (string.IsNullOrEmpty (name))
+			{
+				throw new System.ArgumentException ("Invalid field name");
+			}
+
+			if (this.fields.ContainsKey (name))
+			{
+				throw new System.ArgumentException ("Duplicate definition for field '{0}'", name);
+			}
+
+			this.fields[name] = type;
+		}
+		
 		public HostedDictionary<string, INamedType> Fields
 		{
 			get

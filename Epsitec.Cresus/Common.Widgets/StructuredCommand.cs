@@ -14,17 +14,46 @@ namespace Epsitec.Common.Widgets
 		{
 			this.StateObjectType = Types.DependencyObjectType.FromSystemType (typeof (StructuredState));
 		}
+
+		public void AddField(string name, INamedType type)
+		{
+			this.type.AddField (name, type);
+		}
+
+		public static void SetFieldValue(CommandState commandState, string name, object value)
+		{
+			StructuredState state = commandState as StructuredState;
+			IStructuredData data = state as IStructuredData;
+
+			System.Diagnostics.Debug.Assert (state != null);
+			System.Diagnostics.Debug.Assert (data != null);
+			System.Diagnostics.Debug.Assert (name != null);
+
+			data.SetValue (name, value);
+		}
+
+		public static object GetFieldValue(CommandState commandState, string name)
+		{
+			StructuredState state = commandState as StructuredState;
+			IStructuredData data = state as IStructuredData;
+
+			System.Diagnostics.Debug.Assert (state != null);
+			System.Diagnostics.Debug.Assert (data != null);
+			System.Diagnostics.Debug.Assert (name != null);
+
+			return data.GetValue (name);
+		}
 		
 		#region IStructuredType Members
 
 		string[] IStructuredType.GetFieldNames()
 		{
-			throw new System.Exception ("The method or operation is not implemented.");
+			return this.type.GetFieldNames ();
 		}
 
 		object IStructuredType.GetFieldTypeObject(string name)
 		{
-			throw new System.Exception ("The method or operation is not implemented.");
+			return this.type.GetFieldTypeObject (name);
 		}
 		
 		#endregion
@@ -35,43 +64,53 @@ namespace Epsitec.Common.Widgets
 			{
 			}
 
+			protected override void OverrideDefineCommand()
+			{
+				base.OverrideDefineCommand ();
+				
+				this.data = new StructuredData (this.Command as IStructuredType);
+			}
+
 			#region IStructuredData Members
 
 			void IStructuredData.AttachListener(string path, Epsitec.Common.Support.EventHandler<DependencyPropertyChangedEventArgs> handler)
 			{
-				
+				this.data.AttachListener (path, handler);
 			}
 
 			void IStructuredData.DetachListener(string path, Epsitec.Common.Support.EventHandler<DependencyPropertyChangedEventArgs> handler)
 			{
-				
+				this.data.DetachListener (path, handler);
 			}
 
 			string[] IStructuredData.GetValueNames()
 			{
-				IStructuredType type = this.Command as IStructuredType;
-				return type.GetFieldNames ();
+				return this.data.GetValueNames ();
 			}
 
 			object IStructuredData.GetValue(string name)
 			{
-				return null;
+				return this.data.GetValue (name);
 			}
 
 			void IStructuredData.SetValue(string name, object value)
 			{
-				
+				this.data.SetValue (name, value);
 			}
 
 			bool IStructuredData.HasImmutableRoots
 			{
 				get
 				{
-					return true;
+					return this.data.HasImmutableRoots;
 				}
 			}
 
 			#endregion
+
+			private Types.StructuredData data;
 		}
+
+		private StructuredType type;
 	}
 }

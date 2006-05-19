@@ -11,7 +11,7 @@ namespace Epsitec.Common.Types
 		{
 		}
 		
-		public StructuredData(StructuredType type)
+		public StructuredData(IStructuredType type)
 		{
 			this.type = type;
 		}
@@ -191,7 +191,7 @@ namespace Epsitec.Common.Types
 		{
 		}
 
-		private StructuredType type;
+		private IStructuredType type;
 		private IDictionary<string, object> values;
 	}
 }
