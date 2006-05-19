@@ -111,6 +111,6 @@ namespace Epsitec.Common.Widgets
 			private Types.StructuredData data;
 		}
 
-		private StructuredType type;
+		private StructuredType type = new StructuredType ();
 	}
 }

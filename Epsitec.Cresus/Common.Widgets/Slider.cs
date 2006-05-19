@@ -1,4 +1,5 @@
 using Epsitec.Common.Support;
+using Epsitec.Common.Types;
 
 namespace Epsitec.Common.Widgets
 {
@@ -47,18 +48,11 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.value;
+				return (decimal) this.GetValue (Slider.ValueProperty);
 			}
 			set
 			{
-				value = this.range.Constrain (value);
-				
-				if (this.value != value)
-				{
-					this.value = value;
-					this.OnValueChanged ();
-					this.Invalidate ();
-				}
+				this.SetValue (Slider.ValueProperty, value);
 			}
 		}
 
@@ -284,9 +278,25 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		private static void NotifyValueChanged(DependencyObject o, object oldValue, object newValue)
+		{
+			Slider that = o as Slider;
+			that.OnValueChanged ();
+		}
+
+		private static object CoerceValue(DependencyObject o, DependencyProperty property, object value)
+		{
+			Slider that = o as Slider;
+			decimal num = (decimal) value;
+			
+			num = that.range.Constrain (num);
+			
+			return num;
+		}
+
+		public static readonly DependencyProperty ValueProperty = DependencyProperty.Register ("Value", typeof (decimal), typeof (DataObject), new Helpers.VisualPropertyMetadata (0M, Slider.NotifyValueChanged, Slider.CoerceValue, Epsitec.Common.Widgets.Helpers.VisualPropertyMetadataOptions.AffectsDisplay));
 		
 		private Behaviors.DragBehavior		drag_behavior;
-		private decimal						value = 0;
 		private Types.DecimalRange			range = new Types.DecimalRange (0, 100, 1);
 		private decimal						logarithmic = 1;
 		private Drawing.Color				color = Drawing.Color.Empty;

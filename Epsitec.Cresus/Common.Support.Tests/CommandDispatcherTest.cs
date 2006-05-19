@@ -3,27 +3,32 @@ using Epsitec.Common.Widgets;
 
 namespace Epsitec.Common.Support
 {
-	[TestFixture] public class CommandDispatcherTest
+	[TestFixture]
+	public class CommandDispatcherTest
 	{
-		[Test] public void CheckRegisterController()
+		[Test]
+		public void CheckRegisterController()
 		{
-			CommandDispatcher     dispatcher = new CommandDispatcher ();
-			BaseTestController    controller = new BaseTestController ();
+			CommandDispatcher dispatcher = new CommandDispatcher ();
+			BaseTestController controller = new BaseTestController ();
 			DerivedTestController derived    = new DerivedTestController ();
-			
+
 			dispatcher.RegisterController (controller);
 			dispatcher.RegisterController (derived);
 		}
-		
-		[Test] [ExpectedException (typeof (System.FormatException))] public void CheckRegisterControllerEx1()
+
+		[Test]
+		[ExpectedException (typeof (System.FormatException))]
+		public void CheckRegisterControllerEx1()
 		{
-			CommandDispatcher    dispatcher = new CommandDispatcher ();
+			CommandDispatcher dispatcher = new CommandDispatcher ();
 			BrokenTestController broken     = new BrokenTestController ();
-			
+
 			dispatcher.RegisterController (broken);
 		}
 
-		[Test] public void CheckCommandContext()
+		[Test]
+		public void CheckCommandContext()
 		{
 			Command command = new Command ("TestSave");
 
@@ -72,7 +77,7 @@ namespace Epsitec.Common.Support
 
 			Assert.AreEqual ("TestSave", v3.Command);
 			Assert.AreEqual ("TestSave", v3.CommandName);
-			
+
 			CommandCache.Default.Synchronize ();
 
 			Assert.IsTrue (v3.Enable);
@@ -84,9 +89,9 @@ namespace Epsitec.Common.Support
 
 			Assert.IsNotNull (stateA);
 			Assert.AreEqual ("SimpleState", stateA.GetType ().Name);
-			
+
 			stateA.Enable = false;
-			
+
 			Assert.IsTrue (v3.Enable);
 			CommandCache.Default.Synchronize ();
 			Assert.IsFalse (v3.Enable);
@@ -95,18 +100,18 @@ namespace Epsitec.Common.Support
 			//	En créant un stateB dans contextB, on va se trouver plus près de v3
 			//	dans la chaîne des contextes des commandes. Du coup, c'est l'état de
 			//	stateB (enabled) qui l'emportera sur stateA (disabled) :
-			
+
 			stateB = contextB.GetCommandState (command);
 
 			Assert.AreNotEqual (stateA, stateB);
-			
-			Assert.IsFalse(v3.Enable);
+
+			Assert.IsFalse (v3.Enable);
 			CommandCache.Default.Synchronize ();
 			Assert.IsTrue (v3.Enable);
 			Assert.AreEqual (stateB, chain.GetCommandState (command.Name));
 
 			contextB.ClearCommandState (command);
-			
+
 			Assert.IsTrue (v3.Enable);
 			CommandCache.Default.Synchronize ();
 			Assert.IsFalse (v3.Enable);
@@ -180,7 +185,7 @@ namespace Epsitec.Common.Support
 			CommandDispatcher.Dispatch (dispatcherChain, contextChain, command.Name, this);
 			Assert.AreEqual ("", CommandDispatcherTest.buffer.ToString ());
 		}
-		
+
 		[Test]
 		[ExpectedException (typeof (System.ArgumentException))]
 		public void CheckCommandMultiCommandEx1()
@@ -231,12 +236,12 @@ namespace Epsitec.Common.Support
 			dispatcherChain = CommandDispatcherChain.BuildChain (v1);
 
 			CommandState state = context.GetCommandState (command);
-			
+
 			MultiCommand.SetSelectedCommand (state, command);
 
 			CommandDispatcher.Dispatch (dispatcherChain, contextChain, command.Name, this);
 		}
-		
+
 		[Test]
 		[ExpectedException (typeof (System.ArgumentException))]
 		public void CheckCommandMultiCommandEx3()
@@ -249,7 +254,7 @@ namespace Epsitec.Common.Support
 
 			command.Add (commandA);
 			command.Add (commandB);
-			
+
 			CommandContext context = new CommandContext ();
 			CommandDispatcher dispatcher = new CommandDispatcher ();
 
@@ -312,55 +317,91 @@ namespace Epsitec.Common.Support
 			CommandDispatcherTest.buffer.Append (command == null ? "null" : command.Name);
 			CommandDispatcherTest.buffer.Append (">");
 		}
-		
-		[Test] public void CheckDispatch()
+
+		[Test]
+		public void CheckCommandStructuredCommand()
 		{
-			CommandDispatcher  dispatcher = new CommandDispatcher ();
+			CommandContext context = new CommandContext ();
+			CommandDispatcher dispatcher = new CommandDispatcher ();
+
+			Visual v1 = new Visual ();
+
+			CommandContext.SetContext (v1, context);
+			CommandDispatcher.SetDispatcher (v1, dispatcher);
+
+			StructuredCommand command = new StructuredCommand ("TestSetFontSize");
+			
+			command.AddField ("Size", new Types.DecimalType (0.1M, 999.9M, 0.1M));
+			command.AddField ("Units", new Types.EnumType (typeof (Text.Properties.SizeUnits)));
+
+			CommandState state = context.GetCommandState (command);
+
+			StructuredCommand.SetFieldValue (state, "Size", 12.0M);
+			StructuredCommand.SetFieldValue (state, "Units", Text.Properties.SizeUnits.Points);
+
+			Slider slider = new Slider ();
+
+			slider.MinValue = 0.1M;
+			slider.MaxValue = 99.9M;
+			slider.Resolution = 0.1M;
+			
+			slider.SetBinding (Slider.ValueProperty, new Types.Binding (Types.BindingMode.TwoWay, state, "Size"));
+
+			Assert.AreEqual (12.0M, slider.Value);
+		}
+
+		[Test]
+		public void CheckDispatch()
+		{
+			CommandDispatcher dispatcher = new CommandDispatcher ();
 			BaseTestController controller = new BaseTestController ();
-			
+
 			dispatcher.RegisterController (controller);
-			
+
 			CommandDispatcherTest.buffer.Length = 0;
-			
+
 			//	Vérifie que le dispatch se fait correctement.
-			
+
 			dispatcher.InternalDispatch (null, "private-base-a", null);
 			dispatcher.InternalDispatch (null, "private-base-x", null);
 			dispatcher.InternalDispatch (null, "protected-base-b", null);
 			dispatcher.InternalDispatch (null, "public-base-virtual-c", null);
 			dispatcher.InternalDispatch (null, "public-base-d", null);
 			dispatcher.InternalDispatch (null, "public-base-virtual-e", null);	//	n'existe pas
-			
+
 			Assert.AreEqual ("ba/bx/bb/bc/bd/", CommandDispatcherTest.buffer.ToString ());
 		}
-		
-		[Test] [Ignore ("Not implemented - broken")] public void CheckDispatchMultipleCommands()
+
+		[Test]
+		[Ignore ("Not implemented - broken")]
+		public void CheckDispatchMultipleCommands()
 		{
-			CommandDispatcher  dispatcher = new CommandDispatcher ();
+			CommandDispatcher dispatcher = new CommandDispatcher ();
 			BaseTestController controller = new BaseTestController ();
-			
+
 			dispatcher.RegisterController (controller);
-			
+
 			CommandDispatcherTest.buffer.Length = 0;
-			
+
 			//	Vérifie que le dispatch se fait correctement.
 
 			dispatcher.InternalDispatch (null, "private-base-a -> protected-base-b -> public-base-virtual-c", null);
 			dispatcher.InternalDispatch (null, "private-base-a -> cancel-multiple", null);
 			dispatcher.InternalDispatch (null, "private-base-a -> cancel-multiple -> protected-base-b -> public-base-virtual-c", null);
-			
+
 			Assert.AreEqual ("ba/bb/bc/ba/cm/ba/CM/", CommandDispatcherTest.buffer.ToString ());
 		}
-		
-		[Test] public void CheckDispatchDerived()
+
+		[Test]
+		public void CheckDispatchDerived()
 		{
-			CommandDispatcher     dispatcher = new CommandDispatcher ();
+			CommandDispatcher dispatcher = new CommandDispatcher ();
 			DerivedTestController derived    = new DerivedTestController ();
-			
+
 			dispatcher.RegisterController (derived);
-			
+
 			CommandDispatcherTest.buffer.Length = 0;
-			
+
 			//	Vérifie que le dispatch se fait correctement, et que la visibilité des méthodes
 			//	est bien respectée.
 
@@ -374,11 +415,12 @@ namespace Epsitec.Common.Support
 			dispatcher.InternalDispatch (null, "protected-new-b", null);		//	accessible, surcharge la base -> visible
 			dispatcher.InternalDispatch (null, "public-override-c", null);		//	accessible, surcharge la base -> visible
 			dispatcher.InternalDispatch (null, "public-override-e", null);		//	accessible, surcharge la base -> visible
-			
+
 			Assert.AreEqual ("bb/bd/da/db/dc/de/", CommandDispatcherTest.buffer.ToString ());
 		}
-		
-		[Test] public void CheckExtractCommandArgs()
+
+		[Test]
+		public void CheckExtractCommandArgs()
 		{
 			string cmd1 = "foo";
 			string cmd2 = "foo ()";
@@ -386,17 +428,17 @@ namespace Epsitec.Common.Support
 			string cmd4 = "foo (this.Name, \"Hello, world !\", 123)";
 			string cmd5 = "foo ( this.Name , 'Hello, world !' , 123 ) ";
 			string cmd6 = "foo(this.Name,\"Hello, world !\",123)";
-			
+
 			Assert.IsTrue (CommandDispatcher.IsSimpleCommand (cmd1));
 			Assert.IsTrue (CommandDispatcher.IsSimpleCommand (cmd2) == false);
-			
+
 			Assert.AreEqual ("foo", CommandDispatcher.ExtractCommandName (cmd1));
 			Assert.AreEqual ("foo", CommandDispatcher.ExtractCommandName (cmd2));
 			Assert.AreEqual ("foo", CommandDispatcher.ExtractCommandName (cmd3));
 			Assert.AreEqual ("foo", CommandDispatcher.ExtractCommandName (cmd4));
 			Assert.AreEqual ("foo", CommandDispatcher.ExtractCommandName (cmd5));
 			Assert.AreEqual ("foo", CommandDispatcher.ExtractCommandName (cmd6));
-			
+
 			Assert.AreEqual (0, CommandDispatcher.ExtractCommandArgs (cmd1).Length);
 			Assert.AreEqual (0, CommandDispatcher.ExtractCommandArgs (cmd2).Length);
 			Assert.AreEqual (1, CommandDispatcher.ExtractCommandArgs (cmd3).Length);
@@ -405,90 +447,113 @@ namespace Epsitec.Common.Support
 			Assert.AreEqual (3, CommandDispatcher.ExtractCommandArgs (cmd6).Length);
 
 			Assert.AreEqual ("a", CommandDispatcher.ExtractCommandArgs (cmd3)[0]);
-			Assert.AreEqual ("this.Name",          CommandDispatcher.ExtractCommandArgs (cmd4)[0]);
+			Assert.AreEqual ("this.Name", CommandDispatcher.ExtractCommandArgs (cmd4)[0]);
 			Assert.AreEqual ("\"Hello, world !\"", CommandDispatcher.ExtractCommandArgs (cmd4)[1]);
-			Assert.AreEqual ("123",                CommandDispatcher.ExtractCommandArgs (cmd4)[2]);
-			Assert.AreEqual ("this.Name",          CommandDispatcher.ExtractCommandArgs (cmd5)[0]);
-			Assert.AreEqual ("'Hello, world !'",   CommandDispatcher.ExtractCommandArgs (cmd5)[1]);
-			Assert.AreEqual ("123",                CommandDispatcher.ExtractCommandArgs (cmd5)[2]);
+			Assert.AreEqual ("123", CommandDispatcher.ExtractCommandArgs (cmd4)[2]);
+			Assert.AreEqual ("this.Name", CommandDispatcher.ExtractCommandArgs (cmd5)[0]);
+			Assert.AreEqual ("'Hello, world !'", CommandDispatcher.ExtractCommandArgs (cmd5)[1]);
+			Assert.AreEqual ("123", CommandDispatcher.ExtractCommandArgs (cmd5)[2]);
 			Assert.AreEqual ("\"Hello, world !\"", CommandDispatcher.ExtractCommandArgs (cmd6)[1]);
-			Assert.AreEqual ("123",                CommandDispatcher.ExtractCommandArgs (cmd6)[2]);
+			Assert.AreEqual ("123", CommandDispatcher.ExtractCommandArgs (cmd6)[2]);
 		}
-		
-		[Test] [ExpectedException (typeof (System.FormatException))] public void CheckExtractCommandArgsEx1()
+
+		[Test]
+		[ExpectedException (typeof (System.FormatException))]
+		public void CheckExtractCommandArgsEx1()
 		{
 			string cmd = "foo (123x)";
 			CommandDispatcher.ExtractCommandArgs (cmd);
 		}
-		
-		[Test] [ExpectedException (typeof (System.FormatException))] public void CheckExtractCommandArgsEx2()
+
+		[Test]
+		[ExpectedException (typeof (System.FormatException))]
+		public void CheckExtractCommandArgsEx2()
 		{
 			string cmd = "foo..bar (1)";
 			CommandDispatcher.ExtractCommandArgs (cmd);
 		}
-		
-		[Test] [ExpectedException (typeof (System.FormatException))] public void CheckExtractCommandArgsEx3()
+
+		[Test]
+		[ExpectedException (typeof (System.FormatException))]
+		public void CheckExtractCommandArgsEx3()
 		{
 			string cmd = "foo ('x'x')";
 			CommandDispatcher.ExtractCommandArgs (cmd);
 		}
-		
-		[Test] [ExpectedException (typeof (System.FormatException))] public void CheckExtractCommandArgsEx4()
+
+		[Test]
+		[ExpectedException (typeof (System.FormatException))]
+		public void CheckExtractCommandArgsEx4()
 		{
 			string cmd = "foo (a.)";
 			CommandDispatcher.ExtractCommandArgs (cmd);
 		}
-		
-		[Test] [ExpectedException (typeof (System.FormatException))] public void CheckExtractCommandArgsEx5()
+
+		[Test]
+		[ExpectedException (typeof (System.FormatException))]
+		public void CheckExtractCommandArgsEx5()
 		{
 			string cmd = "foo (a,)";
 			CommandDispatcher.ExtractCommandArgs (cmd);
 		}
-		
-		[Test] [ExpectedException (typeof (System.FormatException))] public void CheckExtractCommandArgsEx6()
+
+		[Test]
+		[ExpectedException (typeof (System.FormatException))]
+		public void CheckExtractCommandArgsEx6()
 		{
 			string cmd = "foo (a";
 			CommandDispatcher.ExtractCommandArgs (cmd);
 		}
-		
-		[Test] public void CheckExtractAndParseCommandArgs()
+
+		[Test]
+		public void CheckExtractAndParseCommandArgs()
 		{
-			string   cmd  = "foo (this.Name, 'abc', 123.456, bar, this.Mode)";
+			string cmd  = "foo (this.Name, 'abc', 123.456, bar, this.Mode)";
 			string[] args = CommandDispatcher.ExtractCommandArgs (cmd);
 			string[] vals = CommandDispatcher.ExtractAndParseCommandArgs (cmd, this);
 			string[] expect = new string[] { "test", "abc", "123.456", "bar", "Funny" };
-			
+
 			for (int i = 0; i < args.Length; i++)
 			{
 				Assert.AreEqual (expect[i], vals[i], string.Format ("{0} mismatched;", args[i]));
 			}
 		}
-		
-		[Test] [ExpectedException (typeof (System.FieldAccessException))] public void CheckExtractAndParseCommandArgsEx1()
+
+		[Test]
+		[ExpectedException (typeof (System.FieldAccessException))]
+		public void CheckExtractAndParseCommandArgsEx1()
 		{
-			string   cmd  = "foo (this.Name, 'abc', 123.456, bar, this.DoesNotExist)";
+			string cmd  = "foo (this.Name, 'abc', 123.456, bar, this.DoesNotExist)";
 			string[] args = CommandDispatcher.ExtractCommandArgs (cmd);
 			string[] vals = CommandDispatcher.ExtractAndParseCommandArgs (cmd, this);
 		}
-		
-		
+
+
 		#region Test Properties used by ExtractAndParseCommandArgs
-		public string						Name
+		public string Name
 		{
-			get { return "test"; }
+			get
+			{
+				return "test";
+			}
 		}
-		
-		public TestMode						Mode
+
+		public TestMode Mode
 		{
-			get { return TestMode.Funny; }
+			get
+			{
+				return TestMode.Funny;
+			}
 		}
-		
+
 		public enum TestMode
 		{
-			Boring, Funny, Strange
+			Boring,
+			Funny,
+			Strange
 		}
 		#endregion
-		
+
 #if false
 		#region MyCommandState Class
 		class MyCommandState : CommandState
@@ -517,39 +582,44 @@ namespace Epsitec.Common.Support
 		}
 		#endregion
 #endif
-		
+
 		#region XyzTestController classes
 		public class BaseTestController
 		{
 			public BaseTestController()
 			{
 			}
-			
-			[Command ("private-base-a")] private void PrivateA()
+
+			[Command ("private-base-a")]
+			private void PrivateA()
 			{
 				CommandDispatcherTest.buffer.Append ("ba/");
 			}
-			
-			[Command ("private-base-x")] private void PrivateX()
+
+			[Command ("private-base-x")]
+			private void PrivateX()
 			{
 				CommandDispatcherTest.buffer.Append ("bx/");
 			}
-			
-			[Command ("protected-base-b")] protected void ProtectedB()
+
+			[Command ("protected-base-b")]
+			protected void ProtectedB()
 			{
 				CommandDispatcherTest.buffer.Append ("bb/");
 			}
-			
-			[Command ("public-base-virtual-c")] public virtual void PublicC()
+
+			[Command ("public-base-virtual-c")]
+			public virtual void PublicC()
 			{
 				CommandDispatcherTest.buffer.Append ("bc/");
 			}
-			
-			[Command ("public-base-d")] public void PublicD(CommandDispatcher dispatcher, CommandEventArgs e)
+
+			[Command ("public-base-d")]
+			public void PublicD(CommandDispatcher dispatcher, CommandEventArgs e)
 			{
 				CommandDispatcherTest.buffer.Append ("bd/");
 			}
-			
+
 #if false //#fix
 			[Command ("cancel-multiple")] public void CancelMultiple(CommandDispatcher dispatcher, CommandEventArgs e)
 			{
@@ -564,52 +634,57 @@ namespace Epsitec.Common.Support
 				}
 			}
 #endif
-			
+
 			public virtual void PublicE()
 			{
 				CommandDispatcherTest.buffer.Append ("be/");
 			}
 		}
-		
+
 		public class DerivedTestController : BaseTestController
 		{
 			public DerivedTestController()
 			{
 			}
-			
-			[Command ("private-derived-a")] private void PrivateA(CommandDispatcher dispatcher)
+
+			[Command ("private-derived-a")]
+			private void PrivateA(CommandDispatcher dispatcher)
 			{
 				CommandDispatcherTest.buffer.Append ("da/");
 			}
-			
-			[Command ("protected-new-b")] protected new void ProtectedB()
+
+			[Command ("protected-new-b")]
+			protected new void ProtectedB()
 			{
 				CommandDispatcherTest.buffer.Append ("db/");
 			}
-			
-			[Command ("public-override-c")] public override void PublicC()
+
+			[Command ("public-override-c")]
+			public override void PublicC()
 			{
 				CommandDispatcherTest.buffer.Append ("dc/");
 			}
-			
-			[Command ("public-override-e")] public override void PublicE()
+
+			[Command ("public-override-e")]
+			public override void PublicE()
 			{
 				CommandDispatcherTest.buffer.Append ("de/");
 			}
 		}
-		
+
 		public class BrokenTestController
 		{
 			public BrokenTestController()
 			{
 			}
-			
-			[Command ("broken")] public void BrokenMethod(string command)
+
+			[Command ("broken")]
+			public void BrokenMethod(string command)
 			{
 			}
 		}
 		#endregion
-		
+
 #if false
 		[Test] public void CheckValidators()
 		{
@@ -661,7 +736,7 @@ namespace Epsitec.Common.Support
 			Assert.AreEqual (ValidationState.Dirty, v2.State);
 		}
 #endif
-		
+
 		static System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 	}
 }
