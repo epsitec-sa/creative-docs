@@ -306,12 +306,17 @@ namespace Epsitec.Common.Types
 				
 				return this_type;
 			}
+			else if (system_type == typeof (System.Object))
+			{
+				return null;
+			}
 			else
 			{
 				DependencyObjectType base_type = DependencyObjectType.FromSystemTypeLocked (system_type.BaseType);
 				
 				if (base_type == null)
 				{
+					throw new Exceptions.WrongBaseTypeException (system_type);
 					return null;
 				}
 				

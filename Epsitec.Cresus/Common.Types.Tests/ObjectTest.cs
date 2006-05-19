@@ -791,7 +791,14 @@ namespace Epsitec.Common.Types
 			handler.Clear ();
 		}
 
-		
+		[Test]
+		[ExpectedException (typeof (Exceptions.WrongBaseTypeException))]
+		public void CheckWrongParentClass()
+		{
+			MyObject obj = new MyObject ();
+
+			obj.SetValue (WrongParentClass.FooProperty, "x");
+		}
 		
 		private static class TestAttachedProperties
 		{
@@ -1518,6 +1525,19 @@ namespace Epsitec.Common.Types
 
 			TreeTest parent;
 			TreeTestChildren children;
+		}
+		
+		#endregion
+
+		#region WrongParentClass Class
+
+		class WrongParentClass
+		{
+			public WrongParentClass()
+			{
+			}
+
+			public static readonly DependencyProperty FooProperty = DependencyProperty.RegisterAttached ("Foo", typeof (string), typeof (WrongParentClass));
 		}
 		
 		#endregion
