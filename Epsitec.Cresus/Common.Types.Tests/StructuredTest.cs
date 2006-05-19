@@ -36,12 +36,12 @@ namespace Epsitec.Common.Types
 
 			StructuredTest.Fill (record);
 
-			Assert.IsTrue (StructuredTree.GetFieldTypeFromPath (record, "Number1") is DecimalType);
-			Assert.IsTrue (StructuredTree.GetFieldTypeFromPath (record, "Text1") is StringType);
+			Assert.IsTrue (StructuredTree.GetFieldType (record, "Number1") is DecimalType);
+			Assert.IsTrue (StructuredTree.GetFieldType (record, "Text1") is StringType);
 
-			Assert.IsTrue (StructuredTree.GetFieldTypeFromPath (record, "Personne") is StructuredRecordType);
-			Assert.IsTrue (StructuredTree.GetFieldTypeFromPath (record, "Personne.Adresse") is StructuredRecordType);
-			Assert.IsTrue (StructuredTree.GetFieldTypeFromPath (record, "Personne.Adresse.NPA") is IntegerType);
+			Assert.IsTrue (StructuredTree.GetFieldType (record, "Personne") is StructuredRecordType);
+			Assert.IsTrue (StructuredTree.GetFieldType (record, "Personne.Adresse") is StructuredRecordType);
+			Assert.IsTrue (StructuredTree.GetFieldType (record, "Personne.Adresse.NPA") is IntegerType);
 		}
 
 		[Test]
@@ -113,6 +113,12 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual (typeof (DecimalType), record.GetFieldTypeObject ("Number1").GetType ());
 			Assert.AreEqual (typeof (StringType), record.GetFieldTypeObject ("Text1").GetType ());
 			Assert.AreEqual (typeof (StructuredRecordType), record.GetFieldTypeObject ("Personne").GetType ());
+
+			Assert.IsTrue (StructuredTree.IsPathValid (type, "Number1"));
+			Assert.IsTrue (StructuredTree.IsPathValid (type, "Personne.Nom"));
+			Assert.IsTrue (StructuredTree.IsPathValid (type, "Personne.Adresse.Ville"));
+			Assert.IsFalse (StructuredTree.IsPathValid (type, "Personne.Adresse.Pays"));
+			Assert.IsFalse (StructuredTree.IsPathValid (type, "Client.Adresse.Pays"));
 		}
 
 		private static void Fill(StructuredRecordType record)

@@ -10,7 +10,7 @@ namespace Epsitec.Common.UI
 	/// The <c>DataSourceCollection</c> class provides the list of named objects
 	/// to which a user interface can be data bound.
 	/// </summary>
-	public class DataSourceCollection : IStructuredTree, IStructuredData
+	public class DataSourceCollection : IStructuredType, IStructuredData
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:DataSourceCollection"/> class.

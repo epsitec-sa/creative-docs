@@ -8,7 +8,7 @@ using Epsitec.Common.Types;
 
 namespace Epsitec.Common.Widgets
 {
-	public class StructuredCommand : Command, IStructuredTree
+	public class StructuredCommand : Command, IStructuredType
 	{
 		public StructuredCommand(string name) : base (name)
 		{
@@ -17,7 +17,7 @@ namespace Epsitec.Common.Widgets
 
 		#region IStructuredTree Members
 
-		string[] IStructuredTree.GetFieldNames()
+		string[] IStructuredType.GetFieldNames()
 		{
 			throw new System.Exception ("The method or operation is not implemented.");
 		}

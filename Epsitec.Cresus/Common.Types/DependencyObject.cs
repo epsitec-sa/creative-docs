@@ -14,7 +14,7 @@ namespace Epsitec.Common.Types
 	/// qui permet une plus grande souplesse (valeurs par défaut, introspection,
 	/// sérialisation, styles, génération automatique d'événements, etc.)
 	/// </summary>
-	public abstract class DependencyObject : System.IDisposable, IInheritedPropertyCache, IStructuredData, IStructuredTree
+	public abstract class DependencyObject : System.IDisposable, IInheritedPropertyCache, IStructuredData, IStructuredType
 	{
 		protected DependencyObject()
 		{
@@ -751,7 +751,7 @@ namespace Epsitec.Common.Types
 			return this.ObjectType.GetProperty (name);
 		}
 		
-		string[] IStructuredTree.GetFieldNames()
+		string[] IStructuredType.GetFieldNames()
 		{
 			ReadOnlyArray<DependencyProperty> properties = this.ObjectType.GetProperties ();
 

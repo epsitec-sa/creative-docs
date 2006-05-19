@@ -4,10 +4,10 @@
 namespace Epsitec.Common.Types
 {
 	/// <summary>
-	/// The <c>IStructuredTree</c> interface makes the metadata about a structured
+	/// The <c>IStructuredType</c> interface makes the metadata about a structured
 	/// tree accessible.
 	/// </summary>
-	public interface IStructuredTree
+	public interface IStructuredType
 	{
 		/// <summary>
 		/// Gets the type object for the named field.

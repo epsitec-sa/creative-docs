@@ -8,7 +8,7 @@ namespace Epsitec.Common.Types
 	using PropertyChangedEventHandler = Epsitec.Common.Support.EventHandler<DependencyPropertyChangedEventArgs>;
 	
 	/// <summary>
-	/// The IStructuredData interface provides a DependencyObject compatible way
+	/// The IStructuredData interface provides a <c>DependencyObject</c> compatible way
 	/// of accessing structured data (i.e. records, graphs, etc.)
 	/// </summary>
 	public interface IStructuredData

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Types
 {
-	public class StructuredRecord : IStructuredTree
+	public class StructuredRecord : IStructuredType
 	{
 		public StructuredRecord(StructuredRecordType type)
 		{

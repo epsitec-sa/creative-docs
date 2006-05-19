@@ -9,7 +9,7 @@ namespace Epsitec.Common.Types
 	/// The <c>StructuredRecordType</c> class describes the type of the data stored in
 	/// a <see cref="T:StructuredRecord"/> class.
 	/// </summary>
-	public class StructuredRecordType : INamedType, IStructuredTree
+	public class StructuredRecordType : INamedType, IStructuredType
 	{
 		public StructuredRecordType()
 		{

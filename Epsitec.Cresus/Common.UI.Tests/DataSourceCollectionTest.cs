@@ -36,7 +36,7 @@ namespace Epsitec.Common.UI
 				System.Console.Out.WriteLine ("Name: {0}", name);
 
 				IStructuredData data = collection.GetDataSource (name);
-				IStructuredTree tree = data as IStructuredTree;
+				IStructuredType tree = data as IStructuredType;
 
 				Assert.IsNotNull (data);
 
