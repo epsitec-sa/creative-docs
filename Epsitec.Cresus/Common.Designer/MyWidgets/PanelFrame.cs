@@ -353,11 +353,22 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void DeleteSelection()
 		{
 			//	Supprime tous les objets sélectionnés.
+			foreach (Widget obj in this.selectedObjects)
+			{
+				this.panel.Children.Remove(obj);
+				obj.Dispose();
+			}
+
+			this.selectedObjects.Clear();
+
+			this.OnChildrenSelected();
+			this.Invalidate();
 		}
 
 		protected void DuplicateSelection()
 		{
 			//	Duplique tous les objets sélectionnés.
+			//	TODO:
 		}
 
 		protected void MoveSelection(Point move)
