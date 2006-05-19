@@ -617,7 +617,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void ObjectUp(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
 			//	Dessin d'un objet, souris relâchée.
-			this.Select(this.creatingObject);
+			this.SelectOneObject(this.creatingObject);
 			this.creatingObject = null;
 		}
 
@@ -631,7 +631,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 		#region Selection
 		protected Widget Detect(Point pos)
 		{
-			//	Détecte l'objet visé par la souris.
+			//	Détecte l'objet visé par la souris, avec priorité au dernier objet
+			//	dessiné (donc placé dessus).
 			for (int i=this.panel.Children.Count-1; i>=0; i--)
 			{
 				Widget widget = this.panel.Children[i] as Widget;
@@ -641,15 +642,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 				}
 			}
 			return null;
-		}
-
-		protected void Select(Widget obj)
-		{
-			//	Sélectionne un objet.
-			this.selectedObjects.Clear();
-			this.selectedObjects.Add(obj);
-			this.OnChildrenSelected();
-			this.Invalidate();
 		}
 
 		protected void DeselectAll()
@@ -696,6 +688,15 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.Invalidate();
 		}
 
+		protected void SelectOneObject(Widget obj)
+		{
+			//	Sélectionne un objet.
+			this.selectedObjects.Clear();
+			this.selectedObjects.Add(obj);
+			this.OnChildrenSelected();
+			this.Invalidate();
+		}
+
 		protected void SelectObjectsInRectangle(Rectangle sel)
 		{
 			//	Sélectionne tous les objets entièrement inclus dans un rectangle.
@@ -713,7 +714,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected void HiliteRectangle(Rectangle rect)
 		{
-			//	Détermine la zone à mettre en évidence.
+			//	Détermine la zone à mettre en évidence lors d'un survol.
 			if (this.hilitedRectangle != rect)
 			{
 				this.Invalidate(this.hilitedRectangle);  // invalide l'ancienne zone
