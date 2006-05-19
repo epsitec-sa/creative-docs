@@ -112,6 +112,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 					message.Captured = true;
 					message.Consumer = this;
 					break;
+
+				case MessageType.KeyDown:
+					this.ProcessKeyChanged(message.IsControlPressed, message.IsShiftPressed);
+					break;
+
+				case MessageType.KeyUp:
+					this.ProcessKeyChanged(message.IsControlPressed, message.IsShiftPressed);
+					break;
 			}
 		}
 
@@ -217,6 +225,40 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.ObjectUp(pos, isRightButton, isControlPressed, isShiftPressed);
 			}
 		}
+
+		void ProcessKeyChanged(bool isControlPressed, bool isShiftPressed)
+		{
+			//	La souris a été relâchée.
+			if (this.tool == "ToolSelect")
+			{
+				this.SelectKeyChanged(isControlPressed, isShiftPressed);
+			}
+
+			if (this.tool == "ToolGlobal")
+			{
+				this.GlobalKeyChanged(isControlPressed, isShiftPressed);
+			}
+
+			if (this.tool == "ToolEdit")
+			{
+				this.EditKeyChanged(isControlPressed, isShiftPressed);
+			}
+
+			if (this.tool == "ToolZoom")
+			{
+				this.ZoomKeyChanged(isControlPressed, isShiftPressed);
+			}
+
+			if (this.tool == "ToolHand")
+			{
+				this.HandKeyChanged(isControlPressed, isShiftPressed);
+			}
+
+			if (this.tool.StartsWith("Object"))
+			{
+				this.ObjectKeyChanged(isControlPressed, isShiftPressed);
+			}
+		}
 		#endregion
 
 		#region Drawing select
@@ -256,7 +298,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void SelectMove(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
 			//	Sélection ponctuelle, souris déplacée.
-			this.ChangeMouseCursor(MouseCursorType.Arrow);
+			if (isShiftPressed)
+			{
+				this.ChangeMouseCursor(MouseCursorType.ArrowPlus);
+			}
+			else
+			{
+				this.ChangeMouseCursor(MouseCursorType.Arrow);
+			}
 
 			if (this.dragging)
 			{
@@ -281,6 +330,19 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			//	Sélection ponctuelle, souris relâchée.
 			this.dragging = false;
+		}
+
+		protected void SelectKeyChanged(bool isControlPressed, bool isShiftPressed)
+		{
+			//	Sélection ponctuelle, touche pressée ou relâchée.
+			if (isShiftPressed)
+			{
+				this.ChangeMouseCursor(MouseCursorType.ArrowPlus);
+			}
+			else
+			{
+				this.ChangeMouseCursor(MouseCursorType.Arrow);
+			}
 		}
 
 		protected Widget Detect(Point pos)
@@ -421,6 +483,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			//	Sélection rectangulaire, souris relâchée.
 		}
+
+		protected void GlobalKeyChanged(bool isControlPressed, bool isShiftPressed)
+		{
+			//	Sélection rectangulaire, touche pressée ou relâchée.
+		}
 		#endregion
 
 		#region Drawing edit
@@ -438,6 +505,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void EditUp(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
 			//	Edition, souris relâchée.
+		}
+
+		protected void EditKeyChanged(bool isControlPressed, bool isShiftPressed)
+		{
+			//	Edition, touche pressée ou relâchée.
 		}
 		#endregion
 
@@ -457,6 +529,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			//	Loupe, souris relâchée.
 		}
+
+		protected void ZoomKeyChanged(bool isControlPressed, bool isShiftPressed)
+		{
+			//	Loupe, touche pressée ou relâchée.
+		}
 		#endregion
 
 		#region Drawing hand
@@ -474,6 +551,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void HandUp(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
 			//	Main, souris relâchée.
+		}
+
+		protected void HandKeyChanged(bool isControlPressed, bool isShiftPressed)
+		{
+			//	Main, touche pressée ou relâchée.
 		}
 		#endregion
 
@@ -522,6 +604,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Dessin d'un objet, souris relâchée.
 			this.Select(this.creatingObject);
 			this.creatingObject = null;
+		}
+
+		protected void ObjectKeyChanged(bool isControlPressed, bool isShiftPressed)
+		{
+			//	Dessin d'un objet, touche pressée ou relâchée.
 		}
 		#endregion
 
