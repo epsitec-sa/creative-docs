@@ -64,16 +64,55 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
-		public bool ZOrderDraw
+		public bool						ShowGrid
 		{
 			get
 			{
-				return this.zOrderDraw;
+				return this.showGrid;
 			}
 
 			set
 			{
-				this.zOrderDraw = value;
+				this.showGrid = value;
+			}
+		}
+
+		public bool						ShowZOrder
+		{
+			get
+			{
+				return this.showZOrder;
+			}
+
+			set
+			{
+				this.showZOrder = value;
+			}
+		}
+
+		public bool						ShowTabIndex
+		{
+			get
+			{
+				return this.showTabIndex;
+			}
+
+			set
+			{
+				this.showTabIndex = value;
+			}
+		}
+
+		public bool						ShowExpand
+		{
+			get
+			{
+				return this.showExpand;
+			}
+
+			set
+			{
+				this.showExpand = value;
 			}
 		}
 
@@ -100,6 +139,30 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 				case "PanelSelectInvert":
 					this.SelectInvert();
+					break;
+
+				case "PanelShowGrid":
+					this.showGrid = !this.showGrid;
+					this.Invalidate();
+					this.OnUpdateCommands();
+					break;
+
+				case "PanelShowZOrder":
+					this.showZOrder = !this.showZOrder;
+					this.Invalidate();
+					this.OnUpdateCommands();
+					break;
+
+				case "PanelShowTabIndex":
+					this.showTabIndex = !this.showTabIndex;
+					this.Invalidate();
+					this.OnUpdateCommands();
+					break;
+
+				case "PanelShowExpand":
+					this.showExpand = !this.showExpand;
+					this.Invalidate();
+					this.OnUpdateCommands();
 					break;
 
 				case "AlignLeft":
@@ -152,6 +215,22 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 				case "OrderDownOne":
 					this.SelectOrder(1);
+					break;
+
+				case "TabIndexFirst":
+					this.SelectTabIndex(-10000);
+					break;
+
+				case "TabIndexPrev":
+					this.SelectTabIndex(-1);
+					break;
+
+				case "TabIndexNext":
+					this.SelectTabIndex(1);
+					break;
+
+				case "TabIndexLast":
+					this.SelectTabIndex(10000);
 					break;
 
 			}
@@ -887,6 +966,17 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.Invalidate();
 		}
 
+		protected void SelectTabIndex(int direction)
+		{
+			//	Modifie l'ordre pour la touche Tab de tous les objets sélectionnés.
+			foreach (Widget obj in this.selectedObjects)
+			{
+				//	TODO:
+			}
+
+			this.Invalidate();
+		}
+
 		protected Rectangle SelectBounds
 		{
 			//	Retourne le rectangle englobant tous les objets sélectionnés.
@@ -1035,7 +1125,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 
 			//	Dessine les numéros d'ordre.
-			if (this.zOrderDraw)
+			if (this.showZOrder)
 			{
 				foreach (Widget obj in this.panel.Children)
 				{
@@ -1208,12 +1298,36 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.RemoveUserEventHandler("ChildrenSelected", value);
 			}
 		}
+
+		protected virtual void OnUpdateCommands()
+		{
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("UpdateCommands");
+			if (handler != null)
+			{
+				handler(this);
+			}
+		}
+
+		public event EventHandler UpdateCommands
+		{
+			add
+			{
+				this.AddUserEventHandler("UpdateCommands", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("UpdateCommands", value);
+			}
+		}
 		#endregion
 
 
 		protected UI.Panel					panel;
 		protected string					tool = "ToolSelect";
-		protected bool						zOrderDraw = true;
+		protected bool						showGrid = false;
+		protected bool						showZOrder = false;
+		protected bool						showTabIndex = false;
+		protected bool						showExpand = false;
 
 		protected Widget					creatingObject;
 		protected List<Widget>				selectedObjects = new List<Widget>();

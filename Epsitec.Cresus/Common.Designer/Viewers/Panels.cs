@@ -88,6 +88,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.panelFrame.Panel = this.panelWidget;
 			this.panelFrame.ChildrenAdded += new EventHandler(this.HandlePanelFrameChildrenAdded);
 			this.panelFrame.ChildrenSelected += new EventHandler(this.HandlePanelFrameChildrenSelected);
+			this.panelFrame.UpdateCommands += new EventHandler(this.HandlePanelFrameUpdateCommands);
 
 			this.tabBook = new TabBook(this);
 			this.tabBook.PreferredWidth = 150;
@@ -410,6 +411,15 @@ namespace Epsitec.Common.Designer.Viewers
 			this.GetCommandState("PanelSelectAll").Enable = (objSelected < objCount);
 			this.GetCommandState("PanelSelectInvert").Enable = (objCount > 0);
 
+			this.GetCommandState("PanelShowGrid").Enable = true;
+			this.GetCommandState("PanelShowZOrder").Enable = true;
+			this.GetCommandState("PanelShowTabIndex").Enable = true;
+			this.GetCommandState("PanelShowExpand").Enable = true;
+			this.GetCommandState("PanelShowGrid").ActiveState = this.panelFrame.ShowGrid ? ActiveState.Yes : ActiveState.No;
+			this.GetCommandState("PanelShowZOrder").ActiveState = this.panelFrame.ShowZOrder ? ActiveState.Yes : ActiveState.No;
+			this.GetCommandState("PanelShowTabIndex").ActiveState = this.panelFrame.ShowTabIndex ? ActiveState.Yes : ActiveState.No;
+			this.GetCommandState("PanelShowExpand").ActiveState = this.panelFrame.ShowExpand ? ActiveState.Yes : ActiveState.No;
+
 			this.GetCommandState("AlignLeft").Enable = (objSelected >= 2);
 			this.GetCommandState("AlignCenterX").Enable = (objSelected >= 2);
 			this.GetCommandState("AlignRight").Enable = (objSelected >= 2);
@@ -424,6 +434,11 @@ namespace Epsitec.Common.Designer.Viewers
 			this.GetCommandState("OrderDownAll").Enable = (objSelected != 0 && objCount >= 2);
 			this.GetCommandState("OrderUpOne").Enable = (objSelected != 0 && objCount >= 2);
 			this.GetCommandState("OrderDownOne").Enable = (objSelected != 0 && objCount >= 2);
+
+			this.GetCommandState("TabIndexLast").Enable = (objSelected != 0 && objCount >= 2);
+			this.GetCommandState("TabIndexPrev").Enable = (objSelected != 0 && objCount >= 2);
+			this.GetCommandState("TabIndexNext").Enable = (objSelected != 0 && objCount >= 2);
+			this.GetCommandState("TabIndexFirst").Enable = (objSelected != 0 && objCount >= 2);
 
 			this.module.MainWindow.UpdateInfoCurrentModule();
 			this.module.MainWindow.UpdateInfoAccess();
@@ -537,6 +552,11 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 		void HandlePanelFrameChildrenSelected(object sender)
+		{
+			this.UpdateCommands();
+		}
+
+		void HandlePanelFrameUpdateCommands(object sender)
 		{
 			this.UpdateCommands();
 		}

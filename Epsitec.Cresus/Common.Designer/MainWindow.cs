@@ -205,9 +205,11 @@ namespace Epsitec.Common.Designer
 			this.ribbonOper.RibbonTitle = Res.Strings.Ribbon.Oper;
 			this.ribbonBook.Items.Add(this.ribbonOper);
 
+			this.ribbonOper.Items.Add(new Ribbons.PanelShow());
 			this.ribbonOper.Items.Add(new Ribbons.PanelSelect());
 			this.ribbonOper.Items.Add(new Ribbons.Align());
 			this.ribbonOper.Items.Add(new Ribbons.Order());
+			this.ribbonOper.Items.Add(new Ribbons.TabIndex());
 
 			//	Crée le ruban du texte.
 			this.ribbonText = new RibbonPage();
@@ -492,6 +494,10 @@ namespace Epsitec.Common.Designer
 		[Command("PanelDeselectAll")]
 		[Command("PanelSelectAll")]
 		[Command("PanelSelectInvert")]
+		[Command("PanelShowGrid")]
+		[Command("PanelShowZOrder")]
+		[Command("PanelShowTabIndex")]
+		[Command("PanelShowExpand")]
 		[Command("AlignLeft")]
 		[Command("AlignCenterX")]
 		[Command("AlignRight")]
@@ -505,6 +511,10 @@ namespace Epsitec.Common.Designer
 		[Command("OrderDownAll")]
 		[Command("OrderUpOne")]
 		[Command("OrderDownOne")]
+		[Command("TabIndexFirst")]
+		[Command("TabIndexPrev")]
+		[Command("TabIndexNext")]
+		[Command("TabIndexLast")]
 		void CommandCommand(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			if ( !this.IsCurrentModule )  return;
@@ -573,6 +583,11 @@ namespace Epsitec.Common.Designer
 			this.panelSelectAllState = this.CreateCommandState("PanelSelectAll");
 			this.panelSelectInvertState = this.CreateCommandState("PanelSelectInvert");
 
+			this.panelShowGridState = this.CreateCommandState("PanelShowGrid");
+			this.panelShowZOrderState = this.CreateCommandState("PanelShowZOrder");
+			this.panelShowTabIndexState = this.CreateCommandState("PanelShowTabIndex");
+			this.panelShowExpandState = this.CreateCommandState("PanelShowExpand");
+
 			this.alignLeftState = this.CreateCommandState("AlignLeft");
 			this.alignCenterXState = this.CreateCommandState("AlignCenterX");
 			this.alignRightState = this.CreateCommandState("AlignRight");
@@ -587,6 +602,11 @@ namespace Epsitec.Common.Designer
 			this.orderDownAllState = this.CreateCommandState("OrderDownAll");
 			this.orderUpOneState = this.CreateCommandState("OrderUpOne");
 			this.orderDownOneState = this.CreateCommandState("OrderDownOne");
+
+			this.tabIndexFirstState = this.CreateCommandState("TabIndexFirst");
+			this.tabIndexPrevState = this.CreateCommandState("TabIndexPrev");
+			this.tabIndexNextState = this.CreateCommandState("TabIndexNext");
+			this.tabIndexLastState = this.CreateCommandState("TabIndexLast");
 		}
 
 		protected Command CreateCommandState(string command, params Widgets.Shortcut[] shortcuts)
@@ -601,7 +621,7 @@ namespace Epsitec.Common.Designer
 
 			cs.IconName    = command;
 			cs.LongCaption = Res.Strings.GetString("Action."+command);
-			cs.Statefull   = (command == "FontBold" || command == "FontItalic" || command == "FontUnderlined");
+			cs.Statefull   = (command == "FontBold" || command == "FontItalic" || command == "FontUnderlined" || command.StartsWith("PanelShow"));
 
 			return cs;
 		}
@@ -967,6 +987,10 @@ namespace Epsitec.Common.Designer
 		protected Command						panelDeselectAllState;
 		protected Command						panelSelectAllState;
 		protected Command						panelSelectInvertState;
+		protected Command						panelShowGridState;
+		protected Command						panelShowZOrderState;
+		protected Command						panelShowTabIndexState;
+		protected Command						panelShowExpandState;
 		protected Command						alignLeftState;
 		protected Command						alignCenterXState;
 		protected Command						alignRightState;
@@ -980,5 +1004,9 @@ namespace Epsitec.Common.Designer
 		protected Command						orderDownAllState;
 		protected Command						orderUpOneState;
 		protected Command						orderDownOneState;
+		protected Command						tabIndexFirstState;
+		protected Command						tabIndexPrevState;
+		protected Command						tabIndexNextState;
+		protected Command						tabIndexLastState;
 	}
 }

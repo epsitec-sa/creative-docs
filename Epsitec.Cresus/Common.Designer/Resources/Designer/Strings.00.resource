@@ -14,7 +14,9 @@
   <data name="Ribbon.Section.Access">Accès</data>
   <data name="Ribbon.Section.Culture">Culture</data>
   <data name="Ribbon.Section.PanelSelect">Sélection objets</data>
+  <data name="Ribbon.Section.PanelShow">Affichage</data>
   <data name="Ribbon.Section.Order">Ordre</data>
+  <data name="Ribbon.Section.TabIndex">Touche Tab</data>
   <data name="Ribbon.Section.Align">Alignement</data>
 
   <data name="BundleType.Strings">Textes</data>
@@ -72,6 +74,11 @@
   <data name="Action.PanelSelectAll">Sélectionner tous les objets</data>
   <data name="Action.PanelSelectInvert">Inverser les objets sélectionnés</data>
 
+  <data name="Action.PanelShowGrid">Afficher la grille magnétique</data>
+  <data name="Action.PanelShowZOrder">Afficher l'ordre des objets</data>
+  <data name="Action.PanelShowTabIndex">Afficher l'ordre pour la touche Tab</data>
+  <data name="Action.PanelShowExpand">Afficher les groupes plus grands</data>
+
   <data name="Action.AlignGrid">Alignement sur la grille magnétique</data>
   <data name="Action.AlignLeft">Alignement à gauche</data>
   <data name="Action.AlignCenterX">Alignement centré horizontalement</data>
@@ -86,6 +93,11 @@
   <data name="Action.OrderUpOne">En avant</data>
   <data name="Action.OrderDownOne">En arrière</data>
   <data name="Action.OrderDownAll">Arrière-plan</data>
+
+  <data name="Action.TabIndexFirst">En premier</data>
+  <data name="Action.TabIndexPrev">Rang précédent</data>
+  <data name="Action.TabIndexNext">Rang suivant</data>
+  <data name="Action.TabIndexLast">En dernier</data>
 
   <data name="Action.ToolSelect">Sélectionner</data>
   <data name="Action.ToolGlobal">Rectangle de sélection</data>
