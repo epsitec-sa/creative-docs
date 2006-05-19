@@ -341,11 +341,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 					return;
 				}
 				this.selectedObjects.Clear();
+			}
 
-				if (obj == null)
-				{
-					this.rectangling = true;
-				}
+			if (obj == null)
+			{
+				this.rectangling = true;
 			}
 
 			if (obj != null)
@@ -644,8 +644,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void SelectObjectsInRectangle(Rectangle sel)
 		{
 			//	Sélectionne tous les objets entièrement inclus dans un rectangle.
-			this.selectedObjects.Clear();
-
 			foreach (Widget obj in this.panel.Children)
 			{
 				if (sel.Contains(obj.ActualBounds))
