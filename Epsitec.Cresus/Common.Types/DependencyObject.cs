@@ -765,11 +765,6 @@ namespace Epsitec.Common.Types
 			return names;
 		}
 
-		string[] IStructuredTree.GetFieldPaths(string path)
-		{
-			throw new System.Exception ("The method or operation is not implemented.");
-		}
-
 		#endregion
 	}
 }

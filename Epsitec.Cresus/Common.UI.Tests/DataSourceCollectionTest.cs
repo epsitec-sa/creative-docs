@@ -29,6 +29,8 @@ namespace Epsitec.Common.UI
 			Assert.AreEqual (1, collection.GetValue ("B.x"));
 			Assert.AreEqual ("foo", collection.GetValue ("B.y"));
 
+			Assert.AreEqual (source1.ObjectType, collection.GetFieldTypeObject ("A"));
+
 			foreach (string name in collection.GetFieldNames ())
 			{
 				System.Console.Out.WriteLine ("Name: {0}", name);
@@ -194,7 +196,7 @@ namespace Epsitec.Common.UI
 
 			public object GetValueTypeObject(string path)
 			{
-				return this.data[path].GetType ();
+				return TypeRosetta.GetTypeObjectFromValue (this.data[path]);
 			}
 
 			public void SetValue(string path, object value)

@@ -7,6 +7,11 @@ namespace Epsitec.Common.Types
 {
 	public static class TypeRosetta
 	{
+		/// <summary>
+		/// Gets the system type from type object.
+		/// </summary>
+		/// <param name="typeObject">The type object.</param>
+		/// <returns>The system type.</returns>
 		public static System.Type GetSystemTypeFromTypeObject(object typeObject)
 		{
 			System.Type sytemType = typeObject as System.Type;
@@ -42,6 +47,11 @@ namespace Epsitec.Common.Types
 			return null;
 		}
 
+		/// <summary>
+		/// Gets the named type from type object.
+		/// </summary>
+		/// <param name="typeObject">The type object.</param>
+		/// <returns>The named type.</returns>
 		public static INamedType GetNamedTypeFromTypeObject(object typeObject)
 		{
 			INamedType namedType = typeObject as INamedType;
@@ -68,6 +78,11 @@ namespace Epsitec.Common.Types
 			return namedType;
 		}
 
+		/// <summary>
+		/// Gets the type object from a value.
+		/// </summary>
+		/// <param name="value">The value to derive a type from.</param>
+		/// <returns>The type object.</returns>
 		public static object GetTypeObjectFromValue(object value)
 		{
 			if (value == null)
@@ -168,16 +183,30 @@ namespace Epsitec.Common.Types
 
 		#endregion
 
+		/// <summary>
+		/// Gets the attached type object from the dependency object.
+		/// </summary>
+		/// <param name="obj">The dependency object.</param>
+		/// <returns>The attached type object or <c>null</c> if none can be found.</returns>
 		public static object GetTypeObject(DependencyObject obj)
 		{
 			return obj.GetValue (TypeRosetta.TypeObjectProperty);
 		}
 
+		/// <summary>
+		/// Sets the attached type object to the dependency object.
+		/// </summary>
+		/// <param name="obj">The dependency object.</param>
+		/// <param name="value">The type object to attach.</param>
 		public static void SetTypeObject(DependencyObject obj, object value)
 		{
 			obj.SetValue (TypeRosetta.TypeObjectProperty, value);
 		}
 
+		/// <summary>
+		/// Clears the attached type object from the dependency object.
+		/// </summary>
+		/// <param name="obj">The dependency object.</param>
 		public static void ClearTypeObject(DependencyObject obj)
 		{
 			obj.ClearValueBase (TypeRosetta.TypeObjectProperty);

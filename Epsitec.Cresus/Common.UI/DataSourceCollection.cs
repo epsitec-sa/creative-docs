@@ -70,6 +70,19 @@ namespace Epsitec.Common.UI
 		#region IStructuredTree Members
 
 		/// <summary>
+		/// Gets the type object for the specified field.
+		/// </summary>
+		/// <param name="name">The field name.</param>
+		/// <returns>The type object for the specified field.</returns>
+		public object GetFieldTypeObject(string name)
+		{
+			ItemRecord record = this.GetItemRecord (name);
+			IStructuredData data = record.Data;
+			
+			return TypeRosetta.GetTypeObjectFromValue (data);
+		}
+
+		/// <summary>
 		/// Gets the field names.
 		/// </summary>
 		/// <returns>Array of field names.</returns>
@@ -87,6 +100,7 @@ namespace Epsitec.Common.UI
 			return names;
 		}
 
+#if false
 		/// <summary>
 		/// Gets the field paths of the fields found at the specified path.
 		/// </summary>
@@ -121,6 +135,7 @@ namespace Epsitec.Common.UI
 
 			return paths;
 		}
+#endif
 
 		#endregion
 

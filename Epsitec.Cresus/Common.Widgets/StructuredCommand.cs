@@ -22,11 +22,6 @@ namespace Epsitec.Common.Widgets
 			throw new System.Exception ("The method or operation is not implemented.");
 		}
 
-		string[] IStructuredTree.GetFieldPaths(string path)
-		{
-			throw new System.Exception ("The method or operation is not implemented.");
-		}
-
 		#endregion
 
 		private class StructuredState : CommandState

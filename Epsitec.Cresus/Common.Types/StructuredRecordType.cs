@@ -27,43 +27,6 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		public bool IsPathValid(string path)
-		{
-			return this.GetFieldTypeFromPath (path) != null;
-		}
-		
-		public INamedType GetFieldTypeFromPath(string path)
-		{
-			string[] names = StructuredTree.SplitPath (path);
-
-			if (names.Length == 0)
-			{
-				return null;
-			}
-
-			INamedType type = null;
-			StructuredRecordType record = this;
-
-			for (int i = 0; i < names.Length; i++)
-			{
-				if (record == null)
-				{
-					return null;
-				}
-
-				if (record.Fields.TryGetValue (names[i], out type))
-				{
-					record = type as StructuredRecordType;
-				}
-				else
-				{
-					return null;
-				}
-			}
-
-			return type;
-		}
-		
 		#region IStructuredTree Members
 
 		public object GetFieldTypeObject(string name)
@@ -89,13 +52,6 @@ namespace Epsitec.Common.Types
 			System.Array.Sort (names);
 			
 			return names;
-		}
-
-		public string[] GetFieldPaths(string path)
-		{
-			StructuredRecordType type = this.GetFieldTypeFromPath (path) as StructuredRecordType;
-
-			return StructuredTree.GetFieldPaths (path, type);
 		}
 
 		#endregion

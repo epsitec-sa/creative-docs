@@ -54,18 +54,6 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		public string[] GetFieldPaths(string path)
-		{
-			if (this.IsDynamicType)
-			{
-				return this.GetDynamicFieldPaths (path);
-			}
-			else
-			{
-				return this.type.GetFieldPaths (path);
-			}
-		}
-
 		#endregion
 
 		protected virtual object GetDynamicFieldTypeObject(string name)
@@ -78,10 +66,6 @@ namespace Epsitec.Common.Types
 			return new string[0];
 		}
 
-		protected virtual string[] GetDynamicFieldPaths(string path)
-		{
-			return null;
-		}
 		
 		private StructuredRecordType type;
 	}
