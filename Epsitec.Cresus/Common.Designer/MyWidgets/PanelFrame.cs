@@ -1130,7 +1130,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				foreach (Widget obj in this.panel.Children)
 				{
 					//?box = new Rectangle(obj.ActualBounds.Center-new Point(6, 5), new Size(12, 10));
-					box = new Rectangle(obj.ActualBounds.BottomLeft, new Size(12, 10));
+					box = new Rectangle(obj.ActualBounds.BottomLeft+new Point(1, 1), new Size(12, 10));
 
 					graphics.AddFilledRectangle(box);
 					graphics.RenderSolid(Color.FromBrightness(1));
