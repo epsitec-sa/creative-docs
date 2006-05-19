@@ -1035,6 +1035,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			get
 			{
+#if false
 				Rectangle bounds = Rectangle.Empty;
 
 				foreach (Widget obj in this.panel.Children)
@@ -1046,6 +1047,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 				bounds.Bottom = 0;
 
 				return bounds;
+#else
+				return new Rectangle(Point.Zero, this.panel.RealMinSize);
+#endif
 			}
 		}
 
