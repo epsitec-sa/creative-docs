@@ -29,6 +29,14 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual (10, data.GetValue ("A"));
 			Assert.AreEqual (20, data.GetValue ("B"));
 			Assert.AreEqual (UndefinedValue.Instance, data.GetValue ("X"));
+			
+			data.SetValue ("A", UndefinedValue.Instance);
+
+			Assert.AreEqual (1, data.GetValueNames ().Length);
+			Assert.AreEqual (1, data.StructuredType.GetFieldNames ().Length);
+
+			Assert.AreEqual ("B", data.StructuredType.GetFieldNames ()[0]);
+
 		}
 
 		[Test]
@@ -37,8 +45,8 @@ namespace Epsitec.Common.Types
 			StructuredType type = new StructuredType ();
 			StructuredData data = new StructuredData (type);
 
-			type.Fields["A"] = new IntegerType ();
-			type.Fields["B"] = new IntegerType ();
+			type.Fields["A"] = new IntegerType (0, 100);
+			type.Fields["B"] = new IntegerType (0, 100);
 
 			Assert.AreEqual (2, data.GetValueNames ().Length);
 			Assert.AreEqual (2, data.StructuredType.GetFieldNames ().Length);
@@ -81,6 +89,30 @@ namespace Epsitec.Common.Types
 			type.Fields["B"] = new IntegerType ();
 
 			data.GetValue ("X");
+		}
+
+		[Test]
+		[ExpectedException (typeof (System.ArgumentException))]
+		public void CheckStructuredDataWithTypeEx3()
+		{
+			StructuredType type = new StructuredType ();
+			StructuredData data = new StructuredData (type);
+
+			type.Fields["A"] = new IntegerType (0, 100);
+
+			data.SetValue ("A", 200);
+		}
+
+		[Test]
+		[ExpectedException (typeof (System.ArgumentException))]
+		public void CheckStructuredDataWithTypeEx4()
+		{
+			StructuredType type = new StructuredType ();
+			StructuredData data = new StructuredData (type);
+
+			type.Fields["A"] = new IntegerType (0, 100);
+
+			data.SetValue ("A", "-");
 		}
 
 		[Test]

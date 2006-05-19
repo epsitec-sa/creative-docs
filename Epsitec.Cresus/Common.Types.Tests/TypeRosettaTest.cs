@@ -143,6 +143,8 @@ namespace Epsitec.Common.Types
 			Assert.IsTrue (TypeRosetta.VerifyValueValidity (typeof (B), new B ()));
 		}
 
+		#region A Class
+
 		private class A
 		{
 			public A()
@@ -150,12 +152,20 @@ namespace Epsitec.Common.Types
 			}
 		}
 		
+		#endregion
+
+		#region class B
+
 		private class B : A
 		{
 			public B()
 			{
 			}
 		}
+
+		#endregion
+
+		#region MyObject Class
 
 		private class MyObject : DependencyObject
 		{
@@ -165,6 +175,10 @@ namespace Epsitec.Common.Types
 
 			public static readonly DependencyProperty FooProperty = DependencyProperty.Register ("Foo", typeof (string), typeof (MyObject));
 		}
+
+		#endregion
+
+		#region MyData Class
 
 		private class MyData : IStructuredData
 		{
@@ -210,5 +224,7 @@ namespace Epsitec.Common.Types
 
 			#endregion
 		}
+
+		#endregion
 	}
 }
