@@ -99,7 +99,7 @@ namespace Epsitec.Common.Widgets.Collections
 			if (oldIndex < newIndex)
 			{
 				this.visuals.RemoveAt (oldIndex);
-				this.visuals.Insert (newIndex-1, visual);
+				this.visuals.Insert (newIndex, visual);
 			}
 			else if (oldIndex > newIndex)
 			{

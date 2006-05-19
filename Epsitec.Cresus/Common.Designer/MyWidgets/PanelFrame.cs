@@ -64,6 +64,20 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
+		public bool ZOrderDraw
+		{
+			get
+			{
+				return this.zOrderDraw;
+			}
+
+			set
+			{
+				this.zOrderDraw = value;
+			}
+		}
+
+
 		public void DoCommand(string name)
 		{
 			switch (name)
@@ -125,19 +139,19 @@ namespace Epsitec.Common.Designer.MyWidgets
 					break;
 
 				case "OrderUpAll":
-					this.SelectOrder(10000);
-					break;
-
-				case "OrderDownAll":
 					this.SelectOrder(-10000);
 					break;
 
+				case "OrderDownAll":
+					this.SelectOrder(10000);
+					break;
+
 				case "OrderUpOne":
-					this.SelectOrder(1);
+					this.SelectOrder(-1);
 					break;
 
 				case "OrderDownOne":
-					this.SelectOrder(-1);
+					this.SelectOrder(1);
 					break;
 
 			}
@@ -865,6 +879,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void SelectOrder(int direction)
 		{
 			//	Modifie l'ordre de tous les objets sélectionnés.
+			foreach (Widget obj in this.selectedObjects)
+			{
+				obj.ZOrder += direction;
+			}
+
+			this.Invalidate();
 		}
 
 		protected Rectangle SelectBounds
@@ -1011,6 +1031,23 @@ namespace Epsitec.Common.Designer.MyWidgets
 					graphics.AddRectangle(rect);
 					graphics.RenderSolid(this.HiliteOutlineColor);
 					graphics.LineWidth = 1;
+				}
+			}
+
+			//	Dessine les numéros d'ordre.
+			if (this.zOrderDraw)
+			{
+				foreach (Widget obj in this.panel.Children)
+				{
+					//?box = new Rectangle(obj.ActualBounds.Center-new Point(6, 5), new Size(12, 10));
+					box = new Rectangle(obj.ActualBounds.BottomLeft, new Size(12, 10));
+
+					graphics.AddFilledRectangle(box);
+					graphics.RenderSolid(Color.FromBrightness(1));
+
+					string text = (obj.ZOrder+1).ToString();
+					graphics.AddText(box.Left, box.Bottom, box.Width, box.Height, text, Font.DefaultFont, 9.0, ContentAlignment.MiddleCenter);
+					graphics.RenderSolid(Color.FromRgb(1,0,0));  // rouge
 				}
 			}
 
@@ -1176,6 +1213,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected UI.Panel					panel;
 		protected string					tool = "ToolSelect";
+		protected bool						zOrderDraw = true;
+
 		protected Widget					creatingObject;
 		protected List<Widget>				selectedObjects = new List<Widget>();
 		protected Rectangle					selectedRectangle = Rectangle.Empty;
