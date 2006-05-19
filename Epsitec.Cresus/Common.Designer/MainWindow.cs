@@ -223,7 +223,7 @@ namespace Epsitec.Common.Designer
 			this.info.Margins = new Margins(0, 0, 0, 0);
 
 			this.InfoAdd("InfoCurrentModule", 200);
-			this.InfoAdd("InfoAccess", 120);
+			this.InfoAdd("InfoAccess", 250);
 
 			this.resize = new ResizeKnob();
 			this.resize.Margins = new Margins(2, 0, 0, 0);

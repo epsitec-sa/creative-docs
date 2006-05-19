@@ -169,6 +169,8 @@ namespace Epsitec.Common.Designer.Viewers
 				}
 				else
 				{
+					builder.Append(this.labelsIndex[sel]);
+					builder.Append(": ");
 					builder.Append((sel+1).ToString());
 				}
 
