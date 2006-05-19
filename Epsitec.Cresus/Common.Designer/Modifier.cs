@@ -34,7 +34,7 @@ namespace Epsitec.Common.Designer
 				if (this.isDirty != value)
 				{
 					this.isDirty = value;
-					this.module.MainWindow.CommandContext.SetLocalEnable ("Save", this.isDirty);
+					this.module.MainWindow.GetCommandState ("Save").Enable = this.isDirty;
 				}
 			}
 		}

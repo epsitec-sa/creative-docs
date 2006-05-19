@@ -14,9 +14,13 @@ namespace Epsitec.Common.Dialogs
 		public AbstractOkCancel(string dialog_title, string command_template, CommandDispatcher command_dispatcher)
 		{
 			this.dialog_title       = dialog_title;
+			
 			this.command_template   = command_template;
 			this.command_dispatcher = command_dispatcher;
+			
 			this.private_dispatcher = new CommandDispatcher ("Dialog", CommandDispatcherLevel.Secondary);
+			this.private_context    = new CommandContext ();
+			
 			this.private_dispatcher.RegisterController (this);
 		}
 		
@@ -31,6 +35,14 @@ namespace Epsitec.Common.Dialogs
 			get
 			{
 				return this.private_dispatcher;
+			}
+		}
+
+		public CommandContext					CommandContext
+		{
+			get
+			{
+				return this.private_context;
 			}
 		}
 		
@@ -53,7 +65,13 @@ namespace Epsitec.Common.Dialogs
 			this.window.Name             = "Dialog";
 			this.window.ClientSize       = new Drawing.Size (dx+2*8, dy+2*16+24+16);
 			this.window.PreventAutoClose = true;
-			this.window.AttachDispatcher (this.private_dispatcher);
+
+			CommandDispatcher.SetDispatcher (this.window, this.private_dispatcher);
+			CommandContext.SetContext (this.window, this.private_context);
+
+			this.private_context.GetCommandState ("QuitDialog").Enable = true;
+			this.private_context.GetCommandState ("ValidateDialog").Enable = true;
+			
 			this.window.MakeFixedSizeWindow ();
 			this.window.MakeButtonlessWindow ();
 			this.window.MakeSecondaryWindow ();
@@ -113,5 +131,6 @@ namespace Epsitec.Common.Dialogs
 		protected string						command_template;
 		protected CommandDispatcher				command_dispatcher;
 		protected CommandDispatcher				private_dispatcher;
+		protected CommandContext				private_context;
 	}
 }

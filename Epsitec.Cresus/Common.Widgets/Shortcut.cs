@@ -1,4 +1,4 @@
-//	Copyright © 2003-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Widgets
@@ -6,7 +6,7 @@ namespace Epsitec.Common.Widgets
 	/// <summary>
 	/// La classe Shortcut permet de représenter un raccourci clavier.
 	/// </summary>
-	public class Shortcut
+	public sealed class Shortcut : System.IEquatable<Shortcut>
 	{
 		public Shortcut()
 		{
@@ -131,19 +131,6 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public bool Match(Shortcut shortcut)
-		{
-			if (shortcut.KeyCode == this.key_code)
-			{
-				return true;
-			}
-			else
-			{
-				return false;
-			}
-		}
-		
-		
 		public KeyCode					KeyCode
 		{
 			get
@@ -208,32 +195,45 @@ namespace Epsitec.Common.Widgets
 
 		public override bool Equals(object obj)
 		{
-			Shortcut that = obj as Shortcut;
-			
-			if (that == null)
-			{
-				return false;
-			}
-			else
-			{
-				return this.key_code == that.key_code;
-			}
+			return this.Equals (obj as Shortcut);
 		}
 		
 		public override int GetHashCode()
 		{
 			return base.GetHashCode ();
 		}
-		
+
+		#region IEquatable<Shortcut> Members
+
+		public bool Equals(Shortcut other)
+		{
+			if (object.ReferenceEquals (other, null))
+			{
+				return false;
+			}
+
+			return this.key_code == other.key_code;
+		}
+
+		#endregion
 		
 		public static bool operator==(Shortcut a, Shortcut b)
 		{
-			return System.Object.Equals (a, b);
+			if (object.ReferenceEquals (a, b))
+			{
+				return true;
+			}
+			if (object.ReferenceEquals (a, null))
+			{
+				return false;
+			}
+
+			return a.Equals (b);
 		}
 		
 		public static bool operator!=(Shortcut a, Shortcut b)
 		{
-			return ! System.Object.Equals (a, b);
+			return !(a == b);
 		}
 		
 		

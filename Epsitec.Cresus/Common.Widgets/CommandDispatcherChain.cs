@@ -114,6 +114,13 @@ namespace Epsitec.Common.Widgets
 		
 		public static CommandDispatcherChain BuildChain(DependencyObject obj)
 		{
+			Visual visual = obj as Visual;
+
+			if (visual != null)
+			{
+				return CommandDispatcherChain.BuildChain (visual);
+			}
+			
 			CommandDispatcherChain that = null;
 
 			if (obj != null)

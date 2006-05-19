@@ -6,12 +6,12 @@ using System.Collections.Generic;
 namespace Epsitec.Common.Types
 {
 	/// <summary>
-	/// The <c>StructuredRecordType</c> class describes the type of the data stored in
-	/// a <see cref="T:StructuredRecord"/> class.
+	/// The <c>StructuredType</c> class describes the type of the data stored in
+	/// a <see cref="T:StructuredData"/> class.
 	/// </summary>
-	public class StructuredRecordType : INamedType, IStructuredTree
+	public class StructuredType : INamedType, IStructuredType
 	{
-		public StructuredRecordType()
+		public StructuredType()
 		{
 			this.fields = new HostedDictionary<string, INamedType> (this.NotifyFieldInserted, this.NotifyFieldRemoved);
 			this.name = null;
@@ -19,6 +19,21 @@ namespace Epsitec.Common.Types
 			this.description = null;
 		}
 
+		public void AddField(string name, INamedType type)
+		{
+			if (string.IsNullOrEmpty (name))
+			{
+				throw new System.ArgumentException ("Invalid field name");
+			}
+
+			if (this.fields.ContainsKey (name))
+			{
+				throw new System.ArgumentException ("Duplicate definition for field '{0}'", name);
+			}
+
+			this.fields[name] = type;
+		}
+		
 		public HostedDictionary<string, INamedType> Fields
 		{
 			get
@@ -27,61 +42,30 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		public bool IsPathValid(string path)
-		{
-			return this.GetFieldType (path) != null;
-		}
-		
-		public INamedType GetFieldType(string path)
-		{
-			string[] names = StructuredTree.SplitPath (path);
+		#region IStructuredType Members
 
-			if (names.Length == 0)
+		public object GetFieldTypeObject(string name)
+		{
+			INamedType type;
+
+			if (this.fields.TryGetValue (name, out type))
+			{
+				return type;
+			}
+			else
 			{
 				return null;
 			}
-
-			INamedType type = null;
-			StructuredRecordType record = this;
-
-			for (int i = 0; i < names.Length; i++)
-			{
-				if (record == null)
-				{
-					return null;
-				}
-
-				if (record.Fields.TryGetValue (names[i], out type))
-				{
-					record = type as StructuredRecordType;
-				}
-				else
-				{
-					return null;
-				}
-			}
-
-			return type;
 		}
-
-		#region IStructuredTree Members
 
 		public string[] GetFieldNames()
 		{
 			string[] names = new string[this.fields.Count];
-			
 			this.fields.Keys.CopyTo (names, 0);
 
 			System.Array.Sort (names);
 			
 			return names;
-		}
-
-		public string[] GetFieldPaths(string path)
-		{
-			StructuredRecordType type = this.GetFieldType (path) as StructuredRecordType;
-
-			return StructuredTree.GetFieldPaths (path, type);
 		}
 
 		#endregion

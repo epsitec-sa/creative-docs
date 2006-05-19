@@ -9,43 +9,150 @@ namespace Epsitec.Common.Types
 	[TestFixture] public class StructuredTest
 	{
 		[Test]
-		public void CheckStructuredRecordTypeIsPathValid()
+		public void CheckStructuredData()
 		{
-			StructuredRecordType record = new StructuredRecordType ();
+			StructuredData data = new StructuredData ();
 
-			StructuredTest.Fill (record);
+			Assert.AreEqual (0, data.GetValueNames ().Length);
+			Assert.AreEqual (0, data.StructuredType.GetFieldNames ().Length);
 
-			Assert.IsTrue (record.IsPathValid ("Number1"));
-			Assert.IsTrue (record.IsPathValid ("Number2"));
-			Assert.IsTrue (record.IsPathValid ("Text1"));
-			Assert.IsFalse (record.IsPathValid ("Text2"));
-			Assert.IsFalse (record.IsPathValid (null));
-			Assert.IsFalse (record.IsPathValid (""));
-			Assert.IsTrue (record.IsPathValid ("Personne"));
-			Assert.IsTrue (record.IsPathValid ("Personne.Nom"));
-			Assert.IsTrue (record.IsPathValid ("Personne.Prénom"));
-			Assert.IsTrue (record.IsPathValid ("Personne.Adresse"));
-			Assert.IsTrue (record.IsPathValid ("Personne.Adresse.NPA"));
-			Assert.IsTrue (record.IsPathValid ("Personne.Adresse.Ville"));
-		}
+			data.SetValue ("A", 10);
+			data.SetValue ("B", 20);
 
-		[Test]
-		public void CheckStructuredRecordTypeGetFieldType()
-		{
-			StructuredRecordType record = new StructuredRecordType ();
+			Assert.AreEqual (2, data.GetValueNames ().Length);
+			Assert.AreEqual (2, data.StructuredType.GetFieldNames ().Length);
 
-			StructuredTest.Fill (record);
+			Assert.AreEqual ("A", data.StructuredType.GetFieldNames ()[0]);
+			Assert.AreEqual ("B", data.StructuredType.GetFieldNames ()[1]);
 
-			Assert.IsTrue (record.GetFieldType ("Number1") is DecimalType);
-			Assert.IsTrue (record.GetFieldType ("Text1") is StringType);
+			Assert.AreEqual (typeof (int), data.StructuredType.GetFieldTypeObject ("A"));
+			Assert.AreEqual (10, data.GetValue ("A"));
+			Assert.AreEqual (20, data.GetValue ("B"));
+			Assert.AreEqual (UndefinedValue.Instance, data.GetValue ("X"));
 			
-			Assert.IsTrue (record.GetFieldType ("Personne") is StructuredRecordType);
-			Assert.IsTrue (record.GetFieldType ("Personne.Adresse") is StructuredRecordType);
-			Assert.IsTrue (record.GetFieldType ("Personne.Adresse.NPA") is IntegerType);
+			data.SetValue ("A", UndefinedValue.Instance);
+
+			Assert.AreEqual (1, data.GetValueNames ().Length);
+			Assert.AreEqual (1, data.StructuredType.GetFieldNames ().Length);
+
+			Assert.AreEqual ("B", data.StructuredType.GetFieldNames ()[0]);
+
 		}
 
 		[Test]
-		public void CheckStructuredTree()
+		public void CheckStructuredDataWithType()
+		{
+			StructuredType type = new StructuredType ();
+			StructuredData data = new StructuredData (type);
+
+			type.Fields["A"] = new IntegerType (0, 100);
+			type.Fields["B"] = new IntegerType (0, 100);
+
+			Assert.AreEqual (2, data.GetValueNames ().Length);
+			Assert.AreEqual (2, data.StructuredType.GetFieldNames ().Length);
+
+			Assert.AreEqual ("A", data.StructuredType.GetFieldNames ()[0]);
+			Assert.AreEqual ("B", data.StructuredType.GetFieldNames ()[1]);
+
+			Assert.AreEqual (UndefinedValue.Instance, data.GetValue ("A"));
+			Assert.AreEqual (UndefinedValue.Instance, data.GetValue ("B"));
+			
+			data.SetValue ("A", 10);
+			data.SetValue ("B", 20);
+
+			Assert.AreEqual (typeof (IntegerType), data.StructuredType.GetFieldTypeObject ("A").GetType ());
+			Assert.AreEqual (10, data.GetValue ("A"));
+			Assert.AreEqual (20, data.GetValue ("B"));
+		}
+
+		[Test]
+		[ExpectedException (typeof (System.Collections.Generic.KeyNotFoundException))]
+		public void CheckStructuredDataWithTypeEx1()
+		{
+			StructuredType type = new StructuredType ();
+			StructuredData data = new StructuredData (type);
+
+			type.Fields["A"] = new IntegerType ();
+			type.Fields["B"] = new IntegerType ();
+
+			data.SetValue ("X", 100);
+		}
+
+		[Test]
+		[ExpectedException (typeof (System.Collections.Generic.KeyNotFoundException))]
+		public void CheckStructuredDataWithTypeEx2()
+		{
+			StructuredType type = new StructuredType ();
+			StructuredData data = new StructuredData (type);
+
+			type.Fields["A"] = new IntegerType ();
+			type.Fields["B"] = new IntegerType ();
+
+			data.GetValue ("X");
+		}
+
+		[Test]
+		[ExpectedException (typeof (System.ArgumentException))]
+		public void CheckStructuredDataWithTypeEx3()
+		{
+			StructuredType type = new StructuredType ();
+			StructuredData data = new StructuredData (type);
+
+			type.Fields["A"] = new IntegerType (0, 100);
+
+			data.SetValue ("A", 200);
+		}
+
+		[Test]
+		[ExpectedException (typeof (System.ArgumentException))]
+		public void CheckStructuredDataWithTypeEx4()
+		{
+			StructuredType type = new StructuredType ();
+			StructuredData data = new StructuredData (type);
+
+			type.Fields["A"] = new IntegerType (0, 100);
+
+			data.SetValue ("A", "-");
+		}
+
+		[Test]
+		public void CheckStructuredTreeIsPathValid()
+		{
+			StructuredType record = new StructuredType ();
+
+			StructuredTest.Fill (record);
+
+			Assert.IsTrue (StructuredTree.IsPathValid (record, "Number1"));
+			Assert.IsTrue (StructuredTree.IsPathValid (record, "Number2"));
+			Assert.IsTrue (StructuredTree.IsPathValid (record, "Text1"));
+			Assert.IsFalse (StructuredTree.IsPathValid (record, "Text2"));
+			Assert.IsFalse (StructuredTree.IsPathValid (record, null));
+			Assert.IsFalse (StructuredTree.IsPathValid (record, ""));
+			Assert.IsTrue (StructuredTree.IsPathValid (record, "Personne"));
+			Assert.IsTrue (StructuredTree.IsPathValid (record, "Personne.Nom"));
+			Assert.IsTrue (StructuredTree.IsPathValid (record, "Personne.Prénom"));
+			Assert.IsTrue (StructuredTree.IsPathValid (record, "Personne.Adresse"));
+			Assert.IsTrue (StructuredTree.IsPathValid (record, "Personne.Adresse.NPA"));
+			Assert.IsTrue (StructuredTree.IsPathValid (record, "Personne.Adresse.Ville"));
+		}
+
+		[Test]
+		public void CheckStructuredTreeGetFieldType()
+		{
+			StructuredType record = new StructuredType ();
+
+			StructuredTest.Fill (record);
+
+			Assert.IsTrue (StructuredTree.GetFieldType (record, "Number1") is DecimalType);
+			Assert.IsTrue (StructuredTree.GetFieldType (record, "Text1") is StringType);
+
+			Assert.IsTrue (StructuredTree.GetFieldType (record, "Personne") is StructuredType);
+			Assert.IsTrue (StructuredTree.GetFieldType (record, "Personne.Adresse") is StructuredType);
+			Assert.IsTrue (StructuredTree.GetFieldType (record, "Personne.Adresse.NPA") is IntegerType);
+		}
+
+		[Test]
+		public void CheckStructuredTreeMisc()
 		{
 			Assert.AreEqual ("a*b*c", string.Join ("*", StructuredTree.SplitPath ("a.b.c")));
 			Assert.AreEqual ("a.b.c.d", StructuredTree.CreatePath ("a", "b", "c.d"));
@@ -61,42 +168,69 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual ("abc", StructuredTree.GetRootName ("abc"));
 			Assert.AreEqual ("", StructuredTree.GetRootName (""));
 			Assert.IsNull (StructuredTree.GetRootName (null));
+
+			string leafPath;
+			string leafName;
+
+			leafPath = StructuredTree.GetLeafPath ("a.b.c.d", out leafName);
+
+			Assert.AreEqual ("a.b.c", leafPath);
+			Assert.AreEqual ("d", leafName);
+
+			leafPath = StructuredTree.GetLeafPath ("a", out leafName);
+
+			Assert.IsNull (leafPath);
+			Assert.AreEqual ("a", leafName);
+
+			leafPath = StructuredTree.GetLeafPath ("", out leafName);
+
+			Assert.IsNull (leafPath);
+			Assert.IsNull (leafName);
 		}
 
 		[Test]
-		public void CheckStructuredRecordTree()
+		public void CheckStructuredTree()
 		{
-			StructuredRecordType type = new StructuredRecordType ();
-			StructuredRecord record = new StructuredRecord (null);
+			StructuredType type = new StructuredType ();
+			StructuredData record = new StructuredData (null);
 
 			Assert.AreEqual (0, type.GetFieldNames ().Length);
-			Assert.AreEqual (0, record.GetFieldNames ().Length);
-
+			
 			StructuredTest.Fill (type);
 
-			record = new StructuredRecord (type);
+			record = new StructuredData (type);
 
 			Assert.AreEqual ("Number1/Number2/Personne/Text1", string.Join ("/", type.GetFieldNames ()));
-			Assert.AreEqual ("Personne.Adresse/Personne.Nom/Personne.Prénom", string.Join ("/", type.GetFieldPaths ("Personne")));
-			Assert.AreEqual ("Personne.Adresse.NPA/Personne.Adresse.Ville", string.Join ("/", type.GetFieldPaths ("Personne.Adresse")));
+			Assert.AreEqual ("Personne.Adresse/Personne.Nom/Personne.Prénom", string.Join ("/", StructuredTree.GetFieldPaths (type, "Personne")));
+			Assert.AreEqual ("Personne.Adresse.NPA/Personne.Adresse.Ville", string.Join ("/", StructuredTree.GetFieldPaths (type, "Personne.Adresse")));
 
-			Assert.IsNull (type.GetFieldPaths ("Number1"));
-			Assert.IsNull (type.GetFieldPaths ("Personne.Adresse.Ville"));
-			Assert.IsNull (type.GetFieldPaths ("X"));
+			Assert.IsNull (StructuredTree.GetFieldPaths (type, "Number1"));
+			Assert.IsNull (StructuredTree.GetFieldPaths (type, "Personne.Adresse.Ville"));
+			Assert.IsNull (StructuredTree.GetFieldPaths (type, "X"));
 
-			Assert.AreEqual ("Number1/Number2/Personne/Text1", string.Join ("/", record.GetFieldNames ()));
-			Assert.AreEqual ("Personne.Adresse/Personne.Nom/Personne.Prénom", string.Join ("/", record.GetFieldPaths ("Personne")));
-			Assert.AreEqual ("Personne.Adresse.NPA/Personne.Adresse.Ville", string.Join ("/", record.GetFieldPaths ("Personne.Adresse")));
+			Assert.AreEqual ("Number1/Number2/Personne/Text1", string.Join ("/", record.StructuredType.GetFieldNames ()));
+			Assert.AreEqual ("Personne.Adresse/Personne.Nom/Personne.Prénom", string.Join ("/", StructuredTree.GetFieldPaths (record.StructuredType, "Personne")));
+			Assert.AreEqual ("Personne.Adresse.NPA/Personne.Adresse.Ville", string.Join ("/", StructuredTree.GetFieldPaths (record.StructuredType, "Personne.Adresse")));
 
-			Assert.IsNull (record.GetFieldPaths ("Number1"));
-			Assert.IsNull (record.GetFieldPaths ("Personne.Adresse.Ville"));
-			Assert.IsNull (record.GetFieldPaths ("X"));
+			Assert.IsNull (StructuredTree.GetFieldPaths (record.StructuredType, "Number1"));
+			Assert.IsNull (StructuredTree.GetFieldPaths (record.StructuredType, "Personne.Adresse.Ville"));
+			Assert.IsNull (StructuredTree.GetFieldPaths (record.StructuredType, "X"));
+
+			Assert.AreEqual (typeof (DecimalType), record.StructuredType.GetFieldTypeObject ("Number1").GetType ());
+			Assert.AreEqual (typeof (StringType), record.StructuredType.GetFieldTypeObject ("Text1").GetType ());
+			Assert.AreEqual (typeof (StructuredType), record.StructuredType.GetFieldTypeObject ("Personne").GetType ());
+
+			Assert.IsTrue (StructuredTree.IsPathValid (type, "Number1"));
+			Assert.IsTrue (StructuredTree.IsPathValid (type, "Personne.Nom"));
+			Assert.IsTrue (StructuredTree.IsPathValid (type, "Personne.Adresse.Ville"));
+			Assert.IsFalse (StructuredTree.IsPathValid (type, "Personne.Adresse.Pays"));
+			Assert.IsFalse (StructuredTree.IsPathValid (type, "Client.Adresse.Pays"));
 		}
 
-		private static void Fill(StructuredRecordType record)
+		private static void Fill(StructuredType record)
 		{
-			StructuredRecordType subRec1 = new StructuredRecordType ();
-			StructuredRecordType subRec2 = new StructuredRecordType ();
+			StructuredType subRec1 = new StructuredType ();
+			StructuredType subRec2 = new StructuredType ();
 
 			record.Fields.Add ("Number1", new DecimalType ());
 			record.Fields.Add ("Text1", new StringType ());

@@ -143,22 +143,22 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public static void Dispatch(CommandDispatcherChain chain, string command, object source)
+		public static void Dispatch(CommandDispatcherChain dispatcherChain, CommandContextChain contextChain, string command, object source)
 		{
-			if (chain != null)
+			if (dispatcherChain != null)
 			{
-				foreach (CommandDispatcher dispatcher in chain.Dispatchers)
+				foreach (CommandDispatcher dispatcher in dispatcherChain.Dispatchers)
 				{
-					if (dispatcher.InternalDispatch (command, source))
+					if (dispatcher.InternalDispatch (contextChain, command, source))
 					{
 						break;
 					}
 				}
 			}
 		}
-		
-		
-		public bool InternalDispatch(string command, object source)
+
+
+		public bool InternalDispatch(CommandContextChain contextChain, string command, object source)
 		{
 			
 #if false //#fix
@@ -206,7 +206,7 @@ namespace Epsitec.Common.Widgets
 			bool handled = false;
 			
 #if true //#fix
-			handled = this.InternalDispatchSingleCommand (command, source);
+			handled = this.InternalDispatchSingleCommand (contextChain, command, source);
 #else
 			try
 			{
@@ -250,33 +250,33 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public void Register(string command, CommandEventHandler handler)
+		public void Register(string commandName, CommandEventHandler handler)
 		{
-			System.Diagnostics.Debug.Assert (command.IndexOf ("*") < 0, "Found '*' in command name.", "The command '" + command + "' may not contain a '*' in its name.\nPlease fix the registration source code.");
-			System.Diagnostics.Debug.Assert (command.IndexOf (".") < 0, "Found '.' in command name.", "The command '" + command + "' may not contain a '.' in its name.\nPlease fix the registration source code.");
+			System.Diagnostics.Debug.Assert (commandName.IndexOf ("*") < 0, "Found '*' in command name.", "The command '" + commandName + "' may not contain a '*' in its name.\nPlease fix the registration source code.");
+			System.Diagnostics.Debug.Assert (commandName.IndexOf (".") < 0, "Found '.' in command name.", "The command '" + commandName + "' may not contain a '.' in its name.\nPlease fix the registration source code.");
 			
 			EventSlot slot;
 			
-			if (this.eventHandlers.TryGetValue (command, out slot) == false)
+			if (this.eventHandlers.TryGetValue (commandName, out slot) == false)
 			{
-				slot = new EventSlot (command);
-				this.eventHandlers[command] = slot;
+				slot = new EventSlot (commandName);
+				this.eventHandlers[commandName] = slot;
 			}
 			
 			slot.Register (handler);
 		}
 		
-		public void Unregister(string command, CommandEventHandler handler)
+		public void Unregister(string commandName, CommandEventHandler handler)
 		{
 			EventSlot slot;
 			
-			if (this.eventHandlers.TryGetValue (command, out slot))
+			if (this.eventHandlers.TryGetValue (commandName, out slot))
 			{
 				slot.Unregister (handler);
 				
 				if (slot.Count == 0)
 				{
-					this.eventHandlers.Remove (command);
+					this.eventHandlers.Remove (commandName);
 				}
 			}
 		}
@@ -304,59 +304,59 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public static bool IsSimpleCommand(string command)
+		public static bool IsSimpleCommand(string commandName)
 		{
-			if (string.IsNullOrEmpty (command))
+			if (string.IsNullOrEmpty (commandName))
 			{
 				return true;
 			}
 			
-			int pos = command.IndexOf ('(');
+			int pos = commandName.IndexOf ('(');
 			return (pos < 0) ? true : false;
 		}
 		
 		
-		public static string   ExtractCommandName(string command)
+		public static string   ExtractCommandName(string commandName)
 		{
-			if (string.IsNullOrEmpty (command))
+			if (string.IsNullOrEmpty (commandName))
 			{
 				return null;
 			}
 			
-			int pos = command.IndexOf ('(');
+			int pos = commandName.IndexOf ('(');
 			
 			if (pos >= 0)
 			{
-				command = command.Substring (0, pos);
+				commandName = commandName.Substring (0, pos);
 			}
 			
-			command = command.Trim ();
+			commandName = commandName.Trim ();
 			
-			if (command.Length == 0)
+			if (commandName.Length == 0)
 			{
 				return null;
 			}
 			else
 			{
-				return command;
+				return commandName;
 			}
 		}
 		
-		public static string[] ExtractCommandArgs(string command)
+		public static string[] ExtractCommandArgs(string commandName)
 		{
-			if (string.IsNullOrEmpty (command))
+			if (string.IsNullOrEmpty (commandName))
 			{
 				return new string[0];
 			}
 			
-			int pos = command.IndexOf ('(');
+			int pos = commandName.IndexOf ('(');
 			
 			if (pos < 0)
 			{
 				return new string[0];
 			}
 			
-			Match match = CommandDispatcher.commandArgRegex.Match (command);
+			Match match = CommandDispatcher.commandArgRegex.Match (commandName);
 			
 			if ((match.Success) &&
 				(match.Groups.Count == 3))
@@ -372,12 +372,12 @@ namespace Epsitec.Common.Widgets
 				return args;
 			}
 			
-			throw new System.FormatException (string.Format ("Command '{0}' is not well formed.", command));
+			throw new System.FormatException (string.Format ("Command '{0}' is not well formed.", commandName));
 		}
 		
-		public static string[] ExtractAndParseCommandArgs(string command, object source)
+		public static string[] ExtractAndParseCommandArgs(string commandLine, object source)
 		{
-			string[] args = CommandDispatcher.ExtractCommandArgs (command);
+			string[] args = CommandDispatcher.ExtractCommandArgs (commandLine);
 			
 			for (int i = 0; i < args.Length; i++)
 			{
@@ -422,7 +422,7 @@ namespace Epsitec.Common.Widgets
 						
 						if (info == null)
 						{
-							throw new System.FieldAccessException (string.Format ("Command {0} tries to access property {1} which cannot be found in class {2}.", command, prop_name, type.Name));
+							throw new System.FieldAccessException (string.Format ("Command {0} tries to access property {1} which cannot be found in class {2}.", commandLine, prop_name, type.Name));
 						}
 						
 						object data = info.GetValue (source, null);
@@ -613,35 +613,71 @@ namespace Epsitec.Common.Widgets
 			this.Register (attribute.CommandName, handler);
 			
 		}
-		
-		
-		protected bool InternalDispatchSingleCommand(string command, object source)
+
+
+		protected bool InternalDispatchSingleCommand(CommandContextChain contextChain, string commandLine, object source)
 		{
 			//	Transmet la commande à ceux qui sont intéressés
+
+			string commandName = CommandDispatcher.ExtractCommandName (commandLine);
 			
-			string command_name = CommandDispatcher.ExtractCommandName (command);
-			
-			if (command_name == null)
+			if (commandName == null)
 			{
 				return false;
 			}
+
+			int loopCounter = 0;
+
+			Command command = Command.Find (commandName);
+			CommandContext commandContext;
+			CommandState commandState;
+
+		again:
 			
-			string[] command_elements = command_name.Split ('/');
-			int      command_length   = command_elements.Length;
-			string[] command_args     = CommandDispatcher.ExtractAndParseCommandArgs (command, source);
+			if ((command == null) ||
+				(command.IsReadWrite))
+			{
+				//	The command will always be considered to be "enabled" if it
+				//	has never been defined as such or if no command state has ever
+				//	been created for it.
+
+				commandContext = null;
+				commandState = null;
+			}
+			else
+			{
+				System.Diagnostics.Debug.Assert (contextChain != null);
+				System.Diagnostics.Debug.Assert (contextChain.IsEmpty == false);
+				
+				commandState = contextChain.GetCommandState (command, out commandContext);
+
+				System.Diagnostics.Debug.Assert (commandContext != null);
+				System.Diagnostics.Debug.Assert (commandState != null);
+				System.Diagnostics.Debug.Assert (commandState.Command != null);
+
+				if (commandState.Enable == false)
+				{
+					return false;
+				}
+			}
 			
-			System.Diagnostics.Debug.Assert (command_length == 1);
-			System.Diagnostics.Debug.Assert (command_name.IndexOf ("*") < 0, "Found '*' in command name.", "The command '" + command + "' may not contain a '*' in its name.\nPlease fix the command name definition source code.");
-			System.Diagnostics.Debug.Assert (command_name.IndexOf (".") < 0, "Found '.' in command name.", "The command '" + command + "' may not contain a '.' in its name.\nPlease fix the command name definition source code.");
+			string[] commandElements = commandName.Split ('/');
+			int      commandLength   = commandElements.Length;
+			string[] commandArgs     = CommandDispatcher.ExtractAndParseCommandArgs (commandLine, source);
 			
-			CommandEventArgs e = new CommandEventArgs (source, command_name, command_args);
+			System.Diagnostics.Debug.Assert (commandLength == 1);
+			System.Diagnostics.Debug.Assert (commandName.IndexOf ("*") < 0, "Found '*' in command name.", "The command '" + commandLine + "' may not contain a '*' in its name.\nPlease fix the command name definition source code.");
+			System.Diagnostics.Debug.Assert (commandName.IndexOf (".") < 0, "Found '.' in command name.", "The command '" + commandLine + "' may not contain a '.' in its name.\nPlease fix the command name definition source code.");
+
+			CommandEventArgs e = new CommandEventArgs (source, command, commandArgs, commandContext, commandState);
 
 			EventSlot slot;
 			int handled = 0;
 			
-			if (this.eventHandlers.TryGetValue (command_name, out slot))
+			
+			if (this.eventHandlers.TryGetValue (commandName, out slot))
 			{
-				System.Diagnostics.Debug.WriteLine ("Command '" + command_name + "' fired.");
+				System.Diagnostics.Debug.WriteLine ("Command '" + commandName + "' fired.");
 				
 				if (slot.DispatchCommand (this, e))
 				{
@@ -665,7 +701,26 @@ namespace Epsitec.Common.Widgets
 			
 			if (handled == 0)
 			{
-				System.Diagnostics.Debug.WriteLine ("Command '" + command_name + "' not handled.");
+				if (loopCounter++ > 10)
+				{
+					throw new Exceptions.InfiniteCommandLoopException ();
+				}
+				
+				if ((commandState != null) &&
+					(command is MultiCommand))
+				{
+					command = MultiCommand.GetSelectedCommand (commandState);
+					
+					if (command != null)
+					{
+						commandName = command.Name;
+						commandLine = commandName;
+
+						goto again;
+					}
+				}
+				
+				System.Diagnostics.Debug.WriteLine ("Command '" + commandName + "' not handled.");
 				return false;
 			}
 			else
@@ -677,7 +732,7 @@ namespace Epsitec.Common.Widgets
 				}
 				else
 				{
-					System.Diagnostics.Debug.WriteLine ("Command '" + command_name + "' handled but not marked as executed.");
+					System.Diagnostics.Debug.WriteLine ("Command '" + commandName + "' handled but not marked as executed.");
 					return false;
 				}
 			}

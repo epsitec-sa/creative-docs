@@ -119,11 +119,11 @@ namespace Epsitec.Common.Widgets
 			{
 				IFeel feel = Feel.Factory.Active;
 				
-				if (this.Shortcuts.Match (feel.AcceptShortcut))
+				if (this.Shortcuts.Contains (feel.AcceptShortcut))
 				{
 					this.ButtonStyle = ButtonStyle.DefaultAccept;
 				}
-				else if (this.Shortcuts.Match (feel.CancelShortcut))
+				else if (this.Shortcuts.Contains (feel.CancelShortcut))
 				{
 					this.ButtonStyle = ButtonStyle.DefaultCancel;
 				}
@@ -133,19 +133,19 @@ namespace Epsitec.Common.Widgets
 		protected override bool ProcessShortcut(Shortcut shortcut)
 		{
 			IFeel feel = Feel.Factory.Active;
-			
-			if ( this.buttonStyle == ButtonStyle.DefaultAccept )
+
+			if (this.buttonStyle == ButtonStyle.DefaultAccept)
 			{
-				if ( feel.AcceptShortcut.Match(shortcut) )
+				if (feel.AcceptShortcut == shortcut)
 				{
 					this.OnShortcutPressed ();
 					return true;
 				}
 			}
-			
-			if ( this.buttonStyle == ButtonStyle.DefaultCancel )
+
+			if (this.buttonStyle == ButtonStyle.DefaultCancel)
 			{
-				if ( feel.CancelShortcut.Match(shortcut) )
+				if (feel.CancelShortcut == shortcut)
 				{
 					this.OnShortcutPressed ();
 					return true;

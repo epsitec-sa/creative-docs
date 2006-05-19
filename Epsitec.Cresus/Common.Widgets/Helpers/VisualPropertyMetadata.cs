@@ -20,6 +20,10 @@ namespace Epsitec.Common.Widgets.Helpers
 		public VisualPropertyMetadata(object default_value, Types.PropertyInvalidatedCallback property_invalidated_callback) : base (default_value, property_invalidated_callback)
 		{
 		}
+		public VisualPropertyMetadata(object default_value, Types.PropertyInvalidatedCallback property_invalidated_callback, Types.CoerceValueCallback coerce_value_callback) : base (default_value, property_invalidated_callback)
+		{
+			this.CoerceValue = coerce_value_callback;
+		}
 		
 		public VisualPropertyMetadata(Types.GetValueOverrideCallback get_value_override_callback) : base (get_value_override_callback)
 		{
@@ -49,6 +53,11 @@ namespace Epsitec.Common.Widgets.Helpers
 		public VisualPropertyMetadata(object default_value, Types.PropertyInvalidatedCallback property_invalidated_callback, VisualPropertyMetadataOptions flags) : base (default_value, property_invalidated_callback)
 		{
 			this.InitialiseFromFlags (flags);
+		}
+		public VisualPropertyMetadata(object default_value, Types.PropertyInvalidatedCallback property_invalidated_callback, Types.CoerceValueCallback coerce_value_callback, VisualPropertyMetadataOptions flags) : base (default_value, property_invalidated_callback)
+		{
+			this.InitialiseFromFlags (flags);
+			this.CoerceValue = coerce_value_callback;
 		}
 		public VisualPropertyMetadata(object default_value, Types.GetValueOverrideCallback get_value_override_callback, Types.PropertyInvalidatedCallback property_invalidated_callback, VisualPropertyMetadataOptions flags) : base (default_value, get_value_override_callback, property_invalidated_callback)
 		{

@@ -23,7 +23,7 @@ namespace Epsitec.Common.Types
 			{
 				string name = fields[i].Name;
 				bool   hide = (fields[i].GetCustomAttributes (typeof (HideAttribute), false).Length > 0);
-				int    rank = (int) System.Enum.Parse (this.enum_type, name);
+				int    rank = EnumType.ConvertToInt ((System.Enum) System.Enum.Parse (this.enum_type, name));
 				
 				this.enum_values[i] = new EnumValue (rank, name);
 				this.enum_values[i].DefineHidden (hide);
@@ -361,6 +361,36 @@ namespace Epsitec.Common.Types
 			#endregion
 		}
 		#endregion
+
+		public static int ConvertToInt(System.Enum value)
+		{
+			//	TODO: optimize this code
+			
+			//	I guess we could do the same with this very simple IL, provided the value is
+			//	represented using 32-bit (or less) :
+			//
+			//		ldarg.0
+			//		ret
+			//
+			//	For 64-bit, maybe :
+			//
+			//		ldarg.0
+			//		conv.i4
+			//		ret
+			
+			System.Type enumType = value.GetType ();
+			string text = System.Enum.Format (enumType, value, "d");
+			
+			long number = System.Int64.Parse (text, System.Globalization.CultureInfo.InvariantCulture);
+			
+			if ((number < int.MinValue) ||
+				(number > int.MaxValue))
+			{
+				throw new System.InvalidOperationException (string.Format ("Value {0} cannot be mapped to int", number));
+			}
+			
+			return (int) number;
+		}
 		
 		private System.Type						enum_type;
 		private EnumValue[]						enum_values;

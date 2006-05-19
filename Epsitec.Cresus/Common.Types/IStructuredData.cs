@@ -8,7 +8,7 @@ namespace Epsitec.Common.Types
 	using PropertyChangedEventHandler = Epsitec.Common.Support.EventHandler<DependencyPropertyChangedEventArgs>;
 	
 	/// <summary>
-	/// The IStructuredData interface provides a DependencyObject compatible way
+	/// The IStructuredData interface provides a <c>DependencyObject</c> compatible way
 	/// of accessing structured data (i.e. records, graphs, etc.)
 	/// </summary>
 	public interface IStructuredData
@@ -16,9 +16,9 @@ namespace Epsitec.Common.Types
 		void AttachListener(string path, PropertyChangedEventHandler handler);
 		void DetachListener(string path, PropertyChangedEventHandler handler);
 
-		object GetValue(string path);
-		object GetValueTypeObject(string path);
-		void SetValue(string path, object value);
+		string[] GetValueNames();
+		object GetValue(string name);
+		void SetValue(string name, object value);
 
 		bool HasImmutableRoots
 		{

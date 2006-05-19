@@ -130,7 +130,7 @@ namespace Epsitec.Common.Widgets.Controllers
 		
 		#endregion
 
-		public static DependencyProperty PlaceholderProperty = DependencyProperty.Register ("Placeholder", typeof (Placeholder), typeof (AbstractController), new DependencyPropertyMetadata (AbstractController.GetPlaceholderValue, AbstractController.SetPlaceholderValue));
+		public static readonly DependencyProperty PlaceholderProperty = DependencyProperty.Register ("Placeholder", typeof (Placeholder), typeof (AbstractController), new DependencyPropertyMetadata (AbstractController.GetPlaceholderValue, AbstractController.SetPlaceholderValue));
 
 		private Placeholder						placeholder;
 		private List<Widget>					widgets = new List<Widget> ();

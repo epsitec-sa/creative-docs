@@ -134,6 +134,11 @@
     <Compile Include="CommandContextChain.cs" />
     <Compile Include="Controllers\Factory.cs" />
     <Compile Include="ControllerAttribute.cs" />
+    <Compile Include="CommandState.cs" />
+    <Compile Include="StructuredCommand.cs" />
+    <Compile Include="Exceptions\InfiniteCommandLoopException.cs" />
+    <Compile Include="MultiCommand.cs" />
+    <Compile Include="Exceptions\CommandLockedException.cs" />
     <Compile Include="ValidationContext.cs" />
     <Compile Include="RibbonSection.cs" />
     <Compile Include="AbstractButton.cs">

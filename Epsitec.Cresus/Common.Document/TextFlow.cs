@@ -312,10 +312,9 @@ namespace Epsitec.Common.Document
 			if ( this.document.CommandDispatcher == null )  return;
 
 			bool sel = (this.TextNavigator.SelectionCount != 0);
-			CommandDispatcher cd = this.document.CommandDispatcher;
 
-			Command.Get ("Cut").Enable = sel;
-			Command.Get ("Copy").Enable = sel;
+			this.document.GetCommandState ("Cut").Enable = sel;
+			this.document.GetCommandState ("Copy").Enable = sel;
 		}
 
 		public void NotifyAreaFlow()

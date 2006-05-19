@@ -97,11 +97,14 @@
     <Compile Include="AbstractStringConverter.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="AbstractStructuredData.cs" />
     <Compile Include="BindingChangedEventArgs.cs" />
+    <Compile Include="IStructuredTypeProvider.cs" />
+    <Compile Include="DynamicStructuredType.cs" />
+    <Compile Include="Exceptions\InvalidTypeObjectException.cs" />
+    <Compile Include="Exceptions\WrongBaseTypeException.cs" />
     <Compile Include="IResourceBoundSource.cs" />
     <Compile Include="StructuredTree.cs" />
-    <Compile Include="IStructuredTree.cs" />
+    <Compile Include="IStructuredType.cs" />
     <Compile Include="IDictionaryHost.cs" />
     <Compile Include="HostedDictionary.cs" />
     <Compile Include="HostedList.cs" />
@@ -266,8 +269,8 @@
     <Compile Include="StringType.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="StructuredRecordType.cs" />
-    <Compile Include="StructuredRecord.cs" />
+    <Compile Include="StructuredType.cs" />
+    <Compile Include="StructuredData.cs" />
     <Compile Include="Tags.cs">
       <SubType>Code</SubType>
     </Compile>

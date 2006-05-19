@@ -3792,18 +3792,18 @@ namespace Epsitec.Common.Document
 			}
 			else
 			{
-				Command.Get ("ShaperHandleAdd").Enable = false;
-				Command.Get ("ShaperHandleContinue").Enable = false;
-				Command.Get ("ShaperHandleSub").Enable = false;
-				Command.Get ("ShaperHandleToLine").Enable = false;
-				Command.Get ("ShaperHandleToCurve").Enable = false;
-				Command.Get ("ShaperHandleSym").Enable = false;
-				Command.Get ("ShaperHandleSmooth").Enable = false;
-				Command.Get ("ShaperHandleDis").Enable = false;
-				Command.Get ("ShaperHandleInline").Enable = false;
-				Command.Get ("ShaperHandleFree").Enable = false;
-				Command.Get ("ShaperHandleSimply").Enable = false;
-				Command.Get ("ShaperHandleCorner").Enable = false;
+				this.document.GetCommandState ("ShaperHandleAdd").Enable = false;
+				this.document.GetCommandState ("ShaperHandleContinue").Enable = false;
+				this.document.GetCommandState ("ShaperHandleSub").Enable = false;
+				this.document.GetCommandState ("ShaperHandleToLine").Enable = false;
+				this.document.GetCommandState ("ShaperHandleToCurve").Enable = false;
+				this.document.GetCommandState ("ShaperHandleSym").Enable = false;
+				this.document.GetCommandState ("ShaperHandleSmooth").Enable = false;
+				this.document.GetCommandState ("ShaperHandleDis").Enable = false;
+				this.document.GetCommandState ("ShaperHandleInline").Enable = false;
+				this.document.GetCommandState ("ShaperHandleFree").Enable = false;
+				this.document.GetCommandState ("ShaperHandleSimply").Enable = false;
+				this.document.GetCommandState ("ShaperHandleCorner").Enable = false;
 			}
 		}
 
@@ -3822,8 +3822,8 @@ namespace Epsitec.Common.Document
 
 		protected void ShaperHandleState(CommandDispatcher cd, string cmd, bool enable, System.Collections.ArrayList actives, string active)
 		{
-			Command.Get (cmd).Enable = enable;
-			Command.Get (cmd).ActiveState = actives.Contains (active) ? Common.Widgets.ActiveState.Yes : Common.Widgets.ActiveState.No;
+			this.document.GetCommandState (cmd).Enable = enable;
+			this.document.GetCommandState (cmd).ActiveState = actives.Contains (active) ? Common.Widgets.ActiveState.Yes : Common.Widgets.ActiveState.No;
 		}
 
 		public void ShaperHandleCommand(string cmd)

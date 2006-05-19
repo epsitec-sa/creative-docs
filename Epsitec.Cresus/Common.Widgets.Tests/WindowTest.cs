@@ -215,7 +215,7 @@ namespace Epsitec.Common.Widgets
 			
 			dispatcher.RegisterController (new MyController ());
 
-			window.AttachDispatcher (dispatcher);
+			CommandDispatcher.SetDispatcher (window, dispatcher);
 			
 			Command command_open = new Command ("Open", KeyCode.ModifierControl | KeyCode.AlphaO);
 			Command command_save = new Command ("Save", KeyCode.ModifierAlt | KeyCode.AlphaS);

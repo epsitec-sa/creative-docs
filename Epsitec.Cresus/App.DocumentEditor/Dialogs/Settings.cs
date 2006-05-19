@@ -689,7 +689,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				bool   sep  = GlobalSettings.QuickSep(xcmd);
 				string cmd  = GlobalSettings.QuickCmd(xcmd);
 
-				Command cs = Command.Find (cmd);
+				Command c = Command.Find (cmd);
 
 				//	Bouton check pour déterminer la visibilité.
 				bt = this.quickList[0, row].Children[0] as CheckButton;
@@ -697,7 +697,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 				//	Icône.
 				ib = this.quickList[1, row].Children[0] as IconButton;
-				ib.IconName = Misc.Icon(cs.IconName);
+				ib.IconName = Misc.Icon(c.IconName);
 
 				//	Bouton pour le séparateur.
 				ib = this.quickList[2, row].Children[0] as IconButton;
@@ -706,7 +706,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 				//	Texte de la commande.
 				st = this.quickList[3, row].Children[0] as StaticText;
-				st.Text = cs.LongCaption;
+				st.Text = c.LongCaption;
 
 				this.quickList.SelectRow(row, row==sel);
 			}

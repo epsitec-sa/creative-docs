@@ -12,7 +12,7 @@ namespace Epsitec.Common.Widgets
 	/// La classe <c>Command</c> permet de représenter l'état d'une commande tout
 	/// en maintenant la synchronisation avec l'état des widgets associés.
 	/// </summary>
-	public sealed class Command : DependencyObject, System.IEquatable<Command>
+	public class Command : DependencyObject, System.IEquatable<Command>, Types.INamedType
 	{
 		public Command(string name)
 		{
@@ -30,6 +30,8 @@ namespace Epsitec.Common.Widgets
 
 				Command.commands[name] = this;
 			}
+
+			this.stateObjectType = Types.DependencyObjectType.FromSystemType (typeof (SimpleState));
 		}
 		
 		public Command(string name, params Shortcut[] shortcuts) : this (name)
@@ -54,6 +56,11 @@ namespace Epsitec.Common.Widgets
 			}
 			set
 			{
+				if (this.locked)
+				{
+					throw new Exceptions.CommandLockedException (this.Name);
+				}
+				
 				this.SetValue (Command.IconNameProperty, value);
 			}
 		}
@@ -66,6 +73,11 @@ namespace Epsitec.Common.Widgets
 			}
 			set
 			{
+				if (this.locked)
+				{
+					throw new Exceptions.CommandLockedException (this.Name);
+				}
+
 				this.SetValue (Command.ShortCaptionProperty, value);
 			}
 		}
@@ -78,6 +90,11 @@ namespace Epsitec.Common.Widgets
 			}
 			set
 			{
+				if (this.locked)
+				{
+					throw new Exceptions.CommandLockedException (this.Name);
+				}
+
 				this.SetValue (Command.LongCaptionProperty, value);
 			}
 		}
@@ -98,23 +115,31 @@ namespace Epsitec.Common.Widgets
 			}
 			set
 			{
+				if (this.locked)
+				{
+					throw new Exceptions.CommandLockedException (this.Name);
+				}
+
 				this.SetValue (Command.GroupProperty, value);
 			}
 		}
-		
-		
-		public bool								Enable
+
+		public DependencyObjectType				StateObjectType
 		{
 			get
 			{
-				return this.enable;
+				return this.stateObjectType;
 			}
 			set
 			{
-				if (this.enable != value)
+				if (this.locked)
 				{
-					this.enable = value;
-					this.Synchronize ();
+					throw new Exceptions.CommandLockedException (this.Name);
+				}
+
+				if (this.stateObjectType != value)
+				{
+					this.stateObjectType = value;
 				}
 			}
 		}
@@ -127,41 +152,14 @@ namespace Epsitec.Common.Widgets
 			}
 			set
 			{
+				if (this.locked)
+				{
+					throw new Exceptions.CommandLockedException (this.Name);
+				}
+
 				if (this.statefull != value)
 				{
 					this.statefull = value;
-				}
-			}
-		}
-		
-		public ActiveState						ActiveState
-		{
-			get
-			{
-				return this.activeState;
-			}
-			set
-			{
-				if (this.activeState != value)
-				{
-					this.activeState = value;
-					this.Synchronize ();
-				}
-			}
-		}
-		
-		public string							AdvancedState
-		{
-			get
-			{
-				return Command.GetAdvancedState (this);
-			}
-			set
-			{
-				if (this.AdvancedState != value)
-				{
-					Command.SetAdvancedState (this, value);
-					this.Synchronize ();
 				}
 			}
 		}
@@ -192,7 +190,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		
 		public bool								HasShortcuts
 		{
 			get
@@ -208,19 +205,50 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		public bool								IsReadOnly
+		{
+			get
+			{
+				return this.locked;
+			}
+		}
 
+		public bool								IsReadWrite
+		{
+			get
+			{
+				return !this.locked;
+			}
+		}
+
+		
+		public CommandState CreateDefaultState()
+		{
+			if (this.stateObjectType != null)
+			{
+				CommandState state = this.stateObjectType.CreateEmptyObject () as CommandState;
+				
+				this.InitializeDefaultState (state);
+				
+				return state;
+			}
+			
+			return null;
+		}
+
+		
 		public static Command Get(string commandName)
 		{
 			lock (Command.commands)
 			{
-				Command commandState = Command.Find (commandName);
+				Command command = Command.Find (commandName);
 
-				if (commandState == null)
+				if (command == null)
 				{
-					commandState = new Command (commandName);
+					command = new Command (commandName);
 				}
 				
-				return commandState;
+				return command;
 			}
 		}
 		
@@ -245,7 +273,7 @@ namespace Epsitec.Common.Widgets
 		{
 			foreach (Command command in Command.commands.Values)
 			{
-				if (command.Shortcuts.Match (shortcut))
+				if (command.Shortcuts.Contains (shortcut))
 				{
 					return command;
 				}
@@ -253,8 +281,7 @@ namespace Epsitec.Common.Widgets
 			
 			return null;
 		}
-		
-		
+
 		public override int GetHashCode()
 		{
 			return this.uniqueId;
@@ -265,26 +292,107 @@ namespace Epsitec.Common.Widgets
 			return this.Equals (obj as Command);
 		}
 
-		#region IEquatable<Command> Members
-
-		public bool Equals(Command other)
+		public static bool operator==(Command a, Command b)
 		{
-			if (other == null)
+			if (object.ReferenceEquals (a, b))
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+
+		public static bool operator!=(Command a, Command b)
+		{
+			if (object.ReferenceEquals (a, b))
 			{
 				return false;
 			}
 			else
 			{
-				return this.uniqueId == other.uniqueId;
+				return true;
+			}
+		}
+
+		#region IEquatable<Command> Members
+
+		public bool Equals(Command other)
+		{
+			//	Two commands can only be equal if they are represented by the same
+			//	instance in memory :
+			
+			return object.ReferenceEquals (this, other);
+		}
+
+		#endregion
+
+		#region INamedType Members
+
+		System.Type INamedType.SystemType
+		{
+			get
+			{
+				return this.GetType ();
 			}
 		}
 
 		#endregion
 
-		private void Synchronize()
+		#region INameCaption Members
+
+		string INameCaption.Caption
 		{
-			CommandCache.Default.UpdateWidgets (this);
+			get
+			{
+				return this.ShortCaption;
+			}
 		}
+
+		string INameCaption.Description
+		{
+			get
+			{
+				return this.LongCaption;
+			}
+		}
+
+		#endregion
+
+		#region IName Members
+
+		string IName.Name
+		{
+			get
+			{
+				return this.Name;
+			}
+		}
+
+		#endregion
+
+		#region Private SimpleState Class
+
+		private class SimpleState : CommandState
+		{
+			public SimpleState()
+			{
+			}
+		}
+
+		#endregion
+
+		#region Internal Methods
+
+		internal void Lockdown()
+		{
+			this.locked = true;
+		}
+		
+		#endregion
+
+		#region Private Event Handlers
 
 		private void OnGroupChanged(DependencyPropertyChangedEventArgs e)
 		{
@@ -328,7 +436,14 @@ namespace Epsitec.Common.Widgets
 			that.OnLongCaptionChanged (new DependencyPropertyChangedEventArgs (Command.LongCaptionProperty, old_value, new_value));
 		}
 
-		
+		#endregion
+
+		protected virtual void InitializeDefaultState(CommandState state)
+		{
+			state.DefineCommand (this);
+			TypeRosetta.SetTypeObject (state, this);
+		}
+
 		public static string[] SplitGroupNames(string groups)
 		{
 			if (string.IsNullOrEmpty (groups))
@@ -345,23 +460,12 @@ namespace Epsitec.Common.Widgets
 		{
 			return string.Join ("|", groups);
 		}
-		
-		 
-		public static void SetAdvancedState(DependencyObject obj, string value)
+
+		public static CommandState CreateSimpleState(Command command)
 		{
-			if (value == null)
-			{
-				obj.ClearValueBase (Command.AdvancedStateProperty);
-			}
-			else
-			{
-				obj.SetValue (Command.AdvancedStateProperty, value);
-			}
-		}
-		
-		public static string GetAdvancedState(DependencyObject obj)
-		{
-			return obj.GetValue (Command.AdvancedStateProperty) as string;
+			CommandState state = new SimpleState ();
+			state.DefineCommand (command);
+			return state;
 		}
 
 		public static readonly DependencyProperty GroupProperty			= DependencyProperty.Register ("Group", typeof (string), typeof (Command), new DependencyPropertyMetadata (null, new PropertyInvalidatedCallback (Command.NotifyGroupChanged)));
@@ -369,15 +473,13 @@ namespace Epsitec.Common.Widgets
 		public static readonly DependencyProperty ShortCaptionProperty	= DependencyProperty.Register ("ShortCaption", typeof (string), typeof (Command), new DependencyPropertyMetadata (null, new PropertyInvalidatedCallback (Command.NotifyShortCaptionChanged)));
 		public static readonly DependencyProperty LongCaptionProperty	= DependencyProperty.Register ("LongCaption", typeof (string), typeof (Command), new DependencyPropertyMetadata (null, new PropertyInvalidatedCallback (Command.NotifyLongCaptionChanged)));
 		
-		public static readonly DependencyProperty	AdvancedStateProperty = DependencyProperty.RegisterAttached ("AdvancedState", typeof (string), typeof (Command), new DependencyPropertyMetadata (null));
-
 		private static Dictionary<string, Command> commands = new Dictionary<string, Command> ();
 		private static int nextUniqueId;
 
+		private DependencyObjectType			stateObjectType;
 		private int								uniqueId;
-		private ActiveState						activeState = ActiveState.No;
-		private bool							enable = true;
 		private bool							statefull;
+		private bool							locked;
 		
 		private Collections.ShortcutCollection	shortcuts;
 		private string							name;

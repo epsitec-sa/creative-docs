@@ -93,29 +93,29 @@ namespace Epsitec.Common.Document.Ribbons
 		protected IconButton CreateIconButton(string command, string iconSize)
 		{
 			//	Crée un bouton pour une commande, en précisant la taille préférée pour l'icône.
-			Command cs = Common.Widgets.Command.Get (command);
+			Command c = Common.Widgets.Command.Get (command);
 			IconButton button = new IconButton(this);
 
 			button.Command = command;
-			button.IconName = Misc.Icon(cs.IconName);
+			button.IconName = Misc.Icon(c.IconName);
 			button.PreferredIconSize = Misc.IconPreferredSize(iconSize);
 			button.AutoFocus = false;
 
-			if ( cs.Statefull )
+			if ( c.Statefull )
 			{
 				button.ButtonStyle = ButtonStyle.ActivableIcon;
 			}
 
 			button.TabIndex = this.tabIndex++;
 			button.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			ToolTip.Default.SetToolTip(button, Misc.GetTextWithShortcut(cs));
+			ToolTip.Default.SetToolTip(button, Misc.GetTextWithShortcut(c));
 			return button;
 		}
 
 		protected IconButtonCombo CreateIconButtonCombo(string command)
 		{
 			//	Crée un bouton combo pour une commande.
-			Command cs = Common.Widgets.Command.Get (command);
+			Command c = Common.Widgets.Command.Get (command);
 			IconButtonCombo button = new IconButtonCombo(this);
 
 			button.Command = command;
@@ -124,7 +124,7 @@ namespace Epsitec.Common.Document.Ribbons
 
 			button.TabIndex = this.tabIndex++;
 			button.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			ToolTip.Default.SetToolTip(button, Misc.GetTextWithShortcut(cs));
+			ToolTip.Default.SetToolTip(button, Misc.GetTextWithShortcut(c));
 			return button;
 		}
 
@@ -158,7 +158,7 @@ namespace Epsitec.Common.Document.Ribbons
 		protected IconButtonsCombo CreateIconButtonsCombo(string command)
 		{
 			//	Crée un bouton combo pour une commande.
-			Command cs = Common.Widgets.Command.Get (command);
+			Command c = Common.Widgets.Command.Get (command);
 			IconButtonsCombo button = new IconButtonsCombo(this);
 
 			button.Command = command;
@@ -167,7 +167,7 @@ namespace Epsitec.Common.Document.Ribbons
 
 			button.TabIndex = this.tabIndex++;
 			button.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			ToolTip.Default.SetToolTip(button, Misc.GetTextWithShortcut(cs));
+			ToolTip.Default.SetToolTip(button, Misc.GetTextWithShortcut(c));
 			return button;
 		}
 
