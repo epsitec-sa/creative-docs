@@ -492,6 +492,19 @@ namespace Epsitec.Common.Designer
 		[Command("PanelDeselectAll")]
 		[Command("PanelSelectAll")]
 		[Command("PanelSelectInvert")]
+		[Command("AlignLeft")]
+		[Command("AlignCenterX")]
+		[Command("AlignRight")]
+		[Command("AlignTop")]
+		[Command("AlignCenterY")]
+		[Command("AlignBottom")]
+		[Command("AdjustWidth")]
+		[Command("AdjustHeight")]
+		[Command("AlignGrid")]
+		[Command("OrderUpAll")]
+		[Command("OrderDownAll")]
+		[Command("OrderUpOne")]
+		[Command("OrderDownOne")]
 		void CommandCommand(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			if ( !this.IsCurrentModule )  return;
