@@ -331,7 +331,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			this.startingPos = pos;
 			this.dragging = false;
-			if (!isShiftPressed)
+			this.rectangling = false;
+
+			if (!isShiftPressed)  // touche Shift relâchée ?
 			{
 				if (obj != null && this.selectedObjects.Contains(obj))
 				{
@@ -339,6 +341,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 					return;
 				}
 				this.selectedObjects.Clear();
+
+				if (obj == null)
+				{
+					this.rectangling = true;
+				}
 			}
 
 			if (obj != null)
@@ -377,6 +384,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.MoveSelection(move);
 				this.HiliteRectangle(Rectangle.Empty);
 			}
+			else if (this.rectangling)
+			{
+				this.SelectRectangle(new Rectangle(this.startingPos, pos));
+			}
 			else
 			{
 				Widget obj = this.Detect(pos);
@@ -393,6 +404,13 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			//	Sélection ponctuelle, souris relâchée.
 			this.dragging = false;
+
+			if (this.rectangling)
+			{
+				this.SelectObjectsInRectangle(this.selectedRectangle);
+				this.SelectRectangle(Rectangle.Empty);
+				this.rectangling = false;
+			}
 		}
 
 		protected void SelectKeyChanged(bool isControlPressed, bool isShiftPressed)
@@ -623,6 +641,23 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.Invalidate();
 		}
 
+		protected void SelectObjectsInRectangle(Rectangle sel)
+		{
+			//	Sélectionne tous les objets entièrement inclus dans un rectangle.
+			this.selectedObjects.Clear();
+
+			foreach (Widget obj in this.panel.Children)
+			{
+				if (sel.Contains(obj.ActualBounds))
+				{
+					this.selectedObjects.Add(obj);
+				}
+			}
+
+			this.OnChildrenSelected();
+			this.Invalidate();
+		}
+
 		protected void HiliteRectangle(Rectangle rect)
 		{
 			//	Détermine la zone à mettre en évidence.
@@ -631,6 +666,17 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.Invalidate(this.hilitedRectangle);  // invalide l'ancienne zone
 				this.hilitedRectangle = rect;
 				this.Invalidate(this.hilitedRectangle);  // invalide la nouvelle zone
+			}
+		}
+
+		protected void SelectRectangle(Rectangle rect)
+		{
+			//	Détermine la zone du rectangle de sélection.
+			if (this.selectedRectangle != rect)
+			{
+				this.Invalidate(this.selectedRectangle);  // invalide l'ancienne zone
+				this.selectedRectangle = rect;
+				this.Invalidate(this.selectedRectangle);  // invalide la nouvelle zone
 			}
 		}
 		#endregion
@@ -920,6 +966,15 @@ namespace Epsitec.Common.Designer.MyWidgets
 				graphics.AddFilledRectangle(this.hilitedRectangle);
 				graphics.RenderSolid(this.HiliteSurfaceColor);
 			}
+
+			//	Dessine le rectangle de sélection.
+			if (!this.selectedRectangle.IsEmpty)
+			{
+				Rectangle sel = this.selectedRectangle;
+				sel.Deflate(0.5);
+				graphics.AddRectangle(sel);
+				graphics.RenderSolid(this.HiliteOutlineColor);
+			}
 		}
 
 		protected Rectangle RealBounds
@@ -1065,7 +1120,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected string					tool = "ToolSelect";
 		protected Widget					creatingObject;
 		protected List<Widget>				selectedObjects = new List<Widget>();
+		protected Rectangle					selectedRectangle = Rectangle.Empty;
 		protected Rectangle					hilitedRectangle = Rectangle.Empty;
+		protected bool						rectangling;  // j'invente des mots si je veux !
 		protected bool						dragging;
 		protected Point						startingPos;
 
