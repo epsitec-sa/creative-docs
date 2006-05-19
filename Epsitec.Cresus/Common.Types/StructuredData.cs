@@ -108,22 +108,33 @@ namespace Epsitec.Common.Types
 			{
 				throw new System.Collections.Generic.KeyNotFoundException (string.Format ("The value '{0}' cannot be set; it is not defined by the structure", name));
 			}
-			if (!this.CheckValueValidity (type, value))
-			{
-				throw new System.ArgumentException (string.Format ("The value '{0}' has the wrong type", name));
-			}
-			
-			if (this.values == null)
-			{
-				this.AllocateValues ();
-			}
 
-			if (this.values == null)
+			if (value == UndefinedValue.Instance)
 			{
-				throw new System.InvalidOperationException ("Cannot set a value; no storage defined");
+				if (this.values != null)
+				{
+					this.values.Remove (name);
+				}
 			}
-			
-			this.values[name] = value;
+			else
+			{
+				if (!this.CheckValueValidity (type, value))
+				{
+					throw new System.ArgumentException (string.Format ("The value '{0}' has the wrong type", name));
+				}
+
+				if (this.values == null)
+				{
+					this.AllocateValues ();
+				}
+
+				if (this.values == null)
+				{
+					throw new System.InvalidOperationException ("Cannot set a value; no storage defined");
+				}
+
+				this.values[name] = value;
+			}
 		}
 
 		public bool HasImmutableRoots
@@ -163,12 +174,10 @@ namespace Epsitec.Common.Types
 			{
 				return true;
 			}
-			
-			//	TODO: verify compatibility
 
-			return true;
+			return TypeRosetta.VerifyValueValidity (type, value);
 		}
-		
+
 		protected virtual void AllocateValues()
 		{
 			this.values = new HostedDictionary<string, object> (this.NotifyInsertion, this.NotifyRemoval);

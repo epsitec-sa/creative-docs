@@ -156,6 +156,47 @@ namespace Epsitec.Common.Types
 			return value.GetType ();
 		}
 
+		/// <summary>
+		/// Verifies the validity of the value (proper type and valid with respect
+		/// to <see cref="T:IDataConstraint"/>.
+		/// </summary>
+		/// <param name="type">The type object (may not be <c>null</c>).</param>
+		/// <param name="value">The value.</param>
+		/// <returns><c>true</c> if the value is compatible with the specified type, <c>false</c> otherwise.</returns>
+		public static bool VerifyValueValidity(object type, object value)
+		{
+			if (type == null)
+			{
+				throw new System.ArgumentNullException ("Null type specified");
+			}
+			
+			INamedType      targetType       = TypeRosetta.GetNamedTypeFromTypeObject (type);
+			System.Type     targetSysType    = TypeRosetta.GetSystemTypeFromTypeObject (type);
+			IDataConstraint targetConstraint = targetType as IDataConstraint;
+
+			System.Diagnostics.Debug.Assert (targetType != null);
+
+			if (targetConstraint != null)
+			{
+				return targetConstraint.ValidateValue (value);
+			}
+
+			if (value == null)
+			{
+				//	Only reference types can be set to null.
+
+				//	TODO: check for nullable types too ?
+
+				return targetSysType.IsClass;
+			}
+			else
+			{
+				return targetSysType.IsAssignableFrom (value.GetType ());
+			}
+		}
+		
+
+
 		#region AutomaticNamedType Class
 
 		private class AutomaticNamedType : INamedType

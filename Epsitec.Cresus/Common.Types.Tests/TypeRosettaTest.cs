@@ -127,6 +127,36 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual ("Dynamic", TypeRosetta.GetNamedTypeFromTypeObject (t4self).Name);
 		}
 
+		[Test]
+		public void CheckVerifyValueValidity()
+		{
+			Assert.IsTrue (TypeRosetta.VerifyValueValidity (typeof (int), 10));
+			Assert.IsFalse (TypeRosetta.VerifyValueValidity (typeof (int), 10.5));
+			Assert.IsTrue (TypeRosetta.VerifyValueValidity (new IntegerType (), 10));
+			Assert.IsFalse (TypeRosetta.VerifyValueValidity (new IntegerType (), 10.5));
+			Assert.IsTrue (TypeRosetta.VerifyValueValidity (new IntegerType (0, 10), 10));
+			Assert.IsFalse (TypeRosetta.VerifyValueValidity (new IntegerType (0, 10), 11));
+
+			Assert.IsTrue (TypeRosetta.VerifyValueValidity (typeof (A), new A ()));
+			Assert.IsTrue (TypeRosetta.VerifyValueValidity (typeof (A), new B ()));
+			Assert.IsFalse (TypeRosetta.VerifyValueValidity (typeof (B), new A ()));
+			Assert.IsTrue (TypeRosetta.VerifyValueValidity (typeof (B), new B ()));
+		}
+
+		private class A
+		{
+			public A()
+			{
+			}
+		}
+		
+		private class B : A
+		{
+			public B()
+			{
+			}
+		}
+
 		private class MyObject : DependencyObject
 		{
 			public MyObject()
