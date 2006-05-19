@@ -241,6 +241,13 @@ namespace Epsitec.Common.Designer.Viewers
 			this.panelFrame.Tool = this.tool;
 		}
 
+		public override void DoCommand(string name)
+		{
+			//	Exécute une commande.
+			this.panelFrame.DoCommand(name);
+			base.DoCommand(name);
+		}
+
 
 		protected override void UpdateLabelsIndex(string filter, Searcher.SearchingMode mode)
 		{

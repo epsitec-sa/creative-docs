@@ -64,6 +64,32 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
+		public void DoCommand(string name)
+		{
+			switch (name)
+			{
+				case "PanelDelete":
+					this.DeleteSelection();
+					break;
+
+				case "PanelDuplicate":
+					this.DuplicateSelection();
+					break;
+
+				case "PanelDeselectAll":
+					this.DeselectAll();
+					break;
+
+				case "PanelSelectAll":
+					this.SelectAll();
+					break;
+
+				case "PanelSelectInvert":
+					this.SelectInvert();
+					break;
+			}
+		}
+
 
 		protected override void ProcessMessage(Message message, Drawing.Point pos)
 		{
@@ -289,6 +315,49 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.OnChildrenSelected();
 				this.Invalidate();
 			}
+		}
+
+		protected void SelectAll()
+		{
+			//	Sélectionne tous les objets.
+			this.selectedObjects.Clear();
+
+			foreach (Widget obj in this.panel.Children)
+			{
+				this.selectedObjects.Add(obj);
+			}
+
+			this.OnChildrenSelected();
+			this.Invalidate();
+		}
+
+		protected void SelectInvert()
+		{
+			//	Inverse la sélection.
+			List<Widget> list = new List<Widget>();
+
+			foreach (Widget obj in this.panel.Children)
+			{
+				if (!this.selectedObjects.Contains(obj))
+				{
+					list.Add(obj);
+				}
+			}
+
+			this.selectedObjects = list;
+
+			this.OnChildrenSelected();
+			this.Invalidate();
+		}
+
+		protected void DeleteSelection()
+		{
+			//	Supprime tous les objets sélectionnés.
+		}
+
+		protected void DuplicateSelection()
+		{
+			//	Duplique tous les objets sélectionnés.
 		}
 
 		protected void MoveSelection(Point move)

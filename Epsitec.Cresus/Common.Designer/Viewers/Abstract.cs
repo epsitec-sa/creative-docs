@@ -148,6 +148,12 @@ namespace Epsitec.Common.Designer.Viewers
 			this.UpdateCommands();
 		}
 
+		public virtual void DoCommand(string name)
+		{
+			//	Exécute une commande.
+			this.UpdateCommands();
+		}
+
 
 		public string InfoAccessText
 		{
