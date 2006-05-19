@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Types
 {
-	public class StructuredRecord : IStructuredType
+	public class StructuredRecord : IStructuredTypeProvider
 	{
 		public StructuredRecord(StructuredType type)
 		{
@@ -16,56 +16,28 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
-				return this.type;
+				if (this.type == null)
+				{
+					//	TODO: implement
+					throw new System.NotImplementedException ();
+					//return new DynamicStructuredType (this);
+				}
+				else
+				{
+					return this.type;
+				}
 			}
 		}
 
-		public bool IsDynamicType
-		{
-			get
-			{
-				return this.type == null;
-			}
-		}
-		
-		#region IStructuredTree Members
+		#region IStructuredTypeProvider Members
 
-		public object GetFieldTypeObject(string name)
+		IStructuredType IStructuredTypeProvider.GetStructuredType()
 		{
-			if (this.IsDynamicType)
-			{
-				return this.GetDynamicFieldTypeObject (name);
-			}
-			else
-			{
-				return this.type.GetFieldTypeObject (name);
-			}
-		}
-		
-		public string[] GetFieldNames()
-		{
-			if (this.IsDynamicType)
-			{
-				return this.GetDynamicFieldNames ();
-			}
-			else
-			{
-				return this.type.GetFieldNames ();
-			}
+			return this.StructuredType;
 		}
 
 		#endregion
-
-		protected virtual object GetDynamicFieldTypeObject(string name)
-		{
-			return null;
-		}
 		
-		protected virtual string[] GetDynamicFieldNames()
-		{
-			return new string[0];
-		}
-
 		
 		private StructuredType type;
 	}

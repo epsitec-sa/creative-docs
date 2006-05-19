@@ -67,14 +67,9 @@ namespace Epsitec.Common.UI
 			}
 		}
 
-		#region IStructuredTree Members
+		#region IStructuredType Members
 
-		/// <summary>
-		/// Gets the type object for the specified field.
-		/// </summary>
-		/// <param name="name">The field name.</param>
-		/// <returns>The type object for the specified field.</returns>
-		public object GetFieldTypeObject(string name)
+		object IStructuredType.GetFieldTypeObject(string name)
 		{
 			ItemRecord record = this.GetItemRecord (name);
 			IStructuredData data = record.Data;
@@ -100,52 +95,11 @@ namespace Epsitec.Common.UI
 			return names;
 		}
 
-#if false
-		/// <summary>
-		/// Gets the field paths of the fields found at the specified path.
-		/// </summary>
-		/// <param name="path">The path to search.</param>
-		/// <returns>Array of field paths.</returns>
-		public string[] GetFieldPaths(string path)
-		{
-			string rootName = StructuredTree.GetRootName (path);
-			string nextPath = StructuredTree.GetSubPath (path, 1);
-			
-			IStructuredTree root = this.GetItemRecord (rootName).Data as IStructuredTree;
-
-			if (root == null)
-			{
-				return null;
-			}
-			string[] paths;
-			
-			if (nextPath.Length == 0)
-			{
-				paths = root.GetFieldNames ();
-			}
-			else
-			{
-				paths = root.GetFieldPaths (nextPath);
-			}
-
-			for (int i = 0; i < paths.Length; i++)
-			{
-				paths[i] = StructuredTree.CreatePath (rootName, paths[i]);
-			}
-
-			return paths;
-		}
-#endif
 
 		#endregion
 
 		#region IStructuredData Members
 
-		/// <summary>
-		/// Attaches the listener for the specified path.
-		/// </summary>
-		/// <param name="path">The path.</param>
-		/// <param name="handler">The handler.</param>
 		public void AttachListener(string path, Epsitec.Common.Support.EventHandler<DependencyPropertyChangedEventArgs> handler)
 		{
 			string name = StructuredTree.GetRootName (path);
@@ -161,11 +115,6 @@ namespace Epsitec.Common.UI
 			data.AttachListener (StructuredTree.GetSubPath (path, 1), handler);
 		}
 
-		/// <summary>
-		/// Detaches the listener for the specified path.
-		/// </summary>
-		/// <param name="path">The path.</param>
-		/// <param name="handler">The handler.</param>
 		public void DetachListener(string path, Epsitec.Common.Support.EventHandler<DependencyPropertyChangedEventArgs> handler)
 		{
 			string name = StructuredTree.GetRootName (path);
@@ -181,92 +130,46 @@ namespace Epsitec.Common.UI
 			data.DetachListener (StructuredTree.GetSubPath (path, 1), handler);
 		}
 
-		/// <summary>
-		/// Gets the value for the specified path.
-		/// </summary>
-		/// <param name="path">The path.</param>
-		/// <returns>The value for the specified path.</returns>
-		public object GetValue(string path)
+		public string[] GetValueNames()
 		{
-			string name = StructuredTree.GetRootName (path);
+			string[] names = new string[this.items.Count];
 
+			for (int i = 0; i < this.items.Count; i++)
+			{
+				names[i] = this.items[i].Name;
+			}
+
+			System.Array.Sort (names);
+
+			return names;
+		}
+		
+		object IStructuredData.GetValue(string name)
+		{
 			ItemRecord record = this.GetItemRecord (name);
 			IStructuredData data = record.Data;
 
 			if (data == null)
 			{
-				throw new System.ArgumentException (string.Format ("Path '{0}' cannot be resolved", path));
+				throw new System.ArgumentException (string.Format ("Name '{0}' cannot be resolved", name));
 			}
-
-			if (name == path)
-			{
-				return record.Data;
-			}
-			else
-			{
-				return data.GetValue (StructuredTree.GetSubPath (path, 1));
-			}
+			
+			return record.Data;
 		}
 
-		public object GetValueTypeObject(string path)
+		void IStructuredData.SetValue(string name, object value)
 		{
-			string name = StructuredTree.GetRootName (path);
-
-			ItemRecord record = this.GetItemRecord (name);
-			IStructuredData data = record.Data;
-
-			if (data == null)
-			{
-				throw new System.ArgumentException (string.Format ("Path '{0}' cannot be resolved", path));
-			}
-
-			if (name == path)
-			{
-				return Types.TypeRosetta.GetTypeObjectFromValue (record.Data);
-			}
-			else
-			{
-				return data.GetValueTypeObject (StructuredTree.GetSubPath (path, 1));
-			}
+			throw new System.InvalidOperationException ("You cannot modify a DataSource with SetValue");
 		}
 
-		/// <summary>
-		/// Sets the value for the specified path.
-		/// </summary>
-		/// <param name="path">The path.</param>
-		/// <param name="value">The value.</param>
-		public void SetValue(string path, object value)
-		{
-			string name = StructuredTree.GetRootName (path);
-
-			ItemRecord record = this.GetItemRecord (name);
-			IStructuredData data = record.Data;
-
-			if (data == null)
-			{
-				throw new System.ArgumentException (string.Format ("Path '{0}' cannot be resolved", path));
-			}
-			if (name == path)
-			{
-				throw new System.InvalidOperationException ("You cannot modify a AddDataSource with SetValue");
-			}
-
-			data.SetValue (StructuredTree.GetSubPath (path, 1), value);
-		}
-
-		/// <summary>
-		/// Gets a value indicating whether this instance has immutable roots.
-		/// </summary>
-		/// <value>
-		/// 	<c>true</c> if this instance has immutable roots; otherwise, <c>false</c>.
-		/// </value>
-		public bool HasImmutableRoots
+		bool IStructuredData.HasImmutableRoots
 		{
 			get
 			{
 				return true;
 			}
 		}
+		
 		#endregion
 
 		/// <summary>

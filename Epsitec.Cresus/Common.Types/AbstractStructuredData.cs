@@ -56,24 +56,24 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		public object GetValue(string path)
-		{
-			object value = this.GetValueBase (path);
-			this.UpdateCachedValue (path, value);
-			return value;
-		}
-
-		public object GetValueTypeObject(string path)
+		public string[] GetValueNames()
 		{
 			//	TODO: ...
 
 			throw new System.NotImplementedException ();
 		}
-
-		public void SetValue(string path, object value)
+		
+		public object GetValue(string name)
 		{
-			this.SetValueBase (path, value);
-			this.UpdateCachedValue (path, value);
+			object value = this.GetValueBase (name);
+			this.UpdateCachedValue (name, value);
+			return value;
+		}
+
+		public void SetValue(string name, object value)
+		{
+			this.SetValueBase (name, value);
+			this.UpdateCachedValue (name, value);
 		}
 
 		public bool HasImmutableRoots

@@ -20,23 +20,27 @@ namespace Epsitec.Common.UI
 			collection.AddDataSource ("A", source1);
 			collection.AddDataSource ("B", source2);
 
-			collection.SetValue ("A.Name", "Source1");
-			collection.SetValue ("B.x", 1);
-			collection.SetValue ("B.y", "foo");
+			StructuredTree.SetValue (collection, "A.Name", "Source1");
+			StructuredTree.SetValue (collection, "B.x", 1);
+			StructuredTree.SetValue (collection, "B.y", "foo");
 
-			Assert.AreEqual ("Source1", collection.GetValue ("A.Name"));
-			Assert.AreEqual (-1, collection.GetValue ("A.Index"));
-			Assert.AreEqual (1, collection.GetValue ("B.x"));
-			Assert.AreEqual ("foo", collection.GetValue ("B.y"));
+			Assert.AreEqual ("Source1", StructuredTree.GetValue (collection, "A.Name"));
+			Assert.AreEqual (-1, StructuredTree.GetValue (collection, "A.Index"));
+			Assert.AreEqual (1, StructuredTree.GetValue (collection, "B.x"));
+			Assert.AreEqual ("foo", StructuredTree.GetValue (collection, "B.y"));
 
-			Assert.AreEqual (source1.ObjectType, collection.GetFieldTypeObject ("A"));
+			IStructuredType structuredType = collection as IStructuredType;
+
+			Assert.IsNotNull (structuredType);
+			Assert.AreEqual (source1.ObjectType, structuredType.GetFieldTypeObject ("A"));
 
 			foreach (string name in collection.GetFieldNames ())
 			{
 				System.Console.Out.WriteLine ("Name: {0}", name);
 
 				IStructuredData data = collection.GetDataSource (name);
-				IStructuredType tree = data as IStructuredType;
+				object          type = TypeRosetta.GetTypeObjectFromValue (data);
+				IStructuredType tree = TypeRosetta.GetStructuredTypeFromTypeObject (type);
 
 				Assert.IsNotNull (data);
 
@@ -89,8 +93,8 @@ namespace Epsitec.Common.UI
 			collection.AddDataSource ("B", source2);
 			collection.AddDataSource ("A", source1);
 
-			Assert.AreEqual (source1, collection.GetValue ("A"));
-			Assert.AreEqual (source2, collection.GetValue ("B"));
+			Assert.AreEqual (source1, StructuredTree.GetValue (collection, "A"));
+			Assert.AreEqual (source2, StructuredTree.GetValue (collection, "B"));
 
 			Types.Serialization.Context context = new Types.Serialization.Context ();
 
@@ -122,7 +126,7 @@ namespace Epsitec.Common.UI
 		}
 
 		[Test]
-		public void CheckGetValueType()
+		public void CheckGetFieldTypeObject()
 		{
 			DataSourceCollection collection = new DataSourceCollection ();
 
@@ -134,18 +138,22 @@ namespace Epsitec.Common.UI
 
 			collection.AddDataSource ("B", source2);
 			collection.AddDataSource ("A", source1);
-			
-			Assert.AreEqual (DependencyObjectType.FromSystemType (typeof (Widgets.Visual)), collection.GetValueTypeObject ("A"));
-			Assert.AreEqual (typeof (MySimpleDataSource), collection.GetValueTypeObject ("B"));
-			Assert.AreEqual (Widgets.Visual.NameProperty, collection.GetValueTypeObject ("A.Name"));
-			Assert.AreEqual (typeof (string), collection.GetValueTypeObject ("B.Name"));
-			Assert.AreEqual (typeof (int), collection.GetValueTypeObject ("B.BirthDateYear"));
 
-			Assert.AreEqual (typeof (Widgets.Visual), Types.TypeRosetta.GetSystemTypeFromTypeObject (collection.GetValueTypeObject ("A")));
-			Assert.AreEqual (typeof (MySimpleDataSource), Types.TypeRosetta.GetSystemTypeFromTypeObject (collection.GetValueTypeObject ("B")));
-			Assert.AreEqual (typeof (string), Types.TypeRosetta.GetSystemTypeFromTypeObject (collection.GetValueTypeObject ("A.Name")));
-			Assert.AreEqual (typeof (string), Types.TypeRosetta.GetSystemTypeFromTypeObject (collection.GetValueTypeObject ("B.Name")));
-			Assert.AreEqual (typeof (int), Types.TypeRosetta.GetSystemTypeFromTypeObject (collection.GetValueTypeObject ("B.BirthDateYear")));
+			IStructuredType type = collection as IStructuredType;
+
+			Assert.IsNotNull (type);
+			
+			Assert.AreEqual (DependencyObjectType.FromSystemType (typeof (Widgets.Visual)), StructuredTree.GetFieldType (type, "A"));
+			Assert.AreEqual (typeof (MySimpleDataSource), StructuredTree.GetFieldType (type, "B"));
+			Assert.AreEqual (Widgets.Visual.NameProperty, StructuredTree.GetFieldType (type, "A.Name"));
+			Assert.AreEqual (typeof (string), StructuredTree.GetFieldType (type, "B.Name"));
+			Assert.AreEqual (typeof (int), StructuredTree.GetFieldType (type, "B.BirthDateYear"));
+
+			Assert.AreEqual (typeof (Widgets.Visual), Types.TypeRosetta.GetSystemTypeFromTypeObject (StructuredTree.GetFieldType (type, "A")));
+			Assert.AreEqual (typeof (MySimpleDataSource), Types.TypeRosetta.GetSystemTypeFromTypeObject (StructuredTree.GetFieldType (type, "B")));
+			Assert.AreEqual (typeof (string), Types.TypeRosetta.GetSystemTypeFromTypeObject (StructuredTree.GetFieldType (type, "A.Name")));
+			Assert.AreEqual (typeof (string), Types.TypeRosetta.GetSystemTypeFromTypeObject (StructuredTree.GetFieldType (type, "B.Name")));
+			Assert.AreEqual (typeof (int), Types.TypeRosetta.GetSystemTypeFromTypeObject (StructuredTree.GetFieldType (type, "B.BirthDateYear")));
 		}
 
 		[Test]
@@ -157,7 +165,7 @@ namespace Epsitec.Common.UI
 			Widgets.Visual source1 = new Widgets.Visual ();
 
 			collection.AddDataSource ("A", source1);
-			collection.SetValue ("A", source1);
+			StructuredTree.SetValue (collection, "A", source1);
 		}
 
 		[Test]
@@ -168,7 +176,7 @@ namespace Epsitec.Common.UI
 
 			Widgets.Visual source1 = new Widgets.Visual ();
 
-			collection.SetValue ("A", source1);
+			StructuredTree.SetValue (collection, "A", source1);
 		}
 
 		private class MySimpleDataSource : IStructuredData
@@ -189,19 +197,22 @@ namespace Epsitec.Common.UI
 				throw new System.Exception ("The method or operation is not implemented.");
 			}
 
-			public object GetValue(string path)
+			public string[] GetValueNames()
 			{
-				return this.data[path];
+				string[] names = new string[this.data.Keys.Count];
+				this.data.Keys.CopyTo (names, 0);
+				System.Array.Sort (names);
+				return names;
 			}
 
-			public object GetValueTypeObject(string path)
+			public object GetValue(string name)
 			{
-				return TypeRosetta.GetTypeObjectFromValue (this.data[path]);
+				return this.data[name];
 			}
 
-			public void SetValue(string path, object value)
+			public void SetValue(string name, object value)
 			{
-				this.data[path] = value;
+				this.data[name] = value;
 			}
 
 			public bool HasImmutableRoots

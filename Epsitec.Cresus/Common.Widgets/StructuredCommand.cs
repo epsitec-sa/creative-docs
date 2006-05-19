@@ -15,13 +15,18 @@ namespace Epsitec.Common.Widgets
 			this.StateObjectType = Types.DependencyObjectType.FromSystemType (typeof (StructuredState));
 		}
 
-		#region IStructuredTree Members
+		#region IStructuredType Members
 
 		string[] IStructuredType.GetFieldNames()
 		{
 			throw new System.Exception ("The method or operation is not implemented.");
 		}
 
+		object IStructuredType.GetFieldTypeObject(string name)
+		{
+			throw new System.Exception ("The method or operation is not implemented.");
+		}
+		
 		#endregion
 
 		private class StructuredState : CommandState

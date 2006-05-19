@@ -14,7 +14,7 @@ namespace Epsitec.Common.Types
 	/// qui permet une plus grande souplesse (valeurs par défaut, introspection,
 	/// sérialisation, styles, génération automatique d'événements, etc.)
 	/// </summary>
-	public abstract class DependencyObject : System.IDisposable, IInheritedPropertyCache, IStructuredData, IStructuredType
+	public abstract class DependencyObject : System.IDisposable, IInheritedPropertyCache, IStructuredData
 	{
 		protected DependencyObject()
 		{
@@ -649,37 +649,37 @@ namespace Epsitec.Common.Types
 			this.RemoveEventHandler (property, handler);
 		}
 
-		object IStructuredData.GetValue(string path)
+		string[] IStructuredData.GetValueNames()
 		{
-			DependencyProperty property = this.ObjectType.GetProperty (path);
+			List<string> names = new List<string> ();
+			
+			foreach (LocalValueEntry entry in this.LocalValueEntries)
+			{
+				names.Add (entry.Property.Name);
+			}
+
+			return names.ToArray ();
+		}
+
+		object IStructuredData.GetValue(string name)
+		{
+			DependencyProperty property = this.ObjectType.GetProperty (name);
 
 			if (property == null)
 			{
-				throw new System.ArgumentException (string.Format ("Path '{0}' cannot map to DependencyProperty", path));
+				throw new System.ArgumentException (string.Format ("Name '{0}' cannot be mapped to a DependencyProperty", name));
 			}
 
 			return this.GetValue (property);
 		}
 
-		object IStructuredData.GetValueTypeObject(string path)
+		void IStructuredData.SetValue(string name, object value)
 		{
-			DependencyProperty property = this.ObjectType.GetProperty (path);
+			DependencyProperty property = this.ObjectType.GetProperty (name);
 
 			if (property == null)
 			{
-				throw new System.ArgumentException (string.Format ("Path '{0}' cannot map to DependencyProperty", path));
-			}
-
-			return property;
-		}
-
-		void IStructuredData.SetValue(string path, object value)
-		{
-			DependencyProperty property = this.ObjectType.GetProperty (path);
-
-			if (property == null)
-			{
-				throw new System.ArgumentException (string.Format ("Path '{0}' cannot map to DependencyProperty", path));
+				throw new System.ArgumentException (string.Format ("Name '{0}' cannot be mapped to a DependencyProperty", name));
 			}
 
 			this.SetValue (property, value);
@@ -743,28 +743,5 @@ namespace Epsitec.Common.Types
 
 		static Dictionary<System.Type, TypeDeclaration>		declarations = new Dictionary<System.Type, TypeDeclaration> ();
 		static int											registeredPropertyCount;
-
-		#region IStructuredTree Members
-
-		public object GetFieldTypeObject(string name)
-		{
-			return this.ObjectType.GetProperty (name);
-		}
-		
-		string[] IStructuredType.GetFieldNames()
-		{
-			ReadOnlyArray<DependencyProperty> properties = this.ObjectType.GetProperties ();
-
-			string[] names = new string[properties.Length];
-
-			for (int i = 0; i < properties.Length; i++)
-			{
-				names[i] = properties[i].Name;
-			}
-			
-			return names;
-		}
-
-		#endregion
 	}
 }

@@ -103,6 +103,60 @@ namespace Epsitec.Common.Types
 			return StructuredTree.GetFieldType (root, path) != null;
 		}
 
+		public static object GetValue(IStructuredData root, string path)
+		{
+			if (string.IsNullOrEmpty (path))
+			{
+				throw new System.ArgumentException ();
+			}
+
+			string originalPath = path;
+
+			while (root != null)
+			{
+				string name  = StructuredTree.GetRootName (path);
+				object value = root.GetValue (name);
+
+				if (name == path)
+				{
+					return value;
+				}
+
+				root = value as IStructuredData;
+				path = StructuredTree.GetSubPath (path, 1);
+			}
+
+			throw new System.ArgumentException (string.Format ("Path {0} cannot be resolved", originalPath));
+		}
+
+		public static void SetValue(IStructuredData root, string path, object value)
+		{
+			if (string.IsNullOrEmpty (path))
+			{
+				throw new System.ArgumentException ();
+			}
+
+			string originalPath = path;
+
+			while (root != null)
+			{
+				string name = StructuredTree.GetRootName (path);
+
+				if (name == path)
+				{
+					root.SetValue (name, value);
+					return;
+				}
+				
+				root = root.GetValue (name) as IStructuredData;
+				path = StructuredTree.GetSubPath (path, 1);
+			}
+
+			throw new System.ArgumentException (string.Format ("Path {0} cannot be resolved", originalPath));
+		}
+
+
+
 		public static object GetFieldType(IStructuredType root, string path)
 		{
 			string leafName;

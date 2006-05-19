@@ -27,7 +27,7 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		#region IStructuredTree Members
+		#region IStructuredType Members
 
 		public object GetFieldTypeObject(string name)
 		{

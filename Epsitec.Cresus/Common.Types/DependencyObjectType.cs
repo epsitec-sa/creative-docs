@@ -9,7 +9,7 @@ namespace Epsitec.Common.Types
 	/// La classe DependencyObjectType représente une version de plus haut niveau de
 	/// System.Type.
 	/// </summary>
-	public sealed class DependencyObjectType
+	public sealed class DependencyObjectType : IStructuredType
 	{
 		private DependencyObjectType(System.Type system_type, DependencyObjectType base_type)
 		{
@@ -203,6 +203,28 @@ namespace Epsitec.Common.Types
 			
 			return objectType;
 		}
+
+		#region IStructuredType Members
+
+		object IStructuredType.GetFieldTypeObject(string name)
+		{
+			return this.GetProperty (name);
+		}
+
+		string[] IStructuredType.GetFieldNames()
+		{
+			ReadOnlyArray<DependencyProperty> properties = this.GetProperties ();
+			string[] names = new string[properties.Count];
+
+			for (int i = 0; i < properties.Count; i++)
+			{
+				names[i] = properties[i].Name;
+			}
+
+			return names;
+		}
+
+		#endregion
 		
 		#region Private Methods
 		private void BuildPropertyList()

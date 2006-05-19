@@ -78,6 +78,25 @@ namespace Epsitec.Common.Types
 			return namedType;
 		}
 
+		public static IStructuredType GetStructuredTypeFromTypeObject(object type)
+		{
+			IStructuredType structuredType = type as IStructuredType;
+
+			if (structuredType != null)
+			{
+				return structuredType;
+			}
+			
+			IStructuredTypeProvider structuredTypeProvider = type as IStructuredTypeProvider;
+
+			if (structuredTypeProvider != null)
+			{
+				return structuredTypeProvider.GetStructuredType ();
+			}
+
+			return null;
+		}
+		
 		/// <summary>
 		/// Gets the type object from a value.
 		/// </summary>
@@ -101,17 +120,24 @@ namespace Epsitec.Common.Types
 					return type;
 				}
 			}
+			
+			IStructuredTypeProvider structuredTypeProvider = value as IStructuredTypeProvider;
 
-			StructuredRecord structuredRecord = value as StructuredRecord;
-
-			if (structuredRecord != null)
+			if (structuredTypeProvider != null)
 			{
-				return structuredRecord.StructuredType;
+				return structuredTypeProvider.GetStructuredType ();
 			}
-
+			
 			if (dependencyObject != null)
 			{
 				return dependencyObject.ObjectType;
+			}
+
+			IStructuredData structuredData = value as IStructuredData;
+
+			if (structuredData != null)
+			{
+				return new DynamicStructuredType (structuredData);
 			}
 
 			return value.GetType ();
