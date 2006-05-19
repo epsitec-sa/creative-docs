@@ -971,13 +971,26 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Modifie l'ordre pour la touche Tab de tous les objets sélectionnés.
 			foreach (Widget obj in this.selectedObjects)
 			{
+				int oldIndex = obj.TabIndex;
 				int index = obj.TabIndex + direction;
 				index = System.Math.Max(index, 0);
 				index = System.Math.Min(index, this.panel.Children.Count-1);
+				this.SelectTabIndex(index, oldIndex);
 				obj.TabIndex = index;
 			}
 
 			this.Invalidate();
+		}
+
+		protected void SelectTabIndex(int oldIndex, int newIndex)
+		{
+			foreach (Widget obj in this.panel.Children)
+			{
+				if (obj.TabIndex == oldIndex)
+				{
+					obj.TabIndex = newIndex;
+				}
+			}
 		}
 
 		protected Rectangle SelectBounds
