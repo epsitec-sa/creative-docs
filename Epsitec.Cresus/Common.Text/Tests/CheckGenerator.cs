@@ -85,45 +85,55 @@ namespace Epsitec.Common.Text.Tests
 			
 			TextStyle style = story.StyleList.NewTextStyle (null, "Normal", TextStyleClass.Paragraph, properties);
 			
-			Properties.GeneratorProperty g1_a = new Properties.GeneratorProperty ("G1", 0, 0);
-			Properties.GeneratorProperty g1_b = new Properties.GeneratorProperty ("G1", 0, 0);
-			Properties.GeneratorProperty g1_c = new Properties.GeneratorProperty ("G1", 1, 0);
-			Properties.GeneratorProperty g1_d = new Properties.GeneratorProperty ("G1", 2, 0);
-			Properties.GeneratorProperty g1_e = new Properties.GeneratorProperty ("G1", 1, 0);
-			
-			properties.Clear (); properties.Add (g1_a);
+			Properties.GeneratorProperty g1_a = new Properties.GeneratorProperty ("G1", 0, 101);
+			Properties.GeneratorProperty g1_b = new Properties.GeneratorProperty ("G1", 0, 102);
+			Properties.GeneratorProperty g1_c = new Properties.GeneratorProperty ("G1", 1, 103);
+			Properties.GeneratorProperty g1_d = new Properties.GeneratorProperty ("G1", 2, 104);
+			Properties.GeneratorProperty g1_e = new Properties.GeneratorProperty ("G1", 1, 105);
+
+			properties.Clear ();
+			properties.Add (g1_a);
+			properties.Add (new Properties.AutoTextProperty ("g1a"));
 			
 			story.ConvertToStyledText ("X", style, properties, out text);
 			story.InsertText (cursor, text);
 			
 			story.ConvertToStyledText ("Chapitre premier\n", style, null, out text);
 			story.InsertText (cursor, text);
-			
-			properties.Clear (); properties.Add (g1_b);
+
+			properties.Clear ();
+			properties.Add (g1_b);
+			properties.Add (new Properties.AutoTextProperty ("g1b"));
 			
 			story.ConvertToStyledText ("X", style, properties, out text);
 			story.InsertText (cursor, text);
 			
 			story.ConvertToStyledText ("Chapitre second\n", style, null, out text);
 			story.InsertText (cursor, text);
-			
-			properties.Clear (); properties.Add (g1_c);
+
+			properties.Clear ();
+			properties.Add (g1_c);
+			properties.Add (new Properties.AutoTextProperty ("g1c"));
 			
 			story.ConvertToStyledText ("X", style, properties, out text);
 			story.InsertText (cursor, text);
 			
 			story.ConvertToStyledText ("Introduction\n", style, null, out text);
 			story.InsertText (cursor, text);
-			
-			properties.Clear (); properties.Add (g1_d);
+
+			properties.Clear ();
+			properties.Add (g1_d);
+			properties.Add (new Properties.AutoTextProperty ("g1d"));
 			
 			story.ConvertToStyledText ("X", style, properties, out text);
 			story.InsertText (cursor, text);
 			
 			story.ConvertToStyledText ("Plan\n", style, null, out text);
 			story.InsertText (cursor, text);
-			
-			properties.Clear (); properties.Add (g1_e);
+
+			properties.Clear ();
+			properties.Add (g1_e);
+			properties.Add (new Properties.AutoTextProperty ("g1e"));
 			
 			story.ConvertToStyledText ("X", style, properties, out text);
 			story.InsertText (cursor, text);

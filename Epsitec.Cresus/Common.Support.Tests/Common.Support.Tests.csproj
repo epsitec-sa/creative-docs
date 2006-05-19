@@ -91,6 +91,10 @@
     <Reference Include="System.Xml">
       <Name>System.XML</Name>
     </Reference>
+    <ProjectReference Include="..\Common.Document\Common.Document.csproj">
+      <Project>{B324896E-2CDE-45B8-91CE-B476687EA384}</Project>
+      <Name>Common.Document</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Common.Drawing.Agg\Common.Drawing.Agg.csproj">
       <Name>Common.Drawing.Agg</Name>
       <Project>{7D73AD35-D078-4B4C-AF30-434C6A377058}</Project>

@@ -70,7 +70,26 @@ namespace Epsitec.Common.Widgets
 			
 			this.RequestAsyncSynchronization ();
 		}
-		
+
+		public void InvalidateGroup(string group)
+		{
+			for (int i = 0; i < this.records.Length; i++)
+			{
+				Command command = this.records[i].Command;
+
+				if ((command != null) &&
+					(command.Group == group))
+				{
+					if (this.records[i].ClearCommand ())
+					{
+						this.clear_count += 1;
+					}
+				}
+			}
+
+			this.RequestAsyncSynchronization ();
+		}
+
 		public void InvalidateCommand(Command command)
 		{
 			for (int i = 0; i < this.records.Length; i++)
@@ -83,18 +102,31 @@ namespace Epsitec.Common.Widgets
 					}
 				}
 			}
-			
+
 			this.RequestAsyncSynchronization ();
 		}
 
-		public void InvalidateGroup(string group)
+		public void InvalidateState(CommandState state)
 		{
 			for (int i = 0; i < this.records.Length; i++)
 			{
-				Command command = this.records[i].Command;
-				
-				if ((command != null) &&
-					(command.Group == group))
+				if (this.records[i].State == state)
+				{
+					if (this.records[i].ClearCommand ())
+					{
+						this.clear_count += 1;
+					}
+				}
+			}
+
+			this.RequestAsyncSynchronization ();
+		}
+
+		public void InvalidateContext(CommandContext context)
+		{
+			for (int i = 0; i < this.records.Length; i++)
+			{
+				if (this.records[i].Context == context)
 				{
 					if (this.records[i].ClearCommand ())
 					{
@@ -143,31 +175,7 @@ namespace Epsitec.Common.Widgets
 			
 			this.synchronize = false;
 		}
-		
-		public void UpdateWidgets(Command command)
-		{
-			if (this.synchronize)
-			{
-				this.Synchronize ();
-			}
-			
-			bool        enable   = command.Enable;
-			ActiveState active   = command.ActiveState;
-			string      advanced = command.AdvancedState;
-			
-			int count = 0;
-			
-			for (int i = 0; i < this.records.Length; i++)
-			{
-				if (this.records[i].Command == command)
-				{
-					this.UpdateWidget (this.records[i].Visual as Widget, command, enable, active, advanced);
-					
-					count++;
-				}
-			}
-		}
-		
+
 		
 		public Command GetCommandState(Visual visual)
 		{
@@ -194,14 +202,19 @@ namespace Epsitec.Common.Widgets
 		{
 			public Record(Visual visual)
 			{
-				this.visual = new System.WeakReference (visual, false);
+				this.visual  = new System.WeakReference (visual, false);
+				
 				this.command = null;
+				this.context = null;
+				this.state   = null;
 			}
 			
-			public Record(Visual visual, Command command)
+			public Record(Visual visual, Command command, CommandContext context, CommandState state)
 			{
-				this.visual = new System.WeakReference (visual, false);
-				this.command = null;
+				this.visual  = new System.WeakReference (visual, false);
+				this.command = command;
+				this.context = context;
+				this.state   = state;
 			}
 			
 			
@@ -242,7 +255,7 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 			
-			public Command					Command
+			public Command						Command
 			{
 				get
 				{
@@ -250,11 +263,28 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 			
+			public CommandContext				Context
+			{
+				get
+				{
+					return this.context;
+				}
+			}
+			
+			public CommandState					State
+			{
+				get
+				{
+					return this.state;
+				}
+			}
 			
 			public void Clear()
 			{
 				this.visual  = null;
 				this.command = null;
+				this.context = null;
+				this.state   = null;
 			}
 			
 			public bool ClearCommand()
@@ -262,6 +292,7 @@ namespace Epsitec.Common.Widgets
 				if (this.command != null)
 				{
 					this.command = null;
+					this.state = null;
 					return true;
 				}
 				else
@@ -270,14 +301,22 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 			
-			public void SetCommand(Command command)
+			public void SetCommand(Command command, CommandContext context, CommandState state)
 			{
+				System.Diagnostics.Debug.Assert (command != null);
+				System.Diagnostics.Debug.Assert (context != null);
+				System.Diagnostics.Debug.Assert (state != null);
+				
 				this.command = command;
+				this.context = context;
+				this.state   = state;
 			}
 			
 			
 			private System.WeakReference		visual;
-			private Command				command;
+			private Command						command;
+			private CommandContext				context;
+			private CommandState				state;
 		}
 		#endregion
 		
@@ -321,52 +360,45 @@ namespace Epsitec.Common.Widgets
 			if (visual != null)
 			{
 				Command command = Command.Find (visual.CommandName);
+				CommandContextChain chain = CommandContextChain.BuildChain (visual);
 				
-				if ((this.clear_count > 0) &&
-					(this.records[index].Command == null))
+				if ((command != null) &&
+					(chain != null))
 				{
-					this.clear_count -= 1;
-				}
-				
-				if (command == null)
-				{
-//-					System.Diagnostics.Debug.WriteLine (string.Format ("Command '{0}' does not exist (yet).", visual.CommandName));
-				}
-				
-				if (command != null)
-				{
-					this.records[index].SetCommand (command);
-					
-					bool        enable   = command.Enable;
-					ActiveState active   = command.ActiveState;
-					string      advanced = command.AdvancedState;
-					
-					this.UpdateWidget (this.records[index].Visual as Widget, command, enable, active, advanced);
+					CommandContext context;
+					CommandState state = chain.GetCommandState (command, out context);
+
+					if ((state != null) &&
+						(context != null))
+					{
+						if ((this.clear_count > 0) &&
+							(this.records[index].IsDirty))
+						{
+							this.clear_count -= 1;
+						}
+
+						this.records[index].SetCommand (command, context, state);
+
+						bool enable = state.Enable;
+						ActiveState active = state.ActiveState;
+						string advanced = state.AdvancedState;
+
+						this.UpdateVisual (visual, command, enable, active, advanced);
+					}
 				}
 			}
 		}
 		
-		private void UpdateWidget(Widget widget, Command command, bool enable, ActiveState active, string advanced)
+		private void UpdateVisual(Visual visual, Command command, bool enable, ActiveState active, string advanced)
 		{
-			if (widget != null)
+			if (visual != null)
 			{
-				if (enable)
-				{
-					CommandContextChain chain = CommandContextChain.BuildChain (widget);
-
-					if ((chain != null) &&
-						(chain.IsDisabled (command)))
-					{
-						enable = false;
-					}
-				}
-				
-				widget.Enable      = enable;
-				widget.ActiveState = active;
+				visual.Enable      = enable;
+				visual.ActiveState = active;
 				
 				if (advanced != null)
 				{
-					Command.SetAdvancedState (widget, advanced);
+					CommandState.SetAdvancedState (visual, advanced);
 				}
 			}
 		}

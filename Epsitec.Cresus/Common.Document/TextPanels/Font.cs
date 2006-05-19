@@ -602,13 +602,13 @@ namespace Epsitec.Common.Document.TextPanels
 		{
 			if ( this.ignoreChanged )  return;
 
-			ColorSample cs = sender as ColorSample;
-			if ( cs.ActiveState == ActiveState.Yes )
+			ColorSample c = sender as ColorSample;
+			if ( c.ActiveState == ActiveState.Yes )
 			{
 				this.OnOriginColorChanged();
 			}
 
-			this.ColorToWrapper(cs);
+			this.ColorToWrapper(c);
 		}
 
 		private void HandleButtonUnitClicked(object sender, MessageEventArgs e)

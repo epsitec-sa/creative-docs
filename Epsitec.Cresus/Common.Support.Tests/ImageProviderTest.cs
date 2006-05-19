@@ -6,7 +6,8 @@ namespace Epsitec.Common.Support
 	{
 		[SetUp] public void Initialise()
 		{
-			Widgets.Widget.Initialise ();
+			Epsitec.Common.Document.Engine.Initialise ();
+			Epsitec.Common.Widgets.Widget.Initialise ();
 		}
 		
 		[Test] public void CheckGetImage()

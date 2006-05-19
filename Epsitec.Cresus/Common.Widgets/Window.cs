@@ -1015,18 +1015,6 @@ namespace Epsitec.Common.Widgets
 		#endregion
 		
 		
-		public void AttachDispatcher(CommandDispatcher value)
-		{
-			if (CommandDispatcher.GetDispatcher (this) != value)
-			{
-				System.Diagnostics.Debug.Assert (CommandDispatcher.GetDispatcher (this) == null);
-
-				CommandDispatcher.SetDispatcher (this, value);
-				
-				Helpers.VisualTree.InvalidateCommandDispatcher (this);
-			}
-		}
-		
 		public void DetachDispatcher(CommandDispatcher value)
 		{
 			if (CommandDispatcher.GetDispatcher (this) != null)
@@ -1135,16 +1123,13 @@ namespace Epsitec.Common.Widgets
 					{
 						while (this.cmd_queue.Count > 0)
 						{
-							QueueItem item = this.cmd_queue.Dequeue () as QueueItem;
+							QueueItem item = this.cmd_queue.Dequeue ();
 							helper.QueueCommand (item);
 						}
 					}
 				}
 
-				if (CommandDispatcher.GetDispatcher (this) != null)
-				{
-					this.DetachDispatcher (CommandDispatcher.GetDispatcher (this));
-				}
+				CommandDispatcher.ClearDispatcher (this);
 				
 				if (this.root != null)
 				{
@@ -1542,26 +1527,30 @@ namespace Epsitec.Common.Widgets
 		
 		
 		#region QueueItem class
-		protected class QueueItem
+		private struct QueueItem
 		{
 			public QueueItem(Widget source, string command)
 			{
-				this.source  = source;
-				this.command = command;
-				this.chain   = CommandDispatcherChain.BuildChain (source);
+				this.source          = source;
+				this.command         = command;
+				this.dispatcherChain = CommandDispatcherChain.BuildChain (source);
+				this.contextChain    = CommandContextChain.BuildChain (source);
 				
-				System.Diagnostics.Debug.Assert (this.chain != null);
-				System.Diagnostics.Debug.Assert (this.chain.IsEmpty == false);
+				System.Diagnostics.Debug.Assert (this.dispatcherChain != null);
+				System.Diagnostics.Debug.Assert (this.dispatcherChain.IsEmpty == false);
+				System.Diagnostics.Debug.Assert (this.contextChain != null);
 			}
 
 			public QueueItem(DependencyObject source, string command)
 			{
-				this.source  = source;
-				this.command = command;
-				this.chain   = CommandDispatcherChain.BuildChain (source);
-				
-				System.Diagnostics.Debug.Assert (this.chain != null);
-				System.Diagnostics.Debug.Assert (this.chain.IsEmpty == false);
+				this.source          = source;
+				this.command         = command;
+				this.dispatcherChain = CommandDispatcherChain.BuildChain (source);
+				this.contextChain    = CommandContextChain.BuildChain (source);
+
+				System.Diagnostics.Debug.Assert (this.dispatcherChain != null);
+				System.Diagnostics.Debug.Assert (this.dispatcherChain.IsEmpty == false);
+				System.Diagnostics.Debug.Assert (this.contextChain != null);
 			}
 			
 			
@@ -1581,18 +1570,27 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 			
-			public CommandDispatcherChain		Chain
+			public CommandDispatcherChain		DispatcherChain
 			{
 				get
 				{
-					return this.chain;
+					return this.dispatcherChain;
+				}
+			}
+
+			public CommandContextChain			ContextChain
+			{
+				get
+				{
+					return this.contextChain;
 				}
 			}
 			
 			
-			protected object					source;
-			protected string					command;
-			protected CommandDispatcherChain	chain;
+			object								source;
+			string								command;
+			CommandDispatcherChain				dispatcherChain;
+			CommandContextChain					contextChain;
 		}
 		#endregion
 		
@@ -1607,7 +1605,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		protected void QueueCommand(QueueItem item)
+		private void QueueCommand(QueueItem item)
 		{
 			this.cmd_queue.Enqueue (item);
 			
@@ -1737,13 +1735,13 @@ namespace Epsitec.Common.Widgets
 		{
 			while (this.cmd_queue.Count > 0)
 			{
-				QueueItem item    = this.cmd_queue.Dequeue () as QueueItem;
+				QueueItem item    = this.cmd_queue.Dequeue ();
 				object    source  = item.Source;
 				string    command = item.Command;
 
-				System.Diagnostics.Debug.Assert (item.Chain.IsEmpty == false);
+				System.Diagnostics.Debug.Assert (item.DispatcherChain.IsEmpty == false);
 				
-				CommandDispatcher.Dispatch (item.Chain, command, source);
+				CommandDispatcher.Dispatch (item.DispatcherChain, item.ContextChain, command, source);
 			}
 			
 			if (this.is_dispose_queued)
@@ -2089,7 +2087,7 @@ namespace Epsitec.Common.Widgets
 			
 			while (this.post_paint_queue.Count > 0)
 			{
-				Window.PostPaintRecord record = this.post_paint_queue.Dequeue () as Window.PostPaintRecord;
+				PostPaintRecord record = this.post_paint_queue.Dequeue ();
 				record.Paint (graphics);
 			}
 		}
@@ -2190,7 +2188,7 @@ namespace Epsitec.Common.Widgets
 			void Paint(Drawing.Graphics graphics, Drawing.Rectangle repaint);
 		}
 		
-		protected class PostPaintRecord
+		private struct PostPaintRecord
 		{
 			public PostPaintRecord(Window.IPostPaintHandler handler, Drawing.Graphics graphics, Drawing.Rectangle repaint)
 			{
@@ -2271,9 +2269,9 @@ namespace Epsitec.Common.Widgets
 		private Widget							initially_engaged_widget;
 		private Timer							timer;
 		private MouseCursor						window_cursor;
-		private System.Collections.ArrayList	logical_focus_stack = new System.Collections.ArrayList ();
+		private List<Widget>					logical_focus_stack = new List<Widget> ();
 		
-		private System.Collections.Queue		cmd_queue = new System.Collections.Queue ();
+		private Queue<QueueItem>				cmd_queue = new Queue<QueueItem> ();
 		private bool							is_dispose_queued;
 		private bool							is_async_notification_queued;
 		private bool							is_async_layout_queued;
@@ -2284,7 +2282,7 @@ namespace Epsitec.Common.Widgets
 		
 		private IPaintFilter					paint_filter;
 		
-		private System.Collections.Queue		post_paint_queue = new System.Collections.Queue ();
+		private Queue<PostPaintRecord>			post_paint_queue = new Queue<PostPaintRecord> ();
 		
 		private Support.Data.ComponentCollection components;
 		

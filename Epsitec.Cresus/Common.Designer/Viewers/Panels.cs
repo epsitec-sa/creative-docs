@@ -454,10 +454,10 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 		
-		protected Widget ToolBarAdd(Command cs)
+		protected Widget ToolBarAdd(Command command)
 		{
 			//	Ajoute une icône.
-			if (cs == null)
+			if (command == null)
 			{
 				IconSeparator sep = new IconSeparator();
 				sep.IsHorizontal = false;
@@ -466,9 +466,9 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 			else
 			{
-				IconButton button = new IconButton(cs.Name, Misc.Icon(cs.IconName), cs.Name);
+				IconButton button = new IconButton(command.Name, Misc.Icon(command.IconName), command.Name);
 				this.toolBar.Items.Add(button);
-				ToolTip.Default.SetToolTip(button, Misc.GetTextWithShortcut(cs));
+				ToolTip.Default.SetToolTip(button, Misc.GetTextWithShortcut(command));
 				return button;
 			}
 		}

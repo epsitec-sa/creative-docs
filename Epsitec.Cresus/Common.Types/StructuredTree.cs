@@ -73,8 +73,138 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		public static string[] GetFieldPaths(string path, IStructuredTree root)
+		public static string GetLeafPath(string path, out string leafName)
 		{
+			string leafPath;
+			
+			leafPath = null;
+			leafName = null;
+
+			if (!string.IsNullOrEmpty (path))
+			{
+				int pos = path.LastIndexOf ('.');
+
+				if (pos < 0)
+				{
+					leafName = path;
+				}
+				else
+				{
+					leafPath = path.Substring (0, pos);
+					leafName = path.Substring (pos+1);
+				}
+			}
+			
+			return leafPath;
+		}
+
+		public static bool IsPathValid(IStructuredType root, string path)
+		{
+			return StructuredTree.GetFieldType (root, path) != null;
+		}
+
+		public static object GetValue(IStructuredData root, string path)
+		{
+			if (string.IsNullOrEmpty (path))
+			{
+				throw new System.ArgumentException ();
+			}
+
+			string originalPath = path;
+
+			while (root != null)
+			{
+				string name  = StructuredTree.GetRootName (path);
+				object value = root.GetValue (name);
+
+				if (name == path)
+				{
+					return value;
+				}
+
+				root = value as IStructuredData;
+				path = StructuredTree.GetSubPath (path, 1);
+			}
+
+			throw new System.ArgumentException (string.Format ("Path {0} cannot be resolved", originalPath));
+		}
+
+		public static void SetValue(IStructuredData root, string path, object value)
+		{
+			if (string.IsNullOrEmpty (path))
+			{
+				throw new System.ArgumentException ();
+			}
+
+			string originalPath = path;
+
+			while (root != null)
+			{
+				string name = StructuredTree.GetRootName (path);
+
+				if (name == path)
+				{
+					root.SetValue (name, value);
+					return;
+				}
+				
+				root = root.GetValue (name) as IStructuredData;
+				path = StructuredTree.GetSubPath (path, 1);
+			}
+
+			throw new System.ArgumentException (string.Format ("Path {0} cannot be resolved", originalPath));
+		}
+
+
+
+		public static object GetFieldType(IStructuredType root, string path)
+		{
+			string leafName;
+			string leafPath = StructuredTree.GetLeafPath (path, out leafName);
+
+			if (string.IsNullOrEmpty (leafName))
+			{
+				return null;
+			}
+			
+			root = StructuredTree.GetSubTreeType (root, leafPath);
+			
+			if (root == null)
+			{
+				return null;
+			}
+			
+			return root.GetFieldTypeObject (leafName);
+		}
+
+		public static IStructuredType GetSubTreeType(IStructuredType root, string path)
+		{
+			string[] names = StructuredTree.SplitPath (path);
+
+			if (names.Length == 0)
+			{
+				return root;
+			}
+
+			IStructuredType item = root;
+
+			for (int i = 0; i < names.Length; i++)
+			{
+				if (item == null)
+				{
+					return null;
+				}
+
+				item = item.GetFieldTypeObject (names[i]) as IStructuredType;
+			}
+
+			return item;
+		}
+
+		public static string[] GetFieldPaths(IStructuredType root, string path)
+		{
+			root = StructuredTree.GetSubTreeType (root, path);
+			
 			if (root == null)
 			{
 				return null;

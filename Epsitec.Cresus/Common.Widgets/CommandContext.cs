@@ -13,10 +13,17 @@ namespace Epsitec.Common.Widgets
 	/// </summary>
 	public class CommandContext : DependencyObject
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="T:CommandContext"/> class.
+		/// </summary>
 		public CommandContext()
 		{
 		}
 
+		/// <summary>
+		/// Gets the dispatchers.
+		/// </summary>
+		/// <value>The dispatcher enumeration.</value>
 		public IEnumerable<CommandDispatcher> Dispatchers
 		{
 			get
@@ -67,10 +74,7 @@ namespace Epsitec.Common.Widgets
 					this.commandEnables[command.UniqueId] = false;
 				}
 
-				if (command.Enable)
-				{
-					this.NotifyCommandEnableChanged (command);
-				}
+				this.NotifyCommandEnableChanged (command);
 			}
 		}
 
@@ -188,11 +192,85 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		/// <summary>
+		/// Gets the state of the command.
+		/// </summary>
+		/// <param name="commandName">Name of the command.</param>
+		/// <returns>The command state.</returns>
+		public CommandState GetCommandState(string commandName)
+		{
+			return this.GetCommandState (Command.Get (commandName));
+		}
+
+		/// <summary>
+		/// Gets the state of the command.
+		/// </summary>
+		/// <param name="command">The command.</param>
+		/// <returns>The command state.</returns>
+		public CommandState GetCommandState(Command command)
+		{
+			CommandState state = this.FindCommandState (command);
+
+			if (state != null)
+			{
+				return state;
+			}
+			else
+			{
+				state = command.CreateDefaultState ();
+
+				this.SetCommandState (command, state);
+
+				return state;
+			}
+		}
+
+		/// <summary>
+		/// Clears the state of the command; the <c>CommandState</c> associated with the command will
+		/// be removed from the command context.
+		/// </summary>
+		/// <param name="command">The command.</param>
+		public void ClearCommandState(Command command)
+		{
+			this.SetCommandState (command, null);
+		}
+		
+		#region Internal Methods
+		
+		internal CommandState FindCommandState(Command command)
+		{
+			CommandState state;
+			
+			if (this.states.TryGetValue (command.UniqueId, out state))
+			{
+				return state;
+			}
+			else
+			{
+				return null;
+			}
+		}
+
+		internal void SetCommandState(Command command, CommandState state)
+		{
+			if (state == null)
+			{
+				this.states.Remove (command.UniqueId);
+			}
+			else
+			{
+				this.states[command.UniqueId] = state;
+			}
+
+			CommandCache.Default.InvalidateCommand (command);
+		}
+		
 		internal void UpdateDispatcherChain(Visual visual)
 		{
 			this.dispatcherChain = CommandDispatcherChain.BuildChain (visual);
 		}
 
+		#endregion
 
 		#region Private Methods
 
@@ -308,7 +386,12 @@ namespace Epsitec.Common.Widgets
 		/// <param name="context">The context.</param>
 		public static void SetContext(DependencyObject obj, CommandContext context)
 		{
-			obj.SetValue (CommandContext.ContextProperty, context);
+			if (CommandContext.GetContext (obj) != context)
+			{
+				obj.SetValue (CommandContext.ContextProperty, context);
+
+				CommandCache.Default.InvalidateContext (context);
+			}
 		}
 
 		/// <summary>
@@ -317,7 +400,17 @@ namespace Epsitec.Common.Widgets
 		/// <param name="obj">The dependency object.</param>
 		public static void ClearContext(DependencyObject obj)
 		{
-			obj.ClearValueBase (CommandContext.ContextProperty);
+			if (obj.ContainsLocalValue (CommandContext.ContextProperty))
+			{
+				CommandContext context = CommandContext.GetContext (obj);
+				
+				obj.ClearValueBase (CommandContext.ContextProperty);
+
+				if (context != null)
+				{
+					CommandCache.Default.InvalidateContext (context);
+				}
+			}
 		}
 		
 		
@@ -327,6 +420,7 @@ namespace Epsitec.Common.Widgets
 		private Dictionary<int, bool> commandEnables = new Dictionary<int, bool> ();
 		private Dictionary<string, int> groupDisables = new Dictionary<string, int> ();
 		private Dictionary<long, Record> records = new Dictionary<long, Record> ();
+		private Dictionary<long, CommandState> states = new Dictionary<long, CommandState> ();
 		private CommandDispatcherChain dispatcherChain;
 	}
 }

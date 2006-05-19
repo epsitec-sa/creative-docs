@@ -87,10 +87,10 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 		}
-		
-		
-		public static DependencyProperty ValueProperty = DependencyProperty.Register ("Value", typeof (object), typeof (Placeholder));
-		public static DependencyProperty ControllerProperty = DependencyProperty.Register ("Controller", typeof (string), typeof (Placeholder));
+
+
+		public static readonly DependencyProperty ValueProperty = DependencyProperty.Register ("Value", typeof (object), typeof (Placeholder));
+		public static readonly DependencyProperty ControllerProperty = DependencyProperty.Register ("Controller", typeof (string), typeof (Placeholder));
 
 
 		private IController controller;

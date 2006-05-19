@@ -21,7 +21,7 @@ namespace Epsitec.Common.Types
 		{
 			o.ClearValueBase (DataObject.DataContextProperty);
 		}
-		
-		public static DependencyProperty DataContextProperty = DependencyProperty.RegisterAttached ("DataContext", typeof (Binding), typeof (DataObject), new DependencyPropertyMetadataWithInheritance ());
+
+		public static readonly DependencyProperty DataContextProperty = DependencyProperty.RegisterAttached ("DataContext", typeof (Binding), typeof (DataObject), new DependencyPropertyMetadataWithInheritance ());
 	}
 }

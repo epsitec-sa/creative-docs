@@ -67,7 +67,7 @@ namespace Epsitec.Common.Document
 			SoapUncompress,		// format de debug
 		}
 
-		public Document(DocumentType type, DocumentMode mode, InstallType installType, DebugMode debugMode, Settings.GlobalSettings globalSettings, CommandDispatcher commandDispatcher)
+		public Document(DocumentType type, DocumentMode mode, InstallType installType, DebugMode debugMode, Settings.GlobalSettings globalSettings, CommandDispatcher commandDispatcher, CommandContext commandContext)
 		{
 			//	Crée un nouveau document vide.
 			this.UniqueIDCreate();
@@ -77,6 +77,7 @@ namespace Epsitec.Common.Document
 			this.debugMode = debugMode;
 			this.globalSettings = globalSettings;
 			this.commandDispatcher = commandDispatcher;
+			this.commandContext = commandContext;
 
 			if ( this.type == DocumentType.Pictogram )
 			{
@@ -226,6 +227,11 @@ namespace Epsitec.Common.Document
 			//	CommandDispatcher de l'éditeur.
 			get { return this.commandDispatcher; }
 		}
+
+		public CommandContext CommandContext
+		{
+			get { return this.commandContext; }
+		}
 		
 		public string Name
 		{
@@ -249,7 +255,7 @@ namespace Epsitec.Common.Document
 			{
 				if ( this.documentForSamples == null )
 				{
-					this.documentForSamples = new Document(DocumentType.Graphic, DocumentMode.Samples, InstallType.Full, DebugMode.Release, this.GlobalSettings, null);
+					this.documentForSamples = new Document(DocumentType.Graphic, DocumentMode.Samples, InstallType.Full, DebugMode.Release, this.GlobalSettings, null, null);
 					this.documentForSamples.TextContext = this.TextContext;
 				}
 
@@ -290,6 +296,14 @@ namespace Epsitec.Common.Document
 		}
 		#endregion
 
+		public CommandState GetCommandState(string command)
+		{
+			CommandContext context = this.CommandContext;
+			CommandState state = context.GetCommandState (command);
+
+			return state;
+		}
+		
 		public UndoableList GetObjects
 		{
 			//	Liste des objets de ce document.
@@ -2322,6 +2336,7 @@ namespace Epsitec.Common.Document
 		protected DebugMode						debugMode;
 		protected Settings.GlobalSettings		globalSettings;
 		protected CommandDispatcher				commandDispatcher;
+		protected CommandContext				commandContext;
 		protected string						name;
 		protected Document						clipboard;
 		protected Document						documentForSamples;

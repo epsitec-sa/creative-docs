@@ -14,11 +14,13 @@ namespace Epsitec.Common.Script.Developer
 		public EditionController()
 		{
 			this.dispatcher = new CommandDispatcher ("EditionController", CommandDispatcherLevel.Primary);
+			this.context = new CommandContext ();
+			
 			this.dispatcher.RegisterController (this);
 			
-			this.save_command_state = Command.Find ("SaveSource");
-			this.compile_command_state = Command.Find ("CompileSourceCode");
-			this.next_error_command_state = Command.Find ("FindNextError");
+			this.save_command_state = this.context.GetCommandState ("SaveSource");
+			this.compile_command_state = this.context.GetCommandState ("CompileSourceCode");
+			this.next_error_command_state = this.context.GetCommandState ("FindNextError");
 		}
 		
 		
@@ -133,6 +135,7 @@ namespace Epsitec.Common.Script.Developer
 		protected virtual void UpdateToolBar()
 		{
 			CommandDispatcher.SetDispatcher (this.tool_bar, this.dispatcher);
+			CommandContext.SetContext (this.tool_bar, this.context);
 			
 			this.tool_bar.Items.Clear ();
 			this.tool_bar.Items.Add (IconButton.CreateSimple ("NewMethod", "manifest:Epsitec.Common.Script.Developer.Images.NewMethod.icon"));
@@ -721,6 +724,7 @@ namespace Epsitec.Common.Script.Developer
 		}
 		
 		protected CommandDispatcher				dispatcher;
+		protected CommandContext				context;
 		protected string						name;
 		protected Source						source;
 		protected System.Collections.Hashtable	source_cursor_from = new System.Collections.Hashtable ();
@@ -738,8 +742,8 @@ namespace Epsitec.Common.Script.Developer
 		protected int							next_error;
 		protected bool							is_changing_page;
 		
-		protected Command					save_command_state;
-		protected Command					compile_command_state;
-		protected Command					next_error_command_state;
+		protected CommandState					save_command_state;
+		protected CommandState					compile_command_state;
+		protected CommandState					next_error_command_state;
 	}
 }

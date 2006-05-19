@@ -45,7 +45,7 @@ namespace Epsitec.Common.Document
 
 			using ( System.IO.MemoryStream stream = new System.IO.MemoryStream(data) )
 			{
-				Document doc = new Document(DocumentType.Pictogram, DocumentMode.ReadOnly, InstallType.Full, DebugMode.Release, null, null);
+				Document doc = new Document (DocumentType.Pictogram, DocumentMode.ReadOnly, InstallType.Full, DebugMode.Release, null, null, null);
 			
 				if ( doc.Read(stream, "") == "" )
 				{
@@ -63,7 +63,7 @@ namespace Epsitec.Common.Document
 
 			using ( System.IO.MemoryStream stream = new System.IO.MemoryStream(data) )
 			{
-				Document doc = new Document(DocumentType.Pictogram, DocumentMode.ReadOnly, InstallType.Full, DebugMode.Release, null, null);
+				Document doc = new Document(DocumentType.Pictogram, DocumentMode.ReadOnly, InstallType.Full, DebugMode.Release, null, null, null);
 				
 				if ( doc.Read(stream, "") == "" )
 				{
@@ -77,7 +77,7 @@ namespace Epsitec.Common.Document
 		{
 			using ( System.IO.MemoryStream stream = new System.IO.MemoryStream(data) )
 			{
-				Document doc = new Document(DocumentType.Pictogram, DocumentMode.ReadOnly, InstallType.Full, DebugMode.Release, null, null);
+				Document doc = new Document (DocumentType.Pictogram, DocumentMode.ReadOnly, InstallType.Full, DebugMode.Release, null, null, null);
 				DrawingContext context = new DrawingContext(doc, null);
 				
 				if ( doc.Read(stream, "") == "" )

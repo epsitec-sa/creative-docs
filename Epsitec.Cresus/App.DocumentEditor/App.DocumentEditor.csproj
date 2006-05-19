@@ -175,6 +175,14 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.ico" />
+    <EmbeddedResource Include="Images\ToolSelect.icon" />
+    <EmbeddedResource Include="Images\ToolEdit.icon" />
+    <EmbeddedResource Include="Images\ToolGlobal.icon" />
+    <EmbeddedResource Include="Images\ToolHand.icon" />
+    <EmbeddedResource Include="Images\ToolHotSpot.icon" />
+    <EmbeddedResource Include="Images\ToolPicker.icon" />
+    <EmbeddedResource Include="Images\ToolShaper.icon" />
+    <EmbeddedResource Include="Images\ToolZoom.icon" />
     <EmbeddedResource Include="Images\BulletContinue.icon" />
     <EmbeddedResource Include="Images\TextNumerator.icon" />
     <EmbeddedResource Include="Images\BulletJustifCenter.icon" />
@@ -347,7 +355,6 @@
     <EmbeddedResource Include="Images\Down.icon" />
     <EmbeddedResource Include="Images\Duplicate.icon" />
     <EmbeddedResource Include="Images\DuplicateItem.icon" />
-    <EmbeddedResource Include="Images\Edit.icon" />
     <EmbeddedResource Include="Images\Export.icon" />
     <EmbeddedResource Include="Images\Extract.icon" />
     <EmbeddedResource Include="Images\FineCursor.icon" />
@@ -368,7 +375,6 @@
     <EmbeddedResource Include="Images\FontSuperscript.icon" />
     <EmbeddedResource Include="Images\FontUnderlined.icon" />
     <EmbeddedResource Include="Images\Fragment.icon" />
-    <EmbeddedResource Include="Images\Global.icon" />
     <EmbeddedResource Include="Images\Glyphs.icon" />
     <EmbeddedResource Include="Images\GradientCircle.icon" />
     <EmbeddedResource Include="Images\GradientConic.icon" />
@@ -384,12 +390,10 @@
     <EmbeddedResource Include="Images\GuideNewH.icon" />
     <EmbeddedResource Include="Images\GuideNewV.icon" />
     <EmbeddedResource Include="Images\GuideXfer.icon" />
-    <EmbeddedResource Include="Images\Hand.icon" />
     <EmbeddedResource Include="Images\HideCancel.icon" />
     <EmbeddedResource Include="Images\HideHalf.icon" />
     <EmbeddedResource Include="Images\HideRest.icon" />
     <EmbeddedResource Include="Images\HideSel.icon" />
-    <EmbeddedResource Include="Images\HotSpot.icon" />
     <EmbeddedResource Include="Images\IBeam.icon" />
     <EmbeddedResource Include="Images\IBeamCreate.icon" />
     <EmbeddedResource Include="Images\Import.icon" />
@@ -484,7 +488,6 @@
     <EmbeddedResource Include="Images\ParagraphLeadingPlus.icon" />
     <EmbeddedResource Include="Images\Paste.icon" />
     <EmbeddedResource Include="Images\Pen.icon" />
-    <EmbeddedResource Include="Images\Picker.icon" />
     <EmbeddedResource Include="Images\PickerEmpty.icon" />
     <EmbeddedResource Include="Images\Preview.icon" />
     <EmbeddedResource Include="Images\Print.icon" />
@@ -537,7 +540,6 @@
     <EmbeddedResource Include="Images\ScaleDivFree.icon" />
     <EmbeddedResource Include="Images\ScaleMul2.icon" />
     <EmbeddedResource Include="Images\ScaleMulFree.icon" />
-    <EmbeddedResource Include="Images\Select.icon" />
     <EmbeddedResource Include="Images\SelectAll.icon" />
     <EmbeddedResource Include="Images\SelectAll1.icon" />
     <EmbeddedResource Include="Images\SelectInvert.icon" />
@@ -554,7 +556,6 @@
     <EmbeddedResource Include="Images\SelectPartial.icon" />
     <EmbeddedResource Include="Images\SelectTotal.icon" />
     <EmbeddedResource Include="Images\Settings.icon" />
-    <EmbeddedResource Include="Images\Shaper.icon" />
     <EmbeddedResource Include="Images\ShaperHandleAdd.icon" />
     <EmbeddedResource Include="Images\ShaperHandleContinue.icon" />
     <EmbeddedResource Include="Images\ShaperHandleCorner.icon" />
@@ -646,7 +647,6 @@
     <EmbeddedResource Include="Images\VolumeBoxOpen.icon" />
     <EmbeddedResource Include="Images\VolumeCylinder.icon" />
     <EmbeddedResource Include="Images\VolumePyramid.icon" />
-    <EmbeddedResource Include="Images\Zoom.icon" />
     <EmbeddedResource Include="Images\ZoomAdd.icon" />
     <EmbeddedResource Include="Images\ZoomDefault.icon" />
     <EmbeddedResource Include="Images\ZoomDefault1.icon" />

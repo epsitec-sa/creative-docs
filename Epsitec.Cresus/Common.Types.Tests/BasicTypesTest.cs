@@ -284,7 +284,7 @@ namespace Epsitec.Common.Types
 			private Time			time = Time.Now;
 		}
 
-		private enum MyEnum
+		private enum MyEnum : short
 		{
 			None	= -1,
 			First	=  1,
@@ -295,7 +295,7 @@ namespace Epsitec.Common.Types
 		}
 		
 		[System.Flags]
-		private enum MyFlags
+		private enum MyFlags : byte
 		{
 			None	= 0,
 			Flag1	= 1,

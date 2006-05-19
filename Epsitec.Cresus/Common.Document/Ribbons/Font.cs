@@ -252,13 +252,13 @@ namespace Epsitec.Common.Document.Ribbons
 		protected Widgets.ButtonFontFace CreateButtonFontFace(string command)
 		{
 			//	Crée un bouton pour une police.
-			Command cs = Common.Widgets.Command.Get (command);
+			Command c = Common.Widgets.Command.Get (command);
 			Widgets.ButtonFontFace button = new Widgets.ButtonFontFace(this);
 
 			button.Command = command;
 			button.AutoFocus = false;
 
-			if ( cs.Statefull )
+			if ( c.Statefull )
 			{
 				button.ButtonStyle = ButtonStyle.ActivableIcon;
 			}

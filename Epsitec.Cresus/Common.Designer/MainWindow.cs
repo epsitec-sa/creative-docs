@@ -181,6 +181,14 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
+		public CommandState GetCommandState(string command)
+		{
+			CommandContext context = this.CommandContext;
+			CommandState state = context.GetCommandState (command);
+
+			return state;
+		}
+		
 		protected void CreateLayout()
 		{
 			this.ribbonBook = new RibbonBook(this.window.Root);
@@ -521,12 +529,6 @@ namespace Epsitec.Common.Designer
 			this.CurrentModule.Modifier.ActiveViewer.DoCommand(e.CommandName);
 		}
 
-		public Command GetCommandState(string command)
-		{
-			//	Retourne le Command d'une commande.
-			return Command.Find (command);
-		}
-
 		protected void InitCommands()
 		{
 			this.newState = this.CreateCommandState("New", KeyCode.ModifierControl|KeyCode.AlphaN);
@@ -609,21 +611,25 @@ namespace Epsitec.Common.Designer
 			this.tabIndexLastState = this.CreateCommandState("TabIndexLast");
 		}
 
-		protected Command CreateCommandState(string command, params Widgets.Shortcut[] shortcuts)
+		protected CommandState CreateCommandState(string commandName, params Widgets.Shortcut[] shortcuts)
 		{
-			//	Crée un nouveau Command.
-			Command cs = Command.Get (command);
+			//	Crée une nouvelle commande et son command state associé.
 			
-			if (shortcuts.Length > 0)
+			Command command = Command.Get (commandName);
+
+			if (command.IsReadWrite)
 			{
-				cs.Shortcuts.AddRange (shortcuts);
+				if (shortcuts.Length > 0)
+				{
+					command.Shortcuts.AddRange (shortcuts);
+				}
+
+				command.IconName    = commandName;
+				command.LongCaption = Res.Strings.GetString ("Action."+commandName);
+				command.Statefull   = (commandName == "FontBold" || commandName == "FontItalic" || commandName == "FontUnderlined");
 			}
 
-			cs.IconName    = command;
-			cs.LongCaption = Res.Strings.GetString("Action."+command);
-			cs.Statefull   = (command == "FontBold" || command == "FontItalic" || command == "FontUnderlined" || command.StartsWith("PanelShow"));
-
-			return cs;
+			return this.CommandContext.GetCommandState (command);
 		}
 		#endregion
 
@@ -943,70 +949,70 @@ namespace Epsitec.Common.Designer
 		protected double						ribbonHeight = 71;
 		protected bool							ignoreChange = false;
 
-		protected Command						newState;
-		protected Command						openState;
-		protected Command						saveState;
-		protected Command						saveAsState;
-		protected Command						closeState;
-		protected Command						cutState;
-		protected Command						copyState;
-		protected Command						pasteState;
-		protected Command						deleteState;
-		protected Command						createState;
-		protected Command						duplicateState;
-		protected Command						upState;
-		protected Command						downState;
-		protected Command						fontBoldState;
-		protected Command						fontItalicState;
-		protected Command						fontUnderlinedState;
-		protected Command						glyphsState;
-		protected Command						filterState;
-		protected Command						searchState;
-		protected Command						searchPrevState;
-		protected Command						searchNextState;
-		protected Command						accessFirstState;
-		protected Command						accessPrevState;
-		protected Command						accessNextState;
-		protected Command						accessLastState;
-		protected Command						modificationAllState;
-		protected Command						modificationClearState;
-		protected Command						modificationPrevState;
-		protected Command						modificationNextState;
-		protected Command						newCultureState;
-		protected Command						deleteCultureState;
-		protected Command						toolSelectState;
-		protected Command						toolGlobalState;
-		protected Command						toolEditState;
-		protected Command						toolZoomState;
-		protected Command						toolHandState;
-		protected Command						objectLineState;
-		protected Command						objectButtonState;
-		protected Command						objectTextState;
-		protected Command						panelDeleteState;
-		protected Command						panelDuplicateState;
-		protected Command						panelDeselectAllState;
-		protected Command						panelSelectAllState;
-		protected Command						panelSelectInvertState;
-		protected Command						panelShowGridState;
-		protected Command						panelShowZOrderState;
-		protected Command						panelShowTabIndexState;
-		protected Command						panelShowExpandState;
-		protected Command						alignLeftState;
-		protected Command						alignCenterXState;
-		protected Command						alignRightState;
-		protected Command						alignTopState;
-		protected Command						alignCenterYState;
-		protected Command						alignBottomState;
-		protected Command						adjustWidthState;
-		protected Command						adjustHeightState;
-		protected Command						alignGridState;
-		protected Command						orderUpAllState;
-		protected Command						orderDownAllState;
-		protected Command						orderUpOneState;
-		protected Command						orderDownOneState;
-		protected Command						tabIndexFirstState;
-		protected Command						tabIndexPrevState;
-		protected Command						tabIndexNextState;
-		protected Command						tabIndexLastState;
+		protected CommandState					newState;
+		protected CommandState					openState;
+		protected CommandState					saveState;
+		protected CommandState					saveAsState;
+		protected CommandState					closeState;
+		protected CommandState					cutState;
+		protected CommandState					copyState;
+		protected CommandState					pasteState;
+		protected CommandState					deleteState;
+		protected CommandState					createState;
+		protected CommandState					duplicateState;
+		protected CommandState					upState;
+		protected CommandState					downState;
+		protected CommandState					fontBoldState;
+		protected CommandState					fontItalicState;
+		protected CommandState					fontUnderlinedState;
+		protected CommandState					glyphsState;
+		protected CommandState					filterState;
+		protected CommandState					searchState;
+		protected CommandState					searchPrevState;
+		protected CommandState					searchNextState;
+		protected CommandState					accessFirstState;
+		protected CommandState					accessPrevState;
+		protected CommandState					accessNextState;
+		protected CommandState					accessLastState;
+		protected CommandState					modificationAllState;
+		protected CommandState					modificationClearState;
+		protected CommandState					modificationPrevState;
+		protected CommandState					modificationNextState;
+		protected CommandState					newCultureState;
+		protected CommandState					deleteCultureState;
+		protected CommandState					toolSelectState;
+		protected CommandState					toolGlobalState;
+		protected CommandState					toolEditState;
+		protected CommandState					toolZoomState;
+		protected CommandState					toolHandState;
+		protected CommandState					objectLineState;
+		protected CommandState					objectButtonState;
+		protected CommandState					objectTextState;
+		protected CommandState					panelDeleteState;
+		protected CommandState					panelDuplicateState;
+		protected CommandState					panelDeselectAllState;
+		protected CommandState					panelSelectAllState;
+		protected CommandState					panelSelectInvertState;
+		protected CommandState					panelShowGridState;
+		protected CommandState					panelShowZOrderState;
+		protected CommandState					panelShowTabIndexState;
+		protected CommandState					panelShowExpandState;
+		protected CommandState					alignLeftState;
+		protected CommandState					alignCenterXState;
+		protected CommandState					alignRightState;
+		protected CommandState					alignTopState;
+		protected CommandState					alignCenterYState;
+		protected CommandState					alignBottomState;
+		protected CommandState					adjustWidthState;
+		protected CommandState					adjustHeightState;
+		protected CommandState					alignGridState;
+		protected CommandState					orderUpAllState;
+		protected CommandState					orderDownAllState;
+		protected CommandState					orderUpOneState;
+		protected CommandState					orderDownOneState;
+		protected CommandState					tabIndexFirstState;
+		protected CommandState					tabIndexPrevState;
+		protected CommandState					tabIndexNextState;
+		protected CommandState					tabIndexLastState;
 	}
 }
