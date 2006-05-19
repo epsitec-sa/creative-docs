@@ -206,6 +206,8 @@ namespace Epsitec.Common.Designer
 			this.ribbonBook.Items.Add(this.ribbonOper);
 
 			this.ribbonOper.Items.Add(new Ribbons.PanelSelect());
+			this.ribbonOper.Items.Add(new Ribbons.Align());
+			this.ribbonOper.Items.Add(new Ribbons.Order());
 
 			//	Crée le ruban du texte.
 			this.ribbonText = new RibbonPage();
@@ -517,37 +519,61 @@ namespace Epsitec.Common.Designer
 			this.duplicateState = this.CreateCommandState("Duplicate");
 			this.upState = this.CreateCommandState("Up");
 			this.downState = this.CreateCommandState("Down");
+
 			this.fontBoldState = this.CreateCommandState("FontBold", KeyCode.ModifierControl|KeyCode.AlphaB);
 			this.fontItalicState = this.CreateCommandState("FontItalic", KeyCode.ModifierControl|KeyCode.AlphaI);
 			this.fontUnderlinedState = this.CreateCommandState("FontUnderlined", KeyCode.ModifierControl|KeyCode.AlphaU);
+			
 			this.glyphsState = this.CreateCommandState("Glyphs");
 			this.filterState = this.CreateCommandState("Filter");
+			
 			this.searchState = this.CreateCommandState("Search");
 			this.searchPrevState = this.CreateCommandState("SearchPrev");
 			this.searchNextState = this.CreateCommandState("SearchNext");
+			
 			this.accessFirstState = this.CreateCommandState("AccessFirst");
 			this.accessPrevState = this.CreateCommandState("AccessPrev", KeyCode.FuncF6);
 			this.accessNextState = this.CreateCommandState("AccessNext", KeyCode.FuncF7);
 			this.accessLastState = this.CreateCommandState("AccessLast");
+			
 			this.modificationAllState = this.CreateCommandState("ModificationAll");
 			this.modificationClearState = this.CreateCommandState("ModificationClear", KeyCode.FuncF9);
 			this.modificationPrevState = this.CreateCommandState("ModificationPrev");
 			this.modificationNextState = this.CreateCommandState("ModificationNext", KeyCode.FuncF8);
+			
 			this.newCultureState = this.CreateCommandState("NewCulture");
 			this.deleteCultureState = this.CreateCommandState("DeleteCulture");
+			
 			this.toolSelectState = this.CreateCommandState("ToolSelect", KeyCode.AlphaS);
 			this.toolGlobalState = this.CreateCommandState("ToolGlobal", KeyCode.AlphaG);
 			this.toolEditState = this.CreateCommandState("ToolEdit", KeyCode.AlphaE);
 			this.toolZoomState = this.CreateCommandState("ToolZoom", KeyCode.AlphaZ);
 			this.toolHandState = this.CreateCommandState("ToolHand", KeyCode.AlphaH);
+			
 			this.objectLineState = this.CreateCommandState("ObjectLine", KeyCode.AlphaL);
 			this.objectButtonState = this.CreateCommandState("ObjectButton", KeyCode.AlphaB);
 			this.objectTextState = this.CreateCommandState("ObjectText", KeyCode.AlphaT);
+			
 			this.panelDeleteState = this.CreateCommandState("PanelDelete");
 			this.panelDuplicateState = this.CreateCommandState("PanelDuplicate");
 			this.panelDeselectAllState = this.CreateCommandState("PanelDeselectAll");
 			this.panelSelectAllState = this.CreateCommandState("PanelSelectAll");
 			this.panelSelectInvertState = this.CreateCommandState("PanelSelectInvert");
+
+			this.alignLeftState = this.CreateCommandState("AlignLeft");
+			this.alignCenterXState = this.CreateCommandState("AlignCenterX");
+			this.alignRightState = this.CreateCommandState("AlignRight");
+			this.alignTopState = this.CreateCommandState("AlignTop");
+			this.alignCenterYState = this.CreateCommandState("AlignCenterY");
+			this.alignBottomState = this.CreateCommandState("AlignBottom");
+			this.adjustWidthState = this.CreateCommandState("AdjustWidth");
+			this.adjustHeightState = this.CreateCommandState("AdjustHeight");
+			this.alignGridState = this.CreateCommandState("AlignGrid");
+
+			this.orderUpAllState = this.CreateCommandState("OrderUpAll");
+			this.orderDownAllState = this.CreateCommandState("OrderDownAll");
+			this.orderUpOneState = this.CreateCommandState("OrderUpOne");
+			this.orderDownOneState = this.CreateCommandState("OrderDownOne");
 		}
 
 		protected Command CreateCommandState(string command, params Widgets.Shortcut[] shortcuts)
@@ -928,5 +954,18 @@ namespace Epsitec.Common.Designer
 		protected Command						panelDeselectAllState;
 		protected Command						panelSelectAllState;
 		protected Command						panelSelectInvertState;
+		protected Command						alignLeftState;
+		protected Command						alignCenterXState;
+		protected Command						alignRightState;
+		protected Command						alignTopState;
+		protected Command						alignCenterYState;
+		protected Command						alignBottomState;
+		protected Command						adjustWidthState;
+		protected Command						adjustHeightState;
+		protected Command						alignGridState;
+		protected Command						orderUpAllState;
+		protected Command						orderDownAllState;
+		protected Command						orderUpOneState;
+		protected Command						orderDownOneState;
 	}
 }

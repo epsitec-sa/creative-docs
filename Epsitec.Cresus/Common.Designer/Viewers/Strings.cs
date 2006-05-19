@@ -965,6 +965,21 @@ namespace Epsitec.Common.Designer.Viewers
 			this.GetCommandState("PanelSelectAll").Enable = false;
 			this.GetCommandState("PanelSelectInvert").Enable = false;
 
+			this.GetCommandState("AlignLeft").Enable = false;
+			this.GetCommandState("AlignCenterX").Enable = false;
+			this.GetCommandState("AlignRight").Enable = false;
+			this.GetCommandState("AlignTop").Enable = false;
+			this.GetCommandState("AlignCenterY").Enable = false;
+			this.GetCommandState("AlignBottom").Enable = false;
+			this.GetCommandState("AdjustWidth").Enable = false;
+			this.GetCommandState("AdjustHeight").Enable = false;
+			this.GetCommandState("AlignGrid").Enable = false;
+
+			this.GetCommandState("OrderUpAll").Enable = false;
+			this.GetCommandState("OrderDownAll").Enable = false;
+			this.GetCommandState("OrderUpOne").Enable = false;
+			this.GetCommandState("OrderDownOne").Enable = false;
+
 			this.module.MainWindow.UpdateInfoCurrentModule();
 			this.module.MainWindow.UpdateInfoAccess();
 		}
