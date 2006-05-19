@@ -58,6 +58,8 @@
     <Compile Include="Ribbons\Clipboard.cs" />
     <Compile Include="Ribbons\Character.cs" />
     <Compile Include="Ribbons\Access.cs" />
+    <Compile Include="Ribbons\PanelShow.cs" />
+    <Compile Include="Ribbons\TabIndex.cs" />
     <Compile Include="Ribbons\Order.cs" />
     <Compile Include="Ribbons\PanelSelect.cs" />
     <Compile Include="Ribbons\Culture.cs" />
@@ -184,6 +186,14 @@
     <EmbeddedResource Include="Images\AlignTop.icon" />
     <EmbeddedResource Include="Images\AdjustHeight.icon" />
     <EmbeddedResource Include="Images\AdjustWidth.icon" />
+    <EmbeddedResource Include="Images\PanelShowGrid.icon" />
+    <EmbeddedResource Include="Images\PanelShowExpand.icon" />
+    <EmbeddedResource Include="Images\PanelShowZOrder.icon" />
+    <EmbeddedResource Include="Images\PanelShowTabIndex.icon" />
+    <EmbeddedResource Include="Images\TabIndexLast.icon" />
+    <EmbeddedResource Include="Images\TabIndexPrev.icon" />
+    <EmbeddedResource Include="Images\TabIndexNext.icon" />
+    <EmbeddedResource Include="Images\TabIndexFirst.icon" />
     <None Include="Resources\Designer\Strings.00.resource" />
     <None Include="Resources\Designer\Strings.en.resource" />
   </ItemGroup>
