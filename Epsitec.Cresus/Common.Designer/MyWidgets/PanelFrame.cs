@@ -351,6 +351,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				{
 					this.selectedObjects.Add(obj);
 				}
+				this.dragging = true;
 			}
 
 			this.OnChildrenSelected();
@@ -384,7 +385,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				{
 					rect = obj.ActualBounds;
 				}
-				this.HiliteRectangle(rect);
+				this.HiliteRectangle(rect);  // met en évidence l'objet survolé par la souris
 			}
 		}
 
