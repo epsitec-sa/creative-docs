@@ -6,12 +6,12 @@ using System.Collections.Generic;
 namespace Epsitec.Common.Types
 {
 	/// <summary>
-	/// The <c>StructuredRecordType</c> class describes the type of the data stored in
+	/// The <c>StructuredType</c> class describes the type of the data stored in
 	/// a <see cref="T:StructuredRecord"/> class.
 	/// </summary>
-	public class StructuredRecordType : INamedType, IStructuredType
+	public class StructuredType : INamedType, IStructuredType
 	{
-		public StructuredRecordType()
+		public StructuredType()
 		{
 			this.fields = new HostedDictionary<string, INamedType> (this.NotifyFieldInserted, this.NotifyFieldRemoved);
 			this.name = null;

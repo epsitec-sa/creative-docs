@@ -47,7 +47,7 @@ namespace Epsitec.Common.UI
 					System.Text.StringBuilder buffer1 = new System.Text.StringBuilder ();
 					System.Text.StringBuilder buffer2 = new System.Text.StringBuilder ();
 
-					foreach (string subPath in collection.GetFieldPaths (name))
+					foreach (string subPath in StructuredTree.GetFieldPaths (collection, name))
 					{
 						buffer1.Append (subPath);
 						buffer1.Append (" ");

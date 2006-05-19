@@ -7,12 +7,12 @@ namespace Epsitec.Common.Types
 {
 	public class StructuredRecord : IStructuredType
 	{
-		public StructuredRecord(StructuredRecordType type)
+		public StructuredRecord(StructuredType type)
 		{
 			this.type = type;
 		}
 
-		public StructuredRecordType StructuredRecordType
+		public StructuredType StructuredType
 		{
 			get
 			{
@@ -67,6 +67,6 @@ namespace Epsitec.Common.Types
 		}
 
 		
-		private StructuredRecordType type;
+		private StructuredType type;
 	}
 }

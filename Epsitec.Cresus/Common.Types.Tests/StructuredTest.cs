@@ -9,9 +9,9 @@ namespace Epsitec.Common.Types
 	[TestFixture] public class StructuredTest
 	{
 		[Test]
-		public void CheckStructuredRecordTypeIsPathValid()
+		public void CheckStructuredTreeIsPathValid()
 		{
-			StructuredRecordType record = new StructuredRecordType ();
+			StructuredType record = new StructuredType ();
 
 			StructuredTest.Fill (record);
 
@@ -30,22 +30,22 @@ namespace Epsitec.Common.Types
 		}
 
 		[Test]
-		public void CheckStructuredRecordTypeGetFieldType()
+		public void CheckStructuredTreeGetFieldType()
 		{
-			StructuredRecordType record = new StructuredRecordType ();
+			StructuredType record = new StructuredType ();
 
 			StructuredTest.Fill (record);
 
 			Assert.IsTrue (StructuredTree.GetFieldType (record, "Number1") is DecimalType);
 			Assert.IsTrue (StructuredTree.GetFieldType (record, "Text1") is StringType);
 
-			Assert.IsTrue (StructuredTree.GetFieldType (record, "Personne") is StructuredRecordType);
-			Assert.IsTrue (StructuredTree.GetFieldType (record, "Personne.Adresse") is StructuredRecordType);
+			Assert.IsTrue (StructuredTree.GetFieldType (record, "Personne") is StructuredType);
+			Assert.IsTrue (StructuredTree.GetFieldType (record, "Personne.Adresse") is StructuredType);
 			Assert.IsTrue (StructuredTree.GetFieldType (record, "Personne.Adresse.NPA") is IntegerType);
 		}
 
 		[Test]
-		public void CheckStructuredTree()
+		public void CheckStructuredTreeMisc()
 		{
 			Assert.AreEqual ("a*b*c", string.Join ("*", StructuredTree.SplitPath ("a.b.c")));
 			Assert.AreEqual ("a.b.c.d", StructuredTree.CreatePath ("a", "b", "c.d"));
@@ -84,7 +84,7 @@ namespace Epsitec.Common.Types
 		[Test]
 		public void CheckStructuredRecordTree()
 		{
-			StructuredRecordType type = new StructuredRecordType ();
+			StructuredType type = new StructuredType ();
 			StructuredRecord record = new StructuredRecord (null);
 
 			Assert.AreEqual (0, type.GetFieldNames ().Length);
@@ -112,7 +112,7 @@ namespace Epsitec.Common.Types
 
 			Assert.AreEqual (typeof (DecimalType), record.GetFieldTypeObject ("Number1").GetType ());
 			Assert.AreEqual (typeof (StringType), record.GetFieldTypeObject ("Text1").GetType ());
-			Assert.AreEqual (typeof (StructuredRecordType), record.GetFieldTypeObject ("Personne").GetType ());
+			Assert.AreEqual (typeof (StructuredType), record.GetFieldTypeObject ("Personne").GetType ());
 
 			Assert.IsTrue (StructuredTree.IsPathValid (type, "Number1"));
 			Assert.IsTrue (StructuredTree.IsPathValid (type, "Personne.Nom"));
@@ -121,10 +121,10 @@ namespace Epsitec.Common.Types
 			Assert.IsFalse (StructuredTree.IsPathValid (type, "Client.Adresse.Pays"));
 		}
 
-		private static void Fill(StructuredRecordType record)
+		private static void Fill(StructuredType record)
 		{
-			StructuredRecordType subRec1 = new StructuredRecordType ();
-			StructuredRecordType subRec2 = new StructuredRecordType ();
+			StructuredType subRec1 = new StructuredType ();
+			StructuredType subRec2 = new StructuredType ();
 
 			record.Fields.Add ("Number1", new DecimalType ());
 			record.Fields.Add ("Text1", new StringType ());

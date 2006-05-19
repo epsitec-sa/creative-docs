@@ -106,7 +106,7 @@ namespace Epsitec.Common.Types
 
 			if (structuredRecord != null)
 			{
-				return structuredRecord.StructuredRecordType;
+				return structuredRecord.StructuredType;
 			}
 
 			if (dependencyObject != null)
