@@ -39,7 +39,6 @@ namespace Epsitec.Common.Types
 		}
 
 		#endregion
-		
 
 		#region IStructuredData Members
 
@@ -57,9 +56,18 @@ namespace Epsitec.Common.Types
 		{
 			if (this.type == null)
 			{
-				//	TODO: ...
-
-				throw new System.NotImplementedException ();
+				if (this.values == null)
+				{
+					return new string[0];
+				}
+				else
+				{
+					string[] names = new string[this.values.Count];
+					this.values.Keys.CopyTo (names, 0);
+					System.Array.Sort (names);
+					
+					return names;
+				}
 			}
 			else
 			{
@@ -69,11 +77,53 @@ namespace Epsitec.Common.Types
 
 		public object GetValue(string name)
 		{
-			return null;
+			object type;
+			
+			if (! this.CheckNameValidity (name, out type))
+			{
+				throw new System.Collections.Generic.KeyNotFoundException (string.Format ("The value '{0}' cannot be get; it is not defined by the structure", name));
+			}
+			
+			object value;
+			
+			if (this.values == null)
+			{
+				return UndefinedValue.Instance;
+			}
+			else if (this.values.TryGetValue (name, out value))
+			{
+				return value;
+			}
+			else
+			{
+				return UndefinedValue.Instance;
+			}
 		}
 
 		public void SetValue(string name, object value)
 		{
+			object type;
+			
+			if (!this.CheckNameValidity (name, out type))
+			{
+				throw new System.Collections.Generic.KeyNotFoundException (string.Format ("The value '{0}' cannot be set; it is not defined by the structure", name));
+			}
+			if (!this.CheckValueValidity (type, value))
+			{
+				throw new System.ArgumentException (string.Format ("The value '{0}' has the wrong type", name));
+			}
+			
+			if (this.values == null)
+			{
+				this.AllocateValues ();
+			}
+
+			if (this.values == null)
+			{
+				throw new System.InvalidOperationException ("Cannot set a value; no storage defined");
+			}
+			
+			this.values[name] = value;
 		}
 
 		public bool HasImmutableRoots
@@ -86,6 +136,53 @@ namespace Epsitec.Common.Types
 
 		#endregion
 
+		protected virtual bool CheckNameValidity(string name, out object type)
+		{
+			if (this.type == null)
+			{
+				//	No checking done, as there is no schema.
+
+				type = null;
+			}
+			else
+			{
+				type = this.type.GetFieldTypeObject (name);
+
+				if (type == null)
+				{
+					return false;
+				}
+			}
+			
+			return true;
+		}
+
+		protected virtual bool CheckValueValidity(object type, object value)
+		{
+			if (type == null)
+			{
+				return true;
+			}
+			
+			//	TODO: verify compatibility
+
+			return true;
+		}
+		
+		protected virtual void AllocateValues()
+		{
+			this.values = new HostedDictionary<string, object> (this.NotifyInsertion, this.NotifyRemoval);
+		}
+
+		protected virtual void NotifyInsertion(string name, object value)
+		{
+		}
+
+		protected virtual void NotifyRemoval(string name, object value)
+		{
+		}
+
 		private StructuredType type;
+		private IDictionary<string, object> values;
 	}
 }

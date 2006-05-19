@@ -46,7 +46,6 @@ namespace Epsitec.Common.Types
 		public string[] GetFieldNames()
 		{
 			string[] names = new string[this.fields.Count];
-			
 			this.fields.Keys.CopyTo (names, 0);
 
 			System.Array.Sort (names);

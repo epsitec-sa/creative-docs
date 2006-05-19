@@ -9,6 +9,81 @@ namespace Epsitec.Common.Types
 	[TestFixture] public class StructuredTest
 	{
 		[Test]
+		public void CheckStructuredData()
+		{
+			StructuredData data = new StructuredData ();
+
+			Assert.AreEqual (0, data.GetValueNames ().Length);
+			Assert.AreEqual (0, data.StructuredType.GetFieldNames ().Length);
+
+			data.SetValue ("A", 10);
+			data.SetValue ("B", 20);
+
+			Assert.AreEqual (2, data.GetValueNames ().Length);
+			Assert.AreEqual (2, data.StructuredType.GetFieldNames ().Length);
+
+			Assert.AreEqual ("A", data.StructuredType.GetFieldNames ()[0]);
+			Assert.AreEqual ("B", data.StructuredType.GetFieldNames ()[1]);
+
+			Assert.AreEqual (typeof (int), data.StructuredType.GetFieldTypeObject ("A"));
+			Assert.AreEqual (10, data.GetValue ("A"));
+			Assert.AreEqual (20, data.GetValue ("B"));
+			Assert.AreEqual (UndefinedValue.Instance, data.GetValue ("X"));
+		}
+
+		[Test]
+		public void CheckStructuredDataWithType()
+		{
+			StructuredType type = new StructuredType ();
+			StructuredData data = new StructuredData (type);
+
+			type.Fields["A"] = new IntegerType ();
+			type.Fields["B"] = new IntegerType ();
+
+			Assert.AreEqual (2, data.GetValueNames ().Length);
+			Assert.AreEqual (2, data.StructuredType.GetFieldNames ().Length);
+
+			Assert.AreEqual ("A", data.StructuredType.GetFieldNames ()[0]);
+			Assert.AreEqual ("B", data.StructuredType.GetFieldNames ()[1]);
+
+			Assert.AreEqual (UndefinedValue.Instance, data.GetValue ("A"));
+			Assert.AreEqual (UndefinedValue.Instance, data.GetValue ("B"));
+			
+			data.SetValue ("A", 10);
+			data.SetValue ("B", 20);
+
+			Assert.AreEqual (typeof (IntegerType), data.StructuredType.GetFieldTypeObject ("A").GetType ());
+			Assert.AreEqual (10, data.GetValue ("A"));
+			Assert.AreEqual (20, data.GetValue ("B"));
+		}
+
+		[Test]
+		[ExpectedException (typeof (System.Collections.Generic.KeyNotFoundException))]
+		public void CheckStructuredDataWithTypeEx1()
+		{
+			StructuredType type = new StructuredType ();
+			StructuredData data = new StructuredData (type);
+
+			type.Fields["A"] = new IntegerType ();
+			type.Fields["B"] = new IntegerType ();
+
+			data.SetValue ("X", 100);
+		}
+
+		[Test]
+		[ExpectedException (typeof (System.Collections.Generic.KeyNotFoundException))]
+		public void CheckStructuredDataWithTypeEx2()
+		{
+			StructuredType type = new StructuredType ();
+			StructuredData data = new StructuredData (type);
+
+			type.Fields["A"] = new IntegerType ();
+			type.Fields["B"] = new IntegerType ();
+
+			data.GetValue ("X");
+		}
+
+		[Test]
 		public void CheckStructuredTreeIsPathValid()
 		{
 			StructuredType record = new StructuredType ();
