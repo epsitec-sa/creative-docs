@@ -664,12 +664,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			foreach (Widget obj in this.selectedObjects)
 			{
 				toRepaint = Rectangle.Union(toRepaint, obj.ActualBounds);
-
-				Margins margin = obj.Margins;
-				margin.Left += move.X;
-				margin.Bottom += move.Y;
-				obj.Margins = margin;
-
+				this.ObjectPosition(obj, this.ObjectPosition(obj)+move);
 				toRepaint = Rectangle.Union(toRepaint, obj.ActualBounds);
 			}
 
@@ -809,6 +804,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void ObjectPositionX(Widget obj, double x)
 		{
 			//	Déplace l'origine gauche d'un objet.
+			x = System.Math.Max(x, 0);
+
 			Margins margins = obj.Margins;
 			margins.Left = x;
 			obj.Margins = margins;
@@ -817,6 +814,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void ObjectPositionY(Widget obj, double y)
 		{
 			//	Déplace l'origine inférieure d'un objet.
+			y = System.Math.Max(y, 0);
+
 			Margins margins = obj.Margins;
 			margins.Bottom = y;
 			obj.Margins = margins;
@@ -825,8 +824,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void ObjectPosition(Widget obj, Point pos)
 		{
 			//	Déplace l'origine d'un objet.
+			pos.X = System.Math.Max(pos.X, 0);
+			pos.Y = System.Math.Max(pos.Y, 0);
+
 			Margins margins = obj.Margins;
-			margins.Left = pos.X;
+			margins.Left   = pos.X;
 			margins.Bottom = pos.Y;
 			obj.Margins = margins;
 		}
