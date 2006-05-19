@@ -76,6 +76,13 @@ namespace Epsitec.Common.Types
 			return value.GetType ();
 		}
 
+		#region Tools Class
+		
+		private class Properties : DependencyObject
+		{
+		}
+
+		#endregion
 
 		public static object GetTypeObject(DependencyObject obj)
 		{
@@ -92,6 +99,6 @@ namespace Epsitec.Common.Types
 			obj.ClearValueBase (TypeRosetta.TypeObjectProperty);
 		}
 		
-		public static readonly DependencyProperty TypeObjectProperty = DependencyProperty.RegisterAttached ("TypeObject", typeof (object), typeof (TypeRosetta));
+		public static readonly DependencyProperty TypeObjectProperty = DependencyProperty.RegisterAttached ("TypeObject", typeof (object), typeof (TypeRosetta.Properties));
 	}
 }
