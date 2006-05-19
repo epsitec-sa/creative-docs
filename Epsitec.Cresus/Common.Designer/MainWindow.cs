@@ -485,6 +485,17 @@ namespace Epsitec.Common.Designer
 			this.CurrentModule.Modifier.ActiveViewer.DoTool(e.CommandName);
 		}
 
+		[Command("PanelDelete")]
+		[Command("PanelDuplicate")]
+		[Command("PanelDeselectAll")]
+		[Command("PanelSelectAll")]
+		[Command("PanelSelectInvert")]
+		void CommandCommand(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			if ( !this.IsCurrentModule )  return;
+			this.CurrentModule.Modifier.ActiveViewer.DoCommand(e.CommandName);
+		}
+
 		public Command GetCommandState(string command)
 		{
 			//	Retourne le Command d'une commande.
