@@ -323,7 +323,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		}
 		#endregion
 
-		#region Drawing select
+		#region ProcessMouse select
 		protected void SelectDown(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
 			//	Sélection ponctuelle, souris pressée.
@@ -406,7 +406,155 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.ChangeMouseCursor(MouseCursorType.Arrow);
 			}
 		}
+		#endregion
 
+		#region ProcessMouse global
+		protected void GlobalDown(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
+		{
+			//	Sélection rectangulaire, souris pressée.
+		}
+
+		protected void GlobalMove(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
+		{
+			//	Sélection rectangulaire, souris déplacée.
+			this.ChangeMouseCursor(MouseCursorType.Global);
+		}
+
+		protected void GlobalUp(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
+		{
+			//	Sélection rectangulaire, souris relâchée.
+		}
+
+		protected void GlobalKeyChanged(bool isControlPressed, bool isShiftPressed)
+		{
+			//	Sélection rectangulaire, touche pressée ou relâchée.
+		}
+		#endregion
+
+		#region ProcessMouse edit
+		protected void EditDown(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
+		{
+			//	Edition, souris pressée.
+		}
+
+		protected void EditMove(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
+		{
+			//	Edition, souris déplacée.
+			this.ChangeMouseCursor(MouseCursorType.Edit);
+		}
+
+		protected void EditUp(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
+		{
+			//	Edition, souris relâchée.
+		}
+
+		protected void EditKeyChanged(bool isControlPressed, bool isShiftPressed)
+		{
+			//	Edition, touche pressée ou relâchée.
+		}
+		#endregion
+
+		#region ProcessMouse zoom
+		protected void ZoomDown(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
+		{
+			//	Loupe, souris pressée.
+		}
+
+		protected void ZoomMove(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
+		{
+			//	Loupe, souris déplacée.
+			this.ChangeMouseCursor(MouseCursorType.Zoom);
+		}
+
+		protected void ZoomUp(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
+		{
+			//	Loupe, souris relâchée.
+		}
+
+		protected void ZoomKeyChanged(bool isControlPressed, bool isShiftPressed)
+		{
+			//	Loupe, touche pressée ou relâchée.
+		}
+		#endregion
+
+		#region ProcessMouse hand
+		protected void HandDown(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
+		{
+			//	Main, souris pressée.
+		}
+
+		protected void HandMove(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
+		{
+			//	Main, souris déplacée.
+			this.ChangeMouseCursor(MouseCursorType.Hand);
+		}
+
+		protected void HandUp(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
+		{
+			//	Main, souris relâchée.
+		}
+
+		protected void HandKeyChanged(bool isControlPressed, bool isShiftPressed)
+		{
+			//	Main, touche pressée ou relâchée.
+		}
+		#endregion
+
+		#region ProcessMouse object
+		protected void ObjectDown(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
+		{
+			//	Dessin d'un objet, souris pressée.
+			if (this.tool == "ObjectLine")
+			{
+				this.creatingObject = new Separator(this.panel);
+				this.creatingObject.PreferredHeight = 1;
+			}
+
+			if (this.tool == "ObjectButton")
+			{
+				this.creatingObject = new Button(this.panel);
+				this.creatingObject.Text = "Button";
+			}
+
+			if (this.tool == "ObjectText")
+			{
+				this.creatingObject = new TextField(this.panel);
+				this.creatingObject.Text = "TextField";
+			}
+
+			this.creatingObject.Anchor = AnchorStyles.BottomLeft;
+			this.creatingObject.Margins = new Margins(pos.X, 0, 0, pos.Y);
+
+			this.OnChildrenAdded();
+		}
+
+		protected void ObjectMove(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
+		{
+			//	Dessin d'un objet, souris déplacée.
+			this.ChangeMouseCursor(MouseCursorType.Pen);
+
+			if (this.creatingObject != null)
+			{
+				this.creatingObject.Margins = new Margins(pos.X, 0, 0, pos.Y);
+				this.Invalidate();  // TODO: faire mieux !
+			}
+		}
+
+		protected void ObjectUp(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
+		{
+			//	Dessin d'un objet, souris relâchée.
+			this.Select(this.creatingObject);
+			this.creatingObject = null;
+		}
+
+		protected void ObjectKeyChanged(bool isControlPressed, bool isShiftPressed)
+		{
+			//	Dessin d'un objet, touche pressée ou relâchée.
+		}
+		#endregion
+
+
+		#region Selection
 		protected Widget Detect(Point pos)
 		{
 			//	Détecte l'objet visé par la souris.
@@ -474,6 +622,19 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.Invalidate();
 		}
 
+		protected void HiliteRectangle(Rectangle rect)
+		{
+			//	Détermine la zone à mettre en évidence.
+			if (this.hilitedRectangle != rect)
+			{
+				this.Invalidate(this.hilitedRectangle);  // invalide l'ancienne zone
+				this.hilitedRectangle = rect;
+				this.Invalidate(this.hilitedRectangle);  // invalide la nouvelle zone
+			}
+		}
+		#endregion
+
+		#region Operations
 		protected void DeleteSelection()
 		{
 			//	Supprime tous les objets sélectionnés.
@@ -626,6 +787,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
+
 		protected double ObjectPositionX(Widget obj)
 		{
 			//	Retourne l'origine gauche d'un objet.
@@ -703,162 +865,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			//	Modifie les dimensions d'un objet.
 			obj.PreferredSize = size;
-		}
-
-		protected void HiliteRectangle(Rectangle rect)
-		{
-			//	Détermine la zone à mettre en évidence.
-			if (this.hilitedRectangle != rect)
-			{
-				this.Invalidate(this.hilitedRectangle);  // invalide l'ancienne zone
-				this.hilitedRectangle = rect;
-				this.Invalidate(this.hilitedRectangle);  // invalide la nouvelle zone
-			}
-		}
-		#endregion
-
-		#region Drawing global
-		protected void GlobalDown(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
-		{
-			//	Sélection rectangulaire, souris pressée.
-		}
-
-		protected void GlobalMove(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
-		{
-			//	Sélection rectangulaire, souris déplacée.
-			this.ChangeMouseCursor(MouseCursorType.Global);
-		}
-
-		protected void GlobalUp(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
-		{
-			//	Sélection rectangulaire, souris relâchée.
-		}
-
-		protected void GlobalKeyChanged(bool isControlPressed, bool isShiftPressed)
-		{
-			//	Sélection rectangulaire, touche pressée ou relâchée.
-		}
-		#endregion
-
-		#region Drawing edit
-		protected void EditDown(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
-		{
-			//	Edition, souris pressée.
-		}
-
-		protected void EditMove(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
-		{
-			//	Edition, souris déplacée.
-			this.ChangeMouseCursor(MouseCursorType.Edit);
-		}
-
-		protected void EditUp(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
-		{
-			//	Edition, souris relâchée.
-		}
-
-		protected void EditKeyChanged(bool isControlPressed, bool isShiftPressed)
-		{
-			//	Edition, touche pressée ou relâchée.
-		}
-		#endregion
-
-		#region Drawing zoom
-		protected void ZoomDown(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
-		{
-			//	Loupe, souris pressée.
-		}
-
-		protected void ZoomMove(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
-		{
-			//	Loupe, souris déplacée.
-			this.ChangeMouseCursor(MouseCursorType.Zoom);
-		}
-
-		protected void ZoomUp(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
-		{
-			//	Loupe, souris relâchée.
-		}
-
-		protected void ZoomKeyChanged(bool isControlPressed, bool isShiftPressed)
-		{
-			//	Loupe, touche pressée ou relâchée.
-		}
-		#endregion
-
-		#region Drawing hand
-		protected void HandDown(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
-		{
-			//	Main, souris pressée.
-		}
-
-		protected void HandMove(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
-		{
-			//	Main, souris déplacée.
-			this.ChangeMouseCursor(MouseCursorType.Hand);
-		}
-
-		protected void HandUp(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
-		{
-			//	Main, souris relâchée.
-		}
-
-		protected void HandKeyChanged(bool isControlPressed, bool isShiftPressed)
-		{
-			//	Main, touche pressée ou relâchée.
-		}
-		#endregion
-
-		#region Drawing object
-		protected void ObjectDown(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
-		{
-			//	Dessin d'un objet, souris pressée.
-			if (this.tool == "ObjectLine")
-			{
-				this.creatingObject = new Separator(this.panel);
-				this.creatingObject.PreferredHeight = 1;
-			}
-
-			if (this.tool == "ObjectButton")
-			{
-				this.creatingObject = new Button(this.panel);
-				this.creatingObject.Text = "Button";
-			}
-
-			if (this.tool == "ObjectText")
-			{
-				this.creatingObject = new TextField(this.panel);
-				this.creatingObject.Text = "TextField";
-			}
-
-			this.creatingObject.Anchor = AnchorStyles.BottomLeft;
-			this.creatingObject.Margins = new Margins(pos.X, 0, 0, pos.Y);
-
-			this.OnChildrenAdded();
-		}
-
-		protected void ObjectMove(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
-		{
-			//	Dessin d'un objet, souris déplacée.
-			this.ChangeMouseCursor(MouseCursorType.Pen);
-
-			if (this.creatingObject != null)
-			{
-				this.creatingObject.Margins = new Margins(pos.X, 0, 0, pos.Y);
-				this.Invalidate();  // TODO: faire mieux !
-			}
-		}
-
-		protected void ObjectUp(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
-		{
-			//	Dessin d'un objet, souris relâchée.
-			this.Select(this.creatingObject);
-			this.creatingObject = null;
-		}
-
-		protected void ObjectKeyChanged(bool isControlPressed, bool isShiftPressed)
-		{
-			//	Dessin d'un objet, touche pressée ou relâchée.
 		}
 		#endregion
 
