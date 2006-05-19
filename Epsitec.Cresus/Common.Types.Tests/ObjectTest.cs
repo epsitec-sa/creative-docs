@@ -372,8 +372,6 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual ("MyObject", DependencyObjectType.FromSystemType (typeof (MyObject)).Name);
 			Assert.AreEqual ("DependencyObject", DependencyObjectType.FromSystemType (typeof (MyObject)).BaseType.Name);
 			
-			Assert.IsNull (DependencyObjectType.FromSystemType (typeof (ObjectTest)));
-			
 			MyObject mo = new MyObject ();
 			
 			Assert.AreEqual ("MyObject", mo.ObjectType.Name);
@@ -422,6 +420,12 @@ namespace Epsitec.Common.Types
 			DependencyObjectType.FromSystemType (typeof (ObjectY));
 			
 			Assert.IsTrue (ObjectX.AProperty.IsReferencedBy (typeof (ObjectY)));
+		}
+		[Test]
+		[ExpectedException (typeof (Exceptions.WrongBaseTypeException))]
+		public void CheckObjectTypeEx1()
+		{
+			DependencyObjectType.FromSystemType (typeof (ObjectTest));
 		}
 
 		[Test]
@@ -792,12 +796,28 @@ namespace Epsitec.Common.Types
 		}
 
 		[Test]
-		[ExpectedException (typeof (Exceptions.WrongBaseTypeException))]
+		[ExpectedException (typeof (System.TypeInitializationException))]
 		public void CheckWrongParentClass()
 		{
 			MyObject obj = new MyObject ();
 
-			obj.SetValue (WrongParentClass.FooProperty, "x");
+			try
+			{
+				TestWrongParentClass.Test (obj);
+			}
+			catch (System.Exception ex)
+			{
+				Assert.AreEqual (typeof (Exceptions.WrongBaseTypeException), ex.InnerException.GetType ());
+				throw;
+			}
+		}
+		
+		private static class TestWrongParentClass
+		{
+			public static void Test(DependencyObject obj)
+			{
+				obj.SetValue (WrongParentClass.FooProperty, "x");
+			}
 		}
 		
 		private static class TestAttachedProperties
