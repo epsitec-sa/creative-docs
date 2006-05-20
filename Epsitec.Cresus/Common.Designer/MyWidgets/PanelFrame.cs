@@ -388,6 +388,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void SelectDown(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
 			//	Sélection ponctuelle, souris pressée.
+
 			Widget obj = this.Detect(pos);  // objet visé par la souris
 
 			this.startingPos = pos;
@@ -399,6 +400,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 				if (obj != null && this.selectedObjects.Contains(obj))
 				{
 					this.dragging = true;
+					this.ConstrainStart();
+					Constrain.ActivateAll(this.constrainList, this.SelectBounds);
 					return;
 				}
 				this.selectedObjects.Clear();
@@ -420,6 +423,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 					this.selectedObjects.Add(obj);
 				}
 				this.dragging = true;
+				this.ConstrainStart();
+				Constrain.ActivateAll(this.constrainList, this.SelectBounds);
 			}
 
 			this.OnChildrenSelected();
@@ -440,10 +445,16 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			if (this.dragging)
 			{
+				Rectangle bounds = this.SelectBounds;
 				Point move = pos-this.startingPos;
-				this.startingPos = pos;
-				this.MoveSelection(move);
+				Point corr = this.CorrectionSelection(bounds, move);
+				this.startingPos = pos+corr;
+				this.MoveSelection(move+corr);
+				
 				this.HiliteRectangle(Rectangle.Empty);
+
+				bounds.Offset(move+corr);
+				Constrain.ActivateAll(this.constrainList, bounds);
 			}
 			else if (this.rectangling)
 			{
@@ -465,6 +476,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			//	Sélection ponctuelle, souris relâchée.
 			this.dragging = false;
+			this.ConstrainEnd();
 
 			if (this.rectangling)
 			{
@@ -486,6 +498,27 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.ChangeMouseCursor(MouseCursorType.Arrow);
 			}
 		}
+
+		protected void ConstrainStart()
+		{
+			if (this.context.ShowConstrain)
+			{
+				Constrain.InitialiseAll(this.constrainList, this.panel.Children, this.context.ConstrainMargin);
+			}
+			else
+			{
+				this.constrainList.Clear();
+			}
+		}
+
+		protected void ConstrainEnd()
+		{
+			if (this.constrainList.Count != 0)
+			{
+				this.constrainList.Clear();
+				this.Invalidate();
+			}
+		}
 		#endregion
 
 		#region ProcessMouse global
@@ -503,6 +536,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 				if (obj != null && this.selectedObjects.Contains(obj))
 				{
 					this.dragging = true;
+					this.ConstrainStart();
+					Constrain.ActivateAll(this.constrainList, this.SelectBounds);
 					return;
 				}
 				this.selectedObjects.Clear();
@@ -528,10 +563,16 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			if (this.dragging)
 			{
+				Rectangle bounds = this.SelectBounds;
 				Point move = pos-this.startingPos;
-				this.startingPos = pos;
-				this.MoveSelection(move);
+				Point corr = this.CorrectionSelection(bounds, move);
+				this.startingPos = pos+corr;
+				this.MoveSelection(move+corr);
+
 				this.HiliteRectangle(Rectangle.Empty);
+
+				bounds.Offset(move+corr);
+				Constrain.ActivateAll(this.constrainList, bounds);
 			}
 			else if (this.rectangling)
 			{
@@ -543,6 +584,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			//	Sélection rectangulaire, souris relâchée.
 			this.dragging = false;
+			this.ConstrainEnd();
 
 			if (this.rectangling)
 			{
@@ -639,6 +681,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void ObjectDown(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
 			//	Dessin d'un objet, souris pressée.
+			this.ConstrainStart();
+
 			if (this.context.Tool == "ObjectLine")
 			{
 				this.creatingObject = new Separator(this.panel);
@@ -665,8 +709,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 
 			this.creatingObject.Anchor = AnchorStyles.BottomLeft;
-			this.creatingObject.Margins = new Margins(pos.X, 0, 0, pos.Y);
+			this.ObjectPosition(this.creatingObject, pos);
 			this.creatingObject.TabNavigation = TabNavigationMode.Passive;
+
+			Rectangle bounds = new Rectangle(pos, this.creatingObject.PreferredSize);
+			Constrain.ActivateAll(this.constrainList, bounds);
 
 			this.OnChildrenAdded();
 		}
@@ -678,14 +725,23 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			if (this.creatingObject != null)
 			{
-				this.creatingObject.Margins = new Margins(pos.X, 0, 0, pos.Y);
-				this.Invalidate();  // TODO: faire mieux !
+				Rectangle bounds = new Rectangle(pos, this.creatingObject.PreferredSize);
+				Rectangle adjust = Constrain.SnapAll(this.constrainList, bounds);
+				Point corr = adjust.BottomLeft - bounds.BottomLeft;
+
+				this.ObjectPosition(this.creatingObject, pos+corr);
+				this.Invalidate();
+
+				bounds.Offset(corr);
+				Constrain.ActivateAll(this.constrainList, bounds);
 			}
 		}
 
 		protected void ObjectUp(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
 			//	Dessin d'un objet, souris relâchée.
+			this.ConstrainEnd();
+
 			this.SelectOneObject(this.creatingObject);
 			this.creatingObject = null;
 		}
@@ -824,6 +880,22 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			//	Duplique tous les objets sélectionnés.
 			//	TODO:
+		}
+
+		protected Point CorrectionSelection(Rectangle bounds, Point move)
+		{
+			//	Calcule la correction a apporter au déplacement pour tenir compte des contraintes.
+			if (this.constrainList.Count == 0)
+			{
+				return Point.Zero;
+			}
+
+			Rectangle moved = bounds;
+			moved.Offset(move);
+
+			Rectangle snaped = Constrain.SnapAll(this.constrainList, moved);
+
+			return snaped.BottomLeft - moved.BottomLeft;
 		}
 
 		protected void MoveSelection(Point move)
@@ -1172,7 +1244,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Dessine la grille magnétique
 			if (this.context.ShowGrid)
 			{
-				double step = 10;
+				double step = this.context.GridStep;
 				int hilite = 0;
 				for (double x=step+0.5; x<bounds.Width; x+=step)
 				{
@@ -1196,11 +1268,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 					rect.Deflate(0.5);
 
 					graphics.AddFilledRectangle(rect);
-					graphics.RenderSolid(this.HiliteSurfaceColor);
+					graphics.RenderSolid(PanelFrame.HiliteSurfaceColor);
 
 					graphics.LineWidth = 3;
 					graphics.AddRectangle(rect);
-					graphics.RenderSolid(this.HiliteOutlineColor);
+					graphics.RenderSolid(PanelFrame.HiliteOutlineColor);
 					graphics.LineWidth = 1;
 				}
 			}
@@ -1243,6 +1315,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 				}
 			}
 
+			//	Dessine les contraintes.
+			Constrain.DrawAll(this.constrainList, graphics, bounds);
+
 			//	Dessine les numéros d'ordre.
 			if (this.context.ShowZOrder)
 			{
@@ -1282,7 +1357,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			if (!this.hilitedRectangle.IsEmpty)
 			{
 				graphics.AddFilledRectangle(this.hilitedRectangle);
-				graphics.RenderSolid(this.HiliteSurfaceColor);
+				graphics.RenderSolid(PanelFrame.HiliteSurfaceColor);
 			}
 
 			//	Dessine le rectangle de sélection.
@@ -1291,7 +1366,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				Rectangle sel = this.selectedRectangle;
 				sel.Deflate(0.5);
 				graphics.AddRectangle(sel);
-				graphics.RenderSolid(this.HiliteOutlineColor);
+				graphics.RenderSolid(PanelFrame.HiliteOutlineColor);
 			}
 		}
 
@@ -1320,7 +1395,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
-		protected Color HiliteOutlineColor
+		protected static Color HiliteOutlineColor
 		{
 			//	Couleur lorsqu'un objet est survolé par la souris.
 			get
@@ -1330,7 +1405,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
-		protected Color HiliteSurfaceColor
+		protected static Color HiliteSurfaceColor
 		{
 			//	Couleur lorsqu'un objet est survolé par la souris.
 			get
@@ -1338,6 +1413,202 @@ namespace Epsitec.Common.Designer.MyWidgets
 				IAdorner adorner = Epsitec.Common.Widgets.Adorners.Factory.Active;
 				return Color.FromColor(adorner.ColorCaption, 0.4);
 			}
+		}
+		#endregion
+
+
+		#region Constrain
+		public class Constrain
+		{
+			public Constrain(Point position, bool isVertical, double margin)
+			{
+				this.position = position;
+				this.isVertical = isVertical;
+				this.isActivate = false;
+				this.margin = margin;
+			}
+
+			public bool IsEqualTo(Constrain constrain)
+			{
+				//	Teste si deux contraintes sont identiques (sans tenir compte de l'activation).
+				if (this.isVertical != constrain.isVertical)
+				{
+					return false;
+				}
+
+				if (this.isVertical)
+				{
+					return (this.position.X == constrain.position.X);
+				}
+				else
+				{
+					return (this.position.Y == constrain.position.Y);
+				}
+			}
+
+			public void Draw(Graphics graphics, Rectangle box)
+			{
+				//	Dessine une contrainte.
+				if (this.isVertical)
+				{
+					graphics.AddLine(this.position.X+0.5, box.Bottom, this.position.X+0.5, box.Top);
+				}
+				else
+				{
+					graphics.AddLine(box.Left, this.position.Y+0.5, box.Right, this.position.Y+0.5);
+				}
+
+				Color color = PanelFrame.HiliteOutlineColor;
+				if (!this.isActivate)
+				{
+					color.A *= 0.2;  // plus transparent s'il s'agit d'une contrainte inactive
+				}
+				graphics.RenderSolid(color);
+			}
+
+			public bool Detect(Point position)
+			{
+				//	Détecte si une position est proche d'une contrainte.
+				if (this.isVertical)
+				{
+					if (position.X >= this.position.X-this.margin && position.X <= this.position.X+this.margin)
+					{
+						return true;
+					}
+				}
+				else
+				{
+					if (position.Y >= this.position.Y-this.margin && position.Y <= this.position.Y+this.margin)
+					{
+						return true;
+					}
+				}
+
+				return false;
+			}
+
+			public Rectangle Snap(Rectangle rect)
+			{
+				//	Adapte un rectangle à une contrainte.
+				if (this.isVertical)
+				{
+					if (this.Detect(rect.BottomLeft))
+					{
+						rect.Offset(this.position.X-rect.Left, 0);
+					}
+
+					if (this.Detect(rect.BottomRight))
+					{
+						rect.Offset(this.position.X-rect.Right, 0);
+					}
+				}
+				else
+				{
+					if (this.Detect(rect.BottomLeft))
+					{
+						rect.Offset(0, this.position.Y-rect.Bottom);
+					}
+
+					if (this.Detect(rect.TopLeft))
+					{
+						rect.Offset(0, this.position.Y-rect.Top);
+					}
+				}
+
+				return rect;
+			}
+
+			public static void InitialiseAll(List<Constrain> list, Widgets.Collections.FlatChildrenCollection widgets, double margin)
+			{
+				//	Initialise les contraintes en fonction de l'ensemble des objets.
+				Constrain constrain;
+				list.Clear();
+
+				foreach (Widget obj in widgets)
+				{
+					constrain = new Constrain(obj.ActualBounds.BottomLeft, true, margin);
+					Constrain.ConditionnalAdd(list, constrain);
+
+					constrain = new Constrain(obj.ActualBounds.BottomRight, true, margin);
+					Constrain.ConditionnalAdd(list, constrain);
+
+					constrain = new Constrain(obj.ActualBounds.BottomLeft, false, margin);
+					Constrain.ConditionnalAdd(list, constrain);
+
+					constrain = new Constrain(obj.ActualBounds.TopLeft, false, margin);
+					Constrain.ConditionnalAdd(list, constrain);
+				}
+			}
+
+			protected static void ConditionnalAdd(List<Constrain> list, Constrain toAdd)
+			{
+				//	Ajoute une contrainte dans une liste, si elle n'y est pas déjà.
+				foreach (Constrain constrain in list)
+				{
+					if (constrain.IsEqualTo(toAdd))
+					{
+						return;
+					}
+				}
+
+				list.Add(toAdd);
+			}
+
+			public static void ActivateAll(List<Constrain> list, Rectangle rect)
+			{
+				//	Active les contraintes pour un rectangle donné.
+				foreach (Constrain constrain in list)
+				{
+					constrain.isActivate = false;
+
+					if (constrain.Detect(rect.BottomLeft))
+					{
+						constrain.isActivate = true;
+						continue;
+					}
+
+					if (constrain.Detect(rect.BottomRight))
+					{
+						constrain.isActivate = true;
+						continue;
+					}
+
+					if (constrain.Detect(rect.TopLeft))
+					{
+						constrain.isActivate = true;
+						continue;
+					}
+
+					if (constrain.Detect(rect.TopRight))
+					{
+						constrain.isActivate = true;
+						continue;
+					}
+				}
+			}
+
+			public static Rectangle SnapAll(List<Constrain> list, Rectangle rect)
+			{
+				foreach (Constrain constrain in list)
+				{
+					rect = constrain.Snap(rect);
+				}
+
+				return rect;
+			}
+
+			public static void DrawAll(List<Constrain> list, Graphics graphics, Rectangle box)
+			{
+				foreach (Constrain constrain in list)
+				{
+					constrain.Draw(graphics, box);
+				}
+			}
+
+			protected Point position;
+			protected bool					isVertical;
+			protected bool					isActivate;
+			protected double				margin;
 		}
 		#endregion
 
@@ -1478,6 +1749,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected Color						colorAnchor = Color.FromRgb(1,0,0);
 		protected Color						colorGrid1 = Color.FromAlphaRgb(0.2, 0.4, 0.4, 0.4);
 		protected Color						colorGrid2 = Color.FromAlphaRgb(0.2, 0.7, 0.7, 0.7);
+		protected List<Constrain>			constrainList = new List<Constrain>();
 
 		protected Image						mouseCursorArrow = null;
 		protected Image						mouseCursorArrowPlus = null;
