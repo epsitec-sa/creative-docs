@@ -8,9 +8,9 @@ namespace Epsitec.Common.Types
 	using PropertyChangedEventHandler = Epsitec.Common.Support.EventHandler<DependencyPropertyChangedEventArgs>;
 	
 	/// <summary>
-	/// The BindingExpression class is used to maintain the real binding
-	/// between a source and a target, whereas the Binding class can be
-	/// specified more than once (i.e. Binding is more general).
+	/// The <c>BindingExpression</c> class is used to maintain the real binding
+	/// between a source and a target, whereas the <see cref="T:Binding"/> class
+	/// can be specified more than once (i.e. <c>Binding</c> is more general).
 	/// </summary>
 	public sealed class BindingExpression : System.IDisposable
 	{
@@ -88,12 +88,15 @@ namespace Epsitec.Common.Types
 			this.AttachToSource ();
 			this.UpdateTarget (BindingUpdateMode.Reset);
 		}
+		
 		internal void AttachToSource()
 		{
 			object						sourceObject;
 			object						sourceProperty;
 			BindingSourceType			sourceType;
-			List<SourcePropertyPair>	sourceBreadcrumbs;
+			BindingBreadcrumbs			sourceBreadcrumbs;
+
+			System.Diagnostics.Debug.Assert (this.sourceBreadcrumbs == null);
 
 			if (this.FindDataSource (out sourceObject, out sourceProperty, out sourceType, out sourceBreadcrumbs))
 			{
@@ -112,6 +115,7 @@ namespace Epsitec.Common.Types
 				this.sourceBreadcrumbs = null;
 			}
 		}
+		
 		internal void DetachFromSource()
 		{
 			if (this.sourceObject != null)
@@ -131,8 +135,12 @@ namespace Epsitec.Common.Types
 			expression.targetPropery = property;
 
 			expression.InternalAttachToTarget ();
-			expression.AttachToSource ();
-			expression.UpdateTarget (BindingUpdateMode.Reset);
+
+			if (!binding.Deferred)
+			{
+				expression.AttachToSource ();
+				expression.UpdateTarget (BindingUpdateMode.Reset);
+			}
 			
 			return expression;
 		}
@@ -165,7 +173,7 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		private bool FindDataSource(out object objectSource, out object objectProperty, out BindingSourceType type, out List<SourcePropertyPair> breadcrumbs)
+		private bool FindDataSource(out object objectSource, out object objectProperty, out BindingSourceType type, out BindingBreadcrumbs breadcrumbs)
 		{
 			type           = BindingSourceType.None;
 			objectSource   = null;
@@ -177,65 +185,32 @@ namespace Epsitec.Common.Types
 
 			this.FindDataSourceRoot (out root, out path);
 
-			DependencyObject   source   = root as DependencyObject;
-			DependencyProperty property = null;
-			
-			if ((source != null) &&
-				(source != Binding.DoNothing) &&
-				(path != null) &&
-				(path.Length > 0))
+			if ((root == null) ||
+				(root == Binding.DoNothing))
 			{
-				//	Resolve the path to get at the real source element, starting
-				//	at the root.
+				return false;
+			}
 
-				string[] elements = path.Split ('.');
+			if (string.IsNullOrEmpty (path))
+			{
+				//	There is no path, so we will simply consider the source as the data.
 				
-				for (int i = 0; i < elements.Length; i++)
-				{
-					if (i > 0)
-					{
-						if (breadcrumbs == null)
-						{
-							breadcrumbs = new List<SourcePropertyPair> ();
-						}
-						
-						breadcrumbs.Add (new SourcePropertyPair (source, property));
-						
-						source = source.GetValue (property) as DependencyObject;
-						
-						if ((source == null) ||
-							(source == Binding.DoNothing))
-						{
-							return false;
-						}
-					}
-					
-					property = source.ObjectType.GetProperty (elements[i]);
-					
-					if (property == null)
-					{
-						return false;
-					}
-				}
+				type = BindingSourceType.SourceItself;
 
-				type = BindingSourceType.PropertyObject;
-				
-				objectSource = source;
-				objectProperty = property;
-				
-				//	If we have traversed several data source objects to arrive
-				//	at the leaf 'source', we will register with them in order
-				//	to detect changes; this is done in InternalAttachToSource,
-				//	by the caller, based on the breadcrumbs.
+				objectSource   = root;
+				objectProperty = null;
 
 				return true;
 			}
-			
-			if ((root != null) &&
-				(root != Binding.DoNothing))
+			else
 			{
-				if ((path != null) &&
-					(path.Length > 0))
+				DependencyObject   doSource = root as DependencyObject;
+				IStructuredData    sdSource = root as IStructuredData;
+				DependencyProperty property = null;
+				string             name     = null;
+
+				if ((doSource == null) &&
+					(sdSource == null))
 				{
 					if (root is IResourceBoundSource)
 					{
@@ -243,16 +218,100 @@ namespace Epsitec.Common.Types
 						
 						objectSource   = root;
 						objectProperty = path;
-
+						
 						return true;
 					}
 				}
 				else
 				{
-					type = BindingSourceType.SourceItself;
-					
-					objectSource   = root;
-					objectProperty = null;
+					//	Resolve the path to get at the real source element, starting
+					//	at the root.
+
+					string[] elements = path.Split ('.');
+
+					for (int i = 0; i < elements.Length; i++)
+					{
+						if (i > 0)
+						{
+							if (breadcrumbs == null)
+							{
+								breadcrumbs = new BindingBreadcrumbs (this.HandleBreadcrumbsChanged);
+							}
+
+							object value;
+							
+							if ((doSource != null) &&
+								(property != null))
+							{
+								breadcrumbs.AddNode (doSource, property);
+								value = doSource.GetValue (property);
+							}
+							else if ((sdSource != null) &&
+								/**/ (!string.IsNullOrEmpty (name)))
+							{
+								breadcrumbs.AddNode (sdSource, name);
+								value = sdSource.GetValue (name);
+							}
+							else
+							{
+								value = null;
+							}
+
+							if (value == Binding.DoNothing)
+							{
+								value = null;
+							}
+							
+							doSource = value as DependencyObject;
+							sdSource = value as IStructuredData;
+
+							if ((doSource == null) &&
+								(sdSource == null))
+							{
+								return false;
+							}
+						}
+
+						property = null;
+						name     = null;
+						
+						if (doSource != null)
+						{
+							property = doSource.ObjectType.GetProperty (elements[i]);
+						}
+						if (sdSource != null)
+						{
+							name = elements[i];
+						}
+
+						if ((property == null) &&
+							(name == null))
+						{
+							return false;
+						}
+					}
+
+					if ((doSource != null) &&
+						(property != null))
+					{
+						type = BindingSourceType.PropertyObject;
+						
+						objectSource = doSource;
+						objectProperty = property;
+					}
+					else if ((sdSource != null) &&
+						/**/ (!string.IsNullOrEmpty (name)))
+					{
+						type = BindingSourceType.StructuredData;
+						
+						objectSource   = sdSource;
+						objectProperty = property;
+					}
+
+					//	If we have traversed several data source objects to arrive
+					//	at the leaf 'source', we will register with them in order
+					//	to detect changes; this is done in InternalAttachToSource,
+					//	by the caller, based on the breadcrumbs.
 
 					return true;
 				}
@@ -281,39 +340,6 @@ namespace Epsitec.Common.Types
 			else
 			{
 				this.ClearDataContext ();
-			}
-
-			if ((path != null) &&
-				(path.Length > 0))
-			{
-				if (source is DependencyObject)
-				{
-					//	We walk DependencyObjects in the caller, ie in FindDataSource.
-				}
-				else if (source is IStructuredData)
-				{
-					//	A DependencyObject is an IStructuredData, so we must first
-					//	check for the DependencyObject type before checking for the
-					//	interface...
-					
-					IStructuredData data = source as IStructuredData;
-
-					string dataName = StructuredTree.GetRootName (path);
-					string dataPath = StructuredTree.GetSubPath (path, 1);
-
-					if (data.HasImmutableRoots)
-					{
-						//	For now, we don't support IStructuredData roots which may change
-						//	their contents.
-
-						source = data.GetValue (dataName);
-						path   = dataPath;
-					}
-					else
-					{
-						throw new System.NotImplementedException ("Mutable roots in IStructuredData are not supported");
-					}
-				}
 			}
 		}
 
@@ -379,13 +405,18 @@ namespace Epsitec.Common.Types
 
 				try
 				{
-					DependencyObject source;
+					DependencyObject doSource;
+					IStructuredData  sdSource;
 
 					switch (this.sourceType)
 					{
 						case BindingSourceType.PropertyObject:
-							source = this.sourceObject as DependencyObject;
-							BindingExpression.SetValue (source, (DependencyProperty) this.sourceProperty, value);
+							doSource = this.sourceObject as DependencyObject;
+							BindingExpression.SetValue (doSource, (DependencyProperty) this.sourceProperty, value);
+							break;
+						case BindingSourceType.StructuredData:
+							sdSource = this.sourceObject as IStructuredData;
+							BindingExpression.SetValue (sdSource, (string) this.sourceProperty, value);
 							break;
 						case BindingSourceType.SourceItself:
 							throw new System.InvalidOperationException ("Cannot update source: BindingSourceType set to SourceItself");
@@ -432,7 +463,8 @@ namespace Epsitec.Common.Types
 			{
 				case BindingSourceType.PropertyObject:
 					BindingExpression.Attach (this, this.sourceObject as DependencyObject, (DependencyProperty) this.sourceProperty);
-					BindingExpression.Attach (this, this.sourceBreadcrumbs);
+					break;
+				case BindingSourceType.StructuredData:
 					break;
 				case BindingSourceType.SourceItself:
 					break;
@@ -448,7 +480,8 @@ namespace Epsitec.Common.Types
 			{
 				case BindingSourceType.PropertyObject:
 					BindingExpression.Detach (this, this.sourceObject as DependencyObject, (DependencyProperty) this.sourceProperty);
-					BindingExpression.Detach (this, this.sourceBreadcrumbs);
+					break;
+				case BindingSourceType.StructuredData:
 					break;
 				case BindingSourceType.SourceItself:
 					break;
@@ -456,10 +489,15 @@ namespace Epsitec.Common.Types
 					break;
 			}
 
+			if (this.sourceBreadcrumbs != null)
+			{
+				this.sourceBreadcrumbs.Dispose ();
+				this.sourceBreadcrumbs = null;
+			}
+
 			this.sourceObject      = null;
 			this.sourceProperty    = null;
 			this.sourceType        = BindingSourceType.None;
-			this.sourceBreadcrumbs = null;
 		}
 		
 		private void InternalAttachToTarget()
@@ -498,15 +536,21 @@ namespace Epsitec.Common.Types
 
 		private object GetSourceValue()
 		{
-			DependencyObject source;
+			DependencyObject doSource;
+			IStructuredData sdSource;
 			IResourceBoundSource resource;
 			object data;
 
 			switch (this.sourceType)
 			{
 				case BindingSourceType.PropertyObject:
-					source = this.sourceObject as DependencyObject;
-					data   = source.GetValue ((DependencyProperty) this.sourceProperty);
+					doSource = this.sourceObject as DependencyObject;
+					data = doSource.GetValue ((DependencyProperty) this.sourceProperty);
+					break;
+
+				case BindingSourceType.StructuredData:
+					sdSource = this.sourceObject as IStructuredData;
+					data = sdSource.GetValue ((string) this.sourceProperty);
 					break;
 
 				case BindingSourceType.SourceItself:
@@ -535,64 +579,27 @@ namespace Epsitec.Common.Types
 				}
 			}
 		}
+
+		private static void SetValue(IStructuredData target, string name, object value)
+		{
+			if (target != null)
+			{
+				if (value != Binding.DoNothing)
+				{
+					target.SetValue (name, value);
+				}
+			}
+		}
 		
 		private static void Attach(BindingExpression expression, DependencyObject source, DependencyProperty property)
 		{
 			source.AddEventHandler (property, expression.HandleSourcePropertyChanged);
 		}
-		private static void Attach(BindingExpression expression, List<SourcePropertyPair> list)
-		{
-			if (list != null)
-			{
-				foreach (SourcePropertyPair pair in list)
-				{
-					pair.Source.AddEventHandler (pair.Property, expression.HandleBreadcrumbsChanged);
-				}
-			}
-		}
 		private static void Detach(BindingExpression expression, DependencyObject source, DependencyProperty property)
 		{
 			source.RemoveEventHandler (property, expression.HandleSourcePropertyChanged);
 		}
-		private static void Detach(BindingExpression expression, List<SourcePropertyPair> list)
-		{
-			if (list != null)
-			{
-				foreach (SourcePropertyPair pair in list)
-				{
-					pair.Source.RemoveEventHandler (pair.Property, expression.HandleBreadcrumbsChanged);
-				}
-			}
-		}
 
-		#region Private SourcePropertyPair Structure
-		private struct SourcePropertyPair
-		{
-			public SourcePropertyPair(DependencyObject source, DependencyProperty property)
-			{
-				this.source = source;
-				this.property = property;
-			}
-			
-			public DependencyObject						Source
-			{
-				get
-				{
-					return this.source;
-				}
-			}
-			public DependencyProperty						Property
-			{
-				get
-				{
-					return this.property;
-				}
-			}
-			
-			private DependencyObject source;
-			private DependencyProperty property;
-		}
-		#endregion
 
 		private Binding							binding;
 		private DependencyObject				targetObject;			//	immutable
@@ -600,7 +607,7 @@ namespace Epsitec.Common.Types
 		private object							sourceObject;
 		private object							sourceProperty;
 		private BindingSourceType				sourceType;
-		private List<SourcePropertyPair>		sourceBreadcrumbs;
+		private BindingBreadcrumbs				sourceBreadcrumbs;
 		private Binding							dataContext;
 		private bool							isDataContextBound;
 		private int								sourceUpdateCounter;

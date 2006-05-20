@@ -98,6 +98,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="BindingChangedEventArgs.cs" />
+    <Compile Include="BindingBreadcrumbs.cs" />
     <Compile Include="IStructuredTypeProvider.cs" />
     <Compile Include="DynamicStructuredType.cs" />
     <Compile Include="Exceptions\InvalidTypeObjectException.cs" />

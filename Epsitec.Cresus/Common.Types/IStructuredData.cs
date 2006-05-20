@@ -13,8 +13,8 @@ namespace Epsitec.Common.Types
 	/// </summary>
 	public interface IStructuredData
 	{
-		void AttachListener(string path, PropertyChangedEventHandler handler);
-		void DetachListener(string path, PropertyChangedEventHandler handler);
+		void AttachListener(string name, PropertyChangedEventHandler handler);
+		void DetachListener(string name, PropertyChangedEventHandler handler);
 
 		string[] GetValueNames();
 		object GetValue(string name);

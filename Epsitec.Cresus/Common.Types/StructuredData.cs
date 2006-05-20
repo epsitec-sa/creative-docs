@@ -42,12 +42,12 @@ namespace Epsitec.Common.Types
 
 		#region IStructuredData Members
 
-		public void AttachListener(string path, Epsitec.Common.Support.EventHandler<DependencyPropertyChangedEventArgs> handler)
+		public void AttachListener(string name, Epsitec.Common.Support.EventHandler<DependencyPropertyChangedEventArgs> handler)
 		{
 			throw new System.Exception ("The method or operation is not implemented.");
 		}
 
-		public void DetachListener(string path, Epsitec.Common.Support.EventHandler<DependencyPropertyChangedEventArgs> handler)
+		public void DetachListener(string name, Epsitec.Common.Support.EventHandler<DependencyPropertyChangedEventArgs> handler)
 		{
 			throw new System.Exception ("The method or operation is not implemented.");
 		}
