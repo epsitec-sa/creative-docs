@@ -11,9 +11,10 @@ namespace Epsitec.Common.Designer.Viewers
 	/// </summary>
 	public abstract class Abstract : Widget
 	{
-		public Abstract(Module module)
+		public Abstract(Module module, PanelsContext context)
 		{
 			this.module = module;
+			this.context = context;
 
 			this.labelsIndex = new List<string>();
 		}
@@ -28,12 +29,12 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
-		public static Abstract Create(string type, Module module)
+		public static Abstract Create(string type, Module module, PanelsContext context)
 		{
 			//	Crée un Viewer d'un type donné.
-			if (type == "Strings")  return new Strings(module);
-			if (type == "Panels" )  return new Panels(module);
-			if (type == "Scripts")  return new Scripts(module);
+			if (type == "Strings")  return new Strings(module, context);
+			if (type == "Panels" )  return new Panels(module, context);
+			if (type == "Scripts")  return new Scripts(module, context);
 			return null;
 		}
 
@@ -268,6 +269,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 
 		protected Module					module;
+		protected PanelsContext					context;
 		protected List<string>				labelsIndex;
 		protected bool						ignoreChange = false;
 		protected MyWidgets.StringArray		array;

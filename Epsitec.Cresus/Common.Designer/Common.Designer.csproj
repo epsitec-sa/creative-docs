@@ -35,6 +35,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="PanelsContext.cs" />
     <Compile Include="Dialogs\Abstract.cs" />
     <Compile Include="Dialogs\NewCulture.cs" />
     <Compile Include="Dialogs\Search.cs" />
@@ -194,6 +195,10 @@
     <EmbeddedResource Include="Images\TabIndexPrev.icon" />
     <EmbeddedResource Include="Images\TabIndexNext.icon" />
     <EmbeddedResource Include="Images\TabIndexFirst.icon" />
+    <EmbeddedResource Include="Images\PanelShowAnchor.icon" />
+    <EmbeddedResource Include="Images\PanelShowConstrain.icon" />
+    <EmbeddedResource Include="Images\TabIndexRenum.icon" />
+    <EmbeddedResource Include="Images\TabIndexClear.icon" />
     <None Include="Resources\Designer\Strings.00.resource" />
     <None Include="Resources\Designer\Strings.en.resource" />
   </ItemGroup>

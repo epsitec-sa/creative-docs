@@ -11,7 +11,7 @@ namespace Epsitec.Common.Designer.Viewers
 	/// </summary>
 	public class Panels : Abstract
 	{
-		public Panels(Module module) : base(module)
+		public Panels(Module module, PanelsContext context) : base(module, context)
 		{
 			int tabIndex = 0;
 
@@ -86,6 +86,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.panelFrame.MinHeight = 100;
 			this.panelFrame.Anchor = AnchorStyles.All;
 			this.panelFrame.Panel = this.panelWidget;
+			this.panelFrame.Context = this.context;
 			this.panelFrame.ChildrenAdded += new EventHandler(this.HandlePanelFrameChildrenAdded);
 			this.panelFrame.ChildrenSelected += new EventHandler(this.HandlePanelFrameChildrenSelected);
 			this.panelFrame.UpdateCommands += new EventHandler(this.HandlePanelFrameUpdateCommands);
@@ -412,13 +413,17 @@ namespace Epsitec.Common.Designer.Viewers
 			this.GetCommandState("PanelSelectInvert").Enable = (objCount > 0);
 
 			this.GetCommandState("PanelShowGrid").Enable = true;
+			this.GetCommandState("PanelShowConstrain").Enable = true;
+			this.GetCommandState("PanelShowAnchor").Enable = true;
+			this.GetCommandState("PanelShowExpand").Enable = true;
 			this.GetCommandState("PanelShowZOrder").Enable = true;
 			this.GetCommandState("PanelShowTabIndex").Enable = true;
-			this.GetCommandState("PanelShowExpand").Enable = true;
-			this.GetCommandState("PanelShowGrid").ActiveState = this.panelFrame.ShowGrid ? ActiveState.Yes : ActiveState.No;
-			this.GetCommandState("PanelShowZOrder").ActiveState = this.panelFrame.ShowZOrder ? ActiveState.Yes : ActiveState.No;
-			this.GetCommandState("PanelShowTabIndex").ActiveState = this.panelFrame.ShowTabIndex ? ActiveState.Yes : ActiveState.No;
-			this.GetCommandState("PanelShowExpand").ActiveState = this.panelFrame.ShowExpand ? ActiveState.Yes : ActiveState.No;
+			this.GetCommandState("PanelShowGrid").ActiveState = this.context.ShowGrid ? ActiveState.Yes : ActiveState.No;
+			this.GetCommandState("PanelShowConstrain").ActiveState = this.context.ShowConstrain ? ActiveState.Yes : ActiveState.No;
+			this.GetCommandState("PanelShowAnchor").ActiveState = this.context.ShowAnchor ? ActiveState.Yes : ActiveState.No;
+			this.GetCommandState("PanelShowExpand").ActiveState = this.context.ShowExpand ? ActiveState.Yes : ActiveState.No;
+			this.GetCommandState("PanelShowZOrder").ActiveState = this.context.ShowZOrder ? ActiveState.Yes : ActiveState.No;
+			this.GetCommandState("PanelShowTabIndex").ActiveState = this.context.ShowTabIndex ? ActiveState.Yes : ActiveState.No;
 
 			this.GetCommandState("AlignLeft").Enable = (objSelected >= 2);
 			this.GetCommandState("AlignCenterX").Enable = (objSelected >= 2);
@@ -435,10 +440,12 @@ namespace Epsitec.Common.Designer.Viewers
 			this.GetCommandState("OrderUpOne").Enable = (objSelected != 0 && objCount >= 2);
 			this.GetCommandState("OrderDownOne").Enable = (objSelected != 0 && objCount >= 2);
 
-			this.GetCommandState("TabIndexLast").Enable = (objSelected != 0 && objCount >= 2);
-			this.GetCommandState("TabIndexPrev").Enable = (objSelected != 0 && objCount >= 2);
-			this.GetCommandState("TabIndexNext").Enable = (objSelected != 0 && objCount >= 2);
-			this.GetCommandState("TabIndexFirst").Enable = (objSelected != 0 && objCount >= 2);
+			this.GetCommandState("TabIndexClear").Enable = (objSelected != 0);
+			this.GetCommandState("TabIndexRenum").Enable = (objSelected != 0);
+			this.GetCommandState("TabIndexLast").Enable = (objSelected != 0);
+			this.GetCommandState("TabIndexPrev").Enable = (objSelected != 0);
+			this.GetCommandState("TabIndexNext").Enable = (objSelected != 0);
+			this.GetCommandState("TabIndexFirst").Enable = (objSelected != 0);
 
 			this.module.MainWindow.UpdateInfoCurrentModule();
 			this.module.MainWindow.UpdateInfoAccess();

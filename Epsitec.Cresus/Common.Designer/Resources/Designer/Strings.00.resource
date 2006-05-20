@@ -78,6 +78,8 @@
   <data name="Action.PanelShowZOrder">Afficher l'ordre des objets</data>
   <data name="Action.PanelShowTabIndex">Afficher l'ordre pour la touche Tab</data>
   <data name="Action.PanelShowExpand">Afficher les groupes plus grands</data>
+  <data name="Action.PanelShowConstrain">Afficher les contraintes</data>
+  <data name="Action.PanelShowAnchor">Afficher les ancrages</data>
 
   <data name="Action.AlignGrid">Alignement sur la grille magnétique</data>
   <data name="Action.AlignLeft">Alignement à gauche</data>
@@ -94,10 +96,12 @@
   <data name="Action.OrderDownOne">En arrière</data>
   <data name="Action.OrderDownAll">Arrière-plan</data>
 
+  <data name="Action.TabIndexClear">Aucun numéro</data>
   <data name="Action.TabIndexFirst">En premier</data>
   <data name="Action.TabIndexPrev">Rang précédent</data>
   <data name="Action.TabIndexNext">Rang suivant</data>
   <data name="Action.TabIndexLast">En dernier</data>
+  <data name="Action.TabIndexRenum">Renuméroter tous les objets automatiquement</data>
 
   <data name="Action.ToolSelect">Sélectionner</data>
   <data name="Action.ToolGlobal">Rectangle de sélection</data>
