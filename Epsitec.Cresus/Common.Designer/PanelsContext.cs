@@ -98,6 +98,30 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
+		public double GridStep
+		{
+			get
+			{
+				return this.gridStep;
+			}
+			set
+			{
+				this.gridStep = value;
+			}
+		}
+
+		public double ConstrainMargin
+		{
+			get
+			{
+				return this.constrainMargin;
+			}
+			set
+			{
+				this.constrainMargin = value;
+			}
+		}
+
 
 		protected string				tool = "ToolSelect";
 		protected bool					showGrid = false;
@@ -106,5 +130,7 @@ namespace Epsitec.Common.Designer
 		protected bool					showExpand = false;
 		protected bool					showZOrder = false;
 		protected bool					showTabIndex = false;
+		protected double				gridStep = 10;
+		protected double				constrainMargin = 5;
 	}
 }
