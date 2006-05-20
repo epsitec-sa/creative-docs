@@ -73,14 +73,14 @@ namespace Epsitec.Common.Widgets
 
 			#region IStructuredData Members
 
-			void IStructuredData.AttachListener(string path, Epsitec.Common.Support.EventHandler<DependencyPropertyChangedEventArgs> handler)
+			void IStructuredData.AttachListener(string name, Epsitec.Common.Support.EventHandler<DependencyPropertyChangedEventArgs> handler)
 			{
-				this.data.AttachListener (path, handler);
+				this.data.AttachListener (name, handler);
 			}
 
-			void IStructuredData.DetachListener(string path, Epsitec.Common.Support.EventHandler<DependencyPropertyChangedEventArgs> handler)
+			void IStructuredData.DetachListener(string name, Epsitec.Common.Support.EventHandler<DependencyPropertyChangedEventArgs> handler)
 			{
-				this.data.DetachListener (path, handler);
+				this.data.DetachListener (name, handler);
 			}
 
 			string[] IStructuredData.GetValueNames()

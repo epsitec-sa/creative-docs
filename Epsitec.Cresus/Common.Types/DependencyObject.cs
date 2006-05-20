@@ -625,25 +625,25 @@ namespace Epsitec.Common.Types
 
 		#region IStructuredData Members
 
-		void IStructuredData.AttachListener(string path, Epsitec.Common.Support.EventHandler<DependencyPropertyChangedEventArgs> handler)
+		void IStructuredData.AttachListener(string name, Epsitec.Common.Support.EventHandler<DependencyPropertyChangedEventArgs> handler)
 		{
-			DependencyProperty property = this.ObjectType.GetProperty (path);
+			DependencyProperty property = this.ObjectType.GetProperty (name);
 
 			if (property == null)
 			{
-				throw new System.ArgumentException (string.Format ("Path '{0}' cannot map to DependencyProperty", path));
+				throw new System.ArgumentException (string.Format ("Name '{0}' cannot map to DependencyProperty", name));
 			}
 
 			this.AddEventHandler (property, handler);
 		}
 
-		void IStructuredData.DetachListener(string path, Epsitec.Common.Support.EventHandler<DependencyPropertyChangedEventArgs> handler)
+		void IStructuredData.DetachListener(string name, Epsitec.Common.Support.EventHandler<DependencyPropertyChangedEventArgs> handler)
 		{
-			DependencyProperty property = this.ObjectType.GetProperty (path);
+			DependencyProperty property = this.ObjectType.GetProperty (name);
 
 			if (property == null)
 			{
-				throw new System.ArgumentException (string.Format ("Path '{0}' cannot map to DependencyProperty", path));
+				throw new System.ArgumentException (string.Format ("Name '{0}' cannot map to DependencyProperty", name));
 			}
 
 			this.RemoveEventHandler (property, handler);

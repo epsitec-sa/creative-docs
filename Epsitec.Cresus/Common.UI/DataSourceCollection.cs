@@ -100,40 +100,30 @@ namespace Epsitec.Common.UI
 
 		#region IStructuredData Members
 
-		public void AttachListener(string path, Epsitec.Common.Support.EventHandler<DependencyPropertyChangedEventArgs> handler)
+		public void AttachListener(string name, Epsitec.Common.Support.EventHandler<DependencyPropertyChangedEventArgs> handler)
 		{
-			string name = StructuredTree.GetRootName (path);
-			
 			ItemRecord record = this.GetItemRecord (name);
 			IStructuredData data = record.Data;
 
 			if (data == null)
 			{
-				throw new System.ArgumentException (string.Format ("Path '{0}' cannot be resolved", path));
+				throw new System.ArgumentException (string.Format ("Name '{0}' cannot be resolved", name));
 			}
-
-			if (path != name)
-			{
-				data.AttachListener (StructuredTree.GetSubPath (path, 1), handler);
-			}
+			
+			//	Immutable roots...
 		}
 
-		public void DetachListener(string path, Epsitec.Common.Support.EventHandler<DependencyPropertyChangedEventArgs> handler)
+		public void DetachListener(string name, Epsitec.Common.Support.EventHandler<DependencyPropertyChangedEventArgs> handler)
 		{
-			string name = StructuredTree.GetRootName (path);
-
 			ItemRecord record = this.GetItemRecord (name);
 			IStructuredData data = record.Data;
 
 			if (data == null)
 			{
-				throw new System.ArgumentException (string.Format ("Path '{0}' cannot be resolved", path));
+				throw new System.ArgumentException (string.Format ("Name '{0}' cannot be resolved", name));
 			}
-
-			if (path != name)
-			{
-				data.DetachListener (StructuredTree.GetSubPath (path, 1), handler);
-			}
+			
+			//	Immutable roots...
 		}
 
 		public string[] GetValueNames()
