@@ -661,6 +661,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				this.creatingObject = new GroupBox(this.panel);
 				this.creatingObject.Text = "Group";
+				this.creatingObject.PreferredSize = new Size(200, 100);
 			}
 
 			this.creatingObject.Anchor = AnchorStyles.BottomLeft;
