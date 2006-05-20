@@ -305,7 +305,7 @@ namespace Epsitec.Common.Types
 						type = BindingSourceType.StructuredData;
 						
 						objectSource   = sdSource;
-						objectProperty = property;
+						objectProperty = name;
 					}
 
 					//	If we have traversed several data source objects to arrive
