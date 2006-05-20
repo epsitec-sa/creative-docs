@@ -95,6 +95,14 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		internal bool							Deferred
+		{
+			get
+			{
+				return this.deferCounter > 0;
+			}
+		}
+
 		public System.IDisposable DeferChanges()
 		{
 			return new DeferManager (this);

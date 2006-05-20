@@ -8,9 +8,9 @@ namespace Epsitec.Common.Types
 	using PropertyChangedEventHandler = Epsitec.Common.Support.EventHandler<DependencyPropertyChangedEventArgs>;
 	
 	/// <summary>
-	/// The BindingExpression class is used to maintain the real binding
-	/// between a source and a target, whereas the Binding class can be
-	/// specified more than once (i.e. Binding is more general).
+	/// The <c>BindingExpression</c> class is used to maintain the real binding
+	/// between a source and a target, whereas the <see cref="T:Binding"/> class
+	/// can be specified more than once (i.e. <c>Binding</c> is more general).
 	/// </summary>
 	public sealed class BindingExpression : System.IDisposable
 	{
@@ -88,12 +88,15 @@ namespace Epsitec.Common.Types
 			this.AttachToSource ();
 			this.UpdateTarget (BindingUpdateMode.Reset);
 		}
+		
 		internal void AttachToSource()
 		{
 			object						sourceObject;
 			object						sourceProperty;
 			BindingSourceType			sourceType;
-			List<SourcePropertyPair>	sourceBreadcrumbs;
+			BindingBreadcrumbs			sourceBreadcrumbs;
+
+			System.Diagnostics.Debug.Assert (this.sourceBreadcrumbs == null);
 
 			if (this.FindDataSource (out sourceObject, out sourceProperty, out sourceType, out sourceBreadcrumbs))
 			{
@@ -112,6 +115,7 @@ namespace Epsitec.Common.Types
 				this.sourceBreadcrumbs = null;
 			}
 		}
+		
 		internal void DetachFromSource()
 		{
 			if (this.sourceObject != null)
@@ -131,8 +135,12 @@ namespace Epsitec.Common.Types
 			expression.targetPropery = property;
 
 			expression.InternalAttachToTarget ();
-			expression.AttachToSource ();
-			expression.UpdateTarget (BindingUpdateMode.Reset);
+
+			if (!binding.Deferred)
+			{
+				expression.AttachToSource ();
+				expression.UpdateTarget (BindingUpdateMode.Reset);
+			}
 			
 			return expression;
 		}
@@ -165,7 +173,7 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		private bool FindDataSource(out object objectSource, out object objectProperty, out BindingSourceType type, out List<SourcePropertyPair> breadcrumbs)
+		private bool FindDataSource(out object objectSource, out object objectProperty, out BindingSourceType type, out BindingBreadcrumbs breadcrumbs)
 		{
 			type           = BindingSourceType.None;
 			objectSource   = null;
@@ -196,10 +204,10 @@ namespace Epsitec.Common.Types
 					{
 						if (breadcrumbs == null)
 						{
-							breadcrumbs = new List<SourcePropertyPair> ();
+							breadcrumbs = new BindingBreadcrumbs (this.HandleBreadcrumbsChanged);
 						}
 						
-						breadcrumbs.Add (new SourcePropertyPair (source, property));
+						breadcrumbs.AddNode (source, property);
 						
 						source = source.GetValue (property) as DependencyObject;
 						
@@ -432,7 +440,6 @@ namespace Epsitec.Common.Types
 			{
 				case BindingSourceType.PropertyObject:
 					BindingExpression.Attach (this, this.sourceObject as DependencyObject, (DependencyProperty) this.sourceProperty);
-					BindingExpression.Attach (this, this.sourceBreadcrumbs);
 					break;
 				case BindingSourceType.SourceItself:
 					break;
@@ -448,7 +455,6 @@ namespace Epsitec.Common.Types
 			{
 				case BindingSourceType.PropertyObject:
 					BindingExpression.Detach (this, this.sourceObject as DependencyObject, (DependencyProperty) this.sourceProperty);
-					BindingExpression.Detach (this, this.sourceBreadcrumbs);
 					break;
 				case BindingSourceType.SourceItself:
 					break;
@@ -456,10 +462,15 @@ namespace Epsitec.Common.Types
 					break;
 			}
 
+			if (this.sourceBreadcrumbs != null)
+			{
+				this.sourceBreadcrumbs.Dispose ();
+				this.sourceBreadcrumbs = null;
+			}
+
 			this.sourceObject      = null;
 			this.sourceProperty    = null;
 			this.sourceType        = BindingSourceType.None;
-			this.sourceBreadcrumbs = null;
 		}
 		
 		private void InternalAttachToTarget()
@@ -540,59 +551,11 @@ namespace Epsitec.Common.Types
 		{
 			source.AddEventHandler (property, expression.HandleSourcePropertyChanged);
 		}
-		private static void Attach(BindingExpression expression, List<SourcePropertyPair> list)
-		{
-			if (list != null)
-			{
-				foreach (SourcePropertyPair pair in list)
-				{
-					pair.Source.AddEventHandler (pair.Property, expression.HandleBreadcrumbsChanged);
-				}
-			}
-		}
 		private static void Detach(BindingExpression expression, DependencyObject source, DependencyProperty property)
 		{
 			source.RemoveEventHandler (property, expression.HandleSourcePropertyChanged);
 		}
-		private static void Detach(BindingExpression expression, List<SourcePropertyPair> list)
-		{
-			if (list != null)
-			{
-				foreach (SourcePropertyPair pair in list)
-				{
-					pair.Source.RemoveEventHandler (pair.Property, expression.HandleBreadcrumbsChanged);
-				}
-			}
-		}
 
-		#region Private SourcePropertyPair Structure
-		private struct SourcePropertyPair
-		{
-			public SourcePropertyPair(DependencyObject source, DependencyProperty property)
-			{
-				this.source = source;
-				this.property = property;
-			}
-			
-			public DependencyObject						Source
-			{
-				get
-				{
-					return this.source;
-				}
-			}
-			public DependencyProperty						Property
-			{
-				get
-				{
-					return this.property;
-				}
-			}
-			
-			private DependencyObject source;
-			private DependencyProperty property;
-		}
-		#endregion
 
 		private Binding							binding;
 		private DependencyObject				targetObject;			//	immutable
@@ -600,7 +563,7 @@ namespace Epsitec.Common.Types
 		private object							sourceObject;
 		private object							sourceProperty;
 		private BindingSourceType				sourceType;
-		private List<SourcePropertyPair>		sourceBreadcrumbs;
+		private BindingBreadcrumbs				sourceBreadcrumbs;
 		private Binding							dataContext;
 		private bool							isDataContextBound;
 		private int								sourceUpdateCounter;
