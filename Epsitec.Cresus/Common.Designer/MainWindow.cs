@@ -635,7 +635,7 @@ namespace Epsitec.Common.Designer
 
 				command.IconName    = commandName;
 				command.LongCaption = Res.Strings.GetString ("Action."+commandName);
-				command.Statefull   = (commandName == "FontBold" || commandName == "FontItalic" || commandName == "FontUnderlined");
+				command.Statefull   = (commandName == "FontBold" || commandName == "FontItalic" || commandName == "FontUnderlined" || commandName.StartsWith("PanelShow"));
 			}
 
 			return this.CommandContext.GetCommandState (command);

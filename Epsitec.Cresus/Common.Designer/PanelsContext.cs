@@ -14,6 +14,18 @@ namespace Epsitec.Common.Designer
 		}
 
 
+		public string Tool
+		{
+			get
+			{
+				return this.tool;
+			}
+			set
+			{
+				this.tool = value;
+			}
+		}
+
 		public bool ShowGrid
 		{
 			get
@@ -87,11 +99,12 @@ namespace Epsitec.Common.Designer
 		}
 
 
-		protected bool showGrid = false;
-		protected bool showConstrain = true;
-		protected bool showAnchor = true;
-		protected bool showExpand = false;
-		protected bool showZOrder = false;
-		protected bool showTabIndex = false;
+		protected string				tool = "ToolSelect";
+		protected bool					showGrid = false;
+		protected bool					showConstrain = true;
+		protected bool					showAnchor = true;
+		protected bool					showExpand = false;
+		protected bool					showZOrder = false;
+		protected bool					showTabIndex = false;
 	}
 }

@@ -51,20 +51,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
-		public string					Tool
-		{
-			get
-			{
-				return this.tool;
-			}
-
-			set
-			{
-				this.tool = value;
-			}
-		}
-
-		public PanelsContext					Context
+		public PanelsContext			Context
 		{
 			get
 			{
@@ -255,32 +242,32 @@ namespace Epsitec.Common.Designer.MyWidgets
 		void ProcessMouseDown(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
 			//	La souris a été pressée.
-			if (this.tool == "ToolSelect")
+			if (this.context.Tool == "ToolSelect")
 			{
 				this.SelectDown(pos, isRightButton, isControlPressed, isShiftPressed);
 			}
 
-			if (this.tool == "ToolGlobal")
+			if (this.context.Tool == "ToolGlobal")
 			{
 				this.GlobalDown(pos, isRightButton, isControlPressed, isShiftPressed);
 			}
 
-			if (this.tool == "ToolEdit")
+			if (this.context.Tool == "ToolEdit")
 			{
 				this.EditDown(pos, isRightButton, isControlPressed, isShiftPressed);
 			}
 
-			if (this.tool == "ToolZoom")
+			if (this.context.Tool == "ToolZoom")
 			{
 				this.ZoomDown(pos, isRightButton, isControlPressed, isShiftPressed);
 			}
 
-			if (this.tool == "ToolHand")
+			if (this.context.Tool == "ToolHand")
 			{
 				this.HandDown(pos, isRightButton, isControlPressed, isShiftPressed);
 			}
 
-			if (this.tool.StartsWith("Object"))
+			if (this.context.Tool.StartsWith("Object"))
 			{
 				this.ObjectDown(pos, isRightButton, isControlPressed, isShiftPressed);
 			}
@@ -289,32 +276,32 @@ namespace Epsitec.Common.Designer.MyWidgets
 		void ProcessMouseMove(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
 			//	La souris a été déplacée.
-			if (this.tool == "ToolSelect")
+			if (this.context.Tool == "ToolSelect")
 			{
 				this.SelectMove(pos, isRightButton, isControlPressed, isShiftPressed);
 			}
 
-			if (this.tool == "ToolGlobal")
+			if (this.context.Tool == "ToolGlobal")
 			{
 				this.GlobalMove(pos, isRightButton, isControlPressed, isShiftPressed);
 			}
 
-			if (this.tool == "ToolEdit")
+			if (this.context.Tool == "ToolEdit")
 			{
 				this.EditMove(pos, isRightButton, isControlPressed, isShiftPressed);
 			}
 
-			if (this.tool == "ToolZoom")
+			if (this.context.Tool == "ToolZoom")
 			{
 				this.ZoomMove(pos, isRightButton, isControlPressed, isShiftPressed);
 			}
 
-			if (this.tool == "ToolHand")
+			if (this.context.Tool == "ToolHand")
 			{
 				this.HandMove(pos, isRightButton, isControlPressed, isShiftPressed);
 			}
 
-			if (this.tool.StartsWith("Object"))
+			if (this.context.Tool.StartsWith("Object"))
 			{
 				this.ObjectMove(pos, isRightButton, isControlPressed, isShiftPressed);
 			}
@@ -323,32 +310,32 @@ namespace Epsitec.Common.Designer.MyWidgets
 		void ProcessMouseUp(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
 			//	La souris a été relâchée.
-			if (this.tool == "ToolSelect")
+			if (this.context.Tool == "ToolSelect")
 			{
 				this.SelectUp(pos, isRightButton, isControlPressed, isShiftPressed);
 			}
 
-			if (this.tool == "ToolGlobal")
+			if (this.context.Tool == "ToolGlobal")
 			{
 				this.GlobalUp(pos, isRightButton, isControlPressed, isShiftPressed);
 			}
 
-			if (this.tool == "ToolEdit")
+			if (this.context.Tool == "ToolEdit")
 			{
 				this.EditUp(pos, isRightButton, isControlPressed, isShiftPressed);
 			}
 
-			if (this.tool == "ToolZoom")
+			if (this.context.Tool == "ToolZoom")
 			{
 				this.ZoomUp(pos, isRightButton, isControlPressed, isShiftPressed);
 			}
 
-			if (this.tool == "ToolHand")
+			if (this.context.Tool == "ToolHand")
 			{
 				this.HandUp(pos, isRightButton, isControlPressed, isShiftPressed);
 			}
 
-			if (this.tool.StartsWith("Object"))
+			if (this.context.Tool.StartsWith("Object"))
 			{
 				this.ObjectUp(pos, isRightButton, isControlPressed, isShiftPressed);
 			}
@@ -357,32 +344,32 @@ namespace Epsitec.Common.Designer.MyWidgets
 		void ProcessKeyChanged(bool isControlPressed, bool isShiftPressed)
 		{
 			//	La souris a été relâchée.
-			if (this.tool == "ToolSelect")
+			if (this.context.Tool == "ToolSelect")
 			{
 				this.SelectKeyChanged(isControlPressed, isShiftPressed);
 			}
 
-			if (this.tool == "ToolGlobal")
+			if (this.context.Tool == "ToolGlobal")
 			{
 				this.GlobalKeyChanged(isControlPressed, isShiftPressed);
 			}
 
-			if (this.tool == "ToolEdit")
+			if (this.context.Tool == "ToolEdit")
 			{
 				this.EditKeyChanged(isControlPressed, isShiftPressed);
 			}
 
-			if (this.tool == "ToolZoom")
+			if (this.context.Tool == "ToolZoom")
 			{
 				this.ZoomKeyChanged(isControlPressed, isShiftPressed);
 			}
 
-			if (this.tool == "ToolHand")
+			if (this.context.Tool == "ToolHand")
 			{
 				this.HandKeyChanged(isControlPressed, isShiftPressed);
 			}
 
-			if (this.tool.StartsWith("Object"))
+			if (this.context.Tool.StartsWith("Object"))
 			{
 				this.ObjectKeyChanged(isControlPressed, isShiftPressed);
 			}
@@ -644,19 +631,19 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void ObjectDown(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
 			//	Dessin d'un objet, souris pressée.
-			if (this.tool == "ObjectLine")
+			if (this.context.Tool == "ObjectLine")
 			{
 				this.creatingObject = new Separator(this.panel);
 				this.creatingObject.PreferredHeight = 1;
 			}
 
-			if (this.tool == "ObjectButton")
+			if (this.context.Tool == "ObjectButton")
 			{
 				this.creatingObject = new Button(this.panel);
 				this.creatingObject.Text = "Button";
 			}
 
-			if (this.tool == "ObjectText")
+			if (this.context.Tool == "ObjectText")
 			{
 				this.creatingObject = new TextField(this.panel);
 				this.creatingObject.Text = "TextField";
@@ -1327,8 +1314,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 
 		protected UI.Panel					panel;
-		protected string					tool = "ToolSelect";
-		protected PanelsContext					context;
+		protected PanelsContext				context;
 
 		protected Widget					creatingObject;
 		protected List<Widget>				selectedObjects = new List<Widget>();
