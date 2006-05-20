@@ -29,6 +29,15 @@ namespace Epsitec.Common.Types
 
 		public void AddNode(IStructuredData source, string name)
 		{
+			if ((source != null) &&
+				(source != Binding.DoNothing))
+			{
+				Node node = new Node (source, name);
+
+				node.Attach (this.handler);
+
+				this.nodes.Add (node);
+			}
 		}
 
 		#region IDisposable Members
@@ -54,12 +63,22 @@ namespace Epsitec.Common.Types
 				this.property = property;
 			}
 
+			public Node(IStructuredData source, string name)
+			{
+				this.type     = NodeType.StructuredData;
+				this.source   = source;
+				this.property = name;
+			}
+
 			public void Attach(PropertyChangedEventHandler handler)
 			{
 				switch (this.type)
 				{
 					case NodeType.DependencyObject:
 						this.AttachDependencyObject (handler);
+						break;
+					case NodeType.StructuredData:
+						this.AttachStructuredData (handler);
 						break;
 				}
 			}
@@ -70,6 +89,9 @@ namespace Epsitec.Common.Types
 				{
 					case NodeType.DependencyObject:
 						this.DetachDependencyObject (handler);
+						break;
+					case NodeType.StructuredData:
+						this.DetachStructuredData (handler);
 						break;
 				}
 			}
@@ -82,6 +104,14 @@ namespace Epsitec.Common.Types
 				source.AddEventHandler (property, handler);
 			}
 
+			private void AttachStructuredData(PropertyChangedEventHandler handler)
+			{
+				IStructuredData source = (IStructuredData) this.source;
+				string          name   = (string) this.property;
+
+				source.AttachListener (name, handler);
+			}
+			
 			private void DetachDependencyObject(PropertyChangedEventHandler handler)
 			{
 				DependencyObject source   = (DependencyObject) this.source;
@@ -90,6 +120,14 @@ namespace Epsitec.Common.Types
 				source.RemoveEventHandler (property, handler);
 			}
 
+			private void DetachStructuredData(PropertyChangedEventHandler handler)
+			{
+				IStructuredData source = (IStructuredData) this.source;
+				string name   = (string) this.property;
+
+				source.DetachListener (name, handler);
+			}
+			
 			private NodeType type;
 			private object source;
 			private object property;
