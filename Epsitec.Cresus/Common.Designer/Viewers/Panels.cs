@@ -52,13 +52,14 @@ namespace Epsitec.Common.Designer.Viewers
 			this.toolBar.Dock = DockStyle.Left;
 			this.ToolBarAdd(Widgets.Command.Get("ToolSelect"));
 			this.ToolBarAdd(Widgets.Command.Get("ToolGlobal"));
-			this.ToolBarAdd(Widgets.Command.Get("ToolEdit"));
-			this.ToolBarAdd(Widgets.Command.Get("ToolZoom"));
-			this.ToolBarAdd(Widgets.Command.Get("ToolHand"));
+			//?this.ToolBarAdd(Widgets.Command.Get("ToolEdit"));
+			//?this.ToolBarAdd(Widgets.Command.Get("ToolZoom"));
+			//?this.ToolBarAdd(Widgets.Command.Get("ToolHand"));
 			this.ToolBarAdd(null);
 			this.ToolBarAdd(Widgets.Command.Get("ObjectLine"));
 			this.ToolBarAdd(Widgets.Command.Get("ObjectButton"));
 			this.ToolBarAdd(Widgets.Command.Get("ObjectText"));
+			this.ToolBarAdd(Widgets.Command.Get("ObjectGroup"));
 
 			this.scrollable = new Scrollable(this);
 			this.scrollable.MinWidth = 100;

@@ -199,6 +199,7 @@
     <EmbeddedResource Include="Images\PanelShowConstrain.icon" />
     <EmbeddedResource Include="Images\TabIndexRenum.icon" />
     <EmbeddedResource Include="Images\TabIndexClear.icon" />
+    <EmbeddedResource Include="Images\ObjectGroup.icon" />
     <None Include="Resources\Designer\Strings.00.resource" />
     <None Include="Resources\Designer\Strings.en.resource" />
   </ItemGroup>

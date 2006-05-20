@@ -492,6 +492,7 @@ namespace Epsitec.Common.Designer
 		[Command("ObjectLine")]
 		[Command("ObjectButton")]
 		[Command("ObjectText")]
+		[Command("ObjectGroup")]
 		void CommandTool(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			if ( !this.IsCurrentModule )  return;
@@ -583,6 +584,7 @@ namespace Epsitec.Common.Designer
 			this.objectLineState = this.CreateCommandState("ObjectLine", KeyCode.AlphaL);
 			this.objectButtonState = this.CreateCommandState("ObjectButton", KeyCode.AlphaB);
 			this.objectTextState = this.CreateCommandState("ObjectText", KeyCode.AlphaT);
+			this.objectGroupState = this.CreateCommandState("ObjectGroup", KeyCode.AlphaG);
 			
 			this.panelDeleteState = this.CreateCommandState("PanelDelete");
 			this.panelDuplicateState = this.CreateCommandState("PanelDuplicate");
@@ -998,6 +1000,7 @@ namespace Epsitec.Common.Designer
 		protected CommandState					objectLineState;
 		protected CommandState					objectButtonState;
 		protected CommandState					objectTextState;
+		protected CommandState					objectGroupState;
 		protected CommandState					panelDeleteState;
 		protected CommandState					panelDuplicateState;
 		protected CommandState					panelDeselectAllState;
