@@ -111,8 +111,11 @@ namespace Epsitec.Common.UI
 			{
 				throw new System.ArgumentException (string.Format ("Path '{0}' cannot be resolved", path));
 			}
-			
-			data.AttachListener (StructuredTree.GetSubPath (path, 1), handler);
+
+			if (path != name)
+			{
+				data.AttachListener (StructuredTree.GetSubPath (path, 1), handler);
+			}
 		}
 
 		public void DetachListener(string path, Epsitec.Common.Support.EventHandler<DependencyPropertyChangedEventArgs> handler)
@@ -127,7 +130,10 @@ namespace Epsitec.Common.UI
 				throw new System.ArgumentException (string.Format ("Path '{0}' cannot be resolved", path));
 			}
 
-			data.DetachListener (StructuredTree.GetSubPath (path, 1), handler);
+			if (path != name)
+			{
+				data.DetachListener (StructuredTree.GetSubPath (path, 1), handler);
+			}
 		}
 
 		public string[] GetValueNames()
