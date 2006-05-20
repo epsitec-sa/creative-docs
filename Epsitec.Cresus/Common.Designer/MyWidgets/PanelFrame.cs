@@ -1169,6 +1169,24 @@ namespace Epsitec.Common.Designer.MyWidgets
 				graphics.RenderSolid(this.colorOutsurface);
 			}
 
+			//	Dessine la grille magnétique
+			if (this.context.ShowGrid)
+			{
+				double step = 10;
+				int hilite = 0;
+				for (double x=step+0.5; x<bounds.Width; x+=step)
+				{
+					graphics.AddLine(x, bounds.Bottom, x, bounds.Top);
+					graphics.RenderSolid(((++hilite)%10 == 0) ? this.colorGrid1 : this.colorGrid2);
+				}
+				hilite = 0;
+				for (double y=step+0.5; y<bounds.Height; y+=step)
+				{
+					graphics.AddLine(bounds.Left, y, bounds.Right, y);
+					graphics.RenderSolid(((++hilite)%10 == 0) ? this.colorGrid1 : this.colorGrid2);
+				}
+			}
+
 			//	Dessine les objets sélectionnés.
 			if (this.selectedObjects.Count > 0)
 			{
@@ -1458,6 +1476,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected Color						colorZOrder = Color.FromRgb(1,0,0);
 		protected Color						colorTabIndex = Color.FromRgb(0,0,1);
 		protected Color						colorAnchor = Color.FromRgb(1,0,0);
+		protected Color						colorGrid1 = Color.FromAlphaRgb(0.2, 0.4, 0.4, 0.4);
+		protected Color						colorGrid2 = Color.FromAlphaRgb(0.2, 0.7, 0.7, 0.7);
 
 		protected Image						mouseCursorArrow = null;
 		protected Image						mouseCursorArrowPlus = null;
