@@ -434,7 +434,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.GetCommandState("OrderDownOne").Enable = (objSelected != 0 && objCount >= 2);
 
 			this.GetCommandState("TabIndexClear").Enable = (objSelected != 0);
-			this.GetCommandState("TabIndexRenum").Enable = (objSelected != 0);
+			this.GetCommandState("TabIndexRenum").Enable = (objCount != 0);
 			this.GetCommandState("TabIndexLast").Enable = (objSelected != 0);
 			this.GetCommandState("TabIndexPrev").Enable = (objSelected != 0);
 			this.GetCommandState("TabIndexNext").Enable = (objSelected != 0);
