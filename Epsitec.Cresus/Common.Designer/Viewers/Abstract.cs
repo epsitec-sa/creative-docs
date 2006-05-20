@@ -142,10 +142,10 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Effectue une modification de typographie.
 		}
 
-		public virtual void DoTool(string name)
+		public void DoTool(string name)
 		{
 			//	Choix de l'outil.
-			this.tool = name;
+			this.context.Tool = name;
 			this.UpdateCommands();
 		}
 
@@ -247,7 +247,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected void UpdateCommandTool(string name)
 		{
-			this.GetCommandState(name).ActiveState = (this.tool == name) ? ActiveState.Yes : ActiveState.No;
+			this.GetCommandState(name).ActiveState = (this.context.Tool == name) ? ActiveState.Yes : ActiveState.No;
 		}
 
 		protected CommandState GetCommandState(string command)
@@ -269,11 +269,10 @@ namespace Epsitec.Common.Designer.Viewers
 
 
 		protected Module					module;
-		protected PanelsContext					context;
+		protected PanelsContext				context;
 		protected List<string>				labelsIndex;
 		protected bool						ignoreChange = false;
 		protected MyWidgets.StringArray		array;
 		protected AbstractTextField			currentTextField;
-		protected string					tool = "ToolSelect";
 	}
 }
