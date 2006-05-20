@@ -1055,6 +1055,30 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Modifie les dimensions d'un objet.
 			obj.PreferredSize = size;
 		}
+
+		protected bool ObjectAnchorLeft(Widget obj)
+		{
+			//	Indique si l'objet est ancré à gauche.
+			return (obj.Anchor & AnchorStyles.Left) != 0;
+		}
+
+		protected bool ObjectAnchorRight(Widget obj)
+		{
+			//	Indique si l'objet est ancré à gauche.
+			return (obj.Anchor & AnchorStyles.Right) != 0;
+		}
+
+		protected bool ObjectAnchorBottom(Widget obj)
+		{
+			//	Indique si l'objet est ancré à gauche.
+			return (obj.Anchor & AnchorStyles.Bottom) != 0;
+		}
+
+		protected bool ObjectAnchorTop(Widget obj)
+		{
+			//	Indique si l'objet est ancré à gauche.
+			return (obj.Anchor & AnchorStyles.Top) != 0;
+		}
 		#endregion
 
 
@@ -1072,20 +1096,20 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				Rectangle part = new Rectangle(box.Left, bounds.Top, box.Width, box.Top-bounds.Top);
 				graphics.AddFilledRectangle(part);
-				graphics.RenderSolid(Color.FromAlphaRgb(0.2, 0.5, 0.5, 0.5));
+				graphics.RenderSolid(this.colorOutsurface);
 			}
 
 			if (bounds.Right < box.Right)
 			{
 				Rectangle part = new Rectangle(bounds.Right, box.Bottom, box.Right-bounds.Right, bounds.Height);
 				graphics.AddFilledRectangle(part);
-				graphics.RenderSolid(Color.FromAlphaRgb(0.2, 0.5, 0.5, 0.5));
+				graphics.RenderSolid(this.colorOutsurface);
 			}
 
 			//	Dessine les objets sélectionnés.
 			if (this.selectedObjects.Count > 0)
 			{
-				foreach ( Widget obj in this.selectedObjects)
+				foreach (Widget obj in this.selectedObjects)
 				{
 					Rectangle rect = obj.ActualBounds;
 					rect.Deflate(0.5);
@@ -1097,6 +1121,44 @@ namespace Epsitec.Common.Designer.MyWidgets
 					graphics.AddRectangle(rect);
 					graphics.RenderSolid(this.HiliteOutlineColor);
 					graphics.LineWidth = 1;
+				}
+			}
+
+			//	Dessine les ancrages.
+			if (this.context.ShowAnchor && this.selectedObjects.Count > 0)
+			{
+				foreach (Widget obj in this.selectedObjects)
+				{
+					Rectangle rect = obj.ActualBounds;
+					Point p1, p2;
+
+					if (this.ObjectAnchorLeft(obj))
+					{
+						p1 = new Point(bounds.Left, rect.Center.Y);
+						p2 = new Point(rect.Left, rect.Center.Y);
+						this.DrawAnchor(graphics, p1, p2);
+					}
+
+					if (this.ObjectAnchorRight(obj))
+					{
+						p1 = new Point(bounds.Right, rect.Center.Y);
+						p2 = new Point(rect.Right, rect.Center.Y);
+						this.DrawAnchor(graphics, p1, p2);
+					}
+
+					if (this.ObjectAnchorBottom(obj))
+					{
+						p1 = new Point(rect.Center.X, bounds.Bottom);
+						p2 = new Point(rect.Center.X, rect.Bottom);
+						this.DrawAnchor(graphics, p1, p2);
+					}
+
+					if (this.ObjectAnchorTop(obj))
+					{
+						p1 = new Point(rect.Center.X, bounds.Top);
+						p2 = new Point(rect.Center.X, rect.Top);
+						this.DrawAnchor(graphics, p1, p2);
+					}
 				}
 			}
 
@@ -1112,7 +1174,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 					string text = (obj.ZOrder+1).ToString();
 					graphics.AddText(box.Left, box.Bottom, box.Width, box.Height, text, Font.DefaultFont, 9.0, ContentAlignment.MiddleCenter);
-					graphics.RenderSolid(Color.FromRgb(1,0,0));  // rouge
+					graphics.RenderSolid(this.colorZOrder);
 				}
 			}
 
@@ -1128,7 +1190,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 					string text = (obj.TabIndex+1).ToString();
 					graphics.AddText(box.Left, box.Bottom, box.Width, box.Height, text, Font.DefaultFont, 9.0, ContentAlignment.MiddleCenter);
-					graphics.RenderSolid(Color.FromRgb(0, 0, 1));  // bleu
+					graphics.RenderSolid(this.colorTabIndex);
 				}
 			}
 
@@ -1147,6 +1209,23 @@ namespace Epsitec.Common.Designer.MyWidgets
 				graphics.AddRectangle(sel);
 				graphics.RenderSolid(this.HiliteOutlineColor);
 			}
+		}
+
+		protected void DrawAnchor(Graphics graphics, Point p1, Point p2)
+		{
+			graphics.Align(ref p1);
+			graphics.Align(ref p2);
+			p1.X += 0.5;
+			p1.Y += 0.5;
+			p2.X += 0.5;
+			p2.Y += 0.5;
+
+			graphics.AddLine(p1, p2);
+			graphics.RenderSolid(this.colorAnchor);
+
+			graphics.AddFilledCircle(p1, 4.0);
+			graphics.AddFilledCircle(p2, 4.0);
+			graphics.RenderSolid(this.colorAnchor);
 		}
 
 		protected Rectangle RealBounds
@@ -1323,6 +1402,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected bool						rectangling;  // j'invente des mots si je veux !
 		protected bool						dragging;
 		protected Point						startingPos;
+		protected Color						colorOutsurface = Color.FromAlphaRgb(0.2, 0.5, 0.5, 0.5);
+		protected Color						colorZOrder = Color.FromRgb(1,0,0);
+		protected Color						colorTabIndex = Color.FromRgb(0,0,1);
+		protected Color						colorAnchor = Color.FromRgb(1,0,0);
 
 		protected Image						mouseCursorArrow = null;
 		protected Image						mouseCursorArrowPlus = null;
