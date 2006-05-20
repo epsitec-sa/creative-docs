@@ -177,6 +177,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 					this.SelectOrder(1);
 					break;
 
+				case "TabIndexClear":
+					this.SelectTabIndex(0);
+					break;
+
+				case "TabIndexRenum":
+					this.SelectTabIndexRenum();
+					break;
+
 				case "TabIndexFirst":
 					this.SelectTabIndex(-10000);
 					break;
@@ -924,6 +932,35 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 
 			this.Invalidate();
+			this.context.ShowZOrder = true;
+			this.OnUpdateCommands();
+		}
+
+		protected void SelectTabIndexRenum()
+		{
+			//	Renumérote toutes les touches Tab.
+			if (this.selectedObjects.Count == 0)
+			{
+				int index = 0;
+				foreach (Widget obj in this.panel.Children)
+				{
+					obj.TabIndex = index++;
+					obj.TabNavigation = TabNavigationMode.ActivateOnTab;
+				}
+			}
+			else
+			{
+				int index = 0;
+				foreach (Widget obj in this.selectedObjects)
+				{
+					obj.TabIndex = index++;
+					obj.TabNavigation = TabNavigationMode.ActivateOnTab;
+				}
+			}
+
+			this.Invalidate();
+			this.context.ShowTabIndex = true;
+			this.OnUpdateCommands();
 		}
 
 		protected void SelectTabIndex(int direction)
@@ -931,24 +968,35 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Modifie l'ordre pour la touche Tab de tous les objets sélectionnés.
 			foreach (Widget obj in this.selectedObjects)
 			{
-				int oldIndex = obj.TabIndex;
-				int index = obj.TabIndex + direction;
-				index = System.Math.Max(index, 0);
-				index = System.Math.Min(index, this.panel.Children.Count-1);
-				this.SelectTabIndex(index, oldIndex);
-				obj.TabIndex = index;
+				if (direction == 0)
+				{
+					obj.TabNavigation = TabNavigationMode.Passive;
+				}
+				else
+				{
+					int oldIndex = obj.TabIndex;
+					int index = obj.TabIndex + direction;
+					index = System.Math.Max(index, 0);
+					index = System.Math.Min(index, this.panel.Children.Count-1);
+					this.SelectTabIndex(index, oldIndex);
+					obj.TabIndex = index;
+					obj.TabNavigation = TabNavigationMode.ActivateOnTab;
+				}
 			}
 
 			this.Invalidate();
+			this.context.ShowTabIndex = true;
+			this.OnUpdateCommands();
 		}
 
 		protected void SelectTabIndex(int oldIndex, int newIndex)
 		{
 			foreach (Widget obj in this.panel.Children)
 			{
-				if (obj.TabIndex == oldIndex)
+				if (this.ObjectTabActive(obj) && obj.TabIndex == oldIndex)
 				{
 					obj.TabIndex = newIndex;
+					obj.TabNavigation = TabNavigationMode.ActivateOnTab;
 				}
 			}
 		}
@@ -1079,6 +1127,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Indique si l'objet est ancré à gauche.
 			return (obj.Anchor & AnchorStyles.Top) != 0;
 		}
+
+		protected bool ObjectTabActive(Widget obj)
+		{
+			//	Indique si l'objet est ancré à gauche.
+			return (obj.TabNavigation & TabNavigationMode.ActivateOnTab) != 0;
+		}
 		#endregion
 
 
@@ -1178,19 +1232,22 @@ namespace Epsitec.Common.Designer.MyWidgets
 				}
 			}
 
-			//	Dessine les numéros d'index.
+			//	Dessine les numéros d'index pour la touche Tab.
 			if (this.context.ShowTabIndex)
 			{
 				foreach (Widget obj in this.panel.Children)
 				{
-					box = new Rectangle(obj.ActualBounds.BottomRight+new Point(-12-1, 1), new Size(12, 10));
+					if (this.ObjectTabActive(obj))
+					{
+						box = new Rectangle(obj.ActualBounds.BottomRight+new Point(-12-1, 1), new Size(12, 10));
 
-					graphics.AddFilledRectangle(box);
-					graphics.RenderSolid(Color.FromBrightness(1));
+						graphics.AddFilledRectangle(box);
+						graphics.RenderSolid(Color.FromBrightness(1));
 
-					string text = (obj.TabIndex+1).ToString();
-					graphics.AddText(box.Left, box.Bottom, box.Width, box.Height, text, Font.DefaultFont, 9.0, ContentAlignment.MiddleCenter);
-					graphics.RenderSolid(this.colorTabIndex);
+						string text = (obj.TabIndex+1).ToString();
+						graphics.AddText(box.Left, box.Bottom, box.Width, box.Height, text, Font.DefaultFont, 9.0, ContentAlignment.MiddleCenter);
+						graphics.RenderSolid(this.colorTabIndex);
+					}
 				}
 			}
 
@@ -1232,21 +1289,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			get
 			{
-#if false
-				Rectangle bounds = Rectangle.Empty;
-
-				foreach (Widget obj in this.panel.Children)
-				{
-					bounds = Rectangle.Union(bounds, obj.ActualBounds);
-				}
-
-				bounds.Left = 0;
-				bounds.Bottom = 0;
-
-				return bounds;
-#else
 				return new Rectangle(Point.Zero, this.panel.RealMinSize);
-#endif
 			}
 		}
 
