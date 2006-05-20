@@ -10,6 +10,7 @@ namespace Epsitec.Common.Types
 		None,
 		
 		PropertyObject,
+		StructuredData,
 		SourceItself,
 		Resource
 	}
