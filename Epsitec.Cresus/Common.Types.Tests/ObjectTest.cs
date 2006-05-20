@@ -280,6 +280,48 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual ("[Abc1]", myData3.Name);
 		}
 
+		[Test]
+		public void CheckBindingWithConverter()
+		{
+			MyObject myData1 = new MyObject ();
+			MyObject myData2 = new MyObject ();
+			MyObject myData3 = new MyObject ();
+			MyObject myData4 = new MyObject ();
+
+			myData1.Xyz = 1;
+			myData2.Foo = "2";
+
+			Binding binding1 = new Binding (BindingMode.TwoWay, myData1, "Xyz");
+			Binding binding2 = new Binding (BindingMode.TwoWay, myData2, "Foo");
+
+			binding1.Converter = new Converters.AutomaticValueConverter ();
+			binding2.Converter = new Converters.AutomaticValueConverter ();
+
+			myData3.SetBinding (MyObject.FooProperty, binding1);	//	Data1.Xyz --> Data3.Foo
+			myData4.SetBinding (MyObject.XyzProperty, binding2);	//	Data2.Foo --> Data4.Xyz
+
+			Assert.AreEqual ("1", myData3.Foo);				//	résultat de la conversion de Data1.Xyz
+			Assert.AreEqual (2, myData4.Xyz);				//	résultat de la conversion de Data2.Foo
+
+			myData1.Xyz = 10;
+			myData2.Foo = "20";
+
+			Assert.AreEqual ("10", myData3.Foo);			//	résultat de la conversion de Data1.Xyz
+			Assert.AreEqual (20, myData4.Xyz);				//	résultat de la conversion de Data2.Foo
+
+			myData3.Foo = "-1";
+			myData4.Xyz = -2;
+
+			Assert.AreEqual (-1, myData1.Xyz);				//	résultat de la conversion de Data3.Foo
+			Assert.AreEqual ("-2", myData2.Foo);			//	résultat de la conversion de Data4.Xyz
+			
+			myData1.ClearValueBase (MyObject.XyzProperty);
+			myData2.ClearValueBase (MyObject.FooProperty);
+
+			Assert.AreEqual ("-1", myData3.Foo);			//	inchangé car Data1.Xyz invalide
+			Assert.AreEqual (-2, myData4.Xyz);				//	inchangé car Data2.Foo invalide
+		}
+
 		private class ResourceBoundData : IResourceBoundSource
 		{
 			public string Suffix

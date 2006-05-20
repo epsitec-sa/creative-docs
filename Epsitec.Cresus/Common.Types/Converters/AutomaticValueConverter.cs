@@ -15,12 +15,34 @@ namespace Epsitec.Common.Types.Converters
 
 		public object Convert(object value, System.Type expectedType, object parameter, System.Globalization.CultureInfo culture)
 		{
-			return System.Convert.ChangeType (value, expectedType, culture);
+			try
+			{
+				return System.Convert.ChangeType (value, expectedType, culture);
+			}
+			catch (System.InvalidCastException)
+			{
+				return Binding.DoNothing;
+			}
+			catch (System.FormatException)
+			{
+				return Binding.DoNothing;
+			}
 		}
 
 		public object ConvertBack(object value, System.Type expectedType, object parameter, System.Globalization.CultureInfo culture)
 		{
-			return System.Convert.ChangeType (value, expectedType, culture);
+			try
+			{
+				return System.Convert.ChangeType (value, expectedType, culture);
+			}
+			catch (System.InvalidCastException)
+			{
+				return Binding.DoNothing;
+			}
+			catch (System.FormatException)
+			{
+				return Binding.DoNothing;
+			}
 		}
 
 		#endregion
