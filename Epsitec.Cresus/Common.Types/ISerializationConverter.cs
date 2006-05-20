@@ -3,7 +3,7 @@
 
 namespace Epsitec.Common.Types
 {
-	public interface ITypeConverter
+	public interface ISerializationConverter
 	{
 		string ConvertToString(object value, IContextResolver context);
 		object ConvertFromString(string value, IContextResolver context);

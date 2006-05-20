@@ -1,0 +1,28 @@
+//	Copyright © 2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Responsable: Pierre ARNAUD
+
+using System.Collections.Generic;
+
+namespace Epsitec.Common.Types.Converters
+{
+	public class AutomaticValueConverter : IValueConverter
+	{
+		public AutomaticValueConverter()
+		{
+		}
+		
+		#region IValueConverter Members
+
+		public object Convert(object value, System.Type expectedType, object parameter, System.Globalization.CultureInfo culture)
+		{
+			return System.Convert.ChangeType (value, expectedType, culture);
+		}
+
+		public object ConvertBack(object value, System.Type expectedType, object parameter, System.Globalization.CultureInfo culture)
+		{
+			return System.Convert.ChangeType (value, expectedType, culture);
+		}
+
+		#endregion
+	}
+}

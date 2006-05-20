@@ -4,13 +4,14 @@
 namespace Epsitec.Common.Types
 {
 	/// <summary>
-	/// The TypeConverterAttribute is used to specify which class to use in
-	/// order to convert between a type and string (see ITypeConverter).
+	/// The <c>TypeConverterAttribute</c> is used to specify which
+	/// class to use in order to convert between a type and string
+	/// (<see cref="T:ISerializationConverter"/>).
 	/// </summary>
 	[System.AttributeUsage (System.AttributeTargets.Class, Inherited=false)]
-	public class TypeConverterAttribute : System.Attribute
+	public class SerializationConverterAttribute : System.Attribute
 	{
-		public TypeConverterAttribute(System.Type type)
+		public SerializationConverterAttribute(System.Type type)
 		{
 			this.type = type;
 		}
@@ -22,11 +23,11 @@ namespace Epsitec.Common.Types
 				return this.type;
 			}
 		}
-		public ITypeConverter					Converter
+		public ISerializationConverter			Converter
 		{
 			get
 			{
-				return System.Activator.CreateInstance (this.type) as ITypeConverter;
+				return System.Activator.CreateInstance (this.type) as ISerializationConverter;
 			}
 		}
 

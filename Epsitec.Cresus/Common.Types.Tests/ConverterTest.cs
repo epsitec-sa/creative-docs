@@ -178,14 +178,14 @@ namespace Epsitec.Common.Types
 		[Test]
 		public void CheckTypeConverter()
 		{
-			ITypeConverter convC = Converter.GetTypeConverter (typeof (string));
-			ITypeConverter convD = Converter.GetTypeConverter (typeof (int));
-			ITypeConverter convE = Converter.GetTypeConverter (typeof (double));
-			ITypeConverter convF = Converter.GetTypeConverter (typeof (decimal));
-			ITypeConverter convG = Converter.GetTypeConverter (typeof (bool));
-			ITypeConverter convH = Converter.GetTypeConverter (typeof (Drawing.Color));
-			ITypeConverter convI = Converter.GetTypeConverter (typeof (Drawing.Rectangle));
-			ITypeConverter convJ = Converter.GetTypeConverter (typeof (System.DateTime));
+			ISerializationConverter convC = Converter.GetSerializationConverter (typeof (string));
+			ISerializationConverter convD = Converter.GetSerializationConverter (typeof (int));
+			ISerializationConverter convE = Converter.GetSerializationConverter (typeof (double));
+			ISerializationConverter convF = Converter.GetSerializationConverter (typeof (decimal));
+			ISerializationConverter convG = Converter.GetSerializationConverter (typeof (bool));
+			ISerializationConverter convH = Converter.GetSerializationConverter (typeof (Drawing.Color));
+			ISerializationConverter convI = Converter.GetSerializationConverter (typeof (Drawing.Rectangle));
+			ISerializationConverter convJ = Converter.GetSerializationConverter (typeof (System.DateTime));
 
 			object c = "test";
 			object d = 10;
