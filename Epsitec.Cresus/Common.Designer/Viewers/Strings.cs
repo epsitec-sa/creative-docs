@@ -11,7 +11,7 @@ namespace Epsitec.Common.Designer.Viewers
 	/// </summary>
 	public class Strings : Abstract
 	{
-		public Strings(Module module) : base(module)
+		public Strings(Module module, PanelsContext context) : base(module, context)
 		{
 			int tabIndex = 0;
 
@@ -966,9 +966,11 @@ namespace Epsitec.Common.Designer.Viewers
 			this.GetCommandState("PanelSelectInvert").Enable = false;
 
 			this.GetCommandState("PanelShowGrid").Enable = false;
+			this.GetCommandState("PanelShowConstrain").Enable = false;
+			this.GetCommandState("PanelShowAnchor").Enable = false;
+			this.GetCommandState("PanelShowExpand").Enable = false;
 			this.GetCommandState("PanelShowZOrder").Enable = false;
 			this.GetCommandState("PanelShowTabIndex").Enable = false;
-			this.GetCommandState("PanelShowExpand").Enable = false;
 
 			this.GetCommandState("AlignLeft").Enable = false;
 			this.GetCommandState("AlignCenterX").Enable = false;
@@ -985,6 +987,8 @@ namespace Epsitec.Common.Designer.Viewers
 			this.GetCommandState("OrderUpOne").Enable = false;
 			this.GetCommandState("OrderDownOne").Enable = false;
 
+			this.GetCommandState("TabIndexClear").Enable = false;
+			this.GetCommandState("TabIndexRenum").Enable = false;
 			this.GetCommandState("TabIndexLast").Enable = false;
 			this.GetCommandState("TabIndexPrev").Enable = false;
 			this.GetCommandState("TabIndexNext").Enable = false;

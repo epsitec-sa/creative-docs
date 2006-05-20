@@ -14,6 +14,9 @@ namespace Epsitec.Common.Designer.Ribbons
 			this.Title = Res.Strings.Ribbon.Section.TabIndex;
 			this.PreferredWidth = 8 + 22*4;
 
+			this.buttonClear = this.CreateIconButton("TabIndexClear");
+			this.buttonRenum = this.CreateIconButton("TabIndexRenum");
+
 			this.buttonFirst = this.CreateIconButton("TabIndexFirst");
 			this.buttonPrev  = this.CreateIconButton("TabIndexPrev");
 			this.buttonNext  = this.CreateIconButton("TabIndexNext");
@@ -45,7 +48,14 @@ namespace Epsitec.Common.Designer.Ribbons
 			Rectangle rect = this.UsefulZone;
 			rect.Width  = dx;
 			rect.Height = dy;
-			//?rect.Offset(0, dy+5);
+			rect.Offset(0, dy+5);
+			this.buttonClear.SetManualBounds(rect);
+			rect.Offset(dx*3, 0);
+			this.buttonRenum.SetManualBounds(rect);
+
+			rect = this.UsefulZone;
+			rect.Width  = dx;
+			rect.Height = dy;
 			this.buttonFirst.SetManualBounds(rect);
 			rect.Offset(dx, 0);
 			this.buttonPrev.SetManualBounds(rect);
@@ -56,6 +66,8 @@ namespace Epsitec.Common.Designer.Ribbons
 		}
 
 
+		protected IconButton				buttonClear;
+		protected IconButton				buttonRenum;
 		protected IconButton				buttonFirst;
 		protected IconButton				buttonPrev;
 		protected IconButton				buttonNext;

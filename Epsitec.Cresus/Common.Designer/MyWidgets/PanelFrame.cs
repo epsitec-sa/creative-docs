@@ -64,55 +64,16 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
-		public bool						ShowGrid
+		public PanelsContext					Context
 		{
 			get
 			{
-				return this.showGrid;
+				return this.context;
 			}
 
 			set
 			{
-				this.showGrid = value;
-			}
-		}
-
-		public bool						ShowZOrder
-		{
-			get
-			{
-				return this.showZOrder;
-			}
-
-			set
-			{
-				this.showZOrder = value;
-			}
-		}
-
-		public bool						ShowTabIndex
-		{
-			get
-			{
-				return this.showTabIndex;
-			}
-
-			set
-			{
-				this.showTabIndex = value;
-			}
-		}
-
-		public bool						ShowExpand
-		{
-			get
-			{
-				return this.showExpand;
-			}
-
-			set
-			{
-				this.showExpand = value;
+				this.context = value;
 			}
 		}
 
@@ -142,25 +103,37 @@ namespace Epsitec.Common.Designer.MyWidgets
 					break;
 
 				case "PanelShowGrid":
-					this.showGrid = !this.showGrid;
+					this.context.ShowGrid = !this.context.ShowGrid;
 					this.Invalidate();
 					this.OnUpdateCommands();
 					break;
 
 				case "PanelShowZOrder":
-					this.showZOrder = !this.showZOrder;
+					this.context.ShowZOrder = !this.context.ShowZOrder;
 					this.Invalidate();
 					this.OnUpdateCommands();
 					break;
 
 				case "PanelShowTabIndex":
-					this.showTabIndex = !this.showTabIndex;
+					this.context.ShowTabIndex = !this.context.ShowTabIndex;
 					this.Invalidate();
 					this.OnUpdateCommands();
 					break;
 
 				case "PanelShowExpand":
-					this.showExpand = !this.showExpand;
+					this.context.ShowExpand = !this.context.ShowExpand;
+					this.Invalidate();
+					this.OnUpdateCommands();
+					break;
+
+				case "PanelShowAnchor":
+					this.context.ShowAnchor = !this.context.ShowAnchor;
+					this.Invalidate();
+					this.OnUpdateCommands();
+					break;
+
+				case "PanelShowConstrain":
+					this.context.ShowConstrain = !this.context.ShowConstrain;
 					this.Invalidate();
 					this.OnUpdateCommands();
 					break;
@@ -1141,7 +1114,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 
 			//	Dessine les numéros d'ordre.
-			if (this.showZOrder)
+			if (this.context.ShowZOrder)
 			{
 				foreach (Widget obj in this.panel.Children)
 				{
@@ -1157,7 +1130,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 
 			//	Dessine les numéros d'index.
-			if (this.showTabIndex)
+			if (this.context.ShowTabIndex)
 			{
 				foreach (Widget obj in this.panel.Children)
 				{
@@ -1355,10 +1328,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected UI.Panel					panel;
 		protected string					tool = "ToolSelect";
-		protected bool						showGrid = false;
-		protected bool						showZOrder = false;
-		protected bool						showTabIndex = false;
-		protected bool						showExpand = false;
+		protected PanelsContext					context;
 
 		protected Widget					creatingObject;
 		protected List<Widget>				selectedObjects = new List<Widget>();

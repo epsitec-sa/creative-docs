@@ -28,6 +28,7 @@ namespace Epsitec.Common.Designer
 		{
 			this.resourcePrefix = "file";
 			this.moduleInfoList = new List<ModuleInfo>();
+			this.context = new PanelsContext();
 		}
 
 		public void Show(Window parent, DesignerMode mode)
@@ -505,7 +506,9 @@ namespace Epsitec.Common.Designer
 		[Command("PanelShowGrid")]
 		[Command("PanelShowZOrder")]
 		[Command("PanelShowTabIndex")]
+		[Command("PanelShowConstrain")]
 		[Command("PanelShowExpand")]
+		[Command("PanelShowAnchor")]
 		[Command("AlignLeft")]
 		[Command("AlignCenterX")]
 		[Command("AlignRight")]
@@ -519,10 +522,12 @@ namespace Epsitec.Common.Designer
 		[Command("OrderDownAll")]
 		[Command("OrderUpOne")]
 		[Command("OrderDownOne")]
+		[Command("TabIndexClear")]
 		[Command("TabIndexFirst")]
 		[Command("TabIndexPrev")]
 		[Command("TabIndexNext")]
 		[Command("TabIndexLast")]
+		[Command("TabIndexRenum")]
 		void CommandCommand(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			if ( !this.IsCurrentModule )  return;
@@ -589,6 +594,8 @@ namespace Epsitec.Common.Designer
 			this.panelShowZOrderState = this.CreateCommandState("PanelShowZOrder");
 			this.panelShowTabIndexState = this.CreateCommandState("PanelShowTabIndex");
 			this.panelShowExpandState = this.CreateCommandState("PanelShowExpand");
+			this.panelShowConstrainState = this.CreateCommandState("PanelShowConstrain");
+			this.panelShowAnchorState = this.CreateCommandState("PanelShowAnchor");
 
 			this.alignLeftState = this.CreateCommandState("AlignLeft");
 			this.alignCenterXState = this.CreateCommandState("AlignCenterX");
@@ -605,10 +612,12 @@ namespace Epsitec.Common.Designer
 			this.orderUpOneState = this.CreateCommandState("OrderUpOne");
 			this.orderDownOneState = this.CreateCommandState("OrderDownOne");
 
+			this.tabIndexClearState = this.CreateCommandState("TabIndexClear");
 			this.tabIndexFirstState = this.CreateCommandState("TabIndexFirst");
 			this.tabIndexPrevState = this.CreateCommandState("TabIndexPrev");
 			this.tabIndexNextState = this.CreateCommandState("TabIndexNext");
 			this.tabIndexLastState = this.CreateCommandState("TabIndexLast");
+			this.tabIndexRenumState = this.CreateCommandState("TabIndexRenum");
 		}
 
 		protected CommandState CreateCommandState(string commandName, params Widgets.Shortcut[] shortcuts)
@@ -662,7 +671,7 @@ namespace Epsitec.Common.Designer
 			}
 
 			string type = mi.BundleType.CurrentType;
-			Viewers.Abstract viewer = Viewers.Abstract.Create(type, mi.Module);
+			Viewers.Abstract viewer = Viewers.Abstract.Create(type, mi.Module, this.context);
 
 			if (viewer != null)
 			{
@@ -942,6 +951,7 @@ namespace Epsitec.Common.Designer
 		protected Dialogs.Filter				dlgFilter;
 		protected Dialogs.Search				dlgSearch;
 		protected Dialogs.NewCulture			dlgNewCulture;
+		protected PanelsContext					context;
 
 		protected string						resourcePrefix;
 		protected List<ModuleInfo>				moduleInfoList;
@@ -997,6 +1007,8 @@ namespace Epsitec.Common.Designer
 		protected CommandState					panelShowZOrderState;
 		protected CommandState					panelShowTabIndexState;
 		protected CommandState					panelShowExpandState;
+		protected CommandState					panelShowConstrainState;
+		protected CommandState					panelShowAnchorState;
 		protected CommandState					alignLeftState;
 		protected CommandState					alignCenterXState;
 		protected CommandState					alignRightState;
@@ -1010,9 +1022,11 @@ namespace Epsitec.Common.Designer
 		protected CommandState					orderDownAllState;
 		protected CommandState					orderUpOneState;
 		protected CommandState					orderDownOneState;
+		protected CommandState					tabIndexClearState;
 		protected CommandState					tabIndexFirstState;
 		protected CommandState					tabIndexPrevState;
 		protected CommandState					tabIndexNextState;
 		protected CommandState					tabIndexLastState;
+		protected CommandState					tabIndexRenumState;
 	}
 }

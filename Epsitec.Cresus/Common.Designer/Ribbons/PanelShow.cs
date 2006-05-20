@@ -12,12 +12,15 @@ namespace Epsitec.Common.Designer.Ribbons
 		public PanelShow() : base()
 		{
 			this.Title = Res.Strings.Ribbon.Section.PanelShow;
-			this.PreferredWidth = 8 + (22+5)*2 - 5;
+			this.PreferredWidth = 8 + (22+5)*3 - 4;
 
-			this.buttonShowGrid     = this.CreateIconButton("PanelShowGrid");
-			this.buttonShowExpand   = this.CreateIconButton("PanelShowExpand");
-			this.buttonShowZOrder   = this.CreateIconButton("PanelShowZOrder");
-			this.buttonShowTabIndex = this.CreateIconButton("PanelShowTabIndex");
+			this.buttonShowGrid      = this.CreateIconButton("PanelShowGrid");
+			this.buttonShowConstrain = this.CreateIconButton("PanelShowConstrain");
+			this.buttonShowAnchor    = this.CreateIconButton("PanelShowAnchor");
+
+			this.buttonShowExpand    = this.CreateIconButton("PanelShowExpand");
+			this.buttonShowZOrder    = this.CreateIconButton("PanelShowZOrder");
+			this.buttonShowTabIndex  = this.CreateIconButton("PanelShowTabIndex");
 
 			this.UpdateClientGeometry();
 		}
@@ -48,11 +51,15 @@ namespace Epsitec.Common.Designer.Ribbons
 			rect.Offset(0, dy+5);
 			this.buttonShowGrid.SetManualBounds(rect);
 			rect.Offset(dx+5, 0);
-			this.buttonShowExpand.SetManualBounds(rect);
+			this.buttonShowConstrain.SetManualBounds(rect);
+			rect.Offset(dx+5, 0);
+			this.buttonShowAnchor.SetManualBounds(rect);
 
 			rect = this.UsefulZone;
 			rect.Width  = dx;
 			rect.Height = dy;
+			this.buttonShowExpand.SetManualBounds(rect);
+			rect.Offset(dx+5, 0);
 			this.buttonShowZOrder.SetManualBounds(rect);
 			rect.Offset(dx+5, 0);
 			this.buttonShowTabIndex.SetManualBounds(rect);
@@ -60,6 +67,8 @@ namespace Epsitec.Common.Designer.Ribbons
 
 
 		protected IconButton				buttonShowGrid;
+		protected IconButton				buttonShowConstrain;
+		protected IconButton				buttonShowAnchor;
 		protected IconButton				buttonShowExpand;
 		protected IconButton				buttonShowZOrder;
 		protected IconButton				buttonShowTabIndex;
