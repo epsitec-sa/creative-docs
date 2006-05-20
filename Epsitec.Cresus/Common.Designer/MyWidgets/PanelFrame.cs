@@ -939,6 +939,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void SelectTabIndexRenum()
 		{
 			//	Renumérote toutes les touches Tab.
+			//	TODO: tenir compte de la position des objets.
 			if (this.selectedObjects.Count == 0)
 			{
 				int index = 0;
