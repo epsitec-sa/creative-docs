@@ -657,8 +657,15 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.creatingObject.Text = "TextField";
 			}
 
+			if (this.context.Tool == "ObjectGroup")
+			{
+				this.creatingObject = new GroupBox(this.panel);
+				this.creatingObject.Text = "Group";
+			}
+
 			this.creatingObject.Anchor = AnchorStyles.BottomLeft;
 			this.creatingObject.Margins = new Margins(pos.X, 0, 0, pos.Y);
+			this.creatingObject.TabNavigation = TabNavigationMode.Passive;
 
 			this.OnChildrenAdded();
 		}
