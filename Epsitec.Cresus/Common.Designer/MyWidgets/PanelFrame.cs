@@ -1461,30 +1461,19 @@ namespace Epsitec.Common.Designer.MyWidgets
 			foreach (Constrain constrain in this.constrainList)
 			{
 				constrain.IsActivate = false;
+			}
 
-				if (constrain.IsLeft && constrain.Detect(rect.BottomLeft))
-				{
-					constrain.IsActivate = true;
-					continue;
-				}
+			Constrain bestX, bestY;
+			this.ConstrainBest(rect, out bestX, out bestY);
 
-				if (constrain.IsRight && constrain.Detect(rect.BottomRight))
-				{
-					constrain.IsActivate = true;
-					continue;
-				}
+			if (bestX != null)
+			{
+				bestX.IsActivate = true;
+			}
 
-				if (constrain.IsBottom && constrain.Detect(rect.BottomLeft))
-				{
-					constrain.IsActivate = true;
-					continue;
-				}
-
-				if (constrain.IsTop && constrain.Detect(rect.TopLeft))
-				{
-					constrain.IsActivate = true;
-					continue;
-				}
+			if (bestY != null)
+			{
+				bestY.IsActivate = true;
 			}
 		}
 
@@ -1587,27 +1576,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Adapte un rectangle en fonction de l'ensemble des contraintes.
 			if (this.constrainStarted)
 			{
-				double minX = 1000000;
-				double minY = 1000000;
-				Constrain bestX = null;
-				Constrain bestY = null;
-
-				foreach (Constrain constrain in this.constrainList)
-				{
-					double adjustX = System.Math.Abs(constrain.AdjustX(rect));
-					if (!double.IsNaN(adjustX) && minX > adjustX)
-					{
-						minX = adjustX;
-						bestX = constrain;
-					}
-
-					double adjustY = System.Math.Abs(constrain.AdjustY(rect));
-					if (!double.IsNaN(adjustY) && minY > adjustY)
-					{
-						minY = adjustY;
-						bestY = constrain;
-					}
-				}
+				Constrain bestX, bestY;
+				this.ConstrainBest(rect, out bestX, out bestY);
 
 				if (bestX != null)
 				{
@@ -1621,6 +1591,31 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 
 			return rect;
+		}
+
+		protected void ConstrainBest(Rectangle rect, out Constrain bestX, out Constrain bestY)
+		{
+			double minX = 1000000;
+			double minY = 1000000;
+			bestX = null;
+			bestY = null;
+
+			foreach (Constrain constrain in this.constrainList)
+			{
+				double adjustX = System.Math.Abs(constrain.AdjustX(rect));
+				if (!double.IsNaN(adjustX) && minX > adjustX)
+				{
+					minX = adjustX;
+					bestX = constrain;
+				}
+
+				double adjustY = System.Math.Abs(constrain.AdjustY(rect));
+				if (!double.IsNaN(adjustY) && minY > adjustY)
+				{
+					minY = adjustY;
+					bestY = constrain;
+				}
+			}
 		}
 
 		protected void ConstrainDraw(Graphics graphics, Rectangle box)
