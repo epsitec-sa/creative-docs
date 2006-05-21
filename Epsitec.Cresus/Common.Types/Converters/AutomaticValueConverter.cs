@@ -7,7 +7,7 @@ namespace Epsitec.Common.Types.Converters
 {
 	public class AutomaticValueConverter : IValueConverter
 	{
-		public AutomaticValueConverter()
+		private AutomaticValueConverter()
 		{
 		}
 		
@@ -46,5 +46,15 @@ namespace Epsitec.Common.Types.Converters
 		}
 
 		#endregion
+
+		public static AutomaticValueConverter Instance
+		{
+			get
+			{
+				return AutomaticValueConverter.instance;
+			}
+		}
+
+		private static AutomaticValueConverter instance = new AutomaticValueConverter ();
 	}
 }
