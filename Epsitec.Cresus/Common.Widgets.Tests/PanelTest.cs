@@ -114,7 +114,17 @@ namespace Epsitec.Common.Widgets
 			System.Console.Out.WriteLine ("Button Bounds = {0}, {1}", b1.ActualBounds, b2.ActualBounds);
 			System.Console.Out.WriteLine ("Button Bounds (root relative) = {0}, {1}", b1.MapClientToRoot (b1.Client.Bounds), b2.MapClientToRoot (b2.Client.Bounds));
 
+			surface.Panel.Clicked += new MessageEventHandler (this.HandlePanelClicked);
+
 			Window.RunInTestEnvironment (window);
+		}
+
+		private void HandlePanelClicked(object sender, MessageEventArgs e)
+		{
+			Panel panel = sender as Panel;
+			Scrollable scrollable = panel.Parent as Scrollable;
+
+			scrollable.PanelOffsetY += (e.Message.Button == MouseButtons.Left) ? 10 : -10;
 		}
 
 		private void HandleRadioActiveStateChanged(object sender)
