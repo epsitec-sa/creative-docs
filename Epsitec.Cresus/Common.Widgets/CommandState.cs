@@ -100,7 +100,7 @@ namespace Epsitec.Common.Widgets
 		{
 			if (value == null)
 			{
-				obj.ClearValueBase (CommandState.AdvancedStateProperty);
+				obj.ClearValue (CommandState.AdvancedStateProperty);
 			}
 			else
 			{

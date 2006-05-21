@@ -315,8 +315,8 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual (-1, myData1.Xyz);				//	résultat de la conversion de Data3.Foo
 			Assert.AreEqual ("-2", myData2.Foo);			//	résultat de la conversion de Data4.Xyz
 			
-			myData1.ClearValueBase (MyObject.XyzProperty);
-			myData2.ClearValueBase (MyObject.FooProperty);
+			myData1.ClearValue (MyObject.XyzProperty);
+			myData2.ClearValue (MyObject.FooProperty);
 
 			Assert.AreEqual (null, myData1.GetValue (MyObject.XyzProperty));		//	aberration (voulue) pour cette propriété -- int est null !
 			Assert.AreEqual ("[default]", myData2.GetValue (MyObject.FooProperty));
@@ -360,8 +360,8 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual (-1, myData1.Abc);				//	résultat de la conversion de Data3.Foo
 			Assert.AreEqual ("-2", myData2.Foo);			//	résultat de la conversion de Data4.Abc
 
-			myData1.ClearValueBase (MyObject.AbcProperty);
-			myData2.ClearValueBase (MyObject.FooProperty);
+			myData1.ClearValue (MyObject.AbcProperty);
+			myData2.ClearValue (MyObject.FooProperty);
 
 			Assert.AreEqual (Binding.DoNothing, myData1.GetValue (MyObject.AbcProperty));	//	valeur par défaut pas un int !
 			Assert.AreEqual ("[default]", myData2.GetValue (MyObject.FooProperty));
@@ -789,7 +789,7 @@ namespace Epsitec.Common.Types
 			//	Supprime une valeur locale pour vérifier que l'on reprend bien 
 			//	la valeur héritée :
 			
-			c3.ClearValueBase (TreeTest.CascadeProperty);
+			c3.ClearValue (TreeTest.CascadeProperty);
 
 			Assert.AreEqual ("c3-Cascade:c,a.", handler.Log);
 			handler.Clear ();
@@ -802,7 +802,7 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual ("b-Cascade:a,b.c1-Cascade:a,b.c3-Cascade:a,b.", handler.Log);
 			handler.Clear ();
 
-			b.ClearValueBase (TreeTest.CascadeProperty);
+			b.ClearValue (TreeTest.CascadeProperty);
 
 			Assert.AreEqual ("b-Cascade:b,a.c1-Cascade:b,a.c3-Cascade:b,a.", handler.Log);
 			handler.Clear ();

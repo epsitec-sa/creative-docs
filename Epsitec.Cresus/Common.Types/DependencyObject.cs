@@ -9,18 +9,28 @@ namespace Epsitec.Common.Types
 	using BindingChangedEventHandler = Epsitec.Common.Support.EventHandler<BindingChangedEventArgs>;
 
 	/// <summary>
-	/// La classe DependencyObject représente un objet dont les propriétés sont
-	/// stockées dans un dictionnaire interne plutôt que dans des variables, ce
-	/// qui permet une plus grande souplesse (valeurs par défaut, introspection,
-	/// sérialisation, styles, génération automatique d'événements, etc.)
+	/// The <c>DependencyObject</c> class represents an object which stores its
+	/// properties and events in internal dictionnaries, instead of variables.
+	/// This is useful for easy run-time analysis, handling zero-storage default
+	/// values, automatic change event generation, etc.
 	/// </summary>
 	public abstract class DependencyObject : System.IDisposable, IInheritedPropertyCache, IStructuredData
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="T:DependencyObject"/>
+		/// class. Since the class is <c>abstract</c>, the constructor is not
+		/// publicly visible.
+		/// </summary>
 		protected DependencyObject()
 		{
 			this.cachedType = DependencyObjectType.SetupFromSystemType (this.GetType ());
 		}
-		
+
+		/// <summary>
+		/// Gets the type of the object (as a <see cref="T:DependencyObjectType"/>
+		/// instance).
+		/// </summary>
+		/// <value>The type of the object.</value>
 		public DependencyObjectType				ObjectType
 		{
 			get
@@ -28,6 +38,12 @@ namespace Epsitec.Common.Types
 				return this.cachedType;
 			}
 		}
+
+		/// <summary>
+		/// Gets the enumeration of the local value entries, i.e. the values
+		/// defined in the internal dictionary.
+		/// </summary>
+		/// <value>The enumeration of all local value entries.</value>
 		public IEnumerable<LocalValueEntry>		LocalValueEntries
 		{
 			get
@@ -65,7 +81,11 @@ namespace Epsitec.Common.Types
 				}
 			}
 		}
-		
+
+		/// <summary>
+		/// Gets access to the cache storing the inherited properties.
+		/// </summary>
+		/// <value>The inherited property cache.</value>
 		public IInheritedPropertyCache			InheritedPropertyCache
 		{
 			get
@@ -73,15 +93,16 @@ namespace Epsitec.Common.Types
 				return this;
 			}
 		}
-		
-		public static int						RegisteredPropertyCount
-		{
-			get
-			{
-				return DependencyObject.registeredPropertyCount;
-			}
-		}
-		
+
+		/// <summary>
+		/// Gets the value for the specified property. This internally calls the
+		/// <c>GetValueBase</c> method to get the value. If the property metadata
+		/// defines a <c>GetValueOverride</c>, it will be called instead of
+		/// <c>GetValueBase</c>.
+		/// </summary>
+		/// <param name="property">The property.</param>
+		/// <returns>The value of the property, or its default value if it is
+		/// not defined for this object.</returns>
 		public object GetValue(DependencyProperty property)
 		{
 			DependencyPropertyMetadata metadata = property.GetMetadata (this);
@@ -95,6 +116,14 @@ namespace Epsitec.Common.Types
 				return this.GetValueBase (property, metadata);
 			}
 		}
+
+		/// <summary>
+		/// Gets the base value for the specified property. This is called by
+		/// <c>GetValue</c> or its override.
+		/// </summary>
+		/// <param name="property">The property.</param>
+		/// <returns>The value of the property, or its default value if it is
+		/// not defined for this object.</returns>
 		public object GetValueBase(DependencyProperty property)
 		{
 			object value = this.GetLocalValue (property);
@@ -120,7 +149,15 @@ namespace Epsitec.Common.Types
 			
 			return value;
 		}
-		
+
+		/// <summary>
+		/// Sets the value for the specified property. This internally calls the
+		/// <c>CoerceValue</c> method, followed by the <c>SetValueBase</c> method.
+		/// If the property metadata defines a <c>SetValueOverride</c>, it will
+		/// be called instead of <c>SetValueBase</c>.
+		/// </summary>
+		/// <param name="property">The property.</param>
+		/// <param name="value">The value of the property.</param>
 		public void SetValue(DependencyProperty property, object value)
 		{
 			DependencyPropertyMetadata metadata = property.GetMetadata (this);
@@ -136,25 +173,52 @@ namespace Epsitec.Common.Types
 				this.SetValueBase (property, value, metadata);
 			}
 		}
+
+		/// <summary>
+		/// Sets the base value for the specified property. This is called
+		/// by <c>SetValue</c> or its override.
+		/// </summary>
+		/// <param name="property">The property.</param>
+		/// <param name="value">The value of the property.</param>
 		public void SetValueBase(DependencyProperty property, object value)
 		{
 			DependencyPropertyMetadata metadata = property.GetMetadata (this);
 
 			this.SetValueBase (property, value, metadata);
 		}
-		public void ClearValueBase(DependencyProperty property)
+		
+		/// <summary>
+		/// Clears the value of the specified property.
+		/// </summary>
+		/// <param name="property">The property.</param>
+		public void ClearValue(DependencyProperty property)
 		{
 			DependencyPropertyMetadata metadata = property.GetMetadata (this);
 
-			this.ClearValueBase (property, metadata);
+			this.ClearValue (property, metadata);
 		}
 
+		/// <summary>
+		/// Coerces the value so that it respects the constraints defined by the
+		/// specified property's metadata.
+		/// </summary>
+		/// <param name="property">The property to use for coercion.</param>
+		/// <param name="value">The value to coerce.</param>
+		/// <returns>The coerced value.</returns>
 		public object CoerceValue(DependencyProperty property, object value)
 		{
 			DependencyPropertyMetadata metadata = property.GetMetadata (this);
 			return this.CoerceValue (property, metadata, value);
 		}
 
+		/// <summary>
+		/// Gets the value directly from the internal dictionary, using
+		/// the specified property as the access key. This shortcuts the default
+		/// value management.
+		/// </summary>
+		/// <param name="property">The property.</param>
+		/// <returns>The value, or <c>UndefinedValue.Instance</c> if the value
+		/// is not defined.</returns>
 		public object GetLocalValue(DependencyProperty property)
 		{
 			object value;
@@ -168,6 +232,13 @@ namespace Epsitec.Common.Types
 				return UndefinedValue.Instance;
 			}
 		}
+
+		/// <summary>
+		/// Tries to get the value directly from the internal dictionary.
+		/// </summary>
+		/// <param name="property">The property.</param>
+		/// <param name="value">The value.</param>
+		/// <returns><c>true</c> if the value could be found; otherwise <c>false</c>.</returns>
 		public bool TryGetLocalValue(DependencyProperty property, out object value)
 		{
 			if (this.properties.TryGetValue (property, out value))
@@ -179,24 +250,50 @@ namespace Epsitec.Common.Types
 				return false;
 			}
 		}
+
+		/// <summary>
+		/// Sets the value into the internal dictionary. There is no checking and
+		/// no coercion whatsoever.
+		/// </summary>
+		/// <param name="property">The property.</param>
+		/// <param name="value">The value.</param>
 		public void SetLocalValue(DependencyProperty property, object value)
 		{
 			this.properties[property] = value;
 		}
+
+		/// <summary>
+		/// Clears the value from the internal dictionary.
+		/// </summary>
+		/// <param name="property">The property.</param>
 		public void ClearLocalValue(DependencyProperty property)
 		{
 			this.properties.Remove (property);
 		}
+
+		/// <summary>
+		/// Determines whether the value is contained within the internal dictionary.
+		/// </summary>
+		/// <param name="property">The property.</param>
+		/// <returns><c>true</c> if the value is defined in the internal dictionary;
+		/// otherwise, <c>false</c>.</returns>
 		public bool ContainsLocalValue(DependencyProperty property)
 		{
 			return this.properties.ContainsKey (property);
 		}
 
-		public void InvalidateProperty(DependencyProperty property, object old_value, object new_value)
+		/// <summary>
+		/// Invalidates the property. This will fire a <c>DependencyPropertyChanged</c>
+		/// event.
+		/// </summary>
+		/// <param name="property">The property which changes.</param>
+		/// <param name="oldValue">The old value (before change).</param>
+		/// <param name="newValue">The new value (after change).</param>
+		public void InvalidateProperty(DependencyProperty property, object oldValue, object newValue)
 		{
 			DependencyPropertyMetadata metadata = property.GetMetadata (this);
 
-			this.InvalidateProperty (property, old_value, new_value, metadata);
+			this.InvalidateProperty (property, oldValue, newValue, metadata);
 		}
 
 		#region Private Methods with DependencyPropertyMetadata
@@ -250,7 +347,7 @@ namespace Epsitec.Common.Types
 				}
 			}
 		}
-		private void ClearValueBase(DependencyProperty property, DependencyPropertyMetadata metadata)
+		private void ClearValue(DependencyProperty property, DependencyPropertyMetadata metadata)
 		{
 			if (metadata.InheritsValue)
 			{
@@ -303,6 +400,12 @@ namespace Epsitec.Common.Types
 		
 		#endregion
 
+		/// <summary>
+		/// Adds the event handler for a <c>DependencyPropertyChanged</c> event
+		/// on the specified proeprty.
+		/// </summary>
+		/// <param name="property">The property.</param>
+		/// <param name="handler">The handler.</param>
 		public void AddEventHandler(DependencyProperty property, PropertyChangedEventHandler handler)
 		{
 			if (this.propertyEvents == null)
@@ -324,6 +427,13 @@ namespace Epsitec.Common.Types
 				this.propertyEvents[property] = handler;
 			}
 		}
+
+		/// <summary>
+		/// Removes the event handler for a <c>DependencyPropertyChanged</c> event
+		/// on the specified proeprty.
+		/// </summary>
+		/// <param name="property">The property.</param>
+		/// <param name="handler">The handler.</param>
 		public void RemoveEventHandler(DependencyProperty property, PropertyChangedEventHandler handler)
 		{
 			if ((this.propertyEvents != null) &&
@@ -332,7 +442,14 @@ namespace Epsitec.Common.Types
 				this.propertyEvents[property] = this.propertyEvents[property] - handler;
 			}
 		}
-		
+
+		/// <summary>
+		/// Determines whether the specified property has at least one event handler
+		/// registered.
+		/// </summary>
+		/// <param name="property">The property.</param>
+		/// <returns><c>true</c> if the specified property has an event handler;
+		/// otherwise, <c>false</c>.</returns>
 		public bool HasEventHandlerForProperty(DependencyProperty property)
 		{
 			if ((this.propertyEvents != null) &&
@@ -347,6 +464,11 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		/// <summary>
+		/// Gets the binding for the specified property.
+		/// </summary>
+		/// <param name="property">The property.</param>
+		/// <returns>The binding object for the property.</returns>
 		public Binding GetBinding(DependencyProperty property)
 		{
 			BindingExpression bindingExpression;
@@ -361,6 +483,12 @@ namespace Epsitec.Common.Types
 				return null;
 			}
 		}
+
+		/// <summary>
+		/// Sets the binding for the specified property.
+		/// </summary>
+		/// <param name="property">The property.</param>
+		/// <param name="binding">The binding.</param>
 		public void SetBinding(DependencyProperty property, Binding binding)
 		{
 			if (property == null)
@@ -385,6 +513,10 @@ namespace Epsitec.Common.Types
 
 			this.OnBindingChanged (property);
 		}
+
+		/// <summary>
+		/// Clears all bindings for all properties.
+		/// </summary>
 		public void ClearAllBindings()
 		{
 			DependencyProperty[] properties = Copier.CopyArray (this.bindings.Keys);
@@ -399,6 +531,11 @@ namespace Epsitec.Common.Types
 				this.bindings = null;
 			}
 		}
+
+		/// <summary>
+		/// Clears the binding for the specified property.
+		/// </summary>
+		/// <param name="property">The property.</param>
 		public void ClearBinding(DependencyProperty property)
 		{
 			BindingExpression bindingExpression;
@@ -412,7 +549,13 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		public bool IsDataBound(DependencyProperty property)
+		/// <summary>
+		/// Determines whether the specified property is bound.
+		/// </summary>
+		/// <param name="property">The property.</param>
+		/// <returns><c>true</c> if the specified property is bound; otherwise,
+		/// <c>false</c>.</returns>
+		public bool IsBound(DependencyProperty property)
 		{
 			if ((this.bindings != null) &&
 				(this.bindings.ContainsKey (property)))
@@ -424,6 +567,11 @@ namespace Epsitec.Common.Types
 				return false;
 			}
 		}
+
+		/// <summary>
+		/// Enumerates all bindings for all properties.
+		/// </summary>
+		/// <returns>The enumeration of all bindings.</returns>
 		public IEnumerable<KeyValuePair<DependencyProperty, Binding>> GetAllBindings()
 		{
 			if (this.bindings != null)
@@ -435,6 +583,14 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+
+		/// <summary>
+		/// Copies the attached properties from the source to the destination.
+		/// This is a shallow copy (it copies just the references, not the
+		/// objects themselves for reference types).
+		/// </summary>
+		/// <param name="source">The source object.</param>
+		/// <param name="destination">The destination object.</param>
 		public static void CopyAttachedProperties(DependencyObject source, DependencyObject destination)
 		{
 			foreach (DependencyProperty property in source.properties.Keys)

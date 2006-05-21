@@ -566,7 +566,7 @@ namespace Epsitec.Common.Widgets.Layouts
 		}
 		public static void ClearLayoutContext(Visual visual)
 		{
-			visual.ClearValueBase (LayoutContext.LayoutContextProperty);
+			visual.ClearValue (LayoutContext.LayoutContextProperty);
 		}
 
 		public static Types.DependencyProperty	LayoutContextProperty = Types.DependencyProperty.RegisterAttached ("LayoutContext", typeof (LayoutContext), typeof (LayoutContext));

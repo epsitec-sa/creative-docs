@@ -19,7 +19,7 @@ namespace Epsitec.Common.Types
 		}
 		public static void ClearDataContext(DependencyObject o)
 		{
-			o.ClearValueBase (DataObject.DataContextProperty);
+			o.ClearValue (DataObject.DataContextProperty);
 		}
 
 		public static readonly DependencyProperty DataContextProperty = DependencyProperty.RegisterAttached ("DataContext", typeof (Binding), typeof (DataObject), new DependencyPropertyMetadataWithInheritance ());

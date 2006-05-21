@@ -479,7 +479,7 @@ namespace Epsitec.Common.Widgets
 
 					if (value)
 					{
-						this.ClearValueBase (Visual.IsVisibleProperty);
+						this.ClearValue (Visual.IsVisibleProperty);
 					}
 					else
 					{
@@ -508,7 +508,7 @@ namespace Epsitec.Common.Widgets
 
 					if (value)
 					{
-						this.ClearValueBase (Visual.IsEnabledProperty);
+						this.ClearValue (Visual.IsEnabledProperty);
 					}
 					else
 					{
@@ -1264,7 +1264,7 @@ namespace Epsitec.Common.Widgets
 					
 					if (that.InheritsParentFocus)
 					{
-						that.ClearValueBase (Visual.IsFocusedProperty);
+						that.ClearValue (Visual.IsFocusedProperty);
 					}
 					else
 					{
@@ -1290,7 +1290,7 @@ namespace Epsitec.Common.Widgets
 				{
 					if (that.KeyboardFocus == false)
 					{
-						that.ClearValueBase (Visual.IsFocusedProperty);
+						that.ClearValue (Visual.IsFocusedProperty);
 					}
 				}
 				else

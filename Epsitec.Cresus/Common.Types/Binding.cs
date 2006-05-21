@@ -234,7 +234,11 @@ namespace Epsitec.Common.Types
 		{
 			if (type != null)
 			{
-				value = this.converter.Convert (value, type, this.converterParameter, this.converterCulture);
+				if ((value == null) ||
+					(value.GetType () != type))
+				{
+					value = this.converter.Convert (value, type, this.converterParameter, this.converterCulture);
+				}
 			}
 			
 			return value;
@@ -244,7 +248,11 @@ namespace Epsitec.Common.Types
 		{
 			if (type != null)
 			{
-				value = this.converter.ConvertBack (value, type, this.converterParameter, this.converterCulture);
+				if ((value == null) ||
+					(value.GetType () != type))
+				{
+					value = this.converter.ConvertBack (value, type, this.converterParameter, this.converterCulture);
+				}
 			}
 
 			return value;

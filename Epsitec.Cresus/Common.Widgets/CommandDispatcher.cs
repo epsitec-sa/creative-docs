@@ -770,7 +770,7 @@ namespace Epsitec.Common.Widgets
 
 		public static void ClearDispatcher(DependencyObject obj)
 		{
-			obj.ClearValueBase (CommandDispatcher.DispatcherProperty);
+			obj.ClearValue (CommandDispatcher.DispatcherProperty);
 		}
 		
 		public static readonly DependencyProperty DispatcherProperty = DependencyProperty.RegisterAttached ("Dispatcher", typeof (CommandDispatcher), typeof (CommandDispatcher));
