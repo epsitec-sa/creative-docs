@@ -83,6 +83,11 @@ namespace Epsitec.Common.Designer
 			set
 			{
 				this.showZOrder = value;
+
+				if (this.showZOrder)
+				{
+					this.showTabIndex = false;
+				}
 			}
 		}
 
@@ -95,6 +100,11 @@ namespace Epsitec.Common.Designer
 			set
 			{
 				this.showTabIndex = value;
+
+				if (this.showTabIndex)
+				{
+					this.showZOrder = false;
+				}
 			}
 		}
 
