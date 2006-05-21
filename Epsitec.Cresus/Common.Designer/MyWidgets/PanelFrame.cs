@@ -1460,8 +1460,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 			if (!this.constrainObjectLock)
 			{
 				this.constrainList.Clear();
-				double min = this.ConstrainNearestDistance(rect.Center, excludes);
-				this.ConstrainNearestObjects(rect.Center, min+20, excludes);
+				double minX, minY;
+				this.ConstrainNearestDistance(rect.Center, out minX, out minY, excludes);
+				this.ConstrainNearestObjects(rect.Center, minX, minY, excludes);
 			}
 
 			foreach (Constrain constrain in this.constrainList)
@@ -1483,35 +1484,50 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
-		protected double ConstrainNearestDistance(Point pos, params Widget[] excludes)
+		protected void ConstrainNearestDistance(Point pos, out double minX, out double minY, params Widget[] excludes)
 		{
 			//	Cherche la distance à l'objet le plus proche d'une position donnée.
-			double min = 1000000;
+			minX = 1000000;
+			minY = 1000000;
+			double distance;
 
 			foreach (Widget obj in this.panel.Children)
 			{
 				if (!this.ConstrainContain(excludes, obj))
 				{
-					double distance = Point.Distance(obj.ActualBounds.Center, pos);
-					if (min > distance)
+					distance = System.Math.Abs(obj.ActualBounds.Center.X-pos.X);
+					if (minX > distance)
 					{
-						min = distance;
+						minX = distance;
+					}
+
+					distance = System.Math.Abs(obj.ActualBounds.Center.Y-pos.Y);
+					if (minY > distance)
+					{
+						minY = distance;
 					}
 				}
 			}
-
-			return min;
 		}
 
-		protected void ConstrainNearestObjects(Point pos, double distance, params Widget[] excludes)
+		protected void ConstrainNearestObjects(Point pos, double distanceX, double distanceY, params Widget[] excludes)
 		{
 			//	Initialise les contraintes pour tous les objets dont la distance est
 			//	inférieure ou égale à une distance donnée.
+			double distance;
+
 			foreach (Widget obj in this.panel.Children)
 			{
 				if (!this.ConstrainContain(excludes, obj))
 				{
-					if (Point.Distance(obj.ActualBounds.Center, pos) <= distance)
+					distance = System.Math.Abs(obj.ActualBounds.Center.X-pos.X);
+					if (distance <= distanceX)
+					{
+						this.ConstrainInitialise(obj);
+					}
+
+					distance = System.Math.Abs(obj.ActualBounds.Center.Y-pos.Y);
+					if (distance <= distanceY)
 					{
 						this.ConstrainInitialise(obj);
 					}
@@ -1601,7 +1617,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected void ConstrainBest(Rectangle rect, out Constrain bestX, out Constrain bestY)
 		{
-			//	Cherches les contraintes les plus pertinentes.
+			//	Cherches les contraintes les plus pertinentes parmi l'ensemble des contraintes.
 			double adjust;
 			double minX = 1000000;
 			double minY = 1000000;
@@ -1757,14 +1773,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 				//	Détecte si une position est proche d'une contrainte.
 				if (this.IsVertical)
 				{
-					if (position.X >= this.position.X-this.margin && position.X <= this.position.X+this.margin)
+					if (System.Math.Abs(position.X-this.position.X) <= this.margin)
 					{
 						return true;
 					}
 				}
 				else
 				{
-					if (position.Y >= this.position.Y-this.margin && position.Y <= this.position.Y+this.margin)
+					if (System.Math.Abs(position.Y-this.position.Y) <= this.margin)
 					{
 						return true;
 					}
