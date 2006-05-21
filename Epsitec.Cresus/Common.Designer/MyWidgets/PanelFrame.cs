@@ -1431,25 +1431,25 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				constrain.IsActivate = false;
 
-				if (constrain.Detect(rect.BottomLeft))
+				if (constrain.GetType == Constrain.Type.Left && constrain.Detect(rect.BottomLeft))
 				{
 					constrain.IsActivate = true;
 					continue;
 				}
 
-				if (constrain.Detect(rect.BottomRight))
+				if (constrain.GetType == Constrain.Type.Right && constrain.Detect(rect.BottomRight))
 				{
 					constrain.IsActivate = true;
 					continue;
 				}
 
-				if (constrain.Detect(rect.TopLeft))
+				if (constrain.GetType == Constrain.Type.Bottom && constrain.Detect(rect.BottomLeft))
 				{
 					constrain.IsActivate = true;
 					continue;
 				}
 
-				if (constrain.Detect(rect.TopRight))
+				if (constrain.GetType == Constrain.Type.Top && constrain.Detect(rect.TopLeft))
 				{
 					constrain.IsActivate = true;
 					continue;
@@ -1540,6 +1540,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected Rectangle ConstrainSnap(Rectangle rect)
 		{
+			//	Adapte un rectangle en fonction de l'ensemble des contraintes.
 			foreach (Constrain constrain in this.constrainList)
 			{
 				rect = constrain.Snap(rect);
@@ -1550,6 +1551,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected void ConstrainDraw(Graphics graphics, Rectangle box)
 		{
+			//	Dessine toutes les contraintes.
 			foreach (Constrain constrain in this.constrainList)
 			{
 				constrain.Draw(graphics, box);
@@ -1560,10 +1562,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			public enum Type
 			{
-				Left,
-				Right,
-				Bottom,
-				Top,
+				Left,		// contrainte verticale gauche
+				Right,		// contrainte verticale droite
+				Bottom,		// contrainte horizontale en bas
+				Top,		// contrainte horizontale en haut
 			}
 
 			public Constrain(Point position, Type type, double margin)
@@ -1579,6 +1581,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 				get
 				{
 					return (this.type == Type.Left || this.type == Type.Right);
+				}
+			}
+
+			public Type GetType
+			{
+				get
+				{
+					return this.type;
 				}
 			}
 
