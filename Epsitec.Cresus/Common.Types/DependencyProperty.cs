@@ -426,7 +426,7 @@ namespace Epsitec.Common.Types
 				{
 					if (this.typeConverter == null)
 					{
-						this.typeConverter = Converter.GetTypeConverter (this.propertyType);
+						this.typeConverter = Converter.GetSerializationConverter (this.propertyType);
 					}
 				}
 			}
@@ -448,7 +448,7 @@ namespace Epsitec.Common.Types
 				{
 					if (this.typeConverter == null)
 					{
-						this.typeConverter = Converter.GetTypeConverter (this.propertyType);
+						this.typeConverter = Converter.GetSerializationConverter (this.propertyType);
 					}
 				}
 			}
@@ -521,7 +521,7 @@ namespace Epsitec.Common.Types
 		private bool							isReadOnly;
 		private int								globalIndex;
 		private int								inheritedPropertyCacheMask;
-		private ITypeConverter					typeConverter;
+		private ISerializationConverter					typeConverter;
 		
 		Dictionary<System.Type, DependencyPropertyMetadata>	overriddenMetadata;
 		

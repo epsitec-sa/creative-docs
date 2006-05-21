@@ -305,7 +305,7 @@ namespace Epsitec.Common.Widgets
 
 		public static void ClearContext(DependencyObject obj)
 		{
-			obj.ClearValueBase (ValidationContext.ContextProperty);
+			obj.ClearValue (ValidationContext.ContextProperty);
 		}
 
 

@@ -289,7 +289,7 @@ namespace Epsitec.Common.Types
 		/// <param name="obj">The dependency object.</param>
 		public static void ClearTypeObject(DependencyObject obj)
 		{
-			obj.ClearValueBase (TypeRosetta.TypeObjectProperty);
+			obj.ClearValue (TypeRosetta.TypeObjectProperty);
 		}
 		
 		public static readonly DependencyProperty TypeObjectProperty = DependencyProperty.RegisterAttached ("TypeObject", typeof (object), typeof (TypeRosetta.Properties));

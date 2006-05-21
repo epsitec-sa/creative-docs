@@ -280,6 +280,96 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual ("[Abc1]", myData3.Name);
 		}
 
+		[Test]
+		public void CheckBindingWithConverter1()
+		{
+			MyObject myData1 = new MyObject ();
+			MyObject myData2 = new MyObject ();
+			MyObject myData3 = new MyObject ();
+			MyObject myData4 = new MyObject ();
+
+			myData1.Xyz = 1;
+			myData2.Foo = "2";
+
+			Binding binding1 = new Binding (BindingMode.TwoWay, myData1, "Xyz");
+			Binding binding2 = new Binding (BindingMode.TwoWay, myData2, "Foo");
+
+			binding1.Converter = new Converters.AutomaticValueConverter ();
+			binding2.Converter = new Converters.AutomaticValueConverter ();
+
+			myData3.SetBinding (MyObject.FooProperty, binding1);	//	Data1.Xyz --> Data3.Foo
+			myData4.SetBinding (MyObject.XyzProperty, binding2);	//	Data2.Foo --> Data4.Xyz
+
+			Assert.AreEqual ("1", myData3.Foo);				//	résultat de la conversion de Data1.Xyz
+			Assert.AreEqual (2, myData4.Xyz);				//	résultat de la conversion de Data2.Foo
+
+			myData1.Xyz = 10;
+			myData2.Foo = "20";
+
+			Assert.AreEqual ("10", myData3.Foo);			//	résultat de la conversion de Data1.Xyz
+			Assert.AreEqual (20, myData4.Xyz);				//	résultat de la conversion de Data2.Foo
+
+			myData3.Foo = "-1";
+			myData4.Xyz = -2;
+
+			Assert.AreEqual (-1, myData1.Xyz);				//	résultat de la conversion de Data3.Foo
+			Assert.AreEqual ("-2", myData2.Foo);			//	résultat de la conversion de Data4.Xyz
+			
+			myData1.ClearValue (MyObject.XyzProperty);
+			myData2.ClearValue (MyObject.FooProperty);
+
+			Assert.AreEqual (null, myData1.GetValue (MyObject.XyzProperty));		//	aberration (voulue) pour cette propriété -- int est null !
+			Assert.AreEqual ("[default]", myData2.GetValue (MyObject.FooProperty));
+			
+			Assert.AreEqual (null, myData3.Foo);			//	Data1.Xyz est null car la conversion vers string de null donne null !
+			Assert.AreEqual (-2, myData4.Xyz);				//	inchangé car Data2.Foo invalide
+		}
+
+		[Test]
+		public void CheckBindingWithConverter2()
+		{
+			MyObject myData1 = new MyObject ();
+			MyObject myData2 = new MyObject ();
+			MyObject myData3 = new MyObject ();
+			MyObject myData4 = new MyObject ();
+
+			myData1.Abc = 1;
+			myData2.Foo = "2";
+
+			Binding binding1 = new Binding (BindingMode.TwoWay, myData1, "Abc");
+			Binding binding2 = new Binding (BindingMode.TwoWay, myData2, "Foo");
+
+			binding1.Converter = new Converters.AutomaticValueConverter ();
+			binding2.Converter = new Converters.AutomaticValueConverter ();
+
+			myData3.SetBinding (MyObject.FooProperty, binding1);	//	Data1.Abc --> Data3.Foo
+			myData4.SetBinding (MyObject.AbcProperty, binding2);	//	Data2.Foo --> Data4.Abc
+
+			Assert.AreEqual ("1", myData3.Foo);				//	résultat de la conversion de Data1.Abc
+			Assert.AreEqual (2, myData4.Abc);				//	résultat de la conversion de Data2.Foo
+
+			myData1.Abc = 10;
+			myData2.Foo = "20";
+
+			Assert.AreEqual ("10", myData3.Foo);			//	résultat de la conversion de Data1.Abc
+			Assert.AreEqual (20, myData4.Abc);				//	résultat de la conversion de Data2.Foo
+
+			myData3.Foo = "-1";
+			myData4.Abc = -2;
+
+			Assert.AreEqual (-1, myData1.Abc);				//	résultat de la conversion de Data3.Foo
+			Assert.AreEqual ("-2", myData2.Foo);			//	résultat de la conversion de Data4.Abc
+
+			myData1.ClearValue (MyObject.AbcProperty);
+			myData2.ClearValue (MyObject.FooProperty);
+
+			Assert.AreEqual (Binding.DoNothing, myData1.GetValue (MyObject.AbcProperty));	//	valeur par défaut pas un int !
+			Assert.AreEqual ("[default]", myData2.GetValue (MyObject.FooProperty));
+
+			Assert.AreEqual ("-1", myData3.Foo);			//	inchangé car Data1.Abc invalide
+			Assert.AreEqual (-2, myData4.Abc);				//	inchangé car Data2.Foo invalide
+		}
+
 		private class ResourceBoundData : IResourceBoundSource
 		{
 			public string Suffix
@@ -699,7 +789,7 @@ namespace Epsitec.Common.Types
 			//	Supprime une valeur locale pour vérifier que l'on reprend bien 
 			//	la valeur héritée :
 			
-			c3.ClearValueBase (TreeTest.CascadeProperty);
+			c3.ClearValue (TreeTest.CascadeProperty);
 
 			Assert.AreEqual ("c3-Cascade:c,a.", handler.Log);
 			handler.Clear ();
@@ -712,7 +802,7 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual ("b-Cascade:a,b.c1-Cascade:a,b.c3-Cascade:a,b.", handler.Log);
 			handler.Clear ();
 
-			b.ClearValueBase (TreeTest.CascadeProperty);
+			b.ClearValue (TreeTest.CascadeProperty);
 
 			Assert.AreEqual ("b-Cascade:b,a.c1-Cascade:b,a.c3-Cascade:b,a.", handler.Log);
 			handler.Clear ();
@@ -1120,8 +1210,8 @@ namespace Epsitec.Common.Types
 			public MyObject()
 			{
 			}
-			
-			public int				Xyz
+
+			public int Xyz
 			{
 				get
 				{
@@ -1132,7 +1222,18 @@ namespace Epsitec.Common.Types
 					this.SetValue (MyObject.XyzProperty, value);
 				}
 			}
-			public int				NativeXyz
+			public int Abc
+			{
+				get
+				{
+					return (int) this.GetValue (MyObject.AbcProperty);
+				}
+				set
+				{
+					this.SetValue (MyObject.AbcProperty, value);
+				}
+			}
+			public int NativeXyz
 			{
 				get
 				{
@@ -1247,6 +1348,7 @@ namespace Epsitec.Common.Types
 			}
 			
 			public static DependencyProperty XyzProperty	= DependencyProperty.Register ("Xyz", typeof (int), typeof (MyObject));
+			public static DependencyProperty AbcProperty	= DependencyProperty.Register ("Abc", typeof (int), typeof (MyObject), new DependencyPropertyMetadata (Binding.DoNothing));
 			public static DependencyProperty NameProperty	= DependencyProperty.Register ("Name", typeof (string), typeof (MyObject), new DependencyPropertyMetadata ("[default]"));
 			public static DependencyProperty FooProperty	= DependencyProperty.Register ("Foo", typeof (string), typeof (MyObject), new DependencyPropertyMetadata ("[default]", new PropertyInvalidatedCallback (MyObject.NotifyOnFooChanged)));
 			public static DependencyProperty SiblingProperty = DependencyProperty.Register ("Sibling", typeof (MyObject), typeof (MyObject));

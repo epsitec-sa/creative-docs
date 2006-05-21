@@ -1025,7 +1025,7 @@ namespace Epsitec.Common.Widgets
 
 				if (validator == null)
 				{
-					this.ClearValueBase (Visual.ValidatorProperty);
+					this.ClearValue (Visual.ValidatorProperty);
 				}
 				else
 				{
@@ -1123,7 +1123,7 @@ namespace Epsitec.Common.Widgets
 			else
 			{
 				this.SetValue (Visual.KeyboardFocusProperty, false);
-				this.ClearValueBase (Visual.KeyboardFocusProperty);
+				this.ClearValue (Visual.KeyboardFocusProperty);
 				
 				if (window != null)
 				{
