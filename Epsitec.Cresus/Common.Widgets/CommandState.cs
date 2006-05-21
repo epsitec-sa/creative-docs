@@ -26,6 +26,14 @@ namespace Epsitec.Common.Widgets
 				return this.command;
 			}
 		}
+
+		public CommandContext					CommandContext
+		{
+			get
+			{
+				return this.context;
+			}
+		}
 		
 		public bool								Enable
 		{
@@ -85,7 +93,12 @@ namespace Epsitec.Common.Widgets
 			this.OverrideDefineCommand ();
 		}
 
-		#endregion
+		internal void DefineCommandContext(CommandContext context)
+		{
+			this.context = context;
+		}
+		
+#endregion
 
 		protected virtual void OverrideDefineCommand()
 		{
@@ -117,6 +130,7 @@ namespace Epsitec.Common.Widgets
 		public static readonly DependencyProperty CommandProperty = DependencyProperty.RegisterReadOnly ("Command", typeof (Command), typeof (CommandState));
 
 		private Command							command;
+		private CommandContext					context;
 		private ActiveState						activeState = ActiveState.No;
 		private bool							enable = true;
 	}

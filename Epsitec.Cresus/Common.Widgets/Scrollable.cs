@@ -1,5 +1,7 @@
-//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
+
+using Epsitec.Common.Types;
 
 namespace Epsitec.Common.Widgets
 {
@@ -57,31 +59,46 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.panel;
+				return (Panel) this.GetValue (Scrollable.PanelProperty);
 			}
-			
 			set
 			{
-				if (this.panel != value)
+				this.SetValue (Scrollable.PanelProperty, value);
+			}
+		}
+
+		public double							PanelOffsetX
+		{
+			get
+			{
+				return this.panel_offset.X;
+			}
+			set
+			{
+				if (this.panel_offset.X != value)
 				{
-					if (this.panel != null)
-					{
-						this.DetachPanel (this.panel);
-					}
-					
-					this.panel = value;
-					
-					if (this.panel != null)
-					{
-						this.AttachPanel (this.panel);
-					}
-					
-					this.UpdateGeometry ();
+					this.panel_offset.X = value;
+					this.UpdatePanelLocation ();
 				}
 			}
 		}
-		
-		
+
+		public double							PanelOffsetY
+		{
+			get
+			{
+				return this.panel_offset.Y;
+			}
+			set
+			{
+				if (this.panel_offset.Y != value)
+				{
+					this.panel_offset.Y = value;
+					this.UpdatePanelLocation ();
+				}
+			}
+		}
+
 		public ScrollableScrollerMode			HorizontalScrollerMode
 		{
 			get
@@ -119,9 +136,7 @@ namespace Epsitec.Common.Widgets
 		{
 			if (disposing)
 			{
-				this.DetachPanel (this.panel);
-				
-				this.panel = null;
+				this.Panel = null;
 				
 				this.h_scroller.ValueChanged -= new Support.EventHandler (this.HandleHScrollerValueChanged);
 				this.v_scroller.ValueChanged -= new Support.EventHandler (this.HandleVScrollerValueChanged);
@@ -186,23 +201,29 @@ namespace Epsitec.Common.Widgets
 			double margin_x = (this.v_scroller.Visibility) ? this.v_scroller.PreferredWidth  : 0;
 			double margin_y = (this.h_scroller.Visibility) ? this.h_scroller.PreferredHeight : 0;
 			
-			double total_dx = this.Client.Size.Width;
-			double total_dy = this.Client.Size.Height;
+//			double total_dx = this.Client.Size.Width;
+//			double total_dy = this.Client.Size.Height;
 			
 			if (this.v_scroller.Visibility)
 			{
-				this.v_scroller.SetManualBounds(new Drawing.Rectangle(total_dx - margin_x, margin_y, margin_x, total_dy - margin_y));
+				this.v_scroller.Margins = new Drawing.Margins (0, 0, 0, margin_y);
+				this.v_scroller.Anchor = AnchorStyles.Right | AnchorStyles.TopAndBottom;
+//				this.v_scroller.SetManualBounds(new Drawing.Rectangle(total_dx - margin_x, margin_y, margin_x, total_dy - margin_y));
 			}
 
 			if (this.h_scroller.Visibility)
 			{
-				this.h_scroller.SetManualBounds(new Drawing.Rectangle(0, 0, total_dx - margin_x, margin_y));
+				this.h_scroller.Margins = new Drawing.Margins (0, margin_x, 0, 0);
+				this.h_scroller.Anchor = AnchorStyles.Bottom | AnchorStyles.LeftAndRight;
+//				this.h_scroller.SetManualBounds(new Drawing.Rectangle(0, 0, total_dx - margin_x, margin_y));
 			}
 		}
 		
 		protected void UpdatePanelLocation()
 		{
-			if (this.panel == null)
+			Panel panel = this.Panel;
+			
+			if (panel == null)
 			{
 				this.h_scroller.Hide ();
 				this.v_scroller.Hide ();
@@ -212,8 +233,8 @@ namespace Epsitec.Common.Widgets
 			
 			double total_dx = this.Client.Size.Width;
 			double total_dy = this.Client.Size.Height;
-			double panel_dx = this.panel.SurfaceWidth;
-			double panel_dy = this.panel.SurfaceHeight;
+			double panel_dx = panel.SurfaceWidth;
+			double panel_dy = panel.SurfaceHeight;
 			double margin_x = (this.v_scroller_mode == ScrollableScrollerMode.ShowAlways) ? this.v_scroller.PreferredWidth : 0;
 			double margin_y = (this.h_scroller_mode == ScrollableScrollerMode.ShowAlways) ? this.h_scroller.PreferredHeight : 0;
 			
@@ -324,8 +345,8 @@ namespace Epsitec.Common.Widgets
 			//	l'ouverture.
 			
 			this.panel_aperture = new Drawing.Rectangle (0, margin_y, vis_dx, vis_dy);
-			this.panel.SetManualBounds(new Drawing.Rectangle(-offset_x, total_dy - panel_dy + offset_y, panel_dx, panel_dy));
-			this.panel.Aperture = this.panel.MapParentToClient (this.panel_aperture);
+			panel.SetManualBounds (new Drawing.Rectangle (-offset_x, total_dy - panel_dy + offset_y, panel_dx, panel_dy));
+			panel.Aperture = panel.MapParentToClient (this.panel_aperture);
 			
 			this.h_scroller.Visibility = (margin_y > 0);
 			this.v_scroller.Visibility = (margin_x > 0);
@@ -358,7 +379,7 @@ namespace Epsitec.Common.Widgets
 		
 		private void HandlePanelSurfaceSizeChanged(object sender)
 		{
-			System.Diagnostics.Debug.Assert (this.panel == sender);
+			System.Diagnostics.Debug.Assert (this.Panel == sender);
 			
 			this.UpdateGeometry ();
 		}
@@ -394,8 +415,53 @@ namespace Epsitec.Common.Widgets
 			graphics.RenderSolid (adorner.ColorBorder);
 		}
 
+		private static void HandlePanelInvalidated(DependencyObject o, object oldValue, object newValue)
+		{
+			Scrollable that = (Scrollable) o;
+
+			Panel oldPanel = oldValue as Panel;
+			Panel newPanel = newValue as Panel;
+			
+			if (oldPanel != null)
+			{
+				that.DetachPanel (oldPanel);
+			}
+			if (newPanel != null)
+			{
+				that.AttachPanel (newPanel);
+			}
+
+			that.UpdateGeometry ();
+		}
+
+		private static object GetPanelOffsetXValue(DependencyObject o)
+		{
+			Scrollable that = (Scrollable) o;
+			return that.PanelOffsetX;
+		}
+
+		private static object GetPanelOffsetYValue(DependencyObject o)
+		{
+			Scrollable that = (Scrollable) o;
+			return that.PanelOffsetY;
+		}
+
+		private static void SetPanelOffsetXValue(DependencyObject o, object value)
+		{
+			Scrollable that = (Scrollable) o;
+			that.PanelOffsetX = (double) value;
+		}
+
+		private static void SetPanelOffsetYValue(DependencyObject o, object value)
+		{
+			Scrollable that = (Scrollable) o;
+			that.PanelOffsetX = (double) value;
+		}
+
+		public static readonly DependencyProperty PanelProperty = DependencyProperty.Register ("Panel", typeof (Panel), typeof (Scrollable), new DependencyPropertyMetadata (null, Scrollable.HandlePanelInvalidated));
+		public static readonly DependencyProperty PanelOffsetXProperty = DependencyProperty.Register ("PanelOffsetX", typeof (double), typeof (Scrollable), new DependencyPropertyMetadata (Scrollable.GetPanelOffsetXValue, Scrollable.SetPanelOffsetXValue));
+		public static readonly DependencyProperty PanelOffsetYProperty = DependencyProperty.Register ("PanelOffsetY", typeof (double), typeof (Scrollable), new DependencyPropertyMetadata (Scrollable.GetPanelOffsetYValue, Scrollable.SetPanelOffsetYValue));
 		
-		protected Panel							panel;						//	panel utilisé pour le contenu
 		protected Drawing.Rectangle				panel_aperture;				//	ouverture par laquelle on voit le panel
 		protected Drawing.Point					panel_offset;				//	offset du panel, dérivé de la position des ascenceurs
 		

@@ -1145,7 +1145,12 @@ namespace Epsitec.Common.Widgets
 
 		protected virtual void OnChildrenChanged()
 		{
-			//	TODO: si besoin, rajouter un jour un événement ChildrenChanged
+			Support.EventHandler handler = (Support.EventHandler) this.GetUserEventHandler ("ChildrenChanged");
+
+			if (handler != null)
+			{
+				handler (this);
+			}
 		}
 
 		#region Helpers.IClientInfo Members
@@ -1422,6 +1427,18 @@ namespace Epsitec.Common.Widgets
 			remove
 			{
 				this.RemoveEventHandler (Visual.ParentProperty, value);
+			}
+		}
+
+		public event Support.EventHandler			ChildrenChanged
+		{
+			add
+			{
+				this.AddUserEventHandler ("ChildrenChanged", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler ("ChildrenChanged", value);
 			}
 		}
 

@@ -112,16 +112,13 @@ namespace Epsitec.Common.Types
 				this.sourceObject      = null;
 				this.sourceProperty    = null;
 				this.sourceType        = BindingSourceType.None;
-				this.sourceBreadcrumbs = null;
+				this.sourceBreadcrumbs = sourceBreadcrumbs;
 			}
 		}
 		
 		internal void DetachFromSource()
 		{
-			if (this.sourceObject != null)
-			{
-				this.InternalDetachFromSource ();
-			}
+			this.InternalDetachFromSource ();
 		}
 		
 		internal static BindingExpression BindToTarget(DependencyObject target, DependencyProperty property, Binding binding)
@@ -512,30 +509,31 @@ namespace Epsitec.Common.Types
 		}
 		private void InternalDetachFromSource()
 		{
-			System.Diagnostics.Debug.Assert (this.sourceObject != null);
-			
-			switch (this.sourceType)
+			if (this.sourceObject != null)
 			{
-				case BindingSourceType.PropertyObject:
-					BindingExpression.Detach (this, this.sourceObject as DependencyObject, (DependencyProperty) this.sourceProperty);
-					break;
-				case BindingSourceType.StructuredData:
-					break;
-				case BindingSourceType.SourceItself:
-					break;
-				case BindingSourceType.Resource:
-					break;
-			}
+				switch (this.sourceType)
+				{
+					case BindingSourceType.PropertyObject:
+						BindingExpression.Detach (this, this.sourceObject as DependencyObject, (DependencyProperty) this.sourceProperty);
+						break;
+					case BindingSourceType.StructuredData:
+						break;
+					case BindingSourceType.SourceItself:
+						break;
+					case BindingSourceType.Resource:
+						break;
+				}
 
+				this.sourceObject      = null;
+				this.sourceProperty    = null;
+				this.sourceType        = BindingSourceType.None;
+			}
+			
 			if (this.sourceBreadcrumbs != null)
 			{
 				this.sourceBreadcrumbs.Dispose ();
 				this.sourceBreadcrumbs = null;
 			}
-
-			this.sourceObject      = null;
-			this.sourceProperty    = null;
-			this.sourceType        = BindingSourceType.None;
 		}
 		
 		private void InternalAttachToTarget()
