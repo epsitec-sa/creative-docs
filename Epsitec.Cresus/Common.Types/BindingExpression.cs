@@ -531,7 +531,9 @@ namespace Epsitec.Common.Types
 		private void InternalUpdateTarget(object value)
 		{
 			if ((this.sourceUpdateCounter == 0) &&
-				(value != Binding.DoNothing))
+				(value != Binding.DoNothing) &&
+				(value != InvalidValue.Instance) &&
+				(value != UndefinedValue.Instance))
 			{
 				System.Threading.Interlocked.Increment (ref this.targetUpdateCounter);
 				
@@ -671,7 +673,9 @@ namespace Epsitec.Common.Types
 		{
 			if (target != null)
 			{
-				if (value != Binding.DoNothing)
+				if ((value != Binding.DoNothing) &&
+					(value != InvalidValue.Instance) &&
+					(value != UndefinedValue.Instance))
 				{
 					target.SetValue (property, value);
 				}
@@ -682,7 +686,9 @@ namespace Epsitec.Common.Types
 		{
 			if (target != null)
 			{
-				if (value != Binding.DoNothing)
+				if ((value != Binding.DoNothing) &&
+					(value != InvalidValue.Instance) &&
+					(value != UndefinedValue.Instance))
 				{
 					target.SetValue (name, value);
 				}

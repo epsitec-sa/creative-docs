@@ -206,6 +206,16 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual ("10;20;30;40",			convI.ConvertToString (i, null));
 			Assert.AreEqual ("11/03/2004 10:30:05", convJ.ConvertToString (j, null));
 		}
+
+		[Test]
+		public void CheckAutomaticValueConverter()
+		{
+			System.Globalization.CultureInfo culture = System.Globalization.CultureInfo.InvariantCulture;
+
+			Assert.AreEqual (InvalidValue.Instance, Converters.AutomaticValueConverter.Instance.Convert ("abc", typeof (int), null, culture));
+			Assert.AreEqual (10, Converters.AutomaticValueConverter.Instance.Convert ("10", typeof (int), null, culture));
+			Assert.AreEqual ("10", Converters.AutomaticValueConverter.Instance.ConvertBack (10, typeof (string), null, culture));
+		}
 		
 		[Test] public void MicrosoftBug()
 		{
