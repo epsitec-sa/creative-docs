@@ -692,8 +692,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 
 			this.creatingObject.Anchor = AnchorStyles.BottomLeft;
-			this.ObjectPosition(this.creatingObject, pos);
 			this.creatingObject.TabNavigation = TabNavigationMode.Passive;
+
+			pos.X -= this.creatingObject.PreferredWidth/2;
+			pos.Y -= this.creatingObject.PreferredHeight/2;
+			this.ObjectPosition(this.creatingObject, pos);
 
 			Rectangle bounds = new Rectangle(pos, this.creatingObject.PreferredSize);
 			this.ConstrainStart(bounds);
@@ -709,6 +712,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			if (this.creatingObject != null)
 			{
+				pos.X -= this.creatingObject.PreferredWidth/2;
+				pos.Y -= this.creatingObject.PreferredHeight/2;
 				Rectangle bounds = new Rectangle(pos, this.creatingObject.PreferredSize);
 				Rectangle adjust = this.ConstrainSnap(bounds);
 				Point corr = adjust.BottomLeft - bounds.BottomLeft;
