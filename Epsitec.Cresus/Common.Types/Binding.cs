@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Types
 {
-	[TypeConverter (typeof (Binding.Converter))]
+	[SerializationConverter (typeof (Binding.SerializationConverter))]
 	public class Binding
 	{
 		public Binding()
@@ -92,6 +92,50 @@ namespace Epsitec.Common.Types
 					this.elementName = value;
 					this.NotifyAfterChange ();
 				}
+			}
+		}
+
+		public IValueConverter Converter
+		{
+			get
+			{
+				return this.converter;
+			}
+			set
+			{
+				this.converter = value;
+			}
+		}
+
+		public System.Globalization.CultureInfo ConverterCulture
+		{
+			get
+			{
+				return this.converterCulture;
+			}
+			set
+			{
+				this.converterCulture = value;
+			}
+		}
+
+		public object ConverterParameter
+		{
+			get
+			{
+				return this.converterParameter;
+			}
+			set
+			{
+				this.converterParameter = value;
+			}
+		}
+		
+		public bool HasConverter
+		{
+			get
+			{
+				return this.converter != null;
 			}
 		}
 
@@ -184,6 +228,34 @@ namespace Epsitec.Common.Types
 					this.RemoveExpression (expressions[i]);
 				}
 			}
+		}
+
+		internal object ConvertValue(object value, System.Type type)
+		{
+			if (type != null)
+			{
+				if ((value == null) ||
+					(value.GetType () != type))
+				{
+					value = this.converter.Convert (value, type, this.converterParameter, this.converterCulture);
+				}
+			}
+			
+			return value;
+		}
+
+		internal object ConvertBackValue(object value, System.Type type)
+		{
+			if (type != null)
+			{
+				if ((value == null) ||
+					(value.GetType () != type))
+				{
+					value = this.converter.ConvertBack (value, type, this.converterParameter, this.converterCulture);
+				}
+			}
+
+			return value;
 		}
 
 		private WeakBindingExpression[] GetExpressions()
@@ -358,11 +430,11 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		#region Converter Class
+		#region SerializationConverter Class
 
-		public class Converter : ITypeConverter
+		public class SerializationConverter : ISerializationConverter
 		{
-			#region ITypeConverter Members
+			#region ISerializationConverter Members
 
 			public string ConvertToString(object value, IContextResolver context)
 			{
@@ -457,5 +529,9 @@ namespace Epsitec.Common.Types
 		
 		private BoundExpressions				boundExpressionsType;
 		private object							boundExpressions;
+		
+		private IValueConverter					converter;
+		System.Globalization.CultureInfo		converterCulture;
+		private object							converterParameter;
 	}
 }

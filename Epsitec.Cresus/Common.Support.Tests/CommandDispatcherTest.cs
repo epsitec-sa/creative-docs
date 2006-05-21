@@ -348,6 +348,10 @@ namespace Epsitec.Common.Support
 			slider.SetBinding (Slider.ValueProperty, new Types.Binding (Types.BindingMode.TwoWay, state, "Size"));
 
 			Assert.AreEqual (12.0M, slider.Value);
+
+			slider.Value = 10.0M;
+
+			Assert.AreEqual (10.0M, StructuredCommand.GetFieldValue (state, "Size"));
 		}
 
 		[Test]

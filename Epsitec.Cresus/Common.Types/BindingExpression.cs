@@ -305,7 +305,7 @@ namespace Epsitec.Common.Types
 						type = BindingSourceType.StructuredData;
 						
 						objectSource   = sdSource;
-						objectProperty = property;
+						objectProperty = name;
 					}
 
 					//	If we have traversed several data source objects to arrive
@@ -405,21 +405,40 @@ namespace Epsitec.Common.Types
 
 				try
 				{
-					DependencyObject doSource;
-					IStructuredData  sdSource;
+					DependencyObject   doSource;
+					DependencyProperty property;
+					IStructuredData    sdSource;
+					string             name;
 
 					switch (this.sourceType)
 					{
 						case BindingSourceType.PropertyObject:
-							doSource = this.sourceObject as DependencyObject;
-							BindingExpression.SetValue (doSource, (DependencyProperty) this.sourceProperty, value);
+							doSource = (DependencyObject) this.sourceObject;
+							property = (DependencyProperty) this.sourceProperty;
+							
+							if (this.binding.HasConverter)
+							{
+								value = this.binding.ConvertBackValue (value, property.PropertyType);
+							}
+							
+							BindingExpression.SetValue (doSource, property, value);
 							break;
+						
 						case BindingSourceType.StructuredData:
 							sdSource = this.sourceObject as IStructuredData;
-							BindingExpression.SetValue (sdSource, (string) this.sourceProperty, value);
+							name     = (string) this.sourceProperty;
+							
+							if (this.binding.HasConverter)
+							{
+								value = this.binding.ConvertBackValue (value, this.GetStructuredDataType (sdSource, name));
+							}
+							
+							BindingExpression.SetValue (sdSource, name, value);
 							break;
+						
 						case BindingSourceType.SourceItself:
 							throw new System.InvalidOperationException ("Cannot update source: BindingSourceType set to SourceItself");
+						
 						case BindingSourceType.Resource:
 							throw new System.InvalidOperationException ("Cannot update source: BindingSourceType set to Resource");
 					}
@@ -429,6 +448,20 @@ namespace Epsitec.Common.Types
 					System.Threading.Interlocked.Decrement (ref this.sourceUpdateCounter);
 				}
 			}
+		}
+
+		private System.Type GetStructuredDataType(IStructuredData source, string name)
+		{
+			IStructuredTypeProvider typeProvider = source as IStructuredTypeProvider;
+
+			if (typeProvider != null)
+			{
+				IStructuredType structuredType = typeProvider.GetStructuredType ();
+				object typeObject = structuredType.GetFieldTypeObject (name);
+				return TypeRosetta.GetSystemTypeFromTypeObject (typeObject);
+			}
+			
+			return null;
 		}
 		
 		private void InternalUpdateTarget()
@@ -440,12 +473,17 @@ namespace Epsitec.Common.Types
 		}
 		private void InternalUpdateTarget(object value)
 		{
-			if (this.sourceUpdateCounter == 0)
+			if ((this.sourceUpdateCounter == 0) &&
+				(value != Binding.DoNothing))
 			{
 				System.Threading.Interlocked.Increment (ref this.targetUpdateCounter);
 				
 				try
 				{
+					if (this.binding.HasConverter)
+					{
+						value = this.binding.ConvertValue (value, this.targetPropery.PropertyType);
+					}
 					BindingExpression.SetValue (this.targetObject, this.TargetProperty, value);
 				}
 				finally

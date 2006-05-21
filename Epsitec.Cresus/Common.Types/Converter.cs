@@ -11,9 +11,9 @@ namespace Epsitec.Common.Types
 	/// </summary>
 	public static class Converter
 	{
-		public static ITypeConverter GetTypeConverter(System.Type type)
+		public static ISerializationConverter GetSerializationConverter(System.Type type)
 		{
-			ITypeConverter converter;
+			ISerializationConverter converter;
 			
 			if (Converter.typeConverters.TryGetValue (type, out converter))
 			{
@@ -27,48 +27,48 @@ namespace Epsitec.Common.Types
 					return converter;
 				}
 
-				object[] attributes = type.GetCustomAttributes (typeof (TypeConverterAttribute), false);
+				object[] attributes = type.GetCustomAttributes (typeof (SerializationConverterAttribute), false);
 
 				if (attributes.Length > 0)
 				{
-					//	The type specifies a dedicated ITypeConverter which must
+					//	The type specifies a dedicated ISerializationConverter which must
 					//	be used to convert to/from strings.
 					
-					TypeConverterAttribute attribute = attributes[0] as TypeConverterAttribute;
+					SerializationConverterAttribute attribute = attributes[0] as SerializationConverterAttribute;
 					converter = attribute.Converter;
 				}
 				else
 				{
-					//	There is no dedicated ITypeConverter. Instead, use the type
+					//	There is no dedicated ISerializationConverter. Instead, use the type
 					//	converter provided by the ComponentModel infrastructure.
 					
-					converter = new GenericTypeConverterAdaptor (System.ComponentModel.TypeDescriptor.GetConverter (type));
+					converter = new GenericSerializationConverterAdaptor (System.ComponentModel.TypeDescriptor.GetConverter (type));
 				}
 				
 				Converter.typeConverters[type] = converter;
 				return converter;
 			}
 		}
-		public static void OverrideTypeConverter(System.Type type, ITypeConverter converter)
+		public static void OverrideSerializationConverter(System.Type type, ISerializationConverter converter)
 		{
 			Converter.typeConverters[type] = converter;
 		}
 
-		#region GenericTypeConverter Class
+		#region GenericSerializationConverter Class
 
 		/// <summary>
-		/// The GenericTypeConverterAdaptor wraps the type converter provided by
-		/// the ComponentModel services to our own ITypeConverter infrastructure.
+		/// The GenericSerializationConverterAdaptor wraps the type converter provided by
+		/// the ComponentModel services to our own ISerializationConverter infrastructure.
 		/// </summary>
 		
-		private class GenericTypeConverterAdaptor : ITypeConverter
+		private class GenericSerializationConverterAdaptor : ISerializationConverter
 		{
-			public GenericTypeConverterAdaptor(System.ComponentModel.TypeConverter converter)
+			public GenericSerializationConverterAdaptor(System.ComponentModel.TypeConverter converter)
 			{
 				this.converter = converter;
 			}
-			
-			#region ITypeConverter Members
+
+			#region ISerializationConverter Members
 
 			public string ConvertToString(object value, IContextResolver context)
 			{
@@ -711,6 +711,6 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		private static Dictionary<System.Type, ITypeConverter> typeConverters = new Dictionary<System.Type, ITypeConverter> ();
+		private static Dictionary<System.Type, ISerializationConverter> typeConverters = new Dictionary<System.Type, ISerializationConverter> ();
 	}
 }

@@ -404,7 +404,7 @@ namespace Epsitec.Common.Widgets
 			{
 				CommandContext context = CommandContext.GetContext (obj);
 				
-				obj.ClearValueBase (CommandContext.ContextProperty);
+				obj.ClearValue (CommandContext.ContextProperty);
 
 				if (context != null)
 				{

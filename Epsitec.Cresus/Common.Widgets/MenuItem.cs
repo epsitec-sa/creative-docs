@@ -730,7 +730,7 @@ namespace Epsitec.Common.Widgets
 				System.Diagnostics.Debug.Assert (old_submenu == MenuItem.GetMenuRoot (old_submenu));
 				System.Diagnostics.Debug.Assert (MenuItem.GetParentMenuItem (old_submenu) == that);
 				
-				old_submenu.ClearValueBase (MenuItem.ParentMenuItemProperty);
+				old_submenu.ClearValue (MenuItem.ParentMenuItemProperty);
 			}
 			
 			if (new_submenu != null)
