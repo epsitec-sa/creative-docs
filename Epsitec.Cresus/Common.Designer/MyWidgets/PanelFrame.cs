@@ -1595,6 +1595,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected void ConstrainBest(Rectangle rect, out Constrain bestX, out Constrain bestY)
 		{
+			//	Cherches les contraintes les plus pertinentes.
+			double adjust;
 			double minX = 1000000;
 			double minY = 1000000;
 			bestX = null;
@@ -1602,18 +1604,24 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			foreach (Constrain constrain in this.constrainList)
 			{
-				double adjustX = System.Math.Abs(constrain.AdjustX(rect));
-				if (!double.IsNaN(adjustX) && minX > adjustX)
+				if (constrain.AdjustX(rect, out adjust))
 				{
-					minX = adjustX;
-					bestX = constrain;
+					adjust = System.Math.Abs(adjust);
+					if (minX > adjust)
+					{
+						minX = adjust;
+						bestX = constrain;
+					}
 				}
 
-				double adjustY = System.Math.Abs(constrain.AdjustY(rect));
-				if (!double.IsNaN(adjustY) && minY > adjustY)
+				if (constrain.AdjustY(rect, out adjust))
 				{
-					minY = adjustY;
-					bestY = constrain;
+					adjust = System.Math.Abs(adjust);
+					if (minY > adjust)
+					{
+						minY = adjust;
+						bestY = constrain;
+					}
 				}
 			}
 		}
@@ -1634,17 +1642,17 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			public enum Type
 			{
-				Left,		// contrainte verticale gauche
-				Right,		// contrainte verticale droite
+				Left,		// contrainte verticale à gauche
+				Right,		// contrainte verticale à droite
 				Bottom,		// contrainte horizontale en bas
 				Top,		// contrainte horizontale en haut
 			}
 
 			public Constrain(Point position, Type type, double margin)
 			{
-				this.position = position;
-				this.type = type;
-				this.margin = margin;
+				this.position   = position;
+				this.type       = type;
+				this.margin     = margin;
 				this.isActivate = false;
 			}
 
@@ -1764,57 +1772,59 @@ namespace Epsitec.Common.Designer.MyWidgets
 				//	Adapte un rectangle à une contrainte.
 				if (this.IsVertical)
 				{
-					double adjust = this.AdjustX(rect);
-					if (!double.IsNaN(adjust))
-					{
-						rect.Offset(adjust, 0);
-					}
+					double adjust;
+					this.AdjustX(rect, out adjust);
+					rect.Offset(adjust, 0);
 				}
 				else
 				{
-					double adjust = this.AdjustY(rect);
-					if (!double.IsNaN(adjust))
-					{
-						rect.Offset(0, adjust);
-					}
+					double adjust;
+					this.AdjustY(rect, out adjust);
+					rect.Offset(0, adjust);
 				}
 
 				return rect;
 			}
 
-			public double AdjustX(Rectangle rect)
+			public bool AdjustX(Rectangle rect, out double adjust)
 			{
-				//	Retourne l'ajustement horizontal nécessaire pour s'adapter à une contrainte.
+				//	Calcule l'ajustement horizontal nécessaire pour s'adapter à une contrainte.
 				if (this.IsLeft && this.Detect(rect.BottomLeft))
 				{
-					return this.position.X-rect.Left;
+					adjust = this.position.X-rect.Left;
+					return true;
 				}
 
 				if (this.IsRight && this.Detect(rect.BottomRight))
 				{
-					return this.position.X-rect.Right;
+					adjust = this.position.X-rect.Right;
+					return true;
 				}
 
-				return double.NaN;
+				adjust = 0;
+				return false;
 			}
 
-			public double AdjustY(Rectangle rect)
+			public bool AdjustY(Rectangle rect, out double adjust)
 			{
-				//	Retourne l'ajustement vertical nécessaire pour s'adapter à une contrainte.
+				//	Calcule l'ajustement vertical nécessaire pour s'adapter à une contrainte.
 				if (this.IsBottom && this.Detect(rect.BottomLeft))
 				{
-					return this.position.Y-rect.Bottom;
+					adjust = this.position.Y-rect.Bottom;
+					return true;
 				}
 
 				if (this.IsTop && this.Detect(rect.TopLeft))
 				{
-					return this.position.Y-rect.Top;
+					adjust = this.position.Y-rect.Top;
+					return true;
 				}
 
-				return double.NaN;
+				adjust = 0;
+				return false;
 			}
 
-			protected Point position;
+			protected Point					position;
 			protected Type					type;
 			protected double				margin;
 			protected bool					isActivate;
