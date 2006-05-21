@@ -27,6 +27,9 @@ namespace Epsitec.Common.Support
 
 			manager.Bind (visual, Widgets.Visual.NameProperty, "file:strings#title.SettingsWindow");
 
+			Assert.IsTrue (visual.IsBound (Widgets.Visual.NameProperty));
+			Assert.AreEqual (Types.DataSourceType.Resource, visual.GetBindingExpression (Widgets.Visual.NameProperty).DataSourceType);
+			
 			Assert.AreEqual ("Réglages", visual.Name);
 
 			manager.ActiveCulture = Resources.FindCultureInfo ("en");
@@ -152,7 +155,7 @@ namespace Epsitec.Common.Support
 			System.Console.Out.Flush ();
 
 			Assert.IsTrue (System.Math.Abs ((memory4-memory6)/max - (memory3-memory2)/max) < 2);
-			Assert.IsTrue ((memory3-memory2)/max < 314);
+			Assert.IsTrue ((memory3-memory2)/max < 326);	// 314 before r5433
 			
 //			System.Threading.Thread.Sleep (10*1000);
 		}

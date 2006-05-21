@@ -468,15 +468,36 @@ namespace Epsitec.Common.Types
 		/// Gets the binding for the specified property.
 		/// </summary>
 		/// <param name="property">The property.</param>
-		/// <returns>The binding object for the property.</returns>
+		/// <returns>The binding object for the property, or <c>null</c> if
+		/// there is no binding.</returns>
 		public Binding GetBinding(DependencyProperty property)
 		{
-			BindingExpression bindingExpression;
+			BindingExpression bindingExpression = this.GetBindingExpression (property);
 			
+			if (bindingExpression != null)
+			{
+				return bindingExpression.ParentBinding;
+			}
+			else
+			{
+				return null;
+			}
+		}
+
+		/// <summary>
+		/// Gets the binding expression for the specified property.
+		/// </summary>
+		/// <param name="property">The property.</param>
+		/// <returns>The binding expression for the property, or <c>null</c> if
+		/// there is no binding.</returns>
+		public BindingExpression GetBindingExpression(DependencyProperty property)
+		{
+			BindingExpression bindingExpression;
+
 			if ((this.bindings != null) &&
 				(this.bindings.TryGetValue (property, out bindingExpression)))
 			{
-				return bindingExpression.ParentBinding;
+				return bindingExpression;
 			}
 			else
 			{

@@ -5,6 +5,8 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Types
 {
+	using PropertyChangedEventHandler = Epsitec.Common.Support.EventHandler<DependencyPropertyChangedEventArgs>;
+	
 	public class StructuredData : IStructuredTypeProvider, IStructuredData
 	{
 		public StructuredData() : this (null)
@@ -42,14 +44,62 @@ namespace Epsitec.Common.Types
 
 		#region IStructuredData Members
 
-		public void AttachListener(string name, Epsitec.Common.Support.EventHandler<DependencyPropertyChangedEventArgs> handler)
+		public void AttachListener(string name, PropertyChangedEventHandler handler)
 		{
-			throw new System.Exception ("The method or operation is not implemented.");
+			object type;
+
+			if (!this.CheckNameValidity (name, out type))
+			{
+				throw new System.Collections.Generic.KeyNotFoundException (string.Format ("The value '{0}' does not exist; it is not defined by the structure", name));
+			}
+			
+			if (this.values == null)
+			{
+				this.AllocateValues ();
+			}
+
+			if (this.values == null)
+			{
+				throw new System.InvalidOperationException ("Cannot attach a listener; no storage defined");
+			}
+
+			Record record;
+
+			if (this.values.TryGetValue (name, out record))
+			{
+				record  = new Record (record.Data, (PropertyChangedEventHandler) System.Delegate.Combine (record.Handler, handler));
+			}
+			else
+			{
+				record = new Record (UndefinedValue.Instance, handler);
+			}
+
+			this.values[name] = record;
 		}
 
-		public void DetachListener(string name, Epsitec.Common.Support.EventHandler<DependencyPropertyChangedEventArgs> handler)
+		public void DetachListener(string name, PropertyChangedEventHandler handler)
 		{
-			throw new System.Exception ("The method or operation is not implemented.");
+			if (this.values == null)
+			{
+				return;
+			}
+			
+			Record record;
+
+			if (this.values.TryGetValue (name, out record))
+			{
+				record  = new Record (record.Data, (PropertyChangedEventHandler) System.Delegate.Remove (record.Handler, handler));
+				
+				if ((record.Data == UndefinedValue.Instance) &&
+					(record.Handler == null))
+				{
+					this.values.Remove (name);
+				}
+				else
+				{
+					this.values[name] = record;
+				}
+			}
 		}
 
 		public string[] GetValueNames()
@@ -84,7 +134,7 @@ namespace Epsitec.Common.Types
 				throw new System.Collections.Generic.KeyNotFoundException (string.Format ("The value '{0}' cannot be get; it is not defined by the structure", name));
 			}
 			
-			object value;
+			Record value;
 			
 			if (this.values == null)
 			{
@@ -92,7 +142,7 @@ namespace Epsitec.Common.Types
 			}
 			else if (this.values.TryGetValue (name, out value))
 			{
-				return value;
+				return value.Data;
 			}
 			else
 			{
@@ -109,11 +159,29 @@ namespace Epsitec.Common.Types
 				throw new System.Collections.Generic.KeyNotFoundException (string.Format ("The value '{0}' cannot be set; it is not defined by the structure", name));
 			}
 
+			object oldValue = this.GetValue (name);
+			PropertyChangedEventHandler handler = null;
+
 			if (value == UndefinedValue.Instance)
 			{
 				if (this.values != null)
 				{
-					this.values.Remove (name);
+					Record record;
+					
+					if (this.values.TryGetValue (name, out record))
+					{
+						handler = record.Handler;
+
+						if (handler == null)
+						{
+							this.values.Remove (name);
+						}
+						else
+						{
+							record = new Record (UndefinedValue.Instance, handler);
+							this.values[name] = record;
+						}
+					}
 				}
 			}
 			else
@@ -133,7 +201,29 @@ namespace Epsitec.Common.Types
 					throw new System.InvalidOperationException ("Cannot set a value; no storage defined");
 				}
 
-				this.values[name] = value;
+				Record record;
+
+				if (this.values.TryGetValue (name, out record))
+				{
+					handler = record.Handler;
+					record  = new Record (value, handler);
+				}
+				else
+				{
+					record = new Record (value);
+				}
+
+				this.values[name] = record;
+			}
+
+			object newValue = this.GetValue (name);
+
+			if (oldValue == newValue)
+			{
+			}
+			else if ((oldValue == null) || (!oldValue.Equals (newValue)))
+			{
+				this.InvalidateValue (name, oldValue, newValue, handler);
 			}
 		}
 
@@ -177,21 +267,68 @@ namespace Epsitec.Common.Types
 
 			return TypeRosetta.VerifyValueValidity (type, value);
 		}
-
+		
 		protected virtual void AllocateValues()
 		{
-			this.values = new HostedDictionary<string, object> (this.NotifyInsertion, this.NotifyRemoval);
+			this.values = new HostedDictionary<string, Record> (this.NotifyInsertion, this.NotifyRemoval);
 		}
 
-		protected virtual void NotifyInsertion(string name, object value)
+		protected virtual void NotifyInsertion(string name, Record value)
 		{
 		}
 
-		protected virtual void NotifyRemoval(string name, object value)
+		protected virtual void NotifyRemoval(string name, Record value)
 		{
 		}
+
+		protected virtual void InvalidateValue(string name, object oldValue, object newValue, PropertyChangedEventHandler handler)
+		{
+			if (handler != null)
+			{
+				DependencyPropertyChangedEventArgs e = new DependencyPropertyChangedEventArgs (name, oldValue, newValue);
+				handler (this, e);
+			}
+		}
+
+		#region Record Structure
+
+		protected struct Record
+		{
+			public Record(object data)
+			{
+				this.data = data;
+				this.handler = null;
+			}
+
+			public Record(object data, PropertyChangedEventHandler handler)
+			{
+				this.data = data;
+				this.handler = handler;
+			}
+			
+			public object Data
+			{
+				get
+				{
+					return this.data;
+				}
+			}
+			
+			public PropertyChangedEventHandler Handler
+			{
+				get
+				{
+					return this.handler;
+				}
+			}
+			
+			private object data;
+			private PropertyChangedEventHandler handler;
+		}
+
+		#endregion
 
 		private IStructuredType type;
-		private IDictionary<string, object> values;
+		private IDictionary<string, Record> values;
 	}
 }

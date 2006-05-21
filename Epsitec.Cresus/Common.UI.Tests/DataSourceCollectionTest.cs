@@ -102,8 +102,11 @@ namespace Epsitec.Common.UI
 			b1.Dock = Widgets.DockStyle.Top;
 			b1.SetBinding (Widgets.Visual.NameProperty, binding);
 
+			Assert.AreEqual (DataSourceType.None, b1.GetBindingExpression (Widgets.Visual.NameProperty).DataSourceType);
+
 			panel.Children.Add (b1);
 
+			Assert.AreEqual (DataSourceType.PropertyObject, b1.GetBindingExpression (Widgets.Visual.NameProperty).DataSourceType);
 			Assert.AreEqual (source1.Name, b1.Name);
 
 			source1.Name = "X";
@@ -115,6 +118,36 @@ namespace Epsitec.Common.UI
 			
 			Assert.AreEqual ("X", source1.Name);
 			Assert.AreEqual ("Y", b1.Name);
+		}
+
+		[Test]
+		public void CheckPanelDataSourceBinding()
+		{
+			Panel panel = new UI.Panel ();
+			DataSourceCollection collection = new DataSourceCollection ();
+			StructuredType type = new StructuredType ();
+			StructuredData data = new StructuredData (type);
+
+			type.AddField ("Label", new StringType ());
+			data.SetValue ("Label", "Hello");
+
+			panel.DataSource = collection;
+
+			collection.AddDataSource ("A", data);
+
+			Widgets.Button b1 = new Epsitec.Common.Widgets.Button ();
+
+			panel.Children.Add (b1);
+
+			b1.SetBinding (Widgets.Visual.NameProperty, new Binding (BindingMode.OneWay, null, "A.Label"));
+
+			Assert.AreEqual (DataSourceType.StructuredData, b1.GetBindingExpression (Widgets.Visual.NameProperty).DataSourceType);
+			Assert.AreEqual (typeof (StringType), b1.GetBindingExpression (Widgets.Visual.NameProperty).GetSourceTypeObject ().GetType ());
+			Assert.AreEqual ("Hello", b1.Name);
+
+			data.SetValue ("Label", "Good bye");
+
+			Assert.AreEqual ("Good bye", b1.Name);
 		}
 
 		[Test]
