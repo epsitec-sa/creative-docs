@@ -217,7 +217,7 @@ namespace Epsitec.Common.Widgets
 			}
 			else
 			{
-				state = command.CreateDefaultState ();
+				state = command.CreateDefaultState (this);
 
 				this.SetCommandState (command, state);
 

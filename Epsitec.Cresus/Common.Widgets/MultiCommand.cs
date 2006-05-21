@@ -69,6 +69,14 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 
+			public MultiCommand MultiCommand
+			{
+				get
+				{
+					return this.Command as MultiCommand;
+				}
+			}
+
 			private static object CoerceSelectedCommandValue(DependencyObject obj, DependencyProperty property, object value)
 			{
 				if (value == null)
@@ -258,17 +266,32 @@ namespace Epsitec.Common.Widgets
 		{
 			if (state == null)
 			{
-				throw new System.ArgumentNullException ();
+				throw new System.ArgumentNullException ("Specified state is null");
 			}
+			
+			MultiState multiState = state as MultiState;
 
-			MultiState multi = state as MultiState;
-
-			if (multi == null)
+			if (multiState == null)
 			{
-				throw new System.ArgumentException ();
+				throw new System.ArgumentException ("Specified state is not a MultiState");
 			}
 
-			multi.SelectedCommand = command;
+			if (multiState.SelectedCommand != command)
+			{
+				multiState.SelectedCommand = command;
+				
+				//	Update the active state of the sub-commands found in the same
+				//	context as the multi-command state itself.
+				
+				MultiCommand   multiCommand = multiState.MultiCommand;
+				CommandContext multiContext = multiState.CommandContext;
+
+				foreach (Command item in multiCommand.commands)
+				{
+					CommandState itemState = multiContext.GetCommandState (item);
+					itemState.ActiveState = (item == command) ? ActiveState.Yes : ActiveState.No;
+				}
+			}
 		}
 		
 		private List<Command> commands;

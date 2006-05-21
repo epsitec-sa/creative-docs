@@ -163,6 +163,10 @@ namespace Epsitec.Common.Support
 
 			MultiCommand.SetSelectedCommand (state, commandA);
 
+			Assert.AreEqual (ActiveState.Yes, stateA.ActiveState);
+			Assert.AreEqual (ActiveState.No, stateB.ActiveState);
+			Assert.AreEqual (ActiveState.No, stateC.ActiveState);
+			
 			CommandDispatcherTest.buffer.Length = 0;
 			CommandDispatcher.Dispatch (dispatcherChain, contextChain, command.Name, this);
 			Assert.AreEqual ("<CommandMulti:TestMulti-TestCmdA>", CommandDispatcherTest.buffer.ToString ());
@@ -174,6 +178,10 @@ namespace Epsitec.Common.Support
 			Assert.AreEqual ("<CommandMulti:TestCmdA-null>", CommandDispatcherTest.buffer.ToString ());
 
 			MultiCommand.SetSelectedCommand (state, commandB);
+			
+			Assert.AreEqual (ActiveState.No, stateA.ActiveState);
+			Assert.AreEqual (ActiveState.Yes, stateB.ActiveState);
+			Assert.AreEqual (ActiveState.No, stateC.ActiveState);
 
 			CommandDispatcherTest.buffer.Length = 0;
 			CommandDispatcher.Dispatch (dispatcherChain, contextChain, command.Name, this);
@@ -181,6 +189,10 @@ namespace Epsitec.Common.Support
 
 			MultiCommand.SetSelectedCommand (state, null);
 
+			Assert.AreEqual (ActiveState.No, stateA.ActiveState);
+			Assert.AreEqual (ActiveState.No, stateB.ActiveState);
+			Assert.AreEqual (ActiveState.No, stateC.ActiveState);
+			
 			CommandDispatcherTest.buffer.Length = 0;
 			CommandDispatcher.Dispatch (dispatcherChain, contextChain, command.Name, this);
 			Assert.AreEqual ("", CommandDispatcherTest.buffer.ToString ());

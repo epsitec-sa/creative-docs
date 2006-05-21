@@ -222,13 +222,13 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
-		public CommandState CreateDefaultState()
+		public CommandState CreateDefaultState(CommandContext context)
 		{
 			if (this.stateObjectType != null)
 			{
 				CommandState state = this.stateObjectType.CreateEmptyObject () as CommandState;
 				
-				this.InitializeDefaultState (state);
+				this.InitializeDefaultState (state, context);
 				
 				return state;
 			}
@@ -438,9 +438,11 @@ namespace Epsitec.Common.Widgets
 
 		#endregion
 
-		protected virtual void InitializeDefaultState(CommandState state)
+		protected virtual void InitializeDefaultState(CommandState state, CommandContext context)
 		{
 			state.DefineCommand (this);
+			state.DefineCommandContext (context);
+			
 			TypeRosetta.SetTypeObject (state, this);
 		}
 
