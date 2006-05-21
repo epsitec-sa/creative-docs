@@ -281,7 +281,7 @@ namespace Epsitec.Common.Types
 		}
 
 		[Test]
-		public void CheckBindingWithConverter()
+		public void CheckBindingWithConverter1()
 		{
 			MyObject myData1 = new MyObject ();
 			MyObject myData2 = new MyObject ();
@@ -318,8 +318,56 @@ namespace Epsitec.Common.Types
 			myData1.ClearValueBase (MyObject.XyzProperty);
 			myData2.ClearValueBase (MyObject.FooProperty);
 
-			Assert.AreEqual ("-1", myData3.Foo);			//	inchangé car Data1.Xyz invalide
+			Assert.AreEqual (null, myData1.GetValue (MyObject.XyzProperty));		//	aberration (voulue) pour cette propriété -- int est null !
+			Assert.AreEqual ("[default]", myData2.GetValue (MyObject.FooProperty));
+			
+			Assert.AreEqual (null, myData3.Foo);			//	Data1.Xyz est null car la conversion vers string de null donne null !
 			Assert.AreEqual (-2, myData4.Xyz);				//	inchangé car Data2.Foo invalide
+		}
+
+		[Test]
+		public void CheckBindingWithConverter2()
+		{
+			MyObject myData1 = new MyObject ();
+			MyObject myData2 = new MyObject ();
+			MyObject myData3 = new MyObject ();
+			MyObject myData4 = new MyObject ();
+
+			myData1.Abc = 1;
+			myData2.Foo = "2";
+
+			Binding binding1 = new Binding (BindingMode.TwoWay, myData1, "Abc");
+			Binding binding2 = new Binding (BindingMode.TwoWay, myData2, "Foo");
+
+			binding1.Converter = new Converters.AutomaticValueConverter ();
+			binding2.Converter = new Converters.AutomaticValueConverter ();
+
+			myData3.SetBinding (MyObject.FooProperty, binding1);	//	Data1.Abc --> Data3.Foo
+			myData4.SetBinding (MyObject.AbcProperty, binding2);	//	Data2.Foo --> Data4.Abc
+
+			Assert.AreEqual ("1", myData3.Foo);				//	résultat de la conversion de Data1.Abc
+			Assert.AreEqual (2, myData4.Abc);				//	résultat de la conversion de Data2.Foo
+
+			myData1.Abc = 10;
+			myData2.Foo = "20";
+
+			Assert.AreEqual ("10", myData3.Foo);			//	résultat de la conversion de Data1.Abc
+			Assert.AreEqual (20, myData4.Abc);				//	résultat de la conversion de Data2.Foo
+
+			myData3.Foo = "-1";
+			myData4.Abc = -2;
+
+			Assert.AreEqual (-1, myData1.Abc);				//	résultat de la conversion de Data3.Foo
+			Assert.AreEqual ("-2", myData2.Foo);			//	résultat de la conversion de Data4.Abc
+
+			myData1.ClearValueBase (MyObject.AbcProperty);
+			myData2.ClearValueBase (MyObject.FooProperty);
+
+			Assert.AreEqual (Binding.DoNothing, myData1.GetValue (MyObject.AbcProperty));	//	valeur par défaut pas un int !
+			Assert.AreEqual ("[default]", myData2.GetValue (MyObject.FooProperty));
+
+			Assert.AreEqual ("-1", myData3.Foo);			//	inchangé car Data1.Abc invalide
+			Assert.AreEqual (-2, myData4.Abc);				//	inchangé car Data2.Foo invalide
 		}
 
 		private class ResourceBoundData : IResourceBoundSource
@@ -1162,8 +1210,8 @@ namespace Epsitec.Common.Types
 			public MyObject()
 			{
 			}
-			
-			public int				Xyz
+
+			public int Xyz
 			{
 				get
 				{
@@ -1174,7 +1222,18 @@ namespace Epsitec.Common.Types
 					this.SetValue (MyObject.XyzProperty, value);
 				}
 			}
-			public int				NativeXyz
+			public int Abc
+			{
+				get
+				{
+					return (int) this.GetValue (MyObject.AbcProperty);
+				}
+				set
+				{
+					this.SetValue (MyObject.AbcProperty, value);
+				}
+			}
+			public int NativeXyz
 			{
 				get
 				{
@@ -1289,6 +1348,7 @@ namespace Epsitec.Common.Types
 			}
 			
 			public static DependencyProperty XyzProperty	= DependencyProperty.Register ("Xyz", typeof (int), typeof (MyObject));
+			public static DependencyProperty AbcProperty	= DependencyProperty.Register ("Abc", typeof (int), typeof (MyObject), new DependencyPropertyMetadata (Binding.DoNothing));
 			public static DependencyProperty NameProperty	= DependencyProperty.Register ("Name", typeof (string), typeof (MyObject), new DependencyPropertyMetadata ("[default]"));
 			public static DependencyProperty FooProperty	= DependencyProperty.Register ("Foo", typeof (string), typeof (MyObject), new DependencyPropertyMetadata ("[default]", new PropertyInvalidatedCallback (MyObject.NotifyOnFooChanged)));
 			public static DependencyProperty SiblingProperty = DependencyProperty.Register ("Sibling", typeof (MyObject), typeof (MyObject));
