@@ -132,6 +132,18 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
+		public Size ConstrainSpacing
+		{
+			get
+			{
+				return this.constrainSpacing;
+			}
+			set
+			{
+				this.constrainSpacing = value;
+			}
+		}
+
 
 		protected string				tool = "ToolSelect";
 		protected bool					showGrid = false;
@@ -142,5 +154,6 @@ namespace Epsitec.Common.Designer
 		protected bool					showTabIndex = false;
 		protected double				gridStep = 10;
 		protected double				constrainMargin = 5;
+		protected Size					constrainSpacing = new Size(10, 5);
 	}
 }
