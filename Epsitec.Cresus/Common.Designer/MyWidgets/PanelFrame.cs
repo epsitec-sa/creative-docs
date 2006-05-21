@@ -498,27 +498,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.ChangeMouseCursor(MouseCursorType.Arrow);
 			}
 		}
-
-		protected void ConstrainStart()
-		{
-			if (this.context.ShowConstrain)
-			{
-				this.ConstrainInitialise(this.panel.Children, this.context.ConstrainMargin);
-			}
-			else
-			{
-				this.constrainList.Clear();
-			}
-		}
-
-		protected void ConstrainEnd()
-		{
-			if (this.constrainList.Count != 0)
-			{
-				this.constrainList.Clear();
-				this.Invalidate();
-			}
-		}
 		#endregion
 
 		#region ProcessMouse global
@@ -1418,6 +1397,27 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 
 		#region Constrain
+		protected void ConstrainStart()
+		{
+			if (this.context.ShowConstrain)
+			{
+				this.ConstrainInitialise(this.panel.Children, this.context.ConstrainMargin);
+			}
+			else
+			{
+				this.constrainList.Clear();
+			}
+		}
+
+		protected void ConstrainEnd()
+		{
+			if (this.constrainList.Count != 0)
+			{
+				this.constrainList.Clear();
+				this.Invalidate();
+			}
+		}
+
 		public void ConstrainInitialise(Widgets.Collections.FlatChildrenCollection widgets, double margin)
 		{
 			//	Initialise les contraintes en fonction de l'ensemble des objets.
@@ -1426,16 +1426,16 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			foreach (Widget obj in widgets)
 			{
-				constrain = new Constrain(obj.ActualBounds.BottomLeft, true, margin);
+				constrain = new Constrain(obj.ActualBounds.BottomLeft, Constrain.Type.Left, margin);
 				this.ConstrainAdd(constrain);
 
-				constrain = new Constrain(obj.ActualBounds.BottomRight, true, margin);
+				constrain = new Constrain(obj.ActualBounds.BottomRight, Constrain.Type.Right, margin);
 				this.ConstrainAdd(constrain);
 
-				constrain = new Constrain(obj.ActualBounds.BottomLeft, false, margin);
+				constrain = new Constrain(obj.ActualBounds.BottomLeft, Constrain.Type.Bottom, margin);
 				this.ConstrainAdd(constrain);
 
-				constrain = new Constrain(obj.ActualBounds.TopLeft, false, margin);
+				constrain = new Constrain(obj.ActualBounds.TopLeft, Constrain.Type.Top, margin);
 				this.ConstrainAdd(constrain);
 			}
 		}
@@ -1507,12 +1507,28 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		public class Constrain
 		{
-			public Constrain(Point position, bool isVertical, double margin)
+			public enum Type
+			{
+				Left,
+				Right,
+				Bottom,
+				Top,
+			}
+
+			public Constrain(Point position, Type type, double margin)
 			{
 				this.position = position;
-				this.isVertical = isVertical;
-				this.isActivate = false;
+				this.type = type;
 				this.margin = margin;
+				this.isActivate = false;
+			}
+
+			public bool IsVertical
+			{
+				get
+				{
+					return (this.type == Type.Left || this.type == Type.Right);
+				}
 			}
 
 			public bool IsActivate
@@ -1530,12 +1546,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 			public bool IsEqualTo(Constrain constrain)
 			{
 				//	Teste si deux contraintes sont identiques (sans tenir compte de l'activation).
-				if (this.isVertical != constrain.isVertical)
+				if (this.type != constrain.type)
 				{
 					return false;
 				}
 
-				if (this.isVertical)
+				if (this.IsVertical)
 				{
 					return (this.position.X == constrain.position.X);
 				}
@@ -1548,7 +1564,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			public void Draw(Graphics graphics, Rectangle box)
 			{
 				//	Dessine une contrainte.
-				if (this.isVertical)
+				if (this.IsVertical)
 				{
 					graphics.AddLine(this.position.X+0.5, box.Bottom, this.position.X+0.5, box.Top);
 				}
@@ -1568,7 +1584,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			public bool Detect(Point position)
 			{
 				//	Détecte si une position est proche d'une contrainte.
-				if (this.isVertical)
+				if (this.IsVertical)
 				{
 					if (position.X >= this.position.X-this.margin && position.X <= this.position.X+this.margin)
 					{
@@ -1589,38 +1605,33 @@ namespace Epsitec.Common.Designer.MyWidgets
 			public Rectangle Snap(Rectangle rect)
 			{
 				//	Adapte un rectangle à une contrainte.
-				if (this.isVertical)
+				if (this.type == Type.Left && this.Detect(rect.BottomLeft))
 				{
-					if (this.Detect(rect.BottomLeft))
-					{
-						rect.Offset(this.position.X-rect.Left, 0);
-					}
-
-					if (this.Detect(rect.BottomRight))
-					{
-						rect.Offset(this.position.X-rect.Right, 0);
-					}
+					rect.Offset(this.position.X-rect.Left, 0);
 				}
-				else
-				{
-					if (this.Detect(rect.BottomLeft))
-					{
-						rect.Offset(0, this.position.Y-rect.Bottom);
-					}
 
-					if (this.Detect(rect.TopLeft))
-					{
-						rect.Offset(0, this.position.Y-rect.Top);
-					}
+				if (this.type == Type.Right && this.Detect(rect.BottomRight))
+				{
+					rect.Offset(this.position.X-rect.Right, 0);
+				}
+
+				if (this.type == Type.Bottom && this.Detect(rect.BottomLeft))
+				{
+					rect.Offset(0, this.position.Y-rect.Bottom);
+				}
+
+				if (this.type == Type.Top && this.Detect(rect.TopLeft))
+				{
+					rect.Offset(0, this.position.Y-rect.Top);
 				}
 
 				return rect;
 			}
 
-			protected Point position;
-			protected bool					isVertical;
-			protected bool					isActivate;
+			protected Point					position;
+			protected Type					type;
 			protected double				margin;
+			protected bool					isActivate;
 		}
 		#endregion
 
