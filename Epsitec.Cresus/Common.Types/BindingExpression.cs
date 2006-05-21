@@ -560,6 +560,7 @@ namespace Epsitec.Common.Types
 					BindingExpression.Attach (this, this.sourceObject as DependencyObject, (DependencyProperty) this.sourceProperty);
 					break;
 				case DataSourceType.StructuredData:
+					BindingExpression.Attach (this, this.sourceObject as IStructuredData, (string) this.sourceProperty);
 					break;
 				case DataSourceType.SourceItself:
 					break;
@@ -577,6 +578,7 @@ namespace Epsitec.Common.Types
 						BindingExpression.Detach (this, this.sourceObject as DependencyObject, (DependencyProperty) this.sourceProperty);
 						break;
 					case DataSourceType.StructuredData:
+						BindingExpression.Detach (this, this.sourceObject as IStructuredData, (string) this.sourceProperty);
 						break;
 					case DataSourceType.SourceItself:
 						break;
@@ -696,6 +698,14 @@ namespace Epsitec.Common.Types
 			source.RemoveEventHandler (property, expression.HandleSourcePropertyChanged);
 		}
 
+		private static void Attach(BindingExpression expression, IStructuredData source, string name)
+		{
+			source.AttachListener (name, expression.HandleSourcePropertyChanged);
+		}
+		private static void Detach(BindingExpression expression, IStructuredData source, string name)
+		{
+			source.DetachListener (name, expression.HandleSourcePropertyChanged);
+		}
 
 		private Binding							binding;
 		private DependencyObject				targetObject;			//	immutable
