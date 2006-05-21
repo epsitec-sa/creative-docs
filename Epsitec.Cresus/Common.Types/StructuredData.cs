@@ -33,6 +33,11 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		public int InternalGetValueCount()
+		{
+			return this.values == null ? -1 : this.values.Count;
+		}
+
 		#region IStructuredTypeProvider Members
 
 		IStructuredType IStructuredTypeProvider.GetStructuredType()

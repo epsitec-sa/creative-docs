@@ -56,13 +56,46 @@ namespace Epsitec.Common.Types
 
 			Assert.AreEqual (UndefinedValue.Instance, data.GetValue ("A"));
 			Assert.AreEqual (UndefinedValue.Instance, data.GetValue ("B"));
+
+			Assert.AreEqual (-1, data.InternalGetValueCount ());
 			
 			data.SetValue ("A", 10);
 			data.SetValue ("B", 20);
 
+			Assert.AreEqual (2, data.InternalGetValueCount ());
 			Assert.AreEqual (typeof (IntegerType), data.StructuredType.GetFieldTypeObject ("A").GetType ());
 			Assert.AreEqual (10, data.GetValue ("A"));
 			Assert.AreEqual (20, data.GetValue ("B"));
+			
+			this.buffer.Length = 0;
+
+			data.AttachListener ("A", this.HandleDataPropertyChanged);
+			data.SetValue ("A", 15);
+			data.SetValue ("A", UndefinedValue.Instance);
+			Assert.AreEqual (2, data.InternalGetValueCount ());
+			data.DetachListener ("A", this.HandleDataPropertyChanged);
+			Assert.AreEqual (1, data.InternalGetValueCount ());
+			data.SetValue ("A", 10);
+			Assert.AreEqual (2, data.InternalGetValueCount ());
+			
+			Assert.AreEqual ("[A:10->15][A:15-><UndefinedValue>]", this.buffer.ToString ());
+
+			data.SetValue ("A", UndefinedValue.Instance);
+			data.SetValue ("B", UndefinedValue.Instance);
+			Assert.AreEqual (0, data.InternalGetValueCount ());
+		}
+
+		private System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+
+		private void HandleDataPropertyChanged(object sender, DependencyPropertyChangedEventArgs e)
+		{
+			this.buffer.Append ("[");
+			this.buffer.Append (e.PropertyName);
+			this.buffer.Append (":");
+			this.buffer.Append (e.OldValue);
+			this.buffer.Append ("->");
+			this.buffer.Append (e.NewValue);
+			this.buffer.Append ("]");
 		}
 
 		[Test]
