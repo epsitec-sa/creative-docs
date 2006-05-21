@@ -243,6 +243,13 @@ namespace Epsitec.Common.Designer.MyWidgets
 				case MessageType.KeyUp:
 					this.ProcessKeyChanged(message.IsControlPressed, message.IsShiftPressed);
 					break;
+
+				case MessageType.KeyPress:
+					if (message.KeyCode == KeyCode.Space)
+					{
+						this.ConstrainLock();
+					}
+					break;
 			}
 		}
 
@@ -1397,6 +1404,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			//	Début des contraintes.
 			this.constrainObject = null;
+			this.constrainObjectLock = false;
 			this.constrainList.Clear();
 		}
 
@@ -1412,6 +1420,17 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
+		protected void ConstrainLock()
+		{
+			//	Vérouille ou dévérouille l'objet le plus proche.
+			this.constrainObjectLock = !this.constrainObjectLock;
+
+			if (!this.constrainObjectLock)
+			{
+				this.ConstrainEnd();
+			}
+		}
+
 		protected void ConstrainActivate(Rectangle rect, params Widget[] excludes)
 		{
 			//	Active les contraintes pour un rectangle donné.
@@ -1420,36 +1439,39 @@ namespace Epsitec.Common.Designer.MyWidgets
 				return;
 			}
 
-			Widget obj = this.ConstrainNearestObject(rect.Center, excludes);
-			if (this.constrainObject != obj)
+			if (!this.constrainObjectLock)
 			{
-				this.constrainObject = obj;
-				this.ConstrainInitialise(this.constrainObject);
+				Widget obj = this.ConstrainNearestObject(rect.Center, excludes);
+				if (this.constrainObject != obj)
+				{
+					this.constrainObject = obj;
+					this.ConstrainInitialise(this.constrainObject);
+				}
 			}
 
 			foreach (Constrain constrain in this.constrainList)
 			{
 				constrain.IsActivate = false;
 
-				if (constrain.GetType == Constrain.Type.Left && constrain.Detect(rect.BottomLeft))
+				if (constrain.IsLeft && constrain.Detect(rect.BottomLeft))
 				{
 					constrain.IsActivate = true;
 					continue;
 				}
 
-				if (constrain.GetType == Constrain.Type.Right && constrain.Detect(rect.BottomRight))
+				if (constrain.IsRight && constrain.Detect(rect.BottomRight))
 				{
 					constrain.IsActivate = true;
 					continue;
 				}
 
-				if (constrain.GetType == Constrain.Type.Bottom && constrain.Detect(rect.BottomLeft))
+				if (constrain.IsBottom && constrain.Detect(rect.BottomLeft))
 				{
 					constrain.IsActivate = true;
 					continue;
 				}
 
-				if (constrain.GetType == Constrain.Type.Top && constrain.Detect(rect.TopLeft))
+				if (constrain.IsTop && constrain.Detect(rect.TopLeft))
 				{
 					constrain.IsActivate = true;
 					continue;
@@ -1584,11 +1606,35 @@ namespace Epsitec.Common.Designer.MyWidgets
 				}
 			}
 
-			public Type GetType
+			public bool IsLeft
 			{
 				get
 				{
-					return this.type;
+					return (this.type == Type.Left);
+				}
+			}
+
+			public bool IsRight
+			{
+				get
+				{
+					return (this.type == Type.Right);
+				}
+			}
+
+			public bool IsBottom
+			{
+				get
+				{
+					return (this.type == Type.Bottom);
+				}
+			}
+
+			public bool IsTop
+			{
+				get
+				{
+					return (this.type == Type.Top);
 				}
 			}
 
@@ -1666,22 +1712,22 @@ namespace Epsitec.Common.Designer.MyWidgets
 			public Rectangle Snap(Rectangle rect)
 			{
 				//	Adapte un rectangle à une contrainte.
-				if (this.type == Type.Left && this.Detect(rect.BottomLeft))
+				if (this.IsLeft && this.Detect(rect.BottomLeft))
 				{
 					rect.Offset(this.position.X-rect.Left, 0);
 				}
 
-				if (this.type == Type.Right && this.Detect(rect.BottomRight))
+				if (this.IsRight && this.Detect(rect.BottomRight))
 				{
 					rect.Offset(this.position.X-rect.Right, 0);
 				}
 
-				if (this.type == Type.Bottom && this.Detect(rect.BottomLeft))
+				if (this.IsBottom && this.Detect(rect.BottomLeft))
 				{
 					rect.Offset(0, this.position.Y-rect.Bottom);
 				}
 
-				if (this.type == Type.Top && this.Detect(rect.TopLeft))
+				if (this.IsTop && this.Detect(rect.TopLeft))
 				{
 					rect.Offset(0, this.position.Y-rect.Top);
 				}
@@ -1834,6 +1880,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected Color						colorGrid1 = Color.FromAlphaRgb(0.2, 0.4, 0.4, 0.4);
 		protected Color						colorGrid2 = Color.FromAlphaRgb(0.2, 0.7, 0.7, 0.7);
 		protected Widget					constrainObject;
+		protected bool						constrainObjectLock;
 		protected List<Constrain>			constrainList = new List<Constrain>();
 		protected Size						constrainMargins = new Size(10, 5);
 
