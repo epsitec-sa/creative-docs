@@ -281,6 +281,55 @@ namespace Epsitec.Common.Types
 		}
 
 		[Test]
+		public void CheckBinding5()
+		{
+			MyObject parent = new MyObject ();
+			MyObject root = new MyObject ();
+			MyObject sibling1 = new MyObject ();
+			MyObject sibling2 = new MyObject ();
+
+			sibling1.Xyz = 1;
+			sibling2.Xyz = 2;
+			
+			Binding binding = new Binding (BindingMode.TwoWay, root, "Parent.Sibling.Xyz");
+			binding.Converter = Converters.AutomaticValueConverter.Instance;
+			
+			MyObject myData = new MyObject ();
+			
+			myData.SetBinding (MyObject.XyzProperty, binding);
+			myData.SetBinding (MyObject.FooProperty, binding);
+
+			Assert.AreEqual (null, myData.GetValue (MyObject.XyzProperty));
+			Assert.AreEqual ("[default]", myData.GetValue (MyObject.FooProperty));
+
+			root.Parent = parent;
+
+			Assert.AreEqual (null, myData.GetValue (MyObject.XyzProperty));
+			Assert.AreEqual ("[default]", myData.GetValue (MyObject.FooProperty));
+
+			parent.Sibling = sibling1;
+
+			Assert.AreEqual (1, myData.GetValue (MyObject.XyzProperty));
+			Assert.AreEqual ("1", myData.GetValue (MyObject.FooProperty));
+
+			parent.Sibling = sibling2;
+
+			Assert.AreEqual (2, myData.GetValue (MyObject.XyzProperty));
+			Assert.AreEqual ("2", myData.GetValue (MyObject.FooProperty));
+
+			root.Parent = null;
+			parent.Sibling = sibling1;
+
+			Assert.AreEqual (2, myData.GetValue (MyObject.XyzProperty));
+			Assert.AreEqual ("2", myData.GetValue (MyObject.FooProperty));
+
+			root.Parent = parent;
+
+			Assert.AreEqual (1, myData.GetValue (MyObject.XyzProperty));
+			Assert.AreEqual ("1", myData.GetValue (MyObject.FooProperty));
+		}
+
+		[Test]
 		public void CheckBindingWithConverter1()
 		{
 			MyObject myData1 = new MyObject ();
@@ -294,8 +343,8 @@ namespace Epsitec.Common.Types
 			Binding binding1 = new Binding (BindingMode.TwoWay, myData1, "Xyz");
 			Binding binding2 = new Binding (BindingMode.TwoWay, myData2, "Foo");
 
-			binding1.Converter = new Converters.AutomaticValueConverter ();
-			binding2.Converter = new Converters.AutomaticValueConverter ();
+			binding1.Converter = Converters.AutomaticValueConverter.Instance;
+			binding2.Converter = Converters.AutomaticValueConverter.Instance;
 
 			myData3.SetBinding (MyObject.FooProperty, binding1);	//	Data1.Xyz --> Data3.Foo
 			myData4.SetBinding (MyObject.XyzProperty, binding2);	//	Data2.Foo --> Data4.Xyz
@@ -339,8 +388,8 @@ namespace Epsitec.Common.Types
 			Binding binding1 = new Binding (BindingMode.TwoWay, myData1, "Abc");
 			Binding binding2 = new Binding (BindingMode.TwoWay, myData2, "Foo");
 
-			binding1.Converter = new Converters.AutomaticValueConverter ();
-			binding2.Converter = new Converters.AutomaticValueConverter ();
+			binding1.Converter = Converters.AutomaticValueConverter.Instance;
+			binding2.Converter = Converters.AutomaticValueConverter.Instance;
 
 			myData3.SetBinding (MyObject.FooProperty, binding1);	//	Data1.Abc --> Data3.Foo
 			myData4.SetBinding (MyObject.AbcProperty, binding2);	//	Data2.Foo --> Data4.Abc
