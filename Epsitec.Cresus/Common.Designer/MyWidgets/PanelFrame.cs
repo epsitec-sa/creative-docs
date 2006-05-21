@@ -1403,9 +1403,15 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void ConstrainStart(Rectangle rect)
 		{
 			//	Début des contraintes.
+			if (!this.context.ShowConstrain)
+			{
+				return;
+			}
+
 			this.constrainObject = null;
 			this.constrainObjectLock = false;
 			this.constrainList.Clear();
+			this.constrainStarted = true;
 		}
 
 		protected void ConstrainEnd()
@@ -1418,23 +1424,32 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.constrainList.Clear();
 				this.Invalidate();
 			}
+
+			this.constrainStarted = false;
 		}
 
 		protected void ConstrainLock()
 		{
 			//	Vérouille ou dévérouille l'objet le plus proche.
+			if (!this.constrainStarted)
+			{
+				return;
+			}
+
 			this.constrainObjectLock = !this.constrainObjectLock;
 
 			if (!this.constrainObjectLock)
 			{
-				this.ConstrainEnd();
+				this.constrainObject = null;
+				this.constrainList.Clear();
+				this.Invalidate();
 			}
 		}
 
 		protected void ConstrainActivate(Rectangle rect, params Widget[] excludes)
 		{
 			//	Active les contraintes pour un rectangle donné.
-			if (!this.context.ShowConstrain)
+			if (!this.constrainStarted)
 			{
 				return;
 			}
@@ -1563,9 +1578,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected Rectangle ConstrainSnap(Rectangle rect)
 		{
 			//	Adapte un rectangle en fonction de l'ensemble des contraintes.
-			foreach (Constrain constrain in this.constrainList)
+			if (this.constrainStarted)
 			{
-				rect = constrain.Snap(rect);
+				foreach (Constrain constrain in this.constrainList)
+				{
+					rect = constrain.Snap(rect);
+				}
 			}
 
 			return rect;
@@ -1574,9 +1592,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void ConstrainDraw(Graphics graphics, Rectangle box)
 		{
 			//	Dessine toutes les contraintes.
-			foreach (Constrain constrain in this.constrainList)
+			if (this.constrainStarted)
 			{
-				constrain.Draw(graphics, box);
+				foreach (Constrain constrain in this.constrainList)
+				{
+					constrain.Draw(graphics, box);
+				}
 			}
 		}
 
@@ -1879,8 +1900,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected Color						colorAnchor = Color.FromRgb(1,0,0);
 		protected Color						colorGrid1 = Color.FromAlphaRgb(0.2, 0.4, 0.4, 0.4);
 		protected Color						colorGrid2 = Color.FromAlphaRgb(0.2, 0.7, 0.7, 0.7);
-		protected Widget					constrainObject;
+		protected bool						constrainStarted;
 		protected bool						constrainObjectLock;
+		protected Widget					constrainObject;
 		protected List<Constrain>			constrainList = new List<Constrain>();
 		protected Size						constrainMargins = new Size(10, 5);
 
