@@ -696,6 +696,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			Rectangle bounds = new Rectangle(pos, this.creatingObject.PreferredSize);
 			this.ConstrainStart(bounds);
+			this.ConstrainActivate(bounds, this.creatingObject);
 
 			this.OnChildrenAdded();
 		}
@@ -1408,7 +1409,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 				return;
 			}
 
-			this.constrainObject = null;
 			this.constrainObjectLock = false;
 			this.constrainList.Clear();
 			this.constrainStarted = true;
@@ -1417,8 +1417,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void ConstrainEnd()
 		{
 			//	Fin des contraintes.
-			this.constrainObject = null;
-
 			if (this.constrainList.Count != 0)
 			{
 				this.constrainList.Clear();
@@ -1440,7 +1438,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			if (!this.constrainObjectLock)
 			{
-				this.constrainObject = null;
 				this.constrainList.Clear();
 				this.Invalidate();
 			}
@@ -1493,7 +1490,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected double ConstrainNearestDistance(Point pos, params Widget[] excludes)
 		{
-			//	Cherche l'objet le plus proche d'une position donnée.
+			//	Cherche la distance à l'objet le plus proche d'une position donnée.
 			double min = 1000000;
 
 			foreach (Widget obj in this.panel.Children)
@@ -1513,7 +1510,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected void ConstrainNearestObjects(Point pos, double distance, params Widget[] excludes)
 		{
-			//	Cherche l'objet le plus proche d'une position donnée.
+			//	Initialise les contraintes pour tous les objets dont la distance est
+			//	inférieure ou égale à une distance donnée.
 			foreach (Widget obj in this.panel.Children)
 			{
 				if (!this.ConstrainContain(excludes, obj))
@@ -1589,9 +1587,36 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Adapte un rectangle en fonction de l'ensemble des contraintes.
 			if (this.constrainStarted)
 			{
+				double minX = 1000000;
+				double minY = 1000000;
+				Constrain bestX = null;
+				Constrain bestY = null;
+
 				foreach (Constrain constrain in this.constrainList)
 				{
-					rect = constrain.Snap(rect);
+					double adjustX = System.Math.Abs(constrain.AdjustX(rect));
+					if (!double.IsNaN(adjustX) && minX > adjustX)
+					{
+						minX = adjustX;
+						bestX = constrain;
+					}
+
+					double adjustY = System.Math.Abs(constrain.AdjustY(rect));
+					if (!double.IsNaN(adjustY) && minY > adjustY)
+					{
+						minY = adjustY;
+						bestY = constrain;
+					}
+				}
+
+				if (bestX != null)
+				{
+					rect = bestX.Snap(rect);
+				}
+
+				if (bestY != null)
+				{
+					rect = bestY.Snap(rect);
 				}
 			}
 
@@ -1742,30 +1767,59 @@ namespace Epsitec.Common.Designer.MyWidgets
 			public Rectangle Snap(Rectangle rect)
 			{
 				//	Adapte un rectangle à une contrainte.
-				if (this.IsLeft && this.Detect(rect.BottomLeft))
+				if (this.IsVertical)
 				{
-					rect.Offset(this.position.X-rect.Left, 0);
+					double adjust = this.AdjustX(rect);
+					if (!double.IsNaN(adjust))
+					{
+						rect.Offset(adjust, 0);
+					}
 				}
-
-				if (this.IsRight && this.Detect(rect.BottomRight))
+				else
 				{
-					rect.Offset(this.position.X-rect.Right, 0);
-				}
-
-				if (this.IsBottom && this.Detect(rect.BottomLeft))
-				{
-					rect.Offset(0, this.position.Y-rect.Bottom);
-				}
-
-				if (this.IsTop && this.Detect(rect.TopLeft))
-				{
-					rect.Offset(0, this.position.Y-rect.Top);
+					double adjust = this.AdjustY(rect);
+					if (!double.IsNaN(adjust))
+					{
+						rect.Offset(0, adjust);
+					}
 				}
 
 				return rect;
 			}
 
-			protected Point					position;
+			public double AdjustX(Rectangle rect)
+			{
+				//	Retourne l'ajustement horizontal nécessaire pour s'adapter à une contrainte.
+				if (this.IsLeft && this.Detect(rect.BottomLeft))
+				{
+					return this.position.X-rect.Left;
+				}
+
+				if (this.IsRight && this.Detect(rect.BottomRight))
+				{
+					return this.position.X-rect.Right;
+				}
+
+				return double.NaN;
+			}
+
+			public double AdjustY(Rectangle rect)
+			{
+				//	Retourne l'ajustement vertical nécessaire pour s'adapter à une contrainte.
+				if (this.IsBottom && this.Detect(rect.BottomLeft))
+				{
+					return this.position.Y-rect.Bottom;
+				}
+
+				if (this.IsTop && this.Detect(rect.TopLeft))
+				{
+					return this.position.Y-rect.Top;
+				}
+
+				return double.NaN;
+			}
+
+			protected Point position;
 			protected Type					type;
 			protected double				margin;
 			protected bool					isActivate;
@@ -1911,7 +1965,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected Color						colorGrid2 = Color.FromAlphaRgb(0.2, 0.7, 0.7, 0.7);
 		protected bool						constrainStarted;
 		protected bool						constrainObjectLock;
-		protected Widget					constrainObject;
 		protected List<Constrain>			constrainList = new List<Constrain>();
 		protected Size						constrainMargins = new Size(10, 5);
 
