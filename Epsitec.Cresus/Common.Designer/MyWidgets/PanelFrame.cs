@@ -1456,12 +1456,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			if (!this.constrainObjectLock)
 			{
-				Widget obj = this.ConstrainNearestObject(rect.Center, excludes);
-				if (this.constrainObject != obj)
-				{
-					this.constrainObject = obj;
-					this.ConstrainInitialise(this.constrainObject);
-				}
+				this.constrainList.Clear();
+				double min = this.ConstrainNearestDistance(rect.Center, excludes);
+				this.ConstrainNearestObjects(rect.Center, min+20, excludes);
 			}
 
 			foreach (Constrain constrain in this.constrainList)
@@ -1494,10 +1491,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
-		protected Widget ConstrainNearestObject(Point pos, params Widget[] excludes)
+		protected double ConstrainNearestDistance(Point pos, params Widget[] excludes)
 		{
 			//	Cherche l'objet le plus proche d'une position donnée.
-			Widget nearest = null;
 			double min = 1000000;
 
 			foreach (Widget obj in this.panel.Children)
@@ -1508,12 +1504,26 @@ namespace Epsitec.Common.Designer.MyWidgets
 					if (min > distance)
 					{
 						min = distance;
-						nearest = obj;
 					}
 				}
 			}
 
-			return nearest;
+			return min;
+		}
+
+		protected void ConstrainNearestObjects(Point pos, double distance, params Widget[] excludes)
+		{
+			//	Cherche l'objet le plus proche d'une position donnée.
+			foreach (Widget obj in this.panel.Children)
+			{
+				if (!this.ConstrainContain(excludes, obj))
+				{
+					if (Point.Distance(obj.ActualBounds.Center, pos) <= distance)
+					{
+						this.ConstrainInitialise(obj);
+					}
+				}
+			}
 		}
 
 		protected bool ConstrainContain(Widget[] list, Widget searched)
@@ -1532,7 +1542,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			//	Initialise les contraintes pour un objet.
 			Constrain constrain;
-			this.constrainList.Clear();
 
 			constrain = new Constrain(obj.ActualBounds.BottomLeft, Constrain.Type.Left, this.context.ConstrainMargin);
 			this.ConstrainAdd(constrain);
