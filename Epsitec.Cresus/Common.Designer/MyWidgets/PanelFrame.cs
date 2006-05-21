@@ -401,7 +401,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				{
 					this.dragging = true;
 					this.ConstrainStart();
-					Constrain.ActivateAll(this.constrainList, this.SelectBounds);
+					this.ConstrainActivate(this.SelectBounds);
 					return;
 				}
 				this.selectedObjects.Clear();
@@ -424,7 +424,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				}
 				this.dragging = true;
 				this.ConstrainStart();
-				Constrain.ActivateAll(this.constrainList, this.SelectBounds);
+				this.ConstrainActivate(this.SelectBounds);
 			}
 
 			this.OnChildrenSelected();
@@ -454,7 +454,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.HiliteRectangle(Rectangle.Empty);
 
 				bounds.Offset(move+corr);
-				Constrain.ActivateAll(this.constrainList, bounds);
+				this.ConstrainActivate(bounds);
 			}
 			else if (this.rectangling)
 			{
@@ -503,7 +503,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			if (this.context.ShowConstrain)
 			{
-				Constrain.InitialiseAll(this.constrainList, this.panel.Children, this.context.ConstrainMargin);
+				this.ConstrainInitialise(this.panel.Children, this.context.ConstrainMargin);
 			}
 			else
 			{
@@ -537,7 +537,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				{
 					this.dragging = true;
 					this.ConstrainStart();
-					Constrain.ActivateAll(this.constrainList, this.SelectBounds);
+					this.ConstrainActivate(this.SelectBounds);
 					return;
 				}
 				this.selectedObjects.Clear();
@@ -572,7 +572,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.HiliteRectangle(Rectangle.Empty);
 
 				bounds.Offset(move+corr);
-				Constrain.ActivateAll(this.constrainList, bounds);
+				this.ConstrainActivate(bounds);
 			}
 			else if (this.rectangling)
 			{
@@ -713,7 +713,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.creatingObject.TabNavigation = TabNavigationMode.Passive;
 
 			Rectangle bounds = new Rectangle(pos, this.creatingObject.PreferredSize);
-			Constrain.ActivateAll(this.constrainList, bounds);
+			this.ConstrainActivate(bounds);
 
 			this.OnChildrenAdded();
 		}
@@ -726,14 +726,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 			if (this.creatingObject != null)
 			{
 				Rectangle bounds = new Rectangle(pos, this.creatingObject.PreferredSize);
-				Rectangle adjust = Constrain.SnapAll(this.constrainList, bounds);
+				Rectangle adjust = this.ConstrainSnap(bounds);
 				Point corr = adjust.BottomLeft - bounds.BottomLeft;
 
 				this.ObjectPosition(this.creatingObject, pos+corr);
 				this.Invalidate();
 
 				bounds.Offset(corr);
-				Constrain.ActivateAll(this.constrainList, bounds);
+				this.ConstrainActivate(bounds);
 			}
 		}
 
@@ -893,7 +893,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			Rectangle moved = bounds;
 			moved.Offset(move);
 
-			Rectangle snaped = Constrain.SnapAll(this.constrainList, moved);
+			Rectangle snaped = this.ConstrainSnap(moved);
 
 			return snaped.BottomLeft - moved.BottomLeft;
 		}
@@ -1316,7 +1316,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 
 			//	Dessine les contraintes.
-			Constrain.DrawAll(this.constrainList, graphics, bounds);
+			this.ConstrainDraw(graphics, bounds);
 
 			//	Dessine les numéros d'ordre.
 			if (this.context.ShowZOrder)
@@ -1418,6 +1418,93 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 
 		#region Constrain
+		public void ConstrainInitialise(Widgets.Collections.FlatChildrenCollection widgets, double margin)
+		{
+			//	Initialise les contraintes en fonction de l'ensemble des objets.
+			Constrain constrain;
+			this.constrainList.Clear();
+
+			foreach (Widget obj in widgets)
+			{
+				constrain = new Constrain(obj.ActualBounds.BottomLeft, true, margin);
+				this.ConstrainAdd(constrain);
+
+				constrain = new Constrain(obj.ActualBounds.BottomRight, true, margin);
+				this.ConstrainAdd(constrain);
+
+				constrain = new Constrain(obj.ActualBounds.BottomLeft, false, margin);
+				this.ConstrainAdd(constrain);
+
+				constrain = new Constrain(obj.ActualBounds.TopLeft, false, margin);
+				this.ConstrainAdd(constrain);
+			}
+		}
+
+		protected void ConstrainAdd(Constrain toAdd)
+		{
+			//	Ajoute une contrainte dans une liste, si elle n'y est pas déjà.
+			foreach (Constrain constrain in this.constrainList)
+			{
+				if (constrain.IsEqualTo(toAdd))
+				{
+					return;
+				}
+			}
+
+			this.constrainList.Add(toAdd);
+		}
+
+		public void ConstrainActivate(Rectangle rect)
+		{
+			//	Active les contraintes pour un rectangle donné.
+			foreach (Constrain constrain in this.constrainList)
+			{
+				constrain.IsActivate = false;
+
+				if (constrain.Detect(rect.BottomLeft))
+				{
+					constrain.IsActivate = true;
+					continue;
+				}
+
+				if (constrain.Detect(rect.BottomRight))
+				{
+					constrain.IsActivate = true;
+					continue;
+				}
+
+				if (constrain.Detect(rect.TopLeft))
+				{
+					constrain.IsActivate = true;
+					continue;
+				}
+
+				if (constrain.Detect(rect.TopRight))
+				{
+					constrain.IsActivate = true;
+					continue;
+				}
+			}
+		}
+
+		public Rectangle ConstrainSnap(Rectangle rect)
+		{
+			foreach (Constrain constrain in this.constrainList)
+			{
+				rect = constrain.Snap(rect);
+			}
+
+			return rect;
+		}
+
+		public void ConstrainDraw(Graphics graphics, Rectangle box)
+		{
+			foreach (Constrain constrain in this.constrainList)
+			{
+				constrain.Draw(graphics, box);
+			}
+		}
+
 		public class Constrain
 		{
 			public Constrain(Point position, bool isVertical, double margin)
@@ -1426,6 +1513,18 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.isVertical = isVertical;
 				this.isActivate = false;
 				this.margin = margin;
+			}
+
+			public bool IsActivate
+			{
+				get
+				{
+					return this.isActivate;
+				}
+				set
+				{
+					this.isActivate = value;
+				}
 			}
 
 			public bool IsEqualTo(Constrain constrain)
@@ -1516,93 +1615,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 				}
 
 				return rect;
-			}
-
-			public static void InitialiseAll(List<Constrain> list, Widgets.Collections.FlatChildrenCollection widgets, double margin)
-			{
-				//	Initialise les contraintes en fonction de l'ensemble des objets.
-				Constrain constrain;
-				list.Clear();
-
-				foreach (Widget obj in widgets)
-				{
-					constrain = new Constrain(obj.ActualBounds.BottomLeft, true, margin);
-					Constrain.ConditionnalAdd(list, constrain);
-
-					constrain = new Constrain(obj.ActualBounds.BottomRight, true, margin);
-					Constrain.ConditionnalAdd(list, constrain);
-
-					constrain = new Constrain(obj.ActualBounds.BottomLeft, false, margin);
-					Constrain.ConditionnalAdd(list, constrain);
-
-					constrain = new Constrain(obj.ActualBounds.TopLeft, false, margin);
-					Constrain.ConditionnalAdd(list, constrain);
-				}
-			}
-
-			protected static void ConditionnalAdd(List<Constrain> list, Constrain toAdd)
-			{
-				//	Ajoute une contrainte dans une liste, si elle n'y est pas déjà.
-				foreach (Constrain constrain in list)
-				{
-					if (constrain.IsEqualTo(toAdd))
-					{
-						return;
-					}
-				}
-
-				list.Add(toAdd);
-			}
-
-			public static void ActivateAll(List<Constrain> list, Rectangle rect)
-			{
-				//	Active les contraintes pour un rectangle donné.
-				foreach (Constrain constrain in list)
-				{
-					constrain.isActivate = false;
-
-					if (constrain.Detect(rect.BottomLeft))
-					{
-						constrain.isActivate = true;
-						continue;
-					}
-
-					if (constrain.Detect(rect.BottomRight))
-					{
-						constrain.isActivate = true;
-						continue;
-					}
-
-					if (constrain.Detect(rect.TopLeft))
-					{
-						constrain.isActivate = true;
-						continue;
-					}
-
-					if (constrain.Detect(rect.TopRight))
-					{
-						constrain.isActivate = true;
-						continue;
-					}
-				}
-			}
-
-			public static Rectangle SnapAll(List<Constrain> list, Rectangle rect)
-			{
-				foreach (Constrain constrain in list)
-				{
-					rect = constrain.Snap(rect);
-				}
-
-				return rect;
-			}
-
-			public static void DrawAll(List<Constrain> list, Graphics graphics, Rectangle box)
-			{
-				foreach (Constrain constrain in list)
-				{
-					constrain.Draw(graphics, box);
-				}
 			}
 
 			protected Point position;
