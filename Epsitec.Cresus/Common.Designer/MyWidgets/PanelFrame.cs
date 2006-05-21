@@ -1539,25 +1539,25 @@ namespace Epsitec.Common.Designer.MyWidgets
 			constrain = new Constrain(obj.ActualBounds.BottomLeft, Constrain.Type.Left, this.context.ConstrainMargin);
 			this.ConstrainAdd(constrain);
 
-			constrain = new Constrain(obj.ActualBounds.BottomLeft-this.constrainMargins, Constrain.Type.Right, this.context.ConstrainMargin);
+			constrain = new Constrain(obj.ActualBounds.BottomLeft-this.context.ConstrainSpacing, Constrain.Type.Right, this.context.ConstrainMargin);
 			this.ConstrainAdd(constrain);
 
 			constrain = new Constrain(obj.ActualBounds.BottomRight, Constrain.Type.Right, this.context.ConstrainMargin);
 			this.ConstrainAdd(constrain);
 
-			constrain = new Constrain(obj.ActualBounds.BottomRight+this.constrainMargins, Constrain.Type.Left, this.context.ConstrainMargin);
+			constrain = new Constrain(obj.ActualBounds.BottomRight+this.context.ConstrainSpacing, Constrain.Type.Left, this.context.ConstrainMargin);
 			this.ConstrainAdd(constrain);
 
 			constrain = new Constrain(obj.ActualBounds.BottomLeft, Constrain.Type.Bottom, this.context.ConstrainMargin);
 			this.ConstrainAdd(constrain);
 
-			constrain = new Constrain(obj.ActualBounds.BottomLeft-this.constrainMargins, Constrain.Type.Top, this.context.ConstrainMargin);
+			constrain = new Constrain(obj.ActualBounds.BottomLeft-this.context.ConstrainSpacing, Constrain.Type.Top, this.context.ConstrainMargin);
 			this.ConstrainAdd(constrain);
 
 			constrain = new Constrain(obj.ActualBounds.TopLeft, Constrain.Type.Top, this.context.ConstrainMargin);
 			this.ConstrainAdd(constrain);
 
-			constrain = new Constrain(obj.ActualBounds.TopLeft+this.constrainMargins, Constrain.Type.Bottom, this.context.ConstrainMargin);
+			constrain = new Constrain(obj.ActualBounds.TopLeft+this.context.ConstrainSpacing, Constrain.Type.Bottom, this.context.ConstrainMargin);
 			this.ConstrainAdd(constrain);
 
 			this.Invalidate();
@@ -1977,7 +1977,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected bool						constrainStarted;
 		protected bool						constrainObjectLock;
 		protected List<Constrain>			constrainList = new List<Constrain>();
-		protected Size						constrainMargins = new Size(10, 5);
 
 		protected Image						mouseCursorArrow = null;
 		protected Image						mouseCursorArrowPlus = null;
