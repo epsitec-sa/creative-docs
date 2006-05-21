@@ -664,6 +664,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void ObjectDown(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
 			//	Dessin d'un objet, souris pressée.
+			this.DeselectAll();
 
 			if (this.context.Tool == "ObjectLine")
 			{
