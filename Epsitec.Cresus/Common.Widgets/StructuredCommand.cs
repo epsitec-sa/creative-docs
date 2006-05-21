@@ -98,14 +98,6 @@ namespace Epsitec.Common.Widgets
 				this.data.SetValue (name, value);
 			}
 
-			bool IStructuredData.HasImmutableRoots
-			{
-				get
-				{
-					return this.data.HasImmutableRoots;
-				}
-			}
-
 			#endregion
 
 			private Types.StructuredData data;

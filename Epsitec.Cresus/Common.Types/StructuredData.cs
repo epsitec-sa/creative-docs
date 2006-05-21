@@ -232,14 +232,6 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		public bool HasImmutableRoots
-		{
-			get
-			{
-				return true;
-			}
-		}
-
 		#endregion
 
 		protected virtual bool CheckNameValidity(string name, out object type)

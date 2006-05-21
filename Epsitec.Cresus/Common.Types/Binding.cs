@@ -29,7 +29,11 @@ namespace Epsitec.Common.Types
 			this.Path = path;
 		}
 
-		
+
+		/// <summary>
+		/// Gets or sets the binding mode.
+		/// </summary>
+		/// <value>The binding mode.</value>
 		public BindingMode						Mode
 		{
 			get
@@ -46,6 +50,11 @@ namespace Epsitec.Common.Types
 				}
 			}
 		}
+
+		/// <summary>
+		/// Gets or sets the data source root.
+		/// </summary>
+		/// <value>The data source root.</value>
 		public object							Source
 		{
 			get
@@ -62,6 +71,11 @@ namespace Epsitec.Common.Types
 				}
 			}
 		}
+		
+		/// <summary>
+		/// Gets or sets the data source path.
+		/// </summary>
+		/// <value>The data source path, relative to the root.</value>
 		public string							Path
 		{
 			get
@@ -78,6 +92,12 @@ namespace Epsitec.Common.Types
 				}
 			}
 		}
+		
+#if false
+		/// <summary>
+		/// Gets or sets the name of the data source element.
+		/// </summary>
+		/// <value>The name of the data source element.</value>
 		public string							ElementName
 		{
 			get
@@ -94,8 +114,13 @@ namespace Epsitec.Common.Types
 				}
 			}
 		}
+#endif
 
-		public IValueConverter Converter
+		/// <summary>
+		/// Gets or sets the converter for this binding.
+		/// </summary>
+		/// <value>The value converter.</value>
+		public IValueConverter					Converter
 		{
 			get
 			{
@@ -107,6 +132,10 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets the culture used by the binding converter.
+		/// </summary>
+		/// <value>The culture to use for conversions.</value>
 		public System.Globalization.CultureInfo ConverterCulture
 		{
 			get
@@ -119,7 +148,11 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		public object ConverterParameter
+		/// <summary>
+		/// Gets or sets the optional converter parameter.
+		/// </summary>
+		/// <value>The optional converter parameter.</value>
+		public object							ConverterParameter
 		{
 			get
 			{
@@ -130,8 +163,13 @@ namespace Epsitec.Common.Types
 				this.converterParameter = value;
 			}
 		}
-		
-		public bool HasConverter
+
+		/// <summary>
+		/// Gets a value indicating whether this binding has a converter.
+		/// </summary>
+		/// <value><c>true</c> if this binding has a converter; otherwise,
+		/// <c>false</c>.</value>
+		public bool								HasConverter
 		{
 			get
 			{
@@ -147,11 +185,24 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		/// <summary>
+		/// Defers the changes; this method should be used in a <c>using</c>
+		/// clause when changing several properties of the binding, to
+		/// avoid immediate changes.
+		/// </summary>
+		/// <returns>An <see cref="T:System.IDisposable"/> object which should
+		/// be disposed to reactivate the normal change propagation.</returns>
 		public System.IDisposable DeferChanges()
 		{
 			return new DeferManager (this);
 		}
 
+		/// <summary>
+		/// Determines whether the binding mode affects the target of a binding.
+		/// </summary>
+		/// <param name="mode">The binding mode.</param>
+		/// <returns><c>true</c> if the binding mode affest the target of a binding;
+		/// otherwise, <c>false</c>.</returns>
 		public static bool IsBindingTarget(BindingMode mode)
 		{
 			switch (mode)
@@ -169,6 +220,13 @@ namespace Epsitec.Common.Types
 					throw new System.ArgumentOutOfRangeException (string.Format ("BindingMode.{0} not supported", mode));
 			}
 		}
+
+		/// <summary>
+		/// Determines whether the binding mode affects the source of a binding.
+		/// </summary>
+		/// <param name="mode">The binding mode.</param>
+		/// <returns><c>true</c> if the binding mode affest the source of a binding;
+		/// otherwise, <c>false</c>.</returns>
 		public static bool IsBindingSource(BindingMode mode)
 		{
 			switch (mode)
@@ -187,6 +245,10 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		/// <summary>
+		/// Updates the targets on which this binding has been attached.
+		/// </summary>
+		/// <param name="mode">The binding update mode.</param>
 		public void UpdateTargets(BindingUpdateMode mode)
 		{
 			WeakBindingExpression[] expressions = this.GetExpressions ();
@@ -524,7 +586,9 @@ namespace Epsitec.Common.Types
 		
 		private object							source;
 		private string							path;
+#if false
 		private string							elementName;
+#endif
 		private int								deferCounter;
 		
 		private BoundExpressions				boundExpressionsType;

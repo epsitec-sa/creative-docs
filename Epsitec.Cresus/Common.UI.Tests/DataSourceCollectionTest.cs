@@ -240,14 +240,6 @@ namespace Epsitec.Common.UI
 				this.data[name] = value;
 			}
 
-			public bool HasImmutableRoots
-			{
-				get
-				{
-					return true;
-				}
-			}
-
 			#endregion
 
 			Dictionary<string, object> data = new Dictionary<string, object> ();
