@@ -63,6 +63,8 @@ namespace Epsitec.Common.Widgets.Controllers
 
 		void IController.DisposeUserInterface()
 		{
+			this.PrepareUserInterfaceDisposal ();
+			
 			Widget[] copy = this.widgets.ToArray ();
 			
 			this.widgets.Clear ();
@@ -96,6 +98,10 @@ namespace Epsitec.Common.Widgets.Controllers
 		protected abstract void CreateUserInterface(object valueTypeObject);
 		
 		protected abstract void RefreshUserInterface(object oldValue, object newValue);
+
+		protected virtual void PrepareUserInterfaceDisposal()
+		{
+		}
 		
 		protected void AddWidget(Widget widget)
 		{

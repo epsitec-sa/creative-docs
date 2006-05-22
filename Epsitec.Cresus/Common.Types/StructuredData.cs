@@ -193,7 +193,7 @@ namespace Epsitec.Common.Types
 			{
 				if (!this.CheckValueValidity (type, value))
 				{
-					throw new System.ArgumentException (string.Format ("The value '{0}' has the wrong type", name));
+					throw new System.ArgumentException (string.Format ("The value '{0}' has the wrong type or is not valid", name));
 				}
 
 				if (this.values == null)
@@ -280,6 +280,8 @@ namespace Epsitec.Common.Types
 
 		protected virtual void InvalidateValue(string name, object oldValue, object newValue, PropertyChangedEventHandler handler)
 		{
+			System.Diagnostics.Debug.WriteLine (string.Format ("{0}: {1} --> {2}", name, oldValue, newValue));
+			
 			if (handler != null)
 			{
 				DependencyPropertyChangedEventArgs e = new DependencyPropertyChangedEventArgs (name, oldValue, newValue);

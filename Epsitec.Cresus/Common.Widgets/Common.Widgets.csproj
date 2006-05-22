@@ -136,6 +136,7 @@
     <Compile Include="Controllers\Factory.cs" />
     <Compile Include="ControllerAttribute.cs" />
     <Compile Include="CommandState.cs" />
+    <Compile Include="Controllers\StringController.cs" />
     <Compile Include="StructuredCommand.cs" />
     <Compile Include="Exceptions\InfiniteCommandLoopException.cs" />
     <Compile Include="MultiCommand.cs" />

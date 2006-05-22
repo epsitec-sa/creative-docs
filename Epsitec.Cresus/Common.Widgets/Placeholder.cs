@@ -14,6 +14,7 @@ namespace Epsitec.Common.Widgets
 	{
 		public Placeholder()
 		{
+			Application.QueueAsyncCallback (this.CreateUserInterface);
 		}
 		
 		public Placeholder(Widget embedder)
@@ -86,7 +87,8 @@ namespace Epsitec.Common.Widgets
 
 		private void CreateUserInterface()
 		{
-			if (this.controller == null)
+			if ((this.controller == null) &&
+				(this.Controller != null))
 			{
 				this.controller = Controllers.Factory.CreateController (this.Controller, this.ControllerParameter);
 

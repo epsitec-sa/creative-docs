@@ -3,6 +3,7 @@
 
 using NUnit.Framework;
 using Epsitec.Common.Widgets;
+using Epsitec.Common.Types;
 
 [assembly: Controller (typeof (PlaceholderTest.TestController1))]
 
@@ -33,6 +34,62 @@ namespace Epsitec.Common.Widgets
 
 			Assert.AreEqual ("x", tc1.Parameter);
 			Assert.AreEqual ("y", tc2.Parameter);
+		}
+
+		[Test]
+		public void CheckStringController()
+		{
+			StructuredType type = new StructuredType ();
+			StructuredData data = new StructuredData (type);
+
+			type.AddField ("Name", new StringType ());
+			type.AddField ("Surname", new StringType ());
+			type.AddField ("Age", new IntegerType (1, 150));
+
+			data.SetValue ("Name", "Arnaud");
+			data.SetValue ("Surname", "Pierre");
+			data.SetValue ("Age", System.DateTime.Now.Year - 1972);
+
+			Window window = new Window ();
+			UI.Panel panel = new Epsitec.Common.UI.Panel ();
+
+			panel.DataSource = new UI.DataSourceCollection ();
+			panel.DataSource.AddDataSource ("Person", data);
+			
+			Placeholder placeholder1 = new Placeholder ();
+			Placeholder placeholder2 = new Placeholder ();
+			Placeholder placeholder3 = new Placeholder ();
+
+			placeholder1.Dock = DockStyle.Top;
+			placeholder1.Controller = "StringController";
+			placeholder1.PreferredHeight = 20;
+
+			placeholder2.Dock = DockStyle.Top;
+			placeholder2.Controller = "StringController";
+			placeholder2.PreferredHeight = 20;
+
+			placeholder3.Dock = DockStyle.Top;
+			placeholder3.Controller = "StringController";
+			placeholder3.PreferredHeight = 20;
+
+			Binding binding1 = new Binding (BindingMode.TwoWay, null, "Person.Name");
+			Binding binding2 = new Binding (BindingMode.TwoWay, null, "Person.Surname");
+			Binding binding3 = new Binding (BindingMode.TwoWay, null, "Person.Age");
+
+			placeholder1.SetBinding (Placeholder.ValueProperty, binding1);
+			placeholder2.SetBinding (Placeholder.ValueProperty, binding2);
+			placeholder3.SetBinding (Placeholder.ValueProperty, binding3);
+
+			panel.Dock = DockStyle.Fill;
+			
+			panel.Children.Add (placeholder1);
+			panel.Children.Add (placeholder2);
+			panel.Children.Add (placeholder3);
+			
+			window.Root.Children.Add (panel);
+			window.Show ();
+			
+			Window.RunInTestEnvironment (window);
 		}
 
 		#region TestController1 Class
