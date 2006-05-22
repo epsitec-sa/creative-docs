@@ -19,15 +19,22 @@ namespace Epsitec.Common.Widgets.Controllers
 		protected override void CreateUserInterface(object valueTypeObject)
 		{
 			this.typeObject = valueTypeObject;
-			
+
+			this.label = new StaticText ();
 			this.field = new TextField ();
 
+			this.label.Dock = DockStyle.Left;
+			this.label.HorizontalAlignment = HorizontalAlignment.Right;
+			this.label.ContentAlignment = Epsitec.Common.Drawing.ContentAlignment.MiddleRight;
+			this.label.Text = "Field:";
+			
 			this.field.Dock = DockStyle.Fill;
 			this.field.TextChanged += this.HandleFieldTextChanged;
 
 			this.field.TabIndex = 1;
 			this.field.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			
+
+			this.AddWidget (this.label);
 			this.AddWidget (this.field);
 		}
 
@@ -109,6 +116,7 @@ namespace Epsitec.Common.Widgets.Controllers
 		}
 		
 		private TextField field;
+		private StaticText label;
 		private object typeObject;
 	}
 }

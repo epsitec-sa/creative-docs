@@ -476,7 +476,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public WidgetPaintState							PaintState
+		public WidgetPaintState						PaintState
 		{
 			get
 			{
@@ -690,7 +690,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 
-		public Command							CommandState
+		public Command								CommandState
 		{
 			get
 			{

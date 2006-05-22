@@ -153,6 +153,7 @@
     <Compile Include="Data\StringArrayStore.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Druid.cs" />
     <Compile Include="EmptyEnumerator.cs">
       <SubType>Code</SubType>
     </Compile>
