@@ -31,6 +31,8 @@ namespace Epsitec.Common.Widgets
 			Assert.AreEqual ("y", tc2.Parameter);
 		}
 
+		#region TestController1 Class
+
 		internal class TestController1 : Controllers.AbstractController
 		{
 			public TestController1(string parameter)
@@ -46,12 +48,19 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 			
-			protected override void CreateUserInterface(object value)
+			protected override void CreateUserInterface(object valueTypeObject)
+			{
+				throw new System.Exception ("The method or operation is not implemented.");
+			}
+
+			protected override void RefreshUserInterface(object oldValue, object newValue)
 			{
 				throw new System.Exception ("The method or operation is not implemented.");
 			}
 
 			private string parameter;
 		}
+		
+		#endregion
 	}
 }
