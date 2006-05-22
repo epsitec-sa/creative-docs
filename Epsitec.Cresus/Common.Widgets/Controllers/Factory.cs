@@ -10,13 +10,20 @@ namespace Epsitec.Common.Widgets.Controllers
 
 	public static class Factory
 	{
-		public static IController CreateController(string name)
+		/// <summary>
+		/// Creates the controller based on its name and parameter.
+		/// </summary>
+		/// <param name="name">The controller name.</param>
+		/// <param name="parameter">The optional controller parameter.</param>
+		/// <returns>An object implementing <see cref="T:IController"/> or
+		/// <c>null</c> if the specified controller cannot be found.</returns>
+		public static IController CreateController(string name, string parameter)
 		{
 			Record record;
 			
 			if (Factory.types.TryGetValue (name, out record))
 			{
-				return record.CreateController ();
+				return record.CreateController (parameter);
 			}
 			
 			return null;
@@ -74,7 +81,7 @@ namespace Epsitec.Common.Widgets.Controllers
 				this.type = type;
 			}
 			
-			public IController CreateController()
+			public IController CreateController(string parameter)
 			{
 				if (this.allocator == null)
 				{
@@ -87,25 +94,28 @@ namespace Epsitec.Common.Widgets.Controllers
 					}
 				}
 
-				return this.allocator ();
+				return this.allocator (parameter);
 			}
 			
 			private void BuildDynamicAllocator()
 			{
 				//	See DependencyObjectType.BuildDynamicAllocator
 
+				System.Type[] constructorArgumentTypes = new System.Type[] { typeof (string) };
+
 				System.Reflection.Module module = typeof (Factory).Module;
-				System.Reflection.Emit.DynamicMethod dynamicMethod = new System.Reflection.Emit.DynamicMethod ("DynamicAllocator", this.type, System.Type.EmptyTypes, module, true);
+				System.Reflection.Emit.DynamicMethod dynamicMethod = new System.Reflection.Emit.DynamicMethod ("DynamicAllocator", this.type, constructorArgumentTypes, module, true);
 				System.Reflection.Emit.ILGenerator ilGen = dynamicMethod.GetILGenerator ();
 
 				ilGen.Emit (System.Reflection.Emit.OpCodes.Nop);
-				ilGen.Emit (System.Reflection.Emit.OpCodes.Newobj, this.type.GetConstructor (System.Type.EmptyTypes));
+				ilGen.Emit (System.Reflection.Emit.OpCodes.Ldarg_0);
+				ilGen.Emit (System.Reflection.Emit.OpCodes.Newobj, this.type.GetConstructor (constructorArgumentTypes));
 				ilGen.Emit (System.Reflection.Emit.OpCodes.Ret);
 
 				this.allocator = (Allocator) dynamicMethod.CreateDelegate (typeof (Allocator));
 			}
 			
-			private delegate IController Allocator();
+			private delegate IController Allocator(string parameter);
 			
 			private object exclusion;
 			private Allocator allocator;

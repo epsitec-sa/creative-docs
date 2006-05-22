@@ -34,9 +34,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				//	TODO: améliorer ceci pour fonctionner aussi quand la valeur est null
-				
-				return TypeRosetta.GetTypeObjectFromValue (this.Value);
+				return this.valueTypeObject;
 			}
 		}
 		
@@ -65,6 +63,18 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		public string ControllerParameter
+		{
+			get
+			{
+				return (string) this.GetValue (Placeholder.ControllerParameterProperty);
+			}
+			set
+			{
+				this.SetValue (Placeholder.ControllerParameterProperty, value);
+			}
+		}
+
 		private void DisposeUserInterface()
 		{
 			if (this.controller != null)
@@ -78,7 +88,7 @@ namespace Epsitec.Common.Widgets
 		{
 			if (this.controller == null)
 			{
-				this.controller = Controllers.Factory.CreateController (this.Controller);
+				this.controller = Controllers.Factory.CreateController (this.Controller, this.ControllerParameter);
 
 				if (this.controller != null)
 				{
@@ -88,11 +98,79 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		private void RecreateUserInterface()
+		{
+			if (this.controller != null)
+			{
+				this.DisposeUserInterface ();
+				this.CreateUserInterface ();
+			}
+		}
 
-		public static readonly DependencyProperty ValueProperty = DependencyProperty.Register ("Value", typeof (object), typeof (Placeholder));
-		public static readonly DependencyProperty ControllerProperty = DependencyProperty.Register ("Controller", typeof (string), typeof (Placeholder));
+		protected override void OnBindingChanged(DependencyProperty property)
+		{
+			if (property == Placeholder.ValueProperty)
+			{
+				this.UpdateValueTypeObject ();
+			}
+			
+			base.OnBindingChanged (property);
+		}
+
+		private void UpdateValueTypeObject()
+		{
+			object oldValueTypeObject = this.valueTypeObject;
+			object newValueTypeObject = null;
+			
+			BindingExpression expression = this.GetBindingExpression (Placeholder.ValueProperty);
+
+			if (expression != null)
+			{
+				newValueTypeObject = expression.GetSourceTypeObject ();
+			}
+
+			this.valueTypeObject = newValueTypeObject;
+
+			if (oldValueTypeObject == newValueTypeObject)
+			{
+			}
+			else if ((oldValueTypeObject == null) ||
+				/**/ (oldValueTypeObject.Equals (newValueTypeObject) == false))
+			{
+				//	TODO: signaler le changement de type
+			}
+		}
+
+		private void UpdateValue(object oldValue, object newValue)
+		{
+			//	TODO: signale le changement au contrôleur
+		}
+
+
+		private static void NotifyValueChanged(DependencyObject o, object oldValue, object newValue)
+		{
+			Placeholder that = (Placeholder) o;
+
+			that.UpdateValueTypeObject ();
+			that.UpdateValue (oldValue, newValue);
+		}
+
+		private static void NotifyControllerChanged(DependencyObject o, object oldValue, object newValue)
+		{
+			Placeholder that = (Placeholder) o;
+
+			if (that.controller != null)
+			{
+				Application.QueueAsyncCallback (that.RecreateUserInterface);
+			}
+		}
+		
+		public static readonly DependencyProperty ValueProperty = DependencyProperty.Register ("Value", typeof (object), typeof (Placeholder), new DependencyPropertyMetadata (Placeholder.NotifyValueChanged));
+		public static readonly DependencyProperty ControllerProperty = DependencyProperty.Register ("Controller", typeof (string), typeof (Placeholder), new DependencyPropertyMetadata (Placeholder.NotifyControllerChanged));
+		public static readonly DependencyProperty ControllerParameterProperty = DependencyProperty.Register ("ControllerParameter", typeof (string), typeof (Placeholder), new DependencyPropertyMetadata (Placeholder.NotifyControllerChanged));
 
 
 		private IController controller;
+		private object valueTypeObject;
 	}
 }

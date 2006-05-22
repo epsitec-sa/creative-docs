@@ -1296,6 +1296,8 @@ namespace Epsitec.Common.Widgets.Platform
 		
 		protected override void WndProc(ref System.Windows.Forms.Message msg)
 		{
+			Application.ExecuteAsyncCallbacks ();
+			
 			if (Window.is_sync_requested)
 			{
 				Window.is_sync_requested = false;

@@ -23,6 +23,11 @@ namespace Epsitec.Common.Types
 			this.defaultValue = default_value;
 			this.propertyInvalidated = property_invalidated_callback;
 		}
+
+		public DependencyPropertyMetadata(PropertyInvalidatedCallback property_invalidated_callback)
+		{
+			this.propertyInvalidated = property_invalidated_callback;
+		}
 		
 		public DependencyPropertyMetadata(GetValueOverrideCallback get_value_override_callback)
 		{

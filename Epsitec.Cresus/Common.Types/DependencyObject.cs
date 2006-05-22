@@ -670,6 +670,16 @@ namespace Epsitec.Common.Types
 		{
 		}
 
+		protected virtual void OnBindingChanged(DependencyProperty property)
+		{
+			BindingChangedEventHandler handler = (BindingChangedEventHandler) this.GetUserEventHandler (DependencyObject.BindingChangedString);
+
+			if (handler != null)
+			{
+				handler (this, new BindingChangedEventArgs (property));
+			}
+		}
+
 		private void InheritPropertyFromParent(DependencyProperty property)
 		{
 			//	Update the cached value for this inherited property, based
@@ -694,16 +704,6 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		private void OnBindingChanged(DependencyProperty property)
-		{
-			BindingChangedEventHandler handler = (BindingChangedEventHandler) this.GetUserEventHandler (DependencyObject.BindingChangedString);
-
-			if (handler != null)
-			{
-				handler (this, new BindingChangedEventArgs (property));
-			}
-		}
-		
 		internal static void Register(DependencyProperty property, System.Type ownerType)
 		{
 			System.Diagnostics.Debug.Assert (property != null);

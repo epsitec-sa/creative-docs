@@ -1876,6 +1876,8 @@ namespace Epsitec.Common.Widgets
 			if (this.IsDisposed) return;
 			
 			this.PostProcessMessage (message);
+			
+			Application.ExecuteAsyncCallbacks ();
 		}
 		
 		
