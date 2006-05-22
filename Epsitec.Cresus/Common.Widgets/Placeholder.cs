@@ -94,6 +94,13 @@ namespace Epsitec.Common.Widgets
 				{
 					this.controller.Placeholder = this;
 					this.controller.CreateUserInterface ();
+
+					object value = this.Value;
+
+					if (value != UndefinedValue.Instance)
+					{
+						this.controller.RefreshUserInterface (UndefinedValue.Instance, value);
+					}
 				}
 			}
 		}
@@ -133,17 +140,29 @@ namespace Epsitec.Common.Widgets
 
 			if (oldValueTypeObject == newValueTypeObject)
 			{
+				//	OK, do nothing...
 			}
 			else if ((oldValueTypeObject == null) ||
 				/**/ (oldValueTypeObject.Equals (newValueTypeObject) == false))
 			{
-				//	TODO: signaler le changement de type
+				this.UpdateValueTypeObject (oldValueTypeObject, newValueTypeObject);
+			}
+		}
+
+		private void UpdateValueTypeObject(object oldValueTypeObject, object newValueTypeObject)
+		{
+			if (this.controller != null)
+			{
+				Application.QueueAsyncCallback (this.RecreateUserInterface);
 			}
 		}
 
 		private void UpdateValue(object oldValue, object newValue)
 		{
-			//	TODO: signale le changement au contrôleur
+			if (this.controller != null)
+			{
+				this.controller.RefreshUserInterface (oldValue, newValue);
+			}
 		}
 
 

@@ -1,6 +1,10 @@
-using NUnit.Framework;
+//	Copyright © 2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Responsable: Pierre ARNAUD
 
-[assembly: Epsitec.Common.Widgets.Controller (typeof (Epsitec.Common.Widgets.PlaceholderTest.TestController1))]
+using NUnit.Framework;
+using Epsitec.Common.Widgets;
+
+[assembly: Controller (typeof (PlaceholderTest.TestController1))]
 
 namespace Epsitec.Common.Widgets
 {
