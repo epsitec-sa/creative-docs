@@ -129,15 +129,15 @@ namespace Epsitec.Common.Support
 				buffer[i] = '0';
 			}
 
-			Druid.InputDigit (ref dev, buffer[0]);
-			Druid.InputDigit (ref local, buffer[1]);
-			Druid.InputDigit (ref local, buffer[2]);
-			Druid.InputDigit (ref dev, buffer[3]);
-			Druid.InputDigit (ref local, buffer[4]);
-			Druid.InputDigit (ref local, buffer[5]);
-			Druid.InputDigit (ref dev, buffer[6]);
-			Druid.InputDigit (ref local, buffer[7]);
 			Druid.InputDigit (ref dev, buffer[8]);
+			Druid.InputDigit (ref local, buffer[7]);
+			Druid.InputDigit (ref dev, buffer[6]);
+			Druid.InputDigit (ref local, buffer[5]);
+			Druid.InputDigit (ref local, buffer[4]);
+			Druid.InputDigit (ref dev, buffer[3]);
+			Druid.InputDigit (ref local, buffer[2]);
+			Druid.InputDigit (ref local, buffer[1]);
+			Druid.InputDigit (ref dev, buffer[0]);
 
 			long druid = 0;
 
@@ -148,6 +148,21 @@ namespace Epsitec.Common.Support
 			druid |= (uint) local;
 
 			return druid;
+		}
+
+		public static int GetModuleId(long druid)
+		{
+			return (int) (druid >> 44) & 0xfffff;
+		}
+
+		public static int GetDevId(long druid)
+		{
+			return (int) (druid >> 24) & 0xfffff;
+		}
+
+		public static int GetLocalId(long druid)
+		{
+			return (int) (druid >> 0) & 0xffffff;
 		}
 
 
