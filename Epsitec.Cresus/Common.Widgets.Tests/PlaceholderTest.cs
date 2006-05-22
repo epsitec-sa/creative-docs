@@ -63,14 +63,17 @@ namespace Epsitec.Common.Widgets
 			placeholder1.Dock = DockStyle.Top;
 			placeholder1.Controller = "StringController";
 			placeholder1.PreferredHeight = 20;
+			placeholder1.TabIndex = 1;
 
 			placeholder2.Dock = DockStyle.Top;
 			placeholder2.Controller = "StringController";
 			placeholder2.PreferredHeight = 20;
+			placeholder2.TabIndex = 2;
 
 			placeholder3.Dock = DockStyle.Top;
 			placeholder3.Controller = "StringController";
 			placeholder3.PreferredHeight = 20;
+			placeholder3.TabIndex = 3;
 
 			Binding binding1 = new Binding (BindingMode.TwoWay, null, "Person.Name");
 			Binding binding2 = new Binding (BindingMode.TwoWay, null, "Person.Surname");

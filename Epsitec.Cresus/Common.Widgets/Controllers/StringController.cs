@@ -24,6 +24,9 @@ namespace Epsitec.Common.Widgets.Controllers
 
 			this.field.Dock = DockStyle.Fill;
 			this.field.TextChanged += this.HandleFieldTextChanged;
+
+			this.field.TabIndex = 1;
+			this.field.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			
 			this.AddWidget (this.field);
 		}
