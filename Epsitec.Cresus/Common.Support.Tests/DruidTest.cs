@@ -24,6 +24,7 @@ namespace Epsitec.Common.Support
 			Assert.AreEqual (2, Druid.GetDevId (0x0000100002000003L));
 			Assert.AreEqual (3, Druid.GetLocalId (0x0000100002000003L));
 		}
+		
 		[Test]
 		public void CheckFromModuleString()
 		{
@@ -64,6 +65,19 @@ namespace Epsitec.Common.Support
 			Assert.AreEqual ("20021", Druid.ToModuleString (0x0000100042000400));
 			Assert.AreEqual ("23", Druid.ToModuleString (0x0040100002000003));
 			Assert.AreEqual ("23", Druid.ToModuleString (0x4000100002000003));
+		}
+
+		[Test]
+		public void CheckIsValid()
+		{
+			Assert.IsTrue (Druid.IsValidFullString ("1023000000008"));
+			Assert.IsTrue (Druid.IsValidModuleString ("VVV"));
+			Assert.IsTrue (Druid.IsValidModuleString ("VVV000000"));
+			Assert.IsFalse (Druid.IsValidFullString ("10230000000081"));
+			Assert.IsFalse (Druid.IsValidModuleString ("VVV0000001"));
+			Assert.IsFalse (Druid.IsValidModuleString (""));
+			Assert.IsFalse (Druid.IsValidModuleString (null));
+			Assert.IsFalse (Druid.IsValidModuleString ("abc"));
 		}
 	}
 }

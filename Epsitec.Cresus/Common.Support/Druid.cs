@@ -9,9 +9,21 @@ namespace Epsitec.Common.Support
 	/// The <c>Druid</c> class manages Description Resource Unique ID related
 	/// conversions. These IDs are 64-bit identifiers which encode the module
 	/// identity, the developer identity and a locally unique value.
+	/// The string encoding is very compact for small IDs: we rely on an
+	/// interleaved encoding such as MMDLLDLLDMLDM, with trailing zeroes
+	/// omitted. M=module ID, D=dev. ID, L=local ID. Each is encoded using
+	/// 5-bit digits (0..9, A..V) and the first digit of each category
+	/// encodes the lowest bits of each ID. For instance "1023" can be used
+	/// to represent module=1 ('1'*32^0 + '0'*32^1), dev=2, local=3.
 	/// </summary>
 	public static class Druid
 	{
+		/// <summary>
+		/// Converts the DRUID to a full string encoded as MMDLLDLLDMLDM, less
+		/// significant digits first, trailing zeroes omitted.
+		/// </summary>
+		/// <param name="druid">The 64-bit DRUID to convert.</param>
+		/// <returns>The string representing the full DRUID.</returns>
 		public static string ToFullString(long druid)
 		{
 			int module = (int) (druid >> 44) & 0xfffff;
@@ -37,6 +49,12 @@ namespace Epsitec.Common.Support
 			return Druid.StripEndZeroes (buffer);
 		}
 
+		/// <summary>
+		/// Converts the DRUID to a module relative string encoded as DLLDLLDLD,
+		/// less significant digits first, trailing zeroes omitted.
+		/// </summary>
+		/// <param name="druid">The 64-bit DRUID to convert.</param>
+		/// <returns>The string representing the module relative DRUID.</returns>
 		public static string ToModuleString(long druid)
 		{
 			int dev = (int) (druid >> 24) & 0xfffff;
@@ -57,6 +75,12 @@ namespace Epsitec.Common.Support
 			return Druid.StripEndZeroes (buffer);
 		}
 
+		/// <summary>
+		/// Converts the DRUID encoded as a full string into the native 64-bit
+		/// DRUID value. See <see cref="M:ToFullString"/>.
+		/// </summary>
+		/// <param name="value">The encoded string value.</param>
+		/// <returns>The resulting native 64-bit DRUID value.</returns>
 		public static long FromFullString(string value)
 		{
 			int module = 0;
@@ -106,6 +130,13 @@ namespace Epsitec.Common.Support
 			return druid;
 		}
 
+		/// <summary>
+		/// Converts the DRUID encoded as a module relative string into the native
+		/// 64-bit DRUID value. See <see cref="M:ToModuleString"/>.
+		/// </summary>
+		/// <param name="value">The module relative encoded string value.</param>
+		/// <param name="module">The module ID.</param>
+		/// <returns>The resulting native 64-bit DRUID value.</returns>
 		public static long FromModuleString(string value, int module)
 		{
 			int dev = 0;
@@ -150,21 +181,106 @@ namespace Epsitec.Common.Support
 			return druid;
 		}
 
+		/// <summary>
+		/// Gets the module id from the DRUID.
+		/// </summary>
+		/// <param name="druid">The druid.</param>
+		/// <returns>The module id.</returns>
 		public static int GetModuleId(long druid)
 		{
 			return (int) (druid >> 44) & 0xfffff;
 		}
 
+		/// <summary>
+		/// Gets the developer id from the DRUID.
+		/// </summary>
+		/// <param name="druid">The druid.</param>
+		/// <returns>The developer id.</returns>
 		public static int GetDevId(long druid)
 		{
 			return (int) (druid >> 24) & 0xfffff;
 		}
 
+		/// <summary>
+		/// Gets the local id from the DRUID.
+		/// </summary>
+		/// <param name="druid">The druid.</param>
+		/// <returns>The developer id.</returns>
 		public static int GetLocalId(long druid)
 		{
 			return (int) (druid >> 0) & 0xffffff;
 		}
 
+		/// <summary>
+		/// Determines whether the specified value is a string representing a valid
+		/// full DRUID.
+		/// </summary>
+		/// <param name="value">The DRUID value.</param>
+		/// <returns><c>true</c> if the specified value is valid; otherwise,
+		/// <c>false</c>.</returns>
+		public static bool IsValidFullString(string value)
+		{
+			if (value == null)
+			{
+				return false;
+			}
+
+			int length = value.Length;
+
+			if ((length < 1) ||
+				(length > 13))
+			{
+				return false;
+			}
+
+			return Druid.IsValidBase32Number (value);
+		}
+
+		/// <summary>
+		/// Determines whether the specified value is a string representing a valid
+		/// module relative DRUID.
+		/// </summary>
+		/// <param name="value">The DRUID value.</param>
+		/// <returns><c>true</c> if the specified value is valid; otherwise,
+		/// <c>false</c>.</returns>
+		public static bool IsValidModuleString(string value)
+		{
+			if (value == null)
+			{
+				return false;
+			}
+
+			int length = value.Length;
+
+			if ((length < 1) ||
+				(length > 9))
+			{
+				return false;
+			}
+
+			return Druid.IsValidBase32Number (value);
+		}
+
+		private static bool IsValidBase32Number(string value)
+		{
+			for (int i = 0; i < value.Length; i++)
+			{
+				char c = value[i];
+
+				if ((c >= '0') && (c <= '9'))
+				{
+					continue;
+				}
+				if ((c >= 'A') && (c <= 'A'-10+31))
+				{
+					continue;
+				}
+
+				return false;
+			}
+
+			return true;
+		}
 
 		private static string StripEndZeroes(char[] buffer)
 		{
