@@ -1,4 +1,4 @@
-//	Copyright © 2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2005-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text.Properties
@@ -16,9 +16,9 @@ namespace Epsitec.Common.Text.Properties
 		public AbstractXlineProperty(double position, SizeUnits position_units, double thickness, SizeUnits thickness_units, string draw_class, string draw_style)
 		{
 			this.position_units  = position_units;
-			this.position        = position;
+			this.position        = position_units == SizeUnits.None ? double.NaN : position;
 			this.thickness_units = thickness_units;
-			this.thickness       = thickness;
+			this.thickness       = thickness_units == SizeUnits.None ? double.NaN : thickness;
 			
 			this.draw_class = draw_class;
 			this.draw_style = draw_style;
@@ -318,15 +318,15 @@ namespace Epsitec.Common.Text.Properties
 						
 						if (result == 0)
 						{
-							double xv = UnitsTools.ConvertToSizeUnits (px.position, px.position_units, SizeUnits.Points);
-							double yv = UnitsTools.ConvertToSizeUnits (py.position, py.position_units, SizeUnits.Points);
+							double xv = px.position_units == SizeUnits.None ? double.NaN : UnitsTools.ConvertToSizeUnits (px.position, px.position_units, SizeUnits.Points);
+							double yv = py.position_units == SizeUnits.None ? double.NaN : UnitsTools.ConvertToSizeUnits (py.position, py.position_units, SizeUnits.Points);
 							
 							result = NumberSupport.Compare (xv, yv);
 							
 							if (result == 0)
 							{
-								xv = UnitsTools.ConvertToSizeUnits (px.thickness, px.thickness_units, SizeUnits.Points);
-								yv = UnitsTools.ConvertToSizeUnits (py.thickness, py.thickness_units, SizeUnits.Points);
+								xv = px.thickness_units == SizeUnits.None ? double.NaN : UnitsTools.ConvertToSizeUnits (px.thickness, px.thickness_units, SizeUnits.Points);
+								yv = py.thickness_units == SizeUnits.None ? double.NaN : UnitsTools.ConvertToSizeUnits (py.thickness, py.thickness_units, SizeUnits.Points);
 							
 								result = NumberSupport.Compare (xv, yv);
 							}
