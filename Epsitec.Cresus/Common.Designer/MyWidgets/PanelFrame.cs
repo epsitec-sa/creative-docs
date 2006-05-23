@@ -1040,7 +1040,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				list.Add(obj);
 			}
-			list.Sort(new Comparer.WidgetDisposition());
+			list.Sort(new Comparers.WidgetDisposition());
 
 			int index = 0;
 			foreach (Widget obj in list)

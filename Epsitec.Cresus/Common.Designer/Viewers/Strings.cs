@@ -653,7 +653,7 @@ namespace Epsitec.Common.Designer.Viewers
 					}
 				}
 
-				list.Sort(new Comparer.CultureName());
+				list.Sort(new Comparers.CultureName());
 				
 				this.secondaryCultures = new IconButtonMark[list.Count];
 				for (int i=0; i<list.Count; i++)
