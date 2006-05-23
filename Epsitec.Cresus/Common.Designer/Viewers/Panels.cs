@@ -129,6 +129,16 @@ namespace Epsitec.Common.Designer.Viewers
 			base.Dispose(disposing);
 		}
 
+		public override void PaintHandler(Graphics graphics, Rectangle repaint, IPaintFilter paintFilter)
+		{
+			if (paintFilter == null)
+			{
+				paintFilter = this.panelFrame;
+			}
+			
+			base.PaintHandler (graphics, repaint, paintFilter);
+		}
+
 
 		public override void DoSearch(string search, Searcher.SearchingMode mode)
 		{

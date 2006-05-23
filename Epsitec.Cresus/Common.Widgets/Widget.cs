@@ -1436,7 +1436,7 @@ namespace Epsitec.Common.Widgets
 						{
 							window.SynchronousRepaint ();
 							
-							window.PaintFilter = new WidgetPaintFilter (this);
+							window.PaintFilter = new Helpers.WidgetSyncPaintFilter (this);
 							window.MarkForRepaint (this.MapClientToRoot (rect));
 							window.SynchronousRepaint ();
 							window.PaintFilter = null;
@@ -2924,7 +2924,7 @@ namespace Epsitec.Common.Widgets
 						
 						if (paint_filter != null)
 						{
-							paint_filter.EnableChildren ();
+							paint_filter.NotifyAboutToProcessChildren ();
 						}
 					}
 					
@@ -2960,7 +2960,7 @@ namespace Epsitec.Common.Widgets
 						
 						if (paint_filter != null)
 						{
-							paint_filter.DisableChildren ();
+							paint_filter.NotifyChildrenProcessed ();
 						}
 					}
 				}

@@ -680,7 +680,7 @@
     <Compile Include="Widget.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="WidgetPaintFilter.cs">
+    <Compile Include="Helpers\WidgetSyncPaintFilter.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="WidgetPaintState.cs" />
