@@ -1040,7 +1040,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				list.Add(obj);
 			}
-			list.Sort(new ComparerGeometry());
+			list.Sort(new Comparer.WidgetDisposition());
 
 			int index = 0;
 			foreach (Widget obj in list)
@@ -1053,26 +1053,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.context.ShowTabIndex = true;
 			this.OnUpdateCommands();
 		}
-
-		#region ComparerGeometry
-		protected class ComparerGeometry : IComparer<Widget>
-		{
-			//	Compare deux widgets pour permettre de les trier selon leurs positions géographiques.
-			//	Le premier sera en haut à gauche et le dernier en bas à droite.
-			public int Compare(Widget obj1, Widget obj2)
-			{
-				Point c1 = obj1.ActualBounds.Center;
-				Point c2 = obj2.ActualBounds.Center;
-
-				int comp = c2.Y.CompareTo(c1.Y);  // de haut en bas !
-				if (comp == 0)
-				{
-					comp = c1.X.CompareTo(c2.X);  // de gauche à droite
-				}
-				return comp;
-			}
-		}
-		#endregion
 
 		protected void SelectTabIndex(int direction)
 		{
