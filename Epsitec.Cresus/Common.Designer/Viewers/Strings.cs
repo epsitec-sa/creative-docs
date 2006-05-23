@@ -653,7 +653,7 @@ namespace Epsitec.Common.Designer.Viewers
 					}
 				}
 
-				list.Sort(Strings.CompareCultureInfo);
+				list.Sort(new Comparer.CultureName());
 				
 				this.secondaryCultures = new IconButtonMark[list.Count];
 				for (int i=0; i<list.Count; i++)
@@ -1276,7 +1276,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 
 		#region CultureInfo
-		protected class CultureInfo
+		public class CultureInfo
 		{
 			public CultureInfo(System.Globalization.CultureInfo culture)
 			{
@@ -1302,12 +1302,6 @@ namespace Epsitec.Common.Designer.Viewers
 
 			protected string			name;
 			protected string			tooltip;
-		}
-
-		protected static int CompareCultureInfo(CultureInfo a, CultureInfo b)
-		{
-			//	Compare deux CultureInfo, afin que les noms soient dans l'ordre alphabétique.
-			return a.Name.CompareTo(b.Name);
 		}
 		#endregion
 

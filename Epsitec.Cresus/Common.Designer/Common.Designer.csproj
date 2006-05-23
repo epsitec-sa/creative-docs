@@ -35,6 +35,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Comparer\CultureName.cs" />
     <Compile Include="PanelsContext.cs" />
     <Compile Include="Dialogs\Abstract.cs" />
     <Compile Include="Dialogs\NewCulture.cs" />
