@@ -16,7 +16,7 @@ namespace Epsitec.Common.Widgets.Controllers
 		{
 		}
 		
-		protected override void CreateUserInterface(object valueTypeObject)
+		protected override void CreateUserInterface(object valueTypeObject, string valueName)
 		{
 			this.typeObject = valueTypeObject;
 
@@ -26,7 +26,11 @@ namespace Epsitec.Common.Widgets.Controllers
 			this.label.Dock = DockStyle.Left;
 			this.label.HorizontalAlignment = HorizontalAlignment.Right;
 			this.label.ContentAlignment = Epsitec.Common.Drawing.ContentAlignment.MiddleRight;
-			this.label.Text = "Field:";
+			
+			if (! string.IsNullOrEmpty (valueName))
+			{
+				this.label.Text = string.Format ("{0}: ", valueName);
+			}
 			
 			this.field.Dock = DockStyle.Fill;
 			this.field.TextChanged += this.HandleFieldTextChanged;

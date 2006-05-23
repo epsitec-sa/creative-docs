@@ -43,11 +43,11 @@ namespace Epsitec.Common.Widgets
 			StructuredData data = new StructuredData (type);
 
 			type.AddField ("Name", new StringType ());
-			type.AddField ("Surname", new StringType ());
+			type.AddField ("Forename", new StringType ());
 			type.AddField ("Age", new IntegerType (1, 150));
 
 			data.SetValue ("Name", "Arnaud");
-			data.SetValue ("Surname", "Pierre");
+			data.SetValue ("Forename", "Pierre");
 			data.SetValue ("Age", System.DateTime.Now.Year - 1972);
 
 			Window window = new Window ();
@@ -76,7 +76,7 @@ namespace Epsitec.Common.Widgets
 			placeholder3.TabIndex = 3;
 
 			Binding binding1 = new Binding (BindingMode.TwoWay, null, "Person.Name");
-			Binding binding2 = new Binding (BindingMode.TwoWay, null, "Person.Surname");
+			Binding binding2 = new Binding (BindingMode.TwoWay, null, "Person.Forename");
 			Binding binding3 = new Binding (BindingMode.TwoWay, null, "Person.Age");
 
 			placeholder1.SetBinding (Placeholder.ValueProperty, binding1);
@@ -112,7 +112,7 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 			
-			protected override void CreateUserInterface(object valueTypeObject)
+			protected override void CreateUserInterface(object valueTypeObject, string valueName)
 			{
 				throw new System.Exception ("The method or operation is not implemented.");
 			}

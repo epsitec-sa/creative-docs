@@ -124,6 +124,27 @@ namespace Epsitec.Common.Types
 
 			return typeObject;
 		}
+		
+		public string GetSourceName()
+		{
+			string sourceName = null;
+
+			DependencyProperty property;
+			
+			switch (this.sourceType)
+			{
+				case DataSourceType.PropertyObject:
+					property = this.sourceProperty as DependencyProperty;
+					sourceName = property.Name;
+					break;
+				
+				case DataSourceType.StructuredData:
+					sourceName = (string) this.sourceProperty;
+					break;
+			}
+			
+			return sourceName;
+		}
 
 		#region Internal Methods
 

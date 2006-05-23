@@ -38,6 +38,14 @@ namespace Epsitec.Common.Widgets
 				return this.valueTypeObject;
 			}
 		}
+
+		public string ValueName
+		{
+			get
+			{
+				return this.valueName;
+			}
+		}
 		
 		
 		public object Value
@@ -130,15 +138,19 @@ namespace Epsitec.Common.Widgets
 		{
 			object oldValueTypeObject = this.valueTypeObject;
 			object newValueTypeObject = null;
+			string oldValueName = this.valueName;
+			string newValueName = null;
 			
 			BindingExpression expression = this.GetBindingExpression (Placeholder.ValueProperty);
 
 			if (expression != null)
 			{
 				newValueTypeObject = expression.GetSourceTypeObject ();
+				newValueName = expression.GetSourceName ();
 			}
 
 			this.valueTypeObject = newValueTypeObject;
+			this.valueName = newValueName;
 
 			if (oldValueTypeObject == newValueTypeObject)
 			{
@@ -149,9 +161,22 @@ namespace Epsitec.Common.Widgets
 			{
 				this.UpdateValueTypeObject (oldValueTypeObject, newValueTypeObject);
 			}
+
+			if (oldValueName != newValueName)
+			{
+				this.UpdateValueName (oldValueName, newValueName);
+			}
 		}
 
 		private void UpdateValueTypeObject(object oldValueTypeObject, object newValueTypeObject)
+		{
+			if (this.controller != null)
+			{
+				Application.QueueAsyncCallback (this.RecreateUserInterface);
+			}
+		}
+
+		private void UpdateValueName(string oldValueName, string newValueName)
 		{
 			if (this.controller != null)
 			{
@@ -193,5 +218,6 @@ namespace Epsitec.Common.Widgets
 
 		private IController controller;
 		private object valueTypeObject;
+		private string valueName;
 	}
 }
