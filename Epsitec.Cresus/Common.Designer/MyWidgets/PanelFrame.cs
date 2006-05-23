@@ -12,6 +12,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 	{
 		protected enum MouseCursorType
 		{
+			Unknow,
 			Arrow,
 			ArrowPlus,
 			Global,
@@ -1883,34 +1884,37 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void ChangeMouseCursor(MouseCursorType cursor)
 		{
 			//	Change le sprite de la souris.
+			if ( cursor == this.lastCursor )  return;
+			this.lastCursor = cursor;
+
 			switch (cursor)
 			{
 				case MouseCursorType.Arrow:
-					this.MouseCursorImage(ref this.mouseCursorArrow, Misc.Icon("CursorArrow"));
+					this.SetMouseCursorImage(ref this.mouseCursorArrow, Misc.Icon("CursorArrow"));
 					break;
 
 				case MouseCursorType.ArrowPlus:
-					this.MouseCursorImage(ref this.mouseCursorArrowPlus, Misc.Icon("CursorArrowPlus"));
+					this.SetMouseCursorImage(ref this.mouseCursorArrowPlus, Misc.Icon("CursorArrowPlus"));
 					break;
 
 				case MouseCursorType.Global:
-					this.MouseCursorImage(ref this.mouseCursorGlobal, Misc.Icon("CursorGlobal"));
+					this.SetMouseCursorImage(ref this.mouseCursorGlobal, Misc.Icon("CursorGlobal"));
 					break;
 
 				case MouseCursorType.Edit:
-					this.MouseCursorImage(ref this.mouseCursorEdit, Misc.Icon("CursorEdit"));
+					this.SetMouseCursorImage(ref this.mouseCursorEdit, Misc.Icon("CursorEdit"));
 					break;
 
 				case MouseCursorType.Hand:
-					this.MouseCursorImage(ref this.mouseCursorHand, Misc.Icon("CursorHand"));
+					this.SetMouseCursorImage(ref this.mouseCursorHand, Misc.Icon("CursorHand"));
 					break;
 
 				case MouseCursorType.Pen:
-					this.MouseCursorImage(ref this.mouseCursorPen, Misc.Icon("CursorPen"));
+					this.SetMouseCursorImage(ref this.mouseCursorPen, Misc.Icon("CursorPen"));
 					break;
 
 				case MouseCursorType.Zoom:
-					this.MouseCursorImage(ref this.mouseCursorZoom, Misc.Icon("CursorZoom"));
+					this.SetMouseCursorImage(ref this.mouseCursorZoom, Misc.Icon("CursorZoom"));
 					break;
 
 				default:
@@ -1921,7 +1925,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.Window.MouseCursor = this.MouseCursor;
 		}
 
-		protected void MouseCursorImage(ref Image image, string name)
+		protected void SetMouseCursorImage(ref Image image, string name)
 		{
 			//	Choix du sprite de la souris.
 			if (image == null)
@@ -2019,6 +2023,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected bool						constrainStarted;
 		protected bool						constrainObjectLock;
 		protected List<Constrain>			constrainList = new List<Constrain>();
+		protected MouseCursorType			lastCursor = MouseCursorType.Unknow;
 
 		protected Image						mouseCursorArrow = null;
 		protected Image						mouseCursorArrowPlus = null;
