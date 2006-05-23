@@ -8,7 +8,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 	/// <summary>
 	/// Widget de type 'groupe' avec un cadre permettant d'éditer les widgets enfants.
 	/// </summary>
-	public class PanelFrame : AbstractGroup
+	public class PanelFrame : AbstractGroup, IPaintFilter
 	{
 		protected enum MouseCursorType
 		{
@@ -2048,6 +2048,31 @@ namespace Epsitec.Common.Designer.MyWidgets
 		}
 		#endregion
 
+		#region IPaintFilter Members
+
+		bool IPaintFilter.IsWidgetFullyDiscarded(Widget widget)
+		{
+			//	Retourne true pour indiquer que le widget en question ne doit
+			//	pas être peint, ni ses enfants d'ailleurs. Ceci évite que les
+			//	widgets sélectionnés ne soient peints.
+			
+			return this.selectedObjects.Contains (widget);
+		}
+
+		bool IPaintFilter.IsWidgetPaintDiscarded(Widget widget)
+		{
+			return false;
+		}
+
+		void IPaintFilter.NotifyAboutToProcessChildren()
+		{
+		}
+
+		void IPaintFilter.NotifyChildrenProcessed()
+		{
+		}
+
+		#endregion
 
 		protected UI.Panel					panel;
 		protected PanelsContext				context;
