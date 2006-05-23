@@ -51,6 +51,7 @@
     <Compile Include="MyWidgets\StringArray.cs" />
     <Compile Include="MyWidgets\StringList.cs" />
     <Compile Include="MyWidgets\TextFieldLabel.cs" />
+    <Compile Include="Comparer\WidgetDisposition.cs" />
     <Compile Include="Panels\Abstract.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Res.cs" />
