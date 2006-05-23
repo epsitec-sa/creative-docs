@@ -284,7 +284,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			if (this.context.Tool.StartsWith("Object"))
 			{
-				this.ObjectDown(pos, isRightButton, isControlPressed, isShiftPressed);
+				this.CreateObjectDown(pos, isRightButton, isControlPressed, isShiftPressed);
 			}
 		}
 
@@ -318,7 +318,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			if (this.context.Tool.StartsWith("Object"))
 			{
-				this.ObjectMove(pos, isRightButton, isControlPressed, isShiftPressed);
+				this.CreateObjectMove(pos, isRightButton, isControlPressed, isShiftPressed);
 			}
 		}
 
@@ -352,7 +352,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			if (this.context.Tool.StartsWith("Object"))
 			{
-				this.ObjectUp(pos, isRightButton, isControlPressed, isShiftPressed);
+				this.CreateObjectUp(pos, isRightButton, isControlPressed, isShiftPressed);
 			}
 		}
 
@@ -386,7 +386,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			if (this.context.Tool.StartsWith("Object"))
 			{
-				this.ObjectKeyChanged(isControlPressed, isShiftPressed);
+				this.CreateObjectKeyChanged(isControlPressed, isShiftPressed);
 			}
 		}
 		#endregion
@@ -660,8 +660,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 		}
 		#endregion
 
-		#region ProcessMouse object
-		protected void ObjectDown(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
+		#region ProcessMouse create object
+		protected void CreateObjectDown(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
 			//	Dessin d'un objet, souris pressée.
 			this.DeselectAll();
@@ -697,15 +697,18 @@ namespace Epsitec.Common.Designer.MyWidgets
 			pos.X -= this.creatingObject.PreferredWidth/2;
 			pos.Y -= this.creatingObject.PreferredHeight/2;
 			this.ObjectPosition(this.creatingObject, pos);
-
 			Rectangle bounds = new Rectangle(pos, this.creatingObject.PreferredSize);
+
+			Widget group = this.DetectGroup(bounds, this.creatingObject);
+			//?this.creatingObject.SetParent(group);
+
 			this.ConstrainStart(bounds);
 			this.ConstrainActivate(bounds, this.creatingObject);
 
 			this.OnChildrenAdded();
 		}
 
-		protected void ObjectMove(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
+		protected void CreateObjectMove(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
 			//	Dessin d'un objet, souris déplacée.
 			this.ChangeMouseCursor(MouseCursorType.Pen);
@@ -717,16 +720,20 @@ namespace Epsitec.Common.Designer.MyWidgets
 				Rectangle bounds = new Rectangle(pos, this.creatingObject.PreferredSize);
 				Rectangle adjust = this.ConstrainSnap(bounds);
 				Point corr = adjust.BottomLeft - bounds.BottomLeft;
+				pos += corr;
+				bounds.Offset(corr);
 
-				this.ObjectPosition(this.creatingObject, pos+corr);
+				this.ObjectPosition(this.creatingObject, pos);
 				this.Invalidate();
 
-				bounds.Offset(corr);
+				Widget group = this.DetectGroup(bounds, this.creatingObject);
+				//?this.creatingObject.SetParent(group);
+
 				this.ConstrainActivate(bounds, this.creatingObject);
 			}
 		}
 
-		protected void ObjectUp(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
+		protected void CreateObjectUp(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
 			//	Dessin d'un objet, souris relâchée.
 			this.ConstrainEnd();
@@ -735,7 +742,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.creatingObject = null;
 		}
 
-		protected void ObjectKeyChanged(bool isControlPressed, bool isShiftPressed)
+		protected void CreateObjectKeyChanged(bool isControlPressed, bool isShiftPressed)
 		{
 			//	Dessin d'un objet, touche pressée ou relâchée.
 		}
@@ -756,6 +763,23 @@ namespace Epsitec.Common.Designer.MyWidgets
 				}
 			}
 			return null;
+		}
+
+		protected Widget DetectGroup(Rectangle rect, Widget exclude)
+		{
+			//	Détecte dans quel groupe est entièrement inclu un rectangle donné.
+			for (int i=this.panel.Children.Count-1; i>=0; i--)
+			{
+				Widget widget = this.panel.Children[i] as Widget;
+				if (widget is AbstractGroup && widget != exclude)
+				{
+					if (widget.ActualBounds.Contains(rect))
+					{
+						return widget;
+					}
+				}
+			}
+			return this.panel;
 		}
 
 		protected void DeselectAll()
@@ -848,6 +872,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 		#endregion
+
 
 		#region Operations
 		protected void DeleteSelection()
@@ -1907,6 +1932,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.MouseCursor = MouseCursor.FromImage(image);
 		}
 		#endregion
+
 
 		#region Events
 		protected virtual void OnChildrenAdded()
