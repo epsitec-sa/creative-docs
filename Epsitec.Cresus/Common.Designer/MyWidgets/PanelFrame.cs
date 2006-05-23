@@ -694,6 +694,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			this.creatingObject.Anchor = AnchorStyles.BottomLeft;
 			this.creatingObject.TabNavigation = TabNavigationMode.Passive;
+			//?this.creatingObject.Padding = new Margins(0, this.context.ConstrainSpacing.Width, 0, this.context.ConstrainSpacing.Height);
 
 			pos.X -= this.creatingObject.PreferredWidth/2;
 			pos.Y -= this.creatingObject.PreferredHeight/2;
@@ -1034,30 +1035,44 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void SelectTabIndexRenum()
 		{
 			//	Renumérote toutes les touches Tab.
-			//	TODO: tenir compte de la position des objets.
-			if (this.selectedObjects.Count == 0)
+			List<Widget> list = new List<Widget>();
+			foreach (Widget obj in this.panel.Children)
 			{
-				int index = 0;
-				foreach (Widget obj in this.panel.Children)
-				{
-					obj.TabIndex = index++;
-					obj.TabNavigation = TabNavigationMode.ActivateOnTab;
-				}
+				list.Add(obj);
 			}
-			else
+			list.Sort(new ComparerGeometry());
+
+			int index = 0;
+			foreach (Widget obj in list)
 			{
-				int index = 0;
-				foreach (Widget obj in this.selectedObjects)
-				{
-					obj.TabIndex = index++;
-					obj.TabNavigation = TabNavigationMode.ActivateOnTab;
-				}
+				obj.TabIndex = index++;
+				obj.TabNavigation = TabNavigationMode.ActivateOnTab;
 			}
 
 			this.Invalidate();
 			this.context.ShowTabIndex = true;
 			this.OnUpdateCommands();
 		}
+
+		#region ComparerGeometry
+		protected class ComparerGeometry : IComparer<Widget>
+		{
+			//	Compare deux widgets pour permettre de les trier selon leurs positions géographiques.
+			//	Le premier sera en haut à gauche et le dernier en bas à droite.
+			public int Compare(Widget obj1, Widget obj2)
+			{
+				Point c1 = obj1.ActualBounds.Center;
+				Point c2 = obj2.ActualBounds.Center;
+
+				int comp = c2.Y.CompareTo(c1.Y);  // de haut en bas !
+				if (comp == 0)
+				{
+					comp = c1.X.CompareTo(c2.X);  // de gauche à droite
+				}
+				return comp;
+			}
+		}
+		#endregion
 
 		protected void SelectTabIndex(int direction)
 		{
@@ -1541,6 +1556,30 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Initialise les contraintes pour tous les objets dont la distance est
 			//	inférieure ou égale à une distance donnée.
 			double distance;
+
+#if false
+			this.Window.ForceLayout();
+
+			if (excludes != null && excludes.Length > 0)
+			{
+				Widget firstParent = excludes[0].Parent;
+				Rectangle rect = new Rectangle(Point.Zero, firstParent.RealMinSize);
+
+				Constrain constrain;
+
+				constrain = new Constrain(rect.BottomLeft+this.context.ConstrainSpacing, Constrain.Type.Left, this.context.ConstrainMargin);
+				this.ConstrainAdd(constrain);
+
+				constrain = new Constrain(rect.BottomRight-this.context.ConstrainSpacing, Constrain.Type.Right, this.context.ConstrainMargin);
+				this.ConstrainAdd(constrain);
+
+				constrain = new Constrain(rect.BottomLeft+this.context.ConstrainSpacing, Constrain.Type.Bottom, this.context.ConstrainMargin);
+				this.ConstrainAdd(constrain);
+
+				constrain = new Constrain(rect.TopLeft-this.context.ConstrainSpacing, Constrain.Type.Top, this.context.ConstrainMargin);
+				this.ConstrainAdd(constrain);
+			}
+#endif
 
 			foreach (Widget obj in this.panel.Children)
 			{
