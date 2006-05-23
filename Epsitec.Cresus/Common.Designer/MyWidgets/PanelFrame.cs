@@ -667,47 +667,21 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Dessin d'un objet, souris pressée.
 			this.DeselectAll();
 
-			if (this.context.Tool == "ObjectLine")
-			{
-				this.creatingObject = new Separator(this.panel);
-				this.creatingObject.PreferredHeight = 1;
-			}
-
-			if (this.context.Tool == "ObjectButton")
-			{
-				this.creatingObject = new Button(this.panel);
-				this.creatingObject.Text = "Button";
-			}
-
-			if (this.context.Tool == "ObjectText")
-			{
-				this.creatingObject = new TextField(this.panel);
-				this.creatingObject.Text = "TextField";
-			}
-
-			if (this.context.Tool == "ObjectGroup")
-			{
-				this.creatingObject = new GroupBox(this.panel);
-				this.creatingObject.Text = "Group";
-				this.creatingObject.PreferredSize = new Size(200, 100);
-			}
-
-			this.creatingObject.Anchor = AnchorStyles.BottomLeft;
-			this.creatingObject.TabNavigation = TabNavigationMode.Passive;
-			//?this.creatingObject.Padding = new Margins(0, this.context.ConstrainSpacing.Width, 0, this.context.ConstrainSpacing.Height);
+			this.creatingObject = this.CreateObjectItem();
+			this.creatingOrigin = this.MapClientToScreen(Point.Zero);
+			this.creatingWindow = new DragWindow();
+			this.creatingWindow.DefineWidget(this.creatingObject, this.creatingObject.PreferredSize, Drawing.Margins.Zero);
+			this.creatingWindow.WindowLocation = this.creatingOrigin + pos;
+			this.creatingWindow.Owner = this.Window;
+			this.creatingWindow.FocusedWidget = this.creatingObject;
+			this.creatingWindow.Show();
 
 			pos.X -= this.creatingObject.PreferredWidth/2;
 			pos.Y -= this.creatingObject.PreferredHeight/2;
-			this.ObjectPosition(this.creatingObject, pos);
 			Rectangle bounds = new Rectangle(pos, this.creatingObject.PreferredSize);
 
-			Widget group = this.DetectGroup(bounds, this.creatingObject);
-			//?this.creatingObject.SetParent(group);
-
 			this.ConstrainStart(bounds);
-			this.ConstrainActivate(bounds, this.creatingObject);
-
-			this.OnChildrenAdded();
+			this.ConstrainActivate(bounds, null);
 		}
 
 		protected void CreateObjectMove(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
@@ -717,31 +691,80 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			if (this.creatingObject != null)
 			{
-				pos.X -= this.creatingObject.PreferredWidth/2;
-				pos.Y -= this.creatingObject.PreferredHeight/2;
-				Rectangle bounds = new Rectangle(pos, this.creatingObject.PreferredSize);
-				Rectangle adjust = this.ConstrainSnap(bounds);
-				Point corr = adjust.BottomLeft - bounds.BottomLeft;
-				pos += corr;
-				bounds.Offset(corr);
-
-				this.ObjectPosition(this.creatingObject, pos);
-				this.Invalidate();
-
-				Widget group = this.DetectGroup(bounds, this.creatingObject);
-				//?this.creatingObject.SetParent(group);
-
-				this.ConstrainActivate(bounds, this.creatingObject);
+				Rectangle bounds;
+				this.CreateObjectAdjust(ref pos, out bounds);
+				this.ConstrainActivate(bounds, null);
+				this.creatingWindow.WindowLocation = this.creatingOrigin + pos;
 			}
 		}
 
 		protected void CreateObjectUp(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
 			//	Dessin d'un objet, souris relâchée.
-			this.ConstrainEnd();
+			if (this.creatingObject != null)
+			{
+				this.creatingWindow.Hide();
+				this.creatingWindow.Dispose();
+				this.creatingWindow = null;
 
-			this.SelectOneObject(this.creatingObject);
-			this.creatingObject = null;
+				this.creatingObject = this.CreateObjectItem();
+				this.creatingObject.SetParent(this.panel);
+				this.creatingObject.Anchor = AnchorStyles.BottomLeft;
+				this.creatingObject.TabNavigation = TabNavigationMode.Passive;
+
+				Rectangle bounds;
+				this.CreateObjectAdjust(ref pos, out bounds);
+				this.ObjectPosition(this.creatingObject, pos);
+
+				this.ConstrainEnd();
+
+				this.SelectOneObject(this.creatingObject);
+				this.creatingObject = null;
+			}
+		}
+
+		protected Widget CreateObjectItem()
+		{
+			//	Crée un objet selon la palette d'outils.
+			Widget item = null;
+
+			if (this.context.Tool == "ObjectLine")
+			{
+				item = new Separator();
+				item.PreferredHeight = 1;
+			}
+
+			if (this.context.Tool == "ObjectButton")
+			{
+				item = new Button();
+				item.Text = "Button";
+			}
+
+			if (this.context.Tool == "ObjectText")
+			{
+				item = new TextField();
+				item.Text = "TextField";
+			}
+
+			if (this.context.Tool == "ObjectGroup")
+			{
+				item = new GroupBox();
+				item.Text = "Group";
+				item.PreferredSize = new Size(200, 100);
+			}
+
+			return item;
+		}
+
+		protected void CreateObjectAdjust(ref Point pos, out Rectangle bounds)
+		{
+			pos.X -= this.creatingObject.PreferredWidth/2;
+			pos.Y -= this.creatingObject.PreferredHeight/2;
+			bounds = new Rectangle(pos, this.creatingObject.PreferredSize);
+			Rectangle adjust = this.ConstrainSnap(bounds);
+			Point corr = adjust.BottomLeft - bounds.BottomLeft;
+			pos += corr;
+			bounds.Offset(corr);
 		}
 
 		protected void CreateObjectKeyChanged(bool isControlPressed, bool isShiftPressed)
@@ -1582,11 +1605,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected bool ConstrainContain(Widget[] list, Widget searched)
 		{
-			foreach (Widget obj in list)
+			if (list != null)
 			{
-				if (obj == searched)
+				foreach (Widget obj in list)
 				{
-					return true;
+					if (obj == searched)
+					{
+						return true;
+					}
 				}
 			}
 			return false;
@@ -2026,6 +2052,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected UI.Panel					panel;
 		protected PanelsContext				context;
 
+		protected DragWindow				creatingWindow;
+		protected Point						creatingOrigin;
 		protected Widget					creatingObject;
 		protected List<Widget>				selectedObjects = new List<Widget>();
 		protected Rectangle					selectedRectangle = Rectangle.Empty;
