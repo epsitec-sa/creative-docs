@@ -118,8 +118,21 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 		}
-		
-		
+
+		public override bool HitTest(Drawing.Point point)
+		{
+			if (this.aperture == Drawing.Rectangle.MaxValue)
+			{
+				return base.HitTest (point);
+			}
+			else
+			{
+				Drawing.Rectangle rect = this.aperture;
+				rect.Offset (this.ActualLocation);
+				return rect.Contains (point);
+			}
+		}
+
 		public override Drawing.Rectangle GetClipBounds()
 		{
 			Drawing.Rectangle clip = base.GetClipBounds ();
