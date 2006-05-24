@@ -778,6 +778,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 				Rectangle bounds;
 				this.CreateObjectAdjust(ref pos, out bounds);
+
+				pos.X -= this.panel.Padding.Left;
+				pos.Y -= this.panel.Padding.Bottom;
 				this.ObjectPosition(this.creatingObject, pos);
 
 				this.ConstrainEnd();
@@ -1660,11 +1663,17 @@ namespace Epsitec.Common.Designer.MyWidgets
 				{
 					constrain = new Constrain(this.constrainInitialRectangle.BottomLeft, Constrain.Type.Left, this.context.ConstrainMargin);
 					this.ConstrainAdd(constrain);
+
+					constrain = new Constrain(this.constrainInitialRectangle.BottomRight, Constrain.Type.Right, this.context.ConstrainMargin);
+					this.ConstrainAdd(constrain);
 				}
 
 				if (System.Math.Abs(rect.Bottom-this.constrainInitialRectangle.Bottom) <= this.context.ConstrainMargin)
 				{
 					constrain = new Constrain(this.constrainInitialRectangle.BottomLeft, Constrain.Type.Bottom, this.context.ConstrainMargin);
+					this.ConstrainAdd(constrain);
+
+					constrain = new Constrain(this.constrainInitialRectangle.TopLeft, Constrain.Type.Top, this.context.ConstrainMargin);
 					this.ConstrainAdd(constrain);
 				}
 			}

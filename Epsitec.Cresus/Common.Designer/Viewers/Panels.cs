@@ -76,17 +76,18 @@ namespace Epsitec.Common.Designer.Viewers
 			container.MinWidth = 100;
 			container.Dock = DockStyle.Fill;
 
-			this.panelWidget = new UI.Panel();
-			this.panelWidget.ChildrenLayoutMode = Widgets.Layouts.LayoutMode.Anchored;
-			this.panelWidget.Anchor = AnchorStyles.All;
-			this.panelWidget.SetParent(container);
+			this.panelContainer = new UI.Panel();
+			this.panelContainer.ChildrenLayoutMode = Widgets.Layouts.LayoutMode.Anchored;
+			this.panelContainer.Anchor = AnchorStyles.All;
+			this.panelContainer.Padding = new Margins(20, 20, 20, 20);
+			this.panelContainer.SetParent(container);
 
 			//	Le PanelEditor est par-dessus le UI.Panel.
 			this.panelEditor = new MyWidgets.PanelEditor(container);
 			this.panelEditor.MinWidth = 100;
 			this.panelEditor.MinHeight = 100;
 			this.panelEditor.Anchor = AnchorStyles.All;
-			this.panelEditor.Panel = this.panelWidget;
+			this.panelEditor.Panel = this.panelContainer;
 			this.panelEditor.Context = this.context;
 			this.panelEditor.ChildrenAdded += new EventHandler(this.HandlePanelEditorChildrenAdded);
 			this.panelEditor.ChildrenSelected += new EventHandler(this.HandlePanelEditorChildrenSelected);
@@ -576,7 +577,7 @@ namespace Epsitec.Common.Designer.Viewers
 		protected TextFieldEx				labelEdit;
 		protected VToolBar					toolBar;
 		protected Scrollable				scrollable;
-		protected UI.Panel					panelWidget;
+		protected UI.Panel					panelContainer;
 		protected MyWidgets.PanelEditor		panelEditor;
 		protected TabBook					tabBook;
 		protected TabPage					tabPageProperties;
