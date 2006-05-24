@@ -396,7 +396,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void SelectDown(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
 			//	Sélection ponctuelle, souris pressée.
-
 			Widget obj = this.Detect(pos);  // objet visé par la souris
 
 			this.startingPos = pos;
@@ -407,8 +406,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				if (obj != null && this.selectedObjects.Contains(obj))
 				{
-					this.dragging = true;
-					this.ConstrainStart(this.SelectBounds);
+					this.DraggingStart(pos);
 					return;
 				}
 				this.selectedObjects.Clear();
@@ -429,8 +427,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				{
 					this.selectedObjects.Add(obj);
 				}
-				this.dragging = true;
-				this.ConstrainStart(this.SelectBounds);
+				this.DraggingStart(pos);
 			}
 
 			this.OnChildrenSelected();
@@ -451,6 +448,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			if (this.dragging)
 			{
+				this.DraggingMove(pos);
+#if false
 				Rectangle bounds = this.SelectBounds;
 				Point move = pos-this.startingPos;
 				Point corr = this.CorrectionSelection(bounds, move);
@@ -461,6 +460,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 				bounds.Offset(move+corr);
 				this.ConstrainActivate(bounds, this.selectedObjects.ToArray());
+#endif
 			}
 			else if (this.rectangling)
 			{
@@ -481,8 +481,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void SelectUp(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
 			//	Sélection ponctuelle, souris relâchée.
+#if false
 			this.dragging = false;
 			this.ConstrainEnd();
+#endif
+			if (this.dragging)
+			{
+				this.DraggingEnd();
+			}
 
 			if (this.rectangling)
 			{
@@ -490,6 +496,65 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.SelectRectangle(Rectangle.Empty);
 				this.rectangling = false;
 			}
+		}
+
+		protected void DraggingStart(Point pos)
+		{
+			this.draggingRectangle = this.SelectBounds;
+			this.draggingOffset = this.draggingRectangle.BottomLeft - pos;
+			this.ConstrainStart(this.draggingRectangle);
+
+			Widget container = new Widget();
+			container.PreferredSize = this.draggingRectangle.Size;
+
+			foreach (Widget obj in this.selectedObjects)
+			{
+				Point origin = this.ObjectPosition(obj)-this.draggingRectangle.BottomLeft;
+				CloneViewer clone = new CloneViewer(container);
+				clone.PreferredSize = obj.ActualSize;
+				clone.Margins = new Margins(origin.X, 0, 0, origin.Y);
+				clone.Anchor = AnchorStyles.BottomLeft;
+				clone.Clone = obj;
+			}
+
+			this.draggingOrigin = this.MapClientToScreen(this.draggingOffset);
+			this.draggingWindow = new DragWindow();
+			this.draggingWindow.DefineWidget(container, container.PreferredSize, Drawing.Margins.Zero);
+			this.draggingWindow.WindowLocation = this.draggingOrigin + pos;
+			this.draggingWindow.Owner = this.Window;
+			this.draggingWindow.FocusedWidget = container;
+			this.draggingWindow.Show();
+
+			this.HiliteRectangle(Rectangle.Empty);
+			this.dragging = true;
+			this.Invalidate();
+		}
+
+		protected void DraggingMove(Point pos)
+		{
+			this.draggingRectangle.BottomLeft = this.draggingOffset + pos;
+
+			Point adjust = this.draggingRectangle.BottomLeft;
+			this.draggingRectangle = this.ConstrainSnap(this.draggingRectangle);
+			adjust = this.draggingRectangle.BottomLeft - adjust;
+			
+			this.ConstrainActivate(this.draggingRectangle, this.selectedObjects.ToArray());
+			this.Invalidate();
+
+			this.draggingWindow.WindowLocation = this.draggingOrigin + pos + adjust;
+		}
+
+		protected void DraggingEnd()
+		{
+			this.draggingWindow.Hide();
+			this.draggingWindow.Dispose();
+			this.draggingWindow = null;
+
+			Rectangle initial = this.SelectBounds;
+			this.MoveSelection(this.draggingRectangle.BottomLeft - initial.BottomLeft);
+			this.dragging = false;
+			this.ConstrainEnd();
+			this.Invalidate();
 		}
 
 		protected void SelectKeyChanged(bool isControlPressed, bool isShiftPressed)
@@ -1293,7 +1358,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 
 			//	Dessine les objets sélectionnés.
-			if (this.selectedObjects.Count > 0)
+			if (this.selectedObjects.Count > 0 && !this.dragging)
 			{
 				foreach (Widget obj in this.selectedObjects)
 				{
@@ -1311,7 +1376,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 
 			//	Dessine les ancrages.
-			if (this.context.ShowAnchor && this.selectedObjects.Count > 0)
+			if (this.context.ShowAnchor && this.selectedObjects.Count > 0 && !this.dragging)
 			{
 				foreach (Widget obj in this.selectedObjects)
 				{
@@ -1352,7 +1417,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.ConstrainDraw(graphics, bounds);
 
 			//	Dessine les numéros d'ordre.
-			if (this.context.ShowZOrder)
+			if (this.context.ShowZOrder && !this.dragging)
 			{
 				foreach (Widget obj in this.panel.Children)
 				{
@@ -1368,7 +1433,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 
 			//	Dessine les numéros d'index pour la touche Tab.
-			if (this.context.ShowTabIndex)
+			if (this.context.ShowTabIndex && !this.dragging)
 			{
 				foreach (Widget obj in this.panel.Children)
 				{
@@ -1456,7 +1521,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Retourne true pour indiquer que le widget en question ne doit
 			//	pas être peint, ni ses enfants d'ailleurs. Ceci évite que les
 			//	widgets sélectionnés ne soient peints.
-			return this.dragging && this.selectedObjects.Contains(widget);
+			//?return this.dragging && this.selectedObjects.Contains(widget);
+			return false;
 		}
 
 		bool IPaintFilter.IsWidgetPaintDiscarded(Widget widget)
@@ -2084,6 +2150,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected Rectangle					hilitedRectangle = Rectangle.Empty;
 		protected bool						rectangling;  // j'invente des mots si je veux !
 		protected bool						dragging;
+		protected DragWindow				draggingWindow;
+		protected Point						draggingOffset;
+		protected Point						draggingOrigin;
+		protected Rectangle					draggingRectangle;
 		protected Point						startingPos;
 		protected Color						colorOutsurface = Color.FromAlphaRgb(0.2, 0.5, 0.5, 0.5);
 		protected Color						colorZOrder = Color.FromRgb(1,0,0);

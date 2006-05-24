@@ -1,3 +1,5 @@
+using Epsitec.Common.Drawing;
+
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
@@ -32,8 +34,9 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		public override void PaintHandler(Epsitec.Common.Drawing.Graphics graphics, Epsitec.Common.Drawing.Rectangle repaint, IPaintFilter paintFilter)
+		public override void PaintHandler(Graphics graphics, Rectangle repaint, IPaintFilter paintFilter)
 		{
+#if false
 			if (this.clone == null)
 			{
 				base.PaintHandler(graphics, repaint, paintFilter);
@@ -42,6 +45,10 @@ namespace Epsitec.Common.Widgets
 			{
 				this.clone.PaintHandler(graphics, repaint, paintFilter);
 			}
+#else
+			graphics.AddFilledRectangle(this.Client.Bounds);
+			graphics.RenderSolid(Color.FromAlphaRgb(0.5, 1, 0, 0));
+#endif
 		}
 
 
