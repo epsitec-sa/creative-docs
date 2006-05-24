@@ -449,18 +449,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 			if (this.isDragging)
 			{
 				this.DraggingMove(pos);
-#if false
-				Rectangle bounds = this.SelectBounds;
-				Point move = pos-this.startingPos;
-				Point corr = this.CorrectionSelection(bounds, move);
-				this.startingPos = pos+corr;
-				this.MoveSelection(move+corr);
-				
-				this.SetHiliteRectangle(Rectangle.Empty);
-
-				bounds.Offset(move+corr);
-				this.ConstrainActivate(bounds, this.selectedObjects.ToArray());
-#endif
 			}
 			else if (this.isRectangling)
 			{
@@ -481,10 +469,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void SelectUp(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
 			//	Sélection ponctuelle, souris relâchée.
-#if false
-			this.dragging = false;
-			this.ConstrainEnd();
-#endif
 			if (this.isDragging)
 			{
 				this.DraggingEnd();
@@ -500,6 +484,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected void DraggingStart(Point pos)
 		{
+			//	Début du drag pour déplacer les objets sélectionnés.
 			this.draggingArraySelected = this.selectedObjects.ToArray();
 
 			this.draggingRectangle = this.SelectBounds;
@@ -536,6 +521,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected void DraggingMove(Point pos)
 		{
+			//	Mouvement du drag pour déplacer les objets sélectionnés.
 			this.draggingRectangle.Offset((this.draggingOffset+pos)-this.draggingRectangle.BottomLeft);
 			this.ConstrainActivate(this.draggingRectangle, this.draggingArraySelected);
 			this.Invalidate();
@@ -549,6 +535,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected void DraggingEnd()
 		{
+			//	Fin du drag pour déplacer les objets sélectionnés.
 			this.draggingWindow.Hide();
 			this.draggingWindow.Dispose();
 			this.draggingWindow = null;
@@ -589,8 +576,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				if (obj != null && this.selectedObjects.Contains(obj))
 				{
-					this.isDragging = true;
-					this.ConstrainStart(this.SelectBounds);
+					this.DraggingStart(pos);
 					return;
 				}
 				this.selectedObjects.Clear();
@@ -616,16 +602,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			if (this.isDragging)
 			{
-				Rectangle bounds = this.SelectBounds;
-				Point move = pos-this.startingPos;
-				Point corr = this.CorrectionSelection(bounds, move);
-				this.startingPos = pos+corr;
-				this.MoveSelection(move+corr);
-
-				this.SetHiliteRectangle(Rectangle.Empty);
-
-				bounds.Offset(move+corr);
-				this.ConstrainActivate(bounds, this.selectedObjects.ToArray());
+				this.DraggingMove(pos);
 			}
 			else if (this.isRectangling)
 			{
@@ -636,8 +613,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void GlobalUp(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
 			//	Sélection rectangulaire, souris relâchée.
-			this.isDragging = false;
-			this.ConstrainEnd();
+			if (this.isDragging)
+			{
+				this.DraggingEnd();
+			}
 
 			if (this.isRectangling)
 			{
@@ -991,22 +970,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			//	Duplique tous les objets sélectionnés.
 			//	TODO:
-		}
-
-		protected Point CorrectionSelection(Rectangle bounds, Point move)
-		{
-			//	Calcule la correction a apporter au déplacement pour tenir compte des contraintes.
-			if (this.constrainList.Count == 0)
-			{
-				return Point.Zero;
-			}
-
-			Rectangle moved = bounds;
-			moved.Offset(move);
-
-			Rectangle snaped = this.ConstrainSnap(moved);
-
-			return snaped.BottomLeft - moved.BottomLeft;
 		}
 
 		protected void MoveSelection(Point move)
