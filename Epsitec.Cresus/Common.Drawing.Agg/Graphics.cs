@@ -66,6 +66,19 @@ namespace Epsitec.Common.Drawing
 				return this.SaveClippingRectangle ();
 			}
 		}
+
+		public Point							ClipOffset
+		{
+			get
+			{
+				return new Point (this.clip_ox, this.clip_oy);
+			}
+			set
+			{
+				this.clip_ox = value.X;
+				this.clip_oy = value.Y;
+			}
+		}
 		
 		public RichColor						RichColor
 		{
@@ -793,10 +806,10 @@ namespace Epsitec.Common.Drawing
 		
 		public void SetClippingRectangle(double x, double y, double width, double height)
 		{
-			double x1 = x;
-			double y1 = y;
-			double x2 = x + width;
-			double y2 = y + height;
+			double x1 = x + this.clip_ox;
+			double y1 = y + this.clip_oy;
+			double x2 = x + width + this.clip_ox;
+			double y2 = y + height + this.clip_oy;
 			
 			if (this.has_clip_rect)
 			{
@@ -838,7 +851,7 @@ namespace Epsitec.Common.Drawing
 				
 				if (!rect.IsEmpty)
 				{
-					this.pixmap.AddClipBox (rect.Left, rect.Bottom, rect.Right, rect.Top);
+					this.pixmap.AddClipBox (rect.Left + this.clip_ox, rect.Bottom + this.clip_oy, rect.Right + this.clip_ox, rect.Top + this.clip_oy);
 					bbox = Drawing.Rectangle.Union (bbox, rect);
 				}
 			}
@@ -866,7 +879,7 @@ namespace Epsitec.Common.Drawing
 				
 				if (!rect.IsEmpty)
 				{
-					this.pixmap.AddClipBox (rect.Left, rect.Bottom, rect.Right, rect.Top);
+					this.pixmap.AddClipBox (rect.Left + this.clip_ox, rect.Bottom + this.clip_oy, rect.Right + this.clip_ox, rect.Top + this.clip_oy);
 					bbox = Drawing.Rectangle.Union (bbox, rect);
 				}
 			}
@@ -1034,6 +1047,7 @@ namespace Epsitec.Common.Drawing
 		private Renderers.Smooth			smooth_renderer;
 		
 		private double						clip_x1, clip_y1, clip_x2, clip_y2;
+		private double						clip_ox, clip_oy;
 		private bool						has_clip_rect;
 
 		private Color						original_color;

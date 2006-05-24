@@ -510,11 +510,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 			foreach (Widget obj in this.selectedObjects)
 			{
 				Point origin = this.ObjectPosition(obj)-this.draggingRectangle.BottomLeft;
-				CloneViewer clone = new CloneViewer(container);
+				CloneView clone = new CloneView(container);
 				clone.PreferredSize = obj.ActualSize;
 				clone.Margins = new Margins(origin.X, 0, 0, origin.Y);
 				clone.Anchor = AnchorStyles.BottomLeft;
-				clone.Clone = obj;
+				clone.Model = obj;
 			}
 
 			this.draggingOrigin = this.MapClientToScreen(this.draggingOffset);
