@@ -399,8 +399,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 			Widget obj = this.Detect(pos);  // objet visé par la souris
 
 			this.startingPos = pos;
-			this.dragging = false;
-			this.rectangling = false;
+			this.isDragging = false;
+			this.isRectangling = false;
 
 			if (!isShiftPressed)  // touche Shift relâchée ?
 			{
@@ -414,7 +414,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			if (obj == null)
 			{
-				this.rectangling = true;
+				this.isRectangling = true;
 			}
 
 			if (obj != null)
@@ -446,7 +446,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.ChangeMouseCursor(MouseCursorType.Arrow);
 			}
 
-			if (this.dragging)
+			if (this.isDragging)
 			{
 				this.DraggingMove(pos);
 #if false
@@ -456,15 +456,15 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.startingPos = pos+corr;
 				this.MoveSelection(move+corr);
 				
-				this.HiliteRectangle(Rectangle.Empty);
+				this.SetHiliteRectangle(Rectangle.Empty);
 
 				bounds.Offset(move+corr);
 				this.ConstrainActivate(bounds, this.selectedObjects.ToArray());
 #endif
 			}
-			else if (this.rectangling)
+			else if (this.isRectangling)
 			{
-				this.SelectRectangle(new Rectangle(this.startingPos, pos));
+				this.SetSelectRectangle(new Rectangle(this.startingPos, pos));
 			}
 			else
 			{
@@ -474,7 +474,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				{
 					rect = obj.ActualBounds;
 				}
-				this.HiliteRectangle(rect);  // met en évidence l'objet survolé par la souris
+				this.SetHiliteRectangle(rect);  // met en évidence l'objet survolé par la souris
 			}
 		}
 
@@ -485,16 +485,16 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.dragging = false;
 			this.ConstrainEnd();
 #endif
-			if (this.dragging)
+			if (this.isDragging)
 			{
 				this.DraggingEnd();
 			}
 
-			if (this.rectangling)
+			if (this.isRectangling)
 			{
 				this.SelectObjectsInRectangle(this.selectedRectangle);
-				this.SelectRectangle(Rectangle.Empty);
-				this.rectangling = false;
+				this.SetSelectRectangle(Rectangle.Empty);
+				this.isRectangling = false;
 			}
 		}
 
@@ -525,8 +525,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.draggingWindow.FocusedWidget = container;
 			this.draggingWindow.Show();
 
-			this.HiliteRectangle(Rectangle.Empty);
-			this.dragging = true;
+			this.SetHiliteRectangle(Rectangle.Empty);
+			this.isDragging = true;
 			this.Invalidate();
 		}
 
@@ -551,7 +551,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			Rectangle initial = this.SelectBounds;
 			this.MoveSelection(this.draggingRectangle.BottomLeft - initial.BottomLeft);
-			this.dragging = false;
+			this.isDragging = false;
 			this.ConstrainEnd();
 			this.Invalidate();
 		}
@@ -577,21 +577,21 @@ namespace Epsitec.Common.Designer.MyWidgets
 			Widget obj = this.Detect(pos);  // objet visé par la souris
 
 			this.startingPos = pos;
-			this.dragging = false;
-			this.rectangling = false;
+			this.isDragging = false;
+			this.isRectangling = false;
 
 			if (!isShiftPressed)  // touche Shift relâchée ?
 			{
 				if (obj != null && this.selectedObjects.Contains(obj))
 				{
-					this.dragging = true;
+					this.isDragging = true;
 					this.ConstrainStart(this.SelectBounds);
 					return;
 				}
 				this.selectedObjects.Clear();
 			}
 
-			this.rectangling = true;
+			this.isRectangling = true;
 
 			this.OnChildrenSelected();
 			this.Invalidate();
@@ -609,7 +609,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.ChangeMouseCursor(MouseCursorType.Global);
 			}
 
-			if (this.dragging)
+			if (this.isDragging)
 			{
 				Rectangle bounds = this.SelectBounds;
 				Point move = pos-this.startingPos;
@@ -617,28 +617,28 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.startingPos = pos+corr;
 				this.MoveSelection(move+corr);
 
-				this.HiliteRectangle(Rectangle.Empty);
+				this.SetHiliteRectangle(Rectangle.Empty);
 
 				bounds.Offset(move+corr);
 				this.ConstrainActivate(bounds, this.selectedObjects.ToArray());
 			}
-			else if (this.rectangling)
+			else if (this.isRectangling)
 			{
-				this.SelectRectangle(new Rectangle(this.startingPos, pos));
+				this.SetSelectRectangle(new Rectangle(this.startingPos, pos));
 			}
 		}
 
 		protected void GlobalUp(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
 			//	Sélection rectangulaire, souris relâchée.
-			this.dragging = false;
+			this.isDragging = false;
 			this.ConstrainEnd();
 
-			if (this.rectangling)
+			if (this.isRectangling)
 			{
 				this.SelectObjectsInRectangle(this.selectedRectangle);
-				this.SelectRectangle(Rectangle.Empty);
-				this.rectangling = false;
+				this.SetSelectRectangle(Rectangle.Empty);
+				this.isRectangling = false;
 			}
 		}
 
@@ -942,7 +942,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.Invalidate();
 		}
 
-		protected void HiliteRectangle(Rectangle rect)
+		protected void SetHiliteRectangle(Rectangle rect)
 		{
 			//	Détermine la zone à mettre en évidence lors d'un survol.
 			if (this.hilitedRectangle != rect)
@@ -953,7 +953,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
-		protected void SelectRectangle(Rectangle rect)
+		protected void SetSelectRectangle(Rectangle rect)
 		{
 			//	Détermine la zone du rectangle de sélection.
 			if (this.selectedRectangle != rect)
@@ -1360,7 +1360,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 
 			//	Dessine les objets sélectionnés.
-			if (this.selectedObjects.Count > 0 && !this.dragging)
+			if (this.selectedObjects.Count > 0 && !this.isDragging)
 			{
 				foreach (Widget obj in this.selectedObjects)
 				{
@@ -1378,7 +1378,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 
 			//	Dessine les ancrages.
-			if (this.context.ShowAnchor && this.selectedObjects.Count > 0 && !this.dragging)
+			if (this.context.ShowAnchor && this.selectedObjects.Count > 0 && !this.isDragging)
 			{
 				foreach (Widget obj in this.selectedObjects)
 				{
@@ -1419,7 +1419,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.ConstrainDraw(graphics, bounds);
 
 			//	Dessine les numéros d'ordre.
-			if (this.context.ShowZOrder && !this.dragging)
+			if (this.context.ShowZOrder && !this.isDragging)
 			{
 				foreach (Widget obj in this.panel.Children)
 				{
@@ -1435,7 +1435,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 
 			//	Dessine les numéros d'index pour la touche Tab.
-			if (this.context.ShowTabIndex && !this.dragging)
+			if (this.context.ShowTabIndex && !this.isDragging)
 			{
 				foreach (Widget obj in this.panel.Children)
 				{
@@ -1523,7 +1523,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Retourne true pour indiquer que le widget en question ne doit
 			//	pas être peint, ni ses enfants d'ailleurs. Ceci évite que les
 			//	widgets sélectionnés ne soient peints.
-			return this.dragging && this.selectedObjects.Contains(widget);
+			return this.isDragging && this.selectedObjects.Contains(widget);
 		}
 
 		bool IPaintFilter.IsWidgetPaintDiscarded(Widget widget)
@@ -1551,9 +1551,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 
 			this.constrainInitialRectangle = initialRectangle;
-			this.constrainObjectLock = false;
+			this.isConstrainObjectLock = false;
 			this.constrainList.Clear();
-			this.constrainStarted = true;
+			this.isConstrainStarted = true;
 		}
 
 		protected void ConstrainEnd()
@@ -1565,20 +1565,20 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.Invalidate();
 			}
 
-			this.constrainStarted = false;
+			this.isConstrainStarted = false;
 		}
 
 		protected void ConstrainLock()
 		{
 			//	Vérouille ou dévérouille l'objet le plus proche.
-			if (!this.constrainStarted)
+			if (!this.isConstrainStarted)
 			{
 				return;
 			}
 
-			this.constrainObjectLock = !this.constrainObjectLock;
+			this.isConstrainObjectLock = !this.isConstrainObjectLock;
 
-			if (!this.constrainObjectLock)
+			if (!this.isConstrainObjectLock)
 			{
 				this.constrainList.Clear();
 				this.Invalidate();
@@ -1588,12 +1588,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void ConstrainActivate(Rectangle rect, params Widget[] excludes)
 		{
 			//	Active les contraintes pour un rectangle donné.
-			if (!this.constrainStarted)
+			if (!this.isConstrainStarted)
 			{
 				return;
 			}
 
-			if (!this.constrainObjectLock)
+			if (!this.isConstrainObjectLock)
 			{
 				this.constrainList.Clear();
 				double minX, minY;
@@ -1761,7 +1761,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected Rectangle ConstrainSnap(Rectangle rect)
 		{
 			//	Adapte un rectangle en fonction de l'ensemble des contraintes.
-			if (this.constrainStarted)
+			if (this.isConstrainStarted)
 			{
 				Constrain bestX, bestY;
 				this.ConstrainBest(rect, out bestX, out bestY);
@@ -1816,7 +1816,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void ConstrainDraw(Graphics graphics, Rectangle box)
 		{
 			//	Dessine toutes les contraintes.
-			if (this.constrainStarted)
+			if (this.isConstrainStarted)
 			{
 				foreach (Constrain constrain in this.constrainList)
 				{
@@ -2152,8 +2152,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected List<Widget>				selectedObjects = new List<Widget>();
 		protected Rectangle					selectedRectangle = Rectangle.Empty;
 		protected Rectangle					hilitedRectangle = Rectangle.Empty;
-		protected bool						rectangling;  // j'invente des mots si je veux !
-		protected bool						dragging;
+		protected bool						isRectangling;  // j'invente des mots si je veux !
+		protected bool						isDragging;
 		protected DragWindow				draggingWindow;
 		protected Point						draggingOffset;
 		protected Point						draggingOrigin;
@@ -2165,8 +2165,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected Color						colorAnchor = Color.FromRgb(1,0,0);
 		protected Color						colorGrid1 = Color.FromAlphaRgb(0.2, 0.4, 0.4, 0.4);
 		protected Color						colorGrid2 = Color.FromAlphaRgb(0.2, 0.7, 0.7, 0.7);
-		protected bool						constrainStarted;
-		protected bool						constrainObjectLock;
+		protected bool						isConstrainStarted;
+		protected bool						isConstrainObjectLock;
 		protected Rectangle					constrainInitialRectangle;
 		protected List<Constrain>			constrainList = new List<Constrain>();
 		protected MouseCursorType			lastCursor = MouseCursorType.Unknow;
