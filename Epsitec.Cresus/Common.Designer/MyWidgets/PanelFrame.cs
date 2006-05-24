@@ -2049,14 +2049,13 @@ namespace Epsitec.Common.Designer.MyWidgets
 		#endregion
 
 		#region IPaintFilter Members
-
 		bool IPaintFilter.IsWidgetFullyDiscarded(Widget widget)
 		{
 			//	Retourne true pour indiquer que le widget en question ne doit
 			//	pas être peint, ni ses enfants d'ailleurs. Ceci évite que les
 			//	widgets sélectionnés ne soient peints.
-			
-			return this.selectedObjects.Contains (widget);
+
+			return this.dragging && this.selectedObjects.Contains(widget);
 		}
 
 		bool IPaintFilter.IsWidgetPaintDiscarded(Widget widget)
@@ -2071,7 +2070,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 		void IPaintFilter.NotifyChildrenProcessed()
 		{
 		}
-
 		#endregion
 
 		protected UI.Panel					panel;
