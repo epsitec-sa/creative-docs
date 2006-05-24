@@ -18,7 +18,7 @@ namespace Epsitec.Common.Widgets
 			this.MakeLayeredWindow ();
 			this.DisableMouseActivation ();
 			
-			this.Alpha = 0.9;
+			this.Alpha = 0.8;
 			this.Name = "DragWindow";
 		}
 		

@@ -49,7 +49,7 @@
     <Compile Include="Modifier.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="MyWidgets\BundleType.cs" />
-    <Compile Include="MyWidgets\PanelFrame.cs" />
+    <Compile Include="MyWidgets\PanelEditor.cs" />
     <Compile Include="MyWidgets\StringArray.cs" />
     <Compile Include="MyWidgets\StringList.cs" />
     <Compile Include="MyWidgets\TextFieldLabel.cs" />

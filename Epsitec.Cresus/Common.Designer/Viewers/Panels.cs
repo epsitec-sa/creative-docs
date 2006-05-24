@@ -81,16 +81,16 @@ namespace Epsitec.Common.Designer.Viewers
 			this.panelWidget.Anchor = AnchorStyles.All;
 			this.panelWidget.SetParent(container);
 
-			//	Le PanelFrame est par-dessus le UI.Panel.
-			this.panelFrame = new MyWidgets.PanelFrame(container);
-			this.panelFrame.MinWidth = 100;
-			this.panelFrame.MinHeight = 100;
-			this.panelFrame.Anchor = AnchorStyles.All;
-			this.panelFrame.Panel = this.panelWidget;
-			this.panelFrame.Context = this.context;
-			this.panelFrame.ChildrenAdded += new EventHandler(this.HandlePanelFrameChildrenAdded);
-			this.panelFrame.ChildrenSelected += new EventHandler(this.HandlePanelFrameChildrenSelected);
-			this.panelFrame.UpdateCommands += new EventHandler(this.HandlePanelFrameUpdateCommands);
+			//	Le PanelEditor est par-dessus le UI.Panel.
+			this.panelEditor = new MyWidgets.PanelEditor(container);
+			this.panelEditor.MinWidth = 100;
+			this.panelEditor.MinHeight = 100;
+			this.panelEditor.Anchor = AnchorStyles.All;
+			this.panelEditor.Panel = this.panelWidget;
+			this.panelEditor.Context = this.context;
+			this.panelEditor.ChildrenAdded += new EventHandler(this.HandlePanelEditorChildrenAdded);
+			this.panelEditor.ChildrenSelected += new EventHandler(this.HandlePanelEditorChildrenSelected);
+			this.panelEditor.UpdateCommands += new EventHandler(this.HandlePanelEditorUpdateCommands);
 
 			this.tabBook = new TabBook(this);
 			this.tabBook.PreferredWidth = 150;
@@ -133,7 +133,7 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			if (paintFilter == null)
 			{
-				paintFilter = this.panelFrame;
+				paintFilter = this.panelEditor;
 			}
 			
 			base.PaintHandler (graphics, repaint, paintFilter);
@@ -251,7 +251,7 @@ namespace Epsitec.Common.Designer.Viewers
 		public override void DoCommand(string name)
 		{
 			//	Exécute une commande.
-			this.panelFrame.DoCommand(name);
+			this.panelEditor.DoCommand(name);
 			base.DoCommand(name);
 		}
 
@@ -408,7 +408,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.GetCommandState("Glyphs").Enable = false;
 
 			int objSelected, objCount;
-			this.panelFrame.GetSelectionInfo(out objSelected, out objCount);
+			this.panelEditor.GetSelectionInfo(out objSelected, out objCount);
 
 			this.GetCommandState("PanelDelete").Enable = (objSelected != 0);
 			this.GetCommandState("PanelDuplicate").Enable = (objSelected != 0);
@@ -557,17 +557,17 @@ namespace Epsitec.Common.Designer.Viewers
 			this.module.Modifier.IsDirty = true;
 		}
 
-		void HandlePanelFrameChildrenAdded(object sender)
+		void HandlePanelEditorChildrenAdded(object sender)
 		{
 			this.UpdateCommands();
 		}
 
-		void HandlePanelFrameChildrenSelected(object sender)
+		void HandlePanelEditorChildrenSelected(object sender)
 		{
 			this.UpdateCommands();
 		}
 
-		void HandlePanelFrameUpdateCommands(object sender)
+		void HandlePanelEditorUpdateCommands(object sender)
 		{
 			this.UpdateCommands();
 		}
@@ -577,7 +577,7 @@ namespace Epsitec.Common.Designer.Viewers
 		protected VToolBar					toolBar;
 		protected Scrollable				scrollable;
 		protected UI.Panel					panelWidget;
-		protected MyWidgets.PanelFrame		panelFrame;
+		protected MyWidgets.PanelEditor		panelEditor;
 		protected TabBook					tabBook;
 		protected TabPage					tabPageProperties;
 		protected TabPage					tabPageObjects;
