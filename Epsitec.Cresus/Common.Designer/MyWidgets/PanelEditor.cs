@@ -532,14 +532,13 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected void DraggingMove(Point pos)
 		{
-			this.draggingRectangle.BottomLeft = this.draggingOffset + pos;
+			this.draggingRectangle.Offset((this.draggingOffset+pos)-this.draggingRectangle.BottomLeft);
+			this.ConstrainActivate(this.draggingRectangle, this.selectedObjects.ToArray());
+			this.Invalidate();
 
 			Point adjust = this.draggingRectangle.BottomLeft;
 			this.draggingRectangle = this.ConstrainSnap(this.draggingRectangle);
 			adjust = this.draggingRectangle.BottomLeft - adjust;
-			
-			this.ConstrainActivate(this.draggingRectangle, this.selectedObjects.ToArray());
-			this.Invalidate();
 
 			this.draggingWindow.WindowLocation = this.draggingOrigin + pos + adjust;
 		}
