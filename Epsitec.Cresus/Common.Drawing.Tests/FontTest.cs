@@ -810,6 +810,7 @@ namespace Epsitec.Common.Drawing
 			form.Show ();
 		}
 		
+#if false
 		[Test] public void CheckDebugTrapZeroPointer()
 		{
 			try
@@ -821,7 +822,7 @@ namespace Epsitec.Common.Drawing
 				System.Console.Out.WriteLine (ex.ToString ());
 			}
 		}
-		
+#endif
 		
 		[Test] public void CheckFontFaceBalloon()
 		{
