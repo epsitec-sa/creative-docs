@@ -744,7 +744,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			pos.Y -= this.creatingObject.PreferredHeight/2;
 			Rectangle bounds = new Rectangle(pos, this.creatingObject.PreferredSize);
 
-			this.ConstrainStart(bounds);
+			this.ConstrainStart(Rectangle.Empty);
 			this.ConstrainActivate(bounds, null);
 		}
 
@@ -1520,8 +1520,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Retourne true pour indiquer que le widget en question ne doit
 			//	pas être peint, ni ses enfants d'ailleurs. Ceci évite que les
 			//	widgets sélectionnés ne soient peints.
-			//?return this.dragging && this.selectedObjects.Contains(widget);
-			return false;
+			return this.dragging && this.selectedObjects.Contains(widget);
 		}
 
 		bool IPaintFilter.IsWidgetPaintDiscarded(Widget widget)
@@ -1540,7 +1539,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 
 		#region Constrain
-		protected void ConstrainStart(Rectangle rect)
+		protected void ConstrainStart(Rectangle initialRectangle)
 		{
 			//	Début des contraintes.
 			if (!this.context.ShowConstrain)
@@ -1548,6 +1547,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				return;
 			}
 
+			this.constrainInitialRectangle = initialRectangle;
 			this.constrainObjectLock = false;
 			this.constrainList.Clear();
 			this.constrainStarted = true;
@@ -1594,8 +1594,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				this.constrainList.Clear();
 				double minX, minY;
-				this.ConstrainNearestDistance(rect.Center, out minX, out minY, excludes);
-				this.ConstrainNearestObjects(rect.Center, minX, minY, excludes);
+				this.ConstrainNearestDistance(rect, out minX, out minY, excludes);
+				this.ConstrainNearestObjects(rect, minX, minY, excludes);
 			}
 
 			foreach (Constrain constrain in this.constrainList)
@@ -1617,9 +1617,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
-		protected void ConstrainNearestDistance(Point pos, out double minX, out double minY, params Widget[] excludes)
+		protected void ConstrainNearestDistance(Rectangle rect, out double minX, out double minY, params Widget[] excludes)
 		{
 			//	Cherche la distance à l'objet le plus proche d'une position donnée.
+			Point center = rect.Center;
 			minX = 1000000;
 			minY = 1000000;
 			double distance;
@@ -1628,13 +1629,13 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				if (!this.ConstrainContain(excludes, obj))
 				{
-					distance = System.Math.Abs(obj.ActualBounds.Center.X-pos.X);
+					distance = System.Math.Abs(obj.ActualBounds.Center.X-center.X);
 					if (minX > distance)
 					{
 						minX = distance;
 					}
 
-					distance = System.Math.Abs(obj.ActualBounds.Center.Y-pos.Y);
+					distance = System.Math.Abs(obj.ActualBounds.Center.Y-center.Y);
 					if (minY > distance)
 					{
 						minY = distance;
@@ -1643,47 +1644,42 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
-		protected void ConstrainNearestObjects(Point pos, double distanceX, double distanceY, params Widget[] excludes)
+		protected void ConstrainNearestObjects(Rectangle rect, double distanceX, double distanceY, params Widget[] excludes)
 		{
 			//	Initialise les contraintes pour tous les objets dont la distance est
 			//	inférieure ou égale à une distance donnée.
+			Point center = rect.Center;
 			double distance;
 
-#if false
-			this.Window.ForceLayout();
-
-			if (excludes != null && excludes.Length > 0)
+			if (!this.constrainInitialRectangle.IsEmpty)
 			{
-				Widget firstParent = excludes[0].Parent;
-				Rectangle rect = new Rectangle(Point.Zero, firstParent.RealMinSize);
-
+				//	Ajoute les contraintes correspondant au rectangle initial.
 				Constrain constrain;
 
-				constrain = new Constrain(rect.BottomLeft+this.context.ConstrainSpacing, Constrain.Type.Left, this.context.ConstrainMargin);
-				this.ConstrainAdd(constrain);
+				if (System.Math.Abs(rect.Left-this.constrainInitialRectangle.Left) <= this.context.ConstrainMargin)
+				{
+					constrain = new Constrain(this.constrainInitialRectangle.BottomLeft, Constrain.Type.Left, this.context.ConstrainMargin);
+					this.ConstrainAdd(constrain);
+				}
 
-				constrain = new Constrain(rect.BottomRight-this.context.ConstrainSpacing, Constrain.Type.Right, this.context.ConstrainMargin);
-				this.ConstrainAdd(constrain);
-
-				constrain = new Constrain(rect.BottomLeft+this.context.ConstrainSpacing, Constrain.Type.Bottom, this.context.ConstrainMargin);
-				this.ConstrainAdd(constrain);
-
-				constrain = new Constrain(rect.TopLeft-this.context.ConstrainSpacing, Constrain.Type.Top, this.context.ConstrainMargin);
-				this.ConstrainAdd(constrain);
+				if (System.Math.Abs(rect.Bottom-this.constrainInitialRectangle.Bottom) <= this.context.ConstrainMargin)
+				{
+					constrain = new Constrain(this.constrainInitialRectangle.BottomLeft, Constrain.Type.Bottom, this.context.ConstrainMargin);
+					this.ConstrainAdd(constrain);
+				}
 			}
-#endif
 
 			foreach (Widget obj in this.panel.Children)
 			{
 				if (!this.ConstrainContain(excludes, obj))
 				{
-					distance = System.Math.Abs(obj.ActualBounds.Center.X-pos.X);
+					distance = System.Math.Abs(obj.ActualBounds.Center.X-center.X);
 					if (distance <= distanceX)
 					{
 						this.ConstrainInitialise(obj);
 					}
 
-					distance = System.Math.Abs(obj.ActualBounds.Center.Y-pos.Y);
+					distance = System.Math.Abs(obj.ActualBounds.Center.Y-center.Y);
 					if (distance <= distanceY)
 					{
 						this.ConstrainInitialise(obj);
@@ -2162,6 +2158,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected Color						colorGrid2 = Color.FromAlphaRgb(0.2, 0.7, 0.7, 0.7);
 		protected bool						constrainStarted;
 		protected bool						constrainObjectLock;
+		protected Rectangle					constrainInitialRectangle;
 		protected List<Constrain>			constrainList = new List<Constrain>();
 		protected MouseCursorType			lastCursor = MouseCursorType.Unknow;
 
