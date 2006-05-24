@@ -1608,17 +1608,17 @@ namespace Epsitec.Common.Designer.MyWidgets
 				constrain.IsActivate = false;
 			}
 
-			Constrain bestX, bestY;
+			List<Constrain> bestX, bestY;
 			this.ConstrainBest(rect, out bestX, out bestY);
 
-			if (bestX != null)
+			foreach (Constrain best in bestX)
 			{
-				bestX.IsActivate = true;
+				best.IsActivate = true;
 			}
 
-			if (bestY != null)
+			foreach (Constrain best in bestY)
 			{
-				bestY.IsActivate = true;
+				best.IsActivate = true;
 			}
 		}
 
@@ -1787,31 +1787,29 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Adapte un rectangle en fonction de l'ensemble des contraintes.
 			if (this.isConstrainStarted)
 			{
-				Constrain bestX, bestY;
+				List<Constrain> bestX, bestY;
 				this.ConstrainBest(rect, out bestX, out bestY);
 
-				if (bestX != null)
+				if (bestX.Count > 0)
 				{
-					rect = bestX.Snap(rect);
+					rect = bestX[0].Snap(rect);
 				}
 
-				if (bestY != null)
+				if (bestY.Count > 0)
 				{
-					rect = bestY.Snap(rect);
+					rect = bestY[0].Snap(rect);
 				}
 			}
 
 			return rect;
 		}
 
-		protected void ConstrainBest(Rectangle rect, out Constrain bestX, out Constrain bestY)
+		protected void ConstrainBest(Rectangle rect, out List<Constrain> bestListX, out List<Constrain> bestListY)
 		{
 			//	Cherches les contraintes les plus pertinentes parmi l'ensemble des contraintes.
 			double adjust;
 			double minX = 1000000;
 			double minY = 1000000;
-			bestX = null;
-			bestY = null;
 
 			foreach (Constrain constrain in this.constrainList)
 			{
@@ -1821,7 +1819,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 					if (minX > adjust)
 					{
 						minX = adjust;
-						bestX = constrain;
 					}
 				}
 
@@ -1831,7 +1828,28 @@ namespace Epsitec.Common.Designer.MyWidgets
 					if (minY > adjust)
 					{
 						minY = adjust;
-						bestY = constrain;
+					}
+				}
+			}
+
+			bestListX = new List<Constrain>();
+			bestListY = new List<Constrain>();
+
+			foreach (Constrain constrain in this.constrainList)
+			{
+				if (constrain.AdjustX(rect, out adjust))
+				{
+					if (System.Math.Abs(adjust) <= minX)
+					{
+						bestListX.Add(constrain);
+					}
+				}
+
+				if (constrain.AdjustY(rect, out adjust))
+				{
+					if (System.Math.Abs(adjust) <= minY)
+					{
+						bestListY.Add(constrain);
 					}
 				}
 			}
