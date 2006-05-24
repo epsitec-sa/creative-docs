@@ -500,6 +500,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected void DraggingStart(Point pos)
 		{
+			this.draggingArraySelected = this.selectedObjects.ToArray();
+
 			this.draggingRectangle = this.SelectBounds;
 			this.draggingOffset = this.draggingRectangle.BottomLeft - pos;
 			this.ConstrainStart(this.draggingRectangle);
@@ -535,7 +537,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void DraggingMove(Point pos)
 		{
 			this.draggingRectangle.Offset((this.draggingOffset+pos)-this.draggingRectangle.BottomLeft);
-			this.ConstrainActivate(this.draggingRectangle, this.selectedObjects.ToArray());
+			this.ConstrainActivate(this.draggingRectangle, this.draggingArraySelected);
 			this.Invalidate();
 
 			Point adjust = this.draggingRectangle.BottomLeft;
@@ -554,6 +556,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			Rectangle initial = this.SelectBounds;
 			this.MoveSelection(this.draggingRectangle.BottomLeft - initial.BottomLeft);
 			this.isDragging = false;
+			this.draggingArraySelected = null;
 			this.ConstrainEnd();
 			this.Invalidate();
 		}
@@ -2218,6 +2221,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected Point						draggingOffset;
 		protected Point						draggingOrigin;
 		protected Rectangle					draggingRectangle;
+		protected Widget[]					draggingArraySelected;
 		protected Point						startingPos;
 		protected Color						colorOutsurface = Color.FromAlphaRgb(0.2, 0.5, 0.5, 0.5);
 		protected Color						colorZOrder = Color.FromRgb(1,0,0);

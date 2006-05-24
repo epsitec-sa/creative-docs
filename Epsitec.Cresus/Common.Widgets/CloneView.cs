@@ -36,7 +36,6 @@ namespace Epsitec.Common.Widgets
 
 		public override void PaintHandler(Graphics graphics, Rectangle repaint, IPaintFilter paintFilter)
 		{
-#if true
 			if (this.model == null)
 			{
 				base.PaintHandler(graphics, repaint, paintFilter);
@@ -62,10 +61,6 @@ namespace Epsitec.Common.Widgets
 				graphics.Transform = originalTransform;
 				graphics.ClipOffset = originalClipOffset;
 			}
-#else
-			graphics.AddFilledRectangle(this.Client.Bounds);
-			graphics.RenderSolid(Color.FromAlphaRgb(0.5, 1, 0, 0));
-#endif
 		}
 
 
