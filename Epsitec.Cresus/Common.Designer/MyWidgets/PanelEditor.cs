@@ -510,6 +510,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 			foreach (Widget obj in this.selectedObjects)
 			{
 				Point origin = this.ObjectPosition(obj)-this.draggingRectangle.BottomLeft;
+				origin.X += this.panel.Padding.Left;
+				origin.Y += this.panel.Padding.Bottom;
 				CloneView clone = new CloneView(container);
 				clone.PreferredSize = obj.ActualSize;
 				clone.Margins = new Margins(origin.X, 0, 0, origin.Y);
@@ -1653,12 +1655,34 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	inférieure ou égale à une distance donnée.
 			Point center = rect.Center;
 			double distance;
+			Constrain constrain;
+
+			//	Ajoute les contraintes du conteneur parent.
+			Rectangle box = this.RealBounds;
+			if (!box.IsEmpty)
+			{
+				box.Deflate(this.panel.Padding);
+
+				constrain = new Constrain(box.BottomLeft, Constrain.Type.Left, this.context.ConstrainMargin);
+				constrain.IsLimit = true;
+				this.ConstrainAdd(constrain);
+
+				constrain = new Constrain(box.BottomRight, Constrain.Type.Right, this.context.ConstrainMargin);
+				constrain.IsLimit = true;
+				this.ConstrainAdd(constrain);
+
+				constrain = new Constrain(box.BottomLeft, Constrain.Type.Bottom, this.context.ConstrainMargin);
+				constrain.IsLimit = true;
+				this.ConstrainAdd(constrain);
+
+				constrain = new Constrain(box.TopLeft, Constrain.Type.Top, this.context.ConstrainMargin);
+				constrain.IsLimit = true;
+				this.ConstrainAdd(constrain);
+			}
 
 			if (!this.constrainInitialRectangle.IsEmpty)
 			{
 				//	Ajoute les contraintes correspondant au rectangle initial.
-				Constrain constrain;
-
 				if (System.Math.Abs(rect.Left-this.constrainInitialRectangle.Left) <= this.context.ConstrainMargin)
 				{
 					constrain = new Constrain(this.constrainInitialRectangle.BottomLeft, Constrain.Type.Left, this.context.ConstrainMargin);
@@ -1840,7 +1864,20 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.position   = position;
 				this.type       = type;
 				this.margin     = margin;
+				this.isLimit    = false;
 				this.isActivate = false;
+			}
+
+			public bool IsLimit
+			{
+				get
+				{
+					return this.isLimit;
+				}
+				set
+				{
+					this.isLimit = value;
+				}
 			}
 
 			public bool IsVertical
@@ -1926,6 +1963,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 				}
 
 				Color color = PanelEditor.HiliteOutlineColor;
+				if (this.isLimit)
+				{
+					color = Color.FromAlphaRgb(0.7, 1,0,0);  // rouge transparent
+				}
 				if (!this.isActivate)
 				{
 					color.A *= 0.2;  // plus transparent s'il s'agit d'une contrainte inactive
@@ -2014,6 +2055,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			protected Point					position;
 			protected Type					type;
 			protected double				margin;
+			protected bool					isLimit;
 			protected bool					isActivate;
 		}
 		#endregion
