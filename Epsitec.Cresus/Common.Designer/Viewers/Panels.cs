@@ -249,6 +249,17 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Effectue une modification de typographie.
 		}
 
+		public override void DoTool(string name)
+		{
+			//	Choix de l'outil.
+			base.DoTool(name);
+
+			if (this.context.Tool.StartsWith("Object"))
+			{
+				this.panelEditor.DeselectAll();
+			}
+		}
+
 		public override void DoCommand(string name)
 		{
 			//	Exécute une commande.

@@ -482,72 +482,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
-		protected void DraggingStart(Point pos)
-		{
-			//	Début du drag pour déplacer les objets sélectionnés.
-			this.draggingArraySelected = this.selectedObjects.ToArray();
-
-			this.draggingRectangle = this.SelectBounds;
-			this.draggingOffset = this.draggingRectangle.BottomLeft - pos;
-			this.ConstrainStart(this.draggingRectangle);
-
-			Widget container = new Widget();
-			container.PreferredSize = this.draggingRectangle.Size;
-
-			foreach (Widget obj in this.selectedObjects)
-			{
-				Point origin = this.ObjectPosition(obj)-this.draggingRectangle.BottomLeft;
-				origin.X += this.panel.Padding.Left;
-				origin.Y += this.panel.Padding.Bottom;
-				CloneView clone = new CloneView(container);
-				clone.PreferredSize = obj.ActualSize;
-				clone.Margins = new Margins(origin.X, 0, 0, origin.Y);
-				clone.Anchor = AnchorStyles.BottomLeft;
-				clone.Model = obj;
-			}
-
-			this.draggingOrigin = this.MapClientToScreen(this.draggingOffset);
-			this.draggingWindow = new DragWindow();
-			this.draggingWindow.DefineWidget(container, container.PreferredSize, Drawing.Margins.Zero);
-			this.draggingWindow.WindowLocation = this.draggingOrigin + pos;
-			this.draggingWindow.Owner = this.Window;
-			this.draggingWindow.FocusedWidget = container;
-			this.draggingWindow.Show();
-
-			this.SetHiliteRectangle(Rectangle.Empty);
-			this.isDragging = true;
-			this.Invalidate();
-		}
-
-		protected void DraggingMove(Point pos)
-		{
-			//	Mouvement du drag pour déplacer les objets sélectionnés.
-			this.draggingRectangle.Offset((this.draggingOffset+pos)-this.draggingRectangle.BottomLeft);
-			this.ConstrainActivate(this.draggingRectangle, this.draggingArraySelected);
-			this.Invalidate();
-
-			Point adjust = this.draggingRectangle.BottomLeft;
-			this.draggingRectangle = this.ConstrainSnap(this.draggingRectangle);
-			adjust = this.draggingRectangle.BottomLeft - adjust;
-
-			this.draggingWindow.WindowLocation = this.draggingOrigin + pos + adjust;
-		}
-
-		protected void DraggingEnd()
-		{
-			//	Fin du drag pour déplacer les objets sélectionnés.
-			this.draggingWindow.Hide();
-			this.draggingWindow.Dispose();
-			this.draggingWindow = null;
-
-			Rectangle initial = this.SelectBounds;
-			this.MoveSelection(this.draggingRectangle.BottomLeft - initial.BottomLeft);
-			this.isDragging = false;
-			this.draggingArraySelected = null;
-			this.ConstrainEnd();
-			this.Invalidate();
-		}
-
 		protected void SelectKeyChanged(bool isControlPressed, bool isShiftPressed)
 		{
 			//	Sélection ponctuelle, touche pressée ou relâchée.
@@ -755,17 +689,27 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.creatingWindow.Dispose();
 				this.creatingWindow = null;
 
-				this.creatingObject = this.CreateObjectItem();
-				this.creatingObject.SetParent(this.panel);
-				this.creatingObject.Anchor = AnchorStyles.BottomLeft;
-				this.creatingObject.TabNavigation = TabNavigationMode.Passive;
-
 				Rectangle bounds;
 				this.CreateObjectAdjust(ref pos, out bounds);
 
-				pos.X -= this.panel.Padding.Left;
-				pos.Y -= this.panel.Padding.Bottom;
-				this.ObjectPosition(this.creatingObject, pos);
+				Widget parent = this.DetectGroup(bounds);
+				Point offset = parent.ActualBounds.BottomLeft;
+
+				this.creatingObject = this.CreateObjectItem();
+				this.creatingObject.SetParent(parent);
+				this.creatingObject.Anchor = AnchorStyles.BottomLeft;
+				this.creatingObject.TabNavigation = TabNavigationMode.Passive;
+
+				if (parent == this.panel)
+				{
+					pos.X -= this.panel.Padding.Left;
+					pos.Y -= this.panel.Padding.Bottom;
+				}
+				else
+				{
+					pos -= offset;
+				}
+				this.SetObjectPosition(this.creatingObject, pos);
 
 				this.ConstrainEnd();
 
@@ -809,6 +753,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected void CreateObjectAdjust(ref Point pos, out Rectangle bounds)
 		{
+			//	Ajuste la position de l'objet à créer selon les contraintes.
 			pos.X -= this.creatingObject.PreferredWidth/2;
 			pos.Y -= this.creatingObject.PreferredHeight/2;
 			bounds = new Rectangle(pos, this.creatingObject.PreferredSize);
@@ -825,29 +770,113 @@ namespace Epsitec.Common.Designer.MyWidgets
 		#endregion
 
 
+		#region Dragging
+		protected void DraggingStart(Point pos)
+		{
+			//	Début du drag pour déplacer les objets sélectionnés.
+			this.draggingArraySelected = this.selectedObjects.ToArray();
+
+			this.draggingRectangle = this.SelectBounds;
+			this.draggingOffset = this.draggingRectangle.BottomLeft - pos;
+			this.ConstrainStart(this.draggingRectangle);
+
+			Widget container = new Widget();
+			container.PreferredSize = this.draggingRectangle.Size;
+
+			foreach (Widget obj in this.selectedObjects)
+			{
+				Point origin = this.GetObjectPosition(obj)-this.draggingRectangle.BottomLeft;
+				origin.X += this.panel.Padding.Left;
+				origin.Y += this.panel.Padding.Bottom;
+				CloneView clone = new CloneView(container);
+				clone.PreferredSize = obj.ActualSize;
+				clone.Margins = new Margins(origin.X, 0, 0, origin.Y);
+				clone.Anchor = AnchorStyles.BottomLeft;
+				clone.Model = obj;
+			}
+
+			this.draggingOrigin = this.MapClientToScreen(this.draggingOffset);
+			this.draggingWindow = new DragWindow();
+			this.draggingWindow.DefineWidget(container, container.PreferredSize, Drawing.Margins.Zero);
+			this.draggingWindow.WindowLocation = this.draggingOrigin + pos;
+			this.draggingWindow.Owner = this.Window;
+			this.draggingWindow.FocusedWidget = container;
+			this.draggingWindow.Show();
+
+			this.SetHiliteRectangle(Rectangle.Empty);
+			this.isDragging = true;
+			this.Invalidate();
+		}
+
+		protected void DraggingMove(Point pos)
+		{
+			//	Mouvement du drag pour déplacer les objets sélectionnés.
+			this.draggingRectangle.Offset((this.draggingOffset+pos)-this.draggingRectangle.BottomLeft);
+			this.ConstrainActivate(this.draggingRectangle, this.draggingArraySelected);
+			this.Invalidate();
+
+			Point adjust = this.draggingRectangle.BottomLeft;
+			this.draggingRectangle = this.ConstrainSnap(this.draggingRectangle);
+			adjust = this.draggingRectangle.BottomLeft - adjust;
+
+			this.draggingWindow.WindowLocation = this.draggingOrigin + pos + adjust;
+		}
+
+		protected void DraggingEnd()
+		{
+			//	Fin du drag pour déplacer les objets sélectionnés.
+			this.draggingWindow.Hide();
+			this.draggingWindow.Dispose();
+			this.draggingWindow = null;
+
+			Rectangle initial = this.SelectBounds;
+			this.MoveSelection(this.draggingRectangle.BottomLeft - initial.BottomLeft);
+			this.isDragging = false;
+			this.draggingArraySelected = null;
+			this.ConstrainEnd();
+			this.Invalidate();
+		}
+		#endregion
+
+
 		#region Selection
 		protected Widget Detect(Point pos)
 		{
 			//	Détecte l'objet visé par la souris, avec priorité au dernier objet
 			//	dessiné (donc placé dessus).
-			for (int i=this.panel.Children.Count-1; i>=0; i--)
+			return this.Detect(pos, this.panel);
+		}
+
+		protected Widget Detect(Point pos, Widget parent)
+		{
+			for (int i=parent.Children.Count-1; i>=0; i--)
 			{
-				Widget widget = this.panel.Children[i] as Widget;
+				Widget widget = parent.Children[i] as Widget;
+
 				if (widget.ActualBounds.Contains(pos))
 				{
+					if (widget is AbstractGroup)
+					{
+						Widget child = this.Detect(widget.MapParentToClient(pos), widget);
+						if (child != null)
+						{
+							return child;
+						}
+					}
+
 					return widget;
 				}
 			}
 			return null;
 		}
 
-		protected Widget DetectGroup(Rectangle rect, Widget exclude)
+		protected Widget DetectGroup(Rectangle rect)
 		{
 			//	Détecte dans quel groupe est entièrement inclu un rectangle donné.
 			for (int i=this.panel.Children.Count-1; i>=0; i--)
 			{
 				Widget widget = this.panel.Children[i] as Widget;
-				if (widget is AbstractGroup && widget != exclude)
+				if (widget is AbstractGroup)
 				{
 					if (widget.ActualBounds.Contains(rect))
 					{
@@ -858,7 +887,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			return this.panel;
 		}
 
-		protected void DeselectAll()
+		public void DeselectAll()
 		{
 			//	Désélectionne tous les objets.
 			if (this.selectedObjects.Count > 0)
@@ -980,7 +1009,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			foreach (Widget obj in this.selectedObjects)
 			{
 				toRepaint = Rectangle.Union(toRepaint, obj.ActualBounds);
-				this.ObjectPosition(obj, this.ObjectPosition(obj)+move);
+				this.SetObjectPosition(obj, this.GetObjectPosition(obj)+move);
 				toRepaint = Rectangle.Union(toRepaint, obj.ActualBounds);
 			}
 
@@ -1000,21 +1029,21 @@ namespace Epsitec.Common.Designer.MyWidgets
 				{
 					foreach (Widget obj in this.selectedObjects)
 					{
-						this.ObjectPositionY(obj, bounds.Bottom);
+						this.SetObjectPositionY(obj, bounds.Bottom);
 					}
 				}
 				else if (direction > 0)  // en haut ?
 				{
 					foreach (Widget obj in this.selectedObjects)
 					{
-						this.ObjectPositionY(obj, bounds.Top-this.ObjectSizeY(obj));
+						this.SetObjectPositionY(obj, bounds.Top-this.GetObjectSize(obj).Height);
 					}
 				}
 				else  // centré verticalement ?
 				{
 					foreach (Widget obj in this.selectedObjects)
 					{
-						this.ObjectPositionY(obj, bounds.Center.Y-this.ObjectSizeY(obj)/2);
+						this.SetObjectPositionY(obj, bounds.Center.Y-this.GetObjectSize(obj).Height/2);
 					}
 				}
 			}
@@ -1024,21 +1053,21 @@ namespace Epsitec.Common.Designer.MyWidgets
 				{
 					foreach (Widget obj in this.selectedObjects)
 					{
-						this.ObjectPositionX(obj, bounds.Left);
+						this.SetObjectPositionX(obj, bounds.Left);
 					}
 				}
 				else if (direction > 0)  // à droite ?
 				{
 					foreach (Widget obj in this.selectedObjects)
 					{
-						this.ObjectPositionX(obj, bounds.Right-this.ObjectSizeX(obj));
+						this.SetObjectPositionX(obj, bounds.Right-this.GetObjectSize(obj).Width);
 					}
 				}
 				else  // centré horizontalement ?
 				{
 					foreach (Widget obj in this.selectedObjects)
 					{
-						this.ObjectPositionX(obj, bounds.Center.X-this.ObjectSizeX(obj)/2);
+						this.SetObjectPositionX(obj, bounds.Center.X-this.GetObjectSize(obj).Width/2);
 					}
 				}
 			}
@@ -1055,16 +1084,16 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				foreach (Widget obj in this.selectedObjects)
 				{
-					this.ObjectPositionY(obj, bounds.Bottom);
-					this.ObjectSizeY(obj, bounds.Height);
+					this.SetObjectPositionY(obj, bounds.Bottom);
+					this.SetObjectHeight(obj, bounds.Height);
 				}
 			}
 			else
 			{
 				foreach (Widget obj in this.selectedObjects)
 				{
-					this.ObjectPositionX(obj, bounds.Left);
-					this.ObjectSizeX(obj, bounds.Width);
+					this.SetObjectPositionX(obj, bounds.Left);
+					this.SetObjectWidth(obj, bounds.Width);
 				}
 			}
 
@@ -1167,49 +1196,82 @@ namespace Epsitec.Common.Designer.MyWidgets
 		}
 
 
-		protected double ObjectPositionX(Widget obj)
+		protected Rectangle GetObjectBounds(Widget obj)
 		{
-			//	Retourne l'origine gauche d'un objet.
-			return obj.Margins.Left;
+			//	Retourne la boîte d'un objet.
+			Point pos = new Point(obj.Margins.Left, obj.Margins.Bottom);
+			this.Window.ForceLayout();
+			pos = this.panel.MapClientToParent(pos);
+			pos.X += this.panel.Padding.Left;
+			pos.Y += this.panel.Padding.Bottom;
+			return new Rectangle(pos, obj.PreferredSize);
 		}
 
-		protected double ObjectPositionY(Widget obj)
+		protected void SetObjectBounds(Widget obj, Rectangle rect)
 		{
-			//	Retourne l'origine inférieure d'un objet.
-			return obj.Margins.Bottom;
+			//	Modifie la boîte d'un objet.
+			Point pos = rect.BottomLeft;
+			pos.X -= this.panel.Padding.Left;
+			pos.Y -= this.panel.Padding.Bottom;
+			pos.X = System.Math.Max(pos.X, 0);
+			pos.Y = System.Math.Max(pos.Y, 0);
+			this.Window.ForceLayout();
+			pos = this.panel.MapParentToClient(pos);
+
+			Margins margins = obj.Margins;
+			margins.Left   = pos.X;
+			margins.Bottom = pos.Y;
+			obj.Margins = margins;
+			obj.PreferredSize = rect.Size;
 		}
 
-		protected Point ObjectPosition(Widget obj)
+		protected Point GetObjectPosition(Widget obj)
 		{
 			//	Retourne l'origine d'un objet.
-			return new Point(obj.Margins.Left, obj.Margins.Bottom);
+			Point pos = new Point(obj.Margins.Left, obj.Margins.Bottom);
+			this.Window.ForceLayout();
+			return this.panel.MapClientToParent(pos);
 		}
 
-		protected void ObjectPositionX(Widget obj, double x)
+		protected void SetObjectPositionX(Widget obj, double x)
 		{
 			//	Déplace l'origine gauche d'un objet.
-			x = System.Math.Max(x, 0);
+			Point pos = new Point(x, 0);
+			pos.X -= this.panel.Padding.Left;
+			pos.Y -= this.panel.Padding.Bottom;
+			pos.X = System.Math.Max(pos.X, 0);
+			pos.Y = System.Math.Max(pos.Y, 0);
+			this.Window.ForceLayout();
+			pos = this.panel.MapParentToClient(pos);
 
 			Margins margins = obj.Margins;
-			margins.Left = x;
+			margins.Left = pos.X;
 			obj.Margins = margins;
 		}
 
-		protected void ObjectPositionY(Widget obj, double y)
+		protected void SetObjectPositionY(Widget obj, double y)
 		{
 			//	Déplace l'origine inférieure d'un objet.
-			y = System.Math.Max(y, 0);
+			Point pos = new Point(0, y);
+			pos.X -= this.panel.Padding.Left;
+			pos.Y -= this.panel.Padding.Bottom;
+			pos.X = System.Math.Max(pos.X, 0);
+			pos.Y = System.Math.Max(pos.Y, 0);
+			this.Window.ForceLayout();
+			pos = this.panel.MapParentToClient(pos);
 
 			Margins margins = obj.Margins;
-			margins.Bottom = y;
+			margins.Bottom = pos.Y;
 			obj.Margins = margins;
 		}
 
-		protected void ObjectPosition(Widget obj, Point pos)
+		protected void SetObjectPosition(Widget obj, Point pos)
 		{
 			//	Déplace l'origine d'un objet.
 			pos.X = System.Math.Max(pos.X, 0);
 			pos.Y = System.Math.Max(pos.Y, 0);
+			this.Window.ForceLayout();
+			pos = this.panel.MapParentToClient(pos);
 
 			Margins margins = obj.Margins;
 			margins.Left   = pos.X;
@@ -1217,61 +1279,49 @@ namespace Epsitec.Common.Designer.MyWidgets
 			obj.Margins = margins;
 		}
 
-		protected double ObjectSizeX(Widget obj)
-		{
-			//	Retourne la largeur d'un objet.
-			return obj.ActualWidth;
-		}
-
-		protected double ObjectSizeY(Widget obj)
-		{
-			//	Retourne la hauteur d'un objet.
-			return obj.ActualHeight;
-		}
-
-		protected Size ObjectSize(Widget obj)
+		protected Size GetObjectSize(Widget obj)
 		{
 			//	Retourne les dimensions d'un objet.
 			return obj.ActualSize;
 		}
 
-		protected void ObjectSizeX(Widget obj, double dx)
+		protected void SetObjectWidth(Widget obj, double dx)
 		{
 			//	Modifie la largeur d'un objet.
 			obj.PreferredWidth = dx;
 		}
 
-		protected void ObjectSizeY(Widget obj, double dy)
+		protected void SetObjectHeight(Widget obj, double dy)
 		{
 			//	Modifie la hauteur d'un objet.
 			obj.PreferredHeight = dy;
 		}
 
-		protected void ObjectSize(Widget obj, Size size)
+		protected void SetObjectSize(Widget obj, Size size)
 		{
 			//	Modifie les dimensions d'un objet.
 			obj.PreferredSize = size;
 		}
 
-		protected bool ObjectAnchorLeft(Widget obj)
+		protected bool IsObjectAnchorLeft(Widget obj)
 		{
 			//	Indique si l'objet est ancré à gauche.
 			return (obj.Anchor & AnchorStyles.Left) != 0;
 		}
 
-		protected bool ObjectAnchorRight(Widget obj)
+		protected bool IsObjectAnchorRight(Widget obj)
 		{
 			//	Indique si l'objet est ancré à gauche.
 			return (obj.Anchor & AnchorStyles.Right) != 0;
 		}
 
-		protected bool ObjectAnchorBottom(Widget obj)
+		protected bool IsObjectAnchorBottom(Widget obj)
 		{
 			//	Indique si l'objet est ancré à gauche.
 			return (obj.Anchor & AnchorStyles.Bottom) != 0;
 		}
 
-		protected bool ObjectAnchorTop(Widget obj)
+		protected bool IsObjectAnchorTop(Widget obj)
 		{
 			//	Indique si l'objet est ancré à gauche.
 			return (obj.Anchor & AnchorStyles.Top) != 0;
@@ -1332,7 +1382,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				foreach (Widget obj in this.selectedObjects)
 				{
-					Rectangle rect = obj.ActualBounds;
+					Rectangle rect = this.GetObjectBounds(obj);
 					rect.Deflate(0.5);
 
 					graphics.AddFilledRectangle(rect);
@@ -1350,31 +1400,31 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				foreach (Widget obj in this.selectedObjects)
 				{
-					Rectangle rect = obj.ActualBounds;
+					Rectangle rect = this.GetObjectBounds(obj);
 					Point p1, p2;
 
-					if (this.ObjectAnchorLeft(obj))
+					if (this.IsObjectAnchorLeft(obj))
 					{
 						p1 = new Point(bounds.Left, rect.Center.Y);
 						p2 = new Point(rect.Left, rect.Center.Y);
 						this.DrawAnchor(graphics, p1, p2);
 					}
 
-					if (this.ObjectAnchorRight(obj))
+					if (this.IsObjectAnchorRight(obj))
 					{
 						p1 = new Point(bounds.Right, rect.Center.Y);
 						p2 = new Point(rect.Right, rect.Center.Y);
 						this.DrawAnchor(graphics, p1, p2);
 					}
 
-					if (this.ObjectAnchorBottom(obj))
+					if (this.IsObjectAnchorBottom(obj))
 					{
 						p1 = new Point(rect.Center.X, bounds.Bottom);
 						p2 = new Point(rect.Center.X, rect.Bottom);
 						this.DrawAnchor(graphics, p1, p2);
 					}
 
-					if (this.ObjectAnchorTop(obj))
+					if (this.IsObjectAnchorTop(obj))
 					{
 						p1 = new Point(rect.Center.X, bounds.Top);
 						p2 = new Point(rect.Center.X, rect.Top);
@@ -1391,7 +1441,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				foreach (Widget obj in this.panel.Children)
 				{
-					box = new Rectangle(obj.ActualBounds.BottomLeft+new Point(1, 1), new Size(12, 10));
+					Rectangle rect = this.GetObjectBounds(obj);
+					box = new Rectangle(rect.BottomLeft+new Point(1, 1), new Size(12, 10));
 
 					graphics.AddFilledRectangle(box);
 					graphics.RenderSolid(Color.FromBrightness(1));
@@ -1409,7 +1460,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 				{
 					if (this.ObjectTabActive(obj))
 					{
-						box = new Rectangle(obj.ActualBounds.BottomRight+new Point(-12-1, 1), new Size(12, 10));
+						Rectangle rect = this.GetObjectBounds(obj);
+						box = new Rectangle(rect.BottomRight+new Point(-12-1, 1), new Size(12, 10));
 
 						graphics.AddFilledRectangle(box);
 						graphics.RenderSolid(Color.FromBrightness(1));
