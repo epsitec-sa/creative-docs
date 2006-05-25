@@ -142,7 +142,8 @@ namespace Epsitec.Common.Widgets
 				}
 				else
 				{
-					if (target.WindowBounds.Contains (pos))
+					if ((target.WindowBounds.Contains (pos)) &&
+						(target.IsVisible))
 					{
 						list.Add (target);
 					}
