@@ -396,6 +396,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void SelectDown(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
 			//	Sélection ponctuelle, souris pressée.
+			this.lastCreatedObject = null;
+
 			Widget obj = this.Detect(pos);  // objet visé par la souris
 
 			this.startingPos = pos;
@@ -500,6 +502,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void GlobalDown(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
 			//	Sélection rectangulaire, souris pressée.
+			this.lastCreatedObject = null;
+
 			Widget obj = this.Detect(pos);  // objet visé par la souris
 
 			this.startingPos = pos;
@@ -713,7 +717,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 				this.ConstrainEnd();
 
-				this.SelectOneObject(this.creatingObject);
+				this.lastCreatedObject = this.creatingObject;
 				this.creatingObject = null;
 			}
 		}
@@ -929,6 +933,16 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			this.OnChildrenSelected();
 			this.Invalidate();
+		}
+
+		public void SelectLastCreatedObject()
+		{
+			//	Sélectionne l'objet qui vient d'être créé.
+			if (this.lastCreatedObject != null)
+			{
+				this.SelectOneObject(this.lastCreatedObject);
+				this.lastCreatedObject = null;
+			}
 		}
 
 		protected void SelectOneObject(Widget obj)
@@ -2227,6 +2241,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected DragWindow				creatingWindow;
 		protected Point						creatingOrigin;
 		protected Widget					creatingObject;
+		protected Widget					lastCreatedObject;
 		protected List<Widget>				selectedObjects = new List<Widget>();
 		protected Rectangle					selectedRectangle = Rectangle.Empty;
 		protected Rectangle					hilitedRectangle = Rectangle.Empty;
