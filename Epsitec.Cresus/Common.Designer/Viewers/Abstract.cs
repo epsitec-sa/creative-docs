@@ -142,7 +142,7 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Effectue une modification de typographie.
 		}
 
-		public void DoTool(string name)
+		public virtual void DoTool(string name)
 		{
 			//	Choix de l'outil.
 			this.context.Tool = name;
