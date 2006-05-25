@@ -650,6 +650,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.DeselectAll();
 
 			this.creatingObject = this.CreateObjectItem();
+
+			Rectangle bounds;
+			this.CreateObjectAdjust(ref pos, out bounds);
+
 			this.creatingOrigin = this.MapClientToScreen(Point.Zero);
 			this.creatingWindow = new DragWindow();
 			this.creatingWindow.DefineWidget(this.creatingObject, this.creatingObject.PreferredSize, Drawing.Margins.Zero);
@@ -657,10 +661,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.creatingWindow.Owner = this.Window;
 			this.creatingWindow.FocusedWidget = this.creatingObject;
 			this.creatingWindow.Show();
-
-			pos.X -= this.creatingObject.PreferredWidth/2;
-			pos.Y -= this.creatingObject.PreferredHeight/2;
-			Rectangle bounds = new Rectangle(pos, this.creatingObject.PreferredSize);
 
 			this.ConstrainStart(Rectangle.Empty);
 			this.ConstrainActivate(bounds, null);
