@@ -254,6 +254,11 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Choix de l'outil.
 			base.DoTool(name);
 
+			if (this.context.Tool == "ToolSelect" || this.context.Tool == "ToolGlobal")
+			{
+				this.panelEditor.SelectLastCreatedObject();
+			}
+
 			if (this.context.Tool.StartsWith("Object"))
 			{
 				this.panelEditor.DeselectAll();
