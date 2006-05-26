@@ -723,6 +723,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 				this.lastCreatedObject = this.creatingObject;
 				this.creatingObject = null;
+				this.OnUpdateCommands();
 			}
 		}
 
@@ -1364,12 +1365,16 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected double GetObjectBaseLine(Widget obj)
 		{
 			//	Retourne la position relative de la ligne de base depuis le bas de l'objet.
+#if false
 			if (obj is AbstractGroup || obj is StaticText)
 			{
 				return 0;
 			}
 
 			return 6;  // TODO: faire mieux !!!
+#else
+			return obj.GetBaseLine().Y;
+#endif
 		}
 
 		protected bool IsObjectAnchorLeft(Widget obj)
