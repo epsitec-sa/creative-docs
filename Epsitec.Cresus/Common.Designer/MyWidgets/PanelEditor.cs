@@ -1579,6 +1579,15 @@ namespace Epsitec.Common.Designer.MyWidgets
 				graphics.AddRectangle(sel);
 				graphics.RenderSolid(PanelEditor.HiliteOutlineColor);
 			}
+
+			//	Dessine les poignées.
+			if (this.selectedObjects.Count > 0 && !this.isDragging)
+			{
+				foreach (Widget obj in this.selectedObjects)
+				{
+					this.HandlesDraw(graphics, obj);
+				}
+			}
 		}
 
 		protected void DrawAnchor(Graphics graphics, Point p1, Point p2)
@@ -1648,6 +1657,170 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		void IPaintFilter.NotifyChildrenProcessed()
 		{
+		}
+		#endregion
+
+
+		#region Handle
+		protected Handle GetHandle(Widget obj, Handle.Type type)
+		{
+			//	Retourne une poignée d'un objet.
+			if (type == Handle.Type.None)
+			{
+				return null;
+			}
+
+			if (obj is TextField)
+			{
+				if (type != Handle.Type.Left && type != Handle.Type.Right)
+				{
+					return null;
+				}
+			}
+			else if (obj is StaticText)
+			{
+				if (type != Handle.Type.Left && type != Handle.Type.Right)
+				{
+					return null;
+				}
+			}
+			else if (obj is GroupBox)
+			{
+				//	Tous les types
+			}
+			else
+			{
+				return null;
+			}
+
+			Rectangle bounds = this.GetObjectBounds(obj);
+			Point center = bounds.Center;
+
+			switch (type)
+			{
+				case Handle.Type.BottomLeft:
+					return new Handle(type, bounds.BottomLeft);
+
+				case Handle.Type.BottomRight:
+					return new Handle(type, bounds.BottomRight);
+
+				case Handle.Type.TopRight:
+					return new Handle(type, bounds.TopRight);
+
+				case Handle.Type.TopLeft:
+					return new Handle(type, bounds.TopLeft);
+
+				case Handle.Type.Bottom:
+					return new Handle(type, new Point(center.X, bounds.Bottom));
+
+				case Handle.Type.Top:
+					return new Handle(type, new Point(center.X, bounds.Top));
+
+				case Handle.Type.Left:
+					return new Handle(type, new Point(bounds.Left, center.Y));
+
+				case Handle.Type.Right:
+					return new Handle(type, new Point(bounds.Right, center.Y));
+			}
+
+			return null;
+		}
+
+		protected void HandleMove(Widget obj, Handle.Type type, Point pos)
+		{
+			//	Déplace une poignée d'un objet.
+		}
+
+		protected Handle.Type HandlesDetect(Widget obj, Point mouse)
+		{
+			//	Détecte la poignée visée par la souris.
+			foreach (int i in System.Enum.GetValues(typeof(Handle.Type)))
+			{
+				Handle handle = this.GetHandle(obj, (Handle.Type) i);
+				if (handle != null)
+				{
+					if (handle.Detect(mouse))
+					{
+						return (Handle.Type) i;
+					}
+				}
+			}
+			return Handle.Type.None;
+		}
+
+		protected void HandlesDraw(Graphics graphics, Widget obj)
+		{
+			//	Dessine toutes les poignées d'un objet.
+			foreach (int i in System.Enum.GetValues(typeof(Handle.Type)))
+			{
+				Handle handle = this.GetHandle(obj, (Handle.Type) i);
+				if (handle != null)
+				{
+					handle.Draw(graphics);
+				}
+			}
+		}
+
+		protected class Handle
+		{
+			public enum Type
+			{
+				None,
+				BottomLeft,
+				BottomRight,
+				TopLeft,
+				TopRight,
+				Bottom,
+				Top,
+				Left,
+				Right,
+			}
+
+			public Handle(Type type, Point position)
+			{
+				this.type = type;
+				this.position = position;
+			}
+
+			public Point Position
+			{
+				get
+				{
+					return this.position;
+				}
+				set
+				{
+					this.position = value;
+				}
+			}
+
+			public bool Detect(Point mouse)
+			{
+				return this.Bounds.Contains(mouse);
+			}
+
+			public void Draw(Graphics graphics)
+			{
+				Rectangle rect = this.Bounds;
+
+				graphics.AddFilledRectangle(rect);
+				graphics.RenderSolid(Color.FromRgb(1, 0, 0));
+
+				graphics.AddRectangle(rect);
+				graphics.RenderSolid(Color.FromBrightness(0));
+			}
+
+			protected Rectangle Bounds
+			{
+				get
+				{
+					Point dim = new Point(3.5, 3.5);
+					return new Rectangle(this.position-dim, this.position+dim);
+				}
+			}
+
+			protected Type					type;
+			protected Point					position;
 		}
 		#endregion
 
