@@ -88,6 +88,7 @@
   <data name="Action.AlignTop">Alignement en haut</data>
   <data name="Action.AlignCenterY">Alignement centré verticalement</data>
   <data name="Action.AlignBottom">Alignement en bas</data>
+  <data name="Action.AlignBaseLine">Alignement vertical sur la ligne de base</data>
   <data name="Action.AdjustWidth">Largeurs identiques</data>
   <data name="Action.AdjustHeight">Hauteurs identiques</data>
 

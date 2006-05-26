@@ -978,6 +978,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.GetCommandState("AlignTop").Enable = false;
 			this.GetCommandState("AlignCenterY").Enable = false;
 			this.GetCommandState("AlignBottom").Enable = false;
+			this.GetCommandState("AlignBaseLine").Enable = false;
 			this.GetCommandState("AdjustWidth").Enable = false;
 			this.GetCommandState("AdjustHeight").Enable = false;
 			this.GetCommandState("AlignGrid").Enable = false;

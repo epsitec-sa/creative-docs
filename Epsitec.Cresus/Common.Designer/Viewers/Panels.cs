@@ -453,6 +453,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.GetCommandState("AlignTop").Enable = (objSelected >= 2);
 			this.GetCommandState("AlignCenterY").Enable = (objSelected >= 2);
 			this.GetCommandState("AlignBottom").Enable = (objSelected >= 2);
+			this.GetCommandState("AlignBaseLine").Enable = (objSelected >= 2);
 			this.GetCommandState("AdjustWidth").Enable = (objSelected >= 2);
 			this.GetCommandState("AdjustHeight").Enable = (objSelected >= 2);
 			this.GetCommandState("AlignGrid").Enable = (objSelected != 0);

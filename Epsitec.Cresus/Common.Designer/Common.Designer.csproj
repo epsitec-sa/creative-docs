@@ -203,6 +203,7 @@
     <EmbeddedResource Include="Images\TabIndexClear.icon" />
     <EmbeddedResource Include="Images\ObjectGroup.icon" />
     <EmbeddedResource Include="Images\ObjectStatic.icon" />
+    <EmbeddedResource Include="Images\AlignBaseLine.icon" />
     <None Include="Resources\Designer\Strings.00.resource" />
     <None Include="Resources\Designer\Strings.en.resource" />
   </ItemGroup>
