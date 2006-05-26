@@ -150,6 +150,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 					this.SelectAlign(-1, true);
 					break;
 
+				case "AlignBaseLine":
+					this.SelectAlignBaseLine();
+					break;
+
 				case "AdjustWidth":
 					this.SelectAdjust(false);
 					break;
@@ -1093,6 +1097,20 @@ namespace Epsitec.Common.Designer.MyWidgets
 						this.SetObjectPositionX(obj, bounds.Center.X-this.GetObjectSize(obj).Width/2);
 					}
 				}
+			}
+
+			this.Invalidate();
+		}
+
+		protected void SelectAlignBaseLine()
+		{
+			//	Aligne sur la ligne de base tous les objets sélectionnés.
+			Rectangle bounds = this.SelectBounds;
+			double baseLine = bounds.Bottom + 6;  // TODO: faire mieux !!!
+
+			foreach (Widget obj in this.selectedObjects)
+			{
+				this.SetObjectPositionY(obj, baseLine-this.GetObjectBaseLine(obj));
 			}
 
 			this.Invalidate();

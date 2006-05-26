@@ -517,6 +517,7 @@ namespace Epsitec.Common.Designer
 		[Command("AlignTop")]
 		[Command("AlignCenterY")]
 		[Command("AlignBottom")]
+		[Command("AlignBaseLine")]
 		[Command("AdjustWidth")]
 		[Command("AdjustHeight")]
 		[Command("AlignGrid")]
@@ -607,6 +608,7 @@ namespace Epsitec.Common.Designer
 			this.alignTopState = this.CreateCommandState("AlignTop");
 			this.alignCenterYState = this.CreateCommandState("AlignCenterY");
 			this.alignBottomState = this.CreateCommandState("AlignBottom");
+			this.alignBaseLineState = this.CreateCommandState("AlignBaseLine");
 			this.adjustWidthState = this.CreateCommandState("AdjustWidth");
 			this.adjustHeightState = this.CreateCommandState("AdjustHeight");
 			this.alignGridState = this.CreateCommandState("AlignGrid");
@@ -1021,6 +1023,7 @@ namespace Epsitec.Common.Designer
 		protected CommandState					alignTopState;
 		protected CommandState					alignCenterYState;
 		protected CommandState					alignBottomState;
+		protected CommandState					alignBaseLineState;
 		protected CommandState					adjustWidthState;
 		protected CommandState					adjustHeightState;
 		protected CommandState					alignGridState;
