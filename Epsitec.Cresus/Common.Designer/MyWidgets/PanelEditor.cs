@@ -733,6 +733,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 				item.PreferredHeight = 1;
 			}
 
+			if (this.context.Tool == "ObjectStatic")
+			{
+				item = new StaticText();
+				item.Text = "StaticText";
+			}
+
 			if (this.context.Tool == "ObjectButton")
 			{
 				item = new Button();

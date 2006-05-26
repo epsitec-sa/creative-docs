@@ -243,6 +243,8 @@ namespace Epsitec.Common.Designer.Viewers
 			this.UpdateCommandTool("ObjectLine");
 			this.UpdateCommandTool("ObjectButton");
 			this.UpdateCommandTool("ObjectText");
+			this.UpdateCommandTool("ObjectStatic");
+			this.UpdateCommandTool("ObjectGroup");
 		}
 
 		protected void UpdateCommandTool(string name)

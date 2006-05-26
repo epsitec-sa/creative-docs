@@ -111,6 +111,7 @@
   <data name="Action.ObjectLine">Séparateur</data>
   <data name="Action.ObjectButton">Bouton</data>
   <data name="Action.ObjectText">Texte éditable</data>
+  <data name="Action.ObjectStatic">Texte fixe</data>
   <data name="Action.ObjectGroup">Groupe (conteneur d'objets)</data>
 
   <data name="Dialog.Button.Close">Fermer</data>
