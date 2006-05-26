@@ -144,6 +144,18 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
+		public double Leading
+		{
+			get
+			{
+				return this.leading;
+			}
+			set
+			{
+				this.leading = value;
+			}
+		}
+
 		public Margins ConstrainGroupMargins
 		{
 			get
@@ -167,6 +179,7 @@ namespace Epsitec.Common.Designer
 		protected double				gridStep = 10;
 		protected double				constrainMargin = 5;
 		protected Size					constrainSpacing = new Size(10, 5);
+		protected double				leading = 30;
 		protected Margins				constrainGroupMargins = new Margins(12, 12, 12+7, 12);
 	}
 }
