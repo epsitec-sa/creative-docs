@@ -14,7 +14,6 @@ namespace Epsitec.Common.Designer.Ribbons
 			this.Title = Res.Strings.Ribbon.Section.PanelShow;
 			this.PreferredWidth = 8 + (22+5)*3 - 4;
 
-			this.buttonShowGrid      = this.CreateIconButton("PanelShowGrid");
 			this.buttonShowConstrain = this.CreateIconButton("PanelShowConstrain");
 			this.buttonShowAnchor    = this.CreateIconButton("PanelShowAnchor");
 
@@ -40,17 +39,15 @@ namespace Epsitec.Common.Designer.Ribbons
 			//	Met à jour la géométrie.
 			base.UpdateClientGeometry();
 
-			if ( this.buttonShowGrid == null )  return;
+			if ( this.buttonShowConstrain == null )  return;
 
-			double dx = this.buttonShowGrid.PreferredWidth;
-			double dy = this.buttonShowGrid.PreferredHeight;
+			double dx = this.buttonShowConstrain.PreferredWidth;
+			double dy = this.buttonShowConstrain.PreferredHeight;
 
 			Rectangle rect = this.UsefulZone;
 			rect.Width  = dx;
 			rect.Height = dy;
 			rect.Offset(0, dy+5);
-			this.buttonShowGrid.SetManualBounds(rect);
-			rect.Offset(dx+5, 0);
 			this.buttonShowConstrain.SetManualBounds(rect);
 			rect.Offset(dx+5, 0);
 			this.buttonShowAnchor.SetManualBounds(rect);
@@ -66,7 +63,6 @@ namespace Epsitec.Common.Designer.Ribbons
 		}
 
 
-		protected IconButton				buttonShowGrid;
 		protected IconButton				buttonShowConstrain;
 		protected IconButton				buttonShowAnchor;
 		protected IconButton				buttonShowExpand;
