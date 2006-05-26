@@ -1811,6 +1811,23 @@ namespace Epsitec.Common.Designer.MyWidgets
 			constrain = new Constrain(bounds.TopLeft+this.context.ConstrainSpacing, Constrain.Type.Bottom, this.context.ConstrainMargin);
 			this.ConstrainAdd(constrain);
 
+			if (obj is AbstractGroup)
+			{
+				bounds.Deflate(this.context.ConstrainGroupMargins);
+
+				constrain = new Constrain(bounds.BottomLeft, Constrain.Type.Left, this.context.ConstrainMargin);
+				this.ConstrainAdd(constrain);
+
+				constrain = new Constrain(bounds.BottomRight, Constrain.Type.Right, this.context.ConstrainMargin);
+				this.ConstrainAdd(constrain);
+
+				constrain = new Constrain(bounds.BottomLeft, Constrain.Type.Bottom, this.context.ConstrainMargin);
+				this.ConstrainAdd(constrain);
+
+				constrain = new Constrain(bounds.TopLeft, Constrain.Type.Top, this.context.ConstrainMargin);
+				this.ConstrainAdd(constrain);
+			}
+
 			this.Invalidate();
 		}
 
