@@ -402,11 +402,26 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Sélection ponctuelle, souris pressée.
 			this.lastCreatedObject = null;
 
-			Widget obj = this.Detect(pos);  // objet visé par la souris
-
 			this.startingPos = pos;
 			this.isDragging = false;
 			this.isRectangling = false;
+			this.draggingHandle = Handle.Type.None;
+
+			Widget obj = null;
+
+			if (this.selectedObjects.Count == 1)
+			{
+				obj = this.selectedObjects[0];
+				this.draggingHandle = this.HandlesDetect(obj, pos);
+
+				if (this.draggingHandle != Handle.Type.None)
+				{
+					this.SetHiliteRectangle(Rectangle.Empty);
+					return;
+				}
+			}
+
+			obj = this.Detect(pos);  // objet visé par la souris
 
 			if (!isShiftPressed)  // touche Shift relâchée ?
 			{
@@ -460,6 +475,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				this.SetSelectRectangle(new Rectangle(this.startingPos, pos));
 			}
+			else if (this.draggingHandle != Handle.Type.None)
+			{
+				this.HandleMove(this.selectedObjects[0], this.draggingHandle, pos);
+			}
 			else
 			{
 				Widget obj = this.Detect(pos);
@@ -485,6 +504,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.SelectObjectsInRectangle(this.selectedRectangle);
 				this.SetSelectRectangle(Rectangle.Empty);
 				this.isRectangling = false;
+			}
+
+			if (this.draggingHandle != Handle.Type.None)
+			{
+				this.draggingHandle = Handle.Type.None;
+				this.Invalidate();
 			}
 		}
 
@@ -736,24 +761,28 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				item = new Separator();
 				item.PreferredHeight = 1;
+				//?item.MinWidth = 10;
 			}
 
 			if (this.context.Tool == "ObjectStatic")
 			{
 				item = new StaticText();
 				item.Text = "StaticText";
+				//?item.MinWidth = 10;
 			}
 
 			if (this.context.Tool == "ObjectButton")
 			{
 				item = new Button();
 				item.Text = "Button";
+				//?item.MinWidth = 20;
 			}
 
 			if (this.context.Tool == "ObjectText")
 			{
 				item = new TextField();
 				item.Text = "TextField";
+				//?item.MinWidth = 20;
 			}
 
 			if (this.context.Tool == "ObjectGroup")
@@ -761,6 +790,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 				item = new GroupBox();
 				item.Text = "Group";
 				item.PreferredSize = new Size(200, 100);
+				//?item.MinWidth = 50;
+				//?item.MinHeight = 50;
 			}
 
 			return item;
@@ -1294,6 +1325,18 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void SetObjectBounds(Widget obj, Rectangle rect)
 		{
 			//	Modifie la boîte d'un objet.
+			rect.Normalise();
+
+			if (rect.Width < obj.MinWidth)
+			{
+				rect.Width = obj.MinWidth;
+			}
+
+			if (rect.Height < obj.MinHeight)
+			{
+				rect.Height = obj.MinHeight;
+			}
+
 			Point pos = rect.BottomLeft;
 			pos.X -= this.panel.Padding.Left;
 			pos.Y -= this.panel.Padding.Bottom;
@@ -1307,6 +1350,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 			margins.Bottom = pos.Y;
 			obj.Margins = margins;
 			obj.PreferredSize = rect.Size;
+
+			this.Invalidate();
 		}
 
 		protected Point GetObjectPosition(Widget obj)
@@ -1469,7 +1514,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 
 			//	Dessine les objets sélectionnés.
-			if (this.selectedObjects.Count > 0 && !this.isDragging)
+			if (this.selectedObjects.Count > 0 && !this.isDragging && this.draggingHandle == Handle.Type.None)
 			{
 				foreach (Widget obj in this.selectedObjects)
 				{
@@ -1487,7 +1532,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 
 			//	Dessine les ancrages.
-			if (this.context.ShowAnchor && this.selectedObjects.Count > 0 && !this.isDragging)
+			if (this.context.ShowAnchor && this.selectedObjects.Count > 0 && !this.isDragging && this.draggingHandle == Handle.Type.None)
 			{
 				foreach (Widget obj in this.selectedObjects)
 				{
@@ -1528,7 +1573,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.ConstrainDraw(graphics, bounds);
 
 			//	Dessine les numéros d'ordre.
-			if (this.context.ShowZOrder && !this.isDragging)
+			if (this.context.ShowZOrder && !this.isDragging && this.draggingHandle == Handle.Type.None)
 			{
 				foreach (Widget obj in this.panel.Children)
 				{
@@ -1545,7 +1590,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 
 			//	Dessine les numéros d'index pour la touche Tab.
-			if (this.context.ShowTabIndex && !this.isDragging)
+			if (this.context.ShowTabIndex && !this.isDragging && this.draggingHandle == Handle.Type.None)
 			{
 				foreach (Widget obj in this.panel.Children)
 				{
@@ -1581,7 +1626,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 
 			//	Dessine les poignées.
-			if (this.selectedObjects.Count > 0 && !this.isDragging)
+			if (this.selectedObjects.Count == 1 && !this.isDragging)
 			{
 				foreach (Widget obj in this.selectedObjects)
 				{
@@ -1677,6 +1722,20 @@ namespace Epsitec.Common.Designer.MyWidgets
 					return null;
 				}
 			}
+			else if (obj is Button)
+			{
+				if (type != Handle.Type.Left && type != Handle.Type.Right)
+				{
+					return null;
+				}
+			}
+			else if (obj is Separator)
+			{
+				if (type != Handle.Type.Left && type != Handle.Type.Right)
+				{
+					return null;
+				}
+			}
 			else if (obj is StaticText)
 			{
 				if (type != Handle.Type.Left && type != Handle.Type.Right)
@@ -1729,6 +1788,44 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void HandleMove(Widget obj, Handle.Type type, Point pos)
 		{
 			//	Déplace une poignée d'un objet.
+			Rectangle bounds = this.GetObjectBounds(obj);
+
+			switch (type)
+			{
+				case Handle.Type.BottomLeft:
+					bounds.BottomLeft = pos;
+					break;
+
+				case Handle.Type.BottomRight:
+					bounds.BottomRight = pos;
+					break;
+
+				case Handle.Type.TopRight:
+					bounds.TopRight = pos;
+					break;
+
+				case Handle.Type.TopLeft:
+					bounds.TopLeft = pos;
+					break;
+
+				case Handle.Type.Bottom:
+					bounds.Bottom = pos.Y;
+					break;
+
+				case Handle.Type.Top:
+					bounds.Top = pos.Y;
+					break;
+
+				case Handle.Type.Left:
+					bounds.Left = pos.X;
+					break;
+
+				case Handle.Type.Right:
+					bounds.Right = pos.X;
+					break;
+			}
+
+			this.SetObjectBounds(obj, bounds);
 		}
 
 		protected Handle.Type HandlesDetect(Widget obj, Point mouse)
@@ -1756,6 +1853,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 				Handle handle = this.GetHandle(obj, (Handle.Type) i);
 				if (handle != null)
 				{
+					if (this.draggingHandle != Handle.Type.None)
+					{
+						if (handle.HandleType != this.draggingHandle)
+						{
+							continue;
+						}
+					}
+
 					handle.Draw(graphics);
 				}
 			}
@@ -1782,6 +1887,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.position = position;
 			}
 
+			public Handle.Type HandleType
+			{
+				get
+				{
+					return this.type;
+				}
+			}
+
 			public Point Position
 			{
 				get
@@ -1802,6 +1915,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 			public void Draw(Graphics graphics)
 			{
 				Rectangle rect = this.Bounds;
+				graphics.Align(ref rect);
+				rect.Offset(0.5, 0.5);
 
 				graphics.AddFilledRectangle(rect);
 				graphics.RenderSolid(Color.FromRgb(1, 0, 0));
@@ -2550,6 +2665,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected Rectangle					hilitedRectangle = Rectangle.Empty;
 		protected bool						isRectangling;  // j'invente des mots si je veux !
 		protected bool						isDragging;
+		protected Handle.Type				draggingHandle = Handle.Type.None;
 		protected DragWindow				draggingWindow;
 		protected Point						draggingOffset;
 		protected Point						draggingOrigin;
