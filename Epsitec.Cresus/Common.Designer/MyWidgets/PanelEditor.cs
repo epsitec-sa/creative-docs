@@ -1071,7 +1071,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				{
 					foreach (Widget obj in this.selectedObjects)
 					{
-						this.SetObjectPositionY(obj, bounds.Center.Y-this.GetObjectSize(obj).Height/2);
+						this.SetObjectPositionY(obj, System.Math.Floor(bounds.Center.Y-this.GetObjectSize(obj).Height/2));
 					}
 				}
 			}
@@ -1095,7 +1095,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				{
 					foreach (Widget obj in this.selectedObjects)
 					{
-						this.SetObjectPositionX(obj, bounds.Center.X-this.GetObjectSize(obj).Width/2);
+						this.SetObjectPositionX(obj, System.Math.Floor(bounds.Center.X-this.GetObjectSize(obj).Width/2));
 					}
 				}
 			}
@@ -1106,6 +1106,31 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void SelectAlignBaseLine()
 		{
 			//	Aligne sur la ligne de base tous les objets sélectionnés.
+#if false
+			Widget model = null;
+			foreach (Widget obj in this.selectedObjects)
+			{
+				double baseLine = this.GetObjectBaseLine(obj);
+				if (baseLine != 0)
+				{
+					model = obj;
+					break;
+				}
+			}
+
+			if (model != null)
+			{
+				foreach (Widget obj in this.selectedObjects)
+				{
+					if (obj != model)
+					{
+						Widget.BaseLineAlign(model, obj);
+					}
+				}
+			}
+
+			this.Invalidate();
+#else
 			Rectangle bounds = this.SelectBounds;
 			double baseLine = bounds.Bottom + 6;  // TODO: faire mieux !!!
 
@@ -1115,6 +1140,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 
 			this.Invalidate();
+#endif
 		}
 
 		protected void SelectAdjust(bool isVertical)
@@ -1365,16 +1391,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected double GetObjectBaseLine(Widget obj)
 		{
 			//	Retourne la position relative de la ligne de base depuis le bas de l'objet.
-#if false
-			if (obj is AbstractGroup || obj is StaticText)
-			{
-				return 0;
-			}
-
-			return 6;  // TODO: faire mieux !!!
-#else
-			return obj.GetBaseLine().Y;
-#endif
+			return System.Math.Floor(obj.GetBaseLine().Y);
 		}
 
 		protected bool IsObjectAnchorLeft(Widget obj)
