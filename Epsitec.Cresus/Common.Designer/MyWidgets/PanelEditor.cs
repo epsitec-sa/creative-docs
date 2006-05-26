@@ -462,7 +462,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				Rectangle rect = Rectangle.Empty;
 				if (obj != null)
 				{
-					rect = obj.ActualBounds;
+					rect = this.GetObjectBounds(obj);
 				}
 				this.SetHiliteRectangle(rect);  // met en évidence l'objet survolé par la souris
 			}
@@ -877,6 +877,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected Widget DetectGroup(Rectangle rect)
 		{
 			//	Détecte dans quel groupe est entièrement inclu un rectangle donné.
+#if false
 			for (int i=this.panel.Children.Count-1; i>=0; i--)
 			{
 				Widget widget = this.panel.Children[i] as Widget;
@@ -888,6 +889,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 					}
 				}
 			}
+#endif
 			return this.panel;
 		}
 
@@ -959,7 +961,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Sélectionne tous les objets entièrement inclus dans un rectangle.
 			foreach (Widget obj in this.panel.Children)
 			{
-				if (sel.Contains(obj.ActualBounds))
+				if (sel.Contains(this.GetObjectBounds(obj)))
 				{
 					this.selectedObjects.Add(obj);
 				}
@@ -1022,9 +1024,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			foreach (Widget obj in this.selectedObjects)
 			{
-				toRepaint = Rectangle.Union(toRepaint, obj.ActualBounds);
+				toRepaint = Rectangle.Union(toRepaint, this.GetObjectBounds(obj));
 				this.SetObjectPosition(obj, this.GetObjectPosition(obj)+move);
-				toRepaint = Rectangle.Union(toRepaint, obj.ActualBounds);
+				toRepaint = Rectangle.Union(toRepaint, this.GetObjectBounds(obj));
 			}
 
 			toRepaint.Inflate(1);
@@ -1202,7 +1204,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 				foreach (Widget obj in this.selectedObjects)
 				{
-					bounds = Rectangle.Union(bounds, obj.ActualBounds);
+					bounds = Rectangle.Union(bounds, this.GetObjectBounds(obj));
 				}
 
 				return bounds;
@@ -1214,8 +1216,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			//	Retourne la boîte d'un objet.
 			Point pos = new Point(obj.Margins.Left, obj.Margins.Bottom);
-			this.Window.ForceLayout();
-			pos = this.panel.MapClientToParent(pos);
+			//?this.Window.ForceLayout();
+			//?pos = this.panel.MapClientToParent(pos);
 			pos.X += this.panel.Padding.Left;
 			pos.Y += this.panel.Padding.Bottom;
 			return new Rectangle(pos, obj.PreferredSize);
@@ -1229,8 +1231,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 			pos.Y -= this.panel.Padding.Bottom;
 			pos.X = System.Math.Max(pos.X, 0);
 			pos.Y = System.Math.Max(pos.Y, 0);
-			this.Window.ForceLayout();
-			pos = this.panel.MapParentToClient(pos);
+			//?this.Window.ForceLayout();
+			//?pos = this.panel.MapParentToClient(pos);
 
 			Margins margins = obj.Margins;
 			margins.Left   = pos.X;
@@ -1243,8 +1245,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			//	Retourne l'origine d'un objet.
 			Point pos = new Point(obj.Margins.Left, obj.Margins.Bottom);
-			this.Window.ForceLayout();
-			return this.panel.MapClientToParent(pos);
+			//?this.Window.ForceLayout();
+			//?return this.panel.MapClientToParent(pos);
+			return pos;
 		}
 
 		protected void SetObjectPositionX(Widget obj, double x)
@@ -1255,8 +1258,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 			pos.Y -= this.panel.Padding.Bottom;
 			pos.X = System.Math.Max(pos.X, 0);
 			pos.Y = System.Math.Max(pos.Y, 0);
-			this.Window.ForceLayout();
-			pos = this.panel.MapParentToClient(pos);
+			//?this.Window.ForceLayout();
+			//?pos = this.panel.MapParentToClient(pos);
 
 			Margins margins = obj.Margins;
 			margins.Left = pos.X;
@@ -1271,8 +1274,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 			pos.Y -= this.panel.Padding.Bottom;
 			pos.X = System.Math.Max(pos.X, 0);
 			pos.Y = System.Math.Max(pos.Y, 0);
-			this.Window.ForceLayout();
-			pos = this.panel.MapParentToClient(pos);
+			//?this.Window.ForceLayout();
+			//?pos = this.panel.MapParentToClient(pos);
 
 			Margins margins = obj.Margins;
 			margins.Bottom = pos.Y;
@@ -1284,8 +1287,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Déplace l'origine d'un objet.
 			pos.X = System.Math.Max(pos.X, 0);
 			pos.Y = System.Math.Max(pos.Y, 0);
-			this.Window.ForceLayout();
-			pos = this.panel.MapParentToClient(pos);
+			//?this.Window.ForceLayout();
+			//?pos = this.panel.MapParentToClient(pos);
 
 			Margins margins = obj.Margins;
 			margins.Left   = pos.X;
@@ -1666,13 +1669,15 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				if (!this.ConstrainContain(excludes, obj))
 				{
-					distance = System.Math.Abs(obj.ActualBounds.Center.X-center.X);
+					Rectangle bounds = this.GetObjectBounds(obj);
+
+					distance = System.Math.Abs(bounds.Center.X-center.X);
 					if (minX > distance)
 					{
 						minX = distance;
 					}
 
-					distance = System.Math.Abs(obj.ActualBounds.Center.Y-center.Y);
+					distance = System.Math.Abs(bounds.Center.Y-center.Y);
 					if (minY > distance)
 					{
 						minY = distance;
@@ -1738,13 +1743,15 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				if (!this.ConstrainContain(excludes, obj))
 				{
-					distance = System.Math.Abs(obj.ActualBounds.Center.X-center.X);
+					Rectangle bounds = this.GetObjectBounds(obj);
+
+					distance = System.Math.Abs(bounds.Center.X-center.X);
 					if (distance <= distanceX)
 					{
 						this.ConstrainInitialise(obj);
 					}
 
-					distance = System.Math.Abs(obj.ActualBounds.Center.Y-center.Y);
+					distance = System.Math.Abs(bounds.Center.Y-center.Y);
 					if (distance <= distanceY)
 					{
 						this.ConstrainInitialise(obj);
@@ -1771,30 +1778,31 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void ConstrainInitialise(Widget obj)
 		{
 			//	Initialise les contraintes pour un objet.
+			Rectangle bounds = this.GetObjectBounds(obj);
 			Constrain constrain;
 
-			constrain = new Constrain(obj.ActualBounds.BottomLeft, Constrain.Type.Left, this.context.ConstrainMargin);
+			constrain = new Constrain(bounds.BottomLeft, Constrain.Type.Left, this.context.ConstrainMargin);
 			this.ConstrainAdd(constrain);
 
-			constrain = new Constrain(obj.ActualBounds.BottomLeft-this.context.ConstrainSpacing, Constrain.Type.Right, this.context.ConstrainMargin);
+			constrain = new Constrain(bounds.BottomLeft-this.context.ConstrainSpacing, Constrain.Type.Right, this.context.ConstrainMargin);
 			this.ConstrainAdd(constrain);
 
-			constrain = new Constrain(obj.ActualBounds.BottomRight, Constrain.Type.Right, this.context.ConstrainMargin);
+			constrain = new Constrain(bounds.BottomRight, Constrain.Type.Right, this.context.ConstrainMargin);
 			this.ConstrainAdd(constrain);
 
-			constrain = new Constrain(obj.ActualBounds.BottomRight+this.context.ConstrainSpacing, Constrain.Type.Left, this.context.ConstrainMargin);
+			constrain = new Constrain(bounds.BottomRight+this.context.ConstrainSpacing, Constrain.Type.Left, this.context.ConstrainMargin);
 			this.ConstrainAdd(constrain);
 
-			constrain = new Constrain(obj.ActualBounds.BottomLeft, Constrain.Type.Bottom, this.context.ConstrainMargin);
+			constrain = new Constrain(bounds.BottomLeft, Constrain.Type.Bottom, this.context.ConstrainMargin);
 			this.ConstrainAdd(constrain);
 
-			constrain = new Constrain(obj.ActualBounds.BottomLeft-this.context.ConstrainSpacing, Constrain.Type.Top, this.context.ConstrainMargin);
+			constrain = new Constrain(bounds.BottomLeft-this.context.ConstrainSpacing, Constrain.Type.Top, this.context.ConstrainMargin);
 			this.ConstrainAdd(constrain);
 
-			constrain = new Constrain(obj.ActualBounds.TopLeft, Constrain.Type.Top, this.context.ConstrainMargin);
+			constrain = new Constrain(bounds.TopLeft, Constrain.Type.Top, this.context.ConstrainMargin);
 			this.ConstrainAdd(constrain);
 
-			constrain = new Constrain(obj.ActualBounds.TopLeft+this.context.ConstrainSpacing, Constrain.Type.Bottom, this.context.ConstrainMargin);
+			constrain = new Constrain(bounds.TopLeft+this.context.ConstrainSpacing, Constrain.Type.Bottom, this.context.ConstrainMargin);
 			this.ConstrainAdd(constrain);
 
 			this.Invalidate();
