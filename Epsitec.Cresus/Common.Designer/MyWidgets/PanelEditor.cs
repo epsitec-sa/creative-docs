@@ -62,6 +62,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			set
 			{
 				this.context = value;
+				this.constrainsList = new ConstrainsList(this);
 			}
 		}
 
@@ -252,7 +253,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				case MessageType.KeyPress:
 					if (message.KeyCode == KeyCode.Space)
 					{
-						this.ConstrainLock();
+						this.constrainsList.InvertLock();
 					}
 					break;
 			}
@@ -695,8 +696,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.creatingWindow.FocusedWidget = this.creatingObject;
 			this.creatingWindow.Show();
 
-			this.ConstrainStart(Rectangle.Empty, 0);
-			this.ConstrainActivate(bounds, this.GetObjectBaseLine(this.creatingObject), null);
+			this.constrainsList.Starting(Rectangle.Empty);
+			this.constrainsList.Activate(bounds, this.GetObjectBaseLine(this.creatingObject), null);
 		}
 
 		protected void CreateObjectMove(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
@@ -708,7 +709,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				Rectangle bounds;
 				this.CreateObjectAdjust(ref pos, out bounds);
-				this.ConstrainActivate(bounds, this.GetObjectBaseLine(this.creatingObject), null);
+				this.constrainsList.Activate(bounds, this.GetObjectBaseLine(this.creatingObject), null);
 				this.creatingWindow.WindowLocation = this.creatingOrigin + pos;
 			}
 		}
@@ -744,7 +745,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				}
 				this.SetObjectPosition(this.creatingObject, pos);
 
-				this.ConstrainEnd();
+				this.constrainsList.Ending();
 
 				this.lastCreatedObject = this.creatingObject;
 				this.creatingObject = null;
@@ -803,7 +804,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			pos.X -= this.creatingObject.PreferredWidth/2;
 			pos.Y -= this.creatingObject.PreferredHeight/2;
 			bounds = new Rectangle(pos, this.creatingObject.PreferredSize);
-			Rectangle adjust = this.ConstrainSnap(bounds, this.GetObjectBaseLine(this.creatingObject));
+			Rectangle adjust = this.constrainsList.Snap(bounds, this.GetObjectBaseLine(this.creatingObject));
 			Point corr = adjust.BottomLeft - bounds.BottomLeft;
 			pos += corr;
 			bounds.Offset(corr);
@@ -825,7 +826,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.draggingRectangle = this.SelectBounds;
 			this.draggingBaseLine = this.SelectBaseLine;
 			this.draggingOffset = this.draggingRectangle.BottomLeft - pos;
-			this.ConstrainStart(this.draggingRectangle, 0);
+			this.constrainsList.Starting(this.draggingRectangle);
 
 			Widget container = new Widget();
 			container.PreferredSize = this.draggingRectangle.Size;
@@ -859,11 +860,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			//	Mouvement du drag pour déplacer les objets sélectionnés.
 			this.draggingRectangle.Offset((this.draggingOffset+pos)-this.draggingRectangle.BottomLeft);
-			this.ConstrainActivate(this.draggingRectangle, this.draggingBaseLine, this.draggingArraySelected);
+			this.constrainsList.Activate(this.draggingRectangle, this.draggingBaseLine, this.draggingArraySelected);
 			this.Invalidate();
 
 			Point adjust = this.draggingRectangle.BottomLeft;
-			this.draggingRectangle = this.ConstrainSnap(this.draggingRectangle, this.draggingBaseLine);
+			this.draggingRectangle = this.constrainsList.Snap(this.draggingRectangle, this.draggingBaseLine);
 			adjust = this.draggingRectangle.BottomLeft - adjust;
 
 			this.draggingWindow.WindowLocation = this.draggingOrigin + pos + adjust;
@@ -880,7 +881,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.MoveSelection(this.draggingRectangle.BottomLeft - initial.BottomLeft);
 			this.isDragging = false;
 			this.draggingArraySelected = null;
-			this.ConstrainEnd();
+			this.constrainsList.Ending();
 			this.Invalidate();
 		}
 		#endregion
@@ -1311,7 +1312,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		}
 
 
-		protected Rectangle GetObjectBounds(Widget obj)
+		public Rectangle GetObjectBounds(Widget obj)
 		{
 			//	Retourne la boîte d'un objet.
 			Point pos = new Point(obj.Margins.Left, obj.Margins.Bottom);
@@ -1433,7 +1434,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			obj.PreferredSize = size;
 		}
 
-		protected double GetObjectBaseLine(Widget obj)
+		public double GetObjectBaseLine(Widget obj)
 		{
 			//	Retourne la position relative de la ligne de base depuis le bas de l'objet.
 			return System.Math.Floor(obj.GetBaseLine().Y);
@@ -1570,7 +1571,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 
 			//	Dessine les contraintes.
-			this.ConstrainDraw(graphics, bounds);
+			this.constrainsList.Draw(graphics, bounds);
 
 			//	Dessine les numéros d'ordre.
 			if (this.context.ShowZOrder && !this.isDragging && this.draggingHandle == Handle.Type.None)
@@ -1652,7 +1653,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			graphics.RenderSolid(PanelsContext.ColorAnchor);
 		}
 
-		protected Rectangle RealBounds
+		public Rectangle RealBounds
 		{
 			get
 			{
@@ -1848,370 +1849,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 		#endregion
 
 
-		#region Constrain
-		protected void ConstrainStart(Rectangle initialRectangle, double baseLine)
-		{
-			//	Début des contraintes.
-			if (!this.context.ShowConstrain)
-			{
-				return;
-			}
-
-			this.constrainInitialRectangle = initialRectangle;
-			this.constrainInitialBaseLine = baseLine;
-			this.isConstrainObjectLock = false;
-			this.constrainList.Clear();
-			this.isConstrainStarted = true;
-		}
-
-		protected void ConstrainEnd()
-		{
-			//	Fin des contraintes.
-			if (this.constrainList.Count != 0)
-			{
-				this.constrainList.Clear();
-				this.Invalidate();
-			}
-
-			this.isConstrainStarted = false;
-		}
-
-		protected void ConstrainLock()
-		{
-			//	Vérouille ou dévérouille l'objet le plus proche.
-			if (!this.isConstrainStarted)
-			{
-				return;
-			}
-
-			this.isConstrainObjectLock = !this.isConstrainObjectLock;
-
-			if (!this.isConstrainObjectLock)
-			{
-				this.constrainList.Clear();
-				this.Invalidate();
-			}
-		}
-
-		protected void ConstrainActivate(Rectangle rect, double baseLine, params Widget[] excludes)
-		{
-			//	Active les contraintes pour un rectangle donné.
-			if (!this.isConstrainStarted)
-			{
-				return;
-			}
-
-			if (!this.isConstrainObjectLock)
-			{
-				this.constrainList.Clear();
-				double minX, minY;
-				this.ConstrainNearestDistance(rect, out minX, out minY, excludes);
-				this.ConstrainNearestObjects(rect, minX, minY, excludes);
-			}
-
-			foreach (Constrain constrain in this.constrainList)
-			{
-				constrain.IsActivate = false;
-			}
-
-			List<Constrain> bestX, bestY;
-			this.ConstrainBest(rect, baseLine, out bestX, out bestY);
-
-			foreach (Constrain best in bestX)
-			{
-				best.IsActivate = true;
-			}
-
-			foreach (Constrain best in bestY)
-			{
-				best.IsActivate = true;
-			}
-		}
-
-		protected void ConstrainNearestDistance(Rectangle rect, out double minX, out double minY, params Widget[] excludes)
-		{
-			//	Cherche la distance à l'objet le plus proche d'une position donnée.
-			Point center = rect.Center;
-			minX = 1000000;
-			minY = 1000000;
-			double distance;
-
-			foreach (Widget obj in this.panel.Children)
-			{
-				if (!this.ConstrainContain(excludes, obj))
-				{
-					Rectangle bounds = this.GetObjectBounds(obj);
-
-					distance = System.Math.Abs(bounds.Center.X-center.X);
-					if (minX > distance)
-					{
-						minX = distance;
-					}
-
-					distance = System.Math.Abs(bounds.Center.Y-center.Y);
-					if (minY > distance)
-					{
-						minY = distance;
-					}
-				}
-			}
-		}
-
-		protected void ConstrainNearestObjects(Rectangle rect, double distanceX, double distanceY, params Widget[] excludes)
-		{
-			//	Initialise les contraintes pour tous les objets dont la distance est
-			//	inférieure ou égale à une distance donnée.
-			Point center = rect.Center;
-			double distance;
-			Constrain constrain;
-
-			//	Ajoute les contraintes du conteneur parent.
-			Rectangle box = this.RealBounds;
-			if (!box.IsEmpty)
-			{
-				box.Deflate(this.panel.Padding);
-
-				constrain = new Constrain(box.BottomLeft, Constrain.Type.Left, this.context.ConstrainMargin);
-				constrain.IsLimit = true;
-				this.ConstrainAdd(constrain);
-
-				constrain = new Constrain(box.BottomRight, Constrain.Type.Right, this.context.ConstrainMargin);
-				constrain.IsLimit = true;
-				this.ConstrainAdd(constrain);
-
-				constrain = new Constrain(box.BottomLeft, Constrain.Type.Bottom, this.context.ConstrainMargin);
-				constrain.IsLimit = true;
-				this.ConstrainAdd(constrain);
-
-				constrain = new Constrain(box.TopLeft, Constrain.Type.Top, this.context.ConstrainMargin);
-				constrain.IsLimit = true;
-				this.ConstrainAdd(constrain);
-			}
-
-			if (!this.constrainInitialRectangle.IsEmpty)
-			{
-				//	Ajoute les contraintes correspondant au rectangle initial.
-				if (System.Math.Abs(rect.Left-this.constrainInitialRectangle.Left) <= this.context.ConstrainMargin)
-				{
-					constrain = new Constrain(this.constrainInitialRectangle.BottomLeft, Constrain.Type.Left, this.context.ConstrainMargin);
-					this.ConstrainAdd(constrain);
-
-					constrain = new Constrain(this.constrainInitialRectangle.BottomRight, Constrain.Type.Right, this.context.ConstrainMargin);
-					this.ConstrainAdd(constrain);
-				}
-
-				if (System.Math.Abs(rect.Bottom-this.constrainInitialRectangle.Bottom) <= this.context.ConstrainMargin)
-				{
-					constrain = new Constrain(this.constrainInitialRectangle.BottomLeft, Constrain.Type.Bottom, this.context.ConstrainMargin);
-					this.ConstrainAdd(constrain);
-
-					constrain = new Constrain(this.constrainInitialRectangle.TopLeft, Constrain.Type.Top, this.context.ConstrainMargin);
-					this.ConstrainAdd(constrain);
-				}
-			}
-
-			foreach (Widget obj in this.panel.Children)
-			{
-				if (!this.ConstrainContain(excludes, obj))
-				{
-					Rectangle bounds = this.GetObjectBounds(obj);
-
-					distance = System.Math.Abs(bounds.Center.X-center.X);
-					if (distance <= distanceX)
-					{
-						this.ConstrainInitialise(obj);
-					}
-
-					distance = System.Math.Abs(bounds.Center.Y-center.Y);
-					if (distance <= distanceY)
-					{
-						this.ConstrainInitialise(obj);
-					}
-				}
-			}
-		}
-
-		protected bool ConstrainContain(Widget[] list, Widget searched)
-		{
-			if (list != null)
-			{
-				foreach (Widget obj in list)
-				{
-					if (obj == searched)
-					{
-						return true;
-					}
-				}
-			}
-			return false;
-		}
-
-		protected void ConstrainInitialise(Widget obj)
-		{
-			//	Initialise les contraintes pour un objet.
-			Rectangle bounds = this.GetObjectBounds(obj);
-			Constrain constrain;
-
-			constrain = new Constrain(bounds.BottomLeft, Constrain.Type.Left, this.context.ConstrainMargin);
-			this.ConstrainAdd(constrain);
-
-			constrain = new Constrain(bounds.BottomLeft-this.context.ConstrainSpacing, Constrain.Type.Right, this.context.ConstrainMargin);
-			this.ConstrainAdd(constrain);
-
-			constrain = new Constrain(bounds.BottomRight, Constrain.Type.Right, this.context.ConstrainMargin);
-			this.ConstrainAdd(constrain);
-
-			constrain = new Constrain(bounds.BottomRight+this.context.ConstrainSpacing, Constrain.Type.Left, this.context.ConstrainMargin);
-			this.ConstrainAdd(constrain);
-
-			constrain = new Constrain(bounds.BottomLeft, Constrain.Type.Bottom, this.context.ConstrainMargin);
-			this.ConstrainAdd(constrain);
-
-			constrain = new Constrain(bounds.TopLeft, Constrain.Type.Top, this.context.ConstrainMargin);
-			this.ConstrainAdd(constrain);
-
-			if (obj is AbstractGroup)
-			{
-				constrain = new Constrain(bounds.BottomLeft-this.context.ConstrainSpacing, Constrain.Type.Top, this.context.ConstrainMargin);
-				this.ConstrainAdd(constrain);
-
-				constrain = new Constrain(bounds.TopLeft+this.context.ConstrainSpacing, Constrain.Type.Bottom, this.context.ConstrainMargin);
-				this.ConstrainAdd(constrain);
-
-				bounds.Deflate(this.context.ConstrainGroupMargins);
-
-				constrain = new Constrain(bounds.BottomLeft, Constrain.Type.Left, this.context.ConstrainMargin);
-				this.ConstrainAdd(constrain);
-
-				constrain = new Constrain(bounds.BottomRight, Constrain.Type.Right, this.context.ConstrainMargin);
-				this.ConstrainAdd(constrain);
-
-				constrain = new Constrain(bounds.BottomLeft, Constrain.Type.Bottom, this.context.ConstrainMargin);
-				this.ConstrainAdd(constrain);
-
-				constrain = new Constrain(bounds.TopLeft, Constrain.Type.Top, this.context.ConstrainMargin);
-				this.ConstrainAdd(constrain);
-			}
-			else
-			{
-				Point baseLine = bounds.BottomLeft;
-				baseLine.Y += this.GetObjectBaseLine(obj);
-				constrain = new Constrain(baseLine, Constrain.Type.BaseLine, this.context.ConstrainMargin);
-				this.ConstrainAdd(constrain);
-
-				baseLine.Y += this.context.Leading;
-				constrain = new Constrain(baseLine, Constrain.Type.BaseLine, this.context.ConstrainMargin);
-				this.ConstrainAdd(constrain);
-
-				baseLine.Y -= this.context.Leading*2;
-				constrain = new Constrain(baseLine, Constrain.Type.BaseLine, this.context.ConstrainMargin);
-				this.ConstrainAdd(constrain);
-			}
-
-			this.Invalidate();
-		}
-
-		protected void ConstrainAdd(Constrain toAdd)
-		{
-			//	Ajoute une contrainte dans une liste, si elle n'y est pas déjà.
-			foreach (Constrain constrain in this.constrainList)
-			{
-				if (constrain.IsEqualTo(toAdd))
-				{
-					return;
-				}
-			}
-
-			this.constrainList.Add(toAdd);
-		}
-
-		protected Rectangle ConstrainSnap(Rectangle rect, double baseLine)
-		{
-			//	Adapte un rectangle en fonction de l'ensemble des contraintes.
-			if (this.isConstrainStarted)
-			{
-				List<Constrain> bestX, bestY;
-				this.ConstrainBest(rect, baseLine, out bestX, out bestY);
-
-				if (bestX.Count > 0)
-				{
-					rect = bestX[0].Snap(rect, baseLine);
-				}
-
-				if (bestY.Count > 0)
-				{
-					rect = bestY[0].Snap(rect, baseLine);
-				}
-			}
-
-			return rect;
-		}
-
-		protected void ConstrainBest(Rectangle rect, double baseLine, out List<Constrain> bestListX, out List<Constrain> bestListY)
-		{
-			//	Cherches les contraintes les plus pertinentes parmi l'ensemble des contraintes.
-			double adjust;
-			double minX = 1000000;
-			double minY = 1000000;
-
-			foreach (Constrain constrain in this.constrainList)
-			{
-				if (constrain.AdjustX(rect, out adjust))
-				{
-					adjust = System.Math.Abs(adjust);
-					if (minX > adjust)
-					{
-						minX = adjust;
-					}
-				}
-
-				if (constrain.AdjustY(rect, baseLine, out adjust))
-				{
-					adjust = System.Math.Abs(adjust);
-					if (minY > adjust)
-					{
-						minY = adjust;
-					}
-				}
-			}
-
-			bestListX = new List<Constrain>();
-			bestListY = new List<Constrain>();
-
-			foreach (Constrain constrain in this.constrainList)
-			{
-				if (constrain.AdjustX(rect, out adjust))
-				{
-					if (System.Math.Abs(adjust) <= minX)
-					{
-						bestListX.Add(constrain);
-					}
-				}
-
-				if (constrain.AdjustY(rect, baseLine, out adjust))
-				{
-					if (System.Math.Abs(adjust) <= minY)
-					{
-						bestListY.Add(constrain);
-					}
-				}
-			}
-		}
-
-		protected void ConstrainDraw(Graphics graphics, Rectangle box)
-		{
-			//	Dessine toutes les contraintes.
-			if (this.isConstrainStarted)
-			{
-				foreach (Constrain constrain in this.constrainList)
-				{
-					constrain.Draw(graphics, box);
-				}
-			}
-		}
-		#endregion
-
-
 		#region MouseCursor
 		protected void ChangeMouseCursor(MouseCursorType cursor)
 		{
@@ -2338,6 +1975,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected UI.Panel					panel;
 		protected PanelsContext				context;
+		protected ConstrainsList			constrainsList;
 
 		protected DragWindow				creatingWindow;
 		protected Point						creatingOrigin;
@@ -2356,11 +1994,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected double					draggingBaseLine;
 		protected Widget[]					draggingArraySelected;
 		protected Point						startingPos;
-		protected bool						isConstrainStarted;
-		protected bool						isConstrainObjectLock;
-		protected Rectangle					constrainInitialRectangle;
-		protected double					constrainInitialBaseLine;
-		protected List<Constrain>			constrainList = new List<Constrain>();
 		protected MouseCursorType			lastCursor = MouseCursorType.Unknow;
 
 		protected Image						mouseCursorArrow = null;

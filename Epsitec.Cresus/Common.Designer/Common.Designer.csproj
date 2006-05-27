@@ -38,6 +38,7 @@
     <Compile Include="Comparers\CultureName.cs" />
     <Compile Include="Comparers\WidgetDisposition.cs" />
     <Compile Include="Constrain.cs" />
+    <Compile Include="ConstrainsList.cs" />
     <Compile Include="Handle.cs" />
     <Compile Include="PanelsContext.cs" />
     <Compile Include="Dialogs\Abstract.cs" />
