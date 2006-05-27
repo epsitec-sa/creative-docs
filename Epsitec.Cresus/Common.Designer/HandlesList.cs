@@ -36,7 +36,7 @@ namespace Epsitec.Common.Designer
 					}
 				}
 
-				this.HandlesUpdate();
+				this.HandlesUpdatePosition();
 			}
 			else
 			{
@@ -48,7 +48,7 @@ namespace Epsitec.Common.Designer
 		public void UpdateGeometry()
 		{
 			//	Mise à jour des poignées après une modification géométrique de l'objet.
-			this.HandlesUpdate();
+			this.HandlesUpdatePosition();
 		}
 
 
@@ -56,13 +56,20 @@ namespace Epsitec.Common.Designer
 		{
 			//	Débute éventuellement un déplacement de poignée.
 			this.draggingType = this.HandlesDetect(pos);
+
+			if (this.IsDragging)
+			{
+				Point final = this.GetHandle(this.draggingType).Position;
+				this.draggingOffset = pos-final;
+			}
 		}
 
 		public void DraggingMove(Point pos)
 		{
 			//	Effectue un déplacement de poignée.
-			this.HandleMove(pos);
-			this.HandlesUpdate();
+			this.MoveObjectHandle(pos-this.draggingOffset);
+			this.HandlesUpdatePosition();
+			this.Hilite(pos-this.draggingOffset);
 		}
 
 		public void DraggingStop()
@@ -111,9 +118,10 @@ namespace Epsitec.Common.Designer
 			//	une poignée est survolée.
 			get
 			{
-				return this.isFinger;
+				return this.IsDragging || this.isFinger;
 			}
 		}
+
 
 		public void Draw(Graphics graphics)
 		{
@@ -135,7 +143,7 @@ namespace Epsitec.Common.Designer
 
 		protected Handle CreateHandle(Handle.Type type)
 		{
-			//	Retourne une poignée d'un objet.
+			//	Crée une poignée d'un objet, si elle existe.
 			if (type == Handle.Type.None)
 			{
 				return null;
@@ -181,52 +189,58 @@ namespace Epsitec.Common.Designer
 			return new Handle(type);
 		}
 
-		protected void HandlesUpdate()
+		protected void HandlesUpdatePosition()
 		{
 			//	Met à jour les positions des poignées.
 			foreach (Handle handle in this.list)
 			{
-				handle.Position = this.HandlePosition(handle);
+				this.HandleUpdatePosition(handle);
 			}
 		}
 
-		protected Point HandlePosition(Handle handle)
+		protected void HandleUpdatePosition(Handle handle)
 		{
-			//	Retourne la position d'une poignée selon l'objet.
+			//	Met à jour la position d'une poignée.
 			Rectangle bounds = this.editor.GetObjectBounds(this.widget);
 			Point center = bounds.Center;
 
 			switch (handle.HandleType)
 			{
 				case Handle.Type.BottomLeft:
-					return bounds.BottomLeft;
+					handle.Position = bounds.BottomLeft;
+					break;
 
 				case Handle.Type.BottomRight:
-					return bounds.BottomRight;
+					handle.Position = bounds.BottomRight;
+					break;
 
 				case Handle.Type.TopRight:
-					return bounds.TopRight;
+					handle.Position = bounds.TopRight;
+					break;
 
 				case Handle.Type.TopLeft:
-					return bounds.TopLeft;
+					handle.Position = bounds.TopLeft;
+					break;
 
 				case Handle.Type.Bottom:
-					return new Point(center.X, bounds.Bottom);
+					handle.Position = new Point(center.X, bounds.Bottom);
+					break;
 
 				case Handle.Type.Top:
-					return new Point(center.X, bounds.Top);
+					handle.Position = new Point(center.X, bounds.Top);
+					break;
 
 				case Handle.Type.Left:
-					return new Point(bounds.Left, center.Y);
+					handle.Position = new Point(bounds.Left, center.Y);
+					break;
 
 				case Handle.Type.Right:
-					return new Point(bounds.Right, center.Y);
+					handle.Position = new Point(bounds.Right, center.Y);
+					break;
 			}
-
-			return Point.Zero;
 		}
 
-		protected void HandleMove(Point pos)
+		protected void MoveObjectHandle(Point pos)
 		{
 			//	Déplace une poignée d'un objet.
 			Rectangle bounds = this.editor.GetObjectBounds(this.widget);
@@ -283,6 +297,19 @@ namespace Epsitec.Common.Designer
 
 			return Handle.Type.None;
 		}
+
+		protected Handle GetHandle(Handle.Type type)
+		{
+			foreach (Handle handle in this.list)
+			{
+				if (handle.HandleType == type)
+				{
+					return handle;
+				}
+			}
+
+			return null;
+		}
 		
 		
 		protected MyWidgets.PanelEditor		editor;
@@ -290,6 +317,7 @@ namespace Epsitec.Common.Designer
 		protected Widget					widget;
 		protected List<Handle>				list = new List<Handle>();
 		protected Handle.Type				draggingType = Handle.Type.None;
+		protected Point						draggingOffset;
 		protected bool						isFinger;
 	}
 }
