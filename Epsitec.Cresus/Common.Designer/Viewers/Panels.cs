@@ -85,11 +85,11 @@ namespace Epsitec.Common.Designer.Viewers
 
 			//	Le PanelEditor est par-dessus le UI.Panel.
 			this.panelEditor = new MyWidgets.PanelEditor(container);
+			this.panelEditor.Context = this.context;
 			this.panelEditor.MinWidth = 100;
 			this.panelEditor.MinHeight = 100;
 			this.panelEditor.Anchor = AnchorStyles.All;
 			this.panelEditor.Panel = this.panelContainer;
-			this.panelEditor.Context = this.context;
 			this.panelEditor.ChildrenAdded += new EventHandler(this.HandlePanelEditorChildrenAdded);
 			this.panelEditor.ChildrenSelected += new EventHandler(this.HandlePanelEditorChildrenSelected);
 			this.panelEditor.UpdateCommands += new EventHandler(this.HandlePanelEditorUpdateCommands);
