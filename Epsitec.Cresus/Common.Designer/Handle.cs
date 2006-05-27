@@ -96,8 +96,9 @@ namespace Epsitec.Common.Designer
 			//	Retourne le rectangle de la poignée.
 			get
 			{
-				Point dim = new Point(3.5, 3.5);
-				return new Rectangle(this.position-dim, this.position+dim);
+				Rectangle bounds = new Rectangle(this.position, this.position);
+				bounds.Inflate(3.5);
+				return bounds;
 			}
 		}
 
