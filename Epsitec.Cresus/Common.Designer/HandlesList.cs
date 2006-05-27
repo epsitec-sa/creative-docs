@@ -82,6 +82,8 @@ namespace Epsitec.Common.Designer
 		public void Hilite(Point mouse)
 		{
 			//	Met à jour la poignée survolée par la souris.
+			this.isFinger = false;
+
 			for (int i=this.list.Count-1; i>=0; i--)
 			{
 				Handle handle = this.list[i];
@@ -92,6 +94,21 @@ namespace Epsitec.Common.Designer
 					handle.IsHilite = hilite;
 					this.editor.Panel.Invalidate(handle.Bounds);
 				}
+
+				if (handle.IsHilite)
+				{
+					this.isFinger = true;
+				}
+			}
+		}
+
+		public bool IsFinger
+		{
+			//	Indique s'il faut utiliser le doigt comme curseur pour la souris, car
+			//	une poignée est survolée.
+			get
+			{
+				return this.isFinger;
 			}
 		}
 
@@ -270,5 +287,6 @@ namespace Epsitec.Common.Designer
 		protected Widget					widget;
 		protected List<Handle>				list = new List<Handle>();
 		protected Handle.Type				draggingType = Handle.Type.None;
+		protected bool						isFinger;
 	}
 }

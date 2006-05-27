@@ -20,6 +20,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			Edit,
 			Pen,
 			Zoom,
+			Finger,
 		}
 
 
@@ -461,7 +462,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void SelectMove(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
 			//	Sélection ponctuelle, souris déplacée.
-			if (isShiftPressed)
+			if (this.handlesList.IsFinger)
+			{
+				this.ChangeMouseCursor(MouseCursorType.Finger);
+			}
+			else if (isShiftPressed)
 			{
 				this.ChangeMouseCursor(MouseCursorType.ArrowPlus);
 			}
@@ -1705,10 +1710,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 		#endregion
 
 
-		#region Handle
-		#endregion
-
-
 		#region MouseCursor
 		protected void ChangeMouseCursor(MouseCursorType cursor)
 		{
@@ -1736,6 +1737,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 				case MouseCursorType.Hand:
 					this.SetMouseCursorImage(ref this.mouseCursorHand, Misc.Icon("CursorHand"));
+					break;
+
+				case MouseCursorType.Finger:
+					this.SetMouseCursorImage(ref this.mouseCursorFinger, Misc.Icon("CursorFinger"));
 					break;
 
 				case MouseCursorType.Pen:
@@ -1863,5 +1868,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected Image						mouseCursorPen = null;
 		protected Image						mouseCursorZoom = null;
 		protected Image						mouseCursorHand = null;
+		protected Image						mouseCursorFinger = null;
 	}
 }

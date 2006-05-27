@@ -208,6 +208,7 @@
     <EmbeddedResource Include="Images\ObjectGroup.icon" />
     <EmbeddedResource Include="Images\ObjectStatic.icon" />
     <EmbeddedResource Include="Images\AlignBaseLine.icon" />
+    <EmbeddedResource Include="Images\CursorFinger.icon" />
     <None Include="Resources\Designer\Strings.00.resource" />
     <None Include="Resources\Designer\Strings.en.resource" />
   </ItemGroup>
