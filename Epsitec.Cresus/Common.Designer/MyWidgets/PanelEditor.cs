@@ -68,6 +68,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
+		public List<Widget>				SelectedObjects
+		{
+			get
+			{
+				return this.selectedObjects;
+			}
+		}
+
 
 		public void DoCommand(string name)
 		{
@@ -915,7 +923,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.isDragging = false;
 			this.draggingArraySelected = null;
 			this.constrainsList.Ending();
-			this.handlesList.Update();
+			this.handlesList.UpdateGeometry();
 			this.Invalidate();
 		}
 		#endregion
@@ -1057,14 +1065,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void UpdateAfterSelectionChanged()
 		{
 			//	Mise à jour après un changement de sélection.
-			if (this.selectedObjects.Count == 1)
-			{
-				this.handlesList.Create(this.selectedObjects[0]);
-			}
-			else
-			{
-				this.handlesList.Flush();
-			}
+			this.handlesList.UpdateSelection();
 		}
 
 		protected void SetHiliteRectangle(Rectangle rect)
