@@ -63,6 +63,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				this.context = value;
 				this.constrainsList = new ConstrainsList(this);
+				this.handlesList = new HandlesList(this);
 			}
 		}
 
@@ -406,16 +407,16 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.startingPos = pos;
 			this.isDragging = false;
 			this.isRectangling = false;
-			this.draggingHandle = Handle.Type.None;
+			this.handlesList.DraggingStop();
 
 			Widget obj = null;
 
 			if (this.selectedObjects.Count == 1)
 			{
 				obj = this.selectedObjects[0];
-				this.draggingHandle = this.HandlesDetect(obj, pos);
+				this.handlesList.DraggingStart(obj, pos);
 
-				if (this.draggingHandle != Handle.Type.None)
+				if (this.handlesList.IsDragging)
 				{
 					this.SetHiliteRectangle(Rectangle.Empty);
 					return;
@@ -476,9 +477,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				this.SetSelectRectangle(new Rectangle(this.startingPos, pos));
 			}
-			else if (this.draggingHandle != Handle.Type.None)
+			else if (this.handlesList.IsDragging)
 			{
-				this.HandleMove(this.selectedObjects[0], this.draggingHandle, pos);
+				this.handlesList.DraggingMove(this.selectedObjects[0], pos);
 			}
 			else
 			{
@@ -507,10 +508,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.isRectangling = false;
 			}
 
-			if (this.draggingHandle != Handle.Type.None)
+			if (this.handlesList.IsDragging)
 			{
-				this.draggingHandle = Handle.Type.None;
-				this.Invalidate();
+				this.handlesList.DraggingStop();
 			}
 		}
 
@@ -1323,7 +1323,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			return new Rectangle(pos, obj.PreferredSize);
 		}
 
-		protected void SetObjectBounds(Widget obj, Rectangle rect)
+		public void SetObjectBounds(Widget obj, Rectangle rect)
 		{
 			//	Modifie la boîte d'un objet.
 			rect.Normalise();
@@ -1515,7 +1515,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 
 			//	Dessine les objets sélectionnés.
-			if (this.selectedObjects.Count > 0 && !this.isDragging && this.draggingHandle == Handle.Type.None)
+			if (this.selectedObjects.Count > 0 && !this.isDragging && !this.handlesList.IsDragging)
 			{
 				foreach (Widget obj in this.selectedObjects)
 				{
@@ -1533,7 +1533,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 
 			//	Dessine les ancrages.
-			if (this.context.ShowAnchor && this.selectedObjects.Count > 0 && !this.isDragging && this.draggingHandle == Handle.Type.None)
+			if (this.context.ShowAnchor && this.selectedObjects.Count > 0 && !this.isDragging && !this.handlesList.IsDragging)
 			{
 				foreach (Widget obj in this.selectedObjects)
 				{
@@ -1574,7 +1574,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.constrainsList.Draw(graphics, bounds);
 
 			//	Dessine les numéros d'ordre.
-			if (this.context.ShowZOrder && !this.isDragging && this.draggingHandle == Handle.Type.None)
+			if (this.context.ShowZOrder && !this.isDragging && !this.handlesList.IsDragging)
 			{
 				foreach (Widget obj in this.panel.Children)
 				{
@@ -1591,7 +1591,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 
 			//	Dessine les numéros d'index pour la touche Tab.
-			if (this.context.ShowTabIndex && !this.isDragging && this.draggingHandle == Handle.Type.None)
+			if (this.context.ShowTabIndex && !this.isDragging && !this.handlesList.IsDragging)
 			{
 				foreach (Widget obj in this.panel.Children)
 				{
@@ -1631,7 +1631,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				foreach (Widget obj in this.selectedObjects)
 				{
-					this.HandlesDraw(graphics, obj);
+					this.handlesList.Draw(graphics, obj);
 				}
 			}
 		}
@@ -1688,164 +1688,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 
 		#region Handle
-		protected Handle GetHandle(Widget obj, Handle.Type type)
-		{
-			//	Retourne une poignée d'un objet.
-			if (type == Handle.Type.None)
-			{
-				return null;
-			}
-
-			if (obj is TextField)
-			{
-				if (type != Handle.Type.Left && type != Handle.Type.Right)
-				{
-					return null;
-				}
-			}
-			else if (obj is Button)
-			{
-				if (type != Handle.Type.Left && type != Handle.Type.Right)
-				{
-					return null;
-				}
-			}
-			else if (obj is Separator)
-			{
-				if (type != Handle.Type.Left && type != Handle.Type.Right)
-				{
-					return null;
-				}
-			}
-			else if (obj is StaticText)
-			{
-				if (type != Handle.Type.Left && type != Handle.Type.Right)
-				{
-					return null;
-				}
-			}
-			else if (obj is GroupBox)
-			{
-				//	Tous les types
-			}
-			else
-			{
-				return null;
-			}
-
-			Rectangle bounds = this.GetObjectBounds(obj);
-			Point center = bounds.Center;
-
-			switch (type)
-			{
-				case Handle.Type.BottomLeft:
-					return new Handle(type, bounds.BottomLeft);
-
-				case Handle.Type.BottomRight:
-					return new Handle(type, bounds.BottomRight);
-
-				case Handle.Type.TopRight:
-					return new Handle(type, bounds.TopRight);
-
-				case Handle.Type.TopLeft:
-					return new Handle(type, bounds.TopLeft);
-
-				case Handle.Type.Bottom:
-					return new Handle(type, new Point(center.X, bounds.Bottom));
-
-				case Handle.Type.Top:
-					return new Handle(type, new Point(center.X, bounds.Top));
-
-				case Handle.Type.Left:
-					return new Handle(type, new Point(bounds.Left, center.Y));
-
-				case Handle.Type.Right:
-					return new Handle(type, new Point(bounds.Right, center.Y));
-			}
-
-			return null;
-		}
-
-		protected void HandleMove(Widget obj, Handle.Type type, Point pos)
-		{
-			//	Déplace une poignée d'un objet.
-			Rectangle bounds = this.GetObjectBounds(obj);
-
-			switch (type)
-			{
-				case Handle.Type.BottomLeft:
-					bounds.BottomLeft = pos;
-					break;
-
-				case Handle.Type.BottomRight:
-					bounds.BottomRight = pos;
-					break;
-
-				case Handle.Type.TopRight:
-					bounds.TopRight = pos;
-					break;
-
-				case Handle.Type.TopLeft:
-					bounds.TopLeft = pos;
-					break;
-
-				case Handle.Type.Bottom:
-					bounds.Bottom = pos.Y;
-					break;
-
-				case Handle.Type.Top:
-					bounds.Top = pos.Y;
-					break;
-
-				case Handle.Type.Left:
-					bounds.Left = pos.X;
-					break;
-
-				case Handle.Type.Right:
-					bounds.Right = pos.X;
-					break;
-			}
-
-			this.SetObjectBounds(obj, bounds);
-		}
-
-		protected Handle.Type HandlesDetect(Widget obj, Point mouse)
-		{
-			//	Détecte la poignée visée par la souris.
-			foreach (int i in System.Enum.GetValues(typeof(Handle.Type)))
-			{
-				Handle handle = this.GetHandle(obj, (Handle.Type) i);
-				if (handle != null)
-				{
-					if (handle.Detect(mouse))
-					{
-						return (Handle.Type) i;
-					}
-				}
-			}
-			return Handle.Type.None;
-		}
-
-		protected void HandlesDraw(Graphics graphics, Widget obj)
-		{
-			//	Dessine toutes les poignées d'un objet.
-			foreach (int i in System.Enum.GetValues(typeof(Handle.Type)))
-			{
-				Handle handle = this.GetHandle(obj, (Handle.Type) i);
-				if (handle != null)
-				{
-					if (this.draggingHandle != Handle.Type.None)
-					{
-						if (handle.HandleType != this.draggingHandle)
-						{
-							continue;
-						}
-					}
-
-					handle.Draw(graphics);
-				}
-			}
-		}
 		#endregion
 
 
@@ -1976,6 +1818,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected UI.Panel					panel;
 		protected PanelsContext				context;
 		protected ConstrainsList			constrainsList;
+		protected HandlesList				handlesList;
 
 		protected DragWindow				creatingWindow;
 		protected Point						creatingOrigin;
@@ -1986,7 +1829,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected Rectangle					hilitedRectangle = Rectangle.Empty;
 		protected bool						isRectangling;  // j'invente des mots si je veux !
 		protected bool						isDragging;
-		protected Handle.Type				draggingHandle = Handle.Type.None;
 		protected DragWindow				draggingWindow;
 		protected Point						draggingOffset;
 		protected Point						draggingOrigin;
