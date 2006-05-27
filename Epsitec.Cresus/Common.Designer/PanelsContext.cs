@@ -169,6 +169,7 @@ namespace Epsitec.Common.Designer
 		}
 
 
+		#region Static colors
 		static public Color HiliteOutlineColor
 		{
 			//	Couleur lorsqu'un objet est survolé par la souris.
@@ -188,6 +189,61 @@ namespace Epsitec.Common.Designer
 				return Color.FromColor(adorner.ColorCaption, 0.4);
 			}
 		}
+
+		static public Color ColorOutsurface
+		{
+			//	Couleur pour la surface hors du panneau.
+			get
+			{
+				return Color.FromAlphaRgb(0.2, 0.5, 0.5, 0.5);
+			}
+		}
+
+		static public Color ColorZOrder
+		{
+			//	Couleur pour les chiffres du ZOrder.
+			get
+			{
+				return Color.FromRgb(1, 0, 0);
+			}
+		}
+
+		static public Color ColorTabIndex
+		{
+			//	Couleur pour les chiffres de l'ordre pour la touche Tab.
+			get
+			{
+				return Color.FromRgb(0, 0, 1);
+			}
+		}
+
+		static public Color ColorAnchor
+		{
+			//	Couleur pour représenter un ancrage.
+			get
+			{
+				return Color.FromRgb(0, 0, 1);
+			}
+		}
+
+		static public Color ColorGrid1
+		{
+			//	Couleur pour la grille magnétique primaire (division principale).
+			get
+			{
+				return Color.FromAlphaRgb(0.2, 0.4, 0.4, 0.4);
+			}
+		}
+
+		static public Color ColorGrid2
+		{
+			//	Couleur pour la grille magnétique secondaire (subdivision).
+			get
+			{
+				return Color.FromAlphaRgb(0.2, 0.7, 0.7, 0.7);
+			}
+		}
+		#endregion
 
 
 		protected string				tool = "ToolSelect";
