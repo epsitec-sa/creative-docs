@@ -169,6 +169,27 @@ namespace Epsitec.Common.Designer
 		}
 
 
+		static public Color HiliteOutlineColor
+		{
+			//	Couleur lorsqu'un objet est survolé par la souris.
+			get
+			{
+				IAdorner adorner = Epsitec.Common.Widgets.Adorners.Factory.Active;
+				return Color.FromColor(adorner.ColorCaption, 0.8);
+			}
+		}
+
+		static public Color HiliteSurfaceColor
+		{
+			//	Couleur lorsqu'un objet est survolé par la souris.
+			get
+			{
+				IAdorner adorner = Epsitec.Common.Widgets.Adorners.Factory.Active;
+				return Color.FromColor(adorner.ColorCaption, 0.4);
+			}
+		}
+
+
 		protected string				tool = "ToolSelect";
 		protected bool					showGrid = false;
 		protected bool					showConstrain = true;
