@@ -61,21 +61,30 @@ namespace Epsitec.Common.Designer
 			{
 				Point final = this.GetHandle(this.draggingType).Position;
 				this.draggingOffset = pos-final;
+
+				this.editor.ConstrainsList.Starting(new Rectangle(final, final), true);
+				this.editor.Invalidate();
 			}
 		}
 
 		public void DraggingMove(Point pos)
 		{
 			//	Effectue un déplacement de poignée.
-			this.MoveObjectHandle(pos-this.draggingOffset);
+			pos -= this.draggingOffset;
+			this.editor.ConstrainsList.Activate(new Rectangle(pos, pos), 0, this.editor.SelectedObjects.ToArray());
+			pos = this.editor.ConstrainsList.Snap(pos);
+
+			this.MoveObjectHandle(pos);
 			this.HandlesUpdatePosition();
 			this.Hilite(pos-this.draggingOffset);
+			this.editor.Invalidate();
 		}
 
 		public void DraggingStop()
 		{
 			//	Termine un déplacement de poignée.
 			this.draggingType = Handle.Type.None;
+			this.editor.ConstrainsList.Ending();
 			this.editor.Invalidate();
 		}
 
@@ -283,6 +292,7 @@ namespace Epsitec.Common.Designer
 			this.editor.SetObjectBounds(this.widget, bounds);
 		}
 
+
 		protected Handle.Type HandlesDetect(Point mouse)
 		{
 			//	Détecte la poignée visée par la souris.
@@ -300,6 +310,7 @@ namespace Epsitec.Common.Designer
 
 		protected Handle GetHandle(Handle.Type type)
 		{
+			//	Retourne une poignée d'après son type.
 			foreach (Handle handle in this.list)
 			{
 				if (handle.HandleType == type)

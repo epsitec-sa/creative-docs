@@ -181,6 +181,21 @@ namespace Epsitec.Common.Designer
 			return rect;
 		}
 
+		public Point Snap(Point pos)
+		{
+			//	Adapte un point à une contrainte.
+			if (this.IsVertical)
+			{
+				pos.X = this.position.X;
+			}
+			else
+			{
+				pos.Y = this.position.Y;
+			}
+
+			return pos;
+		}
+
 		public bool AdjustX(Rectangle rect, out double adjust)
 		{
 			//	Calcule l'ajustement horizontal nécessaire pour s'adapter à une contrainte.

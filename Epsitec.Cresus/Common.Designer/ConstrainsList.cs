@@ -17,7 +17,7 @@ namespace Epsitec.Common.Designer
 		}
 
 
-		public void Starting(Rectangle initialRectangle)
+		public void Starting(Rectangle initialRectangle, bool isDot)
 		{
 			//	Début des contraintes.
 			if (!this.context.ShowConstrain)
@@ -25,6 +25,7 @@ namespace Epsitec.Common.Designer
 				return;
 			}
 
+			this.isDot = isDot;
 			this.initialRectangle = initialRectangle;
 			this.isObjectLock = false;
 			this.list.Clear();
@@ -261,18 +262,21 @@ namespace Epsitec.Common.Designer
 			}
 			else
 			{
-				Point baseLine = bounds.BottomLeft;
-				baseLine.Y += this.editor.GetObjectBaseLine(obj);
-				constrain = new Constrain(baseLine, Constrain.Type.BaseLine, this.context.ConstrainMargin);
-				this.Add(constrain);
+				if (!this.isDot)
+				{
+					Point baseLine = bounds.BottomLeft;
+					baseLine.Y += this.editor.GetObjectBaseLine(obj);
+					constrain = new Constrain(baseLine, Constrain.Type.BaseLine, this.context.ConstrainMargin);
+					this.Add(constrain);
 
-				baseLine.Y += this.context.Leading;
-				constrain = new Constrain(baseLine, Constrain.Type.BaseLine, this.context.ConstrainMargin);
-				this.Add(constrain);
+					baseLine.Y += this.context.Leading;
+					constrain = new Constrain(baseLine, Constrain.Type.BaseLine, this.context.ConstrainMargin);
+					this.Add(constrain);
 
-				baseLine.Y -= this.context.Leading*2;
-				constrain = new Constrain(baseLine, Constrain.Type.BaseLine, this.context.ConstrainMargin);
-				this.Add(constrain);
+					baseLine.Y -= this.context.Leading*2;
+					constrain = new Constrain(baseLine, Constrain.Type.BaseLine, this.context.ConstrainMargin);
+					this.Add(constrain);
+				}
 			}
 
 			this.editor.Invalidate();
@@ -312,6 +316,28 @@ namespace Epsitec.Common.Designer
 			}
 
 			return rect;
+		}
+
+		public Point Snap(Point pos)
+		{
+			//	Adapte une position en fonction de l'ensemble des contraintes.
+			if (this.isStarted)
+			{
+				List<Constrain> bestX, bestY;
+				this.Best(new Rectangle(pos, pos), 0, out bestX, out bestY);
+
+				if (bestX.Count > 0)
+				{
+					pos = bestX[0].Snap(pos);
+				}
+
+				if (bestY.Count > 0)
+				{
+					pos = bestY[0].Snap(pos);
+				}
+			}
+
+			return pos;
 		}
 
 		protected void Best(Rectangle rect, double baseLine, out List<Constrain> bestListX, out List<Constrain> bestListY)
@@ -382,6 +408,7 @@ namespace Epsitec.Common.Designer
 		protected PanelsContext				context;
 		protected bool						isStarted;
 		protected bool						isObjectLock;
+		protected bool						isDot;
 		protected Rectangle					initialRectangle;
 		protected List<Constrain>			list = new List<Constrain>();
 	}

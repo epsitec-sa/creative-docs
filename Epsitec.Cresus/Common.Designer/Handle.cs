@@ -24,12 +24,14 @@ namespace Epsitec.Common.Designer
 
 		public Handle(Type type)
 		{
+			//	Crée une poignée, sans préciser la position.
 			this.type = type;
 			this.isHilite = false;
 		}
 
 		public Handle.Type HandleType
 		{
+			//	Retourne le type d'une poignée.
 			get
 			{
 				return this.type;
@@ -38,6 +40,7 @@ namespace Epsitec.Common.Designer
 
 		public Point Position
 		{
+			//	Position du centre de la poignée.
 			get
 			{
 				return this.position;
@@ -50,6 +53,7 @@ namespace Epsitec.Common.Designer
 
 		public bool IsHilite
 		{
+			//	Poignée survolée par la souris ?
 			get
 			{
 				return this.isHilite;

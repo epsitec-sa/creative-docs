@@ -68,6 +68,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
+		public ConstrainsList			ConstrainsList
+		{
+			get
+			{
+				return this.constrainsList;
+			}
+		}
+
 		public List<Widget>				SelectedObjects
 		{
 			get
@@ -416,22 +424,13 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.startingPos = pos;
 			this.isDragging = false;
 			this.isRectangling = false;
-			this.handlesList.DraggingStop();
 
-			Widget obj = null;
-
-			if (this.selectedObjects.Count == 1)
+			if (this.HandlingStart(pos))
 			{
-				this.handlesList.DraggingStart(pos);
-
-				if (this.handlesList.IsDragging)
-				{
-					this.SetHiliteRectangle(Rectangle.Empty);
-					return;
-				}
+				return;
 			}
 
-			obj = this.Detect(pos);  // objet visé par la souris
+			Widget obj = this.Detect(pos);  // objet visé par la souris
 
 			if (!isShiftPressed)  // touche Shift relâchée ?
 			{
@@ -493,7 +492,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 			else if (this.handlesList.IsDragging)
 			{
-				this.handlesList.DraggingMove(pos);
+				this.HandlingMove(pos);
 			}
 			else
 			{
@@ -524,7 +523,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			if (this.handlesList.IsDragging)
 			{
-				this.handlesList.DraggingStop();
+				this.HandlingEnd();
 			}
 		}
 
@@ -548,24 +547,16 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Sélection rectangulaire, souris pressée.
 			this.lastCreatedObject = null;
 
-			Widget obj = null;
-
-			if (this.selectedObjects.Count == 1)
-			{
-				this.handlesList.DraggingStart(pos);
-
-				if (this.handlesList.IsDragging)
-				{
-					this.SetHiliteRectangle(Rectangle.Empty);
-					return;
-				}
-			}
-
-			obj = this.Detect(pos);  // objet visé par la souris
-
 			this.startingPos = pos;
 			this.isDragging = false;
 			this.isRectangling = false;
+
+			if (this.HandlingStart(pos))
+			{
+				return;
+			}
+
+			Widget obj = this.Detect(pos);  // objet visé par la souris
 
 			if (!isShiftPressed)  // touche Shift relâchée ?
 			{
@@ -610,7 +601,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 			else if (this.handlesList.IsDragging)
 			{
-				this.handlesList.DraggingMove(pos);
+				this.HandlingMove(pos);
 			}
 		}
 
@@ -631,7 +622,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			if (this.handlesList.IsDragging)
 			{
-				this.handlesList.DraggingStop();
+				this.HandlingEnd();
 			}
 		}
 
@@ -737,7 +728,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.creatingWindow.FocusedWidget = this.creatingObject;
 			this.creatingWindow.Show();
 
-			this.constrainsList.Starting(Rectangle.Empty);
+			this.constrainsList.Starting(Rectangle.Empty, false);
 			this.constrainsList.Activate(bounds, this.GetObjectBaseLine(this.creatingObject), null);
 		}
 
@@ -858,6 +849,34 @@ namespace Epsitec.Common.Designer.MyWidgets
 		#endregion
 
 
+		#region Handling
+		protected bool HandlingStart(Point pos)
+		{
+			//	Début du drag pour déplacer une poignée.
+			this.handlesList.DraggingStart(pos);
+			if (this.handlesList.IsDragging)
+			{
+				this.SetHiliteRectangle(Rectangle.Empty);
+				return true;
+			}
+
+			return false;
+		}
+
+		protected void HandlingMove(Point pos)
+		{
+			//	Mouvement du drag pour déplacer une poignée.
+			this.handlesList.DraggingMove(pos);
+		}
+
+		protected void HandlingEnd()
+		{
+			//	Fin du drag pour déplacer une poignée.
+			this.handlesList.DraggingStop();
+		}
+		#endregion
+
+
 		#region Dragging
 		protected void DraggingStart(Point pos)
 		{
@@ -867,7 +886,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.draggingRectangle = this.SelectBounds;
 			this.draggingBaseLine = this.SelectBaseLine;
 			this.draggingOffset = this.draggingRectangle.BottomLeft - pos;
-			this.constrainsList.Starting(this.draggingRectangle);
+			this.constrainsList.Starting(this.draggingRectangle, false);
 
 			Widget container = new Widget();
 			container.PreferredSize = this.draggingRectangle.Size;
