@@ -221,8 +221,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected override void ProcessMessage(Message message, Drawing.Point pos)
 		{
-			System.Diagnostics.Debug.WriteLine(message.Type.ToString());
-
 			switch (message.Type)
 			{
 				case MessageType.MouseDown:
@@ -298,6 +296,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 		void ProcessMouseMove(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
 			//	La souris a été déplacée.
+			this.handlesList.Hilite(pos);
+
 			if (this.context.Tool == "ToolSelect")
 			{
 				this.SelectMove(pos, isRightButton, isControlPressed, isShiftPressed);
@@ -413,8 +413,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			if (this.selectedObjects.Count == 1)
 			{
-				obj = this.selectedObjects[0];
-				this.handlesList.DraggingStart(obj, pos);
+				this.handlesList.DraggingStart(pos);
 
 				if (this.handlesList.IsDragging)
 				{
@@ -433,6 +432,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 					return;
 				}
 				this.selectedObjects.Clear();
+				this.UpdateAfterSelectionChanged();
 			}
 
 			if (obj == null)
@@ -450,6 +450,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				{
 					this.selectedObjects.Add(obj);
 				}
+				this.UpdateAfterSelectionChanged();
 				this.DraggingStart(pos);
 			}
 
@@ -479,7 +480,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 			else if (this.handlesList.IsDragging)
 			{
-				this.handlesList.DraggingMove(this.selectedObjects[0], pos);
+				this.handlesList.DraggingMove(pos);
 			}
 			else
 			{
@@ -548,6 +549,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 					return;
 				}
 				this.selectedObjects.Clear();
+				this.UpdateAfterSelectionChanged();
 			}
 
 			this.isRectangling = true;
@@ -882,6 +884,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.isDragging = false;
 			this.draggingArraySelected = null;
 			this.constrainsList.Ending();
+			this.handlesList.Update();
 			this.Invalidate();
 		}
 		#endregion
@@ -943,6 +946,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			if (this.selectedObjects.Count > 0)
 			{
 				this.selectedObjects.Clear();
+				this.UpdateAfterSelectionChanged();
 				this.OnChildrenSelected();
 				this.Invalidate();
 			}
@@ -958,6 +962,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.selectedObjects.Add(obj);
 			}
 
+			this.UpdateAfterSelectionChanged();
 			this.OnChildrenSelected();
 			this.Invalidate();
 		}
@@ -977,6 +982,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			this.selectedObjects = list;
 
+			this.UpdateAfterSelectionChanged();
 			this.OnChildrenSelected();
 			this.Invalidate();
 		}
@@ -996,6 +1002,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Sélectionne un objet.
 			this.selectedObjects.Clear();
 			this.selectedObjects.Add(obj);
+			this.UpdateAfterSelectionChanged();
 			this.OnChildrenSelected();
 			this.Invalidate();
 		}
@@ -1011,8 +1018,22 @@ namespace Epsitec.Common.Designer.MyWidgets
 				}
 			}
 
+			this.UpdateAfterSelectionChanged();
 			this.OnChildrenSelected();
 			this.Invalidate();
+		}
+
+		protected void UpdateAfterSelectionChanged()
+		{
+			//	Mise à jour après un changement de sélection.
+			if (this.selectedObjects.Count == 1)
+			{
+				this.handlesList.Create(this.selectedObjects[0]);
+			}
+			else
+			{
+				this.handlesList.Flush();
+			}
 		}
 
 		protected void SetHiliteRectangle(Rectangle rect)
@@ -1050,7 +1071,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 
 			this.selectedObjects.Clear();
-
+			this.UpdateAfterSelectionChanged();
 			this.OnChildrenSelected();
 			this.Invalidate();
 		}
@@ -1523,11 +1544,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 					rect.Deflate(0.5);
 
 					graphics.AddFilledRectangle(rect);
-					graphics.RenderSolid(PanelsContext.HiliteSurfaceColor);
+					graphics.RenderSolid(PanelsContext.ColorHiliteSurface);
 
 					graphics.LineWidth = 3;
 					graphics.AddRectangle(rect);
-					graphics.RenderSolid(PanelsContext.HiliteOutlineColor);
+					graphics.RenderSolid(PanelsContext.ColorHiliteOutline);
 					graphics.LineWidth = 1;
 				}
 			}
@@ -1614,7 +1635,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			if (!this.hilitedRectangle.IsEmpty)
 			{
 				graphics.AddFilledRectangle(this.hilitedRectangle);
-				graphics.RenderSolid(PanelsContext.HiliteSurfaceColor);
+				graphics.RenderSolid(PanelsContext.ColorHiliteSurface);
 			}
 
 			//	Dessine le rectangle de sélection.
@@ -1623,16 +1644,13 @@ namespace Epsitec.Common.Designer.MyWidgets
 				Rectangle sel = this.selectedRectangle;
 				sel.Deflate(0.5);
 				graphics.AddRectangle(sel);
-				graphics.RenderSolid(PanelsContext.HiliteOutlineColor);
+				graphics.RenderSolid(PanelsContext.ColorHiliteOutline);
 			}
 
 			//	Dessine les poignées.
 			if (this.selectedObjects.Count == 1 && !this.isDragging)
 			{
-				foreach (Widget obj in this.selectedObjects)
-				{
-					this.handlesList.Draw(graphics, obj);
-				}
+				this.handlesList.Draw(graphics);
 			}
 		}
 
