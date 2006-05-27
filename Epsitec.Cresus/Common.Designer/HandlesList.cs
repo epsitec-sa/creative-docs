@@ -101,6 +101,11 @@ namespace Epsitec.Common.Designer
 		public void Hilite(Point mouse)
 		{
 			//	Met à jour la poignée survolée par la souris.
+			if (this.IsDragging)
+			{
+				return;
+			}
+
 			this.isFinger = false;
 
 			for (int i=this.list.Count-1; i>=0; i--)
