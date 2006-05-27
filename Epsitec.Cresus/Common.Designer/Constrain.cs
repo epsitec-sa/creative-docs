@@ -129,7 +129,7 @@ namespace Epsitec.Common.Designer
 				graphics.AddLine(box.Left, this.position.Y+0.5, box.Right, this.position.Y+0.5);
 			}
 
-			Color color = PanelsContext.HiliteOutlineColor;
+			Color color = PanelsContext.ColorHiliteOutline;
 			if (this.isLimit)
 			{
 				color = Color.FromAlphaRgb(0.7, 1,0,0);  // rouge transparent

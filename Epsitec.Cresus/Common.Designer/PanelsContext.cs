@@ -170,7 +170,7 @@ namespace Epsitec.Common.Designer
 
 
 		#region Static colors
-		static public Color HiliteOutlineColor
+		static public Color ColorHiliteOutline
 		{
 			//	Couleur lorsqu'un objet est survolé par la souris.
 			get
@@ -180,7 +180,7 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		static public Color HiliteSurfaceColor
+		static public Color ColorHiliteSurface
 		{
 			//	Couleur lorsqu'un objet est survolé par la souris.
 			get
@@ -241,6 +241,25 @@ namespace Epsitec.Common.Designer
 			get
 			{
 				return Color.FromAlphaRgb(0.2, 0.7, 0.7, 0.7);
+			}
+		}
+
+		static public Color ColorHandleNormal
+		{
+			//	Couleur pour une poignée.
+			get
+			{
+				return Color.FromRgb(1, 0, 0);
+			}
+		}
+
+		static public Color ColorHandleHilited
+		{
+			//	Couleur lorsqu'un objet est survolé par la souris.
+			get
+			{
+				IAdorner adorner = Epsitec.Common.Widgets.Adorners.Factory.Active;
+				return adorner.ColorCaption;
 			}
 		}
 		#endregion

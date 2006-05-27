@@ -17,16 +17,49 @@ namespace Epsitec.Common.Designer
 		}
 
 
-		public void DraggingStart(Widget obj, Point pos)
+		public void Create(Widget obj)
 		{
-			//	Débute éventuellement un déplacement de poignée.
-			this.draggingType = this.HandlesDetect(obj, pos);
+			//	Crée toutes les poignées pour un objet.
+			this.widget = obj;
+			this.list.Clear();
+
+			foreach (int i in System.Enum.GetValues(typeof(Handle.Type)))
+			{
+				Handle handle = this.CreateHandle((Handle.Type) i);
+				if (handle != null)
+				{
+					this.list.Add(handle);
+				}
+			}
+
+			this.HandlesUpdate();
 		}
 
-		public void DraggingMove(Widget obj, Point pos)
+		public void Update()
+		{
+			//	Mise à jour des poignées après une modification géométrique de l'objet.
+			this.HandlesUpdate();
+		}
+
+		public void Flush()
+		{
+			//	Supprime toutes les poignées.
+			this.widget = null;
+			this.list.Clear();
+		}
+
+
+		public void DraggingStart(Point pos)
+		{
+			//	Débute éventuellement un déplacement de poignée.
+			this.draggingType = this.HandlesDetect(pos);
+		}
+
+		public void DraggingMove(Point pos)
 		{
 			//	Effectue un déplacement de poignée.
-			this.HandleMove(obj, pos);
+			this.HandleMove(pos);
+			this.HandlesUpdate();
 		}
 
 		public void DraggingStop()
@@ -46,29 +79,41 @@ namespace Epsitec.Common.Designer
 		}
 
 
-		public void Draw(Graphics graphics, Widget obj)
+		public void Hilite(Point mouse)
 		{
-			//	Dessine toutes les poignées d'un objet.
-			foreach (int i in System.Enum.GetValues(typeof(Handle.Type)))
+			//	Met à jour la poignée survolée par la souris.
+			for (int i=this.list.Count-1; i>=0; i--)
 			{
-				Handle handle = this.GetHandle(obj, (Handle.Type) i);
-				if (handle != null)
-				{
-					if (this.draggingType != Handle.Type.None)
-					{
-						if (handle.HandleType != this.draggingType)
-						{
-							continue;
-						}
-					}
+				Handle handle = this.list[i];
+				bool hilite = handle.Detect(mouse);
 
-					handle.Draw(graphics);
+				if (handle.IsHilite != hilite)
+				{
+					handle.IsHilite = hilite;
+					this.editor.Panel.Invalidate(handle.Bounds);
 				}
 			}
 		}
 
+		public void Draw(Graphics graphics)
+		{
+			//	Dessine toutes les poignées.
+			foreach (Handle handle in this.list)
+			{
+				if (this.draggingType != Handle.Type.None)
+				{
+					if (handle.HandleType != this.draggingType)
+					{
+						continue;
+					}
+				}
 
-		protected Handle GetHandle(Widget obj, Handle.Type type)
+				handle.Draw(graphics);
+			}
+		}
+
+
+		protected Handle CreateHandle(Handle.Type type)
 		{
 			//	Retourne une poignée d'un objet.
 			if (type == Handle.Type.None)
@@ -76,35 +121,35 @@ namespace Epsitec.Common.Designer
 				return null;
 			}
 
-			if (obj is TextField)
+			if (this.widget is TextField)
 			{
 				if (type != Handle.Type.Left && type != Handle.Type.Right)
 				{
 					return null;
 				}
 			}
-			else if (obj is Button)
+			else if (this.widget is Button)
 			{
 				if (type != Handle.Type.Left && type != Handle.Type.Right)
 				{
 					return null;
 				}
 			}
-			else if (obj is Separator)
+			else if (this.widget is Separator)
 			{
 				if (type != Handle.Type.Left && type != Handle.Type.Right)
 				{
 					return null;
 				}
 			}
-			else if (obj is StaticText)
+			else if (this.widget is StaticText)
 			{
 				if (type != Handle.Type.Left && type != Handle.Type.Right)
 				{
 					return null;
 				}
 			}
-			else if (obj is GroupBox)
+			else if (this.widget is GroupBox)
 			{
 				//	Tous les types
 			}
@@ -113,43 +158,58 @@ namespace Epsitec.Common.Designer
 				return null;
 			}
 
-			Rectangle bounds = this.editor.GetObjectBounds(obj);
-			Point center = bounds.Center;
-
-			switch (type)
-			{
-				case Handle.Type.BottomLeft:
-					return new Handle(type, bounds.BottomLeft);
-
-				case Handle.Type.BottomRight:
-					return new Handle(type, bounds.BottomRight);
-
-				case Handle.Type.TopRight:
-					return new Handle(type, bounds.TopRight);
-
-				case Handle.Type.TopLeft:
-					return new Handle(type, bounds.TopLeft);
-
-				case Handle.Type.Bottom:
-					return new Handle(type, new Point(center.X, bounds.Bottom));
-
-				case Handle.Type.Top:
-					return new Handle(type, new Point(center.X, bounds.Top));
-
-				case Handle.Type.Left:
-					return new Handle(type, new Point(bounds.Left, center.Y));
-
-				case Handle.Type.Right:
-					return new Handle(type, new Point(bounds.Right, center.Y));
-			}
-
-			return null;
+			return new Handle(type);
 		}
 
-		protected void HandleMove(Widget obj, Point pos)
+		protected void HandlesUpdate()
+		{
+			//	Met à jour les positions des poignées.
+			foreach (Handle handle in this.list)
+			{
+				handle.Position = this.HandlePosition(handle);
+			}
+		}
+
+		protected Point HandlePosition(Handle handle)
+		{
+			//	Retourne la position d'une poignée selon l'objet.
+			Rectangle bounds = this.editor.GetObjectBounds(this.widget);
+			Point center = bounds.Center;
+
+			switch (handle.HandleType)
+			{
+				case Handle.Type.BottomLeft:
+					return bounds.BottomLeft;
+
+				case Handle.Type.BottomRight:
+					return bounds.BottomRight;
+
+				case Handle.Type.TopRight:
+					return bounds.TopRight;
+
+				case Handle.Type.TopLeft:
+					return bounds.TopLeft;
+
+				case Handle.Type.Bottom:
+					return new Point(center.X, bounds.Bottom);
+
+				case Handle.Type.Top:
+					return new Point(center.X, bounds.Top);
+
+				case Handle.Type.Left:
+					return new Point(bounds.Left, center.Y);
+
+				case Handle.Type.Right:
+					return new Point(bounds.Right, center.Y);
+			}
+
+			return Point.Zero;
+		}
+
+		protected void HandleMove(Point pos)
 		{
 			//	Déplace une poignée d'un objet.
-			Rectangle bounds = this.editor.GetObjectBounds(obj);
+			Rectangle bounds = this.editor.GetObjectBounds(this.widget);
 
 			switch (this.draggingType)
 			{
@@ -186,29 +246,29 @@ namespace Epsitec.Common.Designer
 					break;
 			}
 
-			this.editor.SetObjectBounds(obj, bounds);
+			this.editor.SetObjectBounds(this.widget, bounds);
 		}
 
-		protected Handle.Type HandlesDetect(Widget obj, Point mouse)
+		protected Handle.Type HandlesDetect(Point mouse)
 		{
 			//	Détecte la poignée visée par la souris.
-			foreach (int i in System.Enum.GetValues(typeof(Handle.Type)))
+			for (int i=this.list.Count-1; i>=0; i--)
 			{
-				Handle handle = this.GetHandle(obj, (Handle.Type) i);
-				if (handle != null)
+				Handle handle = this.list[i];
+				if (handle.Detect(mouse))
 				{
-					if (handle.Detect(mouse))
-					{
-						return (Handle.Type) i;
-					}
+					return handle.HandleType;
 				}
 			}
+
 			return Handle.Type.None;
 		}
 		
 		
 		protected MyWidgets.PanelEditor		editor;
 		protected PanelsContext				context;
+		protected Widget					widget;
+		protected List<Handle>				list = new List<Handle>();
 		protected Handle.Type				draggingType = Handle.Type.None;
 	}
 }
