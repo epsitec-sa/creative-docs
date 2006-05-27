@@ -17,35 +17,38 @@ namespace Epsitec.Common.Designer
 		}
 
 
-		public void Create(Widget obj)
+		public void UpdateSelection()
 		{
-			//	Crée toutes les poignées pour un objet.
-			this.widget = obj;
-			this.list.Clear();
+			//	Met à jour les poignées après un changement de sélection.
+			List<Widget> sel = this.editor.SelectedObjects;
 
-			foreach (int i in System.Enum.GetValues(typeof(Handle.Type)))
+			if (sel.Count == 1)
 			{
-				Handle handle = this.CreateHandle((Handle.Type) i);
-				if (handle != null)
-				{
-					this.list.Add(handle);
-				}
-			}
+				this.widget = sel[0];
+				this.list.Clear();
 
-			this.HandlesUpdate();
+				foreach (int i in System.Enum.GetValues(typeof(Handle.Type)))
+				{
+					Handle handle = this.CreateHandle((Handle.Type) i);
+					if (handle != null)
+					{
+						this.list.Add(handle);
+					}
+				}
+
+				this.HandlesUpdate();
+			}
+			else
+			{
+				this.widget = null;
+				this.list.Clear();
+			}
 		}
 
-		public void Update()
+		public void UpdateGeometry()
 		{
 			//	Mise à jour des poignées après une modification géométrique de l'objet.
 			this.HandlesUpdate();
-		}
-
-		public void Flush()
-		{
-			//	Supprime toutes les poignées.
-			this.widget = null;
-			this.list.Clear();
 		}
 
 
