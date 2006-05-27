@@ -540,7 +540,20 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Sélection rectangulaire, souris pressée.
 			this.lastCreatedObject = null;
 
-			Widget obj = this.Detect(pos);  // objet visé par la souris
+			Widget obj = null;
+
+			if (this.selectedObjects.Count == 1)
+			{
+				this.handlesList.DraggingStart(pos);
+
+				if (this.handlesList.IsDragging)
+				{
+					this.SetHiliteRectangle(Rectangle.Empty);
+					return;
+				}
+			}
+
+			obj = this.Detect(pos);  // objet visé par la souris
 
 			this.startingPos = pos;
 			this.isDragging = false;
@@ -566,7 +579,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void GlobalMove(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
 			//	Sélection rectangulaire, souris déplacée.
-			if (isShiftPressed)
+			if (this.handlesList.IsFinger)
+			{
+				this.ChangeMouseCursor(MouseCursorType.Finger);
+			}
+			else if (isShiftPressed)
 			{
 				this.ChangeMouseCursor(MouseCursorType.ArrowPlus);
 			}
@@ -583,6 +600,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				this.SetSelectRectangle(new Rectangle(this.startingPos, pos));
 			}
+			else if (this.handlesList.IsDragging)
+			{
+				this.handlesList.DraggingMove(pos);
+			}
 		}
 
 		protected void GlobalUp(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
@@ -598,6 +619,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.SelectObjectsInRectangle(this.selectedRectangle);
 				this.SetSelectRectangle(Rectangle.Empty);
 				this.isRectangling = false;
+			}
+
+			if (this.handlesList.IsDragging)
+			{
+				this.handlesList.DraggingStop();
 			}
 		}
 
