@@ -1485,14 +1485,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				Rectangle part = new Rectangle(box.Left, bounds.Top, box.Width, box.Top-bounds.Top);
 				graphics.AddFilledRectangle(part);
-				graphics.RenderSolid(this.colorOutsurface);
+				graphics.RenderSolid(PanelsContext.ColorOutsurface);
 			}
 
 			if (bounds.Right < box.Right)
 			{
 				Rectangle part = new Rectangle(bounds.Right, box.Bottom, box.Right-bounds.Right, bounds.Height);
 				graphics.AddFilledRectangle(part);
-				graphics.RenderSolid(this.colorOutsurface);
+				graphics.RenderSolid(PanelsContext.ColorOutsurface);
 			}
 
 			//	Dessine la grille magnétique
@@ -1503,13 +1503,13 @@ namespace Epsitec.Common.Designer.MyWidgets
 				for (double x=step+0.5; x<bounds.Width; x+=step)
 				{
 					graphics.AddLine(x, bounds.Bottom, x, bounds.Top);
-					graphics.RenderSolid(((++hilite)%10 == 0) ? this.colorGrid1 : this.colorGrid2);
+					graphics.RenderSolid(((++hilite)%10 == 0) ? PanelsContext.ColorGrid1 : PanelsContext.ColorGrid2);
 				}
 				hilite = 0;
 				for (double y=step+0.5; y<bounds.Height; y+=step)
 				{
 					graphics.AddLine(bounds.Left, y, bounds.Right, y);
-					graphics.RenderSolid(((++hilite)%10 == 0) ? this.colorGrid1 : this.colorGrid2);
+					graphics.RenderSolid(((++hilite)%10 == 0) ? PanelsContext.ColorGrid1 : PanelsContext.ColorGrid2);
 				}
 			}
 
@@ -1585,7 +1585,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 					string text = (obj.ZOrder+1).ToString();
 					graphics.AddText(box.Left, box.Bottom, box.Width, box.Height, text, Font.DefaultFont, 9.0, ContentAlignment.MiddleCenter);
-					graphics.RenderSolid(this.colorZOrder);
+					graphics.RenderSolid(PanelsContext.ColorZOrder);
 				}
 			}
 
@@ -1604,7 +1604,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 						string text = (obj.TabIndex+1).ToString();
 						graphics.AddText(box.Left, box.Bottom, box.Width, box.Height, text, Font.DefaultFont, 9.0, ContentAlignment.MiddleCenter);
-						graphics.RenderSolid(this.colorTabIndex);
+						graphics.RenderSolid(PanelsContext.ColorTabIndex);
 					}
 				}
 			}
@@ -1645,11 +1645,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 			p2.Y += 0.5;
 
 			graphics.AddLine(p1, p2);
-			graphics.RenderSolid(this.colorAnchor);
+			graphics.RenderSolid(PanelsContext.ColorAnchor);
 
 			graphics.AddFilledCircle(p1, 4.0);
 			graphics.AddFilledCircle(p2, 4.0);
-			graphics.RenderSolid(this.colorAnchor);
+			graphics.RenderSolid(PanelsContext.ColorAnchor);
 		}
 
 		protected Rectangle RealBounds
@@ -2356,12 +2356,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected double					draggingBaseLine;
 		protected Widget[]					draggingArraySelected;
 		protected Point						startingPos;
-		protected Color						colorOutsurface = Color.FromAlphaRgb(0.2, 0.5, 0.5, 0.5);
-		protected Color						colorZOrder = Color.FromRgb(1,0,0);
-		protected Color						colorTabIndex = Color.FromRgb(0,0,1);
-		protected Color						colorAnchor = Color.FromRgb(1,0,0);
-		protected Color						colorGrid1 = Color.FromAlphaRgb(0.2, 0.4, 0.4, 0.4);
-		protected Color						colorGrid2 = Color.FromAlphaRgb(0.2, 0.7, 0.7, 0.7);
 		protected bool						isConstrainStarted;
 		protected bool						isConstrainObjectLock;
 		protected Rectangle					constrainInitialRectangle;
