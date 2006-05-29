@@ -208,6 +208,7 @@
     <Compile Include="ResourceManager.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ResourceModuleInfo.cs" />
     <Compile Include="Resources.cs">
       <SubType>Code</SubType>
     </Compile>

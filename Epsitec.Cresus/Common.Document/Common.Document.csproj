@@ -668,6 +668,9 @@
     <Content Include="Resources\Document\Strings.00.resource" />
     <Content Include="Resources\Document\Strings.en.resource" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\Document\module.info" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>

@@ -200,22 +200,58 @@ namespace Epsitec.Common.Support.Implementation
 			return null;
 		}
 
-		public override string[] GetModules()
+		public override ResourceModuleInfo[] GetModules()
 		{
 			string path  = this.path_prefix_base;
 			int    start = path.Length;
 			
 			string[] files = System.IO.Directory.GetDirectories (path);
 
-			List<string> modules = new List<string> ();
+			List<ResourceModuleInfo> modules = new List<ResourceModuleInfo> ();
 
 			foreach (string file in files)
 			{
-				string module = file.Substring (start);
+				string moduleName = file.Substring (start);
 
-				if (this.ValidateId (module))
+				if (this.ValidateId (moduleName))
 				{
-					modules.Add (module);
+					try
+					{
+						System.Xml.XmlDocument xml = new System.Xml.XmlDocument ();
+						xml.Load (System.IO.Path.Combine (file, "module.info"));
+						System.Xml.XmlElement root = xml.DocumentElement;
+
+						int id = -1;
+						
+						if (root.Name == "ModuleInfo")
+						{
+							int idValue;
+							string idAttribute = root.GetAttribute ("id");
+
+							if ((string.IsNullOrEmpty (idAttribute) == false) &&
+								(int.TryParse (idAttribute, out idValue)))
+							{
+								id = idValue;
+							}
+						}
+
+						if (id >= 0)
+						{
+							modules.Add (new ResourceModuleInfo (moduleName, id));
+						}
+						else
+						{
+							System.Diagnostics.Debug.WriteLine (string.Format ("Invalid XML file found in '{0}'", file));
+						}
+					}
+					catch (System.IO.FileNotFoundException)
+					{
+						System.Diagnostics.Debug.WriteLine (string.Format ("Could not find module.info file in '{0}'", file));
+					}
+					catch (System.IO.PathTooLongException)
+					{
+						System.Diagnostics.Debug.WriteLine (string.Format ("Path to module.info file for '{0}' is too long", file));
+					}
 				}
 			}
 			

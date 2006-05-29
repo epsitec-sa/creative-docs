@@ -732,6 +732,9 @@
     <Content Include="Resources\Common.Widgets\Strings.00.resource" />
     <Content Include="Resources\Common.Widgets\Strings.en.resource" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\Common.Widgets\module.info" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>
