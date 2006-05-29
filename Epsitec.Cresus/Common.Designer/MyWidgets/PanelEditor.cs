@@ -434,7 +434,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			AnchorStyles style;
 			if (this.AnchorDetect(pos, out obj, out style))
 			{
-				this.SetObjectAnchor(obj, style);
+				this.SetObjectAnchor(obj, style);  // modifie les ressorts
 				return;
 			}
 
@@ -521,7 +521,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 					anchor.Offset(0.5, 0.5);
 					anchor.Inflate(3);
 				}
-				this.SetAnchorRectangle(anchor);
+				this.SetAnchorRectangle(anchor);  // met en évidence le ressort survolé par la souris
 			}
 		}
 
@@ -779,22 +779,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.CreateObjectAdjust(ref pos, out bounds);
 
 				Widget parent = this.DetectGroup(bounds);
-				Point offset = parent.ActualBounds.BottomLeft;
 
 				this.creatingObject = this.CreateObjectItem();
 				this.creatingObject.SetParent(parent);
 				this.creatingObject.Anchor = AnchorStyles.BottomLeft;
 				this.creatingObject.TabNavigation = TabNavigationMode.Passive;
 
-				if (parent == this.panel)
-				{
-					pos.X -= this.panel.Padding.Left;
-					pos.Y -= this.panel.Padding.Bottom;
-				}
-				else
-				{
-					pos -= offset;
-				}
 				this.SetObjectPosition(this.creatingObject, pos);
 
 				this.constrainsList.Ending();
@@ -885,6 +875,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.handlesList.DraggingStart(pos);
 			if (this.handlesList.IsDragging)
 			{
+				this.handlesList.DraggingMove(pos);
 				this.SetHiliteRectangle(Rectangle.Empty);
 				this.SetAnchorRectangle(Rectangle.Empty);
 				return true;
@@ -924,8 +915,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 			foreach (Widget obj in this.selectedObjects)
 			{
 				Point origin = this.GetObjectPosition(obj)-this.draggingRectangle.BottomLeft;
-				origin.X += this.panel.Padding.Left;
-				origin.Y += this.panel.Padding.Bottom;
 				CloneView clone = new CloneView(container);
 				clone.PreferredSize = obj.ActualSize;
 				clone.Margins = new Margins(origin.X, 0, 0, origin.Y);
@@ -1462,12 +1451,39 @@ namespace Epsitec.Common.Designer.MyWidgets
 		public Rectangle GetObjectBounds(Widget obj)
 		{
 			//	Retourne la boîte d'un objet.
-			Point pos = new Point(obj.Margins.Left, obj.Margins.Bottom);
+#if false
+			Point pos = Point.Zero;
+			Size size = obj.PreferredSize;
+
+			if (this.IsObjectAnchorLeft(obj))
+			{
+				pos.X = obj.Margins.Left;
+			}
+
+			if (this.IsObjectAnchorRight(obj))
+			{
+				pos.X = obj.Margins.Right - size.Width;
+			}
+
+			if (this.IsObjectAnchorBottom(obj))
+			{
+				pos.Y = obj.Margins.Bottom;
+			}
+
+			if (this.IsObjectAnchorTop(obj))
+			{
+				pos.Y = obj.Margins.Top - size.Height;
+			}
+
 			//?this.Window.ForceLayout();
 			//?pos = this.panel.MapClientToParent(pos);
 			pos.X += this.panel.Padding.Left;
 			pos.Y += this.panel.Padding.Bottom;
 			return new Rectangle(pos, obj.PreferredSize);
+#else
+			this.Window.ForceLayout();
+			return obj.ActualBounds;
+#endif
 		}
 
 		public void SetObjectBounds(Widget obj, Rectangle rect)
@@ -1485,17 +1501,45 @@ namespace Epsitec.Common.Designer.MyWidgets
 				rect.Height = obj.MinHeight;
 			}
 
-			Point pos = rect.BottomLeft;
-			pos.X -= this.panel.Padding.Left;
-			pos.Y -= this.panel.Padding.Bottom;
-			pos.X = System.Math.Max(pos.X, 0);
-			pos.Y = System.Math.Max(pos.Y, 0);
-			//?this.Window.ForceLayout();
-			//?pos = this.panel.MapParentToClient(pos);
-
+			Rectangle bounds = this.RealBounds;
 			Margins margins = obj.Margins;
-			margins.Left   = pos.X;
-			margins.Bottom = pos.Y;
+
+			if (this.IsObjectAnchorLeft(obj))
+			{
+				double px = rect.Left;
+				px -= this.panel.Padding.Left;
+				px = System.Math.Max(px, 0);
+				margins.Left = px;
+				margins.Right = 0;
+			}
+
+			if (this.IsObjectAnchorRight(obj))
+			{
+				double px = bounds.Right - rect.Right;
+				px -= this.panel.Padding.Right;
+				px = System.Math.Max(px, 0);
+				margins.Right = px;
+				margins.Left = 0;
+			}
+
+			if (this.IsObjectAnchorBottom(obj))
+			{
+				double py = rect.Bottom;
+				py -= this.panel.Padding.Bottom;
+				py = System.Math.Max(py, 0);
+				margins.Bottom = py;
+				margins.Top = 0;
+			}
+
+			if (this.IsObjectAnchorTop(obj))
+			{
+				double py = bounds.Top - rect.Top;
+				py -= this.panel.Padding.Top;
+				py = System.Math.Max(py, 0);
+				margins.Top = py;
+				margins.Bottom = 0;
+			}
+
 			obj.Margins = margins;
 			obj.PreferredSize = rect.Size;
 
@@ -1505,55 +1549,105 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected Point GetObjectPosition(Widget obj)
 		{
 			//	Retourne l'origine d'un objet.
-			Point pos = new Point(obj.Margins.Left, obj.Margins.Bottom);
-			//?this.Window.ForceLayout();
-			//?return this.panel.MapClientToParent(pos);
-			return pos;
+			return this.GetObjectBounds(obj).BottomLeft;
 		}
 
 		protected void SetObjectPositionX(Widget obj, double x)
 		{
 			//	Déplace l'origine gauche d'un objet.
-			Point pos = new Point(x, 0);
-			pos.X -= this.panel.Padding.Left;
-			pos.Y -= this.panel.Padding.Bottom;
-			pos.X = System.Math.Max(pos.X, 0);
-			pos.Y = System.Math.Max(pos.Y, 0);
-			//?this.Window.ForceLayout();
-			//?pos = this.panel.MapParentToClient(pos);
-
+			Rectangle bounds = this.RealBounds;
 			Margins margins = obj.Margins;
-			margins.Left = pos.X;
+
+			if (this.IsObjectAnchorLeft(obj))
+			{
+				double px = x;
+				px -= this.panel.Padding.Left;
+				px = System.Math.Max(px, 0);
+				margins.Left = px;
+				margins.Right = 0;
+			}
+
+			if (this.IsObjectAnchorRight(obj))
+			{
+				double px = bounds.Right - (x+obj.PreferredWidth);
+				px -= this.panel.Padding.Right;
+				px = System.Math.Max(px, 0);
+				margins.Right = px;
+				margins.Left = 0;
+			}
+
 			obj.Margins = margins;
 		}
 
 		protected void SetObjectPositionY(Widget obj, double y)
 		{
 			//	Déplace l'origine inférieure d'un objet.
-			Point pos = new Point(0, y);
-			pos.X -= this.panel.Padding.Left;
-			pos.Y -= this.panel.Padding.Bottom;
-			pos.X = System.Math.Max(pos.X, 0);
-			pos.Y = System.Math.Max(pos.Y, 0);
-			//?this.Window.ForceLayout();
-			//?pos = this.panel.MapParentToClient(pos);
-
+			Rectangle bounds = this.RealBounds;
 			Margins margins = obj.Margins;
-			margins.Bottom = pos.Y;
+
+			if (this.IsObjectAnchorBottom(obj))
+			{
+				double py = y;
+				py -= this.panel.Padding.Bottom;
+				py = System.Math.Max(py, 0);
+				margins.Bottom = py;
+				margins.Top = 0;
+			}
+
+			if (this.IsObjectAnchorTop(obj))
+			{
+				double py = bounds.Top - (y+obj.PreferredHeight);
+				py -= this.panel.Padding.Top;
+				py = System.Math.Max(py, 0);
+				margins.Top = py;
+				margins.Bottom = 0;
+			}
+
 			obj.Margins = margins;
 		}
 
 		protected void SetObjectPosition(Widget obj, Point pos)
 		{
 			//	Déplace l'origine d'un objet.
-			pos.X = System.Math.Max(pos.X, 0);
-			pos.Y = System.Math.Max(pos.Y, 0);
-			//?this.Window.ForceLayout();
-			//?pos = this.panel.MapParentToClient(pos);
-
+			Rectangle bounds = this.RealBounds;
 			Margins margins = obj.Margins;
-			margins.Left   = pos.X;
-			margins.Bottom = pos.Y;
+
+			if (this.IsObjectAnchorLeft(obj))
+			{
+				double px = pos.X;
+				px -= this.panel.Padding.Left;
+				px = System.Math.Max(px, 0);
+				margins.Left = px;
+				margins.Right = 0;
+			}
+
+			if (this.IsObjectAnchorRight(obj))
+			{
+				double px = bounds.Right - (pos.X+obj.PreferredWidth);
+				px -= this.panel.Padding.Right;
+				px = System.Math.Max(px, 0);
+				margins.Right = px;
+				margins.Left = 0;
+			}
+
+			if (this.IsObjectAnchorBottom(obj))
+			{
+				double py = pos.Y;
+				py -= this.panel.Padding.Bottom;
+				py = System.Math.Max(py, 0);
+				margins.Bottom = py;
+				margins.Top = 0;
+			}
+
+			if (this.IsObjectAnchorTop(obj))
+			{
+				double py = bounds.Top - (pos.Y+obj.PreferredHeight);
+				py -= this.panel.Padding.Top;
+				py = System.Math.Max(py, 0);
+				margins.Top = py;
+				margins.Bottom = 0;
+			}
+
 			obj.Margins = margins;
 		}
 
@@ -1614,6 +1708,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void SetObjectAnchor(Widget obj, AnchorStyles style)
 		{
 			//	Modifie le système d'ancrage d'un objet.
+			Rectangle bounds = this.GetObjectBounds(obj);
+
 			if ((obj.Anchor & style) == 0)
 			{
 				obj.Anchor |= style;
@@ -1621,8 +1717,15 @@ namespace Epsitec.Common.Designer.MyWidgets
 			else
 			{
 				obj.Anchor &= ~style;
+
+				if ((obj.Anchor & Misc.OppositeAnchor(style)) == 0)
+				{
+					obj.Anchor |= Misc.OppositeAnchor(style);
+				}
 			}
 
+			this.SetObjectBounds(obj, bounds);
+			this.handlesList.UpdateGeometry();
 			this.Invalidate();
 		}
 
@@ -1784,7 +1887,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 
 			//	Dessine les ancrages des objets sélectionnés.
-			if (this.context.ShowAnchor && this.selectedObjects.Count > 0 && !this.isDragging && !this.handlesList.IsDragging)
+			if (this.context.ShowAnchor && this.selectedObjects.Count == 1 && !this.isDragging && !this.handlesList.IsDragging)
 			{
 				foreach (Widget obj in this.selectedObjects)
 				{
@@ -1891,19 +1994,25 @@ namespace Epsitec.Common.Designer.MyWidgets
 			Misc.AlignForLine(graphics, ref p1a);
 			Misc.AlignForLine(graphics, ref p2a);
 
-			graphics.AddLine(p1, p1a);
-			graphics.AddLine(p2, p2a);
-
 			if (rigid)  // rigide ?
 			{
+				Point delta = (p1.Y == p2.Y) ? new Point(0, 1) : new Point(1, 0);
+				graphics.AddLine(p1+delta, p1a+delta);
+				graphics.AddLine(p2+delta, p2a+delta);
+				graphics.AddLine(p1-delta, p1a-delta);
+				graphics.AddLine(p2-delta, p2a-delta);
+
 				double dim = PanelEditor.anchorThickness;
 				Misc.AddBox(graphics, p1a, p2a, dim);
 			}
 			else  // élastique ?
 			{
+				graphics.AddLine(p1, p1a);
+				graphics.AddLine(p2, p2a);
+
 				double dim = PanelEditor.anchorThickness;
 				double length = Point.Distance(p1a, p2a);
-				int loops = (int) (length/(dim*4));
+				int loops = (int) (length/(dim*2));
 				loops = System.Math.Max(loops, 1);
 				Misc.AddSpring(graphics, p1a, p2a, dim, loops);
 			}
