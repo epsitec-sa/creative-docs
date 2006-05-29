@@ -261,6 +261,8 @@ namespace Epsitec.Common.Support
 			return Druid.IsValidBase32Number (value);
 		}
 
+		#region Private Methods
+		
 		private static bool IsValidBase32Number(string value)
 		{
 			for (int i = 0; i < value.Length; i++)
@@ -326,5 +328,7 @@ namespace Epsitec.Common.Support
 				throw new System.FormatException ();
 			}
 		}
+		
+		#endregion
 	}
 }

@@ -23,7 +23,7 @@ namespace Epsitec.Common.Support
 		public ResourceManager(string path)
 		{
 			this.resource_providers     = new IResourceProvider[0];
-			this.resource_provider_hash = new System.Collections.Hashtable ();
+			this.resource_provider_hash = new Dictionary<string, IResourceProvider> ();
 			this.culture                = CultureInfo.CurrentCulture;
 			
 			if ((path != null) &&
@@ -169,8 +169,8 @@ namespace Epsitec.Common.Support
 			
 			//	On reconstruit la table des fournisseurs disponibles en fonction du
 			//	succès de leur initialisation :
-			
-			System.Collections.ArrayList list = new System.Collections.ArrayList ();
+
+			List<IResourceProvider> list = new List<IResourceProvider> ();
 			
 			this.resource_provider_hash.Clear ();
 			
@@ -188,8 +188,7 @@ namespace Epsitec.Common.Support
 				}
 			}
 			
-			this.resource_providers = new IResourceProvider[list.Count];
-			list.CopyTo (this.resource_providers);
+			this.resource_providers = list.ToArray ();
 		}
 		
 		
@@ -323,16 +322,35 @@ namespace Epsitec.Common.Support
 
 		public string[] GetModuleNames(string prefix)
 		{
-			IResourceProvider provider = this.resource_provider_hash[prefix] as IResourceProvider;
+			ResourceModuleInfo[] infos = this.GetModuleInfos (prefix);
+			
+			if (infos != null)
+			{
+				string[] names = new string[infos.Length];
+				
+				for (int i = 0; i < infos.Length; i++)
+				{
+					names[i] = infos[i].Name;
+				}
+				
+				return names;
+			}
 
-			if (provider != null)
+			return null;
+		}
+
+		public ResourceModuleInfo[] GetModuleInfos(string prefix)
+		{
+			IResourceProvider provider;
+
+			if (this.resource_provider_hash.TryGetValue (prefix, out provider))
 			{
 				return provider.GetModules ();
 			}
 
 			return null;
 		}
-		
+
 		public string[] GetBundleIds(string name_filter)
 		{
 			return this.GetBundleIds (name_filter, null, ResourceLevel.Default, this.culture);
@@ -831,7 +849,7 @@ namespace Epsitec.Common.Support
 						
 						if (provider != null)
 						{
-							System.Diagnostics.Debug.Assert (this.resource_provider_hash.Contains (provider.Prefix) == false);
+							System.Diagnostics.Debug.Assert (this.resource_provider_hash.ContainsKey (provider.Prefix) == false);
 							
 							provider.Setup (this);
 							provider.SelectLocale (this.culture);
@@ -1019,7 +1037,7 @@ namespace Epsitec.Common.Support
 
 		private CultureInfo						culture;
 		private IResourceProvider[]				resource_providers;
-		private Hashtable						resource_provider_hash;
+		private Dictionary<string, IResourceProvider> resource_provider_hash;
 		private string							application_name;
 		private string							default_prefix = "file";
 		private string							default_path;

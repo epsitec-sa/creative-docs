@@ -210,8 +210,9 @@
     <EmbeddedResource Include="Images\AlignBaseLine.icon" />
     <EmbeddedResource Include="Images\CursorFinger.icon" />
     <EmbeddedResource Include="Images\ObjectVLine.icon" />
-    <None Include="Resources\Designer\Strings.00.resource" />
-    <None Include="Resources\Designer\Strings.en.resource" />
+    <Content Include="Resources\Designer\module.info" />
+    <Content Include="Resources\Designer\Strings.00.resource" />
+    <Content Include="Resources\Designer\Strings.en.resource" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
