@@ -186,9 +186,19 @@ namespace Epsitec.Common.Designer
 			}
 			else if (this.widget is Separator)
 			{
-				if (type != Handle.Type.Left && type != Handle.Type.Right)
+				if (this.widget.PreferredHeight == 1)
 				{
-					return null;
+					if (type != Handle.Type.Left && type != Handle.Type.Right)
+					{
+						return null;
+					}
+				}
+				else
+				{
+					if (type != Handle.Type.Bottom && type != Handle.Type.Top)
+					{
+						return null;
+					}
 				}
 			}
 			else if (this.widget is StaticText)

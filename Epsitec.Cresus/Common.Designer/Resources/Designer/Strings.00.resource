@@ -109,7 +109,8 @@
   <data name="Action.ToolEdit">Editer</data>
   <data name="Action.ToolZoom">Loupe</data>
   <data name="Action.ToolHand">Main</data>
-  <data name="Action.ObjectLine">Séparateur</data>
+  <data name="Action.ObjectHLine">Séparateur horizontal</data>
+  <data name="Action.ObjectVLine">Séparateur vertical</data>
   <data name="Action.ObjectButton">Bouton</data>
   <data name="Action.ObjectText">Texte éditable</data>
   <data name="Action.ObjectStatic">Texte fixe</data>

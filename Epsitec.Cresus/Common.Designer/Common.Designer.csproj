@@ -167,7 +167,7 @@
     <EmbeddedResource Include="Images\ToolZoom.icon" />
     <EmbeddedResource Include="Images\ObjectButton.icon" />
     <EmbeddedResource Include="Images\ObjectText.icon" />
-    <EmbeddedResource Include="Images\ObjectLine.icon" />
+    <EmbeddedResource Include="Images\ObjectHLine.icon" />
     <EmbeddedResource Include="Images\CursorArrow.icon" />
     <EmbeddedResource Include="Images\CursorArrowPlus.icon" />
     <EmbeddedResource Include="Images\CursorGlobal.icon" />
@@ -209,6 +209,7 @@
     <EmbeddedResource Include="Images\ObjectStatic.icon" />
     <EmbeddedResource Include="Images\AlignBaseLine.icon" />
     <EmbeddedResource Include="Images\CursorFinger.icon" />
+    <EmbeddedResource Include="Images\ObjectVLine.icon" />
     <None Include="Resources\Designer\Strings.00.resource" />
     <None Include="Resources\Designer\Strings.en.resource" />
   </ItemGroup>

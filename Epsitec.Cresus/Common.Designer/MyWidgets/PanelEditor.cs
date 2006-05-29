@@ -790,10 +790,19 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Crée un objet selon la palette d'outils.
 			Widget item = null;
 
-			if (this.context.Tool == "ObjectLine")
+			if (this.context.Tool == "ObjectHLine")
 			{
 				item = new Separator();
 				item.PreferredHeight = 1;
+				item.PreferredWidth = 100;
+				//?item.MinWidth = 10;
+			}
+
+			if (this.context.Tool == "ObjectVLine")
+			{
+				item = new Separator();
+				item.PreferredWidth = 1;
+				item.PreferredHeight = 100;
 				//?item.MinWidth = 10;
 			}
 
