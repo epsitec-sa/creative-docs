@@ -72,21 +72,25 @@ namespace Epsitec.Common.Designer
 				this.CreateLayout();
 			}
 
-			//	Ouvre tous les modules trouvés.
-			string[] modules = Resources.GetModuleNames(this.resourcePrefix);
+			//	Refait la liste des modules, puis ouvre tous ceux qui ont été trouvés.
+			Resources.RefreshModuleInfos (this.resourcePrefix);
+			ResourceModuleInfo[] modules = Resources.GetModuleInfos(this.resourcePrefix);
 
-			for ( int i=0 ; i<modules.Length ; i++ )
+			if (modules != null)
 			{
-				Module module = new Module(this, this.mode, this.resourcePrefix, modules[i]);
+				for (int i=0; i<modules.Length; i++)
+				{
+					Module module = new Module (this, this.mode, this.resourcePrefix, modules[i]);
 
-				ModuleInfo mi = new ModuleInfo();
-				mi.Module = module;
-				this.moduleInfoList.Insert(++this.currentModule, mi);
-				this.CreateModuleLayout();
+					ModuleInfo mi = new ModuleInfo ();
+					mi.Module = module;
+					this.moduleInfoList.Insert (++this.currentModule, mi);
+					this.CreateModuleLayout ();
 
-				this.bookModules.ActivePage = mi.TabPage;
+					this.bookModules.ActivePage = mi.TabPage;
+				}
 			}
-
+			
 			this.window.Show();
 
 #if false

@@ -10,13 +10,14 @@ namespace Epsitec.Common.Designer
 	/// </summary>
 	public class Module
 	{
-		public Module(MainWindow mainWindow, DesignerMode mode, string resourcePrefix, string moduleName)
+		public Module(MainWindow mainWindow, DesignerMode mode, string resourcePrefix, ResourceModuleInfo moduleInfo)
 		{
 			this.UniqueIDCreate();
 
 			this.mainWindow = mainWindow;
 			this.mode = mode;
-			this.name = moduleName;
+			this.name = moduleInfo.Name;
+			this.id   = moduleInfo.Id;
 
 			this.resourceManager = new ResourceManager();
 			this.resourceManager.SetupApplication(this.name);
@@ -389,6 +390,7 @@ namespace Epsitec.Common.Designer
 		protected MainWindow				mainWindow;
 		protected DesignerMode				mode;
 		protected string					name;
+		protected int						id;
 		protected ResourceManager			resourceManager;
 		protected ResourceBundleCollection	bundles;
 		protected List<LoadedBundle>		panelsList;
