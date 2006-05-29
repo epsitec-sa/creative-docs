@@ -1654,33 +1654,21 @@ namespace Epsitec.Common.Designer.MyWidgets
 					Rectangle rect = this.GetObjectBounds(obj);
 					Point p1, p2;
 
-					if (this.IsObjectAnchorLeft(obj))
-					{
-						p1 = new Point(bounds.Left, rect.Center.Y);
-						p2 = new Point(rect.Left, rect.Center.Y);
-						this.DrawAnchor(graphics, p1, p2);
-					}
+					p1 = new Point(bounds.Left, rect.Center.Y);
+					p2 = new Point(rect.Left, rect.Center.Y);
+					this.DrawAnchor(graphics, p1, p2, this.IsObjectAnchorLeft(obj));
 
-					if (this.IsObjectAnchorRight(obj))
-					{
-						p1 = new Point(bounds.Right, rect.Center.Y);
-						p2 = new Point(rect.Right, rect.Center.Y);
-						this.DrawAnchor(graphics, p1, p2);
-					}
+					p1 = new Point(bounds.Right, rect.Center.Y);
+					p2 = new Point(rect.Right, rect.Center.Y);
+					this.DrawAnchor(graphics, p1, p2, this.IsObjectAnchorRight(obj));
 
-					if (this.IsObjectAnchorBottom(obj))
-					{
-						p1 = new Point(rect.Center.X, bounds.Bottom);
-						p2 = new Point(rect.Center.X, rect.Bottom);
-						this.DrawAnchor(graphics, p1, p2);
-					}
+					p1 = new Point(rect.Center.X, bounds.Bottom);
+					p2 = new Point(rect.Center.X, rect.Bottom);
+					this.DrawAnchor(graphics, p1, p2, this.IsObjectAnchorBottom(obj));
 
-					if (this.IsObjectAnchorTop(obj))
-					{
-						p1 = new Point(rect.Center.X, bounds.Top);
-						p2 = new Point(rect.Center.X, rect.Top);
-						this.DrawAnchor(graphics, p1, p2);
-					}
+					p1 = new Point(rect.Center.X, bounds.Top);
+					p2 = new Point(rect.Center.X, rect.Top);
+					this.DrawAnchor(graphics, p1, p2, this.IsObjectAnchorTop(obj));
 				}
 			}
 
@@ -1747,20 +1735,38 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
-		protected void DrawAnchor(Graphics graphics, Point p1, Point p2)
+		protected void DrawAnchor(Graphics graphics, Point p1, Point p2, bool rigid)
 		{
-			graphics.Align(ref p1);
-			graphics.Align(ref p2);
-			p1.X += 0.5;
-			p1.Y += 0.5;
-			p2.X += 0.5;
-			p2.Y += 0.5;
+			Point p1a = Point.Scale(p1, p2, 0.3);
+			Point p2a = Point.Scale(p2, p1, 0.3);
 
-			graphics.AddLine(p1, p2);
+			Misc.AlignForLine(graphics, ref p1);
+			Misc.AlignForLine(graphics, ref p2);
+			Misc.AlignForLine(graphics, ref p1a);
+			Misc.AlignForLine(graphics, ref p2a);
+
+			graphics.AddLine(p1, p1a);
+			graphics.AddLine(p2, p2a);
+
+			if (rigid)
+			{
+				graphics.LineWidth = 5.0;
+				graphics.AddLine(p1a, p2a);
+				graphics.LineWidth = 1.0;
+			}
+			else
+			{
+				double dim = 3.0;
+				double length = Point.Distance(p1a, p2a);
+				int loops = (int) (length/(dim*4));
+				loops = System.Math.Max(loops, 1);
+				Misc.AddSpring(graphics, p1a, p2a, dim, loops);
+			}
+
 			graphics.RenderSolid(PanelsContext.ColorAnchor);
 
-			graphics.AddFilledCircle(p1, 4.0);
-			graphics.AddFilledCircle(p2, 4.0);
+			graphics.AddFilledCircle(p1, 3.0);
+			graphics.AddFilledCircle(p2, 3.0);
 			graphics.RenderSolid(PanelsContext.ColorAnchor);
 		}
 
