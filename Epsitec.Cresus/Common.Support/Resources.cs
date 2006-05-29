@@ -114,17 +114,6 @@ namespace Epsitec.Common.Support
 		}
 		
 		
-		public static void AddBundleProvider(IBundleProvider bundle_provider)
-		{
-			Resources.manager.AddBundleProvider (bundle_provider);
-		}
-		
-		public static void RemoveBundleProvider(IBundleProvider bundle_provider)
-		{
-			Resources.manager.RemoveBundleProvider (bundle_provider);
-		}
-		
-		
 		public static bool ValidateId(string id)
 		{
 			return Resources.manager.ValidateId (id);

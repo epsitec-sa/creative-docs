@@ -162,9 +162,6 @@
     <Compile Include="Globals.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="IBundleProvider.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="IImageProvider.cs">
       <SubType>Code</SubType>
     </Compile>
