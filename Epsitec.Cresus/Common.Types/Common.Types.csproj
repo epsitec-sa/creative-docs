@@ -141,7 +141,7 @@
     </Compile>
     <Compile Include="BindingMode.cs" />
     <Compile Include="BindingUpdateMode.cs" />
-    <Compile Include="BindingSourceType.cs" />
+    <Compile Include="DataSourceType.cs" />
     <Compile Include="DependencyObjectTree.cs" />
     <Compile Include="DataGraph.cs">
       <SubType>Code</SubType>

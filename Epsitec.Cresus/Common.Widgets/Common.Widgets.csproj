@@ -129,6 +129,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Application.cs" />
     <Compile Include="CommandContext.cs" />
     <Compile Include="CommandDispatcherChain.cs" />
     <Compile Include="CommandContextChain.cs" />
@@ -136,6 +137,7 @@
     <Compile Include="ControllerAttribute.cs" />
     <Compile Include="CommandState.cs" />
     <Compile Include="CloneView.cs" />
+    <Compile Include="Controllers\StringController.cs" />
     <Compile Include="StructuredCommand.cs" />
     <Compile Include="Exceptions\InfiniteCommandLoopException.cs" />
     <Compile Include="MultiCommand.cs" />

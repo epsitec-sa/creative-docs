@@ -214,14 +214,6 @@ namespace Epsitec.Common.Types
 				throw new System.Exception ("The method or operation is not implemented.");
 			}
 
-			public bool HasImmutableRoots
-			{
-				get
-				{
-					return true;
-				}
-			}
-
 			#endregion
 		}
 

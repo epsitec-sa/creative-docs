@@ -16,9 +16,7 @@ namespace Epsitec.Common.Widgets.Controllers
 		{
 		}
 
-		#region IController Members
-
-		public Placeholder Placeholder
+		public Placeholder						Placeholder
 		{
 			get
 			{
@@ -40,17 +38,33 @@ namespace Epsitec.Common.Widgets.Controllers
 				}
 			}
 		}
-		
-		public void CreateUserInterface()
+
+		#region IController Members
+
+		Placeholder IController.Placeholder
 		{
-			if (this.placeholder != null)
+			get
 			{
-				this.CreateUserInterface (this.placeholder.Value);
+				return this.Placeholder;
+			}
+			set
+			{
+				this.Placeholder = value;
 			}
 		}
 
-		public void DisposeUserInterface()
+		void IController.CreateUserInterface()
 		{
+			if (this.placeholder != null)
+			{
+				this.CreateUserInterface (this.placeholder.ValueTypeObject, this.placeholder.ValueName);
+			}
+		}
+
+		void IController.DisposeUserInterface()
+		{
+			this.PrepareUserInterfaceDisposal ();
+			
 			Widget[] copy = this.widgets.ToArray ();
 			
 			this.widgets.Clear ();
@@ -61,9 +75,33 @@ namespace Epsitec.Common.Widgets.Controllers
 			}
 		}
 
+		void IController.RefreshUserInterface(object oldValue, object newValue)
+		{
+			//	Avoid update loops :
+			
+			if (this.isRefreshingUserInterface == false)
+			{
+				try
+				{
+					this.isRefreshingUserInterface = true;
+					this.RefreshUserInterface (oldValue, newValue);
+				}
+				finally
+				{
+					this.isRefreshingUserInterface = false;
+				}
+			}
+		}
+
 		#endregion
 
-		protected abstract void CreateUserInterface(object value);
+		protected abstract void CreateUserInterface(object valueTypeObject, string valueName);
+		
+		protected abstract void RefreshUserInterface(object oldValue, object newValue);
+
+		protected virtual void PrepareUserInterfaceDisposal()
+		{
+		}
 		
 		protected void AddWidget(Widget widget)
 		{
@@ -77,16 +115,6 @@ namespace Epsitec.Common.Widgets.Controllers
 			}
 		}
 
-		private void DetachAllWidgets(Placeholder view)
-		{
-			if (view != null)
-			{
-				foreach (Widget widget in this.widgets)
-				{
-					view.Children.Remove (widget);
-				}
-			}
-		}
 		private void AttachAllWidgets(Placeholder view)
 		{
 			if (view != null)
@@ -98,6 +126,17 @@ namespace Epsitec.Common.Widgets.Controllers
 			}
 		}
 
+		private void DetachAllWidgets(Placeholder view)
+		{
+			if (view != null)
+			{
+				foreach (Widget widget in this.widgets)
+				{
+					view.Children.Remove (widget);
+				}
+			}
+		}
+		
 		#region Get/Set Overrides
 
 		private static object GetPlaceholderValue(DependencyObject o)
@@ -134,5 +173,6 @@ namespace Epsitec.Common.Widgets.Controllers
 
 		private Placeholder						placeholder;
 		private List<Widget>					widgets = new List<Widget> ();
+		private bool							isRefreshingUserInterface;
 	}
 }

@@ -165,6 +165,7 @@
     <Compile Include="CommandDispatcherTest.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DruidTest.cs" />
     <Compile Include="EventsTest.cs" />
     <Compile Include="EmptyEnumeratorTest.cs">
       <SubType>Code</SubType>

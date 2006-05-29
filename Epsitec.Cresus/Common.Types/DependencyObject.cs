@@ -468,15 +468,36 @@ namespace Epsitec.Common.Types
 		/// Gets the binding for the specified property.
 		/// </summary>
 		/// <param name="property">The property.</param>
-		/// <returns>The binding object for the property.</returns>
+		/// <returns>The binding object for the property, or <c>null</c> if
+		/// there is no binding.</returns>
 		public Binding GetBinding(DependencyProperty property)
 		{
-			BindingExpression bindingExpression;
+			BindingExpression bindingExpression = this.GetBindingExpression (property);
 			
+			if (bindingExpression != null)
+			{
+				return bindingExpression.ParentBinding;
+			}
+			else
+			{
+				return null;
+			}
+		}
+
+		/// <summary>
+		/// Gets the binding expression for the specified property.
+		/// </summary>
+		/// <param name="property">The property.</param>
+		/// <returns>The binding expression for the property, or <c>null</c> if
+		/// there is no binding.</returns>
+		public BindingExpression GetBindingExpression(DependencyProperty property)
+		{
+			BindingExpression bindingExpression;
+
 			if ((this.bindings != null) &&
 				(this.bindings.TryGetValue (property, out bindingExpression)))
 			{
-				return bindingExpression.ParentBinding;
+				return bindingExpression;
 			}
 			else
 			{
@@ -649,6 +670,16 @@ namespace Epsitec.Common.Types
 		{
 		}
 
+		protected virtual void OnBindingChanged(DependencyProperty property)
+		{
+			BindingChangedEventHandler handler = (BindingChangedEventHandler) this.GetUserEventHandler (DependencyObject.BindingChangedString);
+
+			if (handler != null)
+			{
+				handler (this, new BindingChangedEventArgs (property));
+			}
+		}
+
 		private void InheritPropertyFromParent(DependencyProperty property)
 		{
 			//	Update the cached value for this inherited property, based
@@ -673,16 +704,6 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		private void OnBindingChanged(DependencyProperty property)
-		{
-			BindingChangedEventHandler handler = (BindingChangedEventHandler) this.GetUserEventHandler (DependencyObject.BindingChangedString);
-
-			if (handler != null)
-			{
-				handler (this, new BindingChangedEventArgs (property));
-			}
-		}
-		
 		internal static void Register(DependencyProperty property, System.Type ownerType)
 		{
 			System.Diagnostics.Debug.Assert (property != null);
@@ -839,14 +860,6 @@ namespace Epsitec.Common.Types
 			}
 
 			this.SetValue (property, value);
-		}
-
-		bool IStructuredData.HasImmutableRoots
-		{
-			get
-			{
-				return false;
-			}
 		}
 
 		#endregion

@@ -158,14 +158,6 @@ namespace Epsitec.Common.UI
 			throw new System.InvalidOperationException ("You cannot modify a DataSource with SetValue");
 		}
 
-		bool IStructuredData.HasImmutableRoots
-		{
-			get
-			{
-				return true;
-			}
-		}
-		
 		#endregion
 
 		/// <summary>
