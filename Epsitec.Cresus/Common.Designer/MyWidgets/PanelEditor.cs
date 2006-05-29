@@ -965,15 +965,15 @@ namespace Epsitec.Common.Designer.MyWidgets
 				Rectangle bounds = widget.ActualBounds;
 				
 				double ix = 0;
-				if (bounds.Width < 5)
+				if (bounds.Width < this.context.MinimalSize)
 				{
-					ix = 5;
+					ix = this.context.MinimalSize;
 				}
 				
 				double iy = 0;
-				if (bounds.Height < 5)
+				if (bounds.Height < this.context.MinimalSize)
 				{
-					iy = 5;
+					iy = this.context.MinimalSize;
 				}
 				
 				bounds.Inflate(ix, iy);
@@ -1106,6 +1106,23 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void SetHiliteRectangle(Rectangle rect)
 		{
 			//	Détermine la zone à mettre en évidence lors d'un survol.
+			if (!rect.IsEmpty)
+			{
+				double ix = 0;
+				if (rect.Width < this.context.MinimalSize)
+				{
+					ix = this.context.MinimalSize;
+				}
+
+				double iy = 0;
+				if (rect.Height < this.context.MinimalSize)
+				{
+					iy = this.context.MinimalSize;
+				}
+
+				rect.Inflate(ix, iy);
+			}
+
 			if (this.hilitedRectangle != rect)
 			{
 				this.Invalidate(this.hilitedRectangle);  // invalide l'ancienne zone
@@ -1610,8 +1627,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 					Rectangle rect = this.GetObjectBounds(obj);
 					rect.Deflate(0.5);
 
-					graphics.AddFilledRectangle(rect);
-					graphics.RenderSolid(PanelsContext.ColorHiliteSurface);
+					//?graphics.AddFilledRectangle(rect);
+					//?graphics.RenderSolid(PanelsContext.ColorHiliteSurface);
 
 					graphics.LineWidth = 3;
 					graphics.AddRectangle(rect);
