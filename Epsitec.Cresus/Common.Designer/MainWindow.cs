@@ -74,21 +74,16 @@ namespace Epsitec.Common.Designer
 
 			//	Refait la liste des modules, puis ouvre tous ceux qui ont été trouvés.
 			Resources.RefreshModuleInfos (this.resourcePrefix);
-			ResourceModuleInfo[] modules = Resources.GetModuleInfos(this.resourcePrefix);
-
-			if (modules != null)
+			foreach (ResourceModuleInfo item in Resources.GetModuleInfos (this.resourcePrefix))
 			{
-				for (int i=0; i<modules.Length; i++)
-				{
-					Module module = new Module (this, this.mode, this.resourcePrefix, modules[i]);
+				Module module = new Module (this, this.mode, this.resourcePrefix, item);
 
-					ModuleInfo mi = new ModuleInfo ();
-					mi.Module = module;
-					this.moduleInfoList.Insert (++this.currentModule, mi);
-					this.CreateModuleLayout ();
+				ModuleInfo mi = new ModuleInfo ();
+				mi.Module = module;
+				this.moduleInfoList.Insert (++this.currentModule, mi);
+				this.CreateModuleLayout ();
 
-					this.bookModules.ActivePage = mi.TabPage;
-				}
+				this.bookModules.ActivePage = mi.TabPage;
 			}
 			
 			this.window.Show();

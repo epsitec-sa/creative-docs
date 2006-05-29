@@ -22,22 +22,15 @@ namespace Epsitec.Common.Support
 		
 		public ResourceManager(string path)
 		{
-			this.resource_providers     = new IResourceProvider[0];
-			this.resource_provider_hash = new Dictionary<string, IResourceProvider> ();
-			this.culture                = CultureInfo.CurrentCulture;
-			this.moduleInfos = new Dictionary<string, ResourceModuleInfo[]> ();
-			
-			if ((path != null) &&
-				(path.Length > 0))
+			this.providers = new Dictionary<string, ProviderRecord> ();
+			this.culture = CultureInfo.CurrentCulture;
+			this.defaultPath = string.IsNullOrEmpty (path) ? null : path;
+
+			foreach (ResourceProviderFactory.Allocator allocator in ResourceManager.factory.Allocators)
 			{
-				this.default_path = path;
+				ProviderRecord record = new ProviderRecord (this, allocator);
+				this.providers.Add (record.Prefix, record);
 			}
-			else
-			{
-				this.default_path = System.IO.Directory.GetCurrentDirectory ();
-			}
-			
-			this.InternalInitialize ();
 		}
 		
 		
@@ -45,7 +38,7 @@ namespace Epsitec.Common.Support
 		{
 			get
 			{
-				return this.resource_providers.Length;
+				return this.providers.Count;
 			}
 		}
 		
@@ -53,13 +46,9 @@ namespace Epsitec.Common.Support
 		{
 			get
 			{
-				string[] prefixes = new string[this.resource_providers.Length];
-				
-				for (int i = 0; i < this.resource_providers.Length; i++)
-				{
-					prefixes[i] = this.resource_providers[i].Prefix;
-				}
-				
+				string[] prefixes = new string[this.providers.Count];
+				this.providers.Keys.CopyTo (prefixes, 0);
+				System.Array.Sort (prefixes);
 				return prefixes;
 			}
 		}
@@ -138,7 +127,7 @@ namespace Epsitec.Common.Support
 		{
 			get
 			{
-				return this.default_path;
+				return this.defaultPath;
 			}
 		}
 		
@@ -167,29 +156,13 @@ namespace Epsitec.Common.Support
 			}
 			
 			this.application_name = application_name;
-			
-			//	On reconstruit la table des fournisseurs disponibles en fonction du
-			//	succès de leur initialisation :
 
-			List<IResourceProvider> list = new List<IResourceProvider> ();
-			
-			this.resource_provider_hash.Clear ();
-			
-			for (int i = 0; i < this.resource_providers.Length; i++)
+			foreach (ProviderRecord provider in this.providers.Values)
 			{
-				IResourceProvider provider = this.resource_providers[i];
-				
-				if (provider.SelectModule (new ResourceModuleInfo (application_name, -1)))
-				{
-					//	Conserve le fournisseur qui a réussi son initialisation; un fournisseur qui
-					//	échoue ici est simplement écarté...
-					
-					list.Add (provider);
-					this.resource_provider_hash[provider.Prefix] = provider;
-				}
+				ModuleRecord module = provider.GetModuleRecord (application_name);
+
+				provider.ActiveProvider = (module == null) ? null : module.Provider;
 			}
-			
-			this.resource_providers = list.ToArray ();
 		}
 		
 		
@@ -321,49 +294,35 @@ namespace Epsitec.Common.Support
 			throw new ResourceException (string.Format ("Invalid level {0} specified in GetLevelCaption.", level));
 		}
 
-		public string[] GetModuleNames(string prefix)
+		public IEnumerable<string> GetModuleNames(string prefix)
 		{
-			ResourceModuleInfo[] infos = this.GetModuleInfos (prefix);
-			
-			if (infos != null)
+			foreach (ResourceModuleInfo info in this.GetModuleInfos (prefix))
 			{
-				string[] names = new string[infos.Length];
-				
-				for (int i = 0; i < infos.Length; i++)
-				{
-					names[i] = infos[i].Name;
-				}
-				
-				return names;
+				yield return info.Name;
 			}
-
-			return null;
 		}
 
-		public ResourceModuleInfo[] GetModuleInfos(string prefix)
+		public IEnumerable<ResourceModuleInfo> GetModuleInfos(string prefix)
 		{
-			ResourceModuleInfo[] infos;
-			
-			if (! this.moduleInfos.TryGetValue (prefix, out infos))
-			{
-				this.RefreshModuleInfos (prefix);
-				this.moduleInfos.TryGetValue (prefix, out infos);
-			}
+			ProviderRecord provider;
 
-			return infos;
+			if (this.providers.TryGetValue (prefix, out provider))
+			{
+				return provider.Modules;
+			}
+			else
+			{
+				return new ResourceModuleInfo[0];
+			}
 		}
 		
 		public void RefreshModuleInfos(string prefix)
 		{
-			IResourceProvider provider;
+			ProviderRecord provider;
 
-			if (this.resource_provider_hash.TryGetValue (prefix, out provider))
+			if (this.providers.TryGetValue (prefix, out provider))
 			{
-				this.moduleInfos[prefix] = provider.GetModules ();
-			}
-			else
-			{
-				this.moduleInfos.Remove (prefix);
+				provider.ClearModuleCache ();
 			}
 		}
 
@@ -827,9 +786,9 @@ namespace Epsitec.Common.Support
 		
 		public void DebugDumpProviders()
 		{
-			for (int i = 0; i < this.resource_providers.Length; i++)
+			foreach (ProviderRecord provider in this.providers.Values)
 			{
-				System.Diagnostics.Debug.WriteLine (string.Format ("Prefix '{0}' implemented by class {1}", this.resource_providers[i].Prefix, this.resource_providers[i].GetType ().Name));
+				System.Diagnostics.Debug.WriteLine (string.Format ("Prefix '{0}' implemented by class {1}", provider.Prefix, provider.DefaultProvider.GetType ().FullName));
 			}
 		}
 
@@ -844,41 +803,6 @@ namespace Epsitec.Common.Support
 			{
 				proxy.TrimBindingCache ();
 			}
-		}
-
-
-		private void InternalInitialize()
-		{
-			System.Collections.ArrayList providers = new System.Collections.ArrayList ();
-			System.Reflection.Assembly   assembly  = AssemblyLoader.Load ("Common.Support.Implementation");
-			
-			System.Type[] types_in_assembly = assembly.GetTypes ();
-			
-			foreach (System.Type type in types_in_assembly)
-			{
-				if ((type.IsClass) &&
-					(!type.IsAbstract))
-				{
-					if (type.GetInterface ("IResourceProvider") != null)
-					{
-						IResourceProvider provider = System.Activator.CreateInstance (type) as IResourceProvider;
-						
-						if (provider != null)
-						{
-							System.Diagnostics.Debug.Assert (this.resource_provider_hash.ContainsKey (provider.Prefix) == false);
-							
-							provider.Setup (this);
-							provider.SelectLocale (this.culture);
-							
-							providers.Add (provider);
-							this.resource_provider_hash[provider.Prefix] = provider;
-						}
-					}
-				}
-			}
-			
-			this.resource_providers = new IResourceProvider[providers.Count];
-			providers.CopyTo (this.resource_providers);
 		}
 
 		private static string CreateBundleKey(string prefix, string resource_id, ResourceLevel level, CultureInfo culture)
@@ -904,48 +828,45 @@ namespace Epsitec.Common.Support
 		
 		private void SelectLocale(CultureInfo culture)
 		{
-			this.culture = culture;
-			
-			for (int i = 0; i < this.resource_providers.Length; i++)
+			if (!Resources.EqualCultures (this.culture, culture))
 			{
-				this.resource_providers[i].SelectLocale (culture);
+				this.culture = culture;
+				this.SyncBundleBindingProxies ();
 			}
-
-			this.SyncBundleBindingProxies ();
 		}
 		
 		private IResourceProvider FindProvider(string full_id, out string local_id)
 		{
+			string prefix = null;
+			local_id = null;
+			
 			if (full_id != null)
 			{
 				int pos = full_id.IndexOf (':');
 			
 				if (pos > 0)
 				{
-					string prefix;
-					
 					prefix   = full_id.Substring (0, pos);
 					local_id = full_id.Substring (pos+1);
-					
-					IResourceProvider provider = this.resource_provider_hash[prefix] as IResourceProvider;
-					
-					return provider;
 				}
-				
-				if (this.default_prefix != null)
+				else if (this.ActivePrefix != null)
 				{
-					string prefix;
-					
 					prefix   = this.ActivePrefix;
 					local_id = full_id;
-					
-					IResourceProvider provider = this.resource_provider_hash[prefix] as IResourceProvider;
-					
-					return provider;
+				}
+			}	
+			
+			if ((prefix != null) &&
+				(local_id != null))
+			{
+				ProviderRecord provider;
+
+				if (this.providers.TryGetValue (prefix, out provider))
+				{
+					return provider.ActiveProvider;
 				}
 			}
-			
-			local_id = null;
+
 			return null;
 		}
 
@@ -1051,13 +972,156 @@ namespace Epsitec.Common.Support
 
 		#endregion
 
-		private Dictionary<string, ResourceModuleInfo[]> moduleInfos;
+		private class ProviderRecord
+		{
+			public ProviderRecord(ResourceManager manager, ResourceProviderFactory.Allocator allocator)
+			{
+				this.manager = manager;
+				this.allocator = allocator;
+				this.defaultProvider = this.allocator (this.manager);
+				this.activeProvider = null;
+				this.prefix = this.defaultProvider.Prefix;
+				this.modules = new List<ModuleRecord> ();
+			}
+
+			public string Prefix
+			{
+				get
+				{
+					return this.prefix;
+				}
+			}
+
+			public IResourceProvider DefaultProvider
+			{
+				get
+				{
+					return this.defaultProvider;
+				}
+			}
+
+			public IResourceProvider ActiveProvider
+			{
+				get
+				{
+					return this.activeProvider;
+				}
+				set
+				{
+					this.activeProvider = value;
+				}
+			}
+
+			public IEnumerable<ResourceModuleInfo> Modules
+			{
+				get
+				{
+					if (this.infos == null)
+					{
+						this.infos = this.defaultProvider.GetModules ();
+					}
+					
+					return this.infos;
+				}
+			}
+
+			
+			public void ClearModuleCache()
+			{
+				this.modules = null;
+			}
+
+			public ModuleRecord GetModuleRecord(string moduleName)
+			{
+				foreach (ModuleRecord item in this.modules)
+				{
+					if (item.ModuleInfo.Name == moduleName)
+					{
+						return item;
+					}
+				}
+
+				ResourceModuleInfo moduleInfo = new ResourceModuleInfo (moduleName);
+
+				if (this.defaultProvider.SelectModule (ref moduleInfo))
+				{
+					ModuleRecord record = new ModuleRecord (this.defaultProvider, moduleInfo);
+					this.modules.Add (record);
+					this.defaultProvider = this.allocator (this.manager);
+					return record;
+				}
+				
+				return null;
+			}
+
+			public ModuleRecord GetModuleRecord(int moduleId)
+			{
+				foreach (ModuleRecord item in this.modules)
+				{
+					if (item.ModuleInfo.Id == moduleId)
+					{
+						return item;
+					}
+				}
+
+				ResourceModuleInfo moduleInfo = new ResourceModuleInfo (moduleId);
+
+				if (this.defaultProvider.SelectModule (ref moduleInfo))
+				{
+					ModuleRecord record = new ModuleRecord (this.defaultProvider, moduleInfo);
+					this.modules.Add (record);
+					this.defaultProvider = this.allocator (this.manager);
+					return record;
+				}
+
+				return null;
+			}
+
+			private ResourceManager manager;
+			private ResourceProviderFactory.Allocator allocator;
+			private IResourceProvider defaultProvider;
+			private IResourceProvider activeProvider;
+			private string prefix;
+			private List<ModuleRecord> modules;
+			private ResourceModuleInfo[] infos;
+		}
+
+		private class ModuleRecord
+		{
+			public ModuleRecord(IResourceProvider provider, ResourceModuleInfo moduleInfo)
+			{
+				this.provider = provider;
+				this.moduleInfo = moduleInfo;
+			}
+
+			public IResourceProvider Provider
+			{
+				get
+				{
+					return this.provider;
+				}
+			}
+
+			public ResourceModuleInfo ModuleInfo
+			{
+				get
+				{
+					return this.moduleInfo;
+				}
+			}
+
+			private IResourceProvider provider;
+			private ResourceModuleInfo moduleInfo;
+		}
+
+
+		private static ResourceProviderFactory	factory = new ResourceProviderFactory ();
+		
+		private Dictionary<string, ProviderRecord> providers;
 		private CultureInfo						culture;
-		private IResourceProvider[]				resource_providers;
-		private Dictionary<string, IResourceProvider> resource_provider_hash;
 		private string							application_name;
 		private string							default_prefix = "file";
-		private string							default_path;
+		private string							defaultPath;
 		
 		List<IBundleProvider>					bundleProviders = new List<IBundleProvider> ();
 		Dictionary<string, ResourceBundle>		bundleCache = new Dictionary<string, ResourceBundle> ();
