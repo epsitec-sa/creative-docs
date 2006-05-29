@@ -240,7 +240,8 @@ namespace Epsitec.Common.Designer.Viewers
 			this.UpdateCommandTool("ToolEdit");
 			this.UpdateCommandTool("ToolZoom");
 			this.UpdateCommandTool("ToolHand");
-			this.UpdateCommandTool("ObjectLine");
+			this.UpdateCommandTool("ObjectVLine");
+			this.UpdateCommandTool("ObjectHLine");
 			this.UpdateCommandTool("ObjectButton");
 			this.UpdateCommandTool("ObjectText");
 			this.UpdateCommandTool("ObjectStatic");

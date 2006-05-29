@@ -489,7 +489,8 @@ namespace Epsitec.Common.Designer
 		[Command("ToolEdit")]
 		[Command("ToolZoom")]
 		[Command("ToolHand")]
-		[Command("ObjectLine")]
+		[Command("ObjectHLine")]
+		[Command("ObjectVLine")]
 		[Command("ObjectButton")]
 		[Command("ObjectText")]
 		[Command("ObjectStatic")]
@@ -582,8 +583,9 @@ namespace Epsitec.Common.Designer
 			this.toolEditState = this.CreateCommandState("ToolEdit", KeyCode.AlphaE);
 			this.toolZoomState = this.CreateCommandState("ToolZoom", KeyCode.AlphaZ);
 			this.toolHandState = this.CreateCommandState("ToolHand", KeyCode.AlphaH);
-			
-			this.objectLineState = this.CreateCommandState("ObjectLine", KeyCode.AlphaL);
+
+			this.objectHLineState = this.CreateCommandState("ObjectHLine", KeyCode.AlphaL);
+			this.objectVLineState = this.CreateCommandState("ObjectVLine");
 			this.objectButtonState = this.CreateCommandState("ObjectButton", KeyCode.AlphaB);
 			this.objectTextState = this.CreateCommandState("ObjectText", KeyCode.AlphaT);
 			this.objectStaticState = this.CreateCommandState("ObjectStatic");
@@ -1001,7 +1003,8 @@ namespace Epsitec.Common.Designer
 		protected CommandState					toolEditState;
 		protected CommandState					toolZoomState;
 		protected CommandState					toolHandState;
-		protected CommandState					objectLineState;
+		protected CommandState					objectHLineState;
+		protected CommandState					objectVLineState;
 		protected CommandState					objectButtonState;
 		protected CommandState					objectTextState;
 		protected CommandState					objectStaticState;

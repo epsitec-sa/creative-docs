@@ -56,7 +56,8 @@ namespace Epsitec.Common.Designer.Viewers
 			//?this.ToolBarAdd(Widgets.Command.Get("ToolZoom"));
 			//?this.ToolBarAdd(Widgets.Command.Get("ToolHand"));
 			this.ToolBarAdd(null);
-			this.ToolBarAdd(Widgets.Command.Get("ObjectLine"));
+			this.ToolBarAdd(Widgets.Command.Get("ObjectVLine"));
+			this.ToolBarAdd(Widgets.Command.Get("ObjectHLine"));
 			this.ToolBarAdd(Widgets.Command.Get("ObjectStatic"));
 			this.ToolBarAdd(Widgets.Command.Get("ObjectButton"));
 			this.ToolBarAdd(Widgets.Command.Get("ObjectText"));
