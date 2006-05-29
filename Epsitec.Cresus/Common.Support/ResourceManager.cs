@@ -166,17 +166,6 @@ namespace Epsitec.Common.Support
 		}
 		
 		
-		public void AddBundleProvider(IBundleProvider bundle_provider)
-		{
-			this.bundleProviders.Add (bundle_provider);
-		}
-		
-		public void RemoveBundleProvider(IBundleProvider bundle_provider)
-		{
-			this.bundleProviders.Remove (bundle_provider);
-		}
-		
-		
 		public bool ValidateId(string id)
 		{
 			IResourceProvider provider = this.FindProvider (id, out id);
@@ -420,16 +409,6 @@ namespace Epsitec.Common.Support
 			//	Passe en revue les divers providers de bundles pour voir si la ressource
 			//	demandée n'est pas disponible chez eux. Si oui, c'est celle-ci qui sera
 			//	utilisée :
-			
-			foreach (IBundleProvider bundle_provider in this.bundleProviders)
-			{
-				bundle = bundle_provider.GetBundle (this, provider, resource_id, level, culture, recursion);
-				
-				if (bundle != null)
-				{
-					return bundle;
-				}
-			}
 			
 			if (provider != null)
 			{
@@ -1123,7 +1102,6 @@ namespace Epsitec.Common.Support
 		private string							default_prefix = "file";
 		private string							defaultPath;
 		
-		List<IBundleProvider>					bundleProviders = new List<IBundleProvider> ();
 		Dictionary<string, ResourceBundle>		bundleCache = new Dictionary<string, ResourceBundle> ();
 		Dictionary<string, BundleBindingProxy>	bindingProxies = new Dictionary<string, BundleBindingProxy> ();
 		
