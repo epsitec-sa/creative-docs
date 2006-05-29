@@ -80,7 +80,7 @@ namespace Epsitec.Common.Tool.ResGenerator
 		{
 			ResourceManager manager = new ResourceManager (app_directory);
 			
-			manager.SetupApplication (app_name);
+			manager.DefineDefaultModuleName (app_name);
 			
 			string[] names = manager.GetBundleIds ("*", "String", ResourceLevel.Default);
 			
@@ -259,7 +259,7 @@ namespace Epsitec.Common.Tool.ResGenerator
 			buffer.Append (@"_manager = new Epsitec.Common.Support.ResourceManager (type);");
 			buffer.Append ("\n");
 			buffer.Append (generator.Tabs);
-			buffer.Append (@"_manager.SelectModule (name);");
+			buffer.Append (@"_manager.DefineDefaultModuleName (name);");
 			buffer.Append ("\n");
 			generator.EndBlock ();
 			buffer.Append (generator.Tabs);

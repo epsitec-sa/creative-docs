@@ -128,6 +128,11 @@
 copy "$(SolutionDir)Common.Widgets\Resources\Common.Widgets\Strings.en.resource" "$(ProjectDir)Resources\Common.Widgets\Strings.00.resource"
 copy "$(SolutionDir)App.DocumentEditor\Resources\App\Strings.en.resource" "$(ProjectDir)Resources\App\Strings.00.resource"
 copy "$(SolutionDir)Common.Designer\Resources\Designer\Strings.en.resource" "$(ProjectDir)Resources\Designer\Strings.00.resource"
+
+copy "$(SolutionDir)Common.Document\Resources\Document\*.info" "$(ProjectDir)Resources\Document\"
+copy "$(SolutionDir)Common.Widgets\Resources\Common.Widgets\*.info" "$(ProjectDir)Resources\Common.Widgets\"
+copy "$(SolutionDir)App.DocumentEditor\Resources\App\*.info" "$(ProjectDir)Resources\App\"
+copy "$(SolutionDir)Common.Designer\Resources\Designer\*.info" "$(ProjectDir)Resources\Designer\"
 </PreBuildEvent>
     <PostBuildEvent>
     </PostBuildEvent>

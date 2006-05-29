@@ -16,7 +16,7 @@ namespace Epsitec.Common.Support
 				System.Diagnostics.Debug.WriteLine (ex.Message);
 			}
 			
-			Resources.SetupApplication ("test");
+			Resources.DefineDefaultModuleName ("test");
 		}
 		
 		[Test] public void CheckDebugDumpProviders()

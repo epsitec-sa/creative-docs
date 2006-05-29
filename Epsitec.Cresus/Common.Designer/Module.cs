@@ -20,7 +20,7 @@ namespace Epsitec.Common.Designer
 			this.id   = moduleInfo.Id;
 
 			this.resourceManager = new ResourceManager();
-			this.resourceManager.SetupApplication(this.name);
+			this.resourceManager.DefineDefaultModuleName(this.name);
 			this.resourceManager.ActivePrefix = resourcePrefix;
 
 			this.UpdateBundles();

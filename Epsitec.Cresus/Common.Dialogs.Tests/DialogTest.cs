@@ -11,7 +11,7 @@ namespace Epsitec.Common.Dialogs
 		{
 			Epsitec.Common.Document.Engine.Initialise ();
 			
-			Support.Resources.DefaultManager.SetupApplication ("DialogTest");
+			Support.Resources.DefaultManager.DefineDefaultModuleName ("DialogTest");
 		}
 		
 		[Test] public void CheckLoadDesignerFactory()

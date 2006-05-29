@@ -108,9 +108,9 @@ namespace Epsitec.Common.Support
 		}
 		
 		
-		public static void SetupApplication(string application_name)
+		public static void DefineDefaultModuleName(string application_name)
 		{
-			Resources.manager.SetupApplication (application_name);
+			Resources.manager.DefineDefaultModuleName (application_name);
 		}
 		
 		
