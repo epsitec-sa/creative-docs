@@ -962,7 +962,23 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				Widget widget = parent.Children[i] as Widget;
 
-				if (widget.ActualBounds.Contains(pos))
+				Rectangle bounds = widget.ActualBounds;
+				
+				double ix = 0;
+				if (bounds.Width < 5)
+				{
+					ix = 5;
+				}
+				
+				double iy = 0;
+				if (bounds.Height < 5)
+				{
+					iy = 5;
+				}
+				
+				bounds.Inflate(ix, iy);
+
+				if (bounds.Contains(pos))
 				{
 					if (widget is AbstractGroup)
 					{
