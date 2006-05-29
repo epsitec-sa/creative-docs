@@ -25,6 +25,7 @@ namespace Epsitec.Common.Types
 				return this.binding;
 			}
 		}
+		
 		public DependencyObject					TargetObject
 		{
 			get
@@ -32,6 +33,7 @@ namespace Epsitec.Common.Types
 				return this.targetObject;
 			}
 		}
+		
 		public DependencyProperty				TargetProperty
 		{
 			get
@@ -39,7 +41,16 @@ namespace Epsitec.Common.Types
 				return this.targetPropery;
 			}
 		}
-
+		
+		public DataSourceType DataSourceType
+		{
+			get
+			{
+				return this.sourceType;
+			}
+		}
+		
+		
 		public void Synchronize()
 		{
 			this.UpdateTarget (BindingUpdateMode.Reset);
@@ -58,10 +69,12 @@ namespace Epsitec.Common.Types
 					break;
 			}
 		}
+		
 		public void UpdateTarget()
 		{
 			this.UpdateTarget (BindingUpdateMode.Default);
 		}
+		
 		public void UpdateTarget(BindingUpdateMode mode)
 		{
 			this.AssertBinding ();
@@ -82,6 +95,59 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		public object GetSourceTypeObject()
+		{
+			object typeObject = null;
+			
+			switch (this.sourceType)
+			{
+				case DataSourceType.PropertyObject:
+					typeObject = this.sourceProperty;
+					break;
+				
+				case DataSourceType.StructuredData:
+					typeObject = this.GetTypeObjectFromStructuredData ((IStructuredData) this.sourceObject, (string) this.sourceProperty);
+					break;
+					
+				case DataSourceType.SourceItself:
+					typeObject = TypeRosetta.GetTypeObjectFromValue (this.sourceObject);
+					break;
+
+				case DataSourceType.Resource:
+					if (this.sourceObject != null)
+					{
+						IResourceBoundSource resource = (IResourceBoundSource) this.sourceObject;
+						typeObject = TypeRosetta.GetTypeObjectFromValue (resource.GetValue ((string) this.sourceProperty));
+					}
+					break;
+			}
+
+			return typeObject;
+		}
+		
+		public string GetSourceName()
+		{
+			string sourceName = null;
+
+			DependencyProperty property;
+			
+			switch (this.sourceType)
+			{
+				case DataSourceType.PropertyObject:
+					property = this.sourceProperty as DependencyProperty;
+					sourceName = property.Name;
+					break;
+				
+				case DataSourceType.StructuredData:
+					sourceName = (string) this.sourceProperty;
+					break;
+			}
+			
+			return sourceName;
+		}
+
+		#region Internal Methods
+
 		internal void RefreshSourceBinding()
 		{
 			this.DetachFromSource ();
@@ -93,7 +159,7 @@ namespace Epsitec.Common.Types
 		{
 			object						sourceObject;
 			object						sourceProperty;
-			BindingSourceType			sourceType;
+			DataSourceType				sourceType;
 			BindingBreadcrumbs			sourceBreadcrumbs;
 
 			System.Diagnostics.Debug.Assert (this.sourceBreadcrumbs == null);
@@ -111,7 +177,7 @@ namespace Epsitec.Common.Types
 			{
 				this.sourceObject      = null;
 				this.sourceProperty    = null;
-				this.sourceType        = BindingSourceType.None;
+				this.sourceType        = DataSourceType.None;
 				this.sourceBreadcrumbs = sourceBreadcrumbs;
 			}
 		}
@@ -142,6 +208,8 @@ namespace Epsitec.Common.Types
 			return expression;
 		}
 
+		#endregion
+
 		#region IDisposable Members
 		public void Dispose()
 		{
@@ -170,9 +238,9 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		private bool FindDataSource(out object objectSource, out object objectProperty, out BindingSourceType type, out BindingBreadcrumbs breadcrumbs)
+		private bool FindDataSource(out object objectSource, out object objectProperty, out DataSourceType type, out BindingBreadcrumbs breadcrumbs)
 		{
-			type           = BindingSourceType.None;
+			type           = DataSourceType.None;
 			objectSource   = null;
 			objectProperty = null;
 			breadcrumbs    = null;
@@ -192,7 +260,7 @@ namespace Epsitec.Common.Types
 			{
 				//	There is no path, so we will simply consider the source as the data.
 				
-				type = BindingSourceType.SourceItself;
+				type = DataSourceType.SourceItself;
 
 				objectSource   = root;
 				objectProperty = null;
@@ -211,7 +279,7 @@ namespace Epsitec.Common.Types
 				{
 					if (root is IResourceBoundSource)
 					{
-						type = BindingSourceType.Resource;
+						type = DataSourceType.Resource;
 						
 						objectSource   = root;
 						objectProperty = path;
@@ -291,7 +359,7 @@ namespace Epsitec.Common.Types
 					if ((doSource != null) &&
 						(property != null))
 					{
-						type = BindingSourceType.PropertyObject;
+						type = DataSourceType.PropertyObject;
 						
 						objectSource = doSource;
 						objectProperty = property;
@@ -299,7 +367,7 @@ namespace Epsitec.Common.Types
 					else if ((sdSource != null) &&
 						/**/ (!string.IsNullOrEmpty (name)))
 					{
-						type = BindingSourceType.StructuredData;
+						type = DataSourceType.StructuredData;
 						
 						objectSource   = sdSource;
 						objectProperty = name;
@@ -409,7 +477,7 @@ namespace Epsitec.Common.Types
 
 					switch (this.sourceType)
 					{
-						case BindingSourceType.PropertyObject:
+						case DataSourceType.PropertyObject:
 							doSource = (DependencyObject) this.sourceObject;
 							property = (DependencyProperty) this.sourceProperty;
 							
@@ -421,23 +489,23 @@ namespace Epsitec.Common.Types
 							BindingExpression.SetValue (doSource, property, value);
 							break;
 						
-						case BindingSourceType.StructuredData:
+						case DataSourceType.StructuredData:
 							sdSource = this.sourceObject as IStructuredData;
 							name     = (string) this.sourceProperty;
 							
 							if (this.binding.HasConverter)
 							{
-								value = this.binding.ConvertBackValue (value, this.GetStructuredDataType (sdSource, name));
+								value = this.binding.ConvertBackValue (value, this.GetSystemTypeFromStructuredData (sdSource, name));
 							}
 							
 							BindingExpression.SetValue (sdSource, name, value);
 							break;
 						
-						case BindingSourceType.SourceItself:
-							throw new System.InvalidOperationException ("Cannot update source: BindingSourceType set to SourceItself");
+						case DataSourceType.SourceItself:
+							throw new System.InvalidOperationException ("Cannot update source: DataSourceType set to SourceItself");
 						
-						case BindingSourceType.Resource:
-							throw new System.InvalidOperationException ("Cannot update source: BindingSourceType set to Resource");
+						case DataSourceType.Resource:
+							throw new System.InvalidOperationException ("Cannot update source: DataSourceType set to Resource");
 					}
 				}
 				finally
@@ -447,7 +515,7 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		private System.Type GetStructuredDataType(IStructuredData source, string name)
+		private System.Type GetSystemTypeFromStructuredData(IStructuredData source, string name)
 		{
 			IStructuredTypeProvider typeProvider = source as IStructuredTypeProvider;
 
@@ -457,13 +525,26 @@ namespace Epsitec.Common.Types
 				object typeObject = structuredType.GetFieldTypeObject (name);
 				return TypeRosetta.GetSystemTypeFromTypeObject (typeObject);
 			}
-			
+
 			return null;
 		}
-		
+
+		private object GetTypeObjectFromStructuredData(IStructuredData source, string name)
+		{
+			IStructuredTypeProvider typeProvider = source as IStructuredTypeProvider;
+
+			if (typeProvider != null)
+			{
+				IStructuredType structuredType = typeProvider.GetStructuredType ();
+				return structuredType.GetFieldTypeObject (name);
+			}
+
+			return null;
+		}
+
 		private void InternalUpdateTarget()
 		{
-			if (this.sourceType != BindingSourceType.None)
+			if (this.sourceType != DataSourceType.None)
 			{
 				this.InternalUpdateTarget (this.GetSourceValue ());
 			}
@@ -471,7 +552,9 @@ namespace Epsitec.Common.Types
 		private void InternalUpdateTarget(object value)
 		{
 			if ((this.sourceUpdateCounter == 0) &&
-				(value != Binding.DoNothing))
+				(value != Binding.DoNothing) &&
+				(value != InvalidValue.Instance) &&
+				(value != UndefinedValue.Instance))
 			{
 				System.Threading.Interlocked.Increment (ref this.targetUpdateCounter);
 				
@@ -496,14 +579,15 @@ namespace Epsitec.Common.Types
 			
 			switch (this.sourceType)
 			{
-				case BindingSourceType.PropertyObject:
+				case DataSourceType.PropertyObject:
 					BindingExpression.Attach (this, this.sourceObject as DependencyObject, (DependencyProperty) this.sourceProperty);
 					break;
-				case BindingSourceType.StructuredData:
+				case DataSourceType.StructuredData:
+					BindingExpression.Attach (this, this.sourceObject as IStructuredData, (string) this.sourceProperty);
 					break;
-				case BindingSourceType.SourceItself:
+				case DataSourceType.SourceItself:
 					break;
-				case BindingSourceType.Resource:
+				case DataSourceType.Resource:
 					break;
 			}
 		}
@@ -513,20 +597,21 @@ namespace Epsitec.Common.Types
 			{
 				switch (this.sourceType)
 				{
-					case BindingSourceType.PropertyObject:
+					case DataSourceType.PropertyObject:
 						BindingExpression.Detach (this, this.sourceObject as DependencyObject, (DependencyProperty) this.sourceProperty);
 						break;
-					case BindingSourceType.StructuredData:
+					case DataSourceType.StructuredData:
+						BindingExpression.Detach (this, this.sourceObject as IStructuredData, (string) this.sourceProperty);
 						break;
-					case BindingSourceType.SourceItself:
+					case DataSourceType.SourceItself:
 						break;
-					case BindingSourceType.Resource:
+					case DataSourceType.Resource:
 						break;
 				}
 
 				this.sourceObject      = null;
 				this.sourceProperty    = null;
-				this.sourceType        = BindingSourceType.None;
+				this.sourceType        = DataSourceType.None;
 			}
 			
 			if (this.sourceBreadcrumbs != null)
@@ -579,27 +664,27 @@ namespace Epsitec.Common.Types
 
 			switch (this.sourceType)
 			{
-				case BindingSourceType.PropertyObject:
+				case DataSourceType.PropertyObject:
 					doSource = this.sourceObject as DependencyObject;
 					data = doSource.GetValue ((DependencyProperty) this.sourceProperty);
 					break;
 
-				case BindingSourceType.StructuredData:
+				case DataSourceType.StructuredData:
 					sdSource = this.sourceObject as IStructuredData;
 					data = sdSource.GetValue ((string) this.sourceProperty);
 					break;
 
-				case BindingSourceType.SourceItself:
+				case DataSourceType.SourceItself:
 					data = this.sourceObject;
 					break;
 				
-				case BindingSourceType.Resource:
+				case DataSourceType.Resource:
 					resource = (IResourceBoundSource) this.sourceObject;
 					data = resource.GetValue ((string) this.sourceProperty);
 					break;
 
 				default:
-					throw new System.NotImplementedException (string.Format ("BindingSourceType.{0} not implemented", this.sourceType));
+					throw new System.NotImplementedException (string.Format ("DataSourceType {0} not implemented", this.sourceType));
 			}
 
 			return data;
@@ -609,7 +694,9 @@ namespace Epsitec.Common.Types
 		{
 			if (target != null)
 			{
-				if (value != Binding.DoNothing)
+				if ((value != Binding.DoNothing) &&
+					(value != InvalidValue.Instance) &&
+					(value != UndefinedValue.Instance))
 				{
 					target.SetValue (property, value);
 				}
@@ -620,7 +707,9 @@ namespace Epsitec.Common.Types
 		{
 			if (target != null)
 			{
-				if (value != Binding.DoNothing)
+				if ((value != Binding.DoNothing) &&
+					(value != InvalidValue.Instance) &&
+					(value != UndefinedValue.Instance))
 				{
 					target.SetValue (name, value);
 				}
@@ -636,13 +725,21 @@ namespace Epsitec.Common.Types
 			source.RemoveEventHandler (property, expression.HandleSourcePropertyChanged);
 		}
 
+		private static void Attach(BindingExpression expression, IStructuredData source, string name)
+		{
+			source.AttachListener (name, expression.HandleSourcePropertyChanged);
+		}
+		private static void Detach(BindingExpression expression, IStructuredData source, string name)
+		{
+			source.DetachListener (name, expression.HandleSourcePropertyChanged);
+		}
 
 		private Binding							binding;
 		private DependencyObject				targetObject;			//	immutable
 		private DependencyProperty				targetPropery;			//	immutable
 		private object							sourceObject;
 		private object							sourceProperty;
-		private BindingSourceType				sourceType;
+		private DataSourceType					sourceType;
 		private BindingBreadcrumbs				sourceBreadcrumbs;
 		private Binding							dataContext;
 		private bool							isDataContextBound;

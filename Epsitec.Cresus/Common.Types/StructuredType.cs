@@ -11,6 +11,9 @@ namespace Epsitec.Common.Types
 	/// </summary>
 	public class StructuredType : INamedType, IStructuredType
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="T:StructuredType"/> class.
+		/// </summary>
 		public StructuredType()
 		{
 			this.fields = new HostedDictionary<string, INamedType> (this.NotifyFieldInserted, this.NotifyFieldRemoved);
@@ -19,6 +22,11 @@ namespace Epsitec.Common.Types
 			this.description = null;
 		}
 
+		/// <summary>
+		/// Adds a field definition the the structured type.
+		/// </summary>
+		/// <param name="name">The field name.</param>
+		/// <param name="type">The field type.</param>
 		public void AddField(string name, INamedType type)
 		{
 			if (string.IsNullOrEmpty (name))
@@ -33,7 +41,11 @@ namespace Epsitec.Common.Types
 
 			this.fields[name] = type;
 		}
-		
+
+		/// <summary>
+		/// Gets the field definition dictionary. This instance is writable.
+		/// </summary>
+		/// <value>The fields.</value>
 		public HostedDictionary<string, INamedType> Fields
 		{
 			get

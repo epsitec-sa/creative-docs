@@ -79,6 +79,11 @@ namespace Epsitec.Common.Types
 
 				myTarget.SetBinding (MyObject.FooProperty, bindingName);
 			}
+			
+			Assert.IsTrue (myTarget.IsBound (MyObject.FooProperty));
+			Assert.IsFalse (myTarget.IsBound (MyObject.XyzProperty));
+
+			Assert.AreEqual (DataSourceType.PropertyObject, myTarget.GetBindingExpression (MyObject.FooProperty).DataSourceType);
 
 			using (bindingXyz.DeferChanges ())
 			{
@@ -89,6 +94,9 @@ namespace Epsitec.Common.Types
 				myTarget.SetBinding (MyObject.XyzProperty, bindingXyz);
 			}
 
+			Assert.IsTrue (myTarget.IsBound (MyObject.FooProperty));
+			Assert.IsTrue (myTarget.IsBound (MyObject.XyzProperty));
+			
 			Assert.AreEqual ("Jean Dupont", myTarget.Foo);
 			Assert.AreEqual (999, myTarget.Xyz);
 
@@ -97,6 +105,11 @@ namespace Epsitec.Common.Types
 
 			Assert.AreEqual ("Jeanne Dupont", myTarget.Foo);
 			Assert.AreEqual (888, myTarget.Xyz);
+
+			myTarget.ClearAllBindings ();
+			
+			Assert.IsFalse (myTarget.IsBound (MyObject.FooProperty));
+			Assert.IsFalse (myTarget.IsBound (MyObject.XyzProperty));
 		}
 
 		[Test]
@@ -229,6 +242,8 @@ namespace Epsitec.Common.Types
 			myData3.SetBinding (MyObject.NameProperty, binding1);
 			myData3.SetBinding (MyObject.FooProperty, binding2);
 
+			Assert.AreEqual (DataSourceType.Resource, myData1.GetBindingExpression (MyObject.NameProperty).DataSourceType);
+			
 			Assert.AreEqual ("[Abc]", myData1.Name);
 			Assert.AreEqual ("[Xyz]", myData1.Foo);
 			Assert.AreEqual ("[Abc]", myData2.Name);

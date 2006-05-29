@@ -6,8 +6,8 @@ using System.Collections.Generic;
 namespace Epsitec.Common.Types
 {
 	/// <summary>
-	/// La classe DependencyObjectType représente une version de plus haut niveau de
-	/// System.Type.
+	/// The <c>DependencyObjectType</c> is a higher level version of the
+	/// <see cref="T:System.Type"/> class.
 	/// </summary>
 	public sealed class DependencyObjectType : IStructuredType
 	{
@@ -305,46 +305,45 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		private static DependencyObjectType FromSystemTypeLocked(System.Type system_type)
+		private static DependencyObjectType FromSystemTypeLocked(System.Type systemType)
 		{
-			if (system_type == null)
+			if (systemType == null)
 			{
 				return null;
 			}
 
 			DependencyObjectType objectType;
 			
-			if (DependencyObjectType.types.TryGetValue (system_type, out objectType))
+			if (DependencyObjectType.types.TryGetValue (systemType, out objectType))
 			{
 				return objectType;
 			}
-			else if (system_type == typeof (DependencyObject))
+			else if (systemType == typeof (DependencyObject))
 			{
-				DependencyObjectType this_type = new DependencyObjectType (system_type, null);
+				DependencyObjectType this_type = new DependencyObjectType (systemType, null);
 				
-				DependencyObjectType.types[system_type] = this_type;
+				DependencyObjectType.types[systemType] = this_type;
 
 				this_type.ExecuteTypeStaticConstructor ();
 				
 				return this_type;
 			}
-			else if (system_type == typeof (System.Object))
+			else if (systemType == typeof (System.Object))
 			{
 				return null;
 			}
 			else
 			{
-				DependencyObjectType base_type = DependencyObjectType.FromSystemTypeLocked (system_type.BaseType);
+				DependencyObjectType base_type = DependencyObjectType.FromSystemTypeLocked (systemType.BaseType);
 				
 				if (base_type == null)
 				{
-					throw new Exceptions.WrongBaseTypeException (system_type);
-					return null;
+					throw new Exceptions.WrongBaseTypeException (systemType);
 				}
 				
-				DependencyObjectType this_type = new DependencyObjectType (system_type, base_type);
+				DependencyObjectType this_type = new DependencyObjectType (systemType, base_type);
 				
-				DependencyObjectType.types[system_type] = this_type;
+				DependencyObjectType.types[systemType] = this_type;
 
 				this_type.ExecuteTypeStaticConstructor ();
 				
