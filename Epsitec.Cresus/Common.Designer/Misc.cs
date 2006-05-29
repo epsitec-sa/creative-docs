@@ -8,6 +8,44 @@ namespace Epsitec.Common.Designer
 	/// </summary>
 	public class Misc
 	{
+		static public void AddSpring(Graphics graphics, Point p1, Point p2, double thickness, int loops)
+		{
+			//	Dessine un ressort.
+			double step = Point.Distance(p1, p2)/loops;
+
+			if (p1.Y == p2.Y)  // ressort horizontal ?
+			{
+				p1.X = System.Math.Min(p1.X, p2.X);
+				for (int i=0; i<loops; i++)
+				{
+					graphics.AddLine(p1.X, p1.Y, p1.X+step*0.25, p1.Y+thickness);
+					graphics.AddLine(p1.X+step*0.25, p1.Y+thickness, p1.X+step*0.75, p1.Y-thickness);
+					graphics.AddLine(p1.X+step*0.75, p1.Y-thickness, p1.X+step, p1.Y);
+					p1.X += step;
+				}
+			}
+
+			if (p1.X == p2.X)  // ressort vertical ?
+			{
+				p1.Y = System.Math.Min(p1.Y, p2.Y);
+				for (int i=0; i<loops; i++)
+				{
+					graphics.AddLine(p1.X, p1.Y, p1.X+thickness, p1.Y+step*0.25);
+					graphics.AddLine(p1.X+thickness, p1.Y+step*0.25, p1.X-thickness, p1.Y+step*0.75);
+					graphics.AddLine(p1.X-thickness, p1.Y+step*0.75, p1.X, p1.Y+step);
+					p1.Y += step;
+				}
+			}
+		}
+
+		static public void AlignForLine(Graphics graphics, ref Point p)
+		{
+			graphics.Align(ref p);
+			p.X += 0.5;
+			p.Y += 0.5;
+		}
+
+
 		static public int IndexOfString(string[] list, string searched)
 		{
 			//	Cherche l'index d'une chaîne dans une liste de chaînes.
