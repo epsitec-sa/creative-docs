@@ -59,7 +59,14 @@ namespace Epsitec.Common.Widgets
 		{
 			this.resourceManager = resource_manager;
 		}
-		
+
+		internal Widget Embedder
+		{
+			set
+			{
+				this.embedder = value;
+			}
+		}
 
 		public string							Text
 		{
@@ -91,7 +98,7 @@ namespace Epsitec.Common.Widgets
 					int offsetError;
 					if ( TextLayout.CheckSyntax(value, out offsetError) )
 					{
-						this.text = value;
+						this.SetText (value);
 						this.MarkContentsAsDirty();
 					}
 					else
@@ -976,14 +983,14 @@ namespace Epsitec.Common.Widgets
 			if ( i < 0 )  return;
 
 			len = this.text.IndexOf("\">", i) + 2 - i;
-			this.text = this.text.Remove(i, len);
+			this.SetText (this.text.Remove(i, len));
 			context.PrepareLength1 -= len;
 
 			i = this.text.IndexOf(endCmd, context.PrepareOffset, context.PrepareLength1+context.PrepareLength2);
 			if ( i < 0 )  return;
 
 			len = endCmd.Length;
-			this.text = this.text.Remove(i, len);
+			this.SetText (this.text.Remove(i, len));
 			context.PrepareLength2 -= len;
 		}
 
@@ -3035,6 +3042,21 @@ namespace Epsitec.Common.Widgets
 
 			return buffer.ToString();
 		}
+
+		private void SetText(string text)
+		{
+			System.Diagnostics.Debug.Assert (text != null);
+
+			if (this.text != text)
+			{
+				this.text = text;
+
+				if (this.embedder != null)
+				{
+					this.embedder.SetValueBase (Widget.TextProperty, text);
+				}
+			}
+		}
 		
 		protected void MarkContentsAsDirty()
 		{
@@ -3077,7 +3099,7 @@ namespace Epsitec.Common.Widgets
 		public void Simplify(TextLayout.Context context)
 		{
 			if ( this.text == null )  return;
-			this.text = this.GetSimplify();
+			this.SetText (this.GetSimplify());
 			this.isPrepareDirty = false;
 			context.PrepareOffset  = -1;  // annule la préparation pour l'insertion
 			context.PrepareLength1 = 0;
@@ -4997,6 +5019,7 @@ noText:
 		}
 
 
+		protected Widget						embedder;
 		protected Support.ResourceManager		resourceManager;
 		protected Drawing.TextStyle				style;
 		

@@ -2,6 +2,7 @@
 //	Responsable: Pierre ARNAUD
 
 using System.Collections.Generic;
+using Epsitec.Common.Types;
 
 namespace Epsitec.Common.Widgets
 {
@@ -689,34 +690,13 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				if (this.text_layout == null)
-				{
-					return "";
-				}
-				
-				string text = this.text;
-				
-				if (text == null)
-				{
-					return "";
-				}
-				
-				return text;
+				return (string) this.GetValueBase (Widget.TextProperty) ?? "";
 			}
-			
 			set
 			{
-				if ((value == null) || (value.Length == 0))
+				if (string.IsNullOrEmpty (value))
 				{
-					this.text = null;
-					
-					if (this.text_layout != null)
-					{
-						this.DisposeTextLayout ();
-						this.OnTextDefined ();
-						this.OnTextChanged ();
-						this.Invalidate ();
-					}
+					this.ClearValue (Widget.TextProperty);
 				}
 				else
 				{
@@ -726,22 +706,32 @@ namespace Epsitec.Common.Widgets
 					}
 					
 					this.ModifyText (value);
-					
-					string text = value;
-					
-					if (this.text_layout.Text != text)
-					{
-						this.ModifyTextLayout (text);
-						this.OnTextDefined ();
-						this.OnTextChanged ();
-						this.Invalidate ();
-					}
 				}
-				
-				if (this.AutoMnemonic)
-				{
-					this.ResetMnemonicShortcut ();
-				}
+			}
+		}
+
+		private static void NotifyTextChanged(DependencyObject o, object oldValue, object newValue)
+		{
+			Widget that = o as Widget;
+			string oldText = oldValue as string;
+			string newText = newValue as string;
+
+			if (string.IsNullOrEmpty (newText))
+			{
+				that.DisposeTextLayout ();
+			}
+			else
+			{
+				that.ModifyTextLayout (newText);
+			}
+			
+			that.OnTextDefined ();
+			that.OnTextChanged ();
+			that.Invalidate ();
+
+			if (that.AutoMnemonic)
+			{
+				that.ResetMnemonicShortcut ();
 			}
 		}
 		
@@ -3335,7 +3325,8 @@ namespace Epsitec.Common.Widgets
 			if (this.text_layout == null)
 			{
 				this.text_layout = new TextLayout ();
-				
+
+				this.text_layout.Embedder        = this;
 				this.text_layout.DefaultFont     = this.DefaultFont;
 				this.text_layout.DefaultFontSize = this.DefaultFontSize;
 				this.text_layout.Anchor         += new AnchorEventHandler (this.HandleTextLayoutAnchor);
@@ -3347,7 +3338,9 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void ModifyText(string text)
 		{
-			this.text = text;
+			System.Diagnostics.Debug.Assert (this.text_layout != null);
+			
+			this.SetValueBase (Widget.TextProperty, text);
 		}
 		
 		protected virtual void ModifyTextLayout(string text)
@@ -3436,11 +3429,6 @@ namespace Epsitec.Common.Widgets
 		
 		protected void HandleCultureChanged()
 		{
-			if (Support.Resources.IsTextRef (this.text))
-			{
-				this.Text = this.text;
-			}
-			
 			foreach (Widget child in this.Children)
 			{
 				child.HandleCultureChanged ();
@@ -3980,14 +3968,26 @@ namespace Epsitec.Common.Widgets
 			private int						index;
 		}
 		#endregion
+
+		private static void SetTextValue(DependencyObject o, object value)
+		{
+			Widget that = o as Widget;
+			that.Text = (string) value;
+		}
 		
+		private static object GetTextValue(DependencyObject o)
+		{
+			Widget that = o as Widget;
+			return that.Text;
+		}
+		
+		public static readonly DependencyProperty TextProperty = DependencyProperty.Register ("Text", typeof (string), typeof (Widget), new DependencyPropertyMetadata (Widget.GetTextValue, Widget.SetTextValue, Widget.NotifyTextChanged));
 		
 		private InternalState					internal_state;
 		
 		private System.Collections.ArrayList	hypertext_list;
 		private HypertextInfo					hypertext;
 		
-		private string							text;
 		private TextLayout						text_layout;
 		private int								tab_index = 0;
 		private TabNavigationMode				tab_navigation_mode;
