@@ -430,7 +430,15 @@ namespace Epsitec.Common.Designer.MyWidgets
 				return;
 			}
 
-			Widget obj = this.Detect(pos);  // objet visé par la souris
+			Widget obj;
+			AnchorStyles style;
+			if (this.AnchorDetect(pos, out obj, out style))
+			{
+				this.SetObjectAnchor(obj, style);
+				return;
+			}
+
+			obj = this.Detect(pos);  // objet visé par la souris
 
 			if (!isShiftPressed)  // touche Shift relâchée ?
 			{
@@ -446,6 +454,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			if (obj == null)
 			{
 				this.isRectangling = true;
+				this.SetAnchorRectangle(Rectangle.Empty);
 			}
 
 			if (obj != null)
@@ -503,6 +512,15 @@ namespace Epsitec.Common.Designer.MyWidgets
 					rect = this.GetObjectBounds(obj);
 				}
 				this.SetHiliteRectangle(rect);  // met en évidence l'objet survolé par la souris
+
+				Rectangle anchor = Rectangle.Empty;
+				AnchorStyles style;
+				if (this.AnchorDetect(pos, out obj, out style))
+				{
+					anchor = this.GetAnchorBounds(obj, style);
+					anchor.Inflate(3);
+				}
+				this.SetAnchorRectangle(anchor);
 			}
 		}
 
@@ -570,6 +588,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 
 			this.isRectangling = true;
+			this.SetAnchorRectangle(Rectangle.Empty);
 
 			this.OnChildrenSelected();
 			this.Invalidate();
@@ -866,6 +885,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			if (this.handlesList.IsDragging)
 			{
 				this.SetHiliteRectangle(Rectangle.Empty);
+				this.SetAnchorRectangle(Rectangle.Empty);
 				return true;
 			}
 
@@ -921,6 +941,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.draggingWindow.Show();
 
 			this.SetHiliteRectangle(Rectangle.Empty);
+			this.SetAnchorRectangle(Rectangle.Empty);
 			this.isDragging = true;
 			this.Invalidate();
 		}
@@ -1148,6 +1169,17 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.Invalidate(this.selectedRectangle);  // invalide l'ancienne zone
 				this.selectedRectangle = rect;
 				this.Invalidate(this.selectedRectangle);  // invalide la nouvelle zone
+			}
+		}
+
+		protected void SetAnchorRectangle(Rectangle rect)
+		{
+			//	Détermine la zone du rectangle de ressort d'ancrage.
+			if (this.anchorRectangle != rect)
+			{
+				this.Invalidate(this.anchorRectangle);  // invalide l'ancienne zone
+				this.anchorRectangle = rect;
+				this.Invalidate(this.anchorRectangle);  // invalide la nouvelle zone
 			}
 		}
 		#endregion
@@ -1578,10 +1610,114 @@ namespace Epsitec.Common.Designer.MyWidgets
 			return (obj.Anchor & AnchorStyles.Top) != 0;
 		}
 
+		protected void SetObjectAnchor(Widget obj, AnchorStyles style)
+		{
+			//	Modifie le système d'ancrage d'un objet.
+			if ((obj.Anchor & style) == 0)
+			{
+				obj.Anchor |= style;
+			}
+			else
+			{
+				obj.Anchor &= ~style;
+			}
+
+			this.Invalidate();
+		}
+
 		protected bool ObjectTabActive(Widget obj)
 		{
 			//	Indique si l'objet est ancré à gauche.
 			return (obj.TabNavigation & TabNavigationMode.ActivateOnTab) != 0;
+		}
+		#endregion
+
+
+		#region Anchor
+		protected bool AnchorDetect(Point mouse, out Widget obj, out AnchorStyles style)
+		{
+			//	Détecte dans quel ressort d'un objet est la souris.
+			if (!this.context.ShowAnchor)
+			{
+				obj = null;
+				style = AnchorStyles.None;
+				return false;
+			}
+
+			AnchorStyles[] styles = {AnchorStyles.Left, AnchorStyles.Right, AnchorStyles.Bottom, AnchorStyles.Top};
+
+			foreach (Widget o in this.selectedObjects)
+			{
+				foreach (AnchorStyles s in styles)
+				{
+					Rectangle bounds = this.GetAnchorBounds(o, s);
+					if (bounds.Contains(mouse))
+					{
+						obj = o;
+						style = s;
+						return true;
+					}
+				}
+			}
+
+			obj = null;
+			style = AnchorStyles.None;
+			return false;
+		}
+
+		protected Rectangle GetAnchorBounds(Widget obj, AnchorStyles style)
+		{
+			//	Retourne le rectangle englobant un ressort d'ancrage.
+			Rectangle bounds = this.RealBounds;
+			Rectangle rect = this.GetObjectBounds(obj);
+			Point p1, p2, p1a, p2a;
+			double thickness = PanelEditor.anchorThickness;
+
+			if (style == AnchorStyles.Left)
+			{
+				p1 = new Point(bounds.Left, rect.Center.Y);
+				p2 = new Point(rect.Left, rect.Center.Y);
+				p1a = Point.Scale(p1, p2, PanelEditor.anchorScale);
+				p2a = Point.Scale(p2, p1, PanelEditor.anchorScale);
+				p1a.Y -= thickness;
+				p2a.Y += thickness;
+				return new Rectangle(p1a, p2a);
+			}
+
+			if (style == AnchorStyles.Right)
+			{
+				p1 = new Point(bounds.Right, rect.Center.Y);
+				p2 = new Point(rect.Right, rect.Center.Y);
+				p1a = Point.Scale(p1, p2, PanelEditor.anchorScale);
+				p2a = Point.Scale(p2, p1, PanelEditor.anchorScale);
+				p1a.Y -= thickness;
+				p2a.Y += thickness;
+				return new Rectangle(p1a, p2a);
+			}
+
+			if (style == AnchorStyles.Bottom)
+			{
+				p1 = new Point(rect.Center.X, bounds.Bottom);
+				p2 = new Point(rect.Center.X, rect.Bottom);
+				p1a = Point.Scale(p1, p2, PanelEditor.anchorScale);
+				p2a = Point.Scale(p2, p1, PanelEditor.anchorScale);
+				p1a.X -= thickness;
+				p2a.X += thickness;
+				return new Rectangle(p1a, p2a);
+			}
+
+			if (style == AnchorStyles.Top)
+			{
+				p1 = new Point(rect.Center.X, bounds.Top);
+				p2 = new Point(rect.Center.X, rect.Top);
+				p1a = Point.Scale(p1, p2, PanelEditor.anchorScale);
+				p2a = Point.Scale(p2, p1, PanelEditor.anchorScale);
+				p1a.X -= thickness;
+				p2a.X += thickness;
+				return new Rectangle(p1a, p2a);
+			}
+
+			return Rectangle.Empty;
 		}
 		#endregion
 
@@ -1646,7 +1782,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				}
 			}
 
-			//	Dessine les ancrages.
+			//	Dessine les ancrages des objets sélectionnés.
 			if (this.context.ShowAnchor && this.selectedObjects.Count > 0 && !this.isDragging && !this.handlesList.IsDragging)
 			{
 				foreach (Widget obj in this.selectedObjects)
@@ -1728,6 +1864,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 				graphics.RenderSolid(PanelsContext.ColorHiliteOutline);
 			}
 
+			//	Dessine le rectangle de ressort d'ancrage.
+			if (!this.anchorRectangle.IsEmpty)
+			{
+				Rectangle anchor = this.anchorRectangle;
+				graphics.AddFilledRectangle(anchor);
+				graphics.RenderSolid(PanelsContext.ColorHiliteSurface);
+			}
+
 			//	Dessine les poignées.
 			if (this.selectedObjects.Count == 1 && !this.isDragging)
 			{
@@ -1737,8 +1881,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected void DrawAnchor(Graphics graphics, Point p1, Point p2, bool rigid)
 		{
-			Point p1a = Point.Scale(p1, p2, 0.3);
-			Point p2a = Point.Scale(p2, p1, 0.3);
+			//	Dessine un ancrage horizontal ou vertical d'un objet.
+			Point p1a = Point.Scale(p1, p2, PanelEditor.anchorScale);
+			Point p2a = Point.Scale(p2, p1, PanelEditor.anchorScale);
 
 			Misc.AlignForLine(graphics, ref p1);
 			Misc.AlignForLine(graphics, ref p2);
@@ -1748,15 +1893,22 @@ namespace Epsitec.Common.Designer.MyWidgets
 			graphics.AddLine(p1, p1a);
 			graphics.AddLine(p2, p2a);
 
-			if (rigid)
+			if (rigid)  // rigide ?
 			{
+				double initialWidth = graphics.LineWidth;
+				CapStyle initialCap = graphics.LineCap;
+
 				graphics.LineWidth = 5.0;
+				graphics.LineCap = CapStyle.Butt;
+				
 				graphics.AddLine(p1a, p2a);
-				graphics.LineWidth = 1.0;
+
+				graphics.LineWidth = initialWidth;
+				graphics.LineCap = initialCap;
 			}
-			else
+			else  // élastique ?
 			{
-				double dim = 3.0;
+				double dim = PanelEditor.anchorThickness;
 				double length = Point.Distance(p1a, p2a);
 				int loops = (int) (length/(dim*4));
 				loops = System.Math.Max(loops, 1);
@@ -1765,6 +1917,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			graphics.RenderSolid(PanelsContext.ColorAnchor);
 
+			//	Dessine les extrémités.
 			graphics.AddFilledCircle(p1, 3.0);
 			graphics.AddFilledCircle(p2, 3.0);
 			graphics.RenderSolid(PanelsContext.ColorAnchor);
@@ -1772,6 +1925,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		public Rectangle RealBounds
 		{
+			//	Retourne le rectangle englobant de tous les objets contenus dans le panneau.
 			get
 			{
 				return new Rectangle(Point.Zero, this.panel.RealMinSize);
@@ -1932,6 +2086,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 		#endregion
 
 
+		protected static readonly double	anchorThickness = 3.0;
+		protected static readonly double	anchorScale = 0.4;
+
 		protected UI.Panel					panel;
 		protected PanelsContext				context;
 		protected ConstrainsList			constrainsList;
@@ -1943,6 +2100,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected Widget					lastCreatedObject;
 		protected List<Widget>				selectedObjects = new List<Widget>();
 		protected Rectangle					selectedRectangle = Rectangle.Empty;
+		protected Rectangle					anchorRectangle = Rectangle.Empty;
 		protected Rectangle					hilitedRectangle = Rectangle.Empty;
 		protected bool						isRectangling;  // j'invente des mots si je veux !
 		protected bool						isDragging;

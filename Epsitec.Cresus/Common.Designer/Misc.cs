@@ -10,7 +10,7 @@ namespace Epsitec.Common.Designer
 	{
 		static public void AddSpring(Graphics graphics, Point p1, Point p2, double thickness, int loops)
 		{
-			//	Dessine un ressort.
+			//	Dessine un ressort horizontal ou vertical.
 			double step = Point.Distance(p1, p2)/loops;
 
 			if (p1.Y == p2.Y)  // ressort horizontal ?
@@ -24,8 +24,7 @@ namespace Epsitec.Common.Designer
 					p1.X += step;
 				}
 			}
-
-			if (p1.X == p2.X)  // ressort vertical ?
+			else if (p1.X == p2.X)  // ressort vertical ?
 			{
 				p1.Y = System.Math.Min(p1.Y, p2.Y);
 				for (int i=0; i<loops; i++)
@@ -36,10 +35,15 @@ namespace Epsitec.Common.Designer
 					p1.Y += step;
 				}
 			}
+			else
+			{
+				throw new System.Exception("This geometry is not implemented.");
+			}
 		}
 
 		static public void AlignForLine(Graphics graphics, ref Point p)
 		{
+			//	Aligne un point pour permettre un joli Graphics.AddLine.
 			graphics.Align(ref p);
 			p.X += 0.5;
 			p.Y += 0.5;
