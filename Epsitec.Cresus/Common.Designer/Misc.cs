@@ -8,6 +8,19 @@ namespace Epsitec.Common.Designer
 	/// </summary>
 	public class Misc
 	{
+		static public AnchorStyles OppositeAnchor(AnchorStyles style)
+		{
+			//	Retourne le style d'ancrage opposé.
+			switch (style)
+			{
+				case AnchorStyles.Left:    return AnchorStyles.Right;
+				case AnchorStyles.Right:   return AnchorStyles.Left;
+				case AnchorStyles.Bottom:  return AnchorStyles.Top;
+				case AnchorStyles.Top:     return AnchorStyles.Bottom;
+			}
+			return style;
+		}
+
 		static public void AddSpring(Graphics graphics, Point p1, Point p2, double thickness, int loops)
 		{
 			//	Dessine un ressort horizontal ou vertical.
