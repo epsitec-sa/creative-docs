@@ -1786,6 +1786,8 @@ namespace Epsitec.Common.Widgets
 		
 		internal void DispatchMessage(Message message, Widget root)
 		{
+			this.ForceLayout ();
+			
 			if (this.IsFrozen || (message == null))
 			{
 				return;

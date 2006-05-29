@@ -75,7 +75,7 @@ namespace Epsitec.Common.Widgets
 		protected virtual void OnDragStarted(MessageEventArgs e)
 		{
 			//	Le slider va être déplacé.
-			EventHandler handler = (EventHandler) this.GetUserEventHandler("DragStarted");
+			MessageEventHandler handler = (MessageEventHandler) this.GetUserEventHandler("DragStarted");
 			if (handler != null)
 			{
 				if (e != null)
@@ -83,14 +83,14 @@ namespace Epsitec.Common.Widgets
 					e.Message.Consumer = this;
 				}
 
-				handler(this);
+				handler(this, e);
 			}
 		}
 
 		protected virtual void OnDragMoved(MessageEventArgs e)
 		{
 			//	Le slider est déplacé.
-			EventHandler handler = (EventHandler) this.GetUserEventHandler("DragMoved");
+			MessageEventHandler handler = (MessageEventHandler) this.GetUserEventHandler ("DragMoved");
 			if (handler != null)
 			{
 				if (e != null)
@@ -98,14 +98,14 @@ namespace Epsitec.Common.Widgets
 					e.Message.Consumer = this;
 				}
 
-				handler(this);
+				handler(this, e);
 			}
 		}
 
 		protected virtual void OnDragEnded(MessageEventArgs e)
 		{
 			//	Le slider est fini de déplacer.
-			EventHandler handler = (EventHandler) this.GetUserEventHandler("DragEnded");
+			MessageEventHandler handler = (MessageEventHandler) this.GetUserEventHandler ("DragEnded");
 			if (handler != null)
 			{
 				if (e != null)
@@ -113,7 +113,7 @@ namespace Epsitec.Common.Widgets
 					e.Message.Consumer = this;
 				}
 
-				handler(this);
+				handler(this, e);
 			}
 		}
 

@@ -508,10 +508,10 @@ namespace Epsitec.Common.Widgets
 		}
 		
 
-		protected void StretchColumns()
+		protected void StretchColumns(double actualWidth, double actualHeight)
 		{
 			//	Adapte les largeurs des colonnes à la largeur du widget.
-			double areaWidth = this.ActualWidth-this.margins.Width-this.leftMargin-this.rightMargin;
+			double areaWidth = actualWidth-this.margins.Width-this.leftMargin-this.rightMargin;
 			double totalWidth = 0;
 			for ( int i=0 ; i<this.maxColumns ; i++ )
 			{
@@ -526,10 +526,10 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		protected void StretchRows()
+		protected void StretchRows(double actualWidth, double actualHeight)
 		{
 			//	Adapte les hauteurs des lignes à la hauteur du widget.
-			double areaHeight = this.ActualHeight-this.margins.Height-this.bottomMargin-this.topMargin;
+			double areaHeight = actualHeight-this.margins.Height-this.bottomMargin-this.topMargin;
 			double totalHeight = 0;
 			for ( int i=0 ; i<this.maxRows ; i++ )
 			{
@@ -1331,11 +1331,11 @@ namespace Epsitec.Common.Widgets
 
 			if ( (this.styleH & CellArrayStyles.Stretch) != 0 )
 			{
-				this.StretchColumns();
+				this.StretchColumns (rect.Width, rect.Height);
 			}
 			if ( (this.styleV & CellArrayStyles.Stretch) != 0 )
 			{
-				this.StretchRows();
+				this.StretchRows (rect.Width, rect.Height);
 			}
 
 			//	Positionne l'ascenseur vertical.
@@ -1370,7 +1370,7 @@ namespace Epsitec.Common.Widgets
 			if ( this.container != null )
 			{
 				this.container.SetManualBounds(iRect);
-				this.UpdateArrayGeometry();
+				this.UpdateArrayGeometry(iRect);
 			}
 
 			//	Positionne les boutons de l'en-tête vertical.
@@ -1488,7 +1488,7 @@ namespace Epsitec.Common.Widgets
 			}
 
 			this.isGrimy = false;
-			this.UpdateScrollers();
+			this.UpdateScrollers(rect.Width, rect.Height);
 		}
 
 		protected override void OnAdornerChanged()
@@ -1502,7 +1502,7 @@ namespace Epsitec.Common.Widgets
 			return Widgets.Adorners.Factory.Active.GeometryListShapeMargins;
 		}
 
-		protected void UpdateScrollers()
+		protected void UpdateScrollers(double actualWidth, double actualHeight)
 		{
 			//	Met à jour les ascenseurs en fonction du tableau.
 			if ( this.scrollerV == null || this.scrollerH == null )  return;
@@ -1510,7 +1510,7 @@ namespace Epsitec.Common.Widgets
 			//	Traite l'ascenseur vertical.
 			if ( this.showScrollerV )
 			{
-				double areaHeight = this.ActualHeight-this.margins.Height-this.bottomMargin-this.topMargin;
+				double areaHeight = actualHeight-this.margins.Height-this.bottomMargin-this.topMargin;
 				double totalHeight = 0;
 				for ( int i=0 ; i<this.maxRows ; i++ )
 				{
@@ -1541,7 +1541,7 @@ namespace Epsitec.Common.Widgets
 			//	Traite l'ascenseur horizontal.
 			if ( this.showScrollerH )
 			{
-				double areaWidth = this.ActualWidth-this.margins.Width-this.leftMargin-this.rightMargin;
+				double areaWidth = actualWidth-this.margins.Width-this.leftMargin-this.rightMargin;
 				double totalWidth = 0;
 				
 				if ( this.isDraggingSlider )
@@ -1578,12 +1578,11 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		protected void UpdateArrayGeometry()
+		protected void UpdateArrayGeometry(Drawing.Rectangle rect)
 		{
 			//	Met à jour la géométrie de toutes les cellules du tableau.
 			Cell focusedCell = null;
 			
-			Drawing.Rectangle rect = this.container.ActualBounds;
 			double py = rect.Height+this.offsetV;
 			for ( int y=0 ; y<this.maxRows ; y++ )
 			{
