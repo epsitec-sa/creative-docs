@@ -379,6 +379,7 @@ namespace Epsitec.Common.Widgets
 				double size = this.RetSize(i);
 				page.AbsoluteSize = size;
 			}
+			this.Invalidate ();
 		}
 
 
