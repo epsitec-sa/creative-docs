@@ -48,6 +48,8 @@ namespace Epsitec.Common.Support.Implementation
 		
 		protected string GetLevelSuffix(ResourceLevel level)
 		{
+			System.Diagnostics.Debug.Assert (level != ResourceLevel.Merged);
+			
 			switch (level)
 			{
 				case ResourceLevel.Default:		return this.file_default;
@@ -119,22 +121,22 @@ namespace Epsitec.Common.Support.Implementation
 			return false;
 		}
 		
-		public override bool SetupApplication(string application)
+		public override bool SelectModule(ResourceModuleInfo module)
 		{
-			this.application = application;
+			this.module = module.Name;
 			
-			if ((this.application != null) &&
-				(this.application.Length > 0))
+			if (! string.IsNullOrEmpty (this.module))
 			{
-				string path = System.IO.Path.Combine (this.path_prefix_base, this.application);
+				string path = System.IO.Path.Combine (this.path_prefix_base, this.module);
 				
 				if (System.IO.Directory.Exists (path))
 				{
-					this.path_prefix = path + System.IO.Path.DirectorySeparatorChar;
+					this.path_prefix = string.Concat (path, System.IO.Path.DirectorySeparatorChar);
+					return true;
 				}
 			}
-			
-			return true;
+
+			return false;
 		}
 
 		public override void SelectLocale(System.Globalization.CultureInfo culture)
@@ -421,6 +423,6 @@ namespace Epsitec.Common.Support.Implementation
 		protected string					file_custom;
 		protected string					file_all;
 		
-		protected string					application;
+		protected string					module;
 	}
 }

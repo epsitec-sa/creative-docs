@@ -179,7 +179,7 @@ namespace Epsitec.Common.Support
 			{
 				IResourceProvider provider = this.resource_providers[i];
 				
-				if (provider.SetupApplication (application_name))
+				if (provider.SelectModule (new ResourceModuleInfo (application_name, -1)))
 				{
 					//	Conserve le fournisseur qui a réussi son initialisation; un fournisseur qui
 					//	échoue ici est simplement écarté...

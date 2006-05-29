@@ -21,10 +21,12 @@ namespace Epsitec.Common.Support.Implementation
 		
 		public virtual void Setup(ResourceManager resource_manager)
 		{
+			System.Diagnostics.Debug.Assert (this.manager == null);
+			
 			this.manager = resource_manager;
 		}
 
-		public abstract bool SetupApplication(string application);
+		public abstract bool SelectModule(ResourceModuleInfo module);
 		
 		public virtual void SelectLocale(System.Globalization.CultureInfo culture)
 		{
