@@ -20,26 +20,14 @@ namespace Epsitec.Common.Support
 		}
 
 		/// <summary>
-		/// Sets up the resource provider for the specified resource manager.
-		/// This is called only once in the life time of the provider.
+		/// Selects the specified module by using either the module name, the
+		/// module identifier or both.
 		/// </summary>
-		/// <param name="resourceManager">The resource manager which will use this
-		/// resource provider.</param>
-		void Setup(ResourceManager resourceManager);
-
-		/// <summary>
-		/// Selects the specified module.
-		/// </summary>
-		/// <param name="module">The module to select.</param>
+		/// <param name="module">The module to select; the module information
+		/// is updated on success.</param>
 		/// <returns><c>true</c> if the module could be selected; otherwise,
 		/// <c>false</c>.</returns>
-		bool SelectModule(ResourceModuleInfo module);
-
-		/// <summary>
-		/// Selects the locale to be used.
-		/// </summary>
-		/// <param name="culture">The culture of the locale.</param>
-		void SelectLocale(System.Globalization.CultureInfo culture);
+		bool SelectModule(ref ResourceModuleInfo module);
 
 		/// <summary>
 		/// Validates the resource bundle identifier.
@@ -68,8 +56,8 @@ namespace Epsitec.Common.Support
 		/// <summary>
 		/// Gets the resource bundle identifiers matching several criteria.
 		/// </summary>
-		/// <param name="nameFilter">The name filter.</param>
-		/// <param name="typeFilter">The type filter.</param>
+		/// <param name="nameFilter">The name filter (may include wildcards).</param>
+		/// <param name="typeFilter">The type filter (may include wildcards).</param>
 		/// <param name="level">The localization level (all, default, localized, customized).</param>
 		/// <param name="culture">The culture for the locale.</param>
 		/// <returns>The resource bundle identifiers matching the criteria.</returns>

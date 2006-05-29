@@ -13,8 +13,19 @@ namespace Epsitec.Common.Support.Implementation
 	/// </summary>
 	public class FileProvider : AbstractResourceProvider
 	{
-		public FileProvider()
+		public FileProvider(ResourceManager manager) : base (manager)
 		{
+			string dir1 = manager.DefaultPath;
+			string dir2 = System.IO.Directory.GetCurrentDirectory ();
+			string dir3 = System.IO.Path.GetDirectoryName (typeof (ResourceManager).Assembly.Location);
+
+			if (!this.SelectPath (dir1) &&
+				!this.SelectPath (dir2) &&
+				!this.SelectPath (dir3))
+			{
+				throw new System.IO.FileNotFoundException ("Cannot find resources directory.");
+			}
+			
 			this.id_regex = RegexFactory.FileName;
 		}
 		
@@ -68,26 +79,6 @@ namespace Epsitec.Common.Support.Implementation
 		}
 		
 		
-		public override void Setup(ResourceManager resource_manager)
-		{
-			base.Setup (resource_manager);
-			
-			string dir_1 = resource_manager.DefaultPath;
-			string dir_2 = System.IO.Directory.GetCurrentDirectory ();
-			string dir_3 = System.IO.Path.GetDirectoryName (typeof (ResourceManager).Assembly.Location);
-			
-			if (! this.SelectPath (dir_1))
-			{
-				if (! this.SelectPath (dir_2))
-				{
-					if (! this.SelectPath (dir_3))
-					{
-						throw new System.IO.FileNotFoundException ("Cannot find resources directory.");
-					}
-				}
-			}
-		}
-		
 		private bool SelectPath(string path)
 		{
 			if (! path.EndsWith (System.IO.Path.DirectorySeparatorChar.ToString ()))
@@ -121,25 +112,61 @@ namespace Epsitec.Common.Support.Implementation
 			return false;
 		}
 		
-		public override bool SelectModule(ResourceModuleInfo module)
+		public override bool SelectModule(ref ResourceModuleInfo module)
 		{
-			this.module = module.Name;
-			
-			if (! string.IsNullOrEmpty (this.module))
+			string moduleName = null;
+			int    moduleId   = -1;
+
+			if (string.IsNullOrEmpty (module.Name))
 			{
-				string path = System.IO.Path.Combine (this.path_prefix_base, this.module);
+				if (module.Id >= 0)
+				{
+					//	Search for the module based on its module identifier. This
+					//	is currently slow, as it requires a walk through all possible
+					//	modules, until we find the matching one.
+
+					foreach (ResourceModuleInfo item in this.GetModules ())
+					{
+						if (item.Id == module.Id)
+						{
+							moduleName = item.Name;
+							break;
+						}
+					}
+				}
+			}
+			else
+			{
+				moduleName = module.Name;
+			}
+			
+			if (moduleName != null)
+			{
+				//	Search the module based on its module name. 
+				
+				string path = System.IO.Path.Combine (this.path_prefix_base, moduleName);
 				
 				if (System.IO.Directory.Exists (path))
 				{
-					this.path_prefix = string.Concat (path, System.IO.Path.DirectorySeparatorChar);
-					return true;
+					moduleId = FileProvider.GetModuleId (path);
+
+					if ((moduleId >= 0) &&
+						((module.Id < 0) || (module.Id == moduleId)))
+					{
+						this.path_prefix = string.Concat (path, System.IO.Path.DirectorySeparatorChar);
+						this.module = module;
+
+						module = new ResourceModuleInfo (moduleName, moduleId);
+						
+						return true;
+					}
 				}
 			}
 
 			return false;
 		}
 
-		public override void SelectLocale(System.Globalization.CultureInfo culture)
+		protected override void SelectLocale(System.Globalization.CultureInfo culture)
 		{
 			base.SelectLocale (culture);
 			
@@ -220,51 +247,58 @@ namespace Epsitec.Common.Support.Implementation
 
 				if (this.ValidateId (moduleName))
 				{
-					try
+					int moduleId = FileProvider.GetModuleId (file);
+					
+					if (moduleId >= 0)
 					{
-						//	Load the "module.info" file from the resource sub-folder
-						//	where all the module bundles are stored, then extract the
-						//	identifier :
-						
-						System.Xml.XmlDocument xml = new System.Xml.XmlDocument ();
-						xml.Load (System.IO.Path.Combine (file, "module.info"));
-						System.Xml.XmlElement root = xml.DocumentElement;
-
-						int id = -1;
-						
-						if (root.Name == "ModuleInfo")
-						{
-							int idValue;
-							string idAttribute = root.GetAttribute ("id");
-
-							if ((string.IsNullOrEmpty (idAttribute) == false) &&
-								(int.TryParse (idAttribute, out idValue)))
-							{
-								id = idValue;
-							}
-						}
-
-						if (id >= 0)
-						{
-							modules.Add (new ResourceModuleInfo (moduleName, id));
-						}
-						else
-						{
-							System.Diagnostics.Debug.WriteLine (string.Format ("Invalid XML file found in '{0}'", file));
-						}
-					}
-					catch (System.IO.FileNotFoundException)
-					{
-						System.Diagnostics.Debug.WriteLine (string.Format ("Could not find module.info file in '{0}'", file));
-					}
-					catch (System.IO.PathTooLongException)
-					{
-						System.Diagnostics.Debug.WriteLine (string.Format ("Path to module.info file for '{0}' is too long", file));
+						modules.Add (new ResourceModuleInfo (moduleName, moduleId));
 					}
 				}
 			}
 			
 			return modules.ToArray ();
+		}
+
+		private static int GetModuleId(string path)
+		{
+			int moduleId = -1;
+			try
+			{
+				//	Load the "module.info" file from the resource sub-folder
+				//	where all the module bundles are stored, then extract the
+				//	identifier :
+
+				System.Xml.XmlDocument xml = new System.Xml.XmlDocument ();
+				xml.Load (System.IO.Path.Combine (path, "module.info"));
+				System.Xml.XmlElement root = xml.DocumentElement;
+
+				if (root.Name == "ModuleInfo")
+				{
+					int idValue;
+					string idAttribute = root.GetAttribute ("id");
+
+					if ((string.IsNullOrEmpty (idAttribute) == false) &&
+								(int.TryParse (idAttribute, out idValue)))
+					{
+						moduleId = idValue;
+					}
+				}
+
+				if (moduleId < 0)
+				{
+					System.Diagnostics.Debug.WriteLine (string.Format ("Invalid XML file found in '{0}'", path));
+				}
+			}
+			catch (System.IO.FileNotFoundException)
+			{
+				System.Diagnostics.Debug.WriteLine (string.Format ("Could not find module.info file in '{0}'", path));
+			}
+			catch (System.IO.PathTooLongException)
+			{
+				System.Diagnostics.Debug.WriteLine (string.Format ("Path to module.info file for '{0}' is too long", path));
+			}
+			
+			return moduleId;
 		}
 		
 		public override string[] GetIds(string name_filter, string type_filter, ResourceLevel level, System.Globalization.CultureInfo culture)
@@ -423,6 +457,6 @@ namespace Epsitec.Common.Support.Implementation
 		protected string					file_custom;
 		protected string					file_all;
 		
-		protected string					module;
+		protected ResourceModuleInfo		module;
 	}
 }

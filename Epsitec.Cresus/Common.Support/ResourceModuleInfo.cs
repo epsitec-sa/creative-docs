@@ -23,6 +23,26 @@ namespace Epsitec.Common.Support
 		}
 
 		/// <summary>
+		/// Initializes a new instance of the <see cref="T:ResourceModuleInfo"/> structure.
+		/// </summary>
+		/// <param name="name">The name of the module.</param>
+		public ResourceModuleInfo(string name)
+		{
+			this.name = name;
+			this.id = -1;
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="T:ResourceModuleInfo"/> structure.
+		/// </summary>
+		/// <param name="id">The id of the module.</param>
+		public ResourceModuleInfo(int id)
+		{
+			this.name = null;
+			this.id = id;
+		}
+
+		/// <summary>
 		/// Gets the name of the module.
 		/// </summary>
 		/// <value>The name of the module.</value>

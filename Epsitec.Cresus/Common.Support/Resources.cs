@@ -3,6 +3,7 @@
 
 using System.Globalization;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace Epsitec.Common.Support
 {
@@ -227,12 +228,12 @@ namespace Epsitec.Common.Support
 			return Resources.manager.GetLevelCaption (level, culture);
 		}
 
-		public static string[] GetModuleNames(string prefix)
+		public static IEnumerable<string> GetModuleNames(string prefix)
 		{
 			return Resources.manager.GetModuleNames (prefix);
 		}
 
-		public static ResourceModuleInfo[] GetModuleInfos(string prefix)
+		public static IEnumerable<ResourceModuleInfo> GetModuleInfos(string prefix)
 		{
 			return Resources.manager.GetModuleInfos (prefix);
 		}

@@ -12,33 +12,18 @@ namespace Epsitec.Common.Support.Implementation
 	/// </summary>
 	public abstract class AbstractResourceProvider : Epsitec.Common.Support.IResourceProvider
 	{
-		protected AbstractResourceProvider()
+		protected AbstractResourceProvider(ResourceManager manager)
 		{
+			this.manager = manager;
 		}
 		
 		#region IResourceProvider Members
-		public abstract string Prefix		{ get; }
-		
-		public virtual void Setup(ResourceManager resource_manager)
+		public abstract string Prefix
 		{
-			System.Diagnostics.Debug.Assert (this.manager == null);
-			
-			this.manager = resource_manager;
-		}
-
-		public abstract bool SelectModule(ResourceModuleInfo module);
-		
-		public virtual void SelectLocale(System.Globalization.CultureInfo culture)
-		{
-			this.culture = culture;
-			
-			this.default_suffix = this.manager.MapToSuffix (ResourceLevel.Default, culture);
-			this.local_suffix   = this.manager.MapToSuffix (ResourceLevel.Localized, culture);
-			this.custom_suffix  = this.manager.MapToSuffix (ResourceLevel.Customized, culture);
-			
-			System.Diagnostics.Debug.Assert (culture.TwoLetterISOLanguageName == this.local_suffix);
+			get;
 		}
 		
+		public abstract bool SelectModule(ref ResourceModuleInfo module);
 		
 		public virtual bool ValidateId(string id)
 		{
@@ -54,6 +39,17 @@ namespace Epsitec.Common.Support.Implementation
 		public abstract bool SetData(string id, Epsitec.Common.Support.ResourceLevel level, System.Globalization.CultureInfo culture, byte[] data, Epsitec.Common.Support.ResourceSetMode mode);
 		public abstract bool Remove(string id, Epsitec.Common.Support.ResourceLevel level, System.Globalization.CultureInfo culture);
 		#endregion
+
+		protected virtual void SelectLocale(System.Globalization.CultureInfo culture)
+		{
+			this.culture = culture;
+
+			this.default_suffix = this.manager.MapToSuffix (ResourceLevel.Default, culture);
+			this.local_suffix   = this.manager.MapToSuffix (ResourceLevel.Localized, culture);
+			this.custom_suffix  = this.manager.MapToSuffix (ResourceLevel.Customized, culture);
+
+			System.Diagnostics.Debug.Assert (culture.TwoLetterISOLanguageName == this.local_suffix);
+		}
 		
 		
 		protected CultureInfo				culture;
