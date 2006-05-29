@@ -44,7 +44,7 @@ namespace Epsitec.Common.Support
 		public static void Initialise(System.Type type, string name)
 		{
 			_manager = new Epsitec.Common.Support.ResourceManager (type);
-			_manager.SetupApplication (name);
+			_manager.DefineDefaultModuleName (name);
 		}
 		
 		private static Epsitec.Common.Support.ResourceManager _manager = Epsitec.Common.Support.Resources.DefaultManager;

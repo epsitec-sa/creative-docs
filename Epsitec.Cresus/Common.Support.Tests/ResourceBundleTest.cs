@@ -12,7 +12,7 @@ namespace Epsitec.Common.Support
 		[SetUp]
 		public void SetUp()
 		{
-			Resources.SetupApplication ("test");
+			Resources.DefineDefaultModuleName ("test");
 		}
 
 		[Test]

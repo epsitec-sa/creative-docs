@@ -57,12 +57,12 @@ namespace Epsitec.Common.Support
 		{
 			get
 			{
-				if (this.default_prefix == null)
+				if (this.defaultPrefix == null)
 				{
 					return "";
 				}
 				
-				return this.default_prefix;
+				return this.defaultPrefix;
 			}
 			set
 			{
@@ -71,7 +71,7 @@ namespace Epsitec.Common.Support
 					value = null;
 				}
 				
-				this.default_prefix = value;
+				this.defaultPrefix = value;
 			}
 		}
 		
@@ -135,31 +135,31 @@ namespace Epsitec.Common.Support
 		{
 			get
 			{
-				return this.application_name != null;
+				return this.defaultModuleName != null;
 			}
 		}
 		
 		
-		public void SetupApplication(string application_name)
+		public void DefineDefaultModuleName(string defaultModuleName)
 		{
 			//	Initialise les fournisseurs de ressources pour le nom d'application
 			//	spécifié. Ceci ne peut être fait qu'une seule fois.
 			
-			if (this.application_name == application_name)
+			if (this.defaultModuleName == defaultModuleName)
 			{
 				return;
 			}
 			
-			if (this.application_name != null)
+			if (this.defaultModuleName != null)
 			{
 				throw new System.InvalidOperationException ("Resource Providers may not be setup more than once.");
 			}
 			
-			this.application_name = application_name;
+			this.defaultModuleName = defaultModuleName;
 
 			foreach (ProviderRecord provider in this.providers.Values)
 			{
-				ModuleRecord module = provider.GetModuleRecord (application_name);
+				ModuleRecord module = provider.GetModuleRecord (defaultModuleName);
 
 				provider.ActiveProvider = (module == null) ? null : module.Provider;
 			}
@@ -1007,7 +1007,7 @@ namespace Epsitec.Common.Support
 			
 			public void ClearModuleCache()
 			{
-				this.modules = null;
+				this.infos = null;
 			}
 
 			public ModuleRecord GetModuleRecord(string moduleName)
@@ -1098,8 +1098,8 @@ namespace Epsitec.Common.Support
 		
 		private Dictionary<string, ProviderRecord> providers;
 		private CultureInfo						culture;
-		private string							application_name;
-		private string							default_prefix = "file";
+		private string							defaultModuleName;
+		private string							defaultPrefix = "file";
 		private string							defaultPath;
 		
 		Dictionary<string, ResourceBundle>		bundleCache = new Dictionary<string, ResourceBundle> ();

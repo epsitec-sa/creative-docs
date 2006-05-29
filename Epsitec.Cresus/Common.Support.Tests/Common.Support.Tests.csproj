@@ -216,6 +216,7 @@
     <None Include="resources\complex.00.resource" />
     <None Include="resources\icon.00.resource" />
     <None Include="resources\image.00.resource" />
+    <Content Include="resources\module.info" />
     <None Include="resources\recursive.00.resource" />
     <None Include="resources\simple_window.00.resource" />
     <None Include="resources\strings.00.resource" />
