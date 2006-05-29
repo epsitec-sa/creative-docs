@@ -842,8 +842,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void CreateObjectAdjust(ref Point pos, out Rectangle bounds)
 		{
 			//	Ajuste la position de l'objet à créer selon les contraintes.
-			pos.X -= this.creatingObject.PreferredWidth/2;
-			pos.Y -= this.creatingObject.PreferredHeight/2;
+			pos.X -= System.Math.Floor(this.creatingObject.PreferredWidth/2);
+			pos.Y -= System.Math.Floor(this.creatingObject.PreferredHeight/2);
 			bounds = new Rectangle(pos, this.creatingObject.PreferredSize);
 			Rectangle adjust = this.constrainsList.Snap(bounds, this.GetObjectBaseLine(this.creatingObject));
 			Point corr = adjust.BottomLeft - bounds.BottomLeft;
