@@ -518,6 +518,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				if (this.AnchorDetect(pos, out obj, out style))
 				{
 					anchor = this.GetAnchorBounds(obj, style);
+					anchor.Offset(0.5, 0.5);
 					anchor.Inflate(3);
 				}
 				this.SetAnchorRectangle(anchor);
@@ -1895,16 +1896,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			if (rigid)  // rigide ?
 			{
-				double initialWidth = graphics.LineWidth;
-				CapStyle initialCap = graphics.LineCap;
-
-				graphics.LineWidth = 5.0;
-				graphics.LineCap = CapStyle.Butt;
-				
-				graphics.AddLine(p1a, p2a);
-
-				graphics.LineWidth = initialWidth;
-				graphics.LineCap = initialCap;
+				double dim = PanelEditor.anchorThickness;
+				Misc.AddBox(graphics, p1a, p2a, dim);
 			}
 			else  // élastique ?
 			{
