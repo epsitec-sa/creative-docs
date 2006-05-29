@@ -27,7 +27,6 @@ namespace Epsitec.Common.Widgets
 		Frozen				= 0x00000080,		//	=> n'accepte aucun événement
 		
 		AutoMnemonic		= 0x00100000,
-		AutoResolveResRef	= 0x00800000,		//	une référence à une ressource [res:...] est remplacée automatiquement
 		
 		PossibleContainer	= 0x01000000,		//	widget peut être la cible d'un drag & drop en mode édition
 		EditionEnabled		= 0x02000000,		//	widget peut être édité
@@ -52,7 +51,6 @@ namespace Epsitec.Common.Widgets
 
 			this.InternalState |= InternalState.WasValid;
 			this.InternalState |= InternalState.AutoMnemonic;
-			this.InternalState |= InternalState.AutoResolveResRef;
 			
 			this.default_font_height = System.Math.Floor(this.DefaultFont.LineHeight*this.DefaultFontSize);
 			
@@ -440,29 +438,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		private bool								AutoResolveResRef
-		{
-			get
-			{
-				return (this.resource_manager != null) && ((this.internal_state & InternalState.AutoResolveResRef) != 0);
-			}
-			set
-			{
-				if (this.AutoResolveResRef != value)
-				{
-					if (value)
-					{
-						this.internal_state |= InternalState.AutoResolveResRef;
-					}
-					else
-					{
-						this.internal_state &= ~InternalState.AutoResolveResRef;
-					}
-				}
-			}
-		}
-		
-		
 		protected InternalState						InternalState
 		{
 			get
@@ -721,12 +696,6 @@ namespace Epsitec.Common.Widgets
 				
 				string text = this.text;
 				
-				if ((this.AutoResolveResRef == false) ||
-					(Support.Resources.IsTextRef (text)))
-				{
-					text = this.text_layout.Text;
-				}
-				
 				if (text == null)
 				{
 					return "";
@@ -758,7 +727,7 @@ namespace Epsitec.Common.Widgets
 					
 					this.ModifyText (value);
 					
-					string text = this.AutoResolveResRef ? this.resource_manager.ResolveTextRef (value) : value;
+					string text = value;
 					
 					if (this.text_layout.Text != text)
 					{
@@ -816,15 +785,7 @@ namespace Epsitec.Common.Widgets
 				{
 					//	Le code mnémonique est encapsulé par des tags <m>..</m>.
 					
-					if (this.AutoResolveResRef)
-					{
-						string text = this.resource_manager.ResolveTextRef (this.Text);
-						return TextLayout.ExtractMnemonic (text);
-					}
-					else
-					{
-						return TextLayout.ExtractMnemonic (this.Text);
-					}
+					return TextLayout.ExtractMnemonic (this.Text);
 				}
 				
 				return (char) 0;
