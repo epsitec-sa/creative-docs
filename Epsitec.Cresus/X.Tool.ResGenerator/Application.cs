@@ -259,7 +259,7 @@ namespace Epsitec.Common.Tool.ResGenerator
 			buffer.Append (@"_manager = new Epsitec.Common.Support.ResourceManager (type);");
 			buffer.Append ("\n");
 			buffer.Append (generator.Tabs);
-			buffer.Append (@"_manager.SetupApplication (name);");
+			buffer.Append (@"_manager.SelectModule (name);");
 			buffer.Append ("\n");
 			generator.EndBlock ();
 			buffer.Append (generator.Tabs);
