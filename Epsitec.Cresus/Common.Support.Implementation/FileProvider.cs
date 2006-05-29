@@ -211,12 +211,19 @@ namespace Epsitec.Common.Support.Implementation
 
 			foreach (string file in files)
 			{
+				//	Extract the module name from the full file name by stripping
+				//	the directory path prefix.
+				
 				string moduleName = file.Substring (start);
 
 				if (this.ValidateId (moduleName))
 				{
 					try
 					{
+						//	Load the "module.info" file from the resource sub-folder
+						//	where all the module bundles are stored, then extract the
+						//	identifier :
+						
 						System.Xml.XmlDocument xml = new System.Xml.XmlDocument ();
 						xml.Load (System.IO.Path.Combine (file, "module.info"));
 						System.Xml.XmlElement root = xml.DocumentElement;

@@ -25,6 +25,7 @@ namespace Epsitec.Common.Support
 			this.resource_providers     = new IResourceProvider[0];
 			this.resource_provider_hash = new Dictionary<string, IResourceProvider> ();
 			this.culture                = CultureInfo.CurrentCulture;
+			this.moduleInfos = new Dictionary<string, ResourceModuleInfo[]> ();
 			
 			if ((path != null) &&
 				(path.Length > 0))
@@ -341,14 +342,29 @@ namespace Epsitec.Common.Support
 
 		public ResourceModuleInfo[] GetModuleInfos(string prefix)
 		{
+			ResourceModuleInfo[] infos;
+			
+			if (! this.moduleInfos.TryGetValue (prefix, out infos))
+			{
+				this.RefreshModuleInfos (prefix);
+				this.moduleInfos.TryGetValue (prefix, out infos);
+			}
+
+			return infos;
+		}
+		
+		public void RefreshModuleInfos(string prefix)
+		{
 			IResourceProvider provider;
 
 			if (this.resource_provider_hash.TryGetValue (prefix, out provider))
 			{
-				return provider.GetModules ();
+				this.moduleInfos[prefix] = provider.GetModules ();
 			}
-
-			return null;
+			else
+			{
+				this.moduleInfos.Remove (prefix);
+			}
 		}
 
 		public string[] GetBundleIds(string name_filter)
@@ -1035,6 +1051,7 @@ namespace Epsitec.Common.Support
 
 		#endregion
 
+		private Dictionary<string, ResourceModuleInfo[]> moduleInfos;
 		private CultureInfo						culture;
 		private IResourceProvider[]				resource_providers;
 		private Dictionary<string, IResourceProvider> resource_provider_hash;

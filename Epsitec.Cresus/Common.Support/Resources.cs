@@ -231,7 +231,17 @@ namespace Epsitec.Common.Support
 		{
 			return Resources.manager.GetModuleNames (prefix);
 		}
-		
+
+		public static ResourceModuleInfo[] GetModuleInfos(string prefix)
+		{
+			return Resources.manager.GetModuleInfos (prefix);
+		}
+
+		public static void RefreshModuleInfos(string prefix)
+		{
+			Resources.manager.RefreshModuleInfos (prefix);
+		}
+
 		public static string[] GetBundleIds(string name_filter)
 		{
 			return Resources.manager.GetBundleIds (name_filter);
