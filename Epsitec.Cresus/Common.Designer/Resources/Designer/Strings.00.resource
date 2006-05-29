@@ -74,11 +74,11 @@
   <data name="Action.PanelSelectAll">Sélectionner tous les objets</data>
   <data name="Action.PanelSelectInvert">Inverser les objets sélectionnés</data>
 
-  <data name="Action.PanelShowGrid">Afficher la grille magnétique</data>
+  <data name="Action.PanelShowGrid">Activer la grille magnétique</data>
   <data name="Action.PanelShowZOrder">Afficher l'ordre des objets</data>
   <data name="Action.PanelShowTabIndex">Afficher l'ordre pour la touche Tab</data>
-  <data name="Action.PanelShowExpand">Afficher les groupes plus grands</data>
-  <data name="Action.PanelShowConstrain">Afficher les contraintes</data>
+  <data name="Action.PanelShowExpand">Espacer les groupes</data>
+  <data name="Action.PanelShowConstrain">Activer les contraintes</data>
   <data name="Action.PanelShowAnchor">Afficher les ancrages</data>
 
   <data name="Action.AlignGrid">Alignement sur la grille magnétique</data>
