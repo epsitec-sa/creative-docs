@@ -214,14 +214,33 @@ namespace Epsitec.Common.Support
 		{
 			get
 			{
-				for (int i = 0; i < this.fields.Length; i++)
+				if (string.IsNullOrEmpty (name))
 				{
-					if (this.fields[i].Name == name)
+					return Field.Empty;
+				}
+
+				if (name[0] == '$')
+				{
+					long id = Druid.FromModuleString (name.Substring (1), 0);
+					
+					for (int i = 0; i < this.fields.Length; i++)
 					{
-						return this.fields[i];
+						if (this.fields[i].Id == id)
+						{
+							return this.fields[i];
+						}
 					}
 				}
-				
+				else
+				{
+					for (int i = 0; i < this.fields.Length; i++)
+					{
+						if (this.fields[i].Name == name)
+						{
+							return this.fields[i];
+						}
+					}
+				}
 				return Field.Empty;
 			}
 		}
@@ -429,6 +448,12 @@ namespace Epsitec.Common.Support
 			for (int i = 0; i < this.fields.Length; i++)
 			{
 				string name = this.fields[i].Name;
+				long   id   = this.fields[i].Id;
+
+				if (id >= 0)
+				{
+					name = string.Concat ("$", Druid.ToModuleString (id));
+				}
 				
 				if (name == null)
 				{
@@ -1185,10 +1210,21 @@ namespace Epsitec.Common.Support
 				this.about  = parent.GetAttributeValue (xml, "about");
 				this.xml    = xml;
 
+				string id = parent.GetAttributeValue (xml, "id");
 				string mod = parent.GetAttributeValue (xml, "mod");
 
-				if ((mod != null) &&
-					(mod.Length > 0))
+				if ((string.IsNullOrEmpty (id)) ||
+					(Druid.IsValidModuleString (id) == false))
+				{
+					this.id = -1;
+				}
+				else
+				{
+					this.id = Druid.FromModuleString (id, 0);
+				}
+
+
+				if (!string.IsNullOrEmpty (mod))
 				{
 					this.modification_id = int.Parse (mod, System.Globalization.CultureInfo.InvariantCulture);
 				}
@@ -1206,12 +1242,26 @@ namespace Epsitec.Common.Support
 			
 			public string					Name
 			{
-				get { return this.name; }
+				get
+				{
+					return this.name;
+				}
+			}
+			
+			public long						Id
+			{
+				get
+				{
+					return this.id;
+				}
 			}
 			
 			public string					About
 			{
-				get { return this.about; }
+				get
+				{
+					return this.about;
+				}
 			}
 
 			public int						ModificationId
@@ -1433,6 +1483,31 @@ namespace Epsitec.Common.Support
 				}
 			}
 
+			public void SetId(long id)
+			{
+				if (this.IsEmpty)
+				{
+					throw new ResourceException ("An empty field cannot be modified.");
+				}
+
+				if (this.id != id)
+				{
+					this.id = id;
+
+					if (this.xml != null)
+					{
+						if (this.id < 0)
+						{
+							this.parent.SetAttributeValue (this.xml, "id", "");
+						}
+						else
+						{
+							this.parent.SetAttributeValue (this.xml, "id", Druid.ToModuleString (this.id));
+						}
+					}
+				}
+			}
+
 			public void SetStringValue(string value)
 			{
 				if (this.IsEmpty)
@@ -1594,6 +1669,7 @@ namespace Epsitec.Common.Support
 			
 			protected ResourceBundle		parent;
 			protected string				name;
+			protected long					id;
 			protected string				about;
 			protected int					modification_id;
 			protected System.Xml.XmlNode	xml;

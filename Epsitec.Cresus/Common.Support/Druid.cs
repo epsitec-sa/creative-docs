@@ -135,7 +135,7 @@ namespace Epsitec.Common.Support
 		/// 64-bit DRUID value. See <see cref="M:ToModuleString"/>.
 		/// </summary>
 		/// <param name="value">The module relative encoded string value.</param>
-		/// <param name="module">The module ID.</param>
+		/// <param name="module">The module ID (or zero).</param>
 		/// <returns>The resulting native 64-bit DRUID value.</returns>
 		public static long FromModuleString(string value, int module)
 		{

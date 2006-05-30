@@ -2,6 +2,6 @@
 <!-- Save as UTF-8 -->
 
 <bundle type="String" name="DruidData" culture="en">
-  <data name="0">Druid - Hello, world</data>
-  <data name="01">Druid - Good bye...</data>
+  <data id="0">Druid - Hello, world</data>
+  <data id="01">Druid - Good bye...</data>
 </bundle>

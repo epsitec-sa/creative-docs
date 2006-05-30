@@ -2,5 +2,5 @@
 <!-- Save as UTF-8 -->
 
 <bundle type="String" name="DruidData" culture="en">
-  <data name="0">Druid - From other module</data>
+  <data id="0">Druid - From other module</data>
 </bundle>
