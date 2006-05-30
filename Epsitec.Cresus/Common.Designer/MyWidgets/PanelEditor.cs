@@ -682,11 +682,24 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			//	Edition, souris déplacée.
 			this.ChangeMouseCursor(MouseCursorType.Edit);
+
+			Widget obj = this.Detect(pos);
+			Rectangle rect = Rectangle.Empty;
+			if (obj != null)
+			{
+				rect = this.GetObjectBounds(obj);
+			}
+			this.SetHiliteRectangle(rect);  // met en évidence l'objet survolé par la souris
 		}
 
 		protected void EditUp(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
 			//	Edition, souris relâchée.
+			Widget obj = this.Detect(pos);
+			if (obj != null)
+			{
+				this.ChangeTextRessource(obj);
+			}
 		}
 
 		protected void EditKeyChanged(bool isControlPressed, bool isShiftPressed)
@@ -805,7 +818,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.creatingObject = null;
 				this.OnUpdateCommands();
 
-				this.CreateDialog(this.lastCreatedObject);
+				this.ChangeTextRessource(this.lastCreatedObject);
 			}
 		}
 
@@ -875,19 +888,33 @@ namespace Epsitec.Common.Designer.MyWidgets
 			bounds.Offset(corr);
 		}
 
-		protected void CreateDialog(Widget obj)
-		{
-			if (obj is Button || obj is StaticText)
-			{
-				this.module.MainWindow.DlgTextSelector("");
-			}
-		}
-
 		protected void CreateObjectKeyChanged(bool isControlPressed, bool isShiftPressed)
 		{
 			//	Dessin d'un objet, touche pressée ou relâchée.
 		}
 		#endregion
+
+
+		protected void ChangeTextRessource(Widget obj)
+		{
+			//	Choix de la ressource de type texte pour l'objet.
+			//	TODO: tout ceci est provisoire !!!
+			if (obj is Button || obj is StaticText || obj is GroupBox)
+			{
+				obj.Name = this.module.MainWindow.DlgTextSelector(obj.Name);
+
+				if (obj.Name != "")
+				{
+					ResourceBundleCollection bundles = this.module.Bundles;
+					ResourceBundle bundle = bundles[ResourceLevel.Default];
+					ResourceBundle.Field field = bundle[obj.Name];
+					if (field != null)
+					{
+						obj.Text = field.AsString;
+					}
+				}
+			}
+		}
 
 
 		#region Handling
