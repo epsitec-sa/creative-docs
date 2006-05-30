@@ -763,6 +763,8 @@ namespace Epsitec.Common.Support
 		
 		public static bool SplitTarget(string target, out string target_bundle, out string target_field)
 		{
+			ResourceManager.ResolveDruidReference (ref target);
+			
 			int pos = target.IndexOf ('#');
 			
 			target_bundle = target;

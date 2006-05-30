@@ -402,8 +402,9 @@ namespace Epsitec.Common.Support
 			//	le provider, lorsqu'une ressource est demandée...
 			
 			string resource_id;
+			string module;
 			
-			IResourceProvider provider = this.FindProvider (id, out resource_id);
+			IResourceProvider provider = this.FindProvider (id, out resource_id, out module);
 			ResourceBundle    bundle   = null;
 			
 			//	Passe en revue les divers providers de bundles pour voir si la ressource
@@ -413,7 +414,7 @@ namespace Epsitec.Common.Support
 			if (provider != null)
 			{
 				string prefix = provider.Prefix;
-				string key = ResourceManager.CreateBundleKey (prefix, resource_id, level, culture);
+				string key = ResourceManager.CreateBundleKey (prefix, module, resource_id, level, culture);
 
 				if (this.bundleCache.TryGetValue (key, out bundle))
 				{
@@ -743,13 +744,14 @@ namespace Epsitec.Common.Support
 			}
 			
 			string resource_id;
+			string module;
 			
-			IResourceProvider provider = this.FindProvider (id, out resource_id);
+			IResourceProvider provider = this.FindProvider (id, out resource_id, out module);
 			
 			if (provider != null)
 			{
 				string prefix = provider.Prefix;
-				string key = ResourceManager.CreateBundleKey (prefix, resource_id, level, culture);
+				string key = ResourceManager.CreateBundleKey (prefix, module, resource_id, level, culture);
 				
 				this.bundleCache.Remove (key);
 				
@@ -784,7 +786,7 @@ namespace Epsitec.Common.Support
 			}
 		}
 
-		private static string CreateBundleKey(string prefix, string resource_id, ResourceLevel level, CultureInfo culture)
+		private static string CreateBundleKey(string prefix, string module, string resource_id, ResourceLevel level, CultureInfo culture)
 		{
 			System.Diagnostics.Debug.Assert (prefix != null);
 			System.Diagnostics.Debug.Assert (prefix.Length > 0);
@@ -794,7 +796,16 @@ namespace Epsitec.Common.Support
 			
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 
-			buffer.Append (prefix);
+			if (!string.IsNullOrEmpty (prefix))
+			{
+				buffer.Append (prefix);
+			}
+			if (!string.IsNullOrEmpty (module))
+			{
+				buffer.Append ("/");
+				buffer.Append (module);
+			}
+			
 			buffer.Append (":");
 			buffer.Append (resource_id);
 			buffer.Append ("~");
@@ -813,40 +824,142 @@ namespace Epsitec.Common.Support
 				this.SyncBundleBindingProxies ();
 			}
 		}
-		
-		private IResourceProvider FindProvider(string full_id, out string local_id)
+
+		private IResourceProvider FindProvider(string fullId, out string localId)
 		{
-			string prefix = null;
-			local_id = null;
-			
-			if (full_id != null)
-			{
-				int pos = full_id.IndexOf (':');
-			
-				if (pos > 0)
-				{
-					prefix   = full_id.Substring (0, pos);
-					local_id = full_id.Substring (pos+1);
-				}
-				else if (this.ActivePrefix != null)
-				{
-					prefix   = this.ActivePrefix;
-					local_id = full_id;
-				}
-			}	
+			string module;
+			return this.FindProvider (fullId, out localId, out module);
+		}
+		
+		private IResourceProvider FindProvider(string fullId, out string localId, out string module)
+		{
+			string prefix;
+
+			this.AnalyseFullId (fullId, out prefix, out localId, out module);
 			
 			if ((prefix != null) &&
-				(local_id != null))
+				(localId != null))
 			{
 				ProviderRecord provider;
 
 				if (this.providers.TryGetValue (prefix, out provider))
 				{
-					return provider.ActiveProvider;
+					if (string.IsNullOrEmpty (module))
+					{
+						return provider.ActiveProvider;
+					}
+
+					ModuleRecord record = null;
+					int moduleId;
+
+					if (int.TryParse (module, NumberStyles.Integer, CultureInfo.InvariantCulture, out moduleId))
+					{
+						record = provider.GetModuleRecord (moduleId);
+					}
+					else
+					{
+						record = provider.GetModuleRecord (module);
+					}
+					
+					return record == null ? null : record.Provider;
 				}
 			}
 
 			return null;
+		}
+
+		public void AnalyseFullId(string fullId, out string prefix, out string localId, out string module)
+		{
+			prefix  = null;
+			module  = null;
+			localId = null;
+			
+			if (!string.IsNullOrEmpty (fullId))
+			{
+				ResourceManager.SplitFullId (fullId, out prefix, out localId);
+				ResourceManager.ResolveDruidReference (ref prefix, ref localId);
+				ResourceManager.SplitPrefix (ref prefix, out module);
+
+				if (string.IsNullOrEmpty (prefix) &&
+					(this.ActivePrefix != null))
+				{
+					prefix = this.ActivePrefix;
+				}
+			}
+		}
+
+		private static void SplitPrefix(ref string prefix, out string module)
+		{
+			int pos = prefix.IndexOf ('/');
+
+			if (pos >= 0)
+			{
+				module = prefix.Substring (pos+1);
+				prefix = prefix.Substring (0, pos);
+			}
+			else
+			{
+				module = null;
+			}
+		}
+
+		private static void SplitFullId(string fullId, out string prefix, out string localId)
+		{
+			int pos = fullId.IndexOf (':');
+
+			if (pos >= 0)
+			{
+				prefix  = fullId.Substring (0, pos);
+				localId = fullId.Substring (pos+1);
+			}
+			else
+			{
+				prefix  = "";
+				localId = fullId;
+			}
+		}
+
+		internal static void ResolveDruidReference(ref string fullId)
+		{
+			string prefix;
+			string localId;
+			
+			ResourceManager.SplitFullId (fullId, out prefix, out localId);
+			ResourceManager.ResolveDruidReference (ref prefix, ref localId);
+
+			if (string.IsNullOrEmpty (prefix))
+			{
+				fullId = localId;
+			}
+			else
+			{
+				fullId = string.Concat (prefix, ":", localId);
+			}
+		}
+		
+		internal static void ResolveDruidReference(ref string prefix, ref string localId)
+		{
+			if ((localId.Length > 2) &&
+				(localId[0] == '[') &&
+				(localId[localId.Length-1] == ']'))
+			{
+				//	The local ID is not a standard resource bundle identifier; it
+				//	looks like a DRUID.
+
+				string druid = localId.Substring (1, localId.Length-2);
+
+				if (Druid.IsValidFullString (druid))
+				{
+					long value = Druid.FromFullString (druid);
+
+					prefix  = string.Format (CultureInfo.InvariantCulture, "{0}/{1}", prefix, Druid.GetModuleId (value));
+					localId = string.Concat ("DruidData#", Druid.ToModuleString (value));
+				}
+				else
+				{
+					throw new ResourceException (string.Format ("DRUID specification {0} is not valid.", localId));
+				}
+			}
 		}
 
 		#region Private BundleBindingProxy Class
