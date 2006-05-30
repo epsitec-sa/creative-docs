@@ -1413,6 +1413,10 @@ namespace Epsitec.Common.Widgets
 			{
 				return point;
 			}
+			else if (this.Parent == null)
+			{
+				return point;
+			}
 			else
 			{
 				Drawing.Point result = new Drawing.Point ();
@@ -1430,10 +1434,14 @@ namespace Epsitec.Common.Widgets
 			{
 				return point;
 			}
+			else if (this.Parent == null)
+			{
+				return point;
+			}
 			else
 			{
 				Drawing.Point result = new Drawing.Point ();
-
+				
 				result.X = point.X + this.ActualLocation.X;
 				result.Y = point.Y + this.ActualLocation.Y;
 
@@ -1671,7 +1679,7 @@ namespace Epsitec.Common.Widgets
 		
 		
 		
-		public static void BaseLineAlign(Widget model, Widget widget)
+		public static void ObsoleteBaseLineAlign(Widget model, Widget widget)
 		{
 			if ((model == null) ||
 				(widget == null))

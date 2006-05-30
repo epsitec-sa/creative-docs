@@ -14,7 +14,7 @@ namespace Epsitec.Common.Support
 	/// Implémentation d'un ResourceBundle basé sur un stockage interne de
 	/// l'information sous forme XML DOM.
 	/// </summary>
-	public class ResourceBundle : Types.DependencyObject, System.ICloneable
+	public sealed class ResourceBundle : Types.DependencyObject, System.ICloneable
 	{
 		public static ResourceBundle Create(ResourceManager resource_manager)
 		{
@@ -64,18 +64,20 @@ namespace Epsitec.Common.Support
 		}
 		
 		
-		protected ResourceBundle(ResourceManager resource_manager)
+		private ResourceBundle(ResourceManager resource_manager)
 		{
 			this.manager = resource_manager;
 			this.fields  = new Field[0];
 		}
-		
-		protected ResourceBundle(ResourceManager resource_manager, string name) : this (resource_manager)
+
+		private ResourceBundle(ResourceManager resource_manager, string name)
+			: this (resource_manager)
 		{
 			this.DefineName (name);
 		}
-		
-		protected ResourceBundle(ResourceManager resource_manager, ResourceBundle parent, string name, System.Xml.XmlNode xmlroot) : this (resource_manager, name)
+
+		private ResourceBundle(ResourceManager resource_manager, ResourceBundle parent, string name, System.Xml.XmlNode xmlroot)
+			: this (resource_manager, name)
 		{
 			this.DefinePrefix (parent.prefix);
 			this.level  = parent.level;
@@ -219,7 +221,7 @@ namespace Epsitec.Common.Support
 					return Field.Empty;
 				}
 
-				if (name[0] == '$')
+				if (name[0] == ResourceBundle.FieldIdPrefix)
 				{
 					long id = Druid.FromModuleString (name.Substring (1), 0);
 					
@@ -459,7 +461,7 @@ namespace Epsitec.Common.Support
 
 				if (id >= 0)
 				{
-					name = string.Concat ("$", Druid.ToModuleString (id));
+					name = string.Concat (ResourceBundle.FieldIdPrefix, Druid.ToModuleString (id));
 				}
 
 				int index;
@@ -740,8 +742,8 @@ namespace Epsitec.Common.Support
 			
 			throw new System.NotImplementedException (string.Format ("{0} support not implemented.", type));
 		}
-		
-		protected Field CreateFieldAsData()
+
+		private Field CreateFieldAsData()
 		{
 			System.Xml.XmlDocument  doc  = this.XmlDocument;
 			System.Xml.XmlElement   elem = doc.CreateElement ("data");
@@ -754,8 +756,8 @@ namespace Epsitec.Common.Support
 			
 			return field;
 		}
-		
-		protected Field CreateFieldAsList(System.Collections.ICollection collection)
+
+		private Field CreateFieldAsList(System.Collections.ICollection collection)
 		{
 			if (collection == null)
 			{
@@ -780,8 +782,8 @@ namespace Epsitec.Common.Support
 			
 			return field;
 		}
-		
-		protected Field CreateFieldAsBundle(ResourceBundle bundle)
+
+		private Field CreateFieldAsBundle(ResourceBundle bundle)
 		{
 			if (bundle == null)
 			{
@@ -798,7 +800,7 @@ namespace Epsitec.Common.Support
 		{
 			ResourceManager.ResolveDruidReference (ref target);
 			
-			int pos = target.IndexOf ('#');
+			int pos = target.IndexOf (ResourceBundle.FieldSeparator);
 			
 			target_bundle = target;
 			target_field  = null;
@@ -814,47 +816,21 @@ namespace Epsitec.Common.Support
 			return false;
 		}
 		
-		public static string MakeTarget(string target_bundle, string target_field)
+		public static string JoinTarget(string target_bundle, string target_field)
 		{
 			if ((target_bundle == null) ||
-				(target_bundle.IndexOf ('#') != -1) ||
+				(target_bundle.IndexOf (ResourceBundle.FieldSeparator) != -1) ||
 				(target_field == null) ||
-				(target_field.IndexOf ('#') != -1))
+				(target_field.IndexOf (ResourceBundle.FieldSeparator) != -1))
 			{
 				throw new ResourceException ("Invalid target specified.");
 			}
-			
-			return string.Concat (target_bundle, "#", target_field);
-		}
-		
-		public static string ExtractSortName(string sort_name)
-		{
-			int pos = sort_name.IndexOf ('/');
-			
-			if (pos < 0)
-			{
-				throw new ResourceException (string.Format ("'{0}' is an invalid sort name", sort_name));
-			}
-			
-			return sort_name.Substring (pos+1);
-		}
-		
-		public static string MakeSortName(string name, int rank, int num_digits)
-		{
-			string rank_text = rank.ToString (System.Globalization.CultureInfo.InvariantCulture);
-			
-			if (rank_text.Length > num_digits)
-			{
-				throw new ResourceException (string.Format ("Cannot create a sort name using '{0}/{1}', maximum {2} digits not respected.", name, rank_text, num_digits));
-			}
 
-			string sort_name = string.Concat (rank_text, "/", name);
-			
-			return sort_name.PadLeft (name.Length + num_digits + 1, '0');
+			return string.Concat (target_bundle, ResourceBundle.FieldSeparator, target_field);
 		}
-		
-		
-		protected void CreateFieldList(System.Xml.XmlNode xmlroot, ArrayList list, bool unpack_bundle_ref)
+
+
+		private void CreateFieldList(System.Xml.XmlNode xmlroot, ArrayList list, bool unpack_bundle_ref)
 		{
 			foreach (System.Xml.XmlNode node in xmlroot.ChildNodes)
 			{
@@ -886,8 +862,8 @@ namespace Epsitec.Common.Support
 				}
 			}
 		}
-		
-		protected ResourceBundle ResolveRefBundle(System.Xml.XmlNode node)
+
+		private ResourceBundle ResolveRefBundle(System.Xml.XmlNode node)
 		{
 			string ref_target  = this.GetAttributeValue (node, "target");
 			string ref_type    = this.GetAttributeValue (node, "type");
@@ -916,8 +892,8 @@ namespace Epsitec.Common.Support
 			
 			return bundle;
 		}
-		
-		protected Field ResolveRefField(System.Xml.XmlNode node)
+
+		private Field ResolveRefField(System.Xml.XmlNode node)
 		{
 			string ref_target  = this.GetAttributeValue (node, "target");
 			string ref_type    = this.GetAttributeValue (node, "type");
@@ -957,8 +933,8 @@ namespace Epsitec.Common.Support
 			
 			return field;
 		}
-		
-		protected byte[] ResolveRefBinary(System.Xml.XmlNode node)
+
+		private byte[] ResolveRefBinary(System.Xml.XmlNode node)
 		{
 			string ref_target  = this.GetAttributeValue (node, "target");
 			string full_target = this.GetTargetSpecification (ref_target);
@@ -982,9 +958,9 @@ namespace Epsitec.Common.Support
 			}
 			
 			throw new ResourceException (string.Format ("Illegal reference to binary target '{0}'. XML: {1}.", ref_target, node.OuterXml));
-		}		
-		
-		protected string GetTargetSpecification(string target)
+		}
+
+		private string GetTargetSpecification(string target)
 		{
 			if (target == null)
 			{
@@ -1003,8 +979,8 @@ namespace Epsitec.Common.Support
 			
 			return target;
 		}
-		
-		protected string GetAttributeValue(System.Xml.XmlNode node, string name)
+
+		private string GetAttributeValue(System.Xml.XmlNode node, string name)
 		{
 			System.Xml.XmlAttribute attr = node.Attributes[name];
 			
@@ -1015,8 +991,8 @@ namespace Epsitec.Common.Support
 			
 			return null;
 		}
-		
-		protected void SetAttributeValue(System.Xml.XmlNode node, string name, string value)
+
+		private void SetAttributeValue(System.Xml.XmlNode node, string name, string value)
 		{
 			if (node == null)
 			{
@@ -1053,9 +1029,9 @@ namespace Epsitec.Common.Support
 			
 			this.OnFieldsChanged ();
 		}
-		
-		
-		protected virtual void OnFieldsChanged()
+
+
+		private void OnFieldsChanged()
 		{
 			if (this.FieldsChanged != null)
 			{
@@ -1070,12 +1046,12 @@ namespace Epsitec.Common.Support
 		}
 
 
-		protected virtual object CloneNewObject()
+		private object CloneNewObject()
 		{
 			return new ResourceBundle (this.manager);
 		}
-		
-		protected virtual object CloneCopyToNewObject(object o)
+
+		private object CloneCopyToNewObject(object o)
 		{
 			ResourceBundle that = o as ResourceBundle;
 			
@@ -1201,15 +1177,15 @@ namespace Epsitec.Common.Support
 				return this.list.GetEnumerator ();
 			}
 			#endregion
-			
-			protected ArrayList				list;
+
+			private ArrayList				list;
 		}
 		#endregion
 		
 		#region Field Class
 		public class Field
 		{
-			protected Field()
+			private Field()
 			{
 				this.parent = null;
 			}
@@ -1559,9 +1535,9 @@ namespace Epsitec.Common.Support
 					this.parent.OnFieldsChanged ();
 				}
 			}
-			
-			
-			protected void Compile()
+
+
+			private void Compile()
 			{
 				if ((this.type == ResourceFieldType.None) &&
 					(this.xml != null))
@@ -1594,14 +1570,14 @@ namespace Epsitec.Common.Support
 					System.Diagnostics.Debug.Assert (this.type != ResourceFieldType.None);
 				}
 			}
-			
-			protected void CompileBundle()
+
+			private void CompileBundle()
 			{
 				this.data = new ResourceBundle (this.parent.ResourceManager, this.parent, null, this.xml);
 				this.type = ResourceFieldType.Bundle;
 			}
-			
-			protected void CompileData()
+
+			private void CompileData()
 			{
 				System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 				
@@ -1623,16 +1599,16 @@ namespace Epsitec.Common.Support
 				this.type = ResourceFieldType.Data;
 				this.data = buffer.ToString ();
 			}
-			
-			protected void CompileBinary()
+
+			private void CompileBinary()
 			{
 				byte[] data = this.parent.ResolveRefBinary (this.xml);
 				
 				this.type = ResourceFieldType.Binary;
 				this.data = data;
 			}
-			
-			protected void CompileDataElement(System.Xml.XmlNode node, System.Text.StringBuilder buffer)
+
+			private void CompileDataElement(System.Xml.XmlNode node, System.Text.StringBuilder buffer)
 			{
 				switch (node.Name)
 				{
@@ -1644,8 +1620,8 @@ namespace Epsitec.Common.Support
 						break;
 				}
 			}
-			
-			protected void CompileDataReference(System.Xml.XmlNode node, System.Text.StringBuilder buffer)
+
+			private void CompileDataReference(System.Xml.XmlNode node, System.Text.StringBuilder buffer)
 			{
 				Field field = this.parent.ResolveRefField (node);
 				
@@ -1658,8 +1634,8 @@ namespace Epsitec.Common.Support
 				string data = field.Data as string;
 				buffer.Append (data);
 			}
-			
-			protected void CompileList()
+
+			private void CompileList()
 			{
 				ArrayList list = new ArrayList ();
 				
@@ -1677,35 +1653,37 @@ namespace Epsitec.Common.Support
 				this.data = new FieldList (list);
 				this.type = ResourceFieldType.List;
 			}
-			
-			
-			protected ResourceBundle		parent;
-			protected string				name;
-			protected long					id;
-			protected string				about;
-			protected int					modification_id;
-			protected System.Xml.XmlNode	xml;
-			protected object				data;
-			protected ResourceFieldType		type = ResourceFieldType.None;
+
+
+			private ResourceBundle parent;
+			private string name;
+			private long id;
+			private string about;
+			private int modification_id;
+			private System.Xml.XmlNode xml;
+			private object data;
+			private ResourceFieldType type = ResourceFieldType.None;
 		}
 		#endregion
 
 		public event EventHandler FieldsChanged;
-		
-		protected string					name;
-		protected string					type;
-		protected string					about;
-		
-		protected ResourceManager			manager;
-		protected System.Xml.XmlNode		xmlroot;
-		protected int						depth;
-		protected int						compile_count;
-		protected string					prefix;
-		protected ResourceLevel				level;
-		protected Field[]					fields;
-		protected bool						ref_inclusion = true;
-		protected bool						auto_merge    = true;
-		protected CultureInfo				culture;
-		protected int						rank = -1;
+		public static readonly char FieldIdPrefix = '$';
+		public static readonly char FieldSeparator = '#';
+
+		private string name;
+		private string type;
+		private string about;
+
+		private ResourceManager manager;
+		private System.Xml.XmlNode xmlroot;
+		private int depth;
+		private int compile_count;
+		private string prefix;
+		private ResourceLevel level;
+		private Field[] fields;
+		private bool ref_inclusion = true;
+		private bool auto_merge    = true;
+		private CultureInfo culture;
+		private int rank = -1;
 	}
 }

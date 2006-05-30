@@ -30,7 +30,14 @@ namespace Epsitec.Common.Widgets
 		{
 			if ( this.TextLayout != null )
 			{
-				return this.MapClientToParent (this.TextLayout.GetLineOrigin (0)) - this.ActualLocation;
+				if (this.Parent == null)
+				{
+					return this.TextLayout.GetLineOrigin (0);
+				}
+				else
+				{
+					return this.MapClientToParent (this.TextLayout.GetLineOrigin (0)) - this.ActualLocation;
+				}
 			}
 			
 			return base.GetBaseLine ();

@@ -304,46 +304,6 @@ namespace Epsitec.Common.Support
 			return Resources.manager.GetBinaryData (id, level, culture);
 		}
 		
-		
-		public static bool IsTextRef(string text)
-		{
-			if ((text != null) &&
-				(text.StartsWith ("[res:")) &&
-				(text.EndsWith ("]")))
-			{
-				return true;
-			}
-			
-			return false;
-		}
-		
-		public static string MakeTextRef(string id)
-		{
-			if ((id == null) ||
-				(id.Length == 0))
-			{
-				return id;
-			}
-			
-			return string.Concat ("[res:", id, "]");
-		}
-		
-		public static string ExtractTextRefTarget(string text)
-		{
-			if (Resources.IsTextRef (text))
-			{
-				return text.Substring (5, text.Length-6);
-			}
-			
-			return null;
-		}
-		
-		public static string ResolveTextRef(string text)
-		{
-			return Resources.manager.ResolveTextRef (text);
-		}
-		
-		
 		public static string GetText(string id)
 		{
 			return Resources.manager.GetText (id);

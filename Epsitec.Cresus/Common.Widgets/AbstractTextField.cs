@@ -200,7 +200,16 @@ namespace Epsitec.Common.Widgets
 				double yFromTop = this.TextLayout.LayoutSize.Height - pos.Y;
 				double yFromBot = this.realSize.Height - yFromTop + shift.Y + 1;
 
-				return this.MapClientToParent(new Drawing.Point(shift.X, yFromBot)) - this.ActualLocation;
+				Drawing.Point point = new Drawing.Point (shift.X, yFromBot);
+
+				if (this.Parent == null)
+				{
+					return point;
+				}
+				else
+				{
+					return this.MapClientToParent (point) - this.ActualLocation;
+				}
 			}
 
 			return base.GetBaseLine ();

@@ -656,36 +656,6 @@ namespace Epsitec.Common.Support
 			Assert.AreEqual ("Simple description...", bundle.About);
 		}
 
-		[Test]
-		public void CheckSortName()
-		{
-			string x1 = ResourceBundle.MakeSortName ("abc", 0, 1);
-			string x2 = ResourceBundle.MakeSortName ("abc", 5, 2);
-			string x3 = ResourceBundle.MakeSortName ("abc", 54, 2);
-
-			Assert.AreEqual ("0/abc", x1);
-			Assert.AreEqual ("05/abc", x2);
-			Assert.AreEqual ("54/abc", x3);
-
-			Assert.AreEqual ("abc", ResourceBundle.ExtractSortName (x1));
-			Assert.AreEqual ("abc", ResourceBundle.ExtractSortName (x2));
-			Assert.AreEqual ("abc", ResourceBundle.ExtractSortName (x3));
-		}
-
-		[Test]
-		[ExpectedException (typeof (ResourceException))]
-		public void CheckSortNameEx1()
-		{
-			string x1 = ResourceBundle.MakeSortName ("abc", 10, 1);
-		}
-
-		[Test]
-		[ExpectedException (typeof (ResourceException))]
-		public void CheckSortNameEx2()
-		{
-			ResourceBundle.ExtractSortName ("abc");
-		}
-
 
 		static void XmlDumpIfDifferent(byte[] a, byte[] b, ResourceBundle bundle)
 		{

@@ -604,24 +604,6 @@ namespace Epsitec.Common.Support
 		}
 		
 		
-		public string ResolveTextRef(string text)
-		{
-			if (Resources.IsTextRef (text))
-			{
-				string res = this.GetText (text.Substring (5, text.Length-6));
-				
-				if (res == null)
-				{
-					res = string.Concat (@"<font color=""#ff0000"">", text, "</font>");
-				}
-				
-				return res;
-			}
-			
-			return text;
-		}
-		
-		
 		public string GetText(string id)
 		{
 			return this.GetText (id, ResourceLevel.Merged);
@@ -794,7 +776,7 @@ namespace Epsitec.Common.Support
 			System.Diagnostics.Debug.Assert (prefix.Length > 0);
 			System.Diagnostics.Debug.Assert (prefix.Contains (":") == false);
 			System.Diagnostics.Debug.Assert (resource_id.Length > 0);
-			System.Diagnostics.Debug.Assert (resource_id.Contains ("#") == false);
+			System.Diagnostics.Debug.Assert (resource_id.IndexOf (ResourceBundle.FieldSeparator) < 0);
 			
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 
@@ -955,7 +937,7 @@ namespace Epsitec.Common.Support
 					long value = Druid.FromFullString (druid);
 
 					prefix  = string.Format (CultureInfo.InvariantCulture, "{0}/{1}", prefix, Druid.GetModuleId (value));
-					localId = string.Concat ("DruidData", "#$", Druid.ToModuleString (value));
+					localId = string.Concat (Druid.BundleName, ResourceBundle.FieldSeparator, ResourceBundle.FieldIdPrefix, Druid.ToModuleString (value));
 				}
 				else
 				{

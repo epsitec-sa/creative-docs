@@ -330,5 +330,7 @@ namespace Epsitec.Common.Support
 		}
 		
 		#endregion
+
+		public static readonly string BundleName = "DruidData";
 	}
 }

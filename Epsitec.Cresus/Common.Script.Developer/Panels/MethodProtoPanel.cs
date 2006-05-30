@@ -107,8 +107,8 @@ namespace Epsitec.Common.Script.Developer.Panels
 			label_2.Anchor         = AnchorStyles.TopLeft;
 			label_2.PreferredWidth = width;
 			
-			Widget.BaseLineAlign (this.text_name, label_1);
-			Widget.BaseLineAlign (this.combo_type, label_2);
+			Widget.ObsoleteBaseLineAlign (this.text_name, label_1);
+			Widget.ObsoleteBaseLineAlign (this.combo_type, label_2);
 			
 			this.text_name.TextEdited  += new EventHandler (this.HandleTextNameTextEdited);
 			this.text_name.TextChanged += new EventHandler (this.HandleTextNameTextChanged);
