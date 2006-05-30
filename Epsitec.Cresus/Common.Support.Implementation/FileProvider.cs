@@ -278,7 +278,7 @@ namespace Epsitec.Common.Support.Implementation
 					string idAttribute = root.GetAttribute ("id");
 
 					if ((string.IsNullOrEmpty (idAttribute) == false) &&
-								(int.TryParse (idAttribute, out idValue)))
+						(int.TryParse (idAttribute, NumberStyles.Integer, CultureInfo.InvariantCulture, out idValue)))
 					{
 						moduleId = idValue;
 					}
