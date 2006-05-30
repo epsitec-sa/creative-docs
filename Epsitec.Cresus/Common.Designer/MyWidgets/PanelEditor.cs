@@ -1067,20 +1067,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected Widget DetectGroup(Rectangle rect)
 		{
 			//	Détecte dans quel groupe est entièrement inclu un rectangle donné.
-#if false
-			for (int i=this.panel.Children.Count-1; i>=0; i--)
-			{
-				Widget widget = this.panel.Children[i] as Widget;
-				if (widget is AbstractGroup)
-				{
-					if (widget.ActualBounds.Contains(rect))
-					{
-						return widget;
-					}
-				}
-			}
-#endif
-			return this.panel;
+			
+			Widget container = this.panel.FindChild (rect.Center, ChildFindMode.SkipHidden | ChildFindMode.SkipNonContainer);
+			return container ?? this.panel;
 		}
 
 		public void DeselectAll()
