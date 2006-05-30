@@ -26,8 +26,12 @@ namespace Epsitec.Common.Widgets
 			Drawing.Rectangle frame  = this.FrameRectangle;
 			Drawing.Rectangle title  = this.TitleRectangle;
 			Drawing.Rectangle client = this.Client.Bounds;
+
+			if (title.IsValid)
+			{
+				frame.Top = title.Bottom;
+			}
 			
-			frame.Top = title.Bottom;
 			frame.Deflate (2, 2);
 			
 			return new Drawing.Margins (frame.Left - client.Left, client.Right - frame.Right, client.Top - frame.Top, frame.Bottom - client.Bottom);
