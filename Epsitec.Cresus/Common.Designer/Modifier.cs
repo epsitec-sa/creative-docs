@@ -106,6 +106,21 @@ namespace Epsitec.Common.Designer
 			this.IsDirty = false;
 		}
 
+		public void Create(string name, string text)
+		{
+			//	Crée une nouvelle ressource dans toutes les cultures du module.
+			ResourceBundleCollection bundles = this.module.Bundles;
+			ResourceBundle defaultBundle = bundles[ResourceLevel.Default];
+
+			ResourceBundle.Field newField = defaultBundle.CreateField(ResourceFieldType.Data);
+			newField.SetName(name);
+			newField.SetStringValue(text);
+			newField.SetModificationId(0);
+			defaultBundle.Add(newField);
+
+			this.IsDirty = false;
+		}
+
 		public bool Move(string name, int direction)
 		{
 			//	Déplace une ressource dans la culture par défaut du module.
