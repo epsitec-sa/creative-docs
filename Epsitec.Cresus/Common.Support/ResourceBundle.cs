@@ -331,6 +331,11 @@ namespace Epsitec.Common.Support
 		{
 			this.culture = culture;
 		}
+
+		internal void DefineRecursion(int recursion)
+		{
+			this.depth = recursion;
+		}
 		
 		public bool Contains(string name)
 		{
@@ -442,18 +447,22 @@ namespace Epsitec.Common.Support
 		
 		public void Merge()
 		{
-			ArrayList list = new ArrayList ();
-			Hashtable hash = new Hashtable ();
+			List<Field> list = new List<Field> ();
+			Dictionary<string, int> hash = new Dictionary<string, int> ();
 			
 			for (int i = 0; i < this.fields.Length; i++)
 			{
-				string name = this.fields[i].Name;
-				long   id   = this.fields[i].Id;
+				Field field = this.fields[i];
+				
+				string name = field.Name;
+				long id   = field.Id;
 
 				if (id >= 0)
 				{
 					name = string.Concat ("$", Druid.ToModuleString (id));
 				}
+
+				int index;
 				
 				if (name == null)
 				{
@@ -464,33 +473,32 @@ namespace Epsitec.Common.Support
 						//	Cas particulier: si l'utilisateur a désactivé l'inclusion des <ref>
 						//	alors il se peut qu'un champ soit en fait un <ref> sans nom, auquel
 						//	cas on doit le copier tel quel, sans faire de merge.
-						
-						list.Add (this.fields[i]);
+
+						list.Add (field);
 					}
 					else
 					{
-						throw new ResourceException (string.Format ("Field has no name. XML: {0}.", this.fields[i].Xml.OuterXml));
+						throw new ResourceException (string.Format ("Field has no name. XML: {0}.", field.Xml.OuterXml));
 					}
 				}
-				else if (hash.Contains (name))
+				else if (hash.TryGetValue (name, out index))
 				{
 					//	Le champ est déjà connu: on remplace simplement l'ancienne occurrence
 					//	dans la liste.
-					
-					int index = (int) hash[name];
-					list[index] = this.fields[i];
+
+					list[index] = field;
 				}
 				else
 				{
 					//	Le champ n'est pas connu: on ajoute le champ en fin de liste et on prend
 					//	note de son index, pour pouvoir y accéder rapidement par la suite.
-					
-					hash[name] = list.Add (this.fields[i]);
+
+					hash[name] = list.Count;
+					list.Add (field);
 				}
 			}
-			
-			this.fields = new Field[list.Count];
-			list.CopyTo (this.fields);
+
+			this.fields = list.ToArray ();
 		}
 		
 		
@@ -934,6 +942,10 @@ namespace Epsitec.Common.Support
 			if (bundle == null)
 			{
 				throw new ResourceException (string.Format ("<ref target='{0}'/> could not be resolved. Missing bundle. XML: {1}.", ref_target, node.OuterXml));
+			}
+			if (bundle.depth > ResourceBundle.MaxRecursion)
+			{
+				throw new ResourceException (string.Format ("Bundle is too complex, giving up."));
 			}
 			
 			Field field = bundle[target_field];

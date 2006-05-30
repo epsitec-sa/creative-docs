@@ -27,6 +27,7 @@ namespace Epsitec.Common.Support.Implementation
 			}
 			
 			this.id_regex = RegexFactory.FileName;
+			this.SelectLocale (CultureInfo.CurrentCulture);
 		}
 		
 		

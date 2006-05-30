@@ -7,16 +7,7 @@ namespace Epsitec.Common.Support
 	{
 		[SetUp] public void SetUp()
 		{
-			try
-			{
-//-				Implementation.BaseProvider.CreateResourceDatabase ("test");
-			}
-			catch (System.Exception ex)
-			{
-				System.Diagnostics.Debug.WriteLine (ex.Message);
-			}
-			
-			Resources.DefineDefaultModuleName ("test");
+			Resources.DefineDefaultModuleName ("LowLevelTest");
 		}
 		
 		[Test] public void CheckDebugDumpProviders()

@@ -12,7 +12,7 @@ namespace Epsitec.Common.Support
 		[SetUp]
 		public void SetUp()
 		{
-			Resources.DefineDefaultModuleName ("test");
+			Resources.DefineDefaultModuleName ("LowLevelTest");
 		}
 
 		[Test]
@@ -21,6 +21,7 @@ namespace Epsitec.Common.Support
 			ResourceManager manager = new ResourceManager (this.GetType ());
 			Widgets.Visual visual = new Epsitec.Common.Widgets.Visual ();
 
+			manager.DefineDefaultModuleName ("LowLevelTest");
 			manager.ActiveCulture = Resources.FindCultureInfo ("fr");
 
 			Assert.AreEqual ("Réglages", manager.GetData ("file:strings#title.SettingsWindow", ResourceLevel.Localized, null));
@@ -44,6 +45,7 @@ namespace Epsitec.Common.Support
 			ResourceManager manager = new ResourceManager (this.GetType ());
 			Widgets.Visual visual = new Epsitec.Common.Widgets.Visual ();
 
+			manager.DefineDefaultModuleName ("LowLevelTest");
 			manager.ActiveCulture = Resources.FindCultureInfo ("en");
 			manager.GetData ("file:strings#title.SettingsWindow", ResourceLevel.Localized, null);
 			manager.ActiveCulture = Resources.FindCultureInfo ("fr");
