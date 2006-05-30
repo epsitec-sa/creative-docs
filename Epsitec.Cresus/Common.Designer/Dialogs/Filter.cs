@@ -156,7 +156,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			if (this.checkWord.ActiveState   == ActiveState.Yes)  mode |= Searcher.SearchingMode.WholeWord;
 			module.Modifier.ActiveViewer.DoFilter(this.fieldFilter.Text, mode);
 
-			Misc.ComboMenuAdd(this.fieldFilter, this.fieldFilter.Text);
+			Misc.ComboMenuAdd(this.fieldFilter);
 		}
 
 		private void HandleButtonAllClicked(object sender, MessageEventArgs e)
