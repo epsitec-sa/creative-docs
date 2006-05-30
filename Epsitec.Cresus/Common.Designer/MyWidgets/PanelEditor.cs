@@ -1548,7 +1548,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 				px -= this.panel.Padding.Left;
 				px = System.Math.Max(px, 0);
 				margins.Left = px;
-				margins.Right = 0;
 			}
 
 			if (this.IsObjectAnchorRight(obj))
@@ -1557,7 +1556,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 				px -= this.panel.Padding.Right;
 				px = System.Math.Max(px, 0);
 				margins.Right = px;
-				margins.Left = 0;
 			}
 
 			if (this.IsObjectAnchorBottom(obj))
@@ -1566,7 +1564,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 				py -= this.panel.Padding.Bottom;
 				py = System.Math.Max(py, 0);
 				margins.Bottom = py;
-				margins.Top = 0;
 			}
 
 			if (this.IsObjectAnchorTop(obj))
@@ -1575,7 +1572,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 				py -= this.panel.Padding.Top;
 				py = System.Math.Max(py, 0);
 				margins.Top = py;
-				margins.Bottom = 0;
 			}
 
 			obj.Margins = margins;
@@ -1602,7 +1598,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 				px -= this.panel.Padding.Left;
 				px = System.Math.Max(px, 0);
 				margins.Left = px;
-				margins.Right = 0;
 			}
 
 			if (this.IsObjectAnchorRight(obj))
@@ -1611,7 +1606,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 				px -= this.panel.Padding.Right;
 				px = System.Math.Max(px, 0);
 				margins.Right = px;
-				margins.Left = 0;
 			}
 
 			obj.Margins = margins;
@@ -1629,7 +1623,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 				py -= this.panel.Padding.Bottom;
 				py = System.Math.Max(py, 0);
 				margins.Bottom = py;
-				margins.Top = 0;
 			}
 
 			if (this.IsObjectAnchorTop(obj))
@@ -1638,7 +1631,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 				py -= this.panel.Padding.Top;
 				py = System.Math.Max(py, 0);
 				margins.Top = py;
-				margins.Bottom = 0;
 			}
 
 			obj.Margins = margins;
@@ -1656,7 +1648,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 				px -= this.panel.Padding.Left;
 				px = System.Math.Max(px, 0);
 				margins.Left = px;
-				margins.Right = 0;
 			}
 
 			if (this.IsObjectAnchorRight(obj))
@@ -1665,7 +1656,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 				px -= this.panel.Padding.Right;
 				px = System.Math.Max(px, 0);
 				margins.Right = px;
-				margins.Left = 0;
 			}
 
 			if (this.IsObjectAnchorBottom(obj))
@@ -1674,7 +1664,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 				py -= this.panel.Padding.Bottom;
 				py = System.Math.Max(py, 0);
 				margins.Bottom = py;
-				margins.Top = 0;
 			}
 
 			if (this.IsObjectAnchorTop(obj))
@@ -1683,7 +1672,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 				py -= this.panel.Padding.Top;
 				py = System.Math.Max(py, 0);
 				margins.Top = py;
-				margins.Bottom = 0;
 			}
 
 			obj.Margins = margins;
