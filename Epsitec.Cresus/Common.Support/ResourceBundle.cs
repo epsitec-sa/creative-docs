@@ -2,14 +2,10 @@
 //	Responsable: Pierre ARNAUD
 
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace Epsitec.Common.Support
 {
-	using System.Globalization;
-	
-	using ArrayList = System.Collections.ArrayList;
-	using Hashtable = System.Collections.Hashtable;
-	
 	/// <summary>
 	/// Implémentation d'un ResourceBundle basé sur un stockage interne de
 	/// l'information sous forme XML DOM.
@@ -70,14 +66,12 @@ namespace Epsitec.Common.Support
 			this.fields  = new Field[0];
 		}
 
-		private ResourceBundle(ResourceManager resource_manager, string name)
-			: this (resource_manager)
+		private ResourceBundle(ResourceManager resource_manager, string name) : this (resource_manager)
 		{
 			this.DefineName (name);
 		}
 
-		private ResourceBundle(ResourceManager resource_manager, ResourceBundle parent, string name, System.Xml.XmlNode xmlroot)
-			: this (resource_manager, name)
+		private ResourceBundle(ResourceManager resource_manager, ResourceBundle parent, string name, System.Xml.XmlNode xmlroot) : this (resource_manager, name)
 		{
 			this.DefinePrefix (parent.prefix);
 			this.level  = parent.level;
@@ -182,8 +176,6 @@ namespace Epsitec.Common.Support
 			}
 		}
 		
-		public const int					MaxRecursion = 50;
-		
 		public System.Xml.XmlDocument		XmlDocument
 		{
 			get
@@ -201,14 +193,14 @@ namespace Epsitec.Common.Support
 		
 		public bool							RefInclusionEnabled
 		{
-			get { return this.ref_inclusion; }
-			set { this.ref_inclusion = value; }
+			get { return this.refInclusion; }
+			set { this.refInclusion = value; }
 		}
 		
 		public bool							AutoMergeEnabled
 		{
-			get { return this.auto_merge; }
-			set { this.auto_merge = value; }
+			get { return this.autoMerge; }
+			set { this.autoMerge = value; }
 		}
 		
 		
@@ -216,34 +208,7 @@ namespace Epsitec.Common.Support
 		{
 			get
 			{
-				if (string.IsNullOrEmpty (name))
-				{
-					return Field.Empty;
-				}
-
-				if (name[0] == ResourceBundle.FieldIdPrefix)
-				{
-					long id = Druid.FromModuleString (name.Substring (1), 0);
-					
-					for (int i = 0; i < this.fields.Length; i++)
-					{
-						if (this.fields[i].Id == id)
-						{
-							return this.fields[i];
-						}
-					}
-				}
-				else
-				{
-					for (int i = 0; i < this.fields.Length; i++)
-					{
-						if (this.fields[i].Name == name)
-						{
-							return this.fields[i];
-						}
-					}
-				}
-				return Field.Empty;
+				return this[this.IndexOf (name)];
 			}
 		}
 		
@@ -251,7 +216,14 @@ namespace Epsitec.Common.Support
 		{
 			get
 			{
-				return this.fields[index];
+				if (index < 0)
+				{
+					return Field.Empty;
+				}
+				else
+				{
+					return this.fields[index];
+				}
 			}
 		}
 		
@@ -265,6 +237,7 @@ namespace Epsitec.Common.Support
 				}
 			}
 		}
+		
 		
 		public void DefineName(string name)
 		{
@@ -301,13 +274,15 @@ namespace Epsitec.Common.Support
 		{
 			this.rank = rank;
 		}
-		
-		public void DefineManager(ResourceManager resource_manager)
+
+		#region Internal Define... Methods
+
+		internal void DefineManager(ResourceManager resource_manager)
 		{
 			this.manager = resource_manager;
 		}
-		
-		public void DefinePrefix(string prefix)
+
+		internal void DefinePrefix(string prefix)
 		{
 			if (prefix != null)
 			{
@@ -329,7 +304,7 @@ namespace Epsitec.Common.Support
 			this.prefix = prefix;
 		}
 		
-		public void DefineCulture(CultureInfo culture)
+		internal void DefineCulture(CultureInfo culture)
 		{
 			this.culture = culture;
 		}
@@ -338,32 +313,68 @@ namespace Epsitec.Common.Support
 		{
 			this.depth = recursion;
 		}
-		
+
+		#endregion
+
 		public bool Contains(string name)
 		{
-			return this[name].IsEmpty == false;
+			return this.IndexOf (name) < 0 ? false : true;
 		}
 
+		public int IndexOf(string name)
+		{
+			if (string.IsNullOrEmpty (name))
+			{
+				return -1;
+			}
 
+			if (name[0] == ResourceBundle.FieldIdPrefix)
+			{
+				long id = Druid.FromModuleString (name.Substring (1), 0);
+
+				for (int i = 0; i < this.fields.Length; i++)
+				{
+					if (this.fields[i].Id == id)
+					{
+						return i;
+					}
+				}
+			}
+			else
+			{
+				for (int i = 0; i < this.fields.Length; i++)
+				{
+					if (this.fields[i].Name == name)
+					{
+						return i;
+					}
+				}
+			}
+			
+			return -1;
+		}
+		
 		public int IndexOf(Field field)
 		{
-			for (int i=0; i<this.fields.Length; i++)
+			for (int i = 0; i < this.fields.Length; i++)
 			{
 				if (this.fields[i] == field)
 				{
 					return i;
 				}
 			}
+			
 			return -1;
 		}
 
-		public void Insert(Field field)
-		{
-			this.Insert (this.fields.Length, field);
-		}
-		
 		public void Insert(int index, Field field)
 		{
+			if ((index < 0) ||
+				(index > this.fields.Length))
+			{
+				throw new System.IndexOutOfRangeException (string.Format ("ResourceBundle field index {0} is out of range", index));
+			}
+
 			int len = this.fields.Length;
 			Field[] temp = new Field[len + 1];
 			
@@ -386,6 +397,12 @@ namespace Epsitec.Common.Support
 		
 		public void Remove(int index)
 		{
+			if ((index < 0) ||
+				(index > this.fields.Length))
+			{
+				throw new System.IndexOutOfRangeException (string.Format ("ResourceBundle field index {0} is out of range", index));
+			}
+			
 			int len = this.fields.Length;
 			Field[] temp = new Field[len - 1];
 			
@@ -406,13 +423,11 @@ namespace Epsitec.Common.Support
 		
 		public void Remove(string name)
 		{
-			for (int i = 0; i < this.fields.Length; i++)
+			int index = this.IndexOf (name);
+			
+			if (index >= 0)
 			{
-				if (this.fields[i].Name == name)
-				{
-					this.Remove (i);
-					return;
-				}
+				this.Remove (index);
 			}
 		}
 		
@@ -470,7 +485,7 @@ namespace Epsitec.Common.Support
 				{
 					//	En principe, tous les champs doivent avoir un nom valide.
 					
-					if (this.ref_inclusion == false)
+					if (this.refInclusion == false)
 					{
 						//	Cas particulier: si l'utilisateur a désactivé l'inclusion des <ref>
 						//	alors il se peut qu'un champ soit en fait un <ref> sans nom, auquel
@@ -502,42 +517,13 @@ namespace Epsitec.Common.Support
 
 			this.fields = list.ToArray ();
 		}
-		
-		
-		public static bool CheckBundleHeader(byte[] data)
+
+		public ResourceBundle Clone()
 		{
-			if ((data == null) ||
-				(data.Length < 16))
-			{
-				return false;
-			}
-			
-			System.Text.Decoder decoder = System.Text.Encoding.UTF8.GetDecoder ();
-			
-			int byte_length = 16;
-			int char_length = decoder.GetCharCount (data, 0, byte_length);
-				
-			char[] chars = new char[char_length];
-				
-			decoder.GetChars (data, 0, byte_length, chars, 0);
-				
-			//	Le header peut commencer par un "byte order mark" Unicode; il faut le sauter
-			//	car il n'est pas signifiant pour le fichier XML considéré :
-			
-			int    start  = chars[0] == 0xfeff ? 1 : 0;
-			string header = new string (chars, start, chars.Length - start);
-			
-			if ((header.StartsWith ("<?xml")) ||
-				(header.StartsWith ("<!--")) ||
-				(header.StartsWith ("<bundle")))
-			{
-				return true;
-			}
-			
-			return false;
+			return this.CloneCopyToNewObject (this.CloneNewObject ()) as ResourceBundle;
 		}
-		
-		
+
+
 		public void Compile(byte[] data)
 		{
 			if (data == null)
@@ -620,20 +606,16 @@ namespace Epsitec.Common.Support
 			{
 				this.rank = System.Int32.Parse (rank_attr, System.Globalization.CultureInfo.InvariantCulture);
 			}
-			
-			ArrayList list = new ArrayList ();
+
+			List<Field> list = new List<Field> ();
 			list.AddRange (this.fields);
 			
 			this.CreateFieldList (xmlroot, list, true);
-			
-			this.fields  = new Field[list.Count];
+
+			this.fields  = list.ToArray ();
 			this.xmlroot = xmlroot;
 			
-			list.CopyTo (this.fields);
-			
-			this.compile_count++;
-			
-			if (this.auto_merge)
+			if (this.autoMerge)
 			{
 				this.Merge ();
 			}
@@ -654,12 +636,12 @@ namespace Epsitec.Common.Support
 			return data;
 		}
 		
-		public System.Xml.XmlDocument CreateXmlDocument(bool include_declaration)
+		public System.Xml.XmlDocument CreateXmlDocument(bool includeDeclaration)
 		{
 			System.Xml.XmlDocument xmldoc  = new System.Xml.XmlDocument ();
 			System.Xml.XmlNode     xmlnode = this.CreateXmlNode (xmldoc);
 			
-			if (include_declaration)
+			if (includeDeclaration)
 			{
 				xmldoc.AppendChild (xmldoc.CreateXmlDeclaration ("1.0", "utf-8", null));
 			}
@@ -743,17 +725,85 @@ namespace Epsitec.Common.Support
 			throw new System.NotImplementedException (string.Format ("{0} support not implemented.", type));
 		}
 
+		public static bool CheckBundleHeader(byte[] data)
+		{
+			if ((data == null) ||
+				(data.Length < 16))
+			{
+				return false;
+			}
+
+			System.Text.Decoder decoder = System.Text.Encoding.UTF8.GetDecoder ();
+
+			int byte_length = 16;
+			int char_length = decoder.GetCharCount (data, 0, byte_length);
+
+			char[] chars = new char[char_length];
+
+			decoder.GetChars (data, 0, byte_length, chars, 0);
+
+			//	Le header peut commencer par un "byte order mark" Unicode; il faut le sauter
+			//	car il n'est pas signifiant pour le fichier XML considéré :
+
+			int start  = chars[0] == 0xfeff ? 1 : 0;
+			string header = new string (chars, start, chars.Length - start);
+
+			if ((header.StartsWith ("<?xml")) ||
+				(header.StartsWith ("<!--")) ||
+				(header.StartsWith ("<bundle")))
+			{
+				return true;
+			}
+
+			return false;
+		}
+		
+		public static bool SplitTarget(string target, out string targetBundle, out string targetField)
+		{
+			ResourceManager.ResolveDruidReference (ref target);
+			
+			int pos = target.IndexOf (ResourceBundle.FieldSeparator);
+			
+			targetBundle = target;
+			targetField  = null;
+			
+			if (pos >= 0)
+			{
+				targetBundle = target.Substring (0, pos);
+				targetField  = target.Substring (pos+1);
+				
+				return true;
+			}
+			
+			return false;
+		}
+		
+		public static string JoinTarget(string targetBundle, string targetField)
+		{
+			if ((targetBundle == null) ||
+				(targetBundle.IndexOf (ResourceBundle.FieldSeparator) != -1) ||
+				(targetField == null) ||
+				(targetField.IndexOf (ResourceBundle.FieldSeparator) != -1))
+			{
+				throw new ResourceException ("Invalid target specified.");
+			}
+
+			return string.Concat (targetBundle, ResourceBundle.FieldSeparator, targetField);
+		}
+
+		#region Private Methods
+
 		private Field CreateFieldAsData()
 		{
-			System.Xml.XmlDocument  doc  = this.XmlDocument;
-			System.Xml.XmlElement   elem = doc.CreateElement ("data");
+			System.Xml.XmlDocument doc  = this.XmlDocument;
+			System.Xml.XmlElement elem = doc.CreateElement ("data");
 			System.Xml.XmlAttribute attr = doc.CreateAttribute ("name");
-			
+
 			elem.Attributes.Append (attr);
 			attr.Value = "";
-			
+
 			Field field = new Field (this, elem);
-			
+
 			return field;
 		}
 
@@ -763,23 +813,23 @@ namespace Epsitec.Common.Support
 			{
 				throw new System.ArgumentNullException ("collection", "List field needs a valid collection.");
 			}
-			
+
 			ResourceBundle[] bundles = new ResourceBundle[collection.Count];
 			collection.CopyTo (bundles, 0);
-			
-			System.Xml.XmlDocument  doc  = this.XmlDocument;
-			System.Xml.XmlElement   elem = doc.CreateElement ("list");
+
+			System.Xml.XmlDocument doc  = this.XmlDocument;
+			System.Xml.XmlElement elem = doc.CreateElement ("list");
 			System.Xml.XmlAttribute attr = doc.CreateAttribute ("name");
-			
+
 			elem.Attributes.Append (attr);
-			
+
 			for (int i = 0; i < bundles.Length; i++)
 			{
 				elem.AppendChild (bundles[i].CreateXmlNode (doc));
 			}
-			
+
 			Field field = new Field (this, elem);
-			
+
 			return field;
 		}
 
@@ -789,54 +839,19 @@ namespace Epsitec.Common.Support
 			{
 				throw new System.ArgumentNullException ("bundle", "Bundle field needs a valid bundle.");
 			}
-			
+
 			Field field = new Field (this, bundle.CreateXmlNode (this.XmlDocument));
-			
+
 			return field;
 		}
-		
-		
-		public static bool SplitTarget(string target, out string target_bundle, out string target_field)
-		{
-			ResourceManager.ResolveDruidReference (ref target);
-			
-			int pos = target.IndexOf (ResourceBundle.FieldSeparator);
-			
-			target_bundle = target;
-			target_field  = null;
-			
-			if (pos >= 0)
-			{
-				target_bundle = target.Substring (0, pos);
-				target_field  = target.Substring (pos+1);
-				
-				return true;
-			}
-			
-			return false;
-		}
-		
-		public static string JoinTarget(string target_bundle, string target_field)
-		{
-			if ((target_bundle == null) ||
-				(target_bundle.IndexOf (ResourceBundle.FieldSeparator) != -1) ||
-				(target_field == null) ||
-				(target_field.IndexOf (ResourceBundle.FieldSeparator) != -1))
-			{
-				throw new ResourceException ("Invalid target specified.");
-			}
 
-			return string.Concat (target_bundle, ResourceBundle.FieldSeparator, target_field);
-		}
-
-
-		private void CreateFieldList(System.Xml.XmlNode xmlroot, ArrayList list, bool unpack_bundle_ref)
+		private void CreateFieldList(System.Xml.XmlNode xmlroot, List<Field> list, bool unpack_bundle_ref)
 		{
 			foreach (System.Xml.XmlNode node in xmlroot.ChildNodes)
 			{
 				if (node.NodeType == System.Xml.XmlNodeType.Element)
 				{
-					if ((node.Name == "ref") && (this.ref_inclusion))
+					if ((node.Name == "ref") && (this.refInclusion))
 					{
 						//	Cas particulier: on inclut des champs en provenance d'un bundle
 						//	référencé par un tag <ref>.
@@ -1030,7 +1045,6 @@ namespace Epsitec.Common.Support
 			this.OnFieldsChanged ();
 		}
 
-
 		private void OnFieldsChanged()
 		{
 			if (this.FieldsChanged != null)
@@ -1039,13 +1053,6 @@ namespace Epsitec.Common.Support
 			}
 		}
 		
-		
-		public ResourceBundle Clone()
-		{
-			return this.CloneCopyToNewObject (this.CloneNewObject ()) as ResourceBundle;
-		}
-
-
 		private object CloneNewObject()
 		{
 			return new ResourceBundle (this.manager);
@@ -1069,8 +1076,9 @@ namespace Epsitec.Common.Support
 			
 			return that;
 		}
-		
-		
+
+		#endregion
+
 		#region ICloneable Members
 		object System.ICloneable.Clone()
 		{
@@ -1081,7 +1089,7 @@ namespace Epsitec.Common.Support
 		#region FieldList Class
 		public class FieldList : System.Collections.IList
 		{
-			internal FieldList(ArrayList list)
+			internal FieldList(List<Field> list)
 			{
 				this.list = list;
 			}
@@ -1089,26 +1097,47 @@ namespace Epsitec.Common.Support
 			
 			public Field					this[int index]
 			{
-				get { return this.list[index] as Field; }
+				get
+				{
+					return this.list[index];
+				}
 			}
+
 			
-			
+			public bool Contains(Field value)
+			{
+				return this.list.Contains (value);
+			}
+
+	
 			#region IList Members
 			public bool						IsReadOnly
 			{
-				get { return true; }
+				get
+				{
+					return true;
+				}
 			}
 
 			public bool						IsFixedSize
 			{
-				get { return true; }
+				get
+				{
+					return true;
+				}
 			}
 			
 			
 			object System.Collections.IList.this[int index]
 			{
-				get { return this.list[index]; }
-				set { throw new ResourceException ("Fields in a list cannot be modified."); }
+				get
+				{
+					return this.list[index];
+				}
+				set
+				{
+					throw new ResourceException ("Fields in a list cannot be modified.");
+				}
 			}
 
 			
@@ -1132,9 +1161,9 @@ namespace Epsitec.Common.Support
 				throw new ResourceException ("Fields in a list cannot be removed.");
 			}
 
-			public bool Contains(object value)
+			bool System.Collections.IList.Contains(object value)
 			{
-				return this.list.Contains (value);
+				return this.Contains (value as Field);
 			}
 
 			public void Clear()
@@ -1144,30 +1173,39 @@ namespace Epsitec.Common.Support
 
 			public int IndexOf(object value)
 			{
-				return this.list.IndexOf (value);
+				return this.list.IndexOf (value as Field);
 			}
 			#endregion
 			
 			#region ICollection Members
 			public bool						IsSynchronized
 			{
-				get { return this.list.IsSynchronized; }
+				get
+				{
+					return false;
+				}
 			}
 
 			public int						Count
 			{
-				get { return this.list.Count; }
+				get
+				{
+					return this.list.Count;
+				}
 			}
 
 			public object					SyncRoot
 			{
-				get { return this.list.SyncRoot; }
+				get
+				{
+					return this.list;
+				}
 			}
 			
 			
 			public void CopyTo(System.Array array, int index)
 			{
-				this.list.CopyTo (array, index);
+				System.Array.Copy (this.list.ToArray (), 0, array, index, this.list.Count);
 			}
 			#endregion
 			
@@ -1178,7 +1216,7 @@ namespace Epsitec.Common.Support
 			}
 			#endregion
 
-			private ArrayList				list;
+			private List<Field>				list;
 		}
 		#endregion
 		
@@ -1637,7 +1675,7 @@ namespace Epsitec.Common.Support
 
 			private void CompileList()
 			{
-				ArrayList list = new ArrayList ();
+				List<Field> list = new List<Field> ();
 				
 				this.parent.CreateFieldList (this.xml, list, false);
 				
@@ -1646,7 +1684,7 @@ namespace Epsitec.Common.Support
 				
 				for (int i = 0; i < list.Count; i++)
 				{
-					Field field = list[i] as Field;
+					Field field = list[i];
 					field.SetName (string.Format ("{0}[{1}]", this.Name, i));
 				}
 				
@@ -1666,24 +1704,26 @@ namespace Epsitec.Common.Support
 		}
 		#endregion
 
-		public event EventHandler FieldsChanged;
-		public static readonly char FieldIdPrefix = '$';
-		public static readonly char FieldSeparator = '#';
+		public event EventHandler		FieldsChanged;
+		
+		public static readonly char		FieldIdPrefix = '$';
+		public static readonly char		FieldSeparator = '#';
+		public static readonly int		MaxRecursion = 50;
 
-		private string name;
-		private string type;
-		private string about;
-
-		private ResourceManager manager;
-		private System.Xml.XmlNode xmlroot;
-		private int depth;
-		private int compile_count;
-		private string prefix;
-		private ResourceLevel level;
-		private Field[] fields;
-		private bool ref_inclusion = true;
-		private bool auto_merge    = true;
-		private CultureInfo culture;
-		private int rank = -1;
+		private string					prefix;
+		private string					name;
+		private string					type;
+		private string					about;
+		private ResourceLevel			level;
+		private CultureInfo				culture;
+		private ResourceManager			manager;
+		private int						rank = -1;
+		
+		private System.Xml.XmlNode		xmlroot;
+		private int						depth;
+		
+		private Field[]					fields;
+		private bool					refInclusion = true;
+		private bool					autoMerge    = true;
 	}
 }

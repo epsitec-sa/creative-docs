@@ -73,9 +73,6 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System">
-      <Name>System</Name>
-    </Reference>
     <ProjectReference Include="..\App.DocumentEditor\App.DocumentEditor.csproj">
       <Name>App.DocumentEditor</Name>
       <Project>{B3B20AC3-680D-41E0-94C2-8113577CE703}</Project>

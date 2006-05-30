@@ -601,9 +601,7 @@ namespace Epsitec.Common.Support
 		[Test]
 		public void CheckCreateXmlNode4()
 		{
-			ResourceBundle bundle = ResourceBundle.Create (Resources.DefaultManager);
-
-			bundle.DefineCulture (Resources.FindCultureInfo ("fr"));
+			ResourceBundle bundle = ResourceBundle.Create (Resources.DefaultManager, "file", "test", ResourceLevel.Default, Resources.FindCultureInfo ("fr"));
 
 			string test_string = 
 				"<?xml version='1.0' encoding='utf-8'?>\r\n" +
