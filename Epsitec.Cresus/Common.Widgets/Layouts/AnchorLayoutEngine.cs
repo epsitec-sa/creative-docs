@@ -132,12 +132,12 @@ namespace Epsitec.Common.Widgets.Layouts
 				{
 					case AnchorStyles.Left:
 						min_dx = System.Math.Max (min_dx, margins.Left + System.Math.Max (measure_dx.Min, measure_dx.Desired));
-						max_dx = System.Math.Min (max_dx, margins.Left + System.Math.Min (measure_dx.Max, measure_dx.Desired));
+						max_dx = System.Math.Min (max_dx, margins.Left + measure_dx.Max);
 						break;
 
 					case AnchorStyles.Right:
 						min_dx = System.Math.Max (min_dx, margins.Right + System.Math.Max (measure_dx.Min, measure_dx.Desired));
-						max_dx = System.Math.Min (max_dx, margins.Right + System.Math.Min (measure_dx.Max, measure_dx.Desired));
+						max_dx = System.Math.Min (max_dx, margins.Right + measure_dx.Max);
 						break;
 
 					case AnchorStyles.LeftAndRight:
@@ -150,12 +150,12 @@ namespace Epsitec.Common.Widgets.Layouts
 				{
 					case AnchorStyles.Bottom:
 						min_dy = System.Math.Max (min_dy, margins.Bottom + System.Math.Max (measure_dy.Min, measure_dy.Desired));
-						max_dy = System.Math.Min (max_dy, margins.Bottom + System.Math.Min (measure_dy.Max, measure_dy.Desired));
+						max_dy = System.Math.Min (max_dy, margins.Bottom + measure_dy.Max);
 						break;
 
 					case AnchorStyles.Top:
 						min_dy = System.Math.Max (min_dy, margins.Top + System.Math.Max (measure_dy.Min, measure_dy.Desired));
-						max_dy = System.Math.Min (max_dy, margins.Top + System.Math.Min (measure_dy.Max, measure_dy.Desired));
+						max_dy = System.Math.Min (max_dy, margins.Top + measure_dy.Max);
 						break;
 
 					case AnchorStyles.TopAndBottom:
