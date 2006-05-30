@@ -32,7 +32,19 @@ namespace Epsitec.Common.Designer.Dialogs
 
 				int tabIndex = 0;
 
-				this.filterLabel = new TextFieldCombo(this.window.Root);
+				StaticText fix1 = new StaticText(this.window.Root);
+				fix1.PreferredWidth = 185;
+				fix1.Text = Res.Strings.Dialog.TextSelector.Label;
+				fix1.Anchor = AnchorStyles.TopLeft;
+				fix1.Margins = new Margins(6, 0, 6, 0);
+
+				StaticText fix2 = new StaticText(this.window.Root);
+				fix2.PreferredWidth = 185;
+				fix2.Text = Res.Strings.Dialog.TextSelector.Text;
+				fix2.Anchor = AnchorStyles.TopLeft;
+				fix2.Margins = new Margins(192, 0, 6, 0);
+
+				this.filterLabel = new TextField(this.window.Root);
 				this.filterLabel.PreferredWidth = 185;
 				this.filterLabel.Name = "FilterLabel";
 				this.filterLabel.TextChanged += new EventHandler(this.HandleFilterTextChanged);
@@ -40,17 +52,26 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.filterLabel.TabIndex = tabIndex++;
 				this.filterLabel.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 				this.filterLabel.Anchor = AnchorStyles.TopLeft;
-				this.filterLabel.Margins = new Margins(6, 0, 6, 0);
+				this.filterLabel.Margins = new Margins(6, 0, 6+18, 0);
 
-				this.filterText = new TextFieldCombo(this.window.Root);
-				this.filterText.PreferredWidth = 185;
+				this.filterText = new TextField(this.window.Root);
+				this.filterText.PreferredWidth = 181;
 				this.filterText.Name = "FilterText";
 				this.filterText.TextChanged += new EventHandler(this.HandleFilterTextChanged);
 				this.filterText.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleFilterKeyboardFocusChanged);
 				this.filterText.TabIndex = tabIndex++;
 				this.filterText.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 				this.filterText.Anchor = AnchorStyles.TopLeft;
-				this.filterText.Margins = new Margins(192, 0, 6, 0);
+				this.filterText.Margins = new Margins(192, 0, 6+18, 0);
+
+				this.buttonClear = new Button(this.window.Root);
+				this.buttonClear.Text = Res.Strings.Dialog.TextSelector.Button.Clear;
+				this.buttonClear.PreferredSize = new Size(20, 20);
+				this.buttonClear.TabIndex = tabIndex++;
+				this.buttonClear.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+				this.buttonClear.Anchor = AnchorStyles.TopRight;
+				this.buttonClear.Margins = new Margins(0, 6, 6+18, 0);
+				this.buttonClear.Clicked += new MessageEventHandler(this.HandleButtonClearClicked);
 
 				this.array = new MyWidgets.StringArray(this.window.Root);
 				this.array.Columns = 2;
@@ -65,32 +86,52 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.array.TabIndex = tabIndex++;
 				this.array.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 				this.array.Anchor = AnchorStyles.All;
-				this.array.Margins = new Margins(6, 6, 30, 34);
+				this.array.Margins = new Margins(6, 6, 6+18+24, 34);
 
 				//	Boutons de fermeture.
-				Button buttonOk = new Button(this.window.Root);
-				buttonOk.PreferredWidth = 75;
-				buttonOk.Text = Res.Strings.Dialog.Button.OK;
-				buttonOk.ButtonStyle = ButtonStyle.DefaultAccept;
-				buttonOk.Anchor = AnchorStyles.BottomLeft;
-				buttonOk.Margins = new Margins(6, 0, 0, 6);
-				buttonOk.Clicked += new MessageEventHandler(this.HandleButtonOkClicked);
-				buttonOk.TabIndex = tabIndex++;
-				buttonOk.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+				this.buttonUse = new Button(this.window.Root);
+				this.buttonUse.PreferredWidth = 75;
+				this.buttonUse.Text = Res.Strings.Dialog.TextSelector.Button.Use;
+				this.buttonUse.ButtonStyle = ButtonStyle.DefaultAccept;
+				this.buttonUse.Anchor = AnchorStyles.BottomLeft;
+				this.buttonUse.Margins = new Margins(6, 0, 0, 6);
+				this.buttonUse.Clicked += new MessageEventHandler(this.HandleButtonUseClicked);
+				this.buttonUse.TabIndex = tabIndex++;
+				this.buttonUse.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
-				Button buttonClose = new Button(this.window.Root);
-				buttonClose.PreferredWidth = 75;
-				buttonClose.Text = Res.Strings.Dialog.Button.Cancel;
-				buttonClose.Anchor = AnchorStyles.BottomLeft;
-				buttonClose.Margins = new Margins(6+75+10, 0, 0, 6);
-				buttonClose.Clicked += new MessageEventHandler(this.HandleButtonCloseClicked);
-				buttonClose.TabIndex = tabIndex++;
-				buttonClose.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+				this.buttonCreate = new Button(this.window.Root);
+				this.buttonCreate.PreferredWidth = 75;
+				this.buttonCreate.Text = Res.Strings.Dialog.TextSelector.Button.Create;
+				this.buttonCreate.Anchor = AnchorStyles.BottomLeft;
+				this.buttonCreate.Margins = new Margins(6+75+10, 0, 0, 6);
+				this.buttonCreate.Clicked += new MessageEventHandler(this.HandleButtonCreateClicked);
+				this.buttonCreate.TabIndex = tabIndex++;
+				this.buttonCreate.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+
+				this.buttonCancel = new Button(this.window.Root);
+				this.buttonCancel.PreferredWidth = 75;
+				this.buttonCancel.Text = Res.Strings.Dialog.Button.Cancel;
+				this.buttonCancel.Anchor = AnchorStyles.BottomRight;
+				this.buttonCancel.Margins = new Margins(0, 6, 0, 6);
+				this.buttonCancel.Clicked += new MessageEventHandler(this.HandleButtonCloseClicked);
+				this.buttonCancel.TabIndex = tabIndex++;
+				this.buttonCancel.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			}
+
+			this.ignoreChanged = true;
+			this.filterLabel.Text = "";
+			this.filterText.Text = "";
+			this.ignoreChanged = false;
 
 			this.UpdateLabelsIndex();
 			this.UpdateArray();
 			this.SelectArray();
+			this.UpdateButtons();
+
+			this.ignoreChanged = true;
+			this.filterLabel.Text = this.ressource;
+			this.filterText.Text = "";
+			this.ignoreChanged = false;
 
 			Widget widget = this.filterLabel;
 			if (this.focusedWidget != null)
@@ -246,6 +287,37 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.array.ShowSelectedRow();
 		}
 
+		protected void UpdateButtons()
+		{
+			this.buttonClear.Enable = (this.filterLabel.Text != "" || this.filterText.Text != "");
+			this.buttonUse.Enable = (this.array.SelectedRow != -1);
+
+			bool createEnable = false;
+			string label = TextLayout.ConvertToSimpleText(this.filterLabel.Text);
+			string text  = TextLayout.ConvertToSimpleText(this.filterText.Text);
+			if (label != "" && text != "")
+			{
+				if (Misc.IsValidLabel(ref label))
+				{
+					if (!this.IsExistingName(label))
+					{
+						createEnable = true;
+					}
+				}
+			}
+			this.buttonCreate.Enable = createEnable;
+		}
+
+		protected bool IsExistingName(string baseName)
+		{
+			//	Indique si un nom existe.
+			ResourceBundleCollection bundles = this.mainWindow.CurrentModule.Bundles;
+			ResourceBundle defaultBundle = bundles[ResourceLevel.Default];
+
+			ResourceBundle.Field field = defaultBundle[baseName];
+			return (field != null && field.Name != null);
+		}
+
 
 		private void HandleWindowCloseClicked(object sender)
 		{
@@ -261,14 +333,17 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.OnClosed();
 		}
 
-		private void HandleButtonOkClicked(object sender, MessageEventArgs e)
+		private void HandleButtonClearClicked(object sender, MessageEventArgs e)
+		{
+			this.filterLabel.Text = "";
+			this.filterText.Text = "";
+		}
+
+		private void HandleButtonUseClicked(object sender, MessageEventArgs e)
 		{
 			this.parentWindow.MakeActive();
 			this.window.Hide();
 			this.OnClosed();
-
-			Misc.ComboMenuAdd(this.filterLabel);
-			Misc.ComboMenuAdd(this.filterText);
 
 			int sel = this.array.SelectedRow;
 			if (sel == -1)
@@ -281,12 +356,36 @@ namespace Epsitec.Common.Designer.Dialogs
 			}
 		}
 
+		private void HandleButtonCreateClicked(object sender, MessageEventArgs e)
+		{
+			this.parentWindow.MakeActive();
+			this.window.Hide();
+			this.OnClosed();
+
+			string label = TextLayout.ConvertToSimpleText(this.filterLabel.Text);
+			string text  = TextLayout.ConvertToSimpleText(this.filterText.Text);
+			if (label != "" && text != "")
+			{
+				if (Misc.IsValidLabel(ref label))
+				{
+					if (!this.IsExistingName(label))
+					{
+						this.mainWindow.CurrentModule.Modifier.Create(label, text);
+						this.ressource = label;
+					}
+				}
+			}
+		}
+
 
 		void HandleFilterTextChanged(object sender)
 		{
 			//	Le texte d'un filtre a changé.
+			if (this.ignoreChanged)  return;
+
 			int best = this.UpdateLabelsIndex();
 			this.UpdateArray();
+			this.UpdateButtons();
 
 			this.array.SelectedRow = best;
 			this.array.ShowSelectedRow();
@@ -325,12 +424,18 @@ namespace Epsitec.Common.Designer.Dialogs
 		void HandleArraySelectedRowChanged(object sender)
 		{
 			//	La ligne sélectionnée a changé.
+			this.UpdateButtons();
 		}
 
 
-		protected TextFieldCombo				filterLabel;
-		protected TextFieldCombo				filterText;
+		protected TextField						filterLabel;
+		protected TextField						filterText;
+		protected Button						buttonClear;
 		protected MyWidgets.StringArray			array;
+		protected Button						buttonUse;
+		protected Button						buttonCreate;
+		protected Button						buttonCancel;
+
 		protected string						ressource;
 		protected ResourceBundle				primaryBundle;
 		protected List<string>					labelsIndex;

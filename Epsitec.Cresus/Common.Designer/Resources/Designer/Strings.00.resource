@@ -164,6 +164,11 @@
   <data name="Dialog.DeleteCulture.Question">Voulez-vous supprimer la culture {0} ?</data>
 
   <data name="Dialog.TextSelector.Title">Choix d'une ressource de type texte</data>
+  <data name="Dialog.TextSelector.Label">Identificateur :</data>
+  <data name="Dialog.TextSelector.Text">Texte :</data>
+  <data name="Dialog.TextSelector.Button.Clear">R</data>
+  <data name="Dialog.TextSelector.Button.Use">Utiliser</data>
+  <data name="Dialog.TextSelector.Button.Create">Créer</data>
 
   <data name="Misc.NoTitle">&lt;i&gt;sans titre&lt;/i&gt;</data>
   <data name="Misc.Copy">Copie</data>
