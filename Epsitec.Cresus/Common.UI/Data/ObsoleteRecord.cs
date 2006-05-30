@@ -311,8 +311,8 @@ namespace Epsitec.Common.UI.Data
 				string caption     = string.Concat (this.resource_prefix, "#", this.name, ".", field_name, ".", Support.Tags.Caption);
 				string description = string.Concat (this.resource_prefix, "#", this.name, ".", field_name, ".", Support.Tags.Description);
 				
-				field.DefineCaption (Support.Resources.MakeTextRef (caption));
-				field.DefineDescription (Support.Resources.MakeTextRef (description));
+				field.DefineCaption (caption);
+				field.DefineDescription (description);
 				
 				//	Traitement spécial des champs qui représentent des énumérations; pour ceux-ci, il faut
 				//	essayer d'affecter des valeurs 'caption' et 'description' pour chaque élément :

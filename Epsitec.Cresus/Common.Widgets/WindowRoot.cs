@@ -332,7 +332,7 @@ namespace Epsitec.Common.Widgets
 			
 			if (this.window != null)
 			{
-				this.window.Text = this.ResourceManager.ResolveTextRef (this.Text);
+				this.window.Text = this.Text;
 			}
 		}
 		

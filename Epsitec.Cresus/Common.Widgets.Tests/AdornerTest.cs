@@ -407,8 +407,8 @@ namespace Epsitec.Common.Widgets
 			image3.VerticalOffset = 8;
 			image3.ContentAlignment = Drawing.ContentAlignment.BottomCenter;
 			
-			Widget.BaseLineAlign (image1, image2);
-			Widget.BaseLineAlign (image1, image3);
+			Widget.ObsoleteBaseLineAlign (image1, image2);
+			Widget.ObsoleteBaseLineAlign (image1, image3);
 
 			Assert.AreEqual((int) ((image1.ActualLocation.Y+image2.VerticalOffset)*100+0.5), (int) (image2.ActualLocation.Y*100+0.5));
 			Assert.AreEqual((int) ((image1.ActualLocation.Y+image3.VerticalOffset)*100+0.5), (int) (image3.ActualLocation.Y*100+0.5));
