@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
 using Epsitec.Common.Drawing;
@@ -11,6 +12,7 @@ namespace Epsitec.Common.Designer.Dialogs
 	{
 		public TextSelector(MainWindow mainWindow) : base(mainWindow)
 		{
+			this.labelsIndex = new List<string>();
 		}
 
 		public override void Show()
@@ -55,6 +57,8 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.array.SetDynamicsToolTips(0, true);
 				this.array.SetDynamicsToolTips(1, false);
 				this.array.ColumnsWidthChanged += new EventHandler(this.HandleArrayColumnsWidthChanged);
+				this.array.CellsQuantityChanged += new EventHandler(this.HandleArrayCellsQuantityChanged);
+				this.array.CellsContentChanged += new EventHandler(this.HandleArrayCellsContentChanged);
 				this.array.SelectedRowChanged += new EventHandler(this.HandleArraySelectedRowChanged);
 				this.array.TabIndex = tabIndex++;
 				this.array.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
@@ -82,6 +86,10 @@ namespace Epsitec.Common.Designer.Dialogs
 				buttonClose.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			}
 
+			this.UpdateLabelsIndex(this.filterLabel.Text, this.filterText.Text);
+			this.UpdateArray();
+			this.SelectArray();
+
 			this.window.ShowDialog();
 
 			this.filterLabel.Focus();
@@ -99,6 +107,78 @@ namespace Epsitec.Common.Designer.Dialogs
 			{
 				this.ressource = value;
 			}
+		}
+
+
+		protected void UpdateLabelsIndex(string filterLabel, string filterText)
+		{
+			//	Construit l'index en fonction des ressources.
+			ResourceBundleCollection bundles = this.mainWindow.CurrentModule.Bundles;
+			this.primaryBundle = bundles[ResourceLevel.Default];
+
+			this.labelsIndex.Clear();
+
+			filterLabel = Searcher.RemoveAccent(filterLabel.ToLower());
+			filterText  = Searcher.RemoveAccent(filterText.ToLower());
+
+			foreach (ResourceBundle.Field field in this.primaryBundle.Fields)
+			{
+				if (filterLabel != "")
+				{
+					int index = Searcher.IndexOf(field.Name, filterLabel, 0, Searcher.SearchingMode.None);
+					if (index == -1)  continue;
+				}
+
+				this.labelsIndex.Add(field.Name);
+			}
+		}
+
+		protected void UpdateArray()
+		{
+			//	Met à jour tout le contenu du tableau.
+			this.array.TotalRows = this.labelsIndex.Count;
+
+			int first = this.array.FirstVisibleRow;
+			for (int i=0; i<this.array.LineCount; i++)
+			{
+				if (first+i < this.labelsIndex.Count)
+				{
+					ResourceBundle.Field primaryField = this.primaryBundle[this.labelsIndex[first+i]];
+
+					this.array.SetLineString(0, first+i, primaryField.Name);
+					this.array.SetLineString(1, first+i, primaryField.AsString);
+					this.array.SetLineState(0, first+i, MyWidgets.StringList.CellState.Normal);
+					this.array.SetLineState(1, first+i, MyWidgets.StringList.CellState.Normal);
+				}
+				else
+				{
+					this.array.SetLineString(0, first+i, "");
+					this.array.SetLineString(1, first+i, "");
+					this.array.SetLineState(0, first+i, MyWidgets.StringList.CellState.Disabled);
+					this.array.SetLineState(1, first+i, MyWidgets.StringList.CellState.Disabled);
+				}
+			}
+		}
+
+		protected void SelectArray()
+		{
+			//	Sélectionne la bonne ressource dans le tableau.
+			int sel = -1;
+
+			if (this.ressource != "")
+			{
+				for (int i=0; i<this.labelsIndex.Count; i++)
+				{
+					if (this.labelsIndex[i] == this.ressource)
+					{
+						sel = i;
+						break;
+					}
+				}
+			}
+
+			this.array.SelectedRow = sel;
+			this.array.ShowSelectedRow();
 		}
 
 
@@ -121,6 +201,16 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.parentWindow.MakeActive();
 			this.window.Hide();
 			this.OnClosed();
+
+			int sel = this.array.SelectedRow;
+			if (sel == -1)
+			{
+				this.ressource = "";
+			}
+			else
+			{
+				this.ressource = this.labelsIndex[sel];
+			}
 		}
 
 		void HandleFilterLabelTextChanged(object sender)
@@ -136,6 +226,19 @@ namespace Epsitec.Common.Designer.Dialogs
 		void HandleArrayColumnsWidthChanged(object sender)
 		{
 			//	La largeur des colonnes a changé.
+			//?this.UpdateClientGeometry();
+		}
+
+		void HandleArrayCellsQuantityChanged(object sender)
+		{
+			//	Le nombre de lignes a changé.
+			this.UpdateArray();
+		}
+
+		void HandleArrayCellsContentChanged(object sender)
+		{
+			//	Le contenu des cellules a changé.
+			this.UpdateArray();
 		}
 
 		void HandleArraySelectedRowChanged(object sender)
@@ -148,5 +251,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected TextFieldCombo				filterText;
 		protected MyWidgets.StringArray			array;
 		protected string						ressource;
+		protected ResourceBundle				primaryBundle;
+		protected List<string>					labelsIndex;
 	}
 }
