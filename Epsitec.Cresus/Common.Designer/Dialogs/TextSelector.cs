@@ -35,7 +35,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.filterLabel = new TextFieldCombo(this.window.Root);
 				this.filterLabel.PreferredWidth = 185;
 				this.filterLabel.Name = "FilterLabel";
-				this.filterLabel.TextChanged += new EventHandler(this.HandleFilterLabelTextChanged);
+				this.filterLabel.TextChanged += new EventHandler(this.HandleFilterTextChanged);
 				this.filterLabel.TabIndex = tabIndex++;
 				this.filterLabel.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 				this.filterLabel.Anchor = AnchorStyles.TopLeft;
@@ -44,7 +44,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.filterText = new TextFieldCombo(this.window.Root);
 				this.filterText.PreferredWidth = 185;
 				this.filterText.Name = "FilterText";
-				this.filterText.TextChanged += new EventHandler(this.HandleFilterTextTextChanged);
+				this.filterText.TextChanged += new EventHandler(this.HandleFilterTextChanged);
 				this.filterText.TabIndex = tabIndex++;
 				this.filterText.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 				this.filterText.Anchor = AnchorStyles.TopLeft;
@@ -86,7 +86,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				buttonClose.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			}
 
-			this.UpdateLabelsIndex(this.filterLabel.Text, this.filterText.Text);
+			this.UpdateLabelsIndex();
 			this.UpdateArray();
 			this.SelectArray();
 
@@ -109,6 +109,13 @@ namespace Epsitec.Common.Designer.Dialogs
 			}
 		}
 
+
+		protected void UpdateLabelsIndex()
+		{
+			string filterLabel = TextLayout.ConvertToSimpleText(this.filterLabel.Text);
+			string filterText  = TextLayout.ConvertToSimpleText(this.filterText.Text);
+			this.UpdateLabelsIndex(filterLabel, filterText);
+		}
 
 		protected void UpdateLabelsIndex(string filterLabel, string filterText)
 		{
@@ -202,6 +209,9 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.window.Hide();
 			this.OnClosed();
 
+			Misc.ComboMenuAdd(this.filterLabel);
+			Misc.ComboMenuAdd(this.filterText);
+
 			int sel = this.array.SelectedRow;
 			if (sel == -1)
 			{
@@ -213,14 +223,11 @@ namespace Epsitec.Common.Designer.Dialogs
 			}
 		}
 
-		void HandleFilterLabelTextChanged(object sender)
+		void HandleFilterTextChanged(object sender)
 		{
-			//	Le texte du filtre du label a changé.
-		}
-
-		void HandleFilterTextTextChanged(object sender)
-		{
-			//	Le texte du filtre du label a changé.
+			//	Le texte d'un filtre a changé.
+			this.UpdateLabelsIndex();
+			this.UpdateArray();
 		}
 
 		void HandleArrayColumnsWidthChanged(object sender)

@@ -338,7 +338,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 			module.Modifier.ActiveViewer.DoSearch(this.fieldSearch.Text, mode);
 
-			Misc.ComboMenuAdd(this.fieldSearch, this.fieldSearch.Text);
+			Misc.ComboMenuAdd(this.fieldSearch);
 		}
 
 		private void HandleButtonCountClicked(object sender, MessageEventArgs e)
@@ -349,7 +349,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 			module.Modifier.ActiveViewer.DoCount(this.fieldSearch.Text, this.Mode);
 
-			Misc.ComboMenuAdd(this.fieldSearch, this.fieldSearch.Text);
+			Misc.ComboMenuAdd(this.fieldSearch);
 		}
 
 		private void HandleButtonReplaceClicked(object sender, MessageEventArgs e)
@@ -368,8 +368,8 @@ namespace Epsitec.Common.Designer.Dialogs
 
 			module.Modifier.ActiveViewer.DoReplace(this.fieldSearch.Text, this.fieldReplace.Text, mode);
 
-			Misc.ComboMenuAdd(this.fieldSearch, this.fieldSearch.Text);
-			Misc.ComboMenuAdd(this.fieldReplace, this.fieldReplace.Text);
+			Misc.ComboMenuAdd(this.fieldSearch);
+			Misc.ComboMenuAdd(this.fieldReplace);
 		}
 
 		private void HandleButtonReplaceAllClicked(object sender, MessageEventArgs e)
@@ -380,8 +380,8 @@ namespace Epsitec.Common.Designer.Dialogs
 
 			module.Modifier.ActiveViewer.DoReplaceAll(this.fieldSearch.Text, this.fieldReplace.Text, this.Mode);
 
-			Misc.ComboMenuAdd(this.fieldSearch, this.fieldSearch.Text);
-			Misc.ComboMenuAdd(this.fieldReplace, this.fieldReplace.Text);
+			Misc.ComboMenuAdd(this.fieldSearch);
+			Misc.ComboMenuAdd(this.fieldReplace);
 		}
 
 

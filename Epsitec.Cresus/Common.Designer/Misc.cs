@@ -229,6 +229,12 @@ namespace Epsitec.Common.Designer
 		}
 
 
+		static public void ComboMenuAdd(TextFieldCombo combo)
+		{
+			//	Ajoute le texte actuel dans le combo-menu.
+			Misc.ComboMenuAdd(combo, combo.Text);
+		}
+
 		static public void ComboMenuAdd(TextFieldCombo combo, string text)
 		{
 			//	Ajoute un texte dans le combo-menu.
