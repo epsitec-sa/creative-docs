@@ -49,15 +49,15 @@ namespace Epsitec.Common.Support
 			Assert.AreEqual (t1, this.manager.GetText (":strings#Text1"));
 			Assert.AreEqual (t1, this.manager.GetText ("strings#Text1"));
 
-			Assert.AreEqual (t2, this.manager.GetText ("file/Test:DruidData#0"));
-			Assert.AreEqual (t2, this.manager.GetText ("file/4:DruidData#0"));
-			Assert.AreEqual (t2, this.manager.GetText ("file:DruidData#0"));
-			Assert.AreEqual (t2, this.manager.GetText ("/Test:DruidData#0"));
-			Assert.AreEqual (t2, this.manager.GetText ("/:DruidData#0"));
-			Assert.AreEqual (t2, this.manager.GetText (":DruidData#0"));
-			Assert.AreEqual (t2, this.manager.GetText ("DruidData#0"));
+			Assert.AreEqual (t2, this.manager.GetText ("file/Test:DruidData#$0"));
+			Assert.AreEqual (t2, this.manager.GetText ("file/4:DruidData#$0"));
+			Assert.AreEqual (t2, this.manager.GetText ("file:DruidData#$0"));
+			Assert.AreEqual (t2, this.manager.GetText ("/Test:DruidData#$0"));
+			Assert.AreEqual (t2, this.manager.GetText ("/:DruidData#$0"));
+			Assert.AreEqual (t2, this.manager.GetText (":DruidData#$0"));
+			Assert.AreEqual (t2, this.manager.GetText ("DruidData#$0"));
 
-			Assert.AreEqual (t3, this.manager.GetText ("file/4:DruidData#01"));
+			Assert.AreEqual (t3, this.manager.GetText ("file/4:DruidData#$01"));
 
 			Assert.AreEqual (t2, this.manager.GetText ("[4]"));
 			Assert.AreEqual (t3, this.manager.GetText ("[4001]"));
@@ -69,14 +69,14 @@ namespace Epsitec.Common.Support
 			string t1 = "Druid - From other module";
 			string t2 = "Druid - Hello, world";
 
-			Assert.AreEqual (t2, this.manager.GetText ("file:DruidData#0"));
+			Assert.AreEqual (t2, this.manager.GetText ("file:DruidData#$0"));
 
-			Assert.AreEqual (t1, this.manager.GetText ("file/OtherModule:DruidData#0"));
-			Assert.AreEqual (t1, this.manager.GetText ("file/31:DruidData#0"));
+			Assert.AreEqual (t1, this.manager.GetText ("file/OtherModule:DruidData#$0"));
+			Assert.AreEqual (t1, this.manager.GetText ("file/31:DruidData#$0"));
 
-			Assert.AreEqual (t2, this.manager.GetText ("file:DruidData#0"));
-			Assert.AreEqual (t2, this.manager.GetText ("file/Test:DruidData#0"));
-			Assert.AreEqual (t2, this.manager.GetText ("file/4:DruidData#0"));
+			Assert.AreEqual (t2, this.manager.GetText ("file:DruidData#$0"));
+			Assert.AreEqual (t2, this.manager.GetText ("file/Test:DruidData#$0"));
+			Assert.AreEqual (t2, this.manager.GetText ("file/4:DruidData#$0"));
 
 			Assert.AreEqual (t1, this.manager.GetText ("[V]"));
 			Assert.AreEqual (t2, this.manager.GetText ("[4]"));

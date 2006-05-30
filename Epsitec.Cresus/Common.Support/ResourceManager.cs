@@ -953,7 +953,7 @@ namespace Epsitec.Common.Support
 					long value = Druid.FromFullString (druid);
 
 					prefix  = string.Format (CultureInfo.InvariantCulture, "{0}/{1}", prefix, Druid.GetModuleId (value));
-					localId = string.Concat ("DruidData#", Druid.ToModuleString (value));
+					localId = string.Concat ("DruidData", "#$", Druid.ToModuleString (value));
 				}
 				else
 				{
