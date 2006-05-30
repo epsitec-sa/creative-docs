@@ -461,7 +461,7 @@ namespace Epsitec.Common.Support
 		
 		private static void InternalInitialise()
 		{
-			Resources.manager = new ResourceManager ();
+			Resources.manager = new ResourceManager (typeof (ResourceManager));
 		}
 		
 		private static void InternalDefineCultures(string[] names)

@@ -9,7 +9,9 @@ namespace Epsitec.Common.Support
 			Widgets.Widget.Initialise ();
 		}
 		
-		[Test] public void CheckGetData()
+		[Test]
+		[Ignore("Clipboard access not supported in NUnit")]
+		public void CheckGetData()
 		{
 			Clipboard.ReadData data = Clipboard.GetData ();
 			
@@ -48,7 +50,8 @@ namespace Epsitec.Common.Support
 			}
 		}
 		
-		[Test] public void CheckConvertBrokenUtf8ToString()
+		[Test]
+		public void CheckConvertBrokenUtf8ToString()
 		{
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 			string source = "ABC‡ÈË";
@@ -67,7 +70,9 @@ namespace Epsitec.Common.Support
 			Assert.AreEqual (source, unicode);
 		}
 		
-		[Test] public void CheckReadHtmlFragment()
+		[Test]
+		[Ignore ("Clipboard access not supported in NUnit")]
+		public void CheckReadHtmlFragment()
 		{
 			Clipboard.ReadData data = Clipboard.GetData ();
 			string             html = data.ReadHtmlFragment ();
@@ -83,7 +88,9 @@ namespace Epsitec.Common.Support
 			}
 		}
 		
-		[Test] public void CheckReadHtmlDocument()
+		[Test]
+		[Ignore ("Clipboard access not supported in NUnit")]
+		public void CheckReadHtmlDocument()
 		{
 			Clipboard.ReadData data = Clipboard.GetData ();
 			string             html = data.ReadHtmlDocument ();
@@ -99,7 +106,9 @@ namespace Epsitec.Common.Support
 			}
 		}
 		
-		[Test] public void CheckIsCompatible()
+		[Test]
+		[Ignore ("Clipboard access not supported in NUnit")]
+		public void CheckIsCompatible()
 		{
 			Clipboard.ReadData data = Clipboard.GetData ();
 			
@@ -110,7 +119,9 @@ namespace Epsitec.Common.Support
 			}
 		}
 		
-		[Test] public void CheckWriteHtmlFragment()
+		[Test]
+		[Ignore ("Clipboard access not supported in NUnit")]
+		public void CheckWriteHtmlFragment()
 		{
 			Clipboard.WriteData data = new Clipboard.WriteData ();
 			

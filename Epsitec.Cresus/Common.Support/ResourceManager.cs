@@ -419,6 +419,8 @@ namespace Epsitec.Common.Support
 				if (this.bundleCache.TryGetValue (key, out bundle))
 				{
 					//	OK, on a trouvé un bundle dans le cache !
+					
+					bundle.DefineRecursion (recursion);
 				}
 				else
 				{
