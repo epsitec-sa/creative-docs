@@ -40,16 +40,15 @@ namespace Epsitec.Common.Designer.MyWidgets
 		}
 
 
-		public UI.Panel					Panel
+		public Module					Module
 		{
 			get
 			{
-				return this.panel;
+				return this.module;
 			}
-
 			set
 			{
-				this.panel = value;
+				this.module = value;
 			}
 		}
 
@@ -65,6 +64,19 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.context = value;
 				this.constrainsList = new ConstrainsList(this);
 				this.handlesList = new HandlesList(this);
+			}
+		}
+
+		public UI.Panel					Panel
+		{
+			get
+			{
+				return this.panel;
+			}
+
+			set
+			{
+				this.panel = value;
 			}
 		}
 
@@ -792,6 +804,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.lastCreatedObject = this.creatingObject;
 				this.creatingObject = null;
 				this.OnUpdateCommands();
+
+				this.CreateDialog(this.lastCreatedObject);
 			}
 		}
 
@@ -859,6 +873,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 			Point corr = adjust.BottomLeft - bounds.BottomLeft;
 			pos += corr;
 			bounds.Offset(corr);
+		}
+
+		protected void CreateDialog(Widget obj)
+		{
+			if (obj is Button || obj is StaticText)
+			{
+				this.module.MainWindow.DlgTextSelector("");
+			}
 		}
 
 		protected void CreateObjectKeyChanged(bool isControlPressed, bool isShiftPressed)
@@ -1654,7 +1676,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected Size GetObjectSize(Widget obj)
 		{
 			//	Retourne les dimensions d'un objet.
-			return obj.ActualSize;
+			//?return obj.ActualSize;
+			return obj.PreferredSize;
 		}
 
 		protected void SetObjectWidth(Widget obj, double dx)
@@ -2191,6 +2214,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected static readonly double	anchorThickness = 3.0;
 		protected static readonly double	anchorScale = 0.4;
 
+		protected Module					module;
 		protected UI.Panel					panel;
 		protected PanelsContext				context;
 		protected ConstrainsList			constrainsList;

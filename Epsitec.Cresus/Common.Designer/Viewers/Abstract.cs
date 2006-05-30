@@ -255,7 +255,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected CommandState GetCommandState(string command)
 		{
-			return this.module.MainWindow.GetCommandState (command);
+			return this.module.MainWindow.GetCommandState(command);
 		}
 
 

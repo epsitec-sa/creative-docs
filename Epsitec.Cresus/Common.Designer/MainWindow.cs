@@ -59,10 +59,11 @@ namespace Epsitec.Common.Designer
 				CommandDispatcher.SetDispatcher(this.window, this.commandDispatcher);
 				CommandContext.SetContext(this.window, this.commandContext);
 
-				this.dlgGlyphs     = new Dialogs.Glyphs(this);
-				this.dlgFilter     = new Dialogs.Filter(this);
-				this.dlgSearch     = new Dialogs.Search(this);
-				this.dlgNewCulture = new Dialogs.NewCulture(this);
+				this.dlgGlyphs       = new Dialogs.Glyphs(this);
+				this.dlgFilter       = new Dialogs.Filter(this);
+				this.dlgSearch       = new Dialogs.Search(this);
+				this.dlgNewCulture   = new Dialogs.NewCulture(this);
+				this.dlgTextSelector = new Dialogs.TextSelector(this);
 
 				this.dlgGlyphs.Closed += new EventHandler(this.HandleDlgClosed);
 				this.dlgFilter.Closed += new EventHandler(this.HandleDlgClosed);
@@ -834,6 +835,14 @@ namespace Epsitec.Common.Designer
 
 
 		#region Dialogs
+		public string DlgTextSelector(string ressource)
+		{
+			//	Ouvre le dialogue pour choisir un ressource de type texte.
+			this.dlgTextSelector.Ressource = ressource;
+			this.dlgTextSelector.Show();
+			return this.dlgTextSelector.Ressource;
+		}
+
 		public string DlgNewCulture()
 		{
 			//	Ouvre le dialogue pour choisir la culture à créer.
@@ -958,6 +967,7 @@ namespace Epsitec.Common.Designer
 		protected Dialogs.Filter				dlgFilter;
 		protected Dialogs.Search				dlgSearch;
 		protected Dialogs.NewCulture			dlgNewCulture;
+		protected Dialogs.TextSelector			dlgTextSelector;
 		protected PanelsContext					context;
 
 		protected string						resourcePrefix;
