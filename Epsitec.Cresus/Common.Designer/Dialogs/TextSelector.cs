@@ -36,6 +36,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.filterLabel.PreferredWidth = 185;
 				this.filterLabel.Name = "FilterLabel";
 				this.filterLabel.TextChanged += new EventHandler(this.HandleFilterTextChanged);
+				this.filterLabel.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleFilterKeyboardFocusChanged);
 				this.filterLabel.TabIndex = tabIndex++;
 				this.filterLabel.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 				this.filterLabel.Anchor = AnchorStyles.TopLeft;
@@ -45,6 +46,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.filterText.PreferredWidth = 185;
 				this.filterText.Name = "FilterText";
 				this.filterText.TextChanged += new EventHandler(this.HandleFilterTextChanged);
+				this.filterText.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleFilterKeyboardFocusChanged);
 				this.filterText.TabIndex = tabIndex++;
 				this.filterText.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 				this.filterText.Anchor = AnchorStyles.TopLeft;
@@ -90,10 +92,21 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.UpdateArray();
 			this.SelectArray();
 
-			this.window.ShowDialog();
+			Widget widget = this.filterLabel;
+			if (this.focusedWidget != null)
+			{
+				widget = this.focusedWidget;
+			}
 
-			this.filterLabel.Focus();
-			this.filterLabel.SelectAll();
+			widget.Focus();
+
+			if (widget is AbstractTextField)
+			{
+				AbstractTextField text = widget as AbstractTextField;
+				text.SelectAll();
+			}
+
+			this.window.ShowDialog();
 		}
 
 
@@ -110,16 +123,17 @@ namespace Epsitec.Common.Designer.Dialogs
 		}
 
 
-		protected void UpdateLabelsIndex()
+		protected int UpdateLabelsIndex()
 		{
 			string filterLabel = TextLayout.ConvertToSimpleText(this.filterLabel.Text);
 			string filterText  = TextLayout.ConvertToSimpleText(this.filterText.Text);
-			this.UpdateLabelsIndex(filterLabel, filterText);
+			return this.UpdateLabelsIndex(filterLabel, filterText);
 		}
 
-		protected void UpdateLabelsIndex(string filterLabel, string filterText)
+		protected int UpdateLabelsIndex(string filterLabel, string filterText)
 		{
 			//	Construit l'index en fonction des ressources.
+			//	Retourne le rang de la ressource correspondant le mieux possible aux filtres.
 			ResourceBundleCollection bundles = this.mainWindow.CurrentModule.Bundles;
 			this.primaryBundle = bundles[ResourceLevel.Default];
 
@@ -128,16 +142,60 @@ namespace Epsitec.Common.Designer.Dialogs
 			filterLabel = Searcher.RemoveAccent(filterLabel.ToLower());
 			filterText  = Searcher.RemoveAccent(filterText.ToLower());
 
+			int min = 100000;
+			int best = 0;
 			foreach (ResourceBundle.Field field in this.primaryBundle.Fields)
 			{
-				if (filterLabel != "")
+				bool add1 = false;
+				bool add2 = false;
+
+				if (filterLabel == "")
+				{
+					add1 = true;
+				}
+				else
 				{
 					int index = Searcher.IndexOf(field.Name, filterLabel, 0, Searcher.SearchingMode.None);
-					if (index == -1)  continue;
+					if (index != -1)
+					{
+						add1 = true;
+
+						int len = field.Name.Length - filterLabel.Length;
+						if (min > len)
+						{
+							min = len;
+							best = this.labelsIndex.Count;
+						}
+					}
 				}
 
-				this.labelsIndex.Add(field.Name);
+				if (filterText == "")
+				{
+					add2 = true;
+				}
+				else
+				{
+					int index = Searcher.IndexOf(field.AsString, filterText, 0, Searcher.SearchingMode.None);
+					if (index != -1)
+					{
+						add2 = true;
+
+						int len = field.AsString.Length - filterLabel.Length;
+						if (min > len)
+						{
+							min = len;
+							best = this.labelsIndex.Count;
+						}
+					}
+				}
+
+				if (add1 && add2)
+				{
+					this.labelsIndex.Add(field.Name);
+				}
 			}
+
+			return best;
 		}
 
 		protected void UpdateArray()
@@ -223,13 +281,29 @@ namespace Epsitec.Common.Designer.Dialogs
 			}
 		}
 
+
 		void HandleFilterTextChanged(object sender)
 		{
 			//	Le texte d'un filtre a changé.
-			this.UpdateLabelsIndex();
+			int best = this.UpdateLabelsIndex();
 			this.UpdateArray();
+
+			this.array.SelectedRow = best;
+			this.array.ShowSelectedRow();
 		}
 
+		protected void HandleFilterKeyboardFocusChanged(object sender, Epsitec.Common.Types.DependencyPropertyChangedEventArgs e)
+		{
+			//	Appelé lorsqu'une ligne éditable voit son focus changer.
+			bool focused = (bool) e.NewValue;
+
+			if (focused)
+			{
+				this.focusedWidget = sender as AbstractTextField;
+			}
+		}
+
+		
 		void HandleArrayColumnsWidthChanged(object sender)
 		{
 			//	La largeur des colonnes a changé.
@@ -260,5 +334,6 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected string						ressource;
 		protected ResourceBundle				primaryBundle;
 		protected List<string>					labelsIndex;
+		protected Widget						focusedWidget;
 	}
 }
