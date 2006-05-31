@@ -108,7 +108,7 @@ namespace Epsitec.Common.Designer
 
 		public void Create(string name, string text)
 		{
-			//	Crée une nouvelle ressource dans toutes les cultures du module.
+			//	Crée une nouvelle ressource dans la culture par défaut du module.
 			ResourceBundleCollection bundles = this.module.Bundles;
 			ResourceBundle defaultBundle = bundles[ResourceLevel.Default];
 

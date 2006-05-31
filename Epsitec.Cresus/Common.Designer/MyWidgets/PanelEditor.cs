@@ -830,9 +830,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 			if (this.context.Tool == "ObjectHLine")
 			{
 				item = new Separator();
-				item.PreferredHeight = 1;
 				item.PreferredWidth = 100;
-				//?item.MinWidth = 10;
+				item.PreferredHeight = 1;
+				item.MinWidth = 10;
+				item.MinHeight = 1;
 			}
 
 			if (this.context.Tool == "ObjectVLine")
@@ -840,37 +841,41 @@ namespace Epsitec.Common.Designer.MyWidgets
 				item = new Separator();
 				item.PreferredWidth = 1;
 				item.PreferredHeight = 100;
-				//?item.MinWidth = 10;
+				item.MinWidth = 1;
+				item.MinHeight = 10;
 			}
 
 			if (this.context.Tool == "ObjectStatic")
 			{
 				item = new StaticText();
-				item.Text = "StaticText";
-				//?item.MinWidth = 10;
+				item.Text = Misc.Italic("StaticText");
+				item.MinWidth = 10;
+				item.MinHeight = 10;
 			}
 
 			if (this.context.Tool == "ObjectButton")
 			{
 				item = new Button();
-				item.Text = "Button";
-				//?item.MinWidth = 20;
+				item.Text = Misc.Italic("Button");
+				item.MinWidth = 20;
+				item.MinHeight = 10;
 			}
 
 			if (this.context.Tool == "ObjectText")
 			{
 				item = new TextField();
-				item.Text = "TextField";
-				//?item.MinWidth = 20;
+				item.Text = Misc.Italic("TextField");
+				item.MinWidth = 20;
+				item.MinHeight = 10;
 			}
 
 			if (this.context.Tool == "ObjectGroup")
 			{
 				item = new GroupBox();
-				item.Text = "Group";
+				item.Text = Misc.Italic("GroupBox");
 				item.PreferredSize = new Size(200, 100);
-				//?item.MinWidth = 50;
-				//?item.MinHeight = 50;
+				item.MinWidth = 50;
+				item.MinHeight = 50;
 			}
 
 			return item;
@@ -903,7 +908,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				obj.Name = this.module.MainWindow.DlgTextSelector(obj.Name);
 
-				if (obj.Name != "")
+				if (!string.IsNullOrEmpty(obj.Name))
 				{
 					ResourceBundleCollection bundles = this.module.Bundles;
 					ResourceBundle bundle = bundles[ResourceLevel.Default];
@@ -1022,53 +1027,13 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			//	Détecte l'objet visé par la souris, avec priorité au dernier objet
 			//	dessiné (donc placé dessus).
-			return this.Detect(pos, this.panel);
-		}
-
-		protected Widget Detect(Point pos, Widget parent)
-		{
-			for (int i=parent.Children.Count-1; i>=0; i--)
-			{
-				Widget widget = parent.Children[i] as Widget;
-
-				Rectangle bounds = widget.ActualBounds;
-				
-				double ix = 0;
-				if (bounds.Width < this.context.MinimalSize)
-				{
-					ix = this.context.MinimalSize;
-				}
-				
-				double iy = 0;
-				if (bounds.Height < this.context.MinimalSize)
-				{
-					iy = this.context.MinimalSize;
-				}
-				
-				bounds.Inflate(ix, iy);
-
-				if (bounds.Contains(pos))
-				{
-					if (widget is AbstractGroup)
-					{
-						Widget child = this.Detect(widget.MapParentToClient(pos), widget);
-						if (child != null)
-						{
-							return child;
-						}
-					}
-
-					return widget;
-				}
-			}
-			return null;
+			return this.panel.FindChild(pos, ChildFindMode.Deep | ChildFindMode.SkipHidden | ChildFindMode.SkipEmbedded);
 		}
 
 		protected Widget DetectGroup(Rectangle rect)
 		{
 			//	Détecte dans quel groupe est entièrement inclu un rectangle donné.
-			
-			Widget container = this.panel.FindChild (rect.Center, ChildFindMode.SkipHidden | ChildFindMode.SkipNonContainer);
+			Widget container = this.panel.FindChild(rect.Center, ChildFindMode.Deep | ChildFindMode.SkipHidden | ChildFindMode.SkipNonContainer | ChildFindMode.SkipEmbedded);
 			return container ?? this.panel;
 		}
 
