@@ -1501,13 +1501,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Retourne la boîte d'un objet.
 			//	Les coordonnées sont toujours relative au panneau (this.panel) propriétaire.
 			this.Window.ForceLayout();
-			Rectangle bounds = obj.ActualBounds;
+			Rectangle bounds = obj.Client.Bounds;
 
-			Widget parent = obj.Parent;
-			while (parent != this.panel)
+			while (obj != this.panel)
 			{
-				bounds = parent.MapClientToParent(bounds);
-				parent = parent.Parent;
+				bounds = obj.MapClientToParent(bounds);
+				obj = obj.Parent;
 			}
 
 			return bounds;
@@ -1540,11 +1539,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 			parent = obj.Parent;
 			Rectangle box = parent.ActualBounds;
 			Margins margins = obj.Margins;
+			Margins padding = parent.Padding + parent.GetInternalPadding();
 
 			if (this.IsObjectAnchorLeft(obj))
 			{
 				double px = bounds.Left;
-				px -= parent.Padding.Left;
+				px -= padding.Left;
 				px = System.Math.Max(px, 0);
 				margins.Left = px;
 			}
@@ -1552,7 +1552,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			if (this.IsObjectAnchorRight(obj))
 			{
 				double px = box.Right - bounds.Right;
-				px -= parent.Padding.Right;
+				px -= padding.Right;
 				px = System.Math.Max(px, 0);
 				margins.Right = px;
 			}
@@ -1560,7 +1560,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			if (this.IsObjectAnchorBottom(obj))
 			{
 				double py = bounds.Bottom;
-				py -= parent.Padding.Bottom;
+				py -= padding.Bottom;
 				py = System.Math.Max(py, 0);
 				margins.Bottom = py;
 			}
@@ -1568,7 +1568,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			if (this.IsObjectAnchorTop(obj))
 			{
 				double py = box.Top - bounds.Top;
-				py -= parent.Padding.Top;
+				py -= padding.Top;
 				py = System.Math.Max(py, 0);
 				margins.Top = py;
 			}
