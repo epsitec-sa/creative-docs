@@ -8,6 +8,28 @@ namespace Epsitec.Common.Designer
 	/// </summary>
 	public class Misc
 	{
+		static public void DrawPathDash(Graphics graphics, Path path, double width, double dash, double gap, Color color)
+		{
+			//	Dessine un traitillé simple (dash/gap) le long d'un chemin.
+			if (path.IsEmpty)  return;
+
+			DashedPath dp = new DashedPath();
+			dp.Append(path);
+
+			if (dash == 0.0)  // juste un point ?
+			{
+				dash = 0.00001;
+				gap -= dash;
+			}
+			dp.AddDash(dash, gap);
+
+			using (Path temp = dp.GenerateDashedPath())
+			{
+				graphics.Rasterizer.AddOutline(temp, width, CapStyle.Square, JoinStyle.Round, 5.0);
+				graphics.RenderSolid(color);
+			}
+		}
+
 		static public AnchorStyles OppositeAnchor(AnchorStyles style)
 		{
 			//	Retourne le style d'ancrage opposé.

@@ -466,7 +466,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			if (obj == null)
 			{
 				this.isRectangling = true;
-				this.SetAnchorRectangle(Rectangle.Empty);
+				this.SetHilitedAnchorRectangle(Rectangle.Empty);
 			}
 
 			if (obj != null)
@@ -528,7 +528,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 					anchor.Offset(0.5, 0.5);
 					anchor.Inflate(3);
 				}
-				this.SetAnchorRectangle(anchor);  // met en évidence le ressort survolé par la souris
+				this.SetHilitedAnchorRectangle(anchor);  // met en évidence le ressort survolé par la souris
 			}
 		}
 
@@ -596,7 +596,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 
 			this.isRectangling = true;
-			this.SetAnchorRectangle(Rectangle.Empty);
+			this.SetHilitedAnchorRectangle(Rectangle.Empty);
 
 			this.OnChildrenSelected();
 			this.Invalidate();
@@ -765,12 +765,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.constrainsList.Starting(Rectangle.Empty, false);
 			this.constrainsList.Activate(bounds, this.GetObjectBaseLine(this.creatingObject), null);
 
-			Widget parent = this.DetectGroup(bounds);
-			if (parent == this.panel)
-			{
-				parent = null;
-			}
-			this.SetHilitedObject(parent);  // met en évidence le futur parent survolé par la souris
+			this.SetHilitedParent(this.DetectGroup(bounds));  // met en évidence le futur parent survolé par la souris
 		}
 
 		protected void CreateObjectMove(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
@@ -785,12 +780,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.constrainsList.Activate(bounds, this.GetObjectBaseLine(this.creatingObject), null);
 				this.creatingWindow.WindowLocation = this.creatingOrigin + pos;
 
-				Widget parent = this.DetectGroup(bounds);
-				if (parent == this.panel)
-				{
-					parent = null;
-				}
-				this.SetHilitedObject(parent);  // met en évidence le futur parent survolé par la souris
+				this.SetHilitedParent(this.DetectGroup(bounds));  // met en évidence le futur parent survolé par la souris
 			}
 		}
 
@@ -816,7 +806,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.SetObjectPosition(this.creatingObject, pos);
 
 				this.constrainsList.Ending();
-				this.SetHilitedObject(null);
+				this.SetHilitedParent(null);
 
 				this.lastCreatedObject = this.creatingObject;
 				this.creatingObject = null;
@@ -935,7 +925,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				this.handlesList.DraggingMove(pos);
 				this.SetHilitedObject(null);
-				this.SetAnchorRectangle(Rectangle.Empty);
+				this.SetHilitedAnchorRectangle(Rectangle.Empty);
 				return true;
 			}
 
@@ -988,8 +978,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.draggingWindow.FocusedWidget = container;
 			this.draggingWindow.Show();
 
+			this.SetHilitedParent(this.DetectGroup(this.draggingRectangle));  // met en évidence le futur parent survolé par la souris
 			this.SetHilitedObject(null);
-			this.SetAnchorRectangle(Rectangle.Empty);
+			this.SetHilitedAnchorRectangle(Rectangle.Empty);
 			this.isDragging = true;
 			this.Invalidate();
 		}
@@ -1006,6 +997,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 			adjust = this.draggingRectangle.BottomLeft - adjust;
 
 			this.draggingWindow.WindowLocation = this.draggingOrigin + pos + adjust;
+
+			this.SetHilitedParent(this.DetectGroup(this.draggingRectangle));  // met en évidence le futur parent survolé par la souris
 		}
 
 		protected void DraggingEnd()
@@ -1017,6 +1010,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			Rectangle initial = this.SelectBounds;
 			this.MoveSelection(this.draggingRectangle.BottomLeft - initial.BottomLeft);
+			this.SetHilitedParent(null);
 			this.isDragging = false;
 			this.draggingArraySelected = null;
 			this.constrainsList.Ending();
@@ -1140,6 +1134,21 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
+		protected void SetHilitedParent(Widget obj)
+		{
+			//	Détermine l'objet parent à mettre en évidence lors d'un survol.
+			if (obj == this.panel)
+			{
+				//?obj = null;  // pas utile de mettre en évidence le conteneur principal !
+			}
+
+			if (this.hilitedParent != obj)
+			{
+				this.hilitedParent = obj;
+				this.Invalidate();
+			}
+		}
+
 		protected void SetSelectRectangle(Rectangle rect)
 		{
 			//	Détermine la zone du rectangle de sélection.
@@ -1151,14 +1160,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
-		protected void SetAnchorRectangle(Rectangle rect)
+		protected void SetHilitedAnchorRectangle(Rectangle rect)
 		{
 			//	Détermine la zone du rectangle de ressort d'ancrage.
-			if (this.anchorRectangle != rect)
+			if (this.hilitedAnchorRectangle != rect)
 			{
-				this.Invalidate(this.anchorRectangle);  // invalide l'ancienne zone
-				this.anchorRectangle = rect;
-				this.Invalidate(this.anchorRectangle);  // invalide la nouvelle zone
+				this.Invalidate(this.hilitedAnchorRectangle);  // invalide l'ancienne zone
+				this.hilitedAnchorRectangle = rect;
+				this.Invalidate(this.hilitedAnchorRectangle);  // invalide la nouvelle zone
 			}
 		}
 		#endregion
@@ -1889,7 +1898,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				foreach (Widget obj in this.selectedObjects)
 				{
-					this.DrawAnchor(graphics, obj, false);
+					this.DrawAnchor(graphics, obj, PanelsContext.ColorAnchor);
 				}
 			}
 
@@ -1914,6 +1923,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.DrawHilitedObject(graphics, this.hilitedObject);
 			}
 
+			//	Dessine l'objet parentsurvolé.
+			if (this.hilitedParent != null)
+			{
+				this.DrawHilitedParent(graphics, this.hilitedParent);
+			}
+
 			//	Dessine le rectangle de sélection.
 			if (!this.selectedRectangle.IsEmpty)
 			{
@@ -1924,9 +1939,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 
 			//	Dessine le rectangle de ressort d'ancrage.
-			if (!this.anchorRectangle.IsEmpty)
+			if (!this.hilitedAnchorRectangle.IsEmpty)
 			{
-				Rectangle anchor = this.anchorRectangle;
+				Rectangle anchor = this.hilitedAnchorRectangle;
 				graphics.AddFilledRectangle(anchor);
 				graphics.RenderSolid(PanelsContext.ColorHiliteSurface);
 			}
@@ -1943,7 +1958,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Met en évidence l'objet survolé par la souris.
 			if (this.context.ShowAnchor)
 			{
-				this.DrawAnchor(graphics, obj, true);
+				this.DrawAnchor(graphics, obj, PanelsContext.ColorHiliteOutline);
 			}
 
 			Rectangle rect = this.GetObjectBounds(obj);
@@ -1967,7 +1982,26 @@ namespace Epsitec.Common.Designer.MyWidgets
 			graphics.RenderSolid(PanelsContext.ColorHiliteSurface);
 		}
 
-		protected void DrawAnchor(Graphics graphics, Widget obj, bool isHilited)
+		protected void DrawHilitedParent(Graphics graphics, Widget obj)
+		{
+			//	Met en évidence l'objet parent survolé par la souris.
+			if (this.context.ShowAnchor && obj != this.panel)
+			{
+				this.DrawAnchor(graphics, obj, PanelsContext.ColorHiliteParent);
+			}
+
+			Rectangle rect = this.GetObjectBounds(obj);
+			rect.Deflate(0.5);
+			graphics.AddRectangle(rect);
+			graphics.RenderSolid(PanelsContext.ColorHiliteParent);
+			rect.Deflate(2.0);
+
+			Path path = new Path();
+			path.AppendRectangle(rect);
+			Misc.DrawPathDash(graphics, path, 5, 10, 10, PanelsContext.ColorHiliteParent);
+		}
+
+		protected void DrawAnchor(Graphics graphics, Widget obj, Color color)
 		{
 			//	Dessine tous les ancrages d'un objet.
 			Rectangle bounds = this.GetObjectBounds(obj.Parent);
@@ -1977,26 +2011,24 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			p1 = new Point(bounds.Left, rect.Center.Y);
 			p2 = new Point(rect.Left, rect.Center.Y);
-			this.DrawAnchor(graphics, p1, p2, PanelEditor.IsObjectAnchorLeft(anchor), isHilited);
+			this.DrawAnchor(graphics, p1, p2, PanelEditor.IsObjectAnchorLeft(anchor), color);
 
 			p1 = new Point(rect.Right, rect.Center.Y);
 			p2 = new Point(bounds.Right, rect.Center.Y);
-			this.DrawAnchor(graphics, p1, p2, PanelEditor.IsObjectAnchorRight(anchor), isHilited);
+			this.DrawAnchor(graphics, p1, p2, PanelEditor.IsObjectAnchorRight(anchor), color);
 
 			p1 = new Point(rect.Center.X, bounds.Bottom);
 			p2 = new Point(rect.Center.X, rect.Bottom);
-			this.DrawAnchor (graphics, p1, p2, PanelEditor.IsObjectAnchorBottom (anchor), isHilited);
+			this.DrawAnchor(graphics, p1, p2, PanelEditor.IsObjectAnchorBottom(anchor), color);
 
 			p1 = new Point(rect.Center.X, rect.Top);
 			p2 = new Point(rect.Center.X, bounds.Top);
-			this.DrawAnchor (graphics, p1, p2, PanelEditor.IsObjectAnchorTop (anchor), isHilited);
+			this.DrawAnchor(graphics, p1, p2, PanelEditor.IsObjectAnchorTop(anchor), color);
 		}
 
-		protected void DrawAnchor(Graphics graphics, Point p1, Point p2, bool rigid, bool isHilited)
+		protected void DrawAnchor(Graphics graphics, Point p1, Point p2, bool rigid, Color color)
 		{
 			//	Dessine un ancrage horizontal ou vertical d'un objet.
-			Color color = isHilited ? PanelsContext.ColorHiliteOutline : PanelsContext.ColorAnchor;
-
 			Point p1a = Point.Scale(p1, p2, PanelEditor.anchorScale);
 			Point p2a = Point.Scale(p2, p1, PanelEditor.anchorScale);
 
@@ -2258,8 +2290,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected Widget					lastCreatedObject;
 		protected List<Widget>				selectedObjects = new List<Widget>();
 		protected Rectangle					selectedRectangle = Rectangle.Empty;
-		protected Rectangle					anchorRectangle = Rectangle.Empty;
+		protected Rectangle					hilitedAnchorRectangle = Rectangle.Empty;
 		protected Widget					hilitedObject;
+		protected Widget					hilitedParent;
 		protected bool						isRectangling;  // j'invente des mots si je veux !
 		protected bool						isDragging;
 		protected DragWindow				draggingWindow;
