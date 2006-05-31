@@ -1392,7 +1392,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			foreach (Widget obj in parent.Children)
 			{
-				if (this.IsObjectTabActive(obj) && obj.TabIndex == oldIndex)
+				if (PanelEditor.IsObjectTabActive(obj) && obj.TabIndex == oldIndex)
 				{
 					obj.TabIndex = newIndex;
 					obj.TabNavigation = TabNavigationMode.ActivateOnTab;
@@ -1443,6 +1443,31 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			//	Retourne les dimensions d'un objet.
 			return this.GetObjectBounds(obj).Size;
+		}
+
+		protected void SetObjectAnchor(Widget obj, AnchorStyles anchorFlag)
+		{
+			//	Modifie le système d'ancrage d'un objet.
+			Rectangle bounds = this.GetObjectBounds(obj);
+			AnchorStyles anchor = obj.Anchor;
+
+			if ((anchor & anchorFlag) == 0)
+			{
+				anchor |= anchorFlag;
+			}
+			else
+			{
+				anchor &= ~anchorFlag;
+
+				if ((anchor & Misc.OppositeAnchor(anchorFlag)) == 0)
+				{
+					anchor |= Misc.OppositeAnchor(anchorFlag);
+				}
+			}
+
+			this.SetObjectBounds(obj, bounds, anchor);
+			this.handlesList.UpdateGeometry();
+			this.Invalidate();
 		}
 
 		protected void SetObjectPosition(Widget obj, Point pos)
@@ -1514,12 +1539,13 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		public void SetObjectBounds(Widget obj, Rectangle bounds)
 		{
-			this.SetObjectBounds (obj, bounds, obj.Anchor);
+			//	Modifie la boîte d'un objet.
+			this.SetObjectBounds(obj, bounds, obj.Anchor);
 		}
 
 		public void SetObjectBounds(Widget obj, Rectangle bounds, AnchorStyles anchor)
 		{
-			//	Modifie la boîte d'un objet.
+			//	Modifie la boîte et le système d'ancrage d'un objet.
 			//	Les coordonnées sont toujours relative au panneau (this.panel) propriétaire.
 			bounds.Normalise();
 
@@ -1544,9 +1570,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 			parent = obj.Parent;
 			Rectangle box = parent.ActualBounds;
 			Margins margins = obj.Margins;
-			Margins padding = parent.Padding + parent.GetInternalPadding ();
+			Margins padding = parent.Padding + parent.GetInternalPadding();
 
-			if (PanelEditor.IsObjectAnchorLeft (anchor))
+			if (PanelEditor.IsObjectAnchorLeft(anchor))
 			{
 				double px = bounds.Left;
 				px -= padding.Left;
@@ -1554,7 +1580,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				margins.Left = px;
 			}
 
-			if (PanelEditor.IsObjectAnchorRight (anchor))
+			if (PanelEditor.IsObjectAnchorRight(anchor))
 			{
 				double px = box.Width - bounds.Right;
 				px -= padding.Right;
@@ -1562,7 +1588,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				margins.Right = px;
 			}
 
-			if (PanelEditor.IsObjectAnchorBottom (anchor))
+			if (PanelEditor.IsObjectAnchorBottom(anchor))
 			{
 				double py = bounds.Bottom;
 				py -= padding.Bottom;
@@ -1570,7 +1596,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				margins.Bottom = py;
 			}
 
-			if (PanelEditor.IsObjectAnchorTop (anchor))
+			if (PanelEditor.IsObjectAnchorTop(anchor))
 			{
 				double py = box.Height - bounds.Top;
 				py -= padding.Top;
@@ -1615,34 +1641,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 			return (anchor & AnchorStyles.Top) != 0;
 		}
 
-		protected void SetObjectAnchor(Widget obj, AnchorStyles anchorFlag)
+		protected static bool IsObjectTabActive(Widget obj)
 		{
-			//	Modifie le système d'ancrage d'un objet.
-			Rectangle bounds = this.GetObjectBounds(obj);
-			AnchorStyles anchor = obj.Anchor;
-
-			if ((anchor & anchorFlag) == 0)
-			{
-				anchor |= anchorFlag;
-			}
-			else
-			{
-				anchor &= ~anchorFlag;
-
-				if ((anchor & Misc.OppositeAnchor(anchorFlag)) == 0)
-				{
-					anchor |= Misc.OppositeAnchor(anchorFlag);
-				}
-			}
-
-			this.SetObjectBounds(obj, bounds, anchor);
-			this.handlesList.UpdateGeometry();
-			this.Invalidate();
-		}
-
-		protected bool IsObjectTabActive(Widget obj)
-		{
-			//	Indique si l'objet est ancré à gauche.
+			//	Indique si l'objet à un ordre pour la touche Tab.
 			return (obj.TabNavigation & TabNavigationMode.ActivateOnTab) != 0;
 		}
 
@@ -1679,7 +1680,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Retourne la chaîne indiquant l'ordre Z, y compris des parents, sous la forme "n.n.n".
 			if (obj.Parent == this.panel)
 			{
-				if (this.IsObjectTabActive(obj))
+				if (PanelEditor.IsObjectTabActive(obj))
 				{
 					return (obj.TabIndex+1).ToString();
 				}
@@ -1692,7 +1693,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			List<string> list = new List<string>();
 			while (obj != this.panel)
 			{
-				if (this.IsObjectTabActive(obj))
+				if (PanelEditor.IsObjectTabActive(obj))
 				{
 					list.Add((obj.TabIndex+1).ToString());
 				}
