@@ -1558,6 +1558,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				bounds.Height = obj.MinHeight;
 			}
 
+			this.Window.ForceLayout();
 			Widget parent = obj.Parent;
 			while (parent != this.panel)
 			{
@@ -1774,7 +1775,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected Rectangle GetAnchorBounds(Widget obj, AnchorStyles style)
 		{
 			//	Retourne le rectangle englobant un ressort d'ancrage.
-			Rectangle bounds = this.RealBounds;
+			Rectangle bounds = obj.Parent.ActualBounds;
 			Rectangle rect = this.GetObjectBounds(obj);
 			Point p1, p2, p1a, p2a;
 			double thickness = PanelEditor.anchorThickness;
@@ -1893,24 +1894,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				foreach (Widget obj in this.selectedObjects)
 				{
-					Rectangle rect = this.GetObjectBounds(obj);
-					Point p1, p2;
-
-					p1 = new Point(bounds.Left, rect.Center.Y);
-					p2 = new Point(rect.Left, rect.Center.Y);
-					this.DrawAnchor(graphics, p1, p2, this.IsObjectAnchorLeft(obj));
-
-					p1 = new Point(bounds.Right, rect.Center.Y);
-					p2 = new Point(rect.Right, rect.Center.Y);
-					this.DrawAnchor(graphics, p1, p2, this.IsObjectAnchorRight(obj));
-
-					p1 = new Point(rect.Center.X, bounds.Bottom);
-					p2 = new Point(rect.Center.X, rect.Bottom);
-					this.DrawAnchor(graphics, p1, p2, this.IsObjectAnchorBottom(obj));
-
-					p1 = new Point(rect.Center.X, bounds.Top);
-					p2 = new Point(rect.Center.X, rect.Top);
-					this.DrawAnchor(graphics, p1, p2, this.IsObjectAnchorTop(obj));
+					this.DrawAnchor(graphics, obj);
 				}
 			}
 
@@ -1958,6 +1942,30 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				this.handlesList.Draw(graphics);
 			}
+		}
+
+		protected void DrawAnchor(Graphics graphics, Widget obj)
+		{
+			//	Dessine tous les ancrages d'un objet.
+			Rectangle bounds = obj.Parent.ActualBounds;
+			Rectangle rect = this.GetObjectBounds(obj);
+			Point p1, p2;
+
+			p1 = new Point(bounds.Left, rect.Center.Y);
+			p2 = new Point(rect.Left, rect.Center.Y);
+			this.DrawAnchor(graphics, p1, p2, this.IsObjectAnchorLeft(obj));
+
+			p1 = new Point(bounds.Right, rect.Center.Y);
+			p2 = new Point(rect.Right, rect.Center.Y);
+			this.DrawAnchor(graphics, p1, p2, this.IsObjectAnchorRight(obj));
+
+			p1 = new Point(rect.Center.X, bounds.Bottom);
+			p2 = new Point(rect.Center.X, rect.Bottom);
+			this.DrawAnchor(graphics, p1, p2, this.IsObjectAnchorBottom(obj));
+
+			p1 = new Point(rect.Center.X, bounds.Top);
+			p2 = new Point(rect.Center.X, rect.Top);
+			this.DrawAnchor(graphics, p1, p2, this.IsObjectAnchorTop(obj));
 		}
 
 		protected void DrawAnchor(Graphics graphics, Point p1, Point p2, bool rigid)
