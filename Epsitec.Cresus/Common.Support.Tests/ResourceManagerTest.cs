@@ -234,7 +234,9 @@ namespace Epsitec.Common.Support
 		[Test]
 		public void CheckBindingSerialization()
 		{
-			System.Xml.XmlTextWriter xmlWriter = new System.Xml.XmlTextWriter (System.Console.Out);
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+			System.IO.StringWriter stringWriter = new System.IO.StringWriter (buffer);
+			System.Xml.XmlTextWriter xmlWriter = new System.Xml.XmlTextWriter (stringWriter);
 
 			xmlWriter.Indentation = 2;
 			xmlWriter.IndentChar = ' ';
@@ -248,6 +250,7 @@ namespace Epsitec.Common.Support
 
 			Widgets.Widget root = new Widgets.Widget ();
 			Widgets.Button button = new Widgets.Button ();
+			Widgets.VScroller scroller = new Widgets.VScroller ();
 
 			this.manager.Bind (root, Widgets.Widget.TextProperty, "[4]");
 			this.manager.Bind (button, Widgets.Widget.TextProperty, "[4001]");
@@ -255,6 +258,7 @@ namespace Epsitec.Common.Support
 			root.Name = "RootWidget";
 			root.TabIndex = 1;
 			root.Children.Add (button);
+			root.Children.Add (scroller);
 			
 			Storage.Serialize (root, context);
 			
@@ -262,6 +266,8 @@ namespace Epsitec.Common.Support
 			xmlWriter.WriteEndDocument ();
 			xmlWriter.Flush ();
 			xmlWriter.Close ();
+
+			System.Console.Out.WriteLine (buffer.ToString ());
 		}
 
 		private ResourceManager manager;
