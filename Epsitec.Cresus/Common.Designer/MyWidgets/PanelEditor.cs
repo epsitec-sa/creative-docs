@@ -1451,165 +1451,115 @@ namespace Epsitec.Common.Designer.MyWidgets
 		}
 
 
-		public Rectangle GetObjectBounds(Widget obj)
-		{
-			//	Retourne la boîte d'un objet.
-#if false
-			Point pos = Point.Zero;
-			Size size = obj.PreferredSize;
-
-			if (this.IsObjectAnchorLeft(obj))
-			{
-				pos.X = obj.Margins.Left;
-			}
-
-			if (this.IsObjectAnchorRight(obj))
-			{
-				pos.X = obj.Margins.Right - size.Width;
-			}
-
-			if (this.IsObjectAnchorBottom(obj))
-			{
-				pos.Y = obj.Margins.Bottom;
-			}
-
-			if (this.IsObjectAnchorTop(obj))
-			{
-				pos.Y = obj.Margins.Top - size.Height;
-			}
-
-			//?this.Window.ForceLayout();
-			//?pos = this.panel.MapClientToParent(pos);
-			pos.X += this.panel.Padding.Left;
-			pos.Y += this.panel.Padding.Bottom;
-			return new Rectangle(pos, obj.PreferredSize);
-#else
-			this.Window.ForceLayout();
-			return obj.ActualBounds;
-#endif
-		}
-
-		public void SetObjectBounds(Widget obj, Rectangle rect)
-		{
-			//	Modifie la boîte d'un objet.
-			rect.Normalise();
-
-			if (rect.Width < obj.MinWidth)
-			{
-				rect.Width = obj.MinWidth;
-			}
-
-			if (rect.Height < obj.MinHeight)
-			{
-				rect.Height = obj.MinHeight;
-			}
-
-			Rectangle bounds = this.RealBounds;
-			Margins margins = obj.Margins;
-
-			if (this.IsObjectAnchorLeft(obj))
-			{
-				double px = rect.Left;
-				px -= this.panel.Padding.Left;
-				px = System.Math.Max(px, 0);
-				margins.Left = px;
-			}
-
-			if (this.IsObjectAnchorRight(obj))
-			{
-				double px = bounds.Right - rect.Right;
-				px -= this.panel.Padding.Right;
-				px = System.Math.Max(px, 0);
-				margins.Right = px;
-			}
-
-			if (this.IsObjectAnchorBottom(obj))
-			{
-				double py = rect.Bottom;
-				py -= this.panel.Padding.Bottom;
-				py = System.Math.Max(py, 0);
-				margins.Bottom = py;
-			}
-
-			if (this.IsObjectAnchorTop(obj))
-			{
-				double py = bounds.Top - rect.Top;
-				py -= this.panel.Padding.Top;
-				py = System.Math.Max(py, 0);
-				margins.Top = py;
-			}
-
-			obj.Margins = margins;
-			obj.PreferredSize = rect.Size;
-
-			this.Invalidate();
-		}
-
 		protected Point GetObjectPosition(Widget obj)
 		{
 			//	Retourne l'origine d'un objet.
 			return this.GetObjectBounds(obj).BottomLeft;
 		}
 
-		protected void SetObjectPositionX(Widget obj, double x)
+		protected Size GetObjectSize(Widget obj)
 		{
-			//	Déplace l'origine gauche d'un objet.
-			Rectangle bounds = this.RealBounds;
-			Margins margins = obj.Margins;
-
-			if (this.IsObjectAnchorLeft(obj))
-			{
-				double px = x;
-				px -= this.panel.Padding.Left;
-				px = System.Math.Max(px, 0);
-				margins.Left = px;
-			}
-
-			if (this.IsObjectAnchorRight(obj))
-			{
-				double px = bounds.Right - (x+obj.PreferredWidth);
-				px -= this.panel.Padding.Right;
-				px = System.Math.Max(px, 0);
-				margins.Right = px;
-			}
-
-			obj.Margins = margins;
-		}
-
-		protected void SetObjectPositionY(Widget obj, double y)
-		{
-			//	Déplace l'origine inférieure d'un objet.
-			Rectangle bounds = this.RealBounds;
-			Margins margins = obj.Margins;
-
-			if (this.IsObjectAnchorBottom(obj))
-			{
-				double py = y;
-				py -= this.panel.Padding.Bottom;
-				py = System.Math.Max(py, 0);
-				margins.Bottom = py;
-			}
-
-			if (this.IsObjectAnchorTop(obj))
-			{
-				double py = bounds.Top - (y+obj.PreferredHeight);
-				py -= this.panel.Padding.Top;
-				py = System.Math.Max(py, 0);
-				margins.Top = py;
-			}
-
-			obj.Margins = margins;
+			//	Retourne les dimensions d'un objet.
+			return this.GetObjectBounds(obj).Size;
 		}
 
 		protected void SetObjectPosition(Widget obj, Point pos)
 		{
 			//	Déplace l'origine d'un objet.
-			Rectangle bounds = this.RealBounds;
+			Rectangle bounds = new Rectangle(pos, this.GetObjectSize(obj));
+			this.SetObjectBounds(obj, bounds);
+		}
+
+		protected void SetObjectPositionX(Widget obj, double x)
+		{
+			//	Déplace l'origine gauche d'un objet.
+			Rectangle bounds = this.GetObjectBounds(obj);
+			double w = bounds.Width;
+			bounds.Left = x;
+			bounds.Width = w;
+			this.SetObjectBounds(obj, bounds);
+		}
+
+		protected void SetObjectPositionY(Widget obj, double y)
+		{
+			//	Déplace l'origine inférieure d'un objet.
+			Rectangle bounds = this.GetObjectBounds(obj);
+			double h = bounds.Height;
+			bounds.Bottom = y;
+			bounds.Height = h;
+			this.SetObjectBounds(obj, bounds);
+		}
+
+		protected void SetObjectWidth(Widget obj, double dx)
+		{
+			//	Modifie la largeur d'un objet.
+			Rectangle bounds = this.GetObjectBounds(obj);
+			bounds.Width = dx;
+			this.SetObjectBounds(obj, bounds);
+		}
+
+		protected void SetObjectHeight(Widget obj, double dy)
+		{
+			//	Modifie la hauteur d'un objet.
+			Rectangle bounds = this.GetObjectBounds(obj);
+			bounds.Height = dy;
+			this.SetObjectBounds(obj, bounds);
+		}
+
+		protected void SetObjectSize(Widget obj, Size size)
+		{
+			//	Modifie les dimensions d'un objet.
+			Rectangle bounds = this.GetObjectBounds(obj);
+			bounds.Size = size;
+			this.SetObjectBounds(obj, bounds);
+		}
+
+		public Rectangle GetObjectBounds(Widget obj)
+		{
+			//	Retourne la boîte d'un objet.
+			//	Les coordonnées sont toujours relative au panneau (this.panel) propriétaire.
+			this.Window.ForceLayout();
+			Rectangle bounds = obj.ActualBounds;
+
+			Widget parent = obj.Parent;
+			while (parent != this.panel)
+			{
+				bounds = parent.MapClientToParent(bounds);
+				parent = parent.Parent;
+			}
+
+			return bounds;
+		}
+
+		public void SetObjectBounds(Widget obj, Rectangle bounds)
+		{
+			//	Modifie la boîte d'un objet.
+			//	Les coordonnées sont toujours relative au panneau (this.panel) propriétaire.
+			bounds.Normalise();
+
+			if (bounds.Width < obj.MinWidth)
+			{
+				bounds.Width = obj.MinWidth;
+			}
+
+			if (bounds.Height < obj.MinHeight)
+			{
+				bounds.Height = obj.MinHeight;
+			}
+
+			Widget parent = obj.Parent;
+			while (parent != this.panel)
+			{
+				bounds = parent.MapParentToClient(bounds);
+				parent = parent.Parent;
+			}
+
+			Rectangle box = this.RealBounds;
 			Margins margins = obj.Margins;
 
 			if (this.IsObjectAnchorLeft(obj))
 			{
-				double px = pos.X;
+				double px = bounds.Left;
 				px -= this.panel.Padding.Left;
 				px = System.Math.Max(px, 0);
 				margins.Left = px;
@@ -1617,7 +1567,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			if (this.IsObjectAnchorRight(obj))
 			{
-				double px = bounds.Right - (pos.X+obj.PreferredWidth);
+				double px = box.Right - bounds.Right;
 				px -= this.panel.Padding.Right;
 				px = System.Math.Max(px, 0);
 				margins.Right = px;
@@ -1625,7 +1575,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			if (this.IsObjectAnchorBottom(obj))
 			{
-				double py = pos.Y;
+				double py = bounds.Bottom;
 				py -= this.panel.Padding.Bottom;
 				py = System.Math.Max(py, 0);
 				margins.Bottom = py;
@@ -1633,38 +1583,16 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			if (this.IsObjectAnchorTop(obj))
 			{
-				double py = bounds.Top - (pos.Y+obj.PreferredHeight);
+				double py = box.Top - bounds.Top;
 				py -= this.panel.Padding.Top;
 				py = System.Math.Max(py, 0);
 				margins.Top = py;
 			}
 
 			obj.Margins = margins;
-		}
+			obj.PreferredSize = bounds.Size;
 
-		protected Size GetObjectSize(Widget obj)
-		{
-			//	Retourne les dimensions d'un objet.
-			//?return obj.ActualSize;
-			return obj.PreferredSize;
-		}
-
-		protected void SetObjectWidth(Widget obj, double dx)
-		{
-			//	Modifie la largeur d'un objet.
-			obj.PreferredWidth = dx;
-		}
-
-		protected void SetObjectHeight(Widget obj, double dy)
-		{
-			//	Modifie la hauteur d'un objet.
-			obj.PreferredHeight = dy;
-		}
-
-		protected void SetObjectSize(Widget obj, Size size)
-		{
-			//	Modifie les dimensions d'un objet.
-			obj.PreferredSize = size;
+			this.Invalidate();
 		}
 
 		public double GetObjectBaseLine(Widget obj)
