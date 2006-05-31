@@ -73,8 +73,21 @@ namespace Epsitec.Common.Types.Serialization
 		{
 			return "{Null}";
 		}
+
 		public static string BindingToString(IContextResolver resolver, Binding binding)
 		{
+			ResourceBinding resBinding = binding as ResourceBinding;
+			
+			//	If the binding object really is a resource binding, use the specialized
+			//	ResourceBindingToString method :
+			
+			if (resBinding != null)
+			{
+				return MarkupExtension.ResourceBindingToString (resolver, resBinding);
+			}
+			
+			//	Convert the binding description to a string representation :
+			
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 
 			buffer.Append ("{");
@@ -128,14 +141,31 @@ namespace Epsitec.Common.Types.Serialization
 			buffer.Append ("}");
 			return buffer.ToString ();
 		}
+
+		public static string ResourceBindingToString(IContextResolver resolver, ResourceBinding binding)
+		{
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+
+			buffer.Append ("{");
+			buffer.Append ("ResBinding");
+			buffer.Append (" ");
+			buffer.Append ("id=");
+			buffer.Append (binding.ResourceId);
+			buffer.Append ("}");
+			
+			return buffer.ToString ();
+		}
+
 		public static string ExtRefToString(object value, Context context)
 		{
 			return string.Concat ("{ExtRef ", context.ExternalMap.GetTag (value), "}");
 		}
+		
 		public static string ObjRefToString(DependencyObject value, Context context)
 		{
 			return string.Concat ("{ObjRef ", Context.IdToString (context.ObjectMap.GetId (value)), "}");
 		}
+		
 		public static string CollectionToString(IEnumerable<DependencyObject> collection, SerializerContext context)
 		{
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
@@ -180,6 +210,7 @@ namespace Epsitec.Common.Types.Serialization
 			return (i < 0) ? null : buffer.ToString ();
 		}
 
+		
 		public static object Resolve(Context context, string markup)
 		{
 			string[] args = MarkupExtension.Explode (markup);
@@ -195,6 +226,9 @@ namespace Epsitec.Common.Types.Serialization
 
 					case "Binding":
 						return MarkupExtension.BindingFromString (context, args);
+					
+					case "ResBinding":
+						return MarkupExtension.ResourceBindingFromString (context, args);
 
 					case "ObjRef":
 						return MarkupExtension.ObjRefFromString (context, args);
@@ -210,10 +244,16 @@ namespace Epsitec.Common.Types.Serialization
 			throw new System.NotImplementedException (string.Format ("Cannot resolve '{0}'", markup));
 		}
 
+		
 		public static Binding BindingFromString(IContextResolver context, string value)
 		{
-			string[] args = MarkupExtension.Explode (value);
+			if (value.StartsWith ("ResBinding"))
+			{
+				return MarkupExtension.ResourceBindingFromString (context, value);
+			}
 			
+			string[] args = MarkupExtension.Explode (value);
+
 			if ((args.Length == 0) ||
 				(args[0] != "Binding"))
 			{
@@ -222,6 +262,20 @@ namespace Epsitec.Common.Types.Serialization
 
 			return MarkupExtension.BindingFromString (context, args);
 		}
+		
+		public static ResourceBinding ResourceBindingFromString(IContextResolver context, string value)
+		{
+			string[] args = MarkupExtension.Explode (value);
+
+			if ((args.Length == 0) ||
+				(args[0] != "ResBinding"))
+			{
+				throw new System.FormatException (string.Format ("String '{0}' is not a valid ResBinding expression", value));
+			}
+
+			return MarkupExtension.ResourceBindingFromString (context, args);
+		}
+		
 		public static string[] Explode(string source)
 		{
 			if ((source.StartsWith ("{")) &&
@@ -398,6 +452,7 @@ namespace Epsitec.Common.Types.Serialization
 			}
 		}
 
+		
 		private static object NullFromString(Context context, string[] args)
 		{
 			if ((args.Length != 1) ||
@@ -408,8 +463,15 @@ namespace Epsitec.Common.Types.Serialization
 
 			return null;
 		}
+		
 		private static Binding BindingFromString(IContextResolver context, string[] args)
 		{
+			if ((args.Length > 0) &&
+				(args[0] == "ResBinding"))
+			{
+				return MarkupExtension.ResourceBindingFromString (context, args);
+			}
+			
 			if ((args.Length < 1) ||
 				(args[0] != "Binding"))
 			{
@@ -454,6 +516,49 @@ namespace Epsitec.Common.Types.Serialization
 
 			return binding;
 		}
+
+		private static ResourceBinding ResourceBindingFromString(IContextResolver context, string[] args)
+		{
+			if ((args.Length < 1) ||
+				(args[0] != "ResBinding"))
+			{
+				throw new System.FormatException ("ResBinding format error");
+			}
+
+			ResourceBinding binding = new ResourceBinding ();
+
+			for (int i = 1; i < args.Length; i++)
+			{
+				string element = args[i];
+
+				if (element.Length > 0)
+				{
+					string[] elems = element.Split ('=');
+
+					if (elems.Length != 2)
+					{
+						throw new System.FormatException (string.Format ("Element '{0}' not valid in Binding expression", element));
+					}
+
+					switch (elems[0])
+					{
+						case "Id":
+							binding.ResourceId = elems[1];
+							break;
+
+						default:
+							throw new System.FormatException (string.Format ("Element '{0}' not valid in ResBinding expression", element));
+					}
+				}
+			}
+
+			object manager = context.ResolveFromMarkup (string.Concat ("{ExtRef ", Context.WellKnownTagResourceManager, "}"));
+			
+			ResourceBinding.RebindCallback (manager, binding);
+
+			return binding;
+		}
+		
 		private static object ExtRefFromString(Context context, string[] args)
 		{
 			if ((args.Length != 2) ||
@@ -464,6 +569,7 @@ namespace Epsitec.Common.Types.Serialization
 
 			return context.ExternalMap.GetValue (args[1]);
 		}
+		
 		private static object ObjRefFromString(Context context, string[] args)
 		{
 			if ((args.Length != 2) ||
@@ -474,6 +580,7 @@ namespace Epsitec.Common.Types.Serialization
 
 			return context.ObjectMap.GetValue (Context.ParseId (args[1]));
 		}
+		
 		private static ICollection<DependencyObject> CollectionFromString(Context context, string[] args)
 		{
 			DependencyObject[] items = new DependencyObject[args.Length-1];

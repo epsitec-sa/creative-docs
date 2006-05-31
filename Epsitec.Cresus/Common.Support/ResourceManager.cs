@@ -5,12 +5,14 @@ using System.Globalization;
 using System.Collections;
 using System.Collections.Generic;
 
+using Epsitec.Common.Types;
+
 namespace Epsitec.Common.Support
 {
 	/// <summary>
 	/// La classe ResourceManager permet de gérer les ressources de l'application.
 	/// </summary>
-	public sealed class ResourceManager
+	public sealed class ResourceManager : DependencyObject
 	{
 		public ResourceManager() : this (Support.Globals.Directories.Executable)
 		{
@@ -135,7 +137,7 @@ namespace Epsitec.Common.Support
 		{
 			get
 			{
-				return this.defaultModuleName != null;
+				return (this.defaultModuleName != null) && (this.defaultModuleId >= 0);
 			}
 		}
 		
@@ -156,10 +158,23 @@ namespace Epsitec.Common.Support
 			}
 			
 			this.defaultModuleName = defaultModuleName;
+			this.defaultModuleId   = -1;
 
 			foreach (ProviderRecord provider in this.providers.Values)
 			{
-				ModuleRecord module = provider.GetModuleRecord (defaultModuleName);
+				ModuleRecord module = provider.GetModuleRecord (this.defaultModuleName);
+
+				if (module != null)
+				{
+					if (this.defaultModuleId == -1)
+					{
+						this.defaultModuleId = module.ModuleInfo.Id;
+					}
+					else if (this.defaultModuleId != module.ModuleInfo.Id)
+					{
+						throw new ResourceException (string.Format ("Inconsistent module id for module '{0}'", this.defaultModuleName));
+					}
+				}
 
 				provider.ActiveProvider = (module == null) ? null : module.Provider;
 			}
@@ -189,28 +204,63 @@ namespace Epsitec.Common.Support
 			
 			return false;
 		}
-		
-		
-		public string MakeFullName(string prefix, string name)
+
+
+		internal string NormalizeFullId(string id)
 		{
-			if (name == null)
+			string prefix;
+			string localId;
+
+			ResourceManager.SplitFullId (id, out prefix, out localId);
+			ResourceManager.ResolveDruidReference (ref prefix, ref localId);
+
+			return this.NormalizeFullId (prefix, localId);
+		}
+
+		internal string NormalizeFullId(string prefix, string localId)
+		{
+			if (string.IsNullOrEmpty (localId))
 			{
-				throw new ResourceException ("Cannot make full name if name is missing.");
+				throw new ResourceException ("Cannot normalize resource name; local id is empty");
 			}
-			if (prefix == null)
+
+			string module;
+			
+			ResourceManager.SplitFullPrefix (prefix, out prefix, out module);
+			
+			if (string.IsNullOrEmpty (prefix))
 			{
 				prefix = this.ActivePrefix;
 				
-				if (prefix == null)
+				if (string.IsNullOrEmpty (prefix))
 				{
-					throw new ResourceException (string.Format ("Cannot make full name if prefix is missing for resource {0}.", name));
+					throw new ResourceException (string.Format ("Cannot normalize resource name; prefix is empty for resource '{0}'", localId));
 				}
 			}
-			
-			return string.Concat (prefix, ":", name);
+
+			module = this.NormalizeModuleId (prefix, module);
+			prefix = ResourceManager.JoinFullPrefix (prefix, module);
+
+			return ResourceManager.JoinFullId (prefix, localId);
 		}
-		
-		
+
+		internal string NormalizeModuleId(string prefix, string module)
+		{
+			if (string.IsNullOrEmpty (prefix))
+			{
+				throw new ResourceException ("Cannot normalize bundle id; prefix is empty");
+			}
+			
+			if (string.IsNullOrEmpty (module))
+			{
+				module = this.defaultModuleName;
+			}
+
+			this.FindProviderFromPrefix (prefix, ref module);
+			
+			return module;
+		}
+
 		public string MapToSuffix(ResourceLevel level, CultureInfo culture)
 		{
 			if (culture == null)
@@ -427,7 +477,7 @@ namespace Epsitec.Common.Support
 					switch (level)
 					{
 						case ResourceLevel.Merged:
-							bundle = ResourceBundle.Create (this, prefix, resource_id, level, culture, recursion);
+							bundle = ResourceBundle.Create (this, prefix, module, resource_id, level, culture, recursion);
 							bundle.Compile (provider.GetData (resource_id, ResourceLevel.Default, culture));
 							bundle.Compile (provider.GetData (resource_id, ResourceLevel.Localized, culture));
 							bundle.Compile (provider.GetData (resource_id, ResourceLevel.Customized, culture));
@@ -436,7 +486,7 @@ namespace Epsitec.Common.Support
 						case ResourceLevel.Default:
 						case ResourceLevel.Localized:
 						case ResourceLevel.Customized:
-							bundle = ResourceBundle.Create (this, prefix, resource_id, level, culture, recursion);
+							bundle = ResourceBundle.Create (this, prefix, module, resource_id, level, culture, recursion);
 							bundle.Compile (provider.GetData (resource_id, level, culture));
 							break;
 
@@ -472,6 +522,20 @@ namespace Epsitec.Common.Support
 			{
 				throw new System.ArgumentNullException ();
 			}
+
+			ResourceBinding binding = new ResourceBinding (resourceId);
+
+			if (this.SetResourceBinding (binding) == false)
+			{
+				throw new ResourceException (string.Format ("Cannot bind to ressource '{0}'", resourceId));
+			}
+
+			targetObject.SetBinding (targetProperty, binding);
+		}
+
+		private bool SetResourceBinding(ResourceBinding binding)
+		{
+			string resourceId = this.NormalizeFullId (binding.ResourceId);
 			
 			string bundleName;
 			string fieldName;
@@ -484,17 +548,16 @@ namespace Epsitec.Common.Support
 
 				if (proxy != null)
 				{
-					Types.Binding binding = new Types.Binding (Types.BindingMode.OneTime, proxy, fieldName);
+					binding.Source = proxy;
+					binding.Path = fieldName;
 
 					proxy.AddBinding (binding);
-					
-					targetObject.SetBinding (targetProperty, binding);
 
-					return;
+					return true;
 				}
 			}
-
-			throw new ResourceException (string.Format ("Cannot bind to ressource '{0}'", resourceId));
+			
+			return false;
 		}
 
 		private BundleBindingProxy GetBundleBindingProxy(string bundleName)
@@ -507,8 +570,16 @@ namespace Epsitec.Common.Support
 			//	binding.
 			
 			BundleBindingProxy proxy;
+			
+			string prefix;
+			string localId;
+			string module;
+			
+			this.AnalyseFullId (bundleName, out prefix, out localId, out module);
 
-			if (this.bindingProxies.TryGetValue (bundleName, out proxy) == false)
+			string key = ResourceManager.CreateBundleKey (prefix, module, localId, ResourceLevel.Merged, this.culture);
+
+			if (this.bindingProxies.TryGetValue (key, out proxy) == false)
 			{
 				//	Le proxy pour le bundle en question n'existe pas. Il faut
 				//	donc le créer :
@@ -525,7 +596,7 @@ namespace Epsitec.Common.Support
 				System.Diagnostics.Debug.Assert (proxy.Bundle.PrefixedName == bundleName);
 				System.Diagnostics.Debug.Assert (Resources.EqualCultures (proxy.Bundle.Culture, this.culture));
 				
-				this.bindingProxies[bundleName] = proxy;
+				this.bindingProxies[key] = proxy;
 			}
 
 			return proxy;
@@ -774,7 +845,7 @@ namespace Epsitec.Common.Support
 		{
 			System.Diagnostics.Debug.Assert (prefix != null);
 			System.Diagnostics.Debug.Assert (prefix.Length > 0);
-			System.Diagnostics.Debug.Assert (prefix.Contains (":") == false);
+			System.Diagnostics.Debug.Assert (prefix.IndexOf (ResourceManager.PrefixSeparator) < 0);
 			System.Diagnostics.Debug.Assert (resource_id.Length > 0);
 			System.Diagnostics.Debug.Assert (resource_id.IndexOf (ResourceBundle.FieldSeparator) < 0);
 			
@@ -786,11 +857,11 @@ namespace Epsitec.Common.Support
 			}
 			if (!string.IsNullOrEmpty (module))
 			{
-				buffer.Append ("/");
+				buffer.Append (ResourceManager.ModuleSeparator);
 				buffer.Append (module);
 			}
-			
-			buffer.Append (":");
+
+			buffer.Append (ResourceManager.PrefixSeparator);
 			buffer.Append (resource_id);
 			buffer.Append ("~");
 			buffer.Append ((int) level);
@@ -820,9 +891,21 @@ namespace Epsitec.Common.Support
 			string prefix;
 
 			this.AnalyseFullId (fullId, out prefix, out localId, out module);
+
+			if (string.IsNullOrEmpty (localId))
+			{
+				return null;
+			}
 			
-			if ((prefix != null) &&
-				(localId != null))
+			return this.FindProviderFromPrefix (prefix, ref module);
+		}
+
+		private IResourceProvider FindProviderFromPrefix(string prefix, ref string module)
+		{
+			System.Diagnostics.Debug.Assert (this.defaultModuleId != -1);
+			System.Diagnostics.Debug.Assert (this.defaultModuleName != null);
+			
+			if (!string.IsNullOrEmpty (prefix))
 			{
 				ProviderRecord provider;
 
@@ -830,6 +913,7 @@ namespace Epsitec.Common.Support
 				{
 					if (string.IsNullOrEmpty (module))
 					{
+						module = string.Format (CultureInfo.InvariantCulture, "{0}", this.defaultModuleId);
 						return provider.ActiveProvider;
 					}
 
@@ -844,8 +928,12 @@ namespace Epsitec.Common.Support
 					{
 						record = provider.GetModuleRecord (module);
 					}
-					
-					return record == null ? null : record.Provider;
+
+					if (record != null)
+					{
+						module = string.Format (CultureInfo.InvariantCulture, "{0}", record.ModuleInfo.Id);
+						return record.Provider;
+					}
 				}
 			}
 
@@ -862,34 +950,70 @@ namespace Epsitec.Common.Support
 			{
 				ResourceManager.SplitFullId (fullId, out prefix, out localId);
 				ResourceManager.ResolveDruidReference (ref prefix, ref localId);
-				ResourceManager.SplitPrefix (ref prefix, out module);
+				ResourceManager.SplitFullPrefix (prefix, out prefix, out module);
 
-				if (string.IsNullOrEmpty (prefix) &&
-					(this.ActivePrefix != null))
+				if (string.IsNullOrEmpty (prefix))
 				{
 					prefix = this.ActivePrefix;
+				}
+				if (string.IsNullOrEmpty (module))
+				{
+					module = this.defaultModuleName;
 				}
 			}
 		}
 
-		private static void SplitPrefix(ref string prefix, out string module)
+		internal static string JoinFullPrefix(string prefix, string module)
 		{
-			int pos = prefix.IndexOf ('/');
-
-			if (pos >= 0)
+			if (string.IsNullOrEmpty (module))
 			{
-				module = prefix.Substring (pos+1);
-				prefix = prefix.Substring (0, pos);
+				return prefix;
 			}
 			else
 			{
-				module = null;
+				return string.Concat (prefix, ResourceManager.ModuleSeparator, module);
 			}
 		}
 
-		private static void SplitFullId(string fullId, out string prefix, out string localId)
+		internal static void SplitFullPrefix(string fullPrefix, out string prefix, out string module)
 		{
-			int pos = fullId.IndexOf (':');
+			if (fullPrefix == null)
+			{
+				prefix = null;
+				module = null;
+			}
+			else
+			{
+				int pos = fullPrefix.IndexOf (ResourceManager.ModuleSeparator);
+
+				if (pos >= 0)
+				{
+					prefix = fullPrefix.Substring (0, pos);
+					module = fullPrefix.Substring (pos+1);
+				}
+				else
+				{
+					prefix = fullPrefix;
+					module = null;
+				}
+			}
+		}
+
+		internal static string JoinFullId(string prefix, string localId)
+		{
+			if (string.IsNullOrEmpty (prefix))
+			{
+				return localId;
+			}
+			else
+			{
+				return string.Concat (prefix, ResourceManager.PrefixSeparator, localId);
+			}
+		}
+		
+		internal static void SplitFullId(string fullId, out string prefix, out string localId)
+		{
+			int pos = fullId.IndexOf (ResourceManager.PrefixSeparator);
 
 			if (pos >= 0)
 			{
@@ -903,7 +1027,7 @@ namespace Epsitec.Common.Support
 			}
 		}
 
-		internal static void ResolveDruidReference(ref string fullId)
+		internal static string ResolveDruidReference(string fullId)
 		{
 			string prefix;
 			string localId;
@@ -911,16 +1035,9 @@ namespace Epsitec.Common.Support
 			ResourceManager.SplitFullId (fullId, out prefix, out localId);
 			ResourceManager.ResolveDruidReference (ref prefix, ref localId);
 
-			if (string.IsNullOrEmpty (prefix))
-			{
-				fullId = localId;
-			}
-			else
-			{
-				fullId = string.Concat (prefix, ":", localId);
-			}
+			return ResourceManager.JoinFullId (prefix, localId);
 		}
-		
+
 		internal static void ResolveDruidReference(ref string prefix, ref string localId)
 		{
 			if ((localId.Length > 2) &&
@@ -943,6 +1060,31 @@ namespace Epsitec.Common.Support
 				{
 					throw new ResourceException (string.Format ("DRUID specification {0} is not valid.", localId));
 				}
+			}
+		}
+
+		static ResourceManager()
+		{
+			ResourceManager.factory = new ResourceProviderFactory ();
+			ResourceBinding.RebindCallback = ResourceManager.Rebinder;
+		}
+
+		private static void Rebinder(object resourceManager, ResourceBinding binding)
+		{
+			ResourceManager that = resourceManager as ResourceManager;
+
+			if (that == null)
+			{
+				throw new System.ArgumentNullException ("resourceManager", "No resource manager specified");
+			}
+			if (binding == null)
+			{
+				throw new System.ArgumentNullException ("binding", "No binding specified");
+			}
+
+			if (that.SetResourceBinding (binding) == false)
+			{
+				throw new ResourceException (string.Format ("Cannot bind to ressource '{0}'", binding.ResourceId));
 			}
 		}
 
@@ -1190,12 +1332,15 @@ namespace Epsitec.Common.Support
 			private ResourceModuleInfo moduleInfo;
 		}
 
+		public static readonly char PrefixSeparator = ':';
+		public static readonly char ModuleSeparator = '/';
 
-		private static ResourceProviderFactory	factory = new ResourceProviderFactory ();
+		private static ResourceProviderFactory	factory;
 		
 		private Dictionary<string, ProviderRecord> providers;
 		private CultureInfo						culture;
 		private string							defaultModuleName;
+		private long							defaultModuleId;
 		private string							defaultPrefix = "file";
 		private string							defaultPath;
 		

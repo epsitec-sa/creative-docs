@@ -210,18 +210,9 @@
     <Compile Include="VersionCheckerTest.cs">
       <SubType>Code</SubType>
     </Compile>
-    <None Include="resources\ab.00.resource" />
-    <None Include="resources\bitmap.00.resource" />
-    <None Include="resources\button.cancel.00.resource" />
-    <None Include="resources\button.cancel.fr.resource" />
-    <None Include="resources\complex.00.resource" />
-    <None Include="resources\icon.00.resource" />
-    <None Include="resources\image.00.resource" />
-    <Content Include="resources\module.info" />
-    <None Include="resources\recursive.00.resource" />
-    <None Include="resources\simple_window.00.resource" />
-    <None Include="resources\strings.00.resource" />
-    <None Include="resources\strings.fr.resource" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="resources\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

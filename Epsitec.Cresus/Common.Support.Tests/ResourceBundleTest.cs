@@ -24,18 +24,19 @@ namespace Epsitec.Common.Support
 			manager.DefineDefaultModuleName ("LowLevelTest");
 			manager.ActiveCulture = Resources.FindCultureInfo ("fr");
 
-			Assert.AreEqual ("Réglages", manager.GetData ("file:strings#title.SettingsWindow", ResourceLevel.Localized, null));
+			Assert.AreEqual ("Druid - Bonjour", manager.GetData ("file/Test:DruidData#$0", ResourceLevel.Localized, null));
+			Assert.AreEqual ("Druid - Bonjour", manager.GetData ("[4]", ResourceLevel.Localized, null));
 
-			manager.Bind (visual, Widgets.Visual.NameProperty, "file:strings#title.SettingsWindow");
+			manager.Bind (visual, Widgets.Visual.NameProperty, "[4]");
 
 			Assert.IsTrue (visual.IsBound (Widgets.Visual.NameProperty));
 			Assert.AreEqual (Types.DataSourceType.Resource, visual.GetBindingExpression (Widgets.Visual.NameProperty).DataSourceType);
-			
-			Assert.AreEqual ("Réglages", visual.Name);
+
+			Assert.AreEqual ("Druid - Bonjour", visual.Name);
 
 			manager.ActiveCulture = Resources.FindCultureInfo ("en");
 
-			Assert.AreEqual ("Settings", visual.Name);
+			Assert.AreEqual ("Druid - Hello, world", visual.Name);
 		}
 
 		[Test]

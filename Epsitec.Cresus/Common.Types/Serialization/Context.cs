@@ -209,15 +209,23 @@ namespace Epsitec.Common.Types.Serialization
 			}
 			
 			DependencyObject obj = value as DependencyObject;
-			
-			if ((obj != null) &&
-				(this.ObjectMap.IsValueDefined (obj)))
+
+			if (obj != null)
 			{
-				return MarkupExtension.ObjRefToString (obj, this);
+				if (this.ObjectMap.IsValueDefined (obj))
+				{
+					return MarkupExtension.ObjRefToString (obj, this);
+				}
+			}
+			
+			if (this.ExternalMap.IsValueDefined (value))
+			{
+				return MarkupExtension.ExtRefToString (value, this);
 			}
 
 			return null;
 		}
+		
 		public object ResolveFromMarkup(string tagId)
 		{
 			//	Map a tag id to an object.
@@ -280,6 +288,8 @@ namespace Epsitec.Common.Types.Serialization
 		}
 
 
+		public static readonly string			WellKnownTagResourceManager = "_ResourceManager";
+		
 		private MapId<DependencyObject>			objMap;
 		private MapTag<object>					externalMap;
 		private Dictionary<System.Type, int>	typeIds;
