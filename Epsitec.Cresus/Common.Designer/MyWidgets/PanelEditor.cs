@@ -1361,8 +1361,17 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void SelectTabIndexRenum()
 		{
 			//	Renumérote toutes les touches Tab.
+			this.SelectTabIndexRenum(this.panel);
+
+			this.Invalidate();
+			this.context.ShowTabIndex = true;
+			this.OnUpdateCommands();
+		}
+
+		protected void SelectTabIndexRenum(Widget parent)
+		{
 			List<Widget> list = new List<Widget>();
-			foreach (Widget obj in this.panel.Children)
+			foreach (Widget obj in parent.Children)
 			{
 				list.Add(obj);
 			}
@@ -1373,11 +1382,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				obj.TabIndex = index++;
 				obj.TabNavigation = TabNavigationMode.ActivateOnTab;
-			}
 
-			this.Invalidate();
-			this.context.ShowTabIndex = true;
-			this.OnUpdateCommands();
+				if (obj is AbstractGroup)
+				{
+					this.SelectTabIndexRenum(obj);
+				}
+			}
 		}
 
 		protected void SelectTabIndex(int direction)
