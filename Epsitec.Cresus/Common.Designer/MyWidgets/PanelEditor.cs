@@ -1514,6 +1514,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		public void SetObjectBounds(Widget obj, Rectangle bounds)
 		{
+			this.SetObjectBounds (obj, bounds, obj.Anchor);
+		}
+
+		public void SetObjectBounds(Widget obj, Rectangle bounds, AnchorStyles anchor)
+		{
 			//	Modifie la boîte d'un objet.
 			//	Les coordonnées sont toujours relative au panneau (this.panel) propriétaire.
 			bounds.Normalise();
@@ -1539,9 +1544,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 			parent = obj.Parent;
 			Rectangle box = parent.ActualBounds;
 			Margins margins = obj.Margins;
-			Margins padding = parent.Padding + parent.GetInternalPadding();
+			Margins padding = parent.Padding + parent.GetInternalPadding ();
 
-			if (this.IsObjectAnchorLeft(obj))
+			if (PanelEditor.IsObjectAnchorLeft (anchor))
 			{
 				double px = bounds.Left;
 				px -= padding.Left;
@@ -1549,15 +1554,15 @@ namespace Epsitec.Common.Designer.MyWidgets
 				margins.Left = px;
 			}
 
-			if (this.IsObjectAnchorRight(obj))
+			if (PanelEditor.IsObjectAnchorRight (anchor))
 			{
-				double px = box.Right - bounds.Right;
+				double px = box.Width - bounds.Right;
 				px -= padding.Right;
 				px = System.Math.Max(px, 0);
 				margins.Right = px;
 			}
 
-			if (this.IsObjectAnchorBottom(obj))
+			if (PanelEditor.IsObjectAnchorBottom (anchor))
 			{
 				double py = bounds.Bottom;
 				py -= padding.Bottom;
@@ -1565,9 +1570,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 				margins.Bottom = py;
 			}
 
-			if (this.IsObjectAnchorTop(obj))
+			if (PanelEditor.IsObjectAnchorTop (anchor))
 			{
-				double py = box.Top - bounds.Top;
+				double py = box.Height - bounds.Top;
 				py -= padding.Top;
 				py = System.Math.Max(py, 0);
 				margins.Top = py;
@@ -1575,6 +1580,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			obj.Margins = margins;
 			obj.PreferredSize = bounds.Size;
+			obj.Anchor = anchor;
 
 			this.Invalidate();
 		}
@@ -1585,50 +1591,51 @@ namespace Epsitec.Common.Designer.MyWidgets
 			return System.Math.Floor(obj.GetBaseLine().Y);
 		}
 
-		protected bool IsObjectAnchorLeft(Widget obj)
+		protected static bool IsObjectAnchorLeft(AnchorStyles anchor)
 		{
 			//	Indique si l'objet est ancré à gauche.
-			return (obj.Anchor & AnchorStyles.Left) != 0;
+			return (anchor & AnchorStyles.Left) != 0;
 		}
 
-		protected bool IsObjectAnchorRight(Widget obj)
+		protected static bool IsObjectAnchorRight(AnchorStyles anchor)
 		{
 			//	Indique si l'objet est ancré à gauche.
-			return (obj.Anchor & AnchorStyles.Right) != 0;
+			return (anchor & AnchorStyles.Right) != 0;
 		}
 
-		protected bool IsObjectAnchorBottom(Widget obj)
+		protected static bool IsObjectAnchorBottom(AnchorStyles anchor)
 		{
 			//	Indique si l'objet est ancré à gauche.
-			return (obj.Anchor & AnchorStyles.Bottom) != 0;
+			return (anchor & AnchorStyles.Bottom) != 0;
 		}
 
-		protected bool IsObjectAnchorTop(Widget obj)
+		protected static bool IsObjectAnchorTop(AnchorStyles anchor)
 		{
 			//	Indique si l'objet est ancré à gauche.
-			return (obj.Anchor & AnchorStyles.Top) != 0;
+			return (anchor & AnchorStyles.Top) != 0;
 		}
 
-		protected void SetObjectAnchor(Widget obj, AnchorStyles style)
+		protected void SetObjectAnchor(Widget obj, AnchorStyles anchorFlag)
 		{
 			//	Modifie le système d'ancrage d'un objet.
 			Rectangle bounds = this.GetObjectBounds(obj);
+			AnchorStyles anchor = obj.Anchor;
 
-			if ((obj.Anchor & style) == 0)
+			if ((anchor & anchorFlag) == 0)
 			{
-				obj.Anchor |= style;
+				anchor |= anchorFlag;
 			}
 			else
 			{
-				obj.Anchor &= ~style;
+				anchor &= ~anchorFlag;
 
-				if ((obj.Anchor & Misc.OppositeAnchor(style)) == 0)
+				if ((anchor & Misc.OppositeAnchor(anchorFlag)) == 0)
 				{
-					obj.Anchor |= Misc.OppositeAnchor(style);
+					anchor |= Misc.OppositeAnchor(anchorFlag);
 				}
 			}
 
-			this.SetObjectBounds(obj, bounds);
+			this.SetObjectBounds(obj, bounds, anchor);
 			this.handlesList.UpdateGeometry();
 			this.Invalidate();
 		}
@@ -1949,23 +1956,24 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Dessine tous les ancrages d'un objet.
 			Rectangle bounds = obj.Parent.ActualBounds;
 			Rectangle rect = this.GetObjectBounds(obj);
+			AnchorStyles anchor = obj.Anchor;
 			Point p1, p2;
 
 			p1 = new Point(bounds.Left, rect.Center.Y);
 			p2 = new Point(rect.Left, rect.Center.Y);
-			this.DrawAnchor(graphics, p1, p2, this.IsObjectAnchorLeft(obj), isHilited);
+			this.DrawAnchor(graphics, p1, p2, PanelEditor.IsObjectAnchorLeft(anchor), isHilited);
 
 			p1 = new Point(rect.Right, rect.Center.Y);
 			p2 = new Point(bounds.Right, rect.Center.Y);
-			this.DrawAnchor(graphics, p1, p2, this.IsObjectAnchorRight(obj), isHilited);
+			this.DrawAnchor(graphics, p1, p2, PanelEditor.IsObjectAnchorRight(anchor), isHilited);
 
 			p1 = new Point(rect.Center.X, bounds.Bottom);
 			p2 = new Point(rect.Center.X, rect.Bottom);
-			this.DrawAnchor(graphics, p1, p2, this.IsObjectAnchorBottom(obj), isHilited);
+			this.DrawAnchor (graphics, p1, p2, PanelEditor.IsObjectAnchorBottom (anchor), isHilited);
 
 			p1 = new Point(rect.Center.X, rect.Top);
 			p2 = new Point(rect.Center.X, bounds.Top);
-			this.DrawAnchor(graphics, p1, p2, this.IsObjectAnchorTop(obj), isHilited);
+			this.DrawAnchor (graphics, p1, p2, PanelEditor.IsObjectAnchorTop (anchor), isHilited);
 		}
 
 		protected void DrawAnchor(Graphics graphics, Point p1, Point p2, bool rigid, bool isHilited)
