@@ -73,8 +73,8 @@ namespace Epsitec.Common.Designer
 			{
 				this.list.Clear();
 				double minX, minY;
-				this.NearestDistance(rect, out minX, out minY, excludes);
-				this.NearestObjects(rect, minX, minY, excludes);
+				this.NearestDistance(rect, this.editor.Panel, out minX, out minY, excludes);
+				this.NearestObjects(rect, this.editor.Panel, minX, minY, excludes);
 			}
 
 			foreach (Constrain constrain in this.list)
@@ -96,7 +96,7 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		protected void NearestDistance(Rectangle rect, out double minX, out double minY, params Widget[] excludes)
+		protected void NearestDistance(Rectangle rect, Widget parent, out double minX, out double minY, params Widget[] excludes)
 		{
 			//	Cherche la distance à l'objet le plus proche d'une position donnée.
 			Point center = rect.Center;
@@ -104,7 +104,7 @@ namespace Epsitec.Common.Designer
 			minY = 1000000;
 			double distance;
 
-			foreach (Widget obj in this.editor.Panel.Children)
+			foreach (Widget obj in parent.Children)
 			{
 				if (!this.IsContained(excludes, obj))
 				{
@@ -122,10 +122,15 @@ namespace Epsitec.Common.Designer
 						minY = distance;
 					}
 				}
+
+				if (obj is AbstractGroup)
+				{
+					this.NearestDistance(rect, obj, out minX, out minY, excludes);
+				}
 			}
 		}
 
-		protected void NearestObjects(Rectangle rect, double distanceX, double distanceY, params Widget[] excludes)
+		protected void NearestObjects(Rectangle rect, Widget parent, double distanceX, double distanceY, params Widget[] excludes)
 		{
 			//	Initialise les contraintes pour tous les objets dont la distance est
 			//	inférieure ou égale à une distance donnée.
@@ -178,7 +183,7 @@ namespace Epsitec.Common.Designer
 				}
 			}
 
-			foreach (Widget obj in this.editor.Panel.Children)
+			foreach (Widget obj in parent.Children)
 			{
 				if (!this.IsContained(excludes, obj))
 				{
@@ -195,6 +200,11 @@ namespace Epsitec.Common.Designer
 					{
 						this.Initialise(obj);
 					}
+				}
+
+				if (obj is AbstractGroup)
+				{
+					this.NearestObjects(rect, obj, distanceX, distanceY, excludes);
 				}
 			}
 		}
