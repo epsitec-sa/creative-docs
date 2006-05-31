@@ -57,8 +57,6 @@ namespace Epsitec.Common.Types
 				//	dans la variable 'properties' mais directement au moyen de
 				//	callbacks GetValueOverrideCallback :
 
-				//	TODO: gestion des GetValueOverrideCallback
-
 				DependencyObjectType type = this.ObjectType;
 				System.Type sysType = this.GetType ();
 
@@ -75,6 +73,85 @@ namespace Epsitec.Common.Types
 							if (UndefinedValue.IsValueUndefined (value) == false)
 							{
 								yield return new LocalValueEntry (property, value);
+							}
+						}
+					}
+				}
+			}
+		}
+
+		internal IEnumerable<DependencyProperty> LocalProperties
+		{
+			get
+			{
+				foreach (DependencyProperty property in this.properties.Keys)
+				{
+					yield return property;
+				}
+
+				//	Passe encore en revue les propriétés qui ne sont pas définies
+				//	dans la variable 'properties' mais directement au moyen de
+				//	callbacks GetValueOverrideCallback :
+
+				DependencyObjectType type = this.ObjectType;
+				System.Type sysType = this.GetType ();
+
+				foreach (DependencyProperty property in type.GetProperties ())
+				{
+					if (this.properties.ContainsKey (property) == false)
+					{
+						DependencyPropertyMetadata metadata = property.GetMetadata (sysType);
+
+						if (metadata.GetValueOverride != null)
+						{
+							yield return property;
+						}
+					}
+				}
+			}
+		}
+
+		internal IEnumerable<LocalValueEntry> SerializableLocalValueEntries
+		{
+			get
+			{
+				DependencyObjectType type = this.ObjectType;
+				System.Type sysType = this.GetType ();
+
+				DependencyPropertyMetadata metadata;
+				
+				foreach (DependencyProperty property in this.properties.Keys)
+				{
+					metadata = property.GetMetadata (sysType);
+
+					if ((property.IsReadWrite && metadata.CanSerializeReadWrite) ||
+						(property.IsReadOnly && metadata.CanSerializeReadOnly))
+					{
+						yield return new LocalValueEntry (property, this.properties[property]);
+					}
+				}
+				
+				//	Passe encore en revue les propriétés qui ne sont pas définies
+				//	dans la variable 'properties' mais directement au moyen de
+				//	callbacks GetValueOverrideCallback :
+
+				foreach (DependencyProperty property in type.GetProperties ())
+				{
+					if (this.properties.ContainsKey (property) == false)
+					{
+						metadata = property.GetMetadata (sysType);
+
+						if ((property.IsReadWrite && metadata.CanSerializeReadWrite) ||
+							(property.IsReadOnly && metadata.CanSerializeReadOnly))
+						{
+							if (metadata.GetValueOverride != null)
+							{
+								object value = metadata.GetValueOverride (this);
+
+								if (UndefinedValue.IsValueUndefined (value) == false)
+								{
+									yield return new LocalValueEntry (property, value);
+								}
 							}
 						}
 					}
@@ -830,9 +907,9 @@ namespace Epsitec.Common.Types
 		{
 			List<string> names = new List<string> ();
 			
-			foreach (LocalValueEntry entry in this.LocalValueEntries)
+			foreach (DependencyProperty property in this.LocalProperties)
 			{
-				names.Add (entry.Property.Name);
+				names.Add (property.Name);
 			}
 
 			return names.ToArray ();

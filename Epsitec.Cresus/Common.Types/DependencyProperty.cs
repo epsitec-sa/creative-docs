@@ -509,7 +509,7 @@ namespace Epsitec.Common.Types
 			DependencyProperty.validNameRegex = new System.Text.RegularExpressions.Regex ("^[a-zA-Z][_a-zA-Z0-9]*$");
 		}
 
-		private string name;
+		private string							name;
 		private System.Type						propertyType;
 		private System.Type						ownerType;
 		private List<System.Type>				additionalOwnerTypes;
@@ -521,7 +521,7 @@ namespace Epsitec.Common.Types
 		private bool							isReadOnly;
 		private int								globalIndex;
 		private int								inheritedPropertyCacheMask;
-		private ISerializationConverter					typeConverter;
+		private ISerializationConverter			typeConverter;
 		
 		Dictionary<System.Type, DependencyPropertyMetadata>	overriddenMetadata;
 		

@@ -463,7 +463,10 @@ namespace Epsitec.Common.Widgets.Helpers
 
 				WindowRoot root = VisualTree.GetWindowRoot (visual);
 
-				return root.DoesVisualContainKeyboardFocus (visual);
+				if (root != null)
+				{
+					root.DoesVisualContainKeyboardFocus (visual);
+				}
 			}	
 			
 			return false;

@@ -24,6 +24,7 @@ namespace Epsitec.Common.Types.Serialization
 
 			this.StoreObjectBindings (obj);
 			this.StoreObjectFields (obj);
+			this.StoreObjectChildren (obj);
 			
 			this.writer.EndObject (id, obj);
 		}
@@ -37,73 +38,87 @@ namespace Epsitec.Common.Types.Serialization
 				this.writer.WriteObjectFieldValue (obj, this.GetPropertyName (entry.Key), markup);
 			}
 		}
+		
 		private void StoreObjectFields(DependencyObject obj)
 		{
-			foreach (LocalValueEntry entry in obj.LocalValueEntries)
+			foreach (LocalValueEntry entry in obj.SerializableLocalValueEntries)
 			{
 				DependencyPropertyMetadata metadata = entry.Property.GetMetadata (obj);
 
-				if ((entry.Property.IsReadWrite && metadata.CanSerializeReadWrite) ||
-					(entry.Property.IsReadOnly && metadata.CanSerializeReadOnly))
+				if (obj.GetBinding (entry.Property) == null)
 				{
-					if (obj.GetBinding (entry.Property) == null)
+					if (this.ExternalMap.IsValueDefined (entry.Value))
 					{
-						if (this.ExternalMap.IsValueDefined (entry.Value))
+						//	This is an external reference. Record it as {External xxx}.
+
+						string markup = MarkupExtension.ExtRefToString (entry.Value, this);
+
+						this.writer.WriteObjectFieldValue (obj, this.GetPropertyName (entry.Property), markup);
+						continue;
+					}
+
+					DependencyObject dependencyObjectValue = entry.Value as DependencyObject;
+
+					if (dependencyObjectValue != null)
+					{
+						//	This is an internal reference. Record it as {Object _nnn}.
+
+						if ((metadata.HasSerializationFilter == false) ||
+							(metadata.FilterSerializableItem (dependencyObjectValue)))
 						{
-							//	This is an external reference. Record it as {External xxx}.
-
-							string markup = MarkupExtension.ExtRefToString (entry.Value, this);
-
+							string markup = MarkupExtension.ObjRefToString (dependencyObjectValue, this);
 							this.writer.WriteObjectFieldValue (obj, this.GetPropertyName (entry.Property), markup);
-							continue;
 						}
+						
+						continue;
+					}
 
-						DependencyObject dependencyObjectValue = entry.Value as DependencyObject;
+					ICollection<DependencyObject> dependencyObjectCollection = entry.Value as ICollection<DependencyObject>;
 
-						if (dependencyObjectValue != null)
+					if (dependencyObjectCollection != null)
+					{
+						//	This is a collection. Record it as {Collection xxx, xxx, xxx}
+
+						if (dependencyObjectCollection.Count > 0)
 						{
-							//	This is an internal reference. Record it as {Object _nnn}.
+							string markup = MarkupExtension.CollectionToString (metadata.FilterSerializableCollection (dependencyObjectCollection, entry.Property), this);
 
-							if ((metadata.HasSerializationFilter == false) ||
-								(metadata.FilterSerializableItem (dependencyObjectValue)))
+							if (! string.IsNullOrEmpty (markup))
 							{
-								string markup = MarkupExtension.ObjRefToString (dependencyObjectValue, this);
 								this.writer.WriteObjectFieldValue (obj, this.GetPropertyName (entry.Property), markup);
 							}
-							
-							continue;
 						}
+						
+						continue;
+					}
 
-						ICollection<DependencyObject> dependencyObjectCollection = entry.Value as ICollection<DependencyObject>;
+					string value = entry.Property.ConvertToString (entry.Value, this);
 
-						if (dependencyObjectCollection != null)
-						{
-							//	This is a collection. Record it as {Collection xxx, xxx, xxx}
-
-							if (dependencyObjectCollection.Count > 0)
-							{
-								string markup = MarkupExtension.CollectionToString (metadata.FilterSerializableCollection (dependencyObjectCollection, entry.Property), this);
-
-								if ((markup != null) &&
-									(markup.Length > 0))
-								{
-									this.writer.WriteObjectFieldValue (obj, this.GetPropertyName (entry.Property), markup);
-								}
-							}
-							
-							continue;
-						}
-
-						string value = entry.Property.ConvertToString (entry.Value, this);
-
-						if (value != null)
-						{
-							this.writer.WriteObjectFieldValue (obj, this.GetPropertyName (entry.Property), MarkupExtension.Escape (value));
-							continue;
-						}
+					if (value != null)
+					{
+						this.writer.WriteObjectFieldValue (obj, this.GetPropertyName (entry.Property), MarkupExtension.Escape (value));
+						continue;
 					}
 				}
 			}
+		}
+		
+		private void StoreObjectChildren(DependencyObject obj)
+		{
+			if (DependencyObjectTree.GetHasChildren (obj))
+			{
+				DependencyProperty property = DependencyObjectTree.ChildrenProperty;
+				DependencyPropertyMetadata metadata = property.GetMetadata (obj);
+				ICollection<DependencyObject> dependencyObjectCollection = DependencyObjectTree.GetChildren (obj);
+
+				string markup = MarkupExtension.CollectionToString (metadata.FilterSerializableCollection (dependencyObjectCollection, property), this);
+				
+				if (!string.IsNullOrEmpty (markup))
+				{
+					this.writer.WriteObjectFieldValue (obj, this.GetPropertyName (property), markup);
+				}
+			}
+
 		}
 	}
 }

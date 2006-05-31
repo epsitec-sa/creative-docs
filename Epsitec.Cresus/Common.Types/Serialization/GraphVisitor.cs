@@ -21,43 +21,53 @@ namespace Epsitec.Common.Types.Serialization
 				//	Visit every locally defined property which either refers to
 				//	a DependencyObject or to a collection of such.
 
-				foreach (LocalValueEntry entry in obj.LocalValueEntries)
+				foreach (LocalValueEntry entry in obj.SerializableLocalValueEntries)
 				{
 					DependencyPropertyMetadata metadata = entry.Property.GetMetadata (obj);
 
-					if ((entry.Property.IsReadWrite && metadata.CanSerializeReadWrite) ||
-						(entry.Property.IsReadOnly && metadata.CanSerializeReadOnly))
+					if (obj.GetBinding (entry.Property) == null)
 					{
-						if (obj.GetBinding (entry.Property) == null)
+						if (entry.Property.IsAttached)
 						{
-							if (entry.Property.IsAttached)
+							context.ObjectMap.RecordType (entry.Property.OwnerType);
+						}
+
+						DependencyObject dependencyObjectValue = entry.Value as DependencyObject;
+
+						if (dependencyObjectValue != null)
+						{
+							if ((metadata.HasSerializationFilter == false) ||
+								(metadata.FilterSerializableItem (dependencyObjectValue)))
 							{
-								context.ObjectMap.RecordType (entry.Property.OwnerType);
+								GraphVisitor.VisitSerializableNodes (dependencyObjectValue, context);
 							}
+							
+							continue;
+						}
 
-							DependencyObject dependencyObjectValue = entry.Value as DependencyObject;
+						ICollection<DependencyObject> dependencyObjectCollection = entry.Value as ICollection<DependencyObject>;
 
-							if (dependencyObjectValue != null)
+						if (dependencyObjectCollection != null)
+						{
+							foreach (DependencyObject node in metadata.FilterSerializableCollection (dependencyObjectCollection, entry.Property))
 							{
-								if ((metadata.HasSerializationFilter == false) ||
-									(metadata.FilterSerializableItem (dependencyObjectValue)))
-								{
-									GraphVisitor.VisitSerializableNodes (dependencyObjectValue, context);
-								}
-								
-								continue;
-							}
-
-							ICollection<DependencyObject> dependencyObjectCollection = entry.Value as ICollection<DependencyObject>;
-
-							if (dependencyObjectCollection != null)
-							{
-								foreach (DependencyObject node in metadata.FilterSerializableCollection (dependencyObjectCollection, entry.Property))
-								{
-									GraphVisitor.VisitSerializableNodes (node, context);
-								}
+								GraphVisitor.VisitSerializableNodes (node, context);
 							}
 						}
+					}
+				}
+				
+				//	Visit also the DependencyObjectTree properties, if any.
+
+				if (DependencyObjectTree.GetHasChildren (obj))
+				{
+					DependencyProperty property = DependencyObjectTree.ChildrenProperty;
+					DependencyPropertyMetadata metadata = property.GetMetadata (obj);
+					ICollection<DependencyObject> dependencyObjectCollection = DependencyObjectTree.GetChildren (obj);
+					
+					foreach (DependencyObject node in metadata.FilterSerializableCollection (dependencyObjectCollection, property))
+					{
+						GraphVisitor.VisitSerializableNodes (node, context);
 					}
 				}
 				

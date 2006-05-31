@@ -289,6 +289,7 @@ namespace Epsitec.Common.Types.Serialization
 
 
 		public static readonly string			WellKnownTagResourceManager = "_ResourceManager";
+		public static readonly string			WellKnownTagDataSource = "_DataSource";
 		
 		private MapId<DependencyObject>			objMap;
 		private MapTag<object>					externalMap;

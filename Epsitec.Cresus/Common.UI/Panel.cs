@@ -54,7 +54,8 @@ namespace Epsitec.Common.UI
 		/// <param name="context">The serialization context.</param>
 		public void FillSerializationContext(Types.Serialization.Context context)
 		{
-			context.ExternalMap.Record ("DataSource", this.dataSource);
+			context.ExternalMap.Record (Types.Serialization.Context.WellKnownTagDataSource, this.dataSource);
+			context.ExternalMap.Record (Types.Serialization.Context.WellKnownTagResourceManager, this.dataSource.ResourceManager);
 		}
 
 		

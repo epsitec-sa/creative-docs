@@ -784,13 +784,18 @@ namespace Epsitec.Common.Widgets
 		
 		public int									TabIndex
 		{
-			get { return this.tab_index; }
+			get
+			{
+				return (int) this.GetValue (Widget.TabIndexProperty);
+			}
 			set
 			{
+#if true
+				this.SetValue (Widget.TabIndexProperty, value);
+#else
 				if (this.tab_index != value)
 				{
 					this.tab_index = value;
-					
 					if ((this.tab_navigation_mode == TabNavigationMode.Passive) &&
 						(this.tab_index > 0))
 					{
@@ -802,6 +807,7 @@ namespace Epsitec.Common.Widgets
 						this.tab_navigation_mode = TabNavigationMode.Passive;
 					}
 				}
+#endif
 			}
 		}
 		
@@ -4072,8 +4078,9 @@ namespace Epsitec.Common.Widgets
 			Widget that = o as Widget;
 			return that.Text;
 		}
-		
+
 		public static readonly DependencyProperty TextProperty = DependencyProperty.Register ("Text", typeof (string), typeof (Widget), new DependencyPropertyMetadata (Widget.GetTextValue, Widget.SetTextValue, Widget.NotifyTextChanged));
+		public static readonly DependencyProperty TabIndexProperty = DependencyProperty.Register ("TabIndex", typeof (int), typeof (Widget), new DependencyPropertyMetadata (0));
 		
 		private InternalState					internal_state;
 		
@@ -4081,7 +4088,6 @@ namespace Epsitec.Common.Widgets
 		private HypertextInfo					hypertext;
 		
 		private TextLayout						text_layout;
-		private int								tab_index = 0;
 		private TabNavigationMode				tab_navigation_mode;
 		private Collections.ShortcutCollection	shortcuts;
 		private double							default_font_height;
