@@ -1755,7 +1755,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected Rectangle GetAnchorBounds(Widget obj, AnchorStyles style)
 		{
 			//	Retourne le rectangle englobant un ressort d'ancrage.
-			Rectangle bounds = obj.Parent.ActualBounds;
+			Rectangle bounds = this.GetObjectBounds(obj.Parent);
 			Rectangle rect = this.GetObjectBounds(obj);
 			Point p1, p2, p1a, p2a;
 			double thickness = PanelEditor.anchorThickness;
@@ -1955,7 +1955,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void DrawAnchor(Graphics graphics, Widget obj, bool isHilited)
 		{
 			//	Dessine tous les ancrages d'un objet.
-			Rectangle bounds = obj.Parent.ActualBounds;
+			Rectangle bounds = this.GetObjectBounds(obj.Parent);
 			Rectangle rect = this.GetObjectBounds(obj);
 			AnchorStyles anchor = obj.Anchor;
 			Point p1, p2;
