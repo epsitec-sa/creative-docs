@@ -1918,10 +1918,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void DrawHilitedObject(Graphics graphics, Widget obj)
 		{
 			//	Met en évidence l'objet survolé par la souris.
-			this.DrawAnchor(graphics, obj, true);
+			if (this.context.ShowAnchor)
+			{
+				this.DrawAnchor(graphics, obj, true);
+			}
 
 			Rectangle rect = this.GetObjectBounds(obj);
 
+			//	Si le rectangle est trop petit (par exemple objet Separator), il est engraissé.
 			double ix = 0;
 			if (rect.Width < this.context.MinimalSize)
 			{
@@ -1951,16 +1955,16 @@ namespace Epsitec.Common.Designer.MyWidgets
 			p2 = new Point(rect.Left, rect.Center.Y);
 			this.DrawAnchor(graphics, p1, p2, this.IsObjectAnchorLeft(obj), isHilited);
 
-			p1 = new Point(bounds.Right, rect.Center.Y);
-			p2 = new Point(rect.Right, rect.Center.Y);
+			p1 = new Point(rect.Right, rect.Center.Y);
+			p2 = new Point(bounds.Right, rect.Center.Y);
 			this.DrawAnchor(graphics, p1, p2, this.IsObjectAnchorRight(obj), isHilited);
 
 			p1 = new Point(rect.Center.X, bounds.Bottom);
 			p2 = new Point(rect.Center.X, rect.Bottom);
 			this.DrawAnchor(graphics, p1, p2, this.IsObjectAnchorBottom(obj), isHilited);
 
-			p1 = new Point(rect.Center.X, bounds.Top);
-			p2 = new Point(rect.Center.X, rect.Top);
+			p1 = new Point(rect.Center.X, rect.Top);
+			p2 = new Point(rect.Center.X, bounds.Top);
 			this.DrawAnchor(graphics, p1, p2, this.IsObjectAnchorTop(obj), isHilited);
 		}
 
