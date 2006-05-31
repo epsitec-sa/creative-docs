@@ -764,6 +764,13 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			this.constrainsList.Starting(Rectangle.Empty, false);
 			this.constrainsList.Activate(bounds, this.GetObjectBaseLine(this.creatingObject), null);
+
+			Widget parent = this.DetectGroup(bounds);
+			if (parent == this.panel)
+			{
+				parent = null;
+			}
+			this.SetHilitedObject(parent);  // met en évidence le futur parent survolé par la souris
 		}
 
 		protected void CreateObjectMove(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
@@ -777,6 +784,13 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.CreateObjectAdjust(ref pos, out bounds);
 				this.constrainsList.Activate(bounds, this.GetObjectBaseLine(this.creatingObject), null);
 				this.creatingWindow.WindowLocation = this.creatingOrigin + pos;
+
+				Widget parent = this.DetectGroup(bounds);
+				if (parent == this.panel)
+				{
+					parent = null;
+				}
+				this.SetHilitedObject(parent);  // met en évidence le futur parent survolé par la souris
 			}
 		}
 
@@ -802,6 +816,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.SetObjectPosition(this.creatingObject, pos);
 
 				this.constrainsList.Ending();
+				this.SetHilitedObject(null);
 
 				this.lastCreatedObject = this.creatingObject;
 				this.creatingObject = null;
