@@ -822,7 +822,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				item.PreferredWidth = 100;
 				item.PreferredHeight = 1;
 				item.MinWidth = 10;
-				item.MinHeight = 1;
+				item.MinHeight = item.PreferredHeight;
 			}
 
 			if (this.context.Tool == "ObjectVLine")
@@ -830,7 +830,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				item = new Separator();
 				item.PreferredWidth = 1;
 				item.PreferredHeight = 100;
-				item.MinWidth = 1;
+				item.MinWidth = item.PreferredWidth;
 				item.MinHeight = 10;
 			}
 
@@ -839,7 +839,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				item = new StaticText();
 				item.Text = Misc.Italic("StaticText");
 				item.MinWidth = 10;
-				item.MinHeight = 10;
+				item.MinHeight = item.PreferredHeight;
 			}
 
 			if (this.context.Tool == "ObjectButton")
@@ -847,7 +847,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				item = new Button();
 				item.Text = Misc.Italic("Button");
 				item.MinWidth = 20;
-				item.MinHeight = 10;
+				item.MinHeight = item.PreferredHeight;
 			}
 
 			if (this.context.Tool == "ObjectText")
@@ -855,7 +855,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				item = new TextField();
 				item.Text = Misc.Italic("TextField");
 				item.MinWidth = 20;
-				item.MinHeight = 10;
+				item.MinHeight = item.PreferredHeight;
 			}
 
 			if (this.context.Tool == "ObjectGroup")
