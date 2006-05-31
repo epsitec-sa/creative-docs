@@ -1410,7 +1410,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			foreach (Widget obj in this.panel.Children)
 			{
-				if (this.ObjectTabActive(obj) && obj.TabIndex == oldIndex)
+				if (this.IsObjectTabActive(obj) && obj.TabIndex == oldIndex)
 				{
 					obj.TabIndex = newIndex;
 					obj.TabNavigation = TabNavigationMode.ActivateOnTab;
@@ -1649,10 +1649,81 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.Invalidate();
 		}
 
-		protected bool ObjectTabActive(Widget obj)
+		protected bool IsObjectTabActive(Widget obj)
 		{
 			//	Indique si l'objet est ancré à gauche.
 			return (obj.TabNavigation & TabNavigationMode.ActivateOnTab) != 0;
+		}
+
+		protected string GetObjectZOrder(Widget obj)
+		{
+			//	Retourne la chaîne indiquant l'ordre Z, y compris des parents, sous la forme "n.n.n".
+			if (obj.Parent == this.panel)
+			{
+				return (obj.ZOrder+1).ToString();
+			}
+
+			List<int> list = new List<int>();
+			while (obj != this.panel)
+			{
+				list.Add(obj.ZOrder);
+				obj = obj.Parent;
+			}
+
+			System.Text.StringBuilder builder = new System.Text.StringBuilder();
+			for (int i=list.Count-1; i>=0; i--)
+			{
+				if (builder.Length > 0)
+				{
+					builder.Append(".");
+				}
+
+				builder.Append((list[i]+1).ToString());
+			}
+			return builder.ToString();
+		}
+
+		protected string GetObjectTabIndex(Widget obj)
+		{
+			//	Retourne la chaîne indiquant l'ordre Z, y compris des parents, sous la forme "n.n.n".
+			if (obj.Parent == this.panel)
+			{
+				if (this.IsObjectTabActive(obj))
+				{
+					return (obj.TabIndex+1).ToString();
+				}
+				else
+				{
+					return "x";
+				}
+			}
+
+			List<string> list = new List<string>();
+			while (obj != this.panel)
+			{
+				if (this.IsObjectTabActive(obj))
+				{
+					list.Add((obj.TabIndex+1).ToString());
+				}
+				else
+				{
+					list.Add("x");
+				}
+
+				obj = obj.Parent;
+			}
+
+			System.Text.StringBuilder builder = new System.Text.StringBuilder();
+			for (int i=list.Count-1; i>=0; i--)
+			{
+				if (builder.Length > 0)
+				{
+					builder.Append(".");
+				}
+
+				builder.Append(list[i]);
+			}
+			return builder.ToString();
 		}
 		#endregion
 
@@ -1838,38 +1909,13 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Dessine les numéros d'ordre.
 			if (this.context.ShowZOrder && !this.isDragging && !this.handlesList.IsDragging)
 			{
-				foreach (Widget obj in this.panel.Children)
-				{
-					Rectangle rect = this.GetObjectBounds(obj);
-					box = new Rectangle(rect.BottomLeft+new Point(1, 1), new Size(12, 10));
-
-					graphics.AddFilledRectangle(box);
-					graphics.RenderSolid(Color.FromBrightness(1));
-
-					string text = (obj.ZOrder+1).ToString();
-					graphics.AddText(box.Left, box.Bottom, box.Width, box.Height, text, Font.DefaultFont, 9.0, ContentAlignment.MiddleCenter);
-					graphics.RenderSolid(PanelsContext.ColorZOrder);
-				}
+				this.DrawZOrder(graphics, this.panel);
 			}
 
 			//	Dessine les numéros d'index pour la touche Tab.
 			if (this.context.ShowTabIndex && !this.isDragging && !this.handlesList.IsDragging)
 			{
-				foreach (Widget obj in this.panel.Children)
-				{
-					if (this.ObjectTabActive(obj))
-					{
-						Rectangle rect = this.GetObjectBounds(obj);
-						box = new Rectangle(rect.BottomRight+new Point(-12-1, 1), new Size(12, 10));
-
-						graphics.AddFilledRectangle(box);
-						graphics.RenderSolid(Color.FromBrightness(1));
-
-						string text = (obj.TabIndex+1).ToString();
-						graphics.AddText(box.Left, box.Bottom, box.Width, box.Height, text, Font.DefaultFont, 9.0, ContentAlignment.MiddleCenter);
-						graphics.RenderSolid(PanelsContext.ColorTabIndex);
-					}
-				}
+				this.DrawTabIndex(graphics, this.panel);
 			}
 
 			//	Dessine l'objet survolé.
@@ -1943,6 +1989,50 @@ namespace Epsitec.Common.Designer.MyWidgets
 			graphics.AddFilledCircle(p1, 3.0);
 			graphics.AddFilledCircle(p2, 3.0);
 			graphics.RenderSolid(PanelsContext.ColorAnchor);
+		}
+
+		protected void DrawZOrder(Graphics graphics, Widget parent)
+		{
+			//	Dessine les numéros d'ordre d'un groupe.
+			foreach (Widget obj in parent.Children)
+			{
+				Rectangle rect = this.GetObjectBounds(obj);
+				Rectangle box = new Rectangle(rect.BottomLeft+new Point(1, 1), new Size(20, 10));
+
+				graphics.AddFilledRectangle(box);
+				graphics.RenderSolid(Color.FromBrightness(1));
+
+				string text = this.GetObjectZOrder(obj);
+				graphics.AddText(box.Left, box.Bottom, box.Width, box.Height, text, Font.DefaultFont, 9.0, ContentAlignment.MiddleCenter);
+				graphics.RenderSolid(PanelsContext.ColorZOrder);
+
+				if (obj is AbstractGroup)
+				{
+					this.DrawZOrder(graphics, obj);
+				}
+			}
+		}
+
+		protected void DrawTabIndex(Graphics graphics, Widget parent)
+		{
+			//	Dessine les numéros pour la touche Tab d'un groupe.
+			foreach (Widget obj in parent.Children)
+			{
+				Rectangle rect = this.GetObjectBounds(obj);
+				Rectangle box = new Rectangle(rect.BottomRight+new Point(-20-1, 1), new Size(20, 10));
+
+				graphics.AddFilledRectangle(box);
+				graphics.RenderSolid(Color.FromBrightness(1));
+
+				string text = this.GetObjectTabIndex(obj);
+				graphics.AddText(box.Left, box.Bottom, box.Width, box.Height, text, Font.DefaultFont, 9.0, ContentAlignment.MiddleCenter);
+				graphics.RenderSolid(PanelsContext.ColorTabIndex);
+
+				if (obj is AbstractGroup)
+				{
+					this.DrawTabIndex(graphics, obj);
+				}
+			}
 		}
 
 		public Rectangle RealBounds
