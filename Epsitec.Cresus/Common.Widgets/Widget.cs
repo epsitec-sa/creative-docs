@@ -1785,6 +1785,90 @@ namespace Epsitec.Common.Widgets
 			return null;
 		}
 		
+		public virtual Widget	FindChild(Drawing.Rectangle rect, ChildFindMode mode)
+		{
+			if (this.HasChildren == false)
+			{
+				return null;
+			}
+			
+			Widget[] children = this.Children.Widgets;
+			int  children_num = children.Length;
+			
+			for (int i = 0; i < children_num; i++)
+			{
+				Widget widget = children[children_num-1 - i];
+				
+				System.Diagnostics.Debug.Assert (widget != null);
+				
+				if ((mode & ChildFindMode.SkipMask) != ChildFindMode.All)
+				{
+					if ((mode & ChildFindMode.SkipDisabled) != 0)
+					{
+						if (widget.IsEnabled == false)
+						{
+							continue;
+						}
+					}
+					if ((mode & ChildFindMode.SkipHidden) != 0)
+					{
+						if (widget.Visibility == false)
+						{
+							continue;
+						}
+					}
+					if ((mode & ChildFindMode.SkipNonContainer) != 0)
+					{
+						if (widget.PossibleContainer == false)
+						{
+							continue;
+						}
+					}
+				}
+				
+				if (widget.HitTest (rect.BottomLeft) && widget.HitTest (rect.TopRight))
+				{
+					if ((mode & ChildFindMode.SkipTransparent) != 0)
+					{
+						//	TODO: vérifier que le point en question n'est pas transparent
+					}
+					
+					if ((mode & ChildFindMode.Deep) != 0)
+					{
+						//	Si on fait une recherche en profondeur, on regarde si le point correspond à
+						//	un descendant du widget trouvé...
+						
+						Widget deep = widget.FindChild (widget.MapParentToClient (rect), mode);
+						
+						//	Si oui, pas de test supplémentaire: on s'arrête et on retourne le widget
+						//	terminal trouvé lors de la descente récursive :
+						
+						if (deep != null)
+						{
+							return deep;
+						}
+					}
+					
+					if ((mode & ChildFindMode.SkipEmbedded) != 0)
+					{
+						//	Si l'appelant a demandé de sauter les widgets spéciaux, marqués comme étant
+						//	"embedded" dans un parent, on vérifie que l'on ne retourne pas un tel widget.
+						//	Ce test doit se faire en dernier, parce qu'une descente récursive dans un
+						//	widget "embedded" peut éventuellement donner des résultats positifs :
+						
+						if (widget.IsEmbedded)
+						{
+							continue;
+						}
+					}
+					
+					return widget;
+				}
+			}
+			
+			return null;
+		}
+		
 		public Widget			FindChild(string name)
 		{
 			return this.FindChild (name, ChildFindMode.All);

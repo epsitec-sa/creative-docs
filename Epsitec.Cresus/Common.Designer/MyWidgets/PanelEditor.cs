@@ -1033,7 +1033,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected Widget DetectGroup(Rectangle rect)
 		{
 			//	Détecte dans quel groupe est entièrement inclu un rectangle donné.
-			Widget container = this.panel.FindChild(rect.Center, ChildFindMode.Deep | ChildFindMode.SkipHidden | ChildFindMode.SkipNonContainer | ChildFindMode.SkipEmbedded);
+			Widget container = this.panel.FindChild(rect, ChildFindMode.Deep | ChildFindMode.SkipHidden | ChildFindMode.SkipNonContainer | ChildFindMode.SkipEmbedded);
 			return container ?? this.panel;
 		}
 
