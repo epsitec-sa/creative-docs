@@ -517,15 +517,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 			else
 			{
-				Widget obj = this.Detect(pos);
-				Rectangle rect = Rectangle.Empty;
-				if (obj != null)
-				{
-					rect = this.GetObjectBounds(obj);
-				}
-				this.SetHiliteRectangle(rect);  // met en évidence l'objet survolé par la souris
+				this.SetHilitedObject(this.Detect(pos));  // met en évidence l'objet survolé par la souris
 
 				Rectangle anchor = Rectangle.Empty;
+				Widget obj;
 				AnchorStyles style;
 				if (this.AnchorDetect(pos, out obj, out style))
 				{
@@ -683,13 +678,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Edition, souris déplacée.
 			this.ChangeMouseCursor(MouseCursorType.Edit);
 
-			Widget obj = this.Detect(pos);
-			Rectangle rect = Rectangle.Empty;
-			if (obj != null)
-			{
-				rect = this.GetObjectBounds(obj);
-			}
-			this.SetHiliteRectangle(rect);  // met en évidence l'objet survolé par la souris
+			this.SetHilitedObject(this.Detect(pos));  // met en évidence l'objet survolé par la souris
 		}
 
 		protected void EditUp(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
@@ -930,7 +919,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			if (this.handlesList.IsDragging)
 			{
 				this.handlesList.DraggingMove(pos);
-				this.SetHiliteRectangle(Rectangle.Empty);
+				this.SetHilitedObject(null);
 				this.SetAnchorRectangle(Rectangle.Empty);
 				return true;
 			}
@@ -984,7 +973,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.draggingWindow.FocusedWidget = container;
 			this.draggingWindow.Show();
 
-			this.SetHiliteRectangle(Rectangle.Empty);
+			this.SetHilitedObject(null);
 			this.SetAnchorRectangle(Rectangle.Empty);
 			this.isDragging = true;
 			this.Invalidate();
@@ -1126,31 +1115,13 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.handlesList.UpdateSelection();
 		}
 
-		protected void SetHiliteRectangle(Rectangle rect)
+		protected void SetHilitedObject(Widget obj)
 		{
-			//	Détermine la zone à mettre en évidence lors d'un survol.
-			if (!rect.IsEmpty)
+			//	Détermine l'objet à mettre en évidence lors d'un survol.
+			if (this.hilitedObject != obj)
 			{
-				double ix = 0;
-				if (rect.Width < this.context.MinimalSize)
-				{
-					ix = this.context.MinimalSize;
-				}
-
-				double iy = 0;
-				if (rect.Height < this.context.MinimalSize)
-				{
-					iy = this.context.MinimalSize;
-				}
-
-				rect.Inflate(ix, iy);
-			}
-
-			if (this.hilitedRectangle != rect)
-			{
-				this.Invalidate(this.hilitedRectangle);  // invalide l'ancienne zone
-				this.hilitedRectangle = rect;
-				this.Invalidate(this.hilitedRectangle);  // invalide la nouvelle zone
+				this.hilitedObject = obj;
+				this.Invalidate();
 			}
 		}
 
@@ -1566,13 +1537,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 				parent = parent.Parent;
 			}
 
-			Rectangle box = this.RealBounds;
+			parent = obj.Parent;
+			Rectangle box = parent.ActualBounds;
 			Margins margins = obj.Margins;
 
 			if (this.IsObjectAnchorLeft(obj))
 			{
 				double px = bounds.Left;
-				px -= this.panel.Padding.Left;
+				px -= parent.Padding.Left;
 				px = System.Math.Max(px, 0);
 				margins.Left = px;
 			}
@@ -1580,7 +1552,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			if (this.IsObjectAnchorRight(obj))
 			{
 				double px = box.Right - bounds.Right;
-				px -= this.panel.Padding.Right;
+				px -= parent.Padding.Right;
 				px = System.Math.Max(px, 0);
 				margins.Right = px;
 			}
@@ -1588,7 +1560,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			if (this.IsObjectAnchorBottom(obj))
 			{
 				double py = bounds.Bottom;
-				py -= this.panel.Padding.Bottom;
+				py -= parent.Padding.Bottom;
 				py = System.Math.Max(py, 0);
 				margins.Bottom = py;
 			}
@@ -1596,7 +1568,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			if (this.IsObjectAnchorTop(obj))
 			{
 				double py = box.Top - bounds.Top;
-				py -= this.panel.Padding.Top;
+				py -= parent.Padding.Top;
 				py = System.Math.Max(py, 0);
 				margins.Top = py;
 			}
@@ -1894,7 +1866,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				foreach (Widget obj in this.selectedObjects)
 				{
-					this.DrawAnchor(graphics, obj);
+					this.DrawAnchor(graphics, obj, false);
 				}
 			}
 
@@ -1914,10 +1886,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 
 			//	Dessine l'objet survolé.
-			if (!this.hilitedRectangle.IsEmpty)
+			if (this.hilitedObject != null)
 			{
-				graphics.AddFilledRectangle(this.hilitedRectangle);
-				graphics.RenderSolid(PanelsContext.ColorHiliteSurface);
+				this.DrawHilitedObject(graphics, this.hilitedObject);
 			}
 
 			//	Dessine le rectangle de sélection.
@@ -1944,7 +1915,32 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
-		protected void DrawAnchor(Graphics graphics, Widget obj)
+		protected void DrawHilitedObject(Graphics graphics, Widget obj)
+		{
+			//	Met en évidence l'objet survolé par la souris.
+			this.DrawAnchor(graphics, obj, true);
+
+			Rectangle rect = this.GetObjectBounds(obj);
+
+			double ix = 0;
+			if (rect.Width < this.context.MinimalSize)
+			{
+				ix = this.context.MinimalSize;
+			}
+
+			double iy = 0;
+			if (rect.Height < this.context.MinimalSize)
+			{
+				iy = this.context.MinimalSize;
+			}
+
+			rect.Inflate(ix, iy);
+
+			graphics.AddFilledRectangle(rect);
+			graphics.RenderSolid(PanelsContext.ColorHiliteSurface);
+		}
+
+		protected void DrawAnchor(Graphics graphics, Widget obj, bool isHilited)
 		{
 			//	Dessine tous les ancrages d'un objet.
 			Rectangle bounds = obj.Parent.ActualBounds;
@@ -1953,24 +1949,26 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			p1 = new Point(bounds.Left, rect.Center.Y);
 			p2 = new Point(rect.Left, rect.Center.Y);
-			this.DrawAnchor(graphics, p1, p2, this.IsObjectAnchorLeft(obj));
+			this.DrawAnchor(graphics, p1, p2, this.IsObjectAnchorLeft(obj), isHilited);
 
 			p1 = new Point(bounds.Right, rect.Center.Y);
 			p2 = new Point(rect.Right, rect.Center.Y);
-			this.DrawAnchor(graphics, p1, p2, this.IsObjectAnchorRight(obj));
+			this.DrawAnchor(graphics, p1, p2, this.IsObjectAnchorRight(obj), isHilited);
 
 			p1 = new Point(rect.Center.X, bounds.Bottom);
 			p2 = new Point(rect.Center.X, rect.Bottom);
-			this.DrawAnchor(graphics, p1, p2, this.IsObjectAnchorBottom(obj));
+			this.DrawAnchor(graphics, p1, p2, this.IsObjectAnchorBottom(obj), isHilited);
 
 			p1 = new Point(rect.Center.X, bounds.Top);
 			p2 = new Point(rect.Center.X, rect.Top);
-			this.DrawAnchor(graphics, p1, p2, this.IsObjectAnchorTop(obj));
+			this.DrawAnchor(graphics, p1, p2, this.IsObjectAnchorTop(obj), isHilited);
 		}
 
-		protected void DrawAnchor(Graphics graphics, Point p1, Point p2, bool rigid)
+		protected void DrawAnchor(Graphics graphics, Point p1, Point p2, bool rigid, bool isHilited)
 		{
 			//	Dessine un ancrage horizontal ou vertical d'un objet.
+			Color color = isHilited ? PanelsContext.ColorHiliteOutline : PanelsContext.ColorAnchor;
+
 			Point p1a = Point.Scale(p1, p2, PanelEditor.anchorScale);
 			Point p2a = Point.Scale(p2, p1, PanelEditor.anchorScale);
 
@@ -2002,12 +2000,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 				Misc.AddSpring(graphics, p1a, p2a, dim, loops);
 			}
 
-			graphics.RenderSolid(PanelsContext.ColorAnchor);
+			graphics.RenderSolid(color);
 
 			//	Dessine les extrémités.
 			graphics.AddFilledCircle(p1, 3.0);
 			graphics.AddFilledCircle(p2, 3.0);
-			graphics.RenderSolid(PanelsContext.ColorAnchor);
+			graphics.RenderSolid(color);
 		}
 
 		protected void DrawZOrder(Graphics graphics, Widget parent)
@@ -2233,7 +2231,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected List<Widget>				selectedObjects = new List<Widget>();
 		protected Rectangle					selectedRectangle = Rectangle.Empty;
 		protected Rectangle					anchorRectangle = Rectangle.Empty;
-		protected Rectangle					hilitedRectangle = Rectangle.Empty;
+		protected Widget					hilitedObject;
 		protected bool						isRectangling;  // j'invente des mots si je veux !
 		protected bool						isDragging;
 		protected DragWindow				draggingWindow;
