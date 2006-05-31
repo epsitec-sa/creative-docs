@@ -1184,7 +1184,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Supprime tous les objets sélectionnés.
 			foreach (Widget obj in this.selectedObjects)
 			{
-				this.panel.Children.Remove(obj);
+				//?this.panel.Children.Remove(obj);
+				obj.Parent.Children.Remove(obj);
 				obj.Dispose();
 			}
 
@@ -1404,8 +1405,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 					int oldIndex = obj.TabIndex;
 					int index = obj.TabIndex + direction;
 					index = System.Math.Max(index, 0);
-					index = System.Math.Min(index, this.panel.Children.Count-1);
-					this.SelectTabIndex(index, oldIndex);
+					index = System.Math.Min(index, obj.Parent.Children.Count-1);
+					this.SelectTabIndex(obj.Parent, index, oldIndex);
 					obj.TabIndex = index;
 					obj.TabNavigation = TabNavigationMode.ActivateOnTab;
 				}
@@ -1416,9 +1417,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.OnUpdateCommands();
 		}
 
-		protected void SelectTabIndex(int oldIndex, int newIndex)
+		protected void SelectTabIndex(Widget parent, int oldIndex, int newIndex)
 		{
-			foreach (Widget obj in this.panel.Children)
+			foreach (Widget obj in parent.Children)
 			{
 				if (this.IsObjectTabActive(obj) && obj.TabIndex == oldIndex)
 				{
