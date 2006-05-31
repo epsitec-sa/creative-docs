@@ -1990,15 +1990,17 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.DrawAnchor(graphics, obj, PanelsContext.ColorHiliteParent);
 			}
 
+			double thickness = 3.0;
+
 			Rectangle rect = this.GetObjectBounds(obj);
 			rect.Deflate(0.5);
 			graphics.AddRectangle(rect);
 			graphics.RenderSolid(PanelsContext.ColorHiliteParent);
-			rect.Deflate(2.0);
+			rect.Deflate(thickness/2+0.5);
 
 			Path path = new Path();
 			path.AppendRectangle(rect);
-			Misc.DrawPathDash(graphics, path, 5, 10, 10, PanelsContext.ColorHiliteParent);
+			Misc.DrawPathDash(graphics, path, thickness, thickness*2, thickness*2, PanelsContext.ColorHiliteParent);
 		}
 
 		protected void DrawAnchor(Graphics graphics, Widget obj, Color color)
