@@ -80,7 +80,7 @@ namespace Epsitec.Common.Support
 		{
 			get
 			{
-				return this.manager.MakeFullName (this.prefix, this.name);
+				return this.manager.NormalizeFullId (this.prefix, this.name);
 			}
 		}
 		public string							Name

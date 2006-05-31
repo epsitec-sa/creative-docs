@@ -195,12 +195,6 @@ namespace Epsitec.Common.Support
 			return null;
 		}
 		
-		public static string MakeFullName(string prefix, string name)
-		{
-			return Resources.manager.MakeFullName(prefix, name);
-		}
-		
-		
 		public static string MapToSuffix(ResourceLevel level, CultureInfo culture)
 		{
 			return Resources.manager.MapToSuffix (level, culture);

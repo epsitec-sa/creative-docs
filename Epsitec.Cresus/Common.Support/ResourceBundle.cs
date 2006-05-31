@@ -46,16 +46,22 @@ namespace Epsitec.Common.Support
 		{
 			return ResourceBundle.Create (resource_manager, prefix, name, level, culture, 0);
 		}
-		
+
 		public static ResourceBundle Create(ResourceManager resource_manager, string prefix, string name, ResourceLevel level, CultureInfo culture, int recursion)
 		{
+			return ResourceBundle.Create (resource_manager, prefix, null, name, level, culture, recursion);
+		}
+
+		public static ResourceBundle Create(ResourceManager resource_manager, string prefix, string module, string name, ResourceLevel level, CultureInfo culture, int recursion)
+		{
 			ResourceBundle bundle = new ResourceBundle (resource_manager, name);
-			
+
 			bundle.DefinePrefix (prefix);
+			bundle.DefineModule (module);
 			bundle.DefineCulture (culture);
-			bundle.level   = level;
-			bundle.depth   = recursion;
-			
+			bundle.level = level;
+			bundle.depth = recursion;
+
 			return bundle;
 		}
 		
@@ -141,7 +147,10 @@ namespace Epsitec.Common.Support
 		{
 			get
 			{
-				return this.manager.MakeFullName (this.prefix, this.name);
+				string module = this.manager.NormalizeModuleId (this.prefix, this.module);
+				string prefix = ResourceManager.JoinFullPrefix (this.prefix, module);
+				
+				return this.manager.NormalizeFullId (prefix, this.name);
 			}
 		}
 		
@@ -294,16 +303,21 @@ namespace Epsitec.Common.Support
 					default:
 						throw new System.NotImplementedException (string.Format ("Support for prefix {0} not implemented.", prefix));
 				}
-				
-				if (! RegexFactory.AlphaName.IsMatch (prefix))
+
+				if (!RegexFactory.AlphaName.IsMatch (prefix))
 				{
 					throw new ResourceException (string.Format ("Prefix '{0}' is not a valid prefix name.", prefix));
 				}
 			}
-			
+
 			this.prefix = prefix;
 		}
-		
+
+		internal void DefineModule(string module)
+		{
+			this.module = module;
+		}
+
 		internal void DefineCulture(CultureInfo culture)
 		{
 			this.culture = culture;
@@ -760,7 +774,7 @@ namespace Epsitec.Common.Support
 		
 		public static bool SplitTarget(string target, out string targetBundle, out string targetField)
 		{
-			ResourceManager.ResolveDruidReference (ref target);
+			target = ResourceManager.ResolveDruidReference (target);
 			
 			int pos = target.IndexOf (ResourceBundle.FieldSeparator);
 			
@@ -989,7 +1003,7 @@ namespace Epsitec.Common.Support
 					throw new ResourceException (string.Format ("No default prefix specified, target '{0}' cannot be resolved.", target));
 				}
 				
-				target = this.manager.MakeFullName (this.prefix, target);
+				target = this.manager.NormalizeFullId (this.prefix, target);
 			}
 			
 			return target;
@@ -1711,6 +1725,7 @@ namespace Epsitec.Common.Support
 		public static readonly int		MaxRecursion = 50;
 
 		private string					prefix;
+		private string					module;
 		private string					name;
 		private string					type;
 		private string					about;

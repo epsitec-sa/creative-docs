@@ -4,8 +4,8 @@
 namespace Epsitec.Common.Types
 {
 	/// <summary>
-	/// The IContextResolver can be used to map between objects and markup
-	/// tags. This interface is implemented by Serialization.Context.
+	/// The <c>IContextResolver</c> can be used to map between objects and markup
+	/// tags. This interface is implemented by <c>Serialization.Context</c>.
 	/// </summary>
 	public interface IContextResolver
 	{

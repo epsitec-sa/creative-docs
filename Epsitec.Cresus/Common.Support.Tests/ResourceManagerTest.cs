@@ -14,6 +14,7 @@ namespace Epsitec.Common.Support
 			this.manager = new ResourceManager (@"S:\Epsitec.Cresus\Common.Support.Tests");
 			this.manager.DefineDefaultModuleName ("Test");
 			this.manager.ActivePrefix = "file";
+			this.manager.ActiveCulture = Resources.FindCultureInfo ("en");
 		}
 
 		[Test]
