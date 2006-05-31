@@ -27,7 +27,7 @@ namespace Epsitec.Common.Types
 
 			int objectCount   = newObjCount - oldObjCount;
 			int typeCount     = newTypeCount - oldTypeCount;
-			int externalCount = context.ExternalMap.UsedValueCount;
+			int externalCount = context.ExternalMap.ValueCount;
 
 			context.ActiveWriter.BeginStorageBundle (map.GetId (root), externalCount, typeCount, objectCount);
 

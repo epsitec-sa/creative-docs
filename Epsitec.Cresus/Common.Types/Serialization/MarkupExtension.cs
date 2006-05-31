@@ -149,7 +149,7 @@ namespace Epsitec.Common.Types.Serialization
 			buffer.Append ("{");
 			buffer.Append ("ResBinding");
 			buffer.Append (" ");
-			buffer.Append ("id=");
+			buffer.Append ("Id=");
 			buffer.Append (binding.ResourceId);
 			buffer.Append ("}");
 			

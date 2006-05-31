@@ -85,6 +85,12 @@ namespace Epsitec.Common.Types.Serialization
 						collection.Add (item);
 					}
 				}
+				else if (data is Binding)
+				{
+					//	Rebind property if it was a binding...
+					
+					obj.SetBinding (property, data as Binding);
+				}
 				else
 				{
 					obj.SetValue (property, data);
