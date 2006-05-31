@@ -1,3 +1,5 @@
+[assembly: Epsitec.Common.Types.DependencyClass (typeof (Epsitec.Common.Widgets.VScroller))]
+
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>

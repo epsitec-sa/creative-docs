@@ -4,6 +4,8 @@
 using Epsitec.Common.Types;
 using System.Collections.Generic;
 
+[assembly: Epsitec.Common.Types.DependencyClass (typeof (Epsitec.Common.Widgets.Visual))]
+
 namespace Epsitec.Common.Widgets
 {
 	using PropertyChangedEventHandler=Epsitec.Common.Support.EventHandler<DependencyPropertyChangedEventArgs>;

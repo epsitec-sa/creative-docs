@@ -230,10 +230,53 @@ namespace Epsitec.Common.Support
 			Assert.IsTrue (System.Math.Abs ((memory4-memory6)/max - (memory3-memory2)/max) < 2);
 			Assert.IsTrue ((memory3-memory2)/max < 326);	// 314 before r5433
 		}
+		
+		[Test]
+		public void CheckBinding1Serialization()
+		{
+			string result = this.SerializeToXml ();
+			
+			System.Console.Out.WriteLine (result);
+		}
 
 		[Test]
-		public void CheckBindingSerialization()
+		public void CheckBinding2Deserialization()
 		{
+			string result = this.SerializeToXml ();
+			
+			System.IO.StringReader stringReader = new System.IO.StringReader (result);
+			System.Xml.XmlTextReader xmlReader = new System.Xml.XmlTextReader (stringReader);
+
+			while (xmlReader.Read ())
+			{
+				if ((xmlReader.NodeType == System.Xml.XmlNodeType.Element) &&
+					(xmlReader.LocalName == "root"))
+				{
+					break;
+				}
+			}
+
+			Types.Serialization.Context context = new Types.Serialization.DeserializerContext (new Types.Serialization.IO.XmlReader (xmlReader));
+			
+			context.ExternalMap.Record (Types.Serialization.Context.WellKnownTagResourceManager, this.manager);
+
+			Widgets.Widget root = Storage.Deserialize (context) as Widgets.Widget;
+
+			Assert.IsNotNull (root);
+			Assert.AreEqual ("RootWidget", root.Name);
+			Assert.AreEqual ("Druid - Hello, world", root.Text);
+			Assert.AreEqual (1, root.TabIndex);
+			Assert.AreEqual (2, root.Children.Count);
+			Assert.AreEqual (typeof (Widgets.Button), root.Children[0].GetType ());
+			Assert.AreEqual (root, root.Children[0].Parent);
+			Assert.AreEqual ("Druid - Good bye...", (root.Children[0] as Widgets.Button).Text);
+			Assert.AreEqual (typeof (Widgets.VScroller), root.Children[1].GetType ());
+			Assert.AreEqual (root, root.Children[1].Parent);
+		}
+
+		private string SerializeToXml()
+		{
+			string result;
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 			System.IO.StringWriter stringWriter = new System.IO.StringWriter (buffer);
 			System.Xml.XmlTextWriter xmlWriter = new System.Xml.XmlTextWriter (stringWriter);
@@ -254,20 +297,21 @@ namespace Epsitec.Common.Support
 
 			this.manager.Bind (root, Widgets.Widget.TextProperty, "[4]");
 			this.manager.Bind (button, Widgets.Widget.TextProperty, "[4001]");
-			
+
 			root.Name = "RootWidget";
 			root.TabIndex = 1;
 			root.Children.Add (button);
 			root.Children.Add (scroller);
-			
+
 			Storage.Serialize (root, context);
-			
+
 			xmlWriter.WriteEndElement ();
 			xmlWriter.WriteEndDocument ();
 			xmlWriter.Flush ();
 			xmlWriter.Close ();
 
-			System.Console.Out.WriteLine (buffer.ToString ());
+			result = buffer.ToString ();
+			return result;
 		}
 
 		private ResourceManager manager;

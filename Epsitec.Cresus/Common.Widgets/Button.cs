@@ -1,3 +1,6 @@
+
+[assembly: Epsitec.Common.Types.DependencyClass (typeof (Epsitec.Common.Widgets.Button))]
+
 namespace Epsitec.Common.Widgets
 {
 	public enum ButtonStyle
