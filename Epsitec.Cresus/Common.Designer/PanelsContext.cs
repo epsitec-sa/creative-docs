@@ -202,6 +202,16 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
+		static public Color ColorHiliteParent
+		{
+			//	Couleur lorsqu'un objet parent est survolé par la souris.
+			get
+			{
+				IAdorner adorner = Epsitec.Common.Widgets.Adorners.Factory.Active;
+				return adorner.ColorCaption;
+			}
+		}
+
 		static public Color ColorOutsurface
 		{
 			//	Couleur pour la surface hors du panneau.
