@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using Epsitec.Common.Types;
+using Epsitec.Common.Support;
 
 namespace Epsitec.Common.UI
 {
@@ -17,6 +18,22 @@ namespace Epsitec.Common.UI
 		/// </summary>
 		public DataSourceCollection()
 		{
+		}
+
+		/// <summary>
+		/// Gets or sets the associated resource manager.
+		/// </summary>
+		/// <value>The resource manager.</value>
+		public ResourceManager ResourceManager
+		{
+			get
+			{
+				return this.resourceManager;
+			}
+			set
+			{
+				this.resourceManager = value;
+			}
 		}
 
 		/// <summary>
@@ -262,5 +279,6 @@ namespace Epsitec.Common.UI
 		#endregion
 
 		List<ItemRecord> items = new List<ItemRecord> ();
+		ResourceManager resourceManager;
 	}
 }

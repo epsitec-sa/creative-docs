@@ -569,7 +569,7 @@ namespace Epsitec.Common.Widgets.Layouts
 			visual.ClearValue (LayoutContext.LayoutContextProperty);
 		}
 
-		public static Types.DependencyProperty	LayoutContextProperty = Types.DependencyProperty.RegisterAttached ("LayoutContext", typeof (LayoutContext), typeof (LayoutContext));
+		public static Types.DependencyProperty LayoutContextProperty = Types.DependencyProperty.RegisterAttached ("LayoutContext", typeof (LayoutContext), typeof (LayoutContext), new Types.DependencyPropertyMetadata ().MakeNotSerializable ());
 		
 		private static int						nextPassId = 0;
 		

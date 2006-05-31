@@ -410,13 +410,13 @@ namespace Epsitec.Common.Types
 		{
 			while (item != null)
 			{
-				foreach (LocalValueEntry entry in item.LocalValueEntries)
+				foreach (DependencyProperty property in item.LocalProperties)
 				{
-					if (entry.Property.GetMetadata (item).InheritsValue)
+					if (property.GetMetadata (item).InheritsValue)
 					{
-						if (list.Contains (entry.Property) == false)
+						if (list.Contains (property) == false)
 						{
-							list.Add (entry.Property);
+							list.Add (property);
 						}
 					}
 				}

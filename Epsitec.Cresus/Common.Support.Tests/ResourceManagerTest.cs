@@ -2,6 +2,9 @@
 //	Responsable: Pierre ARNAUD
 
 using NUnit.Framework;
+using System.Collections.Generic;
+
+using Epsitec.Common.Types;
 
 namespace Epsitec.Common.Support
 {
@@ -83,6 +86,182 @@ namespace Epsitec.Common.Support
 
 			Assert.AreEqual (t1, this.manager.GetText ("[V]"));
 			Assert.AreEqual (t2, this.manager.GetText ("[4]"));
+		}
+
+		[Test]
+		public void CheckBinding()
+		{
+			ResourceManager manager = this.manager;
+			Widgets.Visual visual = new Epsitec.Common.Widgets.Visual ();
+			System.Globalization.CultureInfo culture = manager.ActiveCulture;
+
+			manager.ActiveCulture = Resources.FindCultureInfo ("fr");
+
+			Assert.AreEqual ("Druid - Bonjour", manager.GetData ("file/Test:DruidData#$0", ResourceLevel.Localized, null));
+			Assert.AreEqual ("Druid - Bonjour", manager.GetData ("[4]", ResourceLevel.Localized, null));
+
+			manager.Bind (visual, Widgets.Visual.NameProperty, "[4]");
+
+			Assert.IsTrue (visual.IsBound (Widgets.Visual.NameProperty));
+			Assert.AreEqual (Types.DataSourceType.Resource, visual.GetBindingExpression (Widgets.Visual.NameProperty).DataSourceType);
+
+			Assert.AreEqual ("Druid - Bonjour", visual.Name);
+
+			manager.ActiveCulture = Resources.FindCultureInfo ("en");
+
+			Assert.AreEqual ("Druid - Hello, world", visual.Name);
+
+			manager.ActiveCulture = culture;
+		}
+
+		[Test]
+		public void CheckBindingPerformance()
+		{
+			System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch ();
+			ResourceManager manager = new ResourceManager (this.GetType ());
+			Widgets.Visual visual = new Epsitec.Common.Widgets.Visual ();
+
+			manager.DefineDefaultModuleName ("LowLevelTest");
+			manager.ActiveCulture = Resources.FindCultureInfo ("en");
+			manager.GetData ("file:strings#title.SettingsWindow", ResourceLevel.Localized, null);
+			manager.ActiveCulture = Resources.FindCultureInfo ("fr");
+			manager.GetData ("file:strings#title.SettingsWindow", ResourceLevel.Localized, null);
+
+			System.GC.Collect ();
+
+			long memory1 = System.GC.GetTotalMemory (true);
+
+			stopwatch.Start ();
+			stopwatch.Stop ();
+
+			int max = 100*1000;
+
+			List<Widgets.Visual> list = new List<Epsitec.Common.Widgets.Visual> ();
+
+			stopwatch.Reset ();
+			stopwatch.Start ();
+
+			for (int i = 0; i < max; i++)
+			{
+				visual = new Epsitec.Common.Widgets.Visual ();
+				list.Add (visual);
+			}
+
+			stopwatch.Stop ();
+			long memory2 = System.GC.GetTotalMemory (true);
+			stopwatch.Start ();
+
+			for (int i = 0; i < max; i++)
+			{
+				visual = list[i];
+				manager.Bind (visual, Widgets.Visual.NameProperty, "file:strings#title.SettingsWindow");
+			}
+
+			stopwatch.Stop ();
+
+			long memory3 = System.GC.GetTotalMemory (true);
+
+			System.Console.Out.WriteLine ("Created {0} bindings in {1} ms", max, stopwatch.ElapsedMilliseconds);
+			System.Console.Out.WriteLine ("Visual:  {0} bytes/instance", (memory2-memory1) / max);
+			System.Console.Out.WriteLine ("Binding: {0} bytes/instance", (memory3-memory2) / max);
+			System.Console.Out.Flush ();
+
+			stopwatch.Reset ();
+			stopwatch.Start ();
+
+			manager.ActiveCulture = Resources.FindCultureInfo ("en");
+
+			stopwatch.Stop ();
+
+			System.Console.Out.WriteLine ("Switch to culture '{0}' bindings in {1} ms", manager.ActiveCulture.EnglishName, stopwatch.ElapsedMilliseconds);
+
+			stopwatch.Reset ();
+			stopwatch.Start ();
+
+			manager.ActiveCulture = Resources.FindCultureInfo ("fr");
+
+			stopwatch.Stop ();
+
+			System.Console.Out.WriteLine ("Switch to culture '{0}' bindings in {1} ms", manager.ActiveCulture.EnglishName, stopwatch.ElapsedMilliseconds);
+
+			stopwatch.Reset ();
+			stopwatch.Start ();
+
+			manager.ActiveCulture = Resources.FindCultureInfo ("en");
+
+			stopwatch.Stop ();
+
+			System.Console.Out.WriteLine ("Switch to culture '{0}' bindings in {1} ms", manager.ActiveCulture.EnglishName, stopwatch.ElapsedMilliseconds);
+
+			stopwatch.Reset ();
+			stopwatch.Start ();
+
+			manager.ActiveCulture = Resources.FindCultureInfo ("fr");
+
+			stopwatch.Stop ();
+
+			System.Console.Out.WriteLine ("Switch to culture '{0}' bindings in {1} ms", manager.ActiveCulture.EnglishName, stopwatch.ElapsedMilliseconds);
+
+			long memory4 = System.GC.GetTotalMemory (true);
+
+			System.Console.Out.WriteLine ("Memory delta after switches: {0}", memory4-memory3);
+			System.Console.Out.Flush ();
+
+			for (int i = 0; i < max; i++)
+			{
+				visual = list[i];
+				visual.ClearAllBindings ();
+			}
+
+			long memory5 = System.GC.GetTotalMemory (true);
+
+			System.Console.Out.WriteLine ("Memory delta after ClearAllBindings: {0} bytes/instance", (memory5-memory4)/max);
+			System.Console.Out.Flush ();
+
+			System.GC.Collect ();
+			manager.TrimBindingCache ();
+			System.GC.Collect ();
+
+			long memory6 = System.GC.GetTotalMemory (true);
+
+			System.Console.Out.WriteLine ("Total memory delta after TrimBindingCache & GC: {0} bytes/instance", (memory6-memory4)/max);
+			System.Console.Out.Flush ();
+
+			Assert.IsTrue (System.Math.Abs ((memory4-memory6)/max - (memory3-memory2)/max) < 2);
+			Assert.IsTrue ((memory3-memory2)/max < 326);	// 314 before r5433
+		}
+
+		[Test]
+		public void CheckBindingSerialization()
+		{
+			System.Xml.XmlTextWriter xmlWriter = new System.Xml.XmlTextWriter (System.Console.Out);
+
+			xmlWriter.Indentation = 2;
+			xmlWriter.IndentChar = ' ';
+			xmlWriter.Formatting = System.Xml.Formatting.Indented;
+			xmlWriter.WriteStartDocument (true);
+			xmlWriter.WriteStartElement ("root");
+
+			Types.Serialization.Context context = new Types.Serialization.SerializerContext (new Types.Serialization.IO.XmlWriter (xmlWriter));
+
+			context.ExternalMap.Record (Types.Serialization.Context.WellKnownTagResourceManager, this.manager);
+
+			Widgets.Widget root = new Widgets.Widget ();
+			Widgets.Button button = new Widgets.Button ();
+
+			this.manager.Bind (root, Widgets.Widget.TextProperty, "[4]");
+			this.manager.Bind (button, Widgets.Widget.TextProperty, "[4001]");
+			
+			root.Name = "RootWidget";
+			root.TabIndex = 1;
+			root.Children.Add (button);
+			
+			Storage.Serialize (root, context);
+			
+			xmlWriter.WriteEndElement ();
+			xmlWriter.WriteEndDocument ();
+			xmlWriter.Flush ();
+			xmlWriter.Close ();
 		}
 
 		private ResourceManager manager;

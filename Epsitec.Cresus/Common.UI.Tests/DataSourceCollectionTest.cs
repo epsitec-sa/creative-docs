@@ -71,9 +71,11 @@ namespace Epsitec.Common.UI
 		[Test]
 		public void CheckPanelSerializationContext()
 		{
+			Support.ResourceManager manager = new Support.ResourceManager ();
 			Panel panel = new UI.Panel ();
 			DataSourceCollection collection = new DataSourceCollection ();
 
+			collection.ResourceManager = manager;
 			panel.DataSource = collection;
 
 			Widgets.Visual source1 = new Widgets.Visual ();
@@ -92,9 +94,11 @@ namespace Epsitec.Common.UI
 
 			panel.FillSerializationContext (context);
 
-			Assert.AreEqual (1, context.ExternalMap.TagCount);
-			Assert.AreEqual ("DataSource", Collection.ToArray<string> (context.ExternalMap.RecordedTags)[0]);
-			Assert.AreEqual (collection, context.ExternalMap.GetValue ("DataSource"));
+			Assert.AreEqual (2, context.ExternalMap.TagCount);
+			Assert.AreEqual ("_DataSource", Collection.ToArray<string> (context.ExternalMap.RecordedTags)[0]);
+			Assert.AreEqual ("_ResourceManager", Collection.ToArray<string> (context.ExternalMap.RecordedTags)[1]);
+			Assert.AreEqual (collection, context.ExternalMap.GetValue ("_DataSource"));
+			Assert.AreEqual (manager, context.ExternalMap.GetValue ("_ResourceManager"));
 
 			Widgets.Button b1 = new Epsitec.Common.Widgets.Button ();
 			Binding binding = new Binding (BindingMode.OneWay, null, "A.Name");
