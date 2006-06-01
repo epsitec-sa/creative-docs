@@ -1785,7 +1785,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected bool AnchorDetect(Point mouse, out Widget obj, out AnchorStyles style)
 		{
 			//	Détecte dans quel ressort d'un objet est la souris.
-			if (!this.context.ShowAnchor)
+			if (!this.context.ShowAnchor || this.selectedObjects.Count != 1)
 			{
 				obj = null;
 				style = AnchorStyles.None;
