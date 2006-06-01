@@ -148,6 +148,35 @@ namespace Epsitec.Common.Designer
 			this.bundles.LoadBundles(this.resourceManager.ActivePrefix, this.resourceManager.GetBundleIds(ids[0], ResourceLevel.All));
 		}
 
+		public void CreateIds()
+		{
+			//	Crée les 'druid' pour toutes les cultures du module.
+			ResourceBundle defaultBundle = this.bundles[ResourceLevel.Default];
+
+			int module = defaultBundle.Module.Id;
+			int developer = 0;
+			int local = 0;
+			foreach (ResourceBundle.Field field in defaultBundle.Fields)
+			{
+				Druid druid = new Druid(module, developer, local++);
+				string label = field.Name;
+
+				foreach (ResourceBundle bundle in this.bundles)
+				{
+					ResourceBundle.Field f = bundle[label];
+					if (!f.IsEmpty)
+					{
+						f.SetDruid(druid);
+					}
+				}
+			}
+
+			foreach (ResourceBundle bundle in this.bundles)
+			{
+				this.resourceManager.SetBundle(bundle, ResourceSetMode.UpdateOnly);
+			}
+		}
+
 
 		#region Panels
 		public void PanelsRead()
