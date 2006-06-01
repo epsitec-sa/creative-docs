@@ -104,15 +104,19 @@ namespace Epsitec.Common.Designer.Viewers
 
 			this.tabPageProperties = new TabPage();
 			this.tabPageProperties.TabTitle = Res.Strings.Viewers.Panels.TabProperties;
+			this.tabPageProperties.Padding = new Margins(10, 10, 10, 10);
 			this.tabBook.Items.Add(this.tabPageProperties);
 
 			this.tabPageObjects = new TabPage();
 			this.tabPageObjects.TabTitle = Res.Strings.Viewers.Panels.TabObjects;
+			this.tabPageObjects.Padding = new Margins(10, 10, 10, 10);
 			this.tabBook.Items.Add(this.tabPageObjects);
 
 			this.tabPageCultures = new TabPage();
 			this.tabPageCultures.TabTitle = Res.Strings.Viewers.Panels.TabCultures;
+			this.tabPageCultures.Padding = new Margins(10, 10, 10, 10);
 			this.tabBook.Items.Add(this.tabPageCultures);
+			this.CreateCultureButtons();
 
 			this.tabBook.ActivePage = this.tabPageProperties;
 
@@ -489,7 +493,53 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 		}
 
-		
+
+		protected void CreateCultureButtons()
+		{
+			//	Crée tous les boutons pour ls cultures.
+			this.cultureButtonList = new List<IconButton>();
+
+			int tabIndex = 0;
+			foreach (string name in Misc.Cultures)
+			{
+				System.Globalization.CultureInfo culture = new System.Globalization.CultureInfo(name);
+
+				IconButton button = new IconButton(this.tabPageCultures);
+				button.Name = Misc.CultureShortName(culture);
+				button.Text = Misc.CultureName(culture);
+				button.ButtonStyle = ButtonStyle.ActivableIcon;
+				button.Dock = DockStyle.Top;
+				button.Margins = new Margins(0, 0, 0, 2);
+				button.TabIndex = tabIndex++;
+				button.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+				button.Pressed += new MessageEventHandler(this.HandleCultureButtonPressed);
+				ToolTip.Default.SetToolTip(button, Misc.CultureLongName(culture));
+
+				this.cultureButtonList.Add(button);
+			}
+
+			this.UpdateCultureButtons();
+		}
+
+		void HandleCultureButtonPressed(object sender, MessageEventArgs e)
+		{
+			//	Un bouton pour changer de culture a été cliqué.
+			IconButton button = sender as IconButton;
+			this.context.Culture = button.Name;
+			this.UpdateCultureButtons();
+		}
+
+		protected void UpdateCultureButtons()
+		{
+			//	Met à jour les boutons pour les cultures.
+			foreach (IconButton button in this.cultureButtonList)
+			{
+				bool active = (button.Name == this.context.Culture);
+				button.ActiveState = active ? ActiveState.Yes : ActiveState.No;
+			}
+		}
+
+
 		protected Widget ToolBarAdd(Command command)
 		{
 			//	Ajoute une icône.
@@ -607,5 +657,6 @@ namespace Epsitec.Common.Designer.Viewers
 		protected TabPage					tabPageProperties;
 		protected TabPage					tabPageObjects;
 		protected TabPage					tabPageCultures;
+		protected List<IconButton>			cultureButtonList;
 	}
 }

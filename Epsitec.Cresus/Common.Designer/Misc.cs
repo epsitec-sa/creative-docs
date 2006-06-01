@@ -122,6 +122,10 @@ namespace Epsitec.Common.Designer
 			return -1;
 		}
 
+
+		//	Liste des cultures gérées par Designer, par ordre d'importance.
+		static public string[] Cultures = { "fr", "en", "de", "it", "es", "pt" };
+
 		static public string CultureLongName(System.Globalization.CultureInfo culture)
 		{
 			//	Retourne le nom long d'une culture, par exemple "Italiano (Italian, IT)".
