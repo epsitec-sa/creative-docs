@@ -158,23 +158,19 @@ namespace Epsitec.Common.Designer.MyWidgets
 					break;
 
 				case "MoveLeft":
-					this.MoveSelection(new Point(-this.module.MainWindow.MoveHorizontal, 0), null);
-					this.handlesList.UpdateGeometry();
+					this.MoveRibbonSelection(new Point(-1, 0));
 					break;
 
 				case "MoveRight":
-					this.MoveSelection(new Point(this.module.MainWindow.MoveHorizontal, 0), null);
-					this.handlesList.UpdateGeometry();
+					this.MoveRibbonSelection(new Point(1, 0));
 					break;
 
 				case "MoveDown":
-					this.MoveSelection(new Point(0, -this.module.MainWindow.MoveVertical), null);
-					this.handlesList.UpdateGeometry();
+					this.MoveRibbonSelection(new Point(0, -1));
 					break;
 
 				case "MoveUp":
-					this.MoveSelection(new Point(0, this.module.MainWindow.MoveVertical), null);
-					this.handlesList.UpdateGeometry();
+					this.MoveRibbonSelection(new Point(0, 1));
 					break;
 
 				case "AlignLeft":
@@ -1220,6 +1216,15 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			//	Duplique tous les objets sélectionnés.
 			//	TODO:
+		}
+
+		protected void MoveRibbonSelection(Point direction)
+		{
+			//	Déplace tous les objets sélectionnés selon le ruban 'Move'.
+			direction.X *= this.module.MainWindow.MoveHorizontal;
+			direction.Y *= this.module.MainWindow.MoveVertical;
+			this.MoveSelection(direction, null);
+			this.handlesList.UpdateGeometry();
 		}
 
 		protected void MoveSelection(Point move, Widget parent)
