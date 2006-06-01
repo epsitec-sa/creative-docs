@@ -18,6 +18,9 @@
   <data name="Ribbon.Section.Order">Ordre</data>
   <data name="Ribbon.Section.TabIndex">Touche Tab</data>
   <data name="Ribbon.Section.Align">Alignement</data>
+  <data name="Ribbon.Section.Move">Déplacement</data>
+  <data name="Ribbon.Section.MoveHorizontal">Déplacement horizontal</data>
+  <data name="Ribbon.Section.MoveVertical">Déplacement vertical</data>
 
   <data name="BundleType.Strings">Textes</data>
   <data name="BundleType.Panels">Interfaces</data>
@@ -81,6 +84,11 @@
   <data name="Action.PanelShowExpand">Espacer les groupes</data>
   <data name="Action.PanelShowConstrain">Activer les contraintes</data>
   <data name="Action.PanelShowAnchor">Afficher les ancrages</data>
+
+  <data name="Action.MoveLeft">Déplacement à gauche</data>
+  <data name="Action.MoveRight">Déplacement à droite</data>
+  <data name="Action.MoveDown">Déplacement en bas</data>
+  <data name="Action.MoveUp">Déplacement en haut</data>
 
   <data name="Action.AlignGrid">Alignement sur la grille magnétique</data>
   <data name="Action.AlignLeft">Alignement à gauche</data>

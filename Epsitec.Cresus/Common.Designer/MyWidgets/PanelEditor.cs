@@ -157,6 +157,22 @@ namespace Epsitec.Common.Designer.MyWidgets
 					this.OnUpdateCommands();
 					break;
 
+				case "MoveLeft":
+					//?this.SelectMove();
+					break;
+
+				case "MoveRight":
+					//?this.SelectMove();
+					break;
+
+				case "MoveDown":
+					//?this.SelectMove();
+					break;
+
+				case "MoveUp":
+					//?this.SelectMove();
+					break;
+
 				case "AlignLeft":
 					this.SelectAlign(-1, false);
 					break;

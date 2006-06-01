@@ -457,6 +457,11 @@ namespace Epsitec.Common.Designer.Viewers
 			this.GetCommandState("PanelShowZOrder").ActiveState = this.context.ShowZOrder ? ActiveState.Yes : ActiveState.No;
 			this.GetCommandState("PanelShowTabIndex").ActiveState = this.context.ShowTabIndex ? ActiveState.Yes : ActiveState.No;
 
+			this.GetCommandState("MoveLeft").Enable = (objSelected != 0);
+			this.GetCommandState("MoveRight").Enable = (objSelected != 0);
+			this.GetCommandState("MoveDown").Enable = (objSelected != 0);
+			this.GetCommandState("MoveUp").Enable = (objSelected != 0);
+
 			this.GetCommandState("AlignLeft").Enable = (objSelected >= 2);
 			this.GetCommandState("AlignCenterX").Enable = (objSelected >= 2);
 			this.GetCommandState("AlignRight").Enable = (objSelected >= 2);
