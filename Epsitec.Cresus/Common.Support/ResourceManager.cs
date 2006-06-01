@@ -414,7 +414,11 @@ namespace Epsitec.Common.Support
 			
 			return null;
 		}
-		
+
+		public ResourceBundle GetBundle(Druid druid)
+		{
+			return this.GetBundle (druid.ToResourceId ());
+		}
 		
 		public ResourceBundle GetBundle(string id)
 		{
