@@ -69,6 +69,20 @@ namespace Epsitec.Common.Support
 			this.local = local+1;
 		}
 
+		public static readonly Druid Empty = new Druid();
+
+		/// <summary>
+		/// Gets a value indicating whether this instance is invalid.
+		/// </summary>
+		/// <value><c>true</c> if this instance is empty; otherwise, <c>false</c>.</value>
+		public bool								IsEmpty
+		{
+			get
+			{
+				return (this.Type == DruidType.Invalid);
+			}
+		}
+		
 		/// <summary>
 		/// Gets the type of the DRUID.
 		/// </summary>
@@ -209,6 +223,21 @@ namespace Epsitec.Common.Support
 				default:
 					throw new System.InvalidOperationException (string.Format ("Cannot convert {0} DRUID to a long", type));
 			}
+		}
+
+		public static bool operator==(Druid a, Druid b)
+		{
+			return (a.module == b.module) && (a.developer == b.developer) && (a.local == b.local);
+		}
+
+		public static bool operator!=(Druid a, Druid b)
+		{
+			return (a.module != b.module) || (a.developer != b.developer) || (a.local != b.local);
+		}
+
+		public override bool Equals(object obj)
+		{
+			return (obj is Druid) && (this == (Druid) obj);
 		}
 
 		/// <summary>

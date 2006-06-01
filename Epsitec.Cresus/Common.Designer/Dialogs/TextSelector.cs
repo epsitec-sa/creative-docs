@@ -277,7 +277,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			{
 				for (int i=0; i<this.druidsIndex.Count; i++)
 				{
-					if (this.druidsIndex[i].ToLong() == this.ressource.ToLong())  // TODO: [PA] pas plus simple ?
+					if (this.druidsIndex[i] == this.ressource)
 					{
 						sel = i;
 						break;
@@ -350,7 +350,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			int sel = this.array.SelectedRow;
 			if (sel == -1)
 			{
-				this.ressource = new Druid();  // TODO: [PA] pour obtenir un druid invalide, OK ?
+				this.ressource = Druid.Empty;
 			}
 			else
 			{
