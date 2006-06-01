@@ -1009,8 +1009,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.draggingWindow = null;
 
 			Rectangle initial = this.SelectBounds;
-			this.ChangeParentsSelection(this.DetectGroup(this.draggingRectangle));
-			this.MoveSelection(this.draggingRectangle.BottomLeft - initial.BottomLeft);
+			Widget parent = this.DetectGroup(this.draggingRectangle);
+			this.MoveSelection(this.draggingRectangle.BottomLeft - initial.BottomLeft, parent);
 			this.SetHilitedParent(null);
 			this.isDragging = false;
 			this.draggingArraySelected = null;
@@ -1197,38 +1197,24 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	TODO:
 		}
 
-		protected void MoveSelection(Point move)
+		protected void MoveSelection(Point move, Widget parent)
 		{
-			//	Déplace tous les objets sélectionnés.
-			Rectangle toRepaint = Rectangle.Empty;
-
+			//	Déplace et change de parent à tous les objets sélectionnés.
 			foreach (Widget obj in this.selectedObjects)
 			{
-				toRepaint = Rectangle.Union(toRepaint, this.GetObjectBounds(obj));
-				this.SetObjectPosition(obj, this.GetObjectPosition(obj)+move);
-				toRepaint = Rectangle.Union(toRepaint, this.GetObjectBounds(obj));
-			}
+				Rectangle bounds = this.GetObjectBounds(obj);
+				bounds.Offset(move);
 
-			toRepaint.Inflate(1);
-			this.Invalidate(toRepaint);
-			this.Invalidate();  // TODO: faire mieux !
-		}
-
-		protected void ChangeParentsSelection(Widget parent)
-		{
-			//	Change le parent de tous les objets sélectionnés.
-			foreach (Widget obj in this.selectedObjects)
-			{
 				if (obj.Parent != parent)
 				{
-					Rectangle bounds = this.GetObjectBounds(obj);
-
 					obj.Parent.Children.Remove(obj);
 					parent.Children.Add(obj);
-
-					this.SetObjectBounds(obj, bounds);
 				}
+
+				this.SetObjectBounds(obj, bounds);
 			}
+
+			this.Invalidate();
 		}
 
 		protected void SelectAlign(int direction, bool isVertical)
