@@ -114,11 +114,25 @@ namespace Epsitec.Common.Designer
 
 			// TODO: [PA] comment générer un beau Panoramix unique et tout neuf ?
 
+			Druid druid;
+			
 			int moduleId = defaultBundle.Module.Id;
 			int developerId = 0;						//	[PA] provisoire
-			int localId = defaultBundle.FieldCount;		//	[PA] provisoire
+			int localId = 0;
 			
-			Druid druid = new Druid(moduleId, developerId, localId);
+			foreach (ResourceBundle.Field field in defaultBundle.Fields)
+			{
+				druid = field.Druid;
+				
+				if ((druid.IsValid) &&
+					(druid.Developer == developerId) &&
+					(druid.Local > localId))
+				{
+					localId = druid.Local+1;
+				}
+			}
+			
+			druid = new Druid(moduleId, developerId, localId);
 			ResourceBundle.Field newField = defaultBundle.CreateField(ResourceFieldType.Data);
 			newField.SetDruid(druid);
 			newField.SetName(name);
@@ -197,7 +211,7 @@ namespace Epsitec.Common.Designer
 			return (count != bundles.Count-1);
 		}
 
-		public void CreateIfNecessary(ResourceBundle bundle, string name, int id)
+		public void CreateIfNecessary(ResourceBundle bundle, string name, int id, Druid druid)
 		{
 			//	Crée une ressource secondaire, si nécessaire.
 			ResourceBundle.Field field = bundle[name];
@@ -205,6 +219,7 @@ namespace Epsitec.Common.Designer
 			{
 				ResourceBundle.Field newField = bundle.CreateField(ResourceFieldType.Data);
 				newField.SetName(name);
+				newField.SetDruid(druid);
 
 				if (id != -1)
 				{
