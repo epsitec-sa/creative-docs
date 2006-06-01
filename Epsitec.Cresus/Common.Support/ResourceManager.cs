@@ -542,6 +542,26 @@ namespace Epsitec.Common.Support
 			return bundle;
 		}
 
+		public ResourceBundle.Field GetBundleField(Druid druid, ResourceLevel level)
+		{
+			string id = this.NormalizeFullId (druid.ToResourceId ());
+			
+			string bundleName;
+			string fieldName;
+
+			if (Resources.SplitFieldId (id, out bundleName, out fieldName))
+			{
+				ResourceBundle bundle = this.GetBundle (bundleName, level, this.culture);
+
+				if (bundle != null)
+				{
+					return bundle[fieldName];
+				}
+			}
+
+			return null;
+		}
+
 		
 		public void Bind(Types.DependencyObject targetObject, Types.DependencyProperty targetProperty, Druid druid)
 		{

@@ -84,6 +84,16 @@ namespace Epsitec.Common.Support
 		}
 
 		[Test]
+		public void CheckGetBundleField()
+		{
+			string t2 = "Druid - Hello, world";
+			string t3 = "Druid - Good bye...";
+
+			Assert.AreEqual (t2, this.manager.GetBundleField (Druid.Parse ("[4]"), ResourceLevel.Default).AsString);
+			Assert.AreEqual (t3, this.manager.GetBundleField (Druid.Parse ("[4001]"), ResourceLevel.Default).AsString);
+		}
+
+		[Test]
 		public void CheckGetForeignModuleBundle()
 		{
 			string t1 = "Druid - From other module";
