@@ -35,6 +35,18 @@ namespace Epsitec.Common.Support
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:Druid"/> structure.
 		/// </summary>
+		/// <param name="druid">The druid to copy from.</param>
+		/// <param name="module">The module id to use.</param>
+		public Druid(Druid druid, int module)
+		{
+			this.module = module+1;
+			this.developer = druid.developer;
+			this.local = druid.local;
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="T:Druid"/> structure.
+		/// </summary>
 		/// <param name="dev">The developer id.</param>
 		/// <param name="local">The local id.</param>
 		public Druid(int dev, int local)
