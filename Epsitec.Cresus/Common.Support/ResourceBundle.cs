@@ -95,6 +95,14 @@ namespace Epsitec.Common.Support
 			}
 		}
 		
+		public ResourceModuleInfo			Module
+		{
+			get
+			{
+				return this.module;
+			}
+		}
+		
 		public string						Type
 		{
 			get
