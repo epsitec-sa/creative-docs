@@ -170,7 +170,7 @@ namespace Epsitec.Common.Support
 				throw new System.InvalidOperationException (string.Format ("Cannot convert {0} DRUID to a field id name", type));
 			}
 
-			return string.Concat (ResourceBundle.FieldIdPrefix, Druid.ToModuleString (Druid.FromIds (this.Developer, this.Local)));
+			return string.Concat (Resources.FieldIdPrefix, Druid.ToModuleString (Druid.FromIds (this.Developer, this.Local)));
 		}
 
 		/// <summary>
@@ -683,8 +683,6 @@ namespace Epsitec.Common.Support
 		}
 		
 		#endregion
-
-		public static readonly string BundleName = "DruidData";
 
 		private int								module;			//	0 or module id + 1
 		private int								developer;		//	0 or developer id + 1

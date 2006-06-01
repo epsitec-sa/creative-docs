@@ -155,7 +155,7 @@ namespace Epsitec.Common.Support
 		{
 			get
 			{
-				string prefix = ResourceManager.JoinFullPrefix (this.prefix, module.ToString ());
+				string prefix = Resources.JoinFullPrefix (this.prefix, module.ToString ());
 				
 				return this.manager.NormalizeFullId (prefix, this.name);
 			}
@@ -357,7 +357,7 @@ namespace Epsitec.Common.Support
 				return -1;
 			}
 
-			if (name[0] == ResourceBundle.FieldIdPrefix)
+			if (name[0] == Resources.FieldIdPrefix)
 			{
 				return this.IndexOf (Druid.Parse (name));
 			}
@@ -612,7 +612,7 @@ namespace Epsitec.Common.Support
 		
 		public void Compile(System.Xml.XmlNode xmlroot)
 		{
-			if (this.depth > ResourceBundle.MaxRecursion)
+			if (this.depth > Resources.MaxRecursion)
 			{
 				throw new ResourceException (string.Format ("Bundle is too complex, giving up."));
 			}
@@ -809,39 +809,6 @@ namespace Epsitec.Common.Support
 			return false;
 		}
 		
-		public static bool SplitTarget(string target, out string targetBundle, out string targetField)
-		{
-			target = ResourceManager.ResolveDruidReference (target);
-			
-			int pos = target.IndexOf (ResourceBundle.FieldSeparator);
-			
-			targetBundle = target;
-			targetField  = null;
-			
-			if (pos >= 0)
-			{
-				targetBundle = target.Substring (0, pos);
-				targetField  = target.Substring (pos+1);
-				
-				return true;
-			}
-			
-			return false;
-		}
-		
-		public static string JoinTarget(string targetBundle, string targetField)
-		{
-			if ((targetBundle == null) ||
-				(targetBundle.IndexOf (ResourceBundle.FieldSeparator) != -1) ||
-				(targetField == null) ||
-				(targetField.IndexOf (ResourceBundle.FieldSeparator) != -1))
-			{
-				throw new ResourceException ("Invalid target specified.");
-			}
-
-			return string.Concat (targetBundle, ResourceBundle.FieldSeparator, targetField);
-		}
-
 		#region Private Methods
 
 		private Field CreateFieldAsData()
@@ -938,7 +905,7 @@ namespace Epsitec.Common.Support
 			string target_bundle;
 			string target_field;
 			
-			ResourceBundle.SplitTarget (full_target, out target_bundle, out target_field);
+			Resources.SplitFieldId (full_target, out target_bundle, out target_field);
 			
 			if (target_field != null)
 			{
@@ -967,8 +934,8 @@ namespace Epsitec.Common.Support
 			
 			string target_bundle;
 			string target_field;
-			
-			ResourceBundle.SplitTarget (full_target, out target_bundle, out target_field);
+
+			Resources.SplitFieldId (full_target, out target_bundle, out target_field);
 			
 			if (target_field == null)
 			{
@@ -985,7 +952,7 @@ namespace Epsitec.Common.Support
 			{
 				throw new ResourceException (string.Format ("<ref target='{0}'/> could not be resolved. Missing bundle. XML: {1}.", ref_target, node.OuterXml));
 			}
-			if (bundle.depth > ResourceBundle.MaxRecursion)
+			if (bundle.depth > Resources.MaxRecursion)
 			{
 				throw new ResourceException (string.Format ("Bundle is too complex, giving up."));
 			}
@@ -1007,8 +974,8 @@ namespace Epsitec.Common.Support
 			
 			string target_bundle;
 			string target_field;
-			
-			ResourceBundle.SplitTarget (full_target, out target_bundle, out target_field);
+
+			Resources.SplitFieldId (full_target, out target_bundle, out target_field);
 			
 			if ((target_bundle != null) &&
 				(target_field  == null))
@@ -1073,6 +1040,7 @@ namespace Epsitec.Common.Support
 				}
 				
 				node.Attributes.Append (this.XmlDocument.CreateAttribute (name));
+				node.Attributes[name].Value = value;
 				
 				this.OnFieldsChanged ();
 				
@@ -1589,7 +1557,8 @@ namespace Epsitec.Common.Support
 						}
 						else
 						{
-							this.parent.SetAttributeValue (this.xml, "id", Druid.ToModuleString (this.id));
+							string value = Druid.ToModuleString (this.id);
+							this.parent.SetAttributeValue (this.xml, "id", value);
 						}
 					}
 				}
@@ -1767,10 +1736,6 @@ namespace Epsitec.Common.Support
 
 		public event EventHandler		FieldsChanged;
 		
-		public static readonly char		FieldIdPrefix = '$';
-		public static readonly char		FieldSeparator = '#';
-		public static readonly int		MaxRecursion = 50;
-
 		private string					prefix;
 		private ResourceModuleInfo		module;
 		private string					name;
