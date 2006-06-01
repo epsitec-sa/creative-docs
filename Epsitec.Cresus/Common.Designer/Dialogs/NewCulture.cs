@@ -88,7 +88,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 			//	Construit la liste des cultures inexistantes dans le bundle.
 			this.cultureList = new List<string>();
-			foreach (string name in NewCulture.Cultures)
+			foreach (string name in Misc.Cultures)
 			{
 				if (!module.IsExistingCulture(name))
 				{
@@ -122,10 +122,6 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.window.Hide();
 			this.OnClosed();
 		}
-
-
-		//	Liste des cultures qu'il est possible de créer, par ordre d'importance.
-		public static string[] Cultures = { "fr", "en", "de", "it", "es", "pt" };
 
 		
 		protected ScrollList					cultureWidget;

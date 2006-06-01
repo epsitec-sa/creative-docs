@@ -940,7 +940,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			bool search = this.module.MainWindow.DialogSearch.IsActionsEnabled;
 			
-			bool newCulture = (this.module.Bundles.Count < Dialogs.NewCulture.Cultures.Length);
+			bool newCulture = (this.module.Bundles.Count < Misc.Cultures.Length);
 
 			this.GetCommandState("NewCulture").Enable = newCulture;
 			this.GetCommandState("DeleteCulture").Enable = true;
