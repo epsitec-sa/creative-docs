@@ -950,7 +950,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 				if (!string.IsNullOrEmpty(obj.Name))
 				{
-					string id = string.Concat("file:DruidData#", obj.Name);
+					string id = string.Concat("file:Strings#", obj.Name);
 					this.module.ResourceManager.Bind(obj, Widget.TextProperty, id);
 				}
 			}
