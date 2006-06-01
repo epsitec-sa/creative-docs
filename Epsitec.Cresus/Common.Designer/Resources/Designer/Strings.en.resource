@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <bundle name="Strings" type="String" culture="en">
-  <data name="Application.Title" id="0">Ressources Editor</data>
+  <data name="Application.Title" id="0">Resource Editor</data>
   <data name="Ribbon.Main" id="01">Documents</data>
   <data name="Ribbon.Oper" id="02">Operations</data>
   <data name="Ribbon.Text" id="03">Text</data>

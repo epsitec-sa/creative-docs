@@ -19,7 +19,7 @@ namespace Epsitec.Common.Support
 	/// A compact, module relative DRUID exists; it uses only 44-bit for
 	/// the encoding of the data.
 	/// </summary>
-	public struct Druid
+	public struct Druid : System.IEquatable<Druid>
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:Druid"/> structure.
@@ -68,8 +68,6 @@ namespace Epsitec.Common.Support
 			this.developer = dev+1;
 			this.local = local+1;
 		}
-
-		public static readonly Druid Empty = new Druid();
 
 		/// <summary>
 		/// Gets a value indicating whether this instance is invalid.
@@ -235,9 +233,32 @@ namespace Epsitec.Common.Support
 			return (a.module != b.module) || (a.developer != b.developer) || (a.local != b.local);
 		}
 
+		/// <summary>
+		/// Indicates whether this instance and a specified object are equal.
+		/// </summary>
+		/// <param name="obj">Another object to compare to.</param>
+		/// <returns><c>true</c> if obj and this instance are the same type and
+		/// represent the same value; otherwise, <c>false</c>.</returns>
 		public override bool Equals(object obj)
 		{
-			return (obj is Druid) && (this == (Druid) obj);
+			if (obj is Druid)
+			{
+				return this.Equals ((Druid) obj);
+			}
+			else
+			{
+				return false;
+			}
+		}
+
+		/// <summary>
+		/// Returns the hash code for this instance.
+		/// </summary>
+		/// <returns>A 32-bit signed integer that is the hash code for this
+		/// instance.</returns>
+		public override int GetHashCode()
+		{
+			return this.module ^ this.developer ^ this.local;
 		}
 
 		/// <summary>
@@ -662,6 +683,22 @@ namespace Epsitec.Common.Support
 			return Druid.IsValidBase32Number (value);
 		}
 
+		#region IEquatable<Druid> Members
+
+		/// <summary>
+		/// Indicates whether the current object is equal to another object of
+		/// the same type.
+		/// </summary>
+		/// <param name="other">An object to compare with this object.</param>
+		/// <returns><c>true</c> if the current object is equal to the other
+		/// parameter; otherwise, <c>false</c>.</returns>
+		public bool Equals(Druid other)
+		{
+			return this == other;
+		}
+
+		#endregion
+		
 		#region Private Methods
 		
 		private static bool IsValidBase32Number(string value)
@@ -731,6 +768,8 @@ namespace Epsitec.Common.Support
 		}
 		
 		#endregion
+
+		public static readonly Druid			Empty = new Druid ();
 
 		private int								module;			//	0 or module id + 1
 		private int								developer;		//	0 or developer id + 1

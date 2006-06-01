@@ -112,7 +112,13 @@ namespace Epsitec.Common.Designer
 			ResourceBundleCollection bundles = this.module.Bundles;
 			ResourceBundle defaultBundle = bundles[ResourceLevel.Default];
 
-			Druid druid = new Druid();  // TODO: [PA] comment générer un beau Panoramix unique et tout neuf ?
+			// TODO: [PA] comment générer un beau Panoramix unique et tout neuf ?
+
+			int moduleId = defaultBundle.Module.Id;
+			int developerId = 0;						//	[PA] provisoire
+			int localId = defaultBundle.FieldCount;		//	[PA] provisoire
+			
+			Druid druid = new Druid(moduleId, developerId, localId);
 			ResourceBundle.Field newField = defaultBundle.CreateField(ResourceFieldType.Data);
 			newField.SetDruid(druid);
 			newField.SetName(name);
