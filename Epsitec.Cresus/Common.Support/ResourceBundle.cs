@@ -344,7 +344,8 @@ namespace Epsitec.Common.Support
 
 			if (name[0] == ResourceBundle.FieldIdPrefix)
 			{
-				long id = Druid.FromModuleString (name.Substring (1), 0);
+				Druid druid = Druid.Parse (name);
+				long  id    = druid.ToFieldId ();
 
 				for (int i = 0; i < this.fields.Length; i++)
 				{
@@ -490,7 +491,7 @@ namespace Epsitec.Common.Support
 
 				if (id >= 0)
 				{
-					name = string.Concat (ResourceBundle.FieldIdPrefix, Druid.ToModuleString (id));
+					name = Druid.FromFieldId (id).ToFieldIdName ();
 				}
 
 				int index;
@@ -1260,7 +1261,7 @@ namespace Epsitec.Common.Support
 				}
 				else
 				{
-					this.id = Druid.FromModuleString (id, 0);
+					this.id = Druid.FromModuleString (id);
 				}
 
 
