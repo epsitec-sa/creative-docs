@@ -133,7 +133,7 @@ namespace Epsitec.Common.Designer
 		protected void UpdateBundles()
 		{
 			string[] ids = this.resourceManager.GetBundleIds("*", "String", ResourceLevel.Default);
-			System.Diagnostics.Debug.Assert(ids.Length == 1);
+			System.Diagnostics.Debug.Assert(ids.Length >= 1);
 
 			this.bundles = new ResourceBundleCollection(this.resourceManager);
 			this.bundles.LoadBundles(this.resourceManager.ActivePrefix, this.resourceManager.GetBundleIds(ids[0], ResourceLevel.All));

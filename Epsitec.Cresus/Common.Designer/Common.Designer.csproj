@@ -215,6 +215,12 @@
     <Content Include="Resources\Designer\Strings.00.resource" />
     <Content Include="Resources\Designer\Strings.en.resource" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\Designer\DruidData.00.resource" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\Designer\DruidData.en.resource" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
