@@ -9,7 +9,18 @@ namespace Epsitec.Common.Types
 	/// </summary>
 	public interface IContextResolver
 	{
+		/// <summary>
+		/// Resolves the object to its corresponding markup.
+		/// </summary>
+		/// <param name="value">The object to convert to a markup string.</param>
+		/// <returns>The markup string.</returns>
 		string ResolveToMarkup(object value);
-		object ResolveFromMarkup(string id);
+
+		/// <summary>
+		/// Resolves the object from its corresponding markup.
+		/// </summary>
+		/// <param name="id">The markup string to convert to an object.</param>
+		/// <returns>The object.</returns>
+		object ResolveFromMarkup(string markup);
 	}
 }

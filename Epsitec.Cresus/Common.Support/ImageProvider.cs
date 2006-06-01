@@ -239,8 +239,8 @@ namespace Epsitec.Common.Support
 				}
 				
 				Drawing.Image image = null;
-				
-				if (ResourceBundle.SplitTarget (res_full, out res_bundle, out res_field))
+
+				if (Resources.SplitFieldId (res_full, out res_bundle, out res_field))
 				{
 					ResourceBundle bundle = resource_manager.GetBundle (res_bundle);
 					

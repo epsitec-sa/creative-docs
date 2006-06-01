@@ -10,21 +10,24 @@ namespace Epsitec.Common.Support
 	/// <summary>
 	/// La classe Resources permet de gérer les ressources de l'application.
 	/// </summary>
-	public sealed class Resources
+	public static class Resources
 	{
-		private Resources()
-		{
-		}
-		
 		static Resources()
 		{
-			string[] names = { "fr", "de", "it", "en" };
+			string[] names = { "fr", "de", "it", "en", "es" };
+
+			Resources.factory = new ResourceProviderFactory ();
 			
-			Resources.InternalDefineCultures (names);
 			Resources.InternalInitialise ();
+			Resources.InternalDefineCultures (names);
+			
+			Types.ResourceBinding.RebindCallback = Resources.Rebinder;
 		}
-		
-		
+
+		/// <summary>
+		/// Gets the default resource manager.
+		/// </summary>
+		/// <value>The default resource manager.</value>
 		public static ResourceManager			DefaultManager
 		{
 			get
@@ -32,49 +35,64 @@ namespace Epsitec.Common.Support
 				return Resources.manager;
 			}
 		}
-		
-		
-		public static CultureInfo[]				Cultures
+
+		/// <summary>
+		/// Gets the well known cultures.
+		/// </summary>
+		/// <value>The well known cultures.</value>
+		public static IEnumerable<CultureInfo>	WellKnownCultures
 		{
 			get
 			{
 				return Resources.cultures;
 			}
 		}
-		
-		
-		public static string ExtractPrefix(string full_id)
+
+		/// <summary>
+		/// Gets the resource provider factory.
+		/// </summary>
+		/// <value>The resource provider factory.</value>
+		internal static ResourceProviderFactory Factory
 		{
-			if (full_id != null)
+			get
 			{
-				int pos = full_id.IndexOf (":");
+				return Resources.factory;
+			}
+		}
+		
+		
+		public static string ExtractPrefix(string id)
+		{
+			if (id != null)
+			{
+				int pos = id.IndexOf (Resources.PrefixSeparator);
 			
 				if (pos > 0)
 				{
-					return full_id.Substring (0, pos);
+					return id.Substring (0, pos);
 				}
 			}
 			
 			return null;
 		}
 		
-		public static string ExtractSuffix(string full_id)
+		public static string ExtractSuffix(string id)
 		{
 			//	L'extraction d'un suffixe n'a de sens que si l'on utilise GetBundleIds
 			//	avec level = ResourceLevel.All; sinon, en principe, on n'a jamais besoin
 			//	de se soucier des suffixes.
 			
-			if (full_id != null)
+			if (id != null)
 			{
-				int pos = full_id.LastIndexOf (".") + 1;
-				int len = full_id.Length;
+				int pos = id.LastIndexOf ('.') + 1;
+				int len = id.Length;
 				
 				if (pos > 0)
 				{
 					if ((pos + 2 == len) ||
 						(pos + 3 == len))
 					{
-						return full_id.Substring (pos);
+						return id.Substring (pos);
 					}
 				}
 			}
@@ -82,45 +100,170 @@ namespace Epsitec.Common.Support
 			return null;
 		}
 		
-		public static string StripSuffix(string full_id)
+		public static string StripSuffix(string id)
 		{
-			string suffix = Resources.ExtractSuffix (full_id);
+			string suffix = Resources.ExtractSuffix (id);
 			
-			if (suffix != null)
+			if (string.IsNullOrEmpty (suffix))
 			{
-				return full_id.Substring (0, full_id.Length - suffix.Length - 1);
+				return id;
 			}
-			
-			return full_id;
+			else
+			{
+				return id.Substring (0, id.Length - suffix.Length - 1);
+			}
 		}
 		
-		public static string ExtractName(string full_id)
+		public static string ExtractName(string id)
 		{
-			if (full_id != null)
+			if (id != null)
 			{
-				int pos = full_id.IndexOf (":");
+				int pos = id.IndexOf (Resources.PrefixSeparator);
 			
 				if (pos > 0)
 				{
-					return full_id.Substring (pos+1);
+					return id.Substring (pos+1);
 				}
 				else
 				{
-					return full_id;
+					return id;
 				}
 			}
 			
 			return null;
 		}
-		
-		
-		public static CultureInfo FindCultureInfo(string two_letter_code)
+
+		public static string JoinFullPrefix(string prefix, string module)
 		{
+			if (string.IsNullOrEmpty (module))
+			{
+				return prefix;
+			}
+			else
+			{
+				return string.Concat (prefix, Resources.ModuleSeparator, module);
+			}
+		}
+
+		public static void SplitFullPrefix(string fullPrefix, out string prefix, out string module)
+		{
+			if (fullPrefix == null)
+			{
+				prefix = null;
+				module = null;
+			}
+			else
+			{
+				int pos = fullPrefix.IndexOf (Resources.ModuleSeparator);
+
+				if (pos >= 0)
+				{
+					prefix = fullPrefix.Substring (0, pos);
+					module = fullPrefix.Substring (pos+1);
+				}
+				else
+				{
+					prefix = fullPrefix;
+					module = null;
+				}
+			}
+		}
+
+		public static string JoinFullId(string prefix, string localId)
+		{
+			if (string.IsNullOrEmpty (prefix))
+			{
+				return localId;
+			}
+			else
+			{
+				return string.Concat (prefix, Resources.PrefixSeparator, localId);
+			}
+		}
+
+		public static void SplitFullId(string fullId, out string prefix, out string localId)
+		{
+			int pos = fullId.IndexOf (Resources.PrefixSeparator);
+
+			if (pos >= 0)
+			{
+				prefix  = fullId.Substring (0, pos);
+				localId = fullId.Substring (pos+1);
+			}
+			else
+			{
+				prefix  = "";
+				localId = fullId;
+			}
+		}
+
+		public static bool SplitFieldId(string id, out string bundle, out string field)
+		{
+			id = Resources.ResolveDruidReference (id);
+
+			int pos = id.IndexOf (Resources.FieldSeparator);
+
+			bundle = id;
+			field  = null;
+
+			if (pos >= 0)
+			{
+				bundle = id.Substring (0, pos);
+				field  = id.Substring (pos+1);
+
+				return true;
+			}
+
+			return false;
+		}
+
+		public static string JoinFieldId(string bundle, string field)
+		{
+			if ((bundle == null) ||
+				(bundle.IndexOf (Resources.FieldSeparator) != -1) ||
+				(field == null) ||
+				(field.IndexOf (Resources.FieldSeparator) != -1))
+			{
+				throw new ResourceException ("Invalid target specified.");
+			}
+
+			return string.Concat (bundle, Resources.FieldSeparator, field);
+		}
+
+		public static string ResolveDruidReference(string fullId)
+		{
+			string prefix;
+			string localId;
+
+			Resources.SplitFullId (fullId, out prefix, out localId);
+			Resources.ResolveDruidReference (ref prefix, ref localId);
+
+			return Resources.JoinFullId (prefix, localId);
+		}
+
+		public static void ResolveDruidReference(ref string prefix, ref string localId)
+		{
+			if (Druid.IsValidResourceId (localId))
+			{
+				//	The local ID is not a standard resource bundle identifier; it
+				//	looks like a DRUID : "[mmDLLDLLDmLDm]"
+
+				Druid druid = Druid.Parse (localId);
+
+				prefix  = string.Format (CultureInfo.InvariantCulture, "{0}/{1}", prefix, druid.Module);
+				localId = Resources.JoinFieldId (Resources.DruidBundleName, druid.ToFieldName ());
+			}
+		}
+		
+		
+		public static CultureInfo FindCultureInfo(string twoLetterCode)
+		{
+			twoLetterCode = twoLetterCode.ToLowerInvariant ();
 			CultureInfo[] cultures = CultureInfo.GetCultures (System.Globalization.CultureTypes.NeutralCultures);
 			
 			for (int i = 0; i < cultures.Length; i++)
 			{
-				if (cultures[i].TwoLetterISOLanguageName == two_letter_code)
+				if (cultures[i].TwoLetterISOLanguageName == twoLetterCode)
 				{
 					return cultures[i];
 				}
@@ -129,12 +272,13 @@ namespace Epsitec.Common.Support
 			return null;
 		}
 		
-		public static CultureInfo FindSpecificCultureInfo(string two_letter_code)
+		public static CultureInfo FindSpecificCultureInfo(string twoLetterCode)
 		{
 			//	FindSpecificCultureInfo retourne une culture propre à un pays, avec
 			//	une préférence pour la Suisse ou les USA.
 			
 			CultureInfo[] cultures = CultureInfo.GetCultures (System.Globalization.CultureTypes.SpecificCultures);
+			twoLetterCode = twoLetterCode.ToLowerInvariant ();
 			
 			CultureInfo found = null;
 			
@@ -143,7 +287,7 @@ namespace Epsitec.Common.Support
 				CultureInfo item = cultures[i];
 				string      name = item.Name;
 				
-				if ((item.TwoLetterISOLanguageName == two_letter_code) &&
+				if ((item.TwoLetterISOLanguageName == twoLetterCode) &&
 					(name.Length == 5) &&
 					(name[2] == '-'))
 				{
@@ -164,37 +308,87 @@ namespace Epsitec.Common.Support
 		}
 
 		
-		public static bool EqualCultures(ResourceLevel level_a, CultureInfo culture_a, ResourceLevel level_b, CultureInfo culture_b)
+		public static bool EqualCultures(ResourceLevel levelA, CultureInfo cultureA, ResourceLevel levelB, CultureInfo cultureB)
 		{
-			if (level_a != level_b)
+			if (levelA != levelB)
 			{
 				return false;
 			}
-			if (level_a == ResourceLevel.Default)
+			if (levelA == ResourceLevel.Default)
 			{
 				return true;
 			}
 			
-			return Resources.EqualCultures (culture_a, culture_b);
+			return Resources.EqualCultures (cultureA, cultureB);
 		}
 		
-		public static bool EqualCultures(CultureInfo culture_a, CultureInfo culture_b)
+		public static bool EqualCultures(CultureInfo cultureA, CultureInfo cultureB)
 		{
-			if (culture_a == culture_b)
+			if (cultureA == cultureB)
 			{
 				return true;
 			}
 			
-			if ((culture_a == null) ||
-				(culture_b == null))
+			if ((cultureA == null) ||
+				(cultureB == null))
 			{
 				return false;
 			}
 			
-			return culture_a.TwoLetterISOLanguageName == culture_b.TwoLetterISOLanguageName;
+			return cultureA.TwoLetterISOLanguageName == cultureB.TwoLetterISOLanguageName;
 		}
-		
-		
+
+		#region Internal and Private Methods
+
+		internal static string CreateBundleKey(string prefix, int moduleId, string resource_id, ResourceLevel level, CultureInfo culture)
+		{
+			System.Diagnostics.Debug.Assert (prefix != null);
+			System.Diagnostics.Debug.Assert (prefix.Length > 0);
+			System.Diagnostics.Debug.Assert (prefix.IndexOf (Resources.PrefixSeparator) < 0);
+			System.Diagnostics.Debug.Assert (resource_id.Length > 0);
+			System.Diagnostics.Debug.Assert (resource_id.IndexOf (Resources.FieldSeparator) < 0);
+
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+
+			if (!string.IsNullOrEmpty (prefix))
+			{
+				buffer.Append (prefix);
+			}
+			if (moduleId >= 0)
+			{
+				buffer.Append (Resources.ModuleSeparator);
+				buffer.AppendFormat (CultureInfo.InvariantCulture, "{0}", moduleId);
+			}
+
+			buffer.Append (Resources.PrefixSeparator);
+			buffer.Append (resource_id);
+			buffer.Append ("~");
+			buffer.Append ((int) level);
+			buffer.Append ("~");
+			buffer.Append (culture.TwoLetterISOLanguageName);
+
+			return buffer.ToString ();
+		}
+
+		private static void Rebinder(object resourceManager, Types.ResourceBinding binding)
+		{
+			ResourceManager that = resourceManager as ResourceManager;
+
+			if (that == null)
+			{
+				throw new System.ArgumentNullException ("resourceManager", "No resource manager specified");
+			}
+			if (binding == null)
+			{
+				throw new System.ArgumentNullException ("binding", "No binding specified");
+			}
+
+			if (that.SetResourceBinding (binding) == false)
+			{
+				throw new ResourceException (string.Format ("Cannot bind to ressource '{0}'", binding.ResourceId));
+			}
+		}
+
 		private static void InternalInitialise()
 		{
 			Resources.manager = new ResourceManager (typeof (ResourceManager));
@@ -211,9 +405,20 @@ namespace Epsitec.Common.Support
 				Resources.cultures[i] = Resources.FindCultureInfo (names[i]);
 			}
 		}
+
+		#endregion
+
+		public static readonly string			DruidBundleName = "DruidData";
+
+		public static readonly char				PrefixSeparator = ':';
+		public static readonly char				ModuleSeparator = '/';
+
+		public static readonly char				FieldIdPrefix = '$';
+		public static readonly char				FieldSeparator = '#';
+		public static readonly int				MaxRecursion = 50;
 		
-		
-		
+		private static ResourceProviderFactory	factory;
+
 		private static CultureInfo[]			cultures;
 		private static ResourceManager			manager;
 	}
