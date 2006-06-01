@@ -443,9 +443,6 @@ namespace Epsitec.Common.Support
 				culture = this.culture;
 			}
 			
-			//	TODO: il faudra rajouter un cache pour éviter de consulter chaque fois
-			//	le provider, lorsqu'une ressource est demandée...
-			
 			string resource_id;
 			ResourceModuleInfo module;
 			
@@ -1052,7 +1049,7 @@ namespace Epsitec.Common.Support
 				Druid druid = Druid.Parse (localId);
 
 				prefix  = string.Format (CultureInfo.InvariantCulture, "{0}/{1}", prefix, druid.Module);
-				localId = string.Concat (Druid.BundleName, ResourceBundle.FieldSeparator, druid.ToFieldIdName ());
+				localId = string.Concat (Druid.BundleName, ResourceBundle.FieldSeparator, druid.ToFieldName ());
 			}
 		}
 

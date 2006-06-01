@@ -6,40 +6,62 @@ using System.Collections.Generic;
 namespace Epsitec.Common.Support
 {
 	/// <summary>
-	/// The <c>Druid</c> class manages Description Resource Unique ID related
-	/// conversions. These IDs are 64-bit identifiers which encode the module
-	/// identity, the developer identity and a locally unique value.
-	/// The string encoding is very compact for small IDs: we rely on an
+	/// The <c>Druid</c> structure manages Data Resource Unique IDs and their
+	/// related conversions.
+	/// These DRUIDs are 64-bit identifiers which encode the module identity,
+	/// the developer identity and a locally unique value.
+	/// The string encoding is very compact for small DRUIDs: we rely on an
 	/// interleaved encoding such as MMDLLDLLDMLDM, with trailing zeroes
 	/// omitted. M=module ID, D=dev. ID, L=local ID. Each is encoded using
 	/// 5-bit digits (0..9, A..V) and the first digit of each category
 	/// encodes the lowest bits of each ID. For instance "1023" can be used
 	/// to represent module=1 ('1'*32^0 + '0'*32^1), dev=2, local=3.
+	/// A compact, module relative DRUID exists; it uses only 44-bit for
+	/// the encoding of the data.
 	/// </summary>
 	public struct Druid
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="T:Druid"/> structure.
+		/// </summary>
+		/// <param name="druid">The druid to copy from.</param>
 		public Druid(Druid druid)
 		{
 			this.module = druid.module;
-			this.dev = druid.dev;
+			this.developer = druid.developer;
 			this.local = druid.local;
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="T:Druid"/> structure.
+		/// </summary>
+		/// <param name="dev">The developer id.</param>
+		/// <param name="local">The local id.</param>
 		public Druid(int dev, int local)
 		{
 			this.module = 0;
-			this.dev = dev+1;
+			this.developer = dev+1;
 			this.local = local+1;
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="T:Druid"/> structure.
+		/// </summary>
+		/// <param name="module">The module id.</param>
+		/// <param name="dev">The developer id.</param>
+		/// <param name="local">The local id.</param>
 		public Druid(int module, int dev, int local)
 		{
 			this.module = module+1;
-			this.dev = dev+1;
+			this.developer = dev+1;
 			this.local = local+1;
 		}
 
-		public DruidType Type
+		/// <summary>
+		/// Gets the type of the DRUID.
+		/// </summary>
+		/// <value>The type of the DRUID.</value>
+		public DruidType						Type
 		{
 			get
 			{
@@ -69,8 +91,12 @@ namespace Epsitec.Common.Support
 				return DruidType.Full;
 			}
 		}
-		
-		public int Module
+
+		/// <summary>
+		/// Gets the module id.
+		/// </summary>
+		/// <value>The module id.</value>
+		public int								Module
 		{
 			get
 			{
@@ -78,15 +104,23 @@ namespace Epsitec.Common.Support
 			}
 		}
 
-		public int Developer
+		/// <summary>
+		/// Gets the developer id.
+		/// </summary>
+		/// <value>The developer id.</value>
+		public int								Developer
 		{
 			get
 			{
-				return this.dev-1;
+				return this.developer-1;
 			}
 		}
 
-		public int Local
+		/// <summary>
+		/// Gets the local id.
+		/// </summary>
+		/// <value>The local id.</value>
+		public int								Local
 		{
 			get
 			{
@@ -94,6 +128,10 @@ namespace Epsitec.Common.Support
 			}
 		}
 
+		/// <summary>
+		/// Returns the DRUID encoded as a resource id (e.g. "[1023]").
+		/// </summary>
+		/// <returns>The resource id.</returns>
 		public string ToResourceId()
 		{
 			DruidType type = this.Type;
@@ -106,7 +144,11 @@ namespace Epsitec.Common.Support
 			return string.Concat ("[", Druid.ToFullString (Druid.FromIds (this.Module, this.Developer, this.Local)), "]");
 		}
 
-		public string ToFieldIdName()
+		/// <summary>
+		/// Returns the DRUID encoded as a resource field name (e.g. "$23").
+		/// </summary>
+		/// <returns>The resource field name.</returns>
+		public string ToFieldName()
 		{
 			DruidType type = this.Type;
 			
@@ -119,23 +161,10 @@ namespace Epsitec.Common.Support
 			return string.Concat (ResourceBundle.FieldIdPrefix, Druid.ToModuleString (Druid.FromIds (this.Developer, this.Local)));
 		}
 
-		public long ToLong()
-		{
-			DruidType type = this.Type;
-
-			switch (type)
-			{
-				case DruidType.Full:
-					return Druid.FromIds (this.Module, this.Developer, this.Local);
-				
-				case DruidType.ModuleRelative:
-					return Druid.FromIds (this.Developer, this.Local);
-				
-				default:
-					throw new System.InvalidOperationException (string.Format ("Cannot convert {0} DRUID to a long", type));
-			}
-		}
-		
+		/// <summary>
+		/// Returns the DRUID encoded as a resource field id (e.g. 0x2000003L).
+		/// </summary>
+		/// <returns>The resource field id.</returns>
 		public long ToFieldId()
 		{
 			DruidType type = this.Type;
@@ -149,6 +178,34 @@ namespace Epsitec.Common.Support
 			return Druid.FromIds (this.Developer, this.Local);
 		}
 
+		/// <summary>
+		/// Returns the DRUID encoded as a raw 64-bit DRUID value.
+		/// </summary>
+		/// <returns>The raw 64-bit DRUID value.</returns>
+		public long ToLong()
+		{
+			DruidType type = this.Type;
+
+			switch (type)
+			{
+				case DruidType.Full:
+					return Druid.FromIds (this.Module, this.Developer, this.Local);
+
+				case DruidType.ModuleRelative:
+					return Druid.FromIds (this.Developer, this.Local);
+
+				default:
+					throw new System.InvalidOperationException (string.Format ("Cannot convert {0} DRUID to a long", type));
+			}
+		}
+
+		/// <summary>
+		/// Parses the specified value; this recognizes DRUIDs in the resource
+		/// id "[1023]" format, resource field name "$23" format and XML field
+		/// id "23" format.
+		/// </summary>
+		/// <param name="value">The value to parse.</param>
+		/// <returns>The DRUID.</returns>
 		public static Druid Parse(string value)
 		{
 			if (string.IsNullOrEmpty (value))
@@ -179,6 +236,13 @@ namespace Epsitec.Common.Support
 			throw new System.FormatException (string.Format ("Value '{0}' is not a valid DRUID encoding", value));
 		}
 
+		/// <summary>
+		/// Determines whether the specified value is a valid resource id (it
+		/// must be a DRUID enclosed within brackets).
+		/// </summary>
+		/// <param name="value">The value.</param>
+		/// <returns><c>true</c> if the specified value is a valid resource id;
+		/// otherwise, <c>false</c>.</returns>
 		public static bool IsValidResourceId(string value)
 		{
 			if ((value != null) &&
@@ -194,6 +258,11 @@ namespace Epsitec.Common.Support
 			}
 		}
 
+		/// <summary>
+		/// Converts the raw resource field id into a DRUID.
+		/// </summary>
+		/// <param name="value">The resource raw field id value.</param>
+		/// <returns>The DRUID.</returns>
 		public static Druid FromFieldId(long value)
 		{
 			if (value < 0)
@@ -605,8 +674,8 @@ namespace Epsitec.Common.Support
 
 		public static readonly string BundleName = "DruidData";
 
-		private int module;
-		private int dev;
-		private int local;
+		private int								module;			//	0 or module id + 1
+		private int								developer;		//	0 or developer id + 1
+		private int								local;			//	0 or local id + 1
 	}
 }
