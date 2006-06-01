@@ -743,6 +743,19 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
+		public Module SearchModuleId(int id)
+		{
+			//	Cherche un module d'après son identificateur.
+			foreach (ModuleInfo info in this.moduleInfoList)
+			{
+				if (info.Module.Id == id)
+				{
+					return info.Module;
+				}
+			}
+			return null;
+		}
+
 		protected void UseModule(int rank)
 		{
 			//	Utilise un module ouvert.

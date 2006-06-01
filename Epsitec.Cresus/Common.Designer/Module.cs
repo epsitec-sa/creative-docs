@@ -69,6 +69,15 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
+		public int Id
+		{
+			//	Retourne l'identificateur du module.
+			get
+			{
+				return this.id;
+			}
+		}
+
 		public ResourceManager ResourceManager
 		{
 			get
