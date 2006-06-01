@@ -1,4 +1,4 @@
-//	Copyright © 2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2005-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -128,10 +128,6 @@ namespace Epsitec.Common.Tool.ResGenerator
 				for (int j = 0; j < fields.Length; j++)
 				{
 					string field = fields[j];
-					if (field.IndexOf ("Dialog.Print.PaperFormat.User") > -1)
-					{
-						System.Diagnostics.Debug.WriteLine ("Field found");
-					}
 					
 					while ((prefix != "") && (field.StartsWith (prefix + ".") == false))
 					{
@@ -179,19 +175,31 @@ namespace Epsitec.Common.Tool.ResGenerator
 					//	Crée l'accesseur pour le champ actuel :
 					
 					buffer.Append (generator.Tabs);
+
+					Support.Druid druid = bundle[field].Druid;
+
 					buffer.Append ("public static string ");
 					buffer.Append (delta);
 					buffer.Append (@" { get { return GetText (""");
 					buffer.Append (file_name);
 					buffer.Append (@"""");
-					
-					string[] elems = field.Split ('.');
-					
-					for (int k = 0; k < elems.Length; k++)
+
+					if (druid.Type == Support.DruidType.ModuleRelative)
 					{
 						buffer.Append (@", """);
-						buffer.Append (elems[k]);
+						buffer.Append (druid.ToFieldName ());
 						buffer.Append (@"""");
+					}
+					else
+					{
+						string[] elems = field.Split ('.');
+
+						for (int k = 0; k < elems.Length; k++)
+						{
+							buffer.Append (@", """);
+							buffer.Append (elems[k]);
+							buffer.Append (@"""");
+						}
 					}
 					
 					buffer.Append ("); } }\n");
