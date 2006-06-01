@@ -456,17 +456,11 @@ namespace Epsitec.Common.Widgets
 		protected void SetValue(decimal value)
 		{
 			//	Modifie une valeur en envoyant l'événement AcceptEdition si nécessaire.
-			if ( this.Value != value )
+			if (this.Value != value)
 			{
-				if ( this.StartEdition() )
-				{
-					this.Value = value;
-					this.AcceptEdition();
-				}
-				else
-				{
-					this.Value = value;
-				}
+				this.StartEdition ();
+				this.Value = value;
+				this.AcceptEdition ();
 			}
 		}
 		

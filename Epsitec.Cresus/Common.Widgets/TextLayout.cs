@@ -60,7 +60,7 @@ namespace Epsitec.Common.Widgets
 			this.resourceManager = resource_manager;
 		}
 
-		internal Widget Embedder
+		internal Widget							Embedder
 		{
 			set
 			{
@@ -3047,13 +3047,15 @@ namespace Epsitec.Common.Widgets
 		{
 			System.Diagnostics.Debug.Assert (text != null);
 
-			if (this.text != text)
+			string oldText = this.text;
+			
+			if (oldText != text)
 			{
 				this.text = text;
 
 				if (this.embedder != null)
 				{
-					this.embedder.SetValueBase (Widget.TextProperty, text);
+					this.embedder.InternalNotifyTextLayoutTextChanged (oldText, text);
 				}
 			}
 		}

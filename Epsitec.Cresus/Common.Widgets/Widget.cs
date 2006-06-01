@@ -792,24 +792,21 @@ namespace Epsitec.Common.Widgets
 			}
 			set
 			{
-#if true
-				this.SetValue (Widget.TabIndexProperty, value);
-#else
-				if (this.tab_index != value)
+				if (this.TabIndex != value)
 				{
-					this.tab_index = value;
+					this.SetValue (Widget.TabIndexProperty, value);
+					
 					if ((this.tab_navigation_mode == TabNavigationMode.Passive) &&
-						(this.tab_index > 0))
+						(value > 0))
 					{
 						this.tab_navigation_mode = TabNavigationMode.ActivateOnTab;
 					}
 					else if ((this.tab_navigation_mode == TabNavigationMode.ActivateOnTab) &&
-						/**/ (this.tab_index <= 0))
+						/**/ (value <= 0))
 					{
 						this.tab_navigation_mode = TabNavigationMode.Passive;
 					}
 				}
-#endif
 			}
 		}
 		
@@ -2909,6 +2906,16 @@ namespace Epsitec.Common.Widgets
 			{
 				this.UpdateTextLayout ();
 			}
+		}
+
+		internal void InternalNotifyTextLayoutTextChanged(string oldText, string newText)
+		{
+			this.NotifyTextLayoutTextChanged (oldText, newText);
+		}
+
+		protected virtual void NotifyTextLayoutTextChanged(string oldText, string newText)
+		{
+			this.SetValueBase (Widget.TextProperty, newText);
 		}
 		
 		public virtual void PaintHandler(Drawing.Graphics graphics, Drawing.Rectangle repaint, IPaintFilter paint_filter)
