@@ -158,19 +158,23 @@ namespace Epsitec.Common.Designer.MyWidgets
 					break;
 
 				case "MoveLeft":
-					//?this.SelectMove();
+					this.MoveSelection(new Point(-this.module.MainWindow.MoveHorizontal, 0), null);
+					this.handlesList.UpdateGeometry();
 					break;
 
 				case "MoveRight":
-					//?this.SelectMove();
+					this.MoveSelection(new Point(this.module.MainWindow.MoveHorizontal, 0), null);
+					this.handlesList.UpdateGeometry();
 					break;
 
 				case "MoveDown":
-					//?this.SelectMove();
+					this.MoveSelection(new Point(0, -this.module.MainWindow.MoveVertical), null);
+					this.handlesList.UpdateGeometry();
 					break;
 
 				case "MoveUp":
-					//?this.SelectMove();
+					this.MoveSelection(new Point(0, this.module.MainWindow.MoveVertical), null);
+					this.handlesList.UpdateGeometry();
 					break;
 
 				case "AlignLeft":
@@ -1226,10 +1230,13 @@ namespace Epsitec.Common.Designer.MyWidgets
 				Rectangle bounds = this.GetObjectBounds(obj);
 				bounds.Offset(move);
 
-				if (obj.Parent != parent)
+				if (parent != null)
 				{
-					obj.Parent.Children.Remove(obj);
-					parent.Children.Add(obj);
+					if (obj.Parent != parent)
+					{
+						obj.Parent.Children.Remove(obj);
+						parent.Children.Add(obj);
+					}
 				}
 
 				this.SetObjectBounds(obj, bounds);

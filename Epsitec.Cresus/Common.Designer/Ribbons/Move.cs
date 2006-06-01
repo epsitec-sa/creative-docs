@@ -9,7 +9,7 @@ namespace Epsitec.Common.Designer.Ribbons
 	/// </summary>
 	public class Move : Abstract
 	{
-		public Move() : base()
+		public Move(MainWindow mainWindow) : base(mainWindow)
 		{
 			this.Title = Res.Strings.Ribbon.Section.Move;
 			this.PreferredWidth = 8 + 22*2 + 50;
@@ -71,6 +71,12 @@ namespace Epsitec.Common.Designer.Ribbons
 			//	Crée un champ éditable pour un déplacement.
 			field = new TextFieldReal(this);
 			field.PreferredWidth = 50;
+			field.InternalMinValue     =   1.0M;
+			field.InternalMaxValue     = 100.0M;
+			field.InternalDefaultValue =   5.0M;
+			field.Step                 =   1.0M;
+			field.Resolution           =   1.0M;
+			field.InternalValue = field.InternalDefaultValue;
 			field.TabIndex = this.tabIndex++;
 			field.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			field.ValueChanged += new EventHandler(this.HandleFieldValueChanged);
@@ -84,11 +90,11 @@ namespace Epsitec.Common.Designer.Ribbons
 
 			if ( field == this.fieldMoveH )
 			{
-				//?this.document.Modifier.MoveDistanceH = (double) field.InternalValue;
+				this.mainWindow.MoveHorizontal= (double) field.InternalValue;
 			}
 			if ( field == this.fieldMoveV )
 			{
-				//?this.document.Modifier.MoveDistanceV = (double) field.InternalValue;
+				this.mainWindow.MoveVertical = (double) field.InternalValue;
 			}
 		}
 

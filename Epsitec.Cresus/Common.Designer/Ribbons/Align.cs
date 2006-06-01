@@ -9,7 +9,7 @@ namespace Epsitec.Common.Designer.Ribbons
 	/// </summary>
 	public class Align : Abstract
 	{
-		public Align() : base()
+		public Align(MainWindow mainWindow) : base(mainWindow)
 		{
 			this.Title = Res.Strings.Ribbon.Section.Align;
 			this.PreferredWidth = 8 + 22*4 + this.separatorWidth + 22;

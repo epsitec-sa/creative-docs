@@ -9,7 +9,7 @@ namespace Epsitec.Common.Designer.Ribbons
 	/// </summary>
 	public class Access : Abstract
 	{
-		public Access() : base()
+		public Access(MainWindow mainWindow) : base(mainWindow)
 		{
 			this.Title = Res.Strings.Ribbon.Section.Access;
 			this.PreferredWidth = 8 + 22*1.5*2 + 4 + 22*3 + this.separatorWidth + 22*2 + 4 + 22*1.5*1;

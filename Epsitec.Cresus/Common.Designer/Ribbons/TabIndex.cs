@@ -9,7 +9,7 @@ namespace Epsitec.Common.Designer.Ribbons
 	/// </summary>
 	public class TabIndex : Abstract
 	{
-		public TabIndex() : base()
+		public TabIndex(MainWindow mainWindow) : base(mainWindow)
 		{
 			this.Title = Res.Strings.Ribbon.Section.TabIndex;
 			this.PreferredWidth = 8 + 22*4;
