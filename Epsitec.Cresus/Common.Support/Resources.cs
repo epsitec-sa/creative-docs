@@ -408,7 +408,7 @@ namespace Epsitec.Common.Support
 
 		#endregion
 
-		public static readonly string			DruidBundleName = "DruidData";
+		public static readonly string			DruidBundleName = "Strings";
 
 		public static readonly char				PrefixSeparator = ':';
 		public static readonly char				ModuleSeparator = '/';
