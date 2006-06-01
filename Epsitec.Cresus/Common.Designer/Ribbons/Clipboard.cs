@@ -9,7 +9,7 @@ namespace Epsitec.Common.Designer.Ribbons
 	/// </summary>
 	public class Clipboard : Abstract
 	{
-		public Clipboard() : base()
+		public Clipboard(MainWindow mainWindow) : base(mainWindow)
 		{
 			this.Title = Res.Strings.Ribbon.Section.Clipboard;
 			this.PreferredWidth = 8 + 22 + 4 + 22*1.5;

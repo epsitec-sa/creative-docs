@@ -9,7 +9,7 @@ namespace Epsitec.Common.Designer.Ribbons
 	/// </summary>
 	public class Character : Abstract
 	{
-		public Character() : base()
+		public Character(MainWindow mainWindow) : base(mainWindow)
 		{
 			this.Title = Res.Strings.Ribbon.Section.Character;
 			this.PreferredWidth = 8 + 22*4 + 5;

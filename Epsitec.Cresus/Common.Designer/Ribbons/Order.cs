@@ -9,7 +9,7 @@ namespace Epsitec.Common.Designer.Ribbons
 	/// </summary>
 	public class Order : Abstract
 	{
-		public Order() : base()
+		public Order(MainWindow mainWindow) : base(mainWindow)
 		{
 			this.Title = Res.Strings.Ribbon.Section.Order;
 			this.PreferredWidth = 8 + 22*1.5*2 + 4 + 22*1;

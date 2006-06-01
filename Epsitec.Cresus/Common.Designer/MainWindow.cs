@@ -189,7 +189,31 @@ namespace Epsitec.Common.Designer
 
 			return state;
 		}
-		
+
+		public double MoveHorizontal
+		{
+			get
+			{
+				return this.moveHorizontal;
+			}
+			set
+			{
+				this.moveHorizontal = value;
+			}
+		}
+
+		public double MoveVertical
+		{
+			get
+			{
+				return this.moveVertical;
+			}
+			set
+			{
+				this.moveVertical = value;
+			}
+		}
+
 		protected void CreateLayout()
 		{
 			this.ribbonBook = new RibbonBook(this.window.Root);
@@ -200,34 +224,34 @@ namespace Epsitec.Common.Designer
 			this.ribbonMain.RibbonTitle = Res.Strings.Ribbon.Main;
 			this.ribbonBook.Items.Add(this.ribbonMain);
 
-			this.ribbonMain.Items.Add(new Ribbons.File());
-			this.ribbonMain.Items.Add(new Ribbons.Clipboard());
-			this.ribbonMain.Items.Add(new Ribbons.Culture());
+			this.ribbonMain.Items.Add(new Ribbons.File(this));
+			this.ribbonMain.Items.Add(new Ribbons.Clipboard(this));
+			this.ribbonMain.Items.Add(new Ribbons.Culture(this));
 			if (this.mode == DesignerMode.Build)
 			{
-				this.ribbonMain.Items.Add(new Ribbons.Select());
+				this.ribbonMain.Items.Add(new Ribbons.Select(this));
 			}
-			this.ribbonMain.Items.Add(new Ribbons.Access());
+			this.ribbonMain.Items.Add(new Ribbons.Access(this));
 
 			//	Crée le ruban des opérations.
 			this.ribbonOper = new RibbonPage();
 			this.ribbonOper.RibbonTitle = Res.Strings.Ribbon.Oper;
 			this.ribbonBook.Items.Add(this.ribbonOper);
 
-			this.ribbonOper.Items.Add(new Ribbons.PanelShow());
-			this.ribbonOper.Items.Add(new Ribbons.PanelSelect());
-			this.ribbonOper.Items.Add(new Ribbons.Move());
-			this.ribbonOper.Items.Add(new Ribbons.Align());
-			this.ribbonOper.Items.Add(new Ribbons.Order());
-			this.ribbonOper.Items.Add(new Ribbons.TabIndex());
+			this.ribbonOper.Items.Add(new Ribbons.PanelShow(this));
+			this.ribbonOper.Items.Add(new Ribbons.PanelSelect(this));
+			this.ribbonOper.Items.Add(new Ribbons.Move(this));
+			this.ribbonOper.Items.Add(new Ribbons.Align(this));
+			this.ribbonOper.Items.Add(new Ribbons.Order(this));
+			this.ribbonOper.Items.Add(new Ribbons.TabIndex(this));
 
 			//	Crée le ruban du texte.
 			this.ribbonText = new RibbonPage();
 			this.ribbonText.RibbonTitle = Res.Strings.Ribbon.Text;
 			this.ribbonBook.Items.Add(this.ribbonText);
 
-			this.ribbonText.Items.Add(new Ribbons.Character());
-			this.ribbonText.Items.Add(new Ribbons.Clipboard());
+			this.ribbonText.Items.Add(new Ribbons.Character(this));
+			this.ribbonText.Items.Add(new Ribbons.Clipboard(this));
 
 			//	Crée la barre de status.
 			this.info = new StatusBar(this.window.Root);
@@ -998,6 +1022,8 @@ namespace Epsitec.Common.Designer
 		protected int							currentModule = -1;
 		protected double						ribbonHeight = 71;
 		protected bool							ignoreChange = false;
+		protected double						moveHorizontal = 5;
+		protected double						moveVertical = 5;
 
 		protected CommandState					newState;
 		protected CommandState					openState;

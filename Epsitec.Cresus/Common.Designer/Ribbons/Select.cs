@@ -9,7 +9,7 @@ namespace Epsitec.Common.Designer.Ribbons
 	/// </summary>
 	public class Select : Abstract
 	{
-		public Select() : base()
+		public Select(MainWindow mainWindow) : base(mainWindow)
 		{
 			this.Title = Res.Strings.Ribbon.Section.Select;
 			this.PreferredWidth = 8 + 22*1.5*2 + 4 + 22*2;
