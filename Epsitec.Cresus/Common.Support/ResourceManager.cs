@@ -502,7 +502,11 @@ namespace Epsitec.Common.Support
 			return bundle;
 		}
 
-
+		public void Bind(Types.DependencyObject targetObject, Types.DependencyProperty targetProperty, Druid druid)
+		{
+			this.Bind (targetObject, targetProperty, druid.ToResourceId ());
+		}
+		
 		public void Bind(Types.DependencyObject targetObject, Types.DependencyProperty targetProperty, string resourceId)
 		{
 			//	Attache la cible (object/propriété) avec la ressource décrite
