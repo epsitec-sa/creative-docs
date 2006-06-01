@@ -947,22 +947,16 @@ namespace Epsitec.Common.Designer.MyWidgets
 			if (obj is Button || obj is StaticText || obj is GroupBox)
 			{
 				Druid druid = Druid.Empty;
-				if (!string.IsNullOrEmpty(obj.Name))
+
+				Types.ResourceBinding binding = obj.GetBinding (Widget.TextProperty) as Types.ResourceBinding;
+				
+				if (binding != null)
 				{
-					druid = Druid.Parse(obj.Name);  // TODO: [PA] OK ?
+					druid = Druid.Parse(binding.ResourceId);
 				}
 
 				druid = this.module.MainWindow.DlgTextSelector(druid);
-
-				if (druid.IsEmpty)
-				{
-					obj.Name = null;
-				}
-				else
-				{
-					obj.Name = druid.ToResourceId();  // TODO: [PA] OK ?
-				}
-
+				
 				if (!druid.IsEmpty)
 				{
 					this.module.ResourceManager.Bind(obj, Widget.TextProperty, druid);
