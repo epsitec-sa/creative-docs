@@ -69,15 +69,15 @@ namespace Epsitec.Common.Support
 			Assert.AreEqual (t1, this.manager.GetText (":strings#Text1"));
 			Assert.AreEqual (t1, this.manager.GetText ("strings#Text1"));
 
-			Assert.AreEqual (t2, this.manager.GetText ("file/Test:DruidData#$0"));
-			Assert.AreEqual (t2, this.manager.GetText ("file/4:DruidData#$0"));
-			Assert.AreEqual (t2, this.manager.GetText ("file:DruidData#$0"));
-			Assert.AreEqual (t2, this.manager.GetText ("/Test:DruidData#$0"));
-			Assert.AreEqual (t2, this.manager.GetText ("/:DruidData#$0"));
-			Assert.AreEqual (t2, this.manager.GetText (":DruidData#$0"));
-			Assert.AreEqual (t2, this.manager.GetText ("DruidData#$0"));
+			Assert.AreEqual (t2, this.manager.GetText ("file/Test:strings#$0"));
+			Assert.AreEqual (t2, this.manager.GetText ("file/4:strings#$0"));
+			Assert.AreEqual (t2, this.manager.GetText ("file:strings#$0"));
+			Assert.AreEqual (t2, this.manager.GetText ("/Test:strings#$0"));
+			Assert.AreEqual (t2, this.manager.GetText ("/:strings#$0"));
+			Assert.AreEqual (t2, this.manager.GetText (":strings#$0"));
+			Assert.AreEqual (t2, this.manager.GetText ("strings#$0"));
 
-			Assert.AreEqual (t3, this.manager.GetText ("file/4:DruidData#$01"));
+			Assert.AreEqual (t3, this.manager.GetText ("file/4:strings#$01"));
 
 			Assert.AreEqual (t2, this.manager.GetText ("[4]"));
 			Assert.AreEqual (t3, this.manager.GetText ("[4001]"));
@@ -99,14 +99,14 @@ namespace Epsitec.Common.Support
 			string t1 = "Druid - From other module";
 			string t2 = "Druid - Hello, world";
 
-			Assert.AreEqual (t2, this.manager.GetText ("file:DruidData#$0"));
+			Assert.AreEqual (t2, this.manager.GetText ("file:strings#$0"));
 
-			Assert.AreEqual (t1, this.manager.GetText ("file/OtherModule:DruidData#$0"));
-			Assert.AreEqual (t1, this.manager.GetText ("file/31:DruidData#$0"));
+			Assert.AreEqual (t1, this.manager.GetText ("file/OtherModule:strings#$0"));
+			Assert.AreEqual (t1, this.manager.GetText ("file/31:strings#$0"));
 
-			Assert.AreEqual (t2, this.manager.GetText ("file:DruidData#$0"));
-			Assert.AreEqual (t2, this.manager.GetText ("file/Test:DruidData#$0"));
-			Assert.AreEqual (t2, this.manager.GetText ("file/4:DruidData#$0"));
+			Assert.AreEqual (t2, this.manager.GetText ("file:strings#$0"));
+			Assert.AreEqual (t2, this.manager.GetText ("file/Test:strings#$0"));
+			Assert.AreEqual (t2, this.manager.GetText ("file/4:strings#$0"));
 
 			Assert.AreEqual (t1, this.manager.GetText ("[V]"));
 			Assert.AreEqual (t2, this.manager.GetText ("[4]"));
@@ -121,7 +121,7 @@ namespace Epsitec.Common.Support
 
 			manager.ActiveCulture = Resources.FindCultureInfo ("fr");
 
-			Assert.AreEqual ("Druid - Bonjour", manager.GetData ("file/Test:DruidData#$0", ResourceLevel.Localized, null));
+			Assert.AreEqual ("Druid - Bonjour", manager.GetData ("file/Test:strings#$0", ResourceLevel.Localized, null));
 			Assert.AreEqual ("Druid - Bonjour", manager.GetData ("[4]", ResourceLevel.Localized, null));
 
 			manager.Bind (visual, Widgets.Visual.NameProperty, "[4]");

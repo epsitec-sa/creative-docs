@@ -24,8 +24,6 @@
     </StartupObject>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
-    <UpgradeBackupLocation>
-    </UpgradeBackupLocation>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <OutputPath>bin\Debug\</OutputPath>
@@ -212,7 +210,26 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="resources\" />
+    <None Include="resources\LowLevelTest\ab.00.resource" />
+    <None Include="resources\LowLevelTest\bitmap.00.resource" />
+    <None Include="resources\LowLevelTest\button.cancel.00.resource" />
+    <None Include="resources\LowLevelTest\button.cancel.fr.resource" />
+    <None Include="resources\LowLevelTest\complex.00.resource" />
+    <None Include="resources\LowLevelTest\icon.00.resource" />
+    <None Include="resources\LowLevelTest\image.00.resource" />
+    <None Include="resources\LowLevelTest\module.info" />
+    <None Include="resources\LowLevelTest\recursive.00.resource" />
+    <None Include="resources\LowLevelTest\simple_window.00.resource" />
+    <None Include="resources\LowLevelTest\strings.00.resource" />
+    <None Include="resources\LowLevelTest\strings.fr.resource" />
+    <None Include="resources\OtherModule\module.info" />
+    <None Include="resources\OtherModule\Strings.00.resource" />
+    <None Include="resources\Test\module.info" />
+    <None Include="resources\Test\strings.00.resource" />
+    <None Include="resources\Test\Strings.fr.resource" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="resources\LowLevelTest\bitmap.resource.png" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
