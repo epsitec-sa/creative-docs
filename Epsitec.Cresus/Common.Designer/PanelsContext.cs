@@ -14,18 +14,6 @@ namespace Epsitec.Common.Designer
 		}
 
 
-		public string Culture
-		{
-			get
-			{
-				return this.culture;
-			}
-			set
-			{
-				this.culture = value;
-			}
-		}
-
 		public string Tool
 		{
 			get
@@ -299,7 +287,6 @@ namespace Epsitec.Common.Designer
 		#endregion
 
 
-		protected string				culture = "Fr";
 		protected string				tool = "ToolSelect";
 		protected bool					showGrid = false;
 		protected bool					showConstrain = true;

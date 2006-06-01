@@ -505,7 +505,7 @@ namespace Epsitec.Common.Designer.Viewers
 				System.Globalization.CultureInfo culture = Resources.FindCultureInfo(name);
 
 				IconButton button = new IconButton(this.tabPageCultures);
-				button.Name = Misc.CultureShortName(culture);
+				button.Name = name;
 				button.Text = Misc.CultureName(culture);
 				button.ButtonStyle = ButtonStyle.ActivableIcon;
 				button.Dock = DockStyle.Top;
@@ -525,17 +525,17 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			//	Un bouton pour changer de culture a été cliqué.
 			IconButton button = sender as IconButton;
-			this.context.Culture = button.Name;
-			this.module.ResourceManager.ActiveCulture = Resources.FindCultureInfo(this.context.Culture.ToLower());
+			this.module.ResourceManager.ActiveCulture = Resources.FindCultureInfo(button.Name);
 			this.UpdateCultureButtons();
 		}
 
 		protected void UpdateCultureButtons()
 		{
 			//	Met à jour les boutons pour les cultures.
+			string culture = Misc.CultureBaseName(this.module.ResourceManager.ActiveCulture);
 			foreach (IconButton button in this.cultureButtonList)
 			{
-				bool active = (button.Name == this.context.Culture);
+				bool active = (button.Name == culture);
 				button.ActiveState = active ? ActiveState.Yes : ActiveState.No;
 			}
 		}
