@@ -957,7 +957,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 				druid = this.module.MainWindow.DlgTextSelector(druid);
 				
-				if (!druid.IsEmpty)
+				if (druid.IsValid)
 				{
 					this.module.ResourceManager.Bind(obj, Widget.TextProperty, druid);
 				}

@@ -70,7 +70,7 @@ namespace Epsitec.Common.Support
 		}
 
 		/// <summary>
-		/// Gets a value indicating whether this instance is invalid.
+		/// Gets a value indicating whether this instance is empty.
 		/// </summary>
 		/// <value><c>true</c> if this instance is empty; otherwise, <c>false</c>.</value>
 		public bool								IsEmpty
@@ -78,6 +78,18 @@ namespace Epsitec.Common.Support
 			get
 			{
 				return (this.Type == DruidType.Invalid);
+			}
+		}
+
+		/// <summary>
+		/// Gets a value indicating whether this instance is valid.
+		/// </summary>
+		/// <value><c>true</c> if this instance is valid; otherwise, <c>false</c>.</value>
+		public bool								IsValid
+		{
+			get
+			{
+				return this.Type != DruidType.Invalid;
 			}
 		}
 		

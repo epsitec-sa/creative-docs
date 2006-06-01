@@ -1254,7 +1254,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			if (edit == this.secondaryEdit)
 			{
-				this.module.Modifier.CreateIfNecessary(this.secondaryBundle, label, this.primaryBundle[label].ModificationId);
+				this.module.Modifier.CreateIfNecessary(this.secondaryBundle, label, this.primaryBundle[label].ModificationId, this.primaryBundle[label].Druid);
 				this.secondaryBundle[label].SetStringValue(text);
 				this.UpdateArrayField(2, sel, this.secondaryBundle[label], this.primaryBundle[label]);
 			}
@@ -1266,7 +1266,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			if (edit == this.secondaryAbout)
 			{
-				this.module.Modifier.CreateIfNecessary(this.secondaryBundle, label, -1);
+				this.module.Modifier.CreateIfNecessary (this.secondaryBundle, label, -1, this.primaryBundle[label].Druid);
 				this.secondaryBundle[label].SetAbout(text);
 			}
 
