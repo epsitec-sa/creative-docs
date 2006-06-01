@@ -148,6 +148,7 @@ namespace Epsitec.Common.Designer
 			this.bundles.LoadBundles(this.resourceManager.ActivePrefix, this.resourceManager.GetBundleIds(ids[0], ResourceLevel.All));
 		}
 
+#if false
 		public void CreateIds()
 		{
 			//	Crée les 'druid' pour toutes les cultures du module.
@@ -176,6 +177,7 @@ namespace Epsitec.Common.Designer
 				this.resourceManager.SetBundle(bundle, ResourceSetMode.UpdateOnly);
 			}
 		}
+#endif
 
 
 		#region Panels
