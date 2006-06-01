@@ -81,6 +81,29 @@ namespace Epsitec.Common.Support
 		}
 
 		[Test]
+		public void CheckMiscConversions()
+		{
+			Druid druid = Druid.Parse ("[1023000000008]");
+
+			Assert.AreEqual (2, druid.Developer);
+			Assert.AreEqual (3, druid.Local);
+			Assert.AreEqual (0x40001, druid.Module);
+			
+			Assert.AreEqual (0x4000100002000003L, druid.ToLong ());
+			Assert.AreEqual (0x0000000002000003L, druid.ToFieldId ());
+			Assert.AreEqual ("[1023000000008]", druid.ToResourceId ());
+			Assert.AreEqual ("$23", druid.ToFieldIdName ());
+
+			Assert.AreEqual (DruidType.Full, druid.Type);
+			Assert.AreEqual (DruidType.ModuleRelative, new Druid (2, 3).Type);
+			Assert.AreEqual (DruidType.Invalid, new Druid ().Type);
+			Assert.AreEqual (DruidType.Full, new Druid (druid).Type);
+
+			Assert.AreEqual ("$23", new Druid (2, 3).ToFieldIdName ());
+			Assert.AreEqual ("[1023]", new Druid (new Druid (1, 2, 3)).ToResourceId ());
+		}
+
+		[Test]
 		public void CheckParse()
 		{
 			Assert.AreEqual (0x0000000000000000L, Druid.Parse ("[0]").ToLong ());
@@ -93,6 +116,20 @@ namespace Epsitec.Common.Support
 			Assert.AreEqual (0x0040100002000003L, Druid.Parse ("[1023000001]").ToLong ());
 			Assert.AreEqual (0x4000100002000003L, Druid.Parse ("[1023000000008]").ToLong ());
 
+			Assert.AreEqual (0x00000000000L, Druid.Parse ("$0").ToLong ());
+			Assert.AreEqual (0x00002000003L, Druid.Parse ("$23").ToLong ());
+			Assert.AreEqual (0x00002000100L, Druid.Parse ("$208").ToLong ());
+			Assert.AreEqual (0x00011000100L, Druid.Parse ("$H08").ToLong ());
+			Assert.AreEqual (0x0001f0003ffL, Druid.Parse ("$VVV").ToLong ());
+			Assert.AreEqual (0x0001f000400L, Druid.Parse ("$V0001").ToLong ());
+			Assert.AreEqual (0x00042000400L, Druid.Parse ("$20021").ToLong ());
+		}
+
+		[Test]
+		[ExpectedException (typeof (System.FormatException))]
+		public void CheckParseEx1()
+		{
+			Druid.Parse ("$23000000008");
 		}
 	}
 }

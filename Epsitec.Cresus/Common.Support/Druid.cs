@@ -123,13 +123,17 @@ namespace Epsitec.Common.Support
 		{
 			DruidType type = this.Type;
 
-			if ((type != DruidType.Full) &&
-				(type != DruidType.ModuleRelative))
+			switch (type)
 			{
-				throw new System.InvalidOperationException (string.Format ("Cannot convert {0} DRUID to a long", type));
+				case DruidType.Full:
+					return Druid.FromIds (this.Module, this.Developer, this.Local);
+				
+				case DruidType.ModuleRelative:
+					return Druid.FromIds (this.Developer, this.Local);
+				
+				default:
+					throw new System.InvalidOperationException (string.Format ("Cannot convert {0} DRUID to a long", type));
 			}
-
-			return Druid.FromIds (this.Module, this.Developer, this.Local);
 		}
 		
 		public long ToFieldId()
