@@ -715,6 +715,15 @@ namespace Epsitec.Common.Support
 			{
 				throw new ResourceException (string.Format ("Could not store bundle '{0}'.", id));
 			}
+			
+			ResourceModuleInfo module;
+			IResourceProvider provider = this.FindProvider (id, out id, out module);
+
+			string prefix = provider.Prefix;
+			string key = Resources.CreateBundleKey (prefix, module.Id, id, ResourceLevel.Merged, culture);
+
+			this.bundleCache.Remove (key);
+			this.SyncBundleBindingProxies ();
 		}
 		
 		public bool SetBinaryData(string id, ResourceLevel level, CultureInfo culture, byte[] data, ResourceSetMode mode)
