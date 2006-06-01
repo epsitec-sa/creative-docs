@@ -12,7 +12,7 @@ namespace Epsitec.Common.Designer.Dialogs
 	{
 		public TextSelector(MainWindow mainWindow) : base(mainWindow)
 		{
-			this.labelsIndex = new List<string>();
+			this.druidsIndex = new List<Druid>();
 		}
 
 		public override void Show()
@@ -123,13 +123,13 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.filterText.Text = "";
 			this.ignoreChanged = false;
 
-			this.UpdateLabelsIndex();
+			this.UpdateDruidsIndex();
 			this.UpdateArray();
 			this.SelectArray();
 			this.UpdateButtons();
 
 			this.ignoreChanged = true;
-			this.filterLabel.Text = this.ressource;
+			//?this.filterLabel.Text = this.ressource;  // TODO: [PA] adapter...
 			this.filterText.Text = "";
 			this.ignoreChanged = false;
 
@@ -151,7 +151,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		}
 
 
-		public string Ressource
+		public Druid Ressource
 		{
 			get
 			{
@@ -159,26 +159,27 @@ namespace Epsitec.Common.Designer.Dialogs
 			}
 			set
 			{
+				System.Diagnostics.Debug.Assert(value.Type != DruidType.ModuleRelative);
 				this.ressource = value;
 			}
 		}
 
 
-		protected int UpdateLabelsIndex()
+		protected int UpdateDruidsIndex()
 		{
 			string filterLabel = TextLayout.ConvertToSimpleText(this.filterLabel.Text);
 			string filterText  = TextLayout.ConvertToSimpleText(this.filterText.Text);
-			return this.UpdateLabelsIndex(filterLabel, filterText);
+			return this.UpdateDruidsIndex(filterLabel, filterText);
 		}
 
-		protected int UpdateLabelsIndex(string filterLabel, string filterText)
+		protected int UpdateDruidsIndex(string filterLabel, string filterText)
 		{
 			//	Construit l'index en fonction des ressources.
 			//	Retourne le rang de la ressource correspondant le mieux possible aux filtres.
 			ResourceBundleCollection bundles = this.mainWindow.CurrentModule.Bundles;
 			this.primaryBundle = bundles[ResourceLevel.Default];
 
-			this.labelsIndex.Clear();
+			this.druidsIndex.Clear();
 
 			filterLabel = Searcher.RemoveAccent(filterLabel.ToLower());
 			filterText  = Searcher.RemoveAccent(filterText.ToLower());
@@ -205,7 +206,7 @@ namespace Epsitec.Common.Designer.Dialogs
 						if (min > len)
 						{
 							min = len;
-							best = this.labelsIndex.Count;
+							best = this.druidsIndex.Count;
 						}
 					}
 				}
@@ -225,14 +226,15 @@ namespace Epsitec.Common.Designer.Dialogs
 						if (min > len)
 						{
 							min = len;
-							best = this.labelsIndex.Count;
+							best = this.druidsIndex.Count;
 						}
 					}
 				}
 
 				if (add1 && add2)
 				{
-					this.labelsIndex.Add(field.Name);
+					Druid fullDruid = new Druid(field.Druid, this.primaryBundle.Module.Id);
+					this.druidsIndex.Add(fullDruid);
 				}
 			}
 
@@ -242,14 +244,14 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected void UpdateArray()
 		{
 			//	Met à jour tout le contenu du tableau.
-			this.array.TotalRows = this.labelsIndex.Count;
+			this.array.TotalRows = this.druidsIndex.Count;
 
 			int first = this.array.FirstVisibleRow;
 			for (int i=0; i<this.array.LineCount; i++)
 			{
-				if (first+i < this.labelsIndex.Count)
+				if (first+i < this.druidsIndex.Count)
 				{
-					ResourceBundle.Field primaryField = this.primaryBundle[this.labelsIndex[first+i]];
+					ResourceBundle.Field primaryField = this.primaryBundle[this.druidsIndex[first+i]];
 
 					this.array.SetLineString(0, first+i, primaryField.Name);
 					this.array.SetLineString(1, first+i, primaryField.AsString);
@@ -271,11 +273,11 @@ namespace Epsitec.Common.Designer.Dialogs
 			//	Sélectionne la bonne ressource dans le tableau.
 			int sel = -1;
 
-			if (this.ressource != "")
+			if (this.ressource.Type == DruidType.Full)
 			{
-				for (int i=0; i<this.labelsIndex.Count; i++)
+				for (int i=0; i<this.druidsIndex.Count; i++)
 				{
-					if (this.labelsIndex[i] == this.ressource)
+					if (this.druidsIndex[i].ToLong() == this.ressource.ToLong())  // TODO: [PA] pas plus simple ?
 					{
 						sel = i;
 						break;
@@ -348,11 +350,11 @@ namespace Epsitec.Common.Designer.Dialogs
 			int sel = this.array.SelectedRow;
 			if (sel == -1)
 			{
-				this.ressource = "";
+				this.ressource = new Druid();  // TODO: [PA] pour obtenir un druid invalide, OK ?
 			}
 			else
 			{
-				this.ressource = this.labelsIndex[sel];
+				this.ressource = this.druidsIndex[sel];
 			}
 		}
 
@@ -370,8 +372,8 @@ namespace Epsitec.Common.Designer.Dialogs
 				{
 					if (!this.IsExistingName(label))
 					{
-						this.mainWindow.CurrentModule.Modifier.Create(label, text);
-						this.ressource = label;
+						Druid druid = this.mainWindow.CurrentModule.Modifier.Create(label, text);
+						this.ressource = druid;
 					}
 				}
 			}
@@ -383,7 +385,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			//	Le texte d'un filtre a changé.
 			if (this.ignoreChanged)  return;
 
-			int best = this.UpdateLabelsIndex();
+			int best = this.UpdateDruidsIndex();
 			this.UpdateArray();
 			this.UpdateButtons();
 
@@ -436,9 +438,9 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected Button						buttonCreate;
 		protected Button						buttonCancel;
 
-		protected string						ressource;
+		protected Druid							ressource;
 		protected ResourceBundle				primaryBundle;
-		protected List<string>					labelsIndex;
+		protected List<Druid>					druidsIndex;
 		protected Widget						focusedWidget;
 	}
 }

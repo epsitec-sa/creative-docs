@@ -106,19 +106,22 @@ namespace Epsitec.Common.Designer
 			this.IsDirty = false;
 		}
 
-		public void Create(string name, string text)
+		public Druid Create(string name, string text)
 		{
 			//	Crée une nouvelle ressource dans la culture par défaut du module.
 			ResourceBundleCollection bundles = this.module.Bundles;
 			ResourceBundle defaultBundle = bundles[ResourceLevel.Default];
 
+			Druid druid = new Druid();  // TODO: [PA] comment générer un beau Panoramix unique et tout neuf ?
 			ResourceBundle.Field newField = defaultBundle.CreateField(ResourceFieldType.Data);
+			newField.SetDruid(druid);
 			newField.SetName(name);
 			newField.SetStringValue(text);
 			newField.SetModificationId(0);
 			defaultBundle.Add(newField);
 
 			this.IsDirty = false;
+			return druid;
 		}
 
 		public bool Move(string name, int direction)

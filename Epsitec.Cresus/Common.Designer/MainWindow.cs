@@ -904,7 +904,7 @@ namespace Epsitec.Common.Designer
 
 
 		#region Dialogs
-		public string DlgTextSelector(string ressource)
+		public Druid DlgTextSelector(Druid ressource)
 		{
 			//	Ouvre le dialogue pour choisir un ressource de type texte.
 			this.dlgTextSelector.Ressource = ressource;
