@@ -502,7 +502,7 @@ namespace Epsitec.Common.Designer.Viewers
 			int tabIndex = 0;
 			foreach (string name in Misc.Cultures)
 			{
-				System.Globalization.CultureInfo culture = new System.Globalization.CultureInfo(name);
+				System.Globalization.CultureInfo culture = Resources.FindCultureInfo(name);
 
 				IconButton button = new IconButton(this.tabPageCultures);
 				button.Name = Misc.CultureShortName(culture);
@@ -526,6 +526,7 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Un bouton pour changer de culture a été cliqué.
 			IconButton button = sender as IconButton;
 			this.context.Culture = button.Name;
+			this.module.ResourceManager.ActiveCulture = Resources.FindCultureInfo(this.context.Culture.ToLower());
 			this.UpdateCultureButtons();
 		}
 

@@ -904,13 +904,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 				if (!string.IsNullOrEmpty(obj.Name))
 				{
-					ResourceBundleCollection bundles = this.module.Bundles;
-					ResourceBundle bundle = bundles[ResourceLevel.Default];
-					ResourceBundle.Field field = bundle[obj.Name];
-					if (field != null)
-					{
-						obj.Text = field.AsString;
-					}
+					string id = string.Concat("file:Strings#", obj.Name);
+					this.module.ResourceManager.Bind(obj, Widget.TextProperty, id);
 				}
 			}
 		}
