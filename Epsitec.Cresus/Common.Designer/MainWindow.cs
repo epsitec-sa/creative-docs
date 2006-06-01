@@ -260,6 +260,7 @@ namespace Epsitec.Common.Designer
 
 			this.InfoAdd("InfoCurrentModule", 200);
 			this.InfoAdd("InfoAccess", 250);
+			this.InfoAdd("InfoViewer", 150);
 
 			this.resize = new ResizeKnob();
 			this.resize.Margins = new Margins(2, 0, 0, 0);
@@ -338,6 +339,24 @@ namespace Epsitec.Common.Designer
 			}
 
 			StatusField field = this.info.Items["InfoAccess"] as StatusField;
+
+			if (field.Text != text)
+			{
+				field.Text = text;
+				field.Invalidate();
+			}
+		}
+
+		public void UpdateInfoViewer()
+		{
+			string text = "";
+			Module module = this.CurrentModule;
+			if (module != null && module.Modifier.ActiveViewer!= null)
+			{
+				text = module.Modifier.ActiveViewer.InfoViewerText;
+			}
+
+			StatusField field = this.info.Items["InfoViewer"] as StatusField;
 
 			if (field.Text != text)
 			{
@@ -838,6 +857,7 @@ namespace Epsitec.Common.Designer
 
 				this.UpdateInfoCurrentModule();
 				this.UpdateInfoAccess();
+				this.UpdateInfoViewer();
 			}
 		}
 

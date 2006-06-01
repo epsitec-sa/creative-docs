@@ -34,6 +34,7 @@
   <data name="Viewers.Panels.TabProperties">Propriétés</data>
   <data name="Viewers.Panels.TabObjects">Objets</data>
   <data name="Viewers.Panels.TabCultures">Cultures</data>
+  <data name="Viewers.Panels.Info">Objets: {0}/{1}</data>
 
   <data name="Action.New">Nouveau</data>
   <data name="Action.Open">Ouvrir...</data>

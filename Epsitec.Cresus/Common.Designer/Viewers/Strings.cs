@@ -1002,6 +1002,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			this.module.MainWindow.UpdateInfoCurrentModule();
 			this.module.MainWindow.UpdateInfoAccess();
+			this.module.MainWindow.UpdateInfoViewer();
 		}
 
 
