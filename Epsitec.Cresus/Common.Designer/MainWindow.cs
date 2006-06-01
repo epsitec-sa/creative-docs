@@ -709,7 +709,7 @@ namespace Epsitec.Common.Designer
 		{
 			ModuleInfo mi = this.CurrentModuleInfo;
 
-			mi.Module.CreateIds();
+			//?mi.Module.CreateIds();
 
 			mi.TabPage = new TabPage();
 			mi.TabPage.TabTitle = mi.Module.Name;

@@ -1,193 +1,167 @@
-<?xml version="1.0" encoding="utf-8" ?>
-<!-- Ressources françaises pour le projet Common.Designer -->
-
-<bundle type="String" culture="fr">
-  <data name="Application.Title">Editeur de ressources</data>
-
-  <data name="Ribbon.Main">Principal</data>
-  <data name="Ribbon.Oper">Opérations</data>
-  <data name="Ribbon.Text">Texte</data>
-  <data name="Ribbon.Section.File">Fichier</data>
-  <data name="Ribbon.Section.Clipboard">Presse-papiers</data>
-  <data name="Ribbon.Section.Select">Sélection</data>
-  <data name="Ribbon.Section.Character">Caractère</data>
-  <data name="Ribbon.Section.Access">Accès</data>
-  <data name="Ribbon.Section.Culture">Culture</data>
-  <data name="Ribbon.Section.PanelSelect">Sélection objets</data>
-  <data name="Ribbon.Section.PanelShow">Affichage</data>
-  <data name="Ribbon.Section.Order">Ordre</data>
-  <data name="Ribbon.Section.TabIndex">Touche Tab</data>
-  <data name="Ribbon.Section.Align">Alignement</data>
-  <data name="Ribbon.Section.Move">Déplacement</data>
-  <data name="Ribbon.Section.MoveHorizontal">Déplacement horizontal</data>
-  <data name="Ribbon.Section.MoveVertical">Déplacement vertical</data>
-
-  <data name="BundleType.Strings">Textes</data>
-  <data name="BundleType.Panels">Interfaces</data>
-  <data name="BundleType.Scripts">Scripts</data>
-
-  <data name="Viewers.Strings.Reference">&lt;b&gt;{0}&lt;/b&gt; (référence)</data>
-  <data name="Viewers.Strings.Edit">Textes</data>
-  <data name="Viewers.Strings.About">Commentaires</data>
-
-  <data name="Viewers.Panels.New">New</data>
-  <data name="Viewers.Panels.TabProperties">Propriétés</data>
-  <data name="Viewers.Panels.TabObjects">Objets</data>
-  <data name="Viewers.Panels.TabCultures">Cultures</data>
-  <data name="Viewers.Panels.Info">Objets: {0}/{1}  Sélection: {2}</data>
-  <data name="Viewers.Panels.Rectangle">x={0} y={1} dx={2} dy={3}</data>
-
-  <data name="Action.New">Nouveau</data>
-  <data name="Action.Open">Ouvrir...</data>
-  <data name="Action.Close">Fermer</data>
-  <data name="Action.CloseAll">Fermer tout</data>
-  <data name="Action.Save">Enregistrer</data>
-  <data name="Action.SaveAs">Enregistrer sous...</data>
-  <data name="Action.LastFiles">Fichiers récents</data>
-  <data name="Action.Quit">Quitter</data>
-
-  <data name="Action.Cut">Couper</data>
-  <data name="Action.Copy">Copier</data>
-  <data name="Action.Paste">Coller</data>
-  <data name="Action.Delete">Supprimer la ressource sélectionnée</data>
-  <data name="Action.Create">Créer une ressource après la ressource sélectionnée</data>
-  <data name="Action.Duplicate">Dupliquer la ressource sélectionnée</data>
-  <data name="Action.Up">Monter la ressource sélectionnée</data>
-  <data name="Action.Down">Descendre la ressource sélectionnée</data>
-  <data name="Action.NewCulture">Créer une nouvelle culture</data>
-  <data name="Action.DeleteCulture">Supprimer la culture sélectionnée</data>
-
-  <data name="Action.FontBold">Gras</data>
-  <data name="Action.FontItalic">Italique</data>
-  <data name="Action.FontUnderlined">Souligné</data>
-  <data name="Action.Glyphs">Caractères spéciaux...</data>
-  <data name="Action.Filter">Filtrer les ressources visibles...</data>
-  <data name="Action.Search">Rechercher et remplacer...</data>
-  <data name="Action.SearchPrev">Rechercher en arrière</data>
-  <data name="Action.SearchNext">Rechercher en avant</data>
-  <data name="Action.AccessFirst">Première ressource</data>
-  <data name="Action.AccessLast">Dernière ressource</data>
-  <data name="Action.AccessPrev">Ressource précédente</data>
-  <data name="Action.AccessNext">Ressource suivante</data>
-  <data name="Action.ModificationPrev">Ressource modifiée précédente</data>
-  <data name="Action.ModificationNext">Ressource modifiée suivante</data>
-  <data name="Action.ModificationAll">Toutes les ressources secondaires devront être modifiées</data>
-  <data name="Action.ModificationClear">Modification de la ressource secondaire terminée</data>
-
-  <data name="Action.PanelDelete">Supprimer les objets sélectionnés</data>
-  <data name="Action.PanelDuplicate">Dupliquer les objets sélectionnés</data>
-  <data name="Action.PanelDeselectAll">Désélectionner tous les objets</data>
-  <data name="Action.PanelSelectAll">Sélectionner tous les objets</data>
-  <data name="Action.PanelSelectInvert">Inverser les objets sélectionnés</data>
-
-  <data name="Action.PanelShowGrid">Activer la grille magnétique</data>
-  <data name="Action.PanelShowZOrder">Afficher l'ordre des objets</data>
-  <data name="Action.PanelShowTabIndex">Afficher l'ordre pour la touche Tab</data>
-  <data name="Action.PanelShowExpand">Espacer les groupes</data>
-  <data name="Action.PanelShowConstrain">Activer les contraintes</data>
-  <data name="Action.PanelShowAnchor">Afficher les ancrages</data>
-
-  <data name="Action.MoveLeft">Déplacement à gauche</data>
-  <data name="Action.MoveRight">Déplacement à droite</data>
-  <data name="Action.MoveDown">Déplacement en bas</data>
-  <data name="Action.MoveUp">Déplacement en haut</data>
-
-  <data name="Action.AlignGrid">Alignement sur la grille magnétique</data>
-  <data name="Action.AlignLeft">Alignement à gauche</data>
-  <data name="Action.AlignCenterX">Alignement centré horizontalement</data>
-  <data name="Action.AlignRight">Alignement à droite</data>
-  <data name="Action.AlignTop">Alignement en haut</data>
-  <data name="Action.AlignCenterY">Alignement centré verticalement</data>
-  <data name="Action.AlignBottom">Alignement en bas</data>
-  <data name="Action.AlignBaseLine">Alignement vertical sur la ligne de base</data>
-  <data name="Action.AdjustWidth">Largeurs identiques</data>
-  <data name="Action.AdjustHeight">Hauteurs identiques</data>
-
-  <data name="Action.OrderUpAll">Premier plan</data>
-  <data name="Action.OrderUpOne">En avant</data>
-  <data name="Action.OrderDownOne">En arrière</data>
-  <data name="Action.OrderDownAll">Arrière-plan</data>
-
-  <data name="Action.TabIndexClear">Aucun numéro</data>
-  <data name="Action.TabIndexFirst">En premier</data>
-  <data name="Action.TabIndexPrev">Rang précédent</data>
-  <data name="Action.TabIndexNext">Rang suivant</data>
-  <data name="Action.TabIndexLast">En dernier</data>
-  <data name="Action.TabIndexRenum">Renuméroter tous les objets automatiquement</data>
-
-  <data name="Action.ToolSelect">Sélectionner</data>
-  <data name="Action.ToolGlobal">Rectangle de sélection</data>
-  <data name="Action.ToolEdit">Editer</data>
-  <data name="Action.ToolZoom">Loupe</data>
-  <data name="Action.ToolHand">Main</data>
-  <data name="Action.ObjectHLine">Séparateur horizontal</data>
-  <data name="Action.ObjectVLine">Séparateur vertical</data>
-  <data name="Action.ObjectButton">Bouton</data>
-  <data name="Action.ObjectText">Texte éditable</data>
-  <data name="Action.ObjectStatic">Texte fixe</data>
-  <data name="Action.ObjectGroup">Groupe (conteneur d'objets)</data>
-
-  <data name="Dialog.Button.Close">Fermer</data>
-  <data name="Dialog.Button.OK">D'accord</data>
-  <data name="Dialog.Button.Cancel">Annuler</data>
-  <data name="Dialog.Button.Help">Aide</data>
-  <data name="Dialog.Tooltip.Close">Fermer ce dialogue</data>
-  <data name="Dialog.Tooltip.Help">Texte explicatif</data>
-  <data name="Dialog.Tooltip.Resize">Redimensionner la fenêtre</data>
-
-  <data name="Dialog.Glyphs.Title">Caractères spéciaux</data>
-  <data name="Dialog.Glyphs.Button.Insert">Insérer</data>
-  <data name="Dialog.Glyphs.Tooltip.ArraySize">Taille de l'aperçu</data>
-
-  <data name="Dialog.Filter.Title">Filtre pour les noms des ressources</data>
-  <data name="Dialog.Filter.Label">Critère</data>
-  <data name="Dialog.Filter.Radio.Begin">Au début</data>
-  <data name="Dialog.Filter.Radio.Any">N'importe où</data>
-  <data name="Dialog.Filter.Radio.Jocker">Avec des jockers</data>
-  <data name="Dialog.Filter.Check.Case">Respecter la casse</data>
-  <data name="Dialog.Filter.Check.Word">Mots entiers</data>
-  <data name="Dialog.Filter.Button.Insert">Filtrer</data>
-  <data name="Dialog.Filter.Button.All">Tout</data>
-
-  <data name="Dialog.Search.Title">Rechercher et remplacer</data>
-  <data name="Dialog.Search.Label">Rechercher</data>
-  <data name="Dialog.Search.Replace">Remplacer par</data>
-  <data name="Dialog.Search.Check.Case">Respecter la casse</data>
-  <data name="Dialog.Search.Check.Word">Mots entiers</data>
-  <data name="Dialog.Search.Check.Who">Où rechercher :</data>
-  <data name="Dialog.Search.Check.Label">Rechercher dans les noms</data>
-  <data name="Dialog.Search.Check.PrimaryText">Rechercher dans les textes de référence</data>
-  <data name="Dialog.Search.Check.SecondaryText">Rechercher dans les textes secondaires</data>
-  <data name="Dialog.Search.Check.PrimaryAbout">Rechercher dans les commentaires de référence</data>
-  <data name="Dialog.Search.Check.SecondaryAbout">Rechercher dans les commentaires secondaires</data>
-  <data name="Dialog.Search.Button.Search">Rechercher</data>
-  <data name="Dialog.Search.Button.Count">Compter</data>
-  <data name="Dialog.Search.Button.Replace">Remplacer</data>
-  <data name="Dialog.Search.Button.ReplaceAll">Remplacer tout</data>
-  <data name="Dialog.Search.Message.Count">{0} occurrences trouvées.</data>
-  <data name="Dialog.Search.Message.Replace">{0} occurrences remplacées.</data>
-  <data name="Dialog.Search.Message.Error">Pas trouvé !</data>
-
-  <data name="Dialog.NewCulture.Title">Culture à créer</data>
-  <data name="Dialog.NewCulture.Label">Choix de la culture à créer</data>
-  <data name="Dialog.NewCulture.Button.Create">Créer</data>
-
-  <data name="Dialog.DeleteCulture.Question">Voulez-vous supprimer la culture {0} ?</data>
-
-  <data name="Dialog.TextSelector.Title">Choix d'une ressource de type texte</data>
-  <data name="Dialog.TextSelector.Label">Identificateur :</data>
-  <data name="Dialog.TextSelector.Text">Texte :</data>
-  <data name="Dialog.TextSelector.Button.Clear">R</data>
-  <data name="Dialog.TextSelector.Button.Use">Utiliser</data>
-  <data name="Dialog.TextSelector.Button.Create">Créer</data>
-
-  <data name="Misc.NoTitle">&lt;i&gt;sans titre&lt;/i&gt;</data>
-  <data name="Misc.Copy">Copie</data>
-  <data name="Misc.CopyOf">de</data>
-  <data name="Misc.Extract">Extrait</data>
-  <data name="Misc.ExtractOf">de</data>
-
-  <data name="Error.InvalidLabel">Le nom contient un ou plusieurs caractères invalides !</data>
-  <data name="Error.NameAlreadyExist">Impossible d'utiliser ce nom, car il existe déjà !</data>
-
+﻿<?xml version="1.0" encoding="utf-8"?>
+<bundle name="Strings" type="String" culture="fr">
+  <data name="Application.Title" id="0">Editeur de ressources</data>
+  <data name="Ribbon.Main" id="01">Principal</data>
+  <data name="Ribbon.Oper" id="02">Opérations</data>
+  <data name="Ribbon.Text" id="03">Texte</data>
+  <data name="Ribbon.Section.File" id="04">Fichier</data>
+  <data name="Ribbon.Section.Clipboard" id="05">Presse-papiers</data>
+  <data name="Ribbon.Section.Select" id="06">Sélection</data>
+  <data name="Ribbon.Section.Character" id="07">Caractère</data>
+  <data name="Ribbon.Section.Access" id="08">Accès</data>
+  <data name="Ribbon.Section.Culture" id="09">Culture</data>
+  <data name="Ribbon.Section.PanelSelect" id="0A">Sélection objets</data>
+  <data name="Ribbon.Section.PanelShow" id="0B">Affichage</data>
+  <data name="Ribbon.Section.Order" id="0C">Ordre</data>
+  <data name="Ribbon.Section.TabIndex" id="0D">Touche Tab</data>
+  <data name="Ribbon.Section.Align" id="0E">Alignement</data>
+  <data name="Ribbon.Section.Move" id="0F">Déplacement</data>
+  <data name="Ribbon.Section.MoveHorizontal" id="0G">Déplacement horizontal</data>
+  <data name="Ribbon.Section.MoveVertical" id="0H">Déplacement vertical</data>
+  <data name="BundleType.Strings" id="0I">Textes</data>
+  <data name="BundleType.Panels" id="0J">Interfaces</data>
+  <data name="BundleType.Scripts" id="0K">Scripts</data>
+  <data name="Viewers.Strings.Reference" id="0L">&lt;b&gt;{0}&lt;/b&gt; (référence)</data>
+  <data name="Viewers.Strings.Edit" id="0M">Textes</data>
+  <data name="Viewers.Strings.About" id="0N">Commentaires</data>
+  <data name="Viewers.Panels.New" id="0O">New</data>
+  <data name="Viewers.Panels.TabProperties" id="0P">Propriétés</data>
+  <data name="Viewers.Panels.TabObjects" id="0Q">Objets</data>
+  <data name="Viewers.Panels.TabCultures" id="0R">Cultures</data>
+  <data name="Viewers.Panels.Info" id="0S">Objets: {0}/{1}  Sélection: {2}</data>
+  <data name="Viewers.Panels.Rectangle" id="0T">x={0} y={1} dx={2} dy={3}</data>
+  <data name="Action.New" id="0U">Nouveau</data>
+  <data name="Action.Open" id="0V">Ouvrir...</data>
+  <data name="Action.Close" id="001">Fermer</data>
+  <data name="Action.CloseAll" id="011">Fermer tout</data>
+  <data name="Action.Save" id="021">Enregistrer</data>
+  <data name="Action.SaveAs" id="031">Enregistrer sous...</data>
+  <data name="Action.LastFiles" id="041">Fichiers récents</data>
+  <data name="Action.Quit" id="051">Quitter</data>
+  <data name="Action.Cut" id="061">Couper</data>
+  <data name="Action.Copy" id="071">Copier</data>
+  <data name="Action.Paste" id="081">Coller</data>
+  <data name="Action.Delete" id="091">Supprimer la ressource sélectionnée</data>
+  <data name="Action.Create" id="0A1">Créer une ressource après la ressource sélectionnée</data>
+  <data name="Action.Duplicate" id="0B1">Dupliquer la ressource sélectionnée</data>
+  <data name="Action.Up" id="0C1">Monter la ressource sélectionnée</data>
+  <data name="Action.Down" id="0D1">Descendre la ressource sélectionnée</data>
+  <data name="Action.NewCulture" id="0E1">Créer une nouvelle culture</data>
+  <data name="Action.DeleteCulture" id="0F1">Supprimer la culture sélectionnée</data>
+  <data name="Action.FontBold" id="0G1">Gras</data>
+  <data name="Action.FontItalic" id="0H1">Italique</data>
+  <data name="Action.FontUnderlined" id="0I1">Souligné</data>
+  <data name="Action.Glyphs" id="0J1">Caractères spéciaux...</data>
+  <data name="Action.Filter" id="0K1">Filtrer les ressources visibles...</data>
+  <data name="Action.Search" id="0L1">Rechercher et remplacer...</data>
+  <data name="Action.SearchPrev" id="0M1">Rechercher en arrière</data>
+  <data name="Action.SearchNext" id="0N1">Rechercher en avant</data>
+  <data name="Action.AccessFirst" id="0O1">Première ressource</data>
+  <data name="Action.AccessLast" id="0P1">Dernière ressource</data>
+  <data name="Action.AccessPrev" id="0Q1">Ressource précédente</data>
+  <data name="Action.AccessNext" id="0R1">Ressource suivante</data>
+  <data name="Action.ModificationPrev" id="0S1">Ressource modifiée précédente</data>
+  <data name="Action.ModificationNext" id="0T1">Ressource modifiée suivante</data>
+  <data name="Action.ModificationAll" id="0U1">Toutes les ressources secondaires devront être modifiées</data>
+  <data name="Action.ModificationClear" id="0V1">Modification de la ressource secondaire terminée</data>
+  <data name="Action.PanelDelete" id="002">Supprimer les objets sélectionnés</data>
+  <data name="Action.PanelDuplicate" id="012">Dupliquer les objets sélectionnés</data>
+  <data name="Action.PanelDeselectAll" id="022">Désélectionner tous les objets</data>
+  <data name="Action.PanelSelectAll" id="032">Sélectionner tous les objets</data>
+  <data name="Action.PanelSelectInvert" id="042">Inverser les objets sélectionnés</data>
+  <data name="Action.PanelShowGrid" id="052">Activer la grille magnétique</data>
+  <data name="Action.PanelShowZOrder" id="062">Afficher l'ordre des objets</data>
+  <data name="Action.PanelShowTabIndex" id="072">Afficher l'ordre pour la touche Tab</data>
+  <data name="Action.PanelShowExpand" id="082">Espacer les groupes</data>
+  <data name="Action.PanelShowConstrain" id="092">Activer les contraintes</data>
+  <data name="Action.PanelShowAnchor" id="0A2">Afficher les ancrages</data>
+  <data name="Action.MoveLeft" id="0B2">Déplacement à gauche</data>
+  <data name="Action.MoveRight" id="0C2">Déplacement à droite</data>
+  <data name="Action.MoveDown" id="0D2">Déplacement en bas</data>
+  <data name="Action.MoveUp" id="0E2">Déplacement en haut</data>
+  <data name="Action.AlignGrid" id="0F2">Alignement sur la grille magnétique</data>
+  <data name="Action.AlignLeft" id="0G2">Alignement à gauche</data>
+  <data name="Action.AlignCenterX" id="0H2">Alignement centré horizontalement</data>
+  <data name="Action.AlignRight" id="0I2">Alignement à droite</data>
+  <data name="Action.AlignTop" id="0J2">Alignement en haut</data>
+  <data name="Action.AlignCenterY" id="0K2">Alignement centré verticalement</data>
+  <data name="Action.AlignBottom" id="0L2">Alignement en bas</data>
+  <data name="Action.AlignBaseLine" id="0M2">Alignement vertical sur la ligne de base</data>
+  <data name="Action.AdjustWidth" id="0N2">Largeurs identiques</data>
+  <data name="Action.AdjustHeight" id="0O2">Hauteurs identiques</data>
+  <data name="Action.OrderUpAll" id="0P2">Premier plan</data>
+  <data name="Action.OrderUpOne" id="0Q2">En avant</data>
+  <data name="Action.OrderDownOne" id="0R2">En arrière</data>
+  <data name="Action.OrderDownAll" id="0S2">Arrière-plan</data>
+  <data name="Action.TabIndexClear" id="0T2">Aucun numéro</data>
+  <data name="Action.TabIndexFirst" id="0U2">En premier</data>
+  <data name="Action.TabIndexPrev" id="0V2">Rang précédent</data>
+  <data name="Action.TabIndexNext" id="003">Rang suivant</data>
+  <data name="Action.TabIndexLast" id="013">En dernier</data>
+  <data name="Action.TabIndexRenum" id="023">Renuméroter tous les objets automatiquement</data>
+  <data name="Action.ToolSelect" id="033">Sélectionner</data>
+  <data name="Action.ToolGlobal" id="043">Rectangle de sélection</data>
+  <data name="Action.ToolEdit" id="053">Editer</data>
+  <data name="Action.ToolZoom" id="063">Loupe</data>
+  <data name="Action.ToolHand" id="073">Main</data>
+  <data name="Action.ObjectHLine" id="083">Séparateur horizontal</data>
+  <data name="Action.ObjectVLine" id="093">Séparateur vertical</data>
+  <data name="Action.ObjectButton" id="0A3">Bouton</data>
+  <data name="Action.ObjectText" id="0B3">Texte éditable</data>
+  <data name="Action.ObjectStatic" id="0C3">Texte fixe</data>
+  <data name="Action.ObjectGroup" id="0D3">Groupe (conteneur d'objets)</data>
+  <data name="Dialog.Button.Close" id="0E3">Fermer</data>
+  <data name="Dialog.Button.OK" id="0F3">D'accord</data>
+  <data name="Dialog.Button.Cancel" id="0G3">Annuler</data>
+  <data name="Dialog.Button.Help" id="0H3">Aide</data>
+  <data name="Dialog.Tooltip.Close" id="0I3">Fermer ce dialogue</data>
+  <data name="Dialog.Tooltip.Help" id="0J3">Texte explicatif</data>
+  <data name="Dialog.Tooltip.Resize" id="0K3">Redimensionner la fenêtre</data>
+  <data name="Dialog.Glyphs.Title" id="0L3">Caractères spéciaux</data>
+  <data name="Dialog.Glyphs.Button.Insert" id="0M3">Insérer</data>
+  <data name="Dialog.Glyphs.Tooltip.ArraySize" id="0N3">Taille de l'aperçu</data>
+  <data name="Dialog.Filter.Title" id="0O3">Filtre pour les noms des ressources</data>
+  <data name="Dialog.Filter.Label" id="0P3">Critère</data>
+  <data name="Dialog.Filter.Radio.Begin" id="0Q3">Au début</data>
+  <data name="Dialog.Filter.Radio.Any" id="0R3">N'importe où</data>
+  <data name="Dialog.Filter.Radio.Jocker" id="0S3">Avec des jockers</data>
+  <data name="Dialog.Filter.Check.Case" id="0T3">Respecter la casse</data>
+  <data name="Dialog.Filter.Check.Word" id="0U3">Mots entiers</data>
+  <data name="Dialog.Filter.Button.Insert" id="0V3">Filtrer</data>
+  <data name="Dialog.Filter.Button.All" id="004">Tout</data>
+  <data name="Dialog.Search.Title" id="014">Rechercher et remplacer</data>
+  <data name="Dialog.Search.Label" id="024">Rechercher</data>
+  <data name="Dialog.Search.Replace" id="034">Remplacer par</data>
+  <data name="Dialog.Search.Check.Case" id="044">Respecter la casse</data>
+  <data name="Dialog.Search.Check.Word" id="054">Mots entiers</data>
+  <data name="Dialog.Search.Check.Who" id="064">Où rechercher :</data>
+  <data name="Dialog.Search.Check.Label" id="074">Rechercher dans les noms</data>
+  <data name="Dialog.Search.Check.PrimaryText" id="084">Rechercher dans les textes de référence</data>
+  <data name="Dialog.Search.Check.SecondaryText" id="094">Rechercher dans les textes secondaires</data>
+  <data name="Dialog.Search.Check.PrimaryAbout" id="0A4">Rechercher dans les commentaires de référence</data>
+  <data name="Dialog.Search.Check.SecondaryAbout" id="0B4">Rechercher dans les commentaires secondaires</data>
+  <data name="Dialog.Search.Button.Search" id="0C4">Rechercher</data>
+  <data name="Dialog.Search.Button.Count" id="0D4">Compter</data>
+  <data name="Dialog.Search.Button.Replace" id="0E4">Remplacer</data>
+  <data name="Dialog.Search.Button.ReplaceAll" id="0F4">Remplacer tout</data>
+  <data name="Dialog.Search.Message.Count" id="0G4">{0} occurrences trouvées.</data>
+  <data name="Dialog.Search.Message.Replace" id="0H4">{0} occurrences remplacées.</data>
+  <data name="Dialog.Search.Message.Error" id="0I4">Pas trouvé !</data>
+  <data name="Dialog.NewCulture.Title" id="0J4">Culture à créer</data>
+  <data name="Dialog.NewCulture.Label" id="0K4">Choix de la culture à créer</data>
+  <data name="Dialog.NewCulture.Button.Create" id="0L4">Créer</data>
+  <data name="Dialog.DeleteCulture.Question" id="0M4">Voulez-vous supprimer la culture {0} ?</data>
+  <data name="Dialog.TextSelector.Title" id="0N4">Choix d'une ressource de type texte</data>
+  <data name="Dialog.TextSelector.Label" id="0O4">Identificateur :</data>
+  <data name="Dialog.TextSelector.Text" id="0P4">Texte :</data>
+  <data name="Dialog.TextSelector.Button.Clear" id="0Q4">R</data>
+  <data name="Dialog.TextSelector.Button.Use" id="0R4">Utiliser</data>
+  <data name="Dialog.TextSelector.Button.Create" id="0S4">Créer</data>
+  <data name="Misc.NoTitle" id="0T4">&lt;i&gt;sans titre&lt;/i&gt;</data>
+  <data name="Misc.Copy" id="0U4">Copie</data>
+  <data name="Misc.CopyOf" id="0V4">de</data>
+  <data name="Misc.Extract" id="005">Extrait</data>
+  <data name="Misc.ExtractOf" id="015">de</data>
+  <data name="Error.InvalidLabel" id="025">Le nom contient un ou plusieurs caractères invalides !</data>
+  <data name="Error.NameAlreadyExist" id="035">Impossible d'utiliser ce nom, car il existe déjà !</data>
 </bundle>
