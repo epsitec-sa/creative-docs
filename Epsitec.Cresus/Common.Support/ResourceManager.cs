@@ -1040,26 +1040,15 @@ namespace Epsitec.Common.Support
 
 		internal static void ResolveDruidReference(ref string prefix, ref string localId)
 		{
-			if ((localId.Length > 2) &&
-				(localId[0] == '[') &&
-				(localId[localId.Length-1] == ']'))
+			if (Druid.IsValidResourceId (localId))
 			{
 				//	The local ID is not a standard resource bundle identifier; it
-				//	looks like a DRUID.
+				//	looks like a DRUID : "[mmDLLDLLDmLDm]"
 
-				string druid = localId.Substring (1, localId.Length-2);
+				Druid druid = Druid.Parse (localId);
 
-				if (Druid.IsValidFullString (druid))
-				{
-					long value = Druid.FromFullString (druid);
-
-					prefix  = string.Format (CultureInfo.InvariantCulture, "{0}/{1}", prefix, Druid.GetModuleId (value));
-					localId = string.Concat (Druid.BundleName, ResourceBundle.FieldSeparator, ResourceBundle.FieldIdPrefix, Druid.ToModuleString (value));
-				}
-				else
-				{
-					throw new ResourceException (string.Format ("DRUID specification {0} is not valid.", localId));
-				}
+				prefix  = string.Format (CultureInfo.InvariantCulture, "{0}/{1}", prefix, druid.Module);
+				localId = string.Concat (Druid.BundleName, ResourceBundle.FieldSeparator, druid.ToFieldIdName ());
 			}
 		}
 

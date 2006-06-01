@@ -79,5 +79,20 @@ namespace Epsitec.Common.Support
 			Assert.IsFalse (Druid.IsValidModuleString (null));
 			Assert.IsFalse (Druid.IsValidModuleString ("abc"));
 		}
+
+		[Test]
+		public void CheckParse()
+		{
+			Assert.AreEqual (0x0000000000000000L, Druid.Parse ("[0]").ToLong ());
+			Assert.AreEqual (0x0000100002000003L, Druid.Parse ("[1023]").ToLong ());
+			Assert.AreEqual (0x0000100002000100L, Druid.Parse ("[10208]").ToLong ());
+			Assert.AreEqual (0x0000100011000100L, Druid.Parse ("[10H08]").ToLong ());
+			Assert.AreEqual (0x000010001f0003ffL, Druid.Parse ("[10VVV]").ToLong ());
+			Assert.AreEqual (0x000010001f000400L, Druid.Parse ("[10V0001]").ToLong ());
+			Assert.AreEqual (0x0000100042000400L, Druid.Parse ("[1020021]").ToLong ());
+			Assert.AreEqual (0x0040100002000003L, Druid.Parse ("[1023000001]").ToLong ());
+			Assert.AreEqual (0x4000100002000003L, Druid.Parse ("[1023000000008]").ToLong ());
+
+		}
 	}
 }
