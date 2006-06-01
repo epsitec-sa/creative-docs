@@ -212,6 +212,25 @@ namespace Epsitec.Common.Support
 		}
 
 		/// <summary>
+		/// Returns the string representation of this DRUID.
+		/// </summary>
+		/// <returns>The string representation of this DRUID.</returns>
+		public override string ToString()
+		{
+			switch (this.Type)
+			{
+				case DruidType.Invalid:
+					return "<invalid>";
+				case DruidType.ModuleRelative:
+					return this.ToFieldName ();
+				case DruidType.Full:
+					return this.ToResourceId ();
+				default:
+					return "<not supported>";
+			}
+		}
+
+		/// <summary>
 		/// Parses the specified value; this recognizes DRUIDs in the resource
 		/// id "[1023]" format, resource field name "$23" format and XML field
 		/// id "23" format.
