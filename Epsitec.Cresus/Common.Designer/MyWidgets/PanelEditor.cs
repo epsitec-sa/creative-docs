@@ -1101,17 +1101,28 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void SelectObjectsInRectangle(Rectangle sel)
 		{
 			//	Sélectionne tous les objets entièrement inclus dans un rectangle.
-			foreach (Widget obj in this.panel.Children)
+			this.SelectObjectsInRectangle(sel, this.panel);
+			this.UpdateAfterSelectionChanged();
+			this.OnChildrenSelected();
+			this.Invalidate();
+		}
+
+		protected void SelectObjectsInRectangle(Rectangle sel, Widget parent)
+		{
+			foreach (Widget obj in parent.Children)
 			{
 				if (sel.Contains(this.GetObjectBounds(obj)))
 				{
 					this.selectedObjects.Add(obj);
 				}
+				else
+				{
+					if (obj is AbstractGroup)
+					{
+						this.SelectObjectsInRectangle(sel, obj);
+					}
+				}
 			}
-
-			this.UpdateAfterSelectionChanged();
-			this.OnChildrenSelected();
-			this.Invalidate();
 		}
 
 		protected void UpdateAfterSelectionChanged()
@@ -1175,7 +1186,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Supprime tous les objets sélectionnés.
 			foreach (Widget obj in this.selectedObjects)
 			{
-				//?this.panel.Children.Remove(obj);
 				obj.Parent.Children.Remove(obj);
 				obj.Dispose();
 			}
