@@ -7,18 +7,18 @@ namespace Epsitec.Common.Support
 	{
 		[SetUp] public void SetUp()
 		{
-			Resources.DefineDefaultModuleName ("LowLevelTest");
+			Resources.DefaultManager.DefineDefaultModuleName ("LowLevelTest");
 		}
 		
 		[Test] public void CheckDebugDumpProviders()
 		{
-			System.Diagnostics.Debug.WriteLine (string.Format ("Found {0} providers.", Resources.ProviderCount));
-			Resources.DebugDumpProviders ();
+			System.Diagnostics.Debug.WriteLine (string.Format ("Found {0} providers.", Resources.DefaultManager.ProviderCount));
+			Resources.DefaultManager.DebugDumpProviders ();
 		}
 		
 		[Test] public void CheckValidateAndDumpResults()
 		{
-			string[] prefixes = Resources.ProviderPrefixes;
+			string[] prefixes = Resources.DefaultManager.ProviderPrefixes;
 			string[] names = new string[] { "", "@123", "123", "ABC-123", "ABC.", "ABC.A", "ABC..A", "ABC D", "ABC ", "A(B)", "A[X]", "A/B", "A\\B" };
 			
 			foreach (string prefix in prefixes)
@@ -27,7 +27,7 @@ namespace Epsitec.Common.Support
 				
 				foreach (string name in names)
 				{
-					System.Console.Out.WriteLine (" '{0}' is {1}", name, Resources.ValidateId (prefix+":"+name) ? "valid" : "not valid");
+					System.Console.Out.WriteLine (" '{0}' is {1}", name, Resources.DefaultManager.ValidateId (prefix+":"+name) ? "valid" : "not valid");
 				}
 			}
 		}
@@ -39,26 +39,26 @@ namespace Epsitec.Common.Support
 			
 			foreach (string name in good_names)
 			{
-				Assert.IsTrue (Resources.ValidateId ("file:"+name), string.Format ("{0} should be accepted", name));
+				Assert.IsTrue (Resources.DefaultManager.ValidateId ("file:"+name), string.Format ("{0} should be accepted", name));
 			}
 			
 			foreach (string name in bad_names)
 			{
-				Assert.IsTrue (!Resources.ValidateId ("file:"+name), string.Format ("{0} should be rejected", name));
+				Assert.IsTrue (!Resources.DefaultManager.ValidateId ("file:"+name), string.Format ("{0} should be rejected", name));
 			}
 		}
 		
 		[Test] public void CheckFileContains()
 		{
-			Assert.IsTrue (Resources.ContainsId ("file:button.cancel"));
-			Assert.IsFalse (Resources.ContainsId ("file:does_not_exist"));
+			Assert.IsTrue (Resources.DefaultManager.ContainsId ("file:button.cancel"));
+			Assert.IsFalse (Resources.DefaultManager.ContainsId ("file:does_not_exist"));
 		}
 		
 		[Test] public void CheckFileGetBundle()
 		{
 			ResourceBundle bundle;
-			
-			bundle = Resources.GetBundle ("file:button.cancel");
+
+			bundle = Resources.DefaultManager.GetBundle ("file:button.cancel");
 			Assert.IsNotNull (bundle);
 			System.Console.Out.WriteLine ("Bundle with merged levels:");
 			
@@ -66,8 +66,8 @@ namespace Epsitec.Common.Support
 			{
 				System.Console.Out.WriteLine ("  {0}: {1}", tag, bundle[tag].Data);
 			}
-			
-			bundle = Resources.GetBundle ("file:button.cancel", ResourceLevel.Default);
+
+			bundle = Resources.DefaultManager.GetBundle ("file:button.cancel", ResourceLevel.Default);
 			Assert.IsNotNull (bundle);
 			System.Console.Out.WriteLine ("Bundle with default level only:");
 			
@@ -75,8 +75,8 @@ namespace Epsitec.Common.Support
 			{
 				System.Console.Out.WriteLine ("  {0}: {1}", tag, bundle[tag].AsString);
 			}
-			
-			bundle = Resources.GetBundle ("file:button.cancel", ResourceLevel.Localized);
+
+			bundle = Resources.DefaultManager.GetBundle ("file:button.cancel", ResourceLevel.Localized);
 			Assert.IsNotNull (bundle);
 			System.Console.Out.WriteLine ("Bundle with localised level only:");
 			
@@ -254,7 +254,7 @@ namespace Epsitec.Common.Support
 		
 		[Test] [ExpectedException (typeof (ResourceException))] public void CheckGetBundleRecursive()
 		{
-			ResourceBundle bundle = Resources.GetBundle ("file:recursive");
+			ResourceBundle bundle = Resources.DefaultManager.GetBundle ("file:recursive");
 			
 			string data = bundle["loop"].AsString;
 		}
@@ -262,8 +262,8 @@ namespace Epsitec.Common.Support
 		[Test] public void CheckGetComplexBundle()
 		{
 			ResourceBundle bundle;
-			
-			bundle = Resources.GetBundle ("file:complex");
+
+			bundle = Resources.DefaultManager.GetBundle ("file:complex");
 			
 			Assert.IsNotNull (bundle);
 			Assert.AreEqual (ResourceFieldType.Data, bundle["class"].Type);
@@ -280,10 +280,10 @@ namespace Epsitec.Common.Support
 		
 		[Test] public void CheckGetText()
 		{
-			string text_default = Resources.GetText ("file:strings#title.SettingsWindow", ResourceLevel.Default);
-			string text_merged  = Resources.GetText ("file:strings#title.SettingsWindow", ResourceLevel.Merged);
-			string text_miss_1  = Resources.GetText ("file:strings#DoesNotExist");
-			string text_miss_2  = Resources.GetText ("file:does_not_exist#DoesNotExist");
+			string text_default = Resources.DefaultManager.GetText ("file:strings#title.SettingsWindow", ResourceLevel.Default);
+			string text_merged  = Resources.DefaultManager.GetText ("file:strings#title.SettingsWindow", ResourceLevel.Merged);
+			string text_miss_1  = Resources.DefaultManager.GetText ("file:strings#DoesNotExist");
+			string text_miss_2  = Resources.DefaultManager.GetText ("file:does_not_exist#DoesNotExist");
 			
 			Assert.IsNotNull (text_default);
 			Assert.IsNotNull (text_merged);
@@ -303,10 +303,10 @@ namespace Epsitec.Common.Support
 		
 		[Test] public void CheckGetBundleIds()
 		{
-			string[] names_1 = Resources.GetBundleIds ("file:*");
-			string[] names_2 = Resources.GetBundleIds ("file:*", ResourceLevel.Localized);
-			string[] names_3 = Resources.GetBundleIds ("file:*", "String", ResourceLevel.Localized);
-			string[] names_4 = Resources.GetBundleIds ("file:strings", ResourceLevel.All);
+			string[] names_1 = Resources.DefaultManager.GetBundleIds ("file:*");
+			string[] names_2 = Resources.DefaultManager.GetBundleIds ("file:*", ResourceLevel.Localized);
+			string[] names_3 = Resources.DefaultManager.GetBundleIds ("file:*", "String", ResourceLevel.Localized);
+			string[] names_4 = Resources.DefaultManager.GetBundleIds ("file:strings", ResourceLevel.All);
 			
 			System.Console.Out.WriteLine ("file:*");
 			
@@ -338,8 +338,8 @@ namespace Epsitec.Common.Support
 				
 				ResourceLevel level;
 				System.Globalization.CultureInfo culture;
-				
-				Resources.MapFromSuffix (suffix, out level, out culture);
+
+				Resources.DefaultManager.MapFromSuffix (suffix, out level, out culture);
 				
 				string about = "default";
 				
