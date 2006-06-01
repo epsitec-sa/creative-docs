@@ -263,6 +263,36 @@ namespace Epsitec.Common.Designer.MyWidgets
 			count = this.panel.Children.Count;
 		}
 
+		public string SelectionInfo
+		{
+			//	Donne le texte pour les statuts.
+			get
+			{
+				string sel = "-";
+				Rectangle rect = Rectangle.Empty;
+				
+				if (this.isDragging)
+				{
+					rect = this.draggingRectangle;
+				}
+				else
+				{
+					rect = this.SelectBounds;
+				}
+
+				if (!rect.IsEmpty)
+				{
+					sel = string.Format(Res.Strings.Viewers.Panels.Rectangle, rect.Left, rect.Bottom, rect.Width, rect.Height);
+				}
+
+				int objSelected, objCount;
+				this.GetSelectionInfo(out objSelected, out objCount);
+				string text = string.Format(Res.Strings.Viewers.Panels.Info, objSelected.ToString(), objCount.ToString(), sel);
+
+				return text;
+			}
+		}
+
 
 		protected override void ProcessMessage(Message message, Drawing.Point pos)
 		{
@@ -947,6 +977,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			//	Mouvement du drag pour déplacer une poignée.
 			this.handlesList.DraggingMove(pos);
+			this.module.MainWindow.UpdateInfoViewer();
 		}
 
 		protected void HandlingEnd()
@@ -1010,6 +1041,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.draggingWindow.WindowLocation = this.draggingOrigin + pos + adjust;
 
 			this.SetHilitedParent(this.DetectGroup(this.draggingRectangle));  // met en évidence le futur parent survolé par la souris
+			this.module.MainWindow.UpdateInfoViewer();
 		}
 
 		protected void DraggingEnd()

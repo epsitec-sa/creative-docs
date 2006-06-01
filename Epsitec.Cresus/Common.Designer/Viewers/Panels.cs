@@ -288,10 +288,7 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Donne le texte d'information sur le visualisateur en cours.
 			get
 			{
-				int objSelected, objCount;
-				this.panelEditor.GetSelectionInfo(out objSelected, out objCount);
-				string text = string.Format(Res.Strings.Viewers.Panels.Info, objSelected.ToString(), objCount.ToString());
-				return text;
+				return this.panelEditor.SelectionInfo;
 			}
 		}
 
