@@ -74,7 +74,7 @@ namespace Epsitec.Common.Designer
 			}
 
 			//	Refait la liste des modules, puis ouvre tous ceux qui ont été trouvés.
-			Resources.DefaultManager.RefreshModuleInfos (this.resourcePrefix);
+			Resources.DefaultManager.RefreshModuleInfos(this.resourcePrefix);
 			foreach (ResourceModuleInfo item in Resources.DefaultManager.GetModuleInfos(this.resourcePrefix))
 			{
 				Module module = new Module(this, this.mode, this.resourcePrefix, item);
@@ -708,6 +708,8 @@ namespace Epsitec.Common.Designer
 		protected void CreateModuleLayout()
 		{
 			ModuleInfo mi = this.CurrentModuleInfo;
+
+			mi.Module.CreateIds();
 
 			mi.TabPage = new TabPage();
 			mi.TabPage.TabTitle = mi.Module.Name;
