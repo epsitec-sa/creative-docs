@@ -1009,6 +1009,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.draggingWindow = null;
 
 			Rectangle initial = this.SelectBounds;
+			this.ChangeParentsSelection(this.DetectGroup(this.draggingRectangle));
 			this.MoveSelection(this.draggingRectangle.BottomLeft - initial.BottomLeft);
 			this.SetHilitedParent(null);
 			this.isDragging = false;
@@ -1211,6 +1212,23 @@ namespace Epsitec.Common.Designer.MyWidgets
 			toRepaint.Inflate(1);
 			this.Invalidate(toRepaint);
 			this.Invalidate();  // TODO: faire mieux !
+		}
+
+		protected void ChangeParentsSelection(Widget parent)
+		{
+			//	Change le parent de tous les objets sélectionnés.
+			foreach (Widget obj in this.selectedObjects)
+			{
+				if (obj.Parent != parent)
+				{
+					Rectangle bounds = this.GetObjectBounds(obj);
+
+					obj.Parent.Children.Remove(obj);
+					parent.Children.Add(obj);
+
+					this.SetObjectBounds(obj, bounds);
+				}
+			}
 		}
 
 		protected void SelectAlign(int direction, bool isVertical)
