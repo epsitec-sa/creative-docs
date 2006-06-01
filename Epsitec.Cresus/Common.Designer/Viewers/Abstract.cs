@@ -156,6 +156,15 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
+		public virtual string InfoViewerText
+		{
+			//	Donne le texte d'information sur le visualisateur en cours.
+			get
+			{
+				return "";
+			}
+		}
+
 		public string InfoAccessText
 		{
 			//	Donne le texte d'information sur l'accès en cours.

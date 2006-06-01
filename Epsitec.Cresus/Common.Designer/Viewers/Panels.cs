@@ -283,6 +283,18 @@ namespace Epsitec.Common.Designer.Viewers
 			base.DoCommand(name);
 		}
 
+		public override string InfoViewerText
+		{
+			//	Donne le texte d'information sur le visualisateur en cours.
+			get
+			{
+				int objSelected, objCount;
+				this.panelEditor.GetSelectionInfo(out objSelected, out objCount);
+				string text = string.Format(Res.Strings.Viewers.Panels.Info, objSelected.ToString(), objCount.ToString());
+				return text;
+			}
+		}
+
 
 		protected override void UpdateLabelsIndex(string filter, Searcher.SearchingMode mode)
 		{
@@ -487,6 +499,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			this.module.MainWindow.UpdateInfoCurrentModule();
 			this.module.MainWindow.UpdateInfoAccess();
+			this.module.MainWindow.UpdateInfoViewer();
 		}
 
 
