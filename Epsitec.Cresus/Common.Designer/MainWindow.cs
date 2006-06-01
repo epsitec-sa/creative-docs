@@ -260,7 +260,7 @@ namespace Epsitec.Common.Designer
 
 			this.InfoAdd("InfoCurrentModule", 200);
 			this.InfoAdd("InfoAccess", 250);
-			this.InfoAdd("InfoViewer", 150);
+			this.InfoAdd("InfoViewer", 300);
 
 			this.resize = new ResizeKnob();
 			this.resize.Margins = new Margins(2, 0, 0, 0);
