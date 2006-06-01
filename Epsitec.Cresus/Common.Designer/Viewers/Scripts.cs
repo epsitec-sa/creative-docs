@@ -175,6 +175,11 @@ namespace Epsitec.Common.Designer.Viewers
 			this.GetCommandState("PanelShowZOrder").Enable = false;
 			this.GetCommandState("PanelShowTabIndex").Enable = false;
 
+			this.GetCommandState("MoveLeft").Enable = false;
+			this.GetCommandState("MoveRight").Enable = false;
+			this.GetCommandState("MoveDown").Enable = false;
+			this.GetCommandState("MoveUp").Enable = false;
+
 			this.GetCommandState("AlignLeft").Enable = false;
 			this.GetCommandState("AlignCenterX").Enable = false;
 			this.GetCommandState("AlignRight").Enable = false;

@@ -66,6 +66,7 @@
     <Compile Include="Ribbons\Clipboard.cs" />
     <Compile Include="Ribbons\Character.cs" />
     <Compile Include="Ribbons\Access.cs" />
+    <Compile Include="Ribbons\Move.cs" />
     <Compile Include="Ribbons\PanelShow.cs" />
     <Compile Include="Ribbons\TabIndex.cs" />
     <Compile Include="Ribbons\Order.cs" />
@@ -220,6 +221,18 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\Designer\DruidData.en.resource" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Images\MoveRight.icon" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Images\MoveDown.icon" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Images\MoveLeft.icon" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Images\MoveUp.icon" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

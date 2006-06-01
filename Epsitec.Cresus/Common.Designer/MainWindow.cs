@@ -216,6 +216,7 @@ namespace Epsitec.Common.Designer
 
 			this.ribbonOper.Items.Add(new Ribbons.PanelShow());
 			this.ribbonOper.Items.Add(new Ribbons.PanelSelect());
+			this.ribbonOper.Items.Add(new Ribbons.Move());
 			this.ribbonOper.Items.Add(new Ribbons.Align());
 			this.ribbonOper.Items.Add(new Ribbons.Order());
 			this.ribbonOper.Items.Add(new Ribbons.TabIndex());
@@ -522,6 +523,10 @@ namespace Epsitec.Common.Designer
 		[Command("AdjustWidth")]
 		[Command("AdjustHeight")]
 		[Command("AlignGrid")]
+		[Command("MoveLeft")]
+		[Command("MoveRight")]
+		[Command("MoveDown")]
+		[Command("MoveUp")]
 		[Command("OrderUpAll")]
 		[Command("OrderDownAll")]
 		[Command("OrderUpOne")]
@@ -614,6 +619,11 @@ namespace Epsitec.Common.Designer
 			this.adjustWidthState = this.CreateCommandState("AdjustWidth");
 			this.adjustHeightState = this.CreateCommandState("AdjustHeight");
 			this.alignGridState = this.CreateCommandState("AlignGrid");
+
+			this.moveLeftState = this.CreateCommandState("MoveLeft");
+			this.moveRightState = this.CreateCommandState("MoveRight");
+			this.moveDownState = this.CreateCommandState("MoveDown");
+			this.moveUpState = this.CreateCommandState("MoveUp");
 
 			this.orderUpAllState = this.CreateCommandState("OrderUpAll");
 			this.orderDownAllState = this.CreateCommandState("OrderDownAll");
@@ -1052,6 +1062,10 @@ namespace Epsitec.Common.Designer
 		protected CommandState					adjustWidthState;
 		protected CommandState					adjustHeightState;
 		protected CommandState					alignGridState;
+		protected CommandState					moveLeftState;
+		protected CommandState					moveRightState;
+		protected CommandState					moveDownState;
+		protected CommandState					moveUpState;
 		protected CommandState					orderUpAllState;
 		protected CommandState					orderDownAllState;
 		protected CommandState					orderUpOneState;
