@@ -97,7 +97,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.panelEditor.UpdateCommands += new EventHandler(this.HandlePanelEditorUpdateCommands);
 
 			this.tabBook = new TabBook(this);
-			this.tabBook.PreferredWidth = 150;
+			this.tabBook.PreferredWidth = 200;
 			this.tabBook.Arrows = TabBookArrows.Stretch;
 			this.tabBook.Margins = new Margins(0, 1, 1, 1);
 			this.tabBook.Dock = DockStyle.Right;
@@ -109,6 +109,10 @@ namespace Epsitec.Common.Designer.Viewers
 			this.tabPageObjects = new TabPage();
 			this.tabPageObjects.TabTitle = Res.Strings.Viewers.Panels.TabObjects;
 			this.tabBook.Items.Add(this.tabPageObjects);
+
+			this.tabPageCultures = new TabPage();
+			this.tabPageCultures.TabTitle = Res.Strings.Viewers.Panels.TabCultures;
+			this.tabBook.Items.Add(this.tabPageCultures);
 
 			this.tabBook.ActivePage = this.tabPageProperties;
 
@@ -602,5 +606,6 @@ namespace Epsitec.Common.Designer.Viewers
 		protected TabBook					tabBook;
 		protected TabPage					tabPageProperties;
 		protected TabPage					tabPageObjects;
+		protected TabPage					tabPageCultures;
 	}
 }
