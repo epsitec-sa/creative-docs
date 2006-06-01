@@ -196,10 +196,17 @@ namespace Epsitec.Common.Support
 
 		public static Druid FromFieldId(long value)
 		{
-			int dev = Druid.GetDevId (value);
-			int local = Druid.GetLocalId (value);
-			
-			return new Druid (dev, local);
+			if (value < 0)
+			{
+				return new Druid ();
+			}
+			else
+			{
+				int dev = Druid.GetDevId (value);
+				int local = Druid.GetLocalId (value);
+
+				return new Druid (dev, local);
+			}
 		}
 
 		/// <summary>

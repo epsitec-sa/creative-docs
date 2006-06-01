@@ -49,10 +49,10 @@ namespace Epsitec.Common.Support
 
 		public static ResourceBundle Create(ResourceManager resource_manager, string prefix, string name, ResourceLevel level, CultureInfo culture, int recursion)
 		{
-			return ResourceBundle.Create (resource_manager, prefix, null, name, level, culture, recursion);
+			return ResourceBundle.Create (resource_manager, prefix, new ResourceModuleInfo (), name, level, culture, recursion);
 		}
 
-		public static ResourceBundle Create(ResourceManager resource_manager, string prefix, string module, string name, ResourceLevel level, CultureInfo culture, int recursion)
+		public static ResourceBundle Create(ResourceManager resource_manager, string prefix, ResourceModuleInfo module, string name, ResourceLevel level, CultureInfo culture, int recursion)
 		{
 			ResourceBundle bundle = new ResourceBundle (resource_manager, name);
 
@@ -147,8 +147,7 @@ namespace Epsitec.Common.Support
 		{
 			get
 			{
-				string module = this.manager.NormalizeModuleId (this.prefix, this.module);
-				string prefix = ResourceManager.JoinFullPrefix (this.prefix, module);
+				string prefix = ResourceManager.JoinFullPrefix (this.prefix, module.ToString ());
 				
 				return this.manager.NormalizeFullId (prefix, this.name);
 			}
@@ -220,7 +219,15 @@ namespace Epsitec.Common.Support
 				return this[this.IndexOf (name)];
 			}
 		}
-		
+
+		public Field						this[Druid druid]
+		{
+			get
+			{
+				return this[this.IndexOf (druid)];
+			}
+		}
+
 		public Field						this[int index]
 		{
 			get
@@ -313,7 +320,7 @@ namespace Epsitec.Common.Support
 			this.prefix = prefix;
 		}
 
-		internal void DefineModule(string module)
+		internal void DefineModule(ResourceModuleInfo module)
 		{
 			this.module = module;
 		}
@@ -344,16 +351,7 @@ namespace Epsitec.Common.Support
 
 			if (name[0] == ResourceBundle.FieldIdPrefix)
 			{
-				Druid druid = Druid.Parse (name);
-				long  id    = druid.ToFieldId ();
-
-				for (int i = 0; i < this.fields.Length; i++)
-				{
-					if (this.fields[i].Id == id)
-					{
-						return i;
-					}
-				}
+				return this.IndexOf (Druid.Parse (name));
 			}
 			else
 			{
@@ -365,10 +363,40 @@ namespace Epsitec.Common.Support
 					}
 				}
 			}
+
+			return -1;
+		}
+
+		public int IndexOf(Druid druid)
+		{
+			DruidType type = druid.Type;
+
+			switch (type)
+			{
+				case DruidType.ModuleRelative:
+					break;
+				case DruidType.Full:
+					if (this.module.Id != druid.Module)
+					{
+						return -1;
+					}
+					break;
+				default:
+					return -1;
+			}
+			long id    = druid.ToFieldId ();
+
+			for (int i = 0; i < this.fields.Length; i++)
+			{
+				if (this.fields[i].Id == id)
+				{
+					return i;
+				}
+			}
 			
 			return -1;
 		}
-		
+
 		public int IndexOf(Field field)
 		{
 			for (int i = 0; i < this.fields.Length; i++)
@@ -1289,11 +1317,19 @@ namespace Epsitec.Common.Support
 				}
 			}
 			
-			public long						Id
+			internal long					Id
 			{
 				get
 				{
 					return this.id;
+				}
+			}
+
+			public Druid					Druid
+			{
+				get
+				{
+					return Druid.FromFieldId (this.id);
 				}
 			}
 			
@@ -1524,12 +1560,14 @@ namespace Epsitec.Common.Support
 				}
 			}
 
-			public void SetId(long id)
+			public void SetDruid(Druid druid)
 			{
 				if (this.IsEmpty)
 				{
 					throw new ResourceException ("An empty field cannot be modified.");
 				}
+
+				long id = druid.ToFieldId ();
 
 				if (this.id != id)
 				{
@@ -1726,7 +1764,7 @@ namespace Epsitec.Common.Support
 		public static readonly int		MaxRecursion = 50;
 
 		private string					prefix;
-		private string					module;
+		private ResourceModuleInfo		module;
 		private string					name;
 		private string					type;
 		private string					about;

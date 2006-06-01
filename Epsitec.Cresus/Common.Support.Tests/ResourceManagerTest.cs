@@ -41,6 +41,20 @@ namespace Epsitec.Common.Support
 		}
 
 		[Test]
+		public void CheckNormalization()
+		{
+			Assert.AreEqual ("file/4:strings", this.manager.NormalizeFullId ("file/4:strings"));
+			Assert.AreEqual ("file/4:strings", this.manager.NormalizeFullId ("file/:strings"));
+			Assert.AreEqual ("file/4:strings", this.manager.NormalizeFullId ("file/Test:strings"));
+			Assert.AreEqual ("file/4:strings", this.manager.NormalizeFullId ("file:strings"));
+			Assert.AreEqual ("file/4:strings", this.manager.NormalizeFullId (":strings"));
+			Assert.AreEqual ("file/4:strings", this.manager.NormalizeFullId ("/:strings"));
+			Assert.AreEqual ("file/4:strings", this.manager.NormalizeFullId ("/4:strings"));
+			Assert.AreEqual ("file/4:strings", this.manager.NormalizeFullId ("/Test:strings"));
+			Assert.AreEqual ("file/4:strings", this.manager.NormalizeFullId ("strings"));
+		}
+
+		[Test]
 		public void CheckGetBundle()
 		{
 			string t1 = "Hello, world";

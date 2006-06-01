@@ -206,7 +206,7 @@ namespace Epsitec.Common.Support
 		}
 
 
-		internal string NormalizeFullId(string id)
+		public string NormalizeFullId(string id)
 		{
 			string prefix;
 			string localId;
@@ -217,16 +217,16 @@ namespace Epsitec.Common.Support
 			return this.NormalizeFullId (prefix, localId);
 		}
 
-		internal string NormalizeFullId(string prefix, string localId)
+		public string NormalizeFullId(string prefix, string localId)
 		{
 			if (string.IsNullOrEmpty (localId))
 			{
 				throw new ResourceException ("Cannot normalize resource name; local id is empty");
 			}
 
-			string module;
+			string moduleName;
 			
-			ResourceManager.SplitFullPrefix (prefix, out prefix, out module);
+			ResourceManager.SplitFullPrefix (prefix, out prefix, out moduleName);
 			
 			if (string.IsNullOrEmpty (prefix))
 			{
@@ -238,27 +238,22 @@ namespace Epsitec.Common.Support
 				}
 			}
 
-			module = this.NormalizeModuleId (prefix, module);
-			prefix = ResourceManager.JoinFullPrefix (prefix, module);
+			ResourceModuleInfo module = ResourceModuleInfo.Parse (moduleName);
+
+			this.NormalizeModule (prefix, ref module);
+			prefix = ResourceManager.JoinFullPrefix (prefix, module.ToString ());
 
 			return ResourceManager.JoinFullId (prefix, localId);
 		}
 
-		internal string NormalizeModuleId(string prefix, string module)
+		public void NormalizeModule(string prefix, ref ResourceModuleInfo module)
 		{
 			if (string.IsNullOrEmpty (prefix))
 			{
 				throw new ResourceException ("Cannot normalize bundle id; prefix is empty");
 			}
-			
-			if (string.IsNullOrEmpty (module))
-			{
-				module = this.defaultModuleName;
-			}
 
 			this.FindProviderFromPrefix (prefix, ref module);
-			
-			return module;
 		}
 
 		public string MapToSuffix(ResourceLevel level, CultureInfo culture)
@@ -452,7 +447,7 @@ namespace Epsitec.Common.Support
 			//	le provider, lorsqu'une ressource est demandée...
 			
 			string resource_id;
-			string module;
+			ResourceModuleInfo module;
 			
 			IResourceProvider provider = this.FindProvider (id, out resource_id, out module);
 			ResourceBundle    bundle   = null;
@@ -464,7 +459,7 @@ namespace Epsitec.Common.Support
 			if (provider != null)
 			{
 				string prefix = provider.Prefix;
-				string key = ResourceManager.CreateBundleKey (prefix, module, resource_id, level, culture);
+				string key = ResourceManager.CreateBundleKey (prefix, module.Id, resource_id, level, culture);
 
 				if (this.bundleCache.TryGetValue (key, out bundle))
 				{
@@ -573,11 +568,11 @@ namespace Epsitec.Common.Support
 			
 			string prefix;
 			string localId;
-			string module;
+			ResourceModuleInfo module;
 			
 			this.AnalyseFullId (bundleName, out prefix, out localId, out module);
 
-			string key = ResourceManager.CreateBundleKey (prefix, module, localId, ResourceLevel.Merged, this.culture);
+			string key = ResourceManager.CreateBundleKey (prefix, module.Id, localId, ResourceLevel.Merged, this.culture);
 
 			if (this.bindingProxies.TryGetValue (key, out proxy) == false)
 			{
@@ -799,14 +794,14 @@ namespace Epsitec.Common.Support
 			}
 			
 			string resource_id;
-			string module;
+			ResourceModuleInfo module;
 			
 			IResourceProvider provider = this.FindProvider (id, out resource_id, out module);
 			
 			if (provider != null)
 			{
 				string prefix = provider.Prefix;
-				string key = ResourceManager.CreateBundleKey (prefix, module, resource_id, level, culture);
+				string key = ResourceManager.CreateBundleKey (prefix, module.Id, resource_id, level, culture);
 				
 				this.bundleCache.Remove (key);
 				
@@ -841,7 +836,7 @@ namespace Epsitec.Common.Support
 			}
 		}
 
-		private static string CreateBundleKey(string prefix, string module, string resource_id, ResourceLevel level, CultureInfo culture)
+		private static string CreateBundleKey(string prefix, int moduleId, string resource_id, ResourceLevel level, CultureInfo culture)
 		{
 			System.Diagnostics.Debug.Assert (prefix != null);
 			System.Diagnostics.Debug.Assert (prefix.Length > 0);
@@ -855,10 +850,10 @@ namespace Epsitec.Common.Support
 			{
 				buffer.Append (prefix);
 			}
-			if (!string.IsNullOrEmpty (module))
+			if (moduleId >= 0)
 			{
 				buffer.Append (ResourceManager.ModuleSeparator);
-				buffer.Append (module);
+				buffer.AppendFormat (CultureInfo.InvariantCulture, "{0}", moduleId);
 			}
 
 			buffer.Append (ResourceManager.PrefixSeparator);
@@ -882,11 +877,11 @@ namespace Epsitec.Common.Support
 
 		private IResourceProvider FindProvider(string fullId, out string localId)
 		{
-			string module;
+			ResourceModuleInfo module;
 			return this.FindProvider (fullId, out localId, out module);
 		}
 		
-		private IResourceProvider FindProvider(string fullId, out string localId, out string module)
+		private IResourceProvider FindProvider(string fullId, out string localId, out ResourceModuleInfo module)
 		{
 			string prefix;
 
@@ -900,7 +895,7 @@ namespace Epsitec.Common.Support
 			return this.FindProviderFromPrefix (prefix, ref module);
 		}
 
-		private IResourceProvider FindProviderFromPrefix(string prefix, ref string module)
+		private IResourceProvider FindProviderFromPrefix(string prefix, ref ResourceModuleInfo module)
 		{
 			System.Diagnostics.Debug.Assert (this.defaultModuleId != -1);
 			System.Diagnostics.Debug.Assert (this.defaultModuleName != null);
@@ -911,27 +906,28 @@ namespace Epsitec.Common.Support
 
 				if (this.providers.TryGetValue (prefix, out provider))
 				{
-					if (string.IsNullOrEmpty (module))
+					if ((string.IsNullOrEmpty (module.Name)) &&
+						(module.Id < 0))
 					{
-						module = string.Format (CultureInfo.InvariantCulture, "{0}", this.defaultModuleId);
+						module = new ResourceModuleInfo (this.defaultModuleName, this.defaultModuleId);
 						return provider.ActiveProvider;
 					}
 
 					ModuleRecord record = null;
-					int moduleId;
+					int moduleId = module.Id;
 
-					if (int.TryParse (module, NumberStyles.Integer, CultureInfo.InvariantCulture, out moduleId))
+					if (moduleId < 0)
 					{
-						record = provider.GetModuleRecord (moduleId);
+						record = provider.GetModuleRecord (module.Name);
 					}
 					else
 					{
-						record = provider.GetModuleRecord (module);
+						record = provider.GetModuleRecord (moduleId);
 					}
 
 					if (record != null)
 					{
-						module = string.Format (CultureInfo.InvariantCulture, "{0}", record.ModuleInfo.Id);
+						module = record.ModuleInfo;
 						return record.Provider;
 					}
 				}
@@ -940,26 +936,34 @@ namespace Epsitec.Common.Support
 			return null;
 		}
 
-		public void AnalyseFullId(string fullId, out string prefix, out string localId, out string module)
+		public void AnalyseFullId(string fullId, out string prefix, out string localId, out ResourceModuleInfo module)
 		{
-			prefix  = null;
-			module  = null;
-			localId = null;
-			
 			if (!string.IsNullOrEmpty (fullId))
 			{
+				string moduleName;
+
 				ResourceManager.SplitFullId (fullId, out prefix, out localId);
 				ResourceManager.ResolveDruidReference (ref prefix, ref localId);
-				ResourceManager.SplitFullPrefix (prefix, out prefix, out module);
+				ResourceManager.SplitFullPrefix (prefix, out prefix, out moduleName);
 
 				if (string.IsNullOrEmpty (prefix))
 				{
 					prefix = this.ActivePrefix;
 				}
-				if (string.IsNullOrEmpty (module))
+				if (string.IsNullOrEmpty (moduleName))
 				{
-					module = this.defaultModuleName;
+					module = new ResourceModuleInfo (this.defaultModuleName, this.defaultModuleId);
 				}
+				else
+				{
+					module = ResourceModuleInfo.Parse (moduleName);
+				}
+			}
+			else
+			{
+				prefix  = null;
+				localId = null;
+				module  = new ResourceModuleInfo ();
 			}
 		}
 
@@ -1329,7 +1333,7 @@ namespace Epsitec.Common.Support
 		private Dictionary<string, ProviderRecord> providers;
 		private CultureInfo						culture;
 		private string							defaultModuleName;
-		private long							defaultModuleId;
+		private int								defaultModuleId;
 		private string							defaultPrefix = "file";
 		private string							defaultPath;
 		
