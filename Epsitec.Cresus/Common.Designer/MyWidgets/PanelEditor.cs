@@ -946,12 +946,26 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	TODO: tout ceci est provisoire !!!
 			if (obj is Button || obj is StaticText || obj is GroupBox)
 			{
-				obj.Name = this.module.MainWindow.DlgTextSelector(obj.Name);
-
+				Druid druid = new Druid();  // TODO: [PA] pour obtenir un druid invalide, OK ?
 				if (!string.IsNullOrEmpty(obj.Name))
 				{
-					string id = string.Concat("file:Strings#", obj.Name);
-					this.module.ResourceManager.Bind(obj, Widget.TextProperty, id);
+					druid = Druid.Parse(obj.Name);  // TODO: [PA] OK ?
+				}
+
+				druid = this.module.MainWindow.DlgTextSelector(druid);
+
+				if (druid.Type == DruidType.Full)
+				{
+					obj.Name = druid.ToResourceId();  // TODO: [PA] OK ?
+				}
+				else
+				{
+					obj.Name = null;
+				}
+
+				if (druid.Type == DruidType.Full)
+				{
+					this.module.ResourceManager.Bind(obj, Widget.TextProperty, druid);
 				}
 			}
 		}
