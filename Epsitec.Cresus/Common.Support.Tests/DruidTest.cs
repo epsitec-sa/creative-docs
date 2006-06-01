@@ -92,14 +92,14 @@ namespace Epsitec.Common.Support
 			Assert.AreEqual (0x4000100002000003L, druid.ToLong ());
 			Assert.AreEqual (0x0000000002000003L, druid.ToFieldId ());
 			Assert.AreEqual ("[1023000000008]", druid.ToResourceId ());
-			Assert.AreEqual ("$23", druid.ToFieldIdName ());
+			Assert.AreEqual ("$23", druid.ToFieldName ());
 
 			Assert.AreEqual (DruidType.Full, druid.Type);
 			Assert.AreEqual (DruidType.ModuleRelative, new Druid (2, 3).Type);
 			Assert.AreEqual (DruidType.Invalid, new Druid ().Type);
 			Assert.AreEqual (DruidType.Full, new Druid (druid).Type);
 
-			Assert.AreEqual ("$23", new Druid (2, 3).ToFieldIdName ());
+			Assert.AreEqual ("$23", new Druid (2, 3).ToFieldName ());
 			Assert.AreEqual ("[1023]", new Druid (new Druid (1, 2, 3)).ToResourceId ());
 		}
 

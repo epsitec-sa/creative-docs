@@ -519,7 +519,7 @@ namespace Epsitec.Common.Support
 
 				if (id >= 0)
 				{
-					name = Druid.FromFieldId (id).ToFieldIdName ();
+					name = Druid.FromFieldId (id).ToFieldName ();
 				}
 
 				int index;
@@ -1289,7 +1289,7 @@ namespace Epsitec.Common.Support
 				}
 				else
 				{
-					this.id = Druid.FromModuleString (id);
+					this.id = Druid.Parse (id).ToFieldId ();
 				}
 
 
