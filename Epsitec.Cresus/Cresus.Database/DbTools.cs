@@ -23,7 +23,7 @@ namespace Epsitec.Cresus.Database
 			//	TODO: gérer les suffixes en fonction de la culture active, non en fonction de
 			//	la culture par défaut du gestionnaire de ressources par défaut !
 			
-			System.Globalization.CultureInfo culture = Resources.ActiveCulture;
+			System.Globalization.CultureInfo culture = Resources.DefaultManager.ActiveCulture;
 			ResourceManager                  manager = Resources.DefaultManager;
 			
 			switch (level)

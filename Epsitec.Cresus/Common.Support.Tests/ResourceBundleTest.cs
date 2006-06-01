@@ -12,7 +12,7 @@ namespace Epsitec.Common.Support
 		[SetUp]
 		public void SetUp()
 		{
-			Resources.DefineDefaultModuleName ("LowLevelTest");
+			Resources.DefaultManager.DefineDefaultModuleName ("LowLevelTest");
 		}
 
 		[Test]
