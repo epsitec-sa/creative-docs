@@ -946,7 +946,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	TODO: tout ceci est provisoire !!!
 			if (obj is Button || obj is StaticText || obj is GroupBox)
 			{
-				Druid druid = new Druid();  // TODO: [PA] pour obtenir un druid invalide, OK ?
+				Druid druid = Druid.Empty;
 				if (!string.IsNullOrEmpty(obj.Name))
 				{
 					druid = Druid.Parse(obj.Name);  // TODO: [PA] OK ?
@@ -954,16 +954,16 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 				druid = this.module.MainWindow.DlgTextSelector(druid);
 
-				if (druid.Type == DruidType.Full)
-				{
-					obj.Name = druid.ToResourceId();  // TODO: [PA] OK ?
-				}
-				else
+				if (druid.IsEmpty)
 				{
 					obj.Name = null;
 				}
+				else
+				{
+					obj.Name = druid.ToResourceId();  // TODO: [PA] OK ?
+				}
 
-				if (druid.Type == DruidType.Full)
+				if (!druid.IsEmpty)
 				{
 					this.module.ResourceManager.Bind(obj, Widget.TextProperty, druid);
 				}
