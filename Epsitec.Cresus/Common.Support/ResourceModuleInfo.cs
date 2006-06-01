@@ -19,7 +19,7 @@ namespace Epsitec.Common.Support
 		public ResourceModuleInfo(string name, int id)
 		{
 			this.name = name;
-			this.id = id;
+			this.id = id+1;
 		}
 
 		/// <summary>
@@ -29,7 +29,7 @@ namespace Epsitec.Common.Support
 		public ResourceModuleInfo(string name)
 		{
 			this.name = name;
-			this.id = -1;
+			this.id = 0;
 		}
 
 		/// <summary>
@@ -39,7 +39,7 @@ namespace Epsitec.Common.Support
 		public ResourceModuleInfo(int id)
 		{
 			this.name = null;
-			this.id = id;
+			this.id = id+1;
 		}
 
 		/// <summary>
@@ -62,7 +62,48 @@ namespace Epsitec.Common.Support
 		{
 			get
 			{
-				return this.id;
+				return this.id-1;
+			}
+		}
+
+		/// <summary>
+		/// Returns the module id as a string representation.
+		/// </summary>
+		/// <returns>
+		/// The module id if it is valid; otherwise, <c>null</c>.
+		/// </returns>
+		public override string ToString()
+		{
+			int id = this.Id;
+
+			if (id < 0)
+			{
+				return null;
+			}
+			else
+			{
+				return string.Format (System.Globalization.CultureInfo.InvariantCulture, "{0}", id);
+			}
+		}
+
+
+		/// <summary>
+		/// Parses the specified string, which can be either the module name or a
+		/// module id.
+		/// </summary>
+		/// <param name="moduleName">Name or id of the module.</param>
+		/// <returns>The module information structure.</returns>
+		public static ResourceModuleInfo Parse(string module)
+		{
+			int moduleId;
+
+			if (int.TryParse (module, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out moduleId))
+			{
+				return new ResourceModuleInfo (moduleId);
+			}
+			else
+			{
+				return new ResourceModuleInfo (module);
 			}
 		}
 
