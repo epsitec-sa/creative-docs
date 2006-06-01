@@ -181,6 +181,30 @@ namespace Epsitec.Common.Support
 			return druid;
 		}
 
+		public static long CreateDruid(int module, int dev, int local)
+		{
+			long druid = 0;
+
+			druid |= (uint) module;
+			druid <<= 20;
+			druid |= (uint) dev;
+			druid <<= 24;
+			druid |= (uint) local;
+
+			return druid;
+		}
+
+		public static long CreateDruid(int dev, int local)
+		{
+			long druid = 0;
+
+			druid |= (uint) dev;
+			druid <<= 24;
+			druid |= (uint) local;
+
+			return druid;
+		}
+
 		/// <summary>
 		/// Gets the module id from the DRUID.
 		/// </summary>
