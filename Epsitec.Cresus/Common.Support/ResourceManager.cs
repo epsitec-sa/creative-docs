@@ -251,7 +251,6 @@ namespace Epsitec.Common.Support
 
 			return this.NormalizeFullId (prefix, localId);
 		}
-
 		public string NormalizeFullId(string prefix, string localId)
 		{
 			if (string.IsNullOrEmpty (localId))
@@ -450,12 +449,28 @@ namespace Epsitec.Common.Support
 			return null;
 		}
 
-		
+
+		/// <summary>
+		/// Gets the bundle based on a DRUID. This will return the bundle which
+		/// is named "_MMDLL".
+		/// </summary>
+		/// <param name="druid">The druid.</param>
+		/// <returns>The resource bundle; otherwise, <c>null</c>.</returns>
 		public ResourceBundle GetBundle(Druid druid)
 		{
-			return this.GetBundle (druid.ToResourceId ());
+			return this.GetBundle (druid.ToBundleId ());
 		}
 		
+		public ResourceBundle GetBundle(Druid druid, ResourceLevel level)
+		{
+			return this.GetBundle (druid.ToBundleId (), level);
+		}
+		
+		public ResourceBundle GetBundle(Druid druid, ResourceLevel level, CultureInfo culture)
+		{
+			return this.GetBundle (druid.ToBundleId (), level, culture);
+		}
+
 		public ResourceBundle GetBundle(string id)
 		{
 			return this.GetBundle (id, ResourceLevel.Merged, this.culture, 0);
@@ -488,6 +503,11 @@ namespace Epsitec.Common.Support
 			
 			IResourceProvider provider = this.FindProvider (id, out resource_id, out module);
 			ResourceBundle    bundle   = null;
+
+			if (Resources.IsFieldId (resource_id))
+			{
+				throw new ResourceException (string.Format ("'{0}' is not a bundle id (resolves to '{1}')", id, resource_id));
+			}
 			
 			//	Passe en revue les divers providers de bundles pour voir si la ressource
 			//	demandée n'est pas disponible chez eux. Si oui, c'est celle-ci qui sera
@@ -542,7 +562,24 @@ namespace Epsitec.Common.Support
 			return bundle;
 		}
 
+		/// <summary>
+		/// Gets the bundle field based on a DRUID. The bundle used for this lookup
+		/// is always the "Strings" bundle and the DRUID is used to find the matching
+		/// field inside that bundle.
+		/// </summary>
+		/// <param name="druid">The druid of the field.</param>
+		/// <returns>The resource bundle field; otherwise, <c>ResourceBundle.Field.Empty</c>.</returns>
+		public ResourceBundle.Field GetBundleField(Druid druid)
+		{
+			return this.GetBundleField (druid, ResourceLevel.Merged, this.culture);
+		}
+		
 		public ResourceBundle.Field GetBundleField(Druid druid, ResourceLevel level)
+		{
+			return this.GetBundleField (druid, level, this.culture);
+		}
+		
+		public ResourceBundle.Field GetBundleField(Druid druid, ResourceLevel level, CultureInfo culture)
 		{
 			string id = this.NormalizeFullId (druid.ToResourceId ());
 			
@@ -551,7 +588,7 @@ namespace Epsitec.Common.Support
 
 			if (Resources.SplitFieldId (id, out bundleName, out fieldName))
 			{
-				ResourceBundle bundle = this.GetBundle (bundleName, level, this.culture);
+				ResourceBundle bundle = this.GetBundle (bundleName, level, culture);
 
 				if (bundle != null)
 				{
@@ -645,7 +682,29 @@ namespace Epsitec.Common.Support
 			
 			return data;
 		}
+
+
+		/// <summary>
+		/// Gets the text based on the DRUID. The bundle used for this lookup
+		/// is always the "Strings" bundle and the DRUID is used to find the
+		/// matching field inside that bundle.
+		/// </summary>
+		/// <param name="id">The druid of the field.</param>
+		/// <returns>The text found in that field; otherwise, <c>null</c>.</returns>
+		public string GetText(Druid id)
+		{
+			return this.GetText (id.ToResourceId (), ResourceLevel.Merged, this.culture);
+		}
 		
+		public string GetText(Druid id, ResourceLevel level)
+		{
+			return this.GetText (id.ToResourceId (), level, this.culture);
+		}
+		
+		public string GetText(Druid id, ResourceLevel level, CultureInfo culture)
+		{
+			return this.GetText (id.ToResourceId (), level, culture);
+		}
 		
 		public string GetText(string id)
 		{
@@ -654,12 +713,17 @@ namespace Epsitec.Common.Support
 		
 		public string GetText(string id, ResourceLevel level)
 		{
+			return this.GetText (id, level, this.culture);
+		}
+		
+		public string GetText(string id, ResourceLevel level, CultureInfo culture)
+		{
 			string bundle_name;
 			string field_name;
 
 			if (Resources.SplitFieldId (id, out bundle_name, out field_name))
 			{
-				ResourceBundle bundle = this.GetBundle (bundle_name, level);
+				ResourceBundle bundle = this.GetBundle (bundle_name, level, culture);
 			
 				if (bundle != null)
 				{

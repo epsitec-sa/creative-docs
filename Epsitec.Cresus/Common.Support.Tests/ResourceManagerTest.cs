@@ -81,6 +81,32 @@ namespace Epsitec.Common.Support
 
 			Assert.AreEqual (t2, this.manager.GetText ("[4]"));
 			Assert.AreEqual (t3, this.manager.GetText ("[4001]"));
+			Assert.AreEqual (t3, this.manager.GetText (new Druid (4, 0, 1)));
+
+			ResourceBundle bundle = this.manager.GetBundle (new Druid (4, 0, 0));
+
+			Assert.IsNotNull (bundle);
+			Assert.AreEqual ("DruidExperimentalBundle", bundle.Caption);
+			Assert.AreEqual (1, bundle.FieldCount);
+			Assert.AreEqual (new Druid (4, 0, 0), bundle.Druid);
+
+			Assert.IsTrue (this.manager.GetBundle ("Strings").Druid.IsEmpty);
+			Assert.AreEqual ("Strings", this.manager.GetBundle ("file:Strings").Name);
+			Assert.AreEqual ("file/4:Strings", this.manager.GetBundle ("file:Strings").PrefixedName);
+		}
+
+		[Test]
+		[ExpectedException (typeof (ResourceException))]
+		public void CheckGetBundleEx1()
+		{
+			this.manager.GetBundle ("file:Strings#Text1");
+		}
+
+		[Test]
+		[ExpectedException (typeof (ResourceException))]
+		public void CheckGetBundleEx2()
+		{
+			this.manager.GetBundle ("[4]");
 		}
 
 		[Test]

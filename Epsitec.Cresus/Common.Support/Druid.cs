@@ -181,6 +181,22 @@ namespace Epsitec.Common.Support
 		}
 
 		/// <summary>
+		/// Returns the DRUID encoded as a bundle id (e.g. "_1023").
+		/// </summary>
+		/// <returns>The bundle id.</returns>
+		public string ToBundleId()
+		{
+			DruidType type = this.Type;
+
+			if (type != DruidType.Full)
+			{
+				throw new System.InvalidOperationException (string.Format ("Cannot convert {0} DRUID to a resource id", type));
+			}
+
+			return string.Concat ("_", Druid.ToFullString (Druid.FromIds (this.Module, this.Developer, this.Local)));
+		}
+
+		/// <summary>
 		/// Returns the DRUID encoded as a resource field name (e.g. "$23").
 		/// </summary>
 		/// <returns>The resource field name.</returns>
@@ -311,6 +327,12 @@ namespace Epsitec.Common.Support
 				long druid = Druid.FromModuleString (value.Substring (1));
 				return new Druid (Druid.GetDevId (druid), Druid.GetLocalId (druid));
 			}
+			
+			if (value[0] == '_')
+			{
+				long druid = Druid.FromFullString (value.Substring (1, value.Length-1));
+				return new Druid (Druid.GetModuleId (druid), Druid.GetDevId (druid), Druid.GetLocalId (druid));
+			}
 
 			if ((value.Length > 2) &&
 				(value[0] == '[') &&
@@ -344,6 +366,27 @@ namespace Epsitec.Common.Support
 				(value[value.Length-1] == ']'))
 			{
 				return Druid.IsValidFullString (value.Substring (1, value.Length-2));
+			}
+			else
+			{
+				return false;
+			}
+		}
+
+		/// <summary>
+		/// Determines whether the specified value is a valid bundle id (it
+		/// must be a DRUID prefixed with an underscore).
+		/// </summary>
+		/// <param name="value">The value.</param>
+		/// <returns><c>true</c> if the specified value is a valid bundle id;
+		/// otherwise, <c>false</c>.</returns>
+		public static bool IsValidBundleId(string value)
+		{
+			if ((value != null) &&
+				(value.Length > 1) &&
+				(value[0] == '_'))
+			{
+				return Druid.IsValidFullString (value.Substring (1, value.Length-1));
 			}
 			else
 			{

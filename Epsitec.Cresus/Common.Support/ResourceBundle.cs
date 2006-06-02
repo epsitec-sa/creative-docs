@@ -94,7 +94,23 @@ namespace Epsitec.Common.Support
 				return this.name == null ? "" : this.name;
 			}
 		}
+
+		public string						Caption
+		{
+			get
+			{
+				return this.caption == null ? "" : this.caption;
+			}
+		}
 		
+		public Druid						Druid
+		{
+			get
+			{
+				return this.druid;
+			}
+		}
+
 		public ResourceModuleInfo			Module
 		{
 			get
@@ -267,13 +283,28 @@ namespace Epsitec.Common.Support
 		{
 			if (name != null)
 			{
-				if (! RegexFactory.ResourceBundleName.IsMatch (name))
+				if (! RegexFactory.ResourceBundleName.IsMatch (name) &&
+					! Druid.IsValidBundleId (name))
 				{
 					throw new ResourceException (string.Format ("Name '{0}' is not a valid bundle name.", name));
 				}
 			}
 			
 			this.name = name;
+			this.druid = Druid.IsValidBundleId (name) ? Druid.Parse (name) : Druid.Empty;
+		}
+
+		public void DefineCaption(string caption)
+		{
+			if (caption != null)
+			{
+				if (! RegexFactory.ResourceBundleName.IsMatch (caption))
+				{
+					throw new ResourceException (string.Format ("Caption '{0}' is not a valid bundle caption.", caption));
+				}
+			}
+			
+			this.caption = caption;
 		}
 		
 		public void DefineType(string type)
@@ -622,31 +653,38 @@ namespace Epsitec.Common.Support
 				throw new ResourceException (string.Format ("Bundle does not start with <bundle> tag (<{0}> is an unsupported root).", xmlroot.Name));
 			}
 			
-			string name_attr  = this.GetAttributeValue (xmlroot, "name");
-			string type_attr  = this.GetAttributeValue (xmlroot, "type");
-			string about_attr = this.GetAttributeValue (xmlroot, "about");
+			string name_attr    = this.GetAttributeValue (xmlroot, "name");
+			string caption_attr = this.GetAttributeValue (xmlroot, "caption");
+			string type_attr    = this.GetAttributeValue (xmlroot, "type");
+			string about_attr   = this.GetAttributeValue (xmlroot, "about");
 			string culture_attr = this.GetAttributeValue (xmlroot, "culture");
-			string rank_attr  = this.GetAttributeValue (xmlroot, "rank");
+			string rank_attr    = this.GetAttributeValue (xmlroot, "rank");
 			
-			if ((name_attr != null) && (name_attr != ""))
+			if (!string.IsNullOrEmpty (name_attr))
 			{
-				if ((this.name == null) ||
-					(this.name == ""))
+				if (string.IsNullOrEmpty (this.name))
 				{
-					this.name = name_attr;
+					this.DefineName (name_attr);
 				}
 			}
-			if ((type_attr != null) && (type_attr != ""))
+			if (!string.IsNullOrEmpty (caption_attr))
+			{
+				if (string.IsNullOrEmpty (this.caption))
+				{
+					this.DefineCaption (caption_attr);
+				}
+			}
+			if (!string.IsNullOrEmpty (type_attr))
 			{
 				this.type = type_attr;
 			}
-			if ((about_attr != null) && (about_attr != ""))
+			if (!string.IsNullOrEmpty (about_attr))
 			{
 				this.about = about_attr;
 			}
-			if ((culture_attr != null) && (culture_attr != ""))
+			if (!string.IsNullOrEmpty (culture_attr))
 			{
-				this.culture = new CultureInfo (culture_attr);
+				this.culture = Resources.FindCultureInfo (culture_attr);
 			}
 			
 			if (string.IsNullOrEmpty (rank_attr))
@@ -706,12 +744,14 @@ namespace Epsitec.Common.Support
 		{
 			System.Xml.XmlElement   bundle_node  = xmldoc.CreateElement ("bundle");
 			System.Xml.XmlAttribute name_attr    = xmldoc.CreateAttribute ("name");
+			System.Xml.XmlAttribute caption_attr = xmldoc.CreateAttribute ("caption");
 			System.Xml.XmlAttribute type_attr    = xmldoc.CreateAttribute ("type");
 			System.Xml.XmlAttribute about_attr   = xmldoc.CreateAttribute ("about");
 			System.Xml.XmlAttribute culture_attr = xmldoc.CreateAttribute ("culture");
 			System.Xml.XmlAttribute rank_attr    = xmldoc.CreateAttribute ("rank");
 			
 			name_attr.Value    = this.name;
+			caption_attr.Value = this.caption;
 			type_attr.Value    = this.type;
 			about_attr.Value   = this.about;
 			culture_attr.Value = this.culture.TwoLetterISOLanguageName;
@@ -720,6 +760,10 @@ namespace Epsitec.Common.Support
 			if (name_attr.Value != "")
 			{
 				bundle_node.Attributes.Append (name_attr);
+			}
+			if (caption_attr.Value != "")
+			{
+				bundle_node.Attributes.Append (caption_attr);
 			}
 			if (type_attr.Value != "")
 			{
@@ -1082,6 +1126,8 @@ namespace Epsitec.Common.Support
 			ResourceBundle that = o as ResourceBundle;
 			
 			that.name    = this.name;
+			that.druid   = this.druid;
+			that.caption = this.caption;
 			that.type    = this.type;
 			that.about   = this.about;
 			that.prefix  = this.prefix;
@@ -1739,6 +1785,8 @@ namespace Epsitec.Common.Support
 		private string					prefix;
 		private ResourceModuleInfo		module;
 		private string					name;
+		private Druid					druid;
+		private string					caption;
 		private string					type;
 		private string					about;
 		private ResourceLevel			level;
