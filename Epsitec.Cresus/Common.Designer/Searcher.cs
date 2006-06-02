@@ -23,9 +23,9 @@ namespace Epsitec.Common.Designer
 		}
 
 
-		public Searcher(List<string> labelsIndex, ResourceBundle primaryBundle, ResourceBundle secondaryBundle)
+		public Searcher(List<Druid> druidsIndex, ResourceBundle primaryBundle, ResourceBundle secondaryBundle)
 		{
-			this.labelsIndex = labelsIndex;
+			this.druidsIndex = druidsIndex;
 			this.primaryBundle = primaryBundle;
 			this.secondaryBundle = secondaryBundle;
 			this.mode = SearchingMode.SearchInPrimaryText | SearchingMode.SearchInSecondaryText;
@@ -48,7 +48,7 @@ namespace Epsitec.Common.Designer
 				}
 				else  // en arrière ?
 				{
-					this.starting.Row   = this.labelsIndex.Count-1;  // à la fin
+					this.starting.Row   = this.druidsIndex.Count-1;  // à la fin
 					this.starting.Field = 4;
 					this.starting.Index = 1000000;
 				}
@@ -296,7 +296,7 @@ namespace Epsitec.Common.Designer
 				{
 					this.current.Field = 0;
 					this.current.Row ++;
-					if (this.current.Row >= this.labelsIndex.Count)
+					if (this.current.Row >= this.druidsIndex.Count)
 					{
 						this.current.Row = 0;
 						this.limitOverflow = true;
@@ -314,7 +314,7 @@ namespace Epsitec.Common.Designer
 					this.current.Row--;
 					if (this.current.Row < 0)
 					{
-						this.current.Row = this.labelsIndex.Count-1;
+						this.current.Row = this.druidsIndex.Count-1;
 						this.limitOverflow = true;
 					}
 				}
@@ -327,31 +327,31 @@ namespace Epsitec.Common.Designer
 			//	Retourne le texte à la position du curseur courant (en fonction de row/field).
 			get
 			{
-				string label = this.labelsIndex[this.current.Row];
+				Druid druid = this.druidsIndex[this.current.Row];
 
 				if (this.current.Field == 0 && (this.mode&SearchingMode.SearchInLabel) != 0)
 				{
-					return label;
+					return this.primaryBundle[druid].Name;
 				}
 
 				if (this.current.Field == 1 && (this.mode&SearchingMode.SearchInPrimaryText) != 0)
 				{
-					return this.primaryBundle[label].AsString;
+					return this.primaryBundle[druid].AsString;
 				}
 
 				if (this.current.Field == 2 && (this.mode&SearchingMode.SearchInSecondaryText) != 0)
 				{
-					return this.secondaryBundle[label].AsString;
+					return this.secondaryBundle[druid].AsString;
 				}
 
 				if (this.current.Field == 3 && (this.mode&SearchingMode.SearchInPrimaryAbout) != 0)
 				{
-					return this.primaryBundle[label].About;
+					return this.primaryBundle[druid].About;
 				}
 
 				if (this.current.Field == 4 && (this.mode&SearchingMode.SearchInSecondaryAbout) != 0)
 				{
-					return this.secondaryBundle[label].About;
+					return this.secondaryBundle[druid].About;
 				}
 
 				return null;
@@ -600,7 +600,7 @@ namespace Epsitec.Common.Designer
 		#endregion
 
 
-		protected List<string>			labelsIndex;
+		protected List<Druid>			druidsIndex;
 		protected ResourceBundle		primaryBundle;
 		protected ResourceBundle		secondaryBundle;
 		protected SearchingMode			mode;

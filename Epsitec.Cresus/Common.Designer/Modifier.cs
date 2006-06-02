@@ -59,31 +59,40 @@ namespace Epsitec.Common.Designer
 			this.IsDirty = false;
 		}
 
-		public void Delete(string name)
+		public void Delete(Druid druid)
 		{
 			//	Supprime une ressource dans toutes les cultures du module.
 			ResourceBundleCollection bundles = this.module.Bundles;
 			foreach (ResourceBundle bundle in bundles)
 			{
-				bundle.Remove(name);
+				int index = bundle.IndexOf(druid);
+				if (index >= 0)
+				{
+					bundle.Remove(index);
+				}
 			}
 			this.IsDirty = false;
 		}
 
-		public void Duplicate(string name, string newName, bool duplicate)
+		public Druid Duplicate(Druid actualDruid, string newName, bool duplicate)
 		{
 			//	Duplique une ressource dans toutes les cultures du module.
 			ResourceBundleCollection bundles = this.module.Bundles;
 			ResourceBundle defaultBundle = bundles[ResourceLevel.Default];
-			int index = this.GetDefaultIndex(name);
+
+			int index = this.GetDefaultIndex(actualDruid);
+			Druid newDruid = this.CreateUniqueDruid();
+
 			foreach (ResourceBundle bundle in bundles)
 			{
-				ResourceBundle.Field field = bundle[name];
 				ResourceBundle.Field newField = bundle.CreateField(ResourceFieldType.Data);
+				newField.SetDruid(newDruid);
 				newField.SetName(newName);
+
 				if (duplicate)
 				{
-					if (field == null || field.Name == null)  continue;
+					ResourceBundle.Field field = bundle[actualDruid];
+					if (field.IsEmpty)  continue;
 					newField.SetStringValue(field.AsString);
 					newField.SetAbout(field.About);
 				}
@@ -103,7 +112,9 @@ namespace Epsitec.Common.Designer
 					bundle.Add(newField);
 				}
 			}
+
 			this.IsDirty = false;
+			return newDruid;
 		}
 
 		public Druid Create(string name, string text)
@@ -112,27 +123,7 @@ namespace Epsitec.Common.Designer
 			ResourceBundleCollection bundles = this.module.Bundles;
 			ResourceBundle defaultBundle = bundles[ResourceLevel.Default];
 
-			// TODO: [PA] comment générer un beau Panoramix unique et tout neuf ?
-
-			Druid druid;
-			
-			int moduleId = defaultBundle.Module.Id;
-			int developerId = 0;						//	[PA] provisoire
-			int localId = 0;
-			
-			foreach (ResourceBundle.Field field in defaultBundle.Fields)
-			{
-				druid = field.Druid;
-				
-				if ((druid.IsValid) &&
-					(druid.Developer == developerId) &&
-					(druid.Local > localId))
-				{
-					localId = druid.Local+1;
-				}
-			}
-			
-			druid = new Druid(moduleId, developerId, localId);
+			Druid druid = this.CreateUniqueDruid();
 			ResourceBundle.Field newField = defaultBundle.CreateField(ResourceFieldType.Data);
 			newField.SetDruid(druid);
 			newField.SetName(name);
@@ -144,12 +135,35 @@ namespace Epsitec.Common.Designer
 			return druid;
 		}
 
-		public bool Move(string name, int direction)
+		protected Druid CreateUniqueDruid()
+		{
+			//	Crée un nouveau druid unique.
+			ResourceBundleCollection bundles = this.module.Bundles;
+			ResourceBundle defaultBundle = bundles[ResourceLevel.Default];
+
+			int moduleId = defaultBundle.Module.Id;
+			int developerId = 0;  // [PA] provisoire
+			int localId = 0;
+
+			foreach (ResourceBundle.Field field in defaultBundle.Fields)
+			{
+				Druid druid = field.Druid;
+
+				if (druid.IsValid && druid.Developer == developerId && druid.Local >= localId)
+				{
+					localId = druid.Local+1;
+				}
+			}
+
+			return new Druid(moduleId, developerId, localId);
+		}
+
+		public bool Move(Druid druid, int direction)
 		{
 			//	Déplace une ressource dans la culture par défaut du module.
 			ResourceBundleCollection bundles = this.module.Bundles;
 			ResourceBundle defaultBundle = bundles[ResourceLevel.Default];
-			int index = this.GetDefaultIndex(name);
+			int index = this.GetDefaultIndex(druid);
 			if (index+direction < 0 || index+direction >= defaultBundle.FieldCount)
 			{
 				return false;
@@ -162,47 +176,49 @@ namespace Epsitec.Common.Designer
 			return true;
 		}
 
-		public void Rename(string name, string newName)
+		public void Rename(Druid druid, string newName)
 		{
 			//	Renomme une ressource dans toutes les cultures du module.
 			ResourceBundleCollection bundles = this.module.Bundles;
 			foreach (ResourceBundle bundle in bundles)
 			{
-				ResourceBundle.Field field = bundle[name];
-				if (field == null || field.Name == null)  continue;
-				bundle[name].SetName(newName);
-			}
-			this.IsDirty = false;
-		}
-
-		public void ModificationClearAll(string name)
-		{
-			//	Considère une ressource comme à jour dans toutes les cultures secondaires du module.
-			ResourceBundleCollection bundles = this.module.Bundles;
-			ResourceBundle defaultBundle = bundles[ResourceLevel.Default];
-			int id = defaultBundle[name].ModificationId;
-			foreach (ResourceBundle bundle in bundles)
-			{
-				if (bundle != defaultBundle)
+				ResourceBundle.Field field = bundle[druid];
+				if (field.IsValid)
 				{
-					bundle[name].SetModificationId(id);
+					field.SetName(newName);
 				}
 			}
 			this.IsDirty = false;
 		}
 
-		public bool IsModificationAll(string name)
+		public void ModificationClearAll(Druid druid)
+		{
+			//	Considère une ressource comme à jour dans toutes les cultures secondaires du module.
+			ResourceBundleCollection bundles = this.module.Bundles;
+			ResourceBundle defaultBundle = bundles[ResourceLevel.Default];
+			int id = defaultBundle[druid].ModificationId;
+			foreach (ResourceBundle bundle in bundles)
+			{
+				if (bundle != defaultBundle && !bundle[druid].IsEmpty)
+				{
+					bundle[druid].SetModificationId(id);
+				}
+			}
+			this.IsDirty = false;
+		}
+
+		public bool IsModificationAll(Druid druid)
 		{
 			//	Donne l'état de la commande ModificationAll.
 			ResourceBundleCollection bundles = this.module.Bundles;
 			ResourceBundle defaultBundle = bundles[ResourceLevel.Default];
-			int id = defaultBundle[name].ModificationId;
+			int id = defaultBundle[druid].ModificationId;
 			int count = 0;
 			foreach (ResourceBundle bundle in bundles)
 			{
-				if (bundle != defaultBundle)
+				if (bundle != defaultBundle && !bundle[druid].IsEmpty)
 				{
-					if (bundle[name].ModificationId < id)
+					if (bundle[druid].ModificationId < id)
 					{
 						count ++;
 					}
@@ -211,31 +227,31 @@ namespace Epsitec.Common.Designer
 			return (count != bundles.Count-1);
 		}
 
-		public void CreateIfNecessary(ResourceBundle bundle, string name, int id, Druid druid)
+		public void CreateIfNecessary(ResourceBundle secondaryBundle, Druid druid)
 		{
 			//	Crée une ressource secondaire, si nécessaire.
-			ResourceBundle.Field field = bundle[name];
-			if (field == null || field.Name == null)
+			ResourceBundleCollection bundles = this.module.Bundles;
+			ResourceBundle defaultBundle = bundles[ResourceLevel.Default];
+
+			ResourceBundle.Field field = secondaryBundle[druid];
+			if (field.IsEmpty)
 			{
-				ResourceBundle.Field newField = bundle.CreateField(ResourceFieldType.Data);
-				newField.SetName(name);
+				ResourceBundle.Field defaultField = defaultBundle[druid];
+				ResourceBundle.Field newField = secondaryBundle.CreateField(ResourceFieldType.Data);
+				newField.SetName(defaultField.Name);
 				newField.SetDruid(druid);
+				newField.SetModificationId(defaultField.ModificationId);
 
-				if (id != -1)
-				{
-					newField.SetModificationId(id);
-				}
-
-				bundle.Add(newField);
+				secondaryBundle.Add(newField);
 			}
 		}
 
-		protected int GetDefaultIndex(string name)
+		protected int GetDefaultIndex(Druid druid)
 		{
-			//	Cherche l'index d'une ressource d'après son nom.
+			//	Cherche l'index d'une ressource d'après son druid.
 			ResourceBundleCollection bundles = this.module.Bundles;
 			ResourceBundle defaultBundle = bundles[ResourceLevel.Default];
-			ResourceBundle.Field field = defaultBundle[name];
+			ResourceBundle.Field field = defaultBundle[druid];
 			return defaultBundle.IndexOf(field);
 		}
 

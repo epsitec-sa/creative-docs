@@ -129,7 +129,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.UpdateButtons();
 
 			string label = "";
-			if (this.ressource.IsValid)
+			if (!this.ressource.IsEmpty)
 			{
 				ResourceBundle.Field field = this.primaryBundle[this.ressource];
 				if (!field.IsEmpty)

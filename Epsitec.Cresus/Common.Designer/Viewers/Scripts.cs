@@ -142,7 +142,7 @@ namespace Epsitec.Common.Designer.Viewers
 			base.UpdateCommands();
 
 			int sel = this.array.SelectedRow;
-			int count = this.labelsIndex.Count;
+			int count = this.druidsIndex.Count;
 			bool build = (this.module.Mode == DesignerMode.Build);
 
 			this.GetCommandState("NewCulture").Enable = false;
