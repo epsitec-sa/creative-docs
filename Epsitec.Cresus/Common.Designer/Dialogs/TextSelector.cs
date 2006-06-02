@@ -128,8 +128,18 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.SelectArray();
 			this.UpdateButtons();
 
+			string label = "";
+			if (this.ressource.IsValid)
+			{
+				ResourceBundle.Field field = this.primaryBundle[this.ressource];
+				if (!field.IsEmpty)
+				{
+					label = field.Name;
+				}
+			}
+
 			this.ignoreChanged = true;
-			//?this.filterLabel.Text = this.ressource;  // TODO: [PA] adapter...
+			this.filterLabel.Text = label;
 			this.filterText.Text = "";
 			this.ignoreChanged = false;
 
