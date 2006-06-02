@@ -254,7 +254,11 @@ namespace Epsitec.Common.Support
 				localId = Resources.JoinFieldId (Resources.DruidBundleName, druid.ToFieldName ());
 			}
 		}
-		
+
+		public static bool IsFieldId(string id)
+		{
+			return id.IndexOf (Resources.FieldSeparator) >= 0;
+		}
 		
 		public static CultureInfo FindCultureInfo(string twoLetterCode)
 		{

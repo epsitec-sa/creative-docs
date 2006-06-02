@@ -223,10 +223,11 @@
     <None Include="resources\LowLevelTest\strings.00.resource" />
     <None Include="resources\LowLevelTest\strings.fr.resource" />
     <None Include="resources\OtherModule\module.info" />
-    <None Include="resources\OtherModule\Strings.00.resource" />
+    <None Include="resources\OtherModule\strings.00.resource" />
+    <None Include="resources\Test\_4.00.resource" />
     <None Include="resources\Test\module.info" />
     <None Include="resources\Test\strings.00.resource" />
-    <None Include="resources\Test\Strings.fr.resource" />
+    <None Include="resources\Test\strings.fr.resource" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="resources\LowLevelTest\bitmap.resource.png" />
