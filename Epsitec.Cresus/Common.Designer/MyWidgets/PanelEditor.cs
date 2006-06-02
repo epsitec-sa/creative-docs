@@ -946,10 +946,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	TODO: tout ceci est provisoire !!!
 			if (obj is Button || obj is StaticText || obj is GroupBox)
 			{
-				Druid druid = Druid.Empty;
+				Types.ResourceBinding binding = obj.GetBinding(Widget.TextProperty) as Types.ResourceBinding;
 
-				Types.ResourceBinding binding = obj.GetBinding (Widget.TextProperty) as Types.ResourceBinding;
-				
+				Druid druid = Druid.Empty;
 				if (binding != null)
 				{
 					druid = Druid.Parse(binding.ResourceId);
