@@ -16,7 +16,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.module = module;
 			this.context = context;
 
-			this.labelsIndex = new List<string>();
+			this.druidsIndex = new List<Druid>();
 		}
 
 		protected override void Dispose(bool disposing)
@@ -71,17 +71,17 @@ namespace Epsitec.Common.Designer.Viewers
 		public void DoFilter(string filter, Searcher.SearchingMode mode)
 		{
 			//	Change le filtre des ressources visibles.
-			string label = "";
+			Druid druid = Druid.Empty;
 			int sel = this.array.SelectedRow;
-			if (sel != -1 && sel < this.labelsIndex.Count)
+			if (sel != -1 && sel < this.druidsIndex.Count)
 			{
-				label = this.labelsIndex[sel];
+				druid = this.druidsIndex[sel];
 			}
 
-			this.UpdateLabelsIndex(filter, mode);
+			this.UpdateDruidsIndex(filter, mode);
 			this.UpdateArray();
 
-			sel = this.labelsIndex.IndexOf(label);
+			sel = this.druidsIndex.IndexOf(druid);
 			this.array.SelectedRow = sel;
 			this.array.ShowSelectedRow();
 			this.UpdateCommands();
@@ -179,15 +179,15 @@ namespace Epsitec.Common.Designer.Viewers
 				}
 				else
 				{
-					builder.Append(this.labelsIndex[sel]);
+					builder.Append(this.druidsIndex[sel]);
 					builder.Append(": ");
 					builder.Append((sel+1).ToString());
 				}
 
 				builder.Append("/");
-				builder.Append(this.labelsIndex.Count.ToString());
+				builder.Append(this.druidsIndex.Count.ToString());
 
-				if (this.labelsIndex.Count < this.InfoAccessTotalCount)
+				if (this.druidsIndex.Count < this.InfoAccessTotalCount)
 				{
 					builder.Append(" (");
 					builder.Append(this.InfoAccessTotalCount.ToString());
@@ -202,12 +202,12 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			get
 			{
-				return this.labelsIndex.Count;
+				return this.druidsIndex.Count;
 			}
 		}
 
 
-		protected virtual void UpdateLabelsIndex(string filter, Searcher.SearchingMode mode)
+		protected virtual void UpdateDruidsIndex(string filter, Searcher.SearchingMode mode)
 		{
 		}
 
@@ -224,7 +224,7 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			//	Met à jour les commandes en fonction de la ressource sélectionnée.
 			int sel = this.array.SelectedRow;
-			int count = this.labelsIndex.Count;
+			int count = this.druidsIndex.Count;
 			bool build = (this.module.Mode == DesignerMode.Build);
 
 			this.GetCommandState ("Save").Enable = this.module.Modifier.IsDirty;
@@ -282,7 +282,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected Module					module;
 		protected PanelsContext				context;
-		protected List<string>				labelsIndex;
+		protected List<Druid>				druidsIndex;
 		protected bool						ignoreChange = false;
 		protected MyWidgets.StringArray		array;
 		protected AbstractTextField			currentTextField;

@@ -132,7 +132,7 @@ namespace Epsitec.Common.Designer.Viewers
 		public override void DoSearch(string search, Searcher.SearchingMode mode)
 		{
 			//	Effectue une recherche.
-			Searcher searcher = new Searcher(this.labelsIndex, this.primaryBundle, this.secondaryBundle);
+			Searcher searcher = new Searcher(this.druidsIndex, this.primaryBundle, this.secondaryBundle);
 			searcher.FixStarting(mode, this.array.SelectedRow, this.currentTextField, false);
 
 			if (searcher.Search(search))
@@ -170,7 +170,7 @@ namespace Epsitec.Common.Designer.Viewers
 		public override void DoCount(string search, Searcher.SearchingMode mode)
 		{
 			//	Effectue un comptage.
-			Searcher searcher = new Searcher(this.labelsIndex, this.primaryBundle, this.secondaryBundle);
+			Searcher searcher = new Searcher(this.druidsIndex, this.primaryBundle, this.secondaryBundle);
 			searcher.FixStarting(mode, this.array.SelectedRow, this.currentTextField, false);
 
 			int count = searcher.Count(search);
@@ -193,7 +193,7 @@ namespace Epsitec.Common.Designer.Viewers
 				mode &= ~Searcher.SearchingMode.SearchInLabel;
 			}
 
-			Searcher searcher = new Searcher(this.labelsIndex, this.primaryBundle, this.secondaryBundle);
+			Searcher searcher = new Searcher(this.druidsIndex, this.primaryBundle, this.secondaryBundle);
 			searcher.FixStarting(mode, this.array.SelectedRow, this.currentTextField, this.lastActionIsReplace);
 
 			if (searcher.Replace(search, false))
@@ -203,7 +203,7 @@ namespace Epsitec.Common.Designer.Viewers
 				this.array.SelectedRow = searcher.Row;
 				this.array.ShowSelectedRow();
 
-				string label = this.labelsIndex[searcher.Row];
+				Druid druid = this.druidsIndex[searcher.Row];
 				string text = "";
 
 				if (searcher.Field == 0)
@@ -221,49 +221,48 @@ namespace Epsitec.Common.Designer.Viewers
 						return;
 					}
 
-					text = label;
+					text = this.primaryBundle[druid].AsString;
 					text = text.Remove(searcher.Index, searcher.Length);
 					text = text.Insert(searcher.Index, validReplace);
 
-					this.labelsIndex[searcher.Row] = text;
-					this.module.Modifier.Rename(label, text);
+					this.module.Modifier.Rename(druid, text);
 					this.array.SetLineString(0, searcher.Row, text);
 				}
 
 				if (searcher.Field == 1)
 				{
-					text = this.primaryBundle[label].AsString;
+					text = this.primaryBundle[druid].AsString;
 					text = text.Remove(searcher.Index, searcher.Length);
 					text = text.Insert(searcher.Index, replace);
-					this.primaryBundle[label].SetStringValue(text);
+					this.primaryBundle[druid].SetStringValue(text);
 
-					this.UpdateArrayField(1, searcher.Row, this.primaryBundle[label], this.secondaryBundle[label]);
+					this.UpdateArrayField(1, searcher.Row, this.primaryBundle[druid], this.secondaryBundle[druid]);
 				}
 
 				if (searcher.Field == 2)
 				{
-					text = this.secondaryBundle[label].AsString;
+					text = this.secondaryBundle[druid].AsString;
 					text = text.Remove(searcher.Index, searcher.Length);
 					text = text.Insert(searcher.Index, replace);
-					this.secondaryBundle[label].SetStringValue(text);
+					this.secondaryBundle[druid].SetStringValue(text);
 
-					this.UpdateArrayField(2, searcher.Row, this.secondaryBundle[label], this.primaryBundle[label]);
+					this.UpdateArrayField(2, searcher.Row, this.secondaryBundle[druid], this.primaryBundle[druid]);
 				}
 
 				if (searcher.Field == 3)
 				{
-					text = this.primaryBundle[label].About;
+					text = this.primaryBundle[druid].About;
 					text = text.Remove(searcher.Index, searcher.Length);
 					text = text.Insert(searcher.Index, replace);
-					this.primaryBundle[label].SetAbout(text);
+					this.primaryBundle[druid].SetAbout(text);
 				}
 
 				if (searcher.Field == 4)
 				{
-					text = this.secondaryBundle[label].About;
+					text = this.secondaryBundle[druid].About;
 					text = text.Remove(searcher.Index, searcher.Length);
 					text = text.Insert(searcher.Index, replace);
-					this.secondaryBundle[label].SetAbout(text);
+					this.secondaryBundle[druid].SetAbout(text);
 				}
 
 				AbstractTextField edit = null;
@@ -302,7 +301,7 @@ namespace Epsitec.Common.Designer.Viewers
 				mode &= ~Searcher.SearchingMode.SearchInLabel;
 			}
 
-			Searcher searcher = new Searcher(this.labelsIndex, this.primaryBundle, this.secondaryBundle);
+			Searcher searcher = new Searcher(this.druidsIndex, this.primaryBundle, this.secondaryBundle);
 			searcher.FixStarting(mode, this.array.SelectedRow, this.currentTextField, false);
 
 			int count = 0;
@@ -312,49 +311,48 @@ namespace Epsitec.Common.Designer.Viewers
 				fromBeginning = false;
 				count ++;
 
-				string label = this.labelsIndex[searcher.Row];
+				Druid druid = this.druidsIndex[searcher.Row];
 				string text = "";
 
 				if (searcher.Field == 0)
 				{
-					text = label;
+					text = this.primaryBundle[druid].Name;
 					text = text.Remove(searcher.Index, searcher.Length);
 					text = text.Insert(searcher.Index, replace);
 
-					this.labelsIndex[searcher.Row] = text;
-					this.module.Modifier.Rename(label, text);
+					this.module.Modifier.Rename(druid, text);
 				}
 
 				if (searcher.Field == 1)
 				{
-					text = this.primaryBundle[label].AsString;
+					text = this.primaryBundle[druid].AsString;
 					text = text.Remove(searcher.Index, searcher.Length);
 					text = text.Insert(searcher.Index, replace);
-					this.primaryBundle[label].SetStringValue(text);
+					this.primaryBundle[druid].SetStringValue(text);
 				}
 
 				if (searcher.Field == 2)
 				{
-					text = this.secondaryBundle[label].AsString;
+					text = this.secondaryBundle[druid].AsString;
 					text = text.Remove(searcher.Index, searcher.Length);
 					text = text.Insert(searcher.Index, replace);
-					this.secondaryBundle[label].SetStringValue(text);
+					this.secondaryBundle[druid].SetStringValue(text);
 				}
 
 				if (searcher.Field == 3)
 				{
-					text = this.primaryBundle[label].About;
+					text = this.primaryBundle[druid].About;
 					text = text.Remove(searcher.Index, searcher.Length);
 					text = text.Insert(searcher.Index, replace);
-					this.primaryBundle[label].SetAbout(text);
+					this.primaryBundle[druid].SetAbout(text);
 				}
 
 				if (searcher.Field == 4)
 				{
-					text = this.secondaryBundle[label].About;
+					text = this.secondaryBundle[druid].About;
 					text = text.Remove(searcher.Index, searcher.Length);
 					text = text.Insert(searcher.Index, replace);
-					this.secondaryBundle[label].SetAbout(text);
+					this.secondaryBundle[druid].SetAbout(text);
 				}
 
 				searcher.Skip(replace.Length);  // saute les caractères sélectionnés
@@ -384,10 +382,11 @@ namespace Epsitec.Common.Designer.Viewers
 			if (name == "ModificationAll")
 			{
 				if (sel == -1)  return;
-				string label = this.labelsIndex[sel];
-				if (this.primaryBundle[label] == null || this.primaryBundle[label].Name == null)  return;
+				Druid druid = this.druidsIndex[sel];
+				ResourceBundle.Field field1 = this.primaryBundle[druid];
+				if (field1.IsEmpty)  return;
+				field1.SetModificationId(field1.ModificationId+1);
 
-				this.primaryBundle[label].SetModificationId(this.primaryBundle[label].ModificationId+1);
 				this.UpdateArray();
 				this.UpdateModifiers();
 				this.UpdateCommands();
@@ -396,10 +395,12 @@ namespace Epsitec.Common.Designer.Viewers
 			else if (name == "ModificationClear")
 			{
 				if (sel == -1)  return;
-				string label = this.labelsIndex[sel];
-				if (this.secondaryBundle[label] == null || this.secondaryBundle[label].Name == null)  return;
+				Druid druid = this.druidsIndex[sel];
+				ResourceBundle.Field field1 = this.primaryBundle[druid];
+				ResourceBundle.Field field2 = this.secondaryBundle[druid];
+				if (field1.IsEmpty || field2.IsEmpty)  return;
+				field2.SetModificationId(field1.ModificationId);
 
-				this.secondaryBundle[label].SetModificationId(this.primaryBundle[label].ModificationId);
 				this.UpdateArray();
 				this.UpdateModifiers();
 				this.UpdateCommands();
@@ -409,40 +410,31 @@ namespace Epsitec.Common.Designer.Viewers
 			{
 				if (sel == -1)
 				{
-					sel = (name == "ModificationPrev") ? 0 : this.labelsIndex.Count-1;
+					sel = (name == "ModificationPrev") ? 0 : this.druidsIndex.Count-1;
 				}
 
 				int column = -1;
 				int dir = (name == "ModificationPrev") ? -1 : 1;
 
-				for (int i=0; i<this.labelsIndex.Count; i++)
+				for (int i=0; i<this.druidsIndex.Count; i++)
 				{
 					sel += dir;
 
-					if (sel >= this.labelsIndex.Count)
+					if (sel >= this.druidsIndex.Count)
 					{
 						sel = 0;
 					}
 
 					if (sel < 0)
 					{
-						sel = this.labelsIndex.Count-1;
+						sel = this.druidsIndex.Count-1;
 					}
 
-					string label  = this.labelsIndex[sel];
-					int primary   = this.primaryBundle[label].ModificationId;
-					int secondary = this.secondaryBundle[label].ModificationId;
+					Druid druid = this.druidsIndex[sel];
+					ResourceBundle.Field field1 = this.primaryBundle[druid];
+					ResourceBundle.Field field2 = this.secondaryBundle[druid];
 
-					if ( this.secondaryBundle[label] == null          ||
-						 this.secondaryBundle[label].Name == null     ||
-						 this.secondaryBundle[label].AsString == null ||
-						 this.secondaryBundle[label].AsString == ""   )
-					{
-						column = 2;
-						break;
-					}
-
-					if (primary > secondary)
+					if (!field1.IsEmpty && !field2.IsEmpty && field1.ModificationId > field2.ModificationId)
 					{
 						column = 2;
 						break;
@@ -470,13 +462,13 @@ namespace Epsitec.Common.Designer.Viewers
 			int sel = this.array.SelectedRow;
 			if ( sel == -1 )  return;
 
-			string name = this.labelsIndex[sel];
-			this.module.Modifier.Delete(name);
+			Druid druid = this.druidsIndex[sel];
+			this.module.Modifier.Delete(druid);
 
-			this.labelsIndex.RemoveAt(sel);
+			this.druidsIndex.RemoveAt(sel);
 			this.UpdateArray();
 
-			sel = System.Math.Min(sel, this.labelsIndex.Count-1);
+			sel = System.Math.Min(sel, this.druidsIndex.Count-1);
 			this.array.SelectedRow = sel;
 			this.array.ShowSelectedRow();
 			this.UpdateCommands();
@@ -489,12 +481,12 @@ namespace Epsitec.Common.Designer.Viewers
 			int sel = this.array.SelectedRow;
 			if ( sel == -1 )  return;
 
-			string name = this.labelsIndex[sel];
-			string newName = this.GetDuplicateName(name);
-			this.module.Modifier.Duplicate(name, newName, duplicate);
+			Druid druid = this.druidsIndex[sel];
+			string newName = this.GetDuplicateName(this.primaryBundle[druid].Name);
+			Druid newDruid = this.module.Modifier.Duplicate(druid, newName, duplicate);
 
 			int newSel = sel+1;
-			this.labelsIndex.Insert(newSel, newName);
+			this.druidsIndex.Insert(newSel, newDruid);
 			this.UpdateArray();
 
 			this.array.SelectedRow = newSel;
@@ -509,12 +501,12 @@ namespace Epsitec.Common.Designer.Viewers
 			int sel = this.array.SelectedRow;
 			if ( sel == -1 )  return;
 
-			string name = this.labelsIndex[sel];
-			if ( !this.module.Modifier.Move(name, direction) )  return;
+			Druid druid = this.druidsIndex[sel];
+			if ( !this.module.Modifier.Move(druid, direction) )  return;
 		
 			int newSel = sel+direction;
-			this.labelsIndex.RemoveAt(sel);
-			this.labelsIndex.Insert(newSel, name);
+			this.druidsIndex.RemoveAt(sel);
+			this.druidsIndex.Insert(newSel, druid);
 			this.UpdateArray();
 
 			this.array.SelectedRow = newSel;
@@ -684,7 +676,7 @@ namespace Epsitec.Common.Designer.Viewers
 				this.UpdateSelectedCulture(Misc.CultureName(this.secondaryBundle.Culture));
 			}
 
-			this.UpdateLabelsIndex("", Searcher.SearchingMode.None);
+			this.UpdateDruidsIndex("", Searcher.SearchingMode.None);
 		}
 
 		protected void UpdateSelectedCulture(string name)
@@ -708,10 +700,10 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 		}
 
-		protected override void UpdateLabelsIndex(string filter, Searcher.SearchingMode mode)
+		protected override void UpdateDruidsIndex(string filter, Searcher.SearchingMode mode)
 		{
 			//	Construit l'index en fonction des ressources primaires.
-			this.labelsIndex.Clear();
+			this.druidsIndex.Clear();
 
 			if ((mode&Searcher.SearchingMode.CaseSensitive) == 0)
 			{
@@ -745,22 +737,23 @@ namespace Epsitec.Common.Designer.Viewers
 					}
 				}
 
-				this.labelsIndex.Add(field.Name);
+				Druid fullDruid = new Druid(field.Druid, this.primaryBundle.Module.Id);
+				this.druidsIndex.Add(fullDruid);
 			}
 		}
 
 		protected override void UpdateArray()
 		{
 			//	Met à jour tout le contenu du tableau.
-			this.array.TotalRows = this.labelsIndex.Count;
+			this.array.TotalRows = this.druidsIndex.Count;
 
 			int first = this.array.FirstVisibleRow;
 			for (int i=0; i<this.array.LineCount; i++)
 			{
-				if (first+i < this.labelsIndex.Count)
+				if (first+i < this.druidsIndex.Count)
 				{
-					ResourceBundle.Field primaryField   = this.primaryBundle[this.labelsIndex[first+i]];
-					ResourceBundle.Field secondaryField = this.secondaryBundle[this.labelsIndex[first+i]];
+					ResourceBundle.Field primaryField   = this.primaryBundle[this.druidsIndex[first+i]];
+					ResourceBundle.Field secondaryField = this.secondaryBundle[this.druidsIndex[first+i]];
 
 					this.array.SetLineString(0, first+i, primaryField.Name);
 					this.array.SetLineState(0, first+i, MyWidgets.StringList.CellState.Normal);
@@ -819,10 +812,10 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			//	Met à jour les indicateurs de modifications.
 			int sel = this.array.SelectedRow;
-			string label = null;
+			Druid druid = Druid.Empty;
 			if (sel != -1)
 			{
-				label = this.labelsIndex[sel];
+				druid = this.druidsIndex[sel];
 			}
 
 			ResourceBundle defaultBundle = this.module.Bundles[ResourceLevel.Default];
@@ -834,9 +827,9 @@ namespace Epsitec.Common.Designer.Viewers
 				bool modified = false;
 
 				ResourceBundle bundle = this.module.GetCulture(sample.Name);
-				if (bundle != null && label != null)
+				if (bundle != null && !druid.IsEmpty)
 				{
-					modified = (defaultBundle[label].ModificationId > bundle[label].ModificationId);
+					modified = (defaultBundle[druid].ModificationId > bundle[druid].ModificationId);
 				}
 
 				RichColor color = RichColor.FromBrightness(1);
@@ -857,7 +850,7 @@ namespace Epsitec.Common.Designer.Viewers
 			int sel = this.array.SelectedRow;
 			int column = this.array.SelectedColumn;
 
-			if (sel >= this.labelsIndex.Count)
+			if (sel >= this.druidsIndex.Count)
 			{
 				sel = -1;
 				column = -1;
@@ -885,15 +878,15 @@ namespace Epsitec.Common.Designer.Viewers
 				this.primaryAbout.Enable = true;
 				this.secondaryAbout.Enable = true;
 
-				string label = this.labelsIndex[sel];
+				Druid druid = this.druidsIndex[sel];
 
-				this.SetTextField(this.labelEdit, label);
+				this.SetTextField(this.labelEdit, this.primaryBundle[druid].Name);
 
-				this.SetTextField(this.primaryEdit, this.primaryBundle[label].AsString);
-				this.SetTextField(this.secondaryEdit, this.secondaryBundle[label].AsString);
+				this.SetTextField(this.primaryEdit, this.primaryBundle[druid].AsString);
+				this.SetTextField(this.secondaryEdit, this.secondaryBundle[druid].AsString);
 
-				this.SetTextField(this.primaryAbout, this.primaryBundle[label].About);
-				this.SetTextField(this.secondaryAbout, this.secondaryBundle[label].About);
+				this.SetTextField(this.primaryAbout, this.primaryBundle[druid].About);
+				this.SetTextField(this.secondaryAbout, this.secondaryBundle[druid].About);
 
 				AbstractTextField edit = null;
 				if (column == 0)  edit = this.labelEdit;
@@ -923,18 +916,20 @@ namespace Epsitec.Common.Designer.Viewers
 			base.UpdateCommands();
 
 			int sel = this.array.SelectedRow;
-			int count = this.labelsIndex.Count;
+			int count = this.druidsIndex.Count;
 			bool build = (this.module.Mode == DesignerMode.Build);
 
 			bool all = false;
 			bool modified = false;
 			if (sel != -1)
 			{
-				string label = this.labelsIndex[sel];
-				all = this.module.Modifier.IsModificationAll(label);
-				if (this.secondaryBundle[label] != null && this.secondaryBundle[label].Name != null)
+				Druid druid = this.druidsIndex[sel];
+				all = this.module.Modifier.IsModificationAll(druid);
+				ResourceBundle.Field field1 = this.primaryBundle[druid];
+				ResourceBundle.Field field2 = this.secondaryBundle[druid];
+				if (!field1.IsEmpty && !field2.IsEmpty)
 				{
-					modified = (this.primaryBundle[label].ModificationId > this.secondaryBundle[label].ModificationId);
+					modified = (field1.ModificationId > field2.ModificationId);
 				}
 			}
 
@@ -1154,7 +1149,7 @@ namespace Epsitec.Common.Designer.Viewers
 			{
 				newName = string.Concat(baseName, i.ToString(System.Globalization.CultureInfo.InvariantCulture));
 				ResourceBundle.Field field = defaultBundle[newName];
-				if ( field == null || field.Name == null )  break;
+				if (field.IsEmpty)  break;
 			}
 
 			return newName;
@@ -1205,14 +1200,14 @@ namespace Epsitec.Common.Designer.Viewers
 			AbstractTextField edit = sender as AbstractTextField;
 			string text = edit.Text;
 			int sel = this.array.SelectedRow;
-			string label = this.labelsIndex[sel];
+			Druid druid = this.druidsIndex[sel];
 
 			if (edit == this.labelEdit)
 			{
 				if (!Misc.IsValidLabel(ref text))
 				{
 					this.ignoreChange = true;
-					edit.Text = this.labelsIndex[sel];
+					edit.Text = this.primaryBundle[this.druidsIndex[sel]].Name;
 					edit.SelectAll();
 					this.ignoreChange = false;
 
@@ -1225,7 +1220,7 @@ namespace Epsitec.Common.Designer.Viewers
 				edit.SelectAll();
 				this.ignoreChange = false;
 
-				if (this.labelsIndex[sel] == text)  // label inchangé ?
+				if (this.primaryBundle[this.druidsIndex[sel]].Name == text)  // label inchangé ?
 				{
 					return;
 				}
@@ -1233,7 +1228,7 @@ namespace Epsitec.Common.Designer.Viewers
 				if (this.IsExistingName(text))
 				{
 					this.ignoreChange = true;
-					edit.Text = this.labelsIndex[sel];
+					edit.Text = this.primaryBundle[this.druidsIndex[sel]].Name;
 					edit.SelectAll();
 					this.ignoreChange = false;
 
@@ -1241,33 +1236,32 @@ namespace Epsitec.Common.Designer.Viewers
 					return;
 				}
 
-				this.labelsIndex[sel] = text;
-				this.module.Modifier.Rename(label, text);
+				this.module.Modifier.Rename(druid, text);
 				this.array.SetLineString(0, sel, text);
 			}
 
 			if (edit == this.primaryEdit)
 			{
-				this.primaryBundle[label].SetStringValue(text);
-				this.UpdateArrayField(1, sel, this.primaryBundle[label], this.secondaryBundle[label]);
+				this.primaryBundle[druid].SetStringValue(text);
+				this.UpdateArrayField(1, sel, this.primaryBundle[druid], this.secondaryBundle[druid]);
 			}
 
 			if (edit == this.secondaryEdit)
 			{
-				this.module.Modifier.CreateIfNecessary(this.secondaryBundle, label, this.primaryBundle[label].ModificationId, this.primaryBundle[label].Druid);
-				this.secondaryBundle[label].SetStringValue(text);
-				this.UpdateArrayField(2, sel, this.secondaryBundle[label], this.primaryBundle[label]);
+				this.module.Modifier.CreateIfNecessary(this.secondaryBundle, druid);
+				this.secondaryBundle[druid].SetStringValue(text);
+				this.UpdateArrayField(2, sel, this.secondaryBundle[druid], this.primaryBundle[druid]);
 			}
 
 			if (edit == this.primaryAbout)
 			{
-				this.primaryBundle[label].SetAbout(text);
+				this.primaryBundle[druid].SetAbout(text);
 			}
 
 			if (edit == this.secondaryAbout)
 			{
-				this.module.Modifier.CreateIfNecessary (this.secondaryBundle, label, -1, this.primaryBundle[label].Druid);
-				this.secondaryBundle[label].SetAbout(text);
+				this.module.Modifier.CreateIfNecessary(this.secondaryBundle, druid);
+				this.secondaryBundle[druid].SetAbout(text);
 			}
 
 			this.module.Modifier.IsDirty = true;

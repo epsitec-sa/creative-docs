@@ -122,7 +122,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			this.module.PanelsRead();
 
-			this.UpdateLabelsIndex("", Searcher.SearchingMode.None);
+			this.UpdateDruidsIndex("", Searcher.SearchingMode.None);
 			this.UpdateArray();
 			this.UpdateEdit();
 		}
@@ -183,13 +183,13 @@ namespace Epsitec.Common.Designer.Viewers
 			int sel = this.array.SelectedRow;
 			if ( sel == -1 )  return;
 
-			string name = this.labelsIndex[sel];
-			this.module.PanelDelete(name);
+			Druid druid = this.druidsIndex[sel];
+			this.module.PanelDelete(druid);
 
-			this.labelsIndex.RemoveAt(sel);
+			this.druidsIndex.RemoveAt(sel);
 			this.UpdateArray();
 
-			sel = System.Math.Min(sel, this.labelsIndex.Count-1);
+			sel = System.Math.Min(sel, this.druidsIndex.Count-1);
 			this.array.SelectedRow = sel;
 			this.array.ShowSelectedRow();
 			this.UpdateCommands();
@@ -203,11 +203,12 @@ namespace Epsitec.Common.Designer.Viewers
 			if ( sel == -1 )  return;
 			int newSel = sel+1;
 
-			string name = this.labelsIndex[sel];
-			string newName = this.GetDuplicateName(name);
-			this.module.PanelCreate(newName, this.module.PanelIndex(name)+1);
+			Druid druid = this.druidsIndex[sel];
+			int index = this.module.PanelIndex(druid);
+			string newName = this.GetDuplicateName(this.module.PanelName(index));
+			Druid newDruid = this.module.PanelCreate(newName, index+1);
 
-			this.labelsIndex.Insert(newSel, newName);
+			this.druidsIndex.Insert(newSel, newDruid);
 			this.UpdateArray();
 
 			this.array.SelectedRow = newSel;
@@ -223,15 +224,15 @@ namespace Epsitec.Common.Designer.Viewers
 			if ( sel == -1 )  return;
 
 			int newSel = sel+direction;
-			System.Diagnostics.Debug.Assert(newSel >= 0 && newSel < this.labelsIndex.Count);
+			System.Diagnostics.Debug.Assert(newSel >= 0 && newSel < this.druidsIndex.Count);
 
-			string name1 = this.labelsIndex[sel];
-			string name2 = this.labelsIndex[newSel];
+			Druid druid1 = this.druidsIndex[sel];
+			Druid druid2 = this.druidsIndex[newSel];
 
-			this.module.PanelMove(name1, this.module.PanelIndex(name2));
+			this.module.PanelMove(druid1, this.module.PanelIndex(druid2));
 
-			this.labelsIndex.RemoveAt(sel);
-			this.labelsIndex.Insert(newSel, name1);
+			this.druidsIndex.RemoveAt(sel);
+			this.druidsIndex.Insert(newSel, druid1);
 			this.UpdateArray();
 
 			this.array.SelectedRow = newSel;
@@ -293,10 +294,10 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
-		protected override void UpdateLabelsIndex(string filter, Searcher.SearchingMode mode)
+		protected override void UpdateDruidsIndex(string filter, Searcher.SearchingMode mode)
 		{
 			//	Construit l'index en fonction des ressources primaires.
-			this.labelsIndex.Clear();
+			this.druidsIndex.Clear();
 
 			if ((mode&Searcher.SearchingMode.CaseSensitive) == 0)
 			{
@@ -332,30 +333,24 @@ namespace Epsitec.Common.Designer.Viewers
 					}
 				}
 
-				this.labelsIndex.Add(name);
+				this.druidsIndex.Add(this.module.PanelDruid(i));
 			}
 		}
 
 		protected override void UpdateArray()
 		{
 			//	Met à jour tout le contenu du tableau.
-			this.array.TotalRows = this.labelsIndex.Count;
+			this.array.TotalRows = this.druidsIndex.Count;
 
 			int first = this.array.FirstVisibleRow;
 			for (int i=0; i<this.array.LineCount; i++)
 			{
-				if (first+i < this.labelsIndex.Count)
+				if (first+i < this.druidsIndex.Count)
 				{
-					string label = this.labelsIndex[first+i];
-					int index = this.module.PanelIndex(label);
-					bool newest = this.module.PanelNewest(index);
+					Druid druid = this.druidsIndex[first+i];
+					int index = this.module.PanelIndex(druid);
 
-					if (newest)
-					{
-						label = Misc.Italic(label);
-					}
-					
-					this.array.SetLineString(0, first+i, label);
+					this.array.SetLineString(0, first+i, this.module.PanelName(index));
 					this.array.SetLineState(0, first+i, MyWidgets.StringList.CellState.Normal);
 				}
 				else
@@ -374,7 +369,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			int sel = this.array.SelectedRow;
 
-			if (sel >= this.labelsIndex.Count)
+			if (sel >= this.druidsIndex.Count)
 			{
 				sel = -1;
 			}
@@ -386,22 +381,14 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 			else
 			{
-				string label = this.labelsIndex[sel];
-				int index = this.module.PanelIndex(label);
-				bool newest = this.module.PanelNewest(index);
+				Druid druid = this.druidsIndex[sel];
+				int index = this.module.PanelIndex(druid);
+				string label = this.module.PanelName(index);
 
-				this.labelEdit.Enable = newest;
+				this.labelEdit.Enable = true;
 				this.labelEdit.Text = label;
-
-				if (newest)
-				{
-					this.labelEdit.Focus();
-					this.labelEdit.SelectAll();
-				}
-				else
-				{
-					this.labelEdit.Cursor = 100000;
-				}
+				this.labelEdit.Focus();
+				this.labelEdit.SelectAll();
 			}
 
 			this.ignoreChange = iic;
@@ -424,7 +411,7 @@ namespace Epsitec.Common.Designer.Viewers
 			base.UpdateCommands();
 
 			int sel = this.array.SelectedRow;
-			int count = this.labelsIndex.Count;
+			int count = this.druidsIndex.Count;
 			bool build = (this.module.Mode == DesignerMode.Build);
 
 			this.GetCommandState("NewCulture").Enable = false;
@@ -576,12 +563,6 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
-		protected bool IsExistingName(string baseName)
-		{
-			//	Indique si un nom existe.
-			return (this.module.PanelIndex(baseName) != -1);
-		}
-
 		protected string GetDuplicateName(string baseName)
 		{
 			//	Retourne le nom à utiliser lorsqu'un nom existant est dupliqué.
@@ -616,6 +597,20 @@ namespace Epsitec.Common.Designer.Viewers
 			return newName;
 		}
 
+		protected bool IsExistingName(string baseName)
+		{
+			//	Indique si un nom existe.
+			int total = this.module.PanelsCount;
+			for (int i=0; i<total; i++)
+			{
+				if (baseName == this.module.PanelName(i))
+				{
+					return true;
+				}
+			}
+			return false;
+		}
+
 
 		void HandleArrayCellsQuantityChanged(object sender)
 		{
@@ -638,11 +633,10 @@ namespace Epsitec.Common.Designer.Viewers
 			AbstractTextField edit = sender as AbstractTextField;
 			string newName = edit.Text;
 			int sel = this.array.SelectedRow;
-			string actualName = this.labelsIndex[sel];
+			Druid druid = this.druidsIndex[sel];
 
-			this.module.PanelRename(actualName, newName);
+			this.module.PanelRename(druid, newName);
 
-			this.labelsIndex[sel] = newName;
 			this.UpdateArray();
 
 			this.module.Modifier.IsDirty = true;
