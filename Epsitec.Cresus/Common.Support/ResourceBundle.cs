@@ -283,8 +283,8 @@ namespace Epsitec.Common.Support
 		{
 			if (name != null)
 			{
-				if (! RegexFactory.ResourceBundleName.IsMatch (name) &&
-					! Druid.IsValidBundleId (name))
+				if ((! RegexFactory.ResourceBundleName.IsMatch (name)) &&
+					(! Druid.IsValidBundleId (name)))
 				{
 					throw new ResourceException (string.Format ("Name '{0}' is not a valid bundle name.", name));
 				}
@@ -1761,7 +1761,7 @@ namespace Epsitec.Common.Support
 				for (int i = 0; i < list.Count; i++)
 				{
 					Field field = list[i];
-					field.SetName (string.Format ("{0}[{1}]", this.Name, i));
+					field.SetName (string.Format ("{0}.{1}", this.Name, i));
 				}
 				
 				this.data = new FieldList (list);
