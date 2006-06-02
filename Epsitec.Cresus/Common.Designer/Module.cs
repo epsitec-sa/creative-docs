@@ -341,6 +341,9 @@ namespace Epsitec.Common.Designer
 			if (this.panelsToCreate.Contains(bundle))
 			{
 				this.panelsToCreate.Remove(bundle);
+			}
+			else
+			{
 				this.panelsToDelete.Add(bundle);
 			}
 		}
