@@ -404,7 +404,7 @@ namespace Epsitec.Common.Support
 			ResourceBundle bundle = ResourceBundle.Create (Resources.DefaultManager);
 			string test_string = 
 				"<?xml version='1.0' encoding='utf-8'?>\r\n" +
-				"<bundle name=\"&quot;test&quot;\" type='String' culture='fr'>\r\n" +
+				"<bundle name=\"test\" type='String' culture='fr'>\r\n" +
 				"  <data name='a'>\r\n" +
 				"    <ref target='strings#label.OK' />\r\n" +
 				"  </data>\r\n" +
@@ -414,7 +414,7 @@ namespace Epsitec.Common.Support
 
 			bundle.Compile (test_data);
 
-			Assert.AreEqual ("\"test\"", bundle.Name);
+			Assert.AreEqual ("test", bundle.Name);
 			Assert.AreEqual ("String", bundle.Type);
 
 			byte[] live_data = bundle.CreateXmlAsData ();
