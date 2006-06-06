@@ -511,7 +511,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			Attachment attachment;
 			if (this.AttachmentDetect(pos, out obj, out attachment))
 			{
-				this.ChangeObjectAttachment(obj, attachment);  // modifie les ressorts
+				this.ChangeObjectAttachment(obj, attachment);  // modifie les attachements
 				return;
 			}
 
@@ -593,7 +593,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 					rect.Offset(0.5, 0.5);
 					rect.Inflate(3);
 				}
-				this.SetHilitedAttachmentRectangle(rect);  // met en évidence le ressort survolé par la souris
+				this.SetHilitedAttachmentRectangle(rect);  // met en évidence l'attachement survolé par la souris
 			}
 		}
 
@@ -1252,7 +1252,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected void SetHilitedAttachmentRectangle(Rectangle rect)
 		{
-			//	Détermine la zone du rectangle de ressort.
+			//	Détermine la zone du rectangle d'attachement.
 			if (this.hilitedAttachmentRectangle != rect)
 			{
 				this.Invalidate(this.hilitedAttachmentRectangle);  // invalide l'ancienne zone
@@ -1575,7 +1575,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected void ChangeObjectAttachment(Widget obj, Attachment attachmentFlag)
 		{
-			//	Modifie le système d'ancrage d'un objet.
+			//	Modifie le système d'attachement d'un objet.
 			Rectangle bounds = this.GetObjectBounds(obj);
 			Attachment attachment = this.GetObjectAttachment(obj);
 
@@ -1600,7 +1600,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		static protected Attachment OppositeAttachment(Attachment style)
 		{
-			//	Retourne le style d'ancrage opposé.
+			//	Retourne le style d'attachement opposé.
 			switch (style)
 			{
 				case Attachment.Left:    return Attachment.Right;
@@ -1687,7 +1687,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected void SetObjectBounds(Widget obj, Rectangle bounds, Attachment attachment)
 		{
-			//	Modifie la boîte et le système d'ancrage d'un objet.
+			//	Modifie la boîte et le système d'attachement d'un objet.
 			//	Les coordonnées sont toujours relative au panneau (this.panel) propriétaire.
 			bounds.Normalise();
 
@@ -1779,7 +1779,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected Attachment GetObjectAttachment(Widget obj)
 		{
-			//	Retourne le mode d'ancrage d'un objet.
+			//	Retourne le mode d'attachement d'un objet.
 			Attachment attachment = Attachment.None;
 
 			if (this.panel.ChildrenLayoutMode == Widgets.Layouts.LayoutMode.Anchored)
@@ -1803,7 +1803,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected void SetObjectAttachment(Widget obj, Attachment attachment)
 		{
-			//	Modifie le mode d'encrage d'un objet.
+			//	Modifie le mode d'attachement d'un objet.
 			if (this.panel.ChildrenLayoutMode == Widgets.Layouts.LayoutMode.Anchored)
 			{
 				AnchorStyles style = AnchorStyles.None;
@@ -1915,40 +1915,40 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 
 		#region Attachment
-		protected bool AttachmentDetect(Point mouse, out Widget obj, out Attachment style)
+		protected bool AttachmentDetect(Point mouse, out Widget obj, out Attachment attachment)
 		{
-			//	Détecte dans quel ressort d'un objet est la souris.
+			//	Détecte dans quel attachement d'un objet est la souris.
 			if (!this.context.ShowAttachment || this.selectedObjects.Count != 1)
 			{
 				obj = null;
-				style = Attachment.None;
+				attachment = Attachment.None;
 				return false;
 			}
 
-			Attachment[] styles = { Attachment.Left, Attachment.Right, Attachment.Bottom, Attachment.Top };
+			Attachment[] attachments = { Attachment.Left, Attachment.Right, Attachment.Bottom, Attachment.Top };
 
 			foreach (Widget o in this.selectedObjects)
 			{
-				foreach (Attachment s in styles)
+				foreach (Attachment s in attachments)
 				{
 					Rectangle bounds = this.GetAttachmentBounds(o, s);
 					if (bounds.Contains(mouse))
 					{
 						obj = o;
-						style = s;
+						attachment = s;
 						return true;
 					}
 				}
 			}
 
 			obj = null;
-			style = Attachment.None;
+			attachment = Attachment.None;
 			return false;
 		}
 
 		protected Rectangle GetAttachmentBounds(Widget obj, Attachment style)
 		{
-			//	Retourne le rectangle englobant un ressort d'ancrage.
+			//	Retourne le rectangle englobant un attachement.
 			Rectangle bounds = this.GetObjectBounds(obj.Parent);
 			Rectangle rect = this.GetObjectBounds(obj);
 			Point p1, p2, p1a, p2a;
@@ -2063,7 +2063,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				}
 			}
 
-			//	Dessine les ancrages des objets sélectionnés.
+			//	Dessine les attachements des objets sélectionnés.
 			if (this.context.ShowAttachment && this.selectedObjects.Count == 1 && !this.isDragging && !this.handlesList.IsDragging)
 			{
 				foreach (Widget obj in this.selectedObjects)
@@ -2108,7 +2108,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				graphics.RenderSolid(PanelsContext.ColorHiliteOutline);
 			}
 
-			//	Dessine le rectangle de ressort d'ancrage.
+			//	Dessine le rectangle d'attachement survolé.
 			if (!this.hilitedAttachmentRectangle.IsEmpty)
 			{
 				Rectangle rect = this.hilitedAttachmentRectangle;
@@ -2179,7 +2179,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected void DrawAttachment(Graphics graphics, Widget obj, Color color)
 		{
-			//	Dessine tous les ancrages d'un objet.
+			//	Dessine tous les attachements d'un objet.
 			Rectangle bounds = this.GetObjectBounds(obj.Parent);
 			Rectangle rect = this.GetObjectBounds(obj);
 			Point p1, p2;
@@ -2203,7 +2203,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected void DrawAttachment(Graphics graphics, Point p1, Point p2, bool rigid, Color color)
 		{
-			//	Dessine un ancrage horizontal ou vertical d'un objet.
+			//	Dessine un attachement horizontal ou vertical d'un objet.
 			Point p1a = Point.Scale(p1, p2, PanelEditor.attachmentScale);
 			Point p2a = Point.Scale(p2, p1, PanelEditor.attachmentScale);
 
@@ -2223,7 +2223,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				double dim = PanelEditor.attachmentThickness;
 				Misc.AddBox(graphics, p1a, p2a, dim);
 			}
-			else  // élastique ?
+			else  // élastique (ressort) ?
 			{
 				graphics.AddLine(p1, p1a);
 				graphics.AddLine(p2, p2a);
