@@ -811,9 +811,12 @@ namespace Epsitec.Common.Widgets
 			return Drawing.Margins.Zero;
 		}
 
-		public virtual Drawing.Point GetBaseLine()
+		public Drawing.Point GetBaseLine()
 		{
-			return Drawing.Point.Zero;
+			double ascender;
+			double descender;
+			
+			return this.GetBaseLine (this.width, this.height, out ascender, out descender);
 		}
 
 		public virtual Drawing.Point GetBaseLine(double width, double height, out double ascender, out double descender)
