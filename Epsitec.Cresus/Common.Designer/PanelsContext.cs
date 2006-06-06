@@ -50,15 +50,15 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		public bool ShowAnchor
+		public bool ShowSpring
 		{
 			get
 			{
-				return this.showAnchor;
+				return this.showSpring;
 			}
 			set
 			{
-				this.showAnchor = value;
+				this.showSpring = value;
 			}
 		}
 
@@ -239,9 +239,9 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		static public Color ColorAnchor
+		static public Color ColorSpring
 		{
-			//	Couleur pour représenter un ancrage.
+			//	Couleur pour représenter un ressort.
 			get
 			{
 				return Color.FromRgb(0, 0, 1);
@@ -290,7 +290,7 @@ namespace Epsitec.Common.Designer
 		protected string				tool = "ToolSelect";
 		protected bool					showGrid = false;
 		protected bool					showConstrain = true;
-		protected bool					showAnchor = true;
+		protected bool					showSpring = true;
 		protected bool					showExpand = false;
 		protected bool					showZOrder = false;
 		protected bool					showTabIndex = false;

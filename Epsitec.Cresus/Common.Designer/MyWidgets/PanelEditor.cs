@@ -10,6 +10,16 @@ namespace Epsitec.Common.Designer.MyWidgets
 	/// </summary>
 	public class PanelEditor : AbstractGroup, IPaintFilter
 	{
+		[System.Flags]
+		protected enum Spring
+		{
+			None	= 0x00,
+			Top		= 0x10,
+			Bottom	= 0x20,
+			Left	= 0x40,
+			Right	= 0x80,
+		}
+
 		protected enum MouseCursorType
 		{
 			Unknow,
@@ -145,8 +155,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 					this.OnUpdateCommands();
 					break;
 
-				case "PanelShowAnchor":
-					this.context.ShowAnchor = !this.context.ShowAnchor;
+				case "PanelShowSpring":
+					this.context.ShowSpring = !this.context.ShowSpring;
 					this.Invalidate();
 					this.OnUpdateCommands();
 					break;
@@ -489,10 +499,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 
 			Widget obj;
-			AnchorStyles style;
-			if (this.AnchorDetect(pos, out obj, out style))
+			Spring spring;
+			if (this.SpringDetect(pos, out obj, out spring))
 			{
-				this.SetObjectAnchor(obj, style);  // modifie les ressorts
+				this.ChangeObjectSpring(obj, spring);  // modifie les ressorts
 				return;
 			}
 
@@ -512,7 +522,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			if (obj == null)
 			{
 				this.isRectangling = true;
-				this.SetHilitedAnchorRectangle(Rectangle.Empty);
+				this.SetHilitedSpringRectangle(Rectangle.Empty);
 			}
 
 			if (obj != null)
@@ -565,16 +575,16 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				this.SetHilitedObject(this.Detect(pos));  // met en évidence l'objet survolé par la souris
 
-				Rectangle anchor = Rectangle.Empty;
+				Rectangle rect = Rectangle.Empty;
 				Widget obj;
-				AnchorStyles style;
-				if (this.AnchorDetect(pos, out obj, out style))
+				Spring spring;
+				if (this.SpringDetect(pos, out obj, out spring))
 				{
-					anchor = this.GetAnchorBounds(obj, style);
-					anchor.Offset(0.5, 0.5);
-					anchor.Inflate(3);
+					rect = this.GetSpringBounds(obj, spring);
+					rect.Offset(0.5, 0.5);
+					rect.Inflate(3);
 				}
-				this.SetHilitedAnchorRectangle(anchor);  // met en évidence le ressort survolé par la souris
+				this.SetHilitedSpringRectangle(rect);  // met en évidence le ressort survolé par la souris
 			}
 		}
 
@@ -642,7 +652,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 
 			this.isRectangling = true;
-			this.SetHilitedAnchorRectangle(Rectangle.Empty);
+			this.SetHilitedSpringRectangle(Rectangle.Empty);
 
 			this.OnChildrenSelected();
 			this.Invalidate();
@@ -846,8 +856,17 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 				this.creatingObject = this.CreateObjectItem();
 				this.creatingObject.SetParent(parent);
-				this.creatingObject.Anchor = AnchorStyles.BottomLeft;
 				this.creatingObject.TabNavigation = TabNavigationMode.Passive;
+
+				if (this.panel.ChildrenLayoutMode == Widgets.Layouts.LayoutMode.Anchored)
+				{
+					this.creatingObject.Anchor = AnchorStyles.BottomLeft;
+				}
+
+				if (this.panel.ChildrenLayoutMode == Widgets.Layouts.LayoutMode.Docked)
+				{
+					this.creatingObject.Dock = DockStyle.Left;
+				}
 
 				this.SetObjectPosition(this.creatingObject, pos);
 
@@ -973,7 +992,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				this.handlesList.DraggingMove(pos);
 				this.SetHilitedObject(null);
-				this.SetHilitedAnchorRectangle(Rectangle.Empty);
+				this.SetHilitedSpringRectangle(Rectangle.Empty);
 				return true;
 			}
 
@@ -1029,7 +1048,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			this.SetHilitedParent(this.DetectGroup(this.draggingRectangle));  // met en évidence le futur parent survolé par la souris
 			this.SetHilitedObject(null);
-			this.SetHilitedAnchorRectangle(Rectangle.Empty);
+			this.SetHilitedSpringRectangle(Rectangle.Empty);
 			this.isDragging = true;
 			this.Invalidate();
 		}
@@ -1222,14 +1241,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
-		protected void SetHilitedAnchorRectangle(Rectangle rect)
+		protected void SetHilitedSpringRectangle(Rectangle rect)
 		{
-			//	Détermine la zone du rectangle de ressort d'ancrage.
-			if (this.hilitedAnchorRectangle != rect)
+			//	Détermine la zone du rectangle de ressort.
+			if (this.hilitedSpringRectangle != rect)
 			{
-				this.Invalidate(this.hilitedAnchorRectangle);  // invalide l'ancienne zone
-				this.hilitedAnchorRectangle = rect;
-				this.Invalidate(this.hilitedAnchorRectangle);  // invalide la nouvelle zone
+				this.Invalidate(this.hilitedSpringRectangle);  // invalide l'ancienne zone
+				this.hilitedSpringRectangle = rect;
+				this.Invalidate(this.hilitedSpringRectangle);  // invalide la nouvelle zone
 			}
 		}
 		#endregion
@@ -1545,29 +1564,42 @@ namespace Epsitec.Common.Designer.MyWidgets
 			return this.GetObjectBounds(obj).Size;
 		}
 
-		protected void SetObjectAnchor(Widget obj, AnchorStyles anchorFlag)
+		protected void ChangeObjectSpring(Widget obj, Spring springFlag)
 		{
 			//	Modifie le système d'ancrage d'un objet.
 			Rectangle bounds = this.GetObjectBounds(obj);
-			AnchorStyles anchor = obj.Anchor;
+			Spring spring = this.GetObjectSpring(obj);
 
-			if ((anchor & anchorFlag) == 0)
+			if ((spring & springFlag) == 0)
 			{
-				anchor |= anchorFlag;
+				spring |= springFlag;
 			}
 			else
 			{
-				anchor &= ~anchorFlag;
+				spring &= ~springFlag;
 
-				if ((anchor & Misc.OppositeAnchor(anchorFlag)) == 0)
+				if ((spring & PanelEditor.OppositeSpring(springFlag)) == 0)
 				{
-					anchor |= Misc.OppositeAnchor(anchorFlag);
+					spring |= PanelEditor.OppositeSpring(springFlag);
 				}
 			}
 
-			this.SetObjectBounds(obj, bounds, anchor);
+			this.SetObjectBounds(obj, bounds, spring);
 			this.handlesList.UpdateGeometry();
 			this.Invalidate();
+		}
+
+		static protected Spring OppositeSpring(Spring style)
+		{
+			//	Retourne le style d'ancrage opposé.
+			switch (style)
+			{
+				case Spring.Left:    return Spring.Right;
+				case Spring.Right:   return Spring.Left;
+				case Spring.Bottom:  return Spring.Top;
+				case Spring.Top:     return Spring.Bottom;
+			}
+			return style;
 		}
 
 		protected void SetObjectPosition(Widget obj, Point pos)
@@ -1640,10 +1672,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 		public void SetObjectBounds(Widget obj, Rectangle bounds)
 		{
 			//	Modifie la boîte d'un objet.
-			this.SetObjectBounds(obj, bounds, obj.Anchor);
+			Spring spring = this.GetObjectSpring(obj);
+			this.SetObjectBounds(obj, bounds, spring);
 		}
 
-		public void SetObjectBounds(Widget obj, Rectangle bounds, AnchorStyles anchor)
+		protected void SetObjectBounds(Widget obj, Rectangle bounds, Spring spring)
 		{
 			//	Modifie la boîte et le système d'ancrage d'un objet.
 			//	Les coordonnées sont toujours relative au panneau (this.panel) propriétaire.
@@ -1672,7 +1705,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			Margins margins = obj.Margins;
 			Margins padding = parent.Padding + parent.GetInternalPadding();
 
-			if (PanelEditor.IsObjectAnchorLeft(anchor))
+			if ((spring & Spring.Left) != 0)
 			{
 				double px = bounds.Left;
 				px -= padding.Left;
@@ -1680,7 +1713,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				margins.Left = px;
 			}
 
-			if (PanelEditor.IsObjectAnchorRight(anchor))
+			if ((spring & Spring.Right) != 0)
 			{
 				double px = box.Width - bounds.Right;
 				px -= padding.Right;
@@ -1688,7 +1721,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				margins.Right = px;
 			}
 
-			if (PanelEditor.IsObjectAnchorBottom(anchor))
+			if ((spring & Spring.Bottom) != 0)
 			{
 				double py = bounds.Bottom;
 				py -= padding.Bottom;
@@ -1696,7 +1729,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				margins.Bottom = py;
 			}
 
-			if (PanelEditor.IsObjectAnchorTop(anchor))
+			if ((spring & Spring.Top) != 0)
 			{
 				double py = box.Height - bounds.Top;
 				py -= padding.Top;
@@ -1706,39 +1739,91 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			obj.Margins = margins;
 			obj.PreferredSize = bounds.Size;
-			obj.Anchor = anchor;
+			this.SetObjectSpring(obj, spring);
 
 			this.Invalidate();
+		}
+
+		protected bool IsObjectSpringLeft(Widget obj)
+		{
+			//	Indique si l'objet est ancré à gauche.
+			return (this.GetObjectSpring(obj) & Spring.Left) != 0;
+		}
+
+		protected bool IsObjectSpringRight(Widget obj)
+		{
+			//	Indique si l'objet est ancré à gauche.
+			return (this.GetObjectSpring(obj) & Spring.Right) != 0;
+		}
+
+		protected bool IsObjectSpringBottom(Widget obj)
+		{
+			//	Indique si l'objet est ancré à gauche.
+			return (this.GetObjectSpring(obj) & Spring.Bottom) != 0;
+		}
+
+		protected bool IsObjectSpringTop(Widget obj)
+		{
+			//	Indique si l'objet est ancré à gauche.
+			return (this.GetObjectSpring(obj) & Spring.Top) != 0;
+		}
+
+		protected Spring GetObjectSpring(Widget obj)
+		{
+			//	Retourne le mode d'ancrage d'un objet.
+			Spring spring = Spring.None;
+
+			if (this.panel.ChildrenLayoutMode == Widgets.Layouts.LayoutMode.Anchored)
+			{
+				if ((obj.Anchor & AnchorStyles.Left  ) != 0)  spring |= Spring.Left;
+				if ((obj.Anchor & AnchorStyles.Right ) != 0)  spring |= Spring.Right;
+				if ((obj.Anchor & AnchorStyles.Bottom) != 0)  spring |= Spring.Bottom;
+				if ((obj.Anchor & AnchorStyles.Top   ) != 0)  spring |= Spring.Top;
+			}
+
+			if (this.panel.ChildrenLayoutMode == Widgets.Layouts.LayoutMode.Docked)
+			{
+				if (obj.Dock == DockStyle.Left  )  spring |= Spring.Left;
+				if (obj.Dock == DockStyle.Right )  spring |= Spring.Right;
+				if (obj.Dock == DockStyle.Bottom)  spring |= Spring.Bottom;
+				if (obj.Dock == DockStyle.Top   )  spring |= Spring.Top;
+			}
+
+			return spring;
+		}
+
+		protected void SetObjectSpring(Widget obj, Spring spring)
+		{
+			//	Modifie le mode d'encrage d'un objet.
+			if (this.panel.ChildrenLayoutMode == Widgets.Layouts.LayoutMode.Anchored)
+			{
+				AnchorStyles style = AnchorStyles.None;
+
+				if ((spring & Spring.Left  ) != 0)  style |= AnchorStyles.Left;
+				if ((spring & Spring.Right ) != 0)  style |= AnchorStyles.Right;
+				if ((spring & Spring.Bottom) != 0)  style |= AnchorStyles.Bottom;
+				if ((spring & Spring.Top   ) != 0)  style |= AnchorStyles.Top;
+
+				obj.Anchor = style;
+			}
+
+			if (this.panel.ChildrenLayoutMode == Widgets.Layouts.LayoutMode.Docked)
+			{
+				DockStyle style = DockStyle.None;
+
+				if (spring == Spring.Left  )  style = DockStyle.Left;
+				if (spring == Spring.Right )  style = DockStyle.Right;
+				if (spring == Spring.Bottom)  style = DockStyle.Bottom;
+				if (spring == Spring.Top   )  style = DockStyle.Top;
+
+				obj.Dock = style;
+			}
 		}
 
 		public double GetObjectBaseLine(Widget obj)
 		{
 			//	Retourne la position relative de la ligne de base depuis le bas de l'objet.
 			return System.Math.Floor(obj.GetBaseLine().Y);
-		}
-
-		protected static bool IsObjectAnchorLeft(AnchorStyles anchor)
-		{
-			//	Indique si l'objet est ancré à gauche.
-			return (anchor & AnchorStyles.Left) != 0;
-		}
-
-		protected static bool IsObjectAnchorRight(AnchorStyles anchor)
-		{
-			//	Indique si l'objet est ancré à gauche.
-			return (anchor & AnchorStyles.Right) != 0;
-		}
-
-		protected static bool IsObjectAnchorBottom(AnchorStyles anchor)
-		{
-			//	Indique si l'objet est ancré à gauche.
-			return (anchor & AnchorStyles.Bottom) != 0;
-		}
-
-		protected static bool IsObjectAnchorTop(AnchorStyles anchor)
-		{
-			//	Indique si l'objet est ancré à gauche.
-			return (anchor & AnchorStyles.Top) != 0;
 		}
 
 		protected static bool IsObjectTabActive(Widget obj)
@@ -1820,24 +1905,24 @@ namespace Epsitec.Common.Designer.MyWidgets
 		#endregion
 
 
-		#region Anchor
-		protected bool AnchorDetect(Point mouse, out Widget obj, out AnchorStyles style)
+		#region Spring
+		protected bool SpringDetect(Point mouse, out Widget obj, out Spring style)
 		{
 			//	Détecte dans quel ressort d'un objet est la souris.
-			if (!this.context.ShowAnchor || this.selectedObjects.Count != 1)
+			if (!this.context.ShowSpring || this.selectedObjects.Count != 1)
 			{
 				obj = null;
-				style = AnchorStyles.None;
+				style = Spring.None;
 				return false;
 			}
 
-			AnchorStyles[] styles = {AnchorStyles.Left, AnchorStyles.Right, AnchorStyles.Bottom, AnchorStyles.Top};
+			Spring[] styles = { Spring.Left, Spring.Right, Spring.Bottom, Spring.Top };
 
 			foreach (Widget o in this.selectedObjects)
 			{
-				foreach (AnchorStyles s in styles)
+				foreach (Spring s in styles)
 				{
-					Rectangle bounds = this.GetAnchorBounds(o, s);
+					Rectangle bounds = this.GetSpringBounds(o, s);
 					if (bounds.Contains(mouse))
 					{
 						obj = o;
@@ -1848,57 +1933,57 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 
 			obj = null;
-			style = AnchorStyles.None;
+			style = Spring.None;
 			return false;
 		}
 
-		protected Rectangle GetAnchorBounds(Widget obj, AnchorStyles style)
+		protected Rectangle GetSpringBounds(Widget obj, Spring style)
 		{
 			//	Retourne le rectangle englobant un ressort d'ancrage.
 			Rectangle bounds = this.GetObjectBounds(obj.Parent);
 			Rectangle rect = this.GetObjectBounds(obj);
 			Point p1, p2, p1a, p2a;
-			double thickness = PanelEditor.anchorThickness;
+			double thickness = PanelEditor.springThickness;
 
-			if (style == AnchorStyles.Left)
+			if (style == Spring.Left)
 			{
 				p1 = new Point(bounds.Left, rect.Center.Y);
 				p2 = new Point(rect.Left, rect.Center.Y);
-				p1a = Point.Scale(p1, p2, PanelEditor.anchorScale);
-				p2a = Point.Scale(p2, p1, PanelEditor.anchorScale);
+				p1a = Point.Scale(p1, p2, PanelEditor.springScale);
+				p2a = Point.Scale(p2, p1, PanelEditor.springScale);
 				p1a.Y -= thickness;
 				p2a.Y += thickness;
 				return new Rectangle(p1a, p2a);
 			}
 
-			if (style == AnchorStyles.Right)
+			if (style == Spring.Right)
 			{
 				p1 = new Point(bounds.Right, rect.Center.Y);
 				p2 = new Point(rect.Right, rect.Center.Y);
-				p1a = Point.Scale(p1, p2, PanelEditor.anchorScale);
-				p2a = Point.Scale(p2, p1, PanelEditor.anchorScale);
+				p1a = Point.Scale(p1, p2, PanelEditor.springScale);
+				p2a = Point.Scale(p2, p1, PanelEditor.springScale);
 				p1a.Y -= thickness;
 				p2a.Y += thickness;
 				return new Rectangle(p1a, p2a);
 			}
 
-			if (style == AnchorStyles.Bottom)
+			if (style == Spring.Bottom)
 			{
 				p1 = new Point(rect.Center.X, bounds.Bottom);
 				p2 = new Point(rect.Center.X, rect.Bottom);
-				p1a = Point.Scale(p1, p2, PanelEditor.anchorScale);
-				p2a = Point.Scale(p2, p1, PanelEditor.anchorScale);
+				p1a = Point.Scale(p1, p2, PanelEditor.springScale);
+				p2a = Point.Scale(p2, p1, PanelEditor.springScale);
 				p1a.X -= thickness;
 				p2a.X += thickness;
 				return new Rectangle(p1a, p2a);
 			}
 
-			if (style == AnchorStyles.Top)
+			if (style == Spring.Top)
 			{
 				p1 = new Point(rect.Center.X, bounds.Top);
 				p2 = new Point(rect.Center.X, rect.Top);
-				p1a = Point.Scale(p1, p2, PanelEditor.anchorScale);
-				p2a = Point.Scale(p2, p1, PanelEditor.anchorScale);
+				p1a = Point.Scale(p1, p2, PanelEditor.springScale);
+				p2a = Point.Scale(p2, p1, PanelEditor.springScale);
 				p1a.X -= thickness;
 				p2a.X += thickness;
 				return new Rectangle(p1a, p2a);
@@ -1970,11 +2055,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 
 			//	Dessine les ancrages des objets sélectionnés.
-			if (this.context.ShowAnchor && this.selectedObjects.Count == 1 && !this.isDragging && !this.handlesList.IsDragging)
+			if (this.context.ShowSpring && this.selectedObjects.Count == 1 && !this.isDragging && !this.handlesList.IsDragging)
 			{
 				foreach (Widget obj in this.selectedObjects)
 				{
-					this.DrawAnchor(graphics, obj, PanelsContext.ColorAnchor);
+					this.DrawSpring(graphics, obj, PanelsContext.ColorSpring);
 				}
 			}
 
@@ -2015,10 +2100,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 
 			//	Dessine le rectangle de ressort d'ancrage.
-			if (!this.hilitedAnchorRectangle.IsEmpty)
+			if (!this.hilitedSpringRectangle.IsEmpty)
 			{
-				Rectangle anchor = this.hilitedAnchorRectangle;
-				graphics.AddFilledRectangle(anchor);
+				Rectangle rect = this.hilitedSpringRectangle;
+				graphics.AddFilledRectangle(rect);
 				graphics.RenderSolid(PanelsContext.ColorHiliteSurface);
 			}
 
@@ -2032,9 +2117,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void DrawHilitedObject(Graphics graphics, Widget obj)
 		{
 			//	Met en évidence l'objet survolé par la souris.
-			if (this.context.ShowAnchor)
+			if (this.context.ShowSpring)
 			{
-				this.DrawAnchor(graphics, obj, PanelsContext.ColorHiliteOutline);
+				this.DrawSpring(graphics, obj, PanelsContext.ColorHiliteOutline);
 			}
 
 			Rectangle rect = this.GetObjectBounds(obj);
@@ -2061,9 +2146,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void DrawHilitedParent(Graphics graphics, Widget obj)
 		{
 			//	Met en évidence l'objet parent survolé par la souris.
-			if (this.context.ShowAnchor && obj != this.panel)
+			if (this.context.ShowSpring && obj != this.panel)
 			{
-				this.DrawAnchor(graphics, obj, PanelsContext.ColorHiliteParent);
+				this.DrawSpring(graphics, obj, PanelsContext.ColorHiliteParent);
 			}
 
 			double thickness = 2.0;
@@ -2083,36 +2168,35 @@ namespace Epsitec.Common.Designer.MyWidgets
 			graphics.RenderSolid(PanelsContext.ColorHiliteParent);
 		}
 
-		protected void DrawAnchor(Graphics graphics, Widget obj, Color color)
+		protected void DrawSpring(Graphics graphics, Widget obj, Color color)
 		{
 			//	Dessine tous les ancrages d'un objet.
 			Rectangle bounds = this.GetObjectBounds(obj.Parent);
 			Rectangle rect = this.GetObjectBounds(obj);
-			AnchorStyles anchor = obj.Anchor;
 			Point p1, p2;
 
 			p1 = new Point(bounds.Left, rect.Center.Y);
 			p2 = new Point(rect.Left, rect.Center.Y);
-			this.DrawAnchor(graphics, p1, p2, PanelEditor.IsObjectAnchorLeft(anchor), color);
+			this.DrawSpring(graphics, p1, p2, this.IsObjectSpringLeft(obj), color);
 
 			p1 = new Point(rect.Right, rect.Center.Y);
 			p2 = new Point(bounds.Right, rect.Center.Y);
-			this.DrawAnchor(graphics, p1, p2, PanelEditor.IsObjectAnchorRight(anchor), color);
+			this.DrawSpring(graphics, p1, p2, this.IsObjectSpringRight(obj), color);
 
 			p1 = new Point(rect.Center.X, bounds.Bottom);
 			p2 = new Point(rect.Center.X, rect.Bottom);
-			this.DrawAnchor(graphics, p1, p2, PanelEditor.IsObjectAnchorBottom(anchor), color);
+			this.DrawSpring(graphics, p1, p2, this.IsObjectSpringBottom(obj), color);
 
 			p1 = new Point(rect.Center.X, rect.Top);
 			p2 = new Point(rect.Center.X, bounds.Top);
-			this.DrawAnchor(graphics, p1, p2, PanelEditor.IsObjectAnchorTop(anchor), color);
+			this.DrawSpring(graphics, p1, p2, this.IsObjectSpringTop(obj), color);
 		}
 
-		protected void DrawAnchor(Graphics graphics, Point p1, Point p2, bool rigid, Color color)
+		protected void DrawSpring(Graphics graphics, Point p1, Point p2, bool rigid, Color color)
 		{
 			//	Dessine un ancrage horizontal ou vertical d'un objet.
-			Point p1a = Point.Scale(p1, p2, PanelEditor.anchorScale);
-			Point p2a = Point.Scale(p2, p1, PanelEditor.anchorScale);
+			Point p1a = Point.Scale(p1, p2, PanelEditor.springScale);
+			Point p2a = Point.Scale(p2, p1, PanelEditor.springScale);
 
 			Misc.AlignForLine(graphics, ref p1);
 			Misc.AlignForLine(graphics, ref p2);
@@ -2127,7 +2211,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				graphics.AddLine(p1-delta, p1a-delta);
 				graphics.AddLine(p2-delta, p2a-delta);
 
-				double dim = PanelEditor.anchorThickness;
+				double dim = PanelEditor.springThickness;
 				Misc.AddBox(graphics, p1a, p2a, dim);
 			}
 			else  // élastique ?
@@ -2135,7 +2219,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				graphics.AddLine(p1, p1a);
 				graphics.AddLine(p2, p2a);
 
-				double dim = PanelEditor.anchorThickness;
+				double dim = PanelEditor.springThickness;
 				double length = Point.Distance(p1a, p2a);
 				int loops = (int) (length/(dim*2));
 				loops = System.Math.Max(loops, 1);
@@ -2357,8 +2441,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 		#endregion
 
 
-		protected static readonly double	anchorThickness = 3.0;
-		protected static readonly double	anchorScale = 0.4;
+		protected static readonly double	springThickness = 3.0;
+		protected static readonly double	springScale = 0.4;
 
 		protected Module					module;
 		protected UI.Panel					panel;
@@ -2372,7 +2456,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected Widget					lastCreatedObject;
 		protected List<Widget>				selectedObjects = new List<Widget>();
 		protected Rectangle					selectedRectangle = Rectangle.Empty;
-		protected Rectangle					hilitedAnchorRectangle = Rectangle.Empty;
+		protected Rectangle					hilitedSpringRectangle = Rectangle.Empty;
 		protected Widget					hilitedObject;
 		protected Widget					hilitedParent;
 		protected bool						isRectangling;  // j'invente des mots si je veux !
