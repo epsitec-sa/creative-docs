@@ -50,15 +50,15 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		public bool ShowSpring
+		public bool ShowAttachment
 		{
 			get
 			{
-				return this.showSpring;
+				return this.showAttachment;
 			}
 			set
 			{
-				this.showSpring = value;
+				this.showAttachment = value;
 			}
 		}
 
@@ -239,7 +239,7 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		static public Color ColorSpring
+		static public Color ColorAttachment
 		{
 			//	Couleur pour représenter un ressort.
 			get
@@ -290,7 +290,7 @@ namespace Epsitec.Common.Designer
 		protected string				tool = "ToolSelect";
 		protected bool					showGrid = false;
 		protected bool					showConstrain = true;
-		protected bool					showSpring = true;
+		protected bool					showAttachment = true;
 		protected bool					showExpand = false;
 		protected bool					showZOrder = false;
 		protected bool					showTabIndex = false;
