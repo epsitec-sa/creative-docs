@@ -376,6 +376,12 @@ namespace Epsitec.Common.Widgets.Layouts
 			LayoutMeasure measure = this.GetCachedWidthMeasure (visual);
 			measure.UpdateMax (this.passId, value);
 		}
+
+		public void DefineBaseLine(Visual visual, double h1, double h2)
+		{
+			LayoutMeasure measure = this.GetCachedHeightMeasure (visual);
+			measure.UpdateBaseLine (this.passId, h1, h2);
+		}
 		
 		public void DefineMinHeight(Visual visual, double value)
 		{
@@ -602,6 +608,30 @@ namespace Epsitec.Common.Widgets.Layouts
 			}
 			
 			return new Drawing.Size (measureWidth.Desired, measureHeight.Desired);
+		}
+
+		internal static Drawing.Size GetResultingMeasuredBaseLine(Visual visual, out double h1, out double h2)
+		{
+			LayoutMeasure measureWidth = LayoutMeasure.GetWidth (visual);
+			LayoutMeasure measureHeight = LayoutMeasure.GetHeight (visual);
+
+			if ((measureWidth == null) ||
+				(measureHeight == null))
+			{
+				LayoutContext.AddToMeasureQueue (visual);
+
+				h1 = 0;
+				h2 = 0;
+
+				return Drawing.Size.NegativeInfinity;
+			}
+			else
+			{
+				h1 = measureWidth.H1;
+				h2 = measureWidth.H2;
+
+				return new Drawing.Size (measureWidth.Desired, measureHeight.Desired);
+			}
 		}
 	}
 }

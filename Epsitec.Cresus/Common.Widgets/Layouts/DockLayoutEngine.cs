@@ -356,6 +356,10 @@ namespace Epsitec.Common.Widgets.Layouts
 
 		internal static void SetChildBounds(Visual child, Drawing.Rectangle bounds)
 		{
+			DockLayoutEngine.SetChildBounds (child, bounds, 0);
+		}
+		internal static void SetChildBounds(Visual child, Drawing.Rectangle bounds, double baseOffset)
+		{
 			double dx = child.PreferredWidth;
 			double dy = child.PreferredHeight;
 			
@@ -373,6 +377,13 @@ namespace Epsitec.Common.Widgets.Layouts
 					break;
 				case VerticalAlignment.Bottom:
 					bounds.Top = bounds.Bottom + dy;
+					break;
+				case VerticalAlignment.BaseLine:
+					double h1 = 0;
+					double h2 = 0;
+					Layouts.LayoutContext.GetResultingMeasuredBaseLine (child, out h1, out h2);
+					bounds.Top    = bounds.Bottom + baseOffset + h1;
+					bounds.Bottom = bounds.Bottom + baseOffset - h2;
 					break;
 			}
 			

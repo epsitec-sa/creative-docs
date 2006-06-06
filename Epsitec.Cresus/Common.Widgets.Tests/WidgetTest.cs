@@ -1217,6 +1217,49 @@ namespace Epsitec.Common.Widgets
 			Window.RunInTestEnvironment (window);
 		}
 
+		[Test]
+		public void CheckInteractiveDockStacked()
+		{
+			Window window = new Window ();
+
+			window.ClientSize = new Size (400, 300);
+			window.Text = "CheckInteractiveDockStacked";
+			window.Root.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
+			window.Root.Padding = new Margins (8, 8, 5, 5);
+
+			Button button;
+			button = new Button ();
+			button.PreferredSize = new Size (40, 24);
+			button.Text = @"<font size=""160%"">A</font>";
+			button.Dock = DockStyle.Stacked;
+			button.VerticalAlignment = VerticalAlignment.Bottom;
+			window.Root.Children.Add (button);
+
+			button = new Button ();
+			button.PreferredSize = new Size (40, 24);
+			button.Text = "B";
+			button.Dock = DockStyle.Stacked;
+			button.VerticalAlignment = VerticalAlignment.Center;
+			window.Root.Children.Add (button);
+
+			button = new Button ();
+			button.PreferredSize = new Size (40, 24);
+			button.Text = "C";
+			button.Dock = DockStyle.Stacked;
+			button.VerticalAlignment = VerticalAlignment.Top;
+			window.Root.Children.Add (button);
+
+			button = new Button ();
+			button.PreferredSize = new Size (40, 24);
+			button.Text = "D";
+			button.Dock = DockStyle.Stacked;
+			button.VerticalAlignment = VerticalAlignment.Stretch;
+			window.Root.Children.Add (button);
+
+			window.Show ();
+			Window.RunInTestEnvironment (window);
+		}
+
 		private class FlowPanel : Widget
 		{
 			public FlowPanel()
