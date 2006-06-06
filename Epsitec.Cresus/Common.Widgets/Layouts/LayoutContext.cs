@@ -381,6 +381,7 @@ namespace Epsitec.Common.Widgets.Layouts
 		{
 			BaseLineMeasure measure = this.GetOrCreateBaseLineMeasure (visual);
 			measure.UpdateBaseLine (this.passId, h1, h2);
+			measure.UpdatePassId (this.passId);
 		}
 
 		public void DefineMinHeight(Visual visual, double value)
