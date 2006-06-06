@@ -379,10 +379,10 @@ namespace Epsitec.Common.Widgets.Layouts
 
 		public void DefineBaseLine(Visual visual, double h1, double h2)
 		{
-			LayoutMeasure measure = this.GetCachedHeightMeasure (visual);
+			BaseLineMeasure measure = this.GetOrCreateBaseLineMeasure (visual);
 			measure.UpdateBaseLine (this.passId, h1, h2);
 		}
-		
+
 		public void DefineMinHeight(Visual visual, double value)
 		{
 			LayoutMeasure measure = this.GetCachedHeightMeasure (visual);
@@ -435,6 +435,7 @@ namespace Epsitec.Common.Widgets.Layouts
 			throw new System.InvalidOperationException ("Wrong visual accessing height measure");
 		}
 		
+		
 		private LayoutMeasure GetOrCreateCleanMeasure(Visual visual, Types.DependencyProperty property)
 		{
 			object value;
@@ -450,6 +451,24 @@ namespace Epsitec.Common.Widgets.Layouts
 				LayoutMeasure measure;
 				measure = new LayoutMeasure (0);
 				visual.SetLocalValue (property, measure);
+				return measure;
+			}
+		}
+
+		private BaseLineMeasure GetOrCreateBaseLineMeasure(Visual visual)
+		{
+			object value;
+
+			if (visual.TryGetLocalValue (BaseLineMeasure.BaseLineProperty, out value))
+			{
+				BaseLineMeasure measure = value as BaseLineMeasure;
+				return measure;
+			}
+			else
+			{
+				BaseLineMeasure measure;
+				measure = new BaseLineMeasure (0);
+				visual.SetLocalValue (BaseLineMeasure.BaseLineProperty, measure);
 				return measure;
 			}
 		}
@@ -609,28 +628,37 @@ namespace Epsitec.Common.Widgets.Layouts
 			
 			return new Drawing.Size (measureWidth.Desired, measureHeight.Desired);
 		}
-
-		internal static Drawing.Size GetResultingMeasuredBaseLine(Visual visual, out double h1, out double h2)
+		
+		internal static bool GetMeasuredBaseLine(Visual visual, out double h1, out double h2)
 		{
-			LayoutMeasure measureWidth = LayoutMeasure.GetWidth (visual);
-			LayoutMeasure measureHeight = LayoutMeasure.GetHeight (visual);
+			LayoutContext context = Helpers.VisualTree.GetLayoutContext (visual);
+			BaseLineMeasure measure = context.GetOrCreateBaseLineMeasure (visual);
 
-			if ((measureWidth == null) ||
-				(measureHeight == null))
+			if (measure.IsEmpty)
 			{
-				LayoutContext.AddToMeasureQueue (visual);
+				double width  = visual.PreferredWidth;
+				double height = visual.PreferredHeight;
 
-				h1 = 0;
-				h2 = 0;
+				double ascender;
+				double descender;
+				
+				visual.GetBaseLine (width, height, out ascender, out descender);
+				
+				h1 =  ascender;
+				h2 = -descender;
 
-				return Drawing.Size.NegativeInfinity;
+				measure.UpdateBaseLine (context.PassId, h1, h2);
+				measure.UpdatePassId (context.PassId);
+				BaseLineMeasure.SetBaseLineValue (visual, measure);
+
+				return false;
 			}
 			else
 			{
-				h1 = measureWidth.H1;
-				h2 = measureWidth.H2;
+				h1 = measure.H1;
+				h2 = measure.H2;
 
-				return new Drawing.Size (measureWidth.Desired, measureHeight.Desired);
+				return true;
 			}
 		}
 	}

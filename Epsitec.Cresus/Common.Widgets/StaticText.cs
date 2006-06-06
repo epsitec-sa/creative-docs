@@ -48,23 +48,6 @@ namespace Epsitec.Common.Widgets
 		}
 #endif
 		
-		public override Drawing.Point GetBaseLine()
-		{
-			if (this.TextLayout != null)
-			{
-				if (this.Parent == null)
-				{
-					return this.TextLayout.GetLineOrigin (0);
-				}
-				else
-				{
-					return this.MapClientToParent (this.TextLayout.GetLineOrigin (0)) - this.ActualLocation;
-				}
-			}
-			
-			return base.GetBaseLine ();
-		}
-		
 		public PaintTextStyle						PaintTextStyle
 		{
 			get
@@ -95,8 +78,8 @@ namespace Epsitec.Common.Widgets
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
 			Drawing.Rectangle rect  = this.Client.Bounds;
-			WidgetPaintState       state = this.PaintState;
-			Drawing.Point     pos   = new Drawing.Point();
+			WidgetPaintState  state = this.PaintState;
+			Drawing.Point     pos   = Drawing.Point.Zero;
 			
 			if (this.BackColor.IsVisible)
 			{
@@ -111,6 +94,9 @@ namespace Epsitec.Common.Widgets
 			}
 			
 			base.PaintBackgroundImplementation (graphics, clipRect);
+
+			graphics.AddRectangle (rect);
+			graphics.RenderSolid (Drawing.Color.FromName ("Red"));
 		}
 
 

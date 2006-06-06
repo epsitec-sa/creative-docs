@@ -179,7 +179,7 @@ namespace Epsitec.Common.Widgets.Layouts
 			min_size = Helpers.VisualTree.MapVisualToParent (container, new Drawing.Size (min_width, min_height));
 			max_size = Helpers.VisualTree.MapVisualToParent (container, new Drawing.Size (max_width, max_height));
 
-			Layouts.LayoutContext context = Layouts.LayoutContext.GetLayoutContext (container);
+			Layouts.LayoutContext context = Helpers.VisualTree.GetLayoutContext (container);
 			
 			if (context != null)
 			{
