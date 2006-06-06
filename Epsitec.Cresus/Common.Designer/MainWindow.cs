@@ -731,6 +731,7 @@ namespace Epsitec.Common.Designer
 			{
 				mi.Module.Modifier.DetachViewer(actual);
 				mi.TabPage.Children.Remove(actual);
+				mi.Module.Modifier.ActiveViewer = null;
 			}
 
 			string type = mi.BundleType.CurrentType;

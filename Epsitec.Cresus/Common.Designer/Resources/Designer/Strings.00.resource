@@ -74,7 +74,7 @@
   <data name="Action.PanelShowTabIndex" id="072">Afficher l'ordre pour la touche Tab</data>
   <data name="Action.PanelShowExpand" id="082">Espacer les groupes</data>
   <data name="Action.PanelShowConstrain" id="092">Activer les contraintes</data>
-  <data name="Action.PanelShowAnchor" id="0A2">Afficher les ancrages</data>
+  <data name="Action.PanelShowAttachment" id="0A2">Afficher les ancrages</data>
   <data name="Action.MoveLeft" id="0B2">Déplacement à gauche</data>
   <data name="Action.MoveRight" id="0C2">Déplacement à droite</data>
   <data name="Action.MoveDown" id="0D2">Déplacement en bas</data>

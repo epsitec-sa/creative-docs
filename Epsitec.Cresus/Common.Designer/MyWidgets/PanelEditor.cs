@@ -13,11 +13,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 		[System.Flags]
 		protected enum Attachment
 		{
-			None	= 0x00000000,
-			Top		= 0x00000001,
-			Bottom	= 0x00000002,
-			Left	= 0x00000004,
-			Right	= 0x00000008,
+			None	= 0x00000000,	// objet libre
+			Left	= 0x00000001,	// objet attaché à gauche
+			Right	= 0x00000002,	// objet attaché à droite
+			Bottom	= 0x00000004,	// objet attaché en bas
+			Top		= 0x00000008,	// objet attaché en haut
 		}
 
 		protected enum MouseCursorType
