@@ -204,7 +204,7 @@
     <EmbeddedResource Include="Images\TabIndexPrev.icon" />
     <EmbeddedResource Include="Images\TabIndexNext.icon" />
     <EmbeddedResource Include="Images\TabIndexFirst.icon" />
-    <EmbeddedResource Include="Images\PanelShowAnchor.icon" />
+    <EmbeddedResource Include="Images\PanelShowSpring.icon" />
     <EmbeddedResource Include="Images\PanelShowConstrain.icon" />
     <EmbeddedResource Include="Images\TabIndexRenum.icon" />
     <EmbeddedResource Include="Images\TabIndexClear.icon" />

@@ -442,13 +442,13 @@ namespace Epsitec.Common.Designer.Viewers
 
 			this.GetCommandState("PanelShowGrid").Enable = true;
 			this.GetCommandState("PanelShowConstrain").Enable = true;
-			this.GetCommandState("PanelShowAnchor").Enable = true;
+			this.GetCommandState("PanelShowSpring").Enable = true;
 			this.GetCommandState("PanelShowExpand").Enable = true;
 			this.GetCommandState("PanelShowZOrder").Enable = true;
 			this.GetCommandState("PanelShowTabIndex").Enable = true;
 			this.GetCommandState("PanelShowGrid").ActiveState = this.context.ShowGrid ? ActiveState.Yes : ActiveState.No;
 			this.GetCommandState("PanelShowConstrain").ActiveState = this.context.ShowConstrain ? ActiveState.Yes : ActiveState.No;
-			this.GetCommandState("PanelShowAnchor").ActiveState = this.context.ShowAnchor ? ActiveState.Yes : ActiveState.No;
+			this.GetCommandState("PanelShowSpring").ActiveState = this.context.ShowSpring ? ActiveState.Yes : ActiveState.No;
 			this.GetCommandState("PanelShowExpand").ActiveState = this.context.ShowExpand ? ActiveState.Yes : ActiveState.No;
 			this.GetCommandState("PanelShowZOrder").ActiveState = this.context.ShowZOrder ? ActiveState.Yes : ActiveState.No;
 			this.GetCommandState("PanelShowTabIndex").ActiveState = this.context.ShowTabIndex ? ActiveState.Yes : ActiveState.No;
