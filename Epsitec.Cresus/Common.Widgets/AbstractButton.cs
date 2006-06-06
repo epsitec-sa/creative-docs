@@ -26,23 +26,6 @@ namespace Epsitec.Common.Widgets
 			Visual.ContentAlignmentProperty.OverrideMetadata (typeof (AbstractButton), metadata);
 		}
 
-		public override Drawing.Point GetBaseLine()
-		{
-			if ( this.TextLayout != null )
-			{
-				if (this.Parent == null)
-				{
-					return this.TextLayout.GetLineOrigin (0);
-				}
-				else
-				{
-					return this.MapClientToParent (this.TextLayout.GetLineOrigin (0)) - this.ActualLocation;
-				}
-			}
-			
-			return base.GetBaseLine ();
-		}
-
 		public override Drawing.Margins GetShapeMargins()
 		{
 			return Widgets.Adorners.Factory.Active.GeometryButtonShapeMargins;

@@ -190,6 +190,7 @@ namespace Epsitec.Common.Widgets
 			this.copyPasteBehavior.ProcessPaste();
 		}
 
+#if false
 		public override Drawing.Point GetBaseLine()
 		{
 			if ( this.TextLayout != null )
@@ -214,6 +215,7 @@ namespace Epsitec.Common.Widgets
 
 			return base.GetBaseLine ();
 		}
+#endif
 
 		public override Drawing.Point GetBaseLine(double width, double height, out double ascender, out double descender)
 		{
