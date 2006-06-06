@@ -17,7 +17,8 @@ namespace Epsitec.Common.Widgets
 			this.InternalState &= ~InternalState.Focusable;
 			this.InternalState &= ~InternalState.Engageable;
 
-			this.ContentAlignment = ContentAlignment.MiddleLeft;
+//			this.ContentAlignment = ContentAlignment.MiddleLeft;
+			this.ContentAlignment = ContentAlignment.MiddleCenter;
 		}
 		
 		public RibbonButton(Widget embedder) : this()

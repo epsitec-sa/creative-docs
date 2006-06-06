@@ -138,6 +138,7 @@
     <Compile Include="CommandState.cs" />
     <Compile Include="CloneView.cs" />
     <Compile Include="Controllers\StringController.cs" />
+    <Compile Include="Layouts\StackLayoutEngine.cs" />
     <Compile Include="StructuredCommand.cs" />
     <Compile Include="Exceptions\InfiniteCommandLoopException.cs" />
     <Compile Include="MultiCommand.cs" />

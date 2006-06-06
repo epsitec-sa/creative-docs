@@ -6,7 +6,7 @@ using System.Collections.Generic;
 namespace Epsitec.Common.Widgets.Layouts
 {
 	/// <summary>
-	/// Summary description for AnchorLayout.
+	/// AnchorLayoutEngine.
 	/// </summary>
 	public sealed class AnchorLayoutEngine : ILayoutEngine
 	{
@@ -94,7 +94,7 @@ namespace Epsitec.Common.Widgets.Layouts
 						throw new System.NotSupportedException (string.Format ("AnchorStyle {0} not supported", anchor_y));
 				}
 				
-				AnchorLayoutEngine.SetChildBounds (child, Drawing.Rectangle.FromPoints (x1, y1, x2, y2));
+				DockLayoutEngine.SetChildBounds (child, Drawing.Rectangle.FromPoints (x1, y1, x2, y2));
 			}
 		}
 		
@@ -187,56 +187,6 @@ namespace Epsitec.Common.Widgets.Layouts
 				context.DefineMinHeight (container, min_size.Height);
 				context.DefineMaxWidth (container, max_size.Width);
 				context.DefineMaxHeight (container, max_size.Height);
-			}
-		}
-		
-		private static void SetChildBounds(Visual child, Drawing.Rectangle bounds)
-		{
-			double dx = child.PreferredWidth;
-			double dy = child.PreferredHeight;
-
-			switch (child.VerticalAlignment)
-			{
-				case VerticalAlignment.Stretch:
-					break;
-				case VerticalAlignment.Top:
-					bounds.Bottom = bounds.Top - dy;
-					break;
-				case VerticalAlignment.Center:
-					double h = bounds.Height;
-					bounds.Top = bounds.Top - (h - dy) / 2;
-					bounds.Bottom = bounds.Bottom + (h - dy) / 2;
-					break;
-				case VerticalAlignment.Bottom:
-					bounds.Top = bounds.Bottom + dy;
-					break;
-			}
-
-			switch (child.HorizontalAlignment)
-			{
-				case HorizontalAlignment.Stretch:
-					break;
-				case HorizontalAlignment.Left:
-					bounds.Right = bounds.Left + dx;
-					break;
-				case HorizontalAlignment.Center:
-					double w = bounds.Width;
-					bounds.Left = bounds.Left + (w - dx) / 2;
-					bounds.Right = bounds.Right - (w - dx) / 2;
-					break;
-				case HorizontalAlignment.Right:
-					bounds.Left = bounds.Right - dx;
-					break;
-			}
-
-			Drawing.Rectangle oldBounds = child.GetCurrentBounds ();
-			Drawing.Rectangle newBounds = bounds;
-			
-			child.SetBounds (newBounds);
-
-			if (oldBounds != newBounds)
-			{
-				child.Arrange (Helpers.VisualTree.FindLayoutContext (child));
 			}
 		}
 	}

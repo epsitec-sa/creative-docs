@@ -26,6 +26,13 @@ namespace Epsitec.Common.Widgets.Layouts
 				return LayoutEngine.anchor_engine;
 			}
 		}
+		public static ILayoutEngine					StackEngine
+		{
+			get
+			{
+				return LayoutEngine.stack_engine;
+			}
+		}
 		public static ILayoutEngine					NoOpEngine
 		{
 			get
@@ -49,19 +56,14 @@ namespace Epsitec.Common.Widgets.Layouts
 
 		public static LayoutMode GetLayoutMode(Visual visual)
 		{
-			if (visual.Dock != DockStyle.None)
-			{
-				return LayoutMode.Docked;
-			}
-			if (visual.Anchor != AnchorStyles.None)
-			{
-				return LayoutMode.Anchored;
-			}
-
-			return LayoutMode.None;
+			return LayoutEngine.GetLayoutMode (visual.Dock, visual.Anchor);
 		}
 		public static LayoutMode GetLayoutMode(DockStyle dock, AnchorStyles anchor)
 		{
+			if (dock == DockStyle.Stacked)
+			{
+				return LayoutMode.Stacked;
+			}
 			if (dock != DockStyle.None)
 			{
 				return LayoutMode.Docked;
@@ -74,8 +76,9 @@ namespace Epsitec.Common.Widgets.Layouts
 			return LayoutMode.None;
 		}
 
-		private static ILayoutEngine dock_engine   = new DockLayoutEngine ();
+		private static ILayoutEngine					dock_engine   = new DockLayoutEngine ();
 		private static ILayoutEngine					anchor_engine = new AnchorLayoutEngine ();
 		private static ILayoutEngine					no_op_engine  = new NoOpLayoutEngine ();
+		private static ILayoutEngine					stack_engine  = new StackLayoutEngine ();
 	}
 }

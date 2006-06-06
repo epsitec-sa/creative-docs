@@ -859,12 +859,6 @@ namespace Epsitec.Common.Widgets
 			return new Drawing.Size ((double) metadataDx.DefaultValue, (double) metadataDy.DefaultValue);
 		}
 		
-		public virtual Drawing.Point GetBaseLine()
-		{
-			return Drawing.Point.Zero;
-		}
-		
-		
 		public virtual void Hide()
 		{
 			this.Visibility = false;
