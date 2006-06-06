@@ -8,6 +8,7 @@ namespace Epsitec.Common.Widgets
 		Stretch		= 0,
 		Top			= 1,
 		Center		= 2,
-		Bottom		= 3
+		Bottom		= 3,
+		BaseLine	= 4
 	}
 }

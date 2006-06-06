@@ -6,7 +6,7 @@ using System.Collections.Generic;
 namespace Epsitec.Common.Widgets.Layouts
 {
 	/// <summary>
-	/// DockLayout.
+	/// DockLayoutEngine.
 	/// </summary>
 	public sealed class DockLayoutEngine : ILayoutEngine
 	{
@@ -21,7 +21,10 @@ namespace Epsitec.Common.Widgets.Layouts
 			
 			foreach (Visual child in children)
 			{
-				if (child.Dock == DockStyle.None)
+				DockStyle dock = child.Dock;
+				
+				if ((dock == DockStyle.None) ||
+					(dock == DockStyle.Stacked))
 				{
 					//	Saute les widgets qui ne sont pas "docked", car ils doivent être
 					//	positionnés par d'autres moyens.
@@ -57,7 +60,7 @@ namespace Epsitec.Common.Widgets.Layouts
 				dx += child.Margins.Width;
 				dy += child.Margins.Height;
 				
-				switch (child.Dock)
+				switch (dock)
 				{
 					case DockStyle.Top:
 						bounds = new Drawing.Rectangle (client.Left, client.Top - dy, client.Width, dy);
@@ -202,16 +205,18 @@ namespace Epsitec.Common.Widgets.Layouts
 			//	indépendante au moyen du fill_min_dx.
 			//
 			//	Idem par analogie pour dy et max.
-			
+
+			Drawing.Margins padding = container.Padding + container.GetInternalPadding ();
+
 			double min_ox = 0;
 			double min_oy = 0;
 			double max_ox = 0;
 			double max_oy = 0;
 
-			double min_dx = min_size.Width;
-			double min_dy = min_size.Height;
-			double max_dx = max_size.Width;
-			double max_dy = max_size.Height;
+			double min_dx = System.Math.Max (0, min_size.Width - padding.Width);
+			double min_dy = System.Math.Max (0, min_size.Height - padding.Height);
+			double max_dx = System.Math.Max (0, max_size.Width - padding.Width);
+			double max_dy = System.Math.Max (0, max_size.Height - padding.Height);
 			
 			double fill_min_dx = 0;
 			double fill_min_dy = 0;
@@ -231,7 +236,10 @@ namespace Epsitec.Common.Widgets.Layouts
 			
 			foreach (Visual child in children)
 			{
-				if (child.Dock == DockStyle.None)
+				DockStyle dock = child.Dock;
+				
+				if ((dock == DockStyle.None) ||
+					(dock == DockStyle.Stacked))
 				{
 					//	Saute les widgets qui ne sont pas "docked", car leur taille n'est pas prise
 					//	en compte dans le calcul des minima/maxima.
@@ -255,7 +263,7 @@ namespace Epsitec.Common.Widgets.Layouts
 				double clientDx = measure_dx.Desired + margins.Width;
 				double clientDy = measure_dy.Desired + margins.Height;
 
-				switch (child.Dock)
+				switch (dock)
 				{
 					case DockStyle.Top:
 						min_dx  = System.Math.Max (min_dx, min.Width + min_ox);
@@ -323,14 +331,11 @@ namespace Epsitec.Common.Widgets.Layouts
 			{
 				fill_max_dy = double.PositiveInfinity;
 			}
-			
-			double pad_width  = container.Padding.Width  + container.GetInternalPadding ().Width;
-			double pad_height = container.Padding.Height + container.GetInternalPadding ().Height;
-			
-			double min_width  = System.Math.Max (min_dx, fill_min_dx + min_ox) + pad_width;
-			double min_height = System.Math.Max (min_dy, fill_min_dy + min_oy) + pad_height;
-			double max_width  = System.Math.Min (max_dx, fill_max_dx + max_ox) + pad_width;
-			double max_height = System.Math.Min (max_dy, fill_max_dy + max_oy) + pad_height;
+
+			double min_width  = System.Math.Max (min_dx, fill_min_dx + min_ox) + padding.Width;
+			double min_height = System.Math.Max (min_dy, fill_min_dy + min_oy) + padding.Height;
+			double max_width  = System.Math.Min (max_dx, fill_max_dx + max_ox) + padding.Width;
+			double max_height = System.Math.Min (max_dy, fill_max_dy + max_oy) + padding.Height;
 			
 			//	Tous les calculs ont été faits en coordonnées client, il faut donc encore transformer
 			//	ces dimensions en coordonnées parents.
@@ -349,7 +354,7 @@ namespace Epsitec.Common.Widgets.Layouts
 			}
 		}
 
-		private static void SetChildBounds(Visual child, Drawing.Rectangle bounds)
+		internal static void SetChildBounds(Visual child, Drawing.Rectangle bounds)
 		{
 			double dx = child.PreferredWidth;
 			double dy = child.PreferredHeight;

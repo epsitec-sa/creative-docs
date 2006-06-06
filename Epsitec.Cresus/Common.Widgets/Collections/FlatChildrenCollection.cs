@@ -43,6 +43,22 @@ namespace Epsitec.Common.Widgets.Collections
 				return this.dockLayoutCount;
 			}
 		}
+		public int								StackLayoutCount
+		{
+			get
+			{
+				this.VerifyLayoutStatistics ();
+				return this.stackLayoutCount;
+			}
+		}
+		public int								GridLayoutCount
+		{
+			get
+			{
+				this.VerifyLayoutStatistics ();
+				return this.gridLayoutCount;
+			}
+		}
 
 		public Visual FindNext(Visual find)
 		{
@@ -206,35 +222,55 @@ namespace Epsitec.Common.Widgets.Collections
 		{
 			int dock = 0;
 			int anchor = 0;
+			int stack = 0;
+			int grid = 0;
 			
 			foreach (Visual visual in this.visuals)
 			{
 				switch (Layouts.LayoutEngine.GetLayoutMode (visual))
 				{
-					case Layouts.LayoutMode.Docked:
+					case Epsitec.Common.Widgets.Layouts.LayoutMode.Docked:
 						dock++;
 						break;
 
 					case Epsitec.Common.Widgets.Layouts.LayoutMode.Anchored:
 						anchor++;
 						break;
+
+					case Epsitec.Common.Widgets.Layouts.LayoutMode.Stacked:
+						stack++;
+						break;
+					
+					case Epsitec.Common.Widgets.Layouts.LayoutMode.Grid:
+						grid++;
+						break;
 				}
 			}
 
 			System.Diagnostics.Debug.Assert (dock == this.dockLayoutCount);
 			System.Diagnostics.Debug.Assert (anchor == this.anchorLayoutCount);
+			System.Diagnostics.Debug.Assert (stack == this.stackLayoutCount);
+			System.Diagnostics.Debug.Assert (grid == this.gridLayoutCount);
 		}
 
 		private void UpdateLayoutStatistics(Visual visual, int increment)
 		{
 			switch (Layouts.LayoutEngine.GetLayoutMode (visual))
 			{
-				case Layouts.LayoutMode.Docked:
+				case Epsitec.Common.Widgets.Layouts.LayoutMode.Docked:
 					this.dockLayoutCount += increment;
 					break;
 				
 				case Epsitec.Common.Widgets.Layouts.LayoutMode.Anchored:
 					this.anchorLayoutCount += increment;
+					break;
+
+				case Epsitec.Common.Widgets.Layouts.LayoutMode.Stacked:
+					this.stackLayoutCount += increment;
+					break;
+
+				case Epsitec.Common.Widgets.Layouts.LayoutMode.Grid:
+					this.gridLayoutCount += increment;
 					break;
 			}
 		}
@@ -242,12 +278,20 @@ namespace Epsitec.Common.Widgets.Collections
 		{
 			switch (Layouts.LayoutEngine.GetLayoutMode (dock, anchor))
 			{
-				case Layouts.LayoutMode.Docked:
+				case Epsitec.Common.Widgets.Layouts.LayoutMode.Docked:
 					this.dockLayoutCount += increment;
 					break;
 
 				case Epsitec.Common.Widgets.Layouts.LayoutMode.Anchored:
 					this.anchorLayoutCount += increment;
+					break;
+
+				case Epsitec.Common.Widgets.Layouts.LayoutMode.Stacked:
+					this.stackLayoutCount += increment;
+					break;
+
+				case Epsitec.Common.Widgets.Layouts.LayoutMode.Grid:
+					this.gridLayoutCount += increment;
 					break;
 			}
 		}
@@ -550,5 +594,7 @@ namespace Epsitec.Common.Widgets.Collections
 		
 		private int								dockLayoutCount;
 		private int								anchorLayoutCount;
+		private int								stackLayoutCount;
+		private int								gridLayoutCount;
 	}
 }

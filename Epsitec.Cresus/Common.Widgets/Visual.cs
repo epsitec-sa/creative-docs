@@ -811,6 +811,11 @@ namespace Epsitec.Common.Widgets
 			return Drawing.Margins.Zero;
 		}
 
+		public virtual Drawing.Point GetBaseLine()
+		{
+			return Drawing.Point.Zero;
+		}
+		
 		#region CommandCache Support Methods
 
 		internal int GetCommandCacheId()
@@ -924,10 +929,13 @@ namespace Epsitec.Common.Widgets
 				{
 					Layouts.LayoutEngine.AnchorEngine.UpdateLayout (this, rect, children);
 				}
-				
 				if (this.children.DockLayoutCount > 0)
 				{
 					Layouts.LayoutEngine.DockEngine.UpdateLayout (this, rect, children);
+				}
+				if (this.children.StackLayoutCount > 0)
+				{
+					Layouts.LayoutEngine.StackEngine.UpdateLayout (this, rect, children);
 				}
 
 				this.ManualArrange ();
@@ -968,6 +976,10 @@ namespace Epsitec.Common.Widgets
 				if (this.children.AnchorLayoutCount > 0)
 				{
 					Layouts.LayoutEngine.AnchorEngine.UpdateMinMax (this, children, ref min, ref max);
+				}
+				if (this.children.StackLayoutCount > 0)
+				{
+					Layouts.LayoutEngine.StackEngine.UpdateMinMax (this, children, ref min, ref max);
 				}
 			}
 		}

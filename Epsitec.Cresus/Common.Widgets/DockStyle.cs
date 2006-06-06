@@ -12,5 +12,7 @@ namespace Epsitec.Common.Widgets
 		Left	= 3,				//	colle à gauche
 		Right	= 4,				//	colle à droite
 		Fill	= 5,				//	remplit tout
+		
+		Stacked	= 6					//	organisé en pile
 	}
 }

@@ -11,13 +11,7 @@ namespace Epsitec.Common.Widgets
 		public RibbonPage()
 		{
 			this.items = new RibbonSectionCollection(this);
-
 			this.ribbonButton = new RibbonButton(null);
-			this.ribbonButton.ContentAlignment = ContentAlignment.MiddleCenter;
-			
-			this.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
-
-			this.Padding = new Margins(3, 3, 3, 3);
 		}
 		
 		public RibbonPage(Widget embedder) : this()
@@ -28,9 +22,11 @@ namespace Epsitec.Common.Widgets
 
 		static RibbonPage()
 		{
-			Helpers.VisualPropertyMetadata metadataHeight = new Helpers.VisualPropertyMetadata(RibbonPage.FixHeight, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
-			Visual.MinHeightProperty.OverrideMetadata(typeof(RibbonPage), metadataHeight);
-			Visual.PreferredHeightProperty.OverrideMetadata(typeof(RibbonPage), metadataHeight);
+			Helpers.VisualPropertyMetadata metadataHeight = new Helpers.VisualPropertyMetadata (RibbonPage.FixHeight, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
+			Helpers.VisualPropertyMetadata metadataPadding = new Helpers.VisualPropertyMetadata (RibbonPage.FixPadding, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
+			Visual.MinHeightProperty.OverrideMetadata (typeof (RibbonPage), metadataHeight);
+			Visual.PreferredHeightProperty.OverrideMetadata (typeof (RibbonPage), metadataHeight);
+			Visual.PaddingProperty.OverrideMetadata (typeof (RibbonPage), metadataPadding);
 		}
 
 
@@ -93,38 +89,24 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		
-		public event EventHandler				RankChanged
-		{
-			add
-			{
-				this.AddUserEventHandler("RankChanged", value);
-			}
-			remove
-			{
-				this.RemoveUserEventHandler("RankChanged", value);
-			}
-		}
 
-		
-		protected virtual void OnRankChanged()
-		{
-			EventHandler handler = (EventHandler) this.GetUserEventHandler("RankChanged");
-			if (handler != null)
-			{
-				handler(this);
-			}
-		}
-
-		
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
+			System.Diagnostics.Debug.WriteLine ("Page DY=" + this.ActualHeight + ", minDY=" + this.RealMinSize.Height);
 			//	Dessine l'onglet.
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
 			Rectangle rect = this.Client.Bounds;
 			adorner.PaintRibbonPageBackground(graphics, rect, this.PaintState);
 		}
 
+		protected virtual void OnRankChanged()
+		{
+			EventHandler handler = (EventHandler) this.GetUserEventHandler ("RankChanged");
+			if (handler != null)
+			{
+				handler (this);
+			}
+		}
 
 		#region IWidgetCollectionHost Members
 		Collections.WidgetCollection Collections.IWidgetCollectionHost.GetWidgetCollection()
@@ -179,11 +161,24 @@ namespace Epsitec.Common.Widgets
 		}
 		#endregion
 
-		
-		protected static readonly double		FixHeight = 14 + 8 + 22 + 5 + 22;
 
-		protected int							rank;
-		protected RibbonButton					ribbonButton;
-		protected RibbonSectionCollection		items;
+		public event EventHandler				RankChanged
+		{
+			add
+			{
+				this.AddUserEventHandler ("RankChanged", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler ("RankChanged", value);
+			}
+		}
+		
+		private static readonly double			FixHeight = 3 + 14 + 8 + 22 + 5 + 22 + 3;
+		private static readonly Drawing.Margins	FixPadding = new Margins(3, 3, 3, 3);
+
+		private int								rank;
+		private RibbonButton					ribbonButton;
+		private RibbonSectionCollection			items;
 	}
 }
