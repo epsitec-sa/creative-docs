@@ -815,7 +815,15 @@ namespace Epsitec.Common.Widgets
 		{
 			return Drawing.Point.Zero;
 		}
-		
+
+		public virtual Drawing.Point GetBaseLine(double width, double height, out double ascender, out double descender)
+		{
+			ascender = height;
+			descender = 0;
+
+			return Drawing.Point.Zero;
+		}
+
 		#region CommandCache Support Methods
 
 		internal int GetCommandCacheId()

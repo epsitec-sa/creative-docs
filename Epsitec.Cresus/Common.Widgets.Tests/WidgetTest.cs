@@ -1228,9 +1228,10 @@ namespace Epsitec.Common.Widgets
 			window.Root.Padding = new Margins (8, 8, 5, 5);
 
 			Button button;
+
 			button = new Button ();
 			button.PreferredSize = new Size (40, 24);
-			button.Text = @"<font size=""160%"">A</font>";
+			button.Text = "A";
 			button.Dock = DockStyle.Stacked;
 			button.VerticalAlignment = VerticalAlignment.Bottom;
 			window.Root.Children.Add (button);
@@ -1255,6 +1256,72 @@ namespace Epsitec.Common.Widgets
 			button.Dock = DockStyle.Stacked;
 			button.VerticalAlignment = VerticalAlignment.Stretch;
 			window.Root.Children.Add (button);
+
+			button = new Button ();
+			button.PreferredSize = new Size (40, 24);
+			button.Text = "E-Xy";
+			button.Dock = DockStyle.Stacked;
+			button.VerticalAlignment = VerticalAlignment.BaseLine;
+			window.Root.Children.Add (button);
+
+			Widget line = new Widget ();
+			line.Dock = DockStyle.Stacked;
+			line.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
+			line.VerticalAlignment = VerticalAlignment.BaseLine;
+			line.PreferredHeight = 40;
+			window.Root.Children.Add (line);
+
+			button = new Button ();
+			button.PreferredSize = new Size (32, 24*1.6);
+			button.Text = @"<font size=""160%"">Xy</font>";
+			button.Dock = DockStyle.Stacked;
+			button.VerticalAlignment = VerticalAlignment.BaseLine;
+			line.Children.Add (button);
+
+			button = new Button ();
+			button.PreferredSize = new Size (32, 24);
+			button.Text = @"<font size=""100%"">Xy</font>";
+			button.Dock = DockStyle.Stacked;
+			button.VerticalAlignment = VerticalAlignment.BaseLine;
+			line.Children.Add (button);
+
+			button = new Button ();
+			button.PreferredSize = new Size (32, 24*0.8);
+			button.Text = @"<font size=""80%"">Xy</font>";
+			button.Dock = DockStyle.Stacked;
+			button.VerticalAlignment = VerticalAlignment.BaseLine;
+			line.Children.Add (button);
+
+			StaticText text;
+			TextField field;
+
+			text = new StaticText ();
+			text.Text = "Xy";
+			text.PreferredWidth = 16;
+			text.Dock = DockStyle.Stacked;
+			text.VerticalAlignment = VerticalAlignment.BaseLine;
+			line.Children.Add (text);
+
+			text = new StaticText ();
+			text.Text = @"<font size=""160%"">Xy</font>";
+			text.PreferredWidth = 24;
+			text.Dock = DockStyle.Stacked;
+			text.VerticalAlignment = VerticalAlignment.BaseLine;
+			line.Children.Add (text);
+
+			field = new TextField ();
+			field.Text = "Xy";
+			field.Dock = DockStyle.Stacked;
+			field.PreferredWidth = 24;
+			field.VerticalAlignment = VerticalAlignment.BaseLine;
+			line.Children.Add (field);
+
+			field = new TextField ();
+			field.Text = @"<font size=""80%"">Xy</font>";
+			field.Dock = DockStyle.Stacked;
+			field.PreferredWidth = 24;
+			field.VerticalAlignment = VerticalAlignment.BaseLine;
+			line.Children.Add (field);
 
 			window.Show ();
 			Window.RunInTestEnvironment (window);

@@ -198,7 +198,7 @@ namespace Epsitec.Common.Widgets
 				Drawing.Point shift = this.InnerTextBounds.Location;
 
 				double yFromTop = this.TextLayout.LayoutSize.Height - pos.Y;
-				double yFromBot = this.realSize.Height - yFromTop + shift.Y + 1;
+				double yFromBot = this.realSize.Height - yFromTop + shift.Y + this.GetBaseLineVerticalOffset ();
 
 				Drawing.Point point = new Drawing.Point (shift.X, yFromBot);
 
@@ -214,7 +214,31 @@ namespace Epsitec.Common.Widgets
 
 			return base.GetBaseLine ();
 		}
-		
+
+		public override Drawing.Point GetBaseLine(double width, double height, out double ascender, out double descender)
+		{
+			if (this.TextLayout != null)
+			{
+				double offset = this.GetBaseLineVerticalOffset ();
+				
+				Drawing.Point origin = base.GetBaseLine (width, height, out ascender, out descender);
+				Drawing.Point shift = this.InnerTextBounds.Location;
+				Drawing.Point point = origin + new Drawing.Point (shift.X, shift.Y+offset);
+
+				ascender  -= offset;
+				descender -= offset;
+				
+				return point;
+			}
+
+			return base.GetBaseLine (width, height, out ascender, out descender);
+		}
+
+		protected override double GetBaseLineVerticalOffset()
+		{
+			return 1.0;
+		}
+
 		public override Drawing.Margins GetInternalPadding()
 		{
 			Drawing.Margins padding = this.margins;
@@ -1392,7 +1416,7 @@ namespace Epsitec.Common.Widgets
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
 
 			WidgetPaintState  state     = this.PaintState;
-			Drawing.Point     pos       = this.InnerTextBounds.Location - this.scrollOffset + new Drawing.Point(0, 1);
+			Drawing.Point     pos       = this.InnerTextBounds.Location - this.scrollOffset + new Drawing.Point(0, this.GetBaseLineVerticalOffset ());
 			Drawing.Rectangle rText     = this.InnerTextBounds;
 			Drawing.Rectangle rInside   = this.Client.Bounds;
 			rInside.Deflate(this.GetInternalPadding());

@@ -343,7 +343,7 @@ namespace Epsitec.Common.Widgets.Layouts
 			min_size = Helpers.VisualTree.MapVisualToParent (container, new Drawing.Size (min_width, min_height));
 			max_size = Helpers.VisualTree.MapVisualToParent (container, new Drawing.Size (max_width, max_height));
 
-			Layouts.LayoutContext context = Layouts.LayoutContext.GetLayoutContext (container);
+			Layouts.LayoutContext context = Helpers.VisualTree.GetLayoutContext (container);
 
 			if (context != null)
 			{
@@ -381,7 +381,7 @@ namespace Epsitec.Common.Widgets.Layouts
 				case VerticalAlignment.BaseLine:
 					double h1 = 0;
 					double h2 = 0;
-					Layouts.LayoutContext.GetResultingMeasuredBaseLine (child, out h1, out h2);
+					Layouts.LayoutContext.GetMeasuredBaseLine (child, out h1, out h2);
 					bounds.Top    = bounds.Bottom + baseOffset + h1;
 					bounds.Bottom = bounds.Bottom + baseOffset - h2;
 					break;

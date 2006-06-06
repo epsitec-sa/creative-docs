@@ -1674,9 +1674,44 @@ namespace Epsitec.Common.Widgets
 				return result;
 			}
 		}
-		
-		
-		
+
+
+		public override Drawing.Point GetBaseLine(double width, double height, out double ascender, out double descender)
+		{
+			if (this.TextLayout != null)
+			{
+				Drawing.Point origin;
+				Drawing.Size size;
+
+				this.TextLayout.GetSingleLineGeometry (new Drawing.Size (width, height), this.ContentAlignment, out ascender, out descender, out origin, out size);
+
+				double offset = this.GetBaseLineVerticalOffset ();
+
+				origin.Y += offset;
+				
+				ascender -= offset;
+				descender -= offset;
+				
+				double lineHeight = ascender - descender;
+				double space = height - lineHeight;
+
+				if (space > 0)
+				{
+					ascender  += space / 2;
+					descender -= space / 2;
+				}
+
+				return origin;
+			}
+
+			return base.GetBaseLine (width, height, out ascender, out descender);
+		}
+
+		protected virtual double GetBaseLineVerticalOffset()
+		{
+			return 0;
+		}
+
 		
 		public static void ObsoleteBaseLineAlign(Widget model, Widget widget)
 		{

@@ -11,8 +11,6 @@ namespace Epsitec.Common.Widgets.Layouts
 		{
 			this.min     = 0;
 			this.max     = double.PositiveInfinity;
-			this.h1      = 0;
-			this.h2      = 0;
 			this.desired = double.NaN;
 			this.passId  = passId;
 		}
@@ -46,20 +44,6 @@ namespace Epsitec.Common.Widgets.Layouts
 					value = System.Math.Max (this.min, value);
 					return value;
 				}
-			}
-		}
-		public double H1
-		{
-			get
-			{
-				return this.h1;
-			}
-		}
-		public double H2
-		{
-			get
-			{
-				return this.h2;
 			}
 		}
 		
@@ -129,28 +113,6 @@ namespace Epsitec.Common.Widgets.Layouts
 				this.hasChanged = true;
 			}
 		}
-		internal void UpdateBaseLine(int passId, double h1, double h2)
-		{
-			double oldH1 = this.h1;
-			double oldH2 = this.h2;
-
-			if (this.passId == passId)
-			{
-				this.h1 = System.Math.Max (oldH1, h1);
-				this.h2 = System.Math.Max (oldH2, h2);
-			}
-			else
-			{
-				this.h1 = h1;
-				this.h2 = h2;
-			}
-
-			if ((this.h1 != oldH1) ||
-				(this.h2 != oldH2))
-			{
-				this.hasChanged = true;
-			}
-		}
 		internal void UpdateDesired(int passId, double value)
 		{
 			if (double.IsNaN (this.desired))
@@ -184,7 +146,6 @@ namespace Epsitec.Common.Widgets.Layouts
 		
 		private double min;
 		private double max;
-		private double h1, h2;
 		private int passId;
 		private double desired;
 		private bool hasChanged;

@@ -459,19 +459,36 @@ namespace Epsitec.Common.Widgets
 			//	s'il est mis sur une seule ligne.
 			get
 			{
-				Drawing.Size originalSize = this.LayoutSize;
-				Drawing.ContentAlignment originalAlignment = this.Alignment;
+				double ascender;
+				double descender;
 
-				this.LayoutSize = new Drawing.Size(TextLayout.Infinite, TextLayout.Infinite);
-				this.Alignment  = Drawing.ContentAlignment.TopLeft;
+				Drawing.Point origin;
+				Drawing.Size size = new Drawing.Size (TextLayout.Infinite, TextLayout.Infinite);
+				
+				this.GetSingleLineGeometry (size, Drawing.ContentAlignment.TopLeft, out ascender, out descender, out origin, out size);
 
-				Drawing.Rectangle end = this.StandardRectangle;
-				
-				this.LayoutSize = originalSize;
-				this.Alignment  = originalAlignment;
-				
-				return new Drawing.Size(end.Width, end.Height);
+				return size;
 			}
+		}
+
+		public void GetSingleLineGeometry(Drawing.Size boxSize, Drawing.ContentAlignment alignment, out double ascender, out double descender, out Drawing.Point origin, out Drawing.Size size)
+		{
+			Drawing.Size originalSize = this.LayoutSize;
+			Drawing.ContentAlignment originalAlignment = this.Alignment;
+
+			this.LayoutSize = boxSize;
+			this.Alignment  = alignment;
+
+			Drawing.Rectangle end = this.StandardRectangle;
+
+			double width;
+			
+			this.GetLineGeometry (0, out origin, out ascender, out descender, out width);
+
+			this.LayoutSize = originalSize;
+			this.Alignment  = originalAlignment;
+
+			size = end.Size;
 		}
 		
 		public int								TotalLineCount

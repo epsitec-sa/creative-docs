@@ -158,6 +158,22 @@ namespace Epsitec.Common.Widgets
 			return base.ProcessShortcut (shortcut);
 		}
 
+		protected override double GetBaseLineVerticalOffset()
+		{
+			//	Le texte dans les boutons standards doit être remonté d'un pixel
+			//	pour paraître centré, mais surtout pas dans les IconButtons !
+			
+			switch (this.buttonStyle)
+			{
+				case ButtonStyle.Normal:
+				case ButtonStyle.DefaultAccept:
+				case ButtonStyle.DefaultCancel:
+					return 1.0;
+				
+				default:
+					return 0.0;
+			}
+		}
 		
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
@@ -165,8 +181,8 @@ namespace Epsitec.Common.Widgets
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
 
 			Drawing.Rectangle rect  = this.Client.Bounds;
-			WidgetPaintState       state = this.PaintState;
-			Drawing.Point     pos   = new Drawing.Point (0, 0);
+			WidgetPaintState  state = this.PaintState;
+			Drawing.Point     pos   = Drawing.Point.Zero;
 			
 			if ( (state & WidgetPaintState.Enabled) == 0 )
 			{
@@ -188,14 +204,7 @@ namespace Epsitec.Common.Widgets
 				adorner.PaintButtonBackground(graphics, rect, state, Direction.Down, this.buttonStyle);
 			}
 
-			//	Le texte dans les boutons standards doit être remonté d'un pixel
-			//	pour paraître centré, mais surtout pas dans les IconButtons !
-			if ( this.buttonStyle == ButtonStyle.Normal        ||
-				 this.buttonStyle == ButtonStyle.DefaultAccept ||
-				 this.buttonStyle == ButtonStyle.DefaultCancel )
-			{
-				pos.Y ++;
-			}
+			pos.Y += this.GetBaseLineVerticalOffset ();
 			
 			if ( this.innerZoom != 1.0 )
 			{
