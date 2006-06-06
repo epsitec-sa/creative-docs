@@ -15,6 +15,37 @@ namespace Epsitec.Common.Widgets.Layouts
 			Drawing.Rectangle client = rect;
 			ContainerLayoutMode mode = container.ContainerLayoutMode;
 			
+			double h1 = 0;
+			double h2 = 0;
+
+			foreach (Visual child in children)
+			{
+				if ((child.Dock != DockStyle.Stacked) ||
+					(child.Visibility == false))
+				{
+					//	Saute les widgets qui ne sont pas "stacked", car ils doivent être
+					//	positionnés par d'autres moyens.
+
+					continue;
+				}
+				
+				double childH1;
+				double childH2;
+
+				Drawing.Rectangle bounds = client;
+				Drawing.Size size = LayoutContext.GetResultingMeasuredBaseLine (child, out childH1, out childH2);
+
+				if (size == Drawing.Size.NegativeInfinity)
+				{
+					return;
+				}
+
+				h1 = System.Math.Max (h1, childH1);
+				h2 = System.Math.Max (h2, childH2);
+			}
+
+			double baseLine = System.Math.Round ((client.Height - (h1+h2)) / 2 + h2);
+
 			foreach (Visual child in children)
 			{
 				if ((child.Dock != DockStyle.Stacked) ||
@@ -25,14 +56,9 @@ namespace Epsitec.Common.Widgets.Layouts
 					
 					continue;
 				}
-				
-				Drawing.Rectangle bounds;
-				Drawing.Size size = LayoutContext.GetResultingMeasuredSize (child);
 
-				if (size == Drawing.Size.NegativeInfinity)
-				{
-					return;
-				}
+				Drawing.Rectangle bounds = client;
+				Drawing.Size size = LayoutContext.GetResultingMeasuredSize (child);
 
 				double dx = size.Width;
 				double dy = size.Height;
@@ -48,7 +74,20 @@ namespace Epsitec.Common.Widgets.Layouts
 
 				dx += child.Margins.Width;
 				dy += child.Margins.Height;
+
+				switch (mode)
+				{
+					case ContainerLayoutMode.HorizontalFlow:
+						bounds.Width = dx;
+						client.Left = bounds.Right;
+						break;
+					case ContainerLayoutMode.VerticalFlow:
+						bounds.Bottom = bounds.Top - dy;
+						client.Top = bounds.Bottom;
+						break;
+				}
 				
+				DockLayoutEngine.SetChildBounds (child, bounds, baseLine);
 			}
 		}
 
@@ -120,14 +159,13 @@ namespace Epsitec.Common.Widgets.Layouts
 			minDy = System.Math.Max (minDy, minH1 + minH2);
 
 			Drawing.Margins padding = container.Padding + container.GetInternalPadding ();
-			
 			Layouts.LayoutContext context = Layouts.LayoutContext.GetLayoutContext (container);
 
 			if (context != null)
 			{
 				context.DefineMinWidth (container, min_size.Width);
 				context.DefineMinHeight (container, min_size.Height);
-//				context.DefineBaseLine (container, minH1, minH2);
+				context.DefineBaseLine (container, minH1, minH2);
 				context.DefineMaxWidth (container, max_size.Width);
 				context.DefineMaxHeight (container, max_size.Height);
 			}
