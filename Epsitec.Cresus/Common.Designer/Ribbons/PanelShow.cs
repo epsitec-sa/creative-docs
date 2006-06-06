@@ -14,12 +14,12 @@ namespace Epsitec.Common.Designer.Ribbons
 			this.Title = Res.Strings.Ribbon.Section.PanelShow;
 			this.PreferredWidth = 8 + (22+5)*3 - 4;
 
-			this.buttonShowConstrain = this.CreateIconButton("PanelShowConstrain");
-			this.buttonShowSpring    = this.CreateIconButton("PanelShowSpring");
+			this.buttonShowConstrain  = this.CreateIconButton("PanelShowConstrain");
+			this.buttonShowAttachment = this.CreateIconButton("PanelShowAttachment");
 
-			this.buttonShowExpand    = this.CreateIconButton("PanelShowExpand");
-			this.buttonShowZOrder    = this.CreateIconButton("PanelShowZOrder");
-			this.buttonShowTabIndex  = this.CreateIconButton("PanelShowTabIndex");
+			this.buttonShowExpand     = this.CreateIconButton("PanelShowExpand");
+			this.buttonShowZOrder     = this.CreateIconButton("PanelShowZOrder");
+			this.buttonShowTabIndex   = this.CreateIconButton("PanelShowTabIndex");
 
 			this.UpdateClientGeometry();
 		}
@@ -50,7 +50,7 @@ namespace Epsitec.Common.Designer.Ribbons
 			rect.Offset(0, dy+5);
 			this.buttonShowConstrain.SetManualBounds(rect);
 			rect.Offset(dx+5, 0);
-			this.buttonShowSpring.SetManualBounds(rect);
+			this.buttonShowAttachment.SetManualBounds(rect);
 
 			rect = this.UsefulZone;
 			rect.Width  = dx;
@@ -64,7 +64,7 @@ namespace Epsitec.Common.Designer.Ribbons
 
 
 		protected IconButton				buttonShowConstrain;
-		protected IconButton				buttonShowSpring;
+		protected IconButton				buttonShowAttachment;
 		protected IconButton				buttonShowExpand;
 		protected IconButton				buttonShowZOrder;
 		protected IconButton				buttonShowTabIndex;

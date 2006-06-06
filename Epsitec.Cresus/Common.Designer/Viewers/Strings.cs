@@ -968,7 +968,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			this.GetCommandState("PanelShowGrid").Enable = false;
 			this.GetCommandState("PanelShowConstrain").Enable = false;
-			this.GetCommandState("PanelShowSpring").Enable = false;
+			this.GetCommandState("PanelShowAttachment").Enable = false;
 			this.GetCommandState("PanelShowExpand").Enable = false;
 			this.GetCommandState("PanelShowZOrder").Enable = false;
 			this.GetCommandState("PanelShowTabIndex").Enable = false;

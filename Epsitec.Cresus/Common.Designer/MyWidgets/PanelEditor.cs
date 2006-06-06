@@ -6,18 +6,18 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Designer.MyWidgets
 {
 	/// <summary>
-	/// Widget venant par-dessus UI.Panel pour éditer ce dernier.
+	/// Widget venant par-dessus le conteneur UI.Panel pour éditer ce dernier.
 	/// </summary>
 	public class PanelEditor : AbstractGroup, IPaintFilter
 	{
 		[System.Flags]
-		protected enum Spring
+		protected enum Attachment
 		{
-			None	= 0x00,
-			Top		= 0x10,
-			Bottom	= 0x20,
-			Left	= 0x40,
-			Right	= 0x80,
+			None	= 0x00000000,
+			Top		= 0x00000001,
+			Bottom	= 0x00000002,
+			Left	= 0x00000004,
+			Right	= 0x00000008,
 		}
 
 		protected enum MouseCursorType
@@ -52,46 +52,53 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		public Module					Module
 		{
-			get
-			{
-				return this.module;
-			}
+			//	Module associé.
 			set
 			{
 				this.module = value;
+			}
+
+			get
+			{
+				return this.module;
 			}
 		}
 
 		public PanelsContext			Context
 		{
-			get
-			{
-				return this.context;
-			}
-
+			//	Contexte asocié.
+			//	Le set sert d'initialisation interne (bof).
 			set
 			{
 				this.context = value;
 				this.constrainsList = new ConstrainsList(this);
 				this.handlesList = new HandlesList(this);
 			}
+
+			get
+			{
+				return this.context;
+			}
 		}
 
 		public UI.Panel					Panel
 		{
-			get
-			{
-				return this.panel;
-			}
-
+			//	Panneau associé qui est le conteneur de tous les widgets.
+			//	PanelEditor est frère de Panel et vient par-dessus.
 			set
 			{
 				this.panel = value;
+			}
+
+			get
+			{
+				return this.panel;
 			}
 		}
 
 		public ConstrainsList			ConstrainsList
 		{
+			//	Retourne la liste des contraintes.
 			get
 			{
 				return this.constrainsList;
@@ -100,6 +107,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		public List<Widget>				SelectedObjects
 		{
+			//	Retourne la liste des objets sélectionnés.
 			get
 			{
 				return this.selectedObjects;
@@ -109,6 +117,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		public void DoCommand(string name)
 		{
+			//	Exécute une commande.
 			switch (name)
 			{
 				case "PanelDelete":
@@ -155,8 +164,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 					this.OnUpdateCommands();
 					break;
 
-				case "PanelShowSpring":
-					this.context.ShowSpring = !this.context.ShowSpring;
+				case "PanelShowAttachment":
+					this.context.ShowAttachment = !this.context.ShowAttachment;
 					this.Invalidate();
 					this.OnUpdateCommands();
 					break;
@@ -499,10 +508,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 
 			Widget obj;
-			Spring spring;
-			if (this.SpringDetect(pos, out obj, out spring))
+			Attachment attachment;
+			if (this.AttachmentDetect(pos, out obj, out attachment))
 			{
-				this.ChangeObjectSpring(obj, spring);  // modifie les ressorts
+				this.ChangeObjectAttachment(obj, attachment);  // modifie les ressorts
 				return;
 			}
 
@@ -522,7 +531,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			if (obj == null)
 			{
 				this.isRectangling = true;
-				this.SetHilitedSpringRectangle(Rectangle.Empty);
+				this.SetHilitedAttachmentRectangle(Rectangle.Empty);
 			}
 
 			if (obj != null)
@@ -577,14 +586,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 				Rectangle rect = Rectangle.Empty;
 				Widget obj;
-				Spring spring;
-				if (this.SpringDetect(pos, out obj, out spring))
+				Attachment attachment;
+				if (this.AttachmentDetect(pos, out obj, out attachment))
 				{
-					rect = this.GetSpringBounds(obj, spring);
+					rect = this.GetAttachmentBounds(obj, attachment);
 					rect.Offset(0.5, 0.5);
 					rect.Inflate(3);
 				}
-				this.SetHilitedSpringRectangle(rect);  // met en évidence le ressort survolé par la souris
+				this.SetHilitedAttachmentRectangle(rect);  // met en évidence le ressort survolé par la souris
 			}
 		}
 
@@ -652,7 +661,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 
 			this.isRectangling = true;
-			this.SetHilitedSpringRectangle(Rectangle.Empty);
+			this.SetHilitedAttachmentRectangle(Rectangle.Empty);
 
 			this.OnChildrenSelected();
 			this.Invalidate();
@@ -992,7 +1001,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				this.handlesList.DraggingMove(pos);
 				this.SetHilitedObject(null);
-				this.SetHilitedSpringRectangle(Rectangle.Empty);
+				this.SetHilitedAttachmentRectangle(Rectangle.Empty);
 				return true;
 			}
 
@@ -1048,7 +1057,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			this.SetHilitedParent(this.DetectGroup(this.draggingRectangle));  // met en évidence le futur parent survolé par la souris
 			this.SetHilitedObject(null);
-			this.SetHilitedSpringRectangle(Rectangle.Empty);
+			this.SetHilitedAttachmentRectangle(Rectangle.Empty);
 			this.isDragging = true;
 			this.Invalidate();
 		}
@@ -1241,14 +1250,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
-		protected void SetHilitedSpringRectangle(Rectangle rect)
+		protected void SetHilitedAttachmentRectangle(Rectangle rect)
 		{
 			//	Détermine la zone du rectangle de ressort.
-			if (this.hilitedSpringRectangle != rect)
+			if (this.hilitedAttachmentRectangle != rect)
 			{
-				this.Invalidate(this.hilitedSpringRectangle);  // invalide l'ancienne zone
-				this.hilitedSpringRectangle = rect;
-				this.Invalidate(this.hilitedSpringRectangle);  // invalide la nouvelle zone
+				this.Invalidate(this.hilitedAttachmentRectangle);  // invalide l'ancienne zone
+				this.hilitedAttachmentRectangle = rect;
+				this.Invalidate(this.hilitedAttachmentRectangle);  // invalide la nouvelle zone
 			}
 		}
 		#endregion
@@ -1564,40 +1573,40 @@ namespace Epsitec.Common.Designer.MyWidgets
 			return this.GetObjectBounds(obj).Size;
 		}
 
-		protected void ChangeObjectSpring(Widget obj, Spring springFlag)
+		protected void ChangeObjectAttachment(Widget obj, Attachment attachmentFlag)
 		{
 			//	Modifie le système d'ancrage d'un objet.
 			Rectangle bounds = this.GetObjectBounds(obj);
-			Spring spring = this.GetObjectSpring(obj);
+			Attachment attachment = this.GetObjectAttachment(obj);
 
-			if ((spring & springFlag) == 0)
+			if ((attachment & attachmentFlag) == 0)
 			{
-				spring |= springFlag;
+				attachment |= attachmentFlag;
 			}
 			else
 			{
-				spring &= ~springFlag;
+				attachment &= ~attachmentFlag;
 
-				if ((spring & PanelEditor.OppositeSpring(springFlag)) == 0)
+				if ((attachment & PanelEditor.OppositeAttachment(attachmentFlag)) == 0)
 				{
-					spring |= PanelEditor.OppositeSpring(springFlag);
+					attachment |= PanelEditor.OppositeAttachment(attachmentFlag);
 				}
 			}
 
-			this.SetObjectBounds(obj, bounds, spring);
+			this.SetObjectBounds(obj, bounds, attachment);
 			this.handlesList.UpdateGeometry();
 			this.Invalidate();
 		}
 
-		static protected Spring OppositeSpring(Spring style)
+		static protected Attachment OppositeAttachment(Attachment style)
 		{
 			//	Retourne le style d'ancrage opposé.
 			switch (style)
 			{
-				case Spring.Left:    return Spring.Right;
-				case Spring.Right:   return Spring.Left;
-				case Spring.Bottom:  return Spring.Top;
-				case Spring.Top:     return Spring.Bottom;
+				case Attachment.Left:    return Attachment.Right;
+				case Attachment.Right:   return Attachment.Left;
+				case Attachment.Bottom:  return Attachment.Top;
+				case Attachment.Top:     return Attachment.Bottom;
 			}
 			return style;
 		}
@@ -1672,11 +1681,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 		public void SetObjectBounds(Widget obj, Rectangle bounds)
 		{
 			//	Modifie la boîte d'un objet.
-			Spring spring = this.GetObjectSpring(obj);
-			this.SetObjectBounds(obj, bounds, spring);
+			Attachment attachment = this.GetObjectAttachment(obj);
+			this.SetObjectBounds(obj, bounds, attachment);
 		}
 
-		protected void SetObjectBounds(Widget obj, Rectangle bounds, Spring spring)
+		protected void SetObjectBounds(Widget obj, Rectangle bounds, Attachment attachment)
 		{
 			//	Modifie la boîte et le système d'ancrage d'un objet.
 			//	Les coordonnées sont toujours relative au panneau (this.panel) propriétaire.
@@ -1705,7 +1714,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			Margins margins = obj.Margins;
 			Margins padding = parent.Padding + parent.GetInternalPadding();
 
-			if ((spring & Spring.Left) != 0)
+			if ((attachment & Attachment.Left) != 0)
 			{
 				double px = bounds.Left;
 				px -= padding.Left;
@@ -1713,7 +1722,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				margins.Left = px;
 			}
 
-			if ((spring & Spring.Right) != 0)
+			if ((attachment & Attachment.Right) != 0)
 			{
 				double px = box.Width - bounds.Right;
 				px -= padding.Right;
@@ -1721,7 +1730,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				margins.Right = px;
 			}
 
-			if ((spring & Spring.Bottom) != 0)
+			if ((attachment & Attachment.Bottom) != 0)
 			{
 				double py = bounds.Bottom;
 				py -= padding.Bottom;
@@ -1729,7 +1738,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				margins.Bottom = py;
 			}
 
-			if ((spring & Spring.Top) != 0)
+			if ((attachment & Attachment.Top) != 0)
 			{
 				double py = box.Height - bounds.Top;
 				py -= padding.Top;
@@ -1739,70 +1748,70 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			obj.Margins = margins;
 			obj.PreferredSize = bounds.Size;
-			this.SetObjectSpring(obj, spring);
+			this.SetObjectAttachment(obj, attachment);
 
 			this.Invalidate();
 		}
 
-		protected bool IsObjectSpringLeft(Widget obj)
+		protected bool IsObjectAttachmentLeft(Widget obj)
 		{
 			//	Indique si l'objet est ancré à gauche.
-			return (this.GetObjectSpring(obj) & Spring.Left) != 0;
+			return (this.GetObjectAttachment(obj) & Attachment.Left) != 0;
 		}
 
-		protected bool IsObjectSpringRight(Widget obj)
+		protected bool IsObjectAttachmentRight(Widget obj)
 		{
 			//	Indique si l'objet est ancré à gauche.
-			return (this.GetObjectSpring(obj) & Spring.Right) != 0;
+			return (this.GetObjectAttachment(obj) & Attachment.Right) != 0;
 		}
 
-		protected bool IsObjectSpringBottom(Widget obj)
+		protected bool IsObjectAttachmentBottom(Widget obj)
 		{
 			//	Indique si l'objet est ancré à gauche.
-			return (this.GetObjectSpring(obj) & Spring.Bottom) != 0;
+			return (this.GetObjectAttachment(obj) & Attachment.Bottom) != 0;
 		}
 
-		protected bool IsObjectSpringTop(Widget obj)
+		protected bool IsObjectAttachmentTop(Widget obj)
 		{
 			//	Indique si l'objet est ancré à gauche.
-			return (this.GetObjectSpring(obj) & Spring.Top) != 0;
+			return (this.GetObjectAttachment(obj) & Attachment.Top) != 0;
 		}
 
-		protected Spring GetObjectSpring(Widget obj)
+		protected Attachment GetObjectAttachment(Widget obj)
 		{
 			//	Retourne le mode d'ancrage d'un objet.
-			Spring spring = Spring.None;
+			Attachment attachment = Attachment.None;
 
 			if (this.panel.ChildrenLayoutMode == Widgets.Layouts.LayoutMode.Anchored)
 			{
-				if ((obj.Anchor & AnchorStyles.Left  ) != 0)  spring |= Spring.Left;
-				if ((obj.Anchor & AnchorStyles.Right ) != 0)  spring |= Spring.Right;
-				if ((obj.Anchor & AnchorStyles.Bottom) != 0)  spring |= Spring.Bottom;
-				if ((obj.Anchor & AnchorStyles.Top   ) != 0)  spring |= Spring.Top;
+				if ((obj.Anchor & AnchorStyles.Left  ) != 0)  attachment |= Attachment.Left;
+				if ((obj.Anchor & AnchorStyles.Right ) != 0)  attachment |= Attachment.Right;
+				if ((obj.Anchor & AnchorStyles.Bottom) != 0)  attachment |= Attachment.Bottom;
+				if ((obj.Anchor & AnchorStyles.Top   ) != 0)  attachment |= Attachment.Top;
 			}
 
 			if (this.panel.ChildrenLayoutMode == Widgets.Layouts.LayoutMode.Docked)
 			{
-				if (obj.Dock == DockStyle.Left  )  spring |= Spring.Left;
-				if (obj.Dock == DockStyle.Right )  spring |= Spring.Right;
-				if (obj.Dock == DockStyle.Bottom)  spring |= Spring.Bottom;
-				if (obj.Dock == DockStyle.Top   )  spring |= Spring.Top;
+				if (obj.Dock == DockStyle.Left  )  attachment |= Attachment.Left;
+				if (obj.Dock == DockStyle.Right )  attachment |= Attachment.Right;
+				if (obj.Dock == DockStyle.Bottom)  attachment |= Attachment.Bottom;
+				if (obj.Dock == DockStyle.Top   )  attachment |= Attachment.Top;
 			}
 
-			return spring;
+			return attachment;
 		}
 
-		protected void SetObjectSpring(Widget obj, Spring spring)
+		protected void SetObjectAttachment(Widget obj, Attachment attachment)
 		{
 			//	Modifie le mode d'encrage d'un objet.
 			if (this.panel.ChildrenLayoutMode == Widgets.Layouts.LayoutMode.Anchored)
 			{
 				AnchorStyles style = AnchorStyles.None;
 
-				if ((spring & Spring.Left  ) != 0)  style |= AnchorStyles.Left;
-				if ((spring & Spring.Right ) != 0)  style |= AnchorStyles.Right;
-				if ((spring & Spring.Bottom) != 0)  style |= AnchorStyles.Bottom;
-				if ((spring & Spring.Top   ) != 0)  style |= AnchorStyles.Top;
+				if ((attachment & Attachment.Left  ) != 0)  style |= AnchorStyles.Left;
+				if ((attachment & Attachment.Right ) != 0)  style |= AnchorStyles.Right;
+				if ((attachment & Attachment.Bottom) != 0)  style |= AnchorStyles.Bottom;
+				if ((attachment & Attachment.Top   ) != 0)  style |= AnchorStyles.Top;
 
 				obj.Anchor = style;
 			}
@@ -1811,10 +1820,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				DockStyle style = DockStyle.None;
 
-				if (spring == Spring.Left  )  style = DockStyle.Left;
-				if (spring == Spring.Right )  style = DockStyle.Right;
-				if (spring == Spring.Bottom)  style = DockStyle.Bottom;
-				if (spring == Spring.Top   )  style = DockStyle.Top;
+				if (attachment == Attachment.Left  )  style = DockStyle.Left;
+				if (attachment == Attachment.Right )  style = DockStyle.Right;
+				if (attachment == Attachment.Bottom)  style = DockStyle.Bottom;
+				if (attachment == Attachment.Top   )  style = DockStyle.Top;
 
 				obj.Dock = style;
 			}
@@ -1905,24 +1914,24 @@ namespace Epsitec.Common.Designer.MyWidgets
 		#endregion
 
 
-		#region Spring
-		protected bool SpringDetect(Point mouse, out Widget obj, out Spring style)
+		#region Attachment
+		protected bool AttachmentDetect(Point mouse, out Widget obj, out Attachment style)
 		{
 			//	Détecte dans quel ressort d'un objet est la souris.
-			if (!this.context.ShowSpring || this.selectedObjects.Count != 1)
+			if (!this.context.ShowAttachment || this.selectedObjects.Count != 1)
 			{
 				obj = null;
-				style = Spring.None;
+				style = Attachment.None;
 				return false;
 			}
 
-			Spring[] styles = { Spring.Left, Spring.Right, Spring.Bottom, Spring.Top };
+			Attachment[] styles = { Attachment.Left, Attachment.Right, Attachment.Bottom, Attachment.Top };
 
 			foreach (Widget o in this.selectedObjects)
 			{
-				foreach (Spring s in styles)
+				foreach (Attachment s in styles)
 				{
-					Rectangle bounds = this.GetSpringBounds(o, s);
+					Rectangle bounds = this.GetAttachmentBounds(o, s);
 					if (bounds.Contains(mouse))
 					{
 						obj = o;
@@ -1933,57 +1942,57 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 
 			obj = null;
-			style = Spring.None;
+			style = Attachment.None;
 			return false;
 		}
 
-		protected Rectangle GetSpringBounds(Widget obj, Spring style)
+		protected Rectangle GetAttachmentBounds(Widget obj, Attachment style)
 		{
 			//	Retourne le rectangle englobant un ressort d'ancrage.
 			Rectangle bounds = this.GetObjectBounds(obj.Parent);
 			Rectangle rect = this.GetObjectBounds(obj);
 			Point p1, p2, p1a, p2a;
-			double thickness = PanelEditor.springThickness;
+			double thickness = PanelEditor.attachmentThickness;
 
-			if (style == Spring.Left)
+			if (style == Attachment.Left)
 			{
 				p1 = new Point(bounds.Left, rect.Center.Y);
 				p2 = new Point(rect.Left, rect.Center.Y);
-				p1a = Point.Scale(p1, p2, PanelEditor.springScale);
-				p2a = Point.Scale(p2, p1, PanelEditor.springScale);
+				p1a = Point.Scale(p1, p2, PanelEditor.attachmentScale);
+				p2a = Point.Scale(p2, p1, PanelEditor.attachmentScale);
 				p1a.Y -= thickness;
 				p2a.Y += thickness;
 				return new Rectangle(p1a, p2a);
 			}
 
-			if (style == Spring.Right)
+			if (style == Attachment.Right)
 			{
 				p1 = new Point(bounds.Right, rect.Center.Y);
 				p2 = new Point(rect.Right, rect.Center.Y);
-				p1a = Point.Scale(p1, p2, PanelEditor.springScale);
-				p2a = Point.Scale(p2, p1, PanelEditor.springScale);
+				p1a = Point.Scale(p1, p2, PanelEditor.attachmentScale);
+				p2a = Point.Scale(p2, p1, PanelEditor.attachmentScale);
 				p1a.Y -= thickness;
 				p2a.Y += thickness;
 				return new Rectangle(p1a, p2a);
 			}
 
-			if (style == Spring.Bottom)
+			if (style == Attachment.Bottom)
 			{
 				p1 = new Point(rect.Center.X, bounds.Bottom);
 				p2 = new Point(rect.Center.X, rect.Bottom);
-				p1a = Point.Scale(p1, p2, PanelEditor.springScale);
-				p2a = Point.Scale(p2, p1, PanelEditor.springScale);
+				p1a = Point.Scale(p1, p2, PanelEditor.attachmentScale);
+				p2a = Point.Scale(p2, p1, PanelEditor.attachmentScale);
 				p1a.X -= thickness;
 				p2a.X += thickness;
 				return new Rectangle(p1a, p2a);
 			}
 
-			if (style == Spring.Top)
+			if (style == Attachment.Top)
 			{
 				p1 = new Point(rect.Center.X, bounds.Top);
 				p2 = new Point(rect.Center.X, rect.Top);
-				p1a = Point.Scale(p1, p2, PanelEditor.springScale);
-				p2a = Point.Scale(p2, p1, PanelEditor.springScale);
+				p1a = Point.Scale(p1, p2, PanelEditor.attachmentScale);
+				p2a = Point.Scale(p2, p1, PanelEditor.attachmentScale);
 				p1a.X -= thickness;
 				p2a.X += thickness;
 				return new Rectangle(p1a, p2a);
@@ -2055,11 +2064,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 
 			//	Dessine les ancrages des objets sélectionnés.
-			if (this.context.ShowSpring && this.selectedObjects.Count == 1 && !this.isDragging && !this.handlesList.IsDragging)
+			if (this.context.ShowAttachment && this.selectedObjects.Count == 1 && !this.isDragging && !this.handlesList.IsDragging)
 			{
 				foreach (Widget obj in this.selectedObjects)
 				{
-					this.DrawSpring(graphics, obj, PanelsContext.ColorSpring);
+					this.DrawAttachment(graphics, obj, PanelsContext.ColorAttachment);
 				}
 			}
 
@@ -2100,9 +2109,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 
 			//	Dessine le rectangle de ressort d'ancrage.
-			if (!this.hilitedSpringRectangle.IsEmpty)
+			if (!this.hilitedAttachmentRectangle.IsEmpty)
 			{
-				Rectangle rect = this.hilitedSpringRectangle;
+				Rectangle rect = this.hilitedAttachmentRectangle;
 				graphics.AddFilledRectangle(rect);
 				graphics.RenderSolid(PanelsContext.ColorHiliteSurface);
 			}
@@ -2117,9 +2126,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void DrawHilitedObject(Graphics graphics, Widget obj)
 		{
 			//	Met en évidence l'objet survolé par la souris.
-			if (this.context.ShowSpring)
+			if (this.context.ShowAttachment)
 			{
-				this.DrawSpring(graphics, obj, PanelsContext.ColorHiliteOutline);
+				this.DrawAttachment(graphics, obj, PanelsContext.ColorHiliteOutline);
 			}
 
 			Rectangle rect = this.GetObjectBounds(obj);
@@ -2146,9 +2155,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void DrawHilitedParent(Graphics graphics, Widget obj)
 		{
 			//	Met en évidence l'objet parent survolé par la souris.
-			if (this.context.ShowSpring && obj != this.panel)
+			if (this.context.ShowAttachment && obj != this.panel)
 			{
-				this.DrawSpring(graphics, obj, PanelsContext.ColorHiliteParent);
+				this.DrawAttachment(graphics, obj, PanelsContext.ColorHiliteParent);
 			}
 
 			double thickness = 2.0;
@@ -2168,7 +2177,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			graphics.RenderSolid(PanelsContext.ColorHiliteParent);
 		}
 
-		protected void DrawSpring(Graphics graphics, Widget obj, Color color)
+		protected void DrawAttachment(Graphics graphics, Widget obj, Color color)
 		{
 			//	Dessine tous les ancrages d'un objet.
 			Rectangle bounds = this.GetObjectBounds(obj.Parent);
@@ -2177,26 +2186,26 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			p1 = new Point(bounds.Left, rect.Center.Y);
 			p2 = new Point(rect.Left, rect.Center.Y);
-			this.DrawSpring(graphics, p1, p2, this.IsObjectSpringLeft(obj), color);
+			this.DrawAttachment(graphics, p1, p2, this.IsObjectAttachmentLeft(obj), color);
 
 			p1 = new Point(rect.Right, rect.Center.Y);
 			p2 = new Point(bounds.Right, rect.Center.Y);
-			this.DrawSpring(graphics, p1, p2, this.IsObjectSpringRight(obj), color);
+			this.DrawAttachment(graphics, p1, p2, this.IsObjectAttachmentRight(obj), color);
 
 			p1 = new Point(rect.Center.X, bounds.Bottom);
 			p2 = new Point(rect.Center.X, rect.Bottom);
-			this.DrawSpring(graphics, p1, p2, this.IsObjectSpringBottom(obj), color);
+			this.DrawAttachment(graphics, p1, p2, this.IsObjectAttachmentBottom(obj), color);
 
 			p1 = new Point(rect.Center.X, rect.Top);
 			p2 = new Point(rect.Center.X, bounds.Top);
-			this.DrawSpring(graphics, p1, p2, this.IsObjectSpringTop(obj), color);
+			this.DrawAttachment(graphics, p1, p2, this.IsObjectAttachmentTop(obj), color);
 		}
 
-		protected void DrawSpring(Graphics graphics, Point p1, Point p2, bool rigid, Color color)
+		protected void DrawAttachment(Graphics graphics, Point p1, Point p2, bool rigid, Color color)
 		{
 			//	Dessine un ancrage horizontal ou vertical d'un objet.
-			Point p1a = Point.Scale(p1, p2, PanelEditor.springScale);
-			Point p2a = Point.Scale(p2, p1, PanelEditor.springScale);
+			Point p1a = Point.Scale(p1, p2, PanelEditor.attachmentScale);
+			Point p2a = Point.Scale(p2, p1, PanelEditor.attachmentScale);
 
 			Misc.AlignForLine(graphics, ref p1);
 			Misc.AlignForLine(graphics, ref p2);
@@ -2211,7 +2220,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				graphics.AddLine(p1-delta, p1a-delta);
 				graphics.AddLine(p2-delta, p2a-delta);
 
-				double dim = PanelEditor.springThickness;
+				double dim = PanelEditor.attachmentThickness;
 				Misc.AddBox(graphics, p1a, p2a, dim);
 			}
 			else  // élastique ?
@@ -2219,7 +2228,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				graphics.AddLine(p1, p1a);
 				graphics.AddLine(p2, p2a);
 
-				double dim = PanelEditor.springThickness;
+				double dim = PanelEditor.attachmentThickness;
 				double length = Point.Distance(p1a, p2a);
 				int loops = (int) (length/(dim*2));
 				loops = System.Math.Max(loops, 1);
@@ -2441,8 +2450,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 		#endregion
 
 
-		protected static readonly double	springThickness = 3.0;
-		protected static readonly double	springScale = 0.4;
+		protected static readonly double	attachmentThickness = 3.0;
+		protected static readonly double	attachmentScale = 0.4;
 
 		protected Module					module;
 		protected UI.Panel					panel;
@@ -2456,7 +2465,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected Widget					lastCreatedObject;
 		protected List<Widget>				selectedObjects = new List<Widget>();
 		protected Rectangle					selectedRectangle = Rectangle.Empty;
-		protected Rectangle					hilitedSpringRectangle = Rectangle.Empty;
+		protected Rectangle					hilitedAttachmentRectangle = Rectangle.Empty;
 		protected Widget					hilitedObject;
 		protected Widget					hilitedParent;
 		protected bool						isRectangling;  // j'invente des mots si je veux !

@@ -555,7 +555,7 @@ namespace Epsitec.Common.Designer
 		[Command("PanelShowTabIndex")]
 		[Command("PanelShowConstrain")]
 		[Command("PanelShowExpand")]
-		[Command("PanelShowSpring")]
+		[Command("PanelShowAttachment")]
 		[Command("AlignLeft")]
 		[Command("AlignCenterX")]
 		[Command("AlignRight")]
@@ -650,7 +650,7 @@ namespace Epsitec.Common.Designer
 			this.panelShowTabIndexState = this.CreateCommandState("PanelShowTabIndex");
 			this.panelShowExpandState = this.CreateCommandState("PanelShowExpand");
 			this.panelShowConstrainState = this.CreateCommandState("PanelShowConstrain");
-			this.panelShowSpringState = this.CreateCommandState("PanelShowSpring");
+			this.panelShowAttachmentState = this.CreateCommandState("PanelShowAttachment");
 
 			this.alignLeftState = this.CreateCommandState("AlignLeft");
 			this.alignCenterXState = this.CreateCommandState("AlignCenterX");
@@ -1099,7 +1099,7 @@ namespace Epsitec.Common.Designer
 		protected CommandState					panelShowTabIndexState;
 		protected CommandState					panelShowExpandState;
 		protected CommandState					panelShowConstrainState;
-		protected CommandState					panelShowSpringState;
+		protected CommandState					panelShowAttachmentState;
 		protected CommandState					alignLeftState;
 		protected CommandState					alignCenterXState;
 		protected CommandState					alignRightState;
