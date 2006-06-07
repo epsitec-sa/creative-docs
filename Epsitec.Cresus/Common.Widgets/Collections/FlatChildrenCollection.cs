@@ -117,7 +117,7 @@ namespace Epsitec.Common.Widgets.Collections
 				this.visuals.RemoveAt (oldIndex);
 				this.visuals.Insert (newIndex, visual);
 				
-				Visual parent = this.host.Parent;
+				Visual parent = this.host;
 
 				if (parent != null)
 				{
@@ -130,7 +130,7 @@ namespace Epsitec.Common.Widgets.Collections
 				this.visuals.RemoveAt (oldIndex);
 				this.visuals.Insert (newIndex, visual);
 
-				Visual parent = this.host.Parent;
+				Visual parent = this.host;
 
 				if (parent != null)
 				{
