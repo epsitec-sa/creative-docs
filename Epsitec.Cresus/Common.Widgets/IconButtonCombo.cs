@@ -441,11 +441,16 @@ namespace Epsitec.Common.Widgets
 				rank ++;
 			}
 
+#if false
 			Drawing.Size size = this.scrollList.GetBestLineSize();
 			this.scrollList.LineHeight = size.Height;
 			menu.SetManualBounds(new Drawing.Rectangle(0, 0, size.Width, 200));
 			menu.AdjustSize();
 			MenuItem.SetMenuHost(this, new MenuHost(menu));
+#else
+			TextFieldCombo.AdjustScrollListWidth (this.scrollList);
+			TextFieldCombo.AdjustComboSize (this, menu);
+#endif
 			
 			return menu;
 		}
