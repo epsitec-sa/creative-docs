@@ -977,6 +977,8 @@ namespace Epsitec.Common.Widgets
 
 		protected virtual void MeasureMinMax(ref Drawing.Size min, ref Drawing.Size max)
 		{
+			Layouts.LayoutContext context = Helpers.VisualTree.GetLayoutContext (this);
+			
 			min.Width = System.Math.Max (min.Width, this.MinWidth);
 			min.Height = System.Math.Max (min.Height, this.MinHeight);
 			max.Width = System.Math.Min (max.Width, this.MaxWidth);
@@ -984,26 +986,48 @@ namespace Epsitec.Common.Widgets
 
 			if (this.HasChildren)
 			{
+				Drawing.Margins padding = this.Padding + this.GetInternalPadding ();
 				IEnumerable<Visual> children = this.children;
 				Layouts.ILayoutEngine engine = Layouts.LayoutEngine.GetLayoutEngine (this);
+
+				double paddingWidth  = padding.Width;
+				double paddingHeight = padding.Height;
+
+				min.Width  = System.Math.Max (0, min.Width  - paddingWidth);
+				min.Height = System.Math.Max (0, min.Height - paddingHeight);
+				max.Width  = System.Math.Max (0, max.Width  - paddingWidth);
+				max.Height = System.Math.Max (0, max.Height - paddingHeight);
 				
 				if (this.children.DockLayoutCount > 0)
 				{
-					Layouts.LayoutEngine.DockEngine.UpdateMinMax (this, children, ref min, ref max);
+					Layouts.LayoutEngine.DockEngine.UpdateMinMax (this, context, children, ref min, ref max);
 				}
 				if (this.children.AnchorLayoutCount > 0)
 				{
-					Layouts.LayoutEngine.AnchorEngine.UpdateMinMax (this, children, ref min, ref max);
+					Layouts.LayoutEngine.AnchorEngine.UpdateMinMax (this, context, children, ref min, ref max);
 				}
 				if (this.children.StackLayoutCount > 0)
 				{
-					Layouts.LayoutEngine.StackEngine.UpdateMinMax (this, children, ref min, ref max);
+					Layouts.LayoutEngine.StackEngine.UpdateMinMax (this, context, children, ref min, ref max);
 				}
 
 				if (engine != null)
 				{
-					engine.UpdateMinMax (this, children, ref min, ref max);
+					engine.UpdateMinMax (this, context, children, ref min, ref max);
 				}
+
+				min.Width  += paddingWidth;
+				min.Height += paddingHeight;
+				max.Width  += paddingWidth;
+				max.Height += paddingHeight;
+			}
+			
+			if (context != null)
+			{
+				context.DefineMinWidth (this, min.Width);
+				context.DefineMinHeight (this, min.Height);
+				context.DefineMaxWidth (this, max.Width);
+				context.DefineMaxHeight (this, max.Height);
 			}
 		}
 

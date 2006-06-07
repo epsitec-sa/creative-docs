@@ -13,6 +13,6 @@ namespace Epsitec.Common.Widgets.Layouts
 	public interface ILayoutEngine
 	{
 		void UpdateLayout(Visual container, Drawing.Rectangle rect, IEnumerable<Visual> children);
-		void UpdateMinMax(Visual container, IEnumerable<Visual> children, ref Drawing.Size minSize, ref Drawing.Size maxSize);
+		void UpdateMinMax(Visual container, LayoutContext context, IEnumerable<Visual> children, ref Drawing.Size minSize, ref Drawing.Size maxSize);
 	}
 }
