@@ -1303,6 +1303,14 @@ namespace Epsitec.Common.Widgets
 			line.Children.Add (text);
 
 			text = new StaticText ();
+			text.Text = "Xy";
+			text.PreferredWidth = 16;
+			text.Dock = DockStyle.Stacked;
+			text.VerticalAlignment = VerticalAlignment.BaseLine;
+			text.ContentAlignment = ContentAlignment.MiddleLeft;
+			line.Children.Add (text);
+
+			text = new StaticText ();
 			text.Text = @"<font size=""160%"">Xy</font>";
 			text.PreferredWidth = 24;
 			text.Dock = DockStyle.Stacked;
@@ -1409,6 +1417,7 @@ namespace Epsitec.Common.Widgets
 			text.Text = "Xyz";
 			text.PreferredWidth = 20;
 			text.Margins = new Drawing.Margins (4, 4, 0, 0);
+			text.ContentAlignment = ContentAlignment.BottomLeft;
 			Layouts.GridLayoutEngine.SetColumn (text, 3);
 			Layouts.GridLayoutEngine.SetRow (text, 0);
 			window.Root.Children.Add (text);
