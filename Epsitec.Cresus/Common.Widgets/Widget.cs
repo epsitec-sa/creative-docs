@@ -1689,18 +1689,9 @@ namespace Epsitec.Common.Widgets
 
 				origin.Y += offset;
 				
-				ascender -= offset;
-				descender -= offset;
+				descender = -origin.Y;
+				ascender  = height - origin.Y;
 				
-				double lineHeight = ascender - descender;
-				double space = height - lineHeight;
-
-				if (space > 0)
-				{
-					ascender  += space / 2;
-					descender -= space / 2;
-				}
-
 				return origin;
 			}
 
