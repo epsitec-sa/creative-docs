@@ -92,7 +92,6 @@ namespace Epsitec.Common.Widgets
 
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
-			System.Diagnostics.Debug.WriteLine ("Page DY=" + this.ActualHeight + ", minDY=" + this.RealMinSize.Height);
 			//	Dessine l'onglet.
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
 			Rectangle rect = this.Client.Bounds;
