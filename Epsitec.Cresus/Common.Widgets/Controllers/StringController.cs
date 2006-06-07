@@ -18,21 +18,28 @@ namespace Epsitec.Common.Widgets.Controllers
 		
 		protected override void CreateUserInterface(object valueTypeObject, string valueName)
 		{
+			this.Placeholder.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
+
 			this.typeObject = valueTypeObject;
 
 			this.label = new StaticText ();
 			this.field = new TextField ();
 
-			this.label.Dock = DockStyle.Left;
+			this.label.Dock = DockStyle.Stacked;
 			this.label.HorizontalAlignment = HorizontalAlignment.Right;
+			this.label.VerticalAlignment = VerticalAlignment.BaseLine;
 			this.label.ContentAlignment = Epsitec.Common.Drawing.ContentAlignment.MiddleRight;
 			
 			if (! string.IsNullOrEmpty (valueName))
 			{
 				this.label.Text = string.Format ("{0}: ", valueName);
+				this.label.MinWidth = this.label.GetBestFitSize ().Width;
 			}
 			
-			this.field.Dock = DockStyle.Fill;
+			
+			this.field.Dock = DockStyle.Stacked;
+			this.field.HorizontalAlignment = HorizontalAlignment.Stretch;
+			this.field.VerticalAlignment = VerticalAlignment.BaseLine;
 			this.field.TextChanged += this.HandleFieldTextChanged;
 
 			this.field.TabIndex = 1;
