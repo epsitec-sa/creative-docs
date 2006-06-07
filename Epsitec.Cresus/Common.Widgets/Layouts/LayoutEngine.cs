@@ -1,12 +1,14 @@
 //	Copyright © 2005-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
+using Epsitec.Common.Types;
+
 namespace Epsitec.Common.Widgets.Layouts
 {
 	/// <summary>
 	/// LayoutEngine.
 	/// </summary>
-	public sealed class LayoutEngine
+	public sealed class LayoutEngine : DependencyObject
 	{
 		private LayoutEngine()
 		{
@@ -75,6 +77,35 @@ namespace Epsitec.Common.Widgets.Layouts
 
 			return LayoutMode.None;
 		}
+
+		public static ILayoutEngine GetLayoutEngine(DependencyObject o)
+		{
+			object value;
+			
+			if (o.TryGetLocalValue (LayoutEngine.LayoutEngineProperty, out value))
+			{
+				return value as ILayoutEngine;
+			}
+			else
+			{
+				return null;
+			}
+		}
+
+		public static void SetLayoutEngine(DependencyObject o, ILayoutEngine engine)
+		{
+			if (engine == null)
+			{
+				o.ClearValue (LayoutEngine.LayoutEngineProperty);
+			}
+			else
+			{
+				o.SetValue (LayoutEngine.LayoutEngineProperty, engine);
+			}
+		}
+		
+		
+		public static readonly DependencyProperty LayoutEngineProperty = DependencyProperty.RegisterAttached ("LayoutEngine", typeof (ILayoutEngine), typeof (LayoutEngine));
 
 		private static ILayoutEngine					dock_engine   = new DockLayoutEngine ();
 		private static ILayoutEngine					anchor_engine = new AnchorLayoutEngine ();
