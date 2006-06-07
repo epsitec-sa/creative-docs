@@ -129,6 +129,14 @@ namespace Epsitec.Common.Widgets.Collections
 			{
 				this.visuals.RemoveAt (oldIndex);
 				this.visuals.Insert (newIndex, visual);
+
+				Visual parent = this.host.Parent;
+
+				if (parent != null)
+				{
+					Layouts.LayoutContext.AddToMeasureQueue (parent);
+					Layouts.LayoutContext.AddToArrangeQueue (parent);
+				}
 			}
 		}
 		
