@@ -33,8 +33,9 @@ namespace Epsitec.Common.Widgets.Layouts
 					continue;
 				}
 
-				Drawing.Rectangle bounds = client;
-				Drawing.Size size = LayoutContext.GetResultingMeasuredSize (child);
+				Drawing.Rectangle bounds  = client;
+				Drawing.Margins   margins = child.Margins;
+				Drawing.Size      size    = LayoutContext.GetResultingMeasuredSize (child);
 
 				double dx = size.Width;
 				double dy = size.Height;
@@ -48,22 +49,24 @@ namespace Epsitec.Common.Widgets.Layouts
 					dy = child.GetCurrentBounds ().Height;		//	TODO: améliorer
 				}
 
-				dx += child.Margins.Width;
-				dy += child.Margins.Height;
+				dx += margins.Width;
+				dy += margins.Height;
 
 				switch (mode)
 				{
 					case ContainerLayoutMode.HorizontalFlow:
 						bounds.Width = dx;
-						client.Left = bounds.Right;
+						client.Left  = bounds.Right;
 						break;
+					
 					case ContainerLayoutMode.VerticalFlow:
 						bounds.Bottom = bounds.Top - dy;
-						client.Top = bounds.Bottom;
+						client.Top    = bounds.Bottom;
 						break;
 				}
-				
-				DockLayoutEngine.SetChildBounds (child, bounds, baseLine);
+
+				bounds.Deflate (margins);
+				DockLayoutEngine.SetChildBounds (child, bounds, baseLine - margins.Bottom);
 			}
 		}
 

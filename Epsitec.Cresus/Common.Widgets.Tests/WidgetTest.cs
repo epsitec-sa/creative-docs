@@ -1312,7 +1312,7 @@ namespace Epsitec.Common.Widgets
 			text.PreferredWidth = 16;
 			text.PreferredHeight = 20;
 			text.Dock = DockStyle.Stacked;
-			text.Margins = new Margins (0, 0, 16, 2);
+			text.Margins = new Margins (3, 1, 16, 2);
 			text.VerticalAlignment = VerticalAlignment.BaseLine;
 			text.PaintForeground += WidgetTest.WidgetPaintForeground;
 			line.Children.Add (text);
