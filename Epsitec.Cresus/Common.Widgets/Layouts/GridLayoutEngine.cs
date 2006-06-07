@@ -48,6 +48,8 @@ namespace Epsitec.Common.Widgets.Layouts
 				System.Diagnostics.Debug.Assert (column < this.columnMeasures.Length);
 				System.Diagnostics.Debug.Assert (row < this.rowMeasures.Length);
 
+				Drawing.Margins margins = child.Margins;
+				
 				LayoutMeasure columnMeasure = this.columnMeasures[column];
 				LayoutMeasure rowMeasure    = this.rowMeasures[row];
 
@@ -55,6 +57,8 @@ namespace Epsitec.Common.Widgets.Layouts
 				System.Diagnostics.Debug.Assert (rowMeasure != null);
 
 				Drawing.Rectangle bounds = new Drawing.Rectangle (rect.Left+x[column], rect.Top-y[row], this.columnMeasures[column].Desired, this.rowMeasures[row].Desired);
+				
+				bounds.Deflate (margins);
 				child.SetBounds (bounds);
 			}
 		}
@@ -88,18 +92,20 @@ namespace Epsitec.Common.Widgets.Layouts
 					rowMax = row;
 				}
 
+				Drawing.Margins margins = child.Margins;
+				
 				LayoutMeasure columnMeasure = this.GetColumnMeasure (columnMeasureList, passId, column);
 				LayoutMeasure rowMeasure    = this.GetRowMeasure (rowMeasureList, passId, row);
 
 				Layouts.LayoutMeasure measureDx = Layouts.LayoutMeasure.GetWidth (child);
 				Layouts.LayoutMeasure measureDy = Layouts.LayoutMeasure.GetHeight (child);
 
-				columnMeasure.UpdateMin (passId, measureDx.Desired);
-				columnMeasure.UpdateMax (passId, measureDx.Max);
+				columnMeasure.UpdateMin (passId, measureDx.Desired + margins.Width);
+				columnMeasure.UpdateMax (passId, measureDx.Max + margins.Width);
 				columnMeasure.UpdatePassId (passId);
 
-				rowMeasure.UpdateMin (passId, measureDy.Desired);
-				rowMeasure.UpdateMax (passId, measureDy.Max);
+				rowMeasure.UpdateMin (passId, measureDy.Desired + margins.Height);
+				rowMeasure.UpdateMax (passId, measureDy.Max + margins.Height);
 				rowMeasure.UpdatePassId (passId);
 			}
 
