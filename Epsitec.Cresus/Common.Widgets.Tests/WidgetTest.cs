@@ -1420,6 +1420,7 @@ namespace Epsitec.Common.Widgets
 
 			Button button;
 			StaticText text;
+			TextField field;
 
 			button = new Button ();
 			button.Text = "A";
@@ -1471,6 +1472,41 @@ namespace Epsitec.Common.Widgets
 			Layouts.GridLayoutEngine.SetColumn (button, 2);
 			Layouts.GridLayoutEngine.SetRow (button, 1);
 			window.Root.Children.Add (button);
+
+			button = new Button ();
+			button.Text = "A";
+			button.PreferredWidth = 40;
+			button.VerticalAlignment = VerticalAlignment.BaseLine;
+			Layouts.GridLayoutEngine.SetColumn (button, 0);
+			Layouts.GridLayoutEngine.SetRow (button, 2);
+			window.Root.Children.Add (button);
+
+			field = new TextField ();
+			field.Text = "B";
+			field.PreferredWidth = 60;
+			field.Margins = new Margins (4, 4, 0, 0);
+			field.VerticalAlignment = VerticalAlignment.BaseLine;
+			Layouts.GridLayoutEngine.SetColumn (field, 1);
+			Layouts.GridLayoutEngine.SetRow (field, 2);
+			window.Root.Children.Add (field);
+
+			button = new Button ();
+			button.Text = "C";
+			button.PreferredWidth = 20;
+			button.VerticalAlignment = VerticalAlignment.BaseLine;
+			Layouts.GridLayoutEngine.SetColumn (button, 2);
+			Layouts.GridLayoutEngine.SetRow (button, 2);
+			window.Root.Children.Add (button);
+
+			text = new StaticText ();
+			text.Text = "Xyz";
+			text.PreferredWidth = 20;
+			text.Margins = new Drawing.Margins (4, 4, 0, 0);
+			text.ContentAlignment = ContentAlignment.BottomLeft;
+			text.VerticalAlignment = VerticalAlignment.BaseLine;
+			Layouts.GridLayoutEngine.SetColumn (text, 3);
+			Layouts.GridLayoutEngine.SetRow (text, 2);
+			window.Root.Children.Add (text);
 
 			Layouts.LayoutEngine.SetLayoutEngine (window.Root, grid);
 
