@@ -533,6 +533,14 @@ namespace Epsitec.Common.Widgets
 			
 			MenuItem.SetMenuHost (parent, new MenuHost (menu));
 		}
+
+		public static void AdjustScrollListWidth(ScrollList scrollList)
+		{
+			Drawing.Size size = scrollList.GetBestLineSize ();
+			
+			scrollList.LineHeight     = size.Height;
+			scrollList.PreferredWidth = size.Width;
+		}
 		
 		protected virtual AbstractMenu CreateMenu()
 		{
@@ -549,6 +557,7 @@ namespace Epsitec.Common.Widgets
 			
 			this.CopyItemsToComboList (this.scroll_list.Items);
 
+			TextFieldCombo.AdjustScrollListWidth (this.scroll_list);
 			TextFieldCombo.AdjustComboSize (this, menu);
 			
 			return menu;

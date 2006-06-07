@@ -593,6 +593,8 @@ namespace Epsitec.Common.Widgets
 		protected virtual AbstractMenu CreateMenu()
 		{
 			TextFieldComboMenu menu = new TextFieldComboMenu();
+
+			menu.MinWidth = this.ActualWidth;
 			
 			this.scrollList = new ScrollList();
 			this.scrollList.ScrollListStyle = ScrollListStyle.Menu;
@@ -603,20 +605,29 @@ namespace Epsitec.Common.Widgets
 			
 			//	Remplit la liste :
 			int rank = 0;
-			foreach ( Item item in this.items )
+			foreach (Item item in this.items)
 			{
-				if ( item == null )  continue;  // séparateur ?
+				if (item == null)
+				{
+					continue;  // séparateur ?
+				}
 
 				bool sel = (rank == this.SelectedIndex);
-				this.scrollList.Items.Add(item.Name, sel ? item.SelectedText : item.RegularText);
-				rank ++;
+				this.scrollList.Items.Add (item.Name, sel ? item.SelectedText : item.RegularText);
+				rank++;
 			}
 
+#if false
 			Drawing.Size size = this.scrollList.GetBestLineSize();
 			this.scrollList.LineHeight = size.Height;
+			this.scrollList.PreferredWidth = size.Width;
 			menu.SetManualBounds(new Drawing.Rectangle(0, 0, size.Width, 200));
 			menu.AdjustSize();
 			MenuItem.SetMenuHost(this, new MenuHost(menu));
+#else
+			TextFieldCombo.AdjustScrollListWidth (this.scrollList);
+			TextFieldCombo.AdjustComboSize (this, menu);
+#endif
 			
 			return menu;
 		}
