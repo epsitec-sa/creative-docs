@@ -67,22 +67,16 @@ namespace Epsitec.Common.Widgets.Layouts
 			}
 		}
 
-		public void UpdateMinMax(Visual container, IEnumerable<Visual> children, ref Drawing.Size min_size, ref Drawing.Size max_size)
+		public void UpdateMinMax(Visual container, LayoutContext context, IEnumerable<Visual> children, ref Drawing.Size minSize, ref Drawing.Size maxSize)
 		{
-			Drawing.Margins padding = container.Padding + container.GetInternalPadding ();
 			ContainerLayoutMode mode = container.ContainerLayoutMode;
 
-			double min_dx = System.Math.Max (0, min_size.Width - padding.Width);
-			double min_dy = System.Math.Max (0, min_size.Height - padding.Height);
-			double max_dx = System.Math.Max (0, max_size.Width - padding.Width);
-			double max_dy = System.Math.Max (0, max_size.Height - padding.Height);
-
-			double minDx = 0;
-			double minDy = 0;
-			double minH1 = 0;
-			double minH2 = 0;
-			double maxDx = double.PositiveInfinity;
-			double maxDy = double.PositiveInfinity;
+			double currentMinDx = 0;
+			double currentMinDy = 0;
+			double currentMinH1 = 0;
+			double currentMinH2 = 0;
+			double currentMaxDx = double.PositiveInfinity;
+			double currentMaxDy = double.PositiveInfinity;
 			
 			foreach (Visual child in children)
 			{
@@ -97,20 +91,20 @@ namespace Epsitec.Common.Widgets.Layouts
 
 				Drawing.Size margins = child.Margins.Size;
 
-				Layouts.LayoutMeasure measure_dx = Layouts.LayoutMeasure.GetWidth (child);
-				Layouts.LayoutMeasure measure_dy = Layouts.LayoutMeasure.GetHeight (child);
+				Layouts.LayoutMeasure measureDx = Layouts.LayoutMeasure.GetWidth (child);
+				Layouts.LayoutMeasure measureDy = Layouts.LayoutMeasure.GetHeight (child);
 
-				Drawing.Size clientMin = new Drawing.Size (measure_dx.Min + margins.Width, measure_dy.Min + margins.Height);
-				Drawing.Size clientMax = new Drawing.Size (measure_dx.Max + margins.Width, measure_dy.Max + margins.Width);
+				Drawing.Size clientMin = new Drawing.Size (measureDx.Min + margins.Width, measureDy.Min + margins.Height);
+				Drawing.Size clientMax = new Drawing.Size (measureDx.Max + margins.Width, measureDy.Max + margins.Width);
 
-				double clientDx = measure_dx.Desired + margins.Width;
-				double clientDy = measure_dy.Desired + margins.Height;
+				double clientDx = measureDx.Desired + margins.Width;
+				double clientDy = measureDy.Desired + margins.Height;
 
 				switch (mode)
 				{
 					case ContainerLayoutMode.HorizontalFlow:
-						minDx += clientDx;
-						maxDx += clientDx;
+						currentMinDx += clientDx;
+						currentMaxDx += clientDx;
 
 						if (child.VerticalAlignment == VerticalAlignment.BaseLine)
 						{
@@ -119,47 +113,38 @@ namespace Epsitec.Common.Widgets.Layouts
 							
 							LayoutContext.GetMeasuredBaseLine (child, out h1, out h2);
 
-							minH1 = System.Math.Max (minH1, h1);
-							minH2 = System.Math.Max (minH2, h2);
+							currentMinH1 = System.Math.Max (currentMinH1, h1);
+							currentMinH2 = System.Math.Max (currentMinH2, h2);
 						}
 						else
 						{
-							minDy = System.Math.Max (minDy, clientMin.Height);
-							maxDy = System.Math.Min (maxDy, clientMax.Height);
+							currentMinDy = System.Math.Max (currentMinDy, clientMin.Height);
+							currentMaxDy = System.Math.Min (currentMaxDy, clientMax.Height);
 						}
 						break;
 					
 					case ContainerLayoutMode.VerticalFlow:
-						minDy += clientDy;
-						maxDy += clientDy;
-						minDx  = System.Math.Max (minDx, clientMin.Width);
-						maxDx  = System.Math.Min (maxDx, clientMax.Width);
+						currentMinDy += clientDy;
+						currentMaxDy += clientDy;
+						currentMinDx  = System.Math.Max (currentMinDx, clientMin.Width);
+						currentMaxDx  = System.Math.Min (currentMaxDx, clientMax.Width);
 						break;
 				}
 			}
 
-			minDy = System.Math.Max (minDy, minH1 + minH2);
+			currentMinDy = System.Math.Max (currentMinDy, currentMinH1 + currentMinH2);
 
-			double min_width  = System.Math.Max (min_dx, minDx) + padding.Width;
-			double min_height = System.Math.Max (min_dy, minDy) + padding.Height;
-			double max_width  = System.Math.Min (max_dx, maxDx) + padding.Width;
-			double max_height = System.Math.Min (max_dy, maxDy) + padding.Height;
+			double minWidth  = System.Math.Max (minSize.Width,  currentMinDx);
+			double minHeight = System.Math.Max (minSize.Height, currentMinDy);
+			double maxWidth  = System.Math.Min (maxSize.Width,  currentMaxDx);
+			double maxHeight = System.Math.Min (maxSize.Height, currentMaxDy);
 
-			//	Tous les calculs ont été faits en coordonnées client, il faut donc encore transformer
-			//	ces dimensions en coordonnées parents.
-
-			min_size = Helpers.VisualTree.MapVisualToParent (container, new Drawing.Size (min_width, min_height));
-			max_size = Helpers.VisualTree.MapVisualToParent (container, new Drawing.Size (max_width, max_height));
-
-			Layouts.LayoutContext context = Helpers.VisualTree.GetLayoutContext (container);
+			minSize = new Drawing.Size (minWidth, minHeight);
+			maxSize = new Drawing.Size (maxWidth, maxHeight);
 
 			if (context != null)
 			{
-				context.DefineBaseLine (container, minH1, minH2);
-				context.DefineMinWidth (container, min_size.Width);
-				context.DefineMinHeight (container, min_size.Height);
-				context.DefineMaxWidth (container, max_size.Width);
-				context.DefineMaxHeight (container, max_size.Height);
+				context.DefineBaseLine (container, currentMinH1, currentMinH2);
 			}
 		}
 	}

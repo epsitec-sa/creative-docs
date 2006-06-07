@@ -97,8 +97,8 @@ namespace Epsitec.Common.Widgets.Layouts
 				DockLayoutEngine.SetChildBounds (child, Drawing.Rectangle.FromPoints (x1, y1, x2, y2));
 			}
 		}
-		
-		public void UpdateMinMax(Visual container, IEnumerable<Visual> children, ref Drawing.Size min_size, ref Drawing.Size max_size)
+
+		public void UpdateMinMax(Visual container, LayoutContext context, IEnumerable<Visual> children, ref Drawing.Size min_size, ref Drawing.Size max_size)
 		{
 			double min_dx = min_size.Width;
 			double min_dy = min_size.Height;
@@ -165,29 +165,8 @@ namespace Epsitec.Common.Widgets.Layouts
 				}
 			}
 
-			double pad_width  = container.Padding.Width  + container.GetInternalPadding ().Width;
-			double pad_height = container.Padding.Height + container.GetInternalPadding ().Height;
-
-			double min_width  = min_dx + pad_width;
-			double min_height = min_dy + pad_height;
-			double max_width  = max_dx + pad_width;
-			double max_height = max_dy + pad_height;
-
-			//	Tous les calculs ont été faits en coordonnées client, il faut donc encore transformer
-			//	ces dimensions en coordonnées parents.
-
-			min_size = Helpers.VisualTree.MapVisualToParent (container, new Drawing.Size (min_width, min_height));
-			max_size = Helpers.VisualTree.MapVisualToParent (container, new Drawing.Size (max_width, max_height));
-
-			Layouts.LayoutContext context = Helpers.VisualTree.GetLayoutContext (container);
-			
-			if (context != null)
-			{
-				context.DefineMinWidth (container, min_size.Width);
-				context.DefineMinHeight (container, min_size.Height);
-				context.DefineMaxWidth (container, max_size.Width);
-				context.DefineMaxHeight (container, max_size.Height);
-			}
+			min_size = new Drawing.Size (min_dx, min_dy);
+			max_size = new Drawing.Size (max_dx, max_dy);
 		}
 	}
 }
