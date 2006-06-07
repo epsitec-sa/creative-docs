@@ -81,6 +81,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.panelContainer = new UI.Panel();
 			//?this.panelContainer.ChildrenLayoutMode = Widgets.Layouts.LayoutMode.Anchored;
 			this.panelContainer.ChildrenLayoutMode = Widgets.Layouts.LayoutMode.Docked;
+			this.panelContainer.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
 			this.panelContainer.Anchor = AnchorStyles.BottomLeft;
 			this.panelContainer.Padding = new Margins(20, 20, 20, 20);
 			this.panelContainer.SetParent(container);

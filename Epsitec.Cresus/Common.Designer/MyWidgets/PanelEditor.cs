@@ -114,6 +114,15 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
+		public bool						IsHorizontalDocking
+		{
+			//	Indique si le panneau associé est en mode de docking horizontal.
+			get
+			{
+				return (this.panel.ContainerLayoutMode == ContainerLayoutMode.HorizontalFlow);
+			}
+		}
+
 		public ConstrainsList ConstrainsList
 		{
 			//	Retourne la liste des contraintes.
@@ -892,7 +901,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 				if (this.IsLayoutDocking)
 				{
-					this.creatingObject.Dock = DockStyle.Left;
+					if (this.IsHorizontalDocking)
+					{
+						this.creatingObject.Dock = DockStyle.Left;
+					}
+					else
+					{
+						this.creatingObject.Dock = DockStyle.Top;
+					}
 				}
 
 				this.SetObjectPosition(this.creatingObject, pos);
@@ -1995,12 +2011,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Retourne le rectangle englobant un attachement.
 			Rectangle bounds = this.GetObjectBounds(obj.Parent);
 			Rectangle rect = this.GetObjectBounds(obj);
-
-			if (this.IsLayoutDocking)
-			{
-				rect.Inflate(this.GetObjectMargins(obj));
-			}
-
 			Point p1, p2, p1a, p2a;
 
 			if (style == Attachment.Left)
@@ -2259,30 +2269,28 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void DrawAttachment(Graphics graphics, Widget obj, Color color)
 		{
 			//	Dessine tous les attachements d'un objet.
-			Rectangle bounds = this.GetObjectBounds(obj.Parent);
-			Rectangle rect = this.GetObjectBounds(obj);
-			Point p1, p2;
-
-			if (this.IsLayoutDocking)
+			if (this.IsLayoutAnchored)
 			{
-				rect.Inflate(this.GetObjectMargins(obj));
+				Rectangle bounds = this.GetObjectBounds(obj.Parent);
+				Rectangle rect = this.GetObjectBounds(obj);
+				Point p1, p2;
+
+				p1 = new Point(bounds.Left, rect.Center.Y);
+				p2 = new Point(rect.Left, rect.Center.Y);
+				this.DrawAttachment(graphics, p1, p2, this.IsObjectAttachmentLeft(obj), color);
+
+				p1 = new Point(rect.Right, rect.Center.Y);
+				p2 = new Point(bounds.Right, rect.Center.Y);
+				this.DrawAttachment(graphics, p1, p2, this.IsObjectAttachmentRight(obj), color);
+
+				p1 = new Point(rect.Center.X, bounds.Bottom);
+				p2 = new Point(rect.Center.X, rect.Bottom);
+				this.DrawAttachment(graphics, p1, p2, this.IsObjectAttachmentBottom(obj), color);
+
+				p1 = new Point(rect.Center.X, rect.Top);
+				p2 = new Point(rect.Center.X, bounds.Top);
+				this.DrawAttachment(graphics, p1, p2, this.IsObjectAttachmentTop(obj), color);
 			}
-
-			p1 = new Point(bounds.Left, rect.Center.Y);
-			p2 = new Point(rect.Left, rect.Center.Y);
-			this.DrawAttachment(graphics, p1, p2, this.IsObjectAttachmentLeft(obj), color);
-
-			p1 = new Point(rect.Right, rect.Center.Y);
-			p2 = new Point(bounds.Right, rect.Center.Y);
-			this.DrawAttachment(graphics, p1, p2, this.IsObjectAttachmentRight(obj), color);
-
-			p1 = new Point(rect.Center.X, bounds.Bottom);
-			p2 = new Point(rect.Center.X, rect.Bottom);
-			this.DrawAttachment(graphics, p1, p2, this.IsObjectAttachmentBottom(obj), color);
-
-			p1 = new Point(rect.Center.X, rect.Top);
-			p2 = new Point(rect.Center.X, bounds.Top);
-			this.DrawAttachment(graphics, p1, p2, this.IsObjectAttachmentTop(obj), color);
 		}
 
 		protected void DrawAttachment(Graphics graphics, Point p1, Point p2, bool rigid, Color color)
