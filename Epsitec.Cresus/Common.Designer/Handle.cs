@@ -20,10 +20,6 @@ namespace Epsitec.Common.Designer
 			Top,
 			Left,
 			Right,
-			MarginBottom,
-			MarginTop,
-			MarginLeft,
-			MarginRight,
 		}
 
 		public enum Glyph
@@ -89,21 +85,6 @@ namespace Epsitec.Common.Designer
 			{
 				this.isHilite = value;
 			}
-		}
-
-		public bool IsMargin
-		{
-			//	Indique s'il s'agit d'une poignée pour une marge.
-			get
-			{
-				return Handle.IsMarginType(this.type);
-			}
-		}
-
-		public static bool IsMarginType(Type type)
-		{
-			//	Indique s'il s'agit d'une poignée pour une marge.
-			return (type == Type.MarginBottom || type == Type.MarginTop || type == Type.MarginLeft || type == Type.MarginRight);
 		}
 
 		public bool Detect(Point mouse)
@@ -194,25 +175,25 @@ namespace Epsitec.Common.Designer
 				Rectangle bounds = new Rectangle(this.position, this.position);
 				bounds.Inflate(3.5);
 
-				if (this.type == Type.MarginLeft)
+				if (this.glyph == Glyph.ArrowLeft)
 				{
 					bounds.Inflate(1.0);
 					bounds.Left -= 2.0;
 				}
 
-				if (this.type == Type.MarginRight)
+				if (this.glyph == Glyph.ArrowRight)
 				{
 					bounds.Inflate(1.0);
 					bounds.Right += 2.0;
 				}
 
-				if (this.type == Type.MarginBottom)
+				if (this.glyph == Glyph.ArrowDown)
 				{
 					bounds.Inflate(1.0);
 					bounds.Bottom -= 2.0;
 				}
 
-				if (this.type == Type.MarginTop)
+				if (this.glyph == Glyph.ArrowUp)
 				{
 					bounds.Inflate(1.0);
 					bounds.Top += 2.0;

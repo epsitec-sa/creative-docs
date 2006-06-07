@@ -170,61 +170,51 @@ namespace Epsitec.Common.Designer
 				return null;
 			}
 
-			if (Handle.IsMarginType(type))
+			if (this.widget is TextField)
 			{
-				if (!this.editor.IsLayoutDocking)
+				if (type != Handle.Type.Left && type != Handle.Type.Right)
 				{
 					return null;
 				}
 			}
-			else
+			else if (this.widget is Button)
 			{
-				if (this.widget is TextField)
-				{
-					if (type != Handle.Type.Left && type != Handle.Type.Right)
-					{
-						return null;
-					}
-				}
-				else if (this.widget is Button)
-				{
-					if (type != Handle.Type.Left && type != Handle.Type.Right)
-					{
-						return null;
-					}
-				}
-				else if (this.widget is Separator)
-				{
-					if (this.widget.PreferredHeight == 1)  // séparateur horizontal ?
-					{
-						if (type != Handle.Type.Left && type != Handle.Type.Right)
-						{
-							return null;
-						}
-					}
-					else  // séparateur vertical ?
-					{
-						if (type != Handle.Type.Bottom && type != Handle.Type.Top)
-						{
-							return null;
-						}
-					}
-				}
-				else if (this.widget is StaticText)
-				{
-					if (type != Handle.Type.Left && type != Handle.Type.Right)
-					{
-						return null;
-					}
-				}
-				else if (this.widget is GroupBox)
-				{
-					//	Tous les types
-				}
-				else
+				if (type != Handle.Type.Left && type != Handle.Type.Right)
 				{
 					return null;
 				}
+			}
+			else if (this.widget is Separator)
+			{
+				if (this.widget.PreferredHeight == 1)  // séparateur horizontal ?
+				{
+					if (type != Handle.Type.Left && type != Handle.Type.Right)
+					{
+						return null;
+					}
+				}
+				else  // séparateur vertical ?
+				{
+					if (type != Handle.Type.Bottom && type != Handle.Type.Top)
+					{
+						return null;
+					}
+				}
+			}
+			else if (this.widget is StaticText)
+			{
+				if (type != Handle.Type.Left && type != Handle.Type.Right)
+				{
+					return null;
+				}
+			}
+			else if (this.widget is GroupBox)
+			{
+				//	Tous les types
+			}
+			else
+			{
+				return null;
 			}
 
 			return new Handle(type);
@@ -236,144 +226,81 @@ namespace Epsitec.Common.Designer
 			Rectangle bounds = this.editor.GetObjectBounds(this.widget);
 			Point center = bounds.Center;
 
-			if (handle.IsMargin)
+			handle.GlyphType = Handle.Glyph.Square;
+
+			switch (handle.HandleType)
 			{
-				Point m = Point.Scale(bounds.BottomLeft, bounds.TopRight, 0.25);
-				Margins margins = this.editor.GetObjectMargins(this.widget);
+				case Handle.Type.BottomLeft:
+					handle.Position = bounds.BottomLeft;
 
-				switch (handle.HandleType)
-				{
-					case Handle.Type.MarginBottom:
-						if (this.editor.IsObjectAttachmentTop(this.widget))
-						{
-							handle.Position = new Point(m.X, bounds.Bottom-margins.Bottom);
-							handle.GlyphType = Handle.Glyph.ArrowDown;
-						}
-						else
-						{
-							handle.Position = new Point(m.X, bounds.Bottom);
-							handle.GlyphType = Handle.Glyph.ArrowUp;
-						}
-						break;
+					if (this.editor.IsLayoutDocking)
+					{
+						handle.GlyphType = Handle.Glyph.Hide;
+					}
+					break;
 
-					case Handle.Type.MarginTop:
-						if (this.editor.IsObjectAttachmentTop(this.widget))
-						{
-							handle.Position = new Point(m.X, bounds.Top);
-							handle.GlyphType = Handle.Glyph.ArrowDown;
-						}
-						else
-						{
-							handle.Position = new Point(m.X, bounds.Top+margins.Top);
-							handle.GlyphType = Handle.Glyph.ArrowUp;
-						}
-						break;
+				case Handle.Type.BottomRight:
+					handle.Position = bounds.BottomRight;
 
-					case Handle.Type.MarginLeft:
-						if (this.editor.IsObjectAttachmentRight(this.widget))
-						{
-							handle.Position = new Point(bounds.Left-margins.Left, m.Y);
-							handle.GlyphType = Handle.Glyph.ArrowLeft;
-						}
-						else
-						{
-							handle.Position = new Point(bounds.Left, m.Y);
-							handle.GlyphType = Handle.Glyph.ArrowRight;
-						}
-						break;
+					if (this.editor.IsLayoutDocking)
+					{
+						handle.GlyphType = Handle.Glyph.Hide;
+					}
+					break;
 
-					case Handle.Type.MarginRight:
-						if (this.editor.IsObjectAttachmentRight(this.widget))
-						{
-							handle.Position = new Point(bounds.Right, m.Y);
-							handle.GlyphType = Handle.Glyph.ArrowLeft;
-						}
-						else
-						{
-							handle.Position = new Point(bounds.Right+margins.Right, m.Y);
-							handle.GlyphType = Handle.Glyph.ArrowRight;
-						}
-						break;
-				}
-			}
-			else
-			{
-				handle.GlyphType = Handle.Glyph.Square;
+				case Handle.Type.TopRight:
+					handle.Position = bounds.TopRight;
 
-				switch (handle.HandleType)
-				{
-					case Handle.Type.BottomLeft:
-						handle.Position = bounds.BottomLeft;
+					if (this.editor.IsLayoutDocking)
+					{
+						handle.GlyphType = Handle.Glyph.Hide;
+					}
+					break;
 
-						if (this.editor.IsLayoutDocking)
-						{
-							handle.GlyphType = Handle.Glyph.Hide;
-						}
-						break;
+				case Handle.Type.TopLeft:
+					handle.Position = bounds.TopLeft;
 
-					case Handle.Type.BottomRight:
-						handle.Position = bounds.BottomRight;
+					if (this.editor.IsLayoutDocking)
+					{
+						handle.GlyphType = Handle.Glyph.Hide;
+					}
+					break;
 
-						if (this.editor.IsLayoutDocking)
-						{
-							handle.GlyphType = Handle.Glyph.Hide;
-						}
-						break;
+				case Handle.Type.Bottom:
+					handle.Position = new Point(center.X, bounds.Bottom);
 
-					case Handle.Type.TopRight:
-						handle.Position = bounds.TopRight;
+					if (this.editor.IsLayoutDocking && !this.editor.IsObjectAttachmentTop(this.widget))
+					{
+						handle.GlyphType = Handle.Glyph.Hide;
+					}
+					break;
 
-						if (this.editor.IsLayoutDocking)
-						{
-							handle.GlyphType = Handle.Glyph.Hide;
-						}
-						break;
+				case Handle.Type.Top:
+					handle.Position = new Point(center.X, bounds.Top);
 
-					case Handle.Type.TopLeft:
-						handle.Position = bounds.TopLeft;
+					if (this.editor.IsLayoutDocking && !this.editor.IsObjectAttachmentBottom(this.widget))
+					{
+						handle.GlyphType = Handle.Glyph.Hide;
+					}
+					break;
 
-						if (this.editor.IsLayoutDocking)
-						{
-							handle.GlyphType = Handle.Glyph.Hide;
-						}
-						break;
+				case Handle.Type.Left:
+					handle.Position = new Point(bounds.Left, center.Y);
 
-					case Handle.Type.Bottom:
-						handle.Position = new Point(center.X, bounds.Bottom);
+					if (this.editor.IsLayoutDocking && !this.editor.IsObjectAttachmentRight(this.widget))
+					{
+						handle.GlyphType = Handle.Glyph.Hide;
+					}
+					break;
 
-						if (this.editor.IsLayoutDocking && !this.editor.IsObjectAttachmentTop(this.widget))
-						{
-							handle.GlyphType = Handle.Glyph.Hide;
-						}
-						break;
+				case Handle.Type.Right:
+					handle.Position = new Point(bounds.Right, center.Y);
 
-					case Handle.Type.Top:
-						handle.Position = new Point(center.X, bounds.Top);
-
-						if (this.editor.IsLayoutDocking && !this.editor.IsObjectAttachmentBottom(this.widget))
-						{
-							handle.GlyphType = Handle.Glyph.Hide;
-						}
-						break;
-
-					case Handle.Type.Left:
-						handle.Position = new Point(bounds.Left, center.Y);
-
-						if (this.editor.IsLayoutDocking && !this.editor.IsObjectAttachmentRight(this.widget))
-						{
-							handle.GlyphType = Handle.Glyph.Hide;
-						}
-						break;
-
-					case Handle.Type.Right:
-						handle.Position = new Point(bounds.Right, center.Y);
-
-						if (this.editor.IsLayoutDocking && !this.editor.IsObjectAttachmentLeft(this.widget))
-						{
-							handle.GlyphType = Handle.Glyph.Hide;
-						}
-						break;
-				}
+					if (this.editor.IsLayoutDocking && !this.editor.IsObjectAttachmentLeft(this.widget))
+					{
+						handle.GlyphType = Handle.Glyph.Hide;
+					}
+					break;
 			}
 		}
 
@@ -381,7 +308,6 @@ namespace Epsitec.Common.Designer
 		{
 			//	Déplace une poignée d'un objet.
 			Rectangle bounds = this.editor.GetObjectBounds(this.widget);
-			Margins margins = this.editor.GetObjectMargins(this.widget);
 
 			switch (this.draggingType)
 			{
@@ -416,54 +342,9 @@ namespace Epsitec.Common.Designer
 				case Handle.Type.Right:
 					bounds.Right = pos.X;
 					break;
-
-				case Handle.Type.MarginBottom:
-					if (this.editor.IsObjectAttachmentTop(this.widget))
-					{
-						margins.Bottom = System.Math.Max(bounds.Bottom-pos.Y, 0);
-					}
-					else
-					{
-						margins.Bottom = System.Math.Max(pos.Y-(bounds.Bottom-margins.Bottom), 0);
-					}
-					break;
-
-				case Handle.Type.MarginTop:
-					if (this.editor.IsObjectAttachmentTop(this.widget))
-					{
-						margins.Top = System.Math.Max((bounds.Top+margins.Top)-pos.Y, 0);
-					}
-					else
-					{
-						margins.Top = System.Math.Max(pos.Y-bounds.Top, 0);
-					}
-					break;
-
-				case Handle.Type.MarginLeft:
-					if (this.editor.IsObjectAttachmentRight(this.widget))
-					{
-						margins.Left = System.Math.Max(bounds.Left-pos.X, 0);
-					}
-					else
-					{
-						margins.Left = System.Math.Max(pos.X-(bounds.Left-margins.Left), 0);
-					}
-					break;
-
-				case Handle.Type.MarginRight:
-					if (this.editor.IsObjectAttachmentRight(this.widget))
-					{
-						margins.Right = System.Math.Max((bounds.Right+margins.Right)-pos.X, 0);
-					}
-					else
-					{
-						margins.Right = System.Math.Max(pos.X-bounds.Right, 0);
-					}
-					break;
 			}
 
 			this.editor.SetObjectBounds(this.widget, bounds);
-			this.editor.SetObjectMargins(this.widget, margins);
 		}
 
 
