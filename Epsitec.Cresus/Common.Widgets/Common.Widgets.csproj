@@ -138,6 +138,7 @@
     <Compile Include="CommandState.cs" />
     <Compile Include="CloneView.cs" />
     <Compile Include="Controllers\StringController.cs" />
+    <Compile Include="Layouts\GridLayoutEngine.cs" />
     <Compile Include="PaintTextStyle.cs" />
     <Compile Include="Layouts\BaseLineMeasure.cs" />
     <Compile Include="Layouts\StackLayoutEngine.cs" />

@@ -46,6 +46,14 @@ namespace Epsitec.Common.Widgets.Layouts
 				}
 			}
 		}
+
+		internal int PassId
+		{
+			get
+			{
+				return this.passId;
+			}
+		}
 		
 		public bool HasChanged
 		{
