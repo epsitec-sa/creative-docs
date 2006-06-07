@@ -1971,13 +1971,8 @@ namespace Epsitec.Common.Widgets.Adorners
 			//	Dessine le texte d'un widget.
 			if ( text == null )  return;
 
-			string iText = "";
-			if ( mode == TextDisplayMode.Proposal )
-			{
-				iText = text.Text;
-				text.Text = string.Format("<i>{0}</i>", text.Text);
-			}
-
+			text = AbstractAdorner.AdaptTextLayout (text, mode);
+			
 			if ( style == PaintTextStyle.Group )
 			{
 				Drawing.TextStyle.DefineDefaultColor(this.colorBorderButton);
@@ -2001,11 +1996,6 @@ namespace Epsitec.Common.Widgets.Adorners
 			else
 			{
 				text.Paint(pos, graphics, clipRect, this.colorDisabled, Drawing.GlyphPaintStyle.Disabled);
-			}
-
-			if ( mode == TextDisplayMode.Proposal )
-			{
-				text.Text = iText;
 			}
 
 			if ( (state&WidgetPaintState.Focused) != 0 )

@@ -66,6 +66,20 @@ namespace Epsitec.Common.Widgets.Adorners
 
 			return path;
 		}
+
+		protected static TextLayout AdaptTextLayout(TextLayout text, TextDisplayMode mode)
+		{
+			if (mode == TextDisplayMode.Proposal)
+			{
+				TextLayout copy = new TextLayout (text);
+				copy.Text = string.Concat ("<i>", text.Text, "</i>");
+				return copy;
+			}
+			else
+			{
+				return text;
+			}
+		}
 		
 		
 		#region IAdorner Members
