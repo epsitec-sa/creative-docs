@@ -1978,7 +1978,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected bool AttachmentDetect(Point mouse, out Widget obj, out Attachment attachment)
 		{
 			//	Détecte dans quel attachement d'un objet est la souris.
-			if (!this.context.ShowAttachment || this.selectedObjects.Count != 1)
+			if (!this.IsLayoutAnchored || !this.context.ShowAttachment || this.selectedObjects.Count != 1)
 			{
 				obj = null;
 				attachment = Attachment.None;
@@ -2114,7 +2114,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 
 			//	Dessine les attachements des objets sélectionnés.
-			if (this.context.ShowAttachment && this.selectedObjects.Count == 1 && !this.isDragging && !this.handlesList.IsDragging)
+			if (this.IsLayoutAnchored && this.context.ShowAttachment && this.selectedObjects.Count == 1 && !this.isDragging && !this.handlesList.IsDragging)
 			{
 				foreach (Widget obj in this.selectedObjects)
 				{
