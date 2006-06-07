@@ -6,11 +6,13 @@ using System.Collections.Generic;
 namespace Epsitec.Common.Widgets.Layouts
 {
 	/// <summary>
-	/// ILayout.
+	/// The <c>ILayoutEngine</c> defines the interface with a layout engine used
+	/// to measure the minium/maximum constraints based on a visual's children and
+	/// then laying out the children based on their measures.
 	/// </summary>
 	public interface ILayoutEngine
 	{
 		void UpdateLayout(Visual container, Drawing.Rectangle rect, IEnumerable<Visual> children);
-		void UpdateMinMax(Visual container, IEnumerable<Visual> children, ref Drawing.Size min_size, ref Drawing.Size max_size);
+		void UpdateMinMax(Visual container, IEnumerable<Visual> children, ref Drawing.Size minSize, ref Drawing.Size maxSize);
 	}
 }

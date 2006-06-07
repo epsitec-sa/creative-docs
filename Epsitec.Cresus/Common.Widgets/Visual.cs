@@ -930,6 +930,7 @@ namespace Epsitec.Common.Widgets
 			if (this.HasChildren)
 			{
 				IEnumerable<Visual> children = this.Children;
+				Layouts.ILayoutEngine engine = Layouts.LayoutEngine.GetLayoutEngine (this);
 
 				Drawing.Rectangle rect = this.Client.Bounds;
 				
@@ -949,6 +950,11 @@ namespace Epsitec.Common.Widgets
 					Layouts.LayoutEngine.StackEngine.UpdateLayout (this, rect, children);
 				}
 
+				if (engine != null)
+				{
+					engine.UpdateLayout (this, rect, children);
+				}
+				
 				this.ManualArrange ();
 			}
 
@@ -979,7 +985,8 @@ namespace Epsitec.Common.Widgets
 			if (this.HasChildren)
 			{
 				IEnumerable<Visual> children = this.children;
-
+				Layouts.ILayoutEngine engine = Layouts.LayoutEngine.GetLayoutEngine (this);
+				
 				if (this.children.DockLayoutCount > 0)
 				{
 					Layouts.LayoutEngine.DockEngine.UpdateMinMax (this, children, ref min, ref max);
@@ -991,6 +998,11 @@ namespace Epsitec.Common.Widgets
 				if (this.children.StackLayoutCount > 0)
 				{
 					Layouts.LayoutEngine.StackEngine.UpdateMinMax (this, children, ref min, ref max);
+				}
+
+				if (engine != null)
+				{
+					engine.UpdateMinMax (this, children, ref min, ref max);
 				}
 			}
 		}
