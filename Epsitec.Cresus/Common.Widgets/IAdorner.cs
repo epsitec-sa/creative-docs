@@ -1,21 +1,5 @@
 namespace Epsitec.Common.Widgets
 {
-	public enum PaintTextStyle
-	{
-		StaticText,
-		TextField,
-		Group,
-		Status,
-		Button,
-		CheckButton,
-		RadioButton,
-		List,
-		Array,
-		Header,
-		HMenu,
-		VMenu,
-	}
-
 	/// <summary>
 	/// L'interface IAdorner donne accès aux routines de dessin des divers
 	/// éléments de l'interface graphique.
