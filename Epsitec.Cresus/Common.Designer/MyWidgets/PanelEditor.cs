@@ -96,7 +96,25 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
-		public ConstrainsList			ConstrainsList
+		public bool						IsLayoutAnchored
+		{
+			//	Indique si le panneau associé est en mode LayoutMode.Anchored.
+			get
+			{
+				return (this.panel.ChildrenLayoutMode == Widgets.Layouts.LayoutMode.Anchored);
+			}
+		}
+
+		public bool						IsLayoutDocking
+		{
+			//	Indique si le panneau associé est en mode LayoutMode.Docked.
+			get
+			{
+				return (this.panel.ChildrenLayoutMode == Widgets.Layouts.LayoutMode.Docked);
+			}
+		}
+
+		public ConstrainsList ConstrainsList
 		{
 			//	Retourne la liste des contraintes.
 			get
@@ -867,12 +885,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.creatingObject.SetParent(parent);
 				this.creatingObject.TabNavigation = TabNavigationMode.Passive;
 
-				if (this.panel.ChildrenLayoutMode == Widgets.Layouts.LayoutMode.Anchored)
+				if (this.IsLayoutAnchored)
 				{
 					this.creatingObject.Anchor = AnchorStyles.BottomLeft;
 				}
 
-				if (this.panel.ChildrenLayoutMode == Widgets.Layouts.LayoutMode.Docked)
+				if (this.IsLayoutDocking)
 				{
 					this.creatingObject.Dock = DockStyle.Left;
 				}
@@ -1662,6 +1680,21 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.SetObjectBounds(obj, bounds);
 		}
 
+		public void SetObjectMargins(Widget obj, Margins margins)
+		{
+			//	Modifie les marges de l'objet, en mode LayoutMode.Docked.
+			if (this.IsLayoutDocking)
+			{
+				obj.Margins = margins;
+			}
+		}
+
+		public Margins GetObjectMargins(Widget obj)
+		{
+			//	Donne les marges de l'objet, utile en mode LayoutMode.Docked.
+			return obj.Margins;
+		}
+
 		public Rectangle GetObjectBounds(Widget obj)
 		{
 			//	Retourne la boîte d'un objet.
@@ -1746,7 +1779,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 				margins.Top = py;
 			}
 
-			obj.Margins = margins;
+			if (this.IsLayoutAnchored)
+			{
+				obj.Margins = margins;
+			}
 			obj.PreferredSize = bounds.Size;
 			this.SetObjectAttachment(obj, attachment);
 
@@ -1782,7 +1818,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Retourne le mode d'attachement d'un objet.
 			Attachment attachment = Attachment.None;
 
-			if (this.panel.ChildrenLayoutMode == Widgets.Layouts.LayoutMode.Anchored)
+			if (this.IsLayoutAnchored)
 			{
 				if ((obj.Anchor & AnchorStyles.Left  ) != 0)  attachment |= Attachment.Left;
 				if ((obj.Anchor & AnchorStyles.Right ) != 0)  attachment |= Attachment.Right;
@@ -1790,7 +1826,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				if ((obj.Anchor & AnchorStyles.Top   ) != 0)  attachment |= Attachment.Top;
 			}
 
-			if (this.panel.ChildrenLayoutMode == Widgets.Layouts.LayoutMode.Docked)
+			if (this.IsLayoutDocking)
 			{
 				if (obj.Dock == DockStyle.Left  )  attachment |= Attachment.Left;
 				if (obj.Dock == DockStyle.Right )  attachment |= Attachment.Right;
@@ -1804,7 +1840,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void SetObjectAttachment(Widget obj, Attachment attachment)
 		{
 			//	Modifie le mode d'attachement d'un objet.
-			if (this.panel.ChildrenLayoutMode == Widgets.Layouts.LayoutMode.Anchored)
+			if (this.IsLayoutAnchored)
 			{
 				AnchorStyles style = AnchorStyles.None;
 
@@ -1816,7 +1852,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				obj.Anchor = style;
 			}
 
-			if (this.panel.ChildrenLayoutMode == Widgets.Layouts.LayoutMode.Docked)
+			if (this.IsLayoutDocking)
 			{
 				DockStyle style = DockStyle.None;
 
@@ -2050,16 +2086,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				foreach (Widget obj in this.selectedObjects)
 				{
-					Rectangle rect = this.GetObjectBounds(obj);
-					rect.Deflate(0.5);
-
-					//?graphics.AddFilledRectangle(rect);
-					//?graphics.RenderSolid(PanelsContext.ColorHiliteSurface);
-
-					graphics.LineWidth = 3;
-					graphics.AddRectangle(rect);
-					graphics.RenderSolid(PanelsContext.ColorHiliteOutline);
-					graphics.LineWidth = 1;
+					this.DrawSelectedObject(graphics, obj);
 				}
 			}
 
@@ -2120,6 +2147,45 @@ namespace Epsitec.Common.Designer.MyWidgets
 			if (this.selectedObjects.Count == 1 && !this.isDragging)
 			{
 				this.handlesList.Draw(graphics);
+			}
+		}
+
+		protected void DrawSelectedObject(Graphics graphics, Widget obj)
+		{
+			Rectangle bounds = this.GetObjectBounds(obj);
+			bounds.Deflate(0.5);
+
+			//?graphics.AddFilledRectangle(bounds);
+			//?graphics.RenderSolid(PanelsContext.ColorHiliteSurface);
+
+			graphics.LineWidth = 3;
+			graphics.AddRectangle(bounds);
+			graphics.RenderSolid(PanelsContext.ColorHiliteOutline);
+			graphics.LineWidth = 1;
+
+			if (this.IsLayoutDocking)
+			{
+				Rectangle ext = bounds;
+				ext.Inflate(this.GetObjectMargins(obj));
+				ext.Deflate(0.5);
+
+				Path path = new Path();
+				path.AppendRectangle(ext);
+				Misc.DrawPathDash(graphics, path, 2, 0, 4, PanelsContext.ColorHiliteOutline);
+
+				if (this.selectedObjects.Count == 1)
+				{
+					Point m = Point.Scale(bounds.BottomLeft, bounds.TopRight, 0.25);
+					graphics.Align(ref m);
+
+					graphics.LineWidth = 2;
+					graphics.AddLine(bounds.Left, m.Y, ext.Left, m.Y);
+					graphics.AddLine(bounds.Right, m.Y, ext.Right, m.Y);
+					graphics.AddLine(m.X, bounds.Bottom, m.X, ext.Bottom);
+					graphics.AddLine(m.X, bounds.Top, m.X, ext.Top);
+					graphics.RenderSolid(PanelsContext.ColorHiliteOutline);
+					graphics.LineWidth = 1;
+				}
 			}
 		}
 

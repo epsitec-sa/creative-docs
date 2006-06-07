@@ -170,51 +170,61 @@ namespace Epsitec.Common.Designer
 				return null;
 			}
 
-			if (this.widget is TextField)
+			if (Handle.IsMarginType(type))
 			{
-				if (type != Handle.Type.Left && type != Handle.Type.Right)
+				if (!this.editor.IsLayoutDocking)
 				{
 					return null;
 				}
 			}
-			else if (this.widget is Button)
+			else
 			{
-				if (type != Handle.Type.Left && type != Handle.Type.Right)
-				{
-					return null;
-				}
-			}
-			else if (this.widget is Separator)
-			{
-				if (this.widget.PreferredHeight == 1)  // séparateur horizontal ?
+				if (this.widget is TextField)
 				{
 					if (type != Handle.Type.Left && type != Handle.Type.Right)
 					{
 						return null;
 					}
 				}
-				else  // séparateur vertical ?
+				else if (this.widget is Button)
 				{
-					if (type != Handle.Type.Bottom && type != Handle.Type.Top)
+					if (type != Handle.Type.Left && type != Handle.Type.Right)
 					{
 						return null;
 					}
 				}
-			}
-			else if (this.widget is StaticText)
-			{
-				if (type != Handle.Type.Left && type != Handle.Type.Right)
+				else if (this.widget is Separator)
+				{
+					if (this.widget.PreferredHeight == 1)  // séparateur horizontal ?
+					{
+						if (type != Handle.Type.Left && type != Handle.Type.Right)
+						{
+							return null;
+						}
+					}
+					else  // séparateur vertical ?
+					{
+						if (type != Handle.Type.Bottom && type != Handle.Type.Top)
+						{
+							return null;
+						}
+					}
+				}
+				else if (this.widget is StaticText)
+				{
+					if (type != Handle.Type.Left && type != Handle.Type.Right)
+					{
+						return null;
+					}
+				}
+				else if (this.widget is GroupBox)
+				{
+					//	Tous les types
+				}
+				else
 				{
 					return null;
 				}
-			}
-			else if (this.widget is GroupBox)
-			{
-				//	Tous les types
-			}
-			else
-			{
-				return null;
 			}
 
 			return new Handle(type);
@@ -226,39 +236,67 @@ namespace Epsitec.Common.Designer
 			Rectangle bounds = this.editor.GetObjectBounds(this.widget);
 			Point center = bounds.Center;
 
-			switch (handle.HandleType)
+			if (handle.IsMargin)
 			{
-				case Handle.Type.BottomLeft:
-					handle.Position = bounds.BottomLeft;
-					break;
+				Point m = Point.Scale(bounds.BottomLeft, bounds.TopRight, 0.25);
+				Margins margins = this.editor.GetObjectMargins(this.widget);
+				bounds.Inflate(margins);
 
-				case Handle.Type.BottomRight:
-					handle.Position = bounds.BottomRight;
-					break;
+				switch (handle.HandleType)
+				{
+					case Handle.Type.MarginBottom:
+						handle.Position = new Point(m.X, bounds.Bottom);
+						break;
 
-				case Handle.Type.TopRight:
-					handle.Position = bounds.TopRight;
-					break;
+					case Handle.Type.MarginTop:
+						handle.Position = new Point(m.X, bounds.Top);
+						break;
 
-				case Handle.Type.TopLeft:
-					handle.Position = bounds.TopLeft;
-					break;
+					case Handle.Type.MarginLeft:
+						handle.Position = new Point(bounds.Left, m.Y);
+						break;
 
-				case Handle.Type.Bottom:
-					handle.Position = new Point(center.X, bounds.Bottom);
-					break;
+					case Handle.Type.MarginRight:
+						handle.Position = new Point(bounds.Right, m.Y);
+						break;
+				}
+			}
+			else
+			{
+				switch (handle.HandleType)
+				{
+					case Handle.Type.BottomLeft:
+						handle.Position = bounds.BottomLeft;
+						break;
 
-				case Handle.Type.Top:
-					handle.Position = new Point(center.X, bounds.Top);
-					break;
+					case Handle.Type.BottomRight:
+						handle.Position = bounds.BottomRight;
+						break;
 
-				case Handle.Type.Left:
-					handle.Position = new Point(bounds.Left, center.Y);
-					break;
+					case Handle.Type.TopRight:
+						handle.Position = bounds.TopRight;
+						break;
 
-				case Handle.Type.Right:
-					handle.Position = new Point(bounds.Right, center.Y);
-					break;
+					case Handle.Type.TopLeft:
+						handle.Position = bounds.TopLeft;
+						break;
+
+					case Handle.Type.Bottom:
+						handle.Position = new Point(center.X, bounds.Bottom);
+						break;
+
+					case Handle.Type.Top:
+						handle.Position = new Point(center.X, bounds.Top);
+						break;
+
+					case Handle.Type.Left:
+						handle.Position = new Point(bounds.Left, center.Y);
+						break;
+
+					case Handle.Type.Right:
+						handle.Position = new Point(bounds.Right, center.Y);
+						break;
+				}
 			}
 		}
 
@@ -266,6 +304,7 @@ namespace Epsitec.Common.Designer
 		{
 			//	Déplace une poignée d'un objet.
 			Rectangle bounds = this.editor.GetObjectBounds(this.widget);
+			Margins margins = this.editor.GetObjectMargins(this.widget);
 
 			switch (this.draggingType)
 			{
@@ -300,9 +339,26 @@ namespace Epsitec.Common.Designer
 				case Handle.Type.Right:
 					bounds.Right = pos.X;
 					break;
+
+				case Handle.Type.MarginBottom:
+					margins.Bottom = System.Math.Max(bounds.Bottom-pos.Y, 0);
+					break;
+
+				case Handle.Type.MarginTop:
+					margins.Top = System.Math.Max(pos.Y-bounds.Top, 0);
+					break;
+
+				case Handle.Type.MarginLeft:
+					margins.Left = System.Math.Max(bounds.Left-pos.X, 0);
+					break;
+
+				case Handle.Type.MarginRight:
+					margins.Right = System.Math.Max(pos.X-bounds.Right, 0);
+					break;
 			}
 
 			this.editor.SetObjectBounds(this.widget, bounds);
+			this.editor.SetObjectMargins(this.widget, margins);
 		}
 
 
