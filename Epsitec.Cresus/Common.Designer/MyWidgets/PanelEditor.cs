@@ -901,6 +901,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 				if (this.IsLayoutDocking)
 				{
+					this.creatingObject.Margins = new Margins(5, 5, 5, 5);
+
 					if (this.IsHorizontalDocking)
 					{
 						this.creatingObject.Dock = DockStyle.Left;
@@ -2195,20 +2197,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 				Path path = new Path();
 				path.AppendRectangle(ext);
 				Misc.DrawPathDash(graphics, path, 2, 0, 4, PanelsContext.ColorHiliteOutline);
-
-				if (this.selectedObjects.Count == 1)
-				{
-					Point m = Point.Scale(bounds.BottomLeft, bounds.TopRight, 0.25);
-					graphics.Align(ref m);
-
-					graphics.LineWidth = 2;
-					graphics.AddLine(bounds.Left, m.Y, ext.Left, m.Y);
-					graphics.AddLine(bounds.Right, m.Y, ext.Right, m.Y);
-					graphics.AddLine(m.X, bounds.Bottom, m.X, ext.Bottom);
-					graphics.AddLine(m.X, bounds.Top, m.X, ext.Top);
-					graphics.RenderSolid(PanelsContext.ColorHiliteOutline);
-					graphics.LineWidth = 1;
-				}
 			}
 		}
 
