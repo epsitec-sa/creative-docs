@@ -94,20 +94,20 @@ namespace Epsitec.Common.Widgets.Layouts
 				Layouts.LayoutMeasure measureDx = Layouts.LayoutMeasure.GetWidth (child);
 				Layouts.LayoutMeasure measureDy = Layouts.LayoutMeasure.GetHeight (child);
 
-				columnMeasure.UpdateMin (passId, measureDx.Min);
+				columnMeasure.UpdateMin (passId, measureDx.Desired);
 				columnMeasure.UpdateMax (passId, measureDx.Max);
 				columnMeasure.UpdatePassId (passId);
 
-				rowMeasure.UpdateMin (passId, measureDy.Min);
+				rowMeasure.UpdateMin (passId, measureDy.Desired);
 				rowMeasure.UpdateMax (passId, measureDy.Max);
 				rowMeasure.UpdatePassId (passId);
 			}
 
-			this.columnMeasures = new LayoutMeasure[columnMax];
-			this.rowMeasures    = new LayoutMeasure[rowMax];
+			this.columnMeasures = new LayoutMeasure[columnMax+1];
+			this.rowMeasures    = new LayoutMeasure[rowMax+1];
 			
-			columnMeasureList.CopyTo (0, this.columnMeasures, 0, columnMax);
-			rowMeasureList.CopyTo (0, this.rowMeasures, 0, rowMax);
+			columnMeasureList.CopyTo (0, this.columnMeasures, 0, columnMax+1);
+			rowMeasureList.CopyTo (0, this.rowMeasures, 0, rowMax+1);
 
 			double minDx = 0;
 			double maxDx = 0;
@@ -170,6 +170,11 @@ namespace Epsitec.Common.Widgets.Layouts
 						measure = new LayoutMeasure (passId);
 					}
 				}
+
+				if (double.IsNaN (measure.Desired))
+				{
+					measure.UpdateDesired (passId, 0);
+				}
 				
 				list.Add (measure);
 			}
@@ -195,6 +200,11 @@ namespace Epsitec.Common.Widgets.Layouts
 					{
 						measure = new LayoutMeasure (passId);
 					}
+				}
+
+				if (double.IsNaN (measure.Desired))
+				{
+					measure.UpdateDesired (passId, 0);
 				}
 
 				list.Add (measure);

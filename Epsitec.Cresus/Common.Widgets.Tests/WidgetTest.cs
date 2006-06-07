@@ -1370,6 +1370,76 @@ namespace Epsitec.Common.Widgets
 			Window.RunInTestEnvironment (window);
 		}
 
+		[Test]
+		public void CheckInteractiveGrid()
+		{
+			Window window = new Window ();
+
+			window.ClientSize = new Size (400, 300);
+			window.Text = "CheckInteractiveGrid";
+			window.Root.Padding = new Margins (8, 8, 5, 5);
+
+			Layouts.GridLayoutEngine grid = new Layouts.GridLayoutEngine ();
+
+			Button button;
+			StaticText text;
+
+			button = new Button ();
+			button.Text = "A";
+			button.PreferredWidth = 40;
+			Layouts.GridLayoutEngine.SetColumn (button, 0);
+			Layouts.GridLayoutEngine.SetRow (button, 0);
+			window.Root.Children.Add (button);
+
+			button = new Button ();
+			button.Text = "B";
+			button.PreferredWidth = 60;
+			Layouts.GridLayoutEngine.SetColumn (button, 1);
+			Layouts.GridLayoutEngine.SetRow (button, 0);
+			window.Root.Children.Add (button);
+
+			button = new Button ();
+			button.Text = "C";
+			button.PreferredWidth = 20;
+			Layouts.GridLayoutEngine.SetColumn (button, 2);
+			Layouts.GridLayoutEngine.SetRow (button, 0);
+			window.Root.Children.Add (button);
+
+			text = new StaticText ();
+			text.Text = "Xyz";
+			text.PreferredWidth = 20;
+			text.Margins = new Drawing.Margins (4, 4, 0, 0);
+			Layouts.GridLayoutEngine.SetColumn (text, 3);
+			Layouts.GridLayoutEngine.SetRow (text, 0);
+			window.Root.Children.Add (text);
+
+			button = new Button ();
+			button.Text = "A";
+			button.PreferredWidth = 20;
+			Layouts.GridLayoutEngine.SetColumn (button, 0);
+			Layouts.GridLayoutEngine.SetRow (button, 1);
+			window.Root.Children.Add (button);
+
+			button = new Button ();
+			button.Text = "B";
+			button.PreferredWidth = 20;
+			Layouts.GridLayoutEngine.SetColumn (button, 1);
+			Layouts.GridLayoutEngine.SetRow (button, 1);
+			window.Root.Children.Add (button);
+
+			button = new Button ();
+			button.Text = "C";
+			button.PreferredWidth = 20;
+			Layouts.GridLayoutEngine.SetColumn (button, 2);
+			Layouts.GridLayoutEngine.SetRow (button, 1);
+			window.Root.Children.Add (button);
+
+			Layouts.LayoutEngine.SetLayoutEngine (window.Root, grid);
+
+			window.Show ();
+			Window.RunInTestEnvironment (window);
+		}
+
 		private class FlowPanel : Widget
 		{
 			public FlowPanel()
