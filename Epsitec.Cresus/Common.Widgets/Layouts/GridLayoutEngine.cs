@@ -16,6 +16,47 @@ namespace Epsitec.Common.Widgets.Layouts
 		
 		public void UpdateLayout(Visual container, Drawing.Rectangle rect, IEnumerable<Visual> children)
 		{
+			double[] x = new double[this.columnMeasures.Length];
+			double[] y = new double[this.rowMeasures.Length];
+			
+			double dx = 0;
+			double dy = 0;
+
+			for (int i = 0; i < this.columnMeasures.Length; i++)
+			{
+				x[i] = dx;
+				dx += this.columnMeasures[i].Desired;
+			}
+
+			for (int i = 0; i < this.rowMeasures.Length; i++)
+			{
+				dy += this.rowMeasures[i].Desired;
+				y[i] = dy;
+			}
+			
+			foreach (Visual child in children)
+			{
+				int column = GridLayoutEngine.GetColumn (child);
+				int row    = GridLayoutEngine.GetRow (child);
+
+				if ((column < 0) ||
+					(row < 0))
+				{
+					continue;
+				}
+
+				System.Diagnostics.Debug.Assert (column < this.columnMeasures.Length);
+				System.Diagnostics.Debug.Assert (row < this.rowMeasures.Length);
+
+				LayoutMeasure columnMeasure = this.columnMeasures[column];
+				LayoutMeasure rowMeasure    = this.rowMeasures[row];
+
+				System.Diagnostics.Debug.Assert (columnMeasure != null);
+				System.Diagnostics.Debug.Assert (rowMeasure != null);
+
+				Drawing.Rectangle bounds = new Drawing.Rectangle (rect.Left+x[column], rect.Top-y[row], this.columnMeasures[column].Desired, this.rowMeasures[row].Desired);
+				child.SetBounds (bounds);
+			}
 		}
 
 		public void UpdateMinMax(Visual container, LayoutContext context, IEnumerable<Visual> children, ref Drawing.Size minSize, ref Drawing.Size maxSize)
@@ -62,8 +103,11 @@ namespace Epsitec.Common.Widgets.Layouts
 				rowMeasure.UpdatePassId (passId);
 			}
 
-			this.columnMeasures = columnMeasureList.ToArray ();
-			this.rowMeasures    = rowMeasureList.ToArray ();
+			this.columnMeasures = new LayoutMeasure[columnMax];
+			this.rowMeasures    = new LayoutMeasure[rowMax];
+			
+			columnMeasureList.CopyTo (0, this.columnMeasures, 0, columnMax);
+			rowMeasureList.CopyTo (0, this.rowMeasures, 0, rowMax);
 
 			double minDx = 0;
 			double maxDx = 0;
@@ -74,7 +118,7 @@ namespace Epsitec.Common.Widgets.Layouts
 
 				if (measure.PassId == passId)
 				{
-					minDx += measure.Min;
+					minDx += measure.Desired;
 					maxDx += measure.Max;
 				}
 				else
@@ -92,7 +136,7 @@ namespace Epsitec.Common.Widgets.Layouts
 
 				if (measure.PassId == passId)
 				{
-					minDy += measure.Min;
+					minDy += measure.Desired;
 					maxDy += measure.Max;
 				}
 				else
