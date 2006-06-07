@@ -89,7 +89,7 @@ namespace Epsitec.Common.Widgets.Layouts
 					continue;
 				}
 
-				Drawing.Size margins = child.Margins.Size;
+				Drawing.Margins margins = child.Margins;
 
 				Layouts.LayoutMeasure measureDx = Layouts.LayoutMeasure.GetWidth (child);
 				Layouts.LayoutMeasure measureDy = Layouts.LayoutMeasure.GetHeight (child);
@@ -113,8 +113,8 @@ namespace Epsitec.Common.Widgets.Layouts
 							
 							LayoutContext.GetMeasuredBaseLine (child, out h1, out h2);
 
-							currentMinH1 = System.Math.Max (currentMinH1, h1);
-							currentMinH2 = System.Math.Max (currentMinH2, h2);
+							currentMinH1 = System.Math.Max (currentMinH1, h1 + margins.Top);
+							currentMinH2 = System.Math.Max (currentMinH2, h2 + margins.Bottom);
 						}
 						else
 						{

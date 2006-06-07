@@ -1269,6 +1269,7 @@ namespace Epsitec.Common.Widgets
 			line.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
 			line.VerticalAlignment = VerticalAlignment.BaseLine;
 			line.PreferredHeight = 40;
+			line.PaintForeground += WidgetTest.WidgetPaintForeground;
 			window.Root.Children.Add (line);
 
 			button = new Button ();
@@ -1276,6 +1277,7 @@ namespace Epsitec.Common.Widgets
 			button.Text = @"<font size=""160%"">Xy</font>";
 			button.Dock = DockStyle.Stacked;
 			button.VerticalAlignment = VerticalAlignment.BaseLine;
+			button.PaintForeground += WidgetTest.WidgetPaintForeground;
 			line.Children.Add (button);
 
 			button = new Button ();
@@ -1283,6 +1285,7 @@ namespace Epsitec.Common.Widgets
 			button.Text = @"<font size=""100%"">Xy</font>";
 			button.Dock = DockStyle.Stacked;
 			button.VerticalAlignment = VerticalAlignment.BaseLine;
+			button.PaintForeground += WidgetTest.WidgetPaintForeground;
 			line.Children.Add (button);
 
 			button = new Button ();
@@ -1290,6 +1293,7 @@ namespace Epsitec.Common.Widgets
 			button.Text = @"<font size=""80%"">Xy</font>";
 			button.Dock = DockStyle.Stacked;
 			button.VerticalAlignment = VerticalAlignment.BaseLine;
+			button.PaintForeground += WidgetTest.WidgetPaintForeground;
 			line.Children.Add (button);
 
 			StaticText text;
@@ -1300,21 +1304,36 @@ namespace Epsitec.Common.Widgets
 			text.PreferredWidth = 16;
 			text.Dock = DockStyle.Stacked;
 			text.VerticalAlignment = VerticalAlignment.BaseLine;
+			text.PaintForeground += WidgetTest.WidgetPaintForeground;
 			line.Children.Add (text);
 
 			text = new StaticText ();
 			text.Text = "Xy";
 			text.PreferredWidth = 16;
+			text.PreferredHeight = 20;
+			text.Dock = DockStyle.Stacked;
+			text.Margins = new Margins (0, 0, 16, 2);
+			text.VerticalAlignment = VerticalAlignment.BaseLine;
+			text.PaintForeground += WidgetTest.WidgetPaintForeground;
+			line.Children.Add (text);
+
+			text = new StaticText ();
+			text.Text = "Xy";
+			text.PreferredWidth = 16;
+			text.PreferredHeight = 20;
 			text.Dock = DockStyle.Stacked;
 			text.VerticalAlignment = VerticalAlignment.BaseLine;
-			text.ContentAlignment = ContentAlignment.MiddleLeft;
+			text.ContentAlignment = ContentAlignment.BottomLeft;
+			text.PaintForeground += WidgetTest.WidgetPaintForeground;
 			line.Children.Add (text);
 
 			text = new StaticText ();
 			text.Text = @"<font size=""160%"">Xy</font>";
 			text.PreferredWidth = 24;
+			text.PreferredHeight = 32;
 			text.Dock = DockStyle.Stacked;
 			text.VerticalAlignment = VerticalAlignment.BaseLine;
+			text.PaintForeground += WidgetTest.WidgetPaintForeground;
 			line.Children.Add (text);
 
 			field = new TextField ();
@@ -1322,6 +1341,7 @@ namespace Epsitec.Common.Widgets
 			field.Dock = DockStyle.Stacked;
 			field.PreferredWidth = 24;
 			field.VerticalAlignment = VerticalAlignment.BaseLine;
+			field.PaintForeground += WidgetTest.WidgetPaintForeground;
 			line.Children.Add (field);
 
 			field = new TextField ();
@@ -1329,10 +1349,19 @@ namespace Epsitec.Common.Widgets
 			field.Dock = DockStyle.Stacked;
 			field.PreferredWidth = 24;
 			field.VerticalAlignment = VerticalAlignment.BaseLine;
+			field.PaintForeground += WidgetTest.WidgetPaintForeground;
 			line.Children.Add (field);
 
 			window.Show ();
 			Window.RunInTestEnvironment (window);
+		}
+
+		private static void WidgetPaintForeground(object sender, PaintEventArgs e)
+		{
+			Widget widget = sender as Widget;
+			
+			e.Graphics.AddRectangle (widget.Client.Bounds);
+			e.Graphics.RenderSolid (Color.FromRgb (1, 0, 0));
 		}
 
 		[Test]

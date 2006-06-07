@@ -221,14 +221,12 @@ namespace Epsitec.Common.Widgets
 		{
 			if (this.TextLayout != null)
 			{
-				double offset = this.GetBaseLineVerticalOffset ();
-				
 				Drawing.Point origin = base.GetBaseLine (width, height, out ascender, out descender);
 				Drawing.Point shift = this.InnerTextBounds.Location;
-				Drawing.Point point = origin + new Drawing.Point (shift.X, shift.Y+offset);
+				Drawing.Point point = origin + new Drawing.Point (shift.X, shift.Y);
 
-				ascender  -= offset;
-				descender -= offset;
+				ascender  += shift.Y;
+				descender += shift.Y;
 				
 				return point;
 			}
