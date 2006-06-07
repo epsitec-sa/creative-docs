@@ -18,6 +18,7 @@ namespace Epsitec.Common.Widgets.Layouts
 		{
 			double[] x = new double[this.columnMeasures.Length];
 			double[] y = new double[this.rowMeasures.Length];
+			double[] b = new double[this.rowMeasures.Length];
 			
 			double dx = 0;
 			double dy = 0;
@@ -30,8 +31,14 @@ namespace Epsitec.Common.Widgets.Layouts
 
 			for (int i = 0; i < this.rowMeasures.Length; i++)
 			{
+				double h1 = this.rowMeasures[i].MinH1;
+				double h2 = this.rowMeasures[i].MinH2;
+				double h  = this.rowMeasures[i].Desired;
+				
 				dy += this.rowMeasures[i].Desired;
+				
 				y[i] = dy;
+				b[i] = (h - (h1+h2)) / 2 + h2;
 			}
 			
 			foreach (Visual child in children)
@@ -50,8 +57,8 @@ namespace Epsitec.Common.Widgets.Layouts
 
 				Drawing.Margins margins = child.Margins;
 				
-				LayoutMeasure columnMeasure = this.columnMeasures[column];
-				LayoutMeasure rowMeasure    = this.rowMeasures[row];
+				ColumnMeasure columnMeasure = this.columnMeasures[column];
+				RowMeasure    rowMeasure    = this.rowMeasures[row];
 
 				System.Diagnostics.Debug.Assert (columnMeasure != null);
 				System.Diagnostics.Debug.Assert (rowMeasure != null);
@@ -59,14 +66,14 @@ namespace Epsitec.Common.Widgets.Layouts
 				Drawing.Rectangle bounds = new Drawing.Rectangle (rect.Left+x[column], rect.Top-y[row], this.columnMeasures[column].Desired, this.rowMeasures[row].Desired);
 				
 				bounds.Deflate (margins);
-				child.SetBounds (bounds);
+				DockLayoutEngine.SetChildBounds (child, bounds, b[row]);
 			}
 		}
 
 		public void UpdateMinMax(Visual container, LayoutContext context, IEnumerable<Visual> children, ref Drawing.Size minSize, ref Drawing.Size maxSize)
 		{
-			List<LayoutMeasure> columnMeasureList = new List<LayoutMeasure> ();
-			List<LayoutMeasure> rowMeasureList = new List<LayoutMeasure> ();
+			List<ColumnMeasure> columnMeasureList = new List<ColumnMeasure> ();
+			List<RowMeasure>    rowMeasureList = new List<RowMeasure> ();
 			
 			int passId = context.PassId;
 			int rowMax = 0;
@@ -94,8 +101,8 @@ namespace Epsitec.Common.Widgets.Layouts
 
 				Drawing.Margins margins = child.Margins;
 				
-				LayoutMeasure columnMeasure = this.GetColumnMeasure (columnMeasureList, passId, column);
-				LayoutMeasure rowMeasure    = this.GetRowMeasure (rowMeasureList, passId, row);
+				ColumnMeasure columnMeasure = this.GetColumnMeasure (columnMeasureList, passId, column);
+				RowMeasure    rowMeasure    = this.GetRowMeasure (rowMeasureList, passId, row);
 
 				Layouts.LayoutMeasure measureDx = Layouts.LayoutMeasure.GetWidth (child);
 				Layouts.LayoutMeasure measureDy = Layouts.LayoutMeasure.GetHeight (child);
@@ -107,10 +114,20 @@ namespace Epsitec.Common.Widgets.Layouts
 				rowMeasure.UpdateMin (passId, measureDy.Desired + margins.Height);
 				rowMeasure.UpdateMax (passId, measureDy.Max + margins.Height);
 				rowMeasure.UpdatePassId (passId);
+
+				if (child.VerticalAlignment == VerticalAlignment.BaseLine)
+				{
+					double h1;
+					double h2;
+
+					LayoutContext.GetMeasuredBaseLine (child, out h1, out h2);
+
+					rowMeasure.UpdateMinH1H2 (passId, h1, h2);
+				}
 			}
 
-			this.columnMeasures = new LayoutMeasure[columnMax+1];
-			this.rowMeasures    = new LayoutMeasure[rowMax+1];
+			this.columnMeasures = new ColumnMeasure[columnMax+1];
+			this.rowMeasures    = new RowMeasure[rowMax+1];
 			
 			columnMeasureList.CopyTo (0, this.columnMeasures, 0, columnMax+1);
 			rowMeasureList.CopyTo (0, this.rowMeasures, 0, rowMax+1);
@@ -120,7 +137,7 @@ namespace Epsitec.Common.Widgets.Layouts
 
 			for (int i = 0; i < this.columnMeasures.Length; i++)
 			{
-				LayoutMeasure measure = this.columnMeasures[i];
+				ColumnMeasure measure = this.columnMeasures[i];
 
 				if (measure.PassId == passId)
 				{
@@ -138,7 +155,7 @@ namespace Epsitec.Common.Widgets.Layouts
 
 			for (int i = 0; i < this.rowMeasures.Length; i++)
 			{
-				LayoutMeasure measure = this.rowMeasures[i];
+				RowMeasure measure = this.rowMeasures[i];
 
 				if (measure.PassId == passId)
 				{
@@ -157,15 +174,15 @@ namespace Epsitec.Common.Widgets.Layouts
 			maxSize.Height = System.Math.Min (maxSize.Height, maxDy);
 		}
 
-		private LayoutMeasure GetColumnMeasure(List<LayoutMeasure> list, int passId, int column)
+		private ColumnMeasure GetColumnMeasure(List<ColumnMeasure> list, int passId, int column)
 		{
 			while (column >= list.Count)
 			{
-				LayoutMeasure measure;
+				ColumnMeasure measure;
 				
 				if (list.Count >= this.columnMeasures.Length)
 				{
-					measure = new LayoutMeasure (passId);
+					measure = new ColumnMeasure (passId);
 				}
 				else
 				{
@@ -173,7 +190,7 @@ namespace Epsitec.Common.Widgets.Layouts
 					
 					if (measure == null)
 					{
-						measure = new LayoutMeasure (passId);
+						measure = new ColumnMeasure (passId);
 					}
 				}
 
@@ -188,15 +205,15 @@ namespace Epsitec.Common.Widgets.Layouts
 			return list[column];
 		}
 
-		private LayoutMeasure GetRowMeasure(List<LayoutMeasure> list, int passId, int row)
+		private RowMeasure GetRowMeasure(List<RowMeasure> list, int passId, int row)
 		{
 			while (row >= list.Count)
 			{
-				LayoutMeasure measure;
+				RowMeasure measure;
 
 				if (list.Count >= this.rowMeasures.Length)
 				{
-					measure = new LayoutMeasure (passId);
+					measure = new RowMeasure (passId);
 				}
 				else
 				{
@@ -204,7 +221,7 @@ namespace Epsitec.Common.Widgets.Layouts
 
 					if (measure == null)
 					{
-						measure = new LayoutMeasure (passId);
+						measure = new RowMeasure (passId);
 					}
 				}
 
@@ -220,6 +237,63 @@ namespace Epsitec.Common.Widgets.Layouts
 		}
 
 		#endregion
+
+		private class ColumnMeasure : LayoutMeasure
+		{
+			public ColumnMeasure(int passId) : base (passId)
+			{
+			}
+		}
+
+		private class RowMeasure : LayoutMeasure
+		{
+			public RowMeasure(int passId) : base (passId)
+			{
+			}
+
+			public double MinH1
+			{
+				get
+				{
+					return this.minH1;
+				}
+			}
+
+			public double MinH2
+			{
+				get
+				{
+					return this.minH2;
+				}
+			}
+
+			public void UpdateMinH1H2(int passId, double h1, double h2)
+			{
+				double oldH1 = this.minH1;
+				double oldH2 = this.minH2;
+
+				if (this.PassId == passId)
+				{
+					this.minH1 = System.Math.Max (oldH1, h1);
+					this.minH2 = System.Math.Max (oldH2, h2);
+				}
+				else
+				{
+					this.minH1 = h1;
+					this.minH2 = h2;
+				}
+
+				if ((this.minH1 != oldH1) ||
+					(this.minH2 != oldH2))
+				{
+					this.UpdateMin (passId, this.minH1 + this.minH2);
+					this.SetHasChanged ();
+				}
+			}
+			
+			double minH1;
+			double minH2;
+		}
 
 		public static void SetColumn(Visual visual, int column)
 		{
@@ -330,7 +404,7 @@ namespace Epsitec.Common.Widgets.Layouts
 		public static readonly DependencyProperty ColumnSpanProperty = DependencyProperty.RegisterAttached ("ColumnSpan", typeof (int), typeof (GridLayoutEngine), new DependencyPropertyMetadata (1));
 		public static readonly DependencyProperty RowSpanProperty = DependencyProperty.RegisterAttached ("RowSpan", typeof (int), typeof (GridLayoutEngine), new DependencyPropertyMetadata (1));
 
-		private LayoutMeasure[] rowMeasures    = new LayoutMeasure[0];
-		private LayoutMeasure[] columnMeasures = new LayoutMeasure[0];
+		private RowMeasure[]	rowMeasures    = new RowMeasure[0];
+		private ColumnMeasure[] columnMeasures = new ColumnMeasure[0];
 	}
 }
