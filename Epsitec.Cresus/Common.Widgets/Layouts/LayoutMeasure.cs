@@ -74,6 +74,11 @@ namespace Epsitec.Common.Widgets.Layouts
 			
 			return context.PassId == this.passId;
 		}
+
+		protected void SetHasChanged()
+		{
+			this.hasChanged = true;
+		}
 		
 		internal void ClearHasChanged()
 		{
