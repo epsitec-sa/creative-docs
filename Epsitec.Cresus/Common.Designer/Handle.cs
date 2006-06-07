@@ -26,6 +26,16 @@ namespace Epsitec.Common.Designer
 			MarginRight,
 		}
 
+		public enum Glyph
+		{
+			Hide,
+			Square,
+			ArrowLeft,
+			ArrowRight,
+			ArrowDown,
+			ArrowUp,
+		}
+
 		public Handle(Type type)
 		{
 			//	Crée une poignée, sans préciser la position.
@@ -33,12 +43,25 @@ namespace Epsitec.Common.Designer
 			this.isHilite = false;
 		}
 
-		public Handle.Type HandleType
+		public Type HandleType
 		{
 			//	Retourne le type d'une poignée.
 			get
 			{
 				return this.type;
+			}
+		}
+
+		public Glyph GlyphType
+		{
+			//	Forme de la poignée.
+			get
+			{
+				return this.glyph;
+			}
+			set
+			{
+				this.glyph = value;
 			}
 		}
 
@@ -86,24 +109,28 @@ namespace Epsitec.Common.Designer
 		public bool Detect(Point mouse)
 		{
 			//	Indique si la souris est dans la poignée.
+			if (this.glyph == Glyph.Hide)
+			{
+				return false;
+			}
+
 			return this.Bounds.Contains(mouse);
 		}
 
 		public void Draw(Graphics graphics)
 		{
 			//	Dessine la poignée.
+			if (this.glyph == Glyph.Hide)
+			{
+				return;
+			}
+
 			Rectangle rect = this.Bounds;
 			graphics.Align(ref rect);
 
 			Color color = this.isHilite ? PanelsContext.ColorHandleHilited : PanelsContext.ColorHandleNormal;
 
-			if (this.IsMargin)
-			{
-				Handle.PaintTriangle(graphics, rect, this.type, Color.FromBrightness(0));
-				rect.Deflate(1.0);
-				Handle.PaintTriangle(graphics, rect, this.type, color);
-			}
-			else
+			if (this.glyph == Glyph.Square)
 			{
 				rect.Offset(0.5, 0.5);
 				graphics.AddFilledRectangle(rect);
@@ -112,35 +139,42 @@ namespace Epsitec.Common.Designer
 				graphics.AddRectangle(rect);
 				graphics.RenderSolid(Color.FromBrightness(0));
 			}
+
+			if (this.glyph == Glyph.ArrowLeft || this.glyph == Glyph.ArrowRight || this.glyph == Glyph.ArrowUp || this.glyph == Glyph.ArrowDown)
+			{
+				Handle.PaintTriangle(graphics, rect, this.glyph, Color.FromBrightness(0));
+				rect.Deflate(1.0);
+				Handle.PaintTriangle(graphics, rect, this.glyph, color);
+			}
 		}
 
-		protected static void PaintTriangle(Graphics graphics, Rectangle rect, Type type, Color color)
+		protected static void PaintTriangle(Graphics graphics, Rectangle rect, Glyph glyph, Color color)
 		{
 			//	Dessine un triangle orienté.
 			Path path = new Path();
 
-			if (type == Type.MarginLeft)
+			if (glyph == Glyph.ArrowLeft)
 			{
 				path.MoveTo(rect.Left, rect.Center.Y);
 				path.LineTo(rect.TopRight);
 				path.LineTo(rect.BottomRight);
 			}
 
-			if (type == Type.MarginRight)
+			if (glyph == Glyph.ArrowRight)
 			{
 				path.MoveTo(rect.Right, rect.Center.Y);
 				path.LineTo(rect.BottomLeft);
 				path.LineTo(rect.TopLeft);
 			}
 
-			if (type == Type.MarginBottom)
+			if (glyph == Glyph.ArrowDown)
 			{
 				path.MoveTo(rect.Center.X, rect.Bottom);
 				path.LineTo(rect.TopLeft);
 				path.LineTo(rect.TopRight);
 			}
 
-			if (type == Type.MarginTop)
+			if (glyph == Glyph.ArrowUp)
 			{
 				path.MoveTo(rect.Center.X, rect.Top);
 				path.LineTo(rect.BottomRight);
@@ -188,7 +222,8 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		protected Type type;
+		protected Type				type;
+		protected Glyph				glyph;
 		protected Point				position;
 		protected bool				isHilite;
 	}

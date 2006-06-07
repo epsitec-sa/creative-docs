@@ -1597,18 +1597,26 @@ namespace Epsitec.Common.Designer.MyWidgets
 			Rectangle bounds = this.GetObjectBounds(obj);
 			Attachment attachment = this.GetObjectAttachment(obj);
 
-			if ((attachment & attachmentFlag) == 0)
+			if (this.IsLayoutAnchored)
 			{
-				attachment |= attachmentFlag;
-			}
-			else
-			{
-				attachment &= ~attachmentFlag;
-
-				if ((attachment & PanelEditor.OppositeAttachment(attachmentFlag)) == 0)
+				if ((attachment & attachmentFlag) == 0)
 				{
-					attachment |= PanelEditor.OppositeAttachment(attachmentFlag);
+					attachment |= attachmentFlag;
 				}
+				else
+				{
+					attachment &= ~attachmentFlag;
+
+					if ((attachment & PanelEditor.OppositeAttachment(attachmentFlag)) == 0)
+					{
+						attachment |= PanelEditor.OppositeAttachment(attachmentFlag);
+					}
+				}
+			}
+
+			if (this.IsLayoutDocking)
+			{
+				attachment = attachmentFlag;
 			}
 
 			this.SetObjectBounds(obj, bounds, attachment);
@@ -1789,25 +1797,25 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.Invalidate();
 		}
 
-		protected bool IsObjectAttachmentLeft(Widget obj)
+		public bool IsObjectAttachmentLeft(Widget obj)
 		{
 			//	Indique si l'objet est ancré à gauche.
 			return (this.GetObjectAttachment(obj) & Attachment.Left) != 0;
 		}
 
-		protected bool IsObjectAttachmentRight(Widget obj)
+		public bool IsObjectAttachmentRight(Widget obj)
 		{
 			//	Indique si l'objet est ancré à gauche.
 			return (this.GetObjectAttachment(obj) & Attachment.Right) != 0;
 		}
 
-		protected bool IsObjectAttachmentBottom(Widget obj)
+		public bool IsObjectAttachmentBottom(Widget obj)
 		{
 			//	Indique si l'objet est ancré à gauche.
 			return (this.GetObjectAttachment(obj) & Attachment.Bottom) != 0;
 		}
 
-		protected bool IsObjectAttachmentTop(Widget obj)
+		public bool IsObjectAttachmentTop(Widget obj)
 		{
 			//	Indique si l'objet est ancré à gauche.
 			return (this.GetObjectAttachment(obj) & Attachment.Top) != 0;
@@ -1987,8 +1995,13 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Retourne le rectangle englobant un attachement.
 			Rectangle bounds = this.GetObjectBounds(obj.Parent);
 			Rectangle rect = this.GetObjectBounds(obj);
+
+			if (this.IsLayoutDocking)
+			{
+				rect.Inflate(this.GetObjectMargins(obj));
+			}
+
 			Point p1, p2, p1a, p2a;
-			double thickness = PanelEditor.attachmentThickness;
 
 			if (style == Attachment.Left)
 			{
@@ -1996,8 +2009,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 				p2 = new Point(rect.Left, rect.Center.Y);
 				p1a = Point.Scale(p1, p2, PanelEditor.attachmentScale);
 				p2a = Point.Scale(p2, p1, PanelEditor.attachmentScale);
-				p1a.Y -= thickness;
-				p2a.Y += thickness;
+				p1a.Y -= PanelEditor.attachmentThickness;
+				p2a.Y += PanelEditor.attachmentThickness;
 				return new Rectangle(p1a, p2a);
 			}
 
@@ -2007,8 +2020,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 				p2 = new Point(rect.Right, rect.Center.Y);
 				p1a = Point.Scale(p1, p2, PanelEditor.attachmentScale);
 				p2a = Point.Scale(p2, p1, PanelEditor.attachmentScale);
-				p1a.Y -= thickness;
-				p2a.Y += thickness;
+				p1a.Y -= PanelEditor.attachmentThickness;
+				p2a.Y += PanelEditor.attachmentThickness;
 				return new Rectangle(p1a, p2a);
 			}
 
@@ -2018,8 +2031,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 				p2 = new Point(rect.Center.X, rect.Bottom);
 				p1a = Point.Scale(p1, p2, PanelEditor.attachmentScale);
 				p2a = Point.Scale(p2, p1, PanelEditor.attachmentScale);
-				p1a.X -= thickness;
-				p2a.X += thickness;
+				p1a.X -= PanelEditor.attachmentThickness;
+				p2a.X += PanelEditor.attachmentThickness;
 				return new Rectangle(p1a, p2a);
 			}
 
@@ -2029,8 +2042,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 				p2 = new Point(rect.Center.X, rect.Top);
 				p1a = Point.Scale(p1, p2, PanelEditor.attachmentScale);
 				p2a = Point.Scale(p2, p1, PanelEditor.attachmentScale);
-				p1a.X -= thickness;
-				p2a.X += thickness;
+				p1a.X -= PanelEditor.attachmentThickness;
+				p2a.X += PanelEditor.attachmentThickness;
 				return new Rectangle(p1a, p2a);
 			}
 
@@ -2249,6 +2262,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 			Rectangle bounds = this.GetObjectBounds(obj.Parent);
 			Rectangle rect = this.GetObjectBounds(obj);
 			Point p1, p2;
+
+			if (this.IsLayoutDocking)
+			{
+				rect.Inflate(this.GetObjectMargins(obj));
+			}
 
 			p1 = new Point(bounds.Left, rect.Center.Y);
 			p2 = new Point(rect.Left, rect.Center.Y);
