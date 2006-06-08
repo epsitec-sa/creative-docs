@@ -139,6 +139,7 @@
     <Compile Include="CloneView.cs" />
     <Compile Include="Controllers\StringController.cs" />
     <Compile Include="Layouts\ColumnDefinition.cs" />
+    <Compile Include="Layouts\RowDefinition.cs" />
     <Compile Include="Layouts\GridUnitType.cs" />
     <Compile Include="Layouts\GridLength.cs" />
     <Compile Include="Layouts\GridLayoutEngine.cs" />
