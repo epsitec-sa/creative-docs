@@ -653,9 +653,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.HandlingEnd(pos);
 			}
 
-			if (this.SizeMarkDraggingStop(pos))
-			{
-			}
+			this.SizeMarkDraggingStop(pos);
 		}
 
 		protected void SelectKeyChanged(bool isControlPressed, bool isShiftPressed)
@@ -765,9 +763,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.HandlingEnd(pos);
 			}
 
-			if (this.SizeMarkDraggingStop(pos))
-			{
-			}
+			this.SizeMarkDraggingStop(pos);
 		}
 
 		protected void GlobalKeyChanged(bool isControlPressed, bool isShiftPressed)
@@ -2397,6 +2393,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 		#region SizeMark
 		protected bool SizeMarkDraggingStart(Point pos)
 		{
+			//	Début du déplacement d'un marqueur de taille préférentielle.
+			//	Retourne true en cas de début effectif.
 			this.isSizeMarkDragging = false;
 
 			if (this.isSizeMarkHorizontal)
@@ -2416,6 +2414,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected bool SizeMarkDraggingMove(Point pos)
 		{
+			//	Déplacement d'un marqueur de taille préférentielle.
+			//	Retourne true en cas de déplacement effectif.
 			if (this.isSizeMarkDragging)
 			{
 				if (this.isSizeMarkHorizontal)
@@ -2457,18 +2457,18 @@ namespace Epsitec.Common.Designer.MyWidgets
 			return this.isSizeMarkDragging;
 		}
 
-		protected bool SizeMarkDraggingStop(Point pos)
+		protected void SizeMarkDraggingStop(Point pos)
 		{
+			//	Fin du déplacement d'un marqueur de taille préférentielle.
 			if (this.isSizeMarkDragging)
 			{
 				this.isSizeMarkDragging = false;
 			}
-
-			return this.isSizeMarkDragging;
 		}
 
 		public void SizeMarkDeselect()
 		{
+			//	Désélectionne les marqueurs de taille préférentielle.
 			if (this.isSizeMarkHorizontal)
 			{
 				this.isSizeMarkHorizontal = false;
@@ -2484,6 +2484,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected Rectangle SizeMarkHorizontalRect
 		{
+			//	Retourne le rectangle du marqueur de taille préférentielle horizontal.
 			get
 			{
 				Rectangle bounds = this.RealBounds;
@@ -2495,6 +2496,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected Rectangle SizeMarkVerticalRect
 		{
+			//	Retourne le rectangle du marqueur de taille préférentielle vertical.
 			get
 			{
 				Rectangle bounds = this.RealBounds;
@@ -2549,7 +2551,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 
 			//	Dessine les marques pour la taille préférentielle.
-			this.DrawSizeMark(graphics);
+			if (this.context.Tool == "ToolSelect" || this.context.Tool == "ToolGlobal")
+			{
+				this.DrawSizeMark(graphics);
+			}
 
 			//	Dessine les objets sélectionnés.
 			if (this.selectedObjects.Count > 0 && !this.isDragging && !this.handlesList.IsDragging)
@@ -2641,7 +2646,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected void DrawSizeMark(Graphics graphics)
 		{
-			//	Dessine les marques pour la taille préférentielle.
+			//	Dessine les marqueurs pour la taille préférentielle.
 			Rectangle rect;
 			Point p1, p2;
 
