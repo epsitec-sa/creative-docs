@@ -57,6 +57,12 @@ namespace Epsitec.Common.Widgets
 
 			Layouts.GridLayoutEngine grid = new Layouts.GridLayoutEngine ();
 
+			grid.RowDefinitions.Add (new Layouts.RowDefinition (new Layouts.GridLength (30)));
+			grid.RowDefinitions.Add (new Layouts.RowDefinition ());
+			grid.RowDefinitions.Add (new Layouts.RowDefinition ());
+			grid.RowDefinitions.Add (new Layouts.RowDefinition (50, double.PositiveInfinity));
+			grid.RowDefinitions.Add (new Layouts.RowDefinition (new Layouts.GridLength (1, Layouts.GridUnitType.Proportional)));
+
 			Button button;
 			StaticText text;
 			TextField field;
@@ -155,10 +161,18 @@ namespace Epsitec.Common.Widgets
 			button = new Button ();
 			button.Text = "C";
 			button.PreferredWidth = 100;
-			button.VerticalAlignment = VerticalAlignment.BaseLine;
+			button.VerticalAlignment = VerticalAlignment.Stretch;
 			Layouts.GridLayoutEngine.SetColumn (button, 2);
 			Layouts.GridLayoutEngine.SetRow (button, 3);
 			Layouts.GridLayoutEngine.SetColumnSpan (button, 3);
+			window.Root.Children.Add (button);
+
+			button = new Button ();
+			button.Text = "X";
+			button.VerticalAlignment = VerticalAlignment.Stretch;
+			Layouts.GridLayoutEngine.SetColumn (button, 0);
+			Layouts.GridLayoutEngine.SetRow (button, 4);
+			Layouts.GridLayoutEngine.SetColumnSpan (button, 5);
 			window.Root.Children.Add (button);
 
 			Layouts.LayoutEngine.SetLayoutEngine (window.Root, grid);

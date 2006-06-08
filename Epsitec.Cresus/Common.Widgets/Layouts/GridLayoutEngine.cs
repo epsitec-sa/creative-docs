@@ -41,8 +41,16 @@ namespace Epsitec.Common.Widgets.Layouts
 
 			for (int i = 0; i < this.columnMeasures.Length; i++)
 			{
+				double w = this.columnMeasures[i].Desired;
+
 				x[i] = dx;
-				dx += this.columnMeasures[i].Desired;
+				dx  += w;
+
+				if (i < this.columnDefinitions.Count)
+				{
+					this.columnDefinitions[i].DefineActualOffset (x[i]);
+					this.columnDefinitions[i].DefineActualWidth (w);
+				}
 			}
 
 			for (int i = 0; i < this.rowMeasures.Length; i++)
@@ -50,11 +58,17 @@ namespace Epsitec.Common.Widgets.Layouts
 				double h1 = this.rowMeasures[i].MinH1;
 				double h2 = this.rowMeasures[i].MinH2;
 				double h  = this.rowMeasures[i].Desired;
-				
-				dy += this.rowMeasures[i].Desired;
+
+				dy  += h;
 				
 				y[i] = dy;
 				b[i] = (h - (h1+h2)) / 2 + h2;
+				
+				if (i < this.rowDefinitions.Count)
+				{
+					this.rowDefinitions[i].DefineActualOffset (y[i]);
+					this.rowDefinitions[i].DefineActualHeight (h);
+				}
 			}
 			
 			foreach (Visual child in children)
