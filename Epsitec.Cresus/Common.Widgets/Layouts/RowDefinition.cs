@@ -16,6 +16,42 @@ namespace Epsitec.Common.Widgets.Layouts
 		{
 		}
 
+		public RowDefinition(GridLength height)
+		{
+			if (this.Height != height)
+			{
+				this.Height = height;
+			}
+		}
+
+		public RowDefinition(double minHeight, double maxHeight)
+		{
+			if (this.MinHeight != minHeight)
+			{
+				this.MinHeight = minHeight;
+			}
+			if (this.MaxHeight != maxHeight)
+			{
+				this.MaxHeight = maxHeight;
+			}
+		}
+
+		public RowDefinition(GridLength height, double minHeight, double maxHeight)
+		{
+			if (this.Height != height)
+			{
+				this.Height = height;
+			}
+			if (this.MinHeight != minHeight)
+			{
+				this.MinHeight = minHeight;
+			}
+			if (this.MaxHeight != maxHeight)
+			{
+				this.MaxHeight = maxHeight;
+			}
+		}
+
 		public double MinHeight
 		{
 			get

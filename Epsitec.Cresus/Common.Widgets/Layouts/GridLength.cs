@@ -11,7 +11,7 @@ namespace Epsitec.Common.Widgets.Layouts
 	/// support absolute, relative and automatic values.
 	/// </summary>
 	[SerializationConverter (typeof (GridLength.SerializationConverter))]
-	public struct GridLength
+	public struct GridLength : System.IEquatable<GridLength>
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:GridLength"/> structure.
@@ -160,6 +160,43 @@ namespace Epsitec.Common.Widgets.Layouts
 		}
 
 		#endregion
+
+		#region IEquatable<GridLength> Members
+
+		public bool Equals(GridLength other)
+		{
+			return (this.value == other.value)
+				&& (this.gridUnitType == other.gridUnitType);
+		}
+
+		#endregion
+
+		public override bool Equals(object obj)
+		{
+			if (obj is GridLength)
+			{
+				return this.Equals ((GridLength) obj);
+			}
+			else
+			{
+				return false;
+			}
+		}
+
+		public override int GetHashCode()
+		{
+			return this.value.GetHashCode () ^ this.gridUnitType.GetHashCode ();
+		}
+
+		public static bool operator==(GridLength a, GridLength b)
+		{
+			return a.Equals (b);
+		}
+
+		public static bool operator!=(GridLength a, GridLength b)
+		{
+			return !a.Equals (b);
+		}
 
 		private double							value;
 		private GridUnitType					gridUnitType;

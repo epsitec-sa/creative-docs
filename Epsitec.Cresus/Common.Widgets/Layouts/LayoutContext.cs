@@ -347,6 +347,11 @@ namespace Epsitec.Common.Widgets.Layouts
 						//	Nothing to do for the window root. The size is
 						//	managed by the window.
 					}
+					else if (LayoutContext.GetLayoutContext (visual) == this)
+					{
+						//	Nothing to do for an intermediate root. This size
+						//	is managed externally by the caller.
+					}
 					else
 					{
 						visual.SetBounds (new Drawing.Rectangle (0, 0, visual.PreferredWidth, visual.PreferredHeight));
