@@ -192,6 +192,18 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
+		public double SizeMarkThickness
+		{
+			get
+			{
+				return this.sizeMarkThickness;
+			}
+			set
+			{
+				this.sizeMarkThickness = value;
+			}
+		}
+
 
 		#region Static colors
 		static public Color ColorHiliteOutline
@@ -296,6 +308,36 @@ namespace Epsitec.Common.Designer
 				return adorner.ColorCaption;
 			}
 		}
+
+		static public Color ColorSizeMarkLight
+		{
+			//	Couleur pour un marqueur de taille préférentielle.
+			get
+			{
+				IAdorner adorner = Epsitec.Common.Widgets.Adorners.Factory.Active;
+				return Color.FromColor(adorner.ColorCaption, 0.2);
+			}
+		}
+
+		static public Color ColorSizeMarkDark
+		{
+			//	Couleur pour un marqueur de taille préférentielle.
+			get
+			{
+				IAdorner adorner = Epsitec.Common.Widgets.Adorners.Factory.Active;
+				return Color.FromColor(adorner.ColorCaption, 0.5);
+			}
+		}
+
+		static public Color ColorSizeMarkLine
+		{
+			//	Couleur pour un marqueur de taille préférentielle.
+			get
+			{
+				IAdorner adorner = Epsitec.Common.Widgets.Adorners.Factory.Active;
+				return adorner.ColorCaption;
+			}
+		}
 		#endregion
 
 
@@ -313,5 +355,6 @@ namespace Epsitec.Common.Designer
 		protected double				leading = 30;
 		protected double				minimalSize = 3;
 		protected double				zOrderThickness = 2;
+		protected double				sizeMarkThickness = 8;
 	}
 }
