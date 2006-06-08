@@ -29,6 +29,14 @@ namespace Epsitec.Common.Widgets
 		void RefreshUserInterface(object oldValue, object newValue);
 
 		/// <summary>
+		/// Gets an object implementing interface <see cref="T:Layouts.IGridPermeable"/>
+		/// for this controller.
+		/// </summary>
+		/// <returns>Object implementing interface <see cref="T:Layouts.IGridPermeable"/>
+		/// for this controller, or <c>null</c>.</returns>
+		Layouts.IGridPermeable GetGridPermeableLayoutHelper();
+		
+		/// <summary>
 		/// Gets or sets the placeholder associated with this controller.
 		/// </summary>
 		/// <value>The placeholder.</value>

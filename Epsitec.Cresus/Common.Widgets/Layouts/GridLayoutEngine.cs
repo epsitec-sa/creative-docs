@@ -12,6 +12,22 @@ namespace Epsitec.Common.Widgets.Layouts
 		{
 		}
 
+		public Collections.ColumnDefinitionCollection ColumnDefinitions
+		{
+			get
+			{
+				return this.columnDefinitions;
+			}
+		}
+
+		public Collections.RowDefinitionCollection RowDefinitions
+		{
+			get
+			{
+				return this.rowDefinitions;
+			}
+		}
+
 		#region ILayoutEngine Interface
 		
 		public void UpdateLayout(Visual container, Drawing.Rectangle rect, IEnumerable<Visual> children)
@@ -92,8 +108,8 @@ namespace Epsitec.Common.Widgets.Layouts
 			List<Info> pendingRows = new List<Info> ();
 			
 			int passId = context.PassId;
-			int columnMax = 0;
-			int rowMax = 0;
+			int columnCount = 0;
+			int rowCount = 0;
 			
 			foreach (Visual child in children)
 			{
@@ -109,13 +125,13 @@ namespace Epsitec.Common.Widgets.Layouts
 				int columnSpan = GridLayoutEngine.GetColumnSpan (child);
 				int rowSpan = GridLayoutEngine.GetRowSpan (child);
 
-				if (column+columnSpan > columnMax)
+				if (column+columnSpan > columnCount)
 				{
-					columnMax = column+columnSpan;
+					columnCount = column+columnSpan;
 				}
-				if (row+rowSpan > rowMax)
+				if (row+rowSpan > rowCount)
 				{
-					rowMax = row+rowSpan;
+					rowCount = row+rowSpan;
 				}
 
 				Layouts.LayoutMeasure measureDx = Layouts.LayoutMeasure.GetWidth (child);
@@ -158,6 +174,27 @@ namespace Epsitec.Common.Widgets.Layouts
 				{
 					pendingRows.Add (new Info (child, measureDy, row, rowSpan));
 				}
+			}
+
+			int nColumns = System.Math.Min (this.columnDefinitions.Count, columnCount);
+			int nRows = System.Math.Min (this.rowDefinitions.Count, rowCount);
+
+			for (int i = 0; i < nColumns; i++)
+			{
+				ColumnMeasure measure = this.GetColumnMeasure (columnMeasureList, passId, i);
+
+				measure.UpdateMin (passId, this.columnDefinitions[i].MinWidth);
+				measure.UpdateMax (passId, this.columnDefinitions[i].MaxWidth);
+				measure.UpdatePassId (passId);
+			}
+
+			for (int i = 0; i < nRows; i++)
+			{
+				RowMeasure measure = this.GetRowMeasure (rowMeasureList, passId, i);
+
+				measure.UpdateMin (passId, this.rowDefinitions[i].MinHeight);
+				measure.UpdateMax (passId, this.rowDefinitions[i].MaxHeight);
+				measure.UpdatePassId (passId);
 			}
 
 			if (pendingColumns.Count > 0)
@@ -220,11 +257,11 @@ namespace Epsitec.Common.Widgets.Layouts
 
 			
 			
-			this.columnMeasures = new ColumnMeasure[columnMax];
-			this.rowMeasures    = new RowMeasure[rowMax];
+			this.columnMeasures = new ColumnMeasure[columnCount];
+			this.rowMeasures    = new RowMeasure[rowCount];
 			
-			columnMeasureList.CopyTo (0, this.columnMeasures, 0, columnMax);
-			rowMeasureList.CopyTo (0, this.rowMeasures, 0, rowMax);
+			columnMeasureList.CopyTo (0, this.columnMeasures, 0, columnCount);
+			rowMeasureList.CopyTo (0, this.rowMeasures, 0, rowCount);
 
 			double minDx = 0;
 			double maxDx = 0;
@@ -406,12 +443,18 @@ namespace Epsitec.Common.Widgets.Layouts
 
 		#endregion
 
+		#region ColumnMeasure Class
+
 		private class ColumnMeasure : LayoutMeasure
 		{
 			public ColumnMeasure(int passId) : base (passId)
 			{
 			}
 		}
+
+		#endregion
+
+		#region RowMeasure Class
 
 		private class RowMeasure : LayoutMeasure
 		{
@@ -462,6 +505,8 @@ namespace Epsitec.Common.Widgets.Layouts
 			double minH1;
 			double minH2;
 		}
+
+		#endregion
 
 		public static void SetColumn(Visual visual, int column)
 		{
@@ -572,7 +617,10 @@ namespace Epsitec.Common.Widgets.Layouts
 		public static readonly DependencyProperty ColumnSpanProperty = DependencyProperty.RegisterAttached ("ColumnSpan", typeof (int), typeof (GridLayoutEngine), new DependencyPropertyMetadata (1));
 		public static readonly DependencyProperty RowSpanProperty = DependencyProperty.RegisterAttached ("RowSpan", typeof (int), typeof (GridLayoutEngine), new DependencyPropertyMetadata (1));
 
-		private RowMeasure[]	rowMeasures    = new RowMeasure[0];
 		private ColumnMeasure[] columnMeasures = new ColumnMeasure[0];
+		private RowMeasure[]	rowMeasures    = new RowMeasure[0];
+
+		private Collections.ColumnDefinitionCollection columnDefinitions = new Collections.ColumnDefinitionCollection ();
+		private Collections.RowDefinitionCollection rowDefinitions = new Collections.RowDefinitionCollection ();
 	}
 }

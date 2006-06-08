@@ -141,6 +141,8 @@
     <Compile Include="Layouts\Collections\ColumnDefinitionCollection.cs" />
     <Compile Include="Layouts\Collections\RowDefinitionCollection.cs" />
     <Compile Include="Layouts\ColumnDefinition.cs" />
+    <Compile Include="Layouts\PermeableCell.cs" />
+    <Compile Include="Layouts\IGridPermeable.cs" />
     <Compile Include="Layouts\RowDefinition.cs" />
     <Compile Include="Layouts\GridUnitType.cs" />
     <Compile Include="Layouts\GridLength.cs" />

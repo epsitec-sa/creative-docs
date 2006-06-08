@@ -6,7 +6,7 @@ using System.Collections.Generic;
 namespace Epsitec.Common.Widgets.Layouts
 {
 	/// <summary>
-	/// The <c>ILayoutEngine</c> defines the interface with a layout engine used
+	/// The <c>ILayoutEngine</c> interface defines basic layout engine methods used
 	/// to measure the minium/maximum constraints based on a visual's children and
 	/// then laying out the children based on their measures.
 	/// </summary>
