@@ -10,7 +10,7 @@ namespace Epsitec.Common.Widgets
 	/// La classe Placeholder représente un conteneur utilisé par des widgets
 	/// intelligents, remplis par data binding.
 	/// </summary>
-	public class Placeholder : AbstractGroup
+	public class Placeholder : AbstractGroup, Layouts.IGridPermeable
 	{
 		public Placeholder()
 		{
@@ -23,7 +23,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		public Binding ValueBinding
+		public Binding							ValueBinding
 		{
 			get
 			{
@@ -31,7 +31,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public object ValueTypeObject
+		public object							ValueTypeObject
 		{
 			get
 			{
@@ -39,7 +39,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public string ValueName
+		public string							ValueName
 		{
 			get
 			{
@@ -48,7 +48,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public object Value
+		public object							Value
 		{
 			get
 			{
@@ -60,7 +60,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public string Controller
+		public string							Controller
 		{
 			get
 			{
@@ -72,7 +72,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public string ControllerParameter
+		public string							ControllerParameter
 		{
 			get
 			{
@@ -82,6 +82,35 @@ namespace Epsitec.Common.Widgets
 			{
 				this.SetValue (Placeholder.ControllerParameterProperty, value);
 			}
+		}
+
+		private Layouts.IGridPermeable			ControllerIGridPermeable
+		{
+			get
+			{
+				Layouts.IGridPermeable helper = null;
+
+				if (this.controller != null)
+				{
+					helper = this.controller.GetGridPermeableLayoutHelper ();
+				}
+				if (helper == null)
+				{
+					helper = Placeholder.noOpGridPermeableHelper;
+				}
+
+				return helper;
+			}
+		}
+
+		protected override void OnBindingChanged(DependencyProperty property)
+		{
+			if (property == Placeholder.ValueProperty)
+			{
+				this.UpdateValueTypeObject ();
+			}
+
+			base.OnBindingChanged (property);
 		}
 
 		private void DisposeUserInterface()
@@ -122,16 +151,6 @@ namespace Epsitec.Common.Widgets
 				this.DisposeUserInterface ();
 				this.CreateUserInterface ();
 			}
-		}
-
-		protected override void OnBindingChanged(DependencyProperty property)
-		{
-			if (property == Placeholder.ValueProperty)
-			{
-				this.UpdateValueTypeObject ();
-			}
-			
-			base.OnBindingChanged (property);
 		}
 
 		private void UpdateValueTypeObject()
@@ -192,6 +211,30 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		#region IGridPermeable Members
+
+		IEnumerable<Layouts.PermeableCell> Layouts.IGridPermeable.GetChildren(int column, int row)
+		{
+			return this.ControllerIGridPermeable.GetChildren (column, row);
+		}
+
+		#endregion
+
+		#region NoOpGridPermeableHelper Class
+
+		private class NoOpGridPermeableHelper : Layouts.IGridPermeable
+		{
+			#region IGridPermeable Members
+
+			public IEnumerable<Layouts.PermeableCell> GetChildren(int column, int row)
+			{
+				yield break;
+			}
+
+			#endregion
+		}
+		
+		#endregion
 
 		private static void NotifyValueChanged(DependencyObject o, object oldValue, object newValue)
 		{
@@ -216,8 +259,10 @@ namespace Epsitec.Common.Widgets
 		public static readonly DependencyProperty ControllerParameterProperty = DependencyProperty.Register ("ControllerParameter", typeof (string), typeof (Placeholder), new DependencyPropertyMetadata (Placeholder.NotifyControllerChanged));
 
 
-		private IController controller;
-		private object valueTypeObject;
-		private string valueName;
+		static readonly NoOpGridPermeableHelper	noOpGridPermeableHelper = new NoOpGridPermeableHelper ();
+		
+		private IController						controller;
+		private object							valueTypeObject;
+		private string							valueName;
 	}
 }

@@ -93,7 +93,17 @@ namespace Epsitec.Common.Widgets.Controllers
 			}
 		}
 
+		Layouts.IGridPermeable IController.GetGridPermeableLayoutHelper()
+		{
+			return this.GetGridPermeableLayoutHelper ();
+		}
+
 		#endregion
+
+		protected virtual Layouts.IGridPermeable GetGridPermeableLayoutHelper()
+		{
+			return null;
+		}
 
 		protected abstract void CreateUserInterface(object valueTypeObject, string valueName);
 		
