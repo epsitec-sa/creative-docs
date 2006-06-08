@@ -57,10 +57,11 @@ namespace Epsitec.Common.Designer
 		}
 
 
-		public void DraggingStart(Point pos, Rectangle rect, Handle.Type type)
+		public void DraggingStart(Point pos, Rectangle rect, Size minSize, Handle.Type type)
 		{
 			//	Débute un déplacement de poignée.
 			this.draggingRect = rect;
+			this.draggingMinSize = minSize;
 			this.draggingType = type;
 
 			Point final = this.GetHandle(this.draggingType).Position;
@@ -81,34 +82,46 @@ namespace Epsitec.Common.Designer
 			switch (this.draggingType)
 			{
 				case Handle.Type.BottomLeft:
+					pos.X = System.Math.Min(pos.X, this.draggingRect.Right-this.draggingMinSize.Width);
+					pos.Y = System.Math.Min(pos.Y, this.draggingRect.Top-this.draggingMinSize.Height);
 					this.draggingRect.BottomLeft = pos;
 					break;
 
 				case Handle.Type.BottomRight:
+					pos.X = System.Math.Max(pos.X, this.draggingRect.Left+this.draggingMinSize.Width);
+					pos.Y = System.Math.Min(pos.Y, this.draggingRect.Top-this.draggingMinSize.Height);
 					this.draggingRect.BottomRight = pos;
 					break;
 
 				case Handle.Type.TopRight:
+					pos.X = System.Math.Max(pos.X, this.draggingRect.Left+this.draggingMinSize.Width);
+					pos.Y = System.Math.Max(pos.Y, this.draggingRect.Bottom+this.draggingMinSize.Height);
 					this.draggingRect.TopRight = pos;
 					break;
 
 				case Handle.Type.TopLeft:
+					pos.X = System.Math.Min(pos.X, this.draggingRect.Right-this.draggingMinSize.Width);
+					pos.Y = System.Math.Max(pos.Y, this.draggingRect.Bottom+this.draggingMinSize.Height);
 					this.draggingRect.TopLeft = pos;
 					break;
 
 				case Handle.Type.Bottom:
+					pos.Y = System.Math.Min(pos.Y, this.draggingRect.Top-this.draggingMinSize.Height);
 					this.draggingRect.Bottom = pos.Y;
 					break;
 
 				case Handle.Type.Top:
+					pos.Y = System.Math.Max(pos.Y, this.draggingRect.Bottom+this.draggingMinSize.Height);
 					this.draggingRect.Top = pos.Y;
 					break;
 
 				case Handle.Type.Left:
+					pos.X = System.Math.Min(pos.X, this.draggingRect.Right-this.draggingMinSize.Width);
 					this.draggingRect.Left = pos.X;
 					break;
 
 				case Handle.Type.Right:
+					pos.X = System.Math.Max(pos.X, this.draggingRect.Left+this.draggingMinSize.Width);
 					this.draggingRect.Right = pos.X;
 					break;
 			}
@@ -413,6 +426,7 @@ namespace Epsitec.Common.Designer
 		protected List<Handle>				list = new List<Handle>();
 		protected Handle.Type				draggingType = Handle.Type.None;
 		protected Rectangle					draggingRect;
+		protected Size						draggingMinSize;
 		protected Point						draggingOffset;
 		protected bool						isFinger;
 	}
