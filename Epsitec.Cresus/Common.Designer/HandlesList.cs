@@ -71,8 +71,6 @@ namespace Epsitec.Common.Designer
 		{
 			//	Effectue un déplacement de poignée.
 			pos += this.draggingOffset;
-			this.Hilite(pos);
-			this.editor.Invalidate();
 
 			switch (this.draggingType)
 			{
@@ -214,18 +212,13 @@ namespace Epsitec.Common.Designer
 		public void Draw(Graphics graphics)
 		{
 			//	Dessine toutes les poignées.
-			//	Pendant un drag, seule la poignée déplacée est affichée.
-			foreach (Handle handle in this.list)
+			//	Pendant un drag, aucune poignée n'est affichée.
+			if (!this.IsDragging)
 			{
-				if (this.IsDragging)
+				foreach (Handle handle in this.list)
 				{
-					if (handle.HandleType != this.draggingType)
-					{
-						continue;
-					}
+					handle.Draw(graphics);
 				}
-
-				handle.Draw(graphics);
 			}
 		}
 
