@@ -192,6 +192,30 @@ namespace Epsitec.Common.Widgets.Layouts
 			if (pendingRows.Count > 0)
 			{
 				pendingRows.Sort ();
+
+				foreach (Info info in pendingRows)
+				{
+					double dy = 0;
+
+					for (int i = 0; i < info.Span; i++)
+					{
+						dy += this.GetRowMeasure (rowMeasureList, passId, info.Index + i).Desired;
+					}
+
+					if (dy < info.Measure.Desired)
+					{
+						//	The widget needs more room than what has been granted to it.
+						//	Distribute the excess space evenly.
+
+						double space = (info.Measure.Desired - dy) / info.Span;
+
+						for (int i = 0; i < info.Span; i++)
+						{
+							LayoutMeasure measure = this.GetRowMeasure (rowMeasureList, passId, info.Index + i);
+							measure.UpdateMin (passId, measure.Min + space);
+						}
+					}
+				}
 			}
 
 			

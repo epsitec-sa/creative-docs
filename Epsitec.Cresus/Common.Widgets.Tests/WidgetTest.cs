@@ -1455,6 +1455,7 @@ namespace Epsitec.Common.Widgets
 			button = new Button ();
 			button.Text = "A";
 			button.PreferredWidth = 20;
+			button.PreferredHeight = 60;
 			Layouts.GridLayoutEngine.SetColumn (button, 0);
 			Layouts.GridLayoutEngine.SetRow (button, 1);
 			Layouts.GridLayoutEngine.SetRowSpan (button, 2);
@@ -1463,6 +1464,7 @@ namespace Epsitec.Common.Widgets
 			button = new Button ();
 			button.Text = "B";
 			button.PreferredWidth = 20;
+			button.VerticalAlignment = VerticalAlignment.Center;
 			Layouts.GridLayoutEngine.SetColumn (button, 1);
 			Layouts.GridLayoutEngine.SetRow (button, 1);
 			Layouts.GridLayoutEngine.SetColumnSpan (button, 2);
