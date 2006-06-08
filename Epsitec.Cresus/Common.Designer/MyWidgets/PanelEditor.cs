@@ -942,7 +942,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 					}
 					else
 					{
-						this.creatingObject.Dock = DockStyle.Top;
+						this.creatingObject.Dock = DockStyle.Bottom;
 					}
 
 					this.SetHilitedZOrderRectangle(Rectangle.Empty);
@@ -2214,24 +2214,24 @@ namespace Epsitec.Common.Designer.MyWidgets
 					{
 						if (mouse.Y > bounds.Center.Y)
 						{
-							hilite = new Rectangle(bounds.Left, bounds.Bottom, bounds.Width, 0);
+							hilite = new Rectangle(bounds.Left, bounds.Top, bounds.Width, 0);
 						}
 						else
 						{
 							order++;
-							hilite = new Rectangle(bounds.Left, bounds.Top, bounds.Width, 0);
+							hilite = new Rectangle(bounds.Left, bounds.Bottom, bounds.Width, 0);
 						}
 					}
 					else
 					{
 						if (mouse.Y < bounds.Center.Y)
 						{
-							hilite = new Rectangle(bounds.Left, bounds.Top, bounds.Width, 0);
+							hilite = new Rectangle(bounds.Left, bounds.Bottom, bounds.Width, 0);
 						}
 						else
 						{
 							order++;
-							hilite = new Rectangle(bounds.Left, bounds.Bottom, bounds.Width, 0);
+							hilite = new Rectangle(bounds.Left, bounds.Top, bounds.Width, 0);
 						}
 					}
 				}
