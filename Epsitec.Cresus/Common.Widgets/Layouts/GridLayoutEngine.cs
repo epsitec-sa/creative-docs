@@ -194,169 +194,21 @@ namespace Epsitec.Common.Widgets.Layouts
 
 		public void UpdateMinMax(Visual container, LayoutContext context, IEnumerable<Visual> children, ref Drawing.Size minSize, ref Drawing.Size maxSize)
 		{
-			List<ColumnMeasure> columnMeasureList = new List<ColumnMeasure> ();
-			List<RowMeasure>    rowMeasureList = new List<RowMeasure> ();
-
-			List<Info> pendingColumns = new List<Info> ();
-			List<Info> pendingRows = new List<Info> ();
-			
 			int passId = context.PassId;
-			int columnCount = 0;
-			int rowCount = 0;
 			
-			foreach (Visual child in children)
-			{
-				int column = GridLayoutEngine.GetColumn (child);
-				int row    = GridLayoutEngine.GetRow (child);
-
-				if ((column < 0) ||
-					(row < 0))
-				{
-					continue;
-				}
-
-				int columnSpan = GridLayoutEngine.GetColumnSpan (child);
-				int rowSpan = GridLayoutEngine.GetRowSpan (child);
-
-				if (column+columnSpan > columnCount)
-				{
-					columnCount = column+columnSpan;
-				}
-				if (row+rowSpan > rowCount)
-				{
-					rowCount = row+rowSpan;
-				}
-
-				Layouts.LayoutMeasure measureDx = Layouts.LayoutMeasure.GetWidth (child);
-				Layouts.LayoutMeasure measureDy = Layouts.LayoutMeasure.GetHeight (child);
-
-				Drawing.Margins margins = child.Margins;
-
-				if (columnSpan == 1)
-				{
-					ColumnMeasure columnMeasure = this.GetColumnMeasure (columnMeasureList, passId, column);
-
-					columnMeasure.UpdateMin (passId, measureDx.Desired + margins.Width);
-					columnMeasure.UpdateMax (passId, measureDx.Max + margins.Width);
-					columnMeasure.UpdatePassId (passId);
-				}
-				else
-				{
-					pendingColumns.Add (new Info (child, measureDx, column, columnSpan));
-				}
-
-				if (rowSpan == 1)
-				{
-					RowMeasure rowMeasure = this.GetRowMeasure (rowMeasureList, passId, row);
-
-					rowMeasure.UpdateMin (passId, measureDy.Desired + margins.Height);
-					rowMeasure.UpdateMax (passId, measureDy.Max + margins.Height);
-					rowMeasure.UpdatePassId (passId);
-
-					if (child.VerticalAlignment == VerticalAlignment.BaseLine)
-					{
-						double h1;
-						double h2;
-
-						LayoutContext.GetMeasuredBaseLine (child, out h1, out h2);
-
-						rowMeasure.UpdateMinH1H2 (passId, h1, h2);
-					}
-				}
-				else
-				{
-					pendingRows.Add (new Info (child, measureDy, row, rowSpan));
-				}
-			}
-
-			int nColumns = System.Math.Min (this.columnDefinitions.Count, columnCount);
-			int nRows = System.Math.Min (this.rowDefinitions.Count, rowCount);
-
-			for (int i = 0; i < nColumns; i++)
-			{
-				ColumnMeasure measure = this.GetColumnMeasure (columnMeasureList, passId, i);
-
-				measure.UpdateMin (passId, this.columnDefinitions[i].MinWidth);
-				measure.UpdateMax (passId, this.columnDefinitions[i].MaxWidth);
-				measure.UpdateDesired (0);
-				measure.UpdatePassId (passId);
-			}
-
-			for (int i = 0; i < nRows; i++)
-			{
-				RowMeasure measure = this.GetRowMeasure (rowMeasureList, passId, i);
-
-				measure.UpdateMin (passId, this.rowDefinitions[i].MinHeight);
-				measure.UpdateMax (passId, this.rowDefinitions[i].MaxHeight);
-				measure.UpdateDesired (0);
-				measure.UpdatePassId (passId);
-			}
-
-			if (pendingColumns.Count > 0)
-			{
-				pendingColumns.Sort ();
-
-				foreach (Info info in pendingColumns)
-				{
-					double dx = 0;
-					
-					for (int i = 0; i < info.Span; i++)
-					{
-						dx += this.GetColumnMeasure (columnMeasureList, passId, info.Index + i).Desired;
-					}
-
-					if (dx < info.Measure.Desired)
-					{
-						//	The widget needs more room than what has been granted to it.
-						//	Distribute the excess space evenly.
-
-						double space = (info.Measure.Desired - dx) / info.Span;
-
-						for (int i = 0; i < info.Span; i++)
-						{
-							LayoutMeasure measure = this.GetColumnMeasure (columnMeasureList, passId, info.Index + i);
-							measure.UpdateMin (passId, measure.Min + space);
-						}
-					}
-				}
-			}
-
-			if (pendingRows.Count > 0)
-			{
-				pendingRows.Sort ();
-
-				foreach (Info info in pendingRows)
-				{
-					double dy = 0;
-
-					for (int i = 0; i < info.Span; i++)
-					{
-						dy += this.GetRowMeasure (rowMeasureList, passId, info.Index + i).Desired;
-					}
-
-					if (dy < info.Measure.Desired)
-					{
-						//	The widget needs more room than what has been granted to it.
-						//	Distribute the excess space evenly.
-
-						double space = (info.Measure.Desired - dy) / info.Span;
-
-						for (int i = 0; i < info.Span; i++)
-						{
-							LayoutMeasure measure = this.GetRowMeasure (rowMeasureList, passId, info.Index + i);
-							measure.UpdateMin (passId, measure.Min + space);
-						}
-					}
-				}
-			}
-
+			MinMaxUpdater updater = new MinMaxUpdater (this, passId);
 			
-			
-			this.columnMeasures = new ColumnMeasure[columnCount];
-			this.rowMeasures    = new RowMeasure[rowCount];
-			
-			columnMeasureList.CopyTo (0, this.columnMeasures, 0, columnCount);
-			rowMeasureList.CopyTo (0, this.rowMeasures, 0, rowCount);
+			updater.ProcessChildren (children);
+			updater.ConstrainColumns ();
+			updater.ConstrainRows ();
+			updater.ProcessPendingColumns ();
+			updater.ProcessPendingRows ();
+
+			this.columnMeasures = new ColumnMeasure[updater.ColumnCount];
+			this.rowMeasures    = new RowMeasure[updater.RowCount];
+
+			updater.ColumnMeasureList.CopyTo (0, this.columnMeasures, 0, updater.ColumnCount);
+			updater.RowMeasureList.CopyTo (0, this.rowMeasures, 0, updater.RowCount);
 
 			double minDx = 0;
 			double maxDx = 0;
@@ -400,6 +252,307 @@ namespace Epsitec.Common.Widgets.Layouts
 			maxSize.Height = System.Math.Min (maxSize.Height, maxDy);
 		}
 
+		#endregion
+
+		#region MinMaxUpdater Class
+
+		private class MinMaxUpdater
+		{
+			public MinMaxUpdater(GridLayoutEngine grid, int passId)
+			{
+				this.grid        = grid;
+				this.passId      = passId;
+				this.columnCount = 0;
+				this.rowCount    = 0;
+			}
+
+			public int ColumnCount
+			{
+				get
+				{
+					return this.columnCount;
+				}
+			}
+
+			public int RowCount
+			{
+				get
+				{
+					return this.rowCount;
+				}
+			}
+
+			public List<ColumnMeasure> ColumnMeasureList
+			{
+				get
+				{
+					return this.columnMeasureList;
+				}
+			}
+
+			public List<RowMeasure> RowMeasureList
+			{
+				get
+				{
+					return this.rowMeasureList;
+				}
+			}
+
+			public void ProcessChildren(IEnumerable<Visual> children)
+			{
+				foreach (Visual child in children)
+				{
+					int column = GridLayoutEngine.GetColumn (child);
+					int row    = GridLayoutEngine.GetRow (child);
+
+					if ((column < 0) ||
+						(row < 0))
+					{
+						continue;
+					}
+
+					this.ProcessChild (child, column, row);
+				}
+			}
+
+			private void ProcessChild(Visual child, int column, int row)
+			{
+				IGridPermeable permeable = child as IGridPermeable;
+
+				if (permeable != null)
+				{
+					foreach (PermeableCell cell in permeable.GetChildren (column, row))
+					{
+						this.ProcessChild (cell.Visual, cell.Column, cell.Row);
+					}
+				}
+
+				int columnSpan = GridLayoutEngine.GetColumnSpan (child);
+				int rowSpan    = GridLayoutEngine.GetRowSpan (child);
+
+				if (column+columnSpan > this.columnCount)
+				{
+					this.columnCount = column+columnSpan;
+				}
+				if (row+rowSpan > this.rowCount)
+				{
+					this.rowCount = row+rowSpan;
+				}
+
+				Layouts.LayoutMeasure measureDx = Layouts.LayoutMeasure.GetWidth (child);
+				Layouts.LayoutMeasure measureDy = Layouts.LayoutMeasure.GetHeight (child);
+
+				Drawing.Margins margins = child.Margins;
+
+				if (columnSpan == 1)
+				{
+					ColumnMeasure columnMeasure = this.GetColumnMeasure (column);
+
+					columnMeasure.UpdateMin (this.passId, measureDx.Desired + margins.Width);
+					columnMeasure.UpdateMax (this.passId, measureDx.Max + margins.Width);
+					columnMeasure.UpdatePassId (this.passId);
+				}
+				else
+				{
+					this.pendingColumns.Add (new Info (child, measureDx, column, columnSpan));
+				}
+
+				if (rowSpan == 1)
+				{
+					RowMeasure rowMeasure = this.GetRowMeasure (row);
+
+					rowMeasure.UpdateMin (this.passId, measureDy.Desired + margins.Height);
+					rowMeasure.UpdateMax (this.passId, measureDy.Max + margins.Height);
+					rowMeasure.UpdatePassId (this.passId);
+
+					if (child.VerticalAlignment == VerticalAlignment.BaseLine)
+					{
+						double h1;
+						double h2;
+
+						LayoutContext.GetMeasuredBaseLine (child, out h1, out h2);
+
+						rowMeasure.UpdateMinH1H2 (this.passId, h1, h2);
+					}
+				}
+				else
+				{
+					this.pendingRows.Add (new Info (child, measureDy, row, rowSpan));
+				}
+			}
+
+			public void ConstrainColumns()
+			{
+				int nColumns = System.Math.Min (this.grid.columnDefinitions.Count, this.columnCount);
+
+				for (int i = 0; i < nColumns; i++)
+				{
+					ColumnMeasure measure = this.GetColumnMeasure (i);
+
+					measure.UpdateMin (this.passId, this.grid.columnDefinitions[i].MinWidth);
+					measure.UpdateMax (this.passId, this.grid.columnDefinitions[i].MaxWidth);
+					measure.UpdateDesired (0);
+					measure.UpdatePassId (this.passId);
+				}
+			}
+
+			public void ConstrainRows()
+			{
+				int nRows = System.Math.Min (this.grid.rowDefinitions.Count, this.rowCount);
+
+				for (int i = 0; i < nRows; i++)
+				{
+					RowMeasure measure = this.GetRowMeasure (i);
+
+					measure.UpdateMin (this.passId, this.grid.rowDefinitions[i].MinHeight);
+					measure.UpdateMax (this.passId, this.grid.rowDefinitions[i].MaxHeight);
+					measure.UpdateDesired (0);
+					measure.UpdatePassId (this.passId);
+				}
+			}
+
+			public void ProcessPendingColumns()
+			{
+				if (this.pendingColumns.Count > 0)
+				{
+					this.pendingColumns.Sort ();
+
+					foreach (Info info in this.pendingColumns)
+					{
+						double dx = 0;
+
+						for (int i = 0; i < info.Span; i++)
+						{
+							dx += this.GetColumnMeasure (info.Index + i).Desired;
+						}
+
+						if (dx < info.Measure.Desired)
+						{
+							//	The widget needs more room than what has been granted to it.
+							//	Distribute the excess space evenly.
+
+							double space = (info.Measure.Desired - dx) / info.Span;
+
+							for (int i = 0; i < info.Span; i++)
+							{
+								LayoutMeasure measure = this.GetColumnMeasure (info.Index + i);
+								measure.UpdateMin (this.passId, measure.Min + space);
+							}
+						}
+					}
+				}
+			}
+
+			public void ProcessPendingRows()
+			{
+				if (this.pendingRows.Count > 0)
+				{
+					this.pendingRows.Sort ();
+
+					foreach (Info info in this.pendingRows)
+					{
+						double dy = 0;
+
+						for (int i = 0; i < info.Span; i++)
+						{
+							dy += this.GetRowMeasure (info.Index + i).Desired;
+						}
+
+						if (dy < info.Measure.Desired)
+						{
+							//	The widget needs more room than what has been granted to it.
+							//	Distribute the excess space evenly.
+
+							double space = (info.Measure.Desired - dy) / info.Span;
+
+							for (int i = 0; i < info.Span; i++)
+							{
+								LayoutMeasure measure = this.GetRowMeasure (info.Index + i);
+								measure.UpdateMin (this.passId, measure.Min + space);
+							}
+						}
+					}
+				}
+			}
+
+			private ColumnMeasure GetColumnMeasure(int column)
+			{
+				while (column >= this.columnMeasureList.Count)
+				{
+					ColumnMeasure measure;
+
+					if (this.columnMeasureList.Count >= this.grid.columnMeasures.Length)
+					{
+						measure = new ColumnMeasure (this.passId);
+					}
+					else
+					{
+						measure = this.grid.columnMeasures[this.columnMeasureList.Count];
+
+						if (measure == null)
+						{
+							measure = new ColumnMeasure (this.passId);
+						}
+					}
+
+					if (double.IsNaN (measure.Desired))
+					{
+						measure.UpdateDesired (0);
+					}
+
+					this.columnMeasureList.Add (measure);
+				}
+
+				return this.columnMeasureList[column];
+			}
+
+			private RowMeasure GetRowMeasure(int row)
+			{
+				while (row >= this.rowMeasureList.Count)
+				{
+					RowMeasure measure;
+
+					if (this.rowMeasureList.Count >= this.grid.rowMeasures.Length)
+					{
+						measure = new RowMeasure (this.passId);
+					}
+					else
+					{
+						measure = this.grid.rowMeasures[this.rowMeasureList.Count];
+
+						if (measure == null)
+						{
+							measure = new RowMeasure (this.passId);
+						}
+					}
+
+					if (double.IsNaN (measure.Desired))
+					{
+						measure.UpdateDesired (0);
+					}
+
+					this.rowMeasureList.Add (measure);
+				}
+
+				return this.rowMeasureList[row];
+			}
+
+			GridLayoutEngine grid;
+			List<ColumnMeasure> columnMeasureList = new List<ColumnMeasure> ();
+			List<RowMeasure> rowMeasureList = new List<RowMeasure> ();
+
+			List<Info> pendingColumns = new List<Info> ();
+			List<Info> pendingRows = new List<Info> ();
+
+			int passId;
+			int columnCount;
+			int rowCount;
+		}
+
+		#endregion
+
+		#region Info Structure
+		
 		private struct Info : System.IComparable<Info>
 		{
 			public Info(Visual visual, LayoutMeasure measure, int index, int span)
@@ -472,68 +625,6 @@ namespace Epsitec.Common.Widgets.Layouts
 			}
 
 			#endregion
-		}
-
-		private ColumnMeasure GetColumnMeasure(List<ColumnMeasure> list, int passId, int column)
-		{
-			while (column >= list.Count)
-			{
-				ColumnMeasure measure;
-				
-				if (list.Count >= this.columnMeasures.Length)
-				{
-					measure = new ColumnMeasure (passId);
-				}
-				else
-				{
-					measure = this.columnMeasures[list.Count];
-					
-					if (measure == null)
-					{
-						measure = new ColumnMeasure (passId);
-					}
-				}
-
-				if (double.IsNaN (measure.Desired))
-				{
-					measure.UpdateDesired (0);
-				}
-				
-				list.Add (measure);
-			}
-
-			return list[column];
-		}
-
-		private RowMeasure GetRowMeasure(List<RowMeasure> list, int passId, int row)
-		{
-			while (row >= list.Count)
-			{
-				RowMeasure measure;
-
-				if (list.Count >= this.rowMeasures.Length)
-				{
-					measure = new RowMeasure (passId);
-				}
-				else
-				{
-					measure = this.rowMeasures[list.Count];
-
-					if (measure == null)
-					{
-						measure = new RowMeasure (passId);
-					}
-				}
-
-				if (double.IsNaN (measure.Desired))
-				{
-					measure.UpdateDesired (0);
-				}
-
-				list.Add (measure);
-			}
-
-			return list[row];
 		}
 
 		#endregion
