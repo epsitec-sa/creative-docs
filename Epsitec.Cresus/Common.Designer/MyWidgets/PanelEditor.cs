@@ -588,7 +588,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void SelectMove(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
 			//	Sélection ponctuelle, souris déplacée.
-			if (this.handlesList.IsFinger)
+			if (this.handlesList.IsFinger || this.isSizeMarkHorizontal || this.isSizeMarkVertical)
 			{
 				this.ChangeMouseCursor(MouseCursorType.Finger);
 			}
@@ -600,8 +600,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				this.ChangeMouseCursor(MouseCursorType.Arrow);
 			}
-
-			this.SizeMarkDraggingMove(pos);
 
 			if (this.isDragging)
 			{
@@ -615,7 +613,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				this.HandlingMove(pos);
 			}
-			else if (this.isSizeMarkDragging)
+			else if (this.SizeMarkDraggingMove(pos))
 			{
 			}
 			else
@@ -655,9 +653,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.HandlingEnd(pos);
 			}
 
-			if (this.isSizeMarkDragging)
+			if (this.SizeMarkDraggingStop(pos))
 			{
-				this.SizeMarkDraggingStop(pos);
 			}
 		}
 
@@ -2405,7 +2402,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			return this.isSizeMarkDragging;
 		}
 
-		protected void SizeMarkDraggingMove(Point pos)
+		protected bool SizeMarkDraggingMove(Point pos)
 		{
 			if (this.isSizeMarkDragging)
 			{
@@ -2438,14 +2435,38 @@ namespace Epsitec.Common.Designer.MyWidgets
 					this.isSizeMarkVertical = v;
 					this.Invalidate();
 				}
+
+				if (this.isSizeMarkHorizontal || this.isSizeMarkVertical)
+				{
+					this.ChangeMouseCursor(MouseCursorType.Finger);
+				}
 			}
+
+			return this.isSizeMarkDragging;
 		}
 
-		protected void SizeMarkDraggingStop(Point pos)
+		protected bool SizeMarkDraggingStop(Point pos)
 		{
 			if (this.isSizeMarkDragging)
 			{
 				this.isSizeMarkDragging = false;
+			}
+
+			return this.isSizeMarkDragging;
+		}
+
+		public void SizeMarkDeselect()
+		{
+			if (this.isSizeMarkHorizontal)
+			{
+				this.isSizeMarkHorizontal = false;
+				this.Invalidate();
+			}
+
+			if (this.isSizeMarkVertical)
+			{
+				this.isSizeMarkVertical = false;
+				this.Invalidate();
 			}
 		}
 

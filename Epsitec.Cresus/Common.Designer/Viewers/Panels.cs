@@ -279,6 +279,8 @@ namespace Epsitec.Common.Designer.Viewers
 			{
 				this.panelEditor.DeselectAll();
 			}
+
+			this.panelEditor.SizeMarkDeselect();
 		}
 
 		public override void DoCommand(string name)
