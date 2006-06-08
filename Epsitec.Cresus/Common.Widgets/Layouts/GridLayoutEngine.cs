@@ -87,10 +87,13 @@ namespace Epsitec.Common.Widgets.Layouts
 		{
 			List<ColumnMeasure> columnMeasureList = new List<ColumnMeasure> ();
 			List<RowMeasure>    rowMeasureList = new List<RowMeasure> ();
+
+			List<Info> pendingColumns = new List<Info> ();
+			List<Info> pendingRows = new List<Info> ();
 			
 			int passId = context.PassId;
-			int rowMax = 0;
 			int columnMax = 0;
+			int rowMax = 0;
 			
 			foreach (Visual child in children)
 			{
@@ -103,47 +106,101 @@ namespace Epsitec.Common.Widgets.Layouts
 					continue;
 				}
 
-				if (column > columnMax)
-				{
-					columnMax = column;
-				}
-				if (row > rowMax)
-				{
-					rowMax = row;
-				}
+				int columnSpan = GridLayoutEngine.GetColumnSpan (child);
+				int rowSpan = GridLayoutEngine.GetRowSpan (child);
 
-				Drawing.Margins margins = child.Margins;
-				
-				ColumnMeasure columnMeasure = this.GetColumnMeasure (columnMeasureList, passId, column);
-				RowMeasure    rowMeasure    = this.GetRowMeasure (rowMeasureList, passId, row);
+				if (column+columnSpan > columnMax)
+				{
+					columnMax = column+columnSpan;
+				}
+				if (row+rowSpan > rowMax)
+				{
+					rowMax = row+rowSpan;
+				}
 
 				Layouts.LayoutMeasure measureDx = Layouts.LayoutMeasure.GetWidth (child);
 				Layouts.LayoutMeasure measureDy = Layouts.LayoutMeasure.GetHeight (child);
 
-				columnMeasure.UpdateMin (passId, measureDx.Desired + margins.Width);
-				columnMeasure.UpdateMax (passId, measureDx.Max + margins.Width);
-				columnMeasure.UpdatePassId (passId);
+				Drawing.Margins margins = child.Margins;
 
-				rowMeasure.UpdateMin (passId, measureDy.Desired + margins.Height);
-				rowMeasure.UpdateMax (passId, measureDy.Max + margins.Height);
-				rowMeasure.UpdatePassId (passId);
-
-				if (child.VerticalAlignment == VerticalAlignment.BaseLine)
+				if (columnSpan == 1)
 				{
-					double h1;
-					double h2;
+					ColumnMeasure columnMeasure = this.GetColumnMeasure (columnMeasureList, passId, column);
 
-					LayoutContext.GetMeasuredBaseLine (child, out h1, out h2);
+					columnMeasure.UpdateMin (passId, measureDx.Desired + margins.Width);
+					columnMeasure.UpdateMax (passId, measureDx.Max + margins.Width);
+					columnMeasure.UpdatePassId (passId);
+				}
+				else
+				{
+					pendingColumns.Add (new Info (child, measureDx, column, columnSpan));
+				}
 
-					rowMeasure.UpdateMinH1H2 (passId, h1, h2);
+				if (rowSpan == 1)
+				{
+					RowMeasure rowMeasure = this.GetRowMeasure (rowMeasureList, passId, row);
+
+					rowMeasure.UpdateMin (passId, measureDy.Desired + margins.Height);
+					rowMeasure.UpdateMax (passId, measureDy.Max + margins.Height);
+					rowMeasure.UpdatePassId (passId);
+
+					if (child.VerticalAlignment == VerticalAlignment.BaseLine)
+					{
+						double h1;
+						double h2;
+
+						LayoutContext.GetMeasuredBaseLine (child, out h1, out h2);
+
+						rowMeasure.UpdateMinH1H2 (passId, h1, h2);
+					}
+				}
+				else
+				{
+					pendingRows.Add (new Info (child, measureDy, row, rowSpan));
 				}
 			}
 
-			this.columnMeasures = new ColumnMeasure[columnMax+1];
-			this.rowMeasures    = new RowMeasure[rowMax+1];
+			if (pendingColumns.Count > 0)
+			{
+				pendingColumns.Sort ();
+
+				foreach (Info info in pendingColumns)
+				{
+					double dx = 0;
+					
+					for (int i = 0; i < info.Span; i++)
+					{
+						dx += this.GetColumnMeasure (columnMeasureList, passId, info.Index + i).Desired;
+					}
+
+					if (dx < info.Measure.Desired)
+					{
+						//	The widget needs more room than what has been granted to it.
+						//	Distribute the excess space evenly.
+
+						double space = (info.Measure.Desired - dx) / info.Span;
+
+						for (int i = 0; i < info.Span; i++)
+						{
+							LayoutMeasure measure = this.GetColumnMeasure (columnMeasureList, passId, info.Index + i);
+							measure.UpdateMin (passId, measure.Min + space);
+						}
+					}
+				}
+			}
+
+			if (pendingRows.Count > 0)
+			{
+				pendingRows.Sort ();
+			}
+
 			
-			columnMeasureList.CopyTo (0, this.columnMeasures, 0, columnMax+1);
-			rowMeasureList.CopyTo (0, this.rowMeasures, 0, rowMax+1);
+			
+			this.columnMeasures = new ColumnMeasure[columnMax];
+			this.rowMeasures    = new RowMeasure[rowMax];
+			
+			columnMeasureList.CopyTo (0, this.columnMeasures, 0, columnMax);
+			rowMeasureList.CopyTo (0, this.rowMeasures, 0, rowMax);
 
 			double minDx = 0;
 			double maxDx = 0;
@@ -185,6 +242,80 @@ namespace Epsitec.Common.Widgets.Layouts
 			minSize.Height = System.Math.Max (minSize.Height, minDy);
 			maxSize.Width  = System.Math.Min (maxSize.Width,  maxDx);
 			maxSize.Height = System.Math.Min (maxSize.Height, maxDy);
+		}
+
+		private struct Info : System.IComparable<Info>
+		{
+			public Info(Visual visual, LayoutMeasure measure, int index, int span)
+			{
+				this.visual = visual;
+				this.measure = measure;
+				this.index = index;
+				this.span = span;
+			}
+
+			public Visual Visual
+			{
+				get
+				{
+					return this.visual;
+				}
+			}
+
+			public LayoutMeasure Measure
+			{
+				get
+				{
+					return this.measure;
+				}
+			}
+
+			public int Index
+			{
+				get
+				{
+					return this.index;
+				}
+			}
+
+			public int Span
+			{
+				get
+				{
+					return this.span;
+				}
+			}
+			
+			Visual visual;
+			LayoutMeasure measure;
+			int index;
+			int span;
+
+			#region IComparable<Info> Members
+
+			int System.IComparable<Info>.CompareTo(Info other)
+			{
+				if (this.span < other.span)
+				{
+					return -1;
+				}
+				if (this.span > other.span)
+				{
+					return 1;
+				}
+				if (this.index < other.index)
+				{
+					return -1;
+				}
+				if (this.index > other.index)
+				{
+					return 1;
+				}
+
+				return 0;
+			}
+
+			#endregion
 		}
 
 		private ColumnMeasure GetColumnMeasure(List<ColumnMeasure> list, int passId, int column)
