@@ -14,7 +14,7 @@ namespace Epsitec.Common.Types
 	/// <typeparam name="V">Value type used by HostedDictionary</typeparam>
 	public interface IDictionaryHost<K, V>
 	{
-		HostedDictionary<K, V> Items
+		Collections.HostedDictionary<K, V> Items
 		{
 			get;
 		}

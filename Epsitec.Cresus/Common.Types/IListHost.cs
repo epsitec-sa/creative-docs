@@ -13,7 +13,7 @@ namespace Epsitec.Common.Types
 	/// <typeparam name="T">Data type used by HostedList</typeparam>
 	public interface IListHost<T>
 	{
-		HostedList<T> Items
+		Collections.HostedList<T> Items
 		{
 			get;
 		}

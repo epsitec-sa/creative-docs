@@ -3,7 +3,7 @@
 
 using System.Collections.Generic;
 
-namespace Epsitec.Common.Types
+namespace Epsitec.Common.Types.Collections
 {
 	/// <summary>
 	/// The HostedDictionary class implements a dictionary of T with notifications

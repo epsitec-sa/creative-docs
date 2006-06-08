@@ -3,7 +3,7 @@
 
 using System.Collections.Generic;
 
-namespace Epsitec.Common.Types
+namespace Epsitec.Common.Types.Collections
 {
 	/// <summary>
 	/// The HostedList class implements a list of T with notifications to the
