@@ -403,12 +403,12 @@ namespace Epsitec.Common.Widgets.Layouts
 		public void DefineDesiredWidth(Visual visual, double value)
 		{
 			LayoutMeasure measure = this.GetCachedWidthMeasure (visual);
-			measure.UpdateDesired (this.passId, value);
+			measure.UpdateDesired (value);
 		}
 		public void DefineDesiredHeight(Visual visual, double value)
 		{
 			LayoutMeasure measure = this.GetCachedHeightMeasure (visual);
-			measure.UpdateDesired (this.passId, value);
+			measure.UpdateDesired (value);
 		}
 
 		public void ClearMeasures(Visual visual)

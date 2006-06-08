@@ -37,10 +37,14 @@ namespace Epsitec.Common.Widgets.Layouts
 			double[] b = new double[this.rowMeasures.Length];
 			
 			double dx = 0;
+			double flexX = 0;
 			double dy = 0;
+			double flexY = 0;
 
 			for (int i = 0; i < this.columnMeasures.Length; i++)
 			{
+				this.columnMeasures[i].UpdateDesired (0);
+				
 				double w = this.columnMeasures[i].Desired;
 
 				x[i] = dx;
@@ -50,11 +54,18 @@ namespace Epsitec.Common.Widgets.Layouts
 				{
 					this.columnDefinitions[i].DefineActualOffset (x[i]);
 					this.columnDefinitions[i].DefineActualWidth (w);
+					
+					if (this.columnDefinitions[i].Width.IsProportional)
+					{
+						flexX += this.columnDefinitions[i].Width.Value;
+					}
 				}
 			}
 
 			for (int i = 0; i < this.rowMeasures.Length; i++)
 			{
+				this.rowMeasures[i].UpdateDesired (0);
+				
 				double h1 = this.rowMeasures[i].MinH1;
 				double h2 = this.rowMeasures[i].MinH2;
 				double h  = this.rowMeasures[i].Desired;
@@ -68,6 +79,47 @@ namespace Epsitec.Common.Widgets.Layouts
 				{
 					this.rowDefinitions[i].DefineActualOffset (y[i]);
 					this.rowDefinitions[i].DefineActualHeight (h);
+
+					if (this.rowDefinitions[i].Height.IsProportional)
+					{
+						flexY += this.rowDefinitions[i].Height.Value;
+					}
+				}
+			}
+
+			double spaceX = rect.Width - dx;
+			double spaceY = rect.Height - dy;
+
+			if ((spaceX > 0) &&
+				(flexX > 0))
+			{
+			}
+			
+			if ((spaceY > 0) &&
+				(flexY > 0))
+			{
+				double move = 0;
+				
+				for (int i = 0; i < this.RowDefinitions.Count; i++)
+				{
+					if (this.rowDefinitions[i].Height.IsProportional)
+					{
+						double d = this.rowDefinitions[i].Height.Value * spaceY / flexY;
+						double h = this.rowDefinitions[i].ActualHeight + d;
+						
+						this.rowMeasures[i].UpdateDesired (h);
+						this.rowDefinitions[i].DefineActualHeight (h);
+						
+						move += d;
+					}
+
+					y[i] += move;
+					this.rowDefinitions[i].DefineActualOffset (y[i]);
+				}
+				
+				for (int i = this.rowDefinitions.Count; i < y.Length; i++)
+				{
+					y[i] += move;
 				}
 			}
 			
@@ -199,6 +251,7 @@ namespace Epsitec.Common.Widgets.Layouts
 
 				measure.UpdateMin (passId, this.columnDefinitions[i].MinWidth);
 				measure.UpdateMax (passId, this.columnDefinitions[i].MaxWidth);
+				measure.UpdateDesired (0);
 				measure.UpdatePassId (passId);
 			}
 
@@ -208,6 +261,7 @@ namespace Epsitec.Common.Widgets.Layouts
 
 				measure.UpdateMin (passId, this.rowDefinitions[i].MinHeight);
 				measure.UpdateMax (passId, this.rowDefinitions[i].MaxHeight);
+				measure.UpdateDesired (0);
 				measure.UpdatePassId (passId);
 			}
 
@@ -415,7 +469,7 @@ namespace Epsitec.Common.Widgets.Layouts
 
 				if (double.IsNaN (measure.Desired))
 				{
-					measure.UpdateDesired (passId, 0);
+					measure.UpdateDesired (0);
 				}
 				
 				list.Add (measure);
@@ -446,7 +500,7 @@ namespace Epsitec.Common.Widgets.Layouts
 
 				if (double.IsNaN (measure.Desired))
 				{
-					measure.UpdateDesired (passId, 0);
+					measure.UpdateDesired (0);
 				}
 
 				list.Add (measure);
