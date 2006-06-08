@@ -629,7 +629,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Sélection ponctuelle, souris relâchée.
 			if (this.isDragging)
 			{
-				this.DraggingEnd();
+				this.DraggingEnd(pos);
 			}
 
 			if (this.isRectangling)
@@ -729,7 +729,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Sélection rectangulaire, souris relâchée.
 			if (this.isDragging)
 			{
-				this.DraggingEnd();
+				this.DraggingEnd(pos);
 			}
 
 			if (this.isRectangling)
@@ -840,7 +840,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			//	Dessin d'un objet, souris pressée.
 			this.DeselectAll();
-			this.SetHilitedZOrderRectangle(Rectangle.Empty);
 
 			this.creatingObject = this.CreateObjectItem();
 
@@ -945,11 +944,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 					}
 
 					this.creatingObject.ZOrder = order;
+
+					this.SetHilitedZOrderRectangle(Rectangle.Empty);
 				}
 
 				this.constrainsList.Ending();
 				this.SetHilitedParent(null);
-				this.SetHilitedZOrderRectangle(Rectangle.Empty);
 
 				this.lastCreatedObject = this.creatingObject;
 				this.creatingObject = null;
@@ -1106,7 +1106,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.draggingRectangle = this.SelectBounds;
 			this.draggingBaseLine = this.SelectBaseLine;
 			this.draggingOffset = this.draggingRectangle.BottomLeft - pos;
-			this.constrainsList.Starting(this.draggingRectangle, false);
+			
+			if (this.IsLayoutAnchored)
+			{
+				this.constrainsList.Starting(this.draggingRectangle, false);
+			}
 
 			Widget container = new Widget();
 			container.PreferredSize = this.draggingRectangle.Size;
@@ -1129,7 +1133,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.draggingWindow.FocusedWidget = container;
 			this.draggingWindow.Show();
 
-			this.SetHilitedParent(this.DetectGroup(this.draggingRectangle));  // met en évidence le futur parent survolé par la souris
+			if (this.IsLayoutAnchored)
+			{
+				this.SetHilitedParent(this.DetectGroup(this.draggingRectangle));  // met en évidence le futur parent survolé par la souris
+			}
+
 			this.SetHilitedObject(null);
 			this.SetHilitedAttachmentRectangle(Rectangle.Empty);
 			this.isDragging = true;
@@ -1139,31 +1147,58 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void DraggingMove(Point pos)
 		{
 			//	Mouvement du drag pour déplacer les objets sélectionnés.
-			this.draggingRectangle.Offset((this.draggingOffset+pos)-this.draggingRectangle.BottomLeft);
-			this.constrainsList.Activate(this.draggingRectangle, this.draggingBaseLine, this.draggingArraySelected);
-			this.Invalidate();
+			if (this.IsLayoutAnchored)
+			{
+				this.draggingRectangle.Offset((this.draggingOffset+pos)-this.draggingRectangle.BottomLeft);
+				this.constrainsList.Activate(this.draggingRectangle, this.draggingBaseLine, this.draggingArraySelected);
+				this.Invalidate();
 
-			Point adjust = this.draggingRectangle.BottomLeft;
-			this.draggingRectangle = this.constrainsList.Snap(this.draggingRectangle, this.draggingBaseLine);
-			adjust = this.draggingRectangle.BottomLeft - adjust;
+				Point adjust = this.draggingRectangle.BottomLeft;
+				this.draggingRectangle = this.constrainsList.Snap(this.draggingRectangle, this.draggingBaseLine);
+				adjust = this.draggingRectangle.BottomLeft - adjust;
 
-			this.draggingWindow.WindowLocation = this.draggingOrigin + pos + adjust;
+				this.draggingWindow.WindowLocation = this.draggingOrigin + pos + adjust;
 
-			this.SetHilitedParent(this.DetectGroup(this.draggingRectangle));  // met en évidence le futur parent survolé par la souris
+				this.SetHilitedParent(this.DetectGroup(this.draggingRectangle));  // met en évidence le futur parent survolé par la souris
+			}
+
+			if (this.IsLayoutDocking)
+			{
+				this.draggingWindow.WindowLocation = this.draggingOrigin + pos;
+
+				int order;
+				Rectangle hilite;
+				this.ZOrderDetect(pos, out order, out hilite);
+				this.SetHilitedZOrderRectangle(hilite);
+			}
+
 			this.module.MainWindow.UpdateInfoViewer();
 		}
 
-		protected void DraggingEnd()
+		protected void DraggingEnd(Point pos)
 		{
 			//	Fin du drag pour déplacer les objets sélectionnés.
 			this.draggingWindow.Hide();
 			this.draggingWindow.Dispose();
 			this.draggingWindow = null;
 
-			Rectangle initial = this.SelectBounds;
-			Widget parent = this.DetectGroup(this.draggingRectangle);
-			this.MoveSelection(this.draggingRectangle.BottomLeft - initial.BottomLeft, parent);
-			this.SetHilitedParent(null);
+			if (this.IsLayoutAnchored)
+			{
+				Rectangle initial = this.SelectBounds;
+				Widget parent = this.DetectGroup(this.draggingRectangle);
+				this.MoveSelection(this.draggingRectangle.BottomLeft - initial.BottomLeft, parent);
+				this.SetHilitedParent(null);
+			}
+
+			if (this.IsLayoutDocking)
+			{
+				int order;
+				Rectangle hilite;
+				this.ZOrderDetect(pos, out order, out hilite);
+				this.ZOrderChangeSelection(order);
+				this.SetHilitedZOrderRectangle(Rectangle.Empty);
+			}
+
 			this.isDragging = false;
 			this.draggingArraySelected = null;
 			this.constrainsList.Ending();
@@ -2211,7 +2246,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			if (!hilite.IsEmpty)
 			{
-				hilite.Inflate(this.context.MinimalSize);
+				hilite.Inflate(this.context.ZOrderThickness);
 			}
 		}
 
@@ -2223,6 +2258,22 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.Invalidate(this.hilitedZOrderRectangle);  // invalide l'ancienne zone
 				this.hilitedZOrderRectangle = rect;
 				this.Invalidate(this.hilitedZOrderRectangle);  // invalide la nouvelle zone
+			}
+		}
+
+		protected void ZOrderChangeSelection(int order)
+		{
+			//	Change le ZOrder de tous les objets sélectionnés.
+			foreach (Widget obj in this.selectedObjects)
+			{
+				int newOrder = order;
+
+				if (newOrder > obj.ZOrder)
+				{
+					newOrder--;
+				}
+
+				obj.ZOrder = newOrder;
 			}
 		}
 		#endregion
