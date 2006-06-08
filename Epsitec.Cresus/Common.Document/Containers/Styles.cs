@@ -530,7 +530,13 @@ namespace Epsitec.Common.Document.Containers
 						}
 					}
 
-					double width = System.Math.Floor(this.selectorToolBar.ActualWidth/total);
+					//	Ne demande la largeur actuelle de selectorToolBar qu'une seule fois,
+					//	lorsqu'elle est à jour et ne provoque pas de 'dirty layout' !
+					if (this.selectorToolBarWidth == 0)
+					{
+						this.selectorToolBarWidth = this.selectorToolBar.ActualWidth;
+					}
+					double width = System.Math.Floor(this.selectorToolBarWidth/total);
 					width = System.Math.Min(width, Styles.selectorSize);
 					double zoom = width/Styles.selectorSize;
 
@@ -1717,7 +1723,7 @@ namespace Epsitec.Common.Document.Containers
 
 		protected static readonly double	selectorSize = 20;
 
-		protected StaticText					helpText;
+		protected StaticText				helpText;
 
 		protected PaneBook					mainBook;
 		protected PanePage					topPage;
@@ -1752,6 +1758,7 @@ namespace Epsitec.Common.Document.Containers
 
 		protected Widget					selectorContainer;
 		protected Widget					selectorToolBar;
+		protected double					selectorToolBarWidth = 0;
 		protected string[]					selectorName = new string[(int) StyleCategory.Count];
 		protected IconSeparator				separatorStyle;
 		protected IconButton				buttonStyleNew;
