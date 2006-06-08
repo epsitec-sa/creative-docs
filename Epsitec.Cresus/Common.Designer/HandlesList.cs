@@ -57,6 +57,21 @@ namespace Epsitec.Common.Designer
 		}
 
 
+		public Handle.Type HandleDetect(Point mouse)
+		{
+			//	Détecte la poignée visée par la souris.
+			for (int i=this.list.Count-1; i>=0; i--)
+			{
+				Handle handle = this.list[i];
+				if (handle.Detect(mouse))
+				{
+					return handle.HandleType;
+				}
+			}
+
+			return Handle.Type.None;
+		}
+
 		public void DraggingStart(Point pos, Rectangle rect, Size minSize, Handle.Type type)
 		{
 			//	Débute un déplacement de poignée.
@@ -141,44 +156,6 @@ namespace Epsitec.Common.Designer
 			this.editor.Invalidate();
 		}
 
-
-#if false
-		public void DraggingStart(Point pos)
-		{
-			//	Débute éventuellement un déplacement de poignée.
-			this.draggingType = this.HandleDetect(pos);
-
-			if (this.IsDragging)
-			{
-				Point final = this.GetHandle(this.draggingType).Position;
-				this.draggingOffset = pos-final;
-
-				this.editor.ConstrainsList.Starting(new Rectangle(final, final), true);
-				this.editor.Invalidate();
-			}
-		}
-
-		public void DraggingMove(Point pos)
-		{
-			//	Effectue un déplacement de poignée.
-			pos -= this.draggingOffset;
-			this.editor.ConstrainsList.Activate(new Rectangle(pos, pos), 0, this.editor.SelectedObjects.ToArray());
-			pos = this.editor.ConstrainsList.Snap(pos);
-
-			this.MoveObject(pos);
-			this.UpdateGeometry();
-			this.Hilite(pos-this.draggingOffset);
-			this.editor.Invalidate();
-		}
-
-		public void DraggingStop()
-		{
-			//	Termine un déplacement de poignée.
-			this.draggingType = Handle.Type.None;
-			this.editor.ConstrainsList.Ending();
-			this.editor.Invalidate();
-		}
-#endif
 
 		public bool IsDragging
 		{
@@ -314,34 +291,74 @@ namespace Epsitec.Common.Designer
 			{
 				case Handle.Type.BottomLeft:
 					handle.Position = bounds.BottomLeft;
+
+					if (!this.editor.IsObjectWidthChanging(this.widget) || !this.editor.IsObjectHeightChanging(this.widget))
+					{
+						handle.GlyphType = Handle.Glyph.Hide;
+					}
 					break;
 
 				case Handle.Type.BottomRight:
 					handle.Position = bounds.BottomRight;
+
+					if (!this.editor.IsObjectWidthChanging(this.widget) || !this.editor.IsObjectHeightChanging(this.widget))
+					{
+						handle.GlyphType = Handle.Glyph.Hide;
+					}
 					break;
 
 				case Handle.Type.TopRight:
 					handle.Position = bounds.TopRight;
+
+					if (!this.editor.IsObjectWidthChanging(this.widget) || !this.editor.IsObjectHeightChanging(this.widget))
+					{
+						handle.GlyphType = Handle.Glyph.Hide;
+					}
 					break;
 
 				case Handle.Type.TopLeft:
 					handle.Position = bounds.TopLeft;
+
+					if (!this.editor.IsObjectWidthChanging(this.widget) || !this.editor.IsObjectHeightChanging(this.widget))
+					{
+						handle.GlyphType = Handle.Glyph.Hide;
+					}
 					break;
 
 				case Handle.Type.Bottom:
 					handle.Position = new Point(center.X, bounds.Bottom);
+
+					if (!this.editor.IsObjectHeightChanging(this.widget))
+					{
+						handle.GlyphType = Handle.Glyph.Hide;
+					}
 					break;
 
 				case Handle.Type.Top:
 					handle.Position = new Point(center.X, bounds.Top);
+
+					if (!this.editor.IsObjectHeightChanging(this.widget))
+					{
+						handle.GlyphType = Handle.Glyph.Hide;
+					}
 					break;
 
 				case Handle.Type.Left:
 					handle.Position = new Point(bounds.Left, center.Y);
+
+					if (!this.editor.IsObjectWidthChanging(this.widget))
+					{
+						handle.GlyphType = Handle.Glyph.Hide;
+					}
 					break;
 
 				case Handle.Type.Right:
 					handle.Position = new Point(bounds.Right, center.Y);
+
+					if (!this.editor.IsObjectWidthChanging(this.widget))
+					{
+						handle.GlyphType = Handle.Glyph.Hide;
+					}
 					break;
 			}
 		}
@@ -389,21 +406,6 @@ namespace Epsitec.Common.Designer
 			this.editor.SetObjectBounds(this.widget, bounds);
 		}
 
-
-		public Handle.Type HandleDetect(Point mouse)
-		{
-			//	Détecte la poignée visée par la souris.
-			for (int i=this.list.Count-1; i>=0; i--)
-			{
-				Handle handle = this.list[i];
-				if (handle.Detect(mouse))
-				{
-					return handle.HandleType;
-				}
-			}
-
-			return Handle.Type.None;
-		}
 
 		protected Handle GetHandle(Handle.Type type)
 		{
