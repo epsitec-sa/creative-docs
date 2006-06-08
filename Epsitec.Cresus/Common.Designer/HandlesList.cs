@@ -232,74 +232,34 @@ namespace Epsitec.Common.Designer
 			{
 				case Handle.Type.BottomLeft:
 					handle.Position = bounds.BottomLeft;
-
-					if (this.editor.IsLayoutDocking)
-					{
-						handle.GlyphType = Handle.Glyph.Hide;
-					}
 					break;
 
 				case Handle.Type.BottomRight:
 					handle.Position = bounds.BottomRight;
-
-					if (this.editor.IsLayoutDocking)
-					{
-						handle.GlyphType = Handle.Glyph.Hide;
-					}
 					break;
 
 				case Handle.Type.TopRight:
 					handle.Position = bounds.TopRight;
-
-					if (this.editor.IsLayoutDocking)
-					{
-						handle.GlyphType = Handle.Glyph.Hide;
-					}
 					break;
 
 				case Handle.Type.TopLeft:
 					handle.Position = bounds.TopLeft;
-
-					if (this.editor.IsLayoutDocking)
-					{
-						handle.GlyphType = Handle.Glyph.Hide;
-					}
 					break;
 
 				case Handle.Type.Bottom:
 					handle.Position = new Point(center.X, bounds.Bottom);
-
-					if (this.editor.IsLayoutDocking && !this.editor.IsObjectAttachmentTop(this.widget))
-					{
-						handle.GlyphType = Handle.Glyph.Hide;
-					}
 					break;
 
 				case Handle.Type.Top:
 					handle.Position = new Point(center.X, bounds.Top);
-
-					if (this.editor.IsLayoutDocking && !this.editor.IsObjectAttachmentBottom(this.widget))
-					{
-						handle.GlyphType = Handle.Glyph.Hide;
-					}
 					break;
 
 				case Handle.Type.Left:
 					handle.Position = new Point(bounds.Left, center.Y);
-
-					if (this.editor.IsLayoutDocking && !this.editor.IsObjectAttachmentRight(this.widget))
-					{
-						handle.GlyphType = Handle.Glyph.Hide;
-					}
 					break;
 
 				case Handle.Type.Right:
 					handle.Position = new Point(bounds.Right, center.Y);
-
-					if (this.editor.IsLayoutDocking && !this.editor.IsObjectAttachmentLeft(this.widget))
-					{
-						handle.GlyphType = Handle.Glyph.Hide;
-					}
 					break;
 			}
 		}
