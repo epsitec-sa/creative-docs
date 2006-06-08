@@ -126,7 +126,7 @@ namespace Epsitec.Common.Widgets.Layouts
 				this.hasChanged = true;
 			}
 		}
-		internal void UpdateDesired(int passId, double value)
+		internal void UpdateDesired(double value)
 		{
 			if (double.IsNaN (this.desired))
 			{

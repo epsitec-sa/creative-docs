@@ -62,6 +62,7 @@ namespace Epsitec.Common.Widgets
 			grid.RowDefinitions.Add (new Layouts.RowDefinition ());
 			grid.RowDefinitions.Add (new Layouts.RowDefinition (50, double.PositiveInfinity));
 			grid.RowDefinitions.Add (new Layouts.RowDefinition (new Layouts.GridLength (1, Layouts.GridUnitType.Proportional)));
+			grid.RowDefinitions.Add (new Layouts.RowDefinition (new Layouts.GridLength (2, Layouts.GridUnitType.Proportional)));
 
 			Button button;
 			StaticText text;
@@ -168,10 +169,18 @@ namespace Epsitec.Common.Widgets
 			window.Root.Children.Add (button);
 
 			button = new Button ();
-			button.Text = "X";
+			button.Text = "X (x1)";
 			button.VerticalAlignment = VerticalAlignment.Stretch;
 			Layouts.GridLayoutEngine.SetColumn (button, 0);
 			Layouts.GridLayoutEngine.SetRow (button, 4);
+			Layouts.GridLayoutEngine.SetColumnSpan (button, 5);
+			window.Root.Children.Add (button);
+
+			button = new Button ();
+			button.Text = "Y (x2)";
+			button.VerticalAlignment = VerticalAlignment.Stretch;
+			Layouts.GridLayoutEngine.SetColumn (button, 0);
+			Layouts.GridLayoutEngine.SetRow (button, 5);
 			Layouts.GridLayoutEngine.SetColumnSpan (button, 5);
 			window.Root.Children.Add (button);
 
