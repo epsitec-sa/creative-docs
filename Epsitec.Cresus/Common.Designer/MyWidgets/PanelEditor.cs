@@ -1110,6 +1110,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			if (this.IsLayoutAnchored)
 			{
 				this.constrainsList.Starting(this.draggingRectangle, false);
+				this.SetHilitedParent(this.DetectGroup(this.draggingRectangle));  // met en évidence le futur parent survolé par la souris
 			}
 
 			Widget container = new Widget();
@@ -1132,11 +1133,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.draggingWindow.Owner = this.Window;
 			this.draggingWindow.FocusedWidget = container;
 			this.draggingWindow.Show();
-
-			if (this.IsLayoutAnchored)
-			{
-				this.SetHilitedParent(this.DetectGroup(this.draggingRectangle));  // met en évidence le futur parent survolé par la souris
-			}
 
 			this.SetHilitedObject(null);
 			this.SetHilitedAttachmentRectangle(Rectangle.Empty);
@@ -1409,7 +1405,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected void MoveSelection(Point move, Widget parent)
 		{
-			//	Déplace et change de parent à tous les objets sélectionnés.
+			//	Déplace et change de parent pour tous les objets sélectionnés.
 			foreach (Widget obj in this.selectedObjects)
 			{
 				Rectangle bounds = this.GetObjectBounds(obj);
@@ -2294,6 +2290,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void ZOrderChangeSelection(Widget parent, int order)
 		{
 			//	Change le ZOrder de tous les objets sélectionnés.
+			if (this.selectedObjects.Contains(parent))
+			{
+				return;
+			}
+
 			foreach (Widget obj in this.selectedObjects)
 			{
 				int newOrder = order;
