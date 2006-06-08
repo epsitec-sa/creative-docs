@@ -473,7 +473,9 @@ namespace Epsitec.Common.Types
 			MyItem ext;
 			MyItem root = this.CreateSampleTree (out ext);
 
-			System.Xml.XmlTextWriter xmlWriter = new System.Xml.XmlTextWriter (System.Console.Out);
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+			System.IO.StringWriter stringWriter = new System.IO.StringWriter (buffer);
+			System.Xml.XmlTextWriter xmlWriter = new System.Xml.XmlTextWriter (stringWriter);
 			
 			xmlWriter.Indentation = 2;
 			xmlWriter.IndentChar = ' ';
@@ -506,6 +508,8 @@ namespace Epsitec.Common.Types
 
 			Assert.AreEqual ("_2.DataContext", context.GetPropertyName (DataObject.DataContextProperty));
 			Assert.AreEqual (DataObject.DataContextProperty, context.GetProperty (root, "_2.DataContext"));
+
+			System.Console.Out.WriteLine (buffer.ToString ());
 		}
 
 		[Test]
@@ -578,6 +582,12 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual ("b", root.Children[0].Name);
 			Assert.AreEqual ("q", root.Children[1].Name);
 			Assert.AreEqual ("r", root.Children[2].Name);
+
+			Assert.AreEqual ("c1", root.Children[0].Children[0].Name);
+			Assert.AreEqual ("c2", root.Children[0].Children[1].Name);
+
+			Assert.AreEqual (10, root.Children[0].Children[1].SomeStruct.Value);
+			Assert.AreEqual ("km", root.Children[0].Children[1].SomeStruct.Unit);
 			
 			Assert.AreEqual (3, context.ObjectMap.GetId (b));
 			Assert.AreEqual (3899.20M, root.Friend.Price);
@@ -617,6 +627,8 @@ namespace Epsitec.Common.Types
 			r.Name = "r";
 			c1.Name = "c1";
 			c2.Name = "c2";
+
+			c2.SomeStruct = new SomeStruct (10, "km");
 			
 			a.Value = "A";
 			b.Value = "B";
@@ -794,6 +806,17 @@ namespace Epsitec.Common.Types
 					this.SetValue (MyItem.PriceProperty, value);
 				}
 			}
+			public SomeStruct					SomeStruct
+			{
+				get
+				{
+					return (SomeStruct) this.GetValue (MyItem.SomeStructProperty);
+				}
+				set
+				{
+					this.SetValue (MyItem.SomeStructProperty, value);
+				}
+			}
 			
 			public void AddChild(MyItem item)
 			{
@@ -843,12 +866,66 @@ namespace Epsitec.Common.Types
 			public static DependencyProperty CascadeProperty = DependencyProperty.Register ("Cascade", typeof (string), typeof (MyItem), new DependencyPropertyMetadataWithInheritance (UndefinedValue.Instance));
 			public static DependencyProperty FriendProperty = DependencyProperty.Register ("Friend", typeof (MyItem), typeof (MyItem));
 			public static DependencyProperty PriceProperty = DependencyProperty.Register ("Price", typeof (decimal), typeof (MyItem));
+			public static DependencyProperty SomeStructProperty = DependencyProperty.Register ("SomeStruct", typeof (SomeStruct), typeof (MyItem));
 
 			MyItem parent;
 			ChildrenCollection children;
 		}
 		
 		#endregion
+
+		[SerializationConverter (typeof (SomeStruct.SerializationConverter))]
+		public struct SomeStruct
+		{
+			public SomeStruct(int value, string unit)
+			{
+				this.value = value;
+				this.unit = unit;
+			}
+
+			public int Value
+			{
+				get
+				{
+					return this.value;
+				}
+			}
+
+			public string Unit
+			{
+				get
+				{
+					return this.unit;
+				}
+			}
+
+			#region SerializationConverter Class
+
+			public class SerializationConverter : ISerializationConverter
+			{
+				#region ISerializationConverter Members
+
+				public string ConvertToString(object value, IContextResolver context)
+				{
+					SomeStruct s = (SomeStruct) value;
+					return string.Format ("{0};{1}", s.value, s.unit);
+				}
+
+				public object ConvertFromString(string value, IContextResolver context)
+				{
+					string[] args = value.Split (';');
+					
+					return new SomeStruct (int.Parse (args[0]), args[1]);
+				}
+
+				#endregion
+			}
+
+			#endregion
+			
+			private int value;
+			private string unit;
+		}
 
 		#region ChildrenCollection Class
 		public class ChildrenCollection : DependencyObjectList<MyItem>
