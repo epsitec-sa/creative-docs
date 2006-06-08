@@ -57,6 +57,12 @@ namespace Epsitec.Common.Widgets
 
 			Layouts.GridLayoutEngine grid = new Layouts.GridLayoutEngine ();
 
+			grid.ColumnDefinitions.Add (new Layouts.ColumnDefinition (new Layouts.GridLength (1, Layouts.GridUnitType.Proportional)));
+			grid.ColumnDefinitions.Add (new Layouts.ColumnDefinition ());
+			grid.ColumnDefinitions.Add (new Layouts.ColumnDefinition ());
+			grid.ColumnDefinitions.Add (new Layouts.ColumnDefinition ());
+			grid.ColumnDefinitions.Add (new Layouts.ColumnDefinition ());
+
 			grid.RowDefinitions.Add (new Layouts.RowDefinition (new Layouts.GridLength (30)));
 			grid.RowDefinitions.Add (new Layouts.RowDefinition ());
 			grid.RowDefinitions.Add (new Layouts.RowDefinition ());
@@ -97,6 +103,13 @@ namespace Epsitec.Common.Widgets
 			Layouts.GridLayoutEngine.SetColumn (text, 3);
 			Layouts.GridLayoutEngine.SetRow (text, 0);
 			window.Root.Children.Add (text);
+
+			button = new Button ();
+			button.Text = "E";
+			button.PreferredWidth = 20;
+			Layouts.GridLayoutEngine.SetColumn (button, 4);
+			Layouts.GridLayoutEngine.SetRow (button, 0);
+			window.Root.Children.Add (button);
 
 			button = new Button ();
 			button.Text = "A";
@@ -160,7 +173,7 @@ namespace Epsitec.Common.Widgets
 
 
 			button = new Button ();
-			button.Text = "C";
+			button.Text = "C-E";
 			button.PreferredWidth = 100;
 			button.VerticalAlignment = VerticalAlignment.Stretch;
 			Layouts.GridLayoutEngine.SetColumn (button, 2);

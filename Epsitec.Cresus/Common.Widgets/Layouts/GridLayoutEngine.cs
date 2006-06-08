@@ -93,6 +93,31 @@ namespace Epsitec.Common.Widgets.Layouts
 			if ((spaceX > 0) &&
 				(flexX > 0))
 			{
+				double move = 0;
+
+				for (int i = 0; i < this.columnDefinitions.Count; i++)
+				{
+					x[i] += move;
+					this.columnDefinitions[i].DefineActualOffset (x[i]);
+					
+					if (this.columnDefinitions[i].Width.IsProportional)
+					{
+						double d = this.columnDefinitions[i].Width.Value * spaceX / flexX;
+						double w = this.columnDefinitions[i].ActualWidth + d;
+
+						this.columnMeasures[i].UpdateDesired (w);
+						this.columnDefinitions[i].DefineActualWidth (w);
+
+						move += d;
+					}
+				}
+
+				for (int i = this.columnDefinitions.Count; i < x.Length; i++)
+				{
+					x[i] += move;
+				}
+
+				dx += move;
 			}
 			
 			if ((spaceY > 0) &&
@@ -100,7 +125,7 @@ namespace Epsitec.Common.Widgets.Layouts
 			{
 				double move = 0;
 				
-				for (int i = 0; i < this.RowDefinitions.Count; i++)
+				for (int i = 0; i < this.rowDefinitions.Count; i++)
 				{
 					if (this.rowDefinitions[i].Height.IsProportional)
 					{
@@ -121,6 +146,8 @@ namespace Epsitec.Common.Widgets.Layouts
 				{
 					y[i] += move;
 				}
+
+				dy += move;
 			}
 			
 			foreach (Visual child in children)
