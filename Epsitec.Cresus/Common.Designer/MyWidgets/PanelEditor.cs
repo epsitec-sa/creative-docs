@@ -840,6 +840,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			//	Dessin d'un objet, souris pressée.
 			this.DeselectAll();
+			this.SetHilitedZOrderRectangle(Rectangle.Empty);
 
 			this.creatingObject = this.CreateObjectItem();
 
@@ -854,10 +855,13 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.creatingWindow.FocusedWidget = this.creatingObject;
 			this.creatingWindow.Show();
 
-			this.constrainsList.Starting(Rectangle.Empty, false);
-			this.constrainsList.Activate(bounds, this.GetObjectBaseLine(this.creatingObject), null);
+			if (this.IsLayoutAnchored)
+			{
+				this.constrainsList.Starting(Rectangle.Empty, false);
+				this.constrainsList.Activate(bounds, this.GetObjectBaseLine(this.creatingObject), null);
 
-			this.SetHilitedParent(this.DetectGroup(bounds));  // met en évidence le futur parent survolé par la souris
+				this.SetHilitedParent(this.DetectGroup(bounds));  // met en évidence le futur parent survolé par la souris
+			}
 		}
 
 		protected void CreateObjectMove(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
@@ -867,12 +871,27 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			if (this.creatingObject != null)
 			{
+				Point initialPos = pos;
 				Rectangle bounds;
 				this.CreateObjectAdjust(ref pos, out bounds);
-				this.constrainsList.Activate(bounds, this.GetObjectBaseLine(this.creatingObject), null);
-				this.creatingWindow.WindowLocation = this.creatingOrigin + pos;
 
-				this.SetHilitedParent(this.DetectGroup(bounds));  // met en évidence le futur parent survolé par la souris
+				if (this.IsLayoutAnchored)
+				{
+					this.constrainsList.Activate(bounds, this.GetObjectBaseLine(this.creatingObject), null);
+					this.creatingWindow.WindowLocation = this.creatingOrigin + pos;
+
+					this.SetHilitedParent(this.DetectGroup(bounds));  // met en évidence le futur parent survolé par la souris
+				}
+
+				if (this.IsLayoutDocking)
+				{
+					this.creatingWindow.WindowLocation = this.creatingOrigin + pos;
+
+					int order;
+					Rectangle hilite;
+					this.ZOrderDetect(initialPos, out order, out hilite);
+					this.SetHilitedZOrderRectangle(hilite);
+				}
 			}
 		}
 
@@ -885,22 +904,35 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.creatingWindow.Dispose();
 				this.creatingWindow = null;
 
+				Point initialPos = pos;
 				Rectangle bounds;
 				this.CreateObjectAdjust(ref pos, out bounds);
 
-				Widget parent = this.DetectGroup(bounds);
-
-				this.creatingObject = this.CreateObjectItem();
-				this.creatingObject.SetParent(parent);
-				this.creatingObject.TabNavigation = TabNavigationMode.Passive;
-
 				if (this.IsLayoutAnchored)
 				{
+					Widget parent = this.DetectGroup(bounds);
+
+					this.creatingObject = this.CreateObjectItem();
+					this.creatingObject.SetParent(parent);
+					this.creatingObject.TabNavigation = TabNavigationMode.Passive;
+
 					this.creatingObject.Anchor = AnchorStyles.BottomLeft;
+
+					this.SetObjectPosition(this.creatingObject, pos);
 				}
 
 				if (this.IsLayoutDocking)
 				{
+					int order;
+					Rectangle hilite;
+					this.ZOrderDetect(initialPos, out order, out hilite);
+
+					Widget parent = this.panel;
+
+					this.creatingObject = this.CreateObjectItem();
+					this.creatingObject.SetParent(parent);
+					this.creatingObject.TabNavigation = TabNavigationMode.Passive;
+
 					this.creatingObject.Margins = new Margins(5, 5, 5, 5);
 
 					if (this.IsHorizontalDocking)
@@ -911,12 +943,13 @@ namespace Epsitec.Common.Designer.MyWidgets
 					{
 						this.creatingObject.Dock = DockStyle.Top;
 					}
-				}
 
-				this.SetObjectPosition(this.creatingObject, pos);
+					this.creatingObject.ZOrder = order;
+				}
 
 				this.constrainsList.Ending();
 				this.SetHilitedParent(null);
+				this.SetHilitedZOrderRectangle(Rectangle.Empty);
 
 				this.lastCreatedObject = this.creatingObject;
 				this.creatingObject = null;
@@ -990,11 +1023,16 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Ajuste la position de l'objet à créer selon les contraintes.
 			pos.X -= System.Math.Floor(this.creatingObject.PreferredWidth/2);
 			pos.Y -= System.Math.Floor(this.creatingObject.PreferredHeight/2);
+
 			bounds = new Rectangle(pos, this.creatingObject.PreferredSize);
-			Rectangle adjust = this.constrainsList.Snap(bounds, this.GetObjectBaseLine(this.creatingObject));
-			Point corr = adjust.BottomLeft - bounds.BottomLeft;
-			pos += corr;
-			bounds.Offset(corr);
+			
+			if (this.IsLayoutAnchored)
+			{
+				Rectangle adjust = this.constrainsList.Snap(bounds, this.GetObjectBaseLine(this.creatingObject));
+				Point corr = adjust.BottomLeft - bounds.BottomLeft;
+				pos += corr;
+				bounds.Offset(corr);
+			}
 		}
 
 		protected void CreateObjectKeyChanged(bool isControlPressed, bool isShiftPressed)
@@ -1141,6 +1179,28 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Détecte l'objet visé par la souris, avec priorité au dernier objet
 			//	dessiné (donc placé dessus).
 			return this.panel.FindChild(pos, ChildFindMode.Deep | ChildFindMode.SkipHidden | ChildFindMode.SkipEmbedded);
+		}
+
+		protected Widget DetectNearest(Point pos)
+		{
+			//	Détecte l'objet le plus proche de la souris.
+			Widget bestObj = null;
+			double bestDistance = 1000000;
+
+			for (int i=this.panel.Children.Count-1; i>=0; i--)
+			{
+				Widget obj = this.panel.Children[i] as Widget;
+				Rectangle bounds = this.GetObjectBounds(obj);
+				double distance = Point.Distance(bounds.Center, pos);
+
+				if (bestDistance > distance)
+				{
+					bestDistance = distance;
+					bestObj = obj;
+				}
+			}
+
+			return bestObj;
 		}
 
 		protected Widget DetectGroup(Rectangle rect)
@@ -2064,6 +2124,110 @@ namespace Epsitec.Common.Designer.MyWidgets
 		#endregion
 
 
+		#region ZOrder
+		protected void ZOrderDetect(Point mouse, out int order, out Rectangle hilite)
+		{
+			//	Détecte le ZOrder à utiliser pour une position donnée, ainsi que le rectangle
+			//	à utiliser pour la mise ne évidence.
+			order = 0;
+			hilite = Rectangle.Empty;
+
+			Widget obj = this.DetectNearest(mouse);  // objet le plus proche
+			if (obj == null)
+			{
+				Rectangle bounds = this.RealBounds;
+				
+				if (this.IsHorizontalDocking)
+				{
+					hilite = new Rectangle(bounds.Left, bounds.Bottom, 0, bounds.Height);
+				}
+				else
+				{
+					hilite = new Rectangle(bounds.Left, bounds.Top, bounds.Width, 0);
+				}
+			}
+			else
+			{
+				order = obj.ZOrder;
+
+				Rectangle bounds = this.GetObjectBounds(obj);
+				bounds.Inflate(this.GetObjectMargins(obj));
+
+				if (this.IsHorizontalDocking)
+				{
+					if (this.IsObjectAttachmentLeft(obj))
+					{
+						if (mouse.X > bounds.Center.X)
+						{
+							hilite = new Rectangle(bounds.Right, bounds.Bottom, 0, bounds.Height);
+						}
+						else
+						{
+							order++;
+							hilite = new Rectangle(bounds.Left, bounds.Bottom, 0, bounds.Height);
+						}
+					}
+					else
+					{
+						if (mouse.X < bounds.Center.X)
+						{
+							hilite = new Rectangle(bounds.Left, bounds.Bottom, 0, bounds.Height);
+						}
+						else
+						{
+							order++;
+							hilite = new Rectangle(bounds.Right, bounds.Bottom, 0, bounds.Height);
+						}
+					}
+				}
+				else
+				{
+					if (this.IsObjectAttachmentBottom(obj))
+					{
+						if (mouse.Y > bounds.Center.Y)
+						{
+							hilite = new Rectangle(bounds.Left, bounds.Bottom, bounds.Width, 0);
+						}
+						else
+						{
+							order++;
+							hilite = new Rectangle(bounds.Left, bounds.Top, bounds.Width, 0);
+						}
+					}
+					else
+					{
+						if (mouse.Y < bounds.Center.Y)
+						{
+							hilite = new Rectangle(bounds.Left, bounds.Top, bounds.Width, 0);
+						}
+						else
+						{
+							order++;
+							hilite = new Rectangle(bounds.Left, bounds.Bottom, bounds.Width, 0);
+						}
+					}
+				}
+			}
+
+			if (!hilite.IsEmpty)
+			{
+				hilite.Inflate(this.context.MinimalSize);
+			}
+		}
+
+		protected void SetHilitedZOrderRectangle(Rectangle rect)
+		{
+			//	Détermine la zone du rectangle d'insertion ZOrder.
+			if (this.hilitedZOrderRectangle != rect)
+			{
+				this.Invalidate(this.hilitedZOrderRectangle);  // invalide l'ancienne zone
+				this.hilitedZOrderRectangle = rect;
+				this.Invalidate(this.hilitedZOrderRectangle);  // invalide la nouvelle zone
+			}
+		}
+		#endregion
+
+
 		#region Paint
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
@@ -2166,6 +2330,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 				Rectangle rect = this.hilitedAttachmentRectangle;
 				graphics.AddFilledRectangle(rect);
 				graphics.RenderSolid(PanelsContext.ColorHiliteSurface);
+			}
+
+			//	Dessine le rectangle d'insertion ZOrder survolé.
+			if (!this.hilitedZOrderRectangle.IsEmpty)
+			{
+				Rectangle rect = this.hilitedZOrderRectangle;
+				graphics.AddFilledRectangle(rect);
+				graphics.RenderSolid(PanelsContext.ColorZOrder);
 			}
 
 			//	Dessine les poignées.
@@ -2546,6 +2718,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected List<Widget>				selectedObjects = new List<Widget>();
 		protected Rectangle					selectedRectangle = Rectangle.Empty;
 		protected Rectangle					hilitedAttachmentRectangle = Rectangle.Empty;
+		protected Rectangle					hilitedZOrderRectangle = Rectangle.Empty;
 		protected Widget					hilitedObject;
 		protected Widget					hilitedParent;
 		protected bool						isRectangling;  // j'invente des mots si je veux !
