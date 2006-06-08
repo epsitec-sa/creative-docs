@@ -886,10 +886,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 				{
 					this.creatingWindow.WindowLocation = this.creatingOrigin + pos;
 
+					Widget parent;
 					int order;
 					Rectangle hilite;
-					this.ZOrderDetect(initialPos, out order, out hilite);
+					this.ZOrderDetect(initialPos, out parent, out order, out hilite);
 					this.SetHilitedZOrderRectangle(hilite);
+					this.SetHilitedParent(parent);  // met en évidence le futur parent survolé par la souris
 				}
 			}
 		}
@@ -922,14 +924,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 				if (this.IsLayoutDocking)
 				{
+					Widget parent;
 					int order;
 					Rectangle hilite;
-					this.ZOrderDetect(initialPos, out order, out hilite);
-
-					Widget parent = this.panel;
+					this.ZOrderDetect(initialPos, out parent, out order, out hilite);
 
 					this.creatingObject = this.CreateObjectItem();
 					this.creatingObject.SetParent(parent);
+					this.creatingObject.ZOrder = order;
 					this.creatingObject.TabNavigation = TabNavigationMode.Passive;
 
 					this.creatingObject.Margins = new Margins(5, 5, 5, 5);
@@ -942,8 +944,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 					{
 						this.creatingObject.Dock = DockStyle.Top;
 					}
-
-					this.creatingObject.ZOrder = order;
 
 					this.SetHilitedZOrderRectangle(Rectangle.Empty);
 				}
@@ -1166,10 +1166,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				this.draggingWindow.WindowLocation = this.draggingOrigin + pos;
 
+				Widget parent;
 				int order;
 				Rectangle hilite;
-				this.ZOrderDetect(pos, out order, out hilite);
+				this.ZOrderDetect(pos, out parent, out order, out hilite);
 				this.SetHilitedZOrderRectangle(hilite);
+				this.SetHilitedParent(parent);  // met en évidence le futur parent survolé par la souris
 			}
 
 			this.module.MainWindow.UpdateInfoViewer();
@@ -1192,11 +1194,13 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			if (this.IsLayoutDocking)
 			{
+				Widget parent;
 				int order;
 				Rectangle hilite;
-				this.ZOrderDetect(pos, out order, out hilite);
-				this.ZOrderChangeSelection(order);
+				this.ZOrderDetect(pos, out parent, out order, out hilite);
+				this.ZOrderChangeSelection(parent, order);
 				this.SetHilitedZOrderRectangle(Rectangle.Empty);
+				this.SetHilitedParent(null);
 			}
 
 			this.isDragging = false;
@@ -1214,28 +1218,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Détecte l'objet visé par la souris, avec priorité au dernier objet
 			//	dessiné (donc placé dessus).
 			return this.panel.FindChild(pos, ChildFindMode.Deep | ChildFindMode.SkipHidden | ChildFindMode.SkipEmbedded);
-		}
-
-		protected Widget DetectNearest(Point pos)
-		{
-			//	Détecte l'objet le plus proche de la souris.
-			Widget bestObj = null;
-			double bestDistance = 1000000;
-
-			for (int i=this.panel.Children.Count-1; i>=0; i--)
-			{
-				Widget obj = this.panel.Children[i] as Widget;
-				Rectangle bounds = this.GetObjectBounds(obj);
-				double distance = Point.Distance(bounds.Center, pos);
-
-				if (bestDistance > distance)
-				{
-					bestDistance = distance;
-					bestObj = obj;
-				}
-			}
-
-			return bestObj;
 		}
 
 		protected Widget DetectGroup(Rectangle rect)
@@ -2160,14 +2142,15 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 
 		#region ZOrder
-		protected void ZOrderDetect(Point mouse, out int order, out Rectangle hilite)
+		protected void ZOrderDetect(Point mouse, out Widget parent, out int order, out Rectangle hilite)
 		{
 			//	Détecte le ZOrder à utiliser pour une position donnée, ainsi que le rectangle
 			//	à utiliser pour la mise ne évidence.
+			parent = this.panel;
 			order = 0;
 			hilite = Rectangle.Empty;
 
-			Widget obj = this.DetectNearest(mouse);  // objet le plus proche
+			Widget obj = this.ZOrderDetectNearest(mouse);  // objet le plus proche
 			if (obj == null)
 			{
 				Rectangle bounds = this.RealBounds;
@@ -2183,6 +2166,20 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 			else
 			{
+				if (obj is AbstractGroup)
+				{
+					Rectangle inside = this.GetObjectBounds(obj);
+					inside.Deflate(obj.Padding);
+					if (inside.Contains(mouse))
+					{
+						parent = obj;
+						order = 0;
+						hilite = inside;
+						return;
+					}
+				}
+
+				parent = obj.Parent;
 				order = obj.ZOrder;
 
 				Rectangle bounds = this.GetObjectBounds(obj);
@@ -2250,6 +2247,39 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
+		protected Widget ZOrderDetectNearest(Point pos)
+		{
+			//	Détecte l'objet le plus proche de la souris.
+			Widget bestObj = null;
+			double bestDistance = 1000000;
+			this.ZOrderDetectNearest(pos, this.panel, ref bestObj, ref bestDistance);
+			return bestObj;
+		}
+
+		protected void ZOrderDetectNearest(Point pos, Widget parent, ref Widget bestObj, ref double bestDistance)
+		{
+			for (int i=parent.Children.Count-1; i>=0; i--)
+			{
+				Widget obj = parent.Children[i] as Widget;
+
+				if (obj is AbstractGroup && obj.Children.Count != 0)
+				{
+					this.ZOrderDetectNearest(pos, obj, ref bestObj, ref bestDistance);
+				}
+				else
+				{
+					Rectangle bounds = this.GetObjectBounds(obj);
+					double distance = Point.Distance(bounds.Center, pos);
+
+					if (bestDistance > distance)
+					{
+						bestDistance = distance;
+						bestObj = obj;
+					}
+				}
+			}
+		}
+
 		protected void SetHilitedZOrderRectangle(Rectangle rect)
 		{
 			//	Détermine la zone du rectangle d'insertion ZOrder.
@@ -2261,18 +2291,19 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
-		protected void ZOrderChangeSelection(int order)
+		protected void ZOrderChangeSelection(Widget parent, int order)
 		{
 			//	Change le ZOrder de tous les objets sélectionnés.
 			foreach (Widget obj in this.selectedObjects)
 			{
 				int newOrder = order;
 
-				if (newOrder > obj.ZOrder)
+				if (newOrder > obj.ZOrder && obj.Parent == parent)
 				{
 					newOrder--;
 				}
 
+				obj.SetParent(parent);
 				obj.ZOrder = newOrder;
 			}
 		}
@@ -2387,8 +2418,19 @@ namespace Epsitec.Common.Designer.MyWidgets
 			if (!this.hilitedZOrderRectangle.IsEmpty)
 			{
 				Rectangle rect = this.hilitedZOrderRectangle;
-				graphics.AddFilledRectangle(rect);
-				graphics.RenderSolid(PanelsContext.ColorZOrder);
+				if (rect.Width > this.context.ZOrderThickness && rect.Height > this.context.ZOrderThickness)
+				{
+					rect.Deflate(1.5);
+					graphics.LineWidth = 3;
+					graphics.AddRectangle(rect);
+					graphics.RenderSolid(PanelsContext.ColorZOrder);
+					graphics.LineWidth = 1;
+				}
+				else
+				{
+					graphics.AddFilledRectangle(rect);
+					graphics.RenderSolid(PanelsContext.ColorZOrder);
+				}
 			}
 
 			//	Dessine les poignées.
