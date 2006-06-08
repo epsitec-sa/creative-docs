@@ -641,7 +641,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			if (this.handlesList.IsDragging)
 			{
-				this.HandlingEnd();
+				this.HandlingEnd(pos);
 			}
 		}
 
@@ -741,7 +741,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			if (this.handlesList.IsDragging)
 			{
-				this.HandlingEnd();
+				this.HandlingEnd(pos);
 			}
 		}
 
@@ -1070,29 +1070,59 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected bool HandlingStart(Point pos)
 		{
 			//	Début du drag pour déplacer une poignée.
-			this.handlesList.DraggingStart(pos);
-			if (this.handlesList.IsDragging)
+			this.handlingType = this.handlesList.HandleDetect(pos);
+
+			if (this.handlingType == Handle.Type.None)
 			{
-				this.handlesList.DraggingMove(pos);
+				this.isHandling = false;
+				return false;
+			}
+			else
+			{
+				this.isHandling = true;
+				this.handlingRectangle = this.SelectBounds;
+				this.handlesList.DraggingStart(pos, this.handlingRectangle, this.handlingType);
+
+				System.Diagnostics.Debug.Assert(this.selectedObjects.Count == 1);
+				CloneView clone = new CloneView();
+				clone.Model = this.selectedObjects[0];
+
+				this.handlingWindow = new DragWindow();
+				this.handlingWindow.DefineWidget(clone, this.handlingRectangle.Size, Drawing.Margins.Zero);
+				this.handlingWindow.WindowBounds = this.MapClientToScreen(this.handlingRectangle);
+				this.handlingWindow.Owner = this.Window;
+				this.handlingWindow.FocusedWidget = clone;
+				this.handlingWindow.Show();
+
 				this.SetHilitedObject(null);
 				this.SetHilitedAttachmentRectangle(Rectangle.Empty);
 				return true;
 			}
-
-			return false;
 		}
 
 		protected void HandlingMove(Point pos)
 		{
 			//	Mouvement du drag pour déplacer une poignée.
-			this.handlesList.DraggingMove(pos);
-			this.module.MainWindow.UpdateInfoViewer();
+			if (this.isHandling)
+			{
+				Rectangle rect = this.handlesList.DraggingMove(pos);
+				this.handlingWindow.WindowBounds = this.MapClientToScreen(rect);
+			}
 		}
 
-		protected void HandlingEnd()
+		protected void HandlingEnd(Point pos)
 		{
 			//	Fin du drag pour déplacer une poignée.
-			this.handlesList.DraggingStop();
+			if (this.isHandling)
+			{
+				this.handlingWindow.Hide();
+				this.handlingWindow.Dispose();
+				this.handlingWindow = null;
+
+				this.handlesList.DraggingStop(pos);
+				this.isHandling = false;
+				this.module.MainWindow.UpdateInfoViewer();
+			}
 		}
 		#endregion
 
@@ -2650,7 +2680,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Retourne true pour indiquer que le widget en question ne doit
 			//	pas être peint, ni ses enfants d'ailleurs. Ceci évite que les
 			//	widgets sélectionnés ne soient peints.
-			return this.isDragging && this.selectedObjects.Contains(widget);
+			return (this.isDragging || this.isHandling) && this.selectedObjects.Contains(widget);
 		}
 
 		bool IPaintFilter.IsWidgetPaintDiscarded(Widget widget)
@@ -2823,6 +2853,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected Rectangle					draggingRectangle;
 		protected double					draggingBaseLine;
 		protected Widget[]					draggingArraySelected;
+		protected bool						isHandling;
+		protected Handle.Type				handlingType;
+		protected DragWindow				handlingWindow;
+		protected Rectangle					handlingRectangle;
 		protected Point						startingPos;
 		protected MouseCursorType			lastCursor = MouseCursorType.Unknow;
 

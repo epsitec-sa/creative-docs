@@ -57,6 +57,74 @@ namespace Epsitec.Common.Designer
 		}
 
 
+		public void DraggingStart(Point pos, Rectangle rect, Handle.Type type)
+		{
+			//	Débute un déplacement de poignée.
+			this.draggingRect = rect;
+			this.draggingType = type;
+
+			Point final = this.GetHandle(this.draggingType).Position;
+			this.draggingOffset = final-pos;
+		}
+
+		public Rectangle DraggingMove(Point pos)
+		{
+			//	Effectue un déplacement de poignée.
+			pos += this.draggingOffset;
+			this.Hilite(pos);
+			this.editor.Invalidate();
+
+			switch (this.draggingType)
+			{
+				case Handle.Type.BottomLeft:
+					this.draggingRect.BottomLeft = pos;
+					break;
+
+				case Handle.Type.BottomRight:
+					this.draggingRect.BottomRight = pos;
+					break;
+
+				case Handle.Type.TopRight:
+					this.draggingRect.TopRight = pos;
+					break;
+
+				case Handle.Type.TopLeft:
+					this.draggingRect.TopLeft = pos;
+					break;
+
+				case Handle.Type.Bottom:
+					this.draggingRect.Bottom = pos.Y;
+					break;
+
+				case Handle.Type.Top:
+					this.draggingRect.Top = pos.Y;
+					break;
+
+				case Handle.Type.Left:
+					this.draggingRect.Left = pos.X;
+					break;
+
+				case Handle.Type.Right:
+					this.draggingRect.Right = pos.X;
+					break;
+			}
+
+			return this.draggingRect;
+		}
+
+		public void DraggingStop(Point pos)
+		{
+			//	Termine un déplacement de poignée.
+			pos += this.draggingOffset;
+			this.MoveObject(pos);
+
+			this.draggingType = Handle.Type.None;
+			this.UpdateGeometry();
+			this.editor.Invalidate();
+		}
+
+
+#if false
 		public void DraggingStart(Point pos)
 		{
 			//	Débute éventuellement un déplacement de poignée.
@@ -92,6 +160,7 @@ namespace Epsitec.Common.Designer
 			this.editor.ConstrainsList.Ending();
 			this.editor.Invalidate();
 		}
+#endif
 
 		public bool IsDragging
 		{
@@ -308,7 +377,7 @@ namespace Epsitec.Common.Designer
 		}
 
 
-		protected Handle.Type HandleDetect(Point mouse)
+		public Handle.Type HandleDetect(Point mouse)
 		{
 			//	Détecte la poignée visée par la souris.
 			for (int i=this.list.Count-1; i>=0; i--)
@@ -343,6 +412,7 @@ namespace Epsitec.Common.Designer
 		protected Widget					widget;
 		protected List<Handle>				list = new List<Handle>();
 		protected Handle.Type				draggingType = Handle.Type.None;
+		protected Rectangle					draggingRect;
 		protected Point						draggingOffset;
 		protected bool						isFinger;
 	}
