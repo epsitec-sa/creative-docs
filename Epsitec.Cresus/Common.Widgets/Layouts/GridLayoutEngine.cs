@@ -52,18 +52,31 @@ namespace Epsitec.Common.Widgets.Layouts
 					continue;
 				}
 
+				int columnSpan = GridLayoutEngine.GetColumnSpan (child);
+				int rowSpan = GridLayoutEngine.GetRowSpan (child);
+
 				System.Diagnostics.Debug.Assert (column < this.columnMeasures.Length);
 				System.Diagnostics.Debug.Assert (row < this.rowMeasures.Length);
+				System.Diagnostics.Debug.Assert (columnSpan > 0);
+				System.Diagnostics.Debug.Assert (rowSpan > 0);
 
 				Drawing.Margins margins = child.Margins;
-				
-				ColumnMeasure columnMeasure = this.columnMeasures[column];
-				RowMeasure    rowMeasure    = this.rowMeasures[row];
 
-				System.Diagnostics.Debug.Assert (columnMeasure != null);
-				System.Diagnostics.Debug.Assert (rowMeasure != null);
+				dx = 0;
+				dy = 0;
 
-				Drawing.Rectangle bounds = new Drawing.Rectangle (rect.Left+x[column], rect.Top-y[row], this.columnMeasures[column].Desired, this.rowMeasures[row].Desired);
+				for (int i = 0; i < columnSpan; i++)
+				{
+					System.Diagnostics.Debug.Assert (this.columnMeasures[column+i] != null);
+					dx += this.columnMeasures[column+i].Desired;
+				}
+				for (int i = 0; i < rowSpan; i++)
+				{
+					System.Diagnostics.Debug.Assert (this.rowMeasures[row+i] != null);
+					dy += this.rowMeasures[row+i].Desired;
+				}
+
+				Drawing.Rectangle bounds = new Drawing.Rectangle (rect.Left+x[column], rect.Top-y[row+rowSpan-1], dx, dy);
 				
 				bounds.Deflate (margins);
 				DockLayoutEngine.SetChildBounds (child, bounds, b[row]);
