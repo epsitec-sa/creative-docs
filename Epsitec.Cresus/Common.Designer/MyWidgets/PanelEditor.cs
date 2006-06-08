@@ -1920,6 +1920,32 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.Invalidate();
 		}
 
+		public bool IsObjectWidthChanging(Widget obj)
+		{
+			//	Indique si la largeur d'un objet peut changer.
+			if (this.IsLayoutDocking)
+			{
+				if (this.IsObjectAttachmentBottom(obj) || this.IsObjectAttachmentTop(obj))
+				{
+					return obj.HorizontalAlignment != HorizontalAlignment.Stretch;
+				}
+			}
+			return true;
+		}
+
+		public bool IsObjectHeightChanging(Widget obj)
+		{
+			//	Indique si la hauteur d'un objet peut changer.
+			if (this.IsLayoutDocking)
+			{
+				if (this.IsObjectAttachmentLeft(obj) || this.IsObjectAttachmentRight(obj))
+				{
+					return obj.VerticalAlignment != VerticalAlignment.Stretch;
+				}
+			}
+			return true;
+		}
+
 		public bool IsObjectAttachmentLeft(Widget obj)
 		{
 			//	Indique si l'objet est ancré à gauche.
