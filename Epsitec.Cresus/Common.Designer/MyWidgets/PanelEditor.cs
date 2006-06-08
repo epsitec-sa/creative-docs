@@ -1079,11 +1079,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 			else
 			{
+				System.Diagnostics.Debug.Assert(this.selectedObjects.Count == 1);
+
 				this.isHandling = true;
 				this.handlingRectangle = this.SelectBounds;
-				this.handlesList.DraggingStart(pos, this.handlingRectangle, this.handlingType);
+				this.handlesList.DraggingStart(pos, this.handlingRectangle, this.selectedObjects[0].MinSize, this.handlingType);
 
-				System.Diagnostics.Debug.Assert(this.selectedObjects.Count == 1);
 				CloneView clone = new CloneView();
 				clone.Model = this.selectedObjects[0];
 
