@@ -65,12 +65,18 @@ namespace Epsitec.Common.Designer
 
 			Point final = this.GetHandle(this.draggingType).Position;
 			this.draggingOffset = final-pos;
+
+			this.editor.ConstrainsList.Starting(new Rectangle(final, final), true);
+			this.editor.Invalidate();
 		}
 
 		public Rectangle DraggingMove(Point pos)
 		{
 			//	Effectue un déplacement de poignée.
 			pos += this.draggingOffset;
+			this.editor.ConstrainsList.Activate(new Rectangle(pos, pos), 0, this.editor.SelectedObjects.ToArray());
+			this.editor.Invalidate();
+			pos = this.editor.ConstrainsList.Snap(pos);
 
 			switch (this.draggingType)
 			{
@@ -118,6 +124,7 @@ namespace Epsitec.Common.Designer
 
 			this.draggingType = Handle.Type.None;
 			this.UpdateGeometry();
+			this.editor.ConstrainsList.Ending();
 			this.editor.Invalidate();
 		}
 
