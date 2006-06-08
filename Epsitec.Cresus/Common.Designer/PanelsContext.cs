@@ -180,6 +180,18 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
+		public double ZOrderThickness
+		{
+			get
+			{
+				return this.zOrderThickness;
+			}
+			set
+			{
+				this.zOrderThickness = value;
+			}
+		}
+
 
 		#region Static colors
 		static public Color ColorHiliteOutline
@@ -300,5 +312,6 @@ namespace Epsitec.Common.Designer
 		protected Margins				constrainGroupMargins = new Margins(12, 12, 12+7, 12);
 		protected double				leading = 30;
 		protected double				minimalSize = 3;
+		protected double				zOrderThickness = 2;
 	}
 }
