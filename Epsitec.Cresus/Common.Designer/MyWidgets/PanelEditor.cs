@@ -687,6 +687,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 				return;
 			}
 
+			if (this.SizeMarkDraggingStart(pos))
+			{
+				return;
+			}
+
 			Widget obj = this.Detect(pos);  // objet visé par la souris
 
 			if (!isShiftPressed)  // touche Shift relâchée ?
@@ -710,7 +715,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void GlobalMove(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
 			//	Sélection rectangulaire, souris déplacée.
-			if (this.handlesList.IsFinger)
+			if (this.handlesList.IsFinger || this.isSizeMarkHorizontal || this.isSizeMarkVertical)
 			{
 				this.ChangeMouseCursor(MouseCursorType.Finger);
 			}
@@ -735,6 +740,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				this.HandlingMove(pos);
 			}
+			else if (this.SizeMarkDraggingMove(pos))
+			{
+			}
 		}
 
 		protected void GlobalUp(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
@@ -755,6 +763,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 			if (this.handlesList.IsDragging)
 			{
 				this.HandlingEnd(pos);
+			}
+
+			if (this.SizeMarkDraggingStop(pos))
+			{
 			}
 		}
 
