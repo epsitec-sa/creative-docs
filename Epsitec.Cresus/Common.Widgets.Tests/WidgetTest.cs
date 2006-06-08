@@ -1501,6 +1501,24 @@ namespace Epsitec.Common.Widgets
 			Layouts.GridLayoutEngine.SetColumn (text, 3);
 			Layouts.GridLayoutEngine.SetRow (text, 2);
 			window.Root.Children.Add (text);
+			
+			button = new Button ();
+			button.Text = "E";
+			button.PreferredWidth = 20;
+			button.VerticalAlignment = VerticalAlignment.BaseLine;
+			Layouts.GridLayoutEngine.SetColumn (button, 4);
+			Layouts.GridLayoutEngine.SetRow (button, 2);
+			window.Root.Children.Add (button);
+
+
+			button = new Button ();
+			button.Text = "C";
+			button.PreferredWidth = 100;
+			button.VerticalAlignment = VerticalAlignment.BaseLine;
+			Layouts.GridLayoutEngine.SetColumn (button, 2);
+			Layouts.GridLayoutEngine.SetRow (button, 3);
+			Layouts.GridLayoutEngine.SetColumnSpan (button, 3);
+			window.Root.Children.Add (button);
 
 			Layouts.LayoutEngine.SetLayoutEngine (window.Root, grid);
 
