@@ -1457,6 +1457,7 @@ namespace Epsitec.Common.Widgets
 			button.PreferredWidth = 20;
 			Layouts.GridLayoutEngine.SetColumn (button, 0);
 			Layouts.GridLayoutEngine.SetRow (button, 1);
+			Layouts.GridLayoutEngine.SetRowSpan (button, 2);
 			window.Root.Children.Add (button);
 
 			button = new Button ();
@@ -1464,21 +1465,14 @@ namespace Epsitec.Common.Widgets
 			button.PreferredWidth = 20;
 			Layouts.GridLayoutEngine.SetColumn (button, 1);
 			Layouts.GridLayoutEngine.SetRow (button, 1);
+			Layouts.GridLayoutEngine.SetColumnSpan (button, 2);
 			window.Root.Children.Add (button);
 
 			button = new Button ();
 			button.Text = "C";
 			button.PreferredWidth = 20;
-			Layouts.GridLayoutEngine.SetColumn (button, 2);
+			Layouts.GridLayoutEngine.SetColumn (button, 3);
 			Layouts.GridLayoutEngine.SetRow (button, 1);
-			window.Root.Children.Add (button);
-
-			button = new Button ();
-			button.Text = "A";
-			button.PreferredWidth = 40;
-			button.VerticalAlignment = VerticalAlignment.BaseLine;
-			Layouts.GridLayoutEngine.SetColumn (button, 0);
-			Layouts.GridLayoutEngine.SetRow (button, 2);
 			window.Root.Children.Add (button);
 
 			field = new TextField ();
