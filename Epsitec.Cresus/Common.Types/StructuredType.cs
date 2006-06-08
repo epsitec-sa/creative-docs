@@ -16,7 +16,7 @@ namespace Epsitec.Common.Types
 		/// </summary>
 		public StructuredType()
 		{
-			this.fields = new HostedDictionary<string, INamedType> (this.NotifyFieldInserted, this.NotifyFieldRemoved);
+			this.fields = new Collections.HostedDictionary<string, INamedType> (this.NotifyFieldInserted, this.NotifyFieldRemoved);
 			this.name = null;
 			this.caption = null;
 			this.description = null;
@@ -46,7 +46,7 @@ namespace Epsitec.Common.Types
 		/// Gets the field definition dictionary. This instance is writable.
 		/// </summary>
 		/// <value>The fields.</value>
-		public HostedDictionary<string, INamedType> Fields
+		public Collections.HostedDictionary<string, INamedType> Fields
 		{
 			get
 			{
@@ -137,6 +137,6 @@ namespace Epsitec.Common.Types
 		private string name;
 		private string caption;
 		private string description;
-		private HostedDictionary<string, INamedType> fields;
+		private Collections.HostedDictionary<string, INamedType> fields;
 	}
 }

@@ -267,7 +267,7 @@ namespace Epsitec.Common.Types
 		
 		protected virtual void AllocateValues()
 		{
-			this.values = new HostedDictionary<string, Record> (this.NotifyInsertion, this.NotifyRemoval);
+			this.values = new Collections.HostedDictionary<string, Record> (this.NotifyInsertion, this.NotifyRemoval);
 		}
 
 		protected virtual void NotifyInsertion(string name, Record value)
