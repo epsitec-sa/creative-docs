@@ -24,7 +24,7 @@ namespace Epsitec.Common.Types.Serialization
 
 			this.StoreObjectBindings (obj);
 			this.StoreObjectFields (obj);
-			this.StoreObjectChildren (obj);
+//			this.StoreObjectChildren (obj);
 			
 			this.writer.EndObject (id, obj);
 		}

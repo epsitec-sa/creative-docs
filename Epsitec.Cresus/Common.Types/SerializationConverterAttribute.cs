@@ -8,7 +8,7 @@ namespace Epsitec.Common.Types
 	/// class to use in order to convert between a type and string
 	/// (<see cref="T:ISerializationConverter"/>).
 	/// </summary>
-	[System.AttributeUsage (System.AttributeTargets.Class, Inherited=false)]
+	[System.AttributeUsage (System.AttributeTargets.Class | System.AttributeTargets.Struct, Inherited=false)]
 	public class SerializationConverterAttribute : System.Attribute
 	{
 		public SerializationConverterAttribute(System.Type type)
