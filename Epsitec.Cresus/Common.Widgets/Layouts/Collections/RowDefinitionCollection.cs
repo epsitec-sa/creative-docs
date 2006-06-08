@@ -6,6 +6,10 @@ using Epsitec.Common.Types;
 
 namespace Epsitec.Common.Widgets.Layouts.Collections
 {
+	/// <summary>
+	/// The <c>RowDefinitionCollection</c> class provides access to an ordered,
+	/// strongly typed collection of <see cref="T:RowDefinition"/> objects.
+	/// </summary>
 	public class RowDefinitionCollection : Types.Collections.GenericDepdendencyObjectList<RowDefinition>
 	{
 		public RowDefinitionCollection()
