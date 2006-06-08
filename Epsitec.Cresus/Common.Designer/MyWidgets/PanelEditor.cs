@@ -88,6 +88,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			set
 			{
 				this.panel = value;
+				this.sizeMark = this.panel.PreferredSize;
 			}
 
 			get
@@ -534,6 +535,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 				return;
 			}
 
+			if (this.SizeMarkDraggingStart(pos))
+			{
+				return;
+			}
+
 			Widget obj;
 			Attachment attachment;
 			if (this.AttachmentDetect(pos, out obj, out attachment))
@@ -595,6 +601,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.ChangeMouseCursor(MouseCursorType.Arrow);
 			}
 
+			this.SizeMarkDraggingMove(pos);
+
 			if (this.isDragging)
 			{
 				this.DraggingMove(pos);
@@ -606,6 +614,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 			else if (this.handlesList.IsDragging)
 			{
 				this.HandlingMove(pos);
+			}
+			else if (this.isSizeMarkDragging)
+			{
 			}
 			else
 			{
@@ -642,6 +653,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 			if (this.handlesList.IsDragging)
 			{
 				this.HandlingEnd(pos);
+			}
+
+			if (this.isSizeMarkDragging)
+			{
+				this.SizeMarkDraggingStop(pos);
 			}
 		}
 
@@ -2215,7 +2231,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				}
 				else
 				{
-					hilite = new Rectangle(bounds.Left, bounds.Top, bounds.Width, 0);
+					hilite = new Rectangle(bounds.Left, bounds.Bottom, bounds.Width, 0);
 				}
 			}
 			else
@@ -2369,6 +2385,94 @@ namespace Epsitec.Common.Designer.MyWidgets
 		#endregion
 
 
+		#region SizeMark
+		protected bool SizeMarkDraggingStart(Point pos)
+		{
+			this.isSizeMarkDragging = false;
+
+			if (this.isSizeMarkHorizontal)
+			{
+				this.isSizeMarkDragging = true;
+				this.sizeMarkOffset.Y = pos.Y-this.SizeMarkHorizontalRect.Bottom;
+			}
+
+			if (this.isSizeMarkVertical)
+			{
+				this.isSizeMarkDragging = true;
+				this.sizeMarkOffset.X = pos.X-this.SizeMarkVerticalRect.Right;
+			}
+
+			return this.isSizeMarkDragging;
+		}
+
+		protected void SizeMarkDraggingMove(Point pos)
+		{
+			if (this.isSizeMarkDragging)
+			{
+				if (this.isSizeMarkHorizontal)
+				{
+					this.sizeMark.Height = System.Math.Max(pos.Y-this.sizeMarkOffset.Y, this.context.SizeMarkThickness);
+				}
+
+				if (this.isSizeMarkVertical)
+				{
+					this.sizeMark.Width = System.Math.Max(pos.X-this.sizeMarkOffset.X, this.context.SizeMarkThickness);
+				}
+
+				this.panel.PreferredSize = this.sizeMark;
+				this.Invalidate();
+			}
+			else
+			{
+				bool h = this.SizeMarkHorizontalRect.Contains(pos);
+				bool v = this.SizeMarkVerticalRect.Contains(pos);
+
+				if (this.isSizeMarkHorizontal != h)
+				{
+					this.isSizeMarkHorizontal = h;
+					this.Invalidate();
+				}
+
+				if (this.isSizeMarkVertical != v)
+				{
+					this.isSizeMarkVertical = v;
+					this.Invalidate();
+				}
+			}
+		}
+
+		protected void SizeMarkDraggingStop(Point pos)
+		{
+			if (this.isSizeMarkDragging)
+			{
+				this.isSizeMarkDragging = false;
+			}
+		}
+
+		protected Rectangle SizeMarkHorizontalRect
+		{
+			get
+			{
+				Rectangle bounds = this.RealBounds;
+				Rectangle box = this.Client.Bounds;
+				double t = this.context.SizeMarkThickness;
+				return new Rectangle(bounds.Right, this.sizeMark.Height-t, box.Right, t);
+			}
+		}
+
+		protected Rectangle SizeMarkVerticalRect
+		{
+			get
+			{
+				Rectangle bounds = this.RealBounds;
+				Rectangle box = this.Client.Bounds;
+				double t = this.context.SizeMarkThickness;
+				return new Rectangle(this.sizeMark.Width-t, bounds.Top, t, box.Top);
+			}
+		}
+		#endregion
+
+
 		#region Paint
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
@@ -2410,6 +2514,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 					graphics.RenderSolid(((++hilite)%10 == 0) ? PanelsContext.ColorGrid1 : PanelsContext.ColorGrid2);
 				}
 			}
+
+			//	Dessine les marques pour la taille préférentielle.
+			this.DrawSizeMark(graphics);
 
 			//	Dessine les objets sélectionnés.
 			if (this.selectedObjects.Count > 0 && !this.isDragging && !this.handlesList.IsDragging)
@@ -2497,6 +2604,35 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				this.handlesList.Draw(graphics);
 			}
+		}
+
+		protected void DrawSizeMark(Graphics graphics)
+		{
+			//	Dessine les marques pour la taille préférentielle.
+			Rectangle rect;
+			Point p1, p2;
+
+			rect = this.SizeMarkHorizontalRect;
+			graphics.AddFilledRectangle(rect);
+			graphics.RenderSolid(this.isSizeMarkHorizontal ? PanelsContext.ColorSizeMarkDark : PanelsContext.ColorSizeMarkLight);
+
+			p1 = rect.TopLeft;
+			p2 = rect.TopRight;
+			Misc.AlignForLine(graphics, ref p1);
+			Misc.AlignForLine(graphics, ref p2);
+			graphics.AddLine(p1, p2);
+			graphics.RenderSolid(PanelsContext.ColorSizeMarkLine);
+
+			rect = this.SizeMarkVerticalRect;
+			graphics.AddFilledRectangle(rect);
+			graphics.RenderSolid(this.isSizeMarkVertical ? PanelsContext.ColorSizeMarkDark : PanelsContext.ColorSizeMarkLight);
+
+			p1 = rect.BottomRight;
+			p2 = rect.TopRight;
+			Misc.AlignForLine(graphics, ref p1);
+			Misc.AlignForLine(graphics, ref p2);
+			graphics.AddLine(p1, p2);
+			graphics.RenderSolid(PanelsContext.ColorSizeMarkLine);
 		}
 
 		protected void DrawSelectedObject(Graphics graphics, Widget obj)
@@ -2696,7 +2832,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Retourne le rectangle englobant de tous les objets contenus dans le panneau.
 			get
 			{
-				return new Rectangle(Point.Zero, this.panel.RealMinSize);
+				Size s1 = this.panel.RealMinSize;
+				Size s2 = this.panel.PreferredSize;
+				double w = System.Math.Max(s1.Width, s2.Width);
+				double h = System.Math.Max(s1.Height, s2.Height);
+				return new Rectangle(0, 0, w, h);
 			}
 		}
 		#endregion
@@ -2887,6 +3027,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected Rectangle					handlingRectangle;
 		protected Point						startingPos;
 		protected MouseCursorType			lastCursor = MouseCursorType.Unknow;
+		protected Size						sizeMark;
+		protected bool						isSizeMarkDragging;
+		protected bool						isSizeMarkHorizontal;
+		protected bool						isSizeMarkVertical;
+		protected Point						sizeMarkOffset;
 
 		protected Image						mouseCursorArrow = null;
 		protected Image						mouseCursorArrowPlus = null;
