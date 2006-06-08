@@ -74,6 +74,14 @@ namespace Epsitec.Common.Widgets
 			StaticText text;
 			TextField field;
 
+			text = new StaticText ();
+			text.BackColor = Drawing.Color.FromRgb (0.7, 1, 0.7);
+			text.Margins = new Margins (1, 1, 0, 0);
+			Layouts.GridLayoutEngine.SetColumn (text, 3);
+			Layouts.GridLayoutEngine.SetRow (text, 0);
+			Layouts.GridLayoutEngine.SetRowSpan (text, 3);
+			window.Root.Children.Add (text);
+
 			button = new Button ();
 			button.Text = "A";
 			button.PreferredWidth = 40;
@@ -123,7 +131,6 @@ namespace Epsitec.Common.Widgets
 			button = new Button ();
 			button.Text = "B";
 			button.PreferredWidth = 20;
-			button.VerticalAlignment = VerticalAlignment.Center;
 			Layouts.GridLayoutEngine.SetColumn (button, 1);
 			Layouts.GridLayoutEngine.SetRow (button, 1);
 			Layouts.GridLayoutEngine.SetColumnSpan (button, 2);
@@ -131,7 +138,9 @@ namespace Epsitec.Common.Widgets
 
 			button = new Button ();
 			button.Text = "C";
+			button.Margins = new Margins (4, 4, 0, 0);
 			button.PreferredWidth = 20;
+			button.VerticalAlignment = VerticalAlignment.Center;
 			Layouts.GridLayoutEngine.SetColumn (button, 3);
 			Layouts.GridLayoutEngine.SetRow (button, 1);
 			window.Root.Children.Add (button);
