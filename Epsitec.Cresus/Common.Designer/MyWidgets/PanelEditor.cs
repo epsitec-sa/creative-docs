@@ -1096,6 +1096,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 				this.SetHilitedObject(null);
 				this.SetHilitedAttachmentRectangle(Rectangle.Empty);
+				this.Invalidate();
 				return true;
 			}
 		}
