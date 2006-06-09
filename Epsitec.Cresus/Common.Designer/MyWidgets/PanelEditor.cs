@@ -922,53 +922,63 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Dessin d'un objet, souris relâchée.
 			if (this.creatingObject != null)
 			{
-				this.creatingWindow.Hide();
-				this.creatingWindow.Dispose();
-				this.creatingWindow = null;
-
-				Point initialPos = pos;
-				Rectangle bounds;
-				this.CreateObjectAdjust(ref pos, out bounds);
-
-				if (this.IsLayoutAnchored)
+				if (this.Client.Bounds.Contains(pos))
 				{
-					Widget parent = this.DetectGroup(bounds);
+					this.creatingWindow.Hide();
+					this.creatingWindow.Dispose();
+					this.creatingWindow = null;
 
-					this.creatingObject = this.CreateObjectItem();
-					this.creatingObject.SetParent(parent);
-					this.creatingObject.TabNavigation = TabNavigationMode.Passive;
+					Point initialPos = pos;
+					Rectangle bounds;
+					this.CreateObjectAdjust(ref pos, out bounds);
 
-					this.creatingObject.Anchor = AnchorStyles.BottomLeft;
-
-					this.SetObjectPosition(this.creatingObject, pos);
-				}
-
-				if (this.IsLayoutDocking)
-				{
-					Widget parent;
-					int order;
-					Rectangle hilite;
-					this.ZOrderDetect(initialPos, out parent, out order, out hilite);
-
-					this.creatingObject = this.CreateObjectItem();
-					this.creatingObject.SetParent(parent);
-					this.creatingObject.ZOrder = order;
-					this.creatingObject.TabNavigation = TabNavigationMode.Passive;
-
-					this.creatingObject.Margins = new Margins(5, 5, 5, 5);
-
-					if (this.IsHorizontalDocking)
+					if (this.IsLayoutAnchored)
 					{
-						this.creatingObject.Dock = DockStyle.Left;
-					}
-					else
-					{
-						this.creatingObject.Dock = DockStyle.Bottom;
+						Widget parent = this.DetectGroup(bounds);
+
+						this.creatingObject = this.CreateObjectItem();
+						this.creatingObject.SetParent(parent);
+						this.creatingObject.TabNavigation = TabNavigationMode.Passive;
+
+						this.creatingObject.Anchor = AnchorStyles.BottomLeft;
+
+						this.SetObjectPosition(this.creatingObject, pos);
 					}
 
-					this.SetHilitedZOrderRectangle(Rectangle.Empty);
+					if (this.IsLayoutDocking)
+					{
+						Widget parent;
+						int order;
+						Rectangle hilite;
+						this.ZOrderDetect(initialPos, out parent, out order, out hilite);
+
+						this.creatingObject = this.CreateObjectItem();
+						this.creatingObject.SetParent(parent);
+						this.creatingObject.ZOrder = order;
+						this.creatingObject.TabNavigation = TabNavigationMode.Passive;
+
+						this.creatingObject.Margins = new Margins(5, 5, 5, 5);
+
+						if (this.IsHorizontalDocking)
+						{
+							this.creatingObject.Dock = DockStyle.Left;
+						}
+						else
+						{
+							this.creatingObject.Dock = DockStyle.Bottom;
+						}
+
+					}
+				}
+				else  // relâché hors de la fenêtre ?
+				{
+					this.creatingWindow.DissolveAndDisposeWindow();
+					this.creatingWindow = null;
+
+					this.creatingObject = null;
 				}
 
+				this.SetHilitedZOrderRectangle(Rectangle.Empty);
 				this.constrainsList.Ending();
 				this.SetHilitedParent(null);
 
@@ -1229,29 +1239,38 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void DraggingEnd(Point pos)
 		{
 			//	Fin du drag pour déplacer les objets sélectionnés.
-			this.draggingWindow.Hide();
-			this.draggingWindow.Dispose();
-			this.draggingWindow = null;
-
-			if (this.IsLayoutAnchored)
+			if (this.Client.Bounds.Contains(pos))
 			{
-				Rectangle initial = this.SelectBounds;
-				Widget parent = this.DetectGroup(this.draggingRectangle);
-				this.MoveSelection(this.draggingRectangle.BottomLeft - initial.BottomLeft, parent);
-				this.SetHilitedParent(null);
+				this.draggingWindow.Hide();
+				this.draggingWindow.Dispose();
+				this.draggingWindow = null;
+
+				if (this.IsLayoutAnchored)
+				{
+					Rectangle initial = this.SelectBounds;
+					Widget parent = this.DetectGroup(this.draggingRectangle);
+					this.MoveSelection(this.draggingRectangle.BottomLeft - initial.BottomLeft, parent);
+				}
+
+				if (this.IsLayoutDocking)
+				{
+					Widget parent;
+					int order;
+					Rectangle hilite;
+					this.ZOrderDetect(pos, out parent, out order, out hilite);
+					this.ZOrderChangeSelection(parent, order);
+				}
+			}
+			else  // relâché hors de la fenêtre ?
+			{
+				this.draggingWindow.DissolveAndDisposeWindow();
+				this.draggingWindow = null;
+				this.DeleteSelection();
 			}
 
-			if (this.IsLayoutDocking)
-			{
-				Widget parent;
-				int order;
-				Rectangle hilite;
-				this.ZOrderDetect(pos, out parent, out order, out hilite);
-				this.ZOrderChangeSelection(parent, order);
-				this.SetHilitedZOrderRectangle(Rectangle.Empty);
-				this.SetHilitedParent(null);
-			}
-
+			this.SetHilitedParent(null);
+			this.SetHilitedZOrderRectangle(Rectangle.Empty);
+			this.SetHilitedParent(null);
 			this.isDragging = false;
 			this.draggingArraySelected = null;
 			this.constrainsList.Ending();
@@ -2221,6 +2240,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			//	Détecte le ZOrder à utiliser pour une position donnée, ainsi que le rectangle
 			//	à utiliser pour la mise ne évidence.
+			if (!this.Client.Bounds.Contains(mouse))
+			{
+				parent = null;
+				order = -1;
+				hilite = Rectangle.Empty;
+				return;
+			}
+
 			parent = this.panel;
 			order = 0;
 			hilite = Rectangle.Empty;
