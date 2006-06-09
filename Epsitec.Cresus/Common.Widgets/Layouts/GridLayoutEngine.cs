@@ -35,161 +35,11 @@ namespace Epsitec.Common.Widgets.Layouts
 			double[] x = new double[this.columnMeasures.Length];
 			double[] y = new double[this.rowMeasures.Length];
 			double[] b = new double[this.rowMeasures.Length];
-			
-			double dx = 0;
-			double flexX = 0;
-			double dy = 0;
-			double flexY = 0;
 
-			for (int i = 0; i < this.columnMeasures.Length; i++)
-			{
-				this.columnMeasures[i].UpdateDesired (0);
-				
-				double w = this.columnMeasures[i].Desired;
+			this.GenerateColumnOffsets (rect, x);
+			this.GenerateRowOffsets (rect, y, b);
 
-				x[i] = dx;
-				dx  += w;
-
-				if (i < this.columnDefinitions.Count)
-				{
-					this.columnDefinitions[i].DefineActualOffset (x[i]);
-					this.columnDefinitions[i].DefineActualWidth (w);
-					
-					if (this.columnDefinitions[i].Width.IsProportional)
-					{
-						flexX += this.columnDefinitions[i].Width.Value;
-					}
-				}
-			}
-
-			for (int i = 0; i < this.rowMeasures.Length; i++)
-			{
-				this.rowMeasures[i].UpdateDesired (0);
-				
-				double h1 = this.rowMeasures[i].MinH1;
-				double h2 = this.rowMeasures[i].MinH2;
-				double h  = this.rowMeasures[i].Desired;
-
-				dy  += h;
-				
-				y[i] = dy;
-				b[i] = (h - (h1+h2)) / 2 + h2;
-				
-				if (i < this.rowDefinitions.Count)
-				{
-					this.rowDefinitions[i].DefineActualOffset (y[i]);
-					this.rowDefinitions[i].DefineActualHeight (h);
-
-					if (this.rowDefinitions[i].Height.IsProportional)
-					{
-						flexY += this.rowDefinitions[i].Height.Value;
-					}
-				}
-			}
-
-			double spaceX = rect.Width - dx;
-			double spaceY = rect.Height - dy;
-
-			if ((spaceX > 0) &&
-				(flexX > 0))
-			{
-				double move = 0;
-
-				for (int i = 0; i < this.columnDefinitions.Count; i++)
-				{
-					x[i] += move;
-					this.columnDefinitions[i].DefineActualOffset (x[i]);
-					
-					if (this.columnDefinitions[i].Width.IsProportional)
-					{
-						double d = this.columnDefinitions[i].Width.Value * spaceX / flexX;
-						double w = this.columnDefinitions[i].ActualWidth + d;
-
-						this.columnMeasures[i].UpdateDesired (w);
-						this.columnDefinitions[i].DefineActualWidth (w);
-
-						move += d;
-					}
-				}
-
-				for (int i = this.columnDefinitions.Count; i < x.Length; i++)
-				{
-					x[i] += move;
-				}
-
-				dx += move;
-			}
-			
-			if ((spaceY > 0) &&
-				(flexY > 0))
-			{
-				double move = 0;
-				
-				for (int i = 0; i < this.rowDefinitions.Count; i++)
-				{
-					if (this.rowDefinitions[i].Height.IsProportional)
-					{
-						double d = this.rowDefinitions[i].Height.Value * spaceY / flexY;
-						double h = this.rowDefinitions[i].ActualHeight + d;
-						
-						this.rowMeasures[i].UpdateDesired (h);
-						this.rowDefinitions[i].DefineActualHeight (h);
-						
-						move += d;
-					}
-
-					y[i] += move;
-					this.rowDefinitions[i].DefineActualOffset (y[i]);
-				}
-				
-				for (int i = this.rowDefinitions.Count; i < y.Length; i++)
-				{
-					y[i] += move;
-				}
-
-				dy += move;
-			}
-			
-			foreach (Visual child in children)
-			{
-				int column = GridLayoutEngine.GetColumn (child);
-				int row    = GridLayoutEngine.GetRow (child);
-
-				if ((column < 0) ||
-					(row < 0))
-				{
-					continue;
-				}
-
-				int columnSpan = GridLayoutEngine.GetColumnSpan (child);
-				int rowSpan = GridLayoutEngine.GetRowSpan (child);
-
-				System.Diagnostics.Debug.Assert (column < this.columnMeasures.Length);
-				System.Diagnostics.Debug.Assert (row < this.rowMeasures.Length);
-				System.Diagnostics.Debug.Assert (columnSpan > 0);
-				System.Diagnostics.Debug.Assert (rowSpan > 0);
-
-				Drawing.Margins margins = child.Margins;
-
-				dx = 0;
-				dy = 0;
-
-				for (int i = 0; i < columnSpan; i++)
-				{
-					System.Diagnostics.Debug.Assert (this.columnMeasures[column+i] != null);
-					dx += this.columnMeasures[column+i].Desired;
-				}
-				for (int i = 0; i < rowSpan; i++)
-				{
-					System.Diagnostics.Debug.Assert (this.rowMeasures[row+i] != null);
-					dy += this.rowMeasures[row+i].Desired;
-				}
-
-				Drawing.Rectangle bounds = new Drawing.Rectangle (rect.Left+x[column], rect.Top-y[row+rowSpan-1], dx, dy);
-				
-				bounds.Deflate (margins);
-				DockLayoutEngine.SetChildBounds (child, bounds, b[row]);
-			}
+			this.LayoutChildren (rect, children, x, y, b);
 		}
 
 		public void UpdateMinMax(Visual container, LayoutContext context, IEnumerable<Visual> children, ref Drawing.Size minSize, ref Drawing.Size maxSize)
@@ -253,6 +103,207 @@ namespace Epsitec.Common.Widgets.Layouts
 		}
 
 		#endregion
+
+		private void GenerateColumnOffsets(Drawing.Rectangle rect, double[] x)
+		{
+			double dx = 0;
+			double flexX = 0;
+
+			for (int i = 0; i < this.columnMeasures.Length; i++)
+			{
+				this.columnMeasures[i].UpdateDesired (0);
+
+				double w = this.columnMeasures[i].Desired;
+
+				x[i] = dx;
+				dx  += w;
+
+				if (i < this.columnDefinitions.Count)
+				{
+					this.columnDefinitions[i].DefineActualOffset (x[i]);
+					this.columnDefinitions[i].DefineActualWidth (w);
+
+					if (this.columnDefinitions[i].Width.IsProportional)
+					{
+						flexX += this.columnDefinitions[i].Width.Value;
+					}
+				}
+			}
+
+			double spaceX = rect.Width - dx;
+
+			if ((spaceX > 0) &&
+				(flexX > 0))
+			{
+				double move = 0;
+
+				for (int i = 0; i < this.columnDefinitions.Count; i++)
+				{
+					x[i] += move;
+					this.columnDefinitions[i].DefineActualOffset (x[i]);
+
+					if (this.columnDefinitions[i].Width.IsProportional)
+					{
+						double d = this.columnDefinitions[i].Width.Value * spaceX / flexX;
+						double w = this.columnDefinitions[i].ActualWidth + d;
+
+						this.columnMeasures[i].UpdateDesired (w);
+						this.columnDefinitions[i].DefineActualWidth (w);
+
+						move += d;
+					}
+				}
+
+				for (int i = this.columnDefinitions.Count; i < x.Length; i++)
+				{
+					x[i] += move;
+				}
+
+				dx += move;
+			}
+		}
+
+		private void GenerateRowOffsets(Drawing.Rectangle rect, double[] y, double[] b)
+		{
+			double dy = 0;
+			double flexY = 0;
+
+			for (int i = 0; i < this.rowMeasures.Length; i++)
+			{
+				this.rowMeasures[i].UpdateDesired (0);
+
+				double h1 = this.rowMeasures[i].MinH1;
+				double h2 = this.rowMeasures[i].MinH2;
+				double h  = this.rowMeasures[i].Desired;
+
+				dy  += h;
+
+				y[i] = dy;
+				b[i] = (h - (h1+h2)) / 2 + h2;
+
+				if (i < this.rowDefinitions.Count)
+				{
+					this.rowDefinitions[i].DefineActualOffset (y[i]);
+					this.rowDefinitions[i].DefineActualHeight (h);
+
+					if (this.rowDefinitions[i].Height.IsProportional)
+					{
+						flexY += this.rowDefinitions[i].Height.Value;
+					}
+				}
+			}
+
+			double spaceY = rect.Height - dy;
+
+			if ((spaceY > 0) &&
+				(flexY > 0))
+			{
+				double move = 0;
+
+				for (int i = 0; i < this.rowDefinitions.Count; i++)
+				{
+					if (this.rowDefinitions[i].Height.IsProportional)
+					{
+						double d = this.rowDefinitions[i].Height.Value * spaceY / flexY;
+						double h = this.rowDefinitions[i].ActualHeight + d;
+
+						this.rowMeasures[i].UpdateDesired (h);
+						this.rowDefinitions[i].DefineActualHeight (h);
+
+						move += d;
+					}
+
+					y[i] += move;
+					this.rowDefinitions[i].DefineActualOffset (y[i]);
+				}
+
+				for (int i = this.rowDefinitions.Count; i < y.Length; i++)
+				{
+					y[i] += move;
+				}
+
+				dy += move;
+			}
+		}
+
+		private void LayoutChildren(Drawing.Rectangle rect, IEnumerable<Visual> children, double[] x, double[] y, double[] b)
+		{
+			foreach (Visual child in children)
+			{
+				int column = GridLayoutEngine.GetColumn (child);
+				int row    = GridLayoutEngine.GetRow (child);
+
+				if ((column < 0) ||
+					(row < 0))
+				{
+					continue;
+				}
+
+				this.LayoutChild (rect, x, y, b, child, column, row);
+			}
+		}
+
+		private void LayoutChild(Drawing.Rectangle rect, double[] x, double[] y, double[] b, Visual child, int column, int row)
+		{
+			IGridPermeable permeable = child as IGridPermeable;
+
+			int columnSpan = 0;
+			int rowSpan    = 0;
+
+			if (permeable != null)
+			{
+				if (permeable.GetGlobalGridSpan (out columnSpan, out rowSpan) == false)
+				{
+					permeable = null;
+				}
+			}
+
+			if (columnSpan == 0)
+			{
+				columnSpan = GridLayoutEngine.GetColumnSpan (child);
+			}
+			if (rowSpan == 0)
+			{
+				rowSpan = GridLayoutEngine.GetRowSpan (child);
+			}
+
+			System.Diagnostics.Debug.Assert (column < this.columnMeasures.Length);
+			System.Diagnostics.Debug.Assert (row < this.rowMeasures.Length);
+			System.Diagnostics.Debug.Assert (columnSpan > 0);
+			System.Diagnostics.Debug.Assert (rowSpan > 0);
+
+			Drawing.Margins margins = child.Margins;
+
+			double dx = 0;
+			double dy = 0;
+
+			for (int i = 0; i < columnSpan; i++)
+			{
+				System.Diagnostics.Debug.Assert (this.columnMeasures[column+i] != null);
+				dx += this.columnMeasures[column+i].Desired;
+			}
+			for (int i = 0; i < rowSpan; i++)
+			{
+				System.Diagnostics.Debug.Assert (this.rowMeasures[row+i] != null);
+				dy += this.rowMeasures[row+i].Desired;
+			}
+
+			Drawing.Rectangle bounds = new Drawing.Rectangle (rect.Left+x[column], rect.Top-y[row+rowSpan-1], dx, dy);
+
+			bounds.Deflate (margins);
+			DockLayoutEngine.SetChildBounds (child, bounds, b[row]);
+
+			if (permeable != null)
+			{
+				rect = bounds;
+				rect.Offset (-x[column], -y[row]);
+
+				foreach (PermeableCell cell in permeable.GetChildren (column, row))
+				{
+					this.LayoutChild (rect, x, y, b, cell.Visual, column + cell.Column, row + cell.Row);
+				}
+			}
+		}
 
 		#region MinMaxUpdater Class
 
@@ -318,17 +369,29 @@ namespace Epsitec.Common.Widgets.Layouts
 			private void ProcessChild(Visual child, int column, int row)
 			{
 				IGridPermeable permeable = child as IGridPermeable;
+				
+				int columnSpan = 0;
+				int rowSpan    = 0;
 
 				if (permeable != null)
 				{
-					foreach (PermeableCell cell in permeable.GetChildren (column, row))
+					if (permeable.GetGlobalGridSpan (out columnSpan, out rowSpan))
 					{
-						this.ProcessChild (cell.Visual, cell.Column, cell.Row);
+						foreach (PermeableCell cell in permeable.GetChildren (column, row))
+						{
+							this.ProcessChild (cell.Visual, cell.Column, cell.Row);
+						}
 					}
 				}
 
-				int columnSpan = GridLayoutEngine.GetColumnSpan (child);
-				int rowSpan    = GridLayoutEngine.GetRowSpan (child);
+				if (columnSpan == 0)
+				{
+					columnSpan = GridLayoutEngine.GetColumnSpan (child);
+				}
+				if (rowSpan == 0)
+				{
+					rowSpan = GridLayoutEngine.GetRowSpan (child);
+				}
 
 				if (column+columnSpan > this.columnCount)
 				{
