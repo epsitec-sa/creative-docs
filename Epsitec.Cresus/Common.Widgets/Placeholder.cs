@@ -238,8 +238,8 @@ namespace Epsitec.Common.Widgets
 
 			public bool GetGlobalGridSpan(out int columnSpan, out int rowSpan)
 			{
-				columnSpan = 1;
-				rowSpan    = 1;
+				columnSpan = 0;
+				rowSpan    = 0;
 				
 				return false;
 			}
