@@ -73,8 +73,11 @@ namespace Epsitec.Common.Designer
 			{
 				this.list.Clear();
 				double minX, minY;
-				this.NearestDistance(rect, this.editor.Panel, out minX, out minY, excludes);
-				this.NearestObjects(rect, this.editor.Panel, minX, minY, excludes);
+				if (!rect.IsEmpty)
+				{
+					this.NearestDistance(rect, this.editor.Panel, out minX, out minY, excludes);
+					this.NearestObjects(rect, this.editor.Panel, minX, minY, excludes);
+				}
 			}
 
 			foreach (Constrain constrain in this.list)
