@@ -2485,6 +2485,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				}
 
 				this.panel.PreferredSize = this.sizeMark;
+				this.handlesList.UpdateGeometry();
 				this.Invalidate();
 			}
 			else
