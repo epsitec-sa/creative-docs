@@ -338,6 +338,15 @@ namespace Epsitec.Common.Designer
 				return adorner.ColorCaption;
 			}
 		}
+
+		static public Color ColorOutsideForeground
+		{
+			//	Couleur superposée à une DragWindow lorsqu'on est hors de la fenêtre.
+			get
+			{
+				return Color.FromAlphaRgb(0.3, 1,0,0);
+			}
+		}
 		#endregion
 
 

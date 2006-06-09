@@ -16,19 +16,39 @@ namespace Epsitec.Common.Widgets
 
 		public Drawing.Color Color
 		{
-			get { return this.color; }
-			set { this.color = value; }
+			get
+			{
+				return this.color;
+			}
+			set
+			{
+				if (this.color != value)
+				{
+					this.color = value;
+					this.Invalidate();
+				}
+			}
 		}
 
 		public double Alpha
 		{
-			get { return this.alpha; }
-			set { this.alpha = value; }
+			get
+			{
+				return this.alpha;
+			}
+			set
+			{
+				if (this.alpha != value)
+				{
+					this.alpha = value;
+					this.Invalidate();
+				}
+			}
 		}
 		
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
-			if ( !this.IsEnabled )  return;
+			if ( !this.IsEnabled || this.alpha == 0 )  return;
 
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
 
