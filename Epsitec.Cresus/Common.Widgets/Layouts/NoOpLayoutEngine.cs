@@ -14,5 +14,13 @@ namespace Epsitec.Common.Widgets.Layouts
 		public void UpdateMinMax(Visual container, LayoutContext context, IEnumerable<Visual> children, ref Drawing.Size minSize, ref Drawing.Size maxSize)
 		{
 		}
+		
+		public LayoutMode LayoutMode
+		{
+			get
+			{
+				return LayoutMode.None;
+			}
+		}
 	}
 }

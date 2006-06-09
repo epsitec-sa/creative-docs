@@ -168,5 +168,13 @@ namespace Epsitec.Common.Widgets.Layouts
 			min_size = new Drawing.Size (min_dx, min_dy);
 			max_size = new Drawing.Size (max_dx, max_dy);
 		}
+		
+		public LayoutMode LayoutMode
+		{
+			get
+			{
+				return LayoutMode.Anchored;
+			}
+		}
 	}
 }

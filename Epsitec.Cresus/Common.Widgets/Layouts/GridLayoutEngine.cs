@@ -102,6 +102,14 @@ namespace Epsitec.Common.Widgets.Layouts
 			maxSize.Height = System.Math.Min (maxSize.Height, maxDy);
 		}
 
+		public LayoutMode LayoutMode
+		{
+			get
+			{
+				return LayoutMode.Grid;
+			}
+		}
+
 		#endregion
 
 		private void GenerateColumnOffsets(Drawing.Rectangle rect, double[] x)
