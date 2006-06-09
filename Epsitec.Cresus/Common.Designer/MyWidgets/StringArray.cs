@@ -56,6 +56,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 					{
 						this.columns[i].DraggingCellSelectionChanged -= new EventHandler(this.HandleDraggingCellSelectionChanged);
 						this.columns[i].FinalCellSelectionChanged -= new EventHandler(this.HandleFinalCellSelectionChanged);
+						this.columns[i].DoubleClicked -= new MessageEventHandler(this.HandleDoubleClicked);
 					}
 					this.columns[this.columns.Length-1].CellsQuantityChanged -= new EventHandler(this.HandleCellsQuantityChanged);
 				}
@@ -66,6 +67,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 					this.columns[i] = new StringList(this);
 					this.columns[i].DraggingCellSelectionChanged += new EventHandler(this.HandleDraggingCellSelectionChanged);
 					this.columns[i].FinalCellSelectionChanged += new EventHandler(this.HandleFinalCellSelectionChanged);
+					this.columns[i].DoubleClicked += new MessageEventHandler(this.HandleDoubleClicked);
 					ToolTip.Default.SetToolTip(this.columns[i], "*");
 				}
 				this.columns[this.columns.Length-1].CellsQuantityChanged += new EventHandler(this.HandleCellsQuantityChanged);
@@ -624,6 +626,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.SetSelectedRow(this.firstVisibleRow+sel, column);
 		}
 
+		void HandleDoubleClicked(object sender, MessageEventArgs e)
+		{
+			this.OnSelectedRowDoubleClicked();
+		}
+
 		void HandleScrollerValueChanged(object sender)
 		{
 			this.FirstVisibleRow = (int) System.Math.Floor(this.scroller.Value+0.5M);
@@ -720,6 +727,29 @@ namespace Epsitec.Common.Designer.MyWidgets
 			remove
 			{
 				this.RemoveUserEventHandler("SelectedRowChanged", value);
+			}
+		}
+
+
+		protected virtual void OnSelectedRowDoubleClicked()
+		{
+			//	Génère un événement pour dire que la ligne sélectionnée a été double cliquée.
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("SelectedRowDoubleClicked");
+			if (handler != null)
+			{
+				handler(this);
+			}
+		}
+
+		public event Support.EventHandler SelectedRowDoubleClicked
+		{
+			add
+			{
+				this.AddUserEventHandler("SelectedRowDoubleClicked", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("SelectedRowDoubleClicked", value);
 			}
 		}
 		#endregion

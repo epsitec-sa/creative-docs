@@ -883,10 +883,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.creatingWindow.FocusedWidget = this.creatingObject;
 			this.creatingWindow.Show();
 
-			Separator sep = new Separator(this.creatingWindow.Root);
+			Separator sep = new Separator();
 			sep.Anchor = AnchorStyles.All;
 			sep.Color = PanelsContext.ColorOutsideForeground;
 			sep.Alpha = 0;
+			sep.SetParent(this.creatingWindow.Root);
 
 			if (this.IsLayoutAnchored)
 			{
