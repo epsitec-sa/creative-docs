@@ -312,7 +312,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		public string SelectionInfo
 		{
-			//	Donne le texte pour les statuts.
+			//	Donne le texte pour les status.
 			get
 			{
 				string sel = "-";
@@ -321,6 +321,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 				if (this.isDragging)
 				{
 					rect = this.draggingRectangle;
+				}
+				else if (this.isHandling)
+				{
+					rect = this.handlingRectangle;
 				}
 				else
 				{
@@ -1144,8 +1148,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Mouvement du drag pour déplacer une poignée.
 			if (this.isHandling)
 			{
-				Rectangle rect = this.handlesList.DraggingMove(pos);
-				this.handlingWindow.WindowBounds = this.MapClientToScreen(rect);
+				this.handlingRectangle = this.handlesList.DraggingMove(pos);
+				this.handlingWindow.WindowBounds = this.MapClientToScreen(this.handlingRectangle);
+				this.module.MainWindow.UpdateInfoViewer();
 			}
 		}
 
