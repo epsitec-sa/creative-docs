@@ -316,9 +316,13 @@ namespace Epsitec.Common.Widgets
 			Assert.AreEqual (0, context.MeasureQueueLength);
 			Assert.AreEqual (0, context.ArrangeQueueLength);
 
+			Assert.AreEqual ("[0;0;80;20]", a.ActualBounds.ToString ());
+			
 			a.PreferredWidth = 100;
 			a.PreferredHeight = 200;
 
+			Assert.AreEqual ("[0;0;80;20]", a.ActualBounds.ToString ());
+			
 			b.Anchor = AnchorStyles.All;
 			b.Margins = new Drawing.Margins (1, 1, 1, 1);
 			b.Padding = new Drawing.Margins (5, 5, 10, 10);
@@ -361,6 +365,10 @@ namespace Epsitec.Common.Widgets
 
 			Assert.AreEqual (0, context.ArrangeQueueLength);
 			Assert.AreEqual (0, context.MeasureQueueLength);
+
+			Assert.AreEqual ("[0;0;80;20]", a.ActualBounds.ToString ());
+			
+			a.SetManualBounds (new Drawing.Rectangle (0, 0, a.PreferredWidth, a.PreferredHeight));
 
 			Assert.AreEqual ("[0;0;100;200]", a.ActualBounds.ToString ());
 			Assert.AreEqual ("[1;1;98;198]", b.ActualBounds.ToString ());
