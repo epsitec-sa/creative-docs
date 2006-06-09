@@ -83,6 +83,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.array.CellsQuantityChanged += new EventHandler(this.HandleArrayCellsQuantityChanged);
 				this.array.CellsContentChanged += new EventHandler(this.HandleArrayCellsContentChanged);
 				this.array.SelectedRowChanged += new EventHandler(this.HandleArraySelectedRowChanged);
+				this.array.SelectedRowDoubleClicked += new EventHandler(this.HandleArraySelectedRowDoubleClicked);
 				this.array.TabIndex = tabIndex++;
 				this.array.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 				this.array.Anchor = AnchorStyles.All;
@@ -437,6 +438,26 @@ namespace Epsitec.Common.Designer.Dialogs
 		{
 			//	La ligne sélectionnée a changé.
 			this.UpdateButtons();
+		}
+
+		void HandleArraySelectedRowDoubleClicked(object sender)
+		{
+			//	La ligne sélectionnée a changé.
+			this.UpdateButtons();
+
+			this.parentWindow.MakeActive();
+			this.window.Hide();
+			this.OnClosed();
+
+			int sel = this.array.SelectedRow;
+			if (sel == -1)
+			{
+				this.ressource = Druid.Empty;
+			}
+			else
+			{
+				this.ressource = this.druidsIndex[sel];
+			}
 		}
 
 

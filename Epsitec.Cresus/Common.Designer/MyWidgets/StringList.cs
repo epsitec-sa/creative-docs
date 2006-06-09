@@ -22,7 +22,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 		public StringList() : base()
 		{
 			this.AutoEngage = false;
-			this.AutoFocus  = true;
+			this.AutoFocus = true;
+			this.AutoDoubleClick = true;
 
 			this.InternalState |= InternalState.Focusable;
 			this.InternalState |= InternalState.Engageable;
