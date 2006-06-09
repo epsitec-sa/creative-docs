@@ -21,6 +21,18 @@ namespace Epsitec.Common.Widgets
 			this.Alpha = 0.8;
 			this.Name = "DragWindow";
 		}
+
+		public bool SuperLight
+		{
+			get
+			{
+				return (this.Alpha == 0.4);
+			}
+			set
+			{
+				this.Alpha = value ? 0.4 : 0.8;
+			}
+		}
 		
 		public void DefineWidget(Widget widget, Drawing.Size initial_size, Drawing.Margins margins)
 		{
