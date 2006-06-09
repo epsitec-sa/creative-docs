@@ -2320,6 +2320,23 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				hilite.Inflate(this.context.ZOrderThickness);
 			}
+
+			if (this.selectedObjects.Count != 0)
+			{
+				//	Un ZOrder équivalent au ZOrder de l'objet actuellement sélectionné n'est
+				//	pas retourné, pour éviter à l'utilisateur de croire qu'il va changer
+				//	quelque chose.
+				foreach (Widget selectedObj in this.selectedObjects)
+				{
+					if (selectedObj.ZOrder == order || selectedObj.ZOrder == order-1)
+					{
+						parent = null;
+						order = -1;  // aucun changement
+						hilite = Rectangle.Empty;
+						return;
+					}
+				}
+			}
 		}
 
 		protected Widget ZOrderDetectNearest(Point pos)
@@ -2369,7 +2386,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void ZOrderChangeSelection(Widget parent, int order)
 		{
 			//	Change le ZOrder de tous les objets sélectionnés.
-			if (this.selectedObjects.Contains(parent))
+			if (order == -1 || this.selectedObjects.Contains(parent))
 			{
 				return;
 			}
