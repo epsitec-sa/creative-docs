@@ -45,6 +45,7 @@ namespace Epsitec.Common.Widgets.Controllers
 			this.field.HorizontalAlignment = HorizontalAlignment.Stretch;
 			this.field.VerticalAlignment = VerticalAlignment.BaseLine;
 			this.field.TextChanged += this.HandleFieldTextChanged;
+			this.field.PreferredWidth = 40;
 
 			this.field.TabIndex = 1;
 			this.field.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
@@ -133,16 +134,16 @@ namespace Epsitec.Common.Widgets.Controllers
 		
 		#region IGridPermeable Members
 
-		IEnumerable<Layouts.PermeableCell> Layouts.IGridPermeable.GetChildren(int column, int row)
+		IEnumerable<Layouts.PermeableCell> Layouts.IGridPermeable.GetChildren(int column, int row, int columnSpan, int rowSpan)
 		{
 			yield return new Layouts.PermeableCell (this.label, column+0, row+0, 1, 1);
-			yield return new Layouts.PermeableCell (this.field, column+1, row+0, 1, 1);
+			yield return new Layouts.PermeableCell (this.field, column+1, row+0, columnSpan-1, 1);
 		}
 
-		bool Layouts.IGridPermeable.GetGlobalGridSpan(out int columnSpan, out int rowSpan)
+		bool Layouts.IGridPermeable.UpdateGridSpan(ref int columnSpan, ref int rowSpan)
 		{
-			columnSpan = 2;
-			rowSpan    = 1;
+			columnSpan = System.Math.Max (columnSpan, 2);
+			rowSpan    = System.Math.Max (rowSpan, 1);
 			
 			return true;
 		}
