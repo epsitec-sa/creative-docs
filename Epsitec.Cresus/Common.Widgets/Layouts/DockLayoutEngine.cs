@@ -339,6 +339,14 @@ namespace Epsitec.Common.Widgets.Layouts
 			maxSize = new Drawing.Size (maxWidth, maxHeight);
 		}
 
+		public LayoutMode LayoutMode
+		{
+			get
+			{
+				return LayoutMode.Docked;
+			}
+		}
+
 		internal static void SetChildBounds(Visual child, Drawing.Rectangle bounds)
 		{
 			DockLayoutEngine.SetChildBounds (child, bounds, 0);

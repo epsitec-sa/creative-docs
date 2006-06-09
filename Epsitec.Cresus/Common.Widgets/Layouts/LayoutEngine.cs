@@ -51,15 +51,37 @@ namespace Epsitec.Common.Widgets.Layouts
 					return LayoutEngine.DockEngine;
 				case LayoutMode.Anchored:
 					return LayoutEngine.AnchorEngine;
+				case LayoutMode.Stacked:
+					return LayoutEngine.StackEngine;
+			}
+
+			ILayoutEngine engine = LayoutEngine.GetLayoutEngine (visual);
+			
+			if (engine == null)
+			{
+				engine = LayoutEngine.NoOpEngine;
 			}
 			
-			return LayoutEngine.NoOpEngine;
+			return engine;
 		}
 
 		public static LayoutMode GetLayoutMode(Visual visual)
 		{
-			return LayoutEngine.GetLayoutMode (visual.Dock, visual.Anchor);
+			LayoutMode mode = LayoutEngine.GetLayoutMode (visual.Dock, visual.Anchor);
+			
+			if (mode == LayoutMode.None)
+			{
+				ILayoutEngine engine = LayoutEngine.GetLayoutEngine (visual);
+				
+				if (engine != null)
+				{
+					mode = engine.LayoutMode;
+				}
+			}
+			
+			return mode;
 		}
+		
 		public static LayoutMode GetLayoutMode(DockStyle dock, AnchorStyles anchor)
 		{
 			if (dock == DockStyle.Stacked)

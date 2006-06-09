@@ -150,5 +150,13 @@ namespace Epsitec.Common.Widgets.Layouts
 				context.DefineBaseLine (container, currentMinH1, currentMinH2);
 			}
 		}
+		
+		public LayoutMode LayoutMode
+		{
+			get
+			{
+				return LayoutMode.Stacked;
+			}
+		}
 	}
 }
