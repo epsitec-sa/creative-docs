@@ -12,5 +12,6 @@ namespace Epsitec.Common.Widgets.Layouts
 	public interface IGridPermeable
 	{
 		IEnumerable<PermeableCell> GetChildren(int column, int row);
+		bool GetGlobalGridSpan(out int columnSpan, out int rowSpan);
 	}
 }

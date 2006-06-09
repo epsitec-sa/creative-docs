@@ -218,6 +218,11 @@ namespace Epsitec.Common.Widgets
 			return this.ControllerIGridPermeable.GetChildren (column, row);
 		}
 
+		bool Layouts.IGridPermeable.GetGlobalGridSpan(out int columnSpan, out int rowSpan)
+		{
+			return this.ControllerIGridPermeable.GetGlobalGridSpan (out columnSpan, out rowSpan);
+		}
+
 		#endregion
 
 		#region NoOpGridPermeableHelper Class
@@ -229,6 +234,14 @@ namespace Epsitec.Common.Widgets
 			public IEnumerable<Layouts.PermeableCell> GetChildren(int column, int row)
 			{
 				yield break;
+			}
+
+			public bool GetGlobalGridSpan(out int columnSpan, out int rowSpan)
+			{
+				columnSpan = 1;
+				rowSpan    = 1;
+				
+				return false;
 			}
 
 			#endregion
