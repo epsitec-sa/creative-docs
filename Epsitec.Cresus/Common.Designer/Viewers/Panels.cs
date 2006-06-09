@@ -79,8 +79,8 @@ namespace Epsitec.Common.Designer.Viewers
 			container.Dock = DockStyle.Fill;
 
 			this.panelContainer = new UI.Panel();
-			//?this.panelContainer.ChildrenLayoutMode = Widgets.Layouts.LayoutMode.Anchored;
-			this.panelContainer.ChildrenLayoutMode = Widgets.Layouts.LayoutMode.Docked;
+			this.panelContainer.ChildrenLayoutMode = Widgets.Layouts.LayoutMode.Anchored;
+			//?this.panelContainer.ChildrenLayoutMode = Widgets.Layouts.LayoutMode.Docked;
 			//?this.panelContainer.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
 			this.panelContainer.ContainerLayoutMode = ContainerLayoutMode.VerticalFlow;
 			this.panelContainer.PreferredSize = new Size(200, 200);
