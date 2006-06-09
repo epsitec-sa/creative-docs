@@ -245,26 +245,22 @@ namespace Epsitec.Common.Widgets.Layouts
 
 		private void LayoutChild(Drawing.Rectangle rect, double[] x, double[] y, double[] b, Visual child, int column, int row)
 		{
-			IGridPermeable permeable = child as IGridPermeable;
+			int columnSpan = GridLayoutEngine.GetColumnSpan (child);
+			int rowSpan    = GridLayoutEngine.GetRowSpan (child);
 
-			int columnSpan = 0;
-			int rowSpan    = 0;
+			this.LayoutChild (rect, x, y, b, child, column, row, columnSpan, rowSpan);
+		}
+
+		private void LayoutChild(Drawing.Rectangle rect, double[] x, double[] y, double[] b, Visual child, int column, int row, int columnSpan, int rowSpan)
+		{
+			IGridPermeable permeable = child as IGridPermeable;
 
 			if (permeable != null)
 			{
-				if (permeable.GetGlobalGridSpan (out columnSpan, out rowSpan) == false)
+				if (permeable.UpdateGridSpan (ref columnSpan, ref rowSpan) == false)
 				{
 					permeable = null;
 				}
-			}
-
-			if (columnSpan == 0)
-			{
-				columnSpan = GridLayoutEngine.GetColumnSpan (child);
-			}
-			if (rowSpan == 0)
-			{
-				rowSpan = GridLayoutEngine.GetRowSpan (child);
 			}
 
 			System.Diagnostics.Debug.Assert (column < this.columnMeasures.Length);
@@ -290,7 +286,7 @@ namespace Epsitec.Common.Widgets.Layouts
 
 			double ox = rect.Left + x[column];
 			double oy = rect.Top - y[row+rowSpan-1];
-			
+
 			Drawing.Rectangle bounds = new Drawing.Rectangle (ox, oy, dx, dy);
 
 			bounds.Deflate (margins);
@@ -299,13 +295,13 @@ namespace Epsitec.Common.Widgets.Layouts
 			if (permeable != null)
 			{
 				rect = bounds;
-				
+
 				rect.X = -x[column];
 				rect.Y =  y[row] - rect.Height;
 
-				foreach (PermeableCell cell in permeable.GetChildren (column, row))
+				foreach (PermeableCell cell in permeable.GetChildren (column, row, columnSpan, rowSpan))
 				{
-					this.LayoutChild (rect, x, y, b, cell.Visual, cell.Column, cell.Row);
+					this.LayoutChild (rect, x, y, b, cell.Visual, cell.Column, cell.Row, cell.ColumnSpan, cell.RowSpan);
 				}
 			}
 		}
@@ -374,28 +370,19 @@ namespace Epsitec.Common.Widgets.Layouts
 			private void ProcessChild(Visual child, int column, int row)
 			{
 				IGridPermeable permeable = child as IGridPermeable;
-				
-				int columnSpan = 0;
-				int rowSpan    = 0;
+
+				int columnSpan = GridLayoutEngine.GetColumnSpan (child);
+				int rowSpan    = GridLayoutEngine.GetRowSpan (child);
 
 				if (permeable != null)
 				{
-					if (permeable.GetGlobalGridSpan (out columnSpan, out rowSpan))
+					if (permeable.UpdateGridSpan (ref columnSpan, ref rowSpan))
 					{
-						foreach (PermeableCell cell in permeable.GetChildren (column, row))
+						foreach (PermeableCell cell in permeable.GetChildren (column, row, columnSpan, rowSpan))
 						{
 							this.ProcessChild (cell.Visual, cell.Column, cell.Row);
 						}
 					}
-				}
-
-				if (columnSpan == 0)
-				{
-					columnSpan = GridLayoutEngine.GetColumnSpan (child);
-				}
-				if (rowSpan == 0)
-				{
-					rowSpan = GridLayoutEngine.GetRowSpan (child);
 				}
 
 				if (column+columnSpan > this.columnCount)

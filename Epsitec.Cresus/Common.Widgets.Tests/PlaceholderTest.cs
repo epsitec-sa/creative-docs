@@ -44,6 +44,7 @@ namespace Epsitec.Common.Widgets
 			Layouts.GridLayoutEngine grid = new Layouts.GridLayoutEngine ();
 
 			grid.ColumnDefinitions.Add (new Layouts.ColumnDefinition ());
+			grid.ColumnDefinitions.Add (new Layouts.ColumnDefinition (new Layouts.GridLength (40)));
 			grid.ColumnDefinitions.Add (new Layouts.ColumnDefinition (new Layouts.GridLength (1, Layouts.GridUnitType.Proportional)));
 
 			grid.RowDefinitions.Add (new Layouts.RowDefinition ());
@@ -77,6 +78,7 @@ namespace Epsitec.Common.Widgets
 			placeholder1.TabIndex = 1;
 			Layouts.GridLayoutEngine.SetColumn (placeholder1, 0);
 			Layouts.GridLayoutEngine.SetRow (placeholder1, 1);
+			Layouts.GridLayoutEngine.SetColumnSpan (placeholder1, 3);
 
 			placeholder2.Dock = DockStyle.Top;
 			placeholder2.Controller = "StringController";
@@ -84,6 +86,7 @@ namespace Epsitec.Common.Widgets
 			placeholder2.TabIndex = 2;
 			Layouts.GridLayoutEngine.SetColumn (placeholder2, 0);
 			Layouts.GridLayoutEngine.SetRow (placeholder2, 2);
+			Layouts.GridLayoutEngine.SetColumnSpan (placeholder2, 3);
 
 			placeholder3.Dock = DockStyle.Top;
 			placeholder3.Controller = "StringController";
@@ -103,6 +106,7 @@ namespace Epsitec.Common.Widgets
 			Layouts.LayoutEngine.SetLayoutEngine (panel, grid);
 
 			panel.Padding = new Drawing.Margins (8, 8, 5, 5);
+			panel.Dock = DockStyle.Fill;
 			
 			panel.Children.Add (placeholder1);
 			panel.Children.Add (placeholder2);
@@ -132,10 +136,9 @@ namespace Epsitec.Common.Widgets
 			text.VerticalAlignment = VerticalAlignment.BaseLine;
 			Layouts.GridLayoutEngine.SetColumn (text, 1);
 			Layouts.GridLayoutEngine.SetRow (text, 0);
+			Layouts.GridLayoutEngine.SetColumnSpan (text, 2);
 			panel.Children.Add (text);
 
-			panel.Dock = DockStyle.Fill;
-			
 			window.Root.Children.Add (panel);
 			window.Show ();
 			

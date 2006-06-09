@@ -213,14 +213,14 @@ namespace Epsitec.Common.Widgets
 
 		#region IGridPermeable Members
 
-		IEnumerable<Layouts.PermeableCell> Layouts.IGridPermeable.GetChildren(int column, int row)
+		IEnumerable<Layouts.PermeableCell> Layouts.IGridPermeable.GetChildren(int column, int row, int columnSpan, int rowSpan)
 		{
-			return this.ControllerIGridPermeable.GetChildren (column, row);
+			return this.ControllerIGridPermeable.GetChildren (column, row, columnSpan, rowSpan);
 		}
 
-		bool Layouts.IGridPermeable.GetGlobalGridSpan(out int columnSpan, out int rowSpan)
+		bool Layouts.IGridPermeable.UpdateGridSpan(ref int columnSpan, ref int rowSpan)
 		{
-			return this.ControllerIGridPermeable.GetGlobalGridSpan (out columnSpan, out rowSpan);
+			return this.ControllerIGridPermeable.UpdateGridSpan (ref columnSpan, ref rowSpan);
 		}
 
 		#endregion
@@ -231,16 +231,13 @@ namespace Epsitec.Common.Widgets
 		{
 			#region IGridPermeable Members
 
-			public IEnumerable<Layouts.PermeableCell> GetChildren(int column, int row)
+			public IEnumerable<Layouts.PermeableCell> GetChildren(int column, int row, int columnSpan, int rowSpan)
 			{
 				yield break;
 			}
 
-			public bool GetGlobalGridSpan(out int columnSpan, out int rowSpan)
+			public bool UpdateGridSpan(ref int columnSpan, ref int rowSpan)
 			{
-				columnSpan = 0;
-				rowSpan    = 0;
-				
 				return false;
 			}
 
