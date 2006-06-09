@@ -872,6 +872,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			this.creatingObject = this.CreateObjectItem();
 			this.isInside = true;
+			Point initialPos = pos;
 
 			this.CreateObjectAdjust(ref pos, out this.creatingRectangle);
 
@@ -887,14 +888,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 			sep.Anchor = AnchorStyles.All;
 			sep.Color = PanelsContext.ColorOutsideForeground;
 			sep.Alpha = 0;
-			sep.SetParent(this.creatingWindow.Root);
+			sep.SetParent(this.creatingWindow.Root);  // parent en dernier pour éviter les flashs !
 
 			if (this.IsLayoutAnchored)
 			{
 				this.constrainsList.Starting(Rectangle.Empty, false);
 				this.constrainsList.Activate(this.creatingRectangle, this.GetObjectBaseLine(this.creatingObject), null);
 
-				this.SetHilitedParent(this.DetectGroup(this.creatingRectangle));  // met en évidence le futur parent survolé par la souris
+				this.SetHilitedParent(this.DetectGroup(initialPos));  // met en évidence le futur parent survolé par la souris
 			}
 
 			this.module.MainWindow.UpdateInfoViewer();
@@ -918,7 +919,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 					this.creatingWindow.WindowLocation = this.creatingOrigin + pos;
 					this.ChangeSeparatorAlpha(this.creatingWindow);
 
-					Widget parent = this.isInside ? this.DetectGroup(this.creatingRectangle) : null;
+					Widget parent = this.isInside ? this.DetectGroup(initialPos) : null;
 					this.SetHilitedParent(parent);  // met en évidence le futur parent survolé par la souris
 				}
 
@@ -958,7 +959,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 					if (this.IsLayoutAnchored)
 					{
-						Widget parent = this.DetectGroup(this.creatingRectangle);
+						Widget parent = this.DetectGroup(initialPos);
 
 						this.creatingObject = this.CreateObjectItem();
 						this.creatingObject.SetParent(parent);
@@ -1200,7 +1201,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			if (this.IsLayoutAnchored)
 			{
 				this.constrainsList.Starting(this.draggingRectangle, false);
-				this.SetHilitedParent(this.DetectGroup(this.draggingRectangle));  // met en évidence le futur parent survolé par la souris
+				this.SetHilitedParent(this.DetectGroup(pos));  // met en évidence le futur parent survolé par la souris
 			}
 
 			Widget container = new Widget();
@@ -1241,6 +1242,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			//	Mouvement du drag pour déplacer les objets sélectionnés.
 			this.isInside = this.IsInside(pos);
+			Point initialPos = pos;
 
 			if (this.IsLayoutAnchored)
 			{
@@ -1259,7 +1261,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.draggingWindow.WindowLocation = this.draggingOrigin + pos + adjust;
 				this.ChangeSeparatorAlpha(this.draggingWindow);
 
-				Widget parent = this.isInside ? this.DetectGroup(this.draggingRectangle) : null;
+				Widget parent = this.isInside ? this.DetectGroup(initialPos) : null;
 				this.SetHilitedParent(parent);  // met en évidence le futur parent survolé par la souris
 			}
 
@@ -1294,7 +1296,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				if (this.IsLayoutAnchored)
 				{
 					Rectangle initial = this.SelectBounds;
-					Widget parent = this.DetectGroup(this.draggingRectangle);
+					Widget parent = this.DetectGroup(pos);
 					this.MoveSelection(this.draggingRectangle.BottomLeft - initial.BottomLeft, parent);
 				}
 
@@ -1334,10 +1336,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 			return this.panel.FindChild(pos, ChildFindMode.Deep | ChildFindMode.SkipHidden | ChildFindMode.SkipEmbedded);
 		}
 
-		protected Widget DetectGroup(Rectangle rect)
+		protected Widget DetectGroup(Point pos)
 		{
-			//	Détecte dans quel groupe est entièrement inclu un rectangle donné.
-			Widget container = this.panel.FindChild(rect, ChildFindMode.Deep | ChildFindMode.SkipHidden | ChildFindMode.SkipNonContainer | ChildFindMode.SkipEmbedded);
+			//	Détecte le groupe visé par la souris.
+			Widget container = this.panel.FindChild(pos, ChildFindMode.Deep | ChildFindMode.SkipHidden | ChildFindMode.SkipNonContainer | ChildFindMode.SkipEmbedded);
 			return container ?? this.panel;
 		}
 
