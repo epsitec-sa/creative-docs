@@ -10,10 +10,15 @@ using Epsitec.Common.Types;
 
 namespace Epsitec.Common.Widgets.Controllers
 {
-	public class StringController : AbstractController
+	public class StringController : AbstractController, Layouts.IGridPermeable
 	{
 		public StringController(string parameter)
 		{
+		}
+
+		protected override Layouts.IGridPermeable GetGridPermeableLayoutHelper()
+		{
+			return this;
 		}
 		
 		protected override void CreateUserInterface(object valueTypeObject, string valueName)
@@ -25,26 +30,26 @@ namespace Epsitec.Common.Widgets.Controllers
 			this.label = new StaticText ();
 			this.field = new TextField ();
 
-			this.label.Dock = DockStyle.Stacked;
 			this.label.HorizontalAlignment = HorizontalAlignment.Right;
 			this.label.VerticalAlignment = VerticalAlignment.BaseLine;
-			this.label.ContentAlignment = Epsitec.Common.Drawing.ContentAlignment.MiddleRight;
+			this.label.ContentAlignment = Drawing.ContentAlignment.MiddleRight;
+			this.label.Dock = DockStyle.Stacked;
 			
 			if (! string.IsNullOrEmpty (valueName))
 			{
 				this.label.Text = string.Format ("{0}: ", valueName);
-				this.label.MinWidth = this.label.GetBestFitSize ().Width;
+				this.label.PreferredWidth = this.label.GetBestFitSize ().Width;
+				this.label.Margins = new Drawing.Margins (4, 4, 0, 0);
 			}
 			
-			
-			this.field.Dock = DockStyle.Stacked;
 			this.field.HorizontalAlignment = HorizontalAlignment.Stretch;
 			this.field.VerticalAlignment = VerticalAlignment.BaseLine;
 			this.field.TextChanged += this.HandleFieldTextChanged;
 
 			this.field.TabIndex = 1;
 			this.field.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-
+			this.field.Dock = DockStyle.Stacked;
+			
 			this.AddWidget (this.label);
 			this.AddWidget (this.field);
 		}
@@ -125,6 +130,24 @@ namespace Epsitec.Common.Widgets.Controllers
 		{
 			return newValue.ToString ();
 		}
+		
+		#region IGridPermeable Members
+
+		IEnumerable<Layouts.PermeableCell> Layouts.IGridPermeable.GetChildren(int column, int row)
+		{
+			yield return new Layouts.PermeableCell (this.label, column+0, row+0, 1, 1);
+			yield return new Layouts.PermeableCell (this.field, column+1, row+0, 1, 1);
+		}
+
+		bool Layouts.IGridPermeable.GetGlobalGridSpan(out int columnSpan, out int rowSpan)
+		{
+			columnSpan = 2;
+			rowSpan    = 1;
+			
+			return true;
+		}
+
+		#endregion
 		
 		private TextField field;
 		private StaticText label;

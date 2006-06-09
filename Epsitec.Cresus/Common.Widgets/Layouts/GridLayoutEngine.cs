@@ -288,7 +288,10 @@ namespace Epsitec.Common.Widgets.Layouts
 				dy += this.rowMeasures[row+i].Desired;
 			}
 
-			Drawing.Rectangle bounds = new Drawing.Rectangle (rect.Left+x[column], rect.Top-y[row+rowSpan-1], dx, dy);
+			double ox = rect.Left + x[column];
+			double oy = rect.Top - y[row+rowSpan-1];
+			
+			Drawing.Rectangle bounds = new Drawing.Rectangle (ox, oy, dx, dy);
 
 			bounds.Deflate (margins);
 			DockLayoutEngine.SetChildBounds (child, bounds, b[row]);
@@ -296,11 +299,13 @@ namespace Epsitec.Common.Widgets.Layouts
 			if (permeable != null)
 			{
 				rect = bounds;
-				rect.Offset (-x[column], -y[row]);
+				
+				rect.X = -x[column];
+				rect.Y =  y[row] - rect.Height;
 
 				foreach (PermeableCell cell in permeable.GetChildren (column, row))
 				{
-					this.LayoutChild (rect, x, y, b, cell.Visual, column + cell.Column, row + cell.Row);
+					this.LayoutChild (rect, x, y, b, cell.Visual, cell.Column, cell.Row);
 				}
 			}
 		}
@@ -446,7 +451,12 @@ namespace Epsitec.Common.Widgets.Layouts
 
 			public void ConstrainColumns()
 			{
-				int nColumns = System.Math.Min (this.grid.columnDefinitions.Count, this.columnCount);
+				int nColumns = this.grid.columnDefinitions.Count;
+
+				if (nColumns > this.columnCount)
+				{
+					this.columnCount = nColumns;
+				}
 
 				for (int i = 0; i < nColumns; i++)
 				{
@@ -461,7 +471,12 @@ namespace Epsitec.Common.Widgets.Layouts
 
 			public void ConstrainRows()
 			{
-				int nRows = System.Math.Min (this.grid.rowDefinitions.Count, this.rowCount);
+				int nRows = this.grid.rowDefinitions.Count;
+
+				if (nRows > this.rowCount)
+				{
+					this.rowCount = nRows;
+				}
 
 				for (int i = 0; i < nRows; i++)
 				{
