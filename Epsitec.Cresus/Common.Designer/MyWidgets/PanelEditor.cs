@@ -863,13 +863,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 			sep.Alpha = 0;
 			sep.SetParent(this.creatingWindow.Root);  // parent en dernier pour éviter les flashs !
 
+			this.constrainsList.Starting(Rectangle.Empty, false);
+
 			if (this.IsLayoutAnchored(parent))
 			{
-				this.constrainsList.Starting(Rectangle.Empty, false);
 				this.constrainsList.Activate(this.creatingRectangle, this.GetObjectBaseLine(this.creatingObject), null);
-
-				this.SetHilitedParent(parent);  // met en évidence le futur parent survolé par la souris
 			}
+
+			this.SetHilitedParent(parent);  // met en évidence le futur parent survolé par la souris
 
 			this.module.MainWindow.UpdateInfoViewer();
 		}
@@ -891,10 +892,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 				{
 					Rectangle rect = this.isInside ? this.creatingRectangle : Rectangle.Empty;
 					this.constrainsList.Activate(rect, this.GetObjectBaseLine(this.creatingObject), null);
+
+					this.SetHilitedZOrderRectangle(Rectangle.Empty);
 				}
 
 				if (this.IsLayoutDocking(parent))
 				{
+					this.constrainsList.Activate(Rectangle.Empty, 0, null);
+
 					Widget group;
 					int order;
 					Rectangle hilite;
@@ -1044,6 +1049,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			if (this.IsLayoutAnchored(parent))
 			{
 				obj.Anchor = AnchorStyles.BottomLeft;
+				obj.Dock = DockStyle.None;
 			}
 
 			if (this.IsLayoutDocking(parent))
@@ -1058,6 +1064,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 				{
 					obj.Dock = DockStyle.Bottom;
 				}
+
+				obj.Anchor = AnchorStyles.None;
 			}
 		}
 
@@ -1188,8 +1196,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 			if (this.IsLayoutAnchored(parent))
 			{
 				this.constrainsList.Starting(this.draggingRectangle, false);
-				this.SetHilitedParent(parent);  // met en évidence le futur parent survolé par la souris
 			}
+
+			if (this.IsLayoutDocking(parent))
+			{
+				this.constrainsList.Starting(Rectangle.Empty, false);
+			}
+
+			this.SetHilitedParent(parent);  // met en évidence le futur parent survolé par la souris
 
 			Widget container = new Widget();
 			container.PreferredSize = this.draggingRectangle.Size;
@@ -1245,10 +1259,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 					this.draggingRectangle = this.constrainsList.Snap(this.draggingRectangle, this.draggingBaseLine);
 				}
 				adjust = this.draggingRectangle.BottomLeft - adjust;
+
+				this.SetHilitedZOrderRectangle(Rectangle.Empty);
 			}
 
 			if (this.IsLayoutDocking(parent))
 			{
+				this.constrainsList.Activate(Rectangle.Empty, 0, null);
+
 				Widget group;
 				int order;
 				Rectangle hilite;
