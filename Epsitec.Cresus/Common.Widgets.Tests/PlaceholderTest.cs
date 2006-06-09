@@ -37,8 +37,22 @@ namespace Epsitec.Common.Widgets
 		}
 
 		[Test]
-		public void CheckStringController()
+		public void CheckInteractiveStringController()
 		{
+			Window window = new Window ();
+
+			Layouts.GridLayoutEngine grid = new Layouts.GridLayoutEngine ();
+
+			grid.ColumnDefinitions.Add (new Layouts.ColumnDefinition ());
+			grid.ColumnDefinitions.Add (new Layouts.ColumnDefinition (new Layouts.GridLength (1, Layouts.GridUnitType.Proportional)));
+
+			grid.RowDefinitions.Add (new Layouts.RowDefinition ());
+			grid.RowDefinitions.Add (new Layouts.RowDefinition ());
+			grid.RowDefinitions.Add (new Layouts.RowDefinition ());
+			grid.RowDefinitions.Add (new Layouts.RowDefinition ());
+
+			UI.Panel panel = new Epsitec.Common.UI.Panel ();
+
 			StructuredType type = new StructuredType ();
 			StructuredData data = new StructuredData (type);
 
@@ -49,9 +63,6 @@ namespace Epsitec.Common.Widgets
 			data.SetValue ("Name", "Arnaud");
 			data.SetValue ("Forename", "Pierre");
 			data.SetValue ("Age", System.DateTime.Now.Year - 1972);
-
-			Window window = new Window ();
-			UI.Panel panel = new Epsitec.Common.UI.Panel ();
 
 			panel.DataSource = new UI.DataSourceCollection ();
 			panel.DataSource.AddDataSource ("Person", data);
@@ -64,16 +75,22 @@ namespace Epsitec.Common.Widgets
 			placeholder1.Controller = "StringController";
 			placeholder1.PreferredHeight = 20;
 			placeholder1.TabIndex = 1;
+			Layouts.GridLayoutEngine.SetColumn (placeholder1, 0);
+			Layouts.GridLayoutEngine.SetRow (placeholder1, 1);
 
 			placeholder2.Dock = DockStyle.Top;
 			placeholder2.Controller = "StringController";
 			placeholder2.PreferredHeight = 20;
 			placeholder2.TabIndex = 2;
+			Layouts.GridLayoutEngine.SetColumn (placeholder2, 0);
+			Layouts.GridLayoutEngine.SetRow (placeholder2, 2);
 
 			placeholder3.Dock = DockStyle.Top;
 			placeholder3.Controller = "StringController";
 			placeholder3.PreferredHeight = 20;
 			placeholder3.TabIndex = 3;
+			Layouts.GridLayoutEngine.SetColumn (placeholder3, 0);
+			Layouts.GridLayoutEngine.SetRow (placeholder3, 3);
 
 			Binding binding1 = new Binding (BindingMode.TwoWay, null, "Person.Name");
 			Binding binding2 = new Binding (BindingMode.TwoWay, null, "Person.Forename");
@@ -83,11 +100,41 @@ namespace Epsitec.Common.Widgets
 			placeholder2.SetBinding (Placeholder.ValueProperty, binding2);
 			placeholder3.SetBinding (Placeholder.ValueProperty, binding3);
 
-			panel.Dock = DockStyle.Fill;
+			Layouts.LayoutEngine.SetLayoutEngine (panel, grid);
+
+			panel.Padding = new Drawing.Margins (8, 8, 5, 5);
 			
 			panel.Children.Add (placeholder1);
 			panel.Children.Add (placeholder2);
 			panel.Children.Add (placeholder3);
+
+			StaticText text;
+
+			text = new StaticText ();
+			text.Text = "Label";
+			text.PreferredWidth = 40;
+			text.PreferredHeight = 20;
+			text.BackColor = Drawing.Color.FromBrightness (0.6);
+			text.Margins = new Drawing.Margins (0, 1, 0, 1);
+			text.ContentAlignment = Drawing.ContentAlignment.MiddleCenter;
+			text.VerticalAlignment = VerticalAlignment.BaseLine;
+			Layouts.GridLayoutEngine.SetColumn (text, 0);
+			Layouts.GridLayoutEngine.SetRow (text, 0);
+			panel.Children.Add (text);
+			
+			text = new StaticText ();
+			text.Text = "Data fields";
+			text.PreferredWidth = 40;
+			text.PreferredHeight = 20;
+			text.BackColor = Drawing.Color.FromBrightness (0.6);
+			text.Margins = new Drawing.Margins (0, 0, 0, 1);
+			text.ContentAlignment = Drawing.ContentAlignment.MiddleCenter;
+			text.VerticalAlignment = VerticalAlignment.BaseLine;
+			Layouts.GridLayoutEngine.SetColumn (text, 1);
+			Layouts.GridLayoutEngine.SetRow (text, 0);
+			panel.Children.Add (text);
+
+			panel.Dock = DockStyle.Fill;
 			
 			window.Root.Children.Add (panel);
 			window.Show ();
