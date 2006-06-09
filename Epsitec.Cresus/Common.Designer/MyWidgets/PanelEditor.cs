@@ -883,6 +883,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.creatingWindow.FocusedWidget = this.creatingObject;
 			this.creatingWindow.Show();
 
+			Separator sep = new Separator(this.creatingWindow.Root);
+			sep.Anchor = AnchorStyles.All;
+			sep.Color = PanelsContext.ColorOutsideForeground;
+			sep.Alpha = 0;
+
 			if (this.IsLayoutAnchored)
 			{
 				this.constrainsList.Starting(Rectangle.Empty, false);
@@ -910,6 +915,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 					Rectangle rect = this.isInside ? this.creatingRectangle : Rectangle.Empty;
 					this.constrainsList.Activate(rect, this.GetObjectBaseLine(this.creatingObject), null);
 					this.creatingWindow.WindowLocation = this.creatingOrigin + pos;
+					this.ChangeSeparatorAlpha(this.creatingWindow);
 
 					Widget parent = this.isInside ? this.DetectGroup(this.creatingRectangle) : null;
 					this.SetHilitedParent(parent);  // met en évidence le futur parent survolé par la souris
@@ -918,6 +924,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				if (this.IsLayoutDocking)
 				{
 					this.creatingWindow.WindowLocation = this.creatingOrigin + pos;
+					this.ChangeSeparatorAlpha(this.creatingWindow);
 
 					Widget parent;
 					int order;
@@ -1206,6 +1213,13 @@ namespace Epsitec.Common.Designer.MyWidgets
 				clone.Margins = new Margins(origin.X, 0, 0, origin.Y);
 				clone.Anchor = AnchorStyles.BottomLeft;
 				clone.Model = obj;
+
+				Separator sep = new Separator(container);
+				sep.PreferredSize = obj.ActualSize;
+				sep.Margins = new Margins(origin.X, 0, 0, origin.Y);
+				sep.Anchor = AnchorStyles.BottomLeft;
+				sep.Color = PanelsContext.ColorOutsideForeground;
+				sep.Alpha = 0;
 			}
 
 			this.draggingOrigin = this.MapClientToScreen(this.draggingOffset);
@@ -1242,6 +1256,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				adjust = this.draggingRectangle.BottomLeft - adjust;
 
 				this.draggingWindow.WindowLocation = this.draggingOrigin + pos + adjust;
+				this.ChangeSeparatorAlpha(this.draggingWindow);
 
 				Widget parent = this.isInside ? this.DetectGroup(this.draggingRectangle) : null;
 				this.SetHilitedParent(parent);  // met en évidence le futur parent survolé par la souris
@@ -1250,6 +1265,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			if (this.IsLayoutDocking)
 			{
 				this.draggingWindow.WindowLocation = this.draggingOrigin + pos;
+				this.ChangeSeparatorAlpha(this.draggingWindow);
 
 				Widget parent;
 				int order;
@@ -2956,6 +2972,30 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			//	Indique si une position est dans la fenêtre.
 			return this.Client.Bounds.Contains(pos);
+		}
+
+		protected void ChangeSeparatorAlpha(DragWindow window)
+		{
+			//	Modifie la transparence des tous les Separators d'une fenêtre.
+			double alpha = this.isInside ? 0 : PanelsContext.ColorOutsideForeground.A;
+			this.ChangeSeparatorAlpha(window.Root, alpha);
+		}
+
+		protected void ChangeSeparatorAlpha(Widget parent, double alpha)
+		{
+			foreach (Widget obj in parent.Children)
+			{
+				if (obj is Separator)
+				{
+					Separator sep = obj as Separator;
+					sep.Alpha = alpha;
+				}
+
+				if (obj.Children.Count != 0)
+				{
+					this.ChangeSeparatorAlpha(obj, alpha);
+				}
+			}
 		}
 		#endregion
 
