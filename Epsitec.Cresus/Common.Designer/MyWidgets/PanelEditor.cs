@@ -97,33 +97,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
-		public bool						IsLayoutAnchored
-		{
-			//	Indique si le panneau associé est en mode LayoutMode.Anchored.
-			get
-			{
-				return (this.panel.ChildrenLayoutMode == Widgets.Layouts.LayoutMode.Anchored);
-			}
-		}
-
-		public bool						IsLayoutDocking
-		{
-			//	Indique si le panneau associé est en mode LayoutMode.Docked.
-			get
-			{
-				return (this.panel.ChildrenLayoutMode == Widgets.Layouts.LayoutMode.Docked);
-			}
-		}
-
-		public bool						IsHorizontalDocking
-		{
-			//	Indique si le panneau associé est en mode de docking horizontal.
-			get
-			{
-				return (this.panel.ContainerLayoutMode == ContainerLayoutMode.HorizontalFlow);
-			}
-		}
-
 		public ConstrainsList ConstrainsList
 		{
 			//	Retourne la liste des contraintes.
@@ -874,7 +847,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.isInside = true;
 			Widget parent = this.DetectGroup(pos);
 
-			this.CreateObjectAdjust(ref pos, out this.creatingRectangle);
+			this.CreateObjectAdjust(ref pos, parent, out this.creatingRectangle);
 
 			this.creatingOrigin = this.MapClientToScreen(Point.Zero);
 			this.creatingWindow = new DragWindow();
@@ -890,7 +863,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			sep.Alpha = 0;
 			sep.SetParent(this.creatingWindow.Root);  // parent en dernier pour éviter les flashs !
 
-			if (this.IsLayoutAnchored)
+			if (this.IsLayoutAnchored(parent))
 			{
 				this.constrainsList.Starting(Rectangle.Empty, false);
 				this.constrainsList.Activate(this.creatingRectangle, this.GetObjectBaseLine(this.creatingObject), null);
@@ -912,32 +885,29 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.isInside = this.IsInside(pos);
 				Widget parent = this.DetectGroup(pos);
 
-				this.CreateObjectAdjust(ref pos, out this.creatingRectangle);
+				this.CreateObjectAdjust(ref pos, parent, out this.creatingRectangle);
 
-				if (this.IsLayoutAnchored)
+				if (this.IsLayoutAnchored(parent))
 				{
 					Rectangle rect = this.isInside ? this.creatingRectangle : Rectangle.Empty;
 					this.constrainsList.Activate(rect, this.GetObjectBaseLine(this.creatingObject), null);
-					this.creatingWindow.WindowLocation = this.creatingOrigin + pos;
-					this.ChangeSeparatorAlpha(this.creatingWindow);
-
-					this.SetHilitedParent(parent);  // met en évidence le futur parent survolé par la souris
 				}
 
-				if (this.IsLayoutDocking)
+				if (this.IsLayoutDocking(parent))
 				{
-					this.creatingWindow.WindowLocation = this.creatingOrigin + pos;
-					this.ChangeSeparatorAlpha(this.creatingWindow);
-
 					Widget group;
 					int order;
 					Rectangle hilite;
 					this.ZOrderDetect(initialPos, parent, out group, out order, out hilite);
 					this.SetHilitedZOrderRectangle(hilite);
-					this.SetHilitedParent(parent);  // met en évidence le futur parent survolé par la souris
 				}
 
+				this.creatingWindow.WindowLocation = this.creatingOrigin + pos;
 				this.creatingWindow.SuperLight = !this.isInside;
+				this.ChangeSeparatorAlpha(this.creatingWindow);
+
+				this.SetHilitedParent(parent);  // met en évidence le futur parent survolé par la souris
+
 				this.module.MainWindow.UpdateInfoViewer();
 			}
 		}
@@ -957,20 +927,18 @@ namespace Epsitec.Common.Designer.MyWidgets
 					this.creatingWindow = null;
 
 					Point initialPos = pos;
-					this.CreateObjectAdjust(ref pos, out this.creatingRectangle);
+					this.CreateObjectAdjust(ref pos, parent, out this.creatingRectangle);
 
-					if (this.IsLayoutAnchored)
+					if (this.IsLayoutAnchored(parent))
 					{
 						this.creatingObject = this.CreateObjectItem();
 						this.creatingObject.SetParent(parent);
 						this.creatingObject.TabNavigation = TabNavigationMode.Passive;
-
-						this.creatingObject.Anchor = AnchorStyles.BottomLeft;
-
+						this.CreateObjectAdaptFromParent(this.creatingObject, parent);
 						this.SetObjectPosition(this.creatingObject, pos);
 					}
 
-					if (this.IsLayoutDocking)
+					if (this.IsLayoutDocking(parent))
 					{
 						Widget group;
 						int order;
@@ -981,18 +949,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 						this.creatingObject.SetParent(group);
 						this.creatingObject.ZOrder = order;
 						this.creatingObject.TabNavigation = TabNavigationMode.Passive;
-
-						this.creatingObject.Margins = new Margins(5, 5, 5, 5);
-
-						if (this.IsHorizontalDocking)
-						{
-							this.creatingObject.Dock = DockStyle.Left;
-						}
-						else
-						{
-							this.creatingObject.Dock = DockStyle.Bottom;
-						}
-
+						this.CreateObjectAdaptFromParent(this.creatingObject, parent);
 					}
 				}
 				else  // relâché hors de la fenêtre ?
@@ -1065,17 +1022,46 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			if (this.context.Tool == "ObjectGroup")
 			{
-				item = new GroupBox();
-				item.Text = Misc.Italic("GroupBox");
-				item.PreferredSize = new Size(200, 100);
-				item.MinWidth = 50;
-				item.MinHeight = 50;
+				GroupBox group = new GroupBox();
+				//?group.ChildrenLayoutMode = Widgets.Layouts.LayoutMode.Anchored;
+				group.ChildrenLayoutMode = Widgets.Layouts.LayoutMode.Docked;
+				group.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
+				//?group.ContainerLayoutMode = ContainerLayoutMode.VerticalFlow;
+				group.Text = Misc.Italic("GroupBox");
+				group.PreferredSize = new Size(200, 100);
+				group.MinWidth = 50;
+				group.MinHeight = 50;
+
+				item = group;
 			}
 
 			return item;
 		}
 
-		protected void CreateObjectAdjust(ref Point pos, out Rectangle bounds)
+		protected void CreateObjectAdaptFromParent(Widget obj, Widget parent)
+		{
+			//	Adapte un objet d'après son parent.
+			if (this.IsLayoutAnchored(parent))
+			{
+				obj.Anchor = AnchorStyles.BottomLeft;
+			}
+
+			if (this.IsLayoutDocking(parent))
+			{
+				obj.Margins = new Margins(5, 5, 5, 5);
+
+				if (this.IsHorizontalDocking(parent))
+				{
+					obj.Dock = DockStyle.Left;
+				}
+				else
+				{
+					obj.Dock = DockStyle.Bottom;
+				}
+			}
+		}
+
+		protected void CreateObjectAdjust(ref Point pos, Widget parent, out Rectangle bounds)
 		{
 			//	Ajuste la position de l'objet à créer selon les contraintes.
 			pos.X -= System.Math.Floor(this.creatingObject.PreferredWidth/2);
@@ -1083,7 +1069,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			bounds = new Rectangle(pos, this.creatingObject.PreferredSize);
 
-			if (this.IsLayoutAnchored && this.isInside)
+			if (this.IsLayoutAnchored(parent) && this.isInside)
 			{
 				Rectangle adjust = this.constrainsList.Snap(bounds, this.GetObjectBaseLine(this.creatingObject));
 				Point corr = adjust.BottomLeft - bounds.BottomLeft;
@@ -1198,8 +1184,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.draggingOffset = this.draggingRectangle.BottomLeft - pos;
 			this.isInside = true;
 			Widget parent = this.DetectGroup(pos);
-			
-			if (this.IsLayoutAnchored)
+
+			if (this.IsLayoutAnchored(parent))
 			{
 				this.constrainsList.Starting(this.draggingRectangle, false);
 				this.SetHilitedParent(parent);  // met en évidence le futur parent survolé par la souris
@@ -1244,41 +1230,38 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Mouvement du drag pour déplacer les objets sélectionnés.
 			this.isInside = this.IsInside(pos);
 			Widget parent = this.DetectGroup(pos);
+			Point adjust = Point.Zero;
 
-			if (this.IsLayoutAnchored)
+			if (this.IsLayoutAnchored(parent))
 			{
 				this.draggingRectangle.Offset((this.draggingOffset+pos)-this.draggingRectangle.BottomLeft);
 				Rectangle rect = this.isInside ? this.draggingRectangle : Rectangle.Empty;
 				this.constrainsList.Activate(rect, this.draggingBaseLine, this.draggingArraySelected);
 				this.Invalidate();
 
-				Point adjust = this.draggingRectangle.BottomLeft;
+				adjust = this.draggingRectangle.BottomLeft;
 				if (this.isInside)
 				{
 					this.draggingRectangle = this.constrainsList.Snap(this.draggingRectangle, this.draggingBaseLine);
 				}
 				adjust = this.draggingRectangle.BottomLeft - adjust;
-
-				this.draggingWindow.WindowLocation = this.draggingOrigin + pos + adjust;
-				this.ChangeSeparatorAlpha(this.draggingWindow);
-
-				this.SetHilitedParent(parent);  // met en évidence le futur parent survolé par la souris
 			}
 
-			if (this.IsLayoutDocking)
+			if (this.IsLayoutDocking(parent))
 			{
-				this.draggingWindow.WindowLocation = this.draggingOrigin + pos;
-				this.ChangeSeparatorAlpha(this.draggingWindow);
-
 				Widget group;
 				int order;
 				Rectangle hilite;
 				this.ZOrderDetect(pos, parent, out group, out order, out hilite);
 				this.SetHilitedZOrderRectangle(hilite);
-				this.SetHilitedParent(parent);  // met en évidence le futur parent survolé par la souris
 			}
 
+			this.draggingWindow.WindowLocation = this.draggingOrigin + pos + adjust;
 			this.draggingWindow.SuperLight = !this.isInside;
+
+			this.ChangeSeparatorAlpha(this.draggingWindow);
+
+			this.SetHilitedParent(parent);  // met en évidence le futur parent survolé par la souris
 			this.module.MainWindow.UpdateInfoViewer();
 		}
 
@@ -1294,13 +1277,13 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.draggingWindow.Dispose();
 				this.draggingWindow = null;
 
-				if (this.IsLayoutAnchored)
+				if (this.IsLayoutAnchored(parent))
 				{
 					Rectangle initial = this.SelectBounds;
 					this.MoveSelection(this.draggingRectangle.BottomLeft - initial.BottomLeft, parent);
 				}
 
-				if (this.IsLayoutDocking)
+				if (this.IsLayoutDocking(parent))
 				{
 					Widget group;
 					int order;
@@ -1545,6 +1528,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 						obj.Parent.Children.Remove(obj);
 						parent.Children.Add(obj);
 					}
+
+					this.CreateObjectAdaptFromParent(obj, parent);
 				}
 
 				this.SetObjectBounds(obj, bounds);
@@ -1815,7 +1800,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			Rectangle bounds = this.GetObjectBounds(obj);
 			Attachment attachment = this.GetObjectAttachment(obj);
 
-			if (this.IsLayoutAnchored)
+			if (this.IsLayoutAnchored(obj.Parent))
 			{
 				if ((attachment & attachmentFlag) == 0)
 				{
@@ -1832,7 +1817,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				}
 			}
 
-			if (this.IsLayoutDocking)
+			if (this.IsLayoutDocking(obj.Parent))
 			{
 				attachment = attachmentFlag;
 			}
@@ -1909,7 +1894,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		public void SetObjectMargins(Widget obj, Margins margins)
 		{
 			//	Modifie les marges de l'objet, en mode LayoutMode.Docked.
-			if (this.IsLayoutDocking)
+			if (this.IsLayoutDocking(obj.Parent))
 			{
 				obj.Margins = margins;
 			}
@@ -2005,7 +1990,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				margins.Top = py;
 			}
 
-			if (this.IsLayoutAnchored)
+			if (this.IsLayoutAnchored(obj.Parent))
 			{
 				obj.Margins = margins;
 			}
@@ -2018,7 +2003,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		public bool IsObjectWidthChanging(Widget obj)
 		{
 			//	Indique si la largeur d'un objet peut changer.
-			if (this.IsLayoutDocking)
+			if (this.IsLayoutDocking(obj.Parent))
 			{
 				if (this.IsObjectAttachmentBottom(obj) || this.IsObjectAttachmentTop(obj))
 				{
@@ -2031,7 +2016,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		public bool IsObjectHeightChanging(Widget obj)
 		{
 			//	Indique si la hauteur d'un objet peut changer.
-			if (this.IsLayoutDocking)
+			if (this.IsLayoutDocking(obj.Parent))
 			{
 				if (this.IsObjectAttachmentLeft(obj) || this.IsObjectAttachmentRight(obj))
 				{
@@ -2070,7 +2055,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Retourne le mode d'attachement d'un objet.
 			Attachment attachment = Attachment.None;
 
-			if (this.IsLayoutAnchored)
+			if (this.IsLayoutAnchored(obj.Parent))
 			{
 				if ((obj.Anchor & AnchorStyles.Left  ) != 0)  attachment |= Attachment.Left;
 				if ((obj.Anchor & AnchorStyles.Right ) != 0)  attachment |= Attachment.Right;
@@ -2078,7 +2063,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				if ((obj.Anchor & AnchorStyles.Top   ) != 0)  attachment |= Attachment.Top;
 			}
 
-			if (this.IsLayoutDocking)
+			if (this.IsLayoutDocking(obj.Parent))
 			{
 				if (obj.Dock == DockStyle.Left  )  attachment |= Attachment.Left;
 				if (obj.Dock == DockStyle.Right )  attachment |= Attachment.Right;
@@ -2092,7 +2077,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void SetObjectAttachment(Widget obj, Attachment attachment)
 		{
 			//	Modifie le mode d'attachement d'un objet.
-			if (this.IsLayoutAnchored)
+			if (this.IsLayoutAnchored(obj.Parent))
 			{
 				AnchorStyles style = AnchorStyles.None;
 
@@ -2104,7 +2089,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				obj.Anchor = style;
 			}
 
-			if (this.IsLayoutDocking)
+			if (this.IsLayoutDocking(obj.Parent))
 			{
 				DockStyle style = DockStyle.None;
 
@@ -2206,7 +2191,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected bool AttachmentDetect(Point mouse, out Widget obj, out Attachment attachment)
 		{
 			//	Détecte dans quel attachement d'un objet est la souris.
-			if (!this.IsLayoutAnchored || !this.context.ShowAttachment || this.selectedObjects.Count != 1)
+			if (!this.context.ShowAttachment || this.selectedObjects.Count != 1)
 			{
 				obj = null;
 				attachment = Attachment.None;
@@ -2217,14 +2202,17 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			foreach (Widget o in this.selectedObjects)
 			{
-				foreach (Attachment s in attachments)
+				if (this.IsLayoutAnchored(o.Parent))
 				{
-					Rectangle bounds = this.GetAttachmentBounds(o, s);
-					if (bounds.Contains(mouse))
+					foreach (Attachment s in attachments)
 					{
-						obj = o;
-						attachment = s;
-						return true;
+						Rectangle bounds = this.GetAttachmentBounds(o, s);
+						if (bounds.Contains(mouse))
+						{
+							obj = o;
+							attachment = s;
+							return true;
+						}
 					}
 				}
 			}
@@ -2313,7 +2301,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				Rectangle bounds = this.GetObjectBounds(parent);
 				double t = this.context.ZOrderThickness;
 
-				if (this.IsHorizontalDocking)
+				if (this.IsHorizontalDocking(parent))
 				{
 					hilite = new Rectangle(bounds.Left+t, bounds.Bottom+t, 0, bounds.Height-t*2);
 				}
@@ -2343,7 +2331,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				Rectangle bounds = this.GetObjectBounds(obj);
 				bounds.Inflate(this.GetObjectMargins(obj));
 
-				if (this.IsHorizontalDocking)
+				if (this.IsHorizontalDocking(parent))
 				{
 					if (this.IsObjectAttachmentLeft(obj))
 					{
@@ -2478,6 +2466,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 				obj.SetParent(parent);
 				obj.ZOrder = newOrder;
+				this.CreateObjectAdaptFromParent(obj, parent);
 			}
 		}
 		#endregion
@@ -2660,7 +2649,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 
 			//	Dessine les attachements des objets sélectionnés.
-			if (this.IsLayoutAnchored && this.context.ShowAttachment && this.selectedObjects.Count == 1 && !this.isDragging && !this.handlesList.IsDragging)
+			if (this.context.ShowAttachment && this.selectedObjects.Count == 1 && !this.isDragging && !this.handlesList.IsDragging)
 			{
 				foreach (Widget obj in this.selectedObjects)
 				{
@@ -2780,7 +2769,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			graphics.RenderSolid(PanelsContext.ColorHiliteOutline);
 			graphics.LineWidth = 1;
 
-			if (this.IsLayoutDocking)
+			if (this.IsLayoutDocking(obj.Parent))
 			{
 				Rectangle ext = bounds;
 				ext.Inflate(this.GetObjectMargins(obj));
@@ -2849,7 +2838,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void DrawAttachment(Graphics graphics, Widget obj, Color color)
 		{
 			//	Dessine tous les attachements d'un objet.
-			if (this.IsLayoutAnchored)
+			if (this.IsLayoutAnchored(obj.Parent))
 			{
 				Rectangle bounds = this.GetObjectBounds(obj.Parent);
 				Rectangle rect = this.GetObjectBounds(obj);
@@ -2958,7 +2947,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 				}
 			}
 		}
+		#endregion
 
+
+		#region Misc
 		public Rectangle RealBounds
 		{
 			//	Retourne le rectangle englobant de tous les objets contenus dans le panneau.
@@ -2970,6 +2962,38 @@ namespace Epsitec.Common.Designer.MyWidgets
 				double h = System.Math.Max(s1.Height, s2.Height);
 				return new Rectangle(0, 0, w, h);
 			}
+		}
+
+		protected bool IsLayoutAnchored(Widget parent)
+		{
+			//	Indique si le panneau parent est en mode LayoutMode.Anchored.
+			if (parent != null && parent is AbstractGroup)
+			{
+				AbstractGroup group = parent as AbstractGroup;
+				return (group.ChildrenLayoutMode == Widgets.Layouts.LayoutMode.Anchored);
+			}
+			return false;
+		}
+
+		protected bool IsLayoutDocking(Widget parent)
+		{
+			//	Indique si le panneau parent est en mode LayoutMode.Docked.
+			if (parent != null && parent is AbstractGroup)
+			{
+				AbstractGroup group = parent as AbstractGroup;
+				return (group.ChildrenLayoutMode == Widgets.Layouts.LayoutMode.Docked);
+			}
+			return false;
+		}
+
+		protected bool IsHorizontalDocking(Widget parent)
+		{
+			//	Indique si le panneau parent est en mode de docking horizontal.
+			if (parent != null)
+			{
+				return (parent.ContainerLayoutMode == ContainerLayoutMode.HorizontalFlow);
+			}
+			return false;
 		}
 
 		protected bool IsInside(Point pos)
