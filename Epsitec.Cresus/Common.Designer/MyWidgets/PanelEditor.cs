@@ -317,10 +317,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				string sel = "-";
 				Rectangle rect = Rectangle.Empty;
-				
-				if (this.isDragging)
+
+				if (this.creatingObject != null)
 				{
-					rect = this.draggingRectangle;
+					rect = this.isInside ? this.creatingRectangle : Rectangle.Empty;
+				}
+				else if (this.isDragging)
+				{
+					rect = this.isInside ? this.draggingRectangle : Rectangle.Empty;
 				}
 				else if (this.isHandling)
 				{
@@ -867,9 +871,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.DeselectAll();
 
 			this.creatingObject = this.CreateObjectItem();
+			this.isInside = true;
 
-			Rectangle bounds;
-			this.CreateObjectAdjust(ref pos, out bounds);
+			this.CreateObjectAdjust(ref pos, out this.creatingRectangle);
 
 			this.creatingOrigin = this.MapClientToScreen(Point.Zero);
 			this.creatingWindow = new DragWindow();
@@ -882,10 +886,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 			if (this.IsLayoutAnchored)
 			{
 				this.constrainsList.Starting(Rectangle.Empty, false);
-				this.constrainsList.Activate(bounds, this.GetObjectBaseLine(this.creatingObject), null);
+				this.constrainsList.Activate(this.creatingRectangle, this.GetObjectBaseLine(this.creatingObject), null);
 
-				this.SetHilitedParent(this.DetectGroup(bounds));  // met en évidence le futur parent survolé par la souris
+				this.SetHilitedParent(this.DetectGroup(this.creatingRectangle));  // met en évidence le futur parent survolé par la souris
 			}
+
+			this.module.MainWindow.UpdateInfoViewer();
 		}
 
 		protected void CreateObjectMove(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
@@ -895,17 +901,17 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			if (this.creatingObject != null)
 			{
+				this.isInside = this.IsInside(pos);
 				Point initialPos = pos;
-				Rectangle bounds;
-				this.CreateObjectAdjust(ref pos, out bounds);
+				this.CreateObjectAdjust(ref pos, out this.creatingRectangle);
 
 				if (this.IsLayoutAnchored)
 				{
-					Rectangle rect = this.IsInside(initialPos) ? bounds : Rectangle.Empty;
+					Rectangle rect = this.isInside ? this.creatingRectangle : Rectangle.Empty;
 					this.constrainsList.Activate(rect, this.GetObjectBaseLine(this.creatingObject), null);
 					this.creatingWindow.WindowLocation = this.creatingOrigin + pos;
 
-					Widget parent = this.IsInside(initialPos) ? this.DetectGroup(bounds) : null;
+					Widget parent = this.isInside ? this.DetectGroup(this.creatingRectangle) : null;
 					this.SetHilitedParent(parent);  // met en évidence le futur parent survolé par la souris
 				}
 
@@ -921,7 +927,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 					this.SetHilitedParent(parent);  // met en évidence le futur parent survolé par la souris
 				}
 
-				this.creatingWindow.SuperLight = !this.IsInside(initialPos);
+				this.creatingWindow.SuperLight = !this.isInside;
+				this.module.MainWindow.UpdateInfoViewer();
 			}
 		}
 
@@ -930,19 +937,20 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Dessin d'un objet, souris relâchée.
 			if (this.creatingObject != null)
 			{
-				if (this.IsInside(pos))
+				this.isInside = this.IsInside(pos);
+
+				if (this.isInside)
 				{
 					this.creatingWindow.Hide();
 					this.creatingWindow.Dispose();
 					this.creatingWindow = null;
 
 					Point initialPos = pos;
-					Rectangle bounds;
-					this.CreateObjectAdjust(ref pos, out bounds);
+					this.CreateObjectAdjust(ref pos, out this.creatingRectangle);
 
 					if (this.IsLayoutAnchored)
 					{
-						Widget parent = this.DetectGroup(bounds);
+						Widget parent = this.DetectGroup(this.creatingRectangle);
 
 						this.creatingObject = this.CreateObjectItem();
 						this.creatingObject.SetParent(parent);
@@ -992,6 +1000,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 				this.lastCreatedObject = this.creatingObject;
 				this.creatingObject = null;
+				this.module.MainWindow.UpdateInfoViewer();
 				this.OnUpdateCommands();
 
 				this.ChangeTextRessource(this.lastCreatedObject);
@@ -1060,14 +1069,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void CreateObjectAdjust(ref Point pos, out Rectangle bounds)
 		{
 			//	Ajuste la position de l'objet à créer selon les contraintes.
-			Point initialPos = pos;
-
 			pos.X -= System.Math.Floor(this.creatingObject.PreferredWidth/2);
 			pos.Y -= System.Math.Floor(this.creatingObject.PreferredHeight/2);
 
 			bounds = new Rectangle(pos, this.creatingObject.PreferredSize);
 
-			if (this.IsLayoutAnchored && this.IsInside(initialPos))
+			if (this.IsLayoutAnchored && this.isInside)
 			{
 				Rectangle adjust = this.constrainsList.Snap(bounds, this.GetObjectBaseLine(this.creatingObject));
 				Point corr = adjust.BottomLeft - bounds.BottomLeft;
@@ -1180,6 +1187,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.draggingRectangle = this.SelectBounds;
 			this.draggingBaseLine = this.SelectBaseLine;
 			this.draggingOffset = this.draggingRectangle.BottomLeft - pos;
+			this.isInside = true;
 			
 			if (this.IsLayoutAnchored)
 			{
@@ -1217,15 +1225,17 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void DraggingMove(Point pos)
 		{
 			//	Mouvement du drag pour déplacer les objets sélectionnés.
+			this.isInside = this.IsInside(pos);
+
 			if (this.IsLayoutAnchored)
 			{
 				this.draggingRectangle.Offset((this.draggingOffset+pos)-this.draggingRectangle.BottomLeft);
-				Rectangle rect = this.IsInside(pos) ? this.draggingRectangle : Rectangle.Empty;
+				Rectangle rect = this.isInside ? this.draggingRectangle : Rectangle.Empty;
 				this.constrainsList.Activate(rect, this.draggingBaseLine, this.draggingArraySelected);
 				this.Invalidate();
 
 				Point adjust = this.draggingRectangle.BottomLeft;
-				if (this.IsInside(pos))
+				if (this.isInside)
 				{
 					this.draggingRectangle = this.constrainsList.Snap(this.draggingRectangle, this.draggingBaseLine);
 				}
@@ -1233,7 +1243,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 				this.draggingWindow.WindowLocation = this.draggingOrigin + pos + adjust;
 
-				Widget parent = this.IsInside(pos) ? this.DetectGroup(this.draggingRectangle) : null;
+				Widget parent = this.isInside ? this.DetectGroup(this.draggingRectangle) : null;
 				this.SetHilitedParent(parent);  // met en évidence le futur parent survolé par la souris
 			}
 
@@ -1249,14 +1259,16 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.SetHilitedParent(parent);  // met en évidence le futur parent survolé par la souris
 			}
 
-			this.draggingWindow.SuperLight = !this.IsInside(pos);
+			this.draggingWindow.SuperLight = !this.isInside;
 			this.module.MainWindow.UpdateInfoViewer();
 		}
 
 		protected void DraggingEnd(Point pos)
 		{
 			//	Fin du drag pour déplacer les objets sélectionnés.
-			if (this.IsInside(pos))
+			this.isInside = this.IsInside(pos);
+
+			if (this.isInside)
 			{
 				this.draggingWindow.Hide();
 				this.draggingWindow.Dispose();
@@ -2257,7 +2269,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			//	Détecte le ZOrder à utiliser pour une position donnée, ainsi que le rectangle
 			//	à utiliser pour la mise ne évidence.
-			if (!this.IsInside(mouse))
+			if (!this.isInside)
 			{
 				parent = null;
 				order = -1;
@@ -3111,6 +3123,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected DragWindow				creatingWindow;
 		protected Point						creatingOrigin;
+		protected Rectangle					creatingRectangle;
 		protected Widget					creatingObject;
 		protected Widget					lastCreatedObject;
 		protected List<Widget>				selectedObjects = new List<Widget>();
@@ -3138,6 +3151,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected bool						isSizeMarkHorizontal;
 		protected bool						isSizeMarkVertical;
 		protected Point						sizeMarkOffset;
+		protected bool						isInside;
 
 		protected Image						mouseCursorArrow = null;
 		protected Image						mouseCursorArrowPlus = null;
