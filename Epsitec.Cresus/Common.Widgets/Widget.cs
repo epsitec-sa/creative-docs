@@ -1721,12 +1721,22 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public Widget			FindChild(Drawing.Point point)
+		public Widget FindChild(Drawing.Point point)
 		{
-			return this.FindChild (point, ChildFindMode.SkipHidden);
+			return this.FindChild (point, null, ChildFindMode.SkipHidden);
 		}
-		
-		public virtual Widget	FindChild(Drawing.Point point, ChildFindMode mode)
+
+		public Widget FindChild(Drawing.Point point, IEnumerable<Widget> ignore)
+		{
+			return this.FindChild (point, ignore, ChildFindMode.SkipHidden);
+		}
+
+		public Widget FindChild(Drawing.Point point, ChildFindMode mode)
+		{
+			return this.FindChild (point, null, ChildFindMode.SkipHidden);
+		}
+
+		public virtual Widget FindChild(Drawing.Point point, IEnumerable<Widget> ignore, ChildFindMode mode)
 		{
 			if (this.HasChildren == false)
 			{
@@ -1765,6 +1775,11 @@ namespace Epsitec.Common.Widgets
 							continue;
 						}
 					}
+				}
+
+				if (Widget.IsInIgnoreList (widget, ignore))
+				{
+					continue;
 				}
 				
 				if (widget.HitTest (point))
@@ -1809,8 +1824,13 @@ namespace Epsitec.Common.Widgets
 			
 			return null;
 		}
+
+		public Widget FindChild(Drawing.Rectangle rect, ChildFindMode mode)
+		{
+			return this.FindChild (rect, null, mode);
+		}
 		
-		public virtual Widget	FindChild(Drawing.Rectangle rect, ChildFindMode mode)
+		public virtual Widget FindChild(Drawing.Rectangle rect, IEnumerable<Widget> ignore, ChildFindMode mode)
 		{
 			if (this.HasChildren == false)
 			{
@@ -1849,6 +1869,11 @@ namespace Epsitec.Common.Widgets
 							continue;
 						}
 					}
+				}
+
+				if (Widget.IsInIgnoreList (widget, ignore))
+				{
+					continue;
 				}
 				
 				if (widget.HitTest (rect.BottomLeft) && widget.HitTest (rect.TopRight))
@@ -2108,6 +2133,23 @@ namespace Epsitec.Common.Widgets
 			return null;
 		}
 		
+		private static bool IsInIgnoreList(Widget widget, IEnumerable<Widget> ignore)
+		{
+			if (ignore == null)
+			{
+				return false;
+			}
+			
+			foreach (Widget item in ignore)
+			{
+				if (widget == item)
+				{
+					return true;
+				}
+			}
+			
+			return false;
+		}
 		
 		protected virtual void FindAllChildren(System.Collections.ArrayList list)
 		{
