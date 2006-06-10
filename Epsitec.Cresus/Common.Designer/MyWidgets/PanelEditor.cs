@@ -843,10 +843,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Dessin d'un objet, souris pressée.
 			this.DeselectAll();
 
-			this.creatingObject = this.CreateObjectItem();
 			this.isInside = true;
 			Widget parent = this.DetectGroup(pos);
 
+			this.creatingObject = this.CreateObjectItem();
 			this.CreateObjectAdjust(ref pos, parent, out this.creatingRectangle);
 
 			this.creatingOrigin = this.MapClientToScreen(Point.Zero);
@@ -939,7 +939,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 						this.creatingObject = this.CreateObjectItem();
 						this.creatingObject.SetParent(parent);
 						this.creatingObject.TabNavigation = TabNavigationMode.Passive;
-						this.CreateObjectAdaptFromParent(this.creatingObject, parent);
+						this.ObjectAdaptFromParent(this.creatingObject, parent);
 						this.SetObjectPosition(this.creatingObject, pos);
 					}
 
@@ -954,7 +954,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 						this.creatingObject.SetParent(group);
 						this.creatingObject.ZOrder = order;
 						this.creatingObject.TabNavigation = TabNavigationMode.Passive;
-						this.CreateObjectAdaptFromParent(this.creatingObject, parent);
+						this.ObjectAdaptFromParent(this.creatingObject, parent);
 					}
 				}
 				else  // relâché hors de la fenêtre ?
@@ -1043,7 +1043,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			return item;
 		}
 
-		protected void CreateObjectAdaptFromParent(Widget obj, Widget parent)
+		protected void ObjectAdaptFromParent(Widget obj, Widget parent)
 		{
 			//	Adapte un objet d'après son parent.
 			if (this.IsLayoutAnchored(parent))
@@ -1066,6 +1066,21 @@ namespace Epsitec.Common.Designer.MyWidgets
 				}
 
 				obj.Anchor = AnchorStyles.None;
+			}
+
+			if (obj is StaticText)
+			{
+				obj.PreferredHeight = obj.MinHeight;
+			}
+
+			if (obj is Button)
+			{
+				obj.PreferredHeight = obj.MinHeight;
+			}
+
+			if (obj is TextField)
+			{
+				obj.PreferredHeight = obj.MinHeight;
 			}
 		}
 
@@ -1340,6 +1355,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected Widget DetectGroup(Point pos)
 		{
 			//	Détecte le groupe visé par la souris.
+			//	TODO: exclure tous les objets de this.selectedObjects !
 			if (this.IsInside(pos))
 			{
 				Widget container = this.panel.FindChild(pos, ChildFindMode.Deep | ChildFindMode.SkipHidden | ChildFindMode.SkipNonContainer | ChildFindMode.SkipEmbedded);
@@ -1547,9 +1563,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 						parent.Children.Add(obj);
 					}
 
-					this.CreateObjectAdaptFromParent(obj, parent);
+					this.ObjectAdaptFromParent(obj, parent);
 				}
 
+				bounds.Size = this.GetObjectSize(obj);
 				this.SetObjectBounds(obj, bounds);
 			}
 
@@ -2484,7 +2501,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 				obj.SetParent(parent);
 				obj.ZOrder = newOrder;
-				this.CreateObjectAdaptFromParent(obj, parent);
+				this.ObjectAdaptFromParent(obj, parent);
 			}
 		}
 		#endregion
