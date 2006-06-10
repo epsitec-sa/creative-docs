@@ -1733,7 +1733,7 @@ namespace Epsitec.Common.Widgets
 
 		public Widget FindChild(Drawing.Point point, ChildFindMode mode)
 		{
-			return this.FindChild (point, null, ChildFindMode.SkipHidden);
+			return this.FindChild (point, null, mode);
 		}
 
 		public virtual Widget FindChild(Drawing.Point point, IEnumerable<Widget> ignore, ChildFindMode mode)
@@ -1776,12 +1776,12 @@ namespace Epsitec.Common.Widgets
 						}
 					}
 				}
-
+				
 				if (Widget.IsInIgnoreList (widget, ignore))
 				{
 					continue;
 				}
-				
+
 				if (widget.HitTest (point))
 				{
 					if ((mode & ChildFindMode.SkipTransparent) != 0)
@@ -1794,7 +1794,7 @@ namespace Epsitec.Common.Widgets
 						//	Si on fait une recherche en profondeur, on regarde si le point correspond à
 						//	un descendant du widget trouvé...
 						
-						Widget deep = widget.FindChild (widget.MapParentToClient (point), mode);
+						Widget deep = widget.FindChild (widget.MapParentToClient (point), ignore, mode);
 						
 						//	Si oui, pas de test supplémentaire: on s'arrête et on retourne le widget
 						//	terminal trouvé lors de la descente récursive :
@@ -1875,7 +1875,7 @@ namespace Epsitec.Common.Widgets
 				{
 					continue;
 				}
-				
+
 				if (widget.HitTest (rect.BottomLeft) && widget.HitTest (rect.TopRight))
 				{
 					if ((mode & ChildFindMode.SkipTransparent) != 0)
@@ -2133,7 +2133,7 @@ namespace Epsitec.Common.Widgets
 			return null;
 		}
 		
-		private static bool IsInIgnoreList(Widget widget, IEnumerable<Widget> ignore)
+		protected static bool IsInIgnoreList(Widget widget, IEnumerable<Widget> ignore)
 		{
 			if (ignore == null)
 			{
