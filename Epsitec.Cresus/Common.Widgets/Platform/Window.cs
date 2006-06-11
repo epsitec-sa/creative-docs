@@ -166,6 +166,19 @@ namespace Epsitec.Common.Widgets.Platform
 		internal void AnimateShow(Animation animation, Drawing.Rectangle bounds)
 		{
 			Window.DummyHandleEater (this.Handle);
+
+			if (this.is_layered)
+			{
+				switch (animation)
+				{
+					case Animation.RollDown:
+					case Animation.RollUp:
+					case Animation.RollLeft:
+					case Animation.RollRight:
+						animation = Animation.FadeIn;
+						break;
+				}
+			}
 			
 			Drawing.Rectangle b1;
 			Drawing.Rectangle b2;

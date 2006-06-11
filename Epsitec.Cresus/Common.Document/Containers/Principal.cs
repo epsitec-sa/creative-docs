@@ -126,6 +126,7 @@ namespace Epsitec.Common.Document.Containers
 			selectorStretchType.ButtonStyle = ButtonStyle.ToolItem;
 			selectorStretchType.PreferredWidth = 14;
 			selectorStretchType.Margins = new Margins(-1, 0, 0, 0);
+			selectorStretchType.ExecuteCommandOnPressed = true;
 			ToolTip.Default.SetToolTip(selectorStretchType, Res.Strings.Container.Principal.Button.StretchType);
 			this.selectorToolBar.Items.Add(selectorStretchType);
 

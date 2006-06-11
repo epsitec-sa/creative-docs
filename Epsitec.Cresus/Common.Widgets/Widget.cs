@@ -29,6 +29,8 @@ namespace Epsitec.Common.Widgets
 		Engageable			= 0x00000040,		//	=> peut être enfoncé par une pression
 		Frozen				= 0x00000080,		//	=> n'accepte aucun événement
 		
+		ExecCmdOnPressed	= 0x00001000,		//	=> exécute la commande quand on presse le widget
+		
 		AutoMnemonic		= 0x00100000,
 		
 		PossibleContainer	= 0x01000000,		//	widget peut être la cible d'un drag & drop en mode édition
@@ -413,6 +415,25 @@ namespace Epsitec.Common.Widgets
 			get
 			{
 				return (this.internal_state & InternalState.Disposed) != 0;
+			}
+		}
+		
+		public bool									ExecuteCommandOnPressed
+		{
+			get
+			{
+				return (this.InternalState & InternalState.ExecCmdOnPressed) != 0;
+			}
+			set
+			{
+				if (value)
+				{
+					this.InternalState |= InternalState.ExecCmdOnPressed;
+				}
+				else
+				{
+					this.InternalState &= ~ InternalState.ExecCmdOnPressed;
+				}
 			}
 		}
 		
@@ -3693,14 +3714,6 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void OnPressed(MessageEventArgs e)
 		{
-	//		protected virtual void OnLayoutUpdate(Layouts.UpdateEventArgs e)
-	//		{
-	//			if (this.LayoutUpdate != null)
-	//			{
-	//				this.LayoutUpdate (this, e);
-	//			}
-	//		}
-			
 			if (this.Pressed != null)
 			{
 				if (e != null)
@@ -3709,6 +3722,11 @@ namespace Epsitec.Common.Widgets
 				}
 				
 				this.Pressed (this, e);
+			}
+			
+			if ((this.InternalState & InternalState.ExecCmdOnPressed) != 0)
+			{
+				this.ExecuteCommand ();
 			}
 		}
 		
@@ -3749,8 +3767,11 @@ namespace Epsitec.Common.Widgets
 				
 				this.Clicked (this, e);
 			}
-			
-			this.ExecuteCommand ();
+
+			if ((this.InternalState & InternalState.ExecCmdOnPressed) == 0)
+			{
+				this.ExecuteCommand ();
+			}
 		}
 		
 		protected virtual void OnDoubleClicked(MessageEventArgs e)
