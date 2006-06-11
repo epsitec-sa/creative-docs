@@ -617,11 +617,22 @@ namespace Epsitec.Common.Widgets.Platform
 		{
 			get
 			{
-				double ox = this.MapFromWinFormsX (this.Left);
-				double oy = this.MapFromWinFormsY (this.Bottom);
-				double dx = this.MapFromWinFormsWidth (this.Width);
-				double dy = this.MapFromWinFormsHeight (this.Height);
+				System.Drawing.Rectangle rect;
 				
+				if (this.form_bounds_set)
+				{
+					rect = this.form_bounds;
+				}
+				else
+				{
+					rect = base.Bounds;
+				}
+				
+				double ox = this.MapFromWinFormsX (rect.Left);
+				double oy = this.MapFromWinFormsY (rect.Bottom);
+				double dx = this.MapFromWinFormsWidth (rect.Width);
+				double dy = this.MapFromWinFormsHeight (rect.Height);
+
 				return new Drawing.Rectangle (ox, oy, dx, dy);
 			}
 			set
@@ -638,11 +649,44 @@ namespace Epsitec.Common.Widgets.Platform
 					this.form_bounds_set = true;
 					this.on_resize_event = true;
 					
-					Win32Api.MoveWindow (this.Handle, ox, oy, dx, dy, true);
+					if (this.is_layered)
+					{
+						//	Be very careful here: in order to avoid any jitter while
+						//	moving & sizing the layered window, we must resize the
+						//	suface pixmap first, update the layered window surface
+						//	and only then move the window itself :
+						
+						this.ReallocatePixmapLowLevel ();
+						this.UpdateLayeredWindow ();
+						
+						Win32Api.SetWindowPos (this.Handle, System.IntPtr.Zero, ox, oy, dx, dy, Win32Const.SWP_NOACTIVATE | Win32Const.SWP_NOCOPYBITS | Win32Const.SWP_NOOWNERZORDER | Win32Const.SWP_NOZORDER | Win32Const.SWP_NOREDRAW);
+					}
+					else
+					{
+						Win32Api.SetWindowPos (this.Handle, System.IntPtr.Zero, ox, oy, dx, dy, Win32Const.SWP_NOACTIVATE | Win32Const.SWP_NOCOPYBITS | Win32Const.SWP_NOOWNERZORDER | Win32Const.SWP_NOZORDER);
+					}
 					
-//					this.Bounds        = this.form_bounds;
 					this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
 				}
+			}
+		}
+		
+		public new System.Drawing.Size ClientSize
+		{
+			get
+			{
+				System.Drawing.Size clientSize = base.ClientSize;
+				
+				if (this.form_bounds_set)
+				{
+					int deltaWidth  = this.form_bounds.Width - this.Width;
+					int deltaHeight = this.form_bounds.Height - this.Height;
+					
+					clientSize.Width  += deltaWidth;
+					clientSize.Height += deltaHeight;
+				}
+
+				return clientSize;
 			}
 		}
 		
@@ -705,8 +749,12 @@ namespace Epsitec.Common.Widgets.Platform
 			set
 			{
 				Drawing.Rectangle bounds = this.WindowBounds;
-				bounds.Offset (value.X - bounds.X, value.Y - bounds.Y);
-				this.WindowBounds = bounds;
+				
+				if (bounds.Location != value)
+				{
+					bounds.Offset (value.X - bounds.X, value.Y - bounds.Y);
+					this.WindowBounds = bounds;
+				}
 			}
 		}
 		
@@ -718,7 +766,13 @@ namespace Epsitec.Common.Widgets.Platform
 			}
 			set
 			{
-				this.WindowBounds = new Drawing.Rectangle (this.WindowLocation, value);
+				Drawing.Rectangle bounds = this.WindowBounds;
+				
+				if (bounds.Size != value)
+				{
+					bounds.Size = value;
+					this.WindowBounds = bounds;
+				}
 			}
 		}
 		
@@ -1008,24 +1062,27 @@ namespace Epsitec.Common.Widgets.Platform
 
 		protected override void OnPaint(System.Windows.Forms.PaintEventArgs e)
 		{
+//			System.Diagnostics.Debug.WriteLine ("OnPaint");
 			base.OnPaint (e);
 			this.DispatchPaint (e.Graphics, e.ClipRectangle);
 		}
 
 		protected override void OnPaintBackground(System.Windows.Forms.PaintEventArgs e)
 		{
-			System.Diagnostics.Debug.WriteLine ("OnPaintBackground called");
+//			System.Diagnostics.Debug.WriteLine ("OnPaintBackground called");
 			base.OnPaintBackground (e);
 			this.DispatchPaint (e.Graphics, e.ClipRectangle);
 		}
 
 		protected override void OnResize(System.EventArgs e)
 		{
+//			System.Diagnostics.Debug.WriteLine ("OnResize");
 			base.OnResize (e);
 		}
 
 		protected override void OnSizeChanged(System.EventArgs e)
 		{
+//			System.Diagnostics.Debug.WriteLine ("OnSizeChanged");
 			this.disable_sync_paint++;
 			
 			try
@@ -1138,23 +1195,37 @@ namespace Epsitec.Common.Widgets.Platform
 			{
 				return;
 			}
+
+			if (this.ReallocatePixmapLowLevel ())
+			{
+				this.UpdateLayeredWindow ();
+			}
+		}
+			
+		private bool ReallocatePixmapLowLevel()
+		{
+			bool changed = false;
 			
 			int width  = this.ClientSize.Width;
 			int height = this.ClientSize.Height;
 			
 			if (this.graphics.SetPixmapSize (width, height))
 			{
+//				System.Diagnostics.Debug.WriteLine ("ReallocatePixmapLowLevel" + (this.is_frozen ? " (frozen)" : "") + " Size: " + width.ToString () + "," + height.ToString());
+				
 				this.graphics.Pixmap.Clear ();
 				
 				this.widget_window.Root.NotifyWindowSizeChanged (width, height);
 				this.dirty_rectangle = new Drawing.Rectangle (0, 0, width, height);
 				this.dirty_region    = new Drawing.DirtyRegion ();
 				this.dirty_region.Add (this.dirty_rectangle);
-				
-				this.UpdateLayeredWindow ();
+
+				changed = true;
 			}
 			
 			this.is_pixmap_ok = true;
+			
+			return changed;
 		}
 
 		
@@ -1222,12 +1293,10 @@ namespace Epsitec.Common.Widgets.Platform
 			
 			if (this.is_layered)
 			{
-				this.UpdateLayeredWindow ();
+				this.is_layered_dirty = true;
 			}
-			else
-			{
-				this.Invalidate (new System.Drawing.Rectangle (x, y, width, height));
-			}
+			
+			this.Invalidate (new System.Drawing.Rectangle (x, y, width, height));
 		}
 		
 		internal void SynchronousRepaint()
@@ -1296,6 +1365,7 @@ namespace Epsitec.Common.Widgets.Platform
 		
 		protected override void WndProc(ref System.Windows.Forms.Message msg)
 		{
+//			System.Diagnostics.Debug.WriteLine (msg.ToString ());
 			Application.ExecuteAsyncCallbacks ();
 			
 			if (Window.is_sync_requested)
@@ -1858,6 +1928,11 @@ namespace Epsitec.Common.Widgets.Platform
 				return false;
 			}
 
+			return this.RefreshGraphicsLowLevel ();
+		}
+
+		private bool RefreshGraphicsLowLevel()
+		{
 			if (this.dirty_rectangle.IsValid)
 			{
 				Drawing.Rectangle repaint = this.dirty_rectangle;
@@ -1882,13 +1957,37 @@ namespace Epsitec.Common.Widgets.Platform
 			
 			if (this.is_layered)
 			{
-				System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap (this.Width, this.Height, System.Drawing.Imaging.PixelFormat.Format32bppPArgb);
+				if (this.is_layered_dirty)
+				{
+					this.is_layered_dirty = false;
+				}
+
+				//	UpdateLayeredWindow can be called as the result of setting a
+				//	new WindowBounds rectangle. If this is the case, the Bounds
+				//	property, inherited from WinForms, won't have been updated
+				//	yet, so use the cached value :
+				
+				System.Drawing.Rectangle rect;
+				
+				if (this.form_bounds_set)
+				{
+					rect = this.form_bounds;
+				}
+				else
+				{
+					rect = this.Bounds;
+				}
+				
+				//	Copy the bits from the source buffer to the destination buffer
+				//	which must be premultiplied AlphaRGB.
+				
+				System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap (rect.Width, rect.Height, System.Drawing.Imaging.PixelFormat.Format32bppPArgb);
 				
 				using (bitmap)
 				{
 					Drawing.Pixmap.RawData src = new Drawing.Pixmap.RawData (this.graphics.Pixmap);
 					Drawing.Pixmap.RawData dst = new Drawing.Pixmap.RawData (bitmap, System.Drawing.Imaging.PixelFormat.Format32bppPArgb);
-					
+
 					using (src)
 					{
 						using (dst)
@@ -1896,8 +1995,10 @@ namespace Epsitec.Common.Widgets.Platform
 							src.CopyTo (dst);
 						}
 					}
+
+//					System.Diagnostics.Debug.WriteLine ("UpdateLayeredWindow" + (this.is_frozen ? " (frozen)" : "") + " Bounds: " + rect.ToString ());
 					
-					paint_needed = ! Win32Api.UpdateLayeredWindow (this.Handle, bitmap, this.Bounds, this.alpha);
+					paint_needed = !Win32Api.UpdateLayeredWindow (this.Handle, bitmap, rect, this.alpha);
 				}
 			}
 			
@@ -2020,6 +2121,7 @@ namespace Epsitec.Common.Widgets.Platform
 		private bool							on_resize_event = false;
 		
 		private bool							is_layered;
+		private bool							is_layered_dirty;
 		private bool							is_frozen;
 		private bool							is_animating_active_window;
 		private bool							is_no_activate;

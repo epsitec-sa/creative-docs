@@ -931,7 +931,8 @@ namespace Epsitec.Common.Widgets
 			}
 			set
 			{
-				if (this.window != null)
+				if ((this.window != null) &&
+					(this.ClientSize != value))
 				{
 					Drawing.Size window_size = this.window.WindowSize;
 					Drawing.Size client_size = this.ClientSize;

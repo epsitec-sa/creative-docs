@@ -40,7 +40,10 @@ namespace Epsitec.Common.Widgets.Platform
 		[DllImport ("User32.dll")]  internal extern static int GetKeyNameText(int param, [System.Runtime.InteropServices.Out] System.Text.StringBuilder buffer, int size);
 		[DllImport ("User32.dll")]  internal extern static int MapVirtualKeyEx(int code, int map_type, System.IntPtr layout);
 		[DllImport ("User32.dll")]  internal extern static System.IntPtr GetKeyboardLayout(int thread_id);
-		
+		[DllImport ("User32.dll")]	internal extern static bool SetWindowPos(System.IntPtr hWnd, System.IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, uint uFlags);
+
+
+
 		[DllImport ("GDI32.dll")]	internal extern static System.IntPtr CreateCompatibleDC(System.IntPtr dc);
 		[DllImport ("GDI32.dll")]	internal extern static System.IntPtr SelectObject(System.IntPtr dc, System.IntPtr handle_object);
 		[DllImport ("GDI32.dll")]	internal extern static System.IntPtr DeleteObject(System.IntPtr handle_object);
