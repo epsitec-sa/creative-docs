@@ -1355,10 +1355,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected Widget DetectGroup(Point pos)
 		{
 			//	Détecte le groupe visé par la souris.
-			//	TODO: exclure tous les objets de this.selectedObjects !
 			if (this.IsInside(pos))
 			{
-				Widget container = this.panel.FindChild(pos, ChildFindMode.Deep | ChildFindMode.SkipHidden | ChildFindMode.SkipNonContainer | ChildFindMode.SkipEmbedded);
+				Widget container = this.panel.FindChild(pos, this.selectedObjects, ChildFindMode.Deep | ChildFindMode.SkipHidden | ChildFindMode.SkipNonContainer | ChildFindMode.SkipEmbedded);
 				return container ?? this.panel;
 			}
 			else
@@ -2458,13 +2457,16 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				Widget obj = parent.Children[i] as Widget;
 
-				Rectangle bounds = this.GetObjectBounds(obj);
-				double distance = Point.Distance(bounds.Center, pos);
-
-				if (bestDistance > distance)
+				if (!this.selectedObjects.Contains(obj))
 				{
-					bestDistance = distance;
-					bestObj = obj;
+					Rectangle bounds = this.GetObjectBounds(obj);
+					double distance = Point.Distance(bounds.Center, pos);
+
+					if (bestDistance > distance)
+					{
+						bestDistance = distance;
+						bestObj = obj;
+					}
 				}
 			}
 
