@@ -118,6 +118,8 @@ namespace Epsitec.Common.Designer.Viewers
 			this.tabPageObjects.Padding = new Margins(10, 10, 10, 10);
 			this.tabBook.Items.Add(this.tabPageObjects);
 
+			this.proxyManager = new ProxyManager ();
+
 			this.tabPageCultures = new TabPage();
 			this.tabPageCultures.TabTitle = Res.Strings.Viewers.Panels.TabCultures;
 			this.tabPageCultures.Padding = new Margins(10, 10, 10, 10);
@@ -136,6 +138,18 @@ namespace Epsitec.Common.Designer.Viewers
 			this.UpdateEdit();
 		}
 
+		public void ClearProxies()
+		{
+			this.tabPageObjects.Children.Clear ();
+		}
+
+		public void DefineProxies(IEnumerable<Widget> widgets)
+		{
+			this.ClearProxies ();
+			this.proxyManager.SetSelection (widgets);
+			this.proxyManager.CreateUserInterface (this.tabPageObjects);
+		}
+		
 		protected override void Dispose(bool disposing)
 		{
 			if (disposing)
@@ -662,6 +676,7 @@ namespace Epsitec.Common.Designer.Viewers
 		void HandlePanelEditorChildrenSelected(object sender)
 		{
 			this.UpdateCommands();
+			this.DefineProxies(this.panelEditor.SelectedObjects);
 		}
 
 		void HandlePanelEditorUpdateCommands(object sender)
@@ -670,6 +685,7 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
+		protected ProxyManager				proxyManager;
 		protected TextFieldEx				labelEdit;
 		protected VToolBar					toolBar;
 		protected Scrollable				scrollable;

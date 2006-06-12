@@ -5,31 +5,40 @@ using Epsitec.Common.Widgets;
 
 namespace Epsitec.Common.Designer.Proxies
 {
-	public abstract class Abstract : DependencyObject
+	public abstract class Abstract : DependencyObject, IProxy
 	{
 		protected Abstract(Widget widget)
 		{
 			this.AddWidget (widget);
 		}
 
+		#region IProxy Members
+
 		public void AddWidget(Widget widget)
 		{
 			//	Ajoute un widget à notre liste de widgets connectés. Tous les
 			//	widgets de cette liste doivent partager exactement les mêmes
 			//	propriétés en ce qui concerne notre proxy.
-			
+
 			System.Diagnostics.Debug.Assert (this.widgets.Contains (widget) == false);
-			
+
 			this.widgets.Add (widget);
 
 			if (this.widgets.Count == 1)
 			{
 				//	Quand on ajoute le premier widget, on lit les propriétés
 				//	du widget et on initialise le proxy.
-				
+
 				this.ReadFromWidget ();
 			}
 		}
+
+		public abstract int Rank
+		{
+			get;
+		}
+
+		#endregion
 
 		public void ReadFromWidget()
 		{

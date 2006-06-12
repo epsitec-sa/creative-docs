@@ -498,15 +498,15 @@ namespace Epsitec.Common.Support
 				culture = this.culture;
 			}
 			
-			string resource_id;
+			string resourceId;
 			ResourceModuleInfo module;
 			
-			IResourceProvider provider = this.FindProvider (id, out resource_id, out module);
+			IResourceProvider provider = this.FindProvider (id, out resourceId, out module);
 			ResourceBundle    bundle   = null;
 
-			if (Resources.IsFieldId (resource_id))
+			if (Resources.IsFieldId (resourceId))
 			{
-				throw new ResourceException (string.Format ("'{0}' is not a bundle id (resolves to '{1}')", id, resource_id));
+				throw new ResourceException (string.Format ("'{0}' is not a bundle id (resolves to '{1}')", id, resourceId));
 			}
 			
 			//	Passe en revue les divers providers de bundles pour voir si la ressource
@@ -516,7 +516,7 @@ namespace Epsitec.Common.Support
 			if (provider != null)
 			{
 				string prefix = provider.Prefix;
-				string key = Resources.CreateBundleKey (prefix, module.Id, resource_id, level, culture);
+				string key = Resources.CreateBundleKey (prefix, module.Id, resourceId, level, culture);
 
 				if (this.bundleCache.TryGetValue (key, out bundle))
 				{
@@ -529,17 +529,18 @@ namespace Epsitec.Common.Support
 					switch (level)
 					{
 						case ResourceLevel.Merged:
-							bundle = ResourceBundle.Create (this, prefix, module, resource_id, level, culture, recursion);
-							bundle.Compile (provider.GetData (resource_id, ResourceLevel.Default, culture));
-							bundle.Compile (provider.GetData (resource_id, ResourceLevel.Localized, culture));
-							bundle.Compile (provider.GetData (resource_id, ResourceLevel.Customized, culture));
+							bundle = ResourceBundle.Create (this, prefix, module, resourceId, level, culture, recursion);
+							this.CompileBundle (bundle, provider, resourceId, ResourceLevel.Default, culture);
+							this.CompileBundle (bundle, provider, resourceId, ResourceLevel.Localized, culture);
+							this.CompileBundle (bundle, provider, resourceId, ResourceLevel.Customized, culture);
+							this.mergedBundlesInBundleCache++;
 							break;
 
 						case ResourceLevel.Default:
 						case ResourceLevel.Localized:
 						case ResourceLevel.Customized:
-							bundle = ResourceBundle.Create (this, prefix, module, resource_id, level, culture, recursion);
-							bundle.Compile (provider.GetData (resource_id, level, culture));
+							bundle = ResourceBundle.Create (this, prefix, module, resourceId, level, culture, recursion);
+							bundle.Compile (provider.GetData (resourceId, level, culture));
 							break;
 
 						default:
@@ -560,6 +561,28 @@ namespace Epsitec.Common.Support
 			}
 			
 			return bundle;
+		}
+
+		private void CompileBundle(ResourceBundle bundle, IResourceProvider provider, string resourceId, ResourceLevel level, CultureInfo culture)
+		{
+			ResourceBundle source;
+			byte[] data;
+			string key = Resources.CreateBundleKey (provider.Prefix, bundle.Module.Id, resourceId, level, culture);
+
+			if (this.bundleCache.TryGetValue (key, out source))
+			{
+				//	On a trouvé un bundle dans le cache. Il faut fusionner avec
+				//	celui-ci plutôt que de charger un nouveau bundle depuis le
+				//	disque !
+
+				data = source.CreateXmlAsData ();
+			}
+			else
+			{
+				data = provider.GetData (resourceId, level, culture);
+			}
+			
+			bundle.Compile (data);
 		}
 
 		/// <summary>
@@ -876,6 +899,30 @@ namespace Epsitec.Common.Support
 		public void ClearBundleCache()
 		{
 			this.bundleCache.Clear ();
+			this.mergedBundlesInBundleCache = 0;
+		}
+
+		public void ClearMergedBundlesFromBundleCache()
+		{
+			if (this.mergedBundlesInBundleCache > 0)
+			{
+				List<string> clear = new List<string> ();
+
+				foreach (KeyValuePair<string, ResourceBundle> pair in this.bundleCache)
+				{
+					if (pair.Value.ResourceLevel == ResourceLevel.Merged)
+					{
+						clear.Add (pair.Key);
+					}
+				}
+
+				foreach (string key in clear)
+				{
+					this.bundleCache.Remove (key);
+				}
+				
+				this.mergedBundlesInBundleCache = 0;
+			}
 		}
 
 		public void TrimBindingCache()
@@ -1307,5 +1354,6 @@ namespace Epsitec.Common.Support
 		Dictionary<string, ResourceBundle>		bundleCache = new Dictionary<string, ResourceBundle> ();
 		Dictionary<string, BundleBindingProxy>	bindingProxies = new Dictionary<string, BundleBindingProxy> ();
 		
+		private int								mergedBundlesInBundleCache;
 	}
 }

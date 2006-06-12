@@ -11,6 +11,14 @@ namespace Epsitec.Common.Designer
 		{
 		}
 
+		public IEnumerable<IProxy> Proxies
+		{
+			get
+			{
+				return this.proxies;
+			}
+		}
+		
 		public void SetSelection(Widget widget)
 		{
 			this.widgets = new List<Widget> ();
@@ -25,27 +33,59 @@ namespace Epsitec.Common.Designer
 			this.GenerateProxies ();
 		}
 
-		public IEnumerable<Proxies.Abstract> GetProxies()
+		public void CreateUserInterface(Widget container)
 		{
-			return this.proxies;
+			foreach (IProxy proxy in this.Proxies)
+			{
+				this.CreateUserInterface (container, proxy);
+			}
 		}
 
+		public static bool EqualValues(IProxy a, IProxy b)
+		{
+			if (a == b)
+			{
+				return true;
+			}
+			
+			if ((a == null) ||
+				(b == null))
+			{
+				return false;
+			}
+			
+			//	Ca ne vaut pas la peine de comparer les valeurs des deux proxies
+			//	si leur rang est différent, car cela implique qu'ils ne vont pas
+			//	être représentés par des panneaux identiques :
+			
+			if (a.Rank != b.Rank)
+			{
+				return false;
+			}
+			
+			return DependencyObject.EqualValues (a as DependencyObject, b as DependencyObject);
+		}
+		
 		private void GenerateProxies()
 		{
-			List<Proxies.Abstract> proxies = new List<Proxies.Abstract> ();
+			//	Génère une liste (triée) de tous les proxies. Il se peut qu'il
+			//	y ait plusieurs proxies de type identique si plusieurs widgets
+			//	utilisent des réglages différents.
+
+			List<IProxy> proxies = new List<IProxy> ();
 
 			foreach (Widget widget in this.widgets)
 			{
-				foreach (Proxies.Abstract proxy in this.GenerateProxies (widget))
+				foreach (IProxy proxy in this.GenerateProxies (widget))
 				{
 					//	Evite les doublons pour des proxies qui seraient à 100%
-					//	identiques:
+					//	identiques :
 
 					bool insert = true;
 
-					foreach (Proxies.Abstract item in proxies)
+					foreach (IProxy item in proxies)
 					{
-						if (DependencyObject.EqualValues (item, proxy))
+						if (ProxyManager.EqualValues (item, proxy))
 						{
 							//	Trouvé un doublon. On ajoute simplement le widget
 							//	courant au proxy qui existe déjà avec les mêmes
@@ -64,10 +104,14 @@ namespace Epsitec.Common.Designer
 				}
 			}
 
+			//	Trie les proxies selon leur rang :
+			
+			proxies.Sort (new ProxyManager.ProxyRankComparer ());
+
 			this.proxies = proxies;
 		}
 
-		private IEnumerable<Proxies.Abstract> GenerateProxies(Widget widget)
+		private IEnumerable<IProxy> GenerateProxies(Widget widget)
 		{
 			//	TODO: créer les divers Proxies pour le widget; on peut simplement
 			//	ajouter ici des 'yield return new ...'
@@ -75,7 +119,66 @@ namespace Epsitec.Common.Designer
 			yield return new Proxies.Geometry (widget);
 		}
 
+		private void CreateUserInterface(Widget container, IProxy proxy)
+		{
+			//	Crée un panneau pour représenter le proxy spécifié.
+
+			GroupBox box = new GroupBox (container);
+			DependencyObject source = proxy as DependencyObject;
+			
+			box.Dock = DockStyle.Top;
+			box.Padding = new Drawing.Margins (4, 4, 4, 4);
+			box.Text = source.GetType ().Name;
+
+			foreach (DependencyProperty property in source.LocalProperties)
+			{
+				Placeholder placeholder = new Placeholder (box);
+				Binding binding = new Binding (BindingMode.TwoWay, source, property.Name);
+				placeholder.SetBinding (Placeholder.ValueProperty, binding);
+				placeholder.Controller = "StringController";
+				placeholder.Dock = DockStyle.Top;
+				placeholder.Margins = new Drawing.Margins (0, 0, 2, 2);
+			}
+		}
+
+		#region ProxyRankComparer Class
+
+		private class ProxyRankComparer : IComparer<IProxy>
+		{
+			#region IComparer<IProxy> Members
+
+			public int Compare(IProxy a, IProxy b)
+			{
+				if (a == b)
+				{
+					return 0;
+				}
+				if (a == null)
+				{
+					return -1;
+				}
+				if (b == null)
+				{
+					return 1;
+				}
+				if (a.Rank < b.Rank)
+				{
+					return -1;
+				}
+				if (a.Rank > b.Rank)
+				{
+					return 1;
+				}
+
+				return 0;
+			}
+
+			#endregion
+		}
+		
+		#endregion
+
 		List<Widget> widgets;
-		List<Proxies.Abstract> proxies;
+		List<IProxy> proxies;
 	}
 }

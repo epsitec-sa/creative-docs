@@ -49,7 +49,11 @@ namespace Epsitec.Common.Support
 					//	L'appelant aimerait avoir la version fusionnée des ressources. Nous
 					//	fabriquons ce bundle à la volée si besoin...
 					
+#if false
 					return this.GetMerged (culture);
+#else
+					return this.manager.GetBundle (this.FullName, level, culture);
+#endif
 				}
 				
 				foreach (ResourceBundle bundle in this.list)
@@ -363,6 +367,7 @@ namespace Epsitec.Common.Support
 			}
 		}
 		
+# if false
 		protected virtual ResourceBundle GetMerged(CultureInfo culture)
 		{
 			//	Retrouve la version "fusionnée" des divers bundles pour la culture
@@ -394,6 +399,7 @@ namespace Epsitec.Common.Support
 			
 			return merged;
 		}
+
 		protected virtual ResourceBundle CreateMerged(CultureInfo culture)
 		{
 			System.Diagnostics.Debug.WriteLine (string.Format ("Merging ressource {0} for culture '{1}'.", this.FullName, culture.TwoLetterISOLanguageName));
@@ -423,12 +429,17 @@ namespace Epsitec.Common.Support
 			
 			return bundle;
 		}
+#endif
 
 		protected virtual void ClearMergedCache()
 		{
+#if false
 			this.merged = null;
+#else
+			this.manager.ClearMergedBundlesFromBundleCache ();
+#endif
 		}
-		
+
 		private void HandleBundleFieldsChanged(object sender)
 		{
 			this.ClearMergedCache ();
@@ -439,7 +450,9 @@ namespace Epsitec.Common.Support
 		public event EventHandler				FieldsChanged;
 		
 		private ResourceManager					manager;
+#if false
 		private List<ResourceBundle>			merged;
+#endif
 		private List<ResourceBundle>			list;
 		private string							name;
 		private string							prefix;

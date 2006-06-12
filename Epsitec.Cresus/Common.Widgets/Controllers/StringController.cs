@@ -109,6 +109,15 @@ namespace Epsitec.Common.Widgets.Controllers
 					value = result;
 				}
 			}
+			else if (type == typeof (double))
+			{
+				double result;
+
+				if (double.TryParse (text, out result))
+				{
+					value = result;
+				}
+			}
 
 			if (value != InvalidValue.Instance)
 			{
