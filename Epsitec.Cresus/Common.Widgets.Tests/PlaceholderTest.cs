@@ -72,21 +72,21 @@ namespace Epsitec.Common.Widgets
 			Placeholder placeholder2 = new Placeholder ();
 			Placeholder placeholder3 = new Placeholder ();
 
-			placeholder1.Controller = "StringController";
+			placeholder1.Controller = "String";
 			placeholder1.PreferredHeight = 20;
 			placeholder1.TabIndex = 1;
 			Layouts.GridLayoutEngine.SetColumn (placeholder1, 0);
 			Layouts.GridLayoutEngine.SetRow (placeholder1, 1);
 			Layouts.GridLayoutEngine.SetColumnSpan (placeholder1, 3);
 
-			placeholder2.Controller = "StringController";
+			placeholder2.Controller = "String";
 			placeholder2.PreferredHeight = 20;
 			placeholder2.TabIndex = 2;
 			Layouts.GridLayoutEngine.SetColumn (placeholder2, 0);
 			Layouts.GridLayoutEngine.SetRow (placeholder2, 2);
 			Layouts.GridLayoutEngine.SetColumnSpan (placeholder2, 3);
 
-			placeholder3.Controller = "StringController";
+			placeholder3.Controller = "String";
 			placeholder3.PreferredHeight = 20;
 			placeholder3.TabIndex = 3;
 			Layouts.GridLayoutEngine.SetColumn (placeholder3, 0);
@@ -165,9 +165,9 @@ namespace Epsitec.Common.Widgets
 			Placeholder placeholder2 = new Placeholder ();
 			Placeholder placeholder3 = new Placeholder ();
 
-			placeholder1.Controller = "StringController";
-			placeholder2.Controller = "StringController";
-			placeholder3.Controller = "StringController";
+			placeholder1.Controller = "String";
+			placeholder2.Controller = "String";
+			placeholder3.Controller = "String";
 
 			Binding binding1 = new Binding (BindingMode.TwoWay, "Person.Name");
 			Binding binding2 = new Binding (BindingMode.TwoWay, "Person.Forename");

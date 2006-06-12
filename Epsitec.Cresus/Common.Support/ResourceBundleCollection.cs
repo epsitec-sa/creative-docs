@@ -46,14 +46,11 @@ namespace Epsitec.Common.Support
 			{
 				if (level == ResourceLevel.Merged)
 				{
-					//	L'appelant aimerait avoir la version fusionnée des ressources. Nous
-					//	fabriquons ce bundle à la volée si besoin...
+					//	L'appelant aimerait avoir la version fusionnée des ressources.
+					//	Vu que le ResourceManager maintient un cache actif, il suffit
+					//	d'utiliser ce dernier :
 					
-#if false
-					return this.GetMerged (culture);
-#else
 					return this.manager.GetBundle (this.FullName, level, culture);
-#endif
 				}
 				
 				foreach (ResourceBundle bundle in this.list)
@@ -351,12 +348,17 @@ namespace Epsitec.Common.Support
 		protected virtual void Attach(ResourceBundle bundle)
 		{
 			bundle.FieldsChanged += new EventHandler (this.HandleBundleFieldsChanged);
-			this.ClearMergedCache ();
+			this.ClearMergedBundles ();
 		}
 		protected virtual void Detach(ResourceBundle bundle)
 		{
 			bundle.FieldsChanged -= new EventHandler (this.HandleBundleFieldsChanged);
-			this.ClearMergedCache ();
+			this.ClearMergedBundles ();
+		}
+
+		protected virtual void ClearMergedBundles()
+		{
+			this.manager.ClearMergedBundlesFromBundleCache ();
 		}
 		
 		protected virtual void OnFieldsChanged()
@@ -366,93 +368,16 @@ namespace Epsitec.Common.Support
 				this.FieldsChanged (this);
 			}
 		}
-		
-# if false
-		protected virtual ResourceBundle GetMerged(CultureInfo culture)
-		{
-			//	Retrouve la version "fusionnée" des divers bundles pour la culture
-			//	spécifiée. Si celle-ci a déjà été synthétisée auparavant, on utilise
-			//	la version cachée, sinon il faut la générer...
-			
-			if (this.merged == null)
-			{
-				this.merged = new List<ResourceBundle> ();
-			}
-			
-			foreach (ResourceBundle bundle in this.merged)
-			{
-				if (Resources.EqualCultures (bundle.Culture, culture))
-				{
-					return bundle;
-				}
-			}
-			
-			//	Rien trouvé en cache pour cette culture : génère la version fusionnée
-			//	par nos propres moyens.
-			
-			ResourceBundle merged = this.CreateMerged (culture);
-			
-			if (merged != null)
-			{
-				this.merged.Add (merged);
-			}
-			
-			return merged;
-		}
-
-		protected virtual ResourceBundle CreateMerged(CultureInfo culture)
-		{
-			System.Diagnostics.Debug.WriteLine (string.Format ("Merging ressource {0} for culture '{1}'.", this.FullName, culture.TwoLetterISOLanguageName));
-			
-			ResourceBundle model_default    = this[ResourceLevel.Default, culture];
-			ResourceBundle model_localised  = this[ResourceLevel.Localized, culture];
-			ResourceBundle model_customised = this[ResourceLevel.Customized, culture];
-			
-			if (model_default == null)
-			{
-				return null;
-			}
-			
-			ResourceBundle bundle = model_default.Clone ();
-			
-			bundle.DefineCulture (culture);
-			
-			if (model_localised != null)
-			{
-				bundle.Compile (model_localised.CreateXmlAsData ());
-			}
-			
-			if (model_customised != null)
-			{
-				bundle.Compile (model_customised.CreateXmlAsData ());
-			}
-			
-			return bundle;
-		}
-#endif
-
-		protected virtual void ClearMergedCache()
-		{
-#if false
-			this.merged = null;
-#else
-			this.manager.ClearMergedBundlesFromBundleCache ();
-#endif
-		}
 
 		private void HandleBundleFieldsChanged(object sender)
 		{
-			this.ClearMergedCache ();
+			this.ClearMergedBundles ();
 			this.OnFieldsChanged ();
 		}
-
 		
 		public event EventHandler				FieldsChanged;
 		
 		private ResourceManager					manager;
-#if false
-		private List<ResourceBundle>			merged;
-#endif
 		private List<ResourceBundle>			list;
 		private string							name;
 		private string							prefix;

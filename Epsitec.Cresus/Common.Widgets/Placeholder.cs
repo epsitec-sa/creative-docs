@@ -162,16 +162,6 @@ namespace Epsitec.Common.Widgets
 					{
 						this.controller.RefreshUserInterface (UndefinedValue.Instance, value);
 					}
-#if false
-					Widget parent = this.Parent;
-
-					if (parent != null)
-					{
-						Layouts.LayoutContext.AddToMeasureQueue (this);
-						Layouts.LayoutContext.AddToMeasureQueue (parent);
-						Layouts.LayoutContext.AddToArrangeQueue (parent);
-					}
-#endif
 				}
 			}
 		}

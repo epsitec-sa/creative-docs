@@ -129,15 +129,16 @@ namespace Epsitec.Common.Designer
 			box.Dock = DockStyle.Top;
 			box.Padding = new Drawing.Margins (4, 4, 4, 4);
 			box.Text = source.GetType ().Name;
+			box.PreferredHeight = 30;
 
 			foreach (DependencyProperty property in source.LocalProperties)
 			{
 				Placeholder placeholder = new Placeholder (box);
 				Binding binding = new Binding (BindingMode.TwoWay, source, property.Name);
 				placeholder.SetBinding (Placeholder.ValueProperty, binding);
-				placeholder.Controller = "StringController";
+				placeholder.Controller = "String";
 				placeholder.Dock = DockStyle.Top;
-				placeholder.Margins = new Drawing.Margins (0, 0, 2, 2);
+				placeholder.Margins = new Drawing.Margins (0, 0, 0, 0);
 			}
 		}
 

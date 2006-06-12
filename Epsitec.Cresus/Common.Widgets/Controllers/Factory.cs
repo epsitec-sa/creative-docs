@@ -56,9 +56,18 @@ namespace Epsitec.Common.Widgets.Controllers
 			foreach (System.Type type in ControllerAttribute.GetRegisteredTypes (assembly))
 			{
 				string name = type.Name;
+				string suffix = "Controller";
 				Record record = new Record (type);
-				
-				Factory.types[name] = record;
+
+				if (name.EndsWith (suffix))
+				{
+					name = name.Substring (0, name.Length-suffix.Length);
+					Factory.types[name] = record;
+				}
+				else
+				{
+					System.Diagnostics.Debug.WriteLine (string.Format ("Type '{0}' specifies ControllerAttribute but does not follow naming conventions", name));
+				}
 			}
 		}
 
