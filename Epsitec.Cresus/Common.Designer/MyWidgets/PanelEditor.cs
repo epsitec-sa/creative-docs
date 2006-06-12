@@ -1028,8 +1028,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 			if (this.context.Tool == "ObjectGroup")
 			{
 				GroupBox group = new GroupBox();
-				//?group.ChildrenLayoutMode = Widgets.Layouts.LayoutMode.Anchored;
-				group.ChildrenLayoutMode = Widgets.Layouts.LayoutMode.Docked;
+				group.ChildrenLayoutMode = Widgets.Layouts.LayoutMode.Anchored;
+				//?group.ChildrenLayoutMode = Widgets.Layouts.LayoutMode.Docked;
 				group.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
 				//?group.ContainerLayoutMode = ContainerLayoutMode.VerticalFlow;
 				group.Text = Misc.Italic("GroupBox");
