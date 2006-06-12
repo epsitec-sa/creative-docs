@@ -19,14 +19,19 @@ namespace Epsitec.Common.Types
 		}
 		public Binding(BindingMode mode, object source)
 		{
-			this.Mode = mode;
+			this.Mode   = mode;
 			this.Source = source;
+		}
+		public Binding(BindingMode mode, string path)
+		{
+			this.Mode = mode;
+			this.Path = path;
 		}
 		public Binding(BindingMode mode, object source, string path)
 		{
-			this.Mode = mode;
+			this.Mode   = mode;
 			this.Source = source;
-			this.Path = path;
+			this.Path   = path;
 		}
 
 

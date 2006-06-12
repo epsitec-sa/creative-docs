@@ -72,7 +72,6 @@ namespace Epsitec.Common.Widgets
 			Placeholder placeholder2 = new Placeholder ();
 			Placeholder placeholder3 = new Placeholder ();
 
-			placeholder1.Dock = DockStyle.Top;
 			placeholder1.Controller = "StringController";
 			placeholder1.PreferredHeight = 20;
 			placeholder1.TabIndex = 1;
@@ -80,7 +79,6 @@ namespace Epsitec.Common.Widgets
 			Layouts.GridLayoutEngine.SetRow (placeholder1, 1);
 			Layouts.GridLayoutEngine.SetColumnSpan (placeholder1, 3);
 
-			placeholder2.Dock = DockStyle.Top;
 			placeholder2.Controller = "StringController";
 			placeholder2.PreferredHeight = 20;
 			placeholder2.TabIndex = 2;
@@ -88,16 +86,15 @@ namespace Epsitec.Common.Widgets
 			Layouts.GridLayoutEngine.SetRow (placeholder2, 2);
 			Layouts.GridLayoutEngine.SetColumnSpan (placeholder2, 3);
 
-			placeholder3.Dock = DockStyle.Top;
 			placeholder3.Controller = "StringController";
 			placeholder3.PreferredHeight = 20;
 			placeholder3.TabIndex = 3;
 			Layouts.GridLayoutEngine.SetColumn (placeholder3, 0);
 			Layouts.GridLayoutEngine.SetRow (placeholder3, 3);
 
-			Binding binding1 = new Binding (BindingMode.TwoWay, null, "Person.Name");
-			Binding binding2 = new Binding (BindingMode.TwoWay, null, "Person.Forename");
-			Binding binding3 = new Binding (BindingMode.TwoWay, null, "Person.Age");
+			Binding binding1 = new Binding (BindingMode.TwoWay, "Person.Name");
+			Binding binding2 = new Binding (BindingMode.TwoWay, "Person.Forename");
+			Binding binding3 = new Binding (BindingMode.TwoWay, "Person.Age");
 
 			placeholder1.SetBinding (Placeholder.ValueProperty, binding1);
 			placeholder2.SetBinding (Placeholder.ValueProperty, binding2);
