@@ -105,7 +105,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.tabBook.PreferredWidth = 200;
 			this.tabBook.MaxWidth = 250;
 			this.tabBook.Arrows = TabBookArrows.Stretch;
-			this.tabBook.Margins = new Margins(0, 1, 1, 1);
+			this.tabBook.Margins = new Margins(1, 1, 1, 1);
 			this.tabBook.Dock = DockStyle.Right;
 
 			this.tabPageProperties = new TabPage();
@@ -128,7 +128,6 @@ namespace Epsitec.Common.Designer.Viewers
 
 			VSplitter splitter2 = new VSplitter(this);
 			splitter2.Dock = DockStyle.Right;
-			splitter2.Margins = new Margins(0, 1, 0, 0);
 
 			this.module.PanelsRead();
 
@@ -511,7 +510,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected void CreateCultureButtons()
 		{
-			//	Crée tous les boutons pour ls cultures.
+			//	Crée tous les boutons pour les cultures.
 			this.cultureButtonList = new List<IconButton>();
 
 			int tabIndex = 0;
