@@ -43,8 +43,8 @@ namespace Epsitec.Common.Designer.Viewers
 			this.array.TabIndex = tabIndex++;
 			this.array.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
-			VSplitter splitter = new VSplitter(this);
-			splitter.Dock = DockStyle.Left;
+			VSplitter splitter1 = new VSplitter(this);
+			splitter1.Dock = DockStyle.Left;
 			VSplitter.SetAutoCollapseEnable(left, true);
 
 			this.toolBar = new VToolBar(this);
@@ -101,7 +101,9 @@ namespace Epsitec.Common.Designer.Viewers
 			this.panelEditor.UpdateCommands += new EventHandler(this.HandlePanelEditorUpdateCommands);
 
 			this.tabBook = new TabBook(this);
+			this.tabBook.MinWidth = 150;
 			this.tabBook.PreferredWidth = 200;
+			this.tabBook.MaxWidth = 250;
 			this.tabBook.Arrows = TabBookArrows.Stretch;
 			this.tabBook.Margins = new Margins(0, 1, 1, 1);
 			this.tabBook.Dock = DockStyle.Right;
@@ -123,6 +125,10 @@ namespace Epsitec.Common.Designer.Viewers
 			this.CreateCultureButtons();
 
 			this.tabBook.ActivePage = this.tabPageProperties;
+
+			VSplitter splitter2 = new VSplitter(this);
+			splitter2.Dock = DockStyle.Right;
+			splitter2.Margins = new Margins(0, 1, 0, 0);
 
 			this.module.PanelsRead();
 
