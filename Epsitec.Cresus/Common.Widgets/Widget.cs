@@ -2973,11 +2973,8 @@ namespace Epsitec.Common.Widgets
 		{
 			if (this.text_layout != null)
 			{
-				if (this.IsActualGeometryValid)
-				{
-					this.text_layout.Alignment  = this.ContentAlignment;
-					this.text_layout.LayoutSize = this.Client.Size;
-				}
+				this.text_layout.Alignment  = this.ContentAlignment;
+				this.text_layout.LayoutSize = this.IsActualGeometryValid ? this.Client.Size : this.PreferredSize;
 			}
 		}
 
