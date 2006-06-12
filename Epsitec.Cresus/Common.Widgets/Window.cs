@@ -1598,12 +1598,26 @@ namespace Epsitec.Common.Widgets
 		
 		public void QueueCommand(Widget source, string name)
 		{
-			this.QueueCommand (new QueueItem (source, name));
+			if (CommandDispatcherChain.BuildChain (source) == null)
+			{
+				System.Diagnostics.Debug.WriteLine (string.Format ("Command '{0}' cannot be dispatched, no dispatcher defined.", name));
+			}
+			else
+			{
+				this.QueueCommand (new QueueItem (source, name));
+			}
 		}
 
 		public void QueueCommand(DependencyObject source, string name)
 		{
-			this.QueueCommand (new QueueItem (source, name));
+			if (CommandDispatcherChain.BuildChain (source) == null)
+			{
+				System.Diagnostics.Debug.WriteLine (string.Format ("Command '{0}' cannot be dispatched, no dispatcher defined.", name));
+			}
+			else
+			{
+				this.QueueCommand (new QueueItem (source, name));
+			}
 		}
 
 
