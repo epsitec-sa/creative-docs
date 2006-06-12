@@ -280,7 +280,7 @@ namespace Epsitec.Common.Widgets
 			{
 				if (!this.IsActualGeometryValid)
 				{
-					System.Diagnostics.Debug.Assert (this.IsActualGeometryValid, "Layout dirty when calling ActualBounds");
+//					System.Diagnostics.Debug.Assert (this.IsActualGeometryValid, "Layout dirty when calling ActualBounds");
 				}
 				return new Drawing.Rectangle (this.ActualLocation, this.ActualSize);
 			}
@@ -292,7 +292,7 @@ namespace Epsitec.Common.Widgets
 			{
 				if (!this.IsActualGeometryValid)
 				{
-					System.Diagnostics.Debug.Assert (this.IsActualGeometryValid, "Layout dirty when calling ActualLocation");
+//					System.Diagnostics.Debug.Assert (this.IsActualGeometryValid, "Layout dirty when calling ActualLocation");
 				}
 				return new Drawing.Point (this.x, this.y);
 			}
@@ -304,7 +304,7 @@ namespace Epsitec.Common.Widgets
 			{
 				if (!this.IsActualGeometryValid)
 				{
-					System.Diagnostics.Debug.Assert (this.IsActualGeometryValid, "Layout dirty when calling ActualSize");
+//					System.Diagnostics.Debug.Assert (this.IsActualGeometryValid, "Layout dirty when calling ActualSize");
 				}
 				return new Drawing.Size (this.width, this.height);
 			}
@@ -316,7 +316,7 @@ namespace Epsitec.Common.Widgets
 			{
 				if (!this.IsActualGeometryValid)
 				{
-					System.Diagnostics.Debug.Assert (this.IsActualGeometryValid, "Layout dirty when calling ActualWidth");
+//					System.Diagnostics.Debug.Assert (this.IsActualGeometryValid, "Layout dirty when calling ActualWidth");
 				}
 				return this.width;
 			}
@@ -328,7 +328,7 @@ namespace Epsitec.Common.Widgets
 			{
 				if (!this.IsActualGeometryValid)
 				{
-					System.Diagnostics.Debug.Assert (this.IsActualGeometryValid, "Layout dirty when calling ActualHeight");
+//					System.Diagnostics.Debug.Assert (this.IsActualGeometryValid, "Layout dirty when calling ActualHeight");
 				}
 				return this.height;
 			}

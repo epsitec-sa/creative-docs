@@ -142,6 +142,54 @@ namespace Epsitec.Common.Widgets
 			Window.RunInTestEnvironment (window);
 		}
 
+		[Test]
+		public void CheckValueTypeObjectAndValueName()
+		{
+			UI.Panel panel = new Epsitec.Common.UI.Panel ();
+
+			StructuredType type = new StructuredType ();
+			StructuredData data = new StructuredData (type);
+
+			type.AddField ("Name", new StringType ());
+			type.AddField ("Forename", new StringType ());
+			type.AddField ("Age", new IntegerType (1, 150));
+
+			data.SetValue ("Name", "Arnaud");
+			data.SetValue ("Forename", "Pierre");
+			data.SetValue ("Age", System.DateTime.Now.Year - 1972);
+
+			panel.DataSource = new UI.DataSourceCollection ();
+			panel.DataSource.AddDataSource ("Person", data);
+
+			Placeholder placeholder1 = new Placeholder ();
+			Placeholder placeholder2 = new Placeholder ();
+			Placeholder placeholder3 = new Placeholder ();
+
+			placeholder1.Controller = "StringController";
+			placeholder2.Controller = "StringController";
+			placeholder3.Controller = "StringController";
+
+			Binding binding1 = new Binding (BindingMode.TwoWay, "Person.Name");
+			Binding binding2 = new Binding (BindingMode.TwoWay, "Person.Forename");
+			Binding binding3 = new Binding (BindingMode.TwoWay, "Person.Age");
+
+			placeholder1.SetBinding (Placeholder.ValueProperty, binding1);
+			placeholder2.SetBinding (Placeholder.ValueProperty, binding2);
+			placeholder3.SetBinding (Placeholder.ValueProperty, binding3);
+
+			panel.Children.Add (placeholder1);
+			panel.Children.Add (placeholder2);
+			panel.Children.Add (placeholder3);
+
+			Assert.AreEqual ("Name",		placeholder1.ValueName);
+			Assert.AreEqual ("Forename",	placeholder2.ValueName);
+			Assert.AreEqual ("Age",			placeholder3.ValueName);
+
+			Assert.AreEqual (typeof (StringType),	placeholder1.ValueTypeObject.GetType ());
+			Assert.AreEqual (typeof (StringType),	placeholder2.ValueTypeObject.GetType ());
+			Assert.AreEqual (typeof (IntegerType),	placeholder3.ValueTypeObject.GetType ());
+		}
+
 		#region TestController1 Class
 
 		internal class TestController1 : Controllers.AbstractController
