@@ -40,6 +40,7 @@
     <Compile Include="Comparers\WidgetDisposition.cs" />
     <Compile Include="Constrain.cs" />
     <Compile Include="ConstrainsList.cs" />
+    <Compile Include="IProxy.cs" />
     <Compile Include="Dialogs\TextSelector.cs" />
     <Compile Include="HandlesList.cs" />
     <Compile Include="Handle.cs" />

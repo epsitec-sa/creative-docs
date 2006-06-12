@@ -17,7 +17,7 @@ namespace Epsitec.Common.Widgets
 			Application.QueueAsyncCallback (this.CreateUserInterface);
 		}
 		
-		public Placeholder(Widget embedder)
+		public Placeholder(Widget embedder) : this ()
 		{
 			this.SetEmbedder (embedder);
 		}

@@ -349,6 +349,7 @@ namespace Epsitec.Common.Support
 			System.Diagnostics.Debug.Assert (prefix != null);
 			System.Diagnostics.Debug.Assert (prefix.Length > 0);
 			System.Diagnostics.Debug.Assert (prefix.IndexOf (Resources.PrefixSeparator) < 0);
+			System.Diagnostics.Debug.Assert (prefix.IndexOf (Resources.ModuleSeparator) < 0);
 			System.Diagnostics.Debug.Assert (resource_id.Length > 0);
 			System.Diagnostics.Debug.Assert (resource_id.IndexOf (Resources.FieldSeparator) < 0);
 

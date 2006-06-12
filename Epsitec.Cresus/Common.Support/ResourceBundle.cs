@@ -166,14 +166,20 @@ namespace Epsitec.Common.Support
 				return this.culture;
 			}
 		}
+
+		public string						Prefix
+		{
+			get
+			{
+				return Resources.JoinFullPrefix (this.prefix, this.module.ToString ());
+			}
+		}
 		
 		public string						PrefixedName
 		{
 			get
 			{
-				string prefix = Resources.JoinFullPrefix (this.prefix, module.ToString ());
-				
-				return this.manager.NormalizeFullId (prefix, this.name);
+				return this.manager.NormalizeFullId (this.Prefix, this.name);
 			}
 		}
 		

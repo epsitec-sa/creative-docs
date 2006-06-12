@@ -80,7 +80,7 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		internal IEnumerable<DependencyProperty> LocalProperties
+		public IEnumerable<DependencyProperty>	LocalProperties
 		{
 			get
 			{
