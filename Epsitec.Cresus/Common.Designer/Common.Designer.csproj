@@ -61,6 +61,8 @@
     <Compile Include="MyWidgets\TextFieldLabel.cs" />
     <Compile Include="Panels\Abstract.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Proxies\Abstract.cs" />
+    <Compile Include="Proxies\Geometry.cs" />
     <Compile Include="Res.cs" />
     <Compile Include="Ribbons\Abstract.cs" />
     <Compile Include="Ribbons\Align.cs" />
@@ -76,6 +78,7 @@
     <Compile Include="Ribbons\File.cs" />
     <Compile Include="Ribbons\Select.cs" />
     <Compile Include="Searcher.cs" />
+    <Compile Include="ProxyManager.cs" />
     <Compile Include="UserInterface.cs" />
     <Compile Include="Viewers\Abstract.cs" />
     <Compile Include="Viewers\Scripts.cs" />

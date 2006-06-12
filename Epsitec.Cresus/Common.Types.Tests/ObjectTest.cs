@@ -461,6 +461,52 @@ namespace Epsitec.Common.Types
 		}
 
 		[Test]
+		public void CheckEqualValues()
+		{
+			MyObject myData1 = new MyObject ();
+			MyObject myData2 = new MyObject ();
+			
+			Assert.IsTrue (DependencyObject.EqualValues (myData1, myData2));
+
+			myData1.Abc = 10;
+			myData2.Abc = 10;
+
+			Assert.IsTrue (DependencyObject.EqualValues (myData1, myData2));
+			
+			myData1.Foo = "A";
+			myData2.Foo = "A";
+			
+			Assert.IsTrue (DependencyObject.EqualValues (myData1, myData2));
+			
+			myData1.Abc = 10;
+			myData2.Abc = 11;
+			
+			Assert.IsFalse (DependencyObject.EqualValues (myData1, myData2));
+
+			myData1.Abc = 10;
+			myData2.Abc = 10;
+
+			Assert.IsTrue (DependencyObject.EqualValues (myData1, myData2));
+
+			myData1.Foo = "A";
+			myData2.Foo = "B";
+
+			Assert.IsFalse (DependencyObject.EqualValues (myData1, myData2));
+
+			myData2.ClearValue (MyObject.FooProperty);
+
+			Assert.IsFalse (DependencyObject.EqualValues (myData1, myData2));
+
+			myData1.Foo = "[default]";
+
+			Assert.IsFalse (DependencyObject.EqualValues (myData1, myData2));
+
+			myData1.ClearValue (MyObject.FooProperty);
+			
+			Assert.IsTrue (DependencyObject.EqualValues (myData1, myData2));
+		}
+		
+		[Test]
 		public void CheckPropertyInheritance()
 		{
 			MyObject o1 = new MyObject ();
