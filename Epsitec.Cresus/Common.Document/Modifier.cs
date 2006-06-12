@@ -1817,7 +1817,7 @@ namespace Epsitec.Common.Document
 
 		public void Paste()
 		{
-			//	Colle le contenu du bloc-notes.
+			//	Colle le contenu du press-papiers
 			Objects.AbstractText editObject = this.RetEditObject();
 			if ( editObject != null )
 			{

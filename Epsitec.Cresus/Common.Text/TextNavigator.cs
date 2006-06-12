@@ -1990,7 +1990,39 @@ again:
 			
 			return result;
 		}
-		
+
+		public int[] GetAdjustedSelectionCursorPositions()
+		{
+			int[] positions = this.GetSelectionCursorPositions ();
+
+			for (int i = 0; i < positions.Length; i += 2)
+			{
+				int p1 = positions[i+0];
+				int p2 = positions[i+1];
+
+				if (p2 < p1)
+				{
+					p1 = positions[i+1];
+					p2 = positions[i+0];
+				}
+
+				//	La position p1 dénote le début de la sélection et p2 sa fin.
+				//	Procède à quelques ajustements pour tenir compte correctement
+				//	des textes automatiques.
+
+				if ((this.SkipOverAutoText (ref p2, Direction.Backward)) ||
+					(this.IsAfterManagedParagraph (this.temp_cursor)) ||
+					(p2+1 == this.TextLength))
+				{
+					this.SkipOverAutoText (ref p1, Direction.Backward);
+				}
+
+				positions[i+0] = p1;
+				positions[i+1] = p2;
+			}
+
+			return positions;
+		}
 		
 		public void ClearCurrentStylesAndProperties()
 		{
@@ -3678,41 +3710,7 @@ process_ranges:
 			System.Diagnostics.Debug.Assert ((positions.Length % 2) == 0);
 			
 			return positions;
-		}
-
-		private int[] GetAdjustedSelectionCursorPositions()
-		{
-			int[] positions = this.GetSelectionCursorPositions ();
-			
-			for (int i = 0; i < positions.Length; i += 2)
-			{
-				int p1 = positions[i+0];
-				int p2 = positions[i+1];
-				
-				if (p2 < p1)
-				{
-					p1 = positions[i+1];
-					p2 = positions[i+0];
-				}
-				
-				//	La position p1 dénote le début de la sélection et p2 sa fin.
-				//	Procède à quelques ajustements pour tenir compte correctement
-				//	des textes automatiques.
-				
-				if ((this.SkipOverAutoText (ref p2, Direction.Backward)) ||
-					(this.IsAfterManagedParagraph (this.temp_cursor)) ||
-					(p2+1 == this.TextLength))
-				{
-					this.SkipOverAutoText (ref p1, Direction.Backward);
-				}
-				
-				positions[i+0] = p1;
-				positions[i+1] = p2;
-			}
-			
-			return positions;
-		}
-		
+		}		
 		
 		protected virtual void OnCursorMoved()
 		{

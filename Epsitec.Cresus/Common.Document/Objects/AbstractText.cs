@@ -356,9 +356,10 @@ namespace Epsitec.Common.Document.Objects
 			this.MetaNavigator.DeleteSelection();
 			return true;
 		}
-		
+
 		public virtual bool EditCopy()
 		{
+#if false
 			string[] texts = this.textFlow.TextNavigator.GetSelectedTexts();
 			if ( texts == null || texts.Length == 0 )  return false;
 
@@ -374,10 +375,20 @@ namespace Epsitec.Common.Document.Objects
 			data.WriteTextLayout(text);
 			Support.Clipboard.SetData(data);
 			return true;
+#else
+			TextFlow flow = this.TextFlow;
+			Text.TextStory story = flow.TextStory;
+			Text.TextNavigator navigator = flow.TextNavigator;
+
+			Epsitec.Common.Text.Exchange.Rosetta.CopyText (story, navigator);
+			return true;
+
+#endif
 		}
 		
 		public virtual bool EditPaste()
 		{
+#if false
 			Support.Clipboard.ReadData data = Support.Clipboard.GetData();
 			string text = data.ReadTextLayout();
 			if ( text == null )
@@ -394,6 +405,14 @@ namespace Epsitec.Common.Document.Objects
 			this.MetaNavigator.Insert(text);
 			this.textFlow.NotifyAreaFlow();
 			return true;
+#else
+			TextFlow flow = this.TextFlow;
+			Text.TextStory story = flow.TextStory;
+			Text.TextNavigator navigator = flow.TextNavigator;
+
+			Epsitec.Common.Text.Exchange.Rosetta.PasteText(story, navigator);
+			return true;
+#endif
 		}
 
 		public virtual bool EditSelectAll()

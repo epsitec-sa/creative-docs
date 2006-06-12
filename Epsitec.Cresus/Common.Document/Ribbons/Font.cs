@@ -237,7 +237,7 @@ namespace Epsitec.Common.Document.Ribbons
 
 		private void HandleButtonMWClicked(object sender, MessageEventArgs e)
 		{
-			Objects.AbstractText text = this.document.Modifier.RetEditObject() as Objects.AbstractText;
+			Objects.AbstractText text = this.document.Modifier.RetEditObject ();
 			if ( text != null )
 			{
 				TextFlow flow = text.TextFlow;
