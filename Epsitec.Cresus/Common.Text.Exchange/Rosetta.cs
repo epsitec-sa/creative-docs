@@ -25,130 +25,12 @@ namespace Epsitec.Common.Text.Exchange
 		{
 		}
 
-		public string ConvertCtmlToHtml(string ctml)
-		{
-			//	Méthode bidon juste pour vérifier si les tests compilent.
 
-			return "TODO";
-		}
-
-		public enum SimpleXScript
-		{
-			Superscript,
-			Subscript,
-			Normalscript
-		} ;
-
-		static private SimpleXScript GetSimpleXScript(Wrappers.TextWrapper wrapper)
-		{
-
-			if (wrapper.Active.IsXscriptDefined)
-			{
-				if (wrapper.Active.Xscript.Offset > 0.0)
-					return SimpleXScript.Superscript;
-				if (wrapper.Active.Xscript.Offset < 0.0)
-					return SimpleXScript.Subscript;
-				else
-					return SimpleXScript.Normalscript;
-			}
-			else
-			{
-				return SimpleXScript.Normalscript;
-			}
-		}
+// fonctions de test pour essayer diverses choses
 
 
-
-		public static void TestCode2(TextStory story, TextNavigator navigator)
-		{
-			Wrappers.TextWrapper textWrapper = new Wrappers.TextWrapper ();
-			Wrappers.ParagraphWrapper paraWrapper = new Wrappers.ParagraphWrapper ();
-
-			StringBuilder output = new StringBuilder ();
-
-			textWrapper.Attach (navigator);
-			paraWrapper.Attach (navigator);
-
-			System.Windows.Forms.Clipboard clipboard;
-
-			HtmlTextOut htmlText = new HtmlTextOut ();
-			bool newParagraph = true;
-
-			navigator.MoveTo (0, 0);
-
-			htmlText.NewParagraph (paraWrapper.Active.JustificationMode);
-
-			while (true)
-			{
-				string runText;
-				int runLength = navigator.GetRunLength (100000);
-
-				if (runLength == 0)
-				{
-					break;
-				}
-
-				runText = navigator.ReadText (runLength);
-
-				// navigator.TextStyles[1].StyleProperties[1]. ;
-				// navigator.TextContext.StyleList.StyleMap.GetCaption ();
-				// navigator.TextContext.StyleList.
-
-				bool finishParagraph = false;
-				if (runLength == 1 && runText[0] == (char) Epsitec.Common.Text.Unicode.Code.ParagraphSeparator)
-				{
-					finishParagraph = true;
-					// on est tombé sur un séparateur de paragraphe
-				}
-				else
-				{
-					htmlText.SetItalic (textWrapper.Defined.IsInvertItalicDefined && textWrapper.Defined.InvertItalic);
-					htmlText.SetBold (textWrapper.Defined.IsInvertBoldDefined && textWrapper.Defined.InvertBold);
-					htmlText.SetUnderlined (textWrapper.Active.IsUnderlineDefined);
-					htmlText.SetStrikeout (textWrapper.Active.IsStrikeoutDefined);
-
-					SimpleXScript xscript = GetSimpleXScript (textWrapper);
-					htmlText.SetSimpleXScript (xscript);
-
-					htmlText.SetFontFace (textWrapper.Active.FontFace);
-					htmlText.SetFontSize (textWrapper.Active.IsFontSizeDefined ? textWrapper.Active.FontSize : 0);
-					htmlText.SetFontColor (textWrapper.Active.Color);
-
-					htmlText.AppendText (runText);
-				}
-
-				// avance au run suivant
-				navigator.MoveTo (Epsitec.Common.Text.TextNavigator.Target.CharacterNext, runLength);
-
-				// avance encore d'un seul caractère afin de se trouver véritablement dans
-				// le contexte du run
-				navigator.MoveTo (Epsitec.Common.Text.TextNavigator.Target.CharacterNext, 1);
-
-				if (navigator.GetRunLength (1000000) == 0)
-					break; // arrête si on est à la fin
-
-				// recule au début du run
-				navigator.MoveTo (Epsitec.Common.Text.TextNavigator.Target.CharacterPrevious, 1);
-
-				if (finishParagraph)
-				{
-					htmlText.CloseParagraph (paraWrapper.Active.JustificationMode);
-					finishParagraph = false;
-				}
-			}
-
-			htmlText.Terminate ();
-
-			System.Windows.Forms.DataObject data = new System.Windows.Forms.DataObject ();
-			data.SetData (System.Windows.Forms.DataFormats.Text, true, htmlText.rawText);
-			data.SetData (System.Windows.Forms.DataFormats.Html, true, htmlText.HtmlStream);
-			System.Windows.Forms.Clipboard.SetDataObject (data, true);
-
-			System.Diagnostics.Debug.WriteLine ("Code de test 1 appelé.");
-		}
-		
-		
-		public static void TestCode1(TextStory story, TextNavigator navigator)
+		// parcours du text
+		public static void TestCode(TextStory story, TextNavigator navigator)
 		{
 			Wrappers.TextWrapper textWrapper = new Wrappers.TextWrapper ();
 			Wrappers.ParagraphWrapper paraWrapper = new Wrappers.ParagraphWrapper ();
@@ -228,9 +110,9 @@ namespace Epsitec.Common.Text.Exchange
 
 			System.Diagnostics.Debug.WriteLine ("Code de test 1 appelé.");
 		}
-		
 
-		public static void TestCode(TextStory story, TextNavigator navigator)
+
+		public static void PasteText(TextStory story, TextNavigator navigator)
 		{
 			string s = NativeHtmlClipboardReader.ReadClipBoardHtml ();
 
@@ -279,6 +161,262 @@ namespace Epsitec.Common.Text.Exchange
 #endif
 
 		}
+
+
+		// test de création de styles
+
+		public static void TestCode6(TextStory story, TextNavigator navigator)
+		{
+			Epsitec.Common.Text.TextContext context = story.TextContext;
+			TextStyle[] styles = context.StyleList.StyleMap.GetSortedStyles ();
+
+			System.Collections.ArrayList properties = new System.Collections.ArrayList ();
+			System.Collections.ArrayList parents = new System.Collections.ArrayList ();
+			parents.Add (context.DefaultParagraphStyle);
+
+			// this.document.Modifier.OpletQueueBeginAction ((this.category == StyleCategory.Paragraph) ? Res.Strings.Action.AggregateNewParagraph : Res.Strings.Action.AggregateNewCharacter);
+
+			Text.TextStyle style = context.StyleList.NewTextStyle (/*this.document.Modifier.OpletQueue*/ null, null, Common.Text.TextStyleClass.Paragraph, properties, parents);
+
+			// obtient le nombre de styles de paragraphe
+#if false
+			int rank = styles.Length + 1;	// ne fonctionne pas car il y a des "trous" !??
+#else
+			int rank = 0 ;
+			foreach (TextStyle thestyle in context.StyleList.StyleMap.GetSortedStyles ())
+			{
+				string s = thestyle.Name;
+				s = context.StyleList.StyleMap.GetCaption (thestyle);
+				if (thestyle.TextStyleClass == TextStyleClass.Paragraph)
+					rank++;
+			}
+
+#endif
+			context.StyleList.StyleMap.SetCaption (null /*this.document.Modifier.OpletQueue*/, style, "Style créé par MW");
+			context.StyleList.StyleMap.SetRank(null, style, rank) ;
+			
+			//this.document.SetSelectedTextStyle (this.category, rank);
+
+			//this.document.Modifier.OpletQueueValidateAction ();
+			//this.document.Notifier.NotifyTextStyleListChanged ();
+			//this.document.IsDirtySerialize = true;
+
+			//this.oneShootSelectName = true;
+			//this.SetDirtyContent ();
+			return;
+		}
+
+
+		// Test pour parcourir tous les styles existants
+
+		public static void TestCode4(TextStory story, TextNavigator navigator)
+		{
+			Epsitec.Common.Text.TextContext context = story.TextContext;
+
+			int i;
+
+			TextStyle[] styles = context.StyleList.StyleMap.GetSortedStyles ();
+
+			foreach (TextStyle thestyle in styles)
+			{
+				string s = thestyle.Name;
+				s = context.StyleList.StyleMap.GetCaption (thestyle);
+
+
+			}
+
+			return;
+		}
+
+		
+		public string ConvertCtmlToHtml(string ctml)
+		{
+			//	Méthode bidon juste pour vérifier si les tests compilent.
+
+			return "TODO";
+		}
+
+		public enum SimpleXScript
+		{
+			Superscript,
+			Subscript,
+			Normalscript
+		} ;
+
+		static private SimpleXScript GetSimpleXScript(Wrappers.TextWrapper wrapper)
+		{
+
+			if (wrapper.Active.IsXscriptDefined)
+			{
+				if (wrapper.Active.Xscript.Offset > 0.0)
+					return SimpleXScript.Superscript;
+				if (wrapper.Active.Xscript.Offset < 0.0)
+					return SimpleXScript.Subscript;
+				else
+					return SimpleXScript.Normalscript;
+			}
+			else
+			{
+				return SimpleXScript.Normalscript;
+			}
+		}
+
+
+		public static void CopyText1(TextStory story, TextNavigator usernavigator)
+		{
+			TextNavigator navigator = new TextNavigator (story);
+
+			Wrappers.TextWrapper textWrapper = new Wrappers.TextWrapper ();
+			Wrappers.ParagraphWrapper paraWrapper = new Wrappers.ParagraphWrapper ();
+
+			StringBuilder output = new StringBuilder ();
+
+			textWrapper.Attach (navigator);
+			paraWrapper.Attach (navigator);
+
+			System.Windows.Forms.Clipboard clipboard;
+
+			HtmlTextOut htmlText = new HtmlTextOut ();
+			bool newParagraph = true;
+
+			int[] selectedPositions = usernavigator.GetAdjustedSelectionCursorPositions ();
+
+			// ne gère pas les sélections disjointes pour le moment
+			System.Diagnostics.Debug.Assert (selectedPositions.Length == 2);
+
+			int selectionLength = selectedPositions[1] - selectedPositions[0];
+			int selectionStart = selectedPositions[0];
+			navigator.MoveTo (selectionStart, 0);
+
+
+			while (true)
+			{
+				string runText;
+				int runLength = navigator.GetRunLength (selectionLength);
+
+				if (runLength == 0)
+				{
+					break;
+				}
+
+				runText = navigator.ReadText (runLength);
+
+				// navigator.TextStyles[1].StyleProperties[1]. ;
+				// navigator.TextContext.StyleList.StyleMap.GetCaption ();
+				// navigator.TextContext.StyleList.
+
+				bool finishParagraph = false;
+
+				// avance au run suivant
+				navigator.MoveTo (Epsitec.Common.Text.TextNavigator.Target.CharacterNext, runLength);
+
+			}
+		}
+
+		public static void CopyText(TextStory story, TextNavigator usernavigator)
+		{
+			TextNavigator navigator = new TextNavigator (story);
+
+			Wrappers.TextWrapper textWrapper = new Wrappers.TextWrapper ();
+			Wrappers.ParagraphWrapper paraWrapper = new Wrappers.ParagraphWrapper ();
+
+			StringBuilder output = new StringBuilder ();
+
+			textWrapper.Attach (navigator);
+			paraWrapper.Attach (navigator);
+
+			System.Windows.Forms.Clipboard clipboard;
+
+			HtmlTextOut htmlText = new HtmlTextOut ();
+			bool newParagraph = true;
+
+			int[] selectedPositions = usernavigator.GetAdjustedSelectionCursorPositions ();
+
+			// ne gère pas les sélections disjointes pour le moment
+			System.Diagnostics.Debug.Assert (selectedPositions.Length == 2);
+
+			int selectionLength = selectedPositions[1] - selectedPositions[0];
+			int selectionStart = selectedPositions[0];
+			int selectionEnd = selectedPositions[1];
+			int currentPosition = selectionStart;
+			navigator.MoveTo (selectionStart, 0);
+
+			htmlText.NewParagraph (paraWrapper.Active.JustificationMode);
+
+			while (true)
+			{
+				string runText;
+				int runLength = navigator.GetRunLength (selectionLength);
+
+				if (currentPosition + runLength > selectionEnd)
+					runLength = selectionEnd - currentPosition ;
+
+				if (runLength <= 0)
+				{
+					break;
+				}
+
+				runText = navigator.ReadText (runLength);
+				currentPosition += runLength;
+
+				// navigator.TextStyles[1].StyleProperties[1]. ;
+				// navigator.TextContext.StyleList.StyleMap.GetCaption ();
+				// navigator.TextContext.StyleList.
+
+				bool finishParagraph = false;
+				if (runLength == 1 && runText[0] == (char) Epsitec.Common.Text.Unicode.Code.ParagraphSeparator)
+				{
+					finishParagraph = true;
+					// on est tombé sur un séparateur de paragraphe
+				}
+				else
+				{
+					htmlText.SetItalic (textWrapper.Defined.IsInvertItalicDefined && textWrapper.Defined.InvertItalic);
+					htmlText.SetBold (textWrapper.Defined.IsInvertBoldDefined && textWrapper.Defined.InvertBold);
+					htmlText.SetUnderlined (textWrapper.Active.IsUnderlineDefined);
+					htmlText.SetStrikeout (textWrapper.Active.IsStrikeoutDefined);
+
+					SimpleXScript xscript = GetSimpleXScript (textWrapper);
+					htmlText.SetSimpleXScript (xscript);
+
+					htmlText.SetFontFace (textWrapper.Active.FontFace);
+					htmlText.SetFontSize (textWrapper.Active.IsFontSizeDefined ? textWrapper.Active.FontSize : 0);
+					htmlText.SetFontColor (textWrapper.Active.Color);
+
+					htmlText.AppendText (runText);
+				}
+
+				// avance au run suivant
+				navigator.MoveTo (Epsitec.Common.Text.TextNavigator.Target.CharacterNext, runLength);
+
+				// avance encore d'un seul caractère afin de se trouver véritablement dans
+				// le contexte du run
+				navigator.MoveTo (Epsitec.Common.Text.TextNavigator.Target.CharacterNext, 1);
+
+				if (navigator.GetRunLength (1) == 0)
+					break; // arrête si on est à la fin
+
+				// recule au début du run
+				navigator.MoveTo (Epsitec.Common.Text.TextNavigator.Target.CharacterPrevious, 1);
+
+				if (finishParagraph)
+				{
+					htmlText.CloseParagraph (paraWrapper.Active.JustificationMode);
+					finishParagraph = false;
+				}
+			}
+
+			htmlText.Terminate ();
+
+			System.Windows.Forms.DataObject data = new System.Windows.Forms.DataObject ();
+			data.SetData (System.Windows.Forms.DataFormats.Text, true, htmlText.rawText);
+			data.SetData (System.Windows.Forms.DataFormats.Html, true, htmlText.HtmlStream);
+			System.Windows.Forms.Clipboard.SetDataObject (data, true);
+
+			System.Diagnostics.Debug.WriteLine ("Code de test 1 appelé.");
+		}
+		
+		
 
 	}
 }

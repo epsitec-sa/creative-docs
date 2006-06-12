@@ -309,8 +309,8 @@ namespace Epsitec.Common.Text.Exchange
 		{
 			if (this.pendingDiv)
 			{
-				pendingDiv = false;
-				this.navigator.Insert (Epsitec.Common.Text.Unicode.Code.ParagraphSeparator);
+//				pendingDiv = false;
+//				this.navigator.Insert (Epsitec.Common.Text.Unicode.Code.ParagraphSeparator);
 			}
 
 			string alignMode = string.Empty;
@@ -329,15 +329,17 @@ namespace Epsitec.Common.Text.Exchange
 			bool justificationModeDefined = false;
 			Wrappers.JustificationMode oldjustificationmode = this.paraWrapper.Defined.JustificationMode;
 
-			if (alignMode.Length > 0 && alignMode == "center")
+			if (alignMode.Length > 0)
 			{
 				this.paraWrapper.SuspendSynchronizations ();
 				justificationModeDefined = this.paraWrapper.Defined.IsJustificationModeDefined;
-				this.paraWrapper.Defined.JustificationMode = Wrappers.JustificationMode.JustifyCenter ;
+				this.paraWrapper.Defined.JustificationMode = DecodeAlignMode (alignMode);
 				this.paraWrapper.ResumeSynchronizations ();
 			}
 
 			this.ProcessNodes (element.Nodes);
+
+				this.navigator.Insert (Epsitec.Common.Text.Unicode.Code.ParagraphSeparator);
 
 			if (justificationModeDefined)
 			{
@@ -349,6 +351,29 @@ namespace Epsitec.Common.Text.Exchange
 				this.paraWrapper.Defined.ClearJustificationMode();
 
 			this.pendingDiv = true;
+		}
+
+
+
+		private static Wrappers.JustificationMode DecodeAlignMode(string mode)
+		{
+			 switch (mode)
+			 {
+				 case "center":
+					 return Wrappers.JustificationMode.Center ;
+					 break ;
+				 case "right":
+					 return Wrappers.JustificationMode.AlignRight;
+					 break;
+				 case "justify":
+					 return Wrappers.JustificationMode.JustifyAlignLeft;
+					 break;
+				 case "left":
+					 return Wrappers.JustificationMode.AlignLeft;
+					 break;
+				 default:
+					 return Wrappers.JustificationMode.Unknown;
+			 }
 		}
 
 
