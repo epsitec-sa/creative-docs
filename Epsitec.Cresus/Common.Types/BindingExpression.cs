@@ -134,7 +134,7 @@ namespace Epsitec.Common.Types
 			switch (this.sourceType)
 			{
 				case DataSourceType.PropertyObject:
-					property = this.sourceProperty as DependencyProperty;
+					property   = (DependencyProperty) this.sourceProperty;
 					sourceName = property.Name;
 					break;
 				
@@ -361,7 +361,7 @@ namespace Epsitec.Common.Types
 					{
 						type = DataSourceType.PropertyObject;
 						
-						objectSource = doSource;
+						objectSource   = doSource;
 						objectProperty = property;
 					}
 					else if ((sdSource != null) &&

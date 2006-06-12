@@ -929,32 +929,7 @@ namespace Epsitec.Common.Widgets
 
 			if (this.HasChildren)
 			{
-				IEnumerable<Visual> children = this.Children;
-				Layouts.ILayoutEngine engine = Layouts.LayoutEngine.GetLayoutEngine (this);
-
-				Drawing.Rectangle rect = this.Client.Bounds;
-				
-				rect.Deflate (this.Padding);
-				rect.Deflate (this.GetInternalPadding ());
-
-				if (this.children.AnchorLayoutCount > 0)
-				{
-					Layouts.LayoutEngine.AnchorEngine.UpdateLayout (this, rect, children);
-				}
-				if (this.children.DockLayoutCount > 0)
-				{
-					Layouts.LayoutEngine.DockEngine.UpdateLayout (this, rect, children);
-				}
-				if (this.children.StackLayoutCount > 0)
-				{
-					Layouts.LayoutEngine.StackEngine.UpdateLayout (this, rect, children);
-				}
-
-				if (engine != null)
-				{
-					engine.UpdateLayout (this, rect, children);
-				}
-				
+				this.LayoutArrange ();
 				this.ManualArrange ();
 			}
 
@@ -966,6 +941,35 @@ namespace Epsitec.Common.Widgets
 			if (context != null)
 			{
 				context.RemoveVisualFromArrangeQueue (this);
+			}
+		}
+
+		protected virtual void LayoutArrange()
+		{
+			IEnumerable<Visual> children = this.Children;
+			Layouts.ILayoutEngine engine = Layouts.LayoutEngine.GetLayoutEngine (this);
+
+			Drawing.Rectangle rect = this.Client.Bounds;
+
+			rect.Deflate (this.Padding);
+			rect.Deflate (this.GetInternalPadding ());
+
+			if (this.children.AnchorLayoutCount > 0)
+			{
+				Layouts.LayoutEngine.AnchorEngine.UpdateLayout (this, rect, children);
+			}
+			if (this.children.DockLayoutCount > 0)
+			{
+				Layouts.LayoutEngine.DockEngine.UpdateLayout (this, rect, children);
+			}
+			if (this.children.StackLayoutCount > 0)
+			{
+				Layouts.LayoutEngine.StackEngine.UpdateLayout (this, rect, children);
+			}
+
+			if (engine != null)
+			{
+				engine.UpdateLayout (this, rect, children);
 			}
 		}
 

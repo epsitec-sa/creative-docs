@@ -103,6 +103,28 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		protected override void LayoutArrange()
+		{
+			Widget parent = this.Parent;
+			
+			if ((parent != null) &&
+				(Layouts.GridLayoutEngine.GetColumn (this) >= 0) &&
+				(Layouts.GridLayoutEngine.GetRow (this) >= 0))
+			{
+				Layouts.ILayoutEngine engine = Layouts.LayoutEngine.GetLayoutEngine (parent);
+				
+				if (engine is Layouts.GridLayoutEngine)
+				{
+					//	This placeholder is in a grid. No need to arrange the children;
+					//	they get arranged by the grid itself !
+					
+					return;
+				}
+			}
+			
+			base.LayoutArrange ();
+		}
+		
 		protected override void OnBindingChanged(DependencyProperty property)
 		{
 			if (property == Placeholder.ValueProperty)
@@ -140,6 +162,16 @@ namespace Epsitec.Common.Widgets
 					{
 						this.controller.RefreshUserInterface (UndefinedValue.Instance, value);
 					}
+#if false
+					Widget parent = this.Parent;
+
+					if (parent != null)
+					{
+						Layouts.LayoutContext.AddToMeasureQueue (this);
+						Layouts.LayoutContext.AddToMeasureQueue (parent);
+						Layouts.LayoutContext.AddToArrangeQueue (parent);
+					}
+#endif
 				}
 			}
 		}
