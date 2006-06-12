@@ -699,6 +699,70 @@ namespace Epsitec.Common.Types
 				}
 			}
 		}
+
+		/// <summary>
+		/// Compares two dependency objects based on their values.
+		/// </summary>
+		/// <param name="a">Dependency object.</param>
+		/// <param name="b">Dependency object.</param>
+		/// <returns><c>true</c> if both objects contain the same values; otherwise, <c>false</c>.</returns>
+		public static bool EqualValues(DependencyObject a, DependencyObject b)
+		{
+			if (a == b)
+			{
+				return true;
+			}
+			
+			if ((a == null) ||
+				(b == null))
+			{
+				return false;
+			}
+
+			List<LocalValueEntry> aValues = new List<LocalValueEntry> (a.LocalValueEntries);
+			List<LocalValueEntry> bValues = new List<LocalValueEntry> (b.LocalValueEntries);
+
+			if (aValues.Count != bValues.Count)
+			{
+				return false;
+			}
+
+			foreach (LocalValueEntry entry in aValues)
+			{
+				object va = entry.Value;
+				object vb = b.GetValue (entry.Property);
+
+				if (va == vb)
+				{
+					continue;
+				}
+				if ((va == null) ||
+					(vb == null))
+				{
+					return false;
+				}
+				if (va.Equals (vb))
+				{
+					continue;
+				}
+				if ((va is System.Collections.ICollection) &&
+					(vb is System.Collections.ICollection))
+				{
+					System.Collections.ICollection ca = va as System.Collections.ICollection;
+					System.Collections.ICollection cb = vb as System.Collections.ICollection;
+
+					if ((ca.Count == 0) &&
+						(cb.Count == 0))
+					{
+						continue;
+					}
+				}
+				
+				return false;
+			}
+			
+			return true;
+		}
 		
 		protected void AddUserEventHandler(string name, System.Delegate handler)
 		{
