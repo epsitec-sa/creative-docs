@@ -127,7 +127,6 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.UpdateDruidsIndex();
 			this.UpdateArray();
 			this.SelectArray();
-			this.UpdateButtons();
 
 			string label = "";
 			if (!this.ressource.IsEmpty)
@@ -143,6 +142,8 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.filterLabel.Text = label;
 			this.filterText.Text = "";
 			this.ignoreChanged = false;
+
+			this.UpdateButtons();
 
 			Widget widget = this.filterLabel;
 			if (this.focusedWidget != null)
@@ -302,12 +303,13 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		protected void UpdateButtons()
 		{
-			this.buttonClear.Enable = (this.filterLabel.Text != "" || this.filterText.Text != "");
+			string label = TextLayout.ConvertToSimpleText(this.filterLabel.Text);
+			string text  = TextLayout.ConvertToSimpleText(this.filterText.Text);
+
+			this.buttonClear.Enable = (label != "" || text != "");
 			this.buttonUse.Enable = (this.array.SelectedRow != -1);
 
 			bool createEnable = false;
-			string label = TextLayout.ConvertToSimpleText(this.filterLabel.Text);
-			string text  = TextLayout.ConvertToSimpleText(this.filterText.Text);
 			if (label != "" && text != "")
 			{
 				if (Misc.IsValidLabel(ref label))
