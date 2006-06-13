@@ -11,19 +11,20 @@ namespace Epsitec.Common.Types
 			System.Type type = typeof (MyEnum);
 			
 			EnumType et = new EnumType (type);
+			EnumValue[] ev = Collection.ToArray<EnumValue> (et.Values);
 			
-			Assert.AreEqual (5, et.Values.Length);
+			Assert.AreEqual (5, ev.Length);
 			Assert.IsFalse (et.IsCustomizable);
 			Assert.IsFalse (et.IsDefinedAsFlags);
-			
-			Assert.AreEqual ("None",   et.Values[0].Name);
-			Assert.AreEqual ("First",  et.Values[1].Name);
-			Assert.AreEqual ("Second", et.Values[2].Name);
-			Assert.AreEqual ("Third",  et.Values[3].Name);
-			Assert.AreEqual ("Extra",  et.Values[4].Name);
-			
-			Assert.IsFalse (et.Values[0].IsHidden);
-			Assert.IsTrue  (et.Values[4].IsHidden);
+
+			Assert.AreEqual ("None",   ev[0].Name);
+			Assert.AreEqual ("First",  ev[1].Name);
+			Assert.AreEqual ("Second", ev[2].Name);
+			Assert.AreEqual ("Third",  ev[3].Name);
+			Assert.AreEqual ("Extra",  ev[4].Name);
+
+			Assert.IsFalse (ev[0].IsHidden);
+			Assert.IsTrue (ev[4].IsHidden);
 			
 			Assert.AreEqual (-1, et["None"]  .Rank);
 			Assert.AreEqual ( 1, et["First"] .Rank);
@@ -49,16 +50,17 @@ namespace Epsitec.Common.Types
 			System.Type type = typeof (MyFlags);
 			
 			EnumType et = new EnumType (type);
+			EnumValue[] ev = Collection.ToArray<EnumValue> (et.Values);
 			
-			Assert.AreEqual (5, et.Values.Length);
+			Assert.AreEqual (5, ev.Length);
 			Assert.IsFalse (et.IsCustomizable);
 			Assert.IsTrue (et.IsDefinedAsFlags);
 			
-			Assert.AreEqual ("None",   et.Values[0].Name);
-			Assert.AreEqual ("Flag1",  et.Values[1].Name);
-			Assert.AreEqual ("Flag2", et.Values[2].Name);
-			Assert.AreEqual ("Flag3",  et.Values[3].Name);
-			Assert.AreEqual ("Flag4",  et.Values[4].Name);
+			Assert.AreEqual ("None",  ev[0].Name);
+			Assert.AreEqual ("Flag1", ev[1].Name);
+			Assert.AreEqual ("Flag2", ev[2].Name);
+			Assert.AreEqual ("Flag3", ev[3].Name);
+			Assert.AreEqual ("Flag4", ev[4].Name);
 			
 			Assert.AreEqual (0, et["None"] .Rank);
 			Assert.AreEqual (1, et["Flag1"].Rank);
@@ -106,15 +108,16 @@ namespace Epsitec.Common.Types
 		[Test] public void CheckOpenEnumType()
 		{
 			EnumType et = new OpenEnumType (typeof (MyEnum));
-			
-			Assert.AreEqual (5, et.Values.Length);
+			EnumValue[] ev = Collection.ToArray<EnumValue> (et.Values);
+						
+			Assert.AreEqual (5, ev.Length);
 			Assert.IsTrue (et.IsCustomizable);
-			
-			Assert.AreEqual ("None",   et.Values[0].Name);
-			Assert.AreEqual ("First",  et.Values[1].Name);
-			Assert.AreEqual ("Second", et.Values[2].Name);
-			Assert.AreEqual ("Third",  et.Values[3].Name);
-			Assert.AreEqual ("Extra",  et.Values[4].Name);
+
+			Assert.AreEqual ("None",   ev[0].Name);
+			Assert.AreEqual ("First",  ev[1].Name);
+			Assert.AreEqual ("Second", ev[2].Name);
+			Assert.AreEqual ("Third",  ev[3].Name);
+			Assert.AreEqual ("Extra",  ev[4].Name);
 			
 			Assert.AreEqual (-1, et["None"]  .Rank);
 			Assert.AreEqual ( 1, et["First"] .Rank);

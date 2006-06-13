@@ -1,6 +1,8 @@
 //	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
+using System.Collections.Generic;
+
 namespace Epsitec.Cresus.Database
 {
 	using IEnumType  = Common.Types.IEnumType;
@@ -57,13 +59,11 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
-		public DbEnumValue[]					Values
+		public IEnumerable<DbEnumValue>			Values
 		{
 			get
 			{
-				DbEnumValue[] values = new DbEnumValue[this.values.Length];
-				this.values.CopyTo (values, 0);
-				return values;
+				return this.values;
 			}
 		}
 		
@@ -91,11 +91,14 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
-		IEnumValue[]							IEnumType.Values
+		IEnumerable<IEnumValue>					IEnumType.Values
 		{
 			get
 			{
-				return this.Values;
+				foreach (IEnumValue item in this.Values)
+				{
+					yield return item;
+				}
 			}
 		}
 		

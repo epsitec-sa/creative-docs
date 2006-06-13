@@ -298,9 +298,10 @@ namespace Epsitec.Common.Support
 			command.AddRange (new Command[] { commandA, commandB, commandC });
 
 			Types.IEnumType type = command;
+			Types.IEnumValue[] values = Types.Collection.ToArray (type.Values);
 
 			Assert.IsNotNull (type);
-			Assert.AreEqual (3, type.Values.Length);
+			Assert.AreEqual (3, values.Length);
 			Assert.AreEqual (0, type[0].Rank);
 			Assert.AreEqual (0, type["TestCmdA"].Rank);
 			Assert.AreEqual (1, type["TestCmdB"].Rank);

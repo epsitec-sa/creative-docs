@@ -723,12 +723,13 @@ namespace Epsitec.Cresus.Database
 			{
 				//	Crée les lignes de description des valeurs de l'énumération :
 				
-				DbEnumValue[] enum_values = type_enum.Values;
+				int i = 0;
 				
-				for (int i = 0; i < enum_values.Length; i++)
+				foreach (DbEnumValue value in type_enum.Values)
 				{
-					enum_values[i].DefineInternalKey (new DbKey (enum_id + i));
-					this.InsertEnumValueDefRow (transaction, type, enum_values[i]);
+					value.DefineInternalKey (new DbKey (enum_id + i));
+					this.InsertEnumValueDefRow (transaction, type, value);
+					i++;
 				}
 			}
 		}

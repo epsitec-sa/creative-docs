@@ -183,18 +183,14 @@ namespace Epsitec.Common.Widgets
 
 		#region IEnumType Members
 
-		IEnumValue[] IEnumType.Values
+		IEnumerable<IEnumValue> IEnumType.Values
 		{
 			get
 			{
-				CommandEnumValue[] values = new CommandEnumValue[this.commands.Count];
-
 				for (int i = 0; i < this.commands.Count; i++)
 				{
-					values[i] = new CommandEnumValue (i, this.commands[i]);
+					yield return new CommandEnumValue (i, this.commands[i]);
 				}
-				
-				return values;
 			}
 		}
 
