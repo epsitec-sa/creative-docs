@@ -81,10 +81,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 		public void AddPlaceHolder(Placeholder placeholder)
 		{
 			this.grid.RowDefinitions.Add(new RowDefinition());
+			int row = this.grid.RowDefinitions.Count-1;
 
-			placeholder.Margins = new Margins(0, 0, 0, 1);
+			placeholder.Margins = new Margins(0, 0, (row==0)?0:-1, 0);
 			GridLayoutEngine.SetColumn(placeholder, 0);
-			GridLayoutEngine.SetRow(placeholder, this.grid.RowDefinitions.Count-1);
+			GridLayoutEngine.SetRow(placeholder, row);
 			GridLayoutEngine.SetColumnSpan(placeholder, 2);
 			this.container.Children.Add(placeholder);
 		}

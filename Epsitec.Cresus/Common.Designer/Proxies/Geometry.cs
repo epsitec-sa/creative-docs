@@ -2,6 +2,7 @@ using System.Collections.Generic;
 
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
+using Epsitec.Common.Drawing;
 
 namespace Epsitec.Common.Designer.Proxies
 {
@@ -78,6 +79,7 @@ namespace Epsitec.Common.Designer.Proxies
 			}
 		}
 
+
 		protected override void InitialisePropertyValues()
 		{
 			//	Cette méthode est appelée par Proxies.Abstract quand on connecte
@@ -85,7 +87,7 @@ namespace Epsitec.Common.Designer.Proxies
 			
 			//	Recopie localement les diverses propriétés du widget sélectionné
 			//	pour pouvoir ensuite travailler dessus :
-			Drawing.Margins margins = (Drawing.Margins) this.GetWidgetProperty(Visual.MarginsProperty);
+			Margins margins = (Margins) this.GetWidgetProperty(Visual.MarginsProperty);
 
 			this.LeftMargin   = margins.Left;
 			this.RightMargin  = margins.Right;
@@ -99,7 +101,7 @@ namespace Epsitec.Common.Designer.Proxies
 			//	nos propriétés de définition de la marge (LeftMargin, RightMargin,
 			//	etc.) pour permettre de mettre à jour les widgets connectés :
 			Geometry that = (Geometry) o;
-			Drawing.Margins margins = new Drawing.Margins(that.LeftMargin, that.RightMargin, that.TopMargin, that.BottomMargin);
+			Margins margins = new Margins(that.LeftMargin, that.RightMargin, that.TopMargin, that.BottomMargin);
 			
 			//	Demande à Proxies.Abstract de mettre à jour la propriété qui
 			//	définit les marges du ou des widget(s) sélectionné(s) :
@@ -107,9 +109,9 @@ namespace Epsitec.Common.Designer.Proxies
 		}
 
 
-		public static readonly DependencyProperty LeftMarginProperty	= DependencyProperty.Register ("LeftMargin",   typeof (double), typeof (Geometry), new DependencyPropertyMetadata(0.0, Geometry.NotifyMarginChanged));
-		public static readonly DependencyProperty RightMarginProperty	= DependencyProperty.Register ("RightMargin",  typeof (double), typeof (Geometry), new DependencyPropertyMetadata(0.0, Geometry.NotifyMarginChanged));
-		public static readonly DependencyProperty TopMarginProperty		= DependencyProperty.Register ("TopMargin",    typeof (double), typeof (Geometry), new DependencyPropertyMetadata(0.0, Geometry.NotifyMarginChanged));
-		public static readonly DependencyProperty BottomMarginProperty	= DependencyProperty.Register ("BottomMargin", typeof (double), typeof (Geometry), new DependencyPropertyMetadata(0.0, Geometry.NotifyMarginChanged));
+		public static readonly DependencyProperty LeftMarginProperty	= DependencyProperty.Register("LeftMargin",   typeof(double), typeof(Geometry), new DependencyPropertyMetadata(0.0, Geometry.NotifyMarginChanged));
+		public static readonly DependencyProperty RightMarginProperty	= DependencyProperty.Register("RightMargin",  typeof(double), typeof(Geometry), new DependencyPropertyMetadata(0.0, Geometry.NotifyMarginChanged));
+		public static readonly DependencyProperty TopMarginProperty		= DependencyProperty.Register("TopMargin",    typeof(double), typeof(Geometry), new DependencyPropertyMetadata(0.0, Geometry.NotifyMarginChanged));
+		public static readonly DependencyProperty BottomMarginProperty	= DependencyProperty.Register("BottomMargin", typeof(double), typeof(Geometry), new DependencyPropertyMetadata(0.0, Geometry.NotifyMarginChanged));
 	}
 }
