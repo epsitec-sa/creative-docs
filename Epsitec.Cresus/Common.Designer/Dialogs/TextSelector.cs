@@ -189,13 +189,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			//	Construit l'index en fonction des ressources.
 			//	Retourne le rang de la ressource correspondant le mieux possible aux filtres.
 			ResourceBundleCollection bundles = this.mainWindow.CurrentModule.Bundles;
-			System.Globalization.CultureInfo culture = this.mainWindow.CurrentModule.ResourceManager.ActiveCulture;
-			//?this.primaryBundle = this.mainWindow.CurrentModule.GetCulture(Misc.CultureName(culture));
-			this.primaryBundle = bundles[ResourceLevel.Merged, culture];
-			if (this.primaryBundle == null)
-			{
-				this.primaryBundle = bundles[ResourceLevel.Default];
-			}
+			this.primaryBundle = bundles[ResourceLevel.Merged];
 
 			this.druidsIndex.Clear();
 

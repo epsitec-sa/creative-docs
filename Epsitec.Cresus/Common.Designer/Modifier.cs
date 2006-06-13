@@ -121,15 +121,27 @@ namespace Epsitec.Common.Designer
 		{
 			//	Crée une nouvelle ressource dans la culture par défaut du module.
 			ResourceBundleCollection bundles = this.module.Bundles;
+			System.Globalization.CultureInfo culture = this.module.ResourceManager.ActiveCulture;
+			ResourceBundle actualBundle = bundles[ResourceLevel.Localized, culture];
 			ResourceBundle defaultBundle = bundles[ResourceLevel.Default];
 
 			Druid druid = this.CreateUniqueDruid();
-			ResourceBundle.Field newField = defaultBundle.CreateField(ResourceFieldType.Data);
+
+			if (defaultBundle != actualBundle)
+			{
+				ResourceBundle.Field defaultField = defaultBundle.CreateField(ResourceFieldType.Data);
+				defaultField.SetDruid(druid);
+				defaultField.SetName(name);
+				defaultField.SetModificationId(0);
+				defaultBundle.Add(defaultField);
+			}
+
+			ResourceBundle.Field newField = actualBundle.CreateField(ResourceFieldType.Data);
 			newField.SetDruid(druid);
 			newField.SetName(name);
 			newField.SetStringValue(text);
 			newField.SetModificationId(0);
-			defaultBundle.Add(newField);
+			actualBundle.Add(newField);
 
 			this.IsDirty = false;
 			return druid;
