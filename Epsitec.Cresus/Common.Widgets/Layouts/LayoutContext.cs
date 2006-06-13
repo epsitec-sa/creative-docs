@@ -149,7 +149,8 @@ namespace Epsitec.Common.Widgets.Layouts
 		private void AddToMeasureQueue(Visual visual, int depth)
 		{
 			System.Diagnostics.Debug.Assert (visual != null);
-			
+			System.Diagnostics.Debug.Assert (depth >= 0);
+
 			VisualNode node = new VisualNode (visual, ++this.nodeRank, SortMode.Measure, depth);
 			VisualNode oldNode;
 			
@@ -279,34 +280,39 @@ namespace Epsitec.Common.Widgets.Layouts
 					//	The visual has specified other measures. Its contents
 					//	will have to be arranged.
 
-					this.AddToArrangeQueue (node.Visual, node.Depth);
+					int depth  = node.Depth;
+					Visual visual = node.Visual;
+
+					this.AddToArrangeQueue (visual, depth);
 
 					//	If the visual is either docked or anchored, then the
 					//	contents of the parent needs to be re-arranged too.
+					
+					//	This will also be the case if a special layout engine
+					//	is attached to the container.
 
-					if (node.Depth > 1)
+					if (depth > 1)
 					{
-						LayoutMode mode = LayoutEngine.GetLayoutMode (node.Visual);
+						LayoutMode mode = LayoutEngine.GetLayoutMode (visual);
 
 						if (mode != LayoutMode.None)
 						{
-							Visual parent = node.Visual.Parent;
-							int depth = node.Depth - 1;
+							Visual parent = visual.Parent;
 
-							if (Helpers.VisualTree.FindLayoutContext (node.Visual) == null)
+							if (Helpers.VisualTree.FindLayoutContext (visual) == null)
 							{
-								System.Diagnostics.Debug.WriteLine ("No context for visual " + node.Visual.ToString ());
+								System.Diagnostics.Debug.WriteLine ("No context for visual " + visual.ToString ());
 							}
 							if (parent == null)
 							{
-								System.Diagnostics.Debug.WriteLine ("No parent for visual " + node.Visual.ToString ());
+								System.Diagnostics.Debug.WriteLine ("No parent for visual " + visual.ToString ());
 							}
 
-							System.Diagnostics.Debug.Assert (Helpers.VisualTree.FindLayoutContext (node.Visual) == this);
+							System.Diagnostics.Debug.Assert (Helpers.VisualTree.FindLayoutContext (visual) == this);
 							System.Diagnostics.Debug.Assert (parent != null);
 
-							this.AddToMeasureQueue (parent, depth);
-							this.AddToArrangeQueue (parent, depth);
+							this.AddToMeasureQueue (parent, depth-1);
+							this.AddToArrangeQueue (parent, depth-1);
 						}
 					}
 				}
