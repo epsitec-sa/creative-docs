@@ -21,23 +21,23 @@ namespace Epsitec.Common.Designer
 		
 		public void SetSelection(Widget widget)
 		{
-			this.widgets = new List<Widget> ();
-			this.widgets.Add (widget);
-			this.GenerateProxies ();
+			this.widgets = new List<Widget>();
+			this.widgets.Add(widget);
+			this.GenerateProxies();
 		}
 		
 		public void SetSelection(IEnumerable<Widget> collection)
 		{
-			this.widgets = new List<Widget> ();
-			this.widgets.AddRange (collection);
-			this.GenerateProxies ();
+			this.widgets = new List<Widget>();
+			this.widgets.AddRange(collection);
+			this.GenerateProxies();
 		}
 
 		public void CreateUserInterface(Widget container)
 		{
 			foreach (IProxy proxy in this.Proxies)
 			{
-				this.CreateUserInterface (container, proxy);
+				this.CreateUserInterface(container, proxy);
 			}
 		}
 
@@ -48,8 +48,7 @@ namespace Epsitec.Common.Designer
 				return true;
 			}
 			
-			if ((a == null) ||
-				(b == null))
+			if (a == null || b == null)
 			{
 				return false;
 			}
@@ -57,13 +56,12 @@ namespace Epsitec.Common.Designer
 			//	Ca ne vaut pas la peine de comparer les valeurs des deux proxies
 			//	si leur rang est différent, car cela implique qu'ils ne vont pas
 			//	être représentés par des panneaux identiques :
-			
 			if (a.Rank != b.Rank)
 			{
 				return false;
 			}
 			
-			return DependencyObject.EqualValues (a as DependencyObject, b as DependencyObject);
+			return DependencyObject.EqualValues(a as DependencyObject, b as DependencyObject);
 		}
 		
 		private void GenerateProxies()
@@ -71,27 +69,24 @@ namespace Epsitec.Common.Designer
 			//	Génère une liste (triée) de tous les proxies. Il se peut qu'il
 			//	y ait plusieurs proxies de type identique si plusieurs widgets
 			//	utilisent des réglages différents.
-
-			List<IProxy> proxies = new List<IProxy> ();
+			List<IProxy> proxies = new List<IProxy>();
 
 			foreach (Widget widget in this.widgets)
 			{
-				foreach (IProxy proxy in this.GenerateProxies (widget))
+				foreach (IProxy proxy in this.GenerateProxies(widget))
 				{
 					//	Evite les doublons pour des proxies qui seraient à 100%
 					//	identiques :
-
 					bool insert = true;
 
 					foreach (IProxy item in proxies)
 					{
-						if (ProxyManager.EqualValues (item, proxy))
+						if (ProxyManager.EqualValues(item, proxy))
 						{
 							//	Trouvé un doublon. On ajoute simplement le widget
 							//	courant au proxy qui existe déjà avec les mêmes
 							//	valeurs :
-
-							item.AddWidget (widget);
+							item.AddWidget(widget);
 							insert = false;
 							break;
 						}
@@ -99,14 +94,13 @@ namespace Epsitec.Common.Designer
 
 					if (insert)
 					{
-						proxies.Add (proxy);
+						proxies.Add(proxy);
 					}
 				}
 			}
 
 			//	Trie les proxies selon leur rang :
-			
-			proxies.Sort (new ProxyManager.ProxyRankComparer ());
+			proxies.Sort(new Comparers.ProxyRank());
 
 			this.proxies = proxies;
 		}
@@ -115,71 +109,33 @@ namespace Epsitec.Common.Designer
 		{
 			//	TODO: créer les divers Proxies pour le widget; on peut simplement
 			//	ajouter ici des 'yield return new ...'
-
-			yield return new Proxies.Geometry (widget);
+			yield return new Proxies.Geometry(widget);
 		}
 
 		private void CreateUserInterface(Widget container, IProxy proxy)
 		{
 			//	Crée un panneau pour représenter le proxy spécifié.
-
-			GroupBox box = new GroupBox (container);
+			GroupBox box = new GroupBox(container);
 			DependencyObject source = proxy as DependencyObject;
 			
 			box.Dock = DockStyle.Top;
-			box.Padding = new Drawing.Margins (4, 4, 4, 4);
-			box.Text = source.GetType ().Name;
+			box.Padding = new Drawing.Margins(4, 4, 4, 4);
+			box.Text = source.GetType().Name;
 			box.PreferredHeight = 30;
 
 			foreach (DependencyProperty property in source.LocalProperties)
 			{
-				Placeholder placeholder = new Placeholder (box);
-				Binding binding = new Binding (BindingMode.TwoWay, source, property.Name);
-				placeholder.SetBinding (Placeholder.ValueProperty, binding);
+				Placeholder placeholder = new Placeholder(box);
+				Binding binding = new Binding(BindingMode.TwoWay, source, property.Name);
+				placeholder.SetBinding(Placeholder.ValueProperty, binding);
 				placeholder.Controller = "String";
 				placeholder.Dock = DockStyle.Top;
-				placeholder.Margins = new Drawing.Margins (0, 0, 0, 0);
+				placeholder.Margins = new Drawing.Margins(0, 0, 0, 0);
 			}
 		}
 
-		#region ProxyRankComparer Class
 
-		private class ProxyRankComparer : IComparer<IProxy>
-		{
-			#region IComparer<IProxy> Members
-
-			public int Compare(IProxy a, IProxy b)
-			{
-				if (a == b)
-				{
-					return 0;
-				}
-				if (a == null)
-				{
-					return -1;
-				}
-				if (b == null)
-				{
-					return 1;
-				}
-				if (a.Rank < b.Rank)
-				{
-					return -1;
-				}
-				if (a.Rank > b.Rank)
-				{
-					return 1;
-				}
-
-				return 0;
-			}
-
-			#endregion
-		}
-		
-		#endregion
-
-		List<Widget> widgets;
-		List<IProxy> proxies;
+		private List<Widget>			widgets;
+		private List<IProxy>			proxies;
 	}
 }
