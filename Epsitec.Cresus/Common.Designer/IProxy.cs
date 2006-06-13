@@ -14,6 +14,11 @@ namespace Epsitec.Common.Designer
 		/// <param name="widget">The widget to add.</param>
 		void AddWidget(Widget widget);
 
+		/// <summary>
+		/// Gets the rank of the proxy in the user interface. Proxies with smaller
+		/// values are displayed first
+		/// </summary>
+		/// <value>The rank.</value>
 		int Rank
 		{
 			get;
