@@ -118,7 +118,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.tabPageObjects.Padding = new Margins(10, 10, 10, 10);
 			this.tabBook.Items.Add(this.tabPageObjects);
 
-			this.proxyManager = new ProxyManager ();
+			this.proxyManager = new ProxyManager();
 
 			this.tabPageCultures = new TabPage();
 			this.tabPageCultures.TabTitle = Res.Strings.Viewers.Panels.TabCultures;
@@ -138,18 +138,6 @@ namespace Epsitec.Common.Designer.Viewers
 			this.UpdateEdit();
 		}
 
-		public void ClearProxies()
-		{
-			this.tabPageObjects.Children.Clear ();
-		}
-
-		public void DefineProxies(IEnumerable<Widget> widgets)
-		{
-			this.ClearProxies ();
-			this.proxyManager.SetSelection (widgets);
-			this.proxyManager.CreateUserInterface (this.tabPageObjects);
-		}
-		
 		protected override void Dispose(bool disposing)
 		{
 			if (disposing)
@@ -164,6 +152,7 @@ namespace Epsitec.Common.Designer.Viewers
 			base.Dispose(disposing);
 		}
 
+
 		public override void PaintHandler(Graphics graphics, Rectangle repaint, IPaintFilter paintFilter)
 		{
 			if (paintFilter == null)
@@ -171,7 +160,7 @@ namespace Epsitec.Common.Designer.Viewers
 				paintFilter = this.panelEditor;
 			}
 			
-			base.PaintHandler (graphics, repaint, paintFilter);
+			base.PaintHandler(graphics, repaint, paintFilter);
 		}
 
 
@@ -636,6 +625,21 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 			return false;
 		}
+
+
+		#region Proxies
+		protected void DefineProxies(IEnumerable<Widget> widgets)
+		{
+			this.ClearProxies();
+			this.proxyManager.SetSelection(widgets);
+			this.proxyManager.CreateUserInterface(this.tabPageProperties);
+		}
+
+		protected void ClearProxies()
+		{
+			this.tabPageProperties.Children.Clear();
+		}
+		#endregion
 
 
 		void HandleArrayCellsQuantityChanged(object sender)
