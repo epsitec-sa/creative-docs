@@ -34,8 +34,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			this.grid = new GridLayoutEngine();
 			this.grid.ColumnDefinitions.Add(new ColumnDefinition(new GridLength(1, GridUnitType.Proportional)));
-			this.grid.ColumnDefinitions.Add(new ColumnDefinition());
-			LayoutEngine.SetLayoutEngine(this.container, grid);
+			this.grid.ColumnDefinitions.Add(new ColumnDefinition(new GridLength(50, GridUnitType.Absolute)));
+			LayoutEngine.SetLayoutEngine(this.container, this.grid);
 
 			this.Entered += new MessageEventHandler(this.HandleMouseEntered);
 			this.Exited += new MessageEventHandler(this.HandleMouseExited);
@@ -81,10 +81,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 		public void AddPlaceHolder(Placeholder placeholder)
 		{
 			this.grid.RowDefinitions.Add(new RowDefinition());
-			int row = this.grid.RowDefinitions.Count-1;
 
 			GridLayoutEngine.SetColumn(placeholder, 0);
-			GridLayoutEngine.SetRow(placeholder, row);
+			GridLayoutEngine.SetRow(placeholder, this.grid.RowDefinitions.Count-1);
 			GridLayoutEngine.SetColumnSpan(placeholder, 2);
 			this.container.Children.Add(placeholder);
 		}
