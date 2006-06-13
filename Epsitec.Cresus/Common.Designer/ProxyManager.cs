@@ -124,12 +124,11 @@ namespace Epsitec.Common.Designer
 
 			foreach (DependencyProperty property in source.LocalProperties)
 			{
-				Placeholder placeholder = new Placeholder(panel.Container);
+				Placeholder placeholder = new Placeholder();
 				Binding binding = new Binding(BindingMode.TwoWay, source, property.Name);
 				placeholder.SetBinding(Placeholder.ValueProperty, binding);
 				placeholder.Controller = "String";
-				placeholder.Dock = DockStyle.Top;
-				placeholder.Margins = new Margins(0, 0, 0, 0);
+				panel.AddPlaceHolder(placeholder);
 			}
 		}
 
