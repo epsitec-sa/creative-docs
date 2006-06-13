@@ -46,11 +46,13 @@ namespace Epsitec.Common.Widgets
 			grid.ColumnDefinitions.Add (new Layouts.ColumnDefinition ());
 			grid.ColumnDefinitions.Add (new Layouts.ColumnDefinition (new Layouts.GridLength (40)));
 			grid.ColumnDefinitions.Add (new Layouts.ColumnDefinition ());
-			grid.ColumnDefinitions.Add (new Layouts.ColumnDefinition (new Layouts.GridLength (1, Layouts.GridUnitType.Proportional)));
+			grid.ColumnDefinitions.Add (new Layouts.ColumnDefinition (new Layouts.GridLength (1, Layouts.GridUnitType.Proportional), 60, double.PositiveInfinity));
 
 			grid.RowDefinitions.Add (new Layouts.RowDefinition ());
 			grid.RowDefinitions.Add (new Layouts.RowDefinition ());
 			grid.RowDefinitions.Add (new Layouts.RowDefinition ());
+			grid.RowDefinitions.Add (new Layouts.RowDefinition ());
+			grid.RowDefinitions.Add (new Layouts.RowDefinition (new Layouts.GridLength (1, Layouts.GridUnitType.Proportional)));
 			grid.RowDefinitions.Add (new Layouts.RowDefinition ());
 
 			UI.Panel panel = new Epsitec.Common.UI.Panel ();
@@ -150,10 +152,55 @@ namespace Epsitec.Common.Widgets
 			Layouts.GridLayoutEngine.SetColumnSpan (text, 3);
 			panel.Children.Add (text);
 
+			text = new StaticText ();
+			text.PreferredHeight = 20;
+			Layouts.GridLayoutEngine.SetColumn (text, 0);
+			Layouts.GridLayoutEngine.SetRow (text, 5);
+			Layouts.GridLayoutEngine.SetColumnSpan (text, 4);
+			panel.Children.Add (text);
+
+			StructureChangeListener listener = new StructureChangeListener (text);
+
+			data.ValueChanged += listener.HandleValueChanged;
+
 			window.Root.Children.Add (panel);
 			window.Show ();
 			
 			Window.RunInTestEnvironment (window);
+		}
+
+		private class StructureChangeListener
+		{
+			public StructureChangeListener(Widget widget)
+			{
+				this.widget = widget;
+			}
+
+			public void HandleValueChanged(object sender, DependencyPropertyChangedEventArgs e)
+			{
+				StructuredData data = sender as StructuredData;
+				
+				if (data != null)
+				{
+					System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+					buffer.Append (data.GetValue ("Forename"));
+					buffer.Append (" ");
+					buffer.Append (data.GetValue ("Name"));
+					buffer.Append (", ");
+					buffer.Append (data.GetValue ("Age"));
+					buffer.Append (" years old; ");
+					buffer.Append (data.GetValue ("Sex"));
+					buffer.Append (", ");
+					buffer.Append (@"<font size=""80%"">(");
+					buffer.Append (this.counter++);
+					buffer.Append (@" changes)</font>");
+					
+					this.widget.Text = buffer.ToString ();
+				}
+			}
+			
+			Widget widget;
+			int counter = 1;
 		}
 
 		enum Sex
