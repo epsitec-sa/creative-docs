@@ -1,4 +1,5 @@
 using Epsitec.Common.Widgets;
+using Epsitec.Common.Widgets.Layouts;
 using Epsitec.Common.Support;
 using Epsitec.Common.Drawing;
 
@@ -30,6 +31,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.container = new Widget(this);
 			this.container.Dock = DockStyle.Fill;
 			this.container.Padding = new Margins(this.extendedZoneWidth+4, 4, 4, 4);
+
+			this.grid = new GridLayoutEngine();
+			this.grid.ColumnDefinitions.Add(new ColumnDefinition(new GridLength(1, GridUnitType.Proportional)));
+			this.grid.ColumnDefinitions.Add(new ColumnDefinition());
+			LayoutEngine.SetLayoutEngine(this.container, grid);
 
 			this.Entered += new MessageEventHandler(this.HandleMouseEntered);
 			this.Exited += new MessageEventHandler(this.HandleMouseExited);
@@ -72,12 +78,15 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
-		public Widget Container
+		public void AddPlaceHolder(Placeholder placeholder)
 		{
-			get
-			{
-				return this.container;
-			}
+			this.grid.RowDefinitions.Add(new RowDefinition());
+			int row = this.grid.RowDefinitions.Count-1;
+
+			GridLayoutEngine.SetColumn(placeholder, 0);
+			GridLayoutEngine.SetRow(placeholder, row);
+			GridLayoutEngine.SetRowSpan(placeholder, 2);
+			this.container.Children.Add(placeholder);
 		}
 
 		
@@ -117,5 +126,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected StaticText				label;
 		protected StaticText				fixIcon;
 		protected Widget					container;
+		protected GridLayoutEngine			grid;
 	}
 }
