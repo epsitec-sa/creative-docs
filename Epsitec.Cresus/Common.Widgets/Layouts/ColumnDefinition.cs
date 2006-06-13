@@ -88,6 +88,30 @@ namespace Epsitec.Common.Widgets.Layouts
 			}
 		}
 
+		public double LeftBorder
+		{
+			get
+			{
+				return (double) this.GetValue (ColumnDefinition.LeftBorderProperty);
+			}
+			set
+			{
+				this.SetValue (ColumnDefinition.LeftBorderProperty, value);
+			}
+		}
+
+		public double RightBorder
+		{
+			get
+			{
+				return (double) this.GetValue (ColumnDefinition.RightBorderProperty);
+			}
+			set
+			{
+				this.SetValue (ColumnDefinition.RightBorderProperty, value);
+			}
+		}
+
 		public double ActualWidth
 		{
 			get
@@ -114,9 +138,11 @@ namespace Epsitec.Common.Widgets.Layouts
 			this.actualOffset = value;
 		}
 		
-		public static readonly DependencyProperty MinWidthProperty	= DependencyProperty.Register ("MinWidth", typeof (double), typeof (ColumnDefinition), new DependencyPropertyMetadata (0.0));
-		public static readonly DependencyProperty MaxWidthProperty	= DependencyProperty.Register ("MaxWidth", typeof (double), typeof (ColumnDefinition), new DependencyPropertyMetadata (double.PositiveInfinity));
-		public static readonly DependencyProperty WidthProperty		= DependencyProperty.Register ("Width", typeof (GridLength), typeof (ColumnDefinition), new DependencyPropertyMetadata (GridLength.Auto));
+		public static readonly DependencyProperty MinWidthProperty		= DependencyProperty.Register ("MinWidth", typeof (double), typeof (ColumnDefinition), new DependencyPropertyMetadata (0.0));
+		public static readonly DependencyProperty MaxWidthProperty		= DependencyProperty.Register ("MaxWidth", typeof (double), typeof (ColumnDefinition), new DependencyPropertyMetadata (double.PositiveInfinity));
+		public static readonly DependencyProperty WidthProperty			= DependencyProperty.Register ("Width", typeof (GridLength), typeof (ColumnDefinition), new DependencyPropertyMetadata (GridLength.Auto));
+		public static readonly DependencyProperty LeftBorderProperty	= DependencyProperty.Register ("LeftBorder", typeof (double), typeof (ColumnDefinition), new DependencyPropertyMetadata (0.0));
+		public static readonly DependencyProperty RightBorderProperty	= DependencyProperty.Register ("RightBorder", typeof (double), typeof (ColumnDefinition), new DependencyPropertyMetadata (0.0));
 
 		private double actualOffset;
 		private double actualWidth;

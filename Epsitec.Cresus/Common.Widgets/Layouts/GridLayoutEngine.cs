@@ -69,8 +69,8 @@ namespace Epsitec.Common.Widgets.Layouts
 
 				if (measure.PassId == passId)
 				{
-					minDx += measure.Desired;
-					maxDx += measure.Max;
+					minDx += this.AdjustColumnWidth (measure.Desired, i);
+					maxDx += this.AdjustColumnWidth (measure.Max, i);
 				}
 				else
 				{
@@ -87,8 +87,8 @@ namespace Epsitec.Common.Widgets.Layouts
 
 				if (measure.PassId == passId)
 				{
-					minDy += measure.Desired;
-					maxDy += measure.Max;
+					minDy += this.AdjustRowHeight (measure.Desired, i);
+					maxDy += this.AdjustRowHeight (measure.Max, i);
 				}
 				else
 				{
@@ -100,6 +100,32 @@ namespace Epsitec.Common.Widgets.Layouts
 			minSize.Height = System.Math.Max (minSize.Height, minDy);
 			maxSize.Width  = System.Math.Min (maxSize.Width,  maxDx);
 			maxSize.Height = System.Math.Min (maxSize.Height, maxDy);
+		}
+
+		private double AdjustColumnWidth(double width, int column)
+		{
+			if (column < this.columnDefinitions.Count)
+			{
+				ColumnDefinition def = this.columnDefinitions[column];
+
+				width += def.LeftBorder;
+				width += def.RightBorder;
+			}
+
+			return System.Math.Max (0, width);
+		}
+
+		private double AdjustRowHeight(double height, int row)
+		{
+			if (row < this.rowDefinitions.Count)
+			{
+				RowDefinition def = this.rowDefinitions[row];
+
+				height += def.TopBorder;
+				height += def.BottomBorder;
+			}
+
+			return System.Math.Max (0, height);
 		}
 
 		public LayoutMode LayoutMode
@@ -119,16 +145,18 @@ namespace Epsitec.Common.Widgets.Layouts
 
 			for (int i = 0; i < this.columnMeasures.Length; i++)
 			{
-				GridLength length = this.columnDefinitions[i].Width;
+				GridLength length = (i <  this.columnDefinitions.Count) ? this.columnDefinitions[i].Width : GridLength.Auto;
 				this.columnMeasures[i].UpdateDesired (length.IsAbsolute ? length.Value : 0);
 				
 				double w = this.columnMeasures[i].Desired;
 
 				x[i] = dx;
-				dx  += w;
-
+				dx  += this.AdjustColumnWidth (w, i);
+				
 				if (i < this.columnDefinitions.Count)
 				{
+					x[i] += this.columnDefinitions[i].LeftBorder;
+					
 					this.columnDefinitions[i].DefineActualOffset (x[i]);
 					this.columnDefinitions[i].DefineActualWidth (w);
 
@@ -179,20 +207,22 @@ namespace Epsitec.Common.Widgets.Layouts
 
 			for (int i = 0; i < this.rowMeasures.Length; i++)
 			{
-				GridLength length = this.rowDefinitions[i].Height;
+				GridLength length = (i < this.rowDefinitions.Count) ? this.rowDefinitions[i].Height : GridLength.Auto;
 				this.rowMeasures[i].UpdateDesired (length.IsAbsolute ? length.Value : 0);
 
 				double h1 = this.rowMeasures[i].MinH1;
 				double h2 = this.rowMeasures[i].MinH2;
 				double h  = this.rowMeasures[i].Desired;
 
-				dy  += h;
-
+				dy  += this.AdjustRowHeight (h, i);
+				
 				y[i] = dy;
 				b[i] = (h - (h1+h2)) / 2 + h2;
 
 				if (i < this.rowDefinitions.Count)
 				{
+					y[i] -= this.rowDefinitions[i].BottomBorder;
+					
 					this.rowDefinitions[i].DefineActualOffset (y[i]);
 					this.rowDefinitions[i].DefineActualHeight (h);
 
@@ -280,19 +310,8 @@ namespace Epsitec.Common.Widgets.Layouts
 
 			Drawing.Margins margins = child.Margins;
 
-			double dx = 0;
-			double dy = 0;
-
-			for (int i = 0; i < columnSpan; i++)
-			{
-				System.Diagnostics.Debug.Assert (this.columnMeasures[column+i] != null);
-				dx += this.columnMeasures[column+i].Desired;
-			}
-			for (int i = 0; i < rowSpan; i++)
-			{
-				System.Diagnostics.Debug.Assert (this.rowMeasures[row+i] != null);
-				dy += this.rowMeasures[row+i].Desired;
-			}
+			double dx = this.GetColumnSpanWidth (column, columnSpan);
+			double dy = this.GetRowSpanHeight (row, rowSpan);
 
 			double ox = rect.Left + x[column];
 			double oy = rect.Top - y[row+rowSpan-1];
@@ -314,6 +333,58 @@ namespace Epsitec.Common.Widgets.Layouts
 					this.LayoutChild (rect, x, y, b, cell.Visual, cell.Column, cell.Row, cell.ColumnSpan, cell.RowSpan);
 				}
 			}
+		}
+
+		private double GetColumnSpanWidth(int column, int columnSpan)
+		{
+			double dx = 0;
+
+			for (int i = 0; i < columnSpan; i++)
+			{
+				System.Diagnostics.Debug.Assert (this.columnMeasures[column+i] != null);
+
+				if ((i > 0) &&
+					(column+i-1 < this.columnDefinitions.Count))
+				{
+					dx += this.columnDefinitions[column+i-1].LeftBorder;
+				}
+
+				if ((i+1 < columnSpan) &&
+					(column+i < this.columnDefinitions.Count))
+				{
+					dx += this.columnDefinitions[column+i].RightBorder;
+				}
+
+				dx += this.columnMeasures[column+i].Desired;
+			}
+
+			return dx;
+		}
+
+		private double GetRowSpanHeight(int row, int rowSpan)
+		{
+			double dy = 0;
+			
+			for (int i = 0; i < rowSpan; i++)
+			{
+				System.Diagnostics.Debug.Assert (this.rowMeasures[row+i] != null);
+
+				if ((i > 0) &&
+					(row+i-1 < this.rowDefinitions.Count))
+				{
+					dy += this.rowDefinitions[row+i-1].TopBorder;
+				}
+
+				if ((i+1 < rowSpan) &&
+					(row+i < this.rowDefinitions.Count))
+				{
+					dy += this.rowDefinitions[row+i].BottomBorder;
+				}
+
+				dy += this.rowMeasures[row+i].Desired;
+			}
+			
+			return dy;
 		}
 
 		#region MinMaxUpdater Class
@@ -496,12 +567,7 @@ namespace Epsitec.Common.Widgets.Layouts
 
 					foreach (Info info in this.pendingColumns)
 					{
-						double dx = 0;
-
-						for (int i = 0; i < info.Span; i++)
-						{
-							dx += this.GetColumnMeasure (info.Index + i).Desired;
-						}
+						double dx = this.GetColumnSpanWidth (info.Index, info.Span);
 
 						if (dx < info.Measure.Desired)
 						{
@@ -528,12 +594,7 @@ namespace Epsitec.Common.Widgets.Layouts
 
 					foreach (Info info in this.pendingRows)
 					{
-						double dy = 0;
-
-						for (int i = 0; i < info.Span; i++)
-						{
-							dy += this.GetRowMeasure (info.Index + i).Desired;
-						}
+						double dy = this.GetRowSpanHeight (info.Index, info.Span);
 
 						if (dy < info.Measure.Desired)
 						{
@@ -550,6 +611,54 @@ namespace Epsitec.Common.Widgets.Layouts
 						}
 					}
 				}
+			}
+
+			private double GetColumnSpanWidth(int column, int span)
+			{
+				double dx = 0;
+
+				for (int i = 0; i < span; i++)
+				{
+					if ((i > 0) &&
+						(column+i-1 < this.grid.columnDefinitions.Count))
+					{
+						dx += this.grid.columnDefinitions[column+i-1].LeftBorder;
+					}
+
+					if ((i+1 < span) &&
+						(column+i < this.grid.columnDefinitions.Count))
+					{
+						dx += this.grid.columnDefinitions[column+i].RightBorder;
+					}
+					
+					dx += this.GetColumnMeasure (column+i).Desired;
+				}
+				
+				return dx;
+			}
+
+			private double GetRowSpanHeight(int row, int span)
+			{
+				double dy = 0;
+
+				for (int i = 0; i < span; i++)
+				{
+					if ((i > 0) &&
+						(row+i-1 < this.grid.rowDefinitions.Count))
+					{
+						dy += this.grid.rowDefinitions[row+i-1].TopBorder;
+					}
+
+					if ((i+1 < span) &&
+						(row+i < this.grid.rowDefinitions.Count))
+					{
+						dy += this.grid.rowDefinitions[row+i].BottomBorder;
+					}
+
+					dy += this.GetRowMeasure (row+i).Desired;
+				}
+
+				return dy;
 			}
 
 			private ColumnMeasure GetColumnMeasure(int column)

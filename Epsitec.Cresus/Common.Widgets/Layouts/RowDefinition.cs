@@ -88,6 +88,30 @@ namespace Epsitec.Common.Widgets.Layouts
 			}
 		}
 
+		public double TopBorder
+		{
+			get
+			{
+				return (double) this.GetValue (RowDefinition.TopBorderProperty);
+			}
+			set
+			{
+				this.SetValue (RowDefinition.TopBorderProperty, value);
+			}
+		}
+
+		public double BottomBorder
+		{
+			get
+			{
+				return (double) this.GetValue (RowDefinition.BottomBorderProperty);
+			}
+			set
+			{
+				this.SetValue (RowDefinition.BottomBorderProperty, value);
+			}
+		}
+
 		public double ActualHeight
 		{
 			get
@@ -114,9 +138,11 @@ namespace Epsitec.Common.Widgets.Layouts
 			this.actualOffset = value;
 		}
 
-		public static readonly DependencyProperty MinHeightProperty	= DependencyProperty.Register ("MinHeight", typeof (double), typeof (RowDefinition), new DependencyPropertyMetadata (0.0));
-		public static readonly DependencyProperty MaxHeightProperty	= DependencyProperty.Register ("MaxHeight", typeof (double), typeof (RowDefinition), new DependencyPropertyMetadata (double.PositiveInfinity));
-		public static readonly DependencyProperty HeightProperty	= DependencyProperty.Register ("Height", typeof (GridLength), typeof (RowDefinition), new DependencyPropertyMetadata (GridLength.Auto));
+		public static readonly DependencyProperty MinHeightProperty		= DependencyProperty.Register ("MinHeight", typeof (double), typeof (RowDefinition), new DependencyPropertyMetadata (0.0));
+		public static readonly DependencyProperty MaxHeightProperty		= DependencyProperty.Register ("MaxHeight", typeof (double), typeof (RowDefinition), new DependencyPropertyMetadata (double.PositiveInfinity));
+		public static readonly DependencyProperty HeightProperty		= DependencyProperty.Register ("Height", typeof (GridLength), typeof (RowDefinition), new DependencyPropertyMetadata (GridLength.Auto));
+		public static readonly DependencyProperty TopBorderProperty		= DependencyProperty.Register ("TopBorder", typeof (double), typeof (RowDefinition), new DependencyPropertyMetadata (0.0));
+		public static readonly DependencyProperty BottomBorderProperty	= DependencyProperty.Register ("BottomBorder", typeof (double), typeof (RowDefinition), new DependencyPropertyMetadata (0.0));
 
 		private double actualOffset;
 		private double actualHeight;

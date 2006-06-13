@@ -82,6 +82,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			this.grid.RowDefinitions.Add(new RowDefinition());
 			int row = this.grid.RowDefinitions.Count-1;
+			
+			if (row > 0)
+			{
+				this.grid.RowDefinitions[row].TopBorder = -1;
+			}
 
 			placeholder.Margins = new Margins(0, 0, (row==0)?0:-1, 0);
 			GridLayoutEngine.SetColumn(placeholder, 0);
