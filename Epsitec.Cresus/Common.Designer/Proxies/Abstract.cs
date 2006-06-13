@@ -33,6 +33,11 @@ namespace Epsitec.Common.Designer.Proxies
 		{
 			get;
 		}
+
+		public abstract string IconName
+		{
+			get;
+		}
 		#endregion
 
 		public void ReadFromWidget()

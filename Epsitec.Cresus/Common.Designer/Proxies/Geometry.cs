@@ -13,12 +13,20 @@ namespace Epsitec.Common.Designer.Proxies
 
 		public override int Rank
 		{
+			//	Retourne le rang de ce proxy parmi la liste de tous les proxies.
+			//	Plus le numéro est petit, plus le proxy apparaîtra haut dans la
+			//	liste.
 			get
 			{
-				//	Retourne le rang de ce proxy parmi la liste de tous les proxies.
-				//	Plus le numéro est petit, plus le proxy apparaîtra haut dans la
-				//	liste.
 				return 1;
+			}
+		}
+
+		public override string IconName
+		{
+			get
+			{
+				return "PropertyGeometry";
 			}
 		}
 		

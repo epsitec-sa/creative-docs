@@ -119,7 +119,7 @@ namespace Epsitec.Common.Designer
 
 			MyWidgets.PropertyPanel panel = new MyWidgets.PropertyPanel(container);
 			panel.Dock = DockStyle.Top;
-			panel.Icon = "PropertyGeometry";
+			panel.Icon = proxy.IconName;
 			panel.Title = source.GetType().Name;
 
 			foreach (DependencyProperty property in source.LocalProperties)

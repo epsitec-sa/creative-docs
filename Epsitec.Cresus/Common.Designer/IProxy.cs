@@ -23,5 +23,14 @@ namespace Epsitec.Common.Designer
 		{
 			get;
 		}
+
+		/// <summary>
+		/// Gets the base name of the icon, without prefix, suffix and extension.
+		/// </summary>
+		/// <value>The name of the icon.</value>
+		string IconName
+		{
+			get;
+		}
 	}
 }
