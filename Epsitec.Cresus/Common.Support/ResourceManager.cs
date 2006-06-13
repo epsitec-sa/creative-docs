@@ -962,6 +962,22 @@ namespace Epsitec.Common.Support
 			return false;
 		}
 
+		internal void SyncBundleBindingProxies()
+		{
+			//	Met à jour tous les proxies en les synchronisant avec la culture
+			//	active.
+
+			foreach (KeyValuePair<string, BundleBindingProxy> pair in this.bindingProxies)
+			{
+				string name = pair.Value.Bundle.PrefixedName;
+
+				ResourceBundle oldBundle = pair.Value.Bundle;
+				ResourceBundle newBundle = this.GetBundle (name, ResourceLevel.Merged, this.culture);
+
+				pair.Value.SwitchToBundle (newBundle);
+			}
+		}
+
 		private BundleBindingProxy GetBundleBindingProxy(string bundleName)
 		{
 			//	Trouve le proxy qui liste les bindings pour le bundle spécifié.
@@ -1002,22 +1018,6 @@ namespace Epsitec.Common.Support
 			}
 
 			return proxy;
-		}
-
-		private void SyncBundleBindingProxies()
-		{
-			//	Met à jour tous les proxies en les synchronisant avec la culture
-			//	active.
-
-			foreach (KeyValuePair<string, BundleBindingProxy> pair in this.bindingProxies)
-			{
-				string name = pair.Value.Bundle.PrefixedName;
-
-				ResourceBundle oldBundle = pair.Value.Bundle;
-				ResourceBundle newBundle = this.GetBundle (name, ResourceLevel.Merged, this.culture);
-
-				pair.Value.SwitchToBundle (newBundle);
-			}
 		}
 
 		private void SelectLocale(CultureInfo culture)
