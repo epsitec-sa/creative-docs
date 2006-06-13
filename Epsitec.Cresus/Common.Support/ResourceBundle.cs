@@ -550,7 +550,7 @@ namespace Epsitec.Common.Support
 		}
 		
 		
-		public void Merge()
+		public void Merge(ResourceLevel dataLevel)
 		{
 			List<Field> list = new List<Field> ();
 			Dictionary<string, int> hash = new Dictionary<string, int> ();
@@ -558,9 +558,14 @@ namespace Epsitec.Common.Support
 			for (int i = 0; i < this.fields.Length; i++)
 			{
 				Field field = this.fields[i];
+
+				if (field.DataLevel == ResourceLevel.None)
+				{
+					field.SetDataLevel (dataLevel);
+				}
 				
 				string name = field.Name;
-				long id   = field.Id;
+				long   id   = field.Id;
 
 				if (id >= 0)
 				{
@@ -614,6 +619,11 @@ namespace Epsitec.Common.Support
 
 		public void Compile(byte[] data)
 		{
+			this.Compile (data, this.ResourceLevel);
+		}
+
+		public void Compile(byte[] data, ResourceLevel dataLevel)
+		{
 			if (data == null)
 			{
 				return;
@@ -639,15 +649,20 @@ namespace Epsitec.Common.Support
 					stream.Close ();
 				}
 				
-				this.Compile (xmldoc.DocumentElement);
+				this.Compile (xmldoc.DocumentElement, dataLevel);
 			}
 			else
 			{
 				throw new ResourceException ("Cannot compile garbage; invalid data provided.");
 			}
 		}
-		
+
 		public void Compile(System.Xml.XmlNode xmlroot)
+		{
+			this.Compile (xmlroot, this.ResourceLevel);
+		}
+		
+		public void Compile(System.Xml.XmlNode xmlroot, ResourceLevel dataLevel)
 		{
 			if (this.depth > Resources.MaxRecursion)
 			{
@@ -712,7 +727,7 @@ namespace Epsitec.Common.Support
 			
 			if (this.autoMerge)
 			{
-				this.Merge ();
+				this.Merge (dataLevel);
 			}
 		}
 		
@@ -1385,6 +1400,14 @@ namespace Epsitec.Common.Support
 					return this.type;
 				}
 			}
+
+			public ResourceLevel			DataLevel
+			{
+				get
+				{
+					return this.level;
+				}
+			}
 			
 			public object					Data
 			{
@@ -1656,6 +1679,10 @@ namespace Epsitec.Common.Support
 				}
 			}
 
+			internal void SetDataLevel(ResourceLevel level)
+			{
+				this.level = level;
+			}
 
 			private void Compile()
 			{
@@ -1782,7 +1809,8 @@ namespace Epsitec.Common.Support
 			private int modification_id;
 			private System.Xml.XmlNode xml;
 			private object data;
-			private ResourceFieldType type = ResourceFieldType.None;
+			private ResourceFieldType type;
+			private ResourceLevel level;
 		}
 		#endregion
 

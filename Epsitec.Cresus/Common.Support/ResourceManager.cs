@@ -582,7 +582,7 @@ namespace Epsitec.Common.Support
 				data = provider.GetData (resourceId, level, culture);
 			}
 			
-			bundle.Compile (data);
+			bundle.Compile (data, level);
 		}
 
 		/// <summary>
