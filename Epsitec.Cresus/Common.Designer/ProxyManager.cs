@@ -110,6 +110,7 @@ namespace Epsitec.Common.Designer
 			//	TODO: créer les divers Proxies pour le widget; on peut simplement
 			//	ajouter ici des 'yield return new ...'
 			yield return new Proxies.Geometry(widget);
+			yield return new Proxies.Layout(widget);
 		}
 
 		private void CreateUserInterface(Widget container, IProxy proxy)

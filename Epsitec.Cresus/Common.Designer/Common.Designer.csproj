@@ -64,6 +64,7 @@
     <Compile Include="MyWidgets\PropertyPanel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Proxies\Abstract.cs" />
+    <Compile Include="Proxies\Layout.cs" />
     <Compile Include="Proxies\Geometry.cs" />
     <Compile Include="Res.cs" />
     <Compile Include="Ribbons\Abstract.cs" />
@@ -236,6 +237,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Images\PropertyGeometry.icon" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Images\PropertyLayout.icon" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
