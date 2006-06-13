@@ -108,22 +108,34 @@ namespace Epsitec.Common.Designer.Viewers
 			this.tabBook.Margins = new Margins(1, 1, 1, 1);
 			this.tabBook.Dock = DockStyle.Right;
 
+			//	Crée l'onglet 'propriétés'.
 			this.tabPageProperties = new TabPage();
 			this.tabPageProperties.TabTitle = Res.Strings.Viewers.Panels.TabProperties;
 			this.tabPageProperties.Padding = new Margins(4, 4, 4, 4);
 			this.tabBook.Items.Add(this.tabPageProperties);
 
+			this.proxyManager = new ProxyManager();
+
+			this.propertiesScrollable = new Scrollable(this.tabPageProperties);
+			this.propertiesScrollable.Dock = DockStyle.Fill;
+			this.propertiesScrollable.HorizontalScrollerMode = ScrollableScrollerMode.HideAlways;
+			this.propertiesScrollable.VerticalScrollerMode = ScrollableScrollerMode.ShowAlways;
+			this.propertiesScrollable.Panel.IsAutoFitting = true;
+			this.propertiesScrollable.IsForegroundFrame = true;
+			this.propertiesScrollable.ForegroundFrameMargins = new Margins(0, 1, 0, 0);
+
+			//	Crée l'onglet 'objets'.
 			this.tabPageObjects = new TabPage();
 			this.tabPageObjects.TabTitle = Res.Strings.Viewers.Panels.TabObjects;
 			this.tabPageObjects.Padding = new Margins(10, 10, 10, 10);
 			this.tabBook.Items.Add(this.tabPageObjects);
 
-			this.proxyManager = new ProxyManager();
-
+			//	Crée l'onglet 'cultures'.
 			this.tabPageCultures = new TabPage();
 			this.tabPageCultures.TabTitle = Res.Strings.Viewers.Panels.TabCultures;
 			this.tabPageCultures.Padding = new Margins(10, 10, 10, 10);
 			this.tabBook.Items.Add(this.tabPageCultures);
+
 			this.CreateCultureButtons();
 
 			this.tabBook.ActivePage = this.tabPageProperties;
@@ -632,12 +644,12 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			this.ClearProxies();
 			this.proxyManager.SetSelection(widgets);
-			this.proxyManager.CreateUserInterface(this.tabPageProperties);
+			this.proxyManager.CreateUserInterface(this.propertiesScrollable.Panel);
 		}
 
 		protected void ClearProxies()
 		{
-			this.tabPageProperties.Children.Clear();
+			this.propertiesScrollable.Panel.Children.Clear();
 		}
 		#endregion
 
@@ -696,8 +708,12 @@ namespace Epsitec.Common.Designer.Viewers
 		protected UI.Panel					panelContainer;
 		protected MyWidgets.PanelEditor		panelEditor;
 		protected TabBook					tabBook;
+
 		protected TabPage					tabPageProperties;
+		protected Scrollable				propertiesScrollable;
+
 		protected TabPage					tabPageObjects;
+
 		protected TabPage					tabPageCultures;
 		protected List<IconButton>			cultureButtonList;
 	}
