@@ -121,6 +121,7 @@ namespace Epsitec.Common.Designer
 			panel.Dock = DockStyle.Top;
 			panel.Margins = new Margins(0, 1, 0, 4);
 			panel.Padding = new Margins(4, 4, 4, 4);
+			panel.Icon = "PropertyGeometry";
 			panel.Title = source.GetType().Name;
 
 			foreach (DependencyProperty property in source.LocalProperties)
