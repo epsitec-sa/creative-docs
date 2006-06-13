@@ -46,7 +46,7 @@ namespace Epsitec.Common.Document
 				
 			if ( text != "" )
 			{
-				string  dec = Types.Converter.ExtractDecimal(ref text);
+				string  dec = Types.InvariantConverter.ExtractDecimal(ref text);
 					
 				try
 				{

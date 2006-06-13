@@ -30,12 +30,12 @@ namespace Epsitec.Cresus.Database
 			
 			long id;
 			
-			if ((Common.Types.Converter.Convert (value_id, out id)) &&
+			if ((Common.Types.InvariantConverter.Convert (value_id, out id)) &&
 				(id >= 0))
 			{
 				short status;
 				
-				Common.Types.Converter.Convert (value_status, out status);
+				Common.Types.InvariantConverter.Convert (value_status, out status);
 				
 				this.id         = id;
 				this.int_status = status;
@@ -53,12 +53,12 @@ namespace Epsitec.Cresus.Database
 			
 			long id;
 			
-			if ((Common.Types.Converter.Convert (value_id, out id)) &&
+			if ((Common.Types.InvariantConverter.Convert (value_id, out id)) &&
 				(id >= 0))
 			{
 				short status;
 				
-				Common.Types.Converter.Convert (value_status, out status);
+				Common.Types.InvariantConverter.Convert (value_status, out status);
 				
 				this.id         = id;
 				this.int_status = status;

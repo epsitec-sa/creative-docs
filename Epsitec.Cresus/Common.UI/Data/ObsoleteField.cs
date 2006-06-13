@@ -181,7 +181,7 @@ namespace Epsitec.Common.UI.Data
 			{
 				if (value is string)
 				{
-					if (Common.Types.Converter.Convert (value, this.type.SystemType, out value))
+					if (Common.Types.InvariantConverter.Convert (value, this.type.SystemType, out value))
 					{
 						return value;
 					}
@@ -197,7 +197,7 @@ namespace Epsitec.Common.UI.Data
 		{
 			if (this.type != null)
 			{
-				if (Common.Types.Converter.Convert (value, this.type.SystemType, out value))
+				if (Common.Types.InvariantConverter.Convert (value, this.type.SystemType, out value))
 				{
 					this.Value = value;
 				}
@@ -311,7 +311,7 @@ namespace Epsitec.Common.UI.Data
 			that.value          = this.value;
 //-			that.is_value_valid = this.is_value_valid;
 			
-			System.Diagnostics.Debug.Assert (Types.Converter.IsSimple (that.value));
+			System.Diagnostics.Debug.Assert (Types.InvariantConverter.IsSimple (that.value));
 			
 			return that;
 		}

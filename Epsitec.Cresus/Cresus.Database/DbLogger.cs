@@ -212,8 +212,8 @@ namespace Epsitec.Cresus.Database
 					long            log_id;
 					System.DateTime date_time;
 					
-					Epsitec.Common.Types.Converter.Convert (row["T_ID"], out log_id);
-					Epsitec.Common.Types.Converter.Convert (row["T_DT"], out date_time);
+					Epsitec.Common.Types.InvariantConverter.Convert (row["T_ID"], out log_id);
+					Epsitec.Common.Types.InvariantConverter.Convert (row["T_DT"], out date_time);
 					
 					entries[i] = new Entry (new DbId (log_id), date_time);
 				}

@@ -504,7 +504,7 @@ namespace Epsitec.Common.Types.Serialization
 							binding.Source = context.ResolveFromMarkup (elems[1]);
 							break;
 						case "Mode":
-							Converter.Convert (elems[1], typeof (BindingMode), out mode);
+							InvariantConverter.Convert (elems[1], typeof (BindingMode), out mode);
 							binding.Mode = (BindingMode) mode;
 							break;
 

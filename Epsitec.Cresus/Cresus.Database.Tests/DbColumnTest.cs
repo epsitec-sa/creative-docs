@@ -146,7 +146,7 @@ namespace Epsitec.Cresus.Database
 			Assert.AreEqual (false, sql_d.HasRawConverter);
 
 			System.Console.Out.WriteLine ("Column {0} raw type is {1}, length={2}, fixed={3}.", sql_b.Name, sql_b.Type, sql_b.Length, sql_b.IsFixedLength);
-			System.Console.Out.WriteLine ("Raw Converter between type {0} and {1}.", sql_b.RawConverter.InternalType, sql_b.RawConverter.ExternalType);
+			System.Console.Out.WriteLine ("Raw InvariantConverter between type {0} and {1}.", sql_b.RawConverter.InternalType, sql_b.RawConverter.ExternalType);
 			
 			object guid_object = new System.Guid (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11);
 			

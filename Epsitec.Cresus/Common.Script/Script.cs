@@ -121,7 +121,7 @@ namespace Epsitec.Common.Script
 				
 				if (data != null)
 				{
-					if (Types.Converter.Convert (data.ReadValue (), type, out value))
+					if (Types.InvariantConverter.Convert (data.ReadValue (), type, out value))
 					{
 						return true;
 					}

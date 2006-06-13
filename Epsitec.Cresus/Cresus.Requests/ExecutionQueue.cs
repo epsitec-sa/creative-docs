@@ -469,7 +469,7 @@ namespace Epsitec.Cresus.Requests
 		{
 			System.Enum state;
 				
-			if (Common.Types.Converter.Convert (value, typeof (ExecutionState), out state))
+			if (Common.Types.InvariantConverter.Convert (value, typeof (ExecutionState), out state))
 			{
 				return (ExecutionState) state;
 			}

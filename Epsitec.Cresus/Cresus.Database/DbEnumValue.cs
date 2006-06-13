@@ -5,7 +5,7 @@ namespace Epsitec.Cresus.Database
 {
 //	using Tags				= Epsitec.Common.Support.Tags;
 	using ResourceLevel		= Epsitec.Common.Support.ResourceLevel;
-	using Converter			= Epsitec.Common.Types.Converter;
+	using Converter			= Epsitec.Common.Types.InvariantConverter;
 	using IComparer			= System.Collections.IComparer;
 	
 	/// <summary>

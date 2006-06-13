@@ -43,7 +43,7 @@ namespace Epsitec.Common.Support
 			Assert.AreEqual ("123.456", dict["DecimalValue"]);
 			
 			System.DateTime date;
-			Types.Converter.Convert (dict["DateTimeValue"], out date);
+			Types.InvariantConverter.Convert (dict["DateTimeValue"], out date);
 			
 			Assert.AreEqual (data.DateTimeValue, date);
 		}

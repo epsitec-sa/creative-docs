@@ -31,7 +31,7 @@ namespace Epsitec.Common.Text.Internal.Sequences
 				return false;
 			}
 			
-			if (Types.Converter.SafeConvert (text, out value))
+			if (Types.InvariantConverter.SafeConvert (text, out value))
 			{
 				return true;
 			}

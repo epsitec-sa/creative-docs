@@ -5,7 +5,7 @@ using Epsitec.Common.Support;
 
 namespace Epsitec.Cresus.Database
 {
-	using Converter = Epsitec.Common.Types.Converter;
+	using InvariantConverter = Epsitec.Common.Types.InvariantConverter;
 	
 	/// <summary>
 	/// La classe DbTools fournit quelques fonctions utilitaires qui n'ont pas
@@ -65,7 +65,7 @@ namespace Epsitec.Cresus.Database
 			}
 			
 			int cat;
-			Converter.Convert (text, out cat);
+			InvariantConverter.Convert (text, out cat);
 			return (DbElementCat) cat;
 		}
 		
@@ -78,7 +78,7 @@ namespace Epsitec.Cresus.Database
 			}
 			
 			int mode;
-			Converter.Convert (text, out mode);
+			InvariantConverter.Convert (text, out mode);
 			return (DbRevisionMode) mode;
 		}
 		
@@ -91,7 +91,7 @@ namespace Epsitec.Cresus.Database
 			}
 			
 			int mode;
-			Converter.Convert (text, out mode);
+			InvariantConverter.Convert (text, out mode);
 			return (DbReplicationMode) mode;
 		}
 		
@@ -103,7 +103,7 @@ namespace Epsitec.Cresus.Database
 				return null;
 			}
 			
-			return Converter.ToString ((int) cat);
+			return InvariantConverter.ToString ((int) cat);
 		}
 		
 		public static string RevisionModeToString(DbRevisionMode mode)
@@ -113,7 +113,7 @@ namespace Epsitec.Cresus.Database
 				return null;
 			}
 			
-			return Converter.ToString ((int) mode);
+			return InvariantConverter.ToString ((int) mode);
 		}
 		
 		public static string ReplicationModeToString(DbReplicationMode mode)
@@ -123,7 +123,7 @@ namespace Epsitec.Cresus.Database
 				return null;
 			}
 			
-			return Converter.ToString ((int) mode);
+			return InvariantConverter.ToString ((int) mode);
 		}
 	}
 }
