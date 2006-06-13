@@ -125,6 +125,11 @@ namespace Epsitec.Common.Designer
 			ResourceBundle actualBundle = bundles[ResourceLevel.Localized, culture];
 			ResourceBundle defaultBundle = bundles[ResourceLevel.Default];
 
+			if (actualBundle == null)
+			{
+				actualBundle = defaultBundle;
+			}
+
 			Druid druid = this.CreateUniqueDruid();
 
 			if (defaultBundle != actualBundle)
