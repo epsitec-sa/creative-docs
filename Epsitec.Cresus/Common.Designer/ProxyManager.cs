@@ -119,7 +119,7 @@ namespace Epsitec.Common.Designer
 
 			MyWidgets.PropertyPanel panel = new MyWidgets.PropertyPanel(container);
 			panel.Dock = DockStyle.Top;
-			panel.Margins = new Margins(0, 0, 0, 4);
+			panel.Margins = new Margins(0, 1, 0, 4);
 			panel.Padding = new Margins(4, 4, 4, 4);
 			panel.Title = source.GetType().Name;
 
