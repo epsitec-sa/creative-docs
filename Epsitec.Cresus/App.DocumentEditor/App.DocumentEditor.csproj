@@ -175,6 +175,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.ico" />
+    <EmbeddedResource Include="Images\Picker.icon" />
+    <EmbeddedResource Include="Images\Zoom.icon" />
+    <EmbeddedResource Include="Images\Hand.icon" />
     <Content Include="Resources\App\module.info" />
     <EmbeddedResource Include="Images\ToolSelect.icon" />
     <EmbeddedResource Include="Images\ToolEdit.icon" />
