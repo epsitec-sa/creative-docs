@@ -133,6 +133,7 @@
     <Compile Include="CommandContext.cs" />
     <Compile Include="CommandDispatcherChain.cs" />
     <Compile Include="CommandContextChain.cs" />
+    <Compile Include="Controllers\EnumController.cs" />
     <Compile Include="Controllers\Factory.cs" />
     <Compile Include="ControllerAttribute.cs" />
     <Compile Include="CommandState.cs" />
