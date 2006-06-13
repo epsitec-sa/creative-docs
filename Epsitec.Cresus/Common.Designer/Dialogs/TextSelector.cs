@@ -32,17 +32,15 @@ namespace Epsitec.Common.Designer.Dialogs
 
 				int tabIndex = 0;
 
-				StaticText fix1 = new StaticText(this.window.Root);
-				fix1.PreferredWidth = 185;
-				fix1.Text = Res.Strings.Dialog.TextSelector.Label;
-				fix1.Anchor = AnchorStyles.TopLeft;
-				fix1.Margins = new Margins(6, 0, 6, 0);
+				this.header1 = new StaticText(this.window.Root);
+				this.header1.PreferredWidth = 185;
+				this.header1.Anchor = AnchorStyles.TopLeft;
+				this.header1.Margins = new Margins(6, 0, 6, 0);
 
-				StaticText fix2 = new StaticText(this.window.Root);
-				fix2.PreferredWidth = 185;
-				fix2.Text = Res.Strings.Dialog.TextSelector.Text;
-				fix2.Anchor = AnchorStyles.TopLeft;
-				fix2.Margins = new Margins(192, 0, 6, 0);
+				this.header2 = new StaticText(this.window.Root);
+				this.header2.PreferredWidth = 185;
+				this.header2.Anchor = AnchorStyles.TopLeft;
+				this.header2.Margins = new Margins(192, 0, 6, 0);
 
 				this.filterLabel = new TextField(this.window.Root);
 				this.filterLabel.PreferredWidth = 185;
@@ -124,6 +122,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.filterText.Text = "";
 			this.ignoreChanged = false;
 
+			this.UpdateHeader();
 			this.UpdateDruidsIndex();
 			this.UpdateArray();
 			this.SelectArray();
@@ -176,6 +175,15 @@ namespace Epsitec.Common.Designer.Dialogs
 			}
 		}
 
+
+		protected void UpdateHeader()
+		{
+			//	Met à jour les textes fixes en haut.
+			this.header1.Text = Res.Strings.Dialog.TextSelector.Label;
+
+			string culture = Misc.CultureName(this.mainWindow.CurrentModule.ResourceManager.ActiveCulture);
+			this.header2.Text = string.Format(Res.Strings.Dialog.TextSelector.Text, culture);
+		}
 
 		protected int UpdateDruidsIndex()
 		{
@@ -463,6 +471,8 @@ namespace Epsitec.Common.Designer.Dialogs
 		}
 
 
+		protected StaticText					header1;
+		protected StaticText					header2;
 		protected TextField						filterLabel;
 		protected TextField						filterText;
 		protected Button						buttonClear;
