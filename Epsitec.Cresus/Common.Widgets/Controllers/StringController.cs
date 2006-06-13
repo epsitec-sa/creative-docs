@@ -132,6 +132,11 @@ namespace Epsitec.Common.Widgets.Controllers
 				}
 			}
 			
+			if (value == InvalidValue.Instance)
+			{
+				System.Diagnostics.Debug.WriteLine ("Invalid value: " + text);
+			}
+			
 			return value;
 		}
 
