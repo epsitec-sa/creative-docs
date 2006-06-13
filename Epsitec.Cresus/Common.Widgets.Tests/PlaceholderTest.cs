@@ -37,7 +37,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 		[Test]
-		public void CheckInteractiveStringController()
+		public void CheckInteractiveControllers()
 		{
 			Window window = new Window ();
 
@@ -45,6 +45,7 @@ namespace Epsitec.Common.Widgets
 
 			grid.ColumnDefinitions.Add (new Layouts.ColumnDefinition ());
 			grid.ColumnDefinitions.Add (new Layouts.ColumnDefinition (new Layouts.GridLength (40)));
+			grid.ColumnDefinitions.Add (new Layouts.ColumnDefinition ());
 			grid.ColumnDefinitions.Add (new Layouts.ColumnDefinition (new Layouts.GridLength (1, Layouts.GridUnitType.Proportional)));
 
 			grid.RowDefinitions.Add (new Layouts.RowDefinition ());
@@ -60,10 +61,12 @@ namespace Epsitec.Common.Widgets
 			type.AddField ("Name", new StringType ());
 			type.AddField ("Forename", new StringType ());
 			type.AddField ("Age", new IntegerType (1, 150));
+			type.AddField ("Sex", new EnumType (typeof (Sex)));
 
 			data.SetValue ("Name", "Arnaud");
 			data.SetValue ("Forename", "Pierre");
 			data.SetValue ("Age", System.DateTime.Now.Year - 1972);
+			data.SetValue ("Sex", Sex.Male);
 
 			panel.DataSource = new UI.DataSourceCollection ();
 			panel.DataSource.AddDataSource ("Person", data);
@@ -71,20 +74,21 @@ namespace Epsitec.Common.Widgets
 			Placeholder placeholder1 = new Placeholder ();
 			Placeholder placeholder2 = new Placeholder ();
 			Placeholder placeholder3 = new Placeholder ();
+			Placeholder placeholder4 = new Placeholder ();
 
 			placeholder1.Controller = "String";
 			placeholder1.PreferredHeight = 20;
 			placeholder1.TabIndex = 1;
 			Layouts.GridLayoutEngine.SetColumn (placeholder1, 0);
 			Layouts.GridLayoutEngine.SetRow (placeholder1, 1);
-			Layouts.GridLayoutEngine.SetColumnSpan (placeholder1, 3);
+			Layouts.GridLayoutEngine.SetColumnSpan (placeholder1, 4);
 
 			placeholder2.Controller = "String";
 			placeholder2.PreferredHeight = 20;
 			placeholder2.TabIndex = 2;
 			Layouts.GridLayoutEngine.SetColumn (placeholder2, 0);
 			Layouts.GridLayoutEngine.SetRow (placeholder2, 2);
-			Layouts.GridLayoutEngine.SetColumnSpan (placeholder2, 3);
+			Layouts.GridLayoutEngine.SetColumnSpan (placeholder2, 4);
 
 			placeholder3.Controller = "String";
 			placeholder3.PreferredHeight = 20;
@@ -92,13 +96,22 @@ namespace Epsitec.Common.Widgets
 			Layouts.GridLayoutEngine.SetColumn (placeholder3, 0);
 			Layouts.GridLayoutEngine.SetRow (placeholder3, 3);
 
+			placeholder4.Controller = "Enum";
+			placeholder4.PreferredHeight = 20;
+			placeholder4.TabIndex = 4;
+			Layouts.GridLayoutEngine.SetColumn (placeholder4, 2);
+			Layouts.GridLayoutEngine.SetRow (placeholder4, 3);
+			Layouts.GridLayoutEngine.SetColumnSpan (placeholder4, 2);
+
 			Binding binding1 = new Binding (BindingMode.TwoWay, "Person.Name");
 			Binding binding2 = new Binding (BindingMode.TwoWay, "Person.Forename");
 			Binding binding3 = new Binding (BindingMode.TwoWay, "Person.Age");
+			Binding binding4 = new Binding (BindingMode.TwoWay, "Person.Sex");
 
 			placeholder1.SetBinding (Placeholder.ValueProperty, binding1);
 			placeholder2.SetBinding (Placeholder.ValueProperty, binding2);
 			placeholder3.SetBinding (Placeholder.ValueProperty, binding3);
+			placeholder4.SetBinding (Placeholder.ValueProperty, binding4);
 
 			Layouts.LayoutEngine.SetLayoutEngine (panel, grid);
 
@@ -108,6 +121,7 @@ namespace Epsitec.Common.Widgets
 			panel.Children.Add (placeholder1);
 			panel.Children.Add (placeholder2);
 			panel.Children.Add (placeholder3);
+			panel.Children.Add (placeholder4);
 
 			StaticText text;
 
@@ -133,13 +147,18 @@ namespace Epsitec.Common.Widgets
 			text.VerticalAlignment = VerticalAlignment.BaseLine;
 			Layouts.GridLayoutEngine.SetColumn (text, 1);
 			Layouts.GridLayoutEngine.SetRow (text, 0);
-			Layouts.GridLayoutEngine.SetColumnSpan (text, 2);
+			Layouts.GridLayoutEngine.SetColumnSpan (text, 3);
 			panel.Children.Add (text);
 
 			window.Root.Children.Add (panel);
 			window.Show ();
 			
 			Window.RunInTestEnvironment (window);
+		}
+
+		enum Sex
+		{
+			Unknown, Male, Female
 		}
 
 		[Test]
