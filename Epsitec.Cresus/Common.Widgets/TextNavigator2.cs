@@ -625,6 +625,7 @@ namespace Epsitec.Common.Widgets
 			return true;
 		}
 		
+#if false	// MW: la logique d'insertion de tabuleurs est gérée directement dans TextNavigator
 		public bool Insert(string text)
 		{
 			this.DeleteSelection ();
@@ -654,6 +655,14 @@ namespace Epsitec.Common.Widgets
 			
 			return true;
 		}
+#else
+		public bool Insert(string text)
+		{
+			this.DeleteSelection ();
+			this.text_navigator.InsertWithTabs (text);
+			return true;
+		}
+#endif
 		
 		
 		public void DeleteSelection()
