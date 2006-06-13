@@ -79,7 +79,7 @@ namespace Epsitec.Common.Support
 			string text;
 			
 			if ((this.regex != null) &&
-				(Types.Converter.Convert (value, out text)))
+				(Types.InvariantConverter.Convert (value, out text)))
 			{
 				return this.regex.IsMatch (text);
 			}
@@ -145,7 +145,7 @@ namespace Epsitec.Common.Support
 			
 			System.Enum options;
 			
-			Types.Converter.Convert (arg_options, typeof (RegexFactory.Options), out options);
+			Types.InvariantConverter.Convert (arg_options, typeof (RegexFactory.Options), out options);
 			
 			return new RegexConstraint (arg_pattern, (RegexFactory.Options) options);
 		}
@@ -154,7 +154,7 @@ namespace Epsitec.Common.Support
 		{
 			System.Enum predefined;
 			
-			Types.Converter.Convert (value, typeof (PredefinedRegex), out predefined);
+			Types.InvariantConverter.Convert (value, typeof (PredefinedRegex), out predefined);
 			
 			return new RegexConstraint ((PredefinedRegex) predefined);
 		}

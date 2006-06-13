@@ -131,7 +131,7 @@ namespace Epsitec.Common.Script
 					string arg = lines[i].Substring (16);
 					arg = arg.Substring (0, arg.IndexOf ("$"));
 					
-					Types.Converter.Convert (arg, out section_id);
+					Types.InvariantConverter.Convert (arg, out section_id);
 					
 					line_id = line - i - 1;
 				}
@@ -235,7 +235,7 @@ namespace Epsitec.Common.Script
 				{
 					if (parameter.Type is Types.IEnumType)
 					{
-						buffer.Append ("if (! Epsitec.Common.Types.Converter.SafeConvert (");
+						buffer.Append ("if (! Epsitec.Common.Types.InvariantConverter.SafeConvert (");
 						buffer.Append ("in_args[");
 						buffer.Append (in_index.ToString (System.Globalization.CultureInfo.InvariantCulture));
 						buffer.Append ("], typeof (");
@@ -246,7 +246,7 @@ namespace Epsitec.Common.Script
 					}
 					else
 					{
-						buffer.Append ("if (! Epsitec.Common.Types.Converter.SafeConvert (");
+						buffer.Append ("if (! Epsitec.Common.Types.InvariantConverter.SafeConvert (");
 						buffer.Append ("in_args[");
 						buffer.Append (in_index.ToString (System.Globalization.CultureInfo.InvariantCulture));
 						buffer.Append ("], out p_");

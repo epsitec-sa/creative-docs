@@ -97,7 +97,7 @@ namespace Epsitec.Cresus.Database
 				
 				int client_id;
 				
-				Common.Types.Converter.Convert (data_row[Tags.ColumnClientId], out client_id);
+				Common.Types.InvariantConverter.Convert (data_row[Tags.ColumnClientId], out client_id);
 				
 				if (client_id == entry.ClientId)
 				{
@@ -136,7 +136,7 @@ namespace Epsitec.Cresus.Database
 				
 				int client_id;
 				
-				Common.Types.Converter.Convert (data_row[Tags.ColumnClientId], out client_id);
+				Common.Types.InvariantConverter.Convert (data_row[Tags.ColumnClientId], out client_id);
 				
 				if (client_id == entry.ClientId)
 				{
@@ -172,7 +172,7 @@ namespace Epsitec.Cresus.Database
 				
 				int client_id;
 				
-				Common.Types.Converter.Convert (data_row[Tags.ColumnClientId], out client_id);
+				Common.Types.InvariantConverter.Convert (data_row[Tags.ColumnClientId], out client_id);
 				
 				if (client_id == entry_client_id)
 				{
@@ -213,11 +213,11 @@ namespace Epsitec.Cresus.Database
 				System.DateTime creation_date_time;
 				System.DateTime connection_date_time;
 				
-				Epsitec.Common.Types.Converter.Convert (row[Tags.ColumnClientName], out client_name);
-				Epsitec.Common.Types.Converter.Convert (row[Tags.ColumnClientId], out client_id);
-				Epsitec.Common.Types.Converter.Convert (row[Tags.ColumnClientSync], out client_sync_log_id);
-				Epsitec.Common.Types.Converter.Convert (row[Tags.ColumnClientCreDate], out creation_date_time);
-				Epsitec.Common.Types.Converter.Convert (row[Tags.ColumnClientConDate], out connection_date_time);
+				Epsitec.Common.Types.InvariantConverter.Convert (row[Tags.ColumnClientName], out client_name);
+				Epsitec.Common.Types.InvariantConverter.Convert (row[Tags.ColumnClientId], out client_id);
+				Epsitec.Common.Types.InvariantConverter.Convert (row[Tags.ColumnClientSync], out client_sync_log_id);
+				Epsitec.Common.Types.InvariantConverter.Convert (row[Tags.ColumnClientCreDate], out creation_date_time);
+				Epsitec.Common.Types.InvariantConverter.Convert (row[Tags.ColumnClientConDate], out connection_date_time);
 				
 				list.Add (new Entry (client_name, client_id, client_sync_log_id, creation_date_time, connection_date_time));
 			}

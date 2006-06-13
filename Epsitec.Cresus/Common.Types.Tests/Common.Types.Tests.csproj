@@ -126,7 +126,7 @@
     <Compile Include="ComparerTest.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ConverterTest.cs">
+    <Compile Include="InvariantConverterTest.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="TypeRosettaTest.cs" />

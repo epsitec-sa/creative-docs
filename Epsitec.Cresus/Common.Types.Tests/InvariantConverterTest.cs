@@ -5,17 +5,17 @@ using NUnit.Framework;
 
 namespace Epsitec.Common.Types
 {
-	[TestFixture] public class ConverterTest
+	[TestFixture] public class InvariantConverterTest
 	{
 		[Test] public void CheckIsNull()
 		{
 			object a = null;
 			object b = System.DBNull.Value;
 			
-			Assert.IsTrue (Converter.IsNull (a));
-			Assert.IsTrue (Converter.IsNull (b));
-			Assert.IsTrue (! Converter.IsNotNull (a));
-			Assert.IsTrue (! Converter.IsNotNull (b));
+			Assert.IsTrue (InvariantConverter.IsNull (a));
+			Assert.IsTrue (InvariantConverter.IsNull (b));
+			Assert.IsTrue (! InvariantConverter.IsNotNull (a));
+			Assert.IsTrue (! InvariantConverter.IsNotNull (b));
 		}
 		
 		[Test] public void CheckToDateTime()
@@ -31,19 +31,19 @@ namespace Epsitec.Common.Types
 			
 			System.DateTime result;
 			
-			Assert.IsTrue (! Converter.Convert (a, out result));
-			Assert.IsTrue (! Converter.Convert (b, out result));
-			Assert.IsTrue (! Converter.Convert (c, out result));
+			Assert.IsTrue (! InvariantConverter.Convert (a, out result));
+			Assert.IsTrue (! InvariantConverter.Convert (b, out result));
+			Assert.IsTrue (! InvariantConverter.Convert (c, out result));
 			
-			Assert.IsTrue (Converter.Convert (d, out result));
+			Assert.IsTrue (InvariantConverter.Convert (d, out result));
 			Assert.AreEqual (new System.DateTime (2004, 11, 3, 10, 30, 5, 123), result);
-			Assert.IsTrue (Converter.Convert (e, out result));
+			Assert.IsTrue (InvariantConverter.Convert (e, out result));
 			Assert.AreEqual (new System.DateTime (2004, 11, 3, 10, 30, 5, 123), result);
-			Assert.IsTrue (Converter.Convert (f, out result));
+			Assert.IsTrue (InvariantConverter.Convert (f, out result));
 			Assert.AreEqual (new System.DateTime (2004, 11, 3, 10, 30, 5, 123), result);
-			Assert.IsTrue (Converter.Convert (g, out result));
+			Assert.IsTrue (InvariantConverter.Convert (g, out result));
 			Assert.AreEqual (new System.DateTime (2004, 11, 3, 10, 30, 5, 0), result);
-			Assert.IsTrue (Converter.Convert (h, out result));
+			Assert.IsTrue (InvariantConverter.Convert (h, out result));
 			Assert.AreEqual (new System.DateTime (2004, 11, 3, 10, 30, 5, 0), result);
 			
 			System.DateTime tloc = System.DateTime.Now;
@@ -69,72 +69,72 @@ namespace Epsitec.Common.Types
 			
 			decimal result;
 			
-			Assert.IsTrue (! Converter.Convert (a, out result));
-			Assert.IsTrue (! Converter.Convert (b, out result));
-			Assert.IsTrue (! Converter.Convert (c, out result));
+			Assert.IsTrue (! InvariantConverter.Convert (a, out result));
+			Assert.IsTrue (! InvariantConverter.Convert (b, out result));
+			Assert.IsTrue (! InvariantConverter.Convert (c, out result));
 			
-			Assert.IsTrue (Converter.Convert (d, out result));
+			Assert.IsTrue (InvariantConverter.Convert (d, out result));
 			Assert.IsTrue (result == 10);
-			Assert.IsTrue (Converter.Convert (e, out result));
+			Assert.IsTrue (InvariantConverter.Convert (e, out result));
 			Assert.IsTrue (result == 10);
-			Assert.IsTrue (Converter.Convert (f, out result));
+			Assert.IsTrue (InvariantConverter.Convert (f, out result));
 			Assert.IsTrue (result == 10);
-			Assert.IsTrue (Converter.Convert (g, out result));
+			Assert.IsTrue (InvariantConverter.Convert (g, out result));
 			Assert.IsTrue (result == 1);
-			Assert.IsTrue (Converter.Convert (h, out result));
+			Assert.IsTrue (InvariantConverter.Convert (h, out result));
 			Assert.IsTrue (result == 10);
-			Assert.IsTrue (Converter.Convert (i, out result));
+			Assert.IsTrue (InvariantConverter.Convert (i, out result));
 			Assert.IsTrue (result == 10);
 		}
 		
 		[Test] [ExpectedException (typeof (System.FormatException))] public void CheckToDecimalEx1()
 		{
 			decimal result;
-			Converter.Convert ("X", out result);
+			InvariantConverter.Convert ("X", out result);
 		}
 		
 		[Test] [ExpectedException (typeof (System.NotSupportedException))] public void CheckToDecimalEx2()
 		{
 			decimal result;
-			Converter.Convert (new Drawing.Rectangle (10, 20, 30, 40), out result);
+			InvariantConverter.Convert (new Drawing.Rectangle (10, 20, 30, 40), out result);
 		}
 		
 		[Test] public void CheckToEnum1()
 		{
 			System.Enum v1, v2, v3, v;
 			
-			Assert.IsTrue (Converter.Convert (MyEnum.First, typeof (MyEnum), out v1));
-			Assert.IsTrue (Converter.Convert ("Second",     typeof (MyEnum), out v2));
-			Assert.IsTrue (Converter.Convert (99,           typeof (MyEnum), out v3));
+			Assert.IsTrue (InvariantConverter.Convert (MyEnum.First, typeof (MyEnum), out v1));
+			Assert.IsTrue (InvariantConverter.Convert ("Second",     typeof (MyEnum), out v2));
+			Assert.IsTrue (InvariantConverter.Convert (99,           typeof (MyEnum), out v3));
 			
 			Assert.AreEqual (MyEnum.First,  v1);
 			Assert.AreEqual (MyEnum.Second, v2);
 			Assert.AreEqual (MyEnum.Extra,  v3);
 			
-			Assert.IsTrue (! Converter.Convert (0,   typeof (MyEnum), out v));
-			Assert.IsTrue (! Converter.Convert ("",  typeof (MyEnum), out v));
-			Assert.IsTrue (! Converter.Convert ("X", typeof (MyEnum), out v));
-			Assert.IsTrue (! Converter.Convert ("0", typeof (MyEnum), out v));
+			Assert.IsTrue (! InvariantConverter.Convert (0,   typeof (MyEnum), out v));
+			Assert.IsTrue (! InvariantConverter.Convert ("",  typeof (MyEnum), out v));
+			Assert.IsTrue (! InvariantConverter.Convert ("X", typeof (MyEnum), out v));
+			Assert.IsTrue (! InvariantConverter.Convert ("0", typeof (MyEnum), out v));
 		}
 		
 		[Test] public void CheckToEnum2()
 		{
 			System.Enum v1, v2, v3, v;
 			
-			Assert.IsTrue (Converter.Convert (MyFlags.Flag1,  typeof (MyFlags), out v1));
-			Assert.IsTrue (Converter.Convert ("Flag2, Flag4", typeof (MyFlags), out v2));
-			Assert.IsTrue (Converter.Convert (9,              typeof (MyFlags), out v3));
+			Assert.IsTrue (InvariantConverter.Convert (MyFlags.Flag1,  typeof (MyFlags), out v1));
+			Assert.IsTrue (InvariantConverter.Convert ("Flag2, Flag4", typeof (MyFlags), out v2));
+			Assert.IsTrue (InvariantConverter.Convert (9,              typeof (MyFlags), out v3));
 			
 			Assert.AreEqual (MyFlags.Flag1,  v1);
 			Assert.AreEqual (MyFlags.Flag2 | MyFlags.Flag4, v2);
 			Assert.AreEqual (MyFlags.Flag1 | MyFlags.Flag4, v3);
 			
-			Assert.IsTrue (! Converter.Convert (-1,   typeof (MyFlags), out v));
-			Assert.IsTrue (  Converter.Convert (0x0f, typeof (MyFlags), out v));
-			Assert.IsTrue (! Converter.Convert (0x1f, typeof (MyFlags), out v));
-			Assert.IsTrue (! Converter.Convert ("",   typeof (MyFlags), out v));
-			Assert.IsTrue (! Converter.Convert ("X",  typeof (MyFlags), out v));
-			Assert.IsTrue (! Converter.Convert ("-1", typeof (MyFlags), out v));
+			Assert.IsTrue (! InvariantConverter.Convert (-1,   typeof (MyFlags), out v));
+			Assert.IsTrue (  InvariantConverter.Convert (0x0f, typeof (MyFlags), out v));
+			Assert.IsTrue (! InvariantConverter.Convert (0x1f, typeof (MyFlags), out v));
+			Assert.IsTrue (! InvariantConverter.Convert ("",   typeof (MyFlags), out v));
+			Assert.IsTrue (! InvariantConverter.Convert ("X",  typeof (MyFlags), out v));
+			Assert.IsTrue (! InvariantConverter.Convert ("-1", typeof (MyFlags), out v));
 		}
 		
 		[Test] public void CheckToString()
@@ -152,40 +152,40 @@ namespace Epsitec.Common.Types
 			
 			string result;
 			
-			Assert.IsTrue (! Converter.Convert (a, out result));
-			Assert.IsTrue (! Converter.Convert (b, out result));
+			Assert.IsTrue (! InvariantConverter.Convert (a, out result));
+			Assert.IsTrue (! InvariantConverter.Convert (b, out result));
 			
-			Assert.IsTrue (Converter.Convert (c, out result));
+			Assert.IsTrue (InvariantConverter.Convert (c, out result));
 			Assert.AreEqual ("test", result);
-			Assert.IsTrue (Converter.Convert (d, out result));
+			Assert.IsTrue (InvariantConverter.Convert (d, out result));
 			Assert.AreEqual ("10", result);
-			Assert.IsTrue (Converter.Convert (e, out result));
+			Assert.IsTrue (InvariantConverter.Convert (e, out result));
 			Assert.AreEqual ("10", result);
-			Assert.IsTrue (Converter.Convert (f, out result));
+			Assert.IsTrue (InvariantConverter.Convert (f, out result));
 			Assert.AreEqual ("10.00", result);
-			Assert.IsTrue (Converter.Convert (g, out result));
+			Assert.IsTrue (InvariantConverter.Convert (g, out result));
 			Assert.AreEqual ("True", result);
-			Assert.IsTrue (Converter.Convert (h, out result));
+			Assert.IsTrue (InvariantConverter.Convert (h, out result));
 			Assert.AreEqual ("#199A;#3;#4CCD;#6", result);
-			Assert.IsTrue (Converter.Convert (i, out result));
+			Assert.IsTrue (InvariantConverter.Convert (i, out result));
 			Assert.AreEqual ("10;20;30;40", result);
-			Assert.IsTrue (Converter.Convert (i, out result));
+			Assert.IsTrue (InvariantConverter.Convert (i, out result));
 			Assert.AreEqual ("10;20;30;40", result);
-			Assert.IsTrue (Converter.Convert (j, out result));
+			Assert.IsTrue (InvariantConverter.Convert (j, out result));
 			Assert.AreEqual ("2004-11-03T10:30:05.1230000Z", result);
 		}
 
 		[Test]
 		public void CheckTypeConverter()
 		{
-			ISerializationConverter convC = Converter.GetSerializationConverter (typeof (string));
-			ISerializationConverter convD = Converter.GetSerializationConverter (typeof (int));
-			ISerializationConverter convE = Converter.GetSerializationConverter (typeof (double));
-			ISerializationConverter convF = Converter.GetSerializationConverter (typeof (decimal));
-			ISerializationConverter convG = Converter.GetSerializationConverter (typeof (bool));
-			ISerializationConverter convH = Converter.GetSerializationConverter (typeof (Drawing.Color));
-			ISerializationConverter convI = Converter.GetSerializationConverter (typeof (Drawing.Rectangle));
-			ISerializationConverter convJ = Converter.GetSerializationConverter (typeof (System.DateTime));
+			ISerializationConverter convC = InvariantConverter.GetSerializationConverter (typeof (string));
+			ISerializationConverter convD = InvariantConverter.GetSerializationConverter (typeof (int));
+			ISerializationConverter convE = InvariantConverter.GetSerializationConverter (typeof (double));
+			ISerializationConverter convF = InvariantConverter.GetSerializationConverter (typeof (decimal));
+			ISerializationConverter convG = InvariantConverter.GetSerializationConverter (typeof (bool));
+			ISerializationConverter convH = InvariantConverter.GetSerializationConverter (typeof (Drawing.Color));
+			ISerializationConverter convI = InvariantConverter.GetSerializationConverter (typeof (Drawing.Rectangle));
+			ISerializationConverter convJ = InvariantConverter.GetSerializationConverter (typeof (System.DateTime));
 
 			object c = "test";
 			object d = 10;

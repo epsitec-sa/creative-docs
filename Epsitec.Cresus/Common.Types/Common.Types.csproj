@@ -138,7 +138,7 @@
     <Compile Include="Comparer.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Converter.cs">
+    <Compile Include="InvariantConverter.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Copier.cs">

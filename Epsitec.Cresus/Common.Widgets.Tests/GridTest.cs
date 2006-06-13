@@ -32,7 +32,7 @@ namespace Epsitec.Common.Widgets
 			Layouts.GridLength length4 = new Layouts.GridLength (1, Layouts.GridUnitType.Proportional);
 			Layouts.GridLength length5 = new Layouts.GridLength (2.5, Layouts.GridUnitType.Proportional);
 
-			Types.ISerializationConverter conv = Common.Types.Converter.GetSerializationConverter (typeof (Layouts.GridLength));
+			Types.ISerializationConverter conv = Common.Types.InvariantConverter.GetSerializationConverter (typeof (Layouts.GridLength));
 
 			Assert.AreEqual ("Auto", conv.ConvertToString (length1, null));
 			Assert.AreEqual ("Auto", conv.ConvertToString (length2, null));

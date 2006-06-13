@@ -6,23 +6,23 @@ using System.Collections.Generic;
 namespace Epsitec.Common.Types
 {
 	/// <summary>
-	/// La classe Converter permet de convertir des données simples entre
+	/// La classe InvariantConverter permet de convertir des données simples entre
 	/// elles.
 	/// </summary>
-	public static class Converter
+	public static class InvariantConverter
 	{
 		public static ISerializationConverter GetSerializationConverter(System.Type type)
 		{
 			ISerializationConverter converter;
 			
-			if (Converter.typeConverters.TryGetValue (type, out converter))
+			if (InvariantConverter.typeConverters.TryGetValue (type, out converter))
 			{
 				return converter;
 			}
 
-			lock (Converter.typeConverters)
+			lock (InvariantConverter.typeConverters)
 			{
-				if (Converter.typeConverters.TryGetValue (type, out converter))
+				if (InvariantConverter.typeConverters.TryGetValue (type, out converter))
 				{
 					return converter;
 				}
@@ -45,13 +45,13 @@ namespace Epsitec.Common.Types
 					converter = new GenericSerializationConverterAdaptor (System.ComponentModel.TypeDescriptor.GetConverter (type));
 				}
 				
-				Converter.typeConverters[type] = converter;
+				InvariantConverter.typeConverters[type] = converter;
 				return converter;
 			}
 		}
 		public static void OverrideSerializationConverter(System.Type type, ISerializationConverter converter)
 		{
-			Converter.typeConverters[type] = converter;
+			InvariantConverter.typeConverters[type] = converter;
 		}
 
 		#region GenericSerializationConverter Class
@@ -117,13 +117,13 @@ namespace Epsitec.Common.Types
 		public static string ToString(object obj)
 		{
 			string value;
-			Converter.Convert (obj, out value);
+			InvariantConverter.Convert (obj, out value);
 			return value;
 		}
 		public static double ToDouble(object obj)
 		{
 			decimal value;
-			Converter.Convert (obj, out value);
+			InvariantConverter.Convert (obj, out value);
 			return (double) value;
 		}
 		
@@ -131,7 +131,7 @@ namespace Epsitec.Common.Types
 		{
 			try
 			{
-				return Converter.Convert (obj, out value);
+				return InvariantConverter.Convert (obj, out value);
 			}
 			catch
 			{
@@ -143,7 +143,7 @@ namespace Epsitec.Common.Types
 		{
 			try
 			{
-				return Converter.Convert (obj, out value);
+				return InvariantConverter.Convert (obj, out value);
 			}
 			catch (System.ArgumentException)
 			{
@@ -160,7 +160,7 @@ namespace Epsitec.Common.Types
 		{
 			try
 			{
-				return Converter.Convert (obj, out value);
+				return InvariantConverter.Convert (obj, out value);
 			}
 			catch (System.ArgumentException)
 			{
@@ -177,7 +177,7 @@ namespace Epsitec.Common.Types
 		{
 			try
 			{
-				return Converter.Convert (obj, out value);
+				return InvariantConverter.Convert (obj, out value);
 			}
 			catch (System.ArgumentException)
 			{
@@ -194,7 +194,7 @@ namespace Epsitec.Common.Types
 		{
 			try
 			{
-				return Converter.Convert (obj, out value);
+				return InvariantConverter.Convert (obj, out value);
 			}
 			catch (System.ArgumentException)
 			{
@@ -211,7 +211,7 @@ namespace Epsitec.Common.Types
 		{
 			try
 			{
-				return Converter.Convert (obj, type, out value);
+				return InvariantConverter.Convert (obj, type, out value);
 			}
 			catch (System.ArgumentException)
 			{
@@ -280,28 +280,28 @@ namespace Epsitec.Common.Types
 		public static bool Convert(object obj, out bool value)
 		{
 			decimal value_decimal;
-			bool ok = Converter.Convert (obj, out value_decimal);
+			bool ok = InvariantConverter.Convert (obj, out value_decimal);
 			value = (value_decimal == 0) ? false : true;
 			return ok;
 		}
 		public static bool Convert(object obj, out int value)
 		{
 			decimal value_decimal;
-			bool ok = Converter.Convert (obj, out value_decimal);
+			bool ok = InvariantConverter.Convert (obj, out value_decimal);
 			value = (int) value_decimal;
 			return ok;
 		}
 		public static bool Convert(object obj, out long value)
 		{
 			decimal value_decimal;
-			bool ok = Converter.Convert (obj, out value_decimal);
+			bool ok = InvariantConverter.Convert (obj, out value_decimal);
 			value = (long) value_decimal;
 			return ok;
 		}
 		public static bool Convert(object obj, out short value)
 		{
 			decimal value_decimal;
-			bool ok = Converter.Convert (obj, out value_decimal);
+			bool ok = InvariantConverter.Convert (obj, out value_decimal);
 			value = (short) value_decimal;
 			return ok;
 		}
@@ -391,7 +391,7 @@ namespace Epsitec.Common.Types
 			
 			string name = string.Format (System.Globalization.CultureInfo.InvariantCulture, "{0}", obj);
 			
-			if (Converter.ParseEnum (type, name, out value))
+			if (InvariantConverter.ParseEnum (type, name, out value))
 			{
 				return true;
 			}
@@ -403,11 +403,11 @@ namespace Epsitec.Common.Types
 			
 			try
 			{
-				if (Converter.Convert (obj, out index))
+				if (InvariantConverter.Convert (obj, out index))
 				{
 					value = (System.Enum) System.Enum.ToObject (type, index);
 				
-					if (Converter.CheckEnumValue (type, value))
+					if (InvariantConverter.CheckEnumValue (type, value))
 					{
 						return true;
 					}
@@ -474,7 +474,7 @@ namespace Epsitec.Common.Types
 			
 			long num;
 
-			if (Converter.Convert (obj, out num))
+			if (InvariantConverter.Convert (obj, out num))
 			{
 				value = new System.DateTime (num);
 				return true;
@@ -514,7 +514,7 @@ namespace Epsitec.Common.Types
 				{
 					bool result;
 					
-					if (Converter.Convert (obj, out result))
+					if (InvariantConverter.Convert (obj, out result))
 					{
 						value = result;
 						return true;
@@ -524,7 +524,7 @@ namespace Epsitec.Common.Types
 				{
 					int result;
 					
-					if (Converter.Convert (obj, out result))
+					if (InvariantConverter.Convert (obj, out result))
 					{
 						value = result;
 						return true;
@@ -534,7 +534,7 @@ namespace Epsitec.Common.Types
 				{
 					long result;
 					
-					if (Converter.Convert (obj, out result))
+					if (InvariantConverter.Convert (obj, out result))
 					{
 						value = result;
 						return true;
@@ -544,7 +544,7 @@ namespace Epsitec.Common.Types
 				{
 					decimal result;
 					
-					if (Converter.Convert (obj, out result))
+					if (InvariantConverter.Convert (obj, out result))
 					{
 						value = result;
 						return true;
@@ -554,7 +554,7 @@ namespace Epsitec.Common.Types
 				{
 					System.DateTime result;
 					
-					if (Converter.Convert (obj, out result))
+					if (InvariantConverter.Convert (obj, out result))
 					{
 						value = result;
 						return true;
@@ -563,7 +563,7 @@ namespace Epsitec.Common.Types
 				else if (type.IsEnum)
 				{
 					System.Enum result;
-					if (Converter.Convert (obj, type, out result))
+					if (InvariantConverter.Convert (obj, type, out result))
 					{
 						value = result;
 						return true;
@@ -576,7 +576,7 @@ namespace Epsitec.Common.Types
 				{
 					string result;
 					
-					if (Converter.Convert (obj, out result))
+					if (InvariantConverter.Convert (obj, out result))
 					{
 						value = result;
 						return true;
@@ -676,7 +676,7 @@ namespace Epsitec.Common.Types
 			{
 				value = (System.Enum) System.Enum.Parse (type, name);
 				
-				return Converter.CheckEnumValue (type, value);
+				return InvariantConverter.CheckEnumValue (type, value);
 			}
 			catch (System.ArgumentException)
 			{
@@ -687,7 +687,7 @@ namespace Epsitec.Common.Types
 		}
 		internal static bool CheckEnumValue(System.Type type, System.Enum value)
 		{
-			string[] values = Converter.GetSplitEnumValues (type, value);
+			string[] values = InvariantConverter.GetSplitEnumValues (type, value);
 			
 			try
 			{

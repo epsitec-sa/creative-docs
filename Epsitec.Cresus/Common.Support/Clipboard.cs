@@ -335,7 +335,7 @@ namespace Epsitec.Common.Support
 									int n;
 									try
 									{
-										Types.Converter.Convert (match_opt.Groups["opt"].Captures[0].Value, out n);
+										Types.InvariantConverter.Convert (match_opt.Groups["opt"].Captures[0].Value, out n);
 										
 										while (n-- > 0)
 										{

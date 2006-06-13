@@ -3,7 +3,7 @@
 
 namespace Epsitec.Cresus.Database
 {
-	using Converter = Epsitec.Common.Types.Converter;
+	using InvariantConverter = Epsitec.Common.Types.InvariantConverter;
 	
 	public delegate void CallbackDisplayDataSet(DbInfrastructure infrastructure, string name, System.Data.DataTable table);
 	
@@ -1328,8 +1328,8 @@ namespace Epsitec.Cresus.Database
 				long id;
 				int  status;
 				
-				Converter.Convert (row["T_ID"],   out id);
-				Converter.Convert (row["T_STAT"], out status);
+				InvariantConverter.Convert (row["T_ID"],   out id);
+				InvariantConverter.Convert (row["T_STAT"], out status);
 				
 				keys[i] = new DbKey (id, DbKey.ConvertFromIntStatus (status));
 			}
@@ -1366,7 +1366,7 @@ namespace Epsitec.Cresus.Database
 			
 			transaction.SqlBuilder.SelectData (query);
 			
-			Converter.Convert (this.ExecuteScalar (transaction), out count);
+			InvariantConverter.Convert (this.ExecuteScalar (transaction), out count);
 			
 			return count;
 		}
@@ -1400,7 +1400,7 @@ namespace Epsitec.Cresus.Database
 			
 			int num_rows_affected;
 			
-			Converter.Convert (this.ExecuteNonQuery (transaction), out num_rows_affected);
+			InvariantConverter.Convert (this.ExecuteNonQuery (transaction), out num_rows_affected);
 			
 			if (num_rows_affected != 1)
 			{
@@ -1504,14 +1504,14 @@ namespace Epsitec.Cresus.Database
 				long current_row_id;
 				System.Data.DataRow data_row = rows[i];
 				
-				Converter.Convert (data_row["T_ID"], out current_row_id);
+				InvariantConverter.Convert (data_row["T_ID"], out current_row_id);
 				
 				if (row_id != current_row_id)
 				{
 					row_id   = current_row_id;
 					db_table = null;
 					
-					string table_info = Converter.ToString (data_row["T_INFO"]);
+					string table_info = InvariantConverter.ToString (data_row["T_INFO"]);
 					DbKey  table_key  = (key == null) ? new DbKey (row_id) : key;
 					
 					db_table = this.cache_db_tables[table_key];
@@ -1521,7 +1521,7 @@ namespace Epsitec.Cresus.Database
 						db_table = DbTable.CreateTable (table_info);
 						recycle  = false;
 						
-						db_table.Attributes.SetAttribute (Tags.Name, Converter.ToString (data_row["T_NAME"]));
+						db_table.Attributes.SetAttribute (Tags.Name, InvariantConverter.ToString (data_row["T_NAME"]));
 						db_table.DefineInternalKey (table_key);
 						
 						this.DefineLocalisedAttributes (data_row, "TABLE_CAPTION", Tags.ColumnCaption, db_table.Attributes, Tags.Caption);
@@ -1557,14 +1557,14 @@ namespace Epsitec.Cresus.Database
 				long parent_table_ref_id;
 				long column_id;
 				
-				DbColumn db_column = DbColumn.CreateColumn (Converter.ToString (data_row["C_INFO"]));
+				DbColumn db_column = DbColumn.CreateColumn (InvariantConverter.ToString (data_row["C_INFO"]));
 				
-				Converter.Convert (data_row["C_ID"], out column_id);
-				Converter.Convert (data_row["C_TYPE"], out type_ref_id);
+				InvariantConverter.Convert (data_row["C_ID"], out column_id);
+				InvariantConverter.Convert (data_row["C_TYPE"], out type_ref_id);
 				
-				bool has_parent_table = Converter.Convert (data_row["C_PARENT"], out parent_table_ref_id);
+				bool has_parent_table = InvariantConverter.Convert (data_row["C_PARENT"], out parent_table_ref_id);
 				
-				db_column.Attributes.SetAttribute (Tags.Name, Converter.ToString (data_row["C_NAME"]));
+				db_column.Attributes.SetAttribute (Tags.Name, InvariantConverter.ToString (data_row["C_NAME"]));
 				db_column.DefineInternalKey (new DbKey (column_id));
 				
 				this.DefineLocalisedAttributes (data_row, "COLUMN_CAPTION", Tags.ColumnCaption, db_column.Attributes, Tags.Caption);
@@ -1639,7 +1639,7 @@ namespace Epsitec.Cresus.Database
 			{
 				long type_id;
 				
-				Converter.Convert (data_row["T_ID"], out type_id);
+				InvariantConverter.Convert (data_row["T_ID"], out type_id);
 				
 				string type_name = data_row["T_NAME"] as string;
 				string type_info = data_row["T_INFO"] as string;
@@ -1719,7 +1719,7 @@ namespace Epsitec.Cresus.Database
 			
 			long new_row_id;
 			
-			Converter.Convert (this.ExecuteScalar (transaction), out new_row_id);
+			InvariantConverter.Convert (this.ExecuteScalar (transaction), out new_row_id);
 			
 			return new_row_id - num_keys;
 		}
@@ -1757,9 +1757,9 @@ namespace Epsitec.Cresus.Database
 				//	contient toute l'information nécessaire à la création d'une instance de la
 				//	class DbEnumValue :
 				
-				string val_name = Converter.ToString (data_row["E_NAME"]);
-				string val_id   = Converter.ToString (data_row["E_ID"]);
-				string val_info = Converter.ToString (data_row["E_INFO"]);
+				string val_name = InvariantConverter.ToString (data_row["E_NAME"]);
+				string val_id   = InvariantConverter.ToString (data_row["E_ID"]);
+				string val_info = InvariantConverter.ToString (data_row["E_INFO"]);
 				
 				System.Xml.XmlDocument xml = new System.Xml.XmlDocument ();
 				xml.LoadXml (val_info);
@@ -1801,7 +1801,7 @@ namespace Epsitec.Cresus.Database
 				
 				string index = buffer.ToString ();
 				
-				if (Converter.Convert (row[index], out value))
+				if (InvariantConverter.Convert (row[index], out value))
 				{
 					attributes.SetAttribute (tag, value, locale);
 				}

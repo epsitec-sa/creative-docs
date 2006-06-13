@@ -307,8 +307,8 @@ namespace Epsitec.Common.Script.Developer
 					int line;
 					int col;
 					
-					Types.Converter.Convert (arg_line, out line);	line -= 1;
-					Types.Converter.Convert (arg_col, out col);		col  -= 1;
+					Types.InvariantConverter.Convert (arg_line, out line);	line -= 1;
+					Types.InvariantConverter.Convert (arg_col, out col);		col  -= 1;
 					
 					System.Diagnostics.Debug.WriteLine (error);
 					System.Diagnostics.Debug.WriteLine (lines[line]);
@@ -494,7 +494,7 @@ namespace Epsitec.Common.Script.Developer
 			
 			if (e.CommandArgs.Length >= 1)
 			{
-				Types.Converter.Convert (e.CommandArgs[0], out dir);
+				Types.InvariantConverter.Convert (e.CommandArgs[0], out dir);
 			}
 			
 			this.FindNextError (dir);
@@ -688,7 +688,7 @@ namespace Epsitec.Common.Script.Developer
 					
 					string arg = text.Substring (wave+7, pos-wave-7);
 					
-					if (Types.Converter.Convert (arg, out tag))
+					if (Types.InvariantConverter.Convert (arg, out tag))
 					{
 						return true;
 					}

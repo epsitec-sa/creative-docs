@@ -426,7 +426,7 @@ namespace Epsitec.Common.Types
 				{
 					if (this.typeConverter == null)
 					{
-						this.typeConverter = Converter.GetSerializationConverter (this.propertyType);
+						this.typeConverter = InvariantConverter.GetSerializationConverter (this.propertyType);
 					}
 				}
 			}
@@ -448,7 +448,7 @@ namespace Epsitec.Common.Types
 				{
 					if (this.typeConverter == null)
 					{
-						this.typeConverter = Converter.GetSerializationConverter (this.propertyType);
+						this.typeConverter = InvariantConverter.GetSerializationConverter (this.propertyType);
 					}
 				}
 			}

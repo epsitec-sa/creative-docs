@@ -150,7 +150,7 @@ namespace Epsitec.Common.Types
 			{
 				System.Enum enum_value = (System.Enum) System.Enum.Parse (this.enumType, value.ToString ());
 				
-				return Converter.CheckEnumValue (this.enumType, enum_value);
+				return InvariantConverter.CheckEnumValue (this.enumType, enum_value);
 			}
 			catch (System.ArgumentException)
 			{

@@ -29,7 +29,7 @@ namespace Epsitec.Common.Support
 					(prop.GetIndexParameters ().Length == 0))
 				{
 					string key = prop.Name;
-					string value = Types.Converter.ToString (prop.GetValue (data, null));
+					string value = Types.InvariantConverter.ToString (prop.GetValue (data, null));
 					
 					if (dict.Contains (key))
 					{
@@ -61,7 +61,7 @@ namespace Epsitec.Common.Support
 				{
 					object value;
 					
-					if (Types.Converter.Convert (dict[key], prop.PropertyType, out value))
+					if (Types.InvariantConverter.Convert (dict[key], prop.PropertyType, out value))
 					{
 						prop.SetValue (data, value, null);
 					}
@@ -89,7 +89,7 @@ namespace Epsitec.Common.Support
 					(prop.CanWrite) &&
 					(prop.GetIndexParameters ().Length == 0))
 				{
-					string value = Types.Converter.ToString (prop.GetValue (data, null));
+					string value = Types.InvariantConverter.ToString (prop.GetValue (data, null));
 					
 					dict[key] = value;
 				}
