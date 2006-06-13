@@ -11,16 +11,28 @@ namespace Epsitec.Common.Designer.MyWidgets
 	{
 		public PropertyPanel()
 		{
-			this.Entered += new MessageEventHandler(this.HandleMouseEntered);
-			this.Exited += new MessageEventHandler(this.HandleMouseExited);
+			this.Margins = new Margins(0, 1, 0, 4);
+			this.Padding = new Margins(1, 1, 1, 1);
 
-			this.fixIcon = new StaticText(this);
+			Widget header = new Widget(this);
+			header.PreferredHeight = this.extendedZoneWidth;
+			header.Dock = DockStyle.Top;
+
+			this.fixIcon = new StaticText(header);
+			this.fixIcon.ContentAlignment = ContentAlignment.MiddleCenter;
 			this.fixIcon.PreferredSize = new Size(this.extendedZoneWidth, this.extendedZoneWidth);
 			this.fixIcon.Dock = DockStyle.Left;
 
-			this.label = new StaticText(this);
-			this.label.Dock = DockStyle.Top;
-			this.label.Margins = new Margins(0, 0, 0, 5);
+			this.label = new StaticText(header);
+			this.label.Dock = DockStyle.Fill;
+			this.label.Margins = new Margins(4, 0, 0, 0);
+
+			this.container = new Widget(this);
+			this.container.Dock = DockStyle.Fill;
+			this.container.Padding = new Margins(this.extendedZoneWidth+4, 4, 4, 4);
+
+			this.Entered += new MessageEventHandler(this.HandleMouseEntered);
+			this.Exited += new MessageEventHandler(this.HandleMouseExited);
 		}
 		
 		public PropertyPanel(Widget embedder) : this()
@@ -60,6 +72,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
+		public Widget Container
+		{
+			get
+			{
+				return this.container;
+			}
+		}
+
 		
 		private void HandleMouseEntered(object sender, MessageEventArgs e)
 		{
@@ -84,7 +104,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			rect.Deflate(0.5, 0.5);
 			graphics.AddLine(rect.Left, rect.Bottom-0.5, rect.Left, rect.Top-0.5);
-			graphics.AddLine(rect.Left+this.extendedZoneWidth, rect.Bottom-0.5, rect.Left+this.extendedZoneWidth, rect.Top-0.5);
+			graphics.AddLine(rect.Left+this.extendedZoneWidth+1, rect.Bottom-0.5, rect.Left+this.extendedZoneWidth+1, rect.Top-0.5);
 			graphics.AddLine(rect.Right, rect.Bottom-0.5, rect.Right, rect.Top-0.5);
 			graphics.AddLine(rect.Left-0.5, rect.Top, rect.Right+0.5, rect.Top);
 			graphics.AddLine(rect.Left-0.5, rect.Bottom, rect.Right+0.5, rect.Bottom);
@@ -96,5 +116,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected double					extendedZoneWidth = 16;
 		protected StaticText				label;
 		protected StaticText				fixIcon;
+		protected Widget					container;
 	}
 }

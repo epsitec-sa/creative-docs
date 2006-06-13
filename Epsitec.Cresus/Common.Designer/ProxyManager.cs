@@ -119,14 +119,12 @@ namespace Epsitec.Common.Designer
 
 			MyWidgets.PropertyPanel panel = new MyWidgets.PropertyPanel(container);
 			panel.Dock = DockStyle.Top;
-			panel.Margins = new Margins(0, 1, 0, 4);
-			panel.Padding = new Margins(4, 4, 4, 4);
 			panel.Icon = "PropertyGeometry";
 			panel.Title = source.GetType().Name;
 
 			foreach (DependencyProperty property in source.LocalProperties)
 			{
-				Placeholder placeholder = new Placeholder(panel);
+				Placeholder placeholder = new Placeholder(panel.Container);
 				Binding binding = new Binding(BindingMode.TwoWay, source, property.Name);
 				placeholder.SetBinding(Placeholder.ValueProperty, binding);
 				placeholder.Controller = "String";
