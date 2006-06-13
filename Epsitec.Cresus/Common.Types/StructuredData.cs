@@ -287,6 +287,16 @@ namespace Epsitec.Common.Types
 				DependencyPropertyChangedEventArgs e = new DependencyPropertyChangedEventArgs (name, oldValue, newValue);
 				handler (this, e);
 			}
+
+			this.OnValueChanged (name, oldValue, newValue);
+		}
+
+		protected virtual void OnValueChanged(string name, object oldValue, object newValue)
+		{
+			if (this.ValueChanged != null)
+			{
+				this.ValueChanged (this, new DependencyPropertyChangedEventArgs (name, oldValue, newValue));
+			}
 		}
 
 		#region Record Structure
@@ -326,6 +336,8 @@ namespace Epsitec.Common.Types
 		}
 
 		#endregion
+
+		public event PropertyChangedEventHandler ValueChanged;
 
 		private IStructuredType type;
 		private IDictionary<string, Record> values;
