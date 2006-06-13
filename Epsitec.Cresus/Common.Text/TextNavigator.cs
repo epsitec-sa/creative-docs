@@ -274,7 +274,33 @@ namespace Epsitec.Common.Text
 			
 			this.NotifyTextChanged ();
 		}
-		
+
+		public void InsertWithTabs(string text)
+		{
+			string[] fragments = text.Split ('\t');
+
+			this.Insert (fragments[0]);
+
+			for (int i = 1; i < fragments.Length; i++)
+			{
+				string tag = this.FindInsertionTabTag ();
+
+				if (tag == null)
+				{
+					this.Insert (" ");
+				}
+				else
+				{
+					this.Insert (Text.Unicode.Code.HorizontalTab, new Text.Properties.TabProperty (tag));
+				}
+
+				if (fragments[i].Length > 0)
+				{
+					this.Insert (fragments[i]);
+				}
+			}
+		}
+
 		public void Insert(string text)
 		{
 			//	On n'a pas le droit d'insérer des tabulateurs avec cette méthode,

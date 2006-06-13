@@ -510,7 +510,7 @@ namespace Epsitec.Common.Text.Exchange
 					}
 					else
 					{
-						this.navigator.Insert (text.Text);
+						this.navigator.InsertWithTabs (text.Text);
 					}
 				}
 			}
