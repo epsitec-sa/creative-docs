@@ -263,12 +263,12 @@ namespace Epsitec.Common.Designer.Dialogs
 			{
 				if (first+i < this.druidsIndex.Count)
 				{
-					ResourceBundle.Field primaryField = this.primaryBundle[this.druidsIndex[first+i]];
+					ResourceBundle.Field field = this.primaryBundle[this.druidsIndex[first+i]];
 
-					this.array.SetLineString(0, first+i, primaryField.Name);
-					this.array.SetLineString(1, first+i, primaryField.AsString);
+					this.array.SetLineString(0, first+i, field.Name);
+					this.array.SetLineString(1, first+i, field.AsString);
 					this.array.SetLineState(0, first+i, MyWidgets.StringList.CellState.Normal);
-					this.array.SetLineState(1, first+i, MyWidgets.StringList.CellState.Normal);
+					this.array.SetLineState(1, first+i, (field.DataLevel != ResourceLevel.Default) ? MyWidgets.StringList.CellState.Warning : MyWidgets.StringList.CellState.Normal);
 				}
 				else
 				{
