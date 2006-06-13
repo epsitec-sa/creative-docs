@@ -85,7 +85,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			GridLayoutEngine.SetColumn(placeholder, 0);
 			GridLayoutEngine.SetRow(placeholder, row);
-			GridLayoutEngine.SetRowSpan(placeholder, 2);
+			GridLayoutEngine.SetColumnSpan(placeholder, 2);
 			this.container.Children.Add(placeholder);
 		}
 
