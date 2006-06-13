@@ -119,8 +119,9 @@ namespace Epsitec.Common.Widgets.Layouts
 
 			for (int i = 0; i < this.columnMeasures.Length; i++)
 			{
-				this.columnMeasures[i].UpdateDesired (0);
-
+				GridLength length = this.columnDefinitions[i].Width;
+				this.columnMeasures[i].UpdateDesired (length.IsAbsolute ? length.Value : 0);
+				
 				double w = this.columnMeasures[i].Desired;
 
 				x[i] = dx;
@@ -178,7 +179,8 @@ namespace Epsitec.Common.Widgets.Layouts
 
 			for (int i = 0; i < this.rowMeasures.Length; i++)
 			{
-				this.rowMeasures[i].UpdateDesired (0);
+				GridLength length = this.rowDefinitions[i].Height;
+				this.rowMeasures[i].UpdateDesired (length.IsAbsolute ? length.Value : 0);
 
 				double h1 = this.rowMeasures[i].MinH1;
 				double h2 = this.rowMeasures[i].MinH2;
@@ -456,10 +458,11 @@ namespace Epsitec.Common.Widgets.Layouts
 				for (int i = 0; i < nColumns; i++)
 				{
 					ColumnMeasure measure = this.GetColumnMeasure (i);
+					GridLength length = this.grid.columnDefinitions[i].Width;
 
 					measure.UpdateMin (this.passId, this.grid.columnDefinitions[i].MinWidth);
 					measure.UpdateMax (this.passId, this.grid.columnDefinitions[i].MaxWidth);
-					measure.UpdateDesired (0);
+					measure.UpdateDesired (length.IsAbsolute ? length.Value : 0);
 					measure.UpdatePassId (this.passId);
 				}
 			}
@@ -476,10 +479,11 @@ namespace Epsitec.Common.Widgets.Layouts
 				for (int i = 0; i < nRows; i++)
 				{
 					RowMeasure measure = this.GetRowMeasure (i);
+					GridLength length = this.grid.rowDefinitions[i].Height;
 
 					measure.UpdateMin (this.passId, this.grid.rowDefinitions[i].MinHeight);
 					measure.UpdateMax (this.passId, this.grid.rowDefinitions[i].MaxHeight);
-					measure.UpdateDesired (0);
+					measure.UpdateDesired (length.IsAbsolute ? length.Value : 0);
 					measure.UpdatePassId (this.passId);
 				}
 			}
