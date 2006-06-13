@@ -908,9 +908,9 @@ namespace Epsitec.Common.Designer
 		public Druid DlgTextSelector(Druid ressource)
 		{
 			//	Ouvre le dialogue pour choisir un ressource de type texte.
-			this.dlgTextSelector.Ressource = ressource;
+			this.dlgTextSelector.Resource = ressource;
 			this.dlgTextSelector.Show();
-			return this.dlgTextSelector.Ressource;
+			return this.dlgTextSelector.Resource;
 		}
 
 		public string DlgNewCulture()

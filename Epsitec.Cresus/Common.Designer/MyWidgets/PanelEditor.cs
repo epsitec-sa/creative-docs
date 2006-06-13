@@ -781,7 +781,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			Widget obj = this.Detect(pos);
 			if (obj != null)
 			{
-				this.ChangeTextRessource(obj);
+				this.ChangeTextResource(obj);
 			}
 		}
 
@@ -974,7 +974,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.module.MainWindow.UpdateInfoViewer();
 				this.OnUpdateCommands();
 
-				this.ChangeTextRessource(this.lastCreatedObject);
+				this.ChangeTextResource(this.lastCreatedObject);
 			}
 		}
 
@@ -1108,7 +1108,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		#endregion
 
 
-		protected void ChangeTextRessource(Widget obj)
+		protected void ChangeTextResource(Widget obj)
 		{
 			//	Choix de la ressource de type texte pour l'objet.
 			//	TODO: tout ceci est provisoire !!!

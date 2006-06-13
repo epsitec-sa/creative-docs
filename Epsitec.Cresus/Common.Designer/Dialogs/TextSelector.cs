@@ -128,9 +128,9 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.SelectArray();
 
 			string label = "";
-			if (!this.ressource.IsEmpty)
+			if (!this.resource.IsEmpty)
 			{
-				ResourceBundle.Field field = this.primaryBundle[this.ressource];
+				ResourceBundle.Field field = this.primaryBundle[this.resource];
 				if (!field.IsEmpty)
 				{
 					label = field.Name;
@@ -162,16 +162,16 @@ namespace Epsitec.Common.Designer.Dialogs
 		}
 
 
-		public Druid Ressource
+		public Druid Resource
 		{
 			get
 			{
-				return this.ressource;
+				return this.resource;
 			}
 			set
 			{
 				System.Diagnostics.Debug.Assert(value.Type != DruidType.ModuleRelative);
-				this.ressource = value;
+				this.resource = value;
 			}
 		}
 
@@ -293,11 +293,11 @@ namespace Epsitec.Common.Designer.Dialogs
 			//	Sélectionne la bonne ressource dans le tableau.
 			int sel = -1;
 
-			if (this.ressource.Type == DruidType.Full)
+			if (this.resource.Type == DruidType.Full)
 			{
 				for (int i=0; i<this.druidsIndex.Count; i++)
 				{
-					if (this.druidsIndex[i] == this.ressource)
+					if (this.druidsIndex[i] == this.resource)
 					{
 						sel = i;
 						break;
@@ -371,11 +371,11 @@ namespace Epsitec.Common.Designer.Dialogs
 			int sel = this.array.SelectedRow;
 			if (sel == -1)
 			{
-				this.ressource = Druid.Empty;
+				this.resource = Druid.Empty;
 			}
 			else
 			{
-				this.ressource = this.druidsIndex[sel];
+				this.resource = this.druidsIndex[sel];
 			}
 		}
 
@@ -394,7 +394,7 @@ namespace Epsitec.Common.Designer.Dialogs
 					if (!this.IsExistingName(label))
 					{
 						Druid druid = this.mainWindow.CurrentModule.Modifier.Create(label, text);
-						this.ressource = druid;
+						this.resource = druid;
 					}
 				}
 			}
@@ -462,11 +462,11 @@ namespace Epsitec.Common.Designer.Dialogs
 			int sel = this.array.SelectedRow;
 			if (sel == -1)
 			{
-				this.ressource = Druid.Empty;
+				this.resource = Druid.Empty;
 			}
 			else
 			{
-				this.ressource = this.druidsIndex[sel];
+				this.resource = this.druidsIndex[sel];
 			}
 		}
 
@@ -481,7 +481,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected Button						buttonCreate;
 		protected Button						buttonCancel;
 
-		protected Druid							ressource;
+		protected Druid							resource;
 		protected ResourceBundle				primaryBundle;
 		protected List<Druid>					druidsIndex;
 		protected Widget						focusedWidget;

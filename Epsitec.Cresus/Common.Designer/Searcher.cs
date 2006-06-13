@@ -251,7 +251,7 @@ namespace Epsitec.Common.Designer
 		protected bool Find()
 		{
 			//	Cherche si la chaîne est trouvé à la position du curseur.
-			string text = this.RessourceText;
+			string text = this.ResourceText;
 			if (text != null)
 			{
 				if ((this.mode&SearchingMode.Reverse) == 0)  // en avant ?
@@ -322,7 +322,7 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		protected string RessourceText
+		protected string ResourceText
 		{
 			//	Retourne le texte à la position du curseur courant (en fonction de row/field).
 			get
