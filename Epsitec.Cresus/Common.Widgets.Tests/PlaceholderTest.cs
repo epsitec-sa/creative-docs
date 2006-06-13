@@ -11,6 +11,13 @@ namespace Epsitec.Common.Widgets
 {
 	[TestFixture] public class PlaceholderTest
 	{
+		[SetUp]
+		public void Initialise()
+		{
+			Epsitec.Common.Widgets.Widget.Initialise ();
+			Epsitec.Common.Widgets.Adorners.Factory.SetActive ("LookMetal");
+		}
+		
 		[Test]
 		public void AutomatedTestEnvironment()
 		{
@@ -47,13 +54,20 @@ namespace Epsitec.Common.Widgets
 			grid.ColumnDefinitions.Add (new Layouts.ColumnDefinition (new Layouts.GridLength (40)));
 			grid.ColumnDefinitions.Add (new Layouts.ColumnDefinition ());
 			grid.ColumnDefinitions.Add (new Layouts.ColumnDefinition (new Layouts.GridLength (1, Layouts.GridUnitType.Proportional), 60, double.PositiveInfinity));
+			grid.ColumnDefinitions.Add (new Layouts.ColumnDefinition ()); // en trop
 
 			grid.RowDefinitions.Add (new Layouts.RowDefinition ());
 			grid.RowDefinitions.Add (new Layouts.RowDefinition ());
 			grid.RowDefinitions.Add (new Layouts.RowDefinition ());
 			grid.RowDefinitions.Add (new Layouts.RowDefinition ());
 			grid.RowDefinitions.Add (new Layouts.RowDefinition (new Layouts.GridLength (1, Layouts.GridUnitType.Proportional)));
-			grid.RowDefinitions.Add (new Layouts.RowDefinition ());
+//			grid.RowDefinitions.Add (new Layouts.RowDefinition ()); // en pas assez
+
+			grid.ColumnDefinitions[0].RightBorder = 1;
+			
+			grid.RowDefinitions[0].BottomBorder = 1;
+			grid.RowDefinitions[2].TopBorder = -1;
+			grid.RowDefinitions[3].TopBorder = -1;
 
 			UI.Panel panel = new Epsitec.Common.UI.Panel ();
 
@@ -132,7 +146,7 @@ namespace Epsitec.Common.Widgets
 			text.PreferredWidth = 40;
 			text.PreferredHeight = 20;
 			text.BackColor = Drawing.Color.FromBrightness (0.6);
-			text.Margins = new Drawing.Margins (0, 1, 0, 1);
+			text.Margins = new Drawing.Margins (0, 0, 0, 0);
 			text.ContentAlignment = Drawing.ContentAlignment.MiddleCenter;
 			text.VerticalAlignment = VerticalAlignment.BaseLine;
 			Layouts.GridLayoutEngine.SetColumn (text, 0);
@@ -144,7 +158,7 @@ namespace Epsitec.Common.Widgets
 			text.PreferredWidth = 40;
 			text.PreferredHeight = 20;
 			text.BackColor = Drawing.Color.FromBrightness (0.6);
-			text.Margins = new Drawing.Margins (0, 0, 0, 1);
+			text.Margins = new Drawing.Margins (0, 0, 0, 0);
 			text.ContentAlignment = Drawing.ContentAlignment.MiddleCenter;
 			text.VerticalAlignment = VerticalAlignment.BaseLine;
 			Layouts.GridLayoutEngine.SetColumn (text, 1);

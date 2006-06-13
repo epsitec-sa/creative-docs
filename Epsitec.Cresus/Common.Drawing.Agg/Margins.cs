@@ -60,8 +60,28 @@ namespace Epsitec.Common.Drawing
 		{
 			get { return new Size (this.Width, this.Height); }
 		}
+
 		
-		
+		public void ClipNegative()
+		{
+			if (this.left < 0)
+			{
+				this.left = 0;
+			}
+			if (this.right < 0)
+			{
+				this.right = 0;
+			}
+			if (this.top < 0)
+			{
+				this.top = 0;
+			}
+			if (this.bottom < 0)
+			{
+				this.bottom = 0;
+			}
+		}
+
 		public static readonly Margins			Zero = new Margins(0, 0, 0, 0);
 		
 		public override string ToString()
