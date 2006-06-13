@@ -380,7 +380,7 @@ namespace Epsitec.Common.Document.Objects
 			Text.TextStory story = flow.TextStory;
 			Text.TextNavigator navigator = flow.TextNavigator;
 
-			Epsitec.Common.Text.Exchange.Rosetta.CopyText (story, navigator);
+			Epsitec.Common.Text.Exchange.Rosetta.CopyHtmlText (story, navigator);
 			return true;
 
 #endif
@@ -406,12 +406,37 @@ namespace Epsitec.Common.Document.Objects
 			this.textFlow.NotifyAreaFlow();
 			return true;
 #else
-			TextFlow flow = this.TextFlow;
-			Text.TextStory story = flow.TextStory;
-			Text.TextNavigator navigator = flow.TextNavigator;
+			Support.Clipboard.ReadData data = Support.Clipboard.GetData();
+			bool textInserted = false;
 
-			Epsitec.Common.Text.Exchange.Rosetta.PasteText(story, navigator);
-			return true;
+			if (data.IsCompatible (Clipboard.Format.MicrosoftHtml))
+			{
+				// colle du texte Html
+				TextFlow flow = this.TextFlow;
+				Text.TextStory story = flow.TextStory;
+				Text.TextNavigator navigator = flow.TextNavigator;
+
+				Epsitec.Common.Text.Exchange.Rosetta.PasteHtmlText (story, navigator);
+				textInserted = true;
+			}
+			else if (data.IsCompatible (Clipboard.Format.Text))
+			{
+				string text = data.ReadText();
+				if (text != null)
+				{
+					text = text.Replace ("\r\n", "\u2029");		//	ParagraphSeparator
+					text = text.Replace ("\n", "\u2028");		//	LineSeparator
+					text = text.Replace ("\r", "\u2028");		//	LineSeparator
+
+					this.MetaNavigator.Insert (text);
+					textInserted = true;
+				}
+			}
+
+			if (textInserted)
+				this.textFlow.NotifyAreaFlow ();
+
+			return textInserted;
 #endif
 		}
 
