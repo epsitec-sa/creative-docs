@@ -71,11 +71,16 @@ namespace Epsitec.Common.Widgets.Layouts
 			
 			if (mode == LayoutMode.None)
 			{
-				ILayoutEngine engine = LayoutEngine.GetLayoutEngine (visual);
+				Visual parent = visual.Parent;
 				
-				if (engine != null)
+				if (parent != null)
 				{
-					mode = engine.LayoutMode;
+					ILayoutEngine engine = LayoutEngine.GetLayoutEngine (parent);
+
+					if (engine != null)
+					{
+						mode = engine.LayoutMode;
+					}
 				}
 			}
 			
