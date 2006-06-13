@@ -1,6 +1,8 @@
 //	Copyright © 2004-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
+using System.Collections.Generic;
+
 namespace Epsitec.Common.Types
 {
 	using IComparer    = System.Collections.IComparer;
@@ -16,28 +18,30 @@ namespace Epsitec.Common.Types
 		{
 			FieldInfo[] fields = enum_type.GetFields (BindingFlags.Public | BindingFlags.DeclaredOnly | BindingFlags.Static);
 			
-			this.enum_type   = enum_type;
-			this.enum_values = new EnumValue[fields.Length];
+			this.enumType   = enum_type;
+			this.enumValues = new List<EnumValue> ();
 			
 			for (int i = 0; i < fields.Length; i++)
 			{
 				string name = fields[i].Name;
 				bool   hide = (fields[i].GetCustomAttributes (typeof (HideAttribute), false).Length > 0);
-				int    rank = EnumType.ConvertToInt ((System.Enum) System.Enum.Parse (this.enum_type, name));
+				int    rank = EnumType.ConvertToInt ((System.Enum) System.Enum.Parse (this.enumType, name));
+
+				EnumValue value = new EnumValue (rank, name);
+				value.DefineHidden (hide);
 				
-				this.enum_values[i] = new EnumValue (rank, name);
-				this.enum_values[i].DefineHidden (hide);
+				this.enumValues.Add (value);
 			}
-			
-			System.Array.Sort (this.enum_values, EnumType.RankComparer);
+
+			this.enumValues.Sort (EnumType.RankComparer);
 		}
 		
 		
-		public EnumValue[]						Values
+		public IEnumerable<EnumValue>			Values
 		{
 			get
 			{
-				return this.enum_values;
+				return this.enumValues;
 			}
 		}
 		
@@ -66,7 +70,7 @@ namespace Epsitec.Common.Types
 		}
 		
 		
-		public static IComparer					RankComparer
+		public static IComparer<EnumValue>		RankComparer
 		{
 			get
 			{
@@ -91,7 +95,7 @@ namespace Epsitec.Common.Types
 			this.DefineCaption (Resources.MakeTextRef (id, Tags.Caption));
 			this.DefineDescription (Resources.MakeTextRef (id, Tags.Description));
 			
-			foreach (EnumValue value in this.enum_values)
+			foreach (EnumValue value in this.enumValues)
 			{
 				value.DefineCaption (Resources.MakeTextRef (id, value.Name, Tags.Caption));
 				value.DefineDescription (Resources.MakeTextRef (id, value.Name, Tags.Description));
@@ -101,11 +105,11 @@ namespace Epsitec.Common.Types
 		
 		public EnumValue FindValueFromRank(int rank)
 		{
-			for (int i = 0; i < this.enum_values.Length; i++)
+			for (int i = 0; i < this.enumValues.Count; i++)
 			{
-				if (this.enum_values[i].Rank == rank)
+				if (this.enumValues[i].Rank == rank)
 				{
-					return this.enum_values[i];
+					return this.enumValues[i];
 				}
 			}
 			
@@ -114,11 +118,11 @@ namespace Epsitec.Common.Types
 		
 		public EnumValue FindValueFromName(string name)
 		{
-			for (int i = 0; i < this.enum_values.Length; i++)
+			for (int i = 0; i < this.enumValues.Count; i++)
 			{
-				if (this.enum_values[i].Name == name)
+				if (this.enumValues[i].Name == name)
 				{
-					return this.enum_values[i];
+					return this.enumValues[i];
 				}
 			}
 			
@@ -127,11 +131,11 @@ namespace Epsitec.Common.Types
 		
 		public EnumValue FindValueFromCaption(string caption)
 		{
-			for (int i = 0; i < this.enum_values.Length; i++)
+			for (int i = 0; i < this.enumValues.Count; i++)
 			{
-				if (this.enum_values[i].Caption == caption)
+				if (this.enumValues[i].Caption == caption)
 				{
-					return this.enum_values[i];
+					return this.enumValues[i];
 				}
 			}
 			
@@ -144,9 +148,9 @@ namespace Epsitec.Common.Types
 		{
 			try
 			{
-				System.Enum enum_value = (System.Enum) System.Enum.Parse (this.enum_type, value.ToString ());
+				System.Enum enum_value = (System.Enum) System.Enum.Parse (this.enumType, value.ToString ());
 				
-				return Converter.CheckEnumValue (this.enum_type, enum_value);
+				return Converter.CheckEnumValue (this.enumType, enum_value);
 			}
 			catch (System.ArgumentException)
 			{
@@ -161,7 +165,7 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
-				return enum_type;
+				return enumType;
 			}
 		}
 		#endregion
@@ -179,9 +183,9 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
-				if (this.enum_type != null)
+				if (this.enumType != null)
 				{
-					if (this.enum_type.GetCustomAttributes (typeof (System.FlagsAttribute), false).Length > 0)
+					if (this.enumType.GetCustomAttributes (typeof (System.FlagsAttribute), false).Length > 0)
 					{
 						return true;
 					}
@@ -191,11 +195,14 @@ namespace Epsitec.Common.Types
 			}
 		}
 		
-		IEnumValue[]							IEnumType.Values
+		IEnumerable<IEnumValue>					IEnumType.Values
 		{
 			get
 			{
-				return this.Values;
+				foreach (IEnumValue item in this.Values)
+				{
+					yield return item;
+				}
 			}
 		}
 		
@@ -242,103 +249,12 @@ namespace Epsitec.Common.Types
 		}
 		#endregion
 		
-		#region EnumValue Class
-		public class EnumValue : IEnumValue
-		{
-			public EnumValue(int rank, string name) : this (rank, name, null, null)
-			{
-			}
-			
-			public EnumValue(int rank, string name, string caption) : this (rank, name, caption, null)
-			{
-			}
-			
-			public EnumValue(int rank, string name, string caption, string description)
-			{
-				this.rank        = rank;
-				this.name        = name;
-				this.caption     = caption;
-				this.description = description;
-			}
-			
-			
-			public void DefineCaption(string caption)
-			{
-				this.caption = caption;
-			}
-			
-			public void DefineDescription(string description)
-			{
-				this.description = description;
-			}
-			
-			public void DefineHidden(bool hide)
-			{
-				this.hidden = hide;
-			}
-			
-			
-			#region IEnumValue Members
-			public int							Rank
-			{
-				get
-				{
-					return this.rank;
-				}
-			}
-			
-			public bool							IsHidden
-			{
-				get
-				{
-					return this.hidden;
-				}
-			}
-			#endregion
-			
-			#region INameCaption Members
-			public string						Name
-			{
-				get
-				{
-					return this.name;
-				}
-			}
-
-			public string						Caption
-			{
-				get
-				{
-					return this.caption;
-				}
-			}
-
-			public string						Description
-			{
-				get
-				{
-					return this.description;
-				}
-			}
-			#endregion
-			
-			private int							rank;
-			private bool						hidden;
-			private string						name;
-			private string						caption;
-			private string						description;
-		}
-		#endregion
-		
 		#region RankComparerImplementation Class
-		private class RankComparerImplementation : System.Collections.IComparer
+		private class RankComparerImplementation : IComparer<EnumValue>
 		{
 			#region IComparer Members
-			public int Compare(object x, object y)
+			public int Compare(EnumValue val_x, EnumValue val_y)
 			{
-				IEnumValue val_x = x as IEnumValue;
-				IEnumValue val_y = y as IEnumValue;
-
 				if (val_x == val_y)
 				{
 					return 0;
@@ -392,8 +308,8 @@ namespace Epsitec.Common.Types
 			return (int) number;
 		}
 		
-		private System.Type						enum_type;
-		private EnumValue[]						enum_values;
+		private System.Type						enumType;
+		private List<EnumValue>					enumValues;
 		private string							caption;
 		private string							description;
 	}

@@ -19,23 +19,25 @@ namespace Epsitec.Cresus.Database
 			
 			DbTypeEnum e_type = new DbTypeEnum (list);
 			DbTypeEnum e_copy = e_type.Clone () as DbTypeEnum;
+			DbEnumValue[] enumValues = Common.Types.Collection.ToArray (e_type.Values);
+			DbEnumValue[] copyValues = Common.Types.Collection.ToArray (e_copy.Values);
 			
-			Assert.AreEqual ("M", e_type.Values[0].Name);
+			Assert.AreEqual ("M", enumValues[0].Name);
 			Assert.AreEqual ("M", e_type[1].Name);
 			Assert.AreEqual ("M", e_type["M"].Name);
-			Assert.AreEqual (1, e_type.Values[0].Rank);
+			Assert.AreEqual (1, enumValues[0].Rank);
 			Assert.AreEqual (1, e_type["M"].Rank);
 			
-			Assert.AreEqual ("MME", e_copy.Values[1].Name);
+			Assert.AreEqual ("MME", copyValues[1].Name);
 			Assert.AreEqual ("MME", e_copy[2].Name);
 			Assert.AreEqual ("MME", e_copy["MME"].Name);
-			Assert.AreEqual (2, e_copy.Values[1].Rank);
+			Assert.AreEqual (2, copyValues[1].Rank);
 			Assert.AreEqual (2, e_copy["MME"].Rank);
-			
-			Assert.AreEqual ("MLLE", e_copy.Values[2].Name);
+
+			Assert.AreEqual ("MLLE", copyValues[2].Name);
 			Assert.AreEqual ("MLLE", e_copy[3].Name);
 			Assert.AreEqual ("MLLE", e_copy["MLLE"].Name);
-			Assert.AreEqual (3, e_copy.Values[2].Rank);
+			Assert.AreEqual (3, copyValues[2].Rank);
 			Assert.AreEqual (3, e_copy["MLLE"].Rank);
 			
 			Assert.IsNull (e_type["X"]);
@@ -103,12 +105,17 @@ namespace Epsitec.Cresus.Database
 			Assert.AreEqual (ev_3.Name,    copy["M"]   .Name);
 			Assert.AreEqual (ev_3.Rank,    copy["M"]   .Rank);
 			Assert.AreEqual (ev_3.Caption, copy["M"]   .Caption);
+
+			DbEnumValue[] enumValues = Common.Types.Collection.ToArray (e_type.Values);
+			DbEnumValue[] copyValues = Common.Types.Collection.ToArray (copy.Values);
+
+			Assert.AreEqual (3, enumValues.Length);
 			
 			for (int i = 0; i < 3; i++)
 			{
-				Assert.AreEqual (e_type.Values[i].Name,    copy.Values[i].Name);
-				Assert.AreEqual (e_type.Values[i].Rank,    copy.Values[i].Rank);
-				Assert.AreEqual (e_type.Values[i].Caption, copy.Values[i].Caption);
+				Assert.AreEqual (enumValues[i].Name, copyValues[i].Name);
+				Assert.AreEqual (enumValues[i].Rank, copyValues[i].Rank);
+				Assert.AreEqual (enumValues[i].Caption, copyValues[i].Caption);
 			}
 		}
 		
