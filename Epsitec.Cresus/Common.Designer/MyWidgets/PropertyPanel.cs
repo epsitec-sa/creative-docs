@@ -40,6 +40,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 		}
 
 
+		public string Icon
+		{
+			set
+			{
+				this.fixIcon.Text = Misc.Image(value);
+			}
+		}
+
 		public string Title
 		{
 			get
