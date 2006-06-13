@@ -268,7 +268,7 @@ namespace Epsitec.Common.Designer.Dialogs
 					this.array.SetLineString(0, first+i, field.Name);
 					this.array.SetLineString(1, first+i, field.AsString);
 					this.array.SetLineState(0, first+i, MyWidgets.StringList.CellState.Normal);
-					this.array.SetLineState(1, first+i, (field.DataLevel != ResourceLevel.Default) ? MyWidgets.StringList.CellState.Warning : MyWidgets.StringList.CellState.Normal);
+					this.array.SetLineState(1, first+i, (field.DataLevel == ResourceLevel.Default) ? MyWidgets.StringList.CellState.Warning : MyWidgets.StringList.CellState.Normal);
 				}
 				else
 				{
