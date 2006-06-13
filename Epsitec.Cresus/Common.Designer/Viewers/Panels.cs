@@ -110,7 +110,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			this.tabPageProperties = new TabPage();
 			this.tabPageProperties.TabTitle = Res.Strings.Viewers.Panels.TabProperties;
-			this.tabPageProperties.Padding = new Margins(10, 10, 10, 10);
+			this.tabPageProperties.Padding = new Margins(4, 4, 4, 4);
 			this.tabBook.Items.Add(this.tabPageProperties);
 
 			this.tabPageObjects = new TabPage();

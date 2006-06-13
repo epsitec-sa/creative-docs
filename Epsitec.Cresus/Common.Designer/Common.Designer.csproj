@@ -61,7 +61,7 @@
     <Compile Include="MyWidgets\StringArray.cs" />
     <Compile Include="MyWidgets\StringList.cs" />
     <Compile Include="MyWidgets\TextFieldLabel.cs" />
-    <Compile Include="Panels\Abstract.cs" />
+    <Compile Include="MyWidgets\PropertyPanel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Proxies\Abstract.cs" />
     <Compile Include="Proxies\Geometry.cs" />

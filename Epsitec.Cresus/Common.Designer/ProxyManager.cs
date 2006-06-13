@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
+using Epsitec.Common.Drawing;
 
 namespace Epsitec.Common.Designer
 {
@@ -115,22 +115,22 @@ namespace Epsitec.Common.Designer
 		private void CreateUserInterface(Widget container, IProxy proxy)
 		{
 			//	Crée un panneau pour représenter le proxy spécifié.
-			GroupBox box = new GroupBox(container);
 			DependencyObject source = proxy as DependencyObject;
-			
-			box.Dock = DockStyle.Top;
-			box.Padding = new Drawing.Margins(4, 4, 4, 4);
-			box.Text = source.GetType().Name;
-			box.PreferredHeight = 30;
+
+			MyWidgets.PropertyPanel panel = new MyWidgets.PropertyPanel(container);
+			panel.Dock = DockStyle.Top;
+			panel.Margins = new Margins(0, 0, 0, 4);
+			panel.Padding = new Margins(4, 4, 4, 4);
+			panel.Title = source.GetType().Name;
 
 			foreach (DependencyProperty property in source.LocalProperties)
 			{
-				Placeholder placeholder = new Placeholder(box);
+				Placeholder placeholder = new Placeholder(panel);
 				Binding binding = new Binding(BindingMode.TwoWay, source, property.Name);
 				placeholder.SetBinding(Placeholder.ValueProperty, binding);
 				placeholder.Controller = "String";
 				placeholder.Dock = DockStyle.Top;
-				placeholder.Margins = new Drawing.Margins(0, 0, 0, 0);
+				placeholder.Margins = new Margins(0, 0, 0, 0);
 			}
 		}
 
