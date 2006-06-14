@@ -116,7 +116,7 @@ namespace Epsitec.Common.Designer
 		static public string CultureBaseName(System.Globalization.CultureInfo culture)
 		{
 			//	Retourne le nom de base d'une culture, par exemple "fr".
-			return culture.IetfLanguageTag.Substring(0, 2);
+			return culture.TwoLetterISOLanguageName;
 		}
 
 		static public string CultureLongName(System.Globalization.CultureInfo culture)
@@ -128,7 +128,7 @@ namespace Epsitec.Common.Designer
 		static public string CultureShortName(System.Globalization.CultureInfo culture)
 		{
 			//	Retourne le nom court (2 lettres) d'une culture, par exemple "Fr".
-			return Misc.ProperName(culture.IetfLanguageTag);
+			return Misc.ProperName(culture.TwoLetterISOLanguageName);
 		}
 
 		static public string CultureName(System.Globalization.CultureInfo culture)
