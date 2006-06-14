@@ -70,7 +70,7 @@ namespace Epsitec.Common.Types
 						{
 							object value = metadata.GetValueOverride (this);
 							
-							if (UndefinedValue.IsValueUndefined (value) == false)
+							if (UndefinedValue.IsUndefinedValue (value) == false)
 							{
 								yield return new LocalValueEntry (property, value);
 							}
@@ -148,7 +148,7 @@ namespace Epsitec.Common.Types
 							{
 								object value = metadata.GetValueOverride (this);
 
-								if (UndefinedValue.IsValueUndefined (value) == false)
+								if (UndefinedValue.IsUndefinedValue (value) == false)
 								{
 									yield return new LocalValueEntry (property, value);
 								}
@@ -336,7 +336,7 @@ namespace Epsitec.Common.Types
 		/// <param name="value">The value.</param>
 		public void SetLocalValue(DependencyProperty property, object value)
 		{
-			System.Diagnostics.Debug.Assert (!UndefinedValue.IsValueUndefined (value));
+			System.Diagnostics.Debug.Assert (!UndefinedValue.IsUndefinedValue (value));
 			System.Diagnostics.Debug.Assert (property.IsValidType (value));
 
 			this.properties[property] = value;
@@ -403,7 +403,7 @@ namespace Epsitec.Common.Types
 		}
 		private void SetValueBase(DependencyProperty property, object value, DependencyPropertyMetadata metadata)
 		{
-			System.Diagnostics.Debug.Assert (! UndefinedValue.IsValueUndefined (value));
+			System.Diagnostics.Debug.Assert (! UndefinedValue.IsUndefinedValue (value));
 			
 			if (metadata.InheritsValue)
 			{

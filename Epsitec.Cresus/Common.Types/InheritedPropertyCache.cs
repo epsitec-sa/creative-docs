@@ -459,7 +459,7 @@ namespace Epsitec.Common.Types
 					if (this.oldValue != this.currentValue)
 					{
 						if ((this.oldValue == null) ||
-							(UndefinedValue.IsValueUndefined (this.oldValue)) ||
+							(UndefinedValue.IsUndefinedValue (this.oldValue)) ||
 							(this.oldValue.Equals (this.currentValue) == false))
 						{
 							return true;
@@ -518,7 +518,7 @@ namespace Epsitec.Common.Types
 					if (this.oldValue != this.currentValue)
 					{
 						if ((this.oldValue == null) ||
-							(UndefinedValue.IsValueUndefined (this.oldValue)) ||
+							(UndefinedValue.IsUndefinedValue (this.oldValue)) ||
 							(this.oldValue.Equals (this.currentValue) == false))
 						{
 							node.InvalidateProperty (this.property, this.oldValue, this.currentValue);

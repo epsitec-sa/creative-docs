@@ -139,7 +139,7 @@ namespace Epsitec.Common.Widgets.Controllers
 
 		protected bool IsConvertibleValue(object value)
 		{
-			if (InvalidValue.IsValueInvalid (this.ConvertBackValue (value)))
+			if (InvalidValue.IsInvalidValue (this.ConvertBackValue (value)))
 			{
 				return false;
 			}
@@ -153,7 +153,7 @@ namespace Epsitec.Common.Widgets.Controllers
 		{
 			value = this.ConvertBackValue (value);
 
-			if (InvalidValue.IsValueInvalid (value))
+			if (InvalidValue.IsInvalidValue (value))
 			{
 				return false;
 			}
