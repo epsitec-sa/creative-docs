@@ -66,7 +66,7 @@ namespace Epsitec.Common.Text.Exchange
 		{
 			string result;
 
-			result = string.Format ("font-size:{0}pt;font-family:\"{1}\";color:{2}", this.fontSize, this.fontFamily, this.fontColor);
+			result = string.Format (System.Globalization.CultureInfo.InvariantCulture, "font-size:{0:F1}pt;font-family:\"{1}\";color:{2}", this.fontSize, this.fontFamily, this.fontColor);
 
 			return result;
 		}

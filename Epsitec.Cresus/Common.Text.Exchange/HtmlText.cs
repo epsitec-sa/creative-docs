@@ -195,7 +195,7 @@ namespace Epsitec.Common.Text.Exchange
 
 		public void SetFontSize(double fontSize)
 		{
-			this.fontSize = (int) (fontSize / /* Epsitec.Common.Document.Modifier.FontSizeScale*/ FontSizeFactor);
+			this.fontSize = fontSize / /* Epsitec.Common.Document.Modifier.FontSizeScale*/ FontSizeFactor;
 		}
 
 		static private int[] htmlfontsizes =
