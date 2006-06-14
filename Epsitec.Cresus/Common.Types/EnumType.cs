@@ -144,7 +144,7 @@ namespace Epsitec.Common.Types
 		
 		
 		#region IDataConstraint Members
-		public virtual bool ValidateValue(object value)
+		public virtual bool IsValidValue(object value)
 		{
 			try
 			{

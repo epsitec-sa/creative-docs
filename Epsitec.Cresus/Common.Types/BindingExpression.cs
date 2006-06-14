@@ -146,6 +146,43 @@ namespace Epsitec.Common.Types
 			return sourceName;
 		}
 
+		public object ConvertValue(object value)
+		{
+			if (this.binding.HasConverter)
+			{
+				value = this.binding.ConvertValue (value, this.targetPropery.PropertyType);
+			}
+			return value;
+		}
+
+		public object ConvertBackValue(object value)
+		{
+			if (this.binding.HasConverter)
+			{
+				System.Type type;
+
+				switch (this.sourceType)
+				{
+					case DataSourceType.PropertyObject:
+						type = ((DependencyProperty) this.sourceProperty).PropertyType;
+						break;
+
+					case DataSourceType.StructuredData:
+						type = this.GetSystemTypeFromStructuredData (this.sourceObject as IStructuredData, (string) this.sourceProperty);
+						break;
+
+					default:
+						throw new System.InvalidOperationException (string.Format ("Cannot convert back to source type {0}", this.sourceType));
+				}
+
+				return this.binding.ConvertBackValue (value, type);
+			}
+			else
+			{
+				return value;
+			}
+		}
+
 		#region Internal Methods
 
 		internal void RefreshSourceBinding()
@@ -481,24 +518,14 @@ namespace Epsitec.Common.Types
 							doSource = (DependencyObject) this.sourceObject;
 							property = (DependencyProperty) this.sourceProperty;
 							
-							if (this.binding.HasConverter)
-							{
-								value = this.binding.ConvertBackValue (value, property.PropertyType);
-							}
-							
-							BindingExpression.SetValue (doSource, property, value);
+							BindingExpression.SetValue (doSource, property, this.ConvertBackValue (value));
 							break;
 						
 						case DataSourceType.StructuredData:
 							sdSource = this.sourceObject as IStructuredData;
 							name     = (string) this.sourceProperty;
 							
-							if (this.binding.HasConverter)
-							{
-								value = this.binding.ConvertBackValue (value, this.GetSystemTypeFromStructuredData (sdSource, name));
-							}
-							
-							BindingExpression.SetValue (sdSource, name, value);
+							BindingExpression.SetValue (sdSource, name, this.ConvertBackValue (value));
 							break;
 						
 						case DataSourceType.SourceItself:
@@ -560,11 +587,7 @@ namespace Epsitec.Common.Types
 				
 				try
 				{
-					if (this.binding.HasConverter)
-					{
-						value = this.binding.ConvertValue (value, this.targetPropery.PropertyType);
-					}
-					BindingExpression.SetValue (this.targetObject, this.TargetProperty, value);
+					BindingExpression.SetValue (this.targetObject, this.TargetProperty, this.ConvertValue (value));
 				}
 				finally
 				{

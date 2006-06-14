@@ -160,25 +160,28 @@ namespace Epsitec.Common.Types
 		/// Verifies the validity of the value (proper type and valid with respect
 		/// to <see cref="T:IDataConstraint"/>.
 		/// </summary>
-		/// <param name="type">The type object (may not be <c>null</c>).</param>
 		/// <param name="value">The value.</param>
+		/// <param name="type">The type object (may not be <c>null</c>).</param>
 		/// <returns><c>true</c> if the value is compatible with the specified type, <c>false</c> otherwise.</returns>
-		public static bool VerifyValueValidity(object type, object value)
+		public static bool IsValidValue(object value, object typeObject)
 		{
-			if (type == null)
+			if (typeObject == null)
 			{
 				throw new System.ArgumentNullException ("Null type specified");
 			}
 			
-			INamedType      targetType       = TypeRosetta.GetNamedTypeFromTypeObject (type);
-			System.Type     targetSysType    = TypeRosetta.GetSystemTypeFromTypeObject (type);
+			INamedType      targetType       = TypeRosetta.GetNamedTypeFromTypeObject (typeObject);
+			System.Type     targetSysType    = TypeRosetta.GetSystemTypeFromTypeObject (typeObject);
 			IDataConstraint targetConstraint = targetType as IDataConstraint;
 
 			System.Diagnostics.Debug.Assert (targetType != null);
 
+			//	A DependencyProperty implements IDataConstraint too, so there is
+			//	no need to check explicitely for dependency properties :
+			
 			if (targetConstraint != null)
 			{
-				return targetConstraint.ValidateValue (value);
+				return targetConstraint.IsValidValue (value);
 			}
 
 			if (value == null)

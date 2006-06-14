@@ -11,13 +11,13 @@ namespace Epsitec.Common.Support
 			RegexConstraint c2 = new RegexConstraint (RegexFactory.LocalizedDecimalNum);
 			RegexConstraint c3 = new RegexConstraint (PredefinedRegex.AlphaNum);
 			
-			Assert.IsTrue (c1.ValidateValue ("abc"));
-			Assert.IsTrue (c2.ValidateValue ((10.5M).ToString ()));
-			Assert.IsTrue (c3.ValidateValue ("abc"));
+			Assert.IsTrue (c1.IsValidValue ("abc"));
+			Assert.IsTrue (c2.IsValidValue ((10.5M).ToString ()));
+			Assert.IsTrue (c3.IsValidValue ("abc"));
 			
-			Assert.IsFalse (c1.ValidateValue ("xyz"));
-			Assert.IsFalse (c2.ValidateValue ("abc"));
-			Assert.IsFalse (c3.ValidateValue ("10"));
+			Assert.IsFalse (c1.IsValidValue ("xyz"));
+			Assert.IsFalse (c2.IsValidValue ("abc"));
+			Assert.IsFalse (c3.IsValidValue ("10"));
 		}
 		
 		[Test] public void CheckToStringFromString()
@@ -34,13 +34,13 @@ namespace Epsitec.Common.Support
 			c2 = RegexConstraint.FromString (s2);
 			c3 = RegexConstraint.FromString (s3);
 			
-			Assert.IsTrue (c1.ValidateValue ("abc"));
-			Assert.IsTrue (c2.ValidateValue ((10.5M).ToString ()));
-			Assert.IsTrue (c3.ValidateValue ("abc"));
+			Assert.IsTrue (c1.IsValidValue ("abc"));
+			Assert.IsTrue (c2.IsValidValue ((10.5M).ToString ()));
+			Assert.IsTrue (c3.IsValidValue ("abc"));
 			
-			Assert.IsFalse (c1.ValidateValue ("xyz"));
-			Assert.IsFalse (c2.ValidateValue ("abc"));
-			Assert.IsFalse (c3.ValidateValue ("10"));
+			Assert.IsFalse (c1.IsValidValue ("xyz"));
+			Assert.IsFalse (c2.IsValidValue ("abc"));
+			Assert.IsFalse (c3.IsValidValue ("10"));
 			
 			Assert.AreEqual ("a*", c1.Pattern);
 			Assert.AreEqual (RegexFactory.Options.IgnoreCase, c1.PatternOptions);

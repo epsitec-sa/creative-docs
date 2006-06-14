@@ -93,7 +93,8 @@ namespace Epsitec.Common.Widgets
 					value = "";
 				}
 				
-				if ( this.SimplifiedText != value )
+				if ((this.text != value) &&
+					(this.SimplifiedText != value))
 				{
 					int offsetError;
 					if ( TextLayout.CheckSyntax(value, out offsetError) )

@@ -30,6 +30,15 @@ namespace Epsitec.Common.Widgets
 				return this.GetBinding (Placeholder.ValueProperty);
 			}
 		}
+		
+		public BindingExpression				ValueBindingExpression
+		{
+			get
+			{
+				return this.GetBindingExpression (Placeholder.ValueProperty);
+			}
+		}
+
 
 		public object							ValueTypeObject
 		{
