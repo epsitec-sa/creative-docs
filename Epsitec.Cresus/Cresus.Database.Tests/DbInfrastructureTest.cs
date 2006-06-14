@@ -267,7 +267,7 @@ namespace Epsitec.Cresus.Database
 					if (type is DbTypeString)
 					{
 						DbTypeString type_string = type as DbTypeString;
-						System.Console.Out.WriteLine ("  Length={0}, is fixed length={1}.", type_string.Length, type_string.IsFixedLength);
+						System.Console.Out.WriteLine ("  Length={0}, is fixed length={1}.", type_string.MaximumLength, type_string.IsFixedLength);
 					}
 					else if (type is DbTypeNum)
 					{

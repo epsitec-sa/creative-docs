@@ -8,6 +8,7 @@ namespace Epsitec.Common.Types
 	/// </summary>
 	public interface IStringType : INamedType
 	{
-		int		Length	{ get; }
+		int		MinimumLength	{ get; }
+		int		MaximumLength	{ get; }
 	}
 }

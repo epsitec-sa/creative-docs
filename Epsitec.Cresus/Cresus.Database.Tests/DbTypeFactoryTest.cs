@@ -46,7 +46,7 @@ namespace Epsitec.Cresus.Database
 			
 			type = DbTypeFactory.CreateType ("<type class='str' length='100'/>") as DbTypeString;
 			Assert.IsTrue (type.GetType () == typeof (DbTypeString));
-			Assert.AreEqual (100, type.Length);
+			Assert.AreEqual (100, type.MaximumLength);
 			Assert.AreEqual (false, type.IsFixedLength);
 			
 			type = DbTypeFactory.CreateType ("<type class='str' length='100' fixed='0'/>") as DbTypeString;

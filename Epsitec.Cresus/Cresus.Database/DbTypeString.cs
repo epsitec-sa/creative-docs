@@ -34,8 +34,13 @@ namespace Epsitec.Cresus.Database
 			this.is_fixed_length = is_fixed_length;
 		}
 		
+		public int								MinimumLength
+		{
+			get { return 0; }
+		}
 		
-		public int								Length
+		
+		public int								MaximumLength
 		{
 			get { return this.length; }
 		}
