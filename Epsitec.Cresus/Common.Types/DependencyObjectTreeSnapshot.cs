@@ -159,7 +159,7 @@ namespace Epsitec.Common.Types
 				if (oldValue != newValue)
 				{
 					if ((oldValue == null) ||
-						(UndefinedValue.IsValueUndefined (oldValue)) ||
+						(UndefinedValue.IsUndefinedValue (oldValue)) ||
 						(oldValue.Equals (newValue) == false))
 					{
 						records.Add (new ChangeRecord (snapshot.Object, snapshot.Property, oldValue, newValue));
@@ -222,7 +222,7 @@ namespace Epsitec.Common.Types
 				if (this.oldValue != this.newValue)
 				{
 					if ((this.oldValue == null) ||
-						(UndefinedValue.IsValueUndefined (this.oldValue)) ||
+						(UndefinedValue.IsUndefinedValue (this.oldValue)) ||
 						(this.oldValue.Equals (this.newValue) == false))
 					{
 						this.obj.InvalidateProperty (this.property, this.oldValue, this.newValue);

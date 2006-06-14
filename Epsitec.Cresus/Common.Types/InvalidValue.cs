@@ -20,7 +20,7 @@ namespace Epsitec.Common.Types
 		/// <param name="value">The object which should be tested.</param>
 		/// <returns><c>true</c> if the object is an invalid value; otherwise,
 		/// <c>false</c>.</returns>
-		public static bool IsValueInvalid(object value)
+		public static bool IsInvalidValue(object value)
 		{
 			return (value == InvalidValue.Instance);
 		}

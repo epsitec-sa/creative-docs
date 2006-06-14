@@ -167,7 +167,7 @@ namespace Epsitec.Common.UI.Data
 			get
 			{
 				object value = this.Value;
-				return Types.InvalidValue.IsValueInvalid (value) ? false : true;
+				return Types.InvalidValue.IsInvalidValue (value) ? false : true;
 			}
 		}
 		
