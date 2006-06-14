@@ -614,14 +614,14 @@ namespace Epsitec.Common.Designer
 			this.searchNextState = this.CreateCommandState("SearchNext");
 			
 			this.accessFirstState = this.CreateCommandState("AccessFirst");
-			this.accessPrevState = this.CreateCommandState("AccessPrev", KeyCode.FuncF6);
-			this.accessNextState = this.CreateCommandState("AccessNext", KeyCode.FuncF7);
+			this.accessPrevState = this.CreateCommandState("AccessPrev", KeyCode.FuncF6|KeyCode.ModifierShift);
+			this.accessNextState = this.CreateCommandState("AccessNext", KeyCode.FuncF6);
 			this.accessLastState = this.CreateCommandState("AccessLast");
 			
 			this.modificationAllState = this.CreateCommandState("ModificationAll");
-			this.modificationClearState = this.CreateCommandState("ModificationClear", KeyCode.FuncF9);
-			this.modificationPrevState = this.CreateCommandState("ModificationPrev");
-			this.modificationNextState = this.CreateCommandState("ModificationNext", KeyCode.FuncF8);
+			this.modificationClearState = this.CreateCommandState("ModificationClear", KeyCode.FuncF8);
+			this.modificationPrevState = this.CreateCommandState("ModificationPrev", KeyCode.FuncF7|KeyCode.ModifierShift);
+			this.modificationNextState = this.CreateCommandState("ModificationNext", KeyCode.FuncF7);
 			
 			this.newCultureState = this.CreateCommandState("NewCulture");
 			this.deleteCultureState = this.CreateCommandState("DeleteCulture");

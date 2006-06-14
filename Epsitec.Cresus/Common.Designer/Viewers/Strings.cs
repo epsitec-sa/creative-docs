@@ -433,14 +433,16 @@ namespace Epsitec.Common.Designer.Viewers
 					Druid druid = this.druidsIndex[sel];
 					ResourceBundle.Field field1 = this.primaryBundle[druid];
 					ResourceBundle.Field field2 = this.secondaryBundle[druid];
+					bool state1 = field1.IsEmpty || string.IsNullOrEmpty(field1.AsString);
+					bool state2 = field2.IsEmpty || string.IsNullOrEmpty(field2.AsString);
 
-					if (field1.IsEmpty || field2.IsEmpty)
+					if (state1 || state2)
 					{
 						column = 2;
 						break;
 					}
 
-					if (!field1.IsEmpty && !field2.IsEmpty && field1.ModificationId > field2.ModificationId)
+					if (!state1 && !state2 && field1.ModificationId > field2.ModificationId)
 					{
 						column = 2;
 						break;
