@@ -47,9 +47,7 @@ namespace Epsitec.Common.Designer.Proxies
 		{
 			get
 			{
-				//?return (ContainerLayoutMode) this.GetValue(Layout.ContainerModeProperty);
-				object o = this.GetValue(Layout.ContainerModeProperty);
-				return (ContainerLayoutMode) o;
+				return (ContainerLayoutMode) this.GetValue(Layout.ContainerModeProperty);
 			}
 			set
 			{
@@ -88,7 +86,7 @@ namespace Epsitec.Common.Designer.Proxies
 		}
 
 
-		public static readonly DependencyProperty LayoutModeProperty = DependencyProperty.Register("LayoutMode", typeof(Widgets.Layouts.LayoutMode), typeof(Layout), new DependencyPropertyMetadata(0.0, Layout.NotifyLayoutChanged));
-		public static readonly DependencyProperty ContainerModeProperty = DependencyProperty.Register("ContainerMode", typeof(ContainerLayoutMode), typeof(Layout), new DependencyPropertyMetadata(0.0, Layout.NotifyLayoutChanged));
+		public static readonly DependencyProperty LayoutModeProperty = DependencyProperty.Register("LayoutMode", typeof(Widgets.Layouts.LayoutMode), typeof(Layout), new DependencyPropertyMetadata(Widgets.Layouts.LayoutMode.None, Layout.NotifyLayoutChanged));
+		public static readonly DependencyProperty ContainerModeProperty = DependencyProperty.Register("ContainerMode", typeof(ContainerLayoutMode), typeof(Layout), new DependencyPropertyMetadata(ContainerLayoutMode.None, Layout.NotifyLayoutChanged));
 	}
 }
