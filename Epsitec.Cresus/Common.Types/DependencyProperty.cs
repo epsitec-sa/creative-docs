@@ -155,7 +155,7 @@ namespace Epsitec.Common.Types
 		{
 			if (value == null)
 			{
-				return false;
+				return ! this.PropertyType.IsValueType;
 			}
 			else
 			{

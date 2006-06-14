@@ -996,6 +996,19 @@ namespace Epsitec.Common.Types
 		}
 
 		[Test]
+		public void CheckTypeValidation()
+		{
+			Assert.IsTrue (MyObject.XyzProperty.IsValidType (1));
+			Assert.IsFalse (MyObject.XyzProperty.IsValidType (1.0));
+			Assert.IsFalse (MyObject.XyzProperty.IsValidType (null));
+			Assert.IsFalse (MyObject.XyzProperty.IsValidType (UndefinedValue.Instance));
+			Assert.IsTrue (MyObject.NameProperty.IsValidType ("x"));
+			Assert.IsTrue (MyObject.NameProperty.IsValidType (null));
+			Assert.IsFalse (MyObject.NameProperty.IsValidType (0));
+			Assert.IsFalse (MyObject.NameProperty.IsValidType (UndefinedValue.Instance));
+		}
+
+		[Test]
 		[ExpectedException (typeof (System.TypeInitializationException))]
 		public void CheckWrongParentClass()
 		{
@@ -1321,7 +1334,7 @@ namespace Epsitec.Common.Types
 			{
 			}
 
-			public int Xyz
+			public int				Xyz
 			{
 				get
 				{
@@ -1332,7 +1345,7 @@ namespace Epsitec.Common.Types
 					this.SetValue (MyObject.XyzProperty, value);
 				}
 			}
-			public int Abc
+			public int				Abc
 			{
 				get
 				{
@@ -1343,7 +1356,7 @@ namespace Epsitec.Common.Types
 					this.SetValue (MyObject.AbcProperty, value);
 				}
 			}
-			public int NativeXyz
+			public int				NativeXyz
 			{
 				get
 				{

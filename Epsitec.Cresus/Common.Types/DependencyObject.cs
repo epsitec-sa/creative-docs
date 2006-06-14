@@ -336,6 +336,9 @@ namespace Epsitec.Common.Types
 		/// <param name="value">The value.</param>
 		public void SetLocalValue(DependencyProperty property, object value)
 		{
+			System.Diagnostics.Debug.Assert (!UndefinedValue.IsValueUndefined (value));
+			System.Diagnostics.Debug.Assert (property.IsValidType (value));
+
 			this.properties[property] = value;
 		}
 
@@ -400,6 +403,8 @@ namespace Epsitec.Common.Types
 		}
 		private void SetValueBase(DependencyProperty property, object value, DependencyPropertyMetadata metadata)
 		{
+			System.Diagnostics.Debug.Assert (! UndefinedValue.IsValueUndefined (value));
+			
 			if (metadata.InheritsValue)
 			{
 				this.SetLocalValue (property, value);
