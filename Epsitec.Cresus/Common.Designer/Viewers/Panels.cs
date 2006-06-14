@@ -531,7 +531,7 @@ namespace Epsitec.Common.Designer.Viewers
 			int tabIndex = 0;
 			foreach (string name in Misc.Cultures)
 			{
-				System.Globalization.CultureInfo culture = Resources.FindCultureInfo(name);
+				System.Globalization.CultureInfo culture = Resources.FindSpecificCultureInfo(name);
 
 				IconButton button = new IconButton(this.tabPageCultures);
 				button.Name = name;

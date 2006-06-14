@@ -284,7 +284,7 @@ namespace Epsitec.Common.Support
 			CultureInfo[] cultures = CultureInfo.GetCultures (System.Globalization.CultureTypes.SpecificCultures);
 			twoLetterCode = twoLetterCode.ToLowerInvariant ();
 			
-			CultureInfo found = null;
+			List<CultureInfo> found = new List<CultureInfo> ();
 			
 			for (int i = 0; i < cultures.Length; i++)
 			{
@@ -301,14 +301,27 @@ namespace Epsitec.Common.Support
 						return item;
 					}
 					
-					if (found == null)
-					{
-						found = item;
-					}
+					found.Add (item);
 				}
 			}
+
+			if (found.Count > 0)
+			{
+				foreach (CultureInfo item in found)
+				{
+					string name = item.Name.ToLower ();
+
+					if ((name[3] == name[0]) &&
+						(name[4] == name[1]))
+					{
+						return item;
+					}
+				}
+
+				return found[0];
+			}
 			
-			return found;
+			return null;
 		}
 
 		
