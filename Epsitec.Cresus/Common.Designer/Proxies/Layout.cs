@@ -30,7 +30,7 @@ namespace Epsitec.Common.Designer.Proxies
 				return "PropertyLayout";
 			}
 		}
-		
+
 		public Widgets.Layouts.LayoutMode LayoutMode
 		{
 			get
@@ -43,6 +43,20 @@ namespace Epsitec.Common.Designer.Proxies
 			}
 		}
 
+		public ContainerLayoutMode ContainerMode
+		{
+			get
+			{
+				//?return (ContainerLayoutMode) this.GetValue(Layout.ContainerModeProperty);
+				object o = this.GetValue(Layout.ContainerModeProperty);
+				return (ContainerLayoutMode) o;
+			}
+			set
+			{
+				this.SetValue(Layout.ContainerModeProperty, value);
+			}
+		}
+
 
 		protected override void InitialisePropertyValues()
 		{
@@ -52,7 +66,10 @@ namespace Epsitec.Common.Designer.Proxies
 			//	Recopie localement les diverses propriétés du widget sélectionné
 			//	pour pouvoir ensuite travailler dessus :
 			Widgets.Layouts.LayoutMode layout = (Widgets.Layouts.LayoutMode) this.GetWidgetProperty(AbstractGroup.ChildrenLayoutModeProperty);
+			ContainerLayoutMode container = (ContainerLayoutMode) this.GetWidgetProperty(Visual.ContainerLayoutModeProperty);
+
 			this.LayoutMode = layout;
+			this.ContainerMode = container;
 		}
 
 		private static void NotifyLayoutChanged(DependencyObject o, object oldValue, object newValue)
@@ -62,13 +79,16 @@ namespace Epsitec.Common.Designer.Proxies
 			//	widgets connectés :
 			Layout that = (Layout) o;
 			Widgets.Layouts.LayoutMode layout = that.LayoutMode;
+			ContainerLayoutMode container = that.ContainerMode;
 			
 			//	Demande à Proxies.Abstract de mettre à jour la propriété qui
 			//	définit le layout du ou des widget(s) sélectionné(s) :
 			that.SetWidgetProperty(AbstractGroup.ChildrenLayoutModeProperty, layout);
+			that.SetWidgetProperty(Visual.ContainerLayoutModeProperty, layout);
 		}
 
 
 		public static readonly DependencyProperty LayoutModeProperty = DependencyProperty.Register("LayoutMode", typeof(Widgets.Layouts.LayoutMode), typeof(Layout), new DependencyPropertyMetadata(0.0, Layout.NotifyLayoutChanged));
+		public static readonly DependencyProperty ContainerModeProperty = DependencyProperty.Register("ContainerMode", typeof(ContainerLayoutMode), typeof(Layout), new DependencyPropertyMetadata(0.0, Layout.NotifyLayoutChanged));
 	}
 }
