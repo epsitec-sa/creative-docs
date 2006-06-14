@@ -66,6 +66,7 @@ namespace Epsitec.Common.Types
 		#endregion
 		
 		#region IDataConstraint Members
+		
 		public bool IsValidValue(object value)
 		{
 			if ((value is int) &&
@@ -77,6 +78,7 @@ namespace Epsitec.Common.Types
 			
 			return false;
 		}
+		
 		#endregion
 		
 		private DecimalRange					range;

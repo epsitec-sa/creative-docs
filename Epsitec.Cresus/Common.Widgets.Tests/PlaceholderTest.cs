@@ -74,8 +74,8 @@ namespace Epsitec.Common.Widgets
 			StructuredType type = new StructuredType ();
 			StructuredData data = new StructuredData (type);
 
-			type.AddField ("Name", new StringType ());
-			type.AddField ("Forename", new StringType ());
+			type.AddField ("Name", new StringType (1));
+			type.AddField ("Forename", new StringType (1));
 			type.AddField ("Age", new IntegerType (1, 150));
 			type.AddField ("Sex", new EnumType (typeof (Sex)));
 

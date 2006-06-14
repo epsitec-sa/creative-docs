@@ -270,7 +270,7 @@ namespace Epsitec.Cresus.Database
 				if (this.Type is DbTypeString)
 				{
 					DbTypeString type = this.type as DbTypeString;
-					return type.Length;
+					return type.MaximumLength;
 				}
 				if (this.Type is DbTypeEnum)
 				{
