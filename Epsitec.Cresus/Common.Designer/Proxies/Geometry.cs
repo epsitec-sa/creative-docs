@@ -95,7 +95,7 @@ namespace Epsitec.Common.Designer.Proxies
 			this.BottomMargin = margins.Bottom;
 		}
 
-		private static void NotifyMarginChanged(DependencyObject o, object oldValue, object newValue)
+		private static void NotifyChanged(DependencyObject o, object oldValue, object newValue)
 		{
 			//	Cette méthode est appelée à la suite de la modification d'une de
 			//	nos propriétés de définition de la marge (LeftMargin, RightMargin,
@@ -109,9 +109,9 @@ namespace Epsitec.Common.Designer.Proxies
 		}
 
 
-		public static readonly DependencyProperty LeftMarginProperty	= DependencyProperty.Register("LeftMargin",   typeof(double), typeof(Geometry), new DependencyPropertyMetadata(0.0, Geometry.NotifyMarginChanged));
-		public static readonly DependencyProperty RightMarginProperty	= DependencyProperty.Register("RightMargin",  typeof(double), typeof(Geometry), new DependencyPropertyMetadata(0.0, Geometry.NotifyMarginChanged));
-		public static readonly DependencyProperty TopMarginProperty		= DependencyProperty.Register("TopMargin",    typeof(double), typeof(Geometry), new DependencyPropertyMetadata(0.0, Geometry.NotifyMarginChanged));
-		public static readonly DependencyProperty BottomMarginProperty	= DependencyProperty.Register("BottomMargin", typeof(double), typeof(Geometry), new DependencyPropertyMetadata(0.0, Geometry.NotifyMarginChanged));
+		public static readonly DependencyProperty LeftMarginProperty	= DependencyProperty.Register("LeftMargin",   typeof(double), typeof(Geometry), new DependencyPropertyMetadata(0.0, Geometry.NotifyChanged));
+		public static readonly DependencyProperty RightMarginProperty	= DependencyProperty.Register("RightMargin",  typeof(double), typeof(Geometry), new DependencyPropertyMetadata(0.0, Geometry.NotifyChanged));
+		public static readonly DependencyProperty TopMarginProperty		= DependencyProperty.Register("TopMargin",    typeof(double), typeof(Geometry), new DependencyPropertyMetadata(0.0, Geometry.NotifyChanged));
+		public static readonly DependencyProperty BottomMarginProperty	= DependencyProperty.Register("BottomMargin", typeof(double), typeof(Geometry), new DependencyPropertyMetadata(0.0, Geometry.NotifyChanged));
 	}
 }

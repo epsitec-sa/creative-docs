@@ -434,7 +434,7 @@ namespace Epsitec.Common.Designer.Viewers
 					ResourceBundle.Field field1 = this.primaryBundle[druid];
 					ResourceBundle.Field field2 = this.secondaryBundle[druid];
 
-					if (field2.IsEmpty)
+					if (field1.IsEmpty || field2.IsEmpty)
 					{
 						column = 2;
 						break;
