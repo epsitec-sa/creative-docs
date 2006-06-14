@@ -61,7 +61,7 @@ namespace Epsitec.Common.Types
 		#endregion
 		
 		#region IDataConstraint Members
-		public bool ValidateValue(object value)
+		public bool IsValidValue(object value)
 		{
 			if (value is bool)
 			{

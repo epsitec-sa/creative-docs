@@ -125,7 +125,7 @@ namespace Epsitec.Common.Widgets.Controllers
 			}
 		}
 
-		protected Binding GetPlaceholderBinding()
+		protected BindingExpression GetPlaceholderBindingExpression()
 		{
 			if (this.placeholder == null)
 			{
@@ -133,7 +133,51 @@ namespace Epsitec.Common.Widgets.Controllers
 			}
 			else
 			{
-				return this.placeholder.ValueBinding;
+				return this.placeholder.ValueBindingExpression;
+			}
+		}
+
+		protected bool IsConvertibleValue(object value)
+		{
+			if (InvalidValue.IsValueInvalid (this.ConvertBackValue (value)))
+			{
+				return false;
+			}
+			else
+			{
+				return true;
+			}
+		}
+
+		protected bool IsValidValue(object value)
+		{
+			value = this.ConvertBackValue (value);
+
+			if (InvalidValue.IsValueInvalid (value))
+			{
+				return false;
+			}
+
+			return TypeRosetta.IsValidValue (value, this.Placeholder.ValueTypeObject);
+		}
+
+		protected object ConvertBackValue(object value)
+		{
+			BindingExpression expression;
+			return this.ConvertBackValue (value, out expression);
+		}
+
+		protected object ConvertBackValue(object value, out BindingExpression expression)
+		{
+			expression = this.GetPlaceholderBindingExpression ();
+
+			if (expression == null)
+			{
+				return InvalidValue.Instance;
+			}
+			else
+			{
+				return expression.ConvertBackValue (value);
 			}
 		}
 		

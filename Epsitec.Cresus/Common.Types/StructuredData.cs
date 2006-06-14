@@ -262,7 +262,7 @@ namespace Epsitec.Common.Types
 				return true;
 			}
 
-			return TypeRosetta.VerifyValueValidity (type, value);
+			return TypeRosetta.IsValidValue (value, type);
 		}
 		
 		protected virtual void AllocateValues()

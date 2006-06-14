@@ -125,7 +125,7 @@ namespace Epsitec.Common.Widgets.Controllers
 
 				if (constraint != null)
 				{
-					if (constraint.ValidateValue (value) == false)
+					if (constraint.IsValidValue (value) == false)
 					{
 						value = InvalidValue.Instance;
 					}

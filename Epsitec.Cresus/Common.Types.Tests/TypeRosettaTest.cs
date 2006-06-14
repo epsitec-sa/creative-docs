@@ -130,17 +130,17 @@ namespace Epsitec.Common.Types
 		[Test]
 		public void CheckVerifyValueValidity()
 		{
-			Assert.IsTrue (TypeRosetta.VerifyValueValidity (typeof (int), 10));
-			Assert.IsFalse (TypeRosetta.VerifyValueValidity (typeof (int), 10.5));
-			Assert.IsTrue (TypeRosetta.VerifyValueValidity (new IntegerType (), 10));
-			Assert.IsFalse (TypeRosetta.VerifyValueValidity (new IntegerType (), 10.5));
-			Assert.IsTrue (TypeRosetta.VerifyValueValidity (new IntegerType (0, 10), 10));
-			Assert.IsFalse (TypeRosetta.VerifyValueValidity (new IntegerType (0, 10), 11));
+			Assert.IsTrue (TypeRosetta.IsValidValue (10, typeof (int)));
+			Assert.IsFalse (TypeRosetta.IsValidValue (10.5, typeof (int)));
+			Assert.IsTrue (TypeRosetta.IsValidValue (10, new IntegerType ()));
+			Assert.IsFalse (TypeRosetta.IsValidValue (10.5, new IntegerType ()));
+			Assert.IsTrue (TypeRosetta.IsValidValue (10, new IntegerType (0, 10)));
+			Assert.IsFalse (TypeRosetta.IsValidValue (11, new IntegerType (0, 10)));
 
-			Assert.IsTrue (TypeRosetta.VerifyValueValidity (typeof (A), new A ()));
-			Assert.IsTrue (TypeRosetta.VerifyValueValidity (typeof (A), new B ()));
-			Assert.IsFalse (TypeRosetta.VerifyValueValidity (typeof (B), new A ()));
-			Assert.IsTrue (TypeRosetta.VerifyValueValidity (typeof (B), new B ()));
+			Assert.IsTrue (TypeRosetta.IsValidValue (new A (), typeof (A)));
+			Assert.IsTrue (TypeRosetta.IsValidValue (new B (), typeof (A)));
+			Assert.IsFalse (TypeRosetta.IsValidValue (new A (), typeof (B)));
+			Assert.IsTrue (TypeRosetta.IsValidValue (new B (), typeof (B)));
 		}
 
 		#region A Class
