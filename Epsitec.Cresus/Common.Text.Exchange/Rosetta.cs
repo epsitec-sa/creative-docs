@@ -151,6 +151,109 @@ namespace Epsitec.Common.Text.Exchange
 			return "TODO";
 		}
 
+		// parcours du text
+		public static void TestCode(TextStory story, TextNavigator navigator)
+		{
+			Wrappers.TextWrapper textWrapper = new Wrappers.TextWrapper ();
+			Wrappers.ParagraphWrapper paraWrapper = new Wrappers.ParagraphWrapper ();
+
+			textWrapper.Attach (navigator);
+			paraWrapper.Attach (navigator);
+
+			System.Text.StringBuilder output = new System.Text.StringBuilder ();
+
+			story.DisableOpletQueue ();
+
+			while (true)
+			{
+				int runLength = navigator.GetRunLength (1000000);
+
+				if (runLength == 0)
+				{
+					break;
+				}
+
+				string runText       = navigator.ReadText (runLength);
+
+				navigator.MoveTo (TextNavigator.Target.CharacterNext, runLength);
+
+				Property[] runProperties = navigator.AccumulatedTextProperties;
+				TextStyle[] runStyles     = navigator.TextStyles;
+
+				System.Console.Out.WriteLine ("Run: >>{0}<< with {1} properties", runText, runProperties.Length);
+
+				output.AppendFormat ("Run: \"{0}\"\r\n", runText);
+
+				string text;
+
+				foreach (Property p in runProperties)
+				{
+
+					text = p.ToString ();
+
+					output.AppendFormat ("  {0}  {1}\r\n", p.WellKnownType, text);
+
+					if (p.WellKnownType == Properties.WellKnownType.Font)
+					{
+						Properties.FontProperty fontProperty = p as Properties.FontProperty;
+
+						string fontFace = fontProperty.FaceName;
+						string fontStyle = fontProperty.StyleName;
+
+						fontStyle = OpenType.FontCollection.GetStyleHash (fontStyle);
+
+						System.Console.Out.WriteLine ("- Font: {0} {1}", fontFace, fontStyle);
+					}
+					else
+					{
+						//-						System.Console.Out.WriteLine ("- {0}", p.WellKnownType);
+					}
+				}
+
+				//	La façon "haut niveau" de faire :
+
+
+				int lst = navigator.TextStyles.Length ;
+
+				foreach (TextStyle style in navigator.TextStyles)
+				{
+
+				}
+
+				TextContext context = story.TextContext;
+				TextStyle[] styles = context.StyleList.StyleMap.GetSortedStyles ();
+
+				foreach (TextStyle thestyle in styles)
+				{
+					string s = thestyle.Name;
+					s = context.StyleList.StyleMap.GetCaption (thestyle);
+
+				}
+
+
+				if (textWrapper.Active.IsFontFaceDefined)
+				{
+					System.Console.Out.WriteLine ("- Font Face: {0}", textWrapper.Active.FontFace, textWrapper.Active.FontStyle, textWrapper.Active.InvertItalic ? "(italic)" : string.Empty);
+				}
+				if (textWrapper.Active.IsFontStyleDefined)
+				{
+					System.Console.Out.WriteLine ("- Font Style: {0}", textWrapper.Active.FontStyle);
+				}
+				if (textWrapper.Active.IsInvertItalicDefined)
+				{
+					System.Console.Out.WriteLine ("- Invert Italic: {0}", textWrapper.Active.InvertItalic);
+				}
+				if (textWrapper.Active.IsInvertBoldDefined)
+				{
+					System.Console.Out.WriteLine ("- Invert Bold: {0}", textWrapper.Active.InvertBold);
+				}
+
+			}
+
+			story.EnableOpletQueue ();
+		}
+
+
 		#region SimpleXscript
 		public enum SimpleXScript
 		{
@@ -246,87 +349,6 @@ namespace Epsitec.Common.Text.Exchange
 		}
 
 
-		// parcours du text
-		public static void TestCode(TextStory story, TextNavigator navigator)
-		{
-			Wrappers.TextWrapper textWrapper = new Wrappers.TextWrapper ();
-			Wrappers.ParagraphWrapper paraWrapper = new Wrappers.ParagraphWrapper ();
-
-			System.Text.StringBuilder output = new System.Text.StringBuilder ();
-
-			story.DisableOpletQueue ();
-
-			while (true)
-			{
-				int runLength = navigator.GetRunLength (1000000);
-
-				if (runLength == 0)
-				{
-					break;
-				}
-
-				string runText       = navigator.ReadText (runLength);
-
-				navigator.MoveTo (TextNavigator.Target.CharacterNext, runLength);
-
-				Property[] runProperties = navigator.AccumulatedTextProperties;
-				TextStyle[] runStyles     = navigator.TextStyles;
-
-				System.Console.Out.WriteLine ("Run: >>{0}<< with {1} properties", runText, runProperties.Length);
-
-				output.AppendFormat ("Run: \"{0}\"\r\n", runText);
-
-				string text;
-
-				foreach (Property p in runProperties)
-				{
-
-					text = p.ToString ();
-
-					output.AppendFormat ("  {0}  {1}\r\n", p.WellKnownType, text);
-
-					if (p.WellKnownType == Properties.WellKnownType.Font)
-					{
-						Properties.FontProperty fontProperty = p as Properties.FontProperty;
-
-						string fontFace = fontProperty.FaceName;
-						string fontStyle = fontProperty.StyleName;
-
-						fontStyle = OpenType.FontCollection.GetStyleHash (fontStyle);
-
-						System.Console.Out.WriteLine ("- Font: {0} {1}", fontFace, fontStyle);
-					}
-					else
-					{
-						//-						System.Console.Out.WriteLine ("- {0}", p.WellKnownType);
-					}
-				}
-
-				//	La façon "haut niveau" de faire :
-
-				if (textWrapper.Active.IsFontFaceDefined)
-				{
-					System.Console.Out.WriteLine ("- Font Face: {0}", textWrapper.Active.FontFace, textWrapper.Active.FontStyle, textWrapper.Active.InvertItalic ? "(italic)" : string.Empty);
-				}
-				if (textWrapper.Active.IsFontStyleDefined)
-				{
-					System.Console.Out.WriteLine ("- Font Style: {0}", textWrapper.Active.FontStyle);
-				}
-				if (textWrapper.Active.IsInvertItalicDefined)
-				{
-					System.Console.Out.WriteLine ("- Invert Italic: {0}", textWrapper.Active.InvertItalic);
-				}
-				if (textWrapper.Active.IsInvertBoldDefined)
-				{
-					System.Console.Out.WriteLine ("- Invert Bold: {0}", textWrapper.Active.InvertBold);
-				}
-			}
-
-			story.EnableOpletQueue ();
-			System.Windows.Forms.Clipboard.SetData (System.Windows.Forms.DataFormats.Html, output);
-
-			System.Diagnostics.Debug.WriteLine ("Code de test 1 appelé.");
-		}
 
 		#endregion
 
