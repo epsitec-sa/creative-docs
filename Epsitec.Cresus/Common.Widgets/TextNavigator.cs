@@ -425,54 +425,62 @@ namespace Epsitec.Common.Widgets
 
 		public bool ProcessMessage(Message message, Drawing.Point pos)
 		{
-			switch ( message.Type )
+			try
 			{
-				case MessageType.KeyDown:
-					if ( this.ProcessKeyDown(message.KeyCode, message.IsShiftPressed, message.IsControlPressed) )
-					{
-						//?System.Diagnostics.Debug.WriteLine(this.textLayout.Text);
-						message.Swallowed = true;
-						return true;
-					}
-					break;
-				
-				case MessageType.KeyPress:
-					if ( this.ProcessKeyPress(message.KeyChar) )
-					{
-						//?System.Diagnostics.Debug.WriteLine(this.textLayout.Text);
-						return true;
-					}
-					break;
+				this.textLayout.SuspendTextChangeNotifications ();
+				switch (message.Type)
+				{
+					case MessageType.KeyDown:
+						if (this.ProcessKeyDown (message.KeyCode, message.IsShiftPressed, message.IsControlPressed))
+						{
+							//?System.Diagnostics.Debug.WriteLine(this.textLayout.Text);
+							message.Swallowed = true;
+							return true;
+						}
+						break;
 
-				case MessageType.MouseDown:
-					if ( message.ButtonDownCount == 1 )
-					{
-						this.ProcessBeginPress(pos);
-						this.mouseDrag = true;
-					}
-					this.mouseDown = true;
-					break;
-				
-				case MessageType.MouseMove:
-					if ( this.mouseDrag )
-					{
-						this.ProcessMovePress(pos);
-						return true;
-					}
-					break;
-				
-				case MessageType.MouseUp:
-					if ( this.mouseDown )
-					{
-						this.ProcessEndPress(pos, message.ButtonDownCount);
-						this.mouseDown = false;
-						this.mouseDrag = false;
-						return true;
-					}
-					break;
+					case MessageType.KeyPress:
+						if (this.ProcessKeyPress (message.KeyChar))
+						{
+							//?System.Diagnostics.Debug.WriteLine(this.textLayout.Text);
+							return true;
+						}
+						break;
+
+					case MessageType.MouseDown:
+						if (message.ButtonDownCount == 1)
+						{
+							this.ProcessBeginPress (pos);
+							this.mouseDrag = true;
+						}
+						this.mouseDown = true;
+						break;
+
+					case MessageType.MouseMove:
+						if (this.mouseDrag)
+						{
+							this.ProcessMovePress (pos);
+							return true;
+						}
+						break;
+
+					case MessageType.MouseUp:
+						if (this.mouseDown)
+						{
+							this.ProcessEndPress (pos, message.ButtonDownCount);
+							this.mouseDown = false;
+							this.mouseDrag = false;
+							return true;
+						}
+						break;
+				}
+
+				return false;
 			}
-
-			return false;
+			finally
+			{
+				this.textLayout.ResumeTextChangeNotifications ();
+			}
 		}
 
 		public void MouseDownMessage(Drawing.Point pos)

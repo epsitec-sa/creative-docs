@@ -27,17 +27,20 @@ namespace Epsitec.Common.Widgets
 		public static void ExecuteAsyncCallbacks()
 		{
 			System.Diagnostics.Debug.Assert (Application.runningCallbacks.Count == 0);
-			
-			lock (Application.queueExclusion)
-			{
-				Application.runningCallbacks = Application.pendingCallbacks;
-				Application.pendingCallbacks = new Queue<Support.SimpleCallback> ();
-			}
 
-			while (Application.runningCallbacks.Count > 0)
+			if (Application.pendingCallbacks.Count > 0)
 			{
-				Support.SimpleCallback callback = Application.runningCallbacks.Dequeue ();
-				callback ();
+				lock (Application.queueExclusion)
+				{
+					Application.runningCallbacks = Application.pendingCallbacks;
+					Application.pendingCallbacks = new Queue<Support.SimpleCallback> ();
+				}
+
+				while (Application.runningCallbacks.Count > 0)
+				{
+					Support.SimpleCallback callback = Application.runningCallbacks.Dequeue ();
+					callback ();
+				}
 			}
 		}
 

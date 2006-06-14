@@ -93,7 +93,7 @@ namespace Epsitec.Common.Widgets
 					value = "";
 				}
 				
-				if ( this.text != value )
+				if ( this.SimplifiedText != value )
 				{
 					int offsetError;
 					if ( TextLayout.CheckSyntax(value, out offsetError) )
@@ -106,6 +106,15 @@ namespace Epsitec.Common.Widgets
 						throw new System.FormatException(string.Format ("Syntax error at char {0}.", offsetError.ToString()));
 					}
 				}
+			}
+		}
+
+		private string SimplifiedText
+		{
+			get
+			{
+				string text = this.text ?? "";
+				return text.Contains ("<put ") ? this.GetSimplify () : text;
 			}
 		}
 
@@ -3060,21 +3069,46 @@ namespace Epsitec.Common.Widgets
 			return buffer.ToString();
 		}
 
-		private void SetText(string text)
+		private void SetText(string newText)
 		{
-			System.Diagnostics.Debug.Assert (text != null);
+			System.Diagnostics.Debug.Assert (newText != null);
 
 			string oldText = this.text;
 			
-			if (oldText != text)
+			if (oldText != newText)
 			{
-				this.text = text;
+				this.text = newText;
+				this.NotifyTextChanges ();
+			}
+		}
 
-				if (this.embedder != null)
+		public void NotifyTextChanges()
+		{
+			if ((this.textChangeNotificationSuspendCounter == 0) &&
+				(this.embedder != null))
+			{
+				string oldSimplifiedText = this.simplifiedText;
+				string newSimplifiedText = this.SimplifiedText;
+
+				if (oldSimplifiedText != newSimplifiedText)
 				{
-					this.embedder.InternalNotifyTextLayoutTextChanged (oldText, text);
+					this.simplifiedText = newSimplifiedText;
+					this.embedder.InternalNotifyTextLayoutTextChanged (oldSimplifiedText, newSimplifiedText);
 				}
 			}
+		}
+
+		public void SuspendTextChangeNotifications()
+		{
+			this.textChangeNotificationSuspendCounter++;
+		}
+
+		public void ResumeTextChangeNotifications()
+		{
+			System.Diagnostics.Debug.Assert (this.textChangeNotificationSuspendCounter > 0);
+			
+			this.textChangeNotificationSuspendCounter--;
+			this.NotifyTextChanges ();
 		}
 		
 		protected void MarkContentsAsDirty()
@@ -5048,6 +5082,8 @@ noText:
 		protected bool							isPrepareDirty;
 		protected string						text;
 		protected string						simpleText;
+		protected string						simplifiedText;
+		protected int							textChangeNotificationSuspendCounter;
 		protected Drawing.Size					layoutSize;
 		protected double						drawingScale;
 		protected double						verticalMark;

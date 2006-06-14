@@ -125,6 +125,19 @@ namespace Epsitec.Common.Widgets.Controllers
 			}
 		}
 
+		protected Binding GetPlaceholderBinding()
+		{
+			if (this.placeholder == null)
+			{
+				return null;
+			}
+			else
+			{
+				return this.placeholder.ValueBinding;
+			}
+		}
+		
+		
 		private void AttachAllWidgets(Placeholder view)
 		{
 			if (view != null)

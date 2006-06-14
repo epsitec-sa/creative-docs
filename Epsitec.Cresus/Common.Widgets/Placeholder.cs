@@ -229,6 +229,7 @@ namespace Epsitec.Common.Widgets
 		{
 			if (this.controller != null)
 			{
+				Application.ExecuteAsyncCallbacks ();
 				this.controller.RefreshUserInterface (oldValue, newValue);
 			}
 		}
