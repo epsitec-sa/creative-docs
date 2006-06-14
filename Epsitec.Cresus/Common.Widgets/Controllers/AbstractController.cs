@@ -151,6 +151,18 @@ namespace Epsitec.Common.Widgets.Controllers
 			{
 				handler (this);
 			}
+
+			this.SetPlaceholderValue ();
+		}
+
+		protected virtual void SetPlaceholderValue()
+		{
+			object value = this.ConvertBackValue (this.GetActualValue ());
+
+			if (value != InvalidValue.Instance)
+			{
+				this.Placeholder.Value = value;
+			}
 		}
 
 		public bool IsConvertibleValue(object value)

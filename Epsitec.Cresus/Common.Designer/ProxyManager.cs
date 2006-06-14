@@ -128,7 +128,14 @@ namespace Epsitec.Common.Designer
 				Placeholder placeholder = new Placeholder();
 				Binding binding = new Binding(BindingMode.TwoWay, source, property.Name);
 				placeholder.SetBinding(Placeholder.ValueProperty, binding);
-				placeholder.Controller = "String";
+				
+				BindingExpression expression = placeholder.GetBindingExpression(Placeholder.ValueProperty);
+				object sourceTypeObject = expression.GetSourceTypeObject();
+				System.Type sourceType = TypeRosetta.GetSystemTypeFromTypeObject(sourceTypeObject);
+
+				System.Diagnostics.Debug.Assert(sourceType != null);
+				
+				placeholder.Controller = sourceType.IsEnum ? "Enum" : "String";
 				panel.AddPlaceHolder(placeholder);
 			}
 		}
