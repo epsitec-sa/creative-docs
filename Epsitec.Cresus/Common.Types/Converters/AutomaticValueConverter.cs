@@ -30,6 +30,18 @@ namespace Epsitec.Common.Types.Converters
 		{
 			try
 			{
+				if (expectedType == null)
+				{
+					throw new System.ArgumentNullException ("expectedType", "Expected type is null");
+				}
+
+				System.Type sourceType = value == null ? null : value.GetType ();
+
+				if (sourceType.IsEnum)
+				{
+					System.Diagnostics.Debug.WriteLine ("Convert enum value " + value.ToString () + " to type " + expectedType.Name);
+				}
+				
 				return System.Convert.ChangeType (value, expectedType, culture);
 			}
 			catch (System.InvalidCastException)
@@ -55,6 +67,36 @@ namespace Epsitec.Common.Types.Converters
 		{
 			try
 			{
+				if (expectedType == null)
+				{
+					throw new System.ArgumentNullException ("expectedType", "Expected type is null");
+				}
+
+				System.Type sourceType = value == null ? null : value.GetType ();
+
+				if (sourceType != expectedType)
+				{
+					if (expectedType.IsEnum)
+					{
+						System.Diagnostics.Debug.WriteLine ("ConvertBack value " + value.ToString () + " to enum type " + expectedType.Name);
+
+						value = this.ConvertBack (value, typeof (string), null, System.Globalization.CultureInfo.InvariantCulture);
+
+						if (InvalidValue.IsInvalidValue (value))
+						{
+							return value;
+						}
+
+						System.Enum enumValue;
+
+						if (InvariantConverter.Convert (value, expectedType, out enumValue))
+						{
+							System.Diagnostics.Debug.WriteLine ("ConvertBack succeeded on enum value");
+							return enumValue;
+						}
+					}
+				}
+
 				return System.Convert.ChangeType (value, expectedType, culture);
 			}
 			catch (System.InvalidCastException)
