@@ -76,15 +76,15 @@ namespace Epsitec.Common.Text.Exchange
 
 					if (element == "font-family")
 					{
-						fontface = spanstyleelements[element];
+						fontface = value;
 					}
 
 					if (element == "color")
 					{
-						fontcolor = spanstyleelements[element];
+						fontcolor = value;
 					}
 
-					if (element == "mso-spacerun" && spanstyleelements[element] == "yes")
+					if (element == "mso-spacerun" && value == "yes")
 					{
 						this.IsSpacerun = true;
 					}
