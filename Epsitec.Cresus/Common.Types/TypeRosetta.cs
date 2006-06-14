@@ -75,7 +75,14 @@ namespace Epsitec.Common.Types
 				}
 				else
 				{
-					namedType = new AutomaticNamedType (systemType);
+					if (systemType.IsEnum)
+					{
+						namedType = new EnumType (systemType);
+					}
+					else
+					{
+						namedType = new AutomaticNamedType (systemType);
+					}
 				}
 			}
 

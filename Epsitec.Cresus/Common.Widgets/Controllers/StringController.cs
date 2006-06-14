@@ -82,13 +82,6 @@ namespace Epsitec.Common.Widgets.Controllers
 		private void HandleFieldTextChanged(object sender)
 		{
 			this.OnActualValueChanged ();
-
-			object value = this.ConvertBackValue (this.GetActualValue ());
-			
-			if (value != InvalidValue.Instance)
-			{
-				this.Placeholder.Value = value;
-			}
 		}
 
 		private object ConvertToValue(string text)

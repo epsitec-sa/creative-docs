@@ -16,6 +16,11 @@ namespace Epsitec.Common.Widgets.Controllers
 		{
 		}
 
+		public override object GetActualValue()
+		{
+			return this.combo.SelectedItem;
+		}
+
 		protected override Layouts.IGridPermeable GetGridPermeableLayoutHelper()
 		{
 			return this;
@@ -47,13 +52,13 @@ namespace Epsitec.Common.Widgets.Controllers
 			
 			this.combo.HorizontalAlignment = HorizontalAlignment.Stretch;
 			this.combo.VerticalAlignment = VerticalAlignment.BaseLine;
-			this.combo.TextChanged += this.HandleFieldTextChanged;
+			this.combo.TextChanged += this.HandleComboTextChanged;
 			this.combo.PreferredWidth = 40;
 
 			this.combo.TabIndex = 1;
 			this.combo.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			this.combo.Dock = DockStyle.Stacked;
-
+			
 			if (enumType != null)
 			{
 				foreach (IEnumValue enumValue in enumType.Values)
@@ -72,7 +77,7 @@ namespace Epsitec.Common.Widgets.Controllers
 		{
 			base.PrepareUserInterfaceDisposal ();
 			
-			this.combo.TextChanged -= this.HandleFieldTextChanged;
+			this.combo.TextChanged -= this.HandleComboTextChanged;
 		}
 
 		protected override void RefreshUserInterface(object oldValue, object newValue)
@@ -85,74 +90,10 @@ namespace Epsitec.Common.Widgets.Controllers
 			}
 		}
 
-		private void HandleFieldTextChanged(object sender)
+		private void HandleComboTextChanged(object sender)
 		{
-			object value = this.ConvertToValue (this.combo.Text);
-
-			if (value != InvalidValue.Instance)
-			{
-				this.Placeholder.Value = value;
-			}
+			this.OnActualValueChanged ();
 		}
-
-		private object ConvertToValue(string text)
-		{
-			System.Type type  = TypeRosetta.GetSystemTypeFromTypeObject (this.typeObject);
-			object      value = InvalidValue.Instance;
-
-			if (type == typeof (string))
-			{
-				value = text;
-			}
-			else if (type == typeof (int))
-			{
-				int result;
-
-				if (int.TryParse (text, out result))
-				{
-					value = result;
-				}
-			}
-			else if (type == typeof (decimal))
-			{
-				decimal result;
-
-				if (decimal.TryParse (text, out result))
-				{
-					value = result;
-				}
-			}
-			else if (type == typeof (double))
-			{
-				double result;
-
-				if (double.TryParse (text, out result))
-				{
-					value = result;
-				}
-			}
-
-			if (value != InvalidValue.Instance)
-			{
-				IDataConstraint constraint = this.typeObject as IDataConstraint;
-
-				if (constraint != null)
-				{
-					if (constraint.IsValidValue (value) == false)
-					{
-						value = InvalidValue.Instance;
-					}
-				}
-			}
-			
-			if (value == InvalidValue.Instance)
-			{
-				System.Diagnostics.Debug.WriteLine ("Invalid value: " + text);
-			}
-			
-			return value;
-		}
-
 
 		private string ConvertFromValue(object newValue)
 		{
