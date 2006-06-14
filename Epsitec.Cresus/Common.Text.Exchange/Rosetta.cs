@@ -212,16 +212,15 @@ namespace Epsitec.Common.Text.Exchange
 
 				//	La façon "haut niveau" de faire :
 
+				TextContext context = story.TextContext;
+				TextStyle[] styles = context.StyleList.StyleMap.GetSortedStyles ();
 
-				int lst = navigator.TextStyles.Length ;
+				int lst = navigator.TextStyles.Length;
 
 				foreach (TextStyle style in navigator.TextStyles)
 				{
-
+					string s = context.StyleList.StyleMap.GetCaption (style);
 				}
-
-				TextContext context = story.TextContext;
-				TextStyle[] styles = context.StyleList.StyleMap.GetSortedStyles ();
 
 				foreach (TextStyle thestyle in styles)
 				{
