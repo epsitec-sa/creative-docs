@@ -198,6 +198,8 @@ namespace Epsitec.Common.Designer.Dialogs
 			//	Retourne le rang de la ressource correspondant le mieux possible aux filtres.
 			ResourceBundleCollection bundles = this.mainWindow.CurrentModule.Bundles;
 			this.primaryBundle = bundles[ResourceLevel.Merged];
+			ResourceBundle defaultBundle = bundles[ResourceLevel.Default];
+			this.isDefaultBundle = (Misc.CultureBaseName(this.primaryBundle.Culture) == Misc.CultureBaseName(defaultBundle.Culture));
 
 			this.druidsIndex.Clear();
 
@@ -272,11 +274,12 @@ namespace Epsitec.Common.Designer.Dialogs
 				if (first+i < this.druidsIndex.Count)
 				{
 					ResourceBundle.Field field = this.primaryBundle[this.druidsIndex[first+i]];
+					bool warning = (!this.isDefaultBundle && field.DataLevel == ResourceLevel.Default);
 
 					this.array.SetLineString(0, first+i, field.Name);
 					this.array.SetLineString(1, first+i, field.AsString);
 					this.array.SetLineState(0, first+i, MyWidgets.StringList.CellState.Normal);
-					this.array.SetLineState(1, first+i, (field.DataLevel == ResourceLevel.Default) ? MyWidgets.StringList.CellState.Warning : MyWidgets.StringList.CellState.Normal);
+					this.array.SetLineState(1, first+i, warning ? MyWidgets.StringList.CellState.Warning : MyWidgets.StringList.CellState.Normal);
 				}
 				else
 				{
@@ -483,6 +486,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		protected Druid							resource;
 		protected ResourceBundle				primaryBundle;
+		protected bool							isDefaultBundle;
 		protected List<Druid>					druidsIndex;
 		protected Widget						focusedWidget;
 	}
