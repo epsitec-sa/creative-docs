@@ -148,39 +148,28 @@ namespace Epsitec.Common.Types
 
 		public object ConvertValue(object value)
 		{
-			if (this.binding.HasConverter)
-			{
-				value = this.binding.ConvertValue (value, this.targetPropery.PropertyType);
-			}
-			return value;
+			return this.binding.ConvertValue (value, this.targetPropery.PropertyType);
 		}
 
 		public object ConvertBackValue(object value)
 		{
-			if (this.binding.HasConverter)
+			System.Type type;
+
+			switch (this.sourceType)
 			{
-				System.Type type;
+				case DataSourceType.PropertyObject:
+					type = ((DependencyProperty) this.sourceProperty).PropertyType;
+					break;
 
-				switch (this.sourceType)
-				{
-					case DataSourceType.PropertyObject:
-						type = ((DependencyProperty) this.sourceProperty).PropertyType;
-						break;
+				case DataSourceType.StructuredData:
+					type = this.GetSystemTypeFromStructuredData (this.sourceObject as IStructuredData, (string) this.sourceProperty);
+					break;
 
-					case DataSourceType.StructuredData:
-						type = this.GetSystemTypeFromStructuredData (this.sourceObject as IStructuredData, (string) this.sourceProperty);
-						break;
-
-					default:
-						throw new System.InvalidOperationException (string.Format ("Cannot convert back to source type {0}", this.sourceType));
-				}
-
-				return this.binding.ConvertBackValue (value, type);
+				default:
+					throw new System.InvalidOperationException (string.Format ("Cannot convert back to source type {0}", this.sourceType));
 			}
-			else
-			{
-				return value;
-			}
+
+			return this.binding.ConvertBackValue (value, type);
 		}
 
 		#region Internal Methods

@@ -2,6 +2,7 @@
 //	Responsable: Pierre ARNAUD
 
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace Epsitec.Common.Types
 {
@@ -304,7 +305,11 @@ namespace Epsitec.Common.Types
 				if ((value == null) ||
 					(value.GetType () != type))
 				{
-					value = this.converter.Convert (value, type, this.converterParameter, this.converterCulture);
+					IValueConverter converter = this.converter ?? Converters.AutomaticValueConverter.Instance;
+					CultureInfo     culture   = this.converterCulture ?? CultureInfo.CurrentCulture;
+					object          parameter = this.converter == null ? null : this.converterParameter;
+					
+					value = converter.Convert (value, type, parameter, culture);
 				}
 			}
 			
@@ -318,7 +323,11 @@ namespace Epsitec.Common.Types
 				if ((value == null) ||
 					(value.GetType () != type))
 				{
-					value = this.converter.ConvertBack (value, type, this.converterParameter, this.converterCulture);
+					IValueConverter converter = this.converter ?? Converters.AutomaticValueConverter.Instance;
+					CultureInfo culture   = this.converterCulture ?? CultureInfo.CurrentCulture;
+					object parameter = this.converter == null ? null : this.converterParameter;
+					
+					value = converter.ConvertBack (value, type, parameter, culture);
 				}
 			}
 

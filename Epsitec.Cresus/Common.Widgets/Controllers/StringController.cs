@@ -16,6 +16,11 @@ namespace Epsitec.Common.Widgets.Controllers
 		{
 		}
 
+		public override object GetActualValue()
+		{
+			return this.field.Text;
+		}
+
 		protected override Layouts.IGridPermeable GetGridPermeableLayoutHelper()
 		{
 			return this;
@@ -46,13 +51,15 @@ namespace Epsitec.Common.Widgets.Controllers
 			this.field.VerticalAlignment = VerticalAlignment.BaseLine;
 			this.field.TextChanged += this.HandleFieldTextChanged;
 			this.field.PreferredWidth = 40;
-
+			
 			this.field.TabIndex = 1;
 			this.field.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			this.field.Dock = DockStyle.Stacked;
 			
 			this.AddWidget (this.label);
 			this.AddWidget (this.field);
+
+			this.validator = new Validators.ControllerBasedValidator (this.field, this);
 		}
 
 		protected override void PrepareUserInterfaceDisposal()
@@ -71,9 +78,11 @@ namespace Epsitec.Common.Widgets.Controllers
 				this.field.Text = this.ConvertFromValue (newValue);
 			}
 		}
-
+		
 		private void HandleFieldTextChanged(object sender)
 		{
+			this.OnActualValueChanged ();
+			
 			object value = this.ConvertToValue (this.field.Text);
 
 			if (value != InvalidValue.Instance)
@@ -167,5 +176,6 @@ namespace Epsitec.Common.Widgets.Controllers
 		private TextField field;
 		private StaticText label;
 		private object typeObject;
+		private IValidator validator;
 	}
 }

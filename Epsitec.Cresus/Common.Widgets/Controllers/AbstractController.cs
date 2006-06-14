@@ -100,6 +100,12 @@ namespace Epsitec.Common.Widgets.Controllers
 
 		#endregion
 
+		public virtual object GetActualValue()
+		{
+			return UndefinedValue.Instance;
+		}
+		
+		
 		protected virtual Layouts.IGridPermeable GetGridPermeableLayoutHelper()
 		{
 			return null;
@@ -137,7 +143,17 @@ namespace Epsitec.Common.Widgets.Controllers
 			}
 		}
 
-		protected bool IsConvertibleValue(object value)
+		protected virtual void OnActualValueChanged()
+		{
+			Support.EventHandler handler = (Support.EventHandler) this.GetUserEventHandler ("ActualValueChanged");
+
+			if (handler != null)
+			{
+				handler (this);
+			}
+		}
+
+		public bool IsConvertibleValue(object value)
 		{
 			if (InvalidValue.IsInvalidValue (this.ConvertBackValue (value)))
 			{
@@ -149,7 +165,7 @@ namespace Epsitec.Common.Widgets.Controllers
 			}
 		}
 
-		protected bool IsValidValue(object value)
+		public bool IsValidValue(object value)
 		{
 			value = this.ConvertBackValue (value);
 
@@ -169,6 +185,17 @@ namespace Epsitec.Common.Widgets.Controllers
 
 		protected object ConvertBackValue(object value, out BindingExpression expression)
 		{
+			if (UndefinedValue.IsUndefinedValue (value))
+			{
+				expression = null;
+				return InvalidValue.Instance;
+			}
+			if (InvalidValue.IsInvalidValue (value))
+			{
+				expression = null;
+				return InvalidValue.Instance;
+			}
+			
 			expression = this.GetPlaceholderBindingExpression ();
 
 			if (expression == null)
@@ -235,6 +262,18 @@ namespace Epsitec.Common.Widgets.Controllers
 		}
 		
 		#endregion
+
+		public event Support.EventHandler		ActualValueChanged
+		{
+			add
+			{
+				this.AddUserEventHandler ("ActualValueChanged", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler ("ActualValueChanged", value);
+			}
+		}
 
 		public static readonly DependencyProperty PlaceholderProperty = DependencyProperty.Register ("Placeholder", typeof (Placeholder), typeof (AbstractController), new DependencyPropertyMetadata (AbstractController.GetPlaceholderValue, AbstractController.SetPlaceholderValue));
 

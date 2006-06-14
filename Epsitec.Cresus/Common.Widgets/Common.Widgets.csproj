@@ -353,6 +353,7 @@
     <Compile Include="RibbonBook.cs" />
     <Compile Include="RibbonPage.cs" />
     <Compile Include="HSplitter.cs" />
+    <Compile Include="Validators\ControllerBasedValidator.cs" />
     <Compile Include="VSplitter.cs" />
     <Compile Include="Helpers\IClientInfo.cs" />
     <Compile Include="IController.cs" />
