@@ -82,7 +82,7 @@ namespace Epsitec.Common.Designer.Proxies
 			//	Demande à Proxies.Abstract de mettre à jour la propriété qui
 			//	définit le layout du ou des widget(s) sélectionné(s) :
 			that.SetWidgetProperty(AbstractGroup.ChildrenLayoutModeProperty, layout);
-			that.SetWidgetProperty(Visual.ContainerLayoutModeProperty, layout);
+			that.SetWidgetProperty(Visual.ContainerLayoutModeProperty, container);
 		}
 
 
