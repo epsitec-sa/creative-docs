@@ -30,11 +30,11 @@ namespace Epsitec.Common.Designer
 		}
 
 
-		public ObjectModifier(MyWidgets.PanelEditor panelEditor, UI.Panel container)
+		public ObjectModifier(MyWidgets.PanelEditor panelEditor)
 		{
 			//	Constructeur unique.
 			this.panelEditor = panelEditor;
-			this.container = container;
+			this.container = this.panelEditor.Panel;
 		}
 
 
