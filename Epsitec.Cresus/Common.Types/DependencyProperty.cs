@@ -29,21 +29,7 @@ namespace Epsitec.Common.Types
 			this.globalIndex = System.Threading.Interlocked.Increment (ref DependencyProperty.globalPropertyCount);
 			this.isPropertyDerivedFromDependencyObject = typeof (DependencyObject).IsAssignableFrom (this.propertyType);
 
-			if (this.propertyType == typeof (ICollection<DependencyObject>))
-			{
-				this.isPropertyAnICollection = true;
-			}
-			else
-			{
-				foreach (System.Type type in this.propertyType.GetInterfaces ())
-				{
-					if (type == typeof (ICollection<DependencyObject>))
-					{
-						this.isPropertyAnICollection = true;
-						break;
-					}
-				}
-			}
+			this.isPropertyAnICollection = TypeRosetta.DoesTypeImplementInterface (this.propertyType, typeof (ICollection<DependencyObject>));
 
 			if ((this.defaultMetadata.InheritsValue) &&
 				(this.propertyType == typeof (bool)))
@@ -62,7 +48,7 @@ namespace Epsitec.Common.Types
 				}
 			}
 		}
-		
+
 		public string							Name
 		{
 			get

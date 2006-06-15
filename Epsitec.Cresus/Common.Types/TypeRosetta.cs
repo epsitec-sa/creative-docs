@@ -301,6 +301,33 @@ namespace Epsitec.Common.Types
 		{
 			obj.ClearValue (TypeRosetta.TypeObjectProperty);
 		}
+
+		/// <summary>
+		/// Verifies if the type implements the specified interface.
+		/// </summary>
+		/// <param name="systemType">Type to check.</param>
+		/// <param name="interfaceType">Type of the interface to find.</param>
+		/// <returns><c>true</c> if the interface is found; otherwise, <c>false</c>.</returns>
+		public static bool DoesTypeImplementInterface(System.Type systemType, System.Type interfaceType)
+		{
+			if (systemType == interfaceType)
+			{
+				return true;
+			}
+			else
+			{
+				foreach (System.Type type in systemType.GetInterfaces ())
+				{
+					if (type == interfaceType)
+					{
+						return true;
+					}
+				}
+			}
+
+			return false;
+		}
+		
 		
 		public static readonly DependencyProperty TypeObjectProperty = DependencyProperty.RegisterAttached ("TypeObject", typeof (object), typeof (TypeRosetta.Properties));
 	}

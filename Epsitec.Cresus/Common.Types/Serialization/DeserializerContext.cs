@@ -64,22 +64,27 @@ namespace Epsitec.Common.Types.Serialization
 				object data = this.ResolveFromMarkup (value, property.PropertyType);
 
 				if ((data != null) &&
-					(data.GetType () == typeof (DependencyObject[])) &&
+					(TypeRosetta.DoesTypeImplementInterface (data.GetType (), typeof (IEnumerable<DependencyObject>))) &&
 					(property.IsPropertyTypeAnICollectionOfDependencyObject))
 				{
 					//	Assign a collection of DependencyObject to a property which implements
 					//	such a collection.
 
 					ICollection<DependencyObject> collection = obj.GetValue (property) as ICollection<DependencyObject>;
+					IEnumerable<DependencyObject> dataSource = data as IEnumerable<DependencyObject>;
 
 					if (collection == null)
 					{
 						throw new System.ArgumentException (string.Format ("Property {0} does not follow Collection semantics", field));
 					}
+					if (dataSource == null)
+					{
+						throw new System.ArgumentException (string.Format ("Property {0} cannot be restored", field));
+					}
 
 					collection.Clear ();
 					
-					foreach (DependencyObject item in (DependencyObject[]) data)
+					foreach (DependencyObject item in dataSource)
 					{
 						collection.Add (item);
 					}
