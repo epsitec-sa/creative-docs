@@ -18,6 +18,7 @@ namespace Epsitec.Common.Types.Serialization.IO
 		{
 		}
 
+		public abstract void WriteAttributeStrings();
 		public abstract void WriteExternalReference(string name);
 		public abstract void WriteTypeDefinition(int id, string name);
 		public abstract void WriteObjectDefinition(int id, int typeId);
