@@ -6,10 +6,12 @@ using Epsitec.Common.Types;
 
 namespace Epsitec.Common.Widgets.Layouts
 {
-	public sealed class GridLayoutEngine : DependencyObject, ILayoutEngine
+	public sealed class GridLayoutEngine : DependencyObject, ILayoutEngine, Types.IListHost<ColumnDefinition>, Types.IListHost<RowDefinition>
 	{
 		public GridLayoutEngine()
 		{
+			this.columnDefinitions = new Collections.ColumnDefinitionCollection (this);
+			this.rowDefinitions = new Collections.RowDefinitionCollection (this);
 		}
 
 		public Collections.ColumnDefinitionCollection ColumnDefinitions
@@ -44,6 +46,8 @@ namespace Epsitec.Common.Widgets.Layouts
 
 		public void UpdateMinMax(Visual container, LayoutContext context, IEnumerable<Visual> children, ref Drawing.Size minSize, ref Drawing.Size maxSize)
 		{
+			this.containerCache = container;
+			
 			int passId = context.PassId;
 			
 			MinMaxUpdater updater = new MinMaxUpdater (this, passId);
@@ -137,6 +141,14 @@ namespace Epsitec.Common.Widgets.Layouts
 		}
 
 		#endregion
+
+		public void InvalidateMeasures()
+		{
+			if (this.containerCache != null)
+			{
+				LayoutContext.AddToMeasureQueue (this.containerCache);
+			}
+		}
 
 		private void GenerateColumnOffsets(Drawing.Rectangle rect, double[] x)
 		{
@@ -880,6 +892,64 @@ namespace Epsitec.Common.Widgets.Layouts
 
 		#endregion
 
+		#region IListHost<ColumnDefinition> Members
+
+		Epsitec.Common.Types.Collections.HostedList<ColumnDefinition> IListHost<ColumnDefinition>.Items
+		{
+			get
+			{
+				return this.ColumnDefinitions;
+			}
+		}
+
+		void IListHost<ColumnDefinition>.NotifyListInsertion(ColumnDefinition item)
+		{
+			this.InvalidateMeasures ();
+			item.Changed += this.HandleColumnDefinitionChanged;
+		}
+
+		void IListHost<ColumnDefinition>.NotifyListRemoval(ColumnDefinition item)
+		{
+			item.Changed -= this.HandleColumnDefinitionChanged;
+			this.InvalidateMeasures ();
+		}
+
+		#endregion
+
+		#region IListHost<RowDefinition> Members
+
+		Epsitec.Common.Types.Collections.HostedList<RowDefinition> IListHost<RowDefinition>.Items
+		{
+			get
+			{
+				return this.RowDefinitions;
+			}
+		}
+
+		void IListHost<RowDefinition>.NotifyListInsertion(RowDefinition item)
+		{
+			this.InvalidateMeasures ();
+			item.Changed += this.HandleRowDefinitionChanged;
+		}
+
+		void IListHost<RowDefinition>.NotifyListRemoval(RowDefinition item)
+		{
+			item.Changed -= this.HandleRowDefinitionChanged;
+			this.InvalidateMeasures ();
+		}
+
+		#endregion
+
+		private void HandleRowDefinitionChanged(object sender)
+		{
+			this.InvalidateMeasures ();
+		}
+
+		private void HandleColumnDefinitionChanged(object sender)
+		{
+			this.InvalidateMeasures ();
+		}
+
 		public static void SetColumn(Visual visual, int column)
 		{
 			if (column == -1)
@@ -991,8 +1061,9 @@ namespace Epsitec.Common.Widgets.Layouts
 
 		private ColumnMeasure[] columnMeasures = new ColumnMeasure[0];
 		private RowMeasure[]	rowMeasures    = new RowMeasure[0];
-
-		private Collections.ColumnDefinitionCollection columnDefinitions = new Collections.ColumnDefinitionCollection ();
-		private Collections.RowDefinitionCollection rowDefinitions = new Collections.RowDefinitionCollection ();
+		private Visual			containerCache;
+		
+		private Collections.ColumnDefinitionCollection columnDefinitions;
+		private Collections.RowDefinitionCollection rowDefinitions;
 	}
 }

@@ -138,11 +138,27 @@ namespace Epsitec.Common.Widgets.Layouts
 			this.actualOffset = value;
 		}
 
-		public static readonly DependencyProperty MinHeightProperty		= DependencyProperty.Register ("MinHeight", typeof (double), typeof (RowDefinition), new DependencyPropertyMetadata (0.0));
-		public static readonly DependencyProperty MaxHeightProperty		= DependencyProperty.Register ("MaxHeight", typeof (double), typeof (RowDefinition), new DependencyPropertyMetadata (double.PositiveInfinity));
-		public static readonly DependencyProperty HeightProperty		= DependencyProperty.Register ("Height", typeof (GridLength), typeof (RowDefinition), new DependencyPropertyMetadata (GridLength.Auto));
-		public static readonly DependencyProperty TopBorderProperty		= DependencyProperty.Register ("TopBorder", typeof (double), typeof (RowDefinition), new DependencyPropertyMetadata (0.0));
-		public static readonly DependencyProperty BottomBorderProperty	= DependencyProperty.Register ("BottomBorder", typeof (double), typeof (RowDefinition), new DependencyPropertyMetadata (0.0));
+		private void OnChanged()
+		{
+			if (this.Changed != null)
+			{
+				this.Changed (this);
+			}
+		}
+
+		private static void NotifyPropertyInvalidated(DependencyObject o, object oldValue, object newValue)
+		{
+			RowDefinition def = (RowDefinition) o;
+			def.OnChanged ();
+		}
+
+		public event Support.EventHandler Changed;
+
+		public static readonly DependencyProperty MinHeightProperty		= DependencyProperty.Register ("MinHeight", typeof (double), typeof (RowDefinition), new DependencyPropertyMetadata (0.0, RowDefinition.NotifyPropertyInvalidated));
+		public static readonly DependencyProperty MaxHeightProperty		= DependencyProperty.Register ("MaxHeight", typeof (double), typeof (RowDefinition), new DependencyPropertyMetadata (double.PositiveInfinity, RowDefinition.NotifyPropertyInvalidated));
+		public static readonly DependencyProperty HeightProperty		= DependencyProperty.Register ("Height", typeof (GridLength), typeof (RowDefinition), new DependencyPropertyMetadata (GridLength.Auto, RowDefinition.NotifyPropertyInvalidated));
+		public static readonly DependencyProperty TopBorderProperty		= DependencyProperty.Register ("TopBorder", typeof (double), typeof (RowDefinition), new DependencyPropertyMetadata (0.0, RowDefinition.NotifyPropertyInvalidated));
+		public static readonly DependencyProperty BottomBorderProperty	= DependencyProperty.Register ("BottomBorder", typeof (double), typeof (RowDefinition), new DependencyPropertyMetadata (0.0, RowDefinition.NotifyPropertyInvalidated));
 
 		private double actualOffset;
 		private double actualHeight;

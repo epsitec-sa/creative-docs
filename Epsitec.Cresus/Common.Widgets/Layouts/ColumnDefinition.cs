@@ -137,12 +137,28 @@ namespace Epsitec.Common.Widgets.Layouts
 		{
 			this.actualOffset = value;
 		}
+
+		private void OnChanged()
+		{
+			if (this.Changed != null)
+			{
+				this.Changed (this);
+			}
+		}
 		
-		public static readonly DependencyProperty MinWidthProperty		= DependencyProperty.Register ("MinWidth", typeof (double), typeof (ColumnDefinition), new DependencyPropertyMetadata (0.0));
-		public static readonly DependencyProperty MaxWidthProperty		= DependencyProperty.Register ("MaxWidth", typeof (double), typeof (ColumnDefinition), new DependencyPropertyMetadata (double.PositiveInfinity));
-		public static readonly DependencyProperty WidthProperty			= DependencyProperty.Register ("Width", typeof (GridLength), typeof (ColumnDefinition), new DependencyPropertyMetadata (GridLength.Auto));
-		public static readonly DependencyProperty LeftBorderProperty	= DependencyProperty.Register ("LeftBorder", typeof (double), typeof (ColumnDefinition), new DependencyPropertyMetadata (0.0));
-		public static readonly DependencyProperty RightBorderProperty	= DependencyProperty.Register ("RightBorder", typeof (double), typeof (ColumnDefinition), new DependencyPropertyMetadata (0.0));
+		private static void NotifyPropertyInvalidated(DependencyObject o, object oldValue, object newValue)
+		{
+			ColumnDefinition def = (ColumnDefinition) o;
+			def.OnChanged ();
+		}
+
+		public event Support.EventHandler Changed;
+		
+		public static readonly DependencyProperty MinWidthProperty		= DependencyProperty.Register ("MinWidth", typeof (double), typeof (ColumnDefinition), new DependencyPropertyMetadata (0.0, ColumnDefinition.NotifyPropertyInvalidated));
+		public static readonly DependencyProperty MaxWidthProperty		= DependencyProperty.Register ("MaxWidth", typeof (double), typeof (ColumnDefinition), new DependencyPropertyMetadata (double.PositiveInfinity, ColumnDefinition.NotifyPropertyInvalidated));
+		public static readonly DependencyProperty WidthProperty			= DependencyProperty.Register ("Width", typeof (GridLength), typeof (ColumnDefinition), new DependencyPropertyMetadata (GridLength.Auto, ColumnDefinition.NotifyPropertyInvalidated));
+		public static readonly DependencyProperty LeftBorderProperty	= DependencyProperty.Register ("LeftBorder", typeof (double), typeof (ColumnDefinition), new DependencyPropertyMetadata (0.0, ColumnDefinition.NotifyPropertyInvalidated));
+		public static readonly DependencyProperty RightBorderProperty	= DependencyProperty.Register ("RightBorder", typeof (double), typeof (ColumnDefinition), new DependencyPropertyMetadata (0.0, ColumnDefinition.NotifyPropertyInvalidated));
 
 		private double actualOffset;
 		private double actualWidth;
