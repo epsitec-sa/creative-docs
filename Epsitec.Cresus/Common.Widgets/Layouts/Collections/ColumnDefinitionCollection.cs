@@ -10,9 +10,9 @@ namespace Epsitec.Common.Widgets.Layouts.Collections
 	/// The <c>ColumnDefinitionCollection</c> class provides access to an ordered,
 	/// strongly typed collection of <see cref="T:ColumnDefinition"/> objects.
 	/// </summary>
-	public class ColumnDefinitionCollection : Types.Collections.GenericDepdendencyObjectList<ColumnDefinition>
+	public class ColumnDefinitionCollection : Types.Collections.HostedDependencyObjectList<ColumnDefinition>
 	{
-		public ColumnDefinitionCollection()
+		public ColumnDefinitionCollection(GridLayoutEngine grid) : base (grid)
 		{
 		}
 	}

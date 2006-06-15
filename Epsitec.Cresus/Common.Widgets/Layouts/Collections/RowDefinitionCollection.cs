@@ -10,9 +10,9 @@ namespace Epsitec.Common.Widgets.Layouts.Collections
 	/// The <c>RowDefinitionCollection</c> class provides access to an ordered,
 	/// strongly typed collection of <see cref="T:RowDefinition"/> objects.
 	/// </summary>
-	public class RowDefinitionCollection : Types.Collections.GenericDepdendencyObjectList<RowDefinition>
+	public class RowDefinitionCollection : Types.Collections.HostedDependencyObjectList<RowDefinition>
 	{
-		public RowDefinitionCollection()
+		public RowDefinitionCollection(GridLayoutEngine grid) : base (grid)
 		{
 		}
 	}
