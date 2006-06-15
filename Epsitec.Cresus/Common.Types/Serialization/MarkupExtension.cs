@@ -211,7 +211,7 @@ namespace Epsitec.Common.Types.Serialization
 		}
 
 		
-		public static object Resolve(Context context, string markup)
+		public static object Resolve(Context context, string markup, System.Type type)
 		{
 			string[] args = MarkupExtension.Explode (markup);
 
@@ -501,7 +501,7 @@ namespace Epsitec.Common.Types.Serialization
 							binding.Path = elems[1];
 							break;
 						case "Source":
-							binding.Source = context.ResolveFromMarkup (elems[1]);
+							binding.Source = context.ResolveFromMarkup (elems[1], typeof (object));
 							break;
 						case "Mode":
 							InvariantConverter.Convert (elems[1], typeof (BindingMode), out mode);
@@ -552,7 +552,7 @@ namespace Epsitec.Common.Types.Serialization
 				}
 			}
 
-			object manager = context.ResolveFromMarkup (string.Concat ("{ExtRef ", Context.WellKnownTagResourceManager, "}"));
+			object manager = context.ResolveFromMarkup (string.Concat ("{ExtRef ", Context.WellKnownTagResourceManager, "}"), typeof (object));
 			
 			ResourceBinding.RebindCallback (manager, binding);
 
@@ -587,7 +587,7 @@ namespace Epsitec.Common.Types.Serialization
 			
 			for (int i = 1; i < args.Length; i++)
 			{
-				items[i-1] = context.ResolveFromMarkup (args[i]) as DependencyObject;
+				items[i-1] = context.ResolveFromMarkup (args[i], typeof (DependencyObject)) as DependencyObject;
 			}
 			
 			return items;

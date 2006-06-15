@@ -73,22 +73,8 @@ namespace Epsitec.Common.Types.Serialization
 						continue;
 					}
 
-					ICollection<DependencyObject> dependencyObjectCollection = entry.Value as ICollection<DependencyObject>;
-
-					if (dependencyObjectCollection != null)
+					if (this.StoreFieldAsDependencyObjectCollection (obj, entry, metadata))
 					{
-						//	This is a collection. Record it as {Collection xxx, xxx, xxx}
-
-						if (dependencyObjectCollection.Count > 0)
-						{
-							string markup = MarkupExtension.CollectionToString (metadata.FilterSerializableCollection (dependencyObjectCollection, entry.Property), this);
-
-							if (! string.IsNullOrEmpty (markup))
-							{
-								this.writer.WriteObjectFieldValue (obj, this.GetPropertyName (entry.Property), markup);
-							}
-						}
-						
 						continue;
 					}
 
@@ -102,7 +88,33 @@ namespace Epsitec.Common.Types.Serialization
 				}
 			}
 		}
-		
+
+		private bool StoreFieldAsDependencyObjectCollection(DependencyObject obj, LocalValueEntry entry, DependencyPropertyMetadata metadata)
+		{
+			ICollection<DependencyObject> dependencyObjectCollection = entry.Value as ICollection<DependencyObject>;
+
+			if (dependencyObjectCollection != null)
+			{
+				//	This is a collection. Record it as {Collection xxx, xxx, xxx}
+
+				if (dependencyObjectCollection.Count > 0)
+				{
+					string markup = MarkupExtension.CollectionToString (metadata.FilterSerializableCollection (dependencyObjectCollection, entry.Property), this);
+
+					if (!string.IsNullOrEmpty (markup))
+					{
+						this.writer.WriteObjectFieldValue (obj, this.GetPropertyName (entry.Property), markup);
+					}
+				}
+
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+
 		private void StoreObjectChildren(DependencyObject obj)
 		{
 			if (DependencyObjectTree.GetHasChildren (obj))

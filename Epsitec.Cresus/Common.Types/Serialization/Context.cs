@@ -226,7 +226,7 @@ namespace Epsitec.Common.Types.Serialization
 			return null;
 		}
 		
-		public object ResolveFromMarkup(string tagId)
+		public object ResolveFromMarkup(string tagId, System.Type type)
 		{
 			//	Map a tag id to an object.
 
@@ -240,7 +240,7 @@ namespace Epsitec.Common.Types.Serialization
 				throw new System.NotImplementedException (string.Format ("Cannot resolve '{0}'", tagId));
 			}
 
-			return MarkupExtension.Resolve (this, tagId);
+			return MarkupExtension.Resolve (this, tagId, type);
 		}
 
 		#endregion

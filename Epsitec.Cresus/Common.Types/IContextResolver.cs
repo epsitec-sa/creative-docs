@@ -21,6 +21,6 @@ namespace Epsitec.Common.Types
 		/// </summary>
 		/// <param name="id">The markup string to convert to an object.</param>
 		/// <returns>The object.</returns>
-		object ResolveFromMarkup(string markup);
+		object ResolveFromMarkup(string markup, System.Type type);
 	}
 }

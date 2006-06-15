@@ -61,8 +61,7 @@ namespace Epsitec.Common.Types.Serialization
 			{
 				//	This is a markup extension
 				
-				object data = this.ResolveFromMarkup (value);
-
+				object data = this.ResolveFromMarkup (value, property.PropertyType);
 
 				if ((data != null) &&
 					(data.GetType () == typeof (DependencyObject[])) &&
