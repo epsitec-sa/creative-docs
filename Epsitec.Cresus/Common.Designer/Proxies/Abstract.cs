@@ -118,6 +118,7 @@ namespace Epsitec.Common.Designer.Proxies
 			}
 		}
 
+
 		protected List<Widget>			widgets = new List<Widget>();
 		private int						suspendChanges = 0;
 	}
