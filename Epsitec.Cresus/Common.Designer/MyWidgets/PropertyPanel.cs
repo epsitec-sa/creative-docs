@@ -78,6 +78,19 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
+		public double DataColumnWidth
+		{
+			get
+			{
+				GridLength length = this.grid.ColumnDefinitions[1].Width;
+				return length.Value;
+			}
+			set
+			{
+				this.grid.ColumnDefinitions[1].Width = new GridLength(value, GridUnitType.Absolute);
+			}
+		}
+
 		public void AddPlaceHolder(Placeholder placeholder)
 		{
 			this.grid.RowDefinitions.Add(new RowDefinition());

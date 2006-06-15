@@ -38,6 +38,11 @@ namespace Epsitec.Common.Designer.Proxies
 		{
 			get;
 		}
+
+		public abstract double DataColumnWidth
+		{
+			get;
+		}
 		#endregion
 
 		public void ReadFromWidget()

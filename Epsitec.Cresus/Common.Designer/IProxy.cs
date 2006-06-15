@@ -32,5 +32,14 @@ namespace Epsitec.Common.Designer
 		{
 			get;
 		}
+
+		/// <summary>
+		/// Gets the width of the data column.
+		/// </summary>
+		/// <value>The pixel width of the data column.</value>
+		double DataColumnWidth
+		{
+			get;
+		}
 	}
 }

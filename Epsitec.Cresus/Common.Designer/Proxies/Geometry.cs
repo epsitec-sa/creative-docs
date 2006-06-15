@@ -30,7 +30,15 @@ namespace Epsitec.Common.Designer.Proxies
 				return "PropertyGeometry";
 			}
 		}
-		
+
+		public override double DataColumnWidth
+		{
+			get
+			{
+				return 50;
+			}
+		}
+
 		public double LeftMargin
 		{
 			get
