@@ -62,32 +62,20 @@ namespace Epsitec.Common.Types.Serialization
 				//	This is a markup extension
 				
 				object data = this.ResolveFromMarkup (value, property.PropertyType);
+				System.Type dataType = data == null ? typeof (object) : data.GetType ();
 
-				if ((data != null) &&
-					(TypeRosetta.DoesTypeImplementInterface (data.GetType (), typeof (IEnumerable<DependencyObject>))) &&
+				if ((TypeRosetta.DoesTypeImplementInterface (dataType, typeof (IEnumerable<DependencyObject>))) &&
 					(property.IsPropertyTypeAnICollectionOfDependencyObject))
 				{
 					//	Assign a collection of DependencyObject to a property which implements
 					//	such a collection.
 
-					ICollection<DependencyObject> collection = obj.GetValue (property) as ICollection<DependencyObject>;
-					IEnumerable<DependencyObject> dataSource = data as IEnumerable<DependencyObject>;
-
-					if (collection == null)
-					{
-						throw new System.ArgumentException (string.Format ("Property {0} does not follow Collection semantics", field));
-					}
-					if (dataSource == null)
-					{
-						throw new System.ArgumentException (string.Format ("Property {0} cannot be restored", field));
-					}
-
-					collection.Clear ();
-					
-					foreach (DependencyObject item in dataSource)
-					{
-						collection.Add (item);
-					}
+					DeserializerContext.RestoreCollection<DependencyObject> (obj, field, property, data);
+				}
+				else if ((TypeRosetta.DoesTypeImplementInterface (dataType, typeof (IEnumerable<string>))) &&
+					/**/ (TypeRosetta.DoesTypeImplementInterface (property.PropertyType, typeof (ICollection<string>))))
+				{
+					DeserializerContext.RestoreCollection<string> (obj, field, property, data);
 				}
 				else if (data is Binding)
 				{
@@ -104,6 +92,28 @@ namespace Epsitec.Common.Types.Serialization
 			{
 				object data = property.ConvertFromString (MarkupExtension.Unescape (value), this);
 				obj.SetValue (property, data);
+			}
+		}
+
+		private static void RestoreCollection<T>(DependencyObject obj, string field, DependencyProperty property, object data)
+		{
+			ICollection<T> collection = obj.GetValue (property) as ICollection<T>;
+			IEnumerable<T> dataSource = data as IEnumerable<T>;
+
+			if (collection == null)
+			{
+				throw new System.ArgumentException (string.Format ("Property {0} does not follow Collection semantics", field));
+			}
+			if (dataSource == null)
+			{
+				throw new System.ArgumentException (string.Format ("Property {0} cannot be restored", field));
+			}
+
+			collection.Clear ();
+
+			foreach (T item in dataSource)
+			{
+				collection.Add (item);
 			}
 		}
 	}

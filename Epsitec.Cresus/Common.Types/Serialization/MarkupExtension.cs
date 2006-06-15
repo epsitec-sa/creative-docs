@@ -23,7 +23,6 @@ namespace Epsitec.Common.Types.Serialization
 
 			if ((value != null) &&
 				(value.StartsWith ("{")) &&
-				(value.StartsWith ("{}") == false) &&
 				(value.EndsWith ("}")))
 			{
 				return true;
@@ -44,13 +43,34 @@ namespace Epsitec.Common.Types.Serialization
 			//		these are used to define the markup extensions.
 
 			if ((value == null) ||
-				(value.IndexOfAny (new char[] { '{', '}' }) < 0))
+				(value.IndexOfAny (new char[] { '{', '}', '\\' }) < 0))
 			{
 				return value;
 			}
 			else
 			{
-				return string.Concat ("{}", value);
+				System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+				
+				foreach (char c in value)
+				{
+					switch (c)
+					{
+						case '{':
+							buffer.Append (@"\[");
+							break;
+						case '\\':
+							buffer.Append (@"\\");
+							break;
+						case '}':
+							buffer.Append (@"\]");
+							break;
+						default:
+							buffer.Append (c);
+							break;
+					}
+				}
+				
+				return buffer.ToString ();
 			}
 		}
 		public static string Unescape(string value)
@@ -59,9 +79,9 @@ namespace Epsitec.Common.Types.Serialization
 			//	return the original string (see Escape).
 
 			if ((value != null) &&
-				(value.StartsWith ("{}")))
+				((value.IndexOf (@"\[") >= 0) || (value.IndexOf (@"\]") >= 0) || (value.IndexOf (@"\\") >= 0)))
 			{
-				return value.Substring (2);
+				return value.Replace (@"\[", "{").Replace (@"\]", "}").Replace (@"\\", "\\");
 			}
 			else
 			{
@@ -165,15 +185,33 @@ namespace Epsitec.Common.Types.Serialization
 		{
 			return string.Concat ("{ObjRef ", Context.IdToString (context.ObjectMap.GetId (value)), "}");
 		}
+
+		public static string TextToString(string value)
+		{
+			if (value == null)
+			{
+				return MarkupExtension.NullToString ();
+			}
+			else
+			{
+				System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+
+				buffer.Append ("{Text ");
+				buffer.Append (MarkupExtension.Escape (value));
+				buffer.Append ("}");
+				
+				return buffer.ToString ();
+			}
+		}
 		
 		public static string CollectionToString(IEnumerable<DependencyObject> collection, SerializerContext context)
 		{
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 
 			buffer.Append ("{Collection");
-			
+
 			int i = -1;
-			
+
 			foreach (DependencyObject node in collection)
 			{
 				if (++i == 0)
@@ -184,13 +222,13 @@ namespace Epsitec.Common.Types.Serialization
 				{
 					buffer.Append (", ");
 				}
-				
+
 				if (node == null)
 				{
 					buffer.Append (MarkupExtension.NullToString ());
 					continue;
 				}
-				
+
 				if (context.ObjectMap.IsValueDefined (node))
 				{
 					buffer.Append (MarkupExtension.ObjRefToString (node, context));
@@ -202,8 +240,34 @@ namespace Epsitec.Common.Types.Serialization
 					buffer.Append (MarkupExtension.ExtRefToString (node, context));
 					continue;
 				}
-				
+
 				throw new System.ArgumentException (string.Format ("Element {0} in collection cannot be resolved", i));
+			}
+
+			buffer.Append ("}");
+			return (i < 0) ? null : buffer.ToString ();
+		}
+
+		public static string CollectionToString(IEnumerable<string> collection, SerializerContext context)
+		{
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+
+			buffer.Append ("{Collection");
+
+			int i = -1;
+
+			foreach (string node in collection)
+			{
+				if (++i == 0)
+				{
+					buffer.Append (" ");
+				}
+				else
+				{
+					buffer.Append (", ");
+				}
+
+				buffer.Append (MarkupExtension.TextToString (node));
 			}
 
 			buffer.Append ("}");
@@ -235,6 +299,9 @@ namespace Epsitec.Common.Types.Serialization
 
 					case "ExtRef":
 						return MarkupExtension.ExtRefFromString (context, args);
+					
+					case "Text":
+						return MarkupExtension.TextFromString (context, markup);
 
 					case "Collection":
 						return MarkupExtension.CollectionFromString (context, args, type);
@@ -580,18 +647,41 @@ namespace Epsitec.Common.Types.Serialization
 
 			return context.ObjectMap.GetValue (Context.ParseId (args[1]));
 		}
-		
-		private static ICollection<DependencyObject> CollectionFromString(Context context, string[] args, System.Type type)
+
+		private static object TextFromString(Context context, string markup)
 		{
-			System.Diagnostics.Debug.Assert (type.Name == "ICollection`1");
-			
-			DependencyObject[] items = new DependencyObject[args.Length-1];
-			
-			for (int i = 1; i < args.Length; i++)
+			if ((! markup.StartsWith ("{Text ")) ||
+				(! markup.EndsWith ("}")))
 			{
-				items[i-1] = context.ResolveFromMarkup (args[i], typeof (DependencyObject)) as DependencyObject;
+				throw new System.FormatException ("Text format error");
+			}
+
+			return MarkupExtension.Unescape (markup.Substring (6, markup.Length-7));
+		}
+		
+		private static object CollectionFromString(Context context, string[] args, System.Type type)
+		{
+			if (TypeRosetta.DoesTypeImplementInterface (type, typeof (ICollection<DependencyObject>)))
+			{
+				return MarkupExtension.CollectionFromString<DependencyObject> (context, args);
+			}
+			if (TypeRosetta.DoesTypeImplementInterface (type, typeof (ICollection<string>)))
+			{
+				return MarkupExtension.CollectionFromString<string> (context, args);
 			}
 			
+			return null;
+		}
+
+		private static ICollection<T> CollectionFromString<T>(Context context, string[] args)
+		{
+			T[] items = new T[args.Length-1];
+
+			for (int i = 1; i < args.Length; i++)
+			{
+				items[i-1] = (T) context.ResolveFromMarkup (args[i], typeof (T));
+			}
+
 			return items;
 		}
 	}
