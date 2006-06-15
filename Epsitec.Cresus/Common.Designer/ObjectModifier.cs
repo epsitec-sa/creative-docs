@@ -45,6 +45,22 @@ namespace Epsitec.Common.Designer
 			Fill,
 		}
 
+		public enum DockedHorizontalAlignment
+		{
+			Stretch,
+			Center,
+			Left,
+			Right,
+		}
+
+		public enum DockedVerticalAlignment
+		{
+			Stretch,
+			Center,
+			Bottom,
+			Top,
+		}
+
 
 		public ObjectModifier(MyWidgets.PanelEditor panelEditor)
 		{
@@ -287,9 +303,10 @@ namespace Epsitec.Common.Designer
 		}
 
 
+		#region Anchored
 		public AnchoredVerticalAttachment GetAnchoredVerticalAttachment(Widget obj)
 		{
-			//	Retourne l'alignement vertical de l'objet.
+			//	Retourne l'attachement vertical de l'objet.
 			//	Uniquement pour les objets Anchored.
 			Placement placement = this.GetParentPlacement(obj);
 			System.Diagnostics.Debug.Assert(placement == Placement.Anchored);
@@ -307,7 +324,7 @@ namespace Epsitec.Common.Designer
 
 		public void SetAnchoredVerticalAttachment(Widget obj, AnchoredVerticalAttachment attachment)
 		{
-			//	Choix de l'alignement vertical de l'objet.
+			//	Choix de l'attachement vertical de l'objet.
 			//	Uniquement pour les objets Anchored.
 			Placement placement = this.GetParentPlacement(obj);
 			System.Diagnostics.Debug.Assert(placement == Placement.Anchored);
@@ -342,7 +359,7 @@ namespace Epsitec.Common.Designer
 
 		public AnchoredHorizontalAttachment GetAnchoredHorizontalAttachment(Widget obj)
 		{
-			//	Retourne l'alignement horizontal de l'objet.
+			//	Retourne l'attachement horizontal de l'objet.
 			//	Uniquement pour les objets Anchored.
 			Placement placement = this.GetParentPlacement(obj);
 			System.Diagnostics.Debug.Assert(placement == Placement.Anchored);
@@ -360,7 +377,7 @@ namespace Epsitec.Common.Designer
 
 		public void SetAnchoredHorizontalAttachment(Widget obj, AnchoredHorizontalAttachment attachment)
 		{
-			//	Choix de l'alignement horizontal de l'objet.
+			//	Choix de l'attachement horizontal de l'objet.
 			//	Uniquement pour les objets Anchored.
 			Placement placement = this.GetParentPlacement(obj);
 			System.Diagnostics.Debug.Assert(placement == Placement.Anchored);
@@ -391,11 +408,13 @@ namespace Epsitec.Common.Designer
 				this.Invalidate();
 			}
 		}
+		#endregion
 
 
+		#region Docked
 		public DockedVerticalAttachment GetDockedVerticalAttachment(Widget obj)
 		{
-			//	Retourne l'alignement vertical de l'objet.
+			//	Retourne l'attachement vertical de l'objet.
 			//	Uniquement pour les objets VerticalDocked.
 			Placement placement = this.GetParentPlacement(obj);
 			System.Diagnostics.Debug.Assert(placement == Placement.VerticalDocked);
@@ -410,7 +429,7 @@ namespace Epsitec.Common.Designer
 
 		public void SetDockedVerticalAttachment(Widget obj, DockedVerticalAttachment attachment)
 		{
-			//	Choix de l'alignement vertical de l'objet.
+			//	Choix de l'attachement vertical de l'objet.
 			//	Uniquement pour les objets VerticalDocked.
 			Placement placement = this.GetParentPlacement(obj);
 			System.Diagnostics.Debug.Assert(placement == Placement.VerticalDocked);
@@ -442,7 +461,7 @@ namespace Epsitec.Common.Designer
 
 		public DockedHorizontalAttachment GetDockedHorizontalAttachment(Widget obj)
 		{
-			//	Retourne l'alignement horizontal de l'objet.
+			//	Retourne l'attachement horizontal de l'objet.
 			//	Uniquement pour les objets HorizontalDocked.
 			Placement placement = this.GetParentPlacement(obj);
 			System.Diagnostics.Debug.Assert(placement == Placement.HorizontalDocked);
@@ -457,7 +476,7 @@ namespace Epsitec.Common.Designer
 
 		public void SetDockedHorizontalAttachment(Widget obj, DockedHorizontalAttachment attachment)
 		{
-			//	Choix de l'alignement horizontal de l'objet.
+			//	Choix de l'attachement horizontal de l'objet.
 			//	Uniquement pour les objets HorizontalDocked.
 			Placement placement = this.GetParentPlacement(obj);
 			System.Diagnostics.Debug.Assert(placement == Placement.HorizontalDocked);
@@ -485,6 +504,111 @@ namespace Epsitec.Common.Designer
 				this.Invalidate();
 			}
 		}
+
+
+		public DockedHorizontalAlignment GetDockedHorizontalAlignment(Widget obj)
+		{
+			//	Retourne l'alignement horizontal de l'objet.
+			//	Uniquement pour les objets VerticalDocked.
+			Placement placement = this.GetParentPlacement(obj);
+			System.Diagnostics.Debug.Assert(placement == Placement.VerticalDocked);
+
+			HorizontalAlignment ha = obj.HorizontalAlignment;
+			if (ha == HorizontalAlignment.Stretch)  return DockedHorizontalAlignment.Stretch;
+			if (ha == HorizontalAlignment.Center )  return DockedHorizontalAlignment.Center;
+			if (ha == HorizontalAlignment.Left   )  return DockedHorizontalAlignment.Left;
+			if (ha == HorizontalAlignment.Right  )  return DockedHorizontalAlignment.Right;
+
+			throw new System.Exception("Not supported.");
+		}
+
+		public void SetDockedHorizontalAlignment(Widget obj, DockedHorizontalAlignment alignment)
+		{
+			//	Choix de l'alignement horizontal de l'objet.
+			//	Uniquement pour les objets VerticalDocked.
+			Placement placement = this.GetParentPlacement(obj);
+			System.Diagnostics.Debug.Assert(placement == Placement.VerticalDocked);
+
+			HorizontalAlignment ha = obj.HorizontalAlignment;
+
+			switch (alignment)
+			{
+				case DockedHorizontalAlignment.Stretch:
+					ha = HorizontalAlignment.Stretch;
+					break;
+
+				case DockedHorizontalAlignment.Center:
+					ha = HorizontalAlignment.Center;
+					break;
+
+				case DockedHorizontalAlignment.Left:
+					ha = HorizontalAlignment.Left;
+					break;
+
+				case DockedHorizontalAlignment.Right:
+					ha = HorizontalAlignment.Right;
+					break;
+			}
+
+			if (obj.HorizontalAlignment != ha)
+			{
+				obj.HorizontalAlignment = ha;
+				this.Invalidate();
+			}
+		}
+
+
+		public DockedVerticalAlignment GetDockedVerticalAlignment(Widget obj)
+		{
+			//	Retourne l'alignement vertical de l'objet.
+			//	Uniquement pour les objets HorizontalDocked.
+			Placement placement = this.GetParentPlacement(obj);
+			System.Diagnostics.Debug.Assert(placement == Placement.HorizontalDocked);
+
+			VerticalAlignment va = obj.VerticalAlignment;
+			if (va == VerticalAlignment.Stretch)  return DockedVerticalAlignment.Stretch;
+			if (va == VerticalAlignment.Center )  return DockedVerticalAlignment.Center;
+			if (va == VerticalAlignment.Bottom )  return DockedVerticalAlignment.Bottom;
+			if (va == VerticalAlignment.Top    )  return DockedVerticalAlignment.Top;
+
+			throw new System.Exception("Not supported.");
+		}
+
+		public void SetDockedVerticalAlignment(Widget obj, DockedVerticalAlignment alignment)
+		{
+			//	Choix de l'alignement vertical de l'objet.
+			//	Uniquement pour les objets HorizontalDocked.
+			Placement placement = this.GetParentPlacement(obj);
+			System.Diagnostics.Debug.Assert(placement == Placement.HorizontalDocked);
+
+			VerticalAlignment va = obj.VerticalAlignment;
+
+			switch (alignment)
+			{
+				case DockedVerticalAlignment.Stretch:
+					va = VerticalAlignment.Stretch;
+					break;
+
+				case DockedVerticalAlignment.Center:
+					va = VerticalAlignment.Center;
+					break;
+
+				case DockedVerticalAlignment.Bottom:
+					va = VerticalAlignment.Bottom;
+					break;
+
+				case DockedVerticalAlignment.Top:
+					va = VerticalAlignment.Top;
+					break;
+			}
+
+			if (obj.VerticalAlignment != va)
+			{
+				obj.VerticalAlignment = va;
+				this.Invalidate();
+			}
+		}
+		#endregion
 
 
 		protected Placement GetParentPlacement(Widget obj)
