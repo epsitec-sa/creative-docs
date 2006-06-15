@@ -41,6 +41,7 @@
     <Compile Include="Comparers\WidgetDisposition.cs" />
     <Compile Include="Constrain.cs" />
     <Compile Include="ConstrainsList.cs" />
+    <Compile Include="ObjectModifier.cs" />
     <Compile Include="IProxy.cs" />
     <Compile Include="Dialogs\TextSelector.cs" />
     <Compile Include="HandlesList.cs" />
