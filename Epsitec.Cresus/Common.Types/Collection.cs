@@ -14,13 +14,30 @@ namespace Epsitec.Common.Types
 		public static int Count<T>(IEnumerable<T> collection)
 		{
 			int n = 0;
-			
+
 			foreach (T item in collection)
 			{
 				n++;
 			}
-			
+
 			return n;
+		}
+
+		public static T Extract<T>(IEnumerable<T> collection, int index)
+		{
+			int n = 0;
+
+			foreach (T item in collection)
+			{
+				if (index == n)
+				{
+					return item;
+				}
+				
+				n++;
+			}
+
+			return default (T);
 		}
 
 		public static List<T> ToList<T>(IEnumerable<T> collection)

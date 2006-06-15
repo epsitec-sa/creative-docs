@@ -105,10 +105,10 @@ namespace Epsitec.Common.Types.Collections
 
 		public void Clear()
 		{
-			this.list.Clear ();
-			
 			T[] array = this.list.ToArray ();
 
+			this.list.Clear ();
+			
 			for (int i = array.Length-1; i >= 0; i--)
 			{
 				this.NotifyRemoval (array[i]);
