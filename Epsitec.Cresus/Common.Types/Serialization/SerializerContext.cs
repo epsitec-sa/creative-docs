@@ -77,6 +77,10 @@ namespace Epsitec.Common.Types.Serialization
 					{
 						continue;
 					}
+					if (this.StoreFieldAsStringCollection (obj, entry, metadata))
+					{
+						continue;
+					}
 
 					string value = entry.Property.ConvertToString (entry.Value, this);
 
@@ -100,6 +104,32 @@ namespace Epsitec.Common.Types.Serialization
 				if (dependencyObjectCollection.Count > 0)
 				{
 					string markup = MarkupExtension.CollectionToString (metadata.FilterSerializableCollection (dependencyObjectCollection, entry.Property), this);
+
+					if (!string.IsNullOrEmpty (markup))
+					{
+						this.writer.WriteObjectFieldValue (obj, this.GetPropertyName (entry.Property), markup);
+					}
+				}
+
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+
+		private bool StoreFieldAsStringCollection(DependencyObject obj, LocalValueEntry entry, DependencyPropertyMetadata metadata)
+		{
+			ICollection<string> stringCollection = entry.Value as ICollection<string>;
+
+			if (stringCollection != null)
+			{
+				//	This is a collection. Record it as {Collection xxx, xxx, xxx}
+
+				if (stringCollection.Count > 0)
+				{
+					string markup = MarkupExtension.CollectionToString (stringCollection, this);
 
 					if (!string.IsNullOrEmpty (markup))
 					{

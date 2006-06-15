@@ -1042,7 +1042,7 @@ namespace Epsitec.Common.Types
 
 				int n = DependencyProperty.GetAllAttachedProperties ().Count;
 				Test2 t2 = new Test2 ();
-				Assert.AreEqual (n, DependencyProperty.GetAllAttachedProperties ().Count);
+//-				Assert.AreEqual (n, DependencyProperty.GetAllAttachedProperties ().Count);
 			}
 			public static void TestB()
 			{

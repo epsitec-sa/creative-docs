@@ -583,6 +583,12 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual ("q", root.Children[1].Name);
 			Assert.AreEqual ("r", root.Children[2].Name);
 
+			Assert.AreEqual (3, root.Children[2].Labels.Count);
+			Assert.AreEqual ("First", root.Children[2].Labels[0]);
+			Assert.AreEqual ("Second", root.Children[2].Labels[1]);
+			Assert.AreEqual ("Third & last -- }, {;/<\\ ", root.Children[2].Labels[2]);
+
+
 			Assert.AreEqual ("c1", root.Children[0].Children[0].Name);
 			Assert.AreEqual ("c2", root.Children[0].Children[1].Name);
 
@@ -649,6 +655,10 @@ namespace Epsitec.Common.Types
 			a.Friend = c2;
 			q.Friend = b;
 			b.Friend = q;
+
+			r.Labels.Add ("First");
+			r.Labels.Add ("Second");
+			r.Labels.Add ("Third & last -- }, {;/<\\ ");
 
 			c1.Price = 125.95M;
 			c2.Price = 3899.20M;
@@ -817,6 +827,17 @@ namespace Epsitec.Common.Types
 					this.SetValue (MyItem.SomeStructProperty, value);
 				}
 			}
+			public IList<string>				Labels
+			{
+				get
+				{
+					if (this.labels == null)
+					{
+						this.labels = new List<string> ();
+					}
+					return this.labels;
+				}
+			}
 			
 			public void AddChild(MyItem item)
 			{
@@ -857,6 +878,11 @@ namespace Epsitec.Common.Types
 				MyItem tt = o as MyItem;
 				return tt.HasChildren;
 			}
+			public static object GetValueLabels(DependencyObject o)
+			{
+				MyItem tt = o as MyItem;
+				return tt.Labels;
+			}
 
 			public static DependencyProperty NameProperty = DependencyObjectTree.NameProperty.AddOwner (typeof (MyItem));
 			public static DependencyProperty ParentProperty = DependencyObjectTree.ParentProperty.AddOwner (typeof (MyItem), new DependencyPropertyMetadata (MyItem.GetValueParent));
@@ -867,9 +893,11 @@ namespace Epsitec.Common.Types
 			public static DependencyProperty FriendProperty = DependencyProperty.Register ("Friend", typeof (MyItem), typeof (MyItem));
 			public static DependencyProperty PriceProperty = DependencyProperty.Register ("Price", typeof (decimal), typeof (MyItem));
 			public static DependencyProperty SomeStructProperty = DependencyProperty.Register ("SomeStruct", typeof (SomeStruct), typeof (MyItem));
+			public static DependencyProperty LabelsProperty = DependencyProperty.RegisterReadOnly ("Labels", typeof (IList<string>), typeof (MyItem), new DependencyPropertyMetadata (MyItem.GetValueLabels).MakeReadOnlySerializable ());
 
 			MyItem parent;
 			ChildrenCollection children;
+			List<string> labels;
 		}
 		
 		#endregion
