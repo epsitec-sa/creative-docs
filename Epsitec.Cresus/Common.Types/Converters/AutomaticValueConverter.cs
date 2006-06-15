@@ -37,7 +37,8 @@ namespace Epsitec.Common.Types.Converters
 
 				System.Type sourceType = value == null ? null : value.GetType ();
 
-				if (sourceType.IsEnum)
+				if ((sourceType != null) &&
+					(sourceType.IsEnum))
 				{
 					System.Diagnostics.Debug.WriteLine ("Convert enum value " + value.ToString () + " to type " + expectedType.Name);
 				}
