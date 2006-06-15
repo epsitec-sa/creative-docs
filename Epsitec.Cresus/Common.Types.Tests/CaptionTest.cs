@@ -33,5 +33,26 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual (0, caption.Labels.Count);
 			Assert.AreEqual (0, Collection.Count (caption.SortedLabels));
 		}
+
+		[Test]
+		public void CheckSerialization()
+		{
+			Caption caption = new Caption ();
+
+			caption.Labels.Add ("A");
+			caption.Labels.Add ("Angle");
+			caption.Labels.Add ("Angle de la trame");
+			caption.Description = "Angle de rotation de la trame, exprimé en degrés.";
+
+			string xml = caption.ToPartialXml ();
+			
+			System.Console.Out.WriteLine ("Caption as XML: {0}", xml);
+
+			caption = Caption.CreateFromPartialXml (xml);
+
+			Assert.AreEqual ("A", Collection.Extract (caption.SortedLabels, 0));
+			Assert.AreEqual ("Angle", Collection.Extract (caption.SortedLabels, 1));
+			Assert.AreEqual ("Angle de rotation de la trame, exprimé en degrés.", caption.Description);
+		}
 	}
 }

@@ -12,6 +12,12 @@ namespace Epsitec.Common.Types.Serialization.IO
 			this.xml = xml;
 		}
 
+		public override void WriteAttributeStrings()
+		{
+			this.xml.WriteAttributeString ("xmlns", "s", null, this.nsStructure);
+			this.xml.WriteAttributeString ("xmlns", "f", null, this.nsFields);
+		}
+
 		public override void BeginStorageBundle(int id, int externalCount, int typeCount, int objectCount)
 		{
 			this.xml.WriteStartElement ("s", "storage", this.nsStructure);
