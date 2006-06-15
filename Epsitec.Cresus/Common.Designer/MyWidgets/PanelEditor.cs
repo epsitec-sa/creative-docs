@@ -10,14 +10,13 @@ namespace Epsitec.Common.Designer.MyWidgets
 	/// </summary>
 	public class PanelEditor : AbstractGroup, IPaintFilter
 	{
-		[System.Flags]
 		protected enum Attachment
 		{
-			None	= 0x00000000,	// objet libre
-			Left	= 0x00000001,	// objet attaché à gauche
-			Right	= 0x00000002,	// objet attaché à droite
-			Bottom	= 0x00000004,	// objet attaché en bas
-			Top		= 0x00000008,	// objet attaché en haut
+			None,
+			Left,
+			Right,
+			Bottom,
+			Top,
 		}
 
 		protected enum MouseCursorType
@@ -62,7 +61,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.handlesList = new HandlesList(this);
 		}
 
-		public Module					Module
+		public Module Module
 		{
 			//	Module associé.
 			get
@@ -71,7 +70,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
-		public PanelsContext			Context
+		public PanelsContext Context
 		{
 			//	Contexte asocié.
 			get
@@ -80,13 +79,22 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
-		public UI.Panel					Panel
+		public UI.Panel Panel
 		{
 			//	Panneau associé qui est le conteneur de tous les widgets.
 			//	PanelEditor est frère de Panel et vient par-dessus.
 			get
 			{
 				return this.panel;
+			}
+		}
+
+		public ObjectModifier ObjectModifier
+		{
+			//	Retourne le modificateur d'objets.
+			get
+			{
+				return this.objectModifier;
 			}
 		}
 
@@ -99,7 +107,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
-		public List<Widget>				SelectedObjects
+		public List<Widget> SelectedObjects
 		{
 			//	Retourne la liste des objets sélectionnés.
 			get
@@ -858,7 +866,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			this.constrainsList.Starting(Rectangle.Empty, false);
 
-			if (this.IsLayoutAnchored(parent))
+			if (this.objectModifier.IsChildrenAnchored(parent))
 			{
 				this.constrainsList.Activate(this.creatingRectangle, this.GetObjectBaseLine(this.creatingObject), null);
 			}
@@ -881,7 +889,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 				this.CreateObjectAdjust(ref pos, parent, out this.creatingRectangle);
 
-				if (this.IsLayoutAnchored(parent))
+				if (this.objectModifier.IsChildrenAnchored(parent))
 				{
 					Rectangle rect = this.isInside ? this.creatingRectangle : Rectangle.Empty;
 					this.constrainsList.Activate(rect, this.GetObjectBaseLine(this.creatingObject), null);
@@ -889,7 +897,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 					this.SetHilitedZOrderRectangle(Rectangle.Empty);
 				}
 
-				if (this.IsLayoutDocking(parent))
+				if (this.objectModifier.IsChildrenDocked(parent))
 				{
 					this.constrainsList.Activate(Rectangle.Empty, 0, null);
 
@@ -927,7 +935,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 					Point initialPos = pos;
 					this.CreateObjectAdjust(ref pos, parent, out this.creatingRectangle);
 
-					if (this.IsLayoutAnchored(parent))
+					if (this.objectModifier.IsChildrenAnchored(parent))
 					{
 						this.creatingObject = this.CreateObjectItem();
 						this.creatingObject.SetParent(parent);
@@ -936,7 +944,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 						this.SetObjectPosition(this.creatingObject, pos);
 					}
 
-					if (this.IsLayoutDocking(parent))
+					if (this.objectModifier.IsChildrenDocked(parent))
 					{
 						Widget group;
 						int order;
@@ -1039,17 +1047,17 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void ObjectAdaptFromParent(Widget obj, Widget parent)
 		{
 			//	Adapte un objet d'après son parent.
-			if (this.IsLayoutAnchored(parent))
+			if (this.objectModifier.IsChildrenAnchored(parent))
 			{
 				obj.Anchor = AnchorStyles.BottomLeft;
 				obj.Dock = DockStyle.None;
 			}
 
-			if (this.IsLayoutDocking(parent))
+			if (this.objectModifier.IsChildrenDocked(parent))
 			{
 				obj.Margins = new Margins(5, 5, 5, 5);
 
-				if (this.IsHorizontalDocking(parent))
+				if (this.objectModifier.IsChildrenHorizontal(parent))
 				{
 					obj.Dock = DockStyle.Left;
 				}
@@ -1085,7 +1093,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			bounds = new Rectangle(pos, this.creatingObject.PreferredSize);
 
-			if (this.IsLayoutAnchored(parent) && this.isInside)
+			if (this.objectModifier.IsChildrenAnchored(parent) && this.isInside)
 			{
 				Rectangle adjust = this.constrainsList.Snap(bounds, this.GetObjectBaseLine(this.creatingObject));
 				Point corr = adjust.BottomLeft - bounds.BottomLeft;
@@ -1201,12 +1209,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.isInside = true;
 			Widget parent = this.DetectGroup(pos);
 
-			if (this.IsLayoutAnchored(parent))
+			if (this.objectModifier.IsChildrenAnchored(parent))
 			{
 				this.constrainsList.Starting(this.draggingRectangle, false);
 			}
 
-			if (this.IsLayoutDocking(parent))
+			if (this.objectModifier.IsChildrenDocked(parent))
 			{
 				this.constrainsList.Starting(Rectangle.Empty, false);
 			}
@@ -1218,7 +1226,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			foreach (Widget obj in this.selectedObjects)
 			{
-				Point origin = this.GetObjectPosition(obj)-this.draggingRectangle.BottomLeft;
+				Point origin = this.GetObjectBounds(obj).BottomLeft - this.draggingRectangle.BottomLeft;
 				CloneView clone = new CloneView(container);
 				clone.PreferredSize = obj.ActualSize;
 				clone.Margins = new Margins(origin.X, 0, 0, origin.Y);
@@ -1254,7 +1262,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			Widget parent = this.DetectGroup(pos);
 			Point adjust = Point.Zero;
 
-			if (this.IsLayoutAnchored(parent))
+			if (this.objectModifier.IsChildrenAnchored(parent))
 			{
 				this.draggingRectangle.Offset((this.draggingOffset+pos)-this.draggingRectangle.BottomLeft);
 				Rectangle rect = this.isInside ? this.draggingRectangle : Rectangle.Empty;
@@ -1271,7 +1279,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.SetHilitedZOrderRectangle(Rectangle.Empty);
 			}
 
-			if (this.IsLayoutDocking(parent))
+			if (this.objectModifier.IsChildrenDocked(parent))
 			{
 				this.constrainsList.Activate(Rectangle.Empty, 0, null);
 
@@ -1303,13 +1311,13 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.draggingWindow.Dispose();
 				this.draggingWindow = null;
 
-				if (this.IsLayoutAnchored(parent))
+				if (this.objectModifier.IsChildrenAnchored(parent))
 				{
 					Rectangle initial = this.SelectBounds;
 					this.MoveSelection(this.draggingRectangle.BottomLeft - initial.BottomLeft, parent);
 				}
 
-				if (this.IsLayoutDocking(parent))
+				if (this.objectModifier.IsChildrenDocked(parent))
 				{
 					Widget group;
 					int order;
@@ -1439,7 +1447,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			foreach (Widget obj in parent.Children)
 			{
-				if (sel.Contains(this.GetObjectBounds(obj)))
+				if (sel.Contains(this.objectModifier.GetBounds(obj)))
 				{
 					this.selectedObjects.Add(obj);
 				}
@@ -1544,7 +1552,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Déplace et change de parent pour tous les objets sélectionnés.
 			foreach (Widget obj in this.selectedObjects)
 			{
-				Rectangle bounds = this.GetObjectBounds(obj);
+				Rectangle bounds = this.objectModifier.GetBounds(obj);
 				bounds.Offset(move);
 
 				if (parent != null)
@@ -1558,7 +1566,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 					this.ObjectAdaptFromParent(obj, parent);
 				}
 
-				bounds.Size = this.GetObjectSize(obj);
+				bounds.Size = this.GetObjectBounds(obj).Size;
 				this.SetObjectBounds(obj, bounds);
 			}
 
@@ -1583,14 +1591,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 				{
 					foreach (Widget obj in this.selectedObjects)
 					{
-						this.SetObjectPositionY(obj, bounds.Top-this.GetObjectSize(obj).Height);
+						this.SetObjectPositionY(obj, bounds.Top-this.GetObjectBounds(obj).Height);
 					}
 				}
 				else  // centré verticalement ?
 				{
 					foreach (Widget obj in this.selectedObjects)
 					{
-						this.SetObjectPositionY(obj, System.Math.Floor(bounds.Center.Y-this.GetObjectSize(obj).Height/2));
+						this.SetObjectPositionY(obj, System.Math.Floor(bounds.Center.Y-this.GetObjectBounds(obj).Height/2));
 					}
 				}
 			}
@@ -1607,14 +1615,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 				{
 					foreach (Widget obj in this.selectedObjects)
 					{
-						this.SetObjectPositionX(obj, bounds.Right-this.GetObjectSize(obj).Width);
+						this.SetObjectPositionX(obj, bounds.Right-this.GetObjectBounds(obj).Width);
 					}
 				}
 				else  // centré horizontalement ?
 				{
 					foreach (Widget obj in this.selectedObjects)
 					{
-						this.SetObjectPositionX(obj, System.Math.Floor(bounds.Center.X-this.GetObjectSize(obj).Width/2));
+						this.SetObjectPositionX(obj, System.Math.Floor(bounds.Center.X-this.GetObjectBounds(obj).Width/2));
 					}
 				}
 			}
@@ -1671,16 +1679,20 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				foreach (Widget obj in this.selectedObjects)
 				{
-					this.SetObjectPositionY(obj, bounds.Bottom);
-					this.SetObjectHeight(obj, bounds.Height);
+					Rectangle rect = this.GetObjectBounds(obj);
+					rect.Bottom = bounds.Bottom;
+					rect.Height = bounds.Height;
+					this.SetObjectBounds(obj, rect);
 				}
 			}
 			else
 			{
 				foreach (Widget obj in this.selectedObjects)
 				{
-					this.SetObjectPositionX(obj, bounds.Left);
-					this.SetObjectWidth(obj, bounds.Width);
+					Rectangle rect = this.GetObjectBounds(obj);
+					rect.Left  = bounds.Left;
+					rect.Width = bounds.Width;
+					this.SetObjectBounds(obj, rect);
 				}
 			}
 
@@ -1785,7 +1797,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 				foreach (Widget obj in this.selectedObjects)
 				{
-					bounds = Rectangle.Union(bounds, this.GetObjectBounds(obj));
+					bounds = Rectangle.Union(bounds, this.objectModifier.GetBounds(obj));
 				}
 
 				return bounds;
@@ -1809,234 +1821,131 @@ namespace Epsitec.Common.Designer.MyWidgets
 		}
 
 
-		protected Point GetObjectPosition(Widget obj)
-		{
-			//	Retourne l'origine d'un objet.
-			return this.GetObjectBounds(obj).BottomLeft;
-		}
-
-		protected Size GetObjectSize(Widget obj)
-		{
-			//	Retourne les dimensions d'un objet.
-			return this.GetObjectBounds(obj).Size;
-		}
-
-		protected void ChangeObjectAttachment(Widget obj, Attachment attachmentFlag)
+		protected void ChangeObjectAttachment(Widget obj, Attachment attachment)
 		{
 			//	Modifie le système d'attachement d'un objet.
-			Rectangle bounds = this.GetObjectBounds(obj);
-			Attachment attachment = this.GetObjectAttachment(obj);
-
-			if (this.IsLayoutAnchored(obj.Parent))
+			if (this.objectModifier.GetChildrenPlacement(obj) == ObjectModifier.ChildrenPlacement.Anchored)
 			{
-				if ((attachment & attachmentFlag) == 0)
-				{
-					attachment |= attachmentFlag;
-				}
-				else
-				{
-					attachment &= ~attachmentFlag;
+				ObjectModifier.AnchoredHorizontalAttachment ha = this.objectModifier.GetAnchoredHorizontalAttachment(obj);
+				ObjectModifier.AnchoredVerticalAttachment   va = this.objectModifier.GetAnchoredVerticalAttachment(obj);
 
-					if ((attachment & PanelEditor.OppositeAttachment(attachmentFlag)) == 0)
+				if (attachment == Attachment.Left)
+				{
+					if (ha == ObjectModifier.AnchoredHorizontalAttachment.Right)
 					{
-						attachment |= PanelEditor.OppositeAttachment(attachmentFlag);
+						ha = ObjectModifier.AnchoredHorizontalAttachment.Fill;
+					}
+					else
+					{
+						ha = ObjectModifier.AnchoredHorizontalAttachment.Right;
 					}
 				}
-			}
 
-			if (this.IsLayoutDocking(obj.Parent))
+				if (attachment == Attachment.Right)
+				{
+					if (ha == ObjectModifier.AnchoredHorizontalAttachment.Left)
+					{
+						ha = ObjectModifier.AnchoredHorizontalAttachment.Fill;
+					}
+					else
+					{
+						ha = ObjectModifier.AnchoredHorizontalAttachment.Left;
+					}
+				}
+
+				if (attachment == Attachment.Bottom)
+				{
+					if (va == ObjectModifier.AnchoredVerticalAttachment.Top)
+					{
+						va = ObjectModifier.AnchoredVerticalAttachment.Fill;
+					}
+					else
+					{
+						va = ObjectModifier.AnchoredVerticalAttachment.Top;
+					}
+				}
+
+				if (attachment == Attachment.Top)
+				{
+					if (va == ObjectModifier.AnchoredVerticalAttachment.Bottom)
+					{
+						va = ObjectModifier.AnchoredVerticalAttachment.Fill;
+					}
+					else
+					{
+						va = ObjectModifier.AnchoredVerticalAttachment.Bottom;
+					}
+				}
+
+				this.objectModifier.SetAnchoredHorizontalAttachment(obj, ha);
+				this.objectModifier.SetAnchoredVerticalAttachment(obj, va);
+				this.handlesList.UpdateGeometry();
+			}
+		}
+
+		public void SetObjectPositionX(Widget obj, double x)
+		{
+			if (this.objectModifier.IsChildrenAnchored(obj.Parent))
 			{
-				attachment = attachmentFlag;
+				Rectangle bounds = this.objectModifier.GetBounds(obj);
+				bounds.Offset(x-bounds.Left, 0);
+				this.objectModifier.SetBounds(obj, bounds);
 			}
-
-			this.SetObjectBounds(obj, bounds, attachment);
-			this.handlesList.UpdateGeometry();
-			this.Invalidate();
 		}
 
-		static protected Attachment OppositeAttachment(Attachment style)
+		public void SetObjectPositionY(Widget obj, double y)
 		{
-			//	Retourne le style d'attachement opposé.
-			switch (style)
+			if (this.objectModifier.IsChildrenAnchored(obj.Parent))
 			{
-				case Attachment.Left:    return Attachment.Right;
-				case Attachment.Right:   return Attachment.Left;
-				case Attachment.Bottom:  return Attachment.Top;
-				case Attachment.Top:     return Attachment.Bottom;
+				Rectangle bounds = this.objectModifier.GetBounds(obj);
+				bounds.Offset(0, y-bounds.Bottom);
+				this.objectModifier.SetBounds(obj, bounds);
 			}
-			return style;
 		}
 
-		protected void SetObjectPosition(Widget obj, Point pos)
+		public void SetObjectPosition(Widget obj, Point pos)
 		{
-			//	Déplace l'origine d'un objet.
-			Rectangle bounds = new Rectangle(pos, this.GetObjectSize(obj));
-			this.SetObjectBounds(obj, bounds);
-		}
-
-		protected void SetObjectPositionX(Widget obj, double x)
-		{
-			//	Déplace l'origine gauche d'un objet.
-			Rectangle bounds = this.GetObjectBounds(obj);
-			double w = bounds.Width;
-			bounds.Left = x;
-			bounds.Width = w;
-			this.SetObjectBounds(obj, bounds);
-		}
-
-		protected void SetObjectPositionY(Widget obj, double y)
-		{
-			//	Déplace l'origine inférieure d'un objet.
-			Rectangle bounds = this.GetObjectBounds(obj);
-			double h = bounds.Height;
-			bounds.Bottom = y;
-			bounds.Height = h;
-			this.SetObjectBounds(obj, bounds);
-		}
-
-		protected void SetObjectWidth(Widget obj, double dx)
-		{
-			//	Modifie la largeur d'un objet.
-			Rectangle bounds = this.GetObjectBounds(obj);
-			bounds.Width = dx;
-			this.SetObjectBounds(obj, bounds);
-		}
-
-		protected void SetObjectHeight(Widget obj, double dy)
-		{
-			//	Modifie la hauteur d'un objet.
-			Rectangle bounds = this.GetObjectBounds(obj);
-			bounds.Height = dy;
-			this.SetObjectBounds(obj, bounds);
-		}
-
-		protected void SetObjectSize(Widget obj, Size size)
-		{
-			//	Modifie les dimensions d'un objet.
-			Rectangle bounds = this.GetObjectBounds(obj);
-			bounds.Size = size;
-			this.SetObjectBounds(obj, bounds);
-		}
-
-		public void SetObjectMargins(Widget obj, Margins margins)
-		{
-			//	Modifie les marges de l'objet, en mode LayoutMode.Docked.
-			if (this.IsLayoutDocking(obj.Parent))
+			if (this.objectModifier.IsChildrenAnchored(obj.Parent))
 			{
-				obj.Margins = margins;
+				Rectangle bounds = this.objectModifier.GetBounds(obj);
+				bounds.Offset(pos-bounds.BottomLeft);
+				this.objectModifier.SetBounds(obj, bounds);
 			}
-		}
-
-		public Margins GetObjectMargins(Widget obj)
-		{
-			//	Donne les marges de l'objet, utile en mode LayoutMode.Docked.
-			return obj.Margins;
 		}
 
 		public Rectangle GetObjectBounds(Widget obj)
 		{
-			//	Retourne la boîte d'un objet.
-			//	Les coordonnées sont toujours relative au panneau (this.panel) propriétaire.
 			return this.objectModifier.GetBounds(obj);
-			//?
-			this.Window.ForceLayout();
-			Rectangle bounds = obj.Client.Bounds;
-
-			while (obj != this.panel)
-			{
-				bounds = obj.MapClientToParent(bounds);
-				obj = obj.Parent;
-			}
-
-			return bounds;
 		}
 
 		public void SetObjectBounds(Widget obj, Rectangle bounds)
 		{
-			//	Modifie la boîte d'un objet.
-			Attachment attachment = this.GetObjectAttachment(obj);
-			this.SetObjectBounds(obj, bounds, attachment);
-		}
-
-		protected void SetObjectBounds(Widget obj, Rectangle bounds, Attachment attachment)
-		{
-			//	Modifie la boîte et le système d'attachement d'un objet.
-			//	Les coordonnées sont toujours relative au panneau (this.panel) propriétaire.
-			bounds.Normalise();
-
-			if (bounds.Width < obj.MinWidth)
+			if (this.objectModifier.IsChildrenAnchored(obj.Parent))
 			{
-				bounds.Width = obj.MinWidth;
+				this.objectModifier.SetBounds(obj, bounds);
 			}
 
-			if (bounds.Height < obj.MinHeight)
+			if (this.objectModifier.IsChildrenDocked(obj.Parent))
 			{
-				bounds.Height = obj.MinHeight;
+				if (this.objectModifier.IsChildrenHorizontal(obj))
+				{
+					this.objectModifier.SetWidth(obj, bounds.Width);
+				}
+				else
+				{
+					this.objectModifier.SetHeight(obj, bounds.Height);
+				}
 			}
-
-			this.Window.ForceLayout();
-			Widget parent = obj.Parent;
-			while (parent != this.panel)
-			{
-				bounds = parent.MapParentToClient(bounds);
-				parent = parent.Parent;
-			}
-
-			parent = obj.Parent;
-			Rectangle box = parent.ActualBounds;
-			Margins margins = obj.Margins;
-			Margins padding = parent.Padding + parent.GetInternalPadding();
-
-			if ((attachment & Attachment.Left) != 0)
-			{
-				double px = bounds.Left;
-				px -= padding.Left;
-				px = System.Math.Max(px, 0);
-				margins.Left = px;
-			}
-
-			if ((attachment & Attachment.Right) != 0)
-			{
-				double px = box.Width - bounds.Right;
-				px -= padding.Right;
-				px = System.Math.Max(px, 0);
-				margins.Right = px;
-			}
-
-			if ((attachment & Attachment.Bottom) != 0)
-			{
-				double py = bounds.Bottom;
-				py -= padding.Bottom;
-				py = System.Math.Max(py, 0);
-				margins.Bottom = py;
-			}
-
-			if ((attachment & Attachment.Top) != 0)
-			{
-				double py = box.Height - bounds.Top;
-				py -= padding.Top;
-				py = System.Math.Max(py, 0);
-				margins.Top = py;
-			}
-
-			if (this.IsLayoutAnchored(obj.Parent))
-			{
-				obj.Margins = margins;
-			}
-			obj.PreferredSize = bounds.Size;
-			this.SetObjectAttachment(obj, attachment);
-
-			this.Invalidate();
 		}
 
 		public bool IsObjectWidthChanging(Widget obj)
 		{
 			//	Indique si la largeur d'un objet peut changer.
-			if (this.IsLayoutDocking(obj.Parent))
+			if (this.objectModifier.IsChildrenDocked(obj.Parent))
 			{
-				if (this.IsObjectAttachmentBottom(obj) || this.IsObjectAttachmentTop(obj))
+				if (this.objectModifier.IsAttachmentBottom(obj) || this.objectModifier.IsAttachmentTop(obj))
 				{
-					return obj.HorizontalAlignment != HorizontalAlignment.Stretch;
+					return (this.objectModifier.GetDockedHorizontalAlignment(obj) != ObjectModifier.DockedHorizontalAlignment.Stretch);
 				}
 			}
 			return true;
@@ -2045,90 +1954,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 		public bool IsObjectHeightChanging(Widget obj)
 		{
 			//	Indique si la hauteur d'un objet peut changer.
-			if (this.IsLayoutDocking(obj.Parent))
+			if (this.objectModifier.IsChildrenDocked(obj.Parent))
 			{
-				if (this.IsObjectAttachmentLeft(obj) || this.IsObjectAttachmentRight(obj))
+				if (this.objectModifier.IsAttachmentLeft(obj) || this.objectModifier.IsAttachmentRight(obj))
 				{
-					return obj.VerticalAlignment != VerticalAlignment.Stretch;
+					return (this.objectModifier.GetDockedVerticalAlignment(obj) != ObjectModifier.DockedVerticalAlignment.Stretch);
 				}
 			}
 			return true;
-		}
-
-		public bool IsObjectAttachmentLeft(Widget obj)
-		{
-			//	Indique si l'objet est ancré à gauche.
-			return (this.GetObjectAttachment(obj) & Attachment.Left) != 0;
-		}
-
-		public bool IsObjectAttachmentRight(Widget obj)
-		{
-			//	Indique si l'objet est ancré à gauche.
-			return (this.GetObjectAttachment(obj) & Attachment.Right) != 0;
-		}
-
-		public bool IsObjectAttachmentBottom(Widget obj)
-		{
-			//	Indique si l'objet est ancré à gauche.
-			return (this.GetObjectAttachment(obj) & Attachment.Bottom) != 0;
-		}
-
-		public bool IsObjectAttachmentTop(Widget obj)
-		{
-			//	Indique si l'objet est ancré à gauche.
-			return (this.GetObjectAttachment(obj) & Attachment.Top) != 0;
-		}
-
-		protected Attachment GetObjectAttachment(Widget obj)
-		{
-			//	Retourne le mode d'attachement d'un objet.
-			Attachment attachment = Attachment.None;
-
-			if (this.IsLayoutAnchored(obj.Parent))
-			{
-				if ((obj.Anchor & AnchorStyles.Left  ) != 0)  attachment |= Attachment.Left;
-				if ((obj.Anchor & AnchorStyles.Right ) != 0)  attachment |= Attachment.Right;
-				if ((obj.Anchor & AnchorStyles.Bottom) != 0)  attachment |= Attachment.Bottom;
-				if ((obj.Anchor & AnchorStyles.Top   ) != 0)  attachment |= Attachment.Top;
-			}
-
-			if (this.IsLayoutDocking(obj.Parent))
-			{
-				if (obj.Dock == DockStyle.Left  )  attachment |= Attachment.Left;
-				if (obj.Dock == DockStyle.Right )  attachment |= Attachment.Right;
-				if (obj.Dock == DockStyle.Bottom)  attachment |= Attachment.Bottom;
-				if (obj.Dock == DockStyle.Top   )  attachment |= Attachment.Top;
-			}
-
-			return attachment;
-		}
-
-		protected void SetObjectAttachment(Widget obj, Attachment attachment)
-		{
-			//	Modifie le mode d'attachement d'un objet.
-			if (this.IsLayoutAnchored(obj.Parent))
-			{
-				AnchorStyles style = AnchorStyles.None;
-
-				if ((attachment & Attachment.Left  ) != 0)  style |= AnchorStyles.Left;
-				if ((attachment & Attachment.Right ) != 0)  style |= AnchorStyles.Right;
-				if ((attachment & Attachment.Bottom) != 0)  style |= AnchorStyles.Bottom;
-				if ((attachment & Attachment.Top   ) != 0)  style |= AnchorStyles.Top;
-
-				obj.Anchor = style;
-			}
-
-			if (this.IsLayoutDocking(obj.Parent))
-			{
-				DockStyle style = DockStyle.None;
-
-				if (attachment == Attachment.Left  )  style = DockStyle.Left;
-				if (attachment == Attachment.Right )  style = DockStyle.Right;
-				if (attachment == Attachment.Bottom)  style = DockStyle.Bottom;
-				if (attachment == Attachment.Top   )  style = DockStyle.Top;
-
-				obj.Dock = style;
-			}
 		}
 
 		public double GetObjectBaseLine(Widget obj)
@@ -2231,7 +2064,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			foreach (Widget o in this.selectedObjects)
 			{
-				if (this.IsLayoutAnchored(o.Parent))
+				if (this.objectModifier.IsChildrenAnchored(o.Parent))
 				{
 					foreach (Attachment s in attachments)
 					{
@@ -2254,8 +2087,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected Rectangle GetAttachmentBounds(Widget obj, Attachment style)
 		{
 			//	Retourne le rectangle englobant un attachement.
-			Rectangle bounds = this.GetObjectBounds(obj.Parent);
-			Rectangle rect = this.GetObjectBounds(obj);
+			Rectangle bounds = this.objectModifier.GetBounds(obj.Parent);
+			Rectangle rect = this.objectModifier.GetBounds(obj);
 			Point p1, p2, p1a, p2a;
 
 			if (style == Attachment.Left)
@@ -2327,10 +2160,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 			Widget obj = this.ZOrderDetectNearest(mouse, parent);  // objet le plus proche
 			if (obj == null)
 			{
-				Rectangle bounds = this.GetObjectBounds(parent);
+				Rectangle bounds = this.objectModifier.GetBounds(parent);
 				double t = this.context.ZOrderThickness;
 
-				if (this.IsHorizontalDocking(parent))
+				if (this.objectModifier.IsChildrenHorizontal(parent))
 				{
 					hilite = new Rectangle(bounds.Left+t, bounds.Bottom+t, 0, bounds.Height-t*2);
 				}
@@ -2343,7 +2176,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				if (obj is AbstractGroup)
 				{
-					Rectangle inside = this.GetObjectBounds(obj);
+					Rectangle inside = this.objectModifier.GetBounds(obj);
 					inside.Deflate(obj.Padding);
 					if (inside.Contains(mouse))
 					{
@@ -2357,12 +2190,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 				group = obj.Parent;
 				order = obj.ZOrder;
 
-				Rectangle bounds = this.GetObjectBounds(obj);
-				bounds.Inflate(this.GetObjectMargins(obj));
+				Rectangle bounds = this.objectModifier.GetBounds(obj);
+				bounds.Inflate(this.objectModifier.GetMargins(obj));
 
-				if (this.IsHorizontalDocking(parent))
+				if (this.objectModifier.IsChildrenHorizontal(parent))
 				{
-					if (this.IsObjectAttachmentLeft(obj))
+					if (this.objectModifier.IsAttachmentLeft(obj))
 					{
 						if (mouse.X > bounds.Center.X)
 						{
@@ -2389,7 +2222,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				}
 				else
 				{
-					if (this.IsObjectAttachmentBottom(obj))
+					if (this.objectModifier.IsAttachmentBottom(obj))
 					{
 						if (mouse.Y > bounds.Center.Y)
 						{
@@ -2454,7 +2287,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 				if (!this.selectedObjects.Contains(obj))
 				{
-					Rectangle bounds = this.GetObjectBounds(obj);
+					Rectangle bounds = this.objectModifier.GetBounds(obj);
 					double distance = Point.Distance(bounds.Center, pos);
 
 					if (bestDistance > distance)
@@ -2790,7 +2623,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected void DrawSelectedObject(Graphics graphics, Widget obj)
 		{
-			Rectangle bounds = this.GetObjectBounds(obj);
+			Rectangle bounds = this.objectModifier.GetBounds(obj);
 			bounds.Deflate(0.5);
 
 			//?graphics.AddFilledRectangle(bounds);
@@ -2801,10 +2634,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 			graphics.RenderSolid(PanelsContext.ColorHiliteOutline);
 			graphics.LineWidth = 1;
 
-			if (this.IsLayoutDocking(obj.Parent))
+			if (this.objectModifier.IsChildrenDocked(obj.Parent))
 			{
 				Rectangle ext = bounds;
-				ext.Inflate(this.GetObjectMargins(obj));
+				ext.Inflate(this.objectModifier.GetMargins(obj));
 				ext.Deflate(0.5);
 
 				Path path = new Path();
@@ -2821,7 +2654,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.DrawAttachment(graphics, obj, PanelsContext.ColorHiliteOutline);
 			}
 
-			Rectangle rect = this.GetObjectBounds(obj);
+			Rectangle rect = this.objectModifier.GetBounds(obj);
 
 			//	Si le rectangle est trop petit (par exemple objet Separator), il est engraissé.
 			double ix = 0;
@@ -2852,7 +2685,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			double thickness = 2.0;
 
-			Rectangle rect = this.GetObjectBounds(obj);
+			Rectangle rect = this.objectModifier.GetBounds(obj);
 			rect.Deflate(0.5);
 			graphics.AddRectangle(rect);
 			graphics.RenderSolid(PanelsContext.ColorHiliteParent);
@@ -2870,27 +2703,27 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void DrawAttachment(Graphics graphics, Widget obj, Color color)
 		{
 			//	Dessine tous les attachements d'un objet.
-			if (this.IsLayoutAnchored(obj.Parent))
+			if (this.objectModifier.IsChildrenAnchored(obj.Parent))
 			{
-				Rectangle bounds = this.GetObjectBounds(obj.Parent);
-				Rectangle rect = this.GetObjectBounds(obj);
+				Rectangle bounds = this.objectModifier.GetBounds(obj.Parent);
+				Rectangle rect = this.objectModifier.GetBounds(obj);
 				Point p1, p2;
 
 				p1 = new Point(bounds.Left, rect.Center.Y);
 				p2 = new Point(rect.Left, rect.Center.Y);
-				this.DrawAttachment(graphics, p1, p2, this.IsObjectAttachmentLeft(obj), color);
+				this.DrawAttachment(graphics, p1, p2, this.objectModifier.IsAttachmentLeft(obj), color);
 
 				p1 = new Point(rect.Right, rect.Center.Y);
 				p2 = new Point(bounds.Right, rect.Center.Y);
-				this.DrawAttachment(graphics, p1, p2, this.IsObjectAttachmentRight(obj), color);
+				this.DrawAttachment(graphics, p1, p2, this.objectModifier.IsAttachmentRight(obj), color);
 
 				p1 = new Point(rect.Center.X, bounds.Bottom);
 				p2 = new Point(rect.Center.X, rect.Bottom);
-				this.DrawAttachment(graphics, p1, p2, this.IsObjectAttachmentBottom(obj), color);
+				this.DrawAttachment(graphics, p1, p2, this.objectModifier.IsAttachmentBottom(obj), color);
 
 				p1 = new Point(rect.Center.X, rect.Top);
 				p2 = new Point(rect.Center.X, bounds.Top);
-				this.DrawAttachment(graphics, p1, p2, this.IsObjectAttachmentTop(obj), color);
+				this.DrawAttachment(graphics, p1, p2, this.objectModifier.IsAttachmentTop(obj), color);
 			}
 		}
 
@@ -2941,7 +2774,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Dessine les numéros d'ordre d'un groupe.
 			foreach (Widget obj in parent.Children)
 			{
-				Rectangle rect = this.GetObjectBounds(obj);
+				Rectangle rect = this.objectModifier.GetBounds(obj);
 				Rectangle box = new Rectangle(rect.BottomLeft+new Point(1, 1), new Size(20, 10));
 
 				graphics.AddFilledRectangle(box);
@@ -2963,7 +2796,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Dessine les numéros pour la touche Tab d'un groupe.
 			foreach (Widget obj in parent.Children)
 			{
-				Rectangle rect = this.GetObjectBounds(obj);
+				Rectangle rect = this.objectModifier.GetBounds(obj);
 				Rectangle box = new Rectangle(rect.BottomRight+new Point(-20-1, 1), new Size(20, 10));
 
 				graphics.AddFilledRectangle(box);
@@ -2994,38 +2827,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 				double h = System.Math.Max(s1.Height, s2.Height);
 				return new Rectangle(0, 0, w, h);
 			}
-		}
-
-		protected bool IsLayoutAnchored(Widget parent)
-		{
-			//	Indique si le panneau parent est en mode LayoutMode.Anchored.
-			if (parent != null && parent is AbstractGroup)
-			{
-				AbstractGroup group = parent as AbstractGroup;
-				return (group.ChildrenLayoutMode == Widgets.Layouts.LayoutMode.Anchored);
-			}
-			return false;
-		}
-
-		protected bool IsLayoutDocking(Widget parent)
-		{
-			//	Indique si le panneau parent est en mode LayoutMode.Docked.
-			if (parent != null && parent is AbstractGroup)
-			{
-				AbstractGroup group = parent as AbstractGroup;
-				return (group.ChildrenLayoutMode == Widgets.Layouts.LayoutMode.Docked);
-			}
-			return false;
-		}
-
-		protected bool IsHorizontalDocking(Widget parent)
-		{
-			//	Indique si le panneau parent est en mode de docking horizontal.
-			if (parent != null)
-			{
-				return (parent.ContainerLayoutMode == ContainerLayoutMode.HorizontalFlow);
-			}
-			return false;
 		}
 
 		protected bool IsInside(Point pos)
