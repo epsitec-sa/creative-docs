@@ -237,7 +237,7 @@ namespace Epsitec.Common.Types.Serialization
 						return MarkupExtension.ExtRefFromString (context, args);
 
 					case "Collection":
-						return MarkupExtension.CollectionFromString (context, args);
+						return MarkupExtension.CollectionFromString (context, args, type);
 				}
 			}
 
@@ -581,8 +581,10 @@ namespace Epsitec.Common.Types.Serialization
 			return context.ObjectMap.GetValue (Context.ParseId (args[1]));
 		}
 		
-		private static ICollection<DependencyObject> CollectionFromString(Context context, string[] args)
+		private static ICollection<DependencyObject> CollectionFromString(Context context, string[] args, System.Type type)
 		{
+			System.Diagnostics.Debug.Assert (type.Name == "ICollection`1");
+			
 			DependencyObject[] items = new DependencyObject[args.Length-1];
 			
 			for (int i = 1; i < args.Length; i++)
