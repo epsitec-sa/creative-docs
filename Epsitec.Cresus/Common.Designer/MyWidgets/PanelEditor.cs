@@ -50,14 +50,21 @@ namespace Epsitec.Common.Designer.MyWidgets
 		}
 
 
+		public void Initialise(Module module, PanelsContext context, UI.Panel panel)
+		{
+			this.module = module;
+			this.context = context;
+			this.panel = panel;
+			this.sizeMark = this.panel.PreferredSize;
+
+			this.objectModifier = new ObjectModifier(this);
+			this.constrainsList = new ConstrainsList(this);
+			this.handlesList = new HandlesList(this);
+		}
+
 		public Module					Module
 		{
 			//	Module associé.
-			set
-			{
-				this.module = value;
-			}
-
 			get
 			{
 				return this.module;
@@ -67,14 +74,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 		public PanelsContext			Context
 		{
 			//	Contexte asocié.
-			//	Le set sert d'initialisation interne (bof).
-			set
-			{
-				this.context = value;
-				this.constrainsList = new ConstrainsList(this);
-				this.handlesList = new HandlesList(this);
-			}
-
 			get
 			{
 				return this.context;
@@ -85,12 +84,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			//	Panneau associé qui est le conteneur de tous les widgets.
 			//	PanelEditor est frère de Panel et vient par-dessus.
-			set
-			{
-				this.panel = value;
-				this.sizeMark = this.panel.PreferredSize;
-			}
-
 			get
 			{
 				return this.panel;
@@ -3223,6 +3216,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected Module					module;
 		protected UI.Panel					panel;
 		protected PanelsContext				context;
+		protected ObjectModifier			objectModifier;
 		protected ConstrainsList			constrainsList;
 		protected HandlesList				handlesList;
 
