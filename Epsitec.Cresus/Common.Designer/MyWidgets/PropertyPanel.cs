@@ -12,7 +12,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 	{
 		public PropertyPanel()
 		{
-			this.Margins = new Margins(0, 1, 0, 4);
+			this.Margins = new Margins(0, 0, 0, 4);
 			this.Padding = new Margins(1, 1, 1, 1);
 
 			Widget header = new Widget(this);
