@@ -102,8 +102,8 @@ namespace Epsitec.Common.Designer.Viewers
 
 			this.tabBook = new TabBook(this);
 			this.tabBook.MinWidth = 150;
-			this.tabBook.PreferredWidth = 200;
-			this.tabBook.MaxWidth = 250;
+			this.tabBook.PreferredWidth = 230;
+			this.tabBook.MaxWidth = 300;
 			this.tabBook.Arrows = TabBookArrows.Stretch;
 			this.tabBook.Margins = new Margins(1, 1, 1, 1);
 			this.tabBook.Dock = DockStyle.Right;
@@ -118,11 +118,12 @@ namespace Epsitec.Common.Designer.Viewers
 
 			this.propertiesScrollable = new Scrollable(this.tabPageProperties);
 			this.propertiesScrollable.Dock = DockStyle.Fill;
-			this.propertiesScrollable.HorizontalScrollerMode = ScrollableScrollerMode.HideAlways;
+			this.propertiesScrollable.HorizontalScrollerMode = ScrollableScrollerMode.ShowAlways;
 			this.propertiesScrollable.VerticalScrollerMode = ScrollableScrollerMode.ShowAlways;
 			this.propertiesScrollable.Panel.IsAutoFitting = true;
+			this.propertiesScrollable.Panel.Margins = new Margins(10, 10, 10, 10);
 			this.propertiesScrollable.IsForegroundFrame = true;
-			this.propertiesScrollable.ForegroundFrameMargins = new Margins(0, 1, 0, 0);
+			//?this.propertiesScrollable.ForegroundFrameMargins = new Margins(0, 1, 0, 0);
 
 			//	Crée l'onglet 'objets'.
 			this.tabPageObjects = new TabPage();
