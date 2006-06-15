@@ -31,6 +31,14 @@ namespace Epsitec.Common.Designer.Proxies
 			}
 		}
 
+		public override double DataColumnWidth
+		{
+			get
+			{
+				return 80;
+			}
+		}
+
 		public Widgets.Layouts.LayoutMode LayoutMode
 		{
 			get
