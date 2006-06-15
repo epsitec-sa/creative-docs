@@ -100,8 +100,13 @@ namespace Epsitec.Common.Text.Exchange
 				}
 				else
 				{
+#if false	// n'utilise plus les "invertxxx" mais utilise ce qui est réellement affiché
 					htmlText.SetItalic (textWrapper.Defined.IsInvertItalicDefined && textWrapper.Defined.InvertItalic);
 					htmlText.SetBold (textWrapper.Defined.IsInvertBoldDefined && textWrapper.Defined.InvertBold);
+#else
+					htmlText.SetItalic (Rosetta.IsItalic(navigator));
+					htmlText.SetBold (Rosetta.IsBold (navigator));
+#endif
 					htmlText.SetUnderlined (textWrapper.Active.IsUnderlineDefined);
 					htmlText.SetStrikeout (textWrapper.Active.IsStrikeoutDefined);
 
@@ -177,76 +182,38 @@ namespace Epsitec.Common.Text.Exchange
 
 				navigator.MoveTo (TextNavigator.Target.CharacterNext, runLength);
 
-				Property[] runProperties = navigator.AccumulatedTextProperties;
-				TextStyle[] runStyles     = navigator.TextStyles;
-
-				System.Console.Out.WriteLine ("Run: >>{0}<< with {1} properties", runText, runProperties.Length);
-
-				output.AppendFormat ("Run: \"{0}\"\r\n", runText);
-
-				string text;
-
-				foreach (Property p in runProperties)
-				{
-
-					text = p.ToString ();
-
-					output.AppendFormat ("  {0}  {1}\r\n", p.WellKnownType, text);
-
-					if (p.WellKnownType == Properties.WellKnownType.Font)
-					{
-						Properties.FontProperty fontProperty = p as Properties.FontProperty;
-
-						string fontFace = fontProperty.FaceName;
-						string fontStyle = fontProperty.StyleName;
-
-						fontStyle = OpenType.FontCollection.GetStyleHash (fontStyle);
-
-						System.Console.Out.WriteLine ("- Font: {0} {1}", fontFace, fontStyle);
-					}
-					else
-					{
-						//-						System.Console.Out.WriteLine ("- {0}", p.WellKnownType);
-					}
-				}
 
 				//	La façon "haut niveau" de faire :
 
 				TextContext context = story.TextContext;
-				TextStyle[] styles = context.StyleList.StyleMap.GetSortedStyles ();
-
-				int lst = navigator.TextStyles.Length;
 
 				foreach (TextStyle style in navigator.TextStyles)
 				{
-					string s = context.StyleList.StyleMap.GetCaption (style);
+					if (style.TextStyleClass == TextStyleClass.Paragraph || style.TextStyleClass == TextStyleClass.Text)
+					{
+						string s = context.StyleList.StyleMap.GetCaption (style);
+					}
 				}
 
-				foreach (TextStyle thestyle in styles)
-				{
-					string s = thestyle.Name;
-					s = context.StyleList.StyleMap.GetCaption (thestyle);
+				bool b = textWrapper.Defined.IsInvertItalicDefined && textWrapper.Defined.InvertItalic ;
+				b = textWrapper.Active.IsInvertItalicDefined && textWrapper.Active.InvertItalic ;
 
-				}
+				Property[] props;
+				Property[] fonts;
 
+				props = navigator.AccumulatedTextProperties;
+				fonts = Property.Filter (props, Properties.WellKnownType.Font);
 
-				if (textWrapper.Active.IsFontFaceDefined)
+				if (fonts.Length > 0)
 				{
-					System.Console.Out.WriteLine ("- Font Face: {0}", textWrapper.Active.FontFace, textWrapper.Active.FontStyle, textWrapper.Active.InvertItalic ? "(italic)" : string.Empty);
-				}
-				if (textWrapper.Active.IsFontStyleDefined)
-				{
-					System.Console.Out.WriteLine ("- Font Style: {0}", textWrapper.Active.FontStyle);
-				}
-				if (textWrapper.Active.IsInvertItalicDefined)
-				{
-					System.Console.Out.WriteLine ("- Invert Italic: {0}", textWrapper.Active.InvertItalic);
-				}
-				if (textWrapper.Active.IsInvertBoldDefined)
-				{
-					System.Console.Out.WriteLine ("- Invert Bold: {0}", textWrapper.Active.InvertBold);
+					System.Diagnostics.Debug.Assert (fonts.Length == 1);
+					Properties.FontProperty fontProperty;
+					string fontStyle;
+					fontProperty = fonts[0] as Properties.FontProperty;
+					fontStyle = OpenType.FontCollection.GetStyleHash(fontProperty.StyleName);
 				}
 
+					// navigator.SetTextStyles(
 			}
 
 			story.EnableOpletQueue ();
@@ -336,18 +303,76 @@ namespace Epsitec.Common.Text.Exchange
 
 			TextStyle[] styles = context.StyleList.StyleMap.GetSortedStyles ();
 
+			TextStyle thenewstyle = null ;
 			foreach (TextStyle thestyle in styles)
 			{
 				string s = thestyle.Name;
 				s = context.StyleList.StyleMap.GetCaption (thestyle);
 
+				bool b = false;
 
+				if (b)
+				{
+					thenewstyle = thestyle ;
+					break;
+				}
 			}
+
+			TextStyle[] newstyles = new TextStyle[1] ;
+
+			newstyles[0] = thenewstyle ;
+			navigator.SetTextStyles(newstyles) ;
+
+			navigator.Insert ("abc");
 
 			return;
 		}
 
 
+		private static Properties.FontProperty GetFontProperty(TextNavigator navigator)
+		{
+			Property[] props;
+			Property[] fonts;
+			Properties.FontProperty fontProperty = null;
+
+			props = navigator.AccumulatedTextProperties;
+			fonts = Property.Filter (props, Properties.WellKnownType.Font);
+
+			if (fonts.Length > 0)
+			{
+				System.Diagnostics.Debug.Assert (fonts.Length == 1);
+				fontProperty = fonts[0] as Properties.FontProperty;
+			}
+
+			return fontProperty;
+		}
+
+		private static string GetFontStyleString(TextNavigator navigator)
+		{
+			string fontStyle = null;
+
+			Properties.FontProperty fontProperty = Rosetta.GetFontProperty (navigator);
+
+			if (fontProperty != null)
+				fontStyle = OpenType.FontCollection.GetStyleHash (fontProperty.StyleName);
+
+			return fontStyle;
+		}
+
+		private static bool IsItalic(TextNavigator navigator)
+		{
+			string fontStyle = GetFontStyleString(navigator) ;
+
+			return fontStyle != null && fontStyle == "Italic";
+		}
+
+
+		private static bool IsBold(TextNavigator navigator)
+		{
+			string fontStyle = GetFontStyleString (navigator);
+
+			return fontStyle != null && fontStyle == "Bold";
+		}
 
 		#endregion
 
