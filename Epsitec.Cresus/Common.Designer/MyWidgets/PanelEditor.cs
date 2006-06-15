@@ -1937,6 +1937,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			//	Retourne la boîte d'un objet.
 			//	Les coordonnées sont toujours relative au panneau (this.panel) propriétaire.
+			return this.objectModifier.GetBounds(obj);
+			//?
 			this.Window.ForceLayout();
 			Rectangle bounds = obj.Client.Bounds;
 
