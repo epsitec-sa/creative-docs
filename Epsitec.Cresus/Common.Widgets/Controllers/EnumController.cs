@@ -63,7 +63,10 @@ namespace Epsitec.Common.Widgets.Controllers
 			{
 				foreach (IEnumValue enumValue in enumType.Values)
 				{
-					this.combo.Items.Add (enumValue.Name);
+					if (!enumValue.IsHidden)
+					{
+						this.combo.Items.Add (enumValue.Name);
+					}
 				}
 
 				this.combo.IsReadOnly = enumType.IsCustomizable ? false : true;
