@@ -250,7 +250,7 @@ namespace Epsitec.Common.Support
 					throw new System.InvalidOperationException (string.Format ("Cannot convert {0} DRUID to a long", type));
 			}
 		}
-
+		
 		public static bool operator==(Druid a, Druid b)
 		{
 			return (a.module == b.module) && (a.developer == b.developer) && (a.local == b.local);
@@ -310,8 +310,10 @@ namespace Epsitec.Common.Support
 
 		/// <summary>
 		/// Parses the specified value; this recognizes DRUIDs in the resource
-		/// id "[1023]" format, resource field name "$23" format and XML field
-		/// id "23" format.
+		/// id "[1023]" format, resource field name "$23" format, bundle id
+		/// "_1023" format and XML field id "23" format. This method throws a
+		/// <see cref="T:System.FormatException"/> exception if the format is
+		/// not recognized. An empty string maps to the <c>Empty</c> DRUID.
 		/// </summary>
 		/// <param name="value">The value to parse.</param>
 		/// <returns>The DRUID.</returns>
@@ -330,7 +332,7 @@ namespace Epsitec.Common.Support
 			
 			if (value[0] == '_')
 			{
-				long druid = Druid.FromFullString (value.Substring (1, value.Length-1));
+				long druid = Druid.FromFullString (value.Substring (1));
 				return new Druid (Druid.GetModuleId (druid), Druid.GetDevId (druid), Druid.GetLocalId (druid));
 			}
 
@@ -349,6 +351,106 @@ namespace Epsitec.Common.Support
 			}
 
 			throw new System.FormatException (string.Format ("Value '{0}' is not a valid DRUID encoding", value));
+		}
+
+		/// <summary>
+		/// Parses the specified value; this recognizes DRUIDs in the resource
+		/// id "[1023]" format, resource field name "$23" formant and bundle id
+		/// "_1023" format. The number of recognized formats is restricted with
+		/// respect to what the <c>Parse</c> method supports.
+		/// </summary>
+		/// <param name="value">The value to parse.</param>
+		/// <param name="druid">The parsed DRUID.</param>
+		/// <returns><c>true</c> if the conversion was successful; otherwise,
+		/// <c>false</c>.</returns>
+		public static bool TryParse(string value, out Druid druid)
+		{
+			if (string.IsNullOrEmpty (value))
+			{
+				druid = Druid.Empty;
+				return false;
+			}
+
+			if ((value[0] == '[') &&
+				(value.Length > 2) &&
+				(value[value.Length-1] == ']') &&
+				(Druid.IsValidFullString (value.Substring (1, value.Length-2))))
+			{
+				long id = Druid.FromFullString (value.Substring (1, value.Length-2));
+				druid = new Druid (Druid.GetModuleId (id), Druid.GetDevId (id), Druid.GetLocalId (id));
+				return true;
+			}
+
+			if ((value[0] == '_') &&
+				(Druid.IsValidFullString (value.Substring (1))))
+			{
+				long id = Druid.FromFullString (value.Substring (1));
+				druid = new Druid (Druid.GetModuleId (id), Druid.GetDevId (id), Druid.GetLocalId (id));
+				return true;
+			}
+			
+			if ((value[0] == '$') &&
+				(Druid.IsValidModuleString (value.Substring (1))))
+			{
+				long id = Druid.FromModuleString (value.Substring (1));
+				druid = new Druid (Druid.GetDevId (id), Druid.GetLocalId (id));
+				return true;
+			}
+
+			druid = Druid.Empty;
+			return false;
+		}
+
+		/// <summary>
+		/// Escapes the specified value. This ensures that the value won't be
+		/// confused with a valid DRUID (recognized as such by <c>TryParse</c>).
+		/// This method simply adds a special character in front of the value if
+		/// it could be mistaken with a DRUID.
+		/// </summary>
+		/// <param name="value">The value.</param>
+		/// <returns>The escaped value.</returns>
+		public static string Escape(string value)
+		{
+			if (string.IsNullOrEmpty (value))
+			{
+				return value;
+			}
+
+			switch (value[0])
+			{
+				case '$':
+				case '_':
+				case '[':
+				case ']':
+					value = string.Concat ("]", value);
+					break;
+				
+				default:
+					break;
+			}
+			
+			return value;
+		}
+
+		/// <summary>
+		/// Removes the escape code from the specified value, if any.
+		/// </summary>
+		/// <param name="value">The value.</param>
+		/// <returns>The value, as it was provided to the <c>Escape</c> method.</returns>
+		public static string Unescape(string value)
+		{
+			if (string.IsNullOrEmpty (value))
+			{
+				return value;
+			}
+			else if (value[0] == ']')
+			{
+				return value.Substring (1);
+			}
+			else
+			{
+				return value;
+			}
 		}
 
 		/// <summary>

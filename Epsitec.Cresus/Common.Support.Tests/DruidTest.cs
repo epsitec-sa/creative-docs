@@ -8,6 +8,22 @@ namespace Epsitec.Common.Support
 	[TestFixture] public class DruidTest
 	{
 		[Test]
+		public void CheckEscape()
+		{
+			Assert.AreEqual ("abc", Druid.Escape ("abc"));
+			Assert.AreEqual ("123", Druid.Escape ("123"));
+			Assert.AreEqual ("x[x]", Druid.Escape ("x[x]"));
+			Assert.AreEqual ("][x]", Druid.Escape ("[x]"));
+			Assert.AreEqual ("]_x", Druid.Escape ("_x"));
+			Assert.AreEqual ("]$x", Druid.Escape ("$x"));
+			
+			Assert.AreEqual ("x[x]", Druid.Unescape ("x[x]"));
+			Assert.AreEqual ("[x]", Druid.Unescape ("][x]"));
+			Assert.AreEqual ("_x", Druid.Unescape ("]_x"));
+			Assert.AreEqual ("$x", Druid.Unescape ("]$x"));
+		}
+		
+		[Test]
 		public void CheckFromFullString()
 		{
 			Assert.AreEqual (0x0000000000000000L, Druid.FromFullString ("0"));
@@ -116,6 +132,9 @@ namespace Epsitec.Common.Support
 			Assert.AreEqual (0x0040100002000003L, Druid.Parse ("[1023000001]").ToLong ());
 			Assert.AreEqual (0x4000100002000003L, Druid.Parse ("[1023000000008]").ToLong ());
 
+			Assert.AreEqual (0x0000000002000003L, Druid.Parse ("23").ToLong ());
+			Assert.AreEqual (0x000010001f0003ffL, Druid.Parse ("_10VVV").ToLong ());
+
 			Assert.AreEqual (0x00000000000L, Druid.Parse ("$0").ToLong ());
 			Assert.AreEqual (0x00002000003L, Druid.Parse ("$23").ToLong ());
 			Assert.AreEqual (0x00002000100L, Druid.Parse ("$208").ToLong ());
@@ -123,6 +142,8 @@ namespace Epsitec.Common.Support
 			Assert.AreEqual (0x0001f0003ffL, Druid.Parse ("$VVV").ToLong ());
 			Assert.AreEqual (0x0001f000400L, Druid.Parse ("$V0001").ToLong ());
 			Assert.AreEqual (0x00042000400L, Druid.Parse ("$20021").ToLong ());
+			
+			Assert.AreEqual (0x00011000100L, Druid.Parse ("H08").ToLong ());
 		}
 
 		[Test]
@@ -130,6 +151,32 @@ namespace Epsitec.Common.Support
 		public void CheckParseEx1()
 		{
 			Druid.Parse ("$23000000008");
+		}
+
+		[Test]
+		public void CheckTryParse()
+		{
+			Druid druid;
+			
+			Assert.IsTrue (Druid.TryParse ("[0]", out druid));
+			Assert.AreEqual (0x0000000000000000L, druid.ToLong ());
+
+			Assert.IsTrue (Druid.TryParse ("[1023000000008]", out druid));
+			Assert.AreEqual (0x4000100002000003L, druid.ToLong ());
+
+			Assert.IsTrue (Druid.TryParse ("_1023000000008", out druid));
+			Assert.AreEqual (0x4000100002000003L, druid.ToLong ());
+
+			Assert.IsTrue (Druid.TryParse ("$VVV", out druid));
+			Assert.AreEqual (0x0001f0003ffL, druid.ToLong ());
+
+			Assert.IsFalse (Druid.TryParse ("$XYZ", out druid));
+			Assert.IsFalse (Druid.TryParse ("[X]", out druid));
+			Assert.IsFalse (Druid.TryParse ("_X", out druid));
+			Assert.IsFalse (Druid.TryParse ("1234", out druid));
+			Assert.IsFalse (Druid.TryParse ("xyz", out druid));
+			Assert.IsFalse (Druid.TryParse ("][", out druid));
+			Assert.IsFalse (Druid.TryParse ("[]", out druid));
 		}
 	}
 }

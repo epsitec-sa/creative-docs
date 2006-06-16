@@ -720,6 +720,8 @@ namespace Epsitec.Common.Support
 						this.MergeWithCaption (this.GetBundle (bundleName, ResourceLevel.Default, culture), druid, ref caption);
 						this.MergeWithCaption (this.GetBundle (bundleName, ResourceLevel.Localized, culture), druid, ref caption);
 						this.MergeWithCaption (this.GetBundle (bundleName, ResourceLevel.Customized, culture), druid, ref caption);
+						
+						this.ResolveDruidReferencesInCaption (caption, ResourceLevel.Merged, culture);
 						break;
 					
 					case ResourceLevel.Default:
@@ -734,6 +736,29 @@ namespace Epsitec.Common.Support
 			}
 
 			return caption;
+		}
+
+		private void ResolveDruidReferencesInCaption(Caption caption, ResourceLevel level, CultureInfo culture)
+		{
+			TransformCallback<string> transform = delegate (string value) { return this.ResolveDruidReferenceInText (value, level, culture); };
+
+			caption.TransformTexts (transform);
+		}
+
+		private string ResolveDruidReferenceInText(string value, ResourceLevel level, CultureInfo culture)
+		{
+			Druid druid;
+			
+			if (Druid.TryParse (value, out druid))
+			{
+				value = this.GetText (druid, level, culture);
+			}
+			else
+			{
+				value = Druid.Unescape (value);
+			}
+			
+			return value;
 		}
 
 		private void MergeWithCaption(ResourceBundle bundle, Druid druid, ref Caption caption)
