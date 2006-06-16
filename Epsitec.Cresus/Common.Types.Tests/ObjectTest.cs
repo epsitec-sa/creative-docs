@@ -459,6 +459,60 @@ namespace Epsitec.Common.Types
 			
 			private string suffix = "";
 		}
+		
+		[Test]
+		public void CheckCopyProperty()
+		{
+			MyObject a = new MyObject ();
+			MyObject b = new MyObject ();
+			
+			Assert.IsFalse (a.ContainsLocalValue (MyObject.XyzProperty));
+			Assert.IsFalse (b.ContainsLocalValue (MyObject.XyzProperty));
+			Assert.IsFalse (a.ContainsLocalValue (MyObject.NativeXyzProperty));
+			Assert.IsFalse (b.ContainsLocalValue (MyObject.NativeXyzProperty));
+			Assert.IsTrue (a.ContainsValue (MyObject.NativeXyzProperty));
+			Assert.IsTrue (b.ContainsValue (MyObject.NativeXyzProperty));
+
+			DependencyObject.CopyProperty (a, b, MyObject.XyzProperty);
+			DependencyObject.CopyProperty (a, b, MyObject.NativeXyzProperty);
+
+			Assert.IsFalse (a.ContainsLocalValue (MyObject.XyzProperty));
+			Assert.IsFalse (b.ContainsLocalValue (MyObject.XyzProperty));
+			Assert.IsFalse (a.ContainsLocalValue (MyObject.NativeXyzProperty));
+			Assert.IsFalse (b.ContainsLocalValue (MyObject.NativeXyzProperty));
+			Assert.IsTrue (a.ContainsValue (MyObject.NativeXyzProperty));
+			Assert.IsTrue (b.ContainsValue (MyObject.NativeXyzProperty));
+
+			a.NativeXyz = 1;
+			b.Xyz = 2;
+
+			Assert.IsFalse (a.ContainsLocalValue (MyObject.XyzProperty));
+			Assert.IsTrue (b.ContainsLocalValue (MyObject.XyzProperty));
+			Assert.IsFalse (a.ContainsLocalValue (MyObject.NativeXyzProperty));
+			Assert.IsFalse (b.ContainsLocalValue (MyObject.NativeXyzProperty));
+			Assert.IsTrue (a.ContainsValue (MyObject.NativeXyzProperty));
+			Assert.IsTrue (b.ContainsValue (MyObject.NativeXyzProperty));
+
+			DependencyObject.CopyProperty (a, b, MyObject.XyzProperty);
+			DependencyObject.CopyProperty (a, b, MyObject.NativeXyzProperty);
+
+			Assert.IsFalse (a.ContainsLocalValue (MyObject.XyzProperty));
+			Assert.IsFalse (b.ContainsLocalValue (MyObject.XyzProperty));
+
+			Assert.AreEqual (1, b.NativeXyz);
+
+			b.NativeXyz = 2;
+			b.Xyz = 2;
+
+			//	Copie a.NativeXyz --> b.NativeXyz mais comme a.Xyz n'existe
+			//	pas, b.Xyz n'est pas modifié :
+			
+			DependencyObject.CopyExistingProperty (a, b, MyObject.XyzProperty);
+			DependencyObject.CopyExistingProperty (a, b, MyObject.NativeXyzProperty);
+
+			Assert.AreEqual (2, b.Xyz);
+			Assert.AreEqual (1, b.NativeXyz);
+		}
 
 		[Test]
 		public void CheckEqualValues()
@@ -1080,6 +1134,43 @@ namespace Epsitec.Common.Types
 
 				Test1.SetAttached (t2, "Good bye");
 				Assert.AreEqual ("DependencyProperty 'Attached' changed from 'Hello' to 'Good bye'", ObjectTest.log);
+
+				Test2 a = new Test2 ();
+				Test4 b = new Test4 ();
+
+				DependencyObject.CopyAttachedProperties (a, b);
+
+				Test1.SetAttached (a, "X");
+
+				DependencyObject.CopyAttachedProperties (a, b);
+
+				Assert.AreEqual ("X", Test1.GetAttached (a));
+				Assert.AreEqual ("X", Test1.GetAttached (b));
+
+				Test1.SetAttached (b, "Y");
+
+				Assert.AreEqual ("X", Test1.GetAttached (a));
+				Assert.AreEqual ("Y", Test1.GetAttached (b));
+				
+				DependencyObject.CopyAttachedProperties (b, a);
+
+				Assert.AreEqual ("Y", Test1.GetAttached (a));
+				Assert.AreEqual ("Y", Test1.GetAttached (b));
+
+				a.ClearValue (Test1.AttachedProperty);
+				
+				Assert.AreEqual (null, Test1.GetAttached (a));
+				Assert.AreEqual ("Y", Test1.GetAttached (b));
+				
+				DependencyObject.CopyAttachedProperties (a, b);
+				
+				Assert.AreEqual (null, Test1.GetAttached (a));
+				Assert.AreEqual ("Y", Test1.GetAttached (b));
+
+				DependencyObject.CopyAttachedProperties (b, a);
+				
+				Assert.AreEqual ("Y", Test1.GetAttached (a));
+				Assert.AreEqual ("Y", Test1.GetAttached (b));
 			}
 		}
 
@@ -1469,6 +1560,17 @@ namespace Epsitec.Common.Types
 				MyObject tt = o as MyObject;
 				return tt.HasChildren;
 			}
+
+			private static object GetValueNativeXyz(DependencyObject o)
+			{
+				MyObject that = (MyObject) o;
+				return that.NativeXyz;
+			}
+			private static void SetValueNativeXyz(DependencyObject o, object value)
+			{
+				MyObject that = (MyObject) o;
+				that.NativeXyz = (int) value;
+			}
 			
 			public static DependencyProperty XyzProperty	= DependencyProperty.Register ("Xyz", typeof (int), typeof (MyObject));
 			public static DependencyProperty AbcProperty	= DependencyProperty.Register ("Abc", typeof (int), typeof (MyObject), new DependencyPropertyMetadata (Binding.DoNothing));
@@ -1480,6 +1582,7 @@ namespace Epsitec.Common.Types
 			public static DependencyProperty ChildrenProperty = DependencyObjectTree.ChildrenProperty.AddOwner (typeof (MyObject), new DependencyPropertyMetadata (MyObject.GetValueChildren).MakeReadOnlySerializable ());
 			public static DependencyProperty HasChildrenProperty = DependencyObjectTree.HasChildrenProperty.AddOwner (typeof (MyObject), new DependencyPropertyMetadata (MyObject.GetValueHasChildren));
 			public static DependencyProperty ReadOnlyProperty = DependencyProperty.RegisterReadOnly ("ReadOnly", typeof (string), typeof (MyObject));
+			public static DependencyProperty NativeXyzProperty = DependencyProperty.Register ("NativeXyz", typeof (int), typeof (MyObject), new DependencyPropertyMetadata (MyObject.GetValueNativeXyz, MyObject.SetValueNativeXyz));
 			
 			protected virtual void OnFooChanged()
 			{
@@ -1609,6 +1712,12 @@ namespace Epsitec.Common.Types
 		public class Test3c : DependencyObject
 		{
 			public static DependencyProperty InvalidProperty = DependencyProperty.Register ("_Invalid", typeof (string), typeof (Test3c));
+		}
+		public class Test4 : Types.DependencyObject
+		{
+			public Test4()
+			{
+			}
 		}
 		#endregion
 

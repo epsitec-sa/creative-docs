@@ -68,12 +68,7 @@ namespace Epsitec.Common.Types
 						
 						if (metadata.GetValueOverride != null)
 						{
-							object value = metadata.GetValueOverride (this);
-							
-							if (UndefinedValue.IsUndefinedValue (value) == false)
-							{
-								yield return new LocalValueEntry (property, value);
-							}
+							yield return new LocalValueEntry (property, metadata.GetValueOverride (this));
 						}
 					}
 				}
@@ -111,7 +106,7 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		internal IEnumerable<LocalValueEntry> SerializableLocalValueEntries
+		internal IEnumerable<LocalValueEntry>	SerializableLocalValueEntries
 		{
 			get
 			{
@@ -146,12 +141,7 @@ namespace Epsitec.Common.Types
 						{
 							if (metadata.GetValueOverride != null)
 							{
-								object value = metadata.GetValueOverride (this);
-
-								if (UndefinedValue.IsUndefinedValue (value) == false)
-								{
-									yield return new LocalValueEntry (property, value);
-								}
+								yield return new LocalValueEntry (property, metadata.GetValueOverride (this));
 							}
 						}
 					}
@@ -351,6 +341,26 @@ namespace Epsitec.Common.Types
 			this.properties.Remove (property);
 		}
 
+		public bool ContainsValue(DependencyProperty property)
+		{
+			DependencyPropertyMetadata metadata = property.GetMetadata (this);
+
+			return this.ContainsValue (property, metadata);
+		}
+
+		private bool ContainsValue(DependencyProperty property, DependencyPropertyMetadata metadata)
+		{
+			if ((metadata.GetValueOverride != null) ||
+				(this.ContainsLocalValue (property)))
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+		
 		/// <summary>
 		/// Determines whether the value is contained within the internal dictionary.
 		/// </summary>
@@ -705,6 +715,94 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		public static void CopyProperty(DependencyObject source, DependencyObject destination, DependencyProperty property)
+		{
+			if (! DependencyObject.CopyExistingProperty (source, destination, property, false))
+			{
+				destination.ClearLocalValue (property);
+			}
+		}
+
+		public static void CopyExistingProperty(DependencyObject source, DependencyObject destination, DependencyProperty property)
+		{
+			DependencyObject.CopyExistingProperty (source, destination, property, true);
+		}
+		
+		private static bool CopyExistingProperty(DependencyObject source, DependencyObject destination, DependencyProperty property, bool ignoreEmptyCollection)
+		{
+			if (source.ContainsValue (property))
+			{
+				object value = source.GetValue (property);
+
+				System.Collections.ICollection collection = value as System.Collections.ICollection;
+
+				if (collection != null)
+				{
+					if (ignoreEmptyCollection)
+					{
+						if (collection.Count == 0)
+						{
+							return false;
+						}
+					}
+
+					if (DependencyObject.CopyCollection<DependencyObject> (source, destination, property))
+					{
+						//	Copied a DependencyObject collection.
+					}
+					else if (DependencyObject.CopyCollection<string> (source, destination, property))
+					{
+						//	Copied a string collection.
+					}
+					else
+					{
+						throw new System.InvalidOperationException ("Cannot copy unsupported collection");
+					}
+				}
+				else
+				{
+					destination.SetValue (property, source.GetValue (property));
+				}
+
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+
+		private static bool CopyCollection<T>(DependencyObject src, DependencyObject dst, DependencyProperty property)
+		{
+			if (TypeRosetta.DoesTypeImplementInterface (property.PropertyType, typeof (ICollection<T>)))
+			{
+				ICollection<T> srcList = src.GetValue (property) as ICollection<T>;
+
+				if (srcList.Count > 0)
+				{
+					ICollection<T> dstList = dst.GetValue (property) as ICollection<T>;
+
+					if (dstList == null)
+					{
+						throw new System.InvalidOperationException ("Cannot copy to null destination collection");
+					}
+
+					dstList.Clear ();
+
+					foreach (T item in srcList)
+					{
+						dstList.Add (item);
+					}
+				}
+				
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+		
 		/// <summary>
 		/// Compares two dependency objects based on their values.
 		/// </summary>
