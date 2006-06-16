@@ -179,8 +179,8 @@ namespace Epsitec.Common.Types.Collections
 
 		void System.Collections.ICollection.CopyTo(System.Array array, int index)
 		{
-			T[] temp = this.ToArray ();
-			System.Array.Copy (temp, 0, array, index, temp.Length);
+			System.Collections.ICollection collection = this.list;
+			collection.CopyTo (array, index);
 		}
 
 		int System.Collections.ICollection.Count
