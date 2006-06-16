@@ -359,7 +359,7 @@ namespace Epsitec.Common.Designer
 				return (ha != AnchoredHorizontalAttachment.Right);
 			}
 
-			if (placement == ChildrenPlacement.HorizontalDocked || placement == ChildrenPlacement.VerticalDocked)
+			if (placement == ChildrenPlacement.HorizontalDocked)
 			{
 				DockedHorizontalAttachment ha = this.GetDockedHorizontalAttachment(obj);
 				return (ha == DockedHorizontalAttachment.Left);
@@ -378,7 +378,7 @@ namespace Epsitec.Common.Designer
 				return (ha != AnchoredHorizontalAttachment.Left);
 			}
 
-			if (placement == ChildrenPlacement.HorizontalDocked || placement == ChildrenPlacement.VerticalDocked)
+			if (placement == ChildrenPlacement.HorizontalDocked)
 			{
 				DockedHorizontalAttachment ha = this.GetDockedHorizontalAttachment(obj);
 				return (ha == DockedHorizontalAttachment.Right);
@@ -397,7 +397,7 @@ namespace Epsitec.Common.Designer
 				return (va != AnchoredVerticalAttachment.Top);
 			}
 
-			if (placement == ChildrenPlacement.VerticalDocked || placement == ChildrenPlacement.VerticalDocked)
+			if (placement == ChildrenPlacement.VerticalDocked)
 			{
 				DockedVerticalAttachment va = this.GetDockedVerticalAttachment(obj);
 				return (va == DockedVerticalAttachment.Bottom);
@@ -416,7 +416,7 @@ namespace Epsitec.Common.Designer
 				return (va != AnchoredVerticalAttachment.Bottom);
 			}
 
-			if (placement == ChildrenPlacement.VerticalDocked || placement == ChildrenPlacement.VerticalDocked)
+			if (placement == ChildrenPlacement.VerticalDocked)
 			{
 				DockedVerticalAttachment va = this.GetDockedVerticalAttachment(obj);
 				return (va == DockedVerticalAttachment.Top);
