@@ -178,6 +178,13 @@ namespace Epsitec.Common.Designer
 		#endregion
 
 
+		public bool IsBounds(Widget obj)
+		{
+			//	Indique si l'objet a une position et des dimensions modifiables.
+			ChildrenPlacement placement = this.GetParentPlacement(obj);
+			return (placement == ChildrenPlacement.Anchored);
+		}
+
 		public Rectangle GetBounds(Widget obj)
 		{
 			//	Retourne la position et les dimensions de l'objet.
@@ -787,6 +794,7 @@ namespace Epsitec.Common.Designer
 		{
 			//	Invalide le PanelEditor.
 			this.panelEditor.Invalidate();
+			this.panelEditor.UpdateGeometry();
 		}
 
 

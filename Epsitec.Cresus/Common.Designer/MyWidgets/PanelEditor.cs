@@ -116,6 +116,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
+		public void UpdateGeometry()
+		{
+			//	Mise à jour après avoir changé la géométrie d'un ou plusieurs objets.
+			this.handlesList.UpdateGeometry();
+		}
+
 
 		public void DoCommand(string name)
 		{
