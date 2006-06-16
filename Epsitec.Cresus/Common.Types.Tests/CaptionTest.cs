@@ -57,6 +57,24 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual ("1", Collection.Extract (c.Labels, 0));
 			Assert.AreEqual ("2", Collection.Extract (c.Labels, 1));
 			Assert.AreEqual (a.Description, c.Description);
+
+			b.Description = "abc";
+
+			a.Labels.Add ("x");
+			c = Caption.Merge (a, b);
+
+			Assert.AreEqual (2, c.Labels.Count);
+			Assert.AreEqual ("1", Collection.Extract (c.Labels, 0));
+			Assert.AreEqual ("2", Collection.Extract (c.Labels, 1));
+			Assert.AreEqual (b.Description, c.Description);
+
+			b.Labels.Clear ();
+			
+			c = Caption.Merge (a, b);
+
+			Assert.AreEqual (1, c.Labels.Count);
+			Assert.AreEqual ("x", Collection.Extract (c.Labels, 0));
+			Assert.AreEqual (b.Description, c.Description);
 		}
 
 		[Test]
