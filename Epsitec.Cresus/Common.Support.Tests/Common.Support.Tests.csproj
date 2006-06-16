@@ -224,6 +224,8 @@
     <None Include="resources\LowLevelTest\strings.fr.resource" />
     <None Include="resources\OtherModule\module.info" />
     <None Include="resources\OtherModule\strings.00.resource" />
+    <None Include="resources\Test\captions.00.resource" />
+    <None Include="resources\Test\captions.fr.resource" />
     <None Include="resources\Test\_4.00.resource" />
     <None Include="resources\Test\module.info" />
     <None Include="resources\Test\strings.00.resource" />
