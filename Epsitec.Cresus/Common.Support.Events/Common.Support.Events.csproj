@@ -81,6 +81,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="CancelEventArgs.cs" />
+    <Compile Include="Callbacks.cs" />
     <Compile Include="ValueEventArgs.cs" />
     <Compile Include="EventArgs.cs" />
     <Compile Include="EventHandlers.cs">
