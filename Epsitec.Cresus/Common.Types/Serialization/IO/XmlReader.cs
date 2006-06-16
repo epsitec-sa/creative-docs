@@ -19,15 +19,15 @@ namespace Epsitec.Common.Types.Serialization.IO
 				if (this.xml.NodeType == System.Xml.XmlNodeType.Element)
 				{
 					if ((this.xml.LocalName == "storage") &&
-						(this.xml.NamespaceURI == this.nsStructure))
+						(this.xml.NamespaceURI == Xml.StructureNamespace))
 					{
 						this.hasEmptyStorageElement = this.xml.IsEmptyElement;
 						
-						rootId = Context.ParseId (this.xml.GetAttribute ("root", this.nsStructure));
+						rootId = Context.ParseId (this.xml.GetAttribute ("root", Xml.StructureNamespace));
 						
-						externalCount = Context.ParseNum (this.xml.GetAttribute ("n_ext", this.nsStructure));
-						typeCount     = Context.ParseNum (this.xml.GetAttribute ("n_typ", this.nsStructure));
-						objectCount   = Context.ParseNum (this.xml.GetAttribute ("n_obj", this.nsStructure));
+						externalCount = Context.ParseNum (this.xml.GetAttribute ("n_ext", Xml.StructureNamespace));
+						typeCount     = Context.ParseNum (this.xml.GetAttribute ("n_typ", Xml.StructureNamespace));
+						objectCount   = Context.ParseNum (this.xml.GetAttribute ("n_obj", Xml.StructureNamespace));
 						
 						return;
 					}
@@ -56,7 +56,7 @@ namespace Epsitec.Common.Types.Serialization.IO
 				
 				if ((this.xml.NodeType != System.Xml.XmlNodeType.EndElement) ||
 					(this.xml.LocalName != "storage") ||
-					(this.xml.NamespaceURI != this.nsStructure))
+					(this.xml.NamespaceURI != Xml.StructureNamespace))
 				{
 					this.xml.Skip ();
 				}
@@ -75,9 +75,9 @@ namespace Epsitec.Common.Types.Serialization.IO
 				if (this.xml.NodeType == System.Xml.XmlNodeType.Element)
 				{
 					if ((this.xml.LocalName == "external") &&
-						(this.xml.NamespaceURI == this.nsStructure))
+						(this.xml.NamespaceURI == Xml.StructureNamespace))
 					{
-						return this.xml.GetAttribute ("name", this.nsStructure);
+						return this.xml.GetAttribute ("name", Xml.StructureNamespace);
 					}
 					else
 					{
@@ -95,7 +95,7 @@ namespace Epsitec.Common.Types.Serialization.IO
 				if (this.xml.NodeType == System.Xml.XmlNodeType.Element)
 				{
 					if ((this.xml.LocalName == "type") &&
-						(this.xml.NamespaceURI == this.nsStructure))
+						(this.xml.NamespaceURI == Xml.StructureNamespace))
 					{
 						string elementId = this.xml.GetAttribute ("id");
 						string expectedId = Context.IdToString (id);
@@ -105,7 +105,7 @@ namespace Epsitec.Common.Types.Serialization.IO
 							throw new System.FormatException (string.Format ("Element <type> id={0}; expected id={1}", elementId, expectedId));
 						}
 
-						return this.xml.GetAttribute ("name", this.nsStructure);
+						return this.xml.GetAttribute ("name", Xml.StructureNamespace);
 					}
 					else
 					{
@@ -123,7 +123,7 @@ namespace Epsitec.Common.Types.Serialization.IO
 				if (this.xml.NodeType == System.Xml.XmlNodeType.Element)
 				{
 					if ((this.xml.LocalName == "object") &&
-						(this.xml.NamespaceURI == this.nsStructure))
+						(this.xml.NamespaceURI == Xml.StructureNamespace))
 					{
 						string elementId = this.xml.GetAttribute ("id");
 						string expectedId = Context.IdToString (id);
@@ -133,7 +133,7 @@ namespace Epsitec.Common.Types.Serialization.IO
 							throw new System.FormatException (string.Format ("Element <object> id={0}; expected id={1}", elementId, expectedId));
 						}
 
-						return Context.ParseId (this.xml.GetAttribute ("type", this.nsStructure));
+						return Context.ParseId (this.xml.GetAttribute ("type", Xml.StructureNamespace));
 					}
 					else
 					{
@@ -152,7 +152,7 @@ namespace Epsitec.Common.Types.Serialization.IO
 				if (this.xml.NodeType == System.Xml.XmlNodeType.Element)
 				{
 					if ((this.xml.LocalName == "data") &&
-						(this.xml.NamespaceURI == this.nsStructure))
+						(this.xml.NamespaceURI == Xml.StructureNamespace))
 					{
 						string elementId = this.xml.GetAttribute ("id");
 						string expectedId = Context.IdToString (id);
@@ -184,7 +184,7 @@ namespace Epsitec.Common.Types.Serialization.IO
 		{
 			while (this.xml.MoveToNextAttribute ())
 			{
-				if (this.xml.NamespaceURI == this.nsFields)
+				if (this.xml.NamespaceURI == Xml.FieldsNamespace)
 				{
 					field = this.xml.LocalName;
 					value = this.xml.Value;
@@ -204,8 +204,6 @@ namespace Epsitec.Common.Types.Serialization.IO
 		}
 		
 		private System.Xml.XmlReader			xml;
-		private string							nsStructure = "http://www.epsitec.ch/XNS/storage-structure-1";
-		private string							nsFields	= "http://www.epsitec.ch/XNS/storage-fields-1";
 		private bool hasEmptyStorageElement;
 	}
 }

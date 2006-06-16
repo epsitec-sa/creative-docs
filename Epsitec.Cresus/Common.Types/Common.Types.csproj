@@ -113,6 +113,7 @@
     <Compile Include="Exceptions\WrongBaseTypeException.cs" />
     <Compile Include="IResourceBoundSource.cs" />
     <Compile Include="IValueConverter.cs" />
+    <Compile Include="Serialization\IO\Xml.cs" />
     <Compile Include="StructuredTree.cs" />
     <Compile Include="IStructuredType.cs" />
     <Compile Include="IDictionaryHost.cs" />

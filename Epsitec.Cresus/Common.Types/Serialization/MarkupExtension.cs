@@ -43,7 +43,7 @@ namespace Epsitec.Common.Types.Serialization
 			//		these are used to define the markup extensions.
 
 			if ((value == null) ||
-				(value.IndexOfAny (new char[] { '{', '}', '\\' }) < 0))
+				(value.IndexOfAny (new char[] { '{', '}', '\\', '\"', '\'' }) < 0))
 			{
 				return value;
 			}
@@ -60,6 +60,12 @@ namespace Epsitec.Common.Types.Serialization
 							break;
 						case '\\':
 							buffer.Append (@"\\");
+							break;
+						case '\"':
+							buffer.Append (@"\""");
+							break;
+						case '\'':
+							buffer.Append (@"\'");
 							break;
 						case '}':
 							buffer.Append (@"\]");
@@ -79,9 +85,41 @@ namespace Epsitec.Common.Types.Serialization
 			//	return the original string (see Escape).
 
 			if ((value != null) &&
-				((value.IndexOf (@"\[") >= 0) || (value.IndexOf (@"\]") >= 0) || (value.IndexOf (@"\\") >= 0)))
+				(value.Contains ("\\")))
 			{
-				return value.Replace (@"\[", "{").Replace (@"\]", "}").Replace (@"\\", "\\");
+				System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+				bool escaped = false;
+				
+				foreach (char c in value)
+				{
+					if (escaped)
+					{
+						escaped = false;
+						
+						switch (c)
+						{
+							case '[':
+								buffer.Append ('{');
+								break;
+							case ']':
+								buffer.Append ('}');
+								break;
+							default:
+								buffer.Append (c);
+								break;
+						}
+					}
+					else if (c == '\\')
+					{
+						escaped = true;
+					}
+					else
+					{
+						buffer.Append (c);
+					}
+				}
+				
+				return buffer.ToString ();
 			}
 			else
 			{
@@ -196,9 +234,9 @@ namespace Epsitec.Common.Types.Serialization
 			{
 				System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 
-				buffer.Append ("{Text ");
+				buffer.Append ("{Text '");
 				buffer.Append (MarkupExtension.Escape (value));
-				buffer.Append ("}");
+				buffer.Append ("'}");
 				
 				return buffer.ToString ();
 			}
@@ -650,13 +688,16 @@ namespace Epsitec.Common.Types.Serialization
 
 		private static object TextFromString(Context context, string markup)
 		{
-			if ((! markup.StartsWith ("{Text ")) ||
-				(! markup.EndsWith ("}")))
+			string prefix = "{Text '";
+			string suffix = "'}";
+			
+			if ((! markup.StartsWith (prefix)) ||
+				(! markup.EndsWith (suffix)))
 			{
 				throw new System.FormatException ("Text format error");
 			}
 
-			return MarkupExtension.Unescape (markup.Substring (6, markup.Length-7));
+			return MarkupExtension.Unescape (markup.Substring (prefix.Length, markup.Length-prefix.Length-suffix.Length));
 		}
 		
 		private static object CollectionFromString(Context context, string[] args, System.Type type)
