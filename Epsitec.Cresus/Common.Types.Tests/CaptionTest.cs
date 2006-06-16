@@ -3,6 +3,8 @@
 
 using NUnit.Framework;
 
+[assembly: Epsitec.Common.Types.DependencyClass (typeof (Epsitec.Common.Types.CaptionTest.Stuff))]
+
 namespace Epsitec.Common.Types
 {
 	[TestFixture] public class CaptionTest
@@ -78,7 +80,7 @@ namespace Epsitec.Common.Types
 		}
 
 		[Test]
-		public void CheckSerialization()
+		public void CheckSerialization1()
 		{
 			Caption caption = new Caption ();
 
@@ -88,15 +90,41 @@ namespace Epsitec.Common.Types
 			caption.Description = "Angle de rotation de la trame, exprimé en degrés.";
 
 			string xml = caption.SerializeToString ();
-			
+
 			System.Console.Out.WriteLine ("Caption as XML: {0}", xml);
 
 			caption = new Caption ();
 			caption.DeserializeFromString (xml);
-			
+
 			Assert.AreEqual ("A", Collection.Extract (caption.SortedLabels, 0));
 			Assert.AreEqual ("Angle", Collection.Extract (caption.SortedLabels, 1));
 			Assert.AreEqual ("Angle de rotation de la trame, exprimé en degrés.", caption.Description);
+		}
+
+		[Test]
+		public void CheckSerialization2()
+		{
+			Caption caption = new Caption ();
+
+			caption.Labels.Add ("M");
+			caption.Labels.Add ("Mystery");
+			caption.SetValue (Stuff.NameProperty, "MysteryName");
+
+			string xml = caption.SerializeToString ();
+
+			System.Console.Out.WriteLine ("Caption as XML: {0}", xml);
+
+			caption = new Caption ();
+			caption.DeserializeFromString (xml);
+
+			Assert.AreEqual ("M", Collection.Extract (caption.SortedLabels, 0));
+			Assert.AreEqual ("Mystery", Collection.Extract (caption.SortedLabels, 1));
+			Assert.AreEqual ("MysteryName", caption.GetValue (Stuff.NameProperty));
+		}
+
+		internal class Stuff : DependencyObject
+		{
+			public static readonly DependencyProperty NameProperty = DependencyProperty.RegisterAttached ("Name", typeof (string), typeof (Stuff));
 		}
 	}
 }

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Types
 {
-	public class Caption : DependencyObject
+	public sealed class Caption : DependencyObject
 	{
 		public Caption()
 		{
@@ -64,8 +64,19 @@ namespace Epsitec.Common.Types
 			xmlWriter.WriteStartElement ("xml");
 
 			Serialization.Context context = new Serialization.SerializerContext (new Serialization.IO.XmlWriter (xmlWriter));
-
+			
 			context.ActiveWriter.WriteAttributeStrings ();
+
+			int typeCount = 0;
+
+			foreach (DependencyProperty property in this.AttachedProperties)
+			{
+				typeCount++;
+
+				context.ObjectMap.RecordType (property.OwnerType);
+				context.StoreTypeDefinition (typeCount, property.OwnerType);
+			}
+			
 			context.StoreObjectData (0, this);
 
 			xmlWriter.WriteEndElement ();
@@ -74,18 +85,19 @@ namespace Epsitec.Common.Types
 
 			string xml = buffer.ToString ();
 
-			string dataElementPrefix = string.Concat (@"<", Serialization.IO.Xml.StructurePrefix, @":data id=""_0"" ");
-			string dataElementSuffix = @" /></xml>";
+			string typeElementPrefix = string.Concat (@"<", Serialization.IO.Xml.StructurePrefix, @":type ");
+			string dataElementPrefix = string.Concat (@"<", Serialization.IO.Xml.StructurePrefix, @":data ");
+			string endElement = @"</xml>";
 
-			int prefixPos = xml.IndexOf (dataElementPrefix);
-			int suffixPos = xml.IndexOf (dataElementSuffix);
+			int typeElementPos = xml.IndexOf (typeElementPrefix);
+			int dataElementPos = xml.IndexOf (dataElementPrefix);
+			int endElementPos   = xml.IndexOf (endElement);
+			int startElementPos = typeElementPos > 0 ? typeElementPos : dataElementPos;
 
-			System.Diagnostics.Debug.Assert (prefixPos > 0);
-			System.Diagnostics.Debug.Assert (suffixPos > 0);
+			System.Diagnostics.Debug.Assert (startElementPos > 0);
+			System.Diagnostics.Debug.Assert (endElementPos > 0);
 
-			prefixPos += dataElementPrefix.Length;
-
-			return xml.Substring (prefixPos, suffixPos - prefixPos);
+			return xml.Substring (startElementPos, endElementPos - startElementPos);
 		}
 
 		/// <summary>
@@ -94,13 +106,29 @@ namespace Epsitec.Common.Types
 		/// <param name="value">The serialized caption.</param>
 		public void DeserializeFromString(string value)
 		{
-			value = string.Concat (@"<xml xmlns:", Serialization.IO.Xml.StructurePrefix, @"=""", Serialization.IO.Xml.StructureNamespace, @""" ",
-				/**/			   @"xmlns:", Serialization.IO.Xml.FieldsPrefix, @"=""", Serialization.IO.Xml.FieldsNamespace, @""">",
-				/**/			   @"<", Serialization.IO.Xml.StructurePrefix, @":data id=""_0"" ", value, @" />",
-				/**/			   @"</xml>");
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+			
+			buffer.Append (@"<xml ");
+			buffer.Append (@"xmlns:");
+			buffer.Append (Serialization.IO.Xml.StructurePrefix);
+			buffer.Append (@"=""");
+			buffer.Append (Serialization.IO.Xml.StructureNamespace);
+			buffer.Append (@""" ");
+			buffer.Append (@"xmlns:");
+			buffer.Append (Serialization.IO.Xml.FieldsPrefix);
+			buffer.Append (@"=""");
+			buffer.Append (Serialization.IO.Xml.FieldsNamespace);
+			buffer.Append (@""">");
+			buffer.Append (value);
+			buffer.Append (@"</xml>");
 
-			System.IO.StringReader stringReader = new System.IO.StringReader (value);
+			string typeElementPrefix = string.Concat (@"<", Serialization.IO.Xml.StructurePrefix, @":type ");
+			string xml = buffer.ToString ();
+			
+			System.IO.StringReader stringReader = new System.IO.StringReader (xml);
 			System.Xml.XmlTextReader xmlReader = new System.Xml.XmlTextReader (stringReader);
+
+			Serialization.Context context = new Serialization.DeserializerContext (new Serialization.IO.XmlReader (xmlReader));
 
 			while (xmlReader.Read ())
 			{
@@ -111,7 +139,18 @@ namespace Epsitec.Common.Types
 				}
 			}
 
-			Serialization.Context context = new Serialization.DeserializerContext (new Serialization.IO.XmlReader (xmlReader));
+			int pos = value.IndexOf (typeElementPrefix, 0);
+			int typeCount = 0;
+
+			while (pos >= 0)
+			{
+				typeCount++;
+
+				context.ObjectMap.RecordType (context.RestoreTypeDefinition ());
+				
+				pos = value.IndexOf (typeElementPrefix, pos+typeElementPrefix.Length);
+			}
+			
 
 			this.labels = null;
 			this.sortedLabels = null;
@@ -121,6 +160,36 @@ namespace Epsitec.Common.Types
 			context.RestoreObjectData (0, this);
 		}
 
+		public void TransformTexts(Support.TransformCallback<string> transform)
+		{
+			if (this.labels != null)
+			{
+				for (int i = 0; i < this.labels.Count; i++)
+				{
+					string oldText = this.labels[i];
+					string newText = transform (oldText);
+					
+					if (newText != oldText)
+					{
+						this.labels[i] = newText;
+					}
+				}
+			}
+
+			foreach (DependencyProperty property in this.LocalProperties)
+			{
+				if (property.PropertyType == typeof (string))
+				{
+					string oldText = this.GetLocalValue (property) as string;
+					string newText = transform (oldText);
+
+					if (newText != oldText)
+					{
+						this.SetValueBase (property, newText);
+					}
+				}
+			}
+		}
 
 		public static Caption Merge(Caption a, Caption b)
 		{

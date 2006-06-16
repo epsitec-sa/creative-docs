@@ -112,6 +112,42 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		public IEnumerable<PropertyValuePair>	LocalEntries
+		{
+			get
+			{
+				foreach (DependencyProperty property in this.properties.Keys)
+				{
+					yield return new PropertyValuePair (property, this.properties[property]);
+				}
+			}
+		}
+
+		public IEnumerable<DependencyProperty> LocalProperties
+		{
+			get
+			{
+				foreach (DependencyProperty property in this.properties.Keys)
+				{
+					yield return property;
+				}
+			}
+		}
+
+		public IEnumerable<DependencyProperty> AttachedProperties
+		{
+			get
+			{
+				foreach (DependencyProperty property in this.properties.Keys)
+				{
+					if (property.IsAttached)
+					{
+						yield return property;
+					}
+				}
+			}
+		}
+
 		/// <summary>
 		/// Gets access to the cache storing the inherited properties.
 		/// </summary>
@@ -680,12 +716,9 @@ namespace Epsitec.Common.Types
 		/// <param name="destination">The destination object.</param>
 		public static void CopyAttachedProperties(DependencyObject source, DependencyObject destination)
 		{
-			foreach (DependencyProperty property in source.properties.Keys)
+			foreach (DependencyProperty property in source.AttachedProperties)
 			{
-				if (property.IsAttached)
-				{
-					destination.SetValue (property, source.GetValue (property));
-				}
+				destination.SetValue (property, source.GetValue (property));
 			}
 		}
 

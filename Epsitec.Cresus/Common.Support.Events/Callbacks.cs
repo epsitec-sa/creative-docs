@@ -3,6 +3,6 @@
 
 namespace Epsitec.Common.Support
 {
-	public delegate void EventHandler(object sender);
-	public delegate void EventHandler<TEventArgs>(object sender, TEventArgs e);
+	public delegate void SimpleCallback();
+	public delegate T TransformCallback<T>(T item);
 }
