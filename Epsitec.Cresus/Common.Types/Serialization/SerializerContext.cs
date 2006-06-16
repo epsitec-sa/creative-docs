@@ -41,7 +41,7 @@ namespace Epsitec.Common.Types.Serialization
 		
 		private void StoreObjectFields(DependencyObject obj)
 		{
-			foreach (LocalValueEntry entry in obj.SerializableLocalValueEntries)
+			foreach (PropertyValuePair entry in obj.GetSerializableDefinedValues ())
 			{
 				DependencyPropertyMetadata metadata = entry.Property.GetMetadata (obj);
 
@@ -93,7 +93,7 @@ namespace Epsitec.Common.Types.Serialization
 			}
 		}
 
-		private bool StoreFieldAsDependencyObjectCollection(DependencyObject obj, LocalValueEntry entry, DependencyPropertyMetadata metadata)
+		private bool StoreFieldAsDependencyObjectCollection(DependencyObject obj, PropertyValuePair entry, DependencyPropertyMetadata metadata)
 		{
 			ICollection<DependencyObject> dependencyObjectCollection = entry.Value as ICollection<DependencyObject>;
 
@@ -119,7 +119,7 @@ namespace Epsitec.Common.Types.Serialization
 			}
 		}
 
-		private bool StoreFieldAsStringCollection(DependencyObject obj, LocalValueEntry entry, DependencyPropertyMetadata metadata)
+		private bool StoreFieldAsStringCollection(DependencyObject obj, PropertyValuePair entry, DependencyPropertyMetadata metadata)
 		{
 			ICollection<string> stringCollection = entry.Value as ICollection<string>;
 

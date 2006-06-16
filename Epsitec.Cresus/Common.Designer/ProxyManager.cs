@@ -124,7 +124,7 @@ namespace Epsitec.Common.Designer
 			panel.DataColumnWidth = proxy.DataColumnWidth;
 			panel.Title = source.GetType().Name;
 
-			foreach (DependencyProperty property in source.LocalProperties)
+			foreach (DependencyProperty property in source.DefinedProperties)
 			{
 				Placeholder placeholder = new Placeholder();
 				Binding binding = new Binding(BindingMode.TwoWay, source, property.Name);

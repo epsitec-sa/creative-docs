@@ -40,17 +40,18 @@ namespace Epsitec.Common.Types
 		}
 
 		/// <summary>
-		/// Gets the enumeration of the local value entries, i.e. the values
-		/// defined in the internal dictionary.
+		/// Gets the defined entries, i.e. the properties and values defined by
+		/// this object, either locally or through a <c>GetValueOverride</c>
+		/// callback.
 		/// </summary>
-		/// <value>The enumeration of all local value entries.</value>
-		public IEnumerable<LocalValueEntry>		LocalValueEntries
+		/// <value>The defined entries.</value>
+		public IEnumerable<PropertyValuePair>	DefinedEntries
 		{
 			get
 			{
 				foreach (DependencyProperty property in this.properties.Keys)
 				{
-					yield return new LocalValueEntry (property, this.properties[property]);
+					yield return new PropertyValuePair (property, this.properties[property]);
 				}
 				
 				//	Passe encore en revue les propriétés qui ne sont pas définies
@@ -68,17 +69,25 @@ namespace Epsitec.Common.Types
 						
 						if (metadata.GetValueOverride != null)
 						{
-							yield return new LocalValueEntry (property, metadata.GetValueOverride (this));
+							yield return new PropertyValuePair (property, metadata.GetValueOverride (this));
 						}
 					}
 				}
 			}
 		}
 
-		public IEnumerable<DependencyProperty>	LocalProperties
+		/// <summary>
+		/// Gets the defined properties, i.e. the properties defined by this
+		/// object, either locally or through a <c>GetValueOverride</c> callback.
+		/// </summary>
+		/// <value>The defined properties.</value>
+		public IEnumerable<DependencyProperty>	DefinedProperties
 		{
 			get
 			{
+				DependencyObjectType type = this.ObjectType;
+				System.Type sysType = this.GetType ();
+
 				foreach (DependencyProperty property in this.properties.Keys)
 				{
 					yield return property;
@@ -87,9 +96,6 @@ namespace Epsitec.Common.Types
 				//	Passe encore en revue les propriétés qui ne sont pas définies
 				//	dans la variable 'properties' mais directement au moyen de
 				//	callbacks GetValueOverrideCallback :
-
-				DependencyObjectType type = this.ObjectType;
-				System.Type sysType = this.GetType ();
 
 				foreach (DependencyProperty property in type.GetProperties ())
 				{
@@ -100,49 +106,6 @@ namespace Epsitec.Common.Types
 						if (metadata.GetValueOverride != null)
 						{
 							yield return property;
-						}
-					}
-				}
-			}
-		}
-
-		internal IEnumerable<LocalValueEntry>	SerializableLocalValueEntries
-		{
-			get
-			{
-				DependencyObjectType type = this.ObjectType;
-				System.Type sysType = this.GetType ();
-
-				DependencyPropertyMetadata metadata;
-				
-				foreach (DependencyProperty property in this.properties.Keys)
-				{
-					metadata = property.GetMetadata (sysType);
-
-					if ((property.IsReadWrite && metadata.CanSerializeReadWrite) ||
-						(property.IsReadOnly && metadata.CanSerializeReadOnly))
-					{
-						yield return new LocalValueEntry (property, this.properties[property]);
-					}
-				}
-				
-				//	Passe encore en revue les propriétés qui ne sont pas définies
-				//	dans la variable 'properties' mais directement au moyen de
-				//	callbacks GetValueOverrideCallback :
-
-				foreach (DependencyProperty property in type.GetProperties ())
-				{
-					if (this.properties.ContainsKey (property) == false)
-					{
-						metadata = property.GetMetadata (sysType);
-
-						if ((property.IsReadWrite && metadata.CanSerializeReadWrite) ||
-							(property.IsReadOnly && metadata.CanSerializeReadOnly))
-						{
-							if (metadata.GetValueOverride != null)
-							{
-								yield return new LocalValueEntry (property, metadata.GetValueOverride (this));
-							}
 						}
 					}
 				}
@@ -263,6 +226,17 @@ namespace Epsitec.Common.Types
 			DependencyPropertyMetadata metadata = property.GetMetadata (this);
 
 			this.ClearValue (property, metadata);
+		}
+
+		/// <summary>
+		/// Clears all values.
+		/// </summary>
+		public void ClearAllValues()
+		{
+			foreach (DependencyProperty property in this.DefinedProperties)
+			{
+				this.ClearValue (property);
+			}
 		}
 
 		/// <summary>
@@ -725,7 +699,7 @@ namespace Epsitec.Common.Types
 		/// <param name="property">The property which must be copied.</param>
 		public static void CopyProperty(DependencyObject source, DependencyObject destination, DependencyProperty property)
 		{
-			if (! DependencyObject.CopyExistingProperty (source, destination, property, false))
+			if (! DependencyObject.CopyDefinedProperty (source, destination, property, false))
 			{
 				destination.ClearLocalValue (property);
 			}
@@ -738,12 +712,26 @@ namespace Epsitec.Common.Types
 		/// <param name="source">The source object.</param>
 		/// <param name="destination">The destination object.</param>
 		/// <param name="property">The property which must be copied.</param>
-		public static void CopyExistingProperty(DependencyObject source, DependencyObject destination, DependencyProperty property)
+		public static void CopyDefinedProperty(DependencyObject source, DependencyObject destination, DependencyProperty property)
 		{
-			DependencyObject.CopyExistingProperty (source, destination, property, true);
+			DependencyObject.CopyDefinedProperty (source, destination, property, true);
+		}
+
+		/// <summary>
+		/// Copies the values of the defined properties from the source to the
+		/// destination.
+		/// </summary>
+		/// <param name="source">The source object.</param>
+		/// <param name="destination">The destination object.</param>
+		public static void CopyDefinedProperties(DependencyObject source, DependencyObject destination)
+		{
+			foreach (DependencyProperty property in source.DefinedProperties)
+			{
+				DependencyObject.CopyDefinedProperty (source, destination, property, true);
+			}
 		}
 		
-		private static bool CopyExistingProperty(DependencyObject source, DependencyObject destination, DependencyProperty property, bool ignoreEmptyCollection)
+		private static bool CopyDefinedProperty(DependencyObject source, DependencyObject destination, DependencyProperty property, bool ignoreEmptyCollection)
 		{
 			if (source.ContainsValue (property))
 			{
@@ -837,15 +825,15 @@ namespace Epsitec.Common.Types
 				return false;
 			}
 
-			List<LocalValueEntry> aValues = new List<LocalValueEntry> (a.LocalValueEntries);
-			List<LocalValueEntry> bValues = new List<LocalValueEntry> (b.LocalValueEntries);
+			List<PropertyValuePair> aValues = new List<PropertyValuePair> (a.DefinedEntries);
+			List<PropertyValuePair> bValues = new List<PropertyValuePair> (b.DefinedEntries);
 
 			if (aValues.Count != bValues.Count)
 			{
 				return false;
 			}
 
-			foreach (LocalValueEntry entry in aValues)
+			foreach (PropertyValuePair entry in aValues)
 			{
 				object va = entry.Value;
 				object vb = b.GetValue (entry.Property);
@@ -963,6 +951,23 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		internal IEnumerable<PropertyValuePair> GetSerializableDefinedValues()
+		{
+			System.Type sysType = this.GetType ();
+
+			foreach (PropertyValuePair pair in this.DefinedEntries)
+			{
+				DependencyProperty property = pair.Property;
+				DependencyPropertyMetadata metadata = property.GetMetadata (sysType);
+
+				if ((property.IsReadWrite && metadata.CanSerializeReadWrite) ||
+					(property.IsReadOnly && metadata.CanSerializeReadOnly))
+				{
+					yield return pair;
+				}
+			}
+		}
+		
 		internal static void Register(DependencyProperty property, System.Type ownerType)
 		{
 			System.Diagnostics.Debug.Assert (property != null);
@@ -1032,7 +1037,7 @@ namespace Epsitec.Common.Types
 		{
 			this.inheritedPropertyCache.ClearValues (node, properties);
 		}
-		void IInheritedPropertyCache.SetValues(DependencyObject node, IEnumerable<LocalValueEntry> propertyValues)
+		void IInheritedPropertyCache.SetValues(DependencyObject node, IEnumerable<PropertyValuePair> propertyValues)
 		{
 			this.inheritedPropertyCache.SetValues (node, propertyValues);
 		}
@@ -1048,7 +1053,7 @@ namespace Epsitec.Common.Types
 		{
 			this.inheritedPropertyCache.NotifyChanges (node);
 		}
-		IEnumerable<LocalValueEntry> IInheritedPropertyCache.GetValues(DependencyObject node)
+		IEnumerable<PropertyValuePair> IInheritedPropertyCache.GetValues(DependencyObject node)
 		{
 			return this.inheritedPropertyCache.GetValues (node);
 		}
@@ -1089,7 +1094,7 @@ namespace Epsitec.Common.Types
 		{
 			List<string> names = new List<string> ();
 			
-			foreach (DependencyProperty property in this.LocalProperties)
+			foreach (DependencyProperty property in this.DefinedProperties)
 			{
 				names.Add (property.Name);
 			}

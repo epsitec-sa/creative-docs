@@ -9,8 +9,8 @@ namespace Epsitec.Common.Types
 	{
 		internal void SetValue(DependencyObject node, DependencyProperty property, object value)
 		{
-			LocalValueEntry[] propertyValues = new LocalValueEntry[1];
-			propertyValues[0] = new LocalValueEntry (property, value);
+			PropertyValuePair[] propertyValues = new PropertyValuePair[1];
+			propertyValues[0] = new PropertyValuePair (property, value);
 			this.SetValues (node, propertyValues);
 		}
 		internal void ClearValue(DependencyObject node, DependencyProperty property)
@@ -125,7 +125,7 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		public IEnumerable<LocalValueEntry> GetValues(DependencyObject node)
+		public IEnumerable<PropertyValuePair> GetValues(DependencyObject node)
 		{
 			if (this.cachedValueFlags != 0)
 			{
@@ -137,7 +137,7 @@ namespace Epsitec.Common.Types
 					{
 						DependencyProperty property = DependencyProperty.GetInheritedPropertyFromCacheMask (mask);
 						bool value = ((this.currentValues & mask) != 0) ? true : false;
-						yield return new LocalValueEntry (property, value);
+						yield return new PropertyValuePair (property, value);
 					}
 
 					mask = mask << 1;
@@ -146,7 +146,7 @@ namespace Epsitec.Common.Types
 
 			if (this.more != null)
 			{
-				foreach (LocalValueEntry propertyValue in this.more.GetValues (node))
+				foreach (PropertyValuePair propertyValue in this.more.GetValues (node))
 				{
 					yield return propertyValue;
 				}
@@ -165,9 +165,9 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		private static IEnumerable<LocalValueEntry> OnlyUndefinedEntries(DependencyObject node, IEnumerable<LocalValueEntry> entries)
+		private static IEnumerable<PropertyValuePair> OnlyUndefinedEntries(DependencyObject node, IEnumerable<PropertyValuePair> entries)
 		{
-			foreach (LocalValueEntry entry in entries)
+			foreach (PropertyValuePair entry in entries)
 			{
 				if (node.ContainsLocalValue (entry.Property) == false)
 				{
@@ -176,11 +176,11 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		public void SetValues(DependencyObject node, IEnumerable<LocalValueEntry> propertyValues)
+		public void SetValues(DependencyObject node, IEnumerable<PropertyValuePair> propertyValues)
 		{
-			ListWrapper<LocalValueEntry> list = new ListWrapper<LocalValueEntry> ();
+			ListWrapper<PropertyValuePair> list = new ListWrapper<PropertyValuePair> ();
 
-			foreach (LocalValueEntry propertyValue in propertyValues)
+			foreach (PropertyValuePair propertyValue in propertyValues)
 			{
 				byte mask = (byte) propertyValue.Property.InheritedPropertyCacheMask;
 
@@ -390,7 +390,7 @@ namespace Epsitec.Common.Types
 				}
 			}
 		}
-		private static void SetChildrenProperties(DependencyObject node, List<LocalValueEntry> properties)
+		private static void SetChildrenProperties(DependencyObject node, List<PropertyValuePair> properties)
 		{
 			//	Walk through the node's children and set the specified properties.
 
@@ -419,7 +419,7 @@ namespace Epsitec.Common.Types
 			public abstract bool IsDefined(DependencyProperty property);
 			public abstract bool TryGetValue(DependencyProperty property, out object value);
 			public abstract int NotifyChanges(DependencyObject node);
-			public abstract IEnumerable<Epsitec.Common.Types.LocalValueEntry> GetValues(DependencyObject node);
+			public abstract IEnumerable<Epsitec.Common.Types.PropertyValuePair> GetValues(DependencyObject node);
 		}
 		private class MoreSmall : More
 		{
@@ -556,11 +556,11 @@ namespace Epsitec.Common.Types
 				value = UndefinedValue.Instance;
 				return false;
 			}
-			public override IEnumerable<Epsitec.Common.Types.LocalValueEntry> GetValues(DependencyObject node)
+			public override IEnumerable<Epsitec.Common.Types.PropertyValuePair> GetValues(DependencyObject node)
 			{
 				if (this.isValueDefined)
 				{
-					yield return new LocalValueEntry (this.property, this.currentValue);
+					yield return new PropertyValuePair (this.property, this.currentValue);
 				}
 			}
 
@@ -588,8 +588,8 @@ namespace Epsitec.Common.Types
 	{
 		void ClearAllValues(DependencyObject node);
 		void ClearValues(DependencyObject node, IEnumerable<DependencyProperty> properties);
-		void SetValues(DependencyObject node, IEnumerable<LocalValueEntry> propertyValues);
-		IEnumerable<LocalValueEntry> GetValues(DependencyObject node);
+		void SetValues(DependencyObject node, IEnumerable<PropertyValuePair> propertyValues);
+		IEnumerable<PropertyValuePair> GetValues(DependencyObject node);
 		void InheritValuesFromParent(DependencyObject node, DependencyObject parent);
 		bool IsDefined(DependencyObject node, DependencyProperty property);
 		bool TryGetValue(DependencyObject node, DependencyProperty property, out object value);

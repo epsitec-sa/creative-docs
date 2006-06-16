@@ -410,7 +410,7 @@ namespace Epsitec.Common.Types
 		{
 			while (item != null)
 			{
-				foreach (DependencyProperty property in item.LocalProperties)
+				foreach (DependencyProperty property in item.DefinedProperties)
 				{
 					if (property.GetMetadata (item).InheritsValue)
 					{
