@@ -8,7 +8,7 @@ namespace Epsitec.Common.Designer.Proxies
 {
 	public class Geometry : Abstract
 	{
-		public Geometry(Widget widget) : base(widget)
+		public Geometry(Widget widget, ObjectModifier objectModifier) : base(widget, objectModifier)
 		{
 		}
 
@@ -87,18 +87,6 @@ namespace Epsitec.Common.Designer.Proxies
 			}
 		}
 
-		public bool DockFill
-		{
-			get
-			{
-				return (bool) this.GetValue(Geometry.DockFillProperty);
-			}
-			set
-			{
-				this.SetValue(Geometry.DockFillProperty, value);
-			}
-		}
-
 
 		protected override void InitialisePropertyValues()
 		{
@@ -107,14 +95,13 @@ namespace Epsitec.Common.Designer.Proxies
 			
 			//	Recopie localement les diverses propriétés du widget sélectionné
 			//	pour pouvoir ensuite travailler dessus :
-			Margins margins = (Margins) this.GetWidgetProperty(Visual.MarginsProperty);
-			DockStyle dock = (DockStyle) this.GetWidgetProperty(Visual.DockProperty);
+			//?Margins margins = (Margins) this.GetWidgetProperty(Visual.MarginsProperty);
+			Margins margins = this.objectModifier.GetMargins(this.widgets[0]);
 
 			this.LeftMargin   = margins.Left;
 			this.RightMargin  = margins.Right;
 			this.TopMargin    = margins.Top;
 			this.BottomMargin = margins.Bottom;
-			this.DockFill     = (dock == DockStyle.Fill);
 		}
 
 		private static void NotifyChanged(DependencyObject o, object oldValue, object newValue)
@@ -127,15 +114,10 @@ namespace Epsitec.Common.Designer.Proxies
 			
 			//	Demande à Proxies.Abstract de mettre à jour la propriété qui
 			//	définit les marges du ou des widget(s) sélectionné(s) :
-			that.SetWidgetProperty(Visual.MarginsProperty, margins);
-
-			if (that.DockFill)
+			//?that.SetWidgetProperty(Visual.MarginsProperty, margins);
+			foreach (Widget obj in that.widgets)
 			{
-				that.SetWidgetProperty(Visual.DockProperty, DockStyle.Fill);
-			}
-			else
-			{
-				DockStyle dock = (DockStyle) that.GetWidgetProperty(Visual.DockProperty);
+				that.objectModifier.SetMargins(obj, margins);
 			}
 		}
 
@@ -144,6 +126,5 @@ namespace Epsitec.Common.Designer.Proxies
 		public static readonly DependencyProperty RightMarginProperty	= DependencyProperty.Register("RightMargin",  typeof(double), typeof(Geometry), new DependencyPropertyMetadata(0.0, Geometry.NotifyChanged));
 		public static readonly DependencyProperty TopMarginProperty		= DependencyProperty.Register("TopMargin",    typeof(double), typeof(Geometry), new DependencyPropertyMetadata(0.0, Geometry.NotifyChanged));
 		public static readonly DependencyProperty BottomMarginProperty	= DependencyProperty.Register("BottomMargin", typeof(double), typeof(Geometry), new DependencyPropertyMetadata(0.0, Geometry.NotifyChanged));
-		public static readonly DependencyProperty DockFillProperty	    = DependencyProperty.Register("DockFill",     typeof(bool),   typeof(Geometry), new DependencyPropertyMetadata(false, Geometry.NotifyChanged));
 	}
 }

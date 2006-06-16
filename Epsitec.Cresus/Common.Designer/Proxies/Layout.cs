@@ -8,7 +8,7 @@ namespace Epsitec.Common.Designer.Proxies
 {
 	public class Layout : Abstract
 	{
-		public Layout(Widget widget) : base(widget)
+		public Layout(Widget widget, ObjectModifier objectModifier) : base(widget, objectModifier)
 		{
 		}
 

@@ -7,8 +7,9 @@ namespace Epsitec.Common.Designer.Proxies
 {
 	public abstract class Abstract : DependencyObject, IProxy
 	{
-		protected Abstract(Widget widget)
+		protected Abstract(Widget widget, ObjectModifier objectModifier)
 		{
+			this.objectModifier = objectModifier;
 			this.AddWidget(widget);
 		}
 
@@ -81,6 +82,7 @@ namespace Epsitec.Common.Designer.Proxies
 			this.suspendChanges--;
 		}
 		
+
 		protected void SetWidgetProperty(DependencyProperty property, object value)
 		{
 			//	Met à jour la propriété du (ou des) widget(s) connecté(s), pour
@@ -119,6 +121,7 @@ namespace Epsitec.Common.Designer.Proxies
 		}
 
 
+		protected ObjectModifier		objectModifier;
 		protected List<Widget>			widgets = new List<Widget>();
 		private int						suspendChanges = 0;
 	}
