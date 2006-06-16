@@ -6,6 +6,4 @@
   <data id="01">Druid - Good bye...</data>
   <data name="Text1">Hello, world</data>
   <data name="Text2">Good bye...</data>
-  <data id="02">f:Description="Pattern angle expressed in degrees." f:Labels="{Collection {Text 'A'}, {Text 'Angle'}, {Text 'Pattern angle'}}"</data>
-  <data id="03">f:Description="Quality coefficient." f:Labels="{Collection {Text 'Q'}}"</data>
 </bundle>

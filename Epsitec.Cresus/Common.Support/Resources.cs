@@ -199,8 +199,13 @@ namespace Epsitec.Common.Support
 
 		public static bool SplitFieldId(string id, out string bundle, out string field)
 		{
-			id = Resources.ResolveDruidReference (id);
+			id = Resources.ResolveStringsDruidReference (id);
 
+			return Resources.SplitFieldIdWithoutDruidResolution (id, out bundle, out field);
+		}
+
+		public static bool SplitFieldIdWithoutDruidResolution(string id, out string bundle, out string field)
+		{
 			int pos = id.IndexOf (Resources.FieldSeparator);
 
 			bundle = id;
@@ -230,18 +235,29 @@ namespace Epsitec.Common.Support
 			return string.Concat (bundle, Resources.FieldSeparator, field);
 		}
 
-		public static string ResolveDruidReference(string fullId)
+		public static string ResolveCaptionsDruidReference(string fullId)
 		{
 			string prefix;
 			string localId;
 
 			Resources.SplitFullId (fullId, out prefix, out localId);
-			Resources.ResolveDruidReference (ref prefix, ref localId);
+			Resources.ResolveCaptionsDruidReference (ref prefix, ref localId);
+
+			return Resources.JoinFullId (prefix, localId);
+		}
+		
+		public static string ResolveStringsDruidReference(string fullId)
+		{
+			string prefix;
+			string localId;
+
+			Resources.SplitFullId (fullId, out prefix, out localId);
+			Resources.ResolveStringsDruidReference (ref prefix, ref localId);
 
 			return Resources.JoinFullId (prefix, localId);
 		}
 
-		public static void ResolveDruidReference(ref string prefix, ref string localId)
+		public static void ResolveCaptionsDruidReference(ref string prefix, ref string localId)
 		{
 			if (Druid.IsValidResourceId (localId))
 			{
@@ -251,7 +267,21 @@ namespace Epsitec.Common.Support
 				Druid druid = Druid.Parse (localId);
 
 				prefix  = string.Format (CultureInfo.InvariantCulture, "{0}/{1}", prefix, druid.Module);
-				localId = Resources.JoinFieldId (Resources.DruidBundleName, druid.ToFieldName ());
+				localId = Resources.JoinFieldId (Resources.CaptionsBundleName, druid.ToFieldName ());
+			}
+		}
+
+		public static void ResolveStringsDruidReference(ref string prefix, ref string localId)
+		{
+			if (Druid.IsValidResourceId (localId))
+			{
+				//	The local ID is not a standard resource bundle identifier; it
+				//	looks like a DRUID : "[mmDLLDLLDmLDm]"
+
+				Druid druid = Druid.Parse (localId);
+
+				prefix  = string.Format (CultureInfo.InvariantCulture, "{0}/{1}", prefix, druid.Module);
+				localId = Resources.JoinFieldId (Resources.StringsBundleName, druid.ToFieldName ());
 			}
 		}
 
@@ -426,7 +456,8 @@ namespace Epsitec.Common.Support
 
 		#endregion
 
-		public static readonly string			DruidBundleName = "Strings";
+		public static readonly string			StringsBundleName = "Strings";
+		public static readonly string			CaptionsBundleName = "Captions";
 
 		public static readonly char				PrefixSeparator = ':';
 		public static readonly char				ModuleSeparator = '/';

@@ -212,7 +212,7 @@ namespace Epsitec.Common.Support
 				string moduleName;
 
 				Resources.SplitFullId (id, out prefix, out localId);
-				Resources.ResolveDruidReference (ref prefix, ref localId);
+				Resources.ResolveStringsDruidReference (ref prefix, ref localId);
 				Resources.SplitFullPrefix (prefix, out prefix, out moduleName);
 
 				if (string.IsNullOrEmpty (prefix))
@@ -242,7 +242,7 @@ namespace Epsitec.Common.Support
 			string localId;
 
 			Resources.SplitFullId (id, out prefix, out localId);
-			Resources.ResolveDruidReference (ref prefix, ref localId);
+			Resources.ResolveStringsDruidReference (ref prefix, ref localId);
 
 			return this.NormalizeFullId (prefix, localId);
 		}
@@ -706,13 +706,13 @@ namespace Epsitec.Common.Support
 		{
 			culture = culture ?? this.culture;
 
-			string resource = druid.ToResourceId ();
+			string resource = Resources.ResolveCaptionsDruidReference (druid.ToResourceId ());
 			string bundleName;
 			string fieldName;
 
 			Caption caption = null;
 			
-			if (Resources.SplitFieldId (resource, out bundleName, out fieldName))
+			if (Resources.SplitFieldIdWithoutDruidResolution (resource, out bundleName, out fieldName))
 			{
 				switch (level)
 				{
