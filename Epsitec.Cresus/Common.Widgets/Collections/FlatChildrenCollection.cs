@@ -9,7 +9,7 @@ namespace Epsitec.Common.Widgets.Collections
 	/// La classe FlatChildrenCollection stocke un ensemble de widgets de manière
 	/// ordonnée.
 	/// </summary>
-	public class FlatChildrenCollection : IList<Visual>, ICollection<Types.DependencyObject>
+	public class FlatChildrenCollection : IList<Visual>, ICollection<Types.DependencyObject>, System.Collections.ICollection
 	{
 		internal FlatChildrenCollection(Visual host)
 		{
@@ -534,6 +534,40 @@ namespace Epsitec.Common.Widgets.Collections
 			foreach (Visual item in this.visuals)
 			{
 				yield return item;
+			}
+		}
+
+		#endregion
+
+		#region ICollection Members
+
+		void System.Collections.ICollection.CopyTo(System.Array array, int index)
+		{
+			System.Collections.ICollection collection = this.visuals;
+			collection.CopyTo (array, index);
+		}
+
+		int System.Collections.ICollection.Count
+		{
+			get
+			{
+				return this.Count;
+			}
+		}
+
+		bool System.Collections.ICollection.IsSynchronized
+		{
+			get
+			{
+				return false;
+			}
+		}
+
+		object System.Collections.ICollection.SyncRoot
+		{
+			get
+			{
+				return this.visuals;
 			}
 		}
 

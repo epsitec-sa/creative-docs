@@ -1559,7 +1559,7 @@ namespace Epsitec.Common.Widgets
 		public static readonly DependencyProperty GroupProperty					= DependencyProperty.Register ("Group", typeof (string), typeof (Visual));
 		public static readonly DependencyProperty NameProperty					= DependencyObjectTree.NameProperty.AddOwner (typeof (Visual));
 		public static readonly DependencyProperty ParentProperty				= DependencyObjectTree.ParentProperty.AddOwner (typeof (Visual), new VisualPropertyMetadata (new GetValueOverrideCallback (Visual.GetParentValue), new PropertyInvalidatedCallback (Visual.NotifyParentChanged), VisualPropertyMetadataOptions.None));
-		public static readonly DependencyProperty ChildrenProperty				= DependencyObjectTree.ChildrenProperty.AddOwner (typeof (Visual), new VisualPropertyMetadata (new GetValueOverrideCallback (Visual.GetChildrenValue)));
+		public static readonly DependencyProperty ChildrenProperty				= DependencyObjectTree.ChildrenProperty.AddOwner (typeof (Visual), new VisualPropertyMetadata (new GetValueOverrideCallback (Visual.GetChildrenValue)).MakeReadOnlySerializable ());
 		public static readonly DependencyProperty HasChildrenProperty			= DependencyObjectTree.HasChildrenProperty.AddOwner (typeof (Visual), new VisualPropertyMetadata (new GetValueOverrideCallback (Visual.GetHasChildrenValue)));
 
 		public static readonly DependencyProperty AnchorProperty				= DependencyProperty.Register ("Anchor", typeof (AnchorStyles), typeof (Visual), new VisualPropertyMetadata (AnchorStyles.None, Visual.NotifyAnchorChanged, VisualPropertyMetadataOptions.AffectsArrange));

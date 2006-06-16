@@ -120,6 +120,19 @@ namespace Epsitec.Common.Support
 		}
 
 		[Test]
+		public void CheckGetCaption()
+		{
+			Druid idA = Druid.Parse ("[4002]");
+			Druid idQ = Druid.Parse ("[4003]");
+
+			Caption captionA = this.manager.GetCaption (idA, ResourceLevel.Default);
+			Caption captionQ = this.manager.GetCaption (idQ, ResourceLevel.Default);
+
+			Assert.AreEqual ("Pattern angle expressed in degrees.", captionA.Description);
+			Assert.AreEqual ("Quality coefficient.", captionQ.Description);
+		}
+		
+		[Test]
 		public void CheckGetForeignModuleBundle()
 		{
 			string t1 = "Druid - From other module";
