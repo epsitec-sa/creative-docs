@@ -14,21 +14,21 @@ namespace Epsitec.Common.Types.Serialization.IO
 
 		public override void WriteAttributeStrings()
 		{
-			this.xml.WriteAttributeString ("xmlns", "s", null, this.nsStructure);
-			this.xml.WriteAttributeString ("xmlns", "f", null, this.nsFields);
+			this.xml.WriteAttributeString ("xmlns", Xml.StructurePrefix, null, Xml.StructureNamespace);
+			this.xml.WriteAttributeString ("xmlns", Xml.FieldsPrefix, null, Xml.FieldsNamespace);
 		}
 
 		public override void BeginStorageBundle(int id, int externalCount, int typeCount, int objectCount)
 		{
-			this.xml.WriteStartElement ("s", "storage", this.nsStructure);
-			
-			this.xml.WriteAttributeString ("root", this.nsStructure, Context.IdToString (id));
-			this.xml.WriteAttributeString ("n_ext", this.nsStructure, Context.NumToString (externalCount));
-			this.xml.WriteAttributeString ("n_typ", this.nsStructure, Context.NumToString (typeCount));
-			this.xml.WriteAttributeString ("n_obj", this.nsStructure, Context.NumToString (objectCount));
-			
-//			this.xml.WriteAttributeString ("xmlns", "s", null, this.nsStructure);
-			this.xml.WriteAttributeString ("xmlns", "f", null, this.nsFields);
+			this.xml.WriteStartElement (Xml.StructurePrefix, "storage", Xml.StructureNamespace);
+
+			this.xml.WriteAttributeString ("root", Xml.StructureNamespace, Context.IdToString (id));
+			this.xml.WriteAttributeString ("n_ext", Xml.StructureNamespace, Context.NumToString (externalCount));
+			this.xml.WriteAttributeString ("n_typ", Xml.StructureNamespace, Context.NumToString (typeCount));
+			this.xml.WriteAttributeString ("n_obj", Xml.StructureNamespace, Context.NumToString (objectCount));
+
+//			this.xml.WriteAttributeString ("xmlns", Xml.StructurePrefix, null, this.nsStructure);
+			this.xml.WriteAttributeString ("xmlns", Xml.FieldsPrefix, null, Xml.FieldsNamespace);
 		}
 		public override void EndStorageBundle()
 		{
@@ -37,42 +37,42 @@ namespace Epsitec.Common.Types.Serialization.IO
 
 		public override void WriteExternalReference(string name)
 		{
-			this.xml.WriteStartElement ("external", this.nsStructure);
-			this.xml.WriteAttributeString ("name", this.nsStructure, name);
+			this.xml.WriteStartElement ("external", Xml.StructureNamespace);
+			this.xml.WriteAttributeString ("name", Xml.StructureNamespace, name);
 			this.xml.WriteEndElement ();
 		}
 		public override void WriteTypeDefinition(int id, string name)
 		{
-			this.xml.WriteStartElement ("type", this.nsStructure);
+			this.xml.WriteStartElement ("type", Xml.StructureNamespace);
 			this.xml.WriteAttributeString ("id", Context.IdToString (id));
-			this.xml.WriteAttributeString ("name", this.nsStructure, name);
+			this.xml.WriteAttributeString ("name", Xml.StructureNamespace, name);
 			this.xml.WriteEndElement ();
 		}
 		public override void WriteObjectDefinition(int id, int typeId)
 		{
-			this.xml.WriteStartElement ("object", this.nsStructure);
+			this.xml.WriteStartElement ("object", Xml.StructureNamespace);
 			this.xml.WriteAttributeString ("id", Context.IdToString (id));
-			this.xml.WriteAttributeString ("type", this.nsStructure, Context.IdToString (typeId));
+			this.xml.WriteAttributeString ("type", Xml.StructureNamespace, Context.IdToString (typeId));
 			this.xml.WriteEndElement ();
 		}
 
 		public override void BeginObject(int id, DependencyObject obj)
 		{
-			this.xml.WriteStartElement ("data", this.nsStructure);
+			this.xml.WriteStartElement ("data", Xml.StructureNamespace);
 			this.xml.WriteAttributeString ("id", Context.IdToString (id));
 		}
 		public override void WriteObjectFieldReference(DependencyObject obj, string name, int id)
 		{
-			this.xml.WriteAttributeString ("f", name, this.nsFields, Context.IdToString (id));
+			this.xml.WriteAttributeString (Xml.FieldsPrefix, name, Xml.FieldsNamespace, Context.IdToString (id));
 		}
 		public override void WriteObjectFieldReferenceList(DependencyObject obj, string name, IList<int> ids)
 		{
-			this.xml.WriteStartElement ("f", name, this.nsFields);
+			this.xml.WriteStartElement (Xml.FieldsPrefix, name, Xml.FieldsNamespace);
 			
 			foreach (int id in ids)
 			{
-				this.xml.WriteStartElement ("ref", this.nsStructure);
-				this.xml.WriteAttributeString ("oid", this.nsStructure, Context.IdToString (id));
+				this.xml.WriteStartElement ("ref", Xml.StructureNamespace);
+				this.xml.WriteAttributeString ("oid", Xml.StructureNamespace, Context.IdToString (id));
 				this.xml.WriteEndElement ();
 			}
 			
@@ -80,7 +80,7 @@ namespace Epsitec.Common.Types.Serialization.IO
 		}
 		public override void WriteObjectFieldValue(DependencyObject obj, string name, string value)
 		{
-			this.xml.WriteAttributeString ("f", name, this.nsFields, value);
+			this.xml.WriteAttributeString (Xml.FieldsPrefix, name, Xml.FieldsNamespace, value);
 		}
 		public override void EndObject(int id, DependencyObject obj)
 		{
@@ -88,7 +88,5 @@ namespace Epsitec.Common.Types.Serialization.IO
 		}
 
 		private System.Xml.XmlWriter			xml;
-		private string							nsStructure = "http://www.epsitec.ch/XNS/storage-structure-1";
-		private string							nsFields	= "http://www.epsitec.ch/XNS/storage-fields-1";
 	}
 }

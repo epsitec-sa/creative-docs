@@ -583,11 +583,11 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual ("q", root.Children[1].Name);
 			Assert.AreEqual ("r", root.Children[2].Name);
 
-			Assert.AreEqual (3, root.Children[2].Labels.Count);
+			Assert.AreEqual (4, root.Children[2].Labels.Count);
 			Assert.AreEqual ("First", root.Children[2].Labels[0]);
 			Assert.AreEqual ("Second", root.Children[2].Labels[1]);
-			Assert.AreEqual ("Third & last -- }, {;/<\\ ", root.Children[2].Labels[2]);
-
+			Assert.AreEqual (@"Third & last -- }, {;/<\'"" ", root.Children[2].Labels[2]);
+			Assert.IsNull (root.Children[2].Labels[3]);
 
 			Assert.AreEqual ("c1", root.Children[0].Children[0].Name);
 			Assert.AreEqual ("c2", root.Children[0].Children[1].Name);
@@ -658,7 +658,8 @@ namespace Epsitec.Common.Types
 
 			r.Labels.Add ("First");
 			r.Labels.Add ("Second");
-			r.Labels.Add ("Third & last -- }, {;/<\\ ");
+			r.Labels.Add (@"Third & last -- }, {;/<\'"" ");
+			r.Labels.Add (null);
 
 			c1.Price = 125.95M;
 			c2.Price = 3899.20M;

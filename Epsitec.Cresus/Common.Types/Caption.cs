@@ -142,7 +142,10 @@ namespace Epsitec.Common.Types
 		{
 			Caption caption = new Caption ();
 	
-			xml = string.Concat (@"<xml xmlns:s=""http://www.epsitec.ch/XNS/storage-structure-1"" xmlns:f=""http://www.epsitec.ch/XNS/storage-fields-1""><s:data id=""_0"" ", xml, @" /></xml>");
+			xml = string.Concat (@"<xml xmlns:", Serialization.IO.Xml.StructurePrefix, @"=""", Serialization.IO.Xml.StructureNamespace, @""" ",
+				/**/			 @"xmlns:", Serialization.IO.Xml.FieldsPrefix, @"=""", Serialization.IO.Xml.FieldsNamespace, @""">",
+				/**/			 @"<", Serialization.IO.Xml.StructurePrefix, @":data id=""_0"" ", xml, @" />",
+				/**/			 @"</xml>");
 			
 			System.IO.StringReader stringReader = new System.IO.StringReader (xml);
 			System.Xml.XmlTextReader xmlReader = new System.Xml.XmlTextReader (stringReader);
