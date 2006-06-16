@@ -130,6 +130,18 @@ namespace Epsitec.Common.Support
 
 			Assert.AreEqual ("Pattern angle expressed in degrees.", captionA.Description);
 			Assert.AreEqual ("Quality coefficient.", captionQ.Description);
+			Assert.AreEqual ("A", Collection.Extract (captionA.SortedLabels, 0));
+			Assert.AreEqual ("Pattern angle", Collection.Extract (captionA.SortedLabels, 2));
+			Assert.AreEqual ("Q", Collection.Extract (captionQ.SortedLabels, 0));
+			
+			captionA = this.manager.GetCaption (idA, ResourceLevel.Merged, Resources.FindSpecificCultureInfo ("fr"));
+			captionQ = this.manager.GetCaption (idQ, ResourceLevel.Merged, Resources.FindSpecificCultureInfo ("fr"));
+
+			Assert.AreEqual ("Angle de rotation de la trame, exprimé en degrés.", captionA.Description);
+			Assert.AreEqual ("Coefficient de Qualité.", captionQ.Description);
+			Assert.AreEqual ("A", Collection.Extract (captionA.SortedLabels, 0));
+			Assert.AreEqual ("Angle de la trame", Collection.Extract (captionA.SortedLabels, 2));
+			Assert.AreEqual ("Q", Collection.Extract (captionQ.SortedLabels, 0));
 		}
 		
 		[Test]
