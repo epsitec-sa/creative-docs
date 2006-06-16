@@ -581,6 +581,13 @@ namespace Epsitec.Common.Designer
 
 
 		#region Docked
+		public bool IsDockedVerticalAttachment(Widget obj)
+		{
+			//	Retourne l'attachement vertical de l'objet.
+			ChildrenPlacement placement = this.GetParentPlacement(obj);
+			return (placement == ChildrenPlacement.VerticalDocked);
+		}
+
 		public DockedVerticalAttachment GetDockedVerticalAttachment(Widget obj)
 		{
 			//	Retourne l'attachement vertical de l'objet.
@@ -629,6 +636,13 @@ namespace Epsitec.Common.Designer
 		}
 
 
+		public bool IsDockedHorizontalAttachment(Widget obj)
+		{
+			//	Retourne l'attachement horizontal de l'objet.
+			ChildrenPlacement placement = this.GetParentPlacement(obj);
+			return (placement == ChildrenPlacement.HorizontalDocked);
+		}
+
 		public DockedHorizontalAttachment GetDockedHorizontalAttachment(Widget obj)
 		{
 			//	Retourne l'attachement horizontal de l'objet.
@@ -676,6 +690,13 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
+
+		public bool IsDockedHorizontalAlignment(Widget obj)
+		{
+			//	Retourne l'alignement horizontal de l'objet.
+			ChildrenPlacement placement = this.GetParentPlacement(obj);
+			return (placement == ChildrenPlacement.VerticalDocked);
+		}
 
 		public DockedHorizontalAlignment GetDockedHorizontalAlignment(Widget obj)
 		{
@@ -729,6 +750,13 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
+
+		public bool IsDockedVerticalAlignment(Widget obj)
+		{
+			//	Retourne l'alignement vertical de l'objet.
+			ChildrenPlacement placement = this.GetParentPlacement(obj);
+			return (placement == ChildrenPlacement.HorizontalDocked);
+		}
 
 		public DockedVerticalAlignment GetDockedVerticalAlignment(Widget obj)
 		{
