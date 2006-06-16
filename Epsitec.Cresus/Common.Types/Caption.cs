@@ -176,7 +176,14 @@ namespace Epsitec.Common.Types
 				}
 			}
 
-			foreach (DependencyProperty property in this.LocalProperties)
+			//	We have to make a temporary copy of the locally defined properties,
+			//	since we may not modify the local properties while running through
+			//	the enumerator :
+			
+			List<DependencyProperty> properties = new List<DependencyProperty> ();
+			properties.AddRange (this.LocalProperties);
+
+			foreach (DependencyProperty property in properties)
 			{
 				if (property.PropertyType == typeof (string))
 				{

@@ -133,7 +133,7 @@ namespace Epsitec.Common.Support
 			Assert.AreEqual ("A", Collection.Extract (captionA.SortedLabels, 0));
 			Assert.AreEqual ("Pattern angle", Collection.Extract (captionA.SortedLabels, 2));
 			Assert.AreEqual ("Q", Collection.Extract (captionQ.SortedLabels, 0));
-			
+
 			captionA = this.manager.GetCaption (idA, ResourceLevel.Merged, Resources.FindSpecificCultureInfo ("fr"));
 			captionQ = this.manager.GetCaption (idQ, ResourceLevel.Merged, Resources.FindSpecificCultureInfo ("fr"));
 
@@ -143,7 +143,27 @@ namespace Epsitec.Common.Support
 			Assert.AreEqual ("Angle de la trame", Collection.Extract (captionA.SortedLabels, 2));
 			Assert.AreEqual ("Q", Collection.Extract (captionQ.SortedLabels, 0));
 		}
-		
+
+		[Test]
+		public void CheckGetCaptionUsingDruids()
+		{
+			Druid id = Druid.Parse ("[4001]");
+
+			Caption caption;
+			
+			caption = this.manager.GetCaption (id, ResourceLevel.Merged, Resources.FindSpecificCultureInfo ("en"));
+			
+			Assert.AreEqual ("Text A", caption.Description);
+			Assert.AreEqual ("Text B", Collection.Extract (caption.Labels, 0));
+			Assert.AreEqual ("Text C", Collection.Extract (caption.Labels, 1));
+			
+			caption = this.manager.GetCaption (id, ResourceLevel.Merged, Resources.FindSpecificCultureInfo ("fr"));
+			
+			Assert.AreEqual ("[Test]", caption.Description);
+			Assert.AreEqual ("Text B", Collection.Extract (caption.Labels, 0));
+			Assert.AreEqual ("Texte C en français", Collection.Extract (caption.Labels, 1));
+		}
+
 		[Test]
 		public void CheckGetForeignModuleBundle()
 		{

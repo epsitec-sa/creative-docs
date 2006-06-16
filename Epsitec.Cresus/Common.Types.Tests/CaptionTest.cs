@@ -80,7 +80,7 @@ namespace Epsitec.Common.Types
 		}
 
 		[Test]
-		public void CheckSerialization1()
+		public void CheckSerialization()
 		{
 			Caption caption = new Caption ();
 
@@ -102,7 +102,7 @@ namespace Epsitec.Common.Types
 		}
 
 		[Test]
-		public void CheckSerialization2()
+		public void CheckSerializationWithAttachedProperties()
 		{
 			Caption caption = new Caption ();
 
