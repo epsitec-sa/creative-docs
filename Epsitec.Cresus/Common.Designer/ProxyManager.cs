@@ -7,8 +7,9 @@ namespace Epsitec.Common.Designer
 {
 	public sealed class ProxyManager
 	{
-		public ProxyManager()
+		public ProxyManager(ObjectModifier objectModifier)
 		{
+			this.objectModifier = objectModifier;
 		}
 
 		public IEnumerable<IProxy> Proxies
@@ -109,8 +110,8 @@ namespace Epsitec.Common.Designer
 		{
 			//	TODO: créer les divers Proxies pour le widget; on peut simplement
 			//	ajouter ici des 'yield return new ...'
-			yield return new Proxies.Geometry(widget);
-			yield return new Proxies.Layout(widget);
+			yield return new Proxies.Geometry(widget, this.objectModifier);
+			yield return new Proxies.Layout(widget, this.objectModifier);
 		}
 
 		private void CreateUserInterface(Widget container, IProxy proxy)
@@ -142,6 +143,7 @@ namespace Epsitec.Common.Designer
 		}
 
 
+		private ObjectModifier			objectModifier;
 		private List<Widget>			widgets;
 		private List<IProxy>			proxies;
 	}

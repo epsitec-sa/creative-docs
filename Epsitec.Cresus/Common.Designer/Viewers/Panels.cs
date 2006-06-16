@@ -112,7 +112,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.tabPageProperties.Padding = new Margins(4, 4, 4, 4);
 			this.tabBook.Items.Add(this.tabPageProperties);
 
-			this.proxyManager = new ProxyManager();
+			this.proxyManager = new ProxyManager(this.panelEditor.ObjectModifier);
 
 			this.propertiesScrollable = new Scrollable(this.tabPageProperties);
 			this.propertiesScrollable.Dock = DockStyle.Fill;
