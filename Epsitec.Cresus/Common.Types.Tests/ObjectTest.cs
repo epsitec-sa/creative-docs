@@ -507,8 +507,8 @@ namespace Epsitec.Common.Types
 			//	Copie a.NativeXyz --> b.NativeXyz mais comme a.Xyz n'existe
 			//	pas, b.Xyz n'est pas modifié :
 			
-			DependencyObject.CopyExistingProperty (a, b, MyObject.XyzProperty);
-			DependencyObject.CopyExistingProperty (a, b, MyObject.NativeXyzProperty);
+			DependencyObject.CopyDefinedProperty (a, b, MyObject.XyzProperty);
+			DependencyObject.CopyDefinedProperty (a, b, MyObject.NativeXyzProperty);
 
 			Assert.AreEqual (2, b.Xyz);
 			Assert.AreEqual (1, b.NativeXyz);
@@ -700,7 +700,7 @@ namespace Epsitec.Common.Types
 
 			List<DependencyProperty> properties = new List<DependencyProperty> ();
 
-			foreach (LocalValueEntry entry in t.LocalValueEntries)
+			foreach (PropertyValuePair entry in t.DefinedEntries)
 			{
 				properties.Add (entry.Property);
 			}
@@ -1550,23 +1550,23 @@ namespace Epsitec.Common.Types
 			
 			public static int		OnFooChangedCallCount = 0;
 
-			public static object GetValueChildren(DependencyObject o)
+			public static object GetChildrenValue(DependencyObject o)
 			{
 				MyObject tt = o as MyObject;
 				return tt.Children;
 			}
-			public static object GetValueHasChildren(DependencyObject o)
+			public static object GetHasChildrenValue(DependencyObject o)
 			{
 				MyObject tt = o as MyObject;
 				return tt.HasChildren;
 			}
 
-			private static object GetValueNativeXyz(DependencyObject o)
+			private static object GetNativeXyzValue(DependencyObject o)
 			{
 				MyObject that = (MyObject) o;
 				return that.NativeXyz;
 			}
-			private static void SetValueNativeXyz(DependencyObject o, object value)
+			private static void SetNativeXyzValue(DependencyObject o, object value)
 			{
 				MyObject that = (MyObject) o;
 				that.NativeXyz = (int) value;
@@ -1579,10 +1579,10 @@ namespace Epsitec.Common.Types
 			public static DependencyProperty SiblingProperty = DependencyProperty.Register ("Sibling", typeof (MyObject), typeof (MyObject));
 			public static DependencyProperty CascadeProperty = DependencyProperty.Register ("Cascade", typeof (string), typeof (MyObject), new DependencyPropertyMetadataWithInheritance ());
 			public static DependencyProperty ParentProperty = DependencyObjectTree.ParentProperty.AddOwner (typeof (MyObject));
-			public static DependencyProperty ChildrenProperty = DependencyObjectTree.ChildrenProperty.AddOwner (typeof (MyObject), new DependencyPropertyMetadata (MyObject.GetValueChildren).MakeReadOnlySerializable ());
-			public static DependencyProperty HasChildrenProperty = DependencyObjectTree.HasChildrenProperty.AddOwner (typeof (MyObject), new DependencyPropertyMetadata (MyObject.GetValueHasChildren));
+			public static DependencyProperty ChildrenProperty = DependencyObjectTree.ChildrenProperty.AddOwner (typeof (MyObject), new DependencyPropertyMetadata (MyObject.GetChildrenValue).MakeReadOnlySerializable ());
+			public static DependencyProperty HasChildrenProperty = DependencyObjectTree.HasChildrenProperty.AddOwner (typeof (MyObject), new DependencyPropertyMetadata (MyObject.GetHasChildrenValue));
 			public static DependencyProperty ReadOnlyProperty = DependencyProperty.RegisterReadOnly ("ReadOnly", typeof (string), typeof (MyObject));
-			public static DependencyProperty NativeXyzProperty = DependencyProperty.Register ("NativeXyz", typeof (int), typeof (MyObject), new DependencyPropertyMetadata (MyObject.GetValueNativeXyz, MyObject.SetValueNativeXyz));
+			public static DependencyProperty NativeXyzProperty = DependencyProperty.Register ("NativeXyz", typeof (int), typeof (MyObject), new DependencyPropertyMetadata (MyObject.GetNativeXyzValue, MyObject.SetNativeXyzValue));
 			
 			protected virtual void OnFooChanged()
 			{
@@ -1849,13 +1849,13 @@ namespace Epsitec.Common.Types
 				item.InheritedPropertyCache.InheritValuesFromParent (item, item.parent);
 				item.InheritedPropertyCache.NotifyChanges (item);
 			}
-			
-			public static object GetValueParent(DependencyObject o)
+
+			public static object GetParent(DependencyObject o)
 			{
 				TreeTest tt = o as TreeTest;
 				return tt.Parent;
 			}
-			public static object GetValueChildren(DependencyObject o)
+			public static object GetChildrenValue(DependencyObject o)
 			{
 				TreeTest tt = o as TreeTest;
 				if (tt.children == null)
@@ -1864,16 +1864,16 @@ namespace Epsitec.Common.Types
 				}
 				return tt.children;
 			}
-			public static object GetValueHasChildren(DependencyObject o)
+			public static object GetHasChildrenValue(DependencyObject o)
 			{
 				TreeTest tt = o as TreeTest;
 				return tt.HasChildren;
 			}
 
 			public static DependencyProperty NameProperty = DependencyObjectTree.NameProperty.AddOwner (typeof (TreeTest));
-			public static DependencyProperty ParentProperty = DependencyObjectTree.ParentProperty.AddOwner (typeof (TreeTest), new DependencyPropertyMetadata (TreeTest.GetValueParent));
-			public static DependencyProperty ChildrenProperty = DependencyObjectTree.ChildrenProperty.AddOwner (typeof (TreeTest), new DependencyPropertyMetadata (TreeTest.GetValueChildren).MakeReadOnlySerializable ());
-			public static DependencyProperty HasChildrenProperty = DependencyObjectTree.HasChildrenProperty.AddOwner (typeof (TreeTest), new DependencyPropertyMetadata (TreeTest.GetValueHasChildren));
+			public static DependencyProperty ParentProperty = DependencyObjectTree.ParentProperty.AddOwner (typeof (TreeTest), new DependencyPropertyMetadata (TreeTest.GetParent));
+			public static DependencyProperty ChildrenProperty = DependencyObjectTree.ChildrenProperty.AddOwner (typeof (TreeTest), new DependencyPropertyMetadata (TreeTest.GetChildrenValue).MakeReadOnlySerializable ());
+			public static DependencyProperty HasChildrenProperty = DependencyObjectTree.HasChildrenProperty.AddOwner (typeof (TreeTest), new DependencyPropertyMetadata (TreeTest.GetHasChildrenValue));
 			public static DependencyProperty ValueProperty = DependencyProperty.Register ("Value", typeof (string), typeof (TreeTest));
 			public static DependencyProperty CascadeProperty = DependencyProperty.Register ("Cascade", typeof (string), typeof (TreeTest), new DependencyPropertyMetadataWithInheritance (UndefinedValue.Instance));
 

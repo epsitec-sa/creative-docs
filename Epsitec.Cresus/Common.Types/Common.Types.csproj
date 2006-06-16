@@ -233,7 +233,7 @@
     <Compile Include="IStringType.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="LocalValueEntry.cs">
+    <Compile Include="PropertyValuePair.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="LongIntegerType.cs">

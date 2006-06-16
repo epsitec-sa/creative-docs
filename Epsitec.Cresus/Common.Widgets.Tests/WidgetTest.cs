@@ -1745,7 +1745,7 @@ namespace Epsitec.Common.Widgets
 			{
 				System.Console.WriteLine ("Widget {0} :", w.ToString ());
 				
-				foreach (Types.LocalValueEntry entry in w.LocalValueEntries)
+				foreach (Types.PropertyValuePair entry in w.DefinedEntries)
 				{
 					System.Console.WriteLine ("  {0} --> {1}", entry.Property.Name, entry.Value);
 				}

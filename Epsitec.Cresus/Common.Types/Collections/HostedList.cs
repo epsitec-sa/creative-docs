@@ -10,7 +10,7 @@ namespace Epsitec.Common.Types.Collections
 	/// host when the contents changes (insertion and removal of items).
 	/// </summary>
 	/// <typeparam name="T">Type of items stored in list</typeparam>
-	public class HostedList<T> : IList<T>
+	public class HostedList<T> : IList<T>, System.Collections.ICollection
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:HostedList&lt;T&gt;"/> class.
@@ -171,6 +171,40 @@ namespace Epsitec.Common.Types.Collections
 		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
 		{
 			return this.list.GetEnumerator ();
+		}
+
+		#endregion
+
+		#region ICollection Members
+
+		void System.Collections.ICollection.CopyTo(System.Array array, int index)
+		{
+			T[] temp = this.ToArray ();
+			System.Array.Copy (temp, 0, array, index, temp.Length);
+		}
+
+		int System.Collections.ICollection.Count
+		{
+			get
+			{
+				return this.Count;
+			}
+		}
+
+		bool System.Collections.ICollection.IsSynchronized
+		{
+			get
+			{
+				return false;
+			}
+		}
+
+		object System.Collections.ICollection.SyncRoot
+		{
+			get
+			{
+				return this.list;
+			}
 		}
 
 		#endregion

@@ -8,7 +8,7 @@ namespace Epsitec.Common.Types
 	[TestFixture] public class CaptionTest
 	{
 		[Test]
-		public void CheckCaptionLabels()
+		public void CheckLabels()
 		{
 			Caption caption = new Caption ();
 			
@@ -35,6 +35,31 @@ namespace Epsitec.Common.Types
 		}
 
 		[Test]
+		public void CheckMerge()
+		{
+			Caption a = new Caption ();
+			Caption b = new Caption ();
+
+			Caption c;
+
+			c = Caption.Merge (a, b);
+
+			Assert.AreEqual (0, c.Labels.Count);
+			Assert.IsFalse (c.ContainsLocalValue (Caption.DecriptionProperty));
+
+			a.Description = "xyz";
+			b.Labels.Add ("1");
+			b.Labels.Add ("2");
+
+			c = Caption.Merge (a, b);
+			
+			Assert.AreEqual (2, c.Labels.Count);
+			Assert.AreEqual ("1", Collection.Extract (c.Labels, 0));
+			Assert.AreEqual ("2", Collection.Extract (c.Labels, 1));
+			Assert.AreEqual (a.Description, c.Description);
+		}
+
+		[Test]
 		public void CheckSerialization()
 		{
 			Caption caption = new Caption ();
@@ -44,12 +69,13 @@ namespace Epsitec.Common.Types
 			caption.Labels.Add ("Angle de la trame");
 			caption.Description = "Angle de rotation de la trame, exprimé en degrés.";
 
-			string xml = caption.ToPartialXml ();
+			string xml = caption.SerializeToString ();
 			
 			System.Console.Out.WriteLine ("Caption as XML: {0}", xml);
 
-			caption = Caption.CreateFromPartialXml (xml);
-
+			caption = new Caption ();
+			caption.DeserializeFromString (xml);
+			
 			Assert.AreEqual ("A", Collection.Extract (caption.SortedLabels, 0));
 			Assert.AreEqual ("Angle", Collection.Extract (caption.SortedLabels, 1));
 			Assert.AreEqual ("Angle de rotation de la trame, exprimé en degrés.", caption.Description);

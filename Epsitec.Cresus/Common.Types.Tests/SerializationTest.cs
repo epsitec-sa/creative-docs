@@ -860,12 +860,12 @@ namespace Epsitec.Common.Types
 				snapshot.InvalidateDifferentProperties ();
 			}
 			
-			public static object GetValueParent(DependencyObject o)
+			public static object GetParentValue(DependencyObject o)
 			{
 				MyItem tt = o as MyItem;
 				return tt.Parent;
 			}
-			public static object GetValueChildren(DependencyObject o)
+			public static object GetChildrenValue(DependencyObject o)
 			{
 				MyItem tt = o as MyItem;
 				if (tt.children == null)
@@ -874,27 +874,27 @@ namespace Epsitec.Common.Types
 				}
 				return tt.children;
 			}
-			public static object GetValueHasChildren(DependencyObject o)
+			public static object GetHasChildrenValue(DependencyObject o)
 			{
 				MyItem tt = o as MyItem;
 				return tt.HasChildren;
 			}
-			public static object GetValueLabels(DependencyObject o)
+			public static object GetLabelsValue(DependencyObject o)
 			{
 				MyItem tt = o as MyItem;
 				return tt.Labels;
 			}
 
 			public static DependencyProperty NameProperty = DependencyObjectTree.NameProperty.AddOwner (typeof (MyItem));
-			public static DependencyProperty ParentProperty = DependencyObjectTree.ParentProperty.AddOwner (typeof (MyItem), new DependencyPropertyMetadata (MyItem.GetValueParent));
-			public static DependencyProperty ChildrenProperty = DependencyObjectTree.ChildrenProperty.AddOwner (typeof (MyItem), new DependencyPropertyMetadata (MyItem.GetValueChildren).MakeReadOnlySerializable ());
-			public static DependencyProperty HasChildrenProperty = DependencyObjectTree.HasChildrenProperty.AddOwner (typeof (MyItem), new DependencyPropertyMetadata (MyItem.GetValueHasChildren));
+			public static DependencyProperty ParentProperty = DependencyObjectTree.ParentProperty.AddOwner (typeof (MyItem), new DependencyPropertyMetadata (MyItem.GetParentValue));
+			public static DependencyProperty ChildrenProperty = DependencyObjectTree.ChildrenProperty.AddOwner (typeof (MyItem), new DependencyPropertyMetadata (MyItem.GetChildrenValue).MakeReadOnlySerializable ());
+			public static DependencyProperty HasChildrenProperty = DependencyObjectTree.HasChildrenProperty.AddOwner (typeof (MyItem), new DependencyPropertyMetadata (MyItem.GetHasChildrenValue));
 			public static DependencyProperty ValueProperty = DependencyProperty.Register ("Value", typeof (string), typeof (MyItem));
 			public static DependencyProperty CascadeProperty = DependencyProperty.Register ("Cascade", typeof (string), typeof (MyItem), new DependencyPropertyMetadataWithInheritance (UndefinedValue.Instance));
 			public static DependencyProperty FriendProperty = DependencyProperty.Register ("Friend", typeof (MyItem), typeof (MyItem));
 			public static DependencyProperty PriceProperty = DependencyProperty.Register ("Price", typeof (decimal), typeof (MyItem));
 			public static DependencyProperty SomeStructProperty = DependencyProperty.Register ("SomeStruct", typeof (SomeStruct), typeof (MyItem));
-			public static DependencyProperty LabelsProperty = DependencyProperty.RegisterReadOnly ("Labels", typeof (IList<string>), typeof (MyItem), new DependencyPropertyMetadata (MyItem.GetValueLabels).MakeReadOnlySerializable ());
+			public static DependencyProperty LabelsProperty = DependencyProperty.RegisterReadOnly ("Labels", typeof (IList<string>), typeof (MyItem), new DependencyPropertyMetadata (MyItem.GetLabelsValue).MakeReadOnlySerializable ());
 
 			MyItem parent;
 			ChildrenCollection children;
