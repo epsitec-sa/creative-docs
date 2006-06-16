@@ -11,6 +11,7 @@ namespace Epsitec.Common.Designer
 	{
 		public enum ChildrenPlacement
 		{
+			[Types.Hide] None,
 			Anchored,
 			VerticalDocked,
 			HorizontalDocked,
@@ -20,6 +21,7 @@ namespace Epsitec.Common.Designer
 
 		public enum AnchoredHorizontalAttachment
 		{
+			[Types.Hide] None,
 			Left,
 			Right,
 			Fill,
@@ -27,6 +29,7 @@ namespace Epsitec.Common.Designer
 
 		public enum AnchoredVerticalAttachment
 		{
+			[Types.Hide] None,
 			Bottom,
 			Top,
 			Fill,
@@ -34,6 +37,7 @@ namespace Epsitec.Common.Designer
 
 		public enum DockedHorizontalAttachment
 		{
+			[Types.Hide] None,
 			Left,
 			Right,
 			Fill,
@@ -41,6 +45,7 @@ namespace Epsitec.Common.Designer
 
 		public enum DockedVerticalAttachment
 		{
+			[Types.Hide] None,
 			Bottom,
 			Top,
 			Fill,
@@ -48,6 +53,7 @@ namespace Epsitec.Common.Designer
 
 		public enum DockedHorizontalAlignment
 		{
+			[Types.Hide] None,
 			Stretch,
 			Center,
 			Left,
@@ -56,6 +62,7 @@ namespace Epsitec.Common.Designer
 
 		public enum DockedVerticalAlignment
 		{
+			[Types.Hide] None,
 			Stretch,
 			Center,
 			Bottom,
@@ -121,26 +128,27 @@ namespace Epsitec.Common.Designer
 			//	Retourne le mode de placement des enfants de l'objet.
 			//	Uniquement pour les objects AbstractGroup.
 			AbstractGroup group = obj as AbstractGroup;
-			System.Diagnostics.Debug.Assert(group != null);
-
-			if (group.ChildrenLayoutMode == Widgets.Layouts.LayoutMode.Anchored)
+			if (group != null)
 			{
-				return ChildrenPlacement.Anchored;
+				if (group.ChildrenLayoutMode == Widgets.Layouts.LayoutMode.Anchored)
+				{
+					return ChildrenPlacement.Anchored;
+				}
+
+				if (group.ChildrenLayoutMode == Widgets.Layouts.LayoutMode.Docked)
+				{
+					if (group.ContainerLayoutMode == ContainerLayoutMode.HorizontalFlow)
+					{
+						return ChildrenPlacement.HorizontalDocked;
+					}
+					else
+					{
+						return ChildrenPlacement.VerticalDocked;
+					}
+				}
 			}
 
-			if (group.ChildrenLayoutMode == Widgets.Layouts.LayoutMode.Docked)
-			{
-				if (group.ContainerLayoutMode == ContainerLayoutMode.HorizontalFlow)
-				{
-					return ChildrenPlacement.HorizontalDocked;
-				}
-				else
-				{
-					return ChildrenPlacement.VerticalDocked;
-				}
-			}
-
-			throw new System.Exception("Not supported.");
+			return ChildrenPlacement.None;
 		}
 
 		public void SetChildrenPlacement(Widget obj, ChildrenPlacement mode)
@@ -263,9 +271,12 @@ namespace Epsitec.Common.Designer
 			//	Retourne les marges de l'objet.
 			//	Uniquement pour les objets Docked.
 			ChildrenPlacement placement = this.GetParentPlacement(obj);
-			System.Diagnostics.Debug.Assert(placement == ChildrenPlacement.HorizontalDocked || placement == ChildrenPlacement.VerticalDocked);
+			if (placement == ChildrenPlacement.HorizontalDocked || placement == ChildrenPlacement.VerticalDocked)
+			{
+				return obj.Margins;
+			}
 
-			return obj.Margins;
+			return Margins.Zero;
 		}
 
 		public void SetMargins(Widget obj, Margins margins)
@@ -288,9 +299,12 @@ namespace Epsitec.Common.Designer
 			//	Retourne la largeur de l'objet.
 			//	Uniquement pour les objets HorizontalDocked.
 			ChildrenPlacement placement = this.GetParentPlacement(obj);
-			System.Diagnostics.Debug.Assert(placement == ChildrenPlacement.HorizontalDocked);
+			if (placement == ChildrenPlacement.HorizontalDocked)
+			{
+				return obj.PreferredWidth;
+			}
 
-			return obj.PreferredWidth;
+			return 0;
 		}
 
 		public void SetWidth(Widget obj, double width)
@@ -313,9 +327,12 @@ namespace Epsitec.Common.Designer
 			//	Retourne la hauteur de l'objet.
 			//	Uniquement pour les objets VerticalDocked.
 			ChildrenPlacement placement = this.GetParentPlacement(obj);
-			System.Diagnostics.Debug.Assert(placement == ChildrenPlacement.VerticalDocked);
+			if (placement == ChildrenPlacement.VerticalDocked)
+			{
+				return obj.PreferredHeight;
+			}
 
-			return obj.PreferredHeight;
+			return 0;
 		}
 
 		public void SetHeight(Widget obj, double height)
@@ -433,17 +450,18 @@ namespace Epsitec.Common.Designer
 			//	Retourne l'attachement vertical de l'objet.
 			//	Uniquement pour les objets Anchored.
 			ChildrenPlacement placement = this.GetParentPlacement(obj);
-			System.Diagnostics.Debug.Assert(placement == ChildrenPlacement.Anchored);
+			if (placement == ChildrenPlacement.Anchored)
+			{
+				AnchorStyles style = obj.Anchor;
+				bool bottom = ((style & AnchorStyles.Bottom) != 0);
+				bool top    = ((style & AnchorStyles.Top   ) != 0);
 
-			AnchorStyles style = obj.Anchor;
-			bool bottom = ((style & AnchorStyles.Bottom) != 0);
-			bool top    = ((style & AnchorStyles.Top   ) != 0);
+				if (bottom && top)  return AnchoredVerticalAttachment.Fill;
+				if (bottom       )  return AnchoredVerticalAttachment.Bottom;
+				if (top          )  return AnchoredVerticalAttachment.Top;
+			}
 
-			if (bottom && top)  return AnchoredVerticalAttachment.Fill;
-			if (bottom       )  return AnchoredVerticalAttachment.Bottom;
-			if (top          )  return AnchoredVerticalAttachment.Top;
-
-			throw new System.Exception("Not supported.");
+			return AnchoredVerticalAttachment.None;
 		}
 
 		public void SetAnchoredVerticalAttachment(Widget obj, AnchoredVerticalAttachment attachment)
@@ -486,17 +504,18 @@ namespace Epsitec.Common.Designer
 			//	Retourne l'attachement horizontal de l'objet.
 			//	Uniquement pour les objets Anchored.
 			ChildrenPlacement placement = this.GetParentPlacement(obj);
-			System.Diagnostics.Debug.Assert(placement == ChildrenPlacement.Anchored);
+			if (placement == ChildrenPlacement.Anchored)
+			{
+				AnchorStyles style = obj.Anchor;
+				bool left  = ((style & AnchorStyles.Left ) != 0);
+				bool right = ((style & AnchorStyles.Right) != 0);
 
-			AnchorStyles style = obj.Anchor;
-			bool left  = ((style & AnchorStyles.Left ) != 0);
-			bool right = ((style & AnchorStyles.Right) != 0);
+				if (left && right)  return AnchoredHorizontalAttachment.Fill;
+				if (left         )  return AnchoredHorizontalAttachment.Left;
+				if (right        )  return AnchoredHorizontalAttachment.Right;
+			}
 
-			if (left && right)  return AnchoredHorizontalAttachment.Fill;
-			if (left         )  return AnchoredHorizontalAttachment.Left;
-			if (right        )  return AnchoredHorizontalAttachment.Right;
-
-			throw new System.Exception("Not supported.");
+			return AnchoredHorizontalAttachment.None;
 		}
 
 		public void SetAnchoredHorizontalAttachment(Widget obj, AnchoredHorizontalAttachment attachment)
@@ -541,14 +560,15 @@ namespace Epsitec.Common.Designer
 			//	Retourne l'attachement vertical de l'objet.
 			//	Uniquement pour les objets VerticalDocked.
 			ChildrenPlacement placement = this.GetParentPlacement(obj);
-			System.Diagnostics.Debug.Assert(placement == ChildrenPlacement.VerticalDocked);
+			if (placement == ChildrenPlacement.VerticalDocked)
+			{
+				DockStyle style = obj.Dock;
+				if (style == DockStyle.Fill  )  return DockedVerticalAttachment.Fill;
+				if (style == DockStyle.Bottom)  return DockedVerticalAttachment.Bottom;
+				if (style == DockStyle.Top   )  return DockedVerticalAttachment.Top;
+			}
 
-			DockStyle style = obj.Dock;
-			if (style == DockStyle.Fill  )  return DockedVerticalAttachment.Fill;
-			if (style == DockStyle.Bottom)  return DockedVerticalAttachment.Bottom;
-			if (style == DockStyle.Top   )  return DockedVerticalAttachment.Top;
-
-			throw new System.Exception("Not supported.");
+			return DockedVerticalAttachment.None;
 		}
 
 		public void SetDockedVerticalAttachment(Widget obj, DockedVerticalAttachment attachment)
@@ -588,14 +608,15 @@ namespace Epsitec.Common.Designer
 			//	Retourne l'attachement horizontal de l'objet.
 			//	Uniquement pour les objets HorizontalDocked.
 			ChildrenPlacement placement = this.GetParentPlacement(obj);
-			System.Diagnostics.Debug.Assert(placement == ChildrenPlacement.HorizontalDocked);
+			if (placement == ChildrenPlacement.HorizontalDocked)
+			{
+				DockStyle style = obj.Dock;
+				if (style == DockStyle.Fill )  return DockedHorizontalAttachment.Fill;
+				if (style == DockStyle.Left )  return DockedHorizontalAttachment.Left;
+				if (style == DockStyle.Right)  return DockedHorizontalAttachment.Right;
+			}
 
-			DockStyle style = obj.Dock;
-			if (style == DockStyle.Fill )  return DockedHorizontalAttachment.Fill;
-			if (style == DockStyle.Left )  return DockedHorizontalAttachment.Left;
-			if (style == DockStyle.Right)  return DockedHorizontalAttachment.Right;
-
-			throw new System.Exception("Not supported.");
+			return DockedHorizontalAttachment.None;
 		}
 
 		public void SetDockedHorizontalAttachment(Widget obj, DockedHorizontalAttachment attachment)
@@ -635,15 +656,16 @@ namespace Epsitec.Common.Designer
 			//	Retourne l'alignement horizontal de l'objet.
 			//	Uniquement pour les objets VerticalDocked.
 			ChildrenPlacement placement = this.GetParentPlacement(obj);
-			System.Diagnostics.Debug.Assert(placement == ChildrenPlacement.VerticalDocked);
+			if (placement == ChildrenPlacement.VerticalDocked)
+			{
+				HorizontalAlignment ha = obj.HorizontalAlignment;
+				if (ha == HorizontalAlignment.Stretch)  return DockedHorizontalAlignment.Stretch;
+				if (ha == HorizontalAlignment.Center )  return DockedHorizontalAlignment.Center;
+				if (ha == HorizontalAlignment.Left   )  return DockedHorizontalAlignment.Left;
+				if (ha == HorizontalAlignment.Right  )  return DockedHorizontalAlignment.Right;
+			}
 
-			HorizontalAlignment ha = obj.HorizontalAlignment;
-			if (ha == HorizontalAlignment.Stretch)  return DockedHorizontalAlignment.Stretch;
-			if (ha == HorizontalAlignment.Center )  return DockedHorizontalAlignment.Center;
-			if (ha == HorizontalAlignment.Left   )  return DockedHorizontalAlignment.Left;
-			if (ha == HorizontalAlignment.Right  )  return DockedHorizontalAlignment.Right;
-
-			throw new System.Exception("Not supported.");
+			return DockedHorizontalAlignment.None;
 		}
 
 		public void SetDockedHorizontalAlignment(Widget obj, DockedHorizontalAlignment alignment)
@@ -687,15 +709,16 @@ namespace Epsitec.Common.Designer
 			//	Retourne l'alignement vertical de l'objet.
 			//	Uniquement pour les objets HorizontalDocked.
 			ChildrenPlacement placement = this.GetParentPlacement(obj);
-			System.Diagnostics.Debug.Assert(placement == ChildrenPlacement.HorizontalDocked);
+			if (placement == ChildrenPlacement.HorizontalDocked)
+			{
+				VerticalAlignment va = obj.VerticalAlignment;
+				if (va == VerticalAlignment.Stretch)  return DockedVerticalAlignment.Stretch;
+				if (va == VerticalAlignment.Center )  return DockedVerticalAlignment.Center;
+				if (va == VerticalAlignment.Bottom )  return DockedVerticalAlignment.Bottom;
+				if (va == VerticalAlignment.Top    )  return DockedVerticalAlignment.Top;
+			}
 
-			VerticalAlignment va = obj.VerticalAlignment;
-			if (va == VerticalAlignment.Stretch)  return DockedVerticalAlignment.Stretch;
-			if (va == VerticalAlignment.Center )  return DockedVerticalAlignment.Center;
-			if (va == VerticalAlignment.Bottom )  return DockedVerticalAlignment.Bottom;
-			if (va == VerticalAlignment.Top    )  return DockedVerticalAlignment.Top;
-
-			throw new System.Exception("Not supported.");
+			return DockedVerticalAlignment.None;
 		}
 
 		public void SetDockedVerticalAlignment(Widget obj, DockedVerticalAlignment alignment)
@@ -738,8 +761,14 @@ namespace Epsitec.Common.Designer
 		protected ChildrenPlacement GetParentPlacement(Widget obj)
 		{
 			//	Retourne le mode de placement du parent d'un objet.
-			System.Diagnostics.Debug.Assert(obj != this.container);
-			return this.GetChildrenPlacement(obj.Parent);
+			if (obj == this.container)
+			{
+				return ChildrenPlacement.None;
+			}
+			else
+			{
+				return this.GetChildrenPlacement(obj.Parent);
+			}
 		}
 
 		protected void Invalidate()
