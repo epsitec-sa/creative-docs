@@ -64,12 +64,7 @@ namespace Epsitec.Common.Support
 		{
 			get
 			{
-				if (this.defaultPrefix == null)
-				{
-					return "";
-				}
-				
-				return this.defaultPrefix;
+				return this.defaultPrefix ?? "";
 			}
 			set
 			{
@@ -292,10 +287,7 @@ namespace Epsitec.Common.Support
 
 		public string MapToSuffix(ResourceLevel level, CultureInfo culture)
 		{
-			if (culture == null)
-			{
-				culture = this.culture;
-			}
+			culture = culture ?? this.culture;
 			
 			switch (level)
 			{
@@ -347,11 +339,8 @@ namespace Epsitec.Common.Support
 		
 		public string GetLevelCaption(ResourceLevel level, CultureInfo culture)
 		{
-			if (culture == null)
-			{
-				culture = this.culture;
-			}
-			
+			culture = culture ?? this.culture;
+
 			switch (level)
 			{
 				case ResourceLevel.Default:		return "*";
@@ -421,11 +410,8 @@ namespace Epsitec.Common.Support
 		
 		public string[] GetBundleIds(string name_filter, string type_filter, ResourceLevel level, CultureInfo culture)
 		{
-			if (culture == null)
-			{
-				culture = this.culture;
-			}
-			
+			culture = culture ?? this.culture;
+
 			switch (level)
 			{
 				case ResourceLevel.Default:
@@ -454,7 +440,7 @@ namespace Epsitec.Common.Support
 		/// Gets the bundle based on a DRUID. This will return the bundle which
 		/// is named "_MMDLL".
 		/// </summary>
-		/// <param name="druid">The druid.</param>
+		/// <param name="druid">The DRUID of the bundle.</param>
 		/// <returns>The resource bundle; otherwise, <c>null</c>.</returns>
 		public ResourceBundle GetBundle(Druid druid)
 		{
@@ -493,10 +479,7 @@ namespace Epsitec.Common.Support
 		
 		public ResourceBundle GetBundle(string id, ResourceLevel level, CultureInfo culture, int recursion)
 		{
-			if (culture == null)
-			{
-				culture = this.culture;
-			}
+			culture = culture ?? this.culture;
 			
 			string resourceId;
 			ResourceModuleInfo module;
@@ -590,7 +573,7 @@ namespace Epsitec.Common.Support
 		/// is always the "Strings" bundle and the DRUID is used to find the matching
 		/// field inside that bundle.
 		/// </summary>
-		/// <param name="druid">The druid of the field.</param>
+		/// <param name="druid">The DRUID of the field.</param>
 		/// <returns>The resource bundle field; otherwise, <c>ResourceBundle.Field.Empty</c>.</returns>
 		public ResourceBundle.Field GetBundleField(Druid druid)
 		{
@@ -669,10 +652,7 @@ namespace Epsitec.Common.Support
 		
 		public byte[] GetBinaryData(string id, ResourceLevel level, CultureInfo culture)
 		{
-			if (culture == null)
-			{
-				culture = this.culture;
-			}
+			culture = culture ?? this.culture;
 			
 			//	TODO: il faudrait peut-être rajouter un cache pour éviter de consulter
 			//	chaque fois le provider, lorsqu'une ressource est demandée.
@@ -708,25 +688,92 @@ namespace Epsitec.Common.Support
 
 
 		/// <summary>
+		/// Gets the caption based on the DRUID.
+		/// </summary>
+		/// <param name="druid">The DRUID of the caption.</param>
+		/// <returns>The caption or <c>null</c> if it could not be found.</returns>
+		public Caption GetCaption(Druid druid)
+		{
+			return this.GetCaption (druid, ResourceLevel.Merged, this.culture);
+		}
+
+		public Caption GetCaption(Druid druid, ResourceLevel level)
+		{
+			return this.GetCaption (druid, level, this.culture);
+		}
+		
+		public Caption GetCaption(Druid druid, ResourceLevel level, CultureInfo culture)
+		{
+			culture = culture ?? this.culture;
+
+			string resource = druid.ToResourceId ();
+			string bundleName;
+			string fieldName;
+
+			Caption caption = null;
+			
+			if (Resources.SplitFieldId (resource, out bundleName, out fieldName))
+			{
+				switch (level)
+				{
+					case ResourceLevel.Merged:
+						this.MergeWithCaption (this.GetBundle (bundleName, ResourceLevel.Default, culture), druid, ref caption);
+						this.MergeWithCaption (this.GetBundle (bundleName, ResourceLevel.Localized, culture), druid, ref caption);
+						this.MergeWithCaption (this.GetBundle (bundleName, ResourceLevel.Customized, culture), druid, ref caption);
+						break;
+					
+					case ResourceLevel.Default:
+					case ResourceLevel.Localized:
+					case ResourceLevel.Customized:
+						this.MergeWithCaption (this.GetBundle (bundleName, level, culture), druid, ref caption);
+						break;
+					
+					default:
+						throw new ResourceException ("Invalid resource level");
+				}
+			}
+
+			return caption;
+		}
+
+		private void MergeWithCaption(ResourceBundle bundle, Druid druid, ref Caption caption)
+		{
+			if (bundle != null)
+			{
+				string source = bundle[druid].AsString;
+				
+				if (string.IsNullOrEmpty (source))
+				{
+					return;
+				}
+
+				Caption temp = new Caption ();
+				temp.DeserializeFromString (source);
+				
+				caption = (caption == null) ? temp : Caption.Merge (caption, temp);
+			}
+		}
+
+		/// <summary>
 		/// Gets the text based on the DRUID. The bundle used for this lookup
 		/// is always the "Strings" bundle and the DRUID is used to find the
 		/// matching field inside that bundle.
 		/// </summary>
 		/// <param name="id">The druid of the field.</param>
 		/// <returns>The text found in that field; otherwise, <c>null</c>.</returns>
-		public string GetText(Druid id)
+		public string GetText(Druid druid)
 		{
-			return this.GetText (id.ToResourceId (), ResourceLevel.Merged, this.culture);
+			return this.GetText (druid.ToResourceId (), ResourceLevel.Merged, this.culture);
 		}
 		
-		public string GetText(Druid id, ResourceLevel level)
+		public string GetText(Druid druid, ResourceLevel level)
 		{
-			return this.GetText (id.ToResourceId (), level, this.culture);
+			return this.GetText (druid.ToResourceId (), level, this.culture);
 		}
 		
-		public string GetText(Druid id, ResourceLevel level, CultureInfo culture)
+		public string GetText(Druid druid, ResourceLevel level, CultureInfo culture)
 		{
-			return this.GetText (id.ToResourceId (), level, culture);
+			return this.GetText (druid.ToResourceId (), level, culture);
 		}
 		
 		public string GetText(string id)
@@ -764,10 +811,7 @@ namespace Epsitec.Common.Support
 		
 		public object GetData(string id, ResourceLevel level, CultureInfo culture)
 		{
-			if (culture == null)
-			{
-				culture = this.culture;
-			}
+			culture = culture ?? this.culture;
 			
 			string bundle_name;
 			string field_name;
@@ -815,10 +859,7 @@ namespace Epsitec.Common.Support
 		
 		public bool SetBinaryData(string id, ResourceLevel level, CultureInfo culture, byte[] data, ResourceSetMode mode)
 		{
-			if (culture == null)
-			{
-				culture = this.culture;
-			}
+			culture = culture ?? this.culture;
 			
 			switch (level)
 			{
@@ -849,11 +890,8 @@ namespace Epsitec.Common.Support
 		
 		public bool RemoveBundle(string id, ResourceLevel level, CultureInfo culture)
 		{
-			if (culture == null)
-			{
-				culture = this.culture;
-			}
-			
+			culture = culture ?? this.culture;
+
 			switch (level)
 			{
 				case ResourceLevel.Default:
