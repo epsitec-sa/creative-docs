@@ -29,7 +29,17 @@ namespace Epsitec.Common.Types
 			this.globalIndex = System.Threading.Interlocked.Increment (ref DependencyProperty.globalPropertyCount);
 			this.isPropertyDerivedFromDependencyObject = typeof (DependencyObject).IsAssignableFrom (this.propertyType);
 
-			this.isPropertyAnICollection = TypeRosetta.DoesTypeImplementInterface (this.propertyType, typeof (ICollection<DependencyObject>));
+			this.isPropertyAnICollectionOfDependencyObject = TypeRosetta.DoesTypeImplementInterface (this.propertyType, typeof (ICollection<DependencyObject>));
+			this.isPropertyAnICollectionOfString = TypeRosetta.DoesTypeImplementInterface (this.propertyType, typeof (ICollection<string>));
+
+			if ((this.isPropertyAnICollectionOfDependencyObject == false) &&
+				(this.isPropertyAnICollectionOfString == false))
+			{
+				if (TypeRosetta.DoesTypeImplementInterface (this.propertyType, typeof (System.Collections.ICollection)))
+				{
+					throw new System.ArgumentException (string.Format ("Property {0} uses unsupported collection type {1}", name, this.propertyType.Name));
+				}
+			}
 
 			if ((this.defaultMetadata.InheritsValue) &&
 				(this.propertyType == typeof (bool)))
@@ -84,6 +94,7 @@ namespace Epsitec.Common.Types
 				return this.isAttached;
 			}
 		}
+		
 		public bool								IsPropertyTypeDerivedFromDependencyObject
 		{
 			get
@@ -91,13 +102,23 @@ namespace Epsitec.Common.Types
 				return this.isPropertyDerivedFromDependencyObject;
 			}
 		}
+		
 		public bool								IsPropertyTypeAnICollectionOfDependencyObject
 		{
 			get
 			{
-				return this.isPropertyAnICollection;
+				return this.isPropertyAnICollectionOfDependencyObject;
 			}
 		}
+		
+		public bool								IsPropertyTypeAnICollectionOfString
+		{
+			get
+			{
+				return this.isPropertyAnICollectionOfString;
+			}
+		}
+
 		public bool								IsReadOnly
 		{
 			get
@@ -512,7 +533,8 @@ namespace Epsitec.Common.Types
 		private DependencyPropertyMetadata		defaultMetadata;
 		private bool							isAttached;
 		private bool							isPropertyDerivedFromDependencyObject;
-		private bool							isPropertyAnICollection;
+		private bool							isPropertyAnICollectionOfDependencyObject;
+		private bool							isPropertyAnICollectionOfString;
 		private bool							isReadOnly;
 		private int								globalIndex;
 		private int								inheritedPropertyCacheMask;

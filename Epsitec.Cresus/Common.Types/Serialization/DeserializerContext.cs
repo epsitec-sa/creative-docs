@@ -73,7 +73,7 @@ namespace Epsitec.Common.Types.Serialization
 					DeserializerContext.RestoreCollection<DependencyObject> (obj, field, property, data);
 				}
 				else if ((TypeRosetta.DoesTypeImplementInterface (dataType, typeof (IEnumerable<string>))) &&
-					/**/ (TypeRosetta.DoesTypeImplementInterface (property.PropertyType, typeof (ICollection<string>))))
+					/**/ (property.IsPropertyTypeAnICollectionOfString))
 				{
 					DeserializerContext.RestoreCollection<string> (obj, field, property, data);
 				}
