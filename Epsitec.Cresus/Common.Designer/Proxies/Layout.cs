@@ -39,27 +39,15 @@ namespace Epsitec.Common.Designer.Proxies
 			}
 		}
 
-		public Widgets.Layouts.LayoutMode LayoutMode
+		public ObjectModifier.ChildrenPlacement ChildrenPlacement
 		{
 			get
 			{
-				return (Widgets.Layouts.LayoutMode) this.GetValue(Layout.LayoutModeProperty);
+				return (ObjectModifier.ChildrenPlacement) this.GetValue(Layout.ChildrenPlacementProperty);
 			}
 			set
 			{
-				this.SetValue(Layout.LayoutModeProperty, value);
-			}
-		}
-
-		public ContainerLayoutMode ContainerMode
-		{
-			get
-			{
-				return (ContainerLayoutMode) this.GetValue(Layout.ContainerModeProperty);
-			}
-			set
-			{
-				this.SetValue(Layout.ContainerModeProperty, value);
+				this.SetValue(Layout.ChildrenPlacementProperty, value);
 			}
 		}
 
@@ -71,11 +59,12 @@ namespace Epsitec.Common.Designer.Proxies
 			
 			//	Recopie localement les diverses propriétés du widget sélectionné
 			//	pour pouvoir ensuite travailler dessus :
-			Widgets.Layouts.LayoutMode layout = (Widgets.Layouts.LayoutMode) this.GetWidgetProperty(AbstractGroup.ChildrenLayoutModeProperty);
-			ContainerLayoutMode container = (ContainerLayoutMode) this.GetWidgetProperty(Visual.ContainerLayoutModeProperty);
+			if (this.objectModifier.IsChildrenPlacement(this.widgets[0]))
+			{
+				ObjectModifier.ChildrenPlacement cp = this.objectModifier.GetChildrenPlacement(this.widgets[0]);
 
-			this.LayoutMode = layout;
-			this.ContainerMode = container;
+				this.ChildrenPlacement = cp;
+			}
 		}
 
 		private static void NotifyChanged(DependencyObject o, object oldValue, object newValue)
@@ -84,17 +73,15 @@ namespace Epsitec.Common.Designer.Proxies
 			//	nos propriétés de définition pour permettre de mettre à jour les
 			//	widgets connectés :
 			Layout that = (Layout) o;
-			Widgets.Layouts.LayoutMode layout = that.LayoutMode;
-			ContainerLayoutMode container = that.ContainerMode;
-			
-			//	Demande à Proxies.Abstract de mettre à jour la propriété qui
-			//	définit le layout du ou des widget(s) sélectionné(s) :
-			that.SetWidgetProperty(AbstractGroup.ChildrenLayoutModeProperty, layout);
-			that.SetWidgetProperty(Visual.ContainerLayoutModeProperty, container);
+			ObjectModifier.ChildrenPlacement cp = that.ChildrenPlacement;
+
+			foreach (Widget obj in that.widgets)
+			{
+				that.objectModifier.SetChildrenPlacement(obj, cp);
+			}
 		}
 
 
-		public static readonly DependencyProperty LayoutModeProperty    = DependencyProperty.Register("LayoutMode",    typeof(Widgets.Layouts.LayoutMode), typeof(Layout), new DependencyPropertyMetadata(Widgets.Layouts.LayoutMode.None, Layout.NotifyChanged));
-		public static readonly DependencyProperty ContainerModeProperty = DependencyProperty.Register("ContainerMode", typeof(ContainerLayoutMode),        typeof(Layout), new DependencyPropertyMetadata(ContainerLayoutMode.None,        Layout.NotifyChanged));
+		public static readonly DependencyProperty ChildrenPlacementProperty = DependencyProperty.Register("ChildrenPlacement", typeof(ObjectModifier.ChildrenPlacement), typeof(Layout), new DependencyPropertyMetadata(ObjectModifier.ChildrenPlacement.Anchored, Layout.NotifyChanged));
 	}
 }
