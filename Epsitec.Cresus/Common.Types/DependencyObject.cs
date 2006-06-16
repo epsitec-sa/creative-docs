@@ -715,6 +715,14 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		/// <summary>
+		/// Copies the value of the property from the source to the destination.
+		/// If the source does not define this property, it will be cleared in
+		/// the destination.
+		/// </summary>
+		/// <param name="source">The source object.</param>
+		/// <param name="destination">The destination object.</param>
+		/// <param name="property">The property which must be copied.</param>
 		public static void CopyProperty(DependencyObject source, DependencyObject destination, DependencyProperty property)
 		{
 			if (! DependencyObject.CopyExistingProperty (source, destination, property, false))
@@ -723,6 +731,13 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		/// <summary>
+		/// Copies the value of the property from the source to the destination.
+		/// If the source does not define this property, nothing happens.
+		/// </summary>
+		/// <param name="source">The source object.</param>
+		/// <param name="destination">The destination object.</param>
+		/// <param name="property">The property which must be copied.</param>
 		public static void CopyExistingProperty(DependencyObject source, DependencyObject destination, DependencyProperty property)
 		{
 			DependencyObject.CopyExistingProperty (source, destination, property, true);
