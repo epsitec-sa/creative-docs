@@ -95,13 +95,15 @@ namespace Epsitec.Common.Designer.Proxies
 			
 			//	Recopie localement les diverses propriétés du widget sélectionné
 			//	pour pouvoir ensuite travailler dessus :
-			//?Margins margins = (Margins) this.GetWidgetProperty(Visual.MarginsProperty);
-			Margins margins = this.objectModifier.GetMargins(this.widgets[0]);
+			if (this.objectModifier.IsMargins(this.widgets[0]))
+			{
+				Margins margins = this.objectModifier.GetMargins(this.widgets[0]);
 
-			this.LeftMargin   = margins.Left;
-			this.RightMargin  = margins.Right;
-			this.TopMargin    = margins.Top;
-			this.BottomMargin = margins.Bottom;
+				this.LeftMargin   = margins.Left;
+				this.RightMargin  = margins.Right;
+				this.TopMargin    = margins.Top;
+				this.BottomMargin = margins.Bottom;
+			}
 		}
 
 		private static void NotifyChanged(DependencyObject o, object oldValue, object newValue)
@@ -112,9 +114,6 @@ namespace Epsitec.Common.Designer.Proxies
 			Geometry that = (Geometry) o;
 			Margins margins = new Margins(that.LeftMargin, that.RightMargin, that.TopMargin, that.BottomMargin);
 			
-			//	Demande à Proxies.Abstract de mettre à jour la propriété qui
-			//	définit les marges du ou des widget(s) sélectionné(s) :
-			//?that.SetWidgetProperty(Visual.MarginsProperty, margins);
 			foreach (Widget obj in that.widgets)
 			{
 				that.objectModifier.SetMargins(obj, margins);

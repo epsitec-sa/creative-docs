@@ -266,6 +266,18 @@ namespace Epsitec.Common.Designer
 		}
 
 
+		public bool IsMargins(Widget obj)
+		{
+			//	Indique si l'objet a des marges.
+			ChildrenPlacement placement = this.GetParentPlacement(obj);
+			if (placement == ChildrenPlacement.HorizontalDocked || placement == ChildrenPlacement.VerticalDocked)
+			{
+				return true;
+			}
+
+			return false;
+		}
+
 		public Margins GetMargins(Widget obj)
 		{
 			//	Retourne les marges de l'objet.
