@@ -1824,7 +1824,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void ChangeObjectAttachment(Widget obj, Attachment attachment)
 		{
 			//	Modifie le système d'attachement d'un objet.
-			if (this.objectModifier.GetChildrenPlacement(obj) == ObjectModifier.ChildrenPlacement.Anchored)
+			if (this.objectModifier.IsChildrenAnchored(obj.Parent))
 			{
 				ObjectModifier.AnchoredHorizontalAttachment ha = this.objectModifier.GetAnchoredHorizontalAttachment(obj);
 				ObjectModifier.AnchoredVerticalAttachment   va = this.objectModifier.GetAnchoredVerticalAttachment(obj);
