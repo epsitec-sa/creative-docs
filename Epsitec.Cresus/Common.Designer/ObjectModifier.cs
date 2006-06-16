@@ -15,8 +15,8 @@ namespace Epsitec.Common.Designer
 			Anchored,
 			VerticalDocked,
 			HorizontalDocked,
-			VerticalStacked,
-			HorizontalStacked,
+			[Types.Hide] VerticalStacked,
+			[Types.Hide] HorizontalStacked,
 		}
 
 		public enum AnchoredHorizontalAttachment
@@ -121,6 +121,13 @@ namespace Epsitec.Common.Designer
 				return (p == ChildrenPlacement.HorizontalDocked || p == ChildrenPlacement.HorizontalStacked);
 			}
 			return false;
+		}
+
+		public bool IsChildrenPlacement(Widget obj)
+		{
+			//	Indique s'il existe un mode de placement des enfants de l'objet.
+			AbstractGroup group = obj as AbstractGroup;
+			return (group != null);
 		}
 
 		public ChildrenPlacement GetChildrenPlacement(Widget obj)
