@@ -1826,6 +1826,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Modifie le système d'attachement d'un objet.
 			if (this.objectModifier.IsChildrenAnchored(obj.Parent))
 			{
+				Rectangle bounds = this.objectModifier.GetBounds(obj);
+
 				ObjectModifier.AnchoredHorizontalAttachment ha = this.objectModifier.GetAnchoredHorizontalAttachment(obj);
 				ObjectModifier.AnchoredVerticalAttachment   va = this.objectModifier.GetAnchoredVerticalAttachment(obj);
 
@@ -1879,6 +1881,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 				this.objectModifier.SetAnchoredHorizontalAttachment(obj, ha);
 				this.objectModifier.SetAnchoredVerticalAttachment(obj, va);
+				this.objectModifier.SetBounds(obj, bounds);
+
 				this.handlesList.UpdateGeometry();
 			}
 		}
