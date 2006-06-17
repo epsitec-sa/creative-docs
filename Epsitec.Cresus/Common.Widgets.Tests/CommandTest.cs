@@ -14,18 +14,27 @@ namespace Epsitec.Common.Widgets
 
 			Resources.DefaultManager.ActiveCulture = Resources.FindSpecificCultureInfo ("fr");
 		}
+		
+		[Test]
+		public void CheckApplicationCommands()
+		{
+			Assert.AreEqual ("Couper", ApplicationCommands.Cut.LongCaption);
+			Assert.AreEqual ("Copier", ApplicationCommands.Copy.LongCaption);
+			Assert.AreEqual ("Coller", ApplicationCommands.Paste.LongCaption);
+			Assert.AreEqual ("Supprimer", ApplicationCommands.Delete.LongCaption);
+			Assert.AreEqual ("Sélectionner tout", ApplicationCommands.SelectAll.LongCaption);
+		}
 
 		[Test]
 		public void CheckCommandFromDruid()
 		{
-			Command c1 = Command.Find (Druid.Parse ("[0]"));
-			Command c2 = Command.Get (Druid.Parse ("[0]"));
+			Command command = Command.Get (Druid.Parse ("[0005]"));
 
-			Assert.IsNull (c1);
-			Assert.IsNotNull (c2);
-			Assert.AreEqual ("[0]", c2.Name);
+			Assert.IsNotNull (command);
+			Assert.AreEqual ("[0005]", command.Name);
 
-			Assert.AreEqual ("Sélectionner tout", c2.LongCaption);
+			Assert.AreEqual ("Sélectionner tout", command.LongCaption);
+			Assert.AreEqual (ApplicationCommands.SelectAll, command);
 		}
 	}
 }
