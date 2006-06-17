@@ -11,6 +11,8 @@ namespace Epsitec.Common.Widgets
 		{
 			Epsitec.Common.Document.Engine.Initialise ();
 			Epsitec.Common.Widgets.Adorners.Factory.SetActive ("LookMetal");
+
+			Resources.DefaultManager.ActiveCulture = Resources.FindSpecificCultureInfo ("fr");
 		}
 
 		[Test]
@@ -22,6 +24,8 @@ namespace Epsitec.Common.Widgets
 			Assert.IsNull (c1);
 			Assert.IsNotNull (c2);
 			Assert.AreEqual ("[0]", c2.Name);
+
+			Assert.AreEqual ("Sélectionner tout", c2.LongCaption);
 		}
 	}
 }

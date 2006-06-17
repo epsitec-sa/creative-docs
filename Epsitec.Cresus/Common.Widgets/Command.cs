@@ -44,11 +44,12 @@ namespace Epsitec.Common.Widgets
 
 				System.Diagnostics.Debug.Assert (caption != null);
 				System.Diagnostics.Debug.Assert (caption.Id == this.name);
-				
-				//	TODO: use Caption object here
+
+				this.caption = caption;
+				this.RefreshCommandBasedOnCaption (this.caption);
 			}
 		}
-		
+
 		public Command(string name, params Shortcut[] shortcuts) : this (name)
 		{
 			this.Shortcuts.AddRange (shortcuts);
@@ -493,6 +494,27 @@ namespace Epsitec.Common.Widgets
 
 		#endregion
 
+		protected virtual void RefreshCommandBasedOnCaption(Types.Caption caption)
+		{
+			string[] labels = Types.Collection.ToArray (caption.SortedLabels);
+			
+			if (labels.Length > 1)
+			{
+				this.SetValue (Command.ShortCaptionProperty, labels[0]);
+				this.SetValue (Command.LongCaptionProperty, labels[labels.Length-1]);
+			}
+			else if (labels.Length == 1)
+			{
+				this.ClearValue (Command.ShortCaptionProperty);
+				this.SetValue (Command.LongCaptionProperty, labels[0]);
+			}
+			else if (! string.IsNullOrEmpty (caption.Description))
+			{
+				this.ClearValue (Command.ShortCaptionProperty);
+				this.SetValue (Command.LongCaptionProperty, caption.Description);
+			}
+		}
+
 		protected virtual void InitializeDefaultState(CommandState state, CommandContext context)
 		{
 			state.DefineCommand (this);
@@ -541,5 +563,6 @@ namespace Epsitec.Common.Widgets
 		private Collections.ShortcutCollection	shortcuts;
 		private string							name;
 		private Support.Druid					druid;
+		private Types.Caption					caption;
 	}
 }
