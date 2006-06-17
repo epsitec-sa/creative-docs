@@ -879,7 +879,7 @@ namespace Epsitec.Common.Support
 			string key = Resources.CreateBundleKey (prefix, module.Id, id, ResourceLevel.Merged, culture);
 
 			this.bundleCache.Remove (key);
-			this.SyncBundleBindingProxies ();
+			this.SyncBundleRelatedCache ();
 		}
 		
 		public bool SetBinaryData(string id, ResourceLevel level, CultureInfo culture, byte[] data, ResourceSetMode mode)
@@ -990,7 +990,7 @@ namespace Epsitec.Common.Support
 
 		public void TrimCache()
 		{
-			foreach (BundleBindingProxy proxy in this.bindingProxies.Values)
+			foreach (BundleRelatedCache proxy in this.bundleRelatedCache.Values)
 			{
 				proxy.TrimCache ();
 			}
@@ -1009,7 +1009,7 @@ namespace Epsitec.Common.Support
 				(bundleName.Length > 0) &&
 				(fieldName.Length > 0))
 			{
-				BundleBindingProxy proxy = this.GetBundleBindingProxy (bundleName);
+				BundleRelatedCache proxy = this.GetBundleRelatedCache (bundleName, ResourceLevel.Merged, this.culture);
 
 				if (proxy != null)
 				{
@@ -1025,32 +1025,58 @@ namespace Epsitec.Common.Support
 			return false;
 		}
 
-		internal void SyncBundleBindingProxies()
+		internal void SyncBundleRelatedCache()
 		{
 			//	Met à jour tous les proxies en les synchronisant avec la culture
 			//	active.
 
-			foreach (KeyValuePair<string, BundleBindingProxy> pair in this.bindingProxies)
+			Dictionary<string, BundleRelatedCache> update = new Dictionary<string, BundleRelatedCache> ();
+
+			foreach (KeyValuePair<string, BundleRelatedCache> pair in this.bundleRelatedCache)
 			{
 				string name = pair.Value.Bundle.PrefixedName;
 
+				ResourceLevel level = pair.Value.Bundle.ResourceLevel;
+				CultureInfo culture = pair.Value.Bundle.Culture;
+
+				System.Diagnostics.Debug.Assert (level != ResourceLevel.None);
+				System.Diagnostics.Debug.Assert (culture != null);
+
+				if (level == ResourceLevel.Merged)
+				{
+					culture = this.culture;
+				}
+				
+				string prefix;
+				string localId;
+				ResourceModuleInfo module;
+
+				this.AnalyseFullId (name, out prefix, out localId, out module);
+
+				string key = Resources.CreateBundleKey (prefix, module.Id, localId, level, culture);
+				
 				ResourceBundle oldBundle = pair.Value.Bundle;
-				ResourceBundle newBundle = this.GetBundle (name, ResourceLevel.Merged, this.culture);
+				ResourceBundle newBundle = this.GetBundle (name, level, culture);
 
 				pair.Value.SwitchToBundle (newBundle);
+
+				update[key] = pair.Value;
 			}
+
+			this.bundleRelatedCache = update;
 		}
 
-		private BundleBindingProxy GetBundleBindingProxy(string bundleName)
+		private BundleRelatedCache GetBundleRelatedCache(string bundleName, ResourceLevel level, CultureInfo culture)
 		{
-			//	Trouve le proxy qui liste les bindings pour le bundle spécifié.
+			//	Trouve le cache qui liste les bindings et les captions pour le
+			//	bundle spécifié.
 
-			//	La liste des proxies est gérée par le gestionnaire de ressources
-			//	plutôt que le bundle lui-même, car il faut pouvoir passer d'une
+			//	Ces listes sont gérées par le gestionnaire de ressources plutôt
+			//	que par le bundle lui-même, car il faut pouvoir passer d'une
 			//	culture active à une autre sans perdre les informations de
-			//	binding.
+			//	binding, ni les informations de captions.
 
-			BundleBindingProxy proxy;
+			BundleRelatedCache cache;
 
 			string prefix;
 			string localId;
@@ -1058,29 +1084,30 @@ namespace Epsitec.Common.Support
 
 			this.AnalyseFullId (bundleName, out prefix, out localId, out module);
 
-			string key = Resources.CreateBundleKey (prefix, module.Id, localId, ResourceLevel.Merged, this.culture);
+			string key = Resources.CreateBundleKey (prefix, module.Id, localId, level, culture);
 
-			if (this.bindingProxies.TryGetValue (key, out proxy) == false)
+			if (this.bundleRelatedCache.TryGetValue (key, out cache) == false)
 			{
-				//	Le proxy pour le bundle en question n'existe pas. Il faut
+				//	Le cache pour le bundle en question n'existe pas. Il faut
 				//	donc le créer :
 
-				ResourceBundle bundle = this.GetBundle (bundleName, ResourceLevel.Merged, this.culture, 0);
+				ResourceBundle bundle = this.GetBundle (bundleName, level, culture, 0);
 
 				if (bundle == null)
 				{
 					return null;
 				}
 
-				proxy = new BundleBindingProxy (bundle);
+				cache = new BundleRelatedCache (bundle);
 
-				System.Diagnostics.Debug.Assert (proxy.Bundle.PrefixedName == bundleName);
-				System.Diagnostics.Debug.Assert (Resources.EqualCultures (proxy.Bundle.Culture, this.culture));
+				System.Diagnostics.Debug.Assert (cache.Bundle.PrefixedName == bundleName);
+				System.Diagnostics.Debug.Assert (cache.Bundle.ResourceLevel == level);
+				System.Diagnostics.Debug.Assert (Resources.EqualCultures (cache.Bundle.Culture, culture));
 
-				this.bindingProxies[key] = proxy;
+				this.bundleRelatedCache[key] = cache;
 			}
 
-			return proxy;
+			return cache;
 		}
 
 		private void SelectLocale(CultureInfo culture)
@@ -1088,7 +1115,7 @@ namespace Epsitec.Common.Support
 			if (!Resources.EqualCultures (this.culture, culture))
 			{
 				this.culture = culture;
-				this.SyncBundleBindingProxies ();
+				this.SyncBundleRelatedCache ();
 			}
 		}
 
@@ -1155,11 +1182,11 @@ namespace Epsitec.Common.Support
 
 		#endregion
 
-		#region Private BundleBindingProxy Class
+		#region Private BundleRelatedCache Class
 
-		private class BundleBindingProxy : Types.IResourceBoundSource
+		private class BundleRelatedCache : Types.IResourceBoundSource
 		{
-			public BundleBindingProxy(ResourceBundle bundle)
+			public BundleRelatedCache(ResourceBundle bundle)
 			{
 				this.bundle = bundle;
 			}
@@ -1178,10 +1205,27 @@ namespace Epsitec.Common.Support
 				{
 					this.bundle = bundle;
 					this.SyncBindings ();
+					this.SyncCaptions ();
 				}
 			}
 
-			public void SyncBindings()
+			public void AddBinding(Types.Binding binding)
+			{
+				this.bindings.Add (new Weak<Types.Binding> (binding));
+			}
+
+			public void AddCaption(Types.Caption caption)
+			{
+				this.captions.Add (new Weak<Types.Caption> (caption));
+			}
+
+			public void TrimCache()
+			{
+				this.TrimBindingCache ();
+				this.TrimCaptionCache ();
+			}
+
+			private void SyncBindings()
 			{
 				Weak<Types.Binding>[] bindings = this.bindings.ToArray ();
 
@@ -1200,20 +1244,29 @@ namespace Epsitec.Common.Support
 				}
 			}
 
-			public void AddBinding(Types.Binding binding)
+			private void SyncCaptions()
 			{
-				this.bindings.Add (new Weak<Types.Binding> (binding));
+				Weak<Types.Caption>[] captions = this.captions.ToArray ();
+
+				for (int i = 0; i < captions.Length; i++)
+				{
+					Types.Caption caption = captions[i].Target;
+
+					if (caption == null)
+					{
+						this.captions.Remove (captions[i]);
+					}
+					else
+					{
+						//	TODO: update caption
+					}
+				}
 			}
 
-			public void TrimCache()
-			{
-				this.TrimBindingCache ();
-			}
-			
 			private void TrimBindingCache()
 			{
 				List<Weak<Types.Binding>> clean = new List<Weak<Types.Binding>> ();
-				
+
 				foreach (Weak<Types.Binding> binding in this.bindings)
 				{
 					if (binding.IsAlive)
@@ -1223,6 +1276,21 @@ namespace Epsitec.Common.Support
 				}
 
 				this.bindings = clean;
+			}
+
+			private void TrimCaptionCache()
+			{
+				List<Weak<Types.Caption>> clean = new List<Weak<Types.Caption>> ();
+
+				foreach (Weak<Types.Caption> caption in this.captions)
+				{
+					if (caption.IsAlive)
+					{
+						clean.Add (caption);
+					}
+				}
+
+				this.captions = clean;
 			}
 
 			#region IResourceBoundSource Members
@@ -1239,6 +1307,7 @@ namespace Epsitec.Common.Support
 
 			ResourceBundle						bundle;
 			List<Weak<Types.Binding>>			bindings = new List<Weak<Types.Binding>> ();
+			List<Weak<Types.Caption>>			captions = new List<Weak<Types.Caption>> ();
 		}
 
 		#endregion
@@ -1248,8 +1317,8 @@ namespace Epsitec.Common.Support
 		private class Weak<T> : System.WeakReference
 			where T : class
 		{
-			public Weak(T binding)
-				: base (binding)
+			public Weak(T target)
+				: base (target)
 			{
 			}
 
@@ -1422,7 +1491,7 @@ namespace Epsitec.Common.Support
 		private string							defaultPath;
 		
 		Dictionary<string, ResourceBundle>		bundleCache = new Dictionary<string, ResourceBundle> ();
-		Dictionary<string, BundleBindingProxy>	bindingProxies = new Dictionary<string, BundleBindingProxy> ();
+		Dictionary<string, BundleRelatedCache>	bundleRelatedCache = new Dictionary<string, BundleRelatedCache> ();
 		
 		private int								mergedBundlesInBundleCache;
 	}
