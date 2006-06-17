@@ -1,12 +1,12 @@
-//	Copyright © 2004-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2004-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Support
 {
 	/// <summary>
-	/// La classe CommandAttribute définit un attribut [Command] qui est
-	/// utilisé par le CommandDispatcher pour identifier l'implémentation
-	/// de commandes (l'attribut s'utilise comme préfixe de méthode).
+	/// The <c>CommandAttribute</c> class defines a <c>[Command]</c> attribute,
+	/// which is used by <see cref="T:CommandDispatcher"/> to locate the methods
+	/// implementating specific commands.
 	/// </summary>
 	
 	[System.Serializable]
@@ -18,19 +18,44 @@ namespace Epsitec.Common.Support
 		{
 		}
 		
-		public CommandAttribute(string command_name)
+		public CommandAttribute(string commandName)
 		{
-			this.command_name = command_name;
+			this.commandName = commandName;
 		}
-		
-		
-		public string					CommandName
+
+		public CommandAttribute(long druid)
 		{
-			get { return this.command_name; }
-			set { this.command_name = value; }
+			this.druid = druid;
 		}
+
+
+		public string							CommandName
+		{
+			get
+			{
+				return this.commandName;
+			}
+			set
+			{
+				this.commandName = value;
+			}
+		}
+
+		public long								Druid
+		{
+			get
+			{
+				return this.druid;
+			}
+			set
+			{
+				this.druid = value;
+			}
+		}
+	
 		
 		
-		protected string				command_name;
+		private string							commandName;
+		private long							druid;
 	}
 }
