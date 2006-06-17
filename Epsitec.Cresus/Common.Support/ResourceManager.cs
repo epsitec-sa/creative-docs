@@ -1042,6 +1042,30 @@ namespace Epsitec.Common.Support
 			return false;
 		}
 
+		public int DebugCountLiveBindings()
+		{
+			int count = 0;
+
+			foreach (BundleRelatedCache cache in this.bundleRelatedCache.Values)
+			{
+				count += cache.CountLiveBindings ();
+			}
+
+			return count;
+		}
+
+		public int DebugCountLiveCaptions()
+		{
+			int count = 0;
+
+			foreach (BundleRelatedCache cache in this.bundleRelatedCache.Values)
+			{
+				count += cache.CountLiveCaptions ();
+			}
+
+			return count;
+		}
+
 		internal void SyncBundleRelatedCache()
 		{
 			//	Met à jour tous les proxies en les synchronisant avec la culture
@@ -1242,6 +1266,16 @@ namespace Epsitec.Common.Support
 				this.TrimCaptionCache ();
 			}
 
+			internal int CountLiveBindings()
+			{
+				return this.TrimCaptionCache ();
+			}
+
+			internal int CountLiveCaptions()
+			{
+				return this.TrimCaptionCache ();
+			}
+
 			private void SyncBindings(ResourceManager manager)
 			{
 				Weak<Types.Binding>[] bindings = this.bindings.ToArray ();
@@ -1288,7 +1322,7 @@ namespace Epsitec.Common.Support
 				}
 			}
 
-			private void TrimBindingCache()
+			private int TrimBindingCache()
 			{
 				List<Weak<Types.Binding>> clean = new List<Weak<Types.Binding>> ();
 
@@ -1301,9 +1335,11 @@ namespace Epsitec.Common.Support
 				}
 
 				this.bindings = clean;
+				
+				return this.bindings.Count;
 			}
 
-			private void TrimCaptionCache()
+			private int TrimCaptionCache()
 			{
 				List<Weak<Types.Caption>> clean = new List<Weak<Types.Caption>> ();
 
@@ -1316,6 +1352,8 @@ namespace Epsitec.Common.Support
 				}
 
 				this.captions = clean;
+				
+				return this.captions.Count;
 			}
 
 			#region IResourceBoundSource Members
