@@ -125,8 +125,22 @@ namespace Epsitec.Common.Support
 			Druid idA = Druid.Parse ("[4002]");
 			Druid idQ = Druid.Parse ("[4003]");
 
-			Caption captionA = this.manager.GetCaption (idA, ResourceLevel.Default);
-			Caption captionQ = this.manager.GetCaption (idQ, ResourceLevel.Default);
+			Caption captionA;
+			Caption captionQ;
+
+			captionA = this.manager.GetCaption (idA, ResourceLevel.Default);
+			captionQ = this.manager.GetCaption (idQ, ResourceLevel.Default);
+			
+			Assert.AreEqual ("Pattern angle expressed in degrees.", captionA.Description);
+			Assert.AreEqual ("Quality coefficient.", captionQ.Description);
+			Assert.AreEqual ("A", Collection.Extract (captionA.SortedLabels, 0));
+			Assert.AreEqual ("Pattern angle", Collection.Extract (captionA.SortedLabels, 2));
+			Assert.AreEqual ("Q", Collection.Extract (captionQ.SortedLabels, 0));
+
+			manager.ActiveCulture = Resources.FindSpecificCultureInfo ("en");
+			
+			captionA = this.manager.GetCaption (idA, ResourceLevel.Merged);
+			captionQ = this.manager.GetCaption (idQ, ResourceLevel.Merged);
 
 			Assert.AreEqual ("Pattern angle expressed in degrees.", captionA.Description);
 			Assert.AreEqual ("Quality coefficient.", captionQ.Description);
@@ -134,9 +148,27 @@ namespace Epsitec.Common.Support
 			Assert.AreEqual ("Pattern angle", Collection.Extract (captionA.SortedLabels, 2));
 			Assert.AreEqual ("Q", Collection.Extract (captionQ.SortedLabels, 0));
 
-			captionA = this.manager.GetCaption (idA, ResourceLevel.Merged, Resources.FindSpecificCultureInfo ("fr"));
-			captionQ = this.manager.GetCaption (idQ, ResourceLevel.Merged, Resources.FindSpecificCultureInfo ("fr"));
+			manager.ActiveCulture = Resources.FindSpecificCultureInfo ("fr");
 
+			captionA = this.manager.GetCaption (idA, ResourceLevel.Merged);
+			captionQ = this.manager.GetCaption (idQ, ResourceLevel.Merged);
+
+			Assert.AreEqual ("Angle de rotation de la trame, exprimé en degrés.", captionA.Description);
+			Assert.AreEqual ("Coefficient de Qualité.", captionQ.Description);
+			Assert.AreEqual ("A", Collection.Extract (captionA.SortedLabels, 0));
+			Assert.AreEqual ("Angle de la trame", Collection.Extract (captionA.SortedLabels, 2));
+			Assert.AreEqual ("Q", Collection.Extract (captionQ.SortedLabels, 0));
+			
+			manager.ActiveCulture = Resources.FindSpecificCultureInfo ("en");
+
+			Assert.AreEqual ("Pattern angle expressed in degrees.", captionA.Description);
+			Assert.AreEqual ("Quality coefficient.", captionQ.Description);
+			Assert.AreEqual ("A", Collection.Extract (captionA.SortedLabels, 0));
+			Assert.AreEqual ("Pattern angle", Collection.Extract (captionA.SortedLabels, 2));
+			Assert.AreEqual ("Q", Collection.Extract (captionQ.SortedLabels, 0));
+			
+			manager.ActiveCulture = Resources.FindSpecificCultureInfo ("fr");
+			
 			Assert.AreEqual ("Angle de rotation de la trame, exprimé en degrés.", captionA.Description);
 			Assert.AreEqual ("Coefficient de Qualité.", captionQ.Description);
 			Assert.AreEqual ("A", Collection.Extract (captionA.SortedLabels, 0));
@@ -147,21 +179,23 @@ namespace Epsitec.Common.Support
 		[Test]
 		public void CheckGetCaptionUsingDruids()
 		{
+			manager.ActiveCulture = Resources.FindSpecificCultureInfo ("fr");
+
 			Druid id = Druid.Parse ("[4001]");
 
 			Caption caption;
 			
-			caption = this.manager.GetCaption (id, ResourceLevel.Merged, Resources.FindSpecificCultureInfo ("en"));
-			
-			Assert.AreEqual ("Text A", caption.Description);
-			Assert.AreEqual ("Text B", Collection.Extract (caption.Labels, 0));
-			Assert.AreEqual ("Text C", Collection.Extract (caption.Labels, 1));
-			
-			caption = this.manager.GetCaption (id, ResourceLevel.Merged, Resources.FindSpecificCultureInfo ("fr"));
+			caption = this.manager.GetCaption (id, ResourceLevel.Merged);
 			
 			Assert.AreEqual ("[Test]", caption.Description);
 			Assert.AreEqual ("Text B", Collection.Extract (caption.Labels, 0));
 			Assert.AreEqual ("Texte C en français", Collection.Extract (caption.Labels, 1));
+
+			manager.ActiveCulture = Resources.FindSpecificCultureInfo ("en");
+
+			Assert.AreEqual ("Text A", caption.Description);
+			Assert.AreEqual ("Text B", Collection.Extract (caption.Labels, 0));
+			Assert.AreEqual ("Text C", Collection.Extract (caption.Labels, 1));
 		}
 
 		[Test]
