@@ -160,6 +160,7 @@
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="CommandTest.cs" />
     <Compile Include="GridTest.cs" />
     <Compile Include="PlaceholderTest.cs" />
     <Compile Include="RibbonTest.cs" />

@@ -1182,9 +1182,6 @@ namespace Epsitec.Common.Support
 
 		private IResourceProvider FindProviderFromPrefix(string prefix, ref ResourceModuleInfo module)
 		{
-			System.Diagnostics.Debug.Assert (this.defaultModuleId != -1);
-			System.Diagnostics.Debug.Assert (this.defaultModuleName != null);
-			
 			if (!string.IsNullOrEmpty (prefix))
 			{
 				ProviderRecord provider;
@@ -1549,7 +1546,7 @@ namespace Epsitec.Common.Support
 		private Dictionary<string, ProviderRecord> providers;
 		private CultureInfo						culture;
 		private string							defaultModuleName;
-		private int								defaultModuleId;
+		private int								defaultModuleId = -1;
 		private string							defaultPrefix = "file";
 		private string							defaultPath;
 		
