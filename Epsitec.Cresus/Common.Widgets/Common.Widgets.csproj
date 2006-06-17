@@ -749,6 +749,9 @@
   <ItemGroup>
     <Content Include="Resources\Common.Widgets\module.info" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\Common.Widgets\Captions.00.resource" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>
