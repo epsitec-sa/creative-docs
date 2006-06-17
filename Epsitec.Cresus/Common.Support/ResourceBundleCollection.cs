@@ -359,7 +359,7 @@ namespace Epsitec.Common.Support
 		protected virtual void ClearMergedBundles()
 		{
 			this.manager.ClearMergedBundlesFromBundleCache ();
-			this.manager.SyncBundleBindingProxies ();
+			this.manager.SyncBundleRelatedCache ();
 		}
 		
 		protected virtual void OnFieldsChanged()
