@@ -564,16 +564,16 @@ namespace Epsitec.App.DocumentEditor
 			VMenu debugMenu = new VMenu();
 			debugMenu.Name = "Debug";
 			debugMenu.Host = this;
-			this.MenuAdd(debugMenu, "y/n", "DebugBboxThin", "Show BBoxThin", Misc.GetShortCut(this.debugBboxThinState));
-			this.MenuAdd(debugMenu, "y/n", "DebugBboxGeom", "Show BBoxGeom", Misc.GetShortCut(this.debugBboxGeomState));
-			this.MenuAdd(debugMenu, "y/n", "DebugBboxFull", "Show BBoxFull", Misc.GetShortCut(this.debugBboxFullState));
+			this.MenuAdd(debugMenu, "y/n", "DebugBboxThin", "Show BBoxThin", Misc.GetShortcut(this.debugBboxThinState));
+			this.MenuAdd(debugMenu, "y/n", "DebugBboxGeom", "Show BBoxGeom", Misc.GetShortcut(this.debugBboxGeomState));
+			this.MenuAdd(debugMenu, "y/n", "DebugBboxFull", "Show BBoxFull", Misc.GetShortcut(this.debugBboxFullState));
 			this.MenuAdd(debugMenu, null);
-			this.MenuAdd(debugMenu, "", "DebugDirty", "Make dirty", Misc.GetShortCut(this.debugDirtyState));
+			this.MenuAdd(debugMenu, "", "DebugDirty", "Make dirty", Misc.GetShortcut(this.debugDirtyState));
 			this.MenuAdd(debugMenu, null);
 			this.MenuAdd(debugMenu, "SelectTotal");
 			this.MenuAdd(debugMenu, "SelectPartial");
 			this.MenuAdd(debugMenu, null);
-			this.MenuAdd(debugMenu, "", "ForceSaveAll", "Save and overwrite all", Misc.GetShortCut(this.forceSaveAllState));
+			this.MenuAdd(debugMenu, "", "ForceSaveAll", "Save and overwrite all", Misc.GetShortcut(this.forceSaveAllState));
 			debugMenu.AdjustSize();
 			this.menu.Items[i++].Submenu = debugMenu;
 #endif
@@ -1117,7 +1117,7 @@ namespace Epsitec.App.DocumentEditor
 			{
 				Command c = Widgets.Command.Get (command);
 
-				MenuItem item = new MenuItem(c.Name, Misc.Icon(c.IconName), c.LongCaption, Misc.GetShortCut(c), c.Name);
+				MenuItem item = new MenuItem(c.Name, Misc.Icon(c.IconName), c.LongCaption, Misc.GetShortcut(c), c.Name);
 				vmenu.Items.Add(item);
 			}
 		}

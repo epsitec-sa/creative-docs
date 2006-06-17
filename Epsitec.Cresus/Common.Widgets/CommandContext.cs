@@ -54,7 +54,7 @@ namespace Epsitec.Common.Widgets
 			bool oldValue;
 			bool newValue = value;
 
-			if (this.commandEnables.TryGetValue (command.UniqueId, out oldValue))
+			if (this.commandEnables.TryGetValue (command.SerialId, out oldValue))
 			{
 				System.Diagnostics.Debug.Assert (oldValue == false);
 			}
@@ -67,11 +67,11 @@ namespace Epsitec.Common.Widgets
 			{
 				if (newValue)
 				{
-					this.commandEnables.Remove (command.UniqueId);
+					this.commandEnables.Remove (command.SerialId);
 				}
 				else
 				{
-					this.commandEnables[command.UniqueId] = false;
+					this.commandEnables[command.SerialId] = false;
 				}
 
 				this.NotifyCommandEnableChanged (command);
@@ -97,7 +97,7 @@ namespace Epsitec.Common.Widgets
 		{
 			bool value;
 
-			if (this.commandEnables.TryGetValue (command.UniqueId, out value))
+			if (this.commandEnables.TryGetValue (command.SerialId, out value))
 			{
 				System.Diagnostics.Debug.Assert (value == false);
 
@@ -241,7 +241,7 @@ namespace Epsitec.Common.Widgets
 		{
 			CommandState state;
 			
-			if (this.states.TryGetValue (command.UniqueId, out state))
+			if (this.states.TryGetValue (command.SerialId, out state))
 			{
 				return state;
 			}
@@ -255,11 +255,11 @@ namespace Epsitec.Common.Widgets
 		{
 			if (state == null)
 			{
-				this.states.Remove (command.UniqueId);
+				this.states.Remove (command.SerialId);
 			}
 			else
 			{
-				this.states[command.UniqueId] = state;
+				this.states[command.SerialId] = state;
 			}
 
 			CommandCache.Default.InvalidateCommand (command);
