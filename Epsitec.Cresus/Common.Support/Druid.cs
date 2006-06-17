@@ -70,6 +70,16 @@ namespace Epsitec.Common.Support
 		}
 
 		/// <summary>
+		/// Initializes a new instance of the <see cref="T:Druid"/> structure.
+		/// This constructor can throw a <see cref="T:System.FormatException"/>
+		/// exception if the value has an unrecognized or invalid format.
+		/// </summary>
+		/// <param name="value">The value (it will get parsed by <c>Druid.Parse</c>).</param>
+		public Druid(string value) : this (Druid.Parse (value))
+		{
+		}
+
+		/// <summary>
 		/// Gets a value indicating whether this instance is empty.
 		/// </summary>
 		/// <value><c>true</c> if this instance is empty; otherwise, <c>false</c>.</value>
