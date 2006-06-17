@@ -125,8 +125,12 @@ namespace Epsitec.Common.Support
 			Druid idA = Druid.Parse ("[4002]");
 			Druid idQ = Druid.Parse ("[4003]");
 
+			List<Caption> scrap = new List<Caption> ();
+
 			Caption captionA;
 			Caption captionQ;
+
+			int n = this.manager.DebugCountLiveCaptions ();
 
 			captionA = this.manager.GetCaption (idA, ResourceLevel.Default);
 			captionQ = this.manager.GetCaption (idQ, ResourceLevel.Default);
@@ -137,11 +141,21 @@ namespace Epsitec.Common.Support
 			Assert.AreEqual ("Pattern angle", Collection.Extract (captionA.SortedLabels, 2));
 			Assert.AreEqual ("Q", Collection.Extract (captionQ.SortedLabels, 0));
 
+			Assert.AreEqual (2, this.manager.DebugCountLiveCaptions () - n);
+
+			scrap.Add (captionA);
+			scrap.Add (captionQ);
+			
 			manager.ActiveCulture = Resources.FindSpecificCultureInfo ("en");
 			
 			captionA = this.manager.GetCaption (idA, ResourceLevel.Merged);
 			captionQ = this.manager.GetCaption (idQ, ResourceLevel.Merged);
 
+			Assert.AreEqual (4, this.manager.DebugCountLiveCaptions () - n);
+
+			scrap.Add (captionA);
+			scrap.Add (captionQ);
+			
 			Assert.AreEqual ("Pattern angle expressed in degrees.", captionA.Description);
 			Assert.AreEqual ("Quality coefficient.", captionQ.Description);
 			Assert.AreEqual ("A", Collection.Extract (captionA.SortedLabels, 0));
@@ -153,6 +167,11 @@ namespace Epsitec.Common.Support
 			captionA = this.manager.GetCaption (idA, ResourceLevel.Merged);
 			captionQ = this.manager.GetCaption (idQ, ResourceLevel.Merged);
 
+			Assert.AreEqual (6, this.manager.DebugCountLiveCaptions () - n);
+
+			scrap.Add (captionA);
+			scrap.Add (captionQ);
+			
 			Assert.AreEqual ("Angle de rotation de la trame, exprimé en degrés.", captionA.Description);
 			Assert.AreEqual ("Coefficient de Qualité.", captionQ.Description);
 			Assert.AreEqual ("A", Collection.Extract (captionA.SortedLabels, 0));
@@ -160,6 +179,8 @@ namespace Epsitec.Common.Support
 			Assert.AreEqual ("Q", Collection.Extract (captionQ.SortedLabels, 0));
 			
 			manager.ActiveCulture = Resources.FindSpecificCultureInfo ("en");
+
+			Assert.AreEqual (6, this.manager.DebugCountLiveCaptions () - n);
 
 			Assert.AreEqual ("Pattern angle expressed in degrees.", captionA.Description);
 			Assert.AreEqual ("Quality coefficient.", captionQ.Description);
@@ -174,6 +195,24 @@ namespace Epsitec.Common.Support
 			Assert.AreEqual ("A", Collection.Extract (captionA.SortedLabels, 0));
 			Assert.AreEqual ("Angle de la trame", Collection.Extract (captionA.SortedLabels, 2));
 			Assert.AreEqual ("Q", Collection.Extract (captionQ.SortedLabels, 0));
+			
+			Assert.AreEqual (6, this.manager.DebugCountLiveCaptions () - n);
+
+			scrap.Clear ();
+			
+			System.GC.Collect ();
+
+			Assert.AreEqual (2, this.manager.DebugCountLiveCaptions () - n);
+
+			Assert.IsNotNull (captionA);
+			Assert.IsNotNull (captionQ);
+
+			captionA = null;
+			captionQ = null;
+			
+			System.GC.Collect ();
+
+			Assert.AreEqual (0, this.manager.DebugCountLiveCaptions () - n);
 		}
 
 		[Test]
@@ -191,6 +230,8 @@ namespace Epsitec.Common.Support
 			Assert.AreEqual ("Text B", Collection.Extract (caption.Labels, 0));
 			Assert.AreEqual ("Texte C en français", Collection.Extract (caption.Labels, 1));
 
+			//	Switching to English changes the caption's contents :
+			
 			manager.ActiveCulture = Resources.FindSpecificCultureInfo ("en");
 
 			Assert.AreEqual ("Text A", caption.Description);
