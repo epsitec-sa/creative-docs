@@ -272,6 +272,13 @@ namespace Epsitec.Common.Tool.ResGenerator
 			generator.EndBlock ();
 			buffer.Append (generator.Tabs);
 			buffer.Append ("\n");
+			generator.BeginBlock ("public static Epsitec.Common.Support.ResourceManager", "Manager");
+			buffer.Append (generator.Tabs);
+			buffer.Append (@"get { return _manager; }");
+			buffer.Append ("\n");
+			generator.EndBlock ();
+			buffer.Append (generator.Tabs);
+			buffer.Append ("\n");
 			buffer.Append (generator.Tabs);
 			buffer.Append ("private static Epsitec.Common.Support.ResourceManager _manager = Epsitec.Common.Support.Resources.DefaultManager;");
 			buffer.Append ("\n");
