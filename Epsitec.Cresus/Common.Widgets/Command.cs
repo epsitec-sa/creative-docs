@@ -14,7 +14,12 @@ namespace Epsitec.Common.Widgets
 	/// </summary>
 	public class Command : DependencyObject, System.IEquatable<Command>, Types.INamedType
 	{
-		public Command(string name)
+		private Command()
+		{
+			this.stateObjectType = Types.DependencyObjectType.FromSystemType (typeof (SimpleState));
+		}
+		
+		public Command(string name) : this ()
 		{
 			System.Diagnostics.Debug.Assert (string.IsNullOrEmpty (name) == false);
 
@@ -31,12 +36,26 @@ namespace Epsitec.Common.Widgets
 				Command.commands[name] = this;
 			}
 
-			this.stateObjectType = Types.DependencyObjectType.FromSystemType (typeof (SimpleState));
+			if (Support.Druid.TryParse (name, out this.druid))
+			{
+				//	This command is defined by a DRUID.
+
+				Types.Caption caption = Support.Resources.DefaultManager.GetCaption (druid);
+
+				System.Diagnostics.Debug.Assert (caption != null);
+				System.Diagnostics.Debug.Assert (caption.Id == this.name);
+				
+				//	TODO: use Caption object here
+			}
 		}
 		
 		public Command(string name, params Shortcut[] shortcuts) : this (name)
 		{
 			this.Shortcuts.AddRange (shortcuts);
+		}
+
+		public Command(Support.Druid druid) : this (druid.ToResourceId ())
+		{
 		}
 		
 		
@@ -236,32 +255,63 @@ namespace Epsitec.Common.Widgets
 			return null;
 		}
 
-		
-		public static Command Get(string commandName)
+		/// <summary>
+		/// Gets the command matching the specified DRUID. If the command does
+		/// not exist yet, it is created on the fly.
+		/// </summary>
+		/// <param name="druid">The command DRUID.</param>
+		/// <returns>The command.</returns>
+		public static Command Get(Support.Druid druid)
+		{
+			return Command.Get (druid.ToResourceId ());
+		}
+
+		/// <summary>
+		/// Gets the command matching the specified name. If the command does
+		/// not exist yet, it is created on the fly.
+		/// </summary>
+		/// <param name="name">The command name.</param>
+		/// <returns>The command.</returns>
+		public static Command Get(string name)
 		{
 			lock (Command.commands)
 			{
-				Command command = Command.Find (commandName);
+				Command command = Command.Find (name);
 
 				if (command == null)
 				{
-					command = new Command (commandName);
+					command = new Command (name);
 				}
 				
 				return command;
 			}
 		}
-		
-		public static Command Find(string commandName)
+
+		/// <summary>
+		/// Finds the command matching the specified DRUID.
+		/// </summary>
+		/// <param name="druid">The command DRUID.</param>
+		/// <returns>The command, or <c>null</c> if none could be found.</returns>
+		public static Command Find(Support.Druid druid)
 		{
-			if (string.IsNullOrEmpty (commandName))
+			return Command.Find (druid.ToResourceId ());
+		}
+
+		/// <summary>
+		/// Finds the command matching the specified name.
+		/// </summary>
+		/// <param name="name">The command name.</param>
+		/// <returns>The command, or <c>null</c> if none could be found.</returns>
+		public static Command Find(string name)
+		{
+			if (string.IsNullOrEmpty (name))
 			{
 				return null;
 			}
 			
 			Command state;
 			
-			if (Command.commands.TryGetValue (commandName, out state))
+			if (Command.commands.TryGetValue (name, out state))
 			{
 				return state;
 			}
@@ -269,6 +319,11 @@ namespace Epsitec.Common.Widgets
 			return null;
 		}
 
+		/// <summary>
+		/// Finds the command matching the specified shortcut.
+		/// </summary>
+		/// <param name="shortcut">The command shortcut.</param>
+		/// <returns>The command, or <c>null</c> if none could be found.</returns>
 		public static Command Find(Shortcut shortcut)
 		{
 			foreach (Command command in Command.commands.Values)
@@ -485,5 +540,6 @@ namespace Epsitec.Common.Widgets
 		
 		private Collections.ShortcutCollection	shortcuts;
 		private string							name;
+		private Support.Druid					druid;
 	}
 }
