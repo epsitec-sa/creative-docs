@@ -314,12 +314,12 @@ namespace Epsitec.Common.Support
 			System.Console.Out.Flush ();
 
 			System.GC.Collect ();
-			manager.TrimBindingCache ();
+			manager.TrimCache ();
 			System.GC.Collect ();
 
 			long memory6 = System.GC.GetTotalMemory (true);
 
-			System.Console.Out.WriteLine ("Total memory delta after TrimBindingCache & GC: {0} bytes/instance", (memory6-memory4)/max);
+			System.Console.Out.WriteLine ("Total memory delta after TrimCache & GC: {0} bytes/instance", (memory6-memory4)/max);
 			System.Console.Out.Flush ();
 
 			Assert.IsTrue (System.Math.Abs ((memory4-memory6)/max - (memory3-memory2)/max) < 2);

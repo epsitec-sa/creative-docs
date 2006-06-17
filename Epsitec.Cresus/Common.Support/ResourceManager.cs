@@ -988,11 +988,11 @@ namespace Epsitec.Common.Support
 			}
 		}
 
-		public void TrimBindingCache()
+		public void TrimCache()
 		{
 			foreach (BundleBindingProxy proxy in this.bindingProxies.Values)
 			{
-				proxy.TrimBindingCache ();
+				proxy.TrimCache ();
 			}
 		}
 
@@ -1183,11 +1183,11 @@ namespace Epsitec.Common.Support
 
 			public void SyncBindings()
 			{
-				WeakBinding[] bindings = this.bindings.ToArray ();
+				Weak<Types.Binding>[] bindings = this.bindings.ToArray ();
 
 				for (int i = 0; i < bindings.Length; i++)
 				{
-					Types.Binding binding = bindings[i].Binding;
+					Types.Binding binding = bindings[i].Target;
 
 					if (binding == null)
 					{
@@ -1202,14 +1202,19 @@ namespace Epsitec.Common.Support
 
 			public void AddBinding(Types.Binding binding)
 			{
-				this.bindings.Add (new WeakBinding (binding));
+				this.bindings.Add (new Weak<Types.Binding> (binding));
 			}
 
-			public void TrimBindingCache()
+			public void TrimCache()
 			{
-				List<WeakBinding> clean = new List<WeakBinding> ();
+				this.TrimBindingCache ();
+			}
+			
+			private void TrimBindingCache()
+			{
+				List<Weak<Types.Binding>> clean = new List<Weak<Types.Binding>> ();
 				
-				foreach (WeakBinding binding in this.bindings)
+				foreach (Weak<Types.Binding> binding in this.bindings)
 				{
 					if (binding.IsAlive)
 					{
@@ -1233,24 +1238,26 @@ namespace Epsitec.Common.Support
 			#endregion
 
 			ResourceBundle						bundle;
-			List<WeakBinding>					bindings = new List<WeakBinding> ();
+			List<Weak<Types.Binding>>			bindings = new List<Weak<Types.Binding>> ();
 		}
 
 		#endregion
 
-		#region Private WeakBinding Class
+		#region Private Weak<T> Class
 
-		private class WeakBinding : System.WeakReference
+		private class Weak<T> : System.WeakReference
+			where T : class
 		{
-			public WeakBinding(Types.Binding binding) : base (binding)
+			public Weak(T binding)
+				: base (binding)
 			{
 			}
 
-			public Types.Binding Binding
+			public new T Target
 			{
 				get
 				{
-					return this.Target as Types.Binding;
+					return base.Target as T;
 				}
 			}
 		}
