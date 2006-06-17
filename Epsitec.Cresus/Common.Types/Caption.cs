@@ -11,6 +11,11 @@ namespace Epsitec.Common.Types
 		{
 		}
 
+		public Caption(string id) : this ()
+		{
+			this.id = id;
+		}
+
 		public ICollection<string>				Labels
 		{
 			get
@@ -48,8 +53,31 @@ namespace Epsitec.Common.Types
 				this.SetValue (Caption.DecriptionProperty, value);
 			}
 		}
+		
+		public string							Id
+		{
+			get
+			{
+				return this.id;
+			}
+		}
 
 
+		public void DefineId(string id)
+		{
+			if (this.id == id)
+			{
+				return;
+			}
+			
+			if (this.id != null)
+			{
+				throw new System.InvalidOperationException ("The id cannot be changed");
+			}
+			
+			this.id = id;
+		}
+		
 		/// <summary>
 		/// Serializes the caption object to a string representation.
 		/// </summary>
@@ -160,6 +188,12 @@ namespace Epsitec.Common.Types
 			context.RestoreObjectData (0, this);
 		}
 
+		/// <summary>
+		/// Transforms all the texts used by this object. This will call the
+		/// transform callback for every text; the text gets replaced by the
+		/// value returned by the callback.
+		/// </summary>
+		/// <param name="transform">The transform callback.</param>
 		public void TransformTexts(Support.TransformCallback<string> transform)
 		{
 			if (this.labels != null)
@@ -198,8 +232,22 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		/// <summary>
+		/// Merges the two captions and returns the result. If caption <c>a</c>
+		/// and caption <c>b</c> both define the same properties, those of <c>b</c>
+		/// will take precedence.
+		/// </summary>
+		/// <param name="a">The first caption object.</param>
+		/// <param name="b">The second caption object.</param>
+		/// <returns>The merged caption object.</returns>
 		public static Caption Merge(Caption a, Caption b)
 		{
+			if ((a == null) ||
+				(b == null))
+			{
+				throw new System.ArgumentNullException ();
+			}
+			
 			Caption caption = new Caption ();
 
 			DependencyObject.CopyDefinedProperties (a, caption);
@@ -268,5 +316,6 @@ namespace Epsitec.Common.Types
 
 		private Collections.HostedList<string> labels;
 		private string[] sortedLabels;
+		private string id;
 	}
 }

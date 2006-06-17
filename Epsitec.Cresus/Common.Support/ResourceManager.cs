@@ -694,21 +694,28 @@ namespace Epsitec.Common.Support
 		/// <returns>The caption or <c>null</c> if it could not be found.</returns>
 		public Caption GetCaption(Druid druid)
 		{
-			return this.GetCaption (druid, ResourceLevel.Merged, this.culture);
+			return this.GetCaption (druid, ResourceLevel.Merged, this.culture, true);
 		}
 
 		public Caption GetCaption(Druid druid, ResourceLevel level)
 		{
-			return this.GetCaption (druid, level, this.culture);
+			return this.GetCaption (druid, level, this.culture, true);
 		}
 		
 		public Caption GetCaption(Druid druid, ResourceLevel level, CultureInfo culture)
+		{
+			return this.GetCaption (druid, level, culture, true);
+		}
+		
+		private Caption GetCaption(Druid druid, ResourceLevel level, CultureInfo culture, bool cache)
 		{
 			culture = culture ?? this.culture;
 
 			string resource = Resources.ResolveCaptionsDruidReference (druid.ToResourceId ());
 			string bundleName;
 			string fieldName;
+			
+			resource = this.NormalizeFullId (resource);
 
 			Caption caption = null;
 			
@@ -732,6 +739,16 @@ namespace Epsitec.Common.Support
 					
 					default:
 						throw new ResourceException ("Invalid resource level");
+				}
+
+				if (caption != null)
+				{
+					caption.DefineId (druid.ToResourceId ());
+					
+					if (cache)
+					{
+						this.GetBundleRelatedCache (bundleName, level, culture).AddCaption (caption);
+					}
 				}
 			}
 
@@ -1009,14 +1026,14 @@ namespace Epsitec.Common.Support
 				(bundleName.Length > 0) &&
 				(fieldName.Length > 0))
 			{
-				BundleRelatedCache proxy = this.GetBundleRelatedCache (bundleName, ResourceLevel.Merged, this.culture);
+				BundleRelatedCache cache = this.GetBundleRelatedCache (bundleName, ResourceLevel.Merged, this.culture);
 
-				if (proxy != null)
+				if (cache != null)
 				{
-					binding.Source = proxy;
+					binding.Source = cache;
 					binding.Path = fieldName;
 
-					proxy.AddBinding (binding);
+					cache.AddBinding (binding);
 
 					return true;
 				}
@@ -1058,7 +1075,7 @@ namespace Epsitec.Common.Support
 				ResourceBundle oldBundle = pair.Value.Bundle;
 				ResourceBundle newBundle = this.GetBundle (name, level, culture);
 
-				pair.Value.SwitchToBundle (newBundle);
+				pair.Value.SwitchToBundle (newBundle, this);
 
 				update[key] = pair.Value;
 			}
@@ -1199,13 +1216,13 @@ namespace Epsitec.Common.Support
 				}
 			}
 			
-			public void SwitchToBundle(ResourceBundle bundle)
+			public void SwitchToBundle(ResourceBundle bundle, ResourceManager manager)
 			{
 				if (this.bundle != bundle)
 				{
 					this.bundle = bundle;
-					this.SyncBindings ();
-					this.SyncCaptions ();
+					this.SyncBindings (manager);
+					this.SyncCaptions (manager);
 				}
 			}
 
@@ -1225,7 +1242,7 @@ namespace Epsitec.Common.Support
 				this.TrimCaptionCache ();
 			}
 
-			private void SyncBindings()
+			private void SyncBindings(ResourceManager manager)
 			{
 				Weak<Types.Binding>[] bindings = this.bindings.ToArray ();
 
@@ -1244,9 +1261,12 @@ namespace Epsitec.Common.Support
 				}
 			}
 
-			private void SyncCaptions()
+			private void SyncCaptions(ResourceManager manager)
 			{
 				Weak<Types.Caption>[] captions = this.captions.ToArray ();
+
+				ResourceLevel level = this.bundle.ResourceLevel;
+				CultureInfo culture = this.bundle.Culture;
 
 				for (int i = 0; i < captions.Length; i++)
 				{
@@ -1258,7 +1278,12 @@ namespace Epsitec.Common.Support
 					}
 					else
 					{
-						//	TODO: update caption
+						Types.Caption update = manager.GetCaption (Druid.Parse (caption.Id), level, culture, false);
+
+						if (update != null)
+						{
+							DependencyObject.CopyDefinedProperties (update, caption);
+						}
 					}
 				}
 			}
