@@ -99,7 +99,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public int								UniqueId
+		public int								SerialId
 		{
 			get
 			{

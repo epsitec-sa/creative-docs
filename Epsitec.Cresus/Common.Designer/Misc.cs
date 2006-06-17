@@ -351,7 +351,7 @@ namespace Epsitec.Common.Designer
 		}
 
 
-		static public string GetShortCut(Command command)
+		static public string GetShortcut(Command command)
 		{
 			//	Retourne le nom des touches associées à une commande.
 			if (command == null || command.HasShortcuts == false)
@@ -363,7 +363,7 @@ namespace Epsitec.Common.Designer
 		static public string GetTextWithShortcut(Command command)
 		{
 			//	Donne le nom d'une commande, avec le raccourci clavier éventuel entre parenthèses.
-			string shortcut = Misc.GetShortCut(command);
+			string shortcut = Misc.GetShortcut(command);
 
 			if (shortcut == null)
 			{
