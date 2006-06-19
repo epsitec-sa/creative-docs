@@ -29,7 +29,6 @@ namespace Epsitec.Common.Widgets
 			this.arrowDown.Engaged += new EventHandler(this.HandleButton);
 			this.arrowUp.StillEngaged += new EventHandler(this.HandleButton);
 			this.arrowDown.StillEngaged += new EventHandler(this.HandleButton);
-			this.range.Changed += new EventHandler(this.HandleRangeChanged);
 			this.arrowUp.AutoRepeat = true;
 			this.arrowDown.AutoRepeat = true;
 		}
@@ -48,7 +47,6 @@ namespace Epsitec.Common.Widgets
 				this.arrowDown.Engaged -= new EventHandler(this.HandleButton);
 				this.arrowUp.StillEngaged -= new EventHandler(this.HandleButton);
 				this.arrowDown.StillEngaged -= new EventHandler(this.HandleButton);
-				this.range.Changed -= new EventHandler(this.HandleRangeChanged);
 			}
 			
 			base.Dispose(disposing);
@@ -437,7 +435,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		private void HandleRangeChanged(object sender)
+		private void HandleRangeChanged()
 		{
 			this.UpdateEnable ();
 			this.UpdateInternalGeometry ();
@@ -574,7 +572,12 @@ namespace Epsitec.Common.Widgets
 			{
 				if (this.range.Minimum != value)
 				{
-					this.range.Minimum = value;
+					decimal min = value;
+					decimal max = this.range.Maximum;
+					decimal res = this.range.Resolution;
+
+					this.range = new Types.DecimalRange (min, max, res);
+					this.HandleRangeChanged ();
 				}
 			}
 		}
@@ -589,7 +592,12 @@ namespace Epsitec.Common.Widgets
 			{
 				if (this.range.Maximum != value)
 				{
-					this.range.Maximum = value;
+					decimal min = this.range.Minimum;
+					decimal max = value;
+					decimal res = this.range.Resolution;
+
+					this.range = new Types.DecimalRange (min, max, res);
+					this.HandleRangeChanged ();
 				}
 			}
 		}
@@ -602,7 +610,15 @@ namespace Epsitec.Common.Widgets
 			}
 			set
 			{
-				this.range.Resolution = value;
+				if (this.range.Resolution != value)
+				{
+					decimal min = this.range.Minimum;
+					decimal max = this.range.Maximum;
+					decimal res = value;
+
+					this.range = new Types.DecimalRange (min, max, res);
+					this.HandleRangeChanged ();
+				}
 			}
 		}
 

@@ -56,7 +56,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public decimal						MinValue
+		public decimal MinValue
 		{
 			get
 			{
@@ -64,11 +64,19 @@ namespace Epsitec.Common.Widgets
 			}
 			set
 			{
-				this.range.Minimum = value;
+				if (this.range.Minimum != value)
+				{
+					decimal min = value;
+					decimal max = this.range.Maximum;
+					decimal res = this.range.Resolution;
+
+					this.range = new Types.DecimalRange (min, max, res);
+					this.HandleRangeChanged ();
+				}
 			}
 		}
 
-		public decimal						MaxValue
+		public decimal MaxValue
 		{
 			get
 			{
@@ -76,11 +84,19 @@ namespace Epsitec.Common.Widgets
 			}
 			set
 			{
-				this.range.Maximum = value;
+				if (this.range.Maximum != value)
+				{
+					decimal min = this.range.Minimum;
+					decimal max = value;
+					decimal res = this.range.Resolution;
+
+					this.range = new Types.DecimalRange (min, max, res);
+					this.HandleRangeChanged ();
+				}
 			}
 		}
 
-		public decimal						Resolution
+		public decimal Resolution
 		{
 			get
 			{
@@ -88,9 +104,18 @@ namespace Epsitec.Common.Widgets
 			}
 			set
 			{
-				this.range.Resolution = value;
+				if (this.range.Resolution != value)
+				{
+					decimal min = this.range.Minimum;
+					decimal max = this.range.Maximum;
+					decimal res = value;
+
+					this.range = new Types.DecimalRange (min, max, res);
+					this.HandleRangeChanged ();
+				}
 			}
 		}
+
 		
 		public decimal						Range
 		{
@@ -269,6 +294,11 @@ namespace Epsitec.Common.Widgets
 			return this.MinValue;
 		}
 
+		private void HandleRangeChanged()
+		{
+			this.Invalidate ();
+		}
+		
 		protected virtual void OnValueChanged()
 		{
 			EventHandler handler = (EventHandler) this.GetUserEventHandler("ValueChanged");

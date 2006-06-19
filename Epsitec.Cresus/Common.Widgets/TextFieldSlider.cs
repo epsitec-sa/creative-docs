@@ -7,21 +7,21 @@ namespace Epsitec.Common.Widgets
 	{
 		public TextFieldSlider()
 		{
-			this.slider = new Slider(this);
+			this.slider = new Slider (this);
 			this.slider.HasFrame = false;
-			this.slider.ValueChanged += new Support.EventHandler(this.HandleSliderValueChanged);
-			
-			this.range.Changed += new Support.EventHandler(this.HandleRangeChanged);
-			this.UpdateSliderRange();
+			this.slider.ValueChanged += new Support.EventHandler (this.HandleSliderValueChanged);
+
+			this.UpdateSliderRange ();
 		}
-		
-		public TextFieldSlider(Widget embedder) : this()
+
+		public TextFieldSlider(Widget embedder)
+			: this ()
 		{
-			this.SetEmbedder(embedder);
+			this.SetEmbedder (embedder);
 		}
-		
-		
-		public Drawing.Color				Color
+
+
+		public Drawing.Color Color
 		{
 			//	Couleur du slider.
 			get
@@ -34,21 +34,21 @@ namespace Epsitec.Common.Widgets
 				this.slider.Color = value;
 			}
 		}
-		
+
 		static TextFieldSlider()
 		{
 			//	Toute modification de la propriété BackColor doit être répercutée
 			//	sur le slider. Le plus simple est d'utiliser un override callback
 			//	sur la propriété BackColor :
-			
+
 			Helpers.VisualPropertyMetadata metadata = new Helpers.VisualPropertyMetadata (Drawing.Color.Empty, Helpers.VisualPropertyMetadataOptions.AffectsDisplay);
-			
+
 			metadata.SetValueOverride = new Epsitec.Common.Types.SetValueOverrideCallback (TextFieldSlider.SetBackColorValue);
-			
+
 			Visual.BackColorProperty.OverrideMetadata (typeof (TextFieldSlider), metadata);
 		}
-		
-		
+
+
 		private static void SetBackColorValue(Types.DependencyObject o, object value)
 		{
 			TextFieldSlider that = o as TextFieldSlider;
@@ -56,8 +56,8 @@ namespace Epsitec.Common.Widgets
 			that.SetValueBase (Visual.BackColorProperty, value);
 		}
 
-		
-		public decimal						Logarithmic
+
+		public decimal Logarithmic
 		{
 			get
 			{
@@ -70,40 +70,41 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		
+
 		protected override void Dispose(bool disposing)
 		{
-			if ( disposing )
+			if (disposing)
 			{
-				if ( this.slider != null )
+				if (this.slider != null)
 				{
-					this.slider.ValueChanged -= new Support.EventHandler(this.HandleSliderValueChanged);
-					this.slider.Dispose();
+					this.slider.ValueChanged -= new Support.EventHandler (this.HandleSliderValueChanged);
+					this.slider.Dispose ();
 				}
 				this.slider = null;
 			}
-			
-			base.Dispose(disposing);
+
+			base.Dispose (disposing);
 		}
-		
+
 		protected override void UpdateGeometry()
 		{
 			base.UpdateGeometry ();
 
-			if ( this.arrowUp == null )  return;
+			if (this.arrowUp == null)
+				return;
 
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
 			Drawing.Rectangle rect = this.Client.Bounds;
-			rect.Width -= System.Math.Floor(rect.Height*adorner.GeometryUpDownWidthFactor)-1;
+			rect.Width -= System.Math.Floor (rect.Height*adorner.GeometryUpDownWidthFactor)-1;
 			rect.Height = TextFieldSlider.sliderHeight;
-			this.slider.SetManualBounds(rect);
+			this.slider.SetManualBounds (rect);
 		}
 
 		protected override void OnValueChanged()
 		{
 			//	Valeur numérique éditée.
 			base.OnValueChanged ();
-			
+
 			if (this.Text != "")
 			{
 				this.slider.Value = this.Value;
@@ -116,18 +117,19 @@ namespace Epsitec.Common.Widgets
 			this.margins.Bottom = TextFieldSlider.sliderHeight-AbstractTextField.FrameMargin;
 		}
 
-		
+
 		private void HandleSliderValueChanged(object sender)
 		{
-			this.SetValue(this.slider.Value);
+			this.SetValue (this.slider.Value);
 		}
-		
-		private void HandleRangeChanged(object sender)
+
+		protected override void OnRangeChanged()
 		{
-			this.UpdateSliderRange();
+			base.OnRangeChanged ();
+			this.UpdateSliderRange ();
 		}
-		
-		
+
+
 		protected virtual void UpdateSliderRange()
 		{
 			this.slider.MinValue   = this.MinValue;
@@ -135,8 +137,8 @@ namespace Epsitec.Common.Widgets
 			this.slider.Resolution = this.Resolution;
 		}
 
-		
-		protected Slider					slider;
-		protected static readonly double	sliderHeight = 5;
+
+		protected Slider slider;
+		protected static readonly double sliderHeight = 5;
 	}
 }
