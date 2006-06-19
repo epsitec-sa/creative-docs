@@ -11,9 +11,8 @@ namespace Epsitec.Common.Widgets
 	{
 		protected AbstractSlider(bool vertical, bool hasButtons)
 		{
-			this.drag_behavior = new Behaviors.DragBehavior (this, true, false);
-			
-			this.is_vertical = vertical;
+			this.is_vertical   = vertical;
+			this.drag_behavior = this.CreateDragBehavior ();
 			
 			this.AutoEngage = true;
 			this.AutoRepeat = true;
@@ -41,6 +40,11 @@ namespace Epsitec.Common.Widgets
 			: this (vertical, hasButtons)
 		{
 			this.SetEmbedder(embedder);
+		}
+
+		protected virtual Behaviors.DragBehavior CreateDragBehavior()
+		{
+			return new Behaviors.DragBehavior (this, true, false);
 		}
 
 
@@ -163,13 +167,16 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void UpdateGeometry()
 		{
+			Drawing.Rectangle rect = this.Client.Bounds;
+
 			if ((this.arrowDown == null) ||
 				(this.arrowUp == null))
 			{
+				this.sliderRect = rect;
+//				this.UpdateInternalGeometry ();
+				
 				return;
 			}
-			
-			Drawing.Rectangle rect = this.Client.Bounds;
 			
 			double arrow_length = this.is_vertical ? rect.Width : rect.Height;
 			double total_length = this.is_vertical ? rect.Height : rect.Width;
@@ -236,7 +243,7 @@ namespace Epsitec.Common.Widgets
 			
 			if (this.Range > 0)
 			{
-				decimal lp = this.LogarithmicValue - this.range.Minimum;
+				decimal lp = this.LogarithmicValue - this.MinValue;
 				double pos   = (double) (this.is_inverted ? this.Range - lp : lp);
 				double range = (double) (this.Range);
 				
@@ -339,38 +346,42 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		protected Zone DetectZone(Drawing.Point pos)
+		protected virtual Zone DetectZone(Drawing.Point pos)
 		{
-			if (this.IsEnabled)
+			if ((this.arrowUp != null) &&
+				(this.arrowDown != null))
 			{
-				if (this.is_vertical)
+				if (this.IsEnabled)
 				{
-					if (pos.Y < this.thumbRect.Bottom)
+					if (this.is_vertical)
 					{
-						return Zone.PageDown;
-					}
-					else if (pos.Y > this.thumbRect.Top)
-					{
-						return Zone.PageUp;
+						if (pos.Y < this.thumbRect.Bottom)
+						{
+							return Zone.PageDown;
+						}
+						else if (pos.Y > this.thumbRect.Top)
+						{
+							return Zone.PageUp;
+						}
+						else
+						{
+							return Zone.Thumb;
+						}
 					}
 					else
 					{
-						return Zone.Thumb;
-					}
-				}
-				else
-				{
-					if (pos.X < this.thumbRect.Left)
-					{
-						return Zone.PageDown;
-					}
-					else if (pos.X > this.thumbRect.Right)
-					{
-						return Zone.PageUp;
-					}
-					else
-					{
-						return Zone.Thumb;
+						if (pos.X < this.thumbRect.Left)
+						{
+							return Zone.PageDown;
+						}
+						else if (pos.X > this.thumbRect.Right)
+						{
+							return Zone.PageUp;
+						}
+						else
+						{
+							return Zone.Thumb;
+						}
 					}
 				}
 			}
@@ -523,35 +534,59 @@ namespace Epsitec.Common.Widgets
 
 
 		#region IDragBehaviorHost Members
-		Drawing.Point						Behaviors.IDragBehaviorHost.DragLocation
+
+		Epsitec.Common.Drawing.Point Epsitec.Common.Widgets.Behaviors.IDragBehaviorHost.DragLocation
+		{
+			get
+			{
+				return this.DragLocation;
+			}
+		}
+
+		bool Epsitec.Common.Widgets.Behaviors.IDragBehaviorHost.OnDragBegin(Epsitec.Common.Drawing.Point cursor)
+		{
+			return this.OnDragBegin (cursor);
+		}
+
+		void Epsitec.Common.Widgets.Behaviors.IDragBehaviorHost.OnDragging(DragEventArgs e)
+		{
+			this.OnDragging (e);
+		}
+
+		void Epsitec.Common.Widgets.Behaviors.IDragBehaviorHost.OnDragEnd()
+		{
+			this.OnDragEnd ();
+		}
+
+		#endregion
+
+		protected virtual Drawing.Point						DragLocation
 		{
 			get
 			{
 				return this.thumbRect.Location;
 			}
 		}
-		
-		
-		bool Behaviors.IDragBehaviorHost.OnDragBegin(Drawing.Point cursor)
+
+		protected virtual bool OnDragBegin(Drawing.Point cursor)
 		{
 			this.is_dragging = true;
 			this.is_first_dragging = true;
 			this.Invalidate ();
 			return true;
 		}
-		
-		void Behaviors.IDragBehaviorHost.OnDragging(DragEventArgs e)
+
+		protected virtual void OnDragging(DragEventArgs e)
 		{
 			this.ScrollByDragging (this.is_vertical ? e.ToPoint.Y : e.ToPoint.X, this.is_first_dragging);
 			this.is_first_dragging = false;
 		}
-		
-		void Behaviors.IDragBehaviorHost.OnDragEnd()
+
+		protected virtual void OnDragEnd()
 		{
 			this.is_dragging = false;
 			this.Invalidate ();
 		}
-		#endregion
 		
 		#region INumValue Members
 		public decimal						Value
@@ -626,16 +661,16 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public decimal						Logarithmic
+		public decimal						LogarithmicDivisor
 		{
 			get
 			{
-				return this.logarithmic;
+				return this.logarithmicDivisor;
 			}
 
 			set
 			{
-				this.logarithmic = value;
+				this.logarithmicDivisor = value;
 			}
 		}
 
@@ -650,7 +685,7 @@ namespace Epsitec.Common.Widgets
 				else
 				{
 					decimal norm = (this.Value-this.MinValue)/(this.MaxValue-this.MinValue);
-					norm = (decimal)System.Math.Pow((double)norm, (double)(1.0M/this.logarithmic));
+					norm = (decimal)System.Math.Pow((double)norm, (double)(1.0M/this.logarithmicDivisor));
 					return norm*(this.MaxValue-this.MinValue)+this.MinValue;
 				}
 			}
@@ -659,7 +694,7 @@ namespace Epsitec.Common.Widgets
 				if ( this.MaxValue != this.MinValue )
 				{
 					decimal norm = (value-this.MinValue)/(this.MaxValue-this.MinValue);
-					norm = (decimal)System.Math.Pow((double)norm, (double)this.logarithmic);
+					norm = (decimal)System.Math.Pow((double)norm, (double)this.logarithmicDivisor);
 					value = norm*(this.MaxValue-this.MinValue)+this.MinValue;
 				}
 				this.Value = value;
@@ -746,7 +781,7 @@ namespace Epsitec.Common.Widgets
 		
 		private Zone						hiliteZone;
 		protected Types.DecimalRange		range = new Types.DecimalRange (0, 1, 0.000001M);
-		protected decimal					logarithmic = 1;
+		private decimal						logarithmicDivisor = 1;
 		private bool						isInitialChange = true;
 	}
 }

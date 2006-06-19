@@ -57,16 +57,16 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		public decimal Logarithmic
+		public decimal LogarithmicDivisor
 		{
 			get
 			{
-				return this.slider.Logarithmic;
+				return this.slider.LogarithmicDivisor;
 			}
 
 			set
 			{
-				this.slider.Logarithmic = value;
+				this.slider.LogarithmicDivisor = value;
 			}
 		}
 
