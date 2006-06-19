@@ -6,7 +6,7 @@ namespace Epsitec.Cresus.Database
 	/// <summary>
 	/// La classe DbTypeNum définit les paramètres d'une valeur numérique.
 	/// </summary>
-	public class DbTypeNum : DbType, Common.Types.INumType
+	public class DbTypeNum : DbType, Common.Types.INumericType
 	{
 		internal DbTypeNum() : base (DbSimpleType.Decimal)
 		{

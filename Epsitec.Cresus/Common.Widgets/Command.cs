@@ -386,9 +386,9 @@ namespace Epsitec.Common.Widgets
 
 		#endregion
 
-		#region INamedType Members
+		#region ISystemType Members
 
-		System.Type INamedType.SystemType
+		System.Type ISystemType.SystemType
 		{
 			get
 			{
