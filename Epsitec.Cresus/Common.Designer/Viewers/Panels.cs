@@ -553,7 +553,7 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			//	Un bouton pour changer de culture a été cliqué.
 			IconButton button = sender as IconButton;
-			this.module.ResourceManager.ActiveCulture = Resources.FindCultureInfo(button.Name);
+			this.module.ResourceManager.ActiveCulture = Resources.FindSpecificCultureInfo(button.Name);
 			this.UpdateCultureButtons();
 		}
 

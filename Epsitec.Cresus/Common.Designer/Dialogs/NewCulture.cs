@@ -100,7 +100,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.cultureWidget.Items.Clear();
 			foreach (string name in this.cultureList)
 			{
-				System.Globalization.CultureInfo culture = Resources.FindCultureInfo(name);
+				System.Globalization.CultureInfo culture = Resources.FindSpecificCultureInfo(name);
 				this.cultureWidget.Items.Add(Misc.CultureLongName(culture));
 			}
 			this.cultureWidget.SelectedIndex = 0;  // sélectionne en priorité la première culture de la liste
