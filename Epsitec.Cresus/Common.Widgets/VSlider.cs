@@ -6,7 +6,7 @@ namespace Epsitec.Common.Widgets
 	public class VSlider : AbstractSlider
 	{
 		public VSlider()
-			: base (true)
+			: base (true, true)
 		{
 			this.ArrowUp.Name   = "Up";
 			this.ArrowDown.Name = "Down";

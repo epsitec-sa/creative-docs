@@ -1,4 +1,5 @@
 using Epsitec.Common.Support;
+using Epsitec.Common.Types;
 
 namespace Epsitec.Common.Widgets
 {
@@ -8,7 +9,7 @@ namespace Epsitec.Common.Widgets
 	/// </summary>
 	public abstract class AbstractSlider : Widget, Behaviors.IDragBehaviorHost, Support.Data.INumValue
 	{
-		protected AbstractSlider(bool vertical)
+		protected AbstractSlider(bool vertical, bool hasButtons)
 		{
 			this.drag_behavior = new Behaviors.DragBehavior (this, true, false);
 			
@@ -19,21 +20,25 @@ namespace Epsitec.Common.Widgets
 			
 			this.InternalState |= InternalState.Engageable;
 
-			this.arrowUp = new GlyphButton(this);
-			this.arrowDown = new GlyphButton(this);
-			this.arrowUp.GlyphShape = GlyphShape.Plus;
-			this.arrowDown.GlyphShape = GlyphShape.Minus;
-			this.arrowUp.ButtonStyle = ButtonStyle.Slider;
-			this.arrowDown.ButtonStyle = ButtonStyle.Slider;
-			this.arrowUp.Engaged += new EventHandler(this.HandleButton);
-			this.arrowDown.Engaged += new EventHandler(this.HandleButton);
-			this.arrowUp.StillEngaged += new EventHandler(this.HandleButton);
-			this.arrowDown.StillEngaged += new EventHandler(this.HandleButton);
-			this.arrowUp.AutoRepeat = true;
-			this.arrowDown.AutoRepeat = true;
+			if (hasButtons)
+			{
+				this.arrowUp = new GlyphButton (this);
+				this.arrowDown = new GlyphButton (this);
+				this.arrowUp.GlyphShape = GlyphShape.Plus;
+				this.arrowDown.GlyphShape = GlyphShape.Minus;
+				this.arrowUp.ButtonStyle = ButtonStyle.Slider;
+				this.arrowDown.ButtonStyle = ButtonStyle.Slider;
+				this.arrowUp.Engaged += new EventHandler (this.HandleButton);
+				this.arrowDown.Engaged += new EventHandler (this.HandleButton);
+				this.arrowUp.StillEngaged += new EventHandler (this.HandleButton);
+				this.arrowDown.StillEngaged += new EventHandler (this.HandleButton);
+				this.arrowUp.AutoRepeat = true;
+				this.arrowDown.AutoRepeat = true;
+			}
 		}
-		
-		protected AbstractSlider(Widget embedder, bool vertical) : this(vertical)
+
+		protected AbstractSlider(Widget embedder, bool vertical, bool hasButtons)
+			: this (vertical, hasButtons)
 		{
 			this.SetEmbedder(embedder);
 		}
@@ -43,10 +48,16 @@ namespace Epsitec.Common.Widgets
 		{
 			if ( disposing )
 			{
-				this.arrowUp.Engaged -= new EventHandler(this.HandleButton);
-				this.arrowDown.Engaged -= new EventHandler(this.HandleButton);
-				this.arrowUp.StillEngaged -= new EventHandler(this.HandleButton);
-				this.arrowDown.StillEngaged -= new EventHandler(this.HandleButton);
+				if (this.arrowUp != null)
+				{
+					this.arrowUp.Engaged -= new EventHandler (this.HandleButton);
+					this.arrowUp.StillEngaged -= new EventHandler (this.HandleButton);
+				}
+				if (this.arrowDown != null)
+				{
+					this.arrowDown.Engaged -= new EventHandler (this.HandleButton);
+					this.arrowDown.StillEngaged -= new EventHandler (this.HandleButton);
+				}
 			}
 			
 			base.Dispose(disposing);
@@ -547,18 +558,11 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.range.Constrain (this.position + this.range.Minimum);
+				return (decimal) this.GetValue (AbstractSlider.ValueProperty);
 			}
 			set
 			{
-				value = this.range.Constrain (value) - this.range.Minimum;
-				
-				if (this.position != value)
-				{
-					this.position = value;
-					this.OnValueChanged ();
-					this.Invalidate ();
-				}
+				this.SetValue (AbstractSlider.ValueProperty, value);
 			}
 		}
 
@@ -701,8 +705,26 @@ namespace Epsitec.Common.Widgets
 			PageDown
 		}
 		#endregion
+
+		private static void NotifyValueChanged(DependencyObject o, object oldValue, object newValue)
+		{
+			AbstractSlider that = o as AbstractSlider;
+			that.OnValueChanged ();
+		}
+
+		private static object CoerceValue(DependencyObject o, DependencyProperty property, object value)
+		{
+			AbstractSlider that = o as AbstractSlider;
+			decimal num = (decimal) value;
+
+			num = that.range.Constrain (num);
+
+			return num;
+		}
+
+		public static readonly DependencyProperty ValueProperty = DependencyProperty.Register ("Value", typeof (decimal), typeof (AbstractSlider), new Helpers.VisualPropertyMetadata (0M, AbstractSlider.NotifyValueChanged, AbstractSlider.CoerceValue, Helpers.VisualPropertyMetadataOptions.AffectsDisplay));
 		
-		protected static readonly double	defaultBreadth = 16;
+		protected static readonly double defaultBreadth = 16;
 		protected static readonly double	handleBreadth = 7;
 		protected static readonly double	minimalThumb = 8;
 		protected static readonly double	minimalArrow = 6;
@@ -711,7 +733,6 @@ namespace Epsitec.Common.Widgets
 		
 		private bool						is_vertical;
 		private bool						is_inverted;
-		private decimal						position   = 0.0M;
 		private decimal						buttonStep = 0.1M;
 		private decimal						pageStep   = 0.2M;
 		private GlyphButton					arrowUp;
@@ -724,8 +745,8 @@ namespace Epsitec.Common.Widgets
 		private Drawing.Rectangle			tabRect;
 		
 		private Zone						hiliteZone;
-		private Types.DecimalRange			range = new Types.DecimalRange (0, 1, 0.000001M);
-		private decimal						logarithmic = 1;
+		protected Types.DecimalRange		range = new Types.DecimalRange (0, 1, 0.000001M);
+		protected decimal					logarithmic = 1;
 		private bool						isInitialChange = true;
 	}
 }

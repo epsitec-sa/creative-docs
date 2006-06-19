@@ -5,18 +5,20 @@ namespace Epsitec.Common.Widgets
 	/// </summary>
 	public class HSlider : AbstractSlider
 	{
-		public HSlider() : base(false)
+		public HSlider()
+			: base (false, true)
 		{
 			this.ArrowUp.Name   = "Right";
 			this.ArrowDown.Name = "Left";
 		}
-		
-		public HSlider(Widget embedder) : this()
+
+		public HSlider(Widget embedder)
+			: this ()
 		{
-			this.SetEmbedder(embedder);
+			this.SetEmbedder (embedder);
 		}
-		
-		
+
+
 		static HSlider()
 		{
 			Helpers.VisualPropertyMetadata metadataMinDx = new Helpers.VisualPropertyMetadata (AbstractSlider.minimalThumb+6, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
