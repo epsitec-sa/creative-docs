@@ -17,7 +17,7 @@ namespace Epsitec.Common.Support
 	/// accessed through its full resource id ("provider/module:bundle#field")
 	/// or by specifying a DRUID.
 	/// </summary>
-	public sealed class ResourceManager : DependencyObject
+	public sealed class ResourceManager : DependencyObject, System.IComparable<ResourceManager>, System.IEquatable<ResourceManager>
 	{
 		public ResourceManager() : this (Support.Globals.Directories.Executable)
 		{
@@ -1021,6 +1021,59 @@ namespace Epsitec.Common.Support
 			{
 				proxy.TrimCache ();
 			}
+		}
+
+		#region IComparable<ResourceManager> Members
+
+		int System.IComparable<ResourceManager>.CompareTo(ResourceManager other)
+		{
+			if (this.serialId < other.serialId)
+			{
+				return -1;
+			}
+			else if (this.serialId > other.serialId)
+			{
+				return 1;
+			}
+			else
+			{
+				return 0;
+			}
+		}
+
+		#endregion
+
+		#region IEquatable<ResourceManager> Members
+
+		bool System.IEquatable<ResourceManager>.Equals(ResourceManager other)
+		{
+			return this.serialId == other.serialId;
+		}
+
+		#endregion
+
+		public override int GetHashCode()
+		{
+			return (int) this.serialId;
+		}
+
+		public override bool Equals(object obj)
+		{
+			ResourceManager other = obj as ResourceManager;
+
+			if (object.ReferenceEquals (other, null))
+			{
+				return false;
+			}
+			else
+			{
+				return this.serialId == other.serialId;
+			}
+		}
+
+		public override string ToString()
+		{
+			return string.Format ("[ResMan lang={1}/mod={2} ({3})/serial={0}]", this.serialId, this.culture == null ? "--" : this.culture.TwoLetterISOLanguageName, this.defaultModuleName ?? "*", this.defaultModuleId);
 		}
 
 		#region Internal and Private Methods
