@@ -913,8 +913,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 					Widget group;
 					int order;
+					ObjectModifier.DockedHorizontalAttachment ha;
+					ObjectModifier.DockedVerticalAttachment va;
 					Rectangle hilite;
-					this.ZOrderDetect(initialPos, parent, out group, out order, out hilite);
+					this.ZOrderDetect(initialPos, parent, out group, out order, out ha, out va, out hilite);
 					this.SetHilitedZOrderRectangle(hilite);
 				}
 
@@ -950,7 +952,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 						this.creatingObject = this.CreateObjectItem();
 						this.creatingObject.SetParent(parent);
 						this.creatingObject.TabNavigation = TabNavigationMode.Passive;
-						this.ObjectAdaptFromParent(this.creatingObject, parent);
+						this.ObjectAdaptFromParent(this.creatingObject, parent, ObjectModifier.DockedHorizontalAttachment.None, ObjectModifier.DockedVerticalAttachment.None);
 						this.SetObjectPosition(this.creatingObject, pos);
 					}
 
@@ -958,14 +960,16 @@ namespace Epsitec.Common.Designer.MyWidgets
 					{
 						Widget group;
 						int order;
+						ObjectModifier.DockedHorizontalAttachment ha;
+						ObjectModifier.DockedVerticalAttachment va;
 						Rectangle hilite;
-						this.ZOrderDetect(initialPos, parent, out group, out order, out hilite);
+						this.ZOrderDetect(initialPos, parent, out group, out order, out ha, out va, out hilite);
 
 						this.creatingObject = this.CreateObjectItem();
 						this.creatingObject.SetParent(group);
 						this.creatingObject.ZOrder = order;
 						this.creatingObject.TabNavigation = TabNavigationMode.Passive;
-						this.ObjectAdaptFromParent(this.creatingObject, parent);
+						this.ObjectAdaptFromParent(this.creatingObject, parent, ha, va);
 					}
 				}
 				else  // relâché hors de la fenêtre ?
@@ -1054,7 +1058,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			return item;
 		}
 
-		protected void ObjectAdaptFromParent(Widget obj, Widget parent)
+		protected void ObjectAdaptFromParent(Widget obj, Widget parent, ObjectModifier.DockedHorizontalAttachment ha, ObjectModifier.DockedVerticalAttachment va)
 		{
 			//	Adapte un objet d'après son parent.
 			if (this.objectModifier.IsChildrenAnchored(parent))
@@ -1069,11 +1073,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 				if (this.objectModifier.IsChildrenHorizontal(parent))
 				{
-					obj.Dock = DockStyle.Left;
+					this.objectModifier.SetDockedHorizontalAttachment(obj, ha);
 				}
 				else
 				{
-					obj.Dock = DockStyle.Bottom;
+					this.objectModifier.SetDockedVerticalAttachment(obj, va);
 				}
 
 				obj.Anchor = AnchorStyles.None;
@@ -1296,8 +1300,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 				Widget group;
 				int order;
+				ObjectModifier.DockedHorizontalAttachment ha;
+				ObjectModifier.DockedVerticalAttachment va;
 				Rectangle hilite;
-				this.ZOrderDetect(pos, parent, out group, out order, out hilite);
+				this.ZOrderDetect(pos, parent, out group, out order, out ha, out va, out hilite);
 				this.SetHilitedZOrderRectangle(hilite);
 			}
 
@@ -1333,9 +1339,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 				{
 					Widget group;
 					int order;
+					ObjectModifier.DockedHorizontalAttachment ha;
+					ObjectModifier.DockedVerticalAttachment va;
 					Rectangle hilite;
-					this.ZOrderDetect(pos, parent, out group, out order, out hilite);
-					this.ZOrderChangeSelection(group, order);
+					this.ZOrderDetect(pos, parent, out group, out order, out ha, out va, out hilite);
+					this.ZOrderChangeSelection(group, order, ha, va);
 					this.OnChildrenChanged();
 				}
 			}
@@ -1631,7 +1639,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 						parent.Children.Add(obj);
 					}
 
-					this.ObjectAdaptFromParent(obj, parent);
+					this.ObjectAdaptFromParent(obj, parent, ObjectModifier.DockedHorizontalAttachment.None, ObjectModifier.DockedVerticalAttachment.None);
 				}
 
 				bounds.Size = this.GetObjectBounds(obj).Size;
@@ -2214,7 +2222,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 
 		#region ZOrder
-		protected void ZOrderDetect(Point mouse, Widget parent, out Widget group, out int order, out Rectangle hilite)
+		protected void ZOrderDetect(Point mouse, Widget parent, out Widget group, out int order, out ObjectModifier.DockedHorizontalAttachment ha, out ObjectModifier.DockedVerticalAttachment va, out Rectangle hilite)
 		{
 			//	Détecte le ZOrder à utiliser pour une position donnée, ainsi que le rectangle
 			//	à utiliser pour la mise ne évidence.
@@ -2222,12 +2230,16 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				group = null;
 				order = -1;
+				ha = ObjectModifier.DockedHorizontalAttachment.None;
+				va = ObjectModifier.DockedVerticalAttachment.None;
 				hilite = Rectangle.Empty;
 				return;
 			}
 
 			group = parent;
 			order = 0;
+			ha = ObjectModifier.DockedHorizontalAttachment.None;
+			va = ObjectModifier.DockedVerticalAttachment.None;
 			hilite = Rectangle.Empty;
 
 			Widget obj = this.ZOrderDetectNearest(mouse, parent);  // objet le plus proche
@@ -2238,11 +2250,29 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 				if (this.objectModifier.IsChildrenHorizontal(parent))
 				{
-					hilite = new Rectangle(bounds.Left+t, bounds.Bottom+t, 0, bounds.Height-t*2);
+					if (mouse.X < bounds.Center.X)
+					{
+						hilite = new Rectangle(bounds.Left+t, bounds.Bottom+t, 0, bounds.Height-t*2);
+						ha = ObjectModifier.DockedHorizontalAttachment.Left;
+					}
+					else
+					{
+						hilite = new Rectangle(bounds.Right-t, bounds.Bottom+t, 0, bounds.Height-t*2);
+						ha = ObjectModifier.DockedHorizontalAttachment.Right;
+					}
 				}
 				else
 				{
-					hilite = new Rectangle(bounds.Left+t, bounds.Bottom+t, bounds.Width-t*2, 0);
+					if (mouse.Y < bounds.Center.Y)
+					{
+						hilite = new Rectangle(bounds.Left+t, bounds.Bottom+t, bounds.Width-t*2, 0);
+						va = ObjectModifier.DockedVerticalAttachment.Bottom;
+					}
+					else
+					{
+						hilite = new Rectangle(bounds.Left+t, bounds.Top-t, bounds.Width-t*2, 0);
+						va = ObjectModifier.DockedVerticalAttachment.Top;
+					}
 				}
 			}
 			else
@@ -2292,6 +2322,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 							hilite = new Rectangle(bounds.Right, bounds.Bottom, 0, bounds.Height);
 						}
 					}
+
+					ha = this.objectModifier.GetDockedHorizontalAttachment(obj);
 				}
 				else
 				{
@@ -2319,6 +2351,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 							hilite = new Rectangle(bounds.Left, bounds.Top, bounds.Width, 0);
 						}
 					}
+
+					va = this.objectModifier.GetDockedVerticalAttachment(obj);
 				}
 			}
 
@@ -2340,6 +2374,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 						{
 							group = null;
 							order = -1;  // aucun changement
+							ha = ObjectModifier.DockedHorizontalAttachment.None;
+							va = ObjectModifier.DockedVerticalAttachment.None;
 							hilite = Rectangle.Empty;
 							return;
 						}
@@ -2385,7 +2421,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
-		protected void ZOrderChangeSelection(Widget parent, int order)
+		protected void ZOrderChangeSelection(Widget parent, int order, ObjectModifier.DockedHorizontalAttachment ha, ObjectModifier.DockedVerticalAttachment va)
 		{
 			//	Change le ZOrder de tous les objets sélectionnés.
 			if (order == -1 || this.selectedObjects.Contains(parent))
@@ -2404,7 +2440,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 				obj.SetParent(parent);
 				obj.ZOrder = newOrder;
-				this.ObjectAdaptFromParent(obj, parent);
+				this.ObjectAdaptFromParent(obj, parent, ha, va);
 			}
 		}
 		#endregion
