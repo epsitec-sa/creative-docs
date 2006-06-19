@@ -13,17 +13,15 @@ namespace Epsitec.Common.Types
 		{
 		}
 		
-		public DecimalRange(decimal min, decimal max)
+		public DecimalRange(decimal min, decimal max) : this (min, max, 1.0M)
 		{
-			this.Minimum = min;
-			this.Maximum = max;
 		}
 		
 		public DecimalRange(decimal min, decimal max, decimal resolution)
 		{
-			this.Minimum    = min;
-			this.Maximum    = max;
-			this.Resolution = resolution;
+			this.minimum    = min;
+			this.maximum    = max;
+			this.DefineResolution (resolution);
 		}
 		
 		
@@ -33,14 +31,6 @@ namespace Epsitec.Common.Types
 			{
 				return this.minimum;
 			}
-			set
-			{
-				if (this.minimum != value)
-				{
-					this.minimum = value;
-					this.OnChanged ();
-				}
-			}
 		}
 		
 		public decimal						Maximum
@@ -48,14 +38,6 @@ namespace Epsitec.Common.Types
 			get
 			{
 				return this.maximum;
-			}
-			set
-			{
-				if (this.maximum != value)
-				{
-					this.maximum = value;
-					this.OnChanged ();
-				}
 			}
 		}
 		
@@ -80,42 +62,6 @@ namespace Epsitec.Common.Types
 			get
 			{
 				return this.resolution;
-			}
-			set
-			{
-				if (this.resolution != value)
-				{
-					if (value < 0)
-					{
-						throw new System.ArgumentOutOfRangeException ("value", value, "Resolution must be positive");
-					}
-					
-					this.resolution = value;
-					
-					//	Pour une résolution de 0.05, par exemple, on va déterminer les facteurs
-					//	multiplicatifs pour créer les 2 décimales après la virgule au moyen d'une
-					//	suite d'opérations: multiplier par le, facteur 'digits_mul', tronquer et
-					//	multiplier par le facteur 'digits_div'.
-					//
-					//	Ceci est utile, car le nombre decimal 1M n'est pas représenté de la même
-					//	manière que les nombres 1.0M ou 1.00M, quand ils sont convertis en string.
-					
-					this.digits_div  = 1M;
-					this.digits_mul  = 1M;
-					this.frac_digits = 0;
-					
-					decimal iter = value;
-					
-					while (iter != System.Decimal.Truncate (iter))
-					{
-						this.digits_mul *= 10M;
-						this.digits_div *= 0.1M;
-						this.frac_digits++;
-						iter *= 10M;
-					}
-					
-					this.OnChanged ();
-				}
 			}
 		}
 
@@ -309,6 +255,38 @@ namespace Epsitec.Common.Types
 			return this.CloneCopyToNewObject (this.CloneNewObject ());
 		}
 		#endregion
+
+		private void DefineResolution(decimal value)
+		{
+			if (value < 0)
+			{
+				throw new System.ArgumentOutOfRangeException ("value", value, "Resolution must be positive");
+			}
+
+			this.resolution = value;
+
+			//	Pour une résolution de 0.05, par exemple, on va déterminer les facteurs
+			//	multiplicatifs pour créer les 2 décimales après la virgule au moyen d'une
+			//	suite d'opérations: multiplier par le, facteur 'digits_mul', tronquer et
+			//	multiplier par le facteur 'digits_div'.
+			//
+			//	Ceci est utile, car le nombre decimal 1M n'est pas représenté de la même
+			//	manière que les nombres 1.0M ou 1.00M, quand ils sont convertis en string.
+
+			this.digits_div  = 1M;
+			this.digits_mul  = 1M;
+			this.frac_digits = 0;
+
+			decimal iter = value;
+
+			while (iter != System.Decimal.Truncate (iter))
+			{
+				this.digits_mul *= 10M;
+				this.digits_div *= 0.1M;
+				this.frac_digits++;
+				iter *= 10M;
+			}
+		}
 		
 		protected virtual object CloneNewObject()
 		{
@@ -332,14 +310,8 @@ namespace Epsitec.Common.Types
 		
 		protected virtual void OnChanged()
 		{
-			if (this.Changed != null)
-			{
-				this.Changed (this);
-			}
 		}
 		
-		
-		public event Support.EventHandler	Changed;
 		
 		private decimal						minimum		=   0.0M;
 		private decimal						maximum		= 100.0M;
