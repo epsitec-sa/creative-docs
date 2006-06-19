@@ -137,8 +137,13 @@ namespace Epsitec.Common.Types
 		{
 			return this.CheckInRange ((decimal) value);
 		}
-		
+
 		public bool CheckInRange(int value)
+		{
+			return this.CheckInRange ((decimal) value);
+		}
+
+		public bool CheckInRange(long value)
 		{
 			return this.CheckInRange ((decimal) value);
 		}
@@ -195,8 +200,13 @@ namespace Epsitec.Common.Types
 		{
 			return this.Constrain ((decimal) value);
 		}
-		
+
 		public decimal Constrain(int value)
+		{
+			return this.Constrain ((decimal) value);
+		}
+
+		public decimal Constrain(long value)
 		{
 			return this.Constrain ((decimal) value);
 		}
@@ -252,8 +262,13 @@ namespace Epsitec.Common.Types
 		{
 			return this.ConstrainToZero ((decimal) value);
 		}
-		
+
 		public decimal ConstrainToZero(int value)
+		{
+			return this.ConstrainToZero ((decimal) value);
+		}
+
+		public decimal ConstrainToZero(long value)
 		{
 			return this.ConstrainToZero ((decimal) value);
 		}

@@ -4,12 +4,19 @@
 namespace Epsitec.Common.Types
 {
 	/// <summary>
-	/// L'interface INameCaption permet de regrouper sous un même toit
-	/// les diverses classes qui exportent un nom, un titre et une
-	/// éventuelle description.
+	/// The <c>ICaption</c> interface gives access to a caption ID associated
+	/// with the object. This can then be mapped to a <see cref="T:Caption"/>
+	/// instance through the resource manager, for instance.
 	/// </summary>
 	public interface ICaption
 	{
-		long CaptionId { get; }
+		/// <summary>
+		/// Gets the caption id for the object.
+		/// </summary>
+		/// <value>The caption id (or -1 if there is none).</value>
+		long CaptionId
+		{
+			get;
+		}
 	}
 }
