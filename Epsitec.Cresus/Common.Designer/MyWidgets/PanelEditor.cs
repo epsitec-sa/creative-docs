@@ -1169,7 +1169,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 				this.isHandling = true;
 				this.handlingRectangle = this.SelectBounds;
-				this.handlesList.DraggingStart(pos, this.handlingRectangle, this.selectedObjects[0].MinSize, this.handlingType);
+				this.handlesList.DraggingStart(pos, this.handlingRectangle, this.selectedObjects[0].RealMinSize, this.handlingType);
 
 				CloneView clone = new CloneView();
 				clone.Model = this.selectedObjects[0];
