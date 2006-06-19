@@ -6,39 +6,42 @@ namespace Epsitec.Common.Widgets
 	/// <summary>
 	/// La classe Slider implémente un curseur de réglage.
 	/// </summary>
-	public class Slider : AbstractSlider, Support.Data.INumValue
+	public sealed class Slider : AbstractSlider, Support.Data.INumValue
 	{
-		public Slider() : base (false, false)
+		public Slider()
+			: base (false, false)
 		{
 			this.range = new Types.DecimalRange (0, 100, 1);
 		}
-		
-		public Slider(Widget embedder) : this()
+
+		public Slider(Widget embedder)
+			: this ()
 		{
-			this.SetEmbedder(embedder);
+			this.SetEmbedder (embedder);
 		}
 
-		
-		public bool							HasFrame
-		{
-			get { return this.has_frame; }
-			set { this.has_frame = value; }
-		}
-		
-		public Drawing.Color				Color
+
+		public bool								HasFrame
 		{
 			get
 			{
-				return this.color;
+				return this.hasFrame;
 			}
-
 			set
 			{
-				if ( this.color != value )
-				{
-					this.color = value;
-					this.Invalidate();
-				}
+				this.hasFrame = value;
+			}
+		}
+
+		public Drawing.Color					Color
+		{
+			get
+			{
+				return (Drawing.Color) this.GetValue (Slider.ColorProperty);
+			}
+			set
+			{
+				this.SetValue (Slider.ColorProperty, value);
 			}
 		}
 
@@ -47,15 +50,14 @@ namespace Epsitec.Common.Widgets
 		{
 			return new Behaviors.DragBehavior (this, true, true);
 		}
-		
-		protected override Drawing.Point		DragLocation
+
+		protected override Drawing.Point DragLocation
 		{
 			get
 			{
 				return new Drawing.Point (0, 0);
 			}
 		}
-
 
 		protected override bool OnDragBegin(Drawing.Point cursor)
 		{
@@ -70,60 +72,60 @@ namespace Epsitec.Common.Widgets
 		protected override void OnDragEnd()
 		{
 		}
-		
+
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
 
 			Drawing.Rectangle rect  = this.Client.Bounds;
-			WidgetPaintState       state = this.PaintState;
+			WidgetPaintState state = this.PaintState;
 
 			double width = rect.Width;
 			rect.Left   += adorner.GeometrySliderLeftMargin;
 			rect.Right  += adorner.GeometrySliderRightMargin;
 			rect.Bottom += adorner.GeometrySliderBottomMargin;
-			
-			if (this.has_frame)
+
+			if (this.hasFrame)
 			{
-				adorner.PaintTextFieldBackground(graphics, rect, state, TextFieldStyle.Multi, TextDisplayMode.Default, false);
+				adorner.PaintTextFieldBackground (graphics, rect, state, TextFieldStyle.Multi, TextDisplayMode.Default, false);
 			}
 			else
 			{
-				graphics.AddLine(1, rect.Top-0.5, width-1, rect.Top-0.5);
-				graphics.RenderSolid(adorner.ColorTextSliderBorder(this.IsEnabled));
+				graphics.AddLine (1, rect.Top-0.5, width-1, rect.Top-0.5);
+				graphics.RenderSolid (adorner.ColorTextSliderBorder (this.IsEnabled));
 			}
 
 			if (this.IsEnabled)
 			{
-				rect.Deflate(Slider.FrameMargin, Slider.FrameMargin);
-				
-				Drawing.Color front = this.color.IsEmpty     ? adorner.ColorCaption : this.color;
+				rect.Deflate (Slider.FrameMargin, Slider.FrameMargin);
+
+				Drawing.Color front = this.Color.IsEmpty     ? adorner.ColorCaption : this.Color;
 				Drawing.Color back  = this.BackColor.IsEmpty ? adorner.ColorWindow  : this.BackColor;
-				
-				if ((!this.has_frame) &&
+
+				if ((!this.hasFrame) &&
 					(rect.Left > 1))
 				{
-					Drawing.Path path = new Drawing.Path();
-					path.MoveTo(1, rect.Top);
-					path.LineTo(rect.Left, rect.Top);
-					path.LineTo(rect.Left, rect.Bottom);
-					path.CurveTo(1, rect.Bottom, 1, rect.Top);
-					graphics.Rasterizer.AddSurface(path);
-					graphics.RenderSolid(front);
+					Drawing.Path path = new Drawing.Path ();
+					path.MoveTo (1, rect.Top);
+					path.LineTo (rect.Left, rect.Top);
+					path.LineTo (rect.Left, rect.Bottom);
+					path.CurveTo (1, rect.Bottom, 1, rect.Top);
+					graphics.Rasterizer.AddSurface (path);
+					graphics.RenderSolid (front);
 				}
-				
-				graphics.AddFilledRectangle(rect);
-				graphics.RenderSolid(back);
-				
+
+				graphics.AddFilledRectangle (rect);
+				graphics.RenderSolid (back);
+
 				double range = (double) (this.Range);
 				double delta = (double) (this.LogarithmicValue - this.MinValue);
-				
+
 				if ((delta > 0) &&
 					(range > 0))
 				{
 					rect.Width *= delta / range;
-					graphics.AddFilledRectangle(rect);
-					graphics.RenderSolid(front);
+					graphics.AddFilledRectangle (rect);
+					graphics.RenderSolid (front);
 				}
 			}
 		}
@@ -132,35 +134,36 @@ namespace Epsitec.Common.Widgets
 		{
 			return Zone.Thumb;
 		}
-		
-		protected virtual decimal Detect(Drawing.Point pos)
+
+		private decimal Detect(Drawing.Point pos)
 		{
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
 			double width = this.Client.Size.Width;
 			double left = 0;
-			
+
 			width -= adorner.GeometrySliderLeftMargin;
 			width -= adorner.GeometrySliderRightMargin;
 			width -= Slider.FrameMargin;
-			
+
 			left  += adorner.GeometrySliderLeftMargin;
 			left  += Slider.FrameMargin;
-			
+
 			double offset  = (double) (pos.X - left);
 			double range   = (double) (this.Range);
 			double minimum = (double) (this.MinValue);
-			
+
 			if (width > 0)
 			{
 				return this.range.Constrain (minimum + offset * range / width);
 			}
-			
+
 			return this.MinValue;
 		}
-		
-		protected static readonly double	FrameMargin = 1;
 
-		private Drawing.Color				color = Drawing.Color.Empty;
-		private bool						has_frame = true;
+		private static readonly double			FrameMargin = 1;
+
+		public static readonly DependencyProperty ColorProperty = DependencyProperty.Register ("Color", typeof (Drawing.Color), typeof (Slider), new Helpers.VisualPropertyMetadata (Drawing.Color.Empty, Helpers.VisualPropertyMetadataOptions.AffectsDisplay));
+		
+		private bool							hasFrame = true;
 	}
 }

@@ -759,7 +759,7 @@ namespace Epsitec.Common.Widgets
 
 		public static readonly DependencyProperty ValueProperty = DependencyProperty.Register ("Value", typeof (decimal), typeof (AbstractSlider), new Helpers.VisualPropertyMetadata (0M, AbstractSlider.NotifyValueChanged, AbstractSlider.CoerceValue, Helpers.VisualPropertyMetadataOptions.AffectsDisplay));
 		
-		protected static readonly double defaultBreadth = 16;
+		protected static readonly double	defaultBreadth = 16;
 		protected static readonly double	handleBreadth = 7;
 		protected static readonly double	minimalThumb = 8;
 		protected static readonly double	minimalArrow = 6;
