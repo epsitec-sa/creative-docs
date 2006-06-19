@@ -1201,6 +1201,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 				this.handlesList.DraggingStop(pos);
 				this.isHandling = false;
+				this.OnChildrenChanged();
 				this.module.MainWindow.UpdateInfoViewer();
 			}
 		}
@@ -1325,6 +1326,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				{
 					Rectangle initial = this.SelectBounds;
 					this.MoveSelection(this.draggingRectangle.BottomLeft - initial.BottomLeft, parent);
+					this.OnChildrenChanged();
 				}
 
 				if (this.objectModifier.IsChildrenDocked(parent))
@@ -1334,6 +1336,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 					Rectangle hilite;
 					this.ZOrderDetect(pos, parent, out group, out order, out hilite);
 					this.ZOrderChangeSelection(group, order);
+					this.OnChildrenChanged();
 				}
 			}
 			else  // relâché hors de la fenêtre ?
@@ -1949,6 +1952,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.objectModifier.SetBounds(obj, bounds);
 
 				this.handlesList.UpdateGeometry();
+				this.OnChildrenChanged();
 			}
 		}
 
@@ -3070,6 +3074,27 @@ namespace Epsitec.Common.Designer.MyWidgets
 			remove
 			{
 				this.RemoveUserEventHandler("ChildrenSelected", value);
+			}
+		}
+
+		protected virtual void OnChildrenChanged()
+		{
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("ChildrenChanged");
+			if (handler != null)
+			{
+				handler(this);
+			}
+		}
+
+		public event EventHandler ChildrenChanged
+		{
+			add
+			{
+				this.AddUserEventHandler("ChildrenChanged", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("ChildrenChanged", value);
 			}
 		}
 

@@ -79,8 +79,8 @@ namespace Epsitec.Common.Designer.Viewers
 			container.Dock = DockStyle.Fill;
 
 			this.panelContainer = new UI.Panel();
-			//?this.panelContainer.ChildrenLayoutMode = Widgets.Layouts.LayoutMode.Anchored;
-			this.panelContainer.ChildrenLayoutMode = Widgets.Layouts.LayoutMode.Docked;
+			this.panelContainer.ChildrenLayoutMode = Widgets.Layouts.LayoutMode.Anchored;
+			//?this.panelContainer.ChildrenLayoutMode = Widgets.Layouts.LayoutMode.Docked;
 			//?this.panelContainer.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
 			this.panelContainer.ContainerLayoutMode = ContainerLayoutMode.VerticalFlow;
 			this.panelContainer.PreferredSize = new Size(200, 200);
@@ -96,6 +96,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.panelEditor.Anchor = AnchorStyles.All;
 			this.panelEditor.ChildrenAdded += new EventHandler(this.HandlePanelEditorChildrenAdded);
 			this.panelEditor.ChildrenSelected += new EventHandler(this.HandlePanelEditorChildrenSelected);
+			this.panelEditor.ChildrenChanged += new EventHandler(this.HandlePanelEditorChildrenChanged);
 			this.panelEditor.UpdateCommands += new EventHandler(this.HandlePanelEditorUpdateCommands);
 
 			this.tabBook = new TabBook(this);
@@ -650,6 +651,11 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			this.propertiesScrollable.Panel.Children.Clear();
 		}
+
+		protected void UpdateProxies()
+		{
+			this.proxyManager.UpdateUserInterface();
+		}
 		#endregion
 
 
@@ -692,6 +698,11 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			this.UpdateCommands();
 			this.DefineProxies(this.panelEditor.SelectedObjects);
+		}
+
+		void HandlePanelEditorChildrenChanged(object sender)
+		{
+			this.UpdateProxies();
 		}
 
 		void HandlePanelEditorUpdateCommands(object sender)

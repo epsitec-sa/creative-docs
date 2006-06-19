@@ -13,6 +13,7 @@ namespace Epsitec.Common.Designer.Proxies
 			this.AddWidget(widget);
 		}
 
+
 		#region IProxy Members
 		public void AddWidget(Widget widget)
 		{
@@ -28,6 +29,11 @@ namespace Epsitec.Common.Designer.Proxies
 				//	du widget et on initialise le proxy.
 				this.ReadFromWidget();
 			}
+		}
+
+		public void Update()
+		{
+			this.ReadFromWidget();
 		}
 
 		public abstract int Rank
@@ -46,7 +52,8 @@ namespace Epsitec.Common.Designer.Proxies
 		}
 		#endregion
 
-		public void ReadFromWidget()
+
+		protected void ReadFromWidget()
 		{
 			//	Synchronise le proxy avec le widget en lisant les propriétés du
 			//	widget connecté.
