@@ -57,7 +57,7 @@ namespace Epsitec.Common.Dialogs
 		
 		public enum AccessMode
 		{
-			[Types.Hide] None,
+			[Types.Hidden] None,
 			
 			Local, LAN, Internet
 		}
@@ -65,7 +65,7 @@ namespace Epsitec.Common.Dialogs
 		[System.Flags]
 		public enum LoginOptions
 		{
-			[Types.Hide] None	= 0,
+			[Types.Hidden] None	= 0,
 			RememberUser		= 1,
 			AutoLogin			= 2,
 		}
