@@ -43,23 +43,56 @@ namespace Epsitec.Common.Text.Exchange
 			theWriter.ProcessIt ();
 		}
 
-		public static void CopyHtmlText(TextStory story, TextNavigator usernavigator)
+		public static void PasteNativeText(TextStory story, TextNavigator navigator)
+		{
+			System.Windows.Forms.IDataObject ido = System.Windows.Forms.Clipboard.GetDataObject ();
+			EpsitecFormat efmt = ido.GetData (Common.Text.Exchange.EpsitecFormat.Format.Name, false) as EpsitecFormat;
+
+			if (efmt.String.Length == 0)
+				return;
+
+			Wrappers.TextWrapper textWrapper = new Wrappers.TextWrapper ();
+			Wrappers.ParagraphWrapper paraWrapper = new Wrappers.ParagraphWrapper ();
+
+			textWrapper.Attach (navigator);
+			paraWrapper.Attach (navigator);
+
+			// to do
+		}
+
+
+		public static void CopyText(TextStory story, TextNavigator usernavigator)
+		{
+			HtmlTextOut htmlText = new HtmlTextOut ();
+			NativeTextOut nativeText = new NativeTextOut ();
+
+			Rosetta.CopyHtmlText (story, usernavigator, htmlText);
+			Rosetta.CopyNativeText (story, usernavigator, nativeText);
+
+			System.Windows.Forms.IDataObject od = new System.Windows.Forms.DataObject ();
+			od.SetData (System.Windows.Forms.DataFormats.Text, true, htmlText.rawText);
+			od.SetData (System.Windows.Forms.DataFormats.Html, true, htmlText.HtmlStream);
+
+			EpsitecFormat efmt = new EpsitecFormat (nativeText.ToString());
+			od.SetData (EpsitecFormat.Format.Name, true, efmt);
+
+			System.Windows.Forms.Clipboard.SetDataObject (od, true);
+
+		}
+
+		private static void CopyHtmlText(TextStory story, TextNavigator usernavigator, HtmlTextOut htmlText)
 		{
 			TextNavigator navigator = new TextNavigator (story);
 
 			Wrappers.TextWrapper textWrapper = new Wrappers.TextWrapper ();
 			Wrappers.ParagraphWrapper paraWrapper = new Wrappers.ParagraphWrapper ();
 
-			StringBuilder output = new StringBuilder ();
-
 			textWrapper.Attach (navigator);
 			paraWrapper.Attach (navigator);
 
 			System.Windows.Forms.Clipboard clipboard;
 
-			string epsitecFormattedText = GetEpsitecFormattedText (story, usernavigator);
-
-			HtmlTextOut htmlText = new HtmlTextOut (epsitecFormattedText);
+//			HtmlTextOut htmlText = new HtmlTextOut ();
 			bool newParagraph = true;
 
 			int[] selectedPositions = usernavigator.GetAdjustedSelectionCursorPositions ();
@@ -144,17 +177,82 @@ namespace Epsitec.Common.Text.Exchange
 			}
 
 			htmlText.Terminate ();
-
-			System.Windows.Forms.IDataObject od = new System.Windows.Forms.DataObject ();
-			od.SetData (System.Windows.Forms.DataFormats.Text, true, htmlText.rawText);
-			od.SetData (System.Windows.Forms.DataFormats.Html, true, htmlText.HtmlStream);
-
-			EpsitecFormat efmt = new EpsitecFormat(htmlText.rawText) ;
-			od.SetData (EpsitecFormat.Format.Name, true, efmt);
-
-			System.Windows.Forms.Clipboard.SetDataObject (od, true);
 		}
 
+
+		public static void CopyNativeText(TextStory story, TextNavigator usernavigator, NativeTextOut nativeText)
+		{
+			TextNavigator navigator = new TextNavigator (story);
+
+			Wrappers.TextWrapper textWrapper = new Wrappers.TextWrapper ();
+			Wrappers.ParagraphWrapper paraWrapper = new Wrappers.ParagraphWrapper ();
+
+			textWrapper.Attach (navigator);
+			paraWrapper.Attach (navigator);
+
+			int[] selectedPositions = usernavigator.GetAdjustedSelectionCursorPositions ();
+
+			// ne gère pas les sélections disjointes pour le moment
+			System.Diagnostics.Debug.Assert (selectedPositions.Length == 2);
+
+			int selectionLength = selectedPositions[1] - selectedPositions[0];
+			int selectionStart = selectedPositions[0];
+			int selectionEnd = selectedPositions[1];
+			int currentPosition = selectionStart;
+			navigator.MoveTo (selectionStart, 0);
+
+			// htmlText.NewParagraph (paraWrapper.Active.JustificationMode);
+
+			while (true)
+			{
+				string runText;
+				int runLength = navigator.GetRunLength (selectionLength);
+
+				if (currentPosition + runLength > selectionEnd)
+					runLength = selectionEnd - currentPosition ;
+
+				if (runLength <= 0)
+				{
+					break;
+				}
+
+				runText = navigator.ReadText (runLength);
+				currentPosition += runLength;
+
+				if (runLength == 1 && runText[0] == (char) Epsitec.Common.Text.Unicode.Code.ParagraphSeparator)
+				{
+					// on est tombé sur un séparateur de paragraphe
+				}
+				else
+				{
+#if false	// n'utilise plus les "invertxxx" mais utilise ce qui est réellement affiché
+					htmlText.SetItalic (textWrapper.Defined.IsInvertItalicDefined && textWrapper.Defined.InvertItalic);
+					htmlText.SetBold (textWrapper.Defined.IsInvertBoldDefined && textWrapper.Defined.InvertBold);
+#else
+					nativeText.SetItalic (Rosetta.IsItalic(navigator));
+					nativeText.SetBold (Rosetta.IsBold (navigator));
+#endif
+					nativeText.SetUnderlined (textWrapper.Active.IsUnderlineDefined);
+					nativeText.SetStrikeout (textWrapper.Active.IsStrikeoutDefined);
+
+					nativeText.AppendText (runText);
+				}
+
+				// avance au run suivant
+				navigator.MoveTo (Epsitec.Common.Text.TextNavigator.Target.CharacterNext, runLength);
+
+				// avance encore d'un seul caractère afin de se trouver véritablement dans
+				// le contexte du run
+				navigator.MoveTo (Epsitec.Common.Text.TextNavigator.Target.CharacterNext, 1);
+
+				if (navigator.GetRunLength (1) == 0)
+					break; // arrête si on est à la fin
+
+				// recule au début du run
+				navigator.MoveTo (Epsitec.Common.Text.TextNavigator.Target.CharacterPrevious, 1);
+			}
+
+		}
 
 		public string ConvertCtmlToHtml(string ctml)
 		{
@@ -382,12 +480,6 @@ namespace Epsitec.Common.Text.Exchange
 		}
 
 		#endregion
-
-
-		public static string GetEpsitecFormattedText(TextStory story, TextNavigator usernavigator)
-		{
-			return "stubtext";
-		}
 
 	}
 }
