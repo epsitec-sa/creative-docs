@@ -4,60 +4,46 @@
 namespace Epsitec.Common.Types
 {
 	/// <summary>
-	/// La classe DecimalRange permet de définir une plage de valeurs numériques
-	/// (de type decimal).
+	/// The <c>DecimalRange</c> structure defines a minimum, maximum and resolution
+	/// for a decimal value.
 	/// </summary>
-	public class DecimalRange : System.ICloneable
+	public struct DecimalRange
 	{
-		public DecimalRange()
+		public DecimalRange(decimal min, decimal max)
+			: this (min, max, 1.0M)
 		{
 		}
-		
-		public DecimalRange(decimal min, decimal max) : this (min, max, 1.0M)
-		{
-		}
-		
+
 		public DecimalRange(decimal min, decimal max, decimal resolution)
 		{
-			this.minimum    = min;
-			this.maximum    = max;
+			this.minimum     = min;
+			this.maximum     = max;
+			this.resolution  = 0;
+			this.digitsDiv  = 0;
+			this.digitsMul  = 0;
+			this.fracDigits = 0;
+
 			this.DefineResolution (resolution);
 		}
-		
-		
-		public decimal						Minimum
+
+
+		public decimal							Minimum
 		{
 			get
 			{
 				return this.minimum;
 			}
 		}
-		
-		public decimal						Maximum
+
+		public decimal							Maximum
 		{
 			get
 			{
 				return this.maximum;
 			}
 		}
-		
-		public bool							IsValid
-		{
-			get
-			{
-				return (this.minimum <= this.maximum);
-			}
-		}
-		
-		public bool							IsEmpty
-		{
-			get
-			{
-				return (this.minimum >= this.maximum);
-			}
-		}
-		
-		public decimal						Resolution
+
+		public decimal							Resolution
 		{
 			get
 			{
@@ -65,20 +51,32 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		public static DecimalRange			Empty
+		public bool								IsValid
 		{
 			get
 			{
-				return new DecimalRange (0.0M, 0.0M, 0.0M);
+				return (this.minimum <= this.maximum) && (this.digitsDiv != 0) && (this.digitsMul != 0);
 			}
 		}
+
+		public bool								IsEmpty
+		{
+			get
+			{
+				return (this.minimum >= this.maximum);
+			}
+		}
+
+
+		public static readonly DecimalRange		Empty = new DecimalRange ();
+
 		
 		public bool CheckInRange(decimal value)
 		{
 			decimal constrained = this.Constrain (value);
 			return constrained == value;
 		}
-		
+
 		public bool CheckInRange(double value)
 		{
 			return this.CheckInRange ((decimal) value);
@@ -93,20 +91,20 @@ namespace Epsitec.Common.Types
 		{
 			return this.CheckInRange ((decimal) value);
 		}
-		
-		
+
+
 		public decimal Constrain(decimal value)
 		{
 			//	Tronque la précision de la valeur à la résolution courante,
 			//	en utilisant un arrondi à la valeur la plus proche, puis
 			//	contraint la valeur aux bornes minimum/maximum.
-			
+
 			if (this.IsValid)
 			{
 				if (this.resolution != 0)
 				{
 					decimal scale = 1M / this.resolution;
-					
+
 					if (value < 0)
 					{
 						value -= this.resolution / 2;
@@ -115,33 +113,33 @@ namespace Epsitec.Common.Types
 					{
 						value += this.resolution / 2;
 					}
-					
+
 					value *= scale;
 					value  = System.Decimal.Truncate (value);
 					value /= scale;
 				}
-				
+
 				value = System.Math.Min (value, this.maximum);
 				value = System.Math.Max (value, this.minimum);
-				
+
 				//	Assure que le nombre de décimales après le point est constant et conforme à
 				//	la précision définie.
 				//
 				//	Ceci permet de garantir que ToString() se comporte de manière prévisible.
-				
+
 				if (this.resolution != 0)
 				{
-					value *= this.digits_mul;
+					value *= this.digitsMul;
 					value  = System.Decimal.Truncate (value);
-					value *= this.digits_div;
+					value *= this.digitsDiv;
 				}
-				
+
 				return value;
 			}
-			
-			throw new System.InvalidOperationException (string.Format ("DecimalRange is invalid"));
+
+			throw new System.InvalidOperationException ("DecimalRange is invalid");
 		}
-		
+
 		public decimal Constrain(double value)
 		{
 			return this.Constrain ((decimal) value);
@@ -156,21 +154,21 @@ namespace Epsitec.Common.Types
 		{
 			return this.Constrain ((decimal) value);
 		}
-		
-		
+
+
 		public decimal ConstrainToZero(decimal value)
 		{
 			//	Comme Constain, mais force l'arrondi vers le nombre le plus proche
 			//	de zéro.
-			
+
 			if (this.IsValid)
 			{
 				if (this.resolution != 0)
 				{
 					decimal scale = 1M / this.resolution;
-					
+
 					value *= scale;
-					
+
 					if (value < 0)
 					{
 						value = -System.Decimal.Truncate (-value);
@@ -179,31 +177,31 @@ namespace Epsitec.Common.Types
 					{
 						value = System.Decimal.Truncate (value);
 					}
-					
+
 					value /= scale;
 				}
-				
+
 				value = System.Math.Min (value, this.maximum);
 				value = System.Math.Max (value, this.minimum);
-				
+
 				//	Assure que le nombre de décimales après le point est constant et conforme à
 				//	la précision définie.
 				//
 				//	Ceci permet de garantir que ToString() se comporte de manière prévisible.
-				
+
 				if (this.resolution != 0)
 				{
-					value *= this.digits_mul;
+					value *= this.digitsMul;
 					value  = System.Decimal.Truncate (value);
-					value *= this.digits_div;
+					value *= this.digitsDiv;
 				}
-				
+
 				return value;
 			}
-			
-			throw new System.InvalidOperationException (string.Format ("DecimalRange is invalid"));
+
+			throw new System.InvalidOperationException ("DecimalRange is invalid");
 		}
-		
+
 		public decimal ConstrainToZero(double value)
 		{
 			return this.ConstrainToZero ((decimal) value);
@@ -218,43 +216,36 @@ namespace Epsitec.Common.Types
 		{
 			return this.ConstrainToZero ((decimal) value);
 		}
-		
-		
+
+
 		public string ConvertToString(decimal value)
 		{
 			value = this.Constrain (value);
-			
-			if (this.frac_digits > 0)
+
+			if (this.fracDigits > 0)
 			{
-				return value.ToString (string.Format ("F{0}", this.frac_digits));
+				return value.ToString (string.Format (System.Globalization.CultureInfo.InvariantCulture, "F{0}", this.fracDigits));
 			}
 			else
 			{
-				return ((int)value).ToString ();
+				return ((int) value).ToString ();
 			}
 		}
-		
+
 		public string ConvertToString(decimal value, System.Globalization.CultureInfo culture)
 		{
 			value = this.Constrain (value);
-			
-			if (this.frac_digits > 0)
+
+			if (this.fracDigits > 0)
 			{
-				return value.ToString (string.Format ("F{0}", this.frac_digits), culture);
+				return value.ToString (string.Format (System.Globalization.CultureInfo.InvariantCulture, "F{0}", this.fracDigits), culture);
 			}
 			else
 			{
-				return ((int)value).ToString (culture);
+				return ((int) value).ToString (culture);
 			}
 		}
-		
-		
-		#region ICloneable Members
-		public object Clone()
-		{
-			return this.CloneCopyToNewObject (this.CloneNewObject ());
-		}
-		#endregion
+
 
 		private void DefineResolution(decimal value)
 		{
@@ -273,51 +264,27 @@ namespace Epsitec.Common.Types
 			//	Ceci est utile, car le nombre decimal 1M n'est pas représenté de la même
 			//	manière que les nombres 1.0M ou 1.00M, quand ils sont convertis en string.
 
-			this.digits_div  = 1M;
-			this.digits_mul  = 1M;
-			this.frac_digits = 0;
+			this.digitsDiv  = 1M;
+			this.digitsMul  = 1M;
+			this.fracDigits = 0;
 
 			decimal iter = value;
 
 			while (iter != System.Decimal.Truncate (iter))
 			{
-				this.digits_mul *= 10M;
-				this.digits_div *= 0.1M;
-				this.frac_digits++;
+				this.digitsMul *= 10M;
+				this.digitsDiv *= 0.1M;
+				this.fracDigits++;
 				iter *= 10M;
 			}
 		}
-		
-		protected virtual object CloneNewObject()
-		{
-			return new DecimalRange ();
-		}
-		
-		protected virtual object CloneCopyToNewObject(object o)
-		{
-			DecimalRange that = o as DecimalRange;
-			
-			that.minimum     = this.minimum;
-			that.maximum     = this.maximum;
-			that.resolution  = this.resolution;
-			that.digits_mul  = this.digits_mul;
-			that.digits_div  = this.digits_div;
-			that.frac_digits = this.frac_digits;
-			
-			return that;
-		}
-		
-		
-		protected virtual void OnChanged()
-		{
-		}
-		
-		
-		private decimal						minimum		=   0.0M;
-		private decimal						maximum		= 100.0M;
-		private decimal						resolution	=   1.0M;
-		private decimal						digits_mul	=   1M;
-		private decimal						digits_div	=   1M;
-		private int							frac_digits	=   0;
+
+
+		private decimal minimum;
+		private decimal maximum;
+		private decimal resolution;
+		private decimal digitsMul;
+		private decimal digitsDiv;
+		private int fracDigits;
 	}
 }
