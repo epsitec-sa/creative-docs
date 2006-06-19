@@ -98,10 +98,38 @@ namespace Epsitec.Common.Types
 			Assert.IsFalse (et.IsValidValue (0x18));
 			Assert.IsFalse (et.IsValidValue ("{Other}"));
 		}
-		
+
+		[Test]
+		public void CheckEnumType3()
+		{
+			System.Type type = typeof (MyEnum2);
+
+			EnumType et = new EnumType (type);
+			EnumValue[] ev = Collection.ToArray<EnumValue> (et.Values);
+
+			Assert.AreEqual (4, ev.Length);
+			Assert.IsFalse (et.IsCustomizable);
+			Assert.IsFalse (et.IsDefinedAsFlags);
+
+			Assert.AreEqual ("ValueA", ev[0].Name);
+			Assert.AreEqual ("ValueB", ev[1].Name);
+			Assert.AreEqual ("ValueC", ev[2].Name);
+			Assert.AreEqual ("None", ev[3].Name);
+
+			Assert.AreEqual (5, et["None"].Rank);
+			Assert.AreEqual (1, et["ValueA"].Rank);
+			Assert.AreEqual (1, et["ValueB"].Rank);
+			Assert.AreEqual (2, et["ValueC"].Rank);
+
+			Assert.AreEqual (MyEnum2.None, et["None"].Value);
+			Assert.AreEqual (MyEnum2.ValueA, et["ValueA"].Value);
+			Assert.AreEqual (MyEnum2.ValueB, et["ValueB"].Value);
+			Assert.AreEqual (MyEnum2.ValueC, et["ValueC"].Value);
+		}
+
 		[Test]
 		[Ignore ("No caption defined for enum")]
-		public void CheckEnumType3()
+		public void CheckEnumType4()
 		{
 			System.Type type = typeof (MyEnum);
 			
@@ -308,6 +336,14 @@ namespace Epsitec.Common.Types
 			Third	=  3,
 			
 			[Hidden] Extra	= 99
+		}
+
+		private enum MyEnum2 : long
+		{
+			[Rank (5)] None,
+			[Rank (1)] ValueB,
+			[Rank (1)] ValueA,
+			[Rank (2)] ValueC
 		}
 		
 		[System.Flags]
