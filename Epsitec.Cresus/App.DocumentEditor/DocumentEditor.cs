@@ -682,7 +682,7 @@ namespace Epsitec.App.DocumentEditor
 			sf.Clicked += new MessageEventHandler(this.HandleStatusZoomClicked);
 			ToolTip.Default.SetToolTip(sf, Res.Strings.Status.Zoom.Menu);
 
-			Widgets.HSlider slider = new HSlider();
+			Widgets.AbstractSlider slider = new HSlider();
 			slider.Name = "StatusZoomSlider";
 			slider.PreferredWidth = 100;
 			slider.Margins = new Margins(1, 1, 1, 1);
@@ -1402,7 +1402,7 @@ namespace Epsitec.App.DocumentEditor
 		private void HandleSliderZoomChanged(object sender)
 		{
 			if ( !this.IsCurrentDocument )  return;
-			HSlider slider = sender as HSlider;
+			AbstractSlider slider = sender as AbstractSlider;
 			if ( slider == null )  return;
 			this.CurrentDocument.Modifier.ZoomValue((double) slider.Value, slider.IsInitialChange);
 		}
@@ -3945,7 +3945,7 @@ namespace Epsitec.App.DocumentEditor
 			field.Text = this.TextInfoZoom;
 			field.Invalidate();
 
-			HSlider slider = this.info.Items["StatusZoomSlider"] as HSlider;
+			AbstractSlider slider = this.info.Items["StatusZoomSlider"] as AbstractSlider;
 			slider.Value = (decimal) this.ValueInfoZoom;
 			slider.Enable = this.IsCurrentDocument;
 		}
