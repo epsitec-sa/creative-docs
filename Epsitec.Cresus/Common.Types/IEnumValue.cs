@@ -6,7 +6,7 @@ namespace Epsitec.Common.Types
 	/// <summary>
 	/// The <c>IEnumValue</c> interface describes values defined by enumerations.
 	/// </summary>
-	public interface IEnumValue : ICaption
+	public interface IEnumValue : ICaption, IName
 	{
 		/// <summary>
 		/// Gets the <see cref="T:System.Enum"/> value of the enumeration value.

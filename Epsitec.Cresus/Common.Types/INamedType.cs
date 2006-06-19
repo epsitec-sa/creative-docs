@@ -7,7 +7,7 @@ namespace Epsitec.Common.Types
 	/// L'interface INamedType sert de base pour INumType, IEnumType et
 	/// IStringType.
 	/// </summary>
-	public interface INamedType : ICaption
+	public interface INamedType : ICaption, IName
 	{
 		System.Type		SystemType		{ get; }
 	}
