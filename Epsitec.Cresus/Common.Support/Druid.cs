@@ -527,6 +527,16 @@ namespace Epsitec.Common.Support
 		}
 
 		/// <summary>
+		/// Converts the raw 64-bit id value into a DRUID.
+		/// </summary>
+		/// <param name="value">The raw 64-bit id value.</param>
+		/// <returns>The DRUID.</returns>
+		public static Druid FromLong(long value)
+		{
+			return new Druid (Druid.GetModuleId (value), Druid.GetDevId (value), Druid.GetLocalId (value));
+		}
+
+		/// <summary>
 		/// Converts the DRUID to a full string encoded as MMDLLDLLDMLDM, less
 		/// significant digits first, trailing zeroes omitted.
 		/// </summary>
