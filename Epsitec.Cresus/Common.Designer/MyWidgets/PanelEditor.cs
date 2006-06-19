@@ -540,7 +540,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			if (!isShiftPressed)  // touche Shift relâchée ?
 			{
-				if (obj != null && this.selectedObjects.Contains(obj))
+				if (obj != null && this.selectedObjects.Contains(obj) && obj != this.panel)
 				{
 					this.DraggingStart(pos);
 					return;
@@ -566,7 +566,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 					this.selectedObjects.Add(obj);
 				}
 				this.UpdateAfterSelectionChanged();
-				this.DraggingStart(pos);
+
+				if (obj != this.panel)
+				{
+					this.DraggingStart(pos);
+				}
 			}
 
 			this.OnChildrenSelected();
@@ -682,7 +686,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			if (!isShiftPressed)  // touche Shift relâchée ?
 			{
-				if (obj != null && this.selectedObjects.Contains(obj))
+				if (obj != null && this.selectedObjects.Contains(obj) && obj != this.panel)
 				{
 					this.DraggingStart(pos);
 					return;
@@ -1356,7 +1360,20 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			//	Détecte l'objet visé par la souris, avec priorité au dernier objet
 			//	dessiné (donc placé dessus).
-			return this.Detect(pos, this.panel);
+			Widget detected = this.Detect(pos, this.panel);
+			if (detected == null)
+			{
+				Rectangle rect = this.panel.Client.Bounds;
+				if (rect.Contains(pos))
+				{
+					rect.Deflate(this.context.GroupOutline);
+					if (!rect.Contains(pos))
+					{
+						detected = this.panel;
+					}
+				}
+			}
+			return detected;
 		}
 
 		protected Widget Detect(Point pos, Widget parent)
@@ -2706,6 +2723,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.DrawAttachment(graphics, obj, PanelsContext.ColorHiliteOutline);
 			}
 
+			Color color = PanelsContext.ColorHiliteSurface;
+
 			if (obj is AbstractGroup)
 			{
 				Rectangle outline = this.objectModifier.GetBounds(obj);
@@ -2714,6 +2733,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 				graphics.AddRectangle(outline);
 				graphics.RenderSolid(PanelsContext.ColorHiliteOutline);
 				graphics.LineWidth = 1;
+
+				color.A *= 0.25;
 			}
 
 			//	Si le rectangle est trop petit (par exemple objet Separator), il est engraissé.
@@ -2734,7 +2755,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			rect.Inflate(ix, iy);
 
 			graphics.AddFilledRectangle(rect);
-			graphics.RenderSolid(PanelsContext.ColorHiliteSurface);
+			graphics.RenderSolid(color);
 		}
 
 		protected void DrawHilitedParent(Graphics graphics, Widget obj)
