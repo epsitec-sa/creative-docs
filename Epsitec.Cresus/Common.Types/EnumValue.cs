@@ -5,6 +5,10 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Types
 {
+	/// <summary>
+	/// The <c>EnumValue</c> class describes a single value in an enumeration.
+	/// See also <see cref="T:EnumType"/>.
+	/// </summary>
 	public class EnumValue : NamedDependencyObject, IEnumValue
 	{
 		public EnumValue(System.Enum value, int rank, bool hidden, string name, long captionId)
@@ -15,6 +19,7 @@ namespace Epsitec.Common.Types
 			this.DefineHidden (hidden);
 		}
 
+		
 		public void DefineValue(System.Enum value)
 		{
 			this.value = value;
@@ -56,6 +61,7 @@ namespace Epsitec.Common.Types
 				return this.hidden;
 			}
 		}
+		
 		#endregion
 
 

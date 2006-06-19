@@ -301,6 +301,74 @@ namespace Epsitec.Common.Types
 			
 			System.IO.File.Delete ("test.soap");
 		}
+
+		[Test]
+		public void CheckNumericTypes()
+		{
+			bool num1 = true;
+			short num16 = 1;
+			int num32 = 1;
+			long num64 = 1;
+			decimal numDecimal = 1;
+
+			BooleanType type1 = new BooleanType ();
+			IntegerType type32 = new IntegerType ();
+			LongIntegerType type64 = new LongIntegerType ();
+			DecimalType typeDecimal = new DecimalType ();
+
+			Assert.IsTrue (type32.IsValidValue (num32));
+			Assert.IsTrue (type64.IsValidValue (num64));
+			Assert.IsTrue (typeDecimal.IsValidValue (numDecimal));
+
+			Assert.IsFalse (type32.IsValidValue (num16));
+			Assert.IsFalse (type64.IsValidValue (num16));
+			Assert.IsFalse (typeDecimal.IsValidValue (num16));
+
+			Assert.IsFalse (type64.IsValidValue (num32));
+			Assert.IsFalse (typeDecimal.IsValidValue (num32));
+
+			Assert.IsFalse (type32.IsValidValue (num64));
+			Assert.IsFalse (typeDecimal.IsValidValue (num64));
+
+			Assert.IsFalse (type32.IsValidValue (numDecimal));
+			Assert.IsFalse (type64.IsValidValue (numDecimal));
+
+			Assert.IsTrue (type1.IsValidValue (false));
+			Assert.IsTrue (type1.IsValidValue (true));
+			Assert.IsFalse (type1.IsValidValue (0));
+			Assert.IsFalse (type1.IsValidValue (1));
+
+			IntegerType limit1 = new IntegerType (0, 99999);
+
+			Assert.IsTrue (limit1.IsValidValue (0));
+			Assert.IsTrue (limit1.IsValidValue (1000));
+			Assert.IsTrue (limit1.IsValidValue (99999));
+			
+			Assert.IsFalse (limit1.IsValidValue (99999+1));
+			Assert.IsFalse (limit1.IsValidValue (-1));
+
+			DecimalType limit2 = new DecimalType (0, 10, 0.1M);
+
+			limit2.DefineName ("Rating");
+
+			Assert.IsTrue (limit2.IsValidValue (0.0M));
+			Assert.IsTrue (limit2.IsValidValue (0.1M));
+			Assert.IsTrue (limit2.IsValidValue (9.9M));
+			Assert.IsTrue (limit2.IsValidValue (10.0M));
+			Assert.IsTrue (limit2.IsValidValue (9.90M));
+			Assert.IsFalse (limit2.IsValidValue (9.95M));
+
+			Assert.AreEqual ("Boolean", type1.Name);
+			Assert.AreEqual ("Integer", type32.Name);
+			Assert.AreEqual ("LongInteger", type64.Name);
+			Assert.AreEqual ("Decimal", typeDecimal.Name);
+			Assert.AreEqual ("Rating", limit2.Name);
+			Assert.AreEqual (typeof (bool), type1.SystemType);
+			Assert.AreEqual (typeof (int), type32.SystemType);
+			Assert.AreEqual (typeof (long), type64.SystemType);
+			Assert.AreEqual (typeof (decimal), typeDecimal.SystemType);
+			Assert.AreEqual (typeof (decimal), limit2.SystemType);
+		}
 		
 		[System.Serializable]
 		class DateUser : System.Runtime.Serialization.ISerializable

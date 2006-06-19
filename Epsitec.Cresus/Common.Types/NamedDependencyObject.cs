@@ -62,12 +62,12 @@ namespace Epsitec.Common.Types
 		#endregion
 		
 		
-		protected void DefineName(string name)
+		public void DefineName(string name)
 		{
 			this.SetLocalValue (NamedDependencyObject.NameProperty, name);
 		}
 
-		protected void DefineCaptionId(long captionId)
+		public void DefineCaptionId(long captionId)
 		{
 			this.SetLocalValue (NamedDependencyObject.CaptionIdProperty, captionId);
 		}
