@@ -55,7 +55,7 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
-				return (this.minimum <= this.maximum) && (this.digitsDiv != 0) && (this.digitsMul != 0);
+				return (this.minimum <= this.maximum);
 			}
 		}
 
@@ -63,7 +63,7 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
-				return (this.minimum >= this.maximum);
+				return (this.digitsDiv == 0) || (this.digitsMul == 0);
 			}
 		}
 
@@ -99,8 +99,11 @@ namespace Epsitec.Common.Types
 			//	en utilisant un arrondi à la valeur la plus proche, puis
 			//	contraint la valeur aux bornes minimum/maximum.
 
-			if (this.IsValid)
+			if (this.IsValid && !this.IsEmpty)
 			{
+				System.Diagnostics.Debug.Assert (this.digitsDiv > 0);
+				System.Diagnostics.Debug.Assert (this.digitsMul > 0);
+				
 				if (this.resolution != 0)
 				{
 					decimal scale = 1M / this.resolution;

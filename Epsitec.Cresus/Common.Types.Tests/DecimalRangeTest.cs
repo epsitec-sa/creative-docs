@@ -10,9 +10,13 @@ namespace Epsitec.Common.Types
 			DecimalRange range2 = new DecimalRange (0.0M, -1.0M);
 			DecimalRange range3 = new DecimalRange (0.0M, 1.0M, 0.05M);
 			
-			Assert.AreEqual (true,  range1.IsValid);
-			Assert.AreEqual (false, range2.IsValid);
-			Assert.AreEqual (true,  range3.IsValid);
+			Assert.IsTrue (range1.IsValid);
+			Assert.IsFalse (range2.IsValid);
+			Assert.IsTrue (range3.IsValid);
+
+			Assert.IsTrue (range1.IsEmpty);
+			Assert.IsFalse (range2.IsEmpty);
+			Assert.IsFalse (range3.IsEmpty);
 		}
 		
 		[Test] public void CheckConstrain()
