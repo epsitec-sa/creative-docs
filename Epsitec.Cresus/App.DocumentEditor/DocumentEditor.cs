@@ -691,7 +691,7 @@ namespace Epsitec.App.DocumentEditor
 			slider.SmallChange = 0.1M;
 			slider.LargeChange = 0.1M;
 			slider.Resolution = 0.0M;
-			slider.Logarithmic = 3.0M;
+			slider.LogarithmicDivisor = 3.0M;
 			slider.ValueChanged += new EventHandler(this.HandleSliderZoomChanged);
 			this.info.Items.Add(slider);
 			ToolTip.Default.SetToolTip(slider, Res.Strings.Status.Zoom.Slider);

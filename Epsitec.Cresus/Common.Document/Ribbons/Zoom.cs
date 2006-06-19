@@ -129,7 +129,7 @@ namespace Epsitec.Common.Document.Ribbons
 				field.Resolution = 1.0M;
 				field.InternalMinValue = 0.1M;
 				field.InternalMaxValue = 16.0M;
-				field.Logarithmic = 3.0M;
+				field.LogarithmicDivisor = 3.0M;
 				field.DefaultValue = 1.0M;
 				field.InternalValue = (decimal) this.document.Modifier.ActiveViewer.DrawingContext.Zoom;
 				this.ignoreChange = false;

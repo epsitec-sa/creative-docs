@@ -6,11 +6,10 @@ namespace Epsitec.Common.Widgets
 	/// <summary>
 	/// La classe Slider implémente un curseur de réglage.
 	/// </summary>
-	public class Slider : AbstractSlider, Support.Data.INumValue, Behaviors.IDragBehaviorHost
+	public class Slider : AbstractSlider, Support.Data.INumValue
 	{
 		public Slider() : base (false, false)
 		{
-			this.drag_behavior = new Behaviors.DragBehavior (this, true, true);
 			this.range = new Types.DecimalRange (0, 100, 1);
 		}
 		
@@ -42,10 +41,14 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 		}
+
+
+		protected override Epsitec.Common.Widgets.Behaviors.DragBehavior CreateDragBehavior()
+		{
+			return new Behaviors.DragBehavior (this, true, true);
+		}
 		
-		
-		#region IDragBehaviorHost Members
-		Drawing.Point						Behaviors.IDragBehaviorHost.DragLocation
+		protected override Drawing.Point		DragLocation
 		{
 			get
 			{
@@ -53,21 +56,20 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		
-		bool Behaviors.IDragBehaviorHost.OnDragBegin(Drawing.Point cursor)
+
+		protected override bool OnDragBegin(Drawing.Point cursor)
 		{
 			return true;
 		}
 
-		void Behaviors.IDragBehaviorHost.OnDragging(DragEventArgs e)
+		protected override void OnDragging(DragEventArgs e)
 		{
 			this.LogarithmicValue = this.Detect (e.ToPoint);
 		}
 
-		void Behaviors.IDragBehaviorHost.OnDragEnd()
+		protected override void OnDragEnd()
 		{
 		}
-		#endregion
 		
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
@@ -93,7 +95,7 @@ namespace Epsitec.Common.Widgets
 
 			if (this.IsEnabled)
 			{
-				rect.Deflate(Slider.margin, Slider.margin);
+				rect.Deflate(Slider.FrameMargin, Slider.FrameMargin);
 				
 				Drawing.Color front = this.color.IsEmpty     ? adorner.ColorCaption : this.color;
 				Drawing.Color back  = this.BackColor.IsEmpty ? adorner.ColorWindow  : this.BackColor;
@@ -126,14 +128,10 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		protected override void ProcessMessage(Message message, Drawing.Point pos)
+		protected override Zone DetectZone(Epsitec.Common.Drawing.Point pos)
 		{
-			if (! this.drag_behavior.ProcessMessage (message, pos))
-			{
-				base.ProcessMessage (message, pos);
-			}
+			return Zone.Thumb;
 		}
-		
 		
 		protected virtual decimal Detect(Drawing.Point pos)
 		{
@@ -143,10 +141,10 @@ namespace Epsitec.Common.Widgets
 			
 			width -= adorner.GeometrySliderLeftMargin;
 			width -= adorner.GeometrySliderRightMargin;
-			width -= Slider.margin;
+			width -= Slider.FrameMargin;
 			
 			left  += adorner.GeometrySliderLeftMargin;
-			left  += Slider.margin;
+			left  += Slider.FrameMargin;
 			
 			double offset  = (double) (pos.X - left);
 			double range   = (double) (this.Range);
@@ -160,9 +158,8 @@ namespace Epsitec.Common.Widgets
 			return this.MinValue;
 		}
 		
-		protected static readonly double margin = 1;
+		protected static readonly double	FrameMargin = 1;
 
-		private Behaviors.DragBehavior		drag_behavior;
 		private Drawing.Color				color = Drawing.Color.Empty;
 		private bool						has_frame = true;
 	}

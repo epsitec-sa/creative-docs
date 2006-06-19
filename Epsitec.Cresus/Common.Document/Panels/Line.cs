@@ -56,7 +56,7 @@ namespace Epsitec.Common.Document.Panels
 			this.field.TextFieldReal.FactorMinRange = 0.0M;
 			this.field.TextFieldReal.FactorMaxRange = 0.1M;
 			this.field.TextFieldReal.FactorStep = 0.1M;
-			this.field.TextFieldReal.Logarithmic = 3.0M;
+			this.field.TextFieldReal.LogarithmicDivisor = 3.0M;
 			this.document.Modifier.AdaptTextFieldRealDimension(this.field.TextFieldReal);
 			this.field.TextFieldReal.EditionAccepted += new EventHandler(this.HandleTextChanged);
 			this.field.TabIndex = 2;
