@@ -123,6 +123,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="CresusWrapper.cs" />
+    <Compile Include="EpsitecFormat.cs" />
     <Compile Include="ExchangeStringBuilder.cs" />
     <Compile Include="HtmlClipboardReader.cs" />
     <Compile Include="HtmlParser\HtmlAttribute.cs" />

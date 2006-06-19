@@ -10,7 +10,7 @@ namespace Epsitec.Common.Text.Exchange
 {
 	public class HtmlTextOut
 	{
-		public HtmlTextOut()
+		public HtmlTextOut(string epsitecFormattedText)
 		{
 			this.tagStorageList.Add (HtmlTagType.Bold, new TagStoreage (this, HtmlTagType.Bold));
 			this.tagStorageList.Add (HtmlTagType.Italic, new TagStoreage (this, HtmlTagType.Italic));
@@ -24,6 +24,11 @@ namespace Epsitec.Common.Text.Exchange
 			this.mshtml = new MSClipboardHtmlHeader ();
 			this.output.AppendLine ("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">");
 			this.output.AppendLine ("<HTML><HEAD>");
+
+			this.output.AppendLine ("<!-- EpsitecFormattedText");
+			this.output.AppendLine (epsitecFormattedText);
+			this.output.AppendLine ("-->");
+
 			this.output.AppendLine ("<STYLE></STYLE>");
 			this.output.AppendLine ("</HEAD>");
 			this.output.AppendLine (string.Empty);
@@ -55,8 +60,8 @@ namespace Epsitec.Common.Text.Exchange
 
 			this.mshtml.UpdateEndFragment (this.output.Length);
 			this.output.AppendLine ("<!--EndFragment-->");
-			this.output.AppendLine ("<BODY>");
-			this.output.Append ("<HTML>");
+			this.output.AppendLine ("</BODY>");
+			this.output.Append ("</HTML>");
 			this.mshtml.UpdateEndHtml (this.output.Length);
 			this.output.AppendLine (string.Empty);
 
