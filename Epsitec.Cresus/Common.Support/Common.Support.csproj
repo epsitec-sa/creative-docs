@@ -126,6 +126,7 @@
     <Compile Include="CommandAttribute.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="CaptionCache.cs" />
     <Compile Include="DruidType.cs" />
     <Compile Include="ResourceProviderFactory.cs" />
     <Compile Include="ResourceSetMode.cs" />
