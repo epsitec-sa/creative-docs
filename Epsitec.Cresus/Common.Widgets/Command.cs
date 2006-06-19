@@ -400,7 +400,7 @@ namespace Epsitec.Common.Widgets
 
 		#region INameCaption Members
 
-		long INameCaption.CaptionId
+		long ICaption.CaptionId
 		{
 			get
 			{
