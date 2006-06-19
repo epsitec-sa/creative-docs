@@ -520,6 +520,7 @@ namespace Epsitec.Common.Designer
 			if (obj.Anchor != style)
 			{
 				obj.Anchor = style;
+				obj.Dock = DockStyle.None;
 				this.Invalidate();
 			}
 		}
@@ -574,6 +575,7 @@ namespace Epsitec.Common.Designer
 			if (obj.Anchor != style)
 			{
 				obj.Anchor = style;
+				obj.Dock = DockStyle.None;
 				this.Invalidate();
 			}
 		}
@@ -631,6 +633,7 @@ namespace Epsitec.Common.Designer
 			if (obj.Dock != style)
 			{
 				obj.Dock = style;
+				obj.Anchor = AnchorStyles.None;
 				this.Invalidate();
 			}
 		}
@@ -686,6 +689,7 @@ namespace Epsitec.Common.Designer
 			if (obj.Dock != style)
 			{
 				obj.Dock = style;
+				obj.Anchor = AnchorStyles.None;
 				this.Invalidate();
 			}
 		}

@@ -1063,24 +1063,29 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Adapte un objet d'après son parent.
 			if (this.objectModifier.IsChildrenAnchored(parent))
 			{
-				obj.Anchor = AnchorStyles.BottomLeft;
-				obj.Dock = DockStyle.None;
+				if (this.objectModifier.GetAnchoredVerticalAttachment(obj) == ObjectModifier.AnchoredVerticalAttachment.None)
+				{
+					this.objectModifier.SetAnchoredHorizontalAttachment(obj, ObjectModifier.AnchoredHorizontalAttachment.Left);
+					this.objectModifier.SetAnchoredVerticalAttachment(obj, ObjectModifier.AnchoredVerticalAttachment.Bottom);
+				}
 			}
 
 			if (this.objectModifier.IsChildrenDocked(parent))
 			{
-				obj.Margins = new Margins(5, 5, 5, 5);
-
-				if (this.objectModifier.IsChildrenHorizontal(parent))
+				if (this.objectModifier.GetDockedHorizontalAttachment(obj) == ObjectModifier.DockedHorizontalAttachment.None||
+					this.objectModifier.GetDockedVerticalAttachment(obj) == ObjectModifier.DockedVerticalAttachment.None)
 				{
-					this.objectModifier.SetDockedHorizontalAttachment(obj, ha);
-				}
-				else
-				{
-					this.objectModifier.SetDockedVerticalAttachment(obj, va);
-				}
+					obj.Margins = new Margins(5, 5, 5, 5);
 
-				obj.Anchor = AnchorStyles.None;
+					if (this.objectModifier.IsChildrenHorizontal(parent))
+					{
+						this.objectModifier.SetDockedHorizontalAttachment(obj, ha);
+					}
+					else
+					{
+						this.objectModifier.SetDockedVerticalAttachment(obj, va);
+					}
+				}
 			}
 
 			if (obj is StaticText)
