@@ -180,6 +180,18 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
+		public double GroupOutline
+		{
+			get
+			{
+				return this.groupOutline;
+			}
+			set
+			{
+				this.groupOutline = value;
+			}
+		}
+
 		public double ZOrderThickness
 		{
 			get
@@ -363,6 +375,7 @@ namespace Epsitec.Common.Designer
 		protected Margins				constrainGroupMargins = new Margins(12, 12, 12+7, 12);
 		protected double				leading = 30;
 		protected double				minimalSize = 3;
+		protected double				groupOutline = 5;
 		protected double				zOrderThickness = 2;
 		protected double				sizeMarkThickness = 8;
 	}

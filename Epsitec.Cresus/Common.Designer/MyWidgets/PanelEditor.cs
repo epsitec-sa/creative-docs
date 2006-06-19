@@ -1356,7 +1356,49 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			//	Détecte l'objet visé par la souris, avec priorité au dernier objet
 			//	dessiné (donc placé dessus).
-			return this.panel.FindChild(pos, ChildFindMode.Deep | ChildFindMode.SkipHidden | ChildFindMode.SkipEmbedded);
+			return this.Detect(pos, this.panel);
+		}
+
+		protected Widget Detect(Point pos, Widget parent)
+		{
+			Widget[] children = parent.Children.Widgets;
+			for (int i=children.Length-1; i>=0; i--)
+			{
+				Widget widget = children[i];
+
+				if (widget.Visibility == false)
+				{
+					continue;
+				}
+
+				Rectangle rect = widget.ActualBounds;
+				if (rect.Contains(pos))
+				{
+					Widget deep = this.Detect(widget.MapParentToClient(pos), widget);
+					if (deep != null)
+					{
+						return deep;
+					}
+
+					if (widget is AbstractGroup)
+					{
+						rect.Deflate(this.context.GroupOutline);
+						if (rect.Contains(pos))
+						{
+							continue;
+						}
+					}
+
+					if (widget.IsEmbedded)
+					{
+						continue;
+					}
+
+					return widget;
+				}
+			}
+
+			return null;
 		}
 
 		protected Widget DetectGroup(Point pos)
@@ -2664,9 +2706,19 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.DrawAttachment(graphics, obj, PanelsContext.ColorHiliteOutline);
 			}
 
-			Rectangle rect = this.objectModifier.GetBounds(obj);
+			if (obj is AbstractGroup)
+			{
+				Rectangle outline = this.objectModifier.GetBounds(obj);
+				outline.Deflate(this.context.GroupOutline/2);
+				graphics.LineWidth = this.context.GroupOutline;
+				graphics.AddRectangle(outline);
+				graphics.RenderSolid(PanelsContext.ColorHiliteOutline);
+				graphics.LineWidth = 1;
+			}
 
 			//	Si le rectangle est trop petit (par exemple objet Separator), il est engraissé.
+			Rectangle rect = this.objectModifier.GetBounds(obj);
+
 			double ix = 0;
 			if (rect.Width < this.context.MinimalSize)
 			{
