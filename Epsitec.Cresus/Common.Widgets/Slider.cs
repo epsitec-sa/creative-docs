@@ -6,11 +6,12 @@ namespace Epsitec.Common.Widgets
 	/// <summary>
 	/// La classe Slider implémente un curseur de réglage.
 	/// </summary>
-	public class Slider : Widget, Support.Data.INumValue, Behaviors.IDragBehaviorHost
+	public class Slider : AbstractSlider, Support.Data.INumValue, Behaviors.IDragBehaviorHost
 	{
-		public Slider()
+		public Slider() : base (false, false)
 		{
 			this.drag_behavior = new Behaviors.DragBehavior (this, true, true);
+			this.range = new Types.DecimalRange (0, 100, 1);
 		}
 		
 		public Slider(Widget embedder) : this()
@@ -42,141 +43,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		
-		#region INumValue Members
-		public decimal						Value
-		{
-			get
-			{
-				return (decimal) this.GetValue (Slider.ValueProperty);
-			}
-			set
-			{
-				this.SetValue (Slider.ValueProperty, value);
-			}
-		}
-
-		public decimal MinValue
-		{
-			get
-			{
-				return this.range.Minimum;
-			}
-			set
-			{
-				if (this.range.Minimum != value)
-				{
-					decimal min = value;
-					decimal max = this.range.Maximum;
-					decimal res = this.range.Resolution;
-
-					this.range = new Types.DecimalRange (min, max, res);
-					this.HandleRangeChanged ();
-				}
-			}
-		}
-
-		public decimal MaxValue
-		{
-			get
-			{
-				return this.range.Maximum;
-			}
-			set
-			{
-				if (this.range.Maximum != value)
-				{
-					decimal min = this.range.Minimum;
-					decimal max = value;
-					decimal res = this.range.Resolution;
-
-					this.range = new Types.DecimalRange (min, max, res);
-					this.HandleRangeChanged ();
-				}
-			}
-		}
-
-		public decimal Resolution
-		{
-			get
-			{
-				return this.range.Resolution;
-			}
-			set
-			{
-				if (this.range.Resolution != value)
-				{
-					decimal min = this.range.Minimum;
-					decimal max = this.range.Maximum;
-					decimal res = value;
-
-					this.range = new Types.DecimalRange (min, max, res);
-					this.HandleRangeChanged ();
-				}
-			}
-		}
-
-		
-		public decimal						Range
-		{
-			get
-			{
-				return this.MaxValue - this.MinValue;
-			}
-		}
-		
-		
-		public event EventHandler			ValueChanged
-		{
-			add
-			{
-				this.AddUserEventHandler("ValueChanged", value);
-			}
-			remove
-			{
-				this.RemoveUserEventHandler("ValueChanged", value);
-			}
-		}
-		#endregion
-
-		public decimal						Logarithmic
-		{
-			get
-			{
-				return this.logarithmic;
-			}
-			set
-			{
-				this.logarithmic = value;
-			}
-		}
-		
-		public decimal						LogarithmicValue
-		{
-			get
-			{
-				if ( this.MaxValue == this.MinValue )
-				{
-					return this.Value;
-				}
-				else
-				{
-					decimal norm = (this.Value-this.MinValue)/(this.MaxValue-this.MinValue);
-					norm = (decimal)System.Math.Pow((double)norm, (double)(1.0M/this.logarithmic));
-					return norm*(this.MaxValue-this.MinValue)+this.MinValue;
-				}
-			}
-			set
-			{
-				if ( this.MaxValue != this.MinValue )
-				{
-					decimal norm = (value-this.MinValue)/(this.MaxValue-this.MinValue);
-					norm = (decimal)System.Math.Pow((double)norm, (double)this.logarithmic);
-					value = norm*(this.MaxValue-this.MinValue)+this.MinValue;
-				}
-				this.Value = value;
-			}
-		}
 		
 		#region IDragBehaviorHost Members
 		Drawing.Point						Behaviors.IDragBehaviorHost.DragLocation
@@ -227,7 +93,7 @@ namespace Epsitec.Common.Widgets
 
 			if (this.IsEnabled)
 			{
-				rect.Deflate(this.margin, this.margin);
+				rect.Deflate(Slider.margin, Slider.margin);
 				
 				Drawing.Color front = this.color.IsEmpty     ? adorner.ColorCaption : this.color;
 				Drawing.Color back  = this.BackColor.IsEmpty ? adorner.ColorWindow  : this.BackColor;
@@ -277,10 +143,10 @@ namespace Epsitec.Common.Widgets
 			
 			width -= adorner.GeometrySliderLeftMargin;
 			width -= adorner.GeometrySliderRightMargin;
-			width -= this.margin;
+			width -= Slider.margin;
 			
 			left  += adorner.GeometrySliderLeftMargin;
-			left  += this.margin;
+			left  += Slider.margin;
 			
 			double offset  = (double) (pos.X - left);
 			double range   = (double) (this.Range);
@@ -293,44 +159,11 @@ namespace Epsitec.Common.Widgets
 			
 			return this.MinValue;
 		}
-
-		private void HandleRangeChanged()
-		{
-			this.Invalidate ();
-		}
 		
-		protected virtual void OnValueChanged()
-		{
-			EventHandler handler = (EventHandler) this.GetUserEventHandler("ValueChanged");
-			if (handler != null)
-			{
-				handler(this);
-			}
-		}
+		protected static readonly double margin = 1;
 
-		private static void NotifyValueChanged(DependencyObject o, object oldValue, object newValue)
-		{
-			Slider that = o as Slider;
-			that.OnValueChanged ();
-		}
-
-		private static object CoerceValue(DependencyObject o, DependencyProperty property, object value)
-		{
-			Slider that = o as Slider;
-			decimal num = (decimal) value;
-			
-			num = that.range.Constrain (num);
-			
-			return num;
-		}
-
-		public static readonly DependencyProperty ValueProperty = DependencyProperty.Register ("Value", typeof (decimal), typeof (DataObject), new Helpers.VisualPropertyMetadata (0M, Slider.NotifyValueChanged, Slider.CoerceValue, Epsitec.Common.Widgets.Helpers.VisualPropertyMetadataOptions.AffectsDisplay));
-		
 		private Behaviors.DragBehavior		drag_behavior;
-		private Types.DecimalRange			range = new Types.DecimalRange (0, 100, 1);
-		private decimal						logarithmic = 1;
 		private Drawing.Color				color = Drawing.Color.Empty;
-		protected readonly double			margin = 1;
 		private bool						has_frame = true;
 	}
 }
