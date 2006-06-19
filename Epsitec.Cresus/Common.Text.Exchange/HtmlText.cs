@@ -10,7 +10,18 @@ namespace Epsitec.Common.Text.Exchange
 {
 	public class HtmlTextOut
 	{
-		public HtmlTextOut(string epsitecFormattedText)
+
+		public HtmlTextOut()
+		{
+			this.Initialize("") ;
+		}
+
+		public HtmlTextOut(string comment)
+		{
+			this.Initialize(comment) ;
+		}
+
+		private void Initialize(string comment)
 		{
 			this.tagStorageList.Add (HtmlTagType.Bold, new TagStoreage (this, HtmlTagType.Bold));
 			this.tagStorageList.Add (HtmlTagType.Italic, new TagStoreage (this, HtmlTagType.Italic));
@@ -26,7 +37,7 @@ namespace Epsitec.Common.Text.Exchange
 			this.output.AppendLine ("<HTML><HEAD>");
 
 			this.output.AppendLine ("<!-- EpsitecFormattedText");
-			this.output.AppendLine (epsitecFormattedText);
+			this.output.AppendLine (comment);
 			this.output.AppendLine ("-->");
 
 			this.output.AppendLine ("<STYLE></STYLE>");

@@ -380,7 +380,7 @@ namespace Epsitec.Common.Document.Objects
 			Text.TextStory story = flow.TextStory;
 			Text.TextNavigator navigator = flow.TextNavigator;
 
-			Epsitec.Common.Text.Exchange.Rosetta.CopyHtmlText (story, navigator);
+			Epsitec.Common.Text.Exchange.Rosetta.CopyText (story, navigator);
 			return true;
 
 #endif
@@ -444,16 +444,13 @@ namespace Epsitec.Common.Document.Objects
 
 			if (ido.GetDataPresent (Common.Text.Exchange.EpsitecFormat.Format.Name, false))
 			{
-				string text = ido.GetData (Common.Text.Exchange.EpsitecFormat.Format.Name, false) as string;
-				if (text != null)
-				{
-					text = text.Replace ("\r\n", "\u2029");		//	ParagraphSeparator
-					text = text.Replace ("\n", "\u2028");		//	LineSeparator
-					text = text.Replace ("\r", "\u2028");		//	LineSeparator
+				// colle du texte natif
+				TextFlow flow = this.TextFlow;
+				Text.TextStory story = flow.TextStory;
+				Text.TextNavigator navigator = flow.TextNavigator;
 
-					this.MetaNavigator.Insert (text);
-					textInserted = true;
-				}
+				Epsitec.Common.Text.Exchange.Rosetta.PasteNativeText (story, navigator);
+				textInserted = true;
 			}
 			else if (ido.GetDataPresent (System.Windows.Forms.DataFormats.Html, false))
 			{
