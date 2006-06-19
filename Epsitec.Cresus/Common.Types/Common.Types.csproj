@@ -106,6 +106,7 @@
     <Compile Include="Collections\GenericDepdendencyObjectList.cs" />
     <Compile Include="Converters\AutomaticValueConverter.cs" />
     <Compile Include="AbstractNumericType.cs" />
+    <Compile Include="RankAttribute.cs" />
     <Compile Include="NotAnEnum.cs" />
     <Compile Include="NamedDependencyObject.cs" />
     <Compile Include="EnumValue.cs" />

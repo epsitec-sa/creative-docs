@@ -23,12 +23,27 @@ namespace Epsitec.Common.Types
 			
 			for (int i = 0; i < fields.Length; i++)
 			{
-				string      name  = fields[i].Name;
-				bool        hide  = (fields[i].GetCustomAttributes (typeof (HiddenAttribute), false).Length > 0);
+				object[] hiddenAttributes;
+				object[] rankAttributes;
+				
+				hiddenAttributes = fields[i].GetCustomAttributes (typeof (HiddenAttribute), false);
+				rankAttributes   = fields[i].GetCustomAttributes (typeof (RankAttribute), false);
+				
+				string name = fields[i].Name;
+				bool   hide = hiddenAttributes.Length == 1;
+				int    rank;
+				
 				System.Enum value = (System.Enum) System.Enum.Parse (this.enumType, name);
-				int         rank  = EnumType.ConvertToInt ((System.Enum) System.Enum.Parse (this.enumType, name));
 
-				//	TODO: rank défini par un attribut
+				if (rankAttributes.Length == 1)
+				{
+					RankAttribute rankAttribute = rankAttributes[0] as RankAttribute;
+					rank = rankAttribute.Rank;
+				}
+				else
+				{
+					rank = EnumType.ConvertToInt (value);
+				}
 
 				this.enumValues.Add (new EnumValue (value, rank, hide, name, -1));
 			}
@@ -234,8 +249,17 @@ namespace Epsitec.Common.Types
 				
 				int rx = val_x.Rank;
 				int ry = val_y.Rank;
-				
-				return rx - ry;
+
+				if (rx < ry)
+				{
+					return -1;
+				}
+				if (rx > ry)
+				{
+					return 1;
+				}
+
+				return string.CompareOrdinal (val_x.Name, val_y.Name);
 			}
 			#endregion
 		}

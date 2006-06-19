@@ -12,10 +12,12 @@ namespace Epsitec.Common.Types
 		{
 			get;
 		}
+		
 		int Rank
 		{
 			get;
 		}
+		
 		bool IsHidden
 		{
 			get;
