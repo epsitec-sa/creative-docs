@@ -406,6 +406,7 @@ namespace Epsitec.Common.Document.Objects
 			this.textFlow.NotifyAreaFlow();
 			return true;
 #else
+#if false
 			Support.Clipboard.ReadData data = Support.Clipboard.GetData();
 			bool textInserted = false;
 
@@ -437,6 +438,53 @@ namespace Epsitec.Common.Document.Objects
 				this.textFlow.NotifyAreaFlow ();
 
 			return textInserted;
+#else
+			System.Windows.Forms.IDataObject ido = System.Windows.Forms.Clipboard.GetDataObject ();
+			bool textInserted = false;
+
+			if (ido.GetDataPresent (Common.Text.Exchange.EpsitecFormat.Format.Name, false))
+			{
+				string text = ido.GetData (Common.Text.Exchange.EpsitecFormat.Format.Name, false) as string;
+				if (text != null)
+				{
+					text = text.Replace ("\r\n", "\u2029");		//	ParagraphSeparator
+					text = text.Replace ("\n", "\u2028");		//	LineSeparator
+					text = text.Replace ("\r", "\u2028");		//	LineSeparator
+
+					this.MetaNavigator.Insert (text);
+					textInserted = true;
+				}
+			}
+			else if (ido.GetDataPresent (System.Windows.Forms.DataFormats.Html, false))
+			{
+				// colle du texte Html
+				TextFlow flow = this.TextFlow;
+				Text.TextStory story = flow.TextStory;
+				Text.TextNavigator navigator = flow.TextNavigator;
+
+				Epsitec.Common.Text.Exchange.Rosetta.PasteHtmlText (story, navigator);
+				textInserted = true;
+			}
+			else if (ido.GetDataPresent(System.Windows.Forms.DataFormats.Text, false))
+			{
+				string text = ido.GetData (System.Windows.Forms.DataFormats.Text, false) as string;
+				if (text != null)
+				{
+					text = text.Replace ("\r\n", "\u2029");		//	ParagraphSeparator
+					text = text.Replace ("\n", "\u2028");		//	LineSeparator
+					text = text.Replace ("\r", "\u2028");		//	LineSeparator
+
+					this.MetaNavigator.Insert (text);
+					textInserted = true;
+				}
+			}
+
+			if (textInserted)
+				this.textFlow.NotifyAreaFlow ();
+
+			return textInserted;
+
+#endif
 #endif
 		}
 

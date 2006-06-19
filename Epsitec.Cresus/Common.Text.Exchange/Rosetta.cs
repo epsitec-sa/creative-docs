@@ -7,6 +7,7 @@ using System.Text;
 using System.Collections.Generic;
 using Epsitec.Common.Text.Exchange.HtmlParser;
 
+
 // Il faudrait trouver comment accéder à Epsitec.Common.Document.Modifier.FontSizeScale (254.0 / 72.0) 
 //
 
@@ -56,7 +57,9 @@ namespace Epsitec.Common.Text.Exchange
 
 			System.Windows.Forms.Clipboard clipboard;
 
-			HtmlTextOut htmlText = new HtmlTextOut ();
+			string epsitecFormattedText = GetEpsitecFormattedText (story, usernavigator);
+
+			HtmlTextOut htmlText = new HtmlTextOut (epsitecFormattedText);
 			bool newParagraph = true;
 
 			int[] selectedPositions = usernavigator.GetAdjustedSelectionCursorPositions ();
@@ -142,10 +145,14 @@ namespace Epsitec.Common.Text.Exchange
 
 			htmlText.Terminate ();
 
-			System.Windows.Forms.DataObject data = new System.Windows.Forms.DataObject ();
-			data.SetData (System.Windows.Forms.DataFormats.Text, true, htmlText.rawText);
-			data.SetData (System.Windows.Forms.DataFormats.Html, true, htmlText.HtmlStream);
-			System.Windows.Forms.Clipboard.SetDataObject (data, true);
+			System.Windows.Forms.IDataObject od = new System.Windows.Forms.DataObject ();
+			od.SetData (System.Windows.Forms.DataFormats.Text, true, htmlText.rawText);
+			od.SetData (System.Windows.Forms.DataFormats.Html, true, htmlText.HtmlStream);
+
+			EpsitecFormat efmt = new EpsitecFormat(htmlText.rawText) ;
+			od.SetData (EpsitecFormat.Format.Name, true, efmt);
+
+			System.Windows.Forms.Clipboard.SetDataObject (od, true);
 		}
 
 
@@ -375,6 +382,12 @@ namespace Epsitec.Common.Text.Exchange
 		}
 
 		#endregion
+
+
+		public static string GetEpsitecFormattedText(TextStory story, TextNavigator usernavigator)
+		{
+			return "stubtext";
+		}
 
 	}
 }
