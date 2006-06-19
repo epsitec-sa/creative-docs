@@ -207,7 +207,7 @@
     <Compile Include="IName.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="INameCaption.cs">
+    <Compile Include="ICaption.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="INamedType.cs">

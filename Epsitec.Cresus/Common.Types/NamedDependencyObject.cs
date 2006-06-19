@@ -3,7 +3,7 @@
 
 namespace Epsitec.Common.Types
 {
-	public abstract class NamedDependencyObject : DependencyObject, IName, INameCaption
+	public abstract class NamedDependencyObject : DependencyObject, IName, ICaption
 	{
 		public NamedDependencyObject()
 		{
@@ -51,7 +51,7 @@ namespace Epsitec.Common.Types
 
 		#region INameCaption Members
 
-		long INameCaption.CaptionId
+		long ICaption.CaptionId
 		{
 			get
 			{

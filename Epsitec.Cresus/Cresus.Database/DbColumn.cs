@@ -28,7 +28,7 @@ namespace Epsitec.Cresus.Database
 	/// La classe DbColumn décrit une colonne dans une table de la base de données.
 	/// Cette classe ressemble dans l'esprit à System.Data.DataColumn.
 	/// </summary>
-	public class DbColumn : IDbAttributesHost, Common.Types.INameCaption
+	public class DbColumn : IDbAttributesHost, Common.Types.ICaption
 	{
 		public DbColumn()
 		{
