@@ -29,6 +29,7 @@ namespace Epsitec.Common.Support
 		
 		public ResourceManager(string path)
 		{
+			this.serialId = System.Threading.Interlocked.Increment (ref ResourceManager.nextSerialId);
 			this.providers = new Dictionary<string, ProviderRecord> ();
 			this.culture = CultureInfo.CurrentCulture;
 			this.defaultPath = string.IsNullOrEmpty (path) ? null : path;
@@ -37,6 +38,15 @@ namespace Epsitec.Common.Support
 			{
 				ProviderRecord record = new ProviderRecord (this, allocator);
 				this.providers.Add (record.Prefix, record);
+			}
+		}
+		
+
+		internal long							ManagerSerialId
+		{
+			get
+			{
+				return this.serialId;
 			}
 		}
 		
@@ -1543,6 +1553,9 @@ namespace Epsitec.Common.Support
 
 		#endregion
 
+		private static long						nextSerialId = 1;
+		
+		private long							serialId;
 		private Dictionary<string, ProviderRecord> providers;
 		private CultureInfo						culture;
 		private string							defaultModuleName;
