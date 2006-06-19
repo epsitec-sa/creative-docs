@@ -4,16 +4,16 @@
 namespace Epsitec.Common.Types
 {
 	/// <summary>
-	/// La classe HideAttribute définit un attribut [Hide] qui peut être
+	/// La classe HiddenAttribute définit un attribut [Hidden] qui peut être
 	/// utilisé pour cacher des valeurs d'une énumération.
 	/// </summary>
 	
 	[System.Serializable]
 	[System.AttributeUsage (System.AttributeTargets.Field)]
 	
-	public sealed class HideAttribute : System.Attribute
+	public sealed class HiddenAttribute : System.Attribute
 	{
-		public HideAttribute()
+		public HiddenAttribute()
 		{
 		}
 	}

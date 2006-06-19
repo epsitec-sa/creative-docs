@@ -173,7 +173,7 @@
     <Compile Include="DependencyPropertyChangedEventArgs.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="HideAttribute.cs">
+    <Compile Include="HiddenAttribute.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="IChange.cs">

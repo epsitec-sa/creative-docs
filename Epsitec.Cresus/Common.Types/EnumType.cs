@@ -24,7 +24,7 @@ namespace Epsitec.Common.Types
 			for (int i = 0; i < fields.Length; i++)
 			{
 				string      name  = fields[i].Name;
-				bool        hide  = (fields[i].GetCustomAttributes (typeof (HideAttribute), false).Length > 0);
+				bool        hide  = (fields[i].GetCustomAttributes (typeof (HiddenAttribute), false).Length > 0);
 				System.Enum value = (System.Enum) System.Enum.Parse (this.enumType, name);
 				int         rank  = EnumType.ConvertToInt ((System.Enum) System.Enum.Parse (this.enumType, name));
 

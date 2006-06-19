@@ -307,7 +307,7 @@ namespace Epsitec.Common.Types
 			Second	=  2,
 			Third	=  3,
 			
-			[Hide] Extra	= 99
+			[Hidden] Extra	= 99
 		}
 		
 		[System.Flags]

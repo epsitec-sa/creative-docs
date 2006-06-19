@@ -11,17 +11,17 @@ namespace Epsitec.Common.Designer
 	{
 		public enum ChildrenPlacement
 		{
-			[Types.Hide] None,
+			[Types.Hidden] None,
 			Anchored,
 			VerticalDocked,
 			HorizontalDocked,
-			[Types.Hide] VerticalStacked,
-			[Types.Hide] HorizontalStacked,
+			[Types.Hidden] VerticalStacked,
+			[Types.Hidden] HorizontalStacked,
 		}
 
 		public enum AnchoredHorizontalAttachment
 		{
-			[Types.Hide] None,
+			[Types.Hidden] None,
 			Left,
 			Right,
 			Fill,
@@ -29,7 +29,7 @@ namespace Epsitec.Common.Designer
 
 		public enum AnchoredVerticalAttachment
 		{
-			[Types.Hide] None,
+			[Types.Hidden] None,
 			Bottom,
 			Top,
 			Fill,
@@ -37,7 +37,7 @@ namespace Epsitec.Common.Designer
 
 		public enum DockedHorizontalAttachment
 		{
-			[Types.Hide] None,
+			[Types.Hidden] None,
 			Left,
 			Right,
 			Fill,
@@ -45,7 +45,7 @@ namespace Epsitec.Common.Designer
 
 		public enum DockedVerticalAttachment
 		{
-			[Types.Hide] None,
+			[Types.Hidden] None,
 			Bottom,
 			Top,
 			Fill,
@@ -53,7 +53,7 @@ namespace Epsitec.Common.Designer
 
 		public enum DockedHorizontalAlignment
 		{
-			[Types.Hide] None,
+			[Types.Hidden] None,
 			Stretch,
 			Center,
 			Left,
@@ -62,7 +62,7 @@ namespace Epsitec.Common.Designer
 
 		public enum DockedVerticalAlignment
 		{
-			[Types.Hide] None,
+			[Types.Hidden] None,
 			Stretch,
 			Center,
 			Bottom,

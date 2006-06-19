@@ -8,7 +8,7 @@ namespace Epsitec.Common.Widgets
 	/// </summary>
 	public enum WindowType
 	{
-		[Types.Hide] None		= 0,
+		[Types.Hidden] None		= 0,
 		
 		Document				= 1,
 		Dialog					= 2,
