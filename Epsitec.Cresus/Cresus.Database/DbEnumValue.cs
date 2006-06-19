@@ -62,8 +62,24 @@ namespace Epsitec.Cresus.Database
 		{
 			get { return this.Attributes[Tags.Description]; }
 		}
+
+		public long CaptionId
+		{
+			get
+			{
+				return -1;
+			}
+		}
+
+		public System.Enum Value
+		{
+			get
+			{
+				return Common.Types.NotAnEnum.Instance;
+			}
+		}
 		
-		public int								Rank
+		public int Rank
 		{
 			get { return this.rank; }
 		}

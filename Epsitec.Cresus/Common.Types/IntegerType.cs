@@ -6,81 +6,35 @@ namespace Epsitec.Common.Types
 	/// <summary>
 	/// La classe IntegerType décrit une valeur de type System.Int32.
 	/// </summary>
-	public class IntegerType : INumType, IDataConstraint
+	public class IntegerType : AbstractNumericType
 	{
-		public IntegerType()
+		public IntegerType() : this (int.MinValue, int.MaxValue)
 		{
-			this.range = new DecimalRange (System.Int32.MinValue, System.Int32.MaxValue);
 		}
 		
-		public IntegerType(int min, int max)
+		public IntegerType(int min, int max) : base ("Integer", new DecimalRange (min, max))
 		{
-			this.range = new DecimalRange (min, max);
 		}
 		
 		
-		#region INamedType Members
-		public System.Type						SystemType
+		public override System.Type				SystemType
 		{
 			get
 			{
-				return typeof (System.Int32);
+				return typeof (int);
 			}
 		}
-		#endregion
 		
-		#region INumType Members
-		public DecimalRange						Range
+		public override bool IsValidValue(object value)
 		{
-			get
-			{
-				return this.range;
-			}
-		}
-		#endregion
-		
-		#region INameCaption Members
-		public string							Name
-		{
-			get
-			{
-				return "Integer";
-			}
-		}
-
-		public string							Caption
-		{
-			get
-			{
-				return null;
-			}
-		}
-
-		public string							Description
-		{
-			get
-			{
-				return null;
-			}
-		}
-		#endregion
-		
-		#region IDataConstraint Members
-		
-		public bool IsValidValue(object value)
-		{
-			if ((value is int) &&
-				(this.range != null))
+			if (value is int)
 			{
 				int num = (int) value;
-				return this.range.Constrain (num) == num;
+				
+				return this.Range.Constrain (num) == num;
 			}
 			
 			return false;
 		}
-		
-		#endregion
-		
-		private DecimalRange					range;
 	}
 }

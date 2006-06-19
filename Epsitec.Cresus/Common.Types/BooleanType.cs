@@ -6,62 +6,22 @@ namespace Epsitec.Common.Types
 	/// <summary>
 	/// La classe BooleanType décrit des valeurs de type System.Boolean.
 	/// </summary>
-	public class BooleanType : INumType, IDataConstraint
+	public class BooleanType : AbstractNumericType
 	{
-		public BooleanType()
+		public BooleanType() : base ("Boolean", new DecimalRange (0, 1, 1))
 		{
-			this.range = new DecimalRange (0, 1, 1);
 		}
 		
 		
-		#region INamedType Members
-		public System.Type						SystemType
+		public override System.Type				SystemType
 		{
 			get
 			{
-				return typeof (System.Boolean);
+				return typeof (bool);
 			}
 		}
-		#endregion
 		
-		#region INumType Members
-		public DecimalRange						Range
-		{
-			get
-			{
-				return this.range;
-			}
-		}
-		#endregion
-		
-		#region INameCaption Members
-		public string							Name
-		{
-			get
-			{
-				return "Boolean";
-			}
-		}
-
-		public string							Caption
-		{
-			get
-			{
-				return null;
-			}
-		}
-
-		public string							Description
-		{
-			get
-			{
-				return null;
-			}
-		}
-		#endregion
-		
-		#region IDataConstraint Members
-		public bool IsValidValue(object value)
+		public override bool IsValidValue(object value)
 		{
 			if (value is bool)
 			{
@@ -70,8 +30,5 @@ namespace Epsitec.Common.Types
 			
 			return false;
 		}
-		#endregion
-		
-		private DecimalRange					range;
 	}
 }

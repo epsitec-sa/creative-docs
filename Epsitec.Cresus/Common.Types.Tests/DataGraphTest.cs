@@ -194,8 +194,7 @@ namespace Epsitec.Common.Types
 			//	Vérifie que les dossiers sont identiques... récursivement.
 			
 			Assert.AreEqual (f1.Name, f2.Name);
-			Assert.AreEqual (f1.Caption, f2.Caption);
-			Assert.AreEqual (f1.Description, f2.Description);
+			Assert.AreEqual (f1.CaptionId, f2.CaptionId);
 			Assert.AreEqual (f1.Count, f2.Count);
 			
 			int n = f1.Count;
@@ -296,19 +295,11 @@ namespace Epsitec.Common.Types
 			#endregion
 			
 			#region INameCaption Members
-			public string						Description
+			public long							CaptionId
 			{
 				get
 				{
-					return null;
-				}
-			}
-
-			public string						Caption
-			{
-				get
-				{
-					return null;
+					return -1;
 				}
 			}
 
@@ -394,19 +385,11 @@ namespace Epsitec.Common.Types
 			#endregion
 
 			#region INameCaption Members
-			public string						Description
+			public long							CaptionId
 			{
 				get
 				{
-					return null;
-				}
-			}
-
-			public string						Caption
-			{
-				get
-				{
-					return null;
+					return -1;
 				}
 			}
 

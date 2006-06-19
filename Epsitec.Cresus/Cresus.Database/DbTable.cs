@@ -59,6 +59,14 @@ namespace Epsitec.Cresus.Database
 			get { return this.Attributes[Tags.Description]; }
 		}
 		
+		public long								CaptionId
+		{
+			get
+			{
+				return -1;
+			}
+		}
+		
 		
 		public DbAttributes						Attributes
 		{

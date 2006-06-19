@@ -40,6 +40,8 @@ namespace Epsitec.Common.Widgets
 			{
 				//	This command is defined by a DRUID.
 
+				this.captionId = druid.ToLong ();
+				
 				Types.Caption caption = Support.Resources.DefaultManager.GetCaption (druid);
 
 				System.Diagnostics.Debug.Assert (caption != null);
@@ -398,19 +400,11 @@ namespace Epsitec.Common.Widgets
 
 		#region INameCaption Members
 
-		string INameCaption.Caption
+		long INameCaption.CaptionId
 		{
 			get
 			{
-				return this.ShortCaption;
-			}
-		}
-
-		string INameCaption.Description
-		{
-			get
-			{
-				return this.LongCaption;
+				return this.captionId;
 			}
 		}
 
@@ -564,5 +558,6 @@ namespace Epsitec.Common.Widgets
 		private string							name;
 		private Support.Druid					druid;
 		private Types.Caption					caption;
+		private long							captionId;
 	}
 }

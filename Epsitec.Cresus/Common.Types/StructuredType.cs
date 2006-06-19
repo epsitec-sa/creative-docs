@@ -18,8 +18,7 @@ namespace Epsitec.Common.Types
 		{
 			this.fields = new Collections.HostedDictionary<string, INamedType> (this.NotifyFieldInserted, this.NotifyFieldRemoved);
 			this.name = null;
-			this.caption = null;
-			this.description = null;
+			this.captionId = -1;
 		}
 
 		/// <summary>
@@ -96,19 +95,11 @@ namespace Epsitec.Common.Types
 
 		#region INameCaption Members
 
-		public string Caption
+		public long CaptionId
 		{
 			get
 			{
-				return this.caption;
-			}
-		}
-
-		public string Description
-		{
-			get
-			{
-				return this.description;
+				return this.captionId;
 			}
 		}
 
@@ -135,8 +126,7 @@ namespace Epsitec.Common.Types
 		}
 
 		private string name;
-		private string caption;
-		private string description;
+		private long captionId;
 		private Collections.HostedDictionary<string, INamedType> fields;
 	}
 }

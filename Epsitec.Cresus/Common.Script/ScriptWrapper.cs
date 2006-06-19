@@ -502,22 +502,17 @@ namespace Epsitec.Common.Script
 			#endregion
 			
 			#region INameCaption Members
-			public string						Description
+			public long							CaptionId
 			{
 				get
 				{
-					return null;
+					return -1;
 				}
 			}
+			#endregion
 			
-			public string						Caption
-			{
-				get
-				{
-					return null;
-				}
-			}
-			
+			#region IName Members
+
 			public string						Name
 			{
 				get
