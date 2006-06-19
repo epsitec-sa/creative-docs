@@ -3,7 +3,7 @@
 
 namespace Epsitec.Common.Types
 {
-	public abstract class AbstractNumericType : NamedDependencyObject, INamedType, INumType, IDataConstraint
+	public abstract class AbstractNumericType : NamedDependencyObject, INamedType, INumericType, IDataConstraint
 	{
 		protected AbstractNumericType(string name, DecimalRange range) : base (name)
 		{

@@ -4,11 +4,11 @@
 namespace Epsitec.Common.Types
 {
 	/// <summary>
-	/// L'interface INamedType sert de base pour INumType, IEnumType et
-	/// IStringType.
+	/// The <c>INamedType</c> interface is implemented by all type description
+	/// classes. It is also the base for interfaces such as <see cref="T:INumericType" />,
+	/// <see cref="T:IEnumType" /> and <see cref="T:IStringType" />.
 	/// </summary>
-	public interface INamedType : ICaption, IName
+	public interface INamedType : ICaption, IName, ISystemType
 	{
-		System.Type		SystemType		{ get; }
 	}
 }

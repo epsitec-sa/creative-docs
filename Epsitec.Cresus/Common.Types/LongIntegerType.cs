@@ -6,7 +6,7 @@ namespace Epsitec.Common.Types
 	/// <summary>
 	/// La classe LongIntegerType décrit une valeur de type System.Int64.
 	/// </summary>
-	public class LongIntegerType : INumType, IDataConstraint
+	public class LongIntegerType : INumericType, IDataConstraint
 	{
 		public LongIntegerType()
 		{
