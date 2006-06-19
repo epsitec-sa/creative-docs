@@ -12,7 +12,7 @@ namespace Epsitec.Common.Types
 		{
 		}
 		
-		public DecimalType(DecimalRange range) : base ("Decimal", range.Clone () as DecimalRange)
+		public DecimalType(DecimalRange range) : base ("Decimal", range)
 		{
 		}
 		
