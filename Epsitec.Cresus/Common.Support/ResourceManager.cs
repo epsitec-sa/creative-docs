@@ -1434,27 +1434,6 @@ namespace Epsitec.Common.Support
 
 		#endregion
 
-		#region Private Weak<T> Class
-
-		private class Weak<T> : System.WeakReference
-			where T : class
-		{
-			public Weak(T target)
-				: base (target)
-			{
-			}
-
-			public new T Target
-			{
-				get
-				{
-					return base.Target as T;
-				}
-			}
-		}
-
-		#endregion
-
 		#region ProviderRecord Class
 
 		private class ProviderRecord
