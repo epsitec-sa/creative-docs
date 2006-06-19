@@ -8,7 +8,7 @@ namespace Epsitec.Common.Types
 	/// les diverses classes qui exportent un nom, un titre et une
 	/// éventuelle description.
 	/// </summary>
-	public interface ICaption : IName
+	public interface ICaption
 	{
 		long CaptionId { get; }
 	}
