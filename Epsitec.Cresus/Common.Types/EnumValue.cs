@@ -5,35 +5,24 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Types
 {
-	public class EnumValue : IEnumValue
+	public class EnumValue : NamedDependencyObject, IEnumValue
 	{
-		public EnumValue(int rank, string name)
-			: this (rank, name, null, null)
+		public EnumValue(System.Enum value, int rank, bool hidden, string name, long captionId)
+			: base (name, captionId)
 		{
+			this.DefineValue (value);
+			this.DefineRank (rank);
+			this.DefineHidden (hidden);
 		}
 
-		public EnumValue(int rank, string name, string caption)
-			: this (rank, name, caption, null)
+		public void DefineValue(System.Enum value)
 		{
+			this.value = value;
 		}
 
-		public EnumValue(int rank, string name, string caption, string description)
+		public void DefineRank(int rank)
 		{
-			this.rank        = rank;
-			this.name        = name;
-			this.caption     = caption;
-			this.description = description;
-		}
-
-
-		public void DefineCaption(string caption)
-		{
-			this.caption = caption;
-		}
-
-		public void DefineDescription(string description)
-		{
-			this.description = description;
+			this.rank = rank;
 		}
 
 		public void DefineHidden(bool hide)
@@ -43,6 +32,15 @@ namespace Epsitec.Common.Types
 
 
 		#region IEnumValue Members
+
+		public System.Enum Value
+		{
+			get
+			{
+				return this.value;
+			}
+		}
+		
 		public int Rank
 		{
 			get
@@ -60,36 +58,9 @@ namespace Epsitec.Common.Types
 		}
 		#endregion
 
-		#region INameCaption Members
-		public string Name
-		{
-			get
-			{
-				return this.name;
-			}
-		}
 
-		public string Caption
-		{
-			get
-			{
-				return this.caption;
-			}
-		}
-
-		public string Description
-		{
-			get
-			{
-				return this.description;
-			}
-		}
-		#endregion
-
+		private System.Enum value;
 		private int rank;
 		private bool hidden;
-		private string name;
-		private string caption;
-		private string description;
 	}
 }

@@ -133,6 +133,14 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 
+			System.Enum IEnumValue.Value
+			{
+				get
+				{
+					return Types.NotAnEnum.Instance;
+				}
+			}
+
 			bool IEnumValue.IsHidden
 			{
 				get
@@ -145,19 +153,11 @@ namespace Epsitec.Common.Widgets
 
 			#region INameCaption Members
 
-			string INameCaption.Caption
+			long INameCaption.CaptionId
 			{
 				get
 				{
-					return this.command.Caption;
-				}
-			}
-
-			string INameCaption.Description
-			{
-				get
-				{
-					return this.command.Description;
+					return this.command.CaptionId;
 				}
 			}
 

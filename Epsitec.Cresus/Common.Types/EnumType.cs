@@ -12,9 +12,9 @@ namespace Epsitec.Common.Types
 	/// <summary>
 	/// La classe EnumType décrit des valeurs de type System.Enum.
 	/// </summary>
-	public class EnumType : IEnumType, IDataConstraint
+	public class EnumType : NamedDependencyObject, IEnumType, IDataConstraint
 	{
-		public EnumType(System.Type enum_type)
+		public EnumType(System.Type enum_type) : base ("Enumeration")
 		{
 			FieldInfo[] fields = enum_type.GetFields (BindingFlags.Public | BindingFlags.DeclaredOnly | BindingFlags.Static);
 			
@@ -23,14 +23,14 @@ namespace Epsitec.Common.Types
 			
 			for (int i = 0; i < fields.Length; i++)
 			{
-				string name = fields[i].Name;
-				bool   hide = (fields[i].GetCustomAttributes (typeof (HideAttribute), false).Length > 0);
-				int    rank = EnumType.ConvertToInt ((System.Enum) System.Enum.Parse (this.enumType, name));
+				string      name  = fields[i].Name;
+				bool        hide  = (fields[i].GetCustomAttributes (typeof (HideAttribute), false).Length > 0);
+				System.Enum value = (System.Enum) System.Enum.Parse (this.enumType, name);
+				int         rank  = EnumType.ConvertToInt ((System.Enum) System.Enum.Parse (this.enumType, name));
 
-				EnumValue value = new EnumValue (rank, name);
-				value.DefineHidden (hide);
-				
-				this.enumValues.Add (value);
+				//	TODO: rank défini par un attribut
+
+				this.enumValues.Add (new EnumValue (value, rank, hide, name, -1));
 			}
 
 			this.enumValues.Sort (EnumType.RankComparer);
@@ -61,11 +61,11 @@ namespace Epsitec.Common.Types
 			}
 		}
 		
-		public EnumValue						this[System.Enum rank]
+		public EnumValue						this[System.Enum value]
 		{
 			get
 			{
-				return this.FindValueFromRank (System.Convert.ToInt32 (rank));
+				return this.FindValueFromValue (value);
 			}
 		}
 		
@@ -79,30 +79,6 @@ namespace Epsitec.Common.Types
 		}
 		
 		
-		public void DefineCaption(string caption)
-		{
-			this.caption = caption;
-		}
-			
-		public void DefineDescription(string description)
-		{
-			this.description = description;
-		}
-		
-		
-		public void DefineTextsFromResources(string id)
-		{
-			this.DefineCaption (Resources.MakeTextRef (id, Tags.Caption));
-			this.DefineDescription (Resources.MakeTextRef (id, Tags.Description));
-			
-			foreach (EnumValue value in this.enumValues)
-			{
-				value.DefineCaption (Resources.MakeTextRef (id, value.Name, Tags.Caption));
-				value.DefineDescription (Resources.MakeTextRef (id, value.Name, Tags.Description));
-			}
-		}
-		
-		
 		public EnumValue FindValueFromRank(int rank)
 		{
 			for (int i = 0; i < this.enumValues.Count; i++)
@@ -112,10 +88,23 @@ namespace Epsitec.Common.Types
 					return this.enumValues[i];
 				}
 			}
-			
+
 			return null;
 		}
-		
+
+		public EnumValue FindValueFromValue(System.Enum value)
+		{
+			for (int i = 0; i < this.enumValues.Count; i++)
+			{
+				if (System.Enum.Equals (this.enumValues[i].Value, value))
+				{
+					return this.enumValues[i];
+				}
+			}
+
+			return null;
+		}
+
 		public EnumValue FindValueFromName(string name)
 		{
 			for (int i = 0; i < this.enumValues.Count; i++)
@@ -129,11 +118,11 @@ namespace Epsitec.Common.Types
 			return null;
 		}
 		
-		public EnumValue FindValueFromCaption(string caption)
+		public EnumValue FindValueFromCaptionId(long captionId)
 		{
 			for (int i = 0; i < this.enumValues.Count; i++)
 			{
-				if (this.enumValues[i].Caption == caption)
+				if (this.enumValues[i].CaptionId == captionId)
 				{
 					return this.enumValues[i];
 				}
@@ -223,32 +212,6 @@ namespace Epsitec.Common.Types
 		}
 		#endregion
 		
-		#region INameCaption Members
-		public virtual string					Name
-		{
-			get
-			{
-				return "Enumeration";
-			}
-		}
-
-		public virtual string					Caption
-		{
-			get
-			{
-				return this.caption;
-			}
-		}
-
-		public virtual string					Description
-		{
-			get
-			{
-				return this.description;
-			}
-		}
-		#endregion
-		
 		#region RankComparerImplementation Class
 		private class RankComparerImplementation : IComparer<EnumValue>
 		{
@@ -310,7 +273,5 @@ namespace Epsitec.Common.Types
 		
 		private System.Type						enumType;
 		private List<EnumValue>					enumValues;
-		private string							caption;
-		private string							description;
 	}
 }

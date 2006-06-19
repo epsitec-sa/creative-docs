@@ -234,22 +234,18 @@ namespace Epsitec.Common.UI.Data
 		#endregion
 		
 		#region INameCaption Members
-		public string							Description
+
+		public long CaptionId
 		{
 			get
 			{
-				return null;
+				return -1;
 			}
 		}
-		
-		public string							Caption
-		{
-			get
-			{
-				return null;
-			}
-		}
-		
+		#endregion
+
+		#region IName Members
+
 		public string							Name
 		{
 			get
@@ -300,6 +296,7 @@ namespace Epsitec.Common.UI.Data
 		{
 			string field_name = field.Name;
 			
+#if false //#fix
 			if ((field_name != null) &&
 				(field_name.Length > 0) &&
 				(this.resource_prefix != null) &&
@@ -330,6 +327,7 @@ namespace Epsitec.Common.UI.Data
 					enum_type.DefineTextsFromResources (enum_id);
 				}
 			}
+#endif
 			
 			this.Add (field);
 			

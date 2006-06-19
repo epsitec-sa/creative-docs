@@ -118,7 +118,14 @@ namespace Epsitec.Common.Types
 				}
 			}
 		}
-		
+
+		public static DecimalRange			Empty
+		{
+			get
+			{
+				return new DecimalRange (0.0M, 0.0M, 0.0M);
+			}
+		}
 		
 		public bool CheckInRange(decimal value)
 		{

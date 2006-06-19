@@ -16,8 +16,7 @@ namespace Epsitec.Common.UI.Data
 		public ObsoleteField(string name)
 		{
 			this.name        = name;
-			this.caption     = null;
-			this.description = null;
+			this.captionId   = -1;
 		}
 		
 		public ObsoleteField(string name, object value) : this (name)
@@ -134,17 +133,12 @@ namespace Epsitec.Common.UI.Data
 			this.constraint = constraint;
 		}
 		
-		public void DefineCaption(string caption)
+		public void DefineCaptionId(long captionId)
 		{
-			this.caption = caption;
+			this.captionId = captionId;
 		}
 		
-		public void DefineDescription(string description)
-		{
-			this.description = description;
-		}
-		
-		
+
 		#region IDataValue Members
 		public Types.INamedType					DataType
 		{
@@ -231,28 +225,26 @@ namespace Epsitec.Common.UI.Data
 		}
 		#endregion
 
-		#region INameCaption Members
-		public string							Name
+		#region IName Members
+
+		public string Name
 		{
 			get
 			{
 				return this.name;
 			}
 		}
+
+		#endregion
+
 		
-		public string							Caption
+
+		#region INameCaption Members
+		public long CaptionId
 		{
 			get
 			{
-				return this.caption;
-			}
-		}
-		
-		public string							Description
-		{
-			get
-			{
-				return this.description;
+				return -1;
 			}
 		}
 		#endregion
@@ -304,8 +296,7 @@ namespace Epsitec.Common.UI.Data
 			ObsoleteField that = o as ObsoleteField;
 			
 			that.name           = this.name;
-			that.caption        = this.caption;
-			that.description    = this.description;
+			that.captionId      = this.captionId;
 			that.type           = this.type;
 			that.constraint     = this.constraint;
 			that.value          = this.value;
@@ -321,8 +312,7 @@ namespace Epsitec.Common.UI.Data
 		{
 			ObsoleteField field = new ObsoleteField (value.Name, null, value.DataType, value.DataConstraint);
 			
-			field.DefineCaption (value.Caption);
-			field.DefineDescription (value.Description);
+			field.DefineCaptionId (value.CaptionId);
 			
 			return field;
 		}
@@ -343,13 +333,12 @@ namespace Epsitec.Common.UI.Data
 		
 		
 		private string							name;
-		private string							caption;
-		private string							description;
+		private long 							captionId;
 		
 		private Types.INamedType				type;
 		private Types.IDataConstraint			constraint;
 		
-		private ObsoleteRecord							record;
+		private ObsoleteRecord					record;
 		private object							value;
 //-		private bool							is_value_valid;
 	}

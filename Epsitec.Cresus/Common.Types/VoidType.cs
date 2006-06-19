@@ -32,21 +32,14 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		public string							Caption
+		public long								CaptionId
 		{
 			get
 			{
-				return null;
+				return -1;
 			}
 		}
-
-		public string							Description
-		{
-			get
-			{
-				return null;
-			}
-		}
+		
 		#endregion
 		
 		public static readonly VoidType			Default = new VoidType ();

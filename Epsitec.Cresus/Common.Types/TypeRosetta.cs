@@ -230,19 +230,11 @@ namespace Epsitec.Common.Types
 
 			#region INameCaption Members
 
-			public string Caption
+			public long CaptionId
 			{
 				get
 				{
-					return null;
-				}
-			}
-
-			public string Description
-			{
-				get
-				{
-					return null;
+					return -1;
 				}
 			}
 

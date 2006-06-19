@@ -63,21 +63,14 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		public string							Caption
+		public long								CaptionId
 		{
 			get
 			{
-				return null;
+				return -1;
 			}
 		}
 
-		public string							Description
-		{
-			get
-			{
-				return null;
-			}
-		}
 		#endregion
 
 		#region IDataConstraint Members

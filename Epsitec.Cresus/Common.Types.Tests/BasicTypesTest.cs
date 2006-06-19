@@ -31,8 +31,20 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual ( 2, et["Second"].Rank);
 			Assert.AreEqual ( 3, et["Third"] .Rank);
 			Assert.AreEqual (99, et["Extra"] .Rank);
+
+			Assert.AreEqual (MyEnum.None, et["None"].Value);
+			Assert.AreEqual (MyEnum.First, et["First"].Value);
+			Assert.AreEqual (MyEnum.Second, et["Second"].Value);
+			Assert.AreEqual (MyEnum.Third, et["Third"].Value);
+			Assert.AreEqual (MyEnum.Extra, et["Extra"].Value);
+
+			Assert.AreEqual (-1, et[MyEnum.None].Rank);
+			Assert.AreEqual (1, et[MyEnum.First].Rank);
+			Assert.AreEqual (2, et[MyEnum.Second].Rank);
+			Assert.AreEqual (3, et[MyEnum.Third].Rank);
+			Assert.AreEqual (99, et[MyEnum.Extra].Rank);
 			
-			Assert.AreEqual ("None"  , et[-1].Name);
+			Assert.AreEqual ("None", et[-1].Name);
 			Assert.AreEqual ("First" , et[ 1].Name);
 			Assert.AreEqual ("Second", et[ 2].Name);
 			Assert.AreEqual ("Third" , et[ 3].Name);
@@ -61,12 +73,18 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual ("Flag2", ev[2].Name);
 			Assert.AreEqual ("Flag3", ev[3].Name);
 			Assert.AreEqual ("Flag4", ev[4].Name);
-			
-			Assert.AreEqual (0, et["None"] .Rank);
+
+			Assert.AreEqual (0, et["None"].Rank);
 			Assert.AreEqual (1, et["Flag1"].Rank);
 			Assert.AreEqual (2, et["Flag2"].Rank);
 			Assert.AreEqual (4, et["Flag3"].Rank);
 			Assert.AreEqual (8, et["Flag4"].Rank);
+
+			Assert.AreEqual (MyFlags.None, et["None"].Value);
+			Assert.AreEqual (MyFlags.Flag1, et["Flag1"].Value);
+			Assert.AreEqual (MyFlags.Flag2, et["Flag2"].Value);
+			Assert.AreEqual (MyFlags.Flag3, et["Flag3"].Value);
+			Assert.AreEqual (MyFlags.Flag4, et["Flag4"].Value);
 			
 			Assert.AreEqual ("None",  et[0].Name);
 			Assert.AreEqual ("Flag1", et[1].Name);
@@ -81,28 +99,23 @@ namespace Epsitec.Common.Types
 			Assert.IsFalse (et.IsValidValue ("{Other}"));
 		}
 		
-		[Test] public void CheckEnumType3()
+		[Test]
+		[Ignore ("No caption defined for enum")]
+		public void CheckEnumType3()
 		{
 			System.Type type = typeof (MyEnum);
 			
 			EnumType et = new EnumType (type);
+
+//			et.DefineCaptionId (123);
 			
-			et.DefineTextsFromResources ("Enums#MyEnum");
+			Assert.AreEqual ("[res:Enums#MyEnum.capt]", et.CaptionId);
 			
-			Assert.AreEqual ("[res:Enums#MyEnum.capt]", et.Caption);
-			Assert.AreEqual ("[res:Enums#MyEnum.desc]", et.Description);
-			
-			Assert.AreEqual ("[res:Enums#MyEnum.None.capt]",   et["None"].Caption);
-			Assert.AreEqual ("[res:Enums#MyEnum.First.capt]",  et["First"].Caption);
-			Assert.AreEqual ("[res:Enums#MyEnum.Second.capt]", et["Second"].Caption);
-			Assert.AreEqual ("[res:Enums#MyEnum.Third.capt]",  et["Third"].Caption);
-			Assert.AreEqual ("[res:Enums#MyEnum.Extra.capt]",  et["Extra"].Caption);
-			
-			Assert.AreEqual ("[res:Enums#MyEnum.None.desc]",   et["None"].Description);
-			Assert.AreEqual ("[res:Enums#MyEnum.First.desc]",  et["First"].Description);
-			Assert.AreEqual ("[res:Enums#MyEnum.Second.desc]", et["Second"].Description);
-			Assert.AreEqual ("[res:Enums#MyEnum.Third.desc]",  et["Third"].Description);
-			Assert.AreEqual ("[res:Enums#MyEnum.Extra.desc]",  et["Extra"].Description);
+			Assert.AreEqual ("[res:Enums#MyEnum.None.capt]",   et["None"].CaptionId);
+			Assert.AreEqual ("[res:Enums#MyEnum.First.capt]",  et["First"].CaptionId);
+			Assert.AreEqual ("[res:Enums#MyEnum.Second.capt]", et["Second"].CaptionId);
+			Assert.AreEqual ("[res:Enums#MyEnum.Third.capt]",  et["Third"].CaptionId);
+			Assert.AreEqual ("[res:Enums#MyEnum.Extra.capt]",  et["Extra"].CaptionId);
 		}
 		
 		[Test] public void CheckOpenEnumType()

@@ -10,8 +10,6 @@ namespace Epsitec.Common.Types
 	/// </summary>
 	public interface INameCaption : IName
 	{
-		string	Caption		{ get; }
-		string	Description	{ get; }
-//		string	Name		{ get; }
+		long CaptionId { get; }
 	}
 }
