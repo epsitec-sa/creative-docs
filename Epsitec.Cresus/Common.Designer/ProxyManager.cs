@@ -36,11 +36,23 @@ namespace Epsitec.Common.Designer
 
 		public void CreateUserInterface(Widget container)
 		{
-			foreach (IProxy proxy in this.Proxies)
+			foreach (IProxy proxy in this.proxies)
 			{
 				this.CreateUserInterface(container, proxy);
 			}
 		}
+
+		public void UpdateUserInterface()
+		{
+			if (this.Proxies != null)
+			{
+				foreach (IProxy proxy in this.Proxies)
+				{
+					proxy.Update();
+				}
+			}
+		}
+
 
 		public static bool EqualValues(IProxy a, IProxy b)
 		{
@@ -108,8 +120,6 @@ namespace Epsitec.Common.Designer
 
 		private IEnumerable<IProxy> GenerateProxies(Widget widget)
 		{
-			//	TODO: créer les divers Proxies pour le widget; on peut simplement
-			//	ajouter ici des 'yield return new ...'
 			yield return new Proxies.Geometry(widget, this.objectModifier);
 			yield return new Proxies.Layout(widget, this.objectModifier);
 		}

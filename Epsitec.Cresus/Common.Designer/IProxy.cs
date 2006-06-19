@@ -15,6 +15,11 @@ namespace Epsitec.Common.Designer
 		void AddWidget(Widget widget);
 
 		/// <summary>
+		/// Updates this proxy with the widget. Read the connected widget properties.
+		/// </summary>
+		void Update();
+
+		/// <summary>
 		/// Gets the rank of the proxy in the user interface. Proxies with smaller
 		/// values are displayed first
 		/// </summary>
