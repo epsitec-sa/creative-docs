@@ -8,7 +8,7 @@ namespace Epsitec.Common.Types
 	/// <summary>
 	/// DependencyProperty.
 	/// </summary>
-	public sealed class DependencyProperty : System.IEquatable<DependencyProperty>, System.IComparable<DependencyProperty>, IDataConstraint
+	public sealed class DependencyProperty : System.IEquatable<DependencyProperty>, System.IComparable<DependencyProperty>, IDataConstraint, IName
 	{
 		private DependencyProperty(string name, System.Type propertyType, System.Type ownerType, DependencyPropertyMetadata metadata)
 		{
@@ -341,6 +341,18 @@ namespace Epsitec.Common.Types
 		bool IDataConstraint.IsValidValue(object value)
 		{
 			return this.IsValidValue (value);
+		}
+
+		#endregion
+
+		#region IName Members
+
+		string IName.Name
+		{
+			get
+			{
+				return this.Name;
+			}
 		}
 
 		#endregion

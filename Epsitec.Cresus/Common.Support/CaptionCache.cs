@@ -21,14 +21,76 @@ namespace Epsitec.Common.Support
 
 		public Caption GetCaption(ResourceManager manager, long id)
 		{
-			Druid druid = Druid.FromLong (id);
-			return this.GetCaption (manager, druid, id);
+			if (id >= 0)
+			{
+				Druid druid = Druid.FromLong (id);
+				return this.GetCaption (manager, druid, id);
+			}
+			else
+			{
+				return null;
+			}
 		}
 
 		public Caption GetCaption(ResourceManager manager, Druid druid)
 		{
-			long id = druid.ToLong ();
-			return this.GetCaption (manager, druid, id);
+			if (druid.IsValid)
+			{
+				long id = druid.ToLong ();
+				return this.GetCaption (manager, druid, id);
+			}
+			else
+			{
+				return null;
+			}
+		}
+
+		public Caption GetCaption(ResourceManager manager, DependencyProperty property)
+		{
+			if (property != null)
+			{
+				return this.GetCaption (manager, property.DefaultMetadata.CaptionId);
+			}
+			else
+			{
+				return null;
+			}
+		}
+
+		public Caption GetCaption(ResourceManager manager, DependencyObject obj, DependencyProperty property)
+		{
+			if (property != null)
+			{
+				return this.GetCaption (manager, property.GetMetadata (obj).CaptionId);
+			}
+			else
+			{
+				return null;
+			}
+		}
+
+		public Caption GetCaption(ResourceManager manager, System.Type type, DependencyProperty property)
+		{
+			if (property != null)
+			{
+				return this.GetCaption (manager, property.GetMetadata (type).CaptionId);
+			}
+			else
+			{
+				return null;
+			}
+		}
+
+		public Caption GetCaption(ResourceManager manager, ICaption caption)
+		{
+			if (caption != null)
+			{
+				return this.GetCaption (manager, caption.CaptionId);
+			}
+			else
+			{
+				return null;
+			}
 		}
 
 		public void TrimCache()

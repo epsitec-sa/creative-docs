@@ -8,7 +8,7 @@ namespace Epsitec.Common.Types
 	/// <summary>
 	/// DependencyPropertyMetadata.
 	/// </summary>
-	public class DependencyPropertyMetadata
+	public class DependencyPropertyMetadata : ICaption
 	{
 		public DependencyPropertyMetadata()
 		{
@@ -79,6 +79,13 @@ namespace Epsitec.Common.Types
 			get
 			{
 				return this.defaultValue;
+			}
+		}
+		public long								CaptionId
+		{
+			get
+			{
+				return this.captionId;
 			}
 		}
 		
@@ -195,6 +202,11 @@ namespace Epsitec.Common.Types
 			this.canSerializeReadWrite = false;
 			return this;
 		}
+		public DependencyPropertyMetadata DefineCaptionId(long value)
+		{
+			this.captionId = value;
+			return this;
+		}
 
 		public virtual bool FilterSerializableItem(DependencyObject item)
 		{
@@ -221,6 +233,18 @@ namespace Epsitec.Common.Types
 
 			return (cloneable == null) ? value : cloneable.Clone ();
 		}
+
+		#region ICaption Members
+
+		long ICaption.CaptionId
+		{
+			get
+			{
+				return this.CaptionId;
+			}
+		}
+
+		#endregion
 
 		internal bool NotifyPropertyInvalidated(DependencyObject sender, object old_value, object new_value)
 		{
@@ -264,5 +288,6 @@ namespace Epsitec.Common.Types
 		private CoerceValueCallback				coerceValueCallback;
 		private bool							canSerializeReadOnly;
 		private bool							canSerializeReadWrite = true;
+		private long							captionId = -1;
 	}
 }
