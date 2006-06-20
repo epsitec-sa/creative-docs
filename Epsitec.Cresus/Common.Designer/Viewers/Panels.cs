@@ -699,6 +699,7 @@ namespace Epsitec.Common.Designer.Viewers
 			//	La ligne sélectionnée a changé.
 			this.UpdateEdit();
 			this.UpdateCommands();
+			this.panelEditor.IsEditEnabled = (this.array.SelectedRow != -1);
 		}
 
 		void HandleTextChanged(object sender)
@@ -747,10 +748,11 @@ namespace Epsitec.Common.Designer.Viewers
 
 		public static UI.Panel GetPanel(DependencyObject obj)
 		{
-			return (UI.Panel) obj.GetValue (Panels.PanelProperty);
+			return (UI.Panel) obj.GetValue(Panels.PanelProperty);
 		}
 		
-		public static readonly DependencyProperty PanelProperty = DependencyProperty.RegisterAttached ("Panel", typeof (UI.Panel), typeof (Panels));
+		public static readonly DependencyProperty PanelProperty = DependencyProperty.RegisterAttached("Panel", typeof(UI.Panel), typeof(Panels));
+
 
 		protected ProxyManager				proxyManager;
 		protected TextFieldEx				labelEdit;
