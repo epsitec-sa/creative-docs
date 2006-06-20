@@ -34,10 +34,24 @@ namespace Epsitec.Common.Support
 
 		public Caption GetCaption(ResourceManager manager, Druid druid)
 		{
-			if (druid.IsValid)
+			if (druid.Type == DruidType.Full)
 			{
 				long id = druid.ToLong ();
 				return this.GetCaption (manager, druid, id);
+			}
+			else
+			{
+				return null;
+			}
+		}
+
+		public Caption GetCaption(ResourceManager manager, string id)
+		{
+			Druid druid;
+
+			if (Druid.TryParse (id, out druid))
+			{
+				return this.GetCaption (manager, druid);
 			}
 			else
 			{
