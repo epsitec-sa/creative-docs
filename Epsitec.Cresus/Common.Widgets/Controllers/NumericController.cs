@@ -25,12 +25,10 @@ namespace Epsitec.Common.Widgets.Controllers
 		{
 			return this;
 		}
-		
-		protected override void CreateUserInterface(object valueTypeObject, string valueName)
+
+		protected override void CreateUserInterface(INamedType namedType, string valueName)
 		{
 			this.Placeholder.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
-
-			this.typeObject = valueTypeObject;
 
 			this.label = new StaticText ();
 			this.field = new TextFieldSlider ();
@@ -84,65 +82,6 @@ namespace Epsitec.Common.Widgets.Controllers
 			this.OnActualValueChanged ();
 		}
 
-		private object ConvertToValue(string text)
-		{
-			System.Type type  = TypeRosetta.GetSystemTypeFromTypeObject (this.typeObject);
-			object      value = InvalidValue.Instance;
-
-			if (type == typeof (string))
-			{
-				value = text;
-			}
-			else if (type == typeof (int))
-			{
-				int result;
-
-				if (int.TryParse (text, out result))
-				{
-					value = result;
-				}
-			}
-			else if (type == typeof (decimal))
-			{
-				decimal result;
-
-				if (decimal.TryParse (text, out result))
-				{
-					value = result;
-				}
-			}
-			else if (type == typeof (double))
-			{
-				double result;
-
-				if (double.TryParse (text, out result))
-				{
-					value = result;
-				}
-			}
-
-			if (value != InvalidValue.Instance)
-			{
-				IDataConstraint constraint = this.typeObject as IDataConstraint;
-
-				if (constraint != null)
-				{
-					if (constraint.IsValidValue (value) == false)
-					{
-						value = InvalidValue.Instance;
-					}
-				}
-			}
-			
-			if (value == InvalidValue.Instance)
-			{
-				System.Diagnostics.Debug.WriteLine ("Invalid value: " + text);
-			}
-			
-			return value;
-		}
-
-
 		private string ConvertFromValue(object newValue)
 		{
 			return newValue.ToString ();
@@ -168,7 +107,6 @@ namespace Epsitec.Common.Widgets.Controllers
 		
 		private TextFieldSlider field;
 		private StaticText label;
-		private object typeObject;
 		private IValidator validator;
 	}
 }
