@@ -96,7 +96,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.panelEditor.Anchor = AnchorStyles.All;
 			this.panelEditor.ChildrenAdded += new EventHandler(this.HandlePanelEditorChildrenAdded);
 			this.panelEditor.ChildrenSelected += new EventHandler(this.HandlePanelEditorChildrenSelected);
-			this.panelEditor.ChildrenChanged += new EventHandler(this.HandlePanelEditorChildrenChanged);
+			this.panelEditor.ChildrenGeometryChanged += new EventHandler(this.HandlePanelEditorChildrenGeometryChanged);
 			this.panelEditor.UpdateCommands += new EventHandler(this.HandlePanelEditorUpdateCommands);
 
 			this.tabBook = new TabBook(this);
@@ -700,7 +700,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.DefineProxies(this.panelEditor.SelectedObjects);
 		}
 
-		void HandlePanelEditorChildrenChanged(object sender)
+		void HandlePanelEditorChildrenGeometryChanged(object sender)
 		{
 			this.UpdateProxies();
 		}
