@@ -59,9 +59,10 @@ namespace Epsitec.Common.Widgets.Controllers
 			if ((numType != null) &&
 				(!numType.Range.IsEmpty))
 			{
-				this.field.MinValue = numType.Range.Minimum;
-				this.field.MaxValue = numType.Range.Maximum;
-				this.field.Step     = numType.Range.Resolution;
+				this.field.MinValue   = numType.Range.Minimum;
+				this.field.MaxValue   = numType.Range.Maximum;
+				this.field.Resolution = numType.Range.Resolution;
+				this.field.Step       = numType.DefaultIncrementStep;
 			}
 			
 			this.AddWidget (this.label);
