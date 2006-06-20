@@ -2044,11 +2044,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			if (this.objectModifier.IsChildrenDocked(obj.Parent))
 			{
-				if (this.objectModifier.IsChildrenHorizontal(obj.Parent))
+				if (this.objectModifier.IsWidth(obj))
 				{
 					this.objectModifier.SetWidth(obj, bounds.Width);
 				}
-				else
+
+				if (this.objectModifier.IsHeight(obj))
 				{
 					this.objectModifier.SetHeight(obj, bounds.Height);
 				}

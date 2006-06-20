@@ -326,12 +326,32 @@ namespace Epsitec.Common.Designer
 		}
 
 
+		public bool IsWidth(Widget obj)
+		{
+			//	Indique s'il est possible de modifier la largeur d'un objet.
+			//	A ne pas confondre avec SetBounds pour le mode ancré. Un objet ancré
+			//	pour lequel on peut faire un SetBounds n'accepte pas le SetWidth !
+			ChildrenPlacement placement = this.GetParentPlacement(obj);
+
+			if (placement == ChildrenPlacement.HorizontalDocked)
+			{
+				return true;
+			}
+
+			if (placement == ChildrenPlacement.VerticalDocked)
+			{
+				DockedHorizontalAlignment ha = this.GetDockedHorizontalAlignment(obj);
+				return (ha != DockedHorizontalAlignment.Stretch && ha != DockedHorizontalAlignment.None);
+			}
+
+			return false;
+		}
+
 		public double GetWidth(Widget obj)
 		{
 			//	Retourne la largeur de l'objet.
 			//	Uniquement pour les objets HorizontalDocked.
-			ChildrenPlacement placement = this.GetParentPlacement(obj);
-			if (placement == ChildrenPlacement.HorizontalDocked)
+			if (this.IsWidth(obj))
 			{
 				return obj.PreferredWidth;
 			}
@@ -343,8 +363,7 @@ namespace Epsitec.Common.Designer
 		{
 			//	Choix de la largeur de l'objet.
 			//	Uniquement pour les objets VerticalDocked.
-			ChildrenPlacement placement = this.GetParentPlacement(obj);
-			System.Diagnostics.Debug.Assert(placement == ChildrenPlacement.HorizontalDocked);
+			System.Diagnostics.Debug.Assert(this.IsWidth(obj));
 
 			if (obj.PreferredWidth != width)
 			{
@@ -354,12 +373,32 @@ namespace Epsitec.Common.Designer
 		}
 
 
+		public bool IsHeight(Widget obj)
+		{
+			//	Indique s'il est possible de modifier la hauteur d'un objet.
+			//	A ne pas confondre avec SetBounds pour le mode ancré. Un objet ancré
+			//	pour lequel on peut faire un SetBounds n'accepte pas le IsHeight !
+			ChildrenPlacement placement = this.GetParentPlacement(obj);
+
+			if (placement == ChildrenPlacement.VerticalDocked)
+			{
+				return true;
+			}
+
+			if (placement == ChildrenPlacement.HorizontalDocked)
+			{
+				DockedVerticalAlignment ha = this.GetDockedVerticalAlignment(obj);
+				return (ha != DockedVerticalAlignment.Stretch && ha != DockedVerticalAlignment.None);
+			}
+
+			return false;
+		}
+
 		public double GetHeight(Widget obj)
 		{
 			//	Retourne la hauteur de l'objet.
 			//	Uniquement pour les objets VerticalDocked.
-			ChildrenPlacement placement = this.GetParentPlacement(obj);
-			if (placement == ChildrenPlacement.VerticalDocked)
+			if (this.IsHeight(obj))
 			{
 				return obj.PreferredHeight;
 			}
@@ -371,8 +410,7 @@ namespace Epsitec.Common.Designer
 		{
 			//	Choix de la hauteur de l'objet.
 			//	Uniquement pour les objets HorizontalDocked.
-			ChildrenPlacement placement = this.GetParentPlacement(obj);
-			System.Diagnostics.Debug.Assert(placement == ChildrenPlacement.VerticalDocked);
+			System.Diagnostics.Debug.Assert(this.IsHeight(obj));
 
 			if (obj.PreferredHeight != height)
 			{
