@@ -129,6 +129,20 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
+		public bool IsEditEnabled
+		{
+			//	Est-ce que l'édition est possible ? Pour cela, il faut avoir sélectionner un bundle
+			//	dans la liste de gauche.
+			get
+			{
+				return this.isEditEnabled;
+			}
+			set
+			{
+				this.isEditEnabled = value;
+			}
+		}
+
 		public void UpdateGeometry()
 		{
 			//	Mise à jour après avoir changé la géométrie d'un ou plusieurs objets.
@@ -344,6 +358,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected override void ProcessMessage(Message message, Drawing.Point pos)
 		{
+			if (!this.isEditEnabled)  return;
+
 			switch (message.Type)
 			{
 				case MessageType.MouseDown:
@@ -2688,6 +2704,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
 			//	Dessine le panneau.
+			if (!this.isEditEnabled)  return;
+
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
 
 			//	Dessine les surfaces inutilisées.
@@ -3363,6 +3381,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected ObjectModifier			objectModifier;
 		protected ConstrainsList			constrainsList;
 		protected HandlesList				handlesList;
+		protected bool						isEditEnabled = false;
 
 		protected DragWindow				creatingWindow;
 		protected Point						creatingOrigin;
