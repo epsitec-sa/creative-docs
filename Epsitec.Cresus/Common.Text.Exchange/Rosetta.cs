@@ -57,7 +57,8 @@ namespace Epsitec.Common.Text.Exchange
 			textWrapper.Attach (navigator);
 			paraWrapper.Attach (navigator);
 
-			// to do
+			NativeToTextWriter theWriter = new NativeToTextWriter (efmt.String, textWrapper, paraWrapper, navigator);
+			
 		}
 
 
@@ -77,7 +78,6 @@ namespace Epsitec.Common.Text.Exchange
 			od.SetData (EpsitecFormat.Format.Name, true, efmt);
 
 			System.Windows.Forms.Clipboard.SetDataObject (od, true);
-
 		}
 
 		private static void CopyHtmlText(TextStory story, TextNavigator usernavigator, HtmlTextOut htmlText)
@@ -219,25 +219,23 @@ namespace Epsitec.Common.Text.Exchange
 				runText = navigator.ReadText (runLength);
 				currentPosition += runLength;
 
+				bool paragraphSep = false;
 				if (runLength == 1 && runText[0] == (char) Epsitec.Common.Text.Unicode.Code.ParagraphSeparator)
 				{
 					// on est tombé sur un séparateur de paragraphe
+					paragraphSep = true;
 				}
-				else
-				{
-#if false	// n'utilise plus les "invertxxx" mais utilise ce qui est réellement affiché
-					htmlText.SetItalic (textWrapper.Defined.IsInvertItalicDefined && textWrapper.Defined.InvertItalic);
-					htmlText.SetBold (textWrapper.Defined.IsInvertBoldDefined && textWrapper.Defined.InvertBold);
-#else
-					nativeText.SetItalic (Rosetta.IsItalic(navigator));
-					nativeText.SetBold (Rosetta.IsBold (navigator));
-#endif
-					nativeText.SetUnderlined (textWrapper.Active.IsUnderlineDefined);
-					nativeText.SetStrikeout (textWrapper.Active.IsStrikeoutDefined);
+								
+//				htmlText.SetItalic (textWrapper.Defined.IsInvertItalicDefined && textWrapper.Defined.InvertItalic);
+//				htmlText.SetBold (textWrapper.Defined.IsInvertBoldDefined && textWrapper.Defined.InvertBold);
 
-					nativeText.AppendText (runText);
-				}
+				string runattributes = NativeConverter.GetDefinedString (textWrapper, paragraphSep);
 
+				nativeText.AppendTextLine (runattributes);
+				
+				if (!paragraphSep)
+					nativeText.AppendTextLine (runText);
+			
 				// avance au run suivant
 				navigator.MoveTo (Epsitec.Common.Text.TextNavigator.Target.CharacterNext, runLength);
 

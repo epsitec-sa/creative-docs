@@ -140,7 +140,9 @@
     <Compile Include="HtmlToTextWriter.cs" />
     <Compile Include="Misc.cs" />
     <Compile Include="MsClipboardHtmlHeader.cs" />
+    <Compile Include="NativeConverter.cs" />
     <Compile Include="NativeText.cs" />
+    <Compile Include="NativeToTextWriter.cs" />
     <Compile Include="Rosetta.cs">
       <SubType>Code</SubType>
     </Compile>
