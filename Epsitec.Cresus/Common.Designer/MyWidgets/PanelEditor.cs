@@ -2247,22 +2247,23 @@ namespace Epsitec.Common.Designer.MyWidgets
 			va = ObjectModifier.DockedVerticalAttachment.None;
 			hilite = Rectangle.Empty;
 
+			double t = this.context.ZOrderThickness;
+
 			Widget obj = this.ZOrderDetectNearest(mouse, parent);  // objet le plus proche
 			if (obj == null)
 			{
 				Rectangle bounds = this.objectModifier.GetBounds(parent);
-				double t = this.context.ZOrderThickness;
 
 				if (this.objectModifier.IsChildrenHorizontal(parent))
 				{
 					if (mouse.X < bounds.Center.X)
 					{
-						hilite = new Rectangle(bounds.Left+t, bounds.Bottom+t, 0, bounds.Height-t*2);
+						hilite = new Rectangle(bounds.Left, bounds.Bottom, t*2, bounds.Height);
 						ha = ObjectModifier.DockedHorizontalAttachment.Left;
 					}
 					else
 					{
-						hilite = new Rectangle(bounds.Right-t, bounds.Bottom+t, 0, bounds.Height-t*2);
+						hilite = new Rectangle(bounds.Right-t*2, bounds.Bottom, t*2, bounds.Height);
 						ha = ObjectModifier.DockedHorizontalAttachment.Right;
 					}
 				}
@@ -2270,31 +2271,18 @@ namespace Epsitec.Common.Designer.MyWidgets
 				{
 					if (mouse.Y < bounds.Center.Y)
 					{
-						hilite = new Rectangle(bounds.Left+t, bounds.Bottom+t, bounds.Width-t*2, 0);
+						hilite = new Rectangle(bounds.Left, bounds.Bottom, bounds.Width, t*2);
 						va = ObjectModifier.DockedVerticalAttachment.Bottom;
 					}
 					else
 					{
-						hilite = new Rectangle(bounds.Left+t, bounds.Top-t, bounds.Width-t*2, 0);
+						hilite = new Rectangle(bounds.Left, bounds.Top-t*2, bounds.Width, t*2);
 						va = ObjectModifier.DockedVerticalAttachment.Top;
 					}
 				}
 			}
 			else
 			{
-				if (obj is AbstractGroup)
-				{
-					Rectangle inside = this.objectModifier.GetBounds(obj);
-					inside.Deflate(obj.Padding);
-					if (inside.Contains(mouse))
-					{
-						group = obj;
-						order = 0;
-						hilite = inside;
-						return;
-					}
-				}
-
 				group = obj.Parent;
 				order = obj.ZOrder;
 
@@ -2359,11 +2347,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 					va = this.objectModifier.GetDockedVerticalAttachment(obj);
 				}
-			}
 
-			if (!hilite.IsEmpty)
-			{
-				hilite.Inflate(this.context.ZOrderThickness);
+				hilite.Inflate(t);
 			}
 
 			if (this.selectedObjects.Count != 0)
