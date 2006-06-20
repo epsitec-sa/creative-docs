@@ -130,6 +130,6 @@ namespace Epsitec.Common.Designer.Proxies
 
 		protected ObjectModifier		objectModifier;
 		protected List<Widget>			widgets = new List<Widget>();
-		private int						suspendChanges = 0;
+		protected int					suspendChanges = 0;
 	}
 }

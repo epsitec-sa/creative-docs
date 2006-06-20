@@ -184,9 +184,21 @@ namespace Epsitec.Common.Designer.Proxies
 			Layout that = (Layout) o;
 			ObjectModifier.ChildrenPlacement cp = that.ChildrenPlacement;
 
-			foreach (Widget obj in that.widgets)
+			if (that.suspendChanges == 0)
 			{
-				that.objectModifier.SetChildrenPlacement(obj, cp);
+				that.SuspendChanges();
+
+				try
+				{
+					foreach (Widget obj in that.widgets)
+					{
+						that.objectModifier.SetChildrenPlacement(obj, cp);
+					}
+				}
+				finally
+				{
+					that.ResumeChanges();
+				}
 			}
 		}
 
@@ -198,9 +210,21 @@ namespace Epsitec.Common.Designer.Proxies
 			Layout that = (Layout) o;
 			ObjectModifier.AnchoredHorizontalAttachment cp = that.AnchoredHorizontalAttachment;
 
-			foreach (Widget obj in that.widgets)
+			if (that.suspendChanges == 0)
 			{
-				that.objectModifier.SetAnchoredHorizontalAttachment(obj, cp);
+				that.SuspendChanges();
+
+				try
+				{
+					foreach (Widget obj in that.widgets)
+					{
+						that.objectModifier.SetAnchoredHorizontalAttachment(obj, cp);
+					}
+				}
+				finally
+				{
+					that.ResumeChanges();
+				}
 			}
 		}
 
@@ -212,9 +236,21 @@ namespace Epsitec.Common.Designer.Proxies
 			Layout that = (Layout) o;
 			ObjectModifier.AnchoredVerticalAttachment cp = that.AnchoredVerticalAttachment;
 
-			foreach (Widget obj in that.widgets)
+			if (that.suspendChanges == 0)
 			{
-				that.objectModifier.SetAnchoredVerticalAttachment(obj, cp);
+				that.SuspendChanges();
+
+				try
+				{
+					foreach (Widget obj in that.widgets)
+					{
+						that.objectModifier.SetAnchoredVerticalAttachment(obj, cp);
+					}
+				}
+				finally
+				{
+					that.ResumeChanges();
+				}
 			}
 		}
 
@@ -226,9 +262,21 @@ namespace Epsitec.Common.Designer.Proxies
 			Layout that = (Layout) o;
 			ObjectModifier.DockedHorizontalAttachment cp = that.DockedHorizontalAttachment;
 
-			foreach (Widget obj in that.widgets)
+			if (that.suspendChanges == 0)
 			{
-				that.objectModifier.SetDockedHorizontalAttachment(obj, cp);
+				that.SuspendChanges();
+
+				try
+				{
+					foreach (Widget obj in that.widgets)
+					{
+						that.objectModifier.SetDockedHorizontalAttachment(obj, cp);
+					}
+				}
+				finally
+				{
+					that.ResumeChanges();
+				}
 			}
 		}
 
@@ -240,9 +288,21 @@ namespace Epsitec.Common.Designer.Proxies
 			Layout that = (Layout) o;
 			ObjectModifier.DockedVerticalAttachment cp = that.DockedVerticalAttachment;
 
-			foreach (Widget obj in that.widgets)
+			if (that.suspendChanges == 0)
 			{
-				that.objectModifier.SetDockedVerticalAttachment(obj, cp);
+				that.SuspendChanges();
+
+				try
+				{
+					foreach (Widget obj in that.widgets)
+					{
+						that.objectModifier.SetDockedVerticalAttachment(obj, cp);
+					}
+				}
+				finally
+				{
+					that.ResumeChanges();
+				}
 			}
 		}
 
@@ -254,9 +314,21 @@ namespace Epsitec.Common.Designer.Proxies
 			Layout that = (Layout) o;
 			ObjectModifier.DockedHorizontalAlignment cp = that.DockedHorizontalAlignment;
 
-			foreach (Widget obj in that.widgets)
+			if (that.suspendChanges == 0)
 			{
-				that.objectModifier.SetDockedHorizontalAlignment(obj, cp);
+				that.SuspendChanges();
+
+				try
+				{
+					foreach (Widget obj in that.widgets)
+					{
+						that.objectModifier.SetDockedHorizontalAlignment(obj, cp);
+					}
+				}
+				finally
+				{
+					that.ResumeChanges();
+				}
 			}
 		}
 
@@ -268,9 +340,21 @@ namespace Epsitec.Common.Designer.Proxies
 			Layout that = (Layout) o;
 			ObjectModifier.DockedVerticalAlignment cp = that.DockedVerticalAlignment;
 
-			foreach (Widget obj in that.widgets)
+			if (that.suspendChanges == 0)
 			{
-				that.objectModifier.SetDockedVerticalAlignment(obj, cp);
+				that.SuspendChanges();
+
+				try
+				{
+					foreach (Widget obj in that.widgets)
+					{
+						that.objectModifier.SetDockedVerticalAlignment(obj, cp);
+					}
+				}
+				finally
+				{
+					that.ResumeChanges();
+				}
 			}
 		}
 
