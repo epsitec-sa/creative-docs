@@ -22,9 +22,15 @@ namespace Epsitec.Common.Widgets.Layouts
 			
 			double baseLine = (client.Height - (h1+h2)) / 2 + h2;
 
+			List<Visual> fill = new List<Visual> ();
+			double fillLength = 0;
+
 			foreach (Visual child in children)
 			{
-				if ((child.Dock != DockStyle.Stacked) ||
+				if (( (child.Dock != DockStyle.Stacked) &&
+					  (child.Dock != DockStyle.StackBegin) &&
+					  (child.Dock != DockStyle.StackFill) &&
+					  (child.Dock != DockStyle.StackEnd) ) ||
 					(child.Visibility == false))
 				{
 					//	Saute les widgets qui ne sont pas "stacked", car ils doivent être
@@ -55,18 +61,92 @@ namespace Epsitec.Common.Widgets.Layouts
 				switch (mode)
 				{
 					case ContainerLayoutMode.HorizontalFlow:
-						bounds.Width = dx;
-						client.Left  = bounds.Right;
+						switch (child.Dock)
+						{
+							case DockStyle.Stacked:
+							case DockStyle.StackBegin:
+								bounds.Width = dx;
+								client.Left  = bounds.Right;
+								break;
+							case DockStyle.StackEnd:
+								bounds.Left  = bounds.Right - dx;
+								client.Right = bounds.Left;
+								break;
+							case DockStyle.StackFill:
+								fill.Add (child);
+								fillLength += Layouts.LayoutMeasure.GetWidth (child).Min;
+								continue;
+						}
 						break;
 					
 					case ContainerLayoutMode.VerticalFlow:
-						bounds.Bottom = bounds.Top - dy;
-						client.Top    = bounds.Bottom;
+						switch (child.Dock)
+						{
+							case DockStyle.Stacked:
+							case DockStyle.StackBegin:
+								bounds.Bottom = bounds.Top - dy;
+								client.Top    = bounds.Bottom;
+								break;
+							case DockStyle.StackEnd:
+								bounds.Height = dy;
+								client.Bottom = bounds.Top;
+								break;
+							case DockStyle.StackFill:
+								fill.Add (child);
+								fillLength += Layouts.LayoutMeasure.GetHeight (child).Min;
+								continue;
+						}
 						break;
 				}
 
 				bounds.Deflate (margins);
 				DockLayoutEngine.SetChildBounds (child, bounds, baseLine - margins.Bottom);
+			}
+
+			if (fill.Count > 0)
+			{
+				switch (mode)
+				{
+					case ContainerLayoutMode.HorizontalFlow:
+						{
+							double dw = (client.Width - fillLength) / fill.Count;
+							double ow = client.Left;
+							
+							foreach (Visual child in fill)
+							{
+								Drawing.Margins margins = child.Margins;
+								Drawing.Rectangle bounds = client;
+
+								ow += dw + Layouts.LayoutMeasure.GetWidth (child).Min;
+								bounds.Right = ow;
+								client.Left  = bounds.Right;
+								
+								bounds.Deflate (margins);
+								DockLayoutEngine.SetChildBounds (child, bounds, baseLine - margins.Bottom);
+							}
+						}
+						break;
+					
+					case ContainerLayoutMode.VerticalFlow:
+						{
+							double dh = (client.Height - fillLength) / fill.Count;
+							double oh = client.Top;
+
+							foreach (Visual child in fill)
+							{
+								Drawing.Margins margins = child.Margins;
+								Drawing.Rectangle bounds = client;
+
+								oh -= dh + Layouts.LayoutMeasure.GetHeight (child).Min;
+								bounds.Bottom = oh;
+								client.Top    = bounds.Bottom;
+
+								bounds.Deflate (margins);
+								DockLayoutEngine.SetChildBounds (child, bounds, baseLine - margins.Bottom);
+							}
+						}
+						break;
+				}
 			}
 		}
 
@@ -83,7 +163,10 @@ namespace Epsitec.Common.Widgets.Layouts
 			
 			foreach (Visual child in children)
 			{
-				if ((child.Dock != DockStyle.Stacked) ||
+				if (((child.Dock != DockStyle.Stacked) &&
+					  (child.Dock != DockStyle.StackBegin) &&
+					  (child.Dock != DockStyle.StackFill) &&
+					  (child.Dock != DockStyle.StackEnd)) ||
 					(child.Visibility == false))
 				{
 					//	Saute les widgets qui ne sont pas "stacked", car leur taille n'est pas prise
@@ -106,8 +189,20 @@ namespace Epsitec.Common.Widgets.Layouts
 				switch (mode)
 				{
 					case ContainerLayoutMode.HorizontalFlow:
-						currentMinDx += clientDx;
-						currentMaxDx += clientDx;
+						switch (child.Dock)
+						{
+							case DockStyle.Stacked:
+							case DockStyle.StackBegin:
+							case DockStyle.StackEnd:
+								currentMinDx += clientDx;
+								currentMaxDx += clientDx;
+								break;
+							
+							case DockStyle.StackFill:
+								currentMinDx += clientMin.Width;
+								currentMaxDx += clientMax.Width;
+								break;
+						}
 
 						if (child.VerticalAlignment == VerticalAlignment.BaseLine)
 						{
@@ -127,8 +222,21 @@ namespace Epsitec.Common.Widgets.Layouts
 						break;
 					
 					case ContainerLayoutMode.VerticalFlow:
-						currentMinDy += clientDy;
-						currentMaxDy += clientDy;
+						switch (child.Dock)
+						{
+							case DockStyle.Stacked:
+							case DockStyle.StackBegin:
+							case DockStyle.StackEnd:
+								currentMinDy += clientDy;
+								currentMaxDy += clientDy;
+								break;
+							
+							case DockStyle.StackFill:
+								currentMinDy += clientMin.Height;
+								currentMaxDy += clientMax.Height;
+								break;
+						}
+						
 						currentMinDx  = System.Math.Max (currentMinDx, clientMin.Width);
 						currentMaxDx  = System.Math.Min (currentMaxDx, clientMax.Width);
 						break;

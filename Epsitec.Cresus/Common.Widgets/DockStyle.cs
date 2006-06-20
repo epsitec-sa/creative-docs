@@ -44,6 +44,21 @@ namespace Epsitec.Common.Widgets
 		/// The widget is stacked (either from left to right or from top to bottom,
 		/// depending on the parent's <see cref="T:ContainerLayoutMode"/>.
 		/// </summary>
-		Stacked	= 6					//	organisé en pile
+		Stacked	= 6,				//	organisé en pile
+		
+		/// <summary>
+		/// The widget is stacked at the stack beginning (usually left or top).
+		/// </summary>
+		StackBegin	= 7,
+		
+		/// <summary>
+		/// The widget is stacked at the stack end (usually right or bottom).
+		/// </summary>
+		StackEnd	= 8,
+		
+		/// <summary>
+		/// The widget is stacked in order to fill the stack center.
+		/// </summary>
+		StackFill	= 9,
 	}
 }

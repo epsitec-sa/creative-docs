@@ -89,7 +89,10 @@ namespace Epsitec.Common.Widgets.Layouts
 		
 		public static LayoutMode GetLayoutMode(DockStyle dock, AnchorStyles anchor)
 		{
-			if (dock == DockStyle.Stacked)
+			if ((dock == DockStyle.Stacked) ||
+				(dock == DockStyle.StackBegin) ||
+				(dock == DockStyle.StackFill) ||
+				(dock == DockStyle.StackEnd))
 			{
 				return LayoutMode.Stacked;
 			}
