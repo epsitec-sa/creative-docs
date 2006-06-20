@@ -45,7 +45,7 @@ namespace Epsitec.Common.Widgets.Controllers
 			
 			if (! string.IsNullOrEmpty (valueName))
 			{
-				this.label.Text = string.Format ("{0}: ", valueName);
+				this.label.Text = string.Format ("{0} ", valueName);
 				this.label.PreferredWidth = this.label.GetBestFitSize ().Width;
 				this.label.Margins = new Drawing.Margins (4, 4, 0, 0);
 			}
