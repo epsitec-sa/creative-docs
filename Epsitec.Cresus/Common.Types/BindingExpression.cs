@@ -95,6 +95,44 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		public INamedType GetSourceNamedType()
+		{
+			INamedType namedType = null;
+
+			switch (this.sourceType)
+			{
+				case DataSourceType.PropertyObject:
+					namedType = BindingExpression.GetSourceNamedType (this.sourceObject as DependencyObject, this.sourceProperty as DependencyProperty);
+					break;
+
+				case DataSourceType.StructuredData:
+				case DataSourceType.SourceItself:
+				case DataSourceType.Resource:
+					namedType = null;
+					break;
+			}
+			
+			if (namedType == null)
+			{
+				namedType = TypeRosetta.GetNamedTypeFromTypeObject (this.GetSourceTypeObject ());
+			}
+
+			return namedType;
+		}
+
+		private static INamedType GetSourceNamedType(DependencyObject dependencyObject, DependencyProperty dependencyProperty)
+		{
+			if ((dependencyObject == null) ||
+				(dependencyProperty == null))
+			{
+				return null;
+			}
+			else
+			{
+				return dependencyProperty.GetMetadata (dependencyObject).NamedType;
+			}
+		}
+		
 		public object GetSourceTypeObject()
 		{
 			object typeObject = null;

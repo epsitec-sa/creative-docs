@@ -479,7 +479,15 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.focused_widget;
+				if ((this.focused_widget != null) &&
+					(this.focused_widget.Window == this))
+				{
+					return this.focused_widget;
+				}
+				else
+				{
+					return null;
+				}
 			}
 			set
 			{
