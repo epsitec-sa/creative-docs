@@ -198,11 +198,13 @@ namespace Epsitec.Common.Types
 
 		/// <summary>
 		/// Verifies the validity of the value (proper type and valid with respect
-		/// to <see cref="T:IDataConstraint"/>.
+		/// to <see cref="T:IDataConstraint"/>).
 		/// </summary>
 		/// <param name="value">The value.</param>
-		/// <param name="type">The type object (may not be <c>null</c>).</param>
-		/// <returns><c>true</c> if the value is compatible with the specified type, <c>false</c> otherwise.</returns>
+		/// <param name="typeObject">The expected type object (may not be <c>null</c>).</param>
+		/// <returns>
+		/// 	<c>true</c> if the value is compatible with the specified type, <c>false</c> otherwise.
+		/// </returns>
 		public static bool IsValidValue(object value, object typeObject)
 		{
 			if (typeObject == null)
@@ -237,8 +239,47 @@ namespace Epsitec.Common.Types
 				return targetSysType.IsAssignableFrom (value.GetType ());
 			}
 		}
-		
 
+		/// <summary>
+		/// Verifies the validity of the value (proper type and valid with respect
+		/// to <see cref="T:IDataConstraint"/>).
+		/// </summary>
+		/// <param name="value">The value.</param>
+		/// <param name="targetType">The expected named type (may not be <c>null</c>).</param>
+		/// <returns>
+		/// 	<c>true</c> if the value is compatible with the specified type, <c>false</c> otherwise.
+		/// </returns>
+		public static bool IsValidValue(object value, INamedType targetType)
+		{
+			if (targetType == null)
+			{
+				throw new System.ArgumentNullException ("Null type specified");
+			}
+
+			System.Type     targetSysType    = targetType.SystemType;
+			IDataConstraint targetConstraint = targetType as IDataConstraint;
+
+			System.Diagnostics.Debug.Assert (targetType != null);
+
+			if (targetConstraint != null)
+			{
+				return targetConstraint.IsValidValue (value);
+			}
+
+			if (value == null)
+			{
+				//	Only reference types can be set to null.
+
+				//	TODO: check for nullable types too ?
+
+				return targetSysType.IsClass;
+			}
+			else
+			{
+				return targetSysType.IsAssignableFrom (value.GetType ());
+			}
+		}
+		
 
 		#region AutomaticNamedType Class
 

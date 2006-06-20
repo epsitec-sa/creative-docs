@@ -79,7 +79,10 @@ namespace Epsitec.Common.Widgets.Controllers
 		
 		private void HandleFieldTextChanged(object sender)
 		{
-			this.OnActualValueChanged ();
+			if (this.field.IsValid)
+			{
+				this.OnActualValueChanged ();
+			}
 		}
 
 		private string ConvertFromValue(object newValue)

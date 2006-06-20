@@ -5,7 +5,7 @@ using NUnit.Framework;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Types;
 
-[assembly: Controller (typeof (PlaceholderTest.TestController1))]
+[assembly: Controller (typeof (PlaceholderTest.Test1Controller))]
 
 namespace Epsitec.Common.Widgets
 {
@@ -27,17 +27,17 @@ namespace Epsitec.Common.Widgets
 		[Test]
 		public void CheckControllerCreation()
 		{
-			IController c1 = Controllers.Factory.CreateController ("TestController1", "x");
-			IController c2 = Controllers.Factory.CreateController ("TestController1", "y");
+			IController c1 = Controllers.Factory.CreateController ("Test1", "x");
+			IController c2 = Controllers.Factory.CreateController ("Test1", "y");
 
 			Assert.IsNotNull (c1);
 			Assert.IsNotNull (c2);
 
-			Assert.AreEqual (typeof (TestController1), c1.GetType ());
-			Assert.AreEqual (typeof (TestController1), c2.GetType ());
+			Assert.AreEqual (typeof (Test1Controller), c1.GetType ());
+			Assert.AreEqual (typeof (Test1Controller), c2.GetType ());
 
-			TestController1 tc1 = c1 as TestController1;
-			TestController1 tc2 = c2 as TestController1;
+			Test1Controller tc1 = c1 as Test1Controller;
+			Test1Controller tc2 = c2 as Test1Controller;
 
 			Assert.AreEqual ("x", tc1.Parameter);
 			Assert.AreEqual ("y", tc2.Parameter);
@@ -106,8 +106,8 @@ namespace Epsitec.Common.Widgets
 			Layouts.GridLayoutEngine.SetRow (placeholder2, 2);
 			Layouts.GridLayoutEngine.SetColumnSpan (placeholder2, 4);
 
-			placeholder3.Controller = "String";
-			placeholder3.PreferredHeight = 20;
+			placeholder3.Controller = "Numeric";
+			placeholder3.PreferredHeight = 30;
 			placeholder3.TabIndex = 3;
 			Layouts.GridLayoutEngine.SetColumn (placeholder3, 0);
 			Layouts.GridLayoutEngine.SetRow (placeholder3, 3);
@@ -265,16 +265,16 @@ namespace Epsitec.Common.Widgets
 			Assert.AreEqual ("Forename",	placeholder2.ValueName);
 			Assert.AreEqual ("Age",			placeholder3.ValueName);
 
-			Assert.AreEqual (typeof (StringType),	placeholder1.ValueTypeObject.GetType ());
-			Assert.AreEqual (typeof (StringType),	placeholder2.ValueTypeObject.GetType ());
-			Assert.AreEqual (typeof (IntegerType),	placeholder3.ValueTypeObject.GetType ());
+			Assert.AreEqual (typeof (StringType),	placeholder1.ValueType.GetType ());
+			Assert.AreEqual (typeof (StringType),	placeholder2.ValueType.GetType ());
+			Assert.AreEqual (typeof (IntegerType),	placeholder3.ValueType.GetType ());
 		}
 
 		#region TestController1 Class
 
-		internal class TestController1 : Controllers.AbstractController
+		internal class Test1Controller : Controllers.AbstractController
 		{
-			public TestController1(string parameter)
+			public Test1Controller(string parameter)
 			{
 				this.parameter = parameter;
 			}
@@ -287,7 +287,7 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 			
-			protected override void CreateUserInterface(object valueTypeObject, string valueName)
+			protected override void CreateUserInterface(INamedType valueType, string valueName)
 			{
 				throw new System.Exception ("The method or operation is not implemented.");
 			}
