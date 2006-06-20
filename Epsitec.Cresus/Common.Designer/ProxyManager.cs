@@ -141,22 +141,7 @@ namespace Epsitec.Common.Designer
 				Placeholder placeholder = new Placeholder();
 				Binding binding = new Binding(BindingMode.TwoWay, source, property.Name);
 				placeholder.SetBinding(Placeholder.ValueProperty, binding);
-				
-				BindingExpression expression = placeholder.GetBindingExpression(Placeholder.ValueProperty);
-				
-				string controller;
-				string controllerParameter;
-				
-				if (Epsitec.Common.Widgets.Controllers.Factory.GetDefaultController(expression, out controller, out controllerParameter))
-				{
-					placeholder.Controller = controller;
-					placeholder.ControllerParameter = controllerParameter;
-				}
-				else
-				{
-					placeholder.Controller = "String";
-				}
-				
+				placeholder.Controller = "*";
 				panel.AddPlaceHolder(placeholder);
 			}
 		}
