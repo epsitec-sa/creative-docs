@@ -7,6 +7,9 @@ namespace Epsitec.Common.Types
 	/// The <c>DecimalRange</c> structure defines a minimum, maximum and resolution
 	/// for a decimal value.
 	/// </summary>
+	
+	[SerializationConverter (typeof (DecimalRange.SerializationConverter))]
+	
 	public struct DecimalRange : System.IEquatable<DecimalRange>
 	{
 		public DecimalRange(decimal min, decimal max)
@@ -325,6 +328,44 @@ namespace Epsitec.Common.Types
 				iter *= 10M;
 			}
 		}
+
+		#region SerializationConverter Class
+
+		public class SerializationConverter : ISerializationConverter
+		{
+			#region ISerializationConverter Members
+
+			public string ConvertToString(object value, IContextResolver context)
+			{
+				DecimalRange range = (DecimalRange) value;
+
+				return string.Join (" ",
+					/**/			new string[] {
+					/**/						   range.minimum.ToString (System.Globalization.CultureInfo.InvariantCulture),
+					/**/						   range.maximum.ToString (System.Globalization.CultureInfo.InvariantCulture),
+					/**/						   range.resolution.ToString (System.Globalization.CultureInfo.InvariantCulture) });
+			}
+
+			public object ConvertFromString(string value, IContextResolver context)
+			{
+				string[] args = value.Split (' ');
+
+				if (args.Length != 3)
+				{
+					throw new System.FormatException (string.Format ("{0} is not a serialized DecimalRange"));
+				}
+
+				decimal min = decimal.Parse (args[0], System.Globalization.CultureInfo.InvariantCulture);
+				decimal max = decimal.Parse (args[1], System.Globalization.CultureInfo.InvariantCulture);
+				decimal res = decimal.Parse (args[2], System.Globalization.CultureInfo.InvariantCulture);
+				
+				return new DecimalRange (min, max, res);
+			}
+
+			#endregion
+		}
+
+		#endregion
 
 
 		private decimal minimum;

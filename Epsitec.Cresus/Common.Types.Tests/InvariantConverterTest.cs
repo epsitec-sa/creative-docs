@@ -186,6 +186,7 @@ namespace Epsitec.Common.Types
 			ISerializationConverter convH = InvariantConverter.GetSerializationConverter (typeof (Drawing.Color));
 			ISerializationConverter convI = InvariantConverter.GetSerializationConverter (typeof (Drawing.Rectangle));
 			ISerializationConverter convJ = InvariantConverter.GetSerializationConverter (typeof (System.DateTime));
+			ISerializationConverter convK = InvariantConverter.GetSerializationConverter (typeof (DecimalRange));
 
 			object c = "test";
 			object d = 10;
@@ -195,6 +196,7 @@ namespace Epsitec.Common.Types
 			object h = new Drawing.Color (0.1, 0.2, 0.3, 0.4);
 			object i = new Drawing.Rectangle (10, 20, 30, 40);
 			object j = new System.DateTime (2004, 11, 3, 10, 30, 5, 123);
+			object k = new DecimalRange (1, 100, 0.10M);
 			
 			Assert.AreEqual ("test",	convC.ConvertToString (c, null));
 			Assert.AreEqual ("10",		convD.ConvertToString (d, null));
@@ -205,6 +207,9 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual ("#199A;#3;#4CCD;#6",	convH.ConvertToString (h, null));
 			Assert.AreEqual ("10;20;30;40",			convI.ConvertToString (i, null));
 			Assert.AreEqual ("11/03/2004 10:30:05", convJ.ConvertToString (j, null));
+			Assert.AreEqual ("1 100 0.10",          convK.ConvertToString (k, null));
+
+			Assert.AreEqual (k, convK.ConvertFromString ("1 100 0.10", null));
 		}
 
 		[Test]
