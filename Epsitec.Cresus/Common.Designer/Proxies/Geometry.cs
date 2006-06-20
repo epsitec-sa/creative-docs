@@ -171,10 +171,22 @@ namespace Epsitec.Common.Designer.Proxies
 			//	etc.) pour permettre de mettre à jour les widgets connectés :
 			Geometry that = (Geometry) o;
 			Margins margins = new Margins(that.LeftMargin, that.RightMargin, that.TopMargin, that.BottomMargin);
-			
-			foreach (Widget obj in that.widgets)
+
+			if (that.suspendChanges == 0)
 			{
-				that.objectModifier.SetMargins(obj, margins);
+				that.SuspendChanges();
+
+				try
+				{
+					foreach (Widget obj in that.widgets)
+					{
+						that.objectModifier.SetMargins(obj, margins);
+					}
+				}
+				finally
+				{
+					that.ResumeChanges();
+				}
 			}
 		}
 
@@ -186,9 +198,21 @@ namespace Epsitec.Common.Designer.Proxies
 			Geometry that = (Geometry) o;
 			Rectangle bounds = new Rectangle(that.OriginX, that.OriginY, that.Width, that.Height);
 
-			foreach (Widget obj in that.widgets)
+			if (that.suspendChanges == 0)
 			{
-				that.objectModifier.SetBounds(obj, bounds);
+				that.SuspendChanges();
+
+				try
+				{
+					foreach (Widget obj in that.widgets)
+					{
+						that.objectModifier.SetBounds(obj, bounds);
+					}
+				}
+				finally
+				{
+					that.ResumeChanges();
+				}
 			}
 		}
 
