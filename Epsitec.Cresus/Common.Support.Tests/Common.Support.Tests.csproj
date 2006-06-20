@@ -163,6 +163,7 @@
     <Compile Include="CommandDispatcherTest.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="CaptionCacheTest.cs" />
     <Compile Include="ResourceManagerTest.cs" />
     <Compile Include="DruidTest.cs" />
     <Compile Include="EventsTest.cs" />
