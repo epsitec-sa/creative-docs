@@ -28,23 +28,29 @@ namespace Epsitec.Common.Text.Exchange
 				if (formatline == null)
 					break;
 
-				contentline = theReader.ReadLine ();
+				bool paragraphSep;
+				NativeConverter.SetDefined (textWrapper, formatline, out paragraphSep);
+
+				if (paragraphSep)
+				{
+					contentline = new string((char) Epsitec.Common.Text.Unicode.Code.ParagraphSeparator, 1) ;
+				}
+				else
+				{
+					contentline = theReader.ReadLine ();
+				}
+
 				if (contentline == null)
 					break;
 
-				bool paragraphSep = false ;
-				NativeConverter.SetDefined (textWrapper, formatline, ref paragraphSep);
-
 				this.navigator.Insert (contentline);
-
 			}
-
 		}
 
-		Wrappers.TextWrapper textWrapper ;
-		Wrappers.ParagraphWrapper paraWrapper ;
-		TextNavigator navigator;
-		string nativeClipboard ;
+		private Wrappers.TextWrapper textWrapper ;
+		private Wrappers.ParagraphWrapper paraWrapper;
+		private TextNavigator navigator;
+		private string nativeClipboard;
 
 	}
 }

@@ -43,29 +43,42 @@ namespace Epsitec.Common.Text.Exchange
 			return output.ToString() ;
 		}
 
-		public static void SetDefined(Wrappers.TextWrapper textwrapper, string input, ref bool paragrpahSep)
+		public static void SetDefined(Wrappers.TextWrapper textwrapper, string input, out bool paragrpahSep)
 		{
 			char[] separators = new char[] {';'};
-			string[] elements = input.Split (separators, StringSplitOptions.RemoveEmptyEntries);
+
+			paragrpahSep = false;
 
 			bool invertItalic = false;
 			bool invertBold = false;
 			bool underline = false;
 
-			switch (elements[0])
+			System.Diagnostics.Debug.Assert (input[0] == '[' && input[input.Length-1] == ']');
+			input = input.Substring(1, input.Length - 2) ;
+
+			string[] elements = input.Split (separators, StringSplitOptions.RemoveEmptyEntries);
+
+			foreach (string elem in elements)
 			{
-				case "\\i":
-					textwrapper.Defined.InvertItalic = true;
-					invertItalic = true;
-					break ;
-				case "\\b":
-					textwrapper.Defined.InvertBold = true;
-					invertBold = true;
-					break;
-				case "\\u":
-//					textwrapper.Defined.Underline. = true;
-					underline = true;
-					break;
+				string[] subelements = elem.Split (',');
+				switch (subelements[0])
+				{
+					case "par":
+						paragrpahSep = true;
+						break;
+					case "i":
+						textwrapper.Defined.InvertItalic = true;
+						invertItalic = true;
+						break;
+					case "b":
+						textwrapper.Defined.InvertBold = true;
+						invertBold = true;
+						break;
+					case "u":
+						//					textwrapper.Defined.Underline. = true;
+						underline = true;
+						break;
+				}
 			}
 
 			if (!invertItalic)

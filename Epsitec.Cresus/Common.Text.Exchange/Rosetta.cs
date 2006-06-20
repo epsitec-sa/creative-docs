@@ -58,6 +58,7 @@ namespace Epsitec.Common.Text.Exchange
 			paraWrapper.Attach (navigator);
 
 			NativeToTextWriter theWriter = new NativeToTextWriter (efmt.String, textWrapper, paraWrapper, navigator);
+			theWriter.ProcessIt ();
 			
 		}
 
