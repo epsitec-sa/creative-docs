@@ -90,7 +90,30 @@ namespace Epsitec.Common.Types
 						}
 						else
 						{
-							namedType = new AutomaticNamedType (systemType);
+							if (systemType == typeof (int))
+							{
+								namedType = IntegerType.Default;
+							}
+							else if (systemType == typeof (long))
+							{
+								namedType = LongIntegerType.Default;
+							}
+							else if (systemType == typeof (double))
+							{
+								namedType = DoubleType.Default;
+							}
+							else if (systemType == typeof (void))
+							{
+								namedType = VoidType.Default;
+							}
+							else if (systemType == typeof (string))
+							{
+								namedType = StringType.Default;
+							}
+							else
+							{
+								namedType = new AutomaticNamedType (systemType);
+							}
 						}
 					}
 				}
