@@ -107,7 +107,7 @@ namespace Epsitec.Common.Widgets
 			Layouts.GridLayoutEngine.SetColumnSpan (placeholder2, 4);
 
 			placeholder3.Controller = "Numeric";
-			placeholder3.PreferredHeight = 30;
+			placeholder3.PreferredHeight = 20;
 			placeholder3.TabIndex = 3;
 			Layouts.GridLayoutEngine.SetColumn (placeholder3, 0);
 			Layouts.GridLayoutEngine.SetRow (placeholder3, 3);
