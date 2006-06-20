@@ -216,6 +216,30 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
+		public double DockedTriangleThickness
+		{
+			get
+			{
+				return this.dockedTriangleThickness;
+			}
+			set
+			{
+				this.dockedTriangleThickness = value;
+			}
+		}
+
+		public double DockedTriangleLength
+		{
+			get
+			{
+				return this.dockedTriangleLength;
+			}
+			set
+			{
+				this.dockedTriangleLength = value;
+			}
+		}
+
 
 		#region Static colors
 		static public Color ColorHiliteOutline
@@ -378,5 +402,7 @@ namespace Epsitec.Common.Designer
 		protected double				groupOutline = 5;
 		protected double				zOrderThickness = 2;
 		protected double				sizeMarkThickness = 8;
+		protected double				dockedTriangleThickness = 10;
+		protected double				dockedTriangleLength = 10;
 	}
 }
