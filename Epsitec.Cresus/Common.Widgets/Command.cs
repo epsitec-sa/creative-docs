@@ -386,6 +386,26 @@ namespace Epsitec.Common.Widgets
 
 		#endregion
 
+		#region INamedType Members
+
+		string INamedType.DefaultController
+		{
+			get
+			{
+				return "String";
+			}
+		}
+
+		string INamedType.DefaultControllerParameter
+		{
+			get
+			{
+				return null;
+			}
+		}
+
+		#endregion
+		
 		#region ISystemType Members
 
 		System.Type ISystemType.SystemType
@@ -398,7 +418,7 @@ namespace Epsitec.Common.Widgets
 
 		#endregion
 
-		#region INameCaption Members
+		#region ICaption Members
 
 		long ICaption.CaptionId
 		{

@@ -127,6 +127,21 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
+		public string							DefaultController
+		{
+			get
+			{
+				return "Enum";
+			}
+		}
+		
+		public string							DefaultControllerParameter
+		{
+			get
+			{
+				return null;
+			}
+		}
 		
 		internal override void SerializeXmlAttributes(System.Text.StringBuilder buffer, bool full)
 		{

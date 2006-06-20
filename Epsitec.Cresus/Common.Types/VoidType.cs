@@ -6,42 +6,44 @@ namespace Epsitec.Common.Types
 	/// <summary>
 	/// La classe VoidType décrit les valeurs de type System.Void.
 	/// </summary>
-	public sealed class VoidType : INamedType
+	public sealed class VoidType : NamedDependencyObject, INamedType
 	{
-		public VoidType()
+		public VoidType() : base ("Void")
 		{
 		}
-		
-		
+
 		#region INamedType Members
-		public System.Type						SystemType
+
+		public string DefaultController
 		{
 			get
 			{
-				return typeof (void);			//	System.Void
-			}
-		}
-		#endregion
-		
-		#region INameCaption Members
-		public string							Name
-		{
-			get
-			{
-				return "Void";
+				return null;
 			}
 		}
 
-		public long								CaptionId
+		public string DefaultControllerParameter
 		{
 			get
 			{
-				return -1;
+				return null;
 			}
 		}
-		
+
 		#endregion
-		
-		public static readonly VoidType			Default = new VoidType ();
+
+		#region ISystemType Members
+
+		public System.Type SystemType
+		{
+			get
+			{
+				return typeof (void);
+			}
+		}
+
+		#endregion
+
+		public static readonly VoidType Default = new VoidType ();
 	}
 }

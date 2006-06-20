@@ -9,9 +9,9 @@ namespace Epsitec.Common.Types
 	/// The <c>DynamicStructuredType</c> class describes a data structure which is
 	/// dynamic (it has no defined IStructuredType).
 	/// </summary>
-	public class DynamicStructuredType : INamedType, IStructuredType
+	public class DynamicStructuredType : NamedDependencyObject, INamedType, IStructuredType
 	{
-		public DynamicStructuredType(IStructuredData data)
+		public DynamicStructuredType(IStructuredData data) : base ("DynamicStructure")
 		{
 			this.data = data;
 		}
@@ -33,7 +33,15 @@ namespace Epsitec.Common.Types
 
 		#region INamedType Members
 
-		public System.Type SystemType
+		public string DefaultController
+		{
+			get
+			{
+				return null;
+			}
+		}
+
+		public string DefaultControllerParameter
 		{
 			get
 			{
@@ -42,26 +50,14 @@ namespace Epsitec.Common.Types
 		}
 
 		#endregion
+		
+		#region ISystemType Members
 
-		#region INameCaption Members
-
-		public long CaptionId
+		public System.Type SystemType
 		{
 			get
 			{
-				return -1;
-			}
-		}
-
-		#endregion
-
-		#region IName Members
-
-		public string Name
-		{
-			get
-			{
-				return "Dynamic";
+				return null;
 			}
 		}
 

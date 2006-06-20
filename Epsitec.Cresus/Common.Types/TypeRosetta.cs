@@ -64,24 +64,34 @@ namespace Epsitec.Common.Types
 
 			if (namedType == null)
 			{
-				System.Type systemType = TypeRosetta.GetSystemTypeFromTypeObject (typeObject);
+				DependencyProperty dependencyProperty = typeObject as DependencyProperty;
 
-				if (systemType == null)
+				if (dependencyProperty != null)
 				{
-					//	No underlying System.Type exists for the specified type object.
-					//	This is not a valid type object.
-
-					throw new Exceptions.InvalidTypeObjectException (typeObject);
+					namedType = dependencyProperty.DefaultMetadata.NamedType;
 				}
-				else
+				
+				if (namedType == null)
 				{
-					if (systemType.IsEnum)
+					System.Type systemType = TypeRosetta.GetSystemTypeFromTypeObject (typeObject);
+
+					if (systemType == null)
 					{
-						namedType = new EnumType (systemType);
+						//	No underlying System.Type exists for the specified type object.
+						//	This is not a valid type object.
+
+						throw new Exceptions.InvalidTypeObjectException (typeObject);
 					}
 					else
 					{
-						namedType = new AutomaticNamedType (systemType);
+						if (systemType.IsEnum)
+						{
+							namedType = new EnumType (systemType);
+						}
+						else
+						{
+							namedType = new AutomaticNamedType (systemType);
+						}
 					}
 				}
 			}
@@ -215,8 +225,28 @@ namespace Epsitec.Common.Types
 			{
 				this.type = type;
 			}
-			
+
 			#region INamedType Members
+
+			public string DefaultController
+			{
+				get
+				{
+					return null;
+				}
+			}
+
+			public string DefaultControllerParameter
+			{
+				get
+				{
+					return null;
+				}
+			}
+
+			#endregion
+			
+			#region ISystemType Members
 
 			public System.Type SystemType
 			{

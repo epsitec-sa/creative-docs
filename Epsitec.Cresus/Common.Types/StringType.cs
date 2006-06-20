@@ -6,9 +6,9 @@ namespace Epsitec.Common.Types
 	/// <summary>
 	/// La classe StringType décrit des valeurs de type System.String.
 	/// </summary>
-	public class StringType : IStringType, IDataConstraint
+	public class StringType : NamedDependencyObject, IStringType, IDataConstraint
 	{
-		public StringType()
+		public StringType() : base ("String")
 		{
 		}
 
@@ -22,9 +22,29 @@ namespace Epsitec.Common.Types
 			this.minimumLength = minimumLength;
 			this.maximumLength = maximumLength;
 		}
-		
-		
+
+
 		#region INamedType Members
+
+		public string DefaultController
+		{
+			get
+			{
+				return "String";
+			}
+		}
+
+		public string DefaultControllerParameter
+		{
+			get
+			{
+				return null;
+			}
+		}
+
+		#endregion
+		
+		#region ISystemType Members
 		public System.Type						SystemType
 		{
 			get
@@ -52,25 +72,6 @@ namespace Epsitec.Common.Types
 			}
 		}
 		
-		#endregion
-
-		#region INameCaption Members
-		public string							Name
-		{
-			get
-			{
-				return "String";
-			}
-		}
-
-		public long								CaptionId
-		{
-			get
-			{
-				return -1;
-			}
-		}
-
 		#endregion
 
 		#region IDataConstraint Members

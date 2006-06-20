@@ -1,4 +1,4 @@
-//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Cresus.Database
@@ -34,6 +34,22 @@ namespace Epsitec.Cresus.Database
 			get
 			{
 				return typeof (decimal);
+			}
+		}
+
+		public string							DefaultController
+		{
+			get
+			{
+				return "Numeric";
+			}
+		}
+		
+		public string							DefaultControllerParameter
+		{
+			get
+			{
+				return null;
 			}
 		}
 		

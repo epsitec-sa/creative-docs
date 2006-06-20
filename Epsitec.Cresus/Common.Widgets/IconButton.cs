@@ -1,4 +1,4 @@
-//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Widgets
@@ -13,28 +13,32 @@ namespace Epsitec.Common.Widgets
 		{
 			this.ButtonStyle = ButtonStyle.ToolItem;
 		}
-		
-		public IconButton(Widget embedder) : this()
+
+		public IconButton(Widget embedder)
+			: this ()
 		{
-			this.SetEmbedder(embedder);
+			this.SetEmbedder (embedder);
 		}
-		
-		public IconButton(string icon) : this()
+
+		public IconButton(string icon)
+			: this ()
 		{
 			this.IconName = icon;
 		}
-		
-		public IconButton(string command, string icon) : this(icon)
+
+		public IconButton(string command, string icon)
+			: this (icon)
 		{
 			this.Command = command;
 		}
-		
-		public IconButton(string command, string icon, string name) : this(command, icon)
+
+		public IconButton(string command, string icon, string name)
+			: this (command, icon)
 		{
 			this.Name = name;
 		}
-		
-		
+
+
 		static IconButton()
 		{
 			Helpers.VisualPropertyMetadata metadataDx = new Helpers.VisualPropertyMetadata (22.0, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
@@ -43,8 +47,8 @@ namespace Epsitec.Common.Widgets
 			Visual.PreferredWidthProperty.OverrideMetadata (typeof (IconButton), metadataDx);
 			Visual.PreferredHeightProperty.OverrideMetadata (typeof (IconButton), metadataDy);
 		}
-		
-		public string							IconName
+
+		public string IconName
 		{
 			get
 			{
@@ -53,15 +57,15 @@ namespace Epsitec.Common.Widgets
 
 			set
 			{
-				if ( this.iconName != value )
+				if (this.iconName != value)
 				{
 					this.iconName = value;
-					this.UpdateText();
+					this.UpdateText ();
 				}
 			}
 		}
 
-		public Drawing.Size						PreferredIconSize
+		public Drawing.Size PreferredIconSize
 		{
 			get
 			{
@@ -70,15 +74,15 @@ namespace Epsitec.Common.Widgets
 
 			set
 			{
-				if ( this.preferredIconSize != value )
+				if (this.preferredIconSize != value)
 				{
 					this.preferredIconSize = value;
-					this.UpdateText();
+					this.UpdateText ();
 				}
 			}
 		}
 
-		public string							PreferredIconLanguage
+		public string PreferredIconLanguage
 		{
 			get
 			{
@@ -87,15 +91,15 @@ namespace Epsitec.Common.Widgets
 
 			set
 			{
-				if ( this.preferredIconLanguage != value )
+				if (this.preferredIconLanguage != value)
 				{
 					this.preferredIconLanguage = value;
-					this.UpdateText();
+					this.UpdateText ();
 				}
 			}
 		}
 
-		public string							PreferredIconStyle
+		public string PreferredIconStyle
 		{
 			get
 			{
@@ -104,10 +108,10 @@ namespace Epsitec.Common.Widgets
 
 			set
 			{
-				if ( this.preferredIconStyle != value )
+				if (this.preferredIconStyle != value)
 				{
 					this.preferredIconStyle = value;
-					this.UpdateText();
+					this.UpdateText ();
 				}
 			}
 		}
@@ -116,45 +120,45 @@ namespace Epsitec.Common.Widgets
 		{
 			//	Met à jour le texte du bouton, qui est un tag <img.../> contenant le nom de l'image
 			//	suivi des différentes préférences (taille et langue).
-			if ( this.iconName == null ||
-				 this.iconName == ""   )
+			if (this.iconName == null ||
+				 this.iconName == "")
 			{
 				this.Text = null;
 			}
 			else
 			{
-				System.Text.StringBuilder builder = new System.Text.StringBuilder();
+				System.Text.StringBuilder builder = new System.Text.StringBuilder ();
 
-				builder.Append(@"<img src=""");
-				builder.Append(this.iconName);
-				builder.Append(@"""");
+				builder.Append (@"<img src=""");
+				builder.Append (this.iconName);
+				builder.Append (@"""");
 
-				if ( this.preferredIconSize.Width != 0 && this.preferredIconSize.Height != 0 )
+				if (this.preferredIconSize.Width != 0 && this.preferredIconSize.Height != 0)
 				{
-					builder.Append(@" dx=""");
-					builder.Append(this.preferredIconSize.Width.ToString(System.Globalization.CultureInfo.InvariantCulture));
-					builder.Append(@""" dy=""");
-					builder.Append(this.preferredIconSize.Height.ToString(System.Globalization.CultureInfo.InvariantCulture));
-					builder.Append(@"""");
+					builder.Append (@" dx=""");
+					builder.Append (this.preferredIconSize.Width.ToString (System.Globalization.CultureInfo.InvariantCulture));
+					builder.Append (@""" dy=""");
+					builder.Append (this.preferredIconSize.Height.ToString (System.Globalization.CultureInfo.InvariantCulture));
+					builder.Append (@"""");
 				}
 
-				if ( this.preferredIconLanguage != null && this.preferredIconLanguage != "" )
+				if (this.preferredIconLanguage != null && this.preferredIconLanguage != "")
 				{
-					builder.Append(@" lang=""");
-					builder.Append(this.preferredIconLanguage);
-					builder.Append(@"""");
+					builder.Append (@" lang=""");
+					builder.Append (this.preferredIconLanguage);
+					builder.Append (@"""");
 				}
 
-				if ( this.preferredIconStyle != null && this.preferredIconStyle != "" )
+				if (this.preferredIconStyle != null && this.preferredIconStyle != "")
 				{
-					builder.Append(@" style=""");
-					builder.Append(this.preferredIconStyle);
-					builder.Append(@"""");
+					builder.Append (@" style=""");
+					builder.Append (this.preferredIconStyle);
+					builder.Append (@"""");
 				}
 
-				builder.Append(@"/>");
+				builder.Append (@"/>");
 
-				this.Text = builder.ToString();
+				this.Text = builder.ToString ();
 			}
 		}
 
@@ -170,57 +174,57 @@ namespace Epsitec.Common.Widgets
 				return Widgets.Adorners.Factory.Active.GeometryThreeStateShapeMargins;
 			}
 		}
-		
-		
+
+
 		public static IconButton CreateSimple(string command, string icon)
 		{
 			IconButton button = new IconButton (command, icon);
-			
+
 			button.Name = CommandDispatcher.ExtractCommandName (command);
-			
+
 			return button;
 		}
-		
+
 		public static IconButton CreateHidden(string command, string icon)
 		{
 			IconButton button = new IconButton (command, icon);
-			
+
 			button.Visibility = false;
 			button.Name = CommandDispatcher.ExtractCommandName (command);
-			
+
 			return button;
 		}
-		
+
 		public static IconButton CreateToggle(string command, string icon)
 		{
 			IconButton button = new IconButton (command, icon);
-			
+
 			button.AutoToggle = true;
 			button.Name = CommandDispatcher.ExtractCommandName (command);
-			
+
 			return button;
 		}
-		
-		
+
+
 		public static IconButton CreateSimple(System.Enum command, string icon)
 		{
 			return IconButton.CreateSimple (command.ToString (), icon);
 		}
-		
+
 		public static IconButton CreateHidden(System.Enum command, string icon)
 		{
 			return IconButton.CreateHidden (command.ToString (), icon);
 		}
-		
+
 		public static IconButton CreateToggle(System.Enum command, string icon)
 		{
 			return IconButton.CreateToggle (command.ToString (), icon);
 		}
-		
-		
-		protected string						iconName = null;
-		protected Drawing.Size					preferredIconSize = Drawing.Size.Empty;
-		protected string						preferredIconLanguage = System.Globalization.CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
-		protected string						preferredIconStyle = null;
+
+
+		protected string iconName = null;
+		protected Drawing.Size preferredIconSize = Drawing.Size.Empty;
+		protected string preferredIconLanguage = System.Globalization.CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
+		protected string preferredIconStyle = null;
 	}
 }

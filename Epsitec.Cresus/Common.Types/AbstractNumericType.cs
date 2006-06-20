@@ -9,8 +9,28 @@ namespace Epsitec.Common.Types
 		{
 			this.DefineRange (range);
 		}
-		
+
 		#region INamedType Members
+
+		public virtual string DefaultController
+		{
+			get
+			{
+				return "Numeric";
+			}
+		}
+
+		public virtual string DefaultControllerParameter
+		{
+			get
+			{
+				return null;
+			}
+		}
+
+		#endregion
+		
+		#region ISystemType Members
 		
 		public abstract System.Type				SystemType
 		{

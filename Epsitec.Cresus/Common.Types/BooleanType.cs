@@ -20,6 +20,15 @@ namespace Epsitec.Common.Types
 				return typeof (bool);
 			}
 		}
+
+
+		public override string DefaultController
+		{
+			get
+			{
+				return "Boolean";
+			}
+		}
 		
 		public override bool IsValidValue(object value)
 		{
