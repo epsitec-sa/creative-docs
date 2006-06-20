@@ -29,9 +29,16 @@ namespace Epsitec.Common.Types
 		{
 			if (value is int)
 			{
-				int num = (int) value;
-				
-				return this.Range.Constrain (num) == num;
+				if (this.Range.IsEmpty)
+				{
+					return true;
+				}
+				else
+				{
+					int num = (int) value;
+
+					return this.Range.Constrain (num) == num;
+				}
 			}
 			
 			return false;

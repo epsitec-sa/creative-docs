@@ -8,7 +8,7 @@ namespace Epsitec.Common.Types
 	/// </summary>
 	public class DoubleType : AbstractNumericType
 	{
-		public DoubleType() : this (-DoubleType.TenTo28, DoubleType.TenTo28, 1M/DoubleType.TenTo28)
+		public DoubleType() : this (DecimalRange.Empty)
 		{
 		}
 		
@@ -34,8 +34,15 @@ namespace Epsitec.Common.Types
 		{
 			if (value is double)
 			{
-				decimal num = (decimal) (double) value;
-				return this.Range.Constrain (num) == num;
+				if (this.Range.IsEmpty)
+				{
+					return true;
+				}
+				else
+				{
+					decimal num = (decimal) (double) value;
+					return this.Range.Constrain (num) == num;
+				}
 			}
 			
 			return false;

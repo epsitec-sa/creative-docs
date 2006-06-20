@@ -33,8 +33,15 @@ namespace Epsitec.Common.Types
 		{
 			if (value is decimal)
 			{
-				decimal num = (decimal) value;
-				return this.Range.Constrain (num) == num;
+				if (this.Range.IsEmpty)
+				{
+					return true;
+				}
+				else
+				{
+					decimal num = (decimal) value;
+					return this.Range.Constrain (num) == num;
+				}
 			}
 			
 			return false;
