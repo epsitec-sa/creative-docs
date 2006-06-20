@@ -59,7 +59,7 @@ namespace Epsitec.Common.Support
 			}
 		}
 
-		public Caption GetCaption(ResourceManager manager, DependencyProperty property)
+		public Caption GetPropertyCaption(ResourceManager manager, DependencyProperty property)
 		{
 			if (property != null)
 			{
@@ -71,7 +71,7 @@ namespace Epsitec.Common.Support
 			}
 		}
 
-		public Caption GetCaption(ResourceManager manager, DependencyObject obj, DependencyProperty property)
+		public Caption GetPropertyCaption(ResourceManager manager, DependencyObject obj, DependencyProperty property)
 		{
 			if (property != null)
 			{
@@ -83,7 +83,7 @@ namespace Epsitec.Common.Support
 			}
 		}
 
-		public Caption GetCaption(ResourceManager manager, System.Type type, DependencyProperty property)
+		public Caption GetPropertyCaption(ResourceManager manager, System.Type type, DependencyProperty property)
 		{
 			if (property != null)
 			{
@@ -95,11 +95,55 @@ namespace Epsitec.Common.Support
 			}
 		}
 
-		public Caption GetCaption(ResourceManager manager, ICaption caption)
+		public Caption GetTypeCaption(ResourceManager manager, INamedType type)
 		{
-			if (caption != null)
+			return this.GetObjectCaption (manager, type);
+		}
+
+		public Caption GetTypeCaption(ResourceManager manager, DependencyProperty property)
+		{
+			if (property != null)
 			{
-				return this.GetCaption (manager, caption.CaptionId);
+				INamedType type = property.DefaultMetadata.NamedType;
+				return this.GetTypeCaption (manager, type ?? TypeRosetta.GetNamedTypeFromTypeObject (property.PropertyType));
+			}
+			else
+			{
+				return null;
+			}
+		}
+
+		public Caption GetTypeCaption(ResourceManager manager, DependencyObject obj, DependencyProperty property)
+		{
+			if (property != null)
+			{
+				INamedType type = property.GetMetadata (obj).NamedType;
+				return this.GetTypeCaption (manager, type ?? TypeRosetta.GetNamedTypeFromTypeObject (property.PropertyType));
+			}
+			else
+			{
+				return null;
+			}
+		}
+
+		public Caption GetTypeCaption(ResourceManager manager, System.Type sysType, DependencyProperty property)
+		{
+			if (property != null)
+			{
+				INamedType type = property.GetMetadata (sysType).NamedType;
+				return this.GetTypeCaption (manager, type ?? TypeRosetta.GetNamedTypeFromTypeObject (property.PropertyType));
+			}
+			else
+			{
+				return null;
+			}
+		}
+
+		public Caption GetObjectCaption(ResourceManager manager, ICaption obj)
+		{
+			if (obj != null)
+			{
+				return this.GetCaption (manager, obj.CaptionId);
 			}
 			else
 			{

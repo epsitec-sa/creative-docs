@@ -88,6 +88,13 @@ namespace Epsitec.Common.Types
 				return this.captionId;
 			}
 		}
+		public INamedType						NamedType
+		{
+			get
+			{
+				return this.namedType;
+			}
+		}
 		
 		public GetValueOverrideCallback			GetValueOverride
 		{
@@ -207,6 +214,11 @@ namespace Epsitec.Common.Types
 			this.captionId = value;
 			return this;
 		}
+		public DependencyPropertyMetadata DefineNamedType(INamedType type)
+		{
+			this.namedType = type;
+			return this;
+		}
 
 		public virtual bool FilterSerializableItem(DependencyObject item)
 		{
@@ -289,5 +301,6 @@ namespace Epsitec.Common.Types
 		private bool							canSerializeReadOnly;
 		private bool							canSerializeReadWrite = true;
 		private long							captionId = -1;
+		private INamedType						namedType;
 	}
 }

@@ -94,6 +94,114 @@ namespace Epsitec.Common.Support
 
 			Assert.AreEqual (2, CaptionCache.Instance.DebugCountLiveCaptions ());
 		}
+
+		[Test]
+		public void CheckProperties()
+		{
+			Assert.AreEqual (MyItem.TextProperty, MyItemX.TextProperty);
+			
+			Caption caption;
+			
+			caption = CaptionCache.Instance.GetPropertyCaption (this.manager_en, MyItem.TextProperty);
+
+			Assert.IsNotNull (caption);
+			Assert.AreEqual ("Text Property", caption.Description);
+			Assert.AreEqual ("[4004]", caption.Id);
+
+			caption = CaptionCache.Instance.GetTypeCaption (this.manager_en, MyItem.EnumProperty);
+
+			Assert.IsNotNull (caption);
+			Assert.AreEqual ("One of Three", caption.Description);
+
+			INamedType type1 = MyItem.EnumProperty.DefaultMetadata.NamedType;
+			INamedType type2 = MyItem.EnumProperty.GetMetadata (typeof (MyItem)).NamedType;
+
+			Assert.AreEqual ("One of Three", CaptionCache.Instance.GetTypeCaption (this.manager_en, MyItem.EnumProperty).Description);
+			Assert.AreEqual ("One of Three", CaptionCache.Instance.GetTypeCaption (this.manager_en, type2).Description);
+			Assert.AreEqual ("One of Three", CaptionCache.Instance.GetTypeCaption (this.manager_en, type1).Description);
+
+			caption = CaptionCache.Instance.GetPropertyCaption (this.manager_en, MyItemX.TextProperty);
+
+			Assert.AreEqual ("Text Property", caption.Description);
+			Assert.AreEqual ("[4004]", caption.Id);
+
+			caption = CaptionCache.Instance.GetPropertyCaption (this.manager_en, typeof (MyItemX), MyItemX.TextProperty);
+
+			Assert.AreEqual ("Borrowed Text", caption.Description);
+			Assert.AreEqual ("[400A]", caption.Id);
+			
+			INamedType type3 = MyItem.EnumProperty.GetMetadata (typeof (MyItemX)).NamedType;
+
+			Assert.AreEqual (type1, type2);
+			Assert.AreNotEqual (type1, type3);
+		}
+
+
+		private class MyItem : DependencyObject
+		{
+			public MyItem()
+			{
+			}
+
+			static MyItem()
+			{
+				DependencyPropertyMetadata metadataText = MyItem.TextProperty.GetMetadata (typeof (MyItem));
+				DependencyPropertyMetadata metadataEnum = MyItem.EnumProperty.GetMetadata (typeof (MyItem));
+
+				EnumType enumType = new EnumType (typeof (MyEnum));
+
+				enumType.DefineCaptionId (new Druid ("[4005]").ToLong ());
+				enumType[MyEnum.None].DefineCaptionId (new Druid ("[4006]").ToLong ());
+				enumType[MyEnum.First].DefineCaptionId (new Druid ("[4007]").ToLong ());
+				enumType[MyEnum.Second].DefineCaptionId (new Druid ("[4008]").ToLong ());
+				enumType[MyEnum.Third].DefineCaptionId (new Druid ("[4009]").ToLong ());
+
+				metadataText.DefineCaptionId (new Druid ("[4004]").ToLong ());
+				metadataEnum.DefineNamedType (enumType);
+			}
+
+
+			public static readonly DependencyProperty TextProperty = DependencyProperty.Register ("Text", typeof (string), typeof (MyItem), new DependencyPropertyMetadata ());
+			public static readonly DependencyProperty EnumProperty = DependencyProperty.Register ("Enum", typeof (MyEnum), typeof (MyItem), new DependencyPropertyMetadata (MyEnum.None));
+		}
+
+		private class MyItemX : DependencyObject
+		{
+			public MyItemX()
+			{
+			}
+
+			static MyItemX()
+			{
+				DependencyPropertyMetadata metadataText = new DependencyPropertyMetadata ();
+				DependencyPropertyMetadata metadataEnum = new DependencyPropertyMetadata (MyEnum.First);
+
+				EnumType enumType = new EnumType (typeof (MyEnum));
+
+				enumType.DefineCaptionId (new Druid ("[4005]").ToLong ());
+				enumType[MyEnum.First].DefineCaptionId (new Druid ("[4007]").ToLong ());
+				enumType[MyEnum.Second].DefineCaptionId (new Druid ("[4008]").ToLong ());
+				enumType[MyEnum.Third].DefineCaptionId (new Druid ("[4009]").ToLong ());
+
+				metadataText.DefineCaptionId (new Druid ("[400A]").ToLong ());
+				metadataEnum.DefineNamedType (enumType);
+
+				MyItemX.TextProperty.OverrideMetadata (typeof (MyItemX), metadataText);
+				MyItemX.EnumProperty.OverrideMetadata (typeof (MyItemX), metadataEnum);
+			}
+
+
+			public static readonly DependencyProperty TextProperty = MyItem.TextProperty.AddOwner (typeof (MyItemX));
+			public static readonly DependencyProperty EnumProperty = MyItem.EnumProperty.AddOwner (typeof (MyItemX));
+		}
+
+		private enum MyEnum
+		{
+			None,
+			First,
+			Second,
+			Third
+		}
 		
 		ResourceManager manager_en;
 		ResourceManager manager_fr;

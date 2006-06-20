@@ -7,6 +7,7 @@
   <data id="02">Text A</data>
   <data id="03">Text B</data>
   <data id="04">Text C</data>
+  <data id="05">Text Property</data>
   <data name="Text1">Hello, world</data>
   <data name="Text2">Good bye...</data>
 </bundle>

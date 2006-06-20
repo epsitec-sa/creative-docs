@@ -5,7 +5,9 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Types
 {
-	[System.AttributeUsage(System.AttributeTargets.Assembly, AllowMultiple=true)]
+	[System.AttributeUsage (System.AttributeTargets.Assembly,
+		/**/				AllowMultiple=true)]
+	
 	public class DependencyClassAttribute : System.Attribute
 	{
 		public DependencyClassAttribute(System.Type type)
