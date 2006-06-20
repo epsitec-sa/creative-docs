@@ -101,8 +101,11 @@ namespace Epsitec.Common.Types
 			{
 				typeCount++;
 
-				context.ObjectMap.RecordType (property.OwnerType);
-				context.StoreTypeDefinition (typeCount, property.OwnerType);
+				if (context.ObjectMap.IsTypeDefined (property.OwnerType) == false)
+				{
+					context.ObjectMap.RecordType (property.OwnerType);
+					context.StoreTypeDefinition (typeCount, property.OwnerType);
+				}
 			}
 			
 			context.StoreObjectData (0, this);
