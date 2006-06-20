@@ -773,7 +773,7 @@ namespace Epsitec.Common.Widgets
 			obj.ClearValue (CommandDispatcher.DispatcherProperty);
 		}
 		
-		public static readonly DependencyProperty DispatcherProperty = DependencyProperty.RegisterAttached ("Dispatcher", typeof (CommandDispatcher), typeof (CommandDispatcher));
+		public static readonly DependencyProperty DispatcherProperty = DependencyProperty.RegisterAttached ("Dispatcher", typeof (CommandDispatcher), typeof (CommandDispatcher), new DependencyPropertyMetadata ().MakeNotSerializable ());
 		
 		public event Support.EventHandler		OpletQueueBindingChanged;
 		public event Support.EventHandler		CommandDispatched;
