@@ -14,7 +14,7 @@ namespace Epsitec.Common.Types
 	/// </summary>
 	public class EnumType : NamedDependencyObject, IEnumType, IDataConstraint
 	{
-		public EnumType(System.Type enum_type) : base ("Enumeration")
+		public EnumType(System.Type enum_type) : base (string.Concat ("Enumeration", " ", enum_type.Name))
 		{
 			FieldInfo[] fields = enum_type.GetFields (BindingFlags.Public | BindingFlags.DeclaredOnly | BindingFlags.Static);
 			

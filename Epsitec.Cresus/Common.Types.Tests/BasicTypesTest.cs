@@ -12,6 +12,9 @@ namespace Epsitec.Common.Types
 			
 			EnumType et = new EnumType (type);
 			EnumValue[] ev = Collection.ToArray<EnumValue> (et.Values);
+
+			Assert.AreEqual ("Enumeration MyEnum", et.Name);
+			Assert.AreEqual (-1L, et.CaptionId);
 			
 			Assert.AreEqual (5, ev.Length);
 			Assert.IsFalse (et.IsCustomizable);
@@ -57,7 +60,8 @@ namespace Epsitec.Common.Types
 			Assert.IsFalse (et.IsValidValue ("{Other}"));
 		}
 		
-		[Test] public void CheckEnumType2()
+		[Test]
+		public void CheckEnumType2()
 		{
 			System.Type type = typeof (MyFlags);
 			
@@ -150,7 +154,10 @@ namespace Epsitec.Common.Types
 		{
 			EnumType et = new OpenEnumType (typeof (MyEnum));
 			EnumValue[] ev = Collection.ToArray<EnumValue> (et.Values);
-						
+
+			Assert.AreEqual ("Enumeration MyEnum", et.Name);
+			Assert.AreEqual (-1L, et.CaptionId);
+			
 			Assert.AreEqual (5, ev.Length);
 			Assert.IsTrue (et.IsCustomizable);
 
@@ -333,8 +340,8 @@ namespace Epsitec.Common.Types
 			Assert.IsFalse (type32.IsValidValue (numDecimal));
 			Assert.IsFalse (type64.IsValidValue (numDecimal));
 
-			Assert.IsTrue (type1.IsValidValue (false));
-			Assert.IsTrue (type1.IsValidValue (true));
+			Assert.IsTrue (type1.IsValidValue (num1));
+			Assert.IsTrue (type1.IsValidValue (!num1));
 			Assert.IsFalse (type1.IsValidValue (0));
 			Assert.IsFalse (type1.IsValidValue (1));
 

@@ -10,6 +10,36 @@ namespace Epsitec.Common.Types
 	[TestFixture] public class CaptionTest
 	{
 		[Test]
+		public void CheckBindingCaptionExtraction()
+		{
+			Stuff target = new Stuff ();
+			Stuff source = new Stuff ();
+
+			Binding bindingName = new Binding (BindingMode.TwoWay, source, "Name");
+			Binding bindingText = new Binding (BindingMode.TwoWay, source, "Text");
+			Binding bindingEnum = new Binding (BindingMode.TwoWay, source, "Enum");
+
+			target.SetBinding (Stuff.NameProperty, bindingName);
+			target.SetBinding (Stuff.TextProperty, bindingText);
+			target.SetBinding (Stuff.EnumProperty, bindingEnum);
+
+			Assert.AreEqual ("Name", target.GetBindingExpression (Stuff.NameProperty).GetSourceName ());
+			Assert.AreEqual (-1, target.GetBindingExpression (Stuff.NameProperty).GetSourceCaptionId ());
+			Assert.AreEqual ("AutomaticNamedType", target.GetBindingExpression (Stuff.NameProperty).GetSourceNamedType ().GetType ().Name);
+
+			Assert.AreEqual ("Text", target.GetBindingExpression (Stuff.TextProperty).GetSourceName ());
+			Assert.AreEqual (0x0000400000000004L, target.GetBindingExpression (Stuff.TextProperty).GetSourceCaptionId ());
+			Assert.AreEqual ("AutomaticNamedType", target.GetBindingExpression (Stuff.TextProperty).GetSourceNamedType ().GetType ().Name);
+
+			Assert.AreEqual ("Enum", target.GetBindingExpression (Stuff.EnumProperty).GetSourceName ());
+			Assert.AreEqual (-1, target.GetBindingExpression (Stuff.EnumProperty).GetSourceCaptionId ());
+			Assert.IsNotNull (target.GetBindingExpression (Stuff.EnumProperty).GetSourceNamedType ());
+			Assert.AreEqual ("EnumType", target.GetBindingExpression (Stuff.EnumProperty).GetSourceNamedType ().GetType ().Name);
+			Assert.AreEqual ("Enumeration MyEnum", target.GetBindingExpression (Stuff.EnumProperty).GetSourceNamedType ().Name);
+			Assert.AreEqual (0x0000400000000005L, target.GetBindingExpression (Stuff.EnumProperty).GetSourceNamedType ().CaptionId);
+		}
+		
+		[Test]
 		public void CheckLabels()
 		{
 			Caption caption = new Caption ();
@@ -124,7 +154,35 @@ namespace Epsitec.Common.Types
 
 		internal class Stuff : DependencyObject
 		{
+			static Stuff()
+			{
+				DependencyPropertyMetadata metadataText = Stuff.TextProperty.GetMetadata (typeof (Stuff));
+				DependencyPropertyMetadata metadataEnum = Stuff.EnumProperty.GetMetadata (typeof (Stuff));
+
+				EnumType enumType = new EnumType (typeof (MyEnum));
+
+				enumType.DefineCaptionId (0x0000400000000005L);
+				enumType[MyEnum.None].DefineCaptionId (0x0000400000000006L);
+				enumType[MyEnum.First].DefineCaptionId (0x0000400000000007L);
+				enumType[MyEnum.Second].DefineCaptionId (0x0000400000000008L);
+				enumType[MyEnum.Third].DefineCaptionId (0x0000400000000009L);
+
+				metadataText.DefineCaptionId (0x0000400000000004L);
+				metadataEnum.DefineNamedType (enumType);
+			}
+
 			public static readonly DependencyProperty NameProperty = DependencyProperty.RegisterAttached ("Name", typeof (string), typeof (Stuff));
+
+			public static readonly DependencyProperty TextProperty = DependencyProperty.Register ("Text", typeof (string), typeof (Stuff), new DependencyPropertyMetadata ());
+			public static readonly DependencyProperty EnumProperty = DependencyProperty.Register ("Enum", typeof (MyEnum), typeof (Stuff), new DependencyPropertyMetadata (MyEnum.None));
+		}
+		
+		private enum MyEnum
+		{
+			None,
+			First,
+			Second,
+			Third
 		}
 	}
 }
