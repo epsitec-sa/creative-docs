@@ -214,6 +214,14 @@ namespace Epsitec.Common.Designer
 				{
 					ResourceBundle bundle = this.resourceManager.GetBundle(name, ResourceLevel.Default);
 					this.panelsList.Add(bundle);
+
+					ResourceBundle.Field field = bundle["Panel"];
+					
+					if (field.IsValid)
+					{
+						UI.Panel panel = UserInterface.DeserializePanel (field.AsString, this.resourceManager);
+						Viewers.Panels.SetPanel (bundle, panel);
+					}
 				}
 
 				this.panelsList.Sort(new Comparers.BundleRank());  // trie selon les rangs
@@ -229,6 +237,19 @@ namespace Epsitec.Common.Designer
 			{
 				ResourceBundle bundle = this.panelsList[i];
 				bundle.DefineRank(i);
+				UI.Panel panel = Viewers.Panels.GetPanel (bundle);
+
+				if (panel != null)
+				{
+					if (!bundle.Contains ("Panel"))
+					{
+						ResourceBundle.Field field = bundle.CreateField (ResourceFieldType.Data);
+						field.SetName ("Panel");
+						bundle.Add (field);
+					}
+
+					bundle["Panel"].SetXmlValue (UserInterface.SerializePanel (panel));
+				}
 
 				if (this.panelsToCreate.Contains(bundle))
 				{

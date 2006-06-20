@@ -1,3 +1,6 @@
+
+[assembly: Epsitec.Common.Types.DependencyClass (typeof (Epsitec.Common.Widgets.GroupBox))]
+
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
