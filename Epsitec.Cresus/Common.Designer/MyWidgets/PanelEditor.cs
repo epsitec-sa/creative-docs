@@ -2575,7 +2575,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			if (this.isSizeMarkHorizontal)
 			{
 				this.isSizeMarkDragging = true;
-				this.sizeMarkOffset.Y = pos.Y-this.SizeMarkHorizontalRect.Bottom;
+				this.sizeMarkOffset.Y = pos.Y-this.SizeMarkHorizontalRect.Top;
 			}
 
 			if (this.isSizeMarkVertical)
