@@ -74,9 +74,12 @@ namespace Epsitec.Common.Widgets
 			StructuredType type = new StructuredType ();
 			StructuredData data = new StructuredData (type);
 
+			IntegerType ageType = new IntegerType (20, 65);
+			ageType.DefineDefaultIncrementStep (10);
+			
 			type.AddField ("Name", new StringType (1));
 			type.AddField ("Forename", new StringType (1));
-			type.AddField ("Age", new IntegerType (18, 65));
+			type.AddField ("Age", ageType);
 			type.AddField ("Sex", new EnumType (typeof (Sex)));
 
 			data.SetValue ("Name", "Arnaud");

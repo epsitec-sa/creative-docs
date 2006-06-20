@@ -17,5 +17,14 @@ namespace Epsitec.Common.Types
 		{
 			get;
 		}
+
+		/// <summary>
+		/// Gets the default increment step.
+		/// </summary>
+		/// <value>The default increment step.</value>
+		decimal DefaultIncrementStep
+		{
+			get;
+		}
 	}
 }

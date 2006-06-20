@@ -48,6 +48,14 @@ namespace Epsitec.Common.Types
 				return (DecimalRange) this.GetValue (AbstractNumericType.RangeProperty);
 			}
 		}
+		
+		public decimal							DefaultIncrementStep
+		{
+			get
+			{
+				return (decimal) this.GetValue (AbstractNumericType.DefaultIncrementStepProperty);
+			}
+		}
 
 		#endregion
 		
@@ -57,12 +65,18 @@ namespace Epsitec.Common.Types
 		
 		#endregion
 
-		protected void DefineRange(DecimalRange range)
+		public void DefineRange(DecimalRange range)
 		{
 			this.SetLocalValue (AbstractNumericType.RangeProperty, range);
+		}
+		
+		public void DefineDefaultIncrementStep(decimal value)
+		{
+			this.SetLocalValue (AbstractNumericType.DefaultIncrementStepProperty, value);
 		}
 
 
 		public static readonly DependencyProperty RangeProperty = DependencyProperty.RegisterReadOnly ("Range", typeof (DecimalRange), typeof (AbstractNumericType), new DependencyPropertyMetadata (DecimalRange.Empty));
+		public static readonly DependencyProperty DefaultIncrementStepProperty = DependencyProperty.RegisterReadOnly ("DefaultIncrementStep", typeof (decimal), typeof (AbstractNumericType), new DependencyPropertyMetadata (1M));
 	}
 }
