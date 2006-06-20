@@ -31,6 +31,39 @@ namespace Epsitec.Common.Support
 			return this.GetCaption (manager, druid, id);
 		}
 
+		public void TrimCache()
+		{
+			lock (this.exclusion)
+			{
+				Dictionary<BigKey, Weak<Caption>> copy = new Dictionary<BigKey, Weak<Caption>> ();
+
+				foreach (KeyValuePair<BigKey, Weak<Caption>> pair in this.cache)
+				{
+					if (pair.Value.IsAlive)
+					{
+						copy.Add (pair.Key, pair.Value);
+					}
+				}
+
+				this.cache = copy;
+			}
+		}
+
+		public int DebugCountLiveCaptions()
+		{
+			int count = 0;
+			
+			foreach (KeyValuePair<BigKey, Weak<Caption>> pair in this.cache)
+			{
+				if (pair.Value.IsAlive)
+				{
+					count++;
+				}
+			}
+			
+			return count;
+		}
+
 		private Caption GetCaption(ResourceManager manager, Druid druid, long id)
 		{
 			Caption caption;
@@ -45,15 +78,20 @@ namespace Epsitec.Common.Support
 				{
 					return caption;
 				}
-
-				this.cache.Remove (key);
 			}
 
-			caption = manager.GetCaption (druid);
-
-			if (caption != null)
+			lock (this.exclusion)
 			{
-				this.cache[key] = new Weak<Caption> (caption);
+				caption = manager.GetCaption (druid);
+
+				if (caption != null)
+				{
+					this.cache[key] = new Weak<Caption> (caption);
+				}
+				else
+				{
+					this.cache.Remove (key);
+				}
 			}
 			
 			return caption;
@@ -97,6 +135,7 @@ namespace Epsitec.Common.Support
 
 		public static readonly CaptionCache Instance = new CaptionCache ();
 
-		Dictionary<BigKey, Weak<Caption>> cache = new Dictionary<BigKey, Weak<Caption>> ();
+		private Dictionary<BigKey, Weak<Caption>> cache = new Dictionary<BigKey, Weak<Caption>> ();
+		private object exclusion = new object ();
 	}
 }
