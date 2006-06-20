@@ -1223,7 +1223,7 @@ namespace Epsitec.Common.Widgets
 			Window window = new Window ();
 
 			window.ClientSize = new Size (400, 300);
-			window.Text = "CheckInteractiveDockStacked";
+			window.Text = "CheckInteractiveDockStacked1";
 			window.Root.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
 			window.Root.Padding = new Margins (8, 8, 5, 5);
 
@@ -1370,7 +1370,7 @@ namespace Epsitec.Common.Widgets
 			Window window = new Window ();
 
 			window.ClientSize = new Size (400, 300);
-			window.Text = "CheckInteractiveDockStacked";
+			window.Text = "CheckInteractiveDockStacked2";
 			window.Root.ContainerLayoutMode = ContainerLayoutMode.VerticalFlow;
 			window.Root.Padding = new Margins (8, 8, 5, 5);
 
@@ -1407,6 +1407,145 @@ namespace Epsitec.Common.Widgets
 			Window.RunInTestEnvironment (window);
 		}
 
+		[Test]
+		public void CheckInteractiveDockStacked3()
+		{
+			Window window = new Window ();
+
+			window.ClientSize = new Size (400, 300);
+			window.Text = "CheckInteractiveDockStacked3";
+			window.Root.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
+			window.Root.Padding = new Margins (8, 8, 5, 5);
+
+			Button button;
+
+			button = new Button ();
+			button.PreferredSize = new Size (40, 24);
+			button.Text = "A";
+			button.Dock = DockStyle.StackBegin;
+			button.VerticalAlignment = VerticalAlignment.Bottom;
+			window.Root.Children.Add (button);
+
+			button = new Button ();
+			button.PreferredSize = new Size (40, 24);
+			button.Text = "B";
+			button.Dock = DockStyle.StackBegin;
+			button.VerticalAlignment = VerticalAlignment.Center;
+			window.Root.Children.Add (button);
+
+			button = new Button ();
+			button.PreferredSize = new Size (40, 24);
+			button.Text = "C";
+			button.Dock = DockStyle.StackBegin;
+			button.VerticalAlignment = VerticalAlignment.Top;
+			window.Root.Children.Add (button);
+
+			button = new Button ();
+			button.PreferredSize = new Size (40, 24);
+			button.Text = "D";
+			button.Dock = DockStyle.StackFill;
+			button.VerticalAlignment = VerticalAlignment.Stretch;
+			window.Root.Children.Add (button);
+
+			button = new Button ();
+			button.PreferredSize = new Size (40, 24);
+			button.Text = "E-Xy";
+			button.Dock = DockStyle.StackFill;
+			button.VerticalAlignment = VerticalAlignment.BaseLine;
+			window.Root.Children.Add (button);
+
+			Widget line = new Widget ();
+			line.Dock = DockStyle.StackFill;
+			line.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
+			line.VerticalAlignment = VerticalAlignment.BaseLine;
+			line.PreferredHeight = 40;
+			line.PaintForeground += WidgetTest.WidgetPaintForeground;
+			window.Root.Children.Add (line);
+
+			button = new Button ();
+			button.PreferredSize = new Size (32, 24*1.6);
+			button.Text = @"<font size=""160%"">Xy</font>";
+			button.Dock = DockStyle.StackBegin;
+			button.VerticalAlignment = VerticalAlignment.BaseLine;
+			button.PaintForeground += WidgetTest.WidgetPaintForeground;
+			line.Children.Add (button);
+
+			button = new Button ();
+			button.PreferredSize = new Size (32, 24);
+			button.Text = @"<font size=""100%"">Xy</font>";
+			button.Dock = DockStyle.StackBegin;
+			button.VerticalAlignment = VerticalAlignment.BaseLine;
+			button.PaintForeground += WidgetTest.WidgetPaintForeground;
+			line.Children.Add (button);
+
+			button = new Button ();
+			button.PreferredSize = new Size (32, 24*0.8);
+			button.Text = @"<font size=""80%"">Xy</font>";
+			button.Dock = DockStyle.StackBegin;
+			button.VerticalAlignment = VerticalAlignment.BaseLine;
+			button.PaintForeground += WidgetTest.WidgetPaintForeground;
+			line.Children.Add (button);
+
+			StaticText text;
+			TextField field;
+
+			text = new StaticText ();
+			text.Text = "Xy";
+			text.PreferredWidth = 16;
+			text.Dock = DockStyle.StackBegin;
+			text.VerticalAlignment = VerticalAlignment.BaseLine;
+			text.PaintForeground += WidgetTest.WidgetPaintForeground;
+			line.Children.Add (text);
+
+			text = new StaticText ();
+			text.Text = "Xy";
+			text.PreferredWidth = 16;
+			text.PreferredHeight = 20;
+			text.Dock = DockStyle.StackBegin;
+			text.Margins = new Margins (3, 1, 16, 2);
+			text.VerticalAlignment = VerticalAlignment.BaseLine;
+			text.PaintForeground += WidgetTest.WidgetPaintForeground;
+			line.Children.Add (text);
+
+			text = new StaticText ();
+			text.Text = "Xy";
+			text.PreferredWidth = 16;
+			text.PreferredHeight = 20;
+			text.Dock = DockStyle.StackFill;
+			text.VerticalAlignment = VerticalAlignment.BaseLine;
+			text.ContentAlignment = ContentAlignment.BottomLeft;
+			text.PaintForeground += WidgetTest.WidgetPaintForeground;
+			line.Children.Add (text);
+
+			text = new StaticText ();
+			text.Text = @"<font size=""160%"">Xy</font>";
+			text.PreferredWidth = 24;
+			text.PreferredHeight = 32;
+			text.Dock = DockStyle.StackFill;
+			text.VerticalAlignment = VerticalAlignment.BaseLine;
+			text.PaintForeground += WidgetTest.WidgetPaintForeground;
+			line.Children.Add (text);
+
+			field = new TextField ();
+			field.Text = "Xy";
+			field.Dock = DockStyle.StackEnd;
+			field.PreferredWidth = 24;
+			field.VerticalAlignment = VerticalAlignment.BaseLine;
+			field.PaintForeground += WidgetTest.WidgetPaintForeground;
+			line.Children.Add (field);
+
+			field = new TextField ();
+			field.Text = @"<font size=""80%"">Xy</font>";
+			field.Dock = DockStyle.StackEnd;
+			field.PreferredWidth = 24;
+			field.VerticalAlignment = VerticalAlignment.BaseLine;
+			field.PaintForeground += WidgetTest.WidgetPaintForeground;
+			line.Children.Add (field);
+
+			window.Show ();
+			Window.RunInTestEnvironment (window);
+		}
+		
 		private class FlowPanel : Widget
 		{
 			public FlowPanel()

@@ -24,7 +24,10 @@ namespace Epsitec.Common.Widgets.Layouts
 				DockStyle dock = child.Dock;
 				
 				if ((dock == DockStyle.None) ||
-					(dock == DockStyle.Stacked))
+					(dock == DockStyle.Stacked) ||
+					(dock == DockStyle.StackBegin) ||
+					(dock == DockStyle.StackFill) ||
+					(dock == DockStyle.StackEnd))
 				{
 					//	Saute les widgets qui ne sont pas "docked", car ils doivent être
 					//	positionnés par d'autres moyens.
@@ -237,7 +240,10 @@ namespace Epsitec.Common.Widgets.Layouts
 				DockStyle dock = child.Dock;
 				
 				if ((dock == DockStyle.None) ||
-					(dock == DockStyle.Stacked))
+					(dock == DockStyle.Stacked) ||
+					(dock == DockStyle.StackBegin) ||
+					(dock == DockStyle.StackFill) ||
+					(dock == DockStyle.StackEnd))
 				{
 					//	Saute les widgets qui ne sont pas "docked", car leur taille n'est pas prise
 					//	en compte dans le calcul des minima/maxima.
