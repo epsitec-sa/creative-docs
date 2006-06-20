@@ -22,14 +22,6 @@ namespace Epsitec.Common.Types
 		}
 
 
-		public override string DefaultController
-		{
-			get
-			{
-				return "Boolean";
-			}
-		}
-		
 		public override bool IsValidValue(object value)
 		{
 			if (value is bool)
@@ -38,6 +30,13 @@ namespace Epsitec.Common.Types
 			}
 			
 			return false;
+		}
+
+		static BooleanType()
+		{
+			DependencyPropertyMetadata metadata = new DependencyPropertyMetadata ("Boolean");
+
+			BooleanType.DefaultControllerProperty.OverrideMetadata (typeof (BooleanType), metadata);
 		}
 	}
 }

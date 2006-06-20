@@ -95,27 +95,27 @@ namespace Epsitec.Common.Widgets
 			Placeholder placeholder3 = new Placeholder ();
 			Placeholder placeholder4 = new Placeholder ();
 
-			placeholder1.Controller = "String";
+			placeholder1.Controller = "*";
 			placeholder1.PreferredHeight = 20;
 			placeholder1.TabIndex = 1;
 			Layouts.GridLayoutEngine.SetColumn (placeholder1, 0);
 			Layouts.GridLayoutEngine.SetRow (placeholder1, 1);
 			Layouts.GridLayoutEngine.SetColumnSpan (placeholder1, 4);
 
-			placeholder2.Controller = "String";
+			placeholder2.Controller = "*";
 			placeholder2.PreferredHeight = 20;
 			placeholder2.TabIndex = 2;
 			Layouts.GridLayoutEngine.SetColumn (placeholder2, 0);
 			Layouts.GridLayoutEngine.SetRow (placeholder2, 2);
 			Layouts.GridLayoutEngine.SetColumnSpan (placeholder2, 4);
 
-			placeholder3.Controller = "Numeric";
+			placeholder3.Controller = "*";
 			placeholder3.PreferredHeight = 20;
 			placeholder3.TabIndex = 3;
 			Layouts.GridLayoutEngine.SetColumn (placeholder3, 0);
 			Layouts.GridLayoutEngine.SetRow (placeholder3, 3);
 
-			placeholder4.Controller = "Enum";
+			placeholder4.Controller = "*";
 			placeholder4.PreferredHeight = 20;
 			placeholder4.TabIndex = 4;
 			Layouts.GridLayoutEngine.SetColumn (placeholder4, 2);
