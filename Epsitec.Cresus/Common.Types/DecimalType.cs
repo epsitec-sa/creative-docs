@@ -39,5 +39,7 @@ namespace Epsitec.Common.Types
 			
 			return false;
 		}
+
+		public static readonly DecimalType Default = new DecimalType ();
 	}
 }

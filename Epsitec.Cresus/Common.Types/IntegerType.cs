@@ -36,5 +36,7 @@ namespace Epsitec.Common.Types
 			
 			return false;
 		}
+
+		public static readonly IntegerType Default = new IntegerType ();
 	}
 }

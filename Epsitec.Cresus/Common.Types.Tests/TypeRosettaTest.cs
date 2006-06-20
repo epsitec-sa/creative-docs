@@ -35,7 +35,7 @@ namespace Epsitec.Common.Types
 			type = TypeRosetta.GetNamedTypeFromTypeObject (typeof (double));
 
 			Assert.IsNotNull (type);
-			Assert.AreEqual ("System.Double", type.Name);
+			Assert.AreEqual ("Double", type.Name);
 			Assert.AreEqual (typeof (double), type.SystemType);
 
 			type = TypeRosetta.GetNamedTypeFromTypeObject (new IntegerType (0, 100));
@@ -48,7 +48,7 @@ namespace Epsitec.Common.Types
 			type = TypeRosetta.GetNamedTypeFromTypeObject (DependencyObjectTree.NameProperty);
 
 			Assert.IsNotNull (type);
-			Assert.AreEqual ("System.String", type.Name);
+			Assert.AreEqual ("String", type.Name);
 			Assert.AreEqual (typeof (string), type.SystemType);
 		}
 		
@@ -123,8 +123,9 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual (typeof (DynamicStructuredType), t4self.GetType ());
 			
 			Assert.AreEqual ("Integer", TypeRosetta.GetNamedTypeFromTypeObject (t1x).Name);
-			Assert.AreEqual ("System.String", TypeRosetta.GetNamedTypeFromTypeObject (t2foo).Name);
+			Assert.AreEqual ("String", TypeRosetta.GetNamedTypeFromTypeObject (t2foo).Name);
 			Assert.AreEqual ("DynamicStructure", TypeRosetta.GetNamedTypeFromTypeObject (t4self).Name);
+			Assert.AreEqual ("System.Int16", TypeRosetta.GetNamedTypeFromTypeObject (typeof (short)).Name);
 		}
 
 		[Test]

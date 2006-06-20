@@ -35,5 +35,7 @@ namespace Epsitec.Common.Types
 			
 			return false;
 		}
+
+		public static readonly LongIntegerType Default = new LongIntegerType ();
 	}
 }
