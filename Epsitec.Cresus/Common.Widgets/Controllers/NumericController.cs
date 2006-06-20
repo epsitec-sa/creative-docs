@@ -53,6 +53,16 @@ namespace Epsitec.Common.Widgets.Controllers
 			this.field.TabIndex = 1;
 			this.field.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			this.field.Dock = DockStyle.Stacked;
+
+			INumericType numType = namedType as INumericType;
+
+			if ((numType != null) &&
+				(!numType.Range.IsEmpty))
+			{
+				this.field.MinValue = numType.Range.Minimum;
+				this.field.MaxValue = numType.Range.Maximum;
+				this.field.Step     = numType.Range.Resolution;
+			}
 			
 			this.AddWidget (this.label);
 			this.AddWidget (this.field);

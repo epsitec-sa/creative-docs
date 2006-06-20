@@ -76,7 +76,7 @@ namespace Epsitec.Common.Widgets
 
 			type.AddField ("Name", new StringType (1));
 			type.AddField ("Forename", new StringType (1));
-			type.AddField ("Age", new IntegerType (1, 150));
+			type.AddField ("Age", new IntegerType (18, 65));
 			type.AddField ("Sex", new EnumType (typeof (Sex)));
 
 			data.SetValue ("Name", "Arnaud");
