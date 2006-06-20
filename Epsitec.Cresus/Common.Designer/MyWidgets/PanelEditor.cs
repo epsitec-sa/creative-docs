@@ -363,6 +363,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			switch (message.Type)
 			{
 				case MessageType.MouseDown:
+					this.module.Modifier.IsDirty = true;
 					this.ProcessMouseDown(pos, message.IsRightButton, message.IsControlPressed, message.IsShiftPressed);
 					message.Captured = true;
 					message.Consumer = this;
@@ -1642,6 +1643,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.UpdateAfterSelectionChanged();
 			this.OnChildrenSelected();
 			this.Invalidate();
+			this.module.Modifier.IsDirty = true;
 		}
 
 		protected void DuplicateSelection()
@@ -1657,6 +1659,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			direction.Y *= this.module.MainWindow.MoveVertical;
 			this.MoveSelection(direction, null);
 			this.handlesList.UpdateGeometry();
+			this.module.Modifier.IsDirty = true;
 		}
 
 		protected void MoveSelection(Point move, Widget parent)
@@ -1740,6 +1743,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 
 			this.Invalidate();
+			this.module.Modifier.IsDirty = true;
 		}
 
 		protected void SelectAlignBaseLine()
@@ -1779,6 +1783,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 
 			this.Invalidate();
+			this.module.Modifier.IsDirty = true;
 #endif
 		}
 
@@ -1809,6 +1814,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 
 			this.Invalidate();
+			this.module.Modifier.IsDirty = true;
 		}
 
 		protected void SelectAlignGrid()
@@ -1828,6 +1834,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.Invalidate();
 			this.context.ShowZOrder = true;
 			this.OnUpdateCommands();
+			this.module.Modifier.IsDirty = true;
 		}
 
 		protected void SelectTabIndexRenum()
@@ -1838,6 +1845,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.Invalidate();
 			this.context.ShowTabIndex = true;
 			this.OnUpdateCommands();
+			this.module.Modifier.IsDirty = true;
 		}
 
 		protected void SelectTabIndexRenum(Widget parent)
@@ -1886,6 +1894,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.Invalidate();
 			this.context.ShowTabIndex = true;
 			this.OnUpdateCommands();
+			this.module.Modifier.IsDirty = true;
 		}
 
 		protected void SelectTabIndex(Widget parent, int oldIndex, int newIndex)
