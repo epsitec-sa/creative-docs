@@ -2015,7 +2015,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			if (this.objectModifier.IsChildrenDocked(obj.Parent))
 			{
-				if (this.objectModifier.IsChildrenHorizontal(obj))
+				if (this.objectModifier.IsChildrenHorizontal(obj.Parent))
 				{
 					this.objectModifier.SetWidth(obj, bounds.Width);
 				}
@@ -2940,25 +2940,55 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 				p1 = new Point(bounds.Left, rect.Center.Y);
 				p2 = new Point(rect.Left, rect.Center.Y);
-				this.DrawAttachment(graphics, p1, p2, this.objectModifier.IsAttachmentLeft(obj), color);
+				this.DrawSpring(graphics, p1, p2, this.objectModifier.IsAttachmentLeft(obj), color);
 
 				p1 = new Point(rect.Right, rect.Center.Y);
 				p2 = new Point(bounds.Right, rect.Center.Y);
-				this.DrawAttachment(graphics, p1, p2, this.objectModifier.IsAttachmentRight(obj), color);
+				this.DrawSpring(graphics, p1, p2, this.objectModifier.IsAttachmentRight(obj), color);
 
 				p1 = new Point(rect.Center.X, bounds.Bottom);
 				p2 = new Point(rect.Center.X, rect.Bottom);
-				this.DrawAttachment(graphics, p1, p2, this.objectModifier.IsAttachmentBottom(obj), color);
+				this.DrawSpring(graphics, p1, p2, this.objectModifier.IsAttachmentBottom(obj), color);
 
 				p1 = new Point(rect.Center.X, rect.Top);
 				p2 = new Point(rect.Center.X, bounds.Top);
-				this.DrawAttachment(graphics, p1, p2, this.objectModifier.IsAttachmentTop(obj), color);
+				this.DrawSpring(graphics, p1, p2, this.objectModifier.IsAttachmentTop(obj), color);
+			}
+
+			if (this.objectModifier.IsChildrenDocked(obj.Parent))
+			{
+				Rectangle rect = this.objectModifier.GetBounds(obj);
+				Point p;
+
+				if (this.objectModifier.IsAttachmentLeft(obj))
+				{
+					p = new Point(rect.Left, rect.Center.Y);
+					this.DrawTriangleLeft(graphics, p, color);
+				}
+
+				if (this.objectModifier.IsAttachmentRight(obj))
+				{
+					p = new Point(rect.Right, rect.Center.Y);
+					this.DrawTriangleRight(graphics, p, color);
+				}
+
+				if (this.objectModifier.IsAttachmentBottom(obj))
+				{
+					p = new Point(rect.Center.X, rect.Bottom);
+					this.DrawTriangleBottom(graphics, p, color);
+				}
+
+				if (this.objectModifier.IsAttachmentTop(obj))
+				{
+					p = new Point(rect.Center.X, rect.Top);
+					this.DrawTriangleTop(graphics, p, color);
+				}
 			}
 		}
 
-		protected void DrawAttachment(Graphics graphics, Point p1, Point p2, bool rigid, Color color)
+		protected void DrawSpring(Graphics graphics, Point p1, Point p2, bool rigid, Color color)
 		{
-			//	Dessine un attachement horizontal ou vertical d'un objet.
+			//	Dessine un ressort horizontal ou vertical d'un objet.
 			Point p1a = Point.Scale(p1, p2, PanelEditor.attachmentScale);
 			Point p2a = Point.Scale(p2, p1, PanelEditor.attachmentScale);
 
@@ -2995,6 +3025,54 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Dessine les extrémités.
 			graphics.AddFilledCircle(p1, 3.0);
 			graphics.AddFilledCircle(p2, 3.0);
+			graphics.RenderSolid(color);
+		}
+
+		protected void DrawTriangleLeft(Graphics graphics, Point p, Color color)
+		{
+			Path path = new Path();
+			path.MoveTo(p.X-this.context.DockedTriangleLength, p.Y);
+			path.LineTo(p.X, p.Y-this.context.DockedTriangleThickness);
+			path.LineTo(p.X, p.Y+this.context.DockedTriangleThickness);
+			path.Close();
+
+			graphics.PaintSurface(path);
+			graphics.RenderSolid(color);
+		}
+
+		protected void DrawTriangleRight(Graphics graphics, Point p, Color color)
+		{
+			Path path = new Path();
+			path.MoveTo(p.X+this.context.DockedTriangleLength, p.Y);
+			path.LineTo(p.X, p.Y-this.context.DockedTriangleThickness);
+			path.LineTo(p.X, p.Y+this.context.DockedTriangleThickness);
+			path.Close();
+
+			graphics.PaintSurface(path);
+			graphics.RenderSolid(color);
+		}
+
+		protected void DrawTriangleBottom(Graphics graphics, Point p, Color color)
+		{
+			Path path = new Path();
+			path.MoveTo(p.X, p.Y-this.context.DockedTriangleLength);
+			path.LineTo(p.X-this.context.DockedTriangleThickness, p.Y);
+			path.LineTo(p.X+this.context.DockedTriangleThickness, p.Y);
+			path.Close();
+
+			graphics.PaintSurface(path);
+			graphics.RenderSolid(color);
+		}
+
+		protected void DrawTriangleTop(Graphics graphics, Point p, Color color)
+		{
+			Path path = new Path();
+			path.MoveTo(p.X, p.Y+this.context.DockedTriangleLength);
+			path.LineTo(p.X-this.context.DockedTriangleThickness, p.Y);
+			path.LineTo(p.X+this.context.DockedTriangleThickness, p.Y);
+			path.Close();
+
+			graphics.PaintSurface(path);
 			graphics.RenderSolid(color);
 		}
 
