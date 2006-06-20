@@ -906,8 +906,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 					this.SetHilitedZOrderRectangle(Rectangle.Empty);
 				}
-
-				if (this.objectModifier.IsChildrenDocked(parent))
+				else if (this.objectModifier.IsChildrenDocked(parent))
 				{
 					this.constrainsList.Activate(Rectangle.Empty, 0, null);
 
@@ -918,6 +917,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 					Rectangle hilite;
 					this.ZOrderDetect(initialPos, parent, out group, out order, out ha, out va, out hilite);
 					this.SetHilitedZOrderRectangle(hilite);
+				}
+				else
+				{
+					this.constrainsList.Activate(Rectangle.Empty, 0, null);
+					this.SetHilitedZOrderRectangle(Rectangle.Empty);
 				}
 
 				this.creatingWindow.WindowLocation = this.creatingOrigin + pos;
@@ -1210,7 +1214,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 				this.handlesList.DraggingStop(pos);
 				this.isHandling = false;
-				this.OnChildrenChanged();
+				this.OnChildrenGeometryChanged();
 				this.module.MainWindow.UpdateInfoViewer();
 			}
 		}
@@ -1298,8 +1302,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 				this.SetHilitedZOrderRectangle(Rectangle.Empty);
 			}
-
-			if (this.objectModifier.IsChildrenDocked(parent))
+			else if (this.objectModifier.IsChildrenDocked(parent))
 			{
 				this.constrainsList.Activate(Rectangle.Empty, 0, null);
 
@@ -1310,6 +1313,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 				Rectangle hilite;
 				this.ZOrderDetect(pos, parent, out group, out order, out ha, out va, out hilite);
 				this.SetHilitedZOrderRectangle(hilite);
+			}
+			else
+			{
+				this.constrainsList.Activate(Rectangle.Empty, 0, null);
+				this.SetHilitedZOrderRectangle(Rectangle.Empty);
 			}
 
 			this.draggingWindow.WindowLocation = this.draggingOrigin + pos + adjust;
@@ -1337,7 +1345,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				{
 					Rectangle initial = this.SelectBounds;
 					this.MoveSelection(this.draggingRectangle.BottomLeft - initial.BottomLeft, parent);
-					this.OnChildrenChanged();
+					this.OnChildrenGeometryChanged();
 				}
 
 				if (this.objectModifier.IsChildrenDocked(parent))
@@ -1349,7 +1357,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 					Rectangle hilite;
 					this.ZOrderDetect(pos, parent, out group, out order, out ha, out va, out hilite);
 					this.ZOrderChangeSelection(group, order, ha, va);
-					this.OnChildrenChanged();
+					this.OnChildrenGeometryChanged();
 				}
 			}
 			else  // relâché hors de la fenêtre ?
@@ -1361,7 +1369,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			this.SetHilitedParent(null);
 			this.SetHilitedZOrderRectangle(Rectangle.Empty);
-			this.SetHilitedParent(null);
 			this.isDragging = false;
 			this.draggingArraySelected = null;
 			this.constrainsList.Ending();
@@ -1561,11 +1568,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void SetHilitedParent(Widget obj)
 		{
 			//	Détermine l'objet parent à mettre en évidence lors d'un survol.
-			if (obj == this.panel)
-			{
-				//?obj = null;  // pas utile de mettre en évidence le conteneur principal !
-			}
-
 			if (this.hilitedParent != obj)
 			{
 				this.hilitedParent = obj;
@@ -1965,7 +1967,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.objectModifier.SetBounds(obj, bounds);
 
 				this.handlesList.UpdateGeometry();
-				this.OnChildrenChanged();
+				this.OnChildrenGeometryChanged();
 			}
 		}
 
@@ -2280,6 +2282,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 						va = ObjectModifier.DockedVerticalAttachment.Top;
 					}
 				}
+
+				order = parent.Children.Count;
 			}
 			else
 			{
@@ -2351,6 +2355,17 @@ namespace Epsitec.Common.Designer.MyWidgets
 				hilite.Inflate(t);
 			}
 
+			if (this.selectedObjects.Contains(obj))
+			{
+				//	Un objet sélectionné n'est jamais pris en compte.
+				group = null;
+				order = -1;  // aucun changement
+				ha = ObjectModifier.DockedHorizontalAttachment.None;
+				va = ObjectModifier.DockedVerticalAttachment.None;
+				hilite = Rectangle.Empty;
+				return;
+			}
+
 			if (this.selectedObjects.Count != 0)
 			{
 				//	Un ZOrder équivalent au ZOrder de l'objet actuellement sélectionné n'est
@@ -2362,6 +2377,21 @@ namespace Epsitec.Common.Designer.MyWidgets
 					{
 						if (selectedObj.ZOrder == order || selectedObj.ZOrder == order-1)
 						{
+							if (this.objectModifier.IsChildrenHorizontal(parent))
+							{
+								if (this.objectModifier.GetDockedHorizontalAttachment(selectedObj) != ha)
+								{
+									continue;
+								}
+							}
+							else
+							{
+								if (this.objectModifier.GetDockedVerticalAttachment(selectedObj) != va)
+								{
+									continue;
+								}
+							}
+
 							group = null;
 							order = -1;  // aucun changement
 							ha = ObjectModifier.DockedHorizontalAttachment.None;
@@ -2377,27 +2407,113 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected Widget ZOrderDetectNearest(Point pos, Widget parent)
 		{
 			//	Détecte l'objet le plus proche de la souris.
-			Widget bestObj = null;
-			double bestDistance = 1000000;
+			bool horizontal = (this.objectModifier.GetChildrenPlacement(parent) == ObjectModifier.ChildrenPlacement.HorizontalDocked);
+			Widget minWidget = null;
+			Widget maxWidget = null;
+
+			//	Cherche les objets aux 'extrémités'. Par exemple, en mode VerticalDocked, minWidget
+			//	sera l'objet docké en bas le plus haut, et maxWidget l'objet docké en haut le plus bas.
+			for (int i=parent.Children.Count-1; i>=0; i--)
+			{
+				Widget obj = parent.Children[i] as Widget;
+
+				if (horizontal)
+				{
+					if (minWidget == null && this.objectModifier.IsAttachmentLeft(obj))
+					{
+						minWidget = obj;
+					}
+
+					if (maxWidget == null && this.objectModifier.IsAttachmentRight(obj))
+					{
+						maxWidget = obj;
+					}
+				}
+				else
+				{
+					if (minWidget == null && this.objectModifier.IsAttachmentBottom(obj))
+					{
+						minWidget = obj;
+					}
+
+					if (maxWidget == null && this.objectModifier.IsAttachmentTop(obj))
+					{
+						maxWidget = obj;
+					}
+				}
+			}
+
+			//	S'il n'existe aucun objet à une 'extrémité', détecte si la position est
+			//	dans cette zone pour retourner null. Cela permettra à ZOrderDetect d'y
+			//	placer un objet.
+			if (minWidget != null && maxWidget == null)
+			{
+				Rectangle box = parent.Client.Bounds;
+
+				if (horizontal)
+				{
+					if (pos.X >= box.Right-parent.Padding.Right)
+					{
+						return null;
+					}
+				}
+				else
+				{
+					if (pos.Y >= box.Top-parent.Padding.Top)
+					{
+						return null;
+					}
+				}
+			}
+
+			if (minWidget == null && maxWidget != null)
+			{
+				Rectangle box = parent.Client.Bounds;
+
+				if (horizontal)
+				{
+					if (pos.X <= box.Left+parent.Padding.Left)
+					{
+						return null;
+					}
+				}
+				else
+				{
+					if (pos.Y <= box.Bottom+parent.Padding.Bottom)
+					{
+						return null;
+					}
+				}
+			}
+
+			//	Détecte l'objet le plus proche, qu'il soit sélectionné ou non.
+			Widget best = null;
+			double min = 1000000;
 
 			for (int i=parent.Children.Count-1; i>=0; i--)
 			{
 				Widget obj = parent.Children[i] as Widget;
 
-				if (!this.selectedObjects.Contains(obj))
-				{
-					Rectangle bounds = this.objectModifier.GetBounds(obj);
-					double distance = Point.Distance(bounds.Center, pos);
+				Rectangle bounds = this.objectModifier.GetBounds(obj);
+				double d;
 
-					if (bestDistance > distance)
-					{
-						bestDistance = distance;
-						bestObj = obj;
-					}
+				if (horizontal)
+				{
+					d = System.Math.Abs(bounds.Center.X-pos.X);
+				}
+				else
+				{
+					d = System.Math.Abs(bounds.Center.Y-pos.Y);
+				}
+
+				if (min > d)
+				{
+					min = d;
+					best = obj;
 				}
 			}
 
-			return bestObj;
+			return best;
 		}
 
 		protected void SetHilitedZOrderRectangle(Rectangle rect)
@@ -3103,24 +3219,24 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
-		protected virtual void OnChildrenChanged()
+		protected virtual void OnChildrenGeometryChanged()
 		{
-			EventHandler handler = (EventHandler) this.GetUserEventHandler("ChildrenChanged");
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("ChildrenGeometryChanged");
 			if (handler != null)
 			{
 				handler(this);
 			}
 		}
 
-		public event EventHandler ChildrenChanged
+		public event EventHandler ChildrenGeometryChanged
 		{
 			add
 			{
-				this.AddUserEventHandler("ChildrenChanged", value);
+				this.AddUserEventHandler("ChildrenGeometryChanged", value);
 			}
 			remove
 			{
-				this.RemoveUserEventHandler("ChildrenChanged", value);
+				this.RemoveUserEventHandler("ChildrenGeometryChanged", value);
 			}
 		}
 
