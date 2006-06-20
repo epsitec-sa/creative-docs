@@ -122,6 +122,7 @@ namespace Epsitec.Common.Designer
 		{
 			yield return new Proxies.Geometry(widget, this.objectModifier);
 			yield return new Proxies.Layout(widget, this.objectModifier);
+			yield return new Proxies.Padding(widget, this.objectModifier);
 		}
 
 		private void CreateUserInterface(Widget container, IProxy proxy)

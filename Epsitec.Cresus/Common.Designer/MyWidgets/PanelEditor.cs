@@ -1109,7 +1109,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				if (this.objectModifier.GetDockedHorizontalAttachment(obj) == ObjectModifier.DockedHorizontalAttachment.None||
 					this.objectModifier.GetDockedVerticalAttachment(obj) == ObjectModifier.DockedVerticalAttachment.None)
 				{
-					obj.Margins = new Margins(5, 5, 5, 5);
+					this.objectModifier.SetMargins(obj, new Margins(5, 5, 5, 5));
 
 					if (this.objectModifier.IsChildrenHorizontal(parent))
 					{

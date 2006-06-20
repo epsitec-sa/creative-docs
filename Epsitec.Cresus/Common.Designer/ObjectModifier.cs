@@ -217,8 +217,7 @@ namespace Epsitec.Common.Designer
 		{
 			//	Choix de la position et des dimensions de l'objet.
 			//	Uniquement pour les objets Anchored.
-			ChildrenPlacement placement = this.GetParentPlacement(obj);
-			System.Diagnostics.Debug.Assert(placement == ChildrenPlacement.Anchored);
+			System.Diagnostics.Debug.Assert(this.IsBounds(obj));
 
 			bounds.Normalise();
 
@@ -302,8 +301,7 @@ namespace Epsitec.Common.Designer
 		{
 			//	Retourne les marges de l'objet.
 			//	Uniquement pour les objets Docked.
-			ChildrenPlacement placement = this.GetParentPlacement(obj);
-			if (placement == ChildrenPlacement.HorizontalDocked || placement == ChildrenPlacement.VerticalDocked)
+			if (this.IsMargins(obj))
 			{
 				return obj.Margins;
 			}
@@ -315,12 +313,43 @@ namespace Epsitec.Common.Designer
 		{
 			//	Choix des marges de l'objet.
 			//	Uniquement pour les objets Docked.
-			ChildrenPlacement placement = this.GetParentPlacement(obj);
-			System.Diagnostics.Debug.Assert(placement == ChildrenPlacement.HorizontalDocked || placement == ChildrenPlacement.VerticalDocked);
+			System.Diagnostics.Debug.Assert(this.IsMargins(obj));
 
 			if (obj.Margins != margins)
 			{
 				obj.Margins = margins;
+				this.Invalidate();
+			}
+		}
+
+
+		public bool IsPadding(Widget obj)
+		{
+			//	Indique si l'objet a des marges internes.
+			return (obj is AbstractGroup);
+		}
+
+		public Margins GetPadding(Widget obj)
+		{
+			//	Retourne les marges internes de l'objet.
+			//	Uniquement pour les objets AbstractGroup.
+			if (this.IsPadding(obj))
+			{
+				return obj.Padding;
+			}
+
+			return Margins.Zero;
+		}
+
+		public void SetPadding(Widget obj, Margins padding)
+		{
+			//	Choix des marges internes de l'objet.
+			//	Uniquement pour les objets AbstractGroup.
+			System.Diagnostics.Debug.Assert(this.IsPadding(obj));
+
+			if (obj.Padding != padding)
+			{
+				obj.Padding = padding;
 				this.Invalidate();
 			}
 		}
@@ -638,8 +667,7 @@ namespace Epsitec.Common.Designer
 		{
 			//	Retourne l'attachement vertical de l'objet.
 			//	Uniquement pour les objets VerticalDocked.
-			ChildrenPlacement placement = this.GetParentPlacement(obj);
-			if (placement == ChildrenPlacement.VerticalDocked)
+			if (this.IsDockedVerticalAttachment(obj))
 			{
 				DockStyle style = obj.Dock;
 				if (style == DockStyle.Fill  )  return DockedVerticalAttachment.Fill;
@@ -654,8 +682,7 @@ namespace Epsitec.Common.Designer
 		{
 			//	Choix de l'attachement vertical de l'objet.
 			//	Uniquement pour les objets VerticalDocked.
-			ChildrenPlacement placement = this.GetParentPlacement(obj);
-			System.Diagnostics.Debug.Assert(placement == ChildrenPlacement.VerticalDocked);
+			System.Diagnostics.Debug.Assert(this.IsDockedVerticalAttachment(obj));
 
 			DockStyle style = obj.Dock;
 
@@ -694,8 +721,7 @@ namespace Epsitec.Common.Designer
 		{
 			//	Retourne l'attachement horizontal de l'objet.
 			//	Uniquement pour les objets HorizontalDocked.
-			ChildrenPlacement placement = this.GetParentPlacement(obj);
-			if (placement == ChildrenPlacement.HorizontalDocked)
+			if (this.IsDockedHorizontalAttachment(obj))
 			{
 				DockStyle style = obj.Dock;
 				if (style == DockStyle.Fill )  return DockedHorizontalAttachment.Fill;
@@ -710,8 +736,7 @@ namespace Epsitec.Common.Designer
 		{
 			//	Choix de l'attachement horizontal de l'objet.
 			//	Uniquement pour les objets HorizontalDocked.
-			ChildrenPlacement placement = this.GetParentPlacement(obj);
-			System.Diagnostics.Debug.Assert(placement == ChildrenPlacement.HorizontalDocked);
+			System.Diagnostics.Debug.Assert(this.IsDockedHorizontalAttachment(obj));
 
 			DockStyle style = obj.Dock;
 
@@ -750,8 +775,7 @@ namespace Epsitec.Common.Designer
 		{
 			//	Retourne l'alignement horizontal de l'objet.
 			//	Uniquement pour les objets VerticalDocked.
-			ChildrenPlacement placement = this.GetParentPlacement(obj);
-			if (placement == ChildrenPlacement.HorizontalDocked || placement == ChildrenPlacement.VerticalDocked)
+			if (this.IsDockedHorizontalAlignment(obj))
 			{
 				HorizontalAlignment ha = obj.HorizontalAlignment;
 				if (ha == HorizontalAlignment.Stretch)  return DockedHorizontalAlignment.Stretch;
@@ -767,8 +791,7 @@ namespace Epsitec.Common.Designer
 		{
 			//	Choix de l'alignement horizontal de l'objet.
 			//	Uniquement pour les objets VerticalDocked.
-			ChildrenPlacement placement = this.GetParentPlacement(obj);
-			System.Diagnostics.Debug.Assert(placement == ChildrenPlacement.HorizontalDocked || placement == ChildrenPlacement.VerticalDocked);
+			System.Diagnostics.Debug.Assert(this.IsDockedHorizontalAlignment(obj));
 
 			HorizontalAlignment ha = obj.HorizontalAlignment;
 
@@ -810,8 +833,7 @@ namespace Epsitec.Common.Designer
 		{
 			//	Retourne l'alignement vertical de l'objet.
 			//	Uniquement pour les objets HorizontalDocked.
-			ChildrenPlacement placement = this.GetParentPlacement(obj);
-			if (placement == ChildrenPlacement.HorizontalDocked || placement == ChildrenPlacement.VerticalDocked)
+			if (this.IsDockedVerticalAlignment(obj))
 			{
 				VerticalAlignment va = obj.VerticalAlignment;
 				if (va == VerticalAlignment.Stretch)  return DockedVerticalAlignment.Stretch;
@@ -827,8 +849,7 @@ namespace Epsitec.Common.Designer
 		{
 			//	Choix de l'alignement vertical de l'objet.
 			//	Uniquement pour les objets HorizontalDocked.
-			ChildrenPlacement placement = this.GetParentPlacement(obj);
-			System.Diagnostics.Debug.Assert(placement == ChildrenPlacement.HorizontalDocked || placement == ChildrenPlacement.VerticalDocked);
+			System.Diagnostics.Debug.Assert(this.IsDockedVerticalAlignment(obj));
 
 			VerticalAlignment va = obj.VerticalAlignment;
 
