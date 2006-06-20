@@ -165,6 +165,26 @@ namespace Epsitec.Common.Types
 		#endregion
 		
 		#region INamedType Members
+
+		public string DefaultController
+		{
+			get
+			{
+				return "Enum";
+			}
+		}
+
+		public string DefaultControllerParameter
+		{
+			get
+			{
+				return null;
+			}
+		}
+
+		#endregion
+		
+		#region ISystemType Members
 		public virtual System.Type				SystemType
 		{
 			get

@@ -1,17 +1,17 @@
-//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Widgets
 {
 	using Epsitec.Common.Drawing;
-	
+
 	public delegate void PaintEventHandler(object sender, PaintEventArgs e);
 	public delegate void MessageEventHandler(object sender, MessageEventArgs e);
 	public delegate void DragEventHandler(object sender, DragEventArgs e);
 	public delegate void SelectionEventHandler(object sender, object o);
 	public delegate void WindowDragEventHandler(object sender, WindowDragEventArgs e);
-	
-	
+
+
 	/// <summary>
 	/// La classe PaintEventArgs décrit les arguments pour une opération de dessin, ce qui
 	/// comprend un contexte graphique et un rectangle de clipping.
@@ -23,25 +23,37 @@ namespace Epsitec.Common.Widgets
 			this.graphics  = graphics;
 			this.clip_rect = clip_rect;
 		}
-		
-		
-		public Graphics							Graphics
+
+
+		public Graphics Graphics
 		{
-			get { return this.graphics; }
+			get
+			{
+				return this.graphics;
+			}
 		}
-		
-		public Drawing.Rectangle				ClipRectangle
+
+		public Drawing.Rectangle ClipRectangle
 		{
-			get { return this.clip_rect; }
+			get
+			{
+				return this.clip_rect;
+			}
 		}
-		
-		public bool								Suppress
+
+		public bool Suppress
 		{
-			get { return this.suppress; }
-			set { this.suppress = value; }
+			get
+			{
+				return this.suppress;
+			}
+			set
+			{
+				this.suppress = value;
+			}
 		}
-		
-		
+
+
 		#region IDisposable Members
 
 		public void Dispose()
@@ -49,14 +61,14 @@ namespace Epsitec.Common.Widgets
 			this.Dispose (true);
 			System.GC.SuppressFinalize (this);
 		}
-		
+
 		#endregion
-		
-		~ PaintEventArgs()
+
+		~PaintEventArgs()
 		{
 			this.Dispose (false);
 		}
-		
+
 		protected virtual void Dispose(bool disposing)
 		{
 			if (disposing && (this.graphics != null))
@@ -65,14 +77,14 @@ namespace Epsitec.Common.Widgets
 				this.graphics = null;
 			}
 		}
-		
-		
-		private Graphics						graphics;
-		private Drawing.Rectangle				clip_rect;
-		private bool							suppress;
+
+
+		private Graphics graphics;
+		private Drawing.Rectangle clip_rect;
+		private bool suppress;
 	}
-	
-	
+
+
 	/// <summary>
 	/// La classe MessageEventArgs décrit un événement produit par l'utilisateur.
 	/// </summary>
@@ -83,30 +95,42 @@ namespace Epsitec.Common.Widgets
 			this.message = message;
 			this.point   = point;
 		}
-		
-		
-		public Message							Message
+
+
+		public Message Message
 		{
-			get { return this.message; }
+			get
+			{
+				return this.message;
+			}
 		}
-		
-		public Drawing.Point					Point
+
+		public Drawing.Point Point
 		{
-			get { return this.point; }
+			get
+			{
+				return this.point;
+			}
 		}
-		
-		public bool								Suppress
+
+		public bool Suppress
 		{
-			get { return this.suppress; }
-			set { this.suppress = value; }
+			get
+			{
+				return this.suppress;
+			}
+			set
+			{
+				this.suppress = value;
+			}
 		}
-		
-		
-		private Message							message;
-		private Drawing.Point					point;
-		private bool							suppress;
+
+
+		private Message message;
+		private Drawing.Point point;
+		private bool suppress;
 	}
-	
+
 	/// <summary>
 	/// La classe DragEventArgs décrit un déplacement (drag) produit par l'utilisateur.
 	/// </summary>
@@ -116,39 +140,54 @@ namespace Epsitec.Common.Widgets
 		{
 			this.p1 = p1;
 			this.p2 = p2;
-			
+
 			this.offset = p2 - p1;
 		}
-		
-		
-		public Drawing.Point					FromPoint
+
+
+		public Drawing.Point FromPoint
 		{
-			get { return this.p1; }
+			get
+			{
+				return this.p1;
+			}
 		}
-		
-		public Drawing.Point					ToPoint
+
+		public Drawing.Point ToPoint
 		{
-			get { return this.p2; }
+			get
+			{
+				return this.p2;
+			}
 		}
-		
-		public Drawing.Point					Offset
+
+		public Drawing.Point Offset
 		{
-			get { return this.offset; }
-			set { this.offset = value; }
+			get
+			{
+				return this.offset;
+			}
+			set
+			{
+				this.offset = value;
+			}
 		}
-		
-		public Drawing.Point					InitialOffset
+
+		public Drawing.Point InitialOffset
 		{
-			get { return this.p2 - this.p1; }
+			get
+			{
+				return this.p2 - this.p1;
+			}
 		}
-		
-		
-		private Drawing.Point					p1;
-		private Drawing.Point					p2;
-		private Drawing.Point					offset;
+
+
+		private Drawing.Point p1;
+		private Drawing.Point p2;
+		private Drawing.Point offset;
 	}
-	
-	
+
+
 	/// <summary>
 	/// Summary description for WindowDragEventArgs.
 	/// </summary>
@@ -158,17 +197,17 @@ namespace Epsitec.Common.Widgets
 		{
 			this.original = args as System.Windows.Forms.DragEventArgs;
 		}
-		
-		
-		public Support.Clipboard.ReadData		Data
+
+
+		public Support.Clipboard.ReadData Data
 		{
 			get
 			{
 				return Support.Clipboard.CreateReadDataFromIDataObject (this.original.Data);
 			}
 		}
-		
-		public bool								AcceptDrop
+
+		public bool AcceptDrop
 		{
 			get
 			{
@@ -189,8 +228,8 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 		}
-		
-		
-		System.Windows.Forms.DragEventArgs		original;
+
+
+		System.Windows.Forms.DragEventArgs original;
 	}
 }

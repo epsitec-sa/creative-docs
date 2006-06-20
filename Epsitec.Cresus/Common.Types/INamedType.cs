@@ -10,5 +10,14 @@ namespace Epsitec.Common.Types
 	/// </summary>
 	public interface INamedType : ICaption, IName, ISystemType
 	{
+		string DefaultController
+		{
+			get;
+		}
+
+		string DefaultControllerParameter
+		{
+			get;
+		}
 	}
 }

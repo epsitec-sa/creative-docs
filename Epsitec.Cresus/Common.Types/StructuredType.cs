@@ -9,16 +9,14 @@ namespace Epsitec.Common.Types
 	/// The <c>StructuredType</c> class describes the type of the data stored in
 	/// a <see cref="T:StructuredData"/> class.
 	/// </summary>
-	public class StructuredType : INamedType, IStructuredType
+	public class StructuredType : NamedDependencyObject, INamedType, IStructuredType
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:StructuredType"/> class.
 		/// </summary>
-		public StructuredType()
+		public StructuredType() : base ("Structure")
 		{
 			this.fields = new Collections.HostedDictionary<string, INamedType> (this.NotifyFieldInserted, this.NotifyFieldRemoved);
-			this.name = null;
-			this.captionId = -1;
 		}
 
 		/// <summary>
@@ -83,7 +81,15 @@ namespace Epsitec.Common.Types
 
 		#region INamedType Members
 
-		public System.Type SystemType
+		public string DefaultController
+		{
+			get
+			{
+				return null;
+			}
+		}
+
+		public string DefaultControllerParameter
 		{
 			get
 			{
@@ -92,26 +98,14 @@ namespace Epsitec.Common.Types
 		}
 
 		#endregion
+		
+		#region ISystemType Members
 
-		#region INameCaption Members
-
-		public long CaptionId
+		public System.Type SystemType
 		{
 			get
 			{
-				return this.captionId;
-			}
-		}
-
-		#endregion
-
-		#region IName Members
-
-		public string Name
-		{
-			get
-			{
-				return this.name;
+				return null;
 			}
 		}
 
@@ -125,8 +119,6 @@ namespace Epsitec.Common.Types
 		{
 		}
 
-		private string name;
-		private long captionId;
 		private Collections.HostedDictionary<string, INamedType> fields;
 	}
 }

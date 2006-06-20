@@ -1,10 +1,10 @@
-//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Widgets
 {
-	using ContentAlignment = Drawing.ContentAlignment;
-	
+	using ContentAlignment=Drawing.ContentAlignment;
+
 	/// <summary>
 	/// La classe CheckButton réalise un bouton cochable.
 	/// </summary>
@@ -14,23 +14,24 @@ namespace Epsitec.Common.Widgets
 		{
 			this.AutoToggle = true;
 		}
-		
-		public CheckButton(Widget embedder) : this ()
+
+		public CheckButton(Widget embedder)
+			: this ()
 		{
-			this.SetEmbedder(embedder);
+			this.SetEmbedder (embedder);
 		}
 
-		
+
 		static CheckButton()
 		{
 			Helpers.VisualPropertyMetadata metadataAlign = new Helpers.VisualPropertyMetadata (Drawing.ContentAlignment.MiddleLeft, Helpers.VisualPropertyMetadataOptions.AffectsTextLayout);
 			Helpers.VisualPropertyMetadata metadataDy = new Helpers.VisualPropertyMetadata (Widget.DefaultFontHeight+1, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
-			
+
 			Visual.ContentAlignmentProperty.OverrideMetadata (typeof (CheckButton), metadataAlign);
 			Visual.PreferredHeightProperty.OverrideMetadata (typeof (CheckButton), metadataDy);
 		}
-		
-		public Drawing.Point					LabelOffset
+
+		public Drawing.Point LabelOffset
 		{
 			get
 			{
@@ -59,42 +60,42 @@ namespace Epsitec.Common.Widgets
 				return base.GetShapeMargins ();
 			}
 		}
-		
+
 		public override Drawing.Size GetBestFitSize()
 		{
 			Drawing.Size size = (this.TextLayout == null) ? Drawing.Size.Empty : this.TextLayout.SingleLineSize;
-			
+
 			size.Width  = System.Math.Ceiling (size.Width + CheckButton.CheckWidth + 3);
 			size.Height = System.Math.Max (System.Math.Ceiling (size.Height), CheckButton.CheckHeight);
-			
+
 			return size;
 		}
-		
-		
+
+
 		protected override void UpdateTextLayout()
 		{
 			System.Diagnostics.Debug.Assert (this.TextLayout != null);
-			
+
 			Drawing.Point offset = this.LabelOffset;
 			double dx = this.Client.Size.Width - offset.X;
 			double dy = this.Client.Size.Height;
-			
+
 			this.TextLayout.Alignment  = this.ContentAlignment;
 			this.TextLayout.LayoutSize = new Drawing.Size (dx, dy);
 		}
-		
+
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
 
 			Drawing.Rectangle rect  = new Drawing.Rectangle (0, (this.Client.Size.Height-CheckButton.CheckHeight)/2, CheckButton.CheckHeight, CheckButton.CheckHeight);
-			WidgetPaintState       state = this.PaintState;
-			
+			WidgetPaintState state = this.PaintState;
+
 			adorner.PaintCheck (graphics, rect, state);
 			adorner.PaintGeneralTextLayout (graphics, clipRect, this.LabelOffset, this.TextLayout, state, PaintTextStyle.CheckButton, TextDisplayMode.Default, this.BackColor);
 		}
 
-		
+
 		protected static readonly double CheckHeight = 13;
 		protected static readonly double CheckWidth  = 20;
 	}

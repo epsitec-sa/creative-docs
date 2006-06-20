@@ -1,4 +1,4 @@
-//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Cresus.Database
@@ -61,6 +61,21 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
+		public string							DefaultController
+		{
+			get
+			{
+				return "String";
+			}
+		}
+		
+		public string							DefaultControllerParameter
+		{
+			get
+			{
+				return null;
+			}
+		}
 		
 		internal override void SerializeXmlAttributes(System.Text.StringBuilder buffer, bool full)
 		{
