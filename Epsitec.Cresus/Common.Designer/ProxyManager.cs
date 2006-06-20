@@ -143,11 +143,24 @@ namespace Epsitec.Common.Designer
 				
 				BindingExpression expression = placeholder.GetBindingExpression(Placeholder.ValueProperty);
 				object sourceTypeObject = expression.GetSourceTypeObject();
-				System.Type sourceType = TypeRosetta.GetSystemTypeFromTypeObject(sourceTypeObject);
+				INamedType namedType = expression.GetSourceNamedType ();
+				System.Type sourceType = TypeRosetta.GetSystemTypeFromTypeObject (sourceTypeObject);
 
 				System.Diagnostics.Debug.Assert(sourceType != null);
 				
-				placeholder.Controller = sourceType.IsEnum ? "Enum" : "String";
+				string controller;
+				string controllerParameter;
+				
+				if (Epsitec.Common.Widgets.Controllers.Factory.GetDefaultController(expression, out controller, out controllerParameter))
+				{
+					placeholder.Controller = controller;
+					placeholder.ControllerParameter = controllerParameter;
+				}
+				else
+				{
+					placeholder.Controller = "String";
+				}
+				
 				panel.AddPlaceHolder(placeholder);
 			}
 		}

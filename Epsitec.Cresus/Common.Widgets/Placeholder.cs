@@ -278,6 +278,11 @@ namespace Epsitec.Common.Widgets
 		
 		#endregion
 
+		static Placeholder()
+		{
+			Controllers.Factory.Setup ();
+		}
+
 		private static void NotifyValueChanged(DependencyObject o, object oldValue, object newValue)
 		{
 			Placeholder that = (Placeholder) o;

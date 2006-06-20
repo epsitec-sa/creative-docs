@@ -29,6 +29,29 @@ namespace Epsitec.Common.Widgets.Controllers
 			return null;
 		}
 
+		public static bool GetDefaultController(BindingExpression binding, out string controllerName, out string controllerParameter)
+		{
+			controllerName = null;
+			controllerParameter = null;
+			
+			if (binding == null)
+			{
+				return false;
+			}
+
+			INamedType type = binding.GetSourceNamedType ();
+
+			if (type == null)
+			{
+				return false;
+			}
+
+			controllerName = type.DefaultController;
+			controllerParameter = type.DefaultControllerParameter;
+			
+			return string.IsNullOrEmpty (controllerName) ? false : true;
+		}
+
 		public static void Setup()
 		{
 		}
