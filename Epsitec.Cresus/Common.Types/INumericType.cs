@@ -19,10 +19,11 @@ namespace Epsitec.Common.Types
 		}
 
 		/// <summary>
-		/// Gets the default increment step.
+		/// Gets the preferred range of values. This is not used as a constraint;
+		/// it is just a hint for the user interface controls.
 		/// </summary>
-		/// <value>The default increment step.</value>
-		decimal DefaultIncrementStep
+		/// <value>The preferred range of values.</value>
+		DecimalRange PreferredRange
 		{
 			get;
 		}
