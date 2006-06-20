@@ -1,6 +1,8 @@
 //	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
+[assembly: Epsitec.Common.Types.DependencyClass (typeof (Epsitec.Common.Widgets.StaticText))]
+
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>

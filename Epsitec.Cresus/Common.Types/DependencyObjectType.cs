@@ -280,9 +280,15 @@ namespace Epsitec.Common.Types
 			System.Reflection.Module module = typeof (DependencyObjectType).Module;
 			System.Reflection.Emit.DynamicMethod dynamicMethod = new System.Reflection.Emit.DynamicMethod ("DynamicAllocator", this.systemType, System.Type.EmptyTypes, module, true);
 			System.Reflection.Emit.ILGenerator ilGen = dynamicMethod.GetILGenerator ();
+			System.Reflection.ConstructorInfo constructor = this.systemType.GetConstructor (System.Type.EmptyTypes);
 
+			if (constructor == null)
+			{
+				throw new System.InvalidOperationException (string.Format ("Class {0} has no constructor", this.systemType.Name));
+			}
+			
 			ilGen.Emit (System.Reflection.Emit.OpCodes.Nop);
-			ilGen.Emit (System.Reflection.Emit.OpCodes.Newobj, this.systemType.GetConstructor (System.Type.EmptyTypes));
+			ilGen.Emit (System.Reflection.Emit.OpCodes.Newobj, constructor);
 			ilGen.Emit (System.Reflection.Emit.OpCodes.Ret);
 
 			this.allocator = (Allocator) dynamicMethod.CreateDelegate (typeof (Allocator));

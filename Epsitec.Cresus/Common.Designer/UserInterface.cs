@@ -27,7 +27,50 @@ namespace Epsitec.Common.Designer
 
 			return panel;
 		}
-		
+
+		public static string SerializePanel(UI.Panel panel)
+		{
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+			System.IO.StringWriter stringWriter = new System.IO.StringWriter (buffer);
+			System.Xml.XmlTextWriter xmlWriter = new System.Xml.XmlTextWriter (stringWriter);
+
+			Types.Serialization.Context context = new Types.Serialization.SerializerContext (new Types.Serialization.IO.XmlWriter (xmlWriter));
+			
+			xmlWriter.Formatting = System.Xml.Formatting.None;
+			xmlWriter.WriteStartElement ("panel");
+
+			context.ActiveWriter.WriteAttributeStrings ();
+			// TODO: utiliser Panel.FillSerializationContext
+			
+			Types.Storage.Serialize (panel, context);
+
+			xmlWriter.WriteEndElement ();
+			xmlWriter.Flush ();
+			xmlWriter.Close ();
+
+			return buffer.ToString ();
+		}
+
+		public static UI.Panel DeserializePanel(string xml, Support.ResourceManager manager)
+		{
+			System.IO.StringReader stringReader = new System.IO.StringReader (xml);
+			System.Xml.XmlTextReader xmlReader = new System.Xml.XmlTextReader (stringReader);
+
+			xmlReader.Read ();
+			
+			System.Diagnostics.Debug.Assert (xmlReader.NodeType == System.Xml.XmlNodeType.Element);
+			System.Diagnostics.Debug.Assert (xmlReader.LocalName == "panel");
+
+			Types.Serialization.Context context = new Types.Serialization.DeserializerContext (new Types.Serialization.IO.XmlReader (xmlReader));
+
+			context.ExternalMap.Record (Types.Serialization.Context.WellKnownTagResourceManager, manager);
+			// TODO: utiliser Panel.FillSerializationContext
+
+			UI.Panel panel = Types.Storage.Deserialize (context) as UI.Panel;
+			
+			return panel;
+
+		}
 		
 		private class CustomerRecord : Types.DependencyObject
 		{
