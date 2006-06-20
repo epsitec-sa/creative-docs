@@ -29,8 +29,15 @@ namespace Epsitec.Common.Types
 		{
 			if (value is long)
 			{
-				long num = (long) value;
-				return this.Range.Constrain (num) == num;
+				if (this.Range.IsEmpty)
+				{
+					return true;
+				}
+				else
+				{
+					long num = (long) value;
+					return this.Range.Constrain (num) == num;
+				}
 			}
 			
 			return false;
