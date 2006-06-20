@@ -40,19 +40,11 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		public object							ValueTypeObject
+		public INamedType						ValueType
 		{
 			get
 			{
-				return this.valueTypeObject;
-			}
-		}
-
-		public INamedType						ValueNamedType
-		{
-			get
-			{
-				return this.ValueBindingExpression.GetSourceNamedType ();
+				return this.valueType;
 			}
 		}
 
@@ -146,7 +138,7 @@ namespace Epsitec.Common.Widgets
 		{
 			if (property == Placeholder.ValueProperty)
 			{
-				this.UpdateValueTypeObject ();
+				this.UpdateValueType ();
 			}
 
 			base.OnBindingChanged (property);
@@ -192,10 +184,10 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		private void UpdateValueTypeObject()
+		private void UpdateValueType()
 		{
-			object oldValueTypeObject = this.valueTypeObject;
-			object newValueTypeObject = null;
+			INamedType oldValueType = this.valueType;
+			INamedType newValueType = null;
 			string oldValueName = this.valueName;
 			string newValueName = null;
 			
@@ -203,21 +195,21 @@ namespace Epsitec.Common.Widgets
 
 			if (expression != null)
 			{
-				newValueTypeObject = expression.GetSourceTypeObject ();
+				newValueType = expression.GetSourceNamedType ();
 				newValueName = expression.GetSourceName ();
 			}
 
-			this.valueTypeObject = newValueTypeObject;
+			this.valueType = newValueType;
 			this.valueName = newValueName;
 
-			if (oldValueTypeObject == newValueTypeObject)
+			if (oldValueType == newValueType)
 			{
 				//	OK, do nothing...
 			}
-			else if ((oldValueTypeObject == null) ||
-				/**/ (oldValueTypeObject.Equals (newValueTypeObject) == false))
+			else if ((oldValueType == null) ||
+				/**/ (oldValueType.Equals (newValueType) == false))
 			{
-				this.UpdateValueTypeObject (oldValueTypeObject, newValueTypeObject);
+				this.UpdateValueType (oldValueType, newValueType);
 			}
 
 			if (oldValueName != newValueName)
@@ -226,7 +218,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		private void UpdateValueTypeObject(object oldValueTypeObject, object newValueTypeObject)
+		private void UpdateValueType(object oldValueType, object newValueType)
 		{
 			if (this.controller != null)
 			{
@@ -295,7 +287,7 @@ namespace Epsitec.Common.Widgets
 		{
 			Placeholder that = (Placeholder) o;
 
-			that.UpdateValueTypeObject ();
+			that.UpdateValueType ();
 			that.UpdateValue (oldValue, newValue);
 		}
 
@@ -317,7 +309,7 @@ namespace Epsitec.Common.Widgets
 		static readonly NoOpGridPermeableHelper	noOpGridPermeableHelper = new NoOpGridPermeableHelper ();
 		
 		private IController						controller;
-		private object							valueTypeObject;
+		private INamedType						valueType;
 		private string							valueName;
 	}
 }

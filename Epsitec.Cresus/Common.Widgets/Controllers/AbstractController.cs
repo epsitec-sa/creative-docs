@@ -57,7 +57,7 @@ namespace Epsitec.Common.Widgets.Controllers
 		{
 			if (this.placeholder != null)
 			{
-				this.CreateUserInterface (this.placeholder.ValueNamedType, this.placeholder.ValueName);
+				this.CreateUserInterface (this.placeholder.ValueType, this.placeholder.ValueName);
 			}
 		}
 
@@ -186,7 +186,7 @@ namespace Epsitec.Common.Widgets.Controllers
 				return false;
 			}
 
-			return TypeRosetta.IsValidValue (value, this.Placeholder.ValueTypeObject);
+			return TypeRosetta.IsValidValue (value, this.Placeholder.ValueType);
 		}
 
 		protected object ConvertBackValue(object value)

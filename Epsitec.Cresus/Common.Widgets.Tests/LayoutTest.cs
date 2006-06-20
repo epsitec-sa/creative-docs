@@ -156,7 +156,7 @@ namespace Epsitec.Common.Widgets
 
 			b.Padding = new Drawing.Margins (5, 5, 5, 5);
 
-			Assert.AreEqual (1, context.MeasureQueueLength);
+			Assert.AreEqual (2, context.MeasureQueueLength);
 			Assert.AreEqual (2, context.ArrangeQueueLength);
 
 			array = Types.Collection.ToArray (context.GetArrangeQueue ());

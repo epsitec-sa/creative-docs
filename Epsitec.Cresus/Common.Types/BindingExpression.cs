@@ -114,7 +114,12 @@ namespace Epsitec.Common.Types
 			
 			if (namedType == null)
 			{
-				namedType = TypeRosetta.GetNamedTypeFromTypeObject (this.GetSourceTypeObject ());
+				object typeObject = this.GetSourceTypeObject ();
+				
+				if (typeObject != null)
+				{
+					namedType = TypeRosetta.GetNamedTypeFromTypeObject (typeObject);
+				}
 			}
 
 			return namedType;
