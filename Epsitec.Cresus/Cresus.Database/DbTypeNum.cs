@@ -52,12 +52,20 @@ namespace Epsitec.Cresus.Database
 				return null;
 			}
 		}
-		
+
 		public Common.Types.DecimalRange		Range
 		{
 			get
 			{
 				return this.num_def.ToDecimalRange ();
+			}
+		}
+
+		public Common.Types.DecimalRange		PreferredRange
+		{
+			get
+			{
+				return Common.Types.DecimalRange.Empty;
 			}
 		}
 		
