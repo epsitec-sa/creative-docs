@@ -57,7 +57,7 @@ namespace Epsitec.Common.Widgets.Controllers
 		{
 			if (this.placeholder != null)
 			{
-				this.CreateUserInterface (this.placeholder.ValueTypeObject, this.placeholder.ValueName);
+				this.CreateUserInterface (this.placeholder.ValueNamedType, this.placeholder.ValueName);
 			}
 		}
 
@@ -111,7 +111,7 @@ namespace Epsitec.Common.Widgets.Controllers
 			return null;
 		}
 
-		protected abstract void CreateUserInterface(object valueTypeObject, string valueName);
+		protected abstract void CreateUserInterface(INamedType namedType, string valueName);
 		
 		protected abstract void RefreshUserInterface(object oldValue, object newValue);
 

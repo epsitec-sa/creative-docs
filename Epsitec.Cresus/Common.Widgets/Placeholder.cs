@@ -48,6 +48,14 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		public INamedType						ValueNamedType
+		{
+			get
+			{
+				return this.ValueBindingExpression.GetSourceNamedType ();
+			}
+		}
+
 		public string							ValueName
 		{
 			get

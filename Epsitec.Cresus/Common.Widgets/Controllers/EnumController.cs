@@ -25,15 +25,12 @@ namespace Epsitec.Common.Widgets.Controllers
 		{
 			return this;
 		}
-		
-		protected override void CreateUserInterface(object valueTypeObject, string valueName)
+
+		protected override void CreateUserInterface(INamedType namedType, string valueName)
 		{
 			this.Placeholder.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
 
-			this.typeObject = valueTypeObject;
-
-			INamedType namedType = TypeRosetta.GetNamedTypeFromTypeObject (this.typeObject);
-			IEnumType  enumType  = namedType as IEnumType;
+			IEnumType enumType = namedType as IEnumType;
 
 			this.label = new StaticText ();
 			this.combo = new TextFieldCombo ();
@@ -123,6 +120,5 @@ namespace Epsitec.Common.Widgets.Controllers
 		
 		private TextFieldCombo combo;
 		private StaticText label;
-		private object typeObject;
 	}
 }
