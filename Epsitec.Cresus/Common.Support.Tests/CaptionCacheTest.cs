@@ -30,6 +30,9 @@ namespace Epsitec.Common.Support
 		{
 			Assert.IsNull (CaptionCache.Instance.GetCaption (this.manager_en, -1));
 			Assert.IsNull (CaptionCache.Instance.GetCaption (this.manager_en, Druid.Empty));
+
+			Assert.IsNull (CaptionCache.Instance.GetCaption (this.manager_en, "$02"));
+			Assert.IsNull (CaptionCache.Instance.GetCaption (this.manager_en, new Druid (0, 2)));
 		}
 
 		[Test]
@@ -68,8 +71,10 @@ namespace Epsitec.Common.Support
 
 			Assert.AreEqual (captionA_fr, CaptionCache.Instance.GetCaption (this.manager_fr, idA));
 			Assert.AreEqual (captionA_fr, CaptionCache.Instance.GetCaption (this.manager_fr, idA.ToLong ()));
+			Assert.AreEqual (captionA_fr, CaptionCache.Instance.GetCaption (this.manager_fr, "[4002]"));
 			Assert.AreEqual (captionQ_fr, CaptionCache.Instance.GetCaption (this.manager_fr, idQ));
 			Assert.AreEqual (captionQ_fr, CaptionCache.Instance.GetCaption (this.manager_fr, idQ.ToLong ()));
+			Assert.AreEqual (captionQ_fr, CaptionCache.Instance.GetCaption (this.manager_fr, "[4003]"));
 
 			Assert.AreEqual (4, CaptionCache.Instance.DebugCountLiveCaptions ());
 
