@@ -142,11 +142,6 @@ namespace Epsitec.Common.Designer
 				placeholder.SetBinding(Placeholder.ValueProperty, binding);
 				
 				BindingExpression expression = placeholder.GetBindingExpression(Placeholder.ValueProperty);
-				object sourceTypeObject = expression.GetSourceTypeObject();
-				INamedType namedType = expression.GetSourceNamedType ();
-				System.Type sourceType = TypeRosetta.GetSystemTypeFromTypeObject (sourceTypeObject);
-
-				System.Diagnostics.Debug.Assert(sourceType != null);
 				
 				string controller;
 				string controllerParameter;

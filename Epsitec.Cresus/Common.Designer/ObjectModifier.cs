@@ -74,9 +74,15 @@ namespace Epsitec.Common.Designer
 		{
 			//	Constructeur unique.
 			this.panelEditor = panelEditor;
-			this.container = this.panelEditor.Panel;
 		}
 
+		protected UI.Panel Container
+		{
+			get
+			{
+				return this.panelEditor.Panel;
+			}
+		}
 
 		#region ChildrenPlacement
 		public bool IsChildrenAnchored(Widget obj)
@@ -198,7 +204,7 @@ namespace Epsitec.Common.Designer
 			obj.Window.ForceLayout();
 			Rectangle bounds = obj.Client.Bounds;
 
-			while (obj != this.container)
+			while (obj != this.Container)
 			{
 				bounds = obj.MapClientToParent(bounds);
 				obj = obj.Parent;
@@ -228,7 +234,7 @@ namespace Epsitec.Common.Designer
 
 			obj.Window.ForceLayout();
 			Widget parent = obj.Parent;
-			while (parent != this.container)
+			while (parent != this.Container)
 			{
 				bounds = parent.MapParentToClient(bounds);
 				parent = parent.Parent;
@@ -819,7 +825,7 @@ namespace Epsitec.Common.Designer
 		protected ChildrenPlacement GetParentPlacement(Widget obj)
 		{
 			//	Retourne le mode de placement du parent d'un objet.
-			if (obj == this.container)
+			if (obj == this.Container)
 			{
 				return ChildrenPlacement.None;
 			}
@@ -838,6 +844,5 @@ namespace Epsitec.Common.Designer
 
 
 		protected MyWidgets.PanelEditor				panelEditor;
-		protected UI.Panel							container;
 	}
 }
