@@ -22,37 +22,20 @@ namespace Epsitec.Common.Text.Exchange
 		{
 		}
 
-		public void SetItalic(bool italic)
-		{
-		}
-
-		public void SetBold(bool bold)
-		{
-		}
-
-		public void SetUnderlined(bool underlined)
-		{
-		}
-
-		public void SetStrikeout(bool strikeout)
-		{
-		}
-
-		public void SetFont(double fontSize)
-		{
-		}
-
-
 		public void AppendText(string text)
 		{
 			output.Append (text);
+		}
+
+		public void AppendTextLine(string text)
+		{
+			output.AppendLine (text);
 		}
 
 		public string ToString()
 		{
 			return output.ToString ();
 		}
-		
-	}
 
+	}
 }
