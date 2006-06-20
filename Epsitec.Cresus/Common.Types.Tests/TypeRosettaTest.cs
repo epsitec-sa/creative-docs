@@ -124,7 +124,7 @@ namespace Epsitec.Common.Types
 			
 			Assert.AreEqual ("Integer", TypeRosetta.GetNamedTypeFromTypeObject (t1x).Name);
 			Assert.AreEqual ("System.String", TypeRosetta.GetNamedTypeFromTypeObject (t2foo).Name);
-			Assert.AreEqual ("Dynamic", TypeRosetta.GetNamedTypeFromTypeObject (t4self).Name);
+			Assert.AreEqual ("DynamicStructure", TypeRosetta.GetNamedTypeFromTypeObject (t4self).Name);
 		}
 
 		[Test]

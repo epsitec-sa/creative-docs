@@ -120,19 +120,26 @@ namespace Epsitec.Common.Types
 			return namedType;
 		}
 
-		private static INamedType GetSourceNamedType(DependencyObject dependencyObject, DependencyProperty dependencyProperty)
+		public long GetSourceCaptionId()
 		{
-			if ((dependencyObject == null) ||
-				(dependencyProperty == null))
+			long captionId = -1;
+
+			switch (this.sourceType)
 			{
-				return null;
+				case DataSourceType.PropertyObject:
+					captionId = BindingExpression.GetSourceCaptionId (this.sourceObject as DependencyObject, this.sourceProperty as DependencyProperty);
+					break;
+
+				case DataSourceType.StructuredData:
+				case DataSourceType.SourceItself:
+				case DataSourceType.Resource:
+					captionId = -1;
+					break;
 			}
-			else
-			{
-				return dependencyProperty.GetMetadata (dependencyObject).NamedType;
-			}
+
+			return captionId;
 		}
-		
+
 		public object GetSourceTypeObject()
 		{
 			object typeObject = null;
@@ -784,6 +791,33 @@ namespace Epsitec.Common.Types
 			source.DetachListener (name, expression.HandleSourcePropertyChanged);
 		}
 
+		private static INamedType GetSourceNamedType(DependencyObject dependencyObject, DependencyProperty dependencyProperty)
+		{
+			if ((dependencyObject == null) ||
+				(dependencyProperty == null))
+			{
+				return null;
+			}
+			else
+			{
+				return dependencyProperty.GetMetadata (dependencyObject).NamedType;
+			}
+		}
+
+		private static long GetSourceCaptionId(DependencyObject dependencyObject, DependencyProperty dependencyProperty)
+		{
+			if ((dependencyObject == null) ||
+				(dependencyProperty == null))
+			{
+				return -1;
+			}
+			else
+			{
+				return dependencyProperty.GetMetadata (dependencyObject).CaptionId;
+			}
+		}
+
+		
 		private Binding							binding;
 		private DependencyObject				targetObject;			//	immutable
 		private DependencyProperty				targetPropery;			//	immutable
