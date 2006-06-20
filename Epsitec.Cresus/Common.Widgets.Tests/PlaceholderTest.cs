@@ -74,7 +74,7 @@ namespace Epsitec.Common.Widgets
 			StructuredType type = new StructuredType ();
 			StructuredData data = new StructuredData (type);
 
-			IntegerType ageType = new IntegerType (20, 65);
+			IntegerType ageType = new IntegerType (16, 80);
 			ageType.DefinePreferredRange (new DecimalRange (20, 65, 10));
 			
 			type.AddField ("Name", new StringType (1));

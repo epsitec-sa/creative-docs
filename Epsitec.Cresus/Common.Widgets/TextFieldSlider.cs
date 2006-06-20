@@ -56,6 +56,27 @@ namespace Epsitec.Common.Widgets
 			that.SetValueBase (Visual.BackColorProperty, value);
 		}
 
+		public Types.DecimalRange PreferredRange
+		{
+			get
+			{
+				return this.preferredRange;
+			}
+			set
+			{
+				if (this.preferredRange != value)
+				{
+					this.preferredRange = value;
+
+					if (!value.IsEmpty)
+					{
+						this.Step = value.Resolution;
+					}
+
+					this.UpdateSliderRange ();
+				}
+			}
+		}
 
 		public decimal LogarithmicDivisor
 		{
@@ -96,7 +117,7 @@ namespace Epsitec.Common.Widgets
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
 			Drawing.Rectangle rect = this.Client.Bounds;
 			rect.Width -= System.Math.Floor (rect.Height*adorner.GeometryUpDownWidthFactor)-1;
-			rect.Height = TextFieldSlider.sliderHeight;
+			rect.Height = TextFieldSlider.SliderHeight;
 			this.slider.SetManualBounds (rect);
 		}
 
@@ -107,20 +128,25 @@ namespace Epsitec.Common.Widgets
 
 			if (this.Text != "")
 			{
+				this.ignoreSliderChanges++;
 				this.slider.Value = this.Value;
+				this.ignoreSliderChanges--;
 			}
 		}
 
 		protected override void InitializeMargins()
 		{
 			base.InitializeMargins ();
-			this.margins.Bottom = TextFieldSlider.sliderHeight-AbstractTextField.FrameMargin;
+			this.margins.Bottom = TextFieldSlider.SliderHeight-AbstractTextField.FrameMargin;
 		}
 
 
 		private void HandleSliderValueChanged(object sender)
 		{
-			this.SetValue (this.slider.Value);
+			if (this.ignoreSliderChanges == 0)
+			{
+				this.SetValue (this.slider.Value);
+			}
 		}
 
 		protected override void OnRangeChanged()
@@ -132,13 +158,24 @@ namespace Epsitec.Common.Widgets
 
 		protected virtual void UpdateSliderRange()
 		{
-			this.slider.MinValue   = this.MinValue;
-			this.slider.MaxValue   = this.MaxValue;
-			this.slider.Resolution = this.Resolution;
+			if (this.PreferredRange.IsEmpty)
+			{
+				this.slider.MinValue   = this.MinValue;
+				this.slider.MaxValue   = this.MaxValue;
+				this.slider.Resolution = this.Resolution;
+			}
+			else
+			{
+				this.slider.MinValue   = this.PreferredRange.Minimum;
+				this.slider.MaxValue   = this.PreferredRange.Maximum;
+				this.slider.Resolution = this.Resolution;
+			}
 		}
 
+		private const double SliderHeight = 5;
 
+		private int ignoreSliderChanges;
 		protected Slider slider;
-		protected static readonly double sliderHeight = 5;
+		protected Types.DecimalRange preferredRange;
 	}
 }

@@ -7,7 +7,7 @@ namespace Epsitec.Common.Types
 	/// The <c>DecimalRange</c> structure defines a minimum, maximum and resolution
 	/// for a decimal value.
 	/// </summary>
-	public struct DecimalRange
+	public struct DecimalRange : System.IEquatable<DecimalRange>
 	{
 		public DecimalRange(decimal min, decimal max)
 			: this (min, max, 1.0M)
@@ -249,6 +249,50 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		public static bool operator==(DecimalRange a, DecimalRange b)
+		{
+			return a.Equals (b);
+		}
+
+		public static bool operator!=(DecimalRange a, DecimalRange b)
+		{
+			return ! a.Equals (b);
+		}
+
+		public override bool Equals(object obj)
+		{
+			if (obj is DecimalRange)
+			{
+				return base.Equals ((DecimalRange) obj);
+			}
+			else
+			{
+				return false;
+			}
+		}
+
+		public override int GetHashCode()
+		{
+			return this.minimum.GetHashCode () ^ this.maximum.GetHashCode () ^ this.resolution.GetHashCode ();
+		}
+
+		#region IEquatable<DecimalRange> Members
+
+		public bool Equals(DecimalRange other)
+		{
+			if ((this.minimum == other.minimum) &&
+				(this.maximum == other.maximum) &&
+				(this.resolution == other.resolution))
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+
+		#endregion
 
 		private void DefineResolution(decimal value)
 		{
