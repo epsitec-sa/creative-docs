@@ -139,6 +139,7 @@ namespace Epsitec.Common.Types
 			caption.Labels.Add ("M");
 			caption.Labels.Add ("Mystery");
 			caption.SetValue (Stuff.NameProperty, "MysteryName");
+			caption.SetValue (Stuff.EnumProperty, MyEnum.First);
 
 			string xml = caption.SerializeToString ();
 
@@ -150,6 +151,7 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual ("M", Collection.Extract (caption.SortedLabels, 0));
 			Assert.AreEqual ("Mystery", Collection.Extract (caption.SortedLabels, 1));
 			Assert.AreEqual ("MysteryName", caption.GetValue (Stuff.NameProperty));
+			Assert.AreEqual (MyEnum.First, caption.GetValue (Stuff.EnumProperty));
 		}
 
 		internal class Stuff : DependencyObject
@@ -173,8 +175,8 @@ namespace Epsitec.Common.Types
 
 			public static readonly DependencyProperty NameProperty = DependencyProperty.RegisterAttached ("Name", typeof (string), typeof (Stuff));
 
-			public static readonly DependencyProperty TextProperty = DependencyProperty.Register ("Text", typeof (string), typeof (Stuff), new DependencyPropertyMetadata ());
-			public static readonly DependencyProperty EnumProperty = DependencyProperty.Register ("Enum", typeof (MyEnum), typeof (Stuff), new DependencyPropertyMetadata (MyEnum.None));
+			public static readonly DependencyProperty TextProperty = DependencyProperty.RegisterAttached ("Text", typeof (string), typeof (Stuff), new DependencyPropertyMetadata ());
+			public static readonly DependencyProperty EnumProperty = DependencyProperty.RegisterAttached ("Enum", typeof (MyEnum), typeof (Stuff), new DependencyPropertyMetadata (MyEnum.None));
 		}
 		
 		private enum MyEnum
