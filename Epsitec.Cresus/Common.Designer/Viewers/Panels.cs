@@ -3,6 +3,7 @@ using System.Text.RegularExpressions;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
 using Epsitec.Common.Drawing;
+using Epsitec.Common.Types;
 
 namespace Epsitec.Common.Designer.Viewers
 {
@@ -78,14 +79,7 @@ namespace Epsitec.Common.Designer.Viewers
 			container.MinWidth = 100;
 			container.Dock = DockStyle.Fill;
 
-			this.panelContainer = new UI.Panel();
-			this.panelContainer.ChildrenLayoutMode = Widgets.Layouts.LayoutMode.Anchored;
-			//?this.panelContainer.ChildrenLayoutMode = Widgets.Layouts.LayoutMode.Docked;
-			//?this.panelContainer.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
-			this.panelContainer.ContainerLayoutMode = ContainerLayoutMode.VerticalFlow;
-			this.panelContainer.PreferredSize = new Size(200, 200);
-			this.panelContainer.Anchor = AnchorStyles.BottomLeft;
-			this.panelContainer.Padding = new Margins(20, 20, 20, 20);
+			this.panelContainer = this.CreateEmptyPanel();
 			this.panelContainer.SetParent(container);
 
 			//	Le PanelEditor est par-dessus le UI.Panel.
@@ -148,6 +142,22 @@ namespace Epsitec.Common.Designer.Viewers
 			this.UpdateDruidsIndex("", Searcher.SearchingMode.None);
 			this.UpdateArray();
 			this.UpdateEdit();
+		}
+
+		private UI.Panel CreateEmptyPanel()
+		{
+			UI.Panel panel;
+			
+			panel = new UI.Panel ();
+			panel.ChildrenLayoutMode = Widgets.Layouts.LayoutMode.Anchored;
+			//?panel.ChildrenLayoutMode = Widgets.Layouts.LayoutMode.Docked;
+			//?panel.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
+			panel.ContainerLayoutMode = ContainerLayoutMode.VerticalFlow;
+			panel.PreferredSize = new Size (200, 200);
+			panel.Anchor = AnchorStyles.BottomLeft;
+			panel.Padding = new Margins (20, 20, 20, 20);
+			
+			return panel;
 		}
 
 		protected override void Dispose(bool disposing)
@@ -401,7 +411,13 @@ namespace Epsitec.Common.Designer.Viewers
 				sel = -1;
 			}
 
-			if ( sel == -1 )
+			if (this.panelContainer != null)
+			{
+				this.panelContainer.SetParent (null);
+				this.panelContainer = null;
+			}
+			
+			if (sel == -1)
 			{
 				this.labelEdit.Enable = false;
 				this.labelEdit.Text = "";
@@ -411,7 +427,20 @@ namespace Epsitec.Common.Designer.Viewers
 				Druid druid = this.druidsIndex[sel];
 				int index = this.module.PanelIndex(druid);
 				string label = this.module.PanelName(index);
+				ResourceBundle bundle = this.module.PanelBundle(index);
+				UI.Panel newPanel = Panels.GetPanel(bundle);
 
+				if (newPanel == null)
+				{
+					newPanel = this.CreateEmptyPanel ();
+					Panels.SetPanel(bundle, newPanel);
+				}
+
+				this.panelContainer = newPanel;
+				this.panelContainer.SetParent(this.panelEditor.Parent);
+				this.panelContainer.ZOrder = this.panelEditor.ZOrder+1;
+				this.panelEditor.Panel = this.panelContainer;
+				
 				this.labelEdit.Enable = true;
 				this.labelEdit.Text = label;
 				this.labelEdit.Focus();
@@ -710,6 +739,18 @@ namespace Epsitec.Common.Designer.Viewers
 			this.UpdateCommands();
 		}
 
+
+		public static void SetPanel(DependencyObject obj, UI.Panel panel)
+		{
+			obj.SetValue (Panels.PanelProperty, panel);
+		}
+
+		public static UI.Panel GetPanel(DependencyObject obj)
+		{
+			return (UI.Panel) obj.GetValue (Panels.PanelProperty);
+		}
+		
+		public static readonly DependencyProperty PanelProperty = DependencyProperty.RegisterAttached ("Panel", typeof (UI.Panel), typeof (Panels));
 
 		protected ProxyManager				proxyManager;
 		protected TextFieldEx				labelEdit;

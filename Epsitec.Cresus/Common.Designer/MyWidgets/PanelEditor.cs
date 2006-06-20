@@ -87,6 +87,19 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				return this.panel;
 			}
+			set
+			{
+				if (this.panel != value)
+				{
+					this.selectedObjects.Clear ();
+					this.UpdateAfterSelectionChanged ();
+					
+					this.panel = value;
+					this.sizeMark = this.panel.PreferredSize;
+					
+					//	TODO: @PA invalider ce qui doit l'être... vider les listes des contraintes, poignées, etc.
+				}
+			}
 		}
 
 		public ObjectModifier ObjectModifier
