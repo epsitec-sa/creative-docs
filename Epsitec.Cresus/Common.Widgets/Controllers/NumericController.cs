@@ -56,13 +56,19 @@ namespace Epsitec.Common.Widgets.Controllers
 
 			INumericType numType = namedType as INumericType;
 
-			if ((numType != null) &&
-				(!numType.Range.IsEmpty))
+			if (numType != null)
 			{
-				this.field.MinValue   = numType.Range.Minimum;
-				this.field.MaxValue   = numType.Range.Maximum;
-				this.field.Resolution = numType.Range.Resolution;
-				this.field.Step       = numType.DefaultIncrementStep;
+				if (!numType.Range.IsEmpty)
+				{
+					this.field.MinValue   = numType.Range.Minimum;
+					this.field.MaxValue   = numType.Range.Maximum;
+					this.field.Resolution = numType.Range.Resolution;
+				}
+
+				if (!numType.PreferredRange.IsEmpty)
+				{
+					this.field.Step = numType.PreferredRange.Resolution;
+				}
 			}
 			
 			this.AddWidget (this.label);

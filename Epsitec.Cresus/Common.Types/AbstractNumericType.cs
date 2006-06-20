@@ -49,11 +49,11 @@ namespace Epsitec.Common.Types
 			}
 		}
 		
-		public decimal							DefaultIncrementStep
+		public DecimalRange						PreferredRange
 		{
 			get
 			{
-				return (decimal) this.GetValue (AbstractNumericType.DefaultIncrementStepProperty);
+				return (DecimalRange) this.GetValue (AbstractNumericType.PreferredRangeProperty);
 			}
 		}
 
@@ -69,14 +69,14 @@ namespace Epsitec.Common.Types
 		{
 			this.SetLocalValue (AbstractNumericType.RangeProperty, range);
 		}
-		
-		public void DefineDefaultIncrementStep(decimal value)
+
+		public void DefinePreferredRange(DecimalRange range)
 		{
-			this.SetLocalValue (AbstractNumericType.DefaultIncrementStepProperty, value);
+			this.SetLocalValue (AbstractNumericType.PreferredRangeProperty, range);
 		}
 
 
 		public static readonly DependencyProperty RangeProperty = DependencyProperty.RegisterReadOnly ("Range", typeof (DecimalRange), typeof (AbstractNumericType), new DependencyPropertyMetadata (DecimalRange.Empty));
-		public static readonly DependencyProperty DefaultIncrementStepProperty = DependencyProperty.RegisterReadOnly ("DefaultIncrementStep", typeof (decimal), typeof (AbstractNumericType), new DependencyPropertyMetadata (1M));
+		public static readonly DependencyProperty PreferredRangeProperty = DependencyProperty.RegisterReadOnly ("PreferredRange", typeof (DecimalRange), typeof (AbstractNumericType), new DependencyPropertyMetadata (DecimalRange.Empty));
 	}
 }
