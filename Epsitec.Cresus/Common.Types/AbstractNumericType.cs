@@ -12,19 +12,19 @@ namespace Epsitec.Common.Types
 
 		#region INamedType Members
 
-		public virtual string DefaultController
+		public string DefaultController
 		{
 			get
 			{
-				return "Numeric";
+				return (string) this.GetValue (AbstractNumericType.DefaultControllerProperty);
 			}
 		}
 
-		public virtual string DefaultControllerParameter
+		public string DefaultControllerParameter
 		{
 			get
 			{
-				return null;
+				return (string) this.GetValue (AbstractNumericType.DefaultControllerParameterProperty);
 			}
 		}
 
@@ -67,15 +67,29 @@ namespace Epsitec.Common.Types
 
 		public void DefineRange(DecimalRange range)
 		{
-			this.SetLocalValue (AbstractNumericType.RangeProperty, range);
+			this.SetValue (AbstractNumericType.RangeProperty, range);
 		}
 
 		public void DefinePreferredRange(DecimalRange range)
 		{
-			this.SetLocalValue (AbstractNumericType.PreferredRangeProperty, range);
+			this.SetValue (AbstractNumericType.PreferredRangeProperty, range);
+		}
+
+		public void DefineDefaultController(string controller, string controllerParameter)
+		{
+			if (this.DefaultController != controller)
+			{
+				this.SetValue (AbstractNumericType.DefaultControllerProperty, controller);
+			}
+			if (this.DefaultControllerParameter != controllerParameter)
+			{
+				this.SetValue (AbstractNumericType.DefaultControllerParameterProperty, controllerParameter);
+			}
 		}
 
 
+		public static readonly DependencyProperty DefaultControllerProperty = DependencyProperty.RegisterReadOnly ("DefaultController", typeof (string), typeof (AbstractNumericType), new DependencyPropertyMetadata ("Numeric"));
+		public static readonly DependencyProperty DefaultControllerParameterProperty = DependencyProperty.RegisterReadOnly ("DefaultControllerParameter", typeof (string), typeof (AbstractNumericType), new DependencyPropertyMetadata ());
 		public static readonly DependencyProperty RangeProperty = DependencyProperty.RegisterReadOnly ("Range", typeof (DecimalRange), typeof (AbstractNumericType), new DependencyPropertyMetadata (DecimalRange.Empty));
 		public static readonly DependencyProperty PreferredRangeProperty = DependencyProperty.RegisterReadOnly ("PreferredRange", typeof (DecimalRange), typeof (AbstractNumericType), new DependencyPropertyMetadata (DecimalRange.Empty));
 	}

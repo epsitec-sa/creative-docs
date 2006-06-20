@@ -138,10 +138,53 @@ namespace Epsitec.Common.Widgets
 		{
 			if (property == Placeholder.ValueProperty)
 			{
+				this.UpdateController ();
 				this.UpdateValueType ();
 			}
 
 			base.OnBindingChanged (property);
+		}
+
+		private void UpdateController()
+		{
+			string oldControllerName = this.controllerName;
+			string newControllerName = null;
+			string oldControllerParameter = this.controllerParameter;
+			string newControllerParameter = null;
+			
+			if (this.Controller == "*")
+			{
+				BindingExpression expression = this.ValueBindingExpression;
+				
+				if (expression != null)
+				{
+					Controllers.Factory.GetDefaultController (expression, out newControllerName, out newControllerParameter);
+				}
+			}
+			else
+			{
+				newControllerName      = this.Controller;
+				newControllerParameter = this.ControllerParameter;
+			}
+			
+			if ((newControllerName != oldControllerName) ||
+				(newControllerParameter != oldControllerParameter))
+			{
+				this.controllerName      = newControllerName;
+				this.controllerParameter = newControllerParameter;
+				
+				if (this.controller == null)
+				{
+					if (this.controllerName != null)
+					{
+						Application.QueueAsyncCallback (this.CreateUserInterface);
+					}
+				}
+				else
+				{
+					Application.QueueAsyncCallback (this.RecreateUserInterface);
+				}
+			}
 		}
 
 		private void DisposeUserInterface()
@@ -156,9 +199,9 @@ namespace Epsitec.Common.Widgets
 		private void CreateUserInterface()
 		{
 			if ((this.controller == null) &&
-				(this.Controller != null))
+				(this.controllerName != null))
 			{
-				this.controller = Controllers.Factory.CreateController (this.Controller, this.ControllerParameter);
+				this.controller = Controllers.Factory.CreateController (this.controllerName, this.controllerParameter);
 
 				if (this.controller != null)
 				{
@@ -287,6 +330,7 @@ namespace Epsitec.Common.Widgets
 		{
 			Placeholder that = (Placeholder) o;
 
+			that.UpdateController ();
 			that.UpdateValueType ();
 			that.UpdateValue (oldValue, newValue);
 		}
@@ -294,11 +338,8 @@ namespace Epsitec.Common.Widgets
 		private static void NotifyControllerChanged(DependencyObject o, object oldValue, object newValue)
 		{
 			Placeholder that = (Placeholder) o;
-
-			if (that.controller != null)
-			{
-				Application.QueueAsyncCallback (that.RecreateUserInterface);
-			}
+			
+			that.UpdateController ();
 		}
 		
 		public static readonly DependencyProperty ValueProperty = DependencyProperty.Register ("Value", typeof (object), typeof (Placeholder), new DependencyPropertyMetadata (Placeholder.NotifyValueChanged));
@@ -311,5 +352,7 @@ namespace Epsitec.Common.Widgets
 		private IController						controller;
 		private INamedType						valueType;
 		private string							valueName;
+		private string controllerName;
+		private string controllerParameter;
 	}
 }
