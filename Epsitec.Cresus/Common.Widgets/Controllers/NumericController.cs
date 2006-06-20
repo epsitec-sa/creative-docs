@@ -67,7 +67,7 @@ namespace Epsitec.Common.Widgets.Controllers
 
 				if (!numType.PreferredRange.IsEmpty)
 				{
-					this.field.Step = numType.PreferredRange.Resolution;
+					this.field.PreferredRange = numType.PreferredRange;
 				}
 			}
 			
