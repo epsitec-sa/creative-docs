@@ -222,7 +222,7 @@ namespace Epsitec.Common.Widgets
 			if (this.TextLayout != null)
 			{
 				Drawing.Point origin = base.GetBaseLine (width, height, out ascender, out descender);
-				Drawing.Point shift = this.InnerTextBounds.Location;
+				Drawing.Point shift = this.InnerTextBounds.Location - new Drawing.Point (this.margins.Left, this.margins.Bottom);
 				Drawing.Point point = origin + new Drawing.Point (shift.X, shift.Y);
 
 				ascender  += shift.Y;
