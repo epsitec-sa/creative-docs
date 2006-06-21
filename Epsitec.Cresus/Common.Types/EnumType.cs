@@ -314,9 +314,23 @@ namespace Epsitec.Common.Types
 			
 			return (int) number;
 		}
-		
+
+		/// <summary>
+		/// Gets the default <c>EnumType</c> for some enumeration type.
+		/// </summary>
+		/// <param name="systemType">The enumeration type.</param>
+		/// <returns>The <c>EnumType</c> instance for the specified enumeration type.</returns>
 		public static EnumType GetDefault(System.Type systemType)
 		{
+			if (systemType == null)
+			{
+				throw new System.ArgumentNullException ();
+			}
+			if (systemType.IsEnum == false)
+			{
+				throw new System.ArgumentException (string.Format ("Type {0} is not an enum", systemType.Name));
+			}
+			
 			lock (EnumType.exclusion)
 			{
 				EnumType enumType;
