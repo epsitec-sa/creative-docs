@@ -35,7 +35,7 @@ namespace Epsitec.Common.Designer.Proxies
 		{
 			get
 			{
-				return 80;
+				return 89;
 			}
 		}
 
@@ -361,20 +361,62 @@ namespace Epsitec.Common.Designer.Proxies
 
 		static Layout()
 		{
-			EnumType childrenPlacementEnumType = new EnumType (typeof (ObjectModifier.ChildrenPlacement));
-
-			childrenPlacementEnumType.DefineDefaultController ("Enum", "Icons");
-			childrenPlacementEnumType[ObjectModifier.ChildrenPlacement.Anchored].DefineCaptionId (new Support.Druid ("[10001]").ToLong ());
-			childrenPlacementEnumType[ObjectModifier.ChildrenPlacement.VerticalDocked].DefineCaptionId (new Support.Druid ("[10011]").ToLong ());
-			childrenPlacementEnumType[ObjectModifier.ChildrenPlacement.HorizontalDocked].DefineCaptionId (new Support.Druid ("[10021]").ToLong ());
-			
-			Layout.ChildrenPlacementProperty.DefaultMetadata.DefineNamedType (childrenPlacementEnumType);
+			EnumType childrenPlacementEnumType = new EnumType(typeof(ObjectModifier.ChildrenPlacement));
+			childrenPlacementEnumType.DefineDefaultController("Enum", "Icons");
+			childrenPlacementEnumType[ObjectModifier.ChildrenPlacement.Anchored].DefineCaptionId(new Support.Druid ("[10011]").ToLong());
+			childrenPlacementEnumType[ObjectModifier.ChildrenPlacement.VerticalDocked].DefineCaptionId(new Support.Druid ("[10012]").ToLong());
+			childrenPlacementEnumType[ObjectModifier.ChildrenPlacement.HorizontalDocked].DefineCaptionId(new Support.Druid ("[10013]").ToLong());
+			Layout.ChildrenPlacementProperty.DefaultMetadata.DefineNamedType(childrenPlacementEnumType);
 			Layout.ChildrenPlacementProperty.DefaultMetadata.DefineCaptionId(new Support.Druid("[100C]").ToLong());
+
+			EnumType anchoredHorizontalAttachmentEnumType = new EnumType(typeof(ObjectModifier.AnchoredHorizontalAttachment));
+			anchoredHorizontalAttachmentEnumType.DefineDefaultController("Enum", "Icons");
+			anchoredHorizontalAttachmentEnumType[ObjectModifier.AnchoredHorizontalAttachment.Left].DefineCaptionId(new Support.Druid("[10021]").ToLong());
+			anchoredHorizontalAttachmentEnumType[ObjectModifier.AnchoredHorizontalAttachment.Right].DefineCaptionId(new Support.Druid("[10022]").ToLong());
+			anchoredHorizontalAttachmentEnumType[ObjectModifier.AnchoredHorizontalAttachment.Fill].DefineCaptionId(new Support.Druid("[10025]").ToLong());
+			Layout.AnchoredHorizontalAttachmentProperty.DefaultMetadata.DefineNamedType(anchoredHorizontalAttachmentEnumType);
 			Layout.AnchoredHorizontalAttachmentProperty.DefaultMetadata.DefineCaptionId(new Support.Druid("[100D]").ToLong());
+
+			EnumType anchoredVerticalAttachmentEnumType = new EnumType(typeof(ObjectModifier.AnchoredVerticalAttachment));
+			anchoredVerticalAttachmentEnumType.DefineDefaultController("Enum", "Icons");
+			anchoredVerticalAttachmentEnumType[ObjectModifier.AnchoredVerticalAttachment.Bottom].DefineCaptionId(new Support.Druid("[10023]").ToLong());
+			anchoredVerticalAttachmentEnumType[ObjectModifier.AnchoredVerticalAttachment.Top].DefineCaptionId(new Support.Druid("[10024]").ToLong());
+			anchoredVerticalAttachmentEnumType[ObjectModifier.AnchoredVerticalAttachment.Fill].DefineCaptionId(new Support.Druid("[10026]").ToLong());
+			Layout.AnchoredVerticalAttachmentProperty.DefaultMetadata.DefineNamedType(anchoredVerticalAttachmentEnumType);
 			Layout.AnchoredVerticalAttachmentProperty.DefaultMetadata.DefineCaptionId(new Support.Druid("[100E]").ToLong());
+
+			EnumType dockedHorizontalAttachmentEnumType = new EnumType(typeof(ObjectModifier.DockedHorizontalAttachment));
+			dockedHorizontalAttachmentEnumType.DefineDefaultController("Enum", "Icons");
+			dockedHorizontalAttachmentEnumType[ObjectModifier.DockedHorizontalAttachment.Left].DefineCaptionId(new Support.Druid("[10021]").ToLong());
+			dockedHorizontalAttachmentEnumType[ObjectModifier.DockedHorizontalAttachment.Right].DefineCaptionId(new Support.Druid("[10022]").ToLong());
+			dockedHorizontalAttachmentEnumType[ObjectModifier.DockedHorizontalAttachment.Fill].DefineCaptionId(new Support.Druid("[10025]").ToLong());
+			Layout.DockedHorizontalAttachmentProperty.DefaultMetadata.DefineNamedType(dockedHorizontalAttachmentEnumType);
 			Layout.DockedHorizontalAttachmentProperty.DefaultMetadata.DefineCaptionId(new Support.Druid("[100F]").ToLong());
+
+			EnumType dockedVerticalAttachmentEnumType = new EnumType(typeof(ObjectModifier.DockedVerticalAttachment));
+			dockedVerticalAttachmentEnumType.DefineDefaultController("Enum", "Icons");
+			dockedVerticalAttachmentEnumType[ObjectModifier.DockedVerticalAttachment.Bottom].DefineCaptionId(new Support.Druid("[10023]").ToLong());
+			dockedVerticalAttachmentEnumType[ObjectModifier.DockedVerticalAttachment.Top].DefineCaptionId(new Support.Druid("[10024]").ToLong());
+			dockedVerticalAttachmentEnumType[ObjectModifier.DockedVerticalAttachment.Fill].DefineCaptionId(new Support.Druid("[10026]").ToLong());
+			Layout.DockedVerticalAttachmentProperty.DefaultMetadata.DefineNamedType(dockedVerticalAttachmentEnumType);
 			Layout.DockedVerticalAttachmentProperty.DefaultMetadata.DefineCaptionId(new Support.Druid("[100G]").ToLong());
+
+			EnumType dockedHorizontalAlignmentEnumType = new EnumType(typeof(ObjectModifier.DockedHorizontalAlignment));
+			dockedHorizontalAlignmentEnumType.DefineDefaultController("Enum", "Icons");
+			dockedHorizontalAlignmentEnumType[ObjectModifier.DockedHorizontalAlignment.Stretch].DefineCaptionId(new Support.Druid("[10037]").ToLong());
+			dockedHorizontalAlignmentEnumType[ObjectModifier.DockedHorizontalAlignment.Center].DefineCaptionId(new Support.Druid("[10035]").ToLong());
+			dockedHorizontalAlignmentEnumType[ObjectModifier.DockedHorizontalAlignment.Left].DefineCaptionId(new Support.Druid("[10031]").ToLong());
+			dockedHorizontalAlignmentEnumType[ObjectModifier.DockedHorizontalAlignment.Right].DefineCaptionId(new Support.Druid("[10032]").ToLong());
+			Layout.DockedHorizontalAlignmentProperty.DefaultMetadata.DefineNamedType(dockedHorizontalAlignmentEnumType);
 			Layout.DockedHorizontalAlignmentProperty.DefaultMetadata.DefineCaptionId(new Support.Druid("[100H]").ToLong());
+
+			EnumType dockedVerticalAlignmentEnumType = new EnumType(typeof(ObjectModifier.DockedVerticalAlignment));
+			dockedVerticalAlignmentEnumType.DefineDefaultController("Enum", "Icons");
+			dockedVerticalAlignmentEnumType[ObjectModifier.DockedVerticalAlignment.Stretch].DefineCaptionId(new Support.Druid("[10038]").ToLong());
+			dockedVerticalAlignmentEnumType[ObjectModifier.DockedVerticalAlignment.Center].DefineCaptionId(new Support.Druid("[10036]").ToLong());
+			dockedVerticalAlignmentEnumType[ObjectModifier.DockedVerticalAlignment.Bottom].DefineCaptionId(new Support.Druid("[10033]").ToLong());
+			dockedVerticalAlignmentEnumType[ObjectModifier.DockedVerticalAlignment.Top].DefineCaptionId(new Support.Druid("[10034]").ToLong());
+			Layout.DockedVerticalAlignmentProperty.DefaultMetadata.DefineNamedType(dockedVerticalAlignmentEnumType);
 			Layout.DockedVerticalAlignmentProperty.DefaultMetadata.DefineCaptionId(new Support.Druid("[100I]").ToLong());
 		}
 
