@@ -131,14 +131,14 @@ namespace Epsitec.Common.Designer.Proxies
 			
 			//	Recopie localement les diverses propriétés du widget sélectionné
 			//	pour pouvoir ensuite travailler dessus :
-			if (this.objectModifier.IsChildrenPlacement(this.widgets[0]))
+			if (this.objectModifier.HasChildrenPlacement(this.widgets[0]))
 			{
 				ObjectModifier.ChildrenPlacement cp = this.objectModifier.GetChildrenPlacement(this.widgets[0]);
 
 				this.ChildrenPlacement = cp;
 			}
 
-			if (this.objectModifier.IsChildrenAnchored(this.widgets[0].Parent))
+			if (this.objectModifier.AreChildrenAnchored(this.widgets[0].Parent))
 			{
 				ObjectModifier.AnchoredHorizontalAttachment ha = this.objectModifier.GetAnchoredHorizontalAttachment(this.widgets[0]);
 				ObjectModifier.AnchoredVerticalAttachment va = this.objectModifier.GetAnchoredVerticalAttachment(this.widgets[0]);
@@ -147,28 +147,28 @@ namespace Epsitec.Common.Designer.Proxies
 				this.AnchoredVerticalAttachment = va;
 			}
 
-			if (this.objectModifier.IsDockedHorizontalAttachment(this.widgets[0]))
+			if (this.objectModifier.HasDockedHorizontalAttachment(this.widgets[0]))
 			{
 				ObjectModifier.DockedHorizontalAttachment ha = this.objectModifier.GetDockedHorizontalAttachment(this.widgets[0]);
 
 				this.DockedHorizontalAttachment = ha;
 			}
 
-			if (this.objectModifier.IsDockedVerticalAttachment(this.widgets[0]))
+			if (this.objectModifier.HasDockedVerticalAttachment(this.widgets[0]))
 			{
 				ObjectModifier.DockedVerticalAttachment va = this.objectModifier.GetDockedVerticalAttachment(this.widgets[0]);
 
 				this.DockedVerticalAttachment = va;
 			}
 
-			if (this.objectModifier.IsDockedHorizontalAlignment(this.widgets[0]))
+			if (this.objectModifier.HasDockedHorizontalAlignment(this.widgets[0]))
 			{
 				ObjectModifier.DockedHorizontalAlignment ha = this.objectModifier.GetDockedHorizontalAlignment(this.widgets[0]);
 
 				this.DockedHorizontalAlignment = ha;
 			}
 
-			if (this.objectModifier.IsDockedVerticalAlignment(this.widgets[0]))
+			if (this.objectModifier.HasDockedVerticalAlignment(this.widgets[0]))
 			{
 				ObjectModifier.DockedVerticalAlignment va = this.objectModifier.GetDockedVerticalAlignment(this.widgets[0]);
 

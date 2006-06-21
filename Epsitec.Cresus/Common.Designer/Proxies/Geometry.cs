@@ -143,7 +143,7 @@ namespace Epsitec.Common.Designer.Proxies
 			
 			//	Recopie localement les diverses propriétés du widget sélectionné
 			//	pour pouvoir ensuite travailler dessus :
-			if (this.objectModifier.IsMargins(this.widgets[0]))
+			if (this.objectModifier.HasMargins(this.widgets[0]))
 			{
 				Margins margins = this.objectModifier.GetMargins(this.widgets[0]);
 
@@ -153,7 +153,7 @@ namespace Epsitec.Common.Designer.Proxies
 				this.BottomMargin = margins.Bottom;
 			}
 
-			if (this.objectModifier.IsBounds(this.widgets[0]))
+			if (this.objectModifier.HasBounds(this.widgets[0]))
 			{
 				Rectangle bounds = this.objectModifier.GetBounds(this.widgets[0]);
 

@@ -906,7 +906,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			this.constrainsList.Starting(Rectangle.Empty, false);
 
-			if (this.objectModifier.IsChildrenAnchored(parent))
+			if (this.objectModifier.AreChildrenAnchored(parent))
 			{
 				this.constrainsList.Activate(this.creatingRectangle, this.GetObjectBaseLine(this.creatingObject), null);
 			}
@@ -929,14 +929,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 				this.CreateObjectAdjust(ref pos, parent, out this.creatingRectangle);
 
-				if (this.objectModifier.IsChildrenAnchored(parent))
+				if (this.objectModifier.AreChildrenAnchored(parent))
 				{
 					Rectangle rect = this.isInside ? this.creatingRectangle : Rectangle.Empty;
 					this.constrainsList.Activate(rect, this.GetObjectBaseLine(this.creatingObject), null);
 
 					this.SetHilitedZOrderRectangle(Rectangle.Empty);
 				}
-				else if (this.objectModifier.IsChildrenDocked(parent))
+				else if (this.objectModifier.AreChildrenDocked(parent))
 				{
 					this.constrainsList.Activate(Rectangle.Empty, 0, null);
 
@@ -981,7 +981,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 					Point initialPos = pos;
 					this.CreateObjectAdjust(ref pos, parent, out this.creatingRectangle);
 
-					if (this.objectModifier.IsChildrenAnchored(parent))
+					if (this.objectModifier.AreChildrenAnchored(parent))
 					{
 						this.creatingObject = this.CreateObjectItem();
 						this.creatingObject.SetParent(parent);
@@ -990,7 +990,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 						this.SetObjectPosition(this.creatingObject, pos);
 					}
 
-					if (this.objectModifier.IsChildrenDocked(parent))
+					if (this.objectModifier.AreChildrenDocked(parent))
 					{
 						Widget group;
 						int order;
@@ -1095,7 +1095,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void ObjectAdaptFromParent(Widget obj, Widget parent, ObjectModifier.DockedHorizontalAttachment ha, ObjectModifier.DockedVerticalAttachment va)
 		{
 			//	Adapte un objet d'après son parent.
-			if (this.objectModifier.IsChildrenAnchored(parent))
+			if (this.objectModifier.AreChildrenAnchored(parent))
 			{
 				if (this.objectModifier.GetAnchoredVerticalAttachment(obj) == ObjectModifier.AnchoredVerticalAttachment.None)
 				{
@@ -1104,14 +1104,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 				}
 			}
 
-			if (this.objectModifier.IsChildrenDocked(parent))
+			if (this.objectModifier.AreChildrenDocked(parent))
 			{
 				if (this.objectModifier.GetDockedHorizontalAttachment(obj) == ObjectModifier.DockedHorizontalAttachment.None||
 					this.objectModifier.GetDockedVerticalAttachment(obj) == ObjectModifier.DockedVerticalAttachment.None)
 				{
 					this.objectModifier.SetMargins(obj, new Margins(5, 5, 5, 5));
 
-					if (this.objectModifier.IsChildrenHorizontal(parent))
+					if (this.objectModifier.AreChildrenHorizontal(parent))
 					{
 						this.objectModifier.SetDockedHorizontalAttachment(obj, ha);
 					}
@@ -1146,7 +1146,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			bounds = new Rectangle(pos, this.creatingObject.PreferredSize);
 
-			if (this.objectModifier.IsChildrenAnchored(parent) && this.isInside)
+			if (this.objectModifier.AreChildrenAnchored(parent) && this.isInside)
 			{
 				Rectangle adjust = this.constrainsList.Snap(bounds, this.GetObjectBaseLine(this.creatingObject));
 				Point corr = adjust.BottomLeft - bounds.BottomLeft;
@@ -1263,12 +1263,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.isInside = true;
 			Widget parent = this.DetectGroup(pos);
 
-			if (this.objectModifier.IsChildrenAnchored(parent))
+			if (this.objectModifier.AreChildrenAnchored(parent))
 			{
 				this.constrainsList.Starting(this.draggingRectangle, false);
 			}
 
-			if (this.objectModifier.IsChildrenDocked(parent))
+			if (this.objectModifier.AreChildrenDocked(parent))
 			{
 				this.constrainsList.Starting(Rectangle.Empty, false);
 			}
@@ -1316,7 +1316,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			Widget parent = this.DetectGroup(pos);
 			Point adjust = Point.Zero;
 
-			if (this.objectModifier.IsChildrenAnchored(parent))
+			if (this.objectModifier.AreChildrenAnchored(parent))
 			{
 				this.draggingRectangle.Offset((this.draggingOffset+pos)-this.draggingRectangle.BottomLeft);
 				Rectangle rect = this.isInside ? this.draggingRectangle : Rectangle.Empty;
@@ -1332,7 +1332,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 				this.SetHilitedZOrderRectangle(Rectangle.Empty);
 			}
-			else if (this.objectModifier.IsChildrenDocked(parent))
+			else if (this.objectModifier.AreChildrenDocked(parent))
 			{
 				this.constrainsList.Activate(Rectangle.Empty, 0, null);
 
@@ -1371,14 +1371,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.draggingWindow.Dispose();
 				this.draggingWindow = null;
 
-				if (this.objectModifier.IsChildrenAnchored(parent))
+				if (this.objectModifier.AreChildrenAnchored(parent))
 				{
 					Rectangle initial = this.SelectBounds;
 					this.MoveSelection(this.draggingRectangle.BottomLeft - initial.BottomLeft, parent);
 					this.OnChildrenGeometryChanged();
 				}
 
-				if (this.objectModifier.IsChildrenDocked(parent))
+				if (this.objectModifier.AreChildrenDocked(parent))
 				{
 					Widget group;
 					int order;
@@ -1945,7 +1945,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void ChangeObjectAttachment(Widget obj, Attachment attachment)
 		{
 			//	Modifie le système d'attachement d'un objet.
-			if (this.objectModifier.IsChildrenAnchored(obj.Parent))
+			if (this.objectModifier.AreChildrenAnchored(obj.Parent))
 			{
 				Rectangle bounds = this.objectModifier.GetBounds(obj);
 
@@ -2011,7 +2011,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		public void SetObjectPositionX(Widget obj, double x)
 		{
-			if (this.objectModifier.IsChildrenAnchored(obj.Parent))
+			if (this.objectModifier.AreChildrenAnchored(obj.Parent))
 			{
 				Rectangle bounds = this.objectModifier.GetBounds(obj);
 				bounds.Offset(x-bounds.Left, 0);
@@ -2021,7 +2021,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		public void SetObjectPositionY(Widget obj, double y)
 		{
-			if (this.objectModifier.IsChildrenAnchored(obj.Parent))
+			if (this.objectModifier.AreChildrenAnchored(obj.Parent))
 			{
 				Rectangle bounds = this.objectModifier.GetBounds(obj);
 				bounds.Offset(0, y-bounds.Bottom);
@@ -2031,7 +2031,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		public void SetObjectPosition(Widget obj, Point pos)
 		{
-			if (this.objectModifier.IsChildrenAnchored(obj.Parent))
+			if (this.objectModifier.AreChildrenAnchored(obj.Parent))
 			{
 				Rectangle bounds = this.objectModifier.GetBounds(obj);
 				bounds.Offset(pos-bounds.BottomLeft);
@@ -2046,19 +2046,19 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		public void SetObjectBounds(Widget obj, Rectangle bounds)
 		{
-			if (this.objectModifier.IsChildrenAnchored(obj.Parent))
+			if (this.objectModifier.AreChildrenAnchored(obj.Parent))
 			{
 				this.objectModifier.SetBounds(obj, bounds);
 			}
 
-			if (this.objectModifier.IsChildrenDocked(obj.Parent))
+			if (this.objectModifier.AreChildrenDocked(obj.Parent))
 			{
-				if (this.objectModifier.IsWidth(obj))
+				if (this.objectModifier.HasWidth(obj))
 				{
 					this.objectModifier.SetWidth(obj, bounds.Width);
 				}
 
-				if (this.objectModifier.IsHeight(obj))
+				if (this.objectModifier.HasHeight(obj))
 				{
 					this.objectModifier.SetHeight(obj, bounds.Height);
 				}
@@ -2068,9 +2068,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 		public bool IsObjectWidthChanging(Widget obj)
 		{
 			//	Indique si la largeur d'un objet peut changer.
-			if (this.objectModifier.IsChildrenDocked(obj.Parent))
+			if (this.objectModifier.AreChildrenDocked(obj.Parent))
 			{
-				if (this.objectModifier.IsAttachmentBottom(obj) || this.objectModifier.IsAttachmentTop(obj))
+				if (this.objectModifier.HasAttachmentBottom(obj) || this.objectModifier.HasAttachmentTop(obj))
 				{
 					return (this.objectModifier.GetDockedHorizontalAlignment(obj) != ObjectModifier.DockedHorizontalAlignment.Stretch);
 				}
@@ -2081,9 +2081,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 		public bool IsObjectHeightChanging(Widget obj)
 		{
 			//	Indique si la hauteur d'un objet peut changer.
-			if (this.objectModifier.IsChildrenDocked(obj.Parent))
+			if (this.objectModifier.AreChildrenDocked(obj.Parent))
 			{
-				if (this.objectModifier.IsAttachmentLeft(obj) || this.objectModifier.IsAttachmentRight(obj))
+				if (this.objectModifier.HasAttachmentLeft(obj) || this.objectModifier.HasAttachmentRight(obj))
 				{
 					return (this.objectModifier.GetDockedVerticalAlignment(obj) != ObjectModifier.DockedVerticalAlignment.Stretch);
 				}
@@ -2191,7 +2191,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			foreach (Widget o in this.selectedObjects)
 			{
-				if (this.objectModifier.IsChildrenAnchored(o.Parent))
+				if (this.objectModifier.AreChildrenAnchored(o.Parent))
 				{
 					foreach (Attachment s in attachments)
 					{
@@ -2295,7 +2295,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				Rectangle bounds = this.objectModifier.GetBounds(parent);
 
-				if (this.objectModifier.IsChildrenHorizontal(parent))
+				if (this.objectModifier.AreChildrenHorizontal(parent))
 				{
 					if (mouse.X < bounds.Center.X)
 					{
@@ -2332,9 +2332,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 				Rectangle bounds = this.objectModifier.GetBounds(obj);
 				bounds.Inflate(this.objectModifier.GetMargins(obj));
 
-				if (this.objectModifier.IsChildrenHorizontal(parent))
+				if (this.objectModifier.AreChildrenHorizontal(parent))
 				{
-					if (this.objectModifier.IsAttachmentLeft(obj))
+					if (this.objectModifier.HasAttachmentLeft(obj))
 					{
 						if (mouse.X > bounds.Center.X)
 						{
@@ -2363,7 +2363,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				}
 				else
 				{
-					if (this.objectModifier.IsAttachmentBottom(obj))
+					if (this.objectModifier.HasAttachmentBottom(obj))
 					{
 						if (mouse.Y > bounds.Center.Y)
 						{
@@ -2416,7 +2416,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 					{
 						if (selectedObj.ZOrder == order || selectedObj.ZOrder == order-1)
 						{
-							if (this.objectModifier.IsChildrenHorizontal(parent))
+							if (this.objectModifier.AreChildrenHorizontal(parent))
 							{
 								if (this.objectModifier.GetDockedHorizontalAttachment(selectedObj) != ha)
 								{
@@ -2458,24 +2458,24 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 				if (horizontal)
 				{
-					if (minWidget == null && this.objectModifier.IsAttachmentLeft(obj))
+					if (minWidget == null && this.objectModifier.HasAttachmentLeft(obj))
 					{
 						minWidget = obj;
 					}
 
-					if (maxWidget == null && this.objectModifier.IsAttachmentRight(obj))
+					if (maxWidget == null && this.objectModifier.HasAttachmentRight(obj))
 					{
 						maxWidget = obj;
 					}
 				}
 				else
 				{
-					if (minWidget == null && this.objectModifier.IsAttachmentBottom(obj))
+					if (minWidget == null && this.objectModifier.HasAttachmentBottom(obj))
 					{
 						minWidget = obj;
 					}
 
-					if (maxWidget == null && this.objectModifier.IsAttachmentTop(obj))
+					if (maxWidget == null && this.objectModifier.HasAttachmentTop(obj))
 					{
 						maxWidget = obj;
 					}
@@ -2890,7 +2890,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			graphics.RenderSolid(PanelsContext.ColorHiliteOutline);
 			graphics.LineWidth = 1;
 
-			if (this.objectModifier.IsChildrenDocked(obj.Parent))
+			if (this.objectModifier.AreChildrenDocked(obj.Parent))
 			{
 				Rectangle ext = bounds;
 				ext.Inflate(this.objectModifier.GetMargins(obj));
@@ -2973,7 +2973,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void DrawAttachment(Graphics graphics, Widget obj, Color color)
 		{
 			//	Dessine tous les attachements d'un objet.
-			if (this.objectModifier.IsChildrenAnchored(obj.Parent))
+			if (this.objectModifier.AreChildrenAnchored(obj.Parent))
 			{
 				Rectangle bounds = this.objectModifier.GetBounds(obj.Parent);
 				Rectangle rect = this.objectModifier.GetBounds(obj);
@@ -2981,45 +2981,45 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 				p1 = new Point(bounds.Left, rect.Center.Y);
 				p2 = new Point(rect.Left, rect.Center.Y);
-				this.DrawSpring(graphics, p1, p2, this.objectModifier.IsAttachmentLeft(obj), color);
+				this.DrawSpring(graphics, p1, p2, this.objectModifier.HasAttachmentLeft(obj), color);
 
 				p1 = new Point(rect.Right, rect.Center.Y);
 				p2 = new Point(bounds.Right, rect.Center.Y);
-				this.DrawSpring(graphics, p1, p2, this.objectModifier.IsAttachmentRight(obj), color);
+				this.DrawSpring(graphics, p1, p2, this.objectModifier.HasAttachmentRight(obj), color);
 
 				p1 = new Point(rect.Center.X, bounds.Bottom);
 				p2 = new Point(rect.Center.X, rect.Bottom);
-				this.DrawSpring(graphics, p1, p2, this.objectModifier.IsAttachmentBottom(obj), color);
+				this.DrawSpring(graphics, p1, p2, this.objectModifier.HasAttachmentBottom(obj), color);
 
 				p1 = new Point(rect.Center.X, rect.Top);
 				p2 = new Point(rect.Center.X, bounds.Top);
-				this.DrawSpring(graphics, p1, p2, this.objectModifier.IsAttachmentTop(obj), color);
+				this.DrawSpring(graphics, p1, p2, this.objectModifier.HasAttachmentTop(obj), color);
 			}
 
-			if (this.objectModifier.IsChildrenDocked(obj.Parent))
+			if (this.objectModifier.AreChildrenDocked(obj.Parent))
 			{
 				Rectangle rect = this.objectModifier.GetBounds(obj);
 				Point p;
 
-				if (this.objectModifier.IsAttachmentLeft(obj))
+				if (this.objectModifier.HasAttachmentLeft(obj))
 				{
 					p = new Point(rect.Left, rect.Center.Y);
 					this.DrawTriangleLeft(graphics, p, color);
 				}
 
-				if (this.objectModifier.IsAttachmentRight(obj))
+				if (this.objectModifier.HasAttachmentRight(obj))
 				{
 					p = new Point(rect.Right, rect.Center.Y);
 					this.DrawTriangleRight(graphics, p, color);
 				}
 
-				if (this.objectModifier.IsAttachmentBottom(obj))
+				if (this.objectModifier.HasAttachmentBottom(obj))
 				{
 					p = new Point(rect.Center.X, rect.Bottom);
 					this.DrawTriangleBottom(graphics, p, color);
 				}
 
-				if (this.objectModifier.IsAttachmentTop(obj))
+				if (this.objectModifier.HasAttachmentTop(obj))
 				{
 					p = new Point(rect.Center.X, rect.Top);
 					this.DrawTriangleTop(graphics, p, color);
