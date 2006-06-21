@@ -251,7 +251,7 @@ namespace Epsitec.Common.Widgets
 		{
 			Drawing.Margins padding = this.margins;
 			
-			if ( this.navigator != null && this.textFieldStyle != TextFieldStyle.Flat )
+			if ( this.textFieldStyle != TextFieldStyle.Flat )
 			{
 				double excess = System.Math.Max((22-this.Client.Size.Height)/2, 0);
 				double x = System.Math.Max (1, AbstractTextField.FrameMargin-excess);
@@ -659,16 +659,20 @@ namespace Epsitec.Common.Widgets
 
 		protected override void UpdateTextLayout()
 		{
-			if ( this.TextLayout != null )
+			if (this.TextLayout != null)
 			{
 				this.realSize = this.InnerTextBounds.Size;
 				this.TextLayout.Alignment  = this.ContentAlignment;
-				this.TextLayout.LayoutSize = this.GetTextLayoutSize();
-				
-				if ( this.TextLayout.Text != null )
+				this.TextLayout.LayoutSize = this.GetTextLayoutSize ();
+
+				if (this.TextLayout.Text != null)
 				{
-					this.CursorScroll(true);
+					this.CursorScroll (true);
 				}
+			}
+			else
+			{
+				System.Diagnostics.Debug.WriteLine (string.Format ("UpdateTextLayout Failed."));
 			}
 		}
 		
@@ -1538,7 +1542,7 @@ namespace Epsitec.Common.Widgets
 			else
 			{
 				//	On n'a pas le focus...
-				
+
 				adorner.PaintGeneralTextLayout(graphics, clipRect, pos, textLayout, state&~WidgetPaintState.Focused, PaintTextStyle.TextField, this.textDisplayMode, this.BackColor);
 			}
 
