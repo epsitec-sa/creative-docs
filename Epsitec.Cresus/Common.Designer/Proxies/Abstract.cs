@@ -50,6 +50,11 @@ namespace Epsitec.Common.Designer.Proxies
 		{
 			get;
 		}
+
+		public abstract double RowsSpacing
+		{
+			get;
+		}
 		#endregion
 
 

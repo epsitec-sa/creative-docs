@@ -91,6 +91,18 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
+		public double RowsSpacing
+		{
+			get
+			{
+				return this.rowsSpacing;
+			}
+			set
+			{
+				this.rowsSpacing = value;
+			}
+		}
+
 		public void AddPlaceHolder(Placeholder placeholder)
 		{
 			this.grid.RowDefinitions.Add(new RowDefinition());
@@ -98,7 +110,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			
 			if (row > 0)
 			{
-				this.grid.RowDefinitions[row].TopBorder = -1;
+				this.grid.RowDefinitions[row].TopBorder = this.rowsSpacing;
 			}
 
 			GridLayoutEngine.SetColumn(placeholder, 0);
@@ -145,5 +157,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected StaticText				fixIcon;
 		protected Widget					container;
 		protected GridLayoutEngine			grid;
+		protected double					rowsSpacing = -1;
 	}
 }

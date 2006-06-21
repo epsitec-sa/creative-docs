@@ -39,6 +39,14 @@ namespace Epsitec.Common.Designer.Proxies
 			}
 		}
 
+		public override double RowsSpacing
+		{
+			get
+			{
+				return 3;
+			}
+		}
+
 		public ObjectModifier.ChildrenPlacement ChildrenPlacement
 		{
 			get
