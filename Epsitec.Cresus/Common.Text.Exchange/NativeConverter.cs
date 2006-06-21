@@ -5,9 +5,15 @@ using System.Text;
 // Conversion entre format presse-papier natif et TextWrapper
 // Responsable: Michael Walz
 
-// choses qui restent à faire:
-// - TextMarker, TextBox, UserTags, Conditions
-// - link: gèrer les / et autres signes cabalistiques dans les hyperliens
+// Choses qui restent à faire:
+// - gérer les propriétés suivantes : TextMarker, TextBox, UserTags, Conditions
+// - propriété link: gèrer les / et autres signes cabalistiques dans les hyperliens
+//
+// - copier/coller interdocuments
+//   - copier les définitions de styles 
+//   - gérer la création des styles s'ils n'existent pas
+//
+//
 
 namespace Epsitec.Common.Text.Exchange
 {
@@ -124,7 +130,7 @@ namespace Epsitec.Common.Text.Exchange
 		/// </summary>
 		/// <param name="textwrapper"></param>
 		/// <returns></returns>
-		public static string GetDefinedString(Wrappers.TextWrapper textWrapper, TextNavigator navigator, TextStory story, bool paragraphSep)
+		public static string GetDefinedString(Wrappers.TextWrapper textWrapper, TextNavigator navigator, TextStory story, bool paragraphSep, bool startparagraph)
 		{
 			StringBuilder output = new StringBuilder();
 
@@ -134,9 +140,15 @@ namespace Epsitec.Common.Text.Exchange
 
 			foreach (TextStyle style in styles)
 			{
+				string caption = story.TextContext.StyleList.StyleMap.GetCaption (style);
+
+				if (style.TextStyleClass == TextStyleClass.Paragraph && startparagraph)
+				{
+					output.AppendFormat ("pstyle:{0}/", caption);
+				}
+
 				if (style.TextStyleClass == TextStyleClass.Text)
 				{
-					string caption = story.TextContext.StyleList.StyleMap.GetCaption (style);
 					output.AppendFormat ("cstyle:{0}/", caption);
 				}
 			}
@@ -287,6 +299,15 @@ namespace Epsitec.Common.Text.Exchange
 						if (thestyle != null)
 						{
 							navigator.SetTextStyles (thestyle);
+						}
+						break;
+					case "pstyle":
+						stylecaption = subelements[1];
+						thestyle = StyleFromCaption (stylecaption, story);
+
+						if (thestyle != null)
+						{
+							navigator.SetParagraphStyles (thestyle);
 						}
 						break;
 					case "par":
