@@ -14,7 +14,23 @@ namespace Epsitec.Common.Text.Exchange
 	class NativeConverter
 	{
 
-		static string XScriptDefinitionToString(Wrappers.TextWrapper.XscriptDefinition xscriptdef)
+		private static TextStyle StyleFromCaption(string caption, TextStory story)
+		{
+			TextStyle[] styles = story.TextContext.StyleList.StyleMap.GetSortedStyles ();
+
+			TextStyle thenewstyle = null;
+			foreach (TextStyle thestyle in styles)
+			{
+				if (story.TextContext.StyleList.StyleMap.GetCaption (thestyle) == caption)
+				{
+					return thestyle ;
+				}
+			}
+
+			return null ;
+		}
+
+		private static string XScriptDefinitionToString(Wrappers.TextWrapper.XscriptDefinition xscriptdef)
 		{
 			StringBuilder output = new StringBuilder ();
 
@@ -50,7 +66,7 @@ namespace Epsitec.Common.Text.Exchange
 		}
 
 
-		static string XlineDefinitionToString(Wrappers.TextWrapper.XlineDefinition xlinedef)
+		private static string XlineDefinitionToString(Wrappers.TextWrapper.XlineDefinition xlinedef)
 		{
 			StringBuilder output = new StringBuilder() ;
 
@@ -74,7 +90,7 @@ namespace Epsitec.Common.Text.Exchange
 			return output.ToString();
 		}
 
-		static void StringToXlineDefinition(string strxline, Wrappers.TextWrapper.XlineDefinition xlinedef)
+		private static void StringToXlineDefinition(string strxline, Wrappers.TextWrapper.XlineDefinition xlinedef)
 		{
 			char[] sep = { '\\' };
 			string [] elements = strxline.Split (sep, StringSplitOptions.None);
@@ -108,11 +124,22 @@ namespace Epsitec.Common.Text.Exchange
 		/// </summary>
 		/// <param name="textwrapper"></param>
 		/// <returns></returns>
-		public static string GetDefinedString(Wrappers.TextWrapper textWrapper, bool paragraphSep)
+		public static string GetDefinedString(Wrappers.TextWrapper textWrapper, TextNavigator navigator, TextStory story, bool paragraphSep)
 		{
 			StringBuilder output = new StringBuilder();
 
 			output.Append ('[');
+
+			Text.TextStyle[] styles = navigator.TextStyles;
+
+			foreach (TextStyle style in styles)
+			{
+				if (style.TextStyleClass == TextStyleClass.Text)
+				{
+					string caption = story.TextContext.StyleList.StyleMap.GetCaption (style);
+					output.AppendFormat ("cstyle:{0}/", caption);
+				}
+			}
 
 			if (paragraphSep)
 			{
@@ -218,7 +245,7 @@ namespace Epsitec.Common.Text.Exchange
 			return output.ToString() ;
 		}
 
-		public static void SetDefined(Wrappers.TextWrapper textwrapper, string input, out bool paragrpahSep)
+		public static void SetDefined(Wrappers.TextWrapper textwrapper, TextNavigator navigator, TextStory story, string input, out bool paragrpahSep)
 		{
 			char[] separators = new char[] {'/'};
 
@@ -253,6 +280,15 @@ namespace Epsitec.Common.Text.Exchange
 				string[] subelements = elem.Split (':');
 				switch (subelements[0])
 				{
+					case "cstyle":
+						string stylecaption = subelements[1];
+						TextStyle thestyle = StyleFromCaption (stylecaption, story);
+
+						if (thestyle != null)
+						{
+							navigator.SetTextStyles (thestyle);
+						}
+						break;
 					case "par":
 						paragrpahSep = true;
 						break;
