@@ -56,6 +56,30 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		public Caption							ValueCaption
+		{
+			get
+			{
+				BindingExpression expression = this.ValueBindingExpression;
+				
+				if (expression == null)
+				{
+					return null;
+				}
+
+				long captionId = expression.GetSourceCaptionId ();
+
+				if (captionId < 0)
+				{
+					return null;
+				}
+				
+				Support.ResourceManager manager = Helpers.VisualTree.GetResourceManager (this);
+				
+				return Support.CaptionCache.Instance.GetCaption (manager, captionId);
+			}
+		}
+		
 		
 		public object							Value
 		{

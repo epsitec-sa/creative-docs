@@ -309,6 +309,13 @@ namespace Epsitec.Common.Widgets.Helpers
 			return VisualTree.GetRoot (visual) as WindowRoot;
 		}
 
+		public static Support.ResourceManager GetResourceManager(Visual visual)
+		{
+			//	TODO: trouve le bon resource manager
+			
+			return Support.Resources.DefaultManager;
+		}
+
 		public static CommandContext GetCommandContext(Visual visual)
 		{
 			while (visual != null)

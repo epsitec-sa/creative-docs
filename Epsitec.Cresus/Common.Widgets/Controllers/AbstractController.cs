@@ -57,7 +57,23 @@ namespace Epsitec.Common.Widgets.Controllers
 		{
 			if (this.placeholder != null)
 			{
-				this.CreateUserInterface (this.placeholder.ValueType, this.placeholder.ValueName);
+				string name = this.placeholder.ValueName;
+				Caption caption = this.placeholder.ValueCaption;
+				INamedType type = this.placeholder.ValueType;
+
+				if (type != null)
+				{
+					if ((caption != null) &&
+						(caption.Labels.Count > 0))
+					{
+						//	TODO: ne plus transformer le nom ici, mais attacher le caption au
+						//	widget qui représente le label!
+						
+						name = Collection.Extract (caption.Labels, 0);
+					}
+					
+					this.CreateUserInterface (type, name, caption);
+				}
 			}
 		}
 
@@ -111,7 +127,7 @@ namespace Epsitec.Common.Widgets.Controllers
 			return null;
 		}
 
-		protected abstract void CreateUserInterface(INamedType namedType, string valueName);
+		protected abstract void CreateUserInterface(INamedType namedType, string valueName, Caption caption);
 		
 		protected abstract void RefreshUserInterface(object oldValue, object newValue);
 

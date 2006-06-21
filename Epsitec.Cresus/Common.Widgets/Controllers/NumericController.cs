@@ -26,7 +26,7 @@ namespace Epsitec.Common.Widgets.Controllers
 			return this;
 		}
 
-		protected override void CreateUserInterface(INamedType namedType, string valueName)
+		protected override void CreateUserInterface(INamedType namedType, string valueName, Caption caption)
 		{
 			this.Placeholder.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
 
@@ -43,6 +43,12 @@ namespace Epsitec.Common.Widgets.Controllers
 				this.label.Text = string.Format ("{0} ", valueName);
 				this.label.PreferredWidth = this.label.GetBestFitSize ().Width;
 				this.label.Margins = new Drawing.Margins (4, 4, 0, 0);
+			}
+
+			if (caption != null)
+			{
+				//	TODO: gérer caption proprement (avec binding)
+				ToolTip.Default.SetToolTip (this.field, caption.Description);
 			}
 			
 			this.field.HorizontalAlignment = HorizontalAlignment.Stretch;
