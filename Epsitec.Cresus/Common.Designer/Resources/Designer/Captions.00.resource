@@ -41,8 +41,8 @@
   <data id="012">&lt;s:data id="_0" f:Description="Disposition verticale" f:Labels="{Collection {Text 'Vertical'}}" f:Icon="manifest:Epsitec.Common.Designer.Images.PropertyCPVertical.icon" /&gt;</data>
   <data id="013">&lt;s:data id="_0" f:Description="Disposition horizontale" f:Labels="{Collection {Text 'Horizontal'}}" f:Icon="manifest:Epsitec.Common.Designer.Images.PropertyCPHorizontal.icon" /&gt;</data>
 
-  <data id="021">&lt;s:data id="_0" f:Description="Attaché à gauche" f:Labels="{Collection {Text 'Gauche'}}" f:Icon="manifest:Epsitec.Common.Designer.Images.PropertyAttachmentLeft.icon" /&gt;</data>
-  <data id="022">&lt;s:data id="_0" f:Description="Attaché à droite" f:Labels="{Collection {Text 'Droite'}}" f:Icon="manifest:Epsitec.Common.Designer.Images.PropertyAttachmentRight.icon" /&gt;</data>
+  <data id="021">&lt;s:data id="_0" f:Description="Attaché à gauche" f:Labels="{Collection {Text 'À gauche'}}" f:Icon="manifest:Epsitec.Common.Designer.Images.PropertyAttachmentLeft.icon" /&gt;</data>
+  <data id="022">&lt;s:data id="_0" f:Description="Attaché à droite" f:Labels="{Collection {Text 'À droite'}}" f:Icon="manifest:Epsitec.Common.Designer.Images.PropertyAttachmentRight.icon" /&gt;</data>
   <data id="023">&lt;s:data id="_0" f:Description="Attaché en bas" f:Labels="{Collection {Text 'En bas'}}" f:Icon="manifest:Epsitec.Common.Designer.Images.PropertyAttachmentBottom.icon" /&gt;</data>
   <data id="024">&lt;s:data id="_0" f:Description="Attaché en haut" f:Labels="{Collection {Text 'En haut'}}" f:Icon="manifest:Epsitec.Common.Designer.Images.PropertyAttachmentTop.icon" /&gt;</data>
   <data id="025">&lt;s:data id="_0" f:Description="Attaché partout" f:Labels="{Collection {Text 'Partout'}}" f:Icon="manifest:Epsitec.Common.Designer.Images.PropertyAttachmentHFill.icon" /&gt;</data>
@@ -54,6 +54,6 @@
   <data id="034">&lt;s:data id="_0" f:Description="Aligné en haut" f:Labels="{Collection {Text 'En haut'}}" f:Icon="manifest:Epsitec.Common.Designer.Images.PropertyAlignmentTop.icon" /&gt;</data>
   <data id="035">&lt;s:data id="_0" f:Description="Centré horizontalement" f:Labels="{Collection {Text 'Centré'}}" f:Icon="manifest:Epsitec.Common.Designer.Images.PropertyAlignmentHCenter.icon" /&gt;</data>
   <data id="036">&lt;s:data id="_0" f:Description="Centré verticalement" f:Labels="{Collection {Text 'Centré'}}" f:Icon="manifest:Epsitec.Common.Designer.Images.PropertyAlignmentVCenter.icon" /&gt;</data>
-  <data id="037">&lt;s:data id="_0" f:Description="Rempli tout horizontalement" f:Labels="{Collection {Text 'Tout'}}" f:Icon="manifest:Epsitec.Common.Designer.Images.PropertyAlignmentHStretch.icon" /&gt;</data>
-  <data id="038">&lt;s:data id="_0" f:Description="Rempli tout verticalement" f:Labels="{Collection {Text 'Tout'}}" f:Icon="manifest:Epsitec.Common.Designer.Images.PropertyAlignmentVStretch.icon" /&gt;</data>
+  <data id="037">&lt;s:data id="_0" f:Description="Étiré horizontalement" f:Labels="{Collection {Text 'Étiré'}}" f:Icon="manifest:Epsitec.Common.Designer.Images.PropertyAlignmentHStretch.icon" /&gt;</data>
+  <data id="038">&lt;s:data id="_0" f:Description="Étiré verticalement" f:Labels="{Collection {Text 'Étiré'}}" f:Icon="manifest:Epsitec.Common.Designer.Images.PropertyAlignmentVStretch.icon" /&gt;</data>
 </bundle>
