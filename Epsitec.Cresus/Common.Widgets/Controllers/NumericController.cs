@@ -45,12 +45,6 @@ namespace Epsitec.Common.Widgets.Controllers
 				this.label.Margins = new Drawing.Margins (4, 4, 0, 0);
 			}
 
-			if (caption != null)
-			{
-				//	TODO: gérer caption proprement (avec binding)
-				ToolTip.Default.SetToolTip (this.field, caption.Description);
-			}
-			
 			this.field.HorizontalAlignment = HorizontalAlignment.Stretch;
 			this.field.VerticalAlignment = VerticalAlignment.BaseLine;
 			this.field.TextChanged += this.HandleFieldTextChanged;
