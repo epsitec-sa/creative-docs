@@ -354,6 +354,20 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
+		public Rectangle GetInternalPadding(Widget obj)
+		{
+			//	Retourne le rectangle intérieur d'un objet AbstractGroup.
+			Rectangle bounds = this.GetBounds(obj);
+
+			if (this.HasPadding(obj))
+			{
+				bounds.Deflate(obj.GetInternalPadding());
+				bounds.Deflate(obj.Padding);
+			}
+
+			return bounds;
+		}
+
 
 		public bool HasWidth(Widget obj)
 		{
