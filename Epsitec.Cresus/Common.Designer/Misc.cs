@@ -140,13 +140,13 @@ namespace Epsitec.Common.Designer
 		{
 			//	Retourne le nom long d'une culture, par exemple "Italiano (Italian, IT)".
 			//?return string.Format("{0} ({1}, {2})", Misc.CultureName(culture), culture.DisplayName, Misc.CultureShortName(culture));
-			return string.Format("{0} ({1})", Misc.CultureName(culture), Misc.CultureShortName(culture));
+			return string.Format("{0} {1}", Misc.CultureName(culture), Misc.CultureShortName(culture));
 		}
 
 		static public string CultureShortName(System.Globalization.CultureInfo culture)
 		{
-			//	Retourne le nom court (2 lettres) d'une culture, par exemple "Fr".
-			return Misc.ProperName(culture.TwoLetterISOLanguageName);
+			//	Retourne le nom court ISO (2 lettres) d'une culture, par exemple "[fr]".
+			return string.Format("[{0}]", culture.TwoLetterISOLanguageName);
 		}
 
 		static public string CultureName(System.Globalization.CultureInfo culture)

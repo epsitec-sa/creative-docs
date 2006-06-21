@@ -78,7 +78,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.array.SetDynamicsToolTips(0, true);
 				this.array.SetDynamicsToolTips(1, false);
 				this.array.ColumnsWidthChanged += new EventHandler(this.HandleArrayColumnsWidthChanged);
-				this.array.CellsQuantityChanged += new EventHandler(this.HandleArrayCellsQuantityChanged);
+				this.array.CellCountChanged += new EventHandler(this.HandleArrayCellCountChanged);
 				this.array.CellsContentChanged += new EventHandler(this.HandleArrayCellsContentChanged);
 				this.array.SelectedRowChanged += new EventHandler(this.HandleArraySelectedRowChanged);
 				this.array.SelectedRowDoubleClicked += new EventHandler(this.HandleArraySelectedRowDoubleClicked);
@@ -435,7 +435,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			//?this.UpdateClientGeometry();
 		}
 
-		void HandleArrayCellsQuantityChanged(object sender)
+		void HandleArrayCellCountChanged(object sender)
 		{
 			//	Le nombre de lignes a changé.
 			this.UpdateArray();

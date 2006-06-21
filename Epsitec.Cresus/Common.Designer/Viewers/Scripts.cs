@@ -38,7 +38,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.array.SetDynamicsToolTips(0, true);
 			this.array.Margins = new Margins(0, 0, 0, 0);
 			this.array.Dock = DockStyle.Fill;
-			this.array.CellsQuantityChanged += new EventHandler(this.HandleArrayCellsQuantityChanged);
+			this.array.CellCountChanged += new EventHandler (this.HandleArrayCellCountChanged);
 			this.array.SelectedRowChanged += new EventHandler(this.HandleArraySelectedRowChanged);
 			this.array.TabIndex = tabIndex++;
 			this.array.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
@@ -61,7 +61,7 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			if (disposing)
 			{
-				this.array.CellsQuantityChanged -= new EventHandler(this.HandleArrayCellsQuantityChanged);
+				this.array.CellCountChanged -= new EventHandler (this.HandleArrayCellCountChanged);
 				this.array.SelectedRowChanged -= new EventHandler(this.HandleArraySelectedRowChanged);
 
 				this.labelEdit.EditionAccepted -= new EventHandler(this.HandleTextChanged);
@@ -209,7 +209,7 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
-		void HandleArrayCellsQuantityChanged(object sender)
+		void HandleArrayCellCountChanged(object sender)
 		{
 			//	Le nombre de lignes a changé.
 			//?this.UpdateArray();
