@@ -221,12 +221,20 @@ namespace Epsitec.Common.Widgets
 		{
 			if (this.TextLayout != null)
 			{
-				Drawing.Point origin = base.GetBaseLine (width, height, out ascender, out descender);
-				Drawing.Point shift = this.InnerTextBounds.Location - new Drawing.Point (this.margins.Left, this.margins.Bottom);
-				Drawing.Point point = origin + new Drawing.Point (shift.X, shift.Y);
+				//	Détermine la zone rectangulaire dans laquelle le texte est
+				//	affiché et utilise celle-ci comme référence pour les calculs
+				//	de hauteur :
+				
+				Drawing.Rectangle bounds = this.InnerTextBounds;
+				
+				Drawing.Point origin = base.GetBaseLine (width, bounds.Height, out ascender, out descender);
+				Drawing.Point point  = bounds.Location + origin;
 
-				ascender  += shift.Y;
-				descender += shift.Y;
+				double hAbove = height - bounds.Top;
+				double hBelow = bounds.Bottom;
+
+				ascender  += hAbove;
+				descender -= hBelow;
 				
 				return point;
 			}
