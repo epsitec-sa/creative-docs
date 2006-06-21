@@ -2901,6 +2901,17 @@ namespace Epsitec.Common.Designer.MyWidgets
 				Misc.DrawPathDash(graphics, path, 2, 0, 4, PanelsContext.ColorHiliteOutline);
 			}
 
+			this.DrawPadding(graphics, obj);
+
+			if (obj != this.panel)
+			{
+				this.DrawPadding(graphics, obj.Parent);
+			}
+		}
+
+		protected void DrawPadding(Graphics graphics, Widget obj)
+		{
+			//	Dessine les marges de padding d'un objet, sous forme de hachures.
 			if (obj is AbstractGroup)
 			{
 				AbstractGroup group = obj as AbstractGroup;
@@ -2910,6 +2921,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 				if (padding != Margins.Zero)
 				{
+					Rectangle bounds = this.objectModifier.GetBounds(obj);
+
 					Path path = new Path();
 					path.AppendRectangle(bounds);
 					path = Path.Combine(path, Misc.GetHatchPath(bounds, 6, 1), PathOperation.And);
