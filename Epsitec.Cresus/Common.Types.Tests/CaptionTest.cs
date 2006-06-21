@@ -78,7 +78,7 @@ namespace Epsitec.Common.Types
 			c = Caption.Merge (a, b);
 
 			Assert.AreEqual (0, c.Labels.Count);
-			Assert.IsFalse (c.ContainsLocalValue (Caption.DecriptionProperty));
+			Assert.IsFalse (c.ContainsLocalValue (Caption.DescriptionProperty));
 
 			a.Description = "xyz";
 			b.Labels.Add ("1");

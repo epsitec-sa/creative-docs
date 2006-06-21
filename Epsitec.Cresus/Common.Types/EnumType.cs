@@ -145,8 +145,20 @@ namespace Epsitec.Common.Types
 			
 			return null;
 		}
-		
-		
+
+
+		public void DefineDefaultController(string controller, string controllerParameter)
+		{
+			if (this.DefaultController != controller)
+			{
+				this.SetValue (EnumType.DefaultControllerProperty, controller);
+			}
+			if (this.DefaultControllerParameter != controllerParameter)
+			{
+				this.SetValue (EnumType.DefaultControllerParameterProperty, controllerParameter);
+			}
+		}
+
 		#region IDataConstraint Members
 		public virtual bool IsValidValue(object value)
 		{
@@ -170,7 +182,7 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
-				return "Enum";
+				return (string) this.GetValue (EnumType.DefaultControllerProperty);
 			}
 		}
 
@@ -178,10 +190,10 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
-				return null;
+				return (string) this.GetValue (EnumType.DefaultControllerParameterProperty);
 			}
 		}
-
+		
 		#endregion
 		
 		#region ISystemType Members
@@ -348,6 +360,9 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		public static readonly DependencyProperty DefaultControllerProperty = DependencyProperty.RegisterReadOnly ("DefaultController", typeof (string), typeof (EnumType), new DependencyPropertyMetadata ("Enum"));
+		public static readonly DependencyProperty DefaultControllerParameterProperty = DependencyProperty.RegisterReadOnly ("DefaultControllerParameter", typeof (string), typeof (EnumType), new DependencyPropertyMetadata ());
+		
 		private static object exclusion = new object ();
 		private static Dictionary<System.Type, EnumType> cache = new Dictionary<System.Type, EnumType> ();
 		

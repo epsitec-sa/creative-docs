@@ -764,7 +764,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		public event EventHandler					SelectedIndexChanged
+		public event EventHandler				SelectedIndexChanged
 		{
 			add
 			{
