@@ -253,7 +253,7 @@ namespace Epsitec.Common.Designer
 			this.ribbonText.Items.Add(new Ribbons.Character(this));
 			this.ribbonText.Items.Add(new Ribbons.Clipboard(this));
 
-			//	Crée la barre de status.
+			//	Crée la barre de statuts.
 			this.info = new StatusBar(this.window.Root);
 			this.info.Dock = DockStyle.Bottom;
 			this.info.Margins = new Margins(0, 0, 0, 0);

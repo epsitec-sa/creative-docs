@@ -319,7 +319,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		public string SelectionInfo
 		{
-			//	Donne le texte pour les status.
+			//	Donne le texte pour les statuts.
 			get
 			{
 				string sel = "-";
@@ -379,6 +379,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 					this.ProcessMouseUp(pos, message.IsRightButton, message.IsControlPressed, message.IsShiftPressed);
 					message.Captured = true;
 					message.Consumer = this;
+					break;
+
+				case MessageType.MouseLeave:
+					this.SetHilitedObject(null);
+					this.SetHilitedParent(null);
 					break;
 
 				case MessageType.KeyDown:
