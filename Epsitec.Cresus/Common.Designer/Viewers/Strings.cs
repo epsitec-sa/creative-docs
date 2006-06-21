@@ -1009,6 +1009,43 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
+		public override string InfoAccessText
+		{
+			//	Donne le texte d'information sur l'accès en cours.
+			get
+			{
+				System.Text.StringBuilder builder = new System.Text.StringBuilder();
+
+				int sel = this.array.SelectedRow;
+				if (sel == -1)
+				{
+					builder.Append("-");
+				}
+				else
+				{
+					ResourceBundleCollection bundles = this.module.Bundles;
+					ResourceBundle bundle = bundles[ResourceLevel.Default];
+					ResourceBundle.Field field = bundle[this.druidsIndex[sel]];
+
+					builder.Append(field.Name);
+					builder.Append(": ");
+					builder.Append((sel+1).ToString());
+				}
+
+				builder.Append("/");
+				builder.Append(this.druidsIndex.Count.ToString());
+
+				if (this.druidsIndex.Count < this.InfoAccessTotalCount)
+				{
+					builder.Append(" (");
+					builder.Append(this.InfoAccessTotalCount.ToString());
+					builder.Append(")");
+				}
+
+				return builder.ToString();
+			}
+		}
+
 		protected override int InfoAccessTotalCount
 		{
 			get

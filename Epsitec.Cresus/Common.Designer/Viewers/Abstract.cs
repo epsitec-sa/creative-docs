@@ -165,36 +165,12 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 		}
 
-		public string InfoAccessText
+		public virtual string InfoAccessText
 		{
 			//	Donne le texte d'information sur l'accès en cours.
 			get
 			{
-				System.Text.StringBuilder builder = new System.Text.StringBuilder();
-
-				int sel = this.array.SelectedRow;
-				if (sel == -1)
-				{
-					builder.Append("-");
-				}
-				else
-				{
-					builder.Append(this.druidsIndex[sel]);
-					builder.Append(": ");
-					builder.Append((sel+1).ToString());
-				}
-
-				builder.Append("/");
-				builder.Append(this.druidsIndex.Count.ToString());
-
-				if (this.druidsIndex.Count < this.InfoAccessTotalCount)
-				{
-					builder.Append(" (");
-					builder.Append(this.InfoAccessTotalCount.ToString());
-					builder.Append(")");
-				}
-
-				return builder.ToString();
+				return "";
 			}
 		}
 
