@@ -216,6 +216,7 @@ namespace Epsitec.Common.Designer.Proxies
 			}
 		}
 		
+
 		static Geometry()
 		{
 			Geometry.LeftMarginProperty.DefaultMetadata.DefineNamedType (ProxyManager.MarginNumericType);
@@ -228,10 +229,15 @@ namespace Epsitec.Common.Designer.Proxies
 			Geometry.WidthProperty.DefaultMetadata.DefineNamedType (ProxyManager.SizeNumericType);
 			Geometry.HeightProperty.DefaultMetadata.DefineNamedType (ProxyManager.SizeNumericType);
 
-			Geometry.OriginXProperty.DefaultMetadata.DefineCaptionId (new Support.Druid ("[1000]").ToLong ());
-			Geometry.OriginYProperty.DefaultMetadata.DefineCaptionId (new Support.Druid ("[1001]").ToLong ());
-			Geometry.WidthProperty.DefaultMetadata.DefineCaptionId (new Support.Druid ("[1002]").ToLong ());
-			Geometry.HeightProperty.DefaultMetadata.DefineCaptionId (new Support.Druid ("[1003]").ToLong ());
+			Geometry.LeftMarginProperty.DefaultMetadata.DefineCaptionId(new Support.Druid("[1000]").ToLong());
+			Geometry.RightMarginProperty.DefaultMetadata.DefineCaptionId(new Support.Druid("[1001]").ToLong());
+			Geometry.TopMarginProperty.DefaultMetadata.DefineCaptionId(new Support.Druid("[1002]").ToLong());
+			Geometry.BottomMarginProperty.DefaultMetadata.DefineCaptionId(new Support.Druid("[1003]").ToLong());
+
+			Geometry.OriginXProperty.DefaultMetadata.DefineCaptionId(new Support.Druid("[1004]").ToLong());
+			Geometry.OriginYProperty.DefaultMetadata.DefineCaptionId(new Support.Druid("[1005]").ToLong());
+			Geometry.WidthProperty.DefaultMetadata.DefineCaptionId(new Support.Druid("[1006]").ToLong());
+			Geometry.HeightProperty.DefaultMetadata.DefineCaptionId(new Support.Druid("[1007]").ToLong());
 		}
 
 

@@ -133,7 +133,21 @@ namespace Epsitec.Common.Designer.Proxies
 		}
 
 
-		public static readonly DependencyProperty LeftPaddingProperty	= DependencyProperty.Register("LeftPadding",   typeof(double), typeof(Padding), new DependencyPropertyMetadata(0.0, Padding.NotifyPaddingChanged));
+		static Padding()
+		{
+			Padding.LeftPaddingProperty.DefaultMetadata.DefineNamedType(ProxyManager.MarginNumericType);
+			Padding.RightPaddingProperty.DefaultMetadata.DefineNamedType(ProxyManager.MarginNumericType);
+			Padding.TopPaddingProperty.DefaultMetadata.DefineNamedType(ProxyManager.MarginNumericType);
+			Padding.BottomPaddingProperty.DefaultMetadata.DefineNamedType(ProxyManager.MarginNumericType);
+
+			Padding.LeftPaddingProperty.DefaultMetadata.DefineCaptionId(new Support.Druid("[1008]").ToLong());
+			Padding.RightPaddingProperty.DefaultMetadata.DefineCaptionId(new Support.Druid("[1009]").ToLong());
+			Padding.TopPaddingProperty.DefaultMetadata.DefineCaptionId(new Support.Druid("[100A]").ToLong());
+			Padding.BottomPaddingProperty.DefaultMetadata.DefineCaptionId(new Support.Druid("[100B]").ToLong());
+		}
+
+
+		public static readonly DependencyProperty LeftPaddingProperty	= DependencyProperty.Register("LeftPadding", typeof(double), typeof(Padding), new DependencyPropertyMetadata(0.0, Padding.NotifyPaddingChanged));
 		public static readonly DependencyProperty RightPaddingProperty	= DependencyProperty.Register("RightPadding",  typeof(double), typeof(Padding), new DependencyPropertyMetadata(0.0, Padding.NotifyPaddingChanged));
 		public static readonly DependencyProperty TopPaddingProperty    = DependencyProperty.Register("TopPadding",    typeof(double), typeof(Padding), new DependencyPropertyMetadata(0.0, Padding.NotifyPaddingChanged));
 		public static readonly DependencyProperty BottomPaddingProperty = DependencyProperty.Register("BottomPadding", typeof(double), typeof(Padding), new DependencyPropertyMetadata(0.0, Padding.NotifyPaddingChanged));

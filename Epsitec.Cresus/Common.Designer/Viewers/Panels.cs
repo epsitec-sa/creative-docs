@@ -95,7 +95,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			this.tabBook = new TabBook(this);
 			this.tabBook.MinWidth = 150;
-			this.tabBook.PreferredWidth = 300;
+			this.tabBook.PreferredWidth = 250;
 			this.tabBook.MaxWidth = 400;
 			this.tabBook.Arrows = TabBookArrows.Stretch;
 			this.tabBook.Margins = new Margins(1, 1, 1, 1);
