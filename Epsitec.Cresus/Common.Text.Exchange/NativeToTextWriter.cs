@@ -30,7 +30,7 @@ namespace Epsitec.Common.Text.Exchange
 					break;
 
 				bool paragraphSep;
-				NativeConverter.SetDefined (this.textWrapper, this.navigator, this.story, formatline, out paragraphSep);
+				NativeConverter.SetDefined (this.textWrapper, this.paraWrapper, this.navigator, this.story, formatline, out paragraphSep);
 
 				if (paragraphSep)
 				{

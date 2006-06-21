@@ -96,7 +96,6 @@ namespace Epsitec.Common.Text.Exchange
 
 			System.Windows.Forms.Clipboard clipboard;
 
-//			HtmlTextOut htmlText = new HtmlTextOut ();
 			bool newParagraph = true;
 
 			int[] selectedPositions = usernavigator.GetAdjustedSelectionCursorPositions ();
@@ -202,14 +201,13 @@ namespace Epsitec.Common.Text.Exchange
 			// ne gère pas les sélections disjointes pour le moment
 			System.Diagnostics.Debug.Assert (selectedPositions.Length == 2);
 
+			// ATTENTION: BUG: lorsqu'on sélectionne une ligne avec des puces
+			// les la longueur (selectionLength) est trop grande
 			int selectionLength = selectedPositions[1] - selectedPositions[0];
 			int selectionStart = selectedPositions[0];
 			int selectionEnd = selectedPositions[1];
 			int currentPosition = selectionStart;
 			navigator.MoveTo (selectionStart, 0);
-
-
-			bool startParagraph = true;
 
 			while (true)
 			{
@@ -234,8 +232,7 @@ namespace Epsitec.Common.Text.Exchange
 					paragraphSep = true;
 				}
 								
-				string runattributes = NativeConverter.GetDefinedString (textWrapper, navigator, story, paragraphSep, startParagraph);
-				startParagraph = paragraphSep;
+				string runattributes = NativeConverter.GetDefinedString (textWrapper, paraWrapper, navigator, story, paragraphSep);
 
 				nativeText.AppendTextLine (runattributes);
 				
