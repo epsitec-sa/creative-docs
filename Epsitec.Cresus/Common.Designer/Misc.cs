@@ -80,33 +80,6 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		static public void AddBox(Graphics graphics, Point p1, Point p2, double thickness)
-		{
-			//	Dessine une boîte horizontale ou verticale.
-			if (p1.Y == p2.Y)  // boîte horizontale ?
-			{
-				p1.Y -= thickness+1;
-				p2.Y += thickness-1;
-				p2.X -= 1;
-				Misc.AlignForLine(graphics, ref p1);
-				Misc.AlignForLine(graphics, ref p2);
-				graphics.AddRectangle(new Rectangle(p1, p2));
-			}
-			else if (p1.X == p2.X)  // boîte verticale ?
-			{
-				p1.X -= thickness+1;
-				p2.X += thickness-1;
-				p2.Y -= 1;
-				Misc.AlignForLine(graphics, ref p1);
-				Misc.AlignForLine(graphics, ref p2);
-				graphics.AddRectangle(new Rectangle(p1, p2));
-			}
-			else
-			{
-				throw new System.Exception("This geometry is not implemented.");
-			}
-		}
-
 		static public void AlignForLine(Graphics graphics, ref Point p)
 		{
 			//	Aligne un point pour permettre un joli Graphics.AddLine.
