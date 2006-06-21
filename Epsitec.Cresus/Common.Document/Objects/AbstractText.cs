@@ -449,7 +449,9 @@ namespace Epsitec.Common.Document.Objects
 				Text.TextStory story = flow.TextStory;
 				Text.TextNavigator navigator = flow.TextNavigator;
 
+				story.DisableOpletQueue ();
 				Epsitec.Common.Text.Exchange.Rosetta.PasteNativeText (story, navigator);
+				story.EnableOpletQueue ();
 				textInserted = true;
 			}
 			else if (ido.GetDataPresent (System.Windows.Forms.DataFormats.Html, false))
@@ -459,7 +461,9 @@ namespace Epsitec.Common.Document.Objects
 				Text.TextStory story = flow.TextStory;
 				Text.TextNavigator navigator = flow.TextNavigator;
 
+				story.DisableOpletQueue ();
 				Epsitec.Common.Text.Exchange.Rosetta.PasteHtmlText (story, navigator);
+				story.EnableOpletQueue ();
 				textInserted = true;
 			}
 			else if (ido.GetDataPresent(System.Windows.Forms.DataFormats.Text, false))
