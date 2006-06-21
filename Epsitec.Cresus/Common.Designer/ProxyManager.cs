@@ -146,6 +146,24 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
+		static ProxyManager()
+		{
+			Types.DoubleType locationNumericType = new Types.DoubleType (-9999, 9999, 0.1M);
+			Types.DoubleType sizeNumericType     = new Types.DoubleType (0, 9999, 0.1M);
+			Types.DoubleType marginNumericType   = new Types.DoubleType (-1, 9999, 0.1M);
+
+			locationNumericType.DefinePreferredRange (new Types.DecimalRange (0, 1000, 2));
+			sizeNumericType.DefinePreferredRange (new Types.DecimalRange (0, 1000, 1));
+			marginNumericType.DefinePreferredRange (new Types.DecimalRange (0, 200, 1));
+
+			ProxyManager.LocationNumericType = locationNumericType;
+			ProxyManager.SizeNumericType     = sizeNumericType;
+			ProxyManager.MarginNumericType   = marginNumericType;
+		}
+		
+		public static readonly Types.INumericType LocationNumericType;
+		public static readonly Types.INumericType SizeNumericType;
+		public static readonly Types.INumericType MarginNumericType;
 
 		private ObjectModifier			objectModifier;
 		private List<Widget>			widgets;
