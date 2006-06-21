@@ -46,11 +46,11 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
-				return (string) this.GetValue (Caption.DecriptionProperty);
+				return (string) this.GetValue (Caption.DescriptionProperty);
 			}
 			set
 			{
-				this.SetValue (Caption.DecriptionProperty, value);
+				this.SetValue (Caption.DescriptionProperty, value);
 			}
 		}
 		
@@ -62,6 +62,18 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		public string							Icon
+		{
+			get
+			{
+				return (string) this.GetValue (Caption.IconProperty);
+			}
+			set
+			{
+				this.SetValue (Caption.IconProperty, value);
+			}
+		}
+		
 
 		public void DefineId(string id)
 		{
@@ -315,7 +327,8 @@ namespace Epsitec.Common.Types
 		}
 		
 		public static readonly DependencyProperty LabelsProperty = DependencyProperty.RegisterReadOnly ("Labels", typeof (ICollection<string>), typeof (Caption), new DependencyPropertyMetadata (Caption.GetLabelsValue).MakeReadOnlySerializable ());
-		public static readonly DependencyProperty DecriptionProperty = DependencyProperty.Register ("Description", typeof (string), typeof (Caption));
+		public static readonly DependencyProperty DescriptionProperty = DependencyProperty.Register ("Description", typeof (string), typeof (Caption));
+		public static readonly DependencyProperty IconProperty = DependencyProperty.Register ("Icon", typeof (string), typeof (Caption));
 
 		private Collections.HostedList<string> labels;
 		private string[] sortedLabels;

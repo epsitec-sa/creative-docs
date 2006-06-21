@@ -361,6 +361,14 @@ namespace Epsitec.Common.Designer.Proxies
 
 		static Layout()
 		{
+			EnumType childrenPlacementEnumType = new EnumType (typeof (ObjectModifier.ChildrenPlacement));
+
+			childrenPlacementEnumType.DefineDefaultController ("Enum", "Icons");
+			childrenPlacementEnumType[ObjectModifier.ChildrenPlacement.Anchored].DefineCaptionId (new Support.Druid ("[10001]").ToLong ());
+			childrenPlacementEnumType[ObjectModifier.ChildrenPlacement.VerticalDocked].DefineCaptionId (new Support.Druid ("[10011]").ToLong ());
+			childrenPlacementEnumType[ObjectModifier.ChildrenPlacement.HorizontalDocked].DefineCaptionId (new Support.Druid ("[10021]").ToLong ());
+			
+			Layout.ChildrenPlacementProperty.DefaultMetadata.DefineNamedType (childrenPlacementEnumType);
 			Layout.ChildrenPlacementProperty.DefaultMetadata.DefineCaptionId(new Support.Druid("[100C]").ToLong());
 			Layout.AnchoredHorizontalAttachmentProperty.DefaultMetadata.DefineCaptionId(new Support.Druid("[100D]").ToLong());
 			Layout.AnchoredVerticalAttachmentProperty.DefaultMetadata.DefineCaptionId(new Support.Druid("[100E]").ToLong());
