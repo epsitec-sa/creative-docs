@@ -134,6 +134,7 @@ namespace Epsitec.Common.Designer
 			panel.Dock = DockStyle.Top;
 			panel.Icon = proxy.IconName;
 			panel.DataColumnWidth = proxy.DataColumnWidth;
+			panel.RowsSpacing = proxy.RowsSpacing;
 			panel.Title = source.GetType().Name;
 
 			foreach (DependencyProperty property in source.DefinedProperties)

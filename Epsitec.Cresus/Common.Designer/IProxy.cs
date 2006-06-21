@@ -46,5 +46,14 @@ namespace Epsitec.Common.Designer
 		{
 			get;
 		}
+
+		/// <summary>
+		/// Gets the vertical spacing for rows.
+		/// </summary>
+		/// <value>The pixel spacing of the rows.</value>
+		double RowsSpacing
+		{
+			get;
+		}
 	}
 }
