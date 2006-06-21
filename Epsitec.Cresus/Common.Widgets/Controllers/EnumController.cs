@@ -26,7 +26,7 @@ namespace Epsitec.Common.Widgets.Controllers
 			return this;
 		}
 
-		protected override void CreateUserInterface(INamedType namedType, string valueName)
+		protected override void CreateUserInterface(INamedType namedType, string valueName, Caption caption)
 		{
 			this.Placeholder.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
 

@@ -227,6 +227,11 @@ namespace Epsitec.Common.Designer.Proxies
 			Geometry.OriginYProperty.DefaultMetadata.DefineNamedType (ProxyManager.LocationNumericType);
 			Geometry.WidthProperty.DefaultMetadata.DefineNamedType (ProxyManager.SizeNumericType);
 			Geometry.HeightProperty.DefaultMetadata.DefineNamedType (ProxyManager.SizeNumericType);
+
+			Geometry.OriginXProperty.DefaultMetadata.DefineCaptionId (new Support.Druid ("[1000]").ToLong ());
+			Geometry.OriginYProperty.DefaultMetadata.DefineCaptionId (new Support.Druid ("[1001]").ToLong ());
+			Geometry.WidthProperty.DefaultMetadata.DefineCaptionId (new Support.Druid ("[1002]").ToLong ());
+			Geometry.HeightProperty.DefaultMetadata.DefineCaptionId (new Support.Druid ("[1003]").ToLong ());
 		}
 
 
