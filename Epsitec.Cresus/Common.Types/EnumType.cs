@@ -315,6 +315,28 @@ namespace Epsitec.Common.Types
 			return (int) number;
 		}
 		
+		public static EnumType GetDefault(System.Type systemType)
+		{
+			lock (EnumType.exclusion)
+			{
+				EnumType enumType;
+
+				if (EnumType.cache.TryGetValue (systemType, out enumType))
+				{
+					return enumType;
+				}
+				
+				enumType = new EnumType (systemType);
+
+				EnumType.cache[systemType] = enumType;
+				
+				return enumType;
+			}
+		}
+
+		private static object exclusion = new object ();
+		private static Dictionary<System.Type, EnumType> cache = new Dictionary<System.Type, EnumType> ();
+		
 		private System.Type						enumType;
 		private List<EnumValue>					enumValues;
 	}

@@ -86,7 +86,7 @@ namespace Epsitec.Common.Types
 					{
 						if (systemType.IsEnum)
 						{
-							namedType = new EnumType (systemType);
+							namedType = EnumType.GetDefault (systemType);
 						}
 						else
 						{
