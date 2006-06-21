@@ -734,6 +734,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.UpdateEdit();
 			this.UpdateCommands();
 			this.panelEditor.IsEditEnabled = (this.array.SelectedRow != -1);
+			this.DefineProxies(this.panelEditor.SelectedObjects);
 		}
 
 		void HandleTextChanged(object sender)
