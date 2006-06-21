@@ -21,22 +21,28 @@ namespace Epsitec.Common.Text.Exchange
 
 			if (paragraphSep)
 			{
-				output.Append("par;") ;
+				output.Append("par/") ;
 			}
 
 			if (textWrapper.Defined.IsInvertItalicDefined && textWrapper.Defined.InvertItalic)
 			{
-				output.Append ("i;");
+				output.Append ("i/");
 			}
 
 			if (textWrapper.Defined.IsInvertBoldDefined && textWrapper.Defined.InvertBold)
 			{
-				output.Append ("b;");
+				output.Append ("b/");
 			}
+
+			if (textWrapper.Defined.IsColorDefined)
+			{
+				output.AppendFormat ("c:{0}/", textWrapper.Defined.Color);
+			}
+
 
 			if (textWrapper.Defined.IsUnderlineDefined)
 			{
-				output.Append ("u;");
+				output.Append ("u/");
 			}
 
 			output.Append (']');
@@ -45,13 +51,14 @@ namespace Epsitec.Common.Text.Exchange
 
 		public static void SetDefined(Wrappers.TextWrapper textwrapper, string input, out bool paragrpahSep)
 		{
-			char[] separators = new char[] {';'};
+			char[] separators = new char[] {'/'};
 
 			paragrpahSep = false;
 
 			bool invertItalic = false;
 			bool invertBold = false;
 			bool underline = false;
+			bool colorDef = false;
 
 			System.Diagnostics.Debug.Assert (input[0] == '[' && input[input.Length-1] == ']');
 			input = input.Substring(1, input.Length - 2) ;
@@ -60,7 +67,7 @@ namespace Epsitec.Common.Text.Exchange
 
 			foreach (string elem in elements)
 			{
-				string[] subelements = elem.Split (',');
+				string[] subelements = elem.Split (':');
 				switch (subelements[0])
 				{
 					case "par":
@@ -78,6 +85,10 @@ namespace Epsitec.Common.Text.Exchange
 						//					textwrapper.Defined.Underline. = true;
 						underline = true;
 						break;
+					case "c":
+						textwrapper.Defined.Color = subelements[1];
+						colorDef = true;
+						break;
 				}
 			}
 
@@ -94,6 +105,11 @@ namespace Epsitec.Common.Text.Exchange
 			if (!underline)
 			{
 				textwrapper.Defined.ClearUnderline ();
+			}
+
+			if (!colorDef)
+			{
+				textwrapper.Defined.ClearColor ();
 			}
 		}
 	}
