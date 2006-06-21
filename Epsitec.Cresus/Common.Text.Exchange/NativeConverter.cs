@@ -2,12 +2,52 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-// Conversion entre format presse-papier natif et 
+// Conversion entre format presse-papier natif et TextWrapper
+// Responsable: Michael Walz
+
+// choses qui restent à faire:
+// - TextMarker, TextBox, UserTage, Conditions
+// - link: gèrer les / et autres signes cabalistiques dans les hyperliens
 
 namespace Epsitec.Common.Text.Exchange
 {
 	class NativeConverter
 	{
+
+		static string XScriptDefinitionToString(Wrappers.TextWrapper.XscriptDefinition xscriptdef)
+		{
+			StringBuilder output = new StringBuilder ();
+
+			output.Append (Misc.boolTobyte (xscriptdef.IsDisabled));
+			output.Append ('\\');
+			output.Append (Misc.boolTobyte (xscriptdef.IsEmpty));
+			output.Append ('\\');
+			output.Append (xscriptdef.Offset);
+			output.Append ('\\');
+			output.Append (xscriptdef.Scale);
+			output.Append ('\\');
+
+			return output.ToString ();
+		}
+
+		static void StringToXScriptDefinition(string strxline, Wrappers.TextWrapper.XscriptDefinition xscriptdef)
+		{
+			char[] sep = { '\\' };
+			string[] elements = strxline.Split (sep, StringSplitOptions.None);
+
+			byte b;
+			double d;
+
+			b = byte.Parse (elements[0]);
+			xscriptdef.IsDisabled = Misc.byteTobool (b);
+
+			b = byte.Parse (elements[1]);
+			//	xscriptdef.IsEmpty = Misc.byteTobool (b);
+
+			xscriptdef.Offset = Misc.ParseDouble (elements[2]);
+
+			xscriptdef.Scale = Misc.ParseDouble (elements[3]);
+		}
 
 
 		static string XlineDefinitionToString(Wrappers.TextWrapper.XlineDefinition xlinedef)
@@ -130,11 +170,48 @@ namespace Epsitec.Common.Text.Exchange
 			}
 
 
-
 			if (textWrapper.Defined.IsUnderlineDefined)
 			{
 				string xlinedef = XlineDefinitionToString (textWrapper.Defined.Underline);
 				output.AppendFormat ("u:{0}/",xlinedef);
+			}
+
+			if (textWrapper.Defined.IsOverlineDefined)
+			{
+				string xlinedef = XlineDefinitionToString (textWrapper.Defined.Overline);
+				output.AppendFormat ("o:{0}/", xlinedef);
+			}
+
+			if (textWrapper.Defined.IsStrikeoutDefined)
+			{
+				string xlinedef = XlineDefinitionToString (textWrapper.Defined.Strikeout);
+				output.AppendFormat ("s:{0}/", xlinedef);
+			}
+
+			if (textWrapper.Defined.IsXscriptDefined)
+			{
+				string xscriptdef = XScriptDefinitionToString (textWrapper.Defined.Xscript);
+				output.AppendFormat ("x:{0}/", xscriptdef);
+			}
+
+			if (textWrapper.Defined.IsFontGlueDefined)
+			{
+				output.AppendFormat ("fontglue:{0}/", textWrapper.Defined.FontGlue);
+			}
+
+			if (textWrapper.Defined.IsLanguageHyphenationDefined)
+			{
+				output.AppendFormat("langhyph:{0}/", textWrapper.Defined.LanguageHyphenation) ;
+			}
+
+			if (textWrapper.Defined.IsLanguageLocaleDefined)
+			{
+				output.AppendFormat ("langloc:{0}/", textWrapper.Defined.LanguageLocale);
+			}
+
+			if (textWrapper.Defined.IsLinkDefined)
+			{
+				output.AppendFormat ("link:{0}/", textWrapper.Defined.Link);
 			}
 
 			output.Append (']');
@@ -154,8 +231,15 @@ namespace Epsitec.Common.Text.Exchange
 			bool fontFace = false ;
 			bool fontStyle = false ;
 			bool fontSize = false ;
+			bool fontglue = false;
+			bool languageHyphenation = false;
+			bool languageLocale = false;
 			bool units = false;
 			bool features = false;
+			bool overline = false;
+			bool strikeout = false;
+			bool xscript = false;
+			bool link = false;
 
 			textwrapper.SuspendSynchronizations ();
 
@@ -184,6 +268,18 @@ namespace Epsitec.Common.Text.Exchange
 						StringToXlineDefinition (subelements[1], textwrapper.Defined.Underline);
 						underline = true;
 						break;
+					case "o":
+						StringToXlineDefinition (subelements[1], textwrapper.Defined.Overline);
+						overline = true;
+						break;
+					case "s":
+						StringToXlineDefinition (subelements[1], textwrapper.Defined.Strikeout);
+						strikeout = true;
+						break;
+					case "x":
+						StringToXScriptDefinition(subelements[1], textwrapper.Defined.Xscript);
+						xscript = true;
+						break;
 					case "c":
 						textwrapper.Defined.Color = subelements[1];
 						color = true;
@@ -198,7 +294,6 @@ namespace Epsitec.Common.Text.Exchange
 						break;
 					case "fsize":
 						double size = double.Parse(subelements[1],System.Globalization.NumberStyles.Float) ;
-						// BUG: la taille ne change pas !!
 						textwrapper.Defined.FontSize = size;
 						fontSize = true;
 						break;
@@ -213,7 +308,22 @@ namespace Epsitec.Common.Text.Exchange
 						textwrapper.Defined.FontFeatures = thefeatures;
 						features = true;
 						break;
-
+					case "fontglue":
+						textwrapper.Defined.FontGlue = double.Parse (subelements[1], System.Globalization.NumberStyles.Float);
+						fontglue = true;
+						break;
+					case "langhyph":
+						textwrapper.Defined.LanguageHyphenation = double.Parse (subelements[1], System.Globalization.NumberStyles.Float);
+						languageHyphenation = true;
+						break;
+					case "langloc":
+						textwrapper.Defined.LanguageLocale = subelements[1];
+						languageLocale = true;
+						break;
+					case "link":
+						textwrapper.Defined.Link = subelements[1];
+						LinkedList = true;
+						break;
 				}
 			}
 
@@ -226,6 +336,15 @@ namespace Epsitec.Common.Text.Exchange
 			if (!underline)
 				textwrapper.Defined.ClearUnderline ();
 
+			if (!overline)
+				textwrapper.Defined.ClearOverline ();
+
+			if (!strikeout)
+				textwrapper.Defined.ClearStrikeout ();
+
+			if (!xscript)
+				textwrapper.Defined.ClearXscript();
+
 			if (!color)
 				textwrapper.Defined.ClearColor ();
 
@@ -237,6 +356,18 @@ namespace Epsitec.Common.Text.Exchange
 
 			if (!fontSize)
 				textwrapper.Defined.ClearFontSize ();
+
+			if (!fontglue)
+				textwrapper.Defined.ClearFontGlue ();
+
+			if (!languageHyphenation)
+				textwrapper.Defined.ClearLanguageHyphenation ();
+
+			if (!languageLocale)
+				textwrapper.Defined.ClearLanguageLocale ();
+
+			if (!link)
+				textwrapper.Defined.ClearLink ();
 
 			if (!units)
 				textwrapper.Defined.ClearUnits ();
