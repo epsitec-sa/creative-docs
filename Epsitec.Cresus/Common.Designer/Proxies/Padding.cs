@@ -31,22 +31,6 @@ namespace Epsitec.Common.Designer.Proxies
 			}
 		}
 
-		public override double DataColumnWidth
-		{
-			get
-			{
-				return 50;
-			}
-		}
-
-		public override double RowsSpacing
-		{
-			get
-			{
-				return -1;
-			}
-		}
-
 		public double LeftPadding
 		{
 			get
