@@ -1419,7 +1419,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				Rectangle rect = this.panel.Client.Bounds;
 				if (rect.Contains(pos))
 				{
-					rect.Deflate(this.context.GroupOutline);
+					rect.Deflate(this.GetDetectPadding(this.panel));
 					if (!rect.Contains(pos))
 					{
 						detected = this.panel;
@@ -1452,7 +1452,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 					if (widget is AbstractGroup)
 					{
-						rect.Deflate(this.context.GroupOutline);
+						rect.Deflate(this.GetDetectPadding(widget));
 						if (rect.Contains(pos))
 						{
 							continue;
@@ -1469,6 +1469,20 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 
 			return null;
+		}
+
+		protected Margins GetDetectPadding(Widget obj)
+		{
+			//	Retourne les marges intérieures pour la détection du padding.
+			Margins padding = obj.Padding;
+			padding += obj.GetInternalPadding();
+
+			padding.Left   = System.Math.Max(padding.Left,   this.context.GroupOutline);
+			padding.Right  = System.Math.Max(padding.Right,  this.context.GroupOutline);
+			padding.Bottom = System.Math.Max(padding.Bottom, this.context.GroupOutline);
+			padding.Top    = System.Math.Max(padding.Top,    this.context.GroupOutline);
+
+			return padding;
 		}
 
 		protected Widget DetectGroup(Point pos)
@@ -2915,35 +2929,26 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Dessine les marges de padding d'un objet, sous forme de hachures.
 			if (obj is AbstractGroup)
 			{
-				AbstractGroup group = obj as AbstractGroup;
+				Rectangle bounds = this.objectModifier.GetBounds(obj);
+				graphics.Align(ref bounds);
+				bounds.Deflate(0.5);
 
-				Margins padding = this.objectModifier.GetPadding(obj);
-				padding += group.GetInternalPadding();
+				Rectangle inside = this.objectModifier.GetInternalPadding(obj);
+				graphics.Align(ref inside);
+				inside.Deflate(0.5);
 
-				if (padding != Margins.Zero)
-				{
-					Rectangle bounds = this.objectModifier.GetBounds(obj);
-					graphics.Align(ref bounds);
-					bounds.Deflate(0.5);
+				Path path = new Path();
+				path.AppendRectangle(bounds);
+				path = Path.Combine(path, Misc.GetHatchPath(bounds, 6, 1), PathOperation.And);
 
-					Path path = new Path();
-					path.AppendRectangle(bounds);
-					path = Path.Combine(path, Misc.GetHatchPath(bounds, 6, 1), PathOperation.And);
+				Path pi = new Path();
+				pi.AppendRectangle(inside);
+				path = Path.Combine(path, pi, PathOperation.AMinusB);
 
-					Rectangle inside = bounds;
-					inside.Deflate(padding);
-					graphics.Align(ref inside);
-					inside.Inflate(0.5);
-
-					Path pi = new Path();
-					pi.AppendRectangle(inside);
-					path = Path.Combine(path, pi, PathOperation.AMinusB);
-
-					graphics.PaintSurface(path);
-					graphics.AddRectangle(bounds);
-					graphics.AddRectangle(inside);
-					graphics.RenderSolid(PanelsContext.ColorHiliteOutline);
-				}
+				graphics.Rasterizer.AddSurface(path);
+				graphics.AddRectangle(bounds);
+				graphics.AddRectangle(inside);
+				graphics.RenderSolid(PanelsContext.ColorHiliteOutline);
 			}
 		}
 
@@ -2959,6 +2964,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			if (obj is AbstractGroup)
 			{
+				this.DrawPadding(graphics, obj);
+
 				Rectangle outline = this.objectModifier.GetBounds(obj);
 				outline.Deflate(this.context.GroupOutline/2);
 				graphics.LineWidth = this.context.GroupOutline;
