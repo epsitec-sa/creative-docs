@@ -44,7 +44,7 @@ namespace Epsitec.Common.Text.Exchange
 				if (contentline == null)
 					break;
 
-				this.navigator.Insert (contentline);
+				this.navigator.InsertWithTabs (contentline);
 			}
 		}
 

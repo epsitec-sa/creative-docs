@@ -83,6 +83,9 @@ namespace Epsitec.Common.Text.Exchange
 
 		private static void CopyHtmlText(TextStory story, TextNavigator usernavigator, HtmlTextOut htmlText)
 		{
+			if (!usernavigator.IsSelectionActive)
+				return;
+
 			TextNavigator navigator = new TextNavigator (story);
 
 			Wrappers.TextWrapper textWrapper = new Wrappers.TextWrapper ();
@@ -183,6 +186,9 @@ namespace Epsitec.Common.Text.Exchange
 
 		public static void CopyNativeText(TextStory story, TextNavigator usernavigator, NativeTextOut nativeText)
 		{
+			if (!usernavigator.IsSelectionActive)
+				return;
+
 			TextNavigator navigator = new TextNavigator (story);
 
 			Wrappers.TextWrapper textWrapper = new Wrappers.TextWrapper ();

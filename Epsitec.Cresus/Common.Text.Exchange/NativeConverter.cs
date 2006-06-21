@@ -13,6 +13,7 @@ using System.Text;
 //   - copier les définitions de styles 
 //   - gérer la création des styles s'ils n'existent pas
 //
+// - gestion des paragraphes modifiés "à la main"
 //
 
 namespace Epsitec.Common.Text.Exchange

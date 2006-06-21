@@ -1,9 +1,10 @@
-
-#define USE_SPAN
+//	Copyright © 2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Responsable: Michael WALZ
 
 using System;
 using System.Collections.Generic;
 using System.Text;
+
 
 
 namespace Epsitec.Common.Text.Exchange
