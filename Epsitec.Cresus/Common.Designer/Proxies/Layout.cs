@@ -226,7 +226,9 @@ namespace Epsitec.Common.Designer.Proxies
 				{
 					foreach (Widget obj in that.widgets)
 					{
+						Rectangle bounds = that.objectModifier.GetBounds(obj);
 						that.objectModifier.SetAnchoredHorizontalAttachment(obj, cp);
+						that.objectModifier.SetBounds(obj, bounds);
 					}
 				}
 				finally
@@ -252,7 +254,9 @@ namespace Epsitec.Common.Designer.Proxies
 				{
 					foreach (Widget obj in that.widgets)
 					{
+						Rectangle bounds = that.objectModifier.GetBounds(obj);
 						that.objectModifier.SetAnchoredVerticalAttachment(obj, cp);
+						that.objectModifier.SetBounds(obj, bounds);
 					}
 				}
 				finally
