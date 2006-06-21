@@ -279,6 +279,8 @@ namespace Epsitec.Common.Designer
 				{
 					Point baseLine = bounds.BottomLeft;
 					baseLine.Y += this.editor.GetObjectBaseLine(obj);
+					//?Point baseLine = bounds.TopLeft;
+					//?baseLine.Y -= this.editor.GetObjectBaseLine(obj);
 					constrain = new Constrain(baseLine, Constrain.Type.BaseLine, this.context.ConstrainMargin);
 					this.Add(constrain);
 
