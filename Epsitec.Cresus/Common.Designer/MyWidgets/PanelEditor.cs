@@ -2903,7 +2903,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			if (obj is AbstractGroup)
 			{
+				AbstractGroup group = obj as AbstractGroup;
+
 				Margins padding = this.objectModifier.GetPadding(obj);
+				padding += group.GetInternalPadding();
+
 				if (padding != Margins.Zero)
 				{
 					Path path = new Path();
