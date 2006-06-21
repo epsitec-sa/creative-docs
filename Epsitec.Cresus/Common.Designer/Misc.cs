@@ -8,6 +8,23 @@ namespace Epsitec.Common.Designer
 	/// </summary>
 	public class Misc
 	{
+		static public Path GetHatchPath(Rectangle rect, double distance, double thickness)
+		{
+			//	Retourne des hachures à 45 degrés remplissant (et débordant) un rectangle.
+			Path path = new Path();
+
+			for (double y=rect.Bottom-rect.Width; y<rect.Top; y+=distance)
+			{
+				path.MoveTo(rect.Left, y);
+				path.LineTo(rect.Right, y+rect.Width);
+				path.LineTo(rect.Right, y+rect.Width+thickness);
+				path.LineTo(rect.Left, y+thickness);
+				path.Close();
+			}
+
+			return path;
+		}
+
 		static public void DrawPathDash(Graphics graphics, Path path, double width, double dash, double gap, Color color)
 		{
 			//	Dessine un traitillé simple (dash/gap) le long d'un chemin.
