@@ -114,24 +114,294 @@ namespace Epsitec.Common.Text.Exchange
 			xlinedef.Position = Misc.ParseDouble (elements[2]);
 
 			b = byte.Parse(elements[3]) ;
-			xlinedef.PositionUnits = (Epsitec.Common.Text.Properties.SizeUnits) b;
+			xlinedef.PositionUnits = (Properties.SizeUnits) b;
 
 			xlinedef.Thickness = Misc.ParseDouble (elements[4]);
 
 			b = byte.Parse (elements[5]);
-			xlinedef.ThicknessUnits = (Epsitec.Common.Text.Properties.SizeUnits) b;
+			xlinedef.ThicknessUnits = (Properties.SizeUnits) b;
 
 			xlinedef.DrawClass = Misc.NullString(elements[6]);
 
 			xlinedef.DrawStyle = Misc.NullString(elements[7]);
 		}
 
+		private static void SetParagraph(Wrappers.ParagraphWrapper parawrapper, string parastring)
+		{
+			char[] seps = { '\\' };
+			char[] innerseps = {'|'};
+			string []elements = parastring.Split(seps, StringSplitOptions.RemoveEmptyEntries) ;
+
+			bool indentationlevel = false;
+			bool alignmode = false;
+			bool justificationmode = false;
+			bool leading = false;
+			bool leadingunits = false;
+			bool indentationlevelattribute = false;
+			bool leftmarginbody = false;
+			bool rightmarginbody = false;
+			bool leftmarginfirst = false;
+			bool rightmarginfirst = false;
+			bool marginunits = false;
+
+			parawrapper.SuspendSynchronizations ();
+
+			foreach (string element in elements)
+			{
+				string [] el = element.Split(innerseps, StringSplitOptions.RemoveEmptyEntries) ;
+
+				switch (el[0])
+				{
+					case "indlev":
+						parawrapper.Defined.IndentationLevel = Misc.ParseInt (el[1]);
+						indentationlevel = true;
+						break;
+					case "indleva":
+						parawrapper.Defined.IndentationLevelAttribute = Misc.NullString (el[1]);
+						indentationlevelattribute = true;
+						break;
+					case "align":
+						parawrapper.Defined.AlignMode = (Properties.AlignMode)byte.Parse (el[1]);
+						alignmode = true;
+						break;
+					case "just":
+						parawrapper.Defined.JustificationMode = (Wrappers.JustificationMode) byte.Parse (el[1]);
+						justificationmode = true;
+						break;
+					case "leading":
+						parawrapper.Defined.Leading = Misc.ParseDouble (el[1]);
+						leading = true;
+						break;
+					case "leadingunit":
+						parawrapper.Defined.LeadingUnits = (Properties.SizeUnits) byte.Parse (el[1]);
+						leadingunits = true;
+						break;
+					case "leftmbody":
+						parawrapper.Defined.LeftMarginBody = Misc.ParseDouble (el[1]);
+						leftmarginbody = true;
+						break;
+					case "rightmbody":
+						parawrapper.Defined.RightMarginBody = Misc.ParseDouble (el[1]);
+						rightmarginbody = true;
+						break;
+					case "leftmfirst":
+						parawrapper.Defined.LeftMarginFirst = Misc.ParseDouble (el[1]);
+						leftmarginfirst = true;
+						break;
+					case "rightmfirst":
+						parawrapper.Defined.RightMarginFirst = Misc.ParseDouble (el[1]);
+						rightmarginfirst = true;
+						break;
+					case "marginunits":
+						parawrapper.Defined.MarginUnits = (Properties.SizeUnits) byte.Parse (el[1]);
+						marginunits = true;
+						break;
+						
+				}
+			}
+
+			if (!indentationlevel)
+				parawrapper.Defined.ClearIndentationLevel ();
+
+			if (!indentationlevelattribute)
+				parawrapper.Defined.ClearIndentationLevelAttribute ();
+
+			if (!alignmode)
+				parawrapper.Defined.ClearAlignMode ();
+
+			if (!justificationmode)
+				parawrapper.Defined.ClearJustificationMode ();
+
+			if (!leading)
+				parawrapper.Defined.ClearLeading ();
+
+			if (!leadingunits)
+				parawrapper.Defined.ClearLeadingUnits ();
+
+			if (!leftmarginbody)
+				parawrapper.Defined.ClearLeftMarginBody();
+
+			if (!rightmarginbody)
+				parawrapper.Defined.ClearRightMarginBody ();
+
+			if (!leftmarginfirst)
+				parawrapper.Defined.ClearLeftMarginFirst ();
+
+			if (!rightmarginfirst)
+				parawrapper.Defined.ClearRightMarginFirst ();
+
+			if (!marginunits)
+				parawrapper.Defined.ClearMarginUnits();
+
+			parawrapper.ResumeSynchronizations ();
+		}
+
+
+		private static string GetDefinedParString(Wrappers.TextWrapper textWrapper, Wrappers.ParagraphWrapper paraWrapper, TextNavigator navigator, TextStory story)
+		{
+			StringBuilder output = new StringBuilder ();
+
+			if (paraWrapper.Defined.IsAlignModeDefined)
+			{
+				output.AppendFormat ("align|{0}\\", (byte) paraWrapper.Defined.AlignMode);
+				output.Append ('\\');
+			}
+
+			if (paraWrapper.Defined.IsJustificationModeDefined)
+			{
+				output.AppendFormat ("just|{0}", (byte) paraWrapper.Defined.JustificationMode);
+				output.Append ('\\');
+			}
+
+			if (paraWrapper.Defined.IsIndentationLevelAttributeDefined)
+			{
+				output.AppendFormat ("indleva|{0}", Misc.StringNull(paraWrapper.Defined.IndentationLevelAttribute));
+				output.Append ('\\');
+			}
+
+			if (paraWrapper.Defined.IsIndentationLevelDefined)
+			{
+				output.AppendFormat ("indlev|{0}", paraWrapper.Defined.IndentationLevel);
+				output.Append ('\\');
+			}
+
+			if (paraWrapper.Defined.IsLeadingDefined)
+			{
+				output.AppendFormat ("leading|{0}", paraWrapper.Defined.Leading);
+				output.Append ('\\');
+			}
+
+			if (paraWrapper.Defined.IsLeadingUnitsDefined)
+			{
+				output.AppendFormat ("leadingunit|{0}", (byte) paraWrapper.Defined.LeadingUnits);
+				output.Append ('\\');
+			}
+
+			if (paraWrapper.Defined.IsLeftMarginBodyDefined)
+			{
+				output.AppendFormat ("lefmbody|{0}", paraWrapper.Defined.LeftMarginBody);
+				output.Append ('\\');
+			}
+
+			if (paraWrapper.Defined.IsRightMarginBodyDefined)
+			{
+				output.AppendFormat ("rightmbody|{0}", paraWrapper.Defined.RightMarginBody);
+				output.Append ('\\');
+			}
+
+			if (paraWrapper.Defined.IsLeftMarginFirstDefined)
+			{
+				output.AppendFormat ("lefmfirst|{0}", paraWrapper.Defined.LeftMarginFirst);
+				output.Append ('\\');
+			}
+
+			if (paraWrapper.Defined.IsRightMarginFirstDefined)
+			{
+				output.AppendFormat ("rightmfirst|{0}", paraWrapper.Defined.RightMarginFirst);
+				output.Append ('\\');
+			}
+
+			if (paraWrapper.Defined.IsMarginUnitsDefined)
+			{
+				output.AppendFormat ("marginunits|{0}", (byte) paraWrapper.Defined.MarginUnits);
+				output.Append ('\\');
+			}
+
+#if false
+			if (paraWrapper.Defined.IsManagedParagraphDefined)
+			{
+				output.AppendFormat ("managedp|{0}", paraWrapper.Defined.ManagedParagraph);
+			}
+#endif
+
+			if (paraWrapper.Defined.IsParagraphStartModeDefined)
+			{
+				output.AppendFormat ("parstartmode|{0}", (byte) paraWrapper.Defined.ParagraphStartMode);
+				output.Append ('\\');
+			}
+
+			if (paraWrapper.Defined.IsSpaceAfterDefined)
+			{
+				output.AppendFormat ("spaceafter|{0}", (byte) paraWrapper.Defined.SpaceAfter);
+				output.Append ('\\');
+			}
+
+			if (paraWrapper.Defined.IsSpaceAfterUnitsDefined)
+			{
+				output.AppendFormat ("spaceafteru|{0}", (byte) paraWrapper.Defined.SpaceAfterUnits);
+				output.Append ('\\');
+			}
+
+			if (paraWrapper.Defined.IsSpaceBeforeDefined)
+			{
+				output.AppendFormat ("spacebefore|{0}", (byte) paraWrapper.Defined.SpaceAfter);
+				output.Append ('\\');
+			}
+
+			if (paraWrapper.Defined.IsSpaceAfterUnitsDefined)
+			{
+				output.AppendFormat ("spacebeforeu|{0}", (byte) paraWrapper.Defined.SpaceBeforeUnits);
+				output.Append ('\\');
+			}
+
+			if (paraWrapper.Defined.IsBreakFenceAfterDefined)
+			{
+				output.AppendFormat ("bfa|{0}", paraWrapper.Defined.BreakFenceAfter);
+				output.Append ('\\');
+			}
+
+			if (paraWrapper.Defined.IsHyphenationDefined)
+			{
+				output.AppendFormat ("hy|{0}", Misc.boolTobyte (paraWrapper.Defined.Hyphenation));
+				output.Append ('\\');
+			}
+
+			if (paraWrapper.Defined.IsBreakFenceBeforeDefined)
+			{
+				output.AppendFormat ("bfb|{0}", paraWrapper.Defined.BreakFenceBefore);
+				output.Append ('\\');
+			}
+
+			if (paraWrapper.Defined.IsItemListInfoDefined)
+			{
+				output.AppendFormat ("itemli|{0}", paraWrapper.Defined.ItemListInfo);
+				output.Append ('\\');
+			}
+
+			if (paraWrapper.Defined.IsKeepEndLinesDefined)
+			{
+				output.AppendFormat ("keepel|{0}", paraWrapper.Defined.KeepEndLines);
+				output.Append ('\\');
+			}
+
+			if (paraWrapper.Defined.IsKeepStartLinesDefined)
+			{
+				output.AppendFormat ("keepsl|{0}", paraWrapper.Defined.KeepStartLines);
+				output.Append ('\\');
+			}
+
+			if (paraWrapper.Defined.IsKeepWithNextParagraphDefined)
+			{
+				output.AppendFormat ("keepwnp|{0}", Misc.boolTobyte (paraWrapper.Defined.KeepWithNextParagraph));
+				output.Append ('\\');
+			}
+
+			if (paraWrapper.Defined.IsKeepWithPreviousParagraphDefined)
+			{
+				output.AppendFormat ("keepwpp|{0}", Misc.boolTobyte (paraWrapper.Defined.KeepWithPreviousParagraph));
+				output.Append ('\\');
+			}
+
+			return output.ToString ();
+		}
+
+
 		/// <summary>
 		/// Convertit les attributs d'un textwrapper en format presse-papier natif
 		/// </summary>
 		/// <param name="textwrapper"></param>
 		/// <returns></returns>
-		public static string GetDefinedString(Wrappers.TextWrapper textWrapper, TextNavigator navigator, TextStory story, bool paragraphSep, bool startparagraph)
+		public static string GetDefinedString(Wrappers.TextWrapper textWrapper, Wrappers.ParagraphWrapper paraWrapper, TextNavigator navigator, TextStory story, bool paragraphSep)
 		{
 			StringBuilder output = new StringBuilder();
 
@@ -143,7 +413,7 @@ namespace Epsitec.Common.Text.Exchange
 			{
 				string caption = story.TextContext.StyleList.StyleMap.GetCaption (style);
 
-				if (style.TextStyleClass == TextStyleClass.Paragraph && startparagraph)
+				if (style.TextStyleClass == TextStyleClass.Paragraph && paragraphSep)
 				{
 					output.AppendFormat ("pstyle:{0}/", caption);
 				}
@@ -157,6 +427,12 @@ namespace Epsitec.Common.Text.Exchange
 			if (paragraphSep)
 			{
 				output.Append("par/") ;
+				string definedPar = GetDefinedParString(textWrapper, paraWrapper, navigator, story) ;
+
+				if (definedPar.Length != 0)
+				{
+					output.AppendFormat("pardef:{0}/", definedPar) ;
+				}
 			}
 
 			if (textWrapper.Defined.IsInvertItalicDefined && textWrapper.Defined.InvertItalic)
@@ -188,7 +464,7 @@ namespace Epsitec.Common.Text.Exchange
 			{
 				if (textWrapper.Defined.IsUnitsDefined)
 				{
-					Epsitec.Common.Text.Properties.SizeUnits units = textWrapper.Defined.Units;
+					Properties.SizeUnits units = textWrapper.Defined.Units;
 					output.AppendFormat ("funits:{0}/", (byte)textWrapper.Defined.Units);
 				}
 
@@ -258,7 +534,7 @@ namespace Epsitec.Common.Text.Exchange
 			return output.ToString() ;
 		}
 
-		public static void SetDefined(Wrappers.TextWrapper textwrapper, TextNavigator navigator, TextStory story, string input, out bool paragrpahSep)
+		public static void SetDefined(Wrappers.TextWrapper textwrapper, Wrappers.ParagraphWrapper parawrapper, TextNavigator navigator, TextStory story, string input, out bool paragrpahSep)
 		{
 			char[] separators = new char[] {'/'};
 
@@ -314,6 +590,9 @@ namespace Epsitec.Common.Text.Exchange
 					case "par":
 						paragrpahSep = true;
 						break;
+					case "pardef":
+						SetParagraph (parawrapper, subelements[1]);
+						break;
 					case "i":
 						textwrapper.Defined.InvertItalic = true;
 						invertItalic = true;
@@ -357,7 +636,7 @@ namespace Epsitec.Common.Text.Exchange
 						break;
 					case "funits":
 						byte theunits = byte.Parse (subelements[1]);
-						textwrapper.Defined.Units = (Epsitec.Common.Text.Properties.SizeUnits) theunits;
+						textwrapper.Defined.Units = (Properties.SizeUnits) theunits;
 						units = true;
 						break;
 					case "ffeat":
