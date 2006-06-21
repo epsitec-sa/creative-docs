@@ -6,7 +6,7 @@ using System.Text;
 // Responsable: Michael Walz
 
 // choses qui restent à faire:
-// - TextMarker, TextBox, UserTage, Conditions
+// - TextMarker, TextBox, UserTags, Conditions
 // - link: gèrer les / et autres signes cabalistiques dans les hyperliens
 
 namespace Epsitec.Common.Text.Exchange
@@ -322,7 +322,7 @@ namespace Epsitec.Common.Text.Exchange
 						break;
 					case "link":
 						textwrapper.Defined.Link = subelements[1];
-						LinkedList = true;
+						link = true;
 						break;
 				}
 			}
