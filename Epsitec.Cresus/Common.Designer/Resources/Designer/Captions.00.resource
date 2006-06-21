@@ -32,7 +32,7 @@
   <data id="0T">&lt;s:data id="_0" f:Description="" /&gt;</data>
   <data id="0U">&lt;s:data id="_0" f:Description="" /&gt;</data>
   <data id="0V">&lt;s:data id="_0" f:Description="" /&gt;</data>
-  <data id="001">&lt;s:data id="_0" f:Description="Ancré" f:Labels="{Collection {Text 'Ancré'}}" f:Icon="manifest:Epsitec.Common.Widgets.Images.ColorSpaceRGB.icon" /&gt;</data>
-  <data id="011">&lt;s:data id="_0" f:Description="Disposition verticale" f:Labels="{Collection {Text 'D. verticale'}}" f:Icon="manifest:Epsitec.Common.Widgets.Images.ColorSpaceCMYK.icon" /&gt;</data>
-  <data id="021">&lt;s:data id="_0" f:Description="Disposition horizontale" f:Labels="{Collection {Text 'D. horizontale'}}" f:Icon="manifest:Epsitec.Common.Widgets.Images.ColorSpaceGray.icon" /&gt;</data>
+  <data id="001">&lt;s:data id="_0" f:Description="Ancré" f:Labels="{Collection {Text 'Ancré'}}" f:Icon="manifest:Epsitec.Common.Designer.Images.PropertyCPAnchored.icon" /&gt;</data>
+  <data id="011">&lt;s:data id="_0" f:Description="Disposition verticale" f:Labels="{Collection {Text 'D. verticale'}}" f:Icon="manifest:Epsitec.Common.Designer.Images.PropertyCPVertical.icon" /&gt;</data>
+  <data id="021">&lt;s:data id="_0" f:Description="Disposition horizontale" f:Labels="{Collection {Text 'D. horizontale'}}" f:Icon="manifest:Epsitec.Common.Designer.Images.PropertyCPHorizontal.icon" /&gt;</data>
 </bundle>
