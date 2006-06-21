@@ -8,6 +8,61 @@ namespace Epsitec.Common.Text.Exchange
 {
 	class NativeConverter
 	{
+
+
+		static string XlineDefinitionToString(Wrappers.TextWrapper.XlineDefinition xlinedef)
+		{
+			StringBuilder output = new StringBuilder() ;
+
+			output.Append (Misc.boolTobyte (xlinedef.IsDisabled));
+			output.Append ('\\');
+			output.Append (Misc.boolTobyte (xlinedef.IsEmpty));
+			output.Append ('\\');
+			output.Append (xlinedef.Position);
+			output.Append ('\\');
+			output.Append ((byte) xlinedef.PositionUnits);
+			output.Append ('\\');
+			output.Append (xlinedef.Thickness);
+			output.Append ('\\');
+			output.Append ((byte) xlinedef.ThicknessUnits);
+			output.Append ('\\');
+			output.Append (Misc.StringNull(xlinedef.DrawClass));
+			output.Append ('\\');
+			output.Append (Misc.StringNull(xlinedef.DrawStyle));
+			output.Append ('\\');
+
+			return output.ToString();
+		}
+
+		static void StringToXlineDefinition(string strxline, Wrappers.TextWrapper.XlineDefinition xlinedef)
+		{
+			char[] sep = { '\\' };
+			string [] elements = strxline.Split (sep, StringSplitOptions.None);
+
+			byte b ;
+			double d;
+
+			b = byte.Parse(elements[0]) ;
+			xlinedef.IsDisabled = Misc.byteTobool (b);
+
+			b = byte.Parse (elements[1]);
+		//	xlinedef.IsEmpty = Misc.byteTobool (b);
+
+			xlinedef.Position = Misc.ParseDouble (elements[2]);
+
+			b = byte.Parse(elements[3]) ;
+			xlinedef.PositionUnits = (Epsitec.Common.Text.Properties.SizeUnits) b;
+
+			xlinedef.Thickness = Misc.ParseDouble (elements[4]);
+
+			b = byte.Parse (elements[5]);
+			xlinedef.ThicknessUnits = (Epsitec.Common.Text.Properties.SizeUnits) b;
+
+			xlinedef.DrawClass = Misc.NullString(elements[6]);
+
+			xlinedef.DrawStyle = Misc.NullString(elements[7]);
+		}
+
 		/// <summary>
 		/// Convertit les attributs d'un textwrapper en format presse-papier natif
 		/// </summary>
@@ -51,12 +106,35 @@ namespace Epsitec.Common.Text.Exchange
 
 			if (textWrapper.Defined.IsFontSizeDefined)
 			{
+				if (textWrapper.Defined.IsUnitsDefined)
+				{
+					Epsitec.Common.Text.Properties.SizeUnits units = textWrapper.Defined.Units;
+					output.AppendFormat ("funits:{0}/", (byte)textWrapper.Defined.Units);
+				}
+
 				output.AppendFormat ("fsize:{0}/", textWrapper.Defined.FontSize);
 			}
 
+			if (textWrapper.Defined.IsFontFeaturesDefined)
+			{
+				string [] features = textWrapper.Defined.FontFeatures ;
+
+				StringBuilder conacatfeatures = new StringBuilder ();
+
+				foreach (string feature in features)
+				{
+					conacatfeatures.AppendFormat ("{0}\\", feature);
+				}
+
+				output.AppendFormat ("ffeat:{0}/", conacatfeatures.ToString());
+			}
+
+
+
 			if (textWrapper.Defined.IsUnderlineDefined)
 			{
-				output.Append ("u/");
+				string xlinedef = XlineDefinitionToString (textWrapper.Defined.Underline);
+				output.AppendFormat ("u:{0}/",xlinedef);
 			}
 
 			output.Append (']');
@@ -76,6 +154,8 @@ namespace Epsitec.Common.Text.Exchange
 			bool fontFace = false ;
 			bool fontStyle = false ;
 			bool fontSize = false ;
+			bool units = false;
+			bool features = false;
 
 			textwrapper.SuspendSynchronizations ();
 
@@ -101,7 +181,7 @@ namespace Epsitec.Common.Text.Exchange
 						invertBold = true;
 						break;
 					case "u":
-						//					textwrapper.Defined.Underline. = true;
+						StringToXlineDefinition (subelements[1], textwrapper.Defined.Underline);
 						underline = true;
 						break;
 					case "c":
@@ -122,6 +202,18 @@ namespace Epsitec.Common.Text.Exchange
 						textwrapper.Defined.FontSize = size;
 						fontSize = true;
 						break;
+					case "funits":
+						byte theunits = byte.Parse (subelements[1]);
+						textwrapper.Defined.Units = (Epsitec.Common.Text.Properties.SizeUnits) theunits;
+						units = true;
+						break;
+					case "ffeat":
+						char[] splitchars = {'\\'};
+						string [] thefeatures = subelements[1].Split(splitchars, StringSplitOptions.RemoveEmptyEntries) ;
+						textwrapper.Defined.FontFeatures = thefeatures;
+						features = true;
+						break;
+
 				}
 			}
 
@@ -145,6 +237,12 @@ namespace Epsitec.Common.Text.Exchange
 
 			if (!fontSize)
 				textwrapper.Defined.ClearFontSize ();
+
+			if (!units)
+				textwrapper.Defined.ClearUnits ();
+
+			if (!features)
+				textwrapper.Defined.ClearFontFeatures ();
 
 			textwrapper.ResumeSynchronizations ();
 		}

@@ -9,6 +9,37 @@ namespace Epsitec.Common.Text.Exchange
 	/// </summary>
 	class Misc
 	{
+
+		public static string StringNull(string thestring)
+		{
+			if (thestring == null)
+				return "~";
+			else
+				return thestring;
+		}
+
+		public static string NullString(string thestring)
+		{
+			if (thestring == "~")
+				return null;
+			else
+				return thestring;
+		}
+
+		public static byte boolTobyte(bool thebool)
+		{
+			if (thebool)
+				return 1;
+			else
+				return 0;
+		}
+
+		public static bool byteTobool(byte thebyte)
+		{
+			System.Diagnostics.Debug.Assert(thebyte == 0 || thebyte == 1) ;
+			return thebyte == 1;
+		}
+
 		/// <summary>
 		/// Convertit un string en double. Si la conversion foire, retourne 0
 		/// </summary>
