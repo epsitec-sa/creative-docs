@@ -202,7 +202,8 @@ namespace Epsitec.Common.Text.Exchange
 			int currentPosition = selectionStart;
 			navigator.MoveTo (selectionStart, 0);
 
-			// htmlText.NewParagraph (paraWrapper.Active.JustificationMode);
+
+			bool startParagraph = true;
 
 			while (true)
 			{
@@ -227,16 +228,15 @@ namespace Epsitec.Common.Text.Exchange
 					paragraphSep = true;
 				}
 								
-//				htmlText.SetItalic (textWrapper.Defined.IsInvertItalicDefined && textWrapper.Defined.InvertItalic);
-//				htmlText.SetBold (textWrapper.Defined.IsInvertBoldDefined && textWrapper.Defined.InvertBold);
-
-				string runattributes = NativeConverter.GetDefinedString (textWrapper, navigator, story, paragraphSep);
+				string runattributes = NativeConverter.GetDefinedString (textWrapper, navigator, story, paragraphSep, startParagraph);
+				startParagraph = paragraphSep;
 
 				nativeText.AppendTextLine (runattributes);
 				
 				if (!paragraphSep)
 					nativeText.AppendTextLine (runText);
 			
+
 				// avance au run suivant
 				navigator.MoveTo (Epsitec.Common.Text.TextNavigator.Target.CharacterNext, runLength);
 
