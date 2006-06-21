@@ -4,10 +4,10 @@
   <data id="01">&lt;s:data id="_0" f:Description="Marge droite" f:Labels="{Collection {Text 'Marge droite'}}" /&gt;</data>
   <data id="02">&lt;s:data id="_0" f:Description="Marge supérieure" f:Labels="{Collection {Text 'Marge supérieure'}}" /&gt;</data>
   <data id="03">&lt;s:data id="_0" f:Description="Marge inférieure" f:Labels="{Collection {Text 'Marge inférieure'}}" /&gt;</data>
-  <data id="04">&lt;s:data id="_0" f:Description="Origine horizontale (X)" f:Labels="{Collection {Text 'X'}, {Text 'Origine X'}}" /&gt;</data>
-  <data id="05">&lt;s:data id="_0" f:Description="Origine verticale (Y)" f:Labels="{Collection {Text 'Y'}, {Text 'Origine Y'}}" /&gt;</data>
-  <data id="06">&lt;s:data id="_0" f:Description="Largeur" f:Labels="{Collection {Text 'ΔX'}, {Text 'Largeur ΔX'}}" /&gt;</data>
-  <data id="07">&lt;s:data id="_0" f:Description="Hauteur" f:Labels="{Collection {Text 'ΔY'}, {Text 'Hauteur ΔY'}}" /&gt;</data>
+  <data id="04">&lt;s:data id="_0" f:Description="Origine horizontale (X)" f:Labels="{Collection {Text 'Origine X'}, {Text 'X'}}" /&gt;</data>
+  <data id="05">&lt;s:data id="_0" f:Description="Origine verticale (Y)" f:Labels="{Collection {Text 'Origine Y'}, {Text 'Y'}}" /&gt;</data>
+  <data id="06">&lt;s:data id="_0" f:Description="Largeur" f:Labels="{Collection {Text 'Largeur ΔX'}, {Text 'ΔX'}}" /&gt;</data>
+  <data id="07">&lt;s:data id="_0" f:Description="Hauteur" f:Labels="{Collection {Text 'Hauteur ΔY'}, {Text 'ΔY'}}" /&gt;</data>
   <data id="08">&lt;s:data id="_0" f:Description="Marge intérieure gauche" f:Labels="{Collection {Text 'Marge gauche'}}" /&gt;</data>
   <data id="09">&lt;s:data id="_0" f:Description="Marge intérieure droite" f:Labels="{Collection {Text 'Marge droite'}}" /&gt;</data>
   <data id="0A">&lt;s:data id="_0" f:Description="Marge intérieure supérieure" f:Labels="{Collection {Text 'Marge supérieure'}}" /&gt;</data>
