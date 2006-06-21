@@ -215,6 +215,19 @@ namespace Epsitec.Common.Designer.Proxies
 				}
 			}
 		}
+		
+		static Geometry()
+		{
+			Geometry.LeftMarginProperty.DefaultMetadata.DefineNamedType (ProxyManager.MarginNumericType);
+			Geometry.RightMarginProperty.DefaultMetadata.DefineNamedType (ProxyManager.MarginNumericType);
+			Geometry.TopMarginProperty.DefaultMetadata.DefineNamedType (ProxyManager.MarginNumericType);
+			Geometry.BottomMarginProperty.DefaultMetadata.DefineNamedType (ProxyManager.MarginNumericType);
+			
+			Geometry.OriginXProperty.DefaultMetadata.DefineNamedType (ProxyManager.LocationNumericType);
+			Geometry.OriginYProperty.DefaultMetadata.DefineNamedType (ProxyManager.LocationNumericType);
+			Geometry.WidthProperty.DefaultMetadata.DefineNamedType (ProxyManager.SizeNumericType);
+			Geometry.HeightProperty.DefaultMetadata.DefineNamedType (ProxyManager.SizeNumericType);
+		}
 
 
 		public static readonly DependencyProperty LeftMarginProperty	= DependencyProperty.Register("LeftMargin",   typeof(double), typeof(Geometry), new DependencyPropertyMetadata(0.0, Geometry.NotifyMarginsChanged));
