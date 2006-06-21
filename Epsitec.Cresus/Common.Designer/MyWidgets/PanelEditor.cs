@@ -3097,14 +3097,19 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			if (rigid)  // rigide ?
 			{
+				double dim = PanelEditor.attachmentThickness;
+				Rectangle box = this.GetDrawBox(graphics, p1a, p2a, dim);
+
+				graphics.AddFilledRectangle(box);
+				graphics.RenderSolid(Color.FromBrightness(1));
+
 				Point delta = (p1.Y == p2.Y) ? new Point(0, 1) : new Point(1, 0);
 				graphics.AddLine(p1+delta, p1a+delta);
 				graphics.AddLine(p2+delta, p2a+delta);
 				graphics.AddLine(p1-delta, p1a-delta);
 				graphics.AddLine(p2-delta, p2a-delta);
 
-				double dim = PanelEditor.attachmentThickness;
-				Misc.AddBox(graphics, p1a, p2a, dim);
+				graphics.AddRectangle(box);
 			}
 			else  // élastique (ressort) ?
 			{
@@ -3124,6 +3129,33 @@ namespace Epsitec.Common.Designer.MyWidgets
 			graphics.AddFilledCircle(p1, 3.0);
 			graphics.AddFilledCircle(p2, 3.0);
 			graphics.RenderSolid(color);
+		}
+
+		protected Rectangle GetDrawBox(Graphics graphics, Point p1, Point p2, double thickness)
+		{
+			//	Donne le rectangle d'une boîte horizontale ou verticale.
+			if (p1.Y == p2.Y)  // boîte horizontale ?
+			{
+				p1.Y -= thickness+1;
+				p2.Y += thickness-1;
+				p2.X -= 1;
+				Misc.AlignForLine(graphics, ref p1);
+				Misc.AlignForLine(graphics, ref p2);
+				return new Rectangle(p1, p2);
+			}
+			else if (p1.X == p2.X)  // boîte verticale ?
+			{
+				p1.X -= thickness+1;
+				p2.X += thickness-1;
+				p2.Y -= 1;
+				Misc.AlignForLine(graphics, ref p1);
+				Misc.AlignForLine(graphics, ref p2);
+				return new Rectangle(p1, p2);
+			}
+			else
+			{
+				throw new System.Exception("This geometry is not implemented.");
+			}
 		}
 
 		protected void DrawTriangleLeft(Graphics graphics, Point p, Color color)
