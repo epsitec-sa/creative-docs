@@ -2933,7 +2933,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				graphics.Align(ref bounds);
 				bounds.Deflate(0.5);
 
-				Rectangle inside = this.objectModifier.GetInternalPadding(obj);
+				Rectangle inside = this.objectModifier.GetFinalPadding(obj);
 				graphics.Align(ref inside);
 				inside.Deflate(0.5);
 
