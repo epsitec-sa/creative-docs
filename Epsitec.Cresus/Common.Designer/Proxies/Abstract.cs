@@ -46,15 +46,22 @@ namespace Epsitec.Common.Designer.Proxies
 			get;
 		}
 
-		public abstract double DataColumnWidth
+		public virtual double DataColumnWidth
 		{
-			get;
+			get
+			{
+				return 50;
+			}
 		}
 
-		public abstract double RowsSpacing
+		public virtual double RowsSpacing
 		{
-			get;
+			get
+			{
+				return -1;
+			}
 		}
+
 		#endregion
 
 

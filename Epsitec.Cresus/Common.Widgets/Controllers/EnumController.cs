@@ -259,7 +259,7 @@ namespace Epsitec.Common.Widgets.Controllers
 				this.combo = new RadioIconGrid ();
 
 				this.label.HorizontalAlignment = HorizontalAlignment.Right;
-				this.label.VerticalAlignment = VerticalAlignment.BaseLine;
+				this.label.VerticalAlignment = VerticalAlignment.Center;
 				this.label.ContentAlignment = Drawing.ContentAlignment.MiddleRight;
 				this.label.Dock = DockStyle.Stacked;
 
