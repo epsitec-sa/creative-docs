@@ -70,6 +70,8 @@ namespace Epsitec.Common.Widgets.Controllers
 						//	widget qui représente le label!
 						
 						name = Collection.Extract (caption.Labels, 0);
+						
+						ToolTip.Default.SetToolTip (this.placeholder, caption.Description);
 					}
 					
 					this.CreateUserInterface (type, name, caption);
