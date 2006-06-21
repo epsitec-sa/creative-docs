@@ -290,7 +290,7 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 			
-			protected override void CreateUserInterface(INamedType valueType, string valueName)
+			protected override void CreateUserInterface(INamedType valueType, string valueName, Caption caption)
 			{
 				throw new System.Exception ("The method or operation is not implemented.");
 			}

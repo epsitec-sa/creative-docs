@@ -33,7 +33,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.array.SetDynamicsToolTips(1, false);
 			this.array.SetDynamicsToolTips(2, false);
 			this.array.ColumnsWidthChanged += new EventHandler(this.HandleArrayColumnsWidthChanged);
-			this.array.CellsQuantityChanged += new EventHandler(this.HandleArrayCellsQuantityChanged);
+			this.array.CellCountChanged += new EventHandler (this.HandleArrayCellCountChanged);
 			this.array.CellsContentChanged += new EventHandler(this.HandleArrayCellsContentChanged);
 			this.array.SelectedRowChanged += new EventHandler(this.HandleArraySelectedRowChanged);
 			this.array.TabIndex = tabIndex++;
@@ -100,7 +100,7 @@ namespace Epsitec.Common.Designer.Viewers
 			if (disposing)
 			{
 				this.array.ColumnsWidthChanged -= new EventHandler(this.HandleArrayColumnsWidthChanged);
-				this.array.CellsQuantityChanged -= new EventHandler(this.HandleArrayCellsQuantityChanged);
+				this.array.CellCountChanged -= new EventHandler (this.HandleArrayCellCountChanged);
 				this.array.CellsContentChanged -= new EventHandler(this.HandleArrayCellsContentChanged);
 				this.array.SelectedRowChanged -= new EventHandler(this.HandleArraySelectedRowChanged);
 
@@ -1180,7 +1180,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.UpdateClientGeometry();
 		}
 
-		void HandleArrayCellsQuantityChanged(object sender)
+		void HandleArrayCellCountChanged(object sender)
 		{
 			//	Le nombre de lignes a changé.
 			this.UpdateArray();

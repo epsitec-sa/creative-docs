@@ -127,6 +127,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Cellule sélectionnée.
 			get
 			{
+				if (this.cells == null)
+				{
+					return this.selectPending;
+				}
+				
 				for (int i=0; i<this.cells.Length; i++)
 				{
 					if ( this.cells[i].Selected )  return i;
@@ -136,13 +141,20 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			set
 			{
-				for (int i=0; i<this.cells.Length; i++)
+				if (this.cells == null)
 				{
-					bool selected = (i == value);
-					if (this.cells[i].Selected != selected)
+					this.selectPending = value;
+				}
+				else
+				{
+					for (int i=0; i<this.cells.Length; i++)
 					{
-						this.cells[i].Selected = selected;
-						this.Invalidate();
+						bool selected = (i == value);
+						if (this.cells[i].Selected != selected)
+						{
+							this.cells[i].Selected = selected;
+							this.Invalidate ();
+						}
 					}
 				}
 			}
@@ -266,18 +278,23 @@ namespace Epsitec.Common.Designer.MyWidgets
 			length = System.Math.Max(length, 1);
 			if ( this.cells == null || this.cells.Length != length )
 			{
-				this.cells = new Cell[length];
-				for ( int i=0 ; i<this.cells.Length ; i++ )
-				{
-					this.cells[i] = new Cell();
-					this.cells[i].TextLayout = new TextLayout();
-					this.cells[i].TextLayout.Alignment = ContentAlignment.MiddleLeft;
-					this.cells[i].State = CellState.Normal;
-					this.cells[i].Selected = false;
-				}
-
-				this.OnCellsQuantityChanged();
+				this.CreateCells(length);
+				this.OnCellCountChanged();
 			}
+		}
+
+		private void CreateCells(int length)
+		{
+			this.cells = new Cell[length];
+			for (int i=0; i<this.cells.Length; i++)
+			{
+				this.cells[i] = new Cell ();
+				this.cells[i].TextLayout = new TextLayout ();
+				this.cells[i].TextLayout.Alignment = ContentAlignment.MiddleLeft;
+				this.cells[i].State = CellState.Normal;
+				this.cells[i].Selected = (i == this.selectPending);
+			}
+			this.selectPending = -1;
 		}
 
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
@@ -389,25 +406,25 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 
 		#region Events handler
-		protected virtual void OnCellsQuantityChanged()
+		protected virtual void OnCellCountChanged()
 		{
 			//	Génère un événement pour dire que le nombre de cellules a changé.
-			EventHandler handler = (EventHandler) this.GetUserEventHandler("CellsQuantityChanged");
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("CellCountChanged");
 			if (handler != null)
 			{
 				handler(this);
 			}
 		}
 
-		public event Support.EventHandler CellsQuantityChanged
+		public event Support.EventHandler CellCountChanged
 		{
 			add
 			{
-				this.AddUserEventHandler("CellsQuantityChanged", value);
+				this.AddUserEventHandler ("CellCountChanged", value);
 			}
 			remove
 			{
-				this.RemoveUserEventHandler("CellsQuantityChanged", value);
+				this.RemoveUserEventHandler ("CellCountChanged", value);
 			}
 		}
 
@@ -476,5 +493,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected Cell[]					cells;
 		protected bool						isDynamicsToolTips = false;
 		protected bool						isDragging = false;
+		protected int						selectPending = -1;
 	}
 }

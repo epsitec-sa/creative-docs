@@ -58,7 +58,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 						this.columns[i].FinalCellSelectionChanged -= new EventHandler(this.HandleFinalCellSelectionChanged);
 						this.columns[i].DoubleClicked -= new MessageEventHandler(this.HandleDoubleClicked);
 					}
-					this.columns[this.columns.Length-1].CellsQuantityChanged -= new EventHandler(this.HandleCellsQuantityChanged);
+					this.columns[this.columns.Length-1].CellCountChanged -= new EventHandler(this.HandleCellCountChanged);
 				}
 
 				this.columns = new StringList[value];
@@ -70,7 +70,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 					this.columns[i].DoubleClicked += new MessageEventHandler(this.HandleDoubleClicked);
 					ToolTip.Default.SetToolTip(this.columns[i], "*");
 				}
-				this.columns[this.columns.Length-1].CellsQuantityChanged += new EventHandler(this.HandleCellsQuantityChanged);
+				this.columns[this.columns.Length-1].CellCountChanged += new EventHandler(this.HandleCellCountChanged);
 			}
 		}
 
@@ -591,9 +591,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 
 		#region Events caller
-		void HandleCellsQuantityChanged(object sender)
+		void HandleCellCountChanged(object sender)
 		{
-			this.OnCellsQuantityChanged();
+			this.OnCellCountChanged();
 		}
 
 		void HandleDraggingCellSelectionChanged(object sender)
@@ -662,25 +662,25 @@ namespace Epsitec.Common.Designer.MyWidgets
 		}
 
 
-		protected virtual void OnCellsQuantityChanged()
+		protected virtual void OnCellCountChanged()
 		{
 			//	Génère un événement pour dire que le nombre de cellules a changé.
-			EventHandler handler = (EventHandler) this.GetUserEventHandler("CellsQuantityChanged");
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("CellCountChanged");
 			if (handler != null)
 			{
 				handler(this);
 			}
 		}
 
-		public event Support.EventHandler CellsQuantityChanged
+		public event Support.EventHandler CellCountChanged
 		{
 			add
 			{
-				this.AddUserEventHandler("CellsQuantityChanged", value);
+				this.AddUserEventHandler ("CellCountChanged", value);
 			}
 			remove
 			{
-				this.RemoveUserEventHandler("CellsQuantityChanged", value);
+				this.RemoveUserEventHandler ("CellCountChanged", value);
 			}
 		}
 
