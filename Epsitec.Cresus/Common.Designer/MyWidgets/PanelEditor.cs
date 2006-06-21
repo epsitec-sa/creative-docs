@@ -2900,6 +2900,29 @@ namespace Epsitec.Common.Designer.MyWidgets
 				path.AppendRectangle(ext);
 				Misc.DrawPathDash(graphics, path, 2, 0, 4, PanelsContext.ColorHiliteOutline);
 			}
+
+			if (obj is AbstractGroup)
+			{
+				Margins padding = this.objectModifier.GetPadding(obj);
+				if (padding != Margins.Zero)
+				{
+					Path path = new Path();
+					path.AppendRectangle(bounds);
+					path = Path.Combine(path, Misc.GetHatchPath(bounds, 6, 1), PathOperation.And);
+
+					bounds.Deflate(padding);
+					graphics.Align(ref bounds);
+					bounds.Inflate(0.5);
+
+					Path inside = new Path();
+					inside.AppendRectangle(bounds);
+					path = Path.Combine(path, inside, PathOperation.AMinusB);
+
+					graphics.PaintSurface(path);
+					graphics.AddRectangle(bounds);
+					graphics.RenderSolid(PanelsContext.ColorHiliteOutline);
+				}
+			}
 		}
 
 		protected void DrawHilitedObject(Graphics graphics, Widget obj)
