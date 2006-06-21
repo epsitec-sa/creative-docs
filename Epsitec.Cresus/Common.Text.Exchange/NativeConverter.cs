@@ -39,6 +39,20 @@ namespace Epsitec.Common.Text.Exchange
 				output.AppendFormat ("c:{0}/", textWrapper.Defined.Color);
 			}
 
+			if (textWrapper.Defined.IsFontFaceDefined)
+			{
+				output.AppendFormat ("fface:{0}/", textWrapper.Defined.FontFace);
+			}
+
+			if (textWrapper.Defined.IsFontStyleDefined)
+			{
+				output.AppendFormat ("fstyle:{0}/", textWrapper.Defined.FontStyle);
+			}
+
+			if (textWrapper.Defined.IsFontSizeDefined)
+			{
+				output.AppendFormat ("fsize:{0}/", textWrapper.Defined.FontSize);
+			}
 
 			if (textWrapper.Defined.IsUnderlineDefined)
 			{
@@ -58,7 +72,12 @@ namespace Epsitec.Common.Text.Exchange
 			bool invertItalic = false;
 			bool invertBold = false;
 			bool underline = false;
-			bool colorDef = false;
+			bool color = false;
+			bool fontFace = false ;
+			bool fontStyle = false ;
+			bool fontSize = false ;
+
+			textwrapper.SuspendSynchronizations ();
 
 			System.Diagnostics.Debug.Assert (input[0] == '[' && input[input.Length-1] == ']');
 			input = input.Substring(1, input.Length - 2) ;
@@ -87,30 +106,47 @@ namespace Epsitec.Common.Text.Exchange
 						break;
 					case "c":
 						textwrapper.Defined.Color = subelements[1];
-						colorDef = true;
+						color = true;
+						break;
+					case "fface":
+						textwrapper.Defined.FontFace = subelements[1];
+						fontFace = true;
+						break;
+					case "fstyle":
+						textwrapper.Defined.FontStyle = subelements[1];
+						fontStyle = true;
+						break;
+					case "fsize":
+						double size = double.Parse(subelements[1],System.Globalization.NumberStyles.Float) ;
+						// BUG: la taille ne change pas !!
+						textwrapper.Defined.FontSize = size;
+						fontSize = true;
 						break;
 				}
 			}
 
 			if (!invertItalic)
-			{
 				textwrapper.Defined.ClearInvertItalic ();
-			}
 
 			if (!invertBold)
-			{
 				textwrapper.Defined.ClearInvertBold ();
-			}
 
 			if (!underline)
-			{
 				textwrapper.Defined.ClearUnderline ();
-			}
 
-			if (!colorDef)
-			{
+			if (!color)
 				textwrapper.Defined.ClearColor ();
-			}
+
+			if (!fontFace)
+				textwrapper.Defined.ClearFontFace ();
+
+			if (!fontStyle)
+				textwrapper.Defined.ClearFontStyle ();
+
+			if (!fontSize)
+				textwrapper.Defined.ClearFontSize ();
+
+			textwrapper.ResumeSynchronizations ();
 		}
 	}
 
