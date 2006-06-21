@@ -720,6 +720,7 @@ namespace Epsitec.Common.Widgets
 				if (string.IsNullOrEmpty (value))
 				{
 					this.ClearValue (Widget.TextProperty);
+					this.OnTextDefined ();
 				}
 				else
 				{
@@ -748,7 +749,6 @@ namespace Epsitec.Common.Widgets
 				that.ModifyTextLayout (newText);
 			}
 			
-			that.OnTextDefined ();
 			that.OnTextChanged ();
 			that.Invalidate ();
 
@@ -3528,6 +3528,7 @@ namespace Epsitec.Common.Widgets
 			System.Diagnostics.Debug.Assert (this.text_layout != null);
 			
 			this.SetValueBase (Widget.TextProperty, text);
+			this.OnTextDefined ();
 		}
 		
 		protected virtual void ModifyTextLayout(string text)

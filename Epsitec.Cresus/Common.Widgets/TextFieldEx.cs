@@ -198,7 +198,7 @@ namespace Epsitec.Common.Widgets
 		{
 			base.OnTextChanged ();
 			
-			System.Diagnostics.Debug.Assert (this.HasEditedText || this.Text == this.accept_reject_behavior.InitialText);
+			//? System.Diagnostics.Debug.Assert (this.HasEditedText || this.Text == this.accept_reject_behavior.InitialText);
 			
 			this.UpdateButtonEnable ();
 			this.UpdateButtonVisibility ();
