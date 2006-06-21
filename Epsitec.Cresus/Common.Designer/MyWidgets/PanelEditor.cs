@@ -2903,6 +2903,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			this.DrawPadding(graphics, obj);
 
+			//	TODO: si plusieurs objets sélectionnés ont le même parent, ne dessiner qu'une fois !!!
 			if (obj != this.panel)
 			{
 				this.DrawPadding(graphics, obj.Parent);
@@ -2922,21 +2923,25 @@ namespace Epsitec.Common.Designer.MyWidgets
 				if (padding != Margins.Zero)
 				{
 					Rectangle bounds = this.objectModifier.GetBounds(obj);
+					graphics.Align(ref bounds);
+					bounds.Deflate(0.5);
 
 					Path path = new Path();
 					path.AppendRectangle(bounds);
 					path = Path.Combine(path, Misc.GetHatchPath(bounds, 6, 1), PathOperation.And);
 
-					bounds.Deflate(padding);
-					graphics.Align(ref bounds);
-					bounds.Inflate(0.5);
+					Rectangle inside = bounds;
+					inside.Deflate(padding);
+					graphics.Align(ref inside);
+					inside.Inflate(0.5);
 
-					Path inside = new Path();
-					inside.AppendRectangle(bounds);
-					path = Path.Combine(path, inside, PathOperation.AMinusB);
+					Path pi = new Path();
+					pi.AppendRectangle(inside);
+					path = Path.Combine(path, pi, PathOperation.AMinusB);
 
 					graphics.PaintSurface(path);
 					graphics.AddRectangle(bounds);
+					graphics.AddRectangle(inside);
 					graphics.RenderSolid(PanelsContext.ColorHiliteOutline);
 				}
 			}
