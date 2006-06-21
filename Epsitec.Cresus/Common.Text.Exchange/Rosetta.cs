@@ -57,7 +57,7 @@ namespace Epsitec.Common.Text.Exchange
 			textWrapper.Attach (navigator);
 			paraWrapper.Attach (navigator);
 
-			NativeToTextWriter theWriter = new NativeToTextWriter (efmt.String, textWrapper, paraWrapper, navigator);
+			NativeToTextWriter theWriter = new NativeToTextWriter (efmt.String, textWrapper, paraWrapper, navigator, story);
 			theWriter.ProcessIt ();
 			
 		}
@@ -230,7 +230,7 @@ namespace Epsitec.Common.Text.Exchange
 //				htmlText.SetItalic (textWrapper.Defined.IsInvertItalicDefined && textWrapper.Defined.InvertItalic);
 //				htmlText.SetBold (textWrapper.Defined.IsInvertBoldDefined && textWrapper.Defined.InvertBold);
 
-				string runattributes = NativeConverter.GetDefinedString (textWrapper, paragraphSep);
+				string runattributes = NativeConverter.GetDefinedString (textWrapper, navigator, story, paragraphSep);
 
 				nativeText.AppendTextLine (runattributes);
 				
