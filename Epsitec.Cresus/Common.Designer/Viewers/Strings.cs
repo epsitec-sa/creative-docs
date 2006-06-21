@@ -531,7 +531,6 @@ namespace Epsitec.Common.Designer.Viewers
 			ResourceBundle bundle = this.module.NewCulture(name);
 
 			this.UpdateCultures();
-			this.UpdateSelectedCulture(Misc.CultureName(bundle.Culture));
 			this.UpdateArray();
 			this.UpdateModifiers();
 			this.UpdateClientGeometry();
