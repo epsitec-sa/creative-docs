@@ -211,6 +211,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 					this.OnUpdateCommands();
 					break;
 
+				case "PanelRun":
+					this.module.RunPanel(0);
+					break;
+
 				case "MoveLeft":
 					this.MoveRibbonSelection(new Point(-1, 0));
 					break;

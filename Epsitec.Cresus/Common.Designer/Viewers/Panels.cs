@@ -502,6 +502,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.GetCommandState("PanelShowExpand").Enable = true;
 			this.GetCommandState("PanelShowZOrder").Enable = true;
 			this.GetCommandState("PanelShowTabIndex").Enable = true;
+			this.GetCommandState("PanelRun").Enable = (sel != -1);
 			this.GetCommandState("PanelShowGrid").ActiveState = this.context.ShowGrid ? ActiveState.Yes : ActiveState.No;
 			this.GetCommandState("PanelShowConstrain").ActiveState = this.context.ShowConstrain ? ActiveState.Yes : ActiveState.No;
 			this.GetCommandState("PanelShowAttachment").ActiveState = this.context.ShowAttachment ? ActiveState.Yes : ActiveState.No;
