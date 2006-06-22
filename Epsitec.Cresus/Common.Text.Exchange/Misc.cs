@@ -10,34 +10,39 @@ namespace Epsitec.Common.Text.Exchange
 	class Misc
 	{
 
-		public static string StringNull(string thestring)
+		public static string StringNull(string value)
 		{
-			if (thestring == null)
-				return "~";
-			else
-				return thestring;
+			return value ?? "~";
 		}
 
-		public static string NullString(string thestring)
+		public static string NullString(string value)
 		{
-			if (thestring == "~")
+			if (value == "~")
+			{
 				return null;
+			}
 			else
-				return thestring;
+			{
+				return value;
+			}
 		}
 
-		public static byte boolTobyte(bool thebool)
+		public static byte BoolToByte(bool value)
 		{
-			if (thebool)
+			if (value)
+			{
 				return 1;
+			}
 			else
+			{
 				return 0;
+			}
 		}
 
-		public static bool byteTobool(byte thebyte)
+		public static bool ByteToBool(byte value)
 		{
-			System.Diagnostics.Debug.Assert(thebyte == 0 || thebyte == 1) ;
-			return thebyte == 1;
+			System.Diagnostics.Debug.Assert(value == 0 || value == 1) ;
+			return value == 1;
 		}
 
 		/// <summary>
@@ -47,17 +52,8 @@ namespace Epsitec.Common.Text.Exchange
 		/// <returns>valeur convertie</returns>
 		public static double ParseDouble(string str)
 		{
-			double value = 0.0;
-
-			try
-			{
-				value = double.Parse (str, System.Globalization.CultureInfo.InvariantCulture);
-			}
-			catch
-			{
-				
-			}
-
+			double value;
+			double.TryParse (str, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out value);
 			return value;
 		}
 
@@ -81,14 +77,7 @@ namespace Epsitec.Common.Text.Exchange
 
 			str = str.Substring (0, i + 1);
 
-			try
-			{
-				value = int.Parse (str, System.Globalization.CultureInfo.InvariantCulture);
-			}
-			catch
-			{
-				value = 0;
-			}
+			int.TryParse (str, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out value);
 
 			return value;
 		}
