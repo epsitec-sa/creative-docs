@@ -279,7 +279,7 @@ namespace Epsitec.Common.Text.Exchange
 
 			if (paraWrapper.Defined.IsLeftMarginBodyDefined)
 			{
-				output.AppendFormat ("lefmbody|{0}", paraWrapper.Defined.LeftMarginBody);
+				output.AppendFormat ("leftmbody|{0}", paraWrapper.Defined.LeftMarginBody);
 				output.Append ('\\');
 			}
 
@@ -291,7 +291,7 @@ namespace Epsitec.Common.Text.Exchange
 
 			if (paraWrapper.Defined.IsLeftMarginFirstDefined)
 			{
-				output.AppendFormat ("lefmfirst|{0}", paraWrapper.Defined.LeftMarginFirst);
+				output.AppendFormat ("leftmfirst|{0}", paraWrapper.Defined.LeftMarginFirst);
 				output.Append ('\\');
 			}
 
