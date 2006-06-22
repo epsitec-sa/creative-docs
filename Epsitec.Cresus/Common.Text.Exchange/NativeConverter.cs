@@ -41,9 +41,9 @@ namespace Epsitec.Common.Text.Exchange
 		{
 			StringBuilder output = new StringBuilder ();
 
-			output.Append (Misc.boolTobyte (xscriptdef.IsDisabled));
+			output.Append (Misc.BoolToByte (xscriptdef.IsDisabled));
 			output.Append ('\\');
-			output.Append (Misc.boolTobyte (xscriptdef.IsEmpty));
+			output.Append (Misc.BoolToByte (xscriptdef.IsEmpty));
 			output.Append ('\\');
 			output.Append (xscriptdef.Offset);
 			output.Append ('\\');
@@ -62,7 +62,7 @@ namespace Epsitec.Common.Text.Exchange
 			double d;
 
 			b = byte.Parse (elements[0]);
-			xscriptdef.IsDisabled = Misc.byteTobool (b);
+			xscriptdef.IsDisabled = Misc.ByteToBool (b);
 
 			b = byte.Parse (elements[1]);
 			//	xscriptdef.IsEmpty = Misc.byteTobool (b);
@@ -77,9 +77,9 @@ namespace Epsitec.Common.Text.Exchange
 		{
 			StringBuilder output = new StringBuilder() ;
 
-			output.Append (Misc.boolTobyte (xlinedef.IsDisabled));
+			output.Append (Misc.BoolToByte (xlinedef.IsDisabled));
 			output.Append ('\\');
-			output.Append (Misc.boolTobyte (xlinedef.IsEmpty));
+			output.Append (Misc.BoolToByte (xlinedef.IsEmpty));
 			output.Append ('\\');
 			output.Append (xlinedef.Position);
 			output.Append ('\\');
@@ -106,7 +106,7 @@ namespace Epsitec.Common.Text.Exchange
 			double d;
 
 			b = byte.Parse(elements[0]) ;
-			xlinedef.IsDisabled = Misc.byteTobool (b);
+			xlinedef.IsDisabled = Misc.ByteToBool (b);
 
 			b = byte.Parse (elements[1]);
 		//	xlinedef.IsEmpty = Misc.byteTobool (b);
@@ -352,7 +352,7 @@ namespace Epsitec.Common.Text.Exchange
 
 			if (paraWrapper.Defined.IsHyphenationDefined)
 			{
-				output.AppendFormat ("hy|{0}", Misc.boolTobyte (paraWrapper.Defined.Hyphenation));
+				output.AppendFormat ("hy|{0}", Misc.BoolToByte (paraWrapper.Defined.Hyphenation));
 				output.Append ('\\');
 			}
 
@@ -382,13 +382,13 @@ namespace Epsitec.Common.Text.Exchange
 
 			if (paraWrapper.Defined.IsKeepWithNextParagraphDefined)
 			{
-				output.AppendFormat ("keepwnp|{0}", Misc.boolTobyte (paraWrapper.Defined.KeepWithNextParagraph));
+				output.AppendFormat ("keepwnp|{0}", Misc.BoolToByte (paraWrapper.Defined.KeepWithNextParagraph));
 				output.Append ('\\');
 			}
 
 			if (paraWrapper.Defined.IsKeepWithPreviousParagraphDefined)
 			{
-				output.AppendFormat ("keepwpp|{0}", Misc.boolTobyte (paraWrapper.Defined.KeepWithPreviousParagraph));
+				output.AppendFormat ("keepwpp|{0}", Misc.BoolToByte (paraWrapper.Defined.KeepWithPreviousParagraph));
 				output.Append ('\\');
 			}
 
