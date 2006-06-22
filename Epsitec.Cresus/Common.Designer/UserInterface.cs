@@ -76,8 +76,9 @@ namespace Epsitec.Common.Designer
 			string xml = UserInterface.SerializePanel (panel);
 			UI.Panel clone = UserInterface.DeserializePanel (xml, manager);
 			Widgets.Window window = new Epsitec.Common.Widgets.Window ();
-			window.Root.Children.Add (panel);
-			panel.Dock = Widgets.DockStyle.Fill;
+			window.Root.Children.Add (clone);
+			clone.Dock = Widgets.DockStyle.Fill;
+			window.Owner = panel.Window;
 			window.ShowDialog ();
 		}
 		
