@@ -45,6 +45,12 @@ namespace Epsitec.Common.Text.Exchange
 					break;
 
 				this.navigator.InsertWithTabs (contentline);
+
+				if (paragraphSep)
+				{
+					this.paraWrapper.Defined.ClearDefinedProperties ();
+					paragraphSep = false;
+				}
 			}
 		}
 
