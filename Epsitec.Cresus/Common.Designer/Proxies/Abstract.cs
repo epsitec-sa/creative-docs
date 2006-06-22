@@ -102,6 +102,7 @@ namespace Epsitec.Common.Designer.Proxies
 		}
 		
 
+#if false
 		protected void SetWidgetProperty(DependencyProperty property, object value)
 		{
 			//	Met à jour la propriété du (ou des) widget(s) connecté(s), pour
@@ -138,6 +139,7 @@ namespace Epsitec.Common.Designer.Proxies
 				return UndefinedValue.Instance;
 			}
 		}
+#endif
 
 
 		protected ObjectModifier		objectModifier;

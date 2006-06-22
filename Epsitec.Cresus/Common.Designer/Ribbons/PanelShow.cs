@@ -16,6 +16,7 @@ namespace Epsitec.Common.Designer.Ribbons
 
 			this.buttonShowConstrain  = this.CreateIconButton("PanelShowConstrain");
 			this.buttonShowAttachment = this.CreateIconButton("PanelShowAttachment");
+			this.buttonRun            = this.CreateIconButton("PanelRun");
 
 			this.buttonShowExpand     = this.CreateIconButton("PanelShowExpand");
 			this.buttonShowZOrder     = this.CreateIconButton("PanelShowZOrder");
@@ -51,6 +52,8 @@ namespace Epsitec.Common.Designer.Ribbons
 			this.buttonShowConstrain.SetManualBounds(rect);
 			rect.Offset(dx+5, 0);
 			this.buttonShowAttachment.SetManualBounds(rect);
+			rect.Offset(dx+5, 0);
+			this.buttonRun.SetManualBounds(rect);
 
 			rect = this.UsefulZone;
 			rect.Width  = dx;
@@ -65,6 +68,7 @@ namespace Epsitec.Common.Designer.Ribbons
 
 		protected IconButton				buttonShowConstrain;
 		protected IconButton				buttonShowAttachment;
+		protected IconButton				buttonRun;
 		protected IconButton				buttonShowExpand;
 		protected IconButton				buttonShowZOrder;
 		protected IconButton				buttonShowTabIndex;
