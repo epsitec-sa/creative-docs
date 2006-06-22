@@ -79,6 +79,7 @@ namespace Epsitec.Common.Designer
 			window.Root.Children.Add (clone);
 			clone.Dock = Widgets.DockStyle.Fill;
 			window.Owner = panel.Window;
+			window.ClientSize = clone.PreferredSize;
 			window.ShowDialog ();
 		}
 		
