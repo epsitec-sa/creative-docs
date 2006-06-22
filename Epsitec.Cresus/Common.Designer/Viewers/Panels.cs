@@ -317,6 +317,12 @@ namespace Epsitec.Common.Designer.Viewers
 		public override void DoCommand(string name)
 		{
 			//	Exécute une commande.
+			if (name == "PanelRun")
+			{
+				this.module.RunPanel(this.array.SelectedRow);
+				return;
+			}
+
 			this.panelEditor.DoCommand(name);
 			base.DoCommand(name);
 		}
