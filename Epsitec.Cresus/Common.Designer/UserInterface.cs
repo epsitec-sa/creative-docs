@@ -69,7 +69,16 @@ namespace Epsitec.Common.Designer
 			UI.Panel panel = Types.Storage.Deserialize (context) as UI.Panel;
 			
 			return panel;
+		}
 
+		public static void RunPanel(UI.Panel panel, Support.ResourceManager manager)
+		{
+			string xml = UserInterface.SerializePanel (panel);
+			UI.Panel clone = UserInterface.DeserializePanel (xml, manager);
+			Widgets.Window window = new Epsitec.Common.Widgets.Window ();
+			window.Root.Children.Add (panel);
+			panel.Dock = Widgets.DockStyle.Fill;
+			window.ShowDialog ();
 		}
 		
 		private class CustomerRecord : Types.DependencyObject

@@ -270,6 +270,17 @@ namespace Epsitec.Common.Designer
 			this.panelsToDelete.Clear();
 		}
 
+		public void RunPanel(int index)
+		{
+			ResourceBundle bundle = this.panelsList[index];
+			UI.Panel panel = Viewers.Panels.GetPanel (bundle);
+			
+			if (panel != null)
+			{
+				UserInterface.RunPanel (panel, this.resourceManager);
+			}
+		}
+
 		public int PanelsCount
 		{
 			//	Retourne le nombre total de ressources de type 'Panel'.
