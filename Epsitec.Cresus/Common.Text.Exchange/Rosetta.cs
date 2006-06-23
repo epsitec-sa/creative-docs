@@ -51,13 +51,17 @@ namespace Epsitec.Common.Text.Exchange
 			if (efmt.String.Length == 0)
 				return;
 
+#if false
 			Wrappers.TextWrapper textWrapper = new Wrappers.TextWrapper ();
 			Wrappers.ParagraphWrapper paraWrapper = new Wrappers.ParagraphWrapper ();
 
 			textWrapper.Attach (navigator);
 			paraWrapper.Attach (navigator);
+#else
+			CopyPasteContect cpContext = new CopyPasteContect (story, navigator);
+#endif
 
-			NativeToTextWriter theWriter = new NativeToTextWriter (efmt.String, textWrapper, paraWrapper, navigator, story, PasteMode.InsertRaw);
+			NativeToTextWriter theWriter = new NativeToTextWriter (efmt.String, cpContext, PasteMode.InsertAll);
 			theWriter.ProcessIt ();
 			
 		}
@@ -134,7 +138,7 @@ namespace Epsitec.Common.Text.Exchange
 				// navigator.TextContext.StyleList.
 
 				bool finishParagraph = false;
-				if (runLength == 1 && runText[0] == (char) Epsitec.Common.Text.Unicode.Code.ParagraphSeparator)
+				if (runLength == 1 && runText[0] == (char) Unicode.Code.ParagraphSeparator)
 				{
 					finishParagraph = true;
 					// on est tombé sur un séparateur de paragraphe
@@ -162,17 +166,17 @@ namespace Epsitec.Common.Text.Exchange
 				}
 
 				// avance au run suivant
-				navigator.MoveTo (Epsitec.Common.Text.TextNavigator.Target.CharacterNext, runLength);
+				navigator.MoveTo (TextNavigator.Target.CharacterNext, runLength);
 
 				// avance encore d'un seul caractère afin de se trouver véritablement dans
 				// le contexte du run
-				navigator.MoveTo (Epsitec.Common.Text.TextNavigator.Target.CharacterNext, 1);
+				navigator.MoveTo (TextNavigator.Target.CharacterNext, 1);
 
 				if (navigator.GetRunLength (1) == 0)
 					break; // arrête si on est à la fin
 
 				// recule au début du run
-				navigator.MoveTo (Epsitec.Common.Text.TextNavigator.Target.CharacterPrevious, 1);
+				navigator.MoveTo (TextNavigator.Target.CharacterPrevious, 1);
 
 				if (finishParagraph)
 				{
@@ -190,13 +194,7 @@ namespace Epsitec.Common.Text.Exchange
 			if (!usernavigator.IsSelectionActive)
 				return;
 
-			TextNavigator navigator = new TextNavigator (story);
-
-			Wrappers.TextWrapper textWrapper = new Wrappers.TextWrapper ();
-			Wrappers.ParagraphWrapper paraWrapper = new Wrappers.ParagraphWrapper ();
-
-			textWrapper.Attach (navigator);
-			paraWrapper.Attach (navigator);
+			CopyPasteContect cpContext = new CopyPasteContect (story);
 
 			int[] selectedPositions = usernavigator.GetAdjustedSelectionCursorPositions ();
 
@@ -209,12 +207,12 @@ namespace Epsitec.Common.Text.Exchange
 			int selectionStart = selectedPositions[0];
 			int selectionEnd = selectedPositions[1];
 			int currentPosition = selectionStart;
-			navigator.MoveTo (selectionStart, 0);
+			cpContext.Navigator.MoveTo (selectionStart, 0);
 
 			while (true)
 			{
 				string runText;
-				int runLength = navigator.GetRunLength (selectionLength);
+				int runLength = cpContext.Navigator.GetRunLength (selectionLength);
 
 				if (currentPosition + runLength > selectionEnd)
 					runLength = selectionEnd - currentPosition ;
@@ -224,17 +222,17 @@ namespace Epsitec.Common.Text.Exchange
 					break;
 				}
 
-				runText = navigator.ReadText (runLength);
+				runText =  cpContext.Navigator.ReadText (runLength);
 				currentPosition += runLength;
 
 				bool paragraphSep = false;
-				if (runLength == 1 && runText[0] == (char) Epsitec.Common.Text.Unicode.Code.ParagraphSeparator)
+				if (runLength == 1 && runText[0] == (char) Unicode.Code.ParagraphSeparator)
 				{
 					// on est tombé sur un séparateur de paragraphe
 					paragraphSep = true;
 				}
 
-				NativeConverter converter = new NativeConverter (textWrapper, paraWrapper, navigator, story);
+				NativeConverter converter = new NativeConverter (cpContext);
 				string runattributes = converter.GetDefinedString (paragraphSep);
 
 				nativeText.AppendTextLine (runattributes);
@@ -244,17 +242,17 @@ namespace Epsitec.Common.Text.Exchange
 			
 
 				// avance au run suivant
-				navigator.MoveTo (Epsitec.Common.Text.TextNavigator.Target.CharacterNext, runLength);
+				cpContext.Navigator.MoveTo (TextNavigator.Target.CharacterNext, runLength);
 
 				// avance encore d'un seul caractère afin de se trouver véritablement dans
 				// le contexte du run
-				navigator.MoveTo (Epsitec.Common.Text.TextNavigator.Target.CharacterNext, 1);
+				cpContext.Navigator.MoveTo (TextNavigator.Target.CharacterNext, 1);
 
-				if (navigator.GetRunLength (1) == 0)
+				if (cpContext.Navigator.GetRunLength (1) == 0)
 					break; // arrête si on est à la fin
 
 				// recule au début du run
-				navigator.MoveTo (Epsitec.Common.Text.TextNavigator.Target.CharacterPrevious, 1);
+				cpContext.Navigator.MoveTo (TextNavigator.Target.CharacterPrevious, 1);
 			}
 
 		}
@@ -273,9 +271,6 @@ namespace Epsitec.Common.Text.Exchange
 			}
 
 			string text = builder.ToString ();
-
-			string newline = "\u2029" ;
-			string newparagraph = "\u2028";
 
 			text = text.Replace ("\u2029", "\r\n");
 			text = text.Replace ("\u2028", "\r\n");

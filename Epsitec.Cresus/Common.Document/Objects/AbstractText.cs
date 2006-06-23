@@ -380,7 +380,7 @@ namespace Epsitec.Common.Document.Objects
 			Text.TextStory story = flow.TextStory;
 			Text.TextNavigator navigator = flow.TextNavigator;
 
-			Epsitec.Common.Text.Exchange.Rosetta.CopyText (story, navigator);
+			Text.Exchange.Rosetta.CopyText (story, navigator);
 			return true;
 
 #endif
@@ -417,7 +417,7 @@ namespace Epsitec.Common.Document.Objects
 				Text.TextStory story = flow.TextStory;
 				Text.TextNavigator navigator = flow.TextNavigator;
 
-				Epsitec.Common.Text.Exchange.Rosetta.PasteHtmlText (story, navigator);
+				Text.Exchange.Rosetta.PasteHtmlText (story, navigator);
 				textInserted = true;
 			}
 			else if (data.IsCompatible (Clipboard.Format.Text))
@@ -451,7 +451,7 @@ namespace Epsitec.Common.Document.Objects
 
 				//	TODO: utiliser un texte des ressources
 				this.document.Modifier.OpletQueueBeginAction ("** PASTE **");
-				Epsitec.Common.Text.Exchange.Rosetta.PasteNativeText (story, navigator);
+				Text.Exchange.Rosetta.PasteNativeText (story, navigator);
 				this.document.Modifier.OpletQueueValidateAction ();
 				textInserted = true;
 			}
@@ -464,7 +464,7 @@ namespace Epsitec.Common.Document.Objects
 
 				//	TODO: utiliser un texte des ressources
 				this.document.Modifier.OpletQueueBeginAction ("** PASTE **");
-				Epsitec.Common.Text.Exchange.Rosetta.PasteHtmlText (story, navigator);
+				Text.Exchange.Rosetta.PasteHtmlText (story, navigator);
 				this.document.Modifier.OpletQueueValidateAction ();
 				textInserted = true;
 			}

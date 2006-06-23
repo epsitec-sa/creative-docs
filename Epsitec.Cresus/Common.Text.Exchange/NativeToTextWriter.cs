@@ -8,14 +8,11 @@ namespace Epsitec.Common.Text.Exchange
 {
 	class NativeToTextWriter
 	{
-		public NativeToTextWriter(string nativeClipboard, Wrappers.TextWrapper textWrapper, Wrappers.ParagraphWrapper paraWrapper, TextNavigator navigator, TextStory story, PasteMode pastemode)
+		public NativeToTextWriter(string nativeClipboard, CopyPasteContect cpContext, PasteMode pastemode)
 		{
-			this.nativeConverter = new NativeConverter (textWrapper, paraWrapper, navigator, story);
+			this.nativeConverter = new NativeConverter (cpContext);
 			this.nativeClipboard = nativeClipboard;
-			this.navigator = navigator;
-			this.paraWrapper = paraWrapper;
-			this.textWrapper = textWrapper;
-			this.story = story;
+			this.cpContext = cpContext;
 			this.pasteMode = pastemode;
 		}
 
@@ -31,38 +28,53 @@ namespace Epsitec.Common.Text.Exchange
 				if (formatline == null)
 					break;
 
-				bool paragraphSep;
-				this.nativeConverter.SetDefined (formatline, out paragraphSep);
-
-				if (paragraphSep)
+				if (this.pasteMode == PasteMode.InsertRaw)
 				{
-					contentline = new string((char) Epsitec.Common.Text.Unicode.Code.ParagraphSeparator, 1) ;
+					if (NativeConverter.IsParagraphSeparator (formatline))
+					{
+						contentline = new string ((char) Epsitec.Common.Text.Unicode.Code.ParagraphSeparator, 1);
+					}
+					else
+					{
+						contentline = theReader.ReadLine ();
+						if (contentline == null)
+							break;
+					}
+
+					this.cpContext.Navigator.InsertWithTabs (contentline);
 				}
 				else
 				{
-					contentline = theReader.ReadLine ();
-				}
+					bool paragraphSep;
+					this.nativeConverter.SetDefined (formatline, out paragraphSep);
 
-				if (contentline == null)
-					break;
+					if (paragraphSep)
+					{
+						contentline = new string ((char) Unicode.Code.ParagraphSeparator, 1);
+					}
+					else
+					{
+						contentline = theReader.ReadLine ();
+					}
 
-				this.navigator.InsertWithTabs (contentline);
+					if (contentline == null)
+						break;
 
-				if (paragraphSep)
-				{
-					this.paraWrapper.Defined.ClearDefinedProperties ();
-					paragraphSep = false;
+					this.cpContext.Navigator.InsertWithTabs (contentline);
+
+					if (paragraphSep)
+					{
+						this.cpContext.ParaWrapper.Defined.ClearDefinedProperties ();
+						paragraphSep = false;
+					}
 				}
 			}
 		}
 
-		private Wrappers.TextWrapper textWrapper ;
-		private Wrappers.ParagraphWrapper paraWrapper;
-		private TextNavigator navigator;
-		private TextStory story;
 		private string nativeClipboard;
 		private PasteMode pasteMode;
 		private NativeConverter nativeConverter;
+		private CopyPasteContect cpContext;
 
 	}
 }

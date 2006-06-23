@@ -290,7 +290,7 @@ namespace Epsitec.Common.Text.Exchange
 
 		private void ProcessBr(HtmlElement element)
 		{
-			this.navigator.Insert (Epsitec.Common.Text.Unicode.Code.LineSeparator);
+			this.navigator.Insert (Unicode.Code.LineSeparator);
 			this.ProcessNodes (element.Nodes);
 		}
 
@@ -299,7 +299,7 @@ namespace Epsitec.Common.Text.Exchange
 			if (this.pendingP)
 			{
 				pendingP = false;
-				this.navigator.Insert (Epsitec.Common.Text.Unicode.Code.ParagraphSeparator);
+				this.navigator.Insert (Unicode.Code.ParagraphSeparator);
 			}
 
 			this.ProcessNodes (element.Nodes);
@@ -311,7 +311,7 @@ namespace Epsitec.Common.Text.Exchange
 			if (this.pendingDiv)
 			{
 //				pendingDiv = false;
-//				this.navigator.Insert (Epsitec.Common.Text.Unicode.Code.ParagraphSeparator);
+//				this.navigator.Insert (Unicode.Code.ParagraphSeparator);
 			}
 
 			string alignMode = string.Empty;
@@ -340,7 +340,7 @@ namespace Epsitec.Common.Text.Exchange
 
 			this.ProcessNodes (element.Nodes);
 
-				this.navigator.Insert (Epsitec.Common.Text.Unicode.Code.ParagraphSeparator);
+				this.navigator.Insert (Unicode.Code.ParagraphSeparator);
 
 			if (justificationModeDefined)
 			{

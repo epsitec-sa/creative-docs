@@ -533,7 +533,7 @@ namespace Epsitec.Common.Text.Exchange
 
 			output.Replace ("<", "&lt;");
 			output.Replace (">", "&gt;");
-			oldchar = new string ((char) Epsitec.Common.Text.Unicode.Code.LineSeparator, 1);
+			oldchar = new string ((char) Unicode.Code.LineSeparator, 1);
 			output.Replace (oldchar, "<br />\r\n");
 
 			for (int i = 0; i < output.Length - 1; i++)
