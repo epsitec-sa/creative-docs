@@ -229,55 +229,101 @@ namespace Epsitec.Common.Designer
 				return null;
 			}
 
-			if (this.widget is TextField)
+			bool w = HandlesList.HasWidthHandles(this.widget);
+			bool h = HandlesList.HasHeightHandles(this.widget);
+
+			if (w && h)
 			{
-				if (type != Handle.Type.Left && type != Handle.Type.Right)
+				return new Handle(type);
+			}
+
+			if (w && !h)
+			{
+				if (type == Handle.Type.Left || type == Handle.Type.Right)
 				{
-					return null;
+					return new Handle(type);
 				}
 			}
-			else if (this.widget is Button)
+
+			if (!w && h)
 			{
-				if (type != Handle.Type.Left && type != Handle.Type.Right)
+				if (type == Handle.Type.Bottom || type == Handle.Type.Top)
 				{
-					return null;
+					return new Handle(type);
 				}
 			}
-			else if (this.widget is Separator)
+
+			return null;
+		}
+
+		static public bool HasWidthHandles(Widget obj)
+		{
+			//	Indique s'il est possible de modifier la largeur d'un objet.
+			if (obj is TextField)
 			{
-				if (this.widget.PreferredHeight == 1)  // séparateur horizontal ?
+				return true;
+			}
+			else if (obj is Button)
+			{
+				return true;
+			}
+			else if (obj is Separator)
+			{
+				if (obj.PreferredHeight == 1)  // séparateur horizontal ?
 				{
-					if (type != Handle.Type.Left && type != Handle.Type.Right)
-					{
-						return null;
-					}
+					return true;
 				}
 				else  // séparateur vertical ?
 				{
-					if (type != Handle.Type.Bottom && type != Handle.Type.Top)
-					{
-						return null;
-					}
+					return false;
 				}
 			}
-			else if (this.widget is StaticText)
+			else if (obj is StaticText)
 			{
-				if (type != Handle.Type.Left && type != Handle.Type.Right)
-				{
-					return null;
-				}
+				return true;
 			}
-			else if (this.widget is GroupBox)
+			else if (obj is GroupBox)
 			{
-				//	Tous les types
-			}
-			else
-			{
-				return null;
+				return true;
 			}
 
-			return new Handle(type);
+			return false;
 		}
+
+		static public bool HasHeightHandles(Widget obj)
+		{
+			//	Indique s'il est possible de modifier la hauteur d'un objet.
+			if (obj is TextField)
+			{
+				return false;
+			}
+			else if (obj is Button)
+			{
+				return false;
+			}
+			else if (obj is Separator)
+			{
+				if (obj.PreferredHeight == 1)  // séparateur horizontal ?
+				{
+					return false;
+				}
+				else  // séparateur vertical ?
+				{
+					return true;
+				}
+			}
+			else if (obj is StaticText)
+			{
+				return false;
+			}
+			else if (obj is GroupBox)
+			{
+				return true;
+			}
+
+			return false;
+		}
+
 
 		protected void HandleUpdatePosition(Handle handle)
 		{

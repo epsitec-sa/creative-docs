@@ -154,6 +154,18 @@ namespace Epsitec.Common.Designer.Proxies
 				this.Width   = bounds.Width;
 				this.Height  = bounds.Height;
 			}
+			else
+			{
+				if (this.objectModifier.HasWidth(this.widgets[0]))
+				{
+					this.Width = this.objectModifier.GetWidth(this.widgets[0]);
+				}
+				
+				if (this.objectModifier.HasHeight(this.widgets[0]))
+				{
+					this.Height = this.objectModifier.GetHeight(this.widgets[0]);
+				}
+			}
 		}
 
 		private static void NotifyMarginsChanged(DependencyObject o, object oldValue, object newValue)
@@ -198,7 +210,22 @@ namespace Epsitec.Common.Designer.Proxies
 				{
 					foreach (Widget obj in that.widgets)
 					{
-						that.objectModifier.SetBounds(obj, bounds);
+						if (that.objectModifier.HasBounds(obj))
+						{
+							that.objectModifier.SetBounds(obj, bounds);
+						}
+						else
+						{
+							if (that.objectModifier.HasWidth(obj))
+							{
+								that.objectModifier.SetWidth(obj, bounds.Width);
+							}
+
+							if (that.objectModifier.HasHeight(obj))
+							{
+								that.objectModifier.SetHeight(obj, bounds.Height);
+							}
+						}
 					}
 				}
 				finally
