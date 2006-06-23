@@ -244,7 +244,9 @@ namespace Epsitec.Common.Document.Ribbons
 				Text.TextStory story = flow.TextStory;
 				Text.TextNavigator navigator = flow.TextNavigator;
 				
-				Epsitec.Common.Text.Exchange.Rosetta.TestCode(story, navigator);
+//				Epsitec.Common.Text.Exchange.Rosetta.TestCode(story, navigator);
+
+				Epsitec.Common.Text.Exchange.Rosetta.TogglePasteMode ();
 			}
 		}
 
