@@ -143,6 +143,7 @@
     <Compile Include="NativeConverter.cs" />
     <Compile Include="NativeText.cs" />
     <Compile Include="NativeToTextWriter.cs" />
+    <Compile Include="PasteMode.cs" />
     <Compile Include="Rosetta.cs">
       <SubType>Code</SubType>
     </Compile>

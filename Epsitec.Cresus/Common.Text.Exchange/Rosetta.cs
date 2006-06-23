@@ -39,7 +39,7 @@ namespace Epsitec.Common.Text.Exchange
 			textWrapper.Attach (navigator);
 			paraWrapper.Attach (navigator);
 
-			HtmlToTextWriter theWriter = new HtmlToTextWriter (thehtmldoc, textWrapper, paraWrapper, navigator);
+			HtmlToTextWriter theWriter = new HtmlToTextWriter (thehtmldoc, textWrapper, paraWrapper, navigator, PasteMode.InsertRaw);
 			theWriter.ProcessIt ();
 		}
 
@@ -57,7 +57,7 @@ namespace Epsitec.Common.Text.Exchange
 			textWrapper.Attach (navigator);
 			paraWrapper.Attach (navigator);
 
-			NativeToTextWriter theWriter = new NativeToTextWriter (efmt.String, textWrapper, paraWrapper, navigator, story);
+			NativeToTextWriter theWriter = new NativeToTextWriter (efmt.String, textWrapper, paraWrapper, navigator, story, PasteMode.InsertRaw);
 			theWriter.ProcessIt ();
 			
 		}
@@ -233,8 +233,9 @@ namespace Epsitec.Common.Text.Exchange
 					// on est tombé sur un séparateur de paragraphe
 					paragraphSep = true;
 				}
-								
-				string runattributes = NativeConverter.GetDefinedString (textWrapper, paraWrapper, navigator, story, paragraphSep);
+
+				NativeConverter converter = new NativeConverter (textWrapper, paraWrapper, navigator, story);
+				string runattributes = converter.GetDefinedString (paragraphSep);
 
 				nativeText.AppendTextLine (runattributes);
 				
