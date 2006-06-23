@@ -26,6 +26,15 @@ namespace Epsitec.Common.Text.Exchange
 
 		public static PasteMode pasteMode = PasteMode.MatchDestination;
 
+		public static void TogglePasteMode()
+		{
+
+			if (pasteMode == PasteMode.MatchDestination)
+				Rosetta.pasteMode = PasteMode.KeepSource;
+
+			Rosetta.pasteMode++;
+		}
+
 
 		public static void PasteHtmlText(TextStory story, TextNavigator navigator)
 		{
