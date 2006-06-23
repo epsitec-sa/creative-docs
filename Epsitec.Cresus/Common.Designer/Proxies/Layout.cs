@@ -8,7 +8,7 @@ namespace Epsitec.Common.Designer.Proxies
 {
 	public class Layout : Abstract
 	{
-		public Layout(Widget widget, ObjectModifier objectModifier) : base(widget, objectModifier)
+		public Layout(Widget widget, Viewers.Panels panel) : base(widget, panel)
 		{
 		}
 
@@ -206,6 +206,7 @@ namespace Epsitec.Common.Designer.Proxies
 				finally
 				{
 					that.ResumeChanges();
+					that.RegenerateProxies();  // (*)
 				}
 			}
 		}
@@ -234,6 +235,7 @@ namespace Epsitec.Common.Designer.Proxies
 				finally
 				{
 					that.ResumeChanges();
+					that.RegenerateProxies();  // (*)
 				}
 			}
 		}
@@ -262,6 +264,7 @@ namespace Epsitec.Common.Designer.Proxies
 				finally
 				{
 					that.ResumeChanges();
+					that.RegenerateProxies();  // (*)
 				}
 			}
 		}
@@ -288,6 +291,7 @@ namespace Epsitec.Common.Designer.Proxies
 				finally
 				{
 					that.ResumeChanges();
+					that.RegenerateProxies();  // (*)
 				}
 			}
 		}
@@ -314,6 +318,7 @@ namespace Epsitec.Common.Designer.Proxies
 				finally
 				{
 					that.ResumeChanges();
+					that.RegenerateProxies();  // (*)
 				}
 			}
 		}
@@ -340,6 +345,7 @@ namespace Epsitec.Common.Designer.Proxies
 				finally
 				{
 					that.ResumeChanges();
+					that.RegenerateProxies();  // (*)
 				}
 			}
 		}
@@ -366,9 +372,12 @@ namespace Epsitec.Common.Designer.Proxies
 				finally
 				{
 					that.ResumeChanges();
+					that.RegenerateProxies();  // (*)
 				}
 			}
 		}
+
+		//	(*)	Les propriétés Largeur ou Hauteur peuvent apparaître ou disparaître !
 
 
 		static Layout()

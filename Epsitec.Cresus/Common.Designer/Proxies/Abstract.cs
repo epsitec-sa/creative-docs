@@ -7,9 +7,10 @@ namespace Epsitec.Common.Designer.Proxies
 {
 	public abstract class Abstract : DependencyObject, IProxy
 	{
-		protected Abstract(Widget widget, ObjectModifier objectModifier)
+		protected Abstract(Widget widget, Viewers.Panels panel)
 		{
-			this.objectModifier = objectModifier;
+			this.panel = panel;
+			this.objectModifier = this.panel.PanelEditor.ObjectModifier;
 			this.AddWidget(widget);
 		}
 
@@ -100,6 +101,15 @@ namespace Epsitec.Common.Designer.Proxies
 		{
 			this.suspendChanges--;
 		}
+
+
+		protected void RegenerateProxies()
+		{
+			//	Régénère la liste des proxies et met à jour les panneaux de l'interface
+			//	utilisateur s'il y a eu un changement dans le nombre de propriétés visibles
+			//	par panneau.
+			this.panel.RegenerateProxies();
+		}
 		
 
 #if false
@@ -142,6 +152,7 @@ namespace Epsitec.Common.Designer.Proxies
 #endif
 
 
+		protected Viewers.Panels		panel;
 		protected ObjectModifier		objectModifier;
 		protected List<Widget>			widgets = new List<Widget>();
 		protected int					suspendChanges = 0;

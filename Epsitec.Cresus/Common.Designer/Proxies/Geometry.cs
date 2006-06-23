@@ -8,7 +8,7 @@ namespace Epsitec.Common.Designer.Proxies
 {
 	public class Geometry : Abstract
 	{
-		public Geometry(Widget widget, ObjectModifier objectModifier) : base(widget, objectModifier)
+		public Geometry(Widget widget, Viewers.Panels panel) : base(widget, panel)
 		{
 		}
 

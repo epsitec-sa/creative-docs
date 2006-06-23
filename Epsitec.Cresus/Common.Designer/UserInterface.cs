@@ -97,6 +97,7 @@ namespace Epsitec.Common.Designer
 
 			window.ShowDialog();  // affiche le dialogue modal...
 
+			//	TODO: comprendre pourquoi WindowBounds ne tient pas compte de la position réelle de la fenêtre !
 			UserInterface.runPanelCenter = window.WindowBounds.Center;
 		}
 		

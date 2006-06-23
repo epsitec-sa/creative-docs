@@ -8,7 +8,7 @@ namespace Epsitec.Common.Designer.Proxies
 {
 	public class Padding : Abstract
 	{
-		public Padding(Widget widget, ObjectModifier objectModifier) : base(widget, objectModifier)
+		public Padding(Widget widget, Viewers.Panels panel) : base(widget, panel)
 		{
 		}
 

@@ -107,7 +107,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.tabPageProperties.Padding = new Margins(4, 4, 4, 4);
 			this.tabBook.Items.Add(this.tabPageProperties);
 
-			this.proxyManager = new ProxyManager(this.panelEditor.ObjectModifier);
+			this.proxyManager = new ProxyManager(this);
 
 			this.propertiesScrollable = new Scrollable(this.tabPageProperties);
 			this.propertiesScrollable.Dock = DockStyle.Fill;
@@ -172,6 +172,15 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 
 			base.Dispose(disposing);
+		}
+
+
+		public MyWidgets.PanelEditor PanelEditor
+		{
+			get
+			{
+				return this.panelEditor;
+			}
 		}
 
 
@@ -712,6 +721,7 @@ namespace Epsitec.Common.Designer.Viewers
 		#region Proxies
 		protected void DefineProxies(IEnumerable<Widget> widgets)
 		{
+			//	Crée les proxies et l'interface utilisateur pour les widgets sélectionnés.
 			this.ClearProxies();
 			this.proxyManager.SetSelection(widgets);
 			this.proxyManager.CreateUserInterface(this.propertiesScrollable.Panel);
@@ -724,7 +734,21 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected void UpdateProxies()
 		{
+			//	Met à jour les proxies et l'interface utilisateur (panneaux), sans changer
+			//	le nombre de propriétés visibles par panneau.
 			this.proxyManager.UpdateUserInterface();
+		}
+
+		public void RegenerateProxies()
+		{
+			//	Régénère la liste des proxies et met à jour les panneaux de l'interface
+			//	utilisateur s'il y a eu un changement dans le nombre de propriétés visibles
+			//	par panneau.
+			if (this.proxyManager.RegenerateProxies())
+			{
+				this.ClearProxies();
+				this.proxyManager.CreateUserInterface(this.propertiesScrollable.Panel);
+			}
 		}
 		#endregion
 
