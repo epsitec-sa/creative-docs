@@ -24,6 +24,9 @@ namespace Epsitec.Common.Text.Exchange
 		{
 		}
 
+		public static PasteMode pasteMode = PasteMode.MatchDestination;
+
+
 		public static void PasteHtmlText(TextStory story, TextNavigator navigator)
 		{
 			string s = NativeHtmlClipboardReader.ReadClipBoardHtml ();
@@ -35,7 +38,7 @@ namespace Epsitec.Common.Text.Exchange
 
 			CopyPasteContext cpContext = new CopyPasteContext (story, navigator);
 
-			HtmlToTextWriter theWriter = new HtmlToTextWriter (thehtmldoc, cpContext, PasteMode.InsertRaw);
+			HtmlToTextWriter theWriter = new HtmlToTextWriter (thehtmldoc, cpContext, Rosetta.pasteMode);
 			theWriter.ProcessIt ();
 		}
 
@@ -49,7 +52,7 @@ namespace Epsitec.Common.Text.Exchange
 
 			CopyPasteContext cpContext = new CopyPasteContext (story, navigator);
 
-			NativeToTextWriter theWriter = new NativeToTextWriter (efmt.String, cpContext, PasteMode.InsertAll);
+			NativeToTextWriter theWriter = new NativeToTextWriter (efmt.String, cpContext, Rosetta.pasteMode);
 			theWriter.ProcessIt ();
 			
 		}
@@ -211,7 +214,7 @@ namespace Epsitec.Common.Text.Exchange
 					paragraphSep = true;
 				}
 
-				NativeConverter converter = new NativeConverter (cpContext);
+				NativeConverter converter = new NativeConverter (cpContext, PasteMode.KeepTextOnly);
 				string runattributes = converter.GetDefinedString (paragraphSep);
 
 				nativeText.AppendTextLine (runattributes);
