@@ -10,7 +10,7 @@ namespace Epsitec.Common.Text.Exchange
 	{
 		public NativeToTextWriter(string nativeClipboard, CopyPasteContext cpContext, PasteMode pastemode)
 		{
-			this.nativeConverter = new NativeConverter (cpContext);
+			this.nativeConverter = new NativeConverter (cpContext, pastemode);
 			this.nativeClipboard = nativeClipboard;
 			this.cpContext = cpContext;
 			this.pasteMode = pastemode;
@@ -28,7 +28,7 @@ namespace Epsitec.Common.Text.Exchange
 				if (formatline == null)
 					break;
 
-				if (this.pasteMode == PasteMode.InsertRaw)
+				if (this.pasteMode == PasteMode.KeepTextOnly)
 				{
 					if (NativeConverter.IsParagraphSeparator (formatline))
 					{

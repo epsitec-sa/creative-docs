@@ -21,12 +21,13 @@ namespace Epsitec.Common.Text.Exchange
 	class NativeConverter
 	{
 
-		public NativeConverter(CopyPasteContext cpContext)
+		public NativeConverter(CopyPasteContext cpContext, PasteMode pastemode)
 		{
 			this.textWrapper = cpContext.TextWrapper;
 			this.paraWrapper = cpContext.ParaWrapper;
 			this.navigator = cpContext.Navigator;
 			this.story = cpContext.Story;
+			this.pasteMode = pastemode;
 		}
 
 
@@ -215,32 +216,11 @@ namespace Epsitec.Common.Text.Exchange
 			foreach (string elem in elements)
 			{
 				string[] subelements = elem.Split (':');
+
+				bool notHandled = false;
+
 				switch (subelements[0])
 				{
-					case "cstyle":
-						string stylecaption = subelements[1];
-						TextStyle thestyle = StyleFromCaption (stylecaption);
-
-						if (thestyle != null)
-						{
-							this.navigator.SetTextStyles (thestyle);
-						}
-						break;
-					case "pstyle":
-						stylecaption = subelements[1];
-						thestyle = StyleFromCaption (stylecaption);
-
-						if (thestyle != null)
-						{
-							this.navigator.SetParagraphStyles (thestyle);
-						}
-						break;
-					case "par":
-						paragrpahSep = true;
-						break;
-					case "pardef":
-						this.SetParagraph (subelements[1]);
-						break;
 					case "i":
 						this.textWrapper.Defined.InvertItalic = true;
 						invertItalic = true;
@@ -262,103 +242,141 @@ namespace Epsitec.Common.Text.Exchange
 						strikeout = true;
 						break;
 					case "x":
-						StringToXScriptDefinition(subelements[1], this.textWrapper.Defined.Xscript);
+						StringToXScriptDefinition (subelements[1], this.textWrapper.Defined.Xscript);
 						xscript = true;
 						break;
 					case "c":
 						this.textWrapper.Defined.Color = subelements[1];
 						color = true;
 						break;
-					case "fface":
-						this.textWrapper.Defined.FontFace = subelements[1];
-						fontFace = true;
+					default:
+						notHandled = true;
 						break;
-					case "fstyle":
-						this.textWrapper.Defined.FontStyle = subelements[1];
-						fontStyle = true;
-						break;
-					case "fsize":
-						double size = double.Parse(subelements[1],System.Globalization.NumberStyles.Float) ;
-						this.textWrapper.Defined.FontSize = size;
-						fontSize = true;
-						break;
-					case "funits":
-						byte theunits = byte.Parse (subelements[1]);
-						this.textWrapper.Defined.Units = (Properties.SizeUnits) theunits;
-						units = true;
-						break;
-					case "ffeat":
-						char[] splitchars = {'\\'};
-						string [] thefeatures = subelements[1].Split(splitchars, StringSplitOptions.RemoveEmptyEntries) ;
-						this.textWrapper.Defined.FontFeatures = thefeatures;
-						features = true;
-						break;
-					case "fontglue":
-						this.textWrapper.Defined.FontGlue = double.Parse (subelements[1], System.Globalization.NumberStyles.Float);
-						fontglue = true;
-						break;
-					case "langhyph":
-						this.textWrapper.Defined.LanguageHyphenation = double.Parse (subelements[1], System.Globalization.NumberStyles.Float);
-						languageHyphenation = true;
-						break;
-					case "langloc":
-						this.textWrapper.Defined.LanguageLocale = subelements[1];
-						languageLocale = true;
-						break;
-					case "link":
-						this.textWrapper.Defined.Link = subelements[1];
-						link = true;
-						break;
+						
+				}
+
+				if (notHandled && pasteMode == PasteMode.KeepSource)
+				{
+					switch (subelements[0])
+					{
+						case "cstyle":
+							string stylecaption = subelements[1];
+							TextStyle thestyle = StyleFromCaption (stylecaption);
+
+							if (thestyle != null)
+							{
+								this.navigator.SetTextStyles (thestyle);
+							}
+							break;
+						case "pstyle":
+							stylecaption = subelements[1];
+							thestyle = StyleFromCaption (stylecaption);
+
+							if (thestyle != null)
+							{
+								this.navigator.SetParagraphStyles (thestyle);
+							}
+							break;
+						case "par":
+							paragrpahSep = true;
+							break;
+						case "pardef":
+							this.SetParagraph (subelements[1]);
+							break;
+						case "fface":
+							this.textWrapper.Defined.FontFace = subelements[1];
+							fontFace = true;
+							break;
+						case "fstyle":
+							this.textWrapper.Defined.FontStyle = subelements[1];
+							fontStyle = true;
+							break;
+						case "fsize":
+							double size = double.Parse (subelements[1], System.Globalization.NumberStyles.Float);
+							this.textWrapper.Defined.FontSize = size;
+							fontSize = true;
+							break;
+						case "funits":
+							byte theunits = byte.Parse (subelements[1]);
+							this.textWrapper.Defined.Units = (Properties.SizeUnits) theunits;
+							units = true;
+							break;
+						case "ffeat":
+							char[] splitchars = { '\\' };
+							string[] thefeatures = subelements[1].Split (splitchars, StringSplitOptions.RemoveEmptyEntries);
+							this.textWrapper.Defined.FontFeatures = thefeatures;
+							features = true;
+							break;
+						case "fontglue":
+							this.textWrapper.Defined.FontGlue = double.Parse (subelements[1], System.Globalization.NumberStyles.Float);
+							fontglue = true;
+							break;
+						case "langhyph":
+							this.textWrapper.Defined.LanguageHyphenation = double.Parse (subelements[1], System.Globalization.NumberStyles.Float);
+							languageHyphenation = true;
+							break;
+						case "langloc":
+							this.textWrapper.Defined.LanguageLocale = subelements[1];
+							languageLocale = true;
+							break;
+						case "link":
+							this.textWrapper.Defined.Link = subelements[1];
+							link = true;
+							break;
+					}
 				}
 			}
 
-			if (!invertItalic)
-				this.textWrapper.Defined.ClearInvertItalic ();
+			if (pasteMode == PasteMode.KeepSource)
+			{
+				if (!invertItalic)
+					this.textWrapper.Defined.ClearInvertItalic ();
 
-			if (!invertBold)
-				this.textWrapper.Defined.ClearInvertBold ();
+				if (!invertBold)
+					this.textWrapper.Defined.ClearInvertBold ();
 
-			if (!underline)
-				this.textWrapper.Defined.ClearUnderline ();
+				if (!underline)
+					this.textWrapper.Defined.ClearUnderline ();
 
-			if (!overline)
-				this.textWrapper.Defined.ClearOverline ();
+				if (!overline)
+					this.textWrapper.Defined.ClearOverline ();
 
-			if (!strikeout)
-				this.textWrapper.Defined.ClearStrikeout ();
+				if (!strikeout)
+					this.textWrapper.Defined.ClearStrikeout ();
 
-			if (!xscript)
-				this.textWrapper.Defined.ClearXscript();
+				if (!xscript)
+					this.textWrapper.Defined.ClearXscript ();
 
-			if (!color)
-				this.textWrapper.Defined.ClearColor ();
+				if (!color)
+					this.textWrapper.Defined.ClearColor ();
 
-			if (!fontFace)
-				this.textWrapper.Defined.ClearFontFace ();
+				if (!fontFace)
+					this.textWrapper.Defined.ClearFontFace ();
 
-			if (!fontStyle)
-				this.textWrapper.Defined.ClearFontStyle ();
+				if (!fontStyle)
+					this.textWrapper.Defined.ClearFontStyle ();
 
-			if (!fontSize)
-				this.textWrapper.Defined.ClearFontSize ();
+				if (!fontSize)
+					this.textWrapper.Defined.ClearFontSize ();
 
-			if (!fontglue)
-				this.textWrapper.Defined.ClearFontGlue ();
+				if (!fontglue)
+					this.textWrapper.Defined.ClearFontGlue ();
 
-			if (!languageHyphenation)
-				this.textWrapper.Defined.ClearLanguageHyphenation ();
+				if (!languageHyphenation)
+					this.textWrapper.Defined.ClearLanguageHyphenation ();
 
-			if (!languageLocale)
-				this.textWrapper.Defined.ClearLanguageLocale ();
+				if (!languageLocale)
+					this.textWrapper.Defined.ClearLanguageLocale ();
 
-			if (!link)
-				this.textWrapper.Defined.ClearLink ();
+				if (!link)
+					this.textWrapper.Defined.ClearLink ();
 
-			if (!units)
-				this.textWrapper.Defined.ClearUnits ();
+				if (!units)
+					this.textWrapper.Defined.ClearUnits ();
 
-			if (!features)
-				this.textWrapper.Defined.ClearFontFeatures ();
+				if (!features)
+					this.textWrapper.Defined.ClearFontFeatures ();
+			}
 
 			this.textWrapper.ResumeSynchronizations ();
 		}
@@ -742,6 +760,7 @@ namespace Epsitec.Common.Text.Exchange
 		private Wrappers.ParagraphWrapper paraWrapper;
 		private TextNavigator navigator;
 		private TextStory story;
+		private PasteMode pasteMode;
 
 	}
 

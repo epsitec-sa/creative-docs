@@ -123,7 +123,7 @@
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="CopyPasteContect.cs" />
+    <Compile Include="CopyPasteContext.cs" />
     <Compile Include="CresusWrapper.cs" />
     <Compile Include="EpsitecFormat.cs" />
     <Compile Include="ExchangeStringBuilder.cs" />
