@@ -200,7 +200,9 @@ namespace Epsitec.Common.Designer.Proxies
 				{
 					foreach (Widget obj in that.widgets)
 					{
+						GeometryCache.FixBounds(obj.Children.Widgets, that.panel.PanelEditor.ObjectModifier);
 						that.objectModifier.SetChildrenPlacement(obj, cp);
+						GeometryCache.AdaptBounds(obj.Children.Widgets, cp);
 					}
 				}
 				finally
@@ -217,7 +219,7 @@ namespace Epsitec.Common.Designer.Proxies
 			//	nos propriétés de définition pour permettre de mettre à jour les
 			//	widgets connectés :
 			Layout that = (Layout) o;
-			ObjectModifier.AnchoredHorizontalAttachment cp = that.AnchoredHorizontalAttachment;
+			ObjectModifier.AnchoredHorizontalAttachment ha = that.AnchoredHorizontalAttachment;
 
 			if (that.suspendChanges == 0)
 			{
@@ -228,7 +230,7 @@ namespace Epsitec.Common.Designer.Proxies
 					foreach (Widget obj in that.widgets)
 					{
 						Rectangle bounds = that.objectModifier.GetBounds(obj);
-						that.objectModifier.SetAnchoredHorizontalAttachment(obj, cp);
+						that.objectModifier.SetAnchoredHorizontalAttachment(obj, ha);
 						that.objectModifier.SetBounds(obj, bounds);
 					}
 				}
@@ -246,7 +248,7 @@ namespace Epsitec.Common.Designer.Proxies
 			//	nos propriétés de définition pour permettre de mettre à jour les
 			//	widgets connectés :
 			Layout that = (Layout) o;
-			ObjectModifier.AnchoredVerticalAttachment cp = that.AnchoredVerticalAttachment;
+			ObjectModifier.AnchoredVerticalAttachment va = that.AnchoredVerticalAttachment;
 
 			if (that.suspendChanges == 0)
 			{
@@ -257,7 +259,7 @@ namespace Epsitec.Common.Designer.Proxies
 					foreach (Widget obj in that.widgets)
 					{
 						Rectangle bounds = that.objectModifier.GetBounds(obj);
-						that.objectModifier.SetAnchoredVerticalAttachment(obj, cp);
+						that.objectModifier.SetAnchoredVerticalAttachment(obj, va);
 						that.objectModifier.SetBounds(obj, bounds);
 					}
 				}
@@ -275,7 +277,7 @@ namespace Epsitec.Common.Designer.Proxies
 			//	nos propriétés de définition pour permettre de mettre à jour les
 			//	widgets connectés :
 			Layout that = (Layout) o;
-			ObjectModifier.DockedHorizontalAttachment cp = that.DockedHorizontalAttachment;
+			ObjectModifier.DockedHorizontalAttachment ha = that.DockedHorizontalAttachment;
 
 			if (that.suspendChanges == 0)
 			{
@@ -285,7 +287,7 @@ namespace Epsitec.Common.Designer.Proxies
 				{
 					foreach (Widget obj in that.widgets)
 					{
-						that.objectModifier.SetDockedHorizontalAttachment(obj, cp);
+						that.objectModifier.SetDockedHorizontalAttachment(obj, ha);
 					}
 				}
 				finally
@@ -302,7 +304,7 @@ namespace Epsitec.Common.Designer.Proxies
 			//	nos propriétés de définition pour permettre de mettre à jour les
 			//	widgets connectés :
 			Layout that = (Layout) o;
-			ObjectModifier.DockedVerticalAttachment cp = that.DockedVerticalAttachment;
+			ObjectModifier.DockedVerticalAttachment va = that.DockedVerticalAttachment;
 
 			if (that.suspendChanges == 0)
 			{
@@ -312,7 +314,7 @@ namespace Epsitec.Common.Designer.Proxies
 				{
 					foreach (Widget obj in that.widgets)
 					{
-						that.objectModifier.SetDockedVerticalAttachment(obj, cp);
+						that.objectModifier.SetDockedVerticalAttachment(obj, va);
 					}
 				}
 				finally
@@ -329,7 +331,7 @@ namespace Epsitec.Common.Designer.Proxies
 			//	nos propriétés de définition pour permettre de mettre à jour les
 			//	widgets connectés :
 			Layout that = (Layout) o;
-			ObjectModifier.DockedHorizontalAlignment cp = that.DockedHorizontalAlignment;
+			ObjectModifier.DockedHorizontalAlignment ha = that.DockedHorizontalAlignment;
 
 			if (that.suspendChanges == 0)
 			{
@@ -339,7 +341,7 @@ namespace Epsitec.Common.Designer.Proxies
 				{
 					foreach (Widget obj in that.widgets)
 					{
-						that.objectModifier.SetDockedHorizontalAlignment(obj, cp);
+						that.objectModifier.SetDockedHorizontalAlignment(obj, ha);
 					}
 				}
 				finally
@@ -356,7 +358,7 @@ namespace Epsitec.Common.Designer.Proxies
 			//	nos propriétés de définition pour permettre de mettre à jour les
 			//	widgets connectés :
 			Layout that = (Layout) o;
-			ObjectModifier.DockedVerticalAlignment cp = that.DockedVerticalAlignment;
+			ObjectModifier.DockedVerticalAlignment va = that.DockedVerticalAlignment;
 
 			if (that.suspendChanges == 0)
 			{
@@ -366,7 +368,7 @@ namespace Epsitec.Common.Designer.Proxies
 				{
 					foreach (Widget obj in that.widgets)
 					{
-						that.objectModifier.SetDockedVerticalAlignment(obj, cp);
+						that.objectModifier.SetDockedVerticalAlignment(obj, va);
 					}
 				}
 				finally

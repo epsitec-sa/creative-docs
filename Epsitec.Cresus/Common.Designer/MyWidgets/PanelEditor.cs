@@ -991,7 +991,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 						this.creatingObject = this.CreateObjectItem();
 						this.creatingObject.SetParent(parent);
 						this.creatingObject.TabNavigation = TabNavigationMode.Passive;
-						this.ObjectAdaptFromParent(this.creatingObject, parent, ObjectModifier.DockedHorizontalAttachment.None, ObjectModifier.DockedVerticalAttachment.None);
+						this.objectModifier.AdaptFromParent(this.creatingObject, ObjectModifier.DockedHorizontalAttachment.None, ObjectModifier.DockedVerticalAttachment.None);
 						this.SetObjectPosition(this.creatingObject, pos);
 					}
 
@@ -1008,7 +1008,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 						this.creatingObject.SetParent(group);
 						this.creatingObject.ZOrder = order;
 						this.creatingObject.TabNavigation = TabNavigationMode.Passive;
-						this.ObjectAdaptFromParent(this.creatingObject, parent, ha, va);
+						this.objectModifier.AdaptFromParent(this.creatingObject, ha, va);
 					}
 				}
 				else  // relâché hors de la fenêtre ?
@@ -1095,52 +1095,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 
 			return item;
-		}
-
-		protected void ObjectAdaptFromParent(Widget obj, Widget parent, ObjectModifier.DockedHorizontalAttachment ha, ObjectModifier.DockedVerticalAttachment va)
-		{
-			//	Adapte un objet d'après son parent.
-			if (this.objectModifier.AreChildrenAnchored(parent))
-			{
-				if (this.objectModifier.GetAnchoredVerticalAttachment(obj) == ObjectModifier.AnchoredVerticalAttachment.None)
-				{
-					this.objectModifier.SetAnchoredHorizontalAttachment(obj, ObjectModifier.AnchoredHorizontalAttachment.Left);
-					this.objectModifier.SetAnchoredVerticalAttachment(obj, ObjectModifier.AnchoredVerticalAttachment.Bottom);
-				}
-			}
-
-			if (this.objectModifier.AreChildrenDocked(parent))
-			{
-				if (this.objectModifier.GetDockedHorizontalAttachment(obj) == ObjectModifier.DockedHorizontalAttachment.None||
-					this.objectModifier.GetDockedVerticalAttachment(obj) == ObjectModifier.DockedVerticalAttachment.None)
-				{
-					this.objectModifier.SetMargins(obj, new Margins(5, 5, 5, 5));
-
-					if (this.objectModifier.AreChildrenHorizontal(parent))
-					{
-						this.objectModifier.SetDockedHorizontalAttachment(obj, ha);
-					}
-					else
-					{
-						this.objectModifier.SetDockedVerticalAttachment(obj, va);
-					}
-				}
-			}
-
-			if (obj is StaticText)
-			{
-				obj.PreferredHeight = obj.MinHeight;
-			}
-
-			if (obj is Button)
-			{
-				obj.PreferredHeight = obj.MinHeight;
-			}
-
-			if (obj is TextField)
-			{
-				obj.PreferredHeight = obj.MinHeight;
-			}
 		}
 
 		protected void CreateObjectAdjust(ref Point pos, Widget parent, out Rectangle bounds)
@@ -1697,7 +1651,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 						parent.Children.Add(obj);
 					}
 
-					this.ObjectAdaptFromParent(obj, parent, ObjectModifier.DockedHorizontalAttachment.None, ObjectModifier.DockedVerticalAttachment.None);
+					this.objectModifier.AdaptFromParent(obj, ObjectModifier.DockedHorizontalAttachment.None, ObjectModifier.DockedVerticalAttachment.None);
 				}
 
 				bounds.Size = this.GetObjectBounds(obj).Size;
@@ -2604,7 +2558,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 				obj.SetParent(parent);
 				obj.ZOrder = newOrder;
-				this.ObjectAdaptFromParent(obj, parent, ha, va);
+				this.objectModifier.AdaptFromParent(obj, ha, va);
 			}
 		}
 		#endregion
@@ -2683,6 +2637,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Fin du déplacement d'un marqueur de taille préférentielle.
 			if (this.isSizeMarkDragging)
 			{
+				//	TODO: mettre à jour les proxies...
 				this.isSizeMarkDragging = false;
 			}
 		}

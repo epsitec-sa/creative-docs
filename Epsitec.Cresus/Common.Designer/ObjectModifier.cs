@@ -191,6 +191,53 @@ namespace Epsitec.Common.Designer
 		#endregion
 
 
+		public void AdaptFromParent(Widget obj, ObjectModifier.DockedHorizontalAttachment ha, ObjectModifier.DockedVerticalAttachment va)
+		{
+			//	Adapte un objet d'après son parent.
+			if (this.AreChildrenAnchored(obj.Parent))
+			{
+				if (this.GetAnchoredVerticalAttachment(obj) == ObjectModifier.AnchoredVerticalAttachment.None)
+				{
+					this.SetAnchoredHorizontalAttachment(obj, ObjectModifier.AnchoredHorizontalAttachment.Left);
+					this.SetAnchoredVerticalAttachment(obj, ObjectModifier.AnchoredVerticalAttachment.Bottom);
+				}
+			}
+
+			if (this.AreChildrenDocked(obj.Parent))
+			{
+				if (this.GetDockedHorizontalAttachment(obj) == ObjectModifier.DockedHorizontalAttachment.None||
+					this.GetDockedVerticalAttachment(obj) == ObjectModifier.DockedVerticalAttachment.None)
+				{
+					this.SetMargins(obj, new Margins(5, 5, 5, 5));
+
+					if (this.AreChildrenHorizontal(obj.Parent))
+					{
+						this.SetDockedHorizontalAttachment(obj, ha);
+					}
+					else
+					{
+						this.SetDockedVerticalAttachment(obj, va);
+					}
+				}
+			}
+
+			if (obj is StaticText)
+			{
+				obj.PreferredHeight = obj.MinHeight;
+			}
+
+			if (obj is Button)
+			{
+				obj.PreferredHeight = obj.MinHeight;
+			}
+
+			if (obj is TextField)
+			{
+				obj.PreferredHeight = obj.MinHeight;
+			}
+		}
+
+
 		public bool HasBounds(Widget obj)
 		{
 			//	Indique si l'objet a une position et des dimensions modifiables.
