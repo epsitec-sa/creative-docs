@@ -67,12 +67,14 @@ namespace Epsitec.Common.Text.Exchange
 		{
 			HtmlTextOut htmlText = new HtmlTextOut ();
 			NativeTextOut nativeText = new NativeTextOut ();
+			string rawText = string.Empty ;
 
 			Rosetta.CopyHtmlText (story, usernavigator, htmlText);
 			Rosetta.CopyNativeText (story, usernavigator, nativeText);
+			rawText = Rosetta.CopyRawText(story, usernavigator) ;
 
 			System.Windows.Forms.IDataObject od = new System.Windows.Forms.DataObject ();
-			od.SetData (System.Windows.Forms.DataFormats.Text, true, htmlText.rawText);
+			od.SetData (System.Windows.Forms.DataFormats.Text, true, rawText);
 			od.SetData (System.Windows.Forms.DataFormats.Html, true, htmlText.HtmlStream);
 
 			EpsitecFormat efmt = new EpsitecFormat (nativeText.ToString());
@@ -255,6 +257,31 @@ namespace Epsitec.Common.Text.Exchange
 			}
 
 		}
+
+		public static string CopyRawText(TextStory story, TextNavigator usernavigator)
+		{
+			string[] texts = usernavigator.GetSelectedTexts ();
+
+			if (texts == null || texts.Length == 0)
+				return "" ;// false;
+
+			System.Text.StringBuilder builder = new System.Text.StringBuilder ();
+			foreach (string part in texts)
+			{
+				builder.Append (part);
+			}
+
+			string text = builder.ToString ();
+
+			string newline = "\u2029" ;
+			string newparagraph = "\u2028";
+
+			text = text.Replace ("\u2029", "\r\n");
+			text = text.Replace ("\u2028", "\r\n");
+
+			return text;
+		}
+
 
 		public string ConvertCtmlToHtml(string ctml)
 		{
