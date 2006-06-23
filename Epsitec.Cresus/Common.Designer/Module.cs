@@ -273,11 +273,11 @@ namespace Epsitec.Common.Designer
 		public void RunPanel(int index)
 		{
 			ResourceBundle bundle = this.panelsList[index];
-			UI.Panel panel = Viewers.Panels.GetPanel (bundle);
+			UI.Panel panel = Viewers.Panels.GetPanel(bundle);
 			
 			if (panel != null)
 			{
-				UserInterface.RunPanel (panel, this.resourceManager);
+				UserInterface.RunPanel(panel, this.resourceManager, this.PanelName(index));
 			}
 		}
 
