@@ -21,7 +21,7 @@ namespace Epsitec.Common.Text.Exchange
 	class NativeConverter
 	{
 
-		public NativeConverter(CopyPasteContect cpContext)
+		public NativeConverter(CopyPasteContext cpContext)
 		{
 			this.textWrapper = cpContext.TextWrapper;
 			this.paraWrapper = cpContext.ParaWrapper;

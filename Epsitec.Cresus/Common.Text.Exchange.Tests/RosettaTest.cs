@@ -160,11 +160,6 @@ namespace Epsitec.Common.Text.Exchange
 				}
 			}
 		
-			
-//-			string ctml = "<run>Hello, </run><run><rundef><b/></rundef>world</run>.";
-//-			string html = "Hello, <b>world</b>.";
-			
-//-			Assert.AreEqual (rosetta.ConvertCtmlToHtml (ctml), html);
-		}
+					}
 	}
 }

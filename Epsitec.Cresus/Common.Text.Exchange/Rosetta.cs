@@ -33,13 +33,9 @@ namespace Epsitec.Common.Text.Exchange
 
 			HtmlDocument thehtmldoc = new HtmlDocument (s, true);
 
-			Wrappers.TextWrapper textWrapper = new Wrappers.TextWrapper ();
-			Wrappers.ParagraphWrapper paraWrapper = new Wrappers.ParagraphWrapper ();
+			CopyPasteContext cpContext = new CopyPasteContext (story, navigator);
 
-			textWrapper.Attach (navigator);
-			paraWrapper.Attach (navigator);
-
-			HtmlToTextWriter theWriter = new HtmlToTextWriter (thehtmldoc, textWrapper, paraWrapper, navigator, PasteMode.InsertRaw);
+			HtmlToTextWriter theWriter = new HtmlToTextWriter (thehtmldoc, cpContext, PasteMode.InsertRaw);
 			theWriter.ProcessIt ();
 		}
 
@@ -51,15 +47,7 @@ namespace Epsitec.Common.Text.Exchange
 			if (efmt.String.Length == 0)
 				return;
 
-#if false
-			Wrappers.TextWrapper textWrapper = new Wrappers.TextWrapper ();
-			Wrappers.ParagraphWrapper paraWrapper = new Wrappers.ParagraphWrapper ();
-
-			textWrapper.Attach (navigator);
-			paraWrapper.Attach (navigator);
-#else
-			CopyPasteContect cpContext = new CopyPasteContect (story, navigator);
-#endif
+			CopyPasteContext cpContext = new CopyPasteContext (story, navigator);
 
 			NativeToTextWriter theWriter = new NativeToTextWriter (efmt.String, cpContext, PasteMode.InsertAll);
 			theWriter.ProcessIt ();
@@ -92,17 +80,7 @@ namespace Epsitec.Common.Text.Exchange
 			if (!usernavigator.IsSelectionActive)
 				return;
 
-			TextNavigator navigator = new TextNavigator (story);
-
-			Wrappers.TextWrapper textWrapper = new Wrappers.TextWrapper ();
-			Wrappers.ParagraphWrapper paraWrapper = new Wrappers.ParagraphWrapper ();
-
-			textWrapper.Attach (navigator);
-			paraWrapper.Attach (navigator);
-
-			System.Windows.Forms.Clipboard clipboard;
-
-			bool newParagraph = true;
+			CopyPasteContext cpContext = new CopyPasteContext (story);
 
 			int[] selectedPositions = usernavigator.GetAdjustedSelectionCursorPositions ();
 
@@ -113,14 +91,15 @@ namespace Epsitec.Common.Text.Exchange
 			int selectionStart = selectedPositions[0];
 			int selectionEnd = selectedPositions[1];
 			int currentPosition = selectionStart;
-			navigator.MoveTo (selectionStart, 0);
 
-			htmlText.NewParagraph (paraWrapper.Active.JustificationMode);
+			cpContext.Navigator.MoveTo (selectionStart, 0);
+
+			htmlText.NewParagraph (cpContext.ParaWrapper.Active.JustificationMode);
 
 			while (true)
 			{
 				string runText;
-				int runLength = navigator.GetRunLength (selectionLength);
+				int runLength = cpContext.Navigator.GetRunLength (selectionLength);
 
 				if (currentPosition + runLength > selectionEnd)
 					runLength = selectionEnd - currentPosition ;
@@ -130,7 +109,7 @@ namespace Epsitec.Common.Text.Exchange
 					break;
 				}
 
-				runText = navigator.ReadText (runLength);
+				runText = cpContext.Navigator.ReadText (runLength);
 				currentPosition += runLength;
 
 				// navigator.TextStyles[1].StyleProperties[1]. ;
@@ -149,38 +128,38 @@ namespace Epsitec.Common.Text.Exchange
 					htmlText.SetItalic (textWrapper.Defined.IsInvertItalicDefined && textWrapper.Defined.InvertItalic);
 					htmlText.SetBold (textWrapper.Defined.IsInvertBoldDefined && textWrapper.Defined.InvertBold);
 #else
-					htmlText.SetItalic (Rosetta.IsItalic(navigator));
-					htmlText.SetBold (Rosetta.IsBold (navigator));
+					htmlText.SetItalic (Rosetta.IsItalic (cpContext.Navigator));
+					htmlText.SetBold (Rosetta.IsBold (cpContext.Navigator));
 #endif
-					htmlText.SetUnderlined (textWrapper.Active.IsUnderlineDefined);
-					htmlText.SetStrikeout (textWrapper.Active.IsStrikeoutDefined);
+					htmlText.SetUnderlined (cpContext.TextWrapper.Active.IsUnderlineDefined);
+					htmlText.SetStrikeout (cpContext.TextWrapper.Active.IsStrikeoutDefined);
 
-					SimpleXScript xscript = GetSimpleXScript (textWrapper);
+					SimpleXScript xscript = GetSimpleXScript (cpContext.TextWrapper);
 					htmlText.SetSimpleXScript (xscript);
 
-					htmlText.SetFontFace (textWrapper.Active.FontFace);
-					htmlText.SetFontSize (textWrapper.Active.IsFontSizeDefined ? textWrapper.Active.FontSize : 0);
-					htmlText.SetFontColor (textWrapper.Active.Color);
+					htmlText.SetFontFace (cpContext.TextWrapper.Active.FontFace);
+					htmlText.SetFontSize (cpContext.TextWrapper.Active.IsFontSizeDefined ? cpContext.TextWrapper.Active.FontSize : 0);
+					htmlText.SetFontColor (cpContext.TextWrapper.Active.Color);
 
 					htmlText.AppendText (runText);
 				}
 
 				// avance au run suivant
-				navigator.MoveTo (TextNavigator.Target.CharacterNext, runLength);
+				cpContext.Navigator.MoveTo (TextNavigator.Target.CharacterNext, runLength);
 
 				// avance encore d'un seul caractère afin de se trouver véritablement dans
 				// le contexte du run
-				navigator.MoveTo (TextNavigator.Target.CharacterNext, 1);
+				cpContext.Navigator.MoveTo (TextNavigator.Target.CharacterNext, 1);
 
-				if (navigator.GetRunLength (1) == 0)
+				if (cpContext.Navigator.GetRunLength (1) == 0)
 					break; // arrête si on est à la fin
 
 				// recule au début du run
-				navigator.MoveTo (TextNavigator.Target.CharacterPrevious, 1);
+				cpContext.Navigator.MoveTo (TextNavigator.Target.CharacterPrevious, 1);
 
 				if (finishParagraph)
 				{
-					htmlText.CloseParagraph (paraWrapper.Active.JustificationMode);
+					htmlText.CloseParagraph (cpContext.ParaWrapper.Active.JustificationMode);
 					finishParagraph = false;
 				}
 			}
@@ -194,7 +173,7 @@ namespace Epsitec.Common.Text.Exchange
 			if (!usernavigator.IsSelectionActive)
 				return;
 
-			CopyPasteContect cpContext = new CopyPasteContect (story);
+			CopyPasteContext cpContext = new CopyPasteContext (story);
 
 			int[] selectedPositions = usernavigator.GetAdjustedSelectionCursorPositions ();
 
@@ -278,13 +257,6 @@ namespace Epsitec.Common.Text.Exchange
 			return text;
 		}
 
-
-		public string ConvertCtmlToHtml(string ctml)
-		{
-			//	Méthode bidon juste pour vérifier si les tests compilent.
-
-			return "TODO";
-		}
 
 		// parcours du text
 		public static void TestCode(TextStory story, TextNavigator navigator)
