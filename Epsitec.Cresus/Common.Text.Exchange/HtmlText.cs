@@ -56,14 +56,6 @@ namespace Epsitec.Common.Text.Exchange
 			}
 		}
 
-		public string rawText
-		{
-			get
-			{
-				return this.rawtextBuilder.ToString ();
-			}
-		}
-
 		public void Terminate()
 		{
 
@@ -175,8 +167,6 @@ namespace Epsitec.Common.Text.Exchange
 			this.AppendTagsToClose (false);
 			this.AppendPendingTags ();
 			this.AppendTagsToOpen ();
-
-			this.rawtextBuilder.Append (thestring);
 
 			this.TransformSpecialHtmlChars (ref thestring);
 			this.output.Append (thestring);
@@ -776,7 +766,6 @@ namespace Epsitec.Common.Text.Exchange
 
 
 		private ExchangeStringBuilder output = new ExchangeStringBuilder ();
-		private StringBuilder rawtextBuilder = new StringBuilder ();
 
 		private System.Collections.Generic.Stack<HtmlTagWithParam> openTagsStack = new System.Collections.Generic.Stack<HtmlTagWithParam> ();
 		private System.Collections.Generic.List<HtmlTagWithParam> tagsToClose = new System.Collections.Generic.List<HtmlTagWithParam> ();
