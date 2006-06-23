@@ -18,6 +18,17 @@ namespace Epsitec.Common.Designer
 			this.objectModifier = objectModifier;
 
 			this.bounds = this.objectModifier.GetBounds(this.obj);
+
+			if (this.objectModifier.GetChildrenPlacement(obj.Parent) == ObjectModifier.ChildrenPlacement.Anchored)
+			{
+				this.aha = this.objectModifier.GetAnchoredHorizontalAttachment(obj);
+				this.ava = this.objectModifier.GetAnchoredVerticalAttachment(obj);
+			}
+			else
+			{
+				this.aha = ObjectModifier.AnchoredHorizontalAttachment.Left;
+				this.ava = ObjectModifier.AnchoredVerticalAttachment.Bottom;
+			}
 		}
 
 		public void AdaptBounds(ObjectModifier.ChildrenPlacement cp)
@@ -25,6 +36,8 @@ namespace Epsitec.Common.Designer
 			if (cp == ObjectModifier.ChildrenPlacement.Anchored)
 			{
 				this.objectModifier.AdaptFromParent(obj, ObjectModifier.DockedHorizontalAttachment.None, ObjectModifier.DockedVerticalAttachment.None);
+				this.objectModifier.SetAnchoredHorizontalAttachment(obj, this.aha);
+				this.objectModifier.SetAnchoredVerticalAttachment(obj, this.ava);
 				this.objectModifier.SetBounds(this.obj, this.bounds);
 			}
 
@@ -82,8 +95,10 @@ namespace Epsitec.Common.Designer
 		protected static readonly DependencyProperty GeometryCacheProperty = DependencyProperty.RegisterAttached("GeometryCache", typeof(GeometryCache), typeof(GeometryCache));
 
 
-		protected Widget						obj;
-		protected ObjectModifier				objectModifier;
-		protected Rectangle						bounds = Rectangle.Empty;
+		protected Widget										obj;
+		protected ObjectModifier								objectModifier;
+		protected Rectangle										bounds = Rectangle.Empty;
+		protected ObjectModifier.AnchoredHorizontalAttachment	aha;
+		protected ObjectModifier.AnchoredVerticalAttachment		ava;
 	}
 }
