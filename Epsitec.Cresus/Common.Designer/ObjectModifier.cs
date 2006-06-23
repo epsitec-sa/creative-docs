@@ -374,6 +374,11 @@ namespace Epsitec.Common.Designer
 			//	Indique s'il est possible de modifier la largeur d'un objet.
 			//	A ne pas confondre avec SetBounds pour le mode ancré. Un objet ancré
 			//	pour lequel on peut faire un SetBounds n'accepte pas le SetWidth !
+			if (!HandlesList.HasWidthHandles(obj))
+			{
+				return false;
+			}
+
 			ChildrenPlacement placement = this.GetParentPlacement(obj);
 
 			if (placement == ChildrenPlacement.HorizontalDocked)
@@ -421,6 +426,11 @@ namespace Epsitec.Common.Designer
 			//	Indique s'il est possible de modifier la hauteur d'un objet.
 			//	A ne pas confondre avec SetBounds pour le mode ancré. Un objet ancré
 			//	pour lequel on peut faire un SetBounds n'accepte pas le HasHeight !
+			if (!HandlesList.HasHeightHandles(obj))
+			{
+				return false;
+			}
+
 			ChildrenPlacement placement = this.GetParentPlacement(obj);
 
 			if (placement == ChildrenPlacement.VerticalDocked)
