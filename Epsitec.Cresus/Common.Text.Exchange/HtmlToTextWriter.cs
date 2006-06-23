@@ -29,12 +29,12 @@ namespace Epsitec.Common.Text.Exchange
 	/// 
 	class HtmlToTextWriter
 	{
-		public HtmlToTextWriter(HtmlDocument thehtmldoc, Wrappers.TextWrapper textWrapper, Wrappers.ParagraphWrapper paraWrapper, TextNavigator navigator, PasteMode pastemode)
+		public HtmlToTextWriter(HtmlDocument thehtmldoc, CopyPasteContext cpContext, PasteMode pasteMode)
 		{
 			this.htmlDoc = thehtmldoc;
-			this.navigator = navigator;
-			this.paraWrapper = paraWrapper;
-			this.textWrapper = textWrapper;
+			this.navigator = cpContext.Navigator;
+			this.paraWrapper = cpContext.ParaWrapper;
+			this.textWrapper = cpContext.TextWrapper;
 			this.pasteMode = pasteMode;
 		}
 

@@ -8,7 +8,7 @@ namespace Epsitec.Common.Text.Exchange
 {
 	class NativeToTextWriter
 	{
-		public NativeToTextWriter(string nativeClipboard, CopyPasteContect cpContext, PasteMode pastemode)
+		public NativeToTextWriter(string nativeClipboard, CopyPasteContext cpContext, PasteMode pastemode)
 		{
 			this.nativeConverter = new NativeConverter (cpContext);
 			this.nativeClipboard = nativeClipboard;
@@ -74,7 +74,7 @@ namespace Epsitec.Common.Text.Exchange
 		private string nativeClipboard;
 		private PasteMode pasteMode;
 		private NativeConverter nativeConverter;
-		private CopyPasteContect cpContext;
+		private CopyPasteContext cpContext;
 
 	}
 }

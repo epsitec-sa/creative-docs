@@ -9,20 +9,20 @@ using System.Text;
 //  - TextNavigator
 //  - TextStory
 //
-// Responsable: Michjael Walz
+// Responsable: Michael Walz
 
 
 namespace Epsitec.Common.Text.Exchange
 {
-	class CopyPasteContect
+	class CopyPasteContext
 	{
-		public CopyPasteContect(TextStory story)
+		public CopyPasteContext(TextStory story)
 		{
 			this.navigator =  new TextNavigator (story);
 			this.Initialize (story, this.navigator);
 		}
 
-		public CopyPasteContect(TextStory story, TextNavigator navigator)
+		public CopyPasteContext(TextStory story, TextNavigator navigator)
 		{
 			this.navigator =  navigator;
 			this.Initialize (story, this.navigator);
@@ -38,8 +38,6 @@ namespace Epsitec.Common.Text.Exchange
 			textWrapper.Attach (navigator);
 			paraWrapper.Attach (navigator);
 
-			this.textWrapper = textWrapper;
-			this.paraWrapper = paraWrapper;
 			this.navigator = navigator;
 			this.story = story;
 		}
