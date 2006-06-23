@@ -193,7 +193,7 @@ namespace Epsitec.Common.Designer
 
 		public void AdaptFromParent(Widget obj, ObjectModifier.DockedHorizontalAttachment ha, ObjectModifier.DockedVerticalAttachment va)
 		{
-			//	Adapte un objet d'après son parent.
+			//	Adapte un objet pour son parent.
 			if (this.AreChildrenAnchored(obj.Parent))
 			{
 				if (this.GetAnchoredVerticalAttachment(obj) == ObjectModifier.AnchoredVerticalAttachment.None)

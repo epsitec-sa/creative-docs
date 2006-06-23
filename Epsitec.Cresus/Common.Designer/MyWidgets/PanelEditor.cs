@@ -91,8 +91,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				if (this.panel != value)
 				{
-					this.selectedObjects.Clear ();
-					this.UpdateAfterSelectionChanged ();
+					this.selectedObjects.Clear();
+					this.UpdateAfterSelectionChanged();
 					
 					this.panel = value;
 					this.sizeMark = this.panel.PreferredSize;
@@ -1556,6 +1556,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			//	Mise à jour après un changement de sélection.
 			this.handlesList.UpdateSelection();
+			GeometryCache.Clear(this.panel);
 		}
 
 		protected void SetHilitedObject(Widget obj)
