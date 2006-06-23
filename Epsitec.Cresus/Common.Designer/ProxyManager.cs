@@ -7,9 +7,10 @@ namespace Epsitec.Common.Designer
 {
 	public sealed class ProxyManager
 	{
-		public ProxyManager(ObjectModifier objectModifier)
+		public ProxyManager(Viewers.Panels panel)
 		{
-			this.objectModifier = objectModifier;
+			this.panel = panel;
+			this.objectModifier = this.panel.PanelEditor.ObjectModifier;
 		}
 
 		public IEnumerable<IProxy> Proxies
@@ -22,6 +23,7 @@ namespace Epsitec.Common.Designer
 		
 		public void SetSelection(Widget widget)
 		{
+			//	Spécifie l'objet sélectionné et construit la liste des proxies nécessaires.
 			this.widgets = new List<Widget>();
 			this.widgets.Add(widget);
 			this.GenerateProxies();
@@ -29,6 +31,7 @@ namespace Epsitec.Common.Designer
 		
 		public void SetSelection(IEnumerable<Widget> collection)
 		{
+			//	Spécifie les objets sélectionnés et construit la liste des proxies nécessaires.
 			this.widgets = new List<Widget>();
 			this.widgets.AddRange(collection);
 			this.GenerateProxies();
@@ -36,6 +39,7 @@ namespace Epsitec.Common.Designer
 
 		public void CreateUserInterface(Widget container)
 		{
+			//	Crée l'interface utilisateur (panneaux) pour la liste des proxies.
 			foreach (IProxy proxy in this.proxies)
 			{
 				this.CreateUserInterface(container, proxy);
@@ -44,6 +48,8 @@ namespace Epsitec.Common.Designer
 
 		public void UpdateUserInterface()
 		{
+			//	Met à jour l'interface utilisateur (panneaux), sans changer le nombre de
+			//	propriétés visibles par panneau.
 			if (this.Proxies != null)
 			{
 				foreach (IProxy proxy in this.Proxies)
@@ -51,6 +57,13 @@ namespace Epsitec.Common.Designer
 					proxy.Update();
 				}
 			}
+		}
+
+		public bool RegenerateProxies()
+		{
+			//	Régénère la liste des proxies.
+			//	Retourne true si la liste a changé.
+			return this.GenerateProxies();
 		}
 
 
@@ -77,11 +90,12 @@ namespace Epsitec.Common.Designer
 			return DependencyObject.EqualValues(a as DependencyObject, b as DependencyObject);
 		}
 		
-		private void GenerateProxies()
+		private bool GenerateProxies()
 		{
 			//	Génère une liste (triée) de tous les proxies. Il se peut qu'il
 			//	y ait plusieurs proxies de type identique si plusieurs widgets
 			//	utilisent des réglages différents.
+			//	Retourne true si la liste a changé.
 			List<IProxy> proxies = new List<IProxy>();
 
 			foreach (Widget widget in this.widgets)
@@ -115,14 +129,42 @@ namespace Epsitec.Common.Designer
 			//	Trie les proxies selon leur rang :
 			proxies.Sort(new Comparers.ProxyRank());
 
-			this.proxies = proxies;
+			if (ProxyManager.EqualLists(this.proxies, proxies))
+			{
+				return false;
+			}
+			else
+			{
+				this.proxies = proxies;
+				return true;
+			}
 		}
 
 		private IEnumerable<IProxy> GenerateProxies(Widget widget)
 		{
-			yield return new Proxies.Geometry(widget, this.objectModifier);
-			yield return new Proxies.Layout(widget, this.objectModifier);
-			yield return new Proxies.Padding(widget, this.objectModifier);
+			yield return new Proxies.Geometry(widget, this.panel);
+			yield return new Proxies.Layout(widget, this.panel);
+			yield return new Proxies.Padding(widget, this.panel);
+		}
+
+		static private bool EqualLists(List<IProxy> list1, List<IProxy> list2)
+		{
+			//	Compare si deux listes contiennent des proxies identiques.
+			if (list1 != null && list1.Count == list2.Count)
+			{
+				for (int i=0; i<list1.Count; i++)
+				{
+					IProxy item1 = list1[i];
+					IProxy item2 = list2[i];
+					if (!ProxyManager.EqualValues(item1, item2))
+					{
+						return false;
+					}
+				}
+				return true;
+			}
+
+			return false;
 		}
 
 		private void CreateUserInterface(Widget container, IProxy proxy)
@@ -166,6 +208,7 @@ namespace Epsitec.Common.Designer
 		public static readonly Types.INumericType SizeNumericType;
 		public static readonly Types.INumericType MarginNumericType;
 
+		private Viewers.Panels			panel;
 		private ObjectModifier			objectModifier;
 		private List<Widget>			widgets;
 		private List<IProxy>			proxies;
