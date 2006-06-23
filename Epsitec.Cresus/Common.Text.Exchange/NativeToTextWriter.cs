@@ -8,13 +8,15 @@ namespace Epsitec.Common.Text.Exchange
 {
 	class NativeToTextWriter
 	{
-		public NativeToTextWriter(string nativeClipboard, Wrappers.TextWrapper textWrapper, Wrappers.ParagraphWrapper paraWrapper, TextNavigator navigator, TextStory story)
+		public NativeToTextWriter(string nativeClipboard, Wrappers.TextWrapper textWrapper, Wrappers.ParagraphWrapper paraWrapper, TextNavigator navigator, TextStory story, PasteMode pastemode)
 		{
+			this.nativeConverter = new NativeConverter (textWrapper, paraWrapper, navigator, story);
 			this.nativeClipboard = nativeClipboard;
 			this.navigator = navigator;
 			this.paraWrapper = paraWrapper;
 			this.textWrapper = textWrapper;
 			this.story = story;
+			this.pasteMode = pastemode;
 		}
 
 		public void ProcessIt()
@@ -30,7 +32,7 @@ namespace Epsitec.Common.Text.Exchange
 					break;
 
 				bool paragraphSep;
-				NativeConverter.SetDefined (this.textWrapper, this.paraWrapper, this.navigator, this.story, formatline, out paragraphSep);
+				this.nativeConverter.SetDefined (formatline, out paragraphSep);
 
 				if (paragraphSep)
 				{
@@ -59,6 +61,8 @@ namespace Epsitec.Common.Text.Exchange
 		private TextNavigator navigator;
 		private TextStory story;
 		private string nativeClipboard;
+		private PasteMode pasteMode;
+		private NativeConverter nativeConverter;
 
 	}
 }

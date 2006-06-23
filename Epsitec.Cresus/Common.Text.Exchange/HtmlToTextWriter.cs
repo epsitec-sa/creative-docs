@@ -29,12 +29,13 @@ namespace Epsitec.Common.Text.Exchange
 	/// 
 	class HtmlToTextWriter
 	{
-		public HtmlToTextWriter (HtmlDocument thehtmldoc, Wrappers.TextWrapper textWrapper, Wrappers.ParagraphWrapper paraWrapper, TextNavigator navigator)
+		public HtmlToTextWriter(HtmlDocument thehtmldoc, Wrappers.TextWrapper textWrapper, Wrappers.ParagraphWrapper paraWrapper, TextNavigator navigator, PasteMode pastemode)
 		{
 			this.htmlDoc = thehtmldoc;
 			this.navigator = navigator;
 			this.paraWrapper = paraWrapper;
 			this.textWrapper = textWrapper;
+			this.pasteMode = pasteMode;
 		}
 
 		public void ProcessIt()
@@ -568,6 +569,7 @@ namespace Epsitec.Common.Text.Exchange
 		private Wrappers.TextWrapper textWrapper;
 		private Wrappers.ParagraphWrapper paraWrapper;
 		private TextNavigator navigator;
+		private PasteMode pasteMode;
 
 		private bool IsSpacerun = false;
 
