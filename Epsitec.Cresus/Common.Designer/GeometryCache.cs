@@ -14,6 +14,7 @@ namespace Epsitec.Common.Designer
 	{
 		public GeometryCache(Widget obj, ObjectModifier objectModifier)
 		{
+			//	Constructeur unique qui mémorise la géométrie de l'objet.
 			this.obj = obj;
 			this.objectModifier = objectModifier;
 
@@ -33,6 +34,7 @@ namespace Epsitec.Common.Designer
 
 		public void AdaptBounds(ObjectModifier.ChildrenPlacement cp)
 		{
+			//	Adapte un objet selon le mode ChildrenPlacement de son parent.
 			if (cp == ObjectModifier.ChildrenPlacement.Anchored)
 			{
 				this.objectModifier.AdaptFromParent(obj, ObjectModifier.DockedHorizontalAttachment.None, ObjectModifier.DockedVerticalAttachment.None);
@@ -55,7 +57,7 @@ namespace Epsitec.Common.Designer
 
 		static public void FixBounds(IEnumerable<Widget> list, ObjectModifier objectModifier)
 		{
-			//	Mémorise la position actuelle des objets sélectionnés.
+			//	Mémorise la position actuelle de tous les fils d'un objet sélectionné.
 			foreach (Widget obj in list)
 			{
 				GeometryCache gc = obj.GetValue(GeometryCache.GeometryCacheProperty) as GeometryCache;
@@ -69,7 +71,7 @@ namespace Epsitec.Common.Designer
 
 		static public void AdaptBounds(IEnumerable<Widget> list, ObjectModifier.ChildrenPlacement cp)
 		{
-			//	Adapte les objets sélectionnés après un changement de ChildrenPlacement.
+			//	Adapte les fils d'un objet sélectionné après un changement de ChildrenPlacement.
 			foreach (Widget obj in list)
 			{
 				GeometryCache gc = obj.GetValue(GeometryCache.GeometryCacheProperty) as GeometryCache;
@@ -93,7 +95,6 @@ namespace Epsitec.Common.Designer
 
 
 		protected static readonly DependencyProperty GeometryCacheProperty = DependencyProperty.RegisterAttached("GeometryCache", typeof(GeometryCache), typeof(GeometryCache));
-
 
 		protected Widget										obj;
 		protected ObjectModifier								objectModifier;
