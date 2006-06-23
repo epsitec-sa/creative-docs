@@ -21,12 +21,12 @@ namespace Epsitec.Common.Text.Exchange
 	class NativeConverter
 	{
 
-		public NativeConverter(Wrappers.TextWrapper textWrapper, Wrappers.ParagraphWrapper paraWrapper, TextNavigator navigator, TextStory story)
+		public NativeConverter(CopyPasteContect cpContext)
 		{
-			this.textWrapper = textWrapper;
-			this.paraWrapper = paraWrapper;
-			this.navigator = navigator;
-			this.story = story;
+			this.textWrapper = cpContext.TextWrapper;
+			this.paraWrapper = cpContext.ParaWrapper;
+			this.navigator = cpContext.Navigator;
+			this.story = cpContext.Story;
 		}
 
 
@@ -166,6 +166,20 @@ namespace Epsitec.Common.Text.Exchange
 
 			output.Append (']');
 			return output.ToString() ;
+		}
+
+		public static bool IsParagraphSeparator(string input)
+		{
+			char[] separators = new char[] { '/' };
+			string[] elements = input.Split(separators, StringSplitOptions.RemoveEmptyEntries);
+
+			foreach (string elem in elements)
+			{
+				if (elem == "par")
+					return true ;
+			}
+
+			return false;
 		}
 
 		public void SetDefined(string input, out bool paragrpahSep)

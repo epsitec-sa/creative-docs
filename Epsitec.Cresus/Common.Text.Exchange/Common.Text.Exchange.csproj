@@ -80,6 +80,7 @@
     <Reference Include="System.Data">
       <Name>System.Data</Name>
     </Reference>
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.XML">
       <Name>System.XML</Name>
@@ -122,6 +123,7 @@
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="CopyPasteContect.cs" />
     <Compile Include="CresusWrapper.cs" />
     <Compile Include="EpsitecFormat.cs" />
     <Compile Include="ExchangeStringBuilder.cs" />
