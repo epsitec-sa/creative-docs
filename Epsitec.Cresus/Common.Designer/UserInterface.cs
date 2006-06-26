@@ -75,15 +75,24 @@ namespace Epsitec.Common.Designer
 
 		public static void RunPanel(UI.Panel panel, ResourceManager manager, string name)
 		{
-			string xml = UserInterface.SerializePanel(panel);
-			UI.Panel clone = UserInterface.DeserializePanel(xml, manager);
-			Widgets.Window window = new Epsitec.Common.Widgets.Window();
-			window.Root.Children.Add(clone);
+			string xml = UserInterface.SerializePanel (panel);
+			UI.Panel clone = UserInterface.DeserializePanel (xml, manager);
+			Widgets.Window window = new Epsitec.Common.Widgets.Window ();
+
+			window.MakeSecondaryWindow ();
+			window.Root.Children.Add (clone);
+
 			clone.Dock = Widgets.DockStyle.Fill;
 			window.Owner = panel.Window;
 			window.Text = name;
 
-			window.ClientSize = clone.PreferredSize;
+			window.ForceLayout ();
+
+			double width  = Widgets.Layouts.LayoutMeasure.GetWidth (clone).Desired;
+			double height = Widgets.Layouts.LayoutMeasure.GetHeight (clone).Desired;
+
+			window.ClientSize = new Size (width, height);
+
 			double dx = window.WindowSize.Width;
 			double dy = window.WindowSize.Height;  // taille avec le cadre
 
@@ -92,13 +101,13 @@ namespace Epsitec.Common.Designer
 			{
 				center = panel.Window.WindowBounds.Center;
 			}
-			Rectangle rect = new Rectangle(center.X-dx/2, center.Y-dy/2, dx, dy);
+			Rectangle rect = new Rectangle (center.X-dx/2, center.Y-dy/2, dx, dy);
 			window.WindowBounds = rect;
 
-			window.ShowDialog();  // affiche le dialogue modal...
+			window.ShowDialog ();  // affiche le dialogue modal...
 
 			//	TODO: comprendre pourquoi WindowBounds ne tient pas compte de la position réelle de la fenêtre !
-			UserInterface.runPanelCenter = window.WindowBounds.Center;
+			UserInterface.runPanelCenter = window.WindowPlacementNormalBounds.Center;
 		}
 		
 		private class CustomerRecord : Types.DependencyObject
