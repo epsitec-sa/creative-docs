@@ -56,33 +56,5 @@ namespace Epsitec.Common.Widgets
 				graphics.RenderSolid(color);
 			}
 		}
-
-
-		#region DrawDesignerFrame
-		public bool DrawDesignerFrame
-		{
-			get
-			{
-				return (bool) this.GetValue(FrameBox.DrawDesignerFrameProperty);
-			}
-
-			set
-			{
-				this.SetValue(FrameBox.DrawDesignerFrameProperty, value);
-			}
-		}
-
-		public static bool GetDrawDesignerFrame(DependencyObject o)
-		{
-			return (bool) o.GetValue(FrameBox.DrawDesignerFrameProperty);
-		}
-
-		public static void SetDrawDesignerFrame(DependencyObject o, bool value)
-		{
-			o.SetValue(FrameBox.DrawDesignerFrameProperty, value);
-		}
-
-		public static readonly DependencyProperty DrawDesignerFrameProperty = DependencyProperty.Register("DrawDesignerFrame", typeof(bool), typeof(FrameBox), new DependencyPropertyMetadata(false).MakeNotSerializable());
-		#endregion
 	}
 }

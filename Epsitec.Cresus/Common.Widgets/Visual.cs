@@ -750,7 +750,20 @@ namespace Epsitec.Common.Widgets
 				this.SetValue (Visual.AcceptThreeStatePropery, value);
 			}
 		}
-		
+
+
+		public bool								DrawDesignerFrame
+		{
+			get
+			{
+				return (bool) this.GetValue (Visual.DrawDesignerFrameProperty);
+			}
+			set
+			{
+				this.SetValue (Visual.DrawDesignerFrameProperty, value);
+			}
+		}
+
 		
 		public Drawing.Color					BackColor
 		{
@@ -1591,6 +1604,8 @@ namespace Epsitec.Common.Widgets
 
 		public static readonly DependencyProperty InheritsParentFocusProperty	= DependencyProperty.Register ("InheritsParentFocus", typeof (bool), typeof (Visual), new VisualPropertyMetadata (false, Visual.SetInheritsParentFocus, VisualPropertyMetadataOptions.None));
 
+		public static readonly DependencyProperty DrawDesignerFrameProperty		= DependencyProperty.Register ("DrawDesignerFrame", typeof (bool), typeof (Visual), new VisualPropertyMetadata (false, VisualPropertyMetadataOptions.InheritsValue | VisualPropertyMetadataOptions.AffectsDisplay).MakeNotSerializable ());
+		
 		public static readonly DependencyProperty IsVisibleProperty				= DependencyProperty.RegisterReadOnly ("IsVisible", typeof (bool), typeof (Visual), new VisualPropertyMetadata (false, VisualPropertyMetadataOptions.InheritsValue | VisualPropertyMetadataOptions.AffectsArrange | VisualPropertyMetadataOptions.AffectsDisplay));
 		public static readonly DependencyProperty IsEnabledProperty				= DependencyProperty.RegisterReadOnly ("IsEnabled", typeof (bool), typeof (Visual), new VisualPropertyMetadata (true, VisualPropertyMetadataOptions.InheritsValue | VisualPropertyMetadataOptions.AffectsDisplay));
 		public static readonly DependencyProperty IsFocusedProperty				= DependencyProperty.RegisterReadOnly ("IsFocused", typeof (bool), typeof (Visual), new VisualPropertyMetadata (false, VisualPropertyMetadataOptions.InheritsValue | VisualPropertyMetadataOptions.AffectsDisplay));
