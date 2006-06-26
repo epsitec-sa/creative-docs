@@ -100,7 +100,7 @@ namespace Epsitec.Common.Widgets.Layouts
 			visual.SetValue (BaseLineMeasure.BaseLineProperty, measure);
 		}
 
-		public static Types.DependencyProperty BaseLineProperty  = Types.DependencyProperty.RegisterAttached ("BaseLine", typeof (BaseLineMeasure), typeof (BaseLineMeasure));
+		public static Types.DependencyProperty BaseLineProperty  = Types.DependencyProperty.RegisterAttached ("BaseLine", typeof (BaseLineMeasure), typeof (BaseLineMeasure), new Types.DependencyPropertyMetadata ().MakeNotSerializable ());
 		
 		private double h1, h2;
 		private int passId;

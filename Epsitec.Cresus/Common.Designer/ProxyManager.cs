@@ -13,6 +13,30 @@ namespace Epsitec.Common.Designer
 			this.objectModifier = this.panel.PanelEditor.ObjectModifier;
 		}
 
+		public IEnumerable<Widget> Widgets
+		{
+			get
+			{
+				return this.widgets;
+			}
+		}
+
+		public Viewers.Panels Panel
+		{
+			get
+			{
+				return this.panel;
+			}
+		}
+
+		public ObjectModifier ObjectModifier
+		{
+			get
+			{
+				return this.objectModifier;
+			}
+		}
+		
 		public IEnumerable<IProxy> Proxies
 		{
 			get
@@ -89,31 +113,33 @@ namespace Epsitec.Common.Designer
 			
 			return DependencyObject.EqualValues(a as DependencyObject, b as DependencyObject);
 		}
-		
+
 		private bool GenerateProxies()
 		{
 			//	Génère une liste (triée) de tous les proxies. Il se peut qu'il
 			//	y ait plusieurs proxies de type identique si plusieurs widgets
 			//	utilisent des réglages différents.
 			//	Retourne true si la liste a changé.
-			List<IProxy> proxies = new List<IProxy>();
+			List<IProxy> proxies = new List<IProxy> ();
 
 			foreach (Widget widget in this.widgets)
 			{
-				foreach (IProxy proxy in this.GenerateProxies(widget))
+				foreach (IProxy proxy in this.GenerateWidgetProxies (widget))
 				{
 					//	Evite les doublons pour des proxies qui seraient à 100%
 					//	identiques :
 					bool insert = true;
 
+					proxy.AddWidget (widget);
+					
 					foreach (IProxy item in proxies)
 					{
-						if (ProxyManager.EqualValues(item, proxy))
+						if (ProxyManager.EqualValues (item, proxy))
 						{
 							//	Trouvé un doublon. On ajoute simplement le widget
 							//	courant au proxy qui existe déjà avec les mêmes
 							//	valeurs :
-							item.AddWidget(widget);
+							item.AddWidget (widget);
 							insert = false;
 							break;
 						}
@@ -121,16 +147,26 @@ namespace Epsitec.Common.Designer
 
 					if (insert)
 					{
-						proxies.Add(proxy);
+						proxies.Add (proxy);
 					}
 				}
 			}
 
 			//	Trie les proxies selon leur rang :
-			proxies.Sort(new Comparers.ProxyRank());
+			proxies.Sort (new Comparers.ProxyRank ());
 
-			if (ProxyManager.EqualLists(this.proxies, proxies))
+			if (ProxyManager.EqualLists (this.proxies, proxies))
 			{
+				for (int i = 0; i < proxies.Count; i++)
+				{
+					this.proxies[i].ClearWidgets ();
+
+					foreach (Widget widget in proxies[i].Widgets)
+					{
+						this.proxies[i].AddWidget (widget);
+					}
+				}
+
 				return false;
 			}
 			else
@@ -140,11 +176,11 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		private IEnumerable<IProxy> GenerateProxies(Widget widget)
+		private IEnumerable<IProxy> GenerateWidgetProxies(Widget widget)
 		{
-			yield return new Proxies.Geometry(widget, this.panel);
-			yield return new Proxies.Layout(widget, this.panel);
-			yield return new Proxies.Padding(widget, this.panel);
+			yield return new Proxies.Geometry(this);
+			yield return new Proxies.Layout(this);
+			yield return new Proxies.Padding(this);
 		}
 
 		static private bool EqualLists(List<IProxy> list1, List<IProxy> list2)
