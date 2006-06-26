@@ -1011,6 +1011,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 						this.creatingObject.TabNavigation = TabNavigationMode.Passive;
 						this.objectModifier.AdaptFromParent(this.creatingObject, ha, va);
 					}
+
+					if (this.objectModifier.AreChildrenGrid(parent))
+					{
+						this.creatingObject = this.CreateObjectItem();
+						this.creatingObject.SetParent(parent);
+						GridLayoutEngine.SetColumn(this.creatingObject, 0);
+						GridLayoutEngine.SetRow(this.creatingObject, 0);
+					}
 				}
 				else  // relâché hors de la fenêtre ?
 				{
@@ -3046,8 +3054,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 			for (int c=0; c<columns; c++)
 			{
 				ColumnDefinition def = engine.ColumnDefinitions[c];
-				//?x += def.ActualWidth;
-				x += def.MinWidth;
+				x += def.ActualWidth;
+				//?x += def.MinWidth;
 				Point p1 = new Point(x, rect.Bottom+1);
 				Point p2 = new Point(x, rect.Top-1);
 				Misc.AlignForLine(graphics, ref p1);
@@ -3060,8 +3068,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 			for (int r=0; r<rows; r++)
 			{
 				RowDefinition def = engine.RowDefinitions[r];
-				//?y -= def.ActualHeight;
-				y -= def.MinHeight;
+				y -= def.ActualHeight;
+				//?y -= def.MinHeight;
 				Point p1 = new Point(rect.Left+1, y);
 				Point p2 = new Point(rect.Right-1, y);
 				Misc.AlignForLine(graphics, ref p1);
