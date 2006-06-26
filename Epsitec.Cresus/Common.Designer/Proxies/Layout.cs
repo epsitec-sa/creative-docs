@@ -83,63 +83,63 @@ namespace Epsitec.Common.Designer.Proxies
 			}
 		}
 
-		public ObjectModifier.StackedHorizontalAttachment DockedHorizontalAttachment
+		public ObjectModifier.StackedHorizontalAttachment StackedHorizontalAttachment
 		{
 			get
 			{
-				return (ObjectModifier.StackedHorizontalAttachment) this.GetValue(Layout.DockedHorizontalAttachmentProperty);
+				return (ObjectModifier.StackedHorizontalAttachment) this.GetValue(Layout.StackedHorizontalAttachmentProperty);
 			}
 			set
 			{
-				this.SetValue(Layout.DockedHorizontalAttachmentProperty, value);
+				this.SetValue(Layout.StackedHorizontalAttachmentProperty, value);
 			}
 		}
 
-		public ObjectModifier.StackedVerticalAttachment DockedVerticalAttachment
+		public ObjectModifier.StackedVerticalAttachment StackedVerticalAttachment
 		{
 			get
 			{
-				return (ObjectModifier.StackedVerticalAttachment) this.GetValue(Layout.DockedVerticalAttachmentProperty);
+				return (ObjectModifier.StackedVerticalAttachment) this.GetValue(Layout.StackedVerticalAttachmentProperty);
 			}
 			set
 			{
-				this.SetValue(Layout.DockedVerticalAttachmentProperty, value);
+				this.SetValue(Layout.StackedVerticalAttachmentProperty, value);
 			}
 		}
 
-		public ObjectModifier.StackedHorizontalAlignment DockedHorizontalAlignment
+		public ObjectModifier.StackedHorizontalAlignment StackedHorizontalAlignment
 		{
 			get
 			{
-				return (ObjectModifier.StackedHorizontalAlignment) this.GetValue(Layout.DockedHorizontalAlignmentProperty);
+				return (ObjectModifier.StackedHorizontalAlignment) this.GetValue(Layout.StackedHorizontalAlignmentProperty);
 			}
 			set
 			{
-				this.SetValue(Layout.DockedHorizontalAlignmentProperty, value);
+				this.SetValue(Layout.StackedHorizontalAlignmentProperty, value);
 			}
 		}
 
-		public ObjectModifier.StackedVerticalAlignment DockedVerticalAlignment
+		public ObjectModifier.StackedVerticalAlignment StackedVerticalAlignment
 		{
 			get
 			{
-				return (ObjectModifier.StackedVerticalAlignment) this.GetValue(Layout.DockedVerticalAlignmentProperty);
+				return (ObjectModifier.StackedVerticalAlignment) this.GetValue(Layout.StackedVerticalAlignmentProperty);
 			}
 			set
 			{
-				this.SetValue(Layout.DockedVerticalAlignmentProperty, value);
+				this.SetValue(Layout.StackedVerticalAlignmentProperty, value);
 			}
 		}
 
-		public ObjectModifier.StackedVerticalAlignment DockedVerticalBaseLineAlignment
+		public ObjectModifier.StackedVerticalAlignment StackedVerticalBaseLineAlignment
 		{
 			get
 			{
-				return (ObjectModifier.StackedVerticalAlignment) this.GetValue(Layout.DockedVerticalBaseLineAlignmentProperty);
+				return (ObjectModifier.StackedVerticalAlignment) this.GetValue(Layout.StackedVerticalBaseLineAlignmentProperty);
 			}
 			set
 			{
-				this.SetValue(Layout.DockedVerticalBaseLineAlignmentProperty, value);
+				this.SetValue(Layout.StackedVerticalBaseLineAlignmentProperty, value);
 			}
 		}
 
@@ -171,21 +171,21 @@ namespace Epsitec.Common.Designer.Proxies
 			{
 				ObjectModifier.StackedHorizontalAttachment ha = this.objectModifier.GetStackedHorizontalAttachment(this.widgets[0]);
 
-				this.DockedHorizontalAttachment = ha;
+				this.StackedHorizontalAttachment = ha;
 			}
 
 			if (this.objectModifier.HasStackedVerticalAttachment(this.widgets[0]))
 			{
 				ObjectModifier.StackedVerticalAttachment va = this.objectModifier.GetStackedVerticalAttachment(this.widgets[0]);
 
-				this.DockedVerticalAttachment = va;
+				this.StackedVerticalAttachment = va;
 			}
 
 			if (this.objectModifier.HasStackedHorizontalAlignment(this.widgets[0]))
 			{
 				ObjectModifier.StackedHorizontalAlignment ha = this.objectModifier.GetStackedHorizontalAlignment(this.widgets[0]);
 
-				this.DockedHorizontalAlignment = ha;
+				this.StackedHorizontalAlignment = ha;
 			}
 
 			if (this.objectModifier.HasStackedVerticalAlignment(this.widgets[0]))
@@ -195,11 +195,11 @@ namespace Epsitec.Common.Designer.Proxies
 
 				if (cp == ObjectModifier.ChildrenPlacement.HorizontalStacked)
 				{
-					this.DockedVerticalBaseLineAlignment = va;
+					this.StackedVerticalBaseLineAlignment = va;
 				}
 				else
 				{
-					this.DockedVerticalAlignment = va;
+					this.StackedVerticalAlignment = va;
 				}
 			}
 		}
@@ -291,13 +291,13 @@ namespace Epsitec.Common.Designer.Proxies
 			}
 		}
 
-		private static void NotifyDockedHorizontalAttachmentChanged(DependencyObject o, object oldValue, object newValue)
+		private static void NotifyStackedHorizontalAttachmentChanged(DependencyObject o, object oldValue, object newValue)
 		{
 			//	Cette méthode est appelée à la suite de la modification d'une de
 			//	nos propriétés de définition pour permettre de mettre à jour les
 			//	widgets connectés :
 			Layout that = (Layout) o;
-			ObjectModifier.StackedHorizontalAttachment ha = that.DockedHorizontalAttachment;
+			ObjectModifier.StackedHorizontalAttachment ha = that.StackedHorizontalAttachment;
 
 			if (that.suspendChanges == 0)
 			{
@@ -318,13 +318,13 @@ namespace Epsitec.Common.Designer.Proxies
 			}
 		}
 
-		private static void NotifyDockedVerticalAttachmentChanged(DependencyObject o, object oldValue, object newValue)
+		private static void NotifyStackedVerticalAttachmentChanged(DependencyObject o, object oldValue, object newValue)
 		{
 			//	Cette méthode est appelée à la suite de la modification d'une de
 			//	nos propriétés de définition pour permettre de mettre à jour les
 			//	widgets connectés :
 			Layout that = (Layout) o;
-			ObjectModifier.StackedVerticalAttachment va = that.DockedVerticalAttachment;
+			ObjectModifier.StackedVerticalAttachment va = that.StackedVerticalAttachment;
 
 			if (that.suspendChanges == 0)
 			{
@@ -345,13 +345,13 @@ namespace Epsitec.Common.Designer.Proxies
 			}
 		}
 
-		private static void NotifyDockedHorizontalAlignmentChanged(DependencyObject o, object oldValue, object newValue)
+		private static void NotifyStackedHorizontalAlignmentChanged(DependencyObject o, object oldValue, object newValue)
 		{
 			//	Cette méthode est appelée à la suite de la modification d'une de
 			//	nos propriétés de définition pour permettre de mettre à jour les
 			//	widgets connectés :
 			Layout that = (Layout) o;
-			ObjectModifier.StackedHorizontalAlignment ha = that.DockedHorizontalAlignment;
+			ObjectModifier.StackedHorizontalAlignment ha = that.StackedHorizontalAlignment;
 
 			if (that.suspendChanges == 0)
 			{
@@ -372,13 +372,13 @@ namespace Epsitec.Common.Designer.Proxies
 			}
 		}
 
-		private static void NotifyDockedVerticalAlignmentChanged(DependencyObject o, object oldValue, object newValue)
+		private static void NotifyStackedVerticalAlignmentChanged(DependencyObject o, object oldValue, object newValue)
 		{
 			//	Cette méthode est appelée à la suite de la modification d'une de
 			//	nos propriétés de définition pour permettre de mettre à jour les
 			//	widgets connectés :
 			Layout that = (Layout) o;
-			ObjectModifier.StackedVerticalAlignment va = that.DockedVerticalAlignment;
+			ObjectModifier.StackedVerticalAlignment va = that.StackedVerticalAlignment;
 
 			if (that.suspendChanges == 0)
 			{
@@ -428,60 +428,60 @@ namespace Epsitec.Common.Designer.Proxies
 			Layout.AnchoredVerticalAttachmentProperty.DefaultMetadata.DefineNamedType(anchoredVerticalAttachmentEnumType);
 			Layout.AnchoredVerticalAttachmentProperty.DefaultMetadata.DefineCaptionId(new Support.Druid("[100E]").ToLong());
 
-			EnumType dockedHorizontalAttachmentEnumType = new EnumType(typeof(ObjectModifier.StackedHorizontalAttachment));
-			dockedHorizontalAttachmentEnumType.DefineDefaultController("Enum", "Icons");
-			dockedHorizontalAttachmentEnumType[ObjectModifier.StackedHorizontalAttachment.Left].DefineCaptionId(new Support.Druid("[10021]").ToLong());
-			dockedHorizontalAttachmentEnumType[ObjectModifier.StackedHorizontalAttachment.Right].DefineCaptionId(new Support.Druid("[10022]").ToLong());
-			dockedHorizontalAttachmentEnumType[ObjectModifier.StackedHorizontalAttachment.Fill].DefineCaptionId(new Support.Druid("[10025]").ToLong());
-			Layout.DockedHorizontalAttachmentProperty.DefaultMetadata.DefineNamedType(dockedHorizontalAttachmentEnumType);
-			Layout.DockedHorizontalAttachmentProperty.DefaultMetadata.DefineCaptionId(new Support.Druid("[100F]").ToLong());
+			EnumType stackedHorizontalAttachmentEnumType = new EnumType(typeof(ObjectModifier.StackedHorizontalAttachment));
+			stackedHorizontalAttachmentEnumType.DefineDefaultController("Enum", "Icons");
+			stackedHorizontalAttachmentEnumType[ObjectModifier.StackedHorizontalAttachment.Left].DefineCaptionId(new Support.Druid("[10021]").ToLong());
+			stackedHorizontalAttachmentEnumType[ObjectModifier.StackedHorizontalAttachment.Right].DefineCaptionId(new Support.Druid("[10022]").ToLong());
+			stackedHorizontalAttachmentEnumType[ObjectModifier.StackedHorizontalAttachment.Fill].DefineCaptionId(new Support.Druid("[10025]").ToLong());
+			Layout.StackedHorizontalAttachmentProperty.DefaultMetadata.DefineNamedType(stackedHorizontalAttachmentEnumType);
+			Layout.StackedHorizontalAttachmentProperty.DefaultMetadata.DefineCaptionId(new Support.Druid("[100F]").ToLong());
 
-			EnumType dockedVerticalAttachmentEnumType = new EnumType(typeof(ObjectModifier.StackedVerticalAttachment));
-			dockedVerticalAttachmentEnumType.DefineDefaultController("Enum", "Icons");
-			dockedVerticalAttachmentEnumType[ObjectModifier.StackedVerticalAttachment.Bottom].DefineCaptionId(new Support.Druid("[10023]").ToLong());
-			dockedVerticalAttachmentEnumType[ObjectModifier.StackedVerticalAttachment.Top].DefineCaptionId(new Support.Druid("[10024]").ToLong());
-			dockedVerticalAttachmentEnumType[ObjectModifier.StackedVerticalAttachment.Fill].DefineCaptionId(new Support.Druid("[10026]").ToLong());
-			Layout.DockedVerticalAttachmentProperty.DefaultMetadata.DefineNamedType(dockedVerticalAttachmentEnumType);
-			Layout.DockedVerticalAttachmentProperty.DefaultMetadata.DefineCaptionId(new Support.Druid("[100G]").ToLong());
+			EnumType stackedVerticalAttachmentEnumType = new EnumType(typeof(ObjectModifier.StackedVerticalAttachment));
+			stackedVerticalAttachmentEnumType.DefineDefaultController("Enum", "Icons");
+			stackedVerticalAttachmentEnumType[ObjectModifier.StackedVerticalAttachment.Bottom].DefineCaptionId(new Support.Druid("[10023]").ToLong());
+			stackedVerticalAttachmentEnumType[ObjectModifier.StackedVerticalAttachment.Top].DefineCaptionId(new Support.Druid("[10024]").ToLong());
+			stackedVerticalAttachmentEnumType[ObjectModifier.StackedVerticalAttachment.Fill].DefineCaptionId(new Support.Druid("[10026]").ToLong());
+			Layout.StackedVerticalAttachmentProperty.DefaultMetadata.DefineNamedType(stackedVerticalAttachmentEnumType);
+			Layout.StackedVerticalAttachmentProperty.DefaultMetadata.DefineCaptionId(new Support.Druid("[100G]").ToLong());
 
-			EnumType dockedHorizontalAlignmentEnumType = new EnumType(typeof(ObjectModifier.StackedHorizontalAlignment));
-			dockedHorizontalAlignmentEnumType.DefineDefaultController("Enum", "Icons");
-			dockedHorizontalAlignmentEnumType[ObjectModifier.StackedHorizontalAlignment.Stretch].DefineCaptionId(new Support.Druid("[10037]").ToLong());
-			dockedHorizontalAlignmentEnumType[ObjectModifier.StackedHorizontalAlignment.Center].DefineCaptionId(new Support.Druid("[10035]").ToLong());
-			dockedHorizontalAlignmentEnumType[ObjectModifier.StackedHorizontalAlignment.Left].DefineCaptionId(new Support.Druid("[10031]").ToLong());
-			dockedHorizontalAlignmentEnumType[ObjectModifier.StackedHorizontalAlignment.Right].DefineCaptionId(new Support.Druid("[10032]").ToLong());
-			Layout.DockedHorizontalAlignmentProperty.DefaultMetadata.DefineNamedType(dockedHorizontalAlignmentEnumType);
-			Layout.DockedHorizontalAlignmentProperty.DefaultMetadata.DefineCaptionId(new Support.Druid("[100H]").ToLong());
+			EnumType stackedHorizontalAlignmentEnumType = new EnumType(typeof(ObjectModifier.StackedHorizontalAlignment));
+			stackedHorizontalAlignmentEnumType.DefineDefaultController("Enum", "Icons");
+			stackedHorizontalAlignmentEnumType[ObjectModifier.StackedHorizontalAlignment.Stretch].DefineCaptionId(new Support.Druid("[10037]").ToLong());
+			stackedHorizontalAlignmentEnumType[ObjectModifier.StackedHorizontalAlignment.Center].DefineCaptionId(new Support.Druid("[10035]").ToLong());
+			stackedHorizontalAlignmentEnumType[ObjectModifier.StackedHorizontalAlignment.Left].DefineCaptionId(new Support.Druid("[10031]").ToLong());
+			stackedHorizontalAlignmentEnumType[ObjectModifier.StackedHorizontalAlignment.Right].DefineCaptionId(new Support.Druid("[10032]").ToLong());
+			Layout.StackedHorizontalAlignmentProperty.DefaultMetadata.DefineNamedType(stackedHorizontalAlignmentEnumType);
+			Layout.StackedHorizontalAlignmentProperty.DefaultMetadata.DefineCaptionId(new Support.Druid("[100H]").ToLong());
 
-			EnumType dockedVerticalAlignmentEnumType = new EnumType(typeof(ObjectModifier.StackedVerticalAlignment));
-			dockedVerticalAlignmentEnumType.DefineDefaultController("Enum", "Icons");
-			dockedVerticalAlignmentEnumType[ObjectModifier.StackedVerticalAlignment.Stretch].DefineCaptionId(new Support.Druid("[10038]").ToLong());
-			dockedVerticalAlignmentEnumType[ObjectModifier.StackedVerticalAlignment.Center].DefineCaptionId(new Support.Druid("[10036]").ToLong());
-			dockedVerticalAlignmentEnumType[ObjectModifier.StackedVerticalAlignment.Bottom].DefineCaptionId(new Support.Druid("[10033]").ToLong());
-			dockedVerticalAlignmentEnumType[ObjectModifier.StackedVerticalAlignment.Top].DefineCaptionId(new Support.Druid("[10034]").ToLong());
-			dockedVerticalAlignmentEnumType[ObjectModifier.StackedVerticalAlignment.BaseLine].DefineHidden(true);
-			Layout.DockedVerticalAlignmentProperty.DefaultMetadata.DefineNamedType(dockedVerticalAlignmentEnumType);
-			Layout.DockedVerticalAlignmentProperty.DefaultMetadata.DefineCaptionId(new Support.Druid("[100I]").ToLong());
+			EnumType stackedVerticalAlignmentEnumType = new EnumType(typeof(ObjectModifier.StackedVerticalAlignment));
+			stackedVerticalAlignmentEnumType.DefineDefaultController("Enum", "Icons");
+			stackedVerticalAlignmentEnumType[ObjectModifier.StackedVerticalAlignment.Stretch].DefineCaptionId(new Support.Druid("[10038]").ToLong());
+			stackedVerticalAlignmentEnumType[ObjectModifier.StackedVerticalAlignment.Center].DefineCaptionId(new Support.Druid("[10036]").ToLong());
+			stackedVerticalAlignmentEnumType[ObjectModifier.StackedVerticalAlignment.Bottom].DefineCaptionId(new Support.Druid("[10033]").ToLong());
+			stackedVerticalAlignmentEnumType[ObjectModifier.StackedVerticalAlignment.Top].DefineCaptionId(new Support.Druid("[10034]").ToLong());
+			stackedVerticalAlignmentEnumType[ObjectModifier.StackedVerticalAlignment.BaseLine].DefineHidden(true);
+			Layout.StackedVerticalAlignmentProperty.DefaultMetadata.DefineNamedType(stackedVerticalAlignmentEnumType);
+			Layout.StackedVerticalAlignmentProperty.DefaultMetadata.DefineCaptionId(new Support.Druid("[100I]").ToLong());
 
-			EnumType DockedVerticalBaseLineAlignmentEnumType = new EnumType(typeof(ObjectModifier.StackedVerticalAlignment));
-			DockedVerticalBaseLineAlignmentEnumType.DefineDefaultController("Enum", "Icons");
-			DockedVerticalBaseLineAlignmentEnumType[ObjectModifier.StackedVerticalAlignment.Stretch].DefineCaptionId(new Support.Druid("[10038]").ToLong());
-			DockedVerticalBaseLineAlignmentEnumType[ObjectModifier.StackedVerticalAlignment.Center].DefineCaptionId(new Support.Druid("[10036]").ToLong());
-			DockedVerticalBaseLineAlignmentEnumType[ObjectModifier.StackedVerticalAlignment.Bottom].DefineCaptionId(new Support.Druid("[10033]").ToLong());
-			DockedVerticalBaseLineAlignmentEnumType[ObjectModifier.StackedVerticalAlignment.Top].DefineCaptionId(new Support.Druid("[10034]").ToLong());
-			DockedVerticalBaseLineAlignmentEnumType[ObjectModifier.StackedVerticalAlignment.BaseLine].DefineCaptionId(new Support.Druid("[10039]").ToLong());
-			Layout.DockedVerticalBaseLineAlignmentProperty.DefaultMetadata.DefineNamedType(DockedVerticalBaseLineAlignmentEnumType);
-			Layout.DockedVerticalBaseLineAlignmentProperty.DefaultMetadata.DefineCaptionId(new Support.Druid("[100I]").ToLong());
+			EnumType stackedVerticalBaseLineAlignmentEnumType = new EnumType(typeof(ObjectModifier.StackedVerticalAlignment));
+			stackedVerticalBaseLineAlignmentEnumType.DefineDefaultController("Enum", "Icons");
+			stackedVerticalBaseLineAlignmentEnumType[ObjectModifier.StackedVerticalAlignment.Stretch].DefineCaptionId(new Support.Druid("[10038]").ToLong());
+			stackedVerticalBaseLineAlignmentEnumType[ObjectModifier.StackedVerticalAlignment.Center].DefineCaptionId(new Support.Druid("[10036]").ToLong());
+			stackedVerticalBaseLineAlignmentEnumType[ObjectModifier.StackedVerticalAlignment.Bottom].DefineCaptionId(new Support.Druid("[10033]").ToLong());
+			stackedVerticalBaseLineAlignmentEnumType[ObjectModifier.StackedVerticalAlignment.Top].DefineCaptionId(new Support.Druid("[10034]").ToLong());
+			stackedVerticalBaseLineAlignmentEnumType[ObjectModifier.StackedVerticalAlignment.BaseLine].DefineCaptionId(new Support.Druid("[10039]").ToLong());
+			Layout.StackedVerticalBaseLineAlignmentProperty.DefaultMetadata.DefineNamedType(stackedVerticalBaseLineAlignmentEnumType);
+			Layout.StackedVerticalBaseLineAlignmentProperty.DefaultMetadata.DefineCaptionId(new Support.Druid("[100I]").ToLong());
 		}
 
 		
 		public static readonly DependencyProperty ChildrenPlacementProperty = DependencyProperty.Register("ChildrenPlacement", typeof(ObjectModifier.ChildrenPlacement), typeof(Layout), new DependencyPropertyMetadata(ObjectModifier.ChildrenPlacement.Anchored, Layout.NotifyChildrenPlacementChanged));
 		public static readonly DependencyProperty AnchoredHorizontalAttachmentProperty = DependencyProperty.Register("AnchoredHorizontalAttachment", typeof(ObjectModifier.AnchoredHorizontalAttachment), typeof(Layout), new DependencyPropertyMetadata(ObjectModifier.AnchoredHorizontalAttachment.Left, Layout.NotifyAnchoredHorizontalAttachmentChanged));
 		public static readonly DependencyProperty AnchoredVerticalAttachmentProperty = DependencyProperty.Register("AnchoredVerticalAttachment", typeof(ObjectModifier.AnchoredVerticalAttachment), typeof(Layout), new DependencyPropertyMetadata(ObjectModifier.AnchoredVerticalAttachment.Bottom, Layout.NotifyAnchoredVerticalAttachmentChanged));
-		public static readonly DependencyProperty DockedHorizontalAttachmentProperty = DependencyProperty.Register("DockedHorizontalAttachment", typeof(ObjectModifier.StackedHorizontalAttachment), typeof(Layout), new DependencyPropertyMetadata(ObjectModifier.StackedHorizontalAttachment.Left, Layout.NotifyDockedHorizontalAttachmentChanged));
-		public static readonly DependencyProperty DockedVerticalAttachmentProperty = DependencyProperty.Register("DockedVerticalAttachment", typeof(ObjectModifier.StackedVerticalAttachment), typeof(Layout), new DependencyPropertyMetadata(ObjectModifier.StackedVerticalAttachment.Bottom, Layout.NotifyDockedVerticalAttachmentChanged));
-		public static readonly DependencyProperty DockedHorizontalAlignmentProperty = DependencyProperty.Register("DockedHorizontalAlignment", typeof(ObjectModifier.StackedHorizontalAlignment), typeof(Layout), new DependencyPropertyMetadata(ObjectModifier.StackedHorizontalAlignment.Stretch, Layout.NotifyDockedHorizontalAlignmentChanged));
-		public static readonly DependencyProperty DockedVerticalAlignmentProperty = DependencyProperty.Register("DockedVerticalAlignment", typeof(ObjectModifier.StackedVerticalAlignment), typeof(Layout), new DependencyPropertyMetadata(ObjectModifier.StackedVerticalAlignment.Stretch, Layout.NotifyDockedVerticalAlignmentChanged));
-		public static readonly DependencyProperty DockedVerticalBaseLineAlignmentProperty = DependencyProperty.Register("DockedVerticalBaseLineAlignment", typeof(ObjectModifier.StackedVerticalAlignment), typeof(Layout), new DependencyPropertyMetadata(ObjectModifier.StackedVerticalAlignment.Stretch, Layout.NotifyDockedVerticalAlignmentChanged));
+		public static readonly DependencyProperty StackedHorizontalAttachmentProperty = DependencyProperty.Register("StackedHorizontalAttachment", typeof(ObjectModifier.StackedHorizontalAttachment), typeof(Layout), new DependencyPropertyMetadata(ObjectModifier.StackedHorizontalAttachment.Left, Layout.NotifyStackedHorizontalAttachmentChanged));
+		public static readonly DependencyProperty StackedVerticalAttachmentProperty = DependencyProperty.Register("StackedVerticalAttachment", typeof(ObjectModifier.StackedVerticalAttachment), typeof(Layout), new DependencyPropertyMetadata(ObjectModifier.StackedVerticalAttachment.Bottom, Layout.NotifyStackedVerticalAttachmentChanged));
+		public static readonly DependencyProperty StackedHorizontalAlignmentProperty = DependencyProperty.Register("StackedHorizontalAlignment", typeof(ObjectModifier.StackedHorizontalAlignment), typeof(Layout), new DependencyPropertyMetadata(ObjectModifier.StackedHorizontalAlignment.Stretch, Layout.NotifyStackedHorizontalAlignmentChanged));
+		public static readonly DependencyProperty StackedVerticalAlignmentProperty = DependencyProperty.Register("StackedVerticalAlignment", typeof(ObjectModifier.StackedVerticalAlignment), typeof(Layout), new DependencyPropertyMetadata(ObjectModifier.StackedVerticalAlignment.Stretch, Layout.NotifyStackedVerticalAlignmentChanged));
+		public static readonly DependencyProperty StackedVerticalBaseLineAlignmentProperty = DependencyProperty.Register("StackedVerticalBaseLineAlignment", typeof(ObjectModifier.StackedVerticalAlignment), typeof(Layout), new DependencyPropertyMetadata(ObjectModifier.StackedVerticalAlignment.Stretch, Layout.NotifyStackedVerticalAlignmentChanged));
 	}
 }
