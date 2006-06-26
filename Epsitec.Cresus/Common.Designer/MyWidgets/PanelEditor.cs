@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Epsitec.Common.Widgets;
+using Epsitec.Common.Widgets.Layouts;
 using Epsitec.Common.Support;
 using Epsitec.Common.Drawing;
 
@@ -2921,6 +2922,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 				path.AppendRectangle(ext);
 				Misc.DrawPathDash(graphics, path, 2, 0, 4, PanelsContext.ColorHiliteOutline);
 			}
+
+			if (this.objectModifier.AreChildrenGrid(obj))
+			{
+				this.DrawGrid(graphics, obj, PanelsContext.ColorHiliteOutline);
+			}
 		}
 
 		protected void DrawPadding(Graphics graphics, Widget obj)
@@ -2994,6 +3000,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			graphics.AddFilledRectangle(rect);
 			graphics.RenderSolid(color);
+
+			if (this.objectModifier.AreChildrenGrid(obj))
+			{
+				this.DrawGrid(graphics, obj, color);
+			}
 		}
 
 		protected void DrawHilitedParent(Graphics graphics, Widget obj)
@@ -3019,6 +3030,46 @@ namespace Epsitec.Common.Designer.MyWidgets
 			rect.Deflate(thickness/2+0.5);
 			graphics.AddRectangle(rect);
 			graphics.RenderSolid(PanelsContext.ColorHiliteParent);
+		}
+
+		protected void DrawGrid(Graphics graphics, Widget obj, Color color)
+		{
+			if (!this.objectModifier.AreChildrenGrid(obj))  return;
+
+			GridLayoutEngine engine = LayoutEngine.GetLayoutEngine(obj) as GridLayoutEngine;
+			if (engine == null)  return;
+
+			Rectangle rect = this.objectModifier.GetFinalPadding(obj);
+
+			int columns = engine.ColumnDefinitions.Count;
+			double x = rect.Left;
+			for (int c=0; c<columns; c++)
+			{
+				ColumnDefinition def = engine.ColumnDefinitions[c];
+				//?x += def.ActualWidth;
+				x += def.MinWidth;
+				Point p1 = new Point(x, rect.Bottom+1);
+				Point p2 = new Point(x, rect.Top-1);
+				Misc.AlignForLine(graphics, ref p1);
+				Misc.AlignForLine(graphics, ref p2);
+				graphics.AddLine(p1, p2);
+			}
+
+			int rows = engine.RowDefinitions.Count;
+			double y = rect.Top;
+			for (int r=0; r<rows; r++)
+			{
+				RowDefinition def = engine.RowDefinitions[r];
+				//?y -= def.ActualHeight;
+				y -= def.MinHeight;
+				Point p1 = new Point(rect.Left+1, y);
+				Point p2 = new Point(rect.Right-1, y);
+				Misc.AlignForLine(graphics, ref p1);
+				Misc.AlignForLine(graphics, ref p2);
+				graphics.AddLine(p1, p2);
+			}
+
+			graphics.RenderSolid(color);
 		}
 
 		protected void DrawAttachment(Graphics graphics, Widget obj, Color color)
