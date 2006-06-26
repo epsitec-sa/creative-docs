@@ -8,7 +8,8 @@ namespace Epsitec.Common.Designer.Proxies
 {
 	public class Geometry : Abstract
 	{
-		public Geometry(Widget widget, Viewers.Panels panel) : base(widget, panel)
+		public Geometry(ProxyManager manager)
+			: base (manager)
 		{
 		}
 
@@ -135,9 +136,9 @@ namespace Epsitec.Common.Designer.Proxies
 			
 			//	Recopie localement les diverses propriétés du widget sélectionné
 			//	pour pouvoir ensuite travailler dessus :
-			if (this.objectModifier.HasMargins(this.widgets[0]))
+			if (this.ObjectModifier.HasMargins (this.DefaultWidget))
 			{
-				Margins margins = this.objectModifier.GetMargins(this.widgets[0]);
+				Margins margins = this.ObjectModifier.GetMargins (this.DefaultWidget);
 
 				this.LeftMargin   = margins.Left;
 				this.RightMargin  = margins.Right;
@@ -145,9 +146,9 @@ namespace Epsitec.Common.Designer.Proxies
 				this.BottomMargin = margins.Bottom;
 			}
 
-			if (this.objectModifier.HasBounds(this.widgets[0]))
+			if (this.ObjectModifier.HasBounds (this.DefaultWidget))
 			{
-				Rectangle bounds = this.objectModifier.GetBounds(this.widgets[0]);
+				Rectangle bounds = this.ObjectModifier.GetBounds (this.DefaultWidget);
 
 				this.OriginX = bounds.Left;
 				this.OriginY = bounds.Bottom;
@@ -156,81 +157,77 @@ namespace Epsitec.Common.Designer.Proxies
 			}
 			else
 			{
-				if (this.objectModifier.HasWidth(this.widgets[0]))
+				if (this.ObjectModifier.HasWidth (this.DefaultWidget))
 				{
-					this.Width = this.objectModifier.GetWidth(this.widgets[0]);
+					this.Width = this.ObjectModifier.GetWidth (this.DefaultWidget);
 				}
-				
-				if (this.objectModifier.HasHeight(this.widgets[0]))
+
+				if (this.ObjectModifier.HasHeight (this.DefaultWidget))
 				{
-					this.Height = this.objectModifier.GetHeight(this.widgets[0]);
+					this.Height = this.ObjectModifier.GetHeight (this.DefaultWidget);
 				}
 			}
 		}
 
-		private static void NotifyMarginsChanged(DependencyObject o, object oldValue, object newValue)
+		private void NotifyMarginsChanged(Margins margins)
 		{
 			//	Cette méthode est appelée à la suite de la modification d'une de
 			//	nos propriétés de définition de la marge (LeftMargin, RightMargin,
 			//	etc.) pour permettre de mettre à jour les widgets connectés :
-			Geometry that = (Geometry) o;
-			Margins margins = new Margins(that.LeftMargin, that.RightMargin, that.TopMargin, that.BottomMargin);
-
-			if (that.suspendChanges == 0)
+			
+			if (this.IsNotSuspended)
 			{
-				that.SuspendChanges();
+				this.SuspendChanges ();
 
 				try
 				{
-					foreach (Widget obj in that.widgets)
+					foreach (Widget obj in this.Widgets)
 					{
-						that.objectModifier.SetMargins(obj, margins);
+						this.ObjectModifier.SetMargins (obj, margins);
 					}
 				}
 				finally
 				{
-					that.ResumeChanges();
+					this.ResumeChanges ();
 				}
 			}
 		}
 
-		private static void NotifyBoundsChanged(DependencyObject o, object oldValue, object newValue)
+		private void NotifyBoundsChanged(Rectangle bounds)
 		{
 			//	Cette méthode est appelée à la suite de la modification d'une de
 			//	nos propriétés de définition de la boîte (OriginX, Width,
 			//	etc.) pour permettre de mettre à jour les widgets connectés :
-			Geometry that = (Geometry) o;
-			Rectangle bounds = new Rectangle(that.OriginX, that.OriginY, that.Width, that.Height);
 
-			if (that.suspendChanges == 0)
+			if (this.IsNotSuspended)
 			{
-				that.SuspendChanges();
+				this.SuspendChanges();
 
 				try
 				{
-					foreach (Widget obj in that.widgets)
+					foreach (Widget obj in this.Widgets)
 					{
-						if (that.objectModifier.HasBounds(obj))
+						if (this.ObjectModifier.HasBounds (obj))
 						{
-							that.objectModifier.SetBounds(obj, bounds);
+							this.ObjectModifier.SetBounds (obj, bounds);
 						}
 						else
 						{
-							if (that.objectModifier.HasWidth(obj))
+							if (this.ObjectModifier.HasWidth (obj))
 							{
-								that.objectModifier.SetWidth(obj, bounds.Width);
+								this.ObjectModifier.SetWidth (obj, bounds.Width);
 							}
 
-							if (that.objectModifier.HasHeight(obj))
+							if (this.ObjectModifier.HasHeight (obj))
 							{
-								that.objectModifier.SetHeight(obj, bounds.Height);
+								this.ObjectModifier.SetHeight (obj, bounds.Height);
 							}
 						}
 					}
 				}
 				finally
 				{
-					that.ResumeChanges();
+					this.ResumeChanges();
 				}
 			}
 		}
@@ -260,14 +257,78 @@ namespace Epsitec.Common.Designer.Proxies
 		}
 
 
-		public static readonly DependencyProperty LeftMarginProperty	= DependencyProperty.Register("LeftMargin",   typeof(double), typeof(Geometry), new DependencyPropertyMetadata(0.0, Geometry.NotifyMarginsChanged));
-		public static readonly DependencyProperty RightMarginProperty	= DependencyProperty.Register("RightMargin",  typeof(double), typeof(Geometry), new DependencyPropertyMetadata(0.0, Geometry.NotifyMarginsChanged));
-		public static readonly DependencyProperty TopMarginProperty		= DependencyProperty.Register("TopMargin",    typeof(double), typeof(Geometry), new DependencyPropertyMetadata(0.0, Geometry.NotifyMarginsChanged));
-		public static readonly DependencyProperty BottomMarginProperty	= DependencyProperty.Register("BottomMargin", typeof(double), typeof(Geometry), new DependencyPropertyMetadata(0.0, Geometry.NotifyMarginsChanged));
+		private static void NotifyLeftMarginChanged(DependencyObject o, object oldValue, object newValue)
+		{
+			double value = (double) newValue;
+			Geometry that = (Geometry) o;
+			Margins margins = new Margins (value, that.RightMargin, that.TopMargin, that.BottomMargin);
+			that.NotifyMarginsChanged (margins);
+		}
 
-		public static readonly DependencyProperty OriginXProperty		= DependencyProperty.Register("OriginX",      typeof(double), typeof(Geometry), new DependencyPropertyMetadata(0.0, Geometry.NotifyBoundsChanged));
-		public static readonly DependencyProperty OriginYProperty		= DependencyProperty.Register("OriginY",      typeof(double), typeof(Geometry), new DependencyPropertyMetadata(0.0, Geometry.NotifyBoundsChanged));
-		public static readonly DependencyProperty WidthProperty			= DependencyProperty.Register("Width",        typeof(double), typeof(Geometry), new DependencyPropertyMetadata(0.0, Geometry.NotifyBoundsChanged));
-		public static readonly DependencyProperty HeightProperty		= DependencyProperty.Register("Height",       typeof(double), typeof(Geometry), new DependencyPropertyMetadata(0.0, Geometry.NotifyBoundsChanged));
+		private static void NotifyRightMarginChanged(DependencyObject o, object oldValue, object newValue)
+		{
+			double value = (double) newValue;
+			Geometry that = (Geometry) o;
+			Margins margins = new Margins (that.LeftMargin, value, that.TopMargin, that.BottomMargin);
+			that.NotifyMarginsChanged (margins);
+		}
+
+		private static void NotifyTopMarginChanged(DependencyObject o, object oldValue, object newValue)
+		{
+			double value = (double) newValue;
+			Geometry that = (Geometry) o;
+			Margins margins = new Margins (that.LeftMargin, that.RightMargin, value, that.BottomMargin);
+			that.NotifyMarginsChanged (margins);
+		}
+
+		private static void NotifyBottomMarginChanged(DependencyObject o, object oldValue, object newValue)
+		{
+			double value = (double) newValue;
+			Geometry that = (Geometry) o;
+			Margins margins = new Margins (that.LeftMargin, that.RightMargin, that.TopMargin, value);
+			that.NotifyMarginsChanged (margins);
+		}
+
+		private static void NotifyOriginXChanged(DependencyObject o, object oldValue, object newValue)
+		{
+			double value = (double) newValue;
+			Geometry that = (Geometry) o;
+			Rectangle bounds = new Rectangle (value, that.OriginY, that.Width, that.Height);
+			that.NotifyBoundsChanged (bounds);
+		}
+
+		private static void NotifyOriginYChanged(DependencyObject o, object oldValue, object newValue)
+		{
+			double value = (double) newValue;
+			Geometry that = (Geometry) o;
+			Rectangle bounds = new Rectangle (that.OriginX, value, that.Width, that.Height);
+			that.NotifyBoundsChanged (bounds);
+		}
+
+		private static void NotifyWidthChanged(DependencyObject o, object oldValue, object newValue)
+		{
+			double value = (double) newValue;
+			Geometry that = (Geometry) o;
+			Rectangle bounds = new Rectangle (that.OriginX, that.OriginY, value, that.Height);
+			that.NotifyBoundsChanged (bounds);
+		}
+
+		private static void NotifyHeightChanged(DependencyObject o, object oldValue, object newValue)
+		{
+			double value = (double) newValue;
+			Geometry that = (Geometry) o;
+			Rectangle bounds = new Rectangle (that.OriginX, that.OriginY, that.Width, value);
+			that.NotifyBoundsChanged (bounds);
+		}
+
+		public static readonly DependencyProperty LeftMarginProperty	= DependencyProperty.Register("LeftMargin",   typeof (double), typeof (Geometry), new DependencyPropertyMetadata (0.0, Geometry.NotifyLeftMarginChanged));
+		public static readonly DependencyProperty RightMarginProperty	= DependencyProperty.Register("RightMargin",  typeof(double), typeof(Geometry), new DependencyPropertyMetadata(0.0, Geometry.NotifyRightMarginChanged));
+		public static readonly DependencyProperty TopMarginProperty		= DependencyProperty.Register("TopMargin",    typeof(double), typeof(Geometry), new DependencyPropertyMetadata(0.0, Geometry.NotifyTopMarginChanged));
+		public static readonly DependencyProperty BottomMarginProperty	= DependencyProperty.Register("BottomMargin", typeof(double), typeof(Geometry), new DependencyPropertyMetadata(0.0, Geometry.NotifyBottomMarginChanged));
+
+		public static readonly DependencyProperty OriginXProperty		= DependencyProperty.Register("OriginX",      typeof(double), typeof(Geometry), new DependencyPropertyMetadata(0.0, Geometry.NotifyOriginXChanged));
+		public static readonly DependencyProperty OriginYProperty		= DependencyProperty.Register("OriginY",      typeof(double), typeof(Geometry), new DependencyPropertyMetadata(0.0, Geometry.NotifyOriginYChanged));
+		public static readonly DependencyProperty WidthProperty			= DependencyProperty.Register("Width",        typeof(double), typeof(Geometry), new DependencyPropertyMetadata(0.0, Geometry.NotifyWidthChanged));
+		public static readonly DependencyProperty HeightProperty		= DependencyProperty.Register("Height",       typeof(double), typeof(Geometry), new DependencyPropertyMetadata(0.0, Geometry.NotifyHeightChanged));
 	}
 }

@@ -7,11 +7,9 @@ namespace Epsitec.Common.Designer.Proxies
 {
 	public abstract class Abstract : DependencyObject, IProxy
 	{
-		protected Abstract(Widget widget, Viewers.Panels panel)
+		protected Abstract(ProxyManager manager)
 		{
-			this.panel = panel;
-			this.objectModifier = this.panel.PanelEditor.ObjectModifier;
-			this.AddWidget(widget);
+			this.manager = manager;
 		}
 
 
@@ -21,14 +19,27 @@ namespace Epsitec.Common.Designer.Proxies
 			//	Ajoute un widget à notre liste de widgets connectés. Tous les
 			//	widgets de cette liste doivent partager exactement les mêmes
 			//	propriétés en ce qui concerne notre proxy.
-			System.Diagnostics.Debug.Assert(this.widgets.Contains(widget) == false);
-			this.widgets.Add(widget);
+			System.Diagnostics.Debug.Assert (this.widgets.Contains (widget) == false);
+			this.widgets.Add (widget);
 
 			if (this.widgets.Count == 1)
 			{
 				//	Quand on ajoute le premier widget, on lit les propriétés
 				//	du widget et on initialise le proxy.
-				this.ReadFromWidget();
+				this.ReadFromWidget ();
+			}
+		}
+
+		public void ClearWidgets()
+		{
+			this.widgets.Clear ();
+		}
+
+		public IEnumerable<Widget> Widgets
+		{
+			get
+			{
+				return this.widgets;
 			}
 		}
 
@@ -65,6 +76,37 @@ namespace Epsitec.Common.Designer.Proxies
 
 		#endregion
 
+		protected ObjectModifier ObjectModifier
+		{
+			get
+			{
+				return this.manager.ObjectModifier;
+			}
+		}
+
+		protected Widget DefaultWidget
+		{
+			get
+			{
+				return this.widgets[0];
+			}
+		}
+
+		protected bool IsSuspended
+		{
+			get
+			{
+				return this.suspendChanges > 0;
+			}
+		}
+
+		protected bool IsNotSuspended
+		{
+			get
+			{
+				return this.suspendChanges == 0;
+			}
+		}
 
 		protected void ReadFromWidget()
 		{
@@ -108,7 +150,7 @@ namespace Epsitec.Common.Designer.Proxies
 			//	Régénère la liste des proxies et met à jour les panneaux de l'interface
 			//	utilisateur s'il y a eu un changement dans le nombre de propriétés visibles
 			//	par panneau.
-			this.panel.RegenerateProxies();
+			Application.QueueAsyncCallback (this.manager.Panel.RegenerateProxies);
 		}
 		
 
@@ -152,9 +194,8 @@ namespace Epsitec.Common.Designer.Proxies
 #endif
 
 
-		protected Viewers.Panels		panel;
-		protected ObjectModifier		objectModifier;
-		protected List<Widget>			widgets = new List<Widget>();
-		protected int					suspendChanges = 0;
+		private ProxyManager			manager;
+		private List<Widget>			widgets = new List<Widget>();
+		private int						suspendChanges;
 	}
 }

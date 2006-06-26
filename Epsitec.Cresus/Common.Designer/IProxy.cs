@@ -15,13 +15,27 @@ namespace Epsitec.Common.Designer
 		void AddWidget(Widget widget);
 
 		/// <summary>
-		/// Updates this proxy with the widget. Read the connected widget properties.
+		/// Clears the widget list.
+		/// </summary>
+		void ClearWidgets();
+
+		/// <summary>
+		/// Gets the widgets which are connected to this proxy.
+		/// </summary>
+		/// <value>The widgets.</value>
+		IEnumerable<Widget> Widgets
+		{
+			get;
+		}
+
+		/// <summary>
+		/// Updates this proxy with the widget. Reads the connected widget properties.
 		/// </summary>
 		void Update();
 
 		/// <summary>
 		/// Gets the rank of the proxy in the user interface. Proxies with smaller
-		/// values are displayed first
+		/// values are displayed first.
 		/// </summary>
 		/// <value>The rank.</value>
 		int Rank
@@ -30,7 +44,7 @@ namespace Epsitec.Common.Designer
 		}
 
 		/// <summary>
-		/// Gets the base name of the icon, without prefix, suffix and extension.
+		/// Gets the base name of the icon, without prefix, suffix nor extension.
 		/// </summary>
 		/// <value>The name of the icon.</value>
 		string IconName

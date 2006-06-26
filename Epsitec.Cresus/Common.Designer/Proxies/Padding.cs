@@ -8,7 +8,8 @@ namespace Epsitec.Common.Designer.Proxies
 {
 	public class Padding : Abstract
 	{
-		public Padding(Widget widget, Viewers.Panels panel) : base(widget, panel)
+		public Padding(ProxyManager manager)
+			: base (manager)
 		{
 		}
 
@@ -87,9 +88,9 @@ namespace Epsitec.Common.Designer.Proxies
 			
 			//	Recopie localement les diverses propriétés du widget sélectionné
 			//	pour pouvoir ensuite travailler dessus :
-			if (this.objectModifier.HasPadding(this.widgets[0]))
+			if (this.ObjectModifier.HasPadding (this.DefaultWidget))
 			{
-				Margins padding = this.objectModifier.GetPadding(this.widgets[0]);
+				Margins padding = this.ObjectModifier.GetPadding (this.DefaultWidget);
 
 				this.LeftPadding   = padding.Left;
 				this.RightPadding  = padding.Right;
@@ -98,30 +99,60 @@ namespace Epsitec.Common.Designer.Proxies
 			}
 		}
 
-		private static void NotifyPaddingChanged(DependencyObject o, object oldValue, object newValue)
+		private void NotifyPaddingChanged(Margins padding)
 		{
 			//	Cette méthode est appelée à la suite de la modification d'une de
 			//	nos propriétés de définition de la marge (LeftPadding, RightPadding,
 			//	etc.) pour permettre de mettre à jour les widgets connectés :
-			Padding that = (Padding) o;
-			Margins padding = new Margins(that.LeftPadding, that.RightPadding, that.TopPadding, that.BottomPadding);
 
-			if (that.suspendChanges == 0)
+			if (this.IsNotSuspended)
 			{
-				that.SuspendChanges();
+				this.SuspendChanges ();
 
 				try
 				{
-					foreach (Widget obj in that.widgets)
+					foreach (Widget obj in this.Widgets)
 					{
-						that.objectModifier.SetPadding(obj, padding);
+						this.ObjectModifier.SetPadding (obj, padding);
 					}
 				}
 				finally
 				{
-					that.ResumeChanges();
+					this.ResumeChanges ();
 				}
 			}
+		}
+
+		private static void NotifyLeftPaddingChanged(DependencyObject o, object oldValue, object newValue)
+		{
+			double value = (double) newValue;
+			Padding that = (Padding) o;
+			Margins padding = new Margins (value, that.RightPadding, that.TopPadding, that.BottomPadding);
+			that.NotifyPaddingChanged (padding);
+		}
+
+		private static void NotifyRightPaddingChanged(DependencyObject o, object oldValue, object newValue)
+		{
+			double value = (double) newValue;
+			Padding that = (Padding) o;
+			Margins padding = new Margins (that.LeftPadding, value, that.TopPadding, that.BottomPadding);
+			that.NotifyPaddingChanged (padding);
+		}
+
+		private static void NotifyTopPaddingChanged(DependencyObject o, object oldValue, object newValue)
+		{
+			double value = (double) newValue;
+			Padding that = (Padding) o;
+			Margins padding = new Margins (that.LeftPadding, that.RightPadding, value, that.BottomPadding);
+			that.NotifyPaddingChanged (padding);
+		}
+
+		private static void NotifyBottomPaddingChanged(DependencyObject o, object oldValue, object newValue)
+		{
+			double value = (double) newValue;
+			Padding that = (Padding) o;
+			Margins padding = new Margins (that.LeftPadding, that.RightPadding, that.TopPadding, value);
+			that.NotifyPaddingChanged (padding);
 		}
 
 
@@ -139,9 +170,9 @@ namespace Epsitec.Common.Designer.Proxies
 		}
 
 
-		public static readonly DependencyProperty LeftPaddingProperty	= DependencyProperty.Register("LeftPadding", typeof(double), typeof(Padding), new DependencyPropertyMetadata(0.0, Padding.NotifyPaddingChanged));
-		public static readonly DependencyProperty RightPaddingProperty	= DependencyProperty.Register("RightPadding",  typeof(double), typeof(Padding), new DependencyPropertyMetadata(0.0, Padding.NotifyPaddingChanged));
-		public static readonly DependencyProperty TopPaddingProperty    = DependencyProperty.Register("TopPadding",    typeof(double), typeof(Padding), new DependencyPropertyMetadata(0.0, Padding.NotifyPaddingChanged));
-		public static readonly DependencyProperty BottomPaddingProperty = DependencyProperty.Register("BottomPadding", typeof(double), typeof(Padding), new DependencyPropertyMetadata(0.0, Padding.NotifyPaddingChanged));
+		public static readonly DependencyProperty LeftPaddingProperty	= DependencyProperty.Register("LeftPadding",   typeof(double), typeof(Padding), new DependencyPropertyMetadata(0.0, Padding.NotifyLeftPaddingChanged));
+		public static readonly DependencyProperty RightPaddingProperty	= DependencyProperty.Register("RightPadding",  typeof(double), typeof(Padding), new DependencyPropertyMetadata(0.0, Padding.NotifyRightPaddingChanged));
+		public static readonly DependencyProperty TopPaddingProperty    = DependencyProperty.Register("TopPadding",    typeof(double), typeof(Padding), new DependencyPropertyMetadata(0.0, Padding.NotifyTopPaddingChanged));
+		public static readonly DependencyProperty BottomPaddingProperty = DependencyProperty.Register("BottomPadding", typeof(double), typeof(Padding), new DependencyPropertyMetadata(0.0, Padding.NotifyBottomPaddingChanged));
 	}
 }

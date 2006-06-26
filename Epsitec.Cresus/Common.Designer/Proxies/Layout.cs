@@ -8,7 +8,8 @@ namespace Epsitec.Common.Designer.Proxies
 {
 	public class Layout : Abstract
 	{
-		public Layout(Widget widget, Viewers.Panels panel) : base(widget, panel)
+		public Layout(ProxyManager manager)
+			: base (manager)
 		{
 		}
 
@@ -151,47 +152,47 @@ namespace Epsitec.Common.Designer.Proxies
 			
 			//	Recopie localement les diverses propriétés du widget sélectionné
 			//	pour pouvoir ensuite travailler dessus :
-			if (this.objectModifier.HasChildrenPlacement(this.widgets[0]))
+			if (this.ObjectModifier.HasChildrenPlacement (this.DefaultWidget))
 			{
-				ObjectModifier.ChildrenPlacement cp = this.objectModifier.GetChildrenPlacement(this.widgets[0]);
+				ObjectModifier.ChildrenPlacement cp = this.ObjectModifier.GetChildrenPlacement (this.DefaultWidget);
 
 				this.ChildrenPlacement = cp;
 			}
 
-			if (this.objectModifier.AreChildrenAnchored(this.widgets[0].Parent))
+			if (this.ObjectModifier.AreChildrenAnchored (this.DefaultWidget.Parent))
 			{
-				ObjectModifier.AnchoredHorizontalAttachment ha = this.objectModifier.GetAnchoredHorizontalAttachment(this.widgets[0]);
-				ObjectModifier.AnchoredVerticalAttachment va = this.objectModifier.GetAnchoredVerticalAttachment(this.widgets[0]);
+				ObjectModifier.AnchoredHorizontalAttachment ha = this.ObjectModifier.GetAnchoredHorizontalAttachment (this.DefaultWidget);
+				ObjectModifier.AnchoredVerticalAttachment va = this.ObjectModifier.GetAnchoredVerticalAttachment (this.DefaultWidget);
 
 				this.AnchoredHorizontalAttachment = ha;
 				this.AnchoredVerticalAttachment = va;
 			}
 
-			if (this.objectModifier.HasStackedHorizontalAttachment(this.widgets[0]))
+			if (this.ObjectModifier.HasStackedHorizontalAttachment (this.DefaultWidget))
 			{
-				ObjectModifier.StackedHorizontalAttachment ha = this.objectModifier.GetStackedHorizontalAttachment(this.widgets[0]);
+				ObjectModifier.StackedHorizontalAttachment ha = this.ObjectModifier.GetStackedHorizontalAttachment (this.DefaultWidget);
 
 				this.StackedHorizontalAttachment = ha;
 			}
 
-			if (this.objectModifier.HasStackedVerticalAttachment(this.widgets[0]))
+			if (this.ObjectModifier.HasStackedVerticalAttachment (this.DefaultWidget))
 			{
-				ObjectModifier.StackedVerticalAttachment va = this.objectModifier.GetStackedVerticalAttachment(this.widgets[0]);
+				ObjectModifier.StackedVerticalAttachment va = this.ObjectModifier.GetStackedVerticalAttachment (this.DefaultWidget);
 
 				this.StackedVerticalAttachment = va;
 			}
 
-			if (this.objectModifier.HasStackedHorizontalAlignment(this.widgets[0]))
+			if (this.ObjectModifier.HasStackedHorizontalAlignment (this.DefaultWidget))
 			{
-				ObjectModifier.StackedHorizontalAlignment ha = this.objectModifier.GetStackedHorizontalAlignment(this.widgets[0]);
+				ObjectModifier.StackedHorizontalAlignment ha = this.ObjectModifier.GetStackedHorizontalAlignment (this.DefaultWidget);
 
 				this.StackedHorizontalAlignment = ha;
 			}
 
-			if (this.objectModifier.HasStackedVerticalAlignment(this.widgets[0]))
+			if (this.ObjectModifier.HasStackedVerticalAlignment (this.DefaultWidget))
 			{
-				ObjectModifier.StackedVerticalAlignment va = this.objectModifier.GetStackedVerticalAlignment(this.widgets[0]);
-				ObjectModifier.ChildrenPlacement cp = this.objectModifier.GetChildrenPlacement(this.widgets[0].Parent);
+				ObjectModifier.StackedVerticalAlignment va = this.ObjectModifier.GetStackedVerticalAlignment (this.DefaultWidget);
+				ObjectModifier.ChildrenPlacement cp = this.ObjectModifier.GetChildrenPlacement (this.DefaultWidget.Parent);
 
 				if (cp == ObjectModifier.ChildrenPlacement.HorizontalStacked)
 				{
@@ -210,18 +211,18 @@ namespace Epsitec.Common.Designer.Proxies
 			//	nos propriétés de définition pour permettre de mettre à jour les
 			//	widgets connectés :
 			Layout that = (Layout) o;
-			ObjectModifier.ChildrenPlacement cp = that.ChildrenPlacement;
+			ObjectModifier.ChildrenPlacement cp = (ObjectModifier.ChildrenPlacement)newValue;
 
-			if (that.suspendChanges == 0)
+			if (that.IsNotSuspended)
 			{
 				that.SuspendChanges();
 
 				try
 				{
-					foreach (Widget obj in that.widgets)
+					foreach (Widget obj in that.Widgets)
 					{
-						GeometryCache.FixBounds(obj.Children.Widgets, that.panel.PanelEditor.ObjectModifier);
-						that.objectModifier.SetChildrenPlacement(obj, cp);
+						GeometryCache.FixBounds(obj.Children.Widgets, that.ObjectModifier);
+						that.ObjectModifier.SetChildrenPlacement (obj, cp);
 						GeometryCache.AdaptBounds(obj.Children.Widgets, cp);
 					}
 				}
@@ -239,19 +240,19 @@ namespace Epsitec.Common.Designer.Proxies
 			//	nos propriétés de définition pour permettre de mettre à jour les
 			//	widgets connectés :
 			Layout that = (Layout) o;
-			ObjectModifier.AnchoredHorizontalAttachment ha = that.AnchoredHorizontalAttachment;
+			ObjectModifier.AnchoredHorizontalAttachment ha = (ObjectModifier.AnchoredHorizontalAttachment) newValue;
 
-			if (that.suspendChanges == 0)
+			if (that.IsNotSuspended)
 			{
 				that.SuspendChanges();
 
 				try
 				{
-					foreach (Widget obj in that.widgets)
+					foreach (Widget obj in that.Widgets)
 					{
-						Rectangle bounds = that.objectModifier.GetBounds(obj);
-						that.objectModifier.SetAnchoredHorizontalAttachment(obj, ha);
-						that.objectModifier.SetBounds(obj, bounds);
+						Rectangle bounds = that.ObjectModifier.GetBounds (obj);
+						that.ObjectModifier.SetAnchoredHorizontalAttachment (obj, ha);
+						that.ObjectModifier.SetBounds (obj, bounds);
 					}
 				}
 				finally
@@ -268,19 +269,19 @@ namespace Epsitec.Common.Designer.Proxies
 			//	nos propriétés de définition pour permettre de mettre à jour les
 			//	widgets connectés :
 			Layout that = (Layout) o;
-			ObjectModifier.AnchoredVerticalAttachment va = that.AnchoredVerticalAttachment;
+			ObjectModifier.AnchoredVerticalAttachment va = (ObjectModifier.AnchoredVerticalAttachment) newValue;
 
-			if (that.suspendChanges == 0)
+			if (that.IsNotSuspended)
 			{
 				that.SuspendChanges();
 
 				try
 				{
-					foreach (Widget obj in that.widgets)
+					foreach (Widget obj in that.Widgets)
 					{
-						Rectangle bounds = that.objectModifier.GetBounds(obj);
-						that.objectModifier.SetAnchoredVerticalAttachment(obj, va);
-						that.objectModifier.SetBounds(obj, bounds);
+						Rectangle bounds = that.ObjectModifier.GetBounds (obj);
+						that.ObjectModifier.SetAnchoredVerticalAttachment (obj, va);
+						that.ObjectModifier.SetBounds (obj, bounds);
 					}
 				}
 				finally
@@ -297,17 +298,17 @@ namespace Epsitec.Common.Designer.Proxies
 			//	nos propriétés de définition pour permettre de mettre à jour les
 			//	widgets connectés :
 			Layout that = (Layout) o;
-			ObjectModifier.StackedHorizontalAttachment ha = that.StackedHorizontalAttachment;
+			ObjectModifier.StackedHorizontalAttachment ha = (ObjectModifier.StackedHorizontalAttachment) newValue;
 
-			if (that.suspendChanges == 0)
+			if (that.IsNotSuspended)
 			{
 				that.SuspendChanges();
 
 				try
 				{
-					foreach (Widget obj in that.widgets)
+					foreach (Widget obj in that.Widgets)
 					{
-						that.objectModifier.SetStackedHorizontalAttachment(obj, ha);
+						that.ObjectModifier.SetStackedHorizontalAttachment (obj, ha);
 					}
 				}
 				finally
@@ -324,17 +325,17 @@ namespace Epsitec.Common.Designer.Proxies
 			//	nos propriétés de définition pour permettre de mettre à jour les
 			//	widgets connectés :
 			Layout that = (Layout) o;
-			ObjectModifier.StackedVerticalAttachment va = that.StackedVerticalAttachment;
+			ObjectModifier.StackedVerticalAttachment va = (ObjectModifier.StackedVerticalAttachment) newValue;
 
-			if (that.suspendChanges == 0)
+			if (that.IsNotSuspended)
 			{
 				that.SuspendChanges();
 
 				try
 				{
-					foreach (Widget obj in that.widgets)
+					foreach (Widget obj in that.Widgets)
 					{
-						that.objectModifier.SetStackedVerticalAttachment(obj, va);
+						that.ObjectModifier.SetStackedVerticalAttachment (obj, va);
 					}
 				}
 				finally
@@ -351,17 +352,17 @@ namespace Epsitec.Common.Designer.Proxies
 			//	nos propriétés de définition pour permettre de mettre à jour les
 			//	widgets connectés :
 			Layout that = (Layout) o;
-			ObjectModifier.StackedHorizontalAlignment ha = that.StackedHorizontalAlignment;
+			ObjectModifier.StackedHorizontalAlignment ha = (ObjectModifier.StackedHorizontalAlignment) newValue;
 
-			if (that.suspendChanges == 0)
+			if (that.IsNotSuspended)
 			{
 				that.SuspendChanges();
 
 				try
 				{
-					foreach (Widget obj in that.widgets)
+					foreach (Widget obj in that.Widgets)
 					{
-						that.objectModifier.SetStackedHorizontalAlignment(obj, ha);
+						that.ObjectModifier.SetStackedHorizontalAlignment (obj, ha);
 					}
 				}
 				finally
@@ -378,17 +379,17 @@ namespace Epsitec.Common.Designer.Proxies
 			//	nos propriétés de définition pour permettre de mettre à jour les
 			//	widgets connectés :
 			Layout that = (Layout) o;
-			ObjectModifier.StackedVerticalAlignment va = that.StackedVerticalAlignment;
+			ObjectModifier.StackedVerticalAlignment va = (ObjectModifier.StackedVerticalAlignment) newValue;
 
-			if (that.suspendChanges == 0)
+			if (that.IsNotSuspended)
 			{
 				that.SuspendChanges();
 
 				try
 				{
-					foreach (Widget obj in that.widgets)
+					foreach (Widget obj in that.Widgets)
 					{
-						that.objectModifier.SetStackedVerticalAlignment(obj, va);
+						that.ObjectModifier.SetStackedVerticalAlignment (obj, va);
 					}
 				}
 				finally
