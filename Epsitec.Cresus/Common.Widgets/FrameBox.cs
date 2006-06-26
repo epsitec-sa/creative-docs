@@ -1,6 +1,8 @@
 using Epsitec.Common.Types;
 using Epsitec.Common.Drawing;
 
+[assembly: Epsitec.Common.Types.DependencyClass(typeof(Epsitec.Common.Widgets.FrameBox))]
+
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
@@ -80,7 +82,7 @@ namespace Epsitec.Common.Widgets
 			o.SetValue(FrameBox.DrawDesignerFrameProperty, value);
 		}
 
-		public static readonly DependencyProperty DrawDesignerFrameProperty = DependencyProperty.Register("DrawDesignerFrame", typeof(bool), typeof(FrameBox), new DependencyPropertyMetadata(false));
+		public static readonly DependencyProperty DrawDesignerFrameProperty = DependencyProperty.Register("DrawDesignerFrame", typeof(bool), typeof(FrameBox), new DependencyPropertyMetadata(false).MakeNotSerializable());
 		#endregion
 	}
 }
