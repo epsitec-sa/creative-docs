@@ -149,14 +149,15 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			UI.Panel panel;
 			
-			panel = new UI.Panel ();
+			panel = new UI.Panel();
 			panel.ChildrenLayoutMode = Widgets.Layouts.LayoutMode.Anchored;
 			//?panel.ChildrenLayoutMode = Widgets.Layouts.LayoutMode.Docked;
 			//?panel.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
 			panel.ContainerLayoutMode = ContainerLayoutMode.VerticalFlow;
-			panel.PreferredSize = new Size (200, 200);
+			panel.PreferredSize = new Size(200, 200);
 			panel.Anchor = AnchorStyles.BottomLeft;
-			panel.Padding = new Margins (20, 20, 20, 20);
+			panel.Padding = new Margins(20, 20, 20, 20);
+			panel.DrawDesignerFrame = true;
 			
 			return panel;
 		}

@@ -219,8 +219,9 @@ namespace Epsitec.Common.Designer
 					
 					if (field.IsValid)
 					{
-						UI.Panel panel = UserInterface.DeserializePanel (field.AsString, this.resourceManager);
-						Viewers.Panels.SetPanel (bundle, panel);
+						UI.Panel panel = UserInterface.DeserializePanel(field.AsString, this.resourceManager);
+						panel.DrawDesignerFrame = true;
+						Viewers.Panels.SetPanel(bundle, panel);
 					}
 				}
 
