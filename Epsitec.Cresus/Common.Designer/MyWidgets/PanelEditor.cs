@@ -1082,11 +1082,13 @@ namespace Epsitec.Common.Designer.MyWidgets
 			if (this.context.Tool == "ObjectGroup")
 			{
 				FrameBox group = new FrameBox();
+				group.DrawDesignerFrame = true;
 				group.ChildrenLayoutMode = Widgets.Layouts.LayoutMode.Anchored;
 				group.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
 				group.PreferredSize = new Size(200, 100);
 				group.MinWidth = 50;
 				group.MinHeight = 50;
+				group.Padding = new Margins(10, 10, 10, 10);
 
 				item = group;
 			}
@@ -1095,9 +1097,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				GroupBox group = new GroupBox();
 				group.ChildrenLayoutMode = Widgets.Layouts.LayoutMode.Anchored;
-				//?group.ChildrenLayoutMode = Widgets.Layouts.LayoutMode.Docked;
 				group.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
-				//?group.ContainerLayoutMode = ContainerLayoutMode.VerticalFlow;
 				group.Text = Misc.Italic("GroupBox");
 				group.PreferredSize = new Size(200, 100);
 				group.MinWidth = 50;
