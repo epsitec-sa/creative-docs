@@ -699,13 +699,30 @@ namespace Epsitec.Common.Widgets
 				this.window.WindowBounds = value;
 			}
 		}
-		
+
 		public Drawing.Image					Icon
 		{
-			get { return this.window.Icon; }
-			set { this.window.Icon = value; }
+			get
+			{
+				return this.window.Icon;
+			}
+			set
+			{
+				this.window.Icon = value;
+			}
 		}
-		
+
+		public bool								ShowWindowIcon
+		{
+			get
+			{
+				return this.window.ShowIcon;
+			}
+			set
+			{
+				this.window.ShowIcon = value;
+			}
+		}
 		
 		internal WindowStyles					WindowStyles
 		{
