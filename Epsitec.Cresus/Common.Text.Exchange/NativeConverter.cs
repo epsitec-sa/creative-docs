@@ -504,6 +504,19 @@ namespace Epsitec.Common.Text.Exchange
 			bool leftmarginfirst = false;
 			bool rightmarginfirst = false;
 			bool marginunits = false;
+			bool pagargaphstartmode = false;
+			bool spaceafter = false;
+			bool spaceafterunits = false;
+			bool spacebefore = false;
+			bool spacebeforeunits = false;
+			bool breakfenceafter = false;
+			bool breakfencebefore = false;
+			bool keependlines = false;
+			bool keepstartlines = false;
+			bool keepwithnextparagraph = false;
+			bool keepwithpreviousparagraph = false;
+			bool hyphenation = false;
+
 
 			this.paraWrapper.SuspendSynchronizations ();
 
@@ -513,14 +526,6 @@ namespace Epsitec.Common.Text.Exchange
 
 				switch (el[0])
 				{
-					case "indlev":
-						this.paraWrapper.Defined.IndentationLevel = Misc.ParseInt (el[1]);
-						indentationlevel = true;
-						break;
-					case "indleva":
-						this.paraWrapper.Defined.IndentationLevelAttribute = Misc.NullString (el[1]);
-						indentationlevelattribute = true;
-						break;
 					case "align":
 						this.paraWrapper.Defined.AlignMode = (Properties.AlignMode) byte.Parse (el[1]);
 						alignmode = true;
@@ -528,6 +533,14 @@ namespace Epsitec.Common.Text.Exchange
 					case "just":
 						this.paraWrapper.Defined.JustificationMode = (Wrappers.JustificationMode) byte.Parse (el[1]);
 						justificationmode = true;
+						break;
+					case "indleva":
+						this.paraWrapper.Defined.IndentationLevelAttribute = Misc.NullString (el[1]);
+						indentationlevelattribute = true;
+						break;
+					case "indlev":
+						this.paraWrapper.Defined.IndentationLevel = Misc.ParseInt (el[1]);
+						indentationlevel = true;
 						break;
 					case "leading":
 						this.paraWrapper.Defined.Leading = Misc.ParseDouble (el[1]);
@@ -557,9 +570,93 @@ namespace Epsitec.Common.Text.Exchange
 						this.paraWrapper.Defined.MarginUnits = (Properties.SizeUnits) byte.Parse (el[1]);
 						marginunits = true;
 						break;
+					case "parstartmode":
+						this.paraWrapper.Defined.ParagraphStartMode = (Properties.ParagraphStartMode) byte.Parse (el[1]);
+						pagargaphstartmode = true;
+						break;
+					case "spaceafter":
+						this.paraWrapper.Defined.SpaceAfter = double.Parse(el[1]) ;
+						spaceafter = true ;
+						break;
+					case "spaceafteru":
+						this.paraWrapper.Defined.SpaceAfterUnits = (Properties.SizeUnits) byte.Parse (el[1]);
+						spaceafterunits = true;
+						break;
+					case "spacebefore":
+						this.paraWrapper.Defined.SpaceBefore = double.Parse (el[1]);
+						spacebefore = true;
+						break;
+					case "spacebeforeu":
+						this.paraWrapper.Defined.SpaceBeforeUnits = (Properties.SizeUnits) byte.Parse (el[1]);
+						spacebeforeunits = true;
+						break;
+					case "bfa":
+						this.paraWrapper.Defined.BreakFenceAfter = Misc.ParseDouble (el[1]);
+						breakfenceafter = true;
+						break;
+					case "bfb":
+						this.paraWrapper.Defined.BreakFenceBefore = Misc.ParseDouble (el[1]);
+						breakfencebefore = true;
+						break;
+					case "keepel":
+						this.paraWrapper.Defined.KeepEndLines = Misc.ParseInt (el[1]);
+						keependlines = true;
+						break;
+					case "keepsl":
+						this.paraWrapper.Defined.KeepStartLines = Misc.ParseInt (el[1]);
+						keepstartlines = true;
+						break;
+					case "keepwithnext":
+						this.paraWrapper.Defined.KeepWithNextParagraph = Misc.ByteToBool(byte.Parse (el[1]));
+						keepwithnextparagraph = true;
+						break;
+					case "keepwithprev":
+						this.paraWrapper.Defined.KeepWithPreviousParagraph = Misc.ByteToBool(byte.Parse (el[1]));
+						keepwithpreviousparagraph = true;
+						break;
+					case "hyphen":
+						this.paraWrapper.Defined.Hyphenation = Misc.ByteToBool(byte.Parse (el[1]));
+						hyphenation = true;
+						break;
 
 				}
 			}
+
+			if (!hyphenation)
+				this.paraWrapper.Defined.ClearHyphenation ();
+
+			if (!keepwithnextparagraph)
+				this.paraWrapper.Defined.ClearKeepWithNextParagraph ();
+
+			if (!keepwithpreviousparagraph)
+				this.paraWrapper.Defined.ClearKeepWithPreviousParagraph();
+
+			if (!keependlines)
+				this.paraWrapper.Defined.ClearKeepEndLines ();
+
+			if (!keepstartlines)
+				this.paraWrapper.Defined.ClearKeepStartLines ();
+
+			if (!breakfenceafter)
+				this.paraWrapper.Defined.ClearBreakFenceAfter ();
+
+			if (!breakfencebefore)
+				this.paraWrapper.Defined.ClearBreakFenceBefore ();
+
+			if (!spaceafter)
+				this.paraWrapper.Defined.ClearSpaceAfter() ;
+
+			if (!spaceafterunits)
+				this.paraWrapper.Defined.ClearSpaceAfterUnits ();
+
+			if (!spacebefore)
+				this.paraWrapper.Defined.ClearSpaceBefore ();
+
+			if (!spacebeforeunits)
+				this.paraWrapper.Defined.ClearSpaceBeforeUnits ();
+
+			if (!pagargaphstartmode)
+				this.paraWrapper.Defined.ClearParagraphStartMode ();
 
 			if (!indentationlevel)
 				this.paraWrapper.Defined.ClearIndentationLevel ();
@@ -711,15 +808,15 @@ namespace Epsitec.Common.Text.Exchange
 				output.Append ('\\');
 			}
 
-			if (this.paraWrapper.Defined.IsHyphenationDefined)
-			{
-				output.AppendFormat ("hy|{0}", Misc.BoolToByte (this.paraWrapper.Defined.Hyphenation));
-				output.Append ('\\');
-			}
-
 			if (this.paraWrapper.Defined.IsBreakFenceBeforeDefined)
 			{
 				output.AppendFormat ("bfb|{0}", this.paraWrapper.Defined.BreakFenceBefore);
+				output.Append ('\\');
+			}
+
+			if (this.paraWrapper.Defined.IsHyphenationDefined)
+			{
+				output.AppendFormat ("hyphen|{0}", Misc.BoolToByte (this.paraWrapper.Defined.Hyphenation));
 				output.Append ('\\');
 			}
 
@@ -743,13 +840,13 @@ namespace Epsitec.Common.Text.Exchange
 
 			if (this.paraWrapper.Defined.IsKeepWithNextParagraphDefined)
 			{
-				output.AppendFormat ("keepwnp|{0}", Misc.BoolToByte (this.paraWrapper.Defined.KeepWithNextParagraph));
+				output.AppendFormat ("keepwithnext|{0}", Misc.BoolToByte (this.paraWrapper.Defined.KeepWithNextParagraph));
 				output.Append ('\\');
 			}
 
 			if (this.paraWrapper.Defined.IsKeepWithPreviousParagraphDefined)
 			{
-				output.AppendFormat ("keepwpp|{0}", Misc.BoolToByte (this.paraWrapper.Defined.KeepWithPreviousParagraph));
+				output.AppendFormat ("keepwithprev|{0}", Misc.BoolToByte (this.paraWrapper.Defined.KeepWithPreviousParagraph));
 				output.Append ('\\');
 			}
 
