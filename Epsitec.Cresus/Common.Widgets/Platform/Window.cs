@@ -50,6 +50,8 @@ namespace Epsitec.Common.Widgets.Platform
 			
 			this.dirty_rectangle = Drawing.Rectangle.Empty;
 			this.dirty_region    = new Drawing.DirtyRegion ();
+
+			this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
 			
 			this.SetStyle (System.Windows.Forms.ControlStyles.AllPaintingInWmPaint, true);
 			this.SetStyle (System.Windows.Forms.ControlStyles.Opaque, true);

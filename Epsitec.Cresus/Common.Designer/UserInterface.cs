@@ -80,6 +80,7 @@ namespace Epsitec.Common.Designer
 			Widgets.Window window = new Epsitec.Common.Widgets.Window ();
 
 			window.MakeSecondaryWindow ();
+			window.ShowWindowIcon = false;
 			window.Root.Children.Add (clone);
 
 			clone.Dock = Widgets.DockStyle.Fill;
@@ -105,8 +106,7 @@ namespace Epsitec.Common.Designer
 			window.WindowBounds = rect;
 
 			window.ShowDialog ();  // affiche le dialogue modal...
-
-			//	TODO: comprendre pourquoi WindowBounds ne tient pas compte de la position réelle de la fenêtre !
+			
 			UserInterface.runPanelCenter = window.WindowPlacementNormalBounds.Center;
 		}
 		
