@@ -8,8 +8,7 @@ namespace Epsitec.Common.Designer.Proxies
 {
 	public class Layout : Abstract
 	{
-		public Layout(ProxyManager manager)
-			: base (manager)
+		public Layout(ProxyManager manager) : base (manager)
 		{
 		}
 
@@ -152,47 +151,47 @@ namespace Epsitec.Common.Designer.Proxies
 			
 			//	Recopie localement les diverses propriétés du widget sélectionné
 			//	pour pouvoir ensuite travailler dessus :
-			if (this.ObjectModifier.HasChildrenPlacement (this.DefaultWidget))
+			if (this.ObjectModifier.HasChildrenPlacement(this.DefaultWidget))
 			{
-				ObjectModifier.ChildrenPlacement cp = this.ObjectModifier.GetChildrenPlacement (this.DefaultWidget);
+				ObjectModifier.ChildrenPlacement cp = this.ObjectModifier.GetChildrenPlacement(this.DefaultWidget);
 
 				this.ChildrenPlacement = cp;
 			}
 
-			if (this.ObjectModifier.AreChildrenAnchored (this.DefaultWidget.Parent))
+			if (this.ObjectModifier.AreChildrenAnchored(this.DefaultWidget.Parent))
 			{
-				ObjectModifier.AnchoredHorizontalAttachment ha = this.ObjectModifier.GetAnchoredHorizontalAttachment (this.DefaultWidget);
-				ObjectModifier.AnchoredVerticalAttachment va = this.ObjectModifier.GetAnchoredVerticalAttachment (this.DefaultWidget);
+				ObjectModifier.AnchoredHorizontalAttachment ha = this.ObjectModifier.GetAnchoredHorizontalAttachment(this.DefaultWidget);
+				ObjectModifier.AnchoredVerticalAttachment va = this.ObjectModifier.GetAnchoredVerticalAttachment(this.DefaultWidget);
 
 				this.AnchoredHorizontalAttachment = ha;
 				this.AnchoredVerticalAttachment = va;
 			}
 
-			if (this.ObjectModifier.HasStackedHorizontalAttachment (this.DefaultWidget))
+			if (this.ObjectModifier.HasStackedHorizontalAttachment(this.DefaultWidget))
 			{
-				ObjectModifier.StackedHorizontalAttachment ha = this.ObjectModifier.GetStackedHorizontalAttachment (this.DefaultWidget);
+				ObjectModifier.StackedHorizontalAttachment ha = this.ObjectModifier.GetStackedHorizontalAttachment(this.DefaultWidget);
 
 				this.StackedHorizontalAttachment = ha;
 			}
 
-			if (this.ObjectModifier.HasStackedVerticalAttachment (this.DefaultWidget))
+			if (this.ObjectModifier.HasStackedVerticalAttachment(this.DefaultWidget))
 			{
-				ObjectModifier.StackedVerticalAttachment va = this.ObjectModifier.GetStackedVerticalAttachment (this.DefaultWidget);
+				ObjectModifier.StackedVerticalAttachment va = this.ObjectModifier.GetStackedVerticalAttachment(this.DefaultWidget);
 
 				this.StackedVerticalAttachment = va;
 			}
 
-			if (this.ObjectModifier.HasStackedHorizontalAlignment (this.DefaultWidget))
+			if (this.ObjectModifier.HasStackedHorizontalAlignment(this.DefaultWidget))
 			{
-				ObjectModifier.StackedHorizontalAlignment ha = this.ObjectModifier.GetStackedHorizontalAlignment (this.DefaultWidget);
+				ObjectModifier.StackedHorizontalAlignment ha = this.ObjectModifier.GetStackedHorizontalAlignment(this.DefaultWidget);
 
 				this.StackedHorizontalAlignment = ha;
 			}
 
-			if (this.ObjectModifier.HasStackedVerticalAlignment (this.DefaultWidget))
+			if (this.ObjectModifier.HasStackedVerticalAlignment(this.DefaultWidget))
 			{
-				ObjectModifier.StackedVerticalAlignment va = this.ObjectModifier.GetStackedVerticalAlignment (this.DefaultWidget);
-				ObjectModifier.ChildrenPlacement cp = this.ObjectModifier.GetChildrenPlacement (this.DefaultWidget.Parent);
+				ObjectModifier.StackedVerticalAlignment va = this.ObjectModifier.GetStackedVerticalAlignment(this.DefaultWidget);
+				ObjectModifier.ChildrenPlacement cp = this.ObjectModifier.GetChildrenPlacement(this.DefaultWidget.Parent);
 
 				if (cp == ObjectModifier.ChildrenPlacement.HorizontalStacked)
 				{
@@ -222,7 +221,7 @@ namespace Epsitec.Common.Designer.Proxies
 					foreach (Widget obj in that.Widgets)
 					{
 						GeometryCache.FixBounds(obj.Children.Widgets, that.ObjectModifier);
-						that.ObjectModifier.SetChildrenPlacement (obj, cp);
+						that.ObjectModifier.SetChildrenPlacement(obj, cp);
 						GeometryCache.AdaptBounds(obj.Children.Widgets, cp);
 					}
 				}
@@ -250,9 +249,9 @@ namespace Epsitec.Common.Designer.Proxies
 				{
 					foreach (Widget obj in that.Widgets)
 					{
-						Rectangle bounds = that.ObjectModifier.GetBounds (obj);
-						that.ObjectModifier.SetAnchoredHorizontalAttachment (obj, ha);
-						that.ObjectModifier.SetBounds (obj, bounds);
+						Rectangle bounds = that.ObjectModifier.GetBounds(obj);
+						that.ObjectModifier.SetAnchoredHorizontalAttachment(obj, ha);
+						that.ObjectModifier.SetBounds(obj, bounds);
 					}
 				}
 				finally
@@ -279,9 +278,9 @@ namespace Epsitec.Common.Designer.Proxies
 				{
 					foreach (Widget obj in that.Widgets)
 					{
-						Rectangle bounds = that.ObjectModifier.GetBounds (obj);
-						that.ObjectModifier.SetAnchoredVerticalAttachment (obj, va);
-						that.ObjectModifier.SetBounds (obj, bounds);
+						Rectangle bounds = that.ObjectModifier.GetBounds(obj);
+						that.ObjectModifier.SetAnchoredVerticalAttachment(obj, va);
+						that.ObjectModifier.SetBounds(obj, bounds);
 					}
 				}
 				finally
@@ -308,7 +307,7 @@ namespace Epsitec.Common.Designer.Proxies
 				{
 					foreach (Widget obj in that.Widgets)
 					{
-						that.ObjectModifier.SetStackedHorizontalAttachment (obj, ha);
+						that.ObjectModifier.SetStackedHorizontalAttachment(obj, ha);
 					}
 				}
 				finally
@@ -335,7 +334,7 @@ namespace Epsitec.Common.Designer.Proxies
 				{
 					foreach (Widget obj in that.Widgets)
 					{
-						that.ObjectModifier.SetStackedVerticalAttachment (obj, va);
+						that.ObjectModifier.SetStackedVerticalAttachment(obj, va);
 					}
 				}
 				finally
@@ -362,7 +361,7 @@ namespace Epsitec.Common.Designer.Proxies
 				{
 					foreach (Widget obj in that.Widgets)
 					{
-						that.ObjectModifier.SetStackedHorizontalAlignment (obj, ha);
+						that.ObjectModifier.SetStackedHorizontalAlignment(obj, ha);
 					}
 				}
 				finally
@@ -389,7 +388,7 @@ namespace Epsitec.Common.Designer.Proxies
 				{
 					foreach (Widget obj in that.Widgets)
 					{
-						that.ObjectModifier.SetStackedVerticalAlignment (obj, va);
+						that.ObjectModifier.SetStackedVerticalAlignment(obj, va);
 					}
 				}
 				finally
@@ -407,9 +406,10 @@ namespace Epsitec.Common.Designer.Proxies
 		{
 			EnumType childrenPlacementEnumType = new EnumType(typeof(ObjectModifier.ChildrenPlacement));
 			childrenPlacementEnumType.DefineDefaultController("Enum", "Icons");
-			childrenPlacementEnumType[ObjectModifier.ChildrenPlacement.Anchored].DefineCaptionId(new Support.Druid ("[10011]").ToLong());
-			childrenPlacementEnumType[ObjectModifier.ChildrenPlacement.VerticalStacked].DefineCaptionId(new Support.Druid ("[10012]").ToLong());
-			childrenPlacementEnumType[ObjectModifier.ChildrenPlacement.HorizontalStacked].DefineCaptionId(new Support.Druid ("[10013]").ToLong());
+			childrenPlacementEnumType[ObjectModifier.ChildrenPlacement.Anchored].DefineCaptionId(new Support.Druid("[10011]").ToLong());
+			childrenPlacementEnumType[ObjectModifier.ChildrenPlacement.VerticalStacked].DefineCaptionId(new Support.Druid("[10012]").ToLong());
+			childrenPlacementEnumType[ObjectModifier.ChildrenPlacement.HorizontalStacked].DefineCaptionId(new Support.Druid("[10013]").ToLong());
+			childrenPlacementEnumType[ObjectModifier.ChildrenPlacement.Grid].DefineCaptionId(new Support.Druid("[10014]").ToLong());
 			Layout.ChildrenPlacementProperty.DefaultMetadata.DefineNamedType(childrenPlacementEnumType);
 			Layout.ChildrenPlacementProperty.DefaultMetadata.DefineCaptionId(new Support.Druid("[100C]").ToLong());
 

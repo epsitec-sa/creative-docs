@@ -40,6 +40,7 @@
   <data id="011">&lt;s:data id="_0" f:Description="Ancré" f:Labels="{Collection {Text 'Ancré'}}" f:Icon="manifest:Epsitec.Common.Designer.Images.PropertyCPAnchored.icon" /&gt;</data>
   <data id="012">&lt;s:data id="_0" f:Description="Disposition verticale" f:Labels="{Collection {Text 'Vertical'}}" f:Icon="manifest:Epsitec.Common.Designer.Images.PropertyCPVertical.icon" /&gt;</data>
   <data id="013">&lt;s:data id="_0" f:Description="Disposition horizontale" f:Labels="{Collection {Text 'Horizontal'}}" f:Icon="manifest:Epsitec.Common.Designer.Images.PropertyCPHorizontal.icon" /&gt;</data>
+  <data id="014">&lt;s:data id="_0" f:Description="Grille" f:Labels="{Collection {Text 'Grille'}}" f:Icon="manifest:Epsitec.Common.Designer.Images.PropertyCPGrid.icon" /&gt;</data>
 
   <data id="021">&lt;s:data id="_0" f:Description="Attaché à gauche" f:Labels="{Collection {Text 'À gauche'}}" f:Icon="manifest:Epsitec.Common.Designer.Images.PropertyAttachmentLeft.icon" /&gt;</data>
   <data id="022">&lt;s:data id="_0" f:Description="Attaché à droite" f:Labels="{Collection {Text 'À droite'}}" f:Icon="manifest:Epsitec.Common.Designer.Images.PropertyAttachmentRight.icon" /&gt;</data>

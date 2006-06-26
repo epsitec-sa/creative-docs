@@ -8,8 +8,7 @@ namespace Epsitec.Common.Designer.Proxies
 {
 	public class Padding : Abstract
 	{
-		public Padding(ProxyManager manager)
-			: base (manager)
+		public Padding(ProxyManager manager) : base (manager)
 		{
 		}
 
@@ -88,9 +87,9 @@ namespace Epsitec.Common.Designer.Proxies
 			
 			//	Recopie localement les diverses propriétés du widget sélectionné
 			//	pour pouvoir ensuite travailler dessus :
-			if (this.ObjectModifier.HasPadding (this.DefaultWidget))
+			if (this.ObjectModifier.HasPadding(this.DefaultWidget))
 			{
-				Margins padding = this.ObjectModifier.GetPadding (this.DefaultWidget);
+				Margins padding = this.ObjectModifier.GetPadding(this.DefaultWidget);
 
 				this.LeftPadding   = padding.Left;
 				this.RightPadding  = padding.Right;
@@ -107,18 +106,18 @@ namespace Epsitec.Common.Designer.Proxies
 
 			if (this.IsNotSuspended)
 			{
-				this.SuspendChanges ();
+				this.SuspendChanges();
 
 				try
 				{
 					foreach (Widget obj in this.Widgets)
 					{
-						this.ObjectModifier.SetPadding (obj, padding);
+						this.ObjectModifier.SetPadding(obj, padding);
 					}
 				}
 				finally
 				{
-					this.ResumeChanges ();
+					this.ResumeChanges();
 				}
 			}
 		}
@@ -127,32 +126,32 @@ namespace Epsitec.Common.Designer.Proxies
 		{
 			double value = (double) newValue;
 			Padding that = (Padding) o;
-			Margins padding = new Margins (value, that.RightPadding, that.TopPadding, that.BottomPadding);
-			that.NotifyPaddingChanged (padding);
+			Margins padding = new Margins(value, that.RightPadding, that.TopPadding, that.BottomPadding);
+			that.NotifyPaddingChanged(padding);
 		}
 
 		private static void NotifyRightPaddingChanged(DependencyObject o, object oldValue, object newValue)
 		{
 			double value = (double) newValue;
 			Padding that = (Padding) o;
-			Margins padding = new Margins (that.LeftPadding, value, that.TopPadding, that.BottomPadding);
-			that.NotifyPaddingChanged (padding);
+			Margins padding = new Margins(that.LeftPadding, value, that.TopPadding, that.BottomPadding);
+			that.NotifyPaddingChanged(padding);
 		}
 
 		private static void NotifyTopPaddingChanged(DependencyObject o, object oldValue, object newValue)
 		{
 			double value = (double) newValue;
 			Padding that = (Padding) o;
-			Margins padding = new Margins (that.LeftPadding, that.RightPadding, value, that.BottomPadding);
-			that.NotifyPaddingChanged (padding);
+			Margins padding = new Margins(that.LeftPadding, that.RightPadding, value, that.BottomPadding);
+			that.NotifyPaddingChanged(padding);
 		}
 
 		private static void NotifyBottomPaddingChanged(DependencyObject o, object oldValue, object newValue)
 		{
 			double value = (double) newValue;
 			Padding that = (Padding) o;
-			Margins padding = new Margins (that.LeftPadding, that.RightPadding, that.TopPadding, value);
-			that.NotifyPaddingChanged (padding);
+			Margins padding = new Margins(that.LeftPadding, that.RightPadding, that.TopPadding, value);
+			that.NotifyPaddingChanged(padding);
 		}
 
 

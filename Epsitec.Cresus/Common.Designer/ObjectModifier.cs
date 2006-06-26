@@ -15,6 +15,7 @@ namespace Epsitec.Common.Designer
 			Anchored,
 			VerticalStacked,
 			HorizontalStacked,
+			Grid,
 		}
 
 		public enum AnchoredHorizontalAttachment
@@ -106,6 +107,17 @@ namespace Epsitec.Common.Designer
 			return false;
 		}
 
+		public bool AreChildrenGrid(Widget obj)
+		{
+			AbstractGroup group = obj as AbstractGroup;
+			if (group != null)
+			{
+				ChildrenPlacement p = this.GetChildrenPlacement(obj);
+				return (p == ChildrenPlacement.Grid);
+			}
+			return false;
+		}
+
 		public bool AreChildrenHorizontal(Widget obj)
 		{
 			AbstractGroup group = obj as AbstractGroup;
@@ -147,6 +159,11 @@ namespace Epsitec.Common.Designer
 						return ChildrenPlacement.VerticalStacked;
 					}
 				}
+
+				if (group.ChildrenLayoutMode == Widgets.Layouts.LayoutMode.Grid)
+				{
+					return ChildrenPlacement.Grid;
+				}
 			}
 
 			return ChildrenPlacement.None;
@@ -173,6 +190,10 @@ namespace Epsitec.Common.Designer
 				case ChildrenPlacement.VerticalStacked:
 					group.ChildrenLayoutMode = Widgets.Layouts.LayoutMode.Stacked;
 					group.ContainerLayoutMode = ContainerLayoutMode.VerticalFlow;
+					break;
+
+				case ChildrenPlacement.Grid:
+					group.ChildrenLayoutMode = Widgets.Layouts.LayoutMode.Grid;
 					break;
 			}
 		}
