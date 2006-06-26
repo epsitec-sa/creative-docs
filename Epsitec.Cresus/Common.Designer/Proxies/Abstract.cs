@@ -19,20 +19,20 @@ namespace Epsitec.Common.Designer.Proxies
 			//	Ajoute un widget à notre liste de widgets connectés. Tous les
 			//	widgets de cette liste doivent partager exactement les mêmes
 			//	propriétés en ce qui concerne notre proxy.
-			System.Diagnostics.Debug.Assert (this.widgets.Contains (widget) == false);
-			this.widgets.Add (widget);
+			System.Diagnostics.Debug.Assert(this.widgets.Contains(widget) == false);
+			this.widgets.Add(widget);
 
 			if (this.widgets.Count == 1)
 			{
 				//	Quand on ajoute le premier widget, on lit les propriétés
 				//	du widget et on initialise le proxy.
-				this.ReadFromWidget ();
+				this.ReadFromWidget();
 			}
 		}
 
 		public void ClearWidgets()
 		{
-			this.widgets.Clear ();
+			this.widgets.Clear();
 		}
 
 		public IEnumerable<Widget> Widgets
@@ -150,7 +150,7 @@ namespace Epsitec.Common.Designer.Proxies
 			//	Régénère la liste des proxies et met à jour les panneaux de l'interface
 			//	utilisateur s'il y a eu un changement dans le nombre de propriétés visibles
 			//	par panneau.
-			Application.QueueAsyncCallback (this.manager.Panel.RegenerateProxies);
+			Application.QueueAsyncCallback(this.manager.Panel.RegenerateProxies);
 		}
 		
 

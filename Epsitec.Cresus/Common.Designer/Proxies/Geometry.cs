@@ -8,8 +8,7 @@ namespace Epsitec.Common.Designer.Proxies
 {
 	public class Geometry : Abstract
 	{
-		public Geometry(ProxyManager manager)
-			: base (manager)
+		public Geometry(ProxyManager manager) : base (manager)
 		{
 		}
 
@@ -136,9 +135,9 @@ namespace Epsitec.Common.Designer.Proxies
 			
 			//	Recopie localement les diverses propriétés du widget sélectionné
 			//	pour pouvoir ensuite travailler dessus :
-			if (this.ObjectModifier.HasMargins (this.DefaultWidget))
+			if (this.ObjectModifier.HasMargins(this.DefaultWidget))
 			{
-				Margins margins = this.ObjectModifier.GetMargins (this.DefaultWidget);
+				Margins margins = this.ObjectModifier.GetMargins(this.DefaultWidget);
 
 				this.LeftMargin   = margins.Left;
 				this.RightMargin  = margins.Right;
@@ -146,9 +145,9 @@ namespace Epsitec.Common.Designer.Proxies
 				this.BottomMargin = margins.Bottom;
 			}
 
-			if (this.ObjectModifier.HasBounds (this.DefaultWidget))
+			if (this.ObjectModifier.HasBounds(this.DefaultWidget))
 			{
-				Rectangle bounds = this.ObjectModifier.GetBounds (this.DefaultWidget);
+				Rectangle bounds = this.ObjectModifier.GetBounds(this.DefaultWidget);
 
 				this.OriginX = bounds.Left;
 				this.OriginY = bounds.Bottom;
@@ -157,14 +156,14 @@ namespace Epsitec.Common.Designer.Proxies
 			}
 			else
 			{
-				if (this.ObjectModifier.HasWidth (this.DefaultWidget))
+				if (this.ObjectModifier.HasWidth(this.DefaultWidget))
 				{
-					this.Width = this.ObjectModifier.GetWidth (this.DefaultWidget);
+					this.Width = this.ObjectModifier.GetWidth(this.DefaultWidget);
 				}
 
-				if (this.ObjectModifier.HasHeight (this.DefaultWidget))
+				if (this.ObjectModifier.HasHeight(this.DefaultWidget))
 				{
-					this.Height = this.ObjectModifier.GetHeight (this.DefaultWidget);
+					this.Height = this.ObjectModifier.GetHeight(this.DefaultWidget);
 				}
 			}
 		}
@@ -177,18 +176,18 @@ namespace Epsitec.Common.Designer.Proxies
 			
 			if (this.IsNotSuspended)
 			{
-				this.SuspendChanges ();
+				this.SuspendChanges();
 
 				try
 				{
 					foreach (Widget obj in this.Widgets)
 					{
-						this.ObjectModifier.SetMargins (obj, margins);
+						this.ObjectModifier.SetMargins(obj, margins);
 					}
 				}
 				finally
 				{
-					this.ResumeChanges ();
+					this.ResumeChanges();
 				}
 			}
 		}
@@ -207,20 +206,20 @@ namespace Epsitec.Common.Designer.Proxies
 				{
 					foreach (Widget obj in this.Widgets)
 					{
-						if (this.ObjectModifier.HasBounds (obj))
+						if (this.ObjectModifier.HasBounds(obj))
 						{
-							this.ObjectModifier.SetBounds (obj, bounds);
+							this.ObjectModifier.SetBounds(obj, bounds);
 						}
 						else
 						{
-							if (this.ObjectModifier.HasWidth (obj))
+							if (this.ObjectModifier.HasWidth(obj))
 							{
-								this.ObjectModifier.SetWidth (obj, bounds.Width);
+								this.ObjectModifier.SetWidth(obj, bounds.Width);
 							}
 
-							if (this.ObjectModifier.HasHeight (obj))
+							if (this.ObjectModifier.HasHeight(obj))
 							{
-								this.ObjectModifier.SetHeight (obj, bounds.Height);
+								this.ObjectModifier.SetHeight(obj, bounds.Height);
 							}
 						}
 					}
@@ -235,15 +234,15 @@ namespace Epsitec.Common.Designer.Proxies
 
 		static Geometry()
 		{
-			Geometry.LeftMarginProperty.DefaultMetadata.DefineNamedType (ProxyManager.MarginNumericType);
-			Geometry.RightMarginProperty.DefaultMetadata.DefineNamedType (ProxyManager.MarginNumericType);
-			Geometry.TopMarginProperty.DefaultMetadata.DefineNamedType (ProxyManager.MarginNumericType);
-			Geometry.BottomMarginProperty.DefaultMetadata.DefineNamedType (ProxyManager.MarginNumericType);
+			Geometry.LeftMarginProperty.DefaultMetadata.DefineNamedType(ProxyManager.MarginNumericType);
+			Geometry.RightMarginProperty.DefaultMetadata.DefineNamedType(ProxyManager.MarginNumericType);
+			Geometry.TopMarginProperty.DefaultMetadata.DefineNamedType(ProxyManager.MarginNumericType);
+			Geometry.BottomMarginProperty.DefaultMetadata.DefineNamedType(ProxyManager.MarginNumericType);
 			
-			Geometry.OriginXProperty.DefaultMetadata.DefineNamedType (ProxyManager.LocationNumericType);
-			Geometry.OriginYProperty.DefaultMetadata.DefineNamedType (ProxyManager.LocationNumericType);
-			Geometry.WidthProperty.DefaultMetadata.DefineNamedType (ProxyManager.SizeNumericType);
-			Geometry.HeightProperty.DefaultMetadata.DefineNamedType (ProxyManager.SizeNumericType);
+			Geometry.OriginXProperty.DefaultMetadata.DefineNamedType(ProxyManager.LocationNumericType);
+			Geometry.OriginYProperty.DefaultMetadata.DefineNamedType(ProxyManager.LocationNumericType);
+			Geometry.WidthProperty.DefaultMetadata.DefineNamedType(ProxyManager.SizeNumericType);
+			Geometry.HeightProperty.DefaultMetadata.DefineNamedType(ProxyManager.SizeNumericType);
 
 			Geometry.LeftMarginProperty.DefaultMetadata.DefineCaptionId(new Support.Druid("[1000]").ToLong());
 			Geometry.RightMarginProperty.DefaultMetadata.DefineCaptionId(new Support.Druid("[1001]").ToLong());
@@ -261,67 +260,67 @@ namespace Epsitec.Common.Designer.Proxies
 		{
 			double value = (double) newValue;
 			Geometry that = (Geometry) o;
-			Margins margins = new Margins (value, that.RightMargin, that.TopMargin, that.BottomMargin);
-			that.NotifyMarginsChanged (margins);
+			Margins margins = new Margins(value, that.RightMargin, that.TopMargin, that.BottomMargin);
+			that.NotifyMarginsChanged(margins);
 		}
 
 		private static void NotifyRightMarginChanged(DependencyObject o, object oldValue, object newValue)
 		{
 			double value = (double) newValue;
 			Geometry that = (Geometry) o;
-			Margins margins = new Margins (that.LeftMargin, value, that.TopMargin, that.BottomMargin);
-			that.NotifyMarginsChanged (margins);
+			Margins margins = new Margins(that.LeftMargin, value, that.TopMargin, that.BottomMargin);
+			that.NotifyMarginsChanged(margins);
 		}
 
 		private static void NotifyTopMarginChanged(DependencyObject o, object oldValue, object newValue)
 		{
 			double value = (double) newValue;
 			Geometry that = (Geometry) o;
-			Margins margins = new Margins (that.LeftMargin, that.RightMargin, value, that.BottomMargin);
-			that.NotifyMarginsChanged (margins);
+			Margins margins = new Margins(that.LeftMargin, that.RightMargin, value, that.BottomMargin);
+			that.NotifyMarginsChanged(margins);
 		}
 
 		private static void NotifyBottomMarginChanged(DependencyObject o, object oldValue, object newValue)
 		{
 			double value = (double) newValue;
 			Geometry that = (Geometry) o;
-			Margins margins = new Margins (that.LeftMargin, that.RightMargin, that.TopMargin, value);
-			that.NotifyMarginsChanged (margins);
+			Margins margins = new Margins(that.LeftMargin, that.RightMargin, that.TopMargin, value);
+			that.NotifyMarginsChanged(margins);
 		}
 
 		private static void NotifyOriginXChanged(DependencyObject o, object oldValue, object newValue)
 		{
 			double value = (double) newValue;
 			Geometry that = (Geometry) o;
-			Rectangle bounds = new Rectangle (value, that.OriginY, that.Width, that.Height);
-			that.NotifyBoundsChanged (bounds);
+			Rectangle bounds = new Rectangle(value, that.OriginY, that.Width, that.Height);
+			that.NotifyBoundsChanged(bounds);
 		}
 
 		private static void NotifyOriginYChanged(DependencyObject o, object oldValue, object newValue)
 		{
 			double value = (double) newValue;
 			Geometry that = (Geometry) o;
-			Rectangle bounds = new Rectangle (that.OriginX, value, that.Width, that.Height);
-			that.NotifyBoundsChanged (bounds);
+			Rectangle bounds = new Rectangle(that.OriginX, value, that.Width, that.Height);
+			that.NotifyBoundsChanged(bounds);
 		}
 
 		private static void NotifyWidthChanged(DependencyObject o, object oldValue, object newValue)
 		{
 			double value = (double) newValue;
 			Geometry that = (Geometry) o;
-			Rectangle bounds = new Rectangle (that.OriginX, that.OriginY, value, that.Height);
-			that.NotifyBoundsChanged (bounds);
+			Rectangle bounds = new Rectangle(that.OriginX, that.OriginY, value, that.Height);
+			that.NotifyBoundsChanged(bounds);
 		}
 
 		private static void NotifyHeightChanged(DependencyObject o, object oldValue, object newValue)
 		{
 			double value = (double) newValue;
 			Geometry that = (Geometry) o;
-			Rectangle bounds = new Rectangle (that.OriginX, that.OriginY, that.Width, value);
-			that.NotifyBoundsChanged (bounds);
+			Rectangle bounds = new Rectangle(that.OriginX, that.OriginY, that.Width, value);
+			that.NotifyBoundsChanged(bounds);
 		}
 
-		public static readonly DependencyProperty LeftMarginProperty	= DependencyProperty.Register("LeftMargin",   typeof (double), typeof (Geometry), new DependencyPropertyMetadata (0.0, Geometry.NotifyLeftMarginChanged));
+		public static readonly DependencyProperty LeftMarginProperty	= DependencyProperty.Register("LeftMargin",   typeof(double), typeof(Geometry), new DependencyPropertyMetadata(0.0, Geometry.NotifyLeftMarginChanged));
 		public static readonly DependencyProperty RightMarginProperty	= DependencyProperty.Register("RightMargin",  typeof(double), typeof(Geometry), new DependencyPropertyMetadata(0.0, Geometry.NotifyRightMarginChanged));
 		public static readonly DependencyProperty TopMarginProperty		= DependencyProperty.Register("TopMargin",    typeof(double), typeof(Geometry), new DependencyPropertyMetadata(0.0, Geometry.NotifyTopMarginChanged));
 		public static readonly DependencyProperty BottomMarginProperty	= DependencyProperty.Register("BottomMargin", typeof(double), typeof(Geometry), new DependencyPropertyMetadata(0.0, Geometry.NotifyBottomMarginChanged));
