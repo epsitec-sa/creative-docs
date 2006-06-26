@@ -57,6 +57,36 @@ namespace Epsitec.Common.Text.Exchange
 			return value;
 		}
 
+
+		public static byte ParseByte(string str)
+		{
+			byte b ;
+			byte.TryParse(str, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out b) ;
+			return b;
+		}
+
+		/// <summary>
+		/// Convertiti un string en bool. Retourne false pour "0" et true pour "1".
+		/// Asserte pour toute autre chaîne que "0" ou "1"
+		/// </summary>
+		/// <param name="str"></param>
+		/// <returns>tValeur convertie true ou false</returns>
+		public static bool ParseBool(string str)
+		{
+			byte b;
+
+			b = Misc.ParseByte (str);
+
+			if (b == 0)
+				return false;
+
+			if (b == 1)
+				return true;
+
+			System.Diagnostics.Debug.Assert (false);
+			return true;
+		}
+
 		/// <summary>
 		/// Convertit un string en int. Si la conversion foire, retourne 0
 		/// En plus le nombre peut s'arrêter sur un caractère non numérique
