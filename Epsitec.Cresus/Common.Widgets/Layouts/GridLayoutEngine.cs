@@ -407,8 +407,8 @@ namespace Epsitec.Common.Widgets.Layouts
 			{
 				this.grid        = grid;
 				this.passId      = passId;
-				this.columnCount = 0;
-				this.rowCount    = 0;
+				this.columnCount = grid.ColumnDefinitions.Count;
+				this.rowCount    = grid.RowDefinitions.Count;
 			}
 
 			public int ColumnCount

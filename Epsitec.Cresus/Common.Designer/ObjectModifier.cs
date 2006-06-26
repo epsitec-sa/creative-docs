@@ -209,6 +209,7 @@ namespace Epsitec.Common.Designer
 					engine.RowDefinitions[0].MinHeight = 20;
 					engine.RowDefinitions[1].MinHeight = 20;
 					LayoutEngine.SetLayoutEngine(group, engine);
+					LayoutContext.AddToMeasureQueue(group);
 					break;
 			}
 		}
