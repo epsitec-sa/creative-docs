@@ -265,6 +265,8 @@ namespace Epsitec.Common.Widgets.Layouts
 				this.cacheWidthMeasure = this.GetOrCreateCleanMeasure (node.Visual, LayoutMeasure.WidthProperty);
 				this.cacheHeightMeasure = this.GetOrCreateCleanMeasure (node.Visual, LayoutMeasure.HeightProperty);
 
+				node.Visual.ClearLocalValue (BaseLineMeasure.BaseLineProperty);
+
 				node.Visual.Measure (this);
 				
 				this.totalMeasureCount++;
