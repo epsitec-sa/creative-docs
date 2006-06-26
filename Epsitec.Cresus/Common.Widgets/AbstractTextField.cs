@@ -225,7 +225,7 @@ namespace Epsitec.Common.Widgets
 				//	affiché et utilise celle-ci comme référence pour les calculs
 				//	de hauteur :
 				
-				Drawing.Rectangle bounds = this.InnerTextBounds;
+				Drawing.Rectangle bounds = this.GetInnerTextBounds (new Drawing.Rectangle (0, 0, width, height));
 				
 				Drawing.Point origin = base.GetBaseLine (width, bounds.Height, out ascender, out descender);
 				Drawing.Point point  = bounds.Location + origin;
@@ -249,28 +249,37 @@ namespace Epsitec.Common.Widgets
 
 		public override Drawing.Margins GetInternalPadding()
 		{
-			Drawing.Margins padding = this.margins;
-			
-			if ( this.textFieldStyle != TextFieldStyle.Flat )
-			{
-				double excess = System.Math.Max((22-this.Client.Size.Height)/2, 0);
-				double x = System.Math.Max (1, AbstractTextField.FrameMargin-excess);
-				double y = System.Math.Max (0, AbstractTextField.FrameMargin-excess);
-				padding = padding + new Drawing.Margins(x, x, y, y);
-			}
-			
-			return padding;
+			return this.GetInternalPadding (this.Client.Size);
 		}
 		
-		public virtual Drawing.Rectangle		InnerTextBounds
+		public Drawing.Rectangle				InnerTextBounds
 		{
 			get
 			{
-				Drawing.Rectangle rect = this.Client.Bounds;
-				rect.Deflate(this.GetInternalPadding());
-				rect.Deflate(AbstractTextField.TextMargin, AbstractTextField.TextMargin);
-				return rect;
+				return this.GetInnerTextBounds (this.Client.Bounds);
 			}
+		}
+
+		private Drawing.Margins GetInternalPadding(Drawing.Size size)
+		{
+			Drawing.Margins padding = this.margins;
+
+			if (this.textFieldStyle != TextFieldStyle.Flat)
+			{
+				double excess = System.Math.Max ((22-size.Height)/2, 0);
+				double x = System.Math.Max (1, AbstractTextField.FrameMargin-excess);
+				double y = System.Math.Max (0, AbstractTextField.FrameMargin-excess);
+				padding = padding + new Drawing.Margins (x, x, y, y);
+			}
+
+			return padding;
+		}
+
+		private Drawing.Rectangle GetInnerTextBounds(Drawing.Rectangle rect)
+		{
+			rect.Deflate (this.GetInternalPadding (rect.Size));
+			rect.Deflate (AbstractTextField.TextMargin, AbstractTextField.TextMargin);
+			return rect;
 		}
 		
 #if false	//#fix
