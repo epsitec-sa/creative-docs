@@ -2738,10 +2738,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Dessine les objets sélectionnés.
 			if (this.selectedObjects.Count > 0 && !this.isDragging && !this.handlesList.IsDragging)
 			{
-				foreach (Widget obj in this.selectedObjects)
-				{
-					this.DrawSelectedObject(graphics, obj);
-				}
+				this.DrawSelectedObjects(graphics);
 			}
 
 			//	Dessine les attachements des objets sélectionnés.
@@ -2852,6 +2849,40 @@ namespace Epsitec.Common.Designer.MyWidgets
 			graphics.RenderSolid(PanelsContext.ColorSizeMarkLine);
 		}
 
+		protected void DrawSelectedObjects(Graphics graphics)
+		{
+			foreach (Widget obj in this.selectedObjects)
+			{
+				this.DrawSelectedObject(graphics, obj);
+			}
+
+			if (this.selectedObjects.Count == 1)
+			{
+				Widget obj = this.selectedObjects[0];
+				if (obj != this.panel)
+				{
+					this.DrawPadding(graphics, obj.Parent);
+				}
+			}
+			else
+			{
+				List<Widget> selectedParent = new List<Widget>();
+
+				foreach (Widget obj in this.selectedObjects)
+				{
+					if (!selectedParent.Contains(obj.Parent))
+					{
+						selectedParent.Add(obj.Parent);
+					}
+				}
+
+				foreach (Widget parent in selectedParent)
+				{
+					this.DrawPadding(graphics, parent);
+				}
+			}
+		}
+
 		protected void DrawSelectedObject(Graphics graphics, Widget obj)
 		{
 			Rectangle bounds = this.objectModifier.GetBounds(obj);
@@ -2877,12 +2908,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 
 			this.DrawPadding(graphics, obj);
-
-			//	TODO: si plusieurs objets sélectionnés ont le même parent, ne dessiner qu'une fois !!!
-			if (obj != this.panel)
-			{
-				this.DrawPadding(graphics, obj.Parent);
-			}
 		}
 
 		protected void DrawPadding(Graphics graphics, Widget obj)
