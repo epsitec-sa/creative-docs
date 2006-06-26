@@ -13,8 +13,8 @@ namespace Epsitec.Common.Designer
 		{
 			[Types.Hidden] None,
 			Anchored,
-			VerticalDocked,
-			HorizontalDocked,
+			VerticalStacked,
+			HorizontalStacked,
 		}
 
 		public enum AnchoredHorizontalAttachment
@@ -33,7 +33,7 @@ namespace Epsitec.Common.Designer
 			Fill,
 		}
 
-		public enum DockedHorizontalAttachment
+		public enum StackedHorizontalAttachment
 		{
 			[Types.Hidden] None,
 			Left,
@@ -41,7 +41,7 @@ namespace Epsitec.Common.Designer
 			Fill,
 		}
 
-		public enum DockedVerticalAttachment
+		public enum StackedVerticalAttachment
 		{
 			[Types.Hidden] None,
 			Bottom,
@@ -49,7 +49,7 @@ namespace Epsitec.Common.Designer
 			Fill,
 		}
 
-		public enum DockedHorizontalAlignment
+		public enum StackedHorizontalAlignment
 		{
 			[Types.Hidden] None,
 			Stretch,
@@ -58,7 +58,7 @@ namespace Epsitec.Common.Designer
 			Right,
 		}
 
-		public enum DockedVerticalAlignment
+		public enum StackedVerticalAlignment
 		{
 			[Types.Hidden] None,
 			Stretch,
@@ -95,13 +95,13 @@ namespace Epsitec.Common.Designer
 			return false;
 		}
 
-		public bool AreChildrenDocked(Widget obj)
+		public bool AreChildrenStacked(Widget obj)
 		{
 			AbstractGroup group = obj as AbstractGroup;
 			if (group != null)
 			{
 				ChildrenPlacement p = this.GetChildrenPlacement(obj);
-				return (p == ChildrenPlacement.HorizontalDocked || p == ChildrenPlacement.VerticalDocked);
+				return (p == ChildrenPlacement.HorizontalStacked || p == ChildrenPlacement.VerticalStacked);
 			}
 			return false;
 		}
@@ -112,7 +112,7 @@ namespace Epsitec.Common.Designer
 			if (group != null)
 			{
 				ChildrenPlacement p = this.GetChildrenPlacement(obj);
-				return (p == ChildrenPlacement.HorizontalDocked);
+				return (p == ChildrenPlacement.HorizontalStacked);
 			}
 			return false;
 		}
@@ -136,15 +136,15 @@ namespace Epsitec.Common.Designer
 					return ChildrenPlacement.Anchored;
 				}
 
-				if (group.ChildrenLayoutMode == Widgets.Layouts.LayoutMode.Docked || group.ChildrenLayoutMode == Widgets.Layouts.LayoutMode.Stacked)
+				if (group.ChildrenLayoutMode == Widgets.Layouts.LayoutMode.Stacked)
 				{
 					if (group.ContainerLayoutMode == ContainerLayoutMode.HorizontalFlow)
 					{
-						return ChildrenPlacement.HorizontalDocked;
+						return ChildrenPlacement.HorizontalStacked;
 					}
 					else
 					{
-						return ChildrenPlacement.VerticalDocked;
+						return ChildrenPlacement.VerticalStacked;
 					}
 				}
 			}
@@ -165,20 +165,13 @@ namespace Epsitec.Common.Designer
 					group.ChildrenLayoutMode = Widgets.Layouts.LayoutMode.Anchored;
 					break;
 
-				case ChildrenPlacement.HorizontalDocked:
-					group.ChildrenLayoutMode = Widgets.Layouts.LayoutMode.Docked;
+				case ChildrenPlacement.HorizontalStacked:
+					group.ChildrenLayoutMode = Widgets.Layouts.LayoutMode.Stacked;
 					group.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
 					break;
 
-				case ChildrenPlacement.VerticalDocked:
-					if (this.GetDockedVerticalAlignment(obj) == DockedVerticalAlignment.BaseLine)
-					{
-						group.ChildrenLayoutMode = Widgets.Layouts.LayoutMode.Stacked;
-					}
-					else
-					{
-						group.ChildrenLayoutMode = Widgets.Layouts.LayoutMode.Docked;
-					}
+				case ChildrenPlacement.VerticalStacked:
+					group.ChildrenLayoutMode = Widgets.Layouts.LayoutMode.Stacked;
 					group.ContainerLayoutMode = ContainerLayoutMode.VerticalFlow;
 					break;
 			}
@@ -186,7 +179,7 @@ namespace Epsitec.Common.Designer
 		#endregion
 
 
-		public void AdaptFromParent(Widget obj, ObjectModifier.DockedHorizontalAttachment ha, ObjectModifier.DockedVerticalAttachment va)
+		public void AdaptFromParent(Widget obj, ObjectModifier.StackedHorizontalAttachment ha, ObjectModifier.StackedVerticalAttachment va)
 		{
 			//	Adapte un objet pour son parent.
 			if (this.AreChildrenAnchored(obj.Parent))
@@ -198,20 +191,20 @@ namespace Epsitec.Common.Designer
 				}
 			}
 
-			if (this.AreChildrenDocked(obj.Parent))
+			if (this.AreChildrenStacked(obj.Parent))
 			{
-				if (this.GetDockedHorizontalAttachment(obj) == ObjectModifier.DockedHorizontalAttachment.None||
-					this.GetDockedVerticalAttachment(obj) == ObjectModifier.DockedVerticalAttachment.None)
+				if (this.GetStackedHorizontalAttachment(obj) == ObjectModifier.StackedHorizontalAttachment.None||
+					this.GetStackedVerticalAttachment(obj) == ObjectModifier.StackedVerticalAttachment.None)
 				{
 					this.SetMargins(obj, new Margins(5, 5, 5, 5));
 
 					if (this.AreChildrenHorizontal(obj.Parent))
 					{
-						this.SetDockedHorizontalAttachment(obj, ha);
+						this.SetStackedHorizontalAttachment(obj, ha);
 					}
 					else
 					{
-						this.SetDockedVerticalAttachment(obj, va);
+						this.SetStackedVerticalAttachment(obj, va);
 					}
 				}
 			}
@@ -331,7 +324,7 @@ namespace Epsitec.Common.Designer
 		{
 			//	Indique si l'objet a des marges.
 			ChildrenPlacement placement = this.GetParentPlacement(obj);
-			if (placement == ChildrenPlacement.HorizontalDocked || placement == ChildrenPlacement.VerticalDocked)
+			if (placement == ChildrenPlacement.HorizontalStacked || placement == ChildrenPlacement.VerticalStacked)
 			{
 				return true;
 			}
@@ -342,7 +335,7 @@ namespace Epsitec.Common.Designer
 		public Margins GetMargins(Widget obj)
 		{
 			//	Retourne les marges de l'objet.
-			//	Uniquement pour les objets Docked.
+			//	Uniquement pour les objets Stacked.
 			if (this.HasMargins(obj))
 			{
 				return obj.Margins;
@@ -354,7 +347,7 @@ namespace Epsitec.Common.Designer
 		public void SetMargins(Widget obj, Margins margins)
 		{
 			//	Choix des marges de l'objet.
-			//	Uniquement pour les objets Docked.
+			//	Uniquement pour les objets Stacked.
 			System.Diagnostics.Debug.Assert(this.HasMargins(obj));
 
 			if (obj.Margins != margins)
@@ -423,15 +416,15 @@ namespace Epsitec.Common.Designer
 
 			ChildrenPlacement placement = this.GetParentPlacement(obj);
 
-			if (placement == ChildrenPlacement.HorizontalDocked)
+			if (placement == ChildrenPlacement.HorizontalStacked)
 			{
 				return true;
 			}
 
-			if (placement == ChildrenPlacement.VerticalDocked)
+			if (placement == ChildrenPlacement.VerticalStacked)
 			{
-				DockedHorizontalAlignment ha = this.GetDockedHorizontalAlignment(obj);
-				return (ha != DockedHorizontalAlignment.Stretch && ha != DockedHorizontalAlignment.None);
+				StackedHorizontalAlignment ha = this.GetStackedHorizontalAlignment(obj);
+				return (ha != StackedHorizontalAlignment.Stretch && ha != StackedHorizontalAlignment.None);
 			}
 
 			return false;
@@ -440,7 +433,7 @@ namespace Epsitec.Common.Designer
 		public double GetWidth(Widget obj)
 		{
 			//	Retourne la largeur de l'objet.
-			//	Uniquement pour les objets HorizontalDocked.
+			//	Uniquement pour les objets HorizontalStacked.
 			if (this.HasWidth(obj))
 			{
 				return obj.PreferredWidth;
@@ -452,7 +445,7 @@ namespace Epsitec.Common.Designer
 		public void SetWidth(Widget obj, double width)
 		{
 			//	Choix de la largeur de l'objet.
-			//	Uniquement pour les objets VerticalDocked.
+			//	Uniquement pour les objets VerticalStacked.
 			System.Diagnostics.Debug.Assert(this.HasWidth(obj));
 
 			if (obj.PreferredWidth != width)
@@ -475,15 +468,15 @@ namespace Epsitec.Common.Designer
 
 			ChildrenPlacement placement = this.GetParentPlacement(obj);
 
-			if (placement == ChildrenPlacement.VerticalDocked)
+			if (placement == ChildrenPlacement.VerticalStacked)
 			{
 				return true;
 			}
 
-			if (placement == ChildrenPlacement.HorizontalDocked)
+			if (placement == ChildrenPlacement.HorizontalStacked)
 			{
-				DockedVerticalAlignment ha = this.GetDockedVerticalAlignment(obj);
-				return (ha != DockedVerticalAlignment.Stretch && ha != DockedVerticalAlignment.None);
+				StackedVerticalAlignment ha = this.GetStackedVerticalAlignment(obj);
+				return (ha != StackedVerticalAlignment.Stretch && ha != StackedVerticalAlignment.None);
 			}
 
 			return false;
@@ -492,7 +485,7 @@ namespace Epsitec.Common.Designer
 		public double GetHeight(Widget obj)
 		{
 			//	Retourne la hauteur de l'objet.
-			//	Uniquement pour les objets VerticalDocked.
+			//	Uniquement pour les objets VerticalStacked.
 			if (this.HasHeight(obj))
 			{
 				return obj.PreferredHeight;
@@ -504,7 +497,7 @@ namespace Epsitec.Common.Designer
 		public void SetHeight(Widget obj, double height)
 		{
 			//	Choix de la hauteur de l'objet.
-			//	Uniquement pour les objets HorizontalDocked.
+			//	Uniquement pour les objets HorizontalStacked.
 			System.Diagnostics.Debug.Assert(this.HasHeight(obj));
 
 			if (obj.PreferredHeight != height)
@@ -542,10 +535,10 @@ namespace Epsitec.Common.Designer
 				return (ha != AnchoredHorizontalAttachment.Right);
 			}
 
-			if (placement == ChildrenPlacement.HorizontalDocked)
+			if (placement == ChildrenPlacement.HorizontalStacked)
 			{
-				DockedHorizontalAttachment ha = this.GetDockedHorizontalAttachment(obj);
-				return (ha == DockedHorizontalAttachment.Left);
+				StackedHorizontalAttachment ha = this.GetStackedHorizontalAttachment(obj);
+				return (ha == StackedHorizontalAttachment.Left);
 			}
 
 			return false;
@@ -561,10 +554,10 @@ namespace Epsitec.Common.Designer
 				return (ha != AnchoredHorizontalAttachment.Left);
 			}
 
-			if (placement == ChildrenPlacement.HorizontalDocked)
+			if (placement == ChildrenPlacement.HorizontalStacked)
 			{
-				DockedHorizontalAttachment ha = this.GetDockedHorizontalAttachment(obj);
-				return (ha == DockedHorizontalAttachment.Right);
+				StackedHorizontalAttachment ha = this.GetStackedHorizontalAttachment(obj);
+				return (ha == StackedHorizontalAttachment.Right);
 			}
 
 			return false;
@@ -580,10 +573,10 @@ namespace Epsitec.Common.Designer
 				return (va != AnchoredVerticalAttachment.Top);
 			}
 
-			if (placement == ChildrenPlacement.VerticalDocked)
+			if (placement == ChildrenPlacement.VerticalStacked)
 			{
-				DockedVerticalAttachment va = this.GetDockedVerticalAttachment(obj);
-				return (va == DockedVerticalAttachment.Bottom);
+				StackedVerticalAttachment va = this.GetStackedVerticalAttachment(obj);
+				return (va == StackedVerticalAttachment.Bottom);
 			}
 
 			return false;
@@ -599,10 +592,10 @@ namespace Epsitec.Common.Designer
 				return (va != AnchoredVerticalAttachment.Bottom);
 			}
 
-			if (placement == ChildrenPlacement.VerticalDocked)
+			if (placement == ChildrenPlacement.VerticalStacked)
 			{
-				DockedVerticalAttachment va = this.GetDockedVerticalAttachment(obj);
-				return (va == DockedVerticalAttachment.Top);
+				StackedVerticalAttachment va = this.GetStackedVerticalAttachment(obj);
+				return (va == StackedVerticalAttachment.Top);
 			}
 
 			return false;
@@ -721,49 +714,49 @@ namespace Epsitec.Common.Designer
 		#endregion
 
 
-		#region Docked
-		public bool HasDockedVerticalAttachment(Widget obj)
+		#region Stacked
+		public bool HasStackedVerticalAttachment(Widget obj)
 		{
 			//	Retourne l'attachement vertical de l'objet.
 			ChildrenPlacement placement = this.GetParentPlacement(obj);
-			return (placement == ChildrenPlacement.VerticalDocked);
+			return (placement == ChildrenPlacement.VerticalStacked);
 		}
 
-		public DockedVerticalAttachment GetDockedVerticalAttachment(Widget obj)
+		public StackedVerticalAttachment GetStackedVerticalAttachment(Widget obj)
 		{
 			//	Retourne l'attachement vertical de l'objet.
-			//	Uniquement pour les objets VerticalDocked.
-			if (this.HasDockedVerticalAttachment(obj))
+			//	Uniquement pour les objets VerticalStacked.
+			if (this.HasStackedVerticalAttachment(obj))
 			{
 				DockStyle style = obj.Dock;
-				if (style == DockStyle.Fill  )  return DockedVerticalAttachment.Fill;
-				if (style == DockStyle.Bottom)  return DockedVerticalAttachment.Bottom;
-				if (style == DockStyle.Top   )  return DockedVerticalAttachment.Top;
+				if (style == DockStyle.StackFill )  return StackedVerticalAttachment.Fill;
+				if (style == DockStyle.StackEnd  )  return StackedVerticalAttachment.Bottom;
+				if (style == DockStyle.StackBegin)  return StackedVerticalAttachment.Top;
 			}
 
-			return DockedVerticalAttachment.None;
+			return StackedVerticalAttachment.None;
 		}
 
-		public void SetDockedVerticalAttachment(Widget obj, DockedVerticalAttachment attachment)
+		public void SetStackedVerticalAttachment(Widget obj, StackedVerticalAttachment attachment)
 		{
 			//	Choix de l'attachement vertical de l'objet.
-			//	Uniquement pour les objets VerticalDocked.
-			System.Diagnostics.Debug.Assert(this.HasDockedVerticalAttachment(obj));
+			//	Uniquement pour les objets VerticalStacked.
+			System.Diagnostics.Debug.Assert(this.HasStackedVerticalAttachment(obj));
 
 			DockStyle style = obj.Dock;
 
 			switch (attachment)
 			{
-				case DockedVerticalAttachment.Bottom:
-					style = DockStyle.Bottom;
+				case StackedVerticalAttachment.Bottom:
+					style = DockStyle.StackEnd;
 					break;
 
-				case DockedVerticalAttachment.Top:
-					style = DockStyle.Top;
+				case StackedVerticalAttachment.Top:
+					style = DockStyle.StackBegin;
 					break;
 
-				case DockedVerticalAttachment.Fill:
-					style = DockStyle.Fill;
+				case StackedVerticalAttachment.Fill:
+					style = DockStyle.StackFill;
 					break;
 			}
 
@@ -776,48 +769,48 @@ namespace Epsitec.Common.Designer
 		}
 
 
-		public bool HasDockedHorizontalAttachment(Widget obj)
+		public bool HasStackedHorizontalAttachment(Widget obj)
 		{
 			//	Retourne l'attachement horizontal de l'objet.
 			ChildrenPlacement placement = this.GetParentPlacement(obj);
-			return (placement == ChildrenPlacement.HorizontalDocked);
+			return (placement == ChildrenPlacement.HorizontalStacked);
 		}
 
-		public DockedHorizontalAttachment GetDockedHorizontalAttachment(Widget obj)
+		public StackedHorizontalAttachment GetStackedHorizontalAttachment(Widget obj)
 		{
 			//	Retourne l'attachement horizontal de l'objet.
-			//	Uniquement pour les objets HorizontalDocked.
-			if (this.HasDockedHorizontalAttachment(obj))
+			//	Uniquement pour les objets HorizontalStacked.
+			if (this.HasStackedHorizontalAttachment(obj))
 			{
 				DockStyle style = obj.Dock;
-				if (style == DockStyle.Fill )  return DockedHorizontalAttachment.Fill;
-				if (style == DockStyle.Left )  return DockedHorizontalAttachment.Left;
-				if (style == DockStyle.Right)  return DockedHorizontalAttachment.Right;
+				if (style == DockStyle.StackFill )  return StackedHorizontalAttachment.Fill;
+				if (style == DockStyle.StackBegin)  return StackedHorizontalAttachment.Left;
+				if (style == DockStyle.StackEnd  )  return StackedHorizontalAttachment.Right;
 			}
 
-			return DockedHorizontalAttachment.None;
+			return StackedHorizontalAttachment.None;
 		}
 
-		public void SetDockedHorizontalAttachment(Widget obj, DockedHorizontalAttachment attachment)
+		public void SetStackedHorizontalAttachment(Widget obj, StackedHorizontalAttachment attachment)
 		{
 			//	Choix de l'attachement horizontal de l'objet.
-			//	Uniquement pour les objets HorizontalDocked.
-			System.Diagnostics.Debug.Assert(this.HasDockedHorizontalAttachment(obj));
+			//	Uniquement pour les objets HorizontalStacked.
+			System.Diagnostics.Debug.Assert(this.HasStackedHorizontalAttachment(obj));
 
 			DockStyle style = obj.Dock;
 
 			switch (attachment)
 			{
-				case DockedHorizontalAttachment.Left:
-					style = DockStyle.Left;
+				case StackedHorizontalAttachment.Left:
+					style = DockStyle.StackBegin;
 					break;
 
-				case DockedHorizontalAttachment.Right:
-					style = DockStyle.Right;
+				case StackedHorizontalAttachment.Right:
+					style = DockStyle.StackEnd;
 					break;
 
-				case DockedHorizontalAttachment.Fill:
-					style = DockStyle.Fill;
+				case StackedHorizontalAttachment.Fill:
+					style = DockStyle.StackFill;
 					break;
 			}
 
@@ -830,52 +823,52 @@ namespace Epsitec.Common.Designer
 		}
 
 
-		public bool HasDockedHorizontalAlignment(Widget obj)
+		public bool HasStackedHorizontalAlignment(Widget obj)
 		{
 			//	Retourne l'alignement horizontal de l'objet.
 			ChildrenPlacement placement = this.GetParentPlacement(obj);
-			return (placement == ChildrenPlacement.HorizontalDocked || placement == ChildrenPlacement.VerticalDocked);
+			return (placement == ChildrenPlacement.HorizontalStacked || placement == ChildrenPlacement.VerticalStacked);
 		}
 
-		public DockedHorizontalAlignment GetDockedHorizontalAlignment(Widget obj)
+		public StackedHorizontalAlignment GetStackedHorizontalAlignment(Widget obj)
 		{
 			//	Retourne l'alignement horizontal de l'objet.
-			//	Uniquement pour les objets VerticalDocked.
-			if (this.HasDockedHorizontalAlignment(obj))
+			//	Uniquement pour les objets VerticalStacked.
+			if (this.HasStackedHorizontalAlignment(obj))
 			{
 				HorizontalAlignment ha = obj.HorizontalAlignment;
-				if (ha == HorizontalAlignment.Stretch)  return DockedHorizontalAlignment.Stretch;
-				if (ha == HorizontalAlignment.Center )  return DockedHorizontalAlignment.Center;
-				if (ha == HorizontalAlignment.Left   )  return DockedHorizontalAlignment.Left;
-				if (ha == HorizontalAlignment.Right  )  return DockedHorizontalAlignment.Right;
+				if (ha == HorizontalAlignment.Stretch)  return StackedHorizontalAlignment.Stretch;
+				if (ha == HorizontalAlignment.Center )  return StackedHorizontalAlignment.Center;
+				if (ha == HorizontalAlignment.Left   )  return StackedHorizontalAlignment.Left;
+				if (ha == HorizontalAlignment.Right  )  return StackedHorizontalAlignment.Right;
 			}
 
-			return DockedHorizontalAlignment.None;
+			return StackedHorizontalAlignment.None;
 		}
 
-		public void SetDockedHorizontalAlignment(Widget obj, DockedHorizontalAlignment alignment)
+		public void SetStackedHorizontalAlignment(Widget obj, StackedHorizontalAlignment alignment)
 		{
 			//	Choix de l'alignement horizontal de l'objet.
-			//	Uniquement pour les objets VerticalDocked.
-			System.Diagnostics.Debug.Assert(this.HasDockedHorizontalAlignment(obj));
+			//	Uniquement pour les objets VerticalStacked.
+			System.Diagnostics.Debug.Assert(this.HasStackedHorizontalAlignment(obj));
 
 			HorizontalAlignment ha = obj.HorizontalAlignment;
 
 			switch (alignment)
 			{
-				case DockedHorizontalAlignment.Stretch:
+				case StackedHorizontalAlignment.Stretch:
 					ha = HorizontalAlignment.Stretch;
 					break;
 
-				case DockedHorizontalAlignment.Center:
+				case StackedHorizontalAlignment.Center:
 					ha = HorizontalAlignment.Center;
 					break;
 
-				case DockedHorizontalAlignment.Left:
+				case StackedHorizontalAlignment.Left:
 					ha = HorizontalAlignment.Left;
 					break;
 
-				case DockedHorizontalAlignment.Right:
+				case StackedHorizontalAlignment.Right:
 					ha = HorizontalAlignment.Right;
 					break;
 			}
@@ -888,72 +881,64 @@ namespace Epsitec.Common.Designer
 		}
 
 
-		public bool HasDockedVerticalAlignment(Widget obj)
+		public bool HasStackedVerticalAlignment(Widget obj)
 		{
 			//	Retourne l'alignement vertical de l'objet.
 			ChildrenPlacement placement = this.GetParentPlacement(obj);
-			return (placement == ChildrenPlacement.HorizontalDocked || placement == ChildrenPlacement.VerticalDocked);
+			return (placement == ChildrenPlacement.HorizontalStacked || placement == ChildrenPlacement.VerticalStacked);
 		}
 
-		public DockedVerticalAlignment GetDockedVerticalAlignment(Widget obj)
+		public StackedVerticalAlignment GetStackedVerticalAlignment(Widget obj)
 		{
 			//	Retourne l'alignement vertical de l'objet.
-			//	Uniquement pour les objets HorizontalDocked.
-			if (this.HasDockedVerticalAlignment(obj))
+			//	Uniquement pour les objets HorizontalStacked.
+			if (this.HasStackedVerticalAlignment(obj))
 			{
 				VerticalAlignment va = obj.VerticalAlignment;
-				if (va == VerticalAlignment.Stretch )  return DockedVerticalAlignment.Stretch;
-				if (va == VerticalAlignment.Center  )  return DockedVerticalAlignment.Center;
-				if (va == VerticalAlignment.Bottom  )  return DockedVerticalAlignment.Bottom;
-				if (va == VerticalAlignment.Top     )  return DockedVerticalAlignment.Top;
-				if (va == VerticalAlignment.BaseLine)  return DockedVerticalAlignment.BaseLine;
+				if (va == VerticalAlignment.Stretch )  return StackedVerticalAlignment.Stretch;
+				if (va == VerticalAlignment.Center  )  return StackedVerticalAlignment.Center;
+				if (va == VerticalAlignment.Bottom  )  return StackedVerticalAlignment.Bottom;
+				if (va == VerticalAlignment.Top     )  return StackedVerticalAlignment.Top;
+				if (va == VerticalAlignment.BaseLine)  return StackedVerticalAlignment.BaseLine;
 			}
 
-			return DockedVerticalAlignment.None;
+			return StackedVerticalAlignment.None;
 		}
 
-		public void SetDockedVerticalAlignment(Widget obj, DockedVerticalAlignment alignment)
+		public void SetStackedVerticalAlignment(Widget obj, StackedVerticalAlignment alignment)
 		{
 			//	Choix de l'alignement vertical de l'objet.
-			//	Uniquement pour les objets HorizontalDocked.
-			System.Diagnostics.Debug.Assert(this.HasDockedVerticalAlignment(obj));
+			//	Uniquement pour les objets HorizontalStacked.
+			System.Diagnostics.Debug.Assert(this.HasStackedVerticalAlignment(obj));
 
 			VerticalAlignment va = obj.VerticalAlignment;
 
 			switch (alignment)
 			{
-				case DockedVerticalAlignment.Stretch:
+				case StackedVerticalAlignment.Stretch:
 					va = VerticalAlignment.Stretch;
 					break;
 
-				case DockedVerticalAlignment.Center:
+				case StackedVerticalAlignment.Center:
 					va = VerticalAlignment.Center;
 					break;
 
-				case DockedVerticalAlignment.Bottom:
+				case StackedVerticalAlignment.Bottom:
 					va = VerticalAlignment.Bottom;
 					break;
 
-				case DockedVerticalAlignment.Top:
+				case StackedVerticalAlignment.Top:
 					va = VerticalAlignment.Top;
 					break;
 
-				case DockedVerticalAlignment.BaseLine:
+				case StackedVerticalAlignment.BaseLine:
 					va = VerticalAlignment.BaseLine;
 					break;
 			}
 
 			if (obj.VerticalAlignment != va)
 			{
-				if (obj.VerticalAlignment == VerticalAlignment.BaseLine || va == VerticalAlignment.BaseLine)
-				{
-					obj.VerticalAlignment = va;
-					this.SetChildrenPlacement(obj.Parent, this.GetChildrenPlacement(obj.Parent));
-				}
-				else
-				{
-					obj.VerticalAlignment = va;
-				}
+				obj.VerticalAlignment = va;
 				this.Invalidate();
 			}
 		}

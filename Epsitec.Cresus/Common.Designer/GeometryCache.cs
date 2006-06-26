@@ -37,20 +37,20 @@ namespace Epsitec.Common.Designer
 			//	Adapte un objet selon le mode ChildrenPlacement de son parent.
 			if (cp == ObjectModifier.ChildrenPlacement.Anchored)
 			{
-				this.objectModifier.AdaptFromParent(obj, ObjectModifier.DockedHorizontalAttachment.None, ObjectModifier.DockedVerticalAttachment.None);
+				this.objectModifier.AdaptFromParent(obj, ObjectModifier.StackedHorizontalAttachment.None, ObjectModifier.StackedVerticalAttachment.None);
 				this.objectModifier.SetAnchoredHorizontalAttachment(obj, this.aha);
 				this.objectModifier.SetAnchoredVerticalAttachment(obj, this.ava);
 				this.objectModifier.SetBounds(this.obj, this.bounds);
 			}
 
-			if (cp == ObjectModifier.ChildrenPlacement.HorizontalDocked)
+			if (cp == ObjectModifier.ChildrenPlacement.HorizontalStacked)
 			{
-				this.objectModifier.AdaptFromParent(obj, ObjectModifier.DockedHorizontalAttachment.Left, ObjectModifier.DockedVerticalAttachment.Fill);
+				this.objectModifier.AdaptFromParent(obj, ObjectModifier.StackedHorizontalAttachment.Left, ObjectModifier.StackedVerticalAttachment.Fill);
 			}
 
-			if (cp == ObjectModifier.ChildrenPlacement.VerticalDocked)
+			if (cp == ObjectModifier.ChildrenPlacement.VerticalStacked)
 			{
-				this.objectModifier.AdaptFromParent(obj, ObjectModifier.DockedHorizontalAttachment.Fill, ObjectModifier.DockedVerticalAttachment.Bottom);
+				this.objectModifier.AdaptFromParent(obj, ObjectModifier.StackedHorizontalAttachment.Fill, ObjectModifier.StackedVerticalAttachment.Bottom);
 			}
 		}
 

@@ -941,14 +941,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 					this.SetHilitedZOrderRectangle(Rectangle.Empty);
 				}
-				else if (this.objectModifier.AreChildrenDocked(parent))
+				else if (this.objectModifier.AreChildrenStacked(parent))
 				{
 					this.constrainsList.Activate(Rectangle.Empty, 0, null);
 
 					Widget group;
 					int order;
-					ObjectModifier.DockedHorizontalAttachment ha;
-					ObjectModifier.DockedVerticalAttachment va;
+					ObjectModifier.StackedHorizontalAttachment ha;
+					ObjectModifier.StackedVerticalAttachment va;
 					Rectangle hilite;
 					this.ZOrderDetect(initialPos, parent, out group, out order, out ha, out va, out hilite);
 					this.SetHilitedZOrderRectangle(hilite);
@@ -991,16 +991,16 @@ namespace Epsitec.Common.Designer.MyWidgets
 						this.creatingObject = this.CreateObjectItem();
 						this.creatingObject.SetParent(parent);
 						this.creatingObject.TabNavigation = TabNavigationMode.Passive;
-						this.objectModifier.AdaptFromParent(this.creatingObject, ObjectModifier.DockedHorizontalAttachment.None, ObjectModifier.DockedVerticalAttachment.None);
+						this.objectModifier.AdaptFromParent(this.creatingObject, ObjectModifier.StackedHorizontalAttachment.None, ObjectModifier.StackedVerticalAttachment.None);
 						this.SetObjectPosition(this.creatingObject, pos);
 					}
 
-					if (this.objectModifier.AreChildrenDocked(parent))
+					if (this.objectModifier.AreChildrenStacked(parent))
 					{
 						Widget group;
 						int order;
-						ObjectModifier.DockedHorizontalAttachment ha;
-						ObjectModifier.DockedVerticalAttachment va;
+						ObjectModifier.StackedHorizontalAttachment ha;
+						ObjectModifier.StackedVerticalAttachment va;
 						Rectangle hilite;
 						this.ZOrderDetect(initialPos, parent, out group, out order, out ha, out va, out hilite);
 
@@ -1227,7 +1227,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.constrainsList.Starting(this.draggingRectangle, false);
 			}
 
-			if (this.objectModifier.AreChildrenDocked(parent))
+			if (this.objectModifier.AreChildrenStacked(parent))
 			{
 				this.constrainsList.Starting(Rectangle.Empty, false);
 			}
@@ -1291,14 +1291,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 				this.SetHilitedZOrderRectangle(Rectangle.Empty);
 			}
-			else if (this.objectModifier.AreChildrenDocked(parent))
+			else if (this.objectModifier.AreChildrenStacked(parent))
 			{
 				this.constrainsList.Activate(Rectangle.Empty, 0, null);
 
 				Widget group;
 				int order;
-				ObjectModifier.DockedHorizontalAttachment ha;
-				ObjectModifier.DockedVerticalAttachment va;
+				ObjectModifier.StackedHorizontalAttachment ha;
+				ObjectModifier.StackedVerticalAttachment va;
 				Rectangle hilite;
 				this.ZOrderDetect(pos, parent, out group, out order, out ha, out va, out hilite);
 				this.SetHilitedZOrderRectangle(hilite);
@@ -1337,12 +1337,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 					this.OnChildrenGeometryChanged();
 				}
 
-				if (this.objectModifier.AreChildrenDocked(parent))
+				if (this.objectModifier.AreChildrenStacked(parent))
 				{
 					Widget group;
 					int order;
-					ObjectModifier.DockedHorizontalAttachment ha;
-					ObjectModifier.DockedVerticalAttachment va;
+					ObjectModifier.StackedHorizontalAttachment ha;
+					ObjectModifier.StackedVerticalAttachment va;
 					Rectangle hilite;
 					this.ZOrderDetect(pos, parent, out group, out order, out ha, out va, out hilite);
 					this.ZOrderChangeSelection(group, order, ha, va);
@@ -1652,7 +1652,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 						parent.Children.Add(obj);
 					}
 
-					this.objectModifier.AdaptFromParent(obj, ObjectModifier.DockedHorizontalAttachment.None, ObjectModifier.DockedVerticalAttachment.None);
+					this.objectModifier.AdaptFromParent(obj, ObjectModifier.StackedHorizontalAttachment.None, ObjectModifier.StackedVerticalAttachment.None);
 				}
 
 				bounds.Size = this.GetObjectBounds(obj).Size;
@@ -2025,7 +2025,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.objectModifier.SetBounds(obj, bounds);
 			}
 
-			if (this.objectModifier.AreChildrenDocked(obj.Parent))
+			if (this.objectModifier.AreChildrenStacked(obj.Parent))
 			{
 				if (this.objectModifier.HasWidth(obj))
 				{
@@ -2042,11 +2042,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 		public bool IsObjectWidthChanging(Widget obj)
 		{
 			//	Indique si la largeur d'un objet peut changer.
-			if (this.objectModifier.AreChildrenDocked(obj.Parent))
+			if (this.objectModifier.AreChildrenStacked(obj.Parent))
 			{
 				if (this.objectModifier.HasAttachmentBottom(obj) || this.objectModifier.HasAttachmentTop(obj))
 				{
-					return (this.objectModifier.GetDockedHorizontalAlignment(obj) != ObjectModifier.DockedHorizontalAlignment.Stretch);
+					return (this.objectModifier.GetStackedHorizontalAlignment(obj) != ObjectModifier.StackedHorizontalAlignment.Stretch);
 				}
 			}
 			return true;
@@ -2055,11 +2055,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 		public bool IsObjectHeightChanging(Widget obj)
 		{
 			//	Indique si la hauteur d'un objet peut changer.
-			if (this.objectModifier.AreChildrenDocked(obj.Parent))
+			if (this.objectModifier.AreChildrenStacked(obj.Parent))
 			{
 				if (this.objectModifier.HasAttachmentLeft(obj) || this.objectModifier.HasAttachmentRight(obj))
 				{
-					return (this.objectModifier.GetDockedVerticalAlignment(obj) != ObjectModifier.DockedVerticalAlignment.Stretch);
+					return (this.objectModifier.GetStackedVerticalAlignment(obj) != ObjectModifier.StackedVerticalAlignment.Stretch);
 				}
 			}
 			return true;
@@ -2242,7 +2242,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 
 		#region ZOrder
-		protected void ZOrderDetect(Point mouse, Widget parent, out Widget group, out int order, out ObjectModifier.DockedHorizontalAttachment ha, out ObjectModifier.DockedVerticalAttachment va, out Rectangle hilite)
+		protected void ZOrderDetect(Point mouse, Widget parent, out Widget group, out int order, out ObjectModifier.StackedHorizontalAttachment ha, out ObjectModifier.StackedVerticalAttachment va, out Rectangle hilite)
 		{
 			//	Détecte le ZOrder à utiliser pour une position donnée, ainsi que le rectangle
 			//	à utiliser pour la mise ne évidence.
@@ -2250,16 +2250,16 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				group = null;
 				order = -1;
-				ha = ObjectModifier.DockedHorizontalAttachment.None;
-				va = ObjectModifier.DockedVerticalAttachment.None;
+				ha = ObjectModifier.StackedHorizontalAttachment.None;
+				va = ObjectModifier.StackedVerticalAttachment.None;
 				hilite = Rectangle.Empty;
 				return;
 			}
 
 			group = parent;
 			order = 0;
-			ha = ObjectModifier.DockedHorizontalAttachment.None;
-			va = ObjectModifier.DockedVerticalAttachment.None;
+			ha = ObjectModifier.StackedHorizontalAttachment.None;
+			va = ObjectModifier.StackedVerticalAttachment.None;
 			hilite = Rectangle.Empty;
 
 			double t = this.context.ZOrderThickness;
@@ -2274,12 +2274,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 					if (mouse.X < bounds.Center.X)
 					{
 						hilite = new Rectangle(bounds.Left, bounds.Bottom, t*2, bounds.Height);
-						ha = ObjectModifier.DockedHorizontalAttachment.Left;
+						ha = ObjectModifier.StackedHorizontalAttachment.Left;
 					}
 					else
 					{
 						hilite = new Rectangle(bounds.Right-t*2, bounds.Bottom, t*2, bounds.Height);
-						ha = ObjectModifier.DockedHorizontalAttachment.Right;
+						ha = ObjectModifier.StackedHorizontalAttachment.Right;
 					}
 				}
 				else
@@ -2287,12 +2287,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 					if (mouse.Y < bounds.Center.Y)
 					{
 						hilite = new Rectangle(bounds.Left, bounds.Bottom, bounds.Width, t*2);
-						va = ObjectModifier.DockedVerticalAttachment.Bottom;
+						va = ObjectModifier.StackedVerticalAttachment.Bottom;
 					}
 					else
 					{
 						hilite = new Rectangle(bounds.Left, bounds.Top-t*2, bounds.Width, t*2);
-						va = ObjectModifier.DockedVerticalAttachment.Top;
+						va = ObjectModifier.StackedVerticalAttachment.Top;
 					}
 				}
 
@@ -2333,7 +2333,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 						}
 					}
 
-					ha = this.objectModifier.GetDockedHorizontalAttachment(obj);
+					ha = this.objectModifier.GetStackedHorizontalAttachment(obj);
 				}
 				else
 				{
@@ -2362,7 +2362,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 						}
 					}
 
-					va = this.objectModifier.GetDockedVerticalAttachment(obj);
+					va = this.objectModifier.GetStackedVerticalAttachment(obj);
 				}
 
 				hilite.Inflate(t);
@@ -2373,8 +2373,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 				//	Un objet sélectionné n'est jamais pris en compte.
 				group = null;
 				order = -1;  // aucun changement
-				ha = ObjectModifier.DockedHorizontalAttachment.None;
-				va = ObjectModifier.DockedVerticalAttachment.None;
+				ha = ObjectModifier.StackedHorizontalAttachment.None;
+				va = ObjectModifier.StackedVerticalAttachment.None;
 				hilite = Rectangle.Empty;
 				return;
 			}
@@ -2392,14 +2392,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 						{
 							if (this.objectModifier.AreChildrenHorizontal(parent))
 							{
-								if (this.objectModifier.GetDockedHorizontalAttachment(selectedObj) != ha)
+								if (this.objectModifier.GetStackedHorizontalAttachment(selectedObj) != ha)
 								{
 									continue;
 								}
 							}
 							else
 							{
-								if (this.objectModifier.GetDockedVerticalAttachment(selectedObj) != va)
+								if (this.objectModifier.GetStackedVerticalAttachment(selectedObj) != va)
 								{
 									continue;
 								}
@@ -2407,8 +2407,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 							group = null;
 							order = -1;  // aucun changement
-							ha = ObjectModifier.DockedHorizontalAttachment.None;
-							va = ObjectModifier.DockedVerticalAttachment.None;
+							ha = ObjectModifier.StackedHorizontalAttachment.None;
+							va = ObjectModifier.StackedVerticalAttachment.None;
 							hilite = Rectangle.Empty;
 							return;
 						}
@@ -2420,7 +2420,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected Widget ZOrderDetectNearest(Point pos, Widget parent)
 		{
 			//	Détecte l'objet le plus proche de la souris.
-			bool horizontal = (this.objectModifier.GetChildrenPlacement(parent) == ObjectModifier.ChildrenPlacement.HorizontalDocked);
+			bool horizontal = (this.objectModifier.GetChildrenPlacement(parent) == ObjectModifier.ChildrenPlacement.HorizontalStacked);
 			Widget minWidget = null;
 			Widget maxWidget = null;
 
@@ -2540,7 +2540,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
-		protected void ZOrderChangeSelection(Widget parent, int order, ObjectModifier.DockedHorizontalAttachment ha, ObjectModifier.DockedVerticalAttachment va)
+		protected void ZOrderChangeSelection(Widget parent, int order, ObjectModifier.StackedHorizontalAttachment ha, ObjectModifier.StackedVerticalAttachment va)
 		{
 			//	Change le ZOrder de tous les objets sélectionnés.
 			if (order == -1 || this.selectedObjects.Contains(parent))
@@ -2865,7 +2865,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			graphics.RenderSolid(PanelsContext.ColorHiliteOutline);
 			graphics.LineWidth = 1;
 
-			if (this.objectModifier.AreChildrenDocked(obj.Parent))
+			if (this.objectModifier.AreChildrenStacked(obj.Parent))
 			{
 				Rectangle ext = bounds;
 				ext.Inflate(this.objectModifier.GetMargins(obj));
@@ -3009,7 +3009,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.DrawSpring(graphics, p1, p2, this.objectModifier.HasAttachmentTop(obj), color);
 			}
 
-			if (this.objectModifier.AreChildrenDocked(obj.Parent))
+			if (this.objectModifier.AreChildrenStacked(obj.Parent))
 			{
 				Rectangle rect = this.objectModifier.GetBounds(obj);
 				Point p;
