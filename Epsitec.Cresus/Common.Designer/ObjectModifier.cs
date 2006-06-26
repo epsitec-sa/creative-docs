@@ -15,8 +15,6 @@ namespace Epsitec.Common.Designer
 			Anchored,
 			VerticalDocked,
 			HorizontalDocked,
-			[Types.Hidden] VerticalStacked,
-			[Types.Hidden] HorizontalStacked,
 		}
 
 		public enum AnchoredHorizontalAttachment
@@ -108,24 +106,13 @@ namespace Epsitec.Common.Designer
 			return false;
 		}
 
-		public bool AreChildrenStacked(Widget obj)
-		{
-			AbstractGroup group = obj as AbstractGroup;
-			if (group != null)
-			{
-				ChildrenPlacement p = this.GetChildrenPlacement(obj);
-				return (p == ChildrenPlacement.HorizontalStacked || p == ChildrenPlacement.VerticalStacked);
-			}
-			return false;
-		}
-
 		public bool AreChildrenHorizontal(Widget obj)
 		{
 			AbstractGroup group = obj as AbstractGroup;
 			if (group != null)
 			{
 				ChildrenPlacement p = this.GetChildrenPlacement(obj);
-				return (p == ChildrenPlacement.HorizontalDocked || p == ChildrenPlacement.HorizontalStacked);
+				return (p == ChildrenPlacement.HorizontalDocked);
 			}
 			return false;
 		}
@@ -149,7 +136,7 @@ namespace Epsitec.Common.Designer
 					return ChildrenPlacement.Anchored;
 				}
 
-				if (group.ChildrenLayoutMode == Widgets.Layouts.LayoutMode.Docked)
+				if (group.ChildrenLayoutMode == Widgets.Layouts.LayoutMode.Docked || group.ChildrenLayoutMode == Widgets.Layouts.LayoutMode.Stacked)
 				{
 					if (group.ContainerLayoutMode == ContainerLayoutMode.HorizontalFlow)
 					{
@@ -184,7 +171,14 @@ namespace Epsitec.Common.Designer
 					break;
 
 				case ChildrenPlacement.VerticalDocked:
-					group.ChildrenLayoutMode = Widgets.Layouts.LayoutMode.Docked;
+					if (this.GetDockedVerticalAlignment(obj) == DockedVerticalAlignment.BaseLine)
+					{
+						group.ChildrenLayoutMode = Widgets.Layouts.LayoutMode.Stacked;
+					}
+					else
+					{
+						group.ChildrenLayoutMode = Widgets.Layouts.LayoutMode.Docked;
+					}
 					group.ContainerLayoutMode = ContainerLayoutMode.VerticalFlow;
 					break;
 			}
@@ -908,10 +902,11 @@ namespace Epsitec.Common.Designer
 			if (this.HasDockedVerticalAlignment(obj))
 			{
 				VerticalAlignment va = obj.VerticalAlignment;
-				if (va == VerticalAlignment.Stretch)  return DockedVerticalAlignment.Stretch;
-				if (va == VerticalAlignment.Center )  return DockedVerticalAlignment.Center;
-				if (va == VerticalAlignment.Bottom )  return DockedVerticalAlignment.Bottom;
-				if (va == VerticalAlignment.Top    )  return DockedVerticalAlignment.Top;
+				if (va == VerticalAlignment.Stretch )  return DockedVerticalAlignment.Stretch;
+				if (va == VerticalAlignment.Center  )  return DockedVerticalAlignment.Center;
+				if (va == VerticalAlignment.Bottom  )  return DockedVerticalAlignment.Bottom;
+				if (va == VerticalAlignment.Top     )  return DockedVerticalAlignment.Top;
+				if (va == VerticalAlignment.BaseLine)  return DockedVerticalAlignment.BaseLine;
 			}
 
 			return DockedVerticalAlignment.None;
@@ -942,11 +937,23 @@ namespace Epsitec.Common.Designer
 				case DockedVerticalAlignment.Top:
 					va = VerticalAlignment.Top;
 					break;
+
+				case DockedVerticalAlignment.BaseLine:
+					va = VerticalAlignment.BaseLine;
+					break;
 			}
 
 			if (obj.VerticalAlignment != va)
 			{
-				obj.VerticalAlignment = va;
+				if (obj.VerticalAlignment == VerticalAlignment.BaseLine || va == VerticalAlignment.BaseLine)
+				{
+					obj.VerticalAlignment = va;
+					this.SetChildrenPlacement(obj.Parent, this.GetChildrenPlacement(obj.Parent));
+				}
+				else
+				{
+					obj.VerticalAlignment = va;
+				}
 				this.Invalidate();
 			}
 		}
