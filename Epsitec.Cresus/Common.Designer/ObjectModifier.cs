@@ -67,6 +67,7 @@ namespace Epsitec.Common.Designer
 			Center,
 			Bottom,
 			Top,
+			BaseLine,
 		}
 
 

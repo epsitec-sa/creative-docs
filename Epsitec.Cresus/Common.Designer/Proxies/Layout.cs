@@ -35,7 +35,7 @@ namespace Epsitec.Common.Designer.Proxies
 		{
 			get
 			{
-				return 89;
+				return 22*5+1;
 			}
 		}
 
@@ -439,6 +439,7 @@ namespace Epsitec.Common.Designer.Proxies
 			dockedVerticalAlignmentEnumType[ObjectModifier.DockedVerticalAlignment.Center].DefineCaptionId(new Support.Druid("[10036]").ToLong());
 			dockedVerticalAlignmentEnumType[ObjectModifier.DockedVerticalAlignment.Bottom].DefineCaptionId(new Support.Druid("[10033]").ToLong());
 			dockedVerticalAlignmentEnumType[ObjectModifier.DockedVerticalAlignment.Top].DefineCaptionId(new Support.Druid("[10034]").ToLong());
+			dockedVerticalAlignmentEnumType[ObjectModifier.DockedVerticalAlignment.BaseLine].DefineCaptionId(new Support.Druid("[10039]").ToLong());
 			Layout.DockedVerticalAlignmentProperty.DefaultMetadata.DefineNamedType(dockedVerticalAlignmentEnumType);
 			Layout.DockedVerticalAlignmentProperty.DefaultMetadata.DefineCaptionId(new Support.Druid("[100I]").ToLong());
 		}

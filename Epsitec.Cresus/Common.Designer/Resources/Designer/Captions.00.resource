@@ -16,12 +16,12 @@
   <data id="0B">&lt;s:data id="_0" f:Description="Marge intérieure inférieure" f:Labels="{Collection {Text 'Marge inférieure'}, {Text 'Marge inf.'}}" /&gt;</data>
   
   <data id="0C">&lt;s:data id="_0" f:Description="Contenu" f:Labels="{Collection {Text 'Contenu'}}" /&gt;</data>
-  <data id="0D">&lt;s:data id="_0" f:Description="Position horizontale" f:Labels="{Collection {Text 'Position horizontale'}, {Text 'Pos. h.'}}" /&gt;</data>
-  <data id="0E">&lt;s:data id="_0" f:Description="Position verticale" f:Labels="{Collection {Text 'Position verticale'}, {Text 'Pos. v.'}}" /&gt;</data>
-  <data id="0F">&lt;s:data id="_0" f:Description="Position horizontale" f:Labels="{Collection {Text 'Position horizontale'}, {Text 'Pos. h.'}}" /&gt;</data>
-  <data id="0G">&lt;s:data id="_0" f:Description="Position verticale" f:Labels="{Collection {Text 'Position verticale'}, {Text 'Pos. v.'}}" /&gt;</data>
-  <data id="0H">&lt;s:data id="_0" f:Description="Alignement horizontal" f:Labels="{Collection {Text 'Alignement horizontal'}, {Text 'Align. h.'}}" /&gt;</data>
-  <data id="0I">&lt;s:data id="_0" f:Description="Alignement vertical" f:Labels="{Collection {Text 'Alignement vertical'}, {Text 'Align. v.'}}" /&gt;</data>
+  <data id="0D">&lt;s:data id="_0" f:Description="Position horizontale" f:Labels="{Collection {Text 'Pos. h.'}, {Text 'Position horizontale'}}" /&gt;</data>
+  <data id="0E">&lt;s:data id="_0" f:Description="Position verticale" f:Labels="{Collection {Text 'Pos. v.'}, {Text 'Position verticale'}}" /&gt;</data>
+  <data id="0F">&lt;s:data id="_0" f:Description="Position horizontale" f:Labels="{Collection {Text 'Pos. h.'}, {Text 'Position horizontale'}}" /&gt;</data>
+  <data id="0G">&lt;s:data id="_0" f:Description="Position verticale" f:Labels="{Collection {Text 'Pos. v.'}, {Text 'Position verticale'}}" /&gt;</data>
+  <data id="0H">&lt;s:data id="_0" f:Description="Alignement horizontal" f:Labels="{Collection {Text 'Align. h.'}, {Text 'Alignement horizontal'}}" /&gt;</data>
+  <data id="0I">&lt;s:data id="_0" f:Description="Alignement vertical" f:Labels="{Collection {Text 'Align. v.'}, {Text 'Alignement vertical'}}" /&gt;</data>
   
   <data id="0J">&lt;s:data id="_0" f:Description="" /&gt;</data>
   <data id="0K">&lt;s:data id="_0" f:Description="" /&gt;</data>
@@ -56,4 +56,5 @@
   <data id="036">&lt;s:data id="_0" f:Description="Centré verticalement" f:Labels="{Collection {Text 'Centré'}}" f:Icon="manifest:Epsitec.Common.Designer.Images.PropertyAlignmentVCenter.icon" /&gt;</data>
   <data id="037">&lt;s:data id="_0" f:Description="Étiré horizontalement" f:Labels="{Collection {Text 'Étiré'}}" f:Icon="manifest:Epsitec.Common.Designer.Images.PropertyAlignmentHStretch.icon" /&gt;</data>
   <data id="038">&lt;s:data id="_0" f:Description="Étiré verticalement" f:Labels="{Collection {Text 'Étiré'}}" f:Icon="manifest:Epsitec.Common.Designer.Images.PropertyAlignmentVStretch.icon" /&gt;</data>
+  <data id="039">&lt;s:data id="_0" f:Description="Sur la ligne de base" f:Labels="{Collection {Text 'Ligne de base'}}" f:Icon="manifest:Epsitec.Common.Designer.Images.PropertyAlignmentBaseLine.icon" /&gt;</data>
 </bundle>
