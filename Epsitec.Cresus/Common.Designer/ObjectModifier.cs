@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
+using Epsitec.Common.Widgets.Layouts;
 
 namespace Epsitec.Common.Designer
 {
@@ -180,20 +181,34 @@ namespace Epsitec.Common.Designer
 			{
 				case ChildrenPlacement.Anchored:
 					group.ChildrenLayoutMode = Widgets.Layouts.LayoutMode.Anchored;
+					LayoutEngine.SetLayoutEngine(group, null);
 					break;
 
 				case ChildrenPlacement.HorizontalStacked:
 					group.ChildrenLayoutMode = Widgets.Layouts.LayoutMode.Stacked;
 					group.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
+					LayoutEngine.SetLayoutEngine(group, null);
 					break;
 
 				case ChildrenPlacement.VerticalStacked:
 					group.ChildrenLayoutMode = Widgets.Layouts.LayoutMode.Stacked;
 					group.ContainerLayoutMode = ContainerLayoutMode.VerticalFlow;
+					LayoutEngine.SetLayoutEngine(group, null);
 					break;
 
 				case ChildrenPlacement.Grid:
 					group.ChildrenLayoutMode = Widgets.Layouts.LayoutMode.Grid;
+
+					GridLayoutEngine engine = new GridLayoutEngine();
+					engine.ColumnDefinitions.Add(new ColumnDefinition(new GridLength(1, GridUnitType.Proportional)));
+					engine.ColumnDefinitions.Add(new ColumnDefinition(new GridLength(1, GridUnitType.Proportional)));
+					engine.RowDefinitions.Add(new RowDefinition(new GridLength(1, GridUnitType.Proportional)));
+					engine.RowDefinitions.Add(new RowDefinition(new GridLength(1, GridUnitType.Proportional)));
+					engine.ColumnDefinitions[0].MinWidth = 20;
+					engine.ColumnDefinitions[1].MinWidth = 20;
+					engine.RowDefinitions[0].MinHeight = 20;
+					engine.RowDefinitions[1].MinHeight = 20;
+					LayoutEngine.SetLayoutEngine(group, engine);
 					break;
 			}
 		}
@@ -228,6 +243,10 @@ namespace Epsitec.Common.Designer
 						this.SetStackedVerticalAttachment(obj, va);
 					}
 				}
+			}
+
+			if (this.AreChildrenGrid(obj.Parent))
+			{
 			}
 
 			if (obj is StaticText)
