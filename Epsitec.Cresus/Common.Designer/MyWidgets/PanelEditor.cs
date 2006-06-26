@@ -1082,13 +1082,13 @@ namespace Epsitec.Common.Designer.MyWidgets
 			if (this.context.Tool == "ObjectGroup")
 			{
 				FrameBox group = new FrameBox();
-				group.DrawDesignerFrame = true;
 				group.ChildrenLayoutMode = Widgets.Layouts.LayoutMode.Anchored;
 				group.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
 				group.PreferredSize = new Size(200, 100);
 				group.MinWidth = 50;
 				group.MinHeight = 50;
 				group.Padding = new Margins(10, 10, 10, 10);
+				group.DrawDesignerFrame = true;  // nécessaire pour voir le cadre pendant la création
 
 				item = group;
 			}
