@@ -571,7 +571,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				return;
 			}
 
-			obj = this.Detect(pos);  // objet visé par la souris
+			obj = this.Detect(pos, isShiftPressed);  // objet visé par la souris
 
 			if (!isShiftPressed)  // touche Shift relâchée ?
 			{
@@ -645,7 +645,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 			else
 			{
-				this.SetHilitedObject(this.Detect(pos));  // met en évidence l'objet survolé par la souris
+				this.SetHilitedObject(this.Detect(pos, isShiftPressed));  // met en évidence l'objet survolé par la souris
 
 				Rectangle rect = Rectangle.Empty;
 				Widget obj;
@@ -717,7 +717,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				return;
 			}
 
-			Widget obj = this.Detect(pos);  // objet visé par la souris
+			Widget obj = this.Detect(pos, isShiftPressed);  // objet visé par la souris
 
 			if (!isShiftPressed)  // touche Shift relâchée ?
 			{
@@ -818,13 +818,13 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Edition, souris déplacée.
 			this.ChangeMouseCursor(MouseCursorType.Edit);
 
-			this.SetHilitedObject(this.Detect(pos));  // met en évidence l'objet survolé par la souris
+			this.SetHilitedObject(this.Detect(pos, false));  // met en évidence l'objet survolé par la souris
 		}
 
 		protected void EditUp(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
 			//	Edition, souris relâchée.
-			Widget obj = this.Detect(pos);
+			Widget obj = this.Detect(pos, false);
 			if (obj != null)
 			{
 				this.ChangeTextResource(obj);
@@ -1368,12 +1368,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 
 		#region Selection
-		protected Widget Detect(Point pos)
+		protected Widget Detect(Point pos, bool sameParent)
 		{
 			//	Détecte l'objet visé par la souris, avec priorité au dernier objet
 			//	dessiné (donc placé dessus).
-			Widget detected = this.Detect(pos, this.panel);
-			if (detected == null)
+			//	Si sameParent = true, l'objet détecté doit avoir le même parent que
+			//	l'objet éventuellement déjà sélectionné.
+			Widget detected = this.Detect(pos, sameParent, this.panel);
+			if (detected == null && (!sameParent || this.selectedObjects.Count == 0))
 			{
 				Rectangle rect = this.panel.Client.Bounds;
 				if (rect.Contains(pos))
@@ -1388,7 +1390,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			return detected;
 		}
 
-		protected Widget Detect(Point pos, Widget parent)
+		protected Widget Detect(Point pos, bool sameParent, Widget parent)
 		{
 			Widget[] children = parent.Children.Widgets;
 			for (int i=children.Length-1; i>=0; i--)
@@ -1403,7 +1405,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				Rectangle rect = widget.ActualBounds;
 				if (rect.Contains(pos))
 				{
-					Widget deep = this.Detect(widget.MapParentToClient(pos), widget);
+					Widget deep = this.Detect(widget.MapParentToClient(pos), sameParent, widget);
 					if (deep != null)
 					{
 						return deep;
@@ -1421,6 +1423,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 					if (widget.IsEmbedded)
 					{
 						continue;
+					}
+
+					if (sameParent && this.selectedObjects.Count > 0)
+					{
+						if (widget.Parent != this.selectedObjects[0].Parent)
+						{
+							continue;
+						}
 					}
 
 					return widget;
@@ -1540,6 +1550,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				if (sel.Contains(this.objectModifier.GetBounds(obj)))
 				{
+					if (this.selectedObjects.Count > 0)
+					{
+						if (obj.Parent != this.selectedObjects[0].Parent)
+						{
+							continue;
+						}
+					}
+
 					this.selectedObjects.Add(obj);
 				}
 				else
