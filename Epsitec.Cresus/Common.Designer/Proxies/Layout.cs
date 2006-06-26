@@ -131,6 +131,18 @@ namespace Epsitec.Common.Designer.Proxies
 			}
 		}
 
+		public ObjectModifier.StackedVerticalAlignment DockedVerticalBaseLineAlignment
+		{
+			get
+			{
+				return (ObjectModifier.StackedVerticalAlignment) this.GetValue(Layout.DockedVerticalBaseLineAlignmentProperty);
+			}
+			set
+			{
+				this.SetValue(Layout.DockedVerticalBaseLineAlignmentProperty, value);
+			}
+		}
+
 
 		protected override void InitialisePropertyValues()
 		{
@@ -179,8 +191,16 @@ namespace Epsitec.Common.Designer.Proxies
 			if (this.objectModifier.HasStackedVerticalAlignment(this.widgets[0]))
 			{
 				ObjectModifier.StackedVerticalAlignment va = this.objectModifier.GetStackedVerticalAlignment(this.widgets[0]);
+				ObjectModifier.ChildrenPlacement cp = this.objectModifier.GetChildrenPlacement(this.widgets[0].Parent);
 
-				this.DockedVerticalAlignment = va;
+				if (cp == ObjectModifier.ChildrenPlacement.HorizontalStacked)
+				{
+					this.DockedVerticalBaseLineAlignment = va;
+				}
+				else
+				{
+					this.DockedVerticalAlignment = va;
+				}
 			}
 		}
 
@@ -439,9 +459,19 @@ namespace Epsitec.Common.Designer.Proxies
 			dockedVerticalAlignmentEnumType[ObjectModifier.StackedVerticalAlignment.Center].DefineCaptionId(new Support.Druid("[10036]").ToLong());
 			dockedVerticalAlignmentEnumType[ObjectModifier.StackedVerticalAlignment.Bottom].DefineCaptionId(new Support.Druid("[10033]").ToLong());
 			dockedVerticalAlignmentEnumType[ObjectModifier.StackedVerticalAlignment.Top].DefineCaptionId(new Support.Druid("[10034]").ToLong());
-			dockedVerticalAlignmentEnumType[ObjectModifier.StackedVerticalAlignment.BaseLine].DefineCaptionId(new Support.Druid("[10039]").ToLong());
+			dockedVerticalAlignmentEnumType[ObjectModifier.StackedVerticalAlignment.BaseLine].DefineHidden(true);
 			Layout.DockedVerticalAlignmentProperty.DefaultMetadata.DefineNamedType(dockedVerticalAlignmentEnumType);
 			Layout.DockedVerticalAlignmentProperty.DefaultMetadata.DefineCaptionId(new Support.Druid("[100I]").ToLong());
+
+			EnumType DockedVerticalBaseLineAlignmentEnumType = new EnumType(typeof(ObjectModifier.StackedVerticalAlignment));
+			DockedVerticalBaseLineAlignmentEnumType.DefineDefaultController("Enum", "Icons");
+			DockedVerticalBaseLineAlignmentEnumType[ObjectModifier.StackedVerticalAlignment.Stretch].DefineCaptionId(new Support.Druid("[10038]").ToLong());
+			DockedVerticalBaseLineAlignmentEnumType[ObjectModifier.StackedVerticalAlignment.Center].DefineCaptionId(new Support.Druid("[10036]").ToLong());
+			DockedVerticalBaseLineAlignmentEnumType[ObjectModifier.StackedVerticalAlignment.Bottom].DefineCaptionId(new Support.Druid("[10033]").ToLong());
+			DockedVerticalBaseLineAlignmentEnumType[ObjectModifier.StackedVerticalAlignment.Top].DefineCaptionId(new Support.Druid("[10034]").ToLong());
+			DockedVerticalBaseLineAlignmentEnumType[ObjectModifier.StackedVerticalAlignment.BaseLine].DefineCaptionId(new Support.Druid("[10039]").ToLong());
+			Layout.DockedVerticalBaseLineAlignmentProperty.DefaultMetadata.DefineNamedType(DockedVerticalBaseLineAlignmentEnumType);
+			Layout.DockedVerticalBaseLineAlignmentProperty.DefaultMetadata.DefineCaptionId(new Support.Druid("[100I]").ToLong());
 		}
 
 		
@@ -452,5 +482,6 @@ namespace Epsitec.Common.Designer.Proxies
 		public static readonly DependencyProperty DockedVerticalAttachmentProperty = DependencyProperty.Register("DockedVerticalAttachment", typeof(ObjectModifier.StackedVerticalAttachment), typeof(Layout), new DependencyPropertyMetadata(ObjectModifier.StackedVerticalAttachment.Bottom, Layout.NotifyDockedVerticalAttachmentChanged));
 		public static readonly DependencyProperty DockedHorizontalAlignmentProperty = DependencyProperty.Register("DockedHorizontalAlignment", typeof(ObjectModifier.StackedHorizontalAlignment), typeof(Layout), new DependencyPropertyMetadata(ObjectModifier.StackedHorizontalAlignment.Stretch, Layout.NotifyDockedHorizontalAlignmentChanged));
 		public static readonly DependencyProperty DockedVerticalAlignmentProperty = DependencyProperty.Register("DockedVerticalAlignment", typeof(ObjectModifier.StackedVerticalAlignment), typeof(Layout), new DependencyPropertyMetadata(ObjectModifier.StackedVerticalAlignment.Stretch, Layout.NotifyDockedVerticalAlignmentChanged));
+		public static readonly DependencyProperty DockedVerticalBaseLineAlignmentProperty = DependencyProperty.Register("DockedVerticalBaseLineAlignment", typeof(ObjectModifier.StackedVerticalAlignment), typeof(Layout), new DependencyPropertyMetadata(ObjectModifier.StackedVerticalAlignment.Stretch, Layout.NotifyDockedVerticalAlignmentChanged));
 	}
 }
