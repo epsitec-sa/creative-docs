@@ -29,10 +29,13 @@ namespace Epsitec.Common.Text.Exchange
 		public static void TogglePasteMode()
 		{
 
-			if (pasteMode == PasteMode.MatchDestination)
-				Rosetta.pasteMode = PasteMode.KeepSource;
+			if (pasteMode == PasteMode.KeepTextOnly)
+				Rosetta.pasteMode = PasteMode.Unknown;
 
 			Rosetta.pasteMode++;
+
+			string text = string.Format("Mode paste: {0}", Rosetta.pasteMode) ;
+			System.Windows.Forms.MessageBox.Show (text);
 		}
 
 
