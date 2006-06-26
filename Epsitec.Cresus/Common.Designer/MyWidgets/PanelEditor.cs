@@ -1081,6 +1081,18 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			if (this.context.Tool == "ObjectGroup")
 			{
+				FrameBox group = new FrameBox();
+				group.ChildrenLayoutMode = Widgets.Layouts.LayoutMode.Anchored;
+				group.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
+				group.PreferredSize = new Size(200, 100);
+				group.MinWidth = 50;
+				group.MinHeight = 50;
+
+				item = group;
+			}
+
+			if (this.context.Tool == "ObjectGroupBox")
+			{
 				GroupBox group = new GroupBox();
 				group.ChildrenLayoutMode = Widgets.Layouts.LayoutMode.Anchored;
 				//?group.ChildrenLayoutMode = Widgets.Layouts.LayoutMode.Docked;
@@ -1538,6 +1550,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void SelectObjectsInRectangle(Rectangle sel)
 		{
 			//	Sélectionne tous les objets entièrement inclus dans un rectangle.
+			//	Tous les objets sélectionnés doivent avoir le même parent.
 			this.SelectObjectsInRectangle(sel, this.panel);
 			this.UpdateAfterSelectionChanged();
 			this.OnChildrenSelected();
@@ -2872,31 +2885,15 @@ namespace Epsitec.Common.Designer.MyWidgets
 			foreach (Widget obj in this.selectedObjects)
 			{
 				this.DrawSelectedObject(graphics, obj);
+				this.DrawPadding(graphics, obj);
 			}
 
-			if (this.selectedObjects.Count == 1)
+			if (this.selectedObjects.Count > 0)
 			{
 				Widget obj = this.selectedObjects[0];
 				if (obj != this.panel)
 				{
 					this.DrawPadding(graphics, obj.Parent);
-				}
-			}
-			else
-			{
-				List<Widget> selectedParent = new List<Widget>();
-
-				foreach (Widget obj in this.selectedObjects)
-				{
-					if (!selectedParent.Contains(obj.Parent))
-					{
-						selectedParent.Add(obj.Parent);
-					}
-				}
-
-				foreach (Widget parent in selectedParent)
-				{
-					this.DrawPadding(graphics, parent);
 				}
 			}
 		}
@@ -2924,8 +2921,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 				path.AppendRectangle(ext);
 				Misc.DrawPathDash(graphics, path, 2, 0, 4, PanelsContext.ColorHiliteOutline);
 			}
-
-			this.DrawPadding(graphics, obj);
 		}
 
 		protected void DrawPadding(Graphics graphics, Widget obj)
