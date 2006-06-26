@@ -231,6 +231,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.UpdateCommandTool("ObjectText");
 			this.UpdateCommandTool("ObjectStatic");
 			this.UpdateCommandTool("ObjectGroup");
+			this.UpdateCommandTool("ObjectGroupBox");
 		}
 
 		protected void UpdateCommandTool(string name)

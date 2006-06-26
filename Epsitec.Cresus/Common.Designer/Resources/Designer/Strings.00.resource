@@ -110,7 +110,8 @@
   <data name="Action.ObjectButton" id="0A3">Bouton</data>
   <data name="Action.ObjectText" id="0B3">Texte éditable</data>
   <data name="Action.ObjectStatic" id="0C3">Texte fixe</data>
-  <data name="Action.ObjectGroup" id="0D3">Groupe (conteneur d'objets)</data>
+  <data name="Action.ObjectGroup" id="0D3">Groupe invisible</data>
+  <data name="Action.ObjectGroupBox" id="055" mod="1">Groupe avec cadre et étiquette</data>
   <data name="Dialog.Button.Close" id="0E3">Fermer</data>
   <data name="Dialog.Button.OK" id="0F3">D'accord</data>
   <data name="Dialog.Button.Cancel" id="0G3">Annuler</data>

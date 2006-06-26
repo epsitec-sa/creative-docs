@@ -286,6 +286,10 @@ namespace Epsitec.Common.Designer
 			{
 				return true;
 			}
+			else if (obj is FrameBox)
+			{
+				return true;
+			}
 
 			return false;
 		}
@@ -317,6 +321,10 @@ namespace Epsitec.Common.Designer
 				return false;
 			}
 			else if (obj is GroupBox)
+			{
+				return true;
+			}
+			else if (obj is FrameBox)
 			{
 				return true;
 			}
