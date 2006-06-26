@@ -257,6 +257,13 @@ namespace Epsitec.Common.Text.Exchange
 
 				if (notHandled && pasteMode == PasteMode.KeepSource)
 				{
+					if (subelements[0] == "par")
+					{
+						paragrpahSep = true;
+					}
+				}
+				else if (notHandled && pasteMode == PasteMode.KeepSource)
+				{
 					switch (subelements[0])
 					{
 						case "cstyle":
@@ -292,12 +299,12 @@ namespace Epsitec.Common.Text.Exchange
 							fontStyle = true;
 							break;
 						case "fsize":
-							double size = double.Parse (subelements[1], System.Globalization.NumberStyles.Float);
+							double size = Misc.ParseDouble (subelements[1]);
 							this.textWrapper.Defined.FontSize = size;
 							fontSize = true;
 							break;
 						case "funits":
-							byte theunits = byte.Parse (subelements[1]);
+							byte theunits = Misc.ParseByte (subelements[1]);
 							this.textWrapper.Defined.Units = (Properties.SizeUnits) theunits;
 							units = true;
 							break;
@@ -308,11 +315,11 @@ namespace Epsitec.Common.Text.Exchange
 							features = true;
 							break;
 						case "fontglue":
-							this.textWrapper.Defined.FontGlue = double.Parse (subelements[1], System.Globalization.NumberStyles.Float);
+							this.textWrapper.Defined.FontGlue = Misc.ParseDouble (subelements[1]);
 							fontglue = true;
 							break;
 						case "langhyph":
-							this.textWrapper.Defined.LanguageHyphenation = double.Parse (subelements[1], System.Globalization.NumberStyles.Float);
+							this.textWrapper.Defined.LanguageHyphenation = Misc.ParseDouble (subelements[1]);
 							languageHyphenation = true;
 							break;
 						case "langloc":
@@ -422,14 +429,9 @@ namespace Epsitec.Common.Text.Exchange
 			byte b;
 			double d;
 
-			b = byte.Parse (elements[0]);
-			xscriptdef.IsDisabled = Misc.ByteToBool (b);
-
-			b = byte.Parse (elements[1]);
-			//	xscriptdef.IsEmpty = Misc.byteTobool (b);
-
+			xscriptdef.IsDisabled = Misc.ParseBool (elements[0]);
+			//	xscriptdef.IsEmpty = Misc.ParseBool (elements[1]);;
 			xscriptdef.Offset = Misc.ParseDouble (elements[2]);
-
 			xscriptdef.Scale = Misc.ParseDouble (elements[3]);
 		}
 
@@ -466,21 +468,16 @@ namespace Epsitec.Common.Text.Exchange
 			byte b;
 			double d;
 
-			b = byte.Parse (elements[0]);
-			xlinedef.IsDisabled = Misc.ByteToBool (b);
-
-			b = byte.Parse (elements[1]);
-			//	xlinedef.IsEmpty = Misc.byteTobool (b);
+			xlinedef.IsDisabled = Misc.ParseBool (elements[0]);
+			//xlinedef.IsEmpty = ParseBool (elements[1])
 
 			xlinedef.Position = Misc.ParseDouble (elements[2]);
 
-			b = byte.Parse (elements[3]);
-			xlinedef.PositionUnits = (Properties.SizeUnits) b;
+			xlinedef.PositionUnits = (Properties.SizeUnits) Misc.ParseByte (elements[3]);
 
 			xlinedef.Thickness = Misc.ParseDouble (elements[4]);
 
-			b = byte.Parse (elements[5]);
-			xlinedef.ThicknessUnits = (Properties.SizeUnits) b;
+			xlinedef.ThicknessUnits = (Properties.SizeUnits) Misc.ParseByte (elements[5]);
 
 			xlinedef.DrawClass = Misc.NullString (elements[6]);
 
@@ -527,11 +524,11 @@ namespace Epsitec.Common.Text.Exchange
 				switch (el[0])
 				{
 					case "align":
-						this.paraWrapper.Defined.AlignMode = (Properties.AlignMode) byte.Parse (el[1]);
+						this.paraWrapper.Defined.AlignMode = (Properties.AlignMode) Misc.ParseByte (el[1]);
 						alignmode = true;
 						break;
 					case "just":
-						this.paraWrapper.Defined.JustificationMode = (Wrappers.JustificationMode) byte.Parse (el[1]);
+						this.paraWrapper.Defined.JustificationMode = (Wrappers.JustificationMode) Misc.ParseByte (el[1]);
 						justificationmode = true;
 						break;
 					case "indleva":
@@ -547,7 +544,7 @@ namespace Epsitec.Common.Text.Exchange
 						leading = true;
 						break;
 					case "leadingunit":
-						this.paraWrapper.Defined.LeadingUnits = (Properties.SizeUnits) byte.Parse (el[1]);
+						this.paraWrapper.Defined.LeadingUnits = (Properties.SizeUnits) Misc.ParseByte (el[1]);
 						leadingunits = true;
 						break;
 					case "leftmbody":
@@ -567,27 +564,27 @@ namespace Epsitec.Common.Text.Exchange
 						rightmarginfirst = true;
 						break;
 					case "marginunits":
-						this.paraWrapper.Defined.MarginUnits = (Properties.SizeUnits) byte.Parse (el[1]);
+						this.paraWrapper.Defined.MarginUnits = (Properties.SizeUnits) Misc.ParseByte (el[1]);
 						marginunits = true;
 						break;
 					case "parstartmode":
-						this.paraWrapper.Defined.ParagraphStartMode = (Properties.ParagraphStartMode) byte.Parse (el[1]);
+						this.paraWrapper.Defined.ParagraphStartMode = (Properties.ParagraphStartMode) Misc.ParseByte (el[1]);
 						pagargaphstartmode = true;
 						break;
 					case "spaceafter":
-						this.paraWrapper.Defined.SpaceAfter = double.Parse(el[1]) ;
+						this.paraWrapper.Defined.SpaceAfter = Misc.ParseDouble(el[1]) ;
 						spaceafter = true ;
 						break;
 					case "spaceafteru":
-						this.paraWrapper.Defined.SpaceAfterUnits = (Properties.SizeUnits) byte.Parse (el[1]);
+						this.paraWrapper.Defined.SpaceAfterUnits = (Properties.SizeUnits) Misc.ParseByte (el[1]);
 						spaceafterunits = true;
 						break;
 					case "spacebefore":
-						this.paraWrapper.Defined.SpaceBefore = double.Parse (el[1]);
+						this.paraWrapper.Defined.SpaceBefore = Misc.ParseDouble (el[1]);
 						spacebefore = true;
 						break;
 					case "spacebeforeu":
-						this.paraWrapper.Defined.SpaceBeforeUnits = (Properties.SizeUnits) byte.Parse (el[1]);
+						this.paraWrapper.Defined.SpaceBeforeUnits = (Properties.SizeUnits) Misc.ParseByte (el[1]);
 						spacebeforeunits = true;
 						break;
 					case "bfa":
@@ -607,15 +604,15 @@ namespace Epsitec.Common.Text.Exchange
 						keepstartlines = true;
 						break;
 					case "keepwithnext":
-						this.paraWrapper.Defined.KeepWithNextParagraph = Misc.ByteToBool(byte.Parse (el[1]));
+						this.paraWrapper.Defined.KeepWithNextParagraph = Misc.ParseBool (el[1]);
 						keepwithnextparagraph = true;
 						break;
 					case "keepwithprev":
-						this.paraWrapper.Defined.KeepWithPreviousParagraph = Misc.ByteToBool(byte.Parse (el[1]));
+						this.paraWrapper.Defined.KeepWithPreviousParagraph = Misc.ParseBool (el[1]);
 						keepwithpreviousparagraph = true;
 						break;
 					case "hyphen":
-						this.paraWrapper.Defined.Hyphenation = Misc.ByteToBool(byte.Parse (el[1]));
+						this.paraWrapper.Defined.Hyphenation = Misc.ParseBool (el[1]);
 						hyphenation = true;
 						break;
 
