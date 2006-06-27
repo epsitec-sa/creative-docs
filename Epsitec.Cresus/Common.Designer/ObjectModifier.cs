@@ -363,8 +363,8 @@ namespace Epsitec.Common.Designer
 						int y = item.Index / engine.ColumnDefinitions.Count;
 						double x1 = this.GetGridColumnPosition(obj, x);
 						double x2 = this.GetGridColumnPosition(obj, x+1);
-						double y1 = this.GetGridRowPosition(obj, y);
-						double y2 = this.GetGridRowPosition(obj, y+1);
+						double y1 = this.GetGridRowPosition(obj, y+1);
+						double y2 = this.GetGridRowPosition(obj, y);
 						return new Rectangle(x1, y1, x2-x1, y2-y1);
 					}
 
@@ -373,8 +373,8 @@ namespace Epsitec.Common.Designer
 						int x = item.Index;
 						double x1 = this.GetGridColumnPosition(obj, x);
 						double x2 = this.GetGridColumnPosition(obj, x+1);
-						double y1 = this.GetGridRowPosition(obj, 0);
-						double y2 = this.GetGridRowPosition(obj, engine.RowDefinitions.Count);
+						double y1 = this.GetGridRowPosition(obj, engine.RowDefinitions.Count);
+						double y2 = this.GetGridRowPosition(obj, 0);
 						return new Rectangle(x1, y1, x2-x1, y2-y1);
 					}
 
@@ -383,8 +383,8 @@ namespace Epsitec.Common.Designer
 						int y = item.Index;
 						double x1 = this.GetGridColumnPosition(obj, 0);
 						double x2 = this.GetGridColumnPosition(obj, engine.ColumnDefinitions.Count);
-						double y1 = this.GetGridRowPosition(obj, y);
-						double y2 = this.GetGridRowPosition(obj, y+1);
+						double y1 = this.GetGridRowPosition(obj, y+1);
+						double y2 = this.GetGridRowPosition(obj, y);
 						return new Rectangle(x1, y1, x2-x1, y2-y1);
 					}
 				}
@@ -403,8 +403,8 @@ namespace Epsitec.Common.Designer
 				{
 					double x1 = this.GetGridColumnPosition(obj, column);
 					double x2 = this.GetGridColumnPosition(obj, column+1);
-					double y1 = this.GetGridRowPosition(obj, row);
-					double y2 = this.GetGridRowPosition(obj, row+1);
+					double y1 = this.GetGridRowPosition(obj, row+1);
+					double y2 = this.GetGridRowPosition(obj, row);
 					return new Rectangle(x1, y1, x2-x1, y2-y1);
 				}
 			}

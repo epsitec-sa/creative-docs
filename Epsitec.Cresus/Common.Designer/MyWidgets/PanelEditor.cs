@@ -1483,6 +1483,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Retourne les marges intérieures pour la détection du padding.
 			if (this.objectModifier.AreChildrenGrid(obj))
 			{
+				//	On rend des marges maximales pour accepter la détection dans toute
+				//	la surface de l'objet.
 				return new Margins(double.MaxValue, double.MaxValue, double.MaxValue, double.MaxValue);
 			}
 
@@ -3065,7 +3067,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			if (column != -1 && row != -1)
 			{
 				Rectangle area = this.objectModifier.GetGridCellArea(obj, column, row);
-				graphics.AddFilledRectangle(area);
+				this.DrawGridHilite(graphics, area, color);
 			}
 
 			if (obj is AbstractGroup)
@@ -3119,8 +3121,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			if (column != -1 && row != -1)
 			{
 				Rectangle area = this.objectModifier.GetGridCellArea(obj, column, row);
-				graphics.AddFilledRectangle(area);
-				graphics.RenderSolid(PanelsContext.ColorHiliteSurface);
+				this.DrawGridHilite(graphics, area, PanelsContext.ColorHiliteParent);
 			}
 
 			double thickness = 2.0;
@@ -3143,6 +3144,52 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				this.DrawGrid(graphics, obj, PanelsContext.ColorHiliteParent);
 			}
+		}
+
+		protected void DrawGridHilite(Graphics graphics, Rectangle area, Color color)
+		{
+			//	Dessine les 4 'coins' d'une zone rectangulaire.
+			double length = System.Math.Min(area.Width, area.Height)*0.4;
+			double thickness = length*0.3;
+			length = System.Math.Floor(length+0.5);
+			thickness = System.Math.Floor(thickness+0.5);
+
+			Path path = new Path();
+
+			path.MoveTo(area.BottomLeft);
+			path.LineTo(area.Left,           area.Bottom+length   );
+			path.LineTo(area.Left+thickness, area.Bottom+length   );
+			path.LineTo(area.Left+thickness, area.Bottom+thickness);
+			path.LineTo(area.Left+length,    area.Bottom+thickness);
+			path.LineTo(area.Left+length,    area.Bottom          );
+			path.Close();
+
+			path.MoveTo(area.BottomRight);
+			path.LineTo(area.Right,           area.Bottom+length   );
+			path.LineTo(area.Right-thickness, area.Bottom+length   );
+			path.LineTo(area.Right-thickness, area.Bottom+thickness);
+			path.LineTo(area.Right-length,    area.Bottom+thickness);
+			path.LineTo(area.Right-length,    area.Bottom          );
+			path.Close();
+
+			path.MoveTo(area.TopLeft);
+			path.LineTo(area.Left,           area.Top-length   );
+			path.LineTo(area.Left+thickness, area.Top-length   );
+			path.LineTo(area.Left+thickness, area.Top-thickness);
+			path.LineTo(area.Left+length,    area.Top-thickness);
+			path.LineTo(area.Left+length,    area.Top          );
+			path.Close();
+
+			path.MoveTo(area.TopRight);
+			path.LineTo(area.Right,           area.Top-length   );
+			path.LineTo(area.Right-thickness, area.Top-length   );
+			path.LineTo(area.Right-thickness, area.Top-thickness);
+			path.LineTo(area.Right-length,    area.Top-thickness);
+			path.LineTo(area.Right-length,    area.Top          );
+			path.Close();
+
+			graphics.Rasterizer.AddSurface(path);
+			graphics.RenderSolid(color);
 		}
 
 		protected void DrawGrid(Graphics graphics, Widget obj, Color color)
