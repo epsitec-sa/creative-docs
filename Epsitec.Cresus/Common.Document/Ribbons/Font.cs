@@ -238,16 +238,19 @@ namespace Epsitec.Common.Document.Ribbons
 		private void HandleButtonMWClicked(object sender, MessageEventArgs e)
 		{
 			Objects.AbstractText text = this.document.Modifier.RetEditObject ();
+
+#if false
 			if ( text != null )
 			{
 				TextFlow flow = text.TextFlow;
 				Text.TextStory story = flow.TextStory;
 				Text.TextNavigator navigator = flow.TextNavigator;
-				
-//				Epsitec.Common.Text.Exchange.Rosetta.TestCode(story, navigator);
 
-				Epsitec.Common.Text.Exchange.Rosetta.TogglePasteMode ();
+				Common.Text.Exchange.Rosetta.TestCode(story, navigator);
 			}
+#else		
+			Common.Text.Exchange.Rosetta.TogglePasteMode ();
+#endif
 		}
 
 

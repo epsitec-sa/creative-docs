@@ -35,7 +35,7 @@ namespace Epsitec.Common.Text.Exchange
 			Rosetta.pasteMode++;
 
 			string text = string.Format("Mode paste: {0}", Rosetta.pasteMode) ;
-			System.Windows.Forms.MessageBox.Show (text);
+			System.Windows.Forms.MessageBox.Show(text, "Debug: Mode pour paste");
 		}
 
 
