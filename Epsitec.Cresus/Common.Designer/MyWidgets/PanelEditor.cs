@@ -3064,12 +3064,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			Color color = PanelsContext.ColorHiliteSurface;
 
-			if (column != -1 && row != -1)
-			{
-				Rectangle area = this.objectModifier.GetGridCellArea(obj, column, row);
-				this.DrawGridHilite(graphics, area, PanelsContext.ColorGridCell);
-			}
-
 			if (obj is AbstractGroup)
 			{
 				this.DrawPadding(graphics, obj);
@@ -3108,6 +3102,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				this.DrawGrid(graphics, obj, color);
 			}
+
+			if (column != -1 && row != -1)
+			{
+				Rectangle area = this.objectModifier.GetGridCellArea(obj, column, row);
+				this.DrawGridHilite(graphics, area, PanelsContext.ColorGridCell);
+			}
 		}
 
 		protected void DrawHilitedParent(Graphics graphics, Widget obj, int column, int row)
@@ -3116,12 +3116,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 			if (this.context.ShowAttachment && obj != this.panel)
 			{
 				this.DrawAttachment(graphics, obj, PanelsContext.ColorHiliteParent);
-			}
-
-			if (column != -1 && row != -1)
-			{
-				Rectangle area = this.objectModifier.GetGridCellArea(obj, column, row);
-				this.DrawGridHilite(graphics, area, PanelsContext.ColorGridCell);
 			}
 
 			double thickness = 2.0;
@@ -3143,6 +3137,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 			if (this.objectModifier.AreChildrenGrid(obj))
 			{
 				this.DrawGrid(graphics, obj, PanelsContext.ColorHiliteParent);
+			}
+
+			if (column != -1 && row != -1)
+			{
+				Rectangle area = this.objectModifier.GetGridCellArea(obj, column, row);
+				this.DrawGridHilite(graphics, area, PanelsContext.ColorGridCell);
 			}
 		}
 
