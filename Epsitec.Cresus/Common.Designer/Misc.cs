@@ -8,6 +8,51 @@ namespace Epsitec.Common.Designer
 	/// </summary>
 	public class Misc
 	{
+		static public Path GetCornerPath(Rectangle area)
+		{
+			//	Retourne le chemin contenant les 4 gros 'coins' d'une zone.
+			double length = System.Math.Min(area.Width, area.Height)*0.4;
+			double thickness = length*0.3;
+			length = System.Math.Floor(length+0.5);
+			thickness = System.Math.Floor(thickness+0.5);
+
+			Path path = new Path();
+
+			path.MoveTo(area.BottomLeft);
+			path.LineTo(area.Left, area.Bottom+length);
+			path.LineTo(area.Left+thickness, area.Bottom+length);
+			path.LineTo(area.Left+thickness, area.Bottom+thickness);
+			path.LineTo(area.Left+length, area.Bottom+thickness);
+			path.LineTo(area.Left+length, area.Bottom);
+			path.Close();
+
+			path.MoveTo(area.BottomRight);
+			path.LineTo(area.Right, area.Bottom+length);
+			path.LineTo(area.Right-thickness, area.Bottom+length);
+			path.LineTo(area.Right-thickness, area.Bottom+thickness);
+			path.LineTo(area.Right-length, area.Bottom+thickness);
+			path.LineTo(area.Right-length, area.Bottom);
+			path.Close();
+
+			path.MoveTo(area.TopLeft);
+			path.LineTo(area.Left, area.Top-length);
+			path.LineTo(area.Left+thickness, area.Top-length);
+			path.LineTo(area.Left+thickness, area.Top-thickness);
+			path.LineTo(area.Left+length, area.Top-thickness);
+			path.LineTo(area.Left+length, area.Top);
+			path.Close();
+
+			path.MoveTo(area.TopRight);
+			path.LineTo(area.Right, area.Top-length);
+			path.LineTo(area.Right-thickness, area.Top-length);
+			path.LineTo(area.Right-thickness, area.Top-thickness);
+			path.LineTo(area.Right-length, area.Top-thickness);
+			path.LineTo(area.Right-length, area.Top);
+			path.Close();
+
+			return path;
+		}
+
 		static public Path GetHatchPath(Rectangle rect, double distance, double thickness)
 		{
 			//	Retourne des hachures à 45 degrés remplissant (et débordant) un rectangle.
