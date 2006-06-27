@@ -299,6 +299,15 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
+		static public Color ColorGridCell
+		{
+			//	Couleur pour représenter une mise en évidence de cellule.
+			get
+			{
+				return Color.FromRgb(0, 0, 1);
+			}
+		}
+
 		static public Color ColorAttachment
 		{
 			//	Couleur pour représenter un ressort.
