@@ -1,6 +1,8 @@
 //	Copyright © 2005-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
+using System.Collections.Generic;
+
 namespace Epsitec.Common.Text.Wrappers
 {
 	using EventHandler = Epsitec.Common.Support.EventHandler;
@@ -49,11 +51,28 @@ namespace Epsitec.Common.Text.Wrappers
 		{
 			this.is_dirty = false;
 		}
-		
+
+		public object SaveInternalState()
+		{
+			return new SavedState (this);
+		}
+
+		public void RestoreInternalState(object state)
+		{
+			SavedState savedState = state as SavedState;
+			
+			if (savedState != null)
+			{
+				savedState.RestoreToState (this);
+			}
+		}
 		
 		public void AddPendingProperty(StateProperty property)
 		{
-			this.pending_properties[property] = property;
+			if (this.pending_properties.Contains (property) == false)
+			{
+				this.pending_properties.Add (property);
+			}
 		}
 		
 		public void RemovePendingProperty(StateProperty property)
@@ -69,9 +88,7 @@ namespace Epsitec.Common.Text.Wrappers
 		
 		public StateProperty[] GetPendingProperties()
 		{
-			StateProperty[] properties = new StateProperty[this.pending_properties.Count];
-			this.pending_properties.Keys.CopyTo (properties, 0);
-			return properties;
+			return this.pending_properties.ToArray ();
 		}
 		
 		public StateProperty[] GetDefinedProperties()
@@ -104,25 +121,25 @@ namespace Epsitec.Common.Text.Wrappers
 		{
 			this.flags.Clear ();
 			
-			foreach (System.Collections.DictionaryEntry entry in this.state)
+			foreach (KeyValuePair<StateProperty, object> pair in this.state)
 			{
-				this.flags[entry.Key] = true;
+				this.flags[pair.Key] = true;
 			}
 		}
 		
 		internal bool IsValueDefined(StateProperty property)
 		{
-			return this.state.Contains (property);
+			return this.state.ContainsKey (property);
 		}
 		
 		internal bool IsValueFlagged(StateProperty property)
 		{
-			return this.flags.Contains (property);
+			return this.flags.ContainsKey (property);
 		}
 		
 		internal bool ReadValueFlag(StateProperty property)
 		{
-			return (bool) this.flags[property];
+			return this.flags[property];
 		}
 		
 		internal void ClearValueFlags()
@@ -222,11 +239,6 @@ namespace Epsitec.Common.Text.Wrappers
 		}
 		
 		
-		internal void CopyFrom(AbstractState model)
-		{
-			this.state = model.state.Clone () as System.Collections.Hashtable;
-		}
-		
 		
 		internal void NotifyIfDirty()
 		{
@@ -259,15 +271,66 @@ namespace Epsitec.Common.Text.Wrappers
 				this.Changed (this);
 			}
 		}
-		
+
+		private class SavedState
+		{
+			public SavedState(AbstractState state)
+			{
+				SavedState.Copy (state.state, this.state);
+				SavedState.Copy (state.flags, this.flags);
+				SavedState.Copy (state.pending_properties, this.pending);
+			}
+
+			public void RestoreToState(AbstractState state)
+			{
+				SavedState.Copy (this.state, state.state);
+				SavedState.Copy (this.flags, state.flags);
+				SavedState.Copy (this.pending, state.pending_properties);
+				state.is_dirty = true;
+			}
+			
+			private static void Copy(Dictionary<StateProperty, object> a, Dictionary<StateProperty, object> b)
+			{
+				b.Clear ();
+
+				foreach (KeyValuePair<StateProperty, object> pair in a)
+				{
+					b.Add (pair.Key, pair.Value);
+				}
+			}
+
+			private static void Copy(Dictionary<StateProperty, bool> a, Dictionary<StateProperty, bool> b)
+			{
+				b.Clear ();
+
+				foreach (KeyValuePair<StateProperty, bool> pair in a)
+				{
+					b.Add (pair.Key, pair.Value);
+				}
+			}
+
+			private static void Copy(List<StateProperty> a, List<StateProperty> b)
+			{
+				b.Clear ();
+
+				foreach (StateProperty value in a)
+				{
+					b.Add (value);
+				}
+			}
+
+			Dictionary<StateProperty, object> state = new Dictionary<StateProperty, object> ();
+			Dictionary<StateProperty, bool> flags = new Dictionary<StateProperty, bool> ();
+			List<StateProperty> pending = new List<StateProperty> ();
+		}
 		
 		public event EventHandler				Changed;
 		
 		private readonly AbstractWrapper		wrapper;
 		private readonly AccessMode				access;
-		private System.Collections.Hashtable	state = new System.Collections.Hashtable ();
-		private System.Collections.Hashtable	flags = new System.Collections.Hashtable ();
-		private System.Collections.Hashtable	pending_properties = new System.Collections.Hashtable ();
+		private Dictionary<StateProperty, object> state = new Dictionary<StateProperty, object> ();
+		private Dictionary<StateProperty, bool> flags = new Dictionary<StateProperty, bool> ();
+		private List<StateProperty>				pending_properties = new List<StateProperty> ();
 		private int								change_id;
 		private bool							is_dirty;
 	}
