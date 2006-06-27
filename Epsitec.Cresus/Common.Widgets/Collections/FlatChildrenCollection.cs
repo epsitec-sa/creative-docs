@@ -223,10 +223,11 @@ namespace Epsitec.Common.Widgets.Collections
 			System.Diagnostics.Debug.Assert (visual != null);
 			System.Diagnostics.Debug.Assert (this.visuals.Contains (visual) == false);
 			System.Diagnostics.Debug.Assert (this.host == visual.Parent);
+
+			this.UpdateLayoutStatistics (visual, -1);
 			
 			visual.SetParentVisual (null);
 			visual.InheritedPropertyCache.ClearAllValues (visual);
-			this.UpdateLayoutStatistics (visual, -1);
 
 			System.Diagnostics.Debug.Assert (visual.Parent == null);
 			
