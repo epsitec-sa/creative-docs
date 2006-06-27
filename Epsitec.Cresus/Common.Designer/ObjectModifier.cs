@@ -338,10 +338,11 @@ namespace Epsitec.Common.Designer
 			return null;
 		}
 
-		public void SetGridColumnRow(Widget obj, int column, int row)
+		public void SetGridParentColumnRow(Widget obj, Widget parent, int column, int row)
 		{
-			//	Détermine la colonne à laquelle appartient l'objet.
-			System.Diagnostics.Debug.Assert(this.AreChildrenGrid(obj.Parent));
+			//	Détermine la cellule dans un tableau à laquelle appartient l'objet.
+			System.Diagnostics.Debug.Assert(this.AreChildrenGrid(parent));
+			obj.SetParent(parent);
 			GridLayoutEngine.SetColumn(obj, column);
 			GridLayoutEngine.SetRow(obj, row);
 		}
