@@ -316,18 +316,26 @@ namespace Epsitec.Common.Designer
 		public bool IsGridCellEmpty(Widget obj, int column, int row)
 		{
 			//	Indique si une cellule est libre, donc si elle ne contient aucun widget.
+			return (this.GetGridCellWidget(obj, column,row) == null);
+		}
+
+		public Widget GetGridCellWidget(Widget obj, int column, int row)
+		{
+			//	Retourne le widget occupant une cellule donnée.
 			if (this.AreChildrenGrid(obj))
 			{
-				GridLayoutEngine engine = LayoutEngine.GetLayoutEngine(obj) as GridLayoutEngine;
-				if (engine != null)
+				foreach (Widget children in obj.Children)
 				{
-					//	TODO: ???
-					if (column == 0 && row == 0)  return false;
-					return true;
+					int c = GridLayoutEngine.GetColumn(children);
+					int r = GridLayoutEngine.GetRow(children);
+					if (c == column && r == row)
+					{
+						return children;
+					}
 				}
 			}
 
-			return false;
+			return null;
 		}
 
 		public int GetGridColumn(Widget obj)
