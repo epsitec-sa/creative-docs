@@ -52,30 +52,67 @@ namespace Epsitec.Common.Designer
 			{
 				this.objectModifier.AdaptFromParent(obj, ObjectModifier.StackedHorizontalAttachment.Fill, ObjectModifier.StackedVerticalAttachment.Bottom);
 			}
+
+			if (cp == ObjectModifier.ChildrenPlacement.Grid)
+			{
+				this.objectModifier.AdaptFromParent(obj, ObjectModifier.StackedHorizontalAttachment.None, ObjectModifier.StackedVerticalAttachment.None);
+			}
 		}
 
 
-		static public void FixBounds(IEnumerable<Widget> list, ObjectModifier objectModifier)
+		static public void FixBounds(Widget parent, ObjectModifier objectModifier)
 		{
 			//	Mémorise la position actuelle de tous les fils d'un objet sélectionné.
-			foreach (Widget obj in list)
+			foreach (Widget children in parent.Children)
 			{
-				GeometryCache gc = obj.GetValue(GeometryCache.GeometryCacheProperty) as GeometryCache;
+				GeometryCache gc = children.GetValue(GeometryCache.GeometryCacheProperty) as GeometryCache;
 				if (gc == null)
 				{
-					gc = new GeometryCache(obj, objectModifier);
-					obj.SetValue(GeometryCache.GeometryCacheProperty, gc);
+					gc = new GeometryCache(children, objectModifier);
+					children.SetValue(GeometryCache.GeometryCacheProperty, gc);
 				}
 			}
 		}
 
-		static public void AdaptBounds(IEnumerable<Widget> list, ObjectModifier.ChildrenPlacement cp)
+		static public void AdaptBounds(Widget parent, ObjectModifier objectModifier, ObjectModifier.ChildrenPlacement cp)
 		{
 			//	Adapte les fils d'un objet sélectionné après un changement de ChildrenPlacement.
-			foreach (Widget obj in list)
+			if (cp == ObjectModifier.ChildrenPlacement.Grid)
 			{
-				GeometryCache gc = obj.GetValue(GeometryCache.GeometryCacheProperty) as GeometryCache;
-				gc.AdaptBounds(cp);
+				double n;
+				n = System.Math.Sqrt(parent.Children.Count);
+				n = System.Math.Ceiling(n);
+				n = System.Math.Max(n, 2);
+				int count = (int) n;
+
+				objectModifier.SetGridColumnsCount(parent, count);
+				objectModifier.SetGridRowsCount(parent, count);
+
+				int column = 0;
+				int row = 0;
+				foreach (Widget children in parent.Children)
+				{
+					GeometryCache gc = children.GetValue(GeometryCache.GeometryCacheProperty) as GeometryCache;
+					gc.AdaptBounds(cp);
+
+					objectModifier.SetGridColumn(children, column);
+					objectModifier.SetGridRow(children, row);
+
+					column ++;
+					if (column >= count)
+					{
+						column = 0;
+						row ++;
+					}
+				}
+			}
+			else
+			{
+				foreach (Widget children in parent.Children)
+				{
+					GeometryCache gc = children.GetValue(GeometryCache.GeometryCacheProperty) as GeometryCache;
+					gc.AdaptBounds(cp);
+				}
 			}
 		}
 

@@ -1014,10 +1014,16 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 					if (this.objectModifier.AreChildrenGrid(parent))
 					{
-						this.creatingObject = this.CreateObjectItem();
-						this.creatingObject.SetParent(parent);
-						GridLayoutEngine.SetColumn(this.creatingObject, 0);
-						GridLayoutEngine.SetRow(this.creatingObject, 0);
+						int column, row;
+						this.GridDetect(initialPos, parent, out column, out row);
+
+						if (column != -1 && row != -1)
+						{
+							this.creatingObject = this.CreateObjectItem();
+							this.creatingObject.SetParent(parent);
+							this.objectModifier.SetGridColumn(this.creatingObject, column);
+							this.objectModifier.SetGridRow(this.creatingObject, row);
+						}
 					}
 				}
 				else  // relâché hors de la fenêtre ?
@@ -2600,6 +2606,49 @@ namespace Epsitec.Common.Designer.MyWidgets
 				obj.SetParent(parent);
 				obj.ZOrder = newOrder;
 				this.objectModifier.AdaptFromParent(obj, ha, va);
+			}
+		}
+		#endregion
+
+
+		#region Grid
+		protected void GridDetect(Point mouse, Widget parent, out int column, out int row)
+		{
+			//	Détecte la colonne et la ligne visée dans un tableau.
+			column = -1;
+			row = -1;
+
+			if (!this.objectModifier.AreChildrenGrid(parent))  return;
+
+			GridLayoutEngine engine = LayoutEngine.GetLayoutEngine(parent) as GridLayoutEngine;
+			if (engine == null)  return;
+
+			Rectangle rect = this.objectModifier.GetFinalPadding(parent);
+
+			int columns = engine.ColumnDefinitions.Count;
+			double x = rect.Left;
+			for (int c=0; c<columns; c++)
+			{
+				ColumnDefinition def = engine.ColumnDefinitions[c];
+				double w = def.ActualWidth;
+				if (mouse.X >= x && mouse.X < x+w)
+				{
+					column = c;
+				}
+				x += w;
+			}
+
+			int rows = engine.RowDefinitions.Count;
+			double y = rect.Top;
+			for (int r=0; r<rows; r++)
+			{
+				RowDefinition def = engine.RowDefinitions[r];
+				double h = def.ActualHeight;
+				if (mouse.Y < y && mouse.Y >= y-h)
+				{
+					row = r;
+				}
+				y -= h;
 			}
 		}
 		#endregion

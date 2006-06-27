@@ -198,7 +198,9 @@ namespace Epsitec.Common.Designer
 
 				case ChildrenPlacement.Grid:
 					group.ChildrenLayoutMode = Widgets.Layouts.LayoutMode.Grid;
-
+					this.SetGridColumnsCount(obj, 2);
+					this.SetGridRowsCount(obj, 2);
+#if false
 					GridLayoutEngine engine = new GridLayoutEngine();
 					engine.ColumnDefinitions.Add(new ColumnDefinition(new GridLength(1, GridUnitType.Proportional)));
 					engine.ColumnDefinitions.Add(new ColumnDefinition(new GridLength(1, GridUnitType.Proportional)));
@@ -209,10 +211,142 @@ namespace Epsitec.Common.Designer
 					engine.RowDefinitions[0].MinHeight = 20;
 					engine.RowDefinitions[1].MinHeight = 20;
 					LayoutEngine.SetLayoutEngine(group, engine);
-					LayoutContext.AddToMeasureQueue (group);
-					LayoutContext.AddToArrangeQueue (group);
+					LayoutContext.AddToMeasureQueue(group);
+					LayoutContext.AddToArrangeQueue(group);
+#endif
 					break;
 			}
+		}
+		#endregion
+
+
+		#region Grid
+		public int GetGridColumnsCount(Widget obj)
+		{
+			//	Retourne le nombre total de colonnes de l'objet group.
+			if (this.AreChildrenGrid(obj))
+			{
+				GridLayoutEngine engine = LayoutEngine.GetLayoutEngine(obj) as GridLayoutEngine;
+				if (engine != null)
+				{
+					return engine.ColumnDefinitions.Count;
+				}
+			}
+
+			return 0;
+		}
+
+		public void SetGridColumnsCount(Widget obj, int columns)
+		{
+			//	Détermine le nombre total de colonnes de l'objet group.
+			System.Diagnostics.Debug.Assert(this.AreChildrenGrid(obj));
+
+			GridLayoutEngine engine = LayoutEngine.GetLayoutEngine(obj) as GridLayoutEngine;
+			if (engine == null)
+			{
+				engine = new GridLayoutEngine();
+				LayoutEngine.SetLayoutEngine(obj, engine);
+			}
+
+			while (columns != engine.ColumnDefinitions.Count)
+			{
+				int count = engine.ColumnDefinitions.Count;
+
+				if (columns > engine.ColumnDefinitions.Count)
+				{
+					engine.ColumnDefinitions.Add(new ColumnDefinition(new GridLength(1, GridUnitType.Proportional)));
+					engine.ColumnDefinitions[count].MinWidth = 20;
+				}
+				else
+				{
+					engine.ColumnDefinitions.RemoveAt(count-1);
+				}
+			}
+
+			LayoutContext.AddToMeasureQueue(obj);
+			LayoutContext.AddToArrangeQueue(obj);
+		}
+
+		public int GetGridRowsCount(Widget obj)
+		{
+			//	Retourne le nombre total de colonnes de l'objet group.
+			if (this.AreChildrenGrid(obj))
+			{
+				GridLayoutEngine engine = LayoutEngine.GetLayoutEngine(obj) as GridLayoutEngine;
+				if (engine != null)
+				{
+					return engine.RowDefinitions.Count;
+				}
+			}
+
+			return 0;
+		}
+
+		public void SetGridRowsCount(Widget obj, int rows)
+		{
+			//	Détermine le nombre total de colonnes de l'objet group.
+			System.Diagnostics.Debug.Assert(this.AreChildrenGrid(obj));
+
+			GridLayoutEngine engine = LayoutEngine.GetLayoutEngine(obj) as GridLayoutEngine;
+			if (engine == null)
+			{
+				engine = new GridLayoutEngine();
+				LayoutEngine.SetLayoutEngine(obj, engine);
+			}
+
+			while (rows != engine.RowDefinitions.Count)
+			{
+				int count = engine.RowDefinitions.Count;
+
+				if (rows > engine.RowDefinitions.Count)
+				{
+					engine.RowDefinitions.Add(new RowDefinition(new GridLength(1, GridUnitType.Proportional)));
+					engine.RowDefinitions[count].MinHeight = 20;
+				}
+				else
+				{
+					engine.RowDefinitions.RemoveAt(count-1);
+				}
+			}
+
+			LayoutContext.AddToMeasureQueue(obj);
+			LayoutContext.AddToArrangeQueue(obj);
+		}
+
+		public int GetGridColumn(Widget obj)
+		{
+			//	Retourne la colonne à laquelle appartient l'objet.
+			if (this.AreChildrenGrid(obj.Parent))
+			{
+				return GridLayoutEngine.GetColumn(obj);
+			}
+
+			return 0;
+		}
+
+		public void SetGridColumn(Widget obj, int column)
+		{
+			//	Détermine la colonne à laquelle appartient l'objet.
+			System.Diagnostics.Debug.Assert(this.AreChildrenGrid(obj.Parent));
+			GridLayoutEngine.SetColumn(obj, column);
+		}
+
+		public int GetGridRow(Widget obj)
+		{
+			//	Retourne la colonne à laquelle appartient l'objet.
+			if (this.AreChildrenGrid(obj.Parent))
+			{
+				return GridLayoutEngine.GetRow(obj);
+			}
+
+			return 0;
+		}
+
+		public void SetGridRow(Widget obj, int row)
+		{
+			//	Détermine la colonne à laquelle appartient l'objet.
+			System.Diagnostics.Debug.Assert(this.AreChildrenGrid(obj.Parent));
+			GridLayoutEngine.SetRow(obj, row);
 		}
 		#endregion
 
@@ -249,6 +383,7 @@ namespace Epsitec.Common.Designer
 
 			if (this.AreChildrenGrid(obj.Parent))
 			{
+				this.SetMargins(obj, new Margins(0, 0, 0, 0));
 			}
 
 			if (obj is StaticText)
@@ -366,7 +501,7 @@ namespace Epsitec.Common.Designer
 		{
 			//	Indique si l'objet a des marges.
 			ChildrenPlacement placement = this.GetParentPlacement(obj);
-			if (placement == ChildrenPlacement.HorizontalStacked || placement == ChildrenPlacement.VerticalStacked)
+			if (placement == ChildrenPlacement.HorizontalStacked || placement == ChildrenPlacement.VerticalStacked || placement == ChildrenPlacement.Grid)
 			{
 				return true;
 			}
