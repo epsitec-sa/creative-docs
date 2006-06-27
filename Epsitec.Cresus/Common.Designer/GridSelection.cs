@@ -16,7 +16,7 @@ namespace Epsitec.Common.Designer
 		public GridSelection(Widget obj)
 		{
 			this.obj = obj;
-			this.list = new List<GridSelectionItem>();
+			this.list = new List<Item>();
 		}
 
 		public int Count
@@ -27,88 +27,87 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		public GridSelectionItem Get(int rank)
+		public Item Get(int index)
 		{
-			return this.list[rank];
+			return this.list[index];
 		}
+
+#if false
+		public Item this[int index]
+		{
+			get
+			{
+				return this.list[index];
+			}
+		}
+#endif
 
 		public void Clear()
 		{
 			this.list.Clear();
 		}
 
-		public void Add(GridSelectionItem item)
+		public void Add(Item item)
 		{
 			this.list.Add(item);
 		}
 
-		public void Remove(GridSelectionItem item)
+		public void Remove(Item item)
 		{
 			this.list.Remove(item);
 		}
 
-		public void RemoveAt(int rank)
+		public void RemoveAt(int index)
 		{
-			this.list.RemoveAt(rank);
+			this.list.RemoveAt(index);
 		}
 
 
-		#region GridSelectionItem
-		public enum GridSelectionType
+		#region Item
+		public enum Unit
 		{
 			Cell,
 			Column,
 			Row,
 		}
 
-		public class GridSelectionItem
+		public class Item
 		{
-			public GridSelectionItem(GridSelectionType type, int rank, bool selected)
+			public Item(Unit unit, int index)
 			{
-				this.type = type;
-				this.rank = rank;
-				this.selected = selected;
+				this.unit = unit;
+				this.index = index;
 			}
 
-			public GridSelectionType Type
+			public Unit Unit
 			{
+				//	Unité de la sélection.
 				get
 				{
-					return this.type;
+					return this.unit;
 				}
 				set
 				{
-					this.type = value;
+					this.unit = value;
 				}
 			}
 
-			public int Rank
+			public int Index
 			{
+				//	Index de la cellule, ligne ou colonne.
+				//	Pour une cellule, il s'agit du rang depuis la cellule supérieure gauche.
 				get
 				{
-					return this.rank;
+					return this.index;
 				}
 				set
 				{
-					this.rank = value;
+					this.index = value;
 				}
 			}
 
-			public bool Selected
-			{
-				get
-				{
-					return this.selected;
-				}
-				set
-				{
-					this.selected = value;
-				}
-			}
-
-			protected GridSelectionType		type;
-			protected int					rank;
-			protected bool					selected;
+			protected Unit					unit;
+			protected int					index;
 		}
 		#endregion
 
@@ -116,6 +115,7 @@ namespace Epsitec.Common.Designer
 		#region Static methods
 		public static void Attach(Widget obj)
 		{
+			//	Attache un GridSelection au widget, si nécessaire.
 			GridSelection gs = obj.GetValue(GridSelection.GridSelectionProperty) as GridSelection;
 			if (gs == null)
 			{
@@ -126,11 +126,13 @@ namespace Epsitec.Common.Designer
 
 		public static void Detach(Widget obj)
 		{
+			//	Détache l'éventuel GridSelection du widget.
 			obj.ClearValue(GridSelection.GridSelectionProperty);
 		}
 
 		public static GridSelection Get(Widget obj)
 		{
+			//	Retourne le GridSelection attaché au widget.
 			return obj.GetValue(GridSelection.GridSelectionProperty) as GridSelection;
 		}
 		#endregion
@@ -139,6 +141,6 @@ namespace Epsitec.Common.Designer
 		protected static readonly DependencyProperty GridSelectionProperty = DependencyProperty.RegisterAttached("GridSelection", typeof(GridSelection), typeof(GridSelection));
 
 		protected Widget					obj;
-		protected List<GridSelectionItem>	list;
+		protected List<Item>				list;
 	}
 }

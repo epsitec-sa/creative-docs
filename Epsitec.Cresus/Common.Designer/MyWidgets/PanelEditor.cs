@@ -383,8 +383,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 					break;
 
 				case MessageType.MouseLeave:
-					this.SetHilitedObject(null);
-					this.SetHilitedParent(null);
+					this.SetHilitedObject(null, -1, -1);
+					this.SetHilitedParent(null, -1, -1);
 					break;
 
 				case MessageType.KeyDown:
@@ -646,10 +646,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 			else
 			{
-				this.SetHilitedObject(this.Detect(pos, isShiftPressed));  // met en évidence l'objet survolé par la souris
+				Widget obj = this.Detect(pos, isShiftPressed);
+				int column, row;
+				this.GridDetect(pos, obj, out column, out row);
+				this.SetHilitedObject(obj, column, row);  // met en évidence l'objet survolé par la souris
 
 				Rectangle rect = Rectangle.Empty;
-				Widget obj;
 				Attachment attachment;
 				if (this.AttachmentDetect(pos, out obj, out attachment))
 				{
@@ -819,7 +821,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Edition, souris déplacée.
 			this.ChangeMouseCursor(MouseCursorType.Edit);
 
-			this.SetHilitedObject(this.Detect(pos, false));  // met en évidence l'objet survolé par la souris
+			this.SetHilitedObject(this.Detect(pos, false), -1, -1);  // met en évidence l'objet survolé par la souris
 		}
 
 		protected void EditUp(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
@@ -890,6 +892,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Dessin d'un objet, souris pressée.
 			this.DeselectAll();
 
+			Point initialPos = pos;
 			this.isInside = true;
 			Widget parent = this.DetectGroup(pos);
 
@@ -917,7 +920,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.constrainsList.Activate(this.creatingRectangle, this.GetObjectBaseLine(this.creatingObject), null);
 			}
 
-			this.SetHilitedParent(parent);  // met en évidence le futur parent survolé par la souris
+			int column, row;
+			this.GridDetect(initialPos, parent, out column, out row);
+			this.SetHilitedParent(parent, column, row);  // met en évidence le futur parent survolé par la souris
 
 			this.module.MainWindow.UpdateInfoViewer();
 		}
@@ -964,7 +969,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.creatingWindow.SuperLight = !this.isInside;
 				this.ChangeSeparatorAlpha(this.creatingWindow);
 
-				this.SetHilitedParent(parent);  // met en évidence le futur parent survolé par la souris
+				int column, row;
+				this.GridDetect(initialPos, parent, out column, out row);
+				this.SetHilitedParent(parent, column, row);  // met en évidence le futur parent survolé par la souris
 
 				this.module.MainWindow.UpdateInfoViewer();
 			}
@@ -1036,7 +1043,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 				this.SetHilitedZOrderRectangle(Rectangle.Empty);
 				this.constrainsList.Ending();
-				this.SetHilitedParent(null);
+				this.SetHilitedParent(null, -1, -1);
 
 				this.lastCreatedObject = this.creatingObject;
 				this.creatingObject = null;
@@ -1201,7 +1208,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.handlingWindow.FocusedWidget = clone;
 				this.handlingWindow.Show();
 
-				this.SetHilitedObject(null);
+				this.SetHilitedObject(null, -1, -1);
 				this.SetHilitedAttachmentRectangle(Rectangle.Empty);
 				this.Invalidate();
 				return true;
@@ -1259,7 +1266,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.constrainsList.Starting(Rectangle.Empty, false);
 			}
 
-			this.SetHilitedParent(parent);  // met en évidence le futur parent survolé par la souris
+			int column, row;
+			this.GridDetect(pos, parent, out column, out row);
+			this.SetHilitedParent(parent, column, row);  // met en évidence le futur parent survolé par la souris
 
 			Widget container = new Widget();
 			container.PreferredSize = this.draggingRectangle.Size;
@@ -1289,7 +1298,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.draggingWindow.FocusedWidget = container;
 			this.draggingWindow.Show();
 
-			this.SetHilitedObject(null);
+			this.SetHilitedObject(null, -1, -1);
 			this.SetHilitedAttachmentRectangle(Rectangle.Empty);
 			this.isDragging = true;
 			this.Invalidate();
@@ -1341,7 +1350,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			this.ChangeSeparatorAlpha(this.draggingWindow);
 
-			this.SetHilitedParent(parent);  // met en évidence le futur parent survolé par la souris
+			int column, row;
+			this.GridDetect(pos, parent, out column, out row);
+			this.SetHilitedParent(parent, column, row);  // met en évidence le futur parent survolé par la souris
 			this.module.MainWindow.UpdateInfoViewer();
 		}
 
@@ -1383,7 +1394,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.DeleteSelection();
 			}
 
-			this.SetHilitedParent(null);
+			this.SetHilitedParent(null, -1, -1);
 			this.SetHilitedZOrderRectangle(Rectangle.Empty);
 			this.isDragging = false;
 			this.draggingArraySelected = null;
@@ -1470,6 +1481,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected Margins GetDetectPadding(Widget obj)
 		{
 			//	Retourne les marges intérieures pour la détection du padding.
+			if (this.objectModifier.AreChildrenGrid(obj))
+			{
+				return new Margins(double.MaxValue, double.MaxValue, double.MaxValue, double.MaxValue);
+			}
+
 			Margins padding = obj.Padding;
 			padding += obj.GetInternalPadding();
 
@@ -1605,22 +1621,26 @@ namespace Epsitec.Common.Designer.MyWidgets
 			GeometryCache.Clear(this.panel);
 		}
 
-		protected void SetHilitedObject(Widget obj)
+		protected void SetHilitedObject(Widget obj, int column, int row)
 		{
 			//	Détermine l'objet à mettre en évidence lors d'un survol.
-			if (this.hilitedObject != obj)
+			if (this.hilitedObject != obj || this.hilitedObjectColumn != column || this.hilitedObjectRow != row)
 			{
 				this.hilitedObject = obj;
+				this.hilitedObjectColumn = column;
+				this.hilitedObjectRow = row;
 				this.Invalidate();
 			}
 		}
 
-		protected void SetHilitedParent(Widget obj)
+		protected void SetHilitedParent(Widget obj, int column, int row)
 		{
 			//	Détermine l'objet parent à mettre en évidence lors d'un survol.
-			if (this.hilitedParent != obj)
+			if (this.hilitedParent != obj || this.hilitedParentColumn != column || this.hilitedParentRow != row)
 			{
 				this.hilitedParent = obj;
+				this.hilitedParentColumn = column;
+				this.hilitedParentRow = row;
 				this.Invalidate();
 			}
 		}
@@ -2612,6 +2632,24 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 
 		#region Grid
+		protected void GridClearSelection(Widget parent)
+		{
+			foreach (Widget obj in parent.Children)
+			{
+				if (obj is AbstractGroup)
+				{
+					if (GridSelection.Get(obj) != null)
+					{
+						GridSelection.Detach(obj);
+						obj.Invalidate();
+						this.Invalidate();
+					}
+
+					this.GridClearSelection(obj);
+				}
+			}
+		}
+
 		protected void GridDetect(Point mouse, Widget parent, out int column, out int row)
 		{
 			//	Détecte la colonne et la ligne visée dans un tableau.
@@ -2857,13 +2895,13 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Dessine l'objet survolé.
 			if (this.hilitedObject != null)
 			{
-				this.DrawHilitedObject(graphics, this.hilitedObject);
+				this.DrawHilitedObject(graphics, this.hilitedObject, this.hilitedObjectColumn, this.hilitedObjectRow);
 			}
 
 			//	Dessine l'objet parentsurvolé.
 			if (this.hilitedParent != null)
 			{
-				this.DrawHilitedParent(graphics, this.hilitedParent);
+				this.DrawHilitedParent(graphics, this.hilitedParent, this.hilitedParentColumn, this.hilitedParentRow);
 			}
 
 			//	Dessine le rectangle de sélection.
@@ -3014,7 +3052,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
-		protected void DrawHilitedObject(Graphics graphics, Widget obj)
+		protected void DrawHilitedObject(Graphics graphics, Widget obj, int column, int row)
 		{
 			//	Met en évidence l'objet survolé par la souris.
 			if (this.context.ShowAttachment)
@@ -3023,6 +3061,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 
 			Color color = PanelsContext.ColorHiliteSurface;
+
+			if (column != -1 && row != -1)
+			{
+				Rectangle area = this.objectModifier.GetGridCellArea(obj, column, row);
+				graphics.AddFilledRectangle(area);
+			}
 
 			if (obj is AbstractGroup)
 			{
@@ -3064,12 +3108,19 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
-		protected void DrawHilitedParent(Graphics graphics, Widget obj)
+		protected void DrawHilitedParent(Graphics graphics, Widget obj, int column, int row)
 		{
 			//	Met en évidence l'objet parent survolé par la souris.
 			if (this.context.ShowAttachment && obj != this.panel)
 			{
 				this.DrawAttachment(graphics, obj, PanelsContext.ColorHiliteParent);
+			}
+
+			if (column != -1 && row != -1)
+			{
+				Rectangle area = this.objectModifier.GetGridCellArea(obj, column, row);
+				graphics.AddFilledRectangle(area);
+				graphics.RenderSolid(PanelsContext.ColorHiliteSurface);
 			}
 
 			double thickness = 2.0;
@@ -3132,6 +3183,17 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			rect.Deflate(0.5);
 			graphics.AddRectangle(rect);
+
+			GridSelection gs = GridSelection.Get(obj);
+			if (gs != null)
+			{
+				for (int i=0; i<gs.Count; i++)
+				{
+					GridSelection.Item item = gs.Get(i);
+					Rectangle area = this.objectModifier.GetGridItemArea(obj, item);
+					graphics.AddFilledRectangle(area);
+				}
+			}
 
 			graphics.RenderSolid(color);
 		}
@@ -3601,7 +3663,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected Rectangle					hilitedAttachmentRectangle = Rectangle.Empty;
 		protected Rectangle					hilitedZOrderRectangle = Rectangle.Empty;
 		protected Widget					hilitedObject;
+		protected int						hilitedObjectColumn = -1;
+		protected int						hilitedObjectRow = -1;
 		protected Widget					hilitedParent;
+		protected int						hilitedParentColumn = -1;
+		protected int						hilitedParentRow = -1;
 		protected bool						isRectangling;  // j'invente des mots si je veux !
 		protected bool						isDragging;
 		protected DragWindow				draggingWindow;

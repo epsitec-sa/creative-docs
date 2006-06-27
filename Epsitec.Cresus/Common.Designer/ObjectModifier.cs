@@ -348,6 +348,117 @@ namespace Epsitec.Common.Designer
 			System.Diagnostics.Debug.Assert(this.AreChildrenGrid(obj.Parent));
 			GridLayoutEngine.SetRow(obj, row);
 		}
+
+		public Rectangle GetGridItemArea(Widget obj, GridSelection.Item item)
+		{
+			//	Retourne la zone rectangulaire correspondant à un Item.
+			if (this.AreChildrenGrid(obj))
+			{
+				GridLayoutEngine engine = LayoutEngine.GetLayoutEngine(obj) as GridLayoutEngine;
+				if (engine != null)
+				{
+					if (item.Unit == GridSelection.Unit.Cell)
+					{
+						int x = item.Index % engine.ColumnDefinitions.Count;
+						int y = item.Index / engine.ColumnDefinitions.Count;
+						double x1 = this.GetGridColumnPosition(obj, x);
+						double x2 = this.GetGridColumnPosition(obj, x+1);
+						double y1 = this.GetGridRowPosition(obj, y);
+						double y2 = this.GetGridRowPosition(obj, y+1);
+						return new Rectangle(x1, y1, x2-x1, y2-y1);
+					}
+
+					if (item.Unit == GridSelection.Unit.Column)
+					{
+						int x = item.Index;
+						double x1 = this.GetGridColumnPosition(obj, x);
+						double x2 = this.GetGridColumnPosition(obj, x+1);
+						double y1 = this.GetGridRowPosition(obj, 0);
+						double y2 = this.GetGridRowPosition(obj, engine.RowDefinitions.Count);
+						return new Rectangle(x1, y1, x2-x1, y2-y1);
+					}
+
+					if (item.Unit == GridSelection.Unit.Row)
+					{
+						int y = item.Index;
+						double x1 = this.GetGridColumnPosition(obj, 0);
+						double x2 = this.GetGridColumnPosition(obj, engine.ColumnDefinitions.Count);
+						double y1 = this.GetGridRowPosition(obj, y);
+						double y2 = this.GetGridRowPosition(obj, y+1);
+						return new Rectangle(x1, y1, x2-x1, y2-y1);
+					}
+				}
+			}
+
+			return Rectangle.Empty;
+		}
+
+		public Rectangle GetGridCellArea(Widget obj, int column, int row)
+		{
+			//	Retourne le rectangle d'uen cellule.
+			if (this.AreChildrenGrid(obj))
+			{
+				GridLayoutEngine engine = LayoutEngine.GetLayoutEngine(obj) as GridLayoutEngine;
+				if (engine != null)
+				{
+					double x1 = this.GetGridColumnPosition(obj, column);
+					double x2 = this.GetGridColumnPosition(obj, column+1);
+					double y1 = this.GetGridRowPosition(obj, row);
+					double y2 = this.GetGridRowPosition(obj, row+1);
+					return new Rectangle(x1, y1, x2-x1, y2-y1);
+				}
+			}
+
+			return Rectangle.Empty;
+		}
+
+		public double GetGridColumnPosition(Widget obj, int index)
+		{
+			//	Retourne la position d'une colonne.
+			if (this.AreChildrenGrid(obj))
+			{
+				GridLayoutEngine engine = LayoutEngine.GetLayoutEngine(obj) as GridLayoutEngine;
+				if (engine != null)
+				{
+					Rectangle rect = this.GetFinalPadding(obj);
+					double position = rect.Left;
+
+					for (int i=0; i<index; i++)
+					{
+						ColumnDefinition def = engine.ColumnDefinitions[i];
+						position += def.ActualWidth;
+					}
+
+					return position;
+				}
+			}
+
+			return 0;
+		}
+
+		public double GetGridRowPosition(Widget obj, int index)
+		{
+			//	Retourne la position d'une ligne.
+			if (this.AreChildrenGrid(obj))
+			{
+				GridLayoutEngine engine = LayoutEngine.GetLayoutEngine(obj) as GridLayoutEngine;
+				if (engine != null)
+				{
+					Rectangle rect = this.GetFinalPadding(obj);
+					double position = rect.Top;
+
+					for (int i=0; i<index; i++)
+					{
+						RowDefinition def = engine.RowDefinitions[i];
+						position -= def.ActualHeight;
+					}
+
+					return position;
+				}
+			}
+
+			return 0;
+		}
 		#endregion
 
 
