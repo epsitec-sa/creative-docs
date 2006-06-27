@@ -2969,7 +2969,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			graphics.RenderSolid(PanelsContext.ColorHiliteOutline);
 			graphics.LineWidth = 1;
 
-			if (this.objectModifier.AreChildrenStacked(obj.Parent))
+			if (this.objectModifier.HasMargins(obj))
 			{
 				Rectangle ext = bounds;
 				ext.Inflate(this.objectModifier.GetMargins(obj));
