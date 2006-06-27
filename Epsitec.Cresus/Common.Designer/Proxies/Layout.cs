@@ -220,9 +220,9 @@ namespace Epsitec.Common.Designer.Proxies
 				{
 					foreach (Widget obj in that.Widgets)
 					{
-						GeometryCache.FixBounds(obj.Children.Widgets, that.ObjectModifier);
+						GeometryCache.FixBounds(obj, that.ObjectModifier);
 						that.ObjectModifier.SetChildrenPlacement(obj, cp);
-						GeometryCache.AdaptBounds(obj.Children.Widgets, cp);
+						GeometryCache.AdaptBounds(obj, that.ObjectModifier, cp);
 					}
 				}
 				finally
