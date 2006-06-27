@@ -937,6 +937,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 				Point initialPos = pos;
 				this.isInside = this.IsInside(pos);
 				Widget parent = this.DetectGroup(pos);
+				int column = -1;
+				int row = -1;
 
 				this.CreateObjectAdjust(ref pos, parent, out this.creatingRectangle);
 
@@ -959,6 +961,18 @@ namespace Epsitec.Common.Designer.MyWidgets
 					this.ZOrderDetect(initialPos, parent, out group, out order, out ha, out va, out hilite);
 					this.SetHilitedZOrderRectangle(hilite);
 				}
+				else if (this.objectModifier.AreChildrenGrid(parent))
+				{
+					this.GridDetect(initialPos, parent, out column, out row);
+					if (!this.objectModifier.IsGridCellEmpty(parent, column, row))
+					{
+						parent = null;
+						this.isInside = false;
+					}
+
+					this.constrainsList.Activate(Rectangle.Empty, 0, null);
+					this.SetHilitedZOrderRectangle(Rectangle.Empty);
+				}
 				else
 				{
 					this.constrainsList.Activate(Rectangle.Empty, 0, null);
@@ -969,8 +983,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.creatingWindow.SuperLight = !this.isInside;
 				this.ChangeSeparatorAlpha(this.creatingWindow);
 
-				int column, row;
-				this.GridDetect(initialPos, parent, out column, out row);
 				this.SetHilitedParent(parent, column, row);  // met en évidence le futur parent survolé par la souris
 
 				this.module.MainWindow.UpdateInfoViewer();
@@ -987,10 +999,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 				if (this.isInside)
 				{
-					this.creatingWindow.Hide();
-					this.creatingWindow.Dispose();
-					this.creatingWindow = null;
-
 					Point initialPos = pos;
 					this.CreateObjectAdjust(ref pos, parent, out this.creatingRectangle);
 
@@ -1024,14 +1032,25 @@ namespace Epsitec.Common.Designer.MyWidgets
 						int column, row;
 						this.GridDetect(initialPos, parent, out column, out row);
 
-						if (column != -1 && row != -1)
+						if (this.objectModifier.IsGridCellEmpty(parent, column, row))
 						{
 							this.creatingObject = this.CreateObjectItem();
 							this.creatingObject.SetParent(parent);
 							this.objectModifier.SetGridColumn(this.creatingObject, column);
 							this.objectModifier.SetGridRow(this.creatingObject, row);
 						}
+						else
+						{
+							this.isInside = false;
+						}
 					}
+				}
+
+				if (this.isInside)
+				{
+					this.creatingWindow.Hide();
+					this.creatingWindow.Dispose();
+					this.creatingWindow = null;
 				}
 				else  // relâché hors de la fenêtre ?
 				{
