@@ -18,20 +18,17 @@ namespace Epsitec.Common.Text.Exchange
 	{
 		public CopyPasteContext(TextStory story)
 		{
-			this.navigator =  new TextNavigator (story);
-			this.Initialize (story, this.navigator);
+			TextNavigator navigator =  new TextNavigator (story);
+			this.Initialize (story, navigator);
 		}
 
 		public CopyPasteContext(TextStory story, TextNavigator navigator)
 		{
-			this.navigator =  navigator;
-			this.Initialize (story, this.navigator);
+			this.Initialize (story, navigator);
 		}
 
 		private void Initialize(TextStory story, TextNavigator navigator)
 		{
-			this.navigator =  new TextNavigator (story);
-
 			textWrapper = new Wrappers.TextWrapper ();
 			paraWrapper = new Wrappers.ParagraphWrapper ();
 
