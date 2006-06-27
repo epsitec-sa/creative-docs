@@ -64,6 +64,7 @@ namespace Epsitec.Common.Text.Wrappers
 			if (savedState != null)
 			{
 				savedState.RestoreToState (this);
+				this.NotifyIfDirty ();
 			}
 		}
 		
