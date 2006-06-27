@@ -940,9 +940,12 @@ namespace Epsitec.Common.Widgets
 
 			this.ArrangeOverride (context);
 
-			if (this.HasChildren)
+			Layouts.ILayoutEngine engine = Layouts.LayoutEngine.GetLayoutEngine (this);
+			
+			if ((this.HasChildren) ||
+				(engine != null))
 			{
-				this.LayoutArrange ();
+				this.LayoutArrange (engine);
 				this.ManualArrange ();
 			}
 
@@ -957,32 +960,38 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		protected virtual void LayoutArrange()
+		protected virtual void LayoutArrange(Layouts.ILayoutEngine engine)
 		{
-			IEnumerable<Visual> children = this.Children;
-			Layouts.ILayoutEngine engine = Layouts.LayoutEngine.GetLayoutEngine (this);
-
 			Drawing.Rectangle rect = this.Client.Bounds;
 
 			rect.Deflate (this.Padding);
 			rect.Deflate (this.GetInternalPadding ());
 
-			if (this.children.AnchorLayoutCount > 0)
+			if (this.HasChildren)
 			{
-				Layouts.LayoutEngine.AnchorEngine.UpdateLayout (this, rect, children);
-			}
-			if (this.children.DockLayoutCount > 0)
-			{
-				Layouts.LayoutEngine.DockEngine.UpdateLayout (this, rect, children);
-			}
-			if (this.children.StackLayoutCount > 0)
-			{
-				Layouts.LayoutEngine.StackEngine.UpdateLayout (this, rect, children);
-			}
+				IEnumerable<Visual> children = this.Children;
 
-			if (engine != null)
+				if (this.children.AnchorLayoutCount > 0)
+				{
+					Layouts.LayoutEngine.AnchorEngine.UpdateLayout (this, rect, children);
+				}
+				if (this.children.DockLayoutCount > 0)
+				{
+					Layouts.LayoutEngine.DockEngine.UpdateLayout (this, rect, children);
+				}
+				if (this.children.StackLayoutCount > 0)
+				{
+					Layouts.LayoutEngine.StackEngine.UpdateLayout (this, rect, children);
+				}
+
+				if (engine != null)
+				{
+					engine.UpdateLayout (this, rect, children);
+				}
+			}
+			else if (engine != null)
 			{
-				engine.UpdateLayout (this, rect, children);
+				engine.UpdateLayout (this, rect, new Visual[0]);
 			}
 		}
 
@@ -1001,11 +1010,12 @@ namespace Epsitec.Common.Widgets
 			max.Width = System.Math.Min (max.Width, this.MaxWidth);
 			max.Height = System.Math.Min (max.Height, this.MaxHeight);
 
+			Layouts.ILayoutEngine engine = Layouts.LayoutEngine.GetLayoutEngine (this);
+			
 			if (this.HasChildren)
 			{
 				Drawing.Margins padding = this.Padding + this.GetInternalPadding ();
 				IEnumerable<Visual> children = this.children;
-				Layouts.ILayoutEngine engine = Layouts.LayoutEngine.GetLayoutEngine (this);
 
 				double paddingWidth  = padding.Width;
 				double paddingHeight = padding.Height;
@@ -1038,7 +1048,27 @@ namespace Epsitec.Common.Widgets
 				max.Width  += paddingWidth;
 				max.Height += paddingHeight;
 			}
-			
+			else if (engine != null)
+			{
+				Drawing.Margins padding = this.Padding + this.GetInternalPadding ();
+				IEnumerable<Visual> children = new Visual[0];
+
+				double paddingWidth  = padding.Width;
+				double paddingHeight = padding.Height;
+
+				min.Width  = System.Math.Max (0, min.Width  - paddingWidth);
+				min.Height = System.Math.Max (0, min.Height - paddingHeight);
+				max.Width  = System.Math.Max (0, max.Width  - paddingWidth);
+				max.Height = System.Math.Max (0, max.Height - paddingHeight);
+				
+				engine.UpdateMinMax (this, context, children, ref min, ref max);
+
+				min.Width  += paddingWidth;
+				min.Height += paddingHeight;
+				max.Width  += paddingWidth;
+				max.Height += paddingHeight;
+			}
+
 			if (context != null)
 			{
 				context.DefineMinWidth (this, min.Width);

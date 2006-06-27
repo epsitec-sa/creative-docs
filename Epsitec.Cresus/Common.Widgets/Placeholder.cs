@@ -136,7 +136,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		protected override void LayoutArrange()
+		protected override void LayoutArrange(Layouts.ILayoutEngine engine)
 		{
 			Widget parent = this.Parent;
 			
@@ -144,9 +144,9 @@ namespace Epsitec.Common.Widgets
 				(Layouts.GridLayoutEngine.GetColumn (this) >= 0) &&
 				(Layouts.GridLayoutEngine.GetRow (this) >= 0))
 			{
-				Layouts.ILayoutEngine engine = Layouts.LayoutEngine.GetLayoutEngine (parent);
+				Layouts.ILayoutEngine parentEngine = Layouts.LayoutEngine.GetLayoutEngine (parent);
 				
-				if (engine is Layouts.GridLayoutEngine)
+				if (parentEngine is Layouts.GridLayoutEngine)
 				{
 					//	This placeholder is in a grid. No need to arrange the children;
 					//	they get arranged by the grid itself !
@@ -155,7 +155,7 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 			
-			base.LayoutArrange ();
+			base.LayoutArrange (engine);
 		}
 		
 		protected override void OnBindingChanged(DependencyProperty property)
