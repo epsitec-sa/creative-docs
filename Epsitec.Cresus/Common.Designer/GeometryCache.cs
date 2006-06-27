@@ -19,6 +19,7 @@ namespace Epsitec.Common.Designer
 			this.objectModifier = objectModifier;
 
 			this.bounds = this.objectModifier.GetBounds(this.obj);
+			this.margins = this.objectModifier.GetMargins(this.obj);
 
 			if (this.objectModifier.GetChildrenPlacement(obj.Parent) == ObjectModifier.ChildrenPlacement.Anchored)
 			{
@@ -46,16 +47,19 @@ namespace Epsitec.Common.Designer
 			if (cp == ObjectModifier.ChildrenPlacement.HorizontalStacked)
 			{
 				this.objectModifier.AdaptFromParent(obj, ObjectModifier.StackedHorizontalAttachment.Left, ObjectModifier.StackedVerticalAttachment.Fill);
+				this.objectModifier.SetMargins(this.obj, this.margins);
 			}
 
 			if (cp == ObjectModifier.ChildrenPlacement.VerticalStacked)
 			{
 				this.objectModifier.AdaptFromParent(obj, ObjectModifier.StackedHorizontalAttachment.Fill, ObjectModifier.StackedVerticalAttachment.Bottom);
+				this.objectModifier.SetMargins(this.obj, this.margins);
 			}
 
 			if (cp == ObjectModifier.ChildrenPlacement.Grid)
 			{
 				this.objectModifier.AdaptFromParent(obj, ObjectModifier.StackedHorizontalAttachment.None, ObjectModifier.StackedVerticalAttachment.None);
+				this.objectModifier.SetMargins(this.obj, this.margins);
 			}
 		}
 
@@ -136,6 +140,7 @@ namespace Epsitec.Common.Designer
 		protected Widget										obj;
 		protected ObjectModifier								objectModifier;
 		protected Rectangle										bounds = Rectangle.Empty;
+		protected Margins										margins = Margins.Zero;
 		protected ObjectModifier.AnchoredHorizontalAttachment	aha;
 		protected ObjectModifier.AnchoredVerticalAttachment		ava;
 	}
