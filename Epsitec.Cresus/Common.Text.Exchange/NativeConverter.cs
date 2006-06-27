@@ -255,7 +255,7 @@ namespace Epsitec.Common.Text.Exchange
 						
 				}
 
-				if (notHandled && pasteMode == PasteMode.KeepSource)
+				if (notHandled && pasteMode == PasteMode.MatchDestination)
 				{
 					if (subelements[0] == "par")
 					{
@@ -334,28 +334,29 @@ namespace Epsitec.Common.Text.Exchange
 				}
 			}
 
+			if (!invertItalic)
+				this.textWrapper.Defined.ClearInvertItalic ();
+
+			if (!invertBold)
+				this.textWrapper.Defined.ClearInvertBold ();
+
+			if (!underline)
+				this.textWrapper.Defined.ClearUnderline ();
+
+			if (!overline)
+				this.textWrapper.Defined.ClearOverline ();
+
+			if (!strikeout)
+				this.textWrapper.Defined.ClearStrikeout ();
+
+			if (!xscript)
+				this.textWrapper.Defined.ClearXscript ();
+
+			if (!color)
+				this.textWrapper.Defined.ClearColor ();
+
 			if (pasteMode == PasteMode.KeepSource)
 			{
-				if (!invertItalic)
-					this.textWrapper.Defined.ClearInvertItalic ();
-
-				if (!invertBold)
-					this.textWrapper.Defined.ClearInvertBold ();
-
-				if (!underline)
-					this.textWrapper.Defined.ClearUnderline ();
-
-				if (!overline)
-					this.textWrapper.Defined.ClearOverline ();
-
-				if (!strikeout)
-					this.textWrapper.Defined.ClearStrikeout ();
-
-				if (!xscript)
-					this.textWrapper.Defined.ClearXscript ();
-
-				if (!color)
-					this.textWrapper.Defined.ClearColor ();
 
 				if (!fontFace)
 					this.textWrapper.Defined.ClearFontFace ();
@@ -388,6 +389,10 @@ namespace Epsitec.Common.Text.Exchange
 			this.textWrapper.ResumeSynchronizations ();
 		}
 
+		public void ResetParagraph()
+		{
+			this.paraWrapper.Defined.RestoreInternalState (this.savedDefinedParagraph);
+		}
 
 		private TextStyle StyleFromCaption(string caption)
 		{
@@ -516,6 +521,7 @@ namespace Epsitec.Common.Text.Exchange
 
 
 			this.paraWrapper.SuspendSynchronizations ();
+			this.savedDefinedParagraph = this.paraWrapper.Defined.SaveInternalState ();
 
 			foreach (string element in elements)
 			{
@@ -855,6 +861,8 @@ namespace Epsitec.Common.Text.Exchange
 		private TextNavigator navigator;
 		private TextStory story;
 		private PasteMode pasteMode;
+
+		private object savedDefinedParagraph;
 
 	}
 

@@ -64,7 +64,11 @@ namespace Epsitec.Common.Text.Exchange
 
 					if (paragraphSep)
 					{
+#if true
+						this.nativeConverter.ResetParagraph ();
+#else
 						this.cpContext.ParaWrapper.Defined.ClearDefinedProperties ();
+#endif
 						paragraphSep = false;
 					}
 				}
