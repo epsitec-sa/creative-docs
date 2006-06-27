@@ -12,7 +12,7 @@ namespace Epsitec.Common.Designer
 		{
 			//	Retourne le chemin contenant les 4 gros 'coins' d'une zone.
 			double length = System.Math.Min(area.Width, area.Height)*0.4;
-			double thickness = length*0.3;
+			double thickness = length*0.4;
 			length = System.Math.Floor(length+0.5);
 			thickness = System.Math.Floor(thickness+0.5);
 

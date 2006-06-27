@@ -3067,7 +3067,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			if (column != -1 && row != -1)
 			{
 				Rectangle area = this.objectModifier.GetGridCellArea(obj, column, row);
-				this.DrawGridHilite(graphics, area, color);
+				this.DrawGridHilite(graphics, area, PanelsContext.ColorGridCell);
 			}
 
 			if (obj is AbstractGroup)
@@ -3121,7 +3121,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			if (column != -1 && row != -1)
 			{
 				Rectangle area = this.objectModifier.GetGridCellArea(obj, column, row);
-				this.DrawGridHilite(graphics, area, PanelsContext.ColorHiliteParent);
+				this.DrawGridHilite(graphics, area, PanelsContext.ColorGridCell);
 			}
 
 			double thickness = 2.0;
