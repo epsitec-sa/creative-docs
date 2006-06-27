@@ -31,11 +31,11 @@ namespace Epsitec.Common.Designer.Proxies
 			}
 		}
 
-		public double GridColumnsCount
+		public int GridColumnsCount
 		{
 			get
 			{
-				return (double) this.GetValue(Grid.GridColumnsCountProperty);
+				return (int) this.GetValue(Grid.GridColumnsCountProperty);
 			}
 			set
 			{
@@ -43,11 +43,11 @@ namespace Epsitec.Common.Designer.Proxies
 			}
 		}
 
-		public double GridRowsCount
+		public int GridRowsCount
 		{
 			get
 			{
-				return (double) this.GetValue(Grid.GridRowsCountProperty);
+				return (int) this.GetValue (Grid.GridRowsCountProperty);
 			}
 			set
 			{
@@ -68,12 +68,12 @@ namespace Epsitec.Common.Designer.Proxies
 				int columns = this.ObjectModifier.GetGridColumnsCount(this.DefaultWidget);
 				int rows    = this.ObjectModifier.GetGridRowsCount(this.DefaultWidget);
 
-				this.GridColumnsCount = (double) columns;
-				this.GridRowsCount    = (double) rows;
+				this.GridColumnsCount = columns;
+				this.GridRowsCount    = rows;
 			}
 		}
 
-		private void NotifyColumnsCountChanged(double columns)
+		private void NotifyColumnsCountChanged(int columns)
 		{
 			//	Cette méthode est appelée à la suite de la modification d'une de nos propriétés
 			//	de définition pour permettre de mettre à jour les widgets connectés.
@@ -85,7 +85,7 @@ namespace Epsitec.Common.Designer.Proxies
 				{
 					foreach (Widget obj in this.Widgets)
 					{
-						this.ObjectModifier.SetGridColumnsCount(obj, (int) columns);
+						this.ObjectModifier.SetGridColumnsCount(obj, columns);
 					}
 				}
 				finally
@@ -95,7 +95,7 @@ namespace Epsitec.Common.Designer.Proxies
 			}
 		}
 
-		private void NotifyRowsCountChanged(double rows)
+		private void NotifyRowsCountChanged(int rows)
 		{
 			//	Cette méthode est appelée à la suite de la modification d'une de nos propriétés
 			//	de définition pour permettre de mettre à jour les widgets connectés.
@@ -107,7 +107,7 @@ namespace Epsitec.Common.Designer.Proxies
 				{
 					foreach (Widget obj in this.Widgets)
 					{
-						this.ObjectModifier.SetGridRowsCount(obj, (int) rows);
+						this.ObjectModifier.SetGridRowsCount(obj, rows);
 					}
 				}
 				finally
@@ -119,14 +119,14 @@ namespace Epsitec.Common.Designer.Proxies
 
 		private static void NotifyGridColumnsCountChanged(DependencyObject o, object oldValue, object newValue)
 		{
-			double value = (double) newValue;
+			int value = (int) newValue;
 			Grid that = (Grid) o;
 			that.NotifyColumnsCountChanged(value);
 		}
 
 		private static void NotifyGridRowsCountChanged(DependencyObject o, object oldValue, object newValue)
 		{
-			double value = (double) newValue;
+			int value = (int) newValue;
 			Grid that = (Grid) o;
 			that.NotifyRowsCountChanged(value);
 		}
@@ -142,8 +142,7 @@ namespace Epsitec.Common.Designer.Proxies
 		}
 
 
-		//	TODO: remplacer un jour le type 'double' par 'int' !
-		public static readonly DependencyProperty GridColumnsCountProperty = DependencyProperty.Register("GridColumnsCount", typeof(double), typeof(Grid), new DependencyPropertyMetadata(2.0, Grid.NotifyGridColumnsCountChanged));
-		public static readonly DependencyProperty GridRowsCountProperty	   = DependencyProperty.Register("GridRowsCount",    typeof(double), typeof(Grid), new DependencyPropertyMetadata(2.0, Grid.NotifyGridRowsCountChanged));
+		public static readonly DependencyProperty GridColumnsCountProperty = DependencyProperty.Register ("GridColumnsCount", typeof (int), typeof (Grid), new DependencyPropertyMetadata (2, Grid.NotifyGridColumnsCountChanged));
+		public static readonly DependencyProperty GridRowsCountProperty	   = DependencyProperty.Register ("GridRowsCount", typeof (int), typeof (Grid), new DependencyPropertyMetadata (2, Grid.NotifyGridRowsCountChanged));
 	}
 }
