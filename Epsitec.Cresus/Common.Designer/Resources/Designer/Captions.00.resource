@@ -22,9 +22,10 @@
   <data id="0G">&lt;s:data id="_0" f:Description="Position verticale" f:Labels="{Collection {Text 'Pos. v.'}, {Text 'Position verticale'}}" /&gt;</data>
   <data id="0H">&lt;s:data id="_0" f:Description="Alignement horizontal" f:Labels="{Collection {Text 'Align. h.'}, {Text 'Alignement horizontal'}}" /&gt;</data>
   <data id="0I">&lt;s:data id="_0" f:Description="Alignement vertical" f:Labels="{Collection {Text 'Align. v.'}, {Text 'Alignement vertical'}}" /&gt;</data>
-  
-  <data id="0J">&lt;s:data id="_0" f:Description="" /&gt;</data>
-  <data id="0K">&lt;s:data id="_0" f:Description="" /&gt;</data>
+
+  <data id="0J">&lt;s:data id="_0" f:Description="Nb de colonnes" f:Labels="{Collection {Text 'Nombre de colonnes'}}" /&gt;</data>
+  <data id="0K">&lt;s:data id="_0" f:Description="Nb de lignes" f:Labels="{Collection {Text 'Nombre de lignes'}}" /&gt;</data>
+
   <data id="0L">&lt;s:data id="_0" f:Description="" /&gt;</data>
   <data id="0M">&lt;s:data id="_0" f:Description="" /&gt;</data>
   <data id="0N">&lt;s:data id="_0" f:Description="" /&gt;</data>
