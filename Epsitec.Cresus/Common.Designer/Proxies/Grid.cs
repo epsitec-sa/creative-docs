@@ -142,6 +142,7 @@ namespace Epsitec.Common.Designer.Proxies
 		}
 
 
+		//	TODO: remplacer un jour le type 'double' par 'int' !
 		public static readonly DependencyProperty GridColumnsCountProperty = DependencyProperty.Register("GridColumnsCount", typeof(double), typeof(Grid), new DependencyPropertyMetadata(2.0, Grid.NotifyGridColumnsCountChanged));
 		public static readonly DependencyProperty GridRowsCountProperty	   = DependencyProperty.Register("GridRowsCount",    typeof(double), typeof(Grid), new DependencyPropertyMetadata(2.0, Grid.NotifyGridRowsCountChanged));
 	}

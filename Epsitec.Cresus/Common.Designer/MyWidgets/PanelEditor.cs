@@ -3087,6 +3087,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 			rect.Deflate(thickness/2+0.5);
 			graphics.AddRectangle(rect);
 			graphics.RenderSolid(PanelsContext.ColorHiliteParent);
+
+			if (this.objectModifier.AreChildrenGrid(obj))
+			{
+				this.DrawGrid(graphics, obj, PanelsContext.ColorHiliteParent);
+			}
 		}
 
 		protected void DrawGrid(Graphics graphics, Widget obj, Color color)
@@ -3097,6 +3102,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			if (engine == null)  return;
 
 			Rectangle rect = this.objectModifier.GetFinalPadding(obj);
+			graphics.Align(ref rect);
 
 			int columns = engine.ColumnDefinitions.Count;
 			double x = rect.Left;
@@ -3104,7 +3110,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				ColumnDefinition def = engine.ColumnDefinitions[c];
 				x += def.ActualWidth;
-				//?x += def.MinWidth;
 				Point p1 = new Point(x, rect.Bottom+1);
 				Point p2 = new Point(x, rect.Top-1);
 				Misc.AlignForLine(graphics, ref p1);
@@ -3118,13 +3123,15 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				RowDefinition def = engine.RowDefinitions[r];
 				y -= def.ActualHeight;
-				//?y -= def.MinHeight;
 				Point p1 = new Point(rect.Left+1, y);
 				Point p2 = new Point(rect.Right-1, y);
 				Misc.AlignForLine(graphics, ref p1);
 				Misc.AlignForLine(graphics, ref p2);
 				graphics.AddLine(p1, p2);
 			}
+
+			rect.Deflate(0.5);
+			graphics.AddRectangle(rect);
 
 			graphics.RenderSolid(color);
 		}
