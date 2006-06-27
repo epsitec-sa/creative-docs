@@ -1279,8 +1279,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				this.constrainsList.Starting(this.draggingRectangle, false);
 			}
-
-			if (this.objectModifier.AreChildrenStacked(parent))
+			else
 			{
 				this.constrainsList.Starting(Rectangle.Empty, false);
 			}
@@ -1328,6 +1327,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Mouvement du drag pour déplacer les objets sélectionnés.
 			this.isInside = this.IsInside(pos);
 			Widget parent = this.DetectGroup(pos);
+			int column = -1;
+			int row = -1;
 			Point adjust = Point.Zero;
 
 			if (this.objectModifier.AreChildrenAnchored(parent))
@@ -1358,6 +1359,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.ZOrderDetect(pos, parent, out group, out order, out ha, out va, out hilite);
 				this.SetHilitedZOrderRectangle(hilite);
 			}
+			else if (this.objectModifier.AreChildrenGrid(parent))
+			{
+				this.GridDetect(pos, parent, out column, out row);
+			}
 			else
 			{
 				this.constrainsList.Activate(Rectangle.Empty, 0, null);
@@ -1369,8 +1374,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			this.ChangeSeparatorAlpha(this.draggingWindow);
 
-			int column, row;
-			this.GridDetect(pos, parent, out column, out row);
 			this.SetHilitedParent(parent, column, row);  // met en évidence le futur parent survolé par la souris
 			this.module.MainWindow.UpdateInfoViewer();
 		}
@@ -1404,6 +1407,30 @@ namespace Epsitec.Common.Designer.MyWidgets
 					this.ZOrderDetect(pos, parent, out group, out order, out ha, out va, out hilite);
 					this.ZOrderChangeSelection(group, order, ha, va);
 					this.OnChildrenGeometryChanged();
+				}
+
+				if (this.objectModifier.AreChildrenGrid(parent))
+				{
+					int column, row;
+					this.GridDetect(pos, parent, out column, out row);
+
+					Widget select = this.selectedObjects[0];
+					Widget actual = this.objectModifier.GetGridCellWidget(parent, column, row);
+
+					if (select != actual)
+					{
+						int ic = this.objectModifier.GetGridColumn(select);
+						int ir = this.objectModifier.GetGridRow(select);
+
+						this.objectModifier.SetGridColumnRow(select, column, row);
+
+						if (actual != null)
+						{
+							this.objectModifier.SetGridColumnRow(actual, ic, ir);
+						}
+
+						this.OnChildrenGeometryChanged();
+					}
 				}
 			}
 			else  // relâché hors de la fenêtre ?
