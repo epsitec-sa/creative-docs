@@ -1419,14 +1419,15 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 					if (select != actual)
 					{
+						Widget ip = select.Parent;
 						int ic = this.objectModifier.GetGridColumn(select);
 						int ir = this.objectModifier.GetGridRow(select);
 
-						this.objectModifier.SetGridColumnRow(select, column, row);
+						this.objectModifier.SetGridParentColumnRow(select, parent, column, row);
 
 						if (actual != null)
 						{
-							this.objectModifier.SetGridColumnRow(actual, ic, ir);
+							this.objectModifier.SetGridParentColumnRow(actual, ip, ic, ir);
 						}
 
 						this.OnChildrenGeometryChanged();
