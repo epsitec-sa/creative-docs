@@ -313,6 +313,23 @@ namespace Epsitec.Common.Designer
 			LayoutContext.AddToArrangeQueue(obj);
 		}
 
+		public bool IsGridCellEmpty(Widget obj, int column, int row)
+		{
+			//	Indique si une cellule est libre, donc si elle ne contient aucun widget.
+			if (this.AreChildrenGrid(obj))
+			{
+				GridLayoutEngine engine = LayoutEngine.GetLayoutEngine(obj) as GridLayoutEngine;
+				if (engine != null)
+				{
+					//	TODO: ???
+					if (column == 0 && row == 0)  return false;
+					return true;
+				}
+			}
+
+			return false;
+		}
+
 		public int GetGridColumn(Widget obj)
 		{
 			//	Retourne la colonne à laquelle appartient l'objet.
