@@ -142,7 +142,7 @@ namespace Epsitec.Common.Designer.Proxies
 		}
 
 
-		public static readonly DependencyProperty GridColumnsCountProperty = DependencyProperty.Register ("GridColumnsCount", typeof (int), typeof (Grid), new DependencyPropertyMetadata (2, Grid.NotifyGridColumnsCountChanged));
-		public static readonly DependencyProperty GridRowsCountProperty	   = DependencyProperty.Register ("GridRowsCount", typeof (int), typeof (Grid), new DependencyPropertyMetadata (2, Grid.NotifyGridRowsCountChanged));
+		public static readonly DependencyProperty GridColumnsCountProperty = DependencyProperty.Register("GridColumnsCount", typeof(int), typeof(Grid), new DependencyPropertyMetadata(2, Grid.NotifyGridColumnsCountChanged));
+		public static readonly DependencyProperty GridRowsCountProperty	   = DependencyProperty.Register("GridRowsCount",    typeof(int), typeof(Grid), new DependencyPropertyMetadata(2, Grid.NotifyGridRowsCountChanged));
 	}
 }
