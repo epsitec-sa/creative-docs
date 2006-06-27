@@ -87,10 +87,11 @@ namespace Epsitec.Common.Designer
 				n = System.Math.Sqrt(parent.Children.Count);
 				n = System.Math.Ceiling(n);
 				n = System.Math.Max(n, 2);
-				int count = (int) n;
+				int columns = (int) n;
+				int rows = (parent.Children.Count+columns-1)/columns;
 
-				objectModifier.SetGridColumnsCount(parent, count);
-				objectModifier.SetGridRowsCount(parent, count);
+				objectModifier.SetGridColumnsCount(parent, columns);
+				objectModifier.SetGridRowsCount(parent, rows);
 
 				int column = 0;
 				int row = 0;
@@ -103,7 +104,7 @@ namespace Epsitec.Common.Designer
 					objectModifier.SetGridRow(children, row);
 
 					column ++;
-					if (column >= count)
+					if (column >= columns)
 					{
 						column = 0;
 						row ++;
