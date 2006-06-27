@@ -319,23 +319,56 @@ namespace Epsitec.Common.Designer
 			return (this.GetGridCellWidget(obj, column,row) == null);
 		}
 
-		public Widget GetGridCellWidget(Widget obj, int column, int row)
+		public Widget GetGridCellWidget(Widget container, int column, int row)
 		{
-			//	Retourne le widget occupant une cellule donnée.
-			if (this.AreChildrenGrid(obj))
+			//	Retourne le premier widget occupant une cellule donnée.
+			foreach (Widget widget in this.GetGridCellWidgets (container, column, row))
 			{
-				foreach (Widget children in obj.Children)
+				return widget;
+			}
+			
+			return null;
+		}
+		public IEnumerable<Widget> GetGridCellWidgets(Widget container, int column, int row)
+		{
+			//	Retourne tous les widgets occupant une cellule donnée, en tenant
+			//	compte de leur span.
+			if (this.AreChildrenGrid (container))
+			{
+				foreach (Widget child in container.Children)
 				{
-					int c = GridLayoutEngine.GetColumn(children);
-					int r = GridLayoutEngine.GetRow(children);
-					if (c == column && r == row)
+					int c = GridLayoutEngine.GetColumn (child);
+					int r = GridLayoutEngine.GetRow (child);
+
+					if ((c < 0) || (c > column))
 					{
-						return children;
+						continue;
+					}
+					if ((r < 0) || (r > row))
+					{
+						continue;
+					}
+
+					int columnSpan = GridLayoutEngine.GetColumnSpan (child);
+					int rowSpan    = GridLayoutEngine.GetRowSpan (child);
+
+					//	Si le widget implémente IGridPermeable, cela implique qu'il a son
+					//	mot à dire sur le nombre de lignes et/ou colonnes qu'il utilise :
+					
+					IGridPermeable permeable = child as IGridPermeable;
+					
+					if (permeable != null)
+					{
+						permeable.UpdateGridSpan (ref columnSpan, ref rowSpan);
+					}
+					
+					if ((c <= column) && (c+columnSpan-1 >= column) &&
+						(r <= row) && (r+rowSpan-1 >= row))
+					{
+						yield return child;
 					}
 				}
 			}
-
-			return null;
 		}
 
 		public void SetGridParentColumnRow(Widget obj, Widget parent, int column, int row)
