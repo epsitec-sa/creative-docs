@@ -4,6 +4,8 @@
 using System.Collections.Generic;
 using Epsitec.Common.Types;
 
+[assembly: Epsitec.Common.Types.DependencyClass (typeof (Epsitec.Common.Widgets.Layouts.GridLayoutEngine))]
+
 namespace Epsitec.Common.Widgets.Layouts
 {
 	public sealed class GridLayoutEngine : DependencyObject, ILayoutEngine, Types.IListHost<ColumnDefinition>, Types.IListHost<RowDefinition>
@@ -157,7 +159,13 @@ namespace Epsitec.Common.Widgets.Layouts
 
 			for (int i = 0; i < this.columnMeasures.Length; i++)
 			{
+				if (this.columnMeasures[i] == null)
+				{
+					this.columnMeasures[i] = new ColumnMeasure (0);
+				}
+
 				GridLength length = (i <  this.columnDefinitions.Count) ? this.columnDefinitions[i].Width : GridLength.Auto;
+				
 				this.columnMeasures[i].UpdateDesired (length.IsAbsolute ? length.Value : 0);
 				
 				double w = this.columnMeasures[i].Desired;
@@ -219,7 +227,13 @@ namespace Epsitec.Common.Widgets.Layouts
 
 			for (int i = 0; i < this.rowMeasures.Length; i++)
 			{
+				if (this.rowMeasures[i] == null)
+				{
+					this.rowMeasures[i] = new RowMeasure (0);
+				}
+
 				GridLength length = (i < this.rowDefinitions.Count) ? this.rowDefinitions[i].Height : GridLength.Auto;
+
 				this.rowMeasures[i].UpdateDesired (length.IsAbsolute ? length.Value : 0);
 
 				double h1 = this.rowMeasures[i].MinH1;
