@@ -102,6 +102,7 @@
   <data name="Action.TabIndexRenum" id="023">Renuméroter tous les objets automatiquement</data>
   <data name="Action.ToolSelect" id="033">Sélectionner</data>
   <data name="Action.ToolGlobal" id="043">Rectangle de sélection</data>
+  <data name="Action.ToolGrid" id="065" mod="1">Outil pour tableaux</data>
   <data name="Action.ToolEdit" id="053">Editer</data>
   <data name="Action.ToolZoom" id="063">Loupe</data>
   <data name="Action.ToolHand" id="073">Main</data>

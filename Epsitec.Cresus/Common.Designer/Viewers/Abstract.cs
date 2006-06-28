@@ -222,6 +222,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			this.UpdateCommandTool("ToolSelect");
 			this.UpdateCommandTool("ToolGlobal");
+			this.UpdateCommandTool("ToolGrid");
 			this.UpdateCommandTool("ToolEdit");
 			this.UpdateCommandTool("ToolZoom");
 			this.UpdateCommandTool("ToolHand");
