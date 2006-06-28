@@ -100,8 +100,7 @@ namespace Epsitec.Common.Designer
 					GeometryCache gc = children.GetValue(GeometryCache.GeometryCacheProperty) as GeometryCache;
 					gc.AdaptBounds(cp);
 
-					objectModifier.SetGridColumn(children, column);
-					objectModifier.SetGridRow(children, row);
+					objectModifier.SetGridParentColumnRow(children, children.Parent, column, row);
 
 					column ++;
 					if (column >= columns)

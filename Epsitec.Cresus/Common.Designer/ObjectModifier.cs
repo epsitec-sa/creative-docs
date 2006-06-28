@@ -308,14 +308,15 @@ namespace Epsitec.Common.Designer
 		public Widget GetGridCellWidget(Widget container, int column, int row)
 		{
 			//	Retourne le premier widget occupant une cellule donnée.
-			foreach (Widget widget in this.GetGridCellWidgets (container, column, row))
+			foreach (Widget widget in this.GetGridCellWidgets(container, column, row))
 			{
 				return widget;
 			}
 			
 			return null;
 		}
-		public IEnumerable<Widget> GetGridCellWidgets(Widget container, int column, int row)
+
+		protected IEnumerable<Widget> GetGridCellWidgets(Widget container, int column, int row)
 		{
 			//	Retourne tous les widgets occupant une cellule donnée, en tenant
 			//	compte de leur span.
@@ -360,7 +361,15 @@ namespace Epsitec.Common.Designer
 		{
 			//	Détermine la cellule dans un tableau à laquelle appartient l'objet.
 			System.Diagnostics.Debug.Assert(this.AreChildrenGrid(parent));
-			obj.SetParent(parent);
+
+			if (obj.Parent != parent)
+			{
+				obj.SetParent(parent);
+			}
+
+			obj.Anchor = AnchorStyles.None;
+			obj.Dock = DockStyle.None;
+
 			GridLayoutEngine.SetColumn(obj, column);
 			GridLayoutEngine.SetRow(obj, row);
 		}
@@ -376,13 +385,6 @@ namespace Epsitec.Common.Designer
 			return 0;
 		}
 
-		public void SetGridColumn(Widget obj, int column)
-		{
-			//	Détermine la colonne à laquelle appartient l'objet.
-			System.Diagnostics.Debug.Assert(this.AreChildrenGrid(obj.Parent));
-			GridLayoutEngine.SetColumn(obj, column);
-		}
-
 		public int GetGridRow(Widget obj)
 		{
 			//	Retourne la colonne à laquelle appartient l'objet.
@@ -392,13 +394,6 @@ namespace Epsitec.Common.Designer
 			}
 
 			return 0;
-		}
-
-		public void SetGridRow(Widget obj, int row)
-		{
-			//	Détermine la colonne à laquelle appartient l'objet.
-			System.Diagnostics.Debug.Assert(this.AreChildrenGrid(obj.Parent));
-			GridLayoutEngine.SetRow(obj, row);
 		}
 
 		public Rectangle GetGridItemArea(Widget obj, GridSelection.Item item)

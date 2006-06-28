@@ -593,7 +593,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				return;
 			}
 
-			obj = this.Detect(pos, isShiftPressed);  // objet visé par la souris
+			obj = this.Detect(pos, isShiftPressed, false);  // objet visé par la souris
 
 			if (!isShiftPressed)  // touche Shift relâchée ?
 			{
@@ -667,7 +667,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 			else
 			{
-				Widget obj = this.Detect(pos, isShiftPressed);
+				Widget obj = this.Detect(pos, isShiftPressed, false);
 				int column, row;
 				this.GridDetect(pos, obj, out column, out row);
 				this.SetHilitedObject(obj, column, row);  // met en évidence l'objet survolé par la souris
@@ -741,7 +741,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				return;
 			}
 
-			Widget obj = this.Detect(pos, isShiftPressed);  // objet visé par la souris
+			Widget obj = this.Detect(pos, isShiftPressed, false);  // objet visé par la souris
 
 			if (!isShiftPressed)  // touche Shift relâchée ?
 			{
@@ -834,38 +834,27 @@ namespace Epsitec.Common.Designer.MyWidgets
 		#region ProcessMouse grid
 		protected void GridDown(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
-			//	Sélection rectangulaire, souris pressée.
+			//	Sélection de tableaux, souris pressée.
 			this.lastCreatedObject = null;
 
 			this.startingPos = pos;
-			this.isDragging = false;
-			this.isRectangling = false;
+			this.isGridding = false;
 
 			if (this.HandlingStart(pos))
 			{
 				return;
 			}
 
-			if (this.SizeMarkDraggingStart(pos))
+			Widget obj = this.Detect(pos, false, true);  // objet tableau visé par la souris
+			int column, row;
+			this.GridDetect(pos, obj, out column, out row);
+			if (column != -1 && row != -1)
 			{
-				return;
+				this.isGridding = true;
+				this.griddingObject = obj;
+				this.griddingColumn = column;
+				this.griddingRow = row;
 			}
-
-			Widget obj = this.Detect(pos, isShiftPressed);  // objet visé par la souris
-
-			if (!isShiftPressed)  // touche Shift relâchée ?
-			{
-				if (obj != null && this.selectedObjects.Contains(obj) && obj != this.panel)
-				{
-					this.DraggingStart(pos);
-					return;
-				}
-				this.selectedObjects.Clear();
-				this.UpdateAfterSelectionChanged();
-			}
-
-			this.isRectangling = true;
-			this.SetHilitedAttachmentRectangle(Rectangle.Empty);
 
 			this.OnChildrenSelected();
 			this.Invalidate();
@@ -873,12 +862,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected void GridMove(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
-			//	Sélection rectangulaire, souris déplacée.
-			if (this.handlesList.IsFinger || this.isSizeMarkHorizontal || this.isSizeMarkVertical)
-			{
-				this.ChangeMouseCursor(MouseCursorType.Finger);
-			}
-			else if (isShiftPressed)
+			//	Sélection de tableaux, souris déplacée.
+			if (isShiftPressed)
 			{
 				this.ChangeMouseCursor(MouseCursorType.ArrowPlus);
 			}
@@ -887,49 +872,30 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.ChangeMouseCursor(MouseCursorType.Grid);
 			}
 
-			if (this.isDragging)
+			Widget obj = this.Detect(pos, false, true);  // objet tableau visé par la souris
+			int column, row;
+			this.GridDetect(pos, obj, out column, out row);
+
+			if (this.isGridding)
 			{
-				this.DraggingMove(pos);
 			}
-			else if (this.isRectangling)
+			else
 			{
-				this.SetSelectRectangle(new Rectangle(this.startingPos, pos));
-			}
-			else if (this.handlesList.IsDragging)
-			{
-				this.HandlingMove(pos);
-			}
-			else if (this.SizeMarkDraggingMove(pos))
-			{
+				this.SetHilitedObject(obj, column, row);
 			}
 		}
 
 		protected void GridUp(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
-			//	Sélection rectangulaire, souris relâchée.
+			//	Sélection de tableaux, souris relâchée.
 			if (this.isDragging)
 			{
-				this.DraggingEnd(pos);
 			}
-
-			if (this.isRectangling)
-			{
-				this.SelectObjectsInRectangle(this.selectedRectangle);
-				this.SetSelectRectangle(Rectangle.Empty);
-				this.isRectangling = false;
-			}
-
-			if (this.handlesList.IsDragging)
-			{
-				this.HandlingEnd(pos);
-			}
-
-			this.SizeMarkDraggingStop(pos);
 		}
 
 		protected void GridKeyChanged(bool isControlPressed, bool isShiftPressed)
 		{
-			//	Sélection rectangulaire, touche pressée ou relâchée.
+			//	Sélection de tableaux, touche pressée ou relâchée.
 			if (isShiftPressed)
 			{
 				this.ChangeMouseCursor(MouseCursorType.ArrowPlus);
@@ -952,13 +918,13 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Edition, souris déplacée.
 			this.ChangeMouseCursor(MouseCursorType.Edit);
 
-			this.SetHilitedObject(this.Detect(pos, false), -1, -1);  // met en évidence l'objet survolé par la souris
+			this.SetHilitedObject(this.Detect(pos, false, false), -1, -1);  // met en évidence l'objet survolé par la souris
 		}
 
 		protected void EditUp(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
 			//	Edition, souris relâchée.
-			Widget obj = this.Detect(pos, false);
+			Widget obj = this.Detect(pos, false, false);
 			if (obj != null)
 			{
 				this.ChangeTextResource(obj);
@@ -1166,9 +1132,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 						if (this.objectModifier.IsGridCellEmpty(parent, column, row))
 						{
 							this.creatingObject = this.CreateObjectItem();
-							this.creatingObject.SetParent(parent);
-							this.objectModifier.SetGridColumn(this.creatingObject, column);
-							this.objectModifier.SetGridRow(this.creatingObject, row);
+							this.objectModifier.SetGridParentColumnRow(this.creatingObject, parent, column, row);
 						}
 						else
 						{
@@ -1584,14 +1548,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 
 		#region Selection
-		protected Widget Detect(Point pos, bool sameParent)
+		protected Widget Detect(Point pos, bool sameParent, bool onlyGrid)
 		{
 			//	Détecte l'objet visé par la souris, avec priorité au dernier objet
 			//	dessiné (donc placé dessus).
 			//	Si sameParent = true, l'objet détecté doit avoir le même parent que
 			//	l'objet éventuellement déjà sélectionné.
-			Widget detected = this.Detect(pos, sameParent, this.panel);
-			if (detected == null && (!sameParent || this.selectedObjects.Count == 0))
+			Widget detected = this.Detect(pos, sameParent, onlyGrid, this.panel);
+			if (detected == null && (!sameParent || this.selectedObjects.Count == 0) && (!onlyGrid || this.objectModifier.AreChildrenGrid(this.panel)))
 			{
 				Rectangle rect = this.panel.Client.Bounds;
 				if (rect.Contains(pos))
@@ -1606,7 +1570,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			return detected;
 		}
 
-		protected Widget Detect(Point pos, bool sameParent, Widget parent)
+		protected Widget Detect(Point pos, bool sameParent, bool onlyGrid, Widget parent)
 		{
 			Widget[] children = parent.Children.Widgets;
 			for (int i=children.Length-1; i>=0; i--)
@@ -1621,7 +1585,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				Rectangle rect = widget.ActualBounds;
 				if (rect.Contains(pos))
 				{
-					Widget deep = this.Detect(widget.MapParentToClient(pos), sameParent, widget);
+					Widget deep = this.Detect(widget.MapParentToClient(pos), sameParent, onlyGrid, widget);
 					if (deep != null)
 					{
 						return deep;
@@ -1647,6 +1611,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 						{
 							continue;
 						}
+					}
+
+					if (onlyGrid && !this.objectModifier.AreChildrenGrid(widget))
+					{
+						continue;
 					}
 
 					return widget;
@@ -3870,6 +3839,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected Handle.Type				handlingType;
 		protected DragWindow				handlingWindow;
 		protected Rectangle					handlingRectangle;
+		protected bool						isGridding;
+		protected Widget					griddingObject;
+		protected int						griddingColumn;
+		protected int						griddingRow;
 		protected Point						startingPos;
 		protected MouseCursorType			lastCursor = MouseCursorType.Unknow;
 		protected Size						sizeMark;
