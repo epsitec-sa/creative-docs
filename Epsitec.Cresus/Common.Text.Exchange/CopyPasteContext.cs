@@ -14,10 +14,12 @@ using System.Text;
 
 namespace Epsitec.Common.Text.Exchange
 {
-	class CopyPasteContext
+	class CopyPasteContext : IDisposable
 	{
 		public CopyPasteContext(TextStory story)
 		{
+			story.DisableOpletQueue ();
+			opletQueueDisabled = true;
 			TextNavigator navigator =  new TextNavigator (story);
 			this.Initialize (story, navigator);
 		}
@@ -73,9 +75,44 @@ namespace Epsitec.Common.Text.Exchange
 		}
 
 
+		~CopyPasteContext()
+		{
+			System.Diagnostics.Debug.Assert (false, "La classe CopyPasteContext a été utilisé sans using");
+			this.Dispose (false);
+		}
+
+		public void Dispose()
+		{
+			this.Dispose (true);
+			GC.SuppressFinalize (this);
+		}
+
+		protected virtual void Dispose(bool disposing)
+		{
+			if (!isDisposed)
+			{
+				if (disposing)
+				{
+
+				}
+
+				if (opletQueueDisabled)
+				{
+					this.navigator.Dispose ();
+					this.story.EnableOpletQueue ();
+				}
+
+			}
+			this.isDisposed = true;
+		}
+
+
 		private Wrappers.TextWrapper textWrapper;
 		private Wrappers.ParagraphWrapper paraWrapper;
 		private TextNavigator navigator;
 		private TextStory story;
+
+		private bool opletQueueDisabled = false;
+		private bool isDisposed = false;
 	}
 }
