@@ -1578,6 +1578,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 						int ir = this.objectModifier.GetGridRow(select);
 
 						this.objectModifier.SetGridParentColumnRow(select, parent, column, row);
+						this.objectModifier.AdaptFromParent(select, ObjectModifier.StackedHorizontalAttachment.None, ObjectModifier.StackedVerticalAttachment.None);
 
 						if (actual != null)
 						{
