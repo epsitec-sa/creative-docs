@@ -553,7 +553,7 @@
     <Compile Include="Unicode.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Wrappers\AbstractState.cs" />
+    <Compile Include="Wrappers\AbstractState.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Wrappers\AbstractWrapper.cs">
