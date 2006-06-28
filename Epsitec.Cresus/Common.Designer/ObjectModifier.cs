@@ -248,6 +248,8 @@ namespace Epsitec.Common.Designer
 					engine.ColumnDefinitions.RemoveAt(count-1);
 				}
 			}
+
+			this.Invalidate();
 		}
 
 		public int GetGridRowsCount(Widget obj)
@@ -291,6 +293,8 @@ namespace Epsitec.Common.Designer
 					engine.RowDefinitions.RemoveAt(count-1);
 				}
 			}
+
+			this.Invalidate();
 		}
 
 		public int GetGridCellIndex(Widget obj, int column, int row)
