@@ -15,6 +15,7 @@ namespace Epsitec.Common.Designer
 			double thickness = length*0.4;
 			length = System.Math.Floor(length+0.5);
 			thickness = System.Math.Floor(thickness+0.5);
+			thickness = System.Math.Min(thickness, 3);
 
 			Path path = new Path();
 

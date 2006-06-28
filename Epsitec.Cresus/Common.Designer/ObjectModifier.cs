@@ -200,20 +200,6 @@ namespace Epsitec.Common.Designer
 					group.ChildrenLayoutMode = Widgets.Layouts.LayoutMode.Grid;
 					this.SetGridColumnsCount(obj, 2);
 					this.SetGridRowsCount(obj, 2);
-#if false
-					GridLayoutEngine engine = new GridLayoutEngine();
-					engine.ColumnDefinitions.Add(new ColumnDefinition(new GridLength(1, GridUnitType.Proportional)));
-					engine.ColumnDefinitions.Add(new ColumnDefinition(new GridLength(1, GridUnitType.Proportional)));
-					engine.RowDefinitions.Add(new RowDefinition(new GridLength(1, GridUnitType.Proportional)));
-					engine.RowDefinitions.Add(new RowDefinition(new GridLength(1, GridUnitType.Proportional)));
-					engine.ColumnDefinitions[0].MinWidth = 20;
-					engine.ColumnDefinitions[1].MinWidth = 20;
-					engine.RowDefinitions[0].MinHeight = 20;
-					engine.RowDefinitions[1].MinHeight = 20;
-					LayoutEngine.SetLayoutEngine(group, engine);
-					LayoutContext.AddToMeasureQueue(group);
-					LayoutContext.AddToArrangeQueue(group);
-#endif
 					break;
 			}
 		}
@@ -333,37 +319,36 @@ namespace Epsitec.Common.Designer
 		{
 			//	Retourne tous les widgets occupant une cellule donnée, en tenant
 			//	compte de leur span.
-			if (this.AreChildrenGrid (container))
+			if (this.AreChildrenGrid(container))
 			{
 				foreach (Widget child in container.Children)
 				{
-					int c = GridLayoutEngine.GetColumn (child);
-					int r = GridLayoutEngine.GetRow (child);
+					int c = GridLayoutEngine.GetColumn(child);
+					int r = GridLayoutEngine.GetRow(child);
 
-					if ((c < 0) || (c > column))
+					if (c < 0 || c > column)
 					{
 						continue;
 					}
-					if ((r < 0) || (r > row))
+					if (r < 0 || r > row)
 					{
 						continue;
 					}
 
-					int columnSpan = GridLayoutEngine.GetColumnSpan (child);
-					int rowSpan    = GridLayoutEngine.GetRowSpan (child);
+					int columnSpan = GridLayoutEngine.GetColumnSpan(child);
+					int rowSpan    = GridLayoutEngine.GetRowSpan(child);
 
 					//	Si le widget implémente IGridPermeable, cela implique qu'il a son
 					//	mot à dire sur le nombre de lignes et/ou colonnes qu'il utilise :
-					
 					IGridPermeable permeable = child as IGridPermeable;
 					
 					if (permeable != null)
 					{
-						permeable.UpdateGridSpan (ref columnSpan, ref rowSpan);
+						permeable.UpdateGridSpan(ref columnSpan, ref rowSpan);
 					}
 					
-					if ((c <= column) && (c+columnSpan-1 >= column) &&
-						(r <= row) && (r+rowSpan-1 >= row))
+					if (c <= column && c+columnSpan-1 >= column &&
+						r <= row    && r+rowSpan-1    >= row    )
 					{
 						yield return child;
 					}
