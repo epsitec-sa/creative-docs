@@ -2869,6 +2869,13 @@ namespace Epsitec.Common.Designer.MyWidgets
 		public void GridClearSelection()
 		{
 			//	Supprime toutes les sélections de cellules/colonnes/lignes dans les tableaux.
+			if (GridSelection.Get(this.panel) != null)
+			{
+				GridSelection.Detach(this.panel);
+				this.panel.Invalidate();
+				this.Invalidate();
+			}
+
 			this.GridClearSelection(this.panel);
 		}
 
