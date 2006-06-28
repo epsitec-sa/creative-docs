@@ -157,10 +157,23 @@ namespace Epsitec.Common.Widgets.Collections
 			}
 		}
 
-		internal void UpdateLayoutStatistics(DockStyle dockOld, DockStyle dockNew, AnchorStyles anchorOld, AnchorStyles anchorNew)
+		internal void RefreshLayoutStatistics()
 		{
-			this.UpdateLayoutStatistics (dockOld, anchorOld, -1);
-			this.UpdateLayoutStatistics (dockNew, anchorNew, 1);
+			this.dockLayoutCount = 0;
+			this.anchorLayoutCount = 0;
+			this.stackLayoutCount = 0;
+			this.gridLayoutCount = 0;
+
+			foreach (Visual visual in this.visuals)
+			{
+				this.UpdateLayoutStatistics (visual, 1);
+			}
+		}
+		
+		internal void UpdateLayoutStatistics(Visual visual, DockStyle dockOld, DockStyle dockNew, AnchorStyles anchorOld, AnchorStyles anchorNew)
+		{
+			this.UpdateLayoutStatistics (visual, dockOld, anchorOld, -1);
+			this.UpdateLayoutStatistics (visual, dockNew, anchorNew, 1);
 		}
 		
 		private void NotifyChanges(Snapshot snapshot)
@@ -264,10 +277,12 @@ namespace Epsitec.Common.Widgets.Collections
 				}
 			}
 
+#if true
 			System.Diagnostics.Debug.Assert (dock == this.dockLayoutCount);
 			System.Diagnostics.Debug.Assert (anchor == this.anchorLayoutCount);
 			System.Diagnostics.Debug.Assert (stack == this.stackLayoutCount);
 			System.Diagnostics.Debug.Assert (grid == this.gridLayoutCount);
+#endif
 		}
 
 		private void UpdateLayoutStatistics(Visual visual, int increment)
@@ -291,9 +306,9 @@ namespace Epsitec.Common.Widgets.Collections
 					break;
 			}
 		}
-		private void UpdateLayoutStatistics(DockStyle dock, AnchorStyles anchor, int increment)
+		private void UpdateLayoutStatistics(Visual visual, DockStyle dock, AnchorStyles anchor, int increment)
 		{
-			switch (Layouts.LayoutEngine.GetLayoutMode (dock, anchor))
+			switch (Layouts.LayoutEngine.GetLayoutMode (visual, dock, anchor))
 			{
 				case Epsitec.Common.Widgets.Layouts.LayoutMode.Docked:
 					this.dockLayoutCount += increment;

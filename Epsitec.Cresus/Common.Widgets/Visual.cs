@@ -1462,7 +1462,7 @@ namespace Epsitec.Common.Widgets
 				AnchorStyles anchorOld = (AnchorStyles) oldValue;
 				AnchorStyles anchorNew = (AnchorStyles) newValue;
 				
-				that.parent.children.UpdateLayoutStatistics (dock, dock, anchorOld, anchorNew);
+				that.parent.children.UpdateLayoutStatistics (that, dock, dock, anchorOld, anchorNew);
 			}
 		}
 
@@ -1476,7 +1476,7 @@ namespace Epsitec.Common.Widgets
 				DockStyle dockOld = (DockStyle) oldValue;
 				DockStyle dockNew = (DockStyle) newValue;
 
-				that.parent.children.UpdateLayoutStatistics (dockOld, dockNew, anchor, anchor);
+				that.parent.children.UpdateLayoutStatistics (that, dockOld, dockNew, anchor, anchor);
 			}
 		}
 
