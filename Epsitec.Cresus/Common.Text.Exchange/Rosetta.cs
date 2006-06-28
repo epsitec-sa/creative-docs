@@ -48,10 +48,11 @@ namespace Epsitec.Common.Text.Exchange
 
 			HtmlDocument thehtmldoc = new HtmlDocument (s, true);
 
-			CopyPasteContext cpContext = new CopyPasteContext (story, navigator);
-
-			HtmlToTextWriter theWriter = new HtmlToTextWriter (thehtmldoc, cpContext, Rosetta.pasteMode);
-			theWriter.ProcessIt ();
+			using (CopyPasteContext cpContext = new CopyPasteContext (story, navigator))
+			{
+				HtmlToTextWriter theWriter = new HtmlToTextWriter (thehtmldoc, cpContext, Rosetta.pasteMode);
+				theWriter.ProcessIt ();
+			}
 		}
 
 		public static void PasteNativeText(TextStory story, TextNavigator navigator)
@@ -62,11 +63,11 @@ namespace Epsitec.Common.Text.Exchange
 			if (efmt.String.Length == 0)
 				return;
 
-			CopyPasteContext cpContext = new CopyPasteContext (story, navigator);
-
-			NativeToTextWriter theWriter = new NativeToTextWriter (efmt.String, cpContext, Rosetta.pasteMode);
-			theWriter.ProcessIt ();
-			
+			using (CopyPasteContext cpContext = new CopyPasteContext (story, navigator))
+			{
+				NativeToTextWriter theWriter = new NativeToTextWriter (efmt.String, cpContext, Rosetta.pasteMode);
+				theWriter.ProcessIt ();
+			}
 		}
 
 
@@ -76,26 +77,27 @@ namespace Epsitec.Common.Text.Exchange
 			NativeTextOut nativeText = new NativeTextOut ();
 			string rawText = string.Empty ;
 
-			Rosetta.CopyHtmlText (story, usernavigator, htmlText);
-			Rosetta.CopyNativeText (story, usernavigator, nativeText);
-			rawText = Rosetta.CopyRawText(story, usernavigator) ;
+			using (CopyPasteContext cpContext = new CopyPasteContext (story))
+			{
+				Rosetta.CopyHtmlText (story, usernavigator, htmlText, cpContext);
+				Rosetta.CopyNativeText (story, usernavigator, nativeText, cpContext);
+				rawText = Rosetta.CopyRawText (story, usernavigator);
 
-			System.Windows.Forms.IDataObject od = new System.Windows.Forms.DataObject ();
-			od.SetData (System.Windows.Forms.DataFormats.Text, true, rawText);
-			od.SetData (System.Windows.Forms.DataFormats.Html, true, htmlText.HtmlStream);
+				System.Windows.Forms.IDataObject od = new System.Windows.Forms.DataObject ();
+				od.SetData (System.Windows.Forms.DataFormats.Text, true, rawText);
+				od.SetData (System.Windows.Forms.DataFormats.Html, true, htmlText.HtmlStream);
 
-			EpsitecFormat efmt = new EpsitecFormat (nativeText.ToString());
-			od.SetData (EpsitecFormat.Format.Name, true, efmt);
+				EpsitecFormat efmt = new EpsitecFormat (nativeText.ToString ());
+				od.SetData (EpsitecFormat.Format.Name, true, efmt);
 
-			System.Windows.Forms.Clipboard.SetDataObject (od, true);
+				System.Windows.Forms.Clipboard.SetDataObject (od, true);
+			}
 		}
 
-		private static void CopyHtmlText(TextStory story, TextNavigator usernavigator, HtmlTextOut htmlText)
+		private static void CopyHtmlText(TextStory story, TextNavigator usernavigator, HtmlTextOut htmlText, CopyPasteContext cpContext)
 		{
 			if (!usernavigator.IsSelectionActive)
 				return;
-
-			CopyPasteContext cpContext = new CopyPasteContext (story);
 
 			int[] selectedPositions = usernavigator.GetAdjustedSelectionCursorPositions ();
 
@@ -183,12 +185,10 @@ namespace Epsitec.Common.Text.Exchange
 		}
 
 
-		public static void CopyNativeText(TextStory story, TextNavigator usernavigator, NativeTextOut nativeText)
+		private static void CopyNativeText(TextStory story, TextNavigator usernavigator, NativeTextOut nativeText, CopyPasteContext cpContext)
 		{
 			if (!usernavigator.IsSelectionActive)
 				return;
-
-			CopyPasteContext cpContext = new CopyPasteContext (story);
 
 			int[] selectedPositions = usernavigator.GetAdjustedSelectionCursorPositions ();
 
@@ -251,7 +251,7 @@ namespace Epsitec.Common.Text.Exchange
 
 		}
 
-		public static string CopyRawText(TextStory story, TextNavigator usernavigator)
+		private static string CopyRawText(TextStory story, TextNavigator usernavigator)
 		{
 			string[] texts = usernavigator.GetSelectedTexts ();
 
