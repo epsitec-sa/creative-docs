@@ -952,6 +952,11 @@ namespace Epsitec.Common.Widgets.Layouts
 
 		public static void SetColumn(Visual visual, int column)
 		{
+			if (GridLayoutEngine.GetColumn (visual) == column)
+			{
+				return;
+			}
+
 			if (column == -1)
 			{
 				visual.ClearValue (GridLayoutEngine.ColumnProperty);
@@ -964,6 +969,11 @@ namespace Epsitec.Common.Widgets.Layouts
 
 		public static void SetRow(Visual visual, int row)
 		{
+			if (GridLayoutEngine.GetRow (visual) == row)
+			{
+				return;
+			}
+			
 			if (row == -1)
 			{
 				visual.ClearValue (GridLayoutEngine.RowProperty);
@@ -976,6 +986,11 @@ namespace Epsitec.Common.Widgets.Layouts
 
 		public static void SetColumnSpan(Visual visual, int span)
 		{
+			if (GridLayoutEngine.GetColumnSpan (visual) == span)
+			{
+				return;
+			}
+
 			if (span == 1)
 			{
 				visual.ClearValue (GridLayoutEngine.ColumnSpanProperty);
@@ -988,6 +1003,11 @@ namespace Epsitec.Common.Widgets.Layouts
 
 		public static void SetRowSpan(Visual visual, int span)
 		{
+			if (GridLayoutEngine.GetRowSpan (visual) == span)
+			{
+				return;
+			}
+
 			if (span == 1)
 			{
 				visual.ClearValue (GridLayoutEngine.RowSpanProperty);
@@ -1054,10 +1074,22 @@ namespace Epsitec.Common.Widgets.Layouts
 			}
 		}
 
-		public static readonly DependencyProperty ColumnProperty = DependencyProperty.RegisterAttached ("Column", typeof (int), typeof (GridLayoutEngine), new DependencyPropertyMetadata (-1));
-		public static readonly DependencyProperty RowProperty = DependencyProperty.RegisterAttached ("Row", typeof (int), typeof (GridLayoutEngine), new DependencyPropertyMetadata (-1));
-		public static readonly DependencyProperty ColumnSpanProperty = DependencyProperty.RegisterAttached ("ColumnSpan", typeof (int), typeof (GridLayoutEngine), new DependencyPropertyMetadata (1));
-		public static readonly DependencyProperty RowSpanProperty = DependencyProperty.RegisterAttached ("RowSpan", typeof (int), typeof (GridLayoutEngine), new DependencyPropertyMetadata (1));
+		private static void NotifyGridPropertyInvalidated(DependencyObject obj, object oldValue, object newValue)
+		{
+			Visual visual = obj as Visual;
+			Visual grid   = visual == null ? null : visual.Parent;
+
+			if (grid != null)
+			{
+				LayoutContext.AddToMeasureQueue (grid);
+				LayoutContext.AddToArrangeQueue (grid);
+			}
+		}
+		
+		public static readonly DependencyProperty ColumnProperty = DependencyProperty.RegisterAttached ("Column", typeof (int), typeof (GridLayoutEngine), new DependencyPropertyMetadata (-1, GridLayoutEngine.NotifyGridPropertyInvalidated));
+		public static readonly DependencyProperty RowProperty = DependencyProperty.RegisterAttached ("Row", typeof (int), typeof (GridLayoutEngine), new DependencyPropertyMetadata (-1, GridLayoutEngine.NotifyGridPropertyInvalidated));
+		public static readonly DependencyProperty ColumnSpanProperty = DependencyProperty.RegisterAttached ("ColumnSpan", typeof (int), typeof (GridLayoutEngine), new DependencyPropertyMetadata (1, GridLayoutEngine.NotifyGridPropertyInvalidated));
+		public static readonly DependencyProperty RowSpanProperty = DependencyProperty.RegisterAttached ("RowSpan", typeof (int), typeof (GridLayoutEngine), new DependencyPropertyMetadata (1, GridLayoutEngine.NotifyGridPropertyInvalidated));
 
 		private ColumnMeasure[] columnMeasures = new ColumnMeasure[0];
 		private RowMeasure[]	rowMeasures    = new RowMeasure[0];
