@@ -88,7 +88,7 @@ namespace Epsitec.Common.Designer
 				n = System.Math.Ceiling(n);
 				n = System.Math.Max(n, 2);
 				int columns = (int) n;
-				int rows = (parent.Children.Count+columns-1)/columns;
+				int rows = System.Math.Max((parent.Children.Count+columns-1)/columns, 1);
 
 				objectModifier.SetGridColumnsCount(parent, columns);
 				objectModifier.SetGridRowsCount(parent, rows);
