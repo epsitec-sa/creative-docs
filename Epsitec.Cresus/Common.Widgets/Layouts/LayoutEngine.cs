@@ -3,6 +3,8 @@
 
 using Epsitec.Common.Types;
 
+[assembly: Epsitec.Common.Types.DependencyClass (typeof (Epsitec.Common.Widgets.Layouts.LayoutEngine))]
+
 namespace Epsitec.Common.Widgets.Layouts
 {
 	/// <summary>
