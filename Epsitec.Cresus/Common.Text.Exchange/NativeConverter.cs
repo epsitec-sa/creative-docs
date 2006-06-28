@@ -30,6 +30,40 @@ namespace Epsitec.Common.Text.Exchange
 			this.pasteMode = pastemode;
 		}
 
+		/// <summary>
+		/// Obtient un array de strings contenant chacun une définition de style
+		/// </summary>
+		/// <returns></returns>
+		public string[] GetStyleStrings()
+		{
+			TextContext context = this.story.TextContext;
+			TextStyle[] styles = context.StyleList.StyleMap.GetSortedStyles ();
+
+			int nbstyles = 0;
+			foreach (TextStyle thestyle in styles)
+			{
+				if (thestyle.TextStyleClass == TextStyleClass.Paragraph || thestyle.TextStyleClass == TextStyleClass.Text)
+					nbstyles++;
+			}
+
+			string[] stringstyles = new string[nbstyles];
+
+
+			int n = 0;
+			foreach (TextStyle thestyle in styles)
+			{
+				if (thestyle.TextStyleClass == TextStyleClass.Paragraph || thestyle.TextStyleClass == TextStyleClass.Text)
+				{
+					string s = thestyle.Name;
+					s = context.StyleList.StyleMap.GetCaption (thestyle);
+
+					stringstyles[n++] = s;
+				}
+			}
+
+			return stringstyles;
+		}
+
 
 		/// <summary>
 		/// Convertit les attributs d'un textwrapper en format presse-papier natif
@@ -398,7 +432,6 @@ namespace Epsitec.Common.Text.Exchange
 		{
 			TextStyle[] styles = this.story.TextContext.StyleList.StyleMap.GetSortedStyles ();
 
-			TextStyle thenewstyle = null;
 			foreach (TextStyle thestyle in styles)
 			{
 				if (this.story.TextContext.StyleList.StyleMap.GetCaption (thestyle) == caption)
@@ -430,9 +463,6 @@ namespace Epsitec.Common.Text.Exchange
 		{
 			char[] sep = { '\\' };
 			string[] elements = strxline.Split (sep, StringSplitOptions.None);
-
-			byte b;
-			double d;
 
 			xscriptdef.IsDisabled = Misc.ParseBool (elements[0]);
 			//	xscriptdef.IsEmpty = Misc.ParseBool (elements[1]);;
@@ -469,9 +499,6 @@ namespace Epsitec.Common.Text.Exchange
 		{
 			char[] sep = { '\\' };
 			string[] elements = strxline.Split (sep, StringSplitOptions.None);
-
-			byte b;
-			double d;
 
 			xlinedef.IsDisabled = Misc.ParseBool (elements[0]);
 			//xlinedef.IsEmpty = ParseBool (elements[1])

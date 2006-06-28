@@ -14,11 +14,11 @@ namespace Epsitec.Common.Text.Exchange
 			this.nativeClipboard = nativeClipboard;
 			this.cpContext = cpContext;
 			this.pasteMode = pastemode;
+			this.theReader = new StringReader (nativeClipboard);
 		}
 
 		public void ProcessIt()
 		{
-			StringReader theReader = new StringReader (nativeClipboard);
 			string formatline;
 			string contentline;
 
@@ -27,6 +27,12 @@ namespace Epsitec.Common.Text.Exchange
 				formatline = theReader.ReadLine ();
 				if (formatline == null)
 					break;
+
+				if (formatline == "{")
+				{
+					this.ProcessStyles ();
+					continue;
+				}
 
 				if (this.pasteMode == PasteMode.KeepTextOnly)
 				{
@@ -75,6 +81,22 @@ namespace Epsitec.Common.Text.Exchange
 			}
 		}
 
+		private void ProcessStyles()
+		{
+			string line;
+			while (true)
+			{
+				line = theReader.ReadLine ();
+				if (line == null)
+					break;
+
+				if (line == "}")
+					break ;
+
+			}
+		}
+
+		StringReader theReader;
 		private string nativeClipboard;
 		private PasteMode pasteMode;
 		private NativeConverter nativeConverter;

@@ -96,7 +96,7 @@ namespace Epsitec.Common.Text.Exchange
 
 		private static void CopyHtmlText(TextStory story, TextNavigator usernavigator, HtmlTextOut htmlText, CopyPasteContext cpContext)
 		{
-			if (!usernavigator.IsSelectionActive)
+			if (!usernavigator.HasSelection)
 				return;
 
 			int[] selectedPositions = usernavigator.GetAdjustedSelectionCursorPositions ();
@@ -187,7 +187,7 @@ namespace Epsitec.Common.Text.Exchange
 
 		private static void CopyNativeText(TextStory story, TextNavigator usernavigator, NativeTextOut nativeText, CopyPasteContext cpContext)
 		{
-			if (!usernavigator.IsSelectionActive)
+			if (!usernavigator.HasSelection)
 				return;
 
 			int[] selectedPositions = usernavigator.GetAdjustedSelectionCursorPositions ();
@@ -196,12 +196,25 @@ namespace Epsitec.Common.Text.Exchange
 			System.Diagnostics.Debug.Assert (selectedPositions.Length == 2);
 
 			// ATTENTION: BUG: lorsqu'on sélectionne une ligne avec des puces
-			// les la longueur (selectionLength) est trop grande
+			// la longueur (selectionLength) est trop grande
 			int selectionLength = selectedPositions[1] - selectedPositions[0];
 			int selectionStart = selectedPositions[0];
 			int selectionEnd = selectedPositions[1];
 			int currentPosition = selectionStart;
 			cpContext.Navigator.MoveTo (selectionStart, 0);
+
+			NativeConverter converter = new NativeConverter (cpContext, PasteMode.KeepTextOnly);
+
+			string[] textStyles = converter.GetStyleStrings ();
+
+			nativeText.AppendTextLine ("{");
+
+			foreach (string stylestring in textStyles)
+			{
+				nativeText.AppendTextLine (stylestring);
+			}
+
+			nativeText.AppendTextLine ("}");
 
 			while (true)
 			{
@@ -226,7 +239,7 @@ namespace Epsitec.Common.Text.Exchange
 					paragraphSep = true;
 				}
 
-				NativeConverter converter = new NativeConverter (cpContext, PasteMode.KeepTextOnly);
+				//NativeConverter converter = new NativeConverter (cpContext, PasteMode.KeepTextOnly);
 				string runattributes = converter.GetDefinedString (paragraphSep);
 
 				nativeText.AppendTextLine (runattributes);
@@ -273,6 +286,37 @@ namespace Epsitec.Common.Text.Exchange
 		}
 
 
+
+
+		#region SimpleXscript
+		public enum SimpleXScript
+		{
+			Superscript,
+			Subscript,
+			Normalscript
+		} ;
+
+		static private SimpleXScript GetSimpleXScript(Wrappers.TextWrapper wrapper)
+		{
+
+			if (wrapper.Active.IsXscriptDefined)
+			{
+				if (wrapper.Active.Xscript.Offset > 0.0)
+					return SimpleXScript.Superscript;
+				if (wrapper.Active.Xscript.Offset < 0.0)
+					return SimpleXScript.Subscript;
+				else
+					return SimpleXScript.Normalscript;
+			}
+			else
+			{
+				return SimpleXScript.Normalscript;
+			}
+		}
+		#endregion		
+
+		#region Fonctions de test provisoire
+
 		// parcours du text
 		public static void TestCode(TextStory story, TextNavigator navigator)
 		{
@@ -312,8 +356,8 @@ namespace Epsitec.Common.Text.Exchange
 					}
 				}
 
-				bool b = textWrapper.Defined.IsInvertItalicDefined && textWrapper.Defined.InvertItalic ;
-				b = textWrapper.Active.IsInvertItalicDefined && textWrapper.Active.InvertItalic ;
+				bool b = textWrapper.Defined.IsInvertItalicDefined && textWrapper.Defined.InvertItalic;
+				b = textWrapper.Active.IsInvertItalicDefined && textWrapper.Active.InvertItalic;
 
 				Property[] props;
 				Property[] fonts;
@@ -327,44 +371,15 @@ namespace Epsitec.Common.Text.Exchange
 					Properties.FontProperty fontProperty;
 					string fontStyle;
 					fontProperty = fonts[0] as Properties.FontProperty;
-					fontStyle = OpenType.FontCollection.GetStyleHash(fontProperty.StyleName);
+					fontStyle = OpenType.FontCollection.GetStyleHash (fontProperty.StyleName);
 				}
 
-					// navigator.SetTextStyles(
+				// navigator.SetTextStyles(
 			}
 
 			story.EnableOpletQueue ();
 		}
 
-
-		#region SimpleXscript
-		public enum SimpleXScript
-		{
-			Superscript,
-			Subscript,
-			Normalscript
-		} ;
-
-		static private SimpleXScript GetSimpleXScript(Wrappers.TextWrapper wrapper)
-		{
-
-			if (wrapper.Active.IsXscriptDefined)
-			{
-				if (wrapper.Active.Xscript.Offset > 0.0)
-					return SimpleXScript.Superscript;
-				if (wrapper.Active.Xscript.Offset < 0.0)
-					return SimpleXScript.Subscript;
-				else
-					return SimpleXScript.Normalscript;
-			}
-			else
-			{
-				return SimpleXScript.Normalscript;
-			}
-		}
-		#endregion		
-
-		#region Fonctions de test provisoire
 
 		// test de création de styles
 
@@ -415,8 +430,6 @@ namespace Epsitec.Common.Text.Exchange
 		public static void TestCode4(TextStory story, TextNavigator navigator)
 		{
 			Epsitec.Common.Text.TextContext context = story.TextContext;
-
-			int i;
 
 			TextStyle[] styles = context.StyleList.StyleMap.GetSortedStyles ();
 
