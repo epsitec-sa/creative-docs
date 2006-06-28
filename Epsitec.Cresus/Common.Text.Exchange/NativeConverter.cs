@@ -52,12 +52,17 @@ namespace Epsitec.Common.Text.Exchange
 			int n = 0;
 			foreach (TextStyle thestyle in styles)
 			{
+				StringBuilder output = new StringBuilder ();
+
 				if (thestyle.TextStyleClass == TextStyleClass.Paragraph || thestyle.TextStyleClass == TextStyleClass.Text)
 				{
 					string s = thestyle.Name;
 					s = context.StyleList.StyleMap.GetCaption (thestyle);
 
-					stringstyles[n++] = s;
+					string props = Property.SerializeProperties (thestyle.StyleProperties);
+					output.AppendFormat ("{0}\\{1}", s, props) ;
+
+					stringstyles[n++] = output.ToString();
 				}
 			}
 
