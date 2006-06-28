@@ -72,11 +72,11 @@ namespace Epsitec.Common.Designer
 			return Handle.Type.None;
 		}
 
-		public void DraggingStart(Point pos, Rectangle rect, Size minSize, Handle.Type type)
+		public void DraggingStart(Point pos, Handle.Type type)
 		{
 			//	Débute un déplacement de poignée.
-			this.draggingRect = rect;
-			this.draggingMinSize = minSize;
+			this.draggingRect = this.editor.GetObjectBounds(this.widget);
+			this.draggingMinSize = this.widget.RealMinSize;
 			this.draggingType = type;
 
 			Point final = this.GetHandle(this.draggingType).Position;
@@ -147,8 +147,8 @@ namespace Epsitec.Common.Designer
 		public void DraggingStop(Point pos)
 		{
 			//	Termine un déplacement de poignée.
-			pos += this.draggingOffset;
-			this.MoveObject(pos);
+			Rectangle bounds = this.DraggingMove(pos);
+			this.editor.SetObjectBounds(this.widget, bounds);
 
 			this.draggingType = Handle.Type.None;
 			this.UpdateGeometry();
@@ -415,49 +415,6 @@ namespace Epsitec.Common.Designer
 					}
 					break;
 			}
-		}
-
-		protected void MoveObject(Point pos)
-		{
-			//	Déplace une poignée d'un objet.
-			Rectangle bounds = this.editor.GetObjectBounds(this.widget);
-
-			switch (this.draggingType)
-			{
-				case Handle.Type.BottomLeft:
-					bounds.BottomLeft = pos;
-					break;
-
-				case Handle.Type.BottomRight:
-					bounds.BottomRight = pos;
-					break;
-
-				case Handle.Type.TopRight:
-					bounds.TopRight = pos;
-					break;
-
-				case Handle.Type.TopLeft:
-					bounds.TopLeft = pos;
-					break;
-
-				case Handle.Type.Bottom:
-					bounds.Bottom = pos.Y;
-					break;
-
-				case Handle.Type.Top:
-					bounds.Top = pos.Y;
-					break;
-
-				case Handle.Type.Left:
-					bounds.Left = pos.X;
-					break;
-
-				case Handle.Type.Right:
-					bounds.Right = pos.X;
-					break;
-			}
-
-			this.editor.SetObjectBounds(this.widget, bounds);
 		}
 
 
