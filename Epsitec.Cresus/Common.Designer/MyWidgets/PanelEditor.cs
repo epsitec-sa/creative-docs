@@ -1516,7 +1516,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			else if (this.objectModifier.AreChildrenGrid(parent))
 			{
 				this.GridDetect(pos, parent, out column, out row);
-				if (!this.objectModifier.IsGridCellEmpty(parent, column, row))
+				if (this.selectedObjects.Count != 1 || !this.objectModifier.IsGridCellEmpty(parent, column, row))
 				{
 					parent = null;
 					this.isInside = false;
@@ -1569,7 +1569,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 					int column, row;
 					this.GridDetect(pos, parent, out column, out row);
 
-					if (this.objectModifier.IsGridCellEmpty(parent, column, row))
+					if (this.selectedObjects.Count == 1 && this.objectModifier.IsGridCellEmpty(parent, column, row))
 					{
 						Widget select = this.selectedObjects[0];
 						Widget actual = this.objectModifier.GetGridCellWidget(parent, column, row);
@@ -1593,7 +1593,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 					}
 					else
 					{
-						//?this.isInside = false;
+						//	Si on relâche l'objet dans une cellule occupée, on ne fait rien.
+						//	L'objet reste ainsi à sa position initiale.
 					}
 				}
 			}
