@@ -1099,11 +1099,25 @@ namespace Epsitec.Common.Widgets.Layouts
 				LayoutContext.AddToArrangeQueue (grid);
 			}
 		}
-		
+
+		private static object GetColumnDefinitionsValue(DependencyObject obj)
+		{
+			GridLayoutEngine that = (GridLayoutEngine) obj;
+			return that.ColumnDefinitions;
+		}
+
+		private static object GetRowDefinitionsValue(DependencyObject obj)
+		{
+			GridLayoutEngine that = (GridLayoutEngine) obj;
+			return that.RowDefinitions;
+		}
+
 		public static readonly DependencyProperty ColumnProperty = DependencyProperty.RegisterAttached ("Column", typeof (int), typeof (GridLayoutEngine), new DependencyPropertyMetadata (-1, GridLayoutEngine.NotifyGridPropertyInvalidated));
 		public static readonly DependencyProperty RowProperty = DependencyProperty.RegisterAttached ("Row", typeof (int), typeof (GridLayoutEngine), new DependencyPropertyMetadata (-1, GridLayoutEngine.NotifyGridPropertyInvalidated));
 		public static readonly DependencyProperty ColumnSpanProperty = DependencyProperty.RegisterAttached ("ColumnSpan", typeof (int), typeof (GridLayoutEngine), new DependencyPropertyMetadata (1, GridLayoutEngine.NotifyGridPropertyInvalidated));
 		public static readonly DependencyProperty RowSpanProperty = DependencyProperty.RegisterAttached ("RowSpan", typeof (int), typeof (GridLayoutEngine), new DependencyPropertyMetadata (1, GridLayoutEngine.NotifyGridPropertyInvalidated));
+		public static readonly DependencyProperty ColumnDefinitionsProperty = DependencyProperty.RegisterReadOnly ("ColumnDefinitions", typeof (Collections.ColumnDefinitionCollection), typeof (GridLayoutEngine), new DependencyPropertyMetadata (GridLayoutEngine.GetRowDefinitionsValue).MakeReadOnlySerializable ());
+		public static readonly DependencyProperty RowDefinitionsProperty = DependencyProperty.RegisterReadOnly ("RowDefinitions", typeof (Collections.RowDefinitionCollection), typeof (GridLayoutEngine), new DependencyPropertyMetadata (GridLayoutEngine.GetColumnDefinitionsValue).MakeReadOnlySerializable ());
 
 		private ColumnMeasure[] columnMeasures = new ColumnMeasure[0];
 		private RowMeasure[]	rowMeasures    = new RowMeasure[0];

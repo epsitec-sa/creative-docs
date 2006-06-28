@@ -4,6 +4,8 @@
 using System.Collections.Generic;
 using Epsitec.Common.Types;
 
+[assembly: Epsitec.Common.Types.DependencyClass (typeof (Epsitec.Common.Widgets.Layouts.ColumnDefinition))]
+
 namespace Epsitec.Common.Widgets.Layouts
 {
 	/// <summary>
