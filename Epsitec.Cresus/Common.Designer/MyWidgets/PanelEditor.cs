@@ -1516,6 +1516,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 			else if (this.objectModifier.AreChildrenGrid(parent))
 			{
 				this.GridDetect(pos, parent, out column, out row);
+				if (!this.objectModifier.IsGridCellEmpty(parent, column, row))
+				{
+					parent = null;
+					this.isInside = false;
+				}
 			}
 			else
 			{
@@ -1540,10 +1545,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			if (this.isInside)
 			{
-				this.draggingWindow.Hide();
-				this.draggingWindow.Dispose();
-				this.draggingWindow = null;
-
 				if (this.objectModifier.AreChildrenAnchored(parent))
 				{
 					Rectangle initial = this.SelectBounds;
@@ -1568,26 +1569,40 @@ namespace Epsitec.Common.Designer.MyWidgets
 					int column, row;
 					this.GridDetect(pos, parent, out column, out row);
 
-					Widget select = this.selectedObjects[0];
-					Widget actual = this.objectModifier.GetGridCellWidget(parent, column, row);
-
-					if (select != actual)
+					if (this.objectModifier.IsGridCellEmpty(parent, column, row))
 					{
-						Widget ip = select.Parent;
-						int ic = this.objectModifier.GetGridColumn(select);
-						int ir = this.objectModifier.GetGridRow(select);
+						Widget select = this.selectedObjects[0];
+						Widget actual = this.objectModifier.GetGridCellWidget(parent, column, row);
 
-						this.objectModifier.SetGridParentColumnRow(select, parent, column, row);
-						this.objectModifier.AdaptFromParent(select, ObjectModifier.StackedHorizontalAttachment.None, ObjectModifier.StackedVerticalAttachment.None);
-
-						if (actual != null)
+						if (select != actual)
 						{
-							this.objectModifier.SetGridParentColumnRow(actual, ip, ic, ir);
-						}
+							Widget ip = select.Parent;
+							int ic = this.objectModifier.GetGridColumn(select);
+							int ir = this.objectModifier.GetGridRow(select);
 
-						this.OnChildrenGeometryChanged();
+							this.objectModifier.SetGridParentColumnRow(select, parent, column, row);
+							this.objectModifier.AdaptFromParent(select, ObjectModifier.StackedHorizontalAttachment.None, ObjectModifier.StackedVerticalAttachment.None);
+
+							if (actual != null)
+							{
+								this.objectModifier.SetGridParentColumnRow(actual, ip, ic, ir);
+							}
+
+							this.OnChildrenGeometryChanged();
+						}
+					}
+					else
+					{
+						//?this.isInside = false;
 					}
 				}
+			}
+
+			if (this.isInside)
+			{
+				this.draggingWindow.Hide();
+				this.draggingWindow.Dispose();
+				this.draggingWindow = null;
 			}
 			else  // relâché hors de la fenêtre ?
 			{
