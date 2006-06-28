@@ -293,6 +293,21 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
+		public int GetGridCellIndex(Widget obj, int column, int row)
+		{
+			//	Retourne l'index d'une cellule dans un tableau.
+			if (this.AreChildrenGrid(obj))
+			{
+				GridLayoutEngine engine = LayoutEngine.GetLayoutEngine(obj) as GridLayoutEngine;
+				if (engine != null)
+				{
+					return column + row*engine.ColumnDefinitions.Count;
+				}
+			}
+
+			return 0;
+		}
+
 		public bool IsGridCellEmpty(Widget obj, int column, int row)
 		{
 			//	Indique si une cellule est libre, donc si elle ne contient aucun widget.
@@ -356,16 +371,16 @@ namespace Epsitec.Common.Designer
 			//	Détermine la cellule dans un tableau à laquelle appartient l'objet.
 			System.Diagnostics.Debug.Assert(this.AreChildrenGrid(parent));
 
-			if (obj.Parent != parent)
-			{
-				obj.SetParent(parent);
-			}
-
 			obj.Anchor = AnchorStyles.None;
 			obj.Dock = DockStyle.None;
 
 			GridLayoutEngine.SetColumn(obj, column);
 			GridLayoutEngine.SetRow(obj, row);
+
+			if (obj.Parent != parent)
+			{
+				obj.SetParent(parent);
+			}
 		}
 
 		public int GetGridColumn(Widget obj)
@@ -664,7 +679,7 @@ namespace Epsitec.Common.Designer
 		public Margins GetMargins(Widget obj)
 		{
 			//	Retourne les marges de l'objet.
-			//	Uniquement pour les objets Stacked.
+			//	Uniquement pour les objets Stacked et Grid.
 			if (this.HasMargins(obj))
 			{
 				return obj.Margins;
@@ -676,7 +691,7 @@ namespace Epsitec.Common.Designer
 		public void SetMargins(Widget obj, Margins margins)
 		{
 			//	Choix des marges de l'objet.
-			//	Uniquement pour les objets Stacked.
+			//	Uniquement pour les objets Stacked et Grid.
 			System.Diagnostics.Debug.Assert(this.HasMargins(obj));
 
 			if (obj.Margins != margins)

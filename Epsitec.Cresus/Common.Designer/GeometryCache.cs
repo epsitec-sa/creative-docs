@@ -135,7 +135,7 @@ namespace Epsitec.Common.Designer
 		}
 
 
-		protected static readonly DependencyProperty GeometryCacheProperty = DependencyProperty.RegisterAttached ("GeometryCache", typeof (GeometryCache), typeof (GeometryCache), new DependencyPropertyMetadata ().MakeNotSerializable ());
+		protected static readonly DependencyProperty GeometryCacheProperty = DependencyProperty.RegisterAttached("GeometryCache", typeof(GeometryCache), typeof(GeometryCache), new DependencyPropertyMetadata().MakeNotSerializable());
 
 		protected Widget										obj;
 		protected ObjectModifier								objectModifier;
