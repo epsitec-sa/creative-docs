@@ -26,6 +26,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			Arrow,
 			ArrowPlus,
 			Global,
+			Grid,
 			Hand,
 			Edit,
 			Pen,
@@ -418,6 +419,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.GlobalDown(pos, isRightButton, isControlPressed, isShiftPressed);
 			}
 
+			if (this.context.Tool == "ToolGrid")
+			{
+				this.GridDown(pos, isRightButton, isControlPressed, isShiftPressed);
+			}
+
 			if (this.context.Tool == "ToolEdit")
 			{
 				this.EditDown(pos, isRightButton, isControlPressed, isShiftPressed);
@@ -454,6 +460,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.GlobalMove(pos, isRightButton, isControlPressed, isShiftPressed);
 			}
 
+			if (this.context.Tool == "ToolGrid")
+			{
+				this.GridMove(pos, isRightButton, isControlPressed, isShiftPressed);
+			}
+
 			if (this.context.Tool == "ToolEdit")
 			{
 				this.EditMove(pos, isRightButton, isControlPressed, isShiftPressed);
@@ -488,6 +499,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.GlobalUp(pos, isRightButton, isControlPressed, isShiftPressed);
 			}
 
+			if (this.context.Tool == "ToolGrid")
+			{
+				this.GridUp(pos, isRightButton, isControlPressed, isShiftPressed);
+			}
+
 			if (this.context.Tool == "ToolEdit")
 			{
 				this.EditUp(pos, isRightButton, isControlPressed, isShiftPressed);
@@ -520,6 +536,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 			if (this.context.Tool == "ToolGlobal")
 			{
 				this.GlobalKeyChanged(isControlPressed, isShiftPressed);
+			}
+
+			if (this.context.Tool == "ToolGrid")
+			{
+				this.GridKeyChanged(isControlPressed, isShiftPressed);
 			}
 
 			if (this.context.Tool == "ToolEdit")
@@ -806,6 +827,116 @@ namespace Epsitec.Common.Designer.MyWidgets
 			else
 			{
 				this.ChangeMouseCursor(MouseCursorType.Global);
+			}
+		}
+		#endregion
+
+		#region ProcessMouse grid
+		protected void GridDown(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
+		{
+			//	Sélection rectangulaire, souris pressée.
+			this.lastCreatedObject = null;
+
+			this.startingPos = pos;
+			this.isDragging = false;
+			this.isRectangling = false;
+
+			if (this.HandlingStart(pos))
+			{
+				return;
+			}
+
+			if (this.SizeMarkDraggingStart(pos))
+			{
+				return;
+			}
+
+			Widget obj = this.Detect(pos, isShiftPressed);  // objet visé par la souris
+
+			if (!isShiftPressed)  // touche Shift relâchée ?
+			{
+				if (obj != null && this.selectedObjects.Contains(obj) && obj != this.panel)
+				{
+					this.DraggingStart(pos);
+					return;
+				}
+				this.selectedObjects.Clear();
+				this.UpdateAfterSelectionChanged();
+			}
+
+			this.isRectangling = true;
+			this.SetHilitedAttachmentRectangle(Rectangle.Empty);
+
+			this.OnChildrenSelected();
+			this.Invalidate();
+		}
+
+		protected void GridMove(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
+		{
+			//	Sélection rectangulaire, souris déplacée.
+			if (this.handlesList.IsFinger || this.isSizeMarkHorizontal || this.isSizeMarkVertical)
+			{
+				this.ChangeMouseCursor(MouseCursorType.Finger);
+			}
+			else if (isShiftPressed)
+			{
+				this.ChangeMouseCursor(MouseCursorType.ArrowPlus);
+			}
+			else
+			{
+				this.ChangeMouseCursor(MouseCursorType.Grid);
+			}
+
+			if (this.isDragging)
+			{
+				this.DraggingMove(pos);
+			}
+			else if (this.isRectangling)
+			{
+				this.SetSelectRectangle(new Rectangle(this.startingPos, pos));
+			}
+			else if (this.handlesList.IsDragging)
+			{
+				this.HandlingMove(pos);
+			}
+			else if (this.SizeMarkDraggingMove(pos))
+			{
+			}
+		}
+
+		protected void GridUp(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
+		{
+			//	Sélection rectangulaire, souris relâchée.
+			if (this.isDragging)
+			{
+				this.DraggingEnd(pos);
+			}
+
+			if (this.isRectangling)
+			{
+				this.SelectObjectsInRectangle(this.selectedRectangle);
+				this.SetSelectRectangle(Rectangle.Empty);
+				this.isRectangling = false;
+			}
+
+			if (this.handlesList.IsDragging)
+			{
+				this.HandlingEnd(pos);
+			}
+
+			this.SizeMarkDraggingStop(pos);
+		}
+
+		protected void GridKeyChanged(bool isControlPressed, bool isShiftPressed)
+		{
+			//	Sélection rectangulaire, touche pressée ou relâchée.
+			if (isShiftPressed)
+			{
+				this.ChangeMouseCursor(MouseCursorType.ArrowPlus);
+			}
+			else
+			{
+				this.ChangeMouseCursor(MouseCursorType.Grid);
 			}
 		}
 		#endregion
@@ -3569,6 +3700,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 					this.SetMouseCursorImage(ref this.mouseCursorGlobal, Misc.Icon("CursorGlobal"));
 					break;
 
+				case MouseCursorType.Grid:
+					this.SetMouseCursorImage(ref this.mouseCursorGrid, Misc.Icon("CursorGrid"));
+					break;
+
 				case MouseCursorType.Edit:
 					this.SetMouseCursorImage(ref this.mouseCursorEdit, Misc.Icon("CursorEdit"));
 					break;
@@ -3747,6 +3882,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected Image						mouseCursorArrow = null;
 		protected Image						mouseCursorArrowPlus = null;
 		protected Image						mouseCursorGlobal = null;
+		protected Image						mouseCursorGrid = null;
 		protected Image						mouseCursorEdit = null;
 		protected Image						mouseCursorPen = null;
 		protected Image						mouseCursorZoom = null;

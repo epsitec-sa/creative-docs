@@ -530,6 +530,7 @@ namespace Epsitec.Common.Designer
 
 		[Command("ToolSelect")]
 		[Command("ToolGlobal")]
+		[Command("ToolGrid")]
 		[Command("ToolEdit")]
 		[Command("ToolZoom")]
 		[Command("ToolHand")]
@@ -630,6 +631,7 @@ namespace Epsitec.Common.Designer
 			
 			this.toolSelectState = this.CreateCommandState("ToolSelect", KeyCode.AlphaS);
 			this.toolGlobalState = this.CreateCommandState("ToolGlobal", KeyCode.AlphaG);
+			this.toolGridState = this.CreateCommandState("ToolGrid", KeyCode.AlphaA);
 			this.toolEditState = this.CreateCommandState("ToolEdit", KeyCode.AlphaE);
 			this.toolZoomState = this.CreateCommandState("ToolZoom", KeyCode.AlphaZ);
 			this.toolHandState = this.CreateCommandState("ToolHand", KeyCode.AlphaH);
@@ -1085,6 +1087,7 @@ namespace Epsitec.Common.Designer
 		protected CommandState					deleteCultureState;
 		protected CommandState					toolSelectState;
 		protected CommandState					toolGlobalState;
+		protected CommandState					toolGridState;
 		protected CommandState					toolEditState;
 		protected CommandState					toolZoomState;
 		protected CommandState					toolHandState;
