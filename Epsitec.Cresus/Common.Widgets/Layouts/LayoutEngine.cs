@@ -69,27 +69,10 @@ namespace Epsitec.Common.Widgets.Layouts
 
 		public static LayoutMode GetLayoutMode(Visual visual)
 		{
-			LayoutMode mode = LayoutEngine.GetLayoutMode (visual.Dock, visual.Anchor);
-			
-			if (mode == LayoutMode.None)
-			{
-				Visual parent = visual.Parent;
-				
-				if (parent != null)
-				{
-					ILayoutEngine engine = LayoutEngine.GetLayoutEngine (parent);
-
-					if (engine != null)
-					{
-						mode = engine.LayoutMode;
-					}
-				}
-			}
-			
-			return mode;
+			return LayoutEngine.GetLayoutMode (visual, visual.Dock, visual.Anchor);
 		}
 		
-		public static LayoutMode GetLayoutMode(DockStyle dock, AnchorStyles anchor)
+		public static LayoutMode GetLayoutMode(Visual visual, DockStyle dock, AnchorStyles anchor)
 		{
 			if ((dock == DockStyle.Stacked) ||
 				(dock == DockStyle.StackBegin) ||
@@ -107,6 +90,18 @@ namespace Epsitec.Common.Widgets.Layouts
 				return LayoutMode.Anchored;
 			}
 
+			Visual parent = visual.Parent;
+
+			if (parent != null)
+			{
+				ILayoutEngine engine = LayoutEngine.GetLayoutEngine (parent);
+
+				if (engine != null)
+				{
+					return engine.LayoutMode;
+				}
+			}
+			
 			return LayoutMode.None;
 		}
 
@@ -135,9 +130,28 @@ namespace Epsitec.Common.Widgets.Layouts
 				o.SetValue (LayoutEngine.LayoutEngineProperty, engine);
 			}
 		}
+
+		private static void NotifyLayoutEngineChanged(DependencyObject o, object oldValue, object newValue)
+		{
+			Visual visual = o as Visual;
+
+			if (visual != null)
+			{
+				if (visual.HasChildren)
+				{
+					visual.Children.RefreshLayoutStatistics ();
+				}
+
+				if (visual.Parent != null)
+				{
+					LayoutContext.AddToMeasureQueue (visual);
+					LayoutContext.AddToArrangeQueue (visual);
+				}
+			}
+		}
 		
 		
-		public static readonly DependencyProperty LayoutEngineProperty = DependencyProperty.RegisterAttached ("LayoutEngine", typeof (ILayoutEngine), typeof (LayoutEngine));
+		public static readonly DependencyProperty LayoutEngineProperty = DependencyProperty.RegisterAttached ("LayoutEngine", typeof (ILayoutEngine), typeof (LayoutEngine), new DependencyPropertyMetadata (LayoutEngine.NotifyLayoutEngineChanged));
 
 		private static ILayoutEngine					dock_engine   = new DockLayoutEngine ();
 		private static ILayoutEngine					anchor_engine = new AnchorLayoutEngine ();

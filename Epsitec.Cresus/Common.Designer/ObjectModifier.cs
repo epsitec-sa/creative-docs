@@ -248,9 +248,6 @@ namespace Epsitec.Common.Designer
 					engine.ColumnDefinitions.RemoveAt(count-1);
 				}
 			}
-
-			LayoutContext.AddToMeasureQueue(obj);
-			LayoutContext.AddToArrangeQueue(obj);
 		}
 
 		public int GetGridRowsCount(Widget obj)
@@ -294,9 +291,6 @@ namespace Epsitec.Common.Designer
 					engine.RowDefinitions.RemoveAt(count-1);
 				}
 			}
-
-			LayoutContext.AddToMeasureQueue(obj);
-			LayoutContext.AddToArrangeQueue(obj);
 		}
 
 		public bool IsGridCellEmpty(Widget obj, int column, int row)

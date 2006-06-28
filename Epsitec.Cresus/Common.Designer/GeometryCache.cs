@@ -64,7 +64,7 @@ namespace Epsitec.Common.Designer
 		}
 
 
-		static public void FixBounds(Widget parent, ObjectModifier objectModifier)
+		public static void FixBounds(Widget parent, ObjectModifier objectModifier)
 		{
 			//	Mémorise la position actuelle de tous les fils d'un objet sélectionné.
 			foreach (Widget children in parent.Children)
@@ -78,7 +78,7 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		static public void AdaptBounds(Widget parent, ObjectModifier objectModifier, ObjectModifier.ChildrenPlacement cp)
+		public static void AdaptBounds(Widget parent, ObjectModifier objectModifier, ObjectModifier.ChildrenPlacement cp)
 		{
 			//	Adapte les fils d'un objet sélectionné après un changement de ChildrenPlacement.
 			if (cp == ObjectModifier.ChildrenPlacement.Grid)
@@ -120,7 +120,7 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		static public void Clear(Widget parent)
+		public static void Clear(Widget parent)
 		{
 			//	Oublie toutes les informations de géométrie mémorisées.
 			foreach (Widget obj in parent.Children)
@@ -135,7 +135,7 @@ namespace Epsitec.Common.Designer
 		}
 
 
-		protected static readonly DependencyProperty GeometryCacheProperty = DependencyProperty.RegisterAttached("GeometryCache", typeof(GeometryCache), typeof(GeometryCache));
+		protected static readonly DependencyProperty GeometryCacheProperty = DependencyProperty.RegisterAttached ("GeometryCache", typeof (GeometryCache), typeof (GeometryCache), new DependencyPropertyMetadata ().MakeNotSerializable ());
 
 		protected Widget										obj;
 		protected ObjectModifier								objectModifier;
