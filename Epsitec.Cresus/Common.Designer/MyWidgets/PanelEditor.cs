@@ -1820,25 +1820,28 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected void SelectObjectsInRectangle(Rectangle sel, Widget parent)
 		{
-			foreach (Widget obj in parent.Children)
+			if (parent.HasChildren)
 			{
-				if (sel.Contains(this.objectModifier.GetBounds(obj)))
+				foreach (Widget obj in parent.Children)
 				{
-					if (this.selectedObjects.Count > 0)
+					if (sel.Contains(this.objectModifier.GetBounds(obj)))
 					{
-						if (obj.Parent != this.selectedObjects[0].Parent)
+						if (this.selectedObjects.Count > 0)
 						{
-							continue;
+							if (obj.Parent != this.selectedObjects[0].Parent)
+							{
+								continue;
+							}
 						}
-					}
 
-					this.selectedObjects.Add(obj);
-				}
-				else
-				{
-					if (obj is AbstractGroup)
+						this.selectedObjects.Add(obj);
+					}
+					else
 					{
-						this.SelectObjectsInRectangle(sel, obj);
+						if (obj is AbstractGroup)
+						{
+							this.SelectObjectsInRectangle(sel, obj);
+						}
 					}
 				}
 			}
@@ -2871,18 +2874,21 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected void GridClearSelection(Widget parent)
 		{
-			foreach (Widget obj in parent.Children)
+			if (parent.HasChildren)
 			{
-				if (obj is AbstractGroup)
+				foreach (Widget obj in parent.Children)
 				{
-					if (GridSelection.Get(obj) != null)
+					if (obj is AbstractGroup)
 					{
-						GridSelection.Detach(obj);
-						obj.Invalidate();
-						this.Invalidate();
-					}
+						if (GridSelection.Get(obj) != null)
+						{
+							GridSelection.Detach(obj);
+							obj.Invalidate();
+							this.Invalidate();
+						}
 
-					this.GridClearSelection(obj);
+						this.GridClearSelection(obj);
+					}
 				}
 			}
 		}
@@ -3638,21 +3644,24 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void DrawZOrder(Graphics graphics, Widget parent)
 		{
 			//	Dessine les numéros d'ordre d'un groupe.
-			foreach (Widget obj in parent.Children)
+			if (parent.HasChildren)
 			{
-				Rectangle rect = this.objectModifier.GetBounds(obj);
-				Rectangle box = new Rectangle(rect.BottomLeft+new Point(1, 1), new Size(20, 10));
-
-				graphics.AddFilledRectangle(box);
-				graphics.RenderSolid(Color.FromBrightness(1));
-
-				string text = this.GetObjectZOrder(obj);
-				graphics.AddText(box.Left, box.Bottom, box.Width, box.Height, text, Font.DefaultFont, 9.0, ContentAlignment.MiddleCenter);
-				graphics.RenderSolid(PanelsContext.ColorZOrder);
-
-				if (obj is AbstractGroup)
+				foreach (Widget obj in parent.Children)
 				{
-					this.DrawZOrder(graphics, obj);
+					Rectangle rect = this.objectModifier.GetBounds(obj);
+					Rectangle box = new Rectangle(rect.BottomLeft+new Point(1, 1), new Size(20, 10));
+
+					graphics.AddFilledRectangle(box);
+					graphics.RenderSolid(Color.FromBrightness(1));
+
+					string text = this.GetObjectZOrder(obj);
+					graphics.AddText(box.Left, box.Bottom, box.Width, box.Height, text, Font.DefaultFont, 9.0, ContentAlignment.MiddleCenter);
+					graphics.RenderSolid(PanelsContext.ColorZOrder);
+
+					if (obj is AbstractGroup)
+					{
+						this.DrawZOrder(graphics, obj);
+					}
 				}
 			}
 		}
@@ -3660,21 +3669,24 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void DrawTabIndex(Graphics graphics, Widget parent)
 		{
 			//	Dessine les numéros pour la touche Tab d'un groupe.
-			foreach (Widget obj in parent.Children)
+			if (parent.HasChildren)
 			{
-				Rectangle rect = this.objectModifier.GetBounds(obj);
-				Rectangle box = new Rectangle(rect.BottomRight+new Point(-20-1, 1), new Size(20, 10));
-
-				graphics.AddFilledRectangle(box);
-				graphics.RenderSolid(Color.FromBrightness(1));
-
-				string text = this.GetObjectTabIndex(obj);
-				graphics.AddText(box.Left, box.Bottom, box.Width, box.Height, text, Font.DefaultFont, 9.0, ContentAlignment.MiddleCenter);
-				graphics.RenderSolid(PanelsContext.ColorTabIndex);
-
-				if (obj is AbstractGroup)
+				foreach (Widget obj in parent.Children)
 				{
-					this.DrawTabIndex(graphics, obj);
+					Rectangle rect = this.objectModifier.GetBounds(obj);
+					Rectangle box = new Rectangle(rect.BottomRight+new Point(-20-1, 1), new Size(20, 10));
+
+					graphics.AddFilledRectangle(box);
+					graphics.RenderSolid(Color.FromBrightness(1));
+
+					string text = this.GetObjectTabIndex(obj);
+					graphics.AddText(box.Left, box.Bottom, box.Width, box.Height, text, Font.DefaultFont, 9.0, ContentAlignment.MiddleCenter);
+					graphics.RenderSolid(PanelsContext.ColorTabIndex);
+
+					if (obj is AbstractGroup)
+					{
+						this.DrawTabIndex(graphics, obj);
+					}
 				}
 			}
 		}
@@ -3710,17 +3722,20 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected void ChangeSeparatorAlpha(Widget parent, double alpha)
 		{
-			foreach (Widget obj in parent.Children)
+			if (parent.HasChildren)
 			{
-				if (obj is Separator)
+				foreach (Widget obj in parent.Children)
 				{
-					Separator sep = obj as Separator;
-					sep.Alpha = alpha;
-				}
+					if (obj is Separator)
+					{
+						Separator sep = obj as Separator;
+						sep.Alpha = alpha;
+					}
 
-				if (obj.Children.Count != 0)
-				{
-					this.ChangeSeparatorAlpha(obj, alpha);
+					if (obj.HasChildren)
+					{
+						this.ChangeSeparatorAlpha(obj, alpha);
+					}
 				}
 			}
 		}

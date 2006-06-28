@@ -67,13 +67,16 @@ namespace Epsitec.Common.Designer
 		public static void FixBounds(Widget parent, ObjectModifier objectModifier)
 		{
 			//	Mémorise la position actuelle de tous les fils d'un objet sélectionné.
-			foreach (Widget children in parent.Children)
+			if (parent.HasChildren)
 			{
-				GeometryCache gc = children.GetValue(GeometryCache.GeometryCacheProperty) as GeometryCache;
-				if (gc == null)
+				foreach (Widget children in parent.Children)
 				{
-					gc = new GeometryCache(children, objectModifier);
-					children.SetValue(GeometryCache.GeometryCacheProperty, gc);
+					GeometryCache gc = children.GetValue(GeometryCache.GeometryCacheProperty) as GeometryCache;
+					if (gc == null)
+					{
+						gc = new GeometryCache(children, objectModifier);
+						children.SetValue(GeometryCache.GeometryCacheProperty, gc);
+					}
 				}
 			}
 		}
@@ -95,27 +98,33 @@ namespace Epsitec.Common.Designer
 
 				int column = 0;
 				int row = 0;
-				foreach (Widget children in parent.Children)
+				if (parent.HasChildren)
 				{
-					GeometryCache gc = children.GetValue(GeometryCache.GeometryCacheProperty) as GeometryCache;
-					gc.AdaptBounds(cp);
-
-					objectModifier.SetGridParentColumnRow(children, children.Parent, column, row);
-
-					column ++;
-					if (column >= columns)
+					foreach (Widget children in parent.Children)
 					{
-						column = 0;
-						row ++;
+						GeometryCache gc = children.GetValue(GeometryCache.GeometryCacheProperty) as GeometryCache;
+						gc.AdaptBounds(cp);
+
+						objectModifier.SetGridParentColumnRow(children, children.Parent, column, row);
+
+						column++;
+						if (column >= columns)
+						{
+							column = 0;
+							row++;
+						}
 					}
 				}
 			}
 			else
 			{
-				foreach (Widget children in parent.Children)
+				if (parent.HasChildren)
 				{
-					GeometryCache gc = children.GetValue(GeometryCache.GeometryCacheProperty) as GeometryCache;
-					gc.AdaptBounds(cp);
+					foreach (Widget children in parent.Children)
+					{
+						GeometryCache gc = children.GetValue(GeometryCache.GeometryCacheProperty) as GeometryCache;
+						gc.AdaptBounds(cp);
+					}
 				}
 			}
 		}
@@ -123,13 +132,16 @@ namespace Epsitec.Common.Designer
 		public static void Clear(Widget parent)
 		{
 			//	Oublie toutes les informations de géométrie mémorisées.
-			foreach (Widget obj in parent.Children)
+			if (parent.HasChildren)
 			{
-				obj.ClearValue(GeometryCache.GeometryCacheProperty);
-
-				if (obj.Children.Count > 0)
+				foreach (Widget obj in parent.Children)
 				{
-					GeometryCache.Clear(obj);
+					obj.ClearValue(GeometryCache.GeometryCacheProperty);
+
+					if (obj.HasChildren)
+					{
+						GeometryCache.Clear(obj);
+					}
 				}
 			}
 		}
