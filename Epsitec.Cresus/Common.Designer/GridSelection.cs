@@ -138,7 +138,7 @@ namespace Epsitec.Common.Designer
 		#endregion
 
 
-		protected static readonly DependencyProperty GridSelectionProperty = DependencyProperty.RegisterAttached("GridSelection", typeof(GridSelection), typeof(GridSelection));
+		protected static readonly DependencyProperty GridSelectionProperty = DependencyProperty.RegisterAttached("GridSelection", typeof(GridSelection), typeof(GridSelection), new DependencyPropertyMetadata().MakeNotSerializable());
 
 		protected Widget					obj;
 		protected List<Item>				list;
