@@ -107,28 +107,31 @@ namespace Epsitec.Common.Designer
 			minY = 1000000;
 			double distance;
 
-			foreach (Widget obj in parent.Children)
+			if (parent.HasChildren)
 			{
-				if (!this.IsContained(excludes, obj))
+				foreach (Widget obj in parent.Children)
 				{
-					Rectangle bounds = this.editor.GetObjectBounds(obj);
-
-					distance = System.Math.Abs(bounds.Center.X-center.X);
-					if (minX > distance)
+					if (!this.IsContained(excludes, obj))
 					{
-						minX = distance;
+						Rectangle bounds = this.editor.GetObjectBounds(obj);
+
+						distance = System.Math.Abs(bounds.Center.X-center.X);
+						if (minX > distance)
+						{
+							minX = distance;
+						}
+
+						distance = System.Math.Abs(bounds.Center.Y-center.Y);
+						if (minY > distance)
+						{
+							minY = distance;
+						}
 					}
 
-					distance = System.Math.Abs(bounds.Center.Y-center.Y);
-					if (minY > distance)
+					if (obj is AbstractGroup)
 					{
-						minY = distance;
+						this.NearestDistance(rect, obj, out minX, out minY, excludes);
 					}
-				}
-
-				if (obj is AbstractGroup)
-				{
-					this.NearestDistance(rect, obj, out minX, out minY, excludes);
 				}
 			}
 		}
@@ -186,28 +189,31 @@ namespace Epsitec.Common.Designer
 				}
 			}
 
-			foreach (Widget obj in parent.Children)
+			if (parent.HasChildren)
 			{
-				if (!this.IsContained(excludes, obj))
+				foreach (Widget obj in parent.Children)
 				{
-					Rectangle bounds = this.editor.GetObjectBounds(obj);
-
-					distance = System.Math.Abs(bounds.Center.X-center.X);
-					if (distance <= distanceX)
+					if (!this.IsContained(excludes, obj))
 					{
-						this.Initialise(obj);
+						Rectangle bounds = this.editor.GetObjectBounds(obj);
+
+						distance = System.Math.Abs(bounds.Center.X-center.X);
+						if (distance <= distanceX)
+						{
+							this.Initialise(obj);
+						}
+
+						distance = System.Math.Abs(bounds.Center.Y-center.Y);
+						if (distance <= distanceY)
+						{
+							this.Initialise(obj);
+						}
 					}
 
-					distance = System.Math.Abs(bounds.Center.Y-center.Y);
-					if (distance <= distanceY)
+					if (obj is AbstractGroup)
 					{
-						this.Initialise(obj);
+						this.NearestObjects(rect, obj, distanceX, distanceY, excludes);
 					}
-				}
-
-				if (obj is AbstractGroup)
-				{
-					this.NearestObjects(rect, obj, distanceX, distanceY, excludes);
 				}
 			}
 		}

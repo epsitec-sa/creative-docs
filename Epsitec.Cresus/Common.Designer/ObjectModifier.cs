@@ -333,7 +333,7 @@ namespace Epsitec.Common.Designer
 		{
 			//	Retourne tous les widgets occupant une cellule donnée, en tenant
 			//	compte de leur span.
-			if (this.AreChildrenGrid(container))
+			if (this.AreChildrenGrid(container) && container.HasChildren)
 			{
 				foreach (Widget child in container.Children)
 				{
