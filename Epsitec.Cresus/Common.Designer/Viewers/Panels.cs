@@ -314,6 +314,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			if (this.context.Tool == "ToolSelect" || this.context.Tool == "ToolGlobal")
 			{
+				this.panelEditor.GridClearSelection();
 				this.panelEditor.SelectLastCreatedObject();
 			}
 

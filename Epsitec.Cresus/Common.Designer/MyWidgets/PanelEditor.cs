@@ -94,6 +94,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				if (this.panel != value)
 				{
 					this.selectedObjects.Clear();
+					this.GridClearSelection();
 					this.UpdateAfterSelectionChanged();
 					
 					this.panel = value;
@@ -603,6 +604,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 					return;
 				}
 				this.selectedObjects.Clear();
+				this.GridClearSelection();
 				this.UpdateAfterSelectionChanged();
 			}
 
@@ -622,6 +624,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				{
 					this.selectedObjects.Add(obj);
 				}
+				this.GridClearSelection();
 				this.UpdateAfterSelectionChanged();
 
 				if (obj != this.panel)
@@ -751,6 +754,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 					return;
 				}
 				this.selectedObjects.Clear();
+				this.GridClearSelection();
 				this.UpdateAfterSelectionChanged();
 			}
 
@@ -850,10 +854,30 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.GridDetect(pos, obj, out column, out row);
 			if (column != -1 && row != -1)
 			{
+				this.selectedObjects.Clear();
+				this.selectedObjects.Add(obj);
+				this.GridClearSelection();
+				this.UpdateAfterSelectionChanged();
+
+				this.SetHilitedObject(null, -1, -1);
+
 				this.isGridding = true;
 				this.griddingObject = obj;
 				this.griddingColumn = column;
 				this.griddingRow = row;
+
+				GridSelection.Attach(obj);
+				GridSelection gc = GridSelection.Get(this.griddingObject);
+
+				int index = this.objectModifier.GetGridCellIndex(obj, column, row);
+				GridSelection.Item item = new GridSelection.Item(GridSelection.Unit.Cell, index);
+				gc.Add(item);
+			}
+			else
+			{
+				this.selectedObjects.Clear();
+				this.GridClearSelection();
+				this.UpdateAfterSelectionChanged();
 			}
 
 			this.OnChildrenSelected();
@@ -863,7 +887,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void GridMove(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
 			//	Sélection de tableaux, souris déplacée.
-			if (isShiftPressed)
+			if (this.handlesList.IsFinger)
+			{
+				this.ChangeMouseCursor(MouseCursorType.Finger);
+			}
+			else if (isShiftPressed)
 			{
 				this.ChangeMouseCursor(MouseCursorType.ArrowPlus);
 			}
@@ -878,6 +906,31 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			if (this.isGridding)
 			{
+				GridSelection gc = GridSelection.Get(this.griddingObject);
+				gc.Clear();
+
+				if (this.griddingColumn == column && this.griddingRow == row)
+				{
+					int index = this.objectModifier.GetGridCellIndex(obj, column, row);
+					GridSelection.Item item = new GridSelection.Item(GridSelection.Unit.Cell, index);
+					gc.Add(item);
+				}
+				else if (this.griddingColumn == column)
+				{
+					GridSelection.Item item = new GridSelection.Item(GridSelection.Unit.Column, column);
+					gc.Add(item);
+				}
+				else if (this.griddingRow == row)
+				{
+					GridSelection.Item item = new GridSelection.Item(GridSelection.Unit.Row, row);
+					gc.Add(item);
+				}
+
+				this.Invalidate();
+			}
+			else if (this.handlesList.IsDragging)
+			{
+				this.HandlingMove(pos);
 			}
 			else
 			{
@@ -888,8 +941,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void GridUp(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
 			//	Sélection de tableaux, souris relâchée.
-			if (this.isDragging)
+			if (this.isGridding)
 			{
+				this.isGridding = false;
+			}
+
+			if (this.handlesList.IsDragging)
+			{
+				this.HandlingEnd(pos);
 			}
 		}
 
@@ -1666,6 +1725,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			if (this.selectedObjects.Count > 0)
 			{
 				this.selectedObjects.Clear();
+				this.GridClearSelection();
 				this.UpdateAfterSelectionChanged();
 				this.OnChildrenSelected();
 				this.Invalidate();
@@ -1682,6 +1742,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.selectedObjects.Add(obj);
 			}
 
+			this.GridClearSelection();
 			this.UpdateAfterSelectionChanged();
 			this.OnChildrenSelected();
 			this.Invalidate();
@@ -1702,6 +1763,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			this.selectedObjects = list;
 
+			this.GridClearSelection();
 			this.UpdateAfterSelectionChanged();
 			this.OnChildrenSelected();
 			this.Invalidate();
@@ -1722,6 +1784,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Sélectionne un objet.
 			this.selectedObjects.Clear();
 			this.selectedObjects.Add(obj);
+			this.GridClearSelection();
 			this.UpdateAfterSelectionChanged();
 			this.OnChildrenSelected();
 			this.Invalidate();
@@ -1732,6 +1795,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Sélectionne tous les objets entièrement inclus dans un rectangle.
 			//	Tous les objets sélectionnés doivent avoir le même parent.
 			this.SelectObjectsInRectangle(sel, this.panel);
+			this.GridClearSelection();
 			this.UpdateAfterSelectionChanged();
 			this.OnChildrenSelected();
 			this.Invalidate();
@@ -1829,6 +1893,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 
 			this.selectedObjects.Clear();
+			this.GridClearSelection();
 			this.UpdateAfterSelectionChanged();
 			this.OnChildrenSelected();
 			this.Invalidate();
@@ -2781,6 +2846,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 
 		#region Grid
+		public void GridClearSelection()
+		{
+			//	Supprime toutes les sélections de cellules/colonnes/lignes dans les tableaux.
+			this.GridClearSelection(this.panel);
+		}
+
 		protected void GridClearSelection(Widget parent)
 		{
 			foreach (Widget obj in parent.Children)
@@ -3253,7 +3324,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			if (column != -1 && row != -1)
 			{
 				Rectangle area = this.objectModifier.GetGridCellArea(obj, column, row);
-				this.DrawGridHilite(graphics, area, PanelsContext.ColorGridCell);
+				this.DrawGridHilited(graphics, area, PanelsContext.ColorGridCell);
 			}
 		}
 
@@ -3289,15 +3360,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 			if (column != -1 && row != -1)
 			{
 				Rectangle area = this.objectModifier.GetGridCellArea(obj, column, row);
-				this.DrawGridHilite(graphics, area, PanelsContext.ColorGridCell);
+				this.DrawGridHilited(graphics, area, PanelsContext.ColorGridCell);
 			}
-		}
-
-		protected void DrawGridHilite(Graphics graphics, Rectangle area, Color color)
-		{
-			//	Dessine les 4 gros 'coins' d'une zone rectangulaire.
-			graphics.Rasterizer.AddSurface(Misc.GetCornerPath(area));
-			graphics.RenderSolid(color);
 		}
 
 		protected void DrawGrid(Graphics graphics, Widget obj, Color color)
@@ -3338,6 +3402,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			rect.Deflate(0.5);
 			graphics.AddRectangle(rect);
+			graphics.RenderSolid(color);
 
 			GridSelection gs = GridSelection.Get(obj);
 			if (gs != null)
@@ -3346,10 +3411,31 @@ namespace Epsitec.Common.Designer.MyWidgets
 				{
 					GridSelection.Item item = gs.Get(i);
 					Rectangle area = this.objectModifier.GetGridItemArea(obj, item);
-					graphics.AddFilledRectangle(area);
+					this.DrawGridSelected(graphics, area, PanelsContext.ColorGridCell);
 				}
 			}
+		}
 
+		protected void DrawGridSelected(Graphics graphics, Rectangle area, Color color)
+		{
+			//	Dessine une ou plusieurs cellules sélectionnées.
+			area.Deflate(0.5);
+
+			Color cs = color;
+			cs.A *= 0.2;
+			graphics.AddFilledRectangle(area);
+			graphics.RenderSolid(cs);
+
+			graphics.AddRectangle(area);
+			area.Deflate(2.0);
+			graphics.AddRectangle(area);
+			graphics.RenderSolid(color);
+		}
+
+		protected void DrawGridHilited(Graphics graphics, Rectangle area, Color color)
+		{
+			//	Dessine une cellule survolée.
+			graphics.Rasterizer.AddSurface(Misc.GetCornerPath(area));
 			graphics.RenderSolid(color);
 		}
 
