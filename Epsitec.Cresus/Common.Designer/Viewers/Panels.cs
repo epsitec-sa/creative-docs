@@ -318,6 +318,11 @@ namespace Epsitec.Common.Designer.Viewers
 				this.panelEditor.SelectLastCreatedObject();
 			}
 
+			if (this.context.Tool == "ToolGrid")
+			{
+				this.panelEditor.DeselectAll();
+			}
+
 			if (this.context.Tool.StartsWith("Object"))
 			{
 				this.panelEditor.DeselectAll();

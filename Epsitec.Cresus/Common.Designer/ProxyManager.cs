@@ -236,7 +236,7 @@ namespace Epsitec.Common.Designer
 			locationNumericType.DefinePreferredRange(new Types.DecimalRange(0, 1000, 2));
 			sizeNumericType.DefinePreferredRange(new Types.DecimalRange(0, 1000, 1));
 			marginNumericType.DefinePreferredRange(new Types.DecimalRange(0, 200, 1));
-			gridNumericType.DefinePreferredRange(new Types.DecimalRange(1, 100, 1));
+			gridNumericType.DefinePreferredRange(new Types.DecimalRange(1, 10, 1));
 
 			ProxyManager.LocationNumericType = locationNumericType;
 			ProxyManager.SizeNumericType     = sizeNumericType;
