@@ -509,7 +509,6 @@ namespace Epsitec.Common.Text.Exchange
 		{
 			this.paragraphMode = Wrappers.JustificationMode.Unknown;
 			this.precedParagraphMode = Wrappers.JustificationMode.Unknown;
-			this.paragraphNotModeSet = true;
 
 			this.fontColor = string.Empty;
 			this.precedfontColor = string.Empty;
@@ -752,7 +751,6 @@ namespace Epsitec.Common.Text.Exchange
 
 		private Wrappers.JustificationMode paragraphMode = Wrappers.JustificationMode.Unknown;
 		private Wrappers.JustificationMode precedParagraphMode = Wrappers.JustificationMode.Unknown;
-		private bool paragraphNotModeSet = true;
 		private bool paragraphStarted = false;
 
 		private string fontColor = string.Empty;

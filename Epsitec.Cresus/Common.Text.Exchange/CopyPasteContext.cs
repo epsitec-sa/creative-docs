@@ -21,26 +21,13 @@ namespace Epsitec.Common.Text.Exchange
 			story.DisableOpletQueue ();
 			opletQueueDisabled = true;
 			TextNavigator navigator =  new TextNavigator (story);
-			this.Initialize (story, navigator);
+			this.InternalInitialize (story, navigator);
 		}
 
 		public CopyPasteContext(TextStory story, TextNavigator navigator)
 		{
-			this.Initialize (story, navigator);
+			this.InternalInitialize (story, navigator);
 		}
-
-		private void Initialize(TextStory story, TextNavigator navigator)
-		{
-			textWrapper = new Wrappers.TextWrapper ();
-			paraWrapper = new Wrappers.ParagraphWrapper ();
-
-			textWrapper.Attach (navigator);
-			paraWrapper.Attach (navigator);
-
-			this.navigator = navigator;
-			this.story = story;
-		}
-
 
 		public Wrappers.TextWrapper TextWrapper
 		{
@@ -77,7 +64,6 @@ namespace Epsitec.Common.Text.Exchange
 
 		~CopyPasteContext()
 		{
-			System.Diagnostics.Debug.Assert (false, "La classe CopyPasteContext a été utilisé sans using");
 			this.Dispose (false);
 		}
 
@@ -93,17 +79,31 @@ namespace Epsitec.Common.Text.Exchange
 			{
 				if (disposing)
 				{
-
+					if (opletQueueDisabled)
+					{
+						this.navigator.Dispose ();
+						this.story.EnableOpletQueue ();
+					}
 				}
-
-				if (opletQueueDisabled)
+				else
 				{
-					this.navigator.Dispose ();
-					this.story.EnableOpletQueue ();
+					System.Diagnostics.Debug.Assert (false, "La classe CopyPasteContext a été utilisé sans using");
 				}
-
 			}
 			this.isDisposed = true;
+		}
+
+
+		private void InternalInitialize(TextStory story, TextNavigator navigator)
+		{
+			this.textWrapper = new Wrappers.TextWrapper ();
+			this.paraWrapper = new Wrappers.ParagraphWrapper ();
+
+			this.textWrapper.Attach (navigator);
+			this.paraWrapper.Attach (navigator);
+
+			this.navigator = navigator;
+			this.story = story;
 		}
 
 

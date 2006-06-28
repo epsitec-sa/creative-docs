@@ -564,7 +564,6 @@ namespace Epsitec.Common.Text.Exchange
 			xline.DrawStyle      = null;
 		}
 
-		private CresusWrapper cresusWrapper;
 		private HtmlDocument htmlDoc;
 		private Wrappers.TextWrapper textWrapper;
 		private Wrappers.ParagraphWrapper paraWrapper;
