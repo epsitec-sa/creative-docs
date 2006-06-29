@@ -409,6 +409,46 @@ namespace Epsitec.Common.Designer
 			return 0;
 		}
 
+		public void SetGridColumnSpan(Widget obj, int span)
+		{
+			//	Détermine le nombre de colonnes occupées.
+			System.Diagnostics.Debug.Assert(this.AreChildrenGrid(obj.Parent));
+
+			GridLayoutEngine.SetColumnSpan(obj, span);
+			this.Invalidate();
+		}
+
+		public int GetGridColumnSpan(Widget obj)
+		{
+			//	Retourne le nombre de colonnes occupées.
+			if (this.AreChildrenGrid(obj.Parent))
+			{
+				return GridLayoutEngine.GetColumnSpan(obj);
+			}
+
+			return 0;
+		}
+
+		public void SetGridRowSpan(Widget obj, int span)
+		{
+			//	Détermine le nombre de lignes occupées.
+			System.Diagnostics.Debug.Assert(this.AreChildrenGrid(obj.Parent));
+
+			GridLayoutEngine.SetRowSpan(obj, span);
+			this.Invalidate();
+		}
+
+		public int GetGridRowSpan(Widget obj)
+		{
+			//	Retourne le nombre de lignes occupées.
+			if (this.AreChildrenGrid(obj.Parent))
+			{
+				return GridLayoutEngine.GetRowSpan(obj);
+			}
+
+			return 0;
+		}
+
 		public Rectangle GetGridItemArea(Widget obj, GridSelection.Item item)
 		{
 			//	Retourne la zone rectangulaire correspondant à un Item.

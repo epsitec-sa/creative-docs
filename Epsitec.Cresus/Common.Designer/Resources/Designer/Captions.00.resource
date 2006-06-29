@@ -26,8 +26,9 @@
   <data id="0J">&lt;s:data id="_0" f:Description="Nb de colonnes" f:Labels="{Collection {Text 'Nombre de colonnes'}}" /&gt;</data>
   <data id="0K">&lt;s:data id="_0" f:Description="Nb de lignes" f:Labels="{Collection {Text 'Nombre de lignes'}}" /&gt;</data>
 
-  <data id="0L">&lt;s:data id="_0" f:Description="" /&gt;</data>
-  <data id="0M">&lt;s:data id="_0" f:Description="" /&gt;</data>
+  <data id="0L">&lt;s:data id="_0" f:Description="Colonnes occupées" f:Labels="{Collection {Text 'Colonnes occupées'}}" /&gt;</data>
+  <data id="0M">&lt;s:data id="_0" f:Description="Lignes occupées" f:Labels="{Collection {Text 'Lignes occupées'}}" /&gt;</data>
+
   <data id="0N">&lt;s:data id="_0" f:Description="" /&gt;</data>
   <data id="0O">&lt;s:data id="_0" f:Description="" /&gt;</data>
   <data id="0P">&lt;s:data id="_0" f:Description="" /&gt;</data>
