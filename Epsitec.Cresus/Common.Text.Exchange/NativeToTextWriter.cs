@@ -84,6 +84,8 @@ namespace Epsitec.Common.Text.Exchange
 		private void ProcessStyles()
 		{
 			string line;
+			TextContext context = this.cpContext.Story.TextContext;
+
 			while (true)
 			{
 				line = theReader.ReadLine ();
@@ -93,18 +95,35 @@ namespace Epsitec.Common.Text.Exchange
 				if (line == "}")
 					break ;
 
+#if false
 				int indexendcaption = line.IndexOf ('\\');
 				string stylecaption = line.Substring(0, indexendcaption) ;
 
-				TextContext context = this.cpContext.Story.TextContext;
+				line = line.Substring (indexendcaption + 1);
+
+				indexendcaption = line.IndexOf ('\\') ;
+				string strnbbasestyles = line.Substring (0, indexendcaption);
+
+				int nbbasestyles = Misc.ParseInt (strnbbasestyles);
+#else
+				string stylecaption = Misc.NextElement(ref line, '\\') ;
+				string strnbbasestyles = Misc.NextElement(ref line, '\\') ;
+				int nbbasestyles = Misc.ParseInt (strnbbasestyles);
 
 				TextStyle style = context.StyleList.StyleMap.GetTextStyle (stylecaption);
 
 				if (style == null)
 				{
-					System.Diagnostics.Debugger.Break ();
+					for (int i = 0; i < nbbasestyles; i++)
+					{
+//						TextStyle style = context.StyleList.StyleMap.GetTextStyle (stylecaption);
+
+						string basestylecaption = Misc.NextElement (ref line, '\\');
+					}
+
 				}
 
+#endif
 			}
 		}
 
