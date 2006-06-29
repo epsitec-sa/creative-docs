@@ -622,7 +622,7 @@ namespace Epsitec.Common.Designer
 		}
 
 
-		public Rectangle GetGridItemArea(Widget obj, GridSelection.Item item)
+		public Rectangle GetGridItemArea(Widget obj, GridSelection.OneItem item)
 		{
 			//	Retourne la zone rectangulaire correspondant à un Item.
 			if (this.AreChildrenGrid(obj))

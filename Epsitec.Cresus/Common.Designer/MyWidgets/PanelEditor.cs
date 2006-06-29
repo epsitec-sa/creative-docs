@@ -870,7 +870,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				GridSelection gc = GridSelection.Get(this.griddingObject);
 
 				int index = this.objectModifier.GetGridCellIndex(obj, column, row);
-				GridSelection.Item item = new GridSelection.Item(GridSelection.Unit.Cell, index);
+				GridSelection.OneItem item = new GridSelection.OneItem(GridSelection.Unit.Cell, index);
 				gc.Add(item);
 			}
 			else
@@ -912,17 +912,17 @@ namespace Epsitec.Common.Designer.MyWidgets
 				if (this.griddingColumn == column && this.griddingRow == row)
 				{
 					int index = this.objectModifier.GetGridCellIndex(obj, column, row);
-					GridSelection.Item item = new GridSelection.Item(GridSelection.Unit.Cell, index);
+					GridSelection.OneItem item = new GridSelection.OneItem(GridSelection.Unit.Cell, index);
 					gc.Add(item);
 				}
 				else if (this.griddingColumn == column)
 				{
-					GridSelection.Item item = new GridSelection.Item(GridSelection.Unit.Column, column);
+					GridSelection.OneItem item = new GridSelection.OneItem(GridSelection.Unit.Column, column);
 					gc.Add(item);
 				}
 				else if (this.griddingRow == row)
 				{
-					GridSelection.Item item = new GridSelection.Item(GridSelection.Unit.Row, row);
+					GridSelection.OneItem item = new GridSelection.OneItem(GridSelection.Unit.Row, row);
 					gc.Add(item);
 				}
 
@@ -3440,9 +3440,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 			GridSelection gs = GridSelection.Get(obj);
 			if (gs != null)
 			{
-				for (int i=0; i<gs.Count; i++)
+				foreach (GridSelection.OneItem item in gs)
 				{
-					GridSelection.Item item = gs.Get(i);
 					Rectangle area = this.objectModifier.GetGridItemArea(obj, item);
 					this.DrawGridSelected(graphics, area, PanelsContext.ColorGridCell);
 				}

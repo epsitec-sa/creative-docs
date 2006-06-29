@@ -167,10 +167,8 @@ namespace Epsitec.Common.Designer.Proxies
 				GridSelection gs = GridSelection.Get(this.DefaultWidget);
 				if (gs != null)
 				{
-					for (int i=0; i<gs.Count; i++)
+					foreach (GridSelection.OneItem item in gs)
 					{
-						GridSelection.Item item = gs.Get(i);
-
 						if (item.Unit == GridSelection.Unit.Column)
 						{
 							ObjectModifier.GridMode mode = this.ObjectModifier.GetGridColumnMode(this.DefaultWidget, item.Index);
@@ -311,9 +309,8 @@ namespace Epsitec.Common.Designer.Proxies
 						GridSelection gs = GridSelection.Get(obj);
 						if (gs != null)
 						{
-							for (int i=0; i<gs.Count; i++)
+							foreach (GridSelection.OneItem item in gs)
 							{
-								GridSelection.Item item = gs.Get(i);
 								if (item.Unit == GridSelection.Unit.Column)
 								{
 									that.ObjectModifier.SetGridColumnMode(obj, item.Index, value);
@@ -347,9 +344,8 @@ namespace Epsitec.Common.Designer.Proxies
 						GridSelection gs = GridSelection.Get(obj);
 						if (gs != null)
 						{
-							for (int i=0; i<gs.Count; i++)
+							foreach (GridSelection.OneItem item in gs)
 							{
-								GridSelection.Item item = gs.Get(i);
 								if (item.Unit == GridSelection.Unit.Row)
 								{
 									that.ObjectModifier.SetGridRowMode(obj, item.Index, value);
@@ -383,9 +379,8 @@ namespace Epsitec.Common.Designer.Proxies
 						GridSelection gs = GridSelection.Get(obj);
 						if (gs != null)
 						{
-							for (int i=0; i<gs.Count; i++)
+							foreach (GridSelection.OneItem item in gs)
 							{
-								GridSelection.Item item = gs.Get(i);
 								if (item.Unit == GridSelection.Unit.Column)
 								{
 									that.ObjectModifier.SetGridColumnWidth(obj, item.Index, value);
@@ -419,9 +414,8 @@ namespace Epsitec.Common.Designer.Proxies
 						GridSelection gs = GridSelection.Get(obj);
 						if (gs != null)
 						{
-							for (int i=0; i<gs.Count; i++)
+							foreach (GridSelection.OneItem item in gs)
 							{
-								GridSelection.Item item = gs.Get(i);
 								if (item.Unit == GridSelection.Unit.Row)
 								{
 									that.ObjectModifier.SetGridRowHeight(obj, item.Index, value);
