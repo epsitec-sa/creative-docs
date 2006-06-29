@@ -11,14 +11,28 @@ namespace Epsitec.Common.Designer
 	/// Contient les informations sur la sélection des lignes/colonnes d'un AbstractGroup
 	/// en mode ChildrenPlacement.Grid.
 	/// </summary>
-	public class GridSelection : DependencyObject
+	public class GridSelection : DependencyObject, IEnumerable<GridSelection.OneItem>
 	{
 		public GridSelection(Widget obj)
 		{
 			this.obj = obj;
-			this.list = new List<Item>();
+			this.list = new List<OneItem>();
 		}
 
+
+		#region IEnumerable
+		public IEnumerator<GridSelection.OneItem> GetEnumerator()
+		{
+			return this.list.GetEnumerator();
+		}
+
+		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+		{
+			return this.list.GetEnumerator();
+		}
+		#endregion
+
+		
 		public int Count
 		{
 			get
@@ -27,32 +41,25 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		public Item Get(int index)
-		{
-			return this.list[index];
-		}
-
-#if false
-		public Item this[int index]
+		public OneItem this[int index]
 		{
 			get
 			{
 				return this.list[index];
 			}
 		}
-#endif
 
 		public void Clear()
 		{
 			this.list.Clear();
 		}
 
-		public void Add(Item item)
+		public void Add(OneItem item)
 		{
 			this.list.Add(item);
 		}
 
-		public void Remove(Item item)
+		public void Remove(OneItem item)
 		{
 			this.list.Remove(item);
 		}
@@ -63,7 +70,7 @@ namespace Epsitec.Common.Designer
 		}
 
 
-		#region Item
+		#region OneItem
 		public enum Unit
 		{
 			Cell,
@@ -71,9 +78,9 @@ namespace Epsitec.Common.Designer
 			Row,
 		}
 
-		public class Item
+		public class OneItem
 		{
-			public Item(Unit unit, int index)
+			public OneItem(Unit unit, int index)
 			{
 				this.unit = unit;
 				this.index = index;
@@ -141,6 +148,6 @@ namespace Epsitec.Common.Designer
 		protected static readonly DependencyProperty GridSelectionProperty = DependencyProperty.RegisterAttached("GridSelection", typeof(GridSelection), typeof(GridSelection), new DependencyPropertyMetadata().MakeNotSerializable());
 
 		protected Widget					obj;
-		protected List<Item>				list;
+		protected List<OneItem>				list;
 	}
 }
