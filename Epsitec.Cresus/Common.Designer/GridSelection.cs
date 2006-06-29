@@ -11,112 +11,55 @@ namespace Epsitec.Common.Designer
 	/// Contient les informations sur la sélection des lignes/colonnes d'un AbstractGroup
 	/// en mode ChildrenPlacement.Grid.
 	/// </summary>
-	public class GridSelection : DependencyObject, IEnumerable<GridSelection.OneItem>
+	public class GridSelection : DependencyObject
 	{
-		public GridSelection(Widget obj)
+		public enum SelectionUnit
 		{
-			this.obj = obj;
-			this.list = new List<OneItem>();
-		}
-
-
-		#region IEnumerable
-		public IEnumerator<GridSelection.OneItem> GetEnumerator()
-		{
-			return this.list.GetEnumerator();
-		}
-
-		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
-		{
-			return this.list.GetEnumerator();
-		}
-		#endregion
-
-		
-		public int Count
-		{
-			get
-			{
-				return this.list.Count;
-			}
-		}
-
-		public OneItem this[int index]
-		{
-			get
-			{
-				return this.list[index];
-			}
-		}
-
-		public void Clear()
-		{
-			this.list.Clear();
-		}
-
-		public void Add(OneItem item)
-		{
-			this.list.Add(item);
-		}
-
-		public void Remove(OneItem item)
-		{
-			this.list.Remove(item);
-		}
-
-		public void RemoveAt(int index)
-		{
-			this.list.RemoveAt(index);
-		}
-
-
-		#region OneItem
-		public enum Unit
-		{
+			None,
 			Cell,
 			Column,
 			Row,
 		}
 
-		public class OneItem
+
+		public GridSelection(Widget obj)
 		{
-			public OneItem(Unit unit, int index)
-			{
-				this.unit = unit;
-				this.index = index;
-			}
-
-			public Unit Unit
-			{
-				//	Unité de la sélection.
-				get
-				{
-					return this.unit;
-				}
-				set
-				{
-					this.unit = value;
-				}
-			}
-
-			public int Index
-			{
-				//	Index de la cellule, ligne ou colonne.
-				//	Pour une cellule, il s'agit du rang depuis la cellule supérieure gauche.
-				get
-				{
-					return this.index;
-				}
-				set
-				{
-					this.index = value;
-				}
-			}
-
-			protected Unit					unit;
-			protected int					index;
+			this.obj = obj;
+			this.unit = SelectionUnit.None;
 		}
-		#endregion
+
+
+		public void Clear()
+		{
+			this.unit = SelectionUnit.None;
+		}
+
+		public SelectionUnit Unit
+		{
+			//	Unité de la sélection.
+			get
+			{
+				return this.unit;
+			}
+			set
+			{
+				this.unit = value;
+			}
+		}
+
+		public int Index
+		{
+			//	Index de la cellule, ligne ou colonne.
+			//	Pour une cellule, il s'agit du rang depuis la cellule supérieure gauche.
+			get
+			{
+				return this.index;
+			}
+			set
+			{
+				this.index = value;
+			}
+		}
 
 
 		#region Static methods
@@ -148,6 +91,7 @@ namespace Epsitec.Common.Designer
 		protected static readonly DependencyProperty GridSelectionProperty = DependencyProperty.RegisterAttached("GridSelection", typeof(GridSelection), typeof(GridSelection), new DependencyPropertyMetadata().MakeNotSerializable());
 
 		protected Widget					obj;
-		protected List<OneItem>				list;
+		protected SelectionUnit				unit;
+		protected int						index;
 	}
 }

@@ -167,25 +167,22 @@ namespace Epsitec.Common.Designer.Proxies
 				GridSelection gs = GridSelection.Get(this.DefaultWidget);
 				if (gs != null)
 				{
-					foreach (GridSelection.OneItem item in gs)
+					if (gs.Unit == GridSelection.SelectionUnit.Column)
 					{
-						if (item.Unit == GridSelection.Unit.Column)
-						{
-							ObjectModifier.GridMode mode = this.ObjectModifier.GetGridColumnMode(this.DefaultWidget, item.Index);
-							double value = this.ObjectModifier.GetGridColumnWidth(this.DefaultWidget, item.Index);
+						ObjectModifier.GridMode mode = this.ObjectModifier.GetGridColumnMode(this.DefaultWidget, gs.Index);
+						double value = this.ObjectModifier.GetGridColumnWidth(this.DefaultWidget, gs.Index);
 
-							this.GridColumnMode = mode;
-							this.GridColumnValue = value;
-						}
+						this.GridColumnMode = mode;
+						this.GridColumnValue = value;
+					}
 
-						if (item.Unit == GridSelection.Unit.Row)
-						{
-							ObjectModifier.GridMode mode = this.ObjectModifier.GetGridRowMode(this.DefaultWidget, item.Index);
-							double value = this.ObjectModifier.GetGridRowHeight(this.DefaultWidget, item.Index);
+					if (gs.Unit == GridSelection.SelectionUnit.Row)
+					{
+						ObjectModifier.GridMode mode = this.ObjectModifier.GetGridRowMode(this.DefaultWidget, gs.Index);
+						double value = this.ObjectModifier.GetGridRowHeight(this.DefaultWidget, gs.Index);
 
-							this.GridRowMode = mode;
-							this.GridRowValue = value;
-						}
+						this.GridRowMode = mode;
+						this.GridRowValue = value;
 					}
 				}
 			}
@@ -309,12 +306,9 @@ namespace Epsitec.Common.Designer.Proxies
 						GridSelection gs = GridSelection.Get(obj);
 						if (gs != null)
 						{
-							foreach (GridSelection.OneItem item in gs)
+							if (gs.Unit == GridSelection.SelectionUnit.Column)
 							{
-								if (item.Unit == GridSelection.Unit.Column)
-								{
-									that.ObjectModifier.SetGridColumnMode(obj, item.Index, value);
-								}
+								that.ObjectModifier.SetGridColumnMode(obj, gs.Index, value);
 							}
 						}
 					}
@@ -344,12 +338,9 @@ namespace Epsitec.Common.Designer.Proxies
 						GridSelection gs = GridSelection.Get(obj);
 						if (gs != null)
 						{
-							foreach (GridSelection.OneItem item in gs)
+							if (gs.Unit == GridSelection.SelectionUnit.Row)
 							{
-								if (item.Unit == GridSelection.Unit.Row)
-								{
-									that.ObjectModifier.SetGridRowMode(obj, item.Index, value);
-								}
+								that.ObjectModifier.SetGridRowMode(obj, gs.Index, value);
 							}
 						}
 					}
@@ -379,12 +370,9 @@ namespace Epsitec.Common.Designer.Proxies
 						GridSelection gs = GridSelection.Get(obj);
 						if (gs != null)
 						{
-							foreach (GridSelection.OneItem item in gs)
+							if (gs.Unit == GridSelection.SelectionUnit.Column)
 							{
-								if (item.Unit == GridSelection.Unit.Column)
-								{
-									that.ObjectModifier.SetGridColumnWidth(obj, item.Index, value);
-								}
+								that.ObjectModifier.SetGridColumnWidth(obj, gs.Index, value);
 							}
 						}
 					}
@@ -414,12 +402,9 @@ namespace Epsitec.Common.Designer.Proxies
 						GridSelection gs = GridSelection.Get(obj);
 						if (gs != null)
 						{
-							foreach (GridSelection.OneItem item in gs)
+							if (gs.Unit == GridSelection.SelectionUnit.Row)
 							{
-								if (item.Unit == GridSelection.Unit.Row)
-								{
-									that.ObjectModifier.SetGridRowHeight(obj, item.Index, value);
-								}
+								that.ObjectModifier.SetGridRowHeight(obj, gs.Index, value);
 							}
 						}
 					}

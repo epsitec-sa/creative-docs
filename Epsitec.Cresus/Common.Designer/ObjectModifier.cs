@@ -622,18 +622,18 @@ namespace Epsitec.Common.Designer
 		}
 
 
-		public Rectangle GetGridItemArea(Widget obj, GridSelection.OneItem item)
+		public Rectangle GetGridItemArea(Widget obj, GridSelection gs)
 		{
-			//	Retourne la zone rectangulaire correspondant à un Item.
+			//	Retourne la zone rectangulaire correspondant à une sélection.
 			if (this.AreChildrenGrid(obj))
 			{
 				GridLayoutEngine engine = LayoutEngine.GetLayoutEngine(obj) as GridLayoutEngine;
 				if (engine != null)
 				{
-					if (item.Unit == GridSelection.Unit.Cell)
+					if (gs.Unit == GridSelection.SelectionUnit.Cell)
 					{
-						int x = item.Index % engine.ColumnDefinitions.Count;
-						int y = item.Index / engine.ColumnDefinitions.Count;
+						int x = gs.Index % engine.ColumnDefinitions.Count;
+						int y = gs.Index / engine.ColumnDefinitions.Count;
 						double x1 = this.GetGridColumnPosition(obj, x);
 						double x2 = this.GetGridColumnPosition(obj, x+1);
 						double y1 = this.GetGridRowPosition(obj, y+1);
@@ -641,9 +641,9 @@ namespace Epsitec.Common.Designer
 						return new Rectangle(x1, y1, x2-x1, y2-y1);
 					}
 
-					if (item.Unit == GridSelection.Unit.Column)
+					if (gs.Unit == GridSelection.SelectionUnit.Column)
 					{
-						int x = item.Index;
+						int x = gs.Index;
 						double x1 = this.GetGridColumnPosition(obj, x);
 						double x2 = this.GetGridColumnPosition(obj, x+1);
 						double y1 = this.GetGridRowPosition(obj, engine.RowDefinitions.Count);
@@ -651,9 +651,9 @@ namespace Epsitec.Common.Designer
 						return new Rectangle(x1, y1, x2-x1, y2-y1);
 					}
 
-					if (item.Unit == GridSelection.Unit.Row)
+					if (gs.Unit == GridSelection.SelectionUnit.Row)
 					{
-						int y = item.Index;
+						int y = gs.Index;
 						double x1 = this.GetGridColumnPosition(obj, 0);
 						double x2 = this.GetGridColumnPosition(obj, engine.ColumnDefinitions.Count);
 						double y1 = this.GetGridRowPosition(obj, y+1);

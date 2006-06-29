@@ -867,11 +867,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.griddingRow = row;
 
 				GridSelection.Attach(obj);
-				GridSelection gc = GridSelection.Get(this.griddingObject);
+				GridSelection gs = GridSelection.Get(this.griddingObject);
 
-				int index = this.objectModifier.GetGridCellIndex(obj, column, row);
-				GridSelection.OneItem item = new GridSelection.OneItem(GridSelection.Unit.Cell, index);
-				gc.Add(item);
+				gs.Index = this.objectModifier.GetGridCellIndex(obj, column, row);
+				gs.Unit = GridSelection.SelectionUnit.Cell;
 			}
 			else
 			{
@@ -906,24 +905,23 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			if (this.isGridding)
 			{
-				GridSelection gc = GridSelection.Get(this.griddingObject);
-				gc.Clear();
+				GridSelection gs = GridSelection.Get(this.griddingObject);
+				gs.Clear();
 
 				if (this.griddingColumn == column && this.griddingRow == row)
 				{
-					int index = this.objectModifier.GetGridCellIndex(obj, column, row);
-					GridSelection.OneItem item = new GridSelection.OneItem(GridSelection.Unit.Cell, index);
-					gc.Add(item);
+					gs.Index = this.objectModifier.GetGridCellIndex(obj, column, row);
+					gs.Unit = GridSelection.SelectionUnit.Cell;
 				}
 				else if (this.griddingColumn == column)
 				{
-					GridSelection.OneItem item = new GridSelection.OneItem(GridSelection.Unit.Column, column);
-					gc.Add(item);
+					gs.Index = column;
+					gs.Unit = GridSelection.SelectionUnit.Column;
 				}
 				else if (this.griddingRow == row)
 				{
-					GridSelection.OneItem item = new GridSelection.OneItem(GridSelection.Unit.Row, row);
-					gc.Add(item);
+					gs.Index = row;
+					gs.Unit = GridSelection.SelectionUnit.Row;
 				}
 
 				this.Invalidate();
@@ -3440,11 +3438,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 			GridSelection gs = GridSelection.Get(obj);
 			if (gs != null)
 			{
-				foreach (GridSelection.OneItem item in gs)
-				{
-					Rectangle area = this.objectModifier.GetGridItemArea(obj, item);
-					this.DrawGridSelected(graphics, area, PanelsContext.ColorGridCell);
-				}
+				Rectangle area = this.objectModifier.GetGridItemArea(obj, gs);
+				this.DrawGridSelected(graphics, area, PanelsContext.ColorGridCell);
 			}
 		}
 
