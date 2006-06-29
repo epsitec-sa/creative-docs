@@ -32,6 +32,11 @@ namespace Epsitec.Common.Widgets.Layouts
 			}
 		}
 
+		/// <summary>
+		/// Gets the column count. This property is valid only if the grid has
+		/// been measured by the layout system.
+		/// </summary>
+		/// <value>The column count.</value>
 		public int ColumnCount
 		{
 			get
@@ -40,11 +45,76 @@ namespace Epsitec.Common.Widgets.Layouts
 			}
 		}
 
+		/// <summary>
+		/// Gets the row count. This property is valid only if the grid has
+		/// been measured by the layout system.
+		/// </summary>
+		/// <value>The row count.</value>
 		public int RowCount
 		{
 			get
 			{
 				return this.rowMeasures.Length;
+			}
+		}
+
+		/// <summary>
+		/// Gets the index of the first column occupied by a widget.  This
+		/// property is valid only if the grid has been measured by the layout
+		/// system.
+		/// </summary>
+		/// <value>The index of the first occupied column, or <c>int.MaxValue</c> if
+		/// no widget can be found in the grid.</value>
+		public int MinColumnIndex
+		{
+			get
+			{
+				return this.minColumnIndex;
+			}
+		}
+
+		/// <summary>
+		/// Gets the index of the last column occupied by a widget.  This
+		/// property is valid only if the grid has been measured by the layout
+		/// system.
+		/// </summary>
+		/// <value>The index of the last occupied column, or <c>-1</c> if no widget
+		/// can be found in the grid.</value>
+		public int MaxColumnIndex
+		{
+			get
+			{
+				return this.maxColumnIndex;
+			}
+		}
+
+		/// <summary>
+		/// Gets the index of the first row occupied by a widget.  This
+		/// property is valid only if the grid has been measured by the layout
+		/// system.
+		/// </summary>
+		/// <value>The index of the first occupied row, or <c>int.MaxValue</c> if
+		/// no widget can be found in the grid.</value>
+		public int MinRowIndex
+		{
+			get
+			{
+				return this.minRowIndex;
+			}
+		}
+
+		/// <summary>
+		/// Gets the index of the last row occupied by a widget.  This
+		/// property is valid only if the grid has been measured by the layout
+		/// system.
+		/// </summary>
+		/// <value>The index of the last occupied row, or <c>-1</c> if no widget
+		/// can be found in the grid.</value>
+		public int MaxRowIndex
+		{
+			get
+			{
+				return this.maxRowIndex;
 			}
 		}
 
@@ -78,6 +148,11 @@ namespace Epsitec.Common.Widgets.Layouts
 
 			this.columnMeasures = new ColumnMeasure[updater.ColumnCount];
 			this.rowMeasures    = new RowMeasure[updater.RowCount];
+
+			this.minColumnIndex = updater.MinColumnIndex;
+			this.maxColumnIndex = updater.MaxColumnIndex;
+			this.minRowIndex = updater.MinRowIndex;
+			this.maxRowIndex = updater.MaxRowIndex;
 
 			updater.ColumnMeasureList.CopyTo (0, this.columnMeasures, 0, updater.ColumnCount);
 			updater.RowMeasureList.CopyTo (0, this.rowMeasures, 0, updater.RowCount);
@@ -439,6 +514,11 @@ namespace Epsitec.Common.Widgets.Layouts
 				this.passId      = passId;
 				this.columnCount = grid.ColumnDefinitions.Count;
 				this.rowCount    = grid.RowDefinitions.Count;
+
+				this.minColumnIndex = int.MaxValue;
+				this.maxColumnIndex = -1;
+				this.minRowIndex = int.MaxValue;
+				this.maxRowIndex = -1;
 			}
 
 			public int ColumnCount
@@ -457,6 +537,38 @@ namespace Epsitec.Common.Widgets.Layouts
 				}
 			}
 
+			public int MinColumnIndex
+			{
+				get
+				{
+					return this.minColumnIndex;
+				}
+			}
+
+			public int MaxColumnIndex
+			{
+				get
+				{
+					return this.maxColumnIndex;
+				}
+			}
+
+			public int MinRowIndex
+			{
+				get
+				{
+					return this.minRowIndex;
+				}
+			}
+
+			public int MaxRowIndex
+			{
+				get
+				{
+					return this.maxRowIndex;
+				}
+			}
+			
 			public List<ColumnMeasure> ColumnMeasureList
 			{
 				get
@@ -512,9 +624,25 @@ namespace Epsitec.Common.Widgets.Layouts
 				{
 					this.columnCount = column+columnSpan;
 				}
+				if (column+columnSpan-1 > this.maxColumnIndex)
+				{
+					this.maxColumnIndex = column+columnSpan-1;
+				}
+				if (column < this.minColumnIndex)
+				{
+					this.minColumnIndex = column;
+				}
 				if (row+rowSpan > this.rowCount)
 				{
 					this.rowCount = row+rowSpan;
+				}
+				if (row+rowSpan-1 > this.maxRowIndex)
+				{
+					this.maxRowIndex = row+rowSpan-1;
+				}
+				if (row < this.minRowIndex)
+				{
+					this.minRowIndex = row;
 				}
 
 				Layouts.LayoutMeasure measureDx = Layouts.LayoutMeasure.GetWidth (child);
@@ -777,6 +905,8 @@ namespace Epsitec.Common.Widgets.Layouts
 			int passId;
 			int columnCount;
 			int rowCount;
+			int minRowIndex, maxRowIndex;
+			int minColumnIndex, maxColumnIndex;
 		}
 
 		#endregion
@@ -1140,6 +1270,9 @@ namespace Epsitec.Common.Widgets.Layouts
 		private ColumnMeasure[] columnMeasures = new ColumnMeasure[0];
 		private RowMeasure[]	rowMeasures    = new RowMeasure[0];
 		private Visual			containerCache;
+		
+		private int				minRowIndex, maxRowIndex;
+		private int				minColumnIndex, maxColumnIndex;
 		
 		private Collections.ColumnDefinitionCollection columnDefinitions;
 		private Collections.RowDefinitionCollection rowDefinitions;
