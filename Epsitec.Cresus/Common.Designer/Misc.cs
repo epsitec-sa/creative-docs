@@ -54,18 +54,43 @@ namespace Epsitec.Common.Designer
 			return path;
 		}
 
-		static public Path GetHatchPath(Rectangle rect, double distance, double thickness)
+		static public Path GetHatchPath(Rectangle rect, double distance, Point reference)
 		{
-			//	Retourne des hachures à 45 degrés remplissant (et débordant) un rectangle.
+			//	Retourne des hachures à 45 degrés remplissant sans déborder un rectangle.
 			Path path = new Path();
 
-			for (double y=rect.Bottom-rect.Width; y<rect.Top; y+=distance)
+			//	Déplace reference sur le bord gauche du rectangle.
+			reference.Y += rect.Left - reference.X;
+			reference.X = rect.Left;
+			double d = reference.Y - rect.Bottom;
+
+			double v = System.Math.Ceiling(rect.Width/distance) * distance;
+			v -= d % distance;
+
+			for (double y=rect.Bottom-v; y<rect.Top; y+=distance)
 			{
-				path.MoveTo(rect.Left, y);
-				path.LineTo(rect.Right, y+rect.Width);
-				path.LineTo(rect.Right, y+rect.Width+thickness);
-				path.LineTo(rect.Left, y+thickness);
-				path.Close();
+				double x1 = rect.Left;
+				double y1 = y;
+				double x2 = rect.Right;
+				double y2 = y+rect.Width;
+
+				if (y1 < rect.Bottom)
+				{
+					x1 += rect.Bottom-y1;
+					y1 = rect.Bottom;
+				}
+
+				if (y2 > rect.Top)
+				{
+					x2 -= y2-rect.Top;
+					y2 = rect.Top;
+				}
+
+				if (x1 < x2)
+				{
+					path.MoveTo(x1, y1);
+					path.LineTo(x2, y2);
+				}
 			}
 
 			return path;
