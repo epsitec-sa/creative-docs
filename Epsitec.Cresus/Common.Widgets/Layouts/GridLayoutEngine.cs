@@ -747,11 +747,16 @@ namespace Epsitec.Common.Widgets.Layouts
 							//	The widget needs more room than what has been granted to it.
 							//	Distribute the excess space evenly.
 
-							double space = (info.Measure.Desired - dx) / info.Span;
+							int[] index = this.GetFlexibleColumns (info.Index, info.Span);
+							double space = (info.Measure.Desired - dx) / index.Length;
+							
+							//	TODO: result is not perfect, since we mix UpdateMin with some
+							//	columns which could define a Desired value different from the
+							//	minimum.
 
-							for (int i = 0; i < info.Span; i++)
+							for (int i = 0; i < index.Length; i++)
 							{
-								LayoutMeasure measure = this.GetColumnMeasure (info.Index + i);
+								LayoutMeasure measure = this.GetColumnMeasure (index[i]);
 								measure.UpdateMin (this.passId, measure.Min + space);
 							}
 						}
@@ -774,16 +779,129 @@ namespace Epsitec.Common.Widgets.Layouts
 							//	The widget needs more room than what has been granted to it.
 							//	Distribute the excess space evenly.
 
-							double space = (info.Measure.Desired - dy) / info.Span;
+							int[] index = this.GetFlexibleRows (info.Index, info.Span);
+							double space = (info.Measure.Desired - dy) / index.Length;
 
-							for (int i = 0; i < info.Span; i++)
+							//	TODO: result is not perfect, since we mix UpdateMin with some
+							//	columns which could define a Desired value different from the
+							//	minimum.
+
+							for (int i = 0; i < index.Length; i++)
 							{
-								LayoutMeasure measure = this.GetRowMeasure (info.Index + i);
+								LayoutMeasure measure = this.GetRowMeasure (index[i]);
 								measure.UpdateMin (this.passId, measure.Min + space);
 							}
 						}
 					}
 				}
+			}
+
+			private int[] GetFlexibleColumns(int index, int span)
+			{
+				List<int> list = new List<int> ();
+
+				//	We try to expand the proportional columns first, if there
+				//	are any. If not, consider the automatic columns; if everything
+				//	fails, just use all columns.
+				
+				for (int i = 0; i < span; i++)
+				{
+					int col = index+i;
+
+					if (col < this.grid.ColumnDefinitions.Count)
+					{
+						if (this.grid.ColumnDefinitions[col].Width.IsProportional)
+						{
+							list.Add (col);
+						}
+					}
+				}
+
+				if (list.Count > 0)
+				{
+					return list.ToArray ();
+				}
+
+				for (int i = 0; i < span; i++)
+				{
+					int col = index+i;
+
+					if (col < this.grid.ColumnDefinitions.Count)
+					{
+						if (this.grid.ColumnDefinitions[col].Width.IsAuto)
+						{
+							list.Add (col);
+						}
+					}
+				}
+
+				if (list.Count > 0)
+				{
+					return list.ToArray ();
+				}
+
+				int[] array = new int[span];
+
+				for (int i = 0; i < span; i++)
+				{
+					array[i] = index+i;
+				}
+
+				return array;
+			}
+
+			private int[] GetFlexibleRows(int index, int span)
+			{
+				List<int> list = new List<int> ();
+
+				//	We try to expand the proportional rows first, if there
+				//	are any. If not, consider the automatic rows; if everything
+				//	fails, just use all rows.
+				
+				for (int i = 0; i < span; i++)
+				{
+					int row = index+i;
+
+					if (row < this.grid.RowDefinitions.Count)
+					{
+						if (this.grid.RowDefinitions[row].Height.IsProportional)
+						{
+							list.Add (row);
+						}
+					}
+				}
+
+				if (list.Count > 0)
+				{
+					return list.ToArray ();
+				}
+
+				for (int i = 0; i < span; i++)
+				{
+					int row = index+i;
+
+					if (row < this.grid.RowDefinitions.Count)
+					{
+						if (this.grid.RowDefinitions[row].Height.IsAuto)
+						{
+							list.Add (row);
+						}
+					}
+				}
+
+				if (list.Count > 0)
+				{
+					return list.ToArray ();
+				}
+
+				int[] array = new int[span];
+
+				for (int i = 0; i < span; i++)
+				{
+					array[i] = index+i;
+				}
+
+				return array;
 			}
 
 			private double GetColumnSpanWidth(int column, int span)
