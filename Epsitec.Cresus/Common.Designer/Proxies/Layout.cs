@@ -193,7 +193,7 @@ namespace Epsitec.Common.Designer.Proxies
 				ObjectModifier.StackedVerticalAlignment va = this.ObjectModifier.GetStackedVerticalAlignment(this.DefaultWidget);
 				ObjectModifier.ChildrenPlacement cp = this.ObjectModifier.GetChildrenPlacement(this.DefaultWidget.Parent);
 
-				if (cp == ObjectModifier.ChildrenPlacement.HorizontalStacked)
+				if (cp == ObjectModifier.ChildrenPlacement.HorizontalStacked || cp == ObjectModifier.ChildrenPlacement.Grid)
 				{
 					this.StackedVerticalBaseLineAlignment = va;
 				}
