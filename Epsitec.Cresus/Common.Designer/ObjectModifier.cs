@@ -248,7 +248,7 @@ namespace Epsitec.Common.Designer
 
 				if (columns > engine.ColumnDefinitions.Count)
 				{
-					engine.ColumnDefinitions.Add(new ColumnDefinition(new GridLength(1, GridUnitType.Proportional)));
+					engine.ColumnDefinitions.Add(new ColumnDefinition(new GridLength(100, GridUnitType.Proportional)));
 					engine.ColumnDefinitions[count].MinWidth = 20;
 				}
 				else
@@ -293,7 +293,7 @@ namespace Epsitec.Common.Designer
 
 				if (rows > engine.RowDefinitions.Count)
 				{
-					engine.RowDefinitions.Add(new RowDefinition(new GridLength(1, GridUnitType.Proportional)));
+					engine.RowDefinitions.Add(new RowDefinition(new GridLength(100, GridUnitType.Proportional)));
 					engine.RowDefinitions[count].MinHeight = 20;
 				}
 				else
@@ -334,10 +334,12 @@ namespace Epsitec.Common.Designer
 			if (this.GetGridColumnMode(obj, column) != mode)
 			{
 				GridUnitType type = ObjectModifier.GridConvert(mode);
-				double value = (type == GridUnitType.Absolute) ? 100 : 1;
+				double value = (type == GridUnitType.Absolute) ? 100 : 100;
 
 				ColumnDefinition def = engine.ColumnDefinitions[column];
 				def.Width = new GridLength(value, type);
+
+				this.Invalidate();
 			}
 		}
 
@@ -369,10 +371,12 @@ namespace Epsitec.Common.Designer
 			if (this.GetGridRowMode(obj, row) != mode)
 			{
 				GridUnitType type = ObjectModifier.GridConvert(mode);
-				double value = (type == GridUnitType.Absolute) ? 100 : 1;
+				double value = (type == GridUnitType.Absolute) ? 20 : 100;
 
 				RowDefinition def = engine.RowDefinitions[row];
 				def.Height = new GridLength(value, type);
+
+				this.Invalidate();
 			}
 		}
 
@@ -403,6 +407,8 @@ namespace Epsitec.Common.Designer
 
 			ColumnDefinition def = engine.ColumnDefinitions[column];
 			def.Width = new GridLength(width, def.Width.GridUnitType);
+
+			this.Invalidate();
 		}
 
 		public double GetGridRowHeight(Widget obj, int row)
@@ -432,6 +438,8 @@ namespace Epsitec.Common.Designer
 
 			RowDefinition def = engine.RowDefinitions[row];
 			def.Height = new GridLength(height, def.Height.GridUnitType);
+
+			this.Invalidate();
 		}
 
 		static protected GridUnitType GridConvert(GridMode mode)
