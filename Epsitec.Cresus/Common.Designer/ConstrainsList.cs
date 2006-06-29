@@ -113,7 +113,7 @@ namespace Epsitec.Common.Designer
 				{
 					if (!this.IsContained(excludes, obj))
 					{
-						Rectangle bounds = this.editor.GetObjectBounds(obj);
+						Rectangle bounds = this.editor.GetObjectPreferredBounds(obj);
 
 						distance = System.Math.Abs(bounds.Center.X-center.X);
 						if (minX > distance)
@@ -195,7 +195,7 @@ namespace Epsitec.Common.Designer
 				{
 					if (!this.IsContained(excludes, obj))
 					{
-						Rectangle bounds = this.editor.GetObjectBounds(obj);
+						Rectangle bounds = this.editor.GetObjectPreferredBounds(obj);
 
 						distance = System.Math.Abs(bounds.Center.X-center.X);
 						if (distance <= distanceX)
@@ -236,7 +236,7 @@ namespace Epsitec.Common.Designer
 		protected void Initialise(Widget obj)
 		{
 			//	Initialise les contraintes pour un objet.
-			Rectangle bounds = this.editor.GetObjectBounds(obj);
+			Rectangle bounds = this.editor.GetObjectPreferredBounds(obj);
 			Constrain constrain;
 
 			constrain = new Constrain(bounds.BottomLeft, Constrain.Type.Left, this.context.ConstrainMargin);

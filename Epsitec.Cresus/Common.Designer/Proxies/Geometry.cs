@@ -145,9 +145,9 @@ namespace Epsitec.Common.Designer.Proxies
 				this.BottomMargin = margins.Bottom;
 			}
 
-			if (this.ObjectModifier.HasBounds(this.DefaultWidget))
+			if (this.ObjectModifier.HasPreferredBounds(this.DefaultWidget))
 			{
-				Rectangle bounds = this.ObjectModifier.GetBounds(this.DefaultWidget);
+				Rectangle bounds = this.ObjectModifier.GetPreferredBounds(this.DefaultWidget);
 
 				this.OriginX = bounds.Left;
 				this.OriginY = bounds.Bottom;
@@ -156,14 +156,14 @@ namespace Epsitec.Common.Designer.Proxies
 			}
 			else
 			{
-				if (this.ObjectModifier.HasWidth(this.DefaultWidget))
+				if (this.ObjectModifier.HasPreferredWidth(this.DefaultWidget))
 				{
-					this.Width = this.ObjectModifier.GetWidth(this.DefaultWidget);
+					this.Width = this.ObjectModifier.GetPreferredWidth(this.DefaultWidget);
 				}
 
-				if (this.ObjectModifier.HasHeight(this.DefaultWidget))
+				if (this.ObjectModifier.HasPreferredHeight(this.DefaultWidget))
 				{
-					this.Height = this.ObjectModifier.GetHeight(this.DefaultWidget);
+					this.Height = this.ObjectModifier.GetPreferredHeight(this.DefaultWidget);
 				}
 			}
 		}
@@ -206,20 +206,20 @@ namespace Epsitec.Common.Designer.Proxies
 				{
 					foreach (Widget obj in this.Widgets)
 					{
-						if (this.ObjectModifier.HasBounds(obj))
+						if (this.ObjectModifier.HasPreferredBounds(obj))
 						{
-							this.ObjectModifier.SetBounds(obj, bounds);
+							this.ObjectModifier.SetPreferredBounds(obj, bounds);
 						}
 						else
 						{
-							if (this.ObjectModifier.HasWidth(obj))
+							if (this.ObjectModifier.HasPreferredWidth(obj))
 							{
-								this.ObjectModifier.SetWidth(obj, bounds.Width);
+								this.ObjectModifier.SetPreferredWidth(obj, bounds.Width);
 							}
 
-							if (this.ObjectModifier.HasHeight(obj))
+							if (this.ObjectModifier.HasPreferredHeight(obj))
 							{
-								this.ObjectModifier.SetHeight(obj, bounds.Height);
+								this.ObjectModifier.SetPreferredHeight(obj, bounds.Height);
 							}
 						}
 					}

@@ -75,7 +75,7 @@ namespace Epsitec.Common.Designer
 		public void DraggingStart(Point pos, Handle.Type type)
 		{
 			//	Débute un déplacement de poignée.
-			this.draggingRect = this.editor.GetObjectBounds(this.widget);
+			this.draggingRect = this.editor.GetObjectPreferredBounds(this.widget);
 			this.draggingMinSize = this.widget.RealMinSize;
 			this.draggingType = type;
 
@@ -148,7 +148,7 @@ namespace Epsitec.Common.Designer
 		{
 			//	Termine un déplacement de poignée.
 			Rectangle bounds = this.DraggingMove(pos);
-			this.editor.SetObjectBounds(this.widget, bounds);
+			this.editor.SetObjectPreferredBounds(this.widget, bounds);
 
 			this.draggingType = Handle.Type.None;
 			this.UpdateGeometry();
@@ -336,7 +336,7 @@ namespace Epsitec.Common.Designer
 		protected void HandleUpdatePosition(Handle handle)
 		{
 			//	Met à jour la position et la forme d'une poignée selon l'objet.
-			Rectangle bounds = this.editor.GetObjectBounds(this.widget);
+			Rectangle bounds = this.editor.GetObjectPreferredBounds(this.widget);
 			Point center = bounds.Center;
 
 			handle.GlyphType = Handle.Glyph.Square;

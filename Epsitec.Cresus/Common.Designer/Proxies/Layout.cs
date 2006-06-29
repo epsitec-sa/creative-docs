@@ -249,9 +249,9 @@ namespace Epsitec.Common.Designer.Proxies
 				{
 					foreach (Widget obj in that.Widgets)
 					{
-						Rectangle bounds = that.ObjectModifier.GetBounds(obj);
+						Rectangle bounds = that.ObjectModifier.GetPreferredBounds(obj);
 						that.ObjectModifier.SetAnchoredHorizontalAttachment(obj, ha);
-						that.ObjectModifier.SetBounds(obj, bounds);
+						that.ObjectModifier.SetPreferredBounds(obj, bounds);
 					}
 				}
 				finally
@@ -278,9 +278,9 @@ namespace Epsitec.Common.Designer.Proxies
 				{
 					foreach (Widget obj in that.Widgets)
 					{
-						Rectangle bounds = that.ObjectModifier.GetBounds(obj);
+						Rectangle bounds = that.ObjectModifier.GetPreferredBounds(obj);
 						that.ObjectModifier.SetAnchoredVerticalAttachment(obj, va);
-						that.ObjectModifier.SetBounds(obj, bounds);
+						that.ObjectModifier.SetPreferredBounds(obj, bounds);
 					}
 				}
 				finally
