@@ -856,21 +856,45 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				this.selectedObjects.Clear();
 				this.selectedObjects.Add(obj);
-				this.GridClearSelection();
+				this.GridClearSelection(obj);
 				this.UpdateAfterSelectionChanged();
 
 				this.SetHilitedObject(null, -1, -1);
-
 				this.isGridding = true;
-				this.griddingObject = obj;
-				this.griddingColumn = column;
-				this.griddingRow = row;
 
 				GridSelection.Attach(obj);
-				GridSelection gs = GridSelection.Get(this.griddingObject);
+				GridSelection gs = GridSelection.Get(obj);
 
-				gs.Index = this.objectModifier.GetGridCellIndex(obj, column, row);
-				gs.Unit = GridSelection.SelectionUnit.Cell;
+				bool byColumn = true;
+
+				if (gs.Unit == GridSelection.SelectionUnit.Column)
+				{
+					if (gs.Index == column)
+					{
+						byColumn = false;
+					}
+				}
+				
+				if (gs.Unit == GridSelection.SelectionUnit.Row)
+				{
+					byColumn = false;
+
+					if (gs.Index == row)
+					{
+						byColumn = true;
+					}
+				}
+
+				if (byColumn)
+				{
+					gs.Unit = GridSelection.SelectionUnit.Column;
+					gs.Index = column;
+				}
+				else
+				{
+					gs.Unit = GridSelection.SelectionUnit.Row;
+					gs.Index = row;
+				}
 			}
 			else
 			{
@@ -905,26 +929,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			if (this.isGridding)
 			{
-				GridSelection gs = GridSelection.Get(this.griddingObject);
-				gs.Clear();
-
-				if (this.griddingColumn == column && this.griddingRow == row)
-				{
-					gs.Index = this.objectModifier.GetGridCellIndex(obj, column, row);
-					gs.Unit = GridSelection.SelectionUnit.Cell;
-				}
-				else if (this.griddingColumn == column)
-				{
-					gs.Index = column;
-					gs.Unit = GridSelection.SelectionUnit.Column;
-				}
-				else if (this.griddingRow == row)
-				{
-					gs.Index = row;
-					gs.Unit = GridSelection.SelectionUnit.Row;
-				}
-
-				this.Invalidate();
 			}
 			else if (this.handlesList.IsDragging)
 			{
@@ -2868,17 +2872,23 @@ namespace Epsitec.Common.Designer.MyWidgets
 		public void GridClearSelection()
 		{
 			//	Supprime toutes les sélections de cellules/colonnes/lignes dans les tableaux.
-			if (GridSelection.Get(this.panel) != null)
+			this.GridClearSelection(null);
+		}
+
+		protected void GridClearSelection(Widget exclude)
+		{
+			//	Supprime toutes les sélections de cellules/colonnes/lignes dans les tableaux, sauf une.
+			if (this.panel != exclude && GridSelection.Get(this.panel) != null)
 			{
 				GridSelection.Detach(this.panel);
 				this.panel.Invalidate();
 				this.Invalidate();
 			}
 
-			this.GridClearSelection(this.panel);
+			this.GridClearSelection(this.panel, exclude);
 		}
 
-		protected void GridClearSelection(Widget parent)
+		protected void GridClearSelection(Widget parent, Widget exclude)
 		{
 			if (parent.HasChildren)
 			{
@@ -2886,14 +2896,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 				{
 					if (obj is AbstractGroup)
 					{
-						if (GridSelection.Get(obj) != null)
+						if (obj != exclude && GridSelection.Get(obj) != null)
 						{
 							GridSelection.Detach(obj);
 							obj.Invalidate();
 							this.Invalidate();
 						}
 
-						this.GridClearSelection(obj);
+						this.GridClearSelection(obj, exclude);
 					}
 				}
 			}
@@ -3962,9 +3972,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected DragWindow				handlingWindow;
 		protected Rectangle					handlingRectangle;
 		protected bool						isGridding;
-		protected Widget					griddingObject;
-		protected int						griddingColumn;
-		protected int						griddingRow;
 		protected Point						startingPos;
 		protected MouseCursorType			lastCursor = MouseCursorType.Unknow;
 		protected Size						sizeMark;

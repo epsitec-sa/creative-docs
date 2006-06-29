@@ -57,9 +57,10 @@ namespace Epsitec.Common.Designer
 		static public Path GetHatchPath(Rectangle rect, double distance, Point reference)
 		{
 			//	Retourne des hachures à 45 degrés remplissant sans déborder un rectangle.
+			//	Une hachure passe toujours par le point de référence.
 			Path path = new Path();
 
-			//	Déplace reference sur le bord gauche du rectangle.
+			//	Déplace le point de référence sur le bord gauche du rectangle.
 			reference.Y += rect.Left - reference.X;
 			reference.X = rect.Left;
 			double d = reference.Y - rect.Bottom;

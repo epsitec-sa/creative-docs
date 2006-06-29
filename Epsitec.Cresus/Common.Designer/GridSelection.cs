@@ -16,7 +16,6 @@ namespace Epsitec.Common.Designer
 		public enum SelectionUnit
 		{
 			None,
-			Cell,
 			Column,
 			Row,
 		}

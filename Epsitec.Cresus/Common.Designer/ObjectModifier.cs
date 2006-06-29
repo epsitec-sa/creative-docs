@@ -467,21 +467,6 @@ namespace Epsitec.Common.Designer
 		}
 
 
-		public int GetGridCellIndex(Widget obj, int column, int row)
-		{
-			//	Retourne l'index d'une cellule dans un tableau.
-			if (this.AreChildrenGrid(obj))
-			{
-				GridLayoutEngine engine = LayoutEngine.GetLayoutEngine(obj) as GridLayoutEngine;
-				if (engine != null)
-				{
-					return column + row*engine.ColumnDefinitions.Count;
-				}
-			}
-
-			return 0;
-		}
-
 		public bool IsGridCellEmpty(Widget obj, int column, int row)
 		{
 			//	Indique si une cellule est libre, donc si elle ne contient aucun widget.
@@ -630,17 +615,6 @@ namespace Epsitec.Common.Designer
 				GridLayoutEngine engine = LayoutEngine.GetLayoutEngine(obj) as GridLayoutEngine;
 				if (engine != null)
 				{
-					if (gs.Unit == GridSelection.SelectionUnit.Cell)
-					{
-						int x = gs.Index % engine.ColumnDefinitions.Count;
-						int y = gs.Index / engine.ColumnDefinitions.Count;
-						double x1 = this.GetGridColumnPosition(obj, x);
-						double x2 = this.GetGridColumnPosition(obj, x+1);
-						double y1 = this.GetGridRowPosition(obj, y+1);
-						double y2 = this.GetGridRowPosition(obj, y);
-						return new Rectangle(x1, y1, x2-x1, y2-y1);
-					}
-
 					if (gs.Unit == GridSelection.SelectionUnit.Column)
 					{
 						int x = gs.Index;
