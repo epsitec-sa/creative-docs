@@ -509,8 +509,9 @@ namespace Epsitec.Common.Widgets.Layouts
 				if (columnSpan == 1)
 				{
 					ColumnMeasure columnMeasure = this.GetColumnMeasure (column);
+					bool auto = column < this.grid.ColumnDefinitions.Count ? this.grid.ColumnDefinitions[column].Width.IsAuto : true;
 
-					columnMeasure.UpdateMin (this.passId, measureDx.Desired + margins.Width);
+					columnMeasure.UpdateMin (this.passId, (auto ? measureDx.Desired : measureDx.Min) + margins.Width);
 					columnMeasure.UpdateMax (this.passId, measureDx.Max + margins.Width);
 					columnMeasure.UpdatePassId (this.passId);
 				}
@@ -522,8 +523,9 @@ namespace Epsitec.Common.Widgets.Layouts
 				if (rowSpan == 1)
 				{
 					RowMeasure rowMeasure = this.GetRowMeasure (row);
+					bool auto = row < this.grid.RowDefinitions.Count ? this.grid.RowDefinitions[row].Height.IsAuto : true;
 
-					rowMeasure.UpdateMin (this.passId, measureDy.Desired + margins.Height);
+					rowMeasure.UpdateMin (this.passId, (auto ? measureDy.Desired : measureDy.Min) + margins.Height);
 					rowMeasure.UpdateMax (this.passId, measureDy.Max + margins.Height);
 					rowMeasure.UpdatePassId (this.passId);
 
