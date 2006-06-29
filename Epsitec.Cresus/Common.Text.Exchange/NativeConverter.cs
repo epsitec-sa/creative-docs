@@ -56,11 +56,20 @@ namespace Epsitec.Common.Text.Exchange
 
 				if (thestyle.TextStyleClass == TextStyleClass.Paragraph || thestyle.TextStyleClass == TextStyleClass.Text)
 				{
-					string s = thestyle.Name;
-					s = context.StyleList.StyleMap.GetCaption (thestyle);
+					string stylename = context.StyleList.StyleMap.GetCaption (thestyle);
+					string basestylename = "" ;
+
+					// ne gère pas plus d'un style de base pour l'instant
+					System.Diagnostics.Debug.Assert (thestyle.ParentStyles.Length <= 1);
+
+					if (thestyle.ParentStyles.Length == 1)
+					{
+						TextStyle parentstyle = thestyle.ParentStyles[0];
+						basestylename = context.StyleList.StyleMap.GetCaption (parentstyle);
+					}
 
 					string props = Property.SerializeProperties (thestyle.StyleProperties);
-					output.AppendFormat ("{0}\\{1}", s, props) ;
+					output.AppendFormat ("{0}\\{1}\\{2}", stylename, basestylename, props) ;
 
 					stringstyles[n++] = output.ToString();
 				}

@@ -93,6 +93,18 @@ namespace Epsitec.Common.Text.Exchange
 				if (line == "}")
 					break ;
 
+				int indexendcaption = line.IndexOf ('\\');
+				string stylecaption = line.Substring(0, indexendcaption) ;
+
+				TextContext context = this.cpContext.Story.TextContext;
+
+				TextStyle style = context.StyleList.StyleMap.GetTextStyle (stylecaption);
+
+				if (style == null)
+				{
+					System.Diagnostics.Debugger.Break ();
+				}
+
 			}
 		}
 
