@@ -3288,17 +3288,19 @@ namespace Epsitec.Common.Designer.MyWidgets
 				graphics.Align(ref inside);
 				inside.Deflate(0.5);
 
-				Path path = new Path();
-				path.AppendRectangle(bounds);
-				path = Path.Combine(path, Misc.GetHatchPath(bounds, 6, 1), PathOperation.And);
+				Rectangle left   = new Rectangle(bounds.Left, bounds.Bottom, inside.Left-bounds.Left, bounds.Height);
+				Rectangle right  = new Rectangle(inside.Right, bounds.Bottom, bounds.Right-inside.Right, bounds.Height);
+				Rectangle bottom = new Rectangle(inside.Left, bounds.Bottom, inside.Width, inside.Bottom-bounds.Bottom);
+				Rectangle top    = new Rectangle(inside.Left, inside.Top, inside.Width, bounds.Top-inside.Top);
 
-				Path pi = new Path();
-				pi.AppendRectangle(inside);
-				path = Path.Combine(path, pi, PathOperation.AMinusB);
+				graphics.Rasterizer.AddOutline(Misc.GetHatchPath(left,   6, bounds.BottomLeft));
+				graphics.Rasterizer.AddOutline(Misc.GetHatchPath(right,  6, bounds.BottomLeft));
+				graphics.Rasterizer.AddOutline(Misc.GetHatchPath(bottom, 6, bounds.BottomLeft));
+				graphics.Rasterizer.AddOutline(Misc.GetHatchPath(top,    6, bounds.BottomLeft));
 
-				graphics.Rasterizer.AddSurface(path);
 				graphics.AddRectangle(bounds);
 				graphics.AddRectangle(inside);
+
 				graphics.RenderSolid(PanelsContext.ColorHiliteOutline);
 			}
 		}
