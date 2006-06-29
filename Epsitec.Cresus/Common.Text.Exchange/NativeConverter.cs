@@ -62,11 +62,11 @@ namespace Epsitec.Common.Text.Exchange
 					foreach (TextStyle basestyle in thestyle.ParentStyles)
 					{
 						string basestylename = context.StyleList.StyleMap.GetCaption (basestyle);
-						basestylenames.AppendFormat ("{0}", basestylename);
+						basestylenames.AppendFormat ("{0}\\", basestylename);
 					}
 
 					string props = Property.SerializeProperties (thestyle.StyleProperties);
-					output.AppendFormat ("{0}\\{1}\\{2}", stylename, basestylenames.ToString(), props) ;
+					output.AppendFormat ("{0}\\{1}{2}", stylename, basestylenames.ToString(), props) ;
 
 					stringstyles[n++] = output.ToString();
 				}
@@ -313,7 +313,9 @@ namespace Epsitec.Common.Text.Exchange
 					{
 						case "cstyle":
 							string stylecaption = subelements[1];
-							TextStyle thestyle = StyleFromCaption (stylecaption);
+
+							//TextStyle thestyle = StyleFromCaption (stylecaption);
+							TextStyle thestyle = this.GetTextStyleToApply (stylecaption);
 
 							if (thestyle != null)
 							{
@@ -322,7 +324,8 @@ namespace Epsitec.Common.Text.Exchange
 							break;
 						case "pstyle":
 							stylecaption = subelements[1];
-							thestyle = StyleFromCaption (stylecaption);
+							//thestyle = StyleFromCaption (stylecaption);
+							thestyle = this.GetTextStyleToApply (stylecaption);
 
 							if (thestyle != null)
 							{
@@ -437,21 +440,6 @@ namespace Epsitec.Common.Text.Exchange
 		public void ResetParagraph()
 		{
 			this.paraWrapper.Defined.RestoreInternalState (this.savedDefinedParagraph);
-		}
-
-		private TextStyle StyleFromCaption(string caption)
-		{
-			TextStyle[] styles = this.story.TextContext.StyleList.StyleMap.GetSortedStyles ();
-
-			foreach (TextStyle thestyle in styles)
-			{
-				if (this.story.TextContext.StyleList.StyleMap.GetCaption (thestyle) == caption)
-				{
-					return thestyle;
-				}
-			}
-
-			return null;
 		}
 
 		private static string XScriptDefinitionToString(Wrappers.TextWrapper.XscriptDefinition xscriptdef)
@@ -894,11 +882,63 @@ namespace Epsitec.Common.Text.Exchange
 			return output.ToString ();
 		}
 
+
+		private TextStyle StyleFromCaption(string caption)
+		{
+			TextStyle[] styles = this.story.TextContext.StyleList.StyleMap.GetSortedStyles ();
+
+			foreach (TextStyle thestyle in styles)
+			{
+				if (this.story.TextContext.StyleList.StyleMap.GetCaption (thestyle) == caption)
+				{
+					return thestyle;
+				}
+			}
+
+			return null;
+		}
+
+		private StyleDefinition GetStyleDefinition(string caption)
+		{
+			foreach (StyleDefinition sd in this.styleDefinitions)
+			{
+				if (sd.Caption == caption)
+					return sd;
+			}
+
+			return null;
+		}
+
+		private TextStyle GetTextStyleToApply (string stylecaption)
+		{
+			TextStyle thestyle = StyleFromCaption (stylecaption);
+
+			if (thestyle == null)
+			{
+				System.Diagnostics.Debugger.Break ();
+				StyleDefinition styledef = this.GetStyleDefinition (stylecaption);
+				System.Diagnostics.Debug.Assert (styledef != null);
+			}
+
+			return thestyle ;
+		}
+
+
 		private Wrappers.TextWrapper textWrapper;
 		private Wrappers.ParagraphWrapper paraWrapper;
 		private TextNavigator navigator;
 		private TextStory story;
 		private PasteMode pasteMode;
+
+		private List<StyleDefinition> styleDefinitions;
+
+		public List<StyleDefinition> StyleDefinitions
+		{
+			set
+			{
+				styleDefinitions = value;
+			}
+		}
 
 		private object savedDefinedParagraph;
 
