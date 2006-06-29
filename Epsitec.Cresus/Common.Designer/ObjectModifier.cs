@@ -70,6 +70,14 @@ namespace Epsitec.Common.Designer
 			BaseLine,
 		}
 
+		public enum GridMode
+		{
+			[Types.Hidden] None,
+			Proportional,
+			Absolute,
+			Auto,
+		}
+
 
 		public ObjectModifier(MyWidgets.PanelEditor panelEditor)
 		{
@@ -297,6 +305,160 @@ namespace Epsitec.Common.Designer
 			this.Invalidate();
 		}
 
+
+		public GridMode GetGridColumnMode(Widget obj, int column)
+		{
+			//	Retourne le mode d'une colonne.
+			if (this.AreChildrenGrid(obj))
+			{
+				GridLayoutEngine engine = LayoutEngine.GetLayoutEngine(obj) as GridLayoutEngine;
+				if (engine != null)
+				{
+					ColumnDefinition def = engine.ColumnDefinitions[column];
+					GridLength gl = def.Width;
+					return ObjectModifier.GridConvert(gl.GridUnitType);
+				}
+			}
+
+			return GridMode.None;
+		}
+
+		public void SetGridColumnMode(Widget obj, int column, GridMode mode)
+		{
+			//	Modifie le mode d'une colonne.
+			System.Diagnostics.Debug.Assert(this.AreChildrenGrid(obj));
+
+			GridLayoutEngine engine = LayoutEngine.GetLayoutEngine(obj) as GridLayoutEngine;
+			System.Diagnostics.Debug.Assert(engine != null);
+
+			if (this.GetGridColumnMode(obj, column) != mode)
+			{
+				GridUnitType type = ObjectModifier.GridConvert(mode);
+				double value = (type == GridUnitType.Absolute) ? 100 : 1;
+
+				ColumnDefinition def = engine.ColumnDefinitions[column];
+				def.Width = new GridLength(value, type);
+			}
+		}
+
+		public GridMode GetGridRowMode(Widget obj, int row)
+		{
+			//	Retourne le mode d'une ligne.
+			if (this.AreChildrenGrid(obj))
+			{
+				GridLayoutEngine engine = LayoutEngine.GetLayoutEngine(obj) as GridLayoutEngine;
+				if (engine != null)
+				{
+					RowDefinition def = engine.RowDefinitions[row];
+					GridLength gl = def.Height;
+					return ObjectModifier.GridConvert(gl.GridUnitType);
+				}
+			}
+
+			return GridMode.None;
+		}
+
+		public void SetGridRowMode(Widget obj, int row, GridMode mode)
+		{
+			//	Modifie le mode d'une ligne.
+			System.Diagnostics.Debug.Assert(this.AreChildrenGrid(obj));
+
+			GridLayoutEngine engine = LayoutEngine.GetLayoutEngine(obj) as GridLayoutEngine;
+			System.Diagnostics.Debug.Assert(engine != null);
+
+			if (this.GetGridRowMode(obj, row) != mode)
+			{
+				GridUnitType type = ObjectModifier.GridConvert(mode);
+				double value = (type == GridUnitType.Absolute) ? 100 : 1;
+
+				RowDefinition def = engine.RowDefinitions[row];
+				def.Height = new GridLength(value, type);
+			}
+		}
+
+		public double GetGridColumnWidth(Widget obj, int column)
+		{
+			//	Retourne la largeur d'une colonne.
+			if (this.AreChildrenGrid(obj))
+			{
+				GridLayoutEngine engine = LayoutEngine.GetLayoutEngine(obj) as GridLayoutEngine;
+				if (engine != null)
+				{
+					ColumnDefinition def = engine.ColumnDefinitions[column];
+					GridLength gl = def.Width;
+					return gl.Value;
+				}
+			}
+
+			return 0;
+		}
+
+		public void SetGridColumnWidth(Widget obj, int column, double width)
+		{
+			//	Modifie la largeur d'une colonne.
+			System.Diagnostics.Debug.Assert(this.AreChildrenGrid(obj));
+
+			GridLayoutEngine engine = LayoutEngine.GetLayoutEngine(obj) as GridLayoutEngine;
+			System.Diagnostics.Debug.Assert(engine != null);
+
+			ColumnDefinition def = engine.ColumnDefinitions[column];
+			def.Width = new GridLength(width, def.Width.GridUnitType);
+		}
+
+		public double GetGridRowHeight(Widget obj, int row)
+		{
+			//	Retourne la hauteur d'une ligne.
+			if (this.AreChildrenGrid(obj))
+			{
+				GridLayoutEngine engine = LayoutEngine.GetLayoutEngine(obj) as GridLayoutEngine;
+				if (engine != null)
+				{
+					RowDefinition def = engine.RowDefinitions[row];
+					GridLength gl = def.Height;
+					return gl.Value;
+				}
+			}
+
+			return 0;
+		}
+
+		public void SetGridRowHeight(Widget obj, int row, double height)
+		{
+			//	Modifie la hauteur d'une ligne.
+			System.Diagnostics.Debug.Assert(this.AreChildrenGrid(obj));
+
+			GridLayoutEngine engine = LayoutEngine.GetLayoutEngine(obj) as GridLayoutEngine;
+			System.Diagnostics.Debug.Assert(engine != null);
+
+			RowDefinition def = engine.RowDefinitions[row];
+			def.Height = new GridLength(height, def.Height.GridUnitType);
+		}
+
+		static protected GridUnitType GridConvert(GridMode mode)
+		{
+			switch (mode)
+			{
+				case GridMode.Proportional:  return GridUnitType.Proportional;
+				case GridMode.Absolute:      return GridUnitType.Absolute;
+				case GridMode.Auto:          return GridUnitType.Auto;
+			}
+
+			return GridUnitType.Proportional;
+		}
+
+		static protected GridMode GridConvert(GridUnitType type)
+		{
+			switch (type)
+			{
+				case GridUnitType.Proportional:  return GridMode.Proportional;
+				case GridUnitType.Absolute:      return GridMode.Absolute;
+				case GridUnitType.Auto:          return GridMode.Auto;
+			}
+
+			return GridMode.None;
+		}
+
+
 		public int GetGridCellIndex(Widget obj, int column, int row)
 		{
 			//	Retourne l'index d'une cellule dans un tableau.
@@ -370,6 +532,7 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
+
 		public void SetGridParentColumnRow(Widget obj, Widget parent, int column, int row)
 		{
 			//	Détermine la cellule dans un tableau à laquelle appartient l'objet.
@@ -408,6 +571,7 @@ namespace Epsitec.Common.Designer
 
 			return 0;
 		}
+
 
 		public void SetGridColumnSpan(Widget obj, int span)
 		{
@@ -448,6 +612,7 @@ namespace Epsitec.Common.Designer
 
 			return 0;
 		}
+
 
 		public Rectangle GetGridItemArea(Widget obj, GridSelection.Item item)
 		{
