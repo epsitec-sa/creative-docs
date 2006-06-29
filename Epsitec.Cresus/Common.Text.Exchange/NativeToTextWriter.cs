@@ -30,7 +30,7 @@ namespace Epsitec.Common.Text.Exchange
 
 				if (formatline == "{")
 				{
-					this.ProcessStyles ();
+					this.nativeConverter.StyleDefinitions = this.ProcessStyles ();
 					continue;
 				}
 
@@ -81,10 +81,12 @@ namespace Epsitec.Common.Text.Exchange
 			}
 		}
 
-		private void ProcessStyles()
+		private List<StyleDefinition> ProcessStyles()
 		{
 			string line;
 			TextContext context = this.cpContext.Story.TextContext;
+
+			List<StyleDefinition> styleDefinitions = null ;
 
 			while (true)
 			{
@@ -95,17 +97,6 @@ namespace Epsitec.Common.Text.Exchange
 				if (line == "}")
 					break ;
 
-#if false
-				int indexendcaption = line.IndexOf ('\\');
-				string stylecaption = line.Substring(0, indexendcaption) ;
-
-				line = line.Substring (indexendcaption + 1);
-
-				indexendcaption = line.IndexOf ('\\') ;
-				string strnbbasestyles = line.Substring (0, indexendcaption);
-
-				int nbbasestyles = Misc.ParseInt (strnbbasestyles);
-#else
 				string stylecaption = Misc.NextElement(ref line, '\\') ;
 				string strnbbasestyles = Misc.NextElement(ref line, '\\') ;
 				int nbbasestyles = Misc.ParseInt (strnbbasestyles);
@@ -114,17 +105,27 @@ namespace Epsitec.Common.Text.Exchange
 
 				if (style == null)
 				{
+					string[] baseStyleCaptions = new string[nbbasestyles] ;
+
 					for (int i = 0; i < nbbasestyles; i++)
 					{
-//						TextStyle style = context.StyleList.StyleMap.GetTextStyle (stylecaption);
-
 						string basestylecaption = Misc.NextElement (ref line, '\\');
+						baseStyleCaptions[i] = basestylecaption ;
 					}
 
-				}
 
-#endif
+					if (styleDefinitions == null)
+					{
+						styleDefinitions = new List<StyleDefinition> ();
+					}
+
+					StyleDefinition styleDefinition = new StyleDefinition (stylecaption, baseStyleCaptions, line);
+					styleDefinitions.Add (styleDefinition);
+
+				}
 			}
+
+			return styleDefinitions;
 		}
 
 		StringReader theReader;

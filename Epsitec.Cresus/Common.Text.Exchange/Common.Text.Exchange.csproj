@@ -150,6 +150,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="SpanStyle.cs" />
+    <Compile Include="StyleDefinition.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
