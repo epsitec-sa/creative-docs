@@ -1637,7 +1637,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				Rectangle rect = this.panel.Client.Bounds;
 				if (rect.Contains(pos))
 				{
-					rect.Deflate(this.GetDetectPadding(this.panel));
+					rect.Deflate(this.GetDetectPadding(this.panel, onlyGrid));
 					if (!rect.Contains(pos))
 					{
 						detected = this.panel;
@@ -1670,7 +1670,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 					if (widget is AbstractGroup)
 					{
-						rect.Deflate(this.GetDetectPadding(widget));
+						rect.Deflate(this.GetDetectPadding(widget, onlyGrid));
 						if (rect.Contains(pos))
 						{
 							continue;
@@ -1702,17 +1702,15 @@ namespace Epsitec.Common.Designer.MyWidgets
 			return null;
 		}
 
-		protected Margins GetDetectPadding(Widget obj)
+		protected Margins GetDetectPadding(Widget obj, bool insideGrid)
 		{
 			//	Retourne les marges intérieures pour la détection du padding.
-#if false
-			if (this.objectModifier.AreChildrenGrid(obj))
+			if (insideGrid && this.objectModifier.AreChildrenGrid(obj))
 			{
 				//	On rend des marges maximales pour accepter la détection dans toute
 				//	la surface de l'objet.
 				return new Margins(double.MaxValue, double.MaxValue, double.MaxValue, double.MaxValue);
 			}
-#endif
 
 			Margins padding = obj.Padding;
 			padding += obj.GetInternalPadding();

@@ -806,7 +806,7 @@ namespace Epsitec.Common.Designer
 		public void SetPreferredBounds(Widget obj, Rectangle bounds)
 		{
 			//	Choix de la position et des dimensions de l'objet.
-			//	Uniquement pour les objets Anchored.
+			//	Uniquement pour les objets Anchored ou Grid.
 			System.Diagnostics.Debug.Assert(this.HasPreferredBounds(obj));
 
 			bounds.Normalise();
@@ -962,8 +962,8 @@ namespace Epsitec.Common.Designer
 		public bool HasPreferredWidth(Widget obj)
 		{
 			//	Indique s'il est possible de modifier la largeur d'un objet.
-			//	A ne pas confondre avec SetBounds pour le mode ancré. Un objet ancré
-			//	pour lequel on peut faire un SetBounds n'accepte pas le SetWidth !
+			//	A ne pas confondre avec SetPreferredBounds pour le mode ancré. Un objet ancré
+			//	pour lequel on peut faire un SetPreferredBounds n'accepte pas le SetPreferredWidth !
 			if (!HandlesList.HasWidthHandles(obj))
 			{
 				return false;
@@ -1014,8 +1014,8 @@ namespace Epsitec.Common.Designer
 		public bool HasPreferredHeight(Widget obj)
 		{
 			//	Indique s'il est possible de modifier la hauteur d'un objet.
-			//	A ne pas confondre avec SetBounds pour le mode ancré. Un objet ancré
-			//	pour lequel on peut faire un SetBounds n'accepte pas le HasHeight !
+			//	A ne pas confondre avec SetPreferredBounds pour le mode ancré. Un objet ancré
+			//	pour lequel on peut faire un SetPreferredBounds n'accepte pas le HasPreferredHeight !
 			if (!HandlesList.HasHeightHandles(obj))
 			{
 				return false;
