@@ -671,9 +671,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			else
 			{
 				Widget obj = this.Detect(pos, isShiftPressed, false);
-				int column, row;
-				this.GridDetect(pos, obj, out column, out row);
-				this.SetHilitedObject(obj, column, row);  // met en évidence l'objet survolé par la souris
+				this.SetHilitedObject(obj, -1, -1);  // met en évidence l'objet survolé par la souris
 
 				Rectangle rect = Rectangle.Empty;
 				Attachment attachment;
@@ -1707,12 +1705,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected Margins GetDetectPadding(Widget obj)
 		{
 			//	Retourne les marges intérieures pour la détection du padding.
+#if false
 			if (this.objectModifier.AreChildrenGrid(obj))
 			{
 				//	On rend des marges maximales pour accepter la détection dans toute
 				//	la surface de l'objet.
 				return new Margins(double.MaxValue, double.MaxValue, double.MaxValue, double.MaxValue);
 			}
+#endif
 
 			Margins padding = obj.Padding;
 			padding += obj.GetInternalPadding();
