@@ -1362,13 +1362,12 @@ namespace Epsitec.Common.Designer
 		{
 			//	Retourne l'alignement horizontal de l'objet.
 			ChildrenPlacement placement = this.GetParentPlacement(obj);
-			return (placement == ChildrenPlacement.HorizontalStacked || placement == ChildrenPlacement.VerticalStacked);
+			return (placement == ChildrenPlacement.HorizontalStacked || placement == ChildrenPlacement.VerticalStacked || placement == ChildrenPlacement.Grid);
 		}
 
 		public StackedHorizontalAlignment GetStackedHorizontalAlignment(Widget obj)
 		{
 			//	Retourne l'alignement horizontal de l'objet.
-			//	Uniquement pour les objets VerticalStacked.
 			if (this.HasStackedHorizontalAlignment(obj))
 			{
 				HorizontalAlignment ha = obj.HorizontalAlignment;
@@ -1384,7 +1383,6 @@ namespace Epsitec.Common.Designer
 		public void SetStackedHorizontalAlignment(Widget obj, StackedHorizontalAlignment alignment)
 		{
 			//	Choix de l'alignement horizontal de l'objet.
-			//	Uniquement pour les objets VerticalStacked.
 			System.Diagnostics.Debug.Assert(this.HasStackedHorizontalAlignment(obj));
 
 			HorizontalAlignment ha = obj.HorizontalAlignment;
@@ -1420,13 +1418,12 @@ namespace Epsitec.Common.Designer
 		{
 			//	Retourne l'alignement vertical de l'objet.
 			ChildrenPlacement placement = this.GetParentPlacement(obj);
-			return (placement == ChildrenPlacement.HorizontalStacked || placement == ChildrenPlacement.VerticalStacked);
+			return (placement == ChildrenPlacement.HorizontalStacked || placement == ChildrenPlacement.VerticalStacked || placement == ChildrenPlacement.Grid);
 		}
 
 		public StackedVerticalAlignment GetStackedVerticalAlignment(Widget obj)
 		{
 			//	Retourne l'alignement vertical de l'objet.
-			//	Uniquement pour les objets HorizontalStacked.
 			if (this.HasStackedVerticalAlignment(obj))
 			{
 				VerticalAlignment va = obj.VerticalAlignment;
@@ -1443,7 +1440,6 @@ namespace Epsitec.Common.Designer
 		public void SetStackedVerticalAlignment(Widget obj, StackedVerticalAlignment alignment)
 		{
 			//	Choix de l'alignement vertical de l'objet.
-			//	Uniquement pour les objets HorizontalStacked.
 			System.Diagnostics.Debug.Assert(this.HasStackedVerticalAlignment(obj));
 
 			VerticalAlignment va = obj.VerticalAlignment;
