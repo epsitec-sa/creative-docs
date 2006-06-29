@@ -943,6 +943,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Sélection de tableaux, souris relâchée.
 			if (this.isGridding)
 			{
+				this.OnChildrenSelected();
 				this.isGridding = false;
 			}
 

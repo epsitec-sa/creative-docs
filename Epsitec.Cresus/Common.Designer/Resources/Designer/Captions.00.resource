@@ -29,10 +29,12 @@
   <data id="0L">&lt;s:data id="_0" f:Description="Colonnes occupées" f:Labels="{Collection {Text 'Colonnes occupées'}}" /&gt;</data>
   <data id="0M">&lt;s:data id="_0" f:Description="Lignes occupées" f:Labels="{Collection {Text 'Lignes occupées'}}" /&gt;</data>
 
-  <data id="0N">&lt;s:data id="_0" f:Description="" /&gt;</data>
-  <data id="0O">&lt;s:data id="_0" f:Description="" /&gt;</data>
-  <data id="0P">&lt;s:data id="_0" f:Description="" /&gt;</data>
-  <data id="0Q">&lt;s:data id="_0" f:Description="" /&gt;</data>
+  <data id="0N">&lt;s:data id="_0" f:Description="Mode colonne" f:Labels="{Collection {Text 'Mode colonne'}}" /&gt;</data>
+  <data id="0O">&lt;s:data id="_0" f:Description="Mode ligne" f:Labels="{Collection {Text 'Mode ligne'}}" /&gt;</data>
+
+  <data id="0P">&lt;s:data id="_0" f:Description="Largeur colonne" f:Labels="{Collection {Text 'Largeur colonne'}}" /&gt;</data>
+  <data id="0Q">&lt;s:data id="_0" f:Description="Hauteur ligne" f:Labels="{Collection {Text 'Hauteur ligne'}}" /&gt;</data>
+
   <data id="0R">&lt;s:data id="_0" f:Description="" /&gt;</data>
   <data id="0S">&lt;s:data id="_0" f:Description="" /&gt;</data>
   <data id="0T">&lt;s:data id="_0" f:Description="" /&gt;</data>
