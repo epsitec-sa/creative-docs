@@ -240,6 +240,7 @@ namespace Epsitec.Common.Widgets.Layouts
 			if (this.containerCache != null)
 			{
 				LayoutContext.AddToMeasureQueue (this.containerCache);
+				LayoutContext.AddToArrangeQueue (this.containerCache);
 			}
 		}
 
