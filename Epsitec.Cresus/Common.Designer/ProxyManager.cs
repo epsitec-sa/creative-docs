@@ -228,9 +228,9 @@ namespace Epsitec.Common.Designer
 
 		static ProxyManager()
 		{
-			Types.DoubleType locationNumericType = new Types.DoubleType(-9999, 9999, 0.1M);
-			Types.DoubleType sizeNumericType     = new Types.DoubleType(0, 9999, 0.1M);
-			Types.DoubleType marginNumericType   = new Types.DoubleType(-1, 9999, 0.1M);
+			Types.DoubleType locationNumericType = new Types.DoubleType(-9999, 9999, 1.0M);
+			Types.DoubleType sizeNumericType     = new Types.DoubleType(0, 9999, 1.0M);
+			Types.DoubleType marginNumericType   = new Types.DoubleType(-1, 9999, 1.0M);
 			Types.IntegerType gridNumericType    = new Types.IntegerType(1, 100);
 
 			locationNumericType.DefinePreferredRange(new Types.DecimalRange(0, 1000, 2));

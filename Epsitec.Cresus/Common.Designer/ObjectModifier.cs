@@ -761,16 +761,9 @@ namespace Epsitec.Common.Designer
 		}
 
 
-		public bool HasBounds(Widget obj)
+		public Rectangle GetActualBounds(Widget obj)
 		{
-			//	Indique si l'objet a une position et des dimensions modifiables.
-			ChildrenPlacement placement = this.GetParentPlacement(obj);
-			return (placement == ChildrenPlacement.Anchored);
-		}
-
-		public Rectangle GetBounds(Widget obj)
-		{
-			//	Retourne la position et les dimensions de l'objet.
+			//	Retourne la position et les dimensions actuelles de l'objet.
 			obj.Window.ForceLayout();
 			Rectangle bounds = obj.Client.Bounds;
 
@@ -783,11 +776,38 @@ namespace Epsitec.Common.Designer
 			return bounds;
 		}
 
-		public void SetBounds(Widget obj, Rectangle bounds)
+		public bool HasPreferredBounds(Widget obj)
+		{
+			//	Indique si l'objet a une position et des dimensions modifiables.
+			ChildrenPlacement placement = this.GetParentPlacement(obj);
+			return (placement == ChildrenPlacement.Anchored || placement == ChildrenPlacement.Grid);
+		}
+
+		public Rectangle GetPreferredBounds(Widget obj)
+		{
+			//	Retourne la position et les dimensions de l'objet.
+			Rectangle bounds = Rectangle.Empty;
+
+			if (this.HasPreferredBounds(obj))
+			{
+				obj.Window.ForceLayout();
+				bounds = new Rectangle(Point.Zero, obj.PreferredSize);
+
+				while (obj != this.Container)
+				{
+					bounds = obj.MapClientToParent(bounds);
+					obj = obj.Parent;
+				}
+			}
+
+			return bounds;
+		}
+
+		public void SetPreferredBounds(Widget obj, Rectangle bounds)
 		{
 			//	Choix de la position et des dimensions de l'objet.
 			//	Uniquement pour les objets Anchored.
-			System.Diagnostics.Debug.Assert(this.HasBounds(obj));
+			System.Diagnostics.Debug.Assert(this.HasPreferredBounds(obj));
 
 			bounds.Normalise();
 
@@ -927,7 +947,7 @@ namespace Epsitec.Common.Designer
 		public Rectangle GetFinalPadding(Widget obj)
 		{
 			//	Retourne le rectangle intérieur d'un objet AbstractGroup.
-			Rectangle bounds = this.GetBounds(obj);
+			Rectangle bounds = this.GetActualBounds(obj);
 
 			if (this.HasPadding(obj))
 			{
@@ -939,7 +959,7 @@ namespace Epsitec.Common.Designer
 		}
 
 
-		public bool HasWidth(Widget obj)
+		public bool HasPreferredWidth(Widget obj)
 		{
 			//	Indique s'il est possible de modifier la largeur d'un objet.
 			//	A ne pas confondre avec SetBounds pour le mode ancré. Un objet ancré
@@ -965,11 +985,11 @@ namespace Epsitec.Common.Designer
 			return false;
 		}
 
-		public double GetWidth(Widget obj)
+		public double GetPreferredWidth(Widget obj)
 		{
 			//	Retourne la largeur de l'objet.
 			//	Uniquement pour les objets HorizontalStacked.
-			if (this.HasWidth(obj))
+			if (this.HasPreferredWidth(obj))
 			{
 				return obj.PreferredWidth;
 			}
@@ -977,11 +997,11 @@ namespace Epsitec.Common.Designer
 			return 0;
 		}
 
-		public void SetWidth(Widget obj, double width)
+		public void SetPreferredWidth(Widget obj, double width)
 		{
 			//	Choix de la largeur de l'objet.
 			//	Uniquement pour les objets VerticalStacked.
-			System.Diagnostics.Debug.Assert(this.HasWidth(obj));
+			System.Diagnostics.Debug.Assert(this.HasPreferredWidth(obj));
 
 			if (obj.PreferredWidth != width)
 			{
@@ -991,7 +1011,7 @@ namespace Epsitec.Common.Designer
 		}
 
 
-		public bool HasHeight(Widget obj)
+		public bool HasPreferredHeight(Widget obj)
 		{
 			//	Indique s'il est possible de modifier la hauteur d'un objet.
 			//	A ne pas confondre avec SetBounds pour le mode ancré. Un objet ancré
@@ -1017,11 +1037,11 @@ namespace Epsitec.Common.Designer
 			return false;
 		}
 
-		public double GetHeight(Widget obj)
+		public double GetPreferredHeight(Widget obj)
 		{
 			//	Retourne la hauteur de l'objet.
 			//	Uniquement pour les objets VerticalStacked.
-			if (this.HasHeight(obj))
+			if (this.HasPreferredHeight(obj))
 			{
 				return obj.PreferredHeight;
 			}
@@ -1029,11 +1049,11 @@ namespace Epsitec.Common.Designer
 			return 0;
 		}
 
-		public void SetHeight(Widget obj, double height)
+		public void SetPreferredHeight(Widget obj, double height)
 		{
 			//	Choix de la hauteur de l'objet.
 			//	Uniquement pour les objets HorizontalStacked.
-			System.Diagnostics.Debug.Assert(this.HasHeight(obj));
+			System.Diagnostics.Debug.Assert(this.HasPreferredHeight(obj));
 
 			if (obj.PreferredHeight != height)
 			{

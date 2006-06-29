@@ -18,7 +18,7 @@ namespace Epsitec.Common.Designer
 			this.obj = obj;
 			this.objectModifier = objectModifier;
 
-			this.bounds = this.objectModifier.GetBounds(this.obj);
+			this.bounds = this.objectModifier.GetActualBounds(this.obj);
 			this.margins = this.objectModifier.GetMargins(this.obj);
 
 			if (this.objectModifier.GetChildrenPlacement(obj.Parent) == ObjectModifier.ChildrenPlacement.Anchored)
@@ -41,7 +41,7 @@ namespace Epsitec.Common.Designer
 				this.objectModifier.AdaptFromParent(obj, ObjectModifier.StackedHorizontalAttachment.None, ObjectModifier.StackedVerticalAttachment.None);
 				this.objectModifier.SetAnchoredHorizontalAttachment(obj, this.aha);
 				this.objectModifier.SetAnchoredVerticalAttachment(obj, this.ava);
-				this.objectModifier.SetBounds(this.obj, this.bounds);
+				this.objectModifier.SetPreferredBounds(this.obj, this.bounds);
 			}
 
 			if (cp == ObjectModifier.ChildrenPlacement.HorizontalStacked)

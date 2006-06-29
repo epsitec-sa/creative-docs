@@ -1450,7 +1450,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			foreach (Widget obj in this.selectedObjects)
 			{
-				Point origin = this.GetObjectBounds(obj).BottomLeft - this.draggingRectangle.BottomLeft;
+				Point origin = this.objectModifier.GetActualBounds(obj).BottomLeft - this.draggingRectangle.BottomLeft;
 				CloneView clone = new CloneView(container);
 				clone.PreferredSize = obj.ActualSize;
 				clone.Margins = new Margins(origin.X, 0, 0, origin.Y);
@@ -1827,7 +1827,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				foreach (Widget obj in parent.Children)
 				{
-					if (sel.Contains(this.objectModifier.GetBounds(obj)))
+					if (sel.Contains(this.objectModifier.GetActualBounds(obj)))
 					{
 						if (this.selectedObjects.Count > 0)
 						{
@@ -1944,7 +1944,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Déplace et change de parent pour tous les objets sélectionnés.
 			foreach (Widget obj in this.selectedObjects)
 			{
-				Rectangle bounds = this.objectModifier.GetBounds(obj);
+				Rectangle bounds = this.objectModifier.GetPreferredBounds(obj);
 				bounds.Offset(move);
 
 				if (parent != null)
@@ -1958,8 +1958,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 					this.objectModifier.AdaptFromParent(obj, ObjectModifier.StackedHorizontalAttachment.None, ObjectModifier.StackedVerticalAttachment.None);
 				}
 
-				bounds.Size = this.GetObjectBounds(obj).Size;
-				this.SetObjectBounds(obj, bounds);
+				bounds.Size = this.GetObjectPreferredBounds(obj).Size;
+				this.SetObjectPreferredBounds(obj, bounds);
 			}
 
 			this.Invalidate();
@@ -1983,14 +1983,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 				{
 					foreach (Widget obj in this.selectedObjects)
 					{
-						this.SetObjectPositionY(obj, bounds.Top-this.GetObjectBounds(obj).Height);
+						this.SetObjectPositionY(obj, bounds.Top-this.GetObjectPreferredBounds(obj).Height);
 					}
 				}
 				else  // centré verticalement ?
 				{
 					foreach (Widget obj in this.selectedObjects)
 					{
-						this.SetObjectPositionY(obj, System.Math.Floor(bounds.Center.Y-this.GetObjectBounds(obj).Height/2));
+						this.SetObjectPositionY(obj, System.Math.Floor(bounds.Center.Y-this.GetObjectPreferredBounds(obj).Height/2));
 					}
 				}
 			}
@@ -2007,14 +2007,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 				{
 					foreach (Widget obj in this.selectedObjects)
 					{
-						this.SetObjectPositionX(obj, bounds.Right-this.GetObjectBounds(obj).Width);
+						this.SetObjectPositionX(obj, bounds.Right-this.GetObjectPreferredBounds(obj).Width);
 					}
 				}
 				else  // centré horizontalement ?
 				{
 					foreach (Widget obj in this.selectedObjects)
 					{
-						this.SetObjectPositionX(obj, System.Math.Floor(bounds.Center.X-this.GetObjectBounds(obj).Width/2));
+						this.SetObjectPositionX(obj, System.Math.Floor(bounds.Center.X-this.GetObjectPreferredBounds(obj).Width/2));
 					}
 				}
 			}
@@ -2073,20 +2073,20 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				foreach (Widget obj in this.selectedObjects)
 				{
-					Rectangle rect = this.GetObjectBounds(obj);
+					Rectangle rect = this.GetObjectPreferredBounds(obj);
 					rect.Bottom = bounds.Bottom;
 					rect.Height = bounds.Height;
-					this.SetObjectBounds(obj, rect);
+					this.SetObjectPreferredBounds(obj, rect);
 				}
 			}
 			else
 			{
 				foreach (Widget obj in this.selectedObjects)
 				{
-					Rectangle rect = this.GetObjectBounds(obj);
+					Rectangle rect = this.GetObjectPreferredBounds(obj);
 					rect.Left  = bounds.Left;
 					rect.Width = bounds.Width;
-					this.SetObjectBounds(obj, rect);
+					this.SetObjectPreferredBounds(obj, rect);
 				}
 			}
 
@@ -2195,7 +2195,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 				foreach (Widget obj in this.selectedObjects)
 				{
-					bounds = Rectangle.Union(bounds, this.objectModifier.GetBounds(obj));
+					bounds = Rectangle.Union(bounds, this.objectModifier.GetActualBounds(obj));
 				}
 
 				return bounds;
@@ -2224,7 +2224,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Modifie le système d'attachement d'un objet.
 			if (this.objectModifier.AreChildrenAnchored(obj.Parent))
 			{
-				Rectangle bounds = this.objectModifier.GetBounds(obj);
+				Rectangle bounds = this.objectModifier.GetPreferredBounds(obj);
 
 				ObjectModifier.AnchoredHorizontalAttachment ha = this.objectModifier.GetAnchoredHorizontalAttachment(obj);
 				ObjectModifier.AnchoredVerticalAttachment   va = this.objectModifier.GetAnchoredVerticalAttachment(obj);
@@ -2279,7 +2279,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 				this.objectModifier.SetAnchoredHorizontalAttachment(obj, ha);
 				this.objectModifier.SetAnchoredVerticalAttachment(obj, va);
-				this.objectModifier.SetBounds(obj, bounds);
+				this.objectModifier.SetPreferredBounds(obj, bounds);
 
 				this.handlesList.UpdateGeometry();
 				this.OnChildrenGeometryChanged();
@@ -2290,9 +2290,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			if (this.objectModifier.AreChildrenAnchored(obj.Parent))
 			{
-				Rectangle bounds = this.objectModifier.GetBounds(obj);
+				Rectangle bounds = this.objectModifier.GetPreferredBounds(obj);
 				bounds.Offset(x-bounds.Left, 0);
-				this.objectModifier.SetBounds(obj, bounds);
+				this.objectModifier.SetPreferredBounds(obj, bounds);
 			}
 		}
 
@@ -2300,9 +2300,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			if (this.objectModifier.AreChildrenAnchored(obj.Parent))
 			{
-				Rectangle bounds = this.objectModifier.GetBounds(obj);
+				Rectangle bounds = this.objectModifier.GetPreferredBounds(obj);
 				bounds.Offset(0, y-bounds.Bottom);
-				this.objectModifier.SetBounds(obj, bounds);
+				this.objectModifier.SetPreferredBounds(obj, bounds);
 			}
 		}
 
@@ -2310,35 +2310,40 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			if (this.objectModifier.AreChildrenAnchored(obj.Parent))
 			{
-				Rectangle bounds = this.objectModifier.GetBounds(obj);
+				Rectangle bounds = this.objectModifier.GetPreferredBounds(obj);
 				bounds.Offset(pos-bounds.BottomLeft);
-				this.objectModifier.SetBounds(obj, bounds);
+				this.objectModifier.SetPreferredBounds(obj, bounds);
 			}
 		}
 
-		public Rectangle GetObjectBounds(Widget obj)
+		public Rectangle GetObjectPreferredBounds(Widget obj)
 		{
-			return this.objectModifier.GetBounds(obj);
+			return this.objectModifier.GetPreferredBounds(obj);
 		}
 
-		public void SetObjectBounds(Widget obj, Rectangle bounds)
+		public void SetObjectPreferredBounds(Widget obj, Rectangle bounds)
 		{
 			if (this.objectModifier.AreChildrenAnchored(obj.Parent))
 			{
-				this.objectModifier.SetBounds(obj, bounds);
+				this.objectModifier.SetPreferredBounds(obj, bounds);
 			}
 
 			if (this.objectModifier.AreChildrenStacked(obj.Parent))
 			{
-				if (this.objectModifier.HasWidth(obj))
+				if (this.objectModifier.HasPreferredWidth(obj))
 				{
-					this.objectModifier.SetWidth(obj, bounds.Width);
+					this.objectModifier.SetPreferredWidth(obj, bounds.Width);
 				}
 
-				if (this.objectModifier.HasHeight(obj))
+				if (this.objectModifier.HasPreferredHeight(obj))
 				{
-					this.objectModifier.SetHeight(obj, bounds.Height);
+					this.objectModifier.SetPreferredHeight(obj, bounds.Height);
 				}
+			}
+
+			if (this.objectModifier.AreChildrenGrid(obj.Parent))
+			{
+				this.objectModifier.SetPreferredBounds(obj, bounds);
 			}
 		}
 
@@ -2491,8 +2496,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected Rectangle GetAttachmentBounds(Widget obj, Attachment style)
 		{
 			//	Retourne le rectangle englobant un attachement.
-			Rectangle bounds = this.objectModifier.GetBounds(obj.Parent);
-			Rectangle rect = this.objectModifier.GetBounds(obj);
+			Rectangle bounds = this.objectModifier.GetActualBounds(obj.Parent);
+			Rectangle rect = this.objectModifier.GetActualBounds(obj);
 			Point p1, p2, p1a, p2a;
 
 			if (style == Attachment.Left)
@@ -2570,7 +2575,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			Widget obj = this.ZOrderDetectNearest(mouse, parent);  // objet le plus proche
 			if (obj == null)
 			{
-				Rectangle bounds = this.objectModifier.GetBounds(parent);
+				Rectangle bounds = this.objectModifier.GetActualBounds(parent);
 
 				if (this.objectModifier.AreChildrenHorizontal(parent))
 				{
@@ -2606,7 +2611,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				group = obj.Parent;
 				order = obj.ZOrder;
 
-				Rectangle bounds = this.objectModifier.GetBounds(obj);
+				Rectangle bounds = this.objectModifier.GetActualBounds(obj);
 				bounds.Inflate(this.objectModifier.GetMargins(obj));
 
 				if (this.objectModifier.AreChildrenHorizontal(parent))
@@ -2810,7 +2815,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				Widget obj = parent.Children[i] as Widget;
 
-				Rectangle bounds = this.objectModifier.GetBounds(obj);
+				Rectangle bounds = this.objectModifier.GetActualBounds(obj);
 				double d;
 
 				if (horizontal)
@@ -3255,11 +3260,21 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected void DrawSelectedObject(Graphics graphics, Widget obj)
 		{
-			Rectangle bounds = this.objectModifier.GetBounds(obj);
+			Rectangle bounds = this.objectModifier.GetActualBounds(obj);
 			bounds.Deflate(0.5);
 
-			//?graphics.AddFilledRectangle(bounds);
-			//?graphics.RenderSolid(PanelsContext.ColorHiliteSurface);
+			if (this.objectModifier.HasPreferredBounds(obj))
+			{
+				Rectangle pref = this.objectModifier.GetPreferredBounds(obj);
+				pref.Deflate(0.5);
+
+				if (pref != bounds)
+				{
+					Path path = new Path();
+					path.AppendRectangle(pref);
+					Misc.DrawPathDash(graphics, path, 1, 8, 3, PanelsContext.ColorHiliteOutline);
+				}
+			}
 
 			graphics.LineWidth = 3;
 			graphics.AddRectangle(bounds);
@@ -3288,7 +3303,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Dessine les marges de padding d'un objet, sous forme de hachures.
 			if (obj is AbstractGroup)
 			{
-				Rectangle bounds = this.objectModifier.GetBounds(obj);
+				Rectangle bounds = this.objectModifier.GetActualBounds(obj);
 				graphics.Align(ref bounds);
 				bounds.Deflate(0.5);
 
@@ -3327,7 +3342,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				this.DrawPadding(graphics, obj);
 
-				Rectangle outline = this.objectModifier.GetBounds(obj);
+				Rectangle outline = this.objectModifier.GetActualBounds(obj);
 				outline.Deflate(this.context.GroupOutline/2);
 				graphics.LineWidth = this.context.GroupOutline;
 				graphics.AddRectangle(outline);
@@ -3338,7 +3353,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 
 			//	Si le rectangle est trop petit (par exemple objet Separator), il est engraissé.
-			Rectangle rect = this.objectModifier.GetBounds(obj);
+			Rectangle rect = this.objectModifier.GetActualBounds(obj);
 
 			double ix = 0;
 			if (rect.Width < this.context.MinimalSize)
@@ -3379,7 +3394,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			double thickness = 2.0;
 
-			Rectangle rect = this.objectModifier.GetBounds(obj);
+			Rectangle rect = this.objectModifier.GetActualBounds(obj);
 			rect.Deflate(0.5);
 			graphics.AddRectangle(rect);
 			graphics.RenderSolid(PanelsContext.ColorHiliteParent);
@@ -3481,8 +3496,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Dessine tous les attachements d'un objet.
 			if (this.objectModifier.AreChildrenAnchored(obj.Parent))
 			{
-				Rectangle bounds = this.objectModifier.GetBounds(obj.Parent);
-				Rectangle rect = this.objectModifier.GetBounds(obj);
+				Rectangle bounds = this.objectModifier.GetActualBounds(obj.Parent);
+				Rectangle rect = this.objectModifier.GetActualBounds(obj);
 				Point p1, p2;
 
 				p1 = new Point(bounds.Left, rect.Center.Y);
@@ -3504,7 +3519,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			if (this.objectModifier.AreChildrenStacked(obj.Parent))
 			{
-				Rectangle rect = this.objectModifier.GetBounds(obj);
+				Rectangle rect = this.objectModifier.GetActualBounds(obj);
 				Point p;
 
 				if (this.objectModifier.HasAttachmentLeft(obj))
@@ -3662,7 +3677,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				foreach (Widget obj in parent.Children)
 				{
-					Rectangle rect = this.objectModifier.GetBounds(obj);
+					Rectangle rect = this.objectModifier.GetActualBounds(obj);
 					Rectangle box = new Rectangle(rect.BottomLeft+new Point(1, 1), new Size(20, 10));
 
 					graphics.AddFilledRectangle(box);
@@ -3687,7 +3702,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				foreach (Widget obj in parent.Children)
 				{
-					Rectangle rect = this.objectModifier.GetBounds(obj);
+					Rectangle rect = this.objectModifier.GetActualBounds(obj);
 					Rectangle box = new Rectangle(rect.BottomRight+new Point(-20-1, 1), new Size(20, 10));
 
 					graphics.AddFilledRectangle(box);
