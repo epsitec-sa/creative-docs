@@ -32,6 +32,22 @@ namespace Epsitec.Common.Widgets.Layouts
 			}
 		}
 
+		public int ColumnCount
+		{
+			get
+			{
+				return this.columnMeasures.Length;
+			}
+		}
+
+		public int RowCount
+		{
+			get
+			{
+				return this.rowMeasures.Length;
+			}
+		}
+
 		#region ILayoutEngine Interface
 		
 		public void UpdateLayout(Visual container, Drawing.Rectangle rect, IEnumerable<Visual> children)
