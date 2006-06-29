@@ -111,5 +111,20 @@ namespace Epsitec.Common.Text.Exchange
 
 			return value;
 		}
+
+
+		public static string NextElement(ref string line, char separator)
+		{
+			int index = line.IndexOf (separator);
+			string retval ;
+
+			if (index == -1)
+				return "";
+
+			retval = line.Substring(0, index) ;
+			line = line.Substring (index + 1);
+
+			return retval;
+		}
 	}
 }

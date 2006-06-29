@@ -238,6 +238,7 @@ namespace Epsitec.Common.Text.Properties
 		
 		public static bool ContainsPropertiesProperties(System.Collections.ICollection properties)
 		{
+			System.Diagnostics.Debug.Assert (properties != null);
 			foreach (Property property in properties)
 			{
 				if (property is PropertiesProperty)

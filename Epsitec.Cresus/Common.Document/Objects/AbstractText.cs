@@ -451,6 +451,7 @@ namespace Epsitec.Common.Document.Objects
 
 				//	TODO: utiliser un texte des ressources
 				this.document.Modifier.OpletQueueBeginAction ("** PASTE **");
+				this.MetaNavigator.DeleteSelection (); // ATTENTION PLANTE au undo suivant
 				Text.Exchange.Rosetta.PasteNativeText (story, navigator);
 				this.document.Modifier.OpletQueueValidateAction ();
 				textInserted = true;
@@ -464,6 +465,7 @@ namespace Epsitec.Common.Document.Objects
 
 				//	TODO: utiliser un texte des ressources
 				this.document.Modifier.OpletQueueBeginAction ("** PASTE **");
+				this.MetaNavigator.DeleteSelection (); // ATTENTION PLANTE au undo suivant
 				Text.Exchange.Rosetta.PasteHtmlText (story, navigator);
 				this.document.Modifier.OpletQueueValidateAction ();
 				textInserted = true;
