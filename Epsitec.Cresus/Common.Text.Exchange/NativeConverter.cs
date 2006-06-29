@@ -66,7 +66,7 @@ namespace Epsitec.Common.Text.Exchange
 					}
 
 					string props = Property.SerializeProperties (thestyle.StyleProperties);
-					output.AppendFormat ("{0}\\{1}{2}", stylename, basestylenames.ToString(), props) ;
+					output.AppendFormat ("{0}\\{1}\\{2}{3}", stylename, (byte)thestyle.TextStyleClass, basestylenames.ToString(), props) ;
 
 					stringstyles[n++] = output.ToString();
 				}
@@ -918,9 +918,21 @@ namespace Epsitec.Common.Text.Exchange
 				System.Diagnostics.Debugger.Break ();
 				StyleDefinition styledef = this.GetStyleDefinition (stylecaption);
 				System.Diagnostics.Debug.Assert (styledef != null);
+
+				thestyle = NewStyle (styledef);
 			}
 
 			return thestyle ;
+		}
+
+
+		private TextStyle NewStyle(StyleDefinition styledef)
+		{
+			TextContext context = this.story.TextContext;
+			Property[] properties = Property.DeserializeProperties (context, styledef.Serialized);
+			TextStyle style = context.StyleList.NewTextStyle (null, null, styledef.TextStyleClass, properties, null/* parents*/);
+
+			return style;
 		}
 
 

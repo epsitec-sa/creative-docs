@@ -98,6 +98,8 @@ namespace Epsitec.Common.Text.Exchange
 					break ;
 
 				string stylecaption = Misc.NextElement(ref line, '\\') ;
+				string strstyleclass = Misc.NextElement (ref line, '\\');
+				TextStyleClass styleclass = (TextStyleClass) Misc.ParseByte (strstyleclass);
 				string strnbbasestyles = Misc.NextElement(ref line, '\\') ;
 				int nbbasestyles = Misc.ParseInt (strnbbasestyles);
 
@@ -119,7 +121,7 @@ namespace Epsitec.Common.Text.Exchange
 						styleDefinitions = new List<StyleDefinition> ();
 					}
 
-					StyleDefinition styleDefinition = new StyleDefinition (stylecaption, baseStyleCaptions, line);
+					StyleDefinition styleDefinition = new StyleDefinition (stylecaption, styleclass, baseStyleCaptions, line);
 					styleDefinitions.Add (styleDefinition);
 
 				}

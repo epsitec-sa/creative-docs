@@ -6,11 +6,22 @@ namespace Epsitec.Common.Text.Exchange
 {
 	class StyleDefinition
 	{
-		public StyleDefinition(string caption, string[] baseStyleCaptions, string serialized)
+		public StyleDefinition(string caption, TextStyleClass textStyleClass, string[] baseStyleCaptions, string serialized)
 		{
 			this.caption = caption;
 			this.baseStyleCaptions = baseStyleCaptions;
 			this.serialized = serialized;
+			this.textStyleClass = textStyleClass;
+		}
+
+		private TextStyleClass textStyleClass;
+
+		public TextStyleClass TextStyleClass
+		{
+			get
+			{
+				return textStyleClass;
+			}
 		}
 
 		private string caption;
