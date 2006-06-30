@@ -1646,6 +1646,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 				return false;
 			}
 
+			if (column == -1 || row == -1)
+			{
+				return false;
+			}
+
 			if (!this.objectModifier.IsGridCellEmpty(parent, column, row))
 			{
 				Widget sourceParent = this.selectedObjects[0].Parent;
