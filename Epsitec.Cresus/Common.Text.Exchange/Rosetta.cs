@@ -251,7 +251,7 @@ namespace Epsitec.Common.Text.Exchange
 				cpContext.Navigator.MoveTo (TextNavigator.Target.CharacterPrevious, 1);
 			}
 
-			string[] textStyles = converter.GetStyleStrings ();
+			List<string> textStyles = converter.GetStyleStrings ();
 
 			nativeText.AppendStyleLine ("{");
 
