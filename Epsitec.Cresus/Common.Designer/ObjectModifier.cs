@@ -733,7 +733,7 @@ namespace Epsitec.Common.Designer
 		public bool IsGridCellEmpty(Widget obj, int column, int row)
 		{
 			//	Indique si une cellule est libre, donc si elle ne contient aucun widget.
-			return (this.GetGridCellWidget(obj, column,row) == null);
+			return (this.GetGridCellWidget(obj, column, row) == null);
 		}
 
 		public Widget GetGridCellWidget(Widget container, int column, int row)
