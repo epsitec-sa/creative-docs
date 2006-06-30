@@ -42,8 +42,13 @@ namespace Epsitec.Common.Text.Exchange
 			int nbstyles = 0;
 			foreach (TextStyle thestyle in styles)
 			{
-				if (thestyle.TextStyleClass == TextStyleClass.Paragraph || thestyle.TextStyleClass == TextStyleClass.Text)
+				string stylecaption = context.StyleList.StyleMap.GetCaption (thestyle);
+
+				if ((thestyle.TextStyleClass == TextStyleClass.Paragraph || thestyle.TextStyleClass == TextStyleClass.Text) &&
+					 this.usedTextStyles.ContainsKey (stylecaption))
+				{
 					nbstyles++;
+				}
 			}
 
 			string[] stringstyles = new string[nbstyles];
@@ -56,19 +61,23 @@ namespace Epsitec.Common.Text.Exchange
 
 				if (thestyle.TextStyleClass == TextStyleClass.Paragraph || thestyle.TextStyleClass == TextStyleClass.Text)
 				{
-					string stylename = context.StyleList.StyleMap.GetCaption (thestyle);
-					StringBuilder basestylenames = new StringBuilder (string.Format ("{0}\\", thestyle.ParentStyles.Length));
+					string stylecaption = context.StyleList.StyleMap.GetCaption (thestyle);
 
-					foreach (TextStyle basestyle in thestyle.ParentStyles)
+					if (this.usedTextStyles.ContainsKey (stylecaption))
 					{
-						string basestylename = context.StyleList.StyleMap.GetCaption (basestyle);
-						basestylenames.AppendFormat ("{0}\\", basestylename);
+						StringBuilder basestylenames = new StringBuilder (string.Format ("{0}\\", thestyle.ParentStyles.Length));
+
+						foreach (TextStyle basestyle in thestyle.ParentStyles)
+						{
+							string basestylename = context.StyleList.StyleMap.GetCaption (basestyle);
+							basestylenames.AppendFormat ("{0}\\", basestylename);
+						}
+
+						string props = Property.SerializeProperties (thestyle.StyleProperties);
+						output.AppendFormat ("{0}\\{1}\\{2}{3}", stylecaption, (byte) thestyle.TextStyleClass, basestylenames.ToString (), props);
+
+						stringstyles[n++] = output.ToString ();
 					}
-
-					string props = Property.SerializeProperties (thestyle.StyleProperties);
-					output.AppendFormat ("{0}\\{1}\\{2}{3}", stylename, (byte)thestyle.TextStyleClass, basestylenames.ToString(), props) ;
-
-					stringstyles[n++] = output.ToString();
 				}
 			}
 
@@ -96,18 +105,26 @@ namespace Epsitec.Common.Text.Exchange
 				if (style.TextStyleClass == TextStyleClass.Paragraph && paragraphSep)
 				{
 					output.AppendFormat ("pstyle:{0}/", caption);
+					if (!usedTextStyles.ContainsKey(caption)) 
+					{
+						usedTextStyles.Add (caption, null);
+					}
 				}
 
 				if (style.TextStyleClass == TextStyleClass.Text)
 				{
 					output.AppendFormat ("cstyle:{0}/", caption);
+					if (!usedTextStyles.ContainsKey(caption))
+					{
+						usedTextStyles.Add (caption, null);
+					}
 				}
 			}
 
 			if (paragraphSep)
 			{
 				output.Append("par/") ;
-				string definedPar = GetDefinedParString() ;
+				string definedPar = this.GetDefinedParString() ;
 
 				if (definedPar.Length != 0)
 				{
@@ -957,6 +974,7 @@ namespace Epsitec.Common.Text.Exchange
 		private TextNavigator navigator;
 		private TextStory story;
 		private PasteMode pasteMode;
+		private System.Collections.Hashtable usedTextStyles = new System.Collections.Hashtable();
 
 		private List<StyleDefinition> styleDefinitions;
 

@@ -456,8 +456,6 @@ namespace Epsitec.Common.Document.Objects
 				
 				// provoquer le raffichage de la liste des styles en haut dans l'onglet "Text"
 				this.document.Notifier.NotifyTextStyleListChanged ();
-
-				// TODO: comment faire pour provoquer le réaffichage de la liste des styles à droite ??
 				
 				this.document.Modifier.OpletQueueValidateAction ();
 				textInserted = true;

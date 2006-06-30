@@ -205,17 +205,6 @@ namespace Epsitec.Common.Text.Exchange
 
 			NativeConverter converter = new NativeConverter (cpContext, PasteMode.KeepTextOnly);
 
-			string[] textStyles = converter.GetStyleStrings ();
-
-			nativeText.AppendTextLine ("{");
-
-			foreach (string stylestring in textStyles)
-			{
-				nativeText.AppendTextLine (stylestring);
-			}
-
-			nativeText.AppendTextLine ("}");
-
 			while (true)
 			{
 				string runText;
@@ -261,6 +250,17 @@ namespace Epsitec.Common.Text.Exchange
 				// recule au début du run
 				cpContext.Navigator.MoveTo (TextNavigator.Target.CharacterPrevious, 1);
 			}
+
+			string[] textStyles = converter.GetStyleStrings ();
+
+			nativeText.AppendStyleLine ("{");
+
+			foreach (string stylestring in textStyles)
+			{
+				nativeText.AppendStyleLine (stylestring);
+			}
+
+			nativeText.AppendStyleLine ("}");
 
 		}
 
