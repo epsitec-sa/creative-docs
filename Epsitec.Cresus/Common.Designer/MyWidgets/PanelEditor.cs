@@ -863,27 +863,17 @@ namespace Epsitec.Common.Designer.MyWidgets
 				GridSelection.Attach(obj);
 				GridSelection gs = GridSelection.Get(obj);
 
-				bool byColumn = true;
-
-				if (gs.Unit == GridSelection.SelectionUnit.Column)
+				if (gs.Unit == GridSelection.SelectionUnit.Column && gs.Index == column)
 				{
-					if (gs.Index == column)
-					{
-						byColumn = false;
-					}
+					this.gridSelectByColumn = false;
 				}
 				
-				if (gs.Unit == GridSelection.SelectionUnit.Row)
+				if (gs.Unit == GridSelection.SelectionUnit.Row && gs.Index == row)
 				{
-					byColumn = false;
-
-					if (gs.Index == row)
-					{
-						byColumn = true;
-					}
+					this.gridSelectByColumn = true;
 				}
 
-				if (byColumn)
+				if (this.gridSelectByColumn)
 				{
 					gs.Unit = GridSelection.SelectionUnit.Column;
 					gs.Index = column;
@@ -3983,6 +3973,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected bool						isSizeMarkVertical;
 		protected Point						sizeMarkOffset;
 		protected bool						isInside;
+		protected bool						gridSelectByColumn = true;
 
 		protected Image						mouseCursorArrow = null;
 		protected Image						mouseCursorArrowPlus = null;
