@@ -930,7 +930,9 @@ namespace Epsitec.Common.Text.Exchange
 		{
 			TextContext context = this.story.TextContext;
 			Property[] properties = Property.DeserializeProperties (context, styledef.Serialized);
-			TextStyle style = context.StyleList.NewTextStyle (null, null, styledef.TextStyleClass, properties, null/* parents*/);
+			System.Collections.ArrayList parents = new System.Collections.ArrayList();
+			parents.Add (context.DefaultParagraphStyle);
+			TextStyle style = context.StyleList.NewTextStyle (null, null, styledef.TextStyleClass, properties, parents);
 
 			return style;
 		}

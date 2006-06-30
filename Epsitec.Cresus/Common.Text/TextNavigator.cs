@@ -3046,6 +3046,8 @@ process_ranges:
 					
 					this.story.OpletExecuted -= new OpletEventHandler (this.HandleStoryOpletExecuted);
 					this.story.TextChanged   -= new EventHandler (this.HandleStoryTextChanged);
+
+					this.story.TextContext.TabList.Changed -= new EventHandler (this.HandleTabListChanged);
 					
 					this.story.RecycleCursor (this.cursor);
 					this.story.RecycleCursor (this.temp_cursor);
