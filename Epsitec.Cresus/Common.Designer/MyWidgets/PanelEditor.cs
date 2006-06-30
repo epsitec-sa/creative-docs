@@ -3507,6 +3507,18 @@ namespace Epsitec.Common.Designer.MyWidgets
 				graphics.AddLine(p1, p2);
 			}
 
+			if (x < rect.Right)
+			{
+				Rectangle part = new Rectangle(x, rect.Bottom, rect.Right-x, rect.Height);
+				graphics.Rasterizer.AddOutline(Misc.GetHatchPath(part, 6, rect.BottomLeft));
+			}
+
+			if (y > rect.Bottom)
+			{
+				Rectangle part = new Rectangle(rect.Left, rect.Bottom, x-rect.Left, y-rect.Bottom);
+				graphics.Rasterizer.AddOutline(Misc.GetHatchPath(part, 6, rect.BottomLeft));
+			}
+
 			rect.Deflate(0.5);
 			graphics.AddRectangle(rect);
 			graphics.RenderSolid(color);
