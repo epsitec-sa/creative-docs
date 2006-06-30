@@ -11,6 +11,7 @@ namespace Epsitec.Common.Designer
 		{
 			this.panel = panel;
 			this.objectModifier = this.panel.PanelEditor.ObjectModifier;
+			this.extendedProxies = new Dictionary<int, bool>();
 		}
 
 		public IEnumerable<Widget> Widgets
@@ -90,6 +91,21 @@ namespace Epsitec.Common.Designer
 			return this.GenerateProxies();
 		}
 
+		public void ClearUserInterface(Widget container)
+		{
+			//	Supprime l'interface utilisateur (panneaux) pour la liste des proxies.
+			foreach (Widget obj in container.Children)
+			{
+				if (obj is MyWidgets.PropertyPanel)
+				{
+					MyWidgets.PropertyPanel panel = obj as MyWidgets.PropertyPanel;
+					panel.ExtendedSize -= new Epsitec.Common.Support.EventHandler(this.HandlePanelExtendedSize);
+				}
+			}
+
+			container.Children.Clear();
+		}
+
 
 		public static bool EqualValues(IProxy a, IProxy b)
 		{
@@ -120,26 +136,26 @@ namespace Epsitec.Common.Designer
 			//	y ait plusieurs proxies de type identique si plusieurs widgets
 			//	utilisent des réglages différents.
 			//	Retourne true si la liste a changé.
-			List<IProxy> proxies = new List<IProxy> ();
+			List<IProxy> proxies = new List<IProxy>();
 
 			foreach (Widget widget in this.widgets)
 			{
-				foreach (IProxy proxy in this.GenerateWidgetProxies (widget))
+				foreach (IProxy proxy in this.GenerateWidgetProxies(widget))
 				{
 					//	Evite les doublons pour des proxies qui seraient à 100%
 					//	identiques :
 					bool insert = true;
 
-					proxy.AddWidget (widget);
+					proxy.AddWidget(widget);
 					
 					foreach (IProxy item in proxies)
 					{
-						if (ProxyManager.EqualValues (item, proxy))
+						if (ProxyManager.EqualValues(item, proxy))
 						{
 							//	Trouvé un doublon. On ajoute simplement le widget
 							//	courant au proxy qui existe déjà avec les mêmes
 							//	valeurs :
-							item.AddWidget (widget);
+							item.AddWidget(widget);
 							insert = false;
 							break;
 						}
@@ -147,26 +163,25 @@ namespace Epsitec.Common.Designer
 
 					if (insert)
 					{
-						proxies.Add (proxy);
+						proxies.Add(proxy);
 					}
 				}
 			}
 
 			//	Trie les proxies selon leur rang :
-			proxies.Sort (new Comparers.ProxyRank ());
+			proxies.Sort(new Comparers.ProxyRank());
 
-			if (ProxyManager.EqualLists (this.proxies, proxies))
+			if (ProxyManager.EqualLists(this.proxies, proxies))
 			{
-				for (int i = 0; i < proxies.Count; i++)
+				for (int i=0; i<proxies.Count; i++)
 				{
-					this.proxies[i].ClearWidgets ();
+					this.proxies[i].ClearWidgets();
 
 					foreach (Widget widget in proxies[i].Widgets)
 					{
-						this.proxies[i].AddWidget (widget);
+						this.proxies[i].AddWidget(widget);
 					}
 				}
-
 				return false;
 			}
 			else
@@ -215,6 +230,9 @@ namespace Epsitec.Common.Designer
 			panel.DataColumnWidth = proxy.DataColumnWidth;
 			panel.RowsSpacing = proxy.RowsSpacing;
 			panel.Title = source.GetType().Name;
+			panel.Rank = proxy.Rank;
+			panel.IsExtendedSize = this.IsExtendedProxies(proxy.Rank);
+			panel.ExtendedSize += new Epsitec.Common.Support.EventHandler(this.HandlePanelExtendedSize);
 
 			foreach (DependencyProperty property in source.DefinedProperties)
 			{
@@ -225,6 +243,37 @@ namespace Epsitec.Common.Designer
 				panel.AddPlaceHolder(placeholder);
 			}
 		}
+
+		void HandlePanelExtendedSize(object sender)
+		{
+			MyWidgets.PropertyPanel panel = sender as MyWidgets.PropertyPanel;
+			System.Diagnostics.Debug.Assert(panel != null);
+
+			this.SetExtendedProxies(panel.Rank, panel.IsExtendedSize);
+		}
+
+		private bool IsExtendedProxies(int rank)
+		{
+			//	Indique si un panneau pour un proxy est étendu ou non.
+			if (!this.extendedProxies.ContainsKey(rank))
+			{
+				this.extendedProxies.Add(rank, false);
+			}
+
+			return this.extendedProxies[rank];
+		}
+
+		private void SetExtendedProxies(int rank, bool extended)
+		{
+			//	Modifie l'état étendu ou non d'un panneau pour un proxy.
+			if (!this.extendedProxies.ContainsKey(rank))
+			{
+				this.extendedProxies.Add(rank, false);
+			}
+
+			this.extendedProxies[rank] = extended;
+		}
+
 
 		static ProxyManager()
 		{
@@ -249,9 +298,10 @@ namespace Epsitec.Common.Designer
 		public static readonly Types.INumericType MarginNumericType;
 		public static readonly Types.INumericType GridNumericType;
 
-		private Viewers.Panels			panel;
-		private ObjectModifier			objectModifier;
-		private List<Widget>			widgets;
-		private List<IProxy>			proxies;
+		private Viewers.Panels				panel;
+		private ObjectModifier				objectModifier;
+		private List<Widget>				widgets;
+		private List<IProxy>				proxies;
+		private Dictionary<int, bool>		extendedProxies;	
 	}
 }
