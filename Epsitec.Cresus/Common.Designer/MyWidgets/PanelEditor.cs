@@ -2875,9 +2875,15 @@ namespace Epsitec.Common.Designer.MyWidgets
 					newOrder--;
 				}
 
+				bool stacked = this.objectModifier.AreChildrenStacked(obj.Parent);
+
 				obj.SetParent(parent);
 				obj.ZOrder = newOrder;
-				this.objectModifier.AdaptFromParent(obj, ha, va);
+
+				if (!stacked)
+				{
+					this.objectModifier.AdaptFromParent(obj, ha, va);
+				}
 			}
 		}
 		#endregion
