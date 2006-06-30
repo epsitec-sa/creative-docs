@@ -34,27 +34,12 @@ namespace Epsitec.Common.Text.Exchange
 		/// Obtient un array de strings contenant chacun une définition de style
 		/// </summary>
 		/// <returns></returns>
-		public string[] GetStyleStrings()
+		public List<string> GetStyleStrings()
 		{
 			TextContext context = this.story.TextContext;
 			TextStyle[] styles = context.StyleList.StyleMap.GetSortedStyles ();
+			List<string> stringstyles = new List<string>();
 
-			int nbstyles = 0;
-			foreach (TextStyle thestyle in styles)
-			{
-				string stylecaption = context.StyleList.StyleMap.GetCaption (thestyle);
-
-				if ((thestyle.TextStyleClass == TextStyleClass.Paragraph || thestyle.TextStyleClass == TextStyleClass.Text) &&
-					 this.usedTextStyles.ContainsKey (stylecaption))
-				{
-					nbstyles++;
-				}
-			}
-
-			string[] stringstyles = new string[nbstyles];
-
-
-			int n = 0;
 			foreach (TextStyle thestyle in styles)
 			{
 				StringBuilder output = new StringBuilder ();
@@ -76,7 +61,8 @@ namespace Epsitec.Common.Text.Exchange
 						string props = Property.SerializeProperties (thestyle.StyleProperties);
 						output.AppendFormat ("{0}\\{1}\\{2}{3}", stylecaption, (byte) thestyle.TextStyleClass, basestylenames.ToString (), props);
 
-						stringstyles[n++] = output.ToString ();
+						// stringstyles[n++] = output.ToString ();
+						stringstyles.Add (output.ToString ());
 					}
 				}
 			}
