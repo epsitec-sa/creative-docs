@@ -1015,7 +1015,9 @@ namespace Epsitec.Common.Document.Containers
 				this.document.IsDirtySerialize = true;
 
 				this.oneShootSelectName = true;
-				this.SetDirtyContent();
+
+				// plus nécessaire: c'est maintenant fait dans NotifyTextStyleListChanged();
+				// this.SetDirtyContent();
 			}
 		}
 
