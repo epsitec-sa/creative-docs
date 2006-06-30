@@ -932,7 +932,22 @@ namespace Epsitec.Common.Text.Exchange
 			Property[] properties = Property.DeserializeProperties (context, styledef.Serialized);
 			System.Collections.ArrayList parents = new System.Collections.ArrayList();
 			parents.Add (context.DefaultParagraphStyle);
+
 			TextStyle style = context.StyleList.NewTextStyle (null, null, styledef.TextStyleClass, properties, parents);
+
+			context.StyleList.StyleMap.SetCaption (null, style, styledef.Caption);
+
+			// cherche le dernier rang
+			int rank = 0;
+			foreach (TextStyle thestyle in context.StyleList.StyleMap.GetSortedStyles ())
+			{
+				string s = thestyle.Name;
+				s = context.StyleList.StyleMap.GetCaption (thestyle);
+				if (thestyle.TextStyleClass == TextStyleClass.Paragraph)
+					rank++;
+			}
+
+			context.StyleList.StyleMap.SetRank (null, style, rank);
 
 			return style;
 		}
