@@ -936,7 +936,9 @@ namespace Epsitec.Common.Designer
 					for (int i=0; i<index; i++)
 					{
 						ColumnDefinition def = engine.ColumnDefinitions[i];
+						position += def.LeftBorder;
 						position += def.ActualWidth;
+						position += def.RightBorder;
 					}
 
 					return position;
@@ -960,7 +962,9 @@ namespace Epsitec.Common.Designer
 					for (int i=0; i<index; i++)
 					{
 						RowDefinition def = engine.RowDefinitions[i];
+						position -= def.TopBorder;
 						position -= def.ActualHeight;
+						position -= def.BottomBorder;
 					}
 
 					return position;
