@@ -1871,7 +1871,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void SetHilitedObject(Widget obj, GridSelection grid)
 		{
 			//	Détermine l'objet à mettre en évidence lors d'un survol.
-			if (this.hilitedObject != obj || !GridSelection.Equals(this.hilitedGrid, grid))
+			if (this.hilitedObject != obj || !GridSelection.EqualValues(this.hilitedGrid, grid))
 			{
 				this.hilitedObject = obj;
 				this.hilitedGrid = grid;

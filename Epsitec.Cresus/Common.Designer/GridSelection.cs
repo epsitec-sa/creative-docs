@@ -69,7 +69,7 @@ namespace Epsitec.Common.Designer
 			dest.index = this.index;
 		}
 
-		public static bool Equals(GridSelection a, GridSelection b)
+		public static bool EqualValues(GridSelection a, GridSelection b)
 		{
 			//	Compare si deux instances de GridSelection sont identiques.
 			if (a == null && b == null)

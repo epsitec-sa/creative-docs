@@ -738,7 +738,8 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected void ClearProxies()
 		{
-			this.propertiesScrollable.Panel.Children.Clear();
+			//	Supprime l'interface utilisateur pour les widgets sélectionnés.
+			this.proxyManager.ClearUserInterface(this.propertiesScrollable.Panel);
 		}
 
 		protected void UpdateProxies()
