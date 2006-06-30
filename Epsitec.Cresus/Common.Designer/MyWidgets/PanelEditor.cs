@@ -2779,7 +2779,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	placer un objet.
 			if (minWidget != null && maxWidget == null)
 			{
-				Rectangle box = parent.Client.Bounds;
+				Rectangle box = this.objectModifier.GetActualBounds(parent);
 
 				if (horizontal)
 				{
@@ -2799,7 +2799,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			if (minWidget == null && maxWidget != null)
 			{
-				Rectangle box = parent.Client.Bounds;
+				Rectangle box = this.objectModifier.GetActualBounds(parent);
 
 				if (horizontal)
 				{
