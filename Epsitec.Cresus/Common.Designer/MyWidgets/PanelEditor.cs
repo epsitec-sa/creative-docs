@@ -1135,7 +1135,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 					this.GridDetect(initialPos, parent, out column, out row);
 					if (!this.objectModifier.IsGridCellEmpty(parent, column, row))
 					{
-						parent = null;
 						this.isInside = false;
 					}
 
@@ -1532,7 +1531,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.GridDetect(pos, parent, out column, out row);
 				if (!this.IsDraggingGridPossible(parent, column, row))
 				{
-					parent = null;
 					this.isInside = false;
 				}
 			}
@@ -3507,13 +3505,13 @@ namespace Epsitec.Common.Designer.MyWidgets
 				graphics.AddLine(p1, p2);
 			}
 
-			if (x < rect.Right)
+			if (x < rect.Right)  // zone inutilisée à droite ?
 			{
 				Rectangle part = new Rectangle(x, rect.Bottom, rect.Right-x, rect.Height);
 				graphics.Rasterizer.AddOutline(Misc.GetHatchPath(part, 6, rect.BottomLeft));
 			}
 
-			if (y > rect.Bottom)
+			if (y > rect.Bottom)  // zone inutilisée en bas ?
 			{
 				Rectangle part = new Rectangle(rect.Left, rect.Bottom, x-rect.Left, y-rect.Bottom);
 				graphics.Rasterizer.AddOutline(Misc.GetHatchPath(part, 6, rect.BottomLeft));
