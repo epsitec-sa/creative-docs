@@ -4704,6 +4704,12 @@ namespace Epsitec.App.DocumentEditor
 		private void HandleTextStyleListChanged()
 		{
 			//	Appelé lorsqu'un style de texte a été ajouté ou supprimé.
+			if (this.IsCurrentDocument)
+			{
+				DocumentInfo di = this.CurrentDocumentInfo;
+				di.containerStyles.SetDirtyContent();
+			}
+
 			this.RibbonsNotifyChanged("TextStyleListChanged");
 		}
 
