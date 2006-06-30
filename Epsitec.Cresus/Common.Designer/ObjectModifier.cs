@@ -787,27 +787,24 @@ namespace Epsitec.Common.Designer
 		public Rectangle GetPreferredBounds(Widget obj)
 		{
 			//	Retourne la position et les dimensions de l'objet.
-			Rectangle bounds = Rectangle.Empty;
+			//	Le rectangle rendu est toujours valide, quel que soit le mode d'attachement.
+			obj.Window.ForceLayout();
 
-			if (this.HasPreferredBounds(obj))
-			{
-				obj.Window.ForceLayout();
 #if false
-				bounds = new Rectangle(Point.Zero, obj.PreferredSize);
+			Rectangle bounds = new Rectangle(Point.Zero, obj.PreferredSize);
 
-				while (obj != this.Container)
-				{
-					bounds = obj.MapClientToParent(bounds);
-					obj = obj.Parent;
-				}
-#else
-				Point center = this.GetActualBounds(obj).Center;
-				Size size = obj.PreferredSize;
-				bounds = new Rectangle(center.X-size.Width/2, center.Y-size.Height/2, size.Width, size.Height);
-#endif
+			while (obj != this.Container)
+			{
+				bounds = obj.MapClientToParent(bounds);
+				obj = obj.Parent;
 			}
 
 			return bounds;
+#else
+			Point center = this.GetActualBounds(obj).Center;
+			Size size = obj.PreferredSize;
+			return new Rectangle(center.X-size.Width/2, center.Y-size.Height/2, size.Width, size.Height);
+#endif
 		}
 
 		public void SetPreferredBounds(Widget obj, Rectangle bounds)
