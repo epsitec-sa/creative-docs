@@ -2948,7 +2948,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			for (int c=0; c<columns; c++)
 			{
 				ColumnDefinition def = engine.ColumnDefinitions[c];
-				double w = def.ActualWidth;
+				double w = def.LeftBorder + def.ActualWidth + def.RightBorder;
 				if (mouse.X >= x && mouse.X < x+w)
 				{
 					column = c;
@@ -2961,7 +2961,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			for (int r=0; r<rows; r++)
 			{
 				RowDefinition def = engine.RowDefinitions[r];
-				double h = def.ActualHeight;
+				double h = def.TopBorder + def.ActualHeight + def.BottomBorder;
 				if (mouse.Y < y && mouse.Y >= y-h)
 				{
 					row = r;
@@ -3441,7 +3441,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			for (int c=0; c<columns; c++)
 			{
 				ColumnDefinition def = engine.ColumnDefinitions[c];
-				x += def.ActualWidth;
+				x += def.LeftBorder + def.ActualWidth + def.RightBorder;
 				Point p1 = new Point(x, rect.Bottom+1);
 				Point p2 = new Point(x, rect.Top-1);
 				Misc.AlignForLine(graphics, ref p1);
@@ -3454,7 +3454,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			for (int r=0; r<rows; r++)
 			{
 				RowDefinition def = engine.RowDefinitions[r];
-				y -= def.ActualHeight;
+				y -= def.TopBorder + def.ActualHeight + def.BottomBorder;
 				Point p1 = new Point(rect.Left+1, y);
 				Point p2 = new Point(rect.Right-1, y);
 				Misc.AlignForLine(graphics, ref p1);
