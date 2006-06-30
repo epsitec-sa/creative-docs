@@ -136,6 +136,102 @@ namespace Epsitec.Common.Designer.Proxies
 			}
 		}
 
+		public double GridMinWidth
+		{
+			get
+			{
+				return (double) this.GetValue(Grid.GridMinWidthProperty);
+			}
+			set
+			{
+				this.SetValue(Grid.GridMinWidthProperty, value);
+			}
+		}
+
+		public double GridMaxWidth
+		{
+			get
+			{
+				return (double) this.GetValue(Grid.GridMaxWidthProperty);
+			}
+			set
+			{
+				this.SetValue(Grid.GridMaxWidthProperty, value);
+			}
+		}
+
+		public double GridMinHeight
+		{
+			get
+			{
+				return (double) this.GetValue(Grid.GridMinHeightProperty);
+			}
+			set
+			{
+				this.SetValue(Grid.GridMinHeightProperty, value);
+			}
+		}
+
+		public double GridMaxHeight
+		{
+			get
+			{
+				return (double) this.GetValue(Grid.GridMaxHeightProperty);
+			}
+			set
+			{
+				this.SetValue(Grid.GridMaxHeightProperty, value);
+			}
+		}
+
+		public double GridLeftBorder
+		{
+			get
+			{
+				return (double) this.GetValue(Grid.GridLeftBorderProperty);
+			}
+			set
+			{
+				this.SetValue(Grid.GridLeftBorderProperty, value);
+			}
+		}
+
+		public double GridRightBorder
+		{
+			get
+			{
+				return (double) this.GetValue(Grid.GridRightBorderProperty);
+			}
+			set
+			{
+				this.SetValue(Grid.GridRightBorderProperty, value);
+			}
+		}
+
+		public double GridBottomBorder
+		{
+			get
+			{
+				return (double) this.GetValue(Grid.GridBottomBorderProperty);
+			}
+			set
+			{
+				this.SetValue(Grid.GridBottomBorderProperty, value);
+			}
+		}
+
+		public double GridTopBorder
+		{
+			get
+			{
+				return (double) this.GetValue(Grid.GridTopBorderProperty);
+			}
+			set
+			{
+				this.SetValue(Grid.GridTopBorderProperty, value);
+			}
+		}
+
 
 		protected override void InitialisePropertyValues()
 		{
@@ -146,20 +242,14 @@ namespace Epsitec.Common.Designer.Proxies
 			//	pour pouvoir ensuite travailler dessus :
 			if (this.ObjectModifier.AreChildrenGrid(this.DefaultWidget))
 			{
-				int columns = this.ObjectModifier.GetGridColumnsCount(this.DefaultWidget);
-				int rows    = this.ObjectModifier.GetGridRowsCount(this.DefaultWidget);
-
-				this.GridColumnsCount = columns;
-				this.GridRowsCount    = rows;
+				this.GridColumnsCount = this.ObjectModifier.GetGridColumnsCount(this.DefaultWidget);
+				this.GridRowsCount    = this.ObjectModifier.GetGridRowsCount(this.DefaultWidget);
 			}
 
 			if (this.ObjectModifier.AreChildrenGrid(this.DefaultWidget.Parent))
 			{
-				int columnSpan = this.ObjectModifier.GetGridColumnSpan(this.DefaultWidget);
-				int rowSpan    = this.ObjectModifier.GetGridRowSpan(this.DefaultWidget);
-
-				this.GridColumnSpan = columnSpan;
-				this.GridRowSpan    = rowSpan;
+				this.GridColumnSpan = this.ObjectModifier.GetGridColumnSpan(this.DefaultWidget);
+				this.GridRowSpan    = this.ObjectModifier.GetGridRowSpan(this.DefaultWidget);
 			}
 
 			if (this.ObjectModifier.AreChildrenGrid(this.DefaultWidget))
@@ -169,20 +259,26 @@ namespace Epsitec.Common.Designer.Proxies
 				{
 					if (gs.Unit == GridSelection.SelectionUnit.Column)
 					{
-						ObjectModifier.GridMode mode = this.ObjectModifier.GetGridColumnMode(this.DefaultWidget, gs.Index);
-						double value = this.ObjectModifier.GetGridColumnWidth(this.DefaultWidget, gs.Index);
-
-						this.GridColumnMode = mode;
-						this.GridColumnValue = value;
+						this.GridColumnMode  = this.ObjectModifier.GetGridColumnMode(this.DefaultWidget, gs.Index);
+						this.GridColumnValue = this.ObjectModifier.GetGridColumnWidth(this.DefaultWidget, gs.Index);
+						
+						this.GridMinWidth = this.ObjectModifier.GetGridColumnMinWidth(this.DefaultWidget, gs.Index);
+						this.GridMaxWidth = this.ObjectModifier.GetGridColumnMaxWidth(this.DefaultWidget, gs.Index);
+						
+						this.GridLeftBorder = this.ObjectModifier.GetGridColumnLeftBorder(this.DefaultWidget, gs.Index);
+						this.GridRightBorder = this.ObjectModifier.GetGridColumnRightBorder(this.DefaultWidget, gs.Index);
 					}
 
 					if (gs.Unit == GridSelection.SelectionUnit.Row)
 					{
-						ObjectModifier.GridMode mode = this.ObjectModifier.GetGridRowMode(this.DefaultWidget, gs.Index);
-						double value = this.ObjectModifier.GetGridRowHeight(this.DefaultWidget, gs.Index);
-
-						this.GridRowMode = mode;
-						this.GridRowValue = value;
+						this.GridRowMode  = this.ObjectModifier.GetGridRowMode(this.DefaultWidget, gs.Index);
+						this.GridRowValue = this.ObjectModifier.GetGridRowHeight(this.DefaultWidget, gs.Index);
+						
+						this.GridMinHeight = this.ObjectModifier.GetGridRowMinHeight(this.DefaultWidget, gs.Index);
+						this.GridMaxHeight = this.ObjectModifier.GetGridRowMaxHeight(this.DefaultWidget, gs.Index);
+						
+						this.GridTopBorder = this.ObjectModifier.GetGridRowTopBorder(this.DefaultWidget, gs.Index);
+						this.GridBottomBorder = this.ObjectModifier.GetGridRowBottomBorder(this.DefaultWidget, gs.Index);
 					}
 				}
 			}
@@ -416,6 +512,262 @@ namespace Epsitec.Common.Designer.Proxies
 			}
 		}
 
+		private static void NotifyGridMinWidthChanged(DependencyObject o, object oldValue, object newValue)
+		{
+			//	Cette méthode est appelée à la suite de la modification d'une de nos propriétés
+			//	de définition pour permettre de mettre à jour les widgets connectés.
+			double value = (double) newValue;
+			Grid that = (Grid) o;
+
+			if (that.IsNotSuspended)
+			{
+				that.SuspendChanges();
+
+				try
+				{
+					foreach (Widget obj in that.Widgets)
+					{
+						GridSelection gs = GridSelection.Get(obj);
+						if (gs != null)
+						{
+							if (gs.Unit == GridSelection.SelectionUnit.Column)
+							{
+								that.ObjectModifier.SetGridColumnMinWidth(obj, gs.Index, value);
+							}
+						}
+					}
+				}
+				finally
+				{
+					that.ResumeChanges();
+				}
+			}
+		}
+
+		private static void NotifyGridMaxWidthChanged(DependencyObject o, object oldValue, object newValue)
+		{
+			//	Cette méthode est appelée à la suite de la modification d'une de nos propriétés
+			//	de définition pour permettre de mettre à jour les widgets connectés.
+			double value = (double) newValue;
+			Grid that = (Grid) o;
+
+			if (that.IsNotSuspended)
+			{
+				that.SuspendChanges();
+
+				try
+				{
+					foreach (Widget obj in that.Widgets)
+					{
+						GridSelection gs = GridSelection.Get(obj);
+						if (gs != null)
+						{
+							if (gs.Unit == GridSelection.SelectionUnit.Column)
+							{
+								that.ObjectModifier.SetGridColumnMaxWidth(obj, gs.Index, value);
+							}
+						}
+					}
+				}
+				finally
+				{
+					that.ResumeChanges();
+				}
+			}
+		}
+
+		private static void NotifyGridMinHeightChanged(DependencyObject o, object oldValue, object newValue)
+		{
+			//	Cette méthode est appelée à la suite de la modification d'une de nos propriétés
+			//	de définition pour permettre de mettre à jour les widgets connectés.
+			double value = (double) newValue;
+			Grid that = (Grid) o;
+
+			if (that.IsNotSuspended)
+			{
+				that.SuspendChanges();
+
+				try
+				{
+					foreach (Widget obj in that.Widgets)
+					{
+						GridSelection gs = GridSelection.Get(obj);
+						if (gs != null)
+						{
+							if (gs.Unit == GridSelection.SelectionUnit.Row)
+							{
+								that.ObjectModifier.SetGridRowMinHeight(obj, gs.Index, value);
+							}
+						}
+					}
+				}
+				finally
+				{
+					that.ResumeChanges();
+				}
+			}
+		}
+
+		private static void NotifyGridMaxHeightChanged(DependencyObject o, object oldValue, object newValue)
+		{
+			//	Cette méthode est appelée à la suite de la modification d'une de nos propriétés
+			//	de définition pour permettre de mettre à jour les widgets connectés.
+			double value = (double) newValue;
+			Grid that = (Grid) o;
+
+			if (that.IsNotSuspended)
+			{
+				that.SuspendChanges();
+
+				try
+				{
+					foreach (Widget obj in that.Widgets)
+					{
+						GridSelection gs = GridSelection.Get(obj);
+						if (gs != null)
+						{
+							if (gs.Unit == GridSelection.SelectionUnit.Row)
+							{
+								that.ObjectModifier.SetGridRowMaxHeight(obj, gs.Index, value);
+							}
+						}
+					}
+				}
+				finally
+				{
+					that.ResumeChanges();
+				}
+			}
+		}
+
+		private static void NotifyGridLeftBorderChanged(DependencyObject o, object oldValue, object newValue)
+		{
+			//	Cette méthode est appelée à la suite de la modification d'une de nos propriétés
+			//	de définition pour permettre de mettre à jour les widgets connectés.
+			double value = (double) newValue;
+			Grid that = (Grid) o;
+
+			if (that.IsNotSuspended)
+			{
+				that.SuspendChanges();
+
+				try
+				{
+					foreach (Widget obj in that.Widgets)
+					{
+						GridSelection gs = GridSelection.Get(obj);
+						if (gs != null)
+						{
+							if (gs.Unit == GridSelection.SelectionUnit.Column)
+							{
+								that.ObjectModifier.SetGridColumnLeftBorder(obj, gs.Index, value);
+							}
+						}
+					}
+				}
+				finally
+				{
+					that.ResumeChanges();
+				}
+			}
+		}
+
+		private static void NotifyGridRightBorderChanged(DependencyObject o, object oldValue, object newValue)
+		{
+			//	Cette méthode est appelée à la suite de la modification d'une de nos propriétés
+			//	de définition pour permettre de mettre à jour les widgets connectés.
+			double value = (double) newValue;
+			Grid that = (Grid) o;
+
+			if (that.IsNotSuspended)
+			{
+				that.SuspendChanges();
+
+				try
+				{
+					foreach (Widget obj in that.Widgets)
+					{
+						GridSelection gs = GridSelection.Get(obj);
+						if (gs != null)
+						{
+							if (gs.Unit == GridSelection.SelectionUnit.Column)
+							{
+								that.ObjectModifier.SetGridColumnRightBorder(obj, gs.Index, value);
+							}
+						}
+					}
+				}
+				finally
+				{
+					that.ResumeChanges();
+				}
+			}
+		}
+
+		private static void NotifyGridTopBorderChanged(DependencyObject o, object oldValue, object newValue)
+		{
+			//	Cette méthode est appelée à la suite de la modification d'une de nos propriétés
+			//	de définition pour permettre de mettre à jour les widgets connectés.
+			double value = (double) newValue;
+			Grid that = (Grid) o;
+
+			if (that.IsNotSuspended)
+			{
+				that.SuspendChanges();
+
+				try
+				{
+					foreach (Widget obj in that.Widgets)
+					{
+						GridSelection gs = GridSelection.Get(obj);
+						if (gs != null)
+						{
+							if (gs.Unit == GridSelection.SelectionUnit.Row)
+							{
+								that.ObjectModifier.SetGridRowTopBorder(obj, gs.Index, value);
+							}
+						}
+					}
+				}
+				finally
+				{
+					that.ResumeChanges();
+				}
+			}
+		}
+
+		private static void NotifyGridBottomBorderChanged(DependencyObject o, object oldValue, object newValue)
+		{
+			//	Cette méthode est appelée à la suite de la modification d'une de nos propriétés
+			//	de définition pour permettre de mettre à jour les widgets connectés.
+			double value = (double) newValue;
+			Grid that = (Grid) o;
+
+			if (that.IsNotSuspended)
+			{
+				that.SuspendChanges();
+
+				try
+				{
+					foreach (Widget obj in that.Widgets)
+					{
+						GridSelection gs = GridSelection.Get(obj);
+						if (gs != null)
+						{
+							if (gs.Unit == GridSelection.SelectionUnit.Row)
+							{
+								that.ObjectModifier.SetGridRowBottomBorder(obj, gs.Index, value);
+							}
+						}
+					}
+				}
+				finally
+				{
+					that.ResumeChanges();
+				}
+			}
+		}
+
 
 		static Grid()
 		{
@@ -436,6 +788,23 @@ namespace Epsitec.Common.Designer.Proxies
 			Grid.GridRowValueProperty.DefaultMetadata.DefineNamedType(ProxyManager.SizeNumericType);
 			Grid.GridColumnValueProperty.DefaultMetadata.DefineCaptionId(new Support.Druid("[100P]").ToLong());
 			Grid.GridRowValueProperty.DefaultMetadata.DefineCaptionId(new Support.Druid("[100Q]").ToLong());
+
+			Grid.GridMinWidthProperty.DefaultMetadata.DefineNamedType(ProxyManager.SizeNumericType);
+			Grid.GridMaxWidthProperty.DefaultMetadata.DefineNamedType(ProxyManager.SizeNumericType);
+			Grid.GridMinHeightProperty.DefaultMetadata.DefineNamedType(ProxyManager.SizeNumericType);
+			Grid.GridMaxHeightProperty.DefaultMetadata.DefineNamedType(ProxyManager.SizeNumericType);
+			Grid.GridLeftBorderProperty.DefaultMetadata.DefineNamedType(ProxyManager.SizeNumericType);
+			Grid.GridRightBorderProperty.DefaultMetadata.DefineNamedType(ProxyManager.SizeNumericType);
+			Grid.GridTopBorderProperty.DefaultMetadata.DefineNamedType(ProxyManager.SizeNumericType);
+			Grid.GridBottomBorderProperty.DefaultMetadata.DefineNamedType(ProxyManager.SizeNumericType);
+			Grid.GridMinWidthProperty.DefaultMetadata.DefineCaptionId(new Support.Druid("[10041]").ToLong());
+			Grid.GridMaxWidthProperty.DefaultMetadata.DefineCaptionId(new Support.Druid("[10042]").ToLong());
+			Grid.GridMinHeightProperty.DefaultMetadata.DefineCaptionId(new Support.Druid("[10043]").ToLong());
+			Grid.GridMaxHeightProperty.DefaultMetadata.DefineCaptionId(new Support.Druid("[10044]").ToLong());
+			Grid.GridLeftBorderProperty.DefaultMetadata.DefineCaptionId(new Support.Druid("[10045]").ToLong());
+			Grid.GridRightBorderProperty.DefaultMetadata.DefineCaptionId(new Support.Druid("[10046]").ToLong());
+			Grid.GridTopBorderProperty.DefaultMetadata.DefineCaptionId(new Support.Druid("[10047]").ToLong());
+			Grid.GridBottomBorderProperty.DefaultMetadata.DefineCaptionId(new Support.Druid("[10048]").ToLong());
 		}
 
 
@@ -450,5 +819,14 @@ namespace Epsitec.Common.Designer.Proxies
 
 		public static readonly DependencyProperty GridColumnValueProperty  = DependencyProperty.Register("GridColumnValue", typeof(double), typeof(Grid), new DependencyPropertyMetadata(1.0, Grid.NotifyGridColumnValueChanged));
 		public static readonly DependencyProperty GridRowValueProperty	   = DependencyProperty.Register("GridRowValue",    typeof(double), typeof(Grid), new DependencyPropertyMetadata(1.0, Grid.NotifyGridRowValueChanged));
+
+		public static readonly DependencyProperty GridMinWidthProperty     = DependencyProperty.Register("GridMinWidth",     typeof(double), typeof(Grid), new DependencyPropertyMetadata(0.0, Grid.NotifyGridMinWidthChanged));
+		public static readonly DependencyProperty GridMaxWidthProperty     = DependencyProperty.Register("GridMaxWidth",     typeof(double), typeof(Grid), new DependencyPropertyMetadata(0.0, Grid.NotifyGridMaxWidthChanged));
+		public static readonly DependencyProperty GridMinHeightProperty    = DependencyProperty.Register("GridMinHeight",    typeof(double), typeof(Grid), new DependencyPropertyMetadata(0.0, Grid.NotifyGridMinHeightChanged));
+		public static readonly DependencyProperty GridMaxHeightProperty    = DependencyProperty.Register("GridMaxHeight",    typeof(double), typeof(Grid), new DependencyPropertyMetadata(0.0, Grid.NotifyGridMaxHeightChanged));
+		public static readonly DependencyProperty GridLeftBorderProperty   = DependencyProperty.Register("GridLeftBorder",   typeof(double), typeof(Grid), new DependencyPropertyMetadata(0.0, Grid.NotifyGridLeftBorderChanged));
+		public static readonly DependencyProperty GridRightBorderProperty  = DependencyProperty.Register("GridRightBorder",  typeof(double), typeof(Grid), new DependencyPropertyMetadata(0.0, Grid.NotifyGridRightBorderChanged));
+		public static readonly DependencyProperty GridTopBorderProperty    = DependencyProperty.Register("GridTopBorder",    typeof(double), typeof(Grid), new DependencyPropertyMetadata(0.0, Grid.NotifyGridTopBorderChanged));
+		public static readonly DependencyProperty GridBottomBorderProperty = DependencyProperty.Register("GridBottomBorder", typeof(double), typeof(Grid), new DependencyPropertyMetadata(0.0, Grid.NotifyGridBottomBorderChanged));
 	}
 }
