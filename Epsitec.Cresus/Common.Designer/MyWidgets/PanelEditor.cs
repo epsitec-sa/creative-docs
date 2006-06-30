@@ -862,31 +862,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 				GridSelection.Attach(obj);
 				GridSelection gs = GridSelection.Get(obj);
-
 				this.gridSelectByColumn = this.GridSelectionPrepare(gs, column, row, this.gridSelectByColumn);
-
-#if false
-				if (gs.Unit == GridSelection.SelectionUnit.Column && gs.Index == column)
-				{
-					this.gridSelectByColumn = false;
-				}
-				
-				if (gs.Unit == GridSelection.SelectionUnit.Row && gs.Index == row)
-				{
-					this.gridSelectByColumn = true;
-				}
-
-				if (this.gridSelectByColumn)
-				{
-					gs.Unit = GridSelection.SelectionUnit.Column;
-					gs.Index = column;
-				}
-				else
-				{
-					gs.Unit = GridSelection.SelectionUnit.Row;
-					gs.Index = row;
-				}
-#endif
 			}
 			else
 			{
@@ -963,6 +939,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected bool GridSelectionPrepare(GridSelection gs, int column, int row, bool byColumn)
 		{
+			//	Prépare GridSelection pour représenter la sélection en cas de clic
+			//	dans une cellule.
 			if (gs.Unit == GridSelection.SelectionUnit.Column && gs.Index == column)
 			{
 				byColumn = false;
@@ -1498,6 +1476,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 
 			this.draggingOrigin = this.MapClientToScreen(this.draggingOffset);
+			this.draggingOrigin.Y -= 1;  // TODO: cette correction devrait être inutile !
 			this.draggingWindow = new DragWindow();
 			this.draggingWindow.DefineWidget(container, container.PreferredSize, Drawing.Margins.Zero);
 			this.draggingWindow.WindowLocation = this.draggingOrigin + pos;
