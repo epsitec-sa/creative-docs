@@ -1501,6 +1501,67 @@ namespace Epsitec.Common.Designer
 		#endregion
 
 
+		#region Min & max size
+		public double GetMinWidth(Widget obj)
+		{
+			return obj.MinWidth;
+		}
+
+		public void SetMinWidth(Widget obj, double width)
+		{
+			if (obj.MinWidth != width)
+			{
+				obj.MinWidth = width;
+				this.Invalidate();
+			}
+		}
+
+		public double GetMaxWidth(Widget obj)
+		{
+			if (System.Double.IsInfinity(obj.MaxWidth))  return 9999;  // TODO: à supprimer !
+			return obj.MaxWidth;
+		}
+
+		public void SetMaxWidth(Widget obj, double width)
+		{
+			if (obj.MaxWidth != width)
+			{
+				obj.MaxWidth = width;
+				this.Invalidate();
+			}
+		}
+
+		public double GetMinHeight(Widget obj)
+		{
+			return obj.MinHeight;
+		}
+
+		public void SetMinHeight(Widget obj, double height)
+		{
+			if (obj.MinHeight != height)
+			{
+				obj.MinHeight = height;
+				this.Invalidate();
+			}
+		}
+
+		public double GetMaxHeight(Widget obj)
+		{
+			if (System.Double.IsInfinity(obj.MaxHeight))  return 9999;  // TODO: à supprimer !
+			return obj.MaxHeight;
+		}
+
+		public void SetMaxHeight(Widget obj, double height)
+		{
+			if (obj.MaxHeight != height)
+			{
+				obj.MaxHeight = height;
+				this.Invalidate();
+			}
+		}
+		#endregion
+
+
 		protected ChildrenPlacement GetParentPlacement(Widget obj)
 		{
 			//	Retourne le mode de placement du parent d'un objet.

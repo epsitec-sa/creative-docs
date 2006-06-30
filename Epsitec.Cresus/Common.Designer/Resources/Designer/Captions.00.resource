@@ -35,10 +35,11 @@
   <data id="0P">&lt;s:data id="_0" f:Description="Largeur colonne" f:Labels="{Collection {Text 'Largeur colonne'}}" /&gt;</data>
   <data id="0Q">&lt;s:data id="_0" f:Description="Hauteur ligne" f:Labels="{Collection {Text 'Hauteur ligne'}}" /&gt;</data>
 
-  <data id="0R">&lt;s:data id="_0" f:Description="" /&gt;</data>
-  <data id="0S">&lt;s:data id="_0" f:Description="" /&gt;</data>
-  <data id="0T">&lt;s:data id="_0" f:Description="" /&gt;</data>
-  <data id="0U">&lt;s:data id="_0" f:Description="" /&gt;</data>
+  <data id="0R">&lt;s:data id="_0" f:Description="Largeur minimale" f:Labels="{Collection {Text 'Largeur minimale'}}" /&gt;</data>
+  <data id="0S">&lt;s:data id="_0" f:Description="Largeur maximale" f:Labels="{Collection {Text 'Largeur maximale'}}" /&gt;</data>
+  <data id="0T">&lt;s:data id="_0" f:Description="Hauteur minimale" f:Labels="{Collection {Text 'Hauteur minimale'}}" /&gt;</data>
+  <data id="0U">&lt;s:data id="_0" f:Description="Hauteur maximale" f:Labels="{Collection {Text 'Hauteur maximale'}}" /&gt;</data>
+
   <data id="0V">&lt;s:data id="_0" f:Description="" /&gt;</data>
   
   <data id="011">&lt;s:data id="_0" f:Description="Ancré" f:Labels="{Collection {Text 'Ancré'}}" f:Icon="manifest:Epsitec.Common.Designer.Images.PropertyCPAnchored.icon" /&gt;</data>
