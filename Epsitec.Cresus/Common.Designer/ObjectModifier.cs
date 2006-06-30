@@ -210,6 +210,8 @@ namespace Epsitec.Common.Designer
 					this.SetGridRowsCount(obj, 2);
 					break;
 			}
+
+			this.Invalidate();
 		}
 		#endregion
 
@@ -788,9 +790,8 @@ namespace Epsitec.Common.Designer
 		{
 			//	Retourne la position et les dimensions de l'objet.
 			//	Le rectangle rendu est toujours valide, quel que soit le mode d'attachement.
-			obj.Window.ForceLayout();
-
 #if false
+			obj.Window.ForceLayout();
 			Rectangle bounds = new Rectangle(Point.Zero, obj.PreferredSize);
 
 			while (obj != this.Container)
@@ -1513,7 +1514,7 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		protected void Invalidate()
+		public void Invalidate()
 		{
 			//	Invalide le PanelEditor.
 			this.panelEditor.Invalidate();

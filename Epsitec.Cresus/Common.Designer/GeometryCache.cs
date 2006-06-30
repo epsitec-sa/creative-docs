@@ -127,6 +127,8 @@ namespace Epsitec.Common.Designer
 					}
 				}
 			}
+
+			objectModifier.Invalidate();
 		}
 
 		public static void Clear(Widget parent)
