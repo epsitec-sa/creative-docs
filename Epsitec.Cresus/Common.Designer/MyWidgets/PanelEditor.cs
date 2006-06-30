@@ -3370,11 +3370,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 			graphics.AddFilledRectangle(rect);
 			graphics.RenderSolid(color);
 
-			if (this.objectModifier.AreChildrenGrid(obj))
-			{
-				this.DrawGrid(graphics, obj, color);
-			}
-
 			if (column != -1 && row != -1)
 			{
 				Rectangle area = this.objectModifier.GetGridCellArea(obj, column, row);
@@ -3405,11 +3400,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 			rect.Deflate(thickness/2+0.5);
 			graphics.AddRectangle(rect);
 			graphics.RenderSolid(PanelsContext.ColorHiliteParent);
-
-			if (this.objectModifier.AreChildrenGrid(obj))
-			{
-				this.DrawGrid(graphics, obj, PanelsContext.ColorHiliteParent);
-			}
 
 			if (column != -1 && row != -1)
 			{
