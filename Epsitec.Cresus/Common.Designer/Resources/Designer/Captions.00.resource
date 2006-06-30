@@ -39,8 +39,6 @@
   <data id="0S">&lt;s:data id="_0" f:Description="Largeur maximale" f:Labels="{Collection {Text 'Largeur maximale'}}" /&gt;</data>
   <data id="0T">&lt;s:data id="_0" f:Description="Hauteur minimale" f:Labels="{Collection {Text 'Hauteur minimale'}}" /&gt;</data>
   <data id="0U">&lt;s:data id="_0" f:Description="Hauteur maximale" f:Labels="{Collection {Text 'Hauteur maximale'}}" /&gt;</data>
-
-  <data id="0V">&lt;s:data id="_0" f:Description="" /&gt;</data>
   
   <data id="011">&lt;s:data id="_0" f:Description="Ancré" f:Labels="{Collection {Text 'Ancré'}}" f:Icon="manifest:Epsitec.Common.Designer.Images.PropertyCPAnchored.icon" /&gt;</data>
   <data id="012">&lt;s:data id="_0" f:Description="Disposition verticale" f:Labels="{Collection {Text 'Vertical'}}" f:Icon="manifest:Epsitec.Common.Designer.Images.PropertyCPVertical.icon" /&gt;</data>
@@ -63,4 +61,14 @@
   <data id="037">&lt;s:data id="_0" f:Description="Étiré horizontalement" f:Labels="{Collection {Text 'Étiré'}}" f:Icon="manifest:Epsitec.Common.Designer.Images.PropertyAlignmentHStretch.icon" /&gt;</data>
   <data id="038">&lt;s:data id="_0" f:Description="Étiré verticalement" f:Labels="{Collection {Text 'Étiré'}}" f:Icon="manifest:Epsitec.Common.Designer.Images.PropertyAlignmentVStretch.icon" /&gt;</data>
   <data id="039">&lt;s:data id="_0" f:Description="Sur la ligne de base" f:Labels="{Collection {Text 'Ligne de base'}}" f:Icon="manifest:Epsitec.Common.Designer.Images.PropertyAlignmentBaseLine.icon" /&gt;</data>
+
+  <data id="041">&lt;s:data id="_0" f:Description="Largeur minimale" f:Labels="{Collection {Text 'Largeur minimale'}}" /&gt;</data>
+  <data id="042">&lt;s:data id="_0" f:Description="Largeur maximale" f:Labels="{Collection {Text 'Largeur maximale'}}" /&gt;</data>
+  <data id="043">&lt;s:data id="_0" f:Description="Hauteur minimale" f:Labels="{Collection {Text 'Hauteur minimale'}}" /&gt;</data>
+  <data id="044">&lt;s:data id="_0" f:Description="Hauteur maximale" f:Labels="{Collection {Text 'Hauteur maximale'}}" /&gt;</data>
+  <data id="045">&lt;s:data id="_0" f:Description="Bord gauche" f:Labels="{Collection {Text 'Bord gauche'}}" /&gt;</data>
+  <data id="046">&lt;s:data id="_0" f:Description="Bord droite" f:Labels="{Collection {Text 'Bord droite'}}" /&gt;</data>
+  <data id="047">&lt;s:data id="_0" f:Description="Bord supérieur" f:Labels="{Collection {Text 'Bord supérieur'}}" /&gt;</data>
+  <data id="048">&lt;s:data id="_0" f:Description="Bord inférieur" f:Labels="{Collection {Text 'Bord inférieur'}}" /&gt;</data>
+
 </bundle>

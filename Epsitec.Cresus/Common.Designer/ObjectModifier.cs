@@ -469,6 +469,267 @@ namespace Epsitec.Common.Designer
 		}
 
 
+		public double GetGridColumnMinWidth(Widget obj, int column)
+		{
+			//	Retourne la largeur minimale d'une colonne.
+			if (this.AreChildrenGrid(obj))
+			{
+				GridLayoutEngine engine = LayoutEngine.GetLayoutEngine(obj) as GridLayoutEngine;
+				if (engine != null)
+				{
+					ColumnDefinition def = engine.ColumnDefinitions[column];
+					return def.MinWidth;
+				}
+			}
+
+			return 0;
+		}
+
+		public void SetGridColumnMinWidth(Widget obj, int column, double width)
+		{
+			//	Modifie la largeur minimale d'une colonne.
+			System.Diagnostics.Debug.Assert(this.AreChildrenGrid(obj));
+
+			GridLayoutEngine engine = LayoutEngine.GetLayoutEngine(obj) as GridLayoutEngine;
+			System.Diagnostics.Debug.Assert(engine != null);
+
+			ColumnDefinition def = engine.ColumnDefinitions[column];
+			if (def.MinWidth != width)
+			{
+				def.MinWidth = width;
+				this.Invalidate();
+			}
+		}
+
+		public double GetGridColumnMaxWidth(Widget obj, int column)
+		{
+			//	Retourne la largeur maximale d'une colonne.
+			if (this.AreChildrenGrid(obj))
+			{
+				GridLayoutEngine engine = LayoutEngine.GetLayoutEngine(obj) as GridLayoutEngine;
+				if (engine != null)
+				{
+					ColumnDefinition def = engine.ColumnDefinitions[column];
+					if (System.Double.IsInfinity(def.MaxWidth))  return 9999;  // TODO: à supprimer !
+					return def.MaxWidth;
+				}
+			}
+
+			return 0;
+		}
+
+		public void SetGridColumnMaxWidth(Widget obj, int column, double width)
+		{
+			//	Modifie la largeur maximale d'une colonne.
+			System.Diagnostics.Debug.Assert(this.AreChildrenGrid(obj));
+
+			GridLayoutEngine engine = LayoutEngine.GetLayoutEngine(obj) as GridLayoutEngine;
+			System.Diagnostics.Debug.Assert(engine != null);
+
+			ColumnDefinition def = engine.ColumnDefinitions[column];
+			if (def.MaxWidth != width)
+			{
+				def.MaxWidth = width;
+				this.Invalidate();
+			}
+		}
+
+		public double GetGridRowMinHeight(Widget obj, int row)
+		{
+			//	Retourne la hauteur minimale d'une ligne.
+			if (this.AreChildrenGrid(obj))
+			{
+				GridLayoutEngine engine = LayoutEngine.GetLayoutEngine(obj) as GridLayoutEngine;
+				if (engine != null)
+				{
+					RowDefinition def = engine.RowDefinitions[row];
+					return def.MinHeight;
+				}
+			}
+
+			return 0;
+		}
+
+		public void SetGridRowMinHeight(Widget obj, int row, double height)
+		{
+			//	Modifie la hauteur minimale d'une ligne.
+			System.Diagnostics.Debug.Assert(this.AreChildrenGrid(obj));
+
+			GridLayoutEngine engine = LayoutEngine.GetLayoutEngine(obj) as GridLayoutEngine;
+			System.Diagnostics.Debug.Assert(engine != null);
+
+			RowDefinition def = engine.RowDefinitions[row];
+			if (def.MinHeight != height)
+			{
+				def.MinHeight = height;
+				this.Invalidate();
+			}
+		}
+
+		public double GetGridRowMaxHeight(Widget obj, int row)
+		{
+			//	Retourne la hauteur maximale d'une ligne.
+			if (this.AreChildrenGrid(obj))
+			{
+				GridLayoutEngine engine = LayoutEngine.GetLayoutEngine(obj) as GridLayoutEngine;
+				if (engine != null)
+				{
+					RowDefinition def = engine.RowDefinitions[row];
+					if (System.Double.IsInfinity(def.MaxHeight))  return 9999;  // TODO: à supprimer !
+					return def.MaxHeight;
+				}
+			}
+
+			return 0;
+		}
+
+		public void SetGridRowMaxHeight(Widget obj, int row, double height)
+		{
+			//	Modifie la hauteur maximale d'une ligne.
+			System.Diagnostics.Debug.Assert(this.AreChildrenGrid(obj));
+
+			GridLayoutEngine engine = LayoutEngine.GetLayoutEngine(obj) as GridLayoutEngine;
+			System.Diagnostics.Debug.Assert(engine != null);
+
+			RowDefinition def = engine.RowDefinitions[row];
+			if (def.MaxHeight != height)
+			{
+				def.MaxHeight = height;
+				this.Invalidate();
+			}
+		}
+
+
+		public double GetGridColumnLeftBorder(Widget obj, int column)
+		{
+			//	Retourne le bord gauche d'une colonne.
+			if (this.AreChildrenGrid(obj))
+			{
+				GridLayoutEngine engine = LayoutEngine.GetLayoutEngine(obj) as GridLayoutEngine;
+				if (engine != null)
+				{
+					ColumnDefinition def = engine.ColumnDefinitions[column];
+					return def.LeftBorder;
+				}
+			}
+
+			return 0;
+		}
+
+		public void SetGridColumnLeftBorder(Widget obj, int column, double value)
+		{
+			//	Modifie le bord gauche d'une colonne.
+			System.Diagnostics.Debug.Assert(this.AreChildrenGrid(obj));
+
+			GridLayoutEngine engine = LayoutEngine.GetLayoutEngine(obj) as GridLayoutEngine;
+			System.Diagnostics.Debug.Assert(engine != null);
+
+			ColumnDefinition def = engine.ColumnDefinitions[column];
+			if (def.LeftBorder != value)
+			{
+				def.LeftBorder = value;
+				this.Invalidate();
+			}
+		}
+
+		public double GetGridColumnRightBorder(Widget obj, int column)
+		{
+			//	Retourne le bord droite d'une colonne.
+			if (this.AreChildrenGrid(obj))
+			{
+				GridLayoutEngine engine = LayoutEngine.GetLayoutEngine(obj) as GridLayoutEngine;
+				if (engine != null)
+				{
+					ColumnDefinition def = engine.ColumnDefinitions[column];
+					return def.RightBorder;
+				}
+			}
+
+			return 0;
+		}
+
+		public void SetGridColumnRightBorder(Widget obj, int column, double value)
+		{
+			//	Modifie le bord droite d'une colonne.
+			System.Diagnostics.Debug.Assert(this.AreChildrenGrid(obj));
+
+			GridLayoutEngine engine = LayoutEngine.GetLayoutEngine(obj) as GridLayoutEngine;
+			System.Diagnostics.Debug.Assert(engine != null);
+
+			ColumnDefinition def = engine.ColumnDefinitions[column];
+			if (def.RightBorder != value)
+			{
+				def.RightBorder = value;
+				this.Invalidate();
+			}
+		}
+
+
+		public double GetGridRowTopBorder(Widget obj, int row)
+		{
+			//	Retourne le bord supérieur d'une colonne.
+			if (this.AreChildrenGrid(obj))
+			{
+				GridLayoutEngine engine = LayoutEngine.GetLayoutEngine(obj) as GridLayoutEngine;
+				if (engine != null)
+				{
+					RowDefinition def = engine.RowDefinitions[row];
+					return def.TopBorder;
+				}
+			}
+
+			return 0;
+		}
+
+		public void SetGridRowTopBorder(Widget obj, int row, double value)
+		{
+			//	Modifie le bord supérieur d'une colonne.
+			System.Diagnostics.Debug.Assert(this.AreChildrenGrid(obj));
+
+			GridLayoutEngine engine = LayoutEngine.GetLayoutEngine(obj) as GridLayoutEngine;
+			System.Diagnostics.Debug.Assert(engine != null);
+
+			RowDefinition def = engine.RowDefinitions[row];
+			if (def.TopBorder != value)
+			{
+				def.TopBorder = value;
+				this.Invalidate();
+			}
+		}
+
+		public double GetGridRowBottomBorder(Widget obj, int row)
+		{
+			//	Retourne le bord inférieur d'une colonne.
+			if (this.AreChildrenGrid(obj))
+			{
+				GridLayoutEngine engine = LayoutEngine.GetLayoutEngine(obj) as GridLayoutEngine;
+				if (engine != null)
+				{
+					RowDefinition def = engine.RowDefinitions[row];
+					return def.BottomBorder;
+				}
+			}
+
+			return 0;
+		}
+
+		public void SetGridRowBottomBorder(Widget obj, int row, double value)
+		{
+			//	Modifie le bord inférieur d'une colonne.
+			System.Diagnostics.Debug.Assert(this.AreChildrenGrid(obj));
+
+			GridLayoutEngine engine = LayoutEngine.GetLayoutEngine(obj) as GridLayoutEngine;
+			System.Diagnostics.Debug.Assert(engine != null);
+
+			RowDefinition def = engine.RowDefinitions[row];
+			if (def.BottomBorder != value)
+			{
+				def.BottomBorder = value;
+				this.Invalidate();
+			}
+		}
+		
+		
 		public bool IsGridCellEmpty(Widget obj, int column, int row)
 		{
 			//	Indique si une cellule est libre, donc si elle ne contient aucun widget.
