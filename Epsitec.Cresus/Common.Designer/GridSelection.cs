@@ -63,6 +63,7 @@ namespace Epsitec.Common.Designer
 
 		public void CopyTo(GridSelection dest)
 		{
+			//	Copie GridSelection dans le sens this -> dest.
 			dest.obj = this.obj;
 			dest.unit = this.unit;
 			dest.index = this.index;
@@ -70,6 +71,7 @@ namespace Epsitec.Common.Designer
 
 		public static bool Equals(GridSelection a, GridSelection b)
 		{
+			//	Compare si deux instances de GridSelection sont identiques.
 			if (a == null && b == null)
 			{
 				return true;
