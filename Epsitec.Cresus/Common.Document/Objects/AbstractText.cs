@@ -451,8 +451,14 @@ namespace Epsitec.Common.Document.Objects
 
 				//	TODO: utiliser un texte des ressources
 				this.document.Modifier.OpletQueueBeginAction ("** PASTE **");
-				this.MetaNavigator.DeleteSelection (); // ATTENTION PLANTE au undo suivant
+				this.MetaNavigator.DeleteSelection (); // TODO: ATTENTION plante au undo suivant
 				Text.Exchange.Rosetta.PasteNativeText (story, navigator);
+				
+				// provoquer le raffichage de la liste des styles en haut dans l'onglet "Text"
+				this.document.Notifier.NotifyTextStyleListChanged ();
+
+				// TODO: comment faire pour provoquer le réaffichage de la liste des styles à droite ??
+				
 				this.document.Modifier.OpletQueueValidateAction ();
 				textInserted = true;
 			}
@@ -465,7 +471,7 @@ namespace Epsitec.Common.Document.Objects
 
 				//	TODO: utiliser un texte des ressources
 				this.document.Modifier.OpletQueueBeginAction ("** PASTE **");
-				this.MetaNavigator.DeleteSelection (); // ATTENTION PLANTE au undo suivant
+				this.MetaNavigator.DeleteSelection (); // TODO: ATTENTION plante au undo suivant
 				Text.Exchange.Rosetta.PasteHtmlText (story, navigator);
 				this.document.Modifier.OpletQueueValidateAction ();
 				textInserted = true;
