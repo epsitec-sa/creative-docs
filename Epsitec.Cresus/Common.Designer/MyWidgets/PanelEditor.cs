@@ -1637,6 +1637,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected bool IsDraggingGridPossible(Widget parent, int column, int row)
 		{
+			//	Vérifie si la sélection peut être déplacée dans le tableau de destination
+			//	donné (parent, column, row). Si la cellule destination est occupée, mais que
+			//	l'objet déplacé provient du même tableau, l'opération est autorisée. Les deux
+			//	widgets seront alors permutés.
 			if (this.selectedObjects.Count != 1)
 			{
 				return false;
@@ -3331,6 +3335,13 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				this.DrawGrid(graphics, obj, PanelsContext.ColorHiliteOutline);
 			}
+
+			GridSelection gs = GridSelection.Get(obj);
+			if (gs != null)
+			{
+				Rectangle area = this.objectModifier.GetGridItemArea(obj, gs);
+				this.DrawGridSelected(graphics, area, PanelsContext.ColorGridCell);
+			}
 		}
 
 		protected void DrawPadding(Graphics graphics, Widget obj)
@@ -3407,6 +3418,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 			graphics.AddFilledRectangle(rect);
 			graphics.RenderSolid(color);
 
+			if (this.objectModifier.AreChildrenGrid(obj))
+			{
+				this.DrawGrid(graphics, obj, PanelsContext.ColorHiliteOutline);
+			}
+
 			if (grid != null)
 			{
 				Rectangle area = this.objectModifier.GetGridItemArea(obj, grid);
@@ -3437,6 +3453,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 			rect.Deflate(thickness/2+0.5);
 			graphics.AddRectangle(rect);
 			graphics.RenderSolid(PanelsContext.ColorHiliteParent);
+
+			if (this.objectModifier.AreChildrenGrid(obj))
+			{
+				this.DrawGrid(graphics, obj, PanelsContext.ColorHiliteOutline);
+			}
 
 			if (column != -1 && row != -1)
 			{
@@ -3484,13 +3505,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 			rect.Deflate(0.5);
 			graphics.AddRectangle(rect);
 			graphics.RenderSolid(color);
-
-			GridSelection gs = GridSelection.Get(obj);
-			if (gs != null)
-			{
-				Rectangle area = this.objectModifier.GetGridItemArea(obj, gs);
-				this.DrawGridSelected(graphics, area, PanelsContext.ColorGridCell);
-			}
 		}
 
 		protected void DrawGridSelected(Graphics graphics, Rectangle area, Color color)
