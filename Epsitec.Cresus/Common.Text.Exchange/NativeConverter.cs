@@ -915,7 +915,6 @@ namespace Epsitec.Common.Text.Exchange
 
 			if (thestyle == null)
 			{
-				System.Diagnostics.Debugger.Break ();
 				StyleDefinition styledef = this.GetStyleDefinition (stylecaption);
 				System.Diagnostics.Debug.Assert (styledef != null);
 
