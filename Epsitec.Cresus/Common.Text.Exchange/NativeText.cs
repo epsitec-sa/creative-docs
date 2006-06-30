@@ -11,32 +11,31 @@ namespace Epsitec.Common.Text.Exchange
 {
 	public class NativeTextOut
 	{
-		StringBuilder output = new StringBuilder() ;
-
 		public NativeTextOut()
 		{
 			this.Initialize() ;
 		}
 
-
 		private void Initialize()
 		{
 		}
 
-		public void AppendText(string text)
-		{
-			output.Append (text);
-		}
-
 		public void AppendTextLine(string text)
 		{
-			output.AppendLine (text);
+			this.output.AppendLine (text);
 		}
 
-		public string ToString()
+		public void AppendStyleLine(string text)
 		{
-			return output.ToString ();
+			this.styles.AppendLine (text);
 		}
 
+		public override string ToString()
+		{
+			return styles.ToString () + output.ToString ();
+		}
+
+		private StringBuilder output = new StringBuilder() ;
+		private StringBuilder styles = new StringBuilder ();
 	}
 }
