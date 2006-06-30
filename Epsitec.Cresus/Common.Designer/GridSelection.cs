@@ -61,6 +61,24 @@ namespace Epsitec.Common.Designer
 		}
 
 
+		public void CopyTo(GridSelection dest)
+		{
+			dest.obj = this.obj;
+			dest.unit = this.unit;
+			dest.index = this.index;
+		}
+
+		public static bool Equals(GridSelection a, GridSelection b)
+		{
+			if (a == null && b == null)
+			{
+				return true;
+			}
+
+			return (a != null && b != null && a.obj == b.obj && a.unit == b.unit && a.index == b.index);
+		}
+
+
 		#region Static methods
 		public static void Attach(Widget obj)
 		{

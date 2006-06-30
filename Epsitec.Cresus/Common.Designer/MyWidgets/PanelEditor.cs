@@ -385,7 +385,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 					break;
 
 				case MessageType.MouseLeave:
-					this.SetHilitedObject(null, -1, -1);
+					this.SetHilitedObject(null, null);
 					this.SetHilitedParent(null, -1, -1);
 					break;
 
@@ -671,7 +671,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			else
 			{
 				Widget obj = this.Detect(pos, isShiftPressed, false);
-				this.SetHilitedObject(obj, -1, -1);  // met en évidence l'objet survolé par la souris
+				this.SetHilitedObject(obj, null);  // met en évidence l'objet survolé par la souris
 
 				Rectangle rect = Rectangle.Empty;
 				Attachment attachment;
@@ -857,12 +857,15 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.GridClearSelection(obj);
 				this.UpdateAfterSelectionChanged();
 
-				this.SetHilitedObject(null, -1, -1);
+				this.SetHilitedObject(null, null);
 				this.isGridding = true;
 
 				GridSelection.Attach(obj);
 				GridSelection gs = GridSelection.Get(obj);
 
+				this.gridSelectByColumn = this.GridSelectionPrepare(gs, column, row, this.gridSelectByColumn);
+
+#if false
 				if (gs.Unit == GridSelection.SelectionUnit.Column && gs.Index == column)
 				{
 					this.gridSelectByColumn = false;
@@ -883,6 +886,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 					gs.Unit = GridSelection.SelectionUnit.Row;
 					gs.Index = row;
 				}
+#endif
 			}
 			else
 			{
@@ -924,7 +928,21 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 			else
 			{
-				this.SetHilitedObject(obj, column, row);
+				if (obj == null)
+				{
+					this.SetHilitedObject(null, null);
+				}
+				else
+				{
+					GridSelection ags = GridSelection.Get(obj);
+					GridSelection tgs = new GridSelection(obj);
+					if (ags != null)
+					{
+						ags.CopyTo(tgs);
+					}
+					this.GridSelectionPrepare(tgs, column, row, this.gridSelectByColumn);
+					this.SetHilitedObject(obj, tgs);
+				}
 			}
 		}
 
@@ -941,6 +959,32 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				this.HandlingEnd(pos);
 			}
+		}
+
+		protected bool GridSelectionPrepare(GridSelection gs, int column, int row, bool byColumn)
+		{
+			if (gs.Unit == GridSelection.SelectionUnit.Column && gs.Index == column)
+			{
+				byColumn = false;
+			}
+
+			if (gs.Unit == GridSelection.SelectionUnit.Row && gs.Index == row)
+			{
+				byColumn = true;
+			}
+
+			if (byColumn)
+			{
+				gs.Unit = GridSelection.SelectionUnit.Column;
+				gs.Index = column;
+			}
+			else
+			{
+				gs.Unit = GridSelection.SelectionUnit.Row;
+				gs.Index = row;
+			}
+
+			return byColumn;
 		}
 
 		protected void GridKeyChanged(bool isControlPressed, bool isShiftPressed)
@@ -968,7 +1012,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Edition, souris déplacée.
 			this.ChangeMouseCursor(MouseCursorType.Edit);
 
-			this.SetHilitedObject(this.Detect(pos, false, false), -1, -1);  // met en évidence l'objet survolé par la souris
+			this.SetHilitedObject(this.Detect(pos, false, false), null);  // met en évidence l'objet survolé par la souris
 		}
 
 		protected void EditUp(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
@@ -1372,7 +1416,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.handlingWindow.FocusedWidget = clone;
 				this.handlingWindow.Show();
 
-				this.SetHilitedObject(null, -1, -1);
+				this.SetHilitedObject(null, null);
 				this.SetHilitedAttachmentRectangle(Rectangle.Empty);
 				this.Invalidate();
 				return true;
@@ -1461,7 +1505,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.draggingWindow.FocusedWidget = container;
 			this.draggingWindow.Show();
 
-			this.SetHilitedObject(null, -1, -1);
+			this.SetHilitedObject(null, null);
 			this.SetHilitedAttachmentRectangle(Rectangle.Empty);
 			this.isDragging = true;
 			this.Invalidate();
@@ -1845,14 +1889,13 @@ namespace Epsitec.Common.Designer.MyWidgets
 			GeometryCache.Clear(this.panel);
 		}
 
-		protected void SetHilitedObject(Widget obj, int column, int row)
+		protected void SetHilitedObject(Widget obj, GridSelection grid)
 		{
 			//	Détermine l'objet à mettre en évidence lors d'un survol.
-			if (this.hilitedObject != obj || this.hilitedObjectColumn != column || this.hilitedObjectRow != row)
+			if (this.hilitedObject != obj || !GridSelection.Equals(this.hilitedGrid, grid))
 			{
 				this.hilitedObject = obj;
-				this.hilitedObjectColumn = column;
-				this.hilitedObjectRow = row;
+				this.hilitedGrid = grid;
 				this.Invalidate();
 			}
 		}
@@ -3147,7 +3190,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Dessine l'objet survolé.
 			if (this.hilitedObject != null)
 			{
-				this.DrawHilitedObject(graphics, this.hilitedObject, this.hilitedObjectColumn, this.hilitedObjectRow);
+				this.DrawHilitedObject(graphics, this.hilitedObject, this.hilitedGrid);
 			}
 
 			//	Dessine l'objet parentsurvolé.
@@ -3316,7 +3359,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
-		protected void DrawHilitedObject(Graphics graphics, Widget obj, int column, int row)
+		protected void DrawHilitedObject(Graphics graphics, Widget obj, GridSelection grid)
 		{
 			//	Met en évidence l'objet survolé par la souris.
 			if (this.context.ShowAttachment)
@@ -3360,9 +3403,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 			graphics.AddFilledRectangle(rect);
 			graphics.RenderSolid(color);
 
-			if (column != -1 && row != -1)
+			if (grid != null)
 			{
-				Rectangle area = this.objectModifier.GetGridCellArea(obj, column, row);
+				Rectangle area = this.objectModifier.GetGridItemArea(obj, grid);
 				this.DrawGridHilited(graphics, area, PanelsContext.ColorGridCell);
 			}
 		}
@@ -3947,8 +3990,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected Rectangle					hilitedAttachmentRectangle = Rectangle.Empty;
 		protected Rectangle					hilitedZOrderRectangle = Rectangle.Empty;
 		protected Widget					hilitedObject;
-		protected int						hilitedObjectColumn = -1;
-		protected int						hilitedObjectRow = -1;
+		protected GridSelection				hilitedGrid;
 		protected Widget					hilitedParent;
 		protected int						hilitedParentColumn = -1;
 		protected int						hilitedParentRow = -1;
