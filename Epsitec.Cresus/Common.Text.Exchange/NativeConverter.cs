@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections;
 using System.Text;
 
 // Conversion entre format presse-papier natif et TextWrapper
@@ -39,37 +40,48 @@ namespace Epsitec.Common.Text.Exchange
 			TextContext context = this.story.TextContext;
 			TextStyle[] styles = context.StyleList.StyleMap.GetSortedStyles ();
 			List<string> stringstyles = new List<string>();
+			Hashtable processedStyleCaptions = new Hashtable ();
 
 			foreach (TextStyle thestyle in styles)
 			{
-				StringBuilder output = new StringBuilder ();
 
 				if (thestyle.TextStyleClass == TextStyleClass.Paragraph || thestyle.TextStyleClass == TextStyleClass.Text)
 				{
 					string stylecaption = context.StyleList.StyleMap.GetCaption (thestyle);
 
-					if (this.usedTextStyles.ContainsKey (stylecaption))
-					{
-						StringBuilder basestylenames = new StringBuilder (string.Format ("{0}\\", thestyle.ParentStyles.Length));
-
-						foreach (TextStyle basestyle in thestyle.ParentStyles)
-						{
-							string basestylename = context.StyleList.StyleMap.GetCaption (basestyle);
-							basestylenames.AppendFormat ("{0}\\", basestylename);
-						}
-
-						string props = Property.SerializeProperties (thestyle.StyleProperties);
-						output.AppendFormat ("{0}\\{1}\\{2}{3}", stylecaption, (byte) thestyle.TextStyleClass, basestylenames.ToString (), props);
-
-						// stringstyles[n++] = output.ToString ();
-						stringstyles.Add (output.ToString ());
-					}
+					AddStyle (context,  thestyle, stringstyles, false, processedStyleCaptions);
 				}
 			}
 
 			return stringstyles;
 		}
 
+		private void AddStyle(TextContext context, TextStyle thestyle, List<string> stringstyles, bool isbasestyle, Hashtable processed)
+		{
+			string stylecaption = context.StyleList.StyleMap.GetCaption (thestyle);
+			StringBuilder output = new StringBuilder ();
+
+			if (! processed.ContainsKey(stylecaption))
+			{
+				if (this.usedTextStyles.ContainsKey (stylecaption) || isbasestyle)
+				{
+					StringBuilder basestylenames = new StringBuilder (string.Format ("{0}\\", thestyle.ParentStyles.Length));
+
+					foreach (TextStyle basestyle in thestyle.ParentStyles)
+					{
+						string basestylename = context.StyleList.StyleMap.GetCaption (basestyle);
+						basestylenames.AppendFormat ("{0}\\", basestylename);
+
+						this.AddStyle (context, basestyle, stringstyles, true, processed);
+					}
+
+					string props = Property.SerializeProperties (thestyle.StyleProperties);
+					output.AppendFormat ("{0}\\{1}\\{2}{3}", stylecaption, (byte) thestyle.TextStyleClass, basestylenames.ToString (), props);
+					processed.Add (stylecaption, null);
+					stringstyles.Add (output.ToString ());
+				}
+			}
+		}
 
 		/// <summary>
 		/// Convertit les attributs d'un textwrapper en format presse-papier natif
@@ -960,7 +972,7 @@ namespace Epsitec.Common.Text.Exchange
 		private TextNavigator navigator;
 		private TextStory story;
 		private PasteMode pasteMode;
-		private System.Collections.Hashtable usedTextStyles = new System.Collections.Hashtable();
+		private Hashtable usedTextStyles = new System.Collections.Hashtable();
 
 		private List<StyleDefinition> styleDefinitions;
 
