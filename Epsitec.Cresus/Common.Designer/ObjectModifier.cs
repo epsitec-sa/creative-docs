@@ -73,9 +73,9 @@ namespace Epsitec.Common.Designer
 		public enum GridMode
 		{
 			[Types.Hidden] None,
-			Proportional,
-			Absolute,
 			Auto,
+			Absolute,
+			Proportional,
 		}
 
 
@@ -250,7 +250,7 @@ namespace Epsitec.Common.Designer
 
 				if (columns > engine.ColumnDefinitions.Count)
 				{
-					engine.ColumnDefinitions.Add(new ColumnDefinition(new GridLength(100, GridUnitType.Proportional)));
+					engine.ColumnDefinitions.Add(new ColumnDefinition(new GridLength(100, GridUnitType.Auto)));
 					engine.ColumnDefinitions[count].MinWidth = 20;
 				}
 				else
@@ -295,7 +295,7 @@ namespace Epsitec.Common.Designer
 
 				if (rows > engine.RowDefinitions.Count)
 				{
-					engine.RowDefinitions.Add(new RowDefinition(new GridLength(100, GridUnitType.Proportional)));
+					engine.RowDefinitions.Add(new RowDefinition(new GridLength(100, GridUnitType.Auto)));
 					engine.RowDefinitions[count].MinHeight = 20;
 				}
 				else

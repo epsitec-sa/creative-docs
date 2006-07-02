@@ -882,10 +882,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				this.ChangeMouseCursor(MouseCursorType.Finger);
 			}
-			else if (isShiftPressed)
-			{
-				this.ChangeMouseCursor(MouseCursorType.ArrowPlus);
-			}
 			else
 			{
 				this.ChangeMouseCursor(MouseCursorType.Grid);
@@ -968,14 +964,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void GridKeyChanged(bool isControlPressed, bool isShiftPressed)
 		{
 			//	Sélection de tableaux, touche pressée ou relâchée.
-			if (isShiftPressed)
-			{
-				this.ChangeMouseCursor(MouseCursorType.ArrowPlus);
-			}
-			else
-			{
-				this.ChangeMouseCursor(MouseCursorType.Grid);
-			}
+			this.ChangeMouseCursor(MouseCursorType.Grid);
 		}
 		#endregion
 

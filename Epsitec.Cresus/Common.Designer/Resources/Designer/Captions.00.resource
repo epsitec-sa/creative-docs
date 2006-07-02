@@ -71,4 +71,8 @@
   <data id="047">&lt;s:data id="_0" f:Description="Bord supérieur" f:Labels="{Collection {Text 'Bord supérieur'}}" /&gt;</data>
   <data id="048">&lt;s:data id="_0" f:Description="Bord inférieur" f:Labels="{Collection {Text 'Bord inférieur'}}" /&gt;</data>
 
+  <data id="051">&lt;s:data id="_0" f:Description="Proportionnel" f:Labels="{Collection {Text 'Proportionnel'}}" f:Icon="manifest:Epsitec.Common.Designer.Images.PropertyGridProportional.icon" /&gt;</data>
+  <data id="052">&lt;s:data id="_0" f:Description="Absolu" f:Labels="{Collection {Text 'Absolu'}}" f:Icon="manifest:Epsitec.Common.Designer.Images.PropertyGridAbsolute.icon" /&gt;</data>
+  <data id="053">&lt;s:data id="_0" f:Description="Automatique" f:Labels="{Collection {Text 'Automatique'}}" f:Icon="manifest:Epsitec.Common.Designer.Images.PropertyGridAuto.icon" /&gt;</data>
+
 </bundle>

@@ -35,7 +35,7 @@ namespace Epsitec.Common.Designer.Proxies
 		{
 			get
 			{
-				return 50;
+				return 22*3+1;
 			}
 		}
 
@@ -781,7 +781,20 @@ namespace Epsitec.Common.Designer.Proxies
 			Grid.GridColumnSpanProperty.DefaultMetadata.DefineCaptionId(new Support.Druid("[100L]").ToLong());
 			Grid.GridRowSpanProperty.DefaultMetadata.DefineCaptionId(new Support.Druid("[100M]").ToLong());
 
+			EnumType gridColumnModeEnumType = new EnumType(typeof(ObjectModifier.GridMode));
+			gridColumnModeEnumType.DefineDefaultController("Enum", "Icons");
+			gridColumnModeEnumType[ObjectModifier.GridMode.Proportional].DefineCaptionId(new Support.Druid("[10051]").ToLong());
+			gridColumnModeEnumType[ObjectModifier.GridMode.Absolute].DefineCaptionId(new Support.Druid("[10052]").ToLong());
+			gridColumnModeEnumType[ObjectModifier.GridMode.Auto].DefineCaptionId(new Support.Druid("[10053]").ToLong());
+			Grid.GridColumnModeProperty.DefaultMetadata.DefineNamedType(gridColumnModeEnumType);
 			Grid.GridColumnModeProperty.DefaultMetadata.DefineCaptionId(new Support.Druid("[100N]").ToLong());
+
+			EnumType gridRowModeEnumType = new EnumType(typeof(ObjectModifier.GridMode));
+			gridRowModeEnumType.DefineDefaultController("Enum", "Icons");
+			gridRowModeEnumType[ObjectModifier.GridMode.Proportional].DefineCaptionId(new Support.Druid("[10051]").ToLong());
+			gridRowModeEnumType[ObjectModifier.GridMode.Absolute].DefineCaptionId(new Support.Druid("[10052]").ToLong());
+			gridRowModeEnumType[ObjectModifier.GridMode.Auto].DefineCaptionId(new Support.Druid("[10053]").ToLong());
+			Grid.GridRowModeProperty.DefaultMetadata.DefineNamedType(gridRowModeEnumType);
 			Grid.GridRowModeProperty.DefaultMetadata.DefineCaptionId(new Support.Druid("[100O]").ToLong());
 
 			Grid.GridColumnValueProperty.DefaultMetadata.DefineNamedType(ProxyManager.SizeNumericType);
