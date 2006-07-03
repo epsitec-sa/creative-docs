@@ -843,7 +843,33 @@ namespace Epsitec.Common.Designer
 			//	Détermine le nombre de colonnes occupées.
 			System.Diagnostics.Debug.Assert(this.AreChildrenGrid(obj.Parent));
 
+			int ic = GridLayoutEngine.GetColumn(obj);
+			int ir = GridLayoutEngine.GetRow(obj);
+			int irs = GridLayoutEngine.GetRowSpan(obj);
+			GridLayoutEngine.SetColumnSpan(obj, 1);
+			GridLayoutEngine.SetRowSpan(obj, 1);
+
+			span = System.Math.Min(span, this.GetGridColumnsCount(obj.Parent)-ic);
+
+			int maxSpan = span;
+			for (int c=0; c<span; c++)
+			{
+				for (int r=0; r<irs; r++)
+				{
+					if (c != 0 || r != 0)
+					{
+						if (!this.IsGridCellEmpty(obj.Parent, ic+c, ir+r))
+						{
+							maxSpan = System.Math.Min(maxSpan, c);
+							break;
+						}
+					}
+				}
+			}
+
+			span = System.Math.Min(span, maxSpan);
 			GridLayoutEngine.SetColumnSpan(obj, span);
+			GridLayoutEngine.SetRowSpan(obj, irs);
 			this.Invalidate();
 		}
 
@@ -863,7 +889,33 @@ namespace Epsitec.Common.Designer
 			//	Détermine le nombre de lignes occupées.
 			System.Diagnostics.Debug.Assert(this.AreChildrenGrid(obj.Parent));
 
+			int ic = GridLayoutEngine.GetColumn(obj);
+			int ir = GridLayoutEngine.GetRow(obj);
+			int ics = GridLayoutEngine.GetColumnSpan(obj);
+			GridLayoutEngine.SetColumnSpan(obj, 1);
+			GridLayoutEngine.SetRowSpan(obj, 1);
+
+			span = System.Math.Min(span, this.GetGridRowsCount(obj.Parent)-ir);
+
+			int maxSpan = span;
+			for (int r=0; r<span; r++)
+			{
+				for (int c=0; c<ics; c++)
+				{
+					if (c != 0 || r != 0)
+					{
+						if (!this.IsGridCellEmpty(obj.Parent, ic+c, ir+r))
+						{
+							maxSpan = System.Math.Min(maxSpan, r);
+							break;
+						}
+					}
+				}
+			}
+
+			span = System.Math.Min(span, maxSpan);
 			GridLayoutEngine.SetRowSpan(obj, span);
+			GridLayoutEngine.SetColumnSpan(obj, ics);
 			this.Invalidate();
 		}
 
@@ -914,7 +966,7 @@ namespace Epsitec.Common.Designer
 
 		public Rectangle GetGridCellArea(Widget obj, int column, int row)
 		{
-			//	Retourne le rectangle d'uen cellule.
+			//	Retourne le rectangle d'une cellule.
 			if (this.AreChildrenGrid(obj))
 			{
 				GridLayoutEngine engine = LayoutEngine.GetLayoutEngine(obj) as GridLayoutEngine;
