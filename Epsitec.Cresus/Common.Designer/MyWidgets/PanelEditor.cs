@@ -386,7 +386,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 				case MessageType.MouseLeave:
 					this.SetHilitedObject(null, null);
-					this.SetHilitedParent(null, -1, -1);
+					this.SetHilitedParent(null, -1, -1, 0, 0);
 					break;
 
 				case MessageType.KeyDown:
@@ -1080,7 +1080,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			int column, row;
 			this.GridDetect(initialPos, parent, out column, out row);
-			this.SetHilitedParent(parent, column, row);  // met en évidence le futur parent survolé par la souris
+			this.SetHilitedParent(parent, column, row, 1, 1);  // met en évidence le futur parent survolé par la souris
 
 			this.module.MainWindow.UpdateInfoViewer();
 		}
@@ -1122,7 +1122,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				else if (this.objectModifier.AreChildrenGrid(parent))
 				{
 					this.GridDetect(initialPos, parent, out column, out row);
-					if (!this.objectModifier.IsGridCellEmpty(parent, column, row))
+					if (!this.objectModifier.IsGridCellEmpty(parent, null, column, row))
 					{
 						this.isInside = false;
 					}
@@ -1140,7 +1140,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.creatingWindow.SuperLight = !this.isInside;
 				this.ChangeSeparatorAlpha(this.creatingWindow);
 
-				this.SetHilitedParent(parent, column, row);  // met en évidence le futur parent survolé par la souris
+				this.SetHilitedParent(parent, column, row, 1, 1);  // met en évidence le futur parent survolé par la souris
 
 				this.module.MainWindow.UpdateInfoViewer();
 			}
@@ -1189,7 +1189,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 						int column, row;
 						this.GridDetect(initialPos, parent, out column, out row);
 
-						if (this.objectModifier.IsGridCellEmpty(parent, column, row))
+						if (this.objectModifier.IsGridCellEmpty(parent, null, column, row))
 						{
 							this.creatingObject = this.CreateObjectItem();
 							this.objectModifier.SetGridParentColumnRow(this.creatingObject, parent, column, row);
@@ -1217,7 +1217,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 				this.SetHilitedZOrderRectangle(Rectangle.Empty);
 				this.constrainsList.Ending();
-				this.SetHilitedParent(null, -1, -1);
+				this.SetHilitedParent(null, -1, -1, 0, 0);
 
 				this.lastCreatedObject = this.creatingObject;
 				this.creatingObject = null;
@@ -1430,18 +1430,41 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.isInside = true;
 			Widget parent = this.DetectGroup(pos);
 
+			int column = -1;
+			int row = -1;
+			this.draggingSpanColumnOffset = 0;
+			this.draggingSpanRowOffset = 0;
+			this.draggingSpanColumnCount = 1;
+			this.draggingSpanRowCount = 1;
+
 			if (this.objectModifier.AreChildrenAnchored(parent))
 			{
 				this.constrainsList.Starting(this.draggingRectangle, false);
+			}
+			else if (this.objectModifier.AreChildrenGrid(parent))
+			{
+				this.constrainsList.Starting(Rectangle.Empty, false);
+
+				if (this.selectedObjects.Count == 1)
+				{
+					Widget obj = this.selectedObjects[0];
+					this.GridDetect(pos, parent, out column, out row);
+
+					this.draggingSpanColumnOffset = column - this.objectModifier.GetGridColumn(obj);
+					this.draggingSpanRowOffset = row - this.objectModifier.GetGridRow(obj);
+					this.draggingSpanColumnCount = this.objectModifier.GetGridColumnSpan(obj);
+					this.draggingSpanRowCount = this.objectModifier.GetGridRowSpan(obj);
+
+					column -= this.draggingSpanColumnOffset;
+					row -= this.draggingSpanRowOffset;
+				}
 			}
 			else
 			{
 				this.constrainsList.Starting(Rectangle.Empty, false);
 			}
 
-			int column, row;
-			this.GridDetect(pos, parent, out column, out row);
-			this.SetHilitedParent(parent, column, row);  // met en évidence le futur parent survolé par la souris
+			this.SetHilitedParent(parent, column, row, this.draggingSpanColumnCount, this.draggingSpanRowCount);  // met en évidence le futur parent survolé par la souris
 
 			Widget container = new Widget();
 			container.PreferredSize = this.draggingRectangle.Size;
@@ -1518,7 +1541,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			else if (this.objectModifier.AreChildrenGrid(parent))
 			{
 				this.GridDetect(pos, parent, out column, out row);
-				if (!this.IsDraggingGridPossible(parent, column, row))
+				if (!this.IsDraggingGridPossible(parent, ref column, ref row))
 				{
 					this.isInside = false;
 				}
@@ -1534,7 +1557,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			this.ChangeSeparatorAlpha(this.draggingWindow);
 
-			this.SetHilitedParent(parent, column, row);  // met en évidence le futur parent survolé par la souris
+			this.SetHilitedParent(parent, column, row, this.draggingSpanColumnCount, this.draggingSpanRowCount);  // met en évidence le futur parent survolé par la souris
 			this.module.MainWindow.UpdateInfoViewer();
 		}
 
@@ -1570,12 +1593,16 @@ namespace Epsitec.Common.Designer.MyWidgets
 					int column, row;
 					this.GridDetect(pos, parent, out column, out row);
 
-					if (this.IsDraggingGridPossible(parent, column, row))
+					if (this.IsDraggingGridPossible(parent, ref column, ref row))
 					{
 						Widget select = this.selectedObjects[0];
-						Widget actual = this.objectModifier.GetGridCellWidget(parent, column, row);
+						Widget actual = this.objectModifier.GetGridCellWidget(parent, null, column, row);
 
-						if (select != actual)
+						if (select == actual)
+						{
+							this.objectModifier.SetGridParentColumnRow(select, parent, column, row);
+						}
+						else
 						{
 							Widget ip = select.Parent;
 							int ic = this.objectModifier.GetGridColumn(select);
@@ -1588,9 +1615,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 							{
 								this.objectModifier.SetGridParentColumnRow(actual, ip, ic, ir);
 							}
-
-							this.OnChildrenGeometryChanged();
 						}
+
+						this.OnChildrenGeometryChanged();
 					}
 					else
 					{
@@ -1613,7 +1640,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.DeleteSelection();
 			}
 
-			this.SetHilitedParent(null, -1, -1);
+			this.SetHilitedParent(null, -1, -1, 0, 0);
 			this.SetHilitedZOrderRectangle(Rectangle.Empty);
 			this.isDragging = false;
 			this.draggingArraySelected = null;
@@ -1622,7 +1649,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.Invalidate();
 		}
 
-		protected bool IsDraggingGridPossible(Widget parent, int column, int row)
+		protected bool IsDraggingGridPossible(Widget parent, ref int column, ref int row)
 		{
 			//	Vérifie si la sélection peut être déplacée dans le tableau de destination
 			//	donné (parent, column, row). Si la cellule destination est occupée, mais que
@@ -1638,10 +1665,32 @@ namespace Epsitec.Common.Designer.MyWidgets
 				return false;
 			}
 
-			if (!this.objectModifier.IsGridCellEmpty(parent, column, row))
+			Widget obj = this.selectedObjects[0];
+			column -= this.draggingSpanColumnOffset;
+			row -= this.draggingSpanRowOffset;
+
+			if (!this.objectModifier.IsGridCellEmpty(parent, obj, column, row, this.draggingSpanColumnCount, this.draggingSpanRowCount))
 			{
-				Widget sourceParent = this.selectedObjects[0].Parent;
+				Widget sourceParent = obj.Parent;
 				if (sourceParent != parent)
+				{
+					return false;
+				}
+
+				Widget actual = this.objectModifier.GetGridCellWidget(obj.Parent, null, column, row);
+				if (actual == null)
+				{
+					column = -1;
+					row = -1;
+					return false;
+				}
+
+				if (this.objectModifier.GetGridColumnSpan(obj) != this.objectModifier.GetGridColumnSpan(actual))
+				{
+					return false;
+				}
+
+				if (this.objectModifier.GetGridRowSpan(obj) != this.objectModifier.GetGridRowSpan(actual))
 				{
 					return false;
 				}
@@ -1894,14 +1943,16 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
-		protected void SetHilitedParent(Widget obj, int column, int row)
+		protected void SetHilitedParent(Widget obj, int column, int row, int columnCount, int rowCount)
 		{
 			//	Détermine l'objet parent à mettre en évidence lors d'un survol.
-			if (this.hilitedParent != obj || this.hilitedParentColumn != column || this.hilitedParentRow != row)
+			if (this.hilitedParent != obj || this.hilitedParentColumn != column || this.hilitedParentRow != row || this.hilitedParentColumnCount != columnCount || this.hilitedParentRowCount != rowCount)
 			{
 				this.hilitedParent = obj;
 				this.hilitedParentColumn = column;
 				this.hilitedParentRow = row;
+				this.hilitedParentColumnCount = columnCount;
+				this.hilitedParentRowCount = rowCount;
 				this.Invalidate();
 			}
 		}
@@ -3196,7 +3247,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Dessine l'objet parentsurvolé.
 			if (this.hilitedParent != null)
 			{
-				this.DrawHilitedParent(graphics, this.hilitedParent, this.hilitedParentColumn, this.hilitedParentRow);
+				this.DrawHilitedParent(graphics, this.hilitedParent, this.hilitedParentColumn, this.hilitedParentRow, this.hilitedParentColumnCount, this.hilitedParentRowCount);
 			}
 
 			//	Dessine le rectangle de sélection.
@@ -3427,7 +3478,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
-		protected void DrawHilitedParent(Graphics graphics, Widget obj, int column, int row)
+		protected void DrawHilitedParent(Graphics graphics, Widget obj, int column, int row, int columnCount, int rowCount)
 		{
 			//	Met en évidence l'objet parent survolé par la souris.
 			if (this.context.ShowAttachment && obj != this.panel)
@@ -3458,7 +3509,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			if (column != -1 && row != -1)
 			{
-				Rectangle area = this.objectModifier.GetGridCellArea(obj, column, row);
+				Rectangle area = this.objectModifier.GetGridCellArea(obj, column, row, columnCount, rowCount);
 				this.DrawGridHilited(graphics, area, PanelsContext.ColorGridCell);
 			}
 		}
@@ -4021,6 +4072,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected Widget					hilitedParent;
 		protected int						hilitedParentColumn = -1;
 		protected int						hilitedParentRow = -1;
+		protected int						hilitedParentColumnCount = 0;
+		protected int						hilitedParentRowCount = 0;
 		protected bool						isRectangling;  // j'invente des mots si je veux !
 		protected bool						isDragging;
 		protected DragWindow				draggingWindow;
@@ -4029,6 +4082,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected Rectangle					draggingRectangle;
 		protected double					draggingBaseLine;
 		protected Widget[]					draggingArraySelected;
+		protected int						draggingSpanColumnOffset;
+		protected int						draggingSpanRowOffset;
+		protected int						draggingSpanColumnCount;
+		protected int						draggingSpanRowCount;
 		protected bool						isHandling;
 		protected Handle.Type				handlingType;
 		protected DragWindow				handlingWindow;
