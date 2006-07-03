@@ -732,9 +732,34 @@ namespace Epsitec.Common.Designer
 				this.Invalidate();
 			}
 		}
-		
-		
-		public bool IsGridCellEmpty(Widget obj, int column, int row)
+
+
+		public bool IsGridCellEmpty(Widget obj, Widget exclude, int column, int row, int columnCount, int rowCount)
+		{
+			if (column < 0 || column+columnCount > this.GetGridColumnsCount(obj))
+			{
+				return false;
+			}
+
+			if (row < 0 || row+rowCount > this.GetGridRowsCount(obj))
+			{
+				return false;
+			}
+
+			for (int c=column; c<column+columnCount; c++)
+			{
+				for (int r=row; r<row+rowCount; r++)
+				{
+					if (!this.IsGridCellEmpty(obj, exclude, c, r))
+					{
+						return false;
+					}
+				}
+			}
+			return true;
+		}
+
+		public bool IsGridCellEmpty(Widget obj, Widget exclude, int column, int row)
 		{
 			//	Indique si une cellule est libre, donc si elle ne contient aucun widget.
 			if (column == -1 || row == -1)
@@ -742,13 +767,13 @@ namespace Epsitec.Common.Designer
 				return false;
 			}
 
-			return (this.GetGridCellWidget(obj, column, row) == null);
+			return (this.GetGridCellWidget(obj, exclude, column, row) == null);
 		}
 
-		public Widget GetGridCellWidget(Widget container, int column, int row)
+		public Widget GetGridCellWidget(Widget container, Widget exclude, int column, int row)
 		{
 			//	Retourne le premier widget occupant une cellule donnée.
-			foreach (Widget widget in this.GetGridCellWidgets(container, column, row))
+			foreach (Widget widget in this.GetGridCellWidgets(container, exclude, column, row))
 			{
 				return widget;
 			}
@@ -756,7 +781,7 @@ namespace Epsitec.Common.Designer
 			return null;
 		}
 
-		protected IEnumerable<Widget> GetGridCellWidgets(Widget container, int column, int row)
+		protected IEnumerable<Widget> GetGridCellWidgets(Widget container, Widget exclude, int column, int row)
 		{
 			//	Retourne tous les widgets occupant une cellule donnée, en tenant
 			//	compte de leur span.
@@ -764,6 +789,11 @@ namespace Epsitec.Common.Designer
 			{
 				foreach (Widget child in container.Children)
 				{
+					if (child == exclude)
+					{
+						continue;
+					}
+
 					int c = GridLayoutEngine.GetColumn(child);
 					int r = GridLayoutEngine.GetRow(child);
 
@@ -856,13 +886,10 @@ namespace Epsitec.Common.Designer
 			{
 				for (int r=0; r<irs; r++)
 				{
-					if (c != 0 || r != 0)
+					if (!this.IsGridCellEmpty(obj.Parent, obj, ic+c, ir+r))
 					{
-						if (!this.IsGridCellEmpty(obj.Parent, ic+c, ir+r))
-						{
-							maxSpan = System.Math.Min(maxSpan, c);
-							break;
-						}
+						maxSpan = System.Math.Min(maxSpan, c);
+						break;
 					}
 				}
 			}
@@ -902,13 +929,10 @@ namespace Epsitec.Common.Designer
 			{
 				for (int c=0; c<ics; c++)
 				{
-					if (c != 0 || r != 0)
+					if (!this.IsGridCellEmpty(obj.Parent, obj, ic+c, ir+r))
 					{
-						if (!this.IsGridCellEmpty(obj.Parent, ic+c, ir+r))
-						{
-							maxSpan = System.Math.Min(maxSpan, r);
-							break;
-						}
+						maxSpan = System.Math.Min(maxSpan, r);
+						break;
 					}
 				}
 			}
@@ -964,7 +988,7 @@ namespace Epsitec.Common.Designer
 			return Rectangle.Empty;
 		}
 
-		public Rectangle GetGridCellArea(Widget obj, int column, int row)
+		public Rectangle GetGridCellArea(Widget obj, int column, int row, int columnCount, int rowCount)
 		{
 			//	Retourne le rectangle d'une cellule.
 			if (this.AreChildrenGrid(obj))
@@ -972,9 +996,18 @@ namespace Epsitec.Common.Designer
 				GridLayoutEngine engine = LayoutEngine.GetLayoutEngine(obj) as GridLayoutEngine;
 				if (engine != null)
 				{
+					int column2 = column+columnCount;
+					int row2 = row+rowCount;
+
+					column = System.Math.Max(column, 0);
+					column2 = System.Math.Min(column2, engine.ColumnCount);
+
+					row = System.Math.Max(row, 0);
+					row2 = System.Math.Min(row2, engine.RowCount);
+
 					double x1 = this.GetGridColumnPosition(obj, column);
-					double x2 = this.GetGridColumnPosition(obj, column+1);
-					double y1 = this.GetGridRowPosition(obj, row+1);
+					double x2 = this.GetGridColumnPosition(obj, column2);
+					double y1 = this.GetGridRowPosition(obj, row2);
 					double y2 = this.GetGridRowPosition(obj, row);
 					return new Rectangle(x1, y1, x2-x1, y2-y1);
 				}
