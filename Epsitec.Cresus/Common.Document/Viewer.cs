@@ -2703,7 +2703,7 @@ namespace Epsitec.Common.Document
 				{
 					Command c = Common.Widgets.Command.Find (cmd);
 
-					IconButton button = new IconButton(c.Name, Misc.Icon(c.IconName), c.Name);
+					IconButton button = new IconButton(c.Name, Misc.Icon(c.Icon), c.Name);
 				
 					if ( c.Statefull )
 					{

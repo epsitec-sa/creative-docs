@@ -32,9 +32,7 @@ namespace Epsitec.Common.Support
 		{
 			Command command = new Command ("TestSave");
 
-			command.ShortCaption = "Enregistre";
-			command.LongCaption = "Enregistre le document ouvert";
-			command.IconName = "save.icon";
+			command.ManuallyDefineCommand ("Enregistre le document ouvert", "save.icon", false);
 			command.Shortcuts.Add (new Shortcut ('S', ModifierKeys.Control));
 
 			Assert.AreEqual ("TestSave", command.Name);

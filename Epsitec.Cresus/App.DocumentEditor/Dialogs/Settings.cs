@@ -697,7 +697,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 				//	Icône.
 				ib = this.quickList[1, row].Children[0] as IconButton;
-				ib.IconName = Misc.Icon(c.IconName);
+				ib.IconName = Misc.Icon(c.Icon);
 
 				//	Bouton pour le séparateur.
 				ib = this.quickList[2, row].Children[0] as IconButton;
@@ -706,7 +706,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 				//	Texte de la commande.
 				st = this.quickList[3, row].Children[0] as StaticText;
-				st.Text = c.LongCaption;
+				st.Text = c.Description;
 
 				this.quickList.SelectRow(row, row==sel);
 			}

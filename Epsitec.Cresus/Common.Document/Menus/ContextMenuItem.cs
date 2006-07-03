@@ -79,8 +79,8 @@ namespace Epsitec.Common.Document.Menus
 			ContextMenuItem item = new ContextMenuItem();
 			item.Command = cs.Command.Name;
 			item.Name = cs.Command.Name;
-			item.Icon = Misc.Icon (cs.Command.IconName);
-			item.Text = cs.Command.LongCaption;  // texte sans le raccourci clavier entre parenthèses
+			item.Icon = Misc.Icon (cs.Command.Icon);
+			item.Text = cs.Command.Description;  // texte sans le raccourci clavier entre parenthèses
 			list.Add(item);
 			return true;
 		}

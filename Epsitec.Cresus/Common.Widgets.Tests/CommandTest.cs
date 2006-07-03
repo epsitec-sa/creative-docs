@@ -18,11 +18,11 @@ namespace Epsitec.Common.Widgets
 		[Test]
 		public void CheckApplicationCommands()
 		{
-			Assert.AreEqual ("Couper", ApplicationCommands.Cut.LongCaption);
-			Assert.AreEqual ("Copier", ApplicationCommands.Copy.LongCaption);
-			Assert.AreEqual ("Coller", ApplicationCommands.Paste.LongCaption);
-			Assert.AreEqual ("Supprimer", ApplicationCommands.Delete.LongCaption);
-			Assert.AreEqual ("Sélectionner tout", ApplicationCommands.SelectAll.LongCaption);
+			Assert.AreEqual ("Couper", ApplicationCommands.Cut.Description);
+			Assert.AreEqual ("Copier", ApplicationCommands.Copy.Description);
+			Assert.AreEqual ("Coller", ApplicationCommands.Paste.Description);
+			Assert.AreEqual ("Supprimer", ApplicationCommands.Delete.Description);
+			Assert.AreEqual ("Sélectionner tout", ApplicationCommands.SelectAll.Description);
 		}
 
 		[Test]
@@ -33,7 +33,7 @@ namespace Epsitec.Common.Widgets
 			Assert.IsNotNull (command);
 			Assert.AreEqual ("[0005]", command.Name);
 
-			Assert.AreEqual ("Sélectionner tout", command.LongCaption);
+			Assert.AreEqual ("Sélectionner tout", command.Description);
 			Assert.AreEqual (ApplicationCommands.SelectAll, command);
 		}
 
