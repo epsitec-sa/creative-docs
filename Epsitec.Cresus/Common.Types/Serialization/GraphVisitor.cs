@@ -32,8 +32,12 @@ namespace Epsitec.Common.Types.Serialization
 							context.ObjectMap.RecordType (entry.Property.OwnerType);
 						}
 
-						if (entry.Property.HasConverter)
+						if (entry.Property.HasTypeConverter)
 						{
+							//	The property has a specific converter attached to it.
+							//	We can safely skip the property, as it won't be saved
+							//	through object serialization.
+							
 							continue;
 						}
 						

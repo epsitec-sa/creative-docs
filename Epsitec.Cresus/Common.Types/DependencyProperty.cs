@@ -142,30 +142,13 @@ namespace Epsitec.Common.Types
 			}
 		}
 		
-		internal bool							HasConverter
+		public bool								HasTypeConverter
 		{
 			get
 			{
-				if (this.hasConverterOk == false)
-				{
-					lock (this)
-					{
-						if (this.hasConverterOk == false)
-						{
-							ISerializationConverter converter = Serialization.DependencyClassManager.Current.FindSerializationConverter (this.propertyType);
+				this.SetupTypeConverterIfNeeded ();
 
-							if (this.typeConverter == null)
-							{
-								this.typeConverter = converter;
-							}
-							
-							this.hasConverter   = (converter != null);
-							this.hasConverterOk = true;
-						}
-					}
-				}
-
-				return this.hasConverter;
+				return this.hasTypeConverter;
 			}
 		}
 
@@ -469,49 +452,74 @@ namespace Epsitec.Common.Types
 			return this.DefaultMetadata;
 		}
 
+
+		/// <summary>
+		/// Converts the object value to a <c>string</c>.
+		/// </summary>
+		/// <param name="value">The value.</param>
+		/// <param name="context">The conversion context.</param>
+		/// <returns>A <c>string</c> which represents the object value.</returns>
 		public string ConvertToString(object value, IContextResolver context)
 		{
 			if (value == null)
 			{
 				return null;
 			}
-			
-			if (this.typeConverter == null)
-			{
-				lock (this)
-				{
-					if (this.typeConverter == null)
-					{
-						this.typeConverter = InvariantConverter.GetSerializationConverter (this.propertyType);
-					}
-				}
-			}
 
+			this.SetupTypeConverterIfNeeded ();
+
+			System.Diagnostics.Debug.Assert (this.typeConverter != null);
 			System.Diagnostics.Debug.Assert (value.GetType () == this.propertyType);
 			
 			return this.typeConverter.ConvertToString (value, context);
 		}
+
+		/// <summary>
+		/// Converts the <c>string</c> back to an object value.
+		/// </summary>
+		/// <param name="value">The <c>string</c> value.</param>
+		/// <param name="context">The conversion context.</param>
+		/// <returns>An object value compatible with the property type.</returns>
 		public object ConvertFromString(string value, IContextResolver context)
 		{
 			if (value == null)
 			{
 				return null;
 			}
+
+			this.SetupTypeConverterIfNeeded ();
+
+			System.Diagnostics.Debug.Assert (this.typeConverter != null);
 			
-			if (this.typeConverter == null)
+			return this.typeConverter.ConvertFromString (value, context);
+		}
+
+		private void SetupTypeConverterIfNeeded()
+		{
+			if (this.typeConverterOk == false)
 			{
 				lock (this)
 				{
-					if (this.typeConverter == null)
+					if (this.typeConverterOk == false)
 					{
-						this.typeConverter = InvariantConverter.GetSerializationConverter (this.propertyType);
+						ISerializationConverter converter = Serialization.DependencyClassManager.Current.FindSerializationConverter (this.propertyType);
+
+						if (this.typeConverter == null)
+						{
+							this.typeConverter = converter;
+						}
+						if (this.typeConverter == null)
+						{
+							this.typeConverter = InvariantConverter.GetSerializationConverter (this.propertyType);
+						}
+
+						this.hasTypeConverter   = (converter != null);
+						this.typeConverterOk = true;
 					}
 				}
 			}
-
-			return this.typeConverter.ConvertFromString (value, context);
 		}
-		
+
 		public static DependencyProperty Register(string name, System.Type propertyType, System.Type ownerType)
 		{
 			return DependencyProperty.Register (name, propertyType, ownerType, new DependencyPropertyMetadata ());
@@ -578,9 +586,9 @@ namespace Epsitec.Common.Types
 		private bool							isReadOnly;
 		private int								globalIndex;
 		private int								inheritedPropertyCacheMask;
+		private bool							hasTypeConverter;
+		private bool							typeConverterOk;
 		private ISerializationConverter			typeConverter;
-		private bool							hasConverter;
-		private bool							hasConverterOk;
 		
 		Dictionary<System.Type, DependencyPropertyMetadata>	overriddenMetadata;
 		

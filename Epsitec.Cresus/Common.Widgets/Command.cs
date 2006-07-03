@@ -402,6 +402,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 		#endregion
+		
 		#region Internal Methods
 
 		private void InitializeName(string name)

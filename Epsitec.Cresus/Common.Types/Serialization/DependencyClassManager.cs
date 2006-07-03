@@ -37,7 +37,13 @@ namespace Epsitec.Common.Types.Serialization
 		public static void Setup()
 		{
 		}
-		
+
+
+		/// <summary>
+		/// Finds the object type for the given name.
+		/// </summary>
+		/// <param name="name">The name.</param>
+		/// <returns>The object type or <c>null</c> if none can be found.</returns>
 		public DependencyObjectType FindObjectType(string name)
 		{
 			DependencyObjectType objectType;
@@ -52,6 +58,11 @@ namespace Epsitec.Common.Types.Serialization
 			}
 		}
 
+		/// <summary>
+		/// Finds the serialization converter for the specified type.
+		/// </summary>
+		/// <param name="type">The type.</param>
+		/// <returns>The serialization converter or <c>null</c> if none can be found.</returns>
 		public ISerializationConverter FindSerializationConverter(System.Type type)
 		{
 			ISerializationConverter converter;
