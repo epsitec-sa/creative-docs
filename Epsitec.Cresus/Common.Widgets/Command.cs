@@ -116,7 +116,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.statefull;
+				return (bool) this.GetValue (Command.StatefullProperty);
 			}
 		}
 		
@@ -187,7 +187,7 @@ namespace Epsitec.Common.Widgets
 
 			this.SetValue (Command.DescriptionProperty, description);
 			this.SetValue (Command.IconNameProperty, icon);
-			this.statefull = statefull;
+			this.SetValue (Command.StatefullProperty, statefull);
 		}
 		
 		public CommandState CreateDefaultState(CommandContext context)
@@ -510,13 +510,13 @@ namespace Epsitec.Common.Widgets
 		public static readonly DependencyProperty IconNameProperty		= DependencyProperty.Register ("Icon", typeof (string), typeof (Command), new DependencyPropertyMetadata (null, new PropertyInvalidatedCallback (Command.NotifyIconNameChanged)));
 		public static readonly DependencyProperty DescriptionProperty	= DependencyProperty.Register ("Description", typeof (string), typeof (Command), new DependencyPropertyMetadata (null, new PropertyInvalidatedCallback (Command.NotifyDescriptionChanged)));
 		public static readonly DependencyProperty ShortcutsProperty		= DependencyProperty.RegisterReadOnly ("Shortcuts", typeof (Collections.ShortcutCollection), typeof (Command), new DependencyPropertyMetadata (Command.GetShortcutsValue).MakeReadOnlySerializable ());
+		public static readonly DependencyProperty StatefullProperty		= DependencyProperty.Register ("Statefull", typeof (bool), typeof (Command), new DependencyPropertyMetadata (false));
 		
 		private static Dictionary<string, Command> commands = new Dictionary<string, Command> ();
 		private static int nextUniqueId;
 
 		private DependencyObjectType			stateObjectType;
 		private int								uniqueId;
-		private bool							statefull;
 		private bool							locked;
 		
 		private string							name;
