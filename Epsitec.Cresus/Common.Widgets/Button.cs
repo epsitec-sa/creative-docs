@@ -114,25 +114,6 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
-		protected override void OnShortcutChanged()
-		{
-			base.OnShortcutChanged ();
-			
-			if (this.ButtonStyle == ButtonStyle.Normal)
-			{
-				IFeel feel = Feel.Factory.Active;
-				
-				if (this.Shortcuts.Contains (feel.AcceptShortcut))
-				{
-					this.ButtonStyle = ButtonStyle.DefaultAccept;
-				}
-				else if (this.Shortcuts.Contains (feel.CancelShortcut))
-				{
-					this.ButtonStyle = ButtonStyle.DefaultCancel;
-				}
-			}
-		}
-		
 		protected override bool ProcessShortcut(Shortcut shortcut)
 		{
 			IFeel feel = Feel.Factory.Active;

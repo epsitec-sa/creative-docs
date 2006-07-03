@@ -124,13 +124,15 @@ namespace Epsitec.Common.Widgets.Behaviors
 			this.button_accept.GlyphShape  = GlyphShape.Accept;
 			this.button_accept.ButtonStyle = ButtonStyle.ExListMiddle;
 			this.button_accept.Clicked    += new MessageEventHandler(this.HandleButtonAcceptClicked);
-			this.button_accept.Shortcuts.Define (feel.AcceptShortcut);
+//#			this.button_accept.Shortcuts.Define (feel.AcceptShortcut);
+			this.button_accept.ButtonStyle = ButtonStyle.DefaultAccept;
 			
 			this.button_reject.Name        = "Reject";
 			this.button_reject.GlyphShape  = GlyphShape.Reject;
 			this.button_reject.ButtonStyle = ButtonStyle.ExListRight;
 			this.button_reject.Clicked    += new MessageEventHandler(this.HandleButtonRejectClicked);
-			this.button_reject.Shortcuts.Define (feel.CancelShortcut);
+//#			this.button_reject.Shortcuts.Define (feel.CancelShortcut);
+			this.button_accept.ButtonStyle = ButtonStyle.DefaultCancel;
 			
 			this.SetVisible (this.is_visible);
 			this.SetAcceptEnabled (this.is_accept_enabled);
