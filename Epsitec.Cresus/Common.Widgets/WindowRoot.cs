@@ -206,9 +206,9 @@ namespace Epsitec.Common.Widgets
 				
 				if ((focused != null) &&
 					(focused.AutoRadio) &&
-					(shortcut.IsAltPressed == false) &&
-					(shortcut.IsControlPressed == false) &&
-					(shortcut.IsShiftPressed == false))
+					(shortcut.IsAltDefined == false) &&
+					(shortcut.IsControlDefined == false) &&
+					(shortcut.IsShiftDefined == false))
 				{
 					switch (shortcut.KeyCodeOnly)
 					{
@@ -235,9 +235,9 @@ namespace Epsitec.Common.Widgets
 					}
 					
 					if ((shortcut.KeyCodeOnly == KeyCode.FuncF4) &&
-						(shortcut.IsAltPressed) &&
-						(shortcut.IsControlPressed == false) &&
-						(shortcut.IsShiftPressed == false))
+						(shortcut.IsAltDefined) &&
+						(shortcut.IsControlDefined == false) &&
+						(shortcut.IsShiftDefined == false))
 					{
 						window.QueueCommand (this, "Quit" + this.Window.Name);
 						return true;
