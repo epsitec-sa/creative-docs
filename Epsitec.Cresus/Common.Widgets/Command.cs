@@ -44,7 +44,14 @@ namespace Epsitec.Common.Widgets
 			
 			this.InitializeName (name);
 		}
-		
+
+		public Caption							Caption
+		{
+			get
+			{
+				return this.caption;
+			}
+		}
 		
 		public string							Name
 		{
@@ -58,7 +65,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return (string) this.GetValue (Command.IconNameProperty);
+				return this.caption.Icon;
 			}
 		}
 		
@@ -66,7 +73,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return (string) this.GetValue (Command.DescriptionProperty);
+				return this.caption.Description;
 			}
 		}
 
@@ -167,8 +174,9 @@ namespace Epsitec.Common.Widgets
 				throw new Exceptions.CommandLockedException (this.Name);
 			}
 
-			this.SetValue (Command.DescriptionProperty, description);
-			this.SetValue (Command.IconNameProperty, icon);
+			this.caption.Description = description;
+			this.caption.Icon        = icon;
+			
 			this.SetValue (Command.StatefullProperty, statefull);
 		}
 		
@@ -429,6 +437,13 @@ namespace Epsitec.Common.Widgets
 			{
 				this.InitializeDruid (druid);
 			}
+			else
+			{
+				this.InitializeDummyCaption ();
+			}
+
+			this.caption.AddEventHandler (Caption.IconProperty, this.HandleIconChanged);
+			this.caption.AddEventHandler (Caption.DescriptionProperty, this.HandleDescriptionChanged);
 		}
 
 		private void InitializeDruid(Support.Druid druid)
@@ -446,7 +461,12 @@ namespace Epsitec.Common.Widgets
 			System.Diagnostics.Debug.Assert (caption.Id == this.name);
 
 			this.caption = caption;
-			this.RefreshCommandBasedOnCaption (this.caption);
+		}
+
+		private void InitializeDummyCaption()
+		{
+			this.caption = new Caption ();
+			this.caption.Name = this.name;
 		}
 
 		internal void Lockdown()
@@ -462,12 +482,12 @@ namespace Epsitec.Common.Widgets
 		{
 			CommandCache.Default.InvalidateCommand (this);
 		}
-		
-		private void OnIconNameChanged(DependencyPropertyChangedEventArgs e)
+
+		private void HandleIconChanged(object sender, DependencyPropertyChangedEventArgs e)
 		{
 		}
 
-		private void OnDescriptionChanged(DependencyPropertyChangedEventArgs e)
+		private void HandleDescriptionChanged(object sender, DependencyPropertyChangedEventArgs e)
 		{
 		}
 
@@ -478,37 +498,7 @@ namespace Epsitec.Common.Widgets
 			that.OnGroupChanged (new DependencyPropertyChangedEventArgs (Command.GroupProperty, old_value, new_value));
 		}
 		
-		private static void NotifyIconNameChanged(DependencyObject o, object old_value, object new_value)
-		{
-			Command that = o as Command;
-			that.OnIconNameChanged (new DependencyPropertyChangedEventArgs (Command.IconNameProperty, old_value, new_value));
-		}
-		
-		private static void NotifyDescriptionChanged(DependencyObject o, object old_value, object new_value)
-		{
-			Command that = o as Command;
-			that.OnDescriptionChanged (new DependencyPropertyChangedEventArgs (Command.DescriptionProperty, old_value, new_value));
-		}
-
 		#endregion
-
-		protected virtual void RefreshCommandBasedOnCaption(Types.Caption caption)
-		{
-			string[] labels = Types.Collection.ToArray (caption.SortedLabels);
-
-			if (!string.IsNullOrEmpty (caption.Description))
-			{
-				this.SetValue (Command.DescriptionProperty, caption.Description);
-			}
-			else if (labels.Length > 1)
-			{
-				this.SetValue (Command.DescriptionProperty, labels[labels.Length-1]);
-			}
-			else if (labels.Length == 1)
-			{
-				this.SetValue (Command.DescriptionProperty, labels[0]);
-			}
-		}
 
 		protected virtual void InitializeDefaultState(CommandState state, CommandContext context)
 		{
@@ -554,6 +544,12 @@ namespace Epsitec.Common.Widgets
 			return that.Shortcuts;
 		}
 
+		private static object GetCaptionValue(DependencyObject obj)
+		{
+			Command that = (Command) obj;
+			return that.Caption;
+		}
+
 		private static object GetNameValue(DependencyObject obj)
 		{
 			Command that = (Command) obj;
@@ -567,11 +563,10 @@ namespace Epsitec.Common.Widgets
 
 			that.InitializeName (name);
 		}
-		
+
+		public static readonly DependencyProperty CaptionProperty		= DependencyProperty.RegisterReadOnly ("Caption", typeof (Caption), typeof (Command), new DependencyPropertyMetadata (Command.GetCaptionValue));
 		public static readonly DependencyProperty NameProperty			= DependencyProperty.Register ("Name", typeof (string), typeof (Command), new DependencyPropertyMetadata (Command.GetNameValue, Command.SetNameValue));
 		public static readonly DependencyProperty GroupProperty			= DependencyProperty.Register ("Group", typeof (string), typeof (Command), new DependencyPropertyMetadata (null, new PropertyInvalidatedCallback (Command.NotifyGroupChanged)));
-		public static readonly DependencyProperty IconNameProperty		= DependencyProperty.Register ("Icon", typeof (string), typeof (Command), new DependencyPropertyMetadata (null, new PropertyInvalidatedCallback (Command.NotifyIconNameChanged)));
-		public static readonly DependencyProperty DescriptionProperty	= DependencyProperty.Register ("Description", typeof (string), typeof (Command), new DependencyPropertyMetadata (null, new PropertyInvalidatedCallback (Command.NotifyDescriptionChanged)));
 		public static readonly DependencyProperty ShortcutsProperty		= DependencyProperty.RegisterReadOnly ("Shortcuts", typeof (Collections.ShortcutCollection), typeof (Command), new DependencyPropertyMetadata (Command.GetShortcutsValue).MakeReadOnlySerializable ());
 		public static readonly DependencyProperty StatefullProperty		= DependencyProperty.Register ("Statefull", typeof (bool), typeof (Command), new DependencyPropertyMetadata (false));
 		
