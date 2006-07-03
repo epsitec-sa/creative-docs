@@ -1,12 +1,16 @@
 //	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
+using Epsitec.Common.Types;
+
+[assembly: Epsitec.Common.Types.DependencyClass (typeof (Epsitec.Common.Widgets.Shortcut))]
+
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
 	/// La classe Shortcut permet de représenter un raccourci clavier.
 	/// </summary>
-	public sealed class Shortcut : System.IEquatable<Shortcut>
+	public sealed class Shortcut : DependencyObject, System.IEquatable<Shortcut>
 	{
 		public Shortcut()
 		{
@@ -235,7 +239,9 @@ namespace Epsitec.Common.Widgets
 		{
 			return !(a == b);
 		}
-		
+
+
+		public static readonly DependencyProperty ShortcutsProperty = DependencyProperty.RegisterAttached ("Shortcuts", typeof (Collections.ShortcutCollection), typeof (Shortcut));
 		
 		private KeyCode					key_code;
 	}

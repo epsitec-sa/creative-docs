@@ -255,12 +255,18 @@ namespace Epsitec.Common.Types.Collections
 
 		protected virtual void NotifyInsertion(T item)
 		{
-			this.host.NotifyListInsertion (item);
+			if (this.host != null)
+			{
+				this.host.NotifyListInsertion (item);
+			}
 		}
 		
 		protected virtual void NotifyRemoval(T item)
 		{
-			this.host.NotifyListRemoval (item);
+			if (this.host != null)
+			{
+				this.host.NotifyListRemoval (item);
+			}
 		}
 
 		private IListHost<T> host;
