@@ -244,6 +244,8 @@ namespace Epsitec.Common.Designer
 				LayoutEngine.SetLayoutEngine(obj, engine);
 			}
 
+			columns = System.Math.Max(columns, engine.MaxColumnIndex+1);
+
 			while (columns != engine.ColumnDefinitions.Count)
 			{
 				int count = engine.ColumnDefinitions.Count;
@@ -288,6 +290,8 @@ namespace Epsitec.Common.Designer
 				engine = new GridLayoutEngine();
 				LayoutEngine.SetLayoutEngine(obj, engine);
 			}
+
+			rows = System.Math.Max(rows, engine.MaxRowIndex+1);
 
 			while (rows != engine.RowDefinitions.Count)
 			{
