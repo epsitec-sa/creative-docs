@@ -713,7 +713,7 @@ namespace Epsitec.Common.Widgets
 					
 					if (command != null)
 					{
-						commandName = command.Name;
+						commandName = command.CommandId;
 						commandLine = commandName;
 
 						goto again;

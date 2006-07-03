@@ -670,7 +670,7 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 			else
 			{
-				IconButton button = new IconButton(command.Name, Misc.Icon(command.Icon), command.Name);
+				IconButton button = new IconButton(command.CommandId, Misc.Icon(command.Icon), command.CommandId);
 				this.toolBar.Items.Add(button);
 				ToolTip.Default.SetToolTip(button, Misc.GetTextWithShortcut(command));
 				return button;

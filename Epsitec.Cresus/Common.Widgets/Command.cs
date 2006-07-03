@@ -15,7 +15,6 @@ namespace Epsitec.Common.Widgets
 	/// La classe <c>Command</c> permet de représenter l'état d'une commande tout
 	/// en maintenant la synchronisation avec l'état des widgets associés.
 	/// </summary>
-	[SerializationConverter (typeof (Command.SerializationConverter))]
 	public class Command : DependencyObject, System.IEquatable<Command>, Types.INamedType
 	{
 		public Command()
@@ -23,26 +22,26 @@ namespace Epsitec.Common.Widgets
 			this.DefineStateObjectType (Types.DependencyObjectType.FromSystemType (typeof (SimpleState)));
 		}
 		
-		public Command(string name) : this ()
+		public Command(string id) : this ()
 		{
-			if (string.IsNullOrEmpty (name))
+			if (string.IsNullOrEmpty (id))
 			{
-				throw new System.ArgumentNullException ("name");
+				throw new System.ArgumentNullException ("id");
 			}
 			
-			this.InitializeName (name);
+			this.InitializeCommandId (id);
 		}
 
-		public Command(string name, params Shortcut[] shortcuts) : this (name)
+		public Command(string id, params Shortcut[] shortcuts) : this (id)
 		{
 			this.Shortcuts.AddRange (shortcuts);
 		}
 
 		public Command(Support.Druid druid) : this ()
 		{
-			string name = druid.ToResourceId ();
+			string id = druid.ToResourceId ();
 			
-			this.InitializeName (name);
+			this.InitializeCommandId (id);
 		}
 
 		public Caption							Caption
@@ -53,11 +52,11 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public string							Name
+		public string							CommandId
 		{
 			get
 			{
-				return this.name;
+				return this.commandId;
 			}
 		}
 		
@@ -171,7 +170,7 @@ namespace Epsitec.Common.Widgets
 		{
 			if (this.locked)
 			{
-				throw new Exceptions.CommandLockedException (this.Name);
+				throw new Exceptions.CommandLockedException (this.CommandId);
 			}
 
 			this.caption.Description = description;
@@ -206,20 +205,20 @@ namespace Epsitec.Common.Widgets
 		}
 
 		/// <summary>
-		/// Gets the command matching the specified name. If the command does
+		/// Gets the command matching the specified id. If the command does
 		/// not exist yet, it is created on the fly.
 		/// </summary>
-		/// <param name="name">The command name.</param>
+		/// <param name="id">The command id.</param>
 		/// <returns>The command.</returns>
-		public static Command Get(string name)
+		public static Command Get(string id)
 		{
 			lock (Command.commands)
 			{
-				Command command = Command.Find (name);
+				Command command = Command.Find (id);
 
 				if (command == null)
 				{
-					command = new Command (name);
+					command = new Command (id);
 				}
 				
 				return command;
@@ -237,20 +236,20 @@ namespace Epsitec.Common.Widgets
 		}
 
 		/// <summary>
-		/// Finds the command matching the specified name.
+		/// Finds the command matching the specified id.
 		/// </summary>
-		/// <param name="name">The command name.</param>
+		/// <param name="id">The command id.</param>
 		/// <returns>The command, or <c>null</c> if none could be found.</returns>
-		public static Command Find(string name)
+		public static Command Find(string id)
 		{
-			if (string.IsNullOrEmpty (name))
+			if (string.IsNullOrEmpty (id))
 			{
 				return null;
 			}
 			
 			Command state;
 			
-			if (Command.commands.TryGetValue (name, out state))
+			if (Command.commands.TryGetValue (id, out state))
 			{
 				return state;
 			}
@@ -372,7 +371,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.Name;
+				return this.CommandId;
 			}
 		}
 
@@ -398,7 +397,7 @@ namespace Epsitec.Common.Widgets
 			public string ConvertToString(object value, IContextResolver context)
 			{
 				Command command = value as Command;
-				return command.Name;
+				return command.CommandId;
 			}
 
 			public object ConvertFromString(string value, IContextResolver context)
@@ -413,27 +412,27 @@ namespace Epsitec.Common.Widgets
 		
 		#region Internal Methods
 
-		private void InitializeName(string name)
+		private void InitializeCommandId(string commandId)
 		{
-			System.Diagnostics.Debug.Assert (string.IsNullOrEmpty (name) == false);
-			System.Diagnostics.Debug.Assert (this.name == null);
+			System.Diagnostics.Debug.Assert (string.IsNullOrEmpty (commandId) == false);
+			System.Diagnostics.Debug.Assert (this.commandId == null);
 			
 			lock (Command.commands)
 			{
-				if (Command.commands.ContainsKey (name))
+				if (Command.commands.ContainsKey (commandId))
 				{
-					throw new System.ArgumentException (string.Format ("Command {0} already registered", name));
+					throw new System.ArgumentException (string.Format ("Command {0} already registered", commandId));
 				}
 
-				this.name = name;
+				this.commandId = commandId;
 				this.uniqueId = Command.nextUniqueId++;
 
-				Command.commands[name] = this;
+				Command.commands[commandId] = this;
 			}
 
 			Support.Druid druid;
 
-			if (Support.Druid.TryParse (name, out druid))
+			if (Support.Druid.TryParse (commandId, out druid))
 			{
 				this.InitializeDruid (druid);
 			}
@@ -458,7 +457,7 @@ namespace Epsitec.Common.Widgets
 			Types.Caption caption = Support.Resources.DefaultManager.GetCaption (druid);
 
 			System.Diagnostics.Debug.Assert (caption != null);
-			System.Diagnostics.Debug.Assert (caption.Id == this.name);
+			System.Diagnostics.Debug.Assert (caption.Id == this.commandId);
 
 			this.caption = caption;
 		}
@@ -466,7 +465,7 @@ namespace Epsitec.Common.Widgets
 		private void InitializeDummyCaption()
 		{
 			this.caption = new Caption ();
-			this.caption.Name = this.name;
+			this.caption.Name = this.commandId;
 		}
 
 		internal void Lockdown()
@@ -550,22 +549,15 @@ namespace Epsitec.Common.Widgets
 			return that.Caption;
 		}
 
-		private static object GetNameValue(DependencyObject obj)
+		private static object GetCommandIdValue(DependencyObject obj)
 		{
 			Command that = (Command) obj;
-			return that.Name;
+			return that.CommandId;
 		}
 
-		private static void SetNameValue(DependencyObject obj, object value)
-		{
-			Command that = (Command) obj;
-			string name = (string) value;
-
-			that.InitializeName (name);
-		}
 
 		public static readonly DependencyProperty CaptionProperty		= DependencyProperty.RegisterReadOnly ("Caption", typeof (Caption), typeof (Command), new DependencyPropertyMetadata (Command.GetCaptionValue));
-		public static readonly DependencyProperty NameProperty			= DependencyProperty.Register ("Name", typeof (string), typeof (Command), new DependencyPropertyMetadata (Command.GetNameValue, Command.SetNameValue));
+		public static readonly DependencyProperty CommandIdProperty		= DependencyProperty.RegisterReadOnly ("CommandId", typeof (string), typeof (Command), new DependencyPropertyMetadata (Command.GetCommandIdValue));
 		public static readonly DependencyProperty GroupProperty			= DependencyProperty.Register ("Group", typeof (string), typeof (Command), new DependencyPropertyMetadata (null, new PropertyInvalidatedCallback (Command.NotifyGroupChanged)));
 		public static readonly DependencyProperty ShortcutsProperty		= DependencyProperty.RegisterReadOnly ("Shortcuts", typeof (Collections.ShortcutCollection), typeof (Command), new DependencyPropertyMetadata (Command.GetShortcutsValue).MakeReadOnlySerializable ());
 		public static readonly DependencyProperty StatefullProperty		= DependencyProperty.Register ("Statefull", typeof (bool), typeof (Command), new DependencyPropertyMetadata (false));
@@ -577,7 +569,7 @@ namespace Epsitec.Common.Widgets
 		private int								uniqueId;
 		private bool							locked;
 		
-		private string							name;
+		private string							commandId;
 		private long							captionId = -1;
 		private Types.Caption					caption;
 		private Collections.ShortcutCollection	shortcuts;

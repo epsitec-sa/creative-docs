@@ -34,7 +34,7 @@ namespace Epsitec.Common.Widgets
 			Command command = Command.Get (Druid.Parse ("[0005]"));
 
 			Assert.IsNotNull (command);
-			Assert.AreEqual ("[0005]", command.Name);
+			Assert.AreEqual ("[0005]", command.CommandId);
 
 			Assert.AreEqual ("Sélectionner tout", command.Description);
 			Assert.AreEqual (ApplicationCommands.SelectAll, command);
