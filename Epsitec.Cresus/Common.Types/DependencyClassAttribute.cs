@@ -26,7 +26,11 @@ namespace Epsitec.Common.Types
 				this.type = value;
 			}
 		}
-		
+
+		/// <summary>
+		/// Gets or sets the converter associated with the class.
+		/// </summary>
+		/// <value>The type of the converter to use for serialization conversions.</value>
 		public System.Type						Converter
 		{
 			get

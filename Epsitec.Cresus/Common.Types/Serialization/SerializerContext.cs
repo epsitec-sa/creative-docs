@@ -57,8 +57,15 @@ namespace Epsitec.Common.Types.Serialization
 						continue;
 					}
 
-					if (entry.Property.HasConverter)
+					if (entry.Property.HasTypeConverter)
 					{
+						//	The property has a specific converter attached to it.
+						//	Use it instead of the standard object serialization.
+						
+						//	Caution: This means that such objects won't be shared when
+						//			 they get deserialized, unless the converter handles
+						//			 this issue
+						
 						goto stringify;
 					}
 					

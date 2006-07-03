@@ -23,14 +23,27 @@ namespace Epsitec.Common.Types
 				return this.type;
 			}
 		}
+		
 		public ISerializationConverter			Converter
 		{
 			get
 			{
-				return System.Activator.CreateInstance (this.type) as ISerializationConverter;
+				if (this.converter == null)
+				{
+					lock (this)
+					{
+						if (this.converter == null)
+						{
+							this.converter = System.Activator.CreateInstance (this.type) as ISerializationConverter;
+						}
+					}
+				}
+				
+				return this.converter;
 			}
 		}
 
 		private System.Type type;
+		private ISerializationConverter converter;
 	}
 }
