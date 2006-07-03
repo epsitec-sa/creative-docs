@@ -8,7 +8,7 @@ using Epsitec.Common.Types;
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
-	/// La classe Shortcut permet de représenter un raccourci clavier.
+	/// The <c>Shortcut</c> class represents a keyboard shortcut.
 	/// </summary>
 	public sealed class Shortcut : DependencyObject, System.IEquatable<Shortcut>
 	{
@@ -55,20 +55,20 @@ namespace Epsitec.Common.Widgets
 		
 		public static Shortcut FromMessage(Message message)
 		{
-			KeyCode key_code = message.KeyCodeOnly;
+			KeyCode keyCode = message.KeyCodeOnly;
 			
 			if (message.Type == MessageType.KeyDown)
 			{
-				if ((key_code != KeyCode.None) &&
+				if ((keyCode != KeyCode.None) &&
 					(message.IsAltPressed))
 				{
 					//	OK. Utilise le code clavier :
 					
-					key_code |= KeyCode.ModifierAlt;
+					keyCode |= KeyCode.ModifierAlt;
 				}
 				else
 				{
-					switch (key_code)
+					switch (keyCode)
 					{
 						case KeyCode.ArrowDown:
 						case KeyCode.ArrowLeft:
@@ -96,39 +96,39 @@ namespace Epsitec.Common.Widgets
 							break;
 						
 						default:
-							key_code = KeyCode.None;
+							keyCode = KeyCode.None;
 							break;
 					}
 				}
 				
-				if ((key_code & KeyCode.KeyCodeMask) != KeyCode.None)
+				if ((keyCode & KeyCode.KeyCodeMask) != KeyCode.None)
 				{
 					if (message.IsControlPressed)
 					{
-						key_code |= KeyCode.ModifierControl;
+						keyCode |= KeyCode.ModifierControl;
 					}
 					
 					if (message.IsShiftPressed)
 					{
-						key_code |= KeyCode.ModifierShift;
+						keyCode |= KeyCode.ModifierShift;
 					}
 					
-					return new Shortcut (key_code);
+					return new Shortcut (keyCode);
 				}
 			}
 			else if (message.Type == MessageType.KeyPress)
 			{
 				if (message.IsControlPressed)
 				{
-					key_code |= KeyCode.ModifierControl;
+					keyCode |= KeyCode.ModifierControl;
 				}
 				
 				if (message.IsShiftPressed)
 				{
-					key_code |= KeyCode.ModifierShift;
+					keyCode |= KeyCode.ModifierShift;
 				}
 				
-				return new Shortcut (key_code);
+				return new Shortcut (keyCode);
 			}
 			
 			return null;
@@ -139,17 +139,17 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.key_code;
+				return this.keyCode;
 			}
 			set
 			{
-				if (this.key_code != value)
+				if (this.keyCode != value)
 				{
-					string oldValue = this.key_code.ToString ();
+					string oldValue = this.keyCode.ToString ();
 					
-					this.key_code = value;
+					this.keyCode = value;
 
-					string newValue = this.key_code.ToString ();
+					string newValue = this.keyCode.ToString ();
 					
 					this.InvalidateProperty (Shortcut.KeyCodeProperty, oldValue, newValue);
 				}
@@ -173,7 +173,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public bool						IsShiftPressed
+		public bool						IsShiftDefined
 		{
 			get
 			{
@@ -181,7 +181,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public bool						IsControlPressed
+		public bool						IsControlDefined
 		{
 			get
 			{
@@ -189,7 +189,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public bool						IsAltPressed
+		public bool						IsAltDefined
 		{
 			get
 			{
@@ -200,7 +200,7 @@ namespace Epsitec.Common.Widgets
 		
 		public override string ToString()
 		{
-			return Message.GetKeyName (this.key_code);
+			return Message.GetKeyName (this.keyCode);
 		}
 
 		public override bool Equals(object obj)
@@ -222,7 +222,7 @@ namespace Epsitec.Common.Widgets
 				return false;
 			}
 
-			return this.key_code == other.key_code;
+			return this.keyCode == other.keyCode;
 		}
 
 		#endregion
@@ -288,6 +288,6 @@ namespace Epsitec.Common.Widgets
 		public static readonly DependencyProperty ShortcutsProperty = DependencyProperty.RegisterAttached ("Shortcuts", typeof (Collections.ShortcutCollection), typeof (Shortcut));
 		public static readonly DependencyProperty KeyCodeProperty = DependencyProperty.Register ("KeyCode", typeof (string), typeof (Shortcut), new DependencyPropertyMetadata (Shortcut.GetKeyCodeValue, Shortcut.SetKeyCodeValue));
 		
-		private KeyCode					key_code;
+		private KeyCode					keyCode;
 	}
 }
