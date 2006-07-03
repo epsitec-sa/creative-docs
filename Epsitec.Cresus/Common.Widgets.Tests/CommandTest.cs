@@ -47,6 +47,12 @@ namespace Epsitec.Common.Widgets
 			string xml = Types.Serialization.SimpleSerialization.SerializeToString (command);
 
 			System.Console.Out.WriteLine (xml);
+
+			Command restored = Types.Serialization.SimpleSerialization.DeserializeFromString (xml) as Command;
+
+			Assert.AreEqual (restored.Shortcuts.Count, 2);
+			Assert.AreEqual (command.Shortcuts[0], restored.Shortcuts[0]);
+			Assert.AreEqual (command.Shortcuts[1], restored.Shortcuts[1]);
 		}
 	}
 }

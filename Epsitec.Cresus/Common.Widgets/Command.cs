@@ -16,7 +16,7 @@ namespace Epsitec.Common.Widgets
 	/// </summary>
 	public class Command : DependencyObject, System.IEquatable<Command>, Types.INamedType
 	{
-		private Command()
+		public Command()
 		{
 			this.stateObjectType = Types.DependencyObjectType.FromSystemType (typeof (SimpleState));
 		}
@@ -192,15 +192,12 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				Collections.ShortcutCollection shortcuts = Shortcut.GetShortcuts (this);
-
-				if (shortcuts == null)
+				if (this.shortcuts == null)
 				{
-					shortcuts = new Collections.ShortcutCollection ();
-					Shortcut.SetShortcuts (this, shortcuts);
+					this.shortcuts = new Collections.ShortcutCollection ();
 				}
-				
-				return shortcuts;
+
+				return this.shortcuts;
 			}
 		}
 		
@@ -221,9 +218,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				Collections.ShortcutCollection shortcuts = Shortcut.GetShortcuts (this);
-				
-				if (shortcuts != null)
+				if (this.shortcuts != null)
 				{
 					return shortcuts.Count > 0;
 				}
@@ -568,10 +563,18 @@ namespace Epsitec.Common.Widgets
 			return state;
 		}
 
+
+		private static object GetShortcutsValue(DependencyObject obj)
+		{
+			Command that = (Command) obj;
+			return that.Shortcuts;
+		}
+		
 		public static readonly DependencyProperty GroupProperty			= DependencyProperty.Register ("Group", typeof (string), typeof (Command), new DependencyPropertyMetadata (null, new PropertyInvalidatedCallback (Command.NotifyGroupChanged)));
 		public static readonly DependencyProperty IconNameProperty		= DependencyProperty.Register ("IconName", typeof (string), typeof (Command), new DependencyPropertyMetadata (null, new PropertyInvalidatedCallback (Command.NotifyIconNameChanged)));
 		public static readonly DependencyProperty ShortCaptionProperty	= DependencyProperty.Register ("ShortCaption", typeof (string), typeof (Command), new DependencyPropertyMetadata (null, new PropertyInvalidatedCallback (Command.NotifyShortCaptionChanged)));
 		public static readonly DependencyProperty LongCaptionProperty	= DependencyProperty.Register ("LongCaption", typeof (string), typeof (Command), new DependencyPropertyMetadata (null, new PropertyInvalidatedCallback (Command.NotifyLongCaptionChanged)));
+		public static readonly DependencyProperty ShortcutsProperty		= DependencyProperty.RegisterReadOnly ("Shortcuts", typeof (Collections.ShortcutCollection), typeof (Command), new DependencyPropertyMetadata (Command.GetShortcutsValue).MakeReadOnlySerializable ());
 		
 		private static Dictionary<string, Command> commands = new Dictionary<string, Command> ();
 		private static int nextUniqueId;
@@ -585,5 +588,6 @@ namespace Epsitec.Common.Widgets
 		private Support.Druid					druid;
 		private Types.Caption					caption;
 		private long							captionId = -1;
+		private Collections.ShortcutCollection	shortcuts;
 	}
 }
