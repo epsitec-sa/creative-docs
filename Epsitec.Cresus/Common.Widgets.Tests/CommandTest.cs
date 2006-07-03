@@ -1,6 +1,9 @@
 using NUnit.Framework;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
+using Epsitec.Common.Types;
+
+[assembly: Epsitec.Common.Types.DependencyClass (typeof (Epsitec.Common.Widgets.CommandTest.MyCommandTest))]
 
 namespace Epsitec.Common.Widgets
 {
@@ -47,25 +50,42 @@ namespace Epsitec.Common.Widgets
 
 			Assert.AreEqual (2, command.Shortcuts.Count);
 
-			string xml = Types.Serialization.SimpleSerialization.SerializeToString (command);
+			MyCommandTest t1 = new MyCommandTest ();
+			MyCommandTest t2;
+			
+			t1.Command = command;
+
+			string xml = Types.Serialization.SimpleSerialization.SerializeToString (t1);
 
 			System.Console.Out.WriteLine (xml);
 
-			Command restored = Types.Serialization.SimpleSerialization.DeserializeFromString (xml) as Command;
+			t2 = Types.Serialization.SimpleSerialization.DeserializeFromString (xml) as MyCommandTest;
+
+			Command restored = t2.Command;
 
 			Assert.AreEqual (restored.Shortcuts.Count, 2);
 			Assert.AreEqual (command.Shortcuts[0], restored.Shortcuts[0]);
 			Assert.AreEqual (command.Shortcuts[1], restored.Shortcuts[1]);
+
+			Assert.IsTrue (object.ReferenceEquals (command, restored));
 		}
-		
-		[Test]
-		public void CheckCommandSerialization2()
+
+
+		public class MyCommandTest : DependencyObject
 		{
-			Command command = Command.Get (Druid.Parse ("[0005]"));
+			public Command Command
+			{
+				get
+				{
+					return (Command) this.GetValue (MyCommandTest.CommandProperty);
+				}
+				set
+				{
+					this.SetValue (MyCommandTest.CommandProperty, value);
+				}
+			}
 
-			string xml = Types.Serialization.SimpleSerialization.SerializeToString (command);
-
-			System.Console.Out.WriteLine (xml);
+			public static readonly DependencyProperty CommandProperty = DependencyProperty.Register ("Command", typeof (Command), typeof (MyCommandTest));
 		}
 	}
 }

@@ -6,7 +6,8 @@ using System.Collections.Generic;
 using Epsitec.Common.Widgets.Collections;
 using Epsitec.Common.Types;
 
-[assembly: Epsitec.Common.Types.DependencyClass (typeof (Epsitec.Common.Widgets.Command))]
+[assembly: Epsitec.Common.Types.DependencyClass (typeof (Epsitec.Common.Widgets.Command),
+	/**/										 Converter = typeof (Epsitec.Common.Widgets.Command.SerializationConverter))]
 
 namespace Epsitec.Common.Widgets
 {
@@ -14,6 +15,7 @@ namespace Epsitec.Common.Widgets
 	/// La classe <c>Command</c> permet de représenter l'état d'une commande tout
 	/// en maintenant la synchronisation avec l'état des widgets associés.
 	/// </summary>
+	[SerializationConverter (typeof (Command.SerializationConverter))]
 	public class Command : DependencyObject, System.IEquatable<Command>, Types.INamedType
 	{
 		public Command()
@@ -379,6 +381,27 @@ namespace Epsitec.Common.Widgets
 
 		#endregion
 
+		#region SerializationConverter Class
+
+		public class SerializationConverter : ISerializationConverter
+		{
+			#region ISerializationConverter Members
+
+			public string ConvertToString(object value, IContextResolver context)
+			{
+				Command command = value as Command;
+				return command.Name;
+			}
+
+			public object ConvertFromString(string value, IContextResolver context)
+			{
+				return Command.Get (value);
+			}
+
+			#endregion
+		}
+
+		#endregion
 		#region Internal Methods
 
 		private void InitializeName(string name)

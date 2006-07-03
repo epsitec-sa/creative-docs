@@ -32,6 +32,11 @@ namespace Epsitec.Common.Types.Serialization
 							context.ObjectMap.RecordType (entry.Property.OwnerType);
 						}
 
+						if (entry.Property.HasConverter)
+						{
+							continue;
+						}
+						
 						DependencyObject dependencyObjectValue = entry.Value as DependencyObject;
 
 						if (dependencyObjectValue != null)
