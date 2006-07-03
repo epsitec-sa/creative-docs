@@ -57,6 +57,11 @@ namespace Epsitec.Common.Types.Serialization
 						continue;
 					}
 
+					if (entry.Property.HasConverter)
+					{
+						goto stringify;
+					}
+					
 					DependencyObject dependencyObjectValue = entry.Value as DependencyObject;
 
 					if (dependencyObjectValue != null)
@@ -81,7 +86,9 @@ namespace Epsitec.Common.Types.Serialization
 					{
 						continue;
 					}
-
+				
+				stringify:
+					
 					string value = entry.Property.ConvertToString (entry.Value, this);
 
 					if (value != null)

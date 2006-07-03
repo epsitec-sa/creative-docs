@@ -57,6 +57,7 @@ namespace Epsitec.Common.Types
 					}
 				}
 			}
+
 		}
 
 		public string							Name
@@ -141,6 +142,33 @@ namespace Epsitec.Common.Types
 			}
 		}
 		
+		internal bool							HasConverter
+		{
+			get
+			{
+				if (this.hasConverterOk == false)
+				{
+					lock (this)
+					{
+						if (this.hasConverterOk == false)
+						{
+							ISerializationConverter converter = Serialization.DependencyClassManager.Current.FindSerializationConverter (this.propertyType);
+
+							if (this.typeConverter == null)
+							{
+								this.typeConverter = converter;
+							}
+							
+							this.hasConverter   = (converter != null);
+							this.hasConverterOk = true;
+						}
+					}
+				}
+
+				return this.hasConverter;
+			}
+		}
+
 		internal int							InheritedPropertyCacheMask
 		{
 			get
@@ -551,6 +579,8 @@ namespace Epsitec.Common.Types
 		private int								globalIndex;
 		private int								inheritedPropertyCacheMask;
 		private ISerializationConverter			typeConverter;
+		private bool							hasConverter;
+		private bool							hasConverterOk;
 		
 		Dictionary<System.Type, DependencyPropertyMetadata>	overriddenMetadata;
 		

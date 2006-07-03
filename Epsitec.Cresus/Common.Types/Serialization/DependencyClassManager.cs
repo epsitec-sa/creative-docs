@@ -14,6 +14,7 @@ namespace Epsitec.Common.Types.Serialization
 			this.domain     = System.AppDomain.CurrentDomain;
 			this.assemblies = new List<Assembly> ();
 			this.types      = new Dictionary<string, DependencyObjectType> ();
+			this.converters = new Dictionary<System.Type, ISerializationConverter> ();
 
 			Assembly[] assemblies = this.domain.GetAssemblies ();
 			
@@ -50,6 +51,20 @@ namespace Epsitec.Common.Types.Serialization
 				return null;
 			}
 		}
+
+		public ISerializationConverter FindSerializationConverter(System.Type type)
+		{
+			ISerializationConverter converter;
+			
+			if (this.converters.TryGetValue (type, out converter))
+			{
+				return converter;
+			}
+			else
+			{
+				return null;
+			}
+		}
 		
 		private void Analyse(Assembly assembly)
 		{
@@ -59,6 +74,11 @@ namespace Epsitec.Common.Types.Serialization
 				string name = type.FullName;
 				
 				this.types[name] = depType;
+			}
+
+			foreach (DependencyClassAttribute attribute in DependencyClassAttribute.GetConverterAttributes (assembly))
+			{
+				this.converters[attribute.Type] = System.Activator.CreateInstance (attribute.Converter) as ISerializationConverter;
 			}
 		}
 
@@ -73,5 +93,6 @@ namespace Epsitec.Common.Types.Serialization
 		private System.AppDomain				domain;
 		private List<Assembly>					assemblies;
 		private Dictionary<string, DependencyObjectType> types;
+		private Dictionary<System.Type, ISerializationConverter> converters;
 	}
 }

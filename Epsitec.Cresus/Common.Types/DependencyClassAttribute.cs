@@ -26,6 +26,18 @@ namespace Epsitec.Common.Types
 				this.type = value;
 			}
 		}
+		
+		public System.Type						Converter
+		{
+			get
+			{
+				return this.converter;
+			}
+			set
+			{
+				this.converter = value;
+			}
+		}
 
 		public static IEnumerable<System.Type> GetRegisteredTypes(System.Reflection.Assembly assembly)
 		{
@@ -35,6 +47,18 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		public static IEnumerable<DependencyClassAttribute> GetConverterAttributes(System.Reflection.Assembly assembly)
+		{
+			foreach (DependencyClassAttribute attribute in assembly.GetCustomAttributes (typeof (DependencyClassAttribute), false))
+			{
+				if (attribute.Converter != null)
+				{
+					yield return attribute;
+				}
+			}
+		}
+
 		private System.Type						type;
+		private System.Type						converter;
 	}
 }
