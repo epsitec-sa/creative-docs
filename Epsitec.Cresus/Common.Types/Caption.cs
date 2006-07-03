@@ -3,6 +3,8 @@
 
 using System.Collections.Generic;
 
+[assembly: Epsitec.Common.Types.DependencyClass (typeof (Epsitec.Common.Types.Caption))]
+
 namespace Epsitec.Common.Types
 {
 	public sealed class Caption : DependencyObject
@@ -73,8 +75,13 @@ namespace Epsitec.Common.Types
 				this.SetValue (Caption.IconProperty, value);
 			}
 		}
-		
 
+
+		/// <summary>
+		/// Defines the ID associated with the caption. The ID can be defined
+		/// only once; redefining it throws an <see cref="T:InvalidOperationException"/>.
+		/// </summary>
+		/// <param name="id">The caption ID (usually a DRUID representation).</param>
 		public void DefineId(string id)
 		{
 			if (this.id == id)

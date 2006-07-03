@@ -15,14 +15,24 @@ namespace Epsitec.Common.Widgets.Collections
 		}
 		
 		
-		protected override void NotifyCollectionChanged()
+		protected override void  NotifyInsertion(Shortcut item)
 		{
-			base.NotifyCollectionChanged ();
-			
 			if (this.host != null)
 			{
 				this.host.NotifyShortcutsChanged (this);
 			}
+			
+			base.NotifyInsertion (item);
+		}
+		
+		protected override void  NotifyRemoval(Shortcut item)
+		{
+			if (this.host != null)
+			{
+				this.host.NotifyShortcutsChanged (this);
+			}
+			
+			base.NotifyRemoval (item);
 		}
 
 		

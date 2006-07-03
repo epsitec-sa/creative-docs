@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using Epsitec.Common.Widgets.Collections;
 using Epsitec.Common.Types;
 
+[assembly: Epsitec.Common.Types.DependencyClass (typeof (Epsitec.Common.Widgets.Command))]
+
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
@@ -578,6 +580,6 @@ namespace Epsitec.Common.Widgets
 		private string							name;
 		private Support.Druid					druid;
 		private Types.Caption					caption;
-		private long							captionId;
+		private long							captionId = -1;
 	}
 }
