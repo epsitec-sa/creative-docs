@@ -260,6 +260,13 @@ namespace Epsitec.Common.Widgets
 			return obj.GetValue (Shortcut.ShortcutsProperty) as Collections.ShortcutCollection;
 		}
 
+		public static bool HasShortcuts(DependencyObject obj)
+		{
+			Collections.ShortcutCollection shortcuts = obj.GetValueBase (Shortcut.ShortcutsProperty) as Collections.ShortcutCollection;
+
+			return (shortcuts != null) && (shortcuts.Count > 0);
+		}
+
 		public static void SetShortcuts(DependencyObject obj, Collections.ShortcutCollection shortcuts)
 		{
 			if (shortcuts == null)
@@ -272,6 +279,19 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		private static object GetShortcutsValue(DependencyObject obj)
+		{
+			Collections.ShortcutCollection shortcuts = obj.GetValueBase (Shortcut.ShortcutsProperty) as Collections.ShortcutCollection;
+
+			if (shortcuts == null)
+			{
+				shortcuts = new Collections.ShortcutCollection ();
+				obj.SetLocalValue (Shortcut.ShortcutsProperty, shortcuts);
+				obj.InvalidateProperty (Shortcut.ShortcutsProperty, null, shortcuts);
+			}
+
+			return shortcuts;
+		}
 
 		private static void SetKeyCodeValue(DependencyObject obj, object value)
 		{
@@ -294,7 +314,7 @@ namespace Epsitec.Common.Widgets
 			return that.KeyCode.ToString ();
 		}
 
-		public static readonly DependencyProperty ShortcutsProperty = DependencyProperty.RegisterAttached ("Shortcuts", typeof (Collections.ShortcutCollection), typeof (Shortcut));
+		public static readonly DependencyProperty ShortcutsProperty = DependencyProperty.RegisterAttached ("Shortcuts", typeof (Collections.ShortcutCollection), typeof (Shortcut), new DependencyPropertyMetadata (Shortcut.GetShortcutsValue));
 		public static readonly DependencyProperty KeyCodeProperty = DependencyProperty.Register ("KeyCode", typeof (string), typeof (Shortcut), new DependencyPropertyMetadata (Shortcut.GetKeyCodeValue, Shortcut.SetKeyCodeValue));
 		
 		private KeyCode					keyCode;

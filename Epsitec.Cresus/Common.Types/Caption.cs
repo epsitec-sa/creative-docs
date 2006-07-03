@@ -137,10 +137,9 @@ namespace Epsitec.Common.Types
 
 			foreach (DependencyProperty property in this.AttachedProperties)
 			{
-				typeCount++;
-
 				if (context.ObjectMap.IsTypeDefined (property.OwnerType) == false)
 				{
+					typeCount++;
 					context.ObjectMap.RecordType (property.OwnerType);
 					context.StoreTypeDefinition (typeCount, property.OwnerType);
 				}

@@ -52,7 +52,7 @@ namespace Epsitec.Common.Widgets
 
 			MyCommandTest t1 = new MyCommandTest ();
 			MyCommandTest t2;
-			
+
 			t1.Command = command;
 
 			string xml = Types.Serialization.SimpleSerialization.SerializeToString (t1);
@@ -68,6 +68,49 @@ namespace Epsitec.Common.Widgets
 			Assert.AreEqual (command.Shortcuts[1], restored.Shortcuts[1]);
 
 			Assert.IsTrue (object.ReferenceEquals (command, restored));
+		}
+
+		[Test]
+		public void CheckCommandSerialization2()
+		{
+			Collections.ShortcutCollection shortcuts;
+			
+			Command command = new Command ("Test.CheckCommandSerialization2");
+			command.Shortcuts.Add (new Shortcut ('O', ModifierKeys.Alt));
+			command.Shortcuts.Add (new Shortcut (KeyCode.FuncF10 | KeyCode.ModifierShift));
+
+			command.ManuallyDefineCommand ("Description", "icon", true);
+			
+			shortcuts = Shortcut.GetShortcuts (command.Caption);
+			
+			Assert.AreEqual ("Test.CheckCommandSerialization2", command.Caption.Name);
+			Assert.AreEqual ("Description", command.Caption.Description);
+			Assert.AreEqual ("icon", command.Caption.Icon);
+
+			Assert.IsNotNull (shortcuts);
+			
+			Assert.AreEqual (shortcuts.Count, 2);
+			Assert.AreEqual (command.Shortcuts[0], shortcuts[0]);
+			Assert.AreEqual (command.Shortcuts[1], shortcuts[1]);
+
+			string xml = Types.Serialization.SimpleSerialization.SerializeToString (command.Caption);
+
+			System.Console.Out.WriteLine (xml);
+			System.Console.Out.WriteLine (command.Caption.SerializeToString ());
+
+			Caption caption = Types.Serialization.SimpleSerialization.DeserializeFromString (xml) as Caption;
+
+			shortcuts = Shortcut.GetShortcuts (caption);
+
+			Assert.AreEqual ("Test.CheckCommandSerialization2", caption.Name);
+			Assert.AreEqual ("Description", caption.Description);
+			Assert.AreEqual ("icon", caption.Icon);
+			
+			Assert.IsNotNull (shortcuts);
+			
+			Assert.AreEqual (shortcuts.Count, 2);
+			Assert.AreEqual (command.Shortcuts[0], shortcuts[0]);
+			Assert.AreEqual (command.Shortcuts[1], shortcuts[1]);
 		}
 
 

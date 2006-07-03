@@ -112,12 +112,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				if (this.shortcuts == null)
-				{
-					this.shortcuts = new Collections.ShortcutCollection ();
-				}
-
-				return this.shortcuts;
+				return Shortcut.GetShortcuts (this.caption);
 			}
 		}
 		
@@ -138,14 +133,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				if (this.shortcuts != null)
-				{
-					return shortcuts.Count > 0;
-				}
-				else
-				{
-					return false;
-				}
+				return Shortcut.HasShortcuts (this.caption);
 			}
 		}
 
@@ -537,12 +525,6 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		private static object GetShortcutsValue(DependencyObject obj)
-		{
-			Command that = (Command) obj;
-			return that.Shortcuts;
-		}
-
 		private static object GetCaptionValue(DependencyObject obj)
 		{
 			Command that = (Command) obj;
@@ -559,7 +541,6 @@ namespace Epsitec.Common.Widgets
 		public static readonly DependencyProperty CaptionProperty		= DependencyProperty.RegisterReadOnly ("Caption", typeof (Caption), typeof (Command), new DependencyPropertyMetadata (Command.GetCaptionValue));
 		public static readonly DependencyProperty CommandIdProperty		= DependencyProperty.RegisterReadOnly ("CommandId", typeof (string), typeof (Command), new DependencyPropertyMetadata (Command.GetCommandIdValue));
 		public static readonly DependencyProperty GroupProperty			= DependencyProperty.Register ("Group", typeof (string), typeof (Command), new DependencyPropertyMetadata (null, new PropertyInvalidatedCallback (Command.NotifyGroupChanged)));
-		public static readonly DependencyProperty ShortcutsProperty		= DependencyProperty.RegisterReadOnly ("Shortcuts", typeof (Collections.ShortcutCollection), typeof (Command), new DependencyPropertyMetadata (Command.GetShortcutsValue).MakeReadOnlySerializable ());
 		public static readonly DependencyProperty StatefullProperty		= DependencyProperty.Register ("Statefull", typeof (bool), typeof (Command), new DependencyPropertyMetadata (false));
 		
 		private static Dictionary<string, Command> commands = new Dictionary<string, Command> ();
@@ -572,6 +553,5 @@ namespace Epsitec.Common.Widgets
 		private string							commandId;
 		private long							captionId = -1;
 		private Types.Caption					caption;
-		private Collections.ShortcutCollection	shortcuts;
 	}
 }
