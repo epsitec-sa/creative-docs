@@ -196,6 +196,15 @@ namespace Epsitec.Common.Widgets
 				return (this.KeyCode & KeyCode.ModifierAlt) != 0;
 			}
 		}
+
+		
+		public bool						IsEmpty
+		{
+			get
+			{
+				return this.keyCode == KeyCode.None;
+			}
+		}
 		
 		
 		public override string ToString()

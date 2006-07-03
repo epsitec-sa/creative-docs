@@ -35,7 +35,7 @@ namespace Epsitec.Common.Types.Collections
 		/// Adds the collection of items to the list.
 		/// </summary>
 		/// <param name="collection">Items to add</param>
-		public void AddRange(IEnumerable<T> collection)
+		public virtual void AddRange(IEnumerable<T> collection)
 		{
 			foreach (T item in collection)
 			{
@@ -96,7 +96,7 @@ namespace Epsitec.Common.Types.Collections
 		
 		#region ICollection<T> Members
 
-		public void Add(T item)
+		public virtual void Add(T item)
 		{
 			this.NotifyBeforeInsertion (item);
 			this.list.Add (item);

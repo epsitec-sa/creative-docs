@@ -75,5 +75,20 @@ namespace Epsitec.Common.Widgets.Collections
 				this.AddRange (values);
 			}
 		}
+
+		public override void Add(Shortcut shortcut)
+		{
+			if ((this.Contains (shortcut)) &&
+				(! shortcut.IsEmpty))
+			{
+				//	Don't add twice... unless the shortcut is empty, in which case
+				//	we might be currently processing a deserialization with partially
+				//	initialized shortcuts.
+			}
+			else
+			{
+				base.Add (shortcut);
+			}
+		}
 	}
 }
