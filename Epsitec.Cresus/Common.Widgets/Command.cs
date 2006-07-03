@@ -192,12 +192,15 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				if (this.shortcuts == null)
+				Collections.ShortcutCollection shortcuts = Shortcut.GetShortcuts (this);
+
+				if (shortcuts == null)
 				{
-					this.shortcuts = new ShortcutCollection ();
+					shortcuts = new Collections.ShortcutCollection ();
+					Shortcut.SetShortcuts (this, shortcuts);
 				}
 				
-				return this.shortcuts;
+				return shortcuts;
 			}
 		}
 		
@@ -218,9 +221,11 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				if (this.shortcuts != null)
+				Collections.ShortcutCollection shortcuts = Shortcut.GetShortcuts (this);
+				
+				if (shortcuts != null)
 				{
-					return this.shortcuts.Count > 0;
+					return shortcuts.Count > 0;
 				}
 				else
 				{
@@ -576,7 +581,6 @@ namespace Epsitec.Common.Widgets
 		private bool							statefull;
 		private bool							locked;
 		
-		private Collections.ShortcutCollection	shortcuts;
 		private string							name;
 		private Support.Druid					druid;
 		private Types.Caption					caption;

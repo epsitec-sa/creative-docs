@@ -36,5 +36,17 @@ namespace Epsitec.Common.Widgets
 			Assert.AreEqual ("Sélectionner tout", command.LongCaption);
 			Assert.AreEqual (ApplicationCommands.SelectAll, command);
 		}
+
+		[Test]
+		public void CheckCommandShortcut()
+		{
+			Command command = new Command ("Test");
+			command.Shortcuts.Add (new Shortcut ('O', ModifierKeys.Alt));
+			command.Shortcuts.Add (new Shortcut (KeyCode.FuncF10 | KeyCode.ModifierShift));
+
+			string xml = Types.Serialization.SimpleSerialization.SerializeToString (command);
+
+			System.Console.Out.WriteLine (xml);
+		}
 	}
 }

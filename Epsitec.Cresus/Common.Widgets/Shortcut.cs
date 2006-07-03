@@ -240,6 +240,23 @@ namespace Epsitec.Common.Widgets
 			return !(a == b);
 		}
 
+		public static Collections.ShortcutCollection GetShortcuts(DependencyObject obj)
+		{
+			return obj.GetValue (Shortcut.ShortcutsProperty) as Collections.ShortcutCollection;
+		}
+
+		public static void SetShortcuts(DependencyObject obj, Collections.ShortcutCollection shortcuts)
+		{
+			if (shortcuts == null)
+			{
+				obj.ClearValue (Shortcut.ShortcutsProperty);
+			}
+			else
+			{
+				obj.SetValue (Shortcut.ShortcutsProperty, shortcuts);
+			}
+		}
+
 
 		public static readonly DependencyProperty ShortcutsProperty = DependencyProperty.RegisterAttached ("Shortcuts", typeof (Collections.ShortcutCollection), typeof (Shortcut));
 		

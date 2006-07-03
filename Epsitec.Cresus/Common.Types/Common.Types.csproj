@@ -120,6 +120,7 @@
     <Compile Include="IResourceBoundSource.cs" />
     <Compile Include="IValueConverter.cs" />
     <Compile Include="Serialization\IO\Xml.cs" />
+    <Compile Include="Serialization\SimpleSerialization.cs" />
     <Compile Include="StructuredTree.cs" />
     <Compile Include="IStructuredType.cs" />
     <Compile Include="IDictionaryHost.cs" />
