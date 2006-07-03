@@ -145,7 +145,13 @@ namespace Epsitec.Common.Widgets
 			{
 				if (this.key_code != value)
 				{
+					string oldValue = this.key_code.ToString ();
+					
 					this.key_code = value;
+
+					string newValue = this.key_code.ToString ();
+					
+					this.InvalidateProperty (Shortcut.KeyCodeProperty, oldValue, newValue);
 				}
 			}
 		}
@@ -258,7 +264,29 @@ namespace Epsitec.Common.Widgets
 		}
 
 
+		private static void SetKeyCodeValue(DependencyObject obj, object value)
+		{
+			Shortcut that = (Shortcut) obj;
+			System.Enum keyCode;
+
+			if (Types.InvariantConverter.Convert (value, typeof (KeyCode), out keyCode))
+			{
+				that.KeyCode = (KeyCode) keyCode;
+			}
+			else
+			{
+				that.KeyCode = KeyCode.None;
+			}
+		}
+
+		private static object GetKeyCodeValue(DependencyObject obj)
+		{
+			Shortcut that = (Shortcut) obj;
+			return that.KeyCode.ToString ();
+		}
+
 		public static readonly DependencyProperty ShortcutsProperty = DependencyProperty.RegisterAttached ("Shortcuts", typeof (Collections.ShortcutCollection), typeof (Shortcut));
+		public static readonly DependencyProperty KeyCodeProperty = DependencyProperty.Register ("KeyCode", typeof (string), typeof (Shortcut), new DependencyPropertyMetadata (Shortcut.GetKeyCodeValue, Shortcut.SetKeyCodeValue));
 		
 		private KeyCode					key_code;
 	}
