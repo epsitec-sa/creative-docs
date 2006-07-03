@@ -762,7 +762,7 @@ namespace Epsitec.Common.Designer
 		public bool IsGridCellEmpty(Widget obj, Widget exclude, int column, int row)
 		{
 			//	Indique si une cellule est libre, donc si elle ne contient aucun widget.
-			if (column == -1 || row == -1)
+			if (column == int.MinValue || row == int.MinValue)
 			{
 				return false;
 			}
@@ -871,6 +871,7 @@ namespace Epsitec.Common.Designer
 		public void SetGridColumnSpan(Widget obj, int span)
 		{
 			//	Détermine le nombre de colonnes occupées.
+			//	Empêche le chevauchement de deux objets.
 			System.Diagnostics.Debug.Assert(this.AreChildrenGrid(obj.Parent));
 
 			int ic = GridLayoutEngine.GetColumn(obj);
@@ -914,6 +915,7 @@ namespace Epsitec.Common.Designer
 		public void SetGridRowSpan(Widget obj, int span)
 		{
 			//	Détermine le nombre de lignes occupées.
+			//	Empêche le chevauchement de deux objets.
 			System.Diagnostics.Debug.Assert(this.AreChildrenGrid(obj.Parent));
 
 			int ic = GridLayoutEngine.GetColumn(obj);
@@ -996,18 +998,9 @@ namespace Epsitec.Common.Designer
 				GridLayoutEngine engine = LayoutEngine.GetLayoutEngine(obj) as GridLayoutEngine;
 				if (engine != null)
 				{
-					int column2 = column+columnCount;
-					int row2 = row+rowCount;
-
-					column = System.Math.Max(column, 0);
-					column2 = System.Math.Min(column2, engine.ColumnCount);
-
-					row = System.Math.Max(row, 0);
-					row2 = System.Math.Min(row2, engine.RowCount);
-
 					double x1 = this.GetGridColumnPosition(obj, column);
-					double x2 = this.GetGridColumnPosition(obj, column2);
-					double y1 = this.GetGridRowPosition(obj, row2);
+					double x2 = this.GetGridColumnPosition(obj, column+columnCount);
+					double y1 = this.GetGridRowPosition(obj, row+rowCount);
 					double y2 = this.GetGridRowPosition(obj, row);
 					return new Rectangle(x1, y1, x2-x1, y2-y1);
 				}
@@ -1019,6 +1012,8 @@ namespace Epsitec.Common.Designer
 		public double GetGridColumnPosition(Widget obj, int index)
 		{
 			//	Retourne la position d'une colonne.
+			//	Accepte des index < 0 ou > que le nombre de colonnes, en prenant comme
+			//	valeur la première ou la dernière colonne.
 			if (this.AreChildrenGrid(obj))
 			{
 				GridLayoutEngine engine = LayoutEngine.GetLayoutEngine(obj) as GridLayoutEngine;
@@ -1027,9 +1022,19 @@ namespace Epsitec.Common.Designer
 					Rectangle rect = this.GetFinalPadding(obj);
 					double position = rect.Left;
 
+					while (index < 0)
+					{
+						ColumnDefinition def = engine.ColumnDefinitions[0];
+						position -= def.LeftBorder;
+						position -= def.ActualWidth;
+						position -= def.RightBorder;
+						index++;
+					}
+
 					for (int i=0; i<index; i++)
 					{
-						ColumnDefinition def = engine.ColumnDefinitions[i];
+						int ii = System.Math.Min(i, engine.ColumnCount-1);
+						ColumnDefinition def = engine.ColumnDefinitions[ii];
 						position += def.LeftBorder;
 						position += def.ActualWidth;
 						position += def.RightBorder;
@@ -1045,6 +1050,8 @@ namespace Epsitec.Common.Designer
 		public double GetGridRowPosition(Widget obj, int index)
 		{
 			//	Retourne la position d'une ligne.
+			//	Accepte des index < 0 ou > que le nombre de lignes, en prenant comme
+			//	valeur la première ou la dernière ligne.
 			if (this.AreChildrenGrid(obj))
 			{
 				GridLayoutEngine engine = LayoutEngine.GetLayoutEngine(obj) as GridLayoutEngine;
@@ -1053,9 +1060,19 @@ namespace Epsitec.Common.Designer
 					Rectangle rect = this.GetFinalPadding(obj);
 					double position = rect.Top;
 
+					while (index < 0)
+					{
+						RowDefinition def = engine.RowDefinitions[0];
+						position += def.TopBorder;
+						position += def.ActualHeight;
+						position += def.BottomBorder;
+						index++;
+					}
+
 					for (int i=0; i<index; i++)
 					{
-						RowDefinition def = engine.RowDefinitions[i];
+						int ii = System.Math.Min(i, engine.RowCount-1);
+						RowDefinition def = engine.RowDefinitions[ii];
 						position -= def.TopBorder;
 						position -= def.ActualHeight;
 						position -= def.BottomBorder;
