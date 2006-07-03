@@ -3285,6 +3285,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 				if (obj != this.panel)
 				{
 					this.DrawPadding(graphics, obj.Parent);
+
+					if (this.objectModifier.AreChildrenGrid(obj.Parent))
+					{
+						this.DrawGrid(graphics, obj.Parent, PanelsContext.ColorHiliteOutline);
+					}
 				}
 			}
 		}
