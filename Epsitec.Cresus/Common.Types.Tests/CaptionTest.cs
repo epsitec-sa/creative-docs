@@ -81,30 +81,36 @@ namespace Epsitec.Common.Types
 			Assert.IsFalse (c.ContainsLocalValue (Caption.DescriptionProperty));
 
 			a.Description = "xyz";
+			a.Name = "A";
 			b.Labels.Add ("1");
 			b.Labels.Add ("2");
 
 			c = Caption.Merge (a, b);
-			
+
+			Assert.AreEqual ("A", c.Name);
 			Assert.AreEqual (2, c.Labels.Count);
 			Assert.AreEqual ("1", Collection.Extract (c.Labels, 0));
 			Assert.AreEqual ("2", Collection.Extract (c.Labels, 1));
 			Assert.AreEqual (a.Description, c.Description);
 
+			b.Name = "B";
 			b.Description = "abc";
 
 			a.Labels.Add ("x");
 			c = Caption.Merge (a, b);
 
+			Assert.AreEqual ("B", c.Name);
 			Assert.AreEqual (2, c.Labels.Count);
 			Assert.AreEqual ("1", Collection.Extract (c.Labels, 0));
 			Assert.AreEqual ("2", Collection.Extract (c.Labels, 1));
 			Assert.AreEqual (b.Description, c.Description);
 
+			b.Name = null;
 			b.Labels.Clear ();
 			
 			c = Caption.Merge (a, b);
 
+			Assert.AreEqual ("A", c.Name);
 			Assert.AreEqual (1, c.Labels.Count);
 			Assert.AreEqual ("x", Collection.Extract (c.Labels, 0));
 			Assert.AreEqual (b.Description, c.Description);
@@ -115,6 +121,7 @@ namespace Epsitec.Common.Types
 		{
 			Caption caption = new Caption ();
 
+			caption.Name = "FrameAngle";
 			caption.Labels.Add ("A");
 			caption.Labels.Add ("Angle");
 			caption.Labels.Add ("Angle de la trame");
@@ -127,6 +134,7 @@ namespace Epsitec.Common.Types
 			caption = new Caption ();
 			caption.DeserializeFromString (xml);
 
+			Assert.AreEqual ("FrameAngle", caption.Name);
 			Assert.AreEqual ("A", Collection.Extract (caption.SortedLabels, 0));
 			Assert.AreEqual ("Angle", Collection.Extract (caption.SortedLabels, 1));
 			Assert.AreEqual ("Angle de rotation de la trame, exprimé en degrés.", caption.Description);

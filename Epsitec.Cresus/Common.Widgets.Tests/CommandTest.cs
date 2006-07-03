@@ -38,9 +38,9 @@ namespace Epsitec.Common.Widgets
 		}
 
 		[Test]
-		public void CheckCommandShortcut()
+		public void CheckCommandSerialization1()
 		{
-			Command command = new Command ("Test");
+			Command command = new Command ("Test.CheckCommandSerialization1");
 			command.Shortcuts.Add (new Shortcut ('O', ModifierKeys.Alt));
 			command.Shortcuts.Add (new Shortcut (KeyCode.FuncF10 | KeyCode.ModifierShift));
 			command.Shortcuts.Add (new Shortcut ('O', ModifierKeys.Alt));
@@ -56,6 +56,16 @@ namespace Epsitec.Common.Widgets
 			Assert.AreEqual (restored.Shortcuts.Count, 2);
 			Assert.AreEqual (command.Shortcuts[0], restored.Shortcuts[0]);
 			Assert.AreEqual (command.Shortcuts[1], restored.Shortcuts[1]);
+		}
+		
+		[Test]
+		public void CheckCommandSerialization2()
+		{
+			Command command = Command.Get (Druid.Parse ("[0005]"));
+
+			string xml = Types.Serialization.SimpleSerialization.SerializeToString (command);
+
+			System.Console.Out.WriteLine (xml);
 		}
 	}
 }
