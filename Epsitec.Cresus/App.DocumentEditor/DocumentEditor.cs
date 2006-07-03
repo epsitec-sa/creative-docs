@@ -1117,7 +1117,7 @@ namespace Epsitec.App.DocumentEditor
 			{
 				Command c = Widgets.Command.Get (command);
 
-				MenuItem item = new MenuItem(c.Name, Misc.Icon(c.Icon), c.Description, Misc.GetShortcut(c), c.Name);
+				MenuItem item = new MenuItem(c.CommandId, Misc.Icon(c.Icon), c.Description, Misc.GetShortcut(c), c.CommandId);
 				vmenu.Items.Add(item);
 			}
 		}
@@ -1163,7 +1163,7 @@ namespace Epsitec.App.DocumentEditor
 			}
 			else
 			{
-				IconButton button = new IconButton(command.Name, Misc.Icon(command.Icon), command.Name);
+				IconButton button = new IconButton(command.CommandId, Misc.Icon(command.Icon), command.CommandId);
 				this.vToolBar.Items.Add(button);
 				ToolTip.Default.SetToolTip(button, Misc.GetTextWithShortcut(command));
 				return button;
@@ -1185,7 +1185,7 @@ namespace Epsitec.App.DocumentEditor
 		{
 			Command command = Widgets.Command.Get (commandName);
 
-			IconButton button = new IconButton(command.Name, Misc.Icon(command.Icon), command.Name);
+			IconButton button = new IconButton(command.CommandId, Misc.Icon(command.Icon), command.CommandId);
 			button.PreferredIconSize = Misc.IconPreferredSize("Small");
 			double h = this.info.PreferredHeight-3;
 			button.PreferredSize = new Size(h, h);
@@ -1327,7 +1327,7 @@ namespace Epsitec.App.DocumentEditor
 			}
 			else
 			{
-				IconButton button = new IconButton(command.Name, Misc.Icon(command.Icon), command.Name);
+				IconButton button = new IconButton(command.CommandId, Misc.Icon(command.Icon), command.CommandId);
 				this.ribbonBook.Items.Add(button);
 				ToolTip.Default.SetToolTip(button, Misc.GetTextWithShortcut(command));
 				return button;
@@ -3954,7 +3954,7 @@ namespace Epsitec.App.DocumentEditor
 		{
 			//	Met à jour une commande d'outil.
 			Command command = cs.Command;
-			string tool = command.Name;
+			string tool = command.CommandId;
 
 			if ( enabled )
 			{

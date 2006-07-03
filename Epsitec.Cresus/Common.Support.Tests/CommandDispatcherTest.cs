@@ -35,7 +35,7 @@ namespace Epsitec.Common.Support
 			command.ManuallyDefineCommand ("Enregistre le document ouvert", "save.icon", false);
 			command.Shortcuts.Add (new Shortcut ('S', ModifierKeys.Control));
 
-			Assert.AreEqual ("TestSave", command.Name);
+			Assert.AreEqual ("TestSave", command.CommandId);
 			Assert.IsTrue (command.IsReadWrite);
 			Assert.IsFalse (command.IsReadOnly);
 
@@ -93,7 +93,7 @@ namespace Epsitec.Common.Support
 			Assert.IsTrue (v3.Enable);
 			CommandCache.Default.Synchronize ();
 			Assert.IsFalse (v3.Enable);
-			Assert.AreEqual (stateA, chain.GetCommandState (command.Name));
+			Assert.AreEqual (stateA, chain.GetCommandState (command.CommandId));
 
 			//	En créant un stateB dans contextB, on va se trouver plus près de v3
 			//	dans la chaîne des contextes des commandes. Du coup, c'est l'état de
@@ -106,14 +106,14 @@ namespace Epsitec.Common.Support
 			Assert.IsFalse (v3.Enable);
 			CommandCache.Default.Synchronize ();
 			Assert.IsTrue (v3.Enable);
-			Assert.AreEqual (stateB, chain.GetCommandState (command.Name));
+			Assert.AreEqual (stateB, chain.GetCommandState (command.CommandId));
 
 			contextB.ClearCommandState (command);
 
 			Assert.IsTrue (v3.Enable);
 			CommandCache.Default.Synchronize ();
 			Assert.IsFalse (v3.Enable);
-			Assert.AreEqual (stateA, chain.GetCommandState (command.Name));
+			Assert.AreEqual (stateA, chain.GetCommandState (command.CommandId));
 		}
 
 		[Test]
@@ -132,10 +132,10 @@ namespace Epsitec.Common.Support
 			CommandContext context = new CommandContext ();
 			CommandDispatcher dispatcher = new CommandDispatcher ();
 
-			dispatcher.Register (command.Name, this.HandleCommandTestMulti);
-			dispatcher.Register (commandA.Name, this.HandleCommandTestMulti);
-			dispatcher.Register (commandB.Name, this.HandleCommandTestMulti);
-			dispatcher.Register (commandC.Name, this.HandleCommandTestMulti);
+			dispatcher.Register (command.CommandId, this.HandleCommandTestMulti);
+			dispatcher.Register (commandA.CommandId, this.HandleCommandTestMulti);
+			dispatcher.Register (commandB.CommandId, this.HandleCommandTestMulti);
+			dispatcher.Register (commandC.CommandId, this.HandleCommandTestMulti);
 
 			Visual v1 = new Visual ();
 
@@ -156,7 +156,7 @@ namespace Epsitec.Common.Support
 			state.Enable = true;
 
 			CommandDispatcherTest.buffer.Length = 0;
-			CommandDispatcher.Dispatch (dispatcherChain, contextChain, command.Name, this);
+			CommandDispatcher.Dispatch (dispatcherChain, contextChain, command.CommandId, this);
 			Assert.AreEqual ("<CommandMulti:TestMulti-null>", CommandDispatcherTest.buffer.ToString ());
 
 			MultiCommand.SetSelectedCommand (state, commandA);
@@ -166,13 +166,13 @@ namespace Epsitec.Common.Support
 			Assert.AreEqual (ActiveState.No, stateC.ActiveState);
 			
 			CommandDispatcherTest.buffer.Length = 0;
-			CommandDispatcher.Dispatch (dispatcherChain, contextChain, command.Name, this);
+			CommandDispatcher.Dispatch (dispatcherChain, contextChain, command.CommandId, this);
 			Assert.AreEqual ("<CommandMulti:TestMulti-TestCmdA>", CommandDispatcherTest.buffer.ToString ());
 
-			dispatcher.Unregister (command.Name, this.HandleCommandTestMulti);
+			dispatcher.Unregister (command.CommandId, this.HandleCommandTestMulti);
 
 			CommandDispatcherTest.buffer.Length = 0;
-			CommandDispatcher.Dispatch (dispatcherChain, contextChain, command.Name, this);
+			CommandDispatcher.Dispatch (dispatcherChain, contextChain, command.CommandId, this);
 			Assert.AreEqual ("<CommandMulti:TestCmdA-null>", CommandDispatcherTest.buffer.ToString ());
 
 			MultiCommand.SetSelectedCommand (state, commandB);
@@ -182,7 +182,7 @@ namespace Epsitec.Common.Support
 			Assert.AreEqual (ActiveState.No, stateC.ActiveState);
 
 			CommandDispatcherTest.buffer.Length = 0;
-			CommandDispatcher.Dispatch (dispatcherChain, contextChain, command.Name, this);
+			CommandDispatcher.Dispatch (dispatcherChain, contextChain, command.CommandId, this);
 			Assert.AreEqual ("<CommandMulti:TestCmdB-null>", CommandDispatcherTest.buffer.ToString ());
 
 			MultiCommand.SetSelectedCommand (state, null);
@@ -192,7 +192,7 @@ namespace Epsitec.Common.Support
 			Assert.AreEqual (ActiveState.No, stateC.ActiveState);
 			
 			CommandDispatcherTest.buffer.Length = 0;
-			CommandDispatcher.Dispatch (dispatcherChain, contextChain, command.Name, this);
+			CommandDispatcher.Dispatch (dispatcherChain, contextChain, command.CommandId, this);
 			Assert.AreEqual ("", CommandDispatcherTest.buffer.ToString ());
 		}
 
@@ -205,7 +205,7 @@ namespace Epsitec.Common.Support
 			CommandContext context = new CommandContext ();
 			CommandDispatcher dispatcher = new CommandDispatcher ();
 
-			dispatcher.Register (command.Name, this.HandleCommandTestMulti);
+			dispatcher.Register (command.CommandId, this.HandleCommandTestMulti);
 
 			Visual v1 = new Visual ();
 
@@ -249,7 +249,7 @@ namespace Epsitec.Common.Support
 
 			MultiCommand.SetSelectedCommand (state, command);
 
-			CommandDispatcher.Dispatch (dispatcherChain, contextChain, command.Name, this);
+			CommandDispatcher.Dispatch (dispatcherChain, contextChain, command.CommandId, this);
 		}
 
 		[Test]
@@ -325,7 +325,7 @@ namespace Epsitec.Common.Support
 			CommandDispatcherTest.buffer.Append ("<CommandMulti:");
 			CommandDispatcherTest.buffer.Append (e.CommandName);
 			CommandDispatcherTest.buffer.Append ("-");
-			CommandDispatcherTest.buffer.Append (command == null ? "null" : command.Name);
+			CommandDispatcherTest.buffer.Append (command == null ? "null" : command.CommandId);
 			CommandDispatcherTest.buffer.Append (">");
 		}
 

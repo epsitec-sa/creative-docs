@@ -39,7 +39,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.command.Name;
+				return this.command.CommandId;
 			}
 		}
 		

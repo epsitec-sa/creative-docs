@@ -26,7 +26,7 @@ namespace Epsitec.Common.Widgets
 		{
 			if (this.IsReadOnly)
 			{
-				throw new Exceptions.CommandLockedException (this.Name);
+				throw new Exceptions.CommandLockedException (this.CommandId);
 			}
 			
 			if (command != null)
@@ -202,7 +202,7 @@ namespace Epsitec.Common.Widgets
 				
 				foreach (Command command in this.commands)
 				{
-					if (command.Name == name)
+					if (command.CommandId == name)
 					{
 						return new CommandEnumValue (rank, command);
 					}
