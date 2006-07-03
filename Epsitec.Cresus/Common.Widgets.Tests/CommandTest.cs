@@ -43,6 +43,9 @@ namespace Epsitec.Common.Widgets
 			Command command = new Command ("Test");
 			command.Shortcuts.Add (new Shortcut ('O', ModifierKeys.Alt));
 			command.Shortcuts.Add (new Shortcut (KeyCode.FuncF10 | KeyCode.ModifierShift));
+			command.Shortcuts.Add (new Shortcut ('O', ModifierKeys.Alt));
+
+			Assert.AreEqual (2, command.Shortcuts.Count);
 
 			string xml = Types.Serialization.SimpleSerialization.SerializeToString (command);
 
