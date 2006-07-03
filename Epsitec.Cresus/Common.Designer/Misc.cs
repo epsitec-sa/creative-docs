@@ -430,11 +430,11 @@ namespace Epsitec.Common.Designer
 
 			if (shortcut == null)
 			{
-				return command.LongCaption;
+				return command.Description;
 			}
 			else
 			{
-				return string.Format("{0} ({1})", command.LongCaption, shortcut);
+				return string.Format("{0} ({1})", command.Description, shortcut);
 			}
 		}
 

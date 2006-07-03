@@ -12,7 +12,7 @@ namespace Epsitec.Common.Widgets
 	{
 		public MultiCommand(string name) : base (name)
 		{
-			this.StateObjectType = Types.DependencyObjectType.FromSystemType (typeof (MultiState));
+			this.DefineStateObjectType (Types.DependencyObjectType.FromSystemType (typeof (MultiState)));
 			this.commands = new List<Command> ();
 		}
 

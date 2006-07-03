@@ -1117,7 +1117,7 @@ namespace Epsitec.App.DocumentEditor
 			{
 				Command c = Widgets.Command.Get (command);
 
-				MenuItem item = new MenuItem(c.Name, Misc.Icon(c.IconName), c.LongCaption, Misc.GetShortcut(c), c.Name);
+				MenuItem item = new MenuItem(c.Name, Misc.Icon(c.Icon), c.Description, Misc.GetShortcut(c), c.Name);
 				vmenu.Items.Add(item);
 			}
 		}
@@ -1163,7 +1163,7 @@ namespace Epsitec.App.DocumentEditor
 			}
 			else
 			{
-				IconButton button = new IconButton(command.Name, Misc.Icon(command.IconName), command.Name);
+				IconButton button = new IconButton(command.Name, Misc.Icon(command.Icon), command.Name);
 				this.vToolBar.Items.Add(button);
 				ToolTip.Default.SetToolTip(button, Misc.GetTextWithShortcut(command));
 				return button;
@@ -1185,7 +1185,7 @@ namespace Epsitec.App.DocumentEditor
 		{
 			Command command = Widgets.Command.Get (commandName);
 
-			IconButton button = new IconButton(command.Name, Misc.Icon(command.IconName), command.Name);
+			IconButton button = new IconButton(command.Name, Misc.Icon(command.Icon), command.Name);
 			button.PreferredIconSize = Misc.IconPreferredSize("Small");
 			double h = this.info.PreferredHeight-3;
 			button.PreferredSize = new Size(h, h);
@@ -1327,7 +1327,7 @@ namespace Epsitec.App.DocumentEditor
 			}
 			else
 			{
-				IconButton button = new IconButton(command.Name, Misc.Icon(command.IconName), command.Name);
+				IconButton button = new IconButton(command.Name, Misc.Icon(command.Icon), command.Name);
 				this.ribbonBook.Items.Add(button);
 				ToolTip.Default.SetToolTip(button, Misc.GetTextWithShortcut(command));
 				return button;
@@ -3759,9 +3759,9 @@ namespace Epsitec.App.DocumentEditor
 					command.Shortcuts.AddRange (shortcuts);
 				}
 
-				command.IconName    = icon;
-				command.LongCaption = DocumentEditor.GetRes ("Action."+tooltip);
-				command.Statefull   = statefull;
+				string description = DocumentEditor.GetRes("Action."+tooltip);
+
+				command.ManuallyDefineCommand (description, icon, statefull);
 			}
 
 			return this.CommandContext.GetCommandState (command);

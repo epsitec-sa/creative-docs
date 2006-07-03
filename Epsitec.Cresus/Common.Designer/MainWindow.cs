@@ -700,9 +700,11 @@ namespace Epsitec.Common.Designer
 					command.Shortcuts.AddRange (shortcuts);
 				}
 
-				command.IconName    = commandName;
-				command.LongCaption = Res.Strings.GetString ("Action."+commandName);
-				command.Statefull   = (commandName == "FontBold" || commandName == "FontItalic" || commandName == "FontUnderlined" || commandName.StartsWith("PanelShow"));
+				string iconName = commandName;
+				string description = Res.Strings.GetString ("Action."+commandName);
+				bool statefull = (commandName == "FontBold" || commandName == "FontItalic" || commandName == "FontUnderlined" || commandName.StartsWith("PanelShow"));
+
+				command.ManuallyDefineCommand (description, iconName, statefull);
 			}
 
 			return this.CommandContext.GetCommandState (command);

@@ -12,7 +12,7 @@ namespace Epsitec.Common.Widgets
 	{
 		public StructuredCommand(string name) : base (name)
 		{
-			this.StateObjectType = Types.DependencyObjectType.FromSystemType (typeof (StructuredState));
+			this.DefineStateObjectType (Types.DependencyObjectType.FromSystemType (typeof (StructuredState)));
 		}
 
 		public void AddField(string name, INamedType type)
