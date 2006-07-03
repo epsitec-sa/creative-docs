@@ -4,8 +4,6 @@
 using Epsitec.Common.Types;
 using System.Collections.Generic;
 
-[assembly: Epsitec.Common.Types.DependencyClass (typeof (Epsitec.Common.Widgets.Collections.ShortcutCollection))]
-
 namespace Epsitec.Common.Widgets.Collections
 {
 	public class ShortcutCollection : Types.Collections.HostedDependencyObjectList<Shortcut>
@@ -17,6 +15,11 @@ namespace Epsitec.Common.Widgets.Collections
 
 		public ShortcutCollection(IListHost<Shortcut> host)
 			: base (host)
+		{
+		}
+
+		public ShortcutCollection(Callback insertionCallback, Callback removalCallback)
+			: base (insertionCallback, removalCallback)
 		{
 		}
 		
