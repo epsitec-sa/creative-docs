@@ -23,35 +23,12 @@ namespace Epsitec.Common.Widgets
 		
 		public Command(string name) : this ()
 		{
-			System.Diagnostics.Debug.Assert (string.IsNullOrEmpty (name) == false);
-
-			lock (Command.commands)
+			if (string.IsNullOrEmpty (name))
 			{
-				if (Command.commands.ContainsKey (name))
-				{
-					throw new System.ArgumentException (string.Format ("Command {0} already registered", name));
-				}
-
-				this.name = name;
-				this.uniqueId = Command.nextUniqueId++;
-
-				Command.commands[name] = this;
+				throw new System.ArgumentNullException ("name");
 			}
-
-			if (Support.Druid.TryParse (name, out this.druid))
-			{
-				//	This command is defined by a DRUID.
-
-				this.captionId = druid.ToLong ();
-				
-				Types.Caption caption = Support.Resources.DefaultManager.GetCaption (druid);
-
-				System.Diagnostics.Debug.Assert (caption != null);
-				System.Diagnostics.Debug.Assert (caption.Id == this.name);
-
-				this.caption = caption;
-				this.RefreshCommandBasedOnCaption (this.caption);
-			}
+			
+			this.InitializeName (name);
 		}
 
 		public Command(string name, params Shortcut[] shortcuts) : this (name)
@@ -59,8 +36,11 @@ namespace Epsitec.Common.Widgets
 			this.Shortcuts.AddRange (shortcuts);
 		}
 
-		public Command(Support.Druid druid) : this (druid.ToResourceId ())
+		public Command(Support.Druid druid) : this ()
 		{
+			string name = druid.ToResourceId ();
+			
+			this.InitializeName (name);
 		}
 		
 		
@@ -401,6 +381,50 @@ namespace Epsitec.Common.Widgets
 
 		#region Internal Methods
 
+		private void InitializeName(string name)
+		{
+			System.Diagnostics.Debug.Assert (string.IsNullOrEmpty (name) == false);
+			System.Diagnostics.Debug.Assert (this.name == null);
+			
+			lock (Command.commands)
+			{
+				if (Command.commands.ContainsKey (name))
+				{
+					throw new System.ArgumentException (string.Format ("Command {0} already registered", name));
+				}
+
+				this.name = name;
+				this.uniqueId = Command.nextUniqueId++;
+
+				Command.commands[name] = this;
+			}
+
+			Support.Druid druid;
+
+			if (Support.Druid.TryParse (name, out druid))
+			{
+				this.InitializeDruid (druid);
+			}
+		}
+
+		private void InitializeDruid(Support.Druid druid)
+		{
+			System.Diagnostics.Debug.Assert (druid.IsValid);
+			System.Diagnostics.Debug.Assert (this.captionId == -1);
+
+			this.captionId = druid.ToLong ();
+			
+			//	This command is defined by a DRUID.
+
+			Types.Caption caption = Support.Resources.DefaultManager.GetCaption (druid);
+
+			System.Diagnostics.Debug.Assert (caption != null);
+			System.Diagnostics.Debug.Assert (caption.Id == this.name);
+
+			this.caption = caption;
+			this.RefreshCommandBasedOnCaption (this.caption);
+		}
+
 		internal void Lockdown()
 		{
 			this.locked = true;
@@ -505,7 +529,22 @@ namespace Epsitec.Common.Widgets
 			Command that = (Command) obj;
 			return that.Shortcuts;
 		}
+
+		private static object GetNameValue(DependencyObject obj)
+		{
+			Command that = (Command) obj;
+			return that.Name;
+		}
+
+		private static void SetNameValue(DependencyObject obj, object value)
+		{
+			Command that = (Command) obj;
+			string name = (string) value;
+
+			that.InitializeName (name);
+		}
 		
+		public static readonly DependencyProperty NameProperty			= DependencyProperty.Register ("Name", typeof (string), typeof (Command), new DependencyPropertyMetadata (Command.GetNameValue, Command.SetNameValue));
 		public static readonly DependencyProperty GroupProperty			= DependencyProperty.Register ("Group", typeof (string), typeof (Command), new DependencyPropertyMetadata (null, new PropertyInvalidatedCallback (Command.NotifyGroupChanged)));
 		public static readonly DependencyProperty IconNameProperty		= DependencyProperty.Register ("Icon", typeof (string), typeof (Command), new DependencyPropertyMetadata (null, new PropertyInvalidatedCallback (Command.NotifyIconNameChanged)));
 		public static readonly DependencyProperty DescriptionProperty	= DependencyProperty.Register ("Description", typeof (string), typeof (Command), new DependencyPropertyMetadata (null, new PropertyInvalidatedCallback (Command.NotifyDescriptionChanged)));
@@ -520,9 +559,8 @@ namespace Epsitec.Common.Widgets
 		private bool							locked;
 		
 		private string							name;
-		private Support.Druid					druid;
-		private Types.Caption					caption;
 		private long							captionId = -1;
+		private Types.Caption					caption;
 		private Collections.ShortcutCollection	shortcuts;
 	}
 }

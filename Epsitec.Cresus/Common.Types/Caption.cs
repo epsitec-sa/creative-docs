@@ -56,6 +56,25 @@ namespace Epsitec.Common.Types
 			}
 		}
 		
+		public string							Name
+		{
+			get
+			{
+				return (string) this.GetValue (Caption.NameProperty);
+			}
+			set
+			{
+				if (value == null)
+				{
+					this.ClearValue (Caption.NameProperty);
+				}
+				else
+				{
+					this.SetValue (Caption.NameProperty, value);
+				}
+			}
+		}
+		
 		public string							Id
 		{
 			get
@@ -332,7 +351,8 @@ namespace Epsitec.Common.Types
 			Caption that = (Caption) o;
 			return that.Labels;
 		}
-		
+
+		public static readonly DependencyProperty NameProperty = DependencyProperty.Register ("Name", typeof (string), typeof (Caption));
 		public static readonly DependencyProperty LabelsProperty = DependencyProperty.RegisterReadOnly ("Labels", typeof (ICollection<string>), typeof (Caption), new DependencyPropertyMetadata (Caption.GetLabelsValue).MakeReadOnlySerializable ());
 		public static readonly DependencyProperty DescriptionProperty = DependencyProperty.Register ("Description", typeof (string), typeof (Caption));
 		public static readonly DependencyProperty IconProperty = DependencyProperty.Register ("Icon", typeof (string), typeof (Caption));
