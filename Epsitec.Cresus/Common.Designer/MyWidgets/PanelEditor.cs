@@ -386,7 +386,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 				case MessageType.MouseLeave:
 					this.SetHilitedObject(null, null);
-					this.SetHilitedParent(null, -1, -1, 0, 0);
+					this.SetHilitedParent(null, int.MinValue, int.MinValue, 0, 0);
 					break;
 
 				case MessageType.KeyDown:
@@ -850,7 +850,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			Widget obj = this.Detect(pos, false, true);  // objet tableau visé par la souris
 			int column, row;
 			this.GridDetect(pos, obj, out column, out row);
-			if (column != -1 && row != -1)
+			if (column != int.MinValue && row != int.MinValue)
 			{
 				this.selectedObjects.Clear();
 				this.selectedObjects.Add(obj);
@@ -1095,8 +1095,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 				Point initialPos = pos;
 				this.isInside = this.IsInside(pos);
 				Widget parent = this.DetectGroup(pos);
-				int column = -1;
-				int row = -1;
+				int column = int.MinValue;
+				int row = int.MinValue;
 
 				this.CreateObjectAdjust(ref pos, parent, out this.creatingRectangle);
 
@@ -1217,7 +1217,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 				this.SetHilitedZOrderRectangle(Rectangle.Empty);
 				this.constrainsList.Ending();
-				this.SetHilitedParent(null, -1, -1, 0, 0);
+				this.SetHilitedParent(null, int.MinValue, int.MinValue, 0, 0);
 
 				this.lastCreatedObject = this.creatingObject;
 				this.creatingObject = null;
@@ -1430,8 +1430,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.isInside = true;
 			Widget parent = this.DetectGroup(pos);
 
-			int column = -1;
-			int row = -1;
+			int column = int.MinValue;
+			int row = int.MinValue;
 			this.draggingSpanColumnOffset = 0;
 			this.draggingSpanRowOffset = 0;
 			this.draggingSpanColumnCount = 1;
@@ -1506,8 +1506,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Mouvement du drag pour déplacer les objets sélectionnés.
 			this.isInside = this.IsInside(pos);
 			Widget parent = this.DetectGroup(pos);
-			int column = -1;
-			int row = -1;
+			int column = int.MinValue;
+			int row = int.MinValue;
 			Point adjust = Point.Zero;
 
 			if (this.objectModifier.AreChildrenAnchored(parent))
@@ -1640,7 +1640,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.DeleteSelection();
 			}
 
-			this.SetHilitedParent(null, -1, -1, 0, 0);
+			this.SetHilitedParent(null, int.MinValue, int.MinValue, 0, 0);
 			this.SetHilitedZOrderRectangle(Rectangle.Empty);
 			this.isDragging = false;
 			this.draggingArraySelected = null;
@@ -1660,7 +1660,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				return false;
 			}
 
-			if (column == -1 || row == -1)
+			if (column == int.MinValue || row == int.MinValue)
 			{
 				return false;
 			}
@@ -1677,20 +1677,16 @@ namespace Epsitec.Common.Designer.MyWidgets
 					return false;
 				}
 
-				Widget actual = this.objectModifier.GetGridCellWidget(obj.Parent, null, column, row);
+				Widget actual = this.objectModifier.GetGridCellWidget(obj.Parent, obj, column, row);
 				if (actual == null)
 				{
-					column = -1;
-					row = -1;
 					return false;
 				}
 
-				if (this.objectModifier.GetGridColumnSpan(obj) != this.objectModifier.GetGridColumnSpan(actual))
-				{
-					return false;
-				}
-
-				if (this.objectModifier.GetGridRowSpan(obj) != this.objectModifier.GetGridRowSpan(actual))
+				if (this.objectModifier.GetGridColumnSpan(obj) != this.objectModifier.GetGridColumnSpan(actual)||
+					this.objectModifier.GetGridRowSpan(obj) != this.objectModifier.GetGridRowSpan(actual)||
+					column != this.objectModifier.GetGridColumn(actual)||
+					row != this.objectModifier.GetGridRow(actual))
 				{
 					return false;
 				}
@@ -2999,8 +2995,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void GridDetect(Point mouse, Widget parent, out int column, out int row)
 		{
 			//	Détecte la colonne et la ligne visée dans un tableau.
-			column = -1;
-			row = -1;
+			column = int.MinValue;
+			row = int.MinValue;
 
 			if (!this.objectModifier.AreChildrenGrid(parent))  return;
 
@@ -3507,7 +3503,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.DrawGrid(graphics, obj, PanelsContext.ColorHiliteOutline);
 			}
 
-			if (column != -1 && row != -1)
+			if (column != int.MinValue && row != int.MinValue)
 			{
 				Rectangle area = this.objectModifier.GetGridCellArea(obj, column, row, columnCount, rowCount);
 				this.DrawGridHilited(graphics, area, PanelsContext.ColorGridCell);
@@ -4070,8 +4066,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected Widget					hilitedObject;
 		protected GridSelection				hilitedGrid;
 		protected Widget					hilitedParent;
-		protected int						hilitedParentColumn = -1;
-		protected int						hilitedParentRow = -1;
+		protected int						hilitedParentColumn = int.MinValue;
+		protected int						hilitedParentRow = int.MinValue;
 		protected int						hilitedParentColumnCount = 0;
 		protected int						hilitedParentRowCount = 0;
 		protected bool						isRectangling;  // j'invente des mots si je veux !
