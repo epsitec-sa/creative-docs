@@ -76,33 +76,19 @@ namespace Epsitec.Common.Designer
 			this.list.RemoveAt(index);
 		}
 
-		public static bool EqualValues(GridSelection a, GridSelection b)
+		public int Search(Unit unit, int index)
 		{
-			//	Compare si deux instances de GridSelection sont identiques.
-			if (a == null && b == null)
+			for (int i=0; i<this.Count; i++)
 			{
-				return true;
-			}
+				OneItem item = this[i];
 
-			if (a == null || b == null)
-			{
-				return false;
-			}
-
-			if (a.Count != b.Count)
-			{
-				return false;
-			}
-
-			for (int i=0; i<a.Count; i++)
-			{
-				if (!OneItem.EqualValues(a[i], b[i]))
+				if (item.Unit == unit && item.Index == index)
 				{
-					return false;
+					return i;
 				}
 			}
 
-			return true;
+			return -1;
 		}
 
 		public bool AreOnlyColumns
@@ -110,6 +96,11 @@ namespace Epsitec.Common.Designer
 			//	Indique s'il n'y a que des sélections de colonnes.
 			get
 			{
+				if (this.Count == 0)
+				{
+					return false;
+				}
+
 				foreach (OneItem item in this)
 				{
 					if (item.Unit == Unit.Row)
@@ -126,6 +117,11 @@ namespace Epsitec.Common.Designer
 			//	Indique s'il n'y a que des sélections de lignes.
 			get
 			{
+				if (this.Count == 0)
+				{
+					return false;
+				}
+
 				foreach (OneItem item in this)
 				{
 					if (item.Unit == Unit.Column)
@@ -162,60 +158,103 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		public void InvertColumnSelection(int column)
+		public void ChangeColumnSelection(int column, bool add)
 		{
-			//	Inverse une sélection de colonne.
-			for (int i=0; i<this.Count; i++)
-			{
-				OneItem item = this[i];
+			//	Modifie une sélection de colonne.
+			int i = this.Search(Unit.Column, column);
 
-				if (item.Unit == Unit.Column && item.Index == column)
+			if (add)
+			{
+				if (i == -1)
 				{
-					this.RemoveAt(i);
-					return;
+					this.Add(Unit.Column, column);
 				}
 			}
-
-			this.Add(Unit.Column, column);
-		}
-
-		public void InvertRowSelection(int row)
-		{
-			//	Inverse une sélection de ligne.
-			for (int i=0; i<this.Count; i++)
+			else
 			{
-				OneItem item = this[i];
-
-				if (item.Unit == Unit.Row && item.Index == row)
+				if (i != -1)
 				{
 					this.RemoveAt(i);
-					return;
 				}
 			}
-
-			this.Add(Unit.Row, row);
 		}
 
-		public void SelectPart(int column1, int column2, int row1, int row2)
+		public void ChangeRowSelection(int row, bool add)
 		{
-			//	Sélectionne quelques lignes et colonnes.
+			//	Modifie une sélection de ligne.
+			int i = this.Search(Unit.Row, row);
+
+			if (add)
+			{
+				if (i == -1)
+				{
+					this.Add(Unit.Row, row);
+				}
+			}
+			else
+			{
+				if (i != -1)
+				{
+					this.RemoveAt(i);
+				}
+			}
+		}
+
+		public void SelectColumnsAndRows(int column1, int column2, int row1, int row2)
+		{
+			//	Sélectionne quelques lignes et colonnes contigües.
 			this.Clear();
 
-			int c1 = System.Math.Min(column1, column2);
-			int c2 = System.Math.Max(column1, column2);
-
-			int r1 = System.Math.Min(row1, row2);
-			int r2 = System.Math.Max(row1, row2);
-
-			for (int c=c1; c<=c2; c++)
+			if (column1 != GridSelection.Invalid && column2 != GridSelection.Invalid)
 			{
-				this.Add(Unit.Column, c);
+				int c1 = System.Math.Min(column1, column2);
+				int c2 = System.Math.Max(column1, column2);
+
+				for (int c=c1; c<=c2; c++)
+				{
+					this.Add(Unit.Column, c);
+				}
 			}
 
-			for (int r=r1; r<=r2; r++)
+			if (row1 != GridSelection.Invalid && row2 != GridSelection.Invalid)
 			{
-				this.Add(Unit.Row, r);
+				int r1 = System.Math.Min(row1, row2);
+				int r2 = System.Math.Max(row1, row2);
+
+				for (int r=r1; r<=r2; r++)
+				{
+					this.Add(Unit.Row, r);
+				}
 			}
+		}
+
+		public static bool EqualValues(GridSelection a, GridSelection b)
+		{
+			//	Compare si deux instances de GridSelection sont identiques.
+			if (a == null && b == null)
+			{
+				return true;
+			}
+
+			if (a == null || b == null)
+			{
+				return false;
+			}
+
+			if (a.Count != b.Count)
+			{
+				return false;
+			}
+
+			for (int i=0; i<a.Count; i++)
+			{
+				if (!OneItem.EqualValues(a[i], b[i]))
+				{
+					return false;
+				}
+			}
+
+			return true;
 		}
 
 

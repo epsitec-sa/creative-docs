@@ -859,26 +859,23 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 			else
 			{
-				if (isShiftPressed)
+				this.selectedObjects.Clear();
+				this.selectedObjects.Add(obj);
+
+				if (!isShiftPressed)
 				{
-					this.GridAddSelection(obj, column, row);
-				}
-				else
-				{
-					this.selectedObjects.Clear();
-					this.selectedObjects.Add(obj);
 					this.GridClearSelection(obj);
-					this.UpdateAfterSelectionChanged();
-
-					this.SetHilitedObject(null, null);
-					this.isGridding = true;
-					this.isGriddingColumn = false;
-					this.isGriddingRow = false;
-					this.griddingColumn = column;
-					this.griddingRow = row;
-
-					this.GridAdaptSelection(obj, column, row);
 				}
+
+				this.UpdateAfterSelectionChanged();
+				this.SetHilitedObject(null, null);
+
+				this.isGridding = true;
+				this.isGriddingColumn = false;
+				this.isGriddingRow = false;
+				this.griddingColumn = column;
+				this.griddingRow = row;
+				this.GridAdaptSelection(obj, column, row, isShiftPressed, true);
 			}
 
 			this.OnChildrenSelected();
@@ -907,7 +904,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			if (this.isGridding)
 			{
-				this.GridAdaptSelection(obj, column, row);
+				this.GridAdaptSelection(obj, column, row, isShiftPressed, false);
 			}
 			else if (this.handlesList.IsDragging)
 			{
@@ -937,9 +934,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 							hgs.Add(GridSelection.Unit.Row, row);
 						}
 
-						if (column != GridSelection.Invalid && row != GridSelection.Invalid && ags != null && ags.AreMix)
+						if (ags != null && ags.AreMix)
 						{
-							hgs.SelectPart(this.griddingColumn, column, this.griddingRow, row);
+							hgs.SelectColumnsAndRows(this.griddingColumn, column, this.griddingRow, row);
 						}
 					}
 					else
@@ -975,39 +972,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
-		protected void GridAddSelection(Widget obj, int column, int row)
-		{
-			//	Etend la sélection lorsque la touche Shift est pressée.
-			if (obj == null)
-			{
-				return;
-			}
-
-			GridSelection gs = GridSelection.Get(obj);
-			if (gs == null)
-			{
-				this.GridAdaptSelection(obj, column, row);
-			}
-			else
-			{
-				if (gs.AreOnlyColumns && column != GridSelection.Invalid)
-				{
-					gs.InvertColumnSelection(column);
-				}
-
-				if (gs.AreOnlyRows && row != GridSelection.Invalid)
-				{
-					gs.InvertRowSelection(row);
-				}
-
-				if (gs.AreMix && column != GridSelection.Invalid && row != GridSelection.Invalid)
-				{
-					gs.SelectPart(this.griddingColumn, column, this.griddingRow, row);
-				}
-			}
-		}
-
-		protected void GridAdaptSelection(Widget obj, int column, int row)
+		protected void GridAdaptSelection(Widget obj, int column, int row, bool isShiftPressed, bool isFirst)
 		{
 			//	Adapte la sélection selon le mouvement de la souris.
 			if (obj == null)
@@ -1015,7 +980,61 @@ namespace Epsitec.Common.Designer.MyWidgets
 				return;
 			}
 
-			GridSelection gs = new GridSelection(obj);
+			GridSelection gs;
+
+			if (isShiftPressed)
+			{
+				gs = GridSelection.Get(obj);
+				if (gs != null)
+				{
+					if (gs.AreOnlyColumns && column != GridSelection.Invalid)
+					{
+						if (isFirst)
+						{
+							this.isGriddingAdd = (gs.Search(GridSelection.Unit.Column, column) == -1);
+						}
+
+						gs.ChangeColumnSelection(column, this.isGriddingAdd);
+						this.isGriddingColumn = true;
+						this.isGriddingRow = false;
+
+						this.Invalidate();
+						return;
+					}
+
+					if (gs.AreOnlyRows && row != GridSelection.Invalid)
+					{
+						if (isFirst)
+						{
+							this.isGriddingAdd = (gs.Search(GridSelection.Unit.Row, row) == -1);
+						}
+
+						gs.ChangeRowSelection(row, this.isGriddingAdd);
+						this.isGriddingColumn = false;
+						this.isGriddingRow = true;
+
+						this.Invalidate();
+						return;
+					}
+				}
+
+				if (this.isGriddingColumn || this.isGriddingRow)
+				{
+					return;
+				}
+
+				gs = new GridSelection(obj);
+				gs.SelectColumnsAndRows(this.griddingColumn, column, this.griddingRow, row);
+
+				if (!GridSelection.EqualValues(gs, GridSelection.Get(obj)))
+				{
+					GridSelection.Attach(obj, gs);
+					this.Invalidate();
+				}
+				return;
+			}
+
+			gs = new GridSelection(obj);
 
 			if (column == this.griddingColumn && row == this.griddingRow)
 			{
@@ -4315,6 +4334,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected bool						isGridding;
 		protected bool						isGriddingColumn;
 		protected bool						isGriddingRow;
+		protected bool						isGriddingAdd;
 		protected int						griddingColumn;
 		protected int						griddingRow;
 		protected Point						startingPos;
