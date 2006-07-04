@@ -137,6 +137,31 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
+		public bool AreMix
+		{
+			//	Indique s'il y a au moins une ligne et une colonne.
+			get
+			{
+				bool c = false;
+				bool r = false;
+
+				foreach (OneItem item in this)
+				{
+					if (item.Unit == Unit.Column)
+					{
+						c = true;
+					}
+
+					if (item.Unit == Unit.Row)
+					{
+						r = true;
+					}
+				}
+
+				return (c && r);
+			}
+		}
+
 		public void InvertColumnSelection(int column)
 		{
 			//	Inverse une sélection de colonne.
@@ -151,7 +176,7 @@ namespace Epsitec.Common.Designer
 				}
 			}
 
-			this.Add(new OneItem(Unit.Column, column));
+			this.Add(Unit.Column, column);
 		}
 
 		public void InvertRowSelection(int row)
@@ -168,7 +193,29 @@ namespace Epsitec.Common.Designer
 				}
 			}
 
-			this.Add(new OneItem(Unit.Row, row));
+			this.Add(Unit.Row, row);
+		}
+
+		public void SelectPart(int column1, int column2, int row1, int row2)
+		{
+			//	Sélectionne quelques lignes et colonnes.
+			this.Clear();
+
+			int c1 = System.Math.Min(column1, column2);
+			int c2 = System.Math.Max(column1, column2);
+
+			int r1 = System.Math.Min(row1, row2);
+			int r2 = System.Math.Max(row1, row2);
+
+			for (int c=c1; c<=c2; c++)
+			{
+				this.Add(Unit.Column, c);
+			}
+
+			for (int r=r1; r<=r2; r++)
+			{
+				this.Add(Unit.Row, r);
+			}
 		}
 
 

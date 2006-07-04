@@ -936,6 +936,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 						{
 							hgs.Add(GridSelection.Unit.Row, row);
 						}
+
+						if (column != GridSelection.Invalid && row != GridSelection.Invalid && ags != null && ags.AreMix)
+						{
+							hgs.SelectPart(this.griddingColumn, column, this.griddingRow, row);
+						}
 					}
 					else
 					{
@@ -993,6 +998,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 				if (gs.AreOnlyRows && row != GridSelection.Invalid)
 				{
 					gs.InvertRowSelection(row);
+				}
+
+				if (gs.AreMix && column != GridSelection.Invalid && row != GridSelection.Invalid)
+				{
+					gs.SelectPart(this.griddingColumn, column, this.griddingRow, row);
 				}
 			}
 		}
