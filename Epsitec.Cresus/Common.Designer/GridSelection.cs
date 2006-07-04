@@ -69,15 +69,32 @@ namespace Epsitec.Common.Designer
 			this.list.RemoveAt(index);
 		}
 
-		public void CopyTo(GridSelection dest)
+		public static bool EqualValues(GridSelection a, GridSelection b)
 		{
-			dest.Clear();
-
-			foreach (OneItem item in this)
+			if (a == null && b == null)
 			{
-				OneItem copy = new OneItem(item.Unit, item.Index);
-				dest.Add(copy);
+				return true;
 			}
+
+			if (a == null || b == null)
+			{
+				return false;
+			}
+
+			if (a.Count != b.Count)
+			{
+				return false;
+			}
+
+			for (int i=0; i<a.Count; i++)
+			{
+				if (!OneItem.EqualValues(a[i], b[i]))
+				{
+					return false;
+				}
+			}
+
+			return true;
 		}
 
 
@@ -123,13 +140,6 @@ namespace Epsitec.Common.Designer
 				}
 			}
 
-			public void CopyTo(OneItem dest)
-			{
-				//	Copie GridSelection dans le sens this -> dest.
-				dest.unit = this.unit;
-				dest.index = this.index;
-			}
-
 			public static bool EqualValues(OneItem a, OneItem b)
 			{
 				//	Compare si deux instances de GridSelection sont identiques.
@@ -138,7 +148,12 @@ namespace Epsitec.Common.Designer
 					return true;
 				}
 
-				return (a != null && b != null && a.unit == b.unit && a.index == b.index);
+				if (a == null || b == null)
+				{
+					return false;
+				}
+
+				return (a.unit == b.unit && a.index == b.index);
 			}
 
 
