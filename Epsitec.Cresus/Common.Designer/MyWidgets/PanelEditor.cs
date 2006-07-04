@@ -863,10 +863,18 @@ namespace Epsitec.Common.Designer.MyWidgets
 				GridSelection.Attach(obj);
 				GridSelection gs = GridSelection.Get(obj);
 				gs.Clear();
-				GridSelection.OneItem i1 = new GridSelection.OneItem(GridSelection.Unit.Column, column);
-				GridSelection.OneItem i2 = new GridSelection.OneItem(GridSelection.Unit.Row, row);
-				gs.Add(i1);
-				gs.Add(i2);
+
+				if (column != int.MinValue)
+				{
+					GridSelection.OneItem item = new GridSelection.OneItem(GridSelection.Unit.Column, column);
+					gs.Add(item);
+				}
+
+				if (row != int.MinValue)
+				{
+					GridSelection.OneItem item = new GridSelection.OneItem(GridSelection.Unit.Row, row);
+					gs.Add(item);
+				}
 			}
 			else
 			{
@@ -911,10 +919,19 @@ namespace Epsitec.Common.Designer.MyWidgets
 				else
 				{
 					GridSelection gs = new GridSelection(obj);
-					GridSelection.OneItem i1 = new GridSelection.OneItem(GridSelection.Unit.Column, column);
-					GridSelection.OneItem i2 = new GridSelection.OneItem(GridSelection.Unit.Row, row);
-					gs.Add(i1);
-					gs.Add(i2);
+
+					if (column != int.MinValue)
+					{
+						GridSelection.OneItem item = new GridSelection.OneItem(GridSelection.Unit.Column, column);
+						gs.Add(item);
+					}
+
+					if (row != int.MinValue)
+					{
+						GridSelection.OneItem item = new GridSelection.OneItem(GridSelection.Unit.Row, row);
+						gs.Add(item);
+					}
+
 					this.SetHilitedObject(obj, gs);
 				}
 			}
@@ -3537,18 +3554,20 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected void DrawGridSelected(Graphics graphics, Widget obj, GridSelection gs, Color color, bool selection)
 		{
-			//	Dessine une ou plusieurs cellules sélectionnées.
+			//	Dessine une ou plusieurs cellules sélectionnées. Le dessin est optimisé
+			//	visuellement lorsqu'une ligne sélectionnée suit une colonne sélectionnée,
+			//	pour former une croix.
 			int i=0;
 			while (i < gs.Count)
 			{
-				GridSelection.OneItem item = gs[i];
+				GridSelection.OneItem item1 = gs[i];
 
 				if (i+1 < gs.Count)
 				{
 					GridSelection.OneItem item2 = gs[i+1];
-					if (item.Unit == GridSelection.Unit.Column && item2.Unit == GridSelection.Unit.Row)
+					if (item1.Unit == GridSelection.Unit.Column && item2.Unit == GridSelection.Unit.Row)
 					{
-						Rectangle area1 = this.objectModifier.GetGridItemArea(obj, item);
+						Rectangle area1 = this.objectModifier.GetGridItemArea(obj, item1);
 						Rectangle area2 = this.objectModifier.GetGridItemArea(obj, item2);
 						this.DrawGridSelected(graphics, area1, area2, color, selection);
 
@@ -3557,10 +3576,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 					}
 				}
 
-				Rectangle area = this.objectModifier.GetGridItemArea(obj, item);
+				Rectangle area = this.objectModifier.GetGridItemArea(obj, item1);
 				this.DrawGridSelected(graphics, area, color, selection);
 
-				i++;
+				i += 1;
 			}
 
 		}

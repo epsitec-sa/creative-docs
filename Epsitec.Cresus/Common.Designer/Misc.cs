@@ -8,23 +8,24 @@ namespace Epsitec.Common.Designer
 	/// </summary>
 	public class Misc
 	{
-		static public Path GetCrossPath(Rectangle area1, Rectangle area2)
+		static public Path GetCrossPath(Rectangle column, Rectangle row)
 		{
-			//	Retourne le chemin d'une croix.
+			//	Retourne le chemin d'une croix. Le chemin peut également prendre la forme
+			//	d'un "T" ou d'un "L" dans n'importe quelle orientation.
 			Path path = new Path();
 
-			path.MoveTo(area1.BottomLeft);
-			path.LineTo(area1.Left, area2.Bottom);
-			path.LineTo(area2.Left, area2.Bottom);
-			path.LineTo(area2.Left, area2.Top);
-			path.LineTo(area1.Left, area2.Top);
-			path.LineTo(area1.TopLeft);
-			path.LineTo(area1.TopRight);
-			path.LineTo(area1.Right, area2.Top);
-			path.LineTo(area2.Right, area2.Top);
-			path.LineTo(area2.Right, area2.Bottom);
-			path.LineTo(area1.Right, area2.Bottom);
-			path.LineTo(area1.BottomRight);
+			path.MoveTo(column.BottomLeft);
+			path.LineTo(column.Left, row.Bottom);
+			path.LineTo(row.Left, row.Bottom);
+			path.LineTo(row.Left, row.Top);
+			path.LineTo(column.Left, row.Top);
+			path.LineTo(column.TopLeft);
+			path.LineTo(column.TopRight);
+			path.LineTo(column.Right, row.Top);
+			path.LineTo(row.Right, row.Top);
+			path.LineTo(row.Right, row.Bottom);
+			path.LineTo(column.Right, row.Bottom);
+			path.LineTo(column.BottomRight);
 			path.Close();
 
 			return path;
