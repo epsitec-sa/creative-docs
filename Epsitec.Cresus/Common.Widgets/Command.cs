@@ -88,7 +88,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return (string) this.GetValue (Command.GroupProperty);
+				return Command.GetGroup (this.caption);
 			}
 		}
 
@@ -104,7 +104,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return (bool) this.GetValue (Command.StatefullProperty);
+				return Command.GetStatefull (this.caption);
 			}
 		}
 		
@@ -154,7 +154,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		public void ManuallyDefineCommand(string description, string icon, bool statefull)
+		public void ManuallyDefineCommand(string description, string icon, string group, bool statefull)
 		{
 			if (this.locked)
 			{
@@ -163,10 +163,11 @@ namespace Epsitec.Common.Widgets
 
 			this.caption.Description = description;
 			this.caption.Icon        = icon;
-			
-			this.SetValue (Command.StatefullProperty, statefull);
+
+			Command.SetGroup (this.caption, group);
+			Command.SetStatefull (this.caption, statefull);
 		}
-		
+
 		public CommandState CreateDefaultState(CommandContext context)
 		{
 			if (this.stateObjectType != null)
@@ -431,6 +432,7 @@ namespace Epsitec.Common.Widgets
 
 			this.caption.AddEventHandler (Caption.IconProperty, this.HandleIconChanged);
 			this.caption.AddEventHandler (Caption.DescriptionProperty, this.HandleDescriptionChanged);
+			this.caption.AddEventHandler (Command.GroupProperty, this.HandleGroupChanged);
 		}
 
 		private void InitializeDruid(Support.Druid druid)
@@ -465,7 +467,7 @@ namespace Epsitec.Common.Widgets
 
 		#region Private Event Handlers
 
-		private void OnGroupChanged(DependencyPropertyChangedEventArgs e)
+		private void HandleGroupChanged(object sender, DependencyPropertyChangedEventArgs e)
 		{
 			CommandCache.Default.InvalidateCommand (this);
 		}
@@ -478,13 +480,6 @@ namespace Epsitec.Common.Widgets
 		{
 		}
 
-
-		private static void NotifyGroupChanged(DependencyObject o, object old_value, object new_value)
-		{
-			Command that = o as Command;
-			that.OnGroupChanged (new DependencyPropertyChangedEventArgs (Command.GroupProperty, old_value, new_value));
-		}
-		
 		#endregion
 
 		protected virtual void InitializeDefaultState(CommandState state, CommandContext context)
@@ -524,6 +519,34 @@ namespace Epsitec.Common.Widgets
 			return state;
 		}
 
+		
+		public static void SetStatefull(DependencyObject obj, bool value)
+		{
+			obj.SetValue (Command.StatefullProperty, value);
+		}
+
+		public static bool GetStatefull(DependencyObject obj)
+		{
+			return (bool) obj.GetValue (Command.StatefullProperty);
+		}
+
+		public static void SetGroup(DependencyObject obj, string value)
+		{
+			if (value == null)
+			{
+				obj.ClearValue (Command.GroupProperty);
+			}
+			else
+			{
+				obj.SetValue (Command.GroupProperty, value);
+			}
+		}
+
+		public static string GetGroup(DependencyObject obj)
+		{
+			return (string) obj.GetValue (Command.GroupProperty);
+		}
+		
 
 		private static object GetCaptionValue(DependencyObject obj)
 		{
@@ -540,8 +563,8 @@ namespace Epsitec.Common.Widgets
 
 		public static readonly DependencyProperty CaptionProperty		= DependencyProperty.RegisterReadOnly ("Caption", typeof (Caption), typeof (Command), new DependencyPropertyMetadata (Command.GetCaptionValue));
 		public static readonly DependencyProperty CommandIdProperty		= DependencyProperty.RegisterReadOnly ("CommandId", typeof (string), typeof (Command), new DependencyPropertyMetadata (Command.GetCommandIdValue));
-		public static readonly DependencyProperty GroupProperty			= DependencyProperty.Register ("Group", typeof (string), typeof (Command), new DependencyPropertyMetadata (null, new PropertyInvalidatedCallback (Command.NotifyGroupChanged)));
-		public static readonly DependencyProperty StatefullProperty		= DependencyProperty.Register ("Statefull", typeof (bool), typeof (Command), new DependencyPropertyMetadata (false));
+		public static readonly DependencyProperty GroupProperty			= DependencyProperty.RegisterAttached ("Group", typeof (string), typeof (Command));
+		public static readonly DependencyProperty StatefullProperty		= DependencyProperty.RegisterAttached ("Statefull", typeof (bool), typeof (Command), new DependencyPropertyMetadata (false));
 		
 		private static Dictionary<string, Command> commands = new Dictionary<string, Command> ();
 		private static int nextUniqueId;

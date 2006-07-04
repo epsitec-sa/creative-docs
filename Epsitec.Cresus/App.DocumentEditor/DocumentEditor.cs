@@ -3761,7 +3761,7 @@ namespace Epsitec.App.DocumentEditor
 
 				string description = DocumentEditor.GetRes("Action."+tooltip);
 
-				command.ManuallyDefineCommand (description, icon, statefull);
+				command.ManuallyDefineCommand (description, icon, null, statefull);
 			}
 
 			return this.CommandContext.GetCommandState (command);
