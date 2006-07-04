@@ -163,7 +163,13 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		
+		public StructuredType					StructuredType
+		{
+			get
+			{
+				return StructuredCommand.GetStructuredType (this.caption);
+			}
+		}
 		
 		public bool								IsReadOnly
 		{

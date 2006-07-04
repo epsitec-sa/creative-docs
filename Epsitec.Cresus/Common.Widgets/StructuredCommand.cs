@@ -8,17 +8,18 @@ using Epsitec.Common.Types;
 
 namespace Epsitec.Common.Widgets
 {
-	public class StructuredCommand : Command, IStructuredType
+	public class StructuredCommand : DependencyObject
 	{
-		public StructuredCommand(string name) : base (name)
+		private StructuredCommand()
 		{
-			this.DefineStateObjectType (Types.DependencyObjectType.FromSystemType (typeof (StructuredState)));
 		}
-
+		
+#if false
 		public void AddField(string name, INamedType type)
 		{
 			this.type.AddField (name, type);
 		}
+#endif
 
 		public static void SetFieldValue(CommandState commandState, string name, object value)
 		{
@@ -43,7 +44,8 @@ namespace Epsitec.Common.Widgets
 
 			return data.GetValue (name);
 		}
-		
+	
+#if false
 		#region IStructuredType Members
 
 		string[] IStructuredType.GetFieldNames()
@@ -57,6 +59,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		#endregion
+#endif
 
 		internal class StructuredState : CommandState, IStructuredData
 		{
@@ -67,8 +70,8 @@ namespace Epsitec.Common.Widgets
 			protected override void OverrideDefineCommand()
 			{
 				base.OverrideDefineCommand ();
-				
-				this.data = new StructuredData (this.Command as IStructuredType);
+
+				this.data = new StructuredData (this.Command.StructuredType);
 			}
 
 			#region IStructuredData Members
@@ -103,6 +106,25 @@ namespace Epsitec.Common.Widgets
 			private Types.StructuredData data;
 		}
 
-		private StructuredType type = new StructuredType ();
+		public static StructuredType GetStructuredType(DependencyObject obj)
+		{
+			return obj.GetValue (StructuredCommand.StructuredTypeProperty) as StructuredType;
+		}
+
+		private static object GetStructuredTypeValue(DependencyObject obj)
+		{
+			StructuredType data = obj.GetValueBase (StructuredCommand.StructuredTypeProperty) as StructuredType;
+
+			if (data == null)
+			{
+				data = new StructuredType ();
+				obj.SetLocalValue (StructuredCommand.StructuredTypeProperty, data);
+				obj.InvalidateProperty (StructuredCommand.StructuredTypeProperty, null, data);
+			}
+
+			return data;
+		}
+		
+		public static readonly DependencyProperty StructuredTypeProperty = DependencyProperty.RegisterAttached ("StructuredType", typeof (StructuredType), typeof (StructuredCommand), new DependencyPropertyMetadata (StructuredCommand.GetStructuredTypeValue));
 	}
 }

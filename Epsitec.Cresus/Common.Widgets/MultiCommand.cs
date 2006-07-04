@@ -14,48 +14,6 @@ namespace Epsitec.Common.Widgets
 		{
 		}
 
-#if false
-		public MultiCommand(string name) : base (name)
-		{
-			this.DefineStateObjectType (Types.DependencyObjectType.FromSystemType (typeof (MultiState)));
-			this.commands = new List<Command> ();
-		}
-
-		public MultiCommand(string name, IEnumerable<Command> commands) : this (name)
-		{
-			this.AddRange (commands);
-		}
-#endif
-
-#if false
-		public void Add(Command command)
-		{
-			if (this.IsReadOnly)
-			{
-				throw new Exceptions.CommandLockedException (this.CommandId);
-			}
-			
-			if (command != null)
-			{
-				if (this.commands.Contains (command) == false)
-				{
-					this.commands.Add (command);
-				}
-			}
-		}
-
-		public void AddRange(IEnumerable<Command> commands)
-		{
-			if (commands != null)
-			{
-				foreach (Command command in commands)
-				{
-					this.Add (command);
-				}
-			}
-		}
-#endif
-
 		#region MultiState Class
 
 		internal class MultiState : CommandState

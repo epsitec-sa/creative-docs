@@ -349,10 +349,13 @@ namespace Epsitec.Common.Support
 			CommandContext.SetContext (v1, context);
 			CommandDispatcher.SetDispatcher (v1, dispatcher);
 
-			StructuredCommand command = new StructuredCommand ("TestSetFontSize");
+			Command command = Command.Get ("TestSetFontSize");
+			Command.SetCommandType (command.Caption, CommandType.Structured);
 			
-			command.AddField ("Size", new Types.DecimalType (0.1M, 999.9M, 0.1M));
-			command.AddField ("Units", new Types.EnumType (typeof (Text.Properties.SizeUnits)));
+			Types.StructuredType type = command.StructuredType;
+			
+			type.AddField ("Size", new Types.DecimalType (0.1M, 999.9M, 0.1M));
+			type.AddField ("Units", new Types.EnumType (typeof (Text.Properties.SizeUnits)));
 
 			CommandState state = context.GetCommandState (command);
 
