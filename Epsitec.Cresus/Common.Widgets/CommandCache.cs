@@ -12,11 +12,39 @@ namespace Epsitec.Common.Widgets
 		private CommandCache()
 		{
 			this.records = new Record[0];
-			this.free_count = 0;
-			this.bunch_of_free_indexes = new int[20];
-			this.bunch_of_free_indexes_count = 0;
+			this.freeCount = 0;
+			this.bunchOfFreeIndexes = new int[20];
+			this.bunchOfFreeIndexesCount = 0;
 		}
-		
+
+		public void Synchronize()
+		{
+			if (this.clearCount > 0)
+			{
+				int count = 0;
+
+				for (int i = 0; i < this.records.Length; i++)
+				{
+					if (this.records[i].IsDirty)
+					{
+						//	We've just found a visual which has no associated CommandState
+						//	in the cache :
+
+						this.SynchronizeIndex (i);
+
+						if (this.records[i].IsDirty)
+						{
+							count++;
+						}
+					}
+				}
+
+				this.clearCount = count;
+			}
+
+			this.synchronizationRequired = false;
+		}
+
 		
 		internal void AttachVisual(Visual visual)
 		{
@@ -33,7 +61,7 @@ namespace Epsitec.Common.Widgets
 			visual.SetCommandCacheId (id);
 			
 			this.records[id]  = new Record (visual);
-			this.clear_count += 1;
+			this.clearCount += 1;
 			
 			System.Diagnostics.Debug.Assert (this.records[id].IsAlive);
 			System.Diagnostics.Debug.Assert (this.records[id].IsDirty);
@@ -73,9 +101,9 @@ namespace Epsitec.Common.Widgets
 				return;
 			}
 			
-			if (this.records[id].ClearCommand ())
+			if (this.records[id].ClearCommandState ())
 			{
-				this.clear_count += 1;
+				this.clearCount += 1;
 			}
 			
 			this.RequestAsyncSynchronization ();
@@ -92,9 +120,9 @@ namespace Epsitec.Common.Widgets
 				if ((command != null) &&
 					(command.Group == group))
 				{
-					if (this.records[i].ClearCommand ())
+					if (this.records[i].ClearCommandState ())
 					{
-						this.clear_count += 1;
+						this.clearCount += 1;
 					}
 				}
 			}
@@ -102,7 +130,7 @@ namespace Epsitec.Common.Widgets
 			this.RequestAsyncSynchronization ();
 		}
 
-		public void InvalidateCommand(Command command)
+		internal void InvalidateCommand(Command command)
 		{
 			//	Called by CommandContext when a command enable changes or if a
 			//	command state is added or removed to/from the current context.
@@ -111,9 +139,9 @@ namespace Epsitec.Common.Widgets
 			{
 				if (this.records[i].Command == command)
 				{
-					if (this.records[i].ClearCommand ())
+					if (this.records[i].ClearCommandState ())
 					{
-						this.clear_count += 1;
+						this.clearCount += 1;
 					}
 				}
 			}
@@ -127,11 +155,11 @@ namespace Epsitec.Common.Widgets
 			
 			for (int i = 0; i < this.records.Length; i++)
 			{
-				if (this.records[i].State == state)
+				if (this.records[i].CommandState == state)
 				{
-					if (this.records[i].ClearCommand ())
+					if (this.records[i].ClearCommandState ())
 					{
-						this.clear_count += 1;
+						this.clearCount += 1;
 					}
 				}
 			}
@@ -146,11 +174,11 @@ namespace Epsitec.Common.Widgets
 			
 			for (int i = 0; i < this.records.Length; i++)
 			{
-				if (this.records[i].Context == context)
+				if (this.records[i].CommandContext == context)
 				{
-					if (this.records[i].ClearCommand ())
+					if (this.records[i].ClearCommandState ())
 					{
-						this.clear_count += 1;
+						this.clearCount += 1;
 					}
 				}
 			}
@@ -158,51 +186,10 @@ namespace Epsitec.Common.Widgets
 			this.RequestAsyncSynchronization ();
 		}
 		
-		private void RequestAsyncSynchronization()
+		internal CommandState GetCommandState(Visual visual)
 		{
-			//	Queue an asynchronous command cache synchronisation. This will
-			//	happen when the application returns into the event loop: Window
-			//	will then call CommandCache.Instance.Synchronize.
-			
-			if (this.synchronize == false)
-			{
-				this.synchronize = true;
-				Platform.Window.SendSynchronizeCommandCache ();
-			}
-		}
-		
-		
-		public void Synchronize()
-		{
-			if (this.clear_count > 0)
-			{
-				int count = 0;
-				
-				for (int i = 0; i < this.records.Length; i++)
-				{
-					if (this.records[i].IsDirty)
-					{
-						//	We've just found a visual which has no associated CommandState
-						//	in the cache :
-						
-						this.SynchronizeIndex (i);
-						
-						if (this.records[i].IsDirty)
-						{
-							count++;
-						}
-					}
-				}
-				
-				this.clear_count = count;
-			}
-			
-			this.synchronize = false;
-		}
+			//	Called by Widget to implement property Widget.CommandState.
 
-		
-		public CommandState GetCommandState(Visual visual)
-		{
 			int id = visual.GetCommandCacheId ();
 			
 			if (id == -1)
@@ -217,28 +204,36 @@ namespace Epsitec.Common.Widgets
 				this.SynchronizeIndex (id);
 			}
 			
-			return this.records[id].State;
+			return this.records[id].CommandState;
+		}
+
+		
+		private void RequestAsyncSynchronization()
+		{
+			//	Queue an asynchronous command cache synchronisation. This will
+			//	happen when the application returns into the event loop: Window
+			//	will then call CommandCache.Instance.Synchronize.
+
+			if (!this.synchronizationRequired)
+			{
+				this.synchronizationRequired = true;
+				Platform.Window.SendSynchronizeCommandCache ();
+			}
 		}
 		
 		
 		#region Record Struct
+		
+		/// <summary>
+		/// The <c>Record</c> structure is used to store a relationship between a
+		/// <c>Visual</c> and a <c>CommandState</c>.
+		/// </summary>
 		private struct Record
 		{
 			public Record(Visual visual)
 			{
-				this.visual  = new System.WeakReference (visual, false);
-				
-				this.command = null;
-				this.context = null;
-				this.state   = null;
-			}
-			
-			public Record(Visual visual, Command command, CommandContext context, CommandState state)
-			{
-				this.visual  = new System.WeakReference (visual, false);
-				this.command = command;
-				this.context = context;
-				this.state   = state;
+				this.visual = new Types.Weak<Visual> (visual);
+				this.state  = null;
 			}
 			
 			
@@ -266,7 +261,7 @@ namespace Epsitec.Common.Widgets
 			{
 				get
 				{
-					return (this.command == null) && (this.IsAlive);
+					return (this.state == null) && (this.IsAlive);
 				}
 			}
 			
@@ -275,27 +270,27 @@ namespace Epsitec.Common.Widgets
 			{
 				get
 				{
-					return this.visual == null ? null : this.visual.Target as Visual;
+					return this.visual == null ? null : this.visual.Target;
 				}
 			}
 
-			public Command Command
+			public Command						Command
 			{
 				get
 				{
-					return this.command;
+					return this.state == null ? null : this.state.Command;
 				}
 			}
 			
-			public CommandContext				Context
+			public CommandContext				CommandContext
 			{
 				get
 				{
-					return this.context;
+					return this.state == null ? null : this.state.CommandContext;
 				}
 			}
 			
-			public CommandState					State
+			public CommandState					CommandState
 			{
 				get
 				{
@@ -306,16 +301,13 @@ namespace Epsitec.Common.Widgets
 			public void Clear()
 			{
 				this.visual  = null;
-				this.command = null;
-				this.context = null;
 				this.state   = null;
 			}
 			
-			public bool ClearCommand()
+			public bool ClearCommandState()
 			{
-				if (this.command != null)
+				if (this.state != null)
 				{
-					this.command = null;
 					this.state = null;
 					return true;
 				}
@@ -325,55 +317,49 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 			
-			public void SetCommand(Command command, CommandContext context, CommandState state)
+			public void SetCommandState(CommandState state)
 			{
-				System.Diagnostics.Debug.Assert (command != null);
-				System.Diagnostics.Debug.Assert (context != null);
 				System.Diagnostics.Debug.Assert (state != null);
 				
-				this.command = command;
-				this.context = context;
-				this.state   = state;
+				this.state = state;
 			}
 			
 			
-			private System.WeakReference		visual;
-			private Command						command;
-			private CommandContext				context;
+			private Types.Weak<Visual>			visual;
 			private CommandState				state;
 		}
+		
 		#endregion
 		
 		private int FindFreeIndex()
 		{
-			//	Trouve l'index d'un enregistrement vide, utilisable pour stocker
-			//	une information sur une paire visual/commande.
+			//	Find a free record, which will be used to store a visual/command state
+			//	pair.
 			
-			if (this.free_count == 0)
+			if (this.freeCount == 0)
 			{
 				this.GrowRecords ();
 			}
-			else if (this.bunch_of_free_indexes_count == 0)
+			else if (this.bunchOfFreeIndexesCount == 0)
 			{
 				this.RefreshBunchOfFreeIndexes ();
 			}
 			
-			this.bunch_of_free_indexes_count -= 1;
-			this.free_count -= 1;
+			this.bunchOfFreeIndexesCount -= 1;
+			this.freeCount -= 1;
 			
-			return this.bunch_of_free_indexes[this.bunch_of_free_indexes_count];
+			return this.bunchOfFreeIndexes[this.bunchOfFreeIndexesCount];
 		}
-		
 		
 		private void RecycleIndex(int index)
 		{
 			this.records[index].Clear ();
-			this.free_count += 1;
+			this.freeCount += 1;
 			
-			if (this.bunch_of_free_indexes_count < this.bunch_of_free_indexes.Length)
+			if (this.bunchOfFreeIndexesCount < this.bunchOfFreeIndexes.Length)
 			{
-				this.bunch_of_free_indexes[this.bunch_of_free_indexes_count] = index;
-				this.bunch_of_free_indexes_count += 1;
+				this.bunchOfFreeIndexes[this.bunchOfFreeIndexesCount] = index;
+				this.bunchOfFreeIndexesCount += 1;
 			}
 		}
 		
@@ -395,13 +381,16 @@ namespace Epsitec.Common.Widgets
 					if ((state != null) &&
 						(context != null))
 					{
-						if ((this.clear_count > 0) &&
+						if ((this.clearCount > 0) &&
 							(this.records[index].IsDirty))
 						{
-							this.clear_count -= 1;
+							this.clearCount -= 1;
 						}
 
-						this.records[index].SetCommand (command, context, state);
+						System.Diagnostics.Debug.Assert (state.Command == command);
+						System.Diagnostics.Debug.Assert (state.CommandContext == context);
+
+						this.records[index].SetCommandState (state);
 
 						bool enable = state.Enable;
 						ActiveState active = state.ActiveState;
@@ -426,15 +415,18 @@ namespace Epsitec.Common.Widgets
 		
 		private void RefreshBunchOfFreeIndexes()
 		{
-			//	Remplit la mini-table des index libres. L'idée est de ne parcourir
-			//	la table des enregistrements qu'une fois pour trouver plusieurs
-			//	éléments libres; on évite ainsi du cache trashing.
+			//	Fill the miniature free index table. The idea here is to avoid
+			//	to have to walk through all the records when looking for a free
+			//	record. Instead, we walk the records until our miniature free
+			//	index table is full, and then use that one.
+			
+			//	Hint: this avoids CPU cache trashing !
 			
 			int free  = 0;
 			int index = 0;
 			int count = 0;
 			
-			for (int i = 0; i < this.bunch_of_free_indexes.Length; i++)
+			for (int i = 0; i < this.bunchOfFreeIndexes.Length; i++)
 			{
 				while ((index < this.records.Length)
 					&& (this.records[index].IsAlive))
@@ -447,7 +439,7 @@ namespace Epsitec.Common.Widgets
 					break;
 				}
 				
-				this.bunch_of_free_indexes[i] = index;
+				this.bunchOfFreeIndexes[i] = index;
 				
 				if (this.records[index].IsDead)
 				{
@@ -478,16 +470,16 @@ namespace Epsitec.Common.Widgets
 				index++;
 			}
 			
-			this.free_count                  = free;
-			this.bunch_of_free_indexes_count = count;
+			this.freeCount                  = free;
+			this.bunchOfFreeIndexesCount = count;
 			
-			System.Diagnostics.Debug.Assert (this.bunch_of_free_indexes_count == System.Math.Min (this.bunch_of_free_indexes.Length, this.free_count));
+			System.Diagnostics.Debug.Assert (this.bunchOfFreeIndexesCount == System.Math.Min (this.bunchOfFreeIndexes.Length, this.freeCount));
 		}
 		
 		private void GrowRecords()
 		{
 			int old_size = this.records.Length;
-			int new_size = old_size + this.bunch_of_free_indexes.Length + old_size / 8;
+			int new_size = old_size + this.bunchOfFreeIndexes.Length + old_size / 8;
 			
 			Record[] old_records = this.records;
 			Record[] new_records = new Record[new_size];
@@ -495,7 +487,7 @@ namespace Epsitec.Common.Widgets
 			System.Array.Copy (old_records, 0, new_records, 0, old_size);
 			
 			this.records     = new_records;
-			this.free_count += new_size - old_size;
+			this.freeCount += new_size - old_size;
 			
 			this.RefreshBunchOfFreeIndexes ();
 		}
@@ -504,10 +496,10 @@ namespace Epsitec.Common.Widgets
 		public static readonly CommandCache		Instance = new CommandCache ();
 		
 		private Record[]						records;
-		private int								free_count;
-		private int								clear_count;
-		private int[]							bunch_of_free_indexes;
-		private int								bunch_of_free_indexes_count;
-		private bool							synchronize;
+		private int								freeCount;
+		private int								clearCount;
+		private int[]							bunchOfFreeIndexes;
+		private int								bunchOfFreeIndexesCount;
+		private bool							synchronizationRequired;
 	}
 }
