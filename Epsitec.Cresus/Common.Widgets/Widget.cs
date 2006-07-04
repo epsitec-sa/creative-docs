@@ -693,7 +693,14 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.GetCommandState ();
+				if (this.IsCommand)
+				{
+					return CommandCache.Instance.GetCommandState (this);
+				}
+				else
+				{
+					return null;
+				}
 			}
 		}
 
@@ -1155,18 +1162,6 @@ namespace Epsitec.Common.Widgets
 					window.EngagedWidget = null;
 					this.OnDisengaged ();
 				}
-			}
-		}
-		
-		public CommandState GetCommandState()
-		{
-			if (this.IsCommand)
-			{
-				return CommandCache.Instance.GetCommandState (this);
-			}
-			else
-			{
-				return null;
 			}
 		}
 		
