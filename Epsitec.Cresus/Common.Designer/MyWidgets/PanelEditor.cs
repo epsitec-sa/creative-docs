@@ -3663,6 +3663,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				if (i+1 < gs.Count)
 				{
 					GridSelection.OneItem item2 = gs[i+1];
+
 					if (item1.Unit == GridSelection.Unit.Column && item2.Unit == GridSelection.Unit.Row)
 					{
 						Rectangle area1 = this.objectModifier.GetGridItemArea(obj, item1);
@@ -3670,6 +3671,21 @@ namespace Epsitec.Common.Designer.MyWidgets
 						this.DrawGridSelected(graphics, area1, area2, color, selection);
 
 						i += 2;
+						continue;
+					}
+
+					if (item1.Unit == item2.Unit)
+					{
+						i += 2;
+						while (i < gs.Count && gs[i].Unit == item1.Unit)
+						{
+							i++;
+						}
+						item2 = gs[i-1];
+
+						Rectangle area1 = this.objectModifier.GetGridItemArea(obj, item1);
+						Rectangle area2 = this.objectModifier.GetGridItemArea(obj, item2);
+						this.DrawGridSelected(graphics, Rectangle.Union(area1, area2), color, selection);
 						continue;
 					}
 				}
