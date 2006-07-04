@@ -39,7 +39,7 @@ namespace Epsitec.Common.Types.Serialization
 					{
 						if (entry.Property.IsAttached)
 						{
-							visitor.VisitAttached (context, entry);
+							visitor.VisitAttached (context, entry.Property.OwnerType);
 						}
 
 						if (entry.Property.HasTypeConverter)
@@ -144,9 +144,9 @@ namespace Epsitec.Common.Types.Serialization
 				this.level--;
 			}
 
-			void IVisitor.VisitAttached(Context context, PropertyValuePair entry)
+			void IVisitor.VisitAttached(Context context, System.Type type)
 			{
-				context.ObjectMap.RecordType (entry.Property.OwnerType);
+				context.ObjectMap.RecordType (type);
 			}
 
 			void IVisitor.VisitUnknown(Context context, object obj)

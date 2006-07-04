@@ -51,90 +51,12 @@ namespace Epsitec.Common.Widgets
 		{
 			return Shortcut.FromMessage (message);
 		}
-		
-		
-		public static Shortcut FromMessage(Message message)
-		{
-			KeyCode keyCode = message.KeyCodeOnly;
-			
-			if (message.Type == MessageType.KeyDown)
-			{
-				if ((keyCode != KeyCode.None) &&
-					(message.IsAltPressed))
-				{
-					//	OK. Utilise le code clavier :
-					
-					keyCode |= KeyCode.ModifierAlt;
-				}
-				else
-				{
-					switch (keyCode)
-					{
-						case KeyCode.ArrowDown:
-						case KeyCode.ArrowLeft:
-						case KeyCode.ArrowRight:
-						case KeyCode.ArrowUp:
-						case KeyCode.Back:
-						case KeyCode.Clear:
-						case KeyCode.Delete:
-						case KeyCode.End:
-						case KeyCode.Escape:
-						case KeyCode.FuncF1:  case KeyCode.FuncF2:  case KeyCode.FuncF3:  case KeyCode.FuncF4:  case KeyCode.FuncF5:
-						case KeyCode.FuncF6:  case KeyCode.FuncF7:  case KeyCode.FuncF8:  case KeyCode.FuncF9:
-						case KeyCode.FuncF10: case KeyCode.FuncF11: case KeyCode.FuncF12: case KeyCode.FuncF13: case KeyCode.FuncF14:
-						case KeyCode.FuncF15: case KeyCode.FuncF16: case KeyCode.FuncF17: case KeyCode.FuncF18: case KeyCode.FuncF19:
-						case KeyCode.FuncF20: case KeyCode.FuncF21: case KeyCode.FuncF22: case KeyCode.FuncF23: case KeyCode.FuncF24:
-						case KeyCode.Home:
-						case KeyCode.Insert:
-						case KeyCode.PageDown:
-						case KeyCode.PageUp:
-						case KeyCode.Pause:
-							break;
 
-						case KeyCode.Digit0: case KeyCode.Digit1: case KeyCode.Digit2: case KeyCode.Digit3: case KeyCode.Digit4:
-						case KeyCode.Digit5: case KeyCode.Digit6: case KeyCode.Digit7: case KeyCode.Digit8: case KeyCode.Digit9:
-							break;
-						
-						default:
-							keyCode = KeyCode.None;
-							break;
-					}
-				}
-				
-				if ((keyCode & KeyCode.KeyCodeMask) != KeyCode.None)
-				{
-					if (message.IsControlPressed)
-					{
-						keyCode |= KeyCode.ModifierControl;
-					}
-					
-					if (message.IsShiftPressed)
-					{
-						keyCode |= KeyCode.ModifierShift;
-					}
-					
-					return new Shortcut (keyCode);
-				}
-			}
-			else if (message.Type == MessageType.KeyPress)
-			{
-				if (message.IsControlPressed)
-				{
-					keyCode |= KeyCode.ModifierControl;
-				}
-				
-				if (message.IsShiftPressed)
-				{
-					keyCode |= KeyCode.ModifierShift;
-				}
-				
-				return new Shortcut (keyCode);
-			}
-			
-			return null;
-		}
-		
-		
+
+		/// <summary>
+		/// Gets or sets the key code for this shortcut.
+		/// </summary>
+		/// <value>The key code.</value>
 		public KeyCode					KeyCode
 		{
 			get
@@ -155,7 +77,11 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 		}
-		
+
+		/// <summary>
+		/// Gets the key code stripped from its modifier keys.
+		/// </summary>
+		/// <value>The key code.</value>
 		public KeyCode					KeyCodeOnly
 		{
 			get
@@ -163,7 +89,11 @@ namespace Epsitec.Common.Widgets
 				return this.KeyCode & KeyCode.KeyCodeMask;
 			}
 		}
-		
+
+		/// <summary>
+		/// Gets the key code as a <c>char</c>.
+		/// </summary>
+		/// <value>The key code.</value>
 		public char						KeyChar
 		{
 			get
@@ -171,8 +101,14 @@ namespace Epsitec.Common.Widgets
 				return (char) (this.KeyCode & KeyCode.KeyCodeMask);
 			}
 		}
-		
-		
+
+
+		/// <summary>
+		/// Gets a value indicating whether the shortcut includes shift.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this shortcut includes shift; otherwise, <c>false</c>.
+		/// </value>
 		public bool						IsShiftDefined
 		{
 			get
@@ -180,7 +116,13 @@ namespace Epsitec.Common.Widgets
 				return (this.KeyCode & KeyCode.ModifierShift) != 0;
 			}
 		}
-		
+
+		/// <summary>
+		/// Gets a value indicating whether the shortcut includes control.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this shortcut includes control; otherwise, <c>false</c>.
+		/// </value>
 		public bool						IsControlDefined
 		{
 			get
@@ -189,6 +131,12 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		/// <summary>
+		/// Gets a value indicating whether the shortcut includes alt.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this shortcut includes alt; otherwise, <c>false</c>.
+		/// </value>
 		public bool						IsAltDefined
 		{
 			get
@@ -197,7 +145,10 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		
+		/// <summary>
+		/// Gets a value indicating whether this shortcut is empty.
+		/// </summary>
+		/// <value><c>true</c> if this shortcut is empty; otherwise, <c>false</c>.</value>
 		public bool						IsEmpty
 		{
 			get
@@ -235,6 +186,114 @@ namespace Epsitec.Common.Widgets
 		}
 
 		#endregion
+
+		public static Shortcut FromMessage(Message message)
+		{
+			KeyCode keyCode = message.KeyCodeOnly;
+
+			if (message.Type == MessageType.KeyDown)
+			{
+				if ((keyCode != KeyCode.None) &&
+					(message.IsAltPressed))
+				{
+					//	OK. Utilise le code clavier :
+
+					keyCode |= KeyCode.ModifierAlt;
+				}
+				else
+				{
+					switch (keyCode)
+					{
+						case KeyCode.ArrowDown:
+						case KeyCode.ArrowLeft:
+						case KeyCode.ArrowRight:
+						case KeyCode.ArrowUp:
+						case KeyCode.Back:
+						case KeyCode.Clear:
+						case KeyCode.Delete:
+						case KeyCode.End:
+						case KeyCode.Escape:
+						case KeyCode.FuncF1:
+						case KeyCode.FuncF2:
+						case KeyCode.FuncF3:
+						case KeyCode.FuncF4:
+						case KeyCode.FuncF5:
+						case KeyCode.FuncF6:
+						case KeyCode.FuncF7:
+						case KeyCode.FuncF8:
+						case KeyCode.FuncF9:
+						case KeyCode.FuncF10:
+						case KeyCode.FuncF11:
+						case KeyCode.FuncF12:
+						case KeyCode.FuncF13:
+						case KeyCode.FuncF14:
+						case KeyCode.FuncF15:
+						case KeyCode.FuncF16:
+						case KeyCode.FuncF17:
+						case KeyCode.FuncF18:
+						case KeyCode.FuncF19:
+						case KeyCode.FuncF20:
+						case KeyCode.FuncF21:
+						case KeyCode.FuncF22:
+						case KeyCode.FuncF23:
+						case KeyCode.FuncF24:
+						case KeyCode.Home:
+						case KeyCode.Insert:
+						case KeyCode.PageDown:
+						case KeyCode.PageUp:
+						case KeyCode.Pause:
+							break;
+
+						case KeyCode.Digit0:
+						case KeyCode.Digit1:
+						case KeyCode.Digit2:
+						case KeyCode.Digit3:
+						case KeyCode.Digit4:
+						case KeyCode.Digit5:
+						case KeyCode.Digit6:
+						case KeyCode.Digit7:
+						case KeyCode.Digit8:
+						case KeyCode.Digit9:
+							break;
+
+						default:
+							keyCode = KeyCode.None;
+							break;
+					}
+				}
+
+				if ((keyCode & KeyCode.KeyCodeMask) != KeyCode.None)
+				{
+					if (message.IsControlPressed)
+					{
+						keyCode |= KeyCode.ModifierControl;
+					}
+
+					if (message.IsShiftPressed)
+					{
+						keyCode |= KeyCode.ModifierShift;
+					}
+
+					return new Shortcut (keyCode);
+				}
+			}
+			else if (message.Type == MessageType.KeyPress)
+			{
+				if (message.IsControlPressed)
+				{
+					keyCode |= KeyCode.ModifierControl;
+				}
+
+				if (message.IsShiftPressed)
+				{
+					keyCode |= KeyCode.ModifierShift;
+				}
+
+				return new Shortcut (keyCode);
+			}
+
+			return null;
+		}
 		
 		public static bool operator==(Shortcut a, Shortcut b)
 		{
@@ -255,6 +314,7 @@ namespace Epsitec.Common.Widgets
 			return !(a == b);
 		}
 
+		
 		public static Collections.ShortcutCollection GetShortcuts(DependencyObject obj)
 		{
 			return obj.GetValue (Shortcut.ShortcutsProperty) as Collections.ShortcutCollection;
@@ -278,6 +338,8 @@ namespace Epsitec.Common.Widgets
 				obj.SetValue (Shortcut.ShortcutsProperty, shortcuts);
 			}
 		}
+
+		#region Dependency Property Support Methods
 
 		private static object GetShortcutsValue(DependencyObject obj)
 		{
@@ -313,6 +375,8 @@ namespace Epsitec.Common.Widgets
 			Shortcut that = (Shortcut) obj;
 			return that.KeyCode.ToString ();
 		}
+
+		#endregion
 
 		public static readonly DependencyProperty ShortcutsProperty = DependencyProperty.RegisterAttached ("Shortcuts", typeof (Collections.ShortcutCollection), typeof (Shortcut), new DependencyPropertyMetadata (Shortcut.GetShortcutsValue));
 		public static readonly DependencyProperty KeyCodeProperty = DependencyProperty.Register ("KeyCode", typeof (string), typeof (Shortcut), new DependencyPropertyMetadata (Shortcut.GetKeyCodeValue, Shortcut.SetKeyCodeValue));
