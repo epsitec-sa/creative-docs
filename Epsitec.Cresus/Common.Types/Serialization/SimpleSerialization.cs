@@ -13,7 +13,7 @@ namespace Epsitec.Common.Types.Serialization
 			System.Xml.XmlTextWriter xmlWriter = new System.Xml.XmlTextWriter (stringWriter);
 
 			xmlWriter.Formatting = System.Xml.Formatting.None;
-			xmlWriter.WriteStartElement ("root");
+			xmlWriter.WriteStartElement (SimpleSerialization.RootElementName);
 
 			Serialization.Context context = new Serialization.SerializerContext (new Serialization.IO.XmlWriter (xmlWriter));
 			context.ActiveWriter.WriteAttributeStrings ();
@@ -37,7 +37,7 @@ namespace Epsitec.Common.Types.Serialization
 			while (xmlReader.Read ())
 			{
 				if ((xmlReader.NodeType == System.Xml.XmlNodeType.Element) &&
-					(xmlReader.LocalName == "root"))
+					(xmlReader.LocalName == SimpleSerialization.RootElementName))
 				{
 					break;
 				}
@@ -50,5 +50,7 @@ namespace Epsitec.Common.Types.Serialization
 			
 			return root;
 		}
+
+		public const string RootElementName = "objects";
 	}
 }

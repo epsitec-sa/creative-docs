@@ -10,14 +10,58 @@ namespace Epsitec.Common.Types.Serialization
 	{
 		public static void VisitSerializableNodes(DependencyObject obj, Context context)
 		{
+			GraphVisitor.Visitor visitor = new GraphVisitor.Visitor ();
+			GraphVisitor.VisitSerializableNodes (obj, context, visitor);
+
+			System.Diagnostics.Debug.Assert (visitor.Level == 0);
+		}
+
+		private class Visitor : IVisitor
+		{
+			public int Level
+			{
+				get
+				{
+					return this.level;
+				}
+			}
+			
+			public void VisitNodeBegin(Context context, DependencyObject obj)
+			{
+				context.ObjectMap.Record (obj);
+				this.level++;
+			}
+
+			public void VisitNodeEnd(Context context, DependencyObject obj)
+			{
+				this.level--;
+			}
+			
+			public void VisitAttached(Context context, PropertyValuePair entry)
+			{
+				context.ObjectMap.RecordType (entry.Property.OwnerType);
+			}
+
+			public void VisitUnknown(Context context, object obj)
+			{
+				context.UnknownMap.Record (obj);
+			}
+
+			private int level;
+		}
+
+		public static void VisitSerializableNodes(DependencyObject obj, Context context, IVisitor visitor)
+		{
 			if (context.ExternalMap.IsValueDefined (obj))
 			{
 				context.ExternalMap.IncrementUseValue (obj);
 				return;
 			}
 			
-			if (context.ObjectMap.Record (obj))
+			if (context.ObjectMap.IsValueDefined (obj) == false)
 			{
+				visitor.VisitNodeBegin (context, obj);
+				
 				//	Visit every locally defined property which either refers to
 				//	a DependencyObject or to a collection of such.
 
@@ -29,7 +73,7 @@ namespace Epsitec.Common.Types.Serialization
 					{
 						if (entry.Property.IsAttached)
 						{
-							context.ObjectMap.RecordType (entry.Property.OwnerType);
+							visitor.VisitAttached (context, entry);
 						}
 
 						if (entry.Property.HasTypeConverter)
@@ -48,7 +92,7 @@ namespace Epsitec.Common.Types.Serialization
 							if ((metadata.HasSerializationFilter == false) ||
 								(metadata.FilterSerializableItem (dependencyObjectValue)))
 							{
-								GraphVisitor.VisitSerializableNodes (dependencyObjectValue, context);
+								GraphVisitor.VisitSerializableNodes (dependencyObjectValue, context, visitor);
 							}
 							
 							continue;
@@ -60,7 +104,7 @@ namespace Epsitec.Common.Types.Serialization
 						{
 							foreach (DependencyObject node in metadata.FilterSerializableCollection (dependencyObjectCollection, entry.Property))
 							{
-								GraphVisitor.VisitSerializableNodes (node, context);
+								GraphVisitor.VisitSerializableNodes (node, context, visitor);
 							}
 						}
 					}
@@ -76,7 +120,7 @@ namespace Epsitec.Common.Types.Serialization
 					
 					foreach (DependencyObject node in metadata.FilterSerializableCollection (dependencyObjectCollection, property))
 					{
-						GraphVisitor.VisitSerializableNodes (node, context);
+						GraphVisitor.VisitSerializableNodes (node, context, visitor);
 					}
 				}
 				
@@ -101,9 +145,11 @@ namespace Epsitec.Common.Types.Serialization
 							continue;
 						}
 
-						context.UnknownMap.Record (binding.Source);
+						visitor.VisitUnknown (context, binding.Source);
 					}
 				}
+
+				visitor.VisitNodeEnd (context, obj);
 			}
 		}
 	}
