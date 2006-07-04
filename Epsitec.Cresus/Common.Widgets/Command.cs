@@ -17,7 +17,7 @@ namespace Epsitec.Common.Widgets
 	/// </summary>
 	public class Command : DependencyObject, System.IEquatable<Command>, Types.INamedType
 	{
-		public Command()
+		private Command()
 		{
 			this.DefineStateObjectType (Types.DependencyObjectType.FromSystemType (typeof (SimpleState)));
 		}

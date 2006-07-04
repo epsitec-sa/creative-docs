@@ -14,8 +14,13 @@ namespace Epsitec.Common.Types.Serialization.IO
 
 		public override void WriteAttributeStrings()
 		{
-			this.xml.WriteAttributeString ("xmlns", Xml.StructurePrefix, null, Xml.StructureNamespace);
-			this.xml.WriteAttributeString ("xmlns", Xml.FieldsPrefix, null, Xml.FieldsNamespace);
+			if (this.emitAttributes)
+			{
+				this.xml.WriteAttributeString ("xmlns", Xml.StructurePrefix, null, Xml.StructureNamespace);
+				this.xml.WriteAttributeString ("xmlns", Xml.FieldsPrefix, null, Xml.FieldsNamespace);
+
+				this.emitAttributes = false;
+			}
 		}
 
 		public override void BeginStorageBundle(int id, int externalCount, int typeCount, int objectCount)
@@ -27,8 +32,13 @@ namespace Epsitec.Common.Types.Serialization.IO
 			this.xml.WriteAttributeString ("n_typ", Xml.StructureNamespace, Context.NumToString (typeCount));
 			this.xml.WriteAttributeString ("n_obj", Xml.StructureNamespace, Context.NumToString (objectCount));
 
-//			this.xml.WriteAttributeString ("xmlns", Xml.StructurePrefix, null, this.nsStructure);
-			this.xml.WriteAttributeString ("xmlns", Xml.FieldsPrefix, null, Xml.FieldsNamespace);
+			if (this.emitAttributes)
+			{
+//				this.xml.WriteAttributeString ("xmlns", Xml.StructurePrefix, null, this.nsStructure);
+				this.xml.WriteAttributeString ("xmlns", Xml.FieldsPrefix, null, Xml.FieldsNamespace);
+				
+				this.emitAttributes = false;
+			}
 		}
 		public override void EndStorageBundle()
 		{
@@ -88,5 +98,6 @@ namespace Epsitec.Common.Types.Serialization.IO
 		}
 
 		private System.Xml.XmlWriter			xml;
+		private bool							emitAttributes = true;
 	}
 }
