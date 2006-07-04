@@ -870,21 +870,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.griddingColumn = column;
 				this.griddingRow = row;
 
-				GridSelection.Attach(obj);
-				GridSelection gs = GridSelection.Get(obj);
-				gs.Clear();
-
-				if (column != GridSelection.Invalid)
-				{
-					GridSelection.OneItem item = new GridSelection.OneItem(GridSelection.Unit.Column, column);
-					gs.Add(item);
-				}
-
-				if (row != GridSelection.Invalid)
-				{
-					GridSelection.OneItem item = new GridSelection.OneItem(GridSelection.Unit.Row, row);
-					gs.Add(item);
-				}
+				this.GridAdaptSelection(obj, column, row);
 			}
 
 			this.OnChildrenSelected();
@@ -965,24 +951,18 @@ namespace Epsitec.Common.Designer.MyWidgets
 				return;
 			}
 
-			GridSelection gs = GridSelection.Get(obj);
-			System.Diagnostics.Debug.Assert(gs != null);
-
 			GridSelection ngs = new GridSelection(obj);
-			GridSelection.OneItem item;
 
 			if (column == this.griddingColumn && row == this.griddingRow)
 			{
 				if (column != GridSelection.Invalid)
 				{
-					item = new GridSelection.OneItem(GridSelection.Unit.Column, column);
-					ngs.Add(item);
+					ngs.Add(new GridSelection.OneItem(GridSelection.Unit.Column, column));
 				}
 
 				if (row != GridSelection.Invalid)
 				{
-					item = new GridSelection.OneItem(GridSelection.Unit.Row, row);
-					ngs.Add(item);
+					ngs.Add(new GridSelection.OneItem(GridSelection.Unit.Row, row));
 				}
 
 				this.isGriddingColumn = (row == GridSelection.Invalid);
@@ -990,16 +970,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 			else if (column == this.griddingColumn && column != GridSelection.Invalid)
 			{
-				item = new GridSelection.OneItem(GridSelection.Unit.Column, column);
-				ngs.Add(item);
+				ngs.Add(new GridSelection.OneItem(GridSelection.Unit.Column, column));
 
 				this.isGriddingColumn = true;
 				this.isGriddingRow = false;
 			}
 			else if (row == this.griddingRow && row != GridSelection.Invalid)
 			{
-				item = new GridSelection.OneItem(GridSelection.Unit.Row, row);
-				ngs.Add(item);
+				ngs.Add(new GridSelection.OneItem(GridSelection.Unit.Row, row));
 
 				this.isGriddingColumn = false;
 				this.isGriddingRow = true;
@@ -1010,16 +988,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 				{
 					for (int i=column; i>=this.griddingColumn; i--)
 					{
-						item = new GridSelection.OneItem(GridSelection.Unit.Column, i);
-						ngs.Add(item);
+						ngs.Add(new GridSelection.OneItem(GridSelection.Unit.Column, i));
 					}
 				}
 				else
 				{
 					for (int i=column; i<=this.griddingColumn; i++)
 					{
-						item = new GridSelection.OneItem(GridSelection.Unit.Column, i);
-						ngs.Add(item);
+						ngs.Add(new GridSelection.OneItem(GridSelection.Unit.Column, i));
 					}
 				}
 			}
@@ -1029,20 +1005,19 @@ namespace Epsitec.Common.Designer.MyWidgets
 				{
 					for (int i=row; i>=this.griddingRow; i--)
 					{
-						item = new GridSelection.OneItem(GridSelection.Unit.Row, i);
-						ngs.Add(item);
+						ngs.Add(new GridSelection.OneItem(GridSelection.Unit.Row, i));
 					}
 				}
 				else
 				{
 					for (int i=row; i<=this.griddingRow; i++)
 					{
-						item = new GridSelection.OneItem(GridSelection.Unit.Row, i);
-						ngs.Add(item);
+						ngs.Add(new GridSelection.OneItem(GridSelection.Unit.Row, i));
 					}
 				}
 			}
 
+			GridSelection gs = GridSelection.Get(obj);
 			if (!GridSelection.EqualValues(gs, ngs))
 			{
 				GridSelection.Attach(obj, ngs);
@@ -3653,8 +3628,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void DrawGridSelected(Graphics graphics, Widget obj, GridSelection gs, Color color, bool selection)
 		{
 			//	Dessine une ou plusieurs cellules sélectionnées. Le dessin est optimisé
-			//	visuellement lorsqu'une ligne sélectionnée suit une colonne sélectionnée,
-			//	pour former une croix.
+			//	visuellement lorsqu'une ligne sélectionnée suit une colonne sélectionnée
+			//	pour former une croix, ou lorsque plusieurs lignes/colonnes sont sélectionnées
+			//	pour former un seul 'bloc'.
 			int i=0;
 			while (i < gs.Count)
 			{
