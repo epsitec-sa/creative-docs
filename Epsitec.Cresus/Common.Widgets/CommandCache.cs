@@ -331,38 +331,6 @@ namespace Epsitec.Common.Widgets
 		
 		#endregion
 		
-		private int FindFreeIndex()
-		{
-			//	Find a free record, which will be used to store a visual/command state
-			//	pair.
-			
-			if (this.freeCount == 0)
-			{
-				this.GrowRecords ();
-			}
-			else if (this.bunchOfFreeIndexesCount == 0)
-			{
-				this.RefreshBunchOfFreeIndexes ();
-			}
-			
-			this.bunchOfFreeIndexesCount -= 1;
-			this.freeCount -= 1;
-			
-			return this.bunchOfFreeIndexes[this.bunchOfFreeIndexesCount];
-		}
-		
-		private void RecycleIndex(int index)
-		{
-			this.records[index].Clear ();
-			this.freeCount += 1;
-			
-			if (this.bunchOfFreeIndexesCount < this.bunchOfFreeIndexes.Length)
-			{
-				this.bunchOfFreeIndexes[this.bunchOfFreeIndexesCount] = index;
-				this.bunchOfFreeIndexesCount += 1;
-			}
-		}
-		
 		private void SynchronizeIndex(int index)
 		{
 			//	Synchronize the information stored in the specified record. This
@@ -418,6 +386,38 @@ namespace Epsitec.Common.Widgets
 				visual.ActiveState = active;
 				
 				CommandState.SetAdvancedState (visual, advanced);
+			}
+		}
+		
+		private int FindFreeIndex()
+		{
+			//	Find a free record, which will be used to store a visual/command state
+			//	pair.
+			
+			if (this.freeCount == 0)
+			{
+				this.GrowRecords ();
+			}
+			else if (this.bunchOfFreeIndexesCount == 0)
+			{
+				this.RefreshBunchOfFreeIndexes ();
+			}
+			
+			this.bunchOfFreeIndexesCount -= 1;
+			this.freeCount -= 1;
+			
+			return this.bunchOfFreeIndexes[this.bunchOfFreeIndexesCount];
+		}
+		
+		private void RecycleIndex(int index)
+		{
+			this.records[index].Clear ();
+			this.freeCount += 1;
+			
+			if (this.bunchOfFreeIndexesCount < this.bunchOfFreeIndexes.Length)
+			{
+				this.bunchOfFreeIndexes[this.bunchOfFreeIndexesCount] = index;
+				this.bunchOfFreeIndexesCount += 1;
 			}
 		}
 		
