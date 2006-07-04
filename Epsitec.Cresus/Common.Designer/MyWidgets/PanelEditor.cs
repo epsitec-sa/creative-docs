@@ -921,21 +921,36 @@ namespace Epsitec.Common.Designer.MyWidgets
 				}
 				else
 				{
-					GridSelection gs = new GridSelection(obj);
+					GridSelection hgs = new GridSelection(obj);
 
-					if (column != GridSelection.Invalid)
+					if (isShiftPressed)
 					{
-						GridSelection.OneItem item = new GridSelection.OneItem(GridSelection.Unit.Column, column);
-						gs.Add(item);
+						GridSelection ags = GridSelection.Get(obj);
+
+						if (column != GridSelection.Invalid && (ags == null || !ags.AreOnlyRows))
+						{
+							hgs.Add(GridSelection.Unit.Column, column);
+						}
+
+						if (row != GridSelection.Invalid && (ags == null || !ags.AreOnlyColumns))
+						{
+							hgs.Add(GridSelection.Unit.Row, row);
+						}
+					}
+					else
+					{
+						if (column != GridSelection.Invalid)
+						{
+							hgs.Add(GridSelection.Unit.Column, column);
+						}
+
+						if (row != GridSelection.Invalid)
+						{
+							hgs.Add(GridSelection.Unit.Row, row);
+						}
 					}
 
-					if (row != GridSelection.Invalid)
-					{
-						GridSelection.OneItem item = new GridSelection.OneItem(GridSelection.Unit.Row, row);
-						gs.Add(item);
-					}
-
-					this.SetHilitedObject(obj, gs);
+					this.SetHilitedObject(obj, hgs);
 				}
 			}
 		}
@@ -996,12 +1011,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				if (column != GridSelection.Invalid)
 				{
-					gs.Add(new GridSelection.OneItem(GridSelection.Unit.Column, column));
+					gs.Add(GridSelection.Unit.Column, column);
 				}
 
 				if (row != GridSelection.Invalid)
 				{
-					gs.Add(new GridSelection.OneItem(GridSelection.Unit.Row, row));
+					gs.Add(GridSelection.Unit.Row, row);
 				}
 
 				this.isGriddingColumn = (row == GridSelection.Invalid);
@@ -1009,14 +1024,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 			else if (column == this.griddingColumn && column != GridSelection.Invalid)
 			{
-				gs.Add(new GridSelection.OneItem(GridSelection.Unit.Column, column));
+				gs.Add(GridSelection.Unit.Column, column);
 
 				this.isGriddingColumn = true;
 				this.isGriddingRow = false;
 			}
 			else if (row == this.griddingRow && row != GridSelection.Invalid)
 			{
-				gs.Add(new GridSelection.OneItem(GridSelection.Unit.Row, row));
+				gs.Add(GridSelection.Unit.Row, row);
 
 				this.isGriddingColumn = false;
 				this.isGriddingRow = true;
@@ -1027,14 +1042,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 				{
 					for (int i=column; i>=this.griddingColumn; i--)
 					{
-						gs.Add(new GridSelection.OneItem(GridSelection.Unit.Column, i));
+						gs.Add(GridSelection.Unit.Column, i);
 					}
 				}
 				else
 				{
 					for (int i=column; i<=this.griddingColumn; i++)
 					{
-						gs.Add(new GridSelection.OneItem(GridSelection.Unit.Column, i));
+						gs.Add(GridSelection.Unit.Column, i);
 					}
 				}
 			}
@@ -1044,14 +1059,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 				{
 					for (int i=row; i>=this.griddingRow; i--)
 					{
-						gs.Add(new GridSelection.OneItem(GridSelection.Unit.Row, i));
+						gs.Add(GridSelection.Unit.Row, i);
 					}
 				}
 				else
 				{
 					for (int i=row; i<=this.griddingRow; i++)
 					{
-						gs.Add(new GridSelection.OneItem(GridSelection.Unit.Row, i));
+						gs.Add(GridSelection.Unit.Row, i);
 					}
 				}
 			}

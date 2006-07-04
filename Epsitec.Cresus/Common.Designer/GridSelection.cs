@@ -54,6 +54,12 @@ namespace Epsitec.Common.Designer
 			this.list.Clear();
 		}
 
+		public void Add(Unit unit, int index)
+		{
+			this.list.Add(new OneItem(unit, index));
+			this.list.Sort();
+		}
+
 		public void Add(OneItem item)
 		{
 			this.list.Add(item);
@@ -228,6 +234,7 @@ namespace Epsitec.Common.Designer
 			#region IComparable Members
 			public int CompareTo(object obj)
 			{
+				//	D'abord les colonnes par index croissants, puis les lignes.
 				OneItem that = obj as OneItem;
 
 				if (this.unit != that.unit)
