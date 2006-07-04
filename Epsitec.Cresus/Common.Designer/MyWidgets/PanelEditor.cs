@@ -850,7 +850,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			Widget obj = this.Detect(pos, false, true);  // objet tableau visé par la souris
 			int column, row;
 			this.GridDetect(pos, obj, out column, out row);
-			if (column != int.MinValue && row != int.MinValue)
+			if (column != int.MinValue || row != int.MinValue)
 			{
 				this.selectedObjects.Clear();
 				this.selectedObjects.Add(obj);
