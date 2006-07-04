@@ -189,6 +189,8 @@ namespace Epsitec.Common.Designer
 		#endregion
 
 
+		public static readonly int Invalid = int.MinValue;
+
 		protected static readonly DependencyProperty GridSelectionProperty = DependencyProperty.RegisterAttached("GridSelection", typeof(GridSelection), typeof(GridSelection), new DependencyPropertyMetadata().MakeNotSerializable());
 
 		protected Widget					obj;

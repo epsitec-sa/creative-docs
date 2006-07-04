@@ -386,7 +386,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 				case MessageType.MouseLeave:
 					this.SetHilitedObject(null, null);
-					this.SetHilitedParent(null, int.MinValue, int.MinValue, 0, 0);
+					this.SetHilitedParent(null, GridSelection.Invalid, GridSelection.Invalid, 0, 0);
 					break;
 
 				case MessageType.KeyDown:
@@ -850,7 +850,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			Widget obj = this.Detect(pos, false, true);  // objet tableau visé par la souris
 			int column, row;
 			this.GridDetect(pos, obj, out column, out row);
-			if (column != int.MinValue || row != int.MinValue)
+			if (column != GridSelection.Invalid || row != GridSelection.Invalid)
 			{
 				this.selectedObjects.Clear();
 				this.selectedObjects.Add(obj);
@@ -864,13 +864,13 @@ namespace Epsitec.Common.Designer.MyWidgets
 				GridSelection gs = GridSelection.Get(obj);
 				gs.Clear();
 
-				if (column != int.MinValue)
+				if (column != GridSelection.Invalid)
 				{
 					GridSelection.OneItem item = new GridSelection.OneItem(GridSelection.Unit.Column, column);
 					gs.Add(item);
 				}
 
-				if (row != int.MinValue)
+				if (row != GridSelection.Invalid)
 				{
 					GridSelection.OneItem item = new GridSelection.OneItem(GridSelection.Unit.Row, row);
 					gs.Add(item);
@@ -920,13 +920,13 @@ namespace Epsitec.Common.Designer.MyWidgets
 				{
 					GridSelection gs = new GridSelection(obj);
 
-					if (column != int.MinValue)
+					if (column != GridSelection.Invalid)
 					{
 						GridSelection.OneItem item = new GridSelection.OneItem(GridSelection.Unit.Column, column);
 						gs.Add(item);
 					}
 
-					if (row != int.MinValue)
+					if (row != GridSelection.Invalid)
 					{
 						GridSelection.OneItem item = new GridSelection.OneItem(GridSelection.Unit.Row, row);
 						gs.Add(item);
@@ -1086,8 +1086,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 				Point initialPos = pos;
 				this.isInside = this.IsInside(pos);
 				Widget parent = this.DetectGroup(pos);
-				int column = int.MinValue;
-				int row = int.MinValue;
+				int column = GridSelection.Invalid;
+				int row = GridSelection.Invalid;
 
 				this.CreateObjectAdjust(ref pos, parent, out this.creatingRectangle);
 
@@ -1208,7 +1208,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 				this.SetHilitedZOrderRectangle(Rectangle.Empty);
 				this.constrainsList.Ending();
-				this.SetHilitedParent(null, int.MinValue, int.MinValue, 0, 0);
+				this.SetHilitedParent(null, GridSelection.Invalid, GridSelection.Invalid, 0, 0);
 
 				this.lastCreatedObject = this.creatingObject;
 				this.creatingObject = null;
@@ -1421,8 +1421,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.isInside = true;
 			Widget parent = this.DetectGroup(pos);
 
-			int column = int.MinValue;
-			int row = int.MinValue;
+			int column = GridSelection.Invalid;
+			int row = GridSelection.Invalid;
 			this.draggingSpanColumnOffset = 0;
 			this.draggingSpanRowOffset = 0;
 			this.draggingSpanColumnCount = 1;
@@ -1497,8 +1497,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Mouvement du drag pour déplacer les objets sélectionnés.
 			this.isInside = this.IsInside(pos);
 			Widget parent = this.DetectGroup(pos);
-			int column = int.MinValue;
-			int row = int.MinValue;
+			int column = GridSelection.Invalid;
+			int row = GridSelection.Invalid;
 			Point adjust = Point.Zero;
 
 			if (this.objectModifier.AreChildrenAnchored(parent))
@@ -1631,7 +1631,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.DeleteSelection();
 			}
 
-			this.SetHilitedParent(null, int.MinValue, int.MinValue, 0, 0);
+			this.SetHilitedParent(null, GridSelection.Invalid, GridSelection.Invalid, 0, 0);
 			this.SetHilitedZOrderRectangle(Rectangle.Empty);
 			this.isDragging = false;
 			this.draggingArraySelected = null;
@@ -1651,7 +1651,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				return false;
 			}
 
-			if (column == int.MinValue || row == int.MinValue)
+			if (column == GridSelection.Invalid || row == GridSelection.Invalid)
 			{
 				return false;
 			}
@@ -2986,8 +2986,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void GridDetect(Point mouse, Widget parent, out int column, out int row)
 		{
 			//	Détecte la colonne et la ligne visée dans un tableau.
-			column = int.MinValue;
-			row = int.MinValue;
+			column = GridSelection.Invalid;
+			row = GridSelection.Invalid;
 
 			if (!this.objectModifier.AreChildrenGrid(parent))  return;
 
@@ -3492,7 +3492,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.DrawGrid(graphics, obj, PanelsContext.ColorHiliteOutline);
 			}
 
-			if (column != int.MinValue && row != int.MinValue)
+			if (column != GridSelection.Invalid && row != GridSelection.Invalid)
 			{
 				Rectangle area = this.objectModifier.GetGridCellArea(obj, column, row, columnCount, rowCount);
 				this.DrawGridHilited(graphics, area, PanelsContext.ColorGridCell);
@@ -4128,8 +4128,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected Widget					hilitedObject;
 		protected GridSelection				hilitedGrid;
 		protected Widget					hilitedParent;
-		protected int						hilitedParentColumn = int.MinValue;
-		protected int						hilitedParentRow = int.MinValue;
+		protected int						hilitedParentColumn = GridSelection.Invalid;
+		protected int						hilitedParentRow = GridSelection.Invalid;
 		protected int						hilitedParentColumnCount = 0;
 		protected int						hilitedParentRowCount = 0;
 		protected bool						isRectangling;  // j'invente des mots si je veux !
