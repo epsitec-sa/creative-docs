@@ -19,7 +19,7 @@ namespace Epsitec.Common.Widgets
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:CommandContextChain"/> class.
 		/// </summary>
-		public CommandContextChain()
+		private CommandContextChain()
 		{
 		}
 
