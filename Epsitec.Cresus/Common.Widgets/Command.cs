@@ -17,7 +17,7 @@ namespace Epsitec.Common.Widgets
 	/// </summary>
 	public class Command : DependencyObject, System.IEquatable<Command>, Types.INamedType
 	{
-		private Command()
+		protected Command()
 		{
 		}
 
@@ -59,6 +59,14 @@ namespace Epsitec.Common.Widgets
 			get
 			{
 				return this.commandId;
+			}
+		}
+
+		public CommandType						CommandType
+		{
+			get
+			{
+				return Command.GetCommandType (this.caption);
 			}
 		}
 
@@ -109,7 +117,15 @@ namespace Epsitec.Common.Widgets
 				return Command.GetStatefull (this.caption);
 			}
 		}
-		
+
+		public bool								HasShortcuts
+		{
+			get
+			{
+				return Shortcut.HasShortcuts (this.caption);
+			}
+		}
+
 		public ShortcutCollection				Shortcuts
 		{
 			get
@@ -130,15 +146,25 @@ namespace Epsitec.Common.Widgets
 				return null;
 			}
 		}
-		
-		public bool								HasShortcuts
+
+		public bool								HasMultiCommands
 		{
 			get
 			{
-				return Shortcut.HasShortcuts (this.caption);
+				return MultiCommand.HasCommands (this.caption);
 			}
 		}
 
+		public Collections.CommandCollection	MultiCommands
+		{
+			get
+			{
+				return MultiCommand.GetCommands (this.caption);
+			}
+		}
+		
+		
+		
 		public bool								IsReadOnly
 		{
 			get
@@ -434,13 +460,14 @@ namespace Epsitec.Common.Widgets
 
 			this.caption.AddEventHandler (Caption.IconProperty, this.HandleIconChanged);
 			this.caption.AddEventHandler (Caption.DescriptionProperty, this.HandleDescriptionChanged);
+			this.caption.AddEventHandler (Command.CommandTypeProperty, this.HandleCommandTypeChanged);
 
 			this.InitializeCommandType ();
 		}
 
 		private void InitializeCommandType()
 		{
-			CommandType type = Command.GetCommandType (this.caption);
+			CommandType type = this.CommandType;
 			
 			switch (type)
 			{
@@ -499,6 +526,11 @@ namespace Epsitec.Common.Widgets
 
 		private void HandleDescriptionChanged(object sender, DependencyPropertyChangedEventArgs e)
 		{
+		}
+
+		private void HandleCommandTypeChanged(object sender, DependencyPropertyChangedEventArgs e)
+		{
+			this.InitializeCommandType ();
 		}
 
 		#endregion
@@ -578,18 +610,6 @@ namespace Epsitec.Common.Widgets
 			return (CommandType) obj.GetValue (Command.CommandTypeProperty);
 		}
 
-		public static Collections.CommandCollection GetMultiCommands(DependencyObject obj)
-		{
-			return obj.GetValue (Command.MultiCommandsProperty) as Collections.CommandCollection;
-		}
-
-		public static bool HasMultiCommands(DependencyObject obj)
-		{
-			Collections.CommandCollection commands = obj.GetValueBase (Command.MultiCommandsProperty) as Collections.CommandCollection;
-
-			return (commands != null) && (commands.Count > 0);
-		}
-
 
 		private static object GetCaptionValue(DependencyObject obj)
 		{
@@ -603,19 +623,6 @@ namespace Epsitec.Common.Widgets
 			return that.CommandId;
 		}
 
-		private static object GetMultiCommandsValue(DependencyObject obj)
-		{
-			Collections.CommandCollection commands = obj.GetValueBase (Command.MultiCommandsProperty) as Collections.CommandCollection;
-
-			if (commands == null)
-			{
-				commands = new Collections.CommandCollection ();
-				obj.SetLocalValue (Command.MultiCommandsProperty, commands);
-				obj.InvalidateProperty (Command.MultiCommandsProperty, null, commands);
-			}
-
-			return commands;
-		}
 
 
 		public static readonly DependencyProperty CaptionProperty		= DependencyProperty.RegisterReadOnly ("Caption", typeof (Caption), typeof (Command), new DependencyPropertyMetadata (Command.GetCaptionValue));
@@ -624,7 +631,6 @@ namespace Epsitec.Common.Widgets
 		public static readonly DependencyProperty GroupProperty			= DependencyProperty.RegisterAttached ("Group", typeof (string), typeof (Command));
 		public static readonly DependencyProperty StatefullProperty		= DependencyProperty.RegisterAttached ("Statefull", typeof (bool), typeof (Command), new DependencyPropertyMetadata (false));
 		public static readonly DependencyProperty CommandTypeProperty	= DependencyProperty.RegisterAttached ("CommandType", typeof (CommandType), typeof (Command), new DependencyPropertyMetadata (CommandType.Standard));
-		public static readonly DependencyProperty MultiCommandsProperty	= DependencyProperty.RegisterAttached ("MultiCommands", typeof (Collections.CommandCollection), typeof (Command), new DependencyPropertyMetadata (Command.GetMultiCommandsValue));
 		
 		private static Dictionary<string, Command> commands = new Dictionary<string, Command> ();
 		private static int nextUniqueId;
