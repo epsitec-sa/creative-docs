@@ -330,16 +330,6 @@ namespace Epsitec.Common.Widgets
 			get { return 12.0; }
 		}
 		
-		public bool									IsCommand
-		{
-			get
-			{
-				string command = this.Command;
-				
-				return (command != null) && (command.Length > 0);
-			}
-		}
-		
 		public virtual bool							IsFrozen
 		{
 			get
@@ -689,21 +679,6 @@ namespace Epsitec.Common.Widgets
 		}
 		
 
-		public CommandState							CommandState
-		{
-			get
-			{
-				if (this.IsCommand)
-				{
-					return CommandCache.Instance.GetCommandState (this);
-				}
-				else
-				{
-					return null;
-				}
-			}
-		}
-
 		public string								FullPathName
 		{
 			get
@@ -972,7 +947,7 @@ namespace Epsitec.Common.Widgets
 
 					if (context != null)
 					{
-						context.UpdateValidity (this);
+						context.UpdateCommandEnableBasedOnVisualValidity (this);
 					}
 				}
 			}
@@ -2370,7 +2345,7 @@ namespace Epsitec.Common.Widgets
 			
 			public bool Analyse(Widget widget)
 			{
-				if (widget.IsCommand)
+				if (widget.HasCommand)
 				{
 					if (this.regex == null)
 					{
@@ -2929,7 +2904,7 @@ namespace Epsitec.Common.Widgets
 		
 		public virtual void ExecuteCommand()
 		{
-			if ((this.IsCommand) &&
+			if ((this.HasCommand) &&
 				(this.IsEnabled))
 			{
 				Window window = this.Window;

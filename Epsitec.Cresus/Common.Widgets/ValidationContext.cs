@@ -22,27 +22,61 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public void UpdateValidity(Visual visual)
+		/// <summary>
+		/// Updates the command enable based on the visual validity.
+		/// </summary>
+		/// <param name="visual">The visual.</param>
+		public void UpdateCommandEnableBasedOnVisualValidity(Visual visual)
 		{
-			CommandContext context = Helpers.VisualTree.GetCommandContext (visual);
+			CommandState state;
+			CommandContext context;
+			
+			//	Either find a CommandContext quickly by going through the CommandCache
+			//	and CommandState, or find the nearest CommandContext in the chain :
+			
+			if (visual.HasCommand)
+			{
+				state   = visual.CommandState;
+				context = state.CommandContext;
+			}
+			else
+			{
+				state   = null;
+				context = Helpers.VisualTree.GetCommandContext (visual);
+			}
 			
 			bool enable = ValidationContext.GetVisualValidity (visual);
 			
-			Record record = new Record (visual.VisualSerialId, visual.ValidationGroups, enable);
+			long serialId = visual.VisualSerialId;
+			string groups = visual.ValidationGroups;
+			
+			//	Find the record for the specified visual. This should be fast, as
+			//	we work with a sorted record list :
+			
+			Record record = new Record (serialId, groups, enable);
 			
 			int index = this.records.BinarySearch (record);
 
 			if (index < 0)
 			{
-				if (record.Enable == false)
+				//	There was no record for this visual. If the visual causes some
+				//	commands to be disabled, then they get disabled here :
+				
+				if (enable == false)
 				{
 					this.DisableGroups (context, record.Groups);
 				}
+
+				//	Insert the record at its position :
 				
 				this.records.Insert (~index, record);
 			}
 			else
 			{
+				//	We have found an existing record for this visual. If there is
+				//	a change in the record definition, update the command group
+				//	enables :
+				
 				Record oldRecord = this.records[index];
 				Record newRecord = record;
 
@@ -58,7 +92,7 @@ namespace Epsitec.Common.Widgets
 						this.DisableGroups (context, newRecord.Groups);
 					}
 					
-					this.records[index] = record;
+					this.records[index] = newRecord;
 				}
 			}
 		}
@@ -169,18 +203,13 @@ namespace Epsitec.Common.Widgets
 			this.records = records;
 		}
 
-		private static bool GetVisualValidity(Visual child)
+		private static bool GetVisualValidity(Visual visual)
 		{
-			bool enable;
-			if (child.IsEnabled)
-			{
-				enable = child.IsValid;
-			}
-			else
-			{
-				enable = true;
-			}
-			return enable;
+			//	Return true if the visual is valid or disabled (a disabled widget
+			//	cannot break the validity, as the user wouldn't have any means of
+			//	fixing the problem).
+			
+			return visual.IsEnabled ? visual.IsValid : true;
 		}
 
 		private void EnableGroups(CommandContext context, string groups)
