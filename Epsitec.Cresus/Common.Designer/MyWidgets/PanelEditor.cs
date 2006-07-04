@@ -850,7 +850,13 @@ namespace Epsitec.Common.Designer.MyWidgets
 			Widget obj = this.Detect(pos, false, true);  // objet tableau visé par la souris
 			int column, row;
 			this.GridDetect(pos, obj, out column, out row);
-			if (column != GridSelection.Invalid || row != GridSelection.Invalid)
+			if (column == GridSelection.Invalid && row == GridSelection.Invalid)
+			{
+				this.selectedObjects.Clear();
+				this.GridClearSelection();
+				this.UpdateAfterSelectionChanged();
+			}
+			else
 			{
 				this.selectedObjects.Clear();
 				this.selectedObjects.Add(obj);
@@ -859,6 +865,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 				this.SetHilitedObject(null, null);
 				this.isGridding = true;
+				this.isGriddingColumn = false;
+				this.isGriddingRow = false;
+				this.griddingColumn = column;
+				this.griddingRow = row;
 
 				GridSelection.Attach(obj);
 				GridSelection gs = GridSelection.Get(obj);
@@ -875,12 +885,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 					GridSelection.OneItem item = new GridSelection.OneItem(GridSelection.Unit.Row, row);
 					gs.Add(item);
 				}
-			}
-			else
-			{
-				this.selectedObjects.Clear();
-				this.GridClearSelection();
-				this.UpdateAfterSelectionChanged();
 			}
 
 			this.OnChildrenSelected();
@@ -905,6 +909,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			if (this.isGridding)
 			{
+				this.GridAdaptSelection(obj, column, row);
 			}
 			else if (this.handlesList.IsDragging)
 			{
@@ -949,6 +954,99 @@ namespace Epsitec.Common.Designer.MyWidgets
 			if (this.handlesList.IsDragging)
 			{
 				this.HandlingEnd(pos);
+			}
+		}
+
+		protected void GridAdaptSelection(Widget obj, int column, int row)
+		{
+			//	Adapte la sélection selon le mouvement de la souris.
+			if (obj == null)
+			{
+				return;
+			}
+
+			GridSelection gs = GridSelection.Get(obj);
+			System.Diagnostics.Debug.Assert(gs != null);
+
+			GridSelection ngs = new GridSelection(obj);
+			GridSelection.OneItem item;
+
+			if (column == this.griddingColumn && row == this.griddingRow)
+			{
+				if (column != GridSelection.Invalid)
+				{
+					item = new GridSelection.OneItem(GridSelection.Unit.Column, column);
+					ngs.Add(item);
+				}
+
+				if (row != GridSelection.Invalid)
+				{
+					item = new GridSelection.OneItem(GridSelection.Unit.Row, row);
+					ngs.Add(item);
+				}
+
+				this.isGriddingColumn = (row == GridSelection.Invalid);
+				this.isGriddingRow = (column == GridSelection.Invalid);
+			}
+			else if (column == this.griddingColumn && column != GridSelection.Invalid)
+			{
+				item = new GridSelection.OneItem(GridSelection.Unit.Column, column);
+				ngs.Add(item);
+
+				this.isGriddingColumn = true;
+				this.isGriddingRow = false;
+			}
+			else if (row == this.griddingRow && row != GridSelection.Invalid)
+			{
+				item = new GridSelection.OneItem(GridSelection.Unit.Row, row);
+				ngs.Add(item);
+
+				this.isGriddingColumn = false;
+				this.isGriddingRow = true;
+			}
+			else if (this.isGriddingColumn && column != GridSelection.Invalid)
+			{
+				if (column >= this.griddingColumn)
+				{
+					for (int i=column; i>=this.griddingColumn; i--)
+					{
+						item = new GridSelection.OneItem(GridSelection.Unit.Column, i);
+						ngs.Add(item);
+					}
+				}
+				else
+				{
+					for (int i=column; i<=this.griddingColumn; i++)
+					{
+						item = new GridSelection.OneItem(GridSelection.Unit.Column, i);
+						ngs.Add(item);
+					}
+				}
+			}
+			else if (this.isGriddingRow && row != GridSelection.Invalid)
+			{
+				if (row >= this.griddingRow)
+				{
+					for (int i=row; i>=this.griddingRow; i--)
+					{
+						item = new GridSelection.OneItem(GridSelection.Unit.Row, i);
+						ngs.Add(item);
+					}
+				}
+				else
+				{
+					for (int i=row; i<=this.griddingRow; i++)
+					{
+						item = new GridSelection.OneItem(GridSelection.Unit.Row, i);
+						ngs.Add(item);
+					}
+				}
+			}
+
+			if (!GridSelection.EqualValues(gs, ngs))
+			{
+				GridSelection.Attach(obj, ngs);
+				this.Invalidate();
 			}
 		}
 
@@ -4149,6 +4247,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected DragWindow				handlingWindow;
 		protected Rectangle					handlingRectangle;
 		protected bool						isGridding;
+		protected bool						isGriddingColumn;
+		protected bool						isGriddingRow;
+		protected int						griddingColumn;
+		protected int						griddingRow;
 		protected Point						startingPos;
 		protected MouseCursorType			lastCursor = MouseCursorType.Unknow;
 		protected Size						sizeMark;
