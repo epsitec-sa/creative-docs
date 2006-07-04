@@ -937,25 +937,33 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			//	Prépare GridSelection pour représenter la sélection en cas de clic
 			//	dans une cellule.
-			if (gs.Unit == GridSelection.SelectionUnit.Column && gs.Index == column)
+			GridSelection.OneItem item;
+			if (gs.Count == 0)
+			{
+				item = new GridSelection.OneItem(GridSelection.Unit.Column, column);
+				gs.Add(item);
+			}
+			item = gs[0];
+
+			if (item.Unit == GridSelection.Unit.Column && item.Index == column)
 			{
 				byColumn = false;
 			}
 
-			if (gs.Unit == GridSelection.SelectionUnit.Row && gs.Index == row)
+			if (item.Unit == GridSelection.Unit.Row && item.Index == row)
 			{
 				byColumn = true;
 			}
 
 			if (byColumn)
 			{
-				gs.Unit = GridSelection.SelectionUnit.Column;
-				gs.Index = column;
+				item.Unit = GridSelection.Unit.Column;
+				item.Index = column;
 			}
 			else
 			{
-				gs.Unit = GridSelection.SelectionUnit.Row;
-				gs.Index = row;
+				item.Unit = GridSelection.Unit.Row;
+				item.Index = row;
 			}
 
 			return byColumn;
@@ -3383,8 +3391,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 			GridSelection gs = GridSelection.Get(obj);
 			if (gs != null)
 			{
-				Rectangle area = this.objectModifier.GetGridItemArea(obj, gs);
-				this.DrawGridSelected(graphics, area, PanelsContext.ColorGridCell);
+				foreach (GridSelection.OneItem item in gs)
+				{
+					Rectangle area = this.objectModifier.GetGridItemArea(obj, item);
+					this.DrawGridSelected(graphics, area, PanelsContext.ColorGridCell);
+				}
 			}
 		}
 
@@ -3418,7 +3429,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
-		protected void DrawHilitedObject(Graphics graphics, Widget obj, GridSelection grid)
+		protected void DrawHilitedObject(Graphics graphics, Widget obj, GridSelection gs)
 		{
 			//	Met en évidence l'objet survolé par la souris.
 			if (this.context.ShowAttachment)
@@ -3467,10 +3478,13 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.DrawGrid(graphics, obj, PanelsContext.ColorHiliteOutline);
 			}
 
-			if (grid != null)
+			if (gs != null)
 			{
-				Rectangle area = this.objectModifier.GetGridItemArea(obj, grid);
-				this.DrawGridHilited(graphics, area, PanelsContext.ColorGridCell);
+				foreach (GridSelection.OneItem item in gs)
+				{
+					Rectangle area = this.objectModifier.GetGridItemArea(obj, item);
+					this.DrawGridHilited(graphics, area, PanelsContext.ColorGridCell);
+				}
 			}
 		}
 
