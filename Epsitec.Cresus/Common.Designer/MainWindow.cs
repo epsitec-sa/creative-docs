@@ -704,7 +704,7 @@ namespace Epsitec.Common.Designer
 				string description = Res.Strings.GetString ("Action."+commandName);
 				bool statefull = (commandName == "FontBold" || commandName == "FontItalic" || commandName == "FontUnderlined" || commandName.StartsWith("PanelShow"));
 
-				command.ManuallyDefineCommand (description, iconName, statefull);
+				command.ManuallyDefineCommand (description, iconName, null, statefull);
 			}
 
 			return this.CommandContext.GetCommandState (command);

@@ -79,13 +79,14 @@ namespace Epsitec.Common.Widgets
 			command.Shortcuts.Add (new Shortcut ('O', ModifierKeys.Alt));
 			command.Shortcuts.Add (new Shortcut (KeyCode.FuncF10 | KeyCode.ModifierShift));
 
-			command.ManuallyDefineCommand ("Description", "icon", true);
+			command.ManuallyDefineCommand ("Description", "icon", "testgroup", true);
 			
 			shortcuts = Shortcut.GetShortcuts (command.Caption);
 			
 			Assert.AreEqual ("Test.CheckCommandSerialization2", command.Caption.Name);
 			Assert.AreEqual ("Description", command.Caption.Description);
 			Assert.AreEqual ("icon", command.Caption.Icon);
+			Assert.AreEqual ("testgroup", command.Group);
 
 			Assert.IsNotNull (shortcuts);
 			
@@ -108,6 +109,7 @@ namespace Epsitec.Common.Widgets
 			Assert.AreEqual ("Test.CheckCommandSerialization2", caption1.Name);
 			Assert.AreEqual ("Description", caption1.Description);
 			Assert.AreEqual ("icon", caption1.Icon);
+			Assert.AreEqual ("testgroup", Command.GetGroup (caption1));
 
 			Assert.IsNotNull (shortcuts);
 
@@ -121,6 +123,7 @@ namespace Epsitec.Common.Widgets
 			Assert.AreEqual ("Test.CheckCommandSerialization2", caption2.Name);
 			Assert.AreEqual ("Description", caption2.Description);
 			Assert.AreEqual ("icon", caption2.Icon);
+			Assert.AreEqual ("testgroup", Command.GetGroup (caption2));
 
 			Assert.IsNotNull (shortcuts);
 
