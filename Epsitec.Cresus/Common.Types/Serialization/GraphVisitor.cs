@@ -16,40 +16,6 @@ namespace Epsitec.Common.Types.Serialization
 			System.Diagnostics.Debug.Assert (visitor.Level == 0);
 		}
 
-		private class Visitor : IVisitor
-		{
-			public int Level
-			{
-				get
-				{
-					return this.level;
-				}
-			}
-			
-			public void VisitNodeBegin(Context context, DependencyObject obj)
-			{
-				context.ObjectMap.Record (obj);
-				this.level++;
-			}
-
-			public void VisitNodeEnd(Context context, DependencyObject obj)
-			{
-				this.level--;
-			}
-			
-			public void VisitAttached(Context context, PropertyValuePair entry)
-			{
-				context.ObjectMap.RecordType (entry.Property.OwnerType);
-			}
-
-			public void VisitUnknown(Context context, object obj)
-			{
-				context.UnknownMap.Record (obj);
-			}
-
-			private int level;
-		}
-
 		public static void VisitSerializableNodes(DependencyObject obj, Context context, IVisitor visitor)
 		{
 			if (context.ExternalMap.IsValueDefined (obj))
@@ -57,11 +23,11 @@ namespace Epsitec.Common.Types.Serialization
 				context.ExternalMap.IncrementUseValue (obj);
 				return;
 			}
-			
+
 			if (context.ObjectMap.IsValueDefined (obj) == false)
 			{
 				visitor.VisitNodeBegin (context, obj);
-				
+
 				//	Visit every locally defined property which either refers to
 				//	a DependencyObject or to a collection of such.
 
@@ -81,10 +47,10 @@ namespace Epsitec.Common.Types.Serialization
 							//	The property has a specific converter attached to it.
 							//	We can safely skip the property, as it won't be saved
 							//	through object serialization.
-							
+
 							continue;
 						}
-						
+
 						DependencyObject dependencyObjectValue = entry.Value as DependencyObject;
 
 						if (dependencyObjectValue != null)
@@ -94,7 +60,7 @@ namespace Epsitec.Common.Types.Serialization
 							{
 								GraphVisitor.VisitSerializableNodes (dependencyObjectValue, context, visitor);
 							}
-							
+
 							continue;
 						}
 
@@ -109,7 +75,7 @@ namespace Epsitec.Common.Types.Serialization
 						}
 					}
 				}
-				
+
 				//	Visit also the DependencyObjectTree properties, if any.
 
 				if (DependencyObjectTree.GetHasChildren (obj))
@@ -117,15 +83,15 @@ namespace Epsitec.Common.Types.Serialization
 					DependencyProperty property = DependencyObjectTree.ChildrenProperty;
 					DependencyPropertyMetadata metadata = property.GetMetadata (obj);
 					ICollection<DependencyObject> dependencyObjectCollection = DependencyObjectTree.GetChildren (obj);
-					
+
 					foreach (DependencyObject node in metadata.FilterSerializableCollection (dependencyObjectCollection, property))
 					{
 						GraphVisitor.VisitSerializableNodes (node, context, visitor);
 					}
 				}
-				
+
 				//	Visit also the properties which are data bound.
-				
+
 				foreach (KeyValuePair<DependencyProperty, Binding> entry in obj.GetAllBindings ())
 				{
 					Binding binding = entry.Value;
@@ -152,5 +118,47 @@ namespace Epsitec.Common.Types.Serialization
 				visitor.VisitNodeEnd (context, obj);
 			}
 		}
+
+		#region Visitor Class
+
+		private class Visitor : IVisitor
+		{
+			public int Level
+			{
+				get
+				{
+					return this.level;
+				}
+			}
+
+			#region IVisitor Members
+
+			void IVisitor.VisitNodeBegin(Context context, DependencyObject obj)
+			{
+				context.ObjectMap.Record (obj);
+				this.level++;
+			}
+
+			void IVisitor.VisitNodeEnd(Context context, DependencyObject obj)
+			{
+				this.level--;
+			}
+
+			void IVisitor.VisitAttached(Context context, PropertyValuePair entry)
+			{
+				context.ObjectMap.RecordType (entry.Property.OwnerType);
+			}
+
+			void IVisitor.VisitUnknown(Context context, object obj)
+			{
+				context.UnknownMap.Record (obj);
+			}
+
+			#endregion
+
+			private int level;
+		}
+
+		#endregion
 	}
 }
