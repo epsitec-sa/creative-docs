@@ -828,6 +828,17 @@ namespace Epsitec.Common.Designer
 		}
 
 
+		public void SetGridClear(Widget obj)
+		{
+			//	Annule les informations d'appartenance à une cellule, lorsque l'objet n'est
+			//	plus dans un tableau.
+			GridLayoutEngine.SetColumn(obj, -1);
+			GridLayoutEngine.SetRow(obj, -1);
+
+			GridLayoutEngine.SetColumnSpan(obj, 1);
+			GridLayoutEngine.SetRowSpan(obj, 1);
+		}
+
 		public void SetGridParentColumnRow(Widget obj, Widget parent, int column, int row)
 		{
 			//	Détermine la cellule dans un tableau à laquelle appartient l'objet.

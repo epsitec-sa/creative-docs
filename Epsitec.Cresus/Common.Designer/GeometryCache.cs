@@ -124,6 +124,8 @@ namespace Epsitec.Common.Designer
 					{
 						GeometryCache gc = children.GetValue(GeometryCache.GeometryCacheProperty) as GeometryCache;
 						gc.AdaptBounds(cp);
+
+						objectModifier.SetGridClear(children);
 					}
 				}
 			}
