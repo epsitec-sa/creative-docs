@@ -71,6 +71,7 @@ namespace Epsitec.Common.Designer
 
 		public static bool EqualValues(GridSelection a, GridSelection b)
 		{
+			//	Compare si deux instances de GridSelection sont identiques.
 			if (a == null && b == null)
 			{
 				return true;
@@ -142,7 +143,7 @@ namespace Epsitec.Common.Designer
 
 			public static bool EqualValues(OneItem a, OneItem b)
 			{
-				//	Compare si deux instances de GridSelection sont identiques.
+				//	Compare si deux instances de OneItem sont identiques.
 				if (a == null && b == null)
 				{
 					return true;
@@ -164,6 +165,12 @@ namespace Epsitec.Common.Designer
 
 
 		#region Static methods
+		public static void Attach(Widget obj, GridSelection gs)
+		{
+			//	Attache un GridSelection au widget.
+			obj.SetValue(GridSelection.GridSelectionProperty, gs);
+		}
+
 		public static void Attach(Widget obj)
 		{
 			//	Attache un GridSelection au widget, si nécessaire.
