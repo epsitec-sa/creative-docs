@@ -1813,9 +1813,9 @@ namespace Epsitec.Common.Widgets
 			Assert.AreEqual ("b", w2.CommandName);
 			Assert.AreEqual ("c", w3.CommandName);
 			
-			Assert.IsTrue (w1.IsCommand);
-			Assert.IsTrue (w2.IsCommand);
-			Assert.IsTrue (w3.IsCommand);
+			Assert.IsTrue (w1.HasCommand);
+			Assert.IsTrue (w2.HasCommand);
+			Assert.IsTrue (w3.HasCommand);
 			
 			Assert.AreEqual (w2, w1.FindChildByPath ("A.B"));
 			Assert.AreEqual (w3, w1.FindChildByPath ("A.B.C"));

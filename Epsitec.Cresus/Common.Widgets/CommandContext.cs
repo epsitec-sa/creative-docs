@@ -342,7 +342,7 @@ namespace Epsitec.Common.Widgets
 		{
 			public Record(ValidationContext context)
 			{
-				this.weakContext = new System.WeakReference (context);
+				this.weakContext = new Types.Weak<ValidationContext> (context);
 				this.groupEnable = new Dictionary<string, bool> ();
 			}
 
@@ -350,7 +350,7 @@ namespace Epsitec.Common.Widgets
 			{
 				get
 				{
-					return this.weakContext.Target as ValidationContext;
+					return this.weakContext.Target;
 				}
 			}
 
@@ -362,7 +362,7 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 
-			System.WeakReference weakContext;
+			Types.Weak<ValidationContext> weakContext;
 			Dictionary<string, bool> groupEnable;
 		}
 

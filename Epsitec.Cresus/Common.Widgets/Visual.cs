@@ -127,7 +127,30 @@ namespace Epsitec.Common.Widgets
 				return CommandDispatcher.ExtractCommandName (this.Command);
 			}
 		}
-		
+
+		public bool								HasCommand
+		{
+			get
+			{
+				return ! string.IsNullOrEmpty (this.Command);
+			}
+		}
+
+		public CommandState						CommandState
+		{
+			get
+			{
+				if (this.HasCommand)
+				{
+					return CommandCache.Instance.GetCommandState (this);
+				}
+				else
+				{
+					return null;
+				}
+			}
+		}
+
 		
 		public AnchorStyles						Anchor
 		{
@@ -622,6 +645,12 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets the validation groups associated with this visual.
+		/// See <see cref="T:Command.JoinGroupNames"/>. If more than one group
+		/// must be used, the group names must be joined using <c>"|"</c>.
+		/// </summary>
+		/// <value>The validation groups.</value>
 		public string							ValidationGroups
 		{
 			get
@@ -634,6 +663,12 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		/// <summary>
+		/// Gets a value indicating whether this visual has validation groups.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this visual has validation groups; otherwise, <c>false</c>.
+		/// </value>
 		public bool								HasValidationGroups
 		{
 			get
