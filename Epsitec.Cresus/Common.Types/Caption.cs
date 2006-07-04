@@ -116,80 +116,6 @@ namespace Epsitec.Common.Types
 			this.id = id;
 		}
 
-		private class Visitor : Serialization.IVisitor
-		{
-			public Visitor(DependencyObject root)
-			{
-				this.root = root;
-			}
-			
-			public int TypeCount
-			{
-				get
-				{
-					return this.typeCount;
-				}
-			}
-
-			public bool Complex
-			{
-				get
-				{
-					return this.complex;
-				}
-			}
-			
-			public void VisitNodeBegin(Serialization.Context context, DependencyObject obj)
-			{
-				if (this.root == obj)
-				{
-					context.ExternalMap.Record ("caption", this.root);
-					System.Diagnostics.Debug.Assert (this.level == 0);
-				}
-				else
-				{
-					this.complex = true;
-				}
-				
-				this.level++;
-			}
-
-			public void VisitNodeEnd(Serialization.Context context, DependencyObject obj)
-			{
-				this.level--;
-				
-				if (this.root == obj)
-				{
-					System.Diagnostics.Debug.Assert (this.level == 0);
-				}
-			}
-
-			public void VisitAttached(Serialization.Context context, PropertyValuePair entry)
-			{
-				this.RecordType (context, entry.Property.OwnerType);
-			}
-
-			public void VisitUnknown(Serialization.Context context, object obj)
-			{
-				throw new System.InvalidOperationException ("Unknown object found");
-			}
-
-			private void RecordType(Serialization.Context context, System.Type type)
-			{
-				if (context.ObjectMap.IsTypeDefined (type) == false)
-				{
-					this.typeCount++;
-					context.ObjectMap.RecordType (type);
-					context.StoreTypeDefinition (this.typeCount, type);
-				}
-			}
-
-			DependencyObject root;
-			int level;
-			int typeCount;
-			bool complex;
-		}
-		
 		/// <summary>
 		/// Serializes the caption object to a string representation.
 		/// </summary>
@@ -211,34 +137,45 @@ namespace Epsitec.Common.Types
 			Visitor visitor = new Visitor (this);
 			Serialization.GraphVisitor.VisitSerializableNodes (this, context, visitor);
 
-			if (visitor.Complex)
+			if (visitor.RichSerialization)
 			{
+				//	We cannot use the compact serialization since the object graph
+				//	contains references to other full-fledged dependency objects;
+				//	just use the plain XML serialization instead:
+				
+				xmlWriter.Close ();
+				stringWriter.Close ();
+				
 				return Serialization.SimpleSerialization.SerializeToString (this);
 			}
-			
-			context.StoreObjectData (0, this);
+			else
+			{
+				//	Simply store the object data (after the optional type definitions
+				//	which get generated in case there are some attached properties).
+				
+				context.StoreObjectData (0, this);
 
-			xmlWriter.WriteEndElement ();
-			xmlWriter.Flush ();
-			xmlWriter.Close ();
+				xmlWriter.WriteEndElement ();
+				xmlWriter.Flush ();
+				xmlWriter.Close ();
 
-			string xml = buffer.ToString ();
+				string xml = buffer.ToString ();
 
-			string typeElementPrefix = string.Concat (@"<", Serialization.IO.Xml.StructurePrefix, @":type ");
-			string dataElementPrefix = string.Concat (@"<", Serialization.IO.Xml.StructurePrefix, @":data ");
-			string endElement = @"</xml>";
+				string typeElementPrefix = string.Concat (@"<", Serialization.IO.Xml.StructurePrefix, @":type ");
+				string dataElementPrefix = string.Concat (@"<", Serialization.IO.Xml.StructurePrefix, @":data ");
+				string endElement = @"</xml>";
 
-			int typeElementPos = xml.IndexOf (typeElementPrefix);
-			int dataElementPos = xml.IndexOf (dataElementPrefix);
-			int endElementPos   = xml.IndexOf (endElement);
-			int startElementPos = typeElementPos > 0 ? typeElementPos : dataElementPos;
+				int typeElementPos = xml.IndexOf (typeElementPrefix);
+				int dataElementPos = xml.IndexOf (dataElementPrefix);
+				int endElementPos   = xml.IndexOf (endElement);
+				int startElementPos = typeElementPos > 0 ? typeElementPos : dataElementPos;
 
-			System.Diagnostics.Debug.Assert (startElementPos > 0);
-			System.Diagnostics.Debug.Assert (endElementPos > 0);
+				System.Diagnostics.Debug.Assert (startElementPos > 0);
+				System.Diagnostics.Debug.Assert (endElementPos > 0);
 
-			return xml.Substring (startElementPos, endElementPos - startElementPos);
+				return xml.Substring (startElementPos, endElementPos - startElementPos);
+			}
 		}
-
 
 		/// <summary>
 		/// Deserializes the caption object from a string representation.
@@ -246,70 +183,76 @@ namespace Epsitec.Common.Types
 		/// <param name="value">The serialized caption.</param>
 		public void DeserializeFromString(string value)
 		{
-			if ((value.Length > 1) &&
-				(value[0] == '<') &&
-				(value.IndexOf (Serialization.SimpleSerialization.RootElementName, 1, Serialization.SimpleSerialization.RootElementName.Length+1) == 1))
+			if (value.StartsWith ("<" + Serialization.SimpleSerialization.RootElementName))
 			{
+				//	The caller has provided us with a fullly serialized XML stream.
+				//	Deserializing is easy: restore the object and copy its fields.
+
 				Caption caption = Serialization.SimpleSerialization.DeserializeFromString (value) as Caption;
-				
+
 				DependencyObject.CopyDefinedProperties (caption, this);
-				return;
 			}
-			
-			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
-			
-			buffer.Append (@"<xml ");
-			buffer.Append (@"xmlns:");
-			buffer.Append (Serialization.IO.Xml.StructurePrefix);
-			buffer.Append (@"=""");
-			buffer.Append (Serialization.IO.Xml.StructureNamespace);
-			buffer.Append (@""" ");
-			buffer.Append (@"xmlns:");
-			buffer.Append (Serialization.IO.Xml.FieldsPrefix);
-			buffer.Append (@"=""");
-			buffer.Append (Serialization.IO.Xml.FieldsNamespace);
-			buffer.Append (@""">");
-			buffer.Append (value);
-			buffer.Append (@"</xml>");
-
-			string typeElementPrefix = string.Concat (@"<", Serialization.IO.Xml.StructurePrefix, @":type ");
-			string xml = buffer.ToString ();
-			
-			System.IO.StringReader stringReader = new System.IO.StringReader (xml);
-			System.Xml.XmlTextReader xmlReader = new System.Xml.XmlTextReader (stringReader);
-
-			Serialization.Context context = new Serialization.DeserializerContext (new Serialization.IO.XmlReader (xmlReader));
-			
-			context.ExternalMap.Record ("caption", this);
-			
-			while (xmlReader.Read ())
+			else
 			{
-				if ((xmlReader.NodeType == System.Xml.XmlNodeType.Element) &&
-					(xmlReader.LocalName == "xml"))
-				{
-					break;
-				}
-			}
-
-			int pos = value.IndexOf (typeElementPrefix, 0);
-			int typeCount = 0;
-
-			while (pos >= 0)
-			{
-				typeCount++;
-
-				context.ObjectMap.RecordType (context.RestoreTypeDefinition ());
+				//	The caller has provided us with a compact serialized XML stream.
+				//	Since we stripped information from it in order to reduce its size,
+				//	we will have to re-synthesize the full XML first :
 				
-				pos = value.IndexOf (typeElementPrefix, pos+typeElementPrefix.Length);
-			}
-			
+				System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 
-			this.labels = null;
-			this.sortedLabels = null;
-			
-			this.ClearAllValues ();
-			
-			context.RestoreObjectData (0, this);
+				buffer.Append (@"<xml ");
+				buffer.Append (@"xmlns:");
+				buffer.Append (Serialization.IO.Xml.StructurePrefix);
+				buffer.Append (@"=""");
+				buffer.Append (Serialization.IO.Xml.StructureNamespace);
+				buffer.Append (@""" ");
+				buffer.Append (@"xmlns:");
+				buffer.Append (Serialization.IO.Xml.FieldsPrefix);
+				buffer.Append (@"=""");
+				buffer.Append (Serialization.IO.Xml.FieldsNamespace);
+				buffer.Append (@""">");
+				buffer.Append (value);
+				buffer.Append (@"</xml>");
+
+				string typeElementPrefix = string.Concat (@"<", Serialization.IO.Xml.StructurePrefix, @":type ");
+				string xml = buffer.ToString ();
+
+				System.IO.StringReader stringReader = new System.IO.StringReader (xml);
+				System.Xml.XmlTextReader xmlReader = new System.Xml.XmlTextReader (stringReader);
+
+				Serialization.Context context = new Serialization.DeserializerContext (new Serialization.IO.XmlReader (xmlReader));
+
+				context.ExternalMap.Record ("caption", this);
+
+				while (xmlReader.Read ())
+				{
+					if ((xmlReader.NodeType == System.Xml.XmlNodeType.Element) &&
+						(xmlReader.LocalName == "xml"))
+					{
+						break;
+					}
+				}
+
+				int pos = value.IndexOf (typeElementPrefix, 0);
+				int typeCount = 0;
+
+				while (pos >= 0)
+				{
+					typeCount++;
+
+					context.ObjectMap.RecordType (context.RestoreTypeDefinition ());
+
+					pos = value.IndexOf (typeElementPrefix, pos+typeElementPrefix.Length);
+				}
+
+
+				this.labels = null;
+				this.sortedLabels = null;
+
+				this.ClearAllValues ();
+
+				context.RestoreObjectData (0, this);
+			}
 		}
 
 		/// <summary>
@@ -398,6 +341,84 @@ namespace Epsitec.Common.Types
 		{
 			this.sortedLabels = null;
 		}
+
+		#region Visitor Class
+
+		private class Visitor : Serialization.IVisitor
+		{
+			public Visitor(DependencyObject root)
+			{
+				this.root = root;
+			}
+
+			public int TypeCount
+			{
+				get
+				{
+					return this.typeCount;
+				}
+			}
+
+			public bool RichSerialization
+			{
+				get
+				{
+					return this.richSerialization;
+				}
+			}
+
+			public void VisitNodeBegin(Serialization.Context context, DependencyObject obj)
+			{
+				if (this.root == obj)
+				{
+					context.ExternalMap.Record ("caption", this.root);
+					System.Diagnostics.Debug.Assert (this.level == 0);
+				}
+				else
+				{
+					this.richSerialization = true;
+				}
+
+				this.level++;
+			}
+
+			public void VisitNodeEnd(Serialization.Context context, DependencyObject obj)
+			{
+				this.level--;
+
+				if (this.root == obj)
+				{
+					System.Diagnostics.Debug.Assert (this.level == 0);
+				}
+			}
+
+			public void VisitAttached(Serialization.Context context, PropertyValuePair entry)
+			{
+				this.RecordType (context, entry.Property.OwnerType);
+			}
+
+			public void VisitUnknown(Serialization.Context context, object obj)
+			{
+				throw new System.InvalidOperationException ("Unknown object found");
+			}
+
+			private void RecordType(Serialization.Context context, System.Type type)
+			{
+				if (context.ObjectMap.IsTypeDefined (type) == false)
+				{
+					this.typeCount++;
+					context.ObjectMap.RecordType (type);
+					context.StoreTypeDefinition (this.typeCount, type);
+				}
+			}
+
+			DependencyObject root;
+			int level;
+			int typeCount;
+			bool richSerialization;
+		}
+
+		#endregion
 
 		#region StringLengthComparer Class
 
