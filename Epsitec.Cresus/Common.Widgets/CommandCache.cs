@@ -396,10 +396,7 @@ namespace Epsitec.Common.Widgets
 				visual.Enable      = enable;
 				visual.ActiveState = active;
 				
-				if (advanced != null)
-				{
-					CommandState.SetAdvancedState (visual, advanced);
-				}
+				CommandState.SetAdvancedState (visual, advanced);
 			}
 		}
 		
