@@ -1509,15 +1509,15 @@ namespace Epsitec.Common.Widgets
 			}
 			else if (old_command_name == null)
 			{
-				CommandCache.Default.AttachVisual (this);
+				CommandCache.Instance.AttachVisual (this);
 			}
 			else if (new_command_name == null)
 			{
-				CommandCache.Default.DetachVisual (this);
+				CommandCache.Instance.DetachVisual (this);
 			}
 			else
 			{
-				CommandCache.Default.InvalidateVisual (this);
+				CommandCache.Instance.InvalidateVisual (this);
 			}
 		}
 		

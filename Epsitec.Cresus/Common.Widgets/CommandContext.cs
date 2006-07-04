@@ -262,7 +262,7 @@ namespace Epsitec.Common.Widgets
 				this.states[command.SerialId] = state;
 			}
 
-			CommandCache.Default.InvalidateCommand (command);
+			CommandCache.Instance.InvalidateCommand (command);
 		}
 		
 		internal void UpdateDispatcherChain(Visual visual)
@@ -276,12 +276,12 @@ namespace Epsitec.Common.Widgets
 
 		private void NotifyCommandEnableChanged(Command command)
 		{
-			CommandCache.Default.InvalidateCommand (command);
+			CommandCache.Instance.InvalidateCommand (command);
 		}
 
 		private void NotifyGroupEnableChanged(string group)
 		{
-			CommandCache.Default.InvalidateGroup (group);
+			CommandCache.Instance.InvalidateGroup (group);
 		}
 
 		private void IncrementGroupDisable(string group)
@@ -390,7 +390,7 @@ namespace Epsitec.Common.Widgets
 			{
 				obj.SetValue (CommandContext.ContextProperty, context);
 
-				CommandCache.Default.InvalidateContext (context);
+				CommandCache.Instance.InvalidateContext (context);
 			}
 		}
 
@@ -408,7 +408,7 @@ namespace Epsitec.Common.Widgets
 
 				if (context != null)
 				{
-					CommandCache.Default.InvalidateContext (context);
+					CommandCache.Instance.InvalidateContext (context);
 				}
 			}
 		}

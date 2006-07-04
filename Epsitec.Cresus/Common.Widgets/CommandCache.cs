@@ -4,12 +4,12 @@
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
-	/// La classe CommandCache permet de réaliser le lien entre des visuals et
-	/// leur Command associé.
+	/// The <c>CommandCache</c> class maintains the relationship between visuals
+	/// and their commands & command states.
 	/// </summary>
 	public sealed class CommandCache
 	{
-		public CommandCache()
+		private CommandCache()
 		{
 			this.records = new Record[0];
 			this.free_count = 0;
@@ -18,8 +18,14 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public void AttachVisual(Visual visual)
+		internal void AttachVisual(Visual visual)
 		{
+			//	This method gets called by Visual when a command is associated
+			//	with the visual (Visual.OnCommandChanged).
+			
+			//	The visual is associated with an entry in the command cache,
+			//	through the CommandCacheId.
+			
 			System.Diagnostics.Debug.Assert (visual.GetCommandCacheId () == -1);
 			
 			int id = this.FindFreeIndex ();
@@ -32,13 +38,14 @@ namespace Epsitec.Common.Widgets
 			System.Diagnostics.Debug.Assert (this.records[id].IsAlive);
 			System.Diagnostics.Debug.Assert (this.records[id].IsDirty);
 			
-//			System.Diagnostics.Debug.WriteLine (string.Format ("Command {0} attached ({1}/{2}; {3} free)", visual.CommandName, id, this.records.Length - this.free_count, this.free_count));
-			
 			this.RequestAsyncSynchronization ();
 		}
 		
-		public void DetachVisual(Visual visual)
+		internal void DetachVisual(Visual visual)
 		{
+			//	This method gets called by Visual when a command is removed from
+			//	a visual (Visual.OnCommandChanged).
+			
 			System.Diagnostics.Debug.Assert (visual.GetCommandCacheId () != -1);
 			
 			int id = visual.GetCommandCacheId ();
@@ -49,13 +56,16 @@ namespace Epsitec.Common.Widgets
 			
 			System.Diagnostics.Debug.Assert (! this.records[id].IsAlive);
 			System.Diagnostics.Debug.Assert (! this.records[id].IsDirty);
-			
-//			System.Diagnostics.Debug.WriteLine (string.Format ("Command detached ({0})", id));
 		}
 		
 		
-		public void InvalidateVisual(Visual visual)
+		internal void InvalidateVisual(Visual visual)
 		{
+			//	This method gets called by Visual.OnCommandChanged if the visual
+			//	just traded one command for another, but also if one of the parents
+			//	of the visual changed (indeed, changing a parent might change the
+			//	active command context).
+			
 			int id = visual.GetCommandCacheId ();
 			
 			if (id == -1)
@@ -71,8 +81,10 @@ namespace Epsitec.Common.Widgets
 			this.RequestAsyncSynchronization ();
 		}
 
-		public void InvalidateGroup(string group)
+		internal void InvalidateGroup(string group)
 		{
+			//	Called by CommandContext when a group enable changes.
+			
 			for (int i = 0; i < this.records.Length; i++)
 			{
 				Command command = this.records[i].Command;
@@ -92,6 +104,9 @@ namespace Epsitec.Common.Widgets
 
 		public void InvalidateCommand(Command command)
 		{
+			//	Called by CommandContext when a command enable changes or if a
+			//	command state is added or removed to/from the current context.
+
 			for (int i = 0; i < this.records.Length; i++)
 			{
 				if (this.records[i].Command == command)
@@ -106,8 +121,10 @@ namespace Epsitec.Common.Widgets
 			this.RequestAsyncSynchronization ();
 		}
 
-		public void InvalidateState(CommandState state)
+		internal void InvalidateState(CommandState state)
 		{
+			//	Called by CommandState when the command state settings change.
+			
 			for (int i = 0; i < this.records.Length; i++)
 			{
 				if (this.records[i].State == state)
@@ -122,8 +139,11 @@ namespace Epsitec.Common.Widgets
 			this.RequestAsyncSynchronization ();
 		}
 
-		public void InvalidateContext(CommandContext context)
+		internal void InvalidateContext(CommandContext context)
 		{
+			//	Called by CommandContext when a context is added or removed from
+			//	a visual or a window.
+			
 			for (int i = 0; i < this.records.Length; i++)
 			{
 				if (this.records[i].Context == context)
@@ -138,8 +158,12 @@ namespace Epsitec.Common.Widgets
 			this.RequestAsyncSynchronization ();
 		}
 		
-		public void RequestAsyncSynchronization()
+		private void RequestAsyncSynchronization()
 		{
+			//	Queue an asynchronous command cache synchronisation. This will
+			//	happen when the application returns into the event loop: Window
+			//	will then call CommandCache.Instance.Synchronize.
+			
 			if (this.synchronize == false)
 			{
 				this.synchronize = true;
@@ -158,8 +182,8 @@ namespace Epsitec.Common.Widgets
 				{
 					if (this.records[i].IsDirty)
 					{
-						//	Nous avons trouvé un visual qui n'a pas encore de
-						//	Command attaché dans le cache.
+						//	We've just found a visual which has no associated CommandState
+						//	in the cache :
 						
 						this.SynchronizeIndex (i);
 						
@@ -177,7 +201,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
-		public Command GetCommandState(Visual visual)
+		public CommandState GetCommandState(Visual visual)
 		{
 			int id = visual.GetCommandCacheId ();
 			
@@ -193,7 +217,7 @@ namespace Epsitec.Common.Widgets
 				this.SynchronizeIndex (id);
 			}
 			
-			return this.records[id].Command;
+			return this.records[id].State;
 		}
 		
 		
@@ -254,8 +278,8 @@ namespace Epsitec.Common.Widgets
 					return this.visual == null ? null : this.visual.Target as Visual;
 				}
 			}
-			
-			public Command						Command
+
+			public Command Command
 			{
 				get
 				{
@@ -477,7 +501,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public static readonly CommandCache		Default = new CommandCache ();
+		public static readonly CommandCache		Instance = new CommandCache ();
 		
 		private Record[]						records;
 		private int								free_count;
