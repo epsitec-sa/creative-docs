@@ -3357,11 +3357,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			GridSelection gs = GridSelection.Get(obj);
 			if (gs != null)
 			{
-				foreach (GridSelection.OneItem item in gs)
-				{
-					Rectangle area = this.objectModifier.GetGridItemArea(obj, item);
-					this.DrawGridSelected(graphics, area, PanelsContext.ColorGridCell);
-				}
+				this.DrawGridSelected(graphics, obj, gs, PanelsContext.ColorGridCell, true);
 			}
 		}
 
@@ -3446,11 +3442,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			if (gs != null)
 			{
-				foreach (GridSelection.OneItem item in gs)
-				{
-					Rectangle area = this.objectModifier.GetGridItemArea(obj, item);
-					this.DrawGridHilited(graphics, area, PanelsContext.ColorGridCell);
-				}
+				this.DrawGridSelected(graphics, obj, gs, PanelsContext.ColorGridCell, false);
 			}
 		}
 
@@ -3543,20 +3535,91 @@ namespace Epsitec.Common.Designer.MyWidgets
 			graphics.RenderSolid(color);
 		}
 
-		protected void DrawGridSelected(Graphics graphics, Rectangle area, Color color)
+		protected void DrawGridSelected(Graphics graphics, Widget obj, GridSelection gs, Color color, bool selection)
 		{
 			//	Dessine une ou plusieurs cellules sélectionnées.
+			int i=0;
+			while (i < gs.Count)
+			{
+				GridSelection.OneItem item = gs[i];
+
+				if (i+1 < gs.Count)
+				{
+					GridSelection.OneItem item2 = gs[i+1];
+					if (item.Unit == GridSelection.Unit.Column && item2.Unit == GridSelection.Unit.Row)
+					{
+						Rectangle area1 = this.objectModifier.GetGridItemArea(obj, item);
+						Rectangle area2 = this.objectModifier.GetGridItemArea(obj, item2);
+						this.DrawGridSelected(graphics, area1, area2, color, selection);
+
+						i += 2;
+						continue;
+					}
+				}
+
+				Rectangle area = this.objectModifier.GetGridItemArea(obj, item);
+				this.DrawGridSelected(graphics, area, color, selection);
+
+				i++;
+			}
+
+		}
+
+		protected void DrawGridSelected(Graphics graphics, Rectangle area1, Rectangle area2, Color color, bool selection)
+		{
+			//	Dessine une ligne et une colonne sélectionnées.
+			area1.Deflate(0.5);
+			area2.Deflate(0.5);
+			Path path;
+
+			if (selection)  // sélection ?
+			{
+				Color cs = color;
+				cs.A *= 0.2;
+				graphics.AddFilledRectangle(area1);
+				graphics.AddFilledRectangle(area2);
+				graphics.RenderSolid(cs);
+
+				path = Misc.GetCrossPath(area1, area2);
+				graphics.Rasterizer.AddOutline(path);
+
+				area1.Deflate(2.0);
+				area2.Deflate(2.0);
+				path = Misc.GetCrossPath(area1, area2);
+				graphics.Rasterizer.AddOutline(path);
+
+				graphics.RenderSolid(color);
+			}
+			else  // hilite ?
+			{
+				path = Misc.GetCrossPath(area1, area2);
+				Misc.DrawPathDash(graphics, path, 1, 8, 3, color);
+			}
+		}
+
+		protected void DrawGridSelected(Graphics graphics, Rectangle area, Color color, bool selection)
+		{
+			//	Dessine une ligne ou une colonne sélectionnée.
 			area.Deflate(0.5);
 
-			Color cs = color;
-			cs.A *= 0.2;
-			graphics.AddFilledRectangle(area);
-			graphics.RenderSolid(cs);
+			if (selection)  // sélection ?
+			{
+				Color cs = color;
+				cs.A *= 0.2;
+				graphics.AddFilledRectangle(area);
+				graphics.RenderSolid(cs);
 
-			graphics.AddRectangle(area);
-			area.Deflate(2.0);
-			graphics.AddRectangle(area);
-			graphics.RenderSolid(color);
+				graphics.AddRectangle(area);
+				area.Deflate(2.0);
+				graphics.AddRectangle(area);
+				graphics.RenderSolid(color);
+			}
+			else  // hilite ?
+			{
+				Path path = new Path();
+				path.AppendRectangle(area);
+				Misc.DrawPathDash(graphics, path, 1, 8, 3, color);
+			}
 		}
 
 		protected void DrawGridHilited(Graphics graphics, Rectangle area, Color color)

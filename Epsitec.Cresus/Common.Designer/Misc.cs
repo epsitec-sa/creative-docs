@@ -8,6 +8,28 @@ namespace Epsitec.Common.Designer
 	/// </summary>
 	public class Misc
 	{
+		static public Path GetCrossPath(Rectangle area1, Rectangle area2)
+		{
+			//	Retourne le chemin d'une croix.
+			Path path = new Path();
+
+			path.MoveTo(area1.BottomLeft);
+			path.LineTo(area1.Left, area2.Bottom);
+			path.LineTo(area2.Left, area2.Bottom);
+			path.LineTo(area2.Left, area2.Top);
+			path.LineTo(area1.Left, area2.Top);
+			path.LineTo(area1.TopLeft);
+			path.LineTo(area1.TopRight);
+			path.LineTo(area1.Right, area2.Top);
+			path.LineTo(area2.Right, area2.Top);
+			path.LineTo(area2.Right, area2.Bottom);
+			path.LineTo(area1.Right, area2.Bottom);
+			path.LineTo(area1.BottomRight);
+			path.Close();
+
+			return path;
+		}
+
 		static public Path GetCornerPath(Rectangle area)
 		{
 			//	Retourne le chemin contenant les 4 gros 'coins' d'une zone.
