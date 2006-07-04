@@ -707,7 +707,7 @@ namespace Epsitec.Common.Widgets
 				}
 				
 				if ((commandState != null) &&
-					(command is MultiCommand))
+					(command.CommandType == CommandType.Multiple))
 				{
 					command = MultiCommand.GetSelectedCommand (commandState);
 					

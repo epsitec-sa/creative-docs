@@ -8,8 +8,13 @@ using Epsitec.Common.Types;
 
 namespace Epsitec.Common.Widgets
 {
-	public class MultiCommand : Command, IEnumType
+	public class MultiCommand : DependencyObject
 	{
+		private MultiCommand()
+		{
+		}
+
+#if false
 		public MultiCommand(string name) : base (name)
 		{
 			this.DefineStateObjectType (Types.DependencyObjectType.FromSystemType (typeof (MultiState)));
@@ -20,8 +25,9 @@ namespace Epsitec.Common.Widgets
 		{
 			this.AddRange (commands);
 		}
+#endif
 
-
+#if false
 		public void Add(Command command)
 		{
 			if (this.IsReadOnly)
@@ -48,6 +54,7 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 		}
+#endif
 
 		#region MultiState Class
 
@@ -69,14 +76,6 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 
-			public MultiCommand MultiCommand
-			{
-				get
-				{
-					return this.Command as MultiCommand;
-				}
-			}
-
 			private static object CoerceSelectedCommandValue(DependencyObject obj, DependencyProperty property, object value)
 			{
 				if (value == null)
@@ -87,11 +86,12 @@ namespace Epsitec.Common.Widgets
 				System.Diagnostics.Debug.Assert (property == MultiState.SelectedCommandProperty);
 				System.Diagnostics.Debug.Assert (obj is MultiState);
 
-				MultiState   state = (MultiState) obj;
-				MultiCommand multi = (MultiCommand) state.Command;
-				Command      command = (Command) value;
+				MultiState state   = (MultiState) obj;
+				Command    multi   = state.Command;
+				Command    command = (Command) value;
 
-				if (multi.commands.Contains (command))
+				if ((multi.HasMultiCommands) &&
+					(multi.MultiCommands.Contains (command)))
 				{
 					return command;
 				}
@@ -113,6 +113,7 @@ namespace Epsitec.Common.Widgets
 
 		#endregion
 
+#if false
 		#region CommandEnumValue Class
 		
 		private class CommandEnumValue : IEnumValue
@@ -239,7 +240,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 		#endregion
-
+#endif
 
 		public static Command GetSelectedCommand(CommandState state)
 		{
@@ -279,17 +280,47 @@ namespace Epsitec.Common.Widgets
 				//	Update the active state of the sub-commands found in the same
 				//	context as the multi-command state itself.
 				
-				MultiCommand   multiCommand = multiState.MultiCommand;
+				Command        multiCommand = multiState.Command;
 				CommandContext multiContext = multiState.CommandContext;
 
-				foreach (Command item in multiCommand.commands)
+				if (multiCommand.HasMultiCommands)
 				{
-					CommandState itemState = multiContext.GetCommandState (item);
-					itemState.ActiveState = (item == command) ? ActiveState.Yes : ActiveState.No;
+					foreach (Command item in multiCommand.MultiCommands)
+					{
+						CommandState itemState = multiContext.GetCommandState (item);
+						itemState.ActiveState = (item == command) ? ActiveState.Yes : ActiveState.No;
+					}
 				}
 			}
 		}
+
+		public static Collections.CommandCollection GetCommands(DependencyObject obj)
+		{
+			return obj.GetValue (MultiCommand.CommandsProperty) as Collections.CommandCollection;
+		}
+
+		public static bool HasCommands(DependencyObject obj)
+		{
+			Collections.CommandCollection commands = obj.GetValueBase (MultiCommand.CommandsProperty) as Collections.CommandCollection;
+
+			return (commands != null) && (commands.Count > 0);
+		}
+
 		
-		private List<Command> commands;
+		private static object GetCommandsValue(DependencyObject obj)
+		{
+			Collections.CommandCollection commands = obj.GetValueBase (MultiCommand.CommandsProperty) as Collections.CommandCollection;
+
+			if (commands == null)
+			{
+				commands = new Collections.CommandCollection ();
+				obj.SetLocalValue (MultiCommand.CommandsProperty, commands);
+				obj.InvalidateProperty (MultiCommand.CommandsProperty, null, commands);
+			}
+
+			return commands;
+		}
+
+		public static readonly DependencyProperty CommandsProperty	= DependencyProperty.RegisterAttached ("Commands", typeof (Collections.CommandCollection), typeof (MultiCommand), new DependencyPropertyMetadata (MultiCommand.GetCommandsValue));
 	}
 }
