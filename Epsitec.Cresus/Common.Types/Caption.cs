@@ -115,6 +115,80 @@ namespace Epsitec.Common.Types
 			
 			this.id = id;
 		}
+
+		private class Visitor : Serialization.IVisitor
+		{
+			public Visitor(DependencyObject root)
+			{
+				this.root = root;
+			}
+			
+			public int TypeCount
+			{
+				get
+				{
+					return this.typeCount;
+				}
+			}
+
+			public bool Complex
+			{
+				get
+				{
+					return this.complex;
+				}
+			}
+			
+			public void VisitNodeBegin(Serialization.Context context, DependencyObject obj)
+			{
+				if (this.root == obj)
+				{
+					context.ExternalMap.Record ("caption", this.root);
+					System.Diagnostics.Debug.Assert (this.level == 0);
+				}
+				else
+				{
+					this.complex = true;
+				}
+				
+				this.level++;
+			}
+
+			public void VisitNodeEnd(Serialization.Context context, DependencyObject obj)
+			{
+				this.level--;
+				
+				if (this.root == obj)
+				{
+					System.Diagnostics.Debug.Assert (this.level == 0);
+				}
+			}
+
+			public void VisitAttached(Serialization.Context context, PropertyValuePair entry)
+			{
+				this.RecordType (context, entry.Property.OwnerType);
+			}
+
+			public void VisitUnknown(Serialization.Context context, object obj)
+			{
+				throw new System.InvalidOperationException ("Unknown object found");
+			}
+
+			private void RecordType(Serialization.Context context, System.Type type)
+			{
+				if (context.ObjectMap.IsTypeDefined (type) == false)
+				{
+					this.typeCount++;
+					context.ObjectMap.RecordType (type);
+					context.StoreTypeDefinition (this.typeCount, type);
+				}
+			}
+
+			DependencyObject root;
+			int level;
+			int typeCount;
+			bool complex;
+		}
 		
 		/// <summary>
 		/// Serializes the caption object to a string representation.
@@ -125,24 +199,21 @@ namespace Epsitec.Common.Types
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 			System.IO.StringWriter stringWriter = new System.IO.StringWriter (buffer);
 			System.Xml.XmlTextWriter xmlWriter = new System.Xml.XmlTextWriter (stringWriter);
+			Serialization.IO.AbstractWriter writer = new Serialization.IO.XmlWriter (xmlWriter);
 
 			xmlWriter.Formatting = System.Xml.Formatting.None;
 			xmlWriter.WriteStartElement ("xml");
 
-			Serialization.Context context = new Serialization.SerializerContext (new Serialization.IO.XmlWriter (xmlWriter));
-			
-			context.ActiveWriter.WriteAttributeStrings ();
+			writer.WriteAttributeStrings ();
 
-			int typeCount = 0;
+			Serialization.Context context = new Serialization.SerializerContext (writer);
 
-			foreach (DependencyProperty property in this.AttachedProperties)
+			Visitor visitor = new Visitor (this);
+			Serialization.GraphVisitor.VisitSerializableNodes (this, context, visitor);
+
+			if (visitor.Complex)
 			{
-				if (context.ObjectMap.IsTypeDefined (property.OwnerType) == false)
-				{
-					typeCount++;
-					context.ObjectMap.RecordType (property.OwnerType);
-					context.StoreTypeDefinition (typeCount, property.OwnerType);
-				}
+				return Serialization.SimpleSerialization.SerializeToString (this);
 			}
 			
 			context.StoreObjectData (0, this);
@@ -168,12 +239,23 @@ namespace Epsitec.Common.Types
 			return xml.Substring (startElementPos, endElementPos - startElementPos);
 		}
 
+
 		/// <summary>
 		/// Deserializes the caption object from a string representation.
 		/// </summary>
 		/// <param name="value">The serialized caption.</param>
 		public void DeserializeFromString(string value)
 		{
+			if ((value.Length > 1) &&
+				(value[0] == '<') &&
+				(value.IndexOf (Serialization.SimpleSerialization.RootElementName, 1, Serialization.SimpleSerialization.RootElementName.Length+1) == 1))
+			{
+				Caption caption = Serialization.SimpleSerialization.DeserializeFromString (value) as Caption;
+				
+				DependencyObject.CopyDefinedProperties (caption, this);
+				return;
+			}
+			
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 			
 			buffer.Append (@"<xml ");
@@ -197,7 +279,9 @@ namespace Epsitec.Common.Types
 			System.Xml.XmlTextReader xmlReader = new System.Xml.XmlTextReader (stringReader);
 
 			Serialization.Context context = new Serialization.DeserializerContext (new Serialization.IO.XmlReader (xmlReader));
-
+			
+			context.ExternalMap.Record ("caption", this);
+			
 			while (xmlReader.Read ())
 			{
 				if ((xmlReader.NodeType == System.Xml.XmlNodeType.Element) &&
