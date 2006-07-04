@@ -137,7 +137,7 @@ namespace Epsitec.Common.Types
 			Visitor visitor = new Visitor (this);
 			Serialization.GraphVisitor.VisitSerializableNodes (this, context, visitor);
 
-			if (visitor.RichSerialization)
+			if (visitor.RequiresRichSerialization)
 			{
 				//	We cannot use the compact serialization since the object graph
 				//	contains references to other full-fledged dependency objects;
@@ -351,7 +351,7 @@ namespace Epsitec.Common.Types
 				this.root = root;
 			}
 
-			public int TypeCount
+			public int							TypeCount
 			{
 				get
 				{
@@ -359,15 +359,17 @@ namespace Epsitec.Common.Types
 				}
 			}
 
-			public bool RichSerialization
+			public bool							RequiresRichSerialization
 			{
 				get
 				{
-					return this.richSerialization;
+					return this.requiresRichSerialization;
 				}
 			}
 
-			public void VisitNodeBegin(Serialization.Context context, DependencyObject obj)
+			#region IVisitor Members
+
+			void Serialization.IVisitor.VisitNodeBegin(Serialization.Context context, DependencyObject obj)
 			{
 				if (this.root == obj)
 				{
@@ -376,13 +378,13 @@ namespace Epsitec.Common.Types
 				}
 				else
 				{
-					this.richSerialization = true;
+					this.requiresRichSerialization = true;
 				}
 
 				this.level++;
 			}
 
-			public void VisitNodeEnd(Serialization.Context context, DependencyObject obj)
+			void Serialization.IVisitor.VisitNodeEnd(Serialization.Context context, DependencyObject obj)
 			{
 				this.level--;
 
@@ -392,15 +394,17 @@ namespace Epsitec.Common.Types
 				}
 			}
 
-			public void VisitAttached(Serialization.Context context, PropertyValuePair entry)
+			void Serialization.IVisitor.VisitAttached(Serialization.Context context, System.Type type)
 			{
-				this.RecordType (context, entry.Property.OwnerType);
+				this.RecordType (context, type);
 			}
 
-			public void VisitUnknown(Serialization.Context context, object obj)
+			void Serialization.IVisitor.VisitUnknown(Serialization.Context context, object obj)
 			{
 				throw new System.InvalidOperationException ("Unknown object found");
 			}
+
+			#endregion
 
 			private void RecordType(Serialization.Context context, System.Type type)
 			{
@@ -412,10 +416,10 @@ namespace Epsitec.Common.Types
 				}
 			}
 
-			DependencyObject root;
-			int level;
-			int typeCount;
-			bool richSerialization;
+			DependencyObject					root;
+			int									level;
+			int									typeCount;
+			bool								requiresRichSerialization;
 		}
 
 		#endregion
