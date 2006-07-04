@@ -762,7 +762,7 @@ namespace Epsitec.Common.Designer
 		public bool IsGridCellEmpty(Widget obj, Widget exclude, int column, int row)
 		{
 			//	Indique si une cellule est libre, donc si elle ne contient aucun widget.
-			if (column == int.MinValue || row == int.MinValue)
+			if (column == GridSelection.Invalid || row == GridSelection.Invalid)
 			{
 				return false;
 			}
@@ -974,7 +974,7 @@ namespace Epsitec.Common.Designer
 			if (this.AreChildrenGrid(obj))
 			{
 				GridLayoutEngine engine = LayoutEngine.GetLayoutEngine(obj) as GridLayoutEngine;
-				if (engine != null && item.Index != int.MinValue)
+				if (engine != null && item.Index != GridSelection.Invalid)
 				{
 					if (item.Unit == GridSelection.Unit.Column)
 					{
@@ -1025,7 +1025,7 @@ namespace Epsitec.Common.Designer
 			//	Retourne la position d'une colonne.
 			//	Accepte des index < 0 ou > que le nombre de colonnes, en prenant comme
 			//	valeur la première ou la dernière colonne.
-			if (this.AreChildrenGrid(obj) && index != int.MinValue)
+			if (this.AreChildrenGrid(obj) && index != GridSelection.Invalid)
 			{
 				GridLayoutEngine engine = LayoutEngine.GetLayoutEngine(obj) as GridLayoutEngine;
 				if (engine != null)
@@ -1063,7 +1063,7 @@ namespace Epsitec.Common.Designer
 			//	Retourne la position d'une ligne.
 			//	Accepte des index < 0 ou > que le nombre de lignes, en prenant comme
 			//	valeur la première ou la dernière ligne.
-			if (this.AreChildrenGrid(obj) && index != int.MinValue)
+			if (this.AreChildrenGrid(obj) && index != GridSelection.Invalid)
 			{
 				GridLayoutEngine engine = LayoutEngine.GetLayoutEngine(obj) as GridLayoutEngine;
 				if (engine != null)
