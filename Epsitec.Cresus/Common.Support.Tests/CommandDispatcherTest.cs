@@ -76,7 +76,7 @@ namespace Epsitec.Common.Support
 			Assert.AreEqual ("TestSave", v3.Command);
 			Assert.AreEqual ("TestSave", v3.CommandName);
 
-			CommandCache.Default.Synchronize ();
+			CommandCache.Instance.Synchronize ();
 
 			Assert.IsTrue (v3.Enable);
 
@@ -91,7 +91,7 @@ namespace Epsitec.Common.Support
 			stateA.Enable = false;
 
 			Assert.IsTrue (v3.Enable);
-			CommandCache.Default.Synchronize ();
+			CommandCache.Instance.Synchronize ();
 			Assert.IsFalse (v3.Enable);
 			Assert.AreEqual (stateA, chain.GetCommandState (command.CommandId));
 
@@ -104,14 +104,14 @@ namespace Epsitec.Common.Support
 			Assert.AreNotEqual (stateA, stateB);
 
 			Assert.IsFalse (v3.Enable);
-			CommandCache.Default.Synchronize ();
+			CommandCache.Instance.Synchronize ();
 			Assert.IsTrue (v3.Enable);
 			Assert.AreEqual (stateB, chain.GetCommandState (command.CommandId));
 
 			contextB.ClearCommandState (command);
 
 			Assert.IsTrue (v3.Enable);
-			CommandCache.Default.Synchronize ();
+			CommandCache.Instance.Synchronize ();
 			Assert.IsFalse (v3.Enable);
 			Assert.AreEqual (stateA, chain.GetCommandState (command.CommandId));
 		}

@@ -106,7 +106,7 @@ namespace Epsitec.Common.Widgets
 		
 		protected void Synchronize()
 		{
-			CommandCache.Default.InvalidateState (this);
+			CommandCache.Instance.InvalidateState (this);
 		}
 		
 		public static void SetAdvancedState(DependencyObject obj, string value)

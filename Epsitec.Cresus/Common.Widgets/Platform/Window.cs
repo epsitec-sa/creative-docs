@@ -1386,7 +1386,7 @@ namespace Epsitec.Common.Widgets.Platform
 			if (Window.is_sync_requested)
 			{
 				Window.is_sync_requested = false;
-				CommandCache.Default.Synchronize ();
+				CommandCache.Instance.Synchronize ();
 			}
 			
 			if (Window.dispatch_window == this)
