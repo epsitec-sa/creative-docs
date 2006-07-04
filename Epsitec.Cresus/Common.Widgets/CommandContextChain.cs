@@ -74,6 +74,24 @@ namespace Epsitec.Common.Widgets
 		}
 
 		/// <summary>
+		/// Gets the local enable state of the command.
+		/// </summary>
+		/// <param name="command">The command.</param>
+		/// <returns><c>false</c> if the command is disabled locally, <c>true</c> otherwise.</returns>
+		public bool GetLocalEnable(Command command)
+		{
+			foreach (CommandContext context in this.Contexts)
+			{
+				if (context.GetLocalEnable (command) == false)
+				{
+					return false;
+				}
+			}
+
+			return true;
+		}
+		
+		/// <summary>
 		/// Builds the command context chain based on a visual.
 		/// </summary>
 		/// <param name="visual">The visual from where to search for the command contexts.</param>

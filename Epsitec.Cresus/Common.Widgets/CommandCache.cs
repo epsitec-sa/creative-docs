@@ -365,6 +365,9 @@ namespace Epsitec.Common.Widgets
 		
 		private void SynchronizeIndex(int index)
 		{
+			//	Synchronize the information stored in the specified record. This
+			//	will re-associate the Visual with its CommandState, if possible.
+			
 			Visual visual = this.records[index].Visual;
 			
 			if (visual != null)
@@ -375,6 +378,9 @@ namespace Epsitec.Common.Widgets
 				if ((command != null) &&
 					(chain != null))
 				{
+					//	Find the CommandState in the CommandContext nearest to the
+					//	Visual. This requires a command context chain walk :
+					
 					CommandContext context;
 					CommandState state = chain.GetCommandState (command, out context);
 
@@ -384,15 +390,17 @@ namespace Epsitec.Common.Widgets
 						if ((this.clearCount > 0) &&
 							(this.records[index].IsDirty))
 						{
-							this.clearCount -= 1;
+							this.clearCount--;
 						}
 
 						System.Diagnostics.Debug.Assert (state.Command == command);
 						System.Diagnostics.Debug.Assert (state.CommandContext == context);
 
+						//	Remember the command state for the visual.
+						
 						this.records[index].SetCommandState (state);
 
-						bool enable = state.Enable;
+						bool enable = state.Enable && chain.GetLocalEnable (command);
 						ActiveState active = state.ActiveState;
 						string advanced = state.AdvancedState;
 
