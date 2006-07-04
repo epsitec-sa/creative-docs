@@ -51,7 +51,7 @@ namespace Epsitec.Common.Widgets
 
 		#region MultiState Class
 
-		private class MultiState : CommandState
+		internal class MultiState : CommandState
 		{
 			public MultiState()
 			{

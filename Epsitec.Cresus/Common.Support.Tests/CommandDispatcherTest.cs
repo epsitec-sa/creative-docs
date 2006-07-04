@@ -30,7 +30,7 @@ namespace Epsitec.Common.Support
 		[Test]
 		public void CheckCommandContext()
 		{
-			Command command = new Command ("TestSave");
+			Command command = Command.Get ("TestSave");
 
 			command.ManuallyDefineCommand ("Enregistre le document ouvert", "save.icon", null, false);
 			command.Shortcuts.Add (new Shortcut ('S', ModifierKeys.Control));

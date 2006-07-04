@@ -217,9 +217,9 @@ namespace Epsitec.Common.Widgets
 
 			CommandDispatcher.SetDispatcher (window, dispatcher);
 			
-			Command command_open = new Command ("Open", KeyCode.ModifierControl | KeyCode.AlphaO);
-			Command command_save = new Command ("Save", KeyCode.ModifierAlt | KeyCode.AlphaS);
-			Command command_cut  = new Command ("ClipCut", KeyCode.ModifierControl | KeyCode.AlphaX);
+			Command command_open = Command.Get ("Open"); command_open.Shortcuts.Add (KeyCode.ModifierControl | KeyCode.AlphaO);
+			Command command_save = Command.Get ("Save"); command_save.Shortcuts.Add (KeyCode.ModifierAlt | KeyCode.AlphaS);
+			Command command_cut  = Command.Get ("ClipCut"); command_cut.Shortcuts.Add (KeyCode.ModifierControl | KeyCode.AlphaX);
 			
 			Button      button;
 			GroupBox    group;

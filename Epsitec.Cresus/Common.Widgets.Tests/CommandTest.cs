@@ -43,7 +43,7 @@ namespace Epsitec.Common.Widgets
 		[Test]
 		public void CheckCommandSerialization1()
 		{
-			Command command = new Command ("Test.CheckCommandSerialization1");
+			Command command = Command.Get ("Test.CheckCommandSerialization1");
 			command.Shortcuts.Add (new Shortcut ('O', ModifierKeys.Alt));
 			command.Shortcuts.Add (new Shortcut (KeyCode.FuncF10 | KeyCode.ModifierShift));
 			command.Shortcuts.Add (new Shortcut ('O', ModifierKeys.Alt));
@@ -75,7 +75,7 @@ namespace Epsitec.Common.Widgets
 		{
 			Collections.ShortcutCollection shortcuts;
 			
-			Command command = new Command ("Test.CheckCommandSerialization2");
+			Command command = Command.Get ("Test.CheckCommandSerialization2");
 			command.Shortcuts.Add (new Shortcut ('O', ModifierKeys.Alt));
 			command.Shortcuts.Add (new Shortcut (KeyCode.FuncF10 | KeyCode.ModifierShift));
 

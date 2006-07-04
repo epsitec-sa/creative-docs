@@ -19,10 +19,10 @@ namespace Epsitec.Common.Widgets
 	{
 		private Command()
 		{
-			this.DefineStateObjectType (Types.DependencyObjectType.FromSystemType (typeof (SimpleState)));
 		}
-		
-		public Command(string id) : this ()
+
+		protected Command(string id)
+			: this ()
 		{
 			if (string.IsNullOrEmpty (id))
 			{
@@ -32,12 +32,14 @@ namespace Epsitec.Common.Widgets
 			this.InitializeCommandId (id);
 		}
 
-		public Command(string id, params Shortcut[] shortcuts) : this (id)
+		protected Command(string id, params Shortcut[] shortcuts)
+			: this (id)
 		{
 			this.Shortcuts.AddRange (shortcuts);
 		}
 
-		public Command(Support.Druid druid) : this ()
+		protected Command(Support.Druid druid)
+			: this ()
 		{
 			string id = druid.ToResourceId ();
 			
@@ -59,7 +61,15 @@ namespace Epsitec.Common.Widgets
 				return this.commandId;
 			}
 		}
-		
+
+		public string							Name
+		{
+			get
+			{
+				return this.caption.Name;
+			}
+		}
+
 		public string							Icon
 		{
 			get
@@ -92,14 +102,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public DependencyObjectType				CommandStateObjectType
-		{
-			get
-			{
-				return this.stateObjectType;
-			}
-		}
-		
 		public bool								Statefull
 		{
 			get
@@ -432,7 +434,31 @@ namespace Epsitec.Common.Widgets
 
 			this.caption.AddEventHandler (Caption.IconProperty, this.HandleIconChanged);
 			this.caption.AddEventHandler (Caption.DescriptionProperty, this.HandleDescriptionChanged);
-			this.caption.AddEventHandler (Command.GroupProperty, this.HandleGroupChanged);
+
+			this.InitializeCommandType ();
+		}
+
+		private void InitializeCommandType()
+		{
+			CommandType type = Command.GetCommandType (this.caption);
+			
+			switch (type)
+			{
+				case CommandType.Standard:
+					this.DefineStateObjectType (Types.DependencyObjectType.FromSystemType (typeof (Command.SimpleState)));
+					break;
+				
+				case CommandType.Multiple:
+					this.DefineStateObjectType (Types.DependencyObjectType.FromSystemType (typeof (MultiCommand.MultiState)));
+					break;
+				
+				case CommandType.Structured:
+					this.DefineStateObjectType (Types.DependencyObjectType.FromSystemType (typeof (StructuredCommand.StructuredState)));
+					break;
+				
+				default:
+					throw new System.InvalidOperationException (string.Format ("Unsupported command type: {0}", type));
+			}
 		}
 
 		private void InitializeDruid(Support.Druid druid)
@@ -466,11 +492,6 @@ namespace Epsitec.Common.Widgets
 		#endregion
 
 		#region Private Event Handlers
-
-		private void HandleGroupChanged(object sender, DependencyPropertyChangedEventArgs e)
-		{
-			CommandCache.Default.InvalidateCommand (this);
-		}
 
 		private void HandleIconChanged(object sender, DependencyPropertyChangedEventArgs e)
 		{
@@ -546,7 +567,29 @@ namespace Epsitec.Common.Widgets
 		{
 			return (string) obj.GetValue (Command.GroupProperty);
 		}
-		
+
+		public static void SetCommandType(DependencyObject obj, CommandType value)
+		{
+			obj.SetValue (Command.CommandTypeProperty, value);
+		}
+
+		public static CommandType GetCommandType(DependencyObject obj)
+		{
+			return (CommandType) obj.GetValue (Command.CommandTypeProperty);
+		}
+
+		public static Collections.CommandCollection GetMultiCommands(DependencyObject obj)
+		{
+			return obj.GetValue (Command.MultiCommandsProperty) as Collections.CommandCollection;
+		}
+
+		public static bool HasMultiCommands(DependencyObject obj)
+		{
+			Collections.CommandCollection commands = obj.GetValueBase (Command.MultiCommandsProperty) as Collections.CommandCollection;
+
+			return (commands != null) && (commands.Count > 0);
+		}
+
 
 		private static object GetCaptionValue(DependencyObject obj)
 		{
@@ -560,11 +603,28 @@ namespace Epsitec.Common.Widgets
 			return that.CommandId;
 		}
 
+		private static object GetMultiCommandsValue(DependencyObject obj)
+		{
+			Collections.CommandCollection commands = obj.GetValueBase (Command.MultiCommandsProperty) as Collections.CommandCollection;
+
+			if (commands == null)
+			{
+				commands = new Collections.CommandCollection ();
+				obj.SetLocalValue (Command.MultiCommandsProperty, commands);
+				obj.InvalidateProperty (Command.MultiCommandsProperty, null, commands);
+			}
+
+			return commands;
+		}
+
 
 		public static readonly DependencyProperty CaptionProperty		= DependencyProperty.RegisterReadOnly ("Caption", typeof (Caption), typeof (Command), new DependencyPropertyMetadata (Command.GetCaptionValue));
 		public static readonly DependencyProperty CommandIdProperty		= DependencyProperty.RegisterReadOnly ("CommandId", typeof (string), typeof (Command), new DependencyPropertyMetadata (Command.GetCommandIdValue));
+		
 		public static readonly DependencyProperty GroupProperty			= DependencyProperty.RegisterAttached ("Group", typeof (string), typeof (Command));
 		public static readonly DependencyProperty StatefullProperty		= DependencyProperty.RegisterAttached ("Statefull", typeof (bool), typeof (Command), new DependencyPropertyMetadata (false));
+		public static readonly DependencyProperty CommandTypeProperty	= DependencyProperty.RegisterAttached ("CommandType", typeof (CommandType), typeof (Command), new DependencyPropertyMetadata (CommandType.Standard));
+		public static readonly DependencyProperty MultiCommandsProperty	= DependencyProperty.RegisterAttached ("MultiCommands", typeof (Collections.CommandCollection), typeof (Command), new DependencyPropertyMetadata (Command.GetMultiCommandsValue));
 		
 		private static Dictionary<string, Command> commands = new Dictionary<string, Command> ();
 		private static int nextUniqueId;

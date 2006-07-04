@@ -58,7 +58,7 @@ namespace Epsitec.Common.Widgets
 		
 		#endregion
 
-		private class StructuredState : CommandState, IStructuredData
+		internal class StructuredState : CommandState, IStructuredData
 		{
 			public StructuredState()
 			{
