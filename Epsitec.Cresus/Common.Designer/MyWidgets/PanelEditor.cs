@@ -862,7 +862,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 				GridSelection.Attach(obj);
 				GridSelection gs = GridSelection.Get(obj);
-				this.gridSelectByColumn = this.GridSelectionPrepare(gs, column, row, this.gridSelectByColumn);
+				gs.Clear();
+				GridSelection.OneItem i1 = new GridSelection.OneItem(GridSelection.Unit.Column, column);
+				GridSelection.OneItem i2 = new GridSelection.OneItem(GridSelection.Unit.Row, row);
+				gs.Add(i1);
+				gs.Add(i2);
 			}
 			else
 			{
@@ -906,14 +910,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 				}
 				else
 				{
-					GridSelection ags = GridSelection.Get(obj);
-					GridSelection tgs = new GridSelection(obj);
-					if (ags != null)
-					{
-						ags.CopyTo(tgs);
-					}
-					this.GridSelectionPrepare(tgs, column, row, this.gridSelectByColumn);
-					this.SetHilitedObject(obj, tgs);
+					GridSelection gs = new GridSelection(obj);
+					GridSelection.OneItem i1 = new GridSelection.OneItem(GridSelection.Unit.Column, column);
+					GridSelection.OneItem i2 = new GridSelection.OneItem(GridSelection.Unit.Row, row);
+					gs.Add(i1);
+					gs.Add(i2);
+					this.SetHilitedObject(obj, gs);
 				}
 			}
 		}
@@ -931,42 +933,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				this.HandlingEnd(pos);
 			}
-		}
-
-		protected bool GridSelectionPrepare(GridSelection gs, int column, int row, bool byColumn)
-		{
-			//	Prépare GridSelection pour représenter la sélection en cas de clic
-			//	dans une cellule.
-			GridSelection.OneItem item;
-			if (gs.Count == 0)
-			{
-				item = new GridSelection.OneItem(GridSelection.Unit.Column, column);
-				gs.Add(item);
-			}
-			item = gs[0];
-
-			if (item.Unit == GridSelection.Unit.Column && item.Index == column)
-			{
-				byColumn = false;
-			}
-
-			if (item.Unit == GridSelection.Unit.Row && item.Index == row)
-			{
-				byColumn = true;
-			}
-
-			if (byColumn)
-			{
-				item.Unit = GridSelection.Unit.Column;
-				item.Index = column;
-			}
-			else
-			{
-				item.Unit = GridSelection.Unit.Row;
-				item.Index = row;
-			}
-
-			return byColumn;
 		}
 
 		protected void GridKeyChanged(bool isControlPressed, bool isShiftPressed)
@@ -4109,7 +4075,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected bool						isSizeMarkVertical;
 		protected Point						sizeMarkOffset;
 		protected bool						isInside;
-		protected bool						gridSelectByColumn = true;
 
 		protected Image						mouseCursorArrow = null;
 		protected Image						mouseCursorArrowPlus = null;
