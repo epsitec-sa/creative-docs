@@ -253,10 +253,12 @@ namespace Epsitec.Common.Widgets
 
 			if (multi == null)
 			{
-				throw new System.ArgumentException ();
+				return null;
 			}
-
-			return multi.SelectedCommand;
+			else
+			{
+				return multi.SelectedCommand;
+			}
 		}
 
 		public static void SetSelectedCommand(CommandState state, Command command)
