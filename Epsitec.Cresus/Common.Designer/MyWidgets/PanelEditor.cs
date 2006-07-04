@@ -27,6 +27,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			ArrowPlus,
 			Global,
 			Grid,
+			GridPlus,
 			Hand,
 			Edit,
 			Pen,
@@ -858,19 +859,26 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 			else
 			{
-				this.selectedObjects.Clear();
-				this.selectedObjects.Add(obj);
-				this.GridClearSelection(obj);
-				this.UpdateAfterSelectionChanged();
+				if (isShiftPressed)
+				{
+					this.GridAddSelection(obj, column, row);
+				}
+				else
+				{
+					this.selectedObjects.Clear();
+					this.selectedObjects.Add(obj);
+					this.GridClearSelection(obj);
+					this.UpdateAfterSelectionChanged();
 
-				this.SetHilitedObject(null, null);
-				this.isGridding = true;
-				this.isGriddingColumn = false;
-				this.isGriddingRow = false;
-				this.griddingColumn = column;
-				this.griddingRow = row;
+					this.SetHilitedObject(null, null);
+					this.isGridding = true;
+					this.isGriddingColumn = false;
+					this.isGriddingRow = false;
+					this.griddingColumn = column;
+					this.griddingRow = row;
 
-				this.GridAdaptSelection(obj, column, row);
+					this.GridAdaptSelection(obj, column, row);
+				}
 			}
 
 			this.OnChildrenSelected();
@@ -883,6 +891,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 			if (this.handlesList.IsFinger)
 			{
 				this.ChangeMouseCursor(MouseCursorType.Finger);
+			}
+			else if (isShiftPressed)
+			{
+				this.ChangeMouseCursor(MouseCursorType.GridPlus);
 			}
 			else
 			{
@@ -943,6 +955,33 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
+		protected void GridAddSelection(Widget obj, int column, int row)
+		{
+			//	Etend la sélection lorsque la touche Shift est pressée.
+			if (obj == null)
+			{
+				return;
+			}
+
+			GridSelection gs = GridSelection.Get(obj);
+			if (gs == null)
+			{
+				this.GridAdaptSelection(obj, column, row);
+			}
+			else
+			{
+				if (gs.AreOnlyColumns && column != GridSelection.Invalid)
+				{
+					gs.InvertColumnSelection(column);
+				}
+
+				if (gs.AreOnlyRows && row != GridSelection.Invalid)
+				{
+					gs.InvertRowSelection(row);
+				}
+			}
+		}
+
 		protected void GridAdaptSelection(Widget obj, int column, int row)
 		{
 			//	Adapte la sélection selon le mouvement de la souris.
@@ -951,18 +990,18 @@ namespace Epsitec.Common.Designer.MyWidgets
 				return;
 			}
 
-			GridSelection ngs = new GridSelection(obj);
+			GridSelection gs = new GridSelection(obj);
 
 			if (column == this.griddingColumn && row == this.griddingRow)
 			{
 				if (column != GridSelection.Invalid)
 				{
-					ngs.Add(new GridSelection.OneItem(GridSelection.Unit.Column, column));
+					gs.Add(new GridSelection.OneItem(GridSelection.Unit.Column, column));
 				}
 
 				if (row != GridSelection.Invalid)
 				{
-					ngs.Add(new GridSelection.OneItem(GridSelection.Unit.Row, row));
+					gs.Add(new GridSelection.OneItem(GridSelection.Unit.Row, row));
 				}
 
 				this.isGriddingColumn = (row == GridSelection.Invalid);
@@ -970,14 +1009,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 			else if (column == this.griddingColumn && column != GridSelection.Invalid)
 			{
-				ngs.Add(new GridSelection.OneItem(GridSelection.Unit.Column, column));
+				gs.Add(new GridSelection.OneItem(GridSelection.Unit.Column, column));
 
 				this.isGriddingColumn = true;
 				this.isGriddingRow = false;
 			}
 			else if (row == this.griddingRow && row != GridSelection.Invalid)
 			{
-				ngs.Add(new GridSelection.OneItem(GridSelection.Unit.Row, row));
+				gs.Add(new GridSelection.OneItem(GridSelection.Unit.Row, row));
 
 				this.isGriddingColumn = false;
 				this.isGriddingRow = true;
@@ -988,14 +1027,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 				{
 					for (int i=column; i>=this.griddingColumn; i--)
 					{
-						ngs.Add(new GridSelection.OneItem(GridSelection.Unit.Column, i));
+						gs.Add(new GridSelection.OneItem(GridSelection.Unit.Column, i));
 					}
 				}
 				else
 				{
 					for (int i=column; i<=this.griddingColumn; i++)
 					{
-						ngs.Add(new GridSelection.OneItem(GridSelection.Unit.Column, i));
+						gs.Add(new GridSelection.OneItem(GridSelection.Unit.Column, i));
 					}
 				}
 			}
@@ -1005,22 +1044,21 @@ namespace Epsitec.Common.Designer.MyWidgets
 				{
 					for (int i=row; i>=this.griddingRow; i--)
 					{
-						ngs.Add(new GridSelection.OneItem(GridSelection.Unit.Row, i));
+						gs.Add(new GridSelection.OneItem(GridSelection.Unit.Row, i));
 					}
 				}
 				else
 				{
 					for (int i=row; i<=this.griddingRow; i++)
 					{
-						ngs.Add(new GridSelection.OneItem(GridSelection.Unit.Row, i));
+						gs.Add(new GridSelection.OneItem(GridSelection.Unit.Row, i));
 					}
 				}
 			}
 
-			GridSelection gs = GridSelection.Get(obj);
-			if (!GridSelection.EqualValues(gs, ngs))
+			if (!GridSelection.EqualValues(gs, GridSelection.Get(obj)))
 			{
-				GridSelection.Attach(obj, ngs);
+				GridSelection.Attach(obj, gs);
 				this.Invalidate();
 			}
 		}
@@ -1028,7 +1066,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void GridKeyChanged(bool isControlPressed, bool isShiftPressed)
 		{
 			//	Sélection de tableaux, touche pressée ou relâchée.
-			this.ChangeMouseCursor(MouseCursorType.Grid);
+			if (isShiftPressed)
+			{
+				this.ChangeMouseCursor(MouseCursorType.GridPlus);
+			}
+			else
+			{
+				this.ChangeMouseCursor(MouseCursorType.Grid);
+			}
 		}
 		#endregion
 
@@ -3650,10 +3695,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 						continue;
 					}
 
-					if (item1.Unit == item2.Unit)
+					if (item1.Unit == item2.Unit && item1.Index+1 == item2.Index)
 					{
 						i += 2;
-						while (i < gs.Count && gs[i].Unit == item1.Unit)
+						while (i < gs.Count && gs[i].Unit == item1.Unit && gs[i-1].Index+1 == gs[i].Index)
 						{
 							i++;
 						}
@@ -4067,6 +4112,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 					this.SetMouseCursorImage(ref this.mouseCursorGrid, Misc.Icon("CursorGrid"));
 					break;
 
+				case MouseCursorType.GridPlus:
+					this.SetMouseCursorImage(ref this.mouseCursorGridPlus, Misc.Icon("CursorGridPlus"));
+					break;
+
 				case MouseCursorType.Edit:
 					this.SetMouseCursorImage(ref this.mouseCursorEdit, Misc.Icon("CursorEdit"));
 					break;
@@ -4256,6 +4305,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected Image						mouseCursorArrowPlus = null;
 		protected Image						mouseCursorGlobal = null;
 		protected Image						mouseCursorGrid = null;
+		protected Image						mouseCursorGridPlus = null;
 		protected Image						mouseCursorEdit = null;
 		protected Image						mouseCursorPen = null;
 		protected Image						mouseCursorZoom = null;

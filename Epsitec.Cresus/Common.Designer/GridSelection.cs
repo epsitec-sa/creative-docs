@@ -57,6 +57,7 @@ namespace Epsitec.Common.Designer
 		public void Add(OneItem item)
 		{
 			this.list.Add(item);
+			this.list.Sort();
 		}
 
 		public void Remove(OneItem item)
@@ -98,6 +99,72 @@ namespace Epsitec.Common.Designer
 			return true;
 		}
 
+		public bool AreOnlyColumns
+		{
+			//	Indique s'il n'y a que des sélections de colonnes.
+			get
+			{
+				foreach (OneItem item in this)
+				{
+					if (item.Unit == Unit.Row)
+					{
+						return false;
+					}
+				}
+				return true;
+			}
+		}
+
+		public bool AreOnlyRows
+		{
+			//	Indique s'il n'y a que des sélections de lignes.
+			get
+			{
+				foreach (OneItem item in this)
+				{
+					if (item.Unit == Unit.Column)
+					{
+						return false;
+					}
+				}
+				return true;
+			}
+		}
+
+		public void InvertColumnSelection(int column)
+		{
+			//	Inverse une sélection de colonne.
+			for (int i=0; i<this.Count; i++)
+			{
+				OneItem item = this[i];
+
+				if (item.Unit == Unit.Column && item.Index == column)
+				{
+					this.RemoveAt(i);
+					return;
+				}
+			}
+
+			this.Add(new OneItem(Unit.Column, column));
+		}
+
+		public void InvertRowSelection(int row)
+		{
+			//	Inverse une sélection de ligne.
+			for (int i=0; i<this.Count; i++)
+			{
+				OneItem item = this[i];
+
+				if (item.Unit == Unit.Row && item.Index == row)
+				{
+					this.RemoveAt(i);
+					return;
+				}
+			}
+
+			this.Add(new OneItem(Unit.Row, row));
+		}
+
 
 		#region OneItem
 		public enum Unit
@@ -106,7 +173,7 @@ namespace Epsitec.Common.Designer
 			Row,
 		}
 
-		public class OneItem
+		public class OneItem : System.IComparable
 		{
 			public OneItem(Unit unit, int index)
 			{
@@ -158,6 +225,21 @@ namespace Epsitec.Common.Designer
 			}
 
 
+			#region IComparable Members
+			public int CompareTo(object obj)
+			{
+				OneItem that = obj as OneItem;
+
+				if (this.unit != that.unit)
+				{
+					return (this.unit == Unit.Column) ? -1 : 1;
+				}
+
+				return this.index.CompareTo(that.index);
+			}
+			#endregion
+
+			
 			protected Unit				unit;
 			protected int				index;
 		}
