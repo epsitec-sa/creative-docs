@@ -968,17 +968,17 @@ namespace Epsitec.Common.Designer
 		}
 
 
-		public Rectangle GetGridItemArea(Widget obj, GridSelection gs)
+		public Rectangle GetGridItemArea(Widget obj, GridSelection.OneItem item)
 		{
 			//	Retourne la zone rectangulaire correspondant à une sélection.
 			if (this.AreChildrenGrid(obj))
 			{
 				GridLayoutEngine engine = LayoutEngine.GetLayoutEngine(obj) as GridLayoutEngine;
-				if (engine != null)
+				if (engine != null && item.Index != int.MinValue)
 				{
-					if (gs.Unit == GridSelection.SelectionUnit.Column)
+					if (item.Unit == GridSelection.Unit.Column)
 					{
-						int x = gs.Index;
+						int x = item.Index;
 						double x1 = this.GetGridColumnPosition(obj, x);
 						double x2 = this.GetGridColumnPosition(obj, x+1);
 						double y1 = this.GetGridRowPosition(obj, engine.RowDefinitions.Count);
@@ -986,9 +986,9 @@ namespace Epsitec.Common.Designer
 						return new Rectangle(x1, y1, x2-x1, y2-y1);
 					}
 
-					if (gs.Unit == GridSelection.SelectionUnit.Row)
+					if (item.Unit == GridSelection.Unit.Row)
 					{
-						int y = gs.Index;
+						int y = item.Index;
 						double x1 = this.GetGridColumnPosition(obj, 0);
 						double x2 = this.GetGridColumnPosition(obj, engine.ColumnDefinitions.Count);
 						double y1 = this.GetGridRowPosition(obj, y+1);
@@ -1025,7 +1025,7 @@ namespace Epsitec.Common.Designer
 			//	Retourne la position d'une colonne.
 			//	Accepte des index < 0 ou > que le nombre de colonnes, en prenant comme
 			//	valeur la première ou la dernière colonne.
-			if (this.AreChildrenGrid(obj))
+			if (this.AreChildrenGrid(obj) && index != int.MinValue)
 			{
 				GridLayoutEngine engine = LayoutEngine.GetLayoutEngine(obj) as GridLayoutEngine;
 				if (engine != null)
@@ -1063,7 +1063,7 @@ namespace Epsitec.Common.Designer
 			//	Retourne la position d'une ligne.
 			//	Accepte des index < 0 ou > que le nombre de lignes, en prenant comme
 			//	valeur la première ou la dernière ligne.
-			if (this.AreChildrenGrid(obj))
+			if (this.AreChildrenGrid(obj) && index != int.MinValue)
 			{
 				GridLayoutEngine engine = LayoutEngine.GetLayoutEngine(obj) as GridLayoutEngine;
 				if (engine != null)
