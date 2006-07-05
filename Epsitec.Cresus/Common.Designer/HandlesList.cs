@@ -72,12 +72,14 @@ namespace Epsitec.Common.Designer
 			return Handle.Type.None;
 		}
 
-		public void DraggingStart(Point pos, Handle.Type type)
+		public void DraggingStart(Point pos, Handle.Type type, bool isHorizontalSymetry, bool isVerticalSymetry)
 		{
 			//	Débute un déplacement de poignée.
 			this.draggingRect = this.editor.GetObjectPreferredBounds(this.widget);
 			this.draggingMinSize = this.widget.RealMinSize;
 			this.draggingType = type;
+			this.isHorizontalSymetry = isHorizontalSymetry;
+			this.isVerticalSymetry = isVerticalSymetry;
 
 			Point final = this.GetHandle(this.draggingType).Position;
 			this.draggingOffset = final-pos;
@@ -94,51 +96,108 @@ namespace Epsitec.Common.Designer
 			this.editor.Invalidate();
 			pos = this.editor.ConstrainsList.Snap(pos);
 
+			bool left   = false;
+			bool right  = false;
+			bool bottom = false;
+			bool top    = false;
+
 			switch (this.draggingType)
 			{
 				case Handle.Type.BottomLeft:
-					pos.X = System.Math.Min(pos.X, this.draggingRect.Right-this.draggingMinSize.Width);
-					pos.Y = System.Math.Min(pos.Y, this.draggingRect.Top-this.draggingMinSize.Height);
-					this.draggingRect.BottomLeft = pos;
+					bottom = true;
+					left = true;
 					break;
 
 				case Handle.Type.BottomRight:
-					pos.X = System.Math.Max(pos.X, this.draggingRect.Left+this.draggingMinSize.Width);
-					pos.Y = System.Math.Min(pos.Y, this.draggingRect.Top-this.draggingMinSize.Height);
-					this.draggingRect.BottomRight = pos;
+					bottom = true;
+					right = true;
 					break;
 
 				case Handle.Type.TopRight:
-					pos.X = System.Math.Max(pos.X, this.draggingRect.Left+this.draggingMinSize.Width);
-					pos.Y = System.Math.Max(pos.Y, this.draggingRect.Bottom+this.draggingMinSize.Height);
-					this.draggingRect.TopRight = pos;
+					top = true;
+					right = true;
 					break;
 
 				case Handle.Type.TopLeft:
-					pos.X = System.Math.Min(pos.X, this.draggingRect.Right-this.draggingMinSize.Width);
-					pos.Y = System.Math.Max(pos.Y, this.draggingRect.Bottom+this.draggingMinSize.Height);
-					this.draggingRect.TopLeft = pos;
+					top = true;
+					left = true;
 					break;
 
 				case Handle.Type.Bottom:
-					pos.Y = System.Math.Min(pos.Y, this.draggingRect.Top-this.draggingMinSize.Height);
-					this.draggingRect.Bottom = pos.Y;
+					bottom = true;
 					break;
 
 				case Handle.Type.Top:
-					pos.Y = System.Math.Max(pos.Y, this.draggingRect.Bottom+this.draggingMinSize.Height);
-					this.draggingRect.Top = pos.Y;
+					top = true;
 					break;
 
 				case Handle.Type.Left:
-					pos.X = System.Math.Min(pos.X, this.draggingRect.Right-this.draggingMinSize.Width);
-					this.draggingRect.Left = pos.X;
+					left = true;
 					break;
 
 				case Handle.Type.Right:
+					right = true;
+					break;
+			}
+
+			if (left)
+			{
+				if (this.isHorizontalSymetry)
+				{
+					double d = System.Math.Min(pos.X-this.draggingRect.Left, (this.draggingRect.Width-this.draggingMinSize.Width)/2);
+					this.draggingRect.Left += d;
+					this.draggingRect.Right -= d;
+				}
+				else
+				{
+					pos.X = System.Math.Min(pos.X, this.draggingRect.Right-this.draggingMinSize.Width);
+					this.draggingRect.Left = pos.X;
+				}
+			}
+
+			if (right)
+			{
+				if (this.isHorizontalSymetry)
+				{
+					double d = System.Math.Min(this.draggingRect.Right-pos.X, (this.draggingRect.Width-this.draggingMinSize.Width)/2);
+					this.draggingRect.Right -= d;
+					this.draggingRect.Left += d;
+				}
+				else
+				{
 					pos.X = System.Math.Max(pos.X, this.draggingRect.Left+this.draggingMinSize.Width);
 					this.draggingRect.Right = pos.X;
-					break;
+				}
+			}
+
+			if (bottom)
+			{
+				if (this.isVerticalSymetry)
+				{
+					double d = System.Math.Min(pos.Y-this.draggingRect.Bottom, (this.draggingRect.Height-this.draggingMinSize.Height)/2);
+					this.draggingRect.Bottom += d;
+					this.draggingRect.Top -= d;
+				}
+				else
+				{
+					pos.Y = System.Math.Min(pos.Y, this.draggingRect.Top-this.draggingMinSize.Height);
+					this.draggingRect.Bottom = pos.Y;
+				}
+			}
+
+			if (top)
+			{
+				if (this.isVerticalSymetry)
+				{
+					double d = System.Math.Min(this.draggingRect.Top-pos.Y, (this.draggingRect.Height-this.draggingMinSize.Height)/2);
+					this.draggingRect.Top -= d;
+					this.draggingRect.Bottom += d;
+				}
+				else
+				{
+					pos.Y = System.Math.Max(pos.Y, this.draggingRect.Bottom+this.draggingMinSize.Height);
+					this.draggingRect.Top = pos.Y;
+				}
 			}
 
 			return this.draggingRect;
@@ -442,5 +501,7 @@ namespace Epsitec.Common.Designer
 		protected Size						draggingMinSize;
 		protected Point						draggingOffset;
 		protected bool						isFinger;
+		protected bool						isHorizontalSymetry = false;
+		protected bool						isVerticalSymetry = false;
 	}
 }
