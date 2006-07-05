@@ -316,6 +316,7 @@ namespace Epsitec.Common.Designer.Viewers
 			{
 				this.panelEditor.GridClearSelection();
 				this.panelEditor.SelectLastCreatedObject();
+				this.RegenerateProxies();
 			}
 
 			if (this.context.Tool == "ToolGrid")

@@ -308,6 +308,7 @@ namespace Epsitec.Common.Designer.Proxies
 				finally
 				{
 					that.ResumeChanges();
+					that.RegenerateProxies();
 				}
 			}
 		}
@@ -333,6 +334,7 @@ namespace Epsitec.Common.Designer.Proxies
 				finally
 				{
 					that.ResumeChanges();
+					that.RegenerateProxies();
 				}
 			}
 		}

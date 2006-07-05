@@ -2622,6 +2622,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		public bool IsObjectWidthChanging(Widget obj)
 		{
 			//	Indique si la largeur d'un objet peut changer.
+#if false
 			if (this.objectModifier.AreChildrenStacked(obj.Parent))
 			{
 				if (this.objectModifier.HasAttachmentBottom(obj) || this.objectModifier.HasAttachmentTop(obj))
@@ -2630,11 +2631,15 @@ namespace Epsitec.Common.Designer.MyWidgets
 				}
 			}
 			return true;
+#else
+			return this.objectModifier.HasPreferredBounds(obj) || this.objectModifier.HasPreferredWidth(obj);
+#endif
 		}
 
 		public bool IsObjectHeightChanging(Widget obj)
 		{
 			//	Indique si la hauteur d'un objet peut changer.
+#if false
 			if (this.objectModifier.AreChildrenStacked(obj.Parent))
 			{
 				if (this.objectModifier.HasAttachmentLeft(obj) || this.objectModifier.HasAttachmentRight(obj))
@@ -2643,6 +2648,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 				}
 			}
 			return true;
+#else
+			return this.objectModifier.HasPreferredBounds(obj) || this.objectModifier.HasPreferredHeight(obj);
+#endif
 		}
 
 		public double GetObjectBaseLine(Widget obj)
