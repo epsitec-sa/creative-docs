@@ -197,10 +197,25 @@ namespace Epsitec.Common.Designer.Proxies
 			{
 				Rectangle bounds = this.ObjectModifier.GetPreferredBounds(this.DefaultWidget);
 
-				this.OriginX = bounds.Left;
-				this.OriginY = bounds.Bottom;
-				this.Width   = bounds.Width;
-				this.Height  = bounds.Height;
+				if (this.ObjectModifier.HasPreferredBounds(this.DefaultWidget, ObjectModifier.BoundsMode.OriginX))
+				{
+					this.OriginX = bounds.Left;
+				}
+
+				if (this.ObjectModifier.HasPreferredBounds(this.DefaultWidget, ObjectModifier.BoundsMode.OriginY))
+				{
+					this.OriginY = bounds.Bottom;
+				}
+
+				if (this.ObjectModifier.HasPreferredBounds(this.DefaultWidget, ObjectModifier.BoundsMode.Width))
+				{
+					this.Width = bounds.Width;
+				}
+
+				if (this.ObjectModifier.HasPreferredBounds(this.DefaultWidget, ObjectModifier.BoundsMode.Height))
+				{
+					this.Height = bounds.Height;
+				}
 			}
 			else
 			{

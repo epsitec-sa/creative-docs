@@ -78,6 +78,14 @@ namespace Epsitec.Common.Designer
 			Proportional,
 		}
 
+		public enum BoundsMode
+		{
+			OriginX,
+			OriginY,
+			Width,
+			Height,
+		}
+
 
 		public ObjectModifier(MyWidgets.PanelEditor panelEditor)
 		{
@@ -265,7 +273,7 @@ namespace Epsitec.Common.Designer
 						int i = gs.Search(GridSelection.Unit.Column, count-1);
 						if (i != -1)
 						{
-							gs.RemoveAt(i);
+							gs.RemoveAt(i);  // supprime la colonne sélectionnée
 						}
 					}
 				}
@@ -322,7 +330,7 @@ namespace Epsitec.Common.Designer
 						int i = gs.Search(GridSelection.Unit.Row, count-1);
 						if (i != -1)
 						{
-							gs.RemoveAt(i);
+							gs.RemoveAt(i);  // supprime la ligne sélectionnée
 						}
 					}
 				}
@@ -1189,8 +1197,39 @@ namespace Epsitec.Common.Designer
 		public bool HasPreferredBounds(Widget obj)
 		{
 			//	Indique si l'objet a une position et des dimensions modifiables.
-			ChildrenPlacement placement = this.GetParentPlacement(obj);
-			return (placement == ChildrenPlacement.Anchored || placement == ChildrenPlacement.Grid);
+			ChildrenPlacement cp = this.GetParentPlacement(obj);
+			return (cp == ChildrenPlacement.Anchored || cp == ChildrenPlacement.Grid);
+		}
+
+		public bool HasPreferredBounds(Widget obj, BoundsMode mode)
+		{
+			//	Indique si l'objet a une position ou des dimensions modifiables.
+			ChildrenPlacement cp = this.GetParentPlacement(obj);
+
+			if (cp == ChildrenPlacement.Anchored)
+			{
+				return true;
+			}
+
+			if (cp == ChildrenPlacement.Grid)
+			{
+				if (mode == BoundsMode.OriginX || mode == BoundsMode.OriginY)
+				{
+					return false;
+				}
+
+				if (mode == BoundsMode.Width)
+				{
+					return HandlesList.HasWidthHandles(obj);
+				}
+
+				if (mode == BoundsMode.Height)
+				{
+					return HandlesList.HasHeightHandles(obj);
+				}
+			}
+
+			return false;
 		}
 
 		public Rectangle GetPreferredBounds(Widget obj)
@@ -1394,7 +1433,8 @@ namespace Epsitec.Common.Designer
 
 			if (placement == ChildrenPlacement.HorizontalStacked)
 			{
-				return true;
+				StackedHorizontalAttachment ha = this.GetStackedHorizontalAttachment(obj);
+				return (ha != StackedHorizontalAttachment.Fill);
 			}
 
 			if (placement == ChildrenPlacement.VerticalStacked)
@@ -1446,7 +1486,8 @@ namespace Epsitec.Common.Designer
 
 			if (placement == ChildrenPlacement.VerticalStacked)
 			{
-				return true;
+				StackedVerticalAttachment va = this.GetStackedVerticalAttachment(obj);
+				return (va != StackedVerticalAttachment.Fill);
 			}
 
 			if (placement == ChildrenPlacement.HorizontalStacked)
