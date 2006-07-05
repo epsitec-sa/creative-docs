@@ -1520,10 +1520,57 @@ namespace Epsitec.Common.Designer.MyWidgets
 			else
 			{
 				System.Diagnostics.Debug.Assert(this.selectedObjects.Count == 1);
+				Widget obj = this.selectedObjects[0];
+
+				bool isHorizontalSymetry = false;
+				bool isVerticalSymetry = false;
+
+				ObjectModifier.ChildrenPlacement cp = this.objectModifier.GetChildrenPlacement(obj.Parent);
+
+				if (cp == ObjectModifier.ChildrenPlacement.VerticalStacked)
+				{
+					if (this.objectModifier.GetStackedVerticalAttachment(obj) == ObjectModifier.StackedVerticalAttachment.Fill)
+					{
+						isVerticalSymetry = true;
+					}
+
+					if (this.objectModifier.GetStackedHorizontalAlignment(obj) == ObjectModifier.StackedHorizontalAlignment.Center)
+					{
+						isHorizontalSymetry = true;
+					}
+				}
+
+				if (cp == ObjectModifier.ChildrenPlacement.HorizontalStacked)
+				{
+					if (this.objectModifier.GetStackedHorizontalAttachment(obj) == ObjectModifier.StackedHorizontalAttachment.Fill)
+					{
+						isHorizontalSymetry = true;
+					}
+
+					if (this.objectModifier.GetStackedVerticalAlignment(obj) == ObjectModifier.StackedVerticalAlignment.Center)
+					{
+						isVerticalSymetry = true;
+					}
+				}
+
+				if (cp == ObjectModifier.ChildrenPlacement.Grid)
+				{
+					ObjectModifier.StackedHorizontalAlignment ha = this.objectModifier.GetStackedHorizontalAlignment(obj);
+					if (ha == ObjectModifier.StackedHorizontalAlignment.Center || ha == ObjectModifier.StackedHorizontalAlignment.Stretch)
+					{
+						isHorizontalSymetry = true;
+					}
+
+					ObjectModifier.StackedVerticalAlignment va = this.objectModifier.GetStackedVerticalAlignment(obj);
+					if (va == ObjectModifier.StackedVerticalAlignment.Center || va == ObjectModifier.StackedVerticalAlignment.Stretch)
+					{
+						isVerticalSymetry = true;
+					}
+				}
 
 				this.isHandling = true;
 				this.handlingRectangle = this.SelectBounds;
-				this.handlesList.DraggingStart(pos, this.handlingType);
+				this.handlesList.DraggingStart(pos, this.handlingType, isHorizontalSymetry, isVerticalSymetry);
 
 				CloneView clone = new CloneView();
 				clone.Model = this.selectedObjects[0];
