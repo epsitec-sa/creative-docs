@@ -659,6 +659,11 @@ namespace Epsitec.Common.Widgets
 				{
 					return false;
 				}
+
+				if (contextChain.GetLocalEnable (commandState.Command) == false)
+				{
+					return false;
+				}
 			}
 			
 			string[] commandElements = commandName.Split ('/');
