@@ -6,13 +6,13 @@ namespace Epsitec.Common.Text.Exchange
 {
 	class StyleDefinition
 	{
-		public StyleDefinition(string caption, TextStyleClass textStyleClass, string[] baseStyleCaptions, string serialized, bool isBaseStyle)
+		public StyleDefinition(string caption, TextStyleClass textStyleClass, string[] baseStyleCaptions, string serialized, bool isDefaultStyle)
 		{
 			this.caption = caption;
 			this.baseStyleCaptions = baseStyleCaptions;
 			this.serialized = serialized;
 			this.textStyleClass = textStyleClass;
-			this.isBaseStyle = isBaseStyle;
+			this.isDefaultStyle = isDefaultStyle;
 		}
 
 		private TextStyleClass textStyleClass;
@@ -57,13 +57,13 @@ namespace Epsitec.Common.Text.Exchange
 			}
 		}
 
-		private bool isBaseStyle;
+		private bool isDefaultStyle;
 
-		public bool IsBaseStyle
+		public bool IsDefaultStyle
 		{
 			get
 			{
-				return isBaseStyle;
+				return isDefaultStyle;
 			}
 		}
 	}
