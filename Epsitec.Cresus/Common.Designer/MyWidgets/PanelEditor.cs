@@ -38,6 +38,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		public PanelEditor() : base()
 		{
+			this.AutoFocus = true;
+			this.InternalState |= InternalState.Focusable;
 		}
 
 		public PanelEditor(Widget embedder) : this()
