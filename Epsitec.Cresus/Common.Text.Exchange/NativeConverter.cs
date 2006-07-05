@@ -944,6 +944,75 @@ namespace Epsitec.Common.Text.Exchange
 		}
 
 
+#if true
+
+		private TextStyle NewStyle(StyleDefinition styledef)
+		{
+			TextContext context = this.story.TextContext;
+
+			foreach (string basecaption in styledef.BaseStyleCaptions)
+			{
+				if (context.StyleList.StyleMap.GetTextStyle (basecaption) == null)
+				{
+					StyleDefinition basestyledef = GetStyleDefinition (basecaption);
+					
+					if (!basestyledef.IsDefaultStyle)
+						this.NewStyle (basestyledef);
+				}
+			}
+
+			Property[] properties = Property.DeserializeProperties (context, styledef.Serialized);
+
+			ArrayList parents = new System.Collections.ArrayList();
+
+			foreach (string basecaption in styledef.BaseStyleCaptions)
+			{
+				StyleDefinition basestyledef = GetStyleDefinition (basecaption);
+				if (basestyledef.IsDefaultStyle)
+				{
+					if (basestyledef.TextStyleClass == TextStyleClass.Paragraph)
+					{
+						parents.Add (context.DefaultParagraphStyle);
+					}
+					else if (basestyledef.TextStyleClass == TextStyleClass.Text)
+					{
+						parents.Add (context.DefaultTextStyle);
+					}
+					else
+					{
+						System.Diagnostics.Debug.Assert (false, "Incorrect TextStyleClass in clipboard");
+						return null;
+					}
+				}
+				else
+				{
+					parents.Add (context.StyleList.StyleMap.GetTextStyle (basecaption));
+				}
+			}
+
+			if (styledef.IsDefaultStyle)
+			{
+				if (styledef.TextStyleClass == TextStyleClass.Paragraph)
+				{
+					return context.DefaultParagraphStyle;
+				}
+				else if (styledef.TextStyleClass == TextStyleClass.Text)
+				{
+					return context.DefaultTextStyle;
+				}
+				else
+				{
+					System.Diagnostics.Debug.Assert (false, "Incorrect TextStyleClass in clipboard");
+					return null;
+				}
+			}
+			else
+			{
+				return this.CreateStyle (styledef.TextStyleClass, styledef.Caption, properties, parents);
+			}
+		}
+
+#else
 		private TextStyle NewStyle(StyleDefinition styledef)
 		{
 			TextContext context = this.story.TextContext;
@@ -968,6 +1037,7 @@ namespace Epsitec.Common.Text.Exchange
 
 			return this.CreateStyle (styledef.TextStyleClass, styledef.Caption, properties, parents);
 		}
+#endif
 
 		private TextStyle CreateStyle(TextStyleClass textStyleClass, string caption, Property[] properties, ArrayList parents)
 		{
