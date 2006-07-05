@@ -1177,22 +1177,31 @@ namespace Epsitec.Common.Designer
 		{
 			//	Retourne la position et les dimensions de l'objet.
 			//	Le rectangle rendu est toujours valide, quel que soit le mode d'attachement.
-#if false
-			obj.Window.ForceLayout();
-			Rectangle bounds = new Rectangle(Point.Zero, obj.PreferredSize);
+			Point center = this.GetActualBounds(obj).Center;
+			Size size = obj.PreferredSize;
+			Rectangle bounds = new Rectangle(center.X-size.Width/2, center.Y-size.Height/2, size.Width, size.Height);
 
-			while (obj != this.Container)
+			ChildrenPlacement placement = this.GetParentPlacement(obj);
+			if (placement == ChildrenPlacement.Anchored)
 			{
-				bounds = obj.MapClientToParent(bounds);
-				obj = obj.Parent;
+				AnchoredHorizontalAttachment ha = this.GetAnchoredHorizontalAttachment(obj);
+				if (ha == AnchoredHorizontalAttachment.Fill)
+				{
+					Rectangle actual = this.GetActualBounds(obj);
+					bounds.Left = actual.Left;
+					bounds.Right = actual.Right;
+				}
+
+				AnchoredVerticalAttachment va = this.GetAnchoredVerticalAttachment(obj);
+				if (va == AnchoredVerticalAttachment.Fill)
+				{
+					Rectangle actual = this.GetActualBounds(obj);
+					bounds.Bottom = actual.Bottom;
+					bounds.Top = actual.Top;
+				}
 			}
 
 			return bounds;
-#else
-			Point center = this.GetActualBounds(obj).Center;
-			Size size = obj.PreferredSize;
-			return new Rectangle(center.X-size.Width/2, center.Y-size.Height/2, size.Width, size.Height);
-#endif
 		}
 
 		public void SetPreferredBounds(Widget obj, Rectangle bounds)
