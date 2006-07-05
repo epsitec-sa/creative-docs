@@ -861,21 +861,30 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				this.selectedObjects.Clear();
 				this.selectedObjects.Add(obj);
+				this.UpdateAfterSelectionChanged();
+				this.SetHilitedObject(null, null);
 
-				if (!isShiftPressed)
+				this.griddingInitial = null;
+				if (isShiftPressed)
+				{
+					GridSelection gs = GridSelection.Get(obj);
+					if (gs != null)
+					{
+						this.griddingInitial = new GridSelection(obj);
+						gs.CopyTo(this.griddingInitial);
+					}
+				}
+				else
 				{
 					this.GridClearSelection(obj);
 				}
-
-				this.UpdateAfterSelectionChanged();
-				this.SetHilitedObject(null, null);
 
 				this.isGridding = true;
 				this.isGriddingColumn = false;
 				this.isGriddingRow = false;
 				this.griddingColumn = column;
 				this.griddingRow = row;
-				this.GridAdaptSelection(obj, column, row, isShiftPressed, true);
+				this.GridAdaptSelection(obj, column, row, isShiftPressed);
 			}
 
 			this.OnChildrenSelected();
@@ -904,7 +913,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			if (this.isGridding)
 			{
-				this.GridAdaptSelection(obj, column, row, isShiftPressed, false);
+				this.GridAdaptSelection(obj, column, row, isShiftPressed);
 			}
 			else if (this.handlesList.IsDragging)
 			{
@@ -964,6 +973,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				this.OnChildrenSelected();
 				this.isGridding = false;
+				this.griddingInitial = null;
 			}
 
 			if (this.handlesList.IsDragging)
@@ -972,7 +982,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
-		protected void GridAdaptSelection(Widget obj, int column, int row, bool isShiftPressed, bool isFirst)
+		protected void GridAdaptSelection(Widget obj, int column, int row, bool isShiftPressed)
 		{
 			//	Adapte la sélection selon le mouvement de la souris.
 			if (obj == null)
@@ -989,12 +999,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				{
 					if (gs.AreOnlyColumns && column != GridSelection.Invalid)
 					{
-						if (isFirst)
-						{
-							this.isGriddingAdd = (gs.Search(GridSelection.Unit.Column, column) == -1);
-						}
-
-						gs.ChangeColumnSelection(column, this.isGriddingAdd);
+						gs.ChangeColumnSelection(column, this.griddingInitial);
 						this.isGriddingColumn = true;
 						this.isGriddingRow = false;
 
@@ -1004,12 +1009,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 					if (gs.AreOnlyRows && row != GridSelection.Invalid)
 					{
-						if (isFirst)
-						{
-							this.isGriddingAdd = (gs.Search(GridSelection.Unit.Row, row) == -1);
-						}
-
-						gs.ChangeRowSelection(row, this.isGriddingAdd);
+						gs.ChangeRowSelection(row, this.griddingInitial);
 						this.isGriddingColumn = false;
 						this.isGriddingRow = true;
 
@@ -4334,7 +4334,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected bool						isGridding;
 		protected bool						isGriddingColumn;
 		protected bool						isGriddingRow;
-		protected bool						isGriddingAdd;
+		protected GridSelection				griddingInitial;
 		protected int						griddingColumn;
 		protected int						griddingRow;
 		protected Point						startingPos;

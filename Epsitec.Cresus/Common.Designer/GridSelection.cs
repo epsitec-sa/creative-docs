@@ -158,45 +158,37 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		public void ChangeColumnSelection(int column, bool add)
+		public void ChangeColumnSelection(int column, GridSelection initial)
 		{
 			//	Modifie une sélection de colonne.
+			int ii = (initial == null) ? -1 : initial.Search(Unit.Column, column);
 			int i = this.Search(Unit.Column, column);
 
-			if (add)
+			if (ii == -1 && i == -1)
 			{
-				if (i == -1)
-				{
-					this.Add(Unit.Column, column);
-				}
+				this.Add(Unit.Column, column);
 			}
-			else
+
+			if (ii != -1 && i != -1)
 			{
-				if (i != -1)
-				{
-					this.RemoveAt(i);
-				}
+				this.RemoveAt(i);
 			}
 		}
 
-		public void ChangeRowSelection(int row, bool add)
+		public void ChangeRowSelection(int row, GridSelection initial)
 		{
 			//	Modifie une sélection de ligne.
+			int ii = (initial == null) ? -1 : initial.Search(Unit.Row, row);
 			int i = this.Search(Unit.Row, row);
 
-			if (add)
+			if (ii == -1 && i == -1)
 			{
-				if (i == -1)
-				{
-					this.Add(Unit.Row, row);
-				}
+				this.Add(Unit.Row, row);
 			}
-			else
+
+			if (ii != -1 && i != -1)
 			{
-				if (i != -1)
-				{
-					this.RemoveAt(i);
-				}
+				this.RemoveAt(i);
 			}
 		}
 
@@ -225,6 +217,17 @@ namespace Epsitec.Common.Designer
 				{
 					this.Add(Unit.Row, r);
 				}
+			}
+		}
+
+		public void CopyTo(GridSelection dest)
+		{
+			dest.obj = this.obj;
+			dest.Clear();
+
+			foreach (OneItem item in this)
+			{
+				dest.Add(item.Unit, item.Index);
 			}
 		}
 
