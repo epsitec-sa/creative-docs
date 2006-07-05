@@ -58,6 +58,9 @@ namespace Epsitec.Common.Text.Exchange
 
 		private void AddStyle(TextContext context, TextStyle thestyle, List<string> stringstyles, bool isbasestyle, Hashtable processed)
 		{
+			//  Format d'une ligne de description d'un style dans le presse-papier :
+			//  caption\isdefaultstyle\TextStyleClass\nbofparentstyles\parentstylename_1\...\parentstylename_n\serialized_style
+
 			string stylecaption = context.StyleList.StyleMap.GetCaption (thestyle);
 			StringBuilder output = new StringBuilder ();
 
@@ -75,8 +78,9 @@ namespace Epsitec.Common.Text.Exchange
 						this.AddStyle (context, basestyle, stringstyles, true, processed);
 					}
 
+					bool isDefault = (thestyle == context.DefaultTextStyle) || (thestyle == context.DefaultParagraphStyle);
 					string props = Property.SerializeProperties (thestyle.StyleProperties);
-					output.AppendFormat ("{0}\\{1}\\{2}{3}", stylecaption, (byte) thestyle.TextStyleClass, basestylenames.ToString (), props);
+					output.AppendFormat ("{0}\\{1}\\{2}\\{3}{4}", stylecaption, Misc.BoolToByte(isDefault),(byte) thestyle.TextStyleClass, basestylenames.ToString (), props);
 					processed.Add (stylecaption, null);
 					stringstyles.Add (output.ToString ());
 				}
@@ -943,13 +947,35 @@ namespace Epsitec.Common.Text.Exchange
 		private TextStyle NewStyle(StyleDefinition styledef)
 		{
 			TextContext context = this.story.TextContext;
+
+			foreach (string basecaption in styledef.BaseStyleCaptions)
+			{
+				if (context.StyleList.StyleMap.GetTextStyle (basecaption) == null)
+				{
+					StyleDefinition basestyledef = GetStyleDefinition (basecaption);
+					this.NewStyle (basestyledef);
+				}
+			}
+
 			Property[] properties = Property.DeserializeProperties (context, styledef.Serialized);
-			System.Collections.ArrayList parents = new System.Collections.ArrayList();
-			parents.Add (context.DefaultParagraphStyle);
 
-			TextStyle style = context.StyleList.NewTextStyle (null, null, styledef.TextStyleClass, properties, parents);
+			ArrayList parents = new System.Collections.ArrayList();
 
-			context.StyleList.StyleMap.SetCaption (null, style, styledef.Caption);
+			foreach (string basecaption in styledef.BaseStyleCaptions)
+			{
+				parents.Add (context.StyleList.StyleMap.GetTextStyle (basecaption));
+			}
+
+			return this.CreateStyle (styledef.TextStyleClass, styledef.Caption, properties, parents);
+		}
+
+		private TextStyle CreateStyle(TextStyleClass textStyleClass, string caption, Property[] properties, ArrayList parents)
+		{
+			TextContext context = this.story.TextContext;
+
+			TextStyle style = context.StyleList.NewTextStyle (null, null, textStyleClass, properties, parents);
+
+			context.StyleList.StyleMap.SetCaption (null, style, caption);
 
 			// cherche le dernier rang
 			int rank = 0;
@@ -965,7 +991,6 @@ namespace Epsitec.Common.Text.Exchange
 
 			return style;
 		}
-
 
 		private Wrappers.TextWrapper textWrapper;
 		private Wrappers.ParagraphWrapper paraWrapper;
