@@ -2624,6 +2624,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		public bool IsObjectWidthChanging(Widget obj)
 		{
 			//	Indique si la largeur d'un objet peut changer.
+			//	Utilisé par HandlesList pour déterminer quelles poignées sont visibles.
 #if false
 			if (this.objectModifier.AreChildrenStacked(obj.Parent))
 			{
@@ -2641,6 +2642,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		public bool IsObjectHeightChanging(Widget obj)
 		{
 			//	Indique si la hauteur d'un objet peut changer.
+			//	Utilisé par HandlesList pour déterminer quelles poignées sont visibles.
 #if false
 			if (this.objectModifier.AreChildrenStacked(obj.Parent))
 			{
@@ -3786,6 +3788,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				{
 					GridSelection.OneItem item2 = gs[i+1];
 
+					//	Colonne suivie d'une ligne formant une croix ?
 					if (item1.Unit == GridSelection.Unit.Column && item2.Unit == GridSelection.Unit.Row)
 					{
 						Rectangle area1 = this.objectModifier.GetGridItemArea(obj, item1);
@@ -3796,6 +3799,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 						continue;
 					}
 
+					//	Plusieurs colonnes ou lignes formant un seul 'bloc' ?
 					if (item1.Unit == item2.Unit && item1.Index+1 == item2.Index)
 					{
 						i += 2;
