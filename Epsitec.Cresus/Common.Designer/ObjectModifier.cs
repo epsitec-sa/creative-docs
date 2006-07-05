@@ -245,6 +245,7 @@ namespace Epsitec.Common.Designer
 			}
 
 			columns = System.Math.Max(columns, engine.MaxColumnIndex+1);
+			GridSelection gs = GridSelection.Get(obj);
 
 			while (columns != engine.ColumnDefinitions.Count)
 			{
@@ -258,6 +259,15 @@ namespace Epsitec.Common.Designer
 				else
 				{
 					engine.ColumnDefinitions.RemoveAt(count-1);
+
+					if (gs != null)
+					{
+						int i = gs.Search(GridSelection.Unit.Column, count-1);
+						if (i != -1)
+						{
+							gs.RemoveAt(i);
+						}
+					}
 				}
 			}
 
@@ -292,6 +302,7 @@ namespace Epsitec.Common.Designer
 			}
 
 			rows = System.Math.Max(rows, engine.MaxRowIndex+1);
+			GridSelection gs = GridSelection.Get(obj);
 
 			while (rows != engine.RowDefinitions.Count)
 			{
@@ -305,6 +316,15 @@ namespace Epsitec.Common.Designer
 				else
 				{
 					engine.RowDefinitions.RemoveAt(count-1);
+
+					if (gs != null)
+					{
+						int i = gs.Search(GridSelection.Unit.Row, count-1);
+						if (i != -1)
+						{
+							gs.RemoveAt(i);
+						}
+					}
 				}
 			}
 

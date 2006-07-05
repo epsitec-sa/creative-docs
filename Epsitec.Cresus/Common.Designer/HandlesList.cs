@@ -105,21 +105,21 @@ namespace Epsitec.Common.Designer
 			{
 				case Handle.Type.BottomLeft:
 					bottom = true;
-					left = true;
+					left   = true;
 					break;
 
 				case Handle.Type.BottomRight:
 					bottom = true;
-					right = true;
+					right  = true;
 					break;
 
 				case Handle.Type.TopRight:
-					top = true;
+					top   = true;
 					right = true;
 					break;
 
 				case Handle.Type.TopLeft:
-					top = true;
+					top  = true;
 					left = true;
 					break;
 
