@@ -3802,16 +3802,42 @@ namespace Epsitec.Common.Designer.MyWidgets
 					//	Plusieurs colonnes ou lignes formant un seul 'bloc' ?
 					if (item1.Unit == item2.Unit && item1.Index+1 == item2.Index)
 					{
+						int ii = i;
 						i += 2;
 						while (i < gs.Count && gs[i].Unit == item1.Unit && gs[i-1].Index+1 == gs[i].Index)
 						{
 							i++;
 						}
-						item2 = gs[i-1];
 
-						Rectangle area1 = this.objectModifier.GetGridItemArea(obj, item1);
-						Rectangle area2 = this.objectModifier.GetGridItemArea(obj, item2);
-						this.DrawGridSelected(graphics, Rectangle.Union(area1, area2), color, selection);
+						for (int j=ii; j<i; j++)
+						{
+							Rectangle area1 = this.objectModifier.GetGridItemArea(obj, gs[j]);
+
+							if (item1.Unit == GridSelection.Unit.Column)
+							{
+								if (j > ii)
+								{
+									area1.Left -= 2;
+								}
+								if (j < i-1)
+								{
+									area1.Right += 1;
+								}
+							}
+							else
+							{
+								if (j > ii)
+								{
+									area1.Top += 1;
+								}
+								if (j < i-1)
+								{
+									area1.Bottom -= 2;
+								}
+							}
+
+							this.DrawGridSelected(graphics, area1, color, selection);
+						}
 						continue;
 					}
 				}
