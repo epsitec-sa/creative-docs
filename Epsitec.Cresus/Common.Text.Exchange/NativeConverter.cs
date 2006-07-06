@@ -6,15 +6,9 @@ using System.Text;
 // Conversion entre format presse-papier natif et TextWrapper
 // Responsable: Michael Walz
 
-// Choses qui restent à faire:
+// TODO:
 // - gérer les propriétés suivantes : TextMarker, TextBox, UserTags, Conditions
 // - propriété link: gèrer les / et autres signes cabalistiques dans les hyperliens
-//
-// - copier/coller interdocuments
-//   - copier les définitions de styles 
-//   - gérer la création des styles s'ils n'existent pas
-//
-// - gestion des paragraphes modifiés "à la main"
 //
 
 namespace Epsitec.Common.Text.Exchange
@@ -59,7 +53,7 @@ namespace Epsitec.Common.Text.Exchange
 		private void AddStyle(TextContext context, TextStyle thestyle, List<string> stringstyles, bool isbasestyle, Hashtable processed)
 		{
 			//  Format d'une ligne de description d'un style dans le presse-papier :
-			//  caption\styleident\isdefaultstyle\TextStyleClass\nbofparentstyles\parentstylename_1\...\parentstylename_n\serialized_style
+			//  caption/styleident/isdefaultstyle/TextStyleClass/nbofparentstyles/parentstylename_1/.../parentstylename_n/serialized_style
 
 			string stylecaption = context.StyleList.StyleMap.GetCaption (thestyle);
 			StringBuilder output = new StringBuilder ();
@@ -118,40 +112,19 @@ namespace Epsitec.Common.Text.Exchange
 
 			foreach (TextStyle style in styles)
 			{
-#if false
-				string caption = story.TextContext.StyleList.StyleMap.GetCaption (style);
-
 				if (style.TextStyleClass == TextStyleClass.Paragraph && paragraphSep)
 				{
-					output.AppendFormat ("pstyle:{0}/", caption);
-					if (!this.usedTextStyles.ContainsKey(caption)) 
-					{
-						this.usedTextStyles.Add (caption, this.styleIdent++);
-					}
-				}
-
-				if (style.TextStyleClass == TextStyleClass.Text)
-				{
-					output.AppendFormat ("cstyle:{0}/", caption);
-					if (!this.usedTextStyles.ContainsKey(caption))
-					{
-						this.usedTextStyles.Add (caption, this.styleIdent++);
-					}
-				}
-#else
-				string caption = story.TextContext.StyleList.StyleMap.GetCaption (style);
-				int styleident = GetStyleIdent(caption) ;
-
-				if (style.TextStyleClass == TextStyleClass.Paragraph && paragraphSep)
-				{
+					string caption = story.TextContext.StyleList.StyleMap.GetCaption (style);
+					int styleident = GetStyleIdent (caption);
 					output.AppendFormat ("pstyle:{0}/", styleident);
 				}
 
 				if (style.TextStyleClass == TextStyleClass.Text)
 				{
+					string caption = story.TextContext.StyleList.StyleMap.GetCaption (style);
+					int styleident = GetStyleIdent (caption);
 					output.AppendFormat ("cstyle:{0}/", styleident);
 				}
-#endif
 			}
 
 			if (paragraphSep)
@@ -497,20 +470,20 @@ namespace Epsitec.Common.Text.Exchange
 			StringBuilder output = new StringBuilder ();
 
 			output.Append (Misc.BoolToByte (xscriptdef.IsDisabled));
-			output.Append ('\\');
+			output.Append (';');
 			output.Append (Misc.BoolToByte (xscriptdef.IsEmpty));
-			output.Append ('\\');
+			output.Append (';');
 			output.Append (xscriptdef.Offset);
-			output.Append ('\\');
+			output.Append (';');
 			output.Append (xscriptdef.Scale);
-			output.Append ('\\');
+			output.Append (';');
 
 			return output.ToString ();
 		}
 
 		private static void StringToXScriptDefinition(string strxline, Wrappers.TextWrapper.XscriptDefinition xscriptdef)
 		{
-			char[] sep = { '\\' };
+			char[] sep = { ';' };
 			string[] elements = strxline.Split (sep, StringSplitOptions.None);
 
 			xscriptdef.IsDisabled = Misc.ParseBool (elements[0]);
@@ -525,28 +498,28 @@ namespace Epsitec.Common.Text.Exchange
 			StringBuilder output = new StringBuilder ();
 
 			output.Append (Misc.BoolToByte (xlinedef.IsDisabled));
-			output.Append ('\\');
+			output.Append (';');
 			output.Append (Misc.BoolToByte (xlinedef.IsEmpty));
-			output.Append ('\\');
+			output.Append (';');
 			output.Append (xlinedef.Position);
-			output.Append ('\\');
+			output.Append (';');
 			output.Append ((byte) xlinedef.PositionUnits);
-			output.Append ('\\');
+			output.Append (';');
 			output.Append (xlinedef.Thickness);
-			output.Append ('\\');
+			output.Append (';');
 			output.Append ((byte) xlinedef.ThicknessUnits);
-			output.Append ('\\');
-			output.Append (Misc.StringNull (xlinedef.DrawClass));
-			output.Append ('\\');
-			output.Append (Misc.StringNull (xlinedef.DrawStyle));
-			output.Append ('\\');
+			output.Append (';');
+			output.Append (SerializerSupport.SerializeString (xlinedef.DrawClass));
+			output.Append (';');
+			output.Append (SerializerSupport.SerializeString (xlinedef.DrawStyle));
+			output.Append (';');
 
 			return output.ToString ();
 		}
 
 		private static void StringToXlineDefinition(string strxline, Wrappers.TextWrapper.XlineDefinition xlinedef)
 		{
-			char[] sep = { '\\' };
+			char[] sep = { ';' };
 			string[] elements = strxline.Split (sep, StringSplitOptions.None);
 
 			xlinedef.IsDisabled = Misc.ParseBool (elements[0]);
@@ -560,9 +533,9 @@ namespace Epsitec.Common.Text.Exchange
 
 			xlinedef.ThicknessUnits = (Properties.SizeUnits) Misc.ParseByte (elements[5]);
 
-			xlinedef.DrawClass = Misc.NullString (elements[6]);
+			xlinedef.DrawClass = SerializerSupport.DeserializeString (elements[6]);
 
-			xlinedef.DrawStyle = Misc.NullString (elements[7]);
+			xlinedef.DrawStyle = SerializerSupport.DeserializeString (elements[7]);
 		}
 
 		private void SetParagraph(string parastring)
@@ -597,6 +570,8 @@ namespace Epsitec.Common.Text.Exchange
 
 
 			this.paraWrapper.SuspendSynchronizations ();
+			this.textWrapper.SuspendSynchronizations ();
+
 			this.savedDefinedParagraph = this.paraWrapper.Defined.SaveInternalState ();
 
 			foreach (string element in elements)
@@ -614,7 +589,7 @@ namespace Epsitec.Common.Text.Exchange
 						justificationmode = true;
 						break;
 					case "indleva":
-						this.paraWrapper.Defined.IndentationLevelAttribute = Misc.NullString (el[1]);
+						this.paraWrapper.Defined.IndentationLevelAttribute = SerializerSupport.DeserializeString (el[1]);
 						indentationlevelattribute = true;
 						break;
 					case "indlev":
@@ -770,6 +745,7 @@ namespace Epsitec.Common.Text.Exchange
 			if (!marginunits)
 				this.paraWrapper.Defined.ClearMarginUnits ();
 
+			this.textWrapper.ResumeSynchronizations ();
 			this.paraWrapper.ResumeSynchronizations ();
 		}
 
@@ -792,7 +768,7 @@ namespace Epsitec.Common.Text.Exchange
 
 			if (this.paraWrapper.Defined.IsIndentationLevelAttributeDefined)
 			{
-				output.AppendFormat ("indleva|{0}", Misc.StringNull (this.paraWrapper.Defined.IndentationLevelAttribute));
+				output.AppendFormat ("indleva|{0}", SerializerSupport.SerializeString (this.paraWrapper.Defined.IndentationLevelAttribute));
 				output.Append ('\\');
 			}
 
@@ -984,8 +960,6 @@ namespace Epsitec.Common.Text.Exchange
 		}
 
 
-#if true
-
 		private TextStyle NewStyle(StyleDefinition styledef)
 		{
 			TextContext context = this.story.TextContext;
@@ -1052,32 +1026,6 @@ namespace Epsitec.Common.Text.Exchange
 			}
 		}
 
-#else
-		private TextStyle NewStyle(StyleDefinition styledef)
-		{
-			TextContext context = this.story.TextContext;
-
-			foreach (string basecaption in styledef.BaseStyleCaptions)
-			{
-				if (context.StyleList.StyleMap.GetTextStyle (basecaption) == null)
-				{
-					StyleDefinition basestyledef = GetStyleDefinition (basecaption);
-					this.NewStyle (basestyledef);
-				}
-			}
-
-			Property[] properties = Property.DeserializeProperties (context, styledef.Serialized);
-
-			ArrayList parents = new System.Collections.ArrayList();
-
-			foreach (string basecaption in styledef.BaseStyleCaptions)
-			{
-				parents.Add (context.StyleList.StyleMap.GetTextStyle (basecaption));
-			}
-
-			return this.CreateStyle (styledef.TextStyleClass, styledef.Caption, properties, parents);
-		}
-#endif
 
 		private TextStyle CreateStyle(TextStyleClass textStyleClass, string caption, Property[] properties, ArrayList parents)
 		{

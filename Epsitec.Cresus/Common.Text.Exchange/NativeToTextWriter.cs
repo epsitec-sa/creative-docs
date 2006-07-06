@@ -86,7 +86,7 @@ namespace Epsitec.Common.Text.Exchange
 			string line;
 			TextContext context = this.cpContext.Story.TextContext;
 
-			Dictionary<int, StyleDefinition> styleDefinitions = null ;
+			Dictionary<int, StyleDefinition> styleDefinitions = new Dictionary<int, StyleDefinition> ();
 
 			while (true)
 			{
@@ -123,15 +123,8 @@ namespace Epsitec.Common.Text.Exchange
 						baseStyleCaptions[i] = basestylecaption ;
 					}
 
-
-					if (styleDefinitions == null)
-					{
-						styleDefinitions = new Dictionary<int, StyleDefinition> ();
-					}
-
 					StyleDefinition styleDefinition = new StyleDefinition (stylecaption, styleident, styleclass, baseStyleCaptions, line, isDefault);
 					styleDefinitions.Add (styleident, styleDefinition);
-
 				}
 			}
 
