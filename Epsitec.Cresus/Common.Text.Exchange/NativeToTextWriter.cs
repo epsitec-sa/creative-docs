@@ -81,12 +81,12 @@ namespace Epsitec.Common.Text.Exchange
 			}
 		}
 
-		private List<StyleDefinition> ProcessStyles()
+		private Dictionary<int, StyleDefinition> ProcessStyles()
 		{
 			string line;
 			TextContext context = this.cpContext.Story.TextContext;
 
-			List<StyleDefinition> styleDefinitions = null ;
+			Dictionary<int, StyleDefinition> styleDefinitions = null ;
 
 			while (true)
 			{
@@ -97,39 +97,40 @@ namespace Epsitec.Common.Text.Exchange
 				if (line == "}")
 					break ;
 
-				string stylecaption =  SerializerSupport.DeserializeString (Misc.NextElement (ref line, '\\'));
+				string stylecaption =  SerializerSupport.DeserializeString (Misc.NextElement (ref line, '/'));
 
-				string styledefault = Misc.NextElement (ref line, '\\');
+				string strstyleident = Misc.NextElement (ref line, '/');
+				int styleident = Misc.ParseInt (strstyleident);
+
+				string styledefault = Misc.NextElement (ref line, '/');
 				bool isDefault = Misc.ParseBool (styledefault);
 
-				string strstyleclass = Misc.NextElement (ref line, '\\');
+				string strstyleclass = Misc.NextElement (ref line, '/');
 				TextStyleClass styleclass = (TextStyleClass) Misc.ParseByte (strstyleclass);
 
-				string strnbbasestyles = Misc.NextElement(ref line, '\\') ;
+				string strnbbasestyles = Misc.NextElement(ref line, '/') ;
 				int nbbasestyles = Misc.ParseInt (strnbbasestyles);
 
 				TextStyle style = context.StyleList.StyleMap.GetTextStyle (stylecaption);
 
-				if (style == null)
+				//if (style == null)
 				{
 					string[] baseStyleCaptions = new string[nbbasestyles] ;
 
 					for (int i = 0; i < nbbasestyles; i++)
 					{
-						string basestylecaption = Misc.NextElement (ref line, '\\');
+						string basestylecaption = Misc.NextElement (ref line, '/');
 						baseStyleCaptions[i] = basestylecaption ;
 					}
 
 
 					if (styleDefinitions == null)
 					{
-						styleDefinitions = new List<StyleDefinition> ();
+						styleDefinitions = new Dictionary<int, StyleDefinition> ();
 					}
 
-
-
-					StyleDefinition styleDefinition = new StyleDefinition (stylecaption, styleclass, baseStyleCaptions, line, isDefault);
-					styleDefinitions.Add (styleDefinition);
+					StyleDefinition styleDefinition = new StyleDefinition (stylecaption, styleident, styleclass, baseStyleCaptions, line, isDefault);
+					styleDefinitions.Add (styleident, styleDefinition);
 
 				}
 			}

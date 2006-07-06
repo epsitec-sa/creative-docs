@@ -59,7 +59,7 @@ namespace Epsitec.Common.Text.Exchange
 		private void AddStyle(TextContext context, TextStyle thestyle, List<string> stringstyles, bool isbasestyle, Hashtable processed)
 		{
 			//  Format d'une ligne de description d'un style dans le presse-papier :
-			//  caption\isdefaultstyle\TextStyleClass\nbofparentstyles\parentstylename_1\...\parentstylename_n\serialized_style
+			//  caption\styleident\isdefaultstyle\TextStyleClass\nbofparentstyles\parentstylename_1\...\parentstylename_n\serialized_style
 
 			string stylecaption = context.StyleList.StyleMap.GetCaption (thestyle);
 			StringBuilder output = new StringBuilder ();
@@ -80,11 +80,27 @@ namespace Epsitec.Common.Text.Exchange
 
 					bool isDefault = (thestyle == context.DefaultTextStyle) || (thestyle == context.DefaultParagraphStyle);
 					string props = Property.SerializeProperties (thestyle.StyleProperties);
-					output.AppendFormat ("{0}/{1}/{2}/{3}{4}", SerializerSupport.SerializeString(stylecaption), Misc.BoolToByte(isDefault),(byte) thestyle.TextStyleClass, basestylenames.ToString (), props);
+
+					int styleident = this.GetStyleIdent (stylecaption);
+					output.AppendFormat ("{0}/{1}/{2}/{3}/{4}{5}", SerializerSupport.SerializeString(stylecaption), styleident ,Misc.BoolToByte(isDefault),(byte) thestyle.TextStyleClass, basestylenames.ToString (), props);
 					processed.Add (stylecaption, null);
 					stringstyles.Add (output.ToString ());
 				}
 			}
+		}
+
+
+		private int GetStyleIdent(string caption)
+		{
+			int ident ;
+
+			if (!this.usedTextStyles.TryGetValue (caption, out ident))
+			{
+				this.usedTextStyles.Add (caption, ++this.styleident);
+				ident = this.styleident;
+			}
+
+			return ident;
 		}
 
 		/// <summary>
@@ -102,25 +118,40 @@ namespace Epsitec.Common.Text.Exchange
 
 			foreach (TextStyle style in styles)
 			{
+#if false
 				string caption = story.TextContext.StyleList.StyleMap.GetCaption (style);
 
 				if (style.TextStyleClass == TextStyleClass.Paragraph && paragraphSep)
 				{
 					output.AppendFormat ("pstyle:{0}/", caption);
-					if (!usedTextStyles.ContainsKey(caption)) 
+					if (!this.usedTextStyles.ContainsKey(caption)) 
 					{
-						usedTextStyles.Add (caption, null);
+						this.usedTextStyles.Add (caption, this.styleIdent++);
 					}
 				}
 
 				if (style.TextStyleClass == TextStyleClass.Text)
 				{
 					output.AppendFormat ("cstyle:{0}/", caption);
-					if (!usedTextStyles.ContainsKey(caption))
+					if (!this.usedTextStyles.ContainsKey(caption))
 					{
-						usedTextStyles.Add (caption, null);
+						this.usedTextStyles.Add (caption, this.styleIdent++);
 					}
 				}
+#else
+				string caption = story.TextContext.StyleList.StyleMap.GetCaption (style);
+				int styleident = GetStyleIdent(caption) ;
+
+				if (style.TextStyleClass == TextStyleClass.Paragraph && paragraphSep)
+				{
+					output.AppendFormat ("pstyle:{0}/", styleident);
+				}
+
+				if (style.TextStyleClass == TextStyleClass.Text)
+				{
+					output.AppendFormat ("cstyle:{0}/", styleident);
+				}
+#endif
 			}
 
 			if (paragraphSep)
@@ -331,10 +362,10 @@ namespace Epsitec.Common.Text.Exchange
 					switch (subelements[0])
 					{
 						case "cstyle":
-							string stylecaption = subelements[1];
+							string styleident = subelements[1];
 
 							//TextStyle thestyle = StyleFromCaption (stylecaption);
-							TextStyle thestyle = this.GetTextStyleToApply (stylecaption);
+							TextStyle thestyle = this.GetTextStyleToApply (styleident);
 
 							if (thestyle != null)
 							{
@@ -342,9 +373,9 @@ namespace Epsitec.Common.Text.Exchange
 							}
 							break;
 						case "pstyle":
-							stylecaption = subelements[1];
+							styleident = subelements[1];
 							//thestyle = StyleFromCaption (stylecaption);
-							thestyle = this.GetTextStyleToApply (stylecaption);
+							thestyle = this.GetTextStyleToApply (styleident);
 
 							if (thestyle != null)
 							{
@@ -917,19 +948,28 @@ namespace Epsitec.Common.Text.Exchange
 			return null;
 		}
 
+		private StyleDefinition GetStyleDefinition(int styleident)
+		{
+			return this.styleDefinitions[styleident];
+		}
+
+		 
 		private StyleDefinition GetStyleDefinition(string caption)
 		{
-			foreach (StyleDefinition sd in this.styleDefinitions)
+			foreach (KeyValuePair<int, StyleDefinition> kv in this.styleDefinitions)
 			{
-				if (sd.Caption == caption)
-					return sd;
+				if (kv.Value.Caption == caption)
+					return kv.Value;
 			}
 
 			return null;
 		}
 
-		private TextStyle GetTextStyleToApply (string stylecaption)
+		private TextStyle GetTextStyleToApply (string styleident)
 		{
+			int ident = Misc.ParseInt(styleident) ;
+			string stylecaption = this.styleDefinitions[ident].Caption;
+
 			TextStyle thestyle = StyleFromCaption (stylecaption);
 
 			if (thestyle == null)
@@ -1067,11 +1107,12 @@ namespace Epsitec.Common.Text.Exchange
 		private TextNavigator navigator;
 		private TextStory story;
 		private PasteMode pasteMode;
-		private Hashtable usedTextStyles = new System.Collections.Hashtable();
+		private Dictionary<string, int> usedTextStyles = new Dictionary<string, int> ();
+		private int styleident = 0;
 
-		private List<StyleDefinition> styleDefinitions;
+		private Dictionary<int,StyleDefinition> styleDefinitions;
 
-		public List<StyleDefinition> StyleDefinitions
+		public Dictionary<int, StyleDefinition> StyleDefinitions
 		{
 			set
 			{
