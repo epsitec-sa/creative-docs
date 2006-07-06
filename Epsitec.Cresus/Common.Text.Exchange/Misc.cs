@@ -9,7 +9,7 @@ namespace Epsitec.Common.Text.Exchange
 	/// </summary>
 	class Misc
 	{
-
+#if false
 		public static string StringNull(string value)
 		{
 			return value ?? "~";
@@ -26,7 +26,7 @@ namespace Epsitec.Common.Text.Exchange
 				return value;
 			}
 		}
-
+#endif
 		public static byte BoolToByte(bool value)
 		{
 			if (value)
