@@ -97,7 +97,7 @@ namespace Epsitec.Common.Text.Exchange
 				if (line == "}")
 					break ;
 
-				string stylecaption = Misc.NextElement(ref line, '\\') ;
+				string stylecaption =  SerializerSupport.DeserializeString (Misc.NextElement (ref line, '\\'));
 
 				string styledefault = Misc.NextElement (ref line, '\\');
 				bool isDefault = Misc.ParseBool (styledefault);
