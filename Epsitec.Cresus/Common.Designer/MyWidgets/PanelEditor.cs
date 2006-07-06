@@ -3817,22 +3817,22 @@ namespace Epsitec.Common.Designer.MyWidgets
 							{
 								if (j > ii)
 								{
-									area1.Left -= 2;
+									area1.Left -= 1;
 								}
 								if (j < i-1)
 								{
-									area1.Right += 1;
+									area1.Right += 2;
 								}
 							}
 							else
 							{
 								if (j > ii)
 								{
-									area1.Top += 1;
+									area1.Top += 2;
 								}
 								if (j < i-1)
 								{
-									area1.Bottom -= 2;
+									area1.Bottom -= 1;
 								}
 							}
 
