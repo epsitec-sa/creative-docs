@@ -119,7 +119,7 @@ namespace Epsitec.Common.Text.Exchange
 
 					for (int i = 0; i < nbbasestyles; i++)
 					{
-						string basestylecaption = Misc.NextElement (ref line, '/');
+						string basestylecaption = SerializerSupport.DeserializeString(Misc.NextElement (ref line, '/'));
 						baseStyleCaptions[i] = basestylecaption ;
 					}
 
