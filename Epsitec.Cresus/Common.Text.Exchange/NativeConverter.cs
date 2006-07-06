@@ -68,19 +68,19 @@ namespace Epsitec.Common.Text.Exchange
 			{
 				if (this.usedTextStyles.ContainsKey (stylecaption) || isbasestyle)
 				{
-					StringBuilder basestylenames = new StringBuilder (string.Format ("{0}\\", thestyle.ParentStyles.Length));
+					StringBuilder basestylenames = new StringBuilder (string.Format ("{0}/", thestyle.ParentStyles.Length));
 
 					foreach (TextStyle basestyle in thestyle.ParentStyles)
 					{
 						string basestylename = context.StyleList.StyleMap.GetCaption (basestyle);
-						basestylenames.AppendFormat ("{0}\\", basestylename);
+						basestylenames.AppendFormat ("{0}/", SerializerSupport.SerializeString(basestylename));
 
 						this.AddStyle (context, basestyle, stringstyles, true, processed);
 					}
 
 					bool isDefault = (thestyle == context.DefaultTextStyle) || (thestyle == context.DefaultParagraphStyle);
 					string props = Property.SerializeProperties (thestyle.StyleProperties);
-					output.AppendFormat ("{0}\\{1}\\{2}\\{3}{4}", stylecaption, Misc.BoolToByte(isDefault),(byte) thestyle.TextStyleClass, basestylenames.ToString (), props);
+					output.AppendFormat ("{0}/{1}/{2}/{3}{4}", SerializerSupport.SerializeString(stylecaption), Misc.BoolToByte(isDefault),(byte) thestyle.TextStyleClass, basestylenames.ToString (), props);
 					processed.Add (stylecaption, null);
 					stringstyles.Add (output.ToString ());
 				}
