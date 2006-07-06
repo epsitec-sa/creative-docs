@@ -3838,6 +3838,29 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 							this.DrawGridSelected(graphics, area1, color, selection);
 						}
+
+						for (int j=ii; j<i; j++)
+						{
+							Rectangle area1 = this.objectModifier.GetGridItemArea(obj, gs[j]);
+
+							if (item1.Unit == GridSelection.Unit.Column)
+							{
+								if (j > ii)
+								{
+									graphics.AddLine(area1.Left+0.5, area1.Bottom+1.5, area1.Left+0.5, area1.Top-1.5);
+								}
+							}
+							else
+							{
+								if (j > ii)
+								{
+									graphics.AddLine(area1.Left+1.5, area1.Top+0.5, area1.Right-1.5, area1.Top+0.5);
+								}
+							}
+
+							graphics.RenderSolid(Color.FromBrightness(1));
+						}
+
 						continue;
 					}
 				}
