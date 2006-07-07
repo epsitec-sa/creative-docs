@@ -1,6 +1,8 @@
 //	Copyright © 2005-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
+using System.Collections.Generic;
+
 namespace Epsitec.Common.Text
 {
 	using EventHandler		= Epsitec.Common.Support.EventHandler;
@@ -868,8 +870,8 @@ namespace Epsitec.Common.Text
 			{
 				return tags_2;
 			}
-			
-			System.Collections.ArrayList list = new System.Collections.ArrayList ();
+
+			List<string> list = new List<string> ();
 			
 			foreach (string tag in tags_1)
 			{
@@ -884,8 +886,8 @@ namespace Epsitec.Common.Text
 			}
 			
 			list.Sort ();
-			
-			return (string[]) list.ToArray (typeof (string));
+
+			return list.ToArray ();
 		}
 		
 		public string FindInsertionTabTag()
@@ -1050,8 +1052,8 @@ again:
 			//	Retourne les tabulateurs définis dans un paragraphe en se basant
 			//	sur la propriété TabsProperty.
 			
-			System.Collections.ArrayList tabs_list = new System.Collections.ArrayList ();
-			System.Collections.ArrayList tags_list = new System.Collections.ArrayList ();
+			List<Property> tabs_list = new List<Property> ();
+			List<string> tags_list = new List<string> ();
 			
 			int length = 0;
 			
@@ -1107,15 +1109,15 @@ again:
 			
 			tags_list.Sort ();
 			
-			return (string[]) tags_list.ToArray (typeof (string));
+			return tags_list.ToArray ();
 		}
 		
 		private string[] GetTextTabTags()
 		{
 			//	Retourne la liste des tabulateurs en se basant sur les marques
 			//	de tabulation elles-mêmes.
-			
-			System.Collections.ArrayList tags_list = new System.Collections.ArrayList ();
+
+			List<string> tags_list = new List<string> ();
 			
 			int length = 0;
 			
@@ -1147,8 +1149,8 @@ again:
 			}
 			
 			tags_list.Sort ();
-			
-			return (string[]) tags_list.ToArray (typeof (string));
+
+			return tags_list.ToArray ();
 		}
 		
 		
@@ -1162,7 +1164,7 @@ again:
 		}
 		
 		
-		private void FindTextTabTags(System.Collections.ArrayList list, int pos)
+		private void FindTextTabTags(ICollection<string> list, int pos)
 		{
 			//	Trouve les tags utilisés par des tabulateurs dans le texte
 			//	du paragraphe :
@@ -1218,7 +1220,7 @@ again:
 		
 		private int[] FindTextTabPositions(params string[] tags)
 		{
-			System.Collections.ArrayList list = new System.Collections.ArrayList ();
+			List<int> list = new List<int> ();
 			
 			int length = 0;
 			
@@ -1248,13 +1250,13 @@ again:
 			{
 				this.FindTextTabPositions (list, this.CursorPosition, tags);
 			}
-			
-			return (int[]) list.ToArray (typeof (int));
+
+			return list.ToArray ();
 		}
 		
 		private int[] FindTextTabsPositions(string[] tags)
 		{
-			System.Collections.ArrayList list = new System.Collections.ArrayList ();
+			List<int> list = new List<int> ();
 			
 			int length = 0;
 			
@@ -1284,11 +1286,11 @@ again:
 			{
 				this.FindTextTabsPositions (list, this.CursorPosition, tags);
 			}
-			
-			return (int[]) list.ToArray (typeof (int));
+
+			return list.ToArray ();
 		}
 		
-		private void  FindTextTabPositions(System.Collections.ArrayList list, int pos, string[] tags)
+		private void  FindTextTabPositions(ICollection<int> list, int pos, string[] tags)
 		{
 			//	Trouve la position des caractères TAB dand le texte du
 			//	paragraphe qui correspondent à la marque de tabulation
@@ -1333,7 +1335,7 @@ again:
 			}
 		}
 		
-		private void  FindTextTabsPositions(System.Collections.ArrayList list, int pos, string[] tags)
+		private void  FindTextTabsPositions(ICollection<int> list, int pos, string[] tags)
 		{
 			//	Trouve la position des paragraphes qui font référence au moyen
 			//	d'un Properties.TabsProperty au tag spécifié :
@@ -1433,15 +1435,15 @@ again:
 			{
 				this.SetParagraphStyles (this.story.GetCursorPosition (this.cursor), paragraph_styles);
 			}
-			
-			System.Collections.ArrayList new_styles = new System.Collections.ArrayList ();
+
+			List<TextStyle> new_styles = new List<TextStyle> ();
 			
 			new_styles.AddRange (paragraph_styles);
 			new_styles.AddRange (TextStyle.FilterStyles (this.current_styles, TextStyleClass.Text));
 			new_styles.AddRange (TextStyle.FilterStyles (this.current_styles, TextStyleClass.Symbol));
 			new_styles.AddRange (TextStyle.FilterStyles (this.current_styles, TextStyleClass.MetaProperty));
 			
-			this.current_styles = new_styles.ToArray (typeof (TextStyle)) as TextStyle[];
+			this.current_styles = new_styles.ToArray ();
 			
 			this.RefreshAccumulatedStylesAndProperties ();
 			this.NotifyTextChanged ();
@@ -1486,15 +1488,15 @@ again:
 //			else
 			{
 				this.UpdateCurrentStylesAndPropertiesIfNeeded ();
-				
-				System.Collections.ArrayList new_styles = new System.Collections.ArrayList ();
+
+				List<TextStyle> new_styles = new List<TextStyle> ();
 				
 				new_styles.AddRange (TextStyle.FilterStyles (this.current_styles, TextStyleClass.Paragraph));
 				new_styles.AddRange (text_styles);
 				new_styles.AddRange (TextStyle.FilterStyles (this.current_styles, TextStyleClass.Symbol));
 				new_styles.AddRange (TextStyle.FilterStyles (this.current_styles, TextStyleClass.MetaProperty));
 				
-				this.current_styles = new_styles.ToArray (typeof (TextStyle)) as TextStyle[];
+				this.current_styles = new_styles.ToArray ();
 				
 				this.RefreshAccumulatedStylesAndProperties ();
 			}
@@ -1536,15 +1538,15 @@ again:
 			else
 			{
 				this.UpdateCurrentStylesAndPropertiesIfNeeded ();
-				
-				System.Collections.ArrayList new_styles = new System.Collections.ArrayList ();
+
+				List<TextStyle> new_styles = new List<TextStyle> ();
 				
 				new_styles.AddRange (TextStyle.FilterStyles (this.current_styles, TextStyleClass.Paragraph));
 				new_styles.AddRange (TextStyle.FilterStyles (this.current_styles, TextStyleClass.Text));
 				new_styles.AddRange (character_styles);
 				new_styles.AddRange (TextStyle.FilterStyles (this.current_styles, TextStyleClass.MetaProperty));
 				
-				this.current_styles = new_styles.ToArray (typeof (TextStyle)) as TextStyle[];
+				this.current_styles = new_styles.ToArray ();
 				
 				this.RefreshAccumulatedStylesAndProperties ();
 			}
@@ -1631,16 +1633,16 @@ again:
 			
 				this.SetParagraphMetaProperties (pos, mode, meta_properties);
 			}
-			
-			
-			System.Collections.ArrayList new_styles = new System.Collections.ArrayList ();
+
+
+			List<TextStyle> new_styles = new List<TextStyle> ();
 			
 			new_styles.AddRange (TextStyle.FilterStyles (this.current_styles, TextStyleClass.Paragraph));
 			new_styles.AddRange (TextStyle.FilterStyles (this.current_styles, TextStyleClass.Text));
 			new_styles.AddRange (TextStyle.FilterStyles (this.current_styles, TextStyleClass.Symbol));
 			new_styles.AddRange (Internal.Navigator.Combine (TextStyle.FilterStyles (this.current_styles, TextStyleClass.MetaProperty), meta_properties, mode));
 			
-			this.current_styles = new_styles.ToArray (typeof (TextStyle)) as TextStyle[];
+			this.current_styles = new_styles.ToArray ();
 			
 			this.RefreshAccumulatedStylesAndProperties ();
 			this.NotifyTextChanged ();
@@ -1686,13 +1688,13 @@ again:
 				this.UpdateCurrentStylesAndPropertiesIfNeeded ();
 				
 				Internal.Navigator.SetParagraphProperties (this.story, this.cursor, mode, paragraph_properties);
-				
-				System.Collections.ArrayList new_properties = new System.Collections.ArrayList ();
+
+				List<Property> new_properties = new List<Property> ();
 				
 				new_properties.AddRange (Internal.Navigator.Combine (Property.Filter (this.current_properties, Properties.PropertyFilter.UniformOnly), paragraph_properties, mode));
 				new_properties.AddRange (Property.Filter (this.current_properties, Properties.PropertyFilter.NonUniformOnly));
 				
-				this.current_properties = new_properties.ToArray (typeof (Property)) as Property[];
+				this.current_properties = new_properties.ToArray ();
 				
 				this.RefreshFilterCurrentProperties ();
 				this.RefreshAccumulatedStylesAndProperties ();
@@ -1733,13 +1735,13 @@ again:
 //			else
 			{
 				this.UpdateCurrentStylesAndPropertiesIfNeeded ();
-				
-				System.Collections.ArrayList new_properties = new System.Collections.ArrayList ();
+
+				List<Property> new_properties = new List<Property> ();
 				
 				new_properties.AddRange (Property.Filter (this.current_properties, Properties.PropertyFilter.UniformOnly));
 				new_properties.AddRange (Internal.Navigator.Combine (Property.Filter (this.current_properties, Properties.PropertyFilter.NonUniformOnly), text_properties, mode));
 				
-				this.current_properties = new_properties.ToArray (typeof (Property)) as Property[];
+				this.current_properties = new_properties.ToArray ();
 				
 				this.RefreshFilterCurrentProperties ();
 				this.RefreshAccumulatedStylesAndProperties ();
@@ -2711,9 +2713,9 @@ process_ranges:
 			//	perd donc les réglages précédents, temporairement.
 			
 			this.UpdateCurrentStylesAndProperties ();
-			
-			System.Collections.ArrayList new_styles     = new System.Collections.ArrayList ();
-			System.Collections.ArrayList new_properties = new System.Collections.ArrayList ();
+
+			List<TextStyle> new_styles     = new List<TextStyle> ();
+			List<Property>  new_properties = new List<Property> ();
 			
 			new_styles.AddRange (TextStyle.FilterStyles (this.current_styles, TextStyleClass.Paragraph));
 			new_styles.AddRange (TextStyle.FilterStyles (old_styles, TextStyleClass.Text));
@@ -2726,8 +2728,8 @@ process_ranges:
 			//	Regénère les styles et propriétés d'origine du curseur, pour ce qui
 			//	concerne le texte, mais conserve les réglages du paragraphe en cours.
 			
-			this.current_styles     = new_styles.ToArray (typeof (TextStyle)) as TextStyle[];
-			this.current_properties = new_properties.ToArray (typeof (Property)) as Property[];
+			this.current_styles     = new_styles.ToArray ();
+			this.current_properties = new_properties.ToArray ();
 			
 			this.RefreshFilterCurrentProperties ();
 			this.RefreshAccumulatedStylesAndProperties ();
@@ -3128,8 +3130,8 @@ process_ranges:
 		private void RefreshFilterCurrentProperties ()
 		{
 			System.Diagnostics.Debug.Assert (this.current_properties != null);
-			
-			System.Collections.ArrayList list = new System.Collections.ArrayList ();
+
+			List<Property> list = new List<Property> ();
 			
 			foreach (Property property in this.current_properties)
 			{
@@ -3146,7 +3148,7 @@ process_ranges:
 			
 			if (list.Count < this.current_properties.Length)
 			{
-				this.current_properties = (Property[]) list.ToArray (typeof (Property));
+				this.current_properties = list.ToArray ();
 			}
 		}
 		
@@ -3675,7 +3677,7 @@ process_ranges:
 			
 			if (this.selection_cursors == null)
 			{
-				this.selection_cursors = new System.Collections.ArrayList ();
+				this.selection_cursors = new List<Cursors.SelectionCursor> ();
 			}
 			
 			Cursors.SelectionCursor cursor = new Cursors.SelectionCursor ();
@@ -3729,7 +3731,7 @@ process_ranges:
 				
 				for (int i = 0; i < this.selection_cursors.Count; i++)
 				{
-					ICursor cursor = this.selection_cursors[i] as ICursor;
+					ICursor cursor = this.selection_cursors[i];
 					
 					positions[i] = this.story.GetCursorPosition (cursor);
 				}
@@ -4079,7 +4081,7 @@ process_ranges:
 		private Cursors.SimpleCursor			cursor;
 		private Cursors.TempCursor				temp_cursor;
 		private Cursors.SelectionCursor			active_selection_cursor;
-		private System.Collections.ArrayList	selection_cursors;
+		private List<Cursors.SelectionCursor>	selection_cursors;
 		private int[]							selection_before;
 		
 		private TextStyle[]						current_styles;

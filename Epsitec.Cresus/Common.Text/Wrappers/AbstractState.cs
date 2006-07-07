@@ -284,10 +284,56 @@ namespace Epsitec.Common.Text.Wrappers
 
 			public void RestoreToState(AbstractState state)
 			{
-				SavedState.Copy (this.state, state.state);
-				SavedState.Copy (this.flags, state.flags);
-				SavedState.Copy (this.pending, state.pending_properties);
-				state.is_dirty = true;
+				List<StateProperty> add = new List<StateProperty> ();
+				List<StateProperty> remove = new List<StateProperty> ();
+				List<StateProperty> update = new List<StateProperty> ();
+				
+				foreach (StateProperty property in this.state.Keys)
+				{
+					if (state.state.ContainsKey (property))
+					{
+						update.Add (property);
+					}
+					else
+					{
+						//	The property does no longer exist in the current state; we
+						//	will have to re-create it :
+
+						add.Add (property);
+					}
+				}
+				
+				foreach (StateProperty property in state.state.Keys)
+				{
+					if (this.state.ContainsKey (property))
+					{
+						System.Diagnostics.Debug.Assert (update.Contains (property));
+					}
+					else
+					{
+						//	The current state contains a excess property; we will have
+						//	to remove it :
+
+						remove.Add (property);
+					}
+				}
+
+				state.wrapper.SuspendSynchronizations ();
+				
+				foreach (StateProperty property in remove)
+				{
+					state.ClearValue (property);
+				}
+				foreach (StateProperty property in add)
+				{
+					state.DefineValue (property, this.state[property]);
+				}
+				foreach (StateProperty property in update)
+				{
+					state.DefineValue (property, this.state[property]);
+				}
+				
+				state.wrapper.ResumeSynchronizations ();
 			}
 			
 			private static void Copy(Dictionary<StateProperty, object> a, Dictionary<StateProperty, object> b)
