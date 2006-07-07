@@ -79,6 +79,9 @@ namespace Epsitec.Common.Text.Exchange
 			{
 				if (disposing)
 				{
+					this.textWrapper.Detach ();
+					this.paraWrapper.Detach ();
+
 					if (opletQueueDisabled)
 					{
 						this.navigator.Dispose ();
