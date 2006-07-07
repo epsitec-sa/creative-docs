@@ -1,6 +1,8 @@
 ﻿//	Copyright © 2005-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
+using System.Collections.Generic;
+
 namespace Epsitec.Common.Text.Internal
 {
 	/// <summary>
@@ -1333,9 +1335,9 @@ namespace Epsitec.Common.Text.Internal
 			//	Dans un premier temps, on conserve tous les styles et ne garde que les
 			//	propriétés associées directement au paragraphe. Les autres propriétés
 			//	vont devoir être filtrées :
-			
-			System.Collections.ArrayList all_styles = new System.Collections.ArrayList ();
-			System.Collections.ArrayList all_properties = new System.Collections.ArrayList ();
+
+			List<TextStyle> all_styles = new List<TextStyle> ();
+			List<Property>  all_properties = new List<Property> ();
 			
 			all_styles.AddRange (current_styles);
 			
@@ -1378,9 +1380,9 @@ namespace Epsitec.Common.Text.Internal
 			
 			System.Diagnostics.Debug.Assert (Properties.PropertiesProperty.ContainsPropertiesProperties (current_properties) == false);
 			System.Diagnostics.Debug.Assert (Properties.StylesProperty.ContainsStylesProperties (current_properties) == false);
-			
-			System.Collections.ArrayList all_styles = new System.Collections.ArrayList ();
-			System.Collections.ICollection combined = Navigator.Combine (TextStyle.FilterStyles (current_styles, TextStyleClass.MetaProperty), meta_properties, mode);
+
+			List<TextStyle> all_styles = new List<TextStyle> ();
+			ICollection<TextStyle> combined = Navigator.Combine (TextStyle.FilterStyles (current_styles, TextStyleClass.MetaProperty), meta_properties, mode);
 			
 			all_styles.AddRange (TextStyle.FilterStyles (current_styles, TextStyleClass.Paragraph));
 			all_styles.AddRange (TextStyle.FilterStyles (current_styles, TextStyleClass.Text));
@@ -1435,8 +1437,8 @@ namespace Epsitec.Common.Text.Internal
 			//	propriétés associés directement au paragraphe. Les autres propriétés
 			//	vont devoir être filtrées :
 			
-			System.Collections.ArrayList all_styles = new System.Collections.ArrayList ();
-			System.Collections.ArrayList all_properties = new System.Collections.ArrayList ();
+			List<TextStyle> all_styles = new List<TextStyle> ();
+			List<Property> all_properties = new List<Property> ();
 			
 			all_styles.AddRange (current_styles);
 			
@@ -1551,7 +1553,7 @@ namespace Epsitec.Common.Text.Internal
 		}
 		
 		
-		internal static System.Collections.ICollection Combine(Property[] a, Property[] b, Properties.ApplyMode mode)
+		internal static ICollection<Property> Combine(Property[] a, Property[] b, Properties.ApplyMode mode)
 		{
 			switch (mode)
 			{
@@ -1564,8 +1566,8 @@ namespace Epsitec.Common.Text.Internal
 					throw new System.InvalidOperationException (string.Format ("ApplyMode.{0} not valid here.", mode));
 			}
 		}
-		
-		internal static System.Collections.ICollection Combine(TextStyle[] a, TextStyle[] b, Properties.ApplyMode mode)
+
+		internal static ICollection<TextStyle> Combine(TextStyle[] a, TextStyle[] b, Properties.ApplyMode mode)
 		{
 			switch (mode)
 			{
@@ -1578,15 +1580,15 @@ namespace Epsitec.Common.Text.Internal
 					throw new System.InvalidOperationException (string.Format ("ApplyMode.{0} not valid here.", mode));
 			}
 		}
-		
-		
-		private static System.Collections.ICollection CombineOverwrite(Property[] a, Property[] b)
+
+
+		private static List<Property> CombineOverwrite(Property[] a, Property[] b)
 		{
 			//	Un overwrite écrase toutes les propriétés source, sauf si la source
 			//	contient des propriétés avec affinité PropertyAffinity.Symbol; dans
 			//	ce cas, la propriété survit à l'overwrite...
-			
-			System.Collections.ArrayList list = new System.Collections.ArrayList ();
+
+			List<Property> list = new List<Property> ();
 			
 			foreach (Property p in a)
 			{
@@ -1621,10 +1623,10 @@ namespace Epsitec.Common.Text.Internal
 			
 			return list;
 		}
-		
-		private static System.Collections.ICollection CombineClear(Property[] a, Property[] b)
+
+		private static List<Property> CombineClear(Property[] a, Property[] b)
 		{
-			System.Collections.ArrayList list = new System.Collections.ArrayList ();
+			List<Property> list = new List<Property> ();
 			
 			list.AddRange (a);
 			
@@ -1656,10 +1658,10 @@ namespace Epsitec.Common.Text.Internal
 			
 			return list;
 		}
-		
-		private static System.Collections.ICollection CombineSet(Property[] a, Property[] b)
+
+		private static List<Property> CombineSet(Property[] a, Property[] b)
 		{
-			System.Collections.ArrayList list = Navigator.CombineClear (a, b) as System.Collections.ArrayList;
+			List<Property> list = Navigator.CombineClear (a, b) as List<Property>;
 			list.AddRange (b);
 			foreach (Property p in b)
 			{
@@ -1667,23 +1669,26 @@ namespace Epsitec.Common.Text.Internal
 			}
 			return list;
 		}
-		
-		private static System.Collections.ICollection CombineAccumulate(Property[] a, Property[] b)
+
+		private static List<Property> CombineAccumulate(Property[] a, Property[] b)
 		{
 			Styles.PropertyContainer.Accumulator accumulator = new Styles.PropertyContainer.Accumulator ();
 			
 			accumulator.Accumulate (a);
 			accumulator.Accumulate (b);
-			
-			return accumulator.AccumulatedProperties;
-		}
-		
 
-		private static System.Collections.ICollection CombineOverwrite(TextStyle[] a, TextStyle[] b)
+			List<Property> list = new List<Property> ();
+			list.AddRange (accumulator.AccumulatedProperties);
+			
+			return list;
+		}
+
+
+		private static List<TextStyle> CombineOverwrite(TextStyle[] a, TextStyle[] b)
 		{
 			//	Un overwrite écrase toutes les propriétés source.
-			
-			System.Collections.ArrayList list = new System.Collections.ArrayList ();
+
+			List<TextStyle> list = new List<TextStyle> ();
 			
 			list.AddRange (a);
 			
@@ -1691,7 +1696,7 @@ namespace Epsitec.Common.Text.Internal
 			{
 				for (int i = 0; i < list.Count; )
 				{
-					TextStyle test = list[i] as TextStyle;
+					TextStyle test = list[i];
 					
 					if (test.MetaId == p.MetaId)
 					{
@@ -1708,10 +1713,10 @@ namespace Epsitec.Common.Text.Internal
 			
 			return list;
 		}
-		
-		private static System.Collections.ICollection CombineClear(TextStyle[] a, TextStyle[] b)
+
+		private static List<TextStyle> CombineClear(TextStyle[] a, TextStyle[] b)
 		{
-			System.Collections.ArrayList list = new System.Collections.ArrayList ();
+			List<TextStyle> list = new List<TextStyle> ();
 			
 			list.AddRange (a);
 			
@@ -1719,7 +1724,7 @@ namespace Epsitec.Common.Text.Internal
 			{
 				for (int i = 0; i < list.Count; )
 				{
-					TextStyle test = list[i] as TextStyle;
+					TextStyle test = list[i];
 					
 					if (test.MetaId == p.MetaId)
 					{
@@ -1734,17 +1739,17 @@ namespace Epsitec.Common.Text.Internal
 			
 			return list;
 		}
-		
-		private static System.Collections.ICollection CombineSet(TextStyle[] a, TextStyle[] b)
+
+		private static List<TextStyle> CombineSet(TextStyle[] a, TextStyle[] b)
 		{
-			System.Collections.ArrayList list = Navigator.CombineClear (a, b) as System.Collections.ArrayList;
+			List<TextStyle> list = Navigator.CombineClear (a, b) as List<TextStyle>;
 			
 			list.AddRange (b);
 			
 			return list;
 		}
-		
-		private static System.Collections.ICollection CombineAccumulate(TextStyle[] a, TextStyle[] b)
+
+		private static List<TextStyle> CombineAccumulate(TextStyle[] a, TextStyle[] b)
 		{
 			throw new System.InvalidOperationException ("Combine is impossible on meta-properties");
 		}

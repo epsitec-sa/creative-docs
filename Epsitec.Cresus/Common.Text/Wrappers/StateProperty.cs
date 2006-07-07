@@ -1,5 +1,7 @@
-//	Copyright © 2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2005-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
+
+using System.Collections.Generic;
 
 namespace Epsitec.Common.Text.Wrappers
 {
@@ -32,8 +34,22 @@ namespace Epsitec.Common.Text.Wrappers
 				return this.default_value;
 			}
 		}
+
 		
-		
+		public static IEnumerable<StateProperty> GetProperties(System.Type state_type)
+		{
+			List<StateProperty> list;
+
+			if (StateProperty.types.TryGetValue (state_type, out list))
+			{
+				return list;
+			}
+			else
+			{
+				return new StateProperty[0];
+			}
+		}
+
 		public override int GetHashCode()
 		{
 			return this.name.GetHashCode ();
@@ -54,12 +70,13 @@ namespace Epsitec.Common.Text.Wrappers
 		
 		static private void Register(System.Type state_type, StateProperty property)
 		{
-			if (StateProperty.types.Contains (state_type) == false)
-			{
-				StateProperty.types[state_type] = new System.Collections.ArrayList ();
-			}
+			List<StateProperty> list;
 			
-			System.Collections.ArrayList list = StateProperty.types[state_type] as System.Collections.ArrayList;
+			if (StateProperty.types.TryGetValue (state_type, out list) == false)
+			{
+				list = new List<StateProperty> ();
+				StateProperty.types[state_type] = list;
+			}
 			
 			foreach (StateProperty find in list)
 			{
@@ -73,7 +90,7 @@ namespace Epsitec.Common.Text.Wrappers
 		}
 		
 		
-		static System.Collections.Hashtable		types = new System.Collections.Hashtable ();
+		static Dictionary<System.Type, List<StateProperty>>	types = new Dictionary<System.Type,List<StateProperty>> ();
 		
 		private readonly string					name;
 		private readonly object					default_value;

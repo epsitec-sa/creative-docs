@@ -1,6 +1,8 @@
 //	Copyright © 2005-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
+using System.Collections.Generic;
+
 namespace Epsitec.Common.Text
 {
 	/// <summary>
@@ -424,7 +426,7 @@ namespace Epsitec.Common.Text
 		}
 		
 		
-		public static Property[] Filter(System.Collections.ICollection properties, Properties.WellKnownType type)
+		public static Property[] Filter(IEnumerable<Property> properties, Properties.WellKnownType type)
 		{
 			int count = 0;
 			
