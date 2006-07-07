@@ -2062,16 +2062,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.Invalidate();
 		}
 
-		public void SelectLastCreatedObject()
-		{
-			//	Sélectionne l'objet qui vient d'être créé.
-			if (this.lastCreatedObject != null)
-			{
-				this.SelectOneObject(this.lastCreatedObject);
-				this.lastCreatedObject = null;
-			}
-		}
-
 		protected void SelectOneObject(Widget obj)
 		{
 			//	Sélectionne un objet.
@@ -4169,6 +4159,71 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 
 		#region Misc
+		public void AdaptAfterToolChanged()
+		{
+			//	Adaptation après un changement d'outil ou d'objet.
+			if (this.context.Tool == "ToolSelect" || this.context.Tool == "ToolGlobal")
+			{
+
+				if (this.lastCreatedObject != null)
+				{
+					this.GridClearSelection();
+					this.SelectOneObject(this.lastCreatedObject);
+					this.lastCreatedObject = null;
+				}
+				else if (this.selectedObjects.Count == 1)
+				{
+					Widget obj = this.selectedObjects[0];
+					GridSelection gs = GridSelection.Get(obj);
+					if (gs != null)
+					{
+						List<Widget> list = new List<Widget>();
+						foreach (Widget children in obj.Children)
+						{
+							int column = this.objectModifier.GetGridColumn(children);
+							if (gs.Search(GridSelection.Unit.Column, column) != -1)
+							{
+								list.Add(children);
+								continue;
+							}
+
+							int row = this.objectModifier.GetGridRow(children);
+							if (gs.Search(GridSelection.Unit.Row, row) != -1)
+							{
+								list.Add(children);
+								continue;
+							}
+						}
+						if (list.Count > 0)
+						{
+							this.selectedObjects = list;
+							this.GridClearSelection();
+							this.UpdateAfterSelectionChanged();
+							this.OnChildrenSelected();
+							this.Invalidate();
+						}
+					}
+				}
+				else
+				{
+					this.GridClearSelection();
+				}
+			}
+
+			if (this.context.Tool == "ToolGrid")
+			{
+				this.DeselectAll();
+			}
+
+			if (this.context.Tool.StartsWith("Object"))
+			{
+				this.DeselectAll();
+			}
+
+			this.SizeMarkDeselect();
+			this.Invalidate();
+		}
+
 		public Rectangle RealBounds
 		{
 			//	Retourne le rectangle englobant de tous les objets contenus dans le panneau.

@@ -311,26 +311,8 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			//	Choix de l'outil.
 			base.DoTool(name);
-
-			if (this.context.Tool == "ToolSelect" || this.context.Tool == "ToolGlobal")
-			{
-				this.panelEditor.GridClearSelection();
-				this.panelEditor.SelectLastCreatedObject();
-				this.RegenerateProxies();
-			}
-
-			if (this.context.Tool == "ToolGrid")
-			{
-				this.panelEditor.DeselectAll();
-			}
-
-			if (this.context.Tool.StartsWith("Object"))
-			{
-				this.panelEditor.DeselectAll();
-			}
-
-			this.panelEditor.SizeMarkDeselect();
-			this.panelEditor.Invalidate();
+			this.panelEditor.AdaptAfterToolChanged();
+			this.RegenerateProxies();
 		}
 
 		public override void DoCommand(string name)
