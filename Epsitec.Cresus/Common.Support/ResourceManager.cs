@@ -730,33 +730,46 @@ namespace Epsitec.Common.Support
 			
 			if (Resources.SplitFieldIdWithoutDruidResolution (resource, out bundleName, out fieldName))
 			{
-				switch (level)
-				{
-					case ResourceLevel.Merged:
-						this.MergeWithCaption (this.GetBundle (bundleName, ResourceLevel.Default, culture), druid, ref caption);
-						this.MergeWithCaption (this.GetBundle (bundleName, ResourceLevel.Localized, culture), druid, ref caption);
-						this.MergeWithCaption (this.GetBundle (bundleName, ResourceLevel.Customized, culture), druid, ref caption);
-						
-						this.ResolveDruidReferencesInCaption (caption, ResourceLevel.Merged, culture);
-						break;
-					
-					case ResourceLevel.Default:
-					case ResourceLevel.Localized:
-					case ResourceLevel.Customized:
-						this.MergeWithCaption (this.GetBundle (bundleName, level, culture), druid, ref caption);
-						break;
-					
-					default:
-						throw new ResourceException ("Invalid resource level");
-				}
+				string key = Resources.CreateCaptionKey (druid, level, culture);
+				Weak<Caption> weakCaption;
 
-				if (caption != null)
+				if ((cache) &&
+					(this.captionCache.TryGetValue (key, out weakCaption)))
 				{
-					caption.DefineId (druid.ToResourceId ());
-					
-					if (cache)
+					caption = weakCaption.Target;
+				}
+				
+				if (caption == null)
+				{
+					switch (level)
 					{
-						this.GetBundleRelatedCache (bundleName, level, culture).AddCaption (caption);
+						case ResourceLevel.Merged:
+							this.MergeWithCaption (this.GetBundle (bundleName, ResourceLevel.Default, culture), druid, ref caption);
+							this.MergeWithCaption (this.GetBundle (bundleName, ResourceLevel.Localized, culture), druid, ref caption);
+							this.MergeWithCaption (this.GetBundle (bundleName, ResourceLevel.Customized, culture), druid, ref caption);
+
+							this.ResolveDruidReferencesInCaption (caption, ResourceLevel.Merged, culture);
+							break;
+
+						case ResourceLevel.Default:
+						case ResourceLevel.Localized:
+						case ResourceLevel.Customized:
+							this.MergeWithCaption (this.GetBundle (bundleName, level, culture), druid, ref caption);
+							break;
+
+						default:
+							throw new ResourceException ("Invalid resource level");
+					}
+					
+					if (caption != null)
+					{
+						caption.DefineId (druid.ToResourceId ());
+
+						if (cache)
+						{
+							this.captionCache[key] = new Weak<Caption> (caption);
+							this.GetBundleRelatedCache (bundleName, level, culture).AddCaption (caption);
+						}
 					}
 				}
 			}
@@ -1596,6 +1609,7 @@ namespace Epsitec.Common.Support
 		
 		Dictionary<string, ResourceBundle>		bundleCache = new Dictionary<string, ResourceBundle> ();
 		Dictionary<string, BundleRelatedCache>	bundleRelatedCache = new Dictionary<string, BundleRelatedCache> ();
+		Dictionary<string, Weak<Caption>>		captionCache = new Dictionary<string, Weak<Caption>> ();
 		
 		private int								mergedBundlesInBundleCache;
 	}

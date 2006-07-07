@@ -417,6 +417,19 @@ namespace Epsitec.Common.Support
 
 			return buffer.ToString ();
 		}
+		
+		internal static string CreateCaptionKey(Druid druid, ResourceLevel level, CultureInfo culture)
+		{
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+			
+			buffer.Append (druid.ToString ());
+			buffer.Append ("~");
+			buffer.Append ((int) level);
+			buffer.Append ("~");
+			buffer.Append (culture.TwoLetterISOLanguageName);
+
+			return buffer.ToString ();
+		}
 
 		private static void Rebinder(object resourceManager, Types.ResourceBinding binding)
 		{
