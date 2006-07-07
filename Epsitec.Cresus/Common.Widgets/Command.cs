@@ -46,6 +46,20 @@ namespace Epsitec.Common.Widgets
 			this.InitializeCommandId (id);
 		}
 
+		protected Command(Types.Caption caption)
+			: this ()
+		{
+			this.uniqueId = -1;
+			this.caption  = caption;
+			
+			this.InitializeCommandId (caption.Id);
+		}
+
+		public static Command CreateTemporary(Types.Caption caption)
+		{
+			return new Command (caption);
+		}
+
 		public Caption							Caption
 		{
 			get
@@ -439,20 +453,23 @@ namespace Epsitec.Common.Widgets
 		{
 			System.Diagnostics.Debug.Assert (string.IsNullOrEmpty (commandId) == false);
 			System.Diagnostics.Debug.Assert (this.commandId == null);
-			
-			lock (Command.commands)
+
+			if (this.uniqueId == 0)
 			{
-				if (Command.commands.ContainsKey (commandId))
+				lock (Command.commands)
 				{
-					throw new System.ArgumentException (string.Format ("Command {0} already registered", commandId));
+					if (Command.commands.ContainsKey (commandId))
+					{
+						throw new System.ArgumentException (string.Format ("Command {0} already registered", commandId));
+					}
+
+					this.commandId = commandId;
+					this.uniqueId = Command.nextUniqueId++;
+
+					Command.commands[commandId] = this;
 				}
-
-				this.commandId = commandId;
-				this.uniqueId = Command.nextUniqueId++;
-
-				Command.commands[commandId] = this;
 			}
-
+			
 			Support.Druid druid;
 
 			if (Support.Druid.TryParse (commandId, out druid))
@@ -500,15 +517,20 @@ namespace Epsitec.Common.Widgets
 			System.Diagnostics.Debug.Assert (this.captionId == -1);
 
 			this.captionId = druid.ToLong ();
-			
+
 			//	This command is defined by a DRUID.
 
-			Types.Caption caption = Support.Resources.DefaultManager.GetCaption (druid);
+			if (this.caption == null)
+			{
+				Types.Caption caption = Support.Resources.DefaultManager.GetCaption (druid);
 
-			System.Diagnostics.Debug.Assert (caption != null);
-			System.Diagnostics.Debug.Assert (caption.Id == this.commandId);
+				System.Diagnostics.Debug.Assert (caption != null);
+				System.Diagnostics.Debug.Assert (caption.Id == this.commandId);
 
-			this.caption = caption;
+				this.caption = caption;
+			}
+			
+			System.Diagnostics.Debug.Assert (this.caption.Id == druid.ToString ());
 		}
 
 		private void InitializeDummyCaption()

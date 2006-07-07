@@ -17,7 +17,27 @@ namespace Epsitec.Common.Widgets
 
 			Resources.DefaultManager.ActiveCulture = Resources.FindSpecificCultureInfo ("fr");
 		}
-		
+
+		[Test]
+		public void Check0TemporaryCommand()
+		{
+			Caption caption1 = Resources.DefaultManager.GetCaption (Druid.Parse ("[0005]"));
+			Caption caption2 = Resources.DefaultManager.GetCaption (Druid.Parse ("[0004]"));
+			Caption caption3 = Resources.DefaultManager.GetCaption (Druid.Parse ("[0004]"));
+
+			Command command = Command.Get (Druid.Parse ("[0005]"));
+
+			Command tempCmd1 = Command.CreateTemporary (caption1);
+			Command tempCmd2 = Command.CreateTemporary (caption2);
+
+			Assert.AreEqual (caption1, command.Caption);
+			Assert.AreEqual (caption2, caption3);
+			Assert.AreNotEqual (command, tempCmd1);
+
+			Assert.IsNotNull (Command.Find ("[0005]"));
+			Assert.IsNull (Command.Find ("[0004]"));
+		}
+
 		[Test]
 		public void CheckApplicationCommands()
 		{

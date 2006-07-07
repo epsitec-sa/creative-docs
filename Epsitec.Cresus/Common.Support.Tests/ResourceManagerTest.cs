@@ -141,6 +141,9 @@ namespace Epsitec.Common.Support
 			Assert.AreEqual ("Pattern angle", Collection.Extract (captionA.SortedLabels, 2));
 			Assert.AreEqual ("Q", Collection.Extract (captionQ.SortedLabels, 0));
 
+			Assert.AreEqual (captionA, this.manager.GetCaption (idA, ResourceLevel.Default));
+			Assert.AreEqual (captionQ, this.manager.GetCaption (idQ, ResourceLevel.Default));
+
 			Assert.AreEqual (2, this.manager.DebugCountLiveCaptions () - n);
 
 			scrap.Add (captionA);
