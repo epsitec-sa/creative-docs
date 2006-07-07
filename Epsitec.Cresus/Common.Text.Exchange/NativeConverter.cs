@@ -342,7 +342,9 @@ namespace Epsitec.Common.Text.Exchange
 
 							if (thestyle != null)
 							{
+								this.textWrapper.ResumeSynchronizations ();
 								this.navigator.SetTextStyles (thestyle);
+								this.textWrapper.SuspendSynchronizations ();
 							}
 							break;
 						case "pstyle":
@@ -352,7 +354,9 @@ namespace Epsitec.Common.Text.Exchange
 
 							if (thestyle != null)
 							{
+								this.textWrapper.ResumeSynchronizations ();
 								this.navigator.SetParagraphStyles (thestyle);
+								this.textWrapper.SuspendSynchronizations ();
 							}
 							break;
 						case "par":
@@ -570,7 +574,6 @@ namespace Epsitec.Common.Text.Exchange
 
 
 			this.paraWrapper.SuspendSynchronizations ();
-			this.textWrapper.SuspendSynchronizations ();
 
 			this.savedDefinedParagraph = this.paraWrapper.Defined.SaveInternalState ();
 
@@ -745,7 +748,6 @@ namespace Epsitec.Common.Text.Exchange
 			if (!marginunits)
 				this.paraWrapper.Defined.ClearMarginUnits ();
 
-			this.textWrapper.ResumeSynchronizations ();
 			this.paraWrapper.ResumeSynchronizations ();
 		}
 
