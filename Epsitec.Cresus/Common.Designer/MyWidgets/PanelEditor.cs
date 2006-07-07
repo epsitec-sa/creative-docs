@@ -4212,7 +4212,72 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			if (this.context.Tool == "ToolGrid")
 			{
-				this.DeselectAll();
+				if (this.selectedObjects.Count != 0)
+				{
+					Widget parent = this.selectedObjects[0].Parent;
+					if (this.objectModifier.AreChildrenGrid(parent))
+					{
+						int c = GridSelection.Invalid;
+						int r = GridSelection.Invalid;
+						bool mc = false;
+						bool mr = false;
+						foreach (Widget children in this.selectedObjects)
+						{
+							int column = this.objectModifier.GetGridColumn(children);
+							if (c == GridSelection.Invalid)
+							{
+								c = column;
+							}
+							else
+							{
+								if (c != column)
+								{
+									mc = true;
+								}
+							}
+
+							int row = this.objectModifier.GetGridRow(children);
+							if (r == GridSelection.Invalid)
+							{
+								r = row;
+							}
+							else
+							{
+								if (r != row)
+								{
+									mr = true;
+								}
+							}
+						}
+
+						GridSelection gs = new GridSelection(parent);
+						foreach (Widget children in this.selectedObjects)
+						{
+							if (mr || (!mc && !mr))
+							{
+								int column = this.objectModifier.GetGridColumn(children);
+								if (gs.Search(GridSelection.Unit.Column, column) == -1)
+								{
+									gs.Add(GridSelection.Unit.Column, column);
+								}
+							}
+							else if (mc)
+							{
+								int row = this.objectModifier.GetGridRow(children);
+								if (gs.Search(GridSelection.Unit.Row, row) == -1)
+								{
+									gs.Add(GridSelection.Unit.Row, row);
+								}
+							}
+						}
+						this.SelectOneObject(parent);
+						GridSelection.Attach(parent, gs);
+					}
+					else
+					{
+						this.DeselectAll();
+					}
+				}
 			}
 
 			if (this.context.Tool.StartsWith("Object"))
