@@ -35,6 +35,9 @@ namespace Epsitec.Common.Designer.Viewers
 			if (type == "Strings")  return new Strings(module, context);
 			if (type == "Panels" )  return new Panels(module, context);
 			if (type == "Scripts")  return new Scripts(module, context);
+			if (type == "Captions")  return new Captions(module, context);
+			if (type == "Commands")  return new Commands(module, context);
+			if (type == "Types")  return new Types(module, context);
 			return null;
 		}
 

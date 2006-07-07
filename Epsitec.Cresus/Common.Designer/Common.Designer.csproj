@@ -89,6 +89,9 @@
     <Compile Include="ProxyManager.cs" />
     <Compile Include="UserInterface.cs" />
     <Compile Include="Viewers\Abstract.cs" />
+    <Compile Include="Viewers\Captions.cs" />
+    <Compile Include="Viewers\Commands.cs" />
+    <Compile Include="Viewers\Types.cs" />
     <Compile Include="Viewers\Scripts.cs" />
     <Compile Include="Viewers\Panels.cs" />
     <Compile Include="Viewers\Strings.cs" />
