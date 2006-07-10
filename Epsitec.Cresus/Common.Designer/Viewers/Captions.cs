@@ -148,7 +148,43 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			//	Met à jour le contenu du Viewer.
 			this.UpdateArray();
-			//?this.UpdateEdit();
+			this.UpdateEdit();
+			this.UpdateCommands();
+		}
+
+		protected void UpdateEdit()
+		{
+			//	Met à jour les lignes éditables en fonction de la sélection dans le tableau.
+			bool iic = this.ignoreChange;
+			this.ignoreChange = true;
+
+			int sel = this.array.SelectedRow;
+			int column = this.array.SelectedColumn;
+
+			if (sel >= this.druidsIndex.Count)
+			{
+				sel = -1;
+				column = -1;
+			}
+
+			if ( sel == -1 )
+			{
+				this.labelEdit.Enable = false;
+				this.labelEdit.Text = "";
+			}
+			else
+			{
+				this.labelEdit.Enable = true;
+
+				Druid druid = this.druidsIndex[sel];
+				this.SetTextField(this.labelEdit, this.primaryBundle[druid].Name);
+
+				this.labelEdit.Focus();
+				this.labelEdit.SelectAll();
+			}
+
+			this.ignoreChange = iic;
+
 			this.UpdateCommands();
 		}
 
@@ -310,6 +346,7 @@ namespace Epsitec.Common.Designer.Viewers
 		void HandleArraySelectedRowChanged(object sender)
 		{
 			//	La ligne sélectionnée a changé.
+			this.UpdateEdit();
 			this.UpdateCommands();
 		}
 
@@ -360,16 +397,8 @@ namespace Epsitec.Common.Designer.Viewers
 				this.module.Modifier.Rename(Module.BundleType.Captions, druid, text);
 				this.array.SetLineString(0, sel, text);
 			}
-		}
 
-		protected bool IsExistingName(string baseName)
-		{
-			//	Indique si un nom existe.
-			ResourceBundleCollection bundles = this.module.Bundles(Module.BundleType.Captions);
-			ResourceBundle defaultBundle = bundles[ResourceLevel.Default];
-
-			ResourceBundle.Field field = defaultBundle[baseName];
-			return (field != null && field.Name != null);
+			this.module.Modifier.IsDirty = true;
 		}
 
 
