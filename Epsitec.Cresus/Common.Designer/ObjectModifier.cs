@@ -259,10 +259,22 @@ namespace Epsitec.Common.Designer
 			{
 				int count = engine.ColumnDefinitions.Count;
 
-				if (columns > engine.ColumnDefinitions.Count)
+				if (columns > count)
 				{
-					engine.ColumnDefinitions.Add(new ColumnDefinition(new GridLength(100, GridUnitType.Auto)));
-					engine.ColumnDefinitions[count].MinWidth = 20;
+					double value = 100;
+					GridUnitType type = GridUnitType.Auto;
+					double minWidth = 20;
+
+					if (count > 0)
+					{
+						GridLength gl = engine.ColumnDefinitions[count-1].Width;
+						value = gl.Value;
+						type = gl.GridUnitType;
+						minWidth = engine.ColumnDefinitions[count-1].MinWidth;
+					}
+
+					engine.ColumnDefinitions.Add(new ColumnDefinition(new GridLength(value, type)));
+					engine.ColumnDefinitions[count].MinWidth = minWidth;
 				}
 				else
 				{
@@ -316,10 +328,22 @@ namespace Epsitec.Common.Designer
 			{
 				int count = engine.RowDefinitions.Count;
 
-				if (rows > engine.RowDefinitions.Count)
+				if (rows > count)
 				{
-					engine.RowDefinitions.Add(new RowDefinition(new GridLength(100, GridUnitType.Auto)));
-					engine.RowDefinitions[count].MinHeight = 20;
+					double value = 100;
+					GridUnitType type = GridUnitType.Auto;
+					double minHeight = 20;
+
+					if (count > 0)
+					{
+						GridLength gl = engine.RowDefinitions[count-1].Height;
+						value = gl.Value;
+						type = gl.GridUnitType;
+						minHeight = engine.RowDefinitions[count-1].MinHeight;
+					}
+
+					engine.RowDefinitions.Add(new RowDefinition(new GridLength(value, type)));
+					engine.RowDefinitions[count].MinHeight = minHeight;
 				}
 				else
 				{
