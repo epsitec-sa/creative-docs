@@ -196,7 +196,8 @@ namespace Epsitec.Common.Designer.Dialogs
 		{
 			//	Construit l'index en fonction des ressources.
 			//	Retourne le rang de la ressource correspondant le mieux possible aux filtres.
-			ResourceBundleCollection bundles = this.mainWindow.CurrentModule.Bundles;
+			Module.BundleType type = this.mainWindow.CurrentModule.Modifier.ActiveBundleType;
+			ResourceBundleCollection bundles = this.mainWindow.CurrentModule.Bundles(type);
 			this.primaryBundle = bundles[ResourceLevel.Merged];
 			ResourceBundle defaultBundle = bundles[ResourceLevel.Default];
 			this.isDefaultBundle = (Misc.CultureBaseName(this.primaryBundle.Culture) == Misc.CultureBaseName(defaultBundle.Culture));
@@ -337,7 +338,8 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected bool IsExistingName(string baseName)
 		{
 			//	Indique si un nom existe.
-			ResourceBundleCollection bundles = this.mainWindow.CurrentModule.Bundles;
+			Module.BundleType type = this.mainWindow.CurrentModule.Modifier.ActiveBundleType;
+			ResourceBundleCollection bundles = this.mainWindow.CurrentModule.Bundles(type);
 			ResourceBundle defaultBundle = bundles[ResourceLevel.Default];
 
 			ResourceBundle.Field field = defaultBundle[baseName];
@@ -396,7 +398,8 @@ namespace Epsitec.Common.Designer.Dialogs
 				{
 					if (!this.IsExistingName(label))
 					{
-						Druid druid = this.mainWindow.CurrentModule.Modifier.Create(label, text);
+						Module.BundleType type = this.mainWindow.CurrentModule.Modifier.ActiveBundleType;
+						Druid druid = this.mainWindow.CurrentModule.Modifier.Create(type, label, text);
 						this.resource = druid;
 					}
 				}

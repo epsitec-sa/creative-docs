@@ -40,10 +40,10 @@ namespace Epsitec.Common.Designer
 		}
 
 
-		public void Save()
+		public void Save(Module.BundleType type)
 		{
 			//	Enregistre toutes les cultures du module.
-			ResourceBundleCollection bundles = this.module.Bundles;
+			ResourceBundleCollection bundles = this.module.Bundles(type);
 			foreach (ResourceBundle bundle in bundles)
 			{
 				this.module.ResourceManager.SetBundle(bundle, ResourceSetMode.UpdateOnly);
@@ -59,10 +59,10 @@ namespace Epsitec.Common.Designer
 			this.IsDirty = false;
 		}
 
-		public void Delete(Druid druid)
+		public void Delete(Module.BundleType type, Druid druid)
 		{
 			//	Supprime une ressource dans toutes les cultures du module.
-			ResourceBundleCollection bundles = this.module.Bundles;
+			ResourceBundleCollection bundles = this.module.Bundles(type);
 			foreach (ResourceBundle bundle in bundles)
 			{
 				int index = bundle.IndexOf(druid);
@@ -74,14 +74,14 @@ namespace Epsitec.Common.Designer
 			this.IsDirty = false;
 		}
 
-		public Druid Duplicate(Druid actualDruid, string newName, bool duplicate)
+		public Druid Duplicate(Module.BundleType type, Druid actualDruid, string newName, bool duplicate)
 		{
 			//	Duplique une ressource dans toutes les cultures du module.
-			ResourceBundleCollection bundles = this.module.Bundles;
+			ResourceBundleCollection bundles = this.module.Bundles(type);
 			ResourceBundle defaultBundle = bundles[ResourceLevel.Default];
 
-			int index = this.GetDefaultIndex(actualDruid);
-			Druid newDruid = this.CreateUniqueDruid();
+			int index = this.GetDefaultIndex(type, actualDruid);
+			Druid newDruid = this.CreateUniqueDruid(type);
 
 			foreach (ResourceBundle bundle in bundles)
 			{
@@ -117,10 +117,10 @@ namespace Epsitec.Common.Designer
 			return newDruid;
 		}
 
-		public Druid Create(string name, string text)
+		public Druid Create(Module.BundleType type, string name, string text)
 		{
 			//	Crée une nouvelle ressource dans la culture par défaut du module.
-			ResourceBundleCollection bundles = this.module.Bundles;
+			ResourceBundleCollection bundles = this.module.Bundles(type);
 			System.Globalization.CultureInfo culture = this.module.ResourceManager.ActiveCulture;
 			ResourceBundle actualBundle = bundles[ResourceLevel.Localized, culture];
 			ResourceBundle defaultBundle = bundles[ResourceLevel.Default];
@@ -130,7 +130,7 @@ namespace Epsitec.Common.Designer
 				actualBundle = defaultBundle;
 			}
 
-			Druid druid = this.CreateUniqueDruid();
+			Druid druid = this.CreateUniqueDruid(type);
 
 			if (defaultBundle != actualBundle)
 			{
@@ -152,10 +152,10 @@ namespace Epsitec.Common.Designer
 			return druid;
 		}
 
-		protected Druid CreateUniqueDruid()
+		protected Druid CreateUniqueDruid(Module.BundleType type)
 		{
 			//	Crée un nouveau druid unique.
-			ResourceBundleCollection bundles = this.module.Bundles;
+			ResourceBundleCollection bundles = this.module.Bundles(type);
 			ResourceBundle defaultBundle = bundles[ResourceLevel.Default];
 
 			int moduleId = defaultBundle.Module.Id;
@@ -175,12 +175,12 @@ namespace Epsitec.Common.Designer
 			return new Druid(moduleId, developerId, localId);
 		}
 
-		public bool Move(Druid druid, int direction)
+		public bool Move(Module.BundleType type, Druid druid, int direction)
 		{
 			//	Déplace une ressource dans la culture par défaut du module.
-			ResourceBundleCollection bundles = this.module.Bundles;
+			ResourceBundleCollection bundles = this.module.Bundles(type);
 			ResourceBundle defaultBundle = bundles[ResourceLevel.Default];
-			int index = this.GetDefaultIndex(druid);
+			int index = this.GetDefaultIndex(type, druid);
 			if (index+direction < 0 || index+direction >= defaultBundle.FieldCount)
 			{
 				return false;
@@ -193,10 +193,10 @@ namespace Epsitec.Common.Designer
 			return true;
 		}
 
-		public void Rename(Druid druid, string newName)
+		public void Rename(Module.BundleType type, Druid druid, string newName)
 		{
 			//	Renomme une ressource dans toutes les cultures du module.
-			ResourceBundleCollection bundles = this.module.Bundles;
+			ResourceBundleCollection bundles = this.module.Bundles(type);
 			foreach (ResourceBundle bundle in bundles)
 			{
 				ResourceBundle.Field field = bundle[druid];
@@ -208,10 +208,10 @@ namespace Epsitec.Common.Designer
 			this.IsDirty = false;
 		}
 
-		public void ModificationClearAll(Druid druid)
+		public void ModificationClearAll(Module.BundleType type, Druid druid)
 		{
 			//	Considère une ressource comme à jour dans toutes les cultures secondaires du module.
-			ResourceBundleCollection bundles = this.module.Bundles;
+			ResourceBundleCollection bundles = this.module.Bundles(type);
 			ResourceBundle defaultBundle = bundles[ResourceLevel.Default];
 			int id = defaultBundle[druid].ModificationId;
 			foreach (ResourceBundle bundle in bundles)
@@ -224,10 +224,10 @@ namespace Epsitec.Common.Designer
 			this.IsDirty = false;
 		}
 
-		public bool IsModificationAll(Druid druid)
+		public bool IsModificationAll(Module.BundleType type, Druid druid)
 		{
 			//	Donne l'état de la commande ModificationAll.
-			ResourceBundleCollection bundles = this.module.Bundles;
+			ResourceBundleCollection bundles = this.module.Bundles(type);
 			ResourceBundle defaultBundle = bundles[ResourceLevel.Default];
 			int id = defaultBundle[druid].ModificationId;
 			int count = 0;
@@ -244,10 +244,10 @@ namespace Epsitec.Common.Designer
 			return (count != bundles.Count-1);
 		}
 
-		public void CreateIfNecessary(ResourceBundle secondaryBundle, Druid druid)
+		public void CreateIfNecessary(Module.BundleType type, ResourceBundle secondaryBundle, Druid druid)
 		{
 			//	Crée une ressource secondaire, si nécessaire.
-			ResourceBundleCollection bundles = this.module.Bundles;
+			ResourceBundleCollection bundles = this.module.Bundles(type);
 			ResourceBundle defaultBundle = bundles[ResourceLevel.Default];
 
 			ResourceBundle.Field field = secondaryBundle[druid];
@@ -263,10 +263,10 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		protected int GetDefaultIndex(Druid druid)
+		protected int GetDefaultIndex(Module.BundleType type, Druid druid)
 		{
 			//	Cherche l'index d'une ressource d'après son druid.
-			ResourceBundleCollection bundles = this.module.Bundles;
+			ResourceBundleCollection bundles = this.module.Bundles(type);
 			ResourceBundle defaultBundle = bundles[ResourceLevel.Default];
 			ResourceBundle.Field field = defaultBundle[druid];
 			return defaultBundle.IndexOf(field);
@@ -284,6 +284,21 @@ namespace Epsitec.Common.Designer
 			set
 			{
 				this.activeViewer = value;
+			}
+		}
+
+		public Module.BundleType ActiveBundleType
+		{
+			get
+			{
+				if (this.activeViewer == null)
+				{
+					return Module.BundleType.Unknow;
+				}
+				else
+				{
+					return this.activeViewer.BundleType;
+				}
 			}
 		}
 

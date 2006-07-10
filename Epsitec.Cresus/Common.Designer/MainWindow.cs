@@ -302,20 +302,24 @@ namespace Epsitec.Common.Designer
 			ModuleInfo mi = this.CurrentModuleInfo;
 			if ( mi != null )
 			{
-				ResourceBundleCollection bundles = mi.Module.Bundles;
+				Module.BundleType type = mi.Module.Modifier.ActiveBundleType;
+				ResourceBundleCollection bundles = mi.Module.Bundles(type);
 
-				for ( int b=0 ; b<bundles.Count ; b++ )
+				if (bundles != null)
 				{
-					ResourceBundle bundle = bundles[b];
-
-					if ( b > 0 )
+					for (int b=0; b<bundles.Count; b++)
 					{
-						builder.Append(", ");
-					}
+						ResourceBundle bundle = bundles[b];
 
-					builder.Append(Misc.CultureShortName(bundle.Culture));
-					builder.Append(":");
-					builder.Append(bundle.FieldCount);
+						if (b > 0)
+						{
+							builder.Append(", ");
+						}
+
+						builder.Append(Misc.CultureShortName(bundle.Culture));
+						builder.Append(":");
+						builder.Append(bundle.FieldCount);
+					}
 				}
 			}
 
@@ -371,7 +375,8 @@ namespace Epsitec.Common.Designer
 		[Command("Save")]
 		void CommandSave(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.CurrentModule.Modifier.Save();
+			this.CurrentModule.Modifier.Save(Module.BundleType.Strings);
+			this.CurrentModule.Modifier.Save(Module.BundleType.Captions);
 		}
 
 		[Command("Close")]

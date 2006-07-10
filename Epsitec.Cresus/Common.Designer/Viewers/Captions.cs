@@ -48,7 +48,7 @@ namespace Epsitec.Common.Designer.Viewers
 			splitter.Dock = DockStyle.Left;
 			VSplitter.SetAutoCollapseEnable(left, true);
 
-			ResourceBundleCollection bundles = this.module.Captions;
+			ResourceBundleCollection bundles = this.module.Bundles(Module.BundleType.Captions);
 			if (bundles != null)
 			{
 				this.primaryBundle = bundles[ResourceLevel.Default];
@@ -71,6 +71,15 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 
 			base.Dispose(disposing);
+		}
+
+
+		public override Module.BundleType BundleType
+		{
+			get
+			{
+				return Module.BundleType.Captions;
+			}
 		}
 
 
@@ -348,7 +357,7 @@ namespace Epsitec.Common.Designer.Viewers
 					return;
 				}
 
-				this.module.Modifier.Rename(druid, text);
+				this.module.Modifier.Rename(Module.BundleType.Captions, druid, text);
 				this.array.SetLineString(0, sel, text);
 			}
 		}
@@ -356,7 +365,7 @@ namespace Epsitec.Common.Designer.Viewers
 		protected bool IsExistingName(string baseName)
 		{
 			//	Indique si un nom existe.
-			ResourceBundleCollection bundles = this.module.Captions;
+			ResourceBundleCollection bundles = this.module.Bundles(Module.BundleType.Captions);
 			ResourceBundle defaultBundle = bundles[ResourceLevel.Default];
 
 			ResourceBundle.Field field = defaultBundle[baseName];

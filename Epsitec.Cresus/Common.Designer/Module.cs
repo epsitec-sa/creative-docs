@@ -10,6 +10,14 @@ namespace Epsitec.Common.Designer
 	/// </summary>
 	public class Module
 	{
+		public enum BundleType
+		{
+			Unknow,
+			Strings,
+			Captions,
+		}
+
+
 		public Module(MainWindow mainWindow, DesignerMode mode, string resourcePrefix, ResourceModuleInfo moduleInfo)
 		{
 			this.UniqueIDCreate();
@@ -23,8 +31,8 @@ namespace Epsitec.Common.Designer
 			this.resourceManager.DefineDefaultModuleName(this.name);
 			this.resourceManager.ActivePrefix = resourcePrefix;
 
-			this.UpdateBundles();
-			this.UpdateCaptions();
+			this.UpdateBundles(BundleType.Strings);
+			this.UpdateBundles(BundleType.Captions);
 
 			this.modifier = new Modifier(this);
 		}
@@ -87,73 +95,111 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		public ResourceBundleCollection Bundles
+		public ResourceBundleCollection Bundles(BundleType type)
 		{
-			get
+			//	Retourne la liste des bundles des différentes cultures.
+			switch (type)
 			{
-				return this.bundles;
+				case BundleType.Strings:
+					return this.strings;
+
+				case BundleType.Captions:
+					return this.captions;
 			}
+
+			return null;
 		}
 
-		public ResourceBundle GetCulture(string name)
+		public ResourceBundle GetCulture(string name, BundleType type)
 		{
 			//	Cherche le bundle d'une culture.
-			for (int b=0; b<this.bundles.Count; b++)
+			ResourceBundleCollection bundles = this.Bundles(type);
+
+			for (int b=0; b<bundles.Count; b++)
 			{
-				ResourceBundle bundle = this.bundles[b];
+				ResourceBundle bundle = bundles[b];
 				if (Misc.CultureName(bundle.Culture) == name)  return bundle;
 			}
 			return null;
 		}
 
-		public bool IsExistingCulture(string name)
+		public bool IsExistingCulture(string name, BundleType type)
 		{
 			//	Indique si une culture donnée existe.
-			for (int b=0; b<this.bundles.Count; b++)
+			ResourceBundleCollection bundles = this.Bundles(type);
+
+			for (int b=0; b<bundles.Count; b++)
 			{
-				ResourceBundle bundle = this.bundles[b];
+				ResourceBundle bundle = bundles[b];
 				if ( name == bundle.Culture.Name )  return true;
 			}
 			return false;
 		}
 
-		public ResourceBundle NewCulture(string name)
+		public ResourceBundle NewCulture(string name, BundleType type)
 		{
 			//	Crée un nouveau bundle pour une culture donnée.
+			ResourceBundleCollection bundles = this.Bundles(type);
+
 			string prefix = this.resourceManager.ActivePrefix;
 			System.Globalization.CultureInfo culture = Resources.FindSpecificCultureInfo(name);
-			ResourceBundle bundle = ResourceBundle.Create(this.resourceManager, prefix, this.bundles.Name, ResourceLevel.Localized, culture);
+			ResourceBundle bundle = ResourceBundle.Create(this.resourceManager, prefix, bundles.Name, ResourceLevel.Localized, culture);
 
-			bundle.DefineType("String");
+			bundle.DefineType(Module.BundlesName(type, false));
 			this.resourceManager.SetBundle(bundle, ResourceSetMode.CreateOnly);
 			
-			this.UpdateBundles();
+			this.UpdateBundles(type);
 
 			return bundle;
 		}
 
-		public void DeleteCulture(ResourceBundle bundle)
+		public void DeleteCulture(ResourceBundle bundle, BundleType type)
 		{
 			//	Supprime une culture.
 			// TODO: la suppression ne fonctionne pas !
-			this.resourceManager.RemoveBundle("Strings", ResourceLevel.Localized, bundle.Culture);
-			this.UpdateBundles();
+			this.resourceManager.RemoveBundle(Module.BundlesName(type, true), ResourceLevel.Localized, bundle.Culture);
+			this.UpdateBundles(type);
 		}
 
-		protected void UpdateBundles()
+		protected void UpdateBundles(BundleType type)
 		{
-			string[] ids = this.resourceManager.GetBundleIds("*", "String", ResourceLevel.Default);
+			string[] ids = this.resourceManager.GetBundleIds("*", Module.BundlesName(type, false), ResourceLevel.Default);
 			if (ids.Length == 0)
 			{
 				string prefix = this.resourceManager.ActivePrefix;
-				System.Globalization.CultureInfo culture = this.BaseCulture;
-				ResourceBundle bundle = ResourceBundle.Create(this.resourceManager, prefix, "Strings", ResourceLevel.Default, culture);
-				bundle.DefineType("String");
+				System.Globalization.CultureInfo culture = this.BaseCulture(type);
+				ResourceBundle bundle = ResourceBundle.Create(this.resourceManager, prefix, Module.BundlesName(type, true), ResourceLevel.Default, culture);
+				bundle.DefineType(Module.BundlesName(type, false));
 				this.resourceManager.SetBundle(bundle, ResourceSetMode.CreateOnly);
 			}
 
-			this.bundles = new ResourceBundleCollection(this.resourceManager);
-			this.bundles.LoadBundles(this.resourceManager.ActivePrefix, this.resourceManager.GetBundleIds(ids[0], ResourceLevel.All));
+			ResourceBundleCollection bundles = new ResourceBundleCollection(this.resourceManager);
+			bundles.LoadBundles(this.resourceManager.ActivePrefix, this.resourceManager.GetBundleIds(ids[0], ResourceLevel.All));
+
+			switch (type)
+			{
+				case BundleType.Strings:
+					this.strings = bundles;
+					break;
+
+				case BundleType.Captions:
+					this.captions = bundles;
+					break;
+			}
+		}
+
+		protected static string BundlesName(BundleType type, bool many)
+		{
+			switch (type)
+			{
+				case BundleType.Strings:
+					return many ? "Strings" : "String";
+
+				case BundleType.Captions:
+					return many ? "Captions" : "Caption";
+			}
+
+			return null;
 		}
 
 #if false
@@ -188,35 +234,6 @@ namespace Epsitec.Common.Designer
 #endif
 
 
-		#region Captions
-		public ResourceBundleCollection Captions
-		{
-			get
-			{
-				return this.captions;
-			}
-		}
-
-		protected void UpdateCaptions()
-		{
-			string[] ids = this.resourceManager.GetBundleIds("*", "Caption", ResourceLevel.Default);
-			if (ids.Length == 0)
-			{
-				string prefix = this.resourceManager.ActivePrefix;
-				System.Globalization.CultureInfo culture = this.BaseCulture;
-				ResourceBundle bundle = ResourceBundle.Create(this.resourceManager, prefix, "Captions", ResourceLevel.Default, culture);
-				bundle.DefineType("Caption");
-				this.resourceManager.SetBundle(bundle, ResourceSetMode.CreateOnly);
-			}
-			else
-			{
-				this.captions = new ResourceBundleCollection(this.resourceManager);
-				this.captions.LoadBundles(this.resourceManager.ActivePrefix, this.resourceManager.GetBundleIds(ids[0], ResourceLevel.All));
-			}
-		}
-		#endregion
-
-
 		#region Panels
 		public void PanelsRead()
 		{
@@ -235,7 +252,7 @@ namespace Epsitec.Common.Designer
 				//	de rien, mais seulement une commande pour dupliquer un panneau existant.
 				Druid druid = this.PanelCreateUniqueDruid();
 				string prefix = this.resourceManager.ActivePrefix;
-				System.Globalization.CultureInfo culture = this.BaseCulture;
+				System.Globalization.CultureInfo culture = this.BaseCulture(BundleType.Strings);
 				ResourceBundle bundle = ResourceBundle.Create(this.resourceManager, prefix, druid.ToBundleId(), ResourceLevel.Default, culture);
 
 				bundle.DefineType("Panel");
@@ -385,7 +402,7 @@ namespace Epsitec.Common.Designer
 			//	Crée une nouvelle ressource de type 'Panel'.
 			Druid druid = this.PanelCreateUniqueDruid();
 			string prefix = this.resourceManager.ActivePrefix;
-			System.Globalization.CultureInfo culture = this.BaseCulture;
+			System.Globalization.CultureInfo culture = this.BaseCulture(BundleType.Strings);
 			ResourceBundle bundle = ResourceBundle.Create(this.resourceManager, prefix, druid.ToBundleId(), ResourceLevel.Default, culture);
 
 			bundle.DefineType("Panel");
@@ -440,14 +457,12 @@ namespace Epsitec.Common.Designer
 		#endregion
 
 
-		protected System.Globalization.CultureInfo BaseCulture
+		protected System.Globalization.CultureInfo BaseCulture(BundleType type)
 		{
-			//	Retourne la culture de base, définie par les ressources "Strings".
-			get
-			{
-				ResourceBundle res = this.bundles[ResourceLevel.Default];
-				return res.Culture;
-			}
+			//	Retourne la culture de base, définie par les ressources "Strings" ou "Captions".
+			ResourceBundleCollection bundles = this.Bundles(type);
+			ResourceBundle res = bundles[ResourceLevel.Default];
+			return res.Culture;
 		}
 
 
@@ -479,7 +494,7 @@ namespace Epsitec.Common.Designer
 		protected string					name;
 		protected int						id;
 		protected ResourceManager			resourceManager;
-		protected ResourceBundleCollection	bundles;
+		protected ResourceBundleCollection	strings;
 		protected ResourceBundleCollection	captions;
 		protected List<ResourceBundle>		panelsList;
 		protected List<ResourceBundle>		panelsToCreate;
