@@ -38,7 +38,8 @@ namespace Epsitec.Common.Designer.Viewers
 			this.array.SetDynamicsToolTips(0, true);
 			this.array.Margins = new Margins(0, 0, 0, 0);
 			this.array.Dock = DockStyle.Fill;
-			this.array.CellCountChanged += new EventHandler (this.HandleArrayCellCountChanged);
+			this.array.CellCountChanged += new EventHandler(this.HandleArrayCellCountChanged);
+			this.array.CellsContentChanged += new EventHandler(this.HandleArrayCellsContentChanged);
 			this.array.SelectedRowChanged += new EventHandler(this.HandleArraySelectedRowChanged);
 			this.array.TabIndex = tabIndex++;
 			this.array.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
@@ -47,28 +48,26 @@ namespace Epsitec.Common.Designer.Viewers
 			splitter.Dock = DockStyle.Left;
 			VSplitter.SetAutoCollapseEnable(left, true);
 
-			this.edit = new TextFieldMulti(this);
-			this.edit.TextLayout.DefaultFont = Font.GetFont("Courier New", "Regular");
-			this.edit.Margins = new Margins(10, 10, 10, 10);
-			this.edit.Dock = DockStyle.Fill;
-			this.edit.EditionAccepted += new EventHandler(this.HandleTextChanged);
-			this.edit.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
-			this.edit.TabIndex = tabIndex++;
-			this.edit.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			ResourceBundleCollection bundles = this.module.Captions;
+			if (bundles != null)
+			{
+				this.primaryBundle = bundles[ResourceLevel.Default];
+
+				this.UpdateDruidsIndex("", Searcher.SearchingMode.None);
+				this.UpdateArray();
+			}
 		}
 
 		protected override void Dispose(bool disposing)
 		{
 			if (disposing)
 			{
-				this.array.CellCountChanged -= new EventHandler (this.HandleArrayCellCountChanged);
+				this.array.CellCountChanged -= new EventHandler(this.HandleArrayCellCountChanged);
+				this.array.CellsContentChanged -= new EventHandler(this.HandleArrayCellsContentChanged);
 				this.array.SelectedRowChanged -= new EventHandler(this.HandleArraySelectedRowChanged);
 
 				this.labelEdit.EditionAccepted -= new EventHandler(this.HandleTextChanged);
 				this.labelEdit.KeyboardFocusChanged -= new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
-
-				this.edit.EditionAccepted -= new EventHandler(this.HandleTextChanged);
-				this.edit.KeyboardFocusChanged -= new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
 			}
 
 			base.Dispose(disposing);
@@ -135,6 +134,14 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Effectue une modification de typographie.
 		}
 
+
+		public override void Update()
+		{
+			//	Met à jour le contenu du Viewer.
+			this.UpdateArray();
+			//?this.UpdateEdit();
+			this.UpdateCommands();
+		}
 
 		public override void UpdateCommands()
 		{
@@ -210,10 +217,85 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
+		protected override void UpdateDruidsIndex(string filter, Searcher.SearchingMode mode)
+		{
+			//	Construit l'index en fonction des ressources primaires.
+			this.druidsIndex.Clear();
+
+			if ((mode&Searcher.SearchingMode.CaseSensitive) == 0)
+			{
+				filter = Searcher.RemoveAccent(filter.ToLower());
+			}
+
+			Regex regex = null;
+			if ((mode&Searcher.SearchingMode.Jocker) != 0)
+			{
+				regex = RegexFactory.FromSimpleJoker(filter, RegexFactory.Options.None);
+			}
+
+			foreach (ResourceBundle.Field field in this.primaryBundle.Fields)
+			{
+				if (filter != "")
+				{
+					if ((mode&Searcher.SearchingMode.Jocker) != 0)
+					{
+						string text = field.Name;
+						if ((mode&Searcher.SearchingMode.CaseSensitive) == 0)
+						{
+							text = Searcher.RemoveAccent(text.ToLower());
+						}
+						if (!regex.IsMatch(text))
+							continue;
+					}
+					else
+					{
+						int index = Searcher.IndexOf(field.Name, filter, 0, mode);
+						if (index == -1)
+							continue;
+						if ((mode&Searcher.SearchingMode.AtBeginning) != 0 && index != 0)
+							continue;
+					}
+				}
+
+				Druid fullDruid = new Druid(field.Druid, this.primaryBundle.Module.Id);
+				this.druidsIndex.Add(fullDruid);
+			}
+		}
+
+		protected override void UpdateArray()
+		{
+			//	Met à jour tout le contenu du tableau.
+			this.array.TotalRows = this.druidsIndex.Count;
+
+			int first = this.array.FirstVisibleRow;
+			for (int i=0; i<this.array.LineCount; i++)
+			{
+				if (first+i < this.druidsIndex.Count)
+				{
+					ResourceBundle.Field primaryField = this.primaryBundle[this.druidsIndex[first+i]];
+
+					this.array.SetLineString(0, first+i, primaryField.Name);
+					this.array.SetLineState(0, first+i, MyWidgets.StringList.CellState.Normal);
+				}
+				else
+				{
+					this.array.SetLineString(0, first+i, "");
+					this.array.SetLineState(0, first+i, MyWidgets.StringList.CellState.Disabled);
+				}
+			}
+		}
+
+		
 		void HandleArrayCellCountChanged(object sender)
 		{
 			//	Le nombre de lignes a changé.
-			//?this.UpdateArray();
+			this.UpdateArray();
+		}
+
+		void HandleArrayCellsContentChanged(object sender)
+		{
+			//	Le contenu des cellules a changé.
+			this.UpdateArray();
 		}
 
 		void HandleArraySelectedRowChanged(object sender)
@@ -228,10 +310,61 @@ namespace Epsitec.Common.Designer.Viewers
 			if ( this.ignoreChange )  return;
 
 			AbstractTextField edit = sender as AbstractTextField;
+			string text = edit.Text;
+			int sel = this.array.SelectedRow;
+			Druid druid = this.druidsIndex[sel];
+
+			if (edit == this.labelEdit)
+			{
+				if (!Misc.IsValidLabel(ref text))
+				{
+					this.ignoreChange = true;
+					edit.Text = this.primaryBundle[this.druidsIndex[sel]].Name;
+					edit.SelectAll();
+					this.ignoreChange = false;
+
+					this.module.MainWindow.DialogError(Res.Strings.Error.InvalidLabel);
+					return;
+				}
+
+				this.ignoreChange = true;
+				edit.Text = text;
+				edit.SelectAll();
+				this.ignoreChange = false;
+
+				if (this.primaryBundle[this.druidsIndex[sel]].Name == text)  // label inchangé ?
+				{
+					return;
+				}
+
+				if (this.IsExistingName(text))
+				{
+					this.ignoreChange = true;
+					edit.Text = this.primaryBundle[this.druidsIndex[sel]].Name;
+					edit.SelectAll();
+					this.ignoreChange = false;
+
+					this.module.MainWindow.DialogError(Res.Strings.Error.NameAlreadyExist);
+					return;
+				}
+
+				this.module.Modifier.Rename(druid, text);
+				this.array.SetLineString(0, sel, text);
+			}
+		}
+
+		protected bool IsExistingName(string baseName)
+		{
+			//	Indique si un nom existe.
+			ResourceBundleCollection bundles = this.module.Captions;
+			ResourceBundle defaultBundle = bundles[ResourceLevel.Default];
+
+			ResourceBundle.Field field = defaultBundle[baseName];
+			return (field != null && field.Name != null);
 		}
 
 
+		protected ResourceBundle			primaryBundle;
 		protected TextFieldEx				labelEdit;
-		protected TextFieldMulti			edit;
 	}
 }
