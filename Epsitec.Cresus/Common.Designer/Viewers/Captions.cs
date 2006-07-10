@@ -111,26 +111,95 @@ namespace Epsitec.Common.Designer.Viewers
 		public override void DoDelete()
 		{
 			//	Supprime la ressource sélectionnée.
+			int sel = this.array.SelectedRow;
+			if ( sel == -1 )  return;
+
+			Druid druid = this.druidsIndex[sel];
+			this.module.Modifier.Delete(Module.BundleType.Captions, druid);
+
+			this.druidsIndex.RemoveAt(sel);
+			this.UpdateArray();
+
+			sel = System.Math.Min(sel, this.druidsIndex.Count-1);
+			this.array.SelectedRow = sel;
+			this.array.ShowSelectedRow();
+			this.UpdateCommands();
+			this.module.Modifier.IsDirty = true;
 		}
 
 		public override void DoDuplicate(bool duplicate)
 		{
 			//	Duplique la ressource sélectionnée.
+			int sel = this.array.SelectedRow;
+			if ( sel == -1 )  return;
+
+			Druid druid = this.druidsIndex[sel];
+			string newName = this.GetDuplicateName(this.primaryBundle[druid].Name);
+			Druid newDruid = this.module.Modifier.Duplicate(Module.BundleType.Captions, druid, newName, duplicate);
+
+			int newSel = sel+1;
+			this.druidsIndex.Insert(newSel, newDruid);
+			this.UpdateArray();
+
+			this.array.SelectedRow = newSel;
+			this.array.ShowSelectedRow();
+			this.UpdateCommands();
+			this.module.Modifier.IsDirty = true;
 		}
 
 		public override void DoMove(int direction)
 		{
 			//	Déplace la ressource sélectionnée.
+			int sel = this.array.SelectedRow;
+			if ( sel == -1 )  return;
+
+			Druid druid = this.druidsIndex[sel];
+			if ( !this.module.Modifier.Move(Module.BundleType.Captions, druid, direction) )  return;
+		
+			int newSel = sel+direction;
+			this.druidsIndex.RemoveAt(sel);
+			this.druidsIndex.Insert(newSel, druid);
+			this.UpdateArray();
+
+			this.array.SelectedRow = newSel;
+			this.array.ShowSelectedRow();
+			this.UpdateCommands();
+			this.module.Modifier.IsDirty = true;
 		}
 
 		public override void DoNewCulture()
 		{
 			//	Crée une nouvelle culture.
+			string name = this.module.MainWindow.DlgNewCulture();
+			if ( name == null )  return;
+			ResourceBundle bundle = this.module.NewCulture(name, Module.BundleType.Captions);
+
+			this.UpdateArray();
+			this.UpdateClientGeometry();
+			this.UpdateCommands();
+			this.module.Modifier.IsDirty = true;
 		}
 
 		public override void DoDeleteCulture()
 		{
 			//	Supprime la culture courante.
+#if false
+			string question = string.Format(Res.Strings.Dialog.DeleteCulture.Question, Misc.CultureName(this.secondaryBundle.Culture));
+			Common.Dialogs.DialogResult result = this.module.MainWindow.DialogQuestion(question);
+			if ( result != Epsitec.Common.Dialogs.DialogResult.Yes )  return;
+
+			this.module.DeleteCulture(this.secondaryBundle, Module.BundleType.Captions);
+
+			this.UpdateCultures();
+			if (this.secondaryBundle != null)
+			{
+				this.UpdateSelectedCulture(Misc.CultureName(this.secondaryBundle.Culture));
+			}
+			this.UpdateArray();
+			this.UpdateClientGeometry();
+			this.UpdateCommands();
+			this.module.Modifier.IsDirty = true;
+#endif
 		}
 
 		public override void DoClipboard(string name)
