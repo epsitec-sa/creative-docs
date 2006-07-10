@@ -24,6 +24,7 @@ namespace Epsitec.Common.Designer
 			this.resourceManager.ActivePrefix = resourcePrefix;
 
 			this.UpdateBundles();
+			this.UpdateCaptions();
 
 			this.modifier = new Modifier(this);
 		}
@@ -142,7 +143,14 @@ namespace Epsitec.Common.Designer
 		protected void UpdateBundles()
 		{
 			string[] ids = this.resourceManager.GetBundleIds("*", "String", ResourceLevel.Default);
-			System.Diagnostics.Debug.Assert(ids.Length >= 1);
+			if (ids.Length == 0)
+			{
+				string prefix = this.resourceManager.ActivePrefix;
+				System.Globalization.CultureInfo culture = this.BaseCulture;
+				ResourceBundle bundle = ResourceBundle.Create(this.resourceManager, prefix, "Strings", ResourceLevel.Default, culture);
+				bundle.DefineType("String");
+				this.resourceManager.SetBundle(bundle, ResourceSetMode.CreateOnly);
+			}
 
 			this.bundles = new ResourceBundleCollection(this.resourceManager);
 			this.bundles.LoadBundles(this.resourceManager.ActivePrefix, this.resourceManager.GetBundleIds(ids[0], ResourceLevel.All));
@@ -178,6 +186,35 @@ namespace Epsitec.Common.Designer
 			}
 		}
 #endif
+
+
+		#region Captions
+		public ResourceBundleCollection Captions
+		{
+			get
+			{
+				return this.captions;
+			}
+		}
+
+		protected void UpdateCaptions()
+		{
+			string[] ids = this.resourceManager.GetBundleIds("*", "Caption", ResourceLevel.Default);
+			if (ids.Length == 0)
+			{
+				string prefix = this.resourceManager.ActivePrefix;
+				System.Globalization.CultureInfo culture = this.BaseCulture;
+				ResourceBundle bundle = ResourceBundle.Create(this.resourceManager, prefix, "Captions", ResourceLevel.Default, culture);
+				bundle.DefineType("Caption");
+				this.resourceManager.SetBundle(bundle, ResourceSetMode.CreateOnly);
+			}
+			else
+			{
+				this.captions = new ResourceBundleCollection(this.resourceManager);
+				this.captions.LoadBundles(this.resourceManager.ActivePrefix, this.resourceManager.GetBundleIds(ids[0], ResourceLevel.All));
+			}
+		}
+		#endregion
 
 
 		#region Panels
@@ -443,6 +480,7 @@ namespace Epsitec.Common.Designer
 		protected int						id;
 		protected ResourceManager			resourceManager;
 		protected ResourceBundleCollection	bundles;
+		protected ResourceBundleCollection	captions;
 		protected List<ResourceBundle>		panelsList;
 		protected List<ResourceBundle>		panelsToCreate;
 		protected List<ResourceBundle>		panelsToDelete;
