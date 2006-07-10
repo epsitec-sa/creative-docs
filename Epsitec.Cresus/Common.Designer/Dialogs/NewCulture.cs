@@ -90,7 +90,8 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.cultureList = new List<string>();
 			foreach (string name in Misc.Cultures)
 			{
-				if (!module.IsExistingCulture(name))
+				Module.BundleType type = this.mainWindow.CurrentModule.Modifier.ActiveBundleType;
+				if (!module.IsExistingCulture(name, type))
 				{
 					this.cultureList.Add(name);
 				}

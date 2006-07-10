@@ -42,6 +42,14 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
+		public virtual Module.BundleType BundleType
+		{
+			get
+			{
+				return Module.BundleType.Unknow;
+			}
+		}
+
 		public virtual AbstractTextField CurrentTextField
 		{
 			//	Retourne le texte éditable en cours d'édition.
