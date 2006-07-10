@@ -1033,9 +1033,9 @@ namespace Epsitec.Common.Text.Exchange
 		{
 			TextContext context = this.story.TextContext;
 
-			TextStyle style = context.StyleList.NewTextStyle (null, null, textStyleClass, properties, parents);
+			TextStyle style = context.StyleList.NewTextStyle (this.story.OpletQueue, null, textStyleClass, properties, parents);
 
-			context.StyleList.StyleMap.SetCaption (null, style, caption);
+			context.StyleList.StyleMap.SetCaption (this.story.OpletQueue, style, caption);
 
 			// cherche le dernier rang
 			int rank = 0;
@@ -1047,7 +1047,7 @@ namespace Epsitec.Common.Text.Exchange
 					rank++;
 			}
 
-			context.StyleList.StyleMap.SetRank (null, style, rank);
+			context.StyleList.StyleMap.SetRank (this.story.OpletQueue, style, rank);
 
 			return style;
 		}
