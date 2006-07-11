@@ -71,15 +71,13 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryCulture.AutoFocus = false;
 			this.primaryCulture.TabIndex = tabIndex++;
 			this.primaryCulture.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			this.primaryCulture.Padding = new Margins(0, 5, 0, 0);  // (*)
+			this.primaryCulture.Margins = new Margins(0, 5, 0, 0);
 			this.primaryCulture.Dock = DockStyle.StackFill;
 
 			this.secondaryCulture = new Widget(sup);
-			this.secondaryCulture.Padding = new Margins(5, 0, 0, 0);  // (*)
+			this.secondaryCulture.Margins = new Margins(5, 0, 0, 0);
 			this.secondaryCulture.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
 			this.secondaryCulture.Dock = DockStyle.StackFill;
-
-			//	TODO: Pourquoi une seule marge de 5 est-elle visible ???
 
 			//	Crée la partie droite, bande inférieure pour la zone d'étition scrollable.
 			this.scrollable = new Scrollable(right);
