@@ -178,14 +178,19 @@ namespace Epsitec.Common.Designer
 
 		protected void UpdateBundles(BundleType type)
 		{
+			//	Met à jour la liste des bundles.
 			string[] ids = this.resourceManager.GetBundleIds("*", Module.BundlesName(type, false), ResourceLevel.Default);
 			if (ids.Length == 0)
 			{
+				//	Crée un premier bundle vide.
 				string prefix = this.resourceManager.ActivePrefix;
 				System.Globalization.CultureInfo culture = this.BaseCulture(type);
 				ResourceBundle bundle = ResourceBundle.Create(this.resourceManager, prefix, Module.BundlesName(type, true), ResourceLevel.Default, culture);
 				bundle.DefineType(Module.BundlesName(type, false));
 
+				//	Crée un premier champ vide avec un premier Druid.
+				//	Ceci est nécessaire, car il n'existe pas de commande pour créer un champ à partir
+				//	de rien, mais seulement une commande pour dupliquer un champ existant.
 				int moduleId = bundle.Module.Id;
 				int developerId = 0;  // [PA] provisoire
 				int localId = 0;
@@ -197,7 +202,11 @@ namespace Epsitec.Common.Designer
 				newField.SetStringValue("");
 				bundle.Add(newField);
 
+				//	Sérialise le bundle et son premier champ sur disque. Il serait préférable de
+				//	faire ceci lors du Save, mais cette situation étant exceptionelle, il est
+				//	acceptable de faire ainsi !
 				this.resourceManager.SetBundle(bundle, ResourceSetMode.CreateOnly);
+
 				ids = this.resourceManager.GetBundleIds("*", Module.BundlesName(type, false), ResourceLevel.Default);
 				System.Diagnostics.Debug.Assert(ids.Length != 0);
 			}
@@ -209,6 +218,7 @@ namespace Epsitec.Common.Designer
 
 		protected static string BundlesName(BundleType type, bool many)
 		{
+			//	Retourne un nom interne (pour Common.Support & Cie) en fonction du type.
 			switch (type)
 			{
 				case BundleType.Strings:
@@ -482,10 +492,12 @@ namespace Epsitec.Common.Designer
 			ResourceBundleCollection bundles = this.GetBundles(type);
 			if (bundles == null)
 			{
-				return new System.Globalization.CultureInfo(Misc.ProperName(Misc.Cultures[0]));
+				//	S'il n'existe aucun bundle, retourne la culture la plus importante.
+				return new System.Globalization.CultureInfo(Misc.Cultures[0]);
 			}
 			else
 			{
+				//	Retourne la culture du bundle par défaut.
 				ResourceBundle res = bundles[ResourceLevel.Default];
 				return res.Culture;
 			}
