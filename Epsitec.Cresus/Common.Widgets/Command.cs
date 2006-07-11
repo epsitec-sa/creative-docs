@@ -57,7 +57,9 @@ namespace Epsitec.Common.Widgets
 
 		public static Command CreateTemporary(Types.Caption caption)
 		{
-			return new Command (caption);
+			Command command = new Command (caption);
+			command.temporary = true;
+			return command;
 		}
 
 		public Caption							Caption
@@ -214,6 +216,92 @@ namespace Epsitec.Common.Widgets
 
 			Command.SetGroup (this.caption, group);
 			Command.SetStatefull (this.caption, statefull);
+		}
+
+		public void DefineGroup(string value)
+		{
+			if (this.locked)
+			{
+				throw new Exceptions.CommandLockedException (this.CommandId);
+			}
+			if (this.temporary == false)
+			{
+				throw new System.InvalidOperationException (string.Format ("Command {0} may not be modified", this.CommandId));
+			}
+
+			Command.SetGroup (this.caption, value);
+		}
+
+		public void DefineStatefull(bool value)
+		{
+			if (this.locked)
+			{
+				throw new Exceptions.CommandLockedException (this.CommandId);
+			}
+			if (this.temporary == false)
+			{
+				throw new System.InvalidOperationException (string.Format ("Command {0} may not be modified", this.CommandId));
+			}
+
+			Command.SetStatefull (this.caption, value);
+		}
+
+		public void DefineCommandType(CommandType value)
+		{
+			if (this.locked)
+			{
+				throw new Exceptions.CommandLockedException (this.CommandId);
+			}
+			if (this.temporary == false)
+			{
+				throw new System.InvalidOperationException (string.Format ("Command {0} may not be modified", this.CommandId));
+			}
+
+			Command.SetCommandType (this.caption, value);
+		}
+
+		public void DefineShortcuts(Collections.ShortcutCollection value)
+		{
+			if (this.locked)
+			{
+				throw new Exceptions.CommandLockedException (this.CommandId);
+			}
+			if (this.temporary == false)
+			{
+				throw new System.InvalidOperationException (string.Format ("Command {0} may not be modified", this.CommandId));
+			}
+
+			Collections.ShortcutCollection shortcuts = Shortcut.GetShortcuts (this.caption);
+
+			shortcuts.Clear ();
+
+			if ((value != null) &&
+				(value.Count > 0))
+			{
+				shortcuts.AddRange (value);
+			}
+		}
+
+		public void DefineMultiCommands(Collections.CommandCollection value)
+		{
+			if (this.locked)
+			{
+				throw new Exceptions.CommandLockedException (this.CommandId);
+			}
+			if (this.temporary == false)
+			{
+				throw new System.InvalidOperationException (string.Format ("Command {0} may not be modified", this.CommandId));
+			}
+
+			Collections.CommandCollection commands = MultiCommand.GetCommands (this.caption);
+
+			commands.Clear ();
+
+			if ((value != null) &&
+				(value.Count > 0))
+			{
+				commands.AddRange (value);
+			}
 		}
 
 		public CommandState CreateDefaultState(CommandContext context)
@@ -541,6 +629,11 @@ namespace Epsitec.Common.Widgets
 
 		internal void Lockdown()
 		{
+			if (this.temporary)
+			{
+				throw new System.InvalidOperationException (string.Format ("Temporary command {0} may not be locked", this.CommandId));
+			}
+			
 			this.locked = true;
 		}
 		
@@ -666,6 +759,7 @@ namespace Epsitec.Common.Widgets
 		private DependencyObjectType			stateObjectType;
 		private int								uniqueId;
 		private bool							locked;
+		private bool							temporary;
 		
 		private string							commandId;
 		private long							captionId = -1;
