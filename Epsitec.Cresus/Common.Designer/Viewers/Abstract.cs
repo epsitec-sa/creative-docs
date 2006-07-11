@@ -272,7 +272,7 @@ namespace Epsitec.Common.Designer.Viewers
 		protected bool IsExistingName(string baseName)
 		{
 			//	Indique si un nom existe.
-			ResourceBundleCollection bundles = this.module.Bundles(this.BundleType);
+			ResourceBundleCollection bundles = this.module.GetBundles(this.BundleType);
 			ResourceBundle defaultBundle = bundles[ResourceLevel.Default];
 
 			ResourceBundle.Field field = defaultBundle[baseName];
@@ -282,7 +282,7 @@ namespace Epsitec.Common.Designer.Viewers
 		protected string GetDuplicateName(string baseName)
 		{
 			//	Retourne le nom à utiliser lorsqu'un nom existant est dupliqué.
-			ResourceBundleCollection bundles = this.module.Bundles(this.BundleType);
+			ResourceBundleCollection bundles = this.module.GetBundles(this.BundleType);
 
 			int numberLength = 0;
 			while (baseName.Length > 0)

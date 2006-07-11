@@ -48,14 +48,11 @@ namespace Epsitec.Common.Designer.Viewers
 			splitter.Dock = DockStyle.Left;
 			VSplitter.SetAutoCollapseEnable(left, true);
 
-			ResourceBundleCollection bundles = this.module.Bundles(Module.BundleType.Captions);
-			if (bundles != null)
-			{
-				this.primaryBundle = bundles[ResourceLevel.Default];
+			ResourceBundleCollection bundles = this.module.GetBundles(Module.BundleType.Captions);
+			this.primaryBundle = bundles[ResourceLevel.Default];
 
-				this.UpdateDruidsIndex("", Searcher.SearchingMode.None);
-				this.UpdateArray();
-			}
+			this.UpdateDruidsIndex("", Searcher.SearchingMode.None);
+			this.UpdateArray();
 		}
 
 		protected override void Dispose(bool disposing)

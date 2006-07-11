@@ -616,7 +616,7 @@ namespace Epsitec.Common.Designer.Viewers
 		protected void UpdateCultures()
 		{
 			//	Met à jour les widgets pour les cultures.
-			ResourceBundleCollection bundles = this.module.Bundles(Module.BundleType.Strings);
+			ResourceBundleCollection bundles = this.module.GetBundles(Module.BundleType.Strings);
 
 			if (this.secondaryCultures != null)
 			{
@@ -698,7 +698,7 @@ namespace Epsitec.Common.Designer.Viewers
 		protected void UpdateSelectedCulture(string name)
 		{
 			//	Sélectionne le widget correspondant à la culture secondaire.
-			ResourceBundleCollection bundles = this.module.Bundles(Module.BundleType.Strings);
+			ResourceBundleCollection bundles = this.module.GetBundles(Module.BundleType.Strings);
 
 			this.secondaryBundle = this.module.GetCulture(name, Module.BundleType.Strings);
 			if (this.secondaryCultures == null)  return;
@@ -839,7 +839,7 @@ namespace Epsitec.Common.Designer.Viewers
 				druid = this.druidsIndex[sel];
 			}
 
-			ResourceBundle defaultBundle = this.module.Bundles(Module.BundleType.Strings)[ResourceLevel.Default];
+			ResourceBundle defaultBundle = this.module.GetBundles(Module.BundleType.Strings)[ResourceLevel.Default];
 
 			for (int i=0; i<this.secondaryModifiers.Length; i++)
 			{
@@ -956,7 +956,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			bool search = this.module.MainWindow.DialogSearch.IsActionsEnabled;
 			
-			bool newCulture = (this.module.Bundles(Module.BundleType.Strings).Count < Misc.Cultures.Length);
+			bool newCulture = (this.module.GetBundles(Module.BundleType.Strings).Count < Misc.Cultures.Length);
 
 			this.GetCommandState("NewCulture").Enable = newCulture;
 			this.GetCommandState("DeleteCulture").Enable = true;
@@ -1037,7 +1037,7 @@ namespace Epsitec.Common.Designer.Viewers
 				}
 				else
 				{
-					ResourceBundleCollection bundles = this.module.Bundles(Module.BundleType.Strings);
+					ResourceBundleCollection bundles = this.module.GetBundles(Module.BundleType.Strings);
 					ResourceBundle bundle = bundles[ResourceLevel.Default];
 					ResourceBundle.Field field = bundle[this.druidsIndex[sel]];
 
