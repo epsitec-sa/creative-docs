@@ -234,9 +234,7 @@ namespace Epsitec.Common.Designer.Viewers
 			ResourceBundle bundle = this.module.NewCulture(name, Module.BundleType.Captions);
 
 			this.UpdateCultures();
-			this.UpdateArray();
-			this.UpdateClientGeometry();
-			this.UpdateCommands();
+			this.Update();
 			this.module.Modifier.IsDirty = true;
 		}
 
@@ -256,7 +254,6 @@ namespace Epsitec.Common.Designer.Viewers
 				this.UpdateSelectedCulture(Misc.CultureName(this.secondaryBundle.Culture));
 			}
 			this.UpdateArray();
-			this.UpdateClientGeometry();
 			this.UpdateCommands();
 			this.module.Modifier.IsDirty = true;
 #endif
@@ -327,6 +324,8 @@ namespace Epsitec.Common.Designer.Viewers
 				sel = -1;
 			}
 
+			this.secondaryDescription.Visibility = (this.secondaryBundle != null);
+
 			if (sel == -1)
 			{
 				this.primaryDescription.Enable = false;
@@ -338,10 +337,13 @@ namespace Epsitec.Common.Designer.Viewers
 			else
 			{
 				this.primaryDescription.Enable = true;
+				this.secondaryDescription.Enable = true;
 
 				Druid druid = this.druidsIndex[sel];
 				ResourceBundle.Field field = this.primaryBundle[druid];
+
 				this.primaryDescription.Text = "";
+				this.secondaryDescription.Text = "";
 			}
 		}
 
