@@ -238,7 +238,7 @@ namespace Epsitec.Common.Designer.Viewers
 					this.array.SetLineString(0, searcher.Row, text);
 				}
 
-				if (searcher.Field == 1)
+				if (searcher.Field == 1 && this.secondaryBundle != null)
 				{
 					text = this.primaryBundle[druid].AsString;
 					text = text.Remove(searcher.Index, searcher.Length);
@@ -248,7 +248,7 @@ namespace Epsitec.Common.Designer.Viewers
 					this.UpdateArrayField(1, searcher.Row, this.primaryBundle[druid], this.secondaryBundle[druid]);
 				}
 
-				if (searcher.Field == 2)
+				if (searcher.Field == 2 && this.secondaryBundle != null)
 				{
 					text = this.secondaryBundle[druid].AsString;
 					text = text.Remove(searcher.Index, searcher.Length);
@@ -266,7 +266,7 @@ namespace Epsitec.Common.Designer.Viewers
 					this.primaryBundle[druid].SetAbout(text);
 				}
 
-				if (searcher.Field == 4)
+				if (searcher.Field == 4 && this.secondaryBundle != null)
 				{
 					text = this.secondaryBundle[druid].About;
 					text = text.Remove(searcher.Index, searcher.Length);
@@ -340,7 +340,7 @@ namespace Epsitec.Common.Designer.Viewers
 					this.primaryBundle[druid].SetStringValue(text);
 				}
 
-				if (searcher.Field == 2)
+				if (searcher.Field == 2 && this.secondaryBundle != null)
 				{
 					text = this.secondaryBundle[druid].AsString;
 					text = text.Remove(searcher.Index, searcher.Length);
@@ -356,7 +356,7 @@ namespace Epsitec.Common.Designer.Viewers
 					this.primaryBundle[druid].SetAbout(text);
 				}
 
-				if (searcher.Field == 4)
+				if (searcher.Field == 4 && this.secondaryBundle != null)
 				{
 					text = this.secondaryBundle[druid].About;
 					text = text.Remove(searcher.Index, searcher.Length);
@@ -401,7 +401,7 @@ namespace Epsitec.Common.Designer.Viewers
 				this.UpdateCommands();
 				this.module.Modifier.IsDirty = true;
 			}
-			else if (name == "ModificationClear")
+			else if (name == "ModificationClear" && this.secondaryBundle != null)
 			{
 				if (sel == -1)  return;
 				Druid druid = this.druidsIndex[sel];
@@ -415,7 +415,7 @@ namespace Epsitec.Common.Designer.Viewers
 				this.UpdateCommands();
 				this.module.Modifier.IsDirty = true;
 			}
-			else
+			else if (this.secondaryBundle != null)
 			{
 				if (sel == -1)
 				{
@@ -768,13 +768,22 @@ namespace Epsitec.Common.Designer.Viewers
 			{
 				if (first+i < this.druidsIndex.Count)
 				{
-					ResourceBundle.Field primaryField   = this.primaryBundle[this.druidsIndex[first+i]];
-					ResourceBundle.Field secondaryField = this.secondaryBundle[this.druidsIndex[first+i]];
+					ResourceBundle.Field primaryField = this.primaryBundle[this.druidsIndex[first+i]];
+					ResourceBundle.Field secondaryField = (this.secondaryBundle == null) ? null : this.secondaryBundle[this.druidsIndex[first+i]];
 
 					this.array.SetLineString(0, first+i, primaryField.Name);
 					this.array.SetLineState(0, first+i, MyWidgets.StringList.CellState.Normal);
 					this.UpdateArrayField(1, first+i, primaryField, secondaryField);
-					this.UpdateArrayField(2, first+i, secondaryField, primaryField);
+
+					if (this.secondaryBundle == null)
+					{
+						this.array.SetLineString(2, first+i, "");
+						this.array.SetLineState(2, first+i, MyWidgets.StringList.CellState.Disabled);
+					}
+					else
+					{
+						this.UpdateArrayField(2, first+i, secondaryField, primaryField);
+					}
 				}
 				else
 				{
@@ -895,19 +904,28 @@ namespace Epsitec.Common.Designer.Viewers
 			{
 				this.labelEdit.Enable = true;
 				this.primaryEdit.Enable = true;
-				this.secondaryEdit.Enable = true;
 				this.primaryAbout.Enable = true;
-				this.secondaryAbout.Enable = true;
 
 				Druid druid = this.druidsIndex[sel];
 
 				this.SetTextField(this.labelEdit, this.primaryBundle[druid].Name);
-
 				this.SetTextField(this.primaryEdit, this.primaryBundle[druid].AsString);
-				this.SetTextField(this.secondaryEdit, this.secondaryBundle[druid].AsString);
-
 				this.SetTextField(this.primaryAbout, this.primaryBundle[druid].About);
-				this.SetTextField(this.secondaryAbout, this.secondaryBundle[druid].About);
+
+				if (this.secondaryBundle == null)
+				{
+					this.secondaryEdit.Enable = false;
+					this.secondaryAbout.Enable = false;
+					this.secondaryEdit.Text = "";
+					this.secondaryAbout.Text = "";
+				}
+				else
+				{
+					this.secondaryEdit.Enable = true;
+					this.secondaryAbout.Enable = true;
+					this.SetTextField(this.secondaryEdit, this.secondaryBundle[druid].AsString);
+					this.SetTextField(this.secondaryAbout, this.secondaryBundle[druid].About);
+				}
 
 				AbstractTextField edit = null;
 				if (column == 0)  edit = this.labelEdit;
@@ -942,7 +960,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			bool all = false;
 			bool modified = false;
-			if (sel != -1)
+			if (sel != -1 && this.secondaryBundle != null)
 			{
 				Druid druid = this.druidsIndex[sel];
 				all = this.module.Modifier.IsModificationAll(Module.BundleType.Strings, druid);
@@ -1241,10 +1259,10 @@ namespace Epsitec.Common.Designer.Viewers
 			if (edit == this.primaryEdit)
 			{
 				this.primaryBundle[druid].SetStringValue(text);
-				this.UpdateArrayField(1, sel, this.primaryBundle[druid], this.secondaryBundle[druid]);
+				this.UpdateArrayField(1, sel, this.primaryBundle[druid], (this.secondaryBundle == null) ? null : this.secondaryBundle[druid]);
 			}
 
-			if (edit == this.secondaryEdit)
+			if (edit == this.secondaryEdit && this.secondaryBundle != null)
 			{
 				this.module.Modifier.CreateIfNecessary(Module.BundleType.Strings, this.secondaryBundle, druid);
 				this.secondaryBundle[druid].SetStringValue(text);
@@ -1256,7 +1274,7 @@ namespace Epsitec.Common.Designer.Viewers
 				this.primaryBundle[druid].SetAbout(text);
 			}
 
-			if (edit == this.secondaryAbout)
+			if (edit == this.secondaryAbout && this.secondaryBundle != null)
 			{
 				this.module.Modifier.CreateIfNecessary(Module.BundleType.Strings, this.secondaryBundle, druid);
 				this.secondaryBundle[druid].SetAbout(text);
