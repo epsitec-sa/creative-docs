@@ -106,11 +106,15 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryDescription.PreferredHeight = 100;
 			this.primaryDescription.Margins = new Margins(10, 0, 10, 10);
 			this.primaryDescription.Dock = DockStyle.StackBegin;
+			this.primaryDescription.TextChanged += new EventHandler(this.HandleTextChanged);
+			this.primaryDescription.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
 
 			this.secondaryDescription = new TextFieldMulti(rightContainer);
 			this.secondaryDescription.PreferredHeight = 100;
 			this.secondaryDescription.Margins = new Margins(0, 10, 10, 10);
 			this.secondaryDescription.Dock = DockStyle.StackBegin;
+			this.secondaryDescription.TextChanged += new EventHandler(this.HandleTextChanged);
+			this.secondaryDescription.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
 
 
 
@@ -129,6 +133,12 @@ namespace Epsitec.Common.Designer.Viewers
 
 				this.labelEdit.EditionAccepted -= new EventHandler(this.HandleTextChanged);
 				this.labelEdit.KeyboardFocusChanged -= new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
+
+				this.primaryDescription.TextChanged -= new EventHandler(this.HandleTextChanged);
+				this.primaryDescription.KeyboardFocusChanged -= new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
+
+				this.secondaryDescription.TextChanged -= new EventHandler(this.HandleTextChanged);
+				this.secondaryDescription.KeyboardFocusChanged -= new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
 			}
 
 			base.Dispose(disposing);
@@ -243,10 +253,12 @@ namespace Epsitec.Common.Designer.Viewers
 		public override void DoDeleteCulture()
 		{
 			//	Supprime la culture courante.
+			//	TODO: pourquoi ça plante ?
 #if false
 			string question = string.Format(Res.Strings.Dialog.DeleteCulture.Question, Misc.CultureName(this.secondaryBundle.Culture));
 			Common.Dialogs.DialogResult result = this.module.MainWindow.DialogQuestion(question);
 			if ( result != Epsitec.Common.Dialogs.DialogResult.Yes )  return;
+#endif
 
 			this.module.DeleteCulture(this.secondaryBundle, Module.BundleType.Captions);
 
@@ -255,10 +267,8 @@ namespace Epsitec.Common.Designer.Viewers
 			{
 				this.UpdateSelectedCulture(Misc.CultureName(this.secondaryBundle.Culture));
 			}
-			this.UpdateArray();
-			this.UpdateCommands();
+			this.Update();
 			this.module.Modifier.IsDirty = true;
-#endif
 		}
 
 		public override void DoClipboard(string name)
@@ -760,6 +770,16 @@ namespace Epsitec.Common.Designer.Viewers
 
 				this.module.Modifier.Rename(Module.BundleType.Captions, druid, Captions.AddFilter(text));
 				this.array.SetLineString(0, sel, text);
+			}
+
+			if (edit == this.primaryDescription)
+			{
+				//	TODO:
+			}
+
+			if (edit == this.secondaryDescription)
+			{
+				//	TODO:
 			}
 
 			this.module.Modifier.IsDirty = true;
