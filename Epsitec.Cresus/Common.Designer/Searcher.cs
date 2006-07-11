@@ -339,7 +339,7 @@ namespace Epsitec.Common.Designer
 					return this.primaryBundle[druid].AsString;
 				}
 
-				if (this.current.Field == 2 && (this.mode&SearchingMode.SearchInSecondaryText) != 0)
+				if (this.current.Field == 2 && (this.mode&SearchingMode.SearchInSecondaryText) != 0 && this.secondaryBundle != null)
 				{
 					return this.secondaryBundle[druid].AsString;
 				}
@@ -349,7 +349,7 @@ namespace Epsitec.Common.Designer
 					return this.primaryBundle[druid].About;
 				}
 
-				if (this.current.Field == 4 && (this.mode&SearchingMode.SearchInSecondaryAbout) != 0)
+				if (this.current.Field == 4 && (this.mode&SearchingMode.SearchInSecondaryAbout) != 0 && this.secondaryBundle != null)
 				{
 					return this.secondaryBundle[druid].About;
 				}
