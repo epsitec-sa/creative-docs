@@ -303,7 +303,7 @@ namespace Epsitec.Common.Designer
 			if ( mi != null )
 			{
 				Module.BundleType type = mi.Module.Modifier.ActiveBundleType;
-				ResourceBundleCollection bundles = mi.Module.Bundles(type);
+				ResourceBundleCollection bundles = mi.Module.GetBundles(type);
 
 				if (bundles != null)
 				{
@@ -375,8 +375,7 @@ namespace Epsitec.Common.Designer
 		[Command("Save")]
 		void CommandSave(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.CurrentModule.Modifier.Save(Module.BundleType.Strings);
-			this.CurrentModule.Modifier.Save(Module.BundleType.Captions);
+			this.CurrentModule.Modifier.Save();
 		}
 
 		[Command("Close")]

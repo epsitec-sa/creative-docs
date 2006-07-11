@@ -31,10 +31,10 @@ namespace Epsitec.Common.Designer
 			this.resourceManager.DefineDefaultModuleName(this.name);
 			this.resourceManager.ActivePrefix = resourcePrefix;
 
+			this.modifier = new Modifier(this);
+
 			this.UpdateBundles(BundleType.Strings);
 			this.UpdateBundles(BundleType.Captions);
-
-			this.modifier = new Modifier(this);
 		}
 
 		public void Dispose()
@@ -95,7 +95,7 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		public ResourceBundleCollection Bundles(BundleType type)
+		public ResourceBundleCollection GetBundles(BundleType type)
 		{
 			//	Retourne la liste des bundles des différentes cultures.
 			switch (type)
@@ -110,10 +110,25 @@ namespace Epsitec.Common.Designer
 			return null;
 		}
 
+		public void SetBundles(BundleType type, ResourceBundleCollection bundles)
+		{
+			//	Modifie la liste des bundles des différentes cultures.
+			switch (type)
+			{
+				case BundleType.Strings:
+					this.strings = bundles;
+					break;
+
+				case BundleType.Captions:
+					this.captions = bundles;
+					break;
+			}
+		}
+
 		public ResourceBundle GetCulture(string name, BundleType type)
 		{
 			//	Cherche le bundle d'une culture.
-			ResourceBundleCollection bundles = this.Bundles(type);
+			ResourceBundleCollection bundles = this.GetBundles(type);
 
 			for (int b=0; b<bundles.Count; b++)
 			{
@@ -126,7 +141,7 @@ namespace Epsitec.Common.Designer
 		public bool IsExistingCulture(string name, BundleType type)
 		{
 			//	Indique si une culture donnée existe.
-			ResourceBundleCollection bundles = this.Bundles(type);
+			ResourceBundleCollection bundles = this.GetBundles(type);
 
 			for (int b=0; b<bundles.Count; b++)
 			{
@@ -139,7 +154,7 @@ namespace Epsitec.Common.Designer
 		public ResourceBundle NewCulture(string name, BundleType type)
 		{
 			//	Crée un nouveau bundle pour une culture donnée.
-			ResourceBundleCollection bundles = this.Bundles(type);
+			ResourceBundleCollection bundles = this.GetBundles(type);
 
 			string prefix = this.resourceManager.ActivePrefix;
 			System.Globalization.CultureInfo culture = Resources.FindSpecificCultureInfo(name);
@@ -170,22 +185,26 @@ namespace Epsitec.Common.Designer
 				System.Globalization.CultureInfo culture = this.BaseCulture(type);
 				ResourceBundle bundle = ResourceBundle.Create(this.resourceManager, prefix, Module.BundlesName(type, true), ResourceLevel.Default, culture);
 				bundle.DefineType(Module.BundlesName(type, false));
+
+				int moduleId = bundle.Module.Id;
+				int developerId = 0;  // [PA] provisoire
+				int localId = 0;
+				Druid newDruid = new Druid(moduleId, developerId, localId);
+
+				ResourceBundle.Field newField = bundle.CreateField(ResourceFieldType.Data);
+				newField.SetDruid(newDruid);
+				newField.SetName(Res.Strings.Viewers.Panels.New);
+				newField.SetStringValue("");
+				bundle.Add(newField);
+
 				this.resourceManager.SetBundle(bundle, ResourceSetMode.CreateOnly);
+				ids = this.resourceManager.GetBundleIds("*", Module.BundlesName(type, false), ResourceLevel.Default);
+				System.Diagnostics.Debug.Assert(ids.Length != 0);
 			}
 
 			ResourceBundleCollection bundles = new ResourceBundleCollection(this.resourceManager);
 			bundles.LoadBundles(this.resourceManager.ActivePrefix, this.resourceManager.GetBundleIds(ids[0], ResourceLevel.All));
-
-			switch (type)
-			{
-				case BundleType.Strings:
-					this.strings = bundles;
-					break;
-
-				case BundleType.Captions:
-					this.captions = bundles;
-					break;
-			}
+			this.SetBundles(type, bundles);
 		}
 
 		protected static string BundlesName(BundleType type, bool many)
@@ -460,9 +479,16 @@ namespace Epsitec.Common.Designer
 		protected System.Globalization.CultureInfo BaseCulture(BundleType type)
 		{
 			//	Retourne la culture de base, définie par les ressources "Strings" ou "Captions".
-			ResourceBundleCollection bundles = this.Bundles(type);
-			ResourceBundle res = bundles[ResourceLevel.Default];
-			return res.Culture;
+			ResourceBundleCollection bundles = this.GetBundles(type);
+			if (bundles == null)
+			{
+				return new System.Globalization.CultureInfo(Misc.ProperName(Misc.Cultures[0]));
+			}
+			else
+			{
+				ResourceBundle res = bundles[ResourceLevel.Default];
+				return res.Culture;
+			}
 		}
 
 

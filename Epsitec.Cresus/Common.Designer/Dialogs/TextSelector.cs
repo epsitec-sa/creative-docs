@@ -197,7 +197,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			//	Construit l'index en fonction des ressources.
 			//	Retourne le rang de la ressource correspondant le mieux possible aux filtres.
 			Module.BundleType type = this.mainWindow.CurrentModule.Modifier.ActiveBundleType;
-			ResourceBundleCollection bundles = this.mainWindow.CurrentModule.Bundles(type);
+			ResourceBundleCollection bundles = this.mainWindow.CurrentModule.GetBundles(type);
 			this.primaryBundle = bundles[ResourceLevel.Merged];
 			ResourceBundle defaultBundle = bundles[ResourceLevel.Default];
 			this.isDefaultBundle = (Misc.CultureBaseName(this.primaryBundle.Culture) == Misc.CultureBaseName(defaultBundle.Culture));
@@ -339,7 +339,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		{
 			//	Indique si un nom existe.
 			Module.BundleType type = this.mainWindow.CurrentModule.Modifier.ActiveBundleType;
-			ResourceBundleCollection bundles = this.mainWindow.CurrentModule.Bundles(type);
+			ResourceBundleCollection bundles = this.mainWindow.CurrentModule.GetBundles(type);
 			ResourceBundle defaultBundle = bundles[ResourceLevel.Default];
 
 			ResourceBundle.Field field = defaultBundle[baseName];
