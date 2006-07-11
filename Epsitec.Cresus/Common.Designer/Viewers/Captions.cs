@@ -71,13 +71,15 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryCulture.AutoFocus = false;
 			this.primaryCulture.TabIndex = tabIndex++;
 			this.primaryCulture.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			this.primaryCulture.Padding = new Margins(0, 1, 0, 0);
+			this.primaryCulture.Padding = new Margins(0, 5, 0, 0);  // (*)
 			this.primaryCulture.Dock = DockStyle.StackFill;
 
 			this.secondaryCulture = new Widget(sup);
-			this.secondaryCulture.Padding = new Margins(1, 0, 0, 0);
+			this.secondaryCulture.Padding = new Margins(5, 0, 0, 0);  // (*)
 			this.secondaryCulture.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
 			this.secondaryCulture.Dock = DockStyle.StackFill;
+
+			//	TODO: Pourquoi une seule marge de 5 est-elle visible ???
 
 			//	Crée la partie droite, bande inférieure pour la zone d'étition scrollable.
 			this.scrollable = new Scrollable(right);
@@ -94,20 +96,22 @@ namespace Epsitec.Common.Designer.Viewers
 
 			Widget leftContainer = new Widget(this.scrollable.Panel);
 			leftContainer.MinWidth = 100;
+			leftContainer.Padding = new Margins(0, 5, 0, 0);
 			leftContainer.Dock = DockStyle.StackFill;
 
 			Widget rightContainer = new Widget(this.scrollable.Panel);
 			rightContainer.MinWidth = 100;
+			rightContainer.Padding = new Margins(5, 0, 0, 0);
 			rightContainer.Dock = DockStyle.StackFill;
 
 			this.primaryDescription = new TextFieldMulti(leftContainer);
 			this.primaryDescription.PreferredHeight = 100;
-			this.primaryDescription.Margins = new Margins(10, 1, 10, 10);
+			this.primaryDescription.Margins = new Margins(10, 0, 10, 10);
 			this.primaryDescription.Dock = DockStyle.StackBegin;
 
 			this.secondaryDescription = new TextFieldMulti(rightContainer);
 			this.secondaryDescription.PreferredHeight = 100;
-			this.secondaryDescription.Margins = new Margins(1, 10, 10, 10);
+			this.secondaryDescription.Margins = new Margins(0, 10, 10, 10);
 			this.secondaryDescription.Dock = DockStyle.StackBegin;
 
 
