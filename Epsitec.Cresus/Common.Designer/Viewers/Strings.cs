@@ -1274,37 +1274,6 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
-		#region CultureInfo
-		public class CultureInfo
-		{
-			public CultureInfo(System.Globalization.CultureInfo culture)
-			{
-				this.name = Misc.CultureName(culture);
-				this.tooltip = Misc.CultureLongName(culture);
-			}
-
-			public string Name
-			{
-				get
-				{
-					return this.name;
-				}
-			}
-
-			public string Tooltip
-			{
-				get
-				{
-					return this.tooltip;
-				}
-			}
-
-			protected string			name;
-			protected string			tooltip;
-		}
-		#endregion
-
-
 		protected bool						lastActionIsReplace = false;
 
 		protected IconButtonMark			primaryCulture;
