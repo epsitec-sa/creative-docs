@@ -15,6 +15,7 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			int tabIndex = 0;
 
+			//	Crée les 2 parties gauche/droite séparées par un splitter.
 			Widget left = new Widget(this);
 			left.MinWidth = 80;
 			left.MaxWidth = 400;
@@ -22,6 +23,16 @@ namespace Epsitec.Common.Designer.Viewers
 			left.Dock = DockStyle.Left;
 			left.Padding = new Margins(10, 10, 10, 10);
 
+			VSplitter splitter = new VSplitter(this);
+			splitter.Dock = DockStyle.Left;
+			VSplitter.SetAutoCollapseEnable(left, true);
+
+			Widget right = new Widget(this);
+			right.MinWidth = 200;
+			right.Dock = DockStyle.Fill;
+			right.Padding = new Margins(1, 1, 1, 1);
+			
+			//	Crée la partie gauche.			
 			this.labelEdit = new TextFieldEx(left);
 			this.labelEdit.Name = "LabelEdit";
 			this.labelEdit.Margins = new Margins(0, 0, 10, 0);
@@ -44,15 +55,66 @@ namespace Epsitec.Common.Designer.Viewers
 			this.array.TabIndex = tabIndex++;
 			this.array.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
-			VSplitter splitter = new VSplitter(this);
-			splitter.Dock = DockStyle.Left;
-			VSplitter.SetAutoCollapseEnable(left, true);
+			//	Crée la partie droite, bande supérieure pour les boutons des cultures.
+			Widget sup = new Widget(right);
+			sup.PreferredHeight = 40;
+			sup.Padding = new Margins(11, 27, 10, 0);
+			sup.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
+			sup.Dock = DockStyle.Top;
 
-			ResourceBundleCollection bundles = this.module.GetBundles(Module.BundleType.Captions);
-			this.primaryBundle = bundles[ResourceLevel.Default];
+			this.primaryCulture = new IconButtonMark(sup);
+			this.primaryCulture.ButtonStyle = ButtonStyle.ActivableIcon;
+			this.primaryCulture.SiteMark = SiteMark.OnBottom;
+			this.primaryCulture.MarkDimension = 10;
+			this.primaryCulture.PreferredHeight = 35;
+			this.primaryCulture.ActiveState = ActiveState.Yes;
+			this.primaryCulture.AutoFocus = false;
+			this.primaryCulture.TabIndex = tabIndex++;
+			this.primaryCulture.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.primaryCulture.Padding = new Margins(0, 1, 0, 0);
+			this.primaryCulture.Dock = DockStyle.StackFill;
 
-			this.UpdateDruidsIndex("", Searcher.SearchingMode.None);
-			this.UpdateArray();
+			this.secondaryCulture = new Widget(sup);
+			this.secondaryCulture.Padding = new Margins(1, 0, 0, 0);
+			this.secondaryCulture.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
+			this.secondaryCulture.Dock = DockStyle.StackFill;
+
+			//	Crée la partie droite, bande inférieure pour la zone d'étition scrollable.
+			this.scrollable = new Scrollable(right);
+			this.scrollable.MinWidth = 100;
+			this.scrollable.MinHeight = 100;
+			this.scrollable.Margins = new Margins(1, 1, 1, 1);
+			this.scrollable.Dock = DockStyle.Fill;
+			this.scrollable.HorizontalScrollerMode = ScrollableScrollerMode.HideAlways;
+			this.scrollable.VerticalScrollerMode = ScrollableScrollerMode.ShowAlways;
+			this.scrollable.Panel.IsAutoFitting = true;
+			this.scrollable.IsForegroundFrame = true;
+
+			this.scrollable.Panel.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
+
+			Widget leftContainer = new Widget(this.scrollable.Panel);
+			leftContainer.MinWidth = 100;
+			leftContainer.Dock = DockStyle.StackFill;
+
+			Widget rightContainer = new Widget(this.scrollable.Panel);
+			rightContainer.MinWidth = 100;
+			rightContainer.Dock = DockStyle.StackFill;
+
+			this.primaryDescription = new TextFieldMulti(leftContainer);
+			this.primaryDescription.PreferredHeight = 100;
+			this.primaryDescription.Margins = new Margins(10, 1, 10, 10);
+			this.primaryDescription.Dock = DockStyle.StackBegin;
+
+			this.secondaryDescription = new TextFieldMulti(rightContainer);
+			this.secondaryDescription.PreferredHeight = 100;
+			this.secondaryDescription.Margins = new Margins(1, 10, 10, 10);
+			this.secondaryDescription.Dock = DockStyle.StackBegin;
+
+
+
+
+			this.UpdateCultures();
+			this.Update();
 		}
 
 		protected override void Dispose(bool disposing)
@@ -171,6 +233,7 @@ namespace Epsitec.Common.Designer.Viewers
 			if ( name == null )  return;
 			ResourceBundle bundle = this.module.NewCulture(name, Module.BundleType.Captions);
 
+			this.UpdateCultures();
 			this.UpdateArray();
 			this.UpdateClientGeometry();
 			this.UpdateCommands();
@@ -215,6 +278,7 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Met à jour le contenu du Viewer.
 			this.UpdateArray();
 			this.UpdateEdit();
+			this.UpdateCaption();
 			this.UpdateCommands();
 		}
 
@@ -254,6 +318,33 @@ namespace Epsitec.Common.Designer.Viewers
 			this.UpdateCommands();
 		}
 
+		protected void UpdateCaption()
+		{
+			int sel = this.array.SelectedRow;
+
+			if (sel >= this.druidsIndex.Count)
+			{
+				sel = -1;
+			}
+
+			if (sel == -1)
+			{
+				this.primaryDescription.Enable = false;
+				this.primaryDescription.Text = "";
+
+				this.secondaryDescription.Enable = false;
+				this.secondaryDescription.Text = "";
+			}
+			else
+			{
+				this.primaryDescription.Enable = true;
+
+				Druid druid = this.druidsIndex[sel];
+				ResourceBundle.Field field = this.primaryBundle[druid];
+				this.primaryDescription.Text = "";
+			}
+		}
+
 		public override void UpdateCommands()
 		{
 			//	Met à jour les commandes en fonction de la ressource sélectionnée.
@@ -262,9 +353,10 @@ namespace Epsitec.Common.Designer.Viewers
 			int sel = this.array.SelectedRow;
 			int count = this.druidsIndex.Count;
 			bool build = (this.module.Mode == DesignerMode.Build);
+			bool newCulture = (this.module.GetBundles(Module.BundleType.Captions).Count < Misc.Cultures.Length);
 
-			this.GetCommandState("NewCulture").Enable = false;
-			this.GetCommandState("DeleteCulture").Enable = false;
+			this.GetCommandState("NewCulture").Enable = newCulture;
+			this.GetCommandState("DeleteCulture").Enable = true;
 
 			this.GetCommandState("Search").Enable = false;
 			this.GetCommandState("SearchPrev").Enable = false;
@@ -327,6 +419,94 @@ namespace Epsitec.Common.Designer.Viewers
 			this.module.MainWindow.UpdateInfoViewer();
 		}
 
+
+		protected void UpdateCultures()
+		{
+			//	Met à jour les widgets pour les cultures.
+			ResourceBundleCollection bundles = this.module.GetBundles(Module.BundleType.Captions);
+
+			if (this.secondaryCultures != null)
+			{
+				foreach (IconButtonMark button in this.secondaryCultures)
+				{
+					button.Clicked -= new MessageEventHandler(this.HandleSecondaryCultureClicked);
+					button.Dispose();
+				}
+				this.secondaryCultures = null;
+			}
+
+			this.primaryBundle = bundles[ResourceLevel.Default];
+			this.primaryCulture.Text = string.Format(Res.Strings.Viewers.Strings.Reference, Misc.CultureName(this.primaryBundle.Culture));
+
+			this.secondaryBundle = null;
+
+			if (bundles.Count-1 > 0)
+			{
+				List<CultureInfo> list = new List<CultureInfo>();
+
+				for (int b=0; b<bundles.Count; b++)
+				{
+					ResourceBundle bundle = bundles[b];
+					if (bundle != this.primaryBundle)
+					{
+						CultureInfo info = new CultureInfo(bundle.Culture);
+						list.Add(info);
+
+						if (this.secondaryBundle == null)
+						{
+							this.secondaryBundle = bundle;
+						}
+					}
+				}
+
+				list.Sort(new Comparers.CultureName());
+				
+				this.secondaryCultures = new IconButtonMark[list.Count];
+				for (int i=0; i<list.Count; i++)
+				{
+					this.secondaryCultures[i] = new IconButtonMark(this.secondaryCulture);
+					this.secondaryCultures[i].ButtonStyle = ButtonStyle.ActivableIcon;
+					this.secondaryCultures[i].SiteMark = SiteMark.OnBottom;
+					this.secondaryCultures[i].MarkDimension = 10;
+					this.secondaryCultures[i].PreferredHeight = 35;
+					this.secondaryCultures[i].Name = list[i].Name;
+					this.secondaryCultures[i].Text = list[i].Name;
+					this.secondaryCultures[i].AutoFocus = false;
+					this.secondaryCultures[i].Margins = new Margins(0, (i==list.Count-1)?1:0, 0, 0);
+					this.secondaryCultures[i].Dock = DockStyle.StackFill;
+					this.secondaryCultures[i].Clicked += new MessageEventHandler(this.HandleSecondaryCultureClicked);
+					ToolTip.Default.SetToolTip(this.secondaryCultures[i], list[i].Tooltip);
+				}
+			}
+
+			if (this.secondaryBundle != null)
+			{
+				this.UpdateSelectedCulture(Misc.CultureName(this.secondaryBundle.Culture));
+			}
+
+			this.UpdateDruidsIndex("", Searcher.SearchingMode.None);
+		}
+
+		protected void UpdateSelectedCulture(string name)
+		{
+			//	Sélectionne le widget correspondant à la culture secondaire.
+			ResourceBundleCollection bundles = this.module.GetBundles(Module.BundleType.Captions);
+
+			this.secondaryBundle = this.module.GetCulture(name, Module.BundleType.Captions);
+			if (this.secondaryCultures == null)  return;
+
+			for (int i=0; i<this.secondaryCultures.Length; i++)
+			{
+				if (this.secondaryCultures[i].Name == name)
+				{
+					this.secondaryCultures[i].ActiveState = ActiveState.Yes;
+				}
+				else
+				{
+					this.secondaryCultures[i].ActiveState = ActiveState.No;
+				}
+			}
+		}
 
 		protected override void UpdateDruidsIndex(string filter, Searcher.SearchingMode mode)
 		{
@@ -445,6 +625,17 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			//	La ligne sélectionnée a changé.
 			this.UpdateEdit();
+			this.UpdateCaption();
+			this.UpdateCommands();
+		}
+
+		void HandleSecondaryCultureClicked(object sender, MessageEventArgs e)
+		{
+			//	Un bouton pour changer de culture secondaire a été cliqué.
+			IconButtonMark button = sender as IconButtonMark;
+			this.UpdateSelectedCulture(button.Name);
+			this.UpdateArray();
+			this.UpdateEdit();
 			this.UpdateCommands();
 		}
 
@@ -500,7 +691,14 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
+		protected IconButtonMark			primaryCulture;
+		protected Widget					secondaryCulture;
+		protected IconButtonMark[]			secondaryCultures;
 		protected ResourceBundle			primaryBundle;
+		protected ResourceBundle			secondaryBundle;
 		protected TextFieldEx				labelEdit;
+		protected Scrollable				scrollable;
+		protected TextFieldMulti			primaryDescription;
+		protected TextFieldMulti			secondaryDescription;
 	}
 }
