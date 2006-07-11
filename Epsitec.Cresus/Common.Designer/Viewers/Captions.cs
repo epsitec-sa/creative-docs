@@ -340,13 +340,15 @@ namespace Epsitec.Common.Designer.Viewers
 
 #if true
 				ResourceBundle.Field primaryField = this.primaryBundle[druid];
-				string primaryText = primaryField.ToString();
+				string primaryText = primaryField.AsString;
+				primaryText = TextLayout.ConvertToTaggedText(primaryText);
 
 				string secondaryText = null;
 				if (this.secondaryBundle != null)
 				{
 					ResourceBundle.Field secondaryField = this.secondaryBundle[druid];
-					secondaryText = secondaryField.ToString();
+					secondaryText = secondaryField.AsString;
+					secondaryText = TextLayout.ConvertToTaggedText(secondaryText);
 				}
 #else
 				Command cmd = Widgets.Command.Get(druid);
