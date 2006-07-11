@@ -243,7 +243,7 @@ namespace Epsitec.Common.Designer.Viewers
 				this.labelEdit.Enable = true;
 
 				Druid druid = this.druidsIndex[sel];
-				this.SetTextField(this.labelEdit, this.primaryBundle[druid].Name);
+				this.SetTextField(this.labelEdit, Captions.SubFilter(this.primaryBundle[druid].Name));
 
 				this.labelEdit.Focus();
 				this.labelEdit.SelectAll();
@@ -346,25 +346,25 @@ namespace Epsitec.Common.Designer.Viewers
 
 			foreach (ResourceBundle.Field field in this.primaryBundle.Fields)
 			{
+				if (!Captions.HasFixFilter(field.Name))  continue;
+				string name = Captions.SubFilter(field.Name);
+
 				if (filter != "")
 				{
 					if ((mode&Searcher.SearchingMode.Jocker) != 0)
 					{
-						string text = field.Name;
+						string text = name;
 						if ((mode&Searcher.SearchingMode.CaseSensitive) == 0)
 						{
 							text = Searcher.RemoveAccent(text.ToLower());
 						}
-						if (!regex.IsMatch(text))
-							continue;
+						if (!regex.IsMatch(text))  continue;
 					}
 					else
 					{
-						int index = Searcher.IndexOf(field.Name, filter, 0, mode);
-						if (index == -1)
-							continue;
-						if ((mode&Searcher.SearchingMode.AtBeginning) != 0 && index != 0)
-							continue;
+						int index = Searcher.IndexOf(name, filter, 0, mode);
+						if (index == -1)  continue;
+						if ((mode&Searcher.SearchingMode.AtBeginning) != 0 && index != 0)  continue;
 					}
 				}
 
@@ -385,7 +385,7 @@ namespace Epsitec.Common.Designer.Viewers
 				{
 					ResourceBundle.Field primaryField = this.primaryBundle[this.druidsIndex[first+i]];
 
-					this.array.SetLineString(0, first+i, primaryField.Name);
+					this.array.SetLineString(0, first+i, Captions.SubFilter(primaryField.Name));
 					this.array.SetLineState(0, first+i, MyWidgets.StringList.CellState.Normal);
 				}
 				else
@@ -396,7 +396,39 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 		}
 
-		
+		#region FixFilter
+		protected static string AddFilter(string name)
+		{
+			//	Ajoute le filtre fixe si nécessaire.
+			if (!Captions.HasFixFilter(name))
+			{
+				return Captions.FixFilter + name;
+			}
+
+			return name;
+		}
+
+		protected static string SubFilter(string name)
+		{
+			//	Supprime le filtre fixe si nécessaire.
+			if (Captions.HasFixFilter(name))
+			{
+				return name.Substring(Captions.FixFilter.Length);
+			}
+
+			return name;
+		}
+
+		protected static bool HasFixFilter(string name)
+		{
+			//	Indique si un nom commence par le filtre fixe.
+			return name.StartsWith(Captions.FixFilter);
+		}
+
+		protected static string FixFilter = "Cap.";
+		#endregion
+
+
 		void HandleArrayCellCountChanged(object sender)
 		{
 			//	Le nombre de lignes a changé.
@@ -431,7 +463,7 @@ namespace Epsitec.Common.Designer.Viewers
 				if (!Misc.IsValidLabel(ref text))
 				{
 					this.ignoreChange = true;
-					edit.Text = this.primaryBundle[this.druidsIndex[sel]].Name;
+					edit.Text = Captions.SubFilter(this.primaryBundle[this.druidsIndex[sel]].Name);
 					edit.SelectAll();
 					this.ignoreChange = false;
 
@@ -444,15 +476,15 @@ namespace Epsitec.Common.Designer.Viewers
 				edit.SelectAll();
 				this.ignoreChange = false;
 
-				if (this.primaryBundle[this.druidsIndex[sel]].Name == text)  // label inchangé ?
+				if (Captions.SubFilter(this.primaryBundle[this.druidsIndex[sel]].Name) == text)  // label inchangé ?
 				{
 					return;
 				}
 
-				if (this.IsExistingName(text))
+				if (this.IsExistingName(Captions.AddFilter(text)))
 				{
 					this.ignoreChange = true;
-					edit.Text = this.primaryBundle[this.druidsIndex[sel]].Name;
+					edit.Text = Captions.SubFilter(this.primaryBundle[this.druidsIndex[sel]].Name);
 					edit.SelectAll();
 					this.ignoreChange = false;
 
@@ -460,7 +492,7 @@ namespace Epsitec.Common.Designer.Viewers
 					return;
 				}
 
-				this.module.Modifier.Rename(Module.BundleType.Captions, druid, text);
+				this.module.Modifier.Rename(Module.BundleType.Captions, druid, Captions.AddFilter(text));
 				this.array.SetLineString(0, sel, text);
 			}
 
