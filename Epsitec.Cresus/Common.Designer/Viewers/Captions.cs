@@ -336,14 +336,37 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 			else
 			{
-				this.primaryDescription.Enable = true;
-				this.secondaryDescription.Enable = true;
-
 				Druid druid = this.druidsIndex[sel];
-				ResourceBundle.Field field = this.primaryBundle[druid];
 
-				this.primaryDescription.Text = "";
-				this.secondaryDescription.Text = "";
+#if true
+				ResourceBundle.Field primaryField = this.primaryBundle[druid];
+				string primaryText = primaryField.ToString();
+
+				string secondaryText = null;
+				if (this.secondaryBundle != null)
+				{
+					ResourceBundle.Field secondaryField = this.secondaryBundle[druid];
+					secondaryText = secondaryField.ToString();
+				}
+#else
+				Command cmd = Widgets.Command.Get(druid);
+				string primaryText = cmd.Description;
+				string secondaryText = "???";
+#endif
+
+				this.primaryDescription.Enable = true;
+				this.primaryDescription.Text = primaryText;
+
+				if (secondaryText == null)
+				{
+					this.secondaryDescription.Enable = false;
+					this.secondaryDescription.Text = "";
+				}
+				else
+				{
+					this.secondaryDescription.Enable = true;
+					this.secondaryDescription.Text = secondaryText;
+				}
 			}
 		}
 
@@ -422,6 +445,52 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
+		public override string InfoAccessText
+		{
+			//	Donne le texte d'information sur l'accès en cours.
+			get
+			{
+				System.Text.StringBuilder builder = new System.Text.StringBuilder();
+
+				int sel = this.array.SelectedRow;
+				if (sel == -1)
+				{
+					builder.Append("-");
+				}
+				else
+				{
+					ResourceBundleCollection bundles = this.module.GetBundles(Module.BundleType.Strings);
+					ResourceBundle bundle = bundles[ResourceLevel.Default];
+					ResourceBundle.Field field = bundle[this.druidsIndex[sel]];
+
+					builder.Append(field.Name);
+					builder.Append(": ");
+					builder.Append((sel+1).ToString());
+				}
+
+				builder.Append("/");
+				builder.Append(this.druidsIndex.Count.ToString());
+
+				if (this.druidsIndex.Count < this.InfoAccessTotalCount)
+				{
+					builder.Append(" (");
+					builder.Append(this.InfoAccessTotalCount.ToString());
+					builder.Append(")");
+				}
+
+				return builder.ToString();
+			}
+		}
+
+		protected override int InfoAccessTotalCount
+		{
+			get
+			{
+				return this.primaryBundle.FieldCount;
+			}
+		}
+
+		
 		protected void UpdateCultures()
 		{
 			//	Met à jour les widgets pour les cultures.
