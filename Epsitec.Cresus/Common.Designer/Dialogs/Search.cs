@@ -57,31 +57,31 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.fieldReplace.TabIndex = tabIndex++;
 				this.fieldReplace.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
-				GroupBox group = new GroupBox(this.window.Root);
-				group.Text = Res.Strings.Dialog.Search.Check.Who;
-				group.PreferredWidth = 160;
-				group.PreferredHeight = 60;
-				group.Anchor = AnchorStyles.Top | AnchorStyles.Left;
-				group.Margins = new Margins(6, 0, 6+58+16*0, 0);
-				group.Padding = new Margins(5, 5, 5, 5);
-				group.TabIndex = tabIndex++;
-				group.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
+				this.groupStrings = new GroupBox(this.window.Root);
+				this.groupStrings.Text = Res.Strings.Dialog.Search.Check.Who;
+				this.groupStrings.PreferredWidth = 160;
+				this.groupStrings.PreferredHeight = 60;
+				this.groupStrings.Anchor = AnchorStyles.Top | AnchorStyles.Left;
+				this.groupStrings.Margins = new Margins(6, 0, 6+58+16*0, 0);
+				this.groupStrings.Padding = new Margins(5, 5, 5, 5);
+				this.groupStrings.TabIndex = tabIndex++;
+				this.groupStrings.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 
-				label = new StaticText(group);
+				label = new StaticText(this.groupStrings);
 				label.PreferredWidth = 80;
 				label.ContentAlignment = ContentAlignment.MiddleRight;
 				label.Text = Res.Strings.Viewers.Strings.Edit;
 				label.Anchor = AnchorStyles.Top | AnchorStyles.Left;
 				label.Margins = new Margins(0, 0, 0, 0);
 
-				label = new StaticText(group);
+				label = new StaticText(this.groupStrings);
 				label.PreferredWidth = 80;
 				label.ContentAlignment = ContentAlignment.MiddleRight;
 				label.Text = Res.Strings.Viewers.Strings.About;
 				label.Anchor = AnchorStyles.Top | AnchorStyles.Left;
 				label.Margins = new Margins(0, 0, 16, 0);
 
-				this.checkLabel = new CheckButton(group);
+				this.checkLabel = new CheckButton(this.groupStrings);
 				this.checkLabel.Anchor = AnchorStyles.Top | AnchorStyles.Left;
 				this.checkLabel.PreferredWidth = this.checkLabel.PreferredHeight;
 				this.checkLabel.Margins = new Margins (90+20*0, 0, 0, 0);
@@ -90,7 +90,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.checkLabel.ActiveStateChanged += new EventHandler(this.HandleCheckActiveStateChanged);
 				ToolTip.Default.SetToolTip(this.checkLabel, Res.Strings.Dialog.Search.Check.Label);
 
-				this.checkPrimaryText = new CheckButton(group);
+				this.checkPrimaryText = new CheckButton(this.groupStrings);
 				this.checkPrimaryText.ActiveState = ActiveState.Yes;
 				this.checkPrimaryText.Anchor = AnchorStyles.Top | AnchorStyles.Left;
 				this.checkPrimaryText.PreferredWidth = this.checkPrimaryText.PreferredHeight;
@@ -100,7 +100,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.checkPrimaryText.ActiveStateChanged += new EventHandler(this.HandleCheckActiveStateChanged);
 				ToolTip.Default.SetToolTip(this.checkPrimaryText, Res.Strings.Dialog.Search.Check.PrimaryText);
 
-				this.checkSecondaryText = new CheckButton(group);
+				this.checkSecondaryText = new CheckButton(this.groupStrings);
 				this.checkSecondaryText.ActiveState = ActiveState.Yes;
 				this.checkSecondaryText.Anchor = AnchorStyles.Top | AnchorStyles.Left;
 				this.checkSecondaryText.PreferredWidth = this.checkSecondaryText.PreferredHeight;
@@ -110,7 +110,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.checkSecondaryText.ActiveStateChanged += new EventHandler(this.HandleCheckActiveStateChanged);
 				ToolTip.Default.SetToolTip(this.checkSecondaryText, Res.Strings.Dialog.Search.Check.SecondaryText);
 
-				this.checkPrimaryAbout = new CheckButton(group);
+				this.checkPrimaryAbout = new CheckButton(this.groupStrings);
 				this.checkPrimaryAbout.Anchor = AnchorStyles.Top | AnchorStyles.Left;
 				this.checkPrimaryAbout.PreferredWidth = this.checkPrimaryAbout.PreferredHeight;
 				this.checkPrimaryAbout.Margins = new Margins(90+20*1, 0, 16, 0);
@@ -119,7 +119,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.checkPrimaryAbout.ActiveStateChanged += new EventHandler(this.HandleCheckActiveStateChanged);
 				ToolTip.Default.SetToolTip(this.checkPrimaryAbout, Res.Strings.Dialog.Search.Check.PrimaryAbout);
 
-				this.checkSecondaryAbout = new CheckButton(group);
+				this.checkSecondaryAbout = new CheckButton(this.groupStrings);
 				this.checkSecondaryAbout.Anchor = AnchorStyles.Top | AnchorStyles.Left;
 				this.checkSecondaryAbout.PreferredWidth = this.checkSecondaryAbout.PreferredHeight;
 				this.checkSecondaryAbout.Margins = new Margins (90+20*2, 0, 16, 0);
@@ -217,6 +217,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				buttonClose.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 				this.HandleFieldSearchTextChanged(null);
+				this.UpdateBundleType();
 			}
 
 			this.window.Show();
@@ -225,6 +226,16 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.fieldSearch.SelectAll();
 		}
 
+
+		public void Adapt(Module.BundleType type)
+		{
+			//	Adapte le dialogue en fonction du type du viewer actif.
+			if (this.bundleType != type)
+			{
+				this.bundleType = type;
+				this.UpdateBundleType();
+			}
+		}
 
 		public string Searching
 		{
@@ -293,6 +304,14 @@ namespace Epsitec.Common.Designer.Dialogs
 
 			this.mainWindow.GetCommandState("SearchPrev").Enable = enable;
 			this.mainWindow.GetCommandState("SearchNext").Enable = enable;
+		}
+
+		protected void UpdateBundleType()
+		{
+			if (this.window != null)
+			{
+				this.groupStrings.Visibility = (this.bundleType == Module.BundleType.Strings);
+			}
 		}
 
 
@@ -385,15 +404,20 @@ namespace Epsitec.Common.Designer.Dialogs
 		}
 
 
+		protected Module.BundleType				bundleType = Module.BundleType.Unknow;
+
 		protected TextFieldCombo				fieldSearch;
 		protected TextFieldCombo				fieldReplace;
 		protected CheckButton					checkCase;
 		protected CheckButton					checkWord;
+
+		protected GroupBox						groupStrings;
 		protected CheckButton					checkLabel;
 		protected CheckButton					checkPrimaryText;
 		protected CheckButton					checkSecondaryText;
 		protected CheckButton					checkPrimaryAbout;
 		protected CheckButton					checkSecondaryAbout;
+
 		protected Button						buttonSearchPrev;
 		protected Button						buttonSearchNext;
 		protected Button						buttonCount;

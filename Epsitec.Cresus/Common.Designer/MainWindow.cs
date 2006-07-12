@@ -761,6 +761,7 @@ namespace Epsitec.Common.Designer
 		void HandleTypeChanged(object sender)
 		{
 			this.CreateViewerLayout();
+			this.DialogSearchAdapt();
 			this.CurrentModule.Modifier.ActiveViewer.UpdateCommands();
 		}
 
@@ -837,6 +838,7 @@ namespace Epsitec.Common.Designer
 				this.bookModules.ActivePage = this.CurrentModuleInfo.TabPage;
 				this.ignoreChange = false;
 
+				this.DialogSearchAdapt();
 				this.CurrentModule.Modifier.ActiveViewer.UpdateCommands();
 			}
 			else
@@ -937,6 +939,20 @@ namespace Epsitec.Common.Designer
 			get
 			{
 				return this.dlgSearch;
+			}
+		}
+
+		protected void DialogSearchAdapt()
+		{
+			//	Adapte le dialogue de recherche en fonction du type du viewer actif.
+			ModuleInfo mi = this.CurrentModuleInfo;
+			if (mi == null)
+			{
+				this.dlgSearch.Adapt(Module.BundleType.Unknow);
+			}
+			else
+			{
+				this.dlgSearch.Adapt(mi.Module.Modifier.ActiveViewer.BundleType);
 			}
 		}
 
