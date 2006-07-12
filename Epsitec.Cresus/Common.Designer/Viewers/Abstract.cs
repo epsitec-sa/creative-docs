@@ -366,6 +366,7 @@ namespace Epsitec.Common.Designer.Viewers
 		protected PanelsContext				context;
 		protected List<Druid>				druidsIndex;
 		protected bool						ignoreChange = false;
+		protected bool						lastActionIsReplace = false;
 		protected MyWidgets.StringArray		array;
 		protected AbstractTextField			currentTextField;
 	}

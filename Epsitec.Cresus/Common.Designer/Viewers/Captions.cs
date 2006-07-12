@@ -157,6 +157,37 @@ namespace Epsitec.Common.Designer.Viewers
 		public override void DoSearch(string search, Searcher.SearchingMode mode)
 		{
 			//	Effectue une recherche.
+			Searcher searcher = new Searcher(this.druidsIndex, this.primaryBundle, this.secondaryBundle, this.BundleType);
+			searcher.FixStarting(mode, this.array.SelectedRow, this.currentTextField, false);
+
+			if (searcher.Search(search))
+			{
+				this.lastActionIsReplace = false;
+
+				this.array.SelectedRow = searcher.Row;
+				this.array.ShowSelectedRow();
+
+				AbstractTextField edit = null;
+				if (searcher.Field == 0)  edit = this.labelEdit;
+				if (searcher.Field == 1)  edit = this.primaryDescription;
+				if (searcher.Field == 2)  edit = this.secondaryDescription;
+				if (edit != null && edit.Visibility)
+				{
+					this.ignoreChange = true;
+
+					this.Window.MakeActive();
+					edit.Focus();
+					edit.CursorFrom  = edit.TextLayout.FindIndexFromOffset(searcher.Index);
+					edit.CursorTo    = edit.TextLayout.FindIndexFromOffset(searcher.Index+searcher.Length);
+					edit.CursorAfter = false;
+
+					this.ignoreChange = false;
+				}
+			}
+			else
+			{
+				this.module.MainWindow.DialogError(Res.Strings.Dialog.Search.Message.Error);
+			}
 		}
 
 		public override void DoCount(string search, Searcher.SearchingMode mode)
@@ -397,9 +428,9 @@ namespace Epsitec.Common.Designer.Viewers
 			this.GetCommandState("NewCulture").Enable = newCulture;
 			this.GetCommandState("DeleteCulture").Enable = true;
 
-			this.GetCommandState("Search").Enable = false;
-			this.GetCommandState("SearchPrev").Enable = false;
-			this.GetCommandState("SearchNext").Enable = false;
+			this.GetCommandState("Search").Enable = true;
+			this.GetCommandState("SearchPrev").Enable = true;
+			this.GetCommandState("SearchNext").Enable = true;
 
 			this.GetCommandState("ModificationPrev").Enable = false;
 			this.GetCommandState("ModificationNext").Enable = false;
@@ -673,7 +704,7 @@ namespace Epsitec.Common.Designer.Viewers
 			return name;
 		}
 
-		protected static string SubFilter(string name)
+		public static string SubFilter(string name)
 		{
 			//	Supprime le filtre fixe si nécessaire.
 			if (Captions.HasFixFilter(name))
