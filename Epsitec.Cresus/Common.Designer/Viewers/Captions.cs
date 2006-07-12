@@ -101,6 +101,29 @@ namespace Epsitec.Common.Designer.Viewers
 			this.rightContainer.MinWidth = 100;
 			this.rightContainer.Dock = DockStyle.StackFill;
 
+			//	Textes.
+			panel = new MyWidgets.StackedPanel(this.leftContainer);
+			panel.IsLeftPart = true;
+			panel.Title = Res.Strings.Viewers.Captions.Labels;
+			panel.Dock = DockStyle.StackBegin;
+
+			this.primaryLabels = new MyWidgets.StringCollection(panel.Container);
+			//?this.primaryLabels.PreferredHeight = 70;
+			this.primaryLabels.Dock = DockStyle.StackBegin;
+			this.primaryLabels.TabIndex = tabIndex++;
+			this.primaryLabels.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+
+			panel = new MyWidgets.StackedPanel(this.rightContainer);
+			panel.IsLeftPart = false;
+			panel.Title = Res.Strings.Viewers.Captions.Labels;
+			panel.Dock = DockStyle.StackBegin;
+
+			this.secondaryLabels = new MyWidgets.StringCollection(panel.Container);
+			//?this.secondaryLabels.PreferredHeight = 70;
+			this.secondaryLabels.Dock = DockStyle.StackBegin;
+			this.secondaryLabels.TabIndex = tabIndex++;
+			this.secondaryLabels.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+
 			//	Description.
 			panel = new MyWidgets.StackedPanel(this.leftContainer);
 			panel.IsLeftPart = true;
@@ -635,6 +658,7 @@ namespace Epsitec.Common.Designer.Viewers
 				caption.DeserializeFromString(this.primaryBundle[druid].AsString);
 
 				this.SetTextField(this.labelEdit, this.primaryBundle[druid].Name);
+				this.primaryLabels.Collection = caption.Labels;
 				this.SetTextField(this.primaryDescription, caption.Description);
 				this.primaryIcon.IconName = caption.Icon;
 				this.SetTextField(this.primaryAbout, this.primaryBundle[druid].About);
@@ -1098,20 +1122,22 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
-		protected IconButtonMark			primaryCulture;
-		protected Widget					secondaryCulture;
-		protected IconButtonMark[]			secondaryCultures;
-		protected ResourceBundle			primaryBundle;
-		protected ResourceBundle			secondaryBundle;
-		protected TextFieldEx				labelEdit;
-		protected Scrollable				scrollable;
-		protected Widget					leftContainer;
-		protected Widget					rightContainer;
-		protected TextFieldMulti			primaryDescription;
-		protected TextFieldMulti			secondaryDescription;
-		protected IconButton				primaryIcon;
-		protected IconButton				secondaryIcon;
-		protected TextFieldMulti			primaryAbout;
-		protected TextFieldMulti			secondaryAbout;
+		protected IconButtonMark				primaryCulture;
+		protected Widget						secondaryCulture;
+		protected IconButtonMark[]				secondaryCultures;
+		protected ResourceBundle				primaryBundle;
+		protected ResourceBundle				secondaryBundle;
+		protected TextFieldEx					labelEdit;
+		protected Scrollable					scrollable;
+		protected Widget						leftContainer;
+		protected Widget						rightContainer;
+		protected MyWidgets.StringCollection	primaryLabels;
+		protected MyWidgets.StringCollection	secondaryLabels;
+		protected TextFieldMulti				primaryDescription;
+		protected TextFieldMulti				secondaryDescription;
+		protected IconButton					primaryIcon;
+		protected IconButton					secondaryIcon;
+		protected TextFieldMulti				primaryAbout;
+		protected TextFieldMulti				secondaryAbout;
 	}
 }
