@@ -29,15 +29,15 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
-		public static Abstract Create(string type, Module module, PanelsContext context)
+		public static Abstract Create(Module.BundleType type, Module module, PanelsContext context)
 		{
 			//	Crée un Viewer d'un type donné.
-			if (type == "Strings")  return new Strings(module, context);
-			if (type == "Panels" )  return new Panels(module, context);
-			if (type == "Scripts")  return new Scripts(module, context);
-			if (type == "Captions")  return new Captions(module, context);
-			if (type == "Commands")  return new Commands(module, context);
-			if (type == "Types")  return new Types(module, context);
+			if (type == Module.BundleType.Strings)  return new Strings(module, context);
+			if (type == Module.BundleType.Panels)  return new Panels(module, context);
+			if (type == Module.BundleType.Scripts)  return new Scripts(module, context);
+			if (type == Module.BundleType.Captions)  return new Captions(module, context);
+			if (type == Module.BundleType.Commands)  return new Commands(module, context);
+			if (type == Module.BundleType.Types)  return new Types(module, context);
 			return null;
 		}
 

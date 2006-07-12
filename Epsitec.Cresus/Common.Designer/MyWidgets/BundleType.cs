@@ -19,7 +19,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			this.buttonStrings = new IconButtonMark(this);
 			this.buttonStrings.Text = Res.Strings.BundleType.Strings;
-			this.buttonStrings.Name = "Strings";
+			this.buttonStrings.Name = BundleType.Convert(Module.BundleType.Strings);
 			this.buttonStrings.ButtonStyle = ButtonStyle.ActivableIcon;
 			this.buttonStrings.SiteMark = SiteMark.OnBottom;
 			this.buttonStrings.MarkDimension = 5;
@@ -32,7 +32,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			this.buttonCaptions = new IconButtonMark(this);
 			this.buttonCaptions.Text = Res.Strings.BundleType.Captions;
-			this.buttonCaptions.Name = "Captions";
+			this.buttonCaptions.Name = BundleType.Convert(Module.BundleType.Captions);
 			this.buttonCaptions.ButtonStyle = ButtonStyle.ActivableIcon;
 			this.buttonCaptions.SiteMark = SiteMark.OnBottom;
 			this.buttonCaptions.MarkDimension = 5;
@@ -45,7 +45,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			this.buttonCommands = new IconButtonMark(this);
 			this.buttonCommands.Text = Res.Strings.BundleType.Commands;
-			this.buttonCommands.Name = "Commands";
+			this.buttonCommands.Name = BundleType.Convert(Module.BundleType.Commands);
 			this.buttonCommands.ButtonStyle = ButtonStyle.ActivableIcon;
 			this.buttonCommands.SiteMark = SiteMark.OnBottom;
 			this.buttonCommands.MarkDimension = 5;
@@ -58,7 +58,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			this.buttonTypes = new IconButtonMark(this);
 			this.buttonTypes.Text = Res.Strings.BundleType.Types;
-			this.buttonTypes.Name = "Types";
+			this.buttonTypes.Name = BundleType.Convert(Module.BundleType.Types);
 			this.buttonTypes.ButtonStyle = ButtonStyle.ActivableIcon;
 			this.buttonTypes.SiteMark = SiteMark.OnBottom;
 			this.buttonTypes.MarkDimension = 5;
@@ -71,7 +71,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			this.buttonPanels = new IconButtonMark(this);
 			this.buttonPanels.Text = Res.Strings.BundleType.Panels;
-			this.buttonPanels.Name = "Panels";
+			this.buttonPanels.Name = BundleType.Convert(Module.BundleType.Panels);
 			this.buttonPanels.ButtonStyle = ButtonStyle.ActivableIcon;
 			this.buttonPanels.SiteMark = SiteMark.OnBottom;
 			this.buttonPanels.MarkDimension = 5;
@@ -84,7 +84,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			this.buttonScripts = new IconButtonMark(this);
 			this.buttonScripts.Text = Res.Strings.BundleType.Scripts;
-			this.buttonScripts.Name = "Scripts";
+			this.buttonScripts.Name = BundleType.Convert(Module.BundleType.Scripts);
 			this.buttonScripts.ButtonStyle = ButtonStyle.ActivableIcon;
 			this.buttonScripts.SiteMark = SiteMark.OnBottom;
 			this.buttonScripts.MarkDimension = 5;
@@ -104,7 +104,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		}
 
 
-		public string CurrentType
+		public Module.BundleType CurrentType
 		{
 			get
 			{
@@ -125,26 +125,37 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected void UpdateButtons()
 		{
-			this.buttonStrings.ActiveState  = (this.currentType == "Strings" ) ? ActiveState.Yes : ActiveState.No;
-			this.buttonCaptions.ActiveState = (this.currentType == "Captions") ? ActiveState.Yes : ActiveState.No;
-			this.buttonCommands.ActiveState = (this.currentType == "Commands") ? ActiveState.Yes : ActiveState.No;
-			this.buttonTypes.ActiveState    = (this.currentType == "Types"   ) ? ActiveState.Yes : ActiveState.No;
-			this.buttonPanels .ActiveState  = (this.currentType == "Panels"  ) ? ActiveState.Yes : ActiveState.No;
-			this.buttonScripts.ActiveState  = (this.currentType == "Scripts" ) ? ActiveState.Yes : ActiveState.No;
+			this.buttonStrings.ActiveState  = (this.currentType == Module.BundleType.Strings ) ? ActiveState.Yes : ActiveState.No;
+			this.buttonCaptions.ActiveState = (this.currentType == Module.BundleType.Captions) ? ActiveState.Yes : ActiveState.No;
+			this.buttonCommands.ActiveState = (this.currentType == Module.BundleType.Commands) ? ActiveState.Yes : ActiveState.No;
+			this.buttonTypes.ActiveState    = (this.currentType == Module.BundleType.Types   ) ? ActiveState.Yes : ActiveState.No;
+			this.buttonPanels .ActiveState  = (this.currentType == Module.BundleType.Panels  ) ? ActiveState.Yes : ActiveState.No;
+			this.buttonScripts.ActiveState  = (this.currentType == Module.BundleType.Scripts ) ? ActiveState.Yes : ActiveState.No;
 		}
 
 
 		void HandleButtonClicked(object sender, MessageEventArgs e)
 		{
 			IconButtonMark button = sender as IconButtonMark;
-			this.CurrentType = button.Name;
+			this.CurrentType = BundleType.Convert(button.Name);
+		}
+
+
+		protected static Module.BundleType Convert(string name)
+		{
+			return (Module.BundleType) System.Enum.Parse(typeof(Module.BundleType), name);
+		}
+
+		protected static string Convert(Module.BundleType type)
+		{
+			return type.ToString();
 		}
 
 
 		#region Events handler
 		protected virtual void OnTypeChanged()
 		{
-			//	Génère un événement pour dire qu'une cellule a été sélectionnée.
+			//	Génère un événement pour dire que le type a été changé.
 			EventHandler handler = (EventHandler) this.GetUserEventHandler("TypeChanged");
 			if (handler != null)
 			{
@@ -166,7 +177,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		#endregion
 
 
-		protected string					currentType = "Strings";
+		protected Module.BundleType			currentType = Module.BundleType.Strings;
 		protected IconButtonMark			buttonStrings;
 		protected IconButtonMark			buttonScripts;
 		protected IconButtonMark			buttonCaptions;

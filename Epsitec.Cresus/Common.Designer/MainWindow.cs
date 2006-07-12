@@ -746,7 +746,7 @@ namespace Epsitec.Common.Designer
 				mi.Module.Modifier.ActiveViewer = null;
 			}
 
-			string type = mi.BundleType.CurrentType;
+			Module.BundleType type = mi.BundleType.CurrentType;
 			Viewers.Abstract viewer = Viewers.Abstract.Create(type, mi.Module, this.context);
 
 			if (viewer != null)
