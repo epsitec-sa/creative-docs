@@ -234,7 +234,7 @@ namespace Epsitec.Common.Designer.Viewers
 					text = text.Remove(searcher.Index, searcher.Length);
 					text = text.Insert(searcher.Index, validReplace);
 
-					this.module.Modifier.Rename(Module.BundleType.Strings, druid, text);
+					this.module.Modifier.Rename(this.BundleType, druid, text);
 					this.array.SetLineString(0, searcher.Row, text);
 				}
 
@@ -329,7 +329,7 @@ namespace Epsitec.Common.Designer.Viewers
 					text = text.Remove(searcher.Index, searcher.Length);
 					text = text.Insert(searcher.Index, replace);
 
-					this.module.Modifier.Rename(Module.BundleType.Strings, druid, text);
+					this.module.Modifier.Rename(this.BundleType, druid, text);
 				}
 
 				if (searcher.Field == 1)
@@ -480,7 +480,7 @@ namespace Epsitec.Common.Designer.Viewers
 			if ( sel == -1 )  return;
 
 			Druid druid = this.druidsIndex[sel];
-			this.module.Modifier.Delete(Module.BundleType.Strings, druid);
+			this.module.Modifier.Delete(this.BundleType, druid);
 
 			this.druidsIndex.RemoveAt(sel);
 			this.UpdateArray();
@@ -500,7 +500,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			Druid druid = this.druidsIndex[sel];
 			string newName = this.GetDuplicateName(this.primaryBundle[druid].Name);
-			Druid newDruid = this.module.Modifier.Duplicate(Module.BundleType.Strings, druid, newName, duplicate);
+			Druid newDruid = this.module.Modifier.Duplicate(this.BundleType, druid, newName, duplicate);
 
 			int newSel = sel+1;
 			this.druidsIndex.Insert(newSel, newDruid);
@@ -519,7 +519,7 @@ namespace Epsitec.Common.Designer.Viewers
 			if ( sel == -1 )  return;
 
 			Druid druid = this.druidsIndex[sel];
-			if ( !this.module.Modifier.Move(Module.BundleType.Strings, druid, direction) )  return;
+			if ( !this.module.Modifier.Move(this.BundleType, druid, direction) )  return;
 		
 			int newSel = sel+direction;
 			this.druidsIndex.RemoveAt(sel);
@@ -537,7 +537,7 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Crée une nouvelle culture.
 			string name = this.module.MainWindow.DlgNewCulture();
 			if ( name == null )  return;
-			ResourceBundle bundle = this.module.NewCulture(name, Module.BundleType.Strings);
+			ResourceBundle bundle = this.module.NewCulture(name, this.BundleType);
 
 			this.UpdateCultures();
 			this.UpdateArray();
@@ -557,7 +557,7 @@ namespace Epsitec.Common.Designer.Viewers
 			if ( result != Epsitec.Common.Dialogs.DialogResult.Yes )  return;
 #endif
 
-			this.module.DeleteCulture(this.secondaryBundle, Module.BundleType.Strings);
+			this.module.DeleteCulture(this.secondaryBundle, this.BundleType);
 
 			this.UpdateCultures();
 			if (this.secondaryBundle != null)
@@ -619,7 +619,7 @@ namespace Epsitec.Common.Designer.Viewers
 		protected void UpdateCultures()
 		{
 			//	Met à jour les widgets pour les cultures.
-			ResourceBundleCollection bundles = this.module.GetBundles(Module.BundleType.Strings);
+			ResourceBundleCollection bundles = this.module.GetBundles(this.BundleType);
 
 			if (this.secondaryCultures != null)
 			{
@@ -701,9 +701,9 @@ namespace Epsitec.Common.Designer.Viewers
 		protected void UpdateSelectedCulture(string name)
 		{
 			//	Sélectionne le widget correspondant à la culture secondaire.
-			ResourceBundleCollection bundles = this.module.GetBundles(Module.BundleType.Strings);
+			ResourceBundleCollection bundles = this.module.GetBundles(this.BundleType);
 
-			this.secondaryBundle = this.module.GetCulture(name, Module.BundleType.Strings);
+			this.secondaryBundle = this.module.GetCulture(name, this.BundleType);
 			if (this.secondaryCultures == null)  return;
 
 			for (int i=0; i<this.secondaryCultures.Length; i++)
@@ -851,7 +851,7 @@ namespace Epsitec.Common.Designer.Viewers
 				druid = this.druidsIndex[sel];
 			}
 
-			ResourceBundle defaultBundle = this.module.GetBundles(Module.BundleType.Strings)[ResourceLevel.Default];
+			ResourceBundle defaultBundle = this.module.GetBundles(this.BundleType)[ResourceLevel.Default];
 
 			for (int i=0; i<this.secondaryModifiers.Length; i++)
 			{
@@ -859,7 +859,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 				bool modified = false;
 
-				ResourceBundle bundle = this.module.GetCulture(sample.Name, Module.BundleType.Strings);
+				ResourceBundle bundle = this.module.GetCulture(sample.Name, this.BundleType);
 				if (bundle != null && !druid.IsEmpty)
 				{
 					modified = (defaultBundle[druid].ModificationId > bundle[druid].ModificationId);
@@ -966,7 +966,7 @@ namespace Epsitec.Common.Designer.Viewers
 			if (sel != -1 && this.secondaryBundle != null)
 			{
 				Druid druid = this.druidsIndex[sel];
-				all = this.module.Modifier.IsModificationAll(Module.BundleType.Strings, druid);
+				all = this.module.Modifier.IsModificationAll(this.BundleType, druid);
 				ResourceBundle.Field field1 = this.primaryBundle[druid];
 				ResourceBundle.Field field2 = this.secondaryBundle[druid];
 				if (!field1.IsEmpty && !field2.IsEmpty)
@@ -976,8 +976,8 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 
 			bool search = this.module.MainWindow.DialogSearch.IsActionsEnabled;
-			
-			bool newCulture = (this.module.GetBundles(Module.BundleType.Strings).Count < Misc.Cultures.Length);
+
+			bool newCulture = (this.module.GetBundles(this.BundleType).Count < Misc.Cultures.Length);
 
 			this.GetCommandState("NewCulture").Enable = newCulture;
 			this.GetCommandState("DeleteCulture").Enable = true;
@@ -1058,7 +1058,7 @@ namespace Epsitec.Common.Designer.Viewers
 				}
 				else
 				{
-					ResourceBundleCollection bundles = this.module.GetBundles(Module.BundleType.Strings);
+					ResourceBundleCollection bundles = this.module.GetBundles(this.BundleType);
 					ResourceBundle bundle = bundles[ResourceLevel.Default];
 					ResourceBundle.Field field = bundle[this.druidsIndex[sel]];
 
@@ -1255,7 +1255,7 @@ namespace Epsitec.Common.Designer.Viewers
 					return;
 				}
 
-				this.module.Modifier.Rename(Module.BundleType.Strings, druid, text);
+				this.module.Modifier.Rename(this.BundleType, druid, text);
 				this.array.SetLineString(0, sel, text);
 			}
 
@@ -1267,7 +1267,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			if (edit == this.secondaryEdit && this.secondaryBundle != null)
 			{
-				this.module.Modifier.CreateIfNecessary(Module.BundleType.Strings, this.secondaryBundle, druid);
+				this.module.Modifier.CreateIfNecessary(this.BundleType, this.secondaryBundle, druid);
 				this.secondaryBundle[druid].SetStringValue(text);
 				this.UpdateArrayField(2, sel, this.secondaryBundle[druid], this.primaryBundle[druid]);
 			}
@@ -1279,7 +1279,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			if (edit == this.secondaryAbout && this.secondaryBundle != null)
 			{
-				this.module.Modifier.CreateIfNecessary(Module.BundleType.Strings, this.secondaryBundle, druid);
+				this.module.Modifier.CreateIfNecessary(this.BundleType, this.secondaryBundle, druid);
 				this.secondaryBundle[druid].SetAbout(text);
 			}
 

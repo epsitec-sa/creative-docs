@@ -15,6 +15,10 @@ namespace Epsitec.Common.Designer
 			Unknow,
 			Strings,
 			Captions,
+			Commands,
+			Types,
+			Panels,
+			Scripts,
 		}
 
 

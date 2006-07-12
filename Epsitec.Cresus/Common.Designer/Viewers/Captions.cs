@@ -186,7 +186,7 @@ namespace Epsitec.Common.Designer.Viewers
 			if ( sel == -1 )  return;
 
 			Druid druid = this.druidsIndex[sel];
-			this.module.Modifier.Delete(Module.BundleType.Captions, druid);
+			this.module.Modifier.Delete(this.BundleType, druid);
 
 			this.druidsIndex.RemoveAt(sel);
 			this.UpdateArray();
@@ -206,7 +206,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			Druid druid = this.druidsIndex[sel];
 			string newName = this.GetDuplicateName(this.primaryBundle[druid].Name);
-			Druid newDruid = this.module.Modifier.Duplicate(Module.BundleType.Captions, druid, newName, duplicate);
+			Druid newDruid = this.module.Modifier.Duplicate(this.BundleType, druid, newName, duplicate);
 
 			int newSel = sel+1;
 			this.druidsIndex.Insert(newSel, newDruid);
@@ -225,7 +225,7 @@ namespace Epsitec.Common.Designer.Viewers
 			if ( sel == -1 )  return;
 
 			Druid druid = this.druidsIndex[sel];
-			if ( !this.module.Modifier.Move(Module.BundleType.Captions, druid, direction) )  return;
+			if ( !this.module.Modifier.Move(this.BundleType, druid, direction) )  return;
 		
 			int newSel = sel+direction;
 			this.druidsIndex.RemoveAt(sel);
@@ -243,7 +243,7 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Crée une nouvelle culture.
 			string name = this.module.MainWindow.DlgNewCulture();
 			if ( name == null )  return;
-			ResourceBundle bundle = this.module.NewCulture(name, Module.BundleType.Captions);
+			ResourceBundle bundle = this.module.NewCulture(name, this.BundleType);
 
 			this.UpdateCultures();
 			this.Update();
@@ -260,7 +260,7 @@ namespace Epsitec.Common.Designer.Viewers
 			if ( result != Epsitec.Common.Dialogs.DialogResult.Yes )  return;
 #endif
 
-			this.module.DeleteCulture(this.secondaryBundle, Module.BundleType.Captions);
+			this.module.DeleteCulture(this.secondaryBundle, this.BundleType);
 
 			this.UpdateCultures();
 			if (this.secondaryBundle != null)
@@ -392,7 +392,7 @@ namespace Epsitec.Common.Designer.Viewers
 			int sel = this.array.SelectedRow;
 			int count = this.druidsIndex.Count;
 			bool build = (this.module.Mode == DesignerMode.Build);
-			bool newCulture = (this.module.GetBundles(Module.BundleType.Captions).Count < Misc.Cultures.Length);
+			bool newCulture = (this.module.GetBundles(this.BundleType).Count < Misc.Cultures.Length);
 
 			this.GetCommandState("NewCulture").Enable = newCulture;
 			this.GetCommandState("DeleteCulture").Enable = true;
@@ -508,7 +508,7 @@ namespace Epsitec.Common.Designer.Viewers
 		protected void UpdateCultures()
 		{
 			//	Met à jour les widgets pour les cultures.
-			ResourceBundleCollection bundles = this.module.GetBundles(Module.BundleType.Captions);
+			ResourceBundleCollection bundles = this.module.GetBundles(this.BundleType);
 
 			if (this.secondaryCultures != null)
 			{
@@ -575,9 +575,9 @@ namespace Epsitec.Common.Designer.Viewers
 		protected void UpdateSelectedCulture(string name)
 		{
 			//	Sélectionne le widget correspondant à la culture secondaire.
-			ResourceBundleCollection bundles = this.module.GetBundles(Module.BundleType.Captions);
+			ResourceBundleCollection bundles = this.module.GetBundles(this.BundleType);
 
-			this.secondaryBundle = this.module.GetCulture(name, Module.BundleType.Captions);
+			this.secondaryBundle = this.module.GetCulture(name, this.BundleType);
 			if (this.secondaryCultures == null)  return;
 
 			for (int i=0; i<this.secondaryCultures.Length; i++)
@@ -768,7 +768,7 @@ namespace Epsitec.Common.Designer.Viewers
 					return;
 				}
 
-				this.module.Modifier.Rename(Module.BundleType.Captions, druid, Captions.AddFilter(text));
+				this.module.Modifier.Rename(this.BundleType, druid, Captions.AddFilter(text));
 				this.array.SetLineString(0, sel, text);
 			}
 
