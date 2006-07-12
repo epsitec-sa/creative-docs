@@ -73,12 +73,16 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 					StaticText fix = new StaticText();
 					fix.Text = (count+1).ToString();
+					fix.ContentAlignment = ContentAlignment.MiddleRight;
+					fix.Margins = new Margins(0, 4, 0, 0);
+					fix.VerticalAlignment = VerticalAlignment.BaseLine;
 					GridLayoutEngine.SetColumn(fix, 0);
 					GridLayoutEngine.SetRow(fix, count);
 					this.Children.Add(fix);
 					this.staticTexts.Add(fix);
 
 					TextField field = new TextField();
+					field.VerticalAlignment = VerticalAlignment.BaseLine;
 					GridLayoutEngine.SetColumn(field, 1);
 					GridLayoutEngine.SetRow(field, count);
 					this.Children.Add(field);
