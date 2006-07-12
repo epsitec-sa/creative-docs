@@ -171,7 +171,6 @@ namespace Epsitec.Common.Designer
 		public void DeleteCulture(ResourceBundle bundle, BundleType type)
 		{
 			//	Supprime une culture.
-			// TODO: la suppression ne fonctionne pas !
 			this.resourceManager.RemoveBundle(Module.BundlesName(type, true), ResourceLevel.Localized, bundle.Culture);
 			this.UpdateBundles(type);
 		}

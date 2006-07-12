@@ -30,19 +30,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonStrings.Dock = DockStyle.Left;
 			this.buttonStrings.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 
-			this.buttonPanels = new IconButtonMark(this);
-			this.buttonPanels.Text = Res.Strings.BundleType.Panels;
-			this.buttonPanels.Name = "Panels";
-			this.buttonPanels.ButtonStyle = ButtonStyle.ActivableIcon;
-			this.buttonPanels.SiteMark = SiteMark.OnBottom;
-			this.buttonPanels.MarkDimension = 5;
-			this.buttonPanels.PreferredWidth = 100;
-			this.buttonPanels.MinHeight = 20+5;
-			this.buttonPanels.AutoFocus = false;
-			this.buttonPanels.Margins = new Margins(2, 0, 10, 0);
-			this.buttonPanels.Dock = DockStyle.Left;
-			this.buttonPanels.Clicked += new MessageEventHandler(this.HandleButtonClicked);
-
 			this.buttonCaptions = new IconButtonMark(this);
 			this.buttonCaptions.Text = Res.Strings.BundleType.Captions;
 			this.buttonCaptions.Name = "Captions";
@@ -81,6 +68,19 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonTypes.Margins = new Margins(2, 0, 10, 0);
 			this.buttonTypes.Dock = DockStyle.Left;
 			this.buttonTypes.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+
+			this.buttonPanels = new IconButtonMark(this);
+			this.buttonPanels.Text = Res.Strings.BundleType.Panels;
+			this.buttonPanels.Name = "Panels";
+			this.buttonPanels.ButtonStyle = ButtonStyle.ActivableIcon;
+			this.buttonPanels.SiteMark = SiteMark.OnBottom;
+			this.buttonPanels.MarkDimension = 5;
+			this.buttonPanels.PreferredWidth = 100;
+			this.buttonPanels.MinHeight = 20+5;
+			this.buttonPanels.AutoFocus = false;
+			this.buttonPanels.Margins = new Margins(2, 0, 10, 0);
+			this.buttonPanels.Dock = DockStyle.Left;
+			this.buttonPanels.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 
 			this.buttonScripts = new IconButtonMark(this);
 			this.buttonScripts.Text = Res.Strings.BundleType.Scripts;
@@ -126,10 +126,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void UpdateButtons()
 		{
 			this.buttonStrings.ActiveState  = (this.currentType == "Strings" ) ? ActiveState.Yes : ActiveState.No;
-			this.buttonPanels .ActiveState  = (this.currentType == "Panels"  ) ? ActiveState.Yes : ActiveState.No;
 			this.buttonCaptions.ActiveState = (this.currentType == "Captions") ? ActiveState.Yes : ActiveState.No;
 			this.buttonCommands.ActiveState = (this.currentType == "Commands") ? ActiveState.Yes : ActiveState.No;
 			this.buttonTypes.ActiveState    = (this.currentType == "Types"   ) ? ActiveState.Yes : ActiveState.No;
+			this.buttonPanels .ActiveState  = (this.currentType == "Panels"  ) ? ActiveState.Yes : ActiveState.No;
 			this.buttonScripts.ActiveState  = (this.currentType == "Scripts" ) ? ActiveState.Yes : ActiveState.No;
 		}
 
@@ -168,10 +168,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected string					currentType = "Strings";
 		protected IconButtonMark			buttonStrings;
-		protected IconButtonMark			buttonPanels;
 		protected IconButtonMark			buttonScripts;
 		protected IconButtonMark			buttonCaptions;
 		protected IconButtonMark			buttonCommands;
+		protected IconButtonMark			buttonPanels;
 		protected IconButtonMark			buttonTypes;
 	}
 }
