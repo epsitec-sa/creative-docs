@@ -75,6 +75,15 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
+		public override Module.BundleType BundleType
+		{
+			get
+			{
+				return Module.BundleType.Types;
+			}
+		}
+
+
 		public override void DoSearch(string search, Searcher.SearchingMode mode)
 		{
 			//	Effectue une recherche.

@@ -178,6 +178,15 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
+		public override Module.BundleType BundleType
+		{
+			get
+			{
+				return Module.BundleType.Panels;
+			}
+		}
+
+
 		public MyWidgets.PanelEditor PanelEditor
 		{
 			get
