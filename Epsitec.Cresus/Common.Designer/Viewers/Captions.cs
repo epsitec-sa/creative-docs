@@ -101,13 +101,14 @@ namespace Epsitec.Common.Designer.Viewers
 			this.rightContainer.MinWidth = 100;
 			this.rightContainer.Dock = DockStyle.StackFill;
 
+			//	Description.
 			panel = new MyWidgets.StackedPanel(this.leftContainer);
 			panel.IsLeftPart = true;
 			panel.Title = Res.Strings.Viewers.Captions.Description;
 			panel.Dock = DockStyle.StackBegin;
 
 			this.primaryDescription = new TextFieldMulti(panel.Container);
-			this.primaryDescription.PreferredHeight = 100;
+			this.primaryDescription.PreferredHeight = 70;
 			this.primaryDescription.Dock = DockStyle.StackBegin;
 			this.primaryDescription.TextChanged += new EventHandler(this.HandleTextChanged);
 			this.primaryDescription.CursorChanged += new EventHandler(this.HandleCursorChanged);
@@ -121,7 +122,7 @@ namespace Epsitec.Common.Designer.Viewers
 			panel.Dock = DockStyle.StackBegin;
 
 			this.secondaryDescription = new TextFieldMulti(panel.Container);
-			this.secondaryDescription.PreferredHeight = 100;
+			this.secondaryDescription.PreferredHeight = 70;
 			this.secondaryDescription.Dock = DockStyle.StackBegin;
 			this.secondaryDescription.TextChanged += new EventHandler(this.HandleTextChanged);
 			this.secondaryDescription.CursorChanged += new EventHandler(this.HandleCursorChanged);
@@ -129,6 +130,32 @@ namespace Epsitec.Common.Designer.Viewers
 			this.secondaryDescription.TabIndex = tabIndex++;
 			this.secondaryDescription.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
+			//	Icône.
+			panel = new MyWidgets.StackedPanel(this.leftContainer);
+			panel.IsLeftPart = true;
+			panel.Title = Res.Strings.Viewers.Captions.Icon;
+			panel.Dock = DockStyle.StackBegin;
+
+			this.primaryIcon = new IconButton(panel.Container);
+			this.primaryIcon.PreferredHeight = 30;
+			this.primaryIcon.PreferredWidth = 30;
+			this.primaryIcon.Dock = DockStyle.StackBegin;
+			this.primaryIcon.TabIndex = tabIndex++;
+			this.primaryIcon.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+
+			panel = new MyWidgets.StackedPanel(this.rightContainer);
+			panel.IsLeftPart = false;
+			panel.Title = Res.Strings.Viewers.Captions.Icon;
+			panel.Dock = DockStyle.StackBegin;
+
+			this.secondaryIcon = new IconButton(panel.Container);
+			this.secondaryIcon.PreferredHeight = 30;
+			this.secondaryIcon.PreferredWidth = 30;
+			this.secondaryIcon.Dock = DockStyle.StackBegin;
+			this.secondaryIcon.TabIndex = tabIndex++;
+			this.secondaryIcon.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+
+			//	Commentaires.
 			panel = new MyWidgets.StackedPanel(this.leftContainer);
 			panel.IsLeftPart = true;
 			panel.Title = Res.Strings.Viewers.Captions.About;
@@ -156,7 +183,6 @@ namespace Epsitec.Common.Designer.Viewers
 			this.secondaryAbout.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
 			this.secondaryAbout.TabIndex = tabIndex++;
 			this.secondaryAbout.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-
 
 
 			this.UpdateCultures();
@@ -581,12 +607,16 @@ namespace Epsitec.Common.Designer.Viewers
 				this.labelEdit.Enable = false;
 				this.primaryDescription.Enable = false;
 				this.secondaryDescription.Enable = false;
+				this.primaryIcon.Enable = false;
+				this.secondaryIcon.Enable = false;
 				this.primaryAbout.Enable = false;
 				this.secondaryAbout.Enable = false;
 
 				this.labelEdit.Text = "";
 				this.primaryDescription.Text = "";
 				this.secondaryDescription.Text = "";
+				this.primaryIcon.IconName = null;
+				this.secondaryIcon.IconName = null;
 				this.primaryAbout.Text = "";
 				this.secondaryAbout.Text = "";
 			}
@@ -594,6 +624,7 @@ namespace Epsitec.Common.Designer.Viewers
 			{
 				this.labelEdit.Enable = true;
 				this.primaryDescription.Enable = true;
+				this.primaryIcon.Enable = true;
 				this.primaryAbout.Enable = true;
 
 				Druid druid = this.druidsIndex[sel];
@@ -603,13 +634,16 @@ namespace Epsitec.Common.Designer.Viewers
 
 				this.SetTextField(this.labelEdit, this.primaryBundle[druid].Name);
 				this.SetTextField(this.primaryDescription, caption.Description);
+				this.primaryIcon.IconName = caption.Icon;
 				this.SetTextField(this.primaryAbout, this.primaryBundle[druid].About);
 
 				if (this.secondaryBundle == null)
 				{
 					this.secondaryDescription.Enable = false;
+					this.secondaryIcon.Enable = false;
 					this.secondaryAbout.Enable = false;
 					this.secondaryDescription.Text = "";
+					this.secondaryIcon.IconName = null;
 					this.secondaryAbout.Text = "";
 				}
 				else
@@ -617,15 +651,19 @@ namespace Epsitec.Common.Designer.Viewers
 					caption = new Epsitec.Common.Types.Caption();
 					string s = this.secondaryBundle[druid].AsString;
 					string text = "";
+					string icon = null;
 					if (!string.IsNullOrEmpty(s))
 					{
 						caption.DeserializeFromString(s);
 						text = caption.Description;
+						icon = caption.Icon;
 					}
 
 					this.secondaryDescription.Enable = true;
+					this.secondaryIcon.Enable = true;
 					this.secondaryAbout.Enable = true;
 					this.SetTextField(this.secondaryDescription, text);
+					this.secondaryIcon.IconName = icon;
 					this.SetTextField(this.secondaryAbout, this.secondaryBundle[druid].About);
 				}
 
@@ -1069,6 +1107,8 @@ namespace Epsitec.Common.Designer.Viewers
 		protected Widget					rightContainer;
 		protected TextFieldMulti			primaryDescription;
 		protected TextFieldMulti			secondaryDescription;
+		protected IconButton				primaryIcon;
+		protected IconButton				secondaryIcon;
 		protected TextFieldMulti			primaryAbout;
 		protected TextFieldMulti			secondaryAbout;
 	}
