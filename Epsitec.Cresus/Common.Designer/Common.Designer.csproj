@@ -43,6 +43,7 @@
     <Compile Include="ConstrainsList.cs" />
     <Compile Include="GridSelection.cs" />
     <Compile Include="GeometryCache.cs" />
+    <Compile Include="MyWidgets\StringCollection.cs" />
     <Compile Include="MyWidgets\StackedPanel.cs" />
     <Compile Include="ObjectModifier.cs" />
     <Compile Include="IProxy.cs" />
