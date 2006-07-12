@@ -126,7 +126,7 @@ namespace Epsitec.Common.Designer
 
 		public int Count(string searching)
 		{
-			//	Effectue le décompte.
+			//	Effectue le comptage.
 			this.InitSearching(searching);
 
 			this.mode &= ~SearchingMode.Reverse;

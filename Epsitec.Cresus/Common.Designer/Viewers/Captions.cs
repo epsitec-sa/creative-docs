@@ -107,15 +107,40 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryDescription.Margins = new Margins(10, 0, 10, 10);
 			this.primaryDescription.Dock = DockStyle.StackBegin;
 			this.primaryDescription.TextChanged += new EventHandler(this.HandleTextChanged);
+			this.primaryDescription.CursorChanged += new EventHandler(this.HandleCursorChanged);
 			this.primaryDescription.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
+			this.primaryDescription.TabIndex = tabIndex++;
+			this.primaryDescription.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			this.secondaryDescription = new TextFieldMulti(rightContainer);
 			this.secondaryDescription.PreferredHeight = 100;
 			this.secondaryDescription.Margins = new Margins(0, 10, 10, 10);
 			this.secondaryDescription.Dock = DockStyle.StackBegin;
 			this.secondaryDescription.TextChanged += new EventHandler(this.HandleTextChanged);
+			this.secondaryDescription.CursorChanged += new EventHandler(this.HandleCursorChanged);
 			this.secondaryDescription.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
+			this.secondaryDescription.TabIndex = tabIndex++;
+			this.secondaryDescription.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
+			this.primaryAbout = new TextFieldMulti(leftContainer);
+			this.primaryAbout.PreferredHeight = 100;
+			this.primaryAbout.Margins = new Margins(10, 0, 10, 10);
+			this.primaryAbout.Dock = DockStyle.StackBegin;
+			this.primaryAbout.TextChanged += new EventHandler(this.HandleTextChanged);
+			this.primaryAbout.CursorChanged += new EventHandler(this.HandleCursorChanged);
+			this.primaryAbout.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
+			this.primaryAbout.TabIndex = tabIndex++;
+			this.primaryAbout.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+
+			this.secondaryAbout = new TextFieldMulti(rightContainer);
+			this.secondaryAbout.PreferredHeight = 100;
+			this.secondaryAbout.Margins = new Margins(0, 10, 10, 10);
+			this.secondaryAbout.Dock = DockStyle.StackBegin;
+			this.secondaryAbout.TextChanged += new EventHandler(this.HandleTextChanged);
+			this.secondaryAbout.CursorChanged += new EventHandler(this.HandleCursorChanged);
+			this.secondaryAbout.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
+			this.secondaryAbout.TabIndex = tabIndex++;
+			this.secondaryAbout.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 
 
@@ -135,10 +160,20 @@ namespace Epsitec.Common.Designer.Viewers
 				this.labelEdit.KeyboardFocusChanged -= new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
 
 				this.primaryDescription.TextChanged -= new EventHandler(this.HandleTextChanged);
+				this.primaryDescription.CursorChanged -= new EventHandler(this.HandleCursorChanged);
 				this.primaryDescription.KeyboardFocusChanged -= new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
 
 				this.secondaryDescription.TextChanged -= new EventHandler(this.HandleTextChanged);
+				this.secondaryDescription.CursorChanged -= new EventHandler(this.HandleCursorChanged);
 				this.secondaryDescription.KeyboardFocusChanged -= new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
+
+				this.primaryAbout.TextChanged -= new EventHandler(this.HandleTextChanged);
+				this.primaryAbout.CursorChanged -= new EventHandler(this.HandleCursorChanged);
+				this.primaryAbout.KeyboardFocusChanged -= new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
+
+				this.secondaryAbout.TextChanged -= new EventHandler(this.HandleTextChanged);
+				this.secondaryAbout.CursorChanged -= new EventHandler(this.HandleCursorChanged);
+				this.secondaryAbout.KeyboardFocusChanged -= new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
 			}
 
 			base.Dispose(disposing);
@@ -171,6 +206,8 @@ namespace Epsitec.Common.Designer.Viewers
 				if (searcher.Field == 0)  edit = this.labelEdit;
 				if (searcher.Field == 1)  edit = this.primaryDescription;
 				if (searcher.Field == 2)  edit = this.secondaryDescription;
+				if (searcher.Field == 3)  edit = this.primaryAbout;
+				if (searcher.Field == 4)  edit = this.secondaryAbout;
 				if (edit != null && edit.Visibility)
 				{
 					this.ignoreChange = true;
@@ -193,16 +230,204 @@ namespace Epsitec.Common.Designer.Viewers
 		public override void DoCount(string search, Searcher.SearchingMode mode)
 		{
 			//	Effectue un comptage.
+			Searcher searcher = new Searcher(this.druidsIndex, this.primaryBundle, this.secondaryBundle, this.BundleType);
+			searcher.FixStarting(mode, this.array.SelectedRow, this.currentTextField, false);
+
+			int count = searcher.Count(search);
+			if (count == 0)
+			{
+				this.module.MainWindow.DialogError(Res.Strings.Dialog.Search.Message.Error);
+			}
+			else
+			{
+				string message = string.Format(Res.Strings.Dialog.Search.Message.Count, count.ToString());
+				this.module.MainWindow.DialogMessage(message);
+			}
 		}
 
 		public override void DoReplace(string search, string replace, Searcher.SearchingMode mode)
 		{
 			//	Effectue un remplacement.
+			if (this.module.Mode == DesignerMode.Translate)
+			{
+				mode &= ~Searcher.SearchingMode.SearchInLabel;
+			}
+
+			Searcher searcher = new Searcher(this.druidsIndex, this.primaryBundle, this.secondaryBundle, this.BundleType);
+			searcher.FixStarting(mode, this.array.SelectedRow, this.currentTextField, this.lastActionIsReplace);
+
+			if (searcher.Replace(search, false))
+			{
+				this.lastActionIsReplace = true;
+
+				this.array.SelectedRow = searcher.Row;
+				this.array.ShowSelectedRow();
+
+				Druid druid = this.druidsIndex[searcher.Row];
+				string text = "";
+
+				if (searcher.Field == 0)
+				{
+					string validReplace = replace;
+					if (!Misc.IsValidLabel(ref validReplace))
+					{
+						this.module.MainWindow.DialogError(Res.Strings.Error.InvalidLabel);
+						return;
+					}
+
+					if (this.IsExistingName(validReplace))
+					{
+						this.module.MainWindow.DialogError(Res.Strings.Error.NameAlreadyExist);
+						return;
+					}
+
+					text = this.primaryBundle[druid].AsString;
+					text = text.Remove(searcher.Index, searcher.Length);
+					text = text.Insert(searcher.Index, validReplace);
+
+					this.module.Modifier.Rename(this.BundleType, druid, text);
+					this.array.SetLineString(0, searcher.Row, text);
+				}
+
+				if (searcher.Field == 1 && this.secondaryBundle != null)
+				{
+					text = this.primaryBundle[druid].AsString;
+					text = text.Remove(searcher.Index, searcher.Length);
+					text = text.Insert(searcher.Index, replace);
+					this.primaryBundle[druid].SetStringValue(text);
+				}
+
+				if (searcher.Field == 2 && this.secondaryBundle != null)
+				{
+					text = this.secondaryBundle[druid].AsString;
+					text = text.Remove(searcher.Index, searcher.Length);
+					text = text.Insert(searcher.Index, replace);
+					this.secondaryBundle[druid].SetStringValue(text);
+				}
+
+				if (searcher.Field == 3)
+				{
+					text = this.primaryBundle[druid].About;
+					text = text.Remove(searcher.Index, searcher.Length);
+					text = text.Insert(searcher.Index, replace);
+					this.primaryBundle[druid].SetAbout(text);
+				}
+
+				if (searcher.Field == 4 && this.secondaryBundle != null)
+				{
+					text = this.secondaryBundle[druid].About;
+					text = text.Remove(searcher.Index, searcher.Length);
+					text = text.Insert(searcher.Index, replace);
+					this.secondaryBundle[druid].SetAbout(text);
+				}
+
+				AbstractTextField edit = null;
+				if (searcher.Field == 0)  edit = this.labelEdit;
+				if (searcher.Field == 1)  edit = this.primaryDescription;
+				if (searcher.Field == 2)  edit = this.secondaryDescription;
+				if (searcher.Field == 3)  edit = this.primaryAbout;
+				if (searcher.Field == 4)  edit = this.secondaryAbout;
+				if (edit != null && edit.Visibility)
+				{
+					this.ignoreChange = true;
+
+					this.Window.MakeActive();
+					edit.Focus();
+					edit.Text = text;
+					edit.CursorFrom  = edit.TextLayout.FindIndexFromOffset(searcher.Index);
+					edit.CursorTo    = edit.TextLayout.FindIndexFromOffset(searcher.Index+replace.Length);
+					edit.CursorAfter = false;
+
+					this.ignoreChange = false;
+				}
+
+				this.module.Modifier.IsDirty = true;
+			}
+			else
+			{
+				this.module.MainWindow.DialogError(Res.Strings.Dialog.Search.Message.Error);
+			}
 		}
 
 		public override void DoReplaceAll(string search, string replace, Searcher.SearchingMode mode)
 		{
 			//	Effectue un 'remplacer tout'.
+			if (this.module.Mode == DesignerMode.Translate)
+			{
+				mode &= ~Searcher.SearchingMode.SearchInLabel;
+			}
+
+			Searcher searcher = new Searcher(this.druidsIndex, this.primaryBundle, this.secondaryBundle, this.BundleType);
+			searcher.FixStarting(mode, this.array.SelectedRow, this.currentTextField, false);
+
+			int count = 0;
+			bool fromBeginning = true;
+			while (searcher.Replace(search, fromBeginning))
+			{
+				fromBeginning = false;
+				count ++;
+
+				Druid druid = this.druidsIndex[searcher.Row];
+				string text = "";
+
+				if (searcher.Field == 0)
+				{
+					text = this.primaryBundle[druid].Name;
+					text = text.Remove(searcher.Index, searcher.Length);
+					text = text.Insert(searcher.Index, replace);
+
+					this.module.Modifier.Rename(this.BundleType, druid, text);
+				}
+
+				if (searcher.Field == 1)
+				{
+					text = this.primaryBundle[druid].AsString;
+					text = text.Remove(searcher.Index, searcher.Length);
+					text = text.Insert(searcher.Index, replace);
+					this.primaryBundle[druid].SetStringValue(text);
+				}
+
+				if (searcher.Field == 2 && this.secondaryBundle != null)
+				{
+					text = this.secondaryBundle[druid].AsString;
+					text = text.Remove(searcher.Index, searcher.Length);
+					text = text.Insert(searcher.Index, replace);
+					this.secondaryBundle[druid].SetStringValue(text);
+				}
+
+				if (searcher.Field == 3)
+				{
+					text = this.primaryBundle[druid].About;
+					text = text.Remove(searcher.Index, searcher.Length);
+					text = text.Insert(searcher.Index, replace);
+					this.primaryBundle[druid].SetAbout(text);
+				}
+
+				if (searcher.Field == 4 && this.secondaryBundle != null)
+				{
+					text = this.secondaryBundle[druid].About;
+					text = text.Remove(searcher.Index, searcher.Length);
+					text = text.Insert(searcher.Index, replace);
+					this.secondaryBundle[druid].SetAbout(text);
+				}
+
+				searcher.Skip(replace.Length);  // saute les caractères sélectionnés
+			}
+
+			if (count == 0)
+			{
+				this.module.MainWindow.DialogError(Res.Strings.Dialog.Search.Message.Error);
+			}
+			else
+			{
+				this.UpdateArray();
+				this.UpdateEdit();
+				this.UpdateCommands();
+				this.module.Modifier.IsDirty = true;
+
+				string text = string.Format(Res.Strings.Dialog.Search.Message.Replace, count.ToString());
+				this.module.MainWindow.DialogMessage(text);
+			}
 		}
 
 		public override void DoModification(string name)
@@ -318,7 +543,6 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Met à jour le contenu du Viewer.
 			this.UpdateArray();
 			this.UpdateEdit();
-			this.UpdateCaption();
 			this.UpdateCommands();
 		}
 
@@ -329,25 +553,67 @@ namespace Epsitec.Common.Designer.Viewers
 			this.ignoreChange = true;
 
 			int sel = this.array.SelectedRow;
-			int column = this.array.SelectedColumn;
 
 			if (sel >= this.druidsIndex.Count)
 			{
 				sel = -1;
-				column = -1;
 			}
+
+			this.secondaryDescription.Visibility = (this.secondaryBundle != null);
+			this.secondaryAbout.Visibility = (this.secondaryBundle != null);
 
 			if ( sel == -1 )
 			{
 				this.labelEdit.Enable = false;
+				this.primaryDescription.Enable = false;
+				this.secondaryDescription.Enable = false;
+				this.primaryAbout.Enable = false;
+				this.secondaryAbout.Enable = false;
+
 				this.labelEdit.Text = "";
+				this.primaryDescription.Text = "";
+				this.secondaryDescription.Text = "";
+				this.primaryAbout.Text = "";
+				this.secondaryAbout.Text = "";
 			}
 			else
 			{
 				this.labelEdit.Enable = true;
+				this.primaryDescription.Enable = true;
+				this.primaryAbout.Enable = true;
 
 				Druid druid = this.druidsIndex[sel];
-				this.SetTextField(this.labelEdit, Captions.SubFilter(this.primaryBundle[druid].Name));
+
+				Common.Types.Caption caption = new Epsitec.Common.Types.Caption();
+				caption.DeserializeFromString(this.primaryBundle[druid].AsString);
+
+				this.SetTextField(this.labelEdit, this.primaryBundle[druid].Name);
+				this.SetTextField(this.primaryDescription, caption.Description);
+				this.SetTextField(this.primaryAbout, this.primaryBundle[druid].About);
+
+				if (this.secondaryBundle == null)
+				{
+					this.secondaryDescription.Enable = false;
+					this.secondaryAbout.Enable = false;
+					this.secondaryDescription.Text = "";
+					this.secondaryAbout.Text = "";
+				}
+				else
+				{
+					caption = new Epsitec.Common.Types.Caption();
+					string s = this.secondaryBundle[druid].AsString;
+					string text = "";
+					if (!string.IsNullOrEmpty(s))
+					{
+						caption.DeserializeFromString(s);
+						text = caption.Description;
+					}
+
+					this.secondaryDescription.Enable = true;
+					this.secondaryAbout.Enable = true;
+					this.SetTextField(this.secondaryDescription, text);
+					this.SetTextField(this.secondaryAbout, this.secondaryBundle[druid].About);
+				}
 
 				this.labelEdit.Focus();
 				this.labelEdit.SelectAll();
@@ -356,63 +622,6 @@ namespace Epsitec.Common.Designer.Viewers
 			this.ignoreChange = iic;
 
 			this.UpdateCommands();
-		}
-
-		protected void UpdateCaption()
-		{
-			int sel = this.array.SelectedRow;
-
-			if (sel >= this.druidsIndex.Count)
-			{
-				sel = -1;
-			}
-
-			this.secondaryDescription.Visibility = (this.secondaryBundle != null);
-
-			if (sel == -1)
-			{
-				this.primaryDescription.Enable = false;
-				this.primaryDescription.Text = "";
-
-				this.secondaryDescription.Enable = false;
-				this.secondaryDescription.Text = "";
-			}
-			else
-			{
-				Druid druid = this.druidsIndex[sel];
-
-#if true
-				ResourceBundle.Field primaryField = this.primaryBundle[druid];
-				string primaryText = primaryField.AsString;
-				primaryText = TextLayout.ConvertToTaggedText(primaryText);
-
-				string secondaryText = null;
-				if (this.secondaryBundle != null)
-				{
-					ResourceBundle.Field secondaryField = this.secondaryBundle[druid];
-					secondaryText = secondaryField.AsString;
-					secondaryText = TextLayout.ConvertToTaggedText(secondaryText);
-				}
-#else
-				Command cmd = Widgets.Command.Get(druid);
-				string primaryText = cmd.Description;
-				string secondaryText = "???";
-#endif
-
-				this.primaryDescription.Enable = true;
-				this.primaryDescription.Text = primaryText;
-
-				if (secondaryText == null)
-				{
-					this.secondaryDescription.Enable = false;
-					this.secondaryDescription.Text = "";
-				}
-				else
-				{
-					this.secondaryDescription.Enable = true;
-					this.secondaryDescription.Text = secondaryText;
-				}
-			}
 		}
 
 		public override void UpdateCommands()
@@ -741,7 +950,6 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			//	La ligne sélectionnée a changé.
 			this.UpdateEdit();
-			this.UpdateCaption();
 			this.UpdateCommands();
 		}
 
@@ -813,7 +1021,26 @@ namespace Epsitec.Common.Designer.Viewers
 				//	TODO:
 			}
 
+			if (edit == this.primaryAbout)
+			{
+				this.primaryBundle[druid].SetAbout(text);
+			}
+
+			if (edit == this.secondaryAbout && this.secondaryBundle != null)
+			{
+				this.module.Modifier.CreateIfNecessary(this.BundleType, this.secondaryBundle, druid);
+				this.secondaryBundle[druid].SetAbout(text);
+			}
+
 			this.module.Modifier.IsDirty = true;
+		}
+
+		void HandleCursorChanged(object sender)
+		{
+			//	Le curseur a été déplacé dans un texte éditable.
+			if ( this.ignoreChange )  return;
+
+			this.lastActionIsReplace = false;
 		}
 
 
@@ -826,5 +1053,7 @@ namespace Epsitec.Common.Designer.Viewers
 		protected Scrollable				scrollable;
 		protected TextFieldMulti			primaryDescription;
 		protected TextFieldMulti			secondaryDescription;
+		protected TextFieldMulti			primaryAbout;
+		protected TextFieldMulti			secondaryAbout;
 	}
 }
