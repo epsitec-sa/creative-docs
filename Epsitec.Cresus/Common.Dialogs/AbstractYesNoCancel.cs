@@ -105,7 +105,7 @@ namespace Epsitec.Common.Dialogs
 			
 			if (this.command_yes_template != null)
 			{
-				this.DispatchWindow.QueueCommand (this, string.Format (this.command_yes_template, this.CommandArgs));
+				this.DispatchWindow.QueueCommand (this.Window, string.Format (this.command_yes_template, this.CommandArgs));
 			}
 			
 			this.CloseDialog ();
@@ -117,7 +117,7 @@ namespace Epsitec.Common.Dialogs
 			
 			if (this.command_no_template != null)
 			{
-				this.DispatchWindow.QueueCommand (this, string.Format (this.command_no_template, this.CommandArgs));
+				this.DispatchWindow.QueueCommand (this.Window, string.Format (this.command_no_template, this.CommandArgs));
 			}
 			
 			this.CloseDialog ();

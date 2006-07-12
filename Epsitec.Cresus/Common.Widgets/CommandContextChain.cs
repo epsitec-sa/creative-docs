@@ -90,7 +90,7 @@ namespace Epsitec.Common.Widgets
 
 			return true;
 		}
-		
+
 		/// <summary>
 		/// Builds the command context chain based on a visual.
 		/// </summary>
@@ -100,44 +100,22 @@ namespace Epsitec.Common.Widgets
 		{
 			CommandContextChain that = null;
 
-			Visual item = visual;
-			Window window = visual.Window;
+			CommandContextChain.BuildChain (visual, ref that);
+			CommandContextChain.BuildChain (visual.Window, ref that);
 
-			while (item != null)
-			{
-				CommandContext context = CommandContext.GetContext (item);
+			return that;
+		}
 
-				if (context != null)
-				{
-					if (that == null)
-					{
-						that = new CommandContextChain ();
-					}
+		/// <summary>
+		/// Builds the command context chain based on a window.
+		/// </summary>
+		/// <param name="window">The window from where to search for the command contexts.</param>
+		/// <returns>The command context chain.</returns>
+		public static CommandContextChain BuildChain(Window window)
+		{
+			CommandContextChain that = null;
 
-					that.chain.Add (new System.WeakReference (context));
-				}
-
-				item = item.Parent;
-			}
-
-			while (window != null)
-			{
-				CommandContext context = CommandContext.GetContext (window);
-
-				if (context != null)
-				{
-					if (that == null)
-					{
-						that = new CommandContextChain ();
-					}
-
-					that.chain.Add (new System.WeakReference (context));
-				}
-
-				window = window.Owner;
-			}
-
-			//	TODO: ajouter ici la notion d'application/module/document
+			CommandContextChain.BuildChain (window, ref that);
 
 			return that;
 		}
@@ -153,10 +131,15 @@ namespace Epsitec.Common.Widgets
 		public static CommandContextChain BuildChain(DependencyObject obj)
 		{
 			Visual visual = obj as Visual;
+			Window window = obj as Window;
 
 			if (visual != null)
 			{
 				return CommandContextChain.BuildChain (visual);
+			}
+			if (window != null)
+			{
+				return CommandContextChain.BuildChain (window);
 			}
 
 			CommandContextChain that = null;
@@ -236,6 +219,48 @@ namespace Epsitec.Common.Widgets
 			context = null;
 			
 			return null;
+		}
+
+		private static void BuildChain(Visual visual, ref CommandContextChain that)
+		{
+			while (visual != null)
+			{
+				CommandContext context = CommandContext.GetContext (visual);
+
+				if (context != null)
+				{
+					if (that == null)
+					{
+						that = new CommandContextChain ();
+					}
+
+					that.chain.Add (new System.WeakReference (context));
+				}
+
+				visual = visual.Parent;
+			}
+		}
+
+		private static void BuildChain(Window window, ref CommandContextChain that)
+		{
+			while (window != null)
+			{
+				CommandContext context = CommandContext.GetContext (window);
+
+				if (context != null)
+				{
+					if (that == null)
+					{
+						that = new CommandContextChain ();
+					}
+
+					that.chain.Add (new System.WeakReference (context));
+				}
+
+				window = window.Owner;
+			}
+
+			//	TODO: ajouter ici la notion d'application/module/document
 		}
 
 		List<System.WeakReference> chain = new List<System.WeakReference> ();

@@ -64,12 +64,60 @@ namespace Epsitec.Common.Widgets
 		{
 			CommandDispatcherChain that = null;
 
-			Visual item = visual;
-			Window window = visual.Window;
+			CommandDispatcherChain.BuildChain (visual, ref that);
+			CommandDispatcherChain.BuildChain (visual.Window, ref that);
 
-			while (item != null)
+			return that;
+		}
+
+		public static CommandDispatcherChain BuildChain(Window window)
+		{
+			CommandDispatcherChain that = null;
+
+			CommandDispatcherChain.BuildChain (window, ref that);
+
+			return that;
+		}
+
+		public static CommandDispatcherChain BuildChain(DependencyObject obj)
+		{
+			Visual visual = obj as Visual;
+			Window window = obj as Window;
+
+			if (visual != null)
 			{
-				CommandDispatcher dispatcher = CommandDispatcher.GetDispatcher (item);
+				return CommandDispatcherChain.BuildChain (visual);
+			}
+			if (window != null)
+			{
+				return CommandDispatcherChain.BuildChain (window);
+			}
+			
+			CommandDispatcherChain that = null;
+
+			if (obj != null)
+			{
+				CommandDispatcher dispatcher = CommandDispatcher.GetDispatcher (obj);
+
+				if (dispatcher != null)
+				{
+					if (that == null)
+					{
+						that = new CommandDispatcherChain ();
+					}
+					
+					that.chain.Add (new System.WeakReference (dispatcher));
+				}
+			}
+			
+			return that;
+		}
+
+		private static void BuildChain(Visual visual, ref CommandDispatcherChain that)
+		{
+			while (visual != null)
+			{
+				CommandDispatcher dispatcher = CommandDispatcher.GetDispatcher (visual);
 
 				if (dispatcher != null)
 				{
@@ -84,13 +132,16 @@ namespace Epsitec.Common.Widgets
 					}
 				}
 
-				item = item.Parent;
+				visual = visual.Parent;
 			}
+		}
 
+		private static void BuildChain(Window window, ref CommandDispatcherChain that)
+		{
 			while (window != null)
 			{
 				CommandDispatcher dispatcher = CommandDispatcher.GetDispatcher (window);
-				
+
 				if (dispatcher != null)
 				{
 					if (that == null)
@@ -106,39 +157,8 @@ namespace Epsitec.Common.Widgets
 
 				window = window.Owner;
 			}
-			
+
 			//	TODO: ajouter ici la notion d'application/module/document
-			
-			return that;
-		}
-		
-		public static CommandDispatcherChain BuildChain(DependencyObject obj)
-		{
-			Visual visual = obj as Visual;
-
-			if (visual != null)
-			{
-				return CommandDispatcherChain.BuildChain (visual);
-			}
-			
-			CommandDispatcherChain that = null;
-
-			if (obj != null)
-			{
-				CommandDispatcher dispatcher = CommandDispatcher.GetDispatcher (obj);
-
-				if (dispatcher != null)
-				{
-					if (that != null)
-					{
-						that = new CommandDispatcherChain ();
-					}
-					
-					that.chain.Add (new System.WeakReference (dispatcher));
-				}
-			}
-			
-			return that;
 		}
 
 		private static bool Contains(IEnumerable<System.WeakReference> chain, CommandDispatcher dispatcher)
