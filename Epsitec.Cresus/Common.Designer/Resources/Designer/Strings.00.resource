@@ -33,6 +33,8 @@
   <data name="Viewers.Panels.TabCultures" id="0R">Cultures</data>
   <data name="Viewers.Panels.Info" id="0S">Objets: {0}/{1}  Sélection: {2}</data>
   <data name="Viewers.Panels.Rectangle" id="0T">x={0} y={1} dx={2} dy={3}</data>
+  <data name="Viewers.Captions.Description" id="0A5" mod="1">Description pour la bulle d&amp;apos;aide</data>
+  <data name="Viewers.Captions.About" id="0B5" mod="1">Commentaires</data>
   <data name="Action.New" id="0U">Nouveau</data>
   <data name="Action.Open" id="0V">Ouvrir...</data>
   <data name="Action.Close" id="001">Fermer</data>
