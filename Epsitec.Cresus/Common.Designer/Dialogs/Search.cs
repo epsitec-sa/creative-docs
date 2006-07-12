@@ -57,6 +57,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.fieldReplace.TabIndex = tabIndex++;
 				this.fieldReplace.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
+				//	Crée le groupe pour le type 'Strings'.
 				this.groupStrings = new GroupBox(this.window.Root);
 				this.groupStrings.Text = Res.Strings.Dialog.Search.Check.Who;
 				this.groupStrings.PreferredWidth = 160;
@@ -81,52 +82,101 @@ namespace Epsitec.Common.Designer.Dialogs
 				label.Anchor = AnchorStyles.Top | AnchorStyles.Left;
 				label.Margins = new Margins(0, 0, 16, 0);
 
-				this.checkLabel = new CheckButton(this.groupStrings);
-				this.checkLabel.Anchor = AnchorStyles.Top | AnchorStyles.Left;
-				this.checkLabel.PreferredWidth = this.checkLabel.PreferredHeight;
-				this.checkLabel.Margins = new Margins (90+20*0, 0, 0, 0);
-				this.checkLabel.TabIndex = tabIndex++;
-				this.checkLabel.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-				this.checkLabel.ActiveStateChanged += new EventHandler(this.HandleCheckActiveStateChanged);
-				ToolTip.Default.SetToolTip(this.checkLabel, Res.Strings.Dialog.Search.Check.Label);
+				this.stringsCheckLabel = new CheckButton(this.groupStrings);
+				this.stringsCheckLabel.Anchor = AnchorStyles.Top | AnchorStyles.Left;
+				this.stringsCheckLabel.PreferredWidth = this.stringsCheckLabel.PreferredHeight;
+				this.stringsCheckLabel.Margins = new Margins(90+20*0, 0, 0, 0);
+				this.stringsCheckLabel.TabIndex = tabIndex++;
+				this.stringsCheckLabel.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+				this.stringsCheckLabel.ActiveStateChanged += new EventHandler(this.HandleCheckActiveStateChanged);
+				ToolTip.Default.SetToolTip(this.stringsCheckLabel, Res.Strings.Dialog.Search.Check.Label);
 
-				this.checkPrimaryText = new CheckButton(this.groupStrings);
-				this.checkPrimaryText.ActiveState = ActiveState.Yes;
-				this.checkPrimaryText.Anchor = AnchorStyles.Top | AnchorStyles.Left;
-				this.checkPrimaryText.PreferredWidth = this.checkPrimaryText.PreferredHeight;
-				this.checkPrimaryText.Margins = new Margins (90+20*1, 0, 0, 0);
-				this.checkPrimaryText.TabIndex = tabIndex++;
-				this.checkPrimaryText.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-				this.checkPrimaryText.ActiveStateChanged += new EventHandler(this.HandleCheckActiveStateChanged);
-				ToolTip.Default.SetToolTip(this.checkPrimaryText, Res.Strings.Dialog.Search.Check.PrimaryText);
+				this.stringsCheckPrimaryText = new CheckButton(this.groupStrings);
+				this.stringsCheckPrimaryText.ActiveState = ActiveState.Yes;
+				this.stringsCheckPrimaryText.Anchor = AnchorStyles.Top | AnchorStyles.Left;
+				this.stringsCheckPrimaryText.PreferredWidth = this.stringsCheckPrimaryText.PreferredHeight;
+				this.stringsCheckPrimaryText.Margins = new Margins(90+20*1, 0, 0, 0);
+				this.stringsCheckPrimaryText.TabIndex = tabIndex++;
+				this.stringsCheckPrimaryText.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+				this.stringsCheckPrimaryText.ActiveStateChanged += new EventHandler(this.HandleCheckActiveStateChanged);
+				ToolTip.Default.SetToolTip(this.stringsCheckPrimaryText, Res.Strings.Dialog.Search.Check.PrimaryText);
 
-				this.checkSecondaryText = new CheckButton(this.groupStrings);
-				this.checkSecondaryText.ActiveState = ActiveState.Yes;
-				this.checkSecondaryText.Anchor = AnchorStyles.Top | AnchorStyles.Left;
-				this.checkSecondaryText.PreferredWidth = this.checkSecondaryText.PreferredHeight;
-				this.checkSecondaryText.Margins = new Margins (90+20*2, 0, 0, 0);
-				this.checkSecondaryText.TabIndex = tabIndex++;
-				this.checkSecondaryText.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-				this.checkSecondaryText.ActiveStateChanged += new EventHandler(this.HandleCheckActiveStateChanged);
-				ToolTip.Default.SetToolTip(this.checkSecondaryText, Res.Strings.Dialog.Search.Check.SecondaryText);
+				this.stringsCheckSecondaryText = new CheckButton(this.groupStrings);
+				this.stringsCheckSecondaryText.ActiveState = ActiveState.Yes;
+				this.stringsCheckSecondaryText.Anchor = AnchorStyles.Top | AnchorStyles.Left;
+				this.stringsCheckSecondaryText.PreferredWidth = this.stringsCheckSecondaryText.PreferredHeight;
+				this.stringsCheckSecondaryText.Margins = new Margins(90+20*2, 0, 0, 0);
+				this.stringsCheckSecondaryText.TabIndex = tabIndex++;
+				this.stringsCheckSecondaryText.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+				this.stringsCheckSecondaryText.ActiveStateChanged += new EventHandler(this.HandleCheckActiveStateChanged);
+				ToolTip.Default.SetToolTip(this.stringsCheckSecondaryText, Res.Strings.Dialog.Search.Check.SecondaryText);
 
-				this.checkPrimaryAbout = new CheckButton(this.groupStrings);
-				this.checkPrimaryAbout.Anchor = AnchorStyles.Top | AnchorStyles.Left;
-				this.checkPrimaryAbout.PreferredWidth = this.checkPrimaryAbout.PreferredHeight;
-				this.checkPrimaryAbout.Margins = new Margins(90+20*1, 0, 16, 0);
-				this.checkPrimaryAbout.TabIndex = tabIndex++;
-				this.checkPrimaryAbout.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-				this.checkPrimaryAbout.ActiveStateChanged += new EventHandler(this.HandleCheckActiveStateChanged);
-				ToolTip.Default.SetToolTip(this.checkPrimaryAbout, Res.Strings.Dialog.Search.Check.PrimaryAbout);
+				this.stringsCheckPrimaryAbout = new CheckButton(this.groupStrings);
+				this.stringsCheckPrimaryAbout.Anchor = AnchorStyles.Top | AnchorStyles.Left;
+				this.stringsCheckPrimaryAbout.PreferredWidth = this.stringsCheckPrimaryAbout.PreferredHeight;
+				this.stringsCheckPrimaryAbout.Margins = new Margins(90+20*1, 0, 16, 0);
+				this.stringsCheckPrimaryAbout.TabIndex = tabIndex++;
+				this.stringsCheckPrimaryAbout.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+				this.stringsCheckPrimaryAbout.ActiveStateChanged += new EventHandler(this.HandleCheckActiveStateChanged);
+				ToolTip.Default.SetToolTip(this.stringsCheckPrimaryAbout, Res.Strings.Dialog.Search.Check.PrimaryAbout);
 
-				this.checkSecondaryAbout = new CheckButton(this.groupStrings);
-				this.checkSecondaryAbout.Anchor = AnchorStyles.Top | AnchorStyles.Left;
-				this.checkSecondaryAbout.PreferredWidth = this.checkSecondaryAbout.PreferredHeight;
-				this.checkSecondaryAbout.Margins = new Margins (90+20*2, 0, 16, 0);
-				this.checkSecondaryAbout.TabIndex = tabIndex++;
-				this.checkSecondaryAbout.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-				this.checkSecondaryAbout.ActiveStateChanged += new EventHandler(this.HandleCheckActiveStateChanged);
-				ToolTip.Default.SetToolTip(this.checkSecondaryAbout, Res.Strings.Dialog.Search.Check.SecondaryAbout);
+				this.stringsCheckSecondaryAbout = new CheckButton(this.groupStrings);
+				this.stringsCheckSecondaryAbout.Anchor = AnchorStyles.Top | AnchorStyles.Left;
+				this.stringsCheckSecondaryAbout.PreferredWidth = this.stringsCheckSecondaryAbout.PreferredHeight;
+				this.stringsCheckSecondaryAbout.Margins = new Margins(90+20*2, 0, 16, 0);
+				this.stringsCheckSecondaryAbout.TabIndex = tabIndex++;
+				this.stringsCheckSecondaryAbout.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+				this.stringsCheckSecondaryAbout.ActiveStateChanged += new EventHandler(this.HandleCheckActiveStateChanged);
+				ToolTip.Default.SetToolTip(this.stringsCheckSecondaryAbout, Res.Strings.Dialog.Search.Check.SecondaryAbout);
+
+				//	Crée le groupe pour le type 'Captions'.
+				this.groupCaptions = new GroupBox(this.window.Root);
+				this.groupCaptions.Text = Res.Strings.Dialog.Search.Check.Who;
+				this.groupCaptions.PreferredWidth = 160;
+				this.groupCaptions.PreferredHeight = 60;
+				this.groupCaptions.Anchor = AnchorStyles.Top | AnchorStyles.Left;
+				this.groupCaptions.Margins = new Margins(6, 0, 6+58+16*0, 0);
+				this.groupCaptions.Padding = new Margins(5, 5, 5, 5);
+				this.groupCaptions.TabIndex = tabIndex++;
+				this.groupCaptions.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
+
+				label = new StaticText(this.groupCaptions);
+				label.PreferredWidth = 80;
+				label.ContentAlignment = ContentAlignment.MiddleRight;
+				label.Text = Res.Strings.Viewers.Strings.Edit;
+				label.Anchor = AnchorStyles.Top | AnchorStyles.Left;
+				label.Margins = new Margins(0, 0, 0, 0);
+
+				this.captionsCheckLabel = new CheckButton(this.groupCaptions);
+				this.captionsCheckLabel.ActiveState = ActiveState.Yes;
+				this.captionsCheckLabel.Anchor = AnchorStyles.Top | AnchorStyles.Left;
+				this.captionsCheckLabel.PreferredWidth = this.captionsCheckLabel.PreferredHeight;
+				this.captionsCheckLabel.Margins = new Margins(90+20*0, 0, 0, 0);
+				this.captionsCheckLabel.TabIndex = tabIndex++;
+				this.captionsCheckLabel.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+				this.captionsCheckLabel.ActiveStateChanged += new EventHandler(this.HandleCheckActiveStateChanged);
+				ToolTip.Default.SetToolTip(this.captionsCheckLabel, Res.Strings.Dialog.Search.Check.Label);
+
+				this.captionsCheckPrimaryText = new CheckButton(this.groupCaptions);
+				//this.captionsCheckPrimaryText.ActiveState = ActiveState.Yes;
+				this.captionsCheckPrimaryText.Anchor = AnchorStyles.Top | AnchorStyles.Left;
+				this.captionsCheckPrimaryText.PreferredWidth = this.captionsCheckPrimaryText.PreferredHeight;
+				this.captionsCheckPrimaryText.Margins = new Margins(90+20*1, 0, 0, 0);
+				this.captionsCheckPrimaryText.TabIndex = tabIndex++;
+				this.captionsCheckPrimaryText.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+				this.captionsCheckPrimaryText.ActiveStateChanged += new EventHandler(this.HandleCheckActiveStateChanged);
+				ToolTip.Default.SetToolTip(this.captionsCheckPrimaryText, Res.Strings.Dialog.Search.Check.PrimaryText);
+
+				this.captionsCheckSecondaryText = new CheckButton(this.groupCaptions);
+				//this.captionsCheckSecondaryText.ActiveState = ActiveState.Yes;
+				this.captionsCheckSecondaryText.Anchor = AnchorStyles.Top | AnchorStyles.Left;
+				this.captionsCheckSecondaryText.PreferredWidth = this.captionsCheckSecondaryText.PreferredHeight;
+				this.captionsCheckSecondaryText.Margins = new Margins(90+20*2, 0, 0, 0);
+				this.captionsCheckSecondaryText.TabIndex = tabIndex++;
+				this.captionsCheckSecondaryText.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+				this.captionsCheckSecondaryText.ActiveStateChanged += new EventHandler(this.HandleCheckActiveStateChanged);
+				ToolTip.Default.SetToolTip(this.captionsCheckSecondaryText, Res.Strings.Dialog.Search.Check.SecondaryText);
+
 
 				this.checkCase = new CheckButton(this.window.Root);
 				this.checkCase.PreferredWidth = 130;
@@ -234,6 +284,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			{
 				this.bundleType = type;
 				this.UpdateBundleType();
+				this.UpdateButtons();
 			}
 		}
 
@@ -257,16 +308,32 @@ namespace Epsitec.Common.Designer.Dialogs
 			get
 			{
 				Searcher.SearchingMode mode = Searcher.SearchingMode.None;
+
 				if (this.checkCase != null)
 				{
-					if (this.checkCase.ActiveState            == ActiveState.Yes)  mode |= Searcher.SearchingMode.CaseSensitive;
-					if (this.checkWord.ActiveState            == ActiveState.Yes)  mode |= Searcher.SearchingMode.WholeWord;
-					if (this.checkLabel.ActiveState           == ActiveState.Yes)  mode |= Searcher.SearchingMode.SearchInLabel;
-					if (this.checkPrimaryText.ActiveState     == ActiveState.Yes)  mode |= Searcher.SearchingMode.SearchInPrimaryText;
-					if (this.checkSecondaryText.ActiveState   == ActiveState.Yes)  mode |= Searcher.SearchingMode.SearchInSecondaryText;
-					if (this.checkPrimaryAbout.ActiveState    == ActiveState.Yes)  mode |= Searcher.SearchingMode.SearchInPrimaryAbout;
-					if (this.checkSecondaryAbout.ActiveState  == ActiveState.Yes)  mode |= Searcher.SearchingMode.SearchInSecondaryAbout;
+					if (this.checkCase.ActiveState == ActiveState.Yes)  mode |= Searcher.SearchingMode.CaseSensitive;
+					if (this.checkWord.ActiveState == ActiveState.Yes)  mode |= Searcher.SearchingMode.WholeWord;
+
+					if (this.bundleType == Module.BundleType.Strings)
+					{
+						if (this.stringsCheckLabel.ActiveState          == ActiveState.Yes)  mode |= Searcher.SearchingMode.SearchInLabel;
+						if (this.stringsCheckPrimaryText.ActiveState    == ActiveState.Yes)  mode |= Searcher.SearchingMode.SearchInPrimaryText;
+						if (this.stringsCheckSecondaryText.ActiveState  == ActiveState.Yes)  mode |= Searcher.SearchingMode.SearchInSecondaryText;
+						if (this.stringsCheckPrimaryAbout.ActiveState   == ActiveState.Yes)  mode |= Searcher.SearchingMode.SearchInPrimaryAbout;
+						if (this.stringsCheckSecondaryAbout.ActiveState == ActiveState.Yes)  mode |= Searcher.SearchingMode.SearchInSecondaryAbout;
+					}
+					else if (this.bundleType == Module.BundleType.Captions)
+					{
+						if (this.captionsCheckLabel.ActiveState         == ActiveState.Yes)  mode |= Searcher.SearchingMode.SearchInLabel;
+						if (this.captionsCheckPrimaryText.ActiveState   == ActiveState.Yes)  mode |= Searcher.SearchingMode.SearchInPrimaryText;
+						if (this.captionsCheckSecondaryText.ActiveState == ActiveState.Yes)  mode |= Searcher.SearchingMode.SearchInSecondaryText;
+					}
+					else
+					{
+						mode |= Searcher.SearchingMode.SearchInLabel;
+					}
 				}
+
 				return mode;
 			}
 		}
@@ -280,16 +347,31 @@ namespace Epsitec.Common.Designer.Dialogs
 				if (this.fieldSearch == null )  return false;
 				if (this.fieldSearch.Text == "")  return false;
 
-				return (this.checkLabel.ActiveState == ActiveState.Yes ||
-						this.checkPrimaryText.ActiveState == ActiveState.Yes ||
-						this.checkSecondaryText.ActiveState == ActiveState.Yes ||
-						this.checkPrimaryAbout.ActiveState == ActiveState.Yes ||
-						this.checkSecondaryAbout.ActiveState == ActiveState.Yes);
+				if (this.bundleType == Module.BundleType.Strings)
+				{
+					return (this.stringsCheckLabel.ActiveState == ActiveState.Yes ||
+							this.stringsCheckPrimaryText.ActiveState == ActiveState.Yes ||
+							this.stringsCheckSecondaryText.ActiveState == ActiveState.Yes ||
+							this.stringsCheckPrimaryAbout.ActiveState == ActiveState.Yes ||
+							this.stringsCheckSecondaryAbout.ActiveState == ActiveState.Yes);
+				}
+				else if (this.bundleType == Module.BundleType.Captions)
+				{
+					return (this.captionsCheckLabel.ActiveState == ActiveState.Yes ||
+							this.captionsCheckPrimaryText.ActiveState == ActiveState.Yes ||
+							this.captionsCheckSecondaryText.ActiveState == ActiveState.Yes);
+				}
+				else
+				{
+					return false;
+				}
 			}
 		}
 
 		protected void UpdateButtons()
 		{
+			if (this.window == null)  return;
+
 			Module module = this.mainWindow.CurrentModule;
 			if (module == null)  return;
 
@@ -311,6 +393,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			if (this.window != null)
 			{
 				this.groupStrings.Visibility = (this.bundleType == Module.BundleType.Strings);
+				this.groupCaptions.Visibility = (this.bundleType == Module.BundleType.Captions);
 			}
 		}
 
@@ -412,11 +495,16 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected CheckButton					checkWord;
 
 		protected GroupBox						groupStrings;
-		protected CheckButton					checkLabel;
-		protected CheckButton					checkPrimaryText;
-		protected CheckButton					checkSecondaryText;
-		protected CheckButton					checkPrimaryAbout;
-		protected CheckButton					checkSecondaryAbout;
+		protected CheckButton					stringsCheckLabel;
+		protected CheckButton					stringsCheckPrimaryText;
+		protected CheckButton					stringsCheckSecondaryText;
+		protected CheckButton					stringsCheckPrimaryAbout;
+		protected CheckButton					stringsCheckSecondaryAbout;
+
+		protected GroupBox						groupCaptions;
+		protected CheckButton					captionsCheckLabel;
+		protected CheckButton					captionsCheckPrimaryText;
+		protected CheckButton					captionsCheckSecondaryText;
 
 		protected Button						buttonSearchPrev;
 		protected Button						buttonSearchNext;

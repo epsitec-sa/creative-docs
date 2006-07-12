@@ -141,7 +141,7 @@ namespace Epsitec.Common.Designer.Viewers
 		public override void DoSearch(string search, Searcher.SearchingMode mode)
 		{
 			//	Effectue une recherche.
-			Searcher searcher = new Searcher(this.druidsIndex, this.primaryBundle, this.secondaryBundle);
+			Searcher searcher = new Searcher(this.druidsIndex, this.primaryBundle, this.secondaryBundle, this.BundleType);
 			searcher.FixStarting(mode, this.array.SelectedRow, this.currentTextField, false);
 
 			if (searcher.Search(search))
@@ -179,7 +179,7 @@ namespace Epsitec.Common.Designer.Viewers
 		public override void DoCount(string search, Searcher.SearchingMode mode)
 		{
 			//	Effectue un comptage.
-			Searcher searcher = new Searcher(this.druidsIndex, this.primaryBundle, this.secondaryBundle);
+			Searcher searcher = new Searcher(this.druidsIndex, this.primaryBundle, this.secondaryBundle, this.BundleType);
 			searcher.FixStarting(mode, this.array.SelectedRow, this.currentTextField, false);
 
 			int count = searcher.Count(search);
@@ -202,7 +202,7 @@ namespace Epsitec.Common.Designer.Viewers
 				mode &= ~Searcher.SearchingMode.SearchInLabel;
 			}
 
-			Searcher searcher = new Searcher(this.druidsIndex, this.primaryBundle, this.secondaryBundle);
+			Searcher searcher = new Searcher(this.druidsIndex, this.primaryBundle, this.secondaryBundle, this.BundleType);
 			searcher.FixStarting(mode, this.array.SelectedRow, this.currentTextField, this.lastActionIsReplace);
 
 			if (searcher.Replace(search, false))
@@ -310,7 +310,7 @@ namespace Epsitec.Common.Designer.Viewers
 				mode &= ~Searcher.SearchingMode.SearchInLabel;
 			}
 
-			Searcher searcher = new Searcher(this.druidsIndex, this.primaryBundle, this.secondaryBundle);
+			Searcher searcher = new Searcher(this.druidsIndex, this.primaryBundle, this.secondaryBundle, this.BundleType);
 			searcher.FixStarting(mode, this.array.SelectedRow, this.currentTextField, false);
 
 			int count = 0;
@@ -1294,8 +1294,6 @@ namespace Epsitec.Common.Designer.Viewers
 			this.lastActionIsReplace = false;
 		}
 
-
-		protected bool						lastActionIsReplace = false;
 
 		protected IconButtonMark			primaryCulture;
 		protected IconButtonMark[]			secondaryCultures;

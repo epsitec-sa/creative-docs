@@ -23,11 +23,12 @@ namespace Epsitec.Common.Designer
 		}
 
 
-		public Searcher(List<Druid> druidsIndex, ResourceBundle primaryBundle, ResourceBundle secondaryBundle)
+		public Searcher(List<Druid> druidsIndex, ResourceBundle primaryBundle, ResourceBundle secondaryBundle, Module.BundleType bundleType)
 		{
 			this.druidsIndex = druidsIndex;
 			this.primaryBundle = primaryBundle;
 			this.secondaryBundle = secondaryBundle;
+			this.bundleType = bundleType;
 			this.mode = SearchingMode.SearchInPrimaryText | SearchingMode.SearchInSecondaryText;
 		}
 
@@ -329,29 +330,50 @@ namespace Epsitec.Common.Designer
 			{
 				Druid druid = this.druidsIndex[this.current.Row];
 
-				if (this.current.Field == 0 && (this.mode&SearchingMode.SearchInLabel) != 0)
+				if (this.bundleType == Module.BundleType.Strings)
 				{
-					return this.primaryBundle[druid].Name;
+					if (this.current.Field == 0 && (this.mode&SearchingMode.SearchInLabel) != 0)
+					{
+						return this.primaryBundle[druid].Name;
+					}
+
+					if (this.current.Field == 1 && (this.mode&SearchingMode.SearchInPrimaryText) != 0)
+					{
+						return this.primaryBundle[druid].AsString;
+					}
+
+					if (this.current.Field == 2 && (this.mode&SearchingMode.SearchInSecondaryText) != 0 && this.secondaryBundle != null)
+					{
+						return this.secondaryBundle[druid].AsString;
+					}
+
+					if (this.current.Field == 3 && (this.mode&SearchingMode.SearchInPrimaryAbout) != 0)
+					{
+						return this.primaryBundle[druid].About;
+					}
+
+					if (this.current.Field == 4 && (this.mode&SearchingMode.SearchInSecondaryAbout) != 0 && this.secondaryBundle != null)
+					{
+						return this.secondaryBundle[druid].About;
+					}
 				}
 
-				if (this.current.Field == 1 && (this.mode&SearchingMode.SearchInPrimaryText) != 0)
+				if (this.bundleType == Module.BundleType.Captions)
 				{
-					return this.primaryBundle[druid].AsString;
-				}
+					if (this.current.Field == 0 && (this.mode&SearchingMode.SearchInLabel) != 0)
+					{
+						return Viewers.Captions.SubFilter(this.primaryBundle[druid].Name);
+					}
 
-				if (this.current.Field == 2 && (this.mode&SearchingMode.SearchInSecondaryText) != 0 && this.secondaryBundle != null)
-				{
-					return this.secondaryBundle[druid].AsString;
-				}
+					if (this.current.Field == 1 && (this.mode&SearchingMode.SearchInPrimaryText) != 0)
+					{
+						return TextLayout.ConvertToTaggedText(this.primaryBundle[druid].AsString);
+					}
 
-				if (this.current.Field == 3 && (this.mode&SearchingMode.SearchInPrimaryAbout) != 0)
-				{
-					return this.primaryBundle[druid].About;
-				}
-
-				if (this.current.Field == 4 && (this.mode&SearchingMode.SearchInSecondaryAbout) != 0 && this.secondaryBundle != null)
-				{
-					return this.secondaryBundle[druid].About;
+					if (this.current.Field == 2 && (this.mode&SearchingMode.SearchInSecondaryText) != 0 && this.secondaryBundle != null)
+					{
+						return TextLayout.ConvertToTaggedText(this.secondaryBundle[druid].AsString);
+					}
 				}
 
 				return null;
@@ -603,6 +625,7 @@ namespace Epsitec.Common.Designer
 		protected List<Druid>			druidsIndex;
 		protected ResourceBundle		primaryBundle;
 		protected ResourceBundle		secondaryBundle;
+		protected Module.BundleType		bundleType;
 		protected SearchingMode			mode;
 		protected string				searching;
 		protected Cursor				starting;
