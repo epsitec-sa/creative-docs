@@ -113,7 +113,7 @@ namespace Epsitec.Common.Dialogs
 			
 			if (! string.IsNullOrEmpty (this.command_template))
 			{
-				this.DispatchWindow.QueueCommand (this, string.Format (this.command_template, this.CommandArgs));
+				this.DispatchWindow.QueueCommand (this.Window, string.Format (this.command_template, this.CommandArgs));
 			}
 			
 			this.CloseDialog ();

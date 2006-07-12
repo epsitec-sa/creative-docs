@@ -579,7 +579,7 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			//	Supprime la culture courante.
 			//	TODO: pourquoi ça plante ?
-#if false
+#if true
 			string question = string.Format(Res.Strings.Dialog.DeleteCulture.Question, Misc.CultureName(this.secondaryBundle.Culture));
 			Common.Dialogs.DialogResult result = this.module.MainWindow.DialogQuestion(question);
 			if ( result != Epsitec.Common.Dialogs.DialogResult.Yes )  return;
