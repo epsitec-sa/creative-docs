@@ -139,7 +139,8 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryIcon = new IconButton(panel.Container);
 			this.primaryIcon.PreferredHeight = 30;
 			this.primaryIcon.PreferredWidth = 30;
-			this.primaryIcon.Dock = DockStyle.StackBegin;
+			this.primaryIcon.ButtonStyle = ButtonStyle.ActivableIcon;
+			this.primaryIcon.Anchor = AnchorStyles.TopLeft;
 			this.primaryIcon.TabIndex = tabIndex++;
 			this.primaryIcon.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
@@ -151,7 +152,8 @@ namespace Epsitec.Common.Designer.Viewers
 			this.secondaryIcon = new IconButton(panel.Container);
 			this.secondaryIcon.PreferredHeight = 30;
 			this.secondaryIcon.PreferredWidth = 30;
-			this.secondaryIcon.Dock = DockStyle.StackBegin;
+			this.secondaryIcon.ButtonStyle = ButtonStyle.ActivableIcon;
+			this.secondaryIcon.Anchor = AnchorStyles.TopLeft;
 			this.secondaryIcon.TabIndex = tabIndex++;
 			this.secondaryIcon.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
