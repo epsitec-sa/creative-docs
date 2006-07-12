@@ -185,12 +185,15 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
 			IAdorner adorner = Epsitec.Common.Widgets.Adorners.Factory.Active;
-
 			Rectangle rect = this.Client.Bounds;
-			graphics.AddFilledRectangle(rect);
-			Color cap = adorner.ColorCaption;
-			Color color = Color.FromAlphaRgb(1.0-this.backgroundIntensity, 0.5+cap.R*0.5, 0.5+cap.G*0.5, 0.5+cap.B*0.5);
-			graphics.RenderSolid(color);
+
+			if (this.backgroundIntensity < 1.0)
+			{
+				graphics.AddFilledRectangle(rect);
+				Color cap = adorner.ColorCaption;
+				Color color = Color.FromAlphaRgb(1.0-this.backgroundIntensity, 0.5+cap.R*0.5, 0.5+cap.G*0.5, 0.5+cap.B*0.5);
+				graphics.RenderSolid(color);
+			}
 
 			rect.Deflate(0.5, 0.5);
 			graphics.AddLine(rect.Left, rect.Bottom-0.5, rect.Left, rect.Top-0.5);

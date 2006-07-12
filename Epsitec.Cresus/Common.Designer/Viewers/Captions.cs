@@ -13,6 +13,7 @@ namespace Epsitec.Common.Designer.Viewers
 	{
 		public Captions(Module module, PanelsContext context) : base(module, context)
 		{
+			MyWidgets.StackedPanel panel;
 			int tabIndex = 0;
 
 			//	Crée les 2 parties gauche/droite séparées par un splitter.
@@ -71,11 +72,11 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryCulture.AutoFocus = false;
 			this.primaryCulture.TabIndex = tabIndex++;
 			this.primaryCulture.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			this.primaryCulture.Margins = new Margins(0, 5, 0, 0);
+			this.primaryCulture.Margins = new Margins(0, 10, 0, 0);
 			this.primaryCulture.Dock = DockStyle.StackFill;
 
 			this.secondaryCulture = new Widget(sup);
-			this.secondaryCulture.Margins = new Margins(5, 0, 0, 0);
+			this.secondaryCulture.Margins = new Margins(10, 0, 0, 0);
 			this.secondaryCulture.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
 			this.secondaryCulture.Dock = DockStyle.StackFill;
 
@@ -92,19 +93,21 @@ namespace Epsitec.Common.Designer.Viewers
 
 			this.scrollable.Panel.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
 
-			Widget leftContainer = new Widget(this.scrollable.Panel);
-			leftContainer.MinWidth = 100;
-			leftContainer.Padding = new Margins(0, 5, 0, 0);
-			leftContainer.Dock = DockStyle.StackFill;
+			this.leftContainer = new Widget(this.scrollable.Panel);
+			this.leftContainer.MinWidth = 100;
+			this.leftContainer.Dock = DockStyle.StackFill;
 
-			Widget rightContainer = new Widget(this.scrollable.Panel);
-			rightContainer.MinWidth = 100;
-			rightContainer.Padding = new Margins(5, 0, 0, 0);
-			rightContainer.Dock = DockStyle.StackFill;
+			this.rightContainer = new Widget(this.scrollable.Panel);
+			this.rightContainer.MinWidth = 100;
+			this.rightContainer.Dock = DockStyle.StackFill;
 
-			this.primaryDescription = new TextFieldMulti(leftContainer);
+			panel = new MyWidgets.StackedPanel(this.leftContainer);
+			panel.IsLeftPart = true;
+			panel.Title = Res.Strings.Viewers.Captions.Description;
+			panel.Dock = DockStyle.StackBegin;
+
+			this.primaryDescription = new TextFieldMulti(panel.Container);
 			this.primaryDescription.PreferredHeight = 100;
-			this.primaryDescription.Margins = new Margins(10, 0, 10, 10);
 			this.primaryDescription.Dock = DockStyle.StackBegin;
 			this.primaryDescription.TextChanged += new EventHandler(this.HandleTextChanged);
 			this.primaryDescription.CursorChanged += new EventHandler(this.HandleCursorChanged);
@@ -112,9 +115,13 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryDescription.TabIndex = tabIndex++;
 			this.primaryDescription.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
-			this.secondaryDescription = new TextFieldMulti(rightContainer);
+			panel = new MyWidgets.StackedPanel(this.rightContainer);
+			panel.IsLeftPart = false;
+			panel.Title = Res.Strings.Viewers.Captions.Description;
+			panel.Dock = DockStyle.StackBegin;
+
+			this.secondaryDescription = new TextFieldMulti(panel.Container);
 			this.secondaryDescription.PreferredHeight = 100;
-			this.secondaryDescription.Margins = new Margins(0, 10, 10, 10);
 			this.secondaryDescription.Dock = DockStyle.StackBegin;
 			this.secondaryDescription.TextChanged += new EventHandler(this.HandleTextChanged);
 			this.secondaryDescription.CursorChanged += new EventHandler(this.HandleCursorChanged);
@@ -122,9 +129,13 @@ namespace Epsitec.Common.Designer.Viewers
 			this.secondaryDescription.TabIndex = tabIndex++;
 			this.secondaryDescription.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
-			this.primaryAbout = new TextFieldMulti(leftContainer);
-			this.primaryAbout.PreferredHeight = 100;
-			this.primaryAbout.Margins = new Margins(10, 0, 10, 10);
+			panel = new MyWidgets.StackedPanel(this.leftContainer);
+			panel.IsLeftPart = true;
+			panel.Title = Res.Strings.Viewers.Captions.About;
+			panel.Dock = DockStyle.StackBegin;
+
+			this.primaryAbout = new TextFieldMulti(panel.Container);
+			this.primaryAbout.PreferredHeight = 50;
 			this.primaryAbout.Dock = DockStyle.StackBegin;
 			this.primaryAbout.TextChanged += new EventHandler(this.HandleTextChanged);
 			this.primaryAbout.CursorChanged += new EventHandler(this.HandleCursorChanged);
@@ -132,9 +143,13 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryAbout.TabIndex = tabIndex++;
 			this.primaryAbout.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
-			this.secondaryAbout = new TextFieldMulti(rightContainer);
-			this.secondaryAbout.PreferredHeight = 100;
-			this.secondaryAbout.Margins = new Margins(0, 10, 10, 10);
+			panel = new MyWidgets.StackedPanel(this.rightContainer);
+			panel.IsLeftPart = false;
+			panel.Title = Res.Strings.Viewers.Captions.About;
+			panel.Dock = DockStyle.StackBegin;
+
+			this.secondaryAbout = new TextFieldMulti(panel.Container);
+			this.secondaryAbout.PreferredHeight = 50;
 			this.secondaryAbout.Dock = DockStyle.StackBegin;
 			this.secondaryAbout.TextChanged += new EventHandler(this.HandleTextChanged);
 			this.secondaryAbout.CursorChanged += new EventHandler(this.HandleCursorChanged);
@@ -559,8 +574,7 @@ namespace Epsitec.Common.Designer.Viewers
 				sel = -1;
 			}
 
-			this.secondaryDescription.Visibility = (this.secondaryBundle != null);
-			this.secondaryAbout.Visibility = (this.secondaryBundle != null);
+			this.rightContainer.Visibility = (this.secondaryBundle != null);
 
 			if ( sel == -1 )
 			{
@@ -1051,6 +1065,8 @@ namespace Epsitec.Common.Designer.Viewers
 		protected ResourceBundle			secondaryBundle;
 		protected TextFieldEx				labelEdit;
 		protected Scrollable				scrollable;
+		protected Widget					leftContainer;
+		protected Widget					rightContainer;
 		protected TextFieldMulti			primaryDescription;
 		protected TextFieldMulti			secondaryDescription;
 		protected TextFieldMulti			primaryAbout;
