@@ -341,6 +341,18 @@
   <ItemGroup>
     <EmbeddedResource Include="Images\CursorGridPlus.icon" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Images\StringAdd.icon" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Images\StringRemove.icon" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Images\StringNext.icon" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Images\StringPrev.icon" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
