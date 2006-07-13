@@ -126,7 +126,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			slider.PreferredWidth = 80;
 			slider.Margins = new Margins(2, 2, 3, 3);
 			slider.MinValue = 1.0M;
-			slider.MaxValue = 5.0M;
+			slider.MaxValue = 5.0M;  // 1..5
 			slider.SmallChange = 1.0M;
 			slider.LargeChange = 2.0M;
 			slider.Resolution = 1.0M;
@@ -142,7 +142,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				int count = this.grid.RowDefinitions.Count;
 
-				if (count < this.strings.Count+1)
+				if (count < this.strings.Count+1)  // ajoute une ligne ?
 				{
 					this.grid.RowDefinitions.Add(new RowDefinition());
 					this.grid.RowDefinitions[count].TopBorder = -1;
@@ -151,6 +151,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 					fix.Text = count.ToString();
 					fix.ContentAlignment = ContentAlignment.MiddleRight;
 					fix.Margins = new Margins(0, 4, 0, 0);
+					//	TODO: bug pour Pierre avec ce mode !
 					//?fix.VerticalAlignment = VerticalAlignment.BaseLine;
 					GridLayoutEngine.SetColumn(fix, 0);
 					GridLayoutEngine.SetRow(fix, count);
@@ -168,6 +169,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 					TextFieldMulti field = new TextFieldMulti();
 					field.TextChanged += new EventHandler(this.HandleTextChanged);
 					field.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleTextFocusChanged);
+					//	TODO: bug pour Pierre avec ce mode !
 					//?field.VerticalAlignment = VerticalAlignment.BaseLine;
 					field.TabIndex = count;
 					field.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
@@ -178,7 +180,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 					this.Children.Add(field);
 					this.textFields.Add(field);
 				}
-				else
+				else  // supprime une ligne ?
 				{
 					this.glyphButtons[count-2].Pressed -= new MessageEventHandler(this.HandleButtonTextPressed);
 					this.textFields[count-2].TextChanged -= new EventHandler(this.HandleTextChanged);
@@ -216,7 +218,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			double h = 20;
 			if (this.lineCount > 1)
 			{
-				h = 8 + 13*this.lineCount;
+				h = 8 + 13*this.lineCount;  // empyrique !
 			}
 
 			field.PreferredHeight = h;
@@ -224,7 +226,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected void UpdateGrid()
 		{
-			//	Adapte le contenu des lignes éditables en fonction de la collection.
+			//	Adapte les textes des lignes éditables en fonction de la collection.
 			for (int i=0; i<this.strings.Count; i++)
 			{
 				this.textFields[i].Text = this.strings[i];
@@ -233,7 +235,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected void UpdateButtons()
 		{
-			//	Met à jour les boutons pour ajouter/supprimer/déplacer une ligne.
+			//	Met à jour les boutons pour ajouter/supprimer/déplacer la ligne sélectionnée.
 			int sel = this.SelectedRow;
 			int count = this.textFields.Count;
 			bool enable = (this.strings != null);
@@ -251,7 +253,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Ligne sélectionnée dans le tableau.
 			get
 			{
-				if (this.selectedRow >= this.textFields.Count)
+				if (this.selectedRow >= this.textFields.Count)  // la ligne sélectionnée a été détruite ?
 				{
 					return -1;
 				}
@@ -289,11 +291,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected void HandleButtonAddPressed(object sender, MessageEventArgs e)
 		{
-			//	Appelé lorsque le bouton pour créer une nouvelle ligne est cliqué.
+			//	Appelé lorsque le bouton pour créer une nouvelle ligne est pressé.
 			int sel = this.SelectedRow;
 			if (sel == -1)
 			{
-				sel = this.strings.Count-1;
+				sel = this.strings.Count-1;  // si aucune ligne sélectionnée -> insère à la fin
 			}
 
 			this.strings.Insert(sel+1, "");
@@ -305,12 +307,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected void HandleButtonDuplicatePressed(object sender, MessageEventArgs e)
 		{
-			//	Appelé lorsque le bouton pour dupliquer une ligne est cliqué.
+			//	Appelé lorsque le bouton pour dupliquer une ligne est pressé.
 			int sel = this.SelectedRow;
-			if (sel == -1)
-			{
-				sel = this.strings.Count-1;
-			}
+			System.Diagnostics.Debug.Assert(sel != -1);
 
 			this.strings.Insert(sel+1, this.strings[sel]);
 			this.AdaptGrid();
@@ -321,7 +320,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected void HandleButtonRemovePressed(object sender, MessageEventArgs e)
 		{
-			//	Appelé lorsque le bouton pour supprimer une ligne est cliqué.
+			//	Appelé lorsque le bouton pour supprimer une ligne est pressé.
 			int sel = this.SelectedRow;
 			System.Diagnostics.Debug.Assert(sel != -1);
 
@@ -340,7 +339,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected void HandleButtonPrevPressed(object sender, MessageEventArgs e)
 		{
-			//	Appelé lorsque le bouton pour monter une ligne est cliqué.
+			//	Appelé lorsque le bouton pour monter une ligne est pressé.
 			int sel = this.SelectedRow;
 			System.Diagnostics.Debug.Assert(sel != -1);
 
@@ -355,7 +354,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected void HandleButtonNextPressed(object sender, MessageEventArgs e)
 		{
-			//	Appelé lorsque le bouton pour descendre une ligne est cliqué.
+			//	Appelé lorsque le bouton pour descendre une ligne est pressé.
 			int sel = this.SelectedRow;
 			System.Diagnostics.Debug.Assert(sel != -1);
 
@@ -370,15 +369,15 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		private void HandleSliderChanged(object sender)
 		{
-			//	Le slider pour le nombre de lignes éditables a été déplacé.
+			//	Appelé lorsque le slider pour le nombre de lignes éditables a été déplacé.
 			HSlider slider = sender as HSlider;
-			this.lineCount = (double) slider.Value;
+			this.lineCount = (double) slider.Value;  // 1..5
 			this.AdaptTextFieldLines();
 		}
 
 		protected void HandleButtonTextPressed(object sender, MessageEventArgs e)
 		{
-			//	Appelé lorsque le bouton pour sélectionner une ligne est cliqué.
+			//	Appelé lorsque le bouton ">" pour sélectionner une ligne est pressé.
 			GlyphButton button = sender as GlyphButton;
 			this.SelectedRow = glyphButtons.IndexOf(button);
 			this.SetFocusInSelection();
