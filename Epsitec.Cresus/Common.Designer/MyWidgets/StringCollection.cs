@@ -26,6 +26,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			this.CreateGrid();
 			this.CreateToolbar();
+			this.UpdateButtons();
 		}
 
 		public StringCollection(Widget embedder) : this()
@@ -36,16 +37,27 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		public ICollection<string> Collection
 		{
+#if false
 			get
 			{
-				return this.collection;
+				ICollection<string> collection = new ICollection<string>();
+				foreach (string text in this.strings)
+				{
+					collection.Add(text);
+				}
+				return collection;
 			}
+#endif
 			set
 			{
-				this.collection = value;
+				string[] list = new string[value.Count];
+				value.CopyTo(list, 0);
+				this.strings = new List<string>();
+				this.strings.AddRange(list);
 
 				this.AdaptGrid();
 				this.UpdateGrid();
+				this.UpdateButtons();
 			}
 		}
 
@@ -77,10 +89,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonAdd = new IconButton(toolbar);
 			this.buttonAdd.IconName = Misc.Icon("StringAdd");
 			this.buttonAdd.Dock = DockStyle.Left;
+			this.buttonAdd.AutoFocus = false;
+			this.buttonAdd.Pressed += new MessageEventHandler(this.HandleButtonAddPressed);
 
 			this.buttonRemove = new IconButton(toolbar);
 			this.buttonRemove.IconName = Misc.Icon("StringRemove");
 			this.buttonRemove.Dock = DockStyle.Left;
+			this.buttonRemove.AutoFocus = false;
+			this.buttonRemove.Pressed += new MessageEventHandler(this.HandleButtonRemovePressed);
 
 			IconSeparator sep = new IconSeparator(toolbar);
 			sep.IsHorizontal = true;
@@ -89,20 +105,24 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonPrev = new IconButton(toolbar);
 			this.buttonPrev.IconName = Misc.Icon("StringPrev");
 			this.buttonPrev.Dock = DockStyle.Left;
+			this.buttonPrev.AutoFocus = false;
+			this.buttonPrev.Pressed += new MessageEventHandler(this.HandleButtonPrevPressed);
 
 			this.buttonNext = new IconButton(toolbar);
 			this.buttonNext.IconName = Misc.Icon("StringNext");
 			this.buttonNext.Dock = DockStyle.Left;
+			this.buttonNext.AutoFocus = false;
+			this.buttonNext.Pressed += new MessageEventHandler(this.HandleButtonNextPressed);
 		}
 
 		protected void AdaptGrid()
 		{
 			//	Adapte le nombre de lignes du tableau en fonction de la collection.
-			while (this.grid.RowDefinitions.Count != this.collection.Count+1)
+			while (this.grid.RowDefinitions.Count != this.strings.Count+1)
 			{
 				int count = this.grid.RowDefinitions.Count;
 
-				if (count < this.collection.Count+1)
+				if (count < this.strings.Count+1)
 				{
 					this.grid.RowDefinitions.Add(new RowDefinition());
 					this.grid.RowDefinitions[count].TopBorder = -1;
@@ -119,15 +139,18 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 					GlyphButton button = new GlyphButton();
 					button.GlyphShape = GlyphShape.None;
-					button.Pressed += new MessageEventHandler(this.HandleButtonPressed);
+					button.Pressed += new MessageEventHandler(this.HandleButtonTextPressed);
 					GridLayoutEngine.SetColumn(button, 1);
 					GridLayoutEngine.SetRow(button, count);
 					this.Children.Add(button);
 					this.glyphButtons.Add(button);
 
 					TextField field = new TextField();
+					field.TextChanged += new EventHandler(this.HandleTextChanged);
 					field.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleTextFocusChanged);
 					field.VerticalAlignment = VerticalAlignment.BaseLine;
+					field.TabIndex = count;
+					field.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 					GridLayoutEngine.SetColumn(field, 2);
 					GridLayoutEngine.SetRow(field, count);
 					this.Children.Add(field);
@@ -135,7 +158,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 				}
 				else
 				{
-					this.glyphButtons[count-2].Pressed -= new MessageEventHandler(this.HandleButtonPressed);
+					this.glyphButtons[count-2].Pressed -= new MessageEventHandler(this.HandleButtonTextPressed);
+					this.textFields[count-2].TextChanged -= new EventHandler(this.HandleTextChanged);
 					this.textFields[count-2].KeyboardFocusChanged -= new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleTextFocusChanged);
 
 					this.Children.Remove(this.staticTexts[count-2]);
@@ -150,21 +174,30 @@ namespace Epsitec.Common.Designer.MyWidgets
 				}
 			}
 
-			System.Diagnostics.Debug.Assert(this.collection.Count == this.staticTexts.Count);
-			System.Diagnostics.Debug.Assert(this.collection.Count == this.glyphButtons.Count);
-			System.Diagnostics.Debug.Assert(this.collection.Count == this.textFields.Count);
+			System.Diagnostics.Debug.Assert(this.strings.Count == this.staticTexts.Count);
+			System.Diagnostics.Debug.Assert(this.strings.Count == this.glyphButtons.Count);
+			System.Diagnostics.Debug.Assert(this.strings.Count == this.textFields.Count);
 		}
 
 		protected void UpdateGrid()
 		{
 			//	Adapte le contenu des lignes éditables en fonction de la collection.
-			string[] array = new string[this.collection.Count];
-			this.collection.CopyTo(array, 0);
-
-			for (int i=0; i<array.Length; i++ )
+			for (int i=0; i<this.strings.Count; i++)
 			{
-				this.textFields[i].Text = array[i];
+				this.textFields[i].Text = this.strings[i];
 			}
+		}
+
+		protected void UpdateButtons()
+		{
+			//	Met à jour les boutons pour ajouter/supprimer/déplacer une ligne.
+			int sel = this.SelectedRow;
+			int count = this.textFields.Count;
+
+			this.buttonAdd.Enable = true;
+			this.buttonRemove.Enable = (sel != -1);
+			this.buttonPrev.Enable = (sel != -1 && sel > 0);
+			this.buttonNext.Enable = (sel != -1 && sel < count-1);
 		}
 
 
@@ -191,14 +224,102 @@ namespace Epsitec.Common.Designer.MyWidgets
 					{
 						this.glyphButtons[i].GlyphShape = (this.selectedRow == i) ? GlyphShape.ArrowRight : GlyphShape.None;
 					}
+
+					this.UpdateButtons();
 				}
 			}
 		}
 
-		protected void HandleButtonPressed(object sender, MessageEventArgs e)
+		protected void SetFocusInSelection()
 		{
+			//	Met le focus dans la ligne éditable sélectionnée.
+			int sel = this.SelectedRow;
+			if (sel != -1)
+			{
+				this.textFields[sel].Focus();
+				this.textFields[sel].SelectAll();
+			}
+		}
+
+
+		protected void HandleButtonAddPressed(object sender, MessageEventArgs e)
+		{
+			//	Appelé lorsque le bouton pour créer une nouvelle ligne est cliqué.
+			int sel = this.SelectedRow;
+			if (sel == -1)
+			{
+				sel = this.strings.Count-1;
+			}
+
+			this.strings.Insert(sel+1, "");
+			this.AdaptGrid();
+			this.UpdateGrid();
+			this.SelectedRow = sel+1;
+			this.SetFocusInSelection();
+		}
+
+		protected void HandleButtonRemovePressed(object sender, MessageEventArgs e)
+		{
+			//	Appelé lorsque le bouton pour supprimer une ligne est cliqué.
+			int sel = this.SelectedRow;
+			System.Diagnostics.Debug.Assert(sel != -1);
+
+			this.strings.RemoveAt(sel);
+			this.AdaptGrid();
+			this.UpdateGrid();
+
+			if (sel >= this.strings.Count)
+			{
+				sel = this.strings.Count-1;
+			}
+			this.selectedRow = -1;  // pour forcer SelectedRow à refaire son travail
+			this.SelectedRow = sel;
+			this.SetFocusInSelection();
+		}
+
+		protected void HandleButtonPrevPressed(object sender, MessageEventArgs e)
+		{
+			//	Appelé lorsque le bouton pour monter une ligne est cliqué.
+			int sel = this.SelectedRow;
+			System.Diagnostics.Debug.Assert(sel != -1);
+
+			string s = this.strings[sel];
+			this.strings[sel] = this.strings[sel-1];
+			this.strings[sel-1] = s;
+
+			this.UpdateGrid();
+			this.SelectedRow = sel-1;
+			this.SetFocusInSelection();
+		}
+
+		protected void HandleButtonNextPressed(object sender, MessageEventArgs e)
+		{
+			//	Appelé lorsque le bouton pour descendre une ligne est cliqué.
+			int sel = this.SelectedRow;
+			System.Diagnostics.Debug.Assert(sel != -1);
+
+			string s = this.strings[sel];
+			this.strings[sel] = this.strings[sel+1];
+			this.strings[sel+1] = s;
+
+			this.UpdateGrid();
+			this.SelectedRow = sel+1;
+			this.SetFocusInSelection();
+		}
+
+		protected void HandleButtonTextPressed(object sender, MessageEventArgs e)
+		{
+			//	Appelé lorsque le bouton pour sélectionner une ligne est cliqué.
 			GlyphButton button = sender as GlyphButton;
 			this.SelectedRow = glyphButtons.IndexOf(button);
+		}
+
+		void HandleTextChanged(object sender)
+		{
+			//	Appelé lorsqu'une ligne éditable a changé.
+			TextField field = sender as TextField;
+			int i = textFields.IndexOf(field);
+			this.strings[i] = field.Text;
 		}
 
 		protected void HandleTextFocusChanged(object sender, Epsitec.Common.Types.DependencyPropertyChangedEventArgs e)
@@ -214,7 +335,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		}
 
 
-		protected ICollection<string>		collection;
+		protected List<string>				strings;
 		protected GridLayoutEngine			grid;
 		protected IconButton				buttonAdd;
 		protected IconButton				buttonRemove;
