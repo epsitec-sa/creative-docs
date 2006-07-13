@@ -59,6 +59,24 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
+		public AbstractTextField FocusedTextField
+		{
+			//	Retourne la ligne éditable qui a le focus.
+			get
+			{
+				int sel = this.SelectedRow;
+				if (sel == -1)
+				{
+					return null;
+				}
+				else
+				{
+					return this.textFields[sel];
+				}
+			}
+
+		}
+
 
 		protected void CreateGrid()
 		{
@@ -291,6 +309,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.textFields[sel].Focus();
 				this.textFields[sel].SelectAll();
 			}
+
+			this.OnStringFocusChanged();
 		}
 
 
@@ -394,7 +414,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			TextFieldMulti field = sender as TextFieldMulti;
 			int i = textFields.IndexOf(field);
 			this.strings[i] = field.Text;
-			this.OnStringChanged();
+			this.OnStringTextChanged();
 		}
 
 		protected void HandleTextFocusChanged(object sender, Epsitec.Common.Types.DependencyPropertyChangedEventArgs e)
@@ -406,30 +426,53 @@ namespace Epsitec.Common.Designer.MyWidgets
 			if (focused)
 			{
 				this.SelectedRow = textFields.IndexOf(field);
+				this.OnStringFocusChanged();
 			}
 		}
 
 
 		#region Events handler
-		protected virtual void OnStringChanged()
+		protected virtual void OnStringTextChanged()
 		{
 			//	Génère un événement pour dire qu'une string a changé.
-			EventHandler handler = (EventHandler) this.GetUserEventHandler("StringChanged");
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("StringTextChanged");
 			if (handler != null)
 			{
 				handler(this);
 			}
 		}
 
-		public event Support.EventHandler StringChanged
+		public event Support.EventHandler StringTextChanged
 		{
 			add
 			{
-				this.AddUserEventHandler("StringChanged", value);
+				this.AddUserEventHandler("StringTextChanged", value);
 			}
 			remove
 			{
-				this.RemoveUserEventHandler("StringChanged", value);
+				this.RemoveUserEventHandler("StringTextChanged", value);
+			}
+		}
+
+		protected virtual void OnStringFocusChanged()
+		{
+			//	Génère un événement pour dire qu'une string a changé.
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("StringFocusChanged");
+			if (handler != null)
+			{
+				handler(this);
+			}
+		}
+
+		public event Support.EventHandler StringFocusChanged
+		{
+			add
+			{
+				this.AddUserEventHandler("StringFocusChanged", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("StringFocusChanged", value);
 			}
 		}
 		#endregion

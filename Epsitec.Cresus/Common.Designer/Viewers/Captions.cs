@@ -108,7 +108,8 @@ namespace Epsitec.Common.Designer.Viewers
 
 			this.primaryLabels = new MyWidgets.StringCollection(panel.Container);
 			this.primaryLabels.Dock = DockStyle.StackBegin;
-			this.primaryLabels.StringChanged += new EventHandler(this.HandleStringCollectionChanged);
+			this.primaryLabels.StringTextChanged += new EventHandler(this.HandleStringTextCollectionChanged);
+			this.primaryLabels.StringFocusChanged += new EventHandler(this.HandleStringFocusCollectionChanged);
 			this.primaryLabels.TabIndex = tabIndex++;
 			this.primaryLabels.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
@@ -119,7 +120,8 @@ namespace Epsitec.Common.Designer.Viewers
 
 			this.secondaryLabels = new MyWidgets.StringCollection(panel.Container);
 			this.secondaryLabels.Dock = DockStyle.StackBegin;
-			this.secondaryLabels.StringChanged += new EventHandler(this.HandleStringCollectionChanged);
+			this.secondaryLabels.StringTextChanged += new EventHandler(this.HandleStringTextCollectionChanged);
+			this.secondaryLabels.StringFocusChanged += new EventHandler(this.HandleStringFocusCollectionChanged);
 			this.secondaryLabels.TabIndex = tabIndex++;
 			this.secondaryLabels.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
@@ -234,9 +236,11 @@ namespace Epsitec.Common.Designer.Viewers
 				this.labelEdit.EditionAccepted -= new EventHandler(this.HandleTextChanged);
 				this.labelEdit.KeyboardFocusChanged -= new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
 
-				this.primaryLabels.StringChanged -= new EventHandler(this.HandleStringCollectionChanged);
+				this.primaryLabels.StringTextChanged -= new EventHandler(this.HandleStringTextCollectionChanged);
+				this.primaryLabels.StringFocusChanged -= new EventHandler(this.HandleStringFocusCollectionChanged);
 
-				this.secondaryLabels.StringChanged -= new EventHandler(this.HandleStringCollectionChanged);
+				this.secondaryLabels.StringTextChanged -= new EventHandler(this.HandleStringTextCollectionChanged);
+				this.secondaryLabels.StringFocusChanged -= new EventHandler(this.HandleStringFocusCollectionChanged);
 
 				this.primaryDescription.TextChanged -= new EventHandler(this.HandleTextChanged);
 				this.primaryDescription.CursorChanged -= new EventHandler(this.HandleCursorChanged);
@@ -606,11 +610,45 @@ namespace Epsitec.Common.Designer.Viewers
 		public override void DoClipboard(string name)
 		{
 			//	Effectue une action avec le bloc-notes.
+			if ( this.currentTextField == null )  return;
+
+			if ( name == "Cut" )
+			{
+				this.currentTextField.ProcessCut();
+			}
+
+			if ( name == "Copy" )
+			{
+				this.currentTextField.ProcessCopy();
+			}
+
+			if ( name == "Paste" )
+			{
+				this.currentTextField.ProcessPaste();
+			}
 		}
 
 		public override void DoFont(string name)
 		{
 			//	Effectue une modification de typographie.
+			if ( this.currentTextField == null )  return;
+
+			if ( name == "FontBold" )
+			{
+				this.currentTextField.TextNavigator.SelectionBold = !this.currentTextField.TextNavigator.SelectionBold;
+			}
+
+			if ( name == "FontItalic" )
+			{
+				this.currentTextField.TextNavigator.SelectionItalic = !this.currentTextField.TextNavigator.SelectionItalic;
+			}
+
+			if ( name == "FontUnderlined" )
+			{
+				this.currentTextField.TextNavigator.SelectionUnderlined = !this.currentTextField.TextNavigator.SelectionUnderlined;
+			}
+
+			this.HandleTextChanged(this.currentTextField);
 		}
 
 
@@ -757,10 +795,10 @@ namespace Epsitec.Common.Designer.Viewers
 			this.GetCommandState("ModificationAll").Enable = false;
 			this.GetCommandState("ModificationClear").Enable = false;
 
-			this.GetCommandState("FontBold").Enable = false;
-			this.GetCommandState("FontItalic").Enable = false;
-			this.GetCommandState("FontUnderlined").Enable = false;
-			this.GetCommandState("Glyphs").Enable = false;
+			this.GetCommandState("FontBold").Enable = (sel != -1);
+			this.GetCommandState("FontItalic").Enable = (sel != -1);
+			this.GetCommandState("FontUnderlined").Enable = (sel != -1);
+			this.GetCommandState("Glyphs").Enable = (sel != -1);
 
 			this.GetCommandState("PanelDelete").Enable = false;
 			this.GetCommandState("PanelDuplicate").Enable = false;
@@ -1261,7 +1299,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.module.Modifier.IsDirty = true;
 		}
 
-		void HandleStringCollectionChanged(object sender)
+		void HandleStringTextCollectionChanged(object sender)
 		{
 			//	Une collection de textes a changé.
 			if ( this.ignoreChange )  return;
@@ -1282,6 +1320,15 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 
 			this.module.Modifier.IsDirty = true;
+		}
+
+		void HandleStringFocusCollectionChanged(object sender)
+		{
+			//	Le focus a changé dans une collection.
+			if ( this.ignoreChange )  return;
+
+			MyWidgets.StringCollection sc = sender as MyWidgets.StringCollection;
+			this.currentTextField = sc.FocusedTextField;
 		}
 
 		void HandleCursorChanged(object sender)
