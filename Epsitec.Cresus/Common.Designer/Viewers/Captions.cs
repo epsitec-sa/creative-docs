@@ -578,12 +578,9 @@ namespace Epsitec.Common.Designer.Viewers
 		public override void DoDeleteCulture()
 		{
 			//	Supprime la culture courante.
-			//	TODO: pourquoi ça plante ?
-#if true
 			string question = string.Format(Res.Strings.Dialog.DeleteCulture.Question, Misc.CultureName(this.secondaryBundle.Culture));
 			Common.Dialogs.DialogResult result = this.module.MainWindow.DialogQuestion(question);
 			if ( result != Epsitec.Common.Dialogs.DialogResult.Yes )  return;
-#endif
 
 			this.module.DeleteCulture(this.secondaryBundle, this.BundleType);
 
