@@ -50,10 +50,17 @@ namespace Epsitec.Common.Designer.MyWidgets
 #endif
 			set
 			{
-				string[] list = new string[value.Count];
-				value.CopyTo(list, 0);
-				this.strings = new List<string>();
-				this.strings.AddRange(list);
+				if (value == null)
+				{
+					this.strings = new List<string>();
+				}
+				else
+				{
+					string[] list = new string[value.Count];
+					value.CopyTo(list, 0);
+					this.strings = new List<string>();
+					this.strings.AddRange(list);
+				}
 
 				this.AdaptGrid();
 				this.UpdateGrid();
