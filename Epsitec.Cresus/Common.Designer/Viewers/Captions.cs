@@ -76,7 +76,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryCulture.Dock = DockStyle.StackFill;
 
 			this.secondaryCulture = new Widget(sup);
-			this.secondaryCulture.Margins = new Margins(10, 0, 0, 0);
+			this.secondaryCulture.Margins = new Margins(10-1, 0, 0, 0);
 			this.secondaryCulture.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
 			this.secondaryCulture.Dock = DockStyle.StackFill;
 
@@ -99,7 +99,7 @@ namespace Epsitec.Common.Designer.Viewers
 			Widget leftContainer, rightContainer;
 
 			//	Textes.
-			this.CreateBand(out leftContainer, out rightContainer);
+			this.CreateBand(out leftContainer, out rightContainer, 0.4);
 
 			panel = new MyWidgets.StackedPanel(leftContainer);
 			panel.IsLeftPart = true;
@@ -124,7 +124,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.secondaryLabels.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			//	Description.
-			this.CreateBand(out leftContainer, out rightContainer);
+			this.CreateBand(out leftContainer, out rightContainer, 0.2);
 
 			panel = new MyWidgets.StackedPanel(leftContainer);
 			panel.IsLeftPart = true;
@@ -155,7 +155,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.secondaryDescription.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			//	Icône.
-			this.CreateBand(out leftContainer, out rightContainer);
+			this.CreateBand(out leftContainer, out rightContainer, 0.0);
 
 			panel = new MyWidgets.StackedPanel(leftContainer);
 			panel.IsLeftPart = true;
@@ -184,7 +184,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.secondaryIcon.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			//	Commentaires.
-			this.CreateBand(out leftContainer, out rightContainer);
+			this.CreateBand(out leftContainer, out rightContainer, 0.6);
 
 			panel = new MyWidgets.StackedPanel(leftContainer);
 			panel.IsLeftPart = true;
@@ -1004,9 +1004,15 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
-		protected void CreateBand(out Widget leftContainer, out Widget rightContainer)
+		protected void CreateBand(out Widget leftContainer, out Widget rightContainer, double backgroundIntensity)
 		{
-			Widget band = new Widget(this.scrollable.Panel);
+			IAdorner adorner = Epsitec.Common.Widgets.Adorners.Factory.Active;
+			Color cap = adorner.ColorCaption;
+			Color color = Color.FromAlphaRgb(backgroundIntensity, 0.5+cap.R*0.5, 0.5+cap.G*0.5, 0.5+cap.B*0.5);
+
+			Separator band = new Separator(this.scrollable.Panel);
+			band.Color = color;
+			band.Alpha = color.A;
 			band.Dock = DockStyle.StackBegin;
 			band.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
 
@@ -1041,10 +1047,8 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			//	Modifie la description d'un caption.
 			Common.Types.Caption caption = this.CaptionDeserialize(bundle, druid);
-
 			caption.Description = text;
-
-			bundle[druid].SetStringValue(caption.SerializeToString());
+			this.CaptionSerialize(bundle, druid, caption);
 		}
 
 		protected List<string> GetCaptionLabels(ResourceBundle bundle, Druid druid)
@@ -1073,7 +1077,7 @@ namespace Epsitec.Common.Designer.Viewers
 				collection.Add(text);
 			}
 
-			bundle[druid].SetStringValue(caption.SerializeToString());
+			this.CaptionSerialize(bundle, druid, caption);
 		}
 
 		protected string GetCaptionIcon(ResourceBundle bundle, Druid druid)
@@ -1093,14 +1097,13 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			//	Modifie l'icône d'un caption.
 			Common.Types.Caption caption = this.CaptionDeserialize(bundle, druid);
-
 			caption.Icon = text;
-
-			bundle[druid].SetStringValue(caption.SerializeToString());
+			this.CaptionSerialize(bundle, druid, caption);
 		}
 
 		protected Common.Types.Caption CaptionDeserialize(ResourceBundle bundle, Druid druid)
 		{
+			//	Désérialise un caption.
 			Common.Types.Caption caption = new Common.Types.Caption();
 
 			string s = bundle[druid].AsString;
@@ -1110,6 +1113,12 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 
 			return caption;
+		}
+
+		protected void CaptionSerialize(ResourceBundle bundle, Druid druid, Common.Types.Caption caption)
+		{
+			//	Sérialise un caption.
+			bundle[druid].SetStringValue(caption.SerializeToString());
 		}
 		#endregion
 
