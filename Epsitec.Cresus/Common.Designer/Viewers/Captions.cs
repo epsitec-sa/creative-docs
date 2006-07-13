@@ -653,6 +653,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 				this.primaryIcon.Enable = false;
 				this.primaryIcon.IconName = null;
+				this.primaryIcon.Visibility = false;
 
 				this.primaryAbout.Enable = false;
 				this.primaryAbout.Text = "";
@@ -665,6 +666,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 				this.secondaryIcon.Enable = false;
 				this.secondaryIcon.IconName = null;
+				this.secondaryIcon.Visibility = false;
 
 				this.secondaryAbout.Enable = false;
 				this.secondaryAbout.Text = "";
@@ -686,6 +688,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 				this.primaryIcon.Enable = true;
 				this.primaryIcon.IconName = this.GetCaptionIcon(caption);
+				this.primaryIcon.Visibility = (this.primaryIcon.IconName != null);
 
 				this.primaryAbout.Enable = true;
 				this.SetTextField(this.primaryAbout, this.primaryBundle[druid].About);
@@ -700,6 +703,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 					this.secondaryIcon.Enable = false;
 					this.secondaryIcon.IconName = null;
+					this.secondaryIcon.Visibility = false;
 
 					this.secondaryAbout.Enable = false;
 					this.secondaryAbout.Text = "";
@@ -716,6 +720,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 					this.secondaryIcon.Enable = true;
 					this.secondaryIcon.IconName = this.GetCaptionIcon(caption);
+					this.secondaryIcon.Visibility = (this.secondaryIcon.IconName != null);
 
 					this.secondaryAbout.Enable = true;
 					this.SetTextField(this.secondaryAbout, this.secondaryBundle[druid].About);
