@@ -35,31 +35,20 @@ namespace Epsitec.Common.Designer.MyWidgets
 		}
 
 
-		public ICollection<string> Collection
+		public List<string> Collection
 		{
-#if false
+			//	Collection de strings éditée par le widget.
 			get
 			{
-				ICollection<string> collection = new ICollection<string>();
-				foreach (string text in this.strings)
-				{
-					collection.Add(text);
-				}
-				return collection;
+				return this.strings;
 			}
-#endif
 			set
 			{
-				if (value == null)
+				this.strings = value;
+
+				if (this.strings == null)
 				{
 					this.strings = new List<string>();
-				}
-				else
-				{
-					string[] list = new string[value.Count];
-					value.CopyTo(list, 0);
-					this.strings = new List<string>();
-					this.strings.AddRange(list);
 				}
 
 				this.AdaptGrid();
@@ -356,6 +345,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			TextField field = sender as TextField;
 			int i = textFields.IndexOf(field);
 			this.strings[i] = field.Text;
+			this.OnStringChanged();
 		}
 
 		protected void HandleTextFocusChanged(object sender, Epsitec.Common.Types.DependencyPropertyChangedEventArgs e)
@@ -369,6 +359,31 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.SelectedRow = textFields.IndexOf(field);
 			}
 		}
+
+
+		#region Events handler
+		protected virtual void OnStringChanged()
+		{
+			//	Génère un événement pour dire que le nombre de cellules a changé.
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("StringChanged");
+			if (handler != null)
+			{
+				handler(this);
+			}
+		}
+
+		public event Support.EventHandler StringChanged
+		{
+			add
+			{
+				this.AddUserEventHandler("StringChanged", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("StringChanged", value);
+			}
+		}
+		#endregion
 
 
 		protected List<string>				strings;
