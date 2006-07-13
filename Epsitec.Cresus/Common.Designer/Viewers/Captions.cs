@@ -667,7 +667,7 @@ namespace Epsitec.Common.Designer.Viewers
 			{
 				Druid druid = this.druidsIndex[sel];
 
-				Common.Types.Caption caption = new Epsitec.Common.Types.Caption();
+				Common.Types.Caption caption = new Common.Types.Caption();
 				caption.DeserializeFromString(this.primaryBundle[druid].AsString);
 
 				this.labelEdit.Enable = true;
@@ -1143,12 +1143,32 @@ namespace Epsitec.Common.Designer.Viewers
 
 			if (edit == this.primaryDescription)
 			{
-				//	TODO:
+				Common.Types.Caption caption = new Common.Types.Caption();
+				string s = this.primaryBundle[druid].AsString;
+				if (!string.IsNullOrEmpty(s))
+				{
+					caption.DeserializeFromString(s);
+				}
+
+				caption.Description = text;
+
+				this.primaryBundle[druid].SetStringValue(caption.SerializeToString());
 			}
 
-			if (edit == this.secondaryDescription)
+			if (edit == this.secondaryDescription && this.secondaryBundle != null)
 			{
-				//	TODO:
+				this.module.Modifier.CreateIfNecessary(this.BundleType, this.secondaryBundle, druid);
+
+				Common.Types.Caption caption = new Common.Types.Caption();
+				string s = this.secondaryBundle[druid].AsString;
+				if (!string.IsNullOrEmpty(s))
+				{
+					caption.DeserializeFromString(s);
+				}
+
+				caption.Description = text;
+
+				this.secondaryBundle[druid].SetStringValue(caption.SerializeToString());
 			}
 
 			if (edit == this.primaryAbout)
