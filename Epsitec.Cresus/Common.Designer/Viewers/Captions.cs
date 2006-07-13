@@ -676,14 +676,16 @@ namespace Epsitec.Common.Designer.Viewers
 				this.labelEdit.Enable = true;
 				this.SetTextField(this.labelEdit, this.primaryBundle[druid].Name);
 
+				Common.Types.Caption caption = this.CaptionDeserialize(this.primaryBundle, druid);
+
 				this.primaryLabels.Enable = true;
-				this.primaryLabels.Collection = this.GetCaptionLabels(this.primaryBundle, druid);
+				this.primaryLabels.Collection = this.GetCaptionLabels(caption);
 
 				this.primaryDescription.Enable = true;
-				this.SetTextField(this.primaryDescription, this.GetCaptionDescription(this.primaryBundle, druid));
+				this.SetTextField(this.primaryDescription, this.GetCaptionDescription(caption));
 
 				this.primaryIcon.Enable = true;
-				this.primaryIcon.IconName = this.GetCaptionIcon(this.primaryBundle, druid);
+				this.primaryIcon.IconName = this.GetCaptionIcon(caption);
 
 				this.primaryAbout.Enable = true;
 				this.SetTextField(this.primaryAbout, this.primaryBundle[druid].About);
@@ -704,14 +706,16 @@ namespace Epsitec.Common.Designer.Viewers
 				}
 				else
 				{
+					caption = this.CaptionDeserialize(this.secondaryBundle, druid);
+
 					this.secondaryLabels.Enable = true;
-					this.secondaryLabels.Collection = this.GetCaptionLabels(this.secondaryBundle, druid);
+					this.secondaryLabels.Collection = this.GetCaptionLabels(caption);
 
 					this.secondaryDescription.Enable = true;
-					this.SetTextField(this.secondaryDescription, this.GetCaptionDescription(this.secondaryBundle, druid));
+					this.SetTextField(this.secondaryDescription, this.GetCaptionDescription(caption));
 
 					this.secondaryIcon.Enable = true;
-					this.secondaryIcon.IconName = this.GetCaptionIcon(this.secondaryBundle, druid);
+					this.secondaryIcon.IconName = this.GetCaptionIcon(caption);
 
 					this.secondaryAbout.Enable = true;
 					this.SetTextField(this.secondaryAbout, this.secondaryBundle[druid].About);
@@ -1030,11 +1034,9 @@ namespace Epsitec.Common.Designer.Viewers
 
 
 		#region Caption modifiers
-		protected string GetCaptionDescription(ResourceBundle bundle, Druid druid)
+		protected string GetCaptionDescription(Common.Types.Caption caption)
 		{
 			//	Donne la description d'un caption.
-			Common.Types.Caption caption = this.CaptionDeserialize(bundle, druid);
-
 			if (string.IsNullOrEmpty(caption.Description))
 			{
 				return "";
@@ -1051,11 +1053,9 @@ namespace Epsitec.Common.Designer.Viewers
 			this.CaptionSerialize(bundle, druid, caption);
 		}
 
-		protected List<string> GetCaptionLabels(ResourceBundle bundle, Druid druid)
+		protected List<string> GetCaptionLabels(Common.Types.Caption caption)
 		{
 			//	Retourne la liste des labels d'un caption.
-			Common.Types.Caption caption = this.CaptionDeserialize(bundle, druid);
-
 			ICollection<string> collection = caption.Labels;
 			string[] strings = new string[collection.Count];
 			collection.CopyTo(strings, 0);
@@ -1080,11 +1080,9 @@ namespace Epsitec.Common.Designer.Viewers
 			this.CaptionSerialize(bundle, druid, caption);
 		}
 
-		protected string GetCaptionIcon(ResourceBundle bundle, Druid druid)
+		protected string GetCaptionIcon(Common.Types.Caption caption)
 		{
 			//	Donne l'icône d'un caption.
-			Common.Types.Caption caption = this.CaptionDeserialize(bundle, druid);
-
 			if (string.IsNullOrEmpty(caption.Icon))
 			{
 				return null;
