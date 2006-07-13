@@ -22,7 +22,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			this.staticTexts = new List<StaticText>();
 			this.glyphButtons = new List<GlyphButton>();
-			this.textFields = new List<TextField>();
+			this.textFields = new List<TextFieldMulti>();
 
 			this.CreateGrid();
 			this.CreateToolbar();
@@ -42,6 +42,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				return this.strings;
 			}
+
 			set
 			{
 				this.strings = value;
@@ -120,6 +121,18 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonNext.AutoFocus = false;
 			this.buttonNext.Pressed += new MessageEventHandler(this.HandleButtonNextPressed);
 			ToolTip.Default.SetToolTip(this.buttonNext, Res.Strings.StringCollection.Next);
+
+			HSlider slider = new HSlider(toolbar);
+			slider.PreferredWidth = 80;
+			slider.Margins = new Margins(2, 2, 3, 3);
+			slider.MinValue = 1.0M;
+			slider.MaxValue = 5.0M;
+			slider.SmallChange = 1.0M;
+			slider.LargeChange = 2.0M;
+			slider.Resolution = 1.0M;
+			slider.ValueChanged += new EventHandler(this.HandleSliderChanged);
+			slider.Value = 1.0M;
+			slider.Dock = DockStyle.Right;
 		}
 
 		protected void AdaptGrid()
@@ -138,7 +151,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 					fix.Text = count.ToString();
 					fix.ContentAlignment = ContentAlignment.MiddleRight;
 					fix.Margins = new Margins(0, 4, 0, 0);
-					fix.VerticalAlignment = VerticalAlignment.BaseLine;
+					//?fix.VerticalAlignment = VerticalAlignment.BaseLine;
 					GridLayoutEngine.SetColumn(fix, 0);
 					GridLayoutEngine.SetRow(fix, count);
 					this.Children.Add(fix);
@@ -152,12 +165,13 @@ namespace Epsitec.Common.Designer.MyWidgets
 					this.Children.Add(button);
 					this.glyphButtons.Add(button);
 
-					TextField field = new TextField();
+					TextFieldMulti field = new TextFieldMulti();
 					field.TextChanged += new EventHandler(this.HandleTextChanged);
 					field.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleTextFocusChanged);
-					field.VerticalAlignment = VerticalAlignment.BaseLine;
+					//?field.VerticalAlignment = VerticalAlignment.BaseLine;
 					field.TabIndex = count;
 					field.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+					this.AdaptTextFieldLines(field);
 					GridLayoutEngine.SetColumn(field, 2);
 					GridLayoutEngine.SetRow(field, count);
 					this.Children.Add(field);
@@ -184,6 +198,27 @@ namespace Epsitec.Common.Designer.MyWidgets
 			System.Diagnostics.Debug.Assert(this.strings.Count == this.staticTexts.Count);
 			System.Diagnostics.Debug.Assert(this.strings.Count == this.glyphButtons.Count);
 			System.Diagnostics.Debug.Assert(this.strings.Count == this.textFields.Count);
+		}
+
+		protected void AdaptTextFieldLines()
+		{
+			//	Adapte le nombre de lignes des lignes éditables.
+			for (int i=0; i<this.textFields.Count; i++)
+			{
+				this.AdaptTextFieldLines(this.textFields[i]);
+			}
+		}
+
+		protected void AdaptTextFieldLines(TextFieldMulti field)
+		{
+			//	Adapte le nombre de lignes d'une ligne éditable.
+			double h = 20;
+			if (this.lineCount > 1)
+			{
+				h = 8 + 13*this.lineCount;
+			}
+
+			field.PreferredHeight = h;
 		}
 
 		protected void UpdateGrid()
@@ -332,17 +367,26 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.SetFocusInSelection();
 		}
 
+		private void HandleSliderChanged(object sender)
+		{
+			//	Le slider pour le nombre de lignes éditables a été déplacé.
+			HSlider slider = sender as HSlider;
+			this.lineCount = (double) slider.Value;
+			this.AdaptTextFieldLines();
+		}
+
 		protected void HandleButtonTextPressed(object sender, MessageEventArgs e)
 		{
 			//	Appelé lorsque le bouton pour sélectionner une ligne est cliqué.
 			GlyphButton button = sender as GlyphButton;
 			this.SelectedRow = glyphButtons.IndexOf(button);
+			this.SetFocusInSelection();
 		}
 
 		void HandleTextChanged(object sender)
 		{
 			//	Appelé lorsqu'une ligne éditable a changé.
-			TextField field = sender as TextField;
+			TextFieldMulti field = sender as TextFieldMulti;
 			int i = textFields.IndexOf(field);
 			this.strings[i] = field.Text;
 			this.OnStringChanged();
@@ -351,7 +395,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void HandleTextFocusChanged(object sender, Epsitec.Common.Types.DependencyPropertyChangedEventArgs e)
 		{
 			//	Appelé lorsqu'une ligne éditable voit son focus changer.
-			TextField field = sender as TextField;
+			TextFieldMulti field = sender as TextFieldMulti;
 			bool focused = (bool) e.NewValue;
 
 			if (focused)
@@ -364,7 +408,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		#region Events handler
 		protected virtual void OnStringChanged()
 		{
-			//	Génère un événement pour dire que le nombre de cellules a changé.
+			//	Génère un événement pour dire qu'une string a changé.
 			EventHandler handler = (EventHandler) this.GetUserEventHandler("StringChanged");
 			if (handler != null)
 			{
@@ -395,7 +439,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected IconButton				buttonNext;
 		protected List<StaticText>			staticTexts;
 		protected List<GlyphButton>			glyphButtons;
-		protected List<TextField>			textFields;
+		protected List<TextFieldMulti>		textFields;
 		protected int						selectedRow = -1;
+		protected double					lineCount = 1;
 	}
 }
