@@ -212,6 +212,10 @@ namespace Epsitec.Common.Designer.Viewers
 			this.secondaryAbout.TabIndex = tabIndex++;
 			this.secondaryAbout.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
+			//	Ligne horizontale pour terminer proprement.
+			Separator sep = new Separator(this.scrollable.Panel);
+			sep.PreferredHeight = 1;
+			sep.Dock = DockStyle.StackBegin;
 
 			this.UpdateCultures();
 			this.Update();
@@ -633,46 +637,66 @@ namespace Epsitec.Common.Designer.Viewers
 			if ( sel == -1 )
 			{
 				this.labelEdit.Enable = false;
-				this.primaryDescription.Enable = false;
-				this.secondaryDescription.Enable = false;
-				this.primaryIcon.Enable = false;
-				this.secondaryIcon.Enable = false;
-				this.primaryAbout.Enable = false;
-				this.secondaryAbout.Enable = false;
-
 				this.labelEdit.Text = "";
+
+				this.primaryLabels.Enable = false;
+				this.primaryLabels.Collection = null;
+
+				this.primaryDescription.Enable = false;
 				this.primaryDescription.Text = "";
-				this.secondaryDescription.Text = "";
+
+				this.primaryIcon.Enable = false;
 				this.primaryIcon.IconName = null;
-				this.secondaryIcon.IconName = null;
+
+				this.primaryAbout.Enable = false;
 				this.primaryAbout.Text = "";
+
+				this.secondaryLabels.Enable = false;
+				this.secondaryLabels.Collection = null;
+
+				this.secondaryDescription.Enable = false;
+				this.secondaryDescription.Text = "";
+
+				this.secondaryIcon.Enable = false;
+				this.secondaryIcon.IconName = null;
+
+				this.secondaryAbout.Enable = false;
 				this.secondaryAbout.Text = "";
 			}
 			else
 			{
-				this.labelEdit.Enable = true;
-				this.primaryDescription.Enable = true;
-				this.primaryIcon.Enable = true;
-				this.primaryAbout.Enable = true;
-
 				Druid druid = this.druidsIndex[sel];
 
 				Common.Types.Caption caption = new Epsitec.Common.Types.Caption();
 				caption.DeserializeFromString(this.primaryBundle[druid].AsString);
 
+				this.labelEdit.Enable = true;
 				this.SetTextField(this.labelEdit, this.primaryBundle[druid].Name);
+
+				this.primaryLabels.Enable = true;
 				this.primaryLabels.Collection = caption.Labels;
+
+				this.primaryDescription.Enable = true;
 				this.SetTextField(this.primaryDescription, caption.Description);
+
+				this.primaryIcon.Enable = true;
 				this.primaryIcon.IconName = caption.Icon;
+
+				this.primaryAbout.Enable = true;
 				this.SetTextField(this.primaryAbout, this.primaryBundle[druid].About);
 
 				if (this.secondaryBundle == null)
 				{
+					this.secondaryLabels.Enable = false;
+					this.secondaryLabels.Collection = null;
+
 					this.secondaryDescription.Enable = false;
-					this.secondaryIcon.Enable = false;
-					this.secondaryAbout.Enable = false;
 					this.secondaryDescription.Text = "";
+
+					this.secondaryIcon.Enable = false;
 					this.secondaryIcon.IconName = null;
+
+					this.secondaryAbout.Enable = false;
 					this.secondaryAbout.Text = "";
 				}
 				else
@@ -688,11 +712,16 @@ namespace Epsitec.Common.Designer.Viewers
 						icon = caption.Icon;
 					}
 
+					this.secondaryLabels.Enable = true;
+					this.secondaryLabels.Collection = caption.Labels;
+
 					this.secondaryDescription.Enable = true;
-					this.secondaryIcon.Enable = true;
-					this.secondaryAbout.Enable = true;
 					this.SetTextField(this.secondaryDescription, text);
+
+					this.secondaryIcon.Enable = true;
 					this.secondaryIcon.IconName = icon;
+
+					this.secondaryAbout.Enable = true;
 					this.SetTextField(this.secondaryAbout, this.secondaryBundle[druid].About);
 				}
 
@@ -997,6 +1026,7 @@ namespace Epsitec.Common.Designer.Viewers
 			rightContainer = new Widget(band);
 			rightContainer.MinWidth = 100;
 			rightContainer.Dock = DockStyle.StackFill;
+			rightContainer.Margins = new Margins(-1, 0, 0, 0);
 			this.rightContainers.Add(rightContainer);
 		}
 
