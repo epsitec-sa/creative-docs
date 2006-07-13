@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <bundle name="Strings" type="String" culture="fr">
   <data name="Application.Title" id="0">Editeur de ressources</data>
   <data name="Ribbon.Main" id="01">Principal</data>
@@ -120,6 +120,11 @@
   <data name="Action.ObjectStatic" id="0C3">Texte fixe</data>
   <data name="Action.ObjectGroup" id="0D3">Groupe invisible</data>
   <data name="Action.ObjectGroupBox" id="055" mod="1">Groupe avec cadre et étiquette</data>
+  <data name="StringCollection.Add" id="0E5" mod="1">Créer un nouveau texte</data>
+  <data name="StringCollection.Duplicate" id="0F5" mod="1">Dupliquer le texte</data>
+  <data name="StringCollection.Remove" id="0G5" mod="1">Supprimer le texte</data>
+  <data name="StringCollection.Prev" id="0H5" mod="1">Monter le texte</data>
+  <data name="StringCollection.Next" id="0I5" mod="1">Descendre le texte</data>
   <data name="Dialog.Button.Close" id="0E3">Fermer</data>
   <data name="Dialog.Button.OK" id="0F3">D'accord</data>
   <data name="Dialog.Button.Cancel" id="0G3">Annuler</data>

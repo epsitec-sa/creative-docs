@@ -91,12 +91,21 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonAdd.Dock = DockStyle.Left;
 			this.buttonAdd.AutoFocus = false;
 			this.buttonAdd.Pressed += new MessageEventHandler(this.HandleButtonAddPressed);
+			ToolTip.Default.SetToolTip(this.buttonAdd, Res.Strings.StringCollection.Add);
+
+			this.buttonDuplicate = new IconButton(toolbar);
+			this.buttonDuplicate.IconName = Misc.Icon("StringDuplicate");
+			this.buttonDuplicate.Dock = DockStyle.Left;
+			this.buttonDuplicate.AutoFocus = false;
+			this.buttonDuplicate.Pressed += new MessageEventHandler(this.HandleButtonDuplicatePressed);
+			ToolTip.Default.SetToolTip(this.buttonDuplicate, Res.Strings.StringCollection.Duplicate);
 
 			this.buttonRemove = new IconButton(toolbar);
 			this.buttonRemove.IconName = Misc.Icon("StringRemove");
 			this.buttonRemove.Dock = DockStyle.Left;
 			this.buttonRemove.AutoFocus = false;
 			this.buttonRemove.Pressed += new MessageEventHandler(this.HandleButtonRemovePressed);
+			ToolTip.Default.SetToolTip(this.buttonRemove, Res.Strings.StringCollection.Remove);
 
 			IconSeparator sep = new IconSeparator(toolbar);
 			sep.IsHorizontal = true;
@@ -107,12 +116,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonPrev.Dock = DockStyle.Left;
 			this.buttonPrev.AutoFocus = false;
 			this.buttonPrev.Pressed += new MessageEventHandler(this.HandleButtonPrevPressed);
+			ToolTip.Default.SetToolTip(this.buttonPrev, Res.Strings.StringCollection.Prev);
 
 			this.buttonNext = new IconButton(toolbar);
 			this.buttonNext.IconName = Misc.Icon("StringNext");
 			this.buttonNext.Dock = DockStyle.Left;
 			this.buttonNext.AutoFocus = false;
 			this.buttonNext.Pressed += new MessageEventHandler(this.HandleButtonNextPressed);
+			ToolTip.Default.SetToolTip(this.buttonNext, Res.Strings.StringCollection.Next);
 		}
 
 		protected void AdaptGrid()
@@ -193,11 +204,13 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Met à jour les boutons pour ajouter/supprimer/déplacer une ligne.
 			int sel = this.SelectedRow;
 			int count = this.textFields.Count;
+			bool enable = (this.strings != null);
 
-			this.buttonAdd.Enable = true;
-			this.buttonRemove.Enable = (sel != -1);
-			this.buttonPrev.Enable = (sel != -1 && sel > 0);
-			this.buttonNext.Enable = (sel != -1 && sel < count-1);
+			this.buttonAdd.Enable = enable;
+			this.buttonDuplicate.Enable = (enable && sel != -1);
+			this.buttonRemove.Enable = (enable && sel != -1);
+			this.buttonPrev.Enable = (enable && sel != -1 && sel > 0);
+			this.buttonNext.Enable = (enable && sel != -1 && sel < count-1);
 		}
 
 
@@ -252,6 +265,22 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 
 			this.strings.Insert(sel+1, "");
+			this.AdaptGrid();
+			this.UpdateGrid();
+			this.SelectedRow = sel+1;
+			this.SetFocusInSelection();
+		}
+
+		protected void HandleButtonDuplicatePressed(object sender, MessageEventArgs e)
+		{
+			//	Appelé lorsque le bouton pour dupliquer une ligne est cliqué.
+			int sel = this.SelectedRow;
+			if (sel == -1)
+			{
+				sel = this.strings.Count-1;
+			}
+
+			this.strings.Insert(sel+1, this.strings[sel]);
 			this.AdaptGrid();
 			this.UpdateGrid();
 			this.SelectedRow = sel+1;
@@ -338,6 +367,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected List<string>				strings;
 		protected GridLayoutEngine			grid;
 		protected IconButton				buttonAdd;
+		protected IconButton				buttonDuplicate;
 		protected IconButton				buttonRemove;
 		protected IconButton				buttonPrev;
 		protected IconButton				buttonNext;
