@@ -54,6 +54,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 				this.AdaptGrid();
 				this.UpdateGrid();
+				this.UpdateArrows();
 				this.UpdateButtons();
 			}
 		}
@@ -247,6 +248,15 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonNext.Enable = (enable && sel != -1 && sel < count-1);
 		}
 
+		protected void UpdateArrows()
+		{
+			//	Met à jour les flèches ">" dans les boutons de la 2ème colonne.
+			for (int i=0; i<this.textFields.Count; i++)
+			{
+				this.glyphButtons[i].GlyphShape = (this.selectedRow == i) ? GlyphShape.ArrowRight : GlyphShape.None;
+			}
+		}
+
 
 		protected int SelectedRow
 		{
@@ -266,12 +276,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				{
 					this.selectedRow = value;
 
-					//	Met à jour les flèches ">" dans les boutons de la 2ème colonne.
-					for (int i=0; i<this.textFields.Count; i++)
-					{
-						this.glyphButtons[i].GlyphShape = (this.selectedRow == i) ? GlyphShape.ArrowRight : GlyphShape.None;
-					}
-
+					this.UpdateArrows();
 					this.UpdateButtons();
 				}
 			}
