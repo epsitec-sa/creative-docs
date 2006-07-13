@@ -93,10 +93,10 @@ namespace Epsitec.Common.Designer.Viewers
 
 			this.scrollable.Panel.ContainerLayoutMode = ContainerLayoutMode.VerticalFlow;
 
-			this.leftContainers = new List<Widget>();
-			this.rightContainers = new List<Widget>();
+			this.leftContainers = new List<Separator>();
+			this.rightContainers = new List<Separator>();
 
-			Widget leftContainer, rightContainer;
+			Separator leftContainer, rightContainer;
 
 			//	Textes.
 			this.CreateBand(out leftContainer, out rightContainer, 0.4);
@@ -516,6 +516,91 @@ namespace Epsitec.Common.Designer.Viewers
 		public override void DoModification(string name)
 		{
 			//	Change la ressource modifiée visible.
+			int sel = this.array.SelectedRow;
+
+			if (name == "ModificationAll")
+			{
+				if (sel == -1)  return;
+				Druid druid = this.druidsIndex[sel];
+				ResourceBundle.Field field1 = this.primaryBundle[druid];
+				if (field1.IsEmpty)  return;
+				field1.SetModificationId(field1.ModificationId+1);
+
+				this.UpdateEdit();
+				//?this.UpdateModifiers();
+				this.UpdateCommands();
+				this.module.Modifier.IsDirty = true;
+			}
+			else if (name == "ModificationClear" && this.secondaryBundle != null)
+			{
+				if (sel == -1)  return;
+				Druid druid = this.druidsIndex[sel];
+				ResourceBundle.Field field1 = this.primaryBundle[druid];
+				ResourceBundle.Field field2 = this.secondaryBundle[druid];
+				if (field1.IsEmpty || field2.IsEmpty)  return;
+				field2.SetModificationId(field1.ModificationId);
+
+				this.UpdateEdit();
+				//?this.UpdateModifiers();
+				this.UpdateCommands();
+				this.module.Modifier.IsDirty = true;
+			}
+			else if (this.secondaryBundle != null)
+			{
+				if (sel == -1)
+				{
+					sel = (name == "ModificationPrev") ? 0 : this.druidsIndex.Count-1;
+				}
+
+				int column = -1;
+				int dir = (name == "ModificationPrev") ? -1 : 1;
+
+				for (int i=0; i<this.druidsIndex.Count; i++)
+				{
+					sel += dir;
+
+					if (sel >= this.druidsIndex.Count)
+					{
+						sel = 0;
+					}
+
+					if (sel < 0)
+					{
+						sel = this.druidsIndex.Count-1;
+					}
+
+					Druid druid = this.druidsIndex[sel];
+					ResourceBundle.Field field1 = this.primaryBundle[druid];
+					ResourceBundle.Field field2 = this.secondaryBundle[druid];
+					bool state1 = field1.IsEmpty || string.IsNullOrEmpty(field1.AsString);
+					bool state2 = field2.IsEmpty || string.IsNullOrEmpty(field2.AsString);
+
+					if (state1 || state2)
+					{
+						column = 2;
+						break;
+					}
+
+					if (!state1 && !state2 && field1.ModificationId > field2.ModificationId)
+					{
+						column = 2;
+						break;
+					}
+				}
+
+				this.array.SelectedRow = sel;
+				this.array.ShowSelectedRow();
+
+				AbstractTextField edit = null;
+				if (column == 1)  edit = this.primaryDescription;
+				if (column == 2)  edit = this.secondaryDescription;
+				if (edit != null)
+				{
+					this.Window.MakeActive();
+					edit.Focus();
+					edit.SelectAll();
+				}
+			}
 		}
 
 		public override void DoDelete()
@@ -673,9 +758,31 @@ namespace Epsitec.Common.Designer.Viewers
 				sel = -1;
 			}
 
-			foreach (Widget container in this.rightContainers)
+			Color color = Color.Empty;
+			if (sel != -1)
+			{
+				Druid druid = this.druidsIndex[sel];
+				ResourceBundle.Field field1 = this.primaryBundle[druid];
+				ResourceBundle.Field field2 = this.secondaryBundle[druid];
+
+				int primaryId = field1.ModificationId;
+				int secondaryId = primaryId;
+				if (field2 != null)
+				{
+					secondaryId = field2.ModificationId;
+				}
+
+				if (primaryId > secondaryId)  // éventuellement pas à jour (fond jaune) ?
+				{
+					color = Color.FromRgb(0.91, 0.81, 0.41);  // jaune
+				}
+			}
+
+			foreach (Separator container in this.rightContainers)
 			{
 				container.Visibility = (this.secondaryBundle != null);
+				container.Color = color;
+				container.Alpha = color.A;
 			}
 
 			if ( sel == -1 )
@@ -781,19 +888,34 @@ namespace Epsitec.Common.Designer.Viewers
 			int sel = this.array.SelectedRow;
 			int count = this.druidsIndex.Count;
 			bool build = (this.module.Mode == DesignerMode.Build);
+			bool search = this.module.MainWindow.DialogSearch.IsActionsEnabled;
 			bool newCulture = (this.module.GetBundles(this.BundleType).Count < Misc.Cultures.Length);
+
+			bool all = false;
+			bool modified = false;
+			if (sel != -1 && this.secondaryBundle != null)
+			{
+				Druid druid = this.druidsIndex[sel];
+				all = this.module.Modifier.IsModificationAll(this.BundleType, druid);
+				ResourceBundle.Field field1 = this.primaryBundle[druid];
+				ResourceBundle.Field field2 = this.secondaryBundle[druid];
+				if (!field1.IsEmpty && !field2.IsEmpty)
+				{
+					modified = (field1.ModificationId > field2.ModificationId);
+				}
+			}
 
 			this.GetCommandState("NewCulture").Enable = newCulture;
 			this.GetCommandState("DeleteCulture").Enable = true;
 
 			this.GetCommandState("Search").Enable = true;
-			this.GetCommandState("SearchPrev").Enable = true;
-			this.GetCommandState("SearchNext").Enable = true;
+			this.GetCommandState("SearchPrev").Enable = search;
+			this.GetCommandState("SearchNext").Enable = search;
 
-			this.GetCommandState("ModificationPrev").Enable = false;
-			this.GetCommandState("ModificationNext").Enable = false;
-			this.GetCommandState("ModificationAll").Enable = false;
-			this.GetCommandState("ModificationClear").Enable = false;
+			this.GetCommandState("ModificationPrev").Enable = true;
+			this.GetCommandState("ModificationNext").Enable = true;
+			this.GetCommandState("ModificationAll").Enable = (sel != -1 && all);
+			this.GetCommandState("ModificationClear").Enable = (sel != -1 && modified);
 
 			this.GetCommandState("FontBold").Enable = (sel != -1);
 			this.GetCommandState("FontItalic").Enable = (sel != -1);
@@ -1051,7 +1173,7 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
-		protected void CreateBand(out Widget leftContainer, out Widget rightContainer, double backgroundIntensity)
+		protected void CreateBand(out Separator leftContainer, out Separator rightContainer, double backgroundIntensity)
 		{
 			IAdorner adorner = Epsitec.Common.Widgets.Adorners.Factory.Active;
 			Color cap = adorner.ColorCaption;
@@ -1063,15 +1185,19 @@ namespace Epsitec.Common.Designer.Viewers
 			band.Dock = DockStyle.StackBegin;
 			band.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
 
-			leftContainer = new Widget(band);
+			leftContainer = new Separator(band);
 			leftContainer.MinWidth = 100;
 			leftContainer.Dock = DockStyle.StackFill;
+			leftContainer.Color = Color.Empty;
+			leftContainer.Alpha = 0;
 			this.leftContainers.Add(leftContainer);
 
-			rightContainer = new Widget(band);
+			rightContainer = new Separator(band);
 			rightContainer.MinWidth = 100;
 			rightContainer.Dock = DockStyle.StackFill;
 			rightContainer.Margins = new Margins(-1, 0, 0, 0);
+			rightContainer.Color = Color.Empty;
+			rightContainer.Alpha = 0;
 			this.rightContainers.Add(rightContainer);
 		}
 
@@ -1347,8 +1473,8 @@ namespace Epsitec.Common.Designer.Viewers
 		protected ResourceBundle				secondaryBundle;
 		protected TextFieldEx					labelEdit;
 		protected Scrollable					scrollable;
-		protected List<Widget>					leftContainers;
-		protected List<Widget>					rightContainers;
+		protected List<Separator>				leftContainers;
+		protected List<Separator>				rightContainers;
 		protected MyWidgets.StringCollection	primaryLabels;
 		protected MyWidgets.StringCollection	secondaryLabels;
 		protected TextFieldMulti				primaryDescription;
