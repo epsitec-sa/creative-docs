@@ -957,6 +957,8 @@ namespace Epsitec.Common.Designer.Viewers
 			int sel = this.array.SelectedRow;
 			int count = this.druidsIndex.Count;
 			bool build = (this.module.Mode == DesignerMode.Build);
+			bool search = this.module.MainWindow.DialogSearch.IsActionsEnabled;
+			bool newCulture = (this.module.GetBundles(this.BundleType).Count < Misc.Cultures.Length);
 
 			bool all = false;
 			bool modified = false;
@@ -971,10 +973,6 @@ namespace Epsitec.Common.Designer.Viewers
 					modified = (field1.ModificationId > field2.ModificationId);
 				}
 			}
-
-			bool search = this.module.MainWindow.DialogSearch.IsActionsEnabled;
-
-			bool newCulture = (this.module.GetBundles(this.BundleType).Count < Misc.Cultures.Length);
 
 			this.GetCommandState("NewCulture").Enable = newCulture;
 			this.GetCommandState("DeleteCulture").Enable = true;
