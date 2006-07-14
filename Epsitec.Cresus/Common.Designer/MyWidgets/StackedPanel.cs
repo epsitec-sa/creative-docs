@@ -100,17 +100,13 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 
 			rect.Deflate(0.5, 0.5);
+			graphics.AddLine(rect.Left-0.5, rect.Bottom, rect.Right+0.5, rect.Bottom);
 
 			if (this.isLeftPart)
 			{
 				graphics.AddLine(rect.Right, rect.Bottom-0.5, rect.Right, rect.Top+0.5);
 			}
-			else
-			{
-				graphics.AddLine(rect.Left, rect.Bottom-0.5, rect.Left, rect.Top+0.5);
-			}
 
-			graphics.AddLine(rect.Left-0.5, rect.Top, rect.Right+0.5, rect.Top);
 			graphics.RenderSolid(adorner.ColorBorder);
 		}
 
