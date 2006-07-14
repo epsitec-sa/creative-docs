@@ -13,7 +13,6 @@ namespace Epsitec.Common.Designer.Viewers
 	{
 		public Captions(Module module, PanelsContext context) : base(module, context)
 		{
-			MyWidgets.StackedPanel panel;
 			int tabIndex = 0;
 
 			//	Crée les 2 parties gauche/droite séparées par un splitter.
@@ -76,7 +75,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryCulture.Dock = DockStyle.StackFill;
 
 			this.secondaryCulture = new Widget(sup);
-			this.secondaryCulture.Margins = new Margins(10-1, 0, 0, 0);
+			this.secondaryCulture.Margins = new Margins(10, 0, 0, 0);
 			this.secondaryCulture.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
 			this.secondaryCulture.Dock = DockStyle.StackFill;
 
@@ -176,10 +175,6 @@ namespace Epsitec.Common.Designer.Viewers
 			this.secondaryAbout.TabIndex = tabIndex++;
 			this.secondaryAbout.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
-			//	Ligne horizontale pour terminer proprement.
-			Separator sep = new Separator(this.scrollable.Panel);
-			sep.PreferredHeight = 1;
-			sep.Dock = DockStyle.StackBegin;
 
 			this.UpdateCultures();
 			this.Update();
@@ -1157,7 +1152,6 @@ namespace Epsitec.Common.Designer.Viewers
 			rightContainer.IsLeftPart = false;
 			rightContainer.MinWidth = 100;
 			rightContainer.Dock = DockStyle.StackFill;
-			rightContainer.Margins = new Margins(-1, 0, 0, 0);
 			this.rightContainers.Add(rightContainer);
 		}
 
