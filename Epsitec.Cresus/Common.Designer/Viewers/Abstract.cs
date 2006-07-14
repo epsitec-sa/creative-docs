@@ -331,6 +331,25 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
+		protected static Color GetBackgroundColor(Modifier.ModificationState state, double intensity)
+		{
+			//	Donne une couleur pour un fond de panneau.
+			switch (state)
+			{
+				case Modifier.ModificationState.Empty:
+					return Color.FromAlphaRgb(intensity, 0.91, 0.40, 0.40);  // rouge
+
+				case Modifier.ModificationState.Modified:
+					return Color.FromAlphaRgb(intensity, 0.91, 0.81, 0.41);  // jaune
+
+				default:
+					IAdorner adorner = Epsitec.Common.Widgets.Adorners.Factory.Active;
+					Color cap = adorner.ColorCaption;
+					return Color.FromAlphaRgb(intensity, 0.5+cap.R*0.5, 0.5+cap.G*0.5, 0.5+cap.B*0.5);
+			}
+		}
+
+
 		#region CultureInfo
 		public class CultureInfo
 		{
