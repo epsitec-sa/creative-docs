@@ -118,20 +118,19 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-
-
 		public Field GetAccessField(int index, string cultureName, string fieldName)
 		{
-			//	Retourne une donnée.
-			this.accessIndex = index;
-
+			//	Retourne les données d'un champ.
+			//	Si cultureName est nul, on accède à la culture par de base.
 			if (this.IsBundlesType)
 			{
-				if (this.accessCulture != cultureName)
+				if (this.accessCulture != cultureName)  // changement de culture ?
 				{
 					this.accessCulture = cultureName;
+					this.accessField = null;
+					this.accessCaption = null;
 
-					if (this.accessCulture == "")  // culture par défaut ?
+					if (string.IsNullOrEmpty(this.accessCulture))  // culture de base ?
 					{
 						this.accessBundle = this.bundles[ResourceLevel.Default];
 					}
@@ -140,45 +139,95 @@ namespace Epsitec.Common.Designer
 						this.accessBundle = this.GetCulture(this.accessCulture);
 					}
 				}
-			}
 
-			if (this.type == Type.Strings)
-			{
 				if (this.accessBundle == null || this.accessIndex < 0 || this.accessIndex >= this.druidsIndex.Count)
 				{
 					return null;
 				}
-				Druid druid = this.druidsIndex[this.accessIndex];
-				ResourceBundle.Field rbf = this.accessBundle[druid];
+
+				//	Met en cache le ResourceBundle.Field.
+				if (this.accessIndex != index || this.accessField == null)
+				{
+					Druid druid = this.druidsIndex[index];
+					this.accessField = this.accessBundle[druid];
+				}
+
+				//	Met en cache le Caption.
+				if (this.type == Type.Captions)
+				{
+					if (this.accessIndex != index || this.accessCaption == null)
+					{
+						this.accessCaption = new Common.Types.Caption();
+
+						if (this.accessField != null)
+						{
+							string s = this.accessField.AsString;
+							if (!string.IsNullOrEmpty(s))
+							{
+								this.accessCaption.DeserializeFromString(s);
+							}
+						}
+					}
+				}
+			}
+
+			this.accessIndex = index;
+
+			if (this.type == Type.Strings)
+			{
+				if (this.accessField == null)
+				{
+					return null;
+				}
 
 				if (fieldName == ResourceAccess.AccessStrings[0])
 				{
 					Field field = new Field(Field.Type.String);
-					field.String = rbf.AsString;
+					field.String = this.accessField.AsString;
 					return field;
 				}
 
 				if (fieldName == ResourceAccess.AccessStrings[1])
 				{
+					Field field = new Field(Field.Type.String);
+					field.String = this.accessField.About;
+					return field;
 				}
 			}
 
 			if (this.type == Type.Captions)
 			{
+				if (this.accessField == null || this.accessCaption == null)
+				{
+					return null;
+				}
+
 				if (fieldName == ResourceAccess.AccessCaptions[0])
 				{
+					Field field = new Field(Field.Type.StringsCollection);
+					field.StringCollection = this.accessCaption.Labels;
+					return field;
 				}
 
 				if (fieldName == ResourceAccess.AccessCaptions[1])
 				{
+					Field field = new Field(Field.Type.String);
+					field.String = this.accessCaption.Description;
+					return field;
 				}
 
 				if (fieldName == ResourceAccess.AccessCaptions[2])
 				{
+					Field field = new Field(Field.Type.String);
+					field.String = this.accessCaption.Icon;
+					return field;
 				}
 
 				if (fieldName == ResourceAccess.AccessCaptions[3])
 				{
+					Field field = new Field(Field.Type.String);
+					field.String = this.accessField.About;
+					return field;
 				}
 			}
 
@@ -554,5 +603,7 @@ namespace Epsitec.Common.Designer
 		protected string						accessCulture;
 		protected ResourceBundle				accessBundle;
 		protected int							accessIndex;
+		protected ResourceBundle.Field			accessField;
+		protected Common.Types.Caption			accessCaption;
 	}
 }
