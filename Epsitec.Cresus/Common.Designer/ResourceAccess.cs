@@ -34,6 +34,7 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
+
 		public void Load()
 		{
 			//	Charge les ressources.
@@ -76,6 +77,24 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
+
+		public Druid Duplicate(string name, int index, bool duplicate)
+		{
+			//	Duplique une ressource.
+			return Druid.Empty;
+		}
+
+		public void Delete(Druid druid)
+		{
+			//	Supprime une ressource.
+		}
+
+		public void Move(Druid druid, int newIndex)
+		{
+			//	Déplace une ressource.
+		}
+
+
 		public void SetFilter(string filter, Searcher.SearchingMode mode)
 		{
 			//	Construit l'index en fonction des ressources primaires.
@@ -85,8 +104,7 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-
-		public int DataCount
+		public int AccessCount
 		{
 			//	Retourne le nombre de données accessibles.
 			get
@@ -102,7 +120,7 @@ namespace Epsitec.Common.Designer
 
 		public string[] GetAccessFieldNames
 		{
-			//	Donne les noms des champs accessibles.
+			//	Donne les noms internes (fieldName) des champs accessibles.
 			get
 			{
 				switch (this.type)
@@ -118,11 +136,63 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
+		public string GetFieldDescription(string fieldName)
+		{
+			//	Donne le texte descriptif pour un champ.
+			if (this.type == Type.Strings)
+			{
+				if (fieldName == ResourceAccess.AccessStrings[0])
+				{
+					return Res.Strings.Viewers.Strings.Edit;
+				}
+
+				if (fieldName == ResourceAccess.AccessStrings[1])
+				{
+					return Res.Strings.Viewers.Strings.About;
+				}
+			}
+
+			if (this.type == Type.Captions)
+			{
+				if (fieldName == ResourceAccess.AccessCaptions[0])
+				{
+					return Res.Strings.Viewers.Captions.Labels;
+				}
+
+				if (fieldName == ResourceAccess.AccessCaptions[1])
+				{
+					return Res.Strings.Viewers.Captions.Description;
+				}
+
+				if (fieldName == ResourceAccess.AccessCaptions[2])
+				{
+					return Res.Strings.Viewers.Captions.Icon;
+				}
+
+				if (fieldName == ResourceAccess.AccessCaptions[3])
+				{
+					return Res.Strings.Viewers.Captions.About;
+				}
+			}
+
+			return null;
+		}
+
 		public Field GetAccessField(int index, string cultureName, string fieldName)
 		{
 			//	Retourne les données d'un champ.
-			//	Si cultureName est nul, on accède à la culture par de base.
+			//	Si cultureName est nul, on accède à la culture de base.
 			this.AccessCache(index, cultureName);
+
+			if (this.IsBundlesType)
+			{
+				if (fieldName == ResourceAccess.AccessStrings[0])
+				{
+					Field field = new Field(Field.Type.String);
+					field.String = this.accessField.Name;
+					return field;
+				}
+			}
 
 			if (this.type == Type.Strings)
 			{
@@ -131,14 +201,14 @@ namespace Epsitec.Common.Designer
 					return null;
 				}
 
-				if (fieldName == ResourceAccess.AccessStrings[0])
+				if (fieldName == ResourceAccess.AccessStrings[1])
 				{
 					Field field = new Field(Field.Type.String);
 					field.String = this.accessField.AsString;
 					return field;
 				}
 
-				if (fieldName == ResourceAccess.AccessStrings[1])
+				if (fieldName == ResourceAccess.AccessStrings[2])
 				{
 					Field field = new Field(Field.Type.String);
 					field.String = this.accessField.About;
@@ -153,28 +223,28 @@ namespace Epsitec.Common.Designer
 					return null;
 				}
 
-				if (fieldName == ResourceAccess.AccessCaptions[0])
+				if (fieldName == ResourceAccess.AccessCaptions[1])
 				{
 					Field field = new Field(Field.Type.StringCollection);
 					field.StringCollection = this.accessCaption.Labels;
 					return field;
 				}
 
-				if (fieldName == ResourceAccess.AccessCaptions[1])
+				if (fieldName == ResourceAccess.AccessCaptions[2])
 				{
 					Field field = new Field(Field.Type.String);
 					field.String = this.accessCaption.Description;
 					return field;
 				}
 
-				if (fieldName == ResourceAccess.AccessCaptions[2])
+				if (fieldName == ResourceAccess.AccessCaptions[3])
 				{
 					Field field = new Field(Field.Type.String);
 					field.String = this.accessCaption.Icon;
 					return field;
 				}
 
-				if (fieldName == ResourceAccess.AccessCaptions[3])
+				if (fieldName == ResourceAccess.AccessCaptions[4])
 				{
 					Field field = new Field(Field.Type.String);
 					field.String = this.accessField.About;
@@ -188,8 +258,16 @@ namespace Epsitec.Common.Designer
 		public void SetAccessField(int index, string cultureName, string fieldName, Field field)
 		{
 			//	Modifie les données d'un champ.
-			//	Si cultureName est nul, on accède à la culture par de base.
+			//	Si cultureName est nul, on accède à la culture de base.
 			this.AccessCache(index, cultureName);
+
+			if (this.IsBundlesType)
+			{
+				if (fieldName == ResourceAccess.AccessStrings[0])
+				{
+					this.accessField.SetName(field.String);
+				}
+			}
 
 			if (this.type == Type.Strings)
 			{
@@ -198,12 +276,12 @@ namespace Epsitec.Common.Designer
 					return;
 				}
 
-				if (fieldName == ResourceAccess.AccessStrings[0])
+				if (fieldName == ResourceAccess.AccessStrings[1])
 				{
 					this.accessField.SetStringValue(field.String);
 				}
 
-				if (fieldName == ResourceAccess.AccessStrings[1])
+				if (fieldName == ResourceAccess.AccessStrings[2])
 				{
 					this.accessField.SetAbout(field.String);
 				}
@@ -216,7 +294,7 @@ namespace Epsitec.Common.Designer
 					return;
 				}
 
-				if (fieldName == ResourceAccess.AccessCaptions[0])
+				if (fieldName == ResourceAccess.AccessCaptions[1])
 				{
 					ICollection<string> src = field.StringCollection;
 					ICollection<string> dst = this.accessCaption.Labels;
@@ -228,17 +306,17 @@ namespace Epsitec.Common.Designer
 					}
 				}
 
-				if (fieldName == ResourceAccess.AccessCaptions[1])
+				if (fieldName == ResourceAccess.AccessCaptions[2])
 				{
 					this.accessCaption.Description = field.String;
 				}
 
-				if (fieldName == ResourceAccess.AccessCaptions[2])
+				if (fieldName == ResourceAccess.AccessCaptions[3])
 				{
 					this.accessCaption.Icon = field.String;
 				}
 
-				if (fieldName == ResourceAccess.AccessCaptions[3])
+				if (fieldName == ResourceAccess.AccessCaptions[4])
 				{
 					this.accessField.SetAbout(field.String);
 				}
@@ -299,8 +377,8 @@ namespace Epsitec.Common.Designer
 			this.accessIndex = index;
 		}
 
-		protected static string[] AccessStrings = { "String", "About" };
-		protected static string[] AccessCaptions = { "Labels", "Description", "Icon", "About" };
+		protected static string[] AccessStrings = { "Name", "String", "About" };
+		protected static string[] AccessCaptions = { "Name", "Labels", "Description", "Icon", "About" };
 
 
 		public bool IsExistingCulture(string name)
