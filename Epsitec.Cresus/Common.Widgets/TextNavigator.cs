@@ -40,10 +40,10 @@ namespace Epsitec.Common.Widgets
 			set { this.isReadOnly = value; }
 		}
 
-		public bool								IsTabInsertionPossible
+		public bool								AllowTabInsertion
 		{
-			get { return this.isTabInsertionPossible; }
-			set { this.isTabInsertionPossible = value; }
+			get { return this.allowTabInsertion; }
+			set { this.allowTabInsertion = value; }
 		}
 
 		public bool								IsEmpty
@@ -520,7 +520,7 @@ namespace Epsitec.Common.Widgets
 						return true;
 
 					case KeyCode.Tab:
-						if ( this.isReadOnly || !this.isTabInsertionPossible )  return false;
+						if ( this.isReadOnly || !this.allowTabInsertion )  return false;
 						this.UndoMemorise(UndoType.Insert);
 						this.textLayout.InsertCharacter(this.context, '\t');
 						this.OnTextInserted(false);
@@ -983,7 +983,7 @@ namespace Epsitec.Common.Widgets
 		protected Support.OpletQueue			undoQueue;
 		protected bool							isReadOnly = false;
 		protected bool							isNumeric = false;
-		protected bool							isTabInsertionPossible = false;
+		protected bool							allowTabInsertion = false;
 		protected int							iCursorFrom;
 		protected int							iCursorTo;
 		protected bool							iCursorAfter;

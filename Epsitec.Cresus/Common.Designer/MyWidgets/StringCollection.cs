@@ -192,7 +192,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 					//?field.VerticalAlignment = VerticalAlignment.BaseLine;
 					field.TabIndex = count;
 					field.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-					field.TextNavigator.IsTabInsertionPossible = false;
+					field.TextNavigator.AllowTabInsertion = false;
 					this.AdaptTextFieldLines(field);
 					GridLayoutEngine.SetColumn(field, 2);
 					GridLayoutEngine.SetRow(field, count);
