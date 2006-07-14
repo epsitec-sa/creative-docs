@@ -20,6 +20,13 @@ namespace Epsitec.Common.Designer
 			Panels,
 		}
 
+		public enum ModificationState
+		{
+			Normal,			//	défini normalement
+			Empty,			//	vide (fond rouge)
+			Modified,		//	modifié (fond jaune)
+		}
+
 
 		public ResourceAccess(Type type, ResourceManager resourceManager)
 		{
@@ -95,6 +102,23 @@ namespace Epsitec.Common.Designer
 		}
 
 
+		public void ModificationSetOne(Druid druid, string cultureName)
+		{
+			//	Considère une ressource comme modifiée dans une culture.
+		}
+
+		public void ModificationClearAll(Druid druid)
+		{
+			//	Considère une ressource comme à jour dans toutes les cultures.
+		}
+
+		public bool IsModificationAll(Druid druid)
+		{
+			//	Donne l'état de la commande ModificationAll.
+			return false;
+		}
+
+
 		public void SetFilter(string filter, Searcher.SearchingMode mode)
 		{
 			//	Construit l'index en fonction des ressources primaires.
@@ -116,6 +140,17 @@ namespace Epsitec.Common.Designer
 
 				return 0;
 			}
+		}
+
+		public Druid GetDruid(int index)
+		{
+			//	Retourne le Druid correspondant à un index donné.
+			if (this.IsBundlesType)
+			{
+				return this.druidsIndex[index];
+			}
+
+			return Druid.Empty;
 		}
 
 		public string[] GetAccessFieldNames
@@ -178,7 +213,7 @@ namespace Epsitec.Common.Designer
 			return null;
 		}
 
-		public Field GetAccessField(int index, string cultureName, string fieldName)
+		public Field GetField(int index, string cultureName, string fieldName)
 		{
 			//	Retourne les données d'un champ.
 			//	Si cultureName est nul, on accède à la culture de base.
@@ -255,7 +290,7 @@ namespace Epsitec.Common.Designer
 			return null;
 		}
 
-		public void SetAccessField(int index, string cultureName, string fieldName, Field field)
+		public void SetField(int index, string cultureName, string fieldName, Field field)
 		{
 			//	Modifie les données d'un champ.
 			//	Si cultureName est nul, on accède à la culture de base.
@@ -320,6 +355,43 @@ namespace Epsitec.Common.Designer
 				{
 					this.accessField.SetAbout(field.String);
 				}
+			}
+		}
+
+		public ModificationState GetModification(int index, string cultureName)
+		{
+			//	Donne l'état 'modifié'.
+			this.AccessCache(index, cultureName);
+
+			if (this.IsBundlesType)
+			{
+				if (this.accessField == null || string.IsNullOrEmpty(this.accessField.AsString))
+				{
+					return ModificationState.Empty;
+				}
+
+				if (this.accessBundle != this.primaryBundle)  // culture secondaire ?
+				{
+					Druid druid = this.druidsIndex[this.accessIndex];
+					ResourceBundle.Field primaryField = this.primaryBundle[druid];
+
+					if (primaryField.ModificationId > this.accessField.ModificationId)
+					{
+						return ModificationState.Modified;
+					}
+				}
+			}
+
+			return ModificationState.Normal;
+		}
+
+		public void SetModification(int index, string cultureName, ModificationState state)
+		{
+			//	Change l'état 'modifié'.
+			this.AccessCache(index, cultureName);
+
+			if (this.IsBundlesType)
+			{
 			}
 		}
 
