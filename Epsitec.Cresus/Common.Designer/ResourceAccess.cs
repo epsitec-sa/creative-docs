@@ -122,56 +122,7 @@ namespace Epsitec.Common.Designer
 		{
 			//	Retourne les données d'un champ.
 			//	Si cultureName est nul, on accède à la culture par de base.
-			if (this.IsBundlesType)
-			{
-				if (this.accessCulture != cultureName)  // changement de culture ?
-				{
-					this.accessCulture = cultureName;
-					this.accessField = null;
-					this.accessCaption = null;
-
-					if (string.IsNullOrEmpty(this.accessCulture))  // culture de base ?
-					{
-						this.accessBundle = this.bundles[ResourceLevel.Default];
-					}
-					else
-					{
-						this.accessBundle = this.GetCulture(this.accessCulture);
-					}
-				}
-
-				if (this.accessBundle == null || this.accessIndex < 0 || this.accessIndex >= this.druidsIndex.Count)
-				{
-					return null;
-				}
-
-				//	Met en cache le ResourceBundle.Field.
-				if (this.accessIndex != index || this.accessField == null)
-				{
-					Druid druid = this.druidsIndex[index];
-					this.accessField = this.accessBundle[druid];
-				}
-
-				//	Met en cache le Caption.
-				if (this.type == Type.Captions)
-				{
-					if (this.accessIndex != index || this.accessCaption == null)
-					{
-						this.accessCaption = new Common.Types.Caption();
-
-						if (this.accessField != null)
-						{
-							string s = this.accessField.AsString;
-							if (!string.IsNullOrEmpty(s))
-							{
-								this.accessCaption.DeserializeFromString(s);
-							}
-						}
-					}
-				}
-			}
-
-			this.accessIndex = index;
+			this.AccessCache(index, cultureName);
 
 			if (this.type == Type.Strings)
 			{
@@ -204,7 +155,7 @@ namespace Epsitec.Common.Designer
 
 				if (fieldName == ResourceAccess.AccessCaptions[0])
 				{
-					Field field = new Field(Field.Type.StringsCollection);
+					Field field = new Field(Field.Type.StringCollection);
 					field.StringCollection = this.accessCaption.Labels;
 					return field;
 				}
@@ -232,6 +183,120 @@ namespace Epsitec.Common.Designer
 			}
 
 			return null;
+		}
+
+		public void SetAccessField(int index, string cultureName, string fieldName, Field field)
+		{
+			//	Modifie les données d'un champ.
+			//	Si cultureName est nul, on accède à la culture par de base.
+			this.AccessCache(index, cultureName);
+
+			if (this.type == Type.Strings)
+			{
+				if (this.accessField == null)
+				{
+					return;
+				}
+
+				if (fieldName == ResourceAccess.AccessStrings[0])
+				{
+					this.accessField.SetStringValue(field.String);
+				}
+
+				if (fieldName == ResourceAccess.AccessStrings[1])
+				{
+					this.accessField.SetAbout(field.String);
+				}
+			}
+
+			if (this.type == Type.Captions)
+			{
+				if (this.accessField == null || this.accessCaption == null)
+				{
+					return;
+				}
+
+				if (fieldName == ResourceAccess.AccessCaptions[0])
+				{
+					ICollection<string> src = field.StringCollection;
+					ICollection<string> dst = this.accessCaption.Labels;
+
+					dst.Clear();
+					foreach (string s in src)
+					{
+						dst.Add(s);
+					}
+				}
+
+				if (fieldName == ResourceAccess.AccessCaptions[1])
+				{
+					this.accessCaption.Description = field.String;
+				}
+
+				if (fieldName == ResourceAccess.AccessCaptions[2])
+				{
+					this.accessCaption.Icon = field.String;
+				}
+
+				if (fieldName == ResourceAccess.AccessCaptions[3])
+				{
+					this.accessField.SetAbout(field.String);
+				}
+			}
+		}
+
+		protected void AccessCache(int index, string cultureName)
+		{
+			if (this.IsBundlesType)
+			{
+				if (this.accessCulture != cultureName)  // changement de culture ?
+				{
+					this.accessCulture = cultureName;
+					this.accessField = null;
+					this.accessCaption = null;
+
+					if (string.IsNullOrEmpty(this.accessCulture))  // culture de base ?
+					{
+						this.accessBundle = this.bundles[ResourceLevel.Default];
+					}
+					else
+					{
+						this.accessBundle = this.GetCulture(this.accessCulture);
+					}
+				}
+
+				if (this.accessBundle == null || index < 0 || index >= this.druidsIndex.Count)
+				{
+					return;
+				}
+
+				//	Met en cache le ResourceBundle.Field.
+				if (this.accessIndex != index || this.accessField == null)
+				{
+					Druid druid = this.druidsIndex[index];
+					this.accessField = this.accessBundle[druid];
+				}
+
+				//	Met en cache le Caption.
+				if (this.type == Type.Captions)
+				{
+					if (this.accessIndex != index || this.accessCaption == null)
+					{
+						this.accessCaption = new Common.Types.Caption();
+
+						if (this.accessField != null)
+						{
+							string s = this.accessField.AsString;
+							if (!string.IsNullOrEmpty(s))
+							{
+								this.accessCaption.DeserializeFromString(s);
+							}
+						}
+					}
+				}
+			}
+
+			this.accessIndex = index;
 		}
 
 		protected static string[] AccessStrings = { "String", "About" };
@@ -527,12 +592,15 @@ namespace Epsitec.Common.Designer
 
 
 		#region Field
+		/// <summary>
+		/// Permet d'accéder à un champ de n'importe quel type.
+		/// </summary>
 		public class Field
 		{
 			public enum Type
 			{
 				String,
-				StringsCollection,
+				StringCollection,
 				Bundle,
 			}
 
@@ -541,7 +609,7 @@ namespace Epsitec.Common.Designer
 				this.type = type;
 			}
 
-			public Type GetType
+			public Type FieldType
 			{
 				get
 				{
@@ -553,10 +621,12 @@ namespace Epsitec.Common.Designer
 			{
 				get
 				{
+					System.Diagnostics.Debug.Assert(this.type == Type.String);
 					return this.stringValue;
 				}
 				set
 				{
+					System.Diagnostics.Debug.Assert(this.type == Type.String);
 					this.stringValue = value;
 				}
 			}
@@ -565,10 +635,12 @@ namespace Epsitec.Common.Designer
 			{
 				get
 				{
+					System.Diagnostics.Debug.Assert(this.type == Type.StringCollection);
 					return this.stringCollection;
 				}
 				set
 				{
+					System.Diagnostics.Debug.Assert(this.type == Type.StringCollection);
 					this.stringCollection = value;
 				}
 			}
@@ -577,10 +649,12 @@ namespace Epsitec.Common.Designer
 			{
 				get
 				{
+					System.Diagnostics.Debug.Assert(this.type == Type.Bundle);
 					return this.bundle;
 				}
 				set
 				{
+					System.Diagnostics.Debug.Assert(this.type == Type.Bundle);
 					this.bundle = value;
 				}
 			}
