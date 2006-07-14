@@ -239,7 +239,7 @@ namespace Epsitec.Common.Designer
 			this.IsDirty = false;
 		}
 
-		public void GetModification(ResourceBundle primaryBundle, ResourceBundle secondaryBundle, Druid druid, out ModificationState primaryState, out ModificationState secondaryState)
+		public static void GetModification(ResourceBundle primaryBundle, ResourceBundle secondaryBundle, Druid druid, out ModificationState primaryState, out ModificationState secondaryState)
 		{
 			//	Donne l'état des deux colonnes primaire/secondaire.
 			primaryState   = ModificationState.Normal;
@@ -251,30 +251,57 @@ namespace Epsitec.Common.Designer
 			}
 
 			ResourceBundle.Field field1 = primaryBundle[druid];
-			bool empty1 = field1.IsEmpty || string.IsNullOrEmpty(field1.AsString);
+			ResourceBundle.Field field2 = (secondaryBundle == null) ? null : secondaryBundle[druid];
+			Modifier.GetModification(field1, field2, out primaryState, out secondaryState);
+		}
+
+		public static void GetModification(ResourceBundle.Field primaryField, ResourceBundle.Field secondaryField, out ModificationState primaryState, out ModificationState secondaryState)
+		{
+			//	Donne l'état des deux colonnes primaire/secondaire.
+			primaryState   = ModificationState.Normal;
+			secondaryState = ModificationState.Normal;
+
+			bool empty1 = primaryField.IsEmpty || string.IsNullOrEmpty(primaryField.AsString);
 
 			if (empty1)
 			{
 				primaryState = ModificationState.Empty;
 			}
 
-			if (secondaryBundle == null)
+			if (secondaryField == null)
 			{
 				return;
 			}
 
-			ResourceBundle.Field field2 = secondaryBundle[druid];
-			bool empty2 = field2.IsEmpty || string.IsNullOrEmpty(field2.AsString);
+			bool empty2 = secondaryField.IsEmpty || string.IsNullOrEmpty(secondaryField.AsString);
 
 			if (empty2)
 			{
 				secondaryState = ModificationState.Empty;
 			}
 
-			if (!empty1 && !empty2 && field1.ModificationId > field2.ModificationId)
+			if (!empty1 && !empty2 && primaryField.ModificationId > secondaryField.ModificationId)
 			{
 				secondaryState = ModificationState.Modified;
 			}
+		}
+
+		public static MyWidgets.StringList.CellState ModificationToCellState(ModificationState state)
+		{
+			MyWidgets.StringList.CellState cs = MyWidgets.StringList.CellState.Normal;
+
+			switch (state)
+			{
+				case Modifier.ModificationState.Empty:
+					cs = MyWidgets.StringList.CellState.Warning;
+					break;
+
+				case Modifier.ModificationState.Modified:
+					cs = MyWidgets.StringList.CellState.Modified;
+					break;
+			}
+
+			return cs;
 		}
 
 		public bool IsModificationAll(Module.BundleType type, Druid druid)
