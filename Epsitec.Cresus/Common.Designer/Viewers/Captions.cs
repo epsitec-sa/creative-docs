@@ -94,6 +94,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			this.leftContainers = new List<MyWidgets.StackedPanel>();
 			this.rightContainers = new List<MyWidgets.StackedPanel>();
+			this.intensityContainers = new List<double>();
 
 			MyWidgets.StackedPanel leftContainer, rightContainer;
 
@@ -713,7 +714,7 @@ namespace Epsitec.Common.Designer.Viewers
 				sel = -1;
 			}
 
-			Color color = Color.Empty;
+			bool isModified = false;
 			if (sel != -1)
 			{
 				Druid druid = this.druidsIndex[sel];
@@ -729,16 +730,11 @@ namespace Epsitec.Common.Designer.Viewers
 
 				if (primaryId > secondaryId)  // éventuellement pas à jour (fond jaune) ?
 				{
-					color = Color.FromRgb(0.91, 0.81, 0.41);  // jaune
+					isModified = true;
 				}
 			}
 
-			foreach (MyWidgets.StackedPanel container in this.rightContainers)
-			{
-				container.Visibility = (this.secondaryBundle != null);
-				//?container.Color = color;
-				//?container.Alpha = color.A;
-			}
+			this.ColoriseBands(isModified);
 
 			if ( sel == -1 )
 			{
@@ -1130,13 +1126,9 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected void CreateBand(out MyWidgets.StackedPanel leftContainer, out MyWidgets.StackedPanel rightContainer, string title, double backgroundIntensity)
 		{
-			IAdorner adorner = Epsitec.Common.Widgets.Adorners.Factory.Active;
-			Color cap = adorner.ColorCaption;
-			Color color = Color.FromAlphaRgb(backgroundIntensity, 0.5+cap.R*0.5, 0.5+cap.G*0.5, 0.5+cap.B*0.5);
-
-			Separator band = new Separator(this.scrollable.Panel);
-			band.Color = color;
-			band.Alpha = color.A;
+			//	Crée une bande horizontale avec deux containers gauche/droite pour les
+			//	ressources primaire/secondaire.
+			Widget band = new Widget(this.scrollable.Panel);
 			band.Dock = DockStyle.StackBegin;
 			band.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
 
@@ -1153,6 +1145,31 @@ namespace Epsitec.Common.Designer.Viewers
 			rightContainer.MinWidth = 100;
 			rightContainer.Dock = DockStyle.StackFill;
 			this.rightContainers.Add(rightContainer);
+
+			this.intensityContainers.Add(backgroundIntensity);
+		}
+
+		protected void ColoriseBands(bool isModified)
+		{
+			//	Colorise toutes les bandes horizontales.
+			IAdorner adorner = Epsitec.Common.Widgets.Adorners.Factory.Active;
+			Color cap = adorner.ColorCaption;
+
+			for (int i=0; i<this.leftContainers.Count; i++)
+			{
+				MyWidgets.StackedPanel lc = this.leftContainers[i];
+				MyWidgets.StackedPanel rc = this.rightContainers[i];
+
+				Color color = Color.FromAlphaRgb(this.intensityContainers[i], 0.5+cap.R*0.5, 0.5+cap.G*0.5, 0.5+cap.B*0.5);
+				lc.BackgroundColor = color;
+
+				if (isModified)
+				{
+					color = Color.FromRgb(0.91, 0.81, 0.41);  // jaune
+				}
+				rc.BackgroundColor = color;
+				rc.Visibility = (this.secondaryBundle != null);
+			}
 		}
 
 
@@ -1429,6 +1446,7 @@ namespace Epsitec.Common.Designer.Viewers
 		protected Scrollable					scrollable;
 		protected List<MyWidgets.StackedPanel>	leftContainers;
 		protected List<MyWidgets.StackedPanel>	rightContainers;
+		protected List<double>					intensityContainers;
 		protected MyWidgets.StringCollection	primaryLabels;
 		protected MyWidgets.StringCollection	secondaryLabels;
 		protected TextFieldMulti				primaryDescription;

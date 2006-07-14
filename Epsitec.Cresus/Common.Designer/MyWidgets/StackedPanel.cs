@@ -66,6 +66,22 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
+		public Color BackgroundColor
+		{
+			get
+			{
+				return this.backgroundColor;
+			}
+			set
+			{
+				if (this.backgroundColor != value)
+				{
+					this.backgroundColor = value;
+					this.Invalidate();
+				}
+			}
+		}
+
 		public Widget Container
 		{
 			get
@@ -91,12 +107,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 			IAdorner adorner = Epsitec.Common.Widgets.Adorners.Factory.Active;
 			Rectangle rect = this.Client.Bounds;
 
-			if (this.backgroundIntensity < 1.0)
+			if (!this.backgroundColor.IsEmpty)
 			{
 				graphics.AddFilledRectangle(rect);
-				Color cap = adorner.ColorCaption;
-				Color color = Color.FromAlphaRgb(1.0-this.backgroundIntensity, 0.5+cap.R*0.5, 0.5+cap.G*0.5, 0.5+cap.B*0.5);
-				graphics.RenderSolid(color);
+				graphics.RenderSolid(this.backgroundColor);
 			}
 
 			rect.Deflate(0.5, 0.5);
@@ -111,7 +125,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		}
 
 
-		protected double					backgroundIntensity = 1.0;
+		protected Color						backgroundColor = Color.Empty;
 		protected bool						isLeftPart = true;
 		protected StaticText				label;
 		protected Widget					container;
