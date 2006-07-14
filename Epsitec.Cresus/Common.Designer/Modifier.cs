@@ -245,6 +245,11 @@ namespace Epsitec.Common.Designer
 			primaryState   = ModificationState.Normal;
 			secondaryState = ModificationState.Normal;
 
+			if (druid.IsEmpty)
+			{
+				return;
+			}
+
 			ResourceBundle.Field field1 = primaryBundle[druid];
 			bool empty1 = field1.IsEmpty || string.IsNullOrEmpty(field1.AsString);
 
