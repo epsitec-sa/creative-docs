@@ -10,6 +10,14 @@ namespace Epsitec.Common.Designer
 	/// </summary>
 	public class Modifier
 	{
+		public enum ModificationState
+		{
+			Normal,			//	défini normalement
+			Empty,			//	vide (fond rouge)
+			Modified,		//	modifié (fond jaune)
+		}
+
+
 		public Modifier(Module module)
 		{
 			this.module = module;
@@ -229,6 +237,39 @@ namespace Epsitec.Common.Designer
 				}
 			}
 			this.IsDirty = false;
+		}
+
+		public void GetModification(ResourceBundle primaryBundle, ResourceBundle secondaryBundle, Druid druid, out ModificationState primaryState, out ModificationState secondaryState)
+		{
+			//	Donne l'état des deux colonnes primaire/secondaire.
+			primaryState   = ModificationState.Normal;
+			secondaryState = ModificationState.Normal;
+
+			ResourceBundle.Field field1 = primaryBundle[druid];
+			bool empty1 = field1.IsEmpty || string.IsNullOrEmpty(field1.AsString);
+
+			if (empty1)
+			{
+				primaryState = ModificationState.Empty;
+			}
+
+			if (secondaryBundle == null)
+			{
+				return;
+			}
+
+			ResourceBundle.Field field2 = secondaryBundle[druid];
+			bool empty2 = field2.IsEmpty || string.IsNullOrEmpty(field2.AsString);
+
+			if (empty2)
+			{
+				secondaryState = ModificationState.Empty;
+			}
+
+			if (!empty1 && !empty2 && field1.ModificationId > field2.ModificationId)
+			{
+				secondaryState = ModificationState.Modified;
+			}
 		}
 
 		public bool IsModificationAll(Module.BundleType type, Druid druid)

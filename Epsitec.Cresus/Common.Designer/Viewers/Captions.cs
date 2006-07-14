@@ -99,7 +99,7 @@ namespace Epsitec.Common.Designer.Viewers
 			MyWidgets.StackedPanel leftContainer, rightContainer;
 
 			//	Textes.
-			this.CreateBand(out leftContainer, out rightContainer, Res.Strings.Viewers.Captions.Labels, 0.4);
+			this.CreateBand(out leftContainer, out rightContainer, Res.Strings.Viewers.Captions.Labels, 0.5);
 
 			this.primaryLabels = new MyWidgets.StringCollection(leftContainer.Container);
 			this.primaryLabels.Dock = DockStyle.StackBegin;
@@ -116,7 +116,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.secondaryLabels.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			//	Description.
-			this.CreateBand(out leftContainer, out rightContainer, Res.Strings.Viewers.Captions.Description, 0.2);
+			this.CreateBand(out leftContainer, out rightContainer, Res.Strings.Viewers.Captions.Description, 0.3);
 
 			this.primaryDescription = new TextFieldMulti(leftContainer.Container);
 			this.primaryDescription.PreferredHeight = 70;
@@ -137,7 +137,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.secondaryDescription.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			//	Icône.
-			this.CreateBand(out leftContainer, out rightContainer, Res.Strings.Viewers.Captions.Icon, 0.0);
+			this.CreateBand(out leftContainer, out rightContainer, Res.Strings.Viewers.Captions.Icon, 0.1);
 
 			this.primaryIcon = new IconButton(leftContainer.Container);
 			this.primaryIcon.PreferredHeight = 30;
@@ -156,7 +156,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.secondaryIcon.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			//	Commentaires.
-			this.CreateBand(out leftContainer, out rightContainer, Res.Strings.Viewers.Captions.About, 0.6);
+			this.CreateBand(out leftContainer, out rightContainer, Res.Strings.Viewers.Captions.About, 0.7);
 
 			this.primaryAbout = new TextFieldMulti(leftContainer.Container);
 			this.primaryAbout.PreferredHeight = 50;
@@ -461,6 +461,7 @@ namespace Epsitec.Common.Designer.Viewers
 			{
 				this.UpdateArray();
 				this.UpdateEdit();
+				this.UpdateColor();
 				this.UpdateCommands();
 				this.module.Modifier.IsDirty = true;
 
@@ -482,7 +483,7 @@ namespace Epsitec.Common.Designer.Viewers
 				if (field1.IsEmpty)  return;
 				field1.SetModificationId(field1.ModificationId+1);
 
-				this.UpdateEdit();
+				this.UpdateColor();
 				//?this.UpdateModifiers();
 				this.UpdateCommands();
 				this.module.Modifier.IsDirty = true;
@@ -496,7 +497,7 @@ namespace Epsitec.Common.Designer.Viewers
 				if (field1.IsEmpty || field2.IsEmpty)  return;
 				field2.SetModificationId(field1.ModificationId);
 
-				this.UpdateEdit();
+				this.UpdateColor();
 				//?this.UpdateModifiers();
 				this.UpdateCommands();
 				this.module.Modifier.IsDirty = true;
@@ -526,18 +527,16 @@ namespace Epsitec.Common.Designer.Viewers
 					}
 
 					Druid druid = this.druidsIndex[sel];
-					ResourceBundle.Field field1 = this.primaryBundle[druid];
-					ResourceBundle.Field field2 = this.secondaryBundle[druid];
-					bool state1 = field1.IsEmpty || string.IsNullOrEmpty(field1.AsString);
-					bool state2 = field2.IsEmpty || string.IsNullOrEmpty(field2.AsString);
+					Modifier.ModificationState state1, state2;
+					this.module.Modifier.GetModification(this.primaryBundle, this.secondaryBundle, druid, out state1, out state2);
 
-					if (state1 || state2)
+					if (state1 != Modifier.ModificationState.Normal)
 					{
-						column = 2;
+						column = 1;
 						break;
 					}
 
-					if (!state1 && !state2 && field1.ModificationId > field2.ModificationId)
+					if (state2 != Modifier.ModificationState.Normal)
 					{
 						column = 2;
 						break;
@@ -698,7 +697,28 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Met à jour le contenu du Viewer.
 			this.UpdateArray();
 			this.UpdateEdit();
+			this.UpdateColor();
 			this.UpdateCommands();
+		}
+
+		protected void UpdateColor()
+		{
+			//	Met à jour les culeurs dans toutes les bandes.
+			int sel = this.array.SelectedRow;
+
+			if (sel >= this.druidsIndex.Count)
+			{
+				sel = -1;
+			}
+
+			Modifier.ModificationState state1 = Modifier.ModificationState.Normal;
+			Modifier.ModificationState state2 = Modifier.ModificationState.Normal;
+			if (sel != -1)
+			{
+				Druid druid = this.druidsIndex[sel];
+				this.module.Modifier.GetModification(this.primaryBundle, this.secondaryBundle, druid, out state1, out state2);
+			}
+			this.ColoriseBands(state1, state2);
 		}
 
 		protected void UpdateEdit()
@@ -713,28 +733,6 @@ namespace Epsitec.Common.Designer.Viewers
 			{
 				sel = -1;
 			}
-
-			bool isModified = false;
-			if (sel != -1)
-			{
-				Druid druid = this.druidsIndex[sel];
-				ResourceBundle.Field field1 = this.primaryBundle[druid];
-				ResourceBundle.Field field2 = this.secondaryBundle[druid];
-
-				int primaryId = field1.ModificationId;
-				int secondaryId = primaryId;
-				if (field2 != null)
-				{
-					secondaryId = field2.ModificationId;
-				}
-
-				if (primaryId > secondaryId)  // éventuellement pas à jour (fond jaune) ?
-				{
-					isModified = true;
-				}
-			}
-
-			this.ColoriseBands(isModified);
 
 			if ( sel == -1 )
 			{
@@ -1149,25 +1147,17 @@ namespace Epsitec.Common.Designer.Viewers
 			this.intensityContainers.Add(backgroundIntensity);
 		}
 
-		protected void ColoriseBands(bool isModified)
+		protected void ColoriseBands(Modifier.ModificationState state1, Modifier.ModificationState state2)
 		{
 			//	Colorise toutes les bandes horizontales.
-			IAdorner adorner = Epsitec.Common.Widgets.Adorners.Factory.Active;
-			Color cap = adorner.ColorCaption;
-
 			for (int i=0; i<this.leftContainers.Count; i++)
 			{
 				MyWidgets.StackedPanel lc = this.leftContainers[i];
 				MyWidgets.StackedPanel rc = this.rightContainers[i];
 
-				Color color = Color.FromAlphaRgb(this.intensityContainers[i], 0.5+cap.R*0.5, 0.5+cap.G*0.5, 0.5+cap.B*0.5);
-				lc.BackgroundColor = color;
+				lc.BackgroundColor = Abstract.GetBackgroundColor(state1, this.intensityContainers[i]);
 
-				if (isModified)
-				{
-					color = Color.FromRgb(0.91, 0.81, 0.41);  // jaune
-				}
-				rc.BackgroundColor = color;
+				rc.BackgroundColor = Abstract.GetBackgroundColor(state2, this.intensityContainers[i]);
 				rc.Visibility = (this.secondaryBundle != null);
 			}
 		}
@@ -1310,6 +1300,7 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			//	La ligne sélectionnée a changé.
 			this.UpdateEdit();
+			this.UpdateColor();
 			this.UpdateCommands();
 		}
 
@@ -1320,6 +1311,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.UpdateSelectedCulture(button.Name);
 			this.UpdateArray();
 			this.UpdateEdit();
+			this.UpdateColor();
 			this.UpdateCommands();
 		}
 
@@ -1393,6 +1385,7 @@ namespace Epsitec.Common.Designer.Viewers
 				this.secondaryBundle[druid].SetAbout(text);
 			}
 
+			this.UpdateColor();
 			this.module.Modifier.IsDirty = true;
 		}
 
@@ -1416,6 +1409,7 @@ namespace Epsitec.Common.Designer.Viewers
 				this.SetCaptionLabels(this.secondaryBundle, druid, sc.Collection);
 			}
 
+			this.UpdateColor();
 			this.module.Modifier.IsDirty = true;
 		}
 

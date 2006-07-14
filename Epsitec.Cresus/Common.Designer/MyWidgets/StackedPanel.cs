@@ -44,6 +44,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		public bool IsLeftPart
 		{
+			//	true  -> panneau de gauche pour la culture primaire
+			//	false -> panneau de droite pour la culture secondaire
 			get
 			{
 				return this.isLeftPart;
@@ -56,6 +58,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		public string Title
 		{
+			//	Texte du titre affiché en haut à gauche du panneau.
 			get
 			{
 				return this.label.Text;
@@ -68,6 +71,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		public Color BackgroundColor
 		{
+			//	Couleur du fond du panneau.
 			get
 			{
 				return this.backgroundColor;
@@ -84,6 +88,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		public Widget Container
 		{
+			//	Donne le container à utiliser comme parent pour tous les enfants.
 			get
 			{
 				return this.container;
