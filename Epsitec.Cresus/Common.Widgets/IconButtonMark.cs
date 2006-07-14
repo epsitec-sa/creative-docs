@@ -62,6 +62,24 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		public Color							BulletColor
+		{
+			//	Couleur de la puce éventuelle (si différent de Color.Empty).
+			get
+			{
+				return this.bulletColor;
+			}
+
+			set
+			{
+				if ( this.bulletColor != value )
+				{
+					this.bulletColor = value;
+					this.Invalidate();
+				}
+			}
+		}
+
 		protected Rectangle						IconButtonBounds
 		{
 			//	Donne le rectangle à utiliser pour le bouton.
@@ -155,6 +173,21 @@ namespace Epsitec.Common.Widgets
 			state &= ~WidgetPaintState.Selected;
 			adorner.PaintButtonBackground(graphics, rect, state, Direction.Down, this.buttonStyle);
 
+			if (!this.bulletColor.IsEmpty)
+			{
+				Rectangle r = rect;
+				r.Deflate(3.5);
+				r.Width = r.Height;
+
+				graphics.AddFilledRectangle(r);
+				graphics.RenderSolid(this.bulletColor);
+
+				graphics.AddRectangle(r);
+				graphics.RenderSolid(adorner.ColorTextFieldBorder(enable));
+
+				rect.Left += rect.Height;
+			}
+
 			if ( this.innerZoom != 1.0 )
 			{
 				double zoom = (this.innerZoom-1)/2+1;
@@ -174,5 +207,6 @@ namespace Epsitec.Common.Widgets
 
 		protected SiteMark				siteMark = SiteMark.OnBottom;
 		protected double				markDimension = 8;
+		protected Color					bulletColor = Color.Empty;
 	}
 }

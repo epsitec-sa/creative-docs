@@ -462,6 +462,7 @@ namespace Epsitec.Common.Designer.Viewers
 				this.UpdateArray();
 				this.UpdateEdit();
 				this.UpdateColor();
+				this.UpdateModifiers();
 				this.UpdateCommands();
 				this.module.Modifier.IsDirty = true;
 
@@ -484,7 +485,7 @@ namespace Epsitec.Common.Designer.Viewers
 				field1.SetModificationId(field1.ModificationId+1);
 
 				this.UpdateColor();
-				//?this.UpdateModifiers();
+				this.UpdateModifiers();
 				this.UpdateCommands();
 				this.module.Modifier.IsDirty = true;
 			}
@@ -498,7 +499,7 @@ namespace Epsitec.Common.Designer.Viewers
 				field2.SetModificationId(field1.ModificationId);
 
 				this.UpdateColor();
-				//?this.UpdateModifiers();
+				this.UpdateModifiers();
 				this.UpdateCommands();
 				this.module.Modifier.IsDirty = true;
 			}
@@ -698,6 +699,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.UpdateArray();
 			this.UpdateEdit();
 			this.UpdateColor();
+			this.UpdateModifiers();
 			this.UpdateCommands();
 		}
 
@@ -719,6 +721,41 @@ namespace Epsitec.Common.Designer.Viewers
 				this.module.Modifier.GetModification(this.primaryBundle, this.secondaryBundle, druid, out state1, out state2);
 			}
 			this.ColoriseBands(state1, state2);
+		}
+
+		protected void UpdateModifiers()
+		{
+			//	Met à jour les indicateurs de modifications.
+			if (this.secondaryCultures == null)
+			{
+				return;
+			}
+
+			int sel = this.array.SelectedRow;
+			Druid druid = Druid.Empty;
+			if (sel != -1)
+			{
+				druid = this.druidsIndex[sel];
+			}
+
+			ResourceBundle defaultBundle = this.module.GetBundles(this.BundleType)[ResourceLevel.Default];
+
+			foreach (IconButtonMark button in this.secondaryCultures)
+			{
+				ResourceBundle secondaryBundle = this.module.GetCulture(button.Name, this.BundleType);
+
+				Modifier.ModificationState state1, state2;
+				this.module.Modifier.GetModification(defaultBundle, secondaryBundle, druid, out state1, out state2);
+
+				if (state2 == Modifier.ModificationState.Normal)
+				{
+					button.BulletColor = Color.Empty;
+				}
+				else
+				{
+					button.BulletColor = Abstract.GetBackgroundColor(state2, 1.0);
+				}
+			}
 		}
 
 		protected void UpdateEdit()
@@ -1301,6 +1338,7 @@ namespace Epsitec.Common.Designer.Viewers
 			//	La ligne sélectionnée a changé.
 			this.UpdateEdit();
 			this.UpdateColor();
+			this.UpdateModifiers();
 			this.UpdateCommands();
 		}
 
@@ -1386,6 +1424,7 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 
 			this.UpdateColor();
+			this.UpdateModifiers();
 			this.module.Modifier.IsDirty = true;
 		}
 
@@ -1410,6 +1449,7 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 
 			this.UpdateColor();
+			this.UpdateModifiers();
 			this.module.Modifier.IsDirty = true;
 		}
 
