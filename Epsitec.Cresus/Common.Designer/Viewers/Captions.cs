@@ -529,7 +529,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 					Druid druid = this.druidsIndex[sel];
 					Modifier.ModificationState state1, state2;
-					this.module.Modifier.GetModification(this.primaryBundle, this.secondaryBundle, druid, out state1, out state2);
+					Modifier.GetModification(this.primaryBundle, this.secondaryBundle, druid, out state1, out state2);
 
 					if (state1 != Modifier.ModificationState.Normal)
 					{
@@ -718,7 +718,7 @@ namespace Epsitec.Common.Designer.Viewers
 			if (sel != -1)
 			{
 				Druid druid = this.druidsIndex[sel];
-				this.module.Modifier.GetModification(this.primaryBundle, this.secondaryBundle, druid, out state1, out state2);
+				Modifier.GetModification(this.primaryBundle, this.secondaryBundle, druid, out state1, out state2);
 			}
 			this.ColoriseBands(state1, state2);
 		}
@@ -745,7 +745,7 @@ namespace Epsitec.Common.Designer.Viewers
 				ResourceBundle secondaryBundle = this.module.GetCulture(button.Name, this.BundleType);
 
 				Modifier.ModificationState state1, state2;
-				this.module.Modifier.GetModification(defaultBundle, secondaryBundle, druid, out state1, out state2);
+				Modifier.GetModification(defaultBundle, secondaryBundle, druid, out state1, out state2);
 
 				if (state2 == Modifier.ModificationState.Normal)
 				{

@@ -440,18 +440,16 @@ namespace Epsitec.Common.Designer.Viewers
 					}
 
 					Druid druid = this.druidsIndex[sel];
-					ResourceBundle.Field field1 = this.primaryBundle[druid];
-					ResourceBundle.Field field2 = this.secondaryBundle[druid];
-					bool state1 = field1.IsEmpty || string.IsNullOrEmpty(field1.AsString);
-					bool state2 = field2.IsEmpty || string.IsNullOrEmpty(field2.AsString);
+					Modifier.ModificationState state1, state2;
+					Modifier.GetModification(this.primaryBundle, this.secondaryBundle, druid, out state1, out state2);
 
-					if (state1 || state2)
+					if (state1 != Modifier.ModificationState.Normal)
 					{
-						column = 2;
+						column = 1;
 						break;
 					}
 
-					if (!state1 && !state2 && field1.ModificationId > field2.ModificationId)
+					if (state2 != Modifier.ModificationState.Normal)
 					{
 						column = 2;
 						break;
@@ -628,15 +626,6 @@ namespace Epsitec.Common.Designer.Viewers
 				this.secondaryCultures = null;
 			}
 
-			if (this.secondaryModifiers != null)
-			{
-				foreach (ColorSample sample in this.secondaryModifiers)
-				{
-					sample.Dispose();
-				}
-				this.secondaryModifiers = null;
-			}
-
 			this.primaryBundle = bundles[ResourceLevel.Default];
 			this.primaryCulture.Text = string.Format(Res.Strings.Viewers.Strings.Reference, Misc.CultureName(this.primaryBundle.Culture));
 
@@ -675,15 +664,6 @@ namespace Epsitec.Common.Designer.Viewers
 					this.secondaryCultures[i].AutoFocus = false;
 					this.secondaryCultures[i].Clicked += new MessageEventHandler(this.HandleSecondaryCultureClicked);
 					ToolTip.Default.SetToolTip(this.secondaryCultures[i], list[i].Tooltip);
-				}
-
-				this.secondaryModifiers = new ColorSample[list.Count];
-				for (int i=0; i<list.Count; i++)
-				{
-					this.secondaryModifiers[i] = new ColorSample(this);
-					this.secondaryModifiers[i].Name = list[i].Name;
-					this.secondaryModifiers[i].AutoFocus = false;
-					this.secondaryModifiers[i].Passive = true;
 				}
 			}
 
@@ -802,23 +782,14 @@ namespace Epsitec.Common.Designer.Viewers
 			if (field != null)
 			{
 				string text = field.AsString;
-				if (text != null && text != "")
+				if (!string.IsNullOrEmpty(text))
 				{
 					this.array.SetLineString(column, row, text);
 
-					int primaryId = field.ModificationId;
-					int secondaryId = primaryId;
-					if (secondaryField != null)
-					{
-						secondaryId = secondaryField.ModificationId;
-					}
+					Modifier.ModificationState state1, state2;
+					Modifier.GetModification(field, secondaryField, out state1, out state2);
 
-					MyWidgets.StringList.CellState state = MyWidgets.StringList.CellState.Normal;
-					if (primaryId < secondaryId)  // éventuellement pas à jour (fond jaune) ?
-					{
-						state = MyWidgets.StringList.CellState.Modified;
-					}
-
+					MyWidgets.StringList.CellState state = Modifier.ModificationToCellState(state1);
 					if (this.array.GetLineState(column, row) != state)
 					{
 						this.array.SetLineState(column, row, state);
@@ -836,7 +807,7 @@ namespace Epsitec.Common.Designer.Viewers
 		protected void UpdateModifiers()
 		{
 			//	Met à jour les indicateurs de modifications.
-			if (this.secondaryModifiers == null)
+			if (this.secondaryCultures == null)
 			{
 				return;
 			}
@@ -850,24 +821,21 @@ namespace Epsitec.Common.Designer.Viewers
 
 			ResourceBundle defaultBundle = this.module.GetBundles(this.BundleType)[ResourceLevel.Default];
 
-			for (int i=0; i<this.secondaryModifiers.Length; i++)
+			foreach (IconButtonMark button in this.secondaryCultures)
 			{
-				ColorSample sample = this.secondaryModifiers[i];
+				ResourceBundle secondaryBundle = this.module.GetCulture(button.Name, this.BundleType);
 
-				bool modified = false;
+				Modifier.ModificationState state1, state2;
+				Modifier.GetModification(defaultBundle, secondaryBundle, druid, out state1, out state2);
 
-				ResourceBundle bundle = this.module.GetCulture(sample.Name, this.BundleType);
-				if (bundle != null && !druid.IsEmpty)
+				if (state2 == Modifier.ModificationState.Normal)
 				{
-					modified = (defaultBundle[druid].ModificationId > bundle[druid].ModificationId);
+					button.BulletColor = Color.Empty;
 				}
-
-				RichColor color = RichColor.FromBrightness(1);
-				if (modified)
+				else
 				{
-					color = RichColor.FromRgb(0.91, 0.81, 0.41);  // jaune
+					button.BulletColor = Abstract.GetBackgroundColor(state2, 1.0);
 				}
-				sample.Color = color;
 			}
 		}
 
@@ -1132,11 +1100,6 @@ namespace Epsitec.Common.Designer.Viewers
 						r.Right = rect.Right;
 					}
 					this.secondaryCultures[i].SetManualBounds(r);
-
-					r.Bottom = r.Top-1;
-					r.Height = 6;
-					r.Width ++;
-					this.secondaryModifiers[i].SetManualBounds(r);
 				}
 			}
 
@@ -1292,7 +1255,6 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected IconButtonMark			primaryCulture;
 		protected IconButtonMark[]			secondaryCultures;
-		protected ColorSample[]				secondaryModifiers;
 		protected ResourceBundle			primaryBundle;
 		protected ResourceBundle			secondaryBundle;
 		protected StaticText				labelStatic;
