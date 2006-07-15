@@ -86,7 +86,7 @@ namespace Epsitec.Common.Designer
 		}
 
 
-		public int Duplicate(string name, int index, bool duplicate)
+		public int Duplicate(string name, int index, bool duplicateContent)
 		{
 			//	Duplique une ressource.
 			return -1;
@@ -100,6 +100,24 @@ namespace Epsitec.Common.Designer
 		public void Move(int index, int direction)
 		{
 			//	Déplace une ressource.
+			if (index+direction < 0 || index+direction >= this.AccessCount)
+			{
+				return;
+			}
+
+			if (this.IsBundlesType)
+			{
+				Druid druid = this.druidsIndex[index];
+				int aIndex = this.GetAbsoluteIndex(druid);
+				ResourceBundle.Field field = this.primaryBundle[aIndex];
+				this.primaryBundle.Remove(aIndex);
+				this.primaryBundle.Insert(aIndex+direction, field);
+
+				this.accessIndex += direction;
+				this.CacheClear();
+			}
+
+			this.isDirty = true;
 		}
 
 
@@ -677,6 +695,13 @@ namespace Epsitec.Common.Designer
 				Druid fullDruid = new Druid(field.Druid, this.primaryBundle.Module.Id);
 				this.druidsIndex.Add(fullDruid);
 			}
+		}
+
+		protected int GetAbsoluteIndex(Druid druid)
+		{
+			//	Cherche l'index absolu d'une ressource d'après son druid.
+			ResourceBundle.Field field = this.primaryBundle[druid];
+			return this.primaryBundle.IndexOf(field);
 		}
 
 
