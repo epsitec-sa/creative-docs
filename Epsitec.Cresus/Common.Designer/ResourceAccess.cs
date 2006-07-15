@@ -275,6 +275,8 @@ namespace Epsitec.Common.Designer
 
 			if (this.IsBundlesType)
 			{
+				this.CreateIfNecessary();
+
 				if (fieldName == ResourceAccess.NameStrings[0])
 				{
 					this.accessField.SetName(field.String);
@@ -443,6 +445,7 @@ namespace Epsitec.Common.Designer
 
 				if (this.accessBundle == null || index < 0 || index >= this.druidsIndex.Count)
 				{
+					this.accessIndex = -1;
 					return;
 				}
 
@@ -478,9 +481,26 @@ namespace Epsitec.Common.Designer
 		protected void CacheClear()
 		{
 			//	Vide le cache.
-			this.accessCulture = "?";
+			this.accessCulture = "?";  // nom différent de null, d'une chaîne vide ou d'un nom existant
 			this.accessField = null;
 			this.accessCaption = null;
+			this.accessIndex = -1;
+		}
+
+		protected void CreateIfNecessary()
+		{
+			//	Crée une ressource secondaire, si nécessaire.
+			if (this.accessBundle != this.primaryBundle && this.accessField.IsEmpty)
+			{
+				Druid druid = this.druidsIndex[this.accessIndex];
+				ResourceBundle.Field defaultField = this.primaryBundle[druid];
+				this.accessField = this.accessBundle.CreateField(ResourceFieldType.Data);
+				this.accessField.SetName(defaultField.Name);
+				this.accessField.SetDruid(druid);
+				this.accessField.SetModificationId(defaultField.ModificationId);
+
+				this.accessBundle.Add(this.accessField);
+			}
 		}
 
 		protected static string[] NameStrings = { "Name", "String", "About" };
