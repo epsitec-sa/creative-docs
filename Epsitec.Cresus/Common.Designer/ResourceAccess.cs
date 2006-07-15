@@ -137,12 +137,38 @@ namespace Epsitec.Common.Designer
 			}
 
 			this.isDirty = true;
-			return index+1;
+			return this.accessIndex;
 		}
 
-		public void Delete(int index)
+		public int Delete(int index)
 		{
-			//	Supprime une ressource.
+			//	Supprime une ressource dans toutes les cultures.
+			if (this.IsBundlesType)
+			{
+				Druid druid = this.druidsIndex[index];
+
+				foreach (ResourceBundle bundle in this.bundles)
+				{
+					int aIndex = bundle.IndexOf(druid);
+					if (aIndex >= 0)
+					{
+						bundle.Remove(aIndex);
+					}
+				}
+
+				this.druidsIndex.RemoveAt(index);
+
+				if (index >= this.druidsIndex.Count)
+				{
+					index--;
+				}
+				this.accessIndex = index;
+
+				this.CacheClear();
+			}
+
+			this.isDirty = true;
+			return this.accessIndex;
 		}
 
 		public void Move(int index, int direction)
