@@ -214,24 +214,29 @@ namespace Epsitec.Common.Designer
 				return;
 			}
 
+			Druid druid = this.druidsIndex[index];
+			int aIndex = this.GetAbsoluteIndex(druid);
+			System.Diagnostics.Debug.Assert(aIndex != -1);
+
 			if (this.IsBundlesType)
 			{
-				Druid druid = this.druidsIndex[index];
-				int aIndex = this.GetAbsoluteIndex(druid);
 				ResourceBundle.Field field = this.primaryBundle[aIndex];
 				this.primaryBundle.Remove(aIndex);
 				this.primaryBundle.Insert(aIndex+direction, field);
-
-				this.druidsIndex[index] = this.druidsIndex[index+direction];
-				this.druidsIndex[index+direction] = druid;
-
-				this.accessIndex += direction;
-				this.CacheClear();
 			}
 
 			if (this.type == Type.Panels)
 			{
+				ResourceBundle bundle = this.panelsList[aIndex];
+				this.panelsList.RemoveAt(aIndex);
+				this.panelsList.Insert(aIndex+direction, bundle);
 			}
+
+			this.druidsIndex[index] = this.druidsIndex[index+direction];
+			this.druidsIndex[index+direction] = druid;
+
+			this.accessIndex += direction;
+			this.CacheClear();
 
 			this.isDirty = true;
 		}
@@ -865,8 +870,24 @@ namespace Epsitec.Common.Designer
 		protected int GetAbsoluteIndex(Druid druid)
 		{
 			//	Cherche l'index absolu d'une ressource d'après son druid.
-			ResourceBundle.Field field = this.primaryBundle[druid];
-			return this.primaryBundle.IndexOf(field);
+			if (this.IsBundlesType)
+			{
+				ResourceBundle.Field field = this.primaryBundle[druid];
+				return this.primaryBundle.IndexOf(field);
+			}
+
+			if (this.type == Type.Panels)
+			{
+				for (int i=0; i<this.panelsList.Count; i++)
+				{
+					if (this.panelsList[i].Druid == druid)
+					{
+						return i;
+					}
+				}
+			}
+
+			return -1;
 		}
 
 		protected Druid CreateUniqueDruid()
@@ -1012,7 +1033,7 @@ namespace Epsitec.Common.Designer
 		{
 			//	Donne le bundle d'un panneau en fonction de l'index du Druid.
 			Druid druid = this.druidsIndex[index];
-			int i = this.PanelIndex(druid);
+			int i = this.GetAbsoluteIndex(druid);
 			if (i == -1)
 			{
 				return null;
@@ -1021,19 +1042,6 @@ namespace Epsitec.Common.Designer
 			{
 				return this.panelsList[i];
 			}
-		}
-
-		protected int PanelIndex(Druid druid)
-		{
-			//	Donne l'index d'une ressource de type 'Panel'.
-			for (int i=0; i<this.panelsList.Count; i++)
-			{
-				if (this.panelsList[i].Druid == druid)
-				{
-					return i;
-				}
-			}
-			return -1;
 		}
 
 
