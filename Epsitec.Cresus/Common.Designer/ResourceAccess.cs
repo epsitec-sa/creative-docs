@@ -223,9 +223,7 @@ namespace Epsitec.Common.Designer
 			{
 				if (fieldName == ResourceAccess.AccessStrings[0])
 				{
-					Field field = new Field(Field.Type.String);
-					field.String = this.accessField.Name;
-					return field;
+					return new Field(this.accessField.Name);
 				}
 			}
 
@@ -238,16 +236,12 @@ namespace Epsitec.Common.Designer
 
 				if (fieldName == ResourceAccess.AccessStrings[1])
 				{
-					Field field = new Field(Field.Type.String);
-					field.String = this.accessField.AsString;
-					return field;
+					return new Field(this.accessField.AsString);
 				}
 
 				if (fieldName == ResourceAccess.AccessStrings[2])
 				{
-					Field field = new Field(Field.Type.String);
-					field.String = this.accessField.About;
-					return field;
+					return new Field(this.accessField.About);
 				}
 			}
 
@@ -260,30 +254,22 @@ namespace Epsitec.Common.Designer
 
 				if (fieldName == ResourceAccess.AccessCaptions[1])
 				{
-					Field field = new Field(Field.Type.StringCollection);
-					field.StringCollection = this.accessCaption.Labels;
-					return field;
+					return new Field(this.accessCaption.Labels);
 				}
 
 				if (fieldName == ResourceAccess.AccessCaptions[2])
 				{
-					Field field = new Field(Field.Type.String);
-					field.String = this.accessCaption.Description;
-					return field;
+					return new Field(this.accessCaption.Description);
 				}
 
 				if (fieldName == ResourceAccess.AccessCaptions[3])
 				{
-					Field field = new Field(Field.Type.String);
-					field.String = this.accessCaption.Icon;
-					return field;
+					return new Field(this.accessCaption.Icon);
 				}
 
 				if (fieldName == ResourceAccess.AccessCaptions[4])
 				{
-					Field field = new Field(Field.Type.String);
-					field.String = this.accessField.About;
-					return field;
+					return new Field(this.accessField.About);
 				}
 			}
 
@@ -754,9 +740,22 @@ namespace Epsitec.Common.Designer
 				Bundle,
 			}
 
-			public Field(Type type)
+			public Field(string value)
 			{
-				this.type = type;
+				this.type = Type.String;
+				this.stringValue = value;
+			}
+
+			public Field(ICollection<string> value)
+			{
+				this.type = Type.String;
+				this.stringCollection = value;
+			}
+
+			public Field(ResourceBundle value)
+			{
+				this.type = Type.Bundle;
+				this.bundle = value;
 			}
 
 			public Type FieldType
@@ -774,11 +773,6 @@ namespace Epsitec.Common.Designer
 					System.Diagnostics.Debug.Assert(this.type == Type.String);
 					return this.stringValue;
 				}
-				set
-				{
-					System.Diagnostics.Debug.Assert(this.type == Type.String);
-					this.stringValue = value;
-				}
 			}
 
 			public ICollection<string> StringCollection
@@ -788,11 +782,6 @@ namespace Epsitec.Common.Designer
 					System.Diagnostics.Debug.Assert(this.type == Type.StringCollection);
 					return this.stringCollection;
 				}
-				set
-				{
-					System.Diagnostics.Debug.Assert(this.type == Type.StringCollection);
-					this.stringCollection = value;
-				}
 			}
 
 			public ResourceBundle Bundle
@@ -801,11 +790,6 @@ namespace Epsitec.Common.Designer
 				{
 					System.Diagnostics.Debug.Assert(this.type == Type.Bundle);
 					return this.bundle;
-				}
-				set
-				{
-					System.Diagnostics.Debug.Assert(this.type == Type.Bundle);
-					this.bundle = value;
 				}
 			}
 
