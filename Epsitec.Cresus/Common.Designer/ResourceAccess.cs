@@ -56,6 +56,7 @@ namespace Epsitec.Common.Designer
 				this.LoadPanels();
 			}
 
+			this.CacheClear();
 			this.isDirty = false;
 		}
 
@@ -85,37 +86,20 @@ namespace Epsitec.Common.Designer
 		}
 
 
-		public Druid Duplicate(string name, int index, bool duplicate)
+		public int Duplicate(string name, int index, bool duplicate)
 		{
 			//	Duplique une ressource.
-			return Druid.Empty;
+			return -1;
 		}
 
-		public void Delete(Druid druid)
+		public void Delete(int index)
 		{
 			//	Supprime une ressource.
 		}
 
-		public void Move(Druid druid, int newIndex)
+		public void Move(int index, int direction)
 		{
 			//	Déplace une ressource.
-		}
-
-
-		public void ModificationSetOne(Druid druid, string cultureName)
-		{
-			//	Considère une ressource comme modifiée dans une culture.
-		}
-
-		public void ModificationClearAll(Druid druid)
-		{
-			//	Considère une ressource comme à jour dans toutes les cultures.
-		}
-
-		public bool IsModificationAll(Druid druid)
-		{
-			//	Donne l'état de la commande ModificationAll.
-			return false;
 		}
 
 
@@ -142,17 +126,6 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		public Druid GetDruid(int index)
-		{
-			//	Retourne le Druid correspondant à un index donné.
-			if (this.IsBundlesType)
-			{
-				return this.druidsIndex[index];
-			}
-
-			return Druid.Empty;
-		}
-
 		public string[] GetAccessFieldNames
 		{
 			//	Donne les noms internes (fieldName) des champs accessibles.
@@ -161,10 +134,28 @@ namespace Epsitec.Common.Designer
 				switch (this.type)
 				{
 					case Type.Strings:
-						return ResourceAccess.AccessStrings;
+						return ResourceAccess.NameStrings;
 
 					case Type.Captions:
-						return ResourceAccess.AccessCaptions;
+						return ResourceAccess.NameCaptions;
+				}
+
+				return null;
+			}
+		}
+
+		public Field.Type[] GetAccessFieldTypes
+		{
+			//	Donne les types des champs accessibles.
+			get
+			{
+				switch (this.type)
+				{
+					case Type.Strings:
+						return ResourceAccess.TypeStrings;
+
+					case Type.Captions:
+						return ResourceAccess.TypeCaptions;
 				}
 
 				return null;
@@ -176,12 +167,12 @@ namespace Epsitec.Common.Designer
 			//	Donne le texte descriptif pour un champ.
 			if (this.type == Type.Strings)
 			{
-				if (fieldName == ResourceAccess.AccessStrings[0])
+				if (fieldName == ResourceAccess.NameStrings[1])
 				{
 					return Res.Strings.Viewers.Strings.Edit;
 				}
 
-				if (fieldName == ResourceAccess.AccessStrings[1])
+				if (fieldName == ResourceAccess.NameStrings[2])
 				{
 					return Res.Strings.Viewers.Strings.About;
 				}
@@ -189,22 +180,22 @@ namespace Epsitec.Common.Designer
 
 			if (this.type == Type.Captions)
 			{
-				if (fieldName == ResourceAccess.AccessCaptions[0])
+				if (fieldName == ResourceAccess.NameCaptions[1])
 				{
 					return Res.Strings.Viewers.Captions.Labels;
 				}
 
-				if (fieldName == ResourceAccess.AccessCaptions[1])
+				if (fieldName == ResourceAccess.NameCaptions[2])
 				{
 					return Res.Strings.Viewers.Captions.Description;
 				}
 
-				if (fieldName == ResourceAccess.AccessCaptions[2])
+				if (fieldName == ResourceAccess.NameCaptions[3])
 				{
 					return Res.Strings.Viewers.Captions.Icon;
 				}
 
-				if (fieldName == ResourceAccess.AccessCaptions[3])
+				if (fieldName == ResourceAccess.NameCaptions[4])
 				{
 					return Res.Strings.Viewers.Captions.About;
 				}
@@ -217,11 +208,11 @@ namespace Epsitec.Common.Designer
 		{
 			//	Retourne les données d'un champ.
 			//	Si cultureName est nul, on accède à la culture de base.
-			this.AccessCache(index, cultureName);
+			this.CacheResource(index, cultureName);
 
 			if (this.IsBundlesType)
 			{
-				if (fieldName == ResourceAccess.AccessStrings[0])
+				if (fieldName == ResourceAccess.NameStrings[0])
 				{
 					return new Field(this.accessField.Name);
 				}
@@ -234,12 +225,12 @@ namespace Epsitec.Common.Designer
 					return null;
 				}
 
-				if (fieldName == ResourceAccess.AccessStrings[1])
+				if (fieldName == ResourceAccess.NameStrings[1])
 				{
 					return new Field(this.accessField.AsString);
 				}
 
-				if (fieldName == ResourceAccess.AccessStrings[2])
+				if (fieldName == ResourceAccess.NameStrings[2])
 				{
 					return new Field(this.accessField.About);
 				}
@@ -252,22 +243,22 @@ namespace Epsitec.Common.Designer
 					return null;
 				}
 
-				if (fieldName == ResourceAccess.AccessCaptions[1])
+				if (fieldName == ResourceAccess.NameCaptions[1])
 				{
 					return new Field(this.accessCaption.Labels);
 				}
 
-				if (fieldName == ResourceAccess.AccessCaptions[2])
+				if (fieldName == ResourceAccess.NameCaptions[2])
 				{
 					return new Field(this.accessCaption.Description);
 				}
 
-				if (fieldName == ResourceAccess.AccessCaptions[3])
+				if (fieldName == ResourceAccess.NameCaptions[3])
 				{
 					return new Field(this.accessCaption.Icon);
 				}
 
-				if (fieldName == ResourceAccess.AccessCaptions[4])
+				if (fieldName == ResourceAccess.NameCaptions[4])
 				{
 					return new Field(this.accessField.About);
 				}
@@ -280,11 +271,11 @@ namespace Epsitec.Common.Designer
 		{
 			//	Modifie les données d'un champ.
 			//	Si cultureName est nul, on accède à la culture de base.
-			this.AccessCache(index, cultureName);
+			this.CacheResource(index, cultureName);
 
 			if (this.IsBundlesType)
 			{
-				if (fieldName == ResourceAccess.AccessStrings[0])
+				if (fieldName == ResourceAccess.NameStrings[0])
 				{
 					this.accessField.SetName(field.String);
 				}
@@ -297,12 +288,12 @@ namespace Epsitec.Common.Designer
 					return;
 				}
 
-				if (fieldName == ResourceAccess.AccessStrings[1])
+				if (fieldName == ResourceAccess.NameStrings[1])
 				{
 					this.accessField.SetStringValue(field.String);
 				}
 
-				if (fieldName == ResourceAccess.AccessStrings[2])
+				if (fieldName == ResourceAccess.NameStrings[2])
 				{
 					this.accessField.SetAbout(field.String);
 				}
@@ -315,7 +306,7 @@ namespace Epsitec.Common.Designer
 					return;
 				}
 
-				if (fieldName == ResourceAccess.AccessCaptions[1])
+				if (fieldName == ResourceAccess.NameCaptions[1])
 				{
 					ICollection<string> src = field.StringCollection;
 					ICollection<string> dst = this.accessCaption.Labels;
@@ -327,27 +318,29 @@ namespace Epsitec.Common.Designer
 					}
 				}
 
-				if (fieldName == ResourceAccess.AccessCaptions[2])
+				if (fieldName == ResourceAccess.NameCaptions[2])
 				{
 					this.accessCaption.Description = field.String;
 				}
 
-				if (fieldName == ResourceAccess.AccessCaptions[3])
+				if (fieldName == ResourceAccess.NameCaptions[3])
 				{
 					this.accessCaption.Icon = field.String;
 				}
 
-				if (fieldName == ResourceAccess.AccessCaptions[4])
+				if (fieldName == ResourceAccess.NameCaptions[4])
 				{
 					this.accessField.SetAbout(field.String);
 				}
 			}
+
+			this.isDirty = true;
 		}
 
 		public ModificationState GetModification(int index, string cultureName)
 		{
 			//	Donne l'état 'modifié'.
-			this.AccessCache(index, cultureName);
+			this.CacheResource(index, cultureName);
 
 			if (this.IsBundlesType)
 			{
@@ -371,18 +364,65 @@ namespace Epsitec.Common.Designer
 			return ModificationState.Normal;
 		}
 
-		public void SetModification(int index, string cultureName, ModificationState state)
+		public void ClearModification(int index, string cultureName)
 		{
-			//	Change l'état 'modifié'.
-			this.AccessCache(index, cultureName);
+			//	Considère une ressource comme 'à jour' dans une culture.
+			this.CacheResource(index, cultureName);
 
 			if (this.IsBundlesType)
 			{
+				if (this.accessBundle != this.primaryBundle)
+				{
+					Druid druid = this.druidsIndex[index];
+					this.accessField.SetModificationId(this.primaryBundle[druid].ModificationId);
+				}
 			}
+
+			this.isDirty = true;
 		}
 
-		protected void AccessCache(int index, string cultureName)
+		public void ModificationSetAll(int index)
 		{
+			//	Considère une ressource comme 'modifiée' dans toutes les cultures.
+			if (this.IsBundlesType)
+			{
+				Druid druid = this.druidsIndex[index];
+				int id = this.primaryBundle[druid].ModificationId;
+				this.primaryBundle[druid].SetModificationId(id+1);
+
+				this.CacheClear();
+			}
+
+			this.isDirty = true;
+		}
+
+		public bool IsModificationAll(int index)
+		{
+			//	Donne l'état de la commande ModificationAll.
+			if (this.IsBundlesType)
+			{
+				Druid druid = this.druidsIndex[index];
+				int id = this.primaryBundle[druid].ModificationId;
+				int count = 0;
+				foreach (ResourceBundle bundle in this.bundles)
+				{
+					if (bundle != this.primaryBundle && !bundle[druid].IsEmpty)
+					{
+						if (bundle[druid].ModificationId < id)
+						{
+							count++;
+						}
+					}
+				}
+				return (count != this.bundles.Count-1);
+			}
+
+			return false;
+		}
+
+		protected void CacheResource(int index, string cultureName)
+		{
+			//	Cache une ressource.
 			if (this.IsBundlesType)
 			{
 				if (this.accessCulture != cultureName)  // changement de culture ?
@@ -435,8 +475,19 @@ namespace Epsitec.Common.Designer
 			this.accessIndex = index;
 		}
 
-		protected static string[] AccessStrings = { "Name", "String", "About" };
-		protected static string[] AccessCaptions = { "Name", "Labels", "Description", "Icon", "About" };
+		protected void CacheClear()
+		{
+			//	Vide le cache.
+			this.accessCulture = "?";
+			this.accessField = null;
+			this.accessCaption = null;
+		}
+
+		protected static string[] NameStrings = { "Name", "String", "About" };
+		protected static string[] NameCaptions = { "Name", "Labels", "Description", "Icon", "About" };
+
+		protected static Field.Type[] TypeStrings = { Field.Type.String, Field.Type.String, Field.Type.String };
+		protected static Field.Type[] TypeCaptions = { Field.Type.String, Field.Type.StringCollection, Field.Type.String, Field.Type.String, Field.Type.String };
 
 
 		public bool IsExistingCulture(string name)
