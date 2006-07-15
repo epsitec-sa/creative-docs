@@ -28,17 +28,15 @@ namespace Epsitec.Common.Designer
 		}
 
 
-		public ResourceAccess(Type type, ResourceManager resourceManager)
+		public ResourceAccess(Type type, ResourceManager resourceManager, ResourceModuleInfo moduleInfo)
 		{
 			//	Constructeur unique pour accéder aux ressources d'un type donné.
 			//	Par la suite, l'instance créée accédera toujours aux ressources de ce type.
 			this.type = type;
 			this.resourceManager = resourceManager;
+			this.moduleInfo = moduleInfo;
 
-			if (this.IsBundlesType)
-			{
-				this.druidsIndex = new List<Druid>();
-			}
+			this.druidsIndex = new List<Druid>();
 		}
 
 
@@ -136,6 +134,10 @@ namespace Epsitec.Common.Designer
 				this.CacheClear();
 			}
 
+			if (this.type == Type.Panels)
+			{
+			}
+
 			this.isDirty = true;
 			return this.accessIndex;
 		}
@@ -167,6 +169,10 @@ namespace Epsitec.Common.Designer
 				this.CacheClear();
 			}
 
+			if (this.type == Type.Panels)
+			{
+			}
+
 			this.isDirty = true;
 			return this.accessIndex;
 		}
@@ -194,6 +200,10 @@ namespace Epsitec.Common.Designer
 				this.CacheClear();
 			}
 
+			if (this.type == Type.Panels)
+			{
+			}
+
 			this.isDirty = true;
 		}
 
@@ -205,6 +215,10 @@ namespace Epsitec.Common.Designer
 			{
 				this.SetFilterBundles(filter, mode);
 			}
+
+			if (this.type == Type.Panels)
+			{
+			}
 		}
 
 		public int AccessCount
@@ -215,6 +229,11 @@ namespace Epsitec.Common.Designer
 				if (this.IsBundlesType)
 				{
 					return this.druidsIndex.Count;
+				}
+
+				if (this.type == Type.Panels)
+				{
+					return this.panelsList.Count;
 				}
 
 				return 0;
@@ -359,6 +378,20 @@ namespace Epsitec.Common.Designer
 				}
 			}
 
+			if (this.type == Type.Panels)
+			{
+				ResourceBundle bundle = this.PanelBundle(index);
+				if (bundle == null)
+				{
+					return null;
+				}
+
+				if (fieldName == ResourceAccess.NamePanels[0])
+				{
+					return new Field(bundle.Caption);
+				}
+			}
+
 			return null;
 		}
 
@@ -428,6 +461,20 @@ namespace Epsitec.Common.Designer
 				if (fieldName == ResourceAccess.NameCaptions[4])
 				{
 					this.accessField.SetAbout(field.String);
+				}
+			}
+
+			if (this.type == Type.Panels)
+			{
+				ResourceBundle bundle = this.PanelBundle(index);
+				if (bundle == null)
+				{
+					return;
+				}
+
+				if (fieldName == ResourceAccess.NamePanels[0])
+				{
+					bundle.DefineCaption(field.String);
 				}
 			}
 
@@ -600,9 +647,11 @@ namespace Epsitec.Common.Designer
 
 		protected static string[] NameStrings = { "Name", "String", "About" };
 		protected static string[] NameCaptions = { "Name", "Labels", "Description", "Icon", "About" };
+		protected static string[] NamePanels = { "Name" };
 
 		protected static Field.Type[] TypeStrings = { Field.Type.String, Field.Type.String, Field.Type.String };
 		protected static Field.Type[] TypeCaptions = { Field.Type.String, Field.Type.StringCollection, Field.Type.String, Field.Type.String, Field.Type.String };
+		protected static Field.Type[] TypePanels = { Field.Type.String };
 
 
 		public bool IsExistingCulture(string name)
@@ -631,7 +680,7 @@ namespace Epsitec.Common.Designer
 				System.Globalization.CultureInfo culture = Resources.FindSpecificCultureInfo(cultureName);
 				ResourceBundle bundle = ResourceBundle.Create(this.resourceManager, prefix, this.bundles.Name, ResourceLevel.Localized, culture);
 
-				bundle.DefineType(this.BundlesName(false));
+				bundle.DefineType(this.BundleName(false));
 				this.resourceManager.SetBundle(bundle, ResourceSetMode.CreateOnly);
 
 				this.LoadBundles();
@@ -646,7 +695,7 @@ namespace Epsitec.Common.Designer
 				ResourceBundle bundle = this.GetCulture(cultureName);
 				if (bundle != null)
 				{
-					this.resourceManager.RemoveBundle(this.BundlesName(true), ResourceLevel.Localized, bundle.Culture);
+					this.resourceManager.RemoveBundle(this.BundleName(true), ResourceLevel.Localized, bundle.Culture);
 					this.LoadBundles();
 				}
 			}
@@ -671,14 +720,14 @@ namespace Epsitec.Common.Designer
 
 		protected void LoadBundles()
 		{
-			string[] ids = this.resourceManager.GetBundleIds("*", this.BundlesName(false), ResourceLevel.Default);
+			string[] ids = this.resourceManager.GetBundleIds("*", this.BundleName(false), ResourceLevel.Default);
 			if (ids.Length == 0)
 			{
 				//	Crée un premier bundle vide.
 				string prefix = this.resourceManager.ActivePrefix;
 				System.Globalization.CultureInfo culture = this.BaseCulture;
-				ResourceBundle bundle = ResourceBundle.Create(this.resourceManager, prefix, this.BundlesName(true), ResourceLevel.Default, culture);
-				bundle.DefineType(this.BundlesName(false));
+				ResourceBundle bundle = ResourceBundle.Create(this.resourceManager, prefix, this.BundleName(true), ResourceLevel.Default, culture);
+				bundle.DefineType(this.BundleName(false));
 
 				//	Crée un premier champ vide avec un premier Druid.
 				//	Ceci est nécessaire, car il n'existe pas de commande pour créer un champ à partir
@@ -699,7 +748,7 @@ namespace Epsitec.Common.Designer
 				//	acceptable de faire ainsi !
 				this.resourceManager.SetBundle(bundle, ResourceSetMode.CreateOnly);
 
-				ids = this.resourceManager.GetBundleIds("*", this.BundlesName(false), ResourceLevel.Default);
+				ids = this.resourceManager.GetBundleIds("*", this.BundleName(false), ResourceLevel.Default);
 				System.Diagnostics.Debug.Assert(ids.Length != 0);
 			}
 
@@ -804,10 +853,144 @@ namespace Epsitec.Common.Designer
 
 		protected void LoadPanels()
 		{
+			if (this.panelsList != null)
+			{
+				return;
+			}
+
+			this.panelsList = new List<ResourceBundle>();
+			this.panelsToCreate = new List<ResourceBundle>();
+			this.panelsToDelete = new List<ResourceBundle>();
+
+			string[] names = this.resourceManager.GetBundleIds("*", this.BundleName(false), ResourceLevel.Default);
+			if (names.Length == 0)
+			{
+				//	S'il n'existe aucun panneau, crée un premier panneau vide.
+				//	Ceci est nécessaire, car il n'existe pas de commande pour créer un panneau à partir
+				//	de rien, mais seulement une commande pour dupliquer un panneau existant.
+				Druid druid = this.PanelCreateUniqueDruid();
+				string prefix = this.resourceManager.ActivePrefix;
+				System.Globalization.CultureInfo culture = this.BaseCulture;
+				ResourceBundle bundle = ResourceBundle.Create(this.resourceManager, prefix, druid.ToBundleId(), ResourceLevel.Default, culture);
+
+				bundle.DefineType(this.BundleName(false));
+				bundle.DefineCaption(Res.Strings.Viewers.Panels.New);
+				bundle.DefineRank(0);
+
+				this.panelsList.Add(bundle);
+				this.panelsToCreate.Add(bundle);
+			}
+			else
+			{
+				foreach (string name in names)
+				{
+					ResourceBundle bundle = this.resourceManager.GetBundle(name, ResourceLevel.Default);
+					this.panelsList.Add(bundle);
+
+					ResourceBundle.Field field = bundle[this.BundleName(false)];
+
+					if (field.IsValid)
+					{
+						UI.Panel panel = UserInterface.DeserializePanel(field.AsString, this.resourceManager);
+						panel.DrawDesignerFrame = true;
+						Viewers.Panels.SetPanel(bundle, panel);
+					}
+				}
+
+				this.panelsList.Sort(new Comparers.BundleRank());  // trie selon les rangs
+			}
 		}
 
 		protected void SavePanels()
 		{
+			if (this.panelsList == null)
+			{
+				return;
+			}
+
+			for (int i=0; i<this.panelsList.Count; i++)
+			{
+				ResourceBundle bundle = this.panelsList[i];
+				bundle.DefineRank(i);
+				UI.Panel panel = Viewers.Panels.GetPanel(bundle);
+
+				if (panel != null)
+				{
+					if (!bundle.Contains(this.BundleName(false)))
+					{
+						ResourceBundle.Field field = bundle.CreateField(ResourceFieldType.Data);
+						field.SetName(this.BundleName(false));
+						bundle.Add(field);
+					}
+
+					bundle[this.BundleName(false)].SetXmlValue(UserInterface.SerializePanel(panel));
+				}
+
+				if (this.panelsToCreate.Contains(bundle))
+				{
+					this.resourceManager.SetBundle(bundle, ResourceSetMode.CreateOnly);
+				}
+				else
+				{
+					this.resourceManager.SetBundle(bundle, ResourceSetMode.UpdateOnly);
+				}
+			}
+			this.panelsToCreate.Clear();
+
+			//	Supprime tous les panneaux mis dans la liste 'à supprimer'.
+			foreach (ResourceBundle bundle in this.panelsToDelete)
+			{
+				this.resourceManager.RemoveBundle(bundle.Druid.ToBundleId(), ResourceLevel.Default, bundle.Culture);
+			}
+			this.panelsToDelete.Clear();
+		}
+
+		protected Druid PanelCreateUniqueDruid()
+		{
+			//	Crée un nouveau druid unique pour une ressource de type 'Panel'.
+			int moduleId = this.moduleInfo.Id;
+			int developerId = 0;  // [PA] provisoire
+			int localId = 0;
+
+			foreach (ResourceBundle bundle in this.panelsList)
+			{
+				Druid druid = bundle.Druid;
+
+				if (druid.IsValid && druid.Developer == developerId && druid.Local >= localId)
+				{
+					localId = druid.Local+1;
+				}
+			}
+
+			return new Druid(moduleId, developerId, localId);
+		}
+
+		protected ResourceBundle PanelBundle(int index)
+		{
+			//	Donne le bundle d'un panneau en fonction de l'index du Druid.
+			Druid druid = this.druidsIndex[index];
+			int i = this.PanelIndex(druid);
+			if (i == -1)
+			{
+				return null;
+			}
+			else
+			{
+				return this.panelsList[i];
+			}
+		}
+
+		protected int PanelIndex(Druid druid)
+		{
+			//	Donne l'index d'une ressource de type 'Panel'.
+			for (int i=0; i<this.panelsList.Count; i++)
+			{
+				if (this.panelsList[i].Druid == druid)
+				{
+					return i;
+				}
+			}
+			return -1;
 		}
 
 
@@ -841,7 +1024,7 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		protected string BundlesName(bool many)
+		protected string BundleName(bool many)
 		{
 			//	Retourne un nom interne (pour Common.Support & Cie) en fonction du type.
 			switch (this.type)
@@ -853,6 +1036,9 @@ namespace Epsitec.Common.Designer
 				case Type.Commands:
 				case Type.Types:
 					return many ? "Captions" : "Caption";
+
+				case Type.Panels:
+					return "Panel";
 			}
 
 			return null;
@@ -996,6 +1182,7 @@ namespace Epsitec.Common.Designer
 
 		protected Type							type;
 		protected ResourceManager				resourceManager;
+		protected ResourceModuleInfo			moduleInfo;
 		protected bool							isDirty = false;
 
 		protected ResourceBundleCollection		bundles;
@@ -1006,5 +1193,8 @@ namespace Epsitec.Common.Designer
 		protected int							accessIndex;
 		protected ResourceBundle.Field			accessField;
 		protected Common.Types.Caption			accessCaption;
+		protected List<ResourceBundle>			panelsList;
+		protected List<ResourceBundle>			panelsToCreate;
+		protected List<ResourceBundle>			panelsToDelete;
 	}
 }
