@@ -87,11 +87,13 @@ namespace Epsitec.Common.Designer
 		public int Duplicate(int index, string newName, bool duplicateContent)
 		{
 			//	Duplique une ressource.
+			Druid newDruid = Druid.Empty;
+
 			if (this.IsBundlesType)
 			{
 				Druid actualDruid = this.druidsIndex[index];
 				int aIndex = this.GetAbsoluteIndex(actualDruid);
-				Druid newDruid = this.CreateUniqueDruid();
+				newDruid = this.CreateUniqueDruid();
 
 				foreach (ResourceBundle bundle in this.bundles)
 				{
@@ -128,15 +130,27 @@ namespace Epsitec.Common.Designer
 						bundle.Add(newField);
 					}
 				}
-
-				this.druidsIndex.Insert(index+1, newDruid);
-				this.accessIndex = index+1;
-				this.CacheClear();
 			}
 
 			if (this.type == Type.Panels)
 			{
+				newDruid = this.CreateUniqueDruid();
+				string prefix = this.resourceManager.ActivePrefix;
+				System.Globalization.CultureInfo culture = this.BaseCulture;
+				ResourceBundle bundle = ResourceBundle.Create(this.resourceManager, prefix, newDruid.ToBundleId(), ResourceLevel.Default, culture);
+
+				bundle.DefineType(this.BundleName(false));
+				bundle.DefineCaption(newName);
+
+				//	TODO: gérer duplicateContent
+
+				this.panelsList.Insert(index, bundle);
+				this.panelsToCreate.Add(bundle);
 			}
+
+			this.druidsIndex.Insert(index+1, newDruid);
+			this.accessIndex = index+1;
+			this.CacheClear();
 
 			this.isDirty = true;
 			return this.accessIndex;
@@ -157,21 +171,36 @@ namespace Epsitec.Common.Designer
 						bundle.Remove(aIndex);
 					}
 				}
-
-				this.druidsIndex.RemoveAt(index);
-
-				if (index >= this.druidsIndex.Count)
-				{
-					index--;
-				}
-				this.accessIndex = index;
-
-				this.CacheClear();
 			}
 
 			if (this.type == Type.Panels)
 			{
+				ResourceBundle bundle = this.PanelBundle(index);
+				System.Diagnostics.Debug.Assert(index != -1);
+
+				this.panelsList.Remove(bundle);
+
+				//	S'il ne s'agit pas d'une nouvelle ressource, il faut l'ajouter dans la liste
+				//	des ressources à détruire (lors du PanelsWrite).
+				if (this.panelsToCreate.Contains(bundle))
+				{
+					this.panelsToCreate.Remove(bundle);
+				}
+				else
+				{
+					this.panelsToDelete.Add(bundle);
+				}
 			}
+
+			this.druidsIndex.RemoveAt(index);
+
+			if (index >= this.druidsIndex.Count)
+			{
+				index--;
+			}
+			this.accessIndex = index;
+
+			this.CacheClear();
 
 			this.isDirty = true;
 			return this.accessIndex;
@@ -390,6 +419,11 @@ namespace Epsitec.Common.Designer
 				{
 					return new Field(bundle.Caption);
 				}
+
+				if (fieldName == ResourceAccess.NamePanels[1])
+				{
+					return new Field(bundle);
+				}
 			}
 
 			return null;
@@ -475,6 +509,11 @@ namespace Epsitec.Common.Designer
 				if (fieldName == ResourceAccess.NamePanels[0])
 				{
 					bundle.DefineCaption(field.String);
+				}
+
+				if (fieldName == ResourceAccess.NamePanels[1])
+				{
+					//	TODO:
 				}
 			}
 
@@ -647,11 +686,11 @@ namespace Epsitec.Common.Designer
 
 		protected static string[] NameStrings = { "Name", "String", "About" };
 		protected static string[] NameCaptions = { "Name", "Labels", "Description", "Icon", "About" };
-		protected static string[] NamePanels = { "Name" };
+		protected static string[] NamePanels = { "Name", "Panel" };
 
 		protected static Field.Type[] TypeStrings = { Field.Type.String, Field.Type.String, Field.Type.String };
 		protected static Field.Type[] TypeCaptions = { Field.Type.String, Field.Type.StringCollection, Field.Type.String, Field.Type.String, Field.Type.String };
-		protected static Field.Type[] TypePanels = { Field.Type.String };
+		protected static Field.Type[] TypePanels = { Field.Type.String, Field.Type.Bundle };
 
 
 		public bool IsExistingCulture(string name)
@@ -833,21 +872,45 @@ namespace Epsitec.Common.Designer
 		protected Druid CreateUniqueDruid()
 		{
 			//	Crée un nouveau druid unique.
-			int moduleId = this.primaryBundle.Module.Id;
-			int developerId = 0;  // [PA] provisoire
-			int localId = 0;
-
-			foreach (ResourceBundle.Field field in this.primaryBundle.Fields)
+			if (this.IsBundlesType)
 			{
-				Druid druid = field.Druid;
+				int moduleId = this.primaryBundle.Module.Id;
+				int developerId = 0;  // [PA] provisoire
+				int localId = 0;
 
-				if (druid.IsValid && druid.Developer == developerId && druid.Local >= localId)
+				foreach (ResourceBundle.Field field in this.primaryBundle.Fields)
 				{
-					localId = druid.Local+1;
+					Druid druid = field.Druid;
+
+					if (druid.IsValid && druid.Developer == developerId && druid.Local >= localId)
+					{
+						localId = druid.Local+1;
+					}
 				}
+
+				return new Druid(moduleId, developerId, localId);
 			}
 
-			return new Druid(moduleId, developerId, localId);
+			if (this.type == Type.Panels)
+			{
+				int moduleId = this.moduleInfo.Id;
+				int developerId = 0;  // [PA] provisoire
+				int localId = 0;
+
+				foreach (ResourceBundle bundle in this.panelsList)
+				{
+					Druid druid = bundle.Druid;
+
+					if (druid.IsValid && druid.Developer == developerId && druid.Local >= localId)
+					{
+						localId = druid.Local+1;
+					}
+				}
+
+				return new Druid(moduleId, developerId, localId);
+			}
+
+			return Druid.Empty;
 		}
 
 
@@ -868,7 +931,7 @@ namespace Epsitec.Common.Designer
 				//	S'il n'existe aucun panneau, crée un premier panneau vide.
 				//	Ceci est nécessaire, car il n'existe pas de commande pour créer un panneau à partir
 				//	de rien, mais seulement une commande pour dupliquer un panneau existant.
-				Druid druid = this.PanelCreateUniqueDruid();
+				Druid druid = this.CreateUniqueDruid();
 				string prefix = this.resourceManager.ActivePrefix;
 				System.Globalization.CultureInfo culture = this.BaseCulture;
 				ResourceBundle bundle = ResourceBundle.Create(this.resourceManager, prefix, druid.ToBundleId(), ResourceLevel.Default, culture);
@@ -943,26 +1006,6 @@ namespace Epsitec.Common.Designer
 				this.resourceManager.RemoveBundle(bundle.Druid.ToBundleId(), ResourceLevel.Default, bundle.Culture);
 			}
 			this.panelsToDelete.Clear();
-		}
-
-		protected Druid PanelCreateUniqueDruid()
-		{
-			//	Crée un nouveau druid unique pour une ressource de type 'Panel'.
-			int moduleId = this.moduleInfo.Id;
-			int developerId = 0;  // [PA] provisoire
-			int localId = 0;
-
-			foreach (ResourceBundle bundle in this.panelsList)
-			{
-				Druid druid = bundle.Druid;
-
-				if (druid.IsValid && druid.Developer == developerId && druid.Local >= localId)
-				{
-					localId = druid.Local+1;
-				}
-			}
-
-			return new Druid(moduleId, developerId, localId);
 		}
 
 		protected ResourceBundle PanelBundle(int index)
