@@ -52,6 +52,7 @@ namespace Epsitec.Common.Designer
 			if (this.type == Type.Panels)
 			{
 				this.LoadPanels();
+				this.SetFilterPanels("", Searcher.SearchingMode.None);
 			}
 
 			this.CacheClear();
@@ -252,6 +253,7 @@ namespace Epsitec.Common.Designer
 
 			if (this.type == Type.Panels)
 			{
+				this.SetFilterPanels(filter, mode);
 			}
 		}
 
@@ -667,10 +669,13 @@ namespace Epsitec.Common.Designer
 		protected void CacheClear()
 		{
 			//	Vide le cache.
-			this.accessCulture = "?";  // nom différent de null, d'une chaîne vide ou d'un nom existant
-			this.accessField = null;
-			this.accessCaption = null;
-			this.accessIndex = -1;
+			if (this.IsBundlesType)
+			{
+				this.accessCulture = "?";  // nom différent de null, d'une chaîne vide ou d'un nom existant
+				this.accessField = null;
+				this.accessCaption = null;
+				this.accessIndex = -1;
+			}
 		}
 
 		protected void CreateIfNecessary()
@@ -864,6 +869,57 @@ namespace Epsitec.Common.Designer
 
 				Druid fullDruid = new Druid(field.Druid, this.primaryBundle.Module.Id);
 				this.druidsIndex.Add(fullDruid);
+			}
+		}
+
+		protected void SetFilterPanels(string filter, Searcher.SearchingMode mode)
+		{
+			this.druidsIndex.Clear();
+
+			if ((mode&Searcher.SearchingMode.CaseSensitive) == 0)
+			{
+				filter = Searcher.RemoveAccent(filter.ToLower());
+			}
+
+			Regex regex = null;
+			if ((mode&Searcher.SearchingMode.Jocker) != 0)
+			{
+				regex = RegexFactory.FromSimpleJoker(filter, RegexFactory.Options.None);
+			}
+
+			foreach (ResourceBundle bundle in this.panelsList)
+			{
+				string name = this.SubFilter(bundle.Caption);
+
+				if (filter != "")
+				{
+					if ((mode&Searcher.SearchingMode.Jocker) != 0)
+					{
+						string text = name;
+						if ((mode&Searcher.SearchingMode.CaseSensitive) == 0)
+						{
+							text = Searcher.RemoveAccent(text.ToLower());
+						}
+						if (!regex.IsMatch(text))
+						{
+							continue;
+						}
+					}
+					else
+					{
+						int index = Searcher.IndexOf(name, filter, 0, mode);
+						if (index == -1)
+						{
+							continue;
+						}
+						if ((mode&Searcher.SearchingMode.AtBeginning) != 0 && index != 0)
+						{
+							continue;
+						}
+					}
+				}
+
+				this.druidsIndex.Add(bundle.Druid);
 			}
 		}
 
