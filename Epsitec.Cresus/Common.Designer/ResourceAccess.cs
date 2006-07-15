@@ -86,10 +86,58 @@ namespace Epsitec.Common.Designer
 		}
 
 
-		public int Duplicate(string name, int index, bool duplicateContent)
+		public int Duplicate(int index, string newName, bool duplicateContent)
 		{
 			//	Duplique une ressource.
-			return -1;
+			if (this.IsBundlesType)
+			{
+				Druid actualDruid = this.druidsIndex[index];
+				int aIndex = this.GetAbsoluteIndex(actualDruid);
+				Druid newDruid = this.CreateUniqueDruid();
+
+				foreach (ResourceBundle bundle in this.bundles)
+				{
+					ResourceBundle.Field newField = bundle.CreateField(ResourceFieldType.Data);
+					newField.SetDruid(newDruid);
+					newField.SetName(newName);
+
+					if (duplicateContent)
+					{
+						ResourceBundle.Field field = bundle[actualDruid];
+						if (field.IsEmpty)
+						{
+							newField.SetStringValue("");
+						}
+						else
+						{
+							newField.SetStringValue(field.AsString);
+							newField.SetAbout(field.About);
+						}
+					}
+					else
+					{
+						newField.SetStringValue("");
+					}
+
+					if (bundle == this.primaryBundle)
+					{
+						newField.SetModificationId(1);
+						bundle.Insert(aIndex+1, newField);
+					}
+					else
+					{
+						newField.SetModificationId(0);
+						bundle.Add(newField);
+					}
+				}
+
+				this.druidsIndex.Insert(index+1, newDruid);
+				this.accessIndex = index+1;
+				this.CacheClear();
+			}
+
+			this.isDirty = true;
+			return index+1;
 		}
 
 		public void Delete(int index)
@@ -112,6 +160,9 @@ namespace Epsitec.Common.Designer
 				ResourceBundle.Field field = this.primaryBundle[aIndex];
 				this.primaryBundle.Remove(aIndex);
 				this.primaryBundle.Insert(aIndex+direction, field);
+
+				this.druidsIndex[index] = this.druidsIndex[index+direction];
+				this.druidsIndex[index+direction] = druid;
 
 				this.accessIndex += direction;
 				this.CacheClear();
@@ -702,6 +753,26 @@ namespace Epsitec.Common.Designer
 			//	Cherche l'index absolu d'une ressource d'après son druid.
 			ResourceBundle.Field field = this.primaryBundle[druid];
 			return this.primaryBundle.IndexOf(field);
+		}
+
+		protected Druid CreateUniqueDruid()
+		{
+			//	Crée un nouveau druid unique.
+			int moduleId = this.primaryBundle.Module.Id;
+			int developerId = 0;  // [PA] provisoire
+			int localId = 0;
+
+			foreach (ResourceBundle.Field field in this.primaryBundle.Fields)
+			{
+				Druid druid = field.Druid;
+
+				if (druid.IsValid && druid.Developer == developerId && druid.Local >= localId)
+				{
+					localId = druid.Local+1;
+				}
+			}
+
+			return new Druid(moduleId, developerId, localId);
 		}
 
 
