@@ -190,7 +190,7 @@ namespace Epsitec.Common.Designer.Viewers
 			int sel = this.access.AccessIndex;
 			int column = this.array.SelectedColumn;
 
-			if (sel >= this.access.CultureCount)
+			if (sel >= this.access.AccessCount)
 			{
 				sel = -1;
 				column = -1;
