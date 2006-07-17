@@ -277,7 +277,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		}
 
 
-		public void Adapt(Module.BundleType type)
+		public void Adapt(ResourceAccess.Type type)
 		{
 			//	Adapte le dialogue en fonction du type du viewer actif.
 			if (this.bundleType != type)
@@ -314,7 +314,7 @@ namespace Epsitec.Common.Designer.Dialogs
 					if (this.checkCase.ActiveState == ActiveState.Yes)  mode |= Searcher.SearchingMode.CaseSensitive;
 					if (this.checkWord.ActiveState == ActiveState.Yes)  mode |= Searcher.SearchingMode.WholeWord;
 
-					if (this.bundleType == Module.BundleType.Strings)
+					if (this.bundleType == ResourceAccess.Type.Strings)
 					{
 						if (this.stringsCheckLabel.ActiveState          == ActiveState.Yes)  mode |= Searcher.SearchingMode.SearchInLabel;
 						if (this.stringsCheckPrimaryText.ActiveState    == ActiveState.Yes)  mode |= Searcher.SearchingMode.SearchInPrimaryText;
@@ -322,7 +322,7 @@ namespace Epsitec.Common.Designer.Dialogs
 						if (this.stringsCheckPrimaryAbout.ActiveState   == ActiveState.Yes)  mode |= Searcher.SearchingMode.SearchInPrimaryAbout;
 						if (this.stringsCheckSecondaryAbout.ActiveState == ActiveState.Yes)  mode |= Searcher.SearchingMode.SearchInSecondaryAbout;
 					}
-					else if (this.bundleType == Module.BundleType.Captions)
+					else if (this.bundleType == ResourceAccess.Type.Captions)
 					{
 						if (this.captionsCheckLabel.ActiveState         == ActiveState.Yes)  mode |= Searcher.SearchingMode.SearchInLabel;
 						if (this.captionsCheckPrimaryText.ActiveState   == ActiveState.Yes)  mode |= Searcher.SearchingMode.SearchInPrimaryText;
@@ -347,7 +347,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				if (this.fieldSearch == null )  return false;
 				if (this.fieldSearch.Text == "")  return false;
 
-				if (this.bundleType == Module.BundleType.Strings)
+				if (this.bundleType == ResourceAccess.Type.Strings)
 				{
 					return (this.stringsCheckLabel.ActiveState == ActiveState.Yes ||
 							this.stringsCheckPrimaryText.ActiveState == ActiveState.Yes ||
@@ -355,7 +355,7 @@ namespace Epsitec.Common.Designer.Dialogs
 							this.stringsCheckPrimaryAbout.ActiveState == ActiveState.Yes ||
 							this.stringsCheckSecondaryAbout.ActiveState == ActiveState.Yes);
 				}
-				else if (this.bundleType == Module.BundleType.Captions)
+				else if (this.bundleType == ResourceAccess.Type.Captions)
 				{
 					return (this.captionsCheckLabel.ActiveState == ActiveState.Yes ||
 							this.captionsCheckPrimaryText.ActiveState == ActiveState.Yes ||
@@ -392,8 +392,8 @@ namespace Epsitec.Common.Designer.Dialogs
 		{
 			if (this.window != null)
 			{
-				this.groupStrings.Visibility = (this.bundleType == Module.BundleType.Strings);
-				this.groupCaptions.Visibility = (this.bundleType == Module.BundleType.Captions);
+				this.groupStrings.Visibility = (this.bundleType == ResourceAccess.Type.Strings);
+				this.groupCaptions.Visibility = (this.bundleType == ResourceAccess.Type.Captions);
 			}
 		}
 
@@ -487,7 +487,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		}
 
 
-		protected Module.BundleType				bundleType = Module.BundleType.Unknow;
+		protected ResourceAccess.Type			bundleType = ResourceAccess.Type.Unknow;
 
 		protected TextFieldCombo				fieldSearch;
 		protected TextFieldCombo				fieldReplace;

@@ -23,12 +23,12 @@ namespace Epsitec.Common.Designer
 		}
 
 
-		public Searcher(List<Druid> druidsIndex, ResourceBundle primaryBundle, ResourceBundle secondaryBundle, Module.BundleType bundleType)
+		public Searcher(List<Druid> druidsIndex, ResourceBundle primaryBundle, ResourceBundle secondaryBundle, ResourceAccess.Type type)
 		{
 			this.druidsIndex = druidsIndex;
 			this.primaryBundle = primaryBundle;
 			this.secondaryBundle = secondaryBundle;
-			this.bundleType = bundleType;
+			this.type = type;
 			this.mode = SearchingMode.SearchInPrimaryText | SearchingMode.SearchInSecondaryText;
 		}
 
@@ -330,7 +330,7 @@ namespace Epsitec.Common.Designer
 			{
 				Druid druid = this.druidsIndex[this.current.Row];
 
-				if (this.bundleType == Module.BundleType.Strings)
+				if (this.type == ResourceAccess.Type.Strings)
 				{
 					if (this.current.Field == 0 && (this.mode&SearchingMode.SearchInLabel) != 0)
 					{
@@ -358,7 +358,7 @@ namespace Epsitec.Common.Designer
 					}
 				}
 
-				if (this.bundleType == Module.BundleType.Captions)
+				if (this.type == ResourceAccess.Type.Captions)
 				{
 					if (this.current.Field == 0 && (this.mode&SearchingMode.SearchInLabel) != 0)
 					{
@@ -625,7 +625,7 @@ namespace Epsitec.Common.Designer
 		protected List<Druid>			druidsIndex;
 		protected ResourceBundle		primaryBundle;
 		protected ResourceBundle		secondaryBundle;
-		protected Module.BundleType		bundleType;
+		protected ResourceAccess.Type	type;
 		protected SearchingMode			mode;
 		protected string				searching;
 		protected Cursor				starting;

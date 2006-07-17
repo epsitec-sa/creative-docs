@@ -11,7 +11,7 @@ namespace Epsitec.Common.Designer.Viewers
 	/// </summary>
 	public class Strings : Abstract
 	{
-		public Strings(Module module, PanelsContext context) : base(module, context)
+		public Strings(Module module, PanelsContext context, ResourceAccess access) : base(module, context, access)
 		{
 			int tabIndex = 0;
 
@@ -89,7 +89,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.secondaryAbout.TabIndex = tabIndex++;
 			this.secondaryAbout.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
-			this.UpdateCultures();
+			this.UpdateCultures(this);
 			this.UpdateEdit();
 			this.UpdateModifiers();
 			this.UpdateCommands();
@@ -129,770 +129,98 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
-		public override Module.BundleType BundleType
+		protected override ResourceAccess.Type ResourceType
 		{
 			get
 			{
-				return Module.BundleType.Strings;
+				return ResourceAccess.Type.Strings;
+			}
+		}
+
+		public override ResourceAccess.Type BundleType
+		{
+			get
+			{
+				return ResourceAccess.Type.Strings;
 			}
 		}
 
 
-		public override void DoSearch(string search, Searcher.SearchingMode mode)
-		{
-			//	Effectue une recherche.
-			Searcher searcher = new Searcher(this.druidsIndex, this.primaryBundle, this.secondaryBundle, this.BundleType);
-			searcher.FixStarting(mode, this.array.SelectedRow, this.currentTextField, false);
-
-			if (searcher.Search(search))
-			{
-				this.lastActionIsReplace = false;
-
-				this.array.SelectedRow = searcher.Row;
-				this.array.ShowSelectedRow();
-
-				AbstractTextField edit = null;
-				if (searcher.Field == 0)  edit = this.labelEdit;
-				if (searcher.Field == 1)  edit = this.primaryEdit;
-				if (searcher.Field == 2)  edit = this.secondaryEdit;
-				if (searcher.Field == 3)  edit = this.primaryAbout;
-				if (searcher.Field == 4)  edit = this.secondaryAbout;
-				if (edit != null && edit.Visibility)
-				{
-					this.ignoreChange = true;
-
-					this.Window.MakeActive();
-					edit.Focus();
-					edit.CursorFrom  = edit.TextLayout.FindIndexFromOffset(searcher.Index);
-					edit.CursorTo    = edit.TextLayout.FindIndexFromOffset(searcher.Index+searcher.Length);
-					edit.CursorAfter = false;
-
-					this.ignoreChange = false;
-				}
-			}
-			else
-			{
-				this.module.MainWindow.DialogError(Res.Strings.Dialog.Search.Message.Error);
-			}
-		}
-
-		public override void DoCount(string search, Searcher.SearchingMode mode)
-		{
-			//	Effectue un comptage.
-			Searcher searcher = new Searcher(this.druidsIndex, this.primaryBundle, this.secondaryBundle, this.BundleType);
-			searcher.FixStarting(mode, this.array.SelectedRow, this.currentTextField, false);
-
-			int count = searcher.Count(search);
-			if (count == 0)
-			{
-				this.module.MainWindow.DialogError(Res.Strings.Dialog.Search.Message.Error);
-			}
-			else
-			{
-				string message = string.Format(Res.Strings.Dialog.Search.Message.Count, count.ToString());
-				this.module.MainWindow.DialogMessage(message);
-			}
-		}
-
-		public override void DoReplace(string search, string replace, Searcher.SearchingMode mode)
-		{
-			//	Effectue un remplacement.
-			if (this.module.Mode == DesignerMode.Translate)
-			{
-				mode &= ~Searcher.SearchingMode.SearchInLabel;
-			}
-
-			Searcher searcher = new Searcher(this.druidsIndex, this.primaryBundle, this.secondaryBundle, this.BundleType);
-			searcher.FixStarting(mode, this.array.SelectedRow, this.currentTextField, this.lastActionIsReplace);
-
-			if (searcher.Replace(search, false))
-			{
-				this.lastActionIsReplace = true;
-
-				this.array.SelectedRow = searcher.Row;
-				this.array.ShowSelectedRow();
-
-				Druid druid = this.druidsIndex[searcher.Row];
-				string text = "";
-
-				if (searcher.Field == 0)
-				{
-					string validReplace = replace;
-					if (!Misc.IsValidLabel(ref validReplace))
-					{
-						this.module.MainWindow.DialogError(Res.Strings.Error.InvalidLabel);
-						return;
-					}
-
-					if (this.IsExistingName(validReplace))
-					{
-						this.module.MainWindow.DialogError(Res.Strings.Error.NameAlreadyExist);
-						return;
-					}
-
-					text = this.primaryBundle[druid].AsString;
-					text = text.Remove(searcher.Index, searcher.Length);
-					text = text.Insert(searcher.Index, validReplace);
-
-					this.module.Modifier.Rename(this.BundleType, druid, text);
-					this.array.SetLineString(0, searcher.Row, text);
-				}
-
-				if (searcher.Field == 1 && this.secondaryBundle != null)
-				{
-					text = this.primaryBundle[druid].AsString;
-					text = text.Remove(searcher.Index, searcher.Length);
-					text = text.Insert(searcher.Index, replace);
-					this.primaryBundle[druid].SetStringValue(text);
-
-					this.UpdateArrayField(1, searcher.Row, this.primaryBundle[druid], this.secondaryBundle[druid]);
-				}
-
-				if (searcher.Field == 2 && this.secondaryBundle != null)
-				{
-					text = this.secondaryBundle[druid].AsString;
-					text = text.Remove(searcher.Index, searcher.Length);
-					text = text.Insert(searcher.Index, replace);
-					this.secondaryBundle[druid].SetStringValue(text);
-
-					this.UpdateArrayField(2, searcher.Row, this.secondaryBundle[druid], this.primaryBundle[druid]);
-				}
-
-				if (searcher.Field == 3)
-				{
-					text = this.primaryBundle[druid].About;
-					text = text.Remove(searcher.Index, searcher.Length);
-					text = text.Insert(searcher.Index, replace);
-					this.primaryBundle[druid].SetAbout(text);
-				}
-
-				if (searcher.Field == 4 && this.secondaryBundle != null)
-				{
-					text = this.secondaryBundle[druid].About;
-					text = text.Remove(searcher.Index, searcher.Length);
-					text = text.Insert(searcher.Index, replace);
-					this.secondaryBundle[druid].SetAbout(text);
-				}
-
-				AbstractTextField edit = null;
-				if (searcher.Field == 0)  edit = this.labelEdit;
-				if (searcher.Field == 1)  edit = this.primaryEdit;
-				if (searcher.Field == 2)  edit = this.secondaryEdit;
-				if (searcher.Field == 3)  edit = this.primaryAbout;
-				if (searcher.Field == 4)  edit = this.secondaryAbout;
-				if (edit != null && edit.Visibility)
-				{
-					this.ignoreChange = true;
-
-					this.Window.MakeActive();
-					edit.Focus();
-					edit.Text = text;
-					edit.CursorFrom  = edit.TextLayout.FindIndexFromOffset(searcher.Index);
-					edit.CursorTo    = edit.TextLayout.FindIndexFromOffset(searcher.Index+replace.Length);
-					edit.CursorAfter = false;
-
-					this.ignoreChange = false;
-				}
-
-				this.module.Modifier.IsDirty = true;
-			}
-			else
-			{
-				this.module.MainWindow.DialogError(Res.Strings.Dialog.Search.Message.Error);
-			}
-		}
-
-		public override void DoReplaceAll(string search, string replace, Searcher.SearchingMode mode)
-		{
-			//	Effectue un 'remplacer tout'.
-			if (this.module.Mode == DesignerMode.Translate)
-			{
-				mode &= ~Searcher.SearchingMode.SearchInLabel;
-			}
-
-			Searcher searcher = new Searcher(this.druidsIndex, this.primaryBundle, this.secondaryBundle, this.BundleType);
-			searcher.FixStarting(mode, this.array.SelectedRow, this.currentTextField, false);
-
-			int count = 0;
-			bool fromBeginning = true;
-			while (searcher.Replace(search, fromBeginning))
-			{
-				fromBeginning = false;
-				count ++;
-
-				Druid druid = this.druidsIndex[searcher.Row];
-				string text = "";
-
-				if (searcher.Field == 0)
-				{
-					text = this.primaryBundle[druid].Name;
-					text = text.Remove(searcher.Index, searcher.Length);
-					text = text.Insert(searcher.Index, replace);
-
-					this.module.Modifier.Rename(this.BundleType, druid, text);
-				}
-
-				if (searcher.Field == 1)
-				{
-					text = this.primaryBundle[druid].AsString;
-					text = text.Remove(searcher.Index, searcher.Length);
-					text = text.Insert(searcher.Index, replace);
-					this.primaryBundle[druid].SetStringValue(text);
-				}
-
-				if (searcher.Field == 2 && this.secondaryBundle != null)
-				{
-					text = this.secondaryBundle[druid].AsString;
-					text = text.Remove(searcher.Index, searcher.Length);
-					text = text.Insert(searcher.Index, replace);
-					this.secondaryBundle[druid].SetStringValue(text);
-				}
-
-				if (searcher.Field == 3)
-				{
-					text = this.primaryBundle[druid].About;
-					text = text.Remove(searcher.Index, searcher.Length);
-					text = text.Insert(searcher.Index, replace);
-					this.primaryBundle[druid].SetAbout(text);
-				}
-
-				if (searcher.Field == 4 && this.secondaryBundle != null)
-				{
-					text = this.secondaryBundle[druid].About;
-					text = text.Remove(searcher.Index, searcher.Length);
-					text = text.Insert(searcher.Index, replace);
-					this.secondaryBundle[druid].SetAbout(text);
-				}
-
-				searcher.Skip(replace.Length);  // saute les caractères sélectionnés
-			}
-
-			if (count == 0)
-			{
-				this.module.MainWindow.DialogError(Res.Strings.Dialog.Search.Message.Error);
-			}
-			else
-			{
-				this.UpdateArray();
-				this.UpdateEdit();
-				this.UpdateCommands();
-				this.module.Modifier.IsDirty = true;
-
-				string text = string.Format(Res.Strings.Dialog.Search.Message.Replace, count.ToString());
-				this.module.MainWindow.DialogMessage(text);
-			}
-		}
-
-		public override void DoModification(string name)
-		{
-			//	Change la ressource modifiée visible.
-			int sel = this.array.SelectedRow;
-
-			if (name == "ModificationAll")
-			{
-				if (sel == -1)  return;
-				Druid druid = this.druidsIndex[sel];
-				ResourceBundle.Field field1 = this.primaryBundle[druid];
-				if (field1.IsEmpty)  return;
-				field1.SetModificationId(field1.ModificationId+1);
-
-				this.UpdateArray();
-				this.UpdateModifiers();
-				this.UpdateCommands();
-				this.module.Modifier.IsDirty = true;
-			}
-			else if (name == "ModificationClear" && this.secondaryBundle != null)
-			{
-				if (sel == -1)  return;
-				Druid druid = this.druidsIndex[sel];
-				ResourceBundle.Field field1 = this.primaryBundle[druid];
-				ResourceBundle.Field field2 = this.secondaryBundle[druid];
-				if (field1.IsEmpty || field2.IsEmpty)  return;
-				field2.SetModificationId(field1.ModificationId);
-
-				this.UpdateArray();
-				this.UpdateModifiers();
-				this.UpdateCommands();
-				this.module.Modifier.IsDirty = true;
-			}
-			else if (this.secondaryBundle != null)
-			{
-				if (sel == -1)
-				{
-					sel = (name == "ModificationPrev") ? 0 : this.druidsIndex.Count-1;
-				}
-
-				int column = -1;
-				int dir = (name == "ModificationPrev") ? -1 : 1;
-
-				for (int i=0; i<this.druidsIndex.Count; i++)
-				{
-					sel += dir;
-
-					if (sel >= this.druidsIndex.Count)
-					{
-						sel = 0;
-					}
-
-					if (sel < 0)
-					{
-						sel = this.druidsIndex.Count-1;
-					}
-
-					Druid druid = this.druidsIndex[sel];
-					Modifier.ModificationState state1, state2;
-					Modifier.GetModification(this.primaryBundle, this.secondaryBundle, druid, out state1, out state2);
-
-					if (state1 != Modifier.ModificationState.Normal)
-					{
-						column = 1;
-						break;
-					}
-
-					if (state2 != Modifier.ModificationState.Normal)
-					{
-						column = 2;
-						break;
-					}
-				}
-
-				this.array.SelectedRow = sel;
-				this.array.ShowSelectedRow();
-
-				AbstractTextField edit = null;
-				if (column == 1)  edit = this.primaryEdit;
-				if (column == 2)  edit = this.secondaryEdit;
-				if (edit != null)
-				{
-					this.Window.MakeActive();
-					edit.Focus();
-					edit.SelectAll();
-				}
-			}
-		}
-
-		public override void DoDelete()
-		{
-			//	Supprime la ressource sélectionnée.
-			int sel = this.array.SelectedRow;
-			if ( sel == -1 )  return;
-
-			Druid druid = this.druidsIndex[sel];
-			this.module.Modifier.Delete(this.BundleType, druid);
-
-			this.druidsIndex.RemoveAt(sel);
-			this.UpdateArray();
-
-			sel = System.Math.Min(sel, this.druidsIndex.Count-1);
-			this.array.SelectedRow = sel;
-			this.array.ShowSelectedRow();
-			this.UpdateCommands();
-			this.module.Modifier.IsDirty = true;
-		}
-
-		public override void DoDuplicate(bool duplicate)
-		{
-			//	Duplique la ressource sélectionnée.
-			int sel = this.array.SelectedRow;
-			if ( sel == -1 )  return;
-
-			Druid druid = this.druidsIndex[sel];
-			string newName = this.GetDuplicateName(this.primaryBundle[druid].Name);
-			Druid newDruid = this.module.Modifier.Duplicate(this.BundleType, druid, newName, duplicate);
-
-			int newSel = sel+1;
-			this.druidsIndex.Insert(newSel, newDruid);
-			this.UpdateArray();
-
-			this.array.SelectedRow = newSel;
-			this.array.ShowSelectedRow();
-			this.UpdateCommands();
-			this.module.Modifier.IsDirty = true;
-		}
-
-		public override void DoMove(int direction)
-		{
-			//	Déplace la ressource sélectionnée.
-			int sel = this.array.SelectedRow;
-			if ( sel == -1 )  return;
-
-			Druid druid = this.druidsIndex[sel];
-			if ( !this.module.Modifier.Move(this.BundleType, druid, direction) )  return;
 		
-			int newSel = sel+direction;
-			this.druidsIndex.RemoveAt(sel);
-			this.druidsIndex.Insert(newSel, druid);
-			this.UpdateArray();
-
-			this.array.SelectedRow = newSel;
-			this.array.ShowSelectedRow();
-			this.UpdateCommands();
-			this.module.Modifier.IsDirty = true;
-		}
-
-		public override void DoNewCulture()
-		{
-			//	Crée une nouvelle culture.
-			string name = this.module.MainWindow.DlgNewCulture();
-			if ( name == null )  return;
-			ResourceBundle bundle = this.module.NewCulture(name, this.BundleType);
-
-			this.UpdateCultures();
-			this.UpdateArray();
-			this.UpdateModifiers();
-			this.UpdateClientGeometry();
-			this.UpdateCommands();
-			this.module.Modifier.IsDirty = true;
-		}
-
-		public override void DoDeleteCulture()
-		{
-			//	Supprime la culture courante.
-			string question = string.Format(Res.Strings.Dialog.DeleteCulture.Question, Misc.CultureName(this.secondaryBundle.Culture));
-			Common.Dialogs.DialogResult result = this.module.MainWindow.DialogQuestion(question);
-			if ( result != Epsitec.Common.Dialogs.DialogResult.Yes )  return;
-
-			this.module.DeleteCulture(this.secondaryBundle, this.BundleType);
-
-			this.UpdateCultures();
-			if (this.secondaryBundle != null)
-			{
-				this.UpdateSelectedCulture(Misc.CultureName(this.secondaryBundle.Culture));
-			}
-			this.UpdateArray();
-			this.UpdateModifiers();
-			this.UpdateClientGeometry();
-			this.UpdateCommands();
-			this.module.Modifier.IsDirty = true;
-		}
-
-		public override void DoClipboard(string name)
-		{
-			//	Effectue une action avec le bloc-notes.
-			if ( this.currentTextField == null )  return;
-
-			if ( name == "Cut" )
-			{
-				this.currentTextField.ProcessCut();
-			}
-
-			if ( name == "Copy" )
-			{
-				this.currentTextField.ProcessCopy();
-			}
-
-			if ( name == "Paste" )
-			{
-				this.currentTextField.ProcessPaste();
-			}
-		}
-
-		public override void DoFont(string name)
-		{
-			//	Effectue une modification de typographie.
-			if ( this.currentTextField == null )  return;
-
-			if ( name == "FontBold" )
-			{
-				this.currentTextField.TextNavigator.SelectionBold = !this.currentTextField.TextNavigator.SelectionBold;
-			}
-
-			if ( name == "FontItalic" )
-			{
-				this.currentTextField.TextNavigator.SelectionItalic = !this.currentTextField.TextNavigator.SelectionItalic;
-			}
-
-			if ( name == "FontUnderlined" )
-			{
-				this.currentTextField.TextNavigator.SelectionUnderlined = !this.currentTextField.TextNavigator.SelectionUnderlined;
-			}
-
-			this.HandleTextChanged(this.currentTextField);
-		}
-
-
-		protected void UpdateCultures()
-		{
-			//	Met à jour les widgets pour les cultures.
-			ResourceBundleCollection bundles = this.module.GetBundles(this.BundleType);
-
-			if (this.secondaryCultures != null)
-			{
-				foreach (IconButtonMark button in this.secondaryCultures)
-				{
-					button.Clicked -= new MessageEventHandler(this.HandleSecondaryCultureClicked);
-					button.Dispose();
-				}
-				this.secondaryCultures = null;
-			}
-
-			this.primaryBundle = bundles[ResourceLevel.Default];
-			this.primaryCulture.Text = string.Format(Res.Strings.Viewers.Strings.Reference, Misc.CultureName(this.primaryBundle.Culture));
-
-			this.secondaryBundle = null;
-
-			if (bundles.Count-1 > 0)
-			{
-				List<CultureInfo> list = new List<CultureInfo>();
-
-				for (int b=0; b<bundles.Count; b++)
-				{
-					ResourceBundle bundle = bundles[b];
-					if (bundle != this.primaryBundle)
-					{
-						CultureInfo info = new CultureInfo(bundle.Culture);
-						list.Add(info);
-
-						if (this.secondaryBundle == null)
-						{
-							this.secondaryBundle = bundle;
-						}
-					}
-				}
-
-				list.Sort(new Comparers.CultureName());
-				
-				this.secondaryCultures = new IconButtonMark[list.Count];
-				for (int i=0; i<list.Count; i++)
-				{
-					this.secondaryCultures[i] = new IconButtonMark(this);
-					this.secondaryCultures[i].ButtonStyle = ButtonStyle.ActivableIcon;
-					this.secondaryCultures[i].SiteMark = SiteMark.OnBottom;
-					this.secondaryCultures[i].MarkDimension = 5;
-					this.secondaryCultures[i].Name = list[i].Name;
-					this.secondaryCultures[i].Text = list[i].Name;
-					this.secondaryCultures[i].AutoFocus = false;
-					this.secondaryCultures[i].Clicked += new MessageEventHandler(this.HandleSecondaryCultureClicked);
-					ToolTip.Default.SetToolTip(this.secondaryCultures[i], list[i].Tooltip);
-				}
-			}
-
-			if (this.secondaryBundle != null)
-			{
-				this.UpdateSelectedCulture(Misc.CultureName(this.secondaryBundle.Culture));
-			}
-
-			this.UpdateDruidsIndex("", Searcher.SearchingMode.None);
-		}
-
-		protected void UpdateSelectedCulture(string name)
-		{
-			//	Sélectionne le widget correspondant à la culture secondaire.
-			ResourceBundleCollection bundles = this.module.GetBundles(this.BundleType);
-
-			this.secondaryBundle = this.module.GetCulture(name, this.BundleType);
-			if (this.secondaryCultures == null)  return;
-
-			for (int i=0; i<this.secondaryCultures.Length; i++)
-			{
-				if (this.secondaryCultures[i].Name == name)
-				{
-					this.secondaryCultures[i].ActiveState = ActiveState.Yes;
-				}
-				else
-				{
-					this.secondaryCultures[i].ActiveState = ActiveState.No;
-				}
-			}
-		}
-
-		protected override void UpdateDruidsIndex(string filter, Searcher.SearchingMode mode)
-		{
-			//	Construit l'index en fonction des ressources primaires.
-			this.druidsIndex.Clear();
-
-			if ((mode&Searcher.SearchingMode.CaseSensitive) == 0)
-			{
-				filter = Searcher.RemoveAccent(filter.ToLower());
-			}
-
-			Regex regex = null;
-			if ((mode&Searcher.SearchingMode.Jocker) != 0)
-			{
-				regex = RegexFactory.FromSimpleJoker(filter, RegexFactory.Options.None);
-			}
-
-			foreach (ResourceBundle.Field field in this.primaryBundle.Fields)
-			{
-				if (filter != "")
-				{
-					if ((mode&Searcher.SearchingMode.Jocker) != 0)
-					{
-						string text = field.Name;
-						if ((mode&Searcher.SearchingMode.CaseSensitive) == 0)
-						{
-							text = Searcher.RemoveAccent(text.ToLower());
-						}
-						if (!regex.IsMatch(text))  continue;
-					}
-					else
-					{
-						int index = Searcher.IndexOf(field.Name, filter, 0, mode);
-						if (index == -1)  continue;
-						if ((mode&Searcher.SearchingMode.AtBeginning) != 0 && index != 0)  continue;
-					}
-				}
-
-				Druid fullDruid = new Druid(field.Druid, this.primaryBundle.Module.Id);
-				this.druidsIndex.Add(fullDruid);
-			}
-		}
-
 		protected override void UpdateArray()
 		{
 			//	Met à jour tout le contenu du tableau.
-			this.array.TotalRows = this.druidsIndex.Count;
+			int index = this.access.AccessIndex;
+
+			this.array.TotalRows = this.access.AccessCount;
 
 			int first = this.array.FirstVisibleRow;
 			for (int i=0; i<this.array.LineCount; i++)
 			{
-				if (first+i < this.druidsIndex.Count)
+				if (first+i < this.access.AccessCount)
 				{
-					ResourceBundle.Field primaryField = this.primaryBundle[this.druidsIndex[first+i]];
-					ResourceBundle.Field secondaryField = (this.secondaryBundle == null) ? null : this.secondaryBundle[this.druidsIndex[first+i]];
-
-					this.array.SetLineString(0, first+i, primaryField.Name);
-					this.array.SetLineState(0, first+i, MyWidgets.StringList.CellState.Normal);
-					this.UpdateArrayField(1, first+i, primaryField, secondaryField);
-
-					if (this.secondaryBundle == null)
-					{
-						this.array.SetLineString(2, first+i, "");
-						this.array.SetLineState(2, first+i, MyWidgets.StringList.CellState.Disabled);
-					}
-					else
-					{
-						this.UpdateArrayField(2, first+i, secondaryField, primaryField);
-					}
+					this.UpdateArrayField(0, first+i, null, "Name");
+					this.UpdateArrayField(1, first+i, null, "String");
+					this.UpdateArrayField(2, first+i, this.secondaryCulture, (this.secondaryCulture == null) ? null : "String");
 				}
 				else
 				{
-					this.array.SetLineString(0, first+i, "");
-					this.array.SetLineString(1, first+i, "");
-					this.array.SetLineString(2, first+i, "");
-					this.array.SetLineState(0, first+i, MyWidgets.StringList.CellState.Disabled);
-					this.array.SetLineState(1, first+i, MyWidgets.StringList.CellState.Disabled);
-					this.array.SetLineState(2, first+i, MyWidgets.StringList.CellState.Disabled);
+					this.UpdateArrayField(0, first+i, null, null);
+					this.UpdateArrayField(1, first+i, null, null);
+					this.UpdateArrayField(2, first+i, null, null);
 				}
 			}
 		}
 
-		protected void UpdateArrayField(int column, int row, ResourceBundle.Field field, ResourceBundle.Field secondaryField)
+		protected override void SelectEdit(bool secondary)
 		{
-			if (field != null)
-			{
-				string text = field.AsString;
-				if (!string.IsNullOrEmpty(text))
-				{
-					this.array.SetLineString(column, row, text);
+			AbstractTextField edit = secondary ? this.secondaryEdit : this.primaryEdit;
 
-					Modifier.ModificationState state1, state2;
-					Modifier.GetModification(field, secondaryField, out state1, out state2);
-
-					MyWidgets.StringList.CellState state = Modifier.ModificationToCellState(state1);
-					if (this.array.GetLineState(column, row) != state)
-					{
-						this.array.SetLineState(column, row, state);
-						this.UpdateModifiers();
-					}
-
-					return;
-				}
-			}
-
-			this.array.SetLineString(column, row, "");
-			this.array.SetLineState(column, row, MyWidgets.StringList.CellState.Warning);
+			this.Window.MakeActive();
+			edit.Focus();
+			edit.SelectAll();
 		}
 
-		protected void UpdateModifiers()
-		{
-			//	Met à jour les indicateurs de modifications.
-			if (this.secondaryCultures == null)
-			{
-				return;
-			}
-
-			int sel = this.array.SelectedRow;
-			Druid druid = Druid.Empty;
-			if (sel != -1)
-			{
-				druid = this.druidsIndex[sel];
-			}
-
-			ResourceBundle defaultBundle = this.module.GetBundles(this.BundleType)[ResourceLevel.Default];
-
-			foreach (IconButtonMark button in this.secondaryCultures)
-			{
-				ResourceBundle secondaryBundle = this.module.GetCulture(button.Name, this.BundleType);
-
-				Modifier.ModificationState state1, state2;
-				Modifier.GetModification(defaultBundle, secondaryBundle, druid, out state1, out state2);
-
-				if (state2 == Modifier.ModificationState.Normal)
-				{
-					button.BulletColor = Color.Empty;
-				}
-				else
-				{
-					button.BulletColor = Abstract.GetBackgroundColor(state2, 1.0);
-				}
-			}
-		}
-
-		protected void UpdateEdit()
+		protected override void UpdateEdit()
 		{
 			//	Met à jour les lignes éditables en fonction de la sélection dans le tableau.
 			bool iic = this.ignoreChange;
 			this.ignoreChange = true;
 
-			int sel = this.array.SelectedRow;
+			int sel = this.access.AccessIndex;
 			int column = this.array.SelectedColumn;
 
-			if (sel >= this.druidsIndex.Count)
+			if (sel >= this.access.CultureCount)
 			{
 				sel = -1;
 				column = -1;
 			}
 
-			if ( sel == -1 )
+			if (sel == -1)
 			{
-				this.labelEdit.Enable = false;
-				this.primaryEdit.Enable = false;
-				this.secondaryEdit.Enable = false;
-				this.primaryAbout.Enable = false;
-				this.secondaryAbout.Enable = false;
-
-				this.labelEdit.Text = "";
-				this.primaryEdit.Text = "";
-				this.secondaryEdit.Text = "";
-				this.primaryAbout.Text = "";
-				this.secondaryAbout.Text = "";
+				this.SetTextField(this.labelEdit, 0, null, null);
+				this.SetTextField(this.primaryEdit, 0, null, null);
+				this.SetTextField(this.primaryAbout, 0, null, null);
+				this.SetTextField(this.secondaryEdit, 0, null, null);
+				this.SetTextField(this.secondaryAbout, 0, null, null);
 			}
 			else
 			{
-				this.labelEdit.Enable = true;
-				this.primaryEdit.Enable = true;
-				this.primaryAbout.Enable = true;
+				int index = this.access.AccessIndex;
 
-				Druid druid = this.druidsIndex[sel];
+				this.SetTextField(this.labelEdit, index, null, "Name");
+				this.SetTextField(this.primaryEdit, index, null, "String");
+				this.SetTextField(this.primaryAbout, index, null, "About");
 
-				this.SetTextField(this.labelEdit, this.primaryBundle[druid].Name);
-				this.SetTextField(this.primaryEdit, this.primaryBundle[druid].AsString);
-				this.SetTextField(this.primaryAbout, this.primaryBundle[druid].About);
-
-				if (this.secondaryBundle == null)
+				if (this.secondaryCulture == null)
 				{
-					this.secondaryEdit.Enable = false;
-					this.secondaryAbout.Enable = false;
-					this.secondaryEdit.Text = "";
-					this.secondaryAbout.Text = "";
+					this.SetTextField(this.secondaryEdit, 0, null, null);
+					this.SetTextField(this.secondaryAbout, 0, null, null);
 				}
 				else
 				{
-					this.secondaryEdit.Enable = true;
-					this.secondaryAbout.Enable = true;
-					this.SetTextField(this.secondaryEdit, this.secondaryBundle[druid].AsString);
-					this.SetTextField(this.secondaryAbout, this.secondaryBundle[druid].About);
+					this.SetTextField(this.secondaryEdit, index, this.secondaryCulture, "String");
+					this.SetTextField(this.secondaryAbout, index, this.secondaryCulture, "About");
 				}
 
 				AbstractTextField edit = null;
@@ -922,24 +250,18 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Met à jour les commandes en fonction de la ressource sélectionnée.
 			base.UpdateCommands();
 
-			int sel = this.array.SelectedRow;
-			int count = this.druidsIndex.Count;
+			int sel = this.access.AccessIndex;
+			int count = this.access.AccessCount;
 			bool build = (this.module.Mode == DesignerMode.Build);
 			bool search = this.module.MainWindow.DialogSearch.IsActionsEnabled;
-			bool newCulture = (this.module.GetBundles(this.BundleType).Count < Misc.Cultures.Length);
+			bool newCulture = (this.access.CultureCount < Misc.Cultures.Length);
 
 			bool all = false;
 			bool modified = false;
-			if (sel != -1 && this.secondaryBundle != null)
+			if (sel != -1 && this.secondaryCulture != null)
 			{
-				Druid druid = this.druidsIndex[sel];
-				all = this.module.Modifier.IsModificationAll(this.BundleType, druid);
-				ResourceBundle.Field field1 = this.primaryBundle[druid];
-				ResourceBundle.Field field2 = this.secondaryBundle[druid];
-				if (!field1.IsEmpty && !field2.IsEmpty)
-				{
-					modified = (field1.ModificationId > field2.ModificationId);
-				}
+				ResourceAccess.ModificationState state = this.access.GetModification(sel, this.secondaryCulture);
+				modified = (state != ResourceAccess.ModificationState.Normal);
 			}
 
 			this.GetCommandState("NewCulture").Enable = newCulture;
@@ -1004,52 +326,6 @@ namespace Epsitec.Common.Designer.Viewers
 			this.module.MainWindow.UpdateInfoCurrentModule();
 			this.module.MainWindow.UpdateInfoAccess();
 			this.module.MainWindow.UpdateInfoViewer();
-		}
-
-
-		public override string InfoAccessText
-		{
-			//	Donne le texte d'information sur l'accès en cours.
-			get
-			{
-				System.Text.StringBuilder builder = new System.Text.StringBuilder();
-
-				int sel = this.array.SelectedRow;
-				if (sel == -1)
-				{
-					builder.Append("-");
-				}
-				else
-				{
-					ResourceBundleCollection bundles = this.module.GetBundles(this.BundleType);
-					ResourceBundle bundle = bundles[ResourceLevel.Default];
-					ResourceBundle.Field field = bundle[this.druidsIndex[sel]];
-
-					builder.Append(field.Name);
-					builder.Append(": ");
-					builder.Append((sel+1).ToString());
-				}
-
-				builder.Append("/");
-				builder.Append(this.druidsIndex.Count.ToString());
-
-				if (this.druidsIndex.Count < this.InfoAccessTotalCount)
-				{
-					builder.Append(" (");
-					builder.Append(this.InfoAccessTotalCount.ToString());
-					builder.Append(")");
-				}
-
-				return builder.ToString();
-			}
-		}
-
-		protected override int InfoAccessTotalCount
-		{
-			get
-			{
-				return this.primaryBundle.FieldCount;
-			}
 		}
 
 		
@@ -1133,16 +409,6 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
-		void HandleSecondaryCultureClicked(object sender, MessageEventArgs e)
-		{
-			//	Un bouton pour changer de culture secondaire a été cliqué.
-			IconButtonMark button = sender as IconButtonMark;
-			this.UpdateSelectedCulture(button.Name);
-			this.UpdateArray();
-			this.UpdateEdit();
-			this.UpdateCommands();
-		}
-
 		void HandleArrayColumnsWidthChanged(object sender)
 		{
 			//	La largeur des colonnes a changé.
@@ -1164,6 +430,7 @@ namespace Epsitec.Common.Designer.Viewers
 		void HandleArraySelectedRowChanged(object sender)
 		{
 			//	La ligne sélectionnée a changé.
+			this.access.AccessIndex = this.array.SelectedRow;
 			this.UpdateEdit();
 			this.UpdateModifiers();
 			this.UpdateCommands();
@@ -1176,72 +443,34 @@ namespace Epsitec.Common.Designer.Viewers
 
 			AbstractTextField edit = sender as AbstractTextField;
 			string text = edit.Text;
-			int sel = this.array.SelectedRow;
-			Druid druid = this.druidsIndex[sel];
+			int sel = this.access.AccessIndex;
 
 			if (edit == this.labelEdit)
 			{
-				if (!Misc.IsValidLabel(ref text))
-				{
-					this.ignoreChange = true;
-					edit.Text = this.primaryBundle[this.druidsIndex[sel]].Name;
-					edit.SelectAll();
-					this.ignoreChange = false;
-
-					this.module.MainWindow.DialogError(Res.Strings.Error.InvalidLabel);
-					return;
-				}
-
-				this.ignoreChange = true;
-				edit.Text = text;
-				edit.SelectAll();
-				this.ignoreChange = false;
-
-				if (this.primaryBundle[this.druidsIndex[sel]].Name == text)  // label inchangé ?
-				{
-					return;
-				}
-
-				if (this.IsExistingName(text))
-				{
-					this.ignoreChange = true;
-					edit.Text = this.primaryBundle[this.druidsIndex[sel]].Name;
-					edit.SelectAll();
-					this.ignoreChange = false;
-
-					this.module.MainWindow.DialogError(Res.Strings.Error.NameAlreadyExist);
-					return;
-				}
-
-				this.module.Modifier.Rename(this.BundleType, druid, text);
-				this.array.SetLineString(0, sel, text);
+				this.UpdateFieldName(edit, sel);
 			}
 
 			if (edit == this.primaryEdit)
 			{
-				this.primaryBundle[druid].SetStringValue(text);
-				this.UpdateArrayField(1, sel, this.primaryBundle[druid], (this.secondaryBundle == null) ? null : this.secondaryBundle[druid]);
+				this.access.SetField(sel, null, "String", new ResourceAccess.Field(text));
+				this.UpdateArrayField(1, sel, null, text);
 			}
 
-			if (edit == this.secondaryEdit && this.secondaryBundle != null)
+			if (edit == this.secondaryEdit)
 			{
-				this.module.Modifier.CreateIfNecessary(this.BundleType, this.secondaryBundle, druid);
-				this.secondaryBundle[druid].SetStringValue(text);
-				this.UpdateArrayField(2, sel, this.secondaryBundle[druid], this.primaryBundle[druid]);
+				this.access.SetField(sel, this.secondaryCulture, "String", new ResourceAccess.Field(text));
+				this.UpdateArrayField(2, sel, this.secondaryCulture, text);
 			}
 
 			if (edit == this.primaryAbout)
 			{
-				this.primaryBundle[druid].SetAbout(text);
+				this.access.SetField(sel, null, "About", new ResourceAccess.Field(text));
 			}
 
-			if (edit == this.secondaryAbout && this.secondaryBundle != null)
+			if (edit == this.secondaryAbout)
 			{
-				this.module.Modifier.CreateIfNecessary(this.BundleType, this.secondaryBundle, druid);
-				this.secondaryBundle[druid].SetAbout(text);
+				this.access.SetField(sel, this.secondaryCulture, "About", new ResourceAccess.Field(text));
 			}
-
-			this.module.Modifier.IsDirty = true;
 		}
 
 		void HandleCursorChanged(object sender)
@@ -1253,10 +482,6 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
-		protected IconButtonMark			primaryCulture;
-		protected IconButtonMark[]			secondaryCultures;
-		protected ResourceBundle			primaryBundle;
-		protected ResourceBundle			secondaryBundle;
 		protected StaticText				labelStatic;
 		protected TextFieldEx				labelEdit;
 		protected TextFieldMulti			primaryEdit;

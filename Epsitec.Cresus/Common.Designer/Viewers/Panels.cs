@@ -12,7 +12,7 @@ namespace Epsitec.Common.Designer.Viewers
 	/// </summary>
 	public class Panels : Abstract
 	{
-		public Panels(Module module, PanelsContext context) : base(module, context)
+		public Panels(Module module, PanelsContext context, ResourceAccess access) : base(module, context, access)
 		{
 			int tabIndex = 0;
 
@@ -81,7 +81,7 @@ namespace Epsitec.Common.Designer.Viewers
 			container.MinWidth = 100;
 			container.Dock = DockStyle.Fill;
 
-			this.panelContainer = this.CreateEmptyPanel();
+			this.panelContainer = this.access.CreateEmptyPanel();
 			this.panelContainer.SetParent(container);
 
 			//	Le PanelEditor est par-dessus le UI.Panel.
@@ -139,28 +139,8 @@ namespace Epsitec.Common.Designer.Viewers
 			VSplitter splitter2 = new VSplitter(this);
 			splitter2.Dock = DockStyle.Right;
 
-			this.module.PanelsRead();
-
-			this.UpdateDruidsIndex("", Searcher.SearchingMode.None);
 			this.UpdateArray();
 			this.UpdateEdit();
-		}
-
-		private UI.Panel CreateEmptyPanel()
-		{
-			UI.Panel panel;
-			
-			panel = new UI.Panel();
-			panel.ChildrenLayoutMode = Widgets.Layouts.LayoutMode.Anchored;
-			//?panel.ChildrenLayoutMode = Widgets.Layouts.LayoutMode.Docked;
-			//?panel.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
-			panel.ContainerLayoutMode = ContainerLayoutMode.VerticalFlow;
-			panel.PreferredSize = new Size(200, 200);
-			panel.Anchor = AnchorStyles.BottomLeft;
-			panel.Padding = new Margins(20, 20, 20, 20);
-			panel.DrawDesignerFrame = true;
-			
-			return panel;
 		}
 
 		protected override void Dispose(bool disposing)
@@ -178,11 +158,19 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
-		public override Module.BundleType BundleType
+		protected override ResourceAccess.Type ResourceType
 		{
 			get
 			{
-				return Module.BundleType.Panels;
+				return ResourceAccess.Type.Panels;
+			}
+		}
+
+		public override ResourceAccess.Type BundleType
+		{
+			get
+			{
+				return ResourceAccess.Type.Panels;
 			}
 		}
 
@@ -207,115 +195,6 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
-		public override void DoSearch(string search, Searcher.SearchingMode mode)
-		{
-			//	Effectue une recherche.
-		}
-
-		public override void DoCount(string search, Searcher.SearchingMode mode)
-		{
-			//	Effectue un comptage.
-		}
-
-		public override void DoReplace(string search, string replace, Searcher.SearchingMode mode)
-		{
-			//	Effectue un remplacement.
-		}
-
-		public override void DoReplaceAll(string search, string replace, Searcher.SearchingMode mode)
-		{
-			//	Effectue un 'remplacer tout'.
-		}
-
-		public override void DoModification(string name)
-		{
-			//	Change la ressource modifiée visible.
-		}
-
-		public override void DoDelete()
-		{
-			//	Supprime la ressource sélectionnée.
-			int sel = this.array.SelectedRow;
-			if ( sel == -1 )  return;
-
-			Druid druid = this.druidsIndex[sel];
-			this.module.PanelDelete(druid);
-
-			this.druidsIndex.RemoveAt(sel);
-			this.UpdateArray();
-
-			sel = System.Math.Min(sel, this.druidsIndex.Count-1);
-			this.array.SelectedRow = sel;
-			this.array.ShowSelectedRow();
-			this.UpdateCommands();
-			this.module.Modifier.IsDirty = true;
-		}
-
-		public override void DoDuplicate(bool duplicate)
-		{
-			//	Duplique la ressource sélectionnée.
-			int sel = this.array.SelectedRow;
-			if ( sel == -1 )  return;
-			int newSel = sel+1;
-
-			Druid druid = this.druidsIndex[sel];
-			int index = this.module.PanelIndex(druid);
-			string newName = this.GetDuplicateName(this.module.PanelName(index));
-			Druid newDruid = this.module.PanelCreate(newName, index+1);
-
-			this.druidsIndex.Insert(newSel, newDruid);
-			this.UpdateArray();
-
-			this.array.SelectedRow = newSel;
-			this.array.ShowSelectedRow();
-			this.UpdateCommands();
-			this.module.Modifier.IsDirty = true;
-		}
-
-		public override void DoMove(int direction)
-		{
-			//	Déplace la ressource sélectionnée.
-			int sel = this.array.SelectedRow;
-			if ( sel == -1 )  return;
-
-			int newSel = sel+direction;
-			System.Diagnostics.Debug.Assert(newSel >= 0 && newSel < this.druidsIndex.Count);
-
-			Druid druid1 = this.druidsIndex[sel];
-			Druid druid2 = this.druidsIndex[newSel];
-
-			this.module.PanelMove(druid1, this.module.PanelIndex(druid2));
-
-			this.druidsIndex.RemoveAt(sel);
-			this.druidsIndex.Insert(newSel, druid1);
-			this.UpdateArray();
-
-			this.array.SelectedRow = newSel;
-			this.array.ShowSelectedRow();
-			this.UpdateCommands();
-			this.module.Modifier.IsDirty = true;
-		}
-
-		public override void DoNewCulture()
-		{
-			//	Crée une nouvelle culture.
-		}
-
-		public override void DoDeleteCulture()
-		{
-			//	Supprime la culture courante.
-		}
-
-		public override void DoClipboard(string name)
-		{
-			//	Effectue une action avec le bloc-notes.
-		}
-
-		public override void DoFont(string name)
-		{
-			//	Effectue une modification de typographie.
-		}
-
 		public override void DoTool(string name)
 		{
 			//	Choix de l'outil.
@@ -329,7 +208,7 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Exécute une commande.
 			if (name == "PanelRun")
 			{
-				this.module.RunPanel(this.array.SelectedRow);
+				this.module.RunPanel(this.access.AccessIndex);
 				return;
 			}
 
@@ -347,118 +226,57 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
-		protected override void UpdateDruidsIndex(string filter, Searcher.SearchingMode mode)
-		{
-			//	Construit l'index en fonction des ressources primaires.
-			this.druidsIndex.Clear();
-
-			if ((mode&Searcher.SearchingMode.CaseSensitive) == 0)
-			{
-				filter = Searcher.RemoveAccent(filter.ToLower());
-			}
-
-			Regex regex = null;
-			if ((mode&Searcher.SearchingMode.Jocker) != 0)
-			{
-				regex = RegexFactory.FromSimpleJoker(filter, RegexFactory.Options.None);
-			}
-
-			for (int i=0; i<this.module.PanelsCount; i++)
-			{
-				string name = this.module.PanelName(i);
-
-				if (filter != "")
-				{
-					if ((mode&Searcher.SearchingMode.Jocker) != 0)
-					{
-						string text = name;
-						if ((mode&Searcher.SearchingMode.CaseSensitive) == 0)
-						{
-							text = Searcher.RemoveAccent(text.ToLower());
-						}
-						if (!regex.IsMatch(text))  continue;
-					}
-					else
-					{
-						int index = Searcher.IndexOf(name, filter, 0, mode);
-						if (index == -1)  continue;
-						if ((mode&Searcher.SearchingMode.AtBeginning) != 0 && index != 0)  continue;
-					}
-				}
-
-				this.druidsIndex.Add(this.module.PanelDruid(i));
-			}
-		}
-
 		protected override void UpdateArray()
 		{
 			//	Met à jour tout le contenu du tableau.
-			this.array.TotalRows = this.druidsIndex.Count;
+			this.array.TotalRows = this.access.AccessCount;
 
 			int first = this.array.FirstVisibleRow;
 			for (int i=0; i<this.array.LineCount; i++)
 			{
-				if (first+i < this.druidsIndex.Count)
+				if (first+i < this.access.AccessCount)
 				{
-					Druid druid = this.druidsIndex[first+i];
-					int index = this.module.PanelIndex(druid);
-
-					this.array.SetLineString(0, first+i, this.module.PanelName(index));
-					this.array.SetLineState(0, first+i, MyWidgets.StringList.CellState.Normal);
+					this.UpdateArrayField(0, first+i, null, "Name");
 				}
 				else
 				{
-					this.array.SetLineString(0, first+i, "");
-					this.array.SetLineState(0, first+i, MyWidgets.StringList.CellState.Disabled);
+					this.UpdateArrayField(0, first+i, null, null);
 				}
 			}
 		}
 
-		protected void UpdateEdit()
+		protected override void UpdateEdit()
 		{
 			//	Met à jour les lignes éditables en fonction de la sélection dans le tableau.
 			bool iic = this.ignoreChange;
 			this.ignoreChange = true;
 
-			int sel = this.array.SelectedRow;
+			int sel = this.access.AccessIndex;
 
-			if (sel >= this.druidsIndex.Count)
+			if (sel >= this.access.AccessCount)
 			{
 				sel = -1;
 			}
 
 			if (this.panelContainer != null)
 			{
-				this.panelContainer.SetParent (null);
+				this.panelContainer.SetParent(null);
 				this.panelContainer = null;
 			}
 			
 			if (sel == -1)
 			{
-				this.labelEdit.Enable = false;
-				this.labelEdit.Text = "";
+				this.SetTextField(this.labelEdit, 0, null, null);
 			}
 			else
 			{
-				Druid druid = this.druidsIndex[sel];
-				int index = this.module.PanelIndex(druid);
-				string label = this.module.PanelName(index);
-				ResourceBundle bundle = this.module.PanelBundle(index);
-				UI.Panel newPanel = Panels.GetPanel(bundle);
-
-				if (newPanel == null)
-				{
-					newPanel = this.CreateEmptyPanel ();
-					Panels.SetPanel(bundle, newPanel);
-				}
-
-				this.panelContainer = newPanel;
+				this.panelContainer = this.access.NewPanel(sel);
 				this.panelContainer.SetParent(this.panelEditor.Parent);
 				this.panelContainer.ZOrder = this.panelEditor.ZOrder+1;
 				this.panelEditor.Panel = this.panelContainer;
-				
-				this.labelEdit.Enable = true;
-				this.labelEdit.Text = label;
+
+				int index = this.access.AccessIndex;
+				this.SetTextField(this.labelEdit, index, null, "Name");
 				this.labelEdit.Focus();
 				this.labelEdit.SelectAll();
 			}
@@ -482,8 +300,8 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Met à jour les commandes en fonction de la ressource sélectionnée.
 			base.UpdateCommands();
 
-			int sel = this.array.SelectedRow;
-			int count = this.druidsIndex.Count;
+			int sel = this.access.AccessIndex;
+			int count = this.access.AccessCount;
 			bool build = (this.module.Mode == DesignerMode.Build);
 
 			this.GetCommandState("NewCulture").Enable = false;
@@ -560,49 +378,6 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
-		public override string InfoAccessText
-		{
-			//	Donne le texte d'information sur l'accès en cours.
-			get
-			{
-				System.Text.StringBuilder builder = new System.Text.StringBuilder();
-
-				int sel = this.array.SelectedRow;
-				if (sel == -1)
-				{
-					builder.Append("-");
-				}
-				else
-				{
-					int index = this.module.PanelIndex(this.druidsIndex[sel]);
-					builder.Append(this.module.PanelName(index));
-					builder.Append(": ");
-					builder.Append((sel+1).ToString());
-				}
-
-				builder.Append("/");
-				builder.Append(this.druidsIndex.Count.ToString());
-
-				if (this.druidsIndex.Count < this.InfoAccessTotalCount)
-				{
-					builder.Append(" (");
-					builder.Append(this.InfoAccessTotalCount.ToString());
-					builder.Append(")");
-				}
-
-				return builder.ToString();
-			}
-		}
-
-		protected override int InfoAccessTotalCount
-		{
-			get
-			{
-				return this.module.PanelsCount;
-			}
-		}
-
-
 		protected void CreateCultureButtons()
 		{
 			//	Crée tous les boutons pour les cultures.
@@ -670,55 +445,6 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
-		protected string GetDuplicateName(string baseName)
-		{
-			//	Retourne le nom à utiliser lorsqu'un nom existant est dupliqué.
-			int numberLength = 0;
-			while (baseName.Length > 0)
-			{
-				char last = baseName[baseName.Length-1-numberLength];
-				if (last >= '0' && last <= '9')
-				{
-					numberLength ++;
-				}
-				else
-				{
-					break;
-				}
-			}
-
-			int nextNumber = 2;
-			if (numberLength > 0)
-			{
-				nextNumber = int.Parse(baseName.Substring(baseName.Length-numberLength))+1;
-				baseName = baseName.Substring(0, baseName.Length-numberLength);
-			}
-
-			string newName = baseName;
-			for (int i=nextNumber; i<nextNumber+100; i++)
-			{
-				newName = string.Concat(baseName, i.ToString(System.Globalization.CultureInfo.InvariantCulture));
-				if ( !this.IsExistingName(newName) )  break;
-			}
-
-			return newName;
-		}
-
-		protected bool IsExistingName(string baseName)
-		{
-			//	Indique si un nom existe.
-			int total = this.module.PanelsCount;
-			for (int i=0; i<total; i++)
-			{
-				if (baseName == this.module.PanelName(i))
-				{
-					return true;
-				}
-			}
-			return false;
-		}
-
-
 		#region Proxies
 		protected void DefineProxies(IEnumerable<Widget> widgets)
 		{
@@ -764,9 +490,10 @@ namespace Epsitec.Common.Designer.Viewers
 		void HandleArraySelectedRowChanged(object sender)
 		{
 			//	La ligne sélectionnée a changé.
+			this.access.AccessIndex = this.array.SelectedRow;
 			this.UpdateEdit();
 			this.UpdateCommands();
-			this.panelEditor.IsEditEnabled = (this.array.SelectedRow != -1);
+			this.panelEditor.IsEditEnabled = (this.access.AccessIndex != -1);
 			this.DefineProxies(this.panelEditor.SelectedObjects);
 		}
 
@@ -776,15 +503,10 @@ namespace Epsitec.Common.Designer.Viewers
 			if ( this.ignoreChange )  return;
 
 			AbstractTextField edit = sender as AbstractTextField;
-			string newName = edit.Text;
-			int sel = this.array.SelectedRow;
-			Druid druid = this.druidsIndex[sel];
-
-			this.module.PanelRename(druid, newName);
+			int sel = this.access.AccessIndex;
+			this.UpdateFieldName(edit, sel);
 
 			this.UpdateArray();
-
-			this.module.Modifier.IsDirty = true;
 		}
 
 		void HandlePanelEditorChildrenAdded(object sender)
@@ -811,7 +533,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		public static void SetPanel(DependencyObject obj, UI.Panel panel)
 		{
-			obj.SetValue (Panels.PanelProperty, panel);
+			obj.SetValue(Panels.PanelProperty, panel);
 		}
 
 		public static UI.Panel GetPanel(DependencyObject obj)

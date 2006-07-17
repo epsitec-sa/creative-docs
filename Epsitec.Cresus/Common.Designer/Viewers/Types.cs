@@ -11,7 +11,7 @@ namespace Epsitec.Common.Designer.Viewers
 	/// </summary>
 	public class Types : Abstract
 	{
-		public Types(Module module, PanelsContext context) : base(module, context)
+		public Types(Module module, PanelsContext context, ResourceAccess access) : base(module, context, access)
 		{
 			int tabIndex = 0;
 
@@ -75,74 +75,22 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
-		public override Module.BundleType BundleType
+		protected override ResourceAccess.Type ResourceType
 		{
 			get
 			{
-				return Module.BundleType.Types;
+				return ResourceAccess.Type.Types;
 			}
 		}
 
-
-		public override void DoSearch(string search, Searcher.SearchingMode mode)
+		public override ResourceAccess.Type BundleType
 		{
-			//	Effectue une recherche.
+			get
+			{
+				return ResourceAccess.Type.Types;
+			}
 		}
 
-		public override void DoCount(string search, Searcher.SearchingMode mode)
-		{
-			//	Effectue un comptage.
-		}
-
-		public override void DoReplace(string search, string replace, Searcher.SearchingMode mode)
-		{
-			//	Effectue un remplacement.
-		}
-
-		public override void DoReplaceAll(string search, string replace, Searcher.SearchingMode mode)
-		{
-			//	Effectue un 'remplacer tout'.
-		}
-
-		public override void DoModification(string name)
-		{
-			//	Change la ressource modifiée visible.
-		}
-
-		public override void DoDelete()
-		{
-			//	Supprime la ressource sélectionnée.
-		}
-
-		public override void DoDuplicate(bool duplicate)
-		{
-			//	Duplique la ressource sélectionnée.
-		}
-
-		public override void DoMove(int direction)
-		{
-			//	Déplace la ressource sélectionnée.
-		}
-
-		public override void DoNewCulture()
-		{
-			//	Crée une nouvelle culture.
-		}
-
-		public override void DoDeleteCulture()
-		{
-			//	Supprime la culture courante.
-		}
-
-		public override void DoClipboard(string name)
-		{
-			//	Effectue une action avec le bloc-notes.
-		}
-
-		public override void DoFont(string name)
-		{
-			//	Effectue une modification de typographie.
-		}
 
 
 		public override void UpdateCommands()
@@ -150,8 +98,8 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Met à jour les commandes en fonction de la ressource sélectionnée.
 			base.UpdateCommands();
 
-			int sel = this.array.SelectedRow;
-			int count = this.druidsIndex.Count;
+			int sel = this.access.AccessIndex;
+			int count = this.access.AccessCount;
 			bool build = (this.module.Mode == DesignerMode.Build);
 
 			this.GetCommandState("NewCulture").Enable = false;

@@ -13,11 +13,13 @@ namespace Epsitec.Common.Designer
 	{
 		public enum Type
 		{
+			Unknow,
 			Strings,
 			Captions,
 			Commands,
 			Types,
 			Panels,
+			Scripts,
 		}
 
 		public enum ModificationState
@@ -40,23 +42,31 @@ namespace Epsitec.Common.Designer
 		}
 
 
+		public Type ResourceType
+		{
+			get
+			{
+				return this.type;
+			}
+		}
+
 		public void Load()
 		{
 			//	Charge les ressources.
 			if (this.IsBundlesType)
 			{
 				this.LoadBundles();
-				this.SetFilterBundles("", Searcher.SearchingMode.None);
 			}
 
 			if (this.type == Type.Panels)
 			{
 				this.LoadPanels();
-				this.SetFilterPanels("", Searcher.SearchingMode.None);
 			}
 
+			this.SetFilter("", Searcher.SearchingMode.None);
+
 			this.CacheClear();
-			this.isDirty = false;
+			this.IsDirty = false;
 		}
 
 		public void Save()
@@ -72,7 +82,7 @@ namespace Epsitec.Common.Designer
 				this.SavePanels();
 			}
 
-			this.isDirty = false;
+			this.IsDirty = false;
 		}
 
 		public bool IsDirty
@@ -82,17 +92,25 @@ namespace Epsitec.Common.Designer
 			{
 				return this.isDirty;
 			}
+			set
+			{
+				if (this.isDirty != value)
+				{
+					this.isDirty = value;
+					this.OnDirtyChanged();
+				}
+			}
 		}
 
 
-		public int Duplicate(int index, string newName, bool duplicateContent)
+		public void Duplicate(string newName, bool duplicateContent)
 		{
 			//	Duplique une ressource.
 			Druid newDruid = Druid.Empty;
 
 			if (this.IsBundlesType)
 			{
-				Druid actualDruid = this.druidsIndex[index];
+				Druid actualDruid = this.druidsIndex[this.accessIndex];
 				int aIndex = this.GetAbsoluteIndex(actualDruid);
 				newDruid = this.CreateUniqueDruid();
 
@@ -145,24 +163,23 @@ namespace Epsitec.Common.Designer
 
 				//	TODO: gérer duplicateContent
 
-				this.panelsList.Insert(index, bundle);
+				this.panelsList.Insert(this.accessIndex, bundle);
 				this.panelsToCreate.Add(bundle);
 			}
 
-			this.druidsIndex.Insert(index+1, newDruid);
-			this.accessIndex = index+1;
+			this.druidsIndex.Insert(this.accessIndex+1, newDruid);
+			this.accessIndex ++;
 			this.CacheClear();
 
-			this.isDirty = true;
-			return this.accessIndex;
+			this.IsDirty = true;
 		}
 
-		public int Delete(int index)
+		public void Delete()
 		{
 			//	Supprime une ressource dans toutes les cultures.
 			if (this.IsBundlesType)
 			{
-				Druid druid = this.druidsIndex[index];
+				Druid druid = this.druidsIndex[this.accessIndex];
 
 				foreach (ResourceBundle bundle in this.bundles)
 				{
@@ -176,8 +193,7 @@ namespace Epsitec.Common.Designer
 
 			if (this.type == Type.Panels)
 			{
-				ResourceBundle bundle = this.PanelBundle(index);
-				System.Diagnostics.Debug.Assert(index != -1);
+				ResourceBundle bundle = this.PanelBundle(this.accessIndex);
 
 				this.panelsList.Remove(bundle);
 
@@ -193,29 +209,22 @@ namespace Epsitec.Common.Designer
 				}
 			}
 
-			this.druidsIndex.RemoveAt(index);
+			this.druidsIndex.RemoveAt(this.accessIndex);
 
-			if (index >= this.druidsIndex.Count)
+			if (this.accessIndex >= this.druidsIndex.Count)
 			{
-				index--;
+				this.accessIndex --;
 			}
-			this.accessIndex = index;
 
 			this.CacheClear();
 
-			this.isDirty = true;
-			return this.accessIndex;
+			this.IsDirty = true;
 		}
 
-		public void Move(int index, int direction)
+		public void Move(int direction)
 		{
 			//	Déplace une ressource.
-			if (index+direction < 0 || index+direction >= this.AccessCount)
-			{
-				return;
-			}
-
-			Druid druid = this.druidsIndex[index];
+			Druid druid = this.druidsIndex[this.accessIndex];
 			int aIndex = this.GetAbsoluteIndex(druid);
 			System.Diagnostics.Debug.Assert(aIndex != -1);
 
@@ -233,19 +242,25 @@ namespace Epsitec.Common.Designer
 				this.panelsList.Insert(aIndex+direction, bundle);
 			}
 
-			this.druidsIndex[index] = this.druidsIndex[index+direction];
-			this.druidsIndex[index+direction] = druid;
+			this.druidsIndex[this.accessIndex] = this.druidsIndex[this.accessIndex+direction];
+			this.druidsIndex[this.accessIndex+direction] = druid;
 
 			this.accessIndex += direction;
 			this.CacheClear();
 
-			this.isDirty = true;
+			this.IsDirty = true;
 		}
 
 
 		public void SetFilter(string filter, Searcher.SearchingMode mode)
 		{
 			//	Construit l'index en fonction des ressources primaires.
+			Druid druid = Druid.Empty;
+			if (this.accessIndex < this.druidsIndex.Count)
+			{
+				druid = this.druidsIndex[this.accessIndex];
+			}
+
 			if (this.IsBundlesType)
 			{
 				this.SetFilterBundles(filter, mode);
@@ -255,16 +270,23 @@ namespace Epsitec.Common.Designer
 			{
 				this.SetFilterPanels(filter, mode);
 			}
+
+			int index = this.druidsIndex.IndexOf(druid);
+			if (index == -1)
+			{
+				index = 0;
+			}
+			this.accessIndex = index;
 		}
 
-		public int AccessCount
+		public int TotalCount
 		{
 			//	Retourne le nombre de données accessibles.
 			get
 			{
 				if (this.IsBundlesType)
 				{
-					return this.druidsIndex.Count;
+					return this.primaryBundle.FieldCount;
 				}
 
 				if (this.type == Type.Panels)
@@ -273,6 +295,31 @@ namespace Epsitec.Common.Designer
 				}
 
 				return 0;
+			}
+		}
+
+		public int AccessCount
+		{
+			//	Retourne le nombre de données accessibles.
+			get
+			{
+				return this.druidsIndex.Count;
+			}
+		}
+
+		public int AccessIndex
+		{
+			//	Index de l'accès en cours.
+			get
+			{
+				return this.accessIndex;
+			}
+
+			set
+			{
+				value = System.Math.Max(value, 0);
+				value = System.Math.Min(value, this.druidsIndex.Count-1);
+				this.accessIndex = value;
 			}
 		}
 
@@ -352,6 +399,66 @@ namespace Epsitec.Common.Designer
 			}
 
 			return null;
+		}
+
+		public bool IsExistingName(string name)
+		{
+			//	Vérifie si un futur "Name" existe déjà.
+			if (this.IsBundlesType)
+			{
+				ResourceBundle.Field field = this.primaryBundle[name];
+				return (field != null && field.Name != null);
+			}
+
+			if (this.type == Type.Panels)
+			{
+				foreach (ResourceBundle bundle in this.panelsList)
+				{
+					if (bundle.Caption == name)
+					{
+						return true;
+					}
+				}
+			}
+
+			return false;
+		}
+
+		public string GetDuplicateName(string baseName)
+		{
+			//	Retourne le nom à utiliser lorsqu'un nom existant est dupliqué.
+			int numberLength = 0;
+			while (baseName.Length > 0)
+			{
+				char last = baseName[baseName.Length-1-numberLength];
+				if (last >= '0' && last <= '9')
+				{
+					numberLength++;
+				}
+				else
+				{
+					break;
+				}
+			}
+
+			int nextNumber = 2;
+			if (numberLength > 0)
+			{
+				nextNumber = int.Parse(baseName.Substring(baseName.Length-numberLength))+1;
+				baseName = baseName.Substring(0, baseName.Length-numberLength);
+			}
+
+			string newName = baseName;
+			for (int i=nextNumber; i<nextNumber+100; i++)
+			{
+				newName = string.Concat(baseName, i.ToString(System.Globalization.CultureInfo.InvariantCulture));
+				if (!this.IsExistingName(newName))
+				{
+					break;
+				}
+			}
+
+			return newName;
 		}
 
 		public Field GetField(int index, string cultureName, string fieldName)
@@ -487,16 +594,20 @@ namespace Epsitec.Common.Designer
 					{
 						dst.Add(s);
 					}
+
+					this.accessField.SetStringValue(this.accessCaption.SerializeToString());
 				}
 
 				if (fieldName == ResourceAccess.NameCaptions[2])
 				{
 					this.accessCaption.Description = field.String;
+					this.accessField.SetStringValue(this.accessCaption.SerializeToString());
 				}
 
 				if (fieldName == ResourceAccess.NameCaptions[3])
 				{
 					this.accessCaption.Icon = field.String;
+					this.accessField.SetStringValue(this.accessCaption.SerializeToString());
 				}
 
 				if (fieldName == ResourceAccess.NameCaptions[4])
@@ -524,29 +635,50 @@ namespace Epsitec.Common.Designer
 				}
 			}
 
-			this.isDirty = true;
+			this.IsDirty = true;
+		}
+
+		public static MyWidgets.StringList.CellState CellState(ModificationState state)
+		{
+			MyWidgets.StringList.CellState cs = MyWidgets.StringList.CellState.Normal;
+
+			switch (state)
+			{
+				case ResourceAccess.ModificationState.Empty:
+					cs = MyWidgets.StringList.CellState.Warning;
+					break;
+
+				case ResourceAccess.ModificationState.Modified:
+					cs = MyWidgets.StringList.CellState.Modified;
+					break;
+			}
+
+			return cs;
 		}
 
 		public ModificationState GetModification(int index, string cultureName)
 		{
 			//	Donne l'état 'modifié'.
-			this.CacheResource(index, cultureName);
-
-			if (this.IsBundlesType)
+			if (index != -1)
 			{
-				if (this.accessField == null || string.IsNullOrEmpty(this.accessField.AsString))
-				{
-					return ModificationState.Empty;
-				}
+				this.CacheResource(index, cultureName);
 
-				if (this.accessBundle != this.primaryBundle)  // culture secondaire ?
+				if (this.IsBundlesType)
 				{
-					Druid druid = this.druidsIndex[this.accessIndex];
-					ResourceBundle.Field primaryField = this.primaryBundle[druid];
-
-					if (primaryField.ModificationId > this.accessField.ModificationId)
+					if (this.accessField == null || string.IsNullOrEmpty(this.accessField.AsString))
 					{
-						return ModificationState.Modified;
+						return ModificationState.Empty;
+					}
+
+					if (this.accessBundle != this.primaryBundle)  // culture secondaire ?
+					{
+						Druid druid = this.druidsIndex[index];
+						ResourceBundle.Field primaryField = this.primaryBundle[druid];
+
+						if (primaryField.ModificationId > this.accessField.ModificationId)
+						{
+							return ModificationState.Modified;
+						}
 					}
 				}
 			}
@@ -554,7 +686,7 @@ namespace Epsitec.Common.Designer
 			return ModificationState.Normal;
 		}
 
-		public void ClearModification(int index, string cultureName)
+		public void ModificationClear(int index, string cultureName)
 		{
 			//	Considère une ressource comme 'à jour' dans une culture.
 			this.CacheResource(index, cultureName);
@@ -568,7 +700,7 @@ namespace Epsitec.Common.Designer
 				}
 			}
 
-			this.isDirty = true;
+			this.IsDirty = true;
 		}
 
 		public void ModificationSetAll(int index)
@@ -583,7 +715,7 @@ namespace Epsitec.Common.Designer
 				this.CacheClear();
 			}
 
-			this.isDirty = true;
+			this.IsDirty = true;
 		}
 
 		public bool IsModificationAll(int index)
@@ -633,12 +765,12 @@ namespace Epsitec.Common.Designer
 
 				if (this.accessBundle == null || index < 0 || index >= this.druidsIndex.Count)
 				{
-					this.accessIndex = -1;
+					this.accessCached = -1;
 					return;
 				}
 
 				//	Met en cache le ResourceBundle.Field.
-				if (this.accessIndex != index || this.accessField == null)
+				if (this.accessCached != index || this.accessField == null)
 				{
 					Druid druid = this.druidsIndex[index];
 					this.accessField = this.accessBundle[druid];
@@ -647,7 +779,7 @@ namespace Epsitec.Common.Designer
 				//	Met en cache le Caption.
 				if (this.type == Type.Captions)
 				{
-					if (this.accessIndex != index || this.accessCaption == null)
+					if (this.accessCached != index || this.accessCaption == null)
 					{
 						this.accessCaption = new Common.Types.Caption();
 
@@ -663,7 +795,7 @@ namespace Epsitec.Common.Designer
 				}
 			}
 
-			this.accessIndex = index;
+			this.accessCached = index;
 		}
 
 		protected void CacheClear()
@@ -674,7 +806,7 @@ namespace Epsitec.Common.Designer
 				this.accessCulture = "?";  // nom différent de null, d'une chaîne vide ou d'un nom existant
 				this.accessField = null;
 				this.accessCaption = null;
-				this.accessIndex = -1;
+				this.accessCached = -1;
 			}
 		}
 
@@ -703,15 +835,76 @@ namespace Epsitec.Common.Designer
 		protected static Field.Type[] TypePanels = { Field.Type.String, Field.Type.Bundle };
 
 
-		public bool IsExistingCulture(string name)
+		public int CultureCount
+		{
+			//	Retourne le nombre de cultures.
+			get
+			{
+				return this.bundles.Count;
+			}
+		}
+
+		public ResourceBundle GetCulture(string cultureName)
+		{
+			//	Cherche le bundle d'une culture.
+			System.Diagnostics.Debug.Assert(cultureName.Length == 2);
+			for (int b=0; b<bundles.Count; b++)
+			{
+				ResourceBundle bundle = bundles[b];
+				if (Misc.CultureBaseName(bundle.Culture) == cultureName)
+				{
+					return bundle;
+				}
+			}
+			return null;
+		}
+
+		public string GetBaseCultureName()
+		{
+			//	Retourne le nom de la culture de base.
+			if (this.IsBundlesType)
+			{
+				return this.primaryBundle.Culture.Name;
+			}
+
+			return null;
+		}
+
+		public List<string> GetSecondaryCultureNames()
+		{
+			//	Retourne la liste des cultures secondaires, triés par ordre alphabétique.
+			List<string> list = new List<string>();
+
+			if (this.IsBundlesType)
+			{
+				if (this.bundles.Count > 1)
+				{
+					for (int b=0; b<this.bundles.Count; b++)
+					{
+						ResourceBundle bundle = this.bundles[b];
+						if (bundle != this.primaryBundle)
+						{
+							list.Add(bundle.Culture.Name);
+						}
+					}
+
+					list.Sort();
+				}
+			}
+
+			return list;
+		}
+
+		public bool IsExistingCulture(string cultureName)
 		{
 			//	Indique si une culture donnée existe.
+			System.Diagnostics.Debug.Assert(cultureName.Length == 2);
 			if (this.IsBundlesType)
 			{
 				for (int b=0; b<this.bundles.Count; b++)
 				{
 					ResourceBundle bundle = this.bundles[b];
-					if (name == bundle.Culture.Name)
+					if (cultureName == bundle.Culture.Name)
 					{
 						return true;
 					}
@@ -723,6 +916,7 @@ namespace Epsitec.Common.Designer
 		public void CreateCulture(string cultureName)
 		{
 			//	Crée un nouveau bundle pour une culture donnée.
+			System.Diagnostics.Debug.Assert(cultureName.Length == 2);
 			if (this.IsBundlesType)
 			{
 				string prefix = this.resourceManager.ActivePrefix;
@@ -739,6 +933,7 @@ namespace Epsitec.Common.Designer
 		public void DeleteCulture(string cultureName)
 		{
 			//	Supprime une culture.
+			System.Diagnostics.Debug.Assert(cultureName.Length == 2);
 			if (this.IsBundlesType)
 			{
 				ResourceBundle bundle = this.GetCulture(cultureName);
@@ -748,22 +943,6 @@ namespace Epsitec.Common.Designer
 					this.LoadBundles();
 				}
 			}
-		}
-
-
-
-		protected ResourceBundle GetCulture(string cultureName)
-		{
-			//	Cherche le bundle d'une culture.
-			for (int b=0; b<bundles.Count; b++)
-			{
-				ResourceBundle bundle = bundles[b];
-				if (Misc.CultureName(bundle.Culture) == cultureName)
-				{
-					return bundle;
-				}
-			}
-			return null;
 		}
 
 
@@ -832,7 +1011,7 @@ namespace Epsitec.Common.Designer
 
 			foreach (ResourceBundle.Field field in this.primaryBundle.Fields)
 			{
-				if (!this.HasFixFilter(field.Name))
+				if (this.HasFixFilter(field.Name))
 				{
 					continue;
 				}
@@ -1085,6 +1264,37 @@ namespace Epsitec.Common.Designer
 			this.panelsToDelete.Clear();
 		}
 
+		public UI.Panel NewPanel(int index)
+		{
+			//	Crée le UI.Panel associé à une ressource.
+			ResourceBundle bundle = this.PanelBundle(index);
+
+			UI.Panel newPanel = Viewers.Panels.GetPanel(bundle);
+
+			if (newPanel == null)
+			{
+				newPanel = this.CreateEmptyPanel();
+				Viewers.Panels.SetPanel(bundle, newPanel);
+			}
+
+			return newPanel;
+		}
+
+		public UI.Panel CreateEmptyPanel()
+		{
+			UI.Panel panel = new UI.Panel();
+			panel.ChildrenLayoutMode = Widgets.Layouts.LayoutMode.Anchored;
+			//?panel.ChildrenLayoutMode = Widgets.Layouts.LayoutMode.Docked;
+			//?panel.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
+			panel.ContainerLayoutMode = ContainerLayoutMode.VerticalFlow;
+			panel.PreferredSize = new Size(200, 200);
+			panel.Anchor = AnchorStyles.BottomLeft;
+			panel.Padding = new Margins(20, 20, 20, 20);
+			panel.DrawDesignerFrame = true;
+
+			return panel;
+		}
+
 		protected ResourceBundle PanelBundle(int index)
 		{
 			//	Donne le bundle d'un panneau en fonction de l'index du Druid.
@@ -1158,7 +1368,8 @@ namespace Epsitec.Common.Designer
 			//	Ajoute le filtre fixe si nécessaire.
 			if (!this.HasFixFilter(name))
 			{
-				return this.FixFilter + name;
+				string fix = this.FixFilter;
+				return (fix == null) ? name : fix+name;
 			}
 
 			return name;
@@ -1287,6 +1498,19 @@ namespace Epsitec.Common.Designer
 		#endregion
 
 
+		#region Events handler
+		protected virtual void OnDirtyChanged()
+		{
+			if (this.DirtyChanged != null)  // qq'un écoute ?
+			{
+				this.DirtyChanged(this);
+			}
+		}
+
+		public event Support.EventHandler DirtyChanged;
+		#endregion
+
+
 		protected Type							type;
 		protected ResourceManager				resourceManager;
 		protected ResourceModuleInfo			moduleInfo;
@@ -1298,6 +1522,7 @@ namespace Epsitec.Common.Designer
 		protected string						accessCulture;
 		protected ResourceBundle				accessBundle;
 		protected int							accessIndex;
+		protected int							accessCached;
 		protected ResourceBundle.Field			accessField;
 		protected Common.Types.Caption			accessCaption;
 		protected List<ResourceBundle>			panelsList;

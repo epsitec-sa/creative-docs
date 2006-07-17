@@ -299,10 +299,11 @@ namespace Epsitec.Common.Designer
 		{
 			System.Text.StringBuilder builder = new System.Text.StringBuilder();
 
+#if false
 			ModuleInfo mi = this.CurrentModuleInfo;
 			if ( mi != null )
 			{
-				Module.BundleType type = mi.Module.Modifier.ActiveBundleType;
+				ResourceAccess.Type type = mi.Module.Modifier.ActiveBundleType;
 				ResourceBundleCollection bundles = mi.Module.GetBundles(type);
 
 				if (bundles != null)
@@ -322,6 +323,7 @@ namespace Epsitec.Common.Designer
 					}
 				}
 			}
+#endif
 
 			StatusField field = this.info.Items["InfoCurrentModule"] as StatusField;
 			string text = builder.ToString();
@@ -375,7 +377,7 @@ namespace Epsitec.Common.Designer
 		[Command("Save")]
 		void CommandSave(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.CurrentModule.Modifier.Save();
+			this.CurrentModule.Save();
 		}
 
 		[Command("Close")]
@@ -724,7 +726,7 @@ namespace Epsitec.Common.Designer
 			//?mi.Module.CreateIds();
 
 			mi.TabPage = new TabPage();
-			mi.TabPage.TabTitle = mi.Module.Name;
+			mi.TabPage.TabTitle = mi.Module.ModuleInfo.Name;
 			this.bookModules.Items.Insert(this.currentModule, mi.TabPage);
 
 			mi.BundleType = new MyWidgets.BundleType(mi.TabPage);
@@ -746,8 +748,8 @@ namespace Epsitec.Common.Designer
 				mi.Module.Modifier.ActiveViewer = null;
 			}
 
-			Module.BundleType type = mi.BundleType.CurrentType;
-			Viewers.Abstract viewer = Viewers.Abstract.Create(type, mi.Module, this.context);
+			ResourceAccess.Type type = mi.BundleType.CurrentType;
+			Viewers.Abstract viewer = Viewers.Abstract.Create(type, mi.Module, this.context, mi.Module.GetAccess(type));
 
 			if (viewer != null)
 			{
@@ -817,7 +819,7 @@ namespace Epsitec.Common.Designer
 			//	Cherche un module d'après son identificateur.
 			foreach (ModuleInfo info in this.moduleInfoList)
 			{
-				if (info.Module.Id == id)
+				if (info.Module.ModuleInfo.Id == id)
 				{
 					return info.Module;
 				}
@@ -912,24 +914,26 @@ namespace Epsitec.Common.Designer
 			//	Met à jour le nom de l'onglet des modules.
 			if ( !this.IsCurrentModule )  return;
 			TabPage tab = this.bookModules.Items[this.currentModule] as TabPage;
-			tab.TabTitle = Misc.ExtractName(this.CurrentModule.Name, this.CurrentModule.Modifier.IsDirty);
+			tab.TabTitle = Misc.ExtractName(this.CurrentModule.ModuleInfo.Name, this.CurrentModule.IsDirty);
 			this.bookModules.UpdateAfterChanges();
 		}
 		#endregion
 
 
 		#region Dialogs
-		public Druid DlgTextSelector(Druid ressource)
+		public Druid DlgTextSelector(ResourceAccess access, Druid ressource)
 		{
 			//	Ouvre le dialogue pour choisir un ressource de type texte.
+			this.dlgTextSelector.SetAccess(access);
 			this.dlgTextSelector.Resource = ressource;
 			this.dlgTextSelector.Show();
 			return this.dlgTextSelector.Resource;
 		}
 
-		public string DlgNewCulture()
+		public string DlgNewCulture(ResourceAccess access)
 		{
 			//	Ouvre le dialogue pour choisir la culture à créer.
+			this.dlgNewCulture.SetAccess(access);
 			this.dlgNewCulture.Show();
 			return this.dlgNewCulture.Culture;
 		}
@@ -948,7 +952,7 @@ namespace Epsitec.Common.Designer
 			ModuleInfo mi = this.CurrentModuleInfo;
 			if (mi == null)
 			{
-				this.dlgSearch.Adapt(Module.BundleType.Unknow);
+				this.dlgSearch.Adapt(ResourceAccess.Type.Unknow);
 			}
 			else
 			{

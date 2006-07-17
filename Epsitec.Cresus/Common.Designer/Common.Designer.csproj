@@ -37,7 +37,6 @@
   <ItemGroup>
     <Compile Include="Comparers\BundleRank.cs" />
     <Compile Include="Comparers\ProxyRank.cs" />
-    <Compile Include="Comparers\CultureName.cs" />
     <Compile Include="Comparers\WidgetDisposition.cs" />
     <Compile Include="Constrain.cs" />
     <Compile Include="ConstrainsList.cs" />
