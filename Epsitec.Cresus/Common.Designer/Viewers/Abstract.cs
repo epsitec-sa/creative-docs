@@ -668,7 +668,7 @@ namespace Epsitec.Common.Designer.Viewers
 				{
 					bundle = this.access.GetCulture(list[i]);
 
-					this.secondaryCultures[i] = new IconButtonMark(this);
+					this.secondaryCultures[i] = new IconButtonMark(parent);
 					this.secondaryCultures[i].ButtonStyle = ButtonStyle.ActivableIcon;
 					this.secondaryCultures[i].SiteMark = SiteMark.OnBottom;
 					this.secondaryCultures[i].MarkDimension = 5;
