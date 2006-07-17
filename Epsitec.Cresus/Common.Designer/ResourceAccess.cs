@@ -1011,7 +1011,7 @@ namespace Epsitec.Common.Designer
 
 			foreach (ResourceBundle.Field field in this.primaryBundle.Fields)
 			{
-				if (this.HasFixFilter(field.Name))
+				if (!this.HasFixFilter(field.Name))
 				{
 					continue;
 				}
@@ -1369,7 +1369,14 @@ namespace Epsitec.Common.Designer
 			if (!this.HasFixFilter(name))
 			{
 				string fix = this.FixFilter;
-				return (fix == null) ? name : fix+name;
+				if (fix == null)
+				{
+					return name;
+				}
+				else
+				{
+					return fix + name;
+				}
 			}
 
 			return name;
@@ -1380,7 +1387,15 @@ namespace Epsitec.Common.Designer
 			//	Supprime le filtre fixe si nécessaire.
 			if (this.HasFixFilter(name))
 			{
-				return name.Substring(this.FixFilter.Length);
+				string fix = this.FixFilter;
+				if (fix == null)
+				{
+					return name;
+				}
+				else
+				{
+					return name.Substring(fix.Length);
+				}
 			}
 
 			return name;
@@ -1393,7 +1408,7 @@ namespace Epsitec.Common.Designer
 			
 			if (fix == null)
 			{
-				return false;
+				return true;
 			}
 			else
 			{
@@ -1445,7 +1460,7 @@ namespace Epsitec.Common.Designer
 
 			public Field(ICollection<string> value)
 			{
-				this.type = Type.String;
+				this.type = Type.StringCollection;
 				this.stringCollection = value;
 			}
 
