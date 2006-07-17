@@ -162,6 +162,12 @@ namespace Epsitec.Common.Designer.Dialogs
 		}
 
 
+		public void SetAccess(ResourceAccess access)
+		{
+			System.Diagnostics.Debug.Assert(access.ResourceType == ResourceAccess.Type.Strings);
+			this.access = access;
+		}
+
 		public Druid Resource
 		{
 			get
@@ -196,7 +202,8 @@ namespace Epsitec.Common.Designer.Dialogs
 		{
 			//	Construit l'index en fonction des ressources.
 			//	Retourne le rang de la ressource correspondant le mieux possible aux filtres.
-			Module.BundleType type = this.mainWindow.CurrentModule.Modifier.ActiveBundleType;
+#if false
+			ResourceAccess.Type type = this.mainWindow.CurrentModule.Modifier.ActiveBundleType;
 			ResourceBundleCollection bundles = this.mainWindow.CurrentModule.GetBundles(type);
 			this.primaryBundle = bundles[ResourceLevel.Merged];
 			ResourceBundle defaultBundle = bundles[ResourceLevel.Default];
@@ -262,6 +269,8 @@ namespace Epsitec.Common.Designer.Dialogs
 			}
 
 			return best;
+#endif
+			return 0;
 		}
 
 		protected void UpdateArray()
@@ -338,12 +347,15 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected bool IsExistingName(string baseName)
 		{
 			//	Indique si un nom existe.
-			Module.BundleType type = this.mainWindow.CurrentModule.Modifier.ActiveBundleType;
+#if false
+			ResourceAccess.Type type = this.mainWindow.CurrentModule.Modifier.ActiveBundleType;
 			ResourceBundleCollection bundles = this.mainWindow.CurrentModule.GetBundles(type);
 			ResourceBundle defaultBundle = bundles[ResourceLevel.Default];
 
 			ResourceBundle.Field field = defaultBundle[baseName];
 			return (field != null && field.Name != null);
+#endif
+			return false;
 		}
 
 
@@ -398,9 +410,9 @@ namespace Epsitec.Common.Designer.Dialogs
 				{
 					if (!this.IsExistingName(label))
 					{
-						Module.BundleType type = this.mainWindow.CurrentModule.Modifier.ActiveBundleType;
-						Druid druid = this.mainWindow.CurrentModule.Modifier.Create(type, label, text);
-						this.resource = druid;
+						ResourceAccess.Type type = this.mainWindow.CurrentModule.Modifier.ActiveBundleType;
+						//?Druid druid = this.mainWindow.CurrentModule.Modifier.Create(type, label, text);
+						//?this.resource = druid;
 					}
 				}
 			}
@@ -477,6 +489,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		}
 
 
+		protected ResourceAccess				access;
 		protected StaticText					header1;
 		protected StaticText					header2;
 		protected TextField						filterLabel;

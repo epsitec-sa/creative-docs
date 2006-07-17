@@ -69,6 +69,11 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.window.ShowDialog();
 		}
 
+		public void SetAccess(ResourceAccess access)
+		{
+			this.access = access;
+		}
+
 		public string Culture
 		{
 			//	Retourne la culture choisie.
@@ -84,14 +89,14 @@ namespace Epsitec.Common.Designer.Dialogs
 		{
 			//	Met à jour la ScrollList des cultures, en enlevant celles qui font déjà
 			//	partie du bundle.
-			Module module = this.mainWindow.CurrentModule;
+			string baseCulture = this.access.GetBaseCultureName();
+			List<string> secondaryCultures = this.access.GetSecondaryCultureNames();
 
-			//	Construit la liste des cultures inexistantes dans le bundle.
+			//	Construit la liste des cultures inexistantes dans l'accès.
 			this.cultureList = new List<string>();
 			foreach (string name in Misc.Cultures)
 			{
-				Module.BundleType type = this.mainWindow.CurrentModule.Modifier.ActiveBundleType;
-				if (!module.IsExistingCulture(name, type))
+				if (name != baseCulture && !secondaryCultures.Contains(name))
 				{
 					this.cultureList.Add(name);
 				}
@@ -124,7 +129,8 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.OnClosed();
 		}
 
-		
+
+		protected ResourceAccess				access;
 		protected ScrollList					cultureWidget;
 		protected List<string>					cultureList;
 	}
