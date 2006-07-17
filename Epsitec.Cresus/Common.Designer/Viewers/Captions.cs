@@ -274,7 +274,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			int sel = this.access.AccessIndex;
 
-			if (sel >= this.access.CultureCount)
+			if (sel >= this.access.AccessCount)
 			{
 				sel = -1;
 			}
