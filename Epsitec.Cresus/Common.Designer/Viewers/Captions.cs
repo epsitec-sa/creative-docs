@@ -467,7 +467,7 @@ namespace Epsitec.Common.Designer.Viewers
 				lc.BackgroundColor = Abstract.GetBackgroundColor(state1, this.intensityContainers[i]);
 
 				rc.BackgroundColor = Abstract.GetBackgroundColor(state2, this.intensityContainers[i]);
-				rc.Visibility = (this.secondaryBundle != null);
+				rc.Visibility = (this.secondaryCulture != null);
 			}
 		}
 
@@ -694,8 +694,6 @@ namespace Epsitec.Common.Designer.Viewers
 
 
 		protected Widget						secondaryCultureGroup;
-		protected ResourceBundle				primaryBundle;
-		protected ResourceBundle				secondaryBundle;
 		protected TextFieldEx					labelEdit;
 		protected Scrollable					scrollable;
 		protected List<MyWidgets.StackedPanel>	leftContainers;
