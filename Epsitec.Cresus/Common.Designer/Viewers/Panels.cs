@@ -226,25 +226,6 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
-		protected override void UpdateArray()
-		{
-			//	Met à jour tout le contenu du tableau.
-			this.array.TotalRows = this.access.AccessCount;
-
-			int first = this.array.FirstVisibleRow;
-			for (int i=0; i<this.array.LineCount; i++)
-			{
-				if (first+i < this.access.AccessCount)
-				{
-					this.UpdateArrayField(0, first+i, null, "Name");
-				}
-				else
-				{
-					this.UpdateArrayField(0, first+i, null, null);
-				}
-			}
-		}
-
 		protected override void UpdateEdit()
 		{
 			//	Met à jour les lignes éditables en fonction de la sélection dans le tableau.

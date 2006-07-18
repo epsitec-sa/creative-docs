@@ -177,7 +177,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.secondaryAbout.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 
-			this.UpdateCultures(this.secondaryCultureGroup);
+			this.UpdateCultures();
 			this.Update();
 		}
 
@@ -242,7 +242,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.UpdateArray();
 			this.UpdateEdit();
 			this.UpdateColor();
-			this.UpdateModifiers();
+			this.UpdateModificationsCulture();
 			this.UpdateCommands();
 		}
 
@@ -264,6 +264,15 @@ namespace Epsitec.Common.Designer.Viewers
 				state2 = this.access.GetModification(sel, this.secondaryCulture);
 			}
 			this.ColoriseBands(state1, state2);
+		}
+
+		protected override Widget CultureParentWidget
+		{
+			//	Retourne le parent à utiliser pour les boutons des cultures.
+			get
+			{
+				return this.secondaryCultureGroup;
+			}
 		}
 
 		protected override void UpdateEdit()
@@ -411,26 +420,6 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
-		protected override void UpdateArray()
-		{
-			//	Met à jour tout le contenu du tableau.
-			this.array.TotalRows = this.access.AccessCount;
-
-			int first = this.array.FirstVisibleRow;
-			for (int i=0; i<this.array.LineCount; i++)
-			{
-				if (first+i < this.access.AccessCount)
-				{
-					this.UpdateArrayField(0, first+i, null, "Name");
-				}
-				else
-				{
-					this.UpdateArrayField(0, first+i, null, null);
-				}
-			}
-		}
-
-
 		protected void CreateBand(out MyWidgets.StackedPanel leftContainer, out MyWidgets.StackedPanel rightContainer, string title, double backgroundIntensity)
 		{
 			//	Crée une bande horizontale avec deux containers gauche/droite pour les
@@ -470,94 +459,6 @@ namespace Epsitec.Common.Designer.Viewers
 				rc.Visibility = (this.secondaryCulture != null);
 			}
 		}
-
-
-		#region Caption modifiers
-		protected string GetCaptionDescription(Common.Types.Caption caption)
-		{
-			//	Donne la description d'un caption.
-			if (string.IsNullOrEmpty(caption.Description))
-			{
-				return "";
-			}
-
-			return caption.Description;
-		}
-
-		protected void SetCaptionDescription(ResourceBundle bundle, Druid druid, string text)
-		{
-			//	Modifie la description d'un caption.
-			Common.Types.Caption caption = this.CaptionDeserialize(bundle, druid);
-			caption.Description = text;
-			this.CaptionSerialize(bundle, druid, caption);
-		}
-
-		protected List<string> GetCaptionLabels(Common.Types.Caption caption)
-		{
-			//	Retourne la liste des labels d'un caption.
-			ICollection<string> collection = caption.Labels;
-			string[] strings = new string[collection.Count];
-			collection.CopyTo(strings, 0);
-			List<string> list = new List<string>();
-			list.AddRange(strings);
-
-			return list;
-		}
-
-		protected void SetCaptionLabels(ResourceBundle bundle, Druid druid, List<string> labels)
-		{
-			//	Modifie les labels d'un caption.
-			Common.Types.Caption caption = this.CaptionDeserialize(bundle, druid);
-
-			ICollection<string> collection = caption.Labels;
-			collection.Clear();
-			foreach (string text in labels)
-			{
-				collection.Add(text);
-			}
-
-			this.CaptionSerialize(bundle, druid, caption);
-		}
-
-		protected string GetCaptionIcon(Common.Types.Caption caption)
-		{
-			//	Donne l'icône d'un caption.
-			if (string.IsNullOrEmpty(caption.Icon))
-			{
-				return null;
-			}
-
-			return caption.Icon;
-		}
-
-		protected void SetCaptionIcon(ResourceBundle bundle, Druid druid, string text)
-		{
-			//	Modifie l'icône d'un caption.
-			Common.Types.Caption caption = this.CaptionDeserialize(bundle, druid);
-			caption.Icon = text;
-			this.CaptionSerialize(bundle, druid, caption);
-		}
-
-		protected Common.Types.Caption CaptionDeserialize(ResourceBundle bundle, Druid druid)
-		{
-			//	Désérialise un caption.
-			Common.Types.Caption caption = new Common.Types.Caption();
-
-			string s = bundle[druid].AsString;
-			if (!string.IsNullOrEmpty(s))
-			{
-				caption.DeserializeFromString(s);
-			}
-
-			return caption;
-		}
-
-		protected void CaptionSerialize(ResourceBundle bundle, Druid druid, Common.Types.Caption caption)
-		{
-			//	Sérialise un caption.
-			bundle[druid].SetStringValue(caption.SerializeToString());
-		}
-		#endregion
 
 
 		#region FixFilter
@@ -611,7 +512,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.access.AccessIndex = this.array.SelectedRow;
 			this.UpdateEdit();
 			this.UpdateColor();
-			this.UpdateModifiers();
+			this.UpdateModificationsCulture();
 			this.UpdateCommands();
 		}
 
@@ -650,7 +551,7 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 
 			this.UpdateColor();
-			this.UpdateModifiers();
+			this.UpdateModificationsCulture();
 		}
 
 		void HandleStringTextCollectionChanged(object sender)
@@ -672,7 +573,7 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 
 			this.UpdateColor();
-			this.UpdateModifiers();
+			this.UpdateModificationsCulture();
 		}
 
 		void HandleStringFocusCollectionChanged(object sender)

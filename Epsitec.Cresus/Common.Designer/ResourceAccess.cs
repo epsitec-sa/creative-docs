@@ -128,6 +128,8 @@ namespace Epsitec.Common.Designer
 
 			if (this.IsBundlesType)
 			{
+				newName = this.AddFilter(newName);
+
 				Druid actualDruid = this.druidsIndex[this.accessIndex];
 				int aIndex = this.GetAbsoluteIndex(actualDruid);
 				newDruid = this.CreateUniqueDruid();
@@ -433,6 +435,7 @@ namespace Epsitec.Common.Designer
 			//	Vérifie si un futur "Name" existe déjà.
 			if (this.IsBundlesType)
 			{
+				name = this.AddFilter(name);
 				ResourceBundle.Field field = this.primaryBundle[name];
 				return (field != null && field.Name != null);
 			}
@@ -1409,7 +1412,7 @@ namespace Epsitec.Common.Designer
 			return name;
 		}
 
-		public string SubFilter(string name)
+		protected string SubFilter(string name)
 		{
 			//	Supprime le filtre fixe si nécessaire.
 			if (this.HasFixFilter(name))
