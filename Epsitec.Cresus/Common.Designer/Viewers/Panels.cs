@@ -24,7 +24,6 @@ namespace Epsitec.Common.Designer.Viewers
 			left.Padding = new Margins(10, 10, 10, 10);
 
 			this.labelEdit = new TextFieldEx(left);
-			this.labelEdit.Name = "LabelEdit";
 			this.labelEdit.Margins = new Margins(0, 0, 10, 0);
 			this.labelEdit.Dock = DockStyle.Bottom;
 			this.labelEdit.EditionAccepted += new EventHandler(this.HandleTextChanged);
@@ -380,6 +379,29 @@ namespace Epsitec.Common.Designer.Viewers
 		#endregion
 
 
+		protected override void TextFieldConvert(AbstractTextField textField, out int field, out int subfield)
+		{
+			field = -1;
+			subfield = -1;
+
+			if (textField == this.labelEdit)
+			{
+				field = 0;
+				subfield = 0;
+			}
+		}
+
+		protected override AbstractTextField TextFieldConvert(int field, int subfield)
+		{
+			if (field == 0 && subfield == 0)
+			{
+				return this.labelEdit;
+			}
+
+			return null;
+		}
+
+		
 		void HandleArrayCellCountChanged(object sender)
 		{
 			//	Le nombre de lignes a changé.

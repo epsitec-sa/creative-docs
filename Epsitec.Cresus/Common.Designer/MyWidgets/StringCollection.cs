@@ -74,7 +74,31 @@ namespace Epsitec.Common.Designer.MyWidgets
 					return this.textFields[sel];
 				}
 			}
+		}
 
+		public AbstractTextField GetTextField(int index)
+		{
+			//	Retourne une ligne éditable.
+			if (index < this.textFields.Count)
+			{
+				return this.textFields[index];
+			}
+
+			return null;
+		}
+
+		public int GetIndex(AbstractTextField textField)
+		{
+			//	Cherche l'index d'une ligne éditable.
+			for (int i=0; i<this.textFields.Count; i++)
+			{
+				if (textField == this.textFields[i])
+				{
+					return i;
+				}
+			}
+
+			return -1;
 		}
 
 

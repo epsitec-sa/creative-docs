@@ -23,7 +23,6 @@ namespace Epsitec.Common.Designer.Viewers
 			left.Padding = new Margins(10, 10, 10, 10);
 
 			this.labelEdit = new TextFieldEx(left);
-			this.labelEdit.Name = "LabelEdit";
 			this.labelEdit.Margins = new Margins(0, 0, 10, 0);
 			this.labelEdit.Dock = DockStyle.Bottom;
 			this.labelEdit.EditionAccepted += new EventHandler(this.HandleTextChanged);

@@ -45,7 +45,6 @@ namespace Epsitec.Common.Designer.Viewers
 			this.labelStatic.Visibility = (this.module.Mode != DesignerMode.Build);
 
 			this.labelEdit = new TextFieldEx(this);
-			this.labelEdit.Name = "LabelEdit";
 			this.labelEdit.EditionAccepted += new EventHandler(this.HandleTextChanged);
 			this.labelEdit.CursorChanged += new EventHandler(this.HandleCursorChanged);
 			this.labelEdit.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
@@ -54,7 +53,6 @@ namespace Epsitec.Common.Designer.Viewers
 			this.labelEdit.Visibility = (this.module.Mode == DesignerMode.Build);
 
 			this.primaryEdit = new TextFieldMulti(this);
-			this.primaryEdit.Name = "PrimaryEdit";
 			this.primaryEdit.TextChanged += new EventHandler(this.HandleTextChanged);
 			this.primaryEdit.CursorChanged += new EventHandler(this.HandleCursorChanged);
 			this.primaryEdit.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
@@ -62,7 +60,6 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryEdit.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			this.secondaryEdit = new TextFieldMulti(this);
-			this.secondaryEdit.Name = "SecondaryEdit";
 			this.secondaryEdit.TextChanged += new EventHandler(this.HandleTextChanged);
 			this.secondaryEdit.CursorChanged += new EventHandler(this.HandleCursorChanged);
 			this.secondaryEdit.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
@@ -74,7 +71,6 @@ namespace Epsitec.Common.Designer.Viewers
 			this.labelAbout.Text = Res.Strings.Viewers.Strings.About;
 
 			this.primaryAbout = new TextFieldMulti(this);
-			this.primaryAbout.Name = "PrimaryAbout";
 			this.primaryAbout.TextChanged += new EventHandler(this.HandleTextChanged);
 			this.primaryAbout.CursorChanged += new EventHandler(this.HandleCursorChanged);
 			this.primaryAbout.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
@@ -82,7 +78,6 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryAbout.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			this.secondaryAbout = new TextFieldMulti(this);
-			this.secondaryAbout.Name = "SecondaryAbout";
 			this.secondaryAbout.TextChanged += new EventHandler(this.HandleTextChanged);
 			this.secondaryAbout.CursorChanged += new EventHandler(this.HandleCursorChanged);
 			this.secondaryAbout.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
@@ -327,6 +322,75 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
+		protected override void TextFieldConvert(AbstractTextField textField, out int field, out int subfield)
+		{
+			subfield = 0;
+
+			if (textField == this.labelEdit)
+			{
+				field = 0;
+				return;
+			}
+
+			if (textField == this.primaryEdit)
+			{
+				field = 1;
+				return;
+			}
+
+			if (textField == this.primaryAbout)
+			{
+				field = 3;
+				return;
+			}
+
+			if (this.secondaryCulture != null)
+			{
+				if (textField == this.secondaryEdit)
+				{
+					field = 2;
+					return;
+				}
+
+				if (textField == this.secondaryAbout)
+				{
+					field = 4;
+					return;
+				}
+			}
+
+			field = -1;
+			subfield = -1;
+		}
+
+		protected override AbstractTextField TextFieldConvert(int field, int subfield)
+		{
+			if (subfield == 0)
+			{
+				switch (field)
+				{
+					case 0:
+						return this.labelEdit;
+
+					case 1:
+						return this.primaryEdit;
+
+					case 2:
+						return this.secondaryEdit;
+
+					case 3:
+						return this.primaryAbout;
+
+					case 4:
+						return this.secondaryAbout;
+
+				}
+			}
+
+			return null;
+		}
+
+		
 		void HandleArrayColumnsWidthChanged(object sender)
 		{
 			//	La largeur des colonnes a changé.
