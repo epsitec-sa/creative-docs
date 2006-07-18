@@ -411,6 +411,102 @@ namespace Epsitec.Common.Designer.Viewers
 		#endregion
 
 
+		protected override void TextFieldConvert(AbstractTextField textField, out int field, out int subfield)
+		{
+			if (textField == this.labelEdit)
+			{
+				field = 0;
+				subfield = 0;
+				return;
+			}
+
+			subfield = this.primaryLabels.GetIndex(textField);
+			if (subfield != -1)
+			{
+				field = 1;
+				return;
+			}
+
+			if (textField == this.primaryDescription)
+			{
+				field = 3;
+				subfield = 0;
+				return;
+			}
+
+			if (textField == this.primaryAbout)
+			{
+				field = 5;
+				subfield = 0;
+				return;
+			}
+
+			if (this.secondaryCulture != null)
+			{
+				subfield = this.secondaryLabels.GetIndex(textField);
+				if (subfield != -1)
+				{
+					field = 2;
+					return;
+				}
+
+				if (textField == this.secondaryDescription)
+				{
+					field = 4;
+					subfield = 0;
+					return;
+				}
+
+				if (textField == this.secondaryAbout)
+				{
+					field = 6;
+					subfield = 0;
+					return;
+				}
+			}
+
+			field = -1;
+			subfield = -1;
+		}
+
+		protected override AbstractTextField TextFieldConvert(int field, int subfield)
+		{
+			if (subfield == 0)
+			{
+				switch (field)
+				{
+					case 0:
+						return this.labelEdit;
+
+					case 3:
+						return this.primaryDescription;
+
+					case 4:
+						return this.secondaryDescription;
+
+					case 5:
+						return this.primaryAbout;
+
+					case 6:
+						return this.secondaryAbout;
+
+				}
+			}
+
+			if (field == 1)
+			{
+				return this.primaryLabels.GetTextField(subfield);
+			}
+
+			if (field == 2)
+			{
+				return this.secondaryLabels.GetTextField(subfield);
+			}
+
+			return null;
+		}
+
+		
 		void HandleArrayCellCountChanged(object sender)
 		{
 			//	Le nombre de lignes a changé.

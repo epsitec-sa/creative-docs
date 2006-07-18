@@ -844,6 +844,190 @@ namespace Epsitec.Common.Designer
 		}
 
 
+		public void SearcherConvert(int field, string secondaryCulture, out string cultureName, out string fieldName)
+		{
+			if (this.type == Type.Strings)
+			{
+				switch (field)
+				{
+					case 0:
+						cultureName = null;
+						fieldName = "Name";
+						return;
+
+					case 1:
+						cultureName = null;
+						fieldName = "String";
+						return;
+
+					case 3:
+						cultureName = null;
+						fieldName = "About";
+						return;
+				}
+
+				if (secondaryCulture != null)
+				{
+					switch (field)
+					{
+						case 2:
+							cultureName = secondaryCulture;
+							fieldName = "String";
+							return;
+
+						case 4:
+							cultureName = secondaryCulture;
+							fieldName = "About";
+							return;
+					}
+				}
+			}
+
+			if (this.type == Type.Captions)
+			{
+				switch (field)
+				{
+					case 0:
+						cultureName = null;
+						fieldName = "Name";
+						return;
+
+					case 1:
+						cultureName = null;
+						fieldName = "Labels";
+						return;
+
+					case 3:
+						cultureName = null;
+						fieldName = "Description";
+						return;
+
+					case 5:
+						cultureName = null;
+						fieldName = "About";
+						return;
+				}
+
+				if (secondaryCulture != null)
+				{
+					switch (field)
+					{
+						case 2:
+							cultureName = secondaryCulture;
+							fieldName = "Labels";
+							return;
+
+						case 4:
+							cultureName = secondaryCulture;
+							fieldName = "Description";
+							return;
+
+						case 6:
+							cultureName = secondaryCulture;
+							fieldName = "About";
+							return;
+					}
+				}
+			}
+
+			if (this.type == Type.Panels)
+			{
+				cultureName = null;
+
+				if (field == 0)
+				{
+					fieldName = "Name";
+					return;
+				}
+			}
+
+			cultureName = null;
+			fieldName = null;
+		}
+
+		public void SearcherConvert(string cultureName, string fieldName, out int field)
+		{
+			if (this.type == Type.Strings)
+			{
+				if (cultureName == null)
+				{
+					switch (fieldName)
+					{
+						case "Name":
+							field = 0;
+							return;
+
+						case "String":
+							field = 1;
+							return;
+
+						case "About":
+							field = 3;
+							return;
+					}
+				}
+				else
+				{
+					switch (fieldName)
+					{
+						case "String":
+							field = 2;
+							return;
+
+						case "About":
+							field = 4;
+							return;
+					}
+				}
+			}
+
+			if (this.type == Type.Captions)
+			{
+				if (cultureName == null)
+				{
+					switch (fieldName)
+					{
+						case "Name":
+							field = 0;
+							return;
+
+						case "String":
+							field = 1;
+							return;
+
+						case "About":
+							field = 3;
+							return;
+					}
+				}
+				else
+				{
+					switch (fieldName)
+					{
+						case "String":
+							field = 2;
+							return;
+
+						case "About":
+							field = 4;
+							return;
+					}
+				}
+			}
+
+			if (this.type == Type.Panels)
+			{
+				if (cultureName == null && fieldName == "Name")
+				{
+					field = 0;
+					return;
+				}
+			}
+
+			field = -1;
+		}
+
+
 		protected void CacheResource(int index, string cultureName)
 		{
 			//	Cache une ressource.

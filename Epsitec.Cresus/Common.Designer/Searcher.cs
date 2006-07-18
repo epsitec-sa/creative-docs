@@ -23,19 +23,17 @@ namespace Epsitec.Common.Designer
 		}
 
 
-		public Searcher(List<Druid> druidsIndex, ResourceBundle primaryBundle, ResourceBundle secondaryBundle, ResourceAccess.Type type)
+		public Searcher(ResourceAccess access)
 		{
-			this.druidsIndex = druidsIndex;
-			this.primaryBundle = primaryBundle;
-			this.secondaryBundle = secondaryBundle;
-			this.type = type;
+			this.access = access;
 			this.mode = SearchingMode.SearchInPrimaryText | SearchingMode.SearchInSecondaryText;
 		}
 
-		public void FixStarting(SearchingMode mode, int row, AbstractTextField edit, bool lastActionIsReplace)
+		public void FixStarting(SearchingMode mode, int row, int field, int subfield, AbstractTextField edit, string secondaryCulture, bool lastActionIsReplace)
 		{
 			//	Fixe la position de départ de la recherche.
 			this.mode = mode;
+			this.secondaryCulture = secondaryCulture;
 			this.starting = new Cursor();
 			this.current  = new Cursor();
 
@@ -43,35 +41,28 @@ namespace Epsitec.Common.Designer
 			{
 				if ((this.mode&SearchingMode.Reverse) == 0)  // en avant ?
 				{
-					this.starting.Row   = 0;  // au début
-					this.starting.Field = 0;
-					this.starting.Index = -1;
+					this.starting.Row      = 0;  // au début
+					this.starting.Field    = 0;
+					this.starting.Subfield = 0;
+					this.starting.Index    = -1;
 				}
 				else  // en arrière ?
 				{
-					this.starting.Row   = this.druidsIndex.Count-1;  // à la fin
-					this.starting.Field = 4;
-					this.starting.Index = 1000000;
+					this.starting.Row      = this.access.AccessCount-1;  // à la fin
+					this.starting.Field    = 1000000;
+					this.starting.Subfield = 1000000;
+					this.starting.Index    = 1000000;
 				}
 			}
 			else
 			{
-				this.starting.Row = row;
-
-				this.starting.Field = 0;
-				this.starting.Index = 0;
+				this.starting.Row      = row;
+				this.starting.Field    = field;
+				this.starting.Subfield = subfield;
+				this.starting.Index    = 0;
 
 				if (edit != null)
 				{
-					switch (edit.Name)
-					{
-						case "LabelEdit":       this.starting.Field = 0;  break;
-						case "PrimaryEdit":     this.starting.Field = 1;  break;
-						case "SecondaryEdit":   this.starting.Field = 2;  break;
-						case "PrimaryAbout":    this.starting.Field = 3;  break;
-						case "SecondaryAbout":  this.starting.Field = 4;  break;
-					}
-
 					if ((this.mode&SearchingMode.Reverse) == 0)  // en avant ?
 					{
 						if (lastActionIsReplace)  // saute la sélection ?
@@ -130,9 +121,10 @@ namespace Epsitec.Common.Designer
 			this.InitSearching(searching);
 
 			this.mode &= ~SearchingMode.Reverse;
-			this.starting.Row   = 0;  // au début
-			this.starting.Field = 0;
-			this.starting.Index = -1;
+			this.starting.Row      = 0;  // au début
+			this.starting.Field    = 0;
+			this.starting.Subfield = 0;
+			this.starting.Index    = -1;
 			this.starting.CopyTo(this.current);
 
 			int count = 0;
@@ -164,9 +156,10 @@ namespace Epsitec.Common.Designer
 			if (fromBeginning)
 			{
 				this.mode &= ~SearchingMode.Reverse;
-				this.starting.Row   = 0;  // au début
-				this.starting.Field = 0;
-				this.starting.Index = -1;
+				this.starting.Row      = 0;  // au début
+				this.starting.Field    = 0;
+				this.starting.Subfield = 0;
+				this.starting.Index    = -1;
 				this.starting.CopyTo(this.current);
 			}
 
@@ -213,10 +206,19 @@ namespace Epsitec.Common.Designer
 
 		public int Field
 		{
-			//	Champ éditable atteint (0..4).
+			//	Champ éditable atteint.
 			get
 			{
 				return this.current.Field;
+			}
+		}
+
+		public int Subfield
+		{
+			//	Sous-champ éditable atteint.
+			get
+			{
+				return this.current.Subfield;
 			}
 		}
 
@@ -292,15 +294,20 @@ namespace Epsitec.Common.Designer
 			if ((this.mode&SearchingMode.Reverse) == 0)  // en avant ?
 			{
 				this.current.Index = -1;
-				this.current.Field++;
-				if (this.current.Field >= 5)
+				this.current.Subfield++;
+				if (this.current.Subfield >= 10)
 				{
-					this.current.Field = 0;
-					this.current.Row ++;
-					if (this.current.Row >= this.druidsIndex.Count)
+					this.current.Subfield = 0;
+					this.current.Field++;
+					if (this.current.Field >= 10)
 					{
-						this.current.Row = 0;
-						this.limitOverflow = true;
+						this.current.Field = 0;
+						this.current.Row++;
+						if (this.current.Row >= this.access.AccessCount)
+						{
+							this.current.Row = 0;
+							this.limitOverflow = true;
+						}
 					}
 				}
 				return (!this.limitOverflow || Cursor.Compare(this.current, this.starting) < 0);
@@ -308,15 +315,20 @@ namespace Epsitec.Common.Designer
 			else  // en arrière ?
 			{
 				this.current.Index = 1000000;
-				this.current.Field--;
-				if (this.current.Field < 0)
+				this.current.Subfield--;
+				if (this.current.Subfield < 0)
 				{
-					this.current.Field = 4;
-					this.current.Row--;
-					if (this.current.Row < 0)
+					this.current.Subfield = 10-1;
+					this.current.Field--;
+					if (this.current.Field < 0)
 					{
-						this.current.Row = this.druidsIndex.Count-1;
-						this.limitOverflow = true;
+						this.current.Field = 10-1;
+						this.current.Row--;
+						if (this.current.Row < 0)
+						{
+							this.current.Row = this.access.AccessCount-1;
+							this.limitOverflow = true;
+						}
 					}
 				}
 				return (!this.limitOverflow || Cursor.Compare(this.current, this.starting) > 0);
@@ -325,54 +337,33 @@ namespace Epsitec.Common.Designer
 
 		protected string ResourceText
 		{
-			//	Retourne le texte à la position du curseur courant (en fonction de row/field).
+			//	Retourne le texte à la position du curseur courant (en fonction de row/field/subfield).
 			get
 			{
-				Druid druid = this.druidsIndex[this.current.Row];
+				string cultureName, fieldName;
+				this.access.SearcherConvert(this.current.Field, this.secondaryCulture, out cultureName, out fieldName);
 
-				if (this.type == ResourceAccess.Type.Strings)
+				ResourceAccess.Field field = this.access.GetField(this.current.Row, cultureName, fieldName);
+				if (field == null)
 				{
-					if (this.current.Field == 0 && (this.mode&SearchingMode.SearchInLabel) != 0)
-					{
-						return this.primaryBundle[druid].Name;
-					}
+					return null;
+				}
 
-					if (this.current.Field == 1 && (this.mode&SearchingMode.SearchInPrimaryText) != 0)
+				if (field.FieldType == ResourceAccess.Field.Type.String)
+				{
+					if (this.current.Subfield == 0)
 					{
-						return this.primaryBundle[druid].AsString;
-					}
-
-					if (this.current.Field == 2 && (this.mode&SearchingMode.SearchInSecondaryText) != 0 && this.secondaryBundle != null)
-					{
-						return this.secondaryBundle[druid].AsString;
-					}
-
-					if (this.current.Field == 3 && (this.mode&SearchingMode.SearchInPrimaryAbout) != 0)
-					{
-						return this.primaryBundle[druid].About;
-					}
-
-					if (this.current.Field == 4 && (this.mode&SearchingMode.SearchInSecondaryAbout) != 0 && this.secondaryBundle != null)
-					{
-						return this.secondaryBundle[druid].About;
+						return field.String;
 					}
 				}
 
-				if (this.type == ResourceAccess.Type.Captions)
+				if (field.FieldType == ResourceAccess.Field.Type.StringCollection)
 				{
-					if (this.current.Field == 0 && (this.mode&SearchingMode.SearchInLabel) != 0)
+					if (this.current.Subfield < field.StringCollection.Count)
 					{
-						return Viewers.Captions.SubFilter(this.primaryBundle[druid].Name);
-					}
-
-					if (this.current.Field == 1 && (this.mode&SearchingMode.SearchInPrimaryText) != 0)
-					{
-						return TextLayout.ConvertToTaggedText(this.primaryBundle[druid].AsString);
-					}
-
-					if (this.current.Field == 2 && (this.mode&SearchingMode.SearchInSecondaryText) != 0 && this.secondaryBundle != null)
-					{
-						return TextLayout.ConvertToTaggedText(this.secondaryBundle[druid].AsString);
+						string[] array = new string[field.StringCollection.Count];
+						field.StringCollection.CopyTo(array, 0);
+						return array[this.current.Subfield];
 					}
 				}
 
@@ -582,6 +573,18 @@ namespace Epsitec.Common.Designer
 				}
 			}
 
+			public int Subfield
+			{
+				get
+				{
+					return this.subfield;
+				}
+				set
+				{
+					this.subfield = value;
+				}
+			}
+
 			public int Index
 			{
 				get
@@ -596,9 +599,10 @@ namespace Epsitec.Common.Designer
 
 			public void CopyTo(Cursor dest)
 			{
-				dest.row   = this.row;
-				dest.field = this.field;
-				dest.index = this.index;
+				dest.row      = this.row;
+				dest.field    = this.field;
+				dest.subfield = this.subfield;
+				dest.index    = this.index;
 			}
 
 			static public int Compare(Cursor c1, Cursor c2)
@@ -609,6 +613,9 @@ namespace Epsitec.Common.Designer
 				if (c1.field < c2.field)  return -1;
 				if (c1.field > c2.field)  return 1;
 
+				if (c1.subfield < c2.subfield)  return -1;
+				if (c1.subfield > c2.subfield)  return 1;
+
 				if (c1.index < c2.index)  return -1;
 				if (c1.index > c2.index)  return 1;
 
@@ -617,16 +624,15 @@ namespace Epsitec.Common.Designer
 
 			protected int					row;
 			protected int					field;
+			protected int					subfield;
 			protected int					index;
 		}
 		#endregion
 
 
-		protected List<Druid>			druidsIndex;
-		protected ResourceBundle		primaryBundle;
-		protected ResourceBundle		secondaryBundle;
-		protected ResourceAccess.Type	type;
+		protected ResourceAccess		access;
 		protected SearchingMode			mode;
+		protected string				secondaryCulture;
 		protected string				searching;
 		protected Cursor				starting;
 		protected Cursor				current;

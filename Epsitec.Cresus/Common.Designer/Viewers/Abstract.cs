@@ -66,6 +66,44 @@ namespace Epsitec.Common.Designer.Viewers
 		public void DoSearch(string search, Searcher.SearchingMode mode)
 		{
 			//	Effectue une recherche.
+			Searcher searcher = new Searcher(this.access);
+
+			int field, subfield;
+			this.TextFieldConvert(this.currentTextField, out field, out subfield);
+			if (field == -1)
+			{
+				return;
+			}
+
+			searcher.FixStarting(mode, this.array.SelectedRow, field, subfield, this.currentTextField, this.secondaryCulture, false);
+
+			if (searcher.Search(search))
+			{
+				this.lastActionIsReplace = false;
+
+				this.access.AccessIndex = searcher.Row;
+				this.array.SelectedRow = this.access.AccessIndex;
+				this.array.ShowSelectedRow();
+
+				AbstractTextField edit = this.TextFieldConvert(searcher.Field, searcher.Subfield);
+				if (edit != null && edit.Visibility)
+				{
+					this.ignoreChange = true;
+
+					this.currentTextField = edit;
+					this.Window.MakeActive();
+					edit.Focus();
+					edit.CursorFrom  = edit.TextLayout.FindIndexFromOffset(searcher.Index);
+					edit.CursorTo    = edit.TextLayout.FindIndexFromOffset(searcher.Index+searcher.Length);
+					edit.CursorAfter = false;
+
+					this.ignoreChange = false;
+				}
+			}
+			else
+			{
+				this.module.MainWindow.DialogError(Res.Strings.Dialog.Search.Message.Error);
+			}
 #if false
 			Searcher searcher = new Searcher(this.druidsIndex, this.primaryBundle, this.secondaryBundle, this.BundleType);
 			searcher.FixStarting(mode, this.array.SelectedRow, this.currentTextField, false);
@@ -1072,6 +1110,20 @@ namespace Epsitec.Common.Designer.Viewers
 					Color cap = adorner.ColorCaption;
 					return Color.FromAlphaRgb(intensity, 0.5+cap.R*0.5, 0.5+cap.G*0.5, 0.5+cap.B*0.5);
 			}
+		}
+
+
+		protected virtual void TextFieldConvert(AbstractTextField textField, out int field, out int subfield)
+		{
+			//	Cherche les rangs correspondant à un texte éditable.
+			field = -1;
+			subfield = -1;
+		}
+
+		protected virtual AbstractTextField TextFieldConvert(int field, int subfield)
+		{
+			//	Cherche le TextField permettant d'éditer des rangs.
+			return null;
 		}
 
 
