@@ -453,13 +453,13 @@ namespace Epsitec.Common.Designer.Viewers
 			if (edit == this.primaryEdit)
 			{
 				this.access.SetField(sel, null, "String", new ResourceAccess.Field(text));
-				this.UpdateArrayField(1, sel, null, text);
+				this.UpdateArrayField(1, sel, null, "String");
 			}
 
 			if (edit == this.secondaryEdit)
 			{
 				this.access.SetField(sel, this.secondaryCulture, "String", new ResourceAccess.Field(text));
-				this.UpdateArrayField(2, sel, this.secondaryCulture, text);
+				this.UpdateArrayField(2, sel, this.secondaryCulture, "String");
 			}
 
 			if (edit == this.primaryAbout)
