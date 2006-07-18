@@ -344,6 +344,8 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		protected ResourceBundle CurrentBundle
 		{
+			//	Retourne le bundle de la culture active, correspondant au choix fait dans
+			//	l'onglet 'Cultures'.
 			get
 			{
 				string culture = Misc.CultureBaseName(this.mainWindow.CurrentModule.ResourceManager.ActiveCulture);

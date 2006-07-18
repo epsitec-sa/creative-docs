@@ -123,7 +123,7 @@ namespace Epsitec.Common.Designer
 
 		public void Duplicate(string newName, bool duplicateContent)
 		{
-			//	Duplique une ressource.
+			//	Duplique la ressource courante.
 			Druid newDruid = Druid.Empty;
 
 			if (this.IsBundlesType)
@@ -196,7 +196,7 @@ namespace Epsitec.Common.Designer
 
 		public void Delete()
 		{
-			//	Supprime une ressource dans toutes les cultures.
+			//	Supprime la ressource courante dans toutes les cultures.
 			if (this.IsBundlesType)
 			{
 				Druid druid = this.druidsIndex[this.accessIndex];
@@ -243,7 +243,7 @@ namespace Epsitec.Common.Designer
 
 		public void Move(int direction)
 		{
-			//	Déplace une ressource.
+			//	Déplace la ressource courante.
 			Druid druid = this.druidsIndex[this.accessIndex];
 			int aIndex = this.GetAbsoluteIndex(druid);
 			System.Diagnostics.Debug.Assert(aIndex != -1);
@@ -430,6 +430,7 @@ namespace Epsitec.Common.Designer
 			return null;
 		}
 
+
 		public bool IsExistingName(string name)
 		{
 			//	Vérifie si un futur "Name" existe déjà.
@@ -491,9 +492,10 @@ namespace Epsitec.Common.Designer
 			return newName;
 		}
 
+
 		public Druid GetBypassFilterDruid(int index)
 		{
-			//	Donne un Druid, sans tenir compte du filtre.
+			//	Donne un druid, sans tenir compte du filtre.
 			System.Diagnostics.Debug.Assert(this.type == Type.Strings);
 			return this.druidsIndex[index];
 		}
@@ -556,6 +558,7 @@ namespace Epsitec.Common.Designer
 
 			return newDruid;
 		}
+
 
 		public Field GetField(int index, string cultureName, string fieldName)
 		{
@@ -734,8 +737,10 @@ namespace Epsitec.Common.Designer
 			this.IsDirty = true;
 		}
 
+
 		public static MyWidgets.StringList.CellState CellState(ModificationState state)
 		{
+			//	Conversion de l'état d'une ressource.
 			MyWidgets.StringList.CellState cs = MyWidgets.StringList.CellState.Normal;
 
 			switch (state)
@@ -837,6 +842,7 @@ namespace Epsitec.Common.Designer
 
 			return false;
 		}
+
 
 		protected void CacheResource(int index, string cultureName)
 		{
@@ -1091,6 +1097,7 @@ namespace Epsitec.Common.Designer
 				this.resourceManager.SetBundle(bundle, ResourceSetMode.UpdateOnly);
 			}
 		}
+
 
 		protected void SetFilterBundles(string filter, Searcher.SearchingMode mode)
 		{
@@ -1395,7 +1402,7 @@ namespace Epsitec.Common.Designer
 
 		protected ResourceBundle PanelBundle(int index)
 		{
-			//	Donne le bundle d'un panneau en fonction de l'index du Druid.
+			//	Donne le bundle d'un panneau en fonction de l'index du druid.
 			Druid druid = this.druidsIndex[index];
 			int i = this.GetAbsoluteIndex(druid);
 			if (i == -1)
