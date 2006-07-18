@@ -258,7 +258,7 @@ namespace Epsitec.Common.Designer
 			this.info.Dock = DockStyle.Bottom;
 			this.info.Margins = new Margins(0, 0, 0, 0);
 
-			this.InfoAdd("InfoCurrentModule", 200);
+			this.InfoAdd("InfoCurrentModule", 250);
 			this.InfoAdd("InfoAccess", 250);
 			this.InfoAdd("InfoViewer", 300);
 
@@ -299,31 +299,28 @@ namespace Epsitec.Common.Designer
 		{
 			System.Text.StringBuilder builder = new System.Text.StringBuilder();
 
-#if false
 			ModuleInfo mi = this.CurrentModuleInfo;
 			if ( mi != null )
 			{
-				ResourceAccess.Type type = mi.Module.Modifier.ActiveBundleType;
-				ResourceBundleCollection bundles = mi.Module.GetBundles(type);
+				ResourceAccess access;
 
-				if (bundles != null)
-				{
-					for (int b=0; b<bundles.Count; b++)
-					{
-						ResourceBundle bundle = bundles[b];
+				access = mi.Module.GetAccess(ResourceAccess.Type.Strings);
+				builder.Append(Res.Strings.BundleType.Strings);
+				builder.Append(":");
+				builder.Append(access.TotalCount);
+				builder.Append(", ");
 
-						if (b > 0)
-						{
-							builder.Append(", ");
-						}
+				access = mi.Module.GetAccess(ResourceAccess.Type.Captions);
+				builder.Append(Res.Strings.BundleType.Captions);
+				builder.Append(":");
+				builder.Append(access.TotalCount);
+				builder.Append(", ");
 
-						builder.Append(Misc.CultureShortName(bundle.Culture));
-						builder.Append(":");
-						builder.Append(bundle.FieldCount);
-					}
-				}
+				access = mi.Module.GetAccess(ResourceAccess.Type.Panels);
+				builder.Append(Res.Strings.BundleType.Panels);
+				builder.Append(":");
+				builder.Append(access.TotalCount);
 			}
-#endif
 
 			StatusField field = this.info.Items["InfoCurrentModule"] as StatusField;
 			string text = builder.ToString();
