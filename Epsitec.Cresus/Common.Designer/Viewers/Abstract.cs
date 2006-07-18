@@ -801,14 +801,15 @@ namespace Epsitec.Common.Designer.Viewers
 				bool modified = false;
 				if (sel != -1 && this.secondaryCulture != null)
 				{
+					all = this.access.IsModificationAll(sel);
 					ResourceAccess.ModificationState state = this.access.GetModification(sel, this.secondaryCulture);
-					modified = (state != ResourceAccess.ModificationState.Normal);
+					modified = (state == ResourceAccess.ModificationState.Modified);
 				}
 
 				this.GetCommandState("ModificationPrev").Enable = true;
 				this.GetCommandState("ModificationNext").Enable = true;
-				this.GetCommandState("ModificationAll").Enable = (sel != -1 && all);
-				this.GetCommandState("ModificationClear").Enable = (sel != -1 && modified);
+				this.GetCommandState("ModificationAll").Enable = all;
+				this.GetCommandState("ModificationClear").Enable = modified;
 			}
 
 			if (this is Panels)

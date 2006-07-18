@@ -389,6 +389,8 @@ namespace Epsitec.Common.Designer.Viewers
 			{
 				this.access.SetField(sel, this.secondaryCulture, "About", new ResourceAccess.Field(text));
 			}
+
+			this.UpdateModificationsCulture();
 		}
 
 		void HandleCursorChanged(object sender)

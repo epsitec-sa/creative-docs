@@ -723,7 +723,7 @@ namespace Epsitec.Common.Designer
 
 			if (this.IsBundlesType)
 			{
-				if (this.accessBundle != this.primaryBundle)
+				if (this.accessBundle != this.primaryBundle && !this.accessField.IsEmpty)
 				{
 					Druid druid = this.druidsIndex[index];
 					this.accessField.SetModificationId(this.primaryBundle[druid].ModificationId);
@@ -758,9 +758,9 @@ namespace Epsitec.Common.Designer
 				int count = 0;
 				foreach (ResourceBundle bundle in this.bundles)
 				{
-					if (bundle != this.primaryBundle && !bundle[druid].IsEmpty)
+					if (bundle != this.primaryBundle)
 					{
-						if (bundle[druid].ModificationId < id)
+						if (bundle[druid].IsEmpty || bundle[druid].ModificationId < id)
 						{
 							count++;
 						}
