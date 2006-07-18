@@ -660,6 +660,8 @@ namespace Epsitec.Common.Designer.Viewers
 			ResourceBundle bundle = this.access.GetCulture(this.access.GetBaseCultureName());
 			this.primaryCulture.Text = string.Format(Res.Strings.Viewers.Strings.Reference, Misc.CultureName(bundle.Culture));
 
+			bool isCaptions = !(parent is Strings);
+
 			List<string> list = this.access.GetSecondaryCultureNames();
 			if (list.Count > 0)
 			{
@@ -671,10 +673,15 @@ namespace Epsitec.Common.Designer.Viewers
 					this.secondaryCultures[i] = new IconButtonMark(parent);
 					this.secondaryCultures[i].ButtonStyle = ButtonStyle.ActivableIcon;
 					this.secondaryCultures[i].SiteMark = SiteMark.OnBottom;
-					this.secondaryCultures[i].MarkDimension = 5;
+					this.secondaryCultures[i].MarkDimension = isCaptions ? 10 : 5;
 					this.secondaryCultures[i].Name = list[i];
 					this.secondaryCultures[i].Text = Misc.CultureName(bundle.Culture);
 					this.secondaryCultures[i].AutoFocus = false;
+					if (isCaptions)
+					{
+						this.secondaryCultures[i].Margins = new Margins(0, (i==list.Count-1)?1:0, 0, 0);
+						this.secondaryCultures[i].Dock = DockStyle.StackFill;
+					}
 					this.secondaryCultures[i].Clicked += new MessageEventHandler(this.HandleSecondaryCultureClicked);
 					ToolTip.Default.SetToolTip(this.secondaryCultures[i], Misc.CultureLongName(bundle.Culture));
 				}
