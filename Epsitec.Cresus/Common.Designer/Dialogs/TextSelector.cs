@@ -130,11 +130,9 @@ namespace Epsitec.Common.Designer.Dialogs
 			string label = "";
 			if (!this.resource.IsEmpty)
 			{
-				ResourceBundle.Field field = this.primaryBundle[this.resource];
-				if (!field.IsEmpty)
-				{
-					label = field.Name;
-				}
+				string text;
+				bool isDefined;
+				this.access.GetBypassFilterStrings(this.resource, this.CurrentBundle, out label, out text, out isDefined);
 			}
 
 			this.ignoreChanged = true;
@@ -202,22 +200,22 @@ namespace Epsitec.Common.Designer.Dialogs
 		{
 			//	Construit l'index en fonction des ressources.
 			//	Retourne le rang de la ressource correspondant le mieux possible aux filtres.
-#if false
-			ResourceAccess.Type type = this.mainWindow.CurrentModule.Modifier.ActiveBundleType;
-			ResourceBundleCollection bundles = this.mainWindow.CurrentModule.GetBundles(type);
-			this.primaryBundle = bundles[ResourceLevel.Merged];
-			ResourceBundle defaultBundle = bundles[ResourceLevel.Default];
-			this.isDefaultBundle = (Misc.CultureBaseName(this.primaryBundle.Culture) == Misc.CultureBaseName(defaultBundle.Culture));
-
-			this.druidsIndex.Clear();
-
 			filterLabel = Searcher.RemoveAccent(filterLabel.ToLower());
 			filterText  = Searcher.RemoveAccent(filterText.ToLower());
 
+			ResourceBundle bundle = this.CurrentBundle;
+
+			this.druidsIndex.Clear();
 			int min = 100000;
 			int best = 0;
-			foreach (ResourceBundle.Field field in this.primaryBundle.Fields)
+
+			for (int i=0; i<this.access.TotalCount; i++)
 			{
+				Druid druid = this.access.GetBypassFilterDruid(i);
+				string label, text;
+				bool isDefined;
+				this.access.GetBypassFilterStrings(druid, bundle, out label, out text, out isDefined);
+
 				bool add1 = false;
 				bool add2 = false;
 
@@ -227,12 +225,12 @@ namespace Epsitec.Common.Designer.Dialogs
 				}
 				else
 				{
-					int index = Searcher.IndexOf(field.Name, filterLabel, 0, Searcher.SearchingMode.None);
+					int index = Searcher.IndexOf(label, filterLabel, 0, Searcher.SearchingMode.None);
 					if (index != -1)
 					{
 						add1 = true;
 
-						int len = field.Name.Length - filterLabel.Length;
+						int len = label.Length - filterLabel.Length;
 						if (min > len)
 						{
 							min = len;
@@ -247,12 +245,12 @@ namespace Epsitec.Common.Designer.Dialogs
 				}
 				else
 				{
-					int index = Searcher.IndexOf(field.AsString, filterText, 0, Searcher.SearchingMode.None);
+					int index = Searcher.IndexOf(text, filterText, 0, Searcher.SearchingMode.None);
 					if (index != -1)
 					{
 						add2 = true;
 
-						int len = field.AsString.Length - filterLabel.Length;
+						int len = text.Length - filterLabel.Length;
 						if (min > len)
 						{
 							min = len;
@@ -263,14 +261,11 @@ namespace Epsitec.Common.Designer.Dialogs
 
 				if (add1 && add2)
 				{
-					Druid fullDruid = new Druid(field.Druid, this.primaryBundle.Module.Id);
-					this.druidsIndex.Add(fullDruid);
+					this.druidsIndex.Add(druid);
 				}
 			}
 
 			return best;
-#endif
-			return 0;
 		}
 
 		protected void UpdateArray()
@@ -278,18 +273,21 @@ namespace Epsitec.Common.Designer.Dialogs
 			//	Met à jour tout le contenu du tableau.
 			this.array.TotalRows = this.druidsIndex.Count;
 
+			ResourceBundle bundle = this.CurrentBundle;
+
 			int first = this.array.FirstVisibleRow;
 			for (int i=0; i<this.array.LineCount; i++)
 			{
 				if (first+i < this.druidsIndex.Count)
 				{
-					ResourceBundle.Field field = this.primaryBundle[this.druidsIndex[first+i]];
-					bool warning = (!this.isDefaultBundle && field.DataLevel == ResourceLevel.Default);
+					string label, text;
+					bool isDefined;
+					this.access.GetBypassFilterStrings(this.druidsIndex[first+i], bundle, out label, out text, out isDefined);
 
-					this.array.SetLineString(0, first+i, field.Name);
-					this.array.SetLineString(1, first+i, field.AsString);
+					this.array.SetLineString(0, first+i, label);
+					this.array.SetLineString(1, first+i, text);
 					this.array.SetLineState(0, first+i, MyWidgets.StringList.CellState.Normal);
-					this.array.SetLineState(1, first+i, warning ? MyWidgets.StringList.CellState.Warning : MyWidgets.StringList.CellState.Normal);
+					this.array.SetLineState(1, first+i, isDefined ? MyWidgets.StringList.CellState.Normal : MyWidgets.StringList.CellState.Warning);
 				}
 				else
 				{
@@ -335,7 +333,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			{
 				if (Misc.IsValidLabel(ref label))
 				{
-					if (!this.IsExistingName(label))
+					if (!this.access.IsExistingName(label))
 					{
 						createEnable = true;
 					}
@@ -344,18 +342,13 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.buttonCreate.Enable = createEnable;
 		}
 
-		protected bool IsExistingName(string baseName)
+		protected ResourceBundle CurrentBundle
 		{
-			//	Indique si un nom existe.
-#if false
-			ResourceAccess.Type type = this.mainWindow.CurrentModule.Modifier.ActiveBundleType;
-			ResourceBundleCollection bundles = this.mainWindow.CurrentModule.GetBundles(type);
-			ResourceBundle defaultBundle = bundles[ResourceLevel.Default];
-
-			ResourceBundle.Field field = defaultBundle[baseName];
-			return (field != null && field.Name != null);
-#endif
-			return false;
+			get
+			{
+				string culture = Misc.CultureBaseName(this.mainWindow.CurrentModule.ResourceManager.ActiveCulture);
+				return this.access.GetCultureBundle(culture);
+			}
 		}
 
 
@@ -408,11 +401,9 @@ namespace Epsitec.Common.Designer.Dialogs
 			{
 				if (Misc.IsValidLabel(ref label))
 				{
-					if (!this.IsExistingName(label))
+					if (!this.access.IsExistingName(label))
 					{
-						ResourceAccess.Type type = this.mainWindow.CurrentModule.Modifier.ActiveBundleType;
-						//?Druid druid = this.mainWindow.CurrentModule.Modifier.Create(type, label, text);
-						//?this.resource = druid;
+						this.resource = this.access.CreateBypassFilter(this.CurrentBundle, label, text);
 					}
 				}
 			}
@@ -501,8 +492,6 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected Button						buttonCancel;
 
 		protected Druid							resource;
-		protected ResourceBundle				primaryBundle;
-		protected bool							isDefaultBundle;
 		protected List<Druid>					druidsIndex;
 		protected Widget						focusedWidget;
 	}
