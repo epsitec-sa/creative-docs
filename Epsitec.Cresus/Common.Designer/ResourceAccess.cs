@@ -84,7 +84,6 @@ namespace Epsitec.Common.Designer
 
 			this.SetFilter("", Searcher.SearchingMode.None);
 
-			this.CacheClear();
 			this.IsDirty = false;
 		}
 
@@ -303,6 +302,8 @@ namespace Epsitec.Common.Designer
 				index = 0;
 			}
 			this.accessIndex = index;
+
+			this.CacheClear();
 		}
 
 		public int TotalCount
@@ -497,7 +498,7 @@ namespace Epsitec.Common.Designer
 			{
 				if (fieldName == ResourceAccess.NameStrings[0])
 				{
-					return new Field(this.accessField.Name);
+					return new Field(this.SubFilter(this.accessField.Name));
 				}
 			}
 
@@ -581,7 +582,7 @@ namespace Epsitec.Common.Designer
 
 				if (fieldName == ResourceAccess.NameStrings[0])
 				{
-					this.accessField.SetName(field.String);
+					this.accessField.SetName(this.AddFilter(field.String));
 				}
 			}
 
