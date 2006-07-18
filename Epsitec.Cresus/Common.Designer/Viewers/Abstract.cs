@@ -69,7 +69,7 @@ namespace Epsitec.Common.Designer.Viewers
 			Searcher searcher = new Searcher(this.access);
 
 			int field, subfield;
-			this.TextFieldConvert(this.currentTextField, out field, out subfield);
+			this.TextFieldToIndex(this.currentTextField, out field, out subfield);
 			if (field == -1)
 			{
 				return;
@@ -85,7 +85,7 @@ namespace Epsitec.Common.Designer.Viewers
 				this.array.SelectedRow = this.access.AccessIndex;
 				this.array.ShowSelectedRow();
 
-				AbstractTextField edit = this.TextFieldConvert(searcher.Field, searcher.Subfield);
+				AbstractTextField edit = this.IndexToTextField(searcher.Field, searcher.Subfield);
 				if (edit != null && edit.Visibility)
 				{
 					this.ignoreChange = true;
@@ -1113,17 +1113,31 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
-		protected virtual void TextFieldConvert(AbstractTextField textField, out int field, out int subfield)
+		protected virtual void TextFieldToIndex(AbstractTextField textField, out int field, out int subfield)
 		{
-			//	Cherche les rangs correspondant à un texte éditable.
+			//	Cherche les index correspondant à un texte éditable.
 			field = -1;
 			subfield = -1;
 		}
 
-		protected virtual AbstractTextField TextFieldConvert(int field, int subfield)
+		protected virtual AbstractTextField IndexToTextField(int field, int subfield)
 		{
-			//	Cherche le TextField permettant d'éditer des rangs.
+			//	Cherche le TextField permettant d'éditer des index.
 			return null;
+		}
+
+		public static void SearchCreateFilterGroup(AbstractGroup parent, EventHandler handler, ResourceAccess.Type type)
+		{
+			switch (type)
+			{
+				case ResourceAccess.Type.Strings:
+					Strings.SearchCreateFilterGroup(parent, handler);
+					break;
+
+				case ResourceAccess.Type.Captions:
+					Captions.SearchCreateFilterGroup(parent, handler);
+					break;
+			}
 		}
 
 
