@@ -341,7 +341,7 @@ namespace Epsitec.Common.Designer
 			get
 			{
 				string cultureName, fieldName;
-				this.access.SearcherConvert(this.current.Field, this.secondaryCulture, out cultureName, out fieldName);
+				this.access.SearcherIndexToAccess(this.current.Field, this.secondaryCulture, out cultureName, out fieldName);
 
 				ResourceAccess.Field field = this.access.GetField(this.current.Row, cultureName, fieldName);
 				if (field == null)

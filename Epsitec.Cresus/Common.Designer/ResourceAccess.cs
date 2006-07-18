@@ -276,7 +276,7 @@ namespace Epsitec.Common.Designer
 		{
 			//	Construit l'index en fonction des ressources primaires.
 			Druid druid = Druid.Empty;
-			if (this.accessIndex < this.druidsIndex.Count)
+			if (this.accessIndex >= 0 && this.accessIndex < this.druidsIndex.Count)
 			{
 				druid = this.druidsIndex[this.accessIndex];
 			}
@@ -844,7 +844,7 @@ namespace Epsitec.Common.Designer
 		}
 
 
-		public void SearcherConvert(int field, string secondaryCulture, out string cultureName, out string fieldName)
+		public void SearcherIndexToAccess(int field, string secondaryCulture, out string cultureName, out string fieldName)
 		{
 			if (this.type == Type.Strings)
 			{
@@ -945,7 +945,7 @@ namespace Epsitec.Common.Designer
 			fieldName = null;
 		}
 
-		public void SearcherConvert(string cultureName, string fieldName, out int field)
+		public void SearcherAccessToIndex(string cultureName, string fieldName, out int field)
 		{
 			if (this.type == Type.Strings)
 			{

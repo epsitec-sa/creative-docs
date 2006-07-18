@@ -379,7 +379,7 @@ namespace Epsitec.Common.Designer.Viewers
 		#endregion
 
 
-		protected override void TextFieldConvert(AbstractTextField textField, out int field, out int subfield)
+		protected override void TextFieldToIndex(AbstractTextField textField, out int field, out int subfield)
 		{
 			field = -1;
 			subfield = -1;
@@ -391,7 +391,7 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 		}
 
-		protected override AbstractTextField TextFieldConvert(int field, int subfield)
+		protected override AbstractTextField IndexToTextField(int field, int subfield)
 		{
 			if (field == 0 && subfield == 0)
 			{
