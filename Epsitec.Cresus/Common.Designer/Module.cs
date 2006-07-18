@@ -26,8 +26,6 @@ namespace Epsitec.Common.Designer
 
 			this.accessStrings = new ResourceAccess(ResourceAccess.Type.Strings, this.resourceManager, this.moduleInfo);
 			this.accessCaptions = new ResourceAccess(ResourceAccess.Type.Captions, this.resourceManager, this.moduleInfo);
-			this.accessCommands = new ResourceAccess(ResourceAccess.Type.Commands, this.resourceManager, this.moduleInfo);
-			this.accessTypes = new ResourceAccess(ResourceAccess.Type.Types, this.resourceManager, this.moduleInfo);
 			this.accessPanels = new ResourceAccess(ResourceAccess.Type.Panels, this.resourceManager, this.moduleInfo);
 			this.accessScripts = new ResourceAccess(ResourceAccess.Type.Scripts, this.resourceManager, this.moduleInfo);
 
@@ -95,12 +93,21 @@ namespace Epsitec.Common.Designer
 		public ResourceAccess GetAccess(ResourceAccess.Type type)
 		{
 			//	Cherche un accès d'après son type.
-			foreach (ResourceAccess access in Access)
+			switch (type)
 			{
-				if (access.ResourceType == type)
-				{
-					return access;
-				}
+				case ResourceAccess.Type.Strings:
+					return this.accessStrings;
+
+				case ResourceAccess.Type.Captions:
+				case ResourceAccess.Type.Commands:
+				case ResourceAccess.Type.Types:
+					return this.accessCaptions;
+
+				case ResourceAccess.Type.Panels:
+					return this.accessPanels;
+
+				case ResourceAccess.Type.Scripts:
+					return this.accessScripts;
 			}
 
 			return null;
@@ -171,8 +178,6 @@ namespace Epsitec.Common.Designer
 			{
 				yield return accessStrings;
 				yield return accessCaptions;
-				yield return accessCommands;
-				yield return accessTypes;
 				yield return accessPanels;
 				yield return accessScripts;
 			}
@@ -208,8 +213,6 @@ namespace Epsitec.Common.Designer
 		protected ResourceManager			resourceManager;
 		protected ResourceAccess			accessStrings;
 		protected ResourceAccess			accessCaptions;
-		protected ResourceAccess			accessCommands;
-		protected ResourceAccess			accessTypes;
 		protected ResourceAccess			accessPanels;
 		protected ResourceAccess			accessScripts;
 	}

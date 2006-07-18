@@ -33,20 +33,39 @@ namespace Epsitec.Common.Designer
 		public ResourceAccess(Type type, ResourceManager resourceManager, ResourceModuleInfo moduleInfo)
 		{
 			//	Constructeur unique pour accéder aux ressources d'un type donné.
-			//	Par la suite, l'instance créée accédera toujours aux ressources de ce type.
+			//	Par la suite, l'instance créée accédera toujours aux ressources de ce type,
+			//	sauf pour les ressources Captions, Commands et Types.
 			this.type = type;
 			this.resourceManager = resourceManager;
 			this.moduleInfo = moduleInfo;
 
 			this.druidsIndex = new List<Druid>();
+
+			this.filterStrings = new string[10];
+			this.filterModes = new Searcher.SearchingMode[10];
 		}
 
 
 		public Type ResourceType
 		{
+			//	Type des ressources accédées.
 			get
 			{
 				return this.type;
+			}
+
+			set
+			{
+				System.Diagnostics.Debug.Assert(this.type == Type.Captions || this.type == Type.Commands || this.type == Type.Types);
+				System.Diagnostics.Debug.Assert(value == Type.Captions || value == Type.Commands || value == Type.Types);
+				if (this.type != value)
+				{
+					this.type = value;
+
+					//	Remet le filtre correspondant au type.
+					int i = (int) this.type;
+					this.SetFilter(this.filterStrings[i], this.filterModes[i]);
+				}
 			}
 		}
 
@@ -261,6 +280,7 @@ namespace Epsitec.Common.Designer
 				druid = this.druidsIndex[this.accessIndex];
 			}
 
+			//	Met à jour druidsIndex.
 			if (this.IsBundlesType)
 			{
 				this.SetFilterBundles(filter, mode);
@@ -271,6 +291,12 @@ namespace Epsitec.Common.Designer
 				this.SetFilterPanels(filter, mode);
 			}
 
+			//	Mémorise le filtre utilisé.
+			int i = (int) this.type;
+			this.filterStrings[i] = filter;
+			this.filterModes[i] = mode;
+
+			//	Cherche l'index correspondant à la ressource d'avant le changement de filtre.
 			int index = this.druidsIndex.IndexOf(druid);
 			if (index == -1)
 			{
@@ -1543,5 +1569,7 @@ namespace Epsitec.Common.Designer
 		protected List<ResourceBundle>			panelsList;
 		protected List<ResourceBundle>			panelsToCreate;
 		protected List<ResourceBundle>			panelsToDelete;
+		protected string[]						filterStrings;
+		protected Searcher.SearchingMode[]		filterModes;
 	}
 }
