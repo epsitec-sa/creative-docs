@@ -957,6 +957,7 @@ namespace Epsitec.Common.Designer
 				this.resourceManager.SetBundle(bundle, ResourceSetMode.CreateOnly);
 
 				this.LoadBundles();
+				this.IsDirty = true;
 			}
 		}
 
@@ -971,6 +972,7 @@ namespace Epsitec.Common.Designer
 				{
 					this.resourceManager.RemoveBundle(this.BundleName(true), ResourceLevel.Localized, bundle.Culture);
 					this.LoadBundles();
+					this.IsDirty = true;
 				}
 			}
 		}
