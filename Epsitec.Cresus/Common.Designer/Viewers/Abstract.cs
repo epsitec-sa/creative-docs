@@ -734,29 +734,12 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Met à jour le contenu du Viewer.
 		}
 
-		public virtual void UpdateCommands()
+		public void UpdateCommands()
 		{
 			//	Met à jour les commandes en fonction de la ressource sélectionnée.
 			int sel = this.access.AccessIndex;
 			int count = this.access.AccessCount;
 			bool build = (this.module.Mode == DesignerMode.Build);
-
-			this.GetCommandState ("Save").Enable = this.access.IsDirty;
-			this.GetCommandState ("SaveAs").Enable = true;
-			
-			this.GetCommandState("Filter").Enable = true;
-
-			this.GetCommandState("AccessFirst").Enable = (sel != -1 && sel > 0);
-			this.GetCommandState("AccessPrev").Enable = (sel != -1 && sel > 0);
-			this.GetCommandState("AccessLast").Enable = (sel != -1 && sel < count-1);
-			this.GetCommandState("AccessNext").Enable = (sel != -1 && sel < count-1);
-
-			this.GetCommandState("Delete").Enable = (sel != -1 && count > 1 && build);
-			this.GetCommandState("Create").Enable = (sel != -1 && build);
-			this.GetCommandState("Duplicate").Enable = (sel != -1 && build);
-
-			this.GetCommandState("Up").Enable = (sel != -1 && sel > 0 && build);
-			this.GetCommandState("Down").Enable = (sel != -1 && sel < count-1 && build);
 
 			this.UpdateCommandTool("ToolSelect");
 			this.UpdateCommandTool("ToolGlobal");
@@ -771,6 +754,180 @@ namespace Epsitec.Common.Designer.Viewers
 			this.UpdateCommandTool("ObjectStatic");
 			this.UpdateCommandTool("ObjectGroup");
 			this.UpdateCommandTool("ObjectGroupBox");
+
+			this.GetCommandState("Save").Enable = this.access.IsDirty;
+			this.GetCommandState("SaveAs").Enable = true;
+
+			if (this is Panels)
+			{
+				this.GetCommandState("NewCulture").Enable = false;
+				this.GetCommandState("DeleteCulture").Enable = false;
+			}
+			else
+			{
+				this.GetCommandState("NewCulture").Enable = (this.access.CultureCount < Misc.Cultures.Length);
+				this.GetCommandState("DeleteCulture").Enable = (this.access.CultureCount > 1);
+			}
+
+			bool search = this.module.MainWindow.DialogSearch.IsActionsEnabled;
+			this.GetCommandState("Search").Enable = true;
+			this.GetCommandState("SearchPrev").Enable = search;
+			this.GetCommandState("SearchNext").Enable = search;
+
+			this.GetCommandState("Filter").Enable = true;
+
+			this.GetCommandState("AccessFirst").Enable = (sel != -1 && sel > 0);
+			this.GetCommandState("AccessPrev").Enable = (sel != -1 && sel > 0);
+			this.GetCommandState("AccessLast").Enable = (sel != -1 && sel < count-1);
+			this.GetCommandState("AccessNext").Enable = (sel != -1 && sel < count-1);
+
+			this.GetCommandState("Delete").Enable = (sel != -1 && count > 1 && build);
+			this.GetCommandState("Create").Enable = (sel != -1 && build);
+			this.GetCommandState("Duplicate").Enable = (sel != -1 && build);
+
+			this.GetCommandState("Up").Enable = (sel != -1 && sel > 0 && build);
+			this.GetCommandState("Down").Enable = (sel != -1 && sel < count-1 && build);
+
+			if (this is Panels)
+			{
+				this.GetCommandState("ModificationPrev").Enable = false;
+				this.GetCommandState("ModificationNext").Enable = false;
+				this.GetCommandState("ModificationAll").Enable = false;
+				this.GetCommandState("ModificationClear").Enable = false;
+			}
+			else
+			{
+				bool all = false;
+				bool modified = false;
+				if (sel != -1 && this.secondaryCulture != null)
+				{
+					ResourceAccess.ModificationState state = this.access.GetModification(sel, this.secondaryCulture);
+					modified = (state != ResourceAccess.ModificationState.Normal);
+				}
+
+				this.GetCommandState("ModificationPrev").Enable = true;
+				this.GetCommandState("ModificationNext").Enable = true;
+				this.GetCommandState("ModificationAll").Enable = (sel != -1 && all);
+				this.GetCommandState("ModificationClear").Enable = (sel != -1 && modified);
+			}
+
+			if (this is Panels)
+			{
+				this.GetCommandState("FontBold").Enable = false;
+				this.GetCommandState("FontItalic").Enable = false;
+				this.GetCommandState("FontUnderlined").Enable = false;
+				this.GetCommandState("Glyphs").Enable = false;
+			}
+			else
+			{
+				this.GetCommandState("FontBold").Enable = (sel != -1);
+				this.GetCommandState("FontItalic").Enable = (sel != -1);
+				this.GetCommandState("FontUnderlined").Enable = (sel != -1);
+				this.GetCommandState("Glyphs").Enable = (sel != -1);
+			}
+
+			if (this is Panels)
+			{
+				int objSelected, objCount;
+				Panels panels = this as Panels;
+				panels.PanelEditor.GetSelectionInfo(out objSelected, out objCount);
+
+				this.GetCommandState("PanelDelete").Enable = (objSelected != 0);
+				this.GetCommandState("PanelDuplicate").Enable = (objSelected != 0);
+				this.GetCommandState("PanelDeselectAll").Enable = (objSelected != 0);
+				this.GetCommandState("PanelSelectAll").Enable = (objSelected < objCount);
+				this.GetCommandState("PanelSelectInvert").Enable = (objCount > 0);
+
+				this.GetCommandState("PanelShowGrid").Enable = true;
+				this.GetCommandState("PanelShowConstrain").Enable = true;
+				this.GetCommandState("PanelShowAttachment").Enable = true;
+				this.GetCommandState("PanelShowExpand").Enable = true;
+				this.GetCommandState("PanelShowZOrder").Enable = true;
+				this.GetCommandState("PanelShowTabIndex").Enable = true;
+				this.GetCommandState("PanelRun").Enable = (sel != -1);
+				this.GetCommandState("PanelShowGrid").ActiveState = this.context.ShowGrid ? ActiveState.Yes : ActiveState.No;
+				this.GetCommandState("PanelShowConstrain").ActiveState = this.context.ShowConstrain ? ActiveState.Yes : ActiveState.No;
+				this.GetCommandState("PanelShowAttachment").ActiveState = this.context.ShowAttachment ? ActiveState.Yes : ActiveState.No;
+				this.GetCommandState("PanelShowExpand").ActiveState = this.context.ShowExpand ? ActiveState.Yes : ActiveState.No;
+				this.GetCommandState("PanelShowZOrder").ActiveState = this.context.ShowZOrder ? ActiveState.Yes : ActiveState.No;
+				this.GetCommandState("PanelShowTabIndex").ActiveState = this.context.ShowTabIndex ? ActiveState.Yes : ActiveState.No;
+
+				this.GetCommandState("MoveLeft").Enable = (objSelected != 0);
+				this.GetCommandState("MoveRight").Enable = (objSelected != 0);
+				this.GetCommandState("MoveDown").Enable = (objSelected != 0);
+				this.GetCommandState("MoveUp").Enable = (objSelected != 0);
+
+				this.GetCommandState("AlignLeft").Enable = (objSelected >= 2);
+				this.GetCommandState("AlignCenterX").Enable = (objSelected >= 2);
+				this.GetCommandState("AlignRight").Enable = (objSelected >= 2);
+				this.GetCommandState("AlignTop").Enable = (objSelected >= 2);
+				this.GetCommandState("AlignCenterY").Enable = (objSelected >= 2);
+				this.GetCommandState("AlignBottom").Enable = (objSelected >= 2);
+				this.GetCommandState("AlignBaseLine").Enable = (objSelected >= 2);
+				this.GetCommandState("AdjustWidth").Enable = (objSelected >= 2);
+				this.GetCommandState("AdjustHeight").Enable = (objSelected >= 2);
+				this.GetCommandState("AlignGrid").Enable = (objSelected != 0);
+
+				this.GetCommandState("OrderUpAll").Enable = (objSelected != 0 && objCount >= 2);
+				this.GetCommandState("OrderDownAll").Enable = (objSelected != 0 && objCount >= 2);
+				this.GetCommandState("OrderUpOne").Enable = (objSelected != 0 && objCount >= 2);
+				this.GetCommandState("OrderDownOne").Enable = (objSelected != 0 && objCount >= 2);
+
+				this.GetCommandState("TabIndexClear").Enable = (objSelected != 0);
+				this.GetCommandState("TabIndexRenum").Enable = (objCount != 0);
+				this.GetCommandState("TabIndexLast").Enable = (objSelected != 0);
+				this.GetCommandState("TabIndexPrev").Enable = (objSelected != 0);
+				this.GetCommandState("TabIndexNext").Enable = (objSelected != 0);
+				this.GetCommandState("TabIndexFirst").Enable = (objSelected != 0);
+			}
+			else
+			{
+				this.GetCommandState("PanelDelete").Enable = false;
+				this.GetCommandState("PanelDuplicate").Enable = false;
+				this.GetCommandState("PanelDeselectAll").Enable = false;
+				this.GetCommandState("PanelSelectAll").Enable = false;
+				this.GetCommandState("PanelSelectInvert").Enable = false;
+
+				this.GetCommandState("PanelShowGrid").Enable = false;
+				this.GetCommandState("PanelShowConstrain").Enable = false;
+				this.GetCommandState("PanelShowAttachment").Enable = false;
+				this.GetCommandState("PanelShowExpand").Enable = false;
+				this.GetCommandState("PanelShowZOrder").Enable = false;
+				this.GetCommandState("PanelShowTabIndex").Enable = false;
+				this.GetCommandState("PanelRun").Enable = false;
+
+				this.GetCommandState("MoveLeft").Enable = false;
+				this.GetCommandState("MoveRight").Enable = false;
+				this.GetCommandState("MoveDown").Enable = false;
+				this.GetCommandState("MoveUp").Enable = false;
+
+				this.GetCommandState("AlignLeft").Enable = false;
+				this.GetCommandState("AlignCenterX").Enable = false;
+				this.GetCommandState("AlignRight").Enable = false;
+				this.GetCommandState("AlignTop").Enable = false;
+				this.GetCommandState("AlignCenterY").Enable = false;
+				this.GetCommandState("AlignBottom").Enable = false;
+				this.GetCommandState("AlignBaseLine").Enable = false;
+				this.GetCommandState("AdjustWidth").Enable = false;
+				this.GetCommandState("AdjustHeight").Enable = false;
+				this.GetCommandState("AlignGrid").Enable = false;
+
+				this.GetCommandState("OrderUpAll").Enable = false;
+				this.GetCommandState("OrderDownAll").Enable = false;
+				this.GetCommandState("OrderUpOne").Enable = false;
+				this.GetCommandState("OrderDownOne").Enable = false;
+
+				this.GetCommandState("TabIndexClear").Enable = false;
+				this.GetCommandState("TabIndexRenum").Enable = false;
+				this.GetCommandState("TabIndexLast").Enable = false;
+				this.GetCommandState("TabIndexPrev").Enable = false;
+				this.GetCommandState("TabIndexNext").Enable = false;
+				this.GetCommandState("TabIndexFirst").Enable = false;
+			}
+
+			this.module.MainWindow.UpdateInfoCurrentModule();
+			this.module.MainWindow.UpdateInfoAccess();
+			this.module.MainWindow.UpdateInfoViewer();
 		}
 
 		protected void UpdateCommandTool(string name)
