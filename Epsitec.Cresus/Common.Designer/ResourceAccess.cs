@@ -491,6 +491,72 @@ namespace Epsitec.Common.Designer
 			return newName;
 		}
 
+		public Druid GetBypassFilterDruid(int index)
+		{
+			//	Donne un Druid, sans tenir compte du filtre.
+			System.Diagnostics.Debug.Assert(this.type == Type.Strings);
+			return this.druidsIndex[index];
+		}
+
+		public void GetBypassFilterStrings(Druid druid, ResourceBundle bundle, out string name, out string text, out bool isDefined)
+		{
+			//	Donne les chaînes 'Name' et 'String' d'une ressource de type Strings,
+			//	sans tenir compte du filtre.
+			System.Diagnostics.Debug.Assert(this.type == Type.Strings);
+			ResourceBundle.Field field = bundle[druid];
+
+			isDefined = true;
+
+			if (field.IsEmpty)
+			{
+				field = this.primaryBundle[druid];
+				isDefined = false;
+			}
+
+			name = this.SubFilter(field.Name);
+			text = field.AsString;
+		}
+
+		public Druid CreateBypassFilter(ResourceBundle bundle, string name, string text)
+		{
+			//	Crée une nouvelle ressource 'Strings' à la fin.
+			System.Diagnostics.Debug.Assert(this.type == Type.Strings);
+			name = this.AddFilter(name);
+
+			Druid newDruid = this.CreateUniqueDruid();
+
+			foreach (ResourceBundle b in this.bundles)
+			{
+				ResourceBundle.Field newField = b.CreateField(ResourceFieldType.Data);
+				newField.SetDruid(newDruid);
+				newField.SetName(name);
+
+				if (b == bundle)
+				{
+					newField.SetStringValue(text);
+				}
+				else
+				{
+					newField.SetStringValue("");
+				}
+
+				if (b == this.primaryBundle)
+				{
+					newField.SetModificationId(1);
+					b.Add(newField);
+				}
+				else
+				{
+					newField.SetModificationId(0);
+					b.Add(newField);
+				}
+			}
+
+			this.druidsIndex.Add(newDruid);
+
+			return newDruid;
+		}
+
 		public Field GetField(int index, string cultureName, string fieldName)
 		{
 			//	Retourne les données d'un champ.
@@ -789,7 +855,7 @@ namespace Epsitec.Common.Designer
 					}
 					else
 					{
-						this.accessBundle = this.GetCulture(this.accessCulture);
+						this.accessBundle = this.GetCultureBundle(this.accessCulture);
 					}
 				}
 
@@ -874,7 +940,7 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		public ResourceBundle GetCulture(string cultureName)
+		public ResourceBundle GetCultureBundle(string cultureName)
 		{
 			//	Cherche le bundle d'une culture.
 			System.Diagnostics.Debug.Assert(cultureName.Length == 2);
@@ -967,7 +1033,7 @@ namespace Epsitec.Common.Designer
 			System.Diagnostics.Debug.Assert(cultureName.Length == 2);
 			if (this.IsBundlesType)
 			{
-				ResourceBundle bundle = this.GetCulture(cultureName);
+				ResourceBundle bundle = this.GetCultureBundle(cultureName);
 				if (bundle != null)
 				{
 					this.resourceManager.RemoveBundle(this.BundleName(true), ResourceLevel.Localized, bundle.Culture);

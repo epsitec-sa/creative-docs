@@ -468,7 +468,7 @@ namespace Epsitec.Common.Designer.Viewers
 		public void DoDeleteCulture()
 		{
 			//	Supprime la culture courante.
-			ResourceBundle bundle = this.access.GetCulture(this.secondaryCulture);
+			ResourceBundle bundle = this.access.GetCultureBundle(this.secondaryCulture);
 			string question = string.Format(Res.Strings.Dialog.DeleteCulture.Question, Misc.CultureName(bundle.Culture));
 			Common.Dialogs.DialogResult result = this.module.MainWindow.DialogQuestion(question);
 			if ( result != Epsitec.Common.Dialogs.DialogResult.Yes )  return;
@@ -680,7 +680,7 @@ namespace Epsitec.Common.Designer.Viewers
 				this.secondaryCultures = null;
 			}
 
-			ResourceBundle bundle = this.access.GetCulture(this.access.GetBaseCultureName());
+			ResourceBundle bundle = this.access.GetCultureBundle(this.access.GetBaseCultureName());
 			this.primaryCulture.Text = string.Format(Res.Strings.Viewers.Strings.Reference, Misc.CultureName(bundle.Culture));
 
 			Widget parent = this.CultureParentWidget;
@@ -692,7 +692,7 @@ namespace Epsitec.Common.Designer.Viewers
 				this.secondaryCultures = new IconButtonMark[list.Count];
 				for (int i=0; i<list.Count; i++)
 				{
-					bundle = this.access.GetCulture(list[i]);
+					bundle = this.access.GetCultureBundle(list[i]);
 
 					this.secondaryCultures[i] = new IconButtonMark(parent);
 					this.secondaryCultures[i].ButtonStyle = ButtonStyle.ActivableIcon;

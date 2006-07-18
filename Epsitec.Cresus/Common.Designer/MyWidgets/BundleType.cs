@@ -94,6 +94,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonScripts.Margins = new Margins(2, 0, 10, 0);
 			this.buttonScripts.Dock = DockStyle.Left;
 			this.buttonScripts.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+			this.buttonScripts.Visibility = false;
 
 			this.UpdateButtons();
 		}
