@@ -844,20 +844,20 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 
 			this.access.SetField(sel, null, "Name", new ResourceAccess.Field(editedName));
-			this.UpdateArrayField(0, sel, null, editedName);
+			this.UpdateArrayField(0, sel, null, "Name");
 		}
 
-		protected void UpdateArrayField(int column, int row, string culture, string name)
+		protected void UpdateArrayField(int column, int row, string culture, string fieldName)
 		{
 			//	Met à jour une cellule dans le tableau.
-			if (name == null)
+			if (fieldName == null)
 			{
 				this.array.SetLineString(column, row, "");
 				this.array.SetLineState(column, row, MyWidgets.StringList.CellState.Disabled);
 			}
 			else
 			{
-				ResourceAccess.Field field = this.access.GetField(row, culture, name);
+				ResourceAccess.Field field = this.access.GetField(row, culture, fieldName);
 				ResourceAccess.ModificationState state = this.access.GetModification(row, culture);
 
 				this.array.SetLineString(column, row, field.String);
