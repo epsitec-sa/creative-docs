@@ -89,9 +89,9 @@ namespace Epsitec.Common.Designer.Viewers
 			this.secondaryAbout.TabIndex = tabIndex++;
 			this.secondaryAbout.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
-			this.UpdateCultures(this);
+			this.UpdateCultures();
 			this.UpdateEdit();
-			this.UpdateModifiers();
+			this.UpdateModificationsCulture();
 			this.UpdateCommands();
 		}
 
@@ -150,8 +150,7 @@ namespace Epsitec.Common.Designer.Viewers
 		protected override void UpdateArray()
 		{
 			//	Met à jour tout le contenu du tableau.
-			int index = this.access.AccessIndex;
-
+			//	Version spéciale pour les trois colonnes de Strings.
 			this.array.TotalRows = this.access.AccessCount;
 
 			int first = this.array.FirstVisibleRow;
@@ -170,6 +169,8 @@ namespace Epsitec.Common.Designer.Viewers
 					this.UpdateArrayField(2, first+i, null, null);
 				}
 			}
+
+			this.array.SelectedRow = this.access.AccessIndex;
 		}
 
 		protected override void SelectEdit(bool secondary)
@@ -432,7 +433,7 @@ namespace Epsitec.Common.Designer.Viewers
 			//	La ligne sélectionnée a changé.
 			this.access.AccessIndex = this.array.SelectedRow;
 			this.UpdateEdit();
-			this.UpdateModifiers();
+			this.UpdateModificationsCulture();
 			this.UpdateCommands();
 		}
 

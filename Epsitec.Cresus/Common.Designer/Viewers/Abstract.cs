@@ -356,7 +356,7 @@ namespace Epsitec.Common.Designer.Viewers
 				this.access.ModificationSetAll(sel);
 
 				this.UpdateArray();
-				this.UpdateModifiers();
+				this.UpdateModificationsCulture();
 				this.UpdateCommands();
 			}
 			else if (name == "ModificationClear")
@@ -365,7 +365,7 @@ namespace Epsitec.Common.Designer.Viewers
 				this.access.ModificationClear(sel, this.secondaryCulture);
 
 				this.UpdateArray();
-				this.UpdateModifiers();
+				this.UpdateModificationsCulture();
 				this.UpdateCommands();
 			}
 			else
@@ -458,9 +458,9 @@ namespace Epsitec.Common.Designer.Viewers
 			if ( name == null )  return;
 			this.access.CreateCulture(name);
 
-			this.UpdateCultures(this);
+			this.UpdateCultures();
 			this.UpdateArray();
-			this.UpdateModifiers();
+			this.UpdateModificationsCulture();
 			this.UpdateClientGeometry();
 			this.UpdateCommands();
 		}
@@ -468,19 +468,20 @@ namespace Epsitec.Common.Designer.Viewers
 		public void DoDeleteCulture()
 		{
 			//	Supprime la culture courante.
-			string question = string.Format(Res.Strings.Dialog.DeleteCulture.Question, this.secondaryCulture);
+			ResourceBundle bundle = this.access.GetCulture(this.secondaryCulture);
+			string question = string.Format(Res.Strings.Dialog.DeleteCulture.Question, Misc.CultureName(bundle.Culture));
 			Common.Dialogs.DialogResult result = this.module.MainWindow.DialogQuestion(question);
 			if ( result != Epsitec.Common.Dialogs.DialogResult.Yes )  return;
 
 			this.access.DeleteCulture(this.secondaryCulture);
 
-			this.UpdateCultures(this);
+			this.UpdateCultures();
 			if (this.secondaryCulture != null)
 			{
 				this.UpdateSelectedCulture();
 			}
 			this.UpdateArray();
-			this.UpdateModifiers();
+			this.UpdateModificationsCulture();
 			this.UpdateClientGeometry();
 			this.UpdateCommands();
 		}
@@ -595,11 +596,31 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected virtual void UpdateArray()
 		{
+			//	Met à jour tout le contenu du tableau.
+			//	Cette version convient pour un tableau d'une seule colonne (Captions, Panels, etc.).
+			//	Seul Strings et ses trois colonnes doit implémenter une autre version.
+			this.array.TotalRows = this.access.AccessCount;
+
+			int first = this.array.FirstVisibleRow;
+			for (int i=0; i<this.array.LineCount; i++)
+			{
+				if (first+i < this.access.AccessCount)
+				{
+					this.UpdateArrayField(0, first+i, null, "Name");
+				}
+				else
+				{
+					this.UpdateArrayField(0, first+i, null, null);
+				}
+			}
+
+			this.array.SelectedRow = this.access.AccessIndex;
 		}
 
-		protected void UpdateModifiers()
+		protected void UpdateModificationsCulture()
 		{
-			if (this.secondaryCultures == null)
+			//	Met à jour les pastilles dans les boutons des cultures.
+			if (this.secondaryCultures == null)  // pas de culture secondaire ?
 			{
 				return;
 			}
@@ -637,16 +658,18 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 		}
 
-		protected virtual void SelectEdit(bool secondary)
+		protected virtual Widget CultureParentWidget
 		{
+			//	Retourne le parent à utiliser pour les boutons des cultures.
+			get
+			{
+				return this;
+			}
 		}
 
-		protected virtual void UpdateEdit()
+		protected void UpdateCultures()
 		{
-		}
-
-		protected void UpdateCultures(Widget parent)
-		{
+			//	Met à jour les boutons des cultures en fonction des cultures existantes.
 			if (this.secondaryCultures != null)
 			{
 				foreach (IconButtonMark button in this.secondaryCultures)
@@ -660,6 +683,7 @@ namespace Epsitec.Common.Designer.Viewers
 			ResourceBundle bundle = this.access.GetCulture(this.access.GetBaseCultureName());
 			this.primaryCulture.Text = string.Format(Res.Strings.Viewers.Strings.Reference, Misc.CultureName(bundle.Culture));
 
+			Widget parent = this.CultureParentWidget;
 			bool isCaptions = !(parent is Strings);
 
 			List<string> list = this.access.GetSecondaryCultureNames();
@@ -695,6 +719,14 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 
 			this.access.SetFilter("", Searcher.SearchingMode.None);
+		}
+
+		protected virtual void SelectEdit(bool secondary)
+		{
+		}
+
+		protected virtual void UpdateEdit()
+		{
 		}
 
 		public virtual void Update()
@@ -808,6 +840,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected void UpdateFieldName(AbstractTextField edit, int sel)
 		{
+			//	Change le 'Name' d'une ressource, en gérant les diverses impossibilités.
 			string editedName = edit.Text;
 			string initialName = this.access.GetField(sel, null, "Name").String;
 
@@ -865,20 +898,6 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 		}
 
-
-		
-		protected void HandleEditKeyboardFocusChanged(object sender, Epsitec.Common.Types.DependencyPropertyChangedEventArgs e)
-		{
-			//	Appelé lorsqu'une ligne éditable voit son focus changer.
-			bool focused = (bool) e.NewValue;
-
-			if (focused)
-			{
-				this.currentTextField = sender as AbstractTextField;
-			}
-		}
-
-
 		protected static Color GetBackgroundColor(ResourceAccess.ModificationState state, double intensity)
 		{
 			//	Donne une couleur pour un fond de panneau.
@@ -898,40 +917,18 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
-#if false
-		#region CultureInfo
-		public class CultureInfo
+		protected void HandleEditKeyboardFocusChanged(object sender, Epsitec.Common.Types.DependencyPropertyChangedEventArgs e)
 		{
-			public CultureInfo(System.Globalization.CultureInfo culture)
-			{
-				this.name = Misc.CultureName(culture);
-				this.tooltip = Misc.CultureLongName(culture);
-			}
+			//	Appelé lorsqu'une ligne éditable voit son focus changer.
+			bool focused = (bool) e.NewValue;
 
-			public string Name
+			if (focused)
 			{
-				get
-				{
-					return this.name;
-				}
+				this.currentTextField = sender as AbstractTextField;
 			}
-
-			public string Tooltip
-			{
-				get
-				{
-					return this.tooltip;
-				}
-			}
-
-			protected string			name;
-			protected string			tooltip;
 		}
-		#endregion
-#endif
 
-
-		void HandleSecondaryCultureClicked(object sender, MessageEventArgs e)
+		protected void HandleSecondaryCultureClicked(object sender, MessageEventArgs e)
 		{
 			//	Un bouton pour changer de culture secondaire a été cliqué.
 			IconButtonMark button = sender as IconButtonMark;
