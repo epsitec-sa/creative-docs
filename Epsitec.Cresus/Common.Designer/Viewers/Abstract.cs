@@ -63,7 +63,7 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 		}
 
-		public void DoSearch(string search, Searcher.SearchingMode mode)
+		public void DoSearch(string search, Searcher.SearchingMode mode, List<int> filter)
 		{
 			//	Effectue une recherche.
 			Searcher searcher = new Searcher(this.access);
@@ -75,7 +75,7 @@ namespace Epsitec.Common.Designer.Viewers
 				return;
 			}
 
-			searcher.FixStarting(mode, this.array.SelectedRow, field, subfield, this.currentTextField, this.secondaryCulture, false);
+			searcher.FixStarting(mode, filter, this.array.SelectedRow, field, subfield, this.currentTextField, this.secondaryCulture, false);
 
 			if (searcher.Search(search))
 			{
@@ -141,7 +141,7 @@ namespace Epsitec.Common.Designer.Viewers
 #endif
 		}
 
-		public void DoCount(string search, Searcher.SearchingMode mode)
+		public void DoCount(string search, Searcher.SearchingMode mode, List<int> filter)
 		{
 			//	Effectue un comptage.
 #if false
@@ -161,7 +161,7 @@ namespace Epsitec.Common.Designer.Viewers
 #endif
 		}
 
-		public void DoReplace(string search, string replace, Searcher.SearchingMode mode)
+		public void DoReplace(string search, string replace, Searcher.SearchingMode mode, List<int> filter)
 		{
 			//	Effectue un remplacement.
 #if false
@@ -271,7 +271,7 @@ namespace Epsitec.Common.Designer.Viewers
 #endif
 		}
 
-		public void DoReplaceAll(string search, string replace, Searcher.SearchingMode mode)
+		public void DoReplaceAll(string search, string replace, Searcher.SearchingMode mode, List<int> filter)
 		{
 			//	Effectue un 'remplacer tout'.
 #if false
@@ -1128,6 +1128,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		public static void SearchCreateFilterGroup(AbstractGroup parent, EventHandler handler, ResourceAccess.Type type)
 		{
+			//	Crée le contenu du groupe 'filtre'.
 			switch (type)
 			{
 				case ResourceAccess.Type.Strings:
@@ -1138,6 +1139,27 @@ namespace Epsitec.Common.Designer.Viewers
 					Captions.SearchCreateFilterGroup(parent, handler);
 					break;
 			}
+		}
+
+		public static List<int> SearchGetFilterGroup(AbstractGroup parent, ResourceAccess.Type type)
+		{
+			//	Donne le résultat du groupe 'filtre', sous forme d'une liste des index autorisés.
+			List<int> filter = new List<int>();
+
+			foreach (Widget widget in parent.Children)
+			{
+				if (widget is CheckButton)
+				{
+					CheckButton check = widget as CheckButton;
+					if (check.ActiveState == ActiveState.Yes)
+					{
+						int index = int.Parse(check.Name);
+						filter.Add(index);
+					}
+				}
+			}
+
+			return filter;
 		}
 
 

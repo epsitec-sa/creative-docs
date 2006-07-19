@@ -435,13 +435,14 @@ namespace Epsitec.Common.Designer
 		{
 			string searching = this.dlgSearch.Searching;
 			Searcher.SearchingMode mode = this.dlgSearch.Mode;
+			List<int> filter = this.dlgSearch.FilterList;
 
 			if (e.CommandName == "SearchPrev")
 			{
 				mode |= Searcher.SearchingMode.Reverse;
 			}
 
-			this.CurrentModule.Modifier.ActiveViewer.DoSearch(searching, mode);
+			this.CurrentModule.Modifier.ActiveViewer.DoSearch(searching, mode, filter);
 		}
 
 		[Command("AccessFirst")]

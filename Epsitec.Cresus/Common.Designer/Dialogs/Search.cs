@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
 using Epsitec.Common.Drawing;
@@ -219,28 +220,31 @@ namespace Epsitec.Common.Designer.Dialogs
 				{
 					if (this.checkCase.ActiveState == ActiveState.Yes)  mode |= Searcher.SearchingMode.CaseSensitive;
 					if (this.checkWord.ActiveState == ActiveState.Yes)  mode |= Searcher.SearchingMode.WholeWord;
-
-					if (this.bundleType == ResourceAccess.Type.Strings)
-					{
-						//?if (this.stringsCheckLabel.ActiveState          == ActiveState.Yes)  mode |= Searcher.SearchingMode.SearchInLabel;
-						//?if (this.stringsCheckPrimaryText.ActiveState    == ActiveState.Yes)  mode |= Searcher.SearchingMode.SearchInPrimaryText;
-						//?if (this.stringsCheckSecondaryText.ActiveState  == ActiveState.Yes)  mode |= Searcher.SearchingMode.SearchInSecondaryText;
-						//?if (this.stringsCheckPrimaryAbout.ActiveState   == ActiveState.Yes)  mode |= Searcher.SearchingMode.SearchInPrimaryAbout;
-						//?if (this.stringsCheckSecondaryAbout.ActiveState == ActiveState.Yes)  mode |= Searcher.SearchingMode.SearchInSecondaryAbout;
-					}
-					else if (this.bundleType == ResourceAccess.Type.Captions)
-					{
-						//?if (this.captionsCheckLabel.ActiveState         == ActiveState.Yes)  mode |= Searcher.SearchingMode.SearchInLabel;
-						//?if (this.captionsCheckPrimaryText.ActiveState   == ActiveState.Yes)  mode |= Searcher.SearchingMode.SearchInPrimaryText;
-						//?if (this.captionsCheckSecondaryText.ActiveState == ActiveState.Yes)  mode |= Searcher.SearchingMode.SearchInSecondaryText;
-					}
-					else
-					{
-						mode |= Searcher.SearchingMode.SearchInLabel;
-					}
 				}
 
 				return mode;
+			}
+		}
+
+		public List<int> FilterList
+		{
+			//	Retourne la liste des index autorisés par le filtre.
+			get
+			{
+				if (this.bundleType == ResourceAccess.Type.Strings)
+				{
+					return Viewers.Abstract.SearchGetFilterGroup(this.groupStrings, ResourceAccess.Type.Strings);
+				}
+				else if (this.bundleType == ResourceAccess.Type.Captions)
+				{
+					return Viewers.Abstract.SearchGetFilterGroup(this.groupCaptions, ResourceAccess.Type.Captions);
+				}
+				else
+				{
+					List<int> filter = new List<int>();
+					filter.Add(0);  // autorisé la recherche dans 'Name'
+					return filter;
+				}
 			}
 		}
 
@@ -253,18 +257,8 @@ namespace Epsitec.Common.Designer.Dialogs
 				if (this.fieldSearch == null )  return false;
 				if (this.fieldSearch.Text == "")  return false;
 
-				if (this.bundleType == ResourceAccess.Type.Strings)
-				{
-					return false;
-				}
-				else if (this.bundleType == ResourceAccess.Type.Captions)
-				{
-					return false;
-				}
-				else
-				{
-					return false;
-				}
+				List<int> filter = this.FilterList;
+				return (filter != null && filter.Count > 0);
 			}
 		}
 
@@ -338,7 +332,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				mode |= Searcher.SearchingMode.Reverse;
 			}
 
-			module.Modifier.ActiveViewer.DoSearch(this.fieldSearch.Text, mode);
+			module.Modifier.ActiveViewer.DoSearch(this.fieldSearch.Text, mode, this.FilterList);
 
 			Misc.ComboMenuAdd(this.fieldSearch);
 		}
@@ -349,7 +343,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			Module module = this.mainWindow.CurrentModule;
 			if ( module == null )  return;
 
-			module.Modifier.ActiveViewer.DoCount(this.fieldSearch.Text, this.Mode);
+			module.Modifier.ActiveViewer.DoCount(this.fieldSearch.Text, this.Mode, this.FilterList);
 
 			Misc.ComboMenuAdd(this.fieldSearch);
 		}
@@ -368,7 +362,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				mode |= Searcher.SearchingMode.Reverse;
 			}
 
-			module.Modifier.ActiveViewer.DoReplace(this.fieldSearch.Text, this.fieldReplace.Text, mode);
+			module.Modifier.ActiveViewer.DoReplace(this.fieldSearch.Text, this.fieldReplace.Text, mode, this.FilterList);
 
 			Misc.ComboMenuAdd(this.fieldSearch);
 			Misc.ComboMenuAdd(this.fieldReplace);
@@ -380,7 +374,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			Module module = this.mainWindow.CurrentModule;
 			if ( module == null )  return;
 
-			module.Modifier.ActiveViewer.DoReplaceAll(this.fieldSearch.Text, this.fieldReplace.Text, this.Mode);
+		module.Modifier.ActiveViewer.DoReplaceAll(this.fieldSearch.Text, this.fieldReplace.Text, this.Mode, this.FilterList);
 
 			Misc.ComboMenuAdd(this.fieldSearch);
 			Misc.ComboMenuAdd(this.fieldReplace);
