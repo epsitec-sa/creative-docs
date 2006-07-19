@@ -244,6 +244,7 @@ namespace Epsitec.Common.Designer.Viewers
 		protected string ReplaceDo(Searcher searcher, string replace)
 		{
 			//	Effectue le remplacement.
+			//	Retourne la chaîne complète contenant le remplacement.
 			string cultureName, fieldName;
 			this.access.SearcherIndexToAccess(searcher.Field, this.secondaryCulture, out cultureName, out fieldName);
 			ResourceAccess.Field field = this.access.GetField(searcher.Row, cultureName, fieldName);

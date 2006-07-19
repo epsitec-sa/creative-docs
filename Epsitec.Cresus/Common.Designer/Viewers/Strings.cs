@@ -410,7 +410,7 @@ namespace Epsitec.Common.Designer.Viewers
 			label.Margins = new Margins(0, 0, 16, 0);
 
 			check = new CheckButton(parent);
-			check.Name = "0";
+			check.Name = "0";  // (*)
 			check.Anchor = AnchorStyles.Top | AnchorStyles.Left;
 			check.PreferredWidth = check.PreferredHeight;
 			check.Margins = new Margins(90+20*0, 0, 0, 0);
@@ -419,7 +419,7 @@ namespace Epsitec.Common.Designer.Viewers
 			ToolTip.Default.SetToolTip(check, Res.Strings.Dialog.Search.Check.Label);
 
 			check = new CheckButton(parent);
-			check.Name = "1";
+			check.Name = "1";  // (*)
 			check.ActiveState = ActiveState.Yes;
 			check.Anchor = AnchorStyles.Top | AnchorStyles.Left;
 			check.PreferredWidth = check.PreferredHeight;
@@ -429,7 +429,7 @@ namespace Epsitec.Common.Designer.Viewers
 			ToolTip.Default.SetToolTip(check, Res.Strings.Dialog.Search.Check.PrimaryText);
 
 			check = new CheckButton(parent);
-			check.Name = "2";
+			check.Name = "2";  // (*)
 			check.ActiveState = ActiveState.Yes;
 			check.Anchor = AnchorStyles.Top | AnchorStyles.Left;
 			check.PreferredWidth = check.PreferredHeight;
@@ -439,7 +439,7 @@ namespace Epsitec.Common.Designer.Viewers
 			ToolTip.Default.SetToolTip(check, Res.Strings.Dialog.Search.Check.SecondaryText);
 
 			check = new CheckButton(parent);
-			check.Name = "3";
+			check.Name = "3";  // (*)
 			check.Anchor = AnchorStyles.Top | AnchorStyles.Left;
 			check.PreferredWidth = check.PreferredHeight;
 			check.Margins = new Margins(90+20*1, 0, 16, 0);
@@ -448,13 +448,15 @@ namespace Epsitec.Common.Designer.Viewers
 			ToolTip.Default.SetToolTip(check, Res.Strings.Dialog.Search.Check.PrimaryAbout);
 
 			check = new CheckButton(parent);
-			check.Name = "4";
+			check.Name = "4";  // (*)
 			check.Anchor = AnchorStyles.Top | AnchorStyles.Left;
 			check.PreferredWidth = check.PreferredHeight;
 			check.Margins = new Margins(90+20*2, 0, 16, 0);
 			check.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			check.ActiveStateChanged += new EventHandler(handler);
 			ToolTip.Default.SetToolTip(check, Res.Strings.Dialog.Search.Check.SecondaryAbout);
+
+			// (*)	Ce numéro correspond à field dans ResourceAccess.SearcherIndexToAccess !
 		}
 
 		
