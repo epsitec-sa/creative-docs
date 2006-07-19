@@ -521,7 +521,7 @@ namespace Epsitec.Common.Designer.Viewers
 			label = new StaticText(parent);
 			label.PreferredWidth = 80;
 			label.ContentAlignment = ContentAlignment.MiddleRight;
-			label.Text = Res.Strings.Viewers.Captions.Description;
+			label.Text = Res.Strings.Viewers.Captions.ShortDescription;
 			label.Anchor = AnchorStyles.Top | AnchorStyles.Left;
 			label.Margins = new Margins(0, 0, 16, 0);
 
@@ -549,7 +549,7 @@ namespace Epsitec.Common.Designer.Viewers
 			check.Margins = new Margins(90+20*1, 0, 0, 0);
 			check.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			check.ActiveStateChanged += new EventHandler(handler);
-			//?ToolTip.Default.SetToolTip(check, Res.Strings.Dialog.Search.Check.PrimaryText);
+			ToolTip.Default.SetToolTip(check, Res.Strings.Dialog.Search.Check.PrimaryLabels);
 
 			check = new CheckButton(parent);
 			check.Name = "2";
@@ -559,7 +559,7 @@ namespace Epsitec.Common.Designer.Viewers
 			check.Margins = new Margins(90+20*2, 0, 0, 0);
 			check.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			check.ActiveStateChanged += new EventHandler(handler);
-			//?ToolTip.Default.SetToolTip(check, Res.Strings.Dialog.Search.Check.SecondaryText);
+			ToolTip.Default.SetToolTip(check, Res.Strings.Dialog.Search.Check.SecondaryLabels);
 
 			check = new CheckButton(parent);
 			check.Name = "3";
@@ -568,7 +568,7 @@ namespace Epsitec.Common.Designer.Viewers
 			check.Margins = new Margins(90+20*1, 0, 16, 0);
 			check.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			check.ActiveStateChanged += new EventHandler(handler);
-			//?ToolTip.Default.SetToolTip(check, Res.Strings.Dialog.Search.Check.PrimaryAbout);
+			ToolTip.Default.SetToolTip(check, Res.Strings.Dialog.Search.Check.PrimaryDescription);
 
 			check = new CheckButton(parent);
 			check.Name = "4";
@@ -577,7 +577,7 @@ namespace Epsitec.Common.Designer.Viewers
 			check.Margins = new Margins(90+20*2, 0, 16, 0);
 			check.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			check.ActiveStateChanged += new EventHandler(handler);
-			//?ToolTip.Default.SetToolTip(check, Res.Strings.Dialog.Search.Check.SecondaryAbout);
+			ToolTip.Default.SetToolTip(check, Res.Strings.Dialog.Search.Check.SecondaryDescription);
 
 			check = new CheckButton(parent);
 			check.Name = "5";
@@ -586,7 +586,7 @@ namespace Epsitec.Common.Designer.Viewers
 			check.Margins = new Margins(90+20*1, 0, 32, 0);
 			check.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			check.ActiveStateChanged += new EventHandler(handler);
-			//?ToolTip.Default.SetToolTip(check, Res.Strings.Dialog.Search.Check.PrimaryAbout);
+			ToolTip.Default.SetToolTip(check, Res.Strings.Dialog.Search.Check.PrimaryAbout);
 
 			check = new CheckButton(parent);
 			check.Name = "6";
@@ -595,7 +595,7 @@ namespace Epsitec.Common.Designer.Viewers
 			check.Margins = new Margins(90+20*2, 0, 32, 0);
 			check.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			check.ActiveStateChanged += new EventHandler(handler);
-			//?ToolTip.Default.SetToolTip(check, Res.Strings.Dialog.Search.Check.SecondaryAbout);
+			ToolTip.Default.SetToolTip(check, Res.Strings.Dialog.Search.Check.SecondaryAbout);
 		}
 
 		

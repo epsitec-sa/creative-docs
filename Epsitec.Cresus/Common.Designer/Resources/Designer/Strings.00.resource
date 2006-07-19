@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <bundle name="Strings" type="String" culture="fr">
   <data name="Application.Title" id="0">Editeur de ressources</data>
   <data name="Ribbon.Main" id="01">Principal</data>
@@ -35,6 +35,7 @@
   <data name="Viewers.Panels.Rectangle" id="0T">x={0} y={1} dx={2} dy={3}</data>
   <data name="Viewers.Captions.Labels" id="0A5" mod="1">Textes</data>
   <data name="Viewers.Captions.Description" id="0C5" mod="1">Description pour la bulle d&amp;apos;aide</data>
+  <data name="Viewers.Captions.ShortDescription" id="0J5" mod="1">Description</data>
   <data name="Viewers.Captions.Icon" id="0D5" mod="1">Icône</data>
   <data name="Viewers.Captions.About" id="0B5" mod="1">Commentaires</data>
   <data name="Action.New" id="0U">Nouveau</data>
@@ -155,6 +156,10 @@
   <data name="Dialog.Search.Check.SecondaryText" id="094">Rechercher dans les textes secondaires</data>
   <data name="Dialog.Search.Check.PrimaryAbout" id="0A4">Rechercher dans les commentaires de référence</data>
   <data name="Dialog.Search.Check.SecondaryAbout" id="0B4">Rechercher dans les commentaires secondaires</data>
+  <data name="Dialog.Search.Check.PrimaryLabels" id="0K5" mod="1">Rechercher dans les textes de référence</data>
+  <data name="Dialog.Search.Check.SecondaryLabels" id="0L5" mod="1">Rechercher dans les textes de secondaires</data>
+  <data name="Dialog.Search.Check.PrimaryDescription" id="0M5" mod="1">Rechercher dans les descriptions de référence</data>
+  <data name="Dialog.Search.Check.SecondaryDescription" id="0N5" mod="1">Rechercher dans les descriptions secondaires</data>
   <data name="Dialog.Search.Button.Search" id="0C4">Rechercher</data>
   <data name="Dialog.Search.Button.Count" id="0D4">Compter</data>
   <data name="Dialog.Search.Button.Replace" id="0E4">Remplacer</data>
