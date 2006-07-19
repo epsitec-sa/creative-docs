@@ -35,7 +35,7 @@
   <data name="Viewers.Panels.Rectangle" id="0T">x={0} y={1} dx={2} dy={3}</data>
   <data name="Viewers.Captions.Labels" id="0A5" mod="1">Textes</data>
   <data name="Viewers.Captions.Description" id="0C5" mod="1">Description pour la bulle d&amp;apos;aide</data>
-  <data name="Viewers.Captions.ShortDescription" id="0J5" mod="1">Description</data>
+  <data name="Viewers.Captions.ShortDescription" id="0J5" mod="1">Descriptions</data>
   <data name="Viewers.Captions.Icon" id="0D5" mod="1">Icône</data>
   <data name="Viewers.Captions.About" id="0B5" mod="1">Commentaires</data>
   <data name="Action.New" id="0U">Nouveau</data>

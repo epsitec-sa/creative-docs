@@ -62,7 +62,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.groupStrings = new GroupBox(this.window.Root);
 				this.groupStrings.Text = Res.Strings.Dialog.Search.Check.Who;
 				this.groupStrings.PreferredWidth = 160;
-				this.groupStrings.PreferredHeight = 76;
+				this.groupStrings.PreferredHeight = 28+16*2;
 				this.groupStrings.Anchor = AnchorStyles.Top | AnchorStyles.Left;
 				this.groupStrings.Margins = new Margins(6, 0, 6+58+16*0, 0);
 				this.groupStrings.Padding = new Margins(5, 5, 5, 5);
@@ -75,7 +75,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.groupCaptions = new GroupBox(this.window.Root);
 				this.groupCaptions.Text = Res.Strings.Dialog.Search.Check.Who;
 				this.groupCaptions.PreferredWidth = 160;
-				this.groupCaptions.PreferredHeight = 76;
+				this.groupCaptions.PreferredHeight = 28+16*3;
 				this.groupCaptions.Anchor = AnchorStyles.Top | AnchorStyles.Left;
 				this.groupCaptions.Margins = new Margins(6, 0, 6+58+16*0, 0);
 				this.groupCaptions.Padding = new Margins(5, 5, 5, 5);
