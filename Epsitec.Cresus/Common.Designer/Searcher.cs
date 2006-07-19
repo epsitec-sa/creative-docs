@@ -45,8 +45,8 @@ namespace Epsitec.Common.Designer
 				else  // en arrière ?
 				{
 					this.starting.Row      = this.access.AccessCount-1;  // à la fin
-					this.starting.Field    = 1000000;
-					this.starting.Subfield = 1000000;
+					this.starting.Field    = 10-1;
+					this.starting.Subfield = 10-1;
 					this.starting.Index    = 1000000;
 				}
 			}

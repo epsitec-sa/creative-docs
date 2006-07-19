@@ -846,6 +846,7 @@ namespace Epsitec.Common.Designer
 
 		public void SearcherIndexToAccess(int field, string secondaryCulture, out string cultureName, out string fieldName)
 		{
+			//	Conversion d'un index de champ (0..n) en l'information nécessaire pour Get/SetField.
 			if (this.type == Type.Strings)
 			{
 				switch (field)

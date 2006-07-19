@@ -75,7 +75,16 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Nombre total de ligne en fonction de la hauteur du widget et de la hauteur d'une ligne.
 			get
 			{
-				if ( this.cells == null )  return 0;
+				if (this.cells == null)
+				{
+					this.UpdateClientGeometry();
+				}
+
+				if (this.cells == null)
+				{
+					return 0;
+				}
+
 				return this.cells.Length;
 			}
 		}
