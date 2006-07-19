@@ -174,17 +174,28 @@ namespace Epsitec.Common.Designer
 			if (this.type == Type.Panels)
 			{
 				newDruid = this.CreateUniqueDruid();
-				string prefix = this.resourceManager.ActivePrefix;
-				System.Globalization.CultureInfo culture = this.BaseCulture;
-				ResourceBundle bundle = ResourceBundle.Create(this.resourceManager, prefix, newDruid.ToBundleId(), ResourceLevel.Default, culture);
+				ResourceBundle newBundle = null;
 
-				bundle.DefineType(this.BundleName(false));
-				bundle.DefineCaption(newName);
+				if (duplicateContent)
+				{
+					//	TODO: [PA]
+					ResourceBundle actualBundle = this.panelsList[this.accessIndex];
+					newBundle = actualBundle.Clone();
+					//?newBundle.Druid = newDruid;  // comment faire pour donner le nouveau druid ?
+					newBundle.DefineCaption(newName);
+				}
+				else
+				{
+					string prefix = this.resourceManager.ActivePrefix;
+					System.Globalization.CultureInfo culture = this.BaseCulture;
+					newBundle = ResourceBundle.Create(this.resourceManager, prefix, newDruid.ToBundleId(), ResourceLevel.Default, culture);
 
-				//	TODO: gérer duplicateContent
+					newBundle.DefineType(this.BundleName(false));
+					newBundle.DefineCaption(newName);
+				}
 
-				this.panelsList.Insert(this.accessIndex, bundle);
-				this.panelsToCreate.Add(bundle);
+				this.panelsList.Insert(this.accessIndex, newBundle);
+				this.panelsToCreate.Add(newBundle);
 			}
 
 			this.druidsIndex.Insert(this.accessIndex+1, newDruid);
@@ -730,7 +741,6 @@ namespace Epsitec.Common.Designer
 
 				if (fieldName == ResourceAccess.NamePanels[1])
 				{
-					//	TODO:
 				}
 			}
 
