@@ -66,16 +66,11 @@ namespace Epsitec.Common.Designer.Viewers
 		public void DoSearch(string search, Searcher.SearchingMode mode, List<int> filter)
 		{
 			//	Effectue une recherche.
-			Searcher searcher = new Searcher(this.access);
-
-			int field, subfield;
-			this.TextFieldToIndex(this.currentTextField, out field, out subfield);
-			if (field == -1)
+			Searcher searcher = this.SearchBegin(mode, filter, false);
+			if (searcher == null)
 			{
 				return;
 			}
-
-			searcher.FixStarting(mode, filter, this.array.SelectedRow, field, subfield, this.currentTextField, this.secondaryCulture, false);
 
 			if (searcher.Search(search))
 			{
@@ -104,49 +99,16 @@ namespace Epsitec.Common.Designer.Viewers
 			{
 				this.module.MainWindow.DialogError(Res.Strings.Dialog.Search.Message.Error);
 			}
-#if false
-			Searcher searcher = new Searcher(this.druidsIndex, this.primaryBundle, this.secondaryBundle, this.BundleType);
-			searcher.FixStarting(mode, this.array.SelectedRow, this.currentTextField, false);
-
-			if (searcher.Search(search))
-			{
-				this.lastActionIsReplace = false;
-
-				this.array.SelectedRow = searcher.Row;
-				this.array.ShowSelectedRow();
-
-				AbstractTextField edit = null;
-				if (searcher.Field == 0)  edit = this.labelEdit;
-				if (searcher.Field == 1)  edit = this.primaryEdit;
-				if (searcher.Field == 2)  edit = this.secondaryEdit;
-				if (searcher.Field == 3)  edit = this.primaryAbout;
-				if (searcher.Field == 4)  edit = this.secondaryAbout;
-				if (edit != null && edit.Visibility)
-				{
-					this.ignoreChange = true;
-
-					this.Window.MakeActive();
-					edit.Focus();
-					edit.CursorFrom  = edit.TextLayout.FindIndexFromOffset(searcher.Index);
-					edit.CursorTo    = edit.TextLayout.FindIndexFromOffset(searcher.Index+searcher.Length);
-					edit.CursorAfter = false;
-
-					this.ignoreChange = false;
-				}
-			}
-			else
-			{
-				this.module.MainWindow.DialogError(Res.Strings.Dialog.Search.Message.Error);
-			}
-#endif
 		}
 
 		public void DoCount(string search, Searcher.SearchingMode mode, List<int> filter)
 		{
 			//	Effectue un comptage.
-#if false
-			Searcher searcher = new Searcher(this.druidsIndex, this.primaryBundle, this.secondaryBundle, this.BundleType);
-			searcher.FixStarting(mode, this.array.SelectedRow, this.currentTextField, false);
+			Searcher searcher = this.SearchBegin(mode, filter, false);
+			if (searcher == null)
+			{
+				return;
+			}
 
 			int count = searcher.Count(search);
 			if (count == 0)
@@ -158,100 +120,37 @@ namespace Epsitec.Common.Designer.Viewers
 				string message = string.Format(Res.Strings.Dialog.Search.Message.Count, count.ToString());
 				this.module.MainWindow.DialogMessage(message);
 			}
-#endif
 		}
 
 		public void DoReplace(string search, string replace, Searcher.SearchingMode mode, List<int> filter)
 		{
 			//	Effectue un remplacement.
-#if false
-			if (this.module.Mode == DesignerMode.Translate)
+			Searcher searcher = this.SearchBegin(mode, filter, true);
+			if (searcher == null)
 			{
-				mode &= ~Searcher.SearchingMode.SearchInLabel;
+				return;
 			}
-
-			Searcher searcher = new Searcher(this.druidsIndex, this.primaryBundle, this.secondaryBundle, this.BundleType);
-			searcher.FixStarting(mode, this.array.SelectedRow, this.currentTextField, this.lastActionIsReplace);
 
 			if (searcher.Replace(search, false))
 			{
 				this.lastActionIsReplace = true;
 
-				this.array.SelectedRow = searcher.Row;
+				this.access.AccessIndex = searcher.Row;
+				this.array.SelectedRow = this.access.AccessIndex;
 				this.array.ShowSelectedRow();
 
-				Druid druid = this.druidsIndex[searcher.Row];
-				string text = "";
-
-				if (searcher.Field == 0)
+				string text = this.ReplaceDo(searcher, ref replace);
+				if (text == null)
 				{
-					string validReplace = replace;
-					if (!Misc.IsValidLabel(ref validReplace))
-					{
-						this.module.MainWindow.DialogError(Res.Strings.Error.InvalidLabel);
-						return;
-					}
-
-					if (this.access.IsExistingName(validReplace))
-					{
-						this.module.MainWindow.DialogError(Res.Strings.Error.NameAlreadyExist);
-						return;
-					}
-
-					text = this.primaryBundle[druid].AsString;
-					text = text.Remove(searcher.Index, searcher.Length);
-					text = text.Insert(searcher.Index, validReplace);
-
-					this.module.Modifier.Rename(this.BundleType, druid, text);
-					this.array.SetLineString(0, searcher.Row, text);
+					return;
 				}
 
-				if (searcher.Field == 1 && this.secondaryBundle != null)
-				{
-					text = this.primaryBundle[druid].AsString;
-					text = text.Remove(searcher.Index, searcher.Length);
-					text = text.Insert(searcher.Index, replace);
-					this.primaryBundle[druid].SetStringValue(text);
-
-					this.UpdateArrayField(1, searcher.Row, this.primaryBundle[druid], this.secondaryBundle[druid]);
-				}
-
-				if (searcher.Field == 2 && this.secondaryBundle != null)
-				{
-					text = this.secondaryBundle[druid].AsString;
-					text = text.Remove(searcher.Index, searcher.Length);
-					text = text.Insert(searcher.Index, replace);
-					this.secondaryBundle[druid].SetStringValue(text);
-
-					this.UpdateArrayField(2, searcher.Row, this.secondaryBundle[druid], this.primaryBundle[druid]);
-				}
-
-				if (searcher.Field == 3)
-				{
-					text = this.primaryBundle[druid].About;
-					text = text.Remove(searcher.Index, searcher.Length);
-					text = text.Insert(searcher.Index, replace);
-					this.primaryBundle[druid].SetAbout(text);
-				}
-
-				if (searcher.Field == 4 && this.secondaryBundle != null)
-				{
-					text = this.secondaryBundle[druid].About;
-					text = text.Remove(searcher.Index, searcher.Length);
-					text = text.Insert(searcher.Index, replace);
-					this.secondaryBundle[druid].SetAbout(text);
-				}
-
-				AbstractTextField edit = null;
-				if (searcher.Field == 0)  edit = this.labelEdit;
-				if (searcher.Field == 1)  edit = this.primaryEdit;
-				if (searcher.Field == 2)  edit = this.secondaryEdit;
-				if (searcher.Field == 3)  edit = this.primaryAbout;
-				if (searcher.Field == 4)  edit = this.secondaryAbout;
+				AbstractTextField edit = this.IndexToTextField(searcher.Field, searcher.Subfield);
 				if (edit != null && edit.Visibility)
 				{
 					this.ignoreChange = true;
 
+					this.currentTextField = edit;
 					this.Window.MakeActive();
 					edit.Focus();
 					edit.Text = text;
@@ -262,26 +161,25 @@ namespace Epsitec.Common.Designer.Viewers
 					this.ignoreChange = false;
 				}
 
-				this.module.Modifier.IsDirty = true;
+				if (searcher.Field == 0)  // remplacement de 'Name' ?
+				{
+					this.UpdateArray();
+				}
 			}
 			else
 			{
 				this.module.MainWindow.DialogError(Res.Strings.Dialog.Search.Message.Error);
 			}
-#endif
 		}
 
 		public void DoReplaceAll(string search, string replace, Searcher.SearchingMode mode, List<int> filter)
 		{
 			//	Effectue un 'remplacer tout'.
-#if false
-			if (this.module.Mode == DesignerMode.Translate)
+			Searcher searcher = this.SearchBegin(mode, filter, true);
+			if (searcher == null)
 			{
-				mode &= ~Searcher.SearchingMode.SearchInLabel;
+				return;
 			}
-
-			Searcher searcher = new Searcher(this.druidsIndex, this.primaryBundle, this.secondaryBundle, this.BundleType);
-			searcher.FixStarting(mode, this.array.SelectedRow, this.currentTextField, false);
 
 			int count = 0;
 			bool fromBeginning = true;
@@ -290,51 +188,14 @@ namespace Epsitec.Common.Designer.Viewers
 				fromBeginning = false;
 				count ++;
 
-				Druid druid = this.druidsIndex[searcher.Row];
-				string text = "";
-
-				if (searcher.Field == 0)
+				string replaced = replace;
+				string text = this.ReplaceDo(searcher, ref replaced);
+				if (text == null)
 				{
-					text = this.primaryBundle[druid].Name;
-					text = text.Remove(searcher.Index, searcher.Length);
-					text = text.Insert(searcher.Index, replace);
-
-					this.module.Modifier.Rename(this.BundleType, druid, text);
+					return;
 				}
 
-				if (searcher.Field == 1)
-				{
-					text = this.primaryBundle[druid].AsString;
-					text = text.Remove(searcher.Index, searcher.Length);
-					text = text.Insert(searcher.Index, replace);
-					this.primaryBundle[druid].SetStringValue(text);
-				}
-
-				if (searcher.Field == 2 && this.secondaryBundle != null)
-				{
-					text = this.secondaryBundle[druid].AsString;
-					text = text.Remove(searcher.Index, searcher.Length);
-					text = text.Insert(searcher.Index, replace);
-					this.secondaryBundle[druid].SetStringValue(text);
-				}
-
-				if (searcher.Field == 3)
-				{
-					text = this.primaryBundle[druid].About;
-					text = text.Remove(searcher.Index, searcher.Length);
-					text = text.Insert(searcher.Index, replace);
-					this.primaryBundle[druid].SetAbout(text);
-				}
-
-				if (searcher.Field == 4 && this.secondaryBundle != null)
-				{
-					text = this.secondaryBundle[druid].About;
-					text = text.Remove(searcher.Index, searcher.Length);
-					text = text.Insert(searcher.Index, replace);
-					this.secondaryBundle[druid].SetAbout(text);
-				}
-
-				searcher.Skip(replace.Length);  // saute les caractères sélectionnés
+				searcher.Skip(replaced.Length);  // saute les caractères sélectionnés
 			}
 
 			if (count == 0)
@@ -346,12 +207,88 @@ namespace Epsitec.Common.Designer.Viewers
 				this.UpdateArray();
 				this.UpdateEdit();
 				this.UpdateCommands();
-				this.module.Modifier.IsDirty = true;
 
 				string text = string.Format(Res.Strings.Dialog.Search.Message.Replace, count.ToString());
 				this.module.MainWindow.DialogMessage(text);
 			}
-#endif
+		}
+
+		protected Searcher SearchBegin(Searcher.SearchingMode mode, List<int> filter, bool replace)
+		{
+			//	Initialisation pour une recherche.
+			if (replace && this.module.Mode == DesignerMode.Translate)
+			{
+				if (filter.Contains(0))  // remplacement dans 'Name' ?
+				{
+					filter.Remove(0);  // interdi en mode 'Translate'
+				}
+			}
+
+			if (filter.Count == 0)  // tout filtré ?
+			{
+				return null;
+			}
+
+			Searcher searcher = new Searcher(this.access);
+
+			int field, subfield;
+			this.TextFieldToIndex(this.currentTextField, out field, out subfield);
+			if (field == -1)
+			{
+				return null;
+			}
+
+			searcher.FixStarting(mode, filter, this.array.SelectedRow, field, subfield, this.currentTextField, this.secondaryCulture, false);
+			return searcher;
+		}
+
+		protected string ReplaceDo(Searcher searcher, ref string replace)
+		{
+			//	Effectue le remplacement.
+			string cultureName, fieldName;
+			this.access.SearcherIndexToAccess(searcher.Field, this.secondaryCulture, out cultureName, out fieldName);
+			ResourceAccess.Field field = this.access.GetField(searcher.Row, cultureName, fieldName);
+			System.Diagnostics.Debug.Assert(field != null);
+
+			if (fieldName == "Name")
+			{
+				if (!Misc.IsValidLabel(ref replace))
+				{
+					this.module.MainWindow.DialogError(Res.Strings.Error.InvalidLabel);
+					return null;
+				}
+
+				if (this.access.IsExistingName(replace))
+				{
+					this.module.MainWindow.DialogError(Res.Strings.Error.NameAlreadyExist);
+					return null;
+				}
+			}
+
+			string text = "";
+
+			if (field.FieldType == ResourceAccess.Field.Type.String)
+			{
+				text = field.String;
+				text = text.Remove(searcher.Index, searcher.Length);
+				text = text.Insert(searcher.Index, replace);
+				this.access.SetField(searcher.Row, cultureName, fieldName, new ResourceAccess.Field(text));
+			}
+
+			if (field.FieldType == ResourceAccess.Field.Type.StringCollection)
+			{
+				string[] array = new string[field.StringCollection.Count];
+				field.StringCollection.CopyTo(array, 0);
+
+				text = array[searcher.Subfield];
+				text = text.Remove(searcher.Index, searcher.Length);
+				text = text.Insert(searcher.Index, replace);
+				array[searcher.Subfield] = text;
+
+				this.access.SetField(searcher.Row, cultureName, fieldName, new ResourceAccess.Field(array));
+			}
+
+			return text;
 		}
 
 		public void DoFilter(string filter, Searcher.SearchingMode mode)
