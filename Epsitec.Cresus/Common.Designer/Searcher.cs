@@ -14,25 +14,21 @@ namespace Epsitec.Common.Designer
 			AtBeginning            = 0x00000004,
 			Jocker                 = 0x00000008,
 			Reverse                = 0x00000010,
-
-			SearchInLabel          = 0x00000100,
-			SearchInPrimaryText    = 0x00000200,
-			SearchInSecondaryText  = 0x00000400,
-			SearchInPrimaryAbout   = 0x00000800,
-			SearchInSecondaryAbout = 0x00001000,
 		}
 
 
 		public Searcher(ResourceAccess access)
 		{
 			this.access = access;
-			this.mode = SearchingMode.SearchInPrimaryText | SearchingMode.SearchInSecondaryText;
+			this.mode = SearchingMode.None;
+			this.filter = new List<int>();
 		}
 
-		public void FixStarting(SearchingMode mode, int row, int field, int subfield, AbstractTextField edit, string secondaryCulture, bool lastActionIsReplace)
+		public void FixStarting(SearchingMode mode, List<int> filter, int row, int field, int subfield, AbstractTextField edit, string secondaryCulture, bool lastActionIsReplace)
 		{
 			//	Fixe la position de départ de la recherche.
 			this.mode = mode;
+			this.filter = filter;
 			this.secondaryCulture = secondaryCulture;
 			this.starting = new Cursor();
 			this.current  = new Cursor();
@@ -340,6 +336,11 @@ namespace Epsitec.Common.Designer
 			//	Retourne le texte à la position du curseur courant (en fonction de row/field/subfield).
 			get
 			{
+				if (!this.filter.Contains(this.current.Field))
+				{
+					return null;
+				}
+
 				string cultureName, fieldName;
 				this.access.SearcherIndexToAccess(this.current.Field, this.secondaryCulture, out cultureName, out fieldName);
 
@@ -630,12 +631,13 @@ namespace Epsitec.Common.Designer
 		#endregion
 
 
-		protected ResourceAccess		access;
-		protected SearchingMode			mode;
-		protected string				secondaryCulture;
-		protected string				searching;
-		protected Cursor				starting;
-		protected Cursor				current;
-		protected bool					limitOverflow;
+		protected ResourceAccess			access;
+		protected SearchingMode				mode;
+		protected List<int>					filter;
+		protected string					secondaryCulture;
+		protected string					searching;
+		protected Cursor					starting;
+		protected Cursor					current;
+		protected bool						limitOverflow;
 	}
 }
