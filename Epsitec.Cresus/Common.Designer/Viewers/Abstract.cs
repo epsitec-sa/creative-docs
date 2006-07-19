@@ -139,7 +139,7 @@ namespace Epsitec.Common.Designer.Viewers
 				this.array.SelectedRow = this.access.AccessIndex;
 				this.array.ShowSelectedRow();
 
-				string text = this.ReplaceDo(searcher, ref replace);
+				string text = this.ReplaceDo(searcher, replace);
 				if (text == null)
 				{
 					return;
@@ -188,14 +188,13 @@ namespace Epsitec.Common.Designer.Viewers
 				fromBeginning = false;
 				count ++;
 
-				string replaced = replace;
-				string text = this.ReplaceDo(searcher, ref replaced);
+				string text = this.ReplaceDo(searcher, replace);
 				if (text == null)
 				{
 					return;
 				}
 
-				searcher.Skip(replaced.Length);  // saute les caractères sélectionnés
+				searcher.Skip(replace.Length);  // saute les caractères sélectionnés
 			}
 
 			if (count == 0)
@@ -242,28 +241,13 @@ namespace Epsitec.Common.Designer.Viewers
 			return searcher;
 		}
 
-		protected string ReplaceDo(Searcher searcher, ref string replace)
+		protected string ReplaceDo(Searcher searcher, string replace)
 		{
 			//	Effectue le remplacement.
 			string cultureName, fieldName;
 			this.access.SearcherIndexToAccess(searcher.Field, this.secondaryCulture, out cultureName, out fieldName);
 			ResourceAccess.Field field = this.access.GetField(searcher.Row, cultureName, fieldName);
 			System.Diagnostics.Debug.Assert(field != null);
-
-			if (fieldName == "Name")
-			{
-				if (!Misc.IsValidLabel(ref replace))
-				{
-					this.module.MainWindow.DialogError(Res.Strings.Error.InvalidLabel);
-					return null;
-				}
-
-				if (this.access.IsExistingName(replace))
-				{
-					this.module.MainWindow.DialogError(Res.Strings.Error.NameAlreadyExist);
-					return null;
-				}
-			}
 
 			string text = "";
 
@@ -272,6 +256,22 @@ namespace Epsitec.Common.Designer.Viewers
 				text = field.String;
 				text = text.Remove(searcher.Index, searcher.Length);
 				text = text.Insert(searcher.Index, replace);
+
+				if (fieldName == "Name")
+				{
+					if (!Misc.IsValidLabel(ref text))
+					{
+						this.module.MainWindow.DialogError(Res.Strings.Error.InvalidLabel);
+						return null;
+					}
+
+					if (this.access.IsExistingName(text))
+					{
+						this.module.MainWindow.DialogError(Res.Strings.Error.NameAlreadyExist);
+						return null;
+					}
+				}
+
 				this.access.SetField(searcher.Row, cultureName, fieldName, new ResourceAccess.Field(text));
 			}
 
