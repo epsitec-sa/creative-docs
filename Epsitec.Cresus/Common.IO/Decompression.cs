@@ -1,4 +1,4 @@
-//	Copyright © 2004-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2004-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.IO
@@ -10,8 +10,8 @@ namespace Epsitec.Common.IO
 	public class Decompression : AbstractStream
 	{
 		protected Decompression(System.IO.Stream stream)
+			: base (stream)
 		{
-			this.Stream = stream;
 		}
 		
 		

@@ -1,4 +1,4 @@
-//	Copyright © 2004-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2004-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 using System.Runtime.Serialization.Formatters.Binary;
@@ -6,9 +6,11 @@ using System.Runtime.Serialization.Formatters.Binary;
 namespace Epsitec.Common.IO
 {
 	/// <summary>
-	/// Summary description for Serialization.
+	/// The <c>Serialization</c> class is a thin wrapper above .NET's own
+	/// object serializaion/deserialization mechanisms, which uses compresed
+	/// byte arrays for its storage needs.
 	/// </summary>
-	public sealed class Serialization
+	public static class Serialization
 	{
 		public static byte[] SerializeAndCompressToMemory(object o, Compressor compressor)
 		{

@@ -1,15 +1,21 @@
-//	Copyright © 2004-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2004-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.IO
 {
 	/// <summary>
-	/// Summary description for AbstractStream.
+	/// The <c>AbstractStream</c> class is a stream wrapper which behaves
+	/// exactly like the stream itself.
 	/// </summary>
 	public abstract class AbstractStream : System.IO.Stream
 	{
-		public AbstractStream()
+		protected AbstractStream()
 		{
+		}
+
+		protected AbstractStream(System.IO.Stream stream)
+		{
+			this.stream = stream;
 		}
 		
 		
