@@ -178,10 +178,9 @@ namespace Epsitec.Common.Designer
 
 				if (duplicateContent)
 				{
-					//	TODO: [PA]
 					ResourceBundle actualBundle = this.panelsList[this.accessIndex];
 					newBundle = actualBundle.Clone();
-					//?newBundle.Druid = newDruid;  // comment faire pour donner le nouveau druid ?
+					newBundle.DefineNme(newDruid.ToBundleId());
 					newBundle.DefineCaption(newName);
 				}
 				else
