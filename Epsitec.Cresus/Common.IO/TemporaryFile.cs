@@ -1,11 +1,11 @@
-//	Copyright © 2004-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2004-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.IO
 {
 	/// <summary>
-	/// La classe TemporaryFile permet de créer et détruire automatiquement des
-	/// fichiers temporaires. A chaque instance correspond un fichier temporaire.
+	/// The <c>TemporaryFile</c> class can be used to create temporary files, which
+	/// are automatically reclaimed when closed.
 	/// </summary>
 	public class TemporaryFile : System.IDisposable
 	{
