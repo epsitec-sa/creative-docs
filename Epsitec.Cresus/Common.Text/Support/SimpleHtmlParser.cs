@@ -58,7 +58,7 @@ namespace Epsitec.Common.Text.Support
 				}
 				else
 				{
-					this.Append (System.Utilities.ParseCharOrXmlEntity (text, ref offset));
+					this.Append (Common.Support.Utilities.ParseCharOrXmlEntity (text, ref offset));
 				}
 			}
 		}
@@ -112,7 +112,7 @@ namespace Epsitec.Common.Text.Support
 			
 			string[] args;
 			
-			System.Utilities.StringToTokens (tag_args, ' ', out args);
+			Common.Support.Utilities.StringToTokens (tag_args, ' ', out args);
 			
 			if (tag_name[0] == '/')
 			{

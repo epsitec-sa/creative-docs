@@ -3,17 +3,18 @@
 
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+using System.Security.Permissions;
 
-[assembly: AssemblyTitle("Epsitec Common Drawing / High level AGG wrapper")]
-[assembly: AssemblyDescription("")]
-[assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("EPSITEC SA")]
-[assembly: AssemblyProduct("Crésus")]
-[assembly: AssemblyCopyright("Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland")]
-[assembly: AssemblyTrademark("")]
-[assembly: AssemblyCulture("")]
+[assembly: AssemblyTitle ("*.Common.Drawing")]
+[assembly: AssemblyDescription ("Drawing Library (intermediate level, AGG wrapper)")]
+[assembly: AssemblyConfiguration ("")]
+[assembly: AssemblyCompany ("EPSITEC SA & OPaC bright ideas")]
+[assembly: AssemblyProduct ("Framework")]
+[assembly: AssemblyCopyright ("Copyright © 2003-2006, Pierre Arnaud, EPSITEC SA & OPaC bright ideas, Switzerland")]
+[assembly: AssemblyTrademark ("")]
+[assembly: AssemblyCulture ("")]
 
-[assembly: AssemblyVersion("1.5.0.0")]
-
-[assembly: AssemblyDelaySign(false)]
-[assembly: AssemblyKeyName("")]
+[assembly: AssemblyVersion ("2.0.0.0")]
+[assembly: ComVisibleAttribute (false)]
+[assembly: SecurityPermission (SecurityAction.RequestMinimum, UnmanagedCode=true)]

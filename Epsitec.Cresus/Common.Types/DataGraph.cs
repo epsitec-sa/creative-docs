@@ -47,7 +47,7 @@ namespace Epsitec.Common.Types
 		
 		public static IDataItem Navigate(string path, IDataFolder start)
 		{
-			string[] names = System.Utilities.Split (path, '.');
+			string[] names = Support.Utilities.Split (path, '.');
 			
 			IDataFolder root;
 			IDataItem   item = start;
@@ -101,7 +101,7 @@ namespace Epsitec.Common.Types
 		public static IDataCollection Select(string query, IDataFolder start)
 		{
 			QueryResultCollection result = new QueryResultCollection ();
-			string[]    names  = System.Utilities.Split (query, '.');
+			string[]    names  = Support.Utilities.Split (query, '.');
 			
 			result.Select (names, start);
 			

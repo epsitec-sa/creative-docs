@@ -106,7 +106,7 @@ namespace Epsitec.Cresus.Database
 				//	Exemple valide "A.B".C où le résultat doit être qualifier="A.B" et name="C".
 
 				string[] tokens;
-				int nb = System.Utilities.StringToTokens (value, '.', out tokens);
+				int nb = Common.Support.Utilities.StringToTokens (value, '.', out tokens);
 
 				if ( nb != 2 )
 				{
@@ -180,7 +180,7 @@ namespace Epsitec.Cresus.Database
 
 					try
 					{
-						nb = System.Utilities.StringToTokens (value, '.', out tokens);
+						nb = Common.Support.Utilities.StringToTokens (value, '.', out tokens);
 					}
 					catch
 					{

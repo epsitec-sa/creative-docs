@@ -16,6 +16,8 @@
     <DefaultClientScript>JScript</DefaultClientScript>
     <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
     <DefaultTargetSchema>IE50</DefaultTargetSchema>
+    <AssemblyOriginatorKeyFile>..\Epsitec.Cresus.snk</AssemblyOriginatorKeyFile>
+    <SignAssembly>true</SignAssembly>
     <DelaySign>false</DelaySign>
     <OutputType>Library</OutputType>
     <RootNamespace>Epsitec.Common.Script.Developer</RootNamespace>
@@ -141,11 +143,6 @@
     <ProjectReference Include="..\Common.Widgets\Common.Widgets.csproj">
       <Name>Common.Widgets</Name>
       <Project>{C84C2E19-04B7-4244-86F6-E4CAFA3FDA7B}</Project>
-      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
-    </ProjectReference>
-    <ProjectReference Include="..\System.Extension\System.Extension.csproj">
-      <Name>System.Extension</Name>
-      <Project>{10453A3B-CA2A-4D36-B634-78BA87AAAB26}</Project>
       <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
     </ProjectReference>
   </ItemGroup>

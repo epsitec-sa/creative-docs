@@ -5,15 +5,14 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-[assembly: AssemblyTitle("Epsitec Common Widgets Library")]
-[assembly: AssemblyDescription("")]
-[assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("EPSITEC SA")]
-[assembly: AssemblyProduct("Crésus")]
-[assembly: AssemblyCopyright("Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland")]
-[assembly: AssemblyTrademark("")]
-[assembly: AssemblyCulture("")]
+[assembly: AssemblyTitle ("*.Common.Widgets")]
+[assembly: AssemblyDescription ("Widget Library")]
+[assembly: AssemblyConfiguration ("")]
+[assembly: AssemblyCompany ("EPSITEC SA & OPaC bright ideas")]
+[assembly: AssemblyProduct ("Framework")]
+[assembly: AssemblyCopyright ("Copyright © 2003-2006, Pierre Arnaud, EPSITEC SA & OPaC bright ideas, Switzerland")]
+[assembly: AssemblyTrademark ("")]
+[assembly: AssemblyCulture ("")]
 
-[assembly: AssemblyVersion("1.1.3.0")]
-
+[assembly: AssemblyVersion ("2.0.0.0")]
 [assembly: ComVisibleAttribute (false)]

@@ -1942,7 +1942,7 @@ namespace Epsitec.App.DocumentEditor
 
 			Document document = this.CurrentDocument;
 			Common.Dialogs.Print dialog = document.PrintDialog;
-			dialog.Document.DocumentName = System.Utilities.XmlToText(Common.Document.Misc.FullName(document.Filename, false));
+			dialog.Document.DocumentName = Common.Support.Utilities.XmlToText(Common.Document.Misc.FullName(document.Filename, false));
 			dialog.Owner = this.Window;
 
 			this.dlgPrint.Show();

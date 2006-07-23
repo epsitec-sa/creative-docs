@@ -412,7 +412,7 @@ namespace Epsitec.Common.Script
 				switch (section.CodeType)
 				{
 					case CodeType.Local:
-						buffer.Append (System.Utilities.XmlBreakToText (section.Code).Replace ('\u00A0', ' '));
+						buffer.Append (Support.Utilities.XmlBreakToText (section.Code).Replace ('\u00A0', ' '));
 						buffer.Append ("\n\n");
 						break;
 					case CodeType.Comment:
@@ -670,7 +670,7 @@ namespace Epsitec.Common.Script
 					(line < lines.Length))
 				{
 					string text = lines[line];
-					int    len  = System.Utilities.SkipXmlChars (text, column);
+					int    len  = Support.Utilities.SkipXmlChars (text, column);
 					
 					string before = text.Substring (0, len);
 					string middle = text.Substring (len);

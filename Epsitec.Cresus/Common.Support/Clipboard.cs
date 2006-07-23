@@ -600,7 +600,7 @@ namespace Epsitec.Common.Support
 				//	version textuelle :
 				
 				string text = value.Replace ("<br />", "\r\n");
-				this.WriteText (System.Utilities.XmlBreakToText (text));
+				this.WriteText (Support.Utilities.XmlBreakToText (text));
 				
 				System.Text.StringBuilder html = new System.Text.StringBuilder ();
 				

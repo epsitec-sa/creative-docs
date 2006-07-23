@@ -362,16 +362,12 @@ namespace Epsitec.Common.Text.Exchange
 			 {
 				 case "center":
 					 return Wrappers.JustificationMode.Center ;
-					 break ;
 				 case "right":
 					 return Wrappers.JustificationMode.AlignRight;
-					 break;
 				 case "justify":
 					 return Wrappers.JustificationMode.JustifyAlignLeft;
-					 break;
 				 case "left":
 					 return Wrappers.JustificationMode.AlignLeft;
-					 break;
 				 default:
 					 return Wrappers.JustificationMode.Unknown;
 			 }

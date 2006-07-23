@@ -83,6 +83,11 @@ namespace Epsitec.Common.Text.Exchange
 
 		#endregion
 
+		public override bool Equals(object obj)
+		{
+			return this == (obj as SpanStyle);
+		}
+
 #if false
 		public override bool Equals(object obj)
 		{
