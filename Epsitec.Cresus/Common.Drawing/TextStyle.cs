@@ -631,7 +631,7 @@ namespace Epsitec.Common.Drawing
 		
 		public void Parse(string value, System.Globalization.CultureInfo culture)
 		{
-			string[]  args = System.Utilities.Split (value, ';');
+			string[]  args = Support.Utilities.Split (value, ';');
 				
 			foreach (string arg in args)
 			{

@@ -113,7 +113,7 @@ namespace Epsitec.Cresus.Database
 		{
 			for (int i = 0; i < list.Length; i++)
 			{
-				string[] args = System.Utilities.Split (list[i], '=');
+				string[] args = Common.Support.Utilities.Split (list[i], '=');
 				
 				if (args.Length != 2)
 				{
@@ -121,7 +121,7 @@ namespace Epsitec.Cresus.Database
 				}
 				
 				string name  = args[0];
-				string value = System.Utilities.StringSimplify (args[1]);
+				string value = Common.Support.Utilities.StringSimplify (args[1]);
 				
 				this.SetAttribute (name, value);
 			}
@@ -226,7 +226,7 @@ namespace Epsitec.Cresus.Database
 				buffer.Append (" attr.");
 				buffer.Append (names[i]);
 				buffer.Append (@"=""");
-				buffer.Append (System.Utilities.TextToXml (this.GetAttribute (names[i])));
+				buffer.Append (Common.Support.Utilities.TextToXml (this.GetAttribute (names[i])));
 				buffer.Append (@"""");
 			}
 		}

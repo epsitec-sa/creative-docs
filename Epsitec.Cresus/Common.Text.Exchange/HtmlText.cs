@@ -514,7 +514,6 @@ namespace Epsitec.Common.Text.Exchange
 			this.precedfontColor = string.Empty;
 
 			this.fontSize = 0;
-			this.precedfontSize = 0;
 
 			this.fontFace = string.Empty;
 			this.precedFontFace = string.Empty;
@@ -757,8 +756,7 @@ namespace Epsitec.Common.Text.Exchange
 		private string precedfontColor = string.Empty;
 
 		private double fontSize = 0;
-		private double precedfontSize = 0;
-
+		
 		private string fontFace = string.Empty;
 		private string precedFontFace = string.Empty;
 

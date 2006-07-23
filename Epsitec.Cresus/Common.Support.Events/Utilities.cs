@@ -7,7 +7,7 @@ namespace Epsitec.Common.Support
 	/// La classe Utilities propose quelques fonctions d'utilité générale
 	/// </summary>
 
-	public class Utilities
+	public static class Utilities
 	{
 		public static string StringSimplify(string value)
 		{

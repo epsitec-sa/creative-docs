@@ -138,7 +138,7 @@ namespace Epsitec.Cresus.Database.Collections
 			if (columns == null)
 			{
 				buffer.Append (@"<null id=""");
-				buffer.Append (System.Utilities.TextToXml (id));
+				buffer.Append (Common.Support.Utilities.TextToXml (id));
 				buffer.Append (@"""/>");
 			}
 			else
@@ -151,7 +151,7 @@ namespace Epsitec.Cresus.Database.Collections
 		protected void SerializeXmlDefinition(System.Text.StringBuilder buffer, string id)
 		{
 			buffer.Append (@"<cols id=""");
-			buffer.Append (System.Utilities.TextToXml (id));
+			buffer.Append (Common.Support.Utilities.TextToXml (id));
 			buffer.Append (@""">");
 			
 			for (int i = 0; i < this.list.Count; i++)

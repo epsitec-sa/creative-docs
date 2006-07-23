@@ -611,7 +611,7 @@ namespace Epsitec.Common.Script.Developer
 			
 			public static bool FindPosInRichText(string rich_text, int cursor_index, out int line, out int column)
 			{
-				string   text  = System.Utilities.XmlBreakToText (rich_text);
+				string   text  = Support.Utilities.XmlBreakToText (rich_text);
 				string[] lines = text.Split ('\n');
 				
 				line   = 0;
@@ -642,8 +642,8 @@ namespace Epsitec.Common.Script.Developer
 				
 				int line   = 0;
 				int column = 0;
-				
-				int line_length = System.Utilities.CountXmlChars (lines[line]);
+
+				int line_length = Support.Utilities.CountXmlChars (lines[line]);
 				
 				while (cursor_index > line_length)
 				{
@@ -654,15 +654,15 @@ namespace Epsitec.Common.Script.Developer
 						tag = -1;
 						return false;
 					}
-					
-					line_length = System.Utilities.CountXmlChars (lines[line]);
+
+					line_length = Support.Utilities.CountXmlChars (lines[line]);
 				}
 				
 				column = cursor_index;
 				
 				text = lines[line];
-				
-				int offset = System.Utilities.SkipXmlChars (text, cursor_index);
+
+				int offset = Support.Utilities.SkipXmlChars (text, cursor_index);
 				int wave   = -1;
 				
 				for (;;)
@@ -700,7 +700,7 @@ namespace Epsitec.Common.Script.Developer
 			
 			public static int  FindPosInRichText(string rich_text, int line, int column)
 			{
-				string   text  = System.Utilities.XmlBreakToText (rich_text);
+				string text  = Support.Utilities.XmlBreakToText (rich_text);
 				string[] lines = text.Split ('\n');
 				
 				int cursor_index = 0;
@@ -709,7 +709,7 @@ namespace Epsitec.Common.Script.Developer
 				
 				for (int i = 0; i < line; i++)
 				{
-					cursor_index += System.Utilities.CountXmlChars (lines[i]) + 1;
+					cursor_index += Support.Utilities.CountXmlChars (lines[i]) + 1;
 				}
 				
 				return cursor_index + column;

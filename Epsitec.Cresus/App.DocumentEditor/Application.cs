@@ -12,7 +12,7 @@ namespace Epsitec.App.DocumentEditor
 	{
 		public static void Start(string mode)
 		{
-			Application.mode = mode;
+			Application.mode = mode.Substring (0, 1);
 			
 			Res.Initialise(typeof(Application), "App");
 			
@@ -27,8 +27,21 @@ namespace Epsitec.App.DocumentEditor
 			Common.Support.ImageProvider.Default.EnableLongLifeCache = true;
 			Common.Support.ImageProvider.Default.PrefillManifestIconCache();
 
-			Application.application = new Application(DocumentType.Pictogram);
-			//Application.application = new Application(DocumentType.Graphic);
+			if (mode.Length > 1)
+			{
+				switch (mode[1])
+				{
+					case 'p':
+						Application.application = new Application (DocumentType.Pictogram);
+						break;
+				}
+			}
+			
+			if (Application.application == null)
+			{
+				Application.application = new Application (DocumentType.Graphic);
+			}
+			
 			Application.application.MainWindow.Run();
 		}
 		
