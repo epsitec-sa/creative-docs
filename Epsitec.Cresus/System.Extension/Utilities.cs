@@ -1,7 +1,7 @@
 //	Copyright © 2003-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Denis DUMOULIN & Pierre ARNAUD
 
-namespace System
+namespace Epsitec.Common.Support
 {
 	/// <summary>
 	/// La classe Utilities propose quelques fonctions d'utilité générale

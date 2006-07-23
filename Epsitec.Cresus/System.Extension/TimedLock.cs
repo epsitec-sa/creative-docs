@@ -1,4 +1,4 @@
-namespace System
+namespace Epsitec.Common.Support
 {
 	//	Thanks to Eric Gunnerson for recommending this be a struct rather
 	//	than a class - avoids a heap allocation.
