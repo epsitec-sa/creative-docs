@@ -180,7 +180,7 @@ namespace Epsitec.Common.Designer
 				{
 					ResourceBundle actualBundle = this.panelsList[this.accessIndex];
 					newBundle = actualBundle.Clone();
-					newBundle.DefineNme(newDruid.ToBundleId());
+					newBundle.DefineName(newDruid.ToBundleId());
 					newBundle.DefineCaption(newName);
 				}
 				else
