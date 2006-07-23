@@ -812,6 +812,7 @@ namespace Epsitec.App.DocumentEditor
 			double tm = 0;
 			if ( document.Type == DocumentType.Pictogram )
 			{
+#if false
 				PaneBook pane = new PaneBook(di.tabPage);
 				pane.Anchor = AnchorStyles.All;
 				pane.PaneBookStyle = PaneBookStyle.LeftRight;
@@ -837,6 +838,24 @@ namespace Epsitec.App.DocumentEditor
 				viewer.Margins = new Margins(wm, wm+sw+1, 6+wm, wm+sw+1);
 				document.Modifier.ActiveViewer = viewer;
 				document.Modifier.AttachViewer(viewer);
+#else
+				Widget leftPane = new Widget (di.tabPage);
+				Widget rightPane = new Widget (di.tabPage);
+				
+				VSplitter splitter = new VSplitter (di.tabPage);
+				
+				leftPane.Dock = DockStyle.Fill;
+				splitter.Dock = DockStyle.Right;
+				rightPane.Dock = DockStyle.Right;
+				
+				mainViewParent = leftPane;
+				Viewer viewer = new Viewer (document);
+				viewer.SetParent (mainViewParent);
+				viewer.Anchor = AnchorStyles.All;
+				viewer.Margins = new Margins (wm, wm+sw+1, 6+wm, wm+sw+1);
+				document.Modifier.ActiveViewer = viewer;
+				document.Modifier.AttachViewer (viewer);
+#endif
 
 #if false
 				Viewer frame1 = new Viewer(document);
