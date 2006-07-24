@@ -324,6 +324,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected override void TextFieldToIndex(AbstractTextField textField, out int field, out int subfield)
 		{
+			//	Cherche les index correspondant à un texte éditable.
 			subfield = 0;
 
 			if (textField == this.labelEdit)
@@ -365,6 +366,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected override AbstractTextField IndexToTextField(int field, int subfield)
 		{
+			//	Cherche le TextField permettant d'éditer des index.
 			if (subfield == 0)
 			{
 				switch (field)

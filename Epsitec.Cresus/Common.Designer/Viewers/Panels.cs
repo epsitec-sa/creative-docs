@@ -138,7 +138,6 @@ namespace Epsitec.Common.Designer.Viewers
 			VSplitter splitter2 = new VSplitter(this);
 			splitter2.Dock = DockStyle.Right;
 
-			this.UpdateArray();
 			this.UpdateEdit();
 		}
 
@@ -381,6 +380,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected override void TextFieldToIndex(AbstractTextField textField, out int field, out int subfield)
 		{
+			//	Cherche les index correspondant à un texte éditable.
 			field = -1;
 			subfield = -1;
 
@@ -393,6 +393,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected override AbstractTextField IndexToTextField(int field, int subfield)
 		{
+			//	Cherche le TextField permettant d'éditer des index.
 			if (field == 0 && subfield == 0)
 			{
 				return this.labelEdit;
