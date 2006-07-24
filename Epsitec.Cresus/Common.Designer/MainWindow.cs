@@ -304,19 +304,19 @@ namespace Epsitec.Common.Designer
 			{
 				ResourceAccess access;
 
-				access = mi.Module.GetAccess(ResourceAccess.Type.Strings);
+				access = mi.Module.AccessStrings;
 				builder.Append(Res.Strings.BundleType.Strings);
 				builder.Append(":");
 				builder.Append(access.TotalCount);
 				builder.Append(", ");
 
-				access = mi.Module.GetAccess(ResourceAccess.Type.Captions);
+				access = mi.Module.AccessCaptions;
 				builder.Append(Res.Strings.BundleType.Captions);
 				builder.Append(":");
 				builder.Append(access.TotalCount);
 				builder.Append(", ");
 
-				access = mi.Module.GetAccess(ResourceAccess.Type.Panels);
+				access = mi.Module.AccessPanels;
 				builder.Append(Res.Strings.BundleType.Panels);
 				builder.Append(":");
 				builder.Append(access.TotalCount);

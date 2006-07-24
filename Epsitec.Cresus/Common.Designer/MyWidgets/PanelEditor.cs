@@ -1498,7 +1498,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 					druid = Druid.Parse(binding.ResourceId);
 				}
 
-				druid = this.module.MainWindow.DlgTextSelector(this.module.GetAccess(ResourceAccess.Type.Strings), druid);
+				druid = this.module.MainWindow.DlgTextSelector(this.module.AccessStrings, druid);
 				
 				if (druid.IsValid)
 				{
@@ -4337,7 +4337,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected void SetDirty()
 		{
-			this.module.GetAccess(ResourceAccess.Type.Panels).IsDirty = true;
+			this.module.AccessPanels.IsDirty = true;
 		}
 		#endregion
 
