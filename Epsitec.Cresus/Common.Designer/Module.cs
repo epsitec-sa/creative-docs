@@ -90,6 +90,30 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
+		public ResourceAccess AccessStrings
+		{
+			get
+			{
+				return this.accessStrings;
+			}
+		}
+
+		public ResourceAccess AccessCaptions
+		{
+			get
+			{
+				return this.accessCaptions;
+			}
+		}
+
+		public ResourceAccess AccessPanels
+		{
+			get
+			{
+				return this.accessPanels;
+			}
+		}
+
 		public ResourceAccess GetAccess(ResourceAccess.Type type)
 		{
 			//	Cherche un accès d'après son type.
