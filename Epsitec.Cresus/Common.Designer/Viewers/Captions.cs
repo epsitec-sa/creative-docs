@@ -178,7 +178,10 @@ namespace Epsitec.Common.Designer.Viewers
 
 
 			this.UpdateCultures();
-			this.Update();
+			this.UpdateEdit();
+			this.UpdateColor();
+			this.UpdateModificationsCulture();
+			this.UpdateCommands();
 		}
 
 		protected override void Dispose(bool disposing)
@@ -413,6 +416,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected override void TextFieldToIndex(AbstractTextField textField, out int field, out int subfield)
 		{
+			//	Cherche les index correspondant à un texte éditable.
 			if (textField == this.labelEdit)
 			{
 				field = 0;
@@ -471,6 +475,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected override AbstractTextField IndexToTextField(int field, int subfield)
 		{
+			//	Cherche le TextField permettant d'éditer des index.
 			if (subfield == 0)
 			{
 				switch (field)
