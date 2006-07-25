@@ -1487,7 +1487,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void ChangeTextResource(Widget obj)
 		{
 			//	Choix de la ressource de type texte pour l'objet.
-			//	TODO: tout ceci est provisoire !!!
 			if (obj is Button || obj is StaticText || obj is GroupBox)
 			{
 				Types.ResourceBinding binding = obj.GetBinding(Widget.TextProperty) as Types.ResourceBinding;
