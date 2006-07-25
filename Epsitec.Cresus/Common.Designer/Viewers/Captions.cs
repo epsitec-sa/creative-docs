@@ -295,7 +295,7 @@ namespace Epsitec.Common.Designer.Viewers
 			{
 				this.SetTextField(this.labelEdit, 0, null, null);
 
-				this.SetTextField(this.primaryLabels, 0, null, null);
+				this.SetCaptionTextField(this.primaryLabels, 0, null, null);
 				this.SetCaptionTextField(this.primaryDescription, 0, null, null);
 				this.SetTextField(this.primaryIcon, 0, null, null);
 				this.SetTextField(this.primaryAbout, 0, null, null);
@@ -310,21 +310,21 @@ namespace Epsitec.Common.Designer.Viewers
 				int index = this.access.AccessIndex;
 
 				this.SetTextField(this.labelEdit, index, null, "Name");
-				this.SetTextField(this.primaryLabels, index, null, "Labels");
+				this.SetCaptionTextField(this.primaryLabels, index, null, "Labels");
 				this.SetCaptionTextField(this.primaryDescription, index, null, "Description");
 				this.SetTextField(this.primaryIcon, index, null, "Icon");
 				this.SetTextField(this.primaryAbout, index, null, "About");
 
 				if (this.secondaryCulture == null)
 				{
-					this.SetTextField(this.secondaryLabels, 0, null, null);
+					this.SetCaptionTextField(this.secondaryLabels, 0, null, null);
 					this.SetCaptionTextField(this.secondaryDescription, 0, null, null);
 					this.SetTextField(this.secondaryIcon, 0, null, null);
 					this.SetCaptionTextField(this.secondaryAbout, 0, null, null);
 				}
 				else
 				{
-					this.SetTextField(this.secondaryLabels, index, this.secondaryCulture, "Labels");
+					this.SetCaptionTextField(this.secondaryLabels, index, this.secondaryCulture, "Labels");
 					this.SetCaptionTextField(this.secondaryDescription, index, this.secondaryCulture, "Description");
 					this.SetTextField(this.secondaryIcon, index, this.secondaryCulture, "Icon");
 					this.SetTextField(this.secondaryAbout, index, this.secondaryCulture, "About");
@@ -348,14 +348,41 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 			else
 			{
+				Druid druid = this.GetDruid(index, cultureName, fieldName);
+				string text = this.GetText(druid, cultureName);
+
 				textField.Enable = true;
-				textField.Text = this.GetText(index, cultureName, fieldName);
+				textField.Text = text;
 			}
 		}
 
-		protected string GetText(int index, string cultureName, string fieldName)
+		protected void SetCaptionTextField(MyWidgets.StringCollection collection, int index, string cultureName, string fieldName)
 		{
 			if (fieldName == null)
+			{
+				collection.Enable = false;
+				collection.Collection = null;
+			}
+			else
+			{
+				ResourceAccess.Field field = this.access.GetField(index, cultureName, fieldName);
+
+				List<string> list = new List<string>();
+				foreach (string id in field.StringCollection)
+				{
+					Druid druid = new Druid(id);
+					string text = this.GetText(druid, cultureName);
+					list.Add(text);
+				}
+
+				collection.Enable = true;
+				collection.Collection = list;
+			}
+		}
+
+		protected string GetText(Druid druid, string cultureName)
+		{
+			if (druid.IsEmpty)
 			{
 				return "";
 			}
@@ -364,20 +391,31 @@ namespace Epsitec.Common.Designer.Viewers
 				ResourceAccess accessStrings = this.module.AccessStrings;
 				ResourceBundle bundleStrings = accessStrings.GetCultureBundle(cultureName);
 
-				ResourceAccess.Field field = this.access.GetField(index, cultureName, fieldName);
-				string id = field.String;
-
-				if (string.IsNullOrEmpty(id))
-				{
-					return "";
-				}
-
-				Druid druid = new Druid(id);
 				string name, text;
 				bool isDefined;
 				accessStrings.GetBypassFilterStrings(druid, bundleStrings, out name, out text, out isDefined);
 
 				return text;
+			}
+		}
+
+		protected Druid GetDruid(int index, string cultureName, string fieldName)
+		{
+			if (fieldName == null)
+			{
+				return Druid.Empty;
+			}
+			else
+			{
+				ResourceAccess.Field field = this.access.GetField(index, cultureName, fieldName);
+				string id = field.String;
+
+				if (string.IsNullOrEmpty(id))
+				{
+					return Druid.Empty;
+				}
+
+				return new Druid(id);
 			}
 		}
 
