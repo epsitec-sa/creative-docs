@@ -686,7 +686,15 @@ namespace Epsitec.Common.Designer
 
 				if (fieldName == ResourceAccess.NameStrings[0])
 				{
-					this.accessField.SetName(this.AddFilter(field.String));
+					string name = this.AddFilter(field.String);
+					this.accessField.SetName(name);
+
+					Druid druid = this.druidsIndex[index];
+					foreach (ResourceBundle bundle in this.bundles)
+					{
+						ResourceBundle.Field f = bundle[druid];
+						f.SetName(name);
+					}
 				}
 			}
 
