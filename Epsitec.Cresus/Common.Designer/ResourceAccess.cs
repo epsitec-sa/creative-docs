@@ -529,6 +529,18 @@ namespace Epsitec.Common.Designer
 			text = field.AsString;
 		}
 
+		public void SetBypassFilterStrings(Druid druid, ResourceBundle bundle, string text)
+		{
+			//	Donne les chaînes 'Name' et 'String' d'une ressource de type Strings,
+			//	sans tenir compte du filtre.
+			System.Diagnostics.Debug.Assert(this.type == Type.Strings);
+			ResourceBundle.Field field = bundle[druid];
+			System.Diagnostics.Debug.Assert(!field.IsEmpty);
+
+			text = this.AddFilter(text);
+			field.SetStringValue(text);
+		}
+
 		public Druid CreateBypassFilter(ResourceBundle bundle, string name, string text)
 		{
 			//	Crée une nouvelle ressource 'Strings' à la fin.
@@ -1049,6 +1061,64 @@ namespace Epsitec.Common.Designer
 		protected static Field.Type[] TypePanels = { Field.Type.String, Field.Type.Bundle };
 
 
+		#region CaptionAdapt
+		public void CaptionAdapt(ResourceAccess accessStrings)
+		{
+			int count = this.AccessCount;
+			for (int i=0; i<count; i++)
+			{
+				this.CaptionAdapt(accessStrings, i);
+			}
+		}
+
+		protected void CaptionAdapt(ResourceAccess accessStrings, int index)
+		{
+			ResourceAccess.Field field;
+			int i;
+			Druid druid;
+			string stringName;
+
+			field = this.GetField(index, null, "Description");
+			if (!Druid.IsValidResourceId(field.String))
+			{
+				field = this.GetField(index, null, "Name");
+				string captionName = field.String;
+
+				//	Champ 'Labels'.
+				field = this.GetField(index, null, "Labels");
+				string[] array = new string[field.StringCollection.Count];
+				field.StringCollection.CopyTo(array, 0);
+
+				List<string> ids = new List<string>();
+				for (int a=0; a<array.Length; a++)
+				{
+					stringName = string.Format("Captions.{0}.{1}.{2}", captionName, "Labels", a);
+					accessStrings.AccessIndex = accessStrings.AccessCount-1;
+					accessStrings.Duplicate(stringName, false);
+					i = accessStrings.AccessCount-1;
+					accessStrings.SetField(i, null, "String", new ResourceAccess.Field(array[a]));
+
+					druid = accessStrings.druidsIndex[i];
+					ids.Add(druid.ToResourceId());
+				}
+				this.SetField(index, null, "Labels", new ResourceAccess.Field(ids));
+
+				//	Champ 'Description'.
+				field = this.GetField(index, null, "Description");
+
+				stringName = string.Format("Captions.{0}.{1}", captionName, "Description");
+				accessStrings.AccessIndex = accessStrings.AccessCount-1;
+				accessStrings.Duplicate(stringName, false);
+				i = accessStrings.AccessCount-1;
+				accessStrings.SetField(i, null, "String", new ResourceAccess.Field(field.String));
+
+				druid = accessStrings.druidsIndex[i];
+				this.SetField(index, null, "Description", new ResourceAccess.Field(druid.ToResourceId()));
+			}
+		}
+		#endregion
+
+
 		public int CultureCount
 		{
 			//	Retourne le nombre de cultures.
@@ -1061,6 +1131,11 @@ namespace Epsitec.Common.Designer
 		public ResourceBundle GetCultureBundle(string cultureName)
 		{
 			//	Cherche le bundle d'une culture.
+			if (cultureName == null)
+			{
+				return this.primaryBundle;
+			}
+
 			System.Diagnostics.Debug.Assert(cultureName.Length == 2);
 			for (int b=0; b<bundles.Count; b++)
 			{

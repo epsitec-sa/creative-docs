@@ -296,12 +296,12 @@ namespace Epsitec.Common.Designer.Viewers
 				this.SetTextField(this.labelEdit, 0, null, null);
 
 				this.SetTextField(this.primaryLabels, 0, null, null);
-				this.SetTextField(this.primaryDescription, 0, null, null);
+				this.SetCaptionTextField(this.primaryDescription, 0, null, null);
 				this.SetTextField(this.primaryIcon, 0, null, null);
 				this.SetTextField(this.primaryAbout, 0, null, null);
-				
+
 				this.SetTextField(this.secondaryLabels, 0, null, null);
-				this.SetTextField(this.secondaryDescription, 0, null, null);
+				this.SetCaptionTextField(this.secondaryDescription, 0, null, null);
 				this.SetTextField(this.secondaryIcon, 0, null, null);
 				this.SetTextField(this.secondaryAbout, 0, null, null);
 			}
@@ -311,21 +311,21 @@ namespace Epsitec.Common.Designer.Viewers
 
 				this.SetTextField(this.labelEdit, index, null, "Name");
 				this.SetTextField(this.primaryLabels, index, null, "Labels");
-				this.SetTextField(this.primaryDescription, index, null, "Description");
+				this.SetCaptionTextField(this.primaryDescription, index, null, "Description");
 				this.SetTextField(this.primaryIcon, index, null, "Icon");
 				this.SetTextField(this.primaryAbout, index, null, "About");
 
 				if (this.secondaryCulture == null)
 				{
 					this.SetTextField(this.secondaryLabels, 0, null, null);
-					this.SetTextField(this.secondaryDescription, 0, null, null);
+					this.SetCaptionTextField(this.secondaryDescription, 0, null, null);
 					this.SetTextField(this.secondaryIcon, 0, null, null);
-					this.SetTextField(this.secondaryAbout, 0, null, null);
+					this.SetCaptionTextField(this.secondaryAbout, 0, null, null);
 				}
 				else
 				{
 					this.SetTextField(this.secondaryLabels, index, this.secondaryCulture, "Labels");
-					this.SetTextField(this.secondaryDescription, index, this.secondaryCulture, "Description");
+					this.SetCaptionTextField(this.secondaryDescription, index, this.secondaryCulture, "Description");
 					this.SetTextField(this.secondaryIcon, index, this.secondaryCulture, "Icon");
 					this.SetTextField(this.secondaryAbout, index, this.secondaryCulture, "About");
 				}
@@ -337,6 +337,83 @@ namespace Epsitec.Common.Designer.Viewers
 			this.ignoreChange = iic;
 
 			this.UpdateCommands();
+		}
+
+		protected void SetCaptionTextField(AbstractTextField textField, int index, string cultureName, string fieldName)
+		{
+			if (fieldName == null)
+			{
+				textField.Enable = false;
+				textField.Text = "";
+			}
+			else
+			{
+				ResourceAccess.Field field = this.access.GetField(index, cultureName, fieldName);
+
+				textField.Enable = true;
+				textField.Text = field.String;
+
+				//?textField.Enable = true;
+				//?textField.Text = this.GetText(index, cultureName, fieldName);
+			}
+		}
+
+		protected string GetText(int index, string cultureName, string fieldName)
+		{
+			if (fieldName == null)
+			{
+				return "";
+			}
+			else
+			{
+				ResourceAccess accessStrings = this.module.AccessStrings;
+				ResourceBundle bundleStrings = accessStrings.GetCultureBundle(cultureName);
+
+				ResourceAccess.Field field = this.access.GetField(index, cultureName, fieldName);
+				string text = field.String;
+				if (Druid.IsValidResourceId(text))
+				{
+					Druid druid = new Druid(text);
+					string name;
+					bool isDefined;
+					accessStrings.GetBypassFilterStrings(druid, bundleStrings, out name, out text, out isDefined);
+				}
+				else
+				{
+					field = this.access.GetField(index, null, "Name");
+
+					string name = string.Format("Captions.{0}.{1}", field.String, fieldName);
+					Druid druid = accessStrings.CreateBypassFilter(bundleStrings, name, text);
+
+					string id = druid.ToResourceId();
+					this.access.SetField(index, cultureName, fieldName, new ResourceAccess.Field(id));
+				}
+
+				return text;
+			}
+		}
+
+		protected void SetText(int index, string cultureName, string fieldName, string text)
+		{
+			ResourceAccess accessStrings = this.module.AccessStrings;
+			ResourceBundle bundleStrings = accessStrings.GetCultureBundle(cultureName);
+
+			ResourceAccess.Field field = this.access.GetField(index, cultureName, fieldName);
+			if (field == null || field.String == null)
+			{
+				field = this.access.GetField(index, null, "Name");
+
+				string name = string.Format("Captions.{0}.{1}", field.String, fieldName);
+				Druid druid = accessStrings.CreateBypassFilter(bundleStrings, name, text);
+
+				string id = druid.ToResourceId();
+				this.access.SetField(index, cultureName, fieldName, new ResourceAccess.Field(id));
+			}
+			else
+			{
+				Druid druid = new Druid(field.String);
+				accessStrings.SetBypassFilterStrings(druid, bundleStrings, text);
+			}
 		}
 
 
@@ -645,11 +722,13 @@ namespace Epsitec.Common.Designer.Viewers
 			if (edit == this.primaryDescription)
 			{
 				this.access.SetField(sel, null, "Description", new ResourceAccess.Field(text));
+				//?this.SetText(sel, null, "Description", text);
 			}
 
 			if (edit == this.secondaryDescription)
 			{
 				this.access.SetField(sel, this.secondaryCulture, "Description", new ResourceAccess.Field(text));
+				//?this.SetText(sel, this.secondaryCulture, "Description", text);
 			}
 
 			if (edit == this.primaryAbout)
