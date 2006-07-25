@@ -348,13 +348,8 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 			else
 			{
-				ResourceAccess.Field field = this.access.GetField(index, cultureName, fieldName);
-
 				textField.Enable = true;
-				textField.Text = field.String;
-
-				//?textField.Enable = true;
-				//?textField.Text = this.GetText(index, cultureName, fieldName);
+				textField.Text = this.GetText(index, cultureName, fieldName);
 			}
 		}
 
@@ -370,24 +365,17 @@ namespace Epsitec.Common.Designer.Viewers
 				ResourceBundle bundleStrings = accessStrings.GetCultureBundle(cultureName);
 
 				ResourceAccess.Field field = this.access.GetField(index, cultureName, fieldName);
-				string text = field.String;
-				if (Druid.IsValidResourceId(text))
-				{
-					Druid druid = new Druid(text);
-					string name;
-					bool isDefined;
-					accessStrings.GetBypassFilterStrings(druid, bundleStrings, out name, out text, out isDefined);
-				}
-				else
-				{
-					field = this.access.GetField(index, null, "Name");
+				string id = field.String;
 
-					string name = string.Format("Captions.{0}.{1}", field.String, fieldName);
-					Druid druid = accessStrings.CreateBypassFilter(bundleStrings, name, text);
-
-					string id = druid.ToResourceId();
-					this.access.SetField(index, cultureName, fieldName, new ResourceAccess.Field(id));
+				if (string.IsNullOrEmpty(id))
+				{
+					return "";
 				}
+
+				Druid druid = new Druid(id);
+				string name, text;
+				bool isDefined;
+				accessStrings.GetBypassFilterStrings(druid, bundleStrings, out name, out text, out isDefined);
 
 				return text;
 			}
@@ -398,22 +386,28 @@ namespace Epsitec.Common.Designer.Viewers
 			ResourceAccess accessStrings = this.module.AccessStrings;
 			ResourceBundle bundleStrings = accessStrings.GetCultureBundle(cultureName);
 
+			//	Si nécessaire, crée une nouvelle culture Strings.
+			if (bundleStrings == null && cultureName != null)
+			{
+				accessStrings.CreateCulture(cultureName);
+				bundleStrings = accessStrings.GetCultureBundle(cultureName);
+			}
+			System.Diagnostics.Debug.Assert(bundleStrings != null);
+
 			ResourceAccess.Field field = this.access.GetField(index, cultureName, fieldName);
-			if (field == null || field.String == null)
-			{
-				field = this.access.GetField(index, null, "Name");
+			string id = field.String;
 
-				string name = string.Format("Captions.{0}.{1}", field.String, fieldName);
-				Druid druid = accessStrings.CreateBypassFilter(bundleStrings, name, text);
-
-				string id = druid.ToResourceId();
-				this.access.SetField(index, cultureName, fieldName, new ResourceAccess.Field(id));
-			}
-			else
+			if (string.IsNullOrEmpty(id))
 			{
-				Druid druid = new Druid(field.String);
-				accessStrings.SetBypassFilterStrings(druid, bundleStrings, text);
+				field = this.access.GetField(index, null, fieldName);
+				id = field.String;
+				System.Diagnostics.Debug.Assert(!string.IsNullOrEmpty(id));
 			}
+
+			Druid druid = new Druid(id);
+			this.access.SetField(index, cultureName, fieldName, new ResourceAccess.Field(druid.ToResourceId()));
+
+			accessStrings.SetBypassFilterStrings(druid, bundleStrings, text);
 		}
 
 
@@ -721,14 +715,14 @@ namespace Epsitec.Common.Designer.Viewers
 
 			if (edit == this.primaryDescription)
 			{
-				this.access.SetField(sel, null, "Description", new ResourceAccess.Field(text));
-				//?this.SetText(sel, null, "Description", text);
+				//?this.access.SetField(sel, null, "Description", new ResourceAccess.Field(text));
+				this.SetText(sel, null, "Description", text);
 			}
 
 			if (edit == this.secondaryDescription)
 			{
-				this.access.SetField(sel, this.secondaryCulture, "Description", new ResourceAccess.Field(text));
-				//?this.SetText(sel, this.secondaryCulture, "Description", text);
+				//?this.access.SetField(sel, this.secondaryCulture, "Description", new ResourceAccess.Field(text));
+				this.SetText(sel, this.secondaryCulture, "Description", text);
 			}
 
 			if (edit == this.primaryAbout)
