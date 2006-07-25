@@ -535,7 +535,17 @@ namespace Epsitec.Common.Designer
 			//	sans tenir compte du filtre.
 			System.Diagnostics.Debug.Assert(this.type == Type.Strings);
 			ResourceBundle.Field field = bundle[druid];
-			System.Diagnostics.Debug.Assert(!field.IsEmpty);
+
+			if (field.IsEmpty)
+			{
+				string name = this.primaryBundle[druid].Name;
+
+				field = bundle.CreateField(ResourceFieldType.Data);
+				field.SetDruid(druid);
+				field.SetName(name);
+
+				bundle.Add(field);
+			}
 
 			text = this.AddFilter(text);
 			field.SetStringValue(text);
