@@ -144,8 +144,6 @@ namespace Epsitec.Common.Designer
 			{
 				access.Load();
 			}
-
-			//?this.accessCaptions.CaptionAdapt(this.accessStrings);
 		}
 
 		public void Save()
