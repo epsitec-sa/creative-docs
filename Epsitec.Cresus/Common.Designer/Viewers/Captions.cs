@@ -295,13 +295,13 @@ namespace Epsitec.Common.Designer.Viewers
 			{
 				this.SetTextField(this.labelEdit, 0, null, null);
 
-				this.SetCaptionTextField(this.primaryLabels, 0, null, null);
-				this.SetCaptionTextField(this.primaryDescription, 0, null, null);
+				this.SetTextField(this.primaryLabels, 0, null, null);
+				this.SetTextField(this.primaryDescription, 0, null, null);
 				this.SetTextField(this.primaryIcon, 0, null, null);
 				this.SetTextField(this.primaryAbout, 0, null, null);
 
 				this.SetTextField(this.secondaryLabels, 0, null, null);
-				this.SetCaptionTextField(this.secondaryDescription, 0, null, null);
+				this.SetTextField(this.secondaryDescription, 0, null, null);
 				this.SetTextField(this.secondaryIcon, 0, null, null);
 				this.SetTextField(this.secondaryAbout, 0, null, null);
 			}
@@ -310,22 +310,22 @@ namespace Epsitec.Common.Designer.Viewers
 				int index = this.access.AccessIndex;
 
 				this.SetTextField(this.labelEdit, index, null, "Name");
-				this.SetCaptionTextField(this.primaryLabels, index, null, "Labels");
-				this.SetCaptionTextField(this.primaryDescription, index, null, "Description");
+				this.SetTextField(this.primaryLabels, index, null, "Labels");
+				this.SetTextField(this.primaryDescription, index, null, "Description");
 				this.SetTextField(this.primaryIcon, index, null, "Icon");
 				this.SetTextField(this.primaryAbout, index, null, "About");
 
 				if (this.secondaryCulture == null)
 				{
-					this.SetCaptionTextField(this.secondaryLabels, 0, null, null);
-					this.SetCaptionTextField(this.secondaryDescription, 0, null, null);
+					this.SetTextField(this.secondaryLabels, 0, null, null);
+					this.SetTextField(this.secondaryDescription, 0, null, null);
 					this.SetTextField(this.secondaryIcon, 0, null, null);
-					this.SetCaptionTextField(this.secondaryAbout, 0, null, null);
+					this.SetTextField(this.secondaryAbout, 0, null, null);
 				}
 				else
 				{
-					this.SetCaptionTextField(this.secondaryLabels, index, this.secondaryCulture, "Labels");
-					this.SetCaptionTextField(this.secondaryDescription, index, this.secondaryCulture, "Description");
+					this.SetTextField(this.secondaryLabels, index, this.secondaryCulture, "Labels");
+					this.SetTextField(this.secondaryDescription, index, this.secondaryCulture, "Description");
 					this.SetTextField(this.secondaryIcon, index, this.secondaryCulture, "Icon");
 					this.SetTextField(this.secondaryAbout, index, this.secondaryCulture, "About");
 				}
@@ -337,115 +337,6 @@ namespace Epsitec.Common.Designer.Viewers
 			this.ignoreChange = iic;
 
 			this.UpdateCommands();
-		}
-
-		protected void SetCaptionTextField(AbstractTextField textField, int index, string cultureName, string fieldName)
-		{
-			if (fieldName == null)
-			{
-				textField.Enable = false;
-				textField.Text = "";
-			}
-			else
-			{
-				Druid druid = this.GetDruid(index, cultureName, fieldName);
-				string text = this.GetText(druid, cultureName);
-
-				textField.Enable = true;
-				textField.Text = text;
-			}
-		}
-
-		protected void SetCaptionTextField(MyWidgets.StringCollection collection, int index, string cultureName, string fieldName)
-		{
-			if (fieldName == null)
-			{
-				collection.Enable = false;
-				collection.Collection = null;
-			}
-			else
-			{
-				ResourceAccess.Field field = this.access.GetField(index, cultureName, fieldName);
-
-				List<string> list = new List<string>();
-				foreach (string id in field.StringCollection)
-				{
-					Druid druid = new Druid(id);
-					string text = this.GetText(druid, cultureName);
-					list.Add(text);
-				}
-
-				collection.Enable = true;
-				collection.Collection = list;
-			}
-		}
-
-		protected string GetText(Druid druid, string cultureName)
-		{
-			if (druid.IsEmpty)
-			{
-				return "";
-			}
-			else
-			{
-				ResourceAccess accessStrings = this.module.AccessStrings;
-				ResourceBundle bundleStrings = accessStrings.GetCultureBundle(cultureName);
-
-				string name, text;
-				bool isDefined;
-				accessStrings.GetBypassFilterStrings(druid, bundleStrings, out name, out text, out isDefined);
-
-				return text;
-			}
-		}
-
-		protected Druid GetDruid(int index, string cultureName, string fieldName)
-		{
-			if (fieldName == null)
-			{
-				return Druid.Empty;
-			}
-			else
-			{
-				ResourceAccess.Field field = this.access.GetField(index, cultureName, fieldName);
-				string id = field.String;
-
-				if (string.IsNullOrEmpty(id))
-				{
-					return Druid.Empty;
-				}
-
-				return new Druid(id);
-			}
-		}
-
-		protected void SetText(int index, string cultureName, string fieldName, string text)
-		{
-			ResourceAccess accessStrings = this.module.AccessStrings;
-			ResourceBundle bundleStrings = accessStrings.GetCultureBundle(cultureName);
-
-			//	Si nécessaire, crée une nouvelle culture Strings.
-			if (bundleStrings == null && cultureName != null)
-			{
-				accessStrings.CreateCulture(cultureName);
-				bundleStrings = accessStrings.GetCultureBundle(cultureName);
-			}
-			System.Diagnostics.Debug.Assert(bundleStrings != null);
-
-			ResourceAccess.Field field = this.access.GetField(index, cultureName, fieldName);
-			string id = field.String;
-
-			if (string.IsNullOrEmpty(id))
-			{
-				field = this.access.GetField(index, null, fieldName);
-				id = field.String;
-				System.Diagnostics.Debug.Assert(!string.IsNullOrEmpty(id));
-			}
-
-			Druid druid = new Druid(id);
-			this.access.SetField(index, cultureName, fieldName, new ResourceAccess.Field(druid.ToResourceId()));
-
-			accessStrings.SetBypassFilterStrings(druid, bundleStrings, text);
 		}
 
 
@@ -753,14 +644,12 @@ namespace Epsitec.Common.Designer.Viewers
 
 			if (edit == this.primaryDescription)
 			{
-				//?this.access.SetField(sel, null, "Description", new ResourceAccess.Field(text));
-				this.SetText(sel, null, "Description", text);
+				this.access.SetField(sel, null, "Description", new ResourceAccess.Field(text));
 			}
 
 			if (edit == this.secondaryDescription)
 			{
-				//?this.access.SetField(sel, this.secondaryCulture, "Description", new ResourceAccess.Field(text));
-				this.SetText(sel, this.secondaryCulture, "Description", text);
+				this.access.SetField(sel, this.secondaryCulture, "Description", new ResourceAccess.Field(text));
 			}
 
 			if (edit == this.primaryAbout)
