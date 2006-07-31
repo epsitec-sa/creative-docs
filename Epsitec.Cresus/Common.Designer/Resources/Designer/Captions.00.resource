@@ -4,22 +4,22 @@
   <data name="Cap.Geometry.RightMargin" id="01">&lt;s:data id="_0" f:Description="Marge droite" f:Labels="{Collection {Text 'Marge droite'}}" /&gt;</data>
   <data name="Cap.Geometry.TopMargin" id="02">&lt;s:data id="_0" f:Description="Marge supérieure" f:Labels="{Collection {Text 'Marge supérieure'}}" /&gt;</data>
   <data name="Cap.Geometry.BottomMargin" id="03">&lt;s:data id="_0" f:Description="Marge inférieure" f:Labels="{Collection {Text 'Marge inférieure'}}" /&gt;</data>
-  
+
   <data name="Cap.Geometry.OriginX" id="04">&lt;s:data id="_0" f:Description="Origine horizontale (X)" f:Labels="{Collection {Text 'Origine X'}, {Text 'X'}}" /&gt;</data>
   <data name="Cap.Geometry.OriginY" id="05">&lt;s:data id="_0" f:Description="Origine verticale (Y)" f:Labels="{Collection {Text 'Origine Y'}, {Text 'Y'}}" /&gt;</data>
-  <data name="Cap.Geometry.Width" id="06">&lt;s:data id="_0" f:Description="Largeur" f:Labels="{Collection {Text 'Largeur ?X'}, {Text '?X'}}" /&gt;</data>
-  <data name="Cap.Geometry.Height" id="07">&lt;s:data id="_0" f:Description="Hauteur" f:Labels="{Collection {Text 'Hauteur ?Y'}, {Text '?Y'}}" /&gt;</data>
-  
+  <data name="Cap.Geometry.Width" id="06">&lt;s:data id="_0" f:Description="Largeur" f:Labels="{Collection {Text 'Largeur ΔX'}, {Text 'ΔX'}}" /&gt;</data>
+  <data name="Cap.Geometry.Height" id="07">&lt;s:data id="_0" f:Description="Hauteur" f:Labels="{Collection {Text 'Hauteur ΔY'}, {Text 'ΔY'}}" /&gt;</data>
+
   <data name="Cap.Geometry.MinWidth" id="0R">&lt;s:data id="_0" f:Description="Largeur minimale" f:Labels="{Collection {Text 'Largeur minimale'}}" /&gt;</data>
   <data name="Cap.Geometry.MaxWidth" id="0S">&lt;s:data id="_0" f:Description="Largeur maximale" f:Labels="{Collection {Text 'Largeur maximale'}}" /&gt;</data>
   <data name="Cap.Geometry.MinHeight" id="0T">&lt;s:data id="_0" f:Description="Hauteur minimale" f:Labels="{Collection {Text 'Hauteur minimale'}}" /&gt;</data>
   <data name="Cap.Geometry.MaxHeight" id="0U">&lt;s:data id="_0" f:Description="Hauteur maximale" f:Labels="{Collection {Text 'Hauteur maximale'}}" /&gt;</data>
-  
+
   <data name="Cap.Padding.Left" id="08">&lt;s:data id="_0" f:Description="Marge intérieure gauche" f:Labels="{Collection {Text 'Marge gauche'}}" /&gt;</data>
   <data name="Cap.Padding.Right" id="09">&lt;s:data id="_0" f:Description="Marge intérieure droite" f:Labels="{Collection {Text 'Marge droite'}}" /&gt;</data>
   <data name="Cap.Padding.Top" id="0A">&lt;s:data id="_0" f:Description="Marge intérieure supérieure" f:Labels="{Collection {Text 'Marge supérieure'}, {Text 'Marge sup.'}}" /&gt;</data>
   <data name="Cap.Padding.Bottom" id="0B">&lt;s:data id="_0" f:Description="Marge intérieure inférieure" f:Labels="{Collection {Text 'Marge inférieure'}, {Text 'Marge inf.'}}" /&gt;</data>
-  
+
   <data name="Cap.Layout.ChildrenPlacement" id="0C">&lt;s:data id="_0" f:Description="Contenu" f:Labels="{Collection {Text 'Contenu'}}" /&gt;</data>
   <data name="Cap.Layout.AnchoredHorizontalAttachment" id="0D">&lt;s:data id="_0" f:Description="Position horizontale" f:Labels="{Collection {Text 'Pos. h.'}, {Text 'Position horizontale'}}" /&gt;</data>
   <data name="Cap.Layout.AnchoredHorizontalAttachment" id="0E">&lt;s:data id="_0" f:Description="Position verticale" f:Labels="{Collection {Text 'Pos. v.'}, {Text 'Position verticale'}}" /&gt;</data>
