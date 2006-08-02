@@ -31,6 +31,14 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Group.
 			this.CreateBand(out leftContainer, "Groupe", 0.5);
 
+			this.primaryGroup = new TextField(leftContainer.Container);
+			this.primaryGroup.PreferredWidth = 200;
+			this.primaryGroup.Dock = DockStyle.StackBegin;
+			this.primaryGroup.TextChanged += new EventHandler(this.HandleGroupTextChanged);
+			this.primaryGroup.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
+			this.primaryGroup.TabIndex = this.tabIndex++;
+			this.primaryGroup.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+
 			this.UpdateEdit();
 		}
 
@@ -39,6 +47,9 @@ namespace Epsitec.Common.Designer.Viewers
 			if (disposing)
 			{
 				this.primaryStatefull.Pressed -= new MessageEventHandler(this.HandleStatefullPressed);
+
+				this.primaryGroup.TextChanged -= new EventHandler(this.HandleGroupTextChanged);
+				this.primaryGroup.KeyboardFocusChanged -= new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
 			}
 
 			base.Dispose(disposing);
@@ -82,6 +93,8 @@ namespace Epsitec.Common.Designer.Viewers
 			{
 				this.primaryStatefull.Enable = false;
 				this.primaryStatefull.ActiveState = ActiveState.No;
+
+				this.SetTextField(this.primaryGroup, 0, null, null);
 			}
 			else
 			{
@@ -92,6 +105,8 @@ namespace Epsitec.Common.Designer.Viewers
 
 				this.primaryStatefull.Enable = true;
 				this.primaryStatefull.ActiveState = statefull ? ActiveState.Yes : ActiveState.No;
+
+				this.SetTextField(this.primaryGroup, index, null, "Group");
 			}
 
 			this.ignoreChange = iic;
@@ -124,9 +139,32 @@ namespace Epsitec.Common.Designer.Viewers
 			bool statefull = (this.primaryStatefull.ActiveState == ActiveState.No);
 			int sel = this.access.AccessIndex;
 			this.access.SetField(sel, null, "Statefull", new ResourceAccess.Field(statefull));
+
+			this.UpdateColor();
 		}
 
+		void HandleGroupTextChanged(object sender)
+		{
+			//	Le texte éditable pour le groupe a changé.
+			if (this.ignoreChange)
+			{
+				return;
+			}
+
+			AbstractTextField edit = sender as AbstractTextField;
+			string text = edit.Text;
+			int sel = this.access.AccessIndex;
+
+			if (edit == this.primaryGroup)
+			{
+				this.access.SetField(sel, null, "Group", new ResourceAccess.Field(text));
+			}
+
+			this.UpdateColor();
+		}
 		
+
 		protected CheckButton					primaryStatefull;
+		protected TextField						primaryGroup;
 	}
 }
