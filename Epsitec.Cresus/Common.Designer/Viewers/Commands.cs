@@ -13,6 +13,22 @@ namespace Epsitec.Common.Designer.Viewers
 	{
 		public Commands(Module module, PanelsContext context, ResourceAccess access) : base(module, context, access)
 		{
+			MyWidgets.StackedPanel leftContainer, rightContainer;
+
+			//	Statefull.
+			this.CreateBand(out leftContainer, out rightContainer, "Type", 0.1);
+
+			this.primaryStatefull = new CheckButton(leftContainer.Container);
+			this.primaryStatefull.Text = "Reflète un état";
+			this.primaryStatefull.Dock = DockStyle.StackBegin;
+			this.primaryStatefull.TabIndex = this.tabIndex++;
+			this.primaryStatefull.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+
+			//	Shortcuts.
+			this.CreateBand(out leftContainer, out rightContainer, "Raccourcis clavier", 0.3);
+
+			//	Group.
+			this.CreateBand(out leftContainer, out rightContainer, "Groupe", 0.5);
 		}
 
 		protected override void Dispose(bool disposing)
@@ -60,5 +76,6 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
+		protected CheckButton					primaryStatefull;
 	}
 }
