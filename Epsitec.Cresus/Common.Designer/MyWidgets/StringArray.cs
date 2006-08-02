@@ -194,7 +194,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				if (this.totalRows != value)
 				{
 					this.totalRows = value;
-					this.UpdateScroller();
+					this.isDirtyScroller = true;
 				}
 			}
 		}
@@ -224,7 +224,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			if (this.selectedRow != row)
 			{
 				this.selectedRow = row;
-				this.UpdateSelectedRow();
+				this.isDirtySelected = true;
 			}
 
 			//	Il faut envoyer l'événement même si la ligne n'a pas changé !
@@ -256,8 +256,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 				if (this.firstVisibleRow != value)
 				{
 					this.firstVisibleRow = value;
-					this.UpdateSelectedRow();
-					this.UpdateScroller();
+					this.isDirtyScroller = true;
+					this.isDirtySelected = true;
 					this.OnCellsContentChanged();
 				}
 			}
@@ -286,32 +286,41 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected void UpdateSelectedRow()
 		{
-			for (int i=0; i<this.columns.Length; i++)
+			if (this.isDirtySelected)
 			{
-				this.columns[i].CellSelected = this.selectedRow-this.firstVisibleRow;
+				this.isDirtySelected = false;
+
+				for (int i=0; i<this.columns.Length; i++)
+				{
+					this.columns[i].CellSelected = this.selectedRow-this.firstVisibleRow;
+				}
 			}
 		}
 
 		protected void UpdateScroller()
 		{
-			this.ignoreChange = true;
-
-			if (this.totalRows <= this.LineCount)
+			if (this.isDirtyScroller)
 			{
-				this.scroller.Enable = false;
-			}
-			else
-			{
-				this.scroller.Enable = true;
-				this.scroller.MinValue = (decimal) 0;
-				this.scroller.MaxValue = (decimal) (this.totalRows - this.LineCount);
-				this.scroller.Value = (decimal) this.firstVisibleRow;
-				this.scroller.VisibleRangeRatio = (decimal) this.LineCount / (decimal) this.totalRows;
-				this.scroller.LargeChange = (decimal) this.LineCount-1;
-				this.scroller.SmallChange = (decimal) 1;
-			}
+				this.isDirtyScroller = false;
+				this.ignoreChange = true;
 
-			this.ignoreChange = false;
+				if (this.totalRows <= this.LineCount)
+				{
+					this.scroller.Enable = false;
+				}
+				else
+				{
+					this.scroller.Enable = true;
+					this.scroller.MinValue = (decimal) 0;
+					this.scroller.MaxValue = (decimal) (this.totalRows - this.LineCount);
+					this.scroller.Value = (decimal) this.firstVisibleRow;
+					this.scroller.VisibleRangeRatio = (decimal) this.LineCount / (decimal) this.totalRows;
+					this.scroller.LargeChange = (decimal) this.LineCount-1;
+					this.scroller.SmallChange = (decimal) 1;
+				}
+
+				this.ignoreChange = false;
+			}
 		}
 
 
@@ -576,6 +585,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected override void PaintForegroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
+			this.UpdateScroller();
+			this.UpdateSelectedRow();
+
 			if (this.widthDraggingRank != -1)
 			{
 				IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
@@ -762,6 +774,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected int						selectedColumn = -1;
 		protected int						firstVisibleRow = 0;
 		protected bool						ignoreChange = false;
+		protected bool						isDirtyScroller = true;
+		protected bool						isDirtySelected = true;
 
 		protected int						widthDraggingRank = -1;
 		protected double[]					widthDraggingAbsolutes;
