@@ -1070,7 +1070,7 @@ namespace Epsitec.Common.Designer.Viewers
 					break;
 
 				case ResourceAccess.Type.Captions:
-					Captions.SearchCreateFilterGroup(parent, handler);
+					AbstractCaptions.SearchCreateFilterGroup(parent, handler);
 					break;
 			}
 		}

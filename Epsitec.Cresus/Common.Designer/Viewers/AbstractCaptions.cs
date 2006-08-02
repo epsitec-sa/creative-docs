@@ -470,6 +470,100 @@ namespace Epsitec.Common.Designer.Viewers
 			return null;
 		}
 
+		public static void SearchCreateFilterGroup(AbstractGroup parent, EventHandler handler)
+		{
+			StaticText label;
+			CheckButton check;
+
+			label = new StaticText(parent);
+			label.PreferredWidth = 80;
+			label.ContentAlignment = ContentAlignment.MiddleRight;
+			label.Text = Res.Strings.Viewers.Captions.Labels;
+			label.Anchor = AnchorStyles.Top | AnchorStyles.Left;
+			label.Margins = new Margins(0, 0, 0, 0);
+
+			label = new StaticText(parent);
+			label.PreferredWidth = 80;
+			label.ContentAlignment = ContentAlignment.MiddleRight;
+			label.Text = Res.Strings.Viewers.Captions.ShortDescription;
+			label.Anchor = AnchorStyles.Top | AnchorStyles.Left;
+			label.Margins = new Margins(0, 0, 16, 0);
+
+			label = new StaticText(parent);
+			label.PreferredWidth = 80;
+			label.ContentAlignment = ContentAlignment.MiddleRight;
+			label.Text = Res.Strings.Viewers.Captions.About;
+			label.Anchor = AnchorStyles.Top | AnchorStyles.Left;
+			label.Margins = new Margins(0, 0, 32, 0);
+
+			check = new CheckButton(parent);
+			check.Name = "0";  // (*)
+			check.Anchor = AnchorStyles.Top | AnchorStyles.Left;
+			check.PreferredWidth = check.PreferredHeight;
+			check.Margins = new Margins(90+20*0, 0, 0, 0);
+			check.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			check.ActiveStateChanged += new EventHandler(handler);
+			ToolTip.Default.SetToolTip(check, Res.Strings.Dialog.Search.Check.Label);
+
+			check = new CheckButton(parent);
+			check.Name = "1";  // (*)
+			check.ActiveState = ActiveState.Yes;
+			check.Anchor = AnchorStyles.Top | AnchorStyles.Left;
+			check.PreferredWidth = check.PreferredHeight;
+			check.Margins = new Margins(90+20*1, 0, 0, 0);
+			check.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			check.ActiveStateChanged += new EventHandler(handler);
+			ToolTip.Default.SetToolTip(check, Res.Strings.Dialog.Search.Check.PrimaryLabels);
+
+			check = new CheckButton(parent);
+			check.Name = "2";  // (*)
+			check.ActiveState = ActiveState.Yes;
+			check.Anchor = AnchorStyles.Top | AnchorStyles.Left;
+			check.PreferredWidth = check.PreferredHeight;
+			check.Margins = new Margins(90+20*2, 0, 0, 0);
+			check.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			check.ActiveStateChanged += new EventHandler(handler);
+			ToolTip.Default.SetToolTip(check, Res.Strings.Dialog.Search.Check.SecondaryLabels);
+
+			check = new CheckButton(parent);
+			check.Name = "3";  // (*)
+			check.Anchor = AnchorStyles.Top | AnchorStyles.Left;
+			check.PreferredWidth = check.PreferredHeight;
+			check.Margins = new Margins(90+20*1, 0, 16, 0);
+			check.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			check.ActiveStateChanged += new EventHandler(handler);
+			ToolTip.Default.SetToolTip(check, Res.Strings.Dialog.Search.Check.PrimaryDescription);
+
+			check = new CheckButton(parent);
+			check.Name = "4";  // (*)
+			check.Anchor = AnchorStyles.Top | AnchorStyles.Left;
+			check.PreferredWidth = check.PreferredHeight;
+			check.Margins = new Margins(90+20*2, 0, 16, 0);
+			check.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			check.ActiveStateChanged += new EventHandler(handler);
+			ToolTip.Default.SetToolTip(check, Res.Strings.Dialog.Search.Check.SecondaryDescription);
+
+			check = new CheckButton(parent);
+			check.Name = "5";  // (*)
+			check.Anchor = AnchorStyles.Top | AnchorStyles.Left;
+			check.PreferredWidth = check.PreferredHeight;
+			check.Margins = new Margins(90+20*1, 0, 32, 0);
+			check.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			check.ActiveStateChanged += new EventHandler(handler);
+			ToolTip.Default.SetToolTip(check, Res.Strings.Dialog.Search.Check.PrimaryAbout);
+
+			check = new CheckButton(parent);
+			check.Name = "6";  // (*)
+			check.Anchor = AnchorStyles.Top | AnchorStyles.Left;
+			check.PreferredWidth = check.PreferredHeight;
+			check.Margins = new Margins(90+20*2, 0, 32, 0);
+			check.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			check.ActiveStateChanged += new EventHandler(handler);
+			ToolTip.Default.SetToolTip(check, Res.Strings.Dialog.Search.Check.SecondaryAbout);
+
+			// (*)	Ce numéro correspond à field dans ResourceAccess.SearcherIndexToAccess !
+		}
+
 		
 		void HandleArrayCellCountChanged(object sender)
 		{

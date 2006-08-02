@@ -44,7 +44,7 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		public ResourceAccess.Type ActiveBundleType
+		public ResourceAccess.Type ActiveResourceType
 		{
 			//	Retourne le type du visualisateur actif.
 			get
