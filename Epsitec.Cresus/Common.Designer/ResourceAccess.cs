@@ -56,10 +56,10 @@ namespace Epsitec.Common.Designer
 
 			set
 			{
-				System.Diagnostics.Debug.Assert(this.type == Type.Captions || this.type == Type.Commands || this.type == Type.Types);
-				System.Diagnostics.Debug.Assert(value == Type.Captions || value == Type.Commands || value == Type.Types);
 				if (this.type != value)
 				{
+					System.Diagnostics.Debug.Assert(this.type == Type.Captions || this.type == Type.Commands || this.type == Type.Types);
+					System.Diagnostics.Debug.Assert(value == Type.Captions || value == Type.Commands || value == Type.Types);
 					this.type = value;
 
 					//	Remet le filtre correspondant au type.

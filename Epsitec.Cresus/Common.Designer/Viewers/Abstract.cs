@@ -16,6 +16,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.module = module;
 			this.context = context;
 			this.access = access;
+			this.access.ResourceType = this.ResourceType;
 		}
 
 		protected override void Dispose(bool disposing)
