@@ -29,7 +29,7 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
-		protected abstract ResourceAccess.Type ResourceType
+		public abstract ResourceAccess.Type ResourceType
 		{
 			get;
 		}
@@ -46,14 +46,6 @@ namespace Epsitec.Common.Designer.Viewers
 			return null;
 		}
 
-
-		public virtual ResourceAccess.Type BundleType
-		{
-			get
-			{
-				return ResourceAccess.Type.Unknow;
-			}
-		}
 
 		public virtual AbstractTextField CurrentTextField
 		{

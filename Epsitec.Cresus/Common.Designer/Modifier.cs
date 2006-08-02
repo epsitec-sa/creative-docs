@@ -55,7 +55,7 @@ namespace Epsitec.Common.Designer
 				}
 				else
 				{
-					return this.activeViewer.BundleType;
+					return this.activeViewer.ResourceType;
 				}
 			}
 		}
