@@ -9,65 +9,16 @@ namespace Epsitec.Common.Designer.Viewers
 	/// <summary>
 	/// Permet de représenter les ressources d'un module.
 	/// </summary>
-	public class Commands : Abstract
+	public class Commands : AbstractCaptions
 	{
 		public Commands(Module module, PanelsContext context, ResourceAccess access) : base(module, context, access)
 		{
-			int tabIndex = 0;
-
-			Widget left = new Widget(this);
-			left.MinWidth = 80;
-			left.MaxWidth = 400;
-			left.PreferredWidth = 200;
-			left.Dock = DockStyle.Left;
-			left.Padding = new Margins(10, 10, 10, 10);
-
-			this.labelEdit = new TextFieldEx(left);
-			this.labelEdit.Margins = new Margins(0, 0, 10, 0);
-			this.labelEdit.Dock = DockStyle.Bottom;
-			this.labelEdit.EditionAccepted += new EventHandler(this.HandleTextChanged);
-			this.labelEdit.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
-			this.labelEdit.TabIndex = tabIndex++;
-			this.labelEdit.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			this.labelEdit.Visibility = (this.module.Mode == DesignerMode.Build);
-
-			this.array = new MyWidgets.StringArray(left);
-			this.array.Columns = 1;
-			this.array.SetColumnsRelativeWidth(0, 1.00);
-			this.array.SetDynamicsToolTips(0, true);
-			this.array.Margins = new Margins(0, 0, 0, 0);
-			this.array.Dock = DockStyle.Fill;
-			this.array.CellCountChanged += new EventHandler (this.HandleArrayCellCountChanged);
-			this.array.SelectedRowChanged += new EventHandler(this.HandleArraySelectedRowChanged);
-			this.array.TabIndex = tabIndex++;
-			this.array.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-
-			VSplitter splitter = new VSplitter(this);
-			splitter.Dock = DockStyle.Left;
-			VSplitter.SetAutoCollapseEnable(left, true);
-
-			this.edit = new TextFieldMulti(this);
-			this.edit.TextLayout.DefaultFont = Font.GetFont("Courier New", "Regular");
-			this.edit.Margins = new Margins(10, 10, 10, 10);
-			this.edit.Dock = DockStyle.Fill;
-			this.edit.EditionAccepted += new EventHandler(this.HandleTextChanged);
-			this.edit.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
-			this.edit.TabIndex = tabIndex++;
-			this.edit.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 		}
 
 		protected override void Dispose(bool disposing)
 		{
 			if (disposing)
 			{
-				this.array.CellCountChanged -= new EventHandler (this.HandleArrayCellCountChanged);
-				this.array.SelectedRowChanged -= new EventHandler(this.HandleArraySelectedRowChanged);
-
-				this.labelEdit.EditionAccepted -= new EventHandler(this.HandleTextChanged);
-				this.labelEdit.KeyboardFocusChanged -= new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
-
-				this.edit.EditionAccepted -= new EventHandler(this.HandleTextChanged);
-				this.edit.KeyboardFocusChanged -= new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
 			}
 
 			base.Dispose(disposing);
@@ -91,28 +42,126 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
-		void HandleArrayCellCountChanged(object sender)
+		public override void Update()
 		{
-			//	Le nombre de lignes a changé.
-			//?this.UpdateArray();
+			//	Met à jour le contenu du Viewer.
+			base.Update();
 		}
 
-		void HandleArraySelectedRowChanged(object sender)
+		protected override void UpdateEdit()
 		{
-			//	La ligne sélectionnée a changé.
-			this.UpdateCommands();
-		}
-
-		void HandleTextChanged(object sender)
-		{
-			//	Un texte éditable a changé.
-			if ( this.ignoreChange )  return;
-
-			AbstractTextField edit = sender as AbstractTextField;
+			//	Met à jour les lignes éditables en fonction de la sélection dans le tableau.
+			base.UpdateEdit();
 		}
 
 
-		protected TextFieldEx				labelEdit;
-		protected TextFieldMulti			edit;
+		protected override void TextFieldToIndex(AbstractTextField textField, out int field, out int subfield)
+		{
+			//	Cherche les index correspondant à un texte éditable.
+			base.TextFieldToIndex(textField, out field, out subfield);
+		}
+
+		protected override AbstractTextField IndexToTextField(int field, int subfield)
+		{
+			//	Cherche le TextField permettant d'éditer des index.
+			return base.IndexToTextField(field, subfield);
+		}
+
+		public static void SearchCreateFilterGroup(AbstractGroup parent, EventHandler handler)
+		{
+			StaticText label;
+			CheckButton check;
+
+			label = new StaticText(parent);
+			label.PreferredWidth = 80;
+			label.ContentAlignment = ContentAlignment.MiddleRight;
+			label.Text = Res.Strings.Viewers.Captions.Labels;
+			label.Anchor = AnchorStyles.Top | AnchorStyles.Left;
+			label.Margins = new Margins(0, 0, 0, 0);
+
+			label = new StaticText(parent);
+			label.PreferredWidth = 80;
+			label.ContentAlignment = ContentAlignment.MiddleRight;
+			label.Text = Res.Strings.Viewers.Captions.ShortDescription;
+			label.Anchor = AnchorStyles.Top | AnchorStyles.Left;
+			label.Margins = new Margins(0, 0, 16, 0);
+
+			label = new StaticText(parent);
+			label.PreferredWidth = 80;
+			label.ContentAlignment = ContentAlignment.MiddleRight;
+			label.Text = Res.Strings.Viewers.Captions.About;
+			label.Anchor = AnchorStyles.Top | AnchorStyles.Left;
+			label.Margins = new Margins(0, 0, 32, 0);
+
+			check = new CheckButton(parent);
+			check.Name = "0";  // (*)
+			check.Anchor = AnchorStyles.Top | AnchorStyles.Left;
+			check.PreferredWidth = check.PreferredHeight;
+			check.Margins = new Margins(90+20*0, 0, 0, 0);
+			check.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			check.ActiveStateChanged += new EventHandler(handler);
+			ToolTip.Default.SetToolTip(check, Res.Strings.Dialog.Search.Check.Label);
+
+			check = new CheckButton(parent);
+			check.Name = "1";  // (*)
+			check.ActiveState = ActiveState.Yes;
+			check.Anchor = AnchorStyles.Top | AnchorStyles.Left;
+			check.PreferredWidth = check.PreferredHeight;
+			check.Margins = new Margins(90+20*1, 0, 0, 0);
+			check.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			check.ActiveStateChanged += new EventHandler(handler);
+			ToolTip.Default.SetToolTip(check, Res.Strings.Dialog.Search.Check.PrimaryLabels);
+
+			check = new CheckButton(parent);
+			check.Name = "2";  // (*)
+			check.ActiveState = ActiveState.Yes;
+			check.Anchor = AnchorStyles.Top | AnchorStyles.Left;
+			check.PreferredWidth = check.PreferredHeight;
+			check.Margins = new Margins(90+20*2, 0, 0, 0);
+			check.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			check.ActiveStateChanged += new EventHandler(handler);
+			ToolTip.Default.SetToolTip(check, Res.Strings.Dialog.Search.Check.SecondaryLabels);
+
+			check = new CheckButton(parent);
+			check.Name = "3";  // (*)
+			check.Anchor = AnchorStyles.Top | AnchorStyles.Left;
+			check.PreferredWidth = check.PreferredHeight;
+			check.Margins = new Margins(90+20*1, 0, 16, 0);
+			check.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			check.ActiveStateChanged += new EventHandler(handler);
+			ToolTip.Default.SetToolTip(check, Res.Strings.Dialog.Search.Check.PrimaryDescription);
+
+			check = new CheckButton(parent);
+			check.Name = "4";  // (*)
+			check.Anchor = AnchorStyles.Top | AnchorStyles.Left;
+			check.PreferredWidth = check.PreferredHeight;
+			check.Margins = new Margins(90+20*2, 0, 16, 0);
+			check.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			check.ActiveStateChanged += new EventHandler(handler);
+			ToolTip.Default.SetToolTip(check, Res.Strings.Dialog.Search.Check.SecondaryDescription);
+
+			check = new CheckButton(parent);
+			check.Name = "5";  // (*)
+			check.Anchor = AnchorStyles.Top | AnchorStyles.Left;
+			check.PreferredWidth = check.PreferredHeight;
+			check.Margins = new Margins(90+20*1, 0, 32, 0);
+			check.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			check.ActiveStateChanged += new EventHandler(handler);
+			ToolTip.Default.SetToolTip(check, Res.Strings.Dialog.Search.Check.PrimaryAbout);
+
+			check = new CheckButton(parent);
+			check.Name = "6";  // (*)
+			check.Anchor = AnchorStyles.Top | AnchorStyles.Left;
+			check.PreferredWidth = check.PreferredHeight;
+			check.Margins = new Margins(90+20*2, 0, 32, 0);
+			check.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			check.ActiveStateChanged += new EventHandler(handler);
+			ToolTip.Default.SetToolTip(check, Res.Strings.Dialog.Search.Check.SecondaryAbout);
+
+			// (*)	Ce numéro correspond à field dans ResourceAccess.SearcherIndexToAccess !
+		}
+
+		
+
 	}
 }
