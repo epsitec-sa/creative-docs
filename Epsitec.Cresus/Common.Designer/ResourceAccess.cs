@@ -460,7 +460,17 @@ namespace Epsitec.Common.Designer
 			{
 				if (fieldName == ResourceAccess.NameCommands[5])
 				{
-					return "???";
+					return "Type";
+				}
+
+				if (fieldName == ResourceAccess.NameCommands[6])
+				{
+					return "Raccourcis clavier";
+				}
+				
+				if (fieldName == ResourceAccess.NameCommands[7])
+				{
+					return "Groupe";
 				}
 			}
 
@@ -686,6 +696,18 @@ namespace Epsitec.Common.Designer
 					bool statefull = Command.GetStatefull(this.accessCaption);
 					return new Field(statefull);
 				}
+
+				if (fieldName == ResourceAccess.NameCommands[6])
+				{
+					Widgets.Collections.ShortcutCollection collection = Shortcut.GetShortcuts(this.accessCaption);
+					return new Field(collection);
+				}
+				
+				if (fieldName == ResourceAccess.NameCommands[7])
+				{
+					string group = Command.GetGroup(this.accessCaption);
+					return new Field(group);
+				}
 			}
 
 			if (this.type == Type.Panels)
@@ -797,6 +819,20 @@ namespace Epsitec.Common.Designer
 				{
 					bool statefull = field.Bool;
 					Command.SetStatefull(this.accessCaption, statefull);
+					this.accessField.SetStringValue(this.accessCaption.SerializeToString());
+				}
+				
+				if (fieldName == ResourceAccess.NameCommands[6])
+				{
+					Widgets.Collections.ShortcutCollection collection = field.ShortcutCollection;
+					Shortcut.SetShortcuts(this.accessCaption, collection);
+					this.accessField.SetStringValue(this.accessCaption.SerializeToString());
+				}
+
+				if (fieldName == ResourceAccess.NameCommands[7])
+				{
+					string group = field.String;
+					Command.SetGroup(this.accessCaption, group);
 					this.accessField.SetStringValue(this.accessCaption.SerializeToString());
 				}
 			}
@@ -1118,13 +1154,13 @@ namespace Epsitec.Common.Designer
 
 		protected static string[] NameStrings  = { "Name", "String", "About" };
 		protected static string[] NameCaptions = { "Name", "Labels", "Description", "Icon", "About" };
-		protected static string[] NameCommands = { "Name", "Labels", "Description", "Icon", "About", "Statefull" };
+		protected static string[] NameCommands = { "Name", "Labels", "Description", "Icon", "About", "Statefull", "Shortcuts", "Group" };
 		protected static string[] NameTypes    = { "Name", "Labels", "Description", "Icon", "About" };
 		protected static string[] NamePanels   = { "Name", "Panel" };
 
 		protected static Field.Type[] TypeStrings  = { Field.Type.String, Field.Type.String, Field.Type.String };
 		protected static Field.Type[] TypeCaptions = { Field.Type.String, Field.Type.StringCollection, Field.Type.String, Field.Type.String, Field.Type.String };
-		protected static Field.Type[] TypeCommands = { Field.Type.String, Field.Type.StringCollection, Field.Type.String, Field.Type.String, Field.Type.String, Field.Type.Bool };
+		protected static Field.Type[] TypeCommands = { Field.Type.String, Field.Type.StringCollection, Field.Type.String, Field.Type.String, Field.Type.String, Field.Type.Bool, Field.Type.Shortcuts, Field.Type.String };
 		protected static Field.Type[] TypeTypes    = { Field.Type.String, Field.Type.StringCollection, Field.Type.String, Field.Type.String, Field.Type.String };
 		protected static Field.Type[] TypePanels   = { Field.Type.String, Field.Type.Bundle };
 
@@ -1775,6 +1811,7 @@ namespace Epsitec.Common.Designer
 				StringCollection,
 				Bundle,
 				Bool,
+				Shortcuts,
 			}
 
 			public Field(string value)
@@ -1799,6 +1836,12 @@ namespace Epsitec.Common.Designer
 			{
 				this.type = Type.Bool;
 				this.boolValue = value;
+			}
+
+			public Field(Widgets.Collections.ShortcutCollection value)
+			{
+				this.type = Type.Bool;
+				this.shortcutCollection = value;
 			}
 
 			public Type FieldType
@@ -1845,11 +1888,21 @@ namespace Epsitec.Common.Designer
 				}
 			}
 
-			protected Type						type;
-			protected string					stringValue;
-			protected ICollection<string>		stringCollection;
-			protected ResourceBundle			bundle;
-			protected bool						boolValue;
+			public Widgets.Collections.ShortcutCollection ShortcutCollection
+			{
+				get
+				{
+					System.Diagnostics.Debug.Assert(this.type == Type.Shortcuts);
+					return this.shortcutCollection;
+				}
+			}
+
+			protected Type										type;
+			protected string									stringValue;
+			protected ICollection<string>						stringCollection;
+			protected ResourceBundle							bundle;
+			protected bool										boolValue;
+			protected Widgets.Collections.ShortcutCollection	shortcutCollection;
 		}
 		#endregion
 
