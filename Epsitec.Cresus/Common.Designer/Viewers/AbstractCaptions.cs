@@ -13,8 +13,6 @@ namespace Epsitec.Common.Designer.Viewers
 	{
 		public AbstractCaptions(Module module, PanelsContext context, ResourceAccess access) : base(module, context, access)
 		{
-			int tabIndex = 0;
-
 			//	Crée les 2 parties gauche/droite séparées par un splitter.
 			Widget left = new Widget(this);
 			left.MinWidth = 80;
@@ -39,7 +37,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.labelEdit.Dock = DockStyle.Bottom;
 			this.labelEdit.EditionAccepted += new EventHandler(this.HandleTextChanged);
 			this.labelEdit.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
-			this.labelEdit.TabIndex = tabIndex++;
+			this.labelEdit.TabIndex = this.tabIndex++;
 			this.labelEdit.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			this.labelEdit.Visibility = (this.module.Mode == DesignerMode.Build);
 
@@ -52,7 +50,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.array.CellCountChanged += new EventHandler(this.HandleArrayCellCountChanged);
 			this.array.CellsContentChanged += new EventHandler(this.HandleArrayCellsContentChanged);
 			this.array.SelectedRowChanged += new EventHandler(this.HandleArraySelectedRowChanged);
-			this.array.TabIndex = tabIndex++;
+			this.array.TabIndex = this.tabIndex++;
 			this.array.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			//	Crée la partie droite, bande supérieure pour les boutons des cultures.
@@ -69,7 +67,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryCulture.PreferredHeight = 35;
 			this.primaryCulture.ActiveState = ActiveState.Yes;
 			this.primaryCulture.AutoFocus = false;
-			this.primaryCulture.TabIndex = tabIndex++;
+			this.primaryCulture.TabIndex = this.tabIndex++;
 			this.primaryCulture.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			this.primaryCulture.Margins = new Margins(0, 10, 0, 0);
 			this.primaryCulture.Dock = DockStyle.StackFill;
@@ -105,14 +103,14 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryLabels.Dock = DockStyle.StackBegin;
 			this.primaryLabels.StringTextChanged += new EventHandler(this.HandleStringTextCollectionChanged);
 			this.primaryLabels.StringFocusChanged += new EventHandler(this.HandleStringFocusCollectionChanged);
-			this.primaryLabels.TabIndex = tabIndex++;
+			this.primaryLabels.TabIndex = this.tabIndex++;
 			this.primaryLabels.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			this.secondaryLabels = new MyWidgets.StringCollection(rightContainer.Container);
 			this.secondaryLabels.Dock = DockStyle.StackBegin;
 			this.secondaryLabels.StringTextChanged += new EventHandler(this.HandleStringTextCollectionChanged);
 			this.secondaryLabels.StringFocusChanged += new EventHandler(this.HandleStringFocusCollectionChanged);
-			this.secondaryLabels.TabIndex = tabIndex++;
+			this.secondaryLabels.TabIndex = this.tabIndex++;
 			this.secondaryLabels.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			//	Description.
@@ -124,7 +122,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryDescription.TextChanged += new EventHandler(this.HandleTextChanged);
 			this.primaryDescription.CursorChanged += new EventHandler(this.HandleCursorChanged);
 			this.primaryDescription.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
-			this.primaryDescription.TabIndex = tabIndex++;
+			this.primaryDescription.TabIndex = this.tabIndex++;
 			this.primaryDescription.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			this.secondaryDescription = new TextFieldMulti(rightContainer.Container);
@@ -133,7 +131,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.secondaryDescription.TextChanged += new EventHandler(this.HandleTextChanged);
 			this.secondaryDescription.CursorChanged += new EventHandler(this.HandleCursorChanged);
 			this.secondaryDescription.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
-			this.secondaryDescription.TabIndex = tabIndex++;
+			this.secondaryDescription.TabIndex = this.tabIndex++;
 			this.secondaryDescription.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			//	Icône.
@@ -144,7 +142,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryIcon.PreferredWidth = 30;
 			this.primaryIcon.ButtonStyle = ButtonStyle.ActivableIcon;
 			this.primaryIcon.Anchor = AnchorStyles.TopLeft;
-			this.primaryIcon.TabIndex = tabIndex++;
+			this.primaryIcon.TabIndex = this.tabIndex++;
 			this.primaryIcon.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			this.secondaryIcon = new IconButton(rightContainer.Container);
@@ -152,7 +150,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.secondaryIcon.PreferredWidth = 30;
 			this.secondaryIcon.ButtonStyle = ButtonStyle.ActivableIcon;
 			this.secondaryIcon.Anchor = AnchorStyles.TopLeft;
-			this.secondaryIcon.TabIndex = tabIndex++;
+			this.secondaryIcon.TabIndex = this.tabIndex++;
 			this.secondaryIcon.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			//	Commentaires.
@@ -164,7 +162,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryAbout.TextChanged += new EventHandler(this.HandleTextChanged);
 			this.primaryAbout.CursorChanged += new EventHandler(this.HandleCursorChanged);
 			this.primaryAbout.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
-			this.primaryAbout.TabIndex = tabIndex++;
+			this.primaryAbout.TabIndex = this.tabIndex++;
 			this.primaryAbout.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			this.secondaryAbout = new TextFieldMulti(rightContainer.Container);
@@ -173,7 +171,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.secondaryAbout.TextChanged += new EventHandler(this.HandleTextChanged);
 			this.secondaryAbout.CursorChanged += new EventHandler(this.HandleCursorChanged);
 			this.secondaryAbout.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
-			this.secondaryAbout.TabIndex = tabIndex++;
+			this.secondaryAbout.TabIndex = this.tabIndex++;
 			this.secondaryAbout.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 
@@ -666,6 +664,7 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
+		protected int							tabIndex = 0;
 		protected Widget						secondaryCultureGroup;
 		protected TextFieldEx					labelEdit;
 		protected Scrollable					scrollable;
