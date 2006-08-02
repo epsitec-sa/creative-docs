@@ -1220,16 +1220,16 @@ namespace Epsitec.Common.Designer
 				//	Crée un premier champ vide avec un premier Druid.
 				//	Ceci est nécessaire, car il n'existe pas de commande pour créer un champ à partir
 				//	de rien, mais seulement une commande pour dupliquer un champ existant.
-				int moduleId = bundle.Module.Id;
-				int developerId = 0;  // [PA] provisoire
-				int localId = 0;
-				Druid newDruid = new Druid(moduleId, developerId, localId);
-
-				ResourceBundle.Field newField = bundle.CreateField(ResourceFieldType.Data);
-				newField.SetDruid(newDruid);
-				newField.SetName(Res.Strings.Viewers.Panels.New);
-				newField.SetStringValue("");
-				bundle.Add(newField);
+				if (this.IsCaptionsType)
+				{
+					this.CreateFirstField(bundle, 0, "Cap."+Res.Strings.Viewers.Panels.New);
+					this.CreateFirstField(bundle, 1, "Cmd."+Res.Strings.Viewers.Panels.New);
+					this.CreateFirstField(bundle, 2, "Typ."+Res.Strings.Viewers.Panels.New);
+				}
+				else
+				{
+					this.CreateFirstField(bundle, 0, Res.Strings.Viewers.Panels.New);
+				}
 
 				//	Sérialise le bundle et son premier champ sur disque. Il serait préférable de
 				//	faire ceci lors du Save, mais cette situation étant exceptionelle, il est
@@ -1244,6 +1244,19 @@ namespace Epsitec.Common.Designer
 			this.bundles.LoadBundles(this.resourceManager.ActivePrefix, this.resourceManager.GetBundleIds(ids[0], ResourceLevel.All));
 
 			this.primaryBundle = this.bundles[ResourceLevel.Default];
+		}
+
+		protected void CreateFirstField(ResourceBundle bundle, int localId, string name)
+		{
+			int moduleId = bundle.Module.Id;
+			int developerId = 0;  // [PA] provisoire
+			Druid newDruid = new Druid(moduleId, developerId, localId);
+
+			ResourceBundle.Field newField = bundle.CreateField(ResourceFieldType.Data);
+			newField.SetDruid(newDruid);
+			newField.SetName(name);
+			newField.SetStringValue("");
+			bundle.Add(newField);
 		}
 
 		protected void SaveBundles()
