@@ -65,9 +65,9 @@ namespace Epsitec.Common.Designer
 			{
 				if (this.type != value)
 				{
-					System.Diagnostics.Debug.Assert(this.type == Type.Captions || this.type == Type.Commands || this.type == Type.Types);
-					System.Diagnostics.Debug.Assert(value == Type.Captions || value == Type.Commands || value == Type.Types);
+					System.Diagnostics.Debug.Assert(this.IsCaptionsType);
 					this.type = value;
+					System.Diagnostics.Debug.Assert(this.IsCaptionsType);
 
 					//	Remet le filtre correspondant au type.
 					int i = (int) this.type;
@@ -374,13 +374,14 @@ namespace Epsitec.Common.Designer
 			//	Donne les noms internes (fieldName) des champs accessibles.
 			get
 			{
-				switch (this.type)
+				if (this.type == Type.Strings)
 				{
-					case Type.Strings:
-						return ResourceAccess.NameStrings;
+					return ResourceAccess.NameStrings;
+				}
 
-					case Type.Captions:
-						return ResourceAccess.NameCaptions;
+				if (this.IsCaptionsType)
+				{
+					return ResourceAccess.NameCaptions;
 				}
 
 				return null;
@@ -392,13 +393,14 @@ namespace Epsitec.Common.Designer
 			//	Donne les types des champs accessibles.
 			get
 			{
-				switch (this.type)
+				if (this.type == Type.Strings)
 				{
-					case Type.Strings:
-						return ResourceAccess.TypeStrings;
+					return ResourceAccess.TypeStrings;
+				}
 
-					case Type.Captions:
-						return ResourceAccess.TypeCaptions;
+				if (this.IsCaptionsType)
+				{
+					return ResourceAccess.TypeCaptions;
 				}
 
 				return null;
@@ -421,7 +423,7 @@ namespace Epsitec.Common.Designer
 				}
 			}
 
-			if (this.type == Type.Captions)
+			if (this.IsCaptionsType)
 			{
 				if (fieldName == ResourceAccess.NameCaptions[1])
 				{
@@ -620,11 +622,6 @@ namespace Epsitec.Common.Designer
 
 			if (this.type == Type.Strings)
 			{
-				if (this.accessField == null)
-				{
-					return null;
-				}
-
 				if (fieldName == ResourceAccess.NameStrings[1])
 				{
 					return new Field(this.accessField.AsString);
@@ -636,9 +633,9 @@ namespace Epsitec.Common.Designer
 				}
 			}
 
-			if (this.type == Type.Captions)
+			if (this.IsCaptionsType)
 			{
-				if (this.accessField == null || this.accessCaption == null)
+				if (this.accessCaption == null)
 				{
 					return null;
 				}
@@ -728,7 +725,7 @@ namespace Epsitec.Common.Designer
 				}
 			}
 
-			if (this.type == Type.Captions)
+			if (this.IsCaptionsType)
 			{
 				if (this.accessField == null || this.accessCaption == null)
 				{
@@ -935,7 +932,7 @@ namespace Epsitec.Common.Designer
 				}
 			}
 
-			if (this.type == Type.Captions)
+			if (this.IsCaptionsType)
 			{
 				switch (field)
 				{
@@ -1033,7 +1030,7 @@ namespace Epsitec.Common.Designer
 				}
 
 				//	Met en cache le Caption.
-				if (this.type == Type.Captions)
+				if (this.IsCaptionsType)
 				{
 					if (this.accessCached != index || this.accessCaption == null)
 					{
@@ -1601,7 +1598,16 @@ namespace Epsitec.Common.Designer
 			//	"un bundle par culture, plusieurs ressources par bundle".
 			get
 			{
-				return (this.type == Type.Strings || this.type == Type.Captions || this.type == Type.Commands || this.type == Type.Types);
+				return (this.type == Type.Strings || this.IsCaptionsType);
+			}
+		}
+
+		protected bool IsCaptionsType
+		{
+			//	Retourne true si on accède à des ressources de type Captions/Commands/Types.
+			get
+			{
+				return (this.type == Type.Captions || this.type == Type.Commands || this.type == Type.Types);
 			}
 		}
 
