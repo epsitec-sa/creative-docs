@@ -374,14 +374,19 @@ namespace Epsitec.Common.Designer
 			//	Donne les noms internes (fieldName) des champs accessibles.
 			get
 			{
-				if (this.type == Type.Strings)
+				switch (this.type)
 				{
-					return ResourceAccess.NameStrings;
-				}
+					case Type.Strings:
+						return ResourceAccess.NameStrings;
 
-				if (this.IsCaptionsType)
-				{
-					return ResourceAccess.NameCaptions;
+					case Type.Captions:
+						return ResourceAccess.NameCaptions;
+
+					case Type.Commands:
+						return ResourceAccess.NameCommands;
+
+					case Type.Types:
+						return ResourceAccess.NameTypes;
 				}
 
 				return null;
@@ -393,14 +398,19 @@ namespace Epsitec.Common.Designer
 			//	Donne les types des champs accessibles.
 			get
 			{
-				if (this.type == Type.Strings)
+				switch (this.type)
 				{
-					return ResourceAccess.TypeStrings;
-				}
+					case Type.Strings:
+						return ResourceAccess.TypeStrings;
 
-				if (this.IsCaptionsType)
-				{
-					return ResourceAccess.TypeCaptions;
+					case Type.Captions:
+						return ResourceAccess.TypeCaptions;
+
+					case Type.Commands:
+						return ResourceAccess.TypeCommands;
+
+					case Type.Types:
+						return ResourceAccess.TypeTypes;
 				}
 
 				return null;
@@ -443,6 +453,14 @@ namespace Epsitec.Common.Designer
 				if (fieldName == ResourceAccess.NameCaptions[4])
 				{
 					return Res.Strings.Viewers.Captions.About;
+				}
+			}
+
+			if (this.type == Type.Commands)
+			{
+				if (fieldName == ResourceAccess.NameCommands[5])
+				{
+					return "???";
 				}
 			}
 
@@ -661,6 +679,15 @@ namespace Epsitec.Common.Designer
 				}
 			}
 
+			if (this.type == Type.Commands)
+			{
+				if (fieldName == ResourceAccess.NameCommands[5])
+				{
+					bool statefull = Command.GetStatefull(this.accessCaption);
+					return new Field(statefull);
+				}
+			}
+
 			if (this.type == Type.Panels)
 			{
 				ResourceBundle bundle = this.PanelBundle(index);
@@ -691,6 +718,11 @@ namespace Epsitec.Common.Designer
 
 			if (this.IsBundlesType)
 			{
+				if (this.accessField == null)
+				{
+					return;
+				}
+
 				this.CreateIfNecessary();
 
 				if (fieldName == ResourceAccess.NameStrings[0])
@@ -709,11 +741,6 @@ namespace Epsitec.Common.Designer
 
 			if (this.type == Type.Strings)
 			{
-				if (this.accessField == null)
-				{
-					return;
-				}
-
 				if (fieldName == ResourceAccess.NameStrings[1])
 				{
 					this.accessField.SetStringValue(field.String);
@@ -727,7 +754,7 @@ namespace Epsitec.Common.Designer
 
 			if (this.IsCaptionsType)
 			{
-				if (this.accessField == null || this.accessCaption == null)
+				if (this.accessCaption == null)
 				{
 					return;
 				}
@@ -761,6 +788,16 @@ namespace Epsitec.Common.Designer
 				if (fieldName == ResourceAccess.NameCaptions[4])
 				{
 					this.accessField.SetAbout(field.String);
+				}
+			}
+
+			if (this.type == Type.Commands)
+			{
+				if (fieldName == ResourceAccess.NameCommands[5])
+				{
+					bool statefull = field.Bool;
+					Command.SetStatefull(this.accessCaption, statefull);
+					this.accessField.SetStringValue(this.accessCaption.SerializeToString());
 				}
 			}
 
@@ -1079,13 +1116,17 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		protected static string[] NameStrings = { "Name", "String", "About" };
+		protected static string[] NameStrings  = { "Name", "String", "About" };
 		protected static string[] NameCaptions = { "Name", "Labels", "Description", "Icon", "About" };
-		protected static string[] NamePanels = { "Name", "Panel" };
+		protected static string[] NameCommands = { "Name", "Labels", "Description", "Icon", "About", "Statefull" };
+		protected static string[] NameTypes    = { "Name", "Labels", "Description", "Icon", "About" };
+		protected static string[] NamePanels   = { "Name", "Panel" };
 
-		protected static Field.Type[] TypeStrings = { Field.Type.String, Field.Type.String, Field.Type.String };
+		protected static Field.Type[] TypeStrings  = { Field.Type.String, Field.Type.String, Field.Type.String };
 		protected static Field.Type[] TypeCaptions = { Field.Type.String, Field.Type.StringCollection, Field.Type.String, Field.Type.String, Field.Type.String };
-		protected static Field.Type[] TypePanels = { Field.Type.String, Field.Type.Bundle };
+		protected static Field.Type[] TypeCommands = { Field.Type.String, Field.Type.StringCollection, Field.Type.String, Field.Type.String, Field.Type.String, Field.Type.Bool };
+		protected static Field.Type[] TypeTypes    = { Field.Type.String, Field.Type.StringCollection, Field.Type.String, Field.Type.String, Field.Type.String };
+		protected static Field.Type[] TypePanels   = { Field.Type.String, Field.Type.Bundle };
 
 
 		public int CultureCount
@@ -1733,6 +1774,7 @@ namespace Epsitec.Common.Designer
 				String,
 				StringCollection,
 				Bundle,
+				Bool,
 			}
 
 			public Field(string value)
@@ -1751,6 +1793,12 @@ namespace Epsitec.Common.Designer
 			{
 				this.type = Type.Bundle;
 				this.bundle = value;
+			}
+
+			public Field(bool value)
+			{
+				this.type = Type.Bool;
+				this.boolValue = value;
 			}
 
 			public Type FieldType
@@ -1788,10 +1836,20 @@ namespace Epsitec.Common.Designer
 				}
 			}
 
+			public bool Bool
+			{
+				get
+				{
+					System.Diagnostics.Debug.Assert(this.type == Type.Bool);
+					return this.boolValue;
+				}
+			}
+
 			protected Type						type;
 			protected string					stringValue;
 			protected ICollection<string>		stringCollection;
 			protected ResourceBundle			bundle;
+			protected bool						boolValue;
 		}
 		#endregion
 

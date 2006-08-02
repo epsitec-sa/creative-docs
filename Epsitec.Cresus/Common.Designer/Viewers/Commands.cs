@@ -16,11 +16,12 @@ namespace Epsitec.Common.Designer.Viewers
 			MyWidgets.StackedPanel leftContainer, rightContainer;
 
 			//	Statefull.
-			this.CreateBand(out leftContainer, out rightContainer, "Type", 0.1);
+			this.CreateBand(out leftContainer, "Type", 0.1);
 
 			this.primaryStatefull = new CheckButton(leftContainer.Container);
 			this.primaryStatefull.Text = "Reflète un état";
 			this.primaryStatefull.Dock = DockStyle.StackBegin;
+			this.primaryStatefull.Pressed += new MessageEventHandler(this.HandleStatefullPressed);
 			this.primaryStatefull.TabIndex = this.tabIndex++;
 			this.primaryStatefull.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
@@ -28,13 +29,16 @@ namespace Epsitec.Common.Designer.Viewers
 			this.CreateBand(out leftContainer, out rightContainer, "Raccourcis clavier", 0.3);
 
 			//	Group.
-			this.CreateBand(out leftContainer, out rightContainer, "Groupe", 0.5);
+			this.CreateBand(out leftContainer, "Groupe", 0.5);
+
+			this.UpdateEdit();
 		}
 
 		protected override void Dispose(bool disposing)
 		{
 			if (disposing)
 			{
+				this.primaryStatefull.Pressed -= new MessageEventHandler(this.HandleStatefullPressed);
 			}
 
 			base.Dispose(disposing);
@@ -59,6 +63,39 @@ namespace Epsitec.Common.Designer.Viewers
 		protected override void UpdateEdit()
 		{
 			//	Met à jour les lignes éditables en fonction de la sélection dans le tableau.
+			if (this.primaryStatefull == null)
+			{
+				return;
+			}
+
+			bool iic = this.ignoreChange;
+			this.ignoreChange = true;
+
+			int sel = this.access.AccessIndex;
+
+			if (sel >= this.access.AccessCount)
+			{
+				sel = -1;
+			}
+
+			if (sel == -1)
+			{
+				this.primaryStatefull.Enable = false;
+				this.primaryStatefull.ActiveState = ActiveState.No;
+			}
+			else
+			{
+				int index = this.access.AccessIndex;
+
+				ResourceAccess.Field field = this.access.GetField(index, null, "Statefull");
+				bool statefull = field.Bool;
+
+				this.primaryStatefull.Enable = true;
+				this.primaryStatefull.ActiveState = statefull ? ActiveState.Yes : ActiveState.No;
+			}
+
+			this.ignoreChange = iic;
+
 			base.UpdateEdit();
 		}
 
@@ -76,6 +113,20 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
+		void HandleStatefullPressed(object sender, MessageEventArgs e)
+		{
+			//	Bouton à cocher 'Statefull' pressé.
+			if (this.ignoreChange)
+			{
+				return;
+			}
+
+			bool statefull = (this.primaryStatefull.ActiveState == ActiveState.No);
+			int sel = this.access.AccessIndex;
+			this.access.SetField(sel, null, "Statefull", new ResourceAccess.Field(statefull));
+		}
+
+		
 		protected CheckButton					primaryStatefull;
 	}
 }
