@@ -756,7 +756,10 @@ namespace Epsitec.Common.Designer
 					foreach (ResourceBundle bundle in this.bundles)
 					{
 						ResourceBundle.Field f = bundle[druid];
-						f.SetName(name);
+						if (!f.IsEmpty)
+						{
+							f.SetName(name);
+						}
 					}
 				}
 			}
