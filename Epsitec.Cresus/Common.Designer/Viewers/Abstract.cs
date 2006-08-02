@@ -551,9 +551,12 @@ namespace Epsitec.Common.Designer.Viewers
 				else
 				{
 					ResourceAccess.Field field = this.access.GetField(sel, null, "Name");
-					builder.Append(field.String);
-					builder.Append(": ");
-					builder.Append((sel+1).ToString());
+					if (field != null)
+					{
+						builder.Append(field.String);
+						builder.Append(": ");
+						builder.Append((sel+1).ToString());
+					}
 				}
 
 				builder.Append("/");

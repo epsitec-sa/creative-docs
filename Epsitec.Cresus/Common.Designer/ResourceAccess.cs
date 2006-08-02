@@ -41,8 +41,15 @@ namespace Epsitec.Common.Designer
 
 			this.druidsIndex = new List<Druid>();
 
-			this.filterStrings = new string[10];
-			this.filterModes = new Searcher.SearchingMode[10];
+			int count = 10;
+			this.filterStrings = new string[count];
+			this.filterModes = new Searcher.SearchingMode[count];
+
+			for (int i=0; i<count; i++)
+			{
+				this.filterStrings[i] = "";
+				this.filterModes[i] = Searcher.SearchingMode.None;
+			}
 		}
 
 
@@ -600,6 +607,11 @@ namespace Epsitec.Common.Designer
 
 			if (this.IsBundlesType)
 			{
+				if (this.accessField == null)
+				{
+					return null;
+				}
+
 				if (fieldName == ResourceAccess.NameStrings[0])
 				{
 					return new Field(this.SubFilter(this.accessField.Name));
