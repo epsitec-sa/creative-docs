@@ -135,7 +135,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.secondaryDescription.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			//	Icône.
-			this.CreateBand(out leftContainer, out rightContainer, Res.Strings.Viewers.Captions.Icon, 0.1);
+			this.CreateBand(out leftContainer, Res.Strings.Viewers.Captions.Icon, 0.1);
 
 			this.primaryIcon = new IconButton(leftContainer.Container);
 			this.primaryIcon.PreferredHeight = 30;
@@ -144,14 +144,6 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryIcon.Anchor = AnchorStyles.TopLeft;
 			this.primaryIcon.TabIndex = this.tabIndex++;
 			this.primaryIcon.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-
-			this.secondaryIcon = new IconButton(rightContainer.Container);
-			this.secondaryIcon.PreferredHeight = 30;
-			this.secondaryIcon.PreferredWidth = 30;
-			this.secondaryIcon.ButtonStyle = ButtonStyle.ActivableIcon;
-			this.secondaryIcon.Anchor = AnchorStyles.TopLeft;
-			this.secondaryIcon.TabIndex = this.tabIndex++;
-			this.secondaryIcon.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			//	Commentaires.
 			this.CreateBand(out leftContainer, out rightContainer, Res.Strings.Viewers.Captions.About, 0.7);
@@ -292,7 +284,6 @@ namespace Epsitec.Common.Designer.Viewers
 
 				this.SetTextField(this.secondaryLabels, 0, null, null);
 				this.SetTextField(this.secondaryDescription, 0, null, null);
-				this.SetTextField(this.secondaryIcon, 0, null, null);
 				this.SetTextField(this.secondaryAbout, 0, null, null);
 			}
 			else
@@ -309,14 +300,12 @@ namespace Epsitec.Common.Designer.Viewers
 				{
 					this.SetTextField(this.secondaryLabels, 0, null, null);
 					this.SetTextField(this.secondaryDescription, 0, null, null);
-					this.SetTextField(this.secondaryIcon, 0, null, null);
 					this.SetTextField(this.secondaryAbout, 0, null, null);
 				}
 				else
 				{
 					this.SetTextField(this.secondaryLabels, index, this.secondaryCulture, "Labels");
 					this.SetTextField(this.secondaryDescription, index, this.secondaryCulture, "Description");
-					this.SetTextField(this.secondaryIcon, index, this.secondaryCulture, "Icon");
 					this.SetTextField(this.secondaryAbout, index, this.secondaryCulture, "About");
 				}
 
@@ -355,6 +344,26 @@ namespace Epsitec.Common.Designer.Viewers
 			this.intensityContainers.Add(backgroundIntensity);
 		}
 
+		protected void CreateBand(out MyWidgets.StackedPanel leftContainer, string title, double backgroundIntensity)
+		{
+			//	Crée une bande horizontale avec un seul container gauche pour la
+			//	ressource primaire.
+			Widget band = new Widget(this.scrollable.Panel);
+			band.Dock = DockStyle.StackBegin;
+			band.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
+
+			leftContainer = new MyWidgets.StackedPanel(band);
+			leftContainer.Title = title;
+			leftContainer.IsLeftPart = true;
+			leftContainer.MinWidth = 100;
+			leftContainer.Dock = DockStyle.StackFill;
+			this.leftContainers.Add(leftContainer);
+
+			this.rightContainers.Add(null);
+
+			this.intensityContainers.Add(backgroundIntensity);
+		}
+
 		protected void ColoriseBands(ResourceAccess.ModificationState state1, ResourceAccess.ModificationState state2)
 		{
 			//	Colorise toutes les bandes horizontales.
@@ -365,8 +374,11 @@ namespace Epsitec.Common.Designer.Viewers
 
 				lc.BackgroundColor = Abstract.GetBackgroundColor(state1, this.intensityContainers[i]);
 
-				rc.BackgroundColor = Abstract.GetBackgroundColor(state2, this.intensityContainers[i]);
-				rc.Visibility = (this.secondaryCulture != null);
+				if (rc != null)
+				{
+					rc.BackgroundColor = Abstract.GetBackgroundColor(state2, this.intensityContainers[i]);
+					rc.Visibility = (this.secondaryCulture != null);
+				}
 			}
 		}
 
@@ -589,7 +601,10 @@ namespace Epsitec.Common.Designer.Viewers
 		void HandleTextChanged(object sender)
 		{
 			//	Un texte éditable a changé.
-			if ( this.ignoreChange )  return;
+			if (this.ignoreChange)
+			{
+				return;
+			}
 
 			AbstractTextField edit = sender as AbstractTextField;
 			string text = edit.Text;
@@ -627,7 +642,10 @@ namespace Epsitec.Common.Designer.Viewers
 		void HandleStringTextCollectionChanged(object sender)
 		{
 			//	Une collection de textes a changé.
-			if ( this.ignoreChange )  return;
+			if (this.ignoreChange)
+			{
+				return;
+			}
 
 			MyWidgets.StringCollection sc = sender as MyWidgets.StringCollection;
 			int sel = this.access.AccessIndex;
@@ -649,7 +667,10 @@ namespace Epsitec.Common.Designer.Viewers
 		void HandleStringFocusCollectionChanged(object sender)
 		{
 			//	Le focus a changé dans une collection.
-			if ( this.ignoreChange )  return;
+			if (this.ignoreChange)
+			{
+				return;
+			}
 
 			MyWidgets.StringCollection sc = sender as MyWidgets.StringCollection;
 			this.currentTextField = sc.FocusedTextField;
@@ -658,7 +679,10 @@ namespace Epsitec.Common.Designer.Viewers
 		void HandleCursorChanged(object sender)
 		{
 			//	Le curseur a été déplacé dans un texte éditable.
-			if ( this.ignoreChange )  return;
+			if (this.ignoreChange)
+			{
+				return;
+			}
 
 			this.lastActionIsReplace = false;
 		}
@@ -676,7 +700,6 @@ namespace Epsitec.Common.Designer.Viewers
 		protected TextFieldMulti				primaryDescription;
 		protected TextFieldMulti				secondaryDescription;
 		protected IconButton					primaryIcon;
-		protected IconButton					secondaryIcon;
 		protected TextFieldMulti				primaryAbout;
 		protected TextFieldMulti				secondaryAbout;
 	}
