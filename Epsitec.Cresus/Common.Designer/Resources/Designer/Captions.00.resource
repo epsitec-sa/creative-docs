@@ -75,4 +75,7 @@
   <data name="Cap.Grid.Mode.Absolute" id="052">&lt;s:data id="_0" f:Description="Absolu" f:Labels="{Collection {Text 'Absolu'}}" f:Icon="manifest:Epsitec.Common.Designer.Images.PropertyGridAbsolute.icon" /&gt;</data>
   <data name="Cap.Grid.Mode.Auto" id="053">&lt;s:data id="_0" f:Description="Automatique" f:Labels="{Collection {Text 'Automatique'}}" f:Icon="manifest:Epsitec.Common.Designer.Images.PropertyGridAuto.icon" /&gt;</data>
 
+  <data name="Cmd.New" id="061"></data>
+  <data name="Typ.New" id="062"></data>
+
 </bundle>
