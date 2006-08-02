@@ -1023,6 +1023,11 @@ namespace Epsitec.Common.Designer.Viewers
 				ResourceAccess.Field field = this.access.GetField(row, culture, fieldName);
 				ResourceAccess.ModificationState state = this.access.GetModification(row, culture);
 
+				if (column == 0)
+				{
+					state = ResourceAccess.ModificationState.Normal;
+				}
+
 				this.array.SetLineString(column, row, field.String);
 				this.array.SetLineState(column, row, ResourceAccess.CellState(state));
 			}

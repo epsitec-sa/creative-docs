@@ -19,7 +19,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.CreateBand(out leftContainer, "Type", 0.1);
 
 			this.primaryStatefull = new CheckButton(leftContainer.Container);
-			this.primaryStatefull.Text = "Reflète un état";
+			this.primaryStatefull.Text = "Reflète un état activé ou désactivé";
 			this.primaryStatefull.Dock = DockStyle.StackBegin;
 			this.primaryStatefull.Pressed += new MessageEventHandler(this.HandleStatefullPressed);
 			this.primaryStatefull.TabIndex = this.tabIndex++;
