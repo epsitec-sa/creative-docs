@@ -44,7 +44,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Choix du nombre de colonnes.
 			get
 			{
-				if ( this.columns == null )  return 0;
+				if (this.columns == null)
+				{
+					return 0;
+				}
+
 				return this.columns.Length;
 			}
 
@@ -112,13 +116,21 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Hauteur d'une ligne.
 			get
 			{
-				if ( this.columns == null )  return 0;
+				if (this.columns == null)
+				{
+					return 0;
+				}
+
 				return this.columns[0].LineHeight;
 			}
 
 			set
 			{
-				if ( this.columns == null )  return;
+				if (this.columns == null)
+				{
+					return;
+				}
+
 				if ( this.columns[0].LineHeight != value )
 				{
 					for (int i=0; i<this.columns.Length; i++)
@@ -134,7 +146,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Nombre total de ligne en fonction de la hauteur du widget et de la hauteur d'une ligne.
 			get
 			{
-				if ( this.columns == null )  return 0;
+				if (this.columns == null)
+				{
+					return 0;
+				}
+
 				return this.columns[0].LineCount;
 			}
 		}
@@ -142,30 +158,44 @@ namespace Epsitec.Common.Designer.MyWidgets
 		public void SetLineString(int column, int row, string text)
 		{
 			//	Spécifie le texte contenu dans une ligne.
-			if ( this.columns == null )  return;
-			if ( column < 0 || column >= this.columns.Length )  return;
+			if (this.columns == null || column < 0 || column >= this.columns.Length)
+			{
+				return;
+			}
+
 			this.columns[column].SetLineString(row-this.firstVisibleRow, text);
 		}
 
 		public string GetLineString(int column, int row)
 		{
 			//	Retourne le texte contenu dans une ligne.
-			if ( this.columns == null )  return null;
-			if ( column < 0 || column >= this.columns.Length )  return null;
+			if (this.columns == null || column < 0 || column >= this.columns.Length)
+			{
+				return null;
+			}
+
 			return this.columns[column].GetLineString(row-this.firstVisibleRow);
 		}
 
 		public void SetLineState(int column, int row, StringList.CellState state)
 		{
 			//	Spécifie l'état d'une ligne.
-			if ( this.columns == null )  return;
+			if (this.columns == null)
+			{
+				return;
+			}
+
 			this.columns[column].SetLineState(row-this.firstVisibleRow, state);
 		}
 
 		public StringList.CellState GetLineState(int column, int row)
 		{
 			//	Retourne l'état d'une ligne.
-			if ( this.columns == null )  return StringList.CellState.Normal;
+			if (this.columns == null)
+			{
+				return StringList.CellState.Normal;
+			}
+
 			return this.columns[column].GetLineState(row-this.firstVisibleRow);
 		}
 
@@ -286,6 +316,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected void UpdateSelectedRow()
 		{
+			//	Met à jour la ligne sélectionnée, si nécessaire.
 			if (this.isDirtySelected)
 			{
 				this.isDirtySelected = false;
@@ -299,6 +330,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected void UpdateScroller()
 		{
+			//	Met à jour l'ascenseur, si nécessaire.
 			if (this.isDirtyScroller)
 			{
 				this.isDirtyScroller = false;
@@ -330,8 +362,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	que nous ayons une chance de détecter le drag sur les colonnes de
 			//	séparation... avant que StringList ne nous mange l'événement sous
 			//	notre nez.
-			
-			this.ProcessMessage (message, list.MapClientToParent (pos));
+			this.ProcessMessage(message, list.MapClientToParent(pos));
 			
 			if (message.Consumer == this)
 			{
@@ -489,7 +520,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected bool WidthDraggingBegin(Point pos)
 		{
 			this.widthDraggingRank = this.WidthDraggingDetect(pos);
-			if ( this.widthDraggingRank == -1 )  return false;
+			if (this.widthDraggingRank == -1)
+			{
+				return false;
+			}
 
 			this.widthDraggingAbsolutes = new double[this.columns.Length+1];
 			double x = this.Client.Bounds.Left;
@@ -557,7 +591,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Met à jour la géométrie.
 			base.UpdateClientGeometry();
 
-			if ( this.columns == null )  return;
+			if (this.columns == null)
+			{
+				return;
+			}
 
 			Rectangle rect = this.Client.Bounds;
 
@@ -688,11 +725,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			add
 			{
-				this.AddUserEventHandler ("CellCountChanged", value);
+				this.AddUserEventHandler("CellCountChanged", value);
 			}
 			remove
 			{
-				this.RemoveUserEventHandler ("CellCountChanged", value);
+				this.RemoveUserEventHandler("CellCountChanged", value);
 			}
 		}
 
