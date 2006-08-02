@@ -472,6 +472,7 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			//	Le nombre de lignes a changé.
 			this.UpdateArray();
+			this.array.ShowSelectedRow();
 		}
 
 		void HandleArrayCellsContentChanged(object sender)
