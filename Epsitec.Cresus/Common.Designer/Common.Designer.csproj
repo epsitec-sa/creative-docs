@@ -93,6 +93,7 @@
     <Compile Include="Viewers\Abstract.cs" />
     <Compile Include="Viewers\Captions.cs" />
     <Compile Include="Viewers\Commands.cs" />
+    <Compile Include="Viewers\AbstractCaptions.cs" />
     <Compile Include="Viewers\Types.cs" />
     <Compile Include="Viewers\Scripts.cs" />
     <Compile Include="Viewers\Panels.cs" />
