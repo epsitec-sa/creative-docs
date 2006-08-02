@@ -25,15 +25,7 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
-		protected override ResourceAccess.Type ResourceType
-		{
-			get
-			{
-				return ResourceAccess.Type.Types;
-			}
-		}
-
-		public override ResourceAccess.Type BundleType
+		public override ResourceAccess.Type ResourceType
 		{
 			get
 			{

@@ -954,7 +954,7 @@ namespace Epsitec.Common.Designer
 			}
 			else
 			{
-				this.dlgSearch.Adapt(mi.Module.Modifier.ActiveViewer.BundleType);
+				this.dlgSearch.Adapt(mi.Module.Modifier.ActiveBundleType);
 			}
 		}
 

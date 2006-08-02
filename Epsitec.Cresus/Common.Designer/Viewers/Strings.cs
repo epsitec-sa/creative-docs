@@ -124,22 +124,13 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
-		protected override ResourceAccess.Type ResourceType
+		public override ResourceAccess.Type ResourceType
 		{
 			get
 			{
 				return ResourceAccess.Type.Strings;
 			}
 		}
-
-		public override ResourceAccess.Type BundleType
-		{
-			get
-			{
-				return ResourceAccess.Type.Strings;
-			}
-		}
-
 
 		
 		protected override void UpdateArray()
