@@ -255,6 +255,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				this.selectedRow = row;
 				this.isDirtySelected = true;
+				this.Invalidate();
 			}
 
 			//	Il faut envoyer l'événement même si la ligne n'a pas changé !
