@@ -80,8 +80,8 @@
   <data name="TextRuler.Tooltip.Unit" id="0D2">mm</data>
   <data name="TextRuler.Tooltip.Deleted" id="0E2">Supprimé</data>
   <data name="TextRuler.FontDefault" id="0F2">Par défaut...</data>
-  <data name="ShortcutEditor.ModifierNone" id="0G2" mod="1"> </data>
-  <data name="ShortcutEditor.CodeNone" id="0H2" mod="1">Aucun</data>
-  <data name="ShortcutEditor.ModifierTooltip" id="0I2" mod="1">Touches super-shift</data>
-  <data name="ShortcutEditor.CodeTooltip" id="0J2" mod="1">Touche principale</data>
+  <data name="ShortcutEditor.Modifier.None" id="0G2" mod="1">—</data>
+  <data name="ShortcutEditor.Code.None" id="0H2" mod="1">Aucun</data>
+  <data name="ShortcutEditor.Modifier.Tooltip" id="0I2" mod="1">Touches super-shift</data>
+  <data name="ShortcutEditor.Code.Tooltip" id="0J2" mod="1">Touche principale</data>
 </bundle>

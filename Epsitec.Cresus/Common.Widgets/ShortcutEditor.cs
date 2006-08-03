@@ -28,7 +28,7 @@ namespace Epsitec.Common.Widgets
 			this.fieldModifier.PreferredWidth = 100;
 			this.fieldModifier.Margins = new Margins(0, 4, 0, 0);
 			this.fieldModifier.Dock = DockStyle.Left;
-			ToolTip.Default.SetToolTip(this.fieldModifier, Res.Strings.ShortcutEditor.ModifierTooltip);
+			ToolTip.Default.SetToolTip(this.fieldModifier, Res.Strings.ShortcutEditor.Modifier.Tooltip);
 			this.UpdateFieldModifier();
 
 			this.fieldCode = new TextFieldCombo(this);
@@ -36,7 +36,7 @@ namespace Epsitec.Common.Widgets
 			this.fieldCode.ComboClosed += new EventHandler(this.HandleFieldCodeComboClosed);
 			this.fieldCode.PreferredWidth = 100;
 			this.fieldCode.Dock = DockStyle.Left;
-			ToolTip.Default.SetToolTip(this.fieldCode, Res.Strings.ShortcutEditor.CodeTooltip);
+			ToolTip.Default.SetToolTip(this.fieldCode, Res.Strings.ShortcutEditor.Code.Tooltip);
 			this.UpdateFieldCode();
 		}
 
@@ -113,7 +113,7 @@ namespace Epsitec.Common.Widgets
 		protected void UpdateFieldModifier()
 		{
 			//	Met à jour le combo pour les touches modificatrices.
-			this.fieldModifier.Items.Add(Res.Strings.ShortcutEditor.ModifierNone);
+			this.fieldModifier.Items.Add(Res.Strings.ShortcutEditor.Modifier.None);
 
 			this.listModifier = new List<KeyCode>();
 
@@ -131,7 +131,7 @@ namespace Epsitec.Common.Widgets
 		protected void UpdateFieldCode()
 		{
 			//	Met à jour le combo pour les touches principales.
-			this.fieldCode.Items.Add(Res.Strings.ShortcutEditor.CodeNone);
+			this.fieldCode.Items.Add(Res.Strings.ShortcutEditor.Code.None);
 
 			this.listCode = new List<KeyCode>();
 
@@ -232,7 +232,7 @@ namespace Epsitec.Common.Widgets
 
 			if (code == KeyCode.None)
 			{
-				return Res.Strings.ShortcutEditor.ModifierNone;
+				return Res.Strings.ShortcutEditor.Modifier.None;
 			}
 			else
 			{
@@ -249,7 +249,7 @@ namespace Epsitec.Common.Widgets
 
 			if (code == KeyCode.None)
 			{
-				return Res.Strings.ShortcutEditor.CodeNone;
+				return Res.Strings.ShortcutEditor.Code.None;
 			}
 			else
 			{

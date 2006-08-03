@@ -33,11 +33,17 @@
   <data name="Viewers.Panels.TabCultures" id="0R">Cultures</data>
   <data name="Viewers.Panels.Info" id="0S">Objets: {0}/{1}  Sélection: {2}</data>
   <data name="Viewers.Panels.Rectangle" id="0T">x={0} y={1} dx={2} dy={3}</data>
-  <data name="Viewers.Captions.Labels" id="0A5" mod="1">Textes</data>
-  <data name="Viewers.Captions.Description" id="0C5" mod="1">Description pour la bulle d&amp;apos;aide</data>
-  <data name="Viewers.Captions.ShortDescription" id="0J5" mod="1">Description</data>
-  <data name="Viewers.Captions.Icon" id="0D5" mod="1">Icône</data>
-  <data name="Viewers.Captions.About" id="0B5" mod="1">Commentaires</data>
+  <data name="Viewers.Captions.Labels.Title" id="0A5" mod="1">Textes</data>
+  <data name="Viewers.Captions.Description.Title" id="0C5" mod="1">Description pour la bulle d&amp;apos;aide</data>
+  <data name="Viewers.Captions.Description.Short" id="0J5" mod="1">Description</data>
+  <data name="Viewers.Captions.Icon.Title" id="0D5" mod="1">Icône</data>
+  <data name="Viewers.Captions.About.Title" id="0B5" mod="1">Commentaires</data>
+  <data name="Viewers.Commands.Statefull.Title" id="0O5" mod="1">Type</data>
+  <data name="Viewers.Commands.Statefull.CheckButton" id="0P5" mod="1">Reflète un état activé ou désactivé</data>
+  <data name="Viewers.Commands.Shortcut.Title" id="0Q5" mod="1">Raccourcis clavier</data>
+  <data name="Viewers.Commands.Shortcut.Main" id="0R5" mod="1">Principal</data>
+  <data name="Viewers.Commands.Shortcut.Suppl" id="0S5" mod="1">Supplémentaire</data>
+  <data name="Viewers.Commands.Group.Title" id="0T5" mod="1">Groupe</data>
   <data name="Action.New" id="0U">Nouveau</data>
   <data name="Action.Open" id="0V">Ouvrir...</data>
   <data name="Action.Close" id="001">Fermer</data>

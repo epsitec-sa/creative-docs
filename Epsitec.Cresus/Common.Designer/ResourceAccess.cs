@@ -437,22 +437,22 @@ namespace Epsitec.Common.Designer
 			{
 				if (fieldName == ResourceAccess.NameCaptions[1])
 				{
-					return Res.Strings.Viewers.Captions.Labels;
+					return Res.Strings.Viewers.Captions.Labels.Title;
 				}
 
 				if (fieldName == ResourceAccess.NameCaptions[2])
 				{
-					return Res.Strings.Viewers.Captions.Description;
+					return Res.Strings.Viewers.Captions.Description.Title;
 				}
 
 				if (fieldName == ResourceAccess.NameCaptions[3])
 				{
-					return Res.Strings.Viewers.Captions.Icon;
+					return Res.Strings.Viewers.Captions.Icon.Title;
 				}
 
 				if (fieldName == ResourceAccess.NameCaptions[4])
 				{
-					return Res.Strings.Viewers.Captions.About;
+					return Res.Strings.Viewers.Captions.About.Title;
 				}
 			}
 

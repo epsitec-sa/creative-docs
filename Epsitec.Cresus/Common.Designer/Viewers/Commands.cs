@@ -16,20 +16,20 @@ namespace Epsitec.Common.Designer.Viewers
 			MyWidgets.StackedPanel leftContainer, rightContainer;
 
 			//	Statefull.
-			this.CreateBand(out leftContainer, "Type", 0.1);
+			this.CreateBand(out leftContainer, Res.Strings.Viewers.Commands.Statefull.Title, 0.1);
 
 			this.primaryStatefull = new CheckButton(leftContainer.Container);
-			this.primaryStatefull.Text = "Reflète un état activé ou désactivé";
+			this.primaryStatefull.Text = Res.Strings.Viewers.Commands.Statefull.CheckButton;
 			this.primaryStatefull.Dock = DockStyle.StackBegin;
 			this.primaryStatefull.Pressed += new MessageEventHandler(this.HandleStatefullPressed);
 			this.primaryStatefull.TabIndex = this.tabIndex++;
 			this.primaryStatefull.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			//	Shortcuts.
-			this.CreateBand(out leftContainer, out rightContainer, "Raccourcis clavier", 0.3);
+			this.CreateBand(out leftContainer, out rightContainer, Res.Strings.Viewers.Commands.Shortcut.Title, 0.3);
 
 			this.primaryShortcut1 = new ShortcutEditor(leftContainer.Container);
-			this.primaryShortcut1.Title = "Principal";
+			this.primaryShortcut1.Title = Res.Strings.Viewers.Commands.Shortcut.Main;
 			this.primaryShortcut1.Margins = new Margins(0, 0, 0, 2);
 			this.primaryShortcut1.Dock = DockStyle.StackBegin;
 			this.primaryShortcut1.EditedShortcutChanged += new EventHandler(this.HandleShortcutEditedShortcutChanged);
@@ -37,14 +37,14 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryShortcut1.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			this.primaryShortcut2 = new ShortcutEditor(leftContainer.Container);
-			this.primaryShortcut2.Title = "Supplémentaire";
+			this.primaryShortcut2.Title = Res.Strings.Viewers.Commands.Shortcut.Suppl;
 			this.primaryShortcut2.Dock = DockStyle.StackBegin;
 			this.primaryShortcut2.EditedShortcutChanged += new EventHandler(this.HandleShortcutEditedShortcutChanged);
 			this.primaryShortcut2.TabIndex = this.tabIndex++;
 			this.primaryShortcut2.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			this.secondaryShortcut1 = new ShortcutEditor(rightContainer.Container);
-			this.secondaryShortcut1.Title = "Principal";
+			this.secondaryShortcut1.Title = Res.Strings.Viewers.Commands.Shortcut.Main;
 			this.secondaryShortcut1.Margins = new Margins(0, 0, 0, 2);
 			this.secondaryShortcut1.Dock = DockStyle.StackBegin;
 			this.secondaryShortcut1.EditedShortcutChanged += new EventHandler(this.HandleShortcutEditedShortcutChanged);
@@ -52,14 +52,14 @@ namespace Epsitec.Common.Designer.Viewers
 			this.secondaryShortcut1.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			this.secondaryShortcut2 = new ShortcutEditor(rightContainer.Container);
-			this.secondaryShortcut2.Title = "Supplémentaire";
+			this.secondaryShortcut2.Title = Res.Strings.Viewers.Commands.Shortcut.Suppl;
 			this.secondaryShortcut2.Dock = DockStyle.StackBegin;
 			this.secondaryShortcut2.EditedShortcutChanged += new EventHandler(this.HandleShortcutEditedShortcutChanged);
 			this.secondaryShortcut2.TabIndex = this.tabIndex++;
 			this.secondaryShortcut2.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			//	Group.
-			this.CreateBand(out leftContainer, "Groupe", 0.5);
+			this.CreateBand(out leftContainer, Res.Strings.Viewers.Commands.Group.Title, 0.5);
 
 			this.primaryGroup = new TextFieldCombo(leftContainer.Container);
 			this.primaryGroup.PreferredWidth = 200;
