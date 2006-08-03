@@ -181,13 +181,9 @@ namespace Epsitec.Common.Widgets
 			this.ComboAddCode(KeyCode.FuncF11);
 			this.ComboAddCode(KeyCode.FuncF12);
 
-			this.ComboAddCode(KeyCode.ArrowLeft);
-			this.ComboAddCode(KeyCode.ArrowRight);
-			this.ComboAddCode(KeyCode.ArrowUp);
-			this.ComboAddCode(KeyCode.ArrowDown);
-
 			this.ComboAddCode(KeyCode.Space);
 			this.ComboAddCode(KeyCode.Escape);
+			this.ComboAddCode(KeyCode.Tab);
 			this.ComboAddCode(KeyCode.Back);
 			this.ComboAddCode(KeyCode.Return);
 
@@ -197,6 +193,17 @@ namespace Epsitec.Common.Widgets
 			this.ComboAddCode(KeyCode.End);
 			this.ComboAddCode(KeyCode.PageUp);
 			this.ComboAddCode(KeyCode.PageDown);
+
+			this.ComboAddCode(KeyCode.ArrowLeft);
+			this.ComboAddCode(KeyCode.ArrowRight);
+			this.ComboAddCode(KeyCode.ArrowUp);
+			this.ComboAddCode(KeyCode.ArrowDown);
+
+			this.ComboAddCode(KeyCode.Divide);
+			this.ComboAddCode(KeyCode.Multiply);
+			this.ComboAddCode(KeyCode.Substract);
+			this.ComboAddCode(KeyCode.Add);
+			this.ComboAddCode(KeyCode.Decimal);
 		}
 
 		protected void ComboAddModifier(KeyCode code)
