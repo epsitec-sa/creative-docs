@@ -28,6 +28,36 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Shortcuts.
 			this.CreateBand(out leftContainer, out rightContainer, "Raccourcis clavier", 0.3);
 
+			this.primaryShortcut1 = new ShortcutEditor(leftContainer.Container);
+			this.primaryShortcut1.Title = "Principal";
+			this.primaryShortcut1.Margins = new Margins(0, 0, 0, 2);
+			this.primaryShortcut1.Dock = DockStyle.StackBegin;
+			this.primaryShortcut1.EditedShortcutChanged += new EventHandler(this.HandleShortcutEditedShortcutChanged);
+			this.primaryShortcut1.TabIndex = this.tabIndex++;
+			this.primaryShortcut1.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+
+			this.primaryShortcut2 = new ShortcutEditor(leftContainer.Container);
+			this.primaryShortcut2.Title = "Supplémentaire";
+			this.primaryShortcut2.Dock = DockStyle.StackBegin;
+			this.primaryShortcut2.EditedShortcutChanged += new EventHandler(this.HandleShortcutEditedShortcutChanged);
+			this.primaryShortcut2.TabIndex = this.tabIndex++;
+			this.primaryShortcut2.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+
+			this.secondaryShortcut1 = new ShortcutEditor(rightContainer.Container);
+			this.secondaryShortcut1.Title = "Principal";
+			this.secondaryShortcut1.Margins = new Margins(0, 0, 0, 2);
+			this.secondaryShortcut1.Dock = DockStyle.StackBegin;
+			this.secondaryShortcut1.EditedShortcutChanged += new EventHandler(this.HandleShortcutEditedShortcutChanged);
+			this.secondaryShortcut1.TabIndex = this.tabIndex++;
+			this.secondaryShortcut1.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+
+			this.secondaryShortcut2 = new ShortcutEditor(rightContainer.Container);
+			this.secondaryShortcut2.Title = "Supplémentaire";
+			this.secondaryShortcut2.Dock = DockStyle.StackBegin;
+			this.secondaryShortcut2.EditedShortcutChanged += new EventHandler(this.HandleShortcutEditedShortcutChanged);
+			this.secondaryShortcut2.TabIndex = this.tabIndex++;
+			this.secondaryShortcut2.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+
 			//	Group.
 			this.CreateBand(out leftContainer, "Groupe", 0.5);
 
@@ -49,6 +79,11 @@ namespace Epsitec.Common.Designer.Viewers
 			if (disposing)
 			{
 				this.primaryStatefull.Pressed -= new MessageEventHandler(this.HandleStatefullPressed);
+
+				this.primaryShortcut1.EditedShortcutChanged -= new EventHandler(this.HandleShortcutEditedShortcutChanged);
+				this.primaryShortcut2.EditedShortcutChanged -= new EventHandler(this.HandleShortcutEditedShortcutChanged);
+				this.secondaryShortcut1.EditedShortcutChanged -= new EventHandler(this.HandleShortcutEditedShortcutChanged);
+				this.secondaryShortcut2.EditedShortcutChanged -= new EventHandler(this.HandleShortcutEditedShortcutChanged);
 
 				this.primaryGroup.TextChanged -= new EventHandler(this.HandleGroupTextChanged);
 				this.primaryGroup.KeyboardFocusChanged -= new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
@@ -169,6 +204,10 @@ namespace Epsitec.Common.Designer.Viewers
 			this.UpdateColor();
 		}
 
+		void HandleShortcutEditedShortcutChanged(object sender)
+		{
+		}
+
 		void HandleGroupComboOpening(object sender, CancelEventArgs e)
 		{
 			//	Le combo pour le groupe va être ouvert.
@@ -197,6 +236,10 @@ namespace Epsitec.Common.Designer.Viewers
 		
 
 		protected CheckButton					primaryStatefull;
+		protected ShortcutEditor				primaryShortcut1;
+		protected ShortcutEditor				primaryShortcut2;
+		protected ShortcutEditor				secondaryShortcut1;
+		protected ShortcutEditor				secondaryShortcut2;
 		protected TextFieldCombo				primaryGroup;
 	}
 }
