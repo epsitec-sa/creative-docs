@@ -569,8 +569,19 @@ namespace Epsitec.Common.Designer
 
 		public string GetBypassFilterGroup(int index)
 		{
+			//	Retourne le groupe d'une commande.
 			System.Diagnostics.Debug.Assert(this.type == Type.Commands);
-			return "";
+			ResourceBundle.Field field = this.primaryBundle[index];
+
+			Common.Types.Caption caption = new Common.Types.Caption();
+
+			string s = field.AsString;
+			if (!string.IsNullOrEmpty(s))
+			{
+				caption.DeserializeFromString(s);
+			}
+			
+			return Command.GetGroup(caption);
 		}
 
 		public void SetBypassFilterStrings(Druid druid, ResourceBundle bundle, string text)
