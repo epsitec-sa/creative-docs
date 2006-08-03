@@ -23,14 +23,14 @@ namespace Epsitec.Common.Widgets
 
 			this.fieldModifier = new TextFieldCombo(this);
 			this.fieldModifier.IsReadOnly = true;
-			this.fieldModifier.TextChanged += new EventHandler(this.HandleFieldModifierTextChanged);
+			this.fieldModifier.ComboClosed += new EventHandler(this.HandleFieldModifierComboClosed);
 			this.fieldModifier.Margins = new Margins(0, 4, 0, 0);
 			this.fieldModifier.Dock = DockStyle.Fill;
 			this.UpdateFieldModifier();
 
 			this.fieldCode = new TextFieldCombo(this);
 			this.fieldCode.IsReadOnly = true;
-			this.fieldCode.TextChanged += new EventHandler(this.HandleFieldCodeTextChanged);
+			this.fieldCode.ComboClosed += new EventHandler(this.HandleFieldCodeComboClosed);
 			this.fieldCode.Dock = DockStyle.Fill;
 			this.UpdateFieldCode();
 		}
@@ -81,11 +81,11 @@ namespace Epsitec.Common.Widgets
 				this.label.Dispose();
 				this.label = null;
 
-				this.fieldModifier.TextChanged -= new EventHandler(this.HandleFieldModifierTextChanged);
+				this.fieldModifier.ComboClosed -= new EventHandler(this.HandleFieldModifierComboClosed);
 				this.fieldModifier.Dispose();
 				this.fieldModifier = null;
 
-				this.fieldCode.TextChanged -= new EventHandler(this.HandleFieldCodeTextChanged);
+				this.fieldCode.ComboClosed -= new EventHandler(this.HandleFieldCodeComboClosed);
 				this.fieldCode.Dispose();
 				this.fieldCode = null;
 			}
@@ -96,6 +96,7 @@ namespace Epsitec.Common.Widgets
 
 		protected void UpdateFields()
 		{
+			//	Met à jour les TextFieldCombo en fonction du raccourci courant.
 			this.isIgnoreChanging = true;
 
 			this.fieldModifier.Text = ShortcutEditor.GetModifierText(this.shortcut.KeyCode);
@@ -200,18 +201,21 @@ namespace Epsitec.Common.Widgets
 
 		protected void ComboAddModifier(KeyCode code)
 		{
+			//	Ajoute une touche modificatrice dans le menu-combo.
 			this.fieldModifier.Items.Add(ShortcutEditor.GetModifierText(code));
 			this.listModifier.Add(code);
 		}
 
 		protected void ComboAddCode(KeyCode code)
 		{
+			//	Ajoute une touche principale dans le menu-combo.
 			this.fieldCode.Items.Add(ShortcutEditor.GetCodeText(code));
 			this.listCode.Add(code);
 		}
 
 		static protected string GetModifierText(KeyCode code)
 		{
+			//	Retourne le texte pour une touche modificatrice.
 			code &= KeyCode.ModifierMask;
 
 			if (code == KeyCode.None)
@@ -228,6 +232,7 @@ namespace Epsitec.Common.Widgets
 
 		static protected string GetCodeText(KeyCode code)
 		{
+			//	Retourne le texte pour une touche principale.
 			code &= KeyCode.KeyCodeMask;
 
 			if (code == KeyCode.None)
@@ -242,13 +247,14 @@ namespace Epsitec.Common.Widgets
 
 		protected KeyCode GetModifierKey()
 		{
+			//	Retourne la touche modificatrice choisie par le combo.
 			for (int i=1; i<this.fieldModifier.Items.Count; i++)
 			{
 				string text = this.fieldModifier.Items[i];
 
 				if (text == this.fieldModifier.Text)
 				{
-					return this.listModifier[i-1];
+					return this.listModifier[i-1];  // -1 pour sauver "Aucun" en tête de liste
 				}
 			}
 
@@ -257,46 +263,45 @@ namespace Epsitec.Common.Widgets
 
 		protected KeyCode GetCodeKey()
 		{
+			//	Retourne la touche principale choisie par le combo.
 			for (int i=1; i<this.fieldCode.Items.Count; i++)
 			{
 				string text = this.fieldCode.Items[i];
 
 				if (text == this.fieldCode.Text)
 				{
-					return this.listCode[i-1];
+					return this.listCode[i-1];  // -1 pour sauver "Aucun" en tête de liste
 				}
 			}
 
 			return KeyCode.None;
 		}
 
-		
-		void HandleFieldModifierTextChanged(object sender)
+
+		void HandleFieldModifierComboClosed(object sender)
 		{
+			//	Fermeture (et donc choix) avec le menu-combo des touches modificatrices.
 			if (this.isIgnoreChanging)
 			{
 				return;
 			}
 
 			KeyCode code = this.GetModifierKey();
-			System.Diagnostics.Debug.Assert(code != KeyCode.None);
-
 			KeyCode full = this.Shortcut.KeyCode;
 			full &= KeyCode.KeyCodeMask;
 			full |= code;
 			this.Shortcut = full;
 		}
 
-		void HandleFieldCodeTextChanged(object sender)
+		void HandleFieldCodeComboClosed(object sender)
 		{
+			//	Fermeture (et donc choix) avec le menu-combo des touches principales.
 			if (this.isIgnoreChanging)
 			{
 				return;
 			}
 
 			KeyCode code = this.GetCodeKey();
-			System.Diagnostics.Debug.Assert(code != KeyCode.None);
-
 			KeyCode full = this.Shortcut.KeyCode;
 			full &= KeyCode.ModifierMask;
 			full |= code;
