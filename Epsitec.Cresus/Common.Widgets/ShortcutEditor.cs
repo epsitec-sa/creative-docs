@@ -17,22 +17,25 @@ namespace Epsitec.Common.Widgets
 			this.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
 
 			this.label = new StaticText(this);
+			this.label.PreferredWidth = 90;
 			this.label.ContentAlignment = ContentAlignment.MiddleRight;
 			this.label.Margins = new Margins(0, 4, 0, 0);
-			this.label.Dock = DockStyle.Fill;
+			this.label.Dock = DockStyle.Left;
 
 			this.fieldModifier = new TextFieldCombo(this);
 			this.fieldModifier.IsReadOnly = true;
 			this.fieldModifier.ComboClosed += new EventHandler(this.HandleFieldModifierComboClosed);
+			this.fieldModifier.PreferredWidth = 100;
 			this.fieldModifier.Margins = new Margins(0, 4, 0, 0);
-			this.fieldModifier.Dock = DockStyle.Fill;
+			this.fieldModifier.Dock = DockStyle.Left;
 			ToolTip.Default.SetToolTip(this.fieldModifier, Res.Strings.ShortcutEditor.ModifierTooltip);
 			this.UpdateFieldModifier();
 
 			this.fieldCode = new TextFieldCombo(this);
 			this.fieldCode.IsReadOnly = true;
 			this.fieldCode.ComboClosed += new EventHandler(this.HandleFieldCodeComboClosed);
-			this.fieldCode.Dock = DockStyle.Fill;
+			this.fieldCode.PreferredWidth = 100;
+			this.fieldCode.Dock = DockStyle.Left;
 			ToolTip.Default.SetToolTip(this.fieldCode, Res.Strings.ShortcutEditor.CodeTooltip);
 			this.UpdateFieldCode();
 		}
