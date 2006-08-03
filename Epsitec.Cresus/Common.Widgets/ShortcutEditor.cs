@@ -26,12 +26,14 @@ namespace Epsitec.Common.Widgets
 			this.fieldModifier.ComboClosed += new EventHandler(this.HandleFieldModifierComboClosed);
 			this.fieldModifier.Margins = new Margins(0, 4, 0, 0);
 			this.fieldModifier.Dock = DockStyle.Fill;
+			ToolTip.Default.SetToolTip(this.fieldModifier, Res.Strings.ShortcutEditor.ModifierTooltip);
 			this.UpdateFieldModifier();
 
 			this.fieldCode = new TextFieldCombo(this);
 			this.fieldCode.IsReadOnly = true;
 			this.fieldCode.ComboClosed += new EventHandler(this.HandleFieldCodeComboClosed);
 			this.fieldCode.Dock = DockStyle.Fill;
+			ToolTip.Default.SetToolTip(this.fieldCode, Res.Strings.ShortcutEditor.CodeTooltip);
 			this.UpdateFieldCode();
 		}
 
@@ -108,7 +110,7 @@ namespace Epsitec.Common.Widgets
 		protected void UpdateFieldModifier()
 		{
 			//	Met à jour le combo pour les touches modificatrices.
-			this.fieldModifier.Items.Add("Aucun");
+			this.fieldModifier.Items.Add(Res.Strings.ShortcutEditor.ModifierNone);
 
 			this.listModifier = new List<KeyCode>();
 
@@ -126,7 +128,7 @@ namespace Epsitec.Common.Widgets
 		protected void UpdateFieldCode()
 		{
 			//	Met à jour le combo pour les touches principales.
-			this.fieldCode.Items.Add("Aucun");
+			this.fieldCode.Items.Add(Res.Strings.ShortcutEditor.CodeNone);
 
 			this.listCode = new List<KeyCode>();
 
@@ -227,7 +229,7 @@ namespace Epsitec.Common.Widgets
 
 			if (code == KeyCode.None)
 			{
-				return "Aucun";
+				return Res.Strings.ShortcutEditor.ModifierNone;
 			}
 			else
 			{
@@ -244,7 +246,7 @@ namespace Epsitec.Common.Widgets
 
 			if (code == KeyCode.None)
 			{
-				return "Aucun";
+				return Res.Strings.ShortcutEditor.CodeNone;
 			}
 			else
 			{
