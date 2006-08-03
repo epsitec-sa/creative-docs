@@ -371,6 +371,12 @@ namespace Epsitec.Common.Designer
 
 
 		#region Commands manager
+		[Command("Check")]
+		void CommandCheck(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.CurrentModule.Check();
+		}
+
 		[Command("Save")]
 		void CommandSave(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
@@ -599,6 +605,7 @@ namespace Epsitec.Common.Designer
 			this.openState = this.CreateCommandState("Open", KeyCode.ModifierControl|KeyCode.AlphaO);
 			this.saveState = this.CreateCommandState("Save", KeyCode.ModifierControl|KeyCode.AlphaS);
 			this.saveAsState = this.CreateCommandState("SaveAs");
+			this.checkState = this.CreateCommandState("Check");
 			this.closeState = this.CreateCommandState("Close", KeyCode.ModifierControl|KeyCode.FuncF4);
 			this.cutState = this.CreateCommandState("Cut", KeyCode.ModifierControl|KeyCode.AlphaX);
 			this.copyState = this.CreateCommandState("Copy", KeyCode.ModifierControl|KeyCode.AlphaC);
@@ -845,6 +852,7 @@ namespace Epsitec.Common.Designer
 			{
 				this.saveState.Enable = false;
 				this.saveAsState.Enable = false;
+				this.checkState.Enable = false;
 				this.cutState.Enable = false;
 				this.copyState.Enable = false;
 				this.pasteState.Enable = false;
@@ -1082,6 +1090,7 @@ namespace Epsitec.Common.Designer
 		protected CommandState					openState;
 		protected CommandState					saveState;
 		protected CommandState					saveAsState;
+		protected CommandState					checkState;
 		protected CommandState					closeState;
 		protected CommandState					cutState;
 		protected CommandState					copyState;

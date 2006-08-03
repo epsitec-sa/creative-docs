@@ -50,6 +50,7 @@
   <data name="Action.CloseAll" id="011">Fermer tout</data>
   <data name="Action.Save" id="021">Enregistrer</data>
   <data name="Action.SaveAs" id="031">Enregistrer sous...</data>
+  <data name="Action.Check" id="0U5" mod="1">Vérifier</data>
   <data name="Action.LastFiles" id="041">Fichiers récents</data>
   <data name="Action.Quit" id="051">Quitter</data>
   <data name="Action.Cut" id="061">Couper</data>

@@ -257,64 +257,65 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 
 			ShortcutEditor editor = sender as ShortcutEditor;
-
 			int sel = this.access.AccessIndex;
 			string cultureName = null;
-			int rank = 0;
+			int rank = -1;
 
 			if (editor == this.primaryShortcut1)
 			{
-				cultureName = null;
-				rank = 0;
+				cultureName = null;  // culture principale
+				rank = 0;  // raccourci principal
 			}
 
 			if (editor == this.primaryShortcut2)
 			{
-				cultureName = null;
-				rank = 1;
+				cultureName = null;  // culture principale
+				rank = 1;  // raccourci supplémentaire
 			}
 
 			if (editor == this.secondaryShortcut1)
 			{
-				cultureName = this.secondaryCulture;
-				rank = 0;
+				cultureName = this.secondaryCulture;  // culture secondaire
+				rank = 0;  // raccourci principal
 			}
 
 			if (editor == this.secondaryShortcut2)
 			{
-				cultureName = this.secondaryCulture;
-				rank = 1;
+				cultureName = this.secondaryCulture;  // culture secondaire
+				rank = 1;  // raccourci supplémentaire
 			}
+
+			System.Diagnostics.Debug.Assert(rank != -1);
 
 			ResourceAccess.Field field = this.access.GetField(sel, cultureName, "Shortcuts");
 			Widgets.Collections.ShortcutCollection collection = field.ShortcutCollection;
 
-			if (rank == 0)
+			if (rank == 0)  // raccourci principal ?
 			{
 				if (collection.Count == 0)
 				{
-					collection.Add(editor.Shortcut);
+					collection.Add(editor.Shortcut);  // insère le raccourci principal
 				}
 				else
 				{
-					collection[rank] = editor.Shortcut;
+					collection[rank] = editor.Shortcut;  // modifie le raccourci principal
 				}
 			}
 
-			if (rank == 1)
+			if (rank == 1)  // raccourci supplémentaire ?
 			{
 				if (collection.Count == 0)
 				{
-					collection.Add(new Shortcut(KeyCode.None));
-					collection.Add(editor.Shortcut);
+					collection.Add(new Shortcut(KeyCode.None));  // insère un raccourci principal inexistant
+					collection.Add(editor.Shortcut);  // insère le raccourci supplémentaire
 				}
 				else if (collection.Count == 1)
 				{
-					collection.Add(editor.Shortcut);
+					collection.Add(editor.Shortcut);  // insère le raccourci supplémentaire
 				}
 				else
 				{
-					collection[rank] = editor.Shortcut;
+					collection[rank] = editor.Shortcut;  // modifie le raccourci supplémentaire
 				}
 			}
 

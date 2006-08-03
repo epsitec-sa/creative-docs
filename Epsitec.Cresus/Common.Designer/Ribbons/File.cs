@@ -12,9 +12,10 @@ namespace Epsitec.Common.Designer.Ribbons
 		public File(MainWindow mainWindow) : base(mainWindow)
 		{
 			this.Title = Res.Strings.Ribbon.Section.File;
-			this.PreferredWidth = 8 + 22*1.5*2 + 4 + 22*1;
+			this.PreferredWidth = 8 + 22*1.5*3 + 4 + 22*1;
 
 			this.buttonOpen   = this.CreateIconButton("Open", "Large");
+			this.buttonCheck  = this.CreateIconButton("Check", "Large");
 			this.buttonSave   = this.CreateIconButton("Save", "Large");
 			this.buttonNew    = this.CreateIconButton("New");
 			this.buttonSaveAs = this.CreateIconButton("SaveAs");
@@ -48,23 +49,26 @@ namespace Epsitec.Common.Designer.Ribbons
 			rect.Offset(0, dy*0.5);
 			this.buttonOpen.SetManualBounds(rect);
 			rect.Offset(dx*1.5, 0);
+			this.buttonCheck.SetManualBounds(rect);
+			rect.Offset(dx*1.5, 0);
 			this.buttonSave.SetManualBounds(rect);
 
 			rect = this.UsefulZone;
 			rect.Width  = dx;
 			rect.Height = dy;
-			rect.Offset(dx*1.5*2+4, dy+5);
+			rect.Offset(dx*1.5*3+4, dy+5);
 			this.buttonNew.SetManualBounds(rect);
 
 			rect = this.UsefulZone;
 			rect.Width  = dx;
 			rect.Height = dy;
-			rect.Offset(dx*1.5*2+4, 0);
+			rect.Offset(dx*1.5*3+4, 0);
 			this.buttonSaveAs.SetManualBounds(rect);
 		}
 
 
 		protected IconButton				buttonOpen;
+		protected IconButton				buttonCheck;
 		protected IconButton				buttonSave;
 		protected IconButton				buttonNew;
 		protected IconButton				buttonSaveAs;
