@@ -97,7 +97,7 @@ namespace Epsitec.Common.Designer.Viewers
 			MyWidgets.StackedPanel leftContainer, rightContainer;
 
 			//	Textes.
-			this.CreateBand(out leftContainer, out rightContainer, Res.Strings.Viewers.Captions.Labels, 0.5);
+			this.CreateBand(out leftContainer, out rightContainer, Res.Strings.Viewers.Captions.Labels.Title, 0.5);
 
 			this.primaryLabels = new MyWidgets.StringCollection(leftContainer.Container);
 			this.primaryLabels.Dock = DockStyle.StackBegin;
@@ -114,7 +114,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.secondaryLabels.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			//	Description.
-			this.CreateBand(out leftContainer, out rightContainer, Res.Strings.Viewers.Captions.Description, 0.3);
+			this.CreateBand(out leftContainer, out rightContainer, Res.Strings.Viewers.Captions.Description.Title, 0.3);
 
 			this.primaryDescription = new TextFieldMulti(leftContainer.Container);
 			this.primaryDescription.PreferredHeight = 70;
@@ -135,7 +135,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.secondaryDescription.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			//	Icône.
-			this.CreateBand(out leftContainer, Res.Strings.Viewers.Captions.Icon, 0.1);
+			this.CreateBand(out leftContainer, Res.Strings.Viewers.Captions.Icon.Title, 0.1);
 
 			this.primaryIcon = new IconButton(leftContainer.Container);
 			this.primaryIcon.PreferredHeight = 30;
@@ -146,7 +146,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryIcon.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			//	Commentaires.
-			this.CreateBand(out leftContainer, out rightContainer, Res.Strings.Viewers.Captions.About, 0.7);
+			this.CreateBand(out leftContainer, out rightContainer, Res.Strings.Viewers.Captions.About.Title, 0.7);
 
 			this.primaryAbout = new TextFieldMulti(leftContainer.Container);
 			this.primaryAbout.PreferredHeight = 50;
@@ -488,21 +488,21 @@ namespace Epsitec.Common.Designer.Viewers
 			label = new StaticText(parent);
 			label.PreferredWidth = 80;
 			label.ContentAlignment = ContentAlignment.MiddleRight;
-			label.Text = Res.Strings.Viewers.Captions.Labels;
+			label.Text = Res.Strings.Viewers.Captions.Labels.Title;
 			label.Anchor = AnchorStyles.Top | AnchorStyles.Left;
 			label.Margins = new Margins(0, 0, 0, 0);
 
 			label = new StaticText(parent);
 			label.PreferredWidth = 80;
 			label.ContentAlignment = ContentAlignment.MiddleRight;
-			label.Text = Res.Strings.Viewers.Captions.ShortDescription;
+			label.Text = Res.Strings.Viewers.Captions.Description.Short;
 			label.Anchor = AnchorStyles.Top | AnchorStyles.Left;
 			label.Margins = new Margins(0, 0, 16, 0);
 
 			label = new StaticText(parent);
 			label.PreferredWidth = 80;
 			label.ContentAlignment = ContentAlignment.MiddleRight;
-			label.Text = Res.Strings.Viewers.Captions.About;
+			label.Text = Res.Strings.Viewers.Captions.About.Title;
 			label.Anchor = AnchorStyles.Top | AnchorStyles.Left;
 			label.Margins = new Margins(0, 0, 32, 0);
 
