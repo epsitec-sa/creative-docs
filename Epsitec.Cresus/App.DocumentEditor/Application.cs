@@ -32,14 +32,15 @@ namespace Epsitec.App.DocumentEditor
 				switch (mode[1])
 				{
 					case 'p':
-						Application.application = new Application (DocumentType.Pictogram);
+						Application.application = new Application(DocumentType.Pictogram);
 						break;
 				}
 			}
 			
 			if (Application.application == null)
 			{
-				Application.application = new Application (DocumentType.Graphic);
+				Application.application = new Application(DocumentType.Graphic);
+				//?Application.application = new Application(DocumentType.Pictogram);
 			}
 			
 			Application.application.MainWindow.Run();

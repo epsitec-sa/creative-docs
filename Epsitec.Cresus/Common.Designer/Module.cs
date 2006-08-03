@@ -155,6 +155,15 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
+		public void Check()
+		{
+			//	Vérifie toutes les ressources.
+			foreach (ResourceAccess access in Access)
+			{
+				//?access.Save();
+			}
+		}
+
 
 		public void RunPanel(int index)
 		{
