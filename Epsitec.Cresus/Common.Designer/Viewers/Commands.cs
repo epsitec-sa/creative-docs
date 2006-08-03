@@ -118,6 +118,25 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected void UpdateGroupCombo()
 		{
+			//	Met à jour le menu du combo des groupes.
+			List<string> list = new List<string>();
+
+			for (int i=0; i<this.access.TotalCount; i++)
+			{
+				string group = this.access.GetBypassFilterGroup(i);
+				if (group != null && !list.Contains(group))
+				{
+					list.Add(group);
+				}
+			}
+
+			list.Sort();  // trie par ordre alphabétique
+
+			this.primaryGroup.Items.Clear();
+			foreach (string name in list)
+			{
+				this.primaryGroup.Items.Add(name);
+			}
 		}
 
 
@@ -152,6 +171,7 @@ namespace Epsitec.Common.Designer.Viewers
 		void HandleGroupComboOpening(object sender, CancelEventArgs e)
 		{
 			//	Le combo pour le groupe va être ouvert.
+			this.UpdateGroupCombo();
 		}
 
 		void HandleGroupTextChanged(object sender)
