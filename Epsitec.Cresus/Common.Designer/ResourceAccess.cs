@@ -544,7 +544,8 @@ namespace Epsitec.Common.Designer
 		{
 			//	Donne un druid, sans tenir compte du filtre.
 			System.Diagnostics.Debug.Assert(this.type == Type.Strings);
-			return this.druidsIndex[index];
+			ResourceBundle.Field field = this.primaryBundle[index];
+			return new Druid(field.Druid, this.primaryBundle.Module.Id);
 		}
 
 		public void GetBypassFilterStrings(Druid druid, ResourceBundle bundle, out string name, out string text, out bool isDefined)
@@ -564,6 +565,12 @@ namespace Epsitec.Common.Designer
 
 			name = this.SubFilter(field.Name);
 			text = field.AsString;
+		}
+
+		public string GetBypassFilterGroup(int index)
+		{
+			System.Diagnostics.Debug.Assert(this.type == Type.Commands);
+			return "";
 		}
 
 		public void SetBypassFilterStrings(Druid druid, ResourceBundle bundle, string text)

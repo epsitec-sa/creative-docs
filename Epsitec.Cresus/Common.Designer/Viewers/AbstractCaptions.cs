@@ -359,7 +359,7 @@ namespace Epsitec.Common.Designer.Viewers
 			leftContainer.Dock = DockStyle.StackFill;
 			this.leftContainers.Add(leftContainer);
 
-			this.rightContainers.Add(null);
+			this.rightContainers.Add(null);  // pour synchroniser les parties gauche/droite
 
 			this.intensityContainers.Add(backgroundIntensity);
 		}

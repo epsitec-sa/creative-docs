@@ -31,11 +31,12 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Group.
 			this.CreateBand(out leftContainer, "Groupe", 0.5);
 
-			this.primaryGroup = new TextField(leftContainer.Container);
-			this.primaryGroup.PreferredWidth = 200;
+			this.primaryGroup = new TextFieldCombo(leftContainer.Container);
+			this.primaryGroup.MaxWidth = 200;
 			this.primaryGroup.Dock = DockStyle.StackBegin;
 			this.primaryGroup.TextChanged += new EventHandler(this.HandleGroupTextChanged);
 			this.primaryGroup.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
+			this.primaryGroup.ComboOpening += new EventHandler<CancelEventArgs>(this.HandleGroupComboOpening);
 			this.primaryGroup.TabIndex = this.tabIndex++;
 			this.primaryGroup.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
@@ -50,6 +51,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 				this.primaryGroup.TextChanged -= new EventHandler(this.HandleGroupTextChanged);
 				this.primaryGroup.KeyboardFocusChanged -= new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
+				this.primaryGroup.ComboOpening -= new EventHandler<CancelEventArgs>(this.HandleGroupComboOpening);
 			}
 
 			base.Dispose(disposing);
@@ -114,6 +116,10 @@ namespace Epsitec.Common.Designer.Viewers
 			base.UpdateEdit();
 		}
 
+		protected void UpdateGroupCombo()
+		{
+		}
+
 
 		protected override void TextFieldToIndex(AbstractTextField textField, out int field, out int subfield)
 		{
@@ -143,6 +149,11 @@ namespace Epsitec.Common.Designer.Viewers
 			this.UpdateColor();
 		}
 
+		void HandleGroupComboOpening(object sender, CancelEventArgs e)
+		{
+			//	Le combo pour le groupe va être ouvert.
+		}
+
 		void HandleGroupTextChanged(object sender)
 		{
 			//	Le texte éditable pour le groupe a changé.
@@ -165,6 +176,6 @@ namespace Epsitec.Common.Designer.Viewers
 		
 
 		protected CheckButton					primaryStatefull;
-		protected TextField						primaryGroup;
+		protected TextFieldCombo				primaryGroup;
 	}
 }
