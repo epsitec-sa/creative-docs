@@ -1861,7 +1861,7 @@ namespace Epsitec.Common.Designer
 
 			public Field(Widgets.Collections.ShortcutCollection value)
 			{
-				this.type = Type.Bool;
+				this.type = Type.Shortcuts;
 				this.shortcutCollection = value;
 			}
 

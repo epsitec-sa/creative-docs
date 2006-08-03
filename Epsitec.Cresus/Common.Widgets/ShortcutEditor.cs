@@ -1,6 +1,7 @@
 //	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
+using System.Collections.Generic;
 using Epsitec.Common.Support;
 using Epsitec.Common.Drawing;
 
@@ -66,6 +67,7 @@ namespace Epsitec.Common.Widgets
 				if (this.shortcut != value)
 				{
 					this.shortcut = value;
+					this.UpdateFields();
 					this.OnEditedShortcutChanged();
 				}
 			}
@@ -92,88 +94,213 @@ namespace Epsitec.Common.Widgets
 		}
 
 
+		protected void UpdateFields()
+		{
+			this.isIgnoreChanging = true;
+
+			this.fieldModifier.Text = ShortcutEditor.GetModifierText(this.shortcut.KeyCode);
+			this.fieldCode.Text = ShortcutEditor.GetCodeText(this.shortcut.KeyCode);
+
+			this.isIgnoreChanging = false;
+		}
+
 		protected void UpdateFieldModifier()
 		{
-			this.ComboAdd(this.fieldModifier, KeyCode.ShiftKey);
-			this.ComboAdd(this.fieldModifier, KeyCode.ControlKey);
-			this.ComboAdd(this.fieldModifier, KeyCode.AltKey);
+			//	Met à jour le combo pour les touches modificatrices.
+			this.fieldModifier.Items.Add("Aucun");
 
-			this.ComboAdd(this.fieldModifier, KeyCode.ShiftKey | KeyCode.ControlKey);
-			this.ComboAdd(this.fieldModifier, KeyCode.ShiftKey | KeyCode.AltKey);
-			this.ComboAdd(this.fieldModifier, KeyCode.AltKey | KeyCode.ControlKey);
+			this.listModifier = new List<KeyCode>();
+
+			this.ComboAddModifier(KeyCode.ModifierShift);
+			this.ComboAddModifier(KeyCode.ModifierControl);
+			this.ComboAddModifier(KeyCode.ModifierAlt);
+
+			this.ComboAddModifier(KeyCode.ModifierShift | KeyCode.ModifierControl);
+			this.ComboAddModifier(KeyCode.ModifierShift | KeyCode.ModifierAlt);
+			this.ComboAddModifier(KeyCode.ModifierAlt | KeyCode.ModifierControl);
+
+			this.ComboAddModifier(KeyCode.ModifierShift | KeyCode.ModifierControl | KeyCode.ModifierAlt);
 		}
 
 		protected void UpdateFieldCode()
 		{
-			this.ComboAdd(this.fieldCode, KeyCode.AlphaA);
-			this.ComboAdd(this.fieldCode, KeyCode.AlphaB);
-			this.ComboAdd(this.fieldCode, KeyCode.AlphaC);
-			this.ComboAdd(this.fieldCode, KeyCode.AlphaD);
-			this.ComboAdd(this.fieldCode, KeyCode.AlphaE);
-			this.ComboAdd(this.fieldCode, KeyCode.AlphaF);
-			this.ComboAdd(this.fieldCode, KeyCode.AlphaG);
-			this.ComboAdd(this.fieldCode, KeyCode.AlphaH);
-			this.ComboAdd(this.fieldCode, KeyCode.AlphaI);
-			this.ComboAdd(this.fieldCode, KeyCode.AlphaJ);
-			this.ComboAdd(this.fieldCode, KeyCode.AlphaK);
-			this.ComboAdd(this.fieldCode, KeyCode.AlphaL);
-			this.ComboAdd(this.fieldCode, KeyCode.AlphaM);
-			this.ComboAdd(this.fieldCode, KeyCode.AlphaN);
-			this.ComboAdd(this.fieldCode, KeyCode.AlphaO);
-			this.ComboAdd(this.fieldCode, KeyCode.AlphaP);
-			this.ComboAdd(this.fieldCode, KeyCode.AlphaQ);
-			this.ComboAdd(this.fieldCode, KeyCode.AlphaR);
-			this.ComboAdd(this.fieldCode, KeyCode.AlphaS);
-			this.ComboAdd(this.fieldCode, KeyCode.AlphaT);
-			this.ComboAdd(this.fieldCode, KeyCode.AlphaU);
-			this.ComboAdd(this.fieldCode, KeyCode.AlphaV);
-			this.ComboAdd(this.fieldCode, KeyCode.AlphaW);
-			this.ComboAdd(this.fieldCode, KeyCode.AlphaX);
-			this.ComboAdd(this.fieldCode, KeyCode.AlphaY);
-			this.ComboAdd(this.fieldCode, KeyCode.AlphaZ);
+			//	Met à jour le combo pour les touches principales.
+			this.fieldCode.Items.Add("Aucun");
 
-			this.ComboAdd(this.fieldCode, KeyCode.FuncF1);
-			this.ComboAdd(this.fieldCode, KeyCode.FuncF2);
-			this.ComboAdd(this.fieldCode, KeyCode.FuncF3);
-			this.ComboAdd(this.fieldCode, KeyCode.FuncF4);
-			this.ComboAdd(this.fieldCode, KeyCode.FuncF5);
-			this.ComboAdd(this.fieldCode, KeyCode.FuncF6);
-			this.ComboAdd(this.fieldCode, KeyCode.FuncF7);
-			this.ComboAdd(this.fieldCode, KeyCode.FuncF8);
-			this.ComboAdd(this.fieldCode, KeyCode.FuncF9);
-			this.ComboAdd(this.fieldCode, KeyCode.FuncF10);
-			this.ComboAdd(this.fieldCode, KeyCode.FuncF11);
-			this.ComboAdd(this.fieldCode, KeyCode.FuncF12);
+			this.listCode = new List<KeyCode>();
 
-			this.ComboAdd(this.fieldCode, KeyCode.ArrowLeft);
-			this.ComboAdd(this.fieldCode, KeyCode.ArrowRight);
-			this.ComboAdd(this.fieldCode, KeyCode.ArrowUp);
-			this.ComboAdd(this.fieldCode, KeyCode.ArrowDown);
+			this.ComboAddCode(KeyCode.AlphaA);
+			this.ComboAddCode(KeyCode.AlphaB);
+			this.ComboAddCode(KeyCode.AlphaC);
+			this.ComboAddCode(KeyCode.AlphaD);
+			this.ComboAddCode(KeyCode.AlphaE);
+			this.ComboAddCode(KeyCode.AlphaF);
+			this.ComboAddCode(KeyCode.AlphaG);
+			this.ComboAddCode(KeyCode.AlphaH);
+			this.ComboAddCode(KeyCode.AlphaI);
+			this.ComboAddCode(KeyCode.AlphaJ);
+			this.ComboAddCode(KeyCode.AlphaK);
+			this.ComboAddCode(KeyCode.AlphaL);
+			this.ComboAddCode(KeyCode.AlphaM);
+			this.ComboAddCode(KeyCode.AlphaN);
+			this.ComboAddCode(KeyCode.AlphaO);
+			this.ComboAddCode(KeyCode.AlphaP);
+			this.ComboAddCode(KeyCode.AlphaQ);
+			this.ComboAddCode(KeyCode.AlphaR);
+			this.ComboAddCode(KeyCode.AlphaS);
+			this.ComboAddCode(KeyCode.AlphaT);
+			this.ComboAddCode(KeyCode.AlphaU);
+			this.ComboAddCode(KeyCode.AlphaV);
+			this.ComboAddCode(KeyCode.AlphaW);
+			this.ComboAddCode(KeyCode.AlphaX);
+			this.ComboAddCode(KeyCode.AlphaY);
+			this.ComboAddCode(KeyCode.AlphaZ);
 
-			this.ComboAdd(this.fieldCode, KeyCode.Return);
-			this.ComboAdd(this.fieldCode, KeyCode.Escape);
+			this.ComboAddCode(KeyCode.Digit0);
+			this.ComboAddCode(KeyCode.Digit1);
+			this.ComboAddCode(KeyCode.Digit2);
+			this.ComboAddCode(KeyCode.Digit3);
+			this.ComboAddCode(KeyCode.Digit4);
+			this.ComboAddCode(KeyCode.Digit5);
+			this.ComboAddCode(KeyCode.Digit6);
+			this.ComboAddCode(KeyCode.Digit7);
+			this.ComboAddCode(KeyCode.Digit8);
+			this.ComboAddCode(KeyCode.Digit9);
 
-			this.ComboAdd(this.fieldCode, KeyCode.Insert);
-			this.ComboAdd(this.fieldCode, KeyCode.Home);
-			this.ComboAdd(this.fieldCode, KeyCode.Delete);
-			this.ComboAdd(this.fieldCode, KeyCode.End);
-			this.ComboAdd(this.fieldCode, KeyCode.PageUp);
-			this.ComboAdd(this.fieldCode, KeyCode.PageDown);
+			this.ComboAddCode(KeyCode.FuncF1);
+			this.ComboAddCode(KeyCode.FuncF2);
+			this.ComboAddCode(KeyCode.FuncF3);
+			this.ComboAddCode(KeyCode.FuncF4);
+			this.ComboAddCode(KeyCode.FuncF5);
+			this.ComboAddCode(KeyCode.FuncF6);
+			this.ComboAddCode(KeyCode.FuncF7);
+			this.ComboAddCode(KeyCode.FuncF8);
+			this.ComboAddCode(KeyCode.FuncF9);
+			this.ComboAddCode(KeyCode.FuncF10);
+			this.ComboAddCode(KeyCode.FuncF11);
+			this.ComboAddCode(KeyCode.FuncF12);
+
+			this.ComboAddCode(KeyCode.ArrowLeft);
+			this.ComboAddCode(KeyCode.ArrowRight);
+			this.ComboAddCode(KeyCode.ArrowUp);
+			this.ComboAddCode(KeyCode.ArrowDown);
+
+			this.ComboAddCode(KeyCode.Space);
+			this.ComboAddCode(KeyCode.Escape);
+			this.ComboAddCode(KeyCode.Back);
+			this.ComboAddCode(KeyCode.Return);
+
+			this.ComboAddCode(KeyCode.Insert);
+			this.ComboAddCode(KeyCode.Home);
+			this.ComboAddCode(KeyCode.Delete);
+			this.ComboAddCode(KeyCode.End);
+			this.ComboAddCode(KeyCode.PageUp);
+			this.ComboAddCode(KeyCode.PageDown);
 		}
 
-		protected void ComboAdd(TextFieldCombo combo, KeyCode code)
+		protected void ComboAddModifier(KeyCode code)
 		{
-			string text = Message.GetKeyName(code);
-			combo.Items.Add(text);
+			this.fieldModifier.Items.Add(ShortcutEditor.GetModifierText(code));
+			this.listModifier.Add(code);
+		}
+
+		protected void ComboAddCode(KeyCode code)
+		{
+			this.fieldCode.Items.Add(ShortcutEditor.GetCodeText(code));
+			this.listCode.Add(code);
+		}
+
+		static protected string GetModifierText(KeyCode code)
+		{
+			code &= KeyCode.ModifierMask;
+
+			if (code == KeyCode.None)
+			{
+				return "Aucun";
+			}
+			else
+			{
+				code |= KeyCode.AlphaX;  // pour ne pas avoir "+None" à la fin
+				string text = Message.GetKeyName(code);
+				return text.Substring(0, text.Length-2);  // supprime le "+X" à la fin !
+			}
+		}
+
+		static protected string GetCodeText(KeyCode code)
+		{
+			code &= KeyCode.KeyCodeMask;
+
+			if (code == KeyCode.None)
+			{
+				return "Aucun";
+			}
+			else
+			{
+				return Message.GetKeyName(code);
+			}
+		}
+
+		protected KeyCode GetModifierKey()
+		{
+			for (int i=1; i<this.fieldModifier.Items.Count; i++)
+			{
+				string text = this.fieldModifier.Items[i];
+
+				if (text == this.fieldModifier.Text)
+				{
+					return this.listModifier[i-1];
+				}
+			}
+
+			return KeyCode.None;
+		}
+
+		protected KeyCode GetCodeKey()
+		{
+			for (int i=1; i<this.fieldCode.Items.Count; i++)
+			{
+				string text = this.fieldCode.Items[i];
+
+				if (text == this.fieldCode.Text)
+				{
+					return this.listCode[i-1];
+				}
+			}
+
+			return KeyCode.None;
 		}
 
 		
 		void HandleFieldModifierTextChanged(object sender)
 		{
+			if (this.isIgnoreChanging)
+			{
+				return;
+			}
+
+			KeyCode code = this.GetModifierKey();
+			System.Diagnostics.Debug.Assert(code != KeyCode.None);
+
+			KeyCode full = this.Shortcut.KeyCode;
+			full &= KeyCode.KeyCodeMask;
+			full |= code;
+			this.Shortcut = full;
 		}
 
 		void HandleFieldCodeTextChanged(object sender)
 		{
+			if (this.isIgnoreChanging)
+			{
+				return;
+			}
+
+			KeyCode code = this.GetCodeKey();
+			System.Diagnostics.Debug.Assert(code != KeyCode.None);
+
+			KeyCode full = this.Shortcut.KeyCode;
+			full &= KeyCode.ModifierMask;
+			full |= code;
+			this.Shortcut = full;
 		}
 
 
@@ -206,5 +333,9 @@ namespace Epsitec.Common.Widgets
 		protected StaticText					label;
 		protected TextFieldCombo				fieldModifier;
 		protected TextFieldCombo				fieldCode;
+
+		protected bool							isIgnoreChanging = false;
+		protected List<KeyCode>					listModifier;
+		protected List<KeyCode>					listCode;
 	}
 }

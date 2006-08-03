@@ -132,6 +132,9 @@ namespace Epsitec.Common.Designer.Viewers
 				this.primaryStatefull.Enable = false;
 				this.primaryStatefull.ActiveState = ActiveState.No;
 
+				this.SetShortcut(this.primaryShortcut1, this.primaryShortcut2, 0, null, null);
+				this.SetShortcut(this.secondaryShortcut1, this.secondaryShortcut2, 0, null, null);
+
 				this.SetTextField(this.primaryGroup, 0, null, null);
 			}
 			else
@@ -144,12 +147,53 @@ namespace Epsitec.Common.Designer.Viewers
 				this.primaryStatefull.Enable = true;
 				this.primaryStatefull.ActiveState = statefull ? ActiveState.Yes : ActiveState.No;
 
+				this.SetShortcut(this.primaryShortcut1, this.primaryShortcut2, index, null, "Shortcuts");
+				this.SetShortcut(this.secondaryShortcut1, this.secondaryShortcut2, index, this.secondaryCulture, "Shortcuts");
+
 				this.SetTextField(this.primaryGroup, index, null, "Group");
 			}
 
 			this.ignoreChange = iic;
 
 			base.UpdateEdit();
+		}
+
+		protected void SetShortcut(ShortcutEditor editor1, ShortcutEditor editor2, int index, string cultureName, string fieldName)
+		{
+			if (fieldName == null)
+			{
+				editor1.Enable = false;
+				editor2.Enable = false;
+
+				editor1.Shortcut = new Shortcut(KeyCode.None);
+				editor2.Shortcut = new Shortcut(KeyCode.None);
+			}
+			else
+			{
+				editor1.Enable = true;
+				editor2.Enable = true;
+
+				ResourceAccess.Field field = this.access.GetField(index, cultureName, fieldName);
+				Widgets.Collections.ShortcutCollection collection = field.ShortcutCollection;
+
+				if (collection.Count < 1)
+				{
+					editor1.Shortcut = new Shortcut(KeyCode.None);
+				}
+				else
+				{
+					editor1.Shortcut = collection[0];
+				}
+
+				if (collection.Count < 2)
+				{
+					editor2.Shortcut = new Shortcut(KeyCode.None);
+				}
+				else
+				{
+					editor2.Shortcut = collection[1];
+				}
+			}
 		}
 
 		protected void UpdateGroupCombo()
@@ -206,6 +250,76 @@ namespace Epsitec.Common.Designer.Viewers
 
 		void HandleShortcutEditedShortcutChanged(object sender)
 		{
+			//	Un raccourci clavier a été changé.
+			if (this.ignoreChange)
+			{
+				return;
+			}
+
+			ShortcutEditor editor = sender as ShortcutEditor;
+
+			int sel = this.access.AccessIndex;
+			string cultureName = null;
+			int rank = 0;
+
+			if (editor == this.primaryShortcut1)
+			{
+				cultureName = null;
+				rank = 0;
+			}
+
+			if (editor == this.primaryShortcut2)
+			{
+				cultureName = null;
+				rank = 1;
+			}
+
+			if (editor == this.secondaryShortcut1)
+			{
+				cultureName = this.secondaryCulture;
+				rank = 0;
+			}
+
+			if (editor == this.secondaryShortcut2)
+			{
+				cultureName = this.secondaryCulture;
+				rank = 1;
+			}
+
+			ResourceAccess.Field field = this.access.GetField(sel, cultureName, "Shortcuts");
+			Widgets.Collections.ShortcutCollection collection = field.ShortcutCollection;
+
+			if (rank == 0)
+			{
+				if (collection.Count == 0)
+				{
+					collection.Add(editor.Shortcut);
+				}
+				else
+				{
+					collection[rank] = editor.Shortcut;
+				}
+			}
+
+			if (rank == 1)
+			{
+				if (collection.Count == 0)
+				{
+					collection.Add(new Shortcut(KeyCode.None));
+					collection.Add(editor.Shortcut);
+				}
+				else if (collection.Count == 1)
+				{
+					collection.Add(editor.Shortcut);
+				}
+				else
+				{
+					collection[rank] = editor.Shortcut;
+				}
+			}
+
+			this.access.SetField(sel, cultureName, "Shortcuts", new ResourceAccess.Field(collection));
+			this.UpdateColor();
 		}
 
 		void HandleGroupComboOpening(object sender, CancelEventArgs e)
