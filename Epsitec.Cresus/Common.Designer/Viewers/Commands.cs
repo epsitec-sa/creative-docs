@@ -32,7 +32,8 @@ namespace Epsitec.Common.Designer.Viewers
 			this.CreateBand(out leftContainer, "Groupe", 0.5);
 
 			this.primaryGroup = new TextFieldCombo(leftContainer.Container);
-			this.primaryGroup.MaxWidth = 200;
+			this.primaryGroup.PreferredWidth = 200;
+			this.primaryGroup.HorizontalAlignment = HorizontalAlignment.Left;
 			this.primaryGroup.Dock = DockStyle.StackBegin;
 			this.primaryGroup.TextChanged += new EventHandler(this.HandleGroupTextChanged);
 			this.primaryGroup.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
