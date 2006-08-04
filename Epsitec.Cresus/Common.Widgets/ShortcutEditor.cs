@@ -26,10 +26,15 @@ namespace Epsitec.Common.Widgets
 			this.fieldModifier.IsReadOnly = true;
 			this.fieldModifier.ComboClosed += new EventHandler(this.HandleFieldModifierComboClosed);
 			this.fieldModifier.PreferredWidth = 100;
-			this.fieldModifier.Margins = new Margins(0, 4, 0, 0);
 			this.fieldModifier.Dock = DockStyle.Left;
 			ToolTip.Default.SetToolTip(this.fieldModifier, Res.Strings.ShortcutEditor.Modifier.Tooltip);
 			this.UpdateFieldModifier();
+
+			StaticText link = new StaticText(this);
+			link.Text = "+";
+			link.PreferredWidth = 16;
+			link.ContentAlignment = ContentAlignment.MiddleCenter;
+			link.Dock = DockStyle.Left;
 
 			this.fieldCode = new TextFieldCombo(this);
 			this.fieldCode.IsReadOnly = true;
