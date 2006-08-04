@@ -145,7 +145,6 @@ namespace Epsitec.Common.Designer
 		{
 			//	Vérifie les raccourcis, en construisant un message d'avertissement
 			//	pour tous les raccourcis utilisés plus d'une fois.
-			bool first = true;
 			string culture = null;
 			List<ShortcutItem> uses = new List<ShortcutItem>();
 
@@ -162,23 +161,16 @@ namespace Epsitec.Common.Designer
 					continue;
 				}
 
-				if (first)  // faut-il mettre le titre ?
+				if (culture == null || culture != list[i].Culture)  // autre culture ?
 				{
 					if (builder.Length > 0)  // déjà d'autres avertissements ?
 					{
 						builder.Append("<br/><br/>");
 					}
 
-					builder.Append(Res.Strings.Error.ShortcutMany);  // texte du titre
-					builder.Append("<br/>");
-					first = false;  // titre mis
-				}
-
-				if (culture == null || culture != list[i].Culture)  // autre culture ?
-				{
-					builder.Append("<br/><font size=\"130%\"><u>");
-					builder.Append(list[i].Culture);
-					builder.Append("</u></font><br/><br/>");
+					builder.Append("<font size=\"120%\">");
+					builder.Append(string.Format(Res.Strings.Error.ShortcutMany, list[i].Culture));
+					builder.Append("</font><br/><br/>");
 					culture = list[i].Culture;
 				}
 
