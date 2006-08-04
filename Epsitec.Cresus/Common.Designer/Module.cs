@@ -158,9 +158,24 @@ namespace Epsitec.Common.Designer
 		public void Check()
 		{
 			//	Vérifie toutes les ressources.
+			List<ResourceAccess.ShortcutItem> list = new List<ResourceAccess.ShortcutItem>();
+
 			foreach (ResourceAccess access in Access)
 			{
-				//?access.Save();
+				access.AddShortcuts(list);
+			}
+
+			System.Text.StringBuilder builder = new System.Text.StringBuilder();
+			ResourceAccess.CheckShortcuts(builder, list);
+
+			string message = builder.ToString();
+			if (string.IsNullOrEmpty(message))
+			{
+				this.mainWindow.DialogMessage("Aucune anomalie détectée.");
+			}
+			else
+			{
+				this.mainWindow.DialogError(message);
 			}
 		}
 

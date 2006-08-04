@@ -110,6 +110,61 @@ namespace Epsitec.Common.Designer
 			this.IsDirty = false;
 		}
 
+
+		public void AddShortcuts(List<ShortcutItem> list)
+		{
+			//	Ajoute tous les raccourcis définis dans la liste.
+			if (this.IsCaptionsType)
+			{
+				this.AddShortcutsCaptions(list);
+			}
+		}
+
+		public static void CheckShortcuts(System.Text.StringBuilder builder, List<ShortcutItem> list)
+		{
+			//	Vérifie les raccourcis utilisés plus d'une fois, en construisant
+			//	un message d'avertissement.
+			bool first = true;
+			List<Shortcut> uses = new List<Shortcut>();
+
+			for (int i=0; i<list.Count; i++)
+			{
+				if (uses.Contains(list[i].Shortcut))
+				{
+					continue;
+				}
+
+				List<int> indexes = ShortcutItem.IndexesOf(list, i);
+				if (indexes != null)
+				{
+					if (first)
+					{
+						builder.Append("Raccourcis clavier utilisés plusieurs fois:<br/><br/>");
+						first = false;
+					}
+
+					builder.Append("<list type=\"fix\" width=\"1.5\"/>");
+					builder.Append("<b>");
+					builder.Append(Message.GetKeyName(list[i].Shortcut.KeyCode));
+					builder.Append("</b>: ");
+
+					for (int s=0; s<indexes.Count; s++)
+					{
+						builder.Append(list[indexes[s]].Name);
+
+						if (s < indexes.Count-1)
+						{
+							builder.Append(", ");
+						}
+					}
+					builder.Append("<br/>");
+
+					uses.Add(list[i].Shortcut);
+				}
+			}
+		}
+
+
 		public bool IsDirty
 		{
 			//	Est-ce que les ressources ont été modifiées.
@@ -1366,6 +1421,34 @@ namespace Epsitec.Common.Designer
 		}
 
 
+		protected void AddShortcutsCaptions(List<ShortcutItem> list)
+		{
+			//	Ajoute tous les raccourcis définis dans la liste.
+			for (int i=0; i<this.primaryBundle.FieldCount; i++)
+			{
+				ResourceBundle.Field field = this.primaryBundle[i];
+
+				Common.Types.Caption caption = new Common.Types.Caption();
+
+				string s = field.AsString;
+				if (!string.IsNullOrEmpty(s))
+				{
+					caption.DeserializeFromString(s);
+				}
+
+				Widgets.Collections.ShortcutCollection collection = Shortcut.GetShortcuts(caption);
+				if (collection != null && collection.Count > 0)
+				{
+					foreach (Shortcut shortcut in collection)
+					{
+						ShortcutItem item = new ShortcutItem(shortcut, field.Name);
+						list.Add(item);
+					}
+				}
+			}
+		}
+
+
 		protected void SetFilterBundles(string filter, Searcher.SearchingMode mode)
 		{
 			this.druidsIndex.Clear();
@@ -1820,7 +1903,75 @@ namespace Epsitec.Common.Designer
 		#endregion
 
 
-		#region Field
+		#region Class ShortcutItem
+		public class ShortcutItem
+		{
+			public ShortcutItem(Shortcut shortcut, string name)
+			{
+				this.shortcut = shortcut;
+				this.name     = name;
+			}
+
+			public Shortcut Shortcut
+			{
+				//	Raccourci.
+				get
+				{
+					return this.shortcut;
+				}
+			}
+
+			public string Name
+			{
+				//	Nom du Command associé (normalement "Cap.*").
+				get
+				{
+					return this.name;
+				}
+			}
+
+			static public List<int> IndexesOf(List<ShortcutItem> list, int index)
+			{
+				//	Retourne la liste des index du raccourci dont on spécifie l'index,
+				//	seulement s'il y en a plus d'un.
+				ShortcutItem item = list[index];
+
+				int count = 0;
+				for (int i=0; i<list.Count; i++)
+				{
+					if (list[i].Shortcut == item.Shortcut)
+					{
+						count ++;
+					}
+				}
+
+				if (count > 1)
+				{
+					List<int> indexes = new List<int>(count);
+
+					for (int i=0; i<list.Count; i++)
+					{
+						if (list[i].Shortcut == item.Shortcut)
+						{
+							indexes.Add(i);
+						}
+					}
+
+					return indexes;
+				}
+				else
+				{
+					return null;
+				}
+			}
+
+			protected Shortcut			shortcut;
+			protected string			name;
+		}
+		#endregion
+
+
+		#region Class Field
 		/// <summary>
 		/// Permet d'accéder à un champ de n'importe quel type.
 		/// </summary>
