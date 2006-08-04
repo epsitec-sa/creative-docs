@@ -171,7 +171,7 @@ namespace Epsitec.Common.Designer
 			string message = builder.ToString();
 			if (string.IsNullOrEmpty(message))
 			{
-				this.mainWindow.DialogMessage("Aucune anomalie détectée.");
+				this.mainWindow.DialogMessage(Res.Strings.Error.CheckOK);
 			}
 			else
 			{
