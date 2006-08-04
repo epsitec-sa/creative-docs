@@ -1450,9 +1450,9 @@ namespace Epsitec.Common.Designer
 				//	de rien, mais seulement une commande pour dupliquer un champ existant.
 				if (this.IsCaptionsType)
 				{
-					this.CreateFirstField(bundle, 0, "Cap."+Res.Strings.Viewers.Panels.New);
-					this.CreateFirstField(bundle, 1, "Cmd."+Res.Strings.Viewers.Panels.New);
-					this.CreateFirstField(bundle, 2, "Typ."+Res.Strings.Viewers.Panels.New);
+					this.CreateFirstField(bundle, 0, ResourceAccess.GetFixFilter(Type.Captions)+Res.Strings.Viewers.Panels.New);
+					this.CreateFirstField(bundle, 1, ResourceAccess.GetFixFilter(Type.Commands)+Res.Strings.Viewers.Panels.New);
+					this.CreateFirstField(bundle, 2, ResourceAccess.GetFixFilter(Type.Types)+Res.Strings.Viewers.Panels.New);
 				}
 				else
 				{
@@ -1663,31 +1663,38 @@ namespace Epsitec.Common.Designer
 		protected void CaptionsCountersModify(int value)
 		{
 			//	Modifie le compte des ressources 'Captions'.
+			System.Diagnostics.Debug.Assert(this.IsCaptionsType);
 			this.captionCounters[this.type] += value;
 		}
 
 		protected void CaptionsCountersUpdate()
 		{
 			//	Met à jour les comptes des ressources 'Captions'.
+			System.Diagnostics.Debug.Assert(this.IsCaptionsType);
+
 			int countCap = 0;
 			int countCmd = 0;
 			int countTyp = 0;
+
+			string filterCap = ResourceAccess.GetFixFilter(Type.Captions);
+			string filterCmd = ResourceAccess.GetFixFilter(Type.Commands);
+			string filterTyp = ResourceAccess.GetFixFilter(Type.Types);
 
 			foreach (ResourceBundle.Field field in this.primaryBundle.Fields)
 			{
 				string name = field.Name;
 
-				if (name.StartsWith("Cap."))
+				if (name.StartsWith(filterCap))
 				{
 					countCap++;
 				}
 
-				if (name.StartsWith("Cmd."))
+				if (name.StartsWith(filterCmd))
 				{
 					countCmd++;
 				}
 
-				if (name.StartsWith("Typ."))
+				if (name.StartsWith(filterTyp))
 				{
 					countTyp++;
 				}
@@ -2003,20 +2010,26 @@ namespace Epsitec.Common.Designer
 			//	Retourne la chaîne fixe du filtre.
 			get
 			{
-				switch (this.type)
-				{
-					case Type.Captions:
-						return "Cap.";
-
-					case Type.Commands:
-						return "Cmd.";
-
-					case Type.Types:
-						return "Typ.";
-				}
-
-				return null;
+				return ResourceAccess.GetFixFilter(this.type);
 			}
+		}
+
+		protected static string GetFixFilter(Type type)
+		{
+			//	Retourne la chaîne fixe du filtre pour un type donné.
+			switch (type)
+			{
+				case Type.Captions:
+					return "Cap.";
+
+				case Type.Commands:
+					return "Cmd.";
+
+				case Type.Types:
+					return "Typ.";
+			}
+
+			return null;
 		}
 		#endregion
 
