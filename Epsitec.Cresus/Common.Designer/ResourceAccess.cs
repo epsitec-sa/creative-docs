@@ -144,15 +144,16 @@ namespace Epsitec.Common.Designer
 				{
 					if (first)
 					{
-						builder.Append("Raccourcis clavier utilisés plusieurs fois:<br/>");
+						builder.Append(Res.Strings.Error.ShortcutMany);
+						builder.Append("<br/>");
 						first = false;
 					}
 
 					if (culture == null || culture != list[i].Culture)  // autre culture ?
 					{
-						builder.Append("<br/><u>     <font size=\"135%\">");
+						builder.Append("<br/><font size=\"135%\">— ");
 						builder.Append(list[i].Culture);
-						builder.Append("</font>     </u><br/><br/>");
+						builder.Append(" —</font><br/><br/>");
 						culture = list[i].Culture;
 					}
 

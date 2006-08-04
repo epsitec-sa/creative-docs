@@ -191,4 +191,6 @@
   <data name="Misc.ExtractOf" id="015">de</data>
   <data name="Error.InvalidLabel" id="025">Le nom contient un ou plusieurs caractères invalides !</data>
   <data name="Error.NameAlreadyExist" id="035">Impossible d'utiliser ce nom, car il existe déjà !</data>
+  <data name="Error.ShortcutMany" id="0V5" mod="1">Raccourcis clavier utilisés plusieurs fois:</data>
+  <data name="Error.CheckOK" id="006" mod="1">Aucune anomalie détectée.</data>
 </bundle>
