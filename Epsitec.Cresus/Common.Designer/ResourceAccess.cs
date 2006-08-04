@@ -42,11 +42,13 @@ namespace Epsitec.Common.Designer
 			this.druidsIndex = new List<Druid>();
 
 			int count = 10;
+			this.filterIndexes = new int[count];
 			this.filterStrings = new string[count];
 			this.filterModes = new Searcher.SearchingMode[count];
 
 			for (int i=0; i<count; i++)
 			{
+				this.filterIndexes[i] = 0;
 				this.filterStrings[i] = "";
 				this.filterModes[i] = Searcher.SearchingMode.None;
 			}
@@ -72,6 +74,7 @@ namespace Epsitec.Common.Designer
 					//	Remet le filtre correspondant au type.
 					int i = (int) this.type;
 					this.SetFilter(this.filterStrings[i], this.filterModes[i]);
+					this.AccessIndex = this.filterIndexes[i];
 				}
 			}
 		}
@@ -440,6 +443,9 @@ namespace Epsitec.Common.Designer
 				value = System.Math.Max(value, 0);
 				value = System.Math.Min(value, this.druidsIndex.Count-1);
 				this.accessIndex = value;
+
+				int i = (int) this.type;
+				this.filterIndexes[i] = value;
 			}
 		}
 
@@ -2158,6 +2164,7 @@ namespace Epsitec.Common.Designer
 		protected List<ResourceBundle>			panelsList;
 		protected List<ResourceBundle>			panelsToCreate;
 		protected List<ResourceBundle>			panelsToDelete;
+		protected int[]							filterIndexes;
 		protected string[]						filterStrings;
 		protected Searcher.SearchingMode[]		filterModes;
 	}

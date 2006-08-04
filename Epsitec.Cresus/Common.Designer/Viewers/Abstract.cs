@@ -689,8 +689,6 @@ namespace Epsitec.Common.Designer.Viewers
 			{
 				this.secondaryCulture = null;
 			}
-
-			this.access.SetFilter("", Searcher.SearchingMode.None);
 		}
 
 		protected virtual void SelectEdit(bool secondary)
