@@ -176,9 +176,9 @@ namespace Epsitec.Common.Designer
 
 				if (culture == null || culture != list[i].Culture)  // autre culture ?
 				{
-					builder.Append("<br/><font size=\"130%\">—&lt; ");
+					builder.Append("<br/><font size=\"130%\"><u>");
 					builder.Append(list[i].Culture);
-					builder.Append(" &gt;—</font><br/><br/>");
+					builder.Append("</u></font><br/><br/>");
 					culture = list[i].Culture;
 				}
 
