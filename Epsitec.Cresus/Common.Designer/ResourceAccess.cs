@@ -41,17 +41,9 @@ namespace Epsitec.Common.Designer
 
 			this.druidsIndex = new List<Druid>();
 
-			int count = 10;
-			this.filterIndexes = new int[count];
-			this.filterStrings = new string[count];
-			this.filterModes = new Searcher.SearchingMode[count];
-
-			for (int i=0; i<count; i++)
-			{
-				this.filterIndexes[i] = 0;
-				this.filterStrings[i] = "";
-				this.filterModes[i] = Searcher.SearchingMode.None;
-			}
+			this.filterIndexes = new Dictionary<Type, int>();
+			this.filterStrings = new Dictionary<Type, string>();
+			this.filterModes = new Dictionary<Type, Searcher.SearchingMode>();
 		}
 
 
@@ -72,9 +64,27 @@ namespace Epsitec.Common.Designer
 					System.Diagnostics.Debug.Assert(this.IsCaptionsType);
 
 					//	Remet le filtre correspondant au type.
-					int i = (int) this.type;
-					this.SetFilter(this.filterStrings[i], this.filterModes[i]);
-					this.AccessIndex = this.filterIndexes[i];
+					string filter = "";
+					if (this.filterStrings.ContainsKey(this.type))
+					{
+						filter = this.filterStrings[this.type];
+					}
+
+					Searcher.SearchingMode mode = Searcher.SearchingMode.None;
+					if (this.filterModes.ContainsKey(this.type))
+					{
+						mode = this.filterModes[this.type];
+					}
+
+					this.SetFilter(filter, mode);
+
+					int index = 0;
+					if (this.filterIndexes.ContainsKey(this.type))
+					{
+						index = this.filterIndexes[this.type];
+					}
+
+					this.AccessIndex = index;
 				}
 			}
 		}
@@ -387,9 +397,23 @@ namespace Epsitec.Common.Designer
 			}
 
 			//	Mémorise le filtre utilisé.
-			int i = (int) this.type;
-			this.filterStrings[i] = filter;
-			this.filterModes[i] = mode;
+			if (this.filterStrings.ContainsKey(this.type))
+			{
+				this.filterStrings[this.type] = filter;
+			}
+			else
+			{
+				this.filterStrings.Add(this.type, filter);
+			}
+
+			if (this.filterModes.ContainsKey(this.type))
+			{
+				this.filterModes[this.type] = mode;
+			}
+			else
+			{
+				this.filterModes.Add(this.type, mode);
+			}
 
 			//	Cherche l'index correspondant à la ressource d'avant le changement de filtre.
 			int index = this.druidsIndex.IndexOf(druid);
@@ -444,8 +468,14 @@ namespace Epsitec.Common.Designer
 				value = System.Math.Min(value, this.druidsIndex.Count-1);
 				this.accessIndex = value;
 
-				int i = (int) this.type;
-				this.filterIndexes[i] = value;
+				if (this.filterIndexes.ContainsKey(this.type))
+				{
+					this.filterIndexes[this.type] = value;
+				}
+				else
+				{
+					this.filterIndexes.Add(this.type, value);
+				}
 			}
 		}
 
@@ -2147,25 +2177,25 @@ namespace Epsitec.Common.Designer
 		#endregion
 
 
-		protected Type							type;
-		protected ResourceManager				resourceManager;
-		protected ResourceModuleInfo			moduleInfo;
-		protected bool							isDirty = false;
+		protected Type										type;
+		protected ResourceManager							resourceManager;
+		protected ResourceModuleInfo						moduleInfo;
+		protected bool										isDirty = false;
 
-		protected ResourceBundleCollection		bundles;
-		protected ResourceBundle				primaryBundle;
-		protected List<Druid>					druidsIndex;
-		protected string						accessCulture;
-		protected ResourceBundle				accessBundle;
-		protected int							accessIndex;
-		protected int							accessCached;
-		protected ResourceBundle.Field			accessField;
-		protected Common.Types.Caption			accessCaption;
-		protected List<ResourceBundle>			panelsList;
-		protected List<ResourceBundle>			panelsToCreate;
-		protected List<ResourceBundle>			panelsToDelete;
-		protected int[]							filterIndexes;
-		protected string[]						filterStrings;
-		protected Searcher.SearchingMode[]		filterModes;
+		protected ResourceBundleCollection					bundles;
+		protected ResourceBundle							primaryBundle;
+		protected List<Druid>								druidsIndex;
+		protected string									accessCulture;
+		protected ResourceBundle							accessBundle;
+		protected int										accessIndex;
+		protected int										accessCached;
+		protected ResourceBundle.Field						accessField;
+		protected Common.Types.Caption						accessCaption;
+		protected List<ResourceBundle>						panelsList;
+		protected List<ResourceBundle>						panelsToCreate;
+		protected List<ResourceBundle>						panelsToDelete;
+		protected Dictionary<Type, int>						filterIndexes;
+		protected Dictionary<Type, string>					filterStrings;
+		protected Dictionary<Type, Searcher.SearchingMode>	filterModes;
 	}
 }
