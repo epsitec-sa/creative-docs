@@ -125,56 +125,61 @@ namespace Epsitec.Common.Designer
 
 		public static void CheckShortcuts(System.Text.StringBuilder builder, List<ShortcutItem> list)
 		{
-			//	Vérifie les raccourcis utilisés plus d'une fois, en construisant
-			//	un message d'avertissement.
+			//	Vérifie les raccourcis, en construisant un message d'avertissement
+			//	pour tous les raccourcis utilisés plus d'une fois.
 			bool first = true;
 			string culture = null;
 			List<ShortcutItem> uses = new List<ShortcutItem>();
-			string chip = "<list type=\"fix\" width=\"1.5\"/>";
 
 			for (int i=0; i<list.Count; i++)
 			{
-				if (ShortcutItem.Contains(uses, list[i]))
+				if (ShortcutItem.Contains(uses, list[i]))  // raccourci déjà traité ?
 				{
 					continue;
 				}
 
 				List<int> indexes = ShortcutItem.IndexesOf(list, i);
-				if (indexes != null)
+				if (indexes == null)  // utilisé une seule fois ?
 				{
-					if (first)
-					{
-						builder.Append(Res.Strings.Error.ShortcutMany);
-						builder.Append("<br/>");
-						first = false;
-					}
-
-					if (culture == null || culture != list[i].Culture)  // autre culture ?
-					{
-						builder.Append("<br/><font size=\"135%\">— ");
-						builder.Append(list[i].Culture);
-						builder.Append(" —</font><br/><br/>");
-						culture = list[i].Culture;
-					}
-
-					builder.Append(chip);
-					builder.Append("<b>");
-					builder.Append(Message.GetKeyName(list[i].Shortcut.KeyCode));
-					builder.Append("</b>: ");
-
-					for (int s=0; s<indexes.Count; s++)
-					{
-						builder.Append(list[indexes[s]].Name);
-
-						if (s < indexes.Count-1)
-						{
-							builder.Append(", ");
-						}
-					}
-					builder.Append("<br/>");
-
-					uses.Add(list[i]);
+					continue;
 				}
+
+				if (first)  // faut-il mettre le titre ?
+				{
+					if (builder.Length > 0)  // déjà d'autres avertissements ?
+					{
+						builder.Append("<br/><br/>");
+					}
+
+					builder.Append(Res.Strings.Error.ShortcutMany);  // texte du titre
+					builder.Append("<br/>");
+					first = false;  // titre mis
+				}
+
+				if (culture == null || culture != list[i].Culture)  // autre culture ?
+				{
+					builder.Append("<br/><font size=\"130%\">—&lt; ");
+					builder.Append(list[i].Culture);
+					builder.Append(" &gt;—</font><br/><br/>");
+					culture = list[i].Culture;
+				}
+
+				builder.Append("<list type=\"fix\" width=\"1.5\"/><b>");
+				builder.Append(Message.GetKeyName(list[i].Shortcut.KeyCode));  // nom du raccourci
+				builder.Append("</b>: ");
+
+				for (int s=0; s<indexes.Count; s++)
+				{
+					builder.Append(list[indexes[s]].Name);  // nom de la commande utilisant le raccourci
+
+					if (s < indexes.Count-1)
+					{
+						builder.Append(", ");
+					}
+				}
+				builder.Append("<br/>");
+
+				uses.Add(list[i]);  // ajoute à la liste des raccourcis traités
 			}
 		}
 

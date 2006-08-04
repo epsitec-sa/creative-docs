@@ -40,7 +40,7 @@ namespace Epsitec.App.DocumentEditor
 			if (Application.application == null)
 			{
 				Application.application = new Application(DocumentType.Graphic);
-				//?Application.application = new Application(DocumentType.Pictogram);
+				//Application.application = new Application(DocumentType.Pictogram);
 			}
 			
 			Application.application.MainWindow.Run();
