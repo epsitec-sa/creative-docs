@@ -41,6 +41,11 @@ namespace Epsitec.Common.Designer
 
 			this.druidsIndex = new List<Druid>();
 
+			this.captionCounters = new Dictionary<Type, int>();
+			this.captionCounters[Type.Captions] = 0;
+			this.captionCounters[Type.Commands] = 0;
+			this.captionCounters[Type.Types] = 0;
+
 			this.filterIndexes = new Dictionary<Type, int>();
 			this.filterStrings = new Dictionary<Type, string>();
 			this.filterModes = new Dictionary<Type, Searcher.SearchingMode>();
@@ -263,6 +268,11 @@ namespace Epsitec.Common.Designer
 						bundle.Add(newField);
 					}
 				}
+
+				if (this.IsCaptionsType)
+				{
+					this.CaptionsCountersModify(1);
+				}
 			}
 
 			if (this.type == Type.Panels)
@@ -312,6 +322,11 @@ namespace Epsitec.Common.Designer
 					{
 						bundle.Remove(aIndex);
 					}
+				}
+
+				if (this.IsCaptionsType)
+				{
+					this.CaptionsCountersModify(-1);
 				}
 			}
 
@@ -431,6 +446,11 @@ namespace Epsitec.Common.Designer
 			//	Retourne le nombre de données accessibles.
 			get
 			{
+				if (this.IsCaptionsType)
+				{
+					return this.captionCounters[this.type];
+				}
+
 				if (this.IsBundlesType)
 				{
 					return this.primaryBundle.FieldCount;
@@ -1452,6 +1472,11 @@ namespace Epsitec.Common.Designer
 			this.bundles.LoadBundles(this.resourceManager.ActivePrefix, this.resourceManager.GetBundleIds(ids[0], ResourceLevel.All));
 
 			this.primaryBundle = this.bundles[ResourceLevel.Default];
+
+			if (this.IsCaptionsType)
+			{
+				this.CaptionsCountersUpdate();
+			}
 		}
 
 		protected void CreateFirstField(ResourceBundle bundle, int localId, string name)
@@ -1633,6 +1658,44 @@ namespace Epsitec.Common.Designer
 			}
 
 			return -1;
+		}
+
+		protected void CaptionsCountersModify(int value)
+		{
+			//	Modifie le compte des ressources 'Captions'.
+			this.captionCounters[this.type] += value;
+		}
+
+		protected void CaptionsCountersUpdate()
+		{
+			//	Met à jour les comptes des ressources 'Captions'.
+			int countCap = 0;
+			int countCmd = 0;
+			int countTyp = 0;
+
+			foreach (ResourceBundle.Field field in this.primaryBundle.Fields)
+			{
+				string name = field.Name;
+
+				if (name.StartsWith("Cap."))
+				{
+					countCap++;
+				}
+
+				if (name.StartsWith("Cmd."))
+				{
+					countCmd++;
+				}
+
+				if (name.StartsWith("Typ."))
+				{
+					countTyp++;
+				}
+			}
+
+			this.captionCounters[Type.Captions] = countCap;
+			this.captionCounters[Type.Commands] = countCmd;
+			this.captionCounters[Type.Types] = countTyp;
 		}
 
 		protected Druid CreateUniqueDruid()
@@ -2194,6 +2257,7 @@ namespace Epsitec.Common.Designer
 		protected List<ResourceBundle>						panelsList;
 		protected List<ResourceBundle>						panelsToCreate;
 		protected List<ResourceBundle>						panelsToDelete;
+		protected Dictionary<Type, int>						captionCounters;
 		protected Dictionary<Type, int>						filterIndexes;
 		protected Dictionary<Type, string>					filterStrings;
 		protected Dictionary<Type, Searcher.SearchingMode>	filterModes;
