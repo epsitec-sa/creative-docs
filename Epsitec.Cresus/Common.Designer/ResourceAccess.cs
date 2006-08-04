@@ -116,7 +116,10 @@ namespace Epsitec.Common.Designer
 			//	Ajoute tous les raccourcis définis dans la liste.
 			if (this.IsCaptionsType)
 			{
-				this.AddShortcutsCaptions(list);
+				foreach (ResourceBundle bundle in this.bundles)
+				{
+					this.AddShortcutsCaptions(bundle, list);
+				}
 			}
 		}
 
@@ -125,11 +128,13 @@ namespace Epsitec.Common.Designer
 			//	Vérifie les raccourcis utilisés plus d'une fois, en construisant
 			//	un message d'avertissement.
 			bool first = true;
-			List<Shortcut> uses = new List<Shortcut>();
+			string culture = null;
+			List<ShortcutItem> uses = new List<ShortcutItem>();
+			string chip = "<list type=\"fix\" width=\"1.5\"/>";
 
 			for (int i=0; i<list.Count; i++)
 			{
-				if (uses.Contains(list[i].Shortcut))
+				if (ShortcutItem.Contains(uses, list[i]))
 				{
 					continue;
 				}
@@ -139,11 +144,19 @@ namespace Epsitec.Common.Designer
 				{
 					if (first)
 					{
-						builder.Append("Raccourcis clavier utilisés plusieurs fois:<br/><br/>");
+						builder.Append("Raccourcis clavier utilisés plusieurs fois:<br/>");
 						first = false;
 					}
 
-					builder.Append("<list type=\"fix\" width=\"1.5\"/>");
+					if (culture == null || culture != list[i].Culture)  // autre culture ?
+					{
+						builder.Append("<br/><u>     <font size=\"135%\">");
+						builder.Append(list[i].Culture);
+						builder.Append("</font>     </u><br/><br/>");
+						culture = list[i].Culture;
+					}
+
+					builder.Append(chip);
 					builder.Append("<b>");
 					builder.Append(Message.GetKeyName(list[i].Shortcut.KeyCode));
 					builder.Append("</b>: ");
@@ -159,7 +172,7 @@ namespace Epsitec.Common.Designer
 					}
 					builder.Append("<br/>");
 
-					uses.Add(list[i].Shortcut);
+					uses.Add(list[i]);
 				}
 			}
 		}
@@ -1421,12 +1434,12 @@ namespace Epsitec.Common.Designer
 		}
 
 
-		protected void AddShortcutsCaptions(List<ShortcutItem> list)
+		protected void AddShortcutsCaptions(ResourceBundle bundle, List<ShortcutItem> list)
 		{
 			//	Ajoute tous les raccourcis définis dans la liste.
-			for (int i=0; i<this.primaryBundle.FieldCount; i++)
+			for (int i=0; i<bundle.FieldCount; i++)
 			{
-				ResourceBundle.Field field = this.primaryBundle[i];
+				ResourceBundle.Field field = bundle[i];
 
 				Common.Types.Caption caption = new Common.Types.Caption();
 
@@ -1441,7 +1454,7 @@ namespace Epsitec.Common.Designer
 				{
 					foreach (Shortcut shortcut in collection)
 					{
-						ShortcutItem item = new ShortcutItem(shortcut, field.Name);
+						ShortcutItem item = new ShortcutItem(shortcut, field.Name, Misc.CultureName(bundle.Culture));
 						list.Add(item);
 					}
 				}
@@ -1906,10 +1919,11 @@ namespace Epsitec.Common.Designer
 		#region Class ShortcutItem
 		public class ShortcutItem
 		{
-			public ShortcutItem(Shortcut shortcut, string name)
+			public ShortcutItem(Shortcut shortcut, string name, string culture)
 			{
 				this.shortcut = shortcut;
 				this.name     = name;
+				this.culture  = culture;
 			}
 
 			public Shortcut Shortcut
@@ -1930,6 +1944,34 @@ namespace Epsitec.Common.Designer
 				}
 			}
 
+			public string Culture
+			{
+				//	Nom standard de la culture associée.
+				get
+				{
+					return this.culture;
+				}
+			}
+
+			static public bool IsEqual(ShortcutItem item1, ShortcutItem item2)
+			{
+				//	Indique si deux raccourcis sont identiques (mêmes raccourcis pour la même culture).
+				return (item1.Shortcut == item2.Shortcut && item1.Culture == item2.Culture);
+			}
+
+			static public bool Contains(List<ShortcutItem> list, ShortcutItem item)
+			{
+				//	Cherche si un raccourci existe dans une liste.
+				foreach (ShortcutItem i in list)
+				{
+					if (ShortcutItem.IsEqual(i, item))
+					{
+						return true;
+					}
+				}
+				return false;
+			}
+
 			static public List<int> IndexesOf(List<ShortcutItem> list, int index)
 			{
 				//	Retourne la liste des index du raccourci dont on spécifie l'index,
@@ -1939,7 +1981,7 @@ namespace Epsitec.Common.Designer
 				int count = 0;
 				for (int i=0; i<list.Count; i++)
 				{
-					if (list[i].Shortcut == item.Shortcut)
+					if (ShortcutItem.IsEqual(list[i], item))
 					{
 						count ++;
 					}
@@ -1951,7 +1993,7 @@ namespace Epsitec.Common.Designer
 
 					for (int i=0; i<list.Count; i++)
 					{
-						if (list[i].Shortcut == item.Shortcut)
+						if (ShortcutItem.IsEqual(list[i], item))
 						{
 							indexes.Add(i);
 						}
@@ -1967,6 +2009,7 @@ namespace Epsitec.Common.Designer
 
 			protected Shortcut			shortcut;
 			protected string			name;
+			protected string			culture;
 		}
 		#endregion
 
