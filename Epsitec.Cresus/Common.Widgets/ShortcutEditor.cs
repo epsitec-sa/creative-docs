@@ -319,10 +319,17 @@ namespace Epsitec.Common.Widgets
 			}
 
 			KeyCode code = this.GetCodeKey();
-			KeyCode full = this.Shortcut.KeyCode;
-			full &= KeyCode.ModifierMask;
-			full |= code;
-			this.Shortcut = full;
+			if (code == KeyCode.None)
+			{
+				this.Shortcut = KeyCode.None;
+			}
+			else
+			{
+				KeyCode full = this.Shortcut.KeyCode;
+				full &= KeyCode.ModifierMask;
+				full |= code;
+				this.Shortcut = full;
+			}
 		}
 
 
