@@ -225,6 +225,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				{
 					this.totalRows = value;
 					this.isDirtyScroller = true;
+					this.scroller.Invalidate();
 				}
 			}
 		}
