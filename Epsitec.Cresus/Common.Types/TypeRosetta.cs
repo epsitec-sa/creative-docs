@@ -324,11 +324,11 @@ namespace Epsitec.Common.Types
 
 			#region INameCaption Members
 
-			public long CaptionId
+			public Support.Druid CaptionId
 			{
 				get
 				{
-					return -1;
+					return Support.Druid.Empty;
 				}
 			}
 

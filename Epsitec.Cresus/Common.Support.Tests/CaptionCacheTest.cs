@@ -150,13 +150,13 @@ namespace Epsitec.Common.Support
 
 				EnumType enumType = new EnumType (typeof (MyEnum));
 
-				enumType.DefineCaptionId (new Druid ("[4005]").ToLong ());
-				enumType[MyEnum.None].DefineCaptionId (new Druid ("[4006]").ToLong ());
-				enumType[MyEnum.First].DefineCaptionId (new Druid ("[4007]").ToLong ());
-				enumType[MyEnum.Second].DefineCaptionId (new Druid ("[4008]").ToLong ());
-				enumType[MyEnum.Third].DefineCaptionId (new Druid ("[4009]").ToLong ());
+				enumType.DefineCaptionId (new Druid ("[4005]"));
+				enumType[MyEnum.None].DefineCaptionId (new Druid ("[4006]"));
+				enumType[MyEnum.First].DefineCaptionId (new Druid ("[4007]"));
+				enumType[MyEnum.Second].DefineCaptionId (new Druid ("[4008]"));
+				enumType[MyEnum.Third].DefineCaptionId (new Druid ("[4009]"));
 
-				metadataText.DefineCaptionId (new Druid ("[4004]").ToLong ());
+				metadataText.DefineCaptionId (new Druid ("[4004]"));
 				metadataEnum.DefineNamedType (enumType);
 			}
 
@@ -178,12 +178,12 @@ namespace Epsitec.Common.Support
 
 				EnumType enumType = new EnumType (typeof (MyEnum));
 
-				enumType.DefineCaptionId (new Druid ("[4005]").ToLong ());
-				enumType[MyEnum.First].DefineCaptionId (new Druid ("[4007]").ToLong ());
-				enumType[MyEnum.Second].DefineCaptionId (new Druid ("[4008]").ToLong ());
-				enumType[MyEnum.Third].DefineCaptionId (new Druid ("[4009]").ToLong ());
+				enumType.DefineCaptionId (new Druid ("[4005]"));
+				enumType[MyEnum.First].DefineCaptionId (new Druid ("[4007]"));
+				enumType[MyEnum.Second].DefineCaptionId (new Druid ("[4008]"));
+				enumType[MyEnum.Third].DefineCaptionId (new Druid ("[4009]"));
 
-				metadataText.DefineCaptionId (new Druid ("[400A]").ToLong ());
+				metadataText.DefineCaptionId (new Druid ("[400A]"));
 				metadataEnum.DefineNamedType (enumType);
 
 				MyItemX.TextProperty.OverrideMetadata (typeof (MyItemX), metadataText);

@@ -81,7 +81,7 @@ namespace Epsitec.Common.Types
 				return this.defaultValue;
 			}
 		}
-		public long								CaptionId
+		public Support.Druid					CaptionId
 		{
 			get
 			{
@@ -209,7 +209,7 @@ namespace Epsitec.Common.Types
 			this.canSerializeReadWrite = false;
 			return this;
 		}
-		public DependencyPropertyMetadata DefineCaptionId(long value)
+		public DependencyPropertyMetadata DefineCaptionId(Support.Druid value)
 		{
 			this.captionId = value;
 			return this;
@@ -248,7 +248,7 @@ namespace Epsitec.Common.Types
 
 		#region ICaption Members
 
-		long ICaption.CaptionId
+		Support.Druid ICaption.CaptionId
 		{
 			get
 			{
@@ -300,7 +300,7 @@ namespace Epsitec.Common.Types
 		private CoerceValueCallback				coerceValueCallback;
 		private bool							canSerializeReadOnly;
 		private bool							canSerializeReadWrite = true;
-		private long							captionId = -1;
+		private Support.Druid					captionId;
 		private INamedType						namedType;
 	}
 }

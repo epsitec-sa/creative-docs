@@ -14,25 +14,29 @@ namespace Epsitec.Common.Types
 			this.DefineName (name);
 		}
 
-		public NamedDependencyObject(string name, long captionId)
+		public NamedDependencyObject(Caption caption)
 		{
-			this.DefineName (name);
-			this.DefineCaptionId (captionId);
+			this.DefineCaption (caption);
 		}
 		
 		public string Name
 		{
 			get
 			{
-				return (string) this.GetValue (NamedDependencyObject.NameProperty);
+				if (this.caption == null)
+				{
+					return this.name;
+				}
+				
+				return this.caption.Name ?? this.name;
 			}
 		}
 
-		public long CaptionId
+		public Caption Caption
 		{
 			get
 			{
-				return (long) this.GetValue (NamedDependencyObject.CaptionIdProperty);
+				return this.caption;
 			}
 		}
 
@@ -51,11 +55,18 @@ namespace Epsitec.Common.Types
 
 		#region INameCaption Members
 
-		long ICaption.CaptionId
+		public Support.Druid CaptionId
 		{
 			get
 			{
-				return this.CaptionId;
+				if (this.caption == null)
+				{
+					return Support.Druid.Empty;
+				}
+				else
+				{
+					return this.caption.Druid;
+				}
 			}
 		}
 
@@ -64,16 +75,36 @@ namespace Epsitec.Common.Types
 		
 		public void DefineName(string name)
 		{
-			this.SetLocalValue (NamedDependencyObject.NameProperty, name);
+			if ((this.caption == null) &&
+				(this.name == null))
+			{
+				this.name = name;
+			}
+			else
+			{
+				throw new System.InvalidOperationException ("The name cannot be changed");
+			}
 		}
 
-		public void DefineCaptionId(long captionId)
+		public void DefineCaptionId(Support.Druid druid)
 		{
-			this.SetLocalValue (NamedDependencyObject.CaptionIdProperty, captionId);
+			this.DefineCaption (Support.Resources.DefaultManager.GetCaption (druid));
+		}
+		
+		public void DefineCaption(Caption caption)
+		{
+			if (this.caption == null)
+			{
+				this.caption = caption;
+			}
+			else
+			{
+				throw new System.InvalidOperationException ("The caption cannot be changed");
+			}
 		}
 
-		
-		public static readonly DependencyProperty NameProperty = DependencyProperty.RegisterReadOnly ("Name", typeof (string), typeof (NamedDependencyObject), new DependencyPropertyMetadata ());
-		public static readonly DependencyProperty CaptionIdProperty = DependencyProperty.RegisterReadOnly ("CaptionId", typeof (long), typeof (NamedDependencyObject), new DependencyPropertyMetadata (-1L));
+
+		private string name;
+		private Caption caption;
 	}
 }

@@ -13,8 +13,8 @@ namespace Epsitec.Common.Types
 		/// <summary>
 		/// Gets the caption id for the object.
 		/// </summary>
-		/// <value>The caption id (or -1 if there is none).</value>
-		long CaptionId
+		/// <value>The caption DRUID.</value>
+		Support.Druid CaptionId
 		{
 			get;
 		}

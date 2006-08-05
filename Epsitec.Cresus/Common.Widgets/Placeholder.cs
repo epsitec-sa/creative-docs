@@ -67,9 +67,9 @@ namespace Epsitec.Common.Widgets
 					return null;
 				}
 
-				long captionId = expression.GetSourceCaptionId ();
+				Support.Druid captionId = expression.GetSourceCaptionId ();
 
-				if (captionId < 0)
+				if (captionId.IsEmpty)
 				{
 					return null;
 				}
