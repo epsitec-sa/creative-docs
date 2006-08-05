@@ -9,7 +9,7 @@ namespace Epsitec.Common.Types
 	/// The <c>StructuredType</c> class describes the type of the data stored in
 	/// a <see cref="T:StructuredData"/> class.
 	/// </summary>
-	public class StructuredType : NamedDependencyObject, INamedType, IStructuredType
+	public class StructuredType : AbstractType, IStructuredType
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:StructuredType"/> class.
@@ -78,30 +78,10 @@ namespace Epsitec.Common.Types
 		}
 
 		#endregion
-
-		#region INamedType Members
-
-		public string DefaultController
-		{
-			get
-			{
-				return null;
-			}
-		}
-
-		public string DefaultControllerParameter
-		{
-			get
-			{
-				return null;
-			}
-		}
-
-		#endregion
 		
 		#region ISystemType Members
 
-		public System.Type SystemType
+		public override System.Type SystemType
 		{
 			get
 			{
@@ -110,6 +90,13 @@ namespace Epsitec.Common.Types
 		}
 
 		#endregion
+
+		public override bool IsValidValue(object value)
+		{
+			StructuredData data = value as StructuredData;
+
+			return (data != null) && (data.StructuredType == this);
+		}
 		
 		private void NotifyFieldInserted(string name, INamedType type)
 		{
