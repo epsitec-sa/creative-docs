@@ -12,27 +12,28 @@ namespace Epsitec.Common.Types
 	/// <summary>
 	/// La classe EnumType décrit des valeurs de type System.Enum.
 	/// </summary>
-	public class EnumType : NamedDependencyObject, IEnumType, IDataConstraint
+	public class EnumType : AbstractType, IEnumType
 	{
-		public EnumType(System.Type enum_type) : base (string.Concat ("Enumeration", " ", enum_type.Name))
+		public EnumType(System.Type enum_type)
+			: base (string.Concat ("Enumeration", " ", enum_type.Name))
 		{
 			FieldInfo[] fields = enum_type.GetFields (BindingFlags.Public | BindingFlags.DeclaredOnly | BindingFlags.Static);
-			
+
 			this.enumType   = enum_type;
 			this.enumValues = new List<EnumValue> ();
-			
+
 			for (int i = 0; i < fields.Length; i++)
 			{
 				object[] hiddenAttributes;
 				object[] rankAttributes;
-				
+
 				hiddenAttributes = fields[i].GetCustomAttributes (typeof (HiddenAttribute), false);
 				rankAttributes   = fields[i].GetCustomAttributes (typeof (RankAttribute), false);
-				
+
 				string name = fields[i].Name;
-				bool   hide = hiddenAttributes.Length == 1;
-				int    rank;
-				
+				bool hide = hiddenAttributes.Length == 1;
+				int rank;
+
 				System.Enum value = (System.Enum) System.Enum.Parse (this.enumType, name);
 
 				if (rankAttributes.Length == 1)
@@ -147,20 +148,8 @@ namespace Epsitec.Common.Types
 		}
 
 
-		public void DefineDefaultController(string controller, string controllerParameter)
-		{
-			if (this.DefaultController != controller)
-			{
-				this.SetValue (EnumType.DefaultControllerProperty, controller);
-			}
-			if (this.DefaultControllerParameter != controllerParameter)
-			{
-				this.SetValue (EnumType.DefaultControllerParameterProperty, controllerParameter);
-			}
-		}
-
 		#region IDataConstraint Members
-		public virtual bool IsValidValue(object value)
+		public override bool IsValidValue(object value)
 		{
 			try
 			{
@@ -176,28 +165,8 @@ namespace Epsitec.Common.Types
 		}
 		#endregion
 		
-		#region INamedType Members
-
-		public string DefaultController
-		{
-			get
-			{
-				return (string) this.GetValue (EnumType.DefaultControllerProperty);
-			}
-		}
-
-		public string DefaultControllerParameter
-		{
-			get
-			{
-				return (string) this.GetValue (EnumType.DefaultControllerParameterProperty);
-			}
-		}
-		
-		#endregion
-		
 		#region ISystemType Members
-		public virtual System.Type				SystemType
+		public override System.Type				SystemType
 		{
 			get
 			{
@@ -360,9 +329,6 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		public static readonly DependencyProperty DefaultControllerProperty = DependencyProperty.RegisterReadOnly ("DefaultController", typeof (string), typeof (EnumType), new DependencyPropertyMetadata ("Enum"));
-		public static readonly DependencyProperty DefaultControllerParameterProperty = DependencyProperty.RegisterReadOnly ("DefaultControllerParameter", typeof (string), typeof (EnumType), new DependencyPropertyMetadata ());
-		
 		private static object exclusion = new object ();
 		private static Dictionary<System.Type, EnumType> cache = new Dictionary<System.Type, EnumType> ();
 		
