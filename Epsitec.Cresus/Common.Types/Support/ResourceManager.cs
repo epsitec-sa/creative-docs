@@ -750,7 +750,7 @@ namespace Epsitec.Common.Support
 					
 					if (caption != null)
 					{
-						caption.DefineId (druid.ToResourceId ());
+						caption.DefineId (druid);
 
 						if (cache)
 						{
@@ -1371,7 +1371,7 @@ namespace Epsitec.Common.Support
 					}
 					else
 					{
-						Types.Caption update = manager.GetCaption (Druid.Parse (caption.Id), level, culture, false);
+						Types.Caption update = manager.GetCaption (caption.Id, level, culture, false);
 
 						if (update != null)
 						{

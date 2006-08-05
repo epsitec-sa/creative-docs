@@ -13,9 +13,9 @@ namespace Epsitec.Common.Types
 		{
 		}
 
-		public Caption(string id) : this ()
+		public Caption(Support.Druid druid) : this ()
 		{
-			this.id = id;
+			this.id = druid;
 		}
 
 		public ICollection<string>				Labels
@@ -75,7 +75,7 @@ namespace Epsitec.Common.Types
 			}
 		}
 		
-		public string							Id
+		public Support.Druid					Id
 		{
 			get
 			{
@@ -100,8 +100,8 @@ namespace Epsitec.Common.Types
 		/// Defines the ID associated with the caption. The ID can be defined
 		/// only once; redefining it throws an <see cref="T:InvalidOperationException"/>.
 		/// </summary>
-		/// <param name="id">The caption ID (usually a DRUID representation).</param>
-		public void DefineId(string id)
+		/// <param name="id">The caption DRUID.</param>
+		public void DefineId(Support.Druid id)
 		{
 			if (this.id == id)
 			{
@@ -467,6 +467,6 @@ namespace Epsitec.Common.Types
 
 		private Collections.HostedList<string> labels;
 		private string[] sortedLabels;
-		private string id;
+		private Support.Druid id;
 	}
 }
