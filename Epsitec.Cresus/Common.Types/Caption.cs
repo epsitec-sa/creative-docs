@@ -15,7 +15,7 @@ namespace Epsitec.Common.Types
 
 		public Caption(Support.Druid druid) : this ()
 		{
-			this.id = druid;
+			this.druid = druid;
 		}
 
 		public ICollection<string>				Labels
@@ -75,11 +75,11 @@ namespace Epsitec.Common.Types
 			}
 		}
 		
-		public Support.Druid					Id
+		public Support.Druid					Druid
 		{
 			get
 			{
-				return this.id;
+				return this.druid;
 			}
 		}
 
@@ -101,19 +101,19 @@ namespace Epsitec.Common.Types
 		/// only once; redefining it throws an <see cref="T:InvalidOperationException"/>.
 		/// </summary>
 		/// <param name="id">The caption DRUID.</param>
-		public void DefineId(Support.Druid id)
+		public void DefineDruid(Support.Druid druid)
 		{
-			if (this.id == id)
+			if (this.druid == druid)
 			{
 				return;
 			}
 			
-			if (this.id != null)
+			if (this.druid.IsValid)
 			{
-				throw new System.InvalidOperationException ("The id cannot be changed");
+				throw new System.InvalidOperationException ("The DRUID cannot be changed");
 			}
 			
-			this.id = id;
+			this.druid = druid;
 		}
 
 		/// <summary>
@@ -467,6 +467,6 @@ namespace Epsitec.Common.Types
 
 		private Collections.HostedList<string> labels;
 		private string[] sortedLabels;
-		private Support.Druid id;
+		private Support.Druid druid;
 	}
 }
