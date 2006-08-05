@@ -14,9 +14,9 @@ namespace Epsitec.Common.Types
 			this.DefineName (name);
 		}
 
-		public NamedDependencyObject(Caption caption)
+		public NamedDependencyObject(Support.Druid captionId)
 		{
-			this.DefineCaption (caption);
+			this.DefineCaptionId (captionId);
 		}
 		
 		public string Name

@@ -172,13 +172,13 @@ namespace Epsitec.Common.Types
 
 				EnumType enumType = new EnumType (typeof (MyEnum));
 
-				enumType.DefineCaptionId (0x0000400000000005L);
-				enumType[MyEnum.None].DefineCaptionId (0x0000400000000006L);
-				enumType[MyEnum.First].DefineCaptionId (0x0000400000000007L);
-				enumType[MyEnum.Second].DefineCaptionId (0x0000400000000008L);
-				enumType[MyEnum.Third].DefineCaptionId (0x0000400000000009L);
+				enumType.DefineCaptionId (Support.Druid.FromLong (0x0000400000000005L));
+				enumType[MyEnum.None].DefineCaptionId (Support.Druid.FromLong (0x0000400000000006L));
+				enumType[MyEnum.First].DefineCaptionId (Support.Druid.FromLong (0x0000400000000007L));
+				enumType[MyEnum.Second].DefineCaptionId (Support.Druid.FromLong (0x0000400000000008L));
+				enumType[MyEnum.Third].DefineCaptionId (Support.Druid.FromLong (0x0000400000000009L));
 
-				metadataText.DefineCaptionId (0x0000400000000004L);
+				metadataText.DefineCaptionId (Support.Druid.FromLong (0x0000400000000004L));
 				metadataEnum.DefineNamedType (enumType);
 			}
 
