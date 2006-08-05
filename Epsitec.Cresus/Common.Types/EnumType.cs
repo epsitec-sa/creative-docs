@@ -46,7 +46,7 @@ namespace Epsitec.Common.Types
 					rank = EnumType.ConvertToInt (value);
 				}
 
-				this.enumValues.Add (new EnumValue (value, rank, hide, name, -1));
+				this.enumValues.Add (new EnumValue (value, rank, hide, name));
 			}
 
 			this.enumValues.Sort (EnumType.RankComparer);
@@ -133,8 +133,8 @@ namespace Epsitec.Common.Types
 			
 			return null;
 		}
-		
-		public EnumValue FindValueFromCaptionId(long captionId)
+
+		public EnumValue FindValueFromCaptionId(Support.Druid captionId)
 		{
 			for (int i = 0; i < this.enumValues.Count; i++)
 			{

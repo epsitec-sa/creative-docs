@@ -480,7 +480,7 @@ namespace Epsitec.Common.Widgets
 
 		#region ICaption Members
 
-		long ICaption.CaptionId
+		Support.Druid ICaption.CaptionId
 		{
 			get
 			{
@@ -602,9 +602,9 @@ namespace Epsitec.Common.Widgets
 		private void InitializeDruid(Support.Druid druid)
 		{
 			System.Diagnostics.Debug.Assert (druid.IsValid);
-			System.Diagnostics.Debug.Assert (this.captionId == -1);
+			System.Diagnostics.Debug.Assert (this.captionId == Support.Druid.Empty);
 
-			this.captionId = druid.ToLong ();
+			this.captionId = druid;
 
 			//	This command is defined by a DRUID.
 
@@ -762,7 +762,7 @@ namespace Epsitec.Common.Widgets
 		private bool							temporary;
 		
 		private string							commandId;
-		private long							captionId = -1;
+		private Support.Druid					captionId;
 		private Types.Caption					caption;
 	}
 }

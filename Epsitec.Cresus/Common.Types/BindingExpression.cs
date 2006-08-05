@@ -125,9 +125,9 @@ namespace Epsitec.Common.Types
 			return namedType;
 		}
 
-		public long GetSourceCaptionId()
+		public Support.Druid GetSourceCaptionId()
 		{
-			long captionId = -1;
+			Support.Druid captionId = Support.Druid.Empty;
 
 			switch (this.sourceType)
 			{
@@ -138,7 +138,7 @@ namespace Epsitec.Common.Types
 				case DataSourceType.StructuredData:
 				case DataSourceType.SourceItself:
 				case DataSourceType.Resource:
-					captionId = -1;
+					captionId = Support.Druid.Empty;
 					break;
 			}
 
@@ -809,12 +809,12 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		private static long GetSourceCaptionId(DependencyObject dependencyObject, DependencyProperty dependencyProperty)
+		private static Support.Druid GetSourceCaptionId(DependencyObject dependencyObject, DependencyProperty dependencyProperty)
 		{
 			if ((dependencyObject == null) ||
 				(dependencyProperty == null))
 			{
-				return -1;
+				return Support.Druid.Empty;
 			}
 			else
 			{

@@ -41,11 +41,11 @@ namespace Epsitec.Cresus.Database
 			get { return this.Attributes[Tags.Description]; }
 		}
 
-		public long								CaptionId
+		public Common.Support.Druid				CaptionId
 		{
 			get
 			{
-				return -1;
+				return Common.Support.Druid.Empty;
 			}
 		}
 		

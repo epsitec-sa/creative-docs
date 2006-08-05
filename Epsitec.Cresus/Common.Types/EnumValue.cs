@@ -11,9 +11,17 @@ namespace Epsitec.Common.Types
 	/// </summary>
 	public class EnumValue : NamedDependencyObject, IEnumValue
 	{
-		public EnumValue(System.Enum value, int rank, bool hidden, string name, long captionId)
-			: base (name, captionId)
+		public EnumValue(System.Enum value, int rank, bool hidden, string name)
+			: base (name)
 		{
+			this.DefineValue (value);
+			this.DefineRank (rank);
+			this.DefineHidden (hidden);
+		}
+		
+		public EnumValue(System.Enum value, int rank, bool hidden, Support.Druid captionId)
+		{
+			// TODO: use captionId instead of name
 			this.DefineValue (value);
 			this.DefineRank (rank);
 			this.DefineHidden (hidden);

@@ -15,8 +15,7 @@ namespace Epsitec.Common.UI.Data
 		
 		public ObsoleteField(string name)
 		{
-			this.name        = name;
-			this.captionId   = -1;
+			this.name = name;
 		}
 		
 		public ObsoleteField(string name, object value) : this (name)
@@ -132,8 +131,8 @@ namespace Epsitec.Common.UI.Data
 		{
 			this.constraint = constraint;
 		}
-		
-		public void DefineCaptionId(long captionId)
+
+		public void DefineCaptionId(Support.Druid captionId)
 		{
 			this.captionId = captionId;
 		}
@@ -240,11 +239,11 @@ namespace Epsitec.Common.UI.Data
 		
 
 		#region INameCaption Members
-		public long CaptionId
+		public Support.Druid CaptionId
 		{
 			get
 			{
-				return -1;
+				return Support.Druid.Empty;
 			}
 		}
 		#endregion
@@ -333,7 +332,7 @@ namespace Epsitec.Common.UI.Data
 		
 		
 		private string							name;
-		private long 							captionId;
+		private Support.Druid					captionId;
 		
 		private Types.INamedType				type;
 		private Types.IDataConstraint			constraint;
