@@ -59,8 +59,7 @@ namespace Epsitec.Common.Support
 				return Resources.factory;
 			}
 		}
-		
-		
+
 		public static string ExtractPrefix(string id)
 		{
 			if (id != null)

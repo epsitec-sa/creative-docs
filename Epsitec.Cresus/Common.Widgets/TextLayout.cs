@@ -3741,11 +3741,11 @@ namespace Epsitec.Common.Widgets
 								string imageName = parameters["src"] as string;
 								double verticalOffset = 0;
 							
-								Drawing.Image image = this.ResourceManager.GetImage(imageName);
+								Drawing.Image image = Support.ImageProvider.Default.GetImage(imageName, this.resourceManager);
 								
 								if ( image == null )
 								{
-									image = this.ResourceManager.GetImage("file:images/missing.icon");
+									image = Support.ImageProvider.Default.GetImage ("file:images/missing.icon", this.resourceManager);
 									System.Diagnostics.Debug.WriteLine (string.Format("<img> tag references unknown image '{0}' while painting. Current directory is {1}.", imageName, System.IO.Directory.GetCurrentDirectory()));
 //-									throw new System.FormatException(string.Format("<img> tag references unknown image '{0}' while painting. Current directory is {1}.", imageName, System.IO.Directory.GetCurrentDirectory()));
 								}
