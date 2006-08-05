@@ -125,14 +125,6 @@ namespace Epsitec.Common.Support
 			}
 		}
 		
-		public IImageProvider					ImageProvider
-		{
-			get
-			{
-				return Support.ImageProvider.Default;
-			}
-		}
-
 		public string							DefaultPath
 		{
 			get
@@ -642,11 +634,6 @@ namespace Epsitec.Common.Support
 			targetObject.SetBinding (targetProperty, binding);
 		}
 
-		
-		public Drawing.Image GetImage(string name)
-		{
-			return this.ImageProvider.GetImage (name, this);
-		}
 		
 		
 		public byte[] GetBinaryData(string id)
@@ -1597,7 +1584,17 @@ namespace Epsitec.Common.Support
 
 		#endregion
 
-		private static long						nextSerialId = 1;
+		public static readonly string StringsBundleName = "Strings";
+		public static readonly string CaptionsBundleName = "Captions";
+
+		public static readonly char PrefixSeparator = ':';
+		public static readonly char ModuleSeparator = '/';
+
+		public static readonly char FieldIdPrefix = '$';
+		public static readonly char FieldSeparator = '#';
+		public static readonly int MaxRecursion = 50;
+		
+		private static long nextSerialId = 1;
 		
 		private long							serialId;
 		private Dictionary<string, ProviderRecord> providers;

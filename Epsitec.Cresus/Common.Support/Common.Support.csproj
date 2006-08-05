@@ -112,19 +112,12 @@
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="AssemblyLoader.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Clipboard.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="CommandAttribute.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="CaptionCache.cs" />
-    <Compile Include="DruidType.cs" />
-    <Compile Include="ResourceProviderFactory.cs" />
-    <Compile Include="ResourceSetMode.cs" />
     <Compile Include="Data\ComponentCollection.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -152,11 +145,7 @@
     <Compile Include="Data\StringArrayStore.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Druid.cs" />
     <Compile Include="EmptyEnumerator.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Globals.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="IImageProvider.cs">
@@ -168,9 +157,6 @@
     <Compile Include="IOplet.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="IResourceProvider.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="ObjectDictMapper.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -178,34 +164,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="OpletQueue.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="RegexConstraint.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="RegexFactory.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="ResourceBundle.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="ResourceBundleCollection.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="ResourceException.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="ResourceFieldType.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="ResourceLevel.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="ResourceManager.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="ResourceModuleInfo.cs" />
-    <Compile Include="Resources.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="SerialAlgorithm.cs">

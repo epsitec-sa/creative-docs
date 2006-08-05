@@ -77,6 +77,7 @@
     <Reference Include="System.Data">
       <Name>System.Data</Name>
     </Reference>
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml">
       <Name>System.XML</Name>
     </Reference>
@@ -286,6 +287,24 @@
     </Compile>
     <Compile Include="StructuredType.cs" />
     <Compile Include="StructuredData.cs" />
+    <Compile Include="Support\AssemblyLoader.cs" />
+    <Compile Include="Support\CaptionCache.cs" />
+    <Compile Include="Support\Druid.cs" />
+    <Compile Include="Support\DruidType.cs" />
+    <Compile Include="Support\Globals.cs" />
+    <Compile Include="Support\IResourceProvider.cs" />
+    <Compile Include="Support\RegexConstraint.cs" />
+    <Compile Include="Support\RegexFactory.cs" />
+    <Compile Include="Support\ResourceBundle.cs" />
+    <Compile Include="Support\ResourceBundleCollection.cs" />
+    <Compile Include="Support\ResourceException.cs" />
+    <Compile Include="Support\ResourceFieldType.cs" />
+    <Compile Include="Support\ResourceLevel.cs" />
+    <Compile Include="Support\ResourceManager.cs" />
+    <Compile Include="Support\ResourceModuleInfo.cs" />
+    <Compile Include="Support\ResourceProviderFactory.cs" />
+    <Compile Include="Support\Resources.cs" />
+    <Compile Include="Support\ResourceSetMode.cs" />
     <Compile Include="Tags.cs">
       <SubType>Code</SubType>
     </Compile>

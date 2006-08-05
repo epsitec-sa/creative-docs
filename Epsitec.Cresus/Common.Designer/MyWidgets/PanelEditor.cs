@@ -4427,7 +4427,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Choix du sprite de la souris.
 			if (image == null)
 			{
-				image = Support.Resources.DefaultManager.GetImage(name);
+				image = Support.ImageProvider.Default.GetImage (name, Support.Resources.DefaultManager);
 			}
 
 			this.MouseCursor = MouseCursor.FromImage(image);
