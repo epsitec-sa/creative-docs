@@ -1,6 +1,8 @@
 //	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
+using System.Collections.Generic;
+
 namespace Epsitec.Common.Support
 {
 	using Hashtable = System.Collections.Hashtable;
@@ -95,7 +97,7 @@ namespace Epsitec.Common.Support
 		}
 		
 		
-		public Drawing.Image GetImage(string name, Support.ResourceManager resource_manager)
+		public Drawing.Image GetImage(string name, Support.ResourceManager resourceManager)
 		{
 			if ((name == null) ||
 				(name.Length < 1))
@@ -215,7 +217,8 @@ namespace Epsitec.Common.Support
 				return image;
 			}
 			
-			if (name.StartsWith ("res:"))
+			if ((name.StartsWith ("res:")) &&
+				(resourceManager != null))
 			{
 				//	L'image décrite par l'identificateur de ressources est définie au moyen
 				//	d'un bundle comportant au minimum le champ "image" et le champ spécifié
@@ -242,7 +245,7 @@ namespace Epsitec.Common.Support
 
 				if (Resources.SplitFieldId (res_full, out res_bundle, out res_field))
 				{
-					ResourceBundle bundle = resource_manager.GetBundle (res_bundle);
+					ResourceBundle bundle = resourceManager.GetBundle (res_bundle);
 					
 					if (bundle != null)
 					{
@@ -251,7 +254,7 @@ namespace Epsitec.Common.Support
 				}
 				else
 				{
-					byte[] data = resource_manager.GetBinaryData (res_full);
+					byte[] data = resourceManager.GetBinaryData (res_full);
 					image = Drawing.Bitmap.FromData (data);
 				}
 				
@@ -336,7 +339,54 @@ namespace Epsitec.Common.Support
 			
 			return null;
 		}
-		
+
+		public string[] GetImageNames(string provider, Support.ResourceManager resourceManager)
+		{
+			if (string.IsNullOrEmpty (provider))
+			{
+				return new string[0];
+			}
+
+			List<string> list = new List<string> ();
+
+			if (provider == "file")
+			{
+				for (int i = 0; i < ImageProvider.default_paths.Length; i++)
+				{
+					string path = ImageProvider.default_paths[i];
+					
+					if (string.IsNullOrEmpty (path))
+					{
+						continue;
+					}
+
+					foreach (string name in System.IO.Directory.GetFileSystemEntries (path, "*.icon"))
+					{
+						if (list.Contains (name) == false)
+						{
+							list.Add (name);
+						}
+					}
+				}
+			}
+			else if (provider == "manifest")
+			{
+				System.Text.RegularExpressions.Regex regex = RegexFactory.FromSimpleJoker ("*.icon", RegexFactory.Options.IgnoreCase);
+				
+				foreach (string name in ImageProvider.GetManifestResourceNames (regex))
+				{
+					if (list.Contains (name) == false)
+					{
+						list.Add (name);
+					}
+				}
+			}
+
+			list.Sort ();
+
+			return list.ToArray ();
+		}
+
 		public Drawing.Image[] GetLongLifeCacheContents()
 		{
 			if (this.keep_alive_images == null)
@@ -485,7 +535,8 @@ namespace Epsitec.Common.Support
 		
 		public static string[] GetManifestResourceNames(System.Text.RegularExpressions.Regex regex)
 		{
-			System.Collections.ArrayList list       = new System.Collections.ArrayList ();
+			List<string> list = new List<string> ();
+			
 			System.AppDomain             domain     = System.AppDomain.CurrentDomain;
 			System.Reflection.Assembly[] assemblies = domain.GetAssemblies ();
 			
@@ -509,8 +560,8 @@ namespace Epsitec.Common.Support
 					}
 				}
 			}
-			
-			return (string[]) list.ToArray (typeof (string));
+
+			return list.ToArray ();
 		}
 		
 		
