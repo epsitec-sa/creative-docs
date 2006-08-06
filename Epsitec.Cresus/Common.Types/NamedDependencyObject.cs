@@ -82,10 +82,20 @@ namespace Epsitec.Common.Types
 		}
 
 		#endregion
-		
+
+
+		internal void LockName()
+		{
+			this.lockedName = true;
+		}
 		
 		public void DefineName(string name)
 		{
+			if (this.lockedName)
+			{
+				throw new System.InvalidOperationException ("The name is locked and cannot be changed");
+			}
+			
 			if (this.caption == null)
 			{
 				this.name = name;
@@ -125,6 +135,7 @@ namespace Epsitec.Common.Types
 
 
 		private string name;
+		private bool lockedName;
 		private Support.Druid captionId;
 		private Caption caption;
 	}

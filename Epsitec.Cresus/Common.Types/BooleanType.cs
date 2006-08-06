@@ -38,5 +38,7 @@ namespace Epsitec.Common.Types
 
 			BooleanType.DefaultControllerProperty.OverrideMetadata (typeof (BooleanType), metadata);
 		}
+
+		public static readonly BooleanType Default = new BooleanType ();
 	}
 }
