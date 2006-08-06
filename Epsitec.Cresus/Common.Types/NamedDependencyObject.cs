@@ -23,12 +23,18 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
-				if (this.caption == null)
+				if (this.name != null)
 				{
 					return this.name;
 				}
+
+				if ((this.caption == null) &&
+					(this.captionId.IsEmpty))
+				{
+					return null;
+				}
 				
-				return this.caption.Name ?? this.name;
+				return this.Caption.Name;
 			}
 		}
 
@@ -36,6 +42,18 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
+				if (this.caption == null)
+				{
+					if (this.captionId.IsEmpty)
+					{
+						this.DefineCaption (new Caption ());
+					}
+					else
+					{
+						this.DefineCaption (Support.Resources.DefaultManager.GetCaption (this.captionId));
+					}
+				}
+				
 				return this.caption;
 			}
 		}
@@ -59,14 +77,7 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
-				if (this.caption == null)
-				{
-					return Support.Druid.Empty;
-				}
-				else
-				{
-					return this.caption.Druid;
-				}
+				return this.captionId;
 			}
 		}
 
@@ -75,27 +86,36 @@ namespace Epsitec.Common.Types
 		
 		public void DefineName(string name)
 		{
-			if ((this.caption == null) &&
-				(this.name == null))
+			if (this.caption == null)
 			{
 				this.name = name;
 			}
 			else
 			{
-				throw new System.InvalidOperationException ("The name cannot be changed");
+				this.caption.Name = name;
 			}
 		}
 
 		public void DefineCaptionId(Support.Druid druid)
 		{
-			this.DefineCaption (Support.Resources.DefaultManager.GetCaption (druid));
+			if (this.captionId.IsEmpty)
+			{
+				this.captionId = druid;
+			}
+			else
+			{
+				throw new System.InvalidOperationException ("The caption DRUID cannot be changed");
+			}
 		}
 		
 		public void DefineCaption(Caption caption)
 		{
-			if (this.caption == null)
+			if ((this.caption == null) &&
+				(caption != null) &&
+				(this.captionId.IsEmpty || (this.captionId == caption.Druid)))
 			{
 				this.caption = caption;
+				this.captionId = caption.Druid;
 			}
 			else
 			{
@@ -105,6 +125,7 @@ namespace Epsitec.Common.Types
 
 
 		private string name;
+		private Support.Druid captionId;
 		private Caption caption;
 	}
 }

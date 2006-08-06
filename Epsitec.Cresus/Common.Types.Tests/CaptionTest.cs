@@ -24,20 +24,20 @@ namespace Epsitec.Common.Types
 			target.SetBinding (Stuff.EnumProperty, bindingEnum);
 
 			Assert.AreEqual ("Name", target.GetBindingExpression (Stuff.NameProperty).GetSourceName ());
-			Assert.AreEqual (-1, target.GetBindingExpression (Stuff.NameProperty).GetSourceCaptionId ());
+			Assert.AreEqual (Support.Druid.Empty, target.GetBindingExpression (Stuff.NameProperty).GetSourceCaptionId ());
 			Assert.AreEqual ("String", target.GetBindingExpression (Stuff.NameProperty).GetSourceNamedType ().Name);
 			Assert.AreEqual ("StringType", target.GetBindingExpression (Stuff.NameProperty).GetSourceNamedType ().GetType ().Name);
 
 			Assert.AreEqual ("Text", target.GetBindingExpression (Stuff.TextProperty).GetSourceName ());
-			Assert.AreEqual (0x0000400000000004L, target.GetBindingExpression (Stuff.TextProperty).GetSourceCaptionId ());
+			Assert.AreEqual (Support.Druid.FromLong (0x0000400000000004L), target.GetBindingExpression (Stuff.TextProperty).GetSourceCaptionId ());
 			Assert.AreEqual ("String", target.GetBindingExpression (Stuff.TextProperty).GetSourceNamedType ().Name);
 
 			Assert.AreEqual ("Enum", target.GetBindingExpression (Stuff.EnumProperty).GetSourceName ());
-			Assert.AreEqual (-1, target.GetBindingExpression (Stuff.EnumProperty).GetSourceCaptionId ());
+			Assert.AreEqual (Support.Druid.Empty, target.GetBindingExpression (Stuff.EnumProperty).GetSourceCaptionId ());
 			Assert.IsNotNull (target.GetBindingExpression (Stuff.EnumProperty).GetSourceNamedType ());
 			Assert.AreEqual ("EnumType", target.GetBindingExpression (Stuff.EnumProperty).GetSourceNamedType ().GetType ().Name);
 			Assert.AreEqual ("Enumeration MyEnum", target.GetBindingExpression (Stuff.EnumProperty).GetSourceNamedType ().Name);
-			Assert.AreEqual (0x0000400000000005L, target.GetBindingExpression (Stuff.EnumProperty).GetSourceNamedType ().CaptionId);
+			Assert.AreEqual (Support.Druid.FromLong (0x0000400000000005L), target.GetBindingExpression (Stuff.EnumProperty).GetSourceNamedType ().CaptionId);
 		}
 		
 		[Test]
