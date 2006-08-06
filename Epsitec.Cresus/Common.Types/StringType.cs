@@ -16,14 +16,14 @@ namespace Epsitec.Common.Types
 		public StringType(int minimumLength)
 			: this ()
 		{
-			this.minimumLength = minimumLength;
+			this.DefineMinimumLength (minimumLength);
 		}
 
 		public StringType(int minimumLength, int maximumLength)
 			: this ()
 		{
-			this.minimumLength = minimumLength;
-			this.maximumLength = maximumLength;
+			this.DefineMinimumLength (minimumLength);
+			this.DefineMaximumLength (maximumLength);
 		}
 
 
@@ -43,7 +43,7 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
-				return this.minimumLength;
+				return (int) this.Caption.GetValue (StringType.MinimumLengthProperty);
 			}
 		}
 
@@ -51,7 +51,7 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
-				return this.maximumLength;
+				return (int) this.Caption.GetValue (StringType.MaximumLengthProperty);
 			}
 		}
 		
@@ -78,10 +78,20 @@ namespace Epsitec.Common.Types
 		}
 
 		#endregion
+
+		public void DefineMinimumLength(int value)
+		{
+			this.Caption.SetValue (StringType.MinimumLengthProperty, value);
+		}
+
+		public void DefineMaximumLength(int value)
+		{
+			this.Caption.SetValue (StringType.MaximumLengthProperty, value);
+		}
 		
 		public static readonly StringType		Default = new StringType ();
-		
-		private int								minimumLength = 0;
-		private int								maximumLength = 100*1000;
+
+		public static readonly DependencyProperty MinimumLengthProperty = DependencyProperty.RegisterAttached ("MinimumLength", typeof (int), typeof (StringType), new DependencyPropertyMetadata (0));
+		public static readonly DependencyProperty MaximumLengthProperty = DependencyProperty.RegisterAttached ("MaximumLength", typeof (int), typeof (StringType), new DependencyPropertyMetadata (100*1000));
 	}
 }

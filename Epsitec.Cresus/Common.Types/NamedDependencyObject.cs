@@ -103,6 +103,7 @@ namespace Epsitec.Common.Types
 			else
 			{
 				this.caption.Name = name;
+				this.name = null;
 			}
 		}
 

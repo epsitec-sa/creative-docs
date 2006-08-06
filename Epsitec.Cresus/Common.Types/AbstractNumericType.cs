@@ -16,7 +16,7 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
-				return (DecimalRange) this.GetValue (AbstractNumericType.RangeProperty);
+				return (DecimalRange) this.Caption.GetValue (AbstractNumericType.RangeProperty);
 			}
 		}
 		
@@ -24,7 +24,7 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
-				return (DecimalRange) this.GetValue (AbstractNumericType.PreferredRangeProperty);
+				return (DecimalRange) this.Caption.GetValue (AbstractNumericType.PreferredRangeProperty);
 			}
 		}
 
@@ -32,16 +32,16 @@ namespace Epsitec.Common.Types
 		
 		public void DefineRange(DecimalRange range)
 		{
-			this.SetValue (AbstractNumericType.RangeProperty, range);
+			this.Caption.SetValue (AbstractNumericType.RangeProperty, range);
 		}
 
 		public void DefinePreferredRange(DecimalRange range)
 		{
-			this.SetValue (AbstractNumericType.PreferredRangeProperty, range);
+			this.Caption.SetValue (AbstractNumericType.PreferredRangeProperty, range);
 		}
 
 
-		public static readonly DependencyProperty RangeProperty = DependencyProperty.RegisterReadOnly ("Range", typeof (DecimalRange), typeof (AbstractNumericType), new DependencyPropertyMetadata (DecimalRange.Empty));
-		public static readonly DependencyProperty PreferredRangeProperty = DependencyProperty.RegisterReadOnly ("PreferredRange", typeof (DecimalRange), typeof (AbstractNumericType), new DependencyPropertyMetadata (DecimalRange.Empty));
+		public static readonly DependencyProperty RangeProperty = DependencyProperty.RegisterAttached ("Range", typeof (DecimalRange), typeof (AbstractNumericType), new DependencyPropertyMetadata (DecimalRange.Empty));
+		public static readonly DependencyProperty PreferredRangeProperty = DependencyProperty.RegisterAttached ("PreferredRange", typeof (DecimalRange), typeof (AbstractNumericType), new DependencyPropertyMetadata (DecimalRange.Empty));
 	}
 }
