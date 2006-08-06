@@ -22,7 +22,7 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
-				return (string) this.GetValue (AbstractType.DefaultControllerProperty);
+				return (string) this.Caption.GetValue (AbstractType.DefaultControllerProperty);
 			}
 		}
 
@@ -30,7 +30,7 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
-				return (string) this.GetValue (AbstractType.DefaultControllerParameterProperty);
+				return (string) this.Caption.GetValue (AbstractType.DefaultControllerParameterProperty);
 			}
 		}
 
@@ -55,16 +55,16 @@ namespace Epsitec.Common.Types
 		{
 			if (this.DefaultController != controller)
 			{
-				this.SetValue (AbstractType.DefaultControllerProperty, controller);
+				this.Caption.SetValue (AbstractType.DefaultControllerProperty, controller);
 			}
 			if (this.DefaultControllerParameter != controllerParameter)
 			{
-				this.SetValue (AbstractType.DefaultControllerParameterProperty, controllerParameter);
+				this.Caption.SetValue (AbstractType.DefaultControllerParameterProperty, controllerParameter);
 			}
 		}
 
 
-		public static readonly DependencyProperty DefaultControllerProperty = DependencyProperty.RegisterReadOnly ("DefaultController", typeof (string), typeof (AbstractType), new DependencyPropertyMetadata ("Numeric"));
-		public static readonly DependencyProperty DefaultControllerParameterProperty = DependencyProperty.RegisterReadOnly ("DefaultControllerParameter", typeof (string), typeof (AbstractType), new DependencyPropertyMetadata ());
+		public static readonly DependencyProperty DefaultControllerProperty = DependencyProperty.RegisterAttached ("DefaultController", typeof (string), typeof (AbstractType), new DependencyPropertyMetadata ("Numeric"));
+		public static readonly DependencyProperty DefaultControllerParameterProperty = DependencyProperty.RegisterAttached ("DefaultControllerParameter", typeof (string), typeof (AbstractType), new DependencyPropertyMetadata ());
 	}
 }
