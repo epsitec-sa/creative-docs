@@ -1,4 +1,5 @@
 using NUnit.Framework;
+using System.Collections.Generic;
 
 namespace Epsitec.Common.Support
 {
@@ -19,6 +20,22 @@ namespace Epsitec.Common.Support
 			Assert.IsNotNull (im1);
 			Assert.IsNotNull (im2);
 			Assert.IsNull (im3);
+		}
+
+		[Test]
+		public void CheckGetImageNames()
+		{
+			List<string> names = new List<string> ();
+
+			names.AddRange (Support.ImageProvider.Default.GetImageNames ("file", Support.Resources.DefaultManager));
+
+			Assert.AreEqual (@"file:About.icon", names[0]);
+			Assert.AreEqual (@"file:Down.icon", names[1]);
+			
+			names.Clear ();
+			names.AddRange (Support.ImageProvider.Default.GetImageNames ("manifest", Support.Resources.DefaultManager));
+
+			Assert.AreEqual (@"manifest:Epsitec.Common.Widgets.Images.ActiveNo.icon", names[0]);
 		}
 		
 		[Test] public void CheckGetManifestResourceNames()
