@@ -279,7 +279,69 @@ namespace Epsitec.Common.Types
 				return targetSysType.IsAssignableFrom (value.GetType ());
 			}
 		}
-		
+
+
+		/// <summary>
+		/// Gets the type object with the specified name.
+		/// </summary>
+		/// <param name="name">The type object name.</param>
+		/// <returns>The type object or <c>null</c> if no matching type object can be found.</returns>
+		public static AbstractType GetTypeObject(string name)
+		{
+			TypeRosetta.InitializeNamedTypes ();
+
+			AbstractType type;
+
+			if (TypeRosetta.namedTypes.TryGetValue (name, out type))
+			{
+				return type;
+			}
+			
+			return null;
+		}
+
+		private static void InitializeNamedTypes()
+		{
+			if (TypeRosetta.namedTypes == null)
+			{
+				lock (TypeRosetta.globalExclusion)
+				{
+					if (TypeRosetta.namedTypes == null)
+					{
+						Dictionary<string, AbstractType> dict = new Dictionary<string, AbstractType> ();
+
+						TypeRosetta.InitializeDictionaryWithDefaultTypes (dict);
+						
+						TypeRosetta.namedTypes = dict;
+					}
+				}
+			}
+		}
+
+		private static void InitializeDictionaryWithDefaultTypes(Dictionary<string, AbstractType> dict)
+		{
+			//	Fill the dictionary with the known default types. This defines the
+			//	following basic .NET types :
+			//
+			//	- bool
+			//	- decimal, double, int, long
+			//	- string
+			//	- void
+			
+			TypeRosetta.AddType (dict, BooleanType.Default);
+			TypeRosetta.AddType (dict, DecimalType.Default);
+			TypeRosetta.AddType (dict, DoubleType.Default);
+			TypeRosetta.AddType (dict, IntegerType.Default);
+			TypeRosetta.AddType (dict, LongIntegerType.Default);
+			TypeRosetta.AddType (dict, StringType.Default);
+			TypeRosetta.AddType (dict, VoidType.Default);
+		}
+
+		private static void AddType(Dictionary<string, AbstractType> dict, AbstractType type)
+		{
+			type.LockName ();
+			dict.Add (type.Name, type);
+		}
 
 		#region AutomaticNamedType Class
 
@@ -416,5 +478,9 @@ namespace Epsitec.Common.Types
 		
 		
 		public static readonly DependencyProperty TypeObjectProperty = DependencyProperty.RegisterAttached ("TypeObject", typeof (object), typeof (TypeRosetta.Properties));
+
+		private static object globalExclusion = new object ();
+
+		private static Dictionary<string, AbstractType> namedTypes;
 	}
 }

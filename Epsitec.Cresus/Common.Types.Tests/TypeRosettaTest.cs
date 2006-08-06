@@ -9,6 +9,18 @@ namespace Epsitec.Common.Types
 	[TestFixture] public class TypeRosettaTest
 	{
 		[Test]
+		public void CheckGetTypeObject()
+		{
+			Assert.AreEqual (typeof (bool), TypeRosetta.GetTypeObject ("Boolean").SystemType);
+			Assert.AreEqual (typeof (decimal), TypeRosetta.GetTypeObject ("Decimal").SystemType);
+			Assert.AreEqual (typeof (double), TypeRosetta.GetTypeObject ("Double").SystemType);
+			Assert.AreEqual (typeof (int), TypeRosetta.GetTypeObject ("Integer").SystemType);
+			Assert.AreEqual (typeof (long), TypeRosetta.GetTypeObject ("LongInteger").SystemType);
+			Assert.AreEqual (typeof (string), TypeRosetta.GetTypeObject ("String").SystemType);
+			Assert.AreEqual (typeof (void), TypeRosetta.GetTypeObject ("Void").SystemType);
+		}
+		
+		[Test]
 		public void CheckObjectTypeToSytemType()
 		{
 			Assert.IsNull (TypeRosetta.GetSystemTypeFromTypeObject (null));
