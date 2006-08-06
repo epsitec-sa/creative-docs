@@ -14,7 +14,7 @@ namespace Epsitec.Common.Types
 			EnumValue[] ev = Collection.ToArray<EnumValue> (et.Values);
 
 			Assert.AreEqual ("Enumeration MyEnum", et.Name);
-			Assert.AreEqual (-1L, et.CaptionId);
+			Assert.AreEqual (Support.Druid.Empty, et.CaptionId);
 			
 			Assert.AreEqual (5, ev.Length);
 			Assert.IsFalse (et.IsCustomizable);
@@ -139,8 +139,6 @@ namespace Epsitec.Common.Types
 			
 			EnumType et = new EnumType (type);
 
-//			et.DefineCaptionId (123);
-			
 			Assert.AreEqual ("[res:Enums#MyEnum.capt]", et.CaptionId);
 			
 			Assert.AreEqual ("[res:Enums#MyEnum.None.capt]",   et["None"].CaptionId);
@@ -156,7 +154,7 @@ namespace Epsitec.Common.Types
 			EnumValue[] ev = Collection.ToArray<EnumValue> (et.Values);
 
 			Assert.AreEqual ("Enumeration MyEnum", et.Name);
-			Assert.AreEqual (-1L, et.CaptionId);
+			Assert.AreEqual (Support.Druid.Empty, et.CaptionId);
 			
 			Assert.AreEqual (5, ev.Length);
 			Assert.IsTrue (et.IsCustomizable);
