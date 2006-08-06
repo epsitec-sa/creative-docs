@@ -360,8 +360,10 @@ namespace Epsitec.Common.Support
 						continue;
 					}
 
-					foreach (string name in System.IO.Directory.GetFileSystemEntries (path, "*.icon"))
+					foreach (string file in System.IO.Directory.GetFiles (path, "*.icon", System.IO.SearchOption.AllDirectories))
 					{
+						string name = string.Concat (provider, ":", file.Remove (0, path.Length+1));
+						
 						if (list.Contains (name) == false)
 						{
 							list.Add (name);
@@ -373,8 +375,10 @@ namespace Epsitec.Common.Support
 			{
 				System.Text.RegularExpressions.Regex regex = RegexFactory.FromSimpleJoker ("*.icon", RegexFactory.Options.IgnoreCase);
 				
-				foreach (string name in ImageProvider.GetManifestResourceNames (regex))
+				foreach (string res in ImageProvider.GetManifestResourceNames (regex))
 				{
+					string name = string.Concat (provider, ":", res);
+
 					if (list.Contains (name) == false)
 					{
 						list.Add (name);
