@@ -97,6 +97,7 @@
     <Compile Include="BindingChangedEventArgs.cs" />
     <Compile Include="BindingBreadcrumbs.cs" />
     <Compile Include="Caption.cs" />
+    <Compile Include="Collections\EnumValueCollection.cs" />
     <Compile Include="Collections\HostedDepdendencyObjectList.cs" />
     <Compile Include="Collections\GenericList.cs" />
     <Compile Include="Collections\GenericDepdendencyObjectList.cs" />

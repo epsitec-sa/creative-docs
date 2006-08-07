@@ -52,6 +52,15 @@ namespace Epsitec.Common.Types.Collections
 			return this.list.ToArray ();
 		}
 
+		/// <summary>
+		/// Sorts the collection using the specified comparer.
+		/// </summary>
+		/// <param name="comparer">The comparer to use.</param>
+		public void Sort(IComparer<T> comparer)
+		{
+			this.list.Sort (comparer);
+		}
+
 		#region IList<T> Members
 
 		public int IndexOf(T item)
