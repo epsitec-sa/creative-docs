@@ -26,6 +26,11 @@ namespace Epsitec.Common.Types
 			this.DefineMaximumLength (maximumLength);
 		}
 
+		public StringType(Caption caption)
+			: base (caption)
+		{
+		}
+
 
 		#region ISystemType Members
 		public override System.Type				SystemType

@@ -13,6 +13,11 @@ namespace Epsitec.Common.Types
 		{
 		}
 
+		public VoidType(Caption caption)
+			: base (caption)
+		{
+		}
+
 		#region ISystemType Members
 
 		public override System.Type SystemType

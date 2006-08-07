@@ -5,9 +5,15 @@ namespace Epsitec.Common.Types
 {
 	public abstract class AbstractNumericType : AbstractType, INumericType
 	{
-		protected AbstractNumericType(string name, DecimalRange range) : base (name)
+		protected AbstractNumericType(string name, DecimalRange range)
+			: base (name)
 		{
 			this.DefineRange (range);
+		}
+
+		protected AbstractNumericType(Caption caption)
+			: base (caption)
+		{
 		}
 
 		#region INumType Members

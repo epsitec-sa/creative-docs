@@ -8,7 +8,13 @@ namespace Epsitec.Common.Types
 	/// </summary>
 	public class BooleanType : AbstractNumericType
 	{
-		public BooleanType() : base ("Boolean", new DecimalRange (0, 1, 1))
+		public BooleanType()
+			: base ("Boolean", new DecimalRange (0, 1, 1))
+		{
+		}
+
+		public BooleanType(Caption caption)
+			: base (caption)
 		{
 		}
 		
