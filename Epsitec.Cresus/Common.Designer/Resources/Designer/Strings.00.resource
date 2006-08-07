@@ -21,7 +21,7 @@
   <data name="BundleType.Strings" id="0I">Textes</data>
   <data name="BundleType.Panels" id="0J">Interfaces</data>
   <data name="BundleType.Scripts" id="0K">Scripts</data>
-  <data name="BundleType.Captions" id="075" mod="1">Captions</data>
+  <data name="BundleType.Captions" id="075" mod="1">Légendes</data>
   <data name="BundleType.Commands" id="085" mod="1">Commandes</data>
   <data name="BundleType.Types" id="095" mod="1">Types</data>
   <data name="Viewers.Strings.Reference" id="0L">&lt;b&gt;{0}&lt;/b&gt; (référence)</data>
