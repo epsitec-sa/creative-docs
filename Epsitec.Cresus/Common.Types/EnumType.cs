@@ -20,7 +20,7 @@ namespace Epsitec.Common.Types
 			FieldInfo[] fields = enum_type.GetFields (BindingFlags.Public | BindingFlags.DeclaredOnly | BindingFlags.Static);
 
 			this.enumType   = enum_type;
-			this.enumValues = new List<EnumValue> ();
+			this.enumValues = new Collections.EnumValueCollection ();
 
 			for (int i = 0; i < fields.Length; i++)
 			{
@@ -333,6 +333,6 @@ namespace Epsitec.Common.Types
 		private static Dictionary<System.Type, EnumType> cache = new Dictionary<System.Type, EnumType> ();
 		
 		private System.Type						enumType;
-		private List<EnumValue>					enumValues;
+		private Collections.EnumValueCollection	enumValues;
 	}
 }
