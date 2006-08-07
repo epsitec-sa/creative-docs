@@ -8,11 +8,18 @@ namespace Epsitec.Common.Types
 	/// </summary>
 	public class LongIntegerType : AbstractNumericType
 	{
-		public LongIntegerType() : this (long.MinValue, long.MaxValue)
+		public LongIntegerType()
+			: this (long.MinValue, long.MaxValue)
 		{
 		}
-		
-		public LongIntegerType(long min, long max) : base ("LongInteger", new DecimalRange (min, max))
+
+		public LongIntegerType(long min, long max)
+			: base ("LongInteger", new DecimalRange (min, max))
+		{
+		}
+
+		public LongIntegerType(Caption caption)
+			: base (caption)
 		{
 		}
 		

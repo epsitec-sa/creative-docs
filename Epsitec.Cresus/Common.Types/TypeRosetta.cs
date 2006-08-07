@@ -300,6 +300,45 @@ namespace Epsitec.Common.Types
 			return null;
 		}
 
+		public static AbstractType CreateTypeObject(Caption caption)
+		{
+			AbstractType type = null;
+			
+			switch (AbstractType.GetSystemType (caption))
+			{
+				case "System.Boolean":
+					type = new BooleanType (caption);
+					break;
+				
+				case "System.Decimal":
+					type = new DecimalType (caption);
+					break;
+				
+				case "System.Double":
+					type = new DoubleType (caption);
+					break;
+
+				case "System.Int32":
+					type = new IntegerType (caption);
+					break;
+
+				case "System.Int64":
+					type = new LongIntegerType (caption);
+					break;
+
+				case "System.String":
+					type = new StringType (caption);
+					break;
+
+				case "System.Void":
+					type = new VoidType (caption);
+					break;
+
+			}
+			
+			return type;
+		}
+
 		private static void InitializeNamedTypes()
 		{
 			if (TypeRosetta.namedTypes == null)

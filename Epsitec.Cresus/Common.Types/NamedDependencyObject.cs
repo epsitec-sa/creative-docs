@@ -18,6 +18,11 @@ namespace Epsitec.Common.Types
 		{
 			this.DefineCaptionId (captionId);
 		}
+
+		public NamedDependencyObject(Caption caption)
+		{
+			this.DefineCaption (caption);
+		}
 		
 		public string Name
 		{
@@ -47,6 +52,9 @@ namespace Epsitec.Common.Types
 					if (this.captionId.IsEmpty)
 					{
 						this.DefineCaption (new Caption ());
+						
+						this.caption.Name = this.name;
+						this.name = null;
 					}
 					else
 					{
@@ -127,11 +135,17 @@ namespace Epsitec.Common.Types
 			{
 				this.caption = caption;
 				this.captionId = caption.Druid;
+				
+				this.OnCaptionDefined ();
 			}
 			else
 			{
 				throw new System.InvalidOperationException ("The caption cannot be changed");
 			}
+		}
+
+		protected virtual void OnCaptionDefined()
+		{
 		}
 
 

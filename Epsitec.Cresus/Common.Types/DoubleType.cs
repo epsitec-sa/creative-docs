@@ -8,11 +8,18 @@ namespace Epsitec.Common.Types
 	/// </summary>
 	public class DoubleType : AbstractNumericType
 	{
-		public DoubleType() : this (DecimalRange.Empty)
+		public DoubleType()
+			: this (DecimalRange.Empty)
 		{
 		}
-		
-		public DoubleType(DecimalRange range) : base ("Double", range)
+
+		public DoubleType(DecimalRange range)
+			: base ("Double", range)
+		{
+		}
+
+		public DoubleType(Caption caption)
+			: base (caption)
 		{
 		}
 

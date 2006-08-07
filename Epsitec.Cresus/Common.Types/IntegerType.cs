@@ -8,11 +8,18 @@ namespace Epsitec.Common.Types
 	/// </summary>
 	public class IntegerType : AbstractNumericType
 	{
-		public IntegerType() : this (int.MinValue, int.MaxValue)
+		public IntegerType()
+			: this (int.MinValue, int.MaxValue)
 		{
 		}
-		
-		public IntegerType(int min, int max) : base ("Integer", new DecimalRange (min, max))
+
+		public IntegerType(int min, int max)
+			: base ("Integer", new DecimalRange (min, max))
+		{
+		}
+
+		public IntegerType(Caption caption)
+			: base (caption)
 		{
 		}
 		

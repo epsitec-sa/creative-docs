@@ -374,6 +374,70 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual (typeof (decimal), typeDecimal.SystemType);
 			Assert.AreEqual (typeof (decimal), limit2.SystemType);
 		}
+
+		[Test]
+		public void CheckTypeCreation()
+		{
+			Caption caption = new Caption ();
+
+			caption.Name = "Nom";
+			AbstractType.SetSystemType (caption, typeof (string).FullName);
+
+			StringType strType = TypeRosetta.CreateTypeObject (caption) as StringType;
+
+			Assert.IsNotNull (strType);
+			Assert.AreEqual ("Nom", strType.Name);
+			Assert.AreEqual (0, strType.MinimumLength);
+			Assert.AreEqual (100*1000, strType.MaximumLength);
+
+			caption = new Caption ();
+			caption.Name = "Xxx";
+			
+			AbstractType.SetSystemType (caption, typeof (bool).FullName);
+			Assert.IsNotNull (TypeRosetta.CreateTypeObject (caption) as BooleanType);
+
+			AbstractType.SetSystemType (caption, typeof (decimal).FullName);
+			Assert.IsNotNull (TypeRosetta.CreateTypeObject (caption) as DecimalType);
+
+			AbstractType.SetSystemType (caption, typeof (double).FullName);
+			Assert.IsNotNull (TypeRosetta.CreateTypeObject (caption) as DoubleType);
+
+			AbstractType.SetSystemType (caption, typeof (int).FullName);
+			Assert.IsNotNull (TypeRosetta.CreateTypeObject (caption) as IntegerType);
+
+			AbstractType.SetSystemType (caption, typeof (long).FullName);
+			Assert.IsNotNull (TypeRosetta.CreateTypeObject (caption) as LongIntegerType);
+
+			AbstractType.SetSystemType (caption, typeof (void).FullName);
+			Assert.IsNotNull (TypeRosetta.CreateTypeObject (caption) as VoidType);
+		}
+
+		[Test]
+		public void CheckTypeSerialization()
+		{
+			Caption caption;
+			string intSerial;
+			string strSerial;
+
+			caption = TypeRosetta.GetTypeObject ("Integer").Caption;
+			intSerial = caption.SerializeToString ();
+
+			Assert.AreEqual ("Integer", TypeRosetta.GetTypeObject ("Integer").Name);
+			Assert.AreEqual ("Integer", caption.Name);
+			Assert.AreEqual (typeof (int).FullName, caption.GetValue (AbstractType.SytemTypeProperty));
+
+			caption = TypeRosetta.GetTypeObject ("String").Caption;
+			strSerial = caption.SerializeToString ();
+
+			System.Console.WriteLine ("Integer: {0}", intSerial);
+			System.Console.WriteLine ("String: {0}", strSerial);
+
+			AbstractType type = TypeRosetta.CreateTypeObject (TypeRosetta.GetTypeObject ("Integer").Caption);
+
+			Assert.IsNotNull (type);
+			Assert.AreEqual ("Integer", type.Name);
+			Assert.AreEqual (typeof (int), type.SystemType);
+		}
 		
 		[System.Serializable]
 		class DateUser : System.Runtime.Serialization.ISerializable

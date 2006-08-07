@@ -8,15 +8,23 @@ namespace Epsitec.Common.Types
 	/// </summary>
 	public class DecimalType : AbstractNumericType
 	{
-		public DecimalType() : this (int.MinValue, int.MaxValue, 1)
+		public DecimalType()
+			: this (int.MinValue, int.MaxValue, 1)
 		{
 		}
-		
-		public DecimalType(DecimalRange range) : base ("Decimal", range)
+
+		public DecimalType(DecimalRange range)
+			: base ("Decimal", range)
 		{
 		}
-		
-		public DecimalType(decimal min, decimal max, decimal resolution) : this (new DecimalRange (min, max, resolution))
+
+		public DecimalType(decimal min, decimal max, decimal resolution)
+			: this (new DecimalRange (min, max, resolution))
+		{
+		}
+
+		public DecimalType(Caption caption)
+			: base (caption)
 		{
 		}
 		

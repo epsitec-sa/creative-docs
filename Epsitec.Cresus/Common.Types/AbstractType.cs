@@ -16,6 +16,11 @@ namespace Epsitec.Common.Types
 			this.DefineDefaultController (controller, controllerParameter);
 		}
 
+		protected AbstractType(Caption caption)
+			: base (caption)
+		{
+		}
+
 		#region INamedType Members
 
 		public string DefaultController
@@ -63,8 +68,30 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		protected override void OnCaptionDefined()
+		{
+			base.OnCaptionDefined ();
+
+			Caption caption = this.Caption;
+
+			if (caption != null)
+			{
+				AbstractType.SetSystemType (caption, this.SystemType.FullName);
+			}
+		}
+
+		public static string GetSystemType(Caption caption)
+		{
+			return (string) caption.GetValue (AbstractType.SytemTypeProperty);
+		}
+
+		public static void SetSystemType(Caption caption, string value)
+		{
+			caption.SetValue (AbstractType.SytemTypeProperty, value);
+		}
 
 		public static readonly DependencyProperty DefaultControllerProperty = DependencyProperty.RegisterAttached ("DefaultController", typeof (string), typeof (AbstractType), new DependencyPropertyMetadata ("Numeric"));
 		public static readonly DependencyProperty DefaultControllerParameterProperty = DependencyProperty.RegisterAttached ("DefaultControllerParameter", typeof (string), typeof (AbstractType), new DependencyPropertyMetadata ());
+		public static readonly DependencyProperty SytemTypeProperty = DependencyProperty.RegisterAttached ("SystemType", typeof (string), typeof (AbstractType));
 	}
 }
