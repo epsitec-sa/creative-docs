@@ -337,7 +337,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 				for (int i=0; i<this.columns.Length; i++)
 				{
-					this.columns[i].CellSelected = this.selectedRow-this.firstVisibleRow;
+					this.columns[i].SelectedCell = this.selectedRow-this.firstVisibleRow;
 				}
 			}
 		}
@@ -662,23 +662,23 @@ namespace Epsitec.Common.Designer.MyWidgets
 		void HandleDraggingCellSelectionChanged(object sender)
 		{
 			MyWidgets.StringList array = sender as MyWidgets.StringList;
-			int sel = array.CellSelected;
+			int sel = array.SelectedCell;
 
 			for (int i=0; i<this.columns.Length; i++)
 			{
-				this.columns[i].CellSelected = sel;
+				this.columns[i].SelectedCell = sel;
 			}
 		}
 
 		void HandleFinalCellSelectionChanged(object sender)
 		{
 			MyWidgets.StringList array = sender as MyWidgets.StringList;
-			int sel = array.CellSelected;
+			int sel = array.SelectedCell;
 			int column = -1;
 
 			for (int i=0; i<this.columns.Length; i++)
 			{
-				this.columns[i].CellSelected = sel;
+				this.columns[i].SelectedCell = sel;
 
 				if (this.columns[i] == sender)
 				{
