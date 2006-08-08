@@ -70,6 +70,20 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 		}
 
+		public ContentAlignment Alignment
+		{
+			//	Alignement des textes pour la colonne.
+			get
+			{
+				return this.alignment;
+			}
+
+			set
+			{
+				this.alignment = value;
+			}
+		}
+
 		public int LineCount
 		{
 			//	Nombre total de ligne en fonction de la hauteur du widget et de la hauteur d'une ligne.
@@ -136,25 +150,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 			//	Cellule sélectionnée.
 			get
 			{
-				if (this.cells == null)
-				{
-					return this.selectPending;
-				}
-				
-				for (int i=0; i<this.cells.Length; i++)
-				{
-					if ( this.cells[i].Selected )  return i;
-				}
-				return -1;
+				return this.cellSelected;
 			}
 
 			set
 			{
-				if (this.cells == null)
-				{
-					this.selectPending = value;
-				}
-				else
+				this.cellSelected = value;
+
+				if (this.cells != null)
 				{
 					for (int i=0; i<this.cells.Length; i++)
 					{
@@ -162,7 +165,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 						if (this.cells[i].Selected != selected)
 						{
 							this.cells[i].Selected = selected;
-							this.Invalidate ();
+							this.Invalidate();
 						}
 					}
 				}
@@ -299,11 +302,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 			{
 				this.cells[i] = new Cell ();
 				this.cells[i].TextLayout = new TextLayout ();
-				this.cells[i].TextLayout.Alignment = ContentAlignment.MiddleLeft;
+				this.cells[i].TextLayout.Alignment = this.alignment;
 				this.cells[i].State = CellState.Normal;
-				this.cells[i].Selected = (i == this.selectPending);
+				this.cells[i].Selected = (i == this.cellSelected);
 			}
-			this.selectPending = -1;
 		}
 
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
@@ -358,8 +360,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 					}
 					Color color = adorner.ColorText(state);
 
+					double leftMargin = 0;
+					if (this.alignment == ContentAlignment.MiddleLeft || this.alignment == ContentAlignment.TopLeft || this.alignment == ContentAlignment.BottomLeft)
+					{
+						leftMargin = rect.Left+5;
+					}
+
 					this.cells[i].TextLayout.LayoutSize = new Size(rect.Width-5, rect.Height);
-					this.cells[i].TextLayout.Paint(new Point(rect.Left+5, rect.Bottom), graphics, Rectangle.MaxValue, color, GlyphPaintStyle.Normal);
+					this.cells[i].TextLayout.Paint(new Point(leftMargin, rect.Bottom), graphics, Rectangle.MaxValue, color, GlyphPaintStyle.Normal);
 				}
 
 				rect.Offset(0, -h);
@@ -499,9 +507,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 		protected double					lineHeight = 20;
 		protected double					relativeWidth = 0;
+		protected ContentAlignment			alignment = ContentAlignment.MiddleLeft;
 		protected Cell[]					cells;
 		protected bool						isDynamicsToolTips = false;
 		protected bool						isDragging = false;
-		protected int						selectPending = -1;
+		protected int						cellSelected = -1;
 	}
 }

@@ -111,6 +111,18 @@ namespace Epsitec.Common.Designer.MyWidgets
 			return System.Math.Floor(w*this.GetColumnsRelativeWidth(column)/this.ColumnsRelativeTotalWidth);
 		}
 
+		public void SetColumnAlignment(int column, ContentAlignment alignment)
+		{
+			//	Modifie l'alignement d'une colonne.
+			this.columns[column].Alignment = alignment;
+		}
+
+		public ContentAlignment GetColumnAlignment(int column)
+		{
+			//	Retourne l'alignement d'une colonne.
+			return this.columns[column].Alignment;
+		}
+
 		public double LineHeight
 		{
 			//	Hauteur d'une ligne.

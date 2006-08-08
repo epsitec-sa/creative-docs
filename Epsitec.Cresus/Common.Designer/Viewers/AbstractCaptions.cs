@@ -144,22 +144,13 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryIcon.Anchor = AnchorStyles.TopLeft;
 			this.primaryIcon.TabIndex = this.tabIndex++;
 			this.primaryIcon.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.primaryIcon.Clicked += new MessageEventHandler(this.HandlePrimaryIconClicked);
 
 			this.primaryIconInfo = new StaticText(leftContainer.Container);
 			this.primaryIconInfo.PreferredHeight = 30;
-			this.primaryIconInfo.PreferredWidth = 200;
+			this.primaryIconInfo.PreferredWidth = 300;
 			this.primaryIconInfo.Margins = new Margins(30+10, 0, 0, 0);
 			this.primaryIconInfo.Anchor = AnchorStyles.TopLeft;
-
-			this.primaryIconChoice = new Button(leftContainer.Container);
-			this.primaryIconChoice.Text = Res.Strings.Viewers.Captions.Icon.Choice;
-			this.primaryIconChoice.PreferredHeight = 30;
-			this.primaryIconChoice.PreferredWidth = 80;
-			this.primaryIconChoice.Margins = new Margins(30+10+200+10, 0, 0, 0);
-			this.primaryIconChoice.Anchor = AnchorStyles.TopLeft;
-			this.primaryIconChoice.TabIndex = this.tabIndex++;
-			this.primaryIconChoice.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			this.primaryIconChoice.Clicked += new MessageEventHandler(this.HandlePrimaryIconChoiceClicked);
 
 			//	Commentaires.
 			this.CreateBand(out leftContainer, out rightContainer, Res.Strings.Viewers.Captions.About.Title, 0.7);
@@ -340,16 +331,16 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			ResourceAccess.Field field = this.access.GetField(this.access.AccessIndex, null, "Icon");
 
-			string app, name;
-			Dialogs.Icon.GetIconNames(field.String, out app, out name);
+			string module, name;
+			Dialogs.Icon.GetIconNames(field.String, out module, out name);
 			
-			if (app == "" && name == "")
+			if (string.IsNullOrEmpty(name))
 			{
-				this.primaryIconInfo.Text = Misc.Italic(Res.Strings.Dialog.Icon.None);
+				this.primaryIconInfo.Text = Res.Strings.Dialog.Icon.None;
 			}
 			else
 			{
-				this.primaryIconInfo.Text = string.Format("{0}.{1}", app, name);
+				this.primaryIconInfo.Text = string.Format("{0}.{1}", module, Misc.Bold(name));
 			}
 		}
 
@@ -722,7 +713,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.lastActionIsReplace = false;
 		}
 
-		void HandlePrimaryIconChoiceClicked(object sender, MessageEventArgs e)
+		void HandlePrimaryIconClicked(object sender, MessageEventArgs e)
 		{
 			//	Le boutons pour choisir l'icône a été cliqué.
 			ResourceAccess.Field field = this.access.GetField(this.access.AccessIndex, null, "Icon");
@@ -753,7 +744,6 @@ namespace Epsitec.Common.Designer.Viewers
 		protected TextFieldMulti				secondaryDescription;
 		protected IconButton					primaryIcon;
 		protected StaticText					primaryIconInfo;
-		protected Button						primaryIconChoice;
 		protected TextFieldMulti				primaryAbout;
 		protected TextFieldMulti				secondaryAbout;
 	}
