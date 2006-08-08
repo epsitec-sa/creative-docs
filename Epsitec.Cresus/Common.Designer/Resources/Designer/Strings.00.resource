@@ -178,6 +178,10 @@
   <data name="Dialog.NewCulture.Label" id="0K4">Choix de la culture à créer</data>
   <data name="Dialog.NewCulture.Button.Create" id="0L4">Créer</data>
   <data name="Dialog.DeleteCulture.Question" id="0M4">Voulez-vous supprimer la culture {0} ?</data>
+  <data name="Dialog.Icon.Title" id="016" mod="1">Choix d&amp;apos;une icône</data>
+  <data name="Dialog.Icon.None" id="046" mod="1">Aucune</data>
+  <data name="Dialog.Icon.Button.OK" id="026" mod="1">D&amp;apos;accord</data>
+  <data name="Dialog.Icon.Button.Cancel" id="036" mod="1">Annuler</data>
   <data name="Dialog.TextSelector.Title" id="0N4">Choix d'une ressource de type texte</data>
   <data name="Dialog.TextSelector.Label" id="0O4">Identificateur :</data>
   <data name="Dialog.TextSelector.Text" id="0P4">Texte {0} :</data>

@@ -23,7 +23,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.window.MakeSecondaryWindow();
 				this.window.PreventAutoClose = true;
 				this.WindowInit("Icon", 300, 400, true);
-				this.window.Text = Res.Strings.Dialog.Glyphs.Title;
+				this.window.Text = Res.Strings.Dialog.Icon.Title;
 				this.window.Owner = this.parentWindow;
 				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowCloseClicked);
 				this.window.Root.MinSize = new Size(200, 150);
@@ -48,7 +48,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				//	Boutons de fermeture.
 				Button buttonOk = new Button(this.window.Root);
 				buttonOk.PreferredWidth = 75;
-				buttonOk.Text = Res.Strings.Dialog.Glyphs.Button.Insert;
+				buttonOk.Text = Res.Strings.Dialog.Icon.Button.OK;
 				buttonOk.ButtonStyle = ButtonStyle.DefaultAccept;
 				buttonOk.Anchor = AnchorStyles.BottomLeft;
 				buttonOk.Margins = new Margins(6, 0, 0, 6);
@@ -58,7 +58,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 				Button buttonClose = new Button(this.window.Root);
 				buttonClose.PreferredWidth = 75;
-				buttonClose.Text = Res.Strings.Dialog.Button.Close;
+				buttonClose.Text = Res.Strings.Dialog.Icon.Button.Cancel;
 				buttonClose.Anchor = AnchorStyles.BottomLeft;
 				buttonClose.Margins = new Margins(6+75+10, 0, 0, 6);
 				buttonClose.Clicked += new MessageEventHandler(this.HandleButtonCloseClicked);
@@ -129,7 +129,7 @@ namespace Epsitec.Common.Designer.Dialogs
 					this.array.SetLineState(2, row, MyWidgets.StringList.CellState.Normal);
 					this.array.SetLineString(0, row, "");
 					this.array.SetLineString(1, row, "");
-					this.array.SetLineString(2, row, "Aucune");
+					this.array.SetLineString(2, row, Res.Strings.Dialog.Icon.None);
 				}
 				else if (row-1 < this.icons.Count)
 				{
