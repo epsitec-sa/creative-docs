@@ -145,17 +145,17 @@ namespace Epsitec.Common.Designer.MyWidgets
 			return this.cells[index].State;
 		}
 
-		public int CellSelected
+		public int SelectedCell
 		{
 			//	Cellule sélectionnée.
 			get
 			{
-				return this.cellSelected;
+				return this.selectedCell;
 			}
 
 			set
 			{
-				this.cellSelected = value;
+				this.selectedCell = value;
 
 				if (this.cells != null)
 				{
@@ -209,11 +209,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 				if (message.Type == MessageType.MouseDown)
 				{
 					int cell = this.Detect(pos, true);
-					if (this.CellSelected != cell)
+					if (this.SelectedCell != cell)
 					{
 						if (cell != -1)
 						{
-							this.CellSelected = cell;
+							this.SelectedCell = cell;
 							this.OnDraggingCellSelectionChanged();
 						}
 					}
@@ -231,9 +231,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 					if (this.isDragging)
 					{
 						int cell = this.Detect(pos, false);
-						if (this.CellSelected != cell)
+						if (this.SelectedCell != cell)
 						{
-							this.CellSelected = cell;
+							this.SelectedCell = cell;
 							this.OnDraggingCellSelectionChanged();
 						}
 						message.Captured = true;
@@ -245,7 +245,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				if (message.Type == MessageType.MouseUp)
 				{
 					int cell = this.Detect(pos, false);
-					this.CellSelected = cell;
+					this.SelectedCell = cell;
 					this.OnFinalCellSelectionChanged();
 					this.isDragging = false;
 					message.Captured = true;
@@ -304,7 +304,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.cells[i].TextLayout = new TextLayout ();
 				this.cells[i].TextLayout.Alignment = this.alignment;
 				this.cells[i].State = CellState.Normal;
-				this.cells[i].Selected = (i == this.cellSelected);
+				this.cells[i].Selected = (i == this.selectedCell);
 			}
 		}
 
@@ -511,6 +511,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected Cell[]					cells;
 		protected bool						isDynamicsToolTips = false;
 		protected bool						isDragging = false;
-		protected int						cellSelected = -1;
+		protected int						selectedCell = -1;
 	}
 }

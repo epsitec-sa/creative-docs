@@ -62,7 +62,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.array.SetColumnsRelativeWidth(1, 0.30);  // nom du module
 				this.array.SetColumnsRelativeWidth(2, 0.55);  // nom de l'icône
 				this.array.SetColumnAlignment(0, ContentAlignment.MiddleCenter);
-				this.array.LineHeight = 40;
+				this.array.LineHeight = 25;
 				this.array.Dock = DockStyle.Fill;
 				this.array.Margins = new Margins(6, 6, 6, 6+30);
 				this.array.CellCountChanged += new EventHandler(this.HandleArrayCellCountChanged);
@@ -71,6 +71,22 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.array.SelectedRowDoubleClicked += new EventHandler(this.HandleArraySelectedRowDoubleClicked);
 				this.array.TabIndex = tabIndex++;
 				this.array.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+
+				this.slider = new HSlider(this.window.Root);
+				this.slider.PreferredWidth = 80;
+				this.slider.PreferredHeight = 14;
+				this.slider.Anchor = AnchorStyles.Bottom|AnchorStyles.Right;
+				this.slider.Margins = new Margins(6, 6, 0, 9);
+				this.slider.TabIndex = tabIndex++;
+				this.slider.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+				this.slider.MinValue = 20.0M;
+				this.slider.MaxValue = 50.0M;
+				this.slider.SmallChange = 1.0M;
+				this.slider.LargeChange = 5.0M;
+				this.slider.Resolution = 1.0M;
+				this.slider.Value = (decimal) this.array.LineHeight;
+				this.slider.ValueChanged += new EventHandler(this.HandleSliderChanged);
+				//?ToolTip.Default.SetToolTip(this.slider, Res.Strings.Dialog.Glyphs.Tooltip.ArraySize);
 
 				//	Boutons de fermeture.
 				Button buttonOk = new Button(this.window.Root);
@@ -343,6 +359,13 @@ namespace Epsitec.Common.Designer.Dialogs
 			}
 		}
 
+		private void HandleSliderChanged(object sender)
+		{
+			HSlider slider = sender as HSlider;
+			if ( slider == null )  return;
+			this.array.LineHeight = (double) slider.Value;
+		}
+
 
 		protected ResourceManager			manager;
 		protected string					moduleName;
@@ -353,5 +376,6 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected IconButton				searchPrev;
 		protected IconButton				searchNext;
 		protected MyWidgets.StringArray		array;
+		protected HSlider					slider;
 	}
 }
