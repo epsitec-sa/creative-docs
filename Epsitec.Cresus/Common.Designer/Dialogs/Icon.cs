@@ -185,13 +185,21 @@ namespace Epsitec.Common.Designer.Dialogs
 			}
 		}
 
-		protected static void GetIconNames(string fullName, out string app, out string shortName)
+		public static void GetIconNames(string fullName, out string app, out string shortName)
 		{
 			//	Fractionne le nom du type "manifest:Epsitec.Common.Designer.Images.xxx.icon".
 			//	TODO: faire mieux !
-			string[] parts = fullName.Split('.');
-			app = parts[parts.Length-4];
-			shortName = parts[parts.Length-2];
+			if (string.IsNullOrEmpty(fullName))
+			{
+				app = "";
+				shortName = "";
+			}
+			else
+			{
+				string[] parts = fullName.Split('.');
+				app = parts[parts.Length-4];
+				shortName = parts[parts.Length-2];
+			}
 		}
 
 

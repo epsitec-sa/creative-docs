@@ -145,11 +145,17 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryIcon.TabIndex = this.tabIndex++;
 			this.primaryIcon.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
+			this.primaryIconInfo = new StaticText(leftContainer.Container);
+			this.primaryIconInfo.PreferredHeight = 30;
+			this.primaryIconInfo.PreferredWidth = 200;
+			this.primaryIconInfo.Margins = new Margins(30+10, 0, 0, 0);
+			this.primaryIconInfo.Anchor = AnchorStyles.TopLeft;
+
 			this.primaryIconChoice = new Button(leftContainer.Container);
 			this.primaryIconChoice.Text = Res.Strings.Viewers.Captions.Icon.Choice;
 			this.primaryIconChoice.PreferredHeight = 30;
 			this.primaryIconChoice.PreferredWidth = 80;
-			this.primaryIconChoice.Margins = new Margins(30+10, 0, 0, 0);
+			this.primaryIconChoice.Margins = new Margins(30+10+200+10, 0, 0, 0);
 			this.primaryIconChoice.Anchor = AnchorStyles.TopLeft;
 			this.primaryIconChoice.TabIndex = this.tabIndex++;
 			this.primaryIconChoice.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
@@ -290,6 +296,7 @@ namespace Epsitec.Common.Designer.Viewers
 				this.SetTextField(this.primaryLabels, 0, null, null);
 				this.SetTextField(this.primaryDescription, 0, null, null);
 				this.SetTextField(this.primaryIcon, 0, null, null);
+				this.primaryIconInfo.Text = "";
 				this.SetTextField(this.primaryAbout, 0, null, null);
 
 				this.SetTextField(this.secondaryLabels, 0, null, null);
@@ -304,6 +311,7 @@ namespace Epsitec.Common.Designer.Viewers
 				this.SetTextField(this.primaryLabels, index, null, "Labels");
 				this.SetTextField(this.primaryDescription, index, null, "Description");
 				this.SetTextField(this.primaryIcon, index, null, "Icon");
+				this.UpdateIconInfo();
 				this.SetTextField(this.primaryAbout, index, null, "About");
 
 				if (this.secondaryCulture == null)
@@ -326,6 +334,23 @@ namespace Epsitec.Common.Designer.Viewers
 			this.ignoreChange = iic;
 
 			this.UpdateCommands();
+		}
+
+		protected void UpdateIconInfo()
+		{
+			ResourceAccess.Field field = this.access.GetField(this.access.AccessIndex, null, "Icon");
+
+			string app, name;
+			Dialogs.Icon.GetIconNames(field.String, out app, out name);
+			
+			if (app == "" && name == "")
+			{
+				this.primaryIconInfo.Text = Misc.Italic(Res.Strings.Dialog.Icon.None);
+			}
+			else
+			{
+				this.primaryIconInfo.Text = string.Format("{0}.{1}", app, name);
+			}
 		}
 
 
@@ -708,7 +733,9 @@ namespace Epsitec.Common.Designer.Viewers
 			if (icon != initialIcon)
 			{
 				this.access.SetField(this.access.AccessIndex, null, "Icon", new ResourceAccess.Field(icon));
+
 				this.SetTextField(this.primaryIcon, this.access.AccessIndex, null, "Icon");
+				this.UpdateIconInfo();
 			}
 		}
 
@@ -725,6 +752,7 @@ namespace Epsitec.Common.Designer.Viewers
 		protected TextFieldMulti				primaryDescription;
 		protected TextFieldMulti				secondaryDescription;
 		protected IconButton					primaryIcon;
+		protected StaticText					primaryIconInfo;
 		protected Button						primaryIconChoice;
 		protected TextFieldMulti				primaryAbout;
 		protected TextFieldMulti				secondaryAbout;
