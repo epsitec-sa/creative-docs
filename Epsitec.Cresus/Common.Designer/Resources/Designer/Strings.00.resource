@@ -37,6 +37,7 @@
   <data name="Viewers.Captions.Description.Title" id="0C5" mod="1">Description pour la bulle d&amp;apos;aide</data>
   <data name="Viewers.Captions.Description.Short" id="0J5" mod="1">Description</data>
   <data name="Viewers.Captions.Icon.Title" id="0D5" mod="1">Icône</data>
+  <data name="Viewers.Captions.Icon.Choice" id="056" mod="1">Choix</data>
   <data name="Viewers.Captions.About.Title" id="0B5" mod="1">Commentaires</data>
   <data name="Viewers.Commands.Statefull.Title" id="0O5" mod="1">Type</data>
   <data name="Viewers.Commands.Statefull.CheckButton" id="0P5" mod="1">Reflète un état activé ou désactivé</data>
