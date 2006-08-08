@@ -708,6 +708,7 @@ namespace Epsitec.Common.Designer.Viewers
 			if (icon != initialIcon)
 			{
 				this.access.SetField(this.access.AccessIndex, null, "Icon", new ResourceAccess.Field(icon));
+				this.SetTextField(this.primaryIcon, this.access.AccessIndex, null, "Icon");
 			}
 		}
 
