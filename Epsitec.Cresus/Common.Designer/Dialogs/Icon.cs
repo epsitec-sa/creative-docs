@@ -30,6 +30,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 				int tabIndex = 0;
 
+				//	Bande horizontale pour la recherche.
 				Widget header = new Widget(this.window.Root);
 				header.PreferredHeight = 20;
 				header.Margins = new Margins(6, 6, 6, 0);
@@ -56,6 +57,25 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.searchPrev.Clicked += new MessageEventHandler(this.HandleSearchPrevClicked);
 				ToolTip.Default.SetToolTip(this.searchPrev, Res.Strings.Action.SearchPrev);
 
+				//	Bande horizontale pour le filtre.
+				header = new Widget(this.window.Root);
+				header.PreferredHeight = 20;
+				header.Margins = new Margins(6, 6, 6, 0);
+				header.Dock = DockStyle.Top;
+
+				label = new StaticText(header);
+				label.Text = Res.Strings.Dialog.Filter.Button.Insert;
+				label.PreferredWidth = 70;
+				label.Dock = DockStyle.Left;
+
+				this.fieldFilter = new TextFieldCombo(header);
+				this.fieldFilter.Text = Res.Strings.Dialog.Filter.Button.All;
+				this.fieldFilter.IsReadOnly = true;
+				this.fieldFilter.Margins = new Margins(5, 5+22+22, 0, 0);
+				this.fieldFilter.Dock = DockStyle.Fill;
+				this.fieldFilter.ComboClosed += new EventHandler(this.HandleFieldFilterComboClosed);
+
+				//	Tableau principal.
 				this.array = new MyWidgets.StringArray(this.window.Root);
 				this.array.Columns = 3;
 				this.array.SetColumnsRelativeWidth(0, 0.15);  // icône
@@ -109,8 +129,9 @@ namespace Epsitec.Common.Designer.Dialogs
 				buttonClose.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			}
 
+			this.UpdateFilter();
 			this.UpdateArray();
-			this.array.SelectedRow = this.SelectedIcon;
+			this.array.SelectedRow = this.SelectedIcon(this.icon);
 			this.array.ShowSelectedRow();
 
 			this.window.ShowDialog();
@@ -123,21 +144,23 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.manager = manager;
 			this.moduleName = moduleName;
 
-			string[] names = ImageProvider.Default.GetImageNames("manifest", this.manager);
-			this.icons = new List<string>();
+			this.modules = new List<string>();
+			this.modules.Clear();
+			this.modules.Add(Res.Strings.Dialog.Filter.Button.All);
 
+			string[] names = ImageProvider.Default.GetImageNames("manifest", this.manager);
 			for (int i=0; i<names.Length; i++)
 			{
-				//	Fractionne le nom du type "manifest:Epsitec.Common.Designer.Images.xxx.icon".
 				string module, name;
 				Icon.GetIconNames(names[i], out module, out name);
 
-				//?if (module == this.moduleName)  // TODO: ne fonctionne pas, voir mail du 08.08.06 11:50
-				if (true)
+				if (!this.modules.Contains(module))
 				{
-					this.icons.Add(names[i]);
+					this.modules.Add(module);
 				}
 			}
+
+			this.UpdateFilter();
 		}
 
 		public string IconValue
@@ -153,6 +176,46 @@ namespace Epsitec.Common.Designer.Dialogs
 			}
 		}
 
+
+		protected void UpdateFilter()
+		{
+			string filter = null;
+
+			if (this.fieldFilter != null)
+			{
+				this.fieldFilter.Items.Clear();
+				foreach (string module in this.modules)
+				{
+					this.fieldFilter.Items.Add(module);
+				}
+
+				filter = this.fieldFilter.Text;
+				if (filter == Res.Strings.Dialog.Filter.Button.All)
+				{
+					filter = null;
+				}
+			}
+
+			this.icons = new List<string>();
+			string[] names = ImageProvider.Default.GetImageNames("manifest", this.manager);
+			for (int i=0; i<names.Length; i++)
+			{
+				string module, name;
+				Icon.GetIconNames(names[i], out module, out name);
+
+				if (filter == null || filter == module)
+				{
+					this.icons.Add(names[i]);
+				}
+			}
+
+			if (!string.IsNullOrEmpty(this.icon) && this.SelectedIcon(this.icon) == 0)
+			{
+				//	Si l'icône n'existe pas avec le filtre actuel, on l'ajoute en
+				//	première position, juste après 'pas d'icône'.
+				this.icons.Insert(0, this.icon);
+			}
+		}
 
 		protected void UpdateArray()
 		{
@@ -205,31 +268,26 @@ namespace Epsitec.Common.Designer.Dialogs
 			}
 		}
 
-		protected int SelectedIcon
+		protected int SelectedIcon(string icon)
 		{
-			//	Retourne le rang de l'icône choisie dans le tableau.
-			get
+			//	Retourne le rang d'une icône dans le tableau.
+			if (!string.IsNullOrEmpty(icon))
 			{
-				if (string.IsNullOrEmpty(this.icon))
-				{
-					return 0;  // première ligne 'pas d'icône'
-				}
-
 				for (int i=0; i<this.icons.Count; i++)
 				{
-					if (this.icons[i] == this.icon)
+					if (this.icons[i] == icon)
 					{
 						return i+1;
 					}
 				}
-
-				return -1;
 			}
+
+			return 0;  // première ligne 'pas d'icône'
 		}
 
 		public static void GetIconNames(string fullName, out string moduleName, out string shortName)
 		{
-			//	Fractionne le nom du type "manifest:Epsitec.Common.Designer.Images.xxx.icon".
+			//	Fractionne un nom du type "manifest:Epsitec.Common.Designer.Images.xxx.icon".
 			//	TODO: faire mieux !
 			if (string.IsNullOrEmpty(fullName))
 			{
@@ -246,7 +304,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		protected void Search(string searching, int direction)
 		{
-			//	Cherche dans une direction.
+			//	Cherche dans une direction donnée.
 			searching = Searcher.RemoveAccent(searching.ToLower());
 			int sel = this.array.SelectedRow-1;
 
@@ -282,14 +340,33 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		void HandleSearchPrevClicked(object sender, MessageEventArgs e)
 		{
+			//	Cherche l'occurence précédente.
 			Misc.ComboMenuAdd(this.fieldSearch);
 			this.Search(this.fieldSearch.Text, -1);
 		}
 
 		void HandleSearchNextClicked(object sender, MessageEventArgs e)
 		{
+			//	Cherche l'occurence suivante.
 			Misc.ComboMenuAdd(this.fieldSearch);
 			this.Search(this.fieldSearch.Text, 1);
+		}
+
+		void HandleFieldFilterComboClosed(object sender)
+		{
+			//	Menu pour choisir le filtre fermé.
+			string icon = null;
+			int sel = this.array.SelectedRow;
+			if (sel > 0)
+			{
+				icon = this.icons[sel-1];
+			}
+
+			this.UpdateFilter();
+			this.UpdateArray();
+
+			this.array.SelectedRow = this.SelectedIcon(icon);
+			this.array.ShowSelectedRow();
 		}
 
 		void HandleArrayCellCountChanged(object sender)
@@ -369,10 +446,12 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		protected ResourceManager			manager;
 		protected string					moduleName;
+		protected List<string>				modules;
 		protected List<string>				icons;
 		protected string					icon;
 
 		protected TextFieldCombo			fieldSearch;
+		protected TextFieldCombo			fieldFilter;
 		protected IconButton				searchPrev;
 		protected IconButton				searchNext;
 		protected MyWidgets.StringArray		array;
