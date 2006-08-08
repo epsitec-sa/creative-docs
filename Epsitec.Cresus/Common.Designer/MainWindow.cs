@@ -60,6 +60,7 @@ namespace Epsitec.Common.Designer
 				CommandContext.SetContext(this.window, this.commandContext);
 
 				this.dlgGlyphs       = new Dialogs.Glyphs(this);
+				this.dlgIcon         = new Dialogs.Icon(this);
 				this.dlgFilter       = new Dialogs.Filter(this);
 				this.dlgSearch       = new Dialogs.Search(this);
 				this.dlgNewCulture   = new Dialogs.NewCulture(this);
@@ -936,6 +937,16 @@ namespace Epsitec.Common.Designer
 			return this.dlgTextSelector.Resource;
 		}
 
+		public string DlgIcon(ResourceManager manager, string icon)
+		{
+			//	Ouvre le dialogue pour choisir une icône.
+			ModuleInfo mi = this.CurrentModuleInfo;
+			this.dlgIcon.SetResourceManager(manager, mi.Module.ModuleInfo.Name);
+			this.dlgIcon.IconValue = icon;
+			this.dlgIcon.Show();
+			return this.dlgIcon.IconValue;
+		}
+
 		public string DlgNewCulture(ResourceAccess access)
 		{
 			//	Ouvre le dialogue pour choisir la culture à créer.
@@ -1072,6 +1083,7 @@ namespace Epsitec.Common.Designer
 		protected StatusBar						info;
 		protected ResizeKnob					resize;
 		protected Dialogs.Glyphs				dlgGlyphs;
+		protected Dialogs.Icon					dlgIcon;
 		protected Dialogs.Filter				dlgFilter;
 		protected Dialogs.Search				dlgSearch;
 		protected Dialogs.NewCulture			dlgNewCulture;
