@@ -122,9 +122,18 @@ namespace Epsitec.Common.Designer.Dialogs
 			{
 				int row = first+i;
 
-				if (row < this.icons.Count)
+				if (row == 0)
 				{
-					string icon = this.icons[row];
+					this.array.SetLineState(0, row, MyWidgets.StringList.CellState.Normal);
+					this.array.SetLineState(1, row, MyWidgets.StringList.CellState.Normal);
+					this.array.SetLineState(2, row, MyWidgets.StringList.CellState.Normal);
+					this.array.SetLineString(0, row, "");
+					this.array.SetLineString(1, row, "");
+					this.array.SetLineString(2, row, "Aucune");
+				}
+				else if (row-1 < this.icons.Count)
+				{
+					string icon = this.icons[row-1];
 					string text = string.Format(@"<img src=""{0}""/>", icon);
 
 					//	Factionne le nom du type "manifest:Epsitec.Common.Designer.Images.xxx.icon".
@@ -157,11 +166,16 @@ namespace Epsitec.Common.Designer.Dialogs
 		{
 			get
 			{
+				if (string.IsNullOrEmpty(this.icon))
+				{
+					return 0;
+				}
+
 				for (int i=0; i<this.icons.Count; i++)
 				{
 					if (this.icons[i] == this.icon)
 					{
-						return i;
+						return i+1;
 					}
 				}
 
@@ -196,7 +210,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.OnClosed();
 
 			int sel = this.array.SelectedRow;
-			if (sel == -1)
+			if (sel <= 0)
 			{
 				this.icon = null;
 			}
@@ -227,7 +241,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.OnClosed();
 
 			int sel = this.array.SelectedRow;
-			if (sel == -1)
+			if (sel <= 0)
 			{
 				this.icon = null;
 			}
