@@ -22,7 +22,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.window = new Window();
 				this.window.MakeSecondaryWindow();
 				this.window.PreventAutoClose = true;
-				this.WindowInit("Icon", 300, 400, true);
+				this.WindowInit("Icon", 400, 400, true);
 				this.window.Text = Res.Strings.Dialog.Icon.Title;
 				this.window.Owner = this.parentWindow;
 				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowCloseClicked);
@@ -30,14 +30,41 @@ namespace Epsitec.Common.Designer.Dialogs
 
 				int tabIndex = 0;
 
+				Widget header = new Widget(this.window.Root);
+				header.PreferredHeight = 20;
+				header.Margins = new Margins(6, 6, 6, 0);
+				header.Dock = DockStyle.Top;
+
+				StaticText label = new StaticText(header);
+				label.Text = Res.Strings.Dialog.Search.Button.Search;
+				label.PreferredWidth = 70;
+				label.Dock = DockStyle.Left;
+
+				this.fieldSearch = new TextFieldCombo(header);
+				this.fieldSearch.Margins = new Margins(5, 5, 0, 0);
+				this.fieldSearch.Dock = DockStyle.Fill;
+
+				this.searchNext = new IconButton(header);
+				this.searchNext.IconName = Misc.Icon("AccessNext");
+				this.searchNext.Dock = DockStyle.Right;
+				this.searchNext.Clicked += new MessageEventHandler(this.HandleSearchNextClicked);
+				ToolTip.Default.SetToolTip(this.searchNext, Res.Strings.Action.SearchNext);
+
+				this.searchPrev = new IconButton(header);
+				this.searchPrev.IconName = Misc.Icon("AccessPrev");
+				this.searchPrev.Dock = DockStyle.Right;
+				this.searchPrev.Clicked += new MessageEventHandler(this.HandleSearchPrevClicked);
+				ToolTip.Default.SetToolTip(this.searchPrev, Res.Strings.Action.SearchPrev);
+
 				this.array = new MyWidgets.StringArray(this.window.Root);
 				this.array.Columns = 3;
-				this.array.SetColumnsRelativeWidth(0, 0.2);
-				this.array.SetColumnsRelativeWidth(1, 0.4);
-				this.array.SetColumnsRelativeWidth(2, 0.4);
+				this.array.SetColumnsRelativeWidth(0, 0.15);  // icône
+				this.array.SetColumnsRelativeWidth(1, 0.30);  // nom du module
+				this.array.SetColumnsRelativeWidth(2, 0.55);  // nom de l'icône
+				this.array.SetColumnAlignment(0, ContentAlignment.MiddleCenter);
 				this.array.LineHeight = 40;
 				this.array.Dock = DockStyle.Fill;
-				this.array.Margins = new Margins (6, 6, 6, 6+30);
+				this.array.Margins = new Margins(6, 6, 6, 6+30);
 				this.array.CellCountChanged += new EventHandler(this.HandleArrayCellCountChanged);
 				this.array.CellsContentChanged += new EventHandler(this.HandleArrayCellsContentChanged);
 				this.array.SelectedRowChanged += new EventHandler(this.HandleArraySelectedRowChanged);
@@ -67,6 +94,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			}
 
 			this.UpdateArray();
+			this.array.SelectedRow = this.SelectedIcon;
 			this.array.ShowSelectedRow();
 
 			this.window.ShowDialog();
@@ -85,10 +113,10 @@ namespace Epsitec.Common.Designer.Dialogs
 			for (int i=0; i<names.Length; i++)
 			{
 				//	Fractionne le nom du type "manifest:Epsitec.Common.Designer.Images.xxx.icon".
-				string app, name;
-				Icon.GetIconNames(names[i], out app, out name);
+				string module, name;
+				Icon.GetIconNames(names[i], out module, out name);
 
-				//?if (app == this.moduleName)  // TODO: ne fonctionne pas, voir mail du 08.08.06 11:50
+				//?if (module == this.moduleName)  // TODO: ne fonctionne pas, voir mail du 08.08.06 11:50
 				if (true)
 				{
 					this.icons.Add(names[i]);
@@ -125,7 +153,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			{
 				int row = first+i;
 
-				if (row == 0)
+				if (row == 0)  // première ligne 'pas d'icône' ?
 				{
 					this.array.SetLineState(0, row, MyWidgets.StringList.CellState.Normal);
 					this.array.SetLineState(1, row, MyWidgets.StringList.CellState.Normal);
@@ -139,14 +167,14 @@ namespace Epsitec.Common.Designer.Dialogs
 					string icon = this.icons[row-1];
 					string text = string.Format(@"<img src=""{0}""/>", icon);
 
-					string app, name;
-					Icon.GetIconNames(icon, out app, out name);
+					string module, name;
+					Icon.GetIconNames(icon, out module, out name);
 
 					this.array.SetLineState(0, row, MyWidgets.StringList.CellState.Normal);
 					this.array.SetLineState(1, row, MyWidgets.StringList.CellState.Normal);
 					this.array.SetLineState(2, row, MyWidgets.StringList.CellState.Normal);
 					this.array.SetLineString(0, row, text);
-					this.array.SetLineString(1, row, app);
+					this.array.SetLineString(1, row, module);
 					this.array.SetLineString(2, row, name);
 				}
 				else
@@ -159,8 +187,6 @@ namespace Epsitec.Common.Designer.Dialogs
 					this.array.SetLineString(2, row, "");
 				}
 			}
-
-			this.array.SelectedRow = this.SelectedIcon;
 		}
 
 		protected int SelectedIcon
@@ -170,7 +196,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			{
 				if (string.IsNullOrEmpty(this.icon))
 				{
-					return 0;  // première ligne 'aucune'
+					return 0;  // première ligne 'pas d'icône'
 				}
 
 				for (int i=0; i<this.icons.Count; i++)
@@ -185,23 +211,70 @@ namespace Epsitec.Common.Designer.Dialogs
 			}
 		}
 
-		public static void GetIconNames(string fullName, out string app, out string shortName)
+		public static void GetIconNames(string fullName, out string moduleName, out string shortName)
 		{
 			//	Fractionne le nom du type "manifest:Epsitec.Common.Designer.Images.xxx.icon".
 			//	TODO: faire mieux !
 			if (string.IsNullOrEmpty(fullName))
 			{
-				app = "";
-				shortName = "";
+				moduleName = null;
+				shortName = null;
 			}
 			else
 			{
 				string[] parts = fullName.Split('.');
-				app = parts[parts.Length-4];
+				moduleName = parts[parts.Length-4];
 				shortName = parts[parts.Length-2];
 			}
 		}
 
+		protected void Search(string searching, int direction)
+		{
+			//	Cherche dans une direction.
+			searching = Searcher.RemoveAccent(searching.ToLower());
+			int sel = this.array.SelectedRow-1;
+
+			for (int i=0; i<this.icons.Count; i++)
+			{
+				sel += direction;  // suivant, en avant ou en arrière
+
+				if (sel >= this.icons.Count)  // fin dépassée ?
+				{
+					sel = 0;  // revient au début
+				}
+
+				if (sel < 0)  // début dépassé ?
+				{
+					sel = this.icons.Count-1;  // va à la fin
+				}
+
+				string module, name;
+				Icon.GetIconNames(this.icons[sel], out module, out name);
+				name = Searcher.RemoveAccent(name.ToLower());
+
+				if (name.Contains(searching))
+				{
+					this.array.SelectedRow = sel+1;
+					this.array.ShowSelectedRow();
+					return;
+				}
+			}
+
+			this.mainWindow.DialogMessage(Res.Strings.Dialog.Search.Message.Error);
+		}
+
+
+		void HandleSearchPrevClicked(object sender, MessageEventArgs e)
+		{
+			Misc.ComboMenuAdd(this.fieldSearch);
+			this.Search(this.fieldSearch.Text, -1);
+		}
+
+		void HandleSearchNextClicked(object sender, MessageEventArgs e)
+		{
+			Misc.ComboMenuAdd(this.fieldSearch);
+			this.Search(this.fieldSearch.Text, 1);
+		}
 
 		void HandleArrayCellCountChanged(object sender)
 		{
@@ -275,6 +348,10 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected string					moduleName;
 		protected List<string>				icons;
 		protected string					icon;
+
+		protected TextFieldCombo			fieldSearch;
+		protected IconButton				searchPrev;
+		protected IconButton				searchNext;
 		protected MyWidgets.StringArray		array;
 	}
 }

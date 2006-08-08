@@ -37,7 +37,6 @@
   <data name="Viewers.Captions.Description.Title" id="0C5" mod="1">Description pour la bulle d&amp;apos;aide</data>
   <data name="Viewers.Captions.Description.Short" id="0J5" mod="1">Description</data>
   <data name="Viewers.Captions.Icon.Title" id="0D5" mod="1">Icône</data>
-  <data name="Viewers.Captions.Icon.Choice" id="056" mod="1">Choix</data>
   <data name="Viewers.Captions.About.Title" id="0B5" mod="1">Commentaires</data>
   <data name="Viewers.Commands.Statefull.Title" id="0O5" mod="1">Type</data>
   <data name="Viewers.Commands.Statefull.CheckButton" id="0P5" mod="1">Reflète un état activé ou désactivé</data>
@@ -180,7 +179,7 @@
   <data name="Dialog.NewCulture.Button.Create" id="0L4">Créer</data>
   <data name="Dialog.DeleteCulture.Question" id="0M4">Voulez-vous supprimer la culture {0} ?</data>
   <data name="Dialog.Icon.Title" id="016" mod="1">Choix d&amp;apos;une icône</data>
-  <data name="Dialog.Icon.None" id="046" mod="1">Aucune</data>
+  <data name="Dialog.Icon.None" id="046" mod="1">&lt;i&gt;Pas d&amp;apos;icône&lt;/i&gt;</data>
   <data name="Dialog.Icon.Button.OK" id="026" mod="1">D&amp;apos;accord</data>
   <data name="Dialog.Icon.Button.Cancel" id="036" mod="1">Annuler</data>
   <data name="Dialog.TextSelector.Title" id="0N4">Choix d'une ressource de type texte</data>
