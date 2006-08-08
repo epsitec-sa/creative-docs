@@ -40,6 +40,7 @@
     <Compile Include="Comparers\WidgetDisposition.cs" />
     <Compile Include="Constrain.cs" />
     <Compile Include="ConstrainsList.cs" />
+    <Compile Include="Dialogs\Icon.cs" />
     <Compile Include="ResourceAccess.cs" />
     <Compile Include="GridSelection.cs" />
     <Compile Include="GeometryCache.cs" />

@@ -145,6 +145,16 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryIcon.TabIndex = this.tabIndex++;
 			this.primaryIcon.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
+			this.primaryIconChoice = new Button(leftContainer.Container);
+			this.primaryIconChoice.Text = "Choix";
+			this.primaryIconChoice.PreferredHeight = 30;
+			this.primaryIconChoice.PreferredWidth = 80;
+			this.primaryIconChoice.Margins = new Margins(30+10, 0, 0, 0);
+			this.primaryIconChoice.Anchor = AnchorStyles.TopLeft;
+			this.primaryIconChoice.TabIndex = this.tabIndex++;
+			this.primaryIconChoice.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.primaryIconChoice.Clicked += new MessageEventHandler(this.HandlePrimaryIconChoiceClicked);
+
 			//	Commentaires.
 			this.CreateBand(out leftContainer, out rightContainer, Res.Strings.Viewers.Captions.About.Title, 0.7);
 
@@ -687,6 +697,20 @@ namespace Epsitec.Common.Designer.Viewers
 			this.lastActionIsReplace = false;
 		}
 
+		void HandlePrimaryIconChoiceClicked(object sender, MessageEventArgs e)
+		{
+			//	Le boutons pour choisir l'icône a été cliqué.
+			ResourceAccess.Field field = this.access.GetField(this.access.AccessIndex, null, "Icon");
+			string initialIcon = field.String;
+
+			string icon = this.module.MainWindow.DlgIcon(this.module.ResourceManager, initialIcon);
+
+			if (icon != initialIcon)
+			{
+				this.access.SetField(this.access.AccessIndex, null, "Icon", new ResourceAccess.Field(icon));
+			}
+		}
+
 
 		protected int							tabIndex = 0;
 		protected Widget						secondaryCultureGroup;
@@ -700,6 +724,7 @@ namespace Epsitec.Common.Designer.Viewers
 		protected TextFieldMulti				primaryDescription;
 		protected TextFieldMulti				secondaryDescription;
 		protected IconButton					primaryIcon;
+		protected Button						primaryIconChoice;
 		protected TextFieldMulti				primaryAbout;
 		protected TextFieldMulti				secondaryAbout;
 	}

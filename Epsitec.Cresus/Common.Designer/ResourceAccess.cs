@@ -946,7 +946,15 @@ namespace Epsitec.Common.Designer
 
 				if (fieldName == ResourceAccess.NameCaptions[3])
 				{
-					this.accessCaption.Icon = field.String;
+					if (field.String == null)
+					{
+						this.accessCaption.Icon = "";
+					}
+					else
+					{
+						this.accessCaption.Icon = field.String;
+					}
+
 					this.accessField.SetStringValue(this.accessCaption.SerializeToString());
 				}
 
