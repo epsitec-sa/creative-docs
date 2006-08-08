@@ -146,7 +146,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryIcon.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			this.primaryIconChoice = new Button(leftContainer.Container);
-			this.primaryIconChoice.Text = "Choix";
+			this.primaryIconChoice.Text = Res.Strings.Viewers.Captions.Icon.Choice;
 			this.primaryIconChoice.PreferredHeight = 30;
 			this.primaryIconChoice.PreferredWidth = 80;
 			this.primaryIconChoice.Margins = new Margins(30+10, 0, 0, 0);
