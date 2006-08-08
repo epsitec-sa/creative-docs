@@ -75,6 +75,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		public void SetResourceManager(ResourceManager manager, string moduleName)
 		{
+			//	Détermine le module pour lequel on désire choisir une icône.
 			this.manager = manager;
 			this.moduleName = moduleName;
 
@@ -83,11 +84,11 @@ namespace Epsitec.Common.Designer.Dialogs
 
 			for (int i=0; i<names.Length; i++)
 			{
-				//	Factionne le nom du type "manifest:Epsitec.Common.Designer.Images.xxx.icon".
-				string[] parts = names[i].Split('.');
-				string app = parts[parts.Length-4];
+				//	Fractionne le nom du type "manifest:Epsitec.Common.Designer.Images.xxx.icon".
+				string app, name;
+				Icon.GetIconNames(names[i], out app, out name);
 
-				//?if (app == moduleName)
+				//?if (app == this.moduleName)  // TODO: ne fonctionne pas, voir mail du 08.08.06 11:50
 				if (true)
 				{
 					this.icons.Add(names[i]);
@@ -97,6 +98,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		public string IconValue
 		{
+			//	Nom complet de l'icône, du type "manifest:Epsitec.Common.Designer.Images.xxx.icon".
 			get
 			{
 				return this.icon;
@@ -110,6 +112,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		protected void UpdateArray()
 		{
+			//	Met à jour le tableau des icônes.
 			if (this.icons == null)
 			{
 				return;
@@ -136,10 +139,8 @@ namespace Epsitec.Common.Designer.Dialogs
 					string icon = this.icons[row-1];
 					string text = string.Format(@"<img src=""{0}""/>", icon);
 
-					//	Factionne le nom du type "manifest:Epsitec.Common.Designer.Images.xxx.icon".
-					string[] parts = icon.Split('.');
-					string app  = parts[parts.Length-4];
-					string name = parts[parts.Length-2];
+					string app, name;
+					Icon.GetIconNames(icon, out app, out name);
 
 					this.array.SetLineState(0, row, MyWidgets.StringList.CellState.Normal);
 					this.array.SetLineState(1, row, MyWidgets.StringList.CellState.Normal);
@@ -164,11 +165,12 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		protected int SelectedIcon
 		{
+			//	Retourne le rang de l'icône choisie dans le tableau.
 			get
 			{
 				if (string.IsNullOrEmpty(this.icon))
 				{
-					return 0;
+					return 0;  // première ligne 'aucune'
 				}
 
 				for (int i=0; i<this.icons.Count; i++)
@@ -181,6 +183,15 @@ namespace Epsitec.Common.Designer.Dialogs
 
 				return -1;
 			}
+		}
+
+		protected static void GetIconNames(string fullName, out string app, out string shortName)
+		{
+			//	Fractionne le nom du type "manifest:Epsitec.Common.Designer.Images.xxx.icon".
+			//	TODO: faire mieux !
+			string[] parts = fullName.Split('.');
+			app = parts[parts.Length-4];
+			shortName = parts[parts.Length-2];
 		}
 
 
@@ -216,7 +227,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			}
 			else
 			{
-				this.icon = this.icons[sel];
+				this.icon = this.icons[sel-1];
 			}
 		}
 
@@ -247,7 +258,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			}
 			else
 			{
-				this.icon = this.icons[sel];
+				this.icon = this.icons[sel-1];
 			}
 		}
 
