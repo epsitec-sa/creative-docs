@@ -29,6 +29,11 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.window.Root.MinSize = new Size(200, 150);
 				this.window.Root.Padding = new Margins(8, 8, 8, 8);
 
+				ResizeKnob resize = new ResizeKnob(this.window.Root);
+				resize.Anchor = AnchorStyles.BottomRight;
+				resize.Margins = new Margins(0, -8, 0, -8);
+				ToolTip.Default.SetToolTip(resize, Res.Strings.Dialog.Tooltip.Resize);
+
 				int tabIndex = 0;
 
 				//	Bande horizontale pour la recherche.
