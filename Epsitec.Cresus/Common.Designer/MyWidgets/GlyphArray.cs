@@ -3,7 +3,7 @@ using Epsitec.Common.Support;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.OpenType;
 
-namespace Epsitec.Common.Designer.Dialogs
+namespace Epsitec.Common.Designer.MyWidgets
 {
 	/// <summary>
 	/// La classe GlyphArray permet de choisir le glyphe Unicode d'une police

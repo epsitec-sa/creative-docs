@@ -56,7 +56,7 @@
     <Compile Include="Dialogs\NewCulture.cs" />
     <Compile Include="Dialogs\Search.cs" />
     <Compile Include="Dialogs\Filter.cs" />
-    <Compile Include="Dialogs\GlyphArray.cs" />
+    <Compile Include="MyWidgets\GlyphArray.cs" />
     <Compile Include="Dialogs\Glyphs.cs" />
     <Compile Include="MainWindow.cs" />
     <Compile Include="Misc.cs" />
