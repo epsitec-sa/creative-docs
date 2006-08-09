@@ -84,7 +84,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.array.SetColumnAlignment(0, ContentAlignment.MiddleCenter);
 				this.array.LineHeight = 25;
 				this.array.Dock = DockStyle.Fill;
-				this.array.Margins = new Margins(6, 6, 6, 6+30);
+				this.array.Margins = new Margins(6, 6, 6, 6);
 				this.array.CellCountChanged += new EventHandler(this.HandleArrayCellCountChanged);
 				this.array.CellsContentChanged += new EventHandler(this.HandleArrayCellsContentChanged);
 				this.array.SelectedRowChanged += new EventHandler(this.HandleArraySelectedRowChanged);
@@ -92,11 +92,35 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.array.TabIndex = tabIndex++;
 				this.array.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
-				this.slider = new HSlider(this.window.Root);
+				//	Pied.
+				Widget footer = new Widget(this.window.Root);
+				footer.PreferredHeight = 22;
+				footer.Margins = new Margins(6, 6, 0, 3);
+				footer.Dock = DockStyle.Bottom;
+
+				Button buttonOk = new Button(footer);
+				buttonOk.PreferredWidth = 75;
+				buttonOk.Text = Res.Strings.Dialog.Icon.Button.OK;
+				buttonOk.ButtonStyle = ButtonStyle.DefaultAccept;
+				buttonOk.Dock = DockStyle.Left;
+				buttonOk.Margins = new Margins(0, 6, 0, 0);
+				buttonOk.Clicked += new MessageEventHandler(this.HandleButtonInsertClicked);
+				buttonOk.TabIndex = tabIndex++;
+				buttonOk.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+
+				Button buttonClose = new Button(footer);
+				buttonClose.PreferredWidth = 75;
+				buttonClose.Text = Res.Strings.Dialog.Icon.Button.Cancel;
+				buttonClose.Dock = DockStyle.Left;
+				buttonClose.Margins = new Margins(0, 6, 0, 0);
+				buttonClose.Clicked += new MessageEventHandler(this.HandleButtonCloseClicked);
+				buttonClose.TabIndex = tabIndex++;
+				buttonClose.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+
+				this.slider = new HSlider(footer);
 				this.slider.PreferredWidth = 80;
-				this.slider.PreferredHeight = 14;
-				this.slider.Anchor = AnchorStyles.Bottom|AnchorStyles.Right;
-				this.slider.Margins = new Margins(6, 6, 0, 9);
+				this.slider.Dock = DockStyle.Right;
+				this.slider.Margins = new Margins(0, 0, 3, 3);
 				this.slider.TabIndex = tabIndex++;
 				this.slider.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 				this.slider.MinValue = 20.0M;
@@ -106,27 +130,6 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.slider.Resolution = 1.0M;
 				this.slider.Value = (decimal) this.array.LineHeight;
 				this.slider.ValueChanged += new EventHandler(this.HandleSliderChanged);
-				//?ToolTip.Default.SetToolTip(this.slider, Res.Strings.Dialog.Glyphs.Tooltip.ArraySize);
-
-				//	Boutons de fermeture.
-				Button buttonOk = new Button(this.window.Root);
-				buttonOk.PreferredWidth = 75;
-				buttonOk.Text = Res.Strings.Dialog.Icon.Button.OK;
-				buttonOk.ButtonStyle = ButtonStyle.DefaultAccept;
-				buttonOk.Anchor = AnchorStyles.BottomLeft;
-				buttonOk.Margins = new Margins(6, 0, 0, 6);
-				buttonOk.Clicked += new MessageEventHandler(this.HandleButtonInsertClicked);
-				buttonOk.TabIndex = tabIndex++;
-				buttonOk.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-
-				Button buttonClose = new Button(this.window.Root);
-				buttonClose.PreferredWidth = 75;
-				buttonClose.Text = Res.Strings.Dialog.Icon.Button.Cancel;
-				buttonClose.Anchor = AnchorStyles.BottomLeft;
-				buttonClose.Margins = new Margins(6+75+10, 0, 0, 6);
-				buttonClose.Clicked += new MessageEventHandler(this.HandleButtonCloseClicked);
-				buttonClose.TabIndex = tabIndex++;
-				buttonClose.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			}
 
 			this.UpdateFilter();
