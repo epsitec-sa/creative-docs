@@ -391,6 +391,29 @@ namespace Epsitec.Common.Designer
 		}
 
 
+		static public void GetIconNames(string fullName, out string moduleName, out string shortName)
+		{
+			//	Fractionne un nom du type "manifest:Epsitec.Common.Designer.Images.xxx.icon".
+			//	TODO: faire mieux !
+			if (string.IsNullOrEmpty(fullName))
+			{
+				moduleName = null;
+				shortName = null;
+			}
+			else
+			{
+				string[] parts = fullName.Split('.');
+				moduleName = parts[parts.Length-4];
+				shortName = parts[parts.Length-2];
+			}
+		}
+
+		static public string ImageFull(string fullName)
+		{
+			//	Retourne le texte pour mettre une image dans un texte.
+			return string.Format(@"<img src=""{0}""/>", fullName);
+		}
+
 		static public string Image(string icon)
 		{
 			//	Retourne le texte pour mettre une image dans un texte.

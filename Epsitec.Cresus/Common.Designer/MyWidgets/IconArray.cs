@@ -300,7 +300,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 						{
 							if (first != 0)
 							{
-								layout.Text = string.Format(@"<img src=""{0}""/>", this.icons[first-1]);
+								layout.Text = Misc.ImageFull(this.icons[first-1]);
 								layout.Paint(rect.BottomLeft, graphics);
 							}
 
@@ -452,7 +452,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			if (index > 0 && index < this.TotalCell)
 			{
 				string module, name;
-				Dialogs.Icon.GetIconNames(this.icons[index-1], out module, out name);
+				Misc.GetIconNames(this.icons[index-1], out module, out name);
 				return string.Format("{0}<br/>{1}", module, name);
 			}
 

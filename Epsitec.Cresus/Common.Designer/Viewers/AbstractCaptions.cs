@@ -332,7 +332,7 @@ namespace Epsitec.Common.Designer.Viewers
 			ResourceAccess.Field field = this.access.GetField(this.access.AccessIndex, null, "Icon");
 
 			string module, name;
-			Dialogs.Icon.GetIconNames(field.String, out module, out name);
+			Misc.GetIconNames(field.String, out module, out name);
 			
 			if (string.IsNullOrEmpty(name))
 			{
