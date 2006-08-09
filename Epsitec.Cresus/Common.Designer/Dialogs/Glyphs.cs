@@ -39,7 +39,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 				int tabIndex = 0;
 
-				this.array = new GlyphArray(this.window.Root);
+				this.array = new MyWidgets.GlyphArray(this.window.Root);
 				this.array.Dock = DockStyle.Fill;
 				this.array.TabIndex = tabIndex++;
 				this.array.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
@@ -171,7 +171,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected string					fontFace;
 		protected string					fontStyle;
 
-		protected GlyphArray				array;
+		protected MyWidgets.GlyphArray		array;
 		protected TextField					status;
 		protected HSlider					slider;
 	}
