@@ -340,7 +340,7 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 			else
 			{
-				this.primaryIconInfo.Text = string.Format("{0}.{1}", module, Misc.Bold(name));
+				this.primaryIconInfo.Text = string.Format("{0}<br/>{1}", module, Misc.Bold(name));
 			}
 		}
 
