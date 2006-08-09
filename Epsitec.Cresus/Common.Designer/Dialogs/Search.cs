@@ -28,43 +28,58 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.window.Text = Res.Strings.Dialog.Search.Title;
 				this.window.Owner = this.parentWindow;
 				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowCloseClicked);
+				this.window.Root.Padding = new Margins(8, 8, 8, 8);
 
 				int tabIndex = 0;
 
-				StaticText label = new StaticText(this.window.Root);
+				//	Partie supérieure.
+				Widget header1 = new Widget(this.window.Root);
+				header1.PreferredHeight = 20;
+				header1.Margins = new Margins(0, 0, 0, 6);
+				header1.Dock = DockStyle.Top;
+
+				StaticText label = new StaticText(header1);
 				label.Text = Res.Strings.Dialog.Search.Label;
 				label.ContentAlignment = ContentAlignment.MiddleLeft;
 				label.PreferredWidth = 80;
-				label.Anchor = AnchorStyles.TopLeft;
-				label.Margins = new Margins(6, 0, 6+3, 0);
+				label.Dock = DockStyle.Left;
 
-				this.fieldSearch = new TextFieldCombo(this.window.Root);
-				this.fieldSearch.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-				this.fieldSearch.Margins = new Margins(6+80, 6, 6, 0);
+				this.fieldSearch = new TextFieldCombo(header1);
+				this.fieldSearch.Dock = DockStyle.Fill;
 				this.fieldSearch.TabIndex = tabIndex++;
 				this.fieldSearch.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 				this.fieldSearch.TextChanged += new EventHandler(this.HandleFieldSearchTextChanged);
 
-				label = new StaticText(this.window.Root);
+				Widget header2 = new Widget(this.window.Root);
+				header2.PreferredHeight = 20;
+				header2.Margins = new Margins(0, 0, 0, 10);
+				header2.Dock = DockStyle.Top;
+
+				label = new StaticText(header2);
 				label.Text = Res.Strings.Dialog.Search.Replace;
 				label.ContentAlignment = ContentAlignment.MiddleLeft;
 				label.PreferredWidth = 80;
-				label.Anchor = AnchorStyles.TopLeft;
-				label.Margins = new Margins(6, 0, 6+28+3, 0);
+				label.Dock = DockStyle.Left;
 
-				this.fieldReplace = new TextFieldCombo(this.window.Root);
-				this.fieldReplace.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-				this.fieldReplace.Margins = new Margins(6+80, 6, 6+28, 0);
+				this.fieldReplace = new TextFieldCombo(header2);
+				this.fieldReplace.Dock = DockStyle.Fill;
 				this.fieldReplace.TabIndex = tabIndex++;
 				this.fieldReplace.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
+				//	Partie principale.
+				Widget main = new Widget(this.window.Root);
+				main.Dock = DockStyle.Fill;
+
+				Widget left = new Widget(main);
+				left.PreferredWidth = 120;
+				left.Dock = DockStyle.Left;
+
 				//	Crée le groupe pour le type 'Strings'.
-				this.groupStrings = new GroupBox(this.window.Root);
+				this.groupStrings = new GroupBox(left);
 				this.groupStrings.Text = Res.Strings.Dialog.Search.Check.Who;
 				this.groupStrings.PreferredWidth = 160;
 				this.groupStrings.PreferredHeight = 28+16*2;
-				this.groupStrings.Anchor = AnchorStyles.Top | AnchorStyles.Left;
-				this.groupStrings.Margins = new Margins(6, 0, 6+58+16*0, 0);
+				this.groupStrings.Dock = DockStyle.Top;
 				this.groupStrings.Padding = new Margins(5, 5, 5, 5);
 				this.groupStrings.TabIndex = tabIndex++;
 				this.groupStrings.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
@@ -72,106 +87,118 @@ namespace Epsitec.Common.Designer.Dialogs
 				Viewers.Abstract.SearchCreateFilterGroup(this.groupStrings, this.HandleCheckActiveStateChanged, ResourceAccess.Type.Strings);
 
 				//	Crée le groupe pour le type 'Captions'.
-				this.groupCaptions = new GroupBox(this.window.Root);
+				this.groupCaptions = new GroupBox(left);
 				this.groupCaptions.Text = Res.Strings.Dialog.Search.Check.Who;
 				this.groupCaptions.PreferredWidth = 160;
 				this.groupCaptions.PreferredHeight = 28+16*3;
-				this.groupCaptions.Anchor = AnchorStyles.Top | AnchorStyles.Left;
-				this.groupCaptions.Margins = new Margins(6, 0, 6+58+16*0, 0);
+				this.groupCaptions.Dock = DockStyle.Top;
 				this.groupCaptions.Padding = new Margins(5, 5, 5, 5);
 				this.groupCaptions.TabIndex = tabIndex++;
 				this.groupCaptions.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 
 				Viewers.Abstract.SearchCreateFilterGroup(this.groupCaptions, this.HandleCheckActiveStateChanged, ResourceAccess.Type.Captions);
 
+				//	Boutons à cocher de droite.
+				Widget right = new Widget(main);
+				right.PreferredWidth = 120;
+				right.Margins = new Margins(0, 60, 21, 0);
+				right.Dock = DockStyle.Right;
 
-				this.checkCase = new CheckButton(this.window.Root);
+				this.checkCase = new CheckButton(right);
 				this.checkCase.PreferredWidth = 130;
 				this.checkCase.Text = Res.Strings.Dialog.Search.Check.Case;
-				this.checkCase.Anchor = AnchorStyles.Top | AnchorStyles.Left;
-				this.checkCase.Margins = new Margins(6+180, 0, 6+79+16*0, 0);
+				this.checkCase.Dock = DockStyle.Top;
+				this.checkCase.Margins = new Margins(0, 0, 0, 3);
 				this.checkCase.TabIndex = tabIndex++;
 				this.checkCase.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
-				this.checkWord = new CheckButton(this.window.Root);
+				this.checkWord = new CheckButton(right);
 				this.checkWord.PreferredWidth = 130;
 				this.checkWord.Text = Res.Strings.Dialog.Search.Check.Word;
-				this.checkWord.Anchor = AnchorStyles.Top | AnchorStyles.Left;
-				this.checkWord.Margins = new Margins(6+180, 0, 6+79+16*1, 0);
+				this.checkWord.Dock = DockStyle.Top;
+				this.checkWord.Margins = new Margins(0, 0, 0, 3);
 				this.checkWord.TabIndex = tabIndex++;
 				this.checkWord.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 				//	Boutons de fermeture.
-				this.buttonSearchPrev = new Button(this.window.Root);
-				this.buttonSearchPrev.Name = "SearchPrev";
-				this.buttonSearchPrev.PreferredWidth = 85;
-				this.buttonSearchPrev.Text = string.Concat(Res.Strings.Dialog.Search.Button.Search, " ", Misc.Image("SearchPrevButton"));
-				this.buttonSearchPrev.Anchor = AnchorStyles.BottomLeft;
-				this.buttonSearchPrev.Margins = new Margins(6+(85+5)*0, 0, 0, 6+30);
-				this.buttonSearchPrev.Clicked += new MessageEventHandler(this.HandleButtonSearchClicked);
-				this.buttonSearchPrev.TabIndex = tabIndex++;
-				this.buttonSearchPrev.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+				Widget footer2 = new Widget(this.window.Root);
+				footer2.PreferredHeight = 22;
+				footer2.Margins = new Margins(0, 0, 8, 0);
+				footer2.Dock = DockStyle.Bottom;
 
-				this.buttonReplacePrev = new Button(this.window.Root);
-				this.buttonReplacePrev.Name = "ReplacePrev";
-				this.buttonReplacePrev.PreferredWidth = 85;
-				this.buttonReplacePrev.Text = string.Concat(Res.Strings.Dialog.Search.Button.Replace, " ", Misc.Image("SearchPrevButton"));
-				this.buttonReplacePrev.Anchor = AnchorStyles.BottomLeft;
-				this.buttonReplacePrev.Margins = new Margins(6+(85+5)*1, 0, 0, 6+30);
-				this.buttonReplacePrev.Clicked += new MessageEventHandler(this.HandleButtonReplaceClicked);
-				this.buttonReplacePrev.TabIndex = tabIndex++;
-				this.buttonReplacePrev.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-
-				this.buttonCount = new Button(this.window.Root);
-				this.buttonCount.Name = "Count";
-				this.buttonCount.PreferredWidth = 85;
-				this.buttonCount.Text = Res.Strings.Dialog.Search.Button.Count;
-				this.buttonCount.Anchor = AnchorStyles.BottomLeft;
-				this.buttonCount.Margins = new Margins(6+(85+5)*2, 0, 0, 6+30);
-				this.buttonCount.Clicked += new MessageEventHandler(this.HandleButtonCountClicked);
-				this.buttonCount.TabIndex = tabIndex++;
-				this.buttonCount.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-
-
-				this.buttonSearchNext = new Button(this.window.Root);
+				this.buttonSearchNext = new Button(footer2);
 				this.buttonSearchNext.Name = "SearchNext";
 				this.buttonSearchNext.PreferredWidth = 85;
 				this.buttonSearchNext.Text = string.Concat(Res.Strings.Dialog.Search.Button.Search, " ", Misc.Image("SearchNextButton"));
 				this.buttonSearchNext.ButtonStyle = ButtonStyle.DefaultAccept;
-				this.buttonSearchNext.Anchor = AnchorStyles.BottomLeft;
-				this.buttonSearchNext.Margins = new Margins(6+(85+5)*0, 0, 0, 6);
+				this.buttonSearchNext.Dock = DockStyle.Left;
+				this.buttonSearchNext.Margins = new Margins(0, 6, 0, 0);
 				this.buttonSearchNext.Clicked += new MessageEventHandler(this.HandleButtonSearchClicked);
 				this.buttonSearchNext.TabIndex = tabIndex++;
 				this.buttonSearchNext.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
-				this.buttonReplaceNext = new Button(this.window.Root);
+				this.buttonReplaceNext = new Button(footer2);
 				this.buttonReplaceNext.Name = "ReplaceNext";
 				this.buttonReplaceNext.PreferredWidth = 85;
 				this.buttonReplaceNext.Text = string.Concat(Res.Strings.Dialog.Search.Button.Replace, " ", Misc.Image("SearchNextButton"));
-				this.buttonReplaceNext.Anchor = AnchorStyles.BottomLeft;
-				this.buttonReplaceNext.Margins = new Margins(6+(85+5)*1, 0, 0, 6);
+				this.buttonReplaceNext.Dock = DockStyle.Left;
+				this.buttonReplaceNext.Margins = new Margins(0, 6, 0, 0);
 				this.buttonReplaceNext.Clicked += new MessageEventHandler(this.HandleButtonReplaceClicked);
 				this.buttonReplaceNext.TabIndex = tabIndex++;
 				this.buttonReplaceNext.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
-				this.buttonReplaceAll = new Button(this.window.Root);
+				this.buttonReplaceAll = new Button(footer2);
 				this.buttonReplaceAll.Name = "ReplaceAll";
 				this.buttonReplaceAll.PreferredWidth = 85;
 				this.buttonReplaceAll.Text = Res.Strings.Dialog.Search.Button.ReplaceAll;
-				this.buttonReplaceAll.Anchor = AnchorStyles.BottomLeft;
-				this.buttonReplaceAll.Margins = new Margins(6+(85+5)*2, 0, 0, 6);
+				this.buttonReplaceAll.Dock = DockStyle.Left;
+				this.buttonReplaceAll.Margins = new Margins(0, 6, 0, 0);
 				this.buttonReplaceAll.Clicked += new MessageEventHandler(this.HandleButtonReplaceAllClicked);
 				this.buttonReplaceAll.TabIndex = tabIndex++;
 				this.buttonReplaceAll.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
-				Button buttonClose = new Button(this.window.Root);
+				Button buttonClose = new Button(footer2);
 				buttonClose.PreferredWidth = 75;
 				buttonClose.Text = Res.Strings.Dialog.Button.Close;
-				buttonClose.Anchor = AnchorStyles.BottomRight;
-				buttonClose.Margins = new Margins(0, 6, 0, 6);
+				buttonClose.Dock = DockStyle.Right;
 				buttonClose.Clicked += new MessageEventHandler(this.HandleButtonCloseClicked);
 				buttonClose.TabIndex = tabIndex++;
 				buttonClose.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+
+				Widget footer1 = new Widget(this.window.Root);
+				footer1.PreferredHeight = 22;
+				footer1.Margins = new Margins(0, 0, 8, 0);
+				footer1.Dock = DockStyle.Bottom;
+
+				this.buttonSearchPrev = new Button(footer1);
+				this.buttonSearchPrev.Name = "SearchPrev";
+				this.buttonSearchPrev.PreferredWidth = 85;
+				this.buttonSearchPrev.Text = string.Concat(Res.Strings.Dialog.Search.Button.Search, " ", Misc.Image("SearchPrevButton"));
+				this.buttonSearchPrev.Dock = DockStyle.Left;
+				this.buttonSearchPrev.Margins = new Margins(0, 6, 0, 0);
+				this.buttonSearchPrev.Clicked += new MessageEventHandler(this.HandleButtonSearchClicked);
+				this.buttonSearchPrev.TabIndex = tabIndex++;
+				this.buttonSearchPrev.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+
+				this.buttonReplacePrev = new Button(footer1);
+				this.buttonReplacePrev.Name = "ReplacePrev";
+				this.buttonReplacePrev.PreferredWidth = 85;
+				this.buttonReplacePrev.Text = string.Concat(Res.Strings.Dialog.Search.Button.Replace, " ", Misc.Image("SearchPrevButton"));
+				this.buttonReplacePrev.Dock = DockStyle.Left;
+				this.buttonReplacePrev.Margins = new Margins(0, 6, 0, 0);
+				this.buttonReplacePrev.Clicked += new MessageEventHandler(this.HandleButtonReplaceClicked);
+				this.buttonReplacePrev.TabIndex = tabIndex++;
+				this.buttonReplacePrev.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+
+				this.buttonCount = new Button(footer1);
+				this.buttonCount.Name = "Count";
+				this.buttonCount.PreferredWidth = 85;
+				this.buttonCount.Text = Res.Strings.Dialog.Search.Button.Count;
+				this.buttonCount.Dock = DockStyle.Left;
+				this.buttonCount.Margins = new Margins(0, 6, 0, 0);
+				this.buttonCount.Clicked += new MessageEventHandler(this.HandleButtonCountClicked);
+				this.buttonCount.TabIndex = tabIndex++;
+				this.buttonCount.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 				this.HandleFieldSearchTextChanged(null);
 				this.UpdateBundleType();
