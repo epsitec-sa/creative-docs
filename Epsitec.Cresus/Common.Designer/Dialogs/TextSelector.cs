@@ -29,48 +29,54 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.window.Text = Res.Strings.Dialog.TextSelector.Title;
 				this.window.Owner = this.parentWindow;
 				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowCloseClicked);
+				this.window.Root.Padding = new Margins(8, 8, 8, 8);
 
 				int tabIndex = 0;
 
-				this.header1 = new StaticText(this.window.Root);
+				Widget header = new Widget(this.window.Root);
+				header.Margins = new Margins(0, 0, 0, 2);
+				header.Dock = DockStyle.Top;
+
+				this.header1 = new StaticText(header);
 				this.header1.PreferredWidth = 185;
-				this.header1.Anchor = AnchorStyles.TopLeft;
-				this.header1.Margins = new Margins(6, 0, 6, 0);
+				this.header1.Dock = DockStyle.Left;
 
-				this.header2 = new StaticText(this.window.Root);
+				this.header2 = new StaticText(header);
 				this.header2.PreferredWidth = 185;
-				this.header2.Anchor = AnchorStyles.TopLeft;
-				this.header2.Margins = new Margins(192, 0, 6, 0);
+				this.header2.Dock = DockStyle.Left;
 
-				this.filterLabel = new TextField(this.window.Root);
-				this.filterLabel.PreferredWidth = 185;
+				header = new Widget(this.window.Root);
+				header.Margins = new Margins(0, 0, 0, 4);
+				header.Dock = DockStyle.Top;
+
+				this.filterLabel = new TextField(header);
+				this.filterLabel.PreferredWidth = 183;
 				this.filterLabel.Name = "FilterLabel";
 				this.filterLabel.TextChanged += new EventHandler(this.HandleFilterTextChanged);
 				this.filterLabel.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleFilterKeyboardFocusChanged);
 				this.filterLabel.TabIndex = tabIndex++;
 				this.filterLabel.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-				this.filterLabel.Anchor = AnchorStyles.TopLeft;
-				this.filterLabel.Margins = new Margins(6, 0, 6+18, 0);
+				this.filterLabel.Dock = DockStyle.Left;
+				this.filterLabel.Margins = new Margins(0, 1, 0, 0);
 
-				this.filterText = new TextField(this.window.Root);
-				this.filterText.PreferredWidth = 181;
+				this.filterText = new TextField(header);
+				this.filterText.PreferredWidth = 178;
 				this.filterText.Name = "FilterText";
 				this.filterText.TextChanged += new EventHandler(this.HandleFilterTextChanged);
 				this.filterText.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleFilterKeyboardFocusChanged);
 				this.filterText.TabIndex = tabIndex++;
 				this.filterText.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-				this.filterText.Anchor = AnchorStyles.TopLeft;
-				this.filterText.Margins = new Margins(192, 0, 6+18, 0);
+				this.filterText.Dock = DockStyle.Left;
 
-				this.buttonClear = new Button(this.window.Root);
+				this.buttonClear = new Button(header);
 				this.buttonClear.Text = Res.Strings.Dialog.TextSelector.Button.Clear;
 				this.buttonClear.PreferredSize = new Size(20, 20);
 				this.buttonClear.TabIndex = tabIndex++;
 				this.buttonClear.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-				this.buttonClear.Anchor = AnchorStyles.TopRight;
-				this.buttonClear.Margins = new Margins(0, 6, 6+18, 0);
+				this.buttonClear.Dock = DockStyle.Right;
 				this.buttonClear.Clicked += new MessageEventHandler(this.HandleButtonClearClicked);
 
+				//	Tableau principal.
 				this.array = new MyWidgets.StringArray(this.window.Root);
 				this.array.Columns = 2;
 				this.array.SetColumnsRelativeWidth(0, 0.5);
@@ -84,34 +90,37 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.array.SelectedRowDoubleClicked += new EventHandler(this.HandleArraySelectedRowDoubleClicked);
 				this.array.TabIndex = tabIndex++;
 				this.array.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-				this.array.Anchor = AnchorStyles.All;
-				this.array.Margins = new Margins(6, 6, 6+18+24, 34);
+				this.array.Dock = DockStyle.Fill;
 
 				//	Boutons de fermeture.
-				this.buttonUse = new Button(this.window.Root);
+				Widget footer = new Widget(this.window.Root);
+				footer.PreferredHeight = 22;
+				footer.Margins = new Margins(0, 0, 8, 0);
+				footer.Dock = DockStyle.Bottom;
+
+				this.buttonUse = new Button(footer);
 				this.buttonUse.PreferredWidth = 75;
 				this.buttonUse.Text = Res.Strings.Dialog.TextSelector.Button.Use;
 				this.buttonUse.ButtonStyle = ButtonStyle.DefaultAccept;
-				this.buttonUse.Anchor = AnchorStyles.BottomLeft;
-				this.buttonUse.Margins = new Margins(6, 0, 0, 6);
+				this.buttonUse.Dock = DockStyle.Left;
+				this.buttonUse.Margins = new Margins(0, 6, 0, 0);
 				this.buttonUse.Clicked += new MessageEventHandler(this.HandleButtonUseClicked);
 				this.buttonUse.TabIndex = tabIndex++;
 				this.buttonUse.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
-				this.buttonCreate = new Button(this.window.Root);
+				this.buttonCreate = new Button(footer);
 				this.buttonCreate.PreferredWidth = 75;
 				this.buttonCreate.Text = Res.Strings.Dialog.TextSelector.Button.Create;
-				this.buttonCreate.Anchor = AnchorStyles.BottomLeft;
-				this.buttonCreate.Margins = new Margins(6+75+10, 0, 0, 6);
+				this.buttonCreate.Dock = DockStyle.Left;
+				this.buttonCreate.Margins = new Margins(0, 6, 0, 0);
 				this.buttonCreate.Clicked += new MessageEventHandler(this.HandleButtonCreateClicked);
 				this.buttonCreate.TabIndex = tabIndex++;
 				this.buttonCreate.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
-				this.buttonCancel = new Button(this.window.Root);
+				this.buttonCancel = new Button(footer);
 				this.buttonCancel.PreferredWidth = 75;
 				this.buttonCancel.Text = Res.Strings.Dialog.Button.Cancel;
-				this.buttonCancel.Anchor = AnchorStyles.BottomRight;
-				this.buttonCancel.Margins = new Margins(0, 6, 0, 6);
+				this.buttonCancel.Dock = DockStyle.Right;
 				this.buttonCancel.Clicked += new MessageEventHandler(this.HandleButtonCloseClicked);
 				this.buttonCancel.TabIndex = tabIndex++;
 				this.buttonCancel.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
