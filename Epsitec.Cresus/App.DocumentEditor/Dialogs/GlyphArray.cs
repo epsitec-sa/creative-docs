@@ -1,6 +1,7 @@
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Text;
 using Epsitec.Common.OpenType;
+using Epsitec.Common.Document;
 
 namespace Epsitec.Common.Widgets
 {
@@ -10,7 +11,7 @@ namespace Epsitec.Common.Widgets
 	/// grand nombre de widgets, les différentes cellules ne sont pas programmées
 	/// avec des instances de widgets, mais directement dessinées ici.
 	/// </summary>
-	public class GlyphArray : Widget
+	public class GlyphArray : Widget, Widgets.Helpers.IToolTipHost
 	{
 		public GlyphArray()
 		{
@@ -611,6 +612,28 @@ namespace Epsitec.Common.Widgets
 			
 			return font;
 		}
+
+
+		#region Helpers.IToolTipHost
+		public object GetToolTipCaption(Point pos)
+		{
+			//	Donne l'objet (string ou widget) pour le tooltip en fonction de la position.
+			return this.GetTooltipEditedText(pos);
+		}
+
+		protected string GetTooltipEditedText(Point pos)
+		{
+			//	Donne le texte du tooltip en fonction de la position.
+			int index = this.Detect(pos);
+			if (index != -1)
+			{
+				int code = this.IndexToUnicode(index);
+				return Misc.GetUnicodeName(code, this.fontFace, this.fontStyle);
+			}
+
+			return null;  // pas de tooltip
+		}
+		#endregion
 
 
 		protected virtual void OnChangeSelected()
