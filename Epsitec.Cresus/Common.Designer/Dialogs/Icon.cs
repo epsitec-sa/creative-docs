@@ -27,13 +27,14 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.window.Owner = this.parentWindow;
 				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowCloseClicked);
 				this.window.Root.MinSize = new Size(200, 150);
+				this.window.Root.Padding = new Margins(8, 8, 8, 8);
 
 				int tabIndex = 0;
 
 				//	Bande horizontale pour la recherche.
 				Widget header = new Widget(this.window.Root);
 				header.PreferredHeight = 20;
-				header.Margins = new Margins(6, 6, 6, 0);
+				header.Margins = new Margins(0, 0, 0, 6);
 				header.Dock = DockStyle.Top;
 
 				StaticText label = new StaticText(header);
@@ -60,7 +61,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				//	Bande horizontale pour le filtre.
 				header = new Widget(this.window.Root);
 				header.PreferredHeight = 20;
-				header.Margins = new Margins(6, 6, 6, 0);
+				header.Margins = new Margins(0, 0, 0, 6);
 				header.Dock = DockStyle.Top;
 
 				label = new StaticText(header);
@@ -84,7 +85,6 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.array.SetColumnAlignment(0, ContentAlignment.MiddleCenter);
 				this.array.LineHeight = 25;
 				this.array.Dock = DockStyle.Fill;
-				this.array.Margins = new Margins(6, 6, 6, 6);
 				this.array.CellCountChanged += new EventHandler(this.HandleArrayCellCountChanged);
 				this.array.CellsContentChanged += new EventHandler(this.HandleArrayCellsContentChanged);
 				this.array.SelectedRowChanged += new EventHandler(this.HandleArraySelectedRowChanged);
@@ -95,7 +95,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				//	Pied.
 				Widget footer = new Widget(this.window.Root);
 				footer.PreferredHeight = 22;
-				footer.Margins = new Margins(6, 6, 0, 3);
+				footer.Margins = new Margins(0, 0, 8, 0);
 				footer.Dock = DockStyle.Bottom;
 
 				Button buttonOk = new Button(footer);
@@ -120,7 +120,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.slider = new HSlider(footer);
 				this.slider.PreferredWidth = 80;
 				this.slider.Dock = DockStyle.Right;
-				this.slider.Margins = new Margins(0, 0, 3, 3);
+				this.slider.Margins = new Margins(0, 0, 4, 4);
 				this.slider.TabIndex = tabIndex++;
 				this.slider.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 				this.slider.MinValue = 20.0M;
