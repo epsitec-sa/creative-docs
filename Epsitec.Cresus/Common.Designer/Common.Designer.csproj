@@ -41,6 +41,7 @@
     <Compile Include="Constrain.cs" />
     <Compile Include="ConstrainsList.cs" />
     <Compile Include="Dialogs\Icon.cs" />
+    <Compile Include="MyWidgets\IconArray.cs" />
     <Compile Include="MyWidgets\GlyphArray.cs" />
     <Compile Include="ResourceAccess.cs" />
     <Compile Include="GridSelection.cs" />
