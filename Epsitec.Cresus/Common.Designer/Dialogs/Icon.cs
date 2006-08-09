@@ -156,7 +156,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.UpdateFilter();
 			this.UpdateArray();
 			this.Selected = this.SelectedIcon(this.icon);
-			this.arrayDetail.ShowSelectedRow();
+			this.ShowSelection();
 
 			this.window.ShowDialog();
 		}
@@ -363,7 +363,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				if (name.Contains(searching))
 				{
 					this.Selected = sel+1;
-					this.arrayDetail.ShowSelectedRow();
+					this.ShowSelection();
 					return;
 				}
 			}
@@ -391,6 +391,13 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.arrayDetail.SelectedRow = value;
 				this.arrayCompact.SelectedIndex = value;
 			}
+		}
+
+		protected void ShowSelection()
+		{
+			//	Montre la sélection dans un tableau (détaillé ou compact).
+			this.arrayDetail.ShowSelectedRow();
+			this.arrayCompact.ShowSelectedCell();
 		}
 
 
@@ -422,14 +429,14 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.UpdateArray();
 
 			this.Selected = this.SelectedIcon(icon);
-			this.arrayDetail.ShowSelectedRow();
+			this.ShowSelection();
 		}
 
 		void HandleArrayCellCountChanged(object sender)
 		{
 			//	Le nombre de lignes a changé.
 			this.UpdateArray();
-			this.arrayDetail.ShowSelectedRow();
+			this.ShowSelection();
 		}
 
 		void HandleArrayCellsContentChanged(object sender)
@@ -441,11 +448,29 @@ namespace Epsitec.Common.Designer.Dialogs
 		void HandleArraySelectedRowChanged(object sender)
 		{
 			//	La ligne sélectionnée a changé.
+			if (this.ignoreChanged)
+			{
+				return;
+			}
+
+			this.ignoreChanged = true;
+			this.arrayCompact.SelectedIndex = this.arrayDetail.SelectedRow;
+			this.ShowSelection();
+			this.ignoreChanged = false;
 		}
 
 		void HandleArrayCompactChangeSelected(object sender)
 		{
 			//	La cellule sélectionnée a changé.
+			if (this.ignoreChanged)
+			{
+				return;
+			}
+
+			this.ignoreChanged = true;
+			this.arrayDetail.SelectedRow = this.arrayCompact.SelectedIndex;
+			this.ShowSelection();
+			this.ignoreChanged = false;
 		}
 
 		void HandleArraySelectedRowDoubleClicked(object sender)
@@ -509,6 +534,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		{
 			this.compactMode = !this.compactMode;
 			this.UpdateMode();
+			this.ShowSelection();
 		}
 
 

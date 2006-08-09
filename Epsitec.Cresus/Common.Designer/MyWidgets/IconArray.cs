@@ -443,6 +443,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			//	Donne le texte du tooltip en fonction de la position.
 			int index = this.Detect(pos);
+
+			if (index == 0)
+			{
+				return Res.Strings.Dialog.Icon.None;
+			}
+
 			if (index > 0 && index < this.TotalCell)
 			{
 				string module, name;
