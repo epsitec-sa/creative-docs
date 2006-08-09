@@ -178,7 +178,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			for (int i=0; i<names.Length; i++)
 			{
 				string module, name;
-				Icon.GetIconNames(names[i], out module, out name);
+				Misc.GetIconNames(names[i], out module, out name);
 				string text = string.Format(Res.Strings.Dialog.Icon.Filter.One, module);
 
 				if (!this.modules.Contains(text))
@@ -236,7 +236,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			for (int i=0; i<names.Length; i++)
 			{
 				string module, name;
-				Icon.GetIconNames(names[i], out module, out name);
+				Misc.GetIconNames(names[i], out module, out name);
 				string text = string.Format(Res.Strings.Dialog.Icon.Filter.One, module);
 
 				if (filter == null || filter == text)
@@ -280,10 +280,10 @@ namespace Epsitec.Common.Designer.Dialogs
 				else if (row-1 < this.icons.Count)
 				{
 					string icon = this.icons[row-1];
-					string text = string.Format(@"<img src=""{0}""/>", icon);
+					string text = Misc.ImageFull(icon);
 
 					string module, name;
-					Icon.GetIconNames(icon, out module, out name);
+					Misc.GetIconNames(icon, out module, out name);
 
 					this.arrayDetail.SetLineState(0, row, MyWidgets.StringList.CellState.Normal);
 					this.arrayDetail.SetLineState(1, row, MyWidgets.StringList.CellState.Normal);
@@ -323,23 +323,6 @@ namespace Epsitec.Common.Designer.Dialogs
 			return 0;  // première ligne 'pas d'icône'
 		}
 
-		public static void GetIconNames(string fullName, out string moduleName, out string shortName)
-		{
-			//	Fractionne un nom du type "manifest:Epsitec.Common.Designer.Images.xxx.icon".
-			//	TODO: faire mieux !
-			if (string.IsNullOrEmpty(fullName))
-			{
-				moduleName = null;
-				shortName = null;
-			}
-			else
-			{
-				string[] parts = fullName.Split('.');
-				moduleName = parts[parts.Length-4];
-				shortName = parts[parts.Length-2];
-			}
-		}
-
 		protected void Search(string searching, int direction)
 		{
 			//	Cherche dans une direction donnée.
@@ -361,7 +344,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				}
 
 				string module, name;
-				Icon.GetIconNames(this.icons[sel], out module, out name);
+				Misc.GetIconNames(this.icons[sel], out module, out name);
 				name = Searcher.RemoveAccent(name.ToLower());
 
 				if (name.Contains(searching))
