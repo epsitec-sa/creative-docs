@@ -178,6 +178,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.array.SelectedIndex = -1;
 				this.array.DoubleClicked += new MessageEventHandler(this.HandleDoubleClicked);
 				this.array.ChangeSelected += new EventHandler(this.HandleArraySelected);
+				ToolTip.Default.SetToolTip(this.array, "*");
 
 				this.status = new TextField(bookArray);
 				this.status.Anchor = AnchorStyles.Bottom|AnchorStyles.LeftAndRight;

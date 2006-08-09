@@ -47,6 +47,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.array.SelectedIndex = -1;
 				this.array.DoubleClicked += new MessageEventHandler(this.HandleDoubleClicked);
 				this.array.ChangeSelected += new EventHandler(this.HandleArraySelected);
+				ToolTip.Default.SetToolTip(this.array, "*");
 
 				//	Boutons de fermeture.
 				Widget footer = new Widget(this.window.Root);
