@@ -146,7 +146,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				ToolTip.Default.SetToolTip(this.slider, Res.Strings.Dialog.Icon.Tooltip.Size);
 
 				this.buttonMode = new IconButton(footer);
-				this.buttonMode.IconName = Misc.Icon("PanelShowGrid");
+				this.buttonMode.IconName = Misc.Icon("DialogIconMode");
 				this.buttonMode.ButtonStyle = ButtonStyle.ActivableIcon;
 				this.buttonMode.Dock = DockStyle.Right;
 				this.buttonMode.Margins = new Margins(0, 6, 0, 0);
