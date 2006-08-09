@@ -41,6 +41,7 @@
     <Compile Include="Constrain.cs" />
     <Compile Include="ConstrainsList.cs" />
     <Compile Include="Dialogs\Icon.cs" />
+    <Compile Include="MyWidgets\GlyphArray.cs" />
     <Compile Include="ResourceAccess.cs" />
     <Compile Include="GridSelection.cs" />
     <Compile Include="GeometryCache.cs" />
@@ -56,7 +57,6 @@
     <Compile Include="Dialogs\NewCulture.cs" />
     <Compile Include="Dialogs\Search.cs" />
     <Compile Include="Dialogs\Filter.cs" />
-    <Compile Include="MyWidgets\GlyphArray.cs" />
     <Compile Include="Dialogs\Glyphs.cs" />
     <Compile Include="MainWindow.cs" />
     <Compile Include="Misc.cs" />
