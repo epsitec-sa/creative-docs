@@ -27,38 +27,41 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.WindowInit("NewCulture", 172, 160, true);
 				this.window.Text = Res.Strings.Dialog.NewCulture.Title;
 				this.window.Owner = this.parentWindow;
+				this.window.Root.Padding = new Margins(8, 8, 8, 8);
 
 				int tabIndex = 0;
 
 				StaticText label = new StaticText(this.window.Root);
 				label.Text = Res.Strings.Dialog.NewCulture.Label;
 				label.ContentAlignment = ContentAlignment.MiddleLeft;
-				label.PreferredWidth = 40;
-				label.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-				label.Margins = new Margins(6, 6, 6+3, 0);
+				label.Dock = DockStyle.Top;
+				label.Margins = new Margins(0, 0, 0, 6);
 
 				this.cultureWidget = new ScrollList(this.window.Root);
 				this.cultureWidget.PreferredHeight = 90;
-				this.cultureWidget.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-				this.cultureWidget.Margins = new Margins(6, 6, 6+22, 0);
+				this.cultureWidget.Dock = DockStyle.Fill;
 				this.cultureWidget.TabIndex = tabIndex++;
 
 				//	Boutons de fermeture.
-				Button buttonOk = new Button(this.window.Root);
+				Widget footer = new Widget(this.window.Root);
+				footer.PreferredHeight = 22;
+				footer.Margins = new Margins(0, 0, 8, 0);
+				footer.Dock = DockStyle.Bottom;
+
+				Button buttonOk = new Button(footer);
 				buttonOk.PreferredWidth = 75;
 				buttonOk.Text = Res.Strings.Dialog.NewCulture.Button.Create;
 				buttonOk.ButtonStyle = ButtonStyle.DefaultAccept;
-				buttonOk.Anchor = AnchorStyles.BottomLeft;
-				buttonOk.Margins = new Margins(6, 0, 0, 6);
+				buttonOk.Dock = DockStyle.Left;
+				buttonOk.Margins = new Margins(0, 6, 0, 0);
 				buttonOk.Clicked += new MessageEventHandler(this.HandleButtonFilterClicked);
 				buttonOk.TabIndex = tabIndex++;
 				buttonOk.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
-				Button buttonClose = new Button(this.window.Root);
+				Button buttonClose = new Button(footer);
 				buttonClose.PreferredWidth = 75;
 				buttonClose.Text = Res.Strings.Dialog.Button.Cancel;
-				buttonClose.Anchor = AnchorStyles.BottomLeft;
-				buttonClose.Margins = new Margins(6+75+10, 0, 0, 6);
+				buttonClose.Dock = DockStyle.Left;
 				buttonClose.Clicked += new MessageEventHandler(this.HandleButtonCloseClicked);
 				buttonClose.TabIndex = tabIndex++;
 				buttonClose.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
