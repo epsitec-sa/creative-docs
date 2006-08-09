@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <bundle name="Strings" type="String" culture="fr">
   <data name="Application.Title" id="0">Editeur de ressources</data>
   <data name="Ribbon.Main" id="01">Principal</data>
@@ -179,9 +179,15 @@
   <data name="Dialog.NewCulture.Button.Create" id="0L4">Créer</data>
   <data name="Dialog.DeleteCulture.Question" id="0M4">Voulez-vous supprimer la culture {0} ?</data>
   <data name="Dialog.Icon.Title" id="016" mod="1">Choix d&amp;apos;une icône</data>
+  <data name="Dialog.Icon.Label.Search" id="096" mod="1">Rechercher</data>
+  <data name="Dialog.Icon.Label.Filter" id="0A6" mod="1">Filtrer</data>
   <data name="Dialog.Icon.None" id="046" mod="1">&lt;i&gt;Pas d&amp;apos;icône&lt;/i&gt;</data>
   <data name="Dialog.Icon.Button.OK" id="026" mod="1">D&amp;apos;accord</data>
   <data name="Dialog.Icon.Button.Cancel" id="036" mod="1">Annuler</data>
+  <data name="Dialog.Icon.Filter.All" id="056" mod="1">Tout montrer</data>
+  <data name="Dialog.Icon.Filter.One" id="066" mod="1">Seulement {0}</data>
+  <data name="Dialog.Icon.Tooltip.Mode" id="076" mod="1">Mode compact ou étendu</data>
+  <data name="Dialog.Icon.Tooltip.Size" id="086" mod="1">Taille des icônes</data>
   <data name="Dialog.TextSelector.Title" id="0N4">Choix d'une ressource de type texte</data>
   <data name="Dialog.TextSelector.Label" id="0O4">Identificateur :</data>
   <data name="Dialog.TextSelector.Text" id="0P4">Texte {0} :</data>

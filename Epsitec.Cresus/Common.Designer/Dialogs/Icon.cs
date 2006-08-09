@@ -43,7 +43,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				header.Dock = DockStyle.Top;
 
 				StaticText label = new StaticText(header);
-				label.Text = Res.Strings.Dialog.Search.Button.Search;
+				label.Text = Res.Strings.Dialog.Icon.Label.Search;
 				label.PreferredWidth = 70;
 				label.Dock = DockStyle.Left;
 
@@ -70,12 +70,12 @@ namespace Epsitec.Common.Designer.Dialogs
 				header.Dock = DockStyle.Top;
 
 				label = new StaticText(header);
-				label.Text = Res.Strings.Dialog.Filter.Button.Insert;
+				label.Text = Res.Strings.Dialog.Icon.Label.Filter;
 				label.PreferredWidth = 70;
 				label.Dock = DockStyle.Left;
 
 				this.fieldFilter = new TextFieldCombo(header);
-				this.fieldFilter.Text = Res.Strings.Dialog.Filter.Button.All;
+				this.fieldFilter.Text = Res.Strings.Dialog.Icon.Filter.All;
 				this.fieldFilter.IsReadOnly = true;
 				this.fieldFilter.Margins = new Margins(5, 5+22+22, 0, 0);
 				this.fieldFilter.Dock = DockStyle.Fill;
@@ -143,6 +143,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.slider.Resolution = 1.0M;
 				this.slider.Value = (decimal) this.arrayDetail.LineHeight;
 				this.slider.ValueChanged += new EventHandler(this.HandleSliderChanged);
+				ToolTip.Default.SetToolTip(this.slider, Res.Strings.Dialog.Icon.Tooltip.Size);
 
 				this.buttonMode = new IconButton(footer);
 				this.buttonMode.IconName = Misc.Icon("PanelShowGrid");
@@ -150,6 +151,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonMode.Dock = DockStyle.Right;
 				this.buttonMode.Margins = new Margins(0, 6, 0, 0);
 				this.buttonMode.Clicked += new MessageEventHandler(this.HandleButtonModeClicked);
+				ToolTip.Default.SetToolTip(this.buttonMode, Res.Strings.Dialog.Icon.Tooltip.Mode);
 			}
 
 			this.UpdateMode();
@@ -170,17 +172,18 @@ namespace Epsitec.Common.Designer.Dialogs
 
 			this.modules = new List<string>();
 			this.modules.Clear();
-			this.modules.Add(Res.Strings.Dialog.Filter.Button.All);
+			this.modules.Add(Res.Strings.Dialog.Icon.Filter.All);
 
 			string[] names = ImageProvider.Default.GetImageNames("manifest", this.manager);
 			for (int i=0; i<names.Length; i++)
 			{
 				string module, name;
 				Icon.GetIconNames(names[i], out module, out name);
+				string text = string.Format(Res.Strings.Dialog.Icon.Filter.One, module);
 
-				if (!this.modules.Contains(module))
+				if (!this.modules.Contains(text))
 				{
-					this.modules.Add(module);
+					this.modules.Add(text);
 				}
 			}
 
@@ -222,7 +225,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				}
 
 				filter = this.fieldFilter.Text;
-				if (filter == Res.Strings.Dialog.Filter.Button.All)
+				if (filter == Res.Strings.Dialog.Icon.Filter.All)
 				{
 					filter = null;
 				}
@@ -234,8 +237,9 @@ namespace Epsitec.Common.Designer.Dialogs
 			{
 				string module, name;
 				Icon.GetIconNames(names[i], out module, out name);
+				string text = string.Format(Res.Strings.Dialog.Icon.Filter.One, module);
 
-				if (filter == null || filter == module)
+				if (filter == null || filter == text)
 				{
 					this.icons.Add(names[i]);
 				}
