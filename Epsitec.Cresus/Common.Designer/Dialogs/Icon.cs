@@ -82,20 +82,28 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.fieldFilter.ComboClosed += new EventHandler(this.HandleFieldFilterComboClosed);
 
 				//	Tableau principal.
-				this.array = new MyWidgets.StringArray(this.window.Root);
-				this.array.Columns = 3;
-				this.array.SetColumnsRelativeWidth(0, 0.15);  // icône
-				this.array.SetColumnsRelativeWidth(1, 0.30);  // nom du module
-				this.array.SetColumnsRelativeWidth(2, 0.55);  // nom de l'icône
-				this.array.SetColumnAlignment(0, ContentAlignment.MiddleCenter);
-				this.array.LineHeight = 25;
-				this.array.Dock = DockStyle.Fill;
-				this.array.CellCountChanged += new EventHandler(this.HandleArrayCellCountChanged);
-				this.array.CellsContentChanged += new EventHandler(this.HandleArrayCellsContentChanged);
-				this.array.SelectedRowChanged += new EventHandler(this.HandleArraySelectedRowChanged);
-				this.array.SelectedRowDoubleClicked += new EventHandler(this.HandleArraySelectedRowDoubleClicked);
-				this.array.TabIndex = tabIndex++;
-				this.array.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+				this.arrayDetail = new MyWidgets.StringArray(this.window.Root);
+				this.arrayDetail.Columns = 3;
+				this.arrayDetail.SetColumnsRelativeWidth(0, 0.15);  // icône
+				this.arrayDetail.SetColumnsRelativeWidth(1, 0.30);  // nom du module
+				this.arrayDetail.SetColumnsRelativeWidth(2, 0.55);  // nom de l'icône
+				this.arrayDetail.SetColumnAlignment(0, ContentAlignment.MiddleCenter);
+				this.arrayDetail.LineHeight = 25;
+				this.arrayDetail.Dock = DockStyle.Fill;
+				this.arrayDetail.CellCountChanged += new EventHandler(this.HandleArrayCellCountChanged);
+				this.arrayDetail.CellsContentChanged += new EventHandler(this.HandleArrayCellsContentChanged);
+				this.arrayDetail.SelectedRowChanged += new EventHandler(this.HandleArraySelectedRowChanged);
+				this.arrayDetail.SelectedRowDoubleClicked += new EventHandler(this.HandleArraySelectedRowDoubleClicked);
+				this.arrayDetail.TabIndex = tabIndex++;
+				this.arrayDetail.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+
+				this.arrayCompact = new MyWidgets.IconArray(this.window.Root);
+				this.arrayCompact.CellSize = this.arrayDetail.LineHeight;
+				this.arrayCompact.Dock = DockStyle.Fill;
+				this.arrayCompact.ChangeSelected += new EventHandler(this.HandleArrayCompactChangeSelected);
+				this.arrayCompact.TabIndex = tabIndex++;
+				this.arrayCompact.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+				ToolTip.Default.SetToolTip(this.arrayCompact, "*");
 
 				//	Pied.
 				Widget footer = new Widget(this.window.Root);
@@ -133,14 +141,22 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.slider.SmallChange = 1.0M;
 				this.slider.LargeChange = 5.0M;
 				this.slider.Resolution = 1.0M;
-				this.slider.Value = (decimal) this.array.LineHeight;
+				this.slider.Value = (decimal) this.arrayDetail.LineHeight;
 				this.slider.ValueChanged += new EventHandler(this.HandleSliderChanged);
+
+				this.buttonMode = new IconButton(footer);
+				this.buttonMode.IconName = Misc.Icon("PanelShowGrid");
+				this.buttonMode.ButtonStyle = ButtonStyle.ActivableIcon;
+				this.buttonMode.Dock = DockStyle.Right;
+				this.buttonMode.Margins = new Margins(0, 6, 0, 0);
+				this.buttonMode.Clicked += new MessageEventHandler(this.HandleButtonModeClicked);
 			}
 
+			this.UpdateMode();
 			this.UpdateFilter();
 			this.UpdateArray();
-			this.array.SelectedRow = this.SelectedIcon(this.icon);
-			this.array.ShowSelectedRow();
+			this.Selected = this.SelectedIcon(this.icon);
+			this.arrayDetail.ShowSelectedRow();
 
 			this.window.ShowDialog();
 		}
@@ -184,6 +200,14 @@ namespace Epsitec.Common.Designer.Dialogs
 			}
 		}
 
+
+		protected void UpdateMode()
+		{
+			this.arrayDetail.Visibility = !this.compactMode;
+			this.arrayCompact.Visibility = this.compactMode;
+
+			this.buttonMode.ActiveState = this.compactMode ? ActiveState.Yes : ActiveState.No;
+		}
 
 		protected void UpdateFilter()
 		{
@@ -233,21 +257,21 @@ namespace Epsitec.Common.Designer.Dialogs
 				return;
 			}
 
-			this.array.TotalRows = this.icons.Count;
+			this.arrayDetail.TotalRows = this.icons.Count;
 
-			int first = this.array.FirstVisibleRow;
-			for (int i=0; i<this.array.LineCount; i++)
+			int first = this.arrayDetail.FirstVisibleRow;
+			for (int i=0; i<this.arrayDetail.LineCount; i++)
 			{
 				int row = first+i;
 
 				if (row == 0)  // première ligne 'pas d'icône' ?
 				{
-					this.array.SetLineState(0, row, MyWidgets.StringList.CellState.Normal);
-					this.array.SetLineState(1, row, MyWidgets.StringList.CellState.Normal);
-					this.array.SetLineState(2, row, MyWidgets.StringList.CellState.Normal);
-					this.array.SetLineString(0, row, "");
-					this.array.SetLineString(1, row, "");
-					this.array.SetLineString(2, row, Res.Strings.Dialog.Icon.None);
+					this.arrayDetail.SetLineState(0, row, MyWidgets.StringList.CellState.Normal);
+					this.arrayDetail.SetLineState(1, row, MyWidgets.StringList.CellState.Normal);
+					this.arrayDetail.SetLineState(2, row, MyWidgets.StringList.CellState.Normal);
+					this.arrayDetail.SetLineString(0, row, "");
+					this.arrayDetail.SetLineString(1, row, "");
+					this.arrayDetail.SetLineString(2, row, Res.Strings.Dialog.Icon.None);
 				}
 				else if (row-1 < this.icons.Count)
 				{
@@ -257,23 +281,25 @@ namespace Epsitec.Common.Designer.Dialogs
 					string module, name;
 					Icon.GetIconNames(icon, out module, out name);
 
-					this.array.SetLineState(0, row, MyWidgets.StringList.CellState.Normal);
-					this.array.SetLineState(1, row, MyWidgets.StringList.CellState.Normal);
-					this.array.SetLineState(2, row, MyWidgets.StringList.CellState.Normal);
-					this.array.SetLineString(0, row, text);
-					this.array.SetLineString(1, row, module);
-					this.array.SetLineString(2, row, name);
+					this.arrayDetail.SetLineState(0, row, MyWidgets.StringList.CellState.Normal);
+					this.arrayDetail.SetLineState(1, row, MyWidgets.StringList.CellState.Normal);
+					this.arrayDetail.SetLineState(2, row, MyWidgets.StringList.CellState.Normal);
+					this.arrayDetail.SetLineString(0, row, text);
+					this.arrayDetail.SetLineString(1, row, module);
+					this.arrayDetail.SetLineString(2, row, name);
 				}
 				else
 				{
-					this.array.SetLineState(0, row, MyWidgets.StringList.CellState.Disabled);
-					this.array.SetLineState(1, row, MyWidgets.StringList.CellState.Disabled);
-					this.array.SetLineState(2, row, MyWidgets.StringList.CellState.Disabled);
-					this.array.SetLineString(0, row, "");
-					this.array.SetLineString(1, row, "");
-					this.array.SetLineString(2, row, "");
+					this.arrayDetail.SetLineState(0, row, MyWidgets.StringList.CellState.Disabled);
+					this.arrayDetail.SetLineState(1, row, MyWidgets.StringList.CellState.Disabled);
+					this.arrayDetail.SetLineState(2, row, MyWidgets.StringList.CellState.Disabled);
+					this.arrayDetail.SetLineString(0, row, "");
+					this.arrayDetail.SetLineString(1, row, "");
+					this.arrayDetail.SetLineString(2, row, "");
 				}
 			}
+
+			this.arrayCompact.SetIcons(this.icons);
 		}
 
 		protected int SelectedIcon(string icon)
@@ -314,7 +340,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		{
 			//	Cherche dans une direction donnée.
 			searching = Searcher.RemoveAccent(searching.ToLower());
-			int sel = this.array.SelectedRow-1;
+			int sel = this.Selected-1;
 
 			for (int i=0; i<this.icons.Count; i++)
 			{
@@ -336,13 +362,35 @@ namespace Epsitec.Common.Designer.Dialogs
 
 				if (name.Contains(searching))
 				{
-					this.array.SelectedRow = sel+1;
-					this.array.ShowSelectedRow();
+					this.Selected = sel+1;
+					this.arrayDetail.ShowSelectedRow();
 					return;
 				}
 			}
 
 			this.mainWindow.DialogMessage(Res.Strings.Dialog.Search.Message.Error);
+		}
+
+		protected int Selected
+		{
+			//	Case sélectionnée dans un tableau (détaillé ou compact).
+			get
+			{
+				if (this.compactMode)
+				{
+					return this.arrayCompact.SelectedIndex;
+				}
+				else
+				{
+					return this.arrayDetail.SelectedRow;
+				}
+			}
+
+			set
+			{
+				this.arrayDetail.SelectedRow = value;
+				this.arrayCompact.SelectedIndex = value;
+			}
 		}
 
 
@@ -364,7 +412,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		{
 			//	Menu pour choisir le filtre fermé.
 			string icon = null;
-			int sel = this.array.SelectedRow;
+			int sel = this.Selected;
 			if (sel > 0)
 			{
 				icon = this.icons[sel-1];
@@ -373,15 +421,15 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.UpdateFilter();
 			this.UpdateArray();
 
-			this.array.SelectedRow = this.SelectedIcon(icon);
-			this.array.ShowSelectedRow();
+			this.Selected = this.SelectedIcon(icon);
+			this.arrayDetail.ShowSelectedRow();
 		}
 
 		void HandleArrayCellCountChanged(object sender)
 		{
 			//	Le nombre de lignes a changé.
 			this.UpdateArray();
-			this.array.ShowSelectedRow();
+			this.arrayDetail.ShowSelectedRow();
 		}
 
 		void HandleArrayCellsContentChanged(object sender)
@@ -395,6 +443,11 @@ namespace Epsitec.Common.Designer.Dialogs
 			//	La ligne sélectionnée a changé.
 		}
 
+		void HandleArrayCompactChangeSelected(object sender)
+		{
+			//	La cellule sélectionnée a changé.
+		}
+
 		void HandleArraySelectedRowDoubleClicked(object sender)
 		{
 			//	La ligne sélectionnée a changé.
@@ -402,7 +455,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.window.Hide();
 			this.OnClosed();
 
-			int sel = this.array.SelectedRow;
+			int sel = this.Selected;
 			if (sel <= 0)
 			{
 				this.icon = null;
@@ -433,7 +486,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.window.Hide();
 			this.OnClosed();
 
-			int sel = this.array.SelectedRow;
+			int sel = this.Selected;
 			if (sel <= 0)
 			{
 				this.icon = null;
@@ -448,8 +501,16 @@ namespace Epsitec.Common.Designer.Dialogs
 		{
 			HSlider slider = sender as HSlider;
 			if ( slider == null )  return;
-			this.array.LineHeight = (double) slider.Value;
+			this.arrayDetail.LineHeight = (double) slider.Value;
+			this.arrayCompact.CellSize = (double) slider.Value;
 		}
+
+		void HandleButtonModeClicked(object sender, MessageEventArgs e)
+		{
+			this.compactMode = !this.compactMode;
+			this.UpdateMode();
+		}
+
 
 
 		protected ResourceManager			manager;
@@ -457,12 +518,15 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected List<string>				modules;
 		protected List<string>				icons;
 		protected string					icon;
+		protected bool						compactMode = false;
 
 		protected TextFieldCombo			fieldSearch;
 		protected TextFieldCombo			fieldFilter;
 		protected IconButton				searchPrev;
 		protected IconButton				searchNext;
-		protected MyWidgets.StringArray		array;
+		protected MyWidgets.StringArray		arrayDetail;
+		protected MyWidgets.IconArray		arrayCompact;
 		protected HSlider					slider;
+		protected IconButton				buttonMode;
 	}
 }
