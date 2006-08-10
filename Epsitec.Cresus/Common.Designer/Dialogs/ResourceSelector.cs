@@ -360,8 +360,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 					if (this.access.ResourceType != ResourceAccess.Type.Strings)
 					{
-						string icon;
-						this.access.GetBypassFilterIcon(this.druidsIndex[first+i], this.access.GetCultureBundle(null), out icon);
+						string icon = this.access.GetBypassFilterIcon(this.druidsIndex[first+i]);
 
 						if (string.IsNullOrEmpty(icon))
 						{
