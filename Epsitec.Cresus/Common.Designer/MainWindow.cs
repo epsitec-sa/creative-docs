@@ -64,7 +64,7 @@ namespace Epsitec.Common.Designer
 				this.dlgFilter       = new Dialogs.Filter(this);
 				this.dlgSearch       = new Dialogs.Search(this);
 				this.dlgNewCulture   = new Dialogs.NewCulture(this);
-				this.dlgTextSelector = new Dialogs.TextSelector(this);
+				this.dlgTextSelector = new Dialogs.StringSelector(this);
 
 				this.dlgGlyphs.Closed += new EventHandler(this.HandleDlgClosed);
 				this.dlgFilter.Closed += new EventHandler(this.HandleDlgClosed);
@@ -1087,7 +1087,7 @@ namespace Epsitec.Common.Designer
 		protected Dialogs.Filter				dlgFilter;
 		protected Dialogs.Search				dlgSearch;
 		protected Dialogs.NewCulture			dlgNewCulture;
-		protected Dialogs.TextSelector			dlgTextSelector;
+		protected Dialogs.StringSelector			dlgTextSelector;
 		protected PanelsContext					context;
 
 		protected string						resourcePrefix;
