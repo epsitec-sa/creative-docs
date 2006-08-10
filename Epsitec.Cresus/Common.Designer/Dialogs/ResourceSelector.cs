@@ -6,11 +6,11 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Designer.Dialogs
 {
 	/// <summary>
-	/// Dialogue permettant de choisir une ressource texte de type String.
+	/// Dialogue permettant de choisir une ressource de type quelconque.
 	/// </summary>
-	public class StringSelector : Abstract
+	public class ResourceSelector : Abstract
 	{
-		public StringSelector(MainWindow mainWindow) : base(mainWindow)
+		public ResourceSelector(MainWindow mainWindow) : base(mainWindow)
 		{
 			this.druidsIndex = new List<Druid>();
 		}
@@ -25,7 +25,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.window.MakeFixedSizeWindow();
 				this.window.Root.WindowStyles = WindowStyles.None;
 				this.window.PreventAutoClose = true;
-				this.WindowInit("TextSelector", 400, 300, true);
+				this.WindowInit("ResourceSelector", 400, 300, true);
 				this.window.Text = Res.Strings.Dialog.TextSelector.Title;
 				this.window.Owner = this.parentWindow;
 				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowCloseClicked);

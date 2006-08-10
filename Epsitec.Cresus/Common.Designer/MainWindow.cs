@@ -59,12 +59,12 @@ namespace Epsitec.Common.Designer
 				CommandDispatcher.SetDispatcher(this.window, this.commandDispatcher);
 				CommandContext.SetContext(this.window, this.commandContext);
 
-				this.dlgGlyphs       = new Dialogs.Glyphs(this);
-				this.dlgIcon         = new Dialogs.Icon(this);
-				this.dlgFilter       = new Dialogs.Filter(this);
-				this.dlgSearch       = new Dialogs.Search(this);
-				this.dlgNewCulture   = new Dialogs.NewCulture(this);
-				this.dlgTextSelector = new Dialogs.StringSelector(this);
+				this.dlgGlyphs           = new Dialogs.Glyphs(this);
+				this.dlgIcon             = new Dialogs.Icon(this);
+				this.dlgFilter           = new Dialogs.Filter(this);
+				this.dlgSearch           = new Dialogs.Search(this);
+				this.dlgNewCulture       = new Dialogs.NewCulture(this);
+				this.dlgResourceSelector = new Dialogs.ResourceSelector(this);
 
 				this.dlgGlyphs.Closed += new EventHandler(this.HandleDlgClosed);
 				this.dlgFilter.Closed += new EventHandler(this.HandleDlgClosed);
@@ -928,13 +928,13 @@ namespace Epsitec.Common.Designer
 
 
 		#region Dialogs
-		public Druid DlgTextSelector(ResourceAccess access, Druid ressource)
+		public Druid DlgResourceSelector(ResourceAccess access, Druid ressource)
 		{
 			//	Ouvre le dialogue pour choisir un ressource de type texte.
-			this.dlgTextSelector.SetAccess(access);
-			this.dlgTextSelector.Resource = ressource;
-			this.dlgTextSelector.Show();
-			return this.dlgTextSelector.Resource;
+			this.dlgResourceSelector.SetAccess(access);
+			this.dlgResourceSelector.Resource = ressource;
+			this.dlgResourceSelector.Show();
+			return this.dlgResourceSelector.Resource;
 		}
 
 		public string DlgIcon(ResourceManager manager, string icon)
@@ -1087,7 +1087,7 @@ namespace Epsitec.Common.Designer
 		protected Dialogs.Filter				dlgFilter;
 		protected Dialogs.Search				dlgSearch;
 		protected Dialogs.NewCulture			dlgNewCulture;
-		protected Dialogs.StringSelector			dlgTextSelector;
+		protected Dialogs.ResourceSelector		dlgResourceSelector;
 		protected PanelsContext					context;
 
 		protected string						resourcePrefix;

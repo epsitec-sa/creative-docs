@@ -50,7 +50,7 @@
     <Compile Include="MyWidgets\StackedPanel.cs" />
     <Compile Include="ObjectModifier.cs" />
     <Compile Include="IProxy.cs" />
-    <Compile Include="Dialogs\StringSelector.cs" />
+    <Compile Include="Dialogs\ResourceSelector.cs" />
     <Compile Include="HandlesList.cs" />
     <Compile Include="Handle.cs" />
     <Compile Include="PanelsContext.cs" />
