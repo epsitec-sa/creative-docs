@@ -63,6 +63,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 						this.columns[i].DoubleClicked -= new MessageEventHandler(this.HandleDoubleClicked);
 					}
 					this.columns[this.columns.Length-1].CellCountChanged -= new EventHandler(this.HandleCellCountChanged);
+
+					for (int i=0; i<this.columns.Length; i++)
+					{
+						this.columns[i].Dispose();
+						this.columns[i] = null;
+					}
+
+					this.isDirtyGeometry = true;
 				}
 
 				this.columns = new StringList[value];
@@ -631,11 +639,18 @@ namespace Epsitec.Common.Designer.MyWidgets
 			rect = this.Client.Bounds;
 			rect.Left = rect.Right-this.scroller.PreferredWidth;
 			this.scroller.SetManualBounds(rect);
+
+			this.isDirtyGeometry = false;
 		}
 
 
 		protected override void PaintForegroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
+			if (this.isDirtyGeometry)
+			{
+				this.UpdateClientGeometry();
+			}
+
 			this.UpdateScroller();
 			this.UpdateSelectedRow();
 
@@ -827,6 +842,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected bool						ignoreChange = false;
 		protected bool						isDirtyScroller = true;
 		protected bool						isDirtySelected = true;
+		protected bool						isDirtyGeometry = true;
 
 		protected int						widthDraggingRank = -1;
 		protected double[]					widthDraggingAbsolutes;
