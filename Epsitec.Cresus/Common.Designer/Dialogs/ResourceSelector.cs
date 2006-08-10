@@ -139,9 +139,9 @@ namespace Epsitec.Common.Designer.Dialogs
 			string label = "";
 			if (!this.resource.IsEmpty)
 			{
-				string text, icon;
+				string text;
 				bool isDefined;
-				this.access.GetBypassFilterStrings(this.resource, this.CurrentBundle, out label, out text, out icon, out isDefined);
+				this.access.GetBypassFilterStrings(this.resource, this.CurrentBundle, out label, out text, out isDefined);
 			}
 
 			this.ignoreChanged = true;
@@ -235,9 +235,9 @@ namespace Epsitec.Common.Designer.Dialogs
 			for (int i=0; i<this.access.TotalCount; i++)
 			{
 				Druid druid = this.access.GetBypassFilterDruid(i);
-				string label, text, icon;
+				string label, text;
 				bool isDefined;
-				this.access.GetBypassFilterStrings(druid, bundle, out label, out text, out icon, out isDefined);
+				this.access.GetBypassFilterStrings(druid, bundle, out label, out text, out isDefined);
 
 				bool add1 = false;
 				bool add2 = false;
@@ -348,9 +348,9 @@ namespace Epsitec.Common.Designer.Dialogs
 			{
 				if (first+i < this.druidsIndex.Count)
 				{
-					string label, text, icon;
+					string label, text;
 					bool isDefined;
-					this.access.GetBypassFilterStrings(this.druidsIndex[first+i], bundle, out label, out text, out icon, out isDefined);
+					this.access.GetBypassFilterStrings(this.druidsIndex[first+i], bundle, out label, out text, out isDefined);
 
 					this.array.SetLineString(0, first+i, label);
 					this.array.SetLineState(0, first+i, MyWidgets.StringList.CellState.Normal);
@@ -360,6 +360,9 @@ namespace Epsitec.Common.Designer.Dialogs
 
 					if (this.access.ResourceType != ResourceAccess.Type.Strings)
 					{
+						string icon;
+						this.access.GetBypassFilterIcon(this.druidsIndex[first+i], this.access.GetCultureBundle(null), out icon);
+
 						if (string.IsNullOrEmpty(icon))
 						{
 							this.array.SetLineString(2, first+i, "");

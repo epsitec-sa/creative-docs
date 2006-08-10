@@ -694,7 +694,27 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		public void GetBypassFilterStrings(Druid druid, ResourceBundle bundle, out string name, out string text, out string icon, out bool isDefined)
+		public void GetBypassFilterStrings(Druid druid, ResourceBundle bundle, out string name, out string text, out bool isDefined)
+		{
+			//	Donne les chaînes 'Name' et 'String' d'une ressource, sans tenir compte du filtre.
+			if (bundle == null)
+			{
+				this.GetBypassFilterStringsBase(druid, this.primaryBundle, out name, out text, out isDefined);
+				isDefined = false;
+			}
+			else
+			{
+				this.GetBypassFilterStringsBase(druid, bundle, out name, out text, out isDefined);
+			}
+
+			if (text == "" && bundle != this.primaryBundle && isDefined)
+			{
+				this.GetBypassFilterStringsBase(druid, this.primaryBundle, out name, out text, out isDefined);
+				isDefined = false;
+			}
+		}
+
+		protected void GetBypassFilterStringsBase(Druid druid, ResourceBundle bundle, out string name, out string text, out bool isDefined)
 		{
 			//	Donne les chaînes 'Name' et 'String' d'une ressource, sans tenir compte du filtre.
 			System.Diagnostics.Debug.Assert(this.IsBundlesType);
@@ -713,7 +733,6 @@ namespace Epsitec.Common.Designer
 			if (this.type == Type.Strings)
 			{
 				text = field.AsString;
-				icon = null;
 			}
 			else
 			{
@@ -760,6 +779,28 @@ namespace Epsitec.Common.Designer
 				}
 
 				text = builder.ToString();
+			}
+		}
+
+		public void GetBypassFilterIcon(Druid druid, ResourceBundle bundle, out string icon)
+		{
+			//	Donne l'icône d'une ressource, sans tenir compte du filtre.
+			System.Diagnostics.Debug.Assert(this.IsBundlesType);
+			ResourceBundle.Field field = bundle[druid];
+
+			if (this.type == Type.Strings)
+			{
+				icon = null;
+			}
+			else
+			{
+				Common.Types.Caption caption = new Common.Types.Caption();
+
+				string s = field.AsString;
+				if (!string.IsNullOrEmpty(s))
+				{
+					caption.DeserializeFromString(s);
+				}
 
 				icon = caption.Icon;
 			}
