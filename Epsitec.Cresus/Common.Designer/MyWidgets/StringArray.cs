@@ -640,6 +640,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			rect.Left = rect.Right-this.scroller.PreferredWidth;
 			this.scroller.SetManualBounds(rect);
 
+			this.OnColumnsWidthChanged();
 			this.isDirtyGeometry = false;
 		}
 
