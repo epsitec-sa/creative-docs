@@ -1497,7 +1497,15 @@ namespace Epsitec.Common.Designer.MyWidgets
 					druid = Druid.Parse(binding.ResourceId);
 				}
 
-				druid = this.module.MainWindow.DlgResourceSelector(this.module.AccessStrings, druid);
+				//	TODO: provisoire
+				if (obj is Button)
+				{
+					druid = this.module.MainWindow.DlgResourceSelector(this.module.AccessCaptions, druid);
+				}
+				else
+				{
+					druid = this.module.MainWindow.DlgResourceSelector(this.module.AccessStrings, druid);
+				}
 				
 				if (druid.IsValid)
 				{

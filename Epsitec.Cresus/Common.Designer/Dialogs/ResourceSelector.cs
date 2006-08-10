@@ -22,14 +22,17 @@ namespace Epsitec.Common.Designer.Dialogs
 			{
 				this.window = new Window();
 				this.window.MakeSecondaryWindow();
-				this.window.MakeFixedSizeWindow();
-				this.window.Root.WindowStyles = WindowStyles.None;
 				this.window.PreventAutoClose = true;
 				this.WindowInit("ResourceSelector", 400, 300, true);
 				this.window.Text = Res.Strings.Dialog.TextSelector.Title;
 				this.window.Owner = this.parentWindow;
 				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowCloseClicked);
 				this.window.Root.Padding = new Margins(8, 8, 8, 8);
+
+				ResizeKnob resize = new ResizeKnob(this.window.Root);
+				resize.Anchor = AnchorStyles.BottomRight;
+				resize.Margins = new Margins(0, -8, 0, -8);
+				ToolTip.Default.SetToolTip(resize, Res.Strings.Dialog.Tooltip.Resize);
 
 				int tabIndex = 0;
 
@@ -78,11 +81,6 @@ namespace Epsitec.Common.Designer.Dialogs
 
 				//	Tableau principal.
 				this.array = new MyWidgets.StringArray(this.window.Root);
-				this.array.Columns = 2;
-				this.array.SetColumnsRelativeWidth(0, 0.5);
-				this.array.SetColumnsRelativeWidth(1, 0.5);
-				this.array.SetDynamicsToolTips(0, true);
-				this.array.SetDynamicsToolTips(1, false);
 				this.array.ColumnsWidthChanged += new EventHandler(this.HandleArrayColumnsWidthChanged);
 				this.array.CellCountChanged += new EventHandler(this.HandleArrayCellCountChanged);
 				this.array.CellsContentChanged += new EventHandler(this.HandleArrayCellsContentChanged);
@@ -131,6 +129,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.filterText.Text = "";
 			this.ignoreChanged = false;
 
+			this.UpdateResourceType();
 			this.UpdateHeader();
 			this.UpdateDruidsIndex();
 			this.UpdateArray();
@@ -139,9 +138,9 @@ namespace Epsitec.Common.Designer.Dialogs
 			string label = "";
 			if (!this.resource.IsEmpty)
 			{
-				string text;
+				string text, icon;
 				bool isDefined;
-				this.access.GetBypassFilterStrings(this.resource, this.CurrentBundle, out label, out text, out isDefined);
+				this.access.GetBypassFilterStrings(this.resource, this.CurrentBundle, out label, out text, out icon, out isDefined);
 			}
 
 			this.ignoreChanged = true;
@@ -171,12 +170,13 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		public void SetAccess(ResourceAccess access)
 		{
-			System.Diagnostics.Debug.Assert(access.ResourceType == ResourceAccess.Type.Strings);
+			//	Détermine les ressources à afficher.
 			this.access = access;
 		}
 
 		public Druid Resource
 		{
+			//	Druid de la ressource choisie.
 			get
 			{
 				return this.resource;
@@ -221,9 +221,9 @@ namespace Epsitec.Common.Designer.Dialogs
 			for (int i=0; i<this.access.TotalCount; i++)
 			{
 				Druid druid = this.access.GetBypassFilterDruid(i);
-				string label, text;
+				string label, text, icon;
 				bool isDefined;
-				this.access.GetBypassFilterStrings(druid, bundle, out label, out text, out isDefined);
+				this.access.GetBypassFilterStrings(druid, bundle, out label, out text, out icon, out isDefined);
 
 				bool add1 = false;
 				bool add2 = false;
@@ -277,6 +277,51 @@ namespace Epsitec.Common.Designer.Dialogs
 			return best;
 		}
 
+		protected void UpdateResourceType()
+		{
+			//	Met à jour le tableau en fonction du type des ressources.
+			int columns = 2;  // 2 colonnes pour les Strings
+			if (this.access.ResourceType != ResourceAccess.Type.Strings)
+			{
+				columns = 3;  // 3 colonnes pour les Captions, COmmands et Types
+			}
+
+			if (this.array.Columns != columns)  // changement du nombre de colonnes ?
+			{
+				this.array.Columns = columns;
+
+				if (columns == 2)
+				{
+					this.array.SetColumnsRelativeWidth(0, 0.5);
+					this.array.SetColumnsRelativeWidth(1, 0.5);
+
+					this.array.SetColumnAlignment(0, ContentAlignment.MiddleLeft);
+					this.array.SetColumnAlignment(1, ContentAlignment.MiddleLeft);
+
+					this.array.SetDynamicsToolTips(0, true);
+					this.array.SetDynamicsToolTips(1, false);
+
+					this.array.LineHeight = 20;  // hauteur standard
+				}
+				else
+				{
+					this.array.SetColumnsRelativeWidth(0, 0.4);
+					this.array.SetColumnsRelativeWidth(1, 0.5);
+					this.array.SetColumnsRelativeWidth(2, 0.1);
+
+					this.array.SetColumnAlignment(0, ContentAlignment.MiddleLeft);
+					this.array.SetColumnAlignment(1, ContentAlignment.MiddleLeft);
+					this.array.SetColumnAlignment(2, ContentAlignment.MiddleCenter);
+
+					this.array.SetDynamicsToolTips(0, true);
+					this.array.SetDynamicsToolTips(1, false);
+					this.array.SetDynamicsToolTips(2, false);
+
+					this.array.LineHeight = 30;  // plus haut, à cause des descriptions et des icônes
+				}
+			}
+		}
+
 		protected void UpdateArray()
 		{
 			//	Met à jour tout le contenu du tableau.
@@ -289,21 +334,42 @@ namespace Epsitec.Common.Designer.Dialogs
 			{
 				if (first+i < this.druidsIndex.Count)
 				{
-					string label, text;
+					string label, text, icon;
 					bool isDefined;
-					this.access.GetBypassFilterStrings(this.druidsIndex[first+i], bundle, out label, out text, out isDefined);
+					this.access.GetBypassFilterStrings(this.druidsIndex[first+i], bundle, out label, out text, out icon, out isDefined);
 
 					this.array.SetLineString(0, first+i, label);
-					this.array.SetLineString(1, first+i, text);
 					this.array.SetLineState(0, first+i, MyWidgets.StringList.CellState.Normal);
+
+					this.array.SetLineString(1, first+i, text);
 					this.array.SetLineState(1, first+i, isDefined ? MyWidgets.StringList.CellState.Normal : MyWidgets.StringList.CellState.Warning);
+
+					if (this.access.ResourceType != ResourceAccess.Type.Strings)
+					{
+						if (string.IsNullOrEmpty(icon))
+						{
+							this.array.SetLineString(2, first+i, "");
+						}
+						else
+						{
+							this.array.SetLineString(2, first+i, Misc.ImageFull(icon));
+						}
+						this.array.SetLineState(2, first+i, isDefined ? MyWidgets.StringList.CellState.Normal : MyWidgets.StringList.CellState.Warning);
+					}
 				}
 				else
 				{
 					this.array.SetLineString(0, first+i, "");
-					this.array.SetLineString(1, first+i, "");
 					this.array.SetLineState(0, first+i, MyWidgets.StringList.CellState.Disabled);
+
+					this.array.SetLineString(1, first+i, "");
 					this.array.SetLineState(1, first+i, MyWidgets.StringList.CellState.Disabled);
+
+					if (this.access.ResourceType != ResourceAccess.Type.Strings)
+					{
+						this.array.SetLineString(2, first+i, "");
+						this.array.SetLineState(2, first+i, MyWidgets.StringList.CellState.Disabled);
+					}
 				}
 			}
 		}
