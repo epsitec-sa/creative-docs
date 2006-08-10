@@ -697,35 +697,39 @@ namespace Epsitec.Common.Designer
 		public void GetBypassFilterStrings(Druid druid, ResourceBundle bundle, out string name, out string text, out bool isDefined)
 		{
 			//	Donne les chaînes 'Name' et 'String' d'une ressource, sans tenir compte du filtre.
+			//	Si le texte n'existe pas, cherche dans la culture de base (isDefined est alors false).
 			if (bundle == null)
 			{
-				this.GetBypassFilterStringsBase(druid, this.primaryBundle, out name, out text, out isDefined);
+				this.GetBypassFilterStrings(druid, this.primaryBundle, out name, out text);
 				isDefined = false;
 			}
 			else
 			{
-				this.GetBypassFilterStringsBase(druid, bundle, out name, out text, out isDefined);
-			}
+				this.GetBypassFilterStrings(druid, bundle, out name, out text);
 
-			if (text == "" && bundle != this.primaryBundle && isDefined)
-			{
-				this.GetBypassFilterStringsBase(druid, this.primaryBundle, out name, out text, out isDefined);
-				isDefined = false;
+				if (string.IsNullOrEmpty(text) && bundle != this.primaryBundle)
+				{
+					this.GetBypassFilterStrings(druid, this.primaryBundle, out name, out text);
+					isDefined = false;
+				}
+				else
+				{
+					isDefined = true;
+				}
 			}
 		}
 
-		protected void GetBypassFilterStringsBase(Druid druid, ResourceBundle bundle, out string name, out string text, out bool isDefined)
+		protected void GetBypassFilterStrings(Druid druid, ResourceBundle bundle, out string name, out string text)
 		{
 			//	Donne les chaînes 'Name' et 'String' d'une ressource, sans tenir compte du filtre.
 			System.Diagnostics.Debug.Assert(this.IsBundlesType);
 			ResourceBundle.Field field = bundle[druid];
 
-			isDefined = true;
-
 			if (field.IsEmpty)
 			{
-				field = this.primaryBundle[druid];
-				isDefined = false;
+				name = null;
+				text = null;
+				return;
 			}
 
 			name = this.SubFilter(field.Name);
@@ -782,15 +786,16 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		public void GetBypassFilterIcon(Druid druid, ResourceBundle bundle, out string icon)
+		public string GetBypassFilterIcon(Druid druid)
 		{
-			//	Donne l'icône d'une ressource, sans tenir compte du filtre.
+			//	Retourne l'icône d'une ressource, sans tenir compte du filtre.
+			//	La recherche s'effectue toujours dans la culture de base.
 			System.Diagnostics.Debug.Assert(this.IsBundlesType);
-			ResourceBundle.Field field = bundle[druid];
+			ResourceBundle.Field field = this.primaryBundle[druid];
 
 			if (this.type == Type.Strings)
 			{
-				icon = null;
+				return null;
 			}
 			else
 			{
@@ -802,7 +807,7 @@ namespace Epsitec.Common.Designer
 					caption.DeserializeFromString(s);
 				}
 
-				icon = caption.Icon;
+				return caption.Icon;
 			}
 		}
 
