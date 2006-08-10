@@ -24,7 +24,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.window.MakeSecondaryWindow();
 				this.window.PreventAutoClose = true;
 				this.WindowInit("ResourceSelector", 400, 300, true);
-				this.window.Text = Res.Strings.Dialog.TextSelector.Title;
+				this.window.Text = Res.Strings.Dialog.ResourceSelector.Title;
 				this.window.Owner = this.parentWindow;
 				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowCloseClicked);
 				this.window.Root.Padding = new Margins(8, 8, 8, 8);
@@ -73,7 +73,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.filterText.Margins = new Margins(0, 1, 0, 0);
 
 				this.buttonClear = new Button(header);
-				this.buttonClear.Text = Res.Strings.Dialog.TextSelector.Button.Clear;
+				this.buttonClear.Text = Res.Strings.Dialog.ResourceSelector.Button.Clear;
 				this.buttonClear.PreferredSize = new Size(16, 20);
 				this.buttonClear.TabIndex = tabIndex++;
 				this.buttonClear.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
@@ -99,7 +99,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 				this.buttonUse = new Button(footer);
 				this.buttonUse.PreferredWidth = 75;
-				this.buttonUse.Text = Res.Strings.Dialog.TextSelector.Button.Use;
+				this.buttonUse.Text = Res.Strings.Dialog.ResourceSelector.Button.Use;
 				this.buttonUse.ButtonStyle = ButtonStyle.DefaultAccept;
 				this.buttonUse.Dock = DockStyle.Left;
 				this.buttonUse.Margins = new Margins(0, 6, 0, 0);
@@ -109,7 +109,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 				this.buttonCreate = new Button(footer);
 				this.buttonCreate.PreferredWidth = 75;
-				this.buttonCreate.Text = Res.Strings.Dialog.TextSelector.Button.Create;
+				this.buttonCreate.Text = Res.Strings.Dialog.ResourceSelector.Button.Create;
 				this.buttonCreate.Dock = DockStyle.Left;
 				this.buttonCreate.Margins = new Margins(0, 6, 0, 0);
 				this.buttonCreate.Clicked += new MessageEventHandler(this.HandleButtonCreateClicked);
@@ -193,10 +193,10 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected void UpdateHeader()
 		{
 			//	Met à jour les textes fixes en haut.
-			this.header1.Text = Res.Strings.Dialog.TextSelector.Label;
+			this.header1.Text = Res.Strings.Dialog.ResourceSelector.Label;
 
 			string culture = Misc.CultureName(this.mainWindow.CurrentModule.ResourceManager.ActiveCulture);
-			this.header2.Text = string.Format(Res.Strings.Dialog.TextSelector.Text, culture);
+			this.header2.Text = string.Format(Res.Strings.Dialog.ResourceSelector.Text, culture);
 		}
 
 		protected void UpdateColumnsWidth()

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <bundle name="Strings" type="String" culture="fr">
   <data name="Application.Title" id="0">Editeur de ressources</data>
   <data name="Ribbon.Main" id="01">Principal</data>
@@ -188,12 +188,12 @@
   <data name="Dialog.Icon.Filter.One" id="066" mod="1">Seulement {0}</data>
   <data name="Dialog.Icon.Tooltip.Mode" id="076" mod="1">Mode compact ou étendu</data>
   <data name="Dialog.Icon.Tooltip.Size" id="086" mod="1">Taille des icônes</data>
-  <data name="Dialog.TextSelector.Title" id="0N4">Choix d'une ressource de type texte</data>
-  <data name="Dialog.TextSelector.Label" id="0O4">Identificateur :</data>
-  <data name="Dialog.TextSelector.Text" id="0P4">Texte {0} :</data>
-  <data name="Dialog.TextSelector.Button.Clear" id="0Q4">R</data>
-  <data name="Dialog.TextSelector.Button.Use" id="0R4">Utiliser</data>
-  <data name="Dialog.TextSelector.Button.Create" id="0S4">Créer</data>
+  <data name="Dialog.ResourceSelector.Title" id="0N4">Choix d'une ressource</data>
+  <data name="Dialog.ResourceSelector.Label" id="0O4">Identificateur :</data>
+  <data name="Dialog.ResourceSelector.Text" id="0P4">Texte {0} :</data>
+  <data name="Dialog.ResourceSelector.Button.Clear" id="0Q4">R</data>
+  <data name="Dialog.ResourceSelector.Button.Use" id="0R4">Utiliser</data>
+  <data name="Dialog.ResourceSelector.Button.Create" id="0S4">Créer</data>
   <data name="Misc.NoTitle" id="0T4">&lt;i&gt;sans titre&lt;/i&gt;</data>
   <data name="Misc.Copy" id="0U4">Copie</data>
   <data name="Misc.CopyOf" id="0V4">de</data>
