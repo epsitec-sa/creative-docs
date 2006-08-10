@@ -6,11 +6,11 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Designer.Dialogs
 {
 	/// <summary>
-	/// Dialogue permettant de choisir une ressource de type texte.
+	/// Dialogue permettant de choisir une ressource texte de type String.
 	/// </summary>
-	public class TextSelector : Abstract
+	public class StringSelector : Abstract
 	{
-		public TextSelector(MainWindow mainWindow) : base(mainWindow)
+		public StringSelector(MainWindow mainWindow) : base(mainWindow)
 		{
 			this.druidsIndex = new List<Druid>();
 		}
