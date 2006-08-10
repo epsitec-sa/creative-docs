@@ -1500,11 +1500,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 				//	TODO: provisoire
 				if (obj is Button)
 				{
-					druid = this.module.MainWindow.DlgResourceSelector(this.module.AccessCaptions, druid);
+					druid = this.module.MainWindow.DlgResourceSelector(this.module.PrepareAccess(ResourceAccess.Type.Commands), druid);
 				}
 				else
 				{
-					druid = this.module.MainWindow.DlgResourceSelector(this.module.AccessStrings, druid);
+					druid = this.module.MainWindow.DlgResourceSelector(this.module.PrepareAccess(ResourceAccess.Type.Strings), druid);
 				}
 				
 				if (druid.IsValid)

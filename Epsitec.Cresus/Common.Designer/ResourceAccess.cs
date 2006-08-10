@@ -666,8 +666,32 @@ namespace Epsitec.Common.Designer
 		{
 			//	Donne un druid, sans tenir compte du filtre.
 			System.Diagnostics.Debug.Assert(this.IsBundlesType);
-			ResourceBundle.Field field = this.primaryBundle[index];
-			return new Druid(field.Druid, this.primaryBundle.Module.Id);
+
+			if (this.type == Type.Strings)
+			{
+				ResourceBundle.Field field = this.primaryBundle[index];
+				return new Druid(field.Druid, this.primaryBundle.Module.Id);
+			}
+			else
+			{
+				//	Comme les ressources Captions, Commands et Types sont dans le même "sac",
+				//	il faut les distinguer d'après leurs préfixes.
+				//	TODO: à optimiser !
+				for (int i=0; i<this.primaryBundle.FieldCount; i++)
+				{
+					ResourceBundle.Field field = this.primaryBundle[i];
+					if (this.HasFixFilter(field.Name))
+					{
+						if (index == 0)
+						{
+							return new Druid(field.Druid, this.primaryBundle.Module.Id);
+						}
+
+						index--;
+					}
+				}
+				return Druid.Empty;
+			}
 		}
 
 		public void GetBypassFilterStrings(Druid druid, ResourceBundle bundle, out string name, out string text, out string icon, out bool isDefined)

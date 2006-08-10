@@ -201,6 +201,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		protected void UpdateColumnsWidth()
 		{
+			//	TODO: étrange problème lors du redimensionnement de la fenêtre...
 			double w1 = this.array.GetColumnsAbsoluteWidth(0);
 			double w2 = this.array.GetColumnsAbsoluteWidth(1);
 
