@@ -878,6 +878,11 @@ namespace Epsitec.Common.Designer
 				}
 			}
 
+			if (this.IsCaptionsType)
+			{
+				this.CaptionsCountersModify(1);
+			}
+
 			this.druidsIndex.Add(newDruid);
 
 			return newDruid;
