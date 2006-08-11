@@ -195,6 +195,26 @@ namespace Epsitec.Common.Designer
 		}
 
 
+		static public Color WarningColor
+		{
+			//	Retourne la couleur à utiliser pour un avertissement dans une fenêtre.
+			get
+			{
+				IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
+				Color w = adorner.ColorWindow;
+				if (w.GetBrightness() < 0.5)
+				{
+					return Color.FromRgb(1, 0.85, 0.35);  // jaune-orange
+				}
+				else
+				{
+					//?return Color.FromRgb(0.5, 0, 0);  // brun
+					return Color.FromRgb(0, 0.2, 0.5);  // bleu foncé
+				}
+			}
+		}
+
+
 		//	Liste des cultures gérées par Designer, par ordre d'importance.
 		static public string[] Cultures = { "fr", "en", "de", "it", "es", "pt" };
 
