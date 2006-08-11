@@ -231,8 +231,8 @@ namespace Epsitec.Common.Designer
 		void HandleAccessDirtyChanged(object sender)
 		{
 			//	Appelé lorsque l'état IsDirty d'un accès a changé.
-
 			this.mainWindow.GetCommandState("Save").Enable = this.IsDirty;
+			this.mainWindow.UpdateBookModules();
 		}
 
 

@@ -968,7 +968,7 @@ namespace Epsitec.Common.Designer
 			return true;
 		}
 
-		protected void UpdateBookModules()
+		public void UpdateBookModules()
 		{
 			//	Met à jour le nom de l'onglet des modules.
 			if ( !this.IsCurrentModule )  return;
