@@ -12,7 +12,8 @@ namespace Epsitec.Common.Designer.Ribbons
 		public File(MainWindow mainWindow) : base(mainWindow)
 		{
 			this.Title = Res.Strings.Ribbon.Section.File;
-			this.PreferredWidth = 8 + 22*1.5*3 + 4 + 22*1;
+			//this.PreferredWidth = 8 + 22*1.5*3 + 4 + 22*1;
+			this.PreferredWidth = 8 + 22*1.5*3;
 
 			this.buttonOpen   = this.CreateIconButton("Open", "Large");
 			this.buttonCheck  = this.CreateIconButton("Check", "Large");
@@ -58,12 +59,14 @@ namespace Epsitec.Common.Designer.Ribbons
 			rect.Height = dy;
 			rect.Offset(dx*1.5*3+4, dy+5);
 			this.buttonNew.SetManualBounds(rect);
+			this.buttonNew.Visibility = false;
 
 			rect = this.UsefulZone;
 			rect.Width  = dx;
 			rect.Height = dy;
 			rect.Offset(dx*1.5*3+4, 0);
 			this.buttonSaveAs.SetManualBounds(rect);
+			this.buttonSaveAs.Visibility = false;
 		}
 
 
