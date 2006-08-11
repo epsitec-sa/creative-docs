@@ -233,7 +233,7 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
-		void HandleStatefullPressed(object sender, MessageEventArgs e)
+		protected void HandleStatefullPressed(object sender, MessageEventArgs e)
 		{
 			//	Bouton à cocher 'Statefull' pressé.
 			if (this.ignoreChange)
@@ -248,7 +248,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.UpdateColor();
 		}
 
-		void HandleShortcutEditedShortcutChanged(object sender)
+		protected void HandleShortcutEditedShortcutChanged(object sender)
 		{
 			//	Un raccourci clavier a été changé.
 			if (this.ignoreChange)
@@ -323,13 +323,13 @@ namespace Epsitec.Common.Designer.Viewers
 			this.UpdateColor();
 		}
 
-		void HandleGroupComboOpening(object sender, CancelEventArgs e)
+		protected void HandleGroupComboOpening(object sender, CancelEventArgs e)
 		{
 			//	Le combo pour le groupe va être ouvert.
 			this.UpdateGroupCombo();
 		}
 
-		void HandleGroupTextChanged(object sender)
+		protected void HandleGroupTextChanged(object sender)
 		{
 			//	Le texte éditable pour le groupe a changé.
 			if (this.ignoreChange)

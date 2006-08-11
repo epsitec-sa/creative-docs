@@ -26,8 +26,9 @@ namespace Epsitec.Common.Designer.Viewers
 			this.labelEdit = new TextFieldEx(left);
 			this.labelEdit.Margins = new Margins(0, 0, 10, 0);
 			this.labelEdit.Dock = DockStyle.Bottom;
+			this.labelEdit.ButtonShowCondition = ShowCondition.WhenModified;
 			this.labelEdit.EditionAccepted += new EventHandler(this.HandleTextChanged);
-			this.labelEdit.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
+			this.labelEdit.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleLabelKeyboardFocusChanged);
 			this.labelEdit.TabIndex = tabIndex++;
 			this.labelEdit.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			this.labelEdit.Visibility = (this.module.Mode == DesignerMode.Build);
@@ -149,7 +150,7 @@ namespace Epsitec.Common.Designer.Viewers
 				this.array.SelectedRowChanged -= new EventHandler(this.HandleArraySelectedRowChanged);
 
 				this.labelEdit.EditionAccepted -= new EventHandler(this.HandleTextChanged);
-				this.labelEdit.KeyboardFocusChanged -= new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
+				this.labelEdit.KeyboardFocusChanged -= new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleLabelKeyboardFocusChanged);
 			}
 
 			base.Dispose(disposing);
@@ -394,14 +395,14 @@ namespace Epsitec.Common.Designer.Viewers
 			return null;
 		}
 
-		
-		void HandleArrayCellCountChanged(object sender)
+
+		protected void HandleArrayCellCountChanged(object sender)
 		{
 			//	Le nombre de lignes a changé.
 			this.UpdateArray();
 		}
 
-		void HandleArraySelectedRowChanged(object sender)
+		protected void HandleArraySelectedRowChanged(object sender)
 		{
 			//	La ligne sélectionnée a changé.
 			this.access.AccessIndex = this.array.SelectedRow;
@@ -411,7 +412,15 @@ namespace Epsitec.Common.Designer.Viewers
 			this.DefineProxies(this.panelEditor.SelectedObjects);
 		}
 
-		void HandleTextChanged(object sender)
+		protected void HandleLabelKeyboardFocusChanged(object sender, Epsitec.Common.Types.DependencyPropertyChangedEventArgs e)
+		{
+			//	Appelé lorsque la ligne éditable pour le label voit son focus changer.
+			TextFieldEx field = sender as TextFieldEx;
+			field.AcceptEdition();
+			this.HandleEditKeyboardFocusChanged(sender, e);
+		}
+
+		protected void HandleTextChanged(object sender)
 		{
 			//	Un texte éditable a changé.
 			if ( this.ignoreChange )  return;
@@ -423,23 +432,23 @@ namespace Epsitec.Common.Designer.Viewers
 			this.UpdateArray();
 		}
 
-		void HandlePanelEditorChildrenAdded(object sender)
+		protected void HandlePanelEditorChildrenAdded(object sender)
 		{
 			this.UpdateCommands();
 		}
 
-		void HandlePanelEditorChildrenSelected(object sender)
+		protected void HandlePanelEditorChildrenSelected(object sender)
 		{
 			this.UpdateCommands();
 			this.DefineProxies(this.panelEditor.SelectedObjects);
 		}
 
-		void HandlePanelEditorChildrenGeometryChanged(object sender)
+		protected void HandlePanelEditorChildrenGeometryChanged(object sender)
 		{
 			this.UpdateProxies();
 		}
 
-		void HandlePanelEditorUpdateCommands(object sender)
+		protected void HandlePanelEditorUpdateCommands(object sender)
 		{
 			this.UpdateCommands();
 		}

@@ -25,8 +25,9 @@ namespace Epsitec.Common.Designer.Viewers
 			this.labelEdit = new TextFieldEx(left);
 			this.labelEdit.Margins = new Margins(0, 0, 10, 0);
 			this.labelEdit.Dock = DockStyle.Bottom;
+			this.labelEdit.ButtonShowCondition = ShowCondition.WhenModified;
 			this.labelEdit.EditionAccepted += new EventHandler(this.HandleTextChanged);
-			this.labelEdit.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
+			this.labelEdit.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleLabelKeyboardFocusChanged);
 			this.labelEdit.TabIndex = tabIndex++;
 			this.labelEdit.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			this.labelEdit.Visibility = (this.module.Mode == DesignerMode.Build);
@@ -67,7 +68,7 @@ namespace Epsitec.Common.Designer.Viewers
 				this.labelEdit.KeyboardFocusChanged -= new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
 
 				this.edit.EditionAccepted -= new EventHandler(this.HandleTextChanged);
-				this.edit.KeyboardFocusChanged -= new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
+				this.edit.KeyboardFocusChanged -= new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleLabelKeyboardFocusChanged);
 			}
 
 			base.Dispose(disposing);
@@ -83,19 +84,27 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
-		void HandleArrayCellCountChanged(object sender)
+		protected void HandleArrayCellCountChanged(object sender)
 		{
 			//	Le nombre de lignes a changé.
 			//?this.UpdateArray();
 		}
 
-		void HandleArraySelectedRowChanged(object sender)
+		protected void HandleArraySelectedRowChanged(object sender)
 		{
 			//	La ligne sélectionnée a changé.
 			this.UpdateCommands();
 		}
 
-		void HandleTextChanged(object sender)
+		protected void HandleLabelKeyboardFocusChanged(object sender, Epsitec.Common.Types.DependencyPropertyChangedEventArgs e)
+		{
+			//	Appelé lorsque la ligne éditable pour le label voit son focus changer.
+			TextFieldEx field = sender as TextFieldEx;
+			field.AcceptEdition();
+			this.HandleEditKeyboardFocusChanged(sender, e);
+		}
+
+		protected void HandleTextChanged(object sender)
 		{
 			//	Un texte éditable a changé.
 			if ( this.ignoreChange )  return;
