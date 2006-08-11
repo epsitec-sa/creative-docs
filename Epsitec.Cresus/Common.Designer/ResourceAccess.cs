@@ -831,7 +831,7 @@ namespace Epsitec.Common.Designer
 		public Druid CreateBypassFilter(ResourceBundle bundle, string name, string text)
 		{
 			//	Crée une nouvelle ressource 'Strings' à la fin.
-			System.Diagnostics.Debug.Assert(this.type == Type.Strings);
+			System.Diagnostics.Debug.Assert(this.IsBundlesType);
 			name = this.AddFilter(name);
 
 			Druid newDruid = this.CreateUniqueDruid();
@@ -842,13 +842,28 @@ namespace Epsitec.Common.Designer
 				newField.SetDruid(newDruid);
 				newField.SetName(name);
 
-				if (b == bundle)
+				if (this.type == Type.Strings)
 				{
-					newField.SetStringValue(text);
+					if (b == bundle)
+					{
+						newField.SetStringValue(text);
+					}
+					else
+					{
+						newField.SetStringValue("");
+					}
 				}
 				else
 				{
-					newField.SetStringValue("");
+					if (b == bundle)
+					{
+						Common.Types.Caption caption = new Common.Types.Caption();
+
+						ICollection<string> dst = caption.Labels;
+						dst.Add(text);
+
+						newField.SetStringValue(caption.SerializeToString());
+					}
 				}
 
 				if (b == this.primaryBundle)
