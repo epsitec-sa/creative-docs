@@ -197,7 +197,7 @@ namespace Epsitec.Common.Designer
 
 		static public Color WarningColor
 		{
-			//	Retourne la couleur à utiliser pour un avertissement dans une fenêtre.
+			//	Retourne la couleur à utiliser pour un texte d'avertissement dans une fenêtre.
 			get
 			{
 				IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
