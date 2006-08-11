@@ -100,57 +100,50 @@ namespace Epsitec.Common.Designer.Dialogs
 		}
 
 
-		public string ResourcePrefix
+		public void SetResourcePrefix(string prefix)
 		{
-			get
-			{
-				return this.resourcePrefix;
-			}
-			set
-			{
-				this.resourcePrefix = value;
-			}
+			//	Choix du préfixe à utiliser pour liste des modules.
+			this.resourcePrefix = prefix;
 		}
 
 		public ResourceModuleInfo SelectedModule
 		{
+			//	Retourne les informations sur le module à ouvrir.
 			get
 			{
-				int i = 0;
-				foreach (ResourceModuleInfo item in Resources.DefaultManager.GetModuleInfos(this.resourcePrefix))
+				if (this.indexToOpen == -1)
 				{
-					if (i++ == this.indexToOpen)
-					{
-						return item;
-					}
+					return new ResourceModuleInfo(null);
 				}
-				return new ResourceModuleInfo(null);
+				else
+				{
+					return this.moduleInfos[this.indexToOpen];
+				}
 			}
 		}
 
 
 		protected void UpdateModules()
 		{
-			this.moduleNames = new List<string>();
-			this.modulesIds = new List<int>();
+			//	Met à jour la liste des modules ouvrables/ouverts.
+			this.moduleInfos = new List<ResourceModuleInfo>();
 
 			Resources.DefaultManager.RefreshModuleInfos(this.resourcePrefix);
 			foreach (ResourceModuleInfo item in Resources.DefaultManager.GetModuleInfos(this.resourcePrefix))
 			{
-				this.moduleNames.Add(item.Name);
-				this.modulesIds.Add(item.Id);
+				this.moduleInfos.Add(item);
 			}
 		}
 
 		protected void UpdateArray()
 		{
 			//	Met à jour tout le contenu du tableau.
-			this.array.TotalRows = this.moduleNames.Count;
+			this.array.TotalRows = this.moduleInfos.Count;
 
 			int first = this.array.FirstVisibleRow;
 			for (int i=0; i<this.array.LineCount; i++)
 			{
-				if (first+i < this.moduleNames.Count)
+				if (first+i < this.moduleInfos.Count)
 				{
 					ModuleState state = this.GetModuleState(first+i);
 
@@ -159,7 +152,7 @@ namespace Epsitec.Common.Designer.Dialogs
 						this.array.SetLineState(0, first+i, MyWidgets.StringList.CellState.Normal);
 						this.array.SetLineState(1, first+i, MyWidgets.StringList.CellState.Normal);
 
-						this.array.SetLineString(0, first+i, this.moduleNames[first+i]);
+						this.array.SetLineString(0, first+i, this.moduleInfos[first+i].Name);
 						this.array.SetLineString(1, first+i, Misc.Image("Open"));
 					}
 					else
@@ -169,12 +162,12 @@ namespace Epsitec.Common.Designer.Dialogs
 
 						if (state == ModuleState.OpeningAndDirty)
 						{
-							this.array.SetLineString(0, first+i, Misc.Bold(this.moduleNames[first+i]));
+							this.array.SetLineString(0, first+i, Misc.Bold(this.moduleInfos[first+i].Name));
 							this.array.SetLineString(1, first+i, Misc.Image("Save"));
 						}
 						else
 						{
-							this.array.SetLineString(0, first+i, Misc.Italic(this.moduleNames[first+i]));
+							this.array.SetLineString(0, first+i, Misc.Italic(this.moduleInfos[first+i].Name));
 							this.array.SetLineString(1, first+i, "");
 						}
 					}
@@ -208,7 +201,8 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		protected ModuleState GetModuleState(int index)
 		{
-			Module module = this.mainWindow.SearchModuleId(this.modulesIds[index]);
+			//	Retourne l'état d'un module.
+			Module module = this.mainWindow.SearchModuleId(this.moduleInfos[index].Id);
 			if (module == null)
 			{
 				return ModuleState.Openable;
@@ -273,8 +267,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 
 		protected string						resourcePrefix;
-		protected List<string>					moduleNames;
-		protected List<int>						modulesIds;
+		protected List<ResourceModuleInfo>		moduleInfos;
 		protected Button						buttonOpen;
 		protected Button						buttonCancel;
 		protected MyWidgets.StringArray			array;
