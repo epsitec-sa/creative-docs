@@ -376,7 +376,7 @@ namespace Epsitec.Common.Designer
 		[Command("Open")]
 		void CommandOpen(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.dlgOpen.ResourcePrefix = this.resourcePrefix;
+			this.dlgOpen.SetResourcePrefix(this.resourcePrefix);
 			this.dlgOpen.Show();
 
 			ResourceModuleInfo item = this.dlgOpen.SelectedModule;
