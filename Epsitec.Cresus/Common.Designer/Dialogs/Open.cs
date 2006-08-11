@@ -29,7 +29,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.window = new Window();
 				this.window.MakeSecondaryWindow();
 				this.window.PreventAutoClose = true;
-				this.WindowInit("Open", 300, 250, true);
+				this.WindowInit("Open", 350, 250, true);
 				this.window.Text = Res.Strings.Dialog.Open.Title;
 				this.window.Owner = this.parentWindow;
 				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowCloseClicked);
@@ -50,11 +50,13 @@ namespace Epsitec.Common.Designer.Dialogs
 
 				//	Tableau principal.
 				this.array = new MyWidgets.StringArray(this.window.Root);
-				this.array.Columns = 2;
-				this.array.SetColumnsRelativeWidth(0, 0.8);
-				this.array.SetColumnsRelativeWidth(1, 0.2);
+				this.array.Columns = 3;
+				this.array.SetColumnsRelativeWidth(0, 0.6);
+				this.array.SetColumnsRelativeWidth(1, 0.3);
+				this.array.SetColumnsRelativeWidth(2, 0.1);
 				this.array.SetColumnAlignment(0, ContentAlignment.MiddleLeft);
-				this.array.SetColumnAlignment(1, ContentAlignment.MiddleCenter);
+				this.array.SetColumnAlignment(1, ContentAlignment.MiddleLeft);
+				this.array.SetColumnAlignment(2, ContentAlignment.MiddleCenter);
 				this.array.LineHeight = 25;
 				this.array.CellCountChanged += new EventHandler(this.HandleArrayCellCountChanged);
 				this.array.CellsContentChanged += new EventHandler(this.HandleArrayCellsContentChanged);
@@ -151,34 +153,41 @@ namespace Epsitec.Common.Designer.Dialogs
 					{
 						this.array.SetLineState(0, first+i, MyWidgets.StringList.CellState.Normal);
 						this.array.SetLineState(1, first+i, MyWidgets.StringList.CellState.Normal);
+						this.array.SetLineState(2, first+i, MyWidgets.StringList.CellState.Normal);
 
 						this.array.SetLineString(0, first+i, this.moduleInfos[first+i].Name);
-						this.array.SetLineString(1, first+i, Misc.Image("Open"));
+						this.array.SetLineString(1, first+i, Res.Strings.Dialog.Open.State.Openable);
+						this.array.SetLineString(2, first+i, Misc.Image("Open"));
 					}
 					else
 					{
 						this.array.SetLineState(0, first+i, MyWidgets.StringList.CellState.Warning);
 						this.array.SetLineState(1, first+i, MyWidgets.StringList.CellState.Warning);
+						this.array.SetLineState(2, first+i, MyWidgets.StringList.CellState.Warning);
 
 						if (state == ModuleState.OpeningAndDirty)
 						{
 							this.array.SetLineString(0, first+i, Misc.Bold(this.moduleInfos[first+i].Name));
-							this.array.SetLineString(1, first+i, Misc.Image("Save"));
+							this.array.SetLineString(2, first+i, Misc.Image("Save"));
 						}
 						else
 						{
 							this.array.SetLineString(0, first+i, Misc.Italic(this.moduleInfos[first+i].Name));
-							this.array.SetLineString(1, first+i, "");
+							this.array.SetLineString(2, first+i, "");
 						}
+
+						this.array.SetLineString(1, first+i, Res.Strings.Dialog.Open.State.Opening);
 					}
 				}
 				else
 				{
 					this.array.SetLineState(0, first+i, MyWidgets.StringList.CellState.Disabled);
 					this.array.SetLineState(1, first+i, MyWidgets.StringList.CellState.Disabled);
+					this.array.SetLineState(2, first+i, MyWidgets.StringList.CellState.Disabled);
 
 					this.array.SetLineString(0, first+i, "");
 					this.array.SetLineString(1, first+i, "");
+					this.array.SetLineString(2, first+i, "");
 				}
 			}
 		}
