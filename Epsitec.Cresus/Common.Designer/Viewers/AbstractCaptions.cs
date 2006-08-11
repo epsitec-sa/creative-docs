@@ -35,8 +35,9 @@ namespace Epsitec.Common.Designer.Viewers
 			this.labelEdit.Name = "LabelEdit";
 			this.labelEdit.Margins = new Margins(0, 0, 10, 0);
 			this.labelEdit.Dock = DockStyle.Bottom;
+			this.labelEdit.ButtonShowCondition = ShowCondition.WhenModified;
 			this.labelEdit.EditionAccepted += new EventHandler(this.HandleTextChanged);
-			this.labelEdit.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
+			this.labelEdit.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleLabelKeyboardFocusChanged);
 			this.labelEdit.TabIndex = this.tabIndex++;
 			this.labelEdit.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			this.labelEdit.Visibility = (this.module.Mode == DesignerMode.Build);
@@ -190,7 +191,7 @@ namespace Epsitec.Common.Designer.Viewers
 				this.array.SelectedRowChanged -= new EventHandler(this.HandleArraySelectedRowChanged);
 
 				this.labelEdit.EditionAccepted -= new EventHandler(this.HandleTextChanged);
-				this.labelEdit.KeyboardFocusChanged -= new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
+				this.labelEdit.KeyboardFocusChanged -= new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleLabelKeyboardFocusChanged);
 
 				this.primaryLabels.StringTextChanged -= new EventHandler(this.HandleStringTextCollectionChanged);
 				this.primaryLabels.StringFocusChanged -= new EventHandler(this.HandleStringFocusCollectionChanged);
@@ -600,21 +601,21 @@ namespace Epsitec.Common.Designer.Viewers
 			// (*)	Ce numéro correspond à field dans ResourceAccess.SearcherIndexToAccess !
 		}
 
-		
-		void HandleArrayCellCountChanged(object sender)
+
+		protected void HandleArrayCellCountChanged(object sender)
 		{
 			//	Le nombre de lignes a changé.
 			this.UpdateArray();
 			this.array.ShowSelectedRow();
 		}
 
-		void HandleArrayCellsContentChanged(object sender)
+		protected void HandleArrayCellsContentChanged(object sender)
 		{
 			//	Le contenu des cellules a changé.
 			this.UpdateArray();
 		}
 
-		void HandleArraySelectedRowChanged(object sender)
+		protected void HandleArraySelectedRowChanged(object sender)
 		{
 			//	La ligne sélectionnée a changé.
 			this.access.AccessIndex = this.array.SelectedRow;
@@ -624,7 +625,15 @@ namespace Epsitec.Common.Designer.Viewers
 			this.UpdateCommands();
 		}
 
-		void HandleTextChanged(object sender)
+		protected void HandleLabelKeyboardFocusChanged(object sender, Epsitec.Common.Types.DependencyPropertyChangedEventArgs e)
+		{
+			//	Appelé lorsque la ligne éditable pour le label voit son focus changer.
+			TextFieldEx field = sender as TextFieldEx;
+			field.AcceptEdition();
+			this.HandleEditKeyboardFocusChanged(sender, e);
+		}
+
+		protected void HandleTextChanged(object sender)
 		{
 			//	Un texte éditable a changé.
 			if (this.ignoreChange)
@@ -665,7 +674,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.UpdateModificationsCulture();
 		}
 
-		void HandleStringTextCollectionChanged(object sender)
+		protected void HandleStringTextCollectionChanged(object sender)
 		{
 			//	Une collection de textes a changé.
 			if (this.ignoreChange)
@@ -690,7 +699,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.UpdateModificationsCulture();
 		}
 
-		void HandleStringFocusCollectionChanged(object sender)
+		protected void HandleStringFocusCollectionChanged(object sender)
 		{
 			//	Le focus a changé dans une collection.
 			if (this.ignoreChange)
@@ -702,7 +711,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.currentTextField = sc.FocusedTextField;
 		}
 
-		void HandleCursorChanged(object sender)
+		protected void HandleCursorChanged(object sender)
 		{
 			//	Le curseur a été déplacé dans un texte éditable.
 			if (this.ignoreChange)
@@ -713,7 +722,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.lastActionIsReplace = false;
 		}
 
-		void HandlePrimaryIconClicked(object sender, MessageEventArgs e)
+		protected void HandlePrimaryIconClicked(object sender, MessageEventArgs e)
 		{
 			//	Le boutons pour choisir l'icône a été cliqué.
 			ResourceAccess.Field field = this.access.GetField(this.access.AccessIndex, null, "Icon");
