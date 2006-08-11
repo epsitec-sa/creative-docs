@@ -6,7 +6,7 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Designer.Dialogs
 {
 	/// <summary>
-	/// Dialogue permettant de choisir le filtre pour les ressources.
+	/// Dialogue permettant de choisir la culture à créer.
 	/// </summary>
 	public class NewCulture : Abstract
 	{

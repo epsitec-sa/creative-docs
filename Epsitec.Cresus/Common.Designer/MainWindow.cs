@@ -59,6 +59,7 @@ namespace Epsitec.Common.Designer
 				CommandDispatcher.SetDispatcher(this.window, this.commandDispatcher);
 				CommandContext.SetContext(this.window, this.commandContext);
 
+				this.dlgOpen             = new Dialogs.Open(this);
 				this.dlgGlyphs           = new Dialogs.Glyphs(this);
 				this.dlgIcon             = new Dialogs.Icon(this);
 				this.dlgFilter           = new Dialogs.Filter(this);
@@ -372,6 +373,26 @@ namespace Epsitec.Common.Designer
 
 
 		#region Commands manager
+		[Command("Open")]
+		void CommandOpen(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.dlgOpen.ResourcePrefix = this.resourcePrefix;
+			this.dlgOpen.Show();
+
+			ResourceModuleInfo item = this.dlgOpen.SelectedModule;
+			if (item.Name != null)
+			{
+				Module module = new Module(this, this.mode, this.resourcePrefix, item);
+
+				ModuleInfo mi = new ModuleInfo();
+				mi.Module = module;
+				this.moduleInfoList.Insert(++this.currentModule, mi);
+				this.CreateModuleLayout();
+
+				this.bookModules.ActivePage = mi.TabPage;
+			}
+		}
+
 		[Command("Check")]
 		void CommandCheck(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
@@ -1159,6 +1180,7 @@ namespace Epsitec.Common.Designer
 		protected TabBook						bookModules;
 		protected StatusBar						info;
 		protected ResizeKnob					resize;
+		protected Dialogs.Open					dlgOpen;
 		protected Dialogs.Glyphs				dlgGlyphs;
 		protected Dialogs.Icon					dlgIcon;
 		protected Dialogs.Filter				dlgFilter;
