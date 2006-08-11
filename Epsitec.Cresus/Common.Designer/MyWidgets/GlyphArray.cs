@@ -182,24 +182,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 				{
 					if ( !isSymbol )
 					{
-#if false
-						if ( i >= 0x0400 && i <= 0x04FF )  continue;  // cyrillique ?
-						if ( i >= 0x0500 && i <= 0x05FF )  continue;  // araménien et hébreu ?
-						if ( i >= 0x0600 && i <= 0x06FF )  continue;  // arabe ?
-						if ( i >= 0x0900 && i <= 0x09FF )  continue;  // bengali ?
-						if ( i >= 0x0A00 && i <= 0x0AFF )  continue;  // pendjabi ?
-						if ( i >= 0x0B00 && i <= 0x0BFF )  continue;  // tamoul ?
-						if ( i >= 0x0C00 && i <= 0x0CFF )  continue;  // télougou ?
-						if ( i >= 0x0D00 && i <= 0x0DFF )  continue;  // malayalam ?
-						if ( i >= 0x0E00 && i <= 0x0EFF )  continue;  // thaï ?
-						if ( i >= 0x1000 && i <= 0x10FF )  continue;  // géorgien ?
-						if ( i >= 0x1100 && i <= 0x11FF )  continue;  // jamos ?
-#else
-						if ( i >= 0x0100 && i <= 0x1FFF )  continue;  // cyrillique ?
-#endif
+						if ( i >= 0x0100 && i <= 0x0390 )  continue;  // 0391..03C9 = grec
+						if ( i >= 0x03CA && i <= 0x1FFF )  continue;
 						if ( i >= 0x3000 && i <= 0x30FF )  continue;  // katakana ?
 						if ( i >= 0x3100 && i <= 0x31FF )  continue;  // bopomofo ?
 						if ( i >= 0xE000 && i <= 0xF0FF )  continue;  // réservé ?
+						if ( i >= 0xF700 && i <= 0xF7FF )  continue;  // réservé ?
 					}
 
 					int glyph = font.GetGlyphIndex(i);
