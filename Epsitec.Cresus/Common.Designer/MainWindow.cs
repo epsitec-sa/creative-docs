@@ -49,8 +49,8 @@ namespace Epsitec.Common.Designer
 				this.window.WindowBounds = new Rectangle(parentCenter.X-1000/2, parentCenter.Y-700/2, 1000, 700);
 				this.window.Root.MinSize = new Size(500, 400);
 				this.window.Text = Res.Strings.Application.Title;
+				this.window.Name = "Application";  // utilisé pour générer "QuitApplication" !
 				this.window.PreventAutoClose = true;
-				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowCloseClicked);
 
 				this.commandDispatcher = new CommandDispatcher("Common.Designer", CommandDispatcherLevel.Primary);
 				this.commandContext = new CommandContext();
@@ -387,9 +387,21 @@ namespace Epsitec.Common.Designer
 		[Command("Close")]
 		void CommandClose(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			//?if ( !this.AutoSave(dispatcher) )  return;
+			if ( !this.AutoSave(dispatcher) )  return;
 			this.CloseModule();
 		}
+
+		[Command("QuitApplication")]
+		void CommandQuitApplication(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			if ( !this.AutoSaveAll(dispatcher) )  return;
+
+			this.dlgGlyphs.Hide();
+			this.dlgFilter.Hide();
+			this.dlgSearch.Hide();
+
+			this.window.Hide();
+	}
 
 		[Command("Glyphs")]
 		void CommandGlyphs(CommandDispatcher dispatcher, CommandEventArgs e)
@@ -916,6 +928,46 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
+		protected bool AutoSave(CommandDispatcher dispatcher)
+		{
+			//	Fait tout ce qu'il faut pour éventuellement sauvegarder les ressources
+			//	avant de passer à autre chose.
+			//	Retourne false si on ne peut pas continuer.
+			Common.Dialogs.DialogResult result = this.DialogSave(dispatcher);
+			if (result == Common.Dialogs.DialogResult.Yes)
+			{
+				this.CurrentModule.Save();
+				return true;
+			}
+			if (result == Common.Dialogs.DialogResult.Cancel)
+			{
+				return false;
+			}
+			return true;
+		}
+
+		protected bool AutoSaveAll(CommandDispatcher dispatcher)
+		{
+			//	Fait tout ce qu'il faut pour éventuellement sauvegarder toutes les
+			//	ressources avant de passer à autre chose.
+			//	Retourne false si on ne peut pas continuer.
+			int cm = this.currentModule;
+
+			int total = this.bookModules.PageCount;
+			for ( int i=0 ; i<total ; i++ )
+			{
+				this.currentModule = i;
+				if (!this.AutoSave(dispatcher))
+				{
+					this.currentModule = cm;
+					return false;
+				}
+			}
+
+			this.currentModule = cm;
+			return true;
+		}
+
 		protected void UpdateBookModules()
 		{
 			//	Met à jour le nom de l'onglet des modules.
@@ -975,6 +1027,27 @@ namespace Epsitec.Common.Designer
 			{
 				this.dlgSearch.Adapt(mi.Module.Modifier.ActiveResourceType);
 			}
+		}
+
+		protected Common.Dialogs.DialogResult DialogSave(CommandDispatcher dispatcher)
+		{
+			//	Affiche le dialogue pour demander s'il faut enregistrer les
+			//	ressources modifiées, avant de passer à d'autres ressources.
+			if (!this.CurrentModule.IsDirty)
+			{
+				return Common.Dialogs.DialogResult.None;
+			}
+
+			string title = Res.Strings.Application.Title;
+			string icon = "manifest:Epsitec.Common.Dialogs.Images.Warning.icon";
+
+			string question1 = string.Format(Res.Strings.Dialog.Save.Question1, this.CurrentModule.ModuleInfo.Name);
+			string question2 = Res.Strings.Dialog.Save.Question2;
+			string message = string.Format("{0}<br/>{1}", question1, question2);
+			Common.Dialogs.IDialog dialog = Common.Dialogs.Message.CreateYesNoCancel(title, icon, message, null, null, this.commandDispatcher);
+			dialog.Owner = this.Window;
+			dialog.OpenDialog();
+			return dialog.Result;
 		}
 
 		public Common.Dialogs.DialogResult DialogQuestion(string question)
@@ -1041,16 +1114,6 @@ namespace Epsitec.Common.Designer
 			}
 		}
 		#endregion
-
-
-		private void HandleWindowCloseClicked(object sender)
-		{
-			this.dlgGlyphs.Hide();
-			this.dlgFilter.Hide();
-			this.dlgSearch.Hide();
-
-			this.window.Hide();
-		}
 
 
 		#region ModuleInfo class
