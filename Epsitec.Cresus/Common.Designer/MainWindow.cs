@@ -1043,7 +1043,19 @@ namespace Epsitec.Common.Designer
 
 			string question1 = string.Format(Res.Strings.Dialog.Save.Question1, this.CurrentModule.ModuleInfo.Name);
 			string question2 = Res.Strings.Dialog.Save.Question2;
-			string message = string.Format("{0}<br/>{1}", question1, question2);
+			string warning = this.CurrentModule.CheckMessage();
+			string message;
+
+			if (string.IsNullOrEmpty(warning))
+			{
+				message = string.Format("{0}<br/>{1}", question1, question2);
+			}
+			else
+			{
+				string color = Color.ToHexa(Misc.WarningColor);
+				message = string.Format("{0}<br/><font color=\"#{1}\">____________________<br/><br/>{2}____________________</font><br/><br/>{3}", question1, color, warning, question2);
+			}
+
 			Common.Dialogs.IDialog dialog = Common.Dialogs.Message.CreateYesNoCancel(title, icon, message, null, null, this.commandDispatcher);
 			dialog.Owner = this.Window;
 			dialog.OpenDialog();

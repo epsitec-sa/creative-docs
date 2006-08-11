@@ -163,9 +163,9 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		public void Check()
+		public string CheckMessage()
 		{
-			//	Vérifie toutes les ressources et affiche un rapport.
+			//	Retourne l'éventuel rapport.
 			List<ResourceAccess.ShortcutItem> list = new List<ResourceAccess.ShortcutItem>();
 
 			foreach (ResourceAccess access in Access)
@@ -178,7 +178,14 @@ namespace Epsitec.Common.Designer
 
 			//	On pourrait vérifier ici d'autres choses que les raccourcis...
 
-			string message = builder.ToString();
+			return builder.ToString();
+		}
+
+		public void Check()
+		{
+			//	Vérifie toutes les ressources et affiche un rapport.
+			string message = CheckMessage();
+
 			if (string.IsNullOrEmpty(message))  // aucune anomalie ?
 			{
 				this.mainWindow.DialogMessage(Res.Strings.Error.CheckOK);
