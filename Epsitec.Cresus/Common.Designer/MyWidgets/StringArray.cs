@@ -353,6 +353,13 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected void UpdateScroller()
 		{
 			//	Met à jour l'ascenseur, si nécessaire.
+			int count = this.LineCount;
+			if (this.lastLineCount != count)
+			{
+				this.lastLineCount = count;
+				this.isDirtyScroller = true;
+			}
+
 			if (this.isDirtyScroller)
 			{
 				this.isDirtyScroller = false;
@@ -844,6 +851,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected bool						isDirtyScroller = true;
 		protected bool						isDirtySelected = true;
 		protected bool						isDirtyGeometry = true;
+		protected int						lastLineCount = 0;
 
 		protected int						widthDraggingRank = -1;
 		protected double[]					widthDraggingAbsolutes;
