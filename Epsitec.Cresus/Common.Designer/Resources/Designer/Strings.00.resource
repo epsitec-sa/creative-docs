@@ -194,6 +194,9 @@
   <data name="Dialog.ResourceSelector.Button.Clear" id="0Q4">R</data>
   <data name="Dialog.ResourceSelector.Button.Use" id="0R4">Utiliser</data>
   <data name="Dialog.ResourceSelector.Button.Create" id="0S4">Créer</data>
+  <data name="Dialog.Open.Title" id="0D6" mod="1">Ouvrir des ressources</data>
+  <data name="Dialog.Open.Label" id="0E6" mod="1">Choix des ressources à ouvrir</data>
+  <data name="Dialog.Open.Button.Open" id="0F6" mod="1">Ouvrir</data>
   <data name="Dialog.Save.Question1" id="0B6" mod="1">Les ressources &lt;b&gt;{0}&lt;/b&gt; ont été modifiées.</data>
   <data name="Dialog.Save.Question2" id="0C6" mod="1">Voulez-vous enregistrer les modifications ?</data>
   <data name="Misc.NoTitle" id="0T4">&lt;i&gt;sans titre&lt;/i&gt;</data>

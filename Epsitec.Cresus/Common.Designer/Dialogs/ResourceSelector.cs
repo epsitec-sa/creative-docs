@@ -445,27 +445,27 @@ namespace Epsitec.Common.Designer.Dialogs
 		}
 
 
-		private void HandleWindowCloseClicked(object sender)
+		protected void HandleWindowCloseClicked(object sender)
 		{
 			this.parentWindow.MakeActive();
 			this.window.Hide();
 			this.OnClosed();
 		}
 
-		private void HandleButtonCloseClicked(object sender, MessageEventArgs e)
+		protected void HandleButtonCloseClicked(object sender, MessageEventArgs e)
 		{
 			this.parentWindow.MakeActive();
 			this.window.Hide();
 			this.OnClosed();
 		}
 
-		private void HandleButtonClearClicked(object sender, MessageEventArgs e)
+		protected void HandleButtonClearClicked(object sender, MessageEventArgs e)
 		{
 			this.filterLabel.Text = "";
 			this.filterText.Text = "";
 		}
 
-		private void HandleButtonUseClicked(object sender, MessageEventArgs e)
+		protected void HandleButtonUseClicked(object sender, MessageEventArgs e)
 		{
 			this.parentWindow.MakeActive();
 			this.window.Hide();
@@ -482,7 +482,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			}
 		}
 
-		private void HandleButtonCreateClicked(object sender, MessageEventArgs e)
+		protected void HandleButtonCreateClicked(object sender, MessageEventArgs e)
 		{
 			this.parentWindow.MakeActive();
 			this.window.Hide();
@@ -503,7 +503,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		}
 
 
-		void HandleFilterTextChanged(object sender)
+		protected void HandleFilterTextChanged(object sender)
 		{
 			//	Le texte d'un filtre a changé.
 			if (this.ignoreChanged)  return;
@@ -527,34 +527,34 @@ namespace Epsitec.Common.Designer.Dialogs
 			}
 		}
 
-		
-		void HandleArrayColumnsWidthChanged(object sender)
+
+		protected void HandleArrayColumnsWidthChanged(object sender)
 		{
 			//	La largeur des colonnes a changé.
 			this.UpdateColumnsWidth();
 		}
 
-		void HandleArrayCellCountChanged(object sender)
+		protected void HandleArrayCellCountChanged(object sender)
 		{
 			//	Le nombre de lignes a changé.
 			this.UpdateArray();
 		}
 
-		void HandleArrayCellsContentChanged(object sender)
+		protected void HandleArrayCellsContentChanged(object sender)
 		{
 			//	Le contenu des cellules a changé.
 			this.UpdateArray();
 		}
 
-		void HandleArraySelectedRowChanged(object sender)
+		protected void HandleArraySelectedRowChanged(object sender)
 		{
 			//	La ligne sélectionnée a changé.
 			this.UpdateButtons();
 		}
 
-		void HandleArraySelectedRowDoubleClicked(object sender)
+		protected void HandleArraySelectedRowDoubleClicked(object sender)
 		{
-			//	La ligne sélectionnée a changé.
+			//	La ligne sélectionnée a été double cliquée.
 			this.UpdateButtons();
 
 			this.parentWindow.MakeActive();
