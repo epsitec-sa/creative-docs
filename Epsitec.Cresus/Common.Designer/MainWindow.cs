@@ -1039,7 +1039,7 @@ namespace Epsitec.Common.Designer
 			}
 
 			string title = Res.Strings.Application.Title;
-			string icon = "manifest:Epsitec.Common.Dialogs.Images.Warning.icon";
+			string icon = "manifest:Epsitec.Common.Dialogs.Images.Question.icon";
 
 			string question1 = string.Format(Res.Strings.Dialog.Save.Question1, this.CurrentModule.ModuleInfo.Name);
 			string question2 = Res.Strings.Dialog.Save.Question2;
@@ -1053,7 +1053,9 @@ namespace Epsitec.Common.Designer
 			else
 			{
 				string color = Color.ToHexa(Misc.WarningColor);
-				message = string.Format("{0}<br/><font color=\"#{1}\">____________________<br/><br/>{2}____________________</font><br/><br/>{3}", question1, color, warning, question2);
+				string line = "____________________";
+				message = string.Format("{0}<br/><br/><font color=\"#{3}\">{2}<br/><br/>{4}<br/>{2}</font><br/><br/>{1}", question1, question2, line, color, warning);
+				icon = "manifest:Epsitec.Common.Dialogs.Images.Warning.icon";
 			}
 
 			Common.Dialogs.IDialog dialog = Common.Dialogs.Message.CreateYesNoCancel(title, icon, message, null, null, this.commandDispatcher);
