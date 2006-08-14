@@ -3523,7 +3523,7 @@ namespace Epsitec.App.DocumentEditor
 			this.prevDocState = this.CreateCommandState("PrevDocument", KeyCode.ModifierControl|KeyCode.ModifierShift|KeyCode.FuncF6);
 			this.printState = this.CreateCommandState("Print", KeyCode.ModifierControl|KeyCode.AlphaP);
 			this.exportState = this.CreateCommandState("Export");
-			this.glyphsState = this.CreateCommandState("Glyphs");
+			this.glyphsState = this.CreateCommandState("Glyphs", KeyCode.FuncF7);
 			this.glyphsInsertState = this.CreateCommandState("GlyphsInsert");
 			this.textEditingState = this.CreateCommandState("TextEditing");
 			this.replaceState = this.CreateCommandState("Replace", KeyCode.ModifierControl|KeyCode.AlphaF);
@@ -3543,8 +3543,8 @@ namespace Epsitec.App.DocumentEditor
 			this.fontUnderlinedState = this.CreateCommandState("FontUnderlined", true, KeyCode.ModifierControl|KeyCode.AlphaU);
 			this.fontOverlinedState = this.CreateCommandState("FontOverlined", true);
 			this.fontStrikeoutState = this.CreateCommandState("FontStrikeout", true);
-			this.fontSubscriptState = this.CreateCommandState("FontSubscript", true);
-			this.fontSuperscriptState = this.CreateCommandState("FontSuperscript", true);
+			this.fontSubscriptState = this.CreateCommandState("FontSubscript", true, KeyCode.ModifierControl|KeyCode.AlphaG);
+			this.fontSuperscriptState = this.CreateCommandState("FontSuperscript", true, KeyCode.ModifierControl|KeyCode.AlphaT);
 			this.fontSizePlusState = this.CreateCommandState("FontSizePlus");
 			this.fontSizeMinusState = this.CreateCommandState("FontSizeMinus");
 			this.fontClearState = this.CreateCommandState("FontClear");
