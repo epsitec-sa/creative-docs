@@ -904,13 +904,7 @@ namespace Epsitec.Common.Document
 			Settings.Point sPoint = settings as Settings.Point;
 			if ( sPoint == null )  return;
 
-			Drawing.Point point = sPoint.Value;
-			point.X = (double) field.InternalValue;
-			if ( sPoint.Link )
-			{
-				point.Y = point.X;
-			}
-			sPoint.Value = point;
+			sPoint.ValueX = (double) field.InternalValue;
 		}
 
 		private void HandleFieldPointYChanged(object sender)
@@ -924,14 +918,8 @@ namespace Epsitec.Common.Document
 			Settings.Point sPoint = settings as Settings.Point;
 			if ( sPoint == null )  return;
 
-			Drawing.Point point = sPoint.Value;
-			point.Y = (double) field.InternalValue;
-			if ( sPoint.Link )
-			{
-				point.X = point.Y;
-			}
-			sPoint.Value = point;
-		}
+			sPoint.ValueY = (double) field.InternalValue;
+	}
 
 		private void HandlePointActiveStateChanged(object sender, MessageEventArgs e)
 		{

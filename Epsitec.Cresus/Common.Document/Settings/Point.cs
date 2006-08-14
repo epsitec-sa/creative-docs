@@ -93,6 +93,66 @@ namespace Epsitec.Common.Document.Settings
 			}
 		}
 
+		public double ValueX
+		{
+			get
+			{
+				return this.Value.X;
+			}
+
+			set
+			{
+				Drawing.Point p = this.Value;
+
+				if (this.ProportionalLink)
+				{
+					double prop = p.Y/p.X;
+					p.X = value;
+					p.Y = value*prop;
+				}
+				else
+				{
+					p.X = value;
+					if (this.Link)
+					{
+						p.Y = p.X;
+					}
+				}
+
+				this.Value = p;
+			}
+		}
+
+		public double ValueY
+		{
+			get
+			{
+				return this.Value.Y;
+			}
+
+			set
+			{
+				Drawing.Point p = this.Value;
+
+				if (this.ProportionalLink)
+				{
+					double prop = p.X/p.Y;
+					p.Y = value;
+					p.X = value*prop;
+				}
+				else
+				{
+					p.Y = value;
+					if (this.Link)
+					{
+						p.X = p.Y;
+					}
+				}
+
+				this.Value = p;
+			}
+		}
+
 		public Drawing.Point Value
 		{
 			get
@@ -186,6 +246,14 @@ namespace Epsitec.Common.Document.Settings
 			set
 			{
 				this.link = value;
+			}
+		}
+
+		public bool ProportionalLink
+		{
+			get
+			{
+				return (this.Link && this.name == "PageSize");
 			}
 		}
 
