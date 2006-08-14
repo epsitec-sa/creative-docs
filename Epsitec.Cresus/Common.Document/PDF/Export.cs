@@ -414,14 +414,14 @@ namespace Epsitec.Common.Document.PDF
 			return string.Format(System.Globalization.CultureInfo.InvariantCulture, "/F{0} ", id*10 + fontPage);
 		}
 
-		protected static string NameCharacter(int id, int fontPage, int character)
+		protected static string NameCharacter(int id, int fontPage, CharacterList cl)
 		{
-			return string.Format(System.Globalization.CultureInfo.InvariantCulture, "HeaderCharacter{0}_{1}_{2}", id, fontPage, character);
+			return string.Format(System.Globalization.CultureInfo.InvariantCulture, "HeaderCharacter{0}_{1}_{2}_{3}", id, fontPage, cl.Glyph, cl.Unicode);
 		}
 
-		protected static string ShortNameCharacter(int id, int fontPage, int character)
+		protected static string ShortNameCharacter(int id, int fontPage, CharacterList cl)
 		{
-			return string.Format(System.Globalization.CultureInfo.InvariantCulture, "/C{0}_{1}_{2} ", id, fontPage, character);
+			return string.Format(System.Globalization.CultureInfo.InvariantCulture, "/C{0}_{1}_{2}_{3} ", id, fontPage, cl.Glyph, cl.Unicode);
 		}
 
 		protected static string NameFunction(int id, TypeFunction type)
@@ -1914,7 +1914,7 @@ namespace Epsitec.Common.Document.PDF
 			for ( int i=0 ; i<count ; i++ )
 			{
 				CharacterList cl = font.GetCharacter(firstChar+i);
-				builder.Append(Export.ShortNameCharacter(font.Id, fontPage, cl.Code));
+				builder.Append(Export.ShortNameCharacter(font.Id, fontPage, cl));
 			}
 
 			builder.Append("] >> endobj");
@@ -1931,8 +1931,8 @@ namespace Epsitec.Common.Document.PDF
 			for ( int i=0 ; i<count ; i++ )
 			{
 				CharacterList cl = font.GetCharacter(firstChar+i);
-				writer.WriteString(Export.ShortNameCharacter(font.Id, fontPage, cl.Code));
-				writer.WriteObjectRef(Export.NameCharacter(font.Id, fontPage, cl.Code));
+				writer.WriteString(Export.ShortNameCharacter(font.Id, fontPage, cl));
+				writer.WriteObjectRef(Export.NameCharacter(font.Id, fontPage, cl));
 			}
 
 			writer.WriteLine(">> endobj");
@@ -2017,18 +2017,18 @@ namespace Epsitec.Common.Document.PDF
 		protected void CreateFontCharacter(Writer writer, FontList font, int fontPage, CharacterList cl)
 		{
 			//	Crée l'objet d'un caractère d'une fonte.
+			writer.WriteObjectDef(Export.NameCharacter(font.Id, fontPage, cl));
+
 			Font drawingFont = font.DrawingFont;
 			Drawing.Transform ft = drawingFont.SyntheticTransform;
 			int glyph;
 			if ( cl.IsGlyph )
 			{
 				glyph = cl.Glyph;
-				writer.WriteObjectDef(Export.NameCharacter(font.Id, fontPage, glyph));
 			}
 			else
 			{
 				glyph = drawingFont.GetGlyphIndex(cl.Unicode);
-				writer.WriteObjectDef(Export.NameCharacter(font.Id, fontPage, cl.Unicode));
 			}
 			Path path = new Path();
 			path.Append(drawingFont, glyph, ft.XX, ft.XY, ft.YX, ft.YY, ft.TX, ft.TY);
