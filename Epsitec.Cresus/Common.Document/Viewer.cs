@@ -196,7 +196,7 @@ namespace Epsitec.Common.Document
 			get
 			{
 				Rectangle rect = this.Client.Bounds;
-				return ScreenToInternal(rect);
+				return this.ScreenToInternal(rect);
 			}
 		}
 
@@ -263,7 +263,7 @@ namespace Epsitec.Common.Document
 			{
 				Rectangle rect = this.Client.Bounds;
 				rect.Deflate(5);  // ch'tite marge
-				return ScreenToInternal(rect);
+				return this.ScreenToInternal(rect);
 			}
 		}
 
@@ -810,6 +810,7 @@ namespace Epsitec.Common.Document
 			this.ctrlDown = this.drawingContext.IsCtrl;
 			this.ctrlDuplicate = false;
 			this.moveReclick = false;
+			this.moveAutoSel = false;
 
 			Objects.Abstract obj;
 			int rank;
@@ -869,6 +870,7 @@ namespace Epsitec.Common.Document
 							else
 							{
 								this.Select(obj, false, this.drawingContext.IsShift);
+								this.moveAutoSel = true;
 
 								if ( this.selector.Visible && this.drawingContext.IsShift )
 								{
@@ -985,7 +987,18 @@ namespace Epsitec.Common.Document
 							double len = Point.Distance(mouse, this.moveStart);
 							if ( len > this.drawingContext.MinimalSize )
 							{
-								this.moveAccept = true;
+								if (!this.moveAutoSel || this.IsFullyDisplayed(this.moveObject))
+								{
+									this.moveAccept = true;
+								}
+								else
+								{
+									this.document.Modifier.UpdateCounters();
+									this.moveObject.Deselect();
+									this.document.Modifier.TotalSelected--;
+
+									this.selector.FixStarting(this.moveStart);
+								}
 							}
 						}
 
@@ -1215,6 +1228,7 @@ namespace Epsitec.Common.Document
 			this.ctrlDown = this.drawingContext.IsCtrl;
 			this.ctrlDuplicate = false;
 			this.moveReclick = false;
+			this.moveAutoSel = false;
 			this.moveSelectedHandle = false;
 			this.hotSpotHandle.IsVisible = false;
 
@@ -1909,6 +1923,13 @@ namespace Epsitec.Common.Document
 			//	Trouve le CommandDispatcher associé au document
 			return this.document.CommandDispatcher;
 		}
+
+		protected bool IsFullyDisplayed(Objects.Abstract obj)
+		{
+			//	Indique si l'objet est entièrement visible.
+			Rectangle displayed = this.RectangleDisplayed;
+			return displayed.Contains(obj.BoundingBox);
+		}
 		
 		protected Objects.Abstract Detect(Point mouse, bool selectFirst)
 		{
@@ -1921,28 +1942,47 @@ namespace Epsitec.Common.Document
 		protected System.Collections.ArrayList Detects(Point mouse, bool selectFirst)
 		{
 			//	Détecte les objets pointés par la souris.
+			//	Avec le mode selectFirst, on détecte en priorité les objets sélectionnés.
 			System.Collections.ArrayList list = new System.Collections.ArrayList();
 			Objects.Abstract layer = this.drawingContext.RootObject();
 
-			if ( selectFirst )
+
+			if (selectFirst)
 			{
-				foreach ( Objects.Abstract obj in this.document.FlatReverse(layer) )
+				foreach (Objects.Abstract obj in this.document.FlatReverse(layer))
 				{
-					if ( !obj.IsSelected )  continue;
-					if ( obj.Detect(mouse) )  list.Add(obj);
+					if (!obj.IsSelected)
+					{
+						continue;
+					}
+
+					if (obj.Detect(mouse))
+					{
+						list.Add(obj);
+					}
 				}
 
-				foreach ( Objects.Abstract obj in this.document.FlatReverse(layer) )
+				foreach (Objects.Abstract obj in this.document.FlatReverse(layer))
 				{
-					if ( obj.IsSelected )  continue;
-					if ( obj.Detect(mouse) )  list.Add(obj);
+					if (obj.IsSelected)
+					{
+						continue;
+					}
+
+					if (obj.Detect(mouse))
+					{
+						list.Add(obj);
+					}
 				}
 			}
 			else
 			{
-				foreach ( Objects.Abstract obj in this.document.FlatReverse(layer) )
+				foreach (Objects.Abstract obj in this.document.FlatReverse(layer))
 				{
-					if ( obj.Detect(mouse) )  list.Add(obj);
+					if (obj.Detect(mouse))
+					{
+						list.Add(obj);
+					}
 				}
 			}
 
@@ -3860,7 +3900,7 @@ namespace Epsitec.Common.Document
 			double iy = 0.5/this.drawingContext.ScaleY;
 
 			clipRect.Inflate(1);
-			clipRect = ScreenToInternal(clipRect);
+			clipRect = this.ScreenToInternal(clipRect);
 			clipRect = Rectangle.Intersection(clipRect, this.document.Modifier.RectangleArea);
 
 			if ( this.IsActiveViewer )
@@ -4647,6 +4687,7 @@ namespace Epsitec.Common.Document
 		protected bool							moveAccept;
 		protected bool							moveInitialSel;
 		protected bool							moveReclick;
+		protected bool							moveAutoSel;
 		protected int							moveHandle = -1;
 		protected int							moveSelectedSegment = -1;
 		protected bool							moveSelectedHandle = false;
