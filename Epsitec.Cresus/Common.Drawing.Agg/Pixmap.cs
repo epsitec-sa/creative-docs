@@ -59,18 +59,18 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
-		public void CreateOSBitmap(System.Drawing.Size size, System.IntPtr display_context)
+		public void AllocatePixmap(System.Drawing.Size size)
 		{
 			if ((this.size.IsEmpty) &&
 				(this.agg_buffer == System.IntPtr.Zero))
 			{
-				this.agg_buffer   = AntiGrain.Buffer.New (display_context, size.Width, size.Height, 32);
+				this.agg_buffer   = AntiGrain.Buffer.New (size.Width, size.Height, 32);
 				this.size         = size;
 				this.is_os_bitmap = true;
 				return;
 			}
 			
-			throw new System.InvalidOperationException ("Cannot re-create bitmap.");
+			throw new System.InvalidOperationException ("Cannot re-allocate pixmap.");
 		}
 		
 		public void Clear()

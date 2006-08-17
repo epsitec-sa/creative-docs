@@ -1019,6 +1019,18 @@ namespace Epsitec.Common.Widgets
 				System.Windows.Forms.Application.Run (window.PlatformWindow);
 			}
 		}
+
+		public static void RunInTestEnvironment(System.Windows.Forms.Form form)
+		{
+			if (Window.RunningInAutomatedTestEnvironment)
+			{
+				System.Windows.Forms.Application.DoEvents ();
+			}
+			else
+			{
+				System.Windows.Forms.Application.Run (form);
+			}
+		}
 		
 		
 		

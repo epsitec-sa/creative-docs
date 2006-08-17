@@ -1948,7 +1948,7 @@ again:
 				
 				ascender  = ot_font.GetAscender (pt_size) * font_scale;
 				descender = ot_font.GetDescender (pt_size) * font_scale;
-				angle     = ot_font.GetCaretAngle ();
+				angle     = ot_font.GetCaretAngleRad ();
 				
 				if (pt_offset != 0)
 				{

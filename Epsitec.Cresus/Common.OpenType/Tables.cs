@@ -1,4 +1,4 @@
-//	Copyright © 2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2005-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.OpenType
@@ -7,7 +7,7 @@ namespace Epsitec.Common.OpenType
 	//	List of tables: http://partners.adobe.com/public/developer/opentype/index_tables.html
 	
 	/// <summary>
-	/// Tables is the base class used to access all OpenType tables.
+	/// <c>Tables</c> is the base class used to access all OpenType tables.
 	/// </summary>
 	public class Tables
 	{
@@ -379,7 +379,7 @@ namespace Epsitec.Common.OpenType
 		{
 			get
 			{
-				return this.ReadInt16 (2);
+				return (short) this.ReadInt16 (2);
 			}
 		}
 		
@@ -387,7 +387,7 @@ namespace Epsitec.Common.OpenType
 		{
 			get
 			{
-				return this.ReadInt16 (4);
+				return (short) this.ReadInt16 (4);
 			}
 		}
 		
@@ -395,7 +395,7 @@ namespace Epsitec.Common.OpenType
 		{
 			get
 			{
-				return this.ReadInt16 (6);
+				return (short) this.ReadInt16 (6);
 			}
 		}
 		
@@ -403,7 +403,7 @@ namespace Epsitec.Common.OpenType
 		{
 			get
 			{
-				return this.ReadInt16 (8);
+				return (short) this.ReadInt16 (8);
 			}
 		}
 		
@@ -862,6 +862,9 @@ namespace Epsitec.Common.OpenType
 		{
 		}
 		
+		public Table_loca_Short(TableEntry entry) : base (entry.BaseData, entry.Offset)
+		{
+		}
 		
 		public int GetOffset(int n)
 		{
@@ -872,6 +875,10 @@ namespace Epsitec.Common.OpenType
 	public class Table_loca_Long : Tables
 	{
 		public Table_loca_Long(byte[] data, int offset) : base (data, offset)
+		{
+		}
+		
+		public Table_loca_Long(TableEntry entry) : base (entry.BaseData, entry.Offset)
 		{
 		}
 		

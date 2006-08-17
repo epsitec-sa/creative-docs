@@ -352,7 +352,7 @@ namespace Epsitec.Common.Document
 			//	Retourne le nom d'un caractère Unicode.
 			if ( code == 0 )  return "";
 
-			string text = TextBreak.GetUnicodeName(code);
+			string text = TextBreak.GetUnicodeName (code);
 
 			bool minus = false;
 			for( int i=0 ; i<text.Length ; i++ )

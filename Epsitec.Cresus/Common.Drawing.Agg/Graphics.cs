@@ -1,4 +1,4 @@
-//	Copyright © 2003-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Drawing
@@ -10,7 +10,7 @@ namespace Epsitec.Common.Drawing
 	{
 		static Graphics()
 		{
-			Font.Initialise ();
+			Agg.Library.Initialize ();
 		}
 		
 		
@@ -245,9 +245,9 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
-		public void CreateOSBitmap()
+		public void AllocatePixmap()
 		{
-			this.pixmap.CreateOSBitmap (new System.Drawing.Size (8, 8), System.IntPtr.Zero);
+			this.pixmap.AllocatePixmap (new System.Drawing.Size (8, 8));
 			
 			this.solid_renderer.Pixmap    = this.pixmap;
 			this.image_renderer.Pixmap    = this.pixmap;
@@ -394,7 +394,7 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 		
-		public double PaintText(double x, double y, string text, Font font, double size, Font.ClassInfo[] infos)
+		public double PaintText(double x, double y, string text, Font font, double size, FontClassInfo[] infos)
 		{
 			//	TODO: déplacer ce code dans la librairie AGG; faire en sorte que ça marche aussi
 			//	si ClassId != ClassId.Space...
@@ -402,7 +402,7 @@ namespace Epsitec.Common.Drawing
 			for (int i = 0; i < infos.Length; i++)
 			{
 				if ((infos[i].Scale != 1.00) &&
-					(infos[i].ClassId == Font.ClassId.Space))
+					(infos[i].GlyphClass == GlyphClass.Space))
 				{
 					string[] texts = text.Split (new char[] { ' ', (char) 160 });
 					double space_w = font.GetCharAdvance (' ') * size * infos[i].Scale;

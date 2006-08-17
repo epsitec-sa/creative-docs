@@ -485,7 +485,7 @@ namespace Epsitec.Common.Document.Objects
 			//	Constructeur qui désérialise l'objet.
 		}
 
-		public override void ReadCheckWarnings(Font.FaceInfo[] fonts, System.Collections.ArrayList warnings)
+		public override void ReadCheckWarnings(FontFaceInfo[] fonts, System.Collections.ArrayList warnings)
 		{
 			//	Vérifie si tous les fichiers existent.
 			Properties.Image pi = this.PropertyImage;

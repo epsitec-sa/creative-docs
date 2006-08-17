@@ -1,17 +1,17 @@
-//	Copyright © 2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2005-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.OpenType
 {
 	/// <summary>
-	/// L'énumération FontStyle détermine le style de fonte (normal, oblique
-	/// ou italique).
+	/// The <c>FontStyle</c> enumeration describes the style of a font
+	/// (normal, oblique or italic).
 	/// </summary>
 	public enum FontStyle
 	{
-		Normal,						//	fonte standard
+		Normal,						//	default style
 		
-		Oblique,					//	oblique (penché: Arial Oblique)
-		Italic,						//	italique (variante de la fonte conçue comme telle: Times New Roman Italic)
+		Oblique,					//	oblique (like in "Arial Oblique")
+		Italic,						//	italic (like in "Times New Roman Italic")
 	}
 }

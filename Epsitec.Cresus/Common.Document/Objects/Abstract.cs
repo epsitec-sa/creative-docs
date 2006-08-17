@@ -3508,12 +3508,12 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		public virtual void ReadCheckWarnings(Font.FaceInfo[] fonts, System.Collections.ArrayList warnings)
+		public virtual void ReadCheckWarnings(FontFaceInfo[] fonts, System.Collections.ArrayList warnings)
 		{
 			//	Vérifie si tous les fichiers existent.
 		}
 
-		protected static void ReadCheckFonts(Font.FaceInfo[] fonts, System.Collections.ArrayList warnings, TextLayout textLayout)
+		protected static void ReadCheckFonts(FontFaceInfo[] fonts, System.Collections.ArrayList warnings, TextLayout textLayout)
 		{
 			//	Vérifie si toutes les fontes d'un TextLayout existent.
 			System.Collections.ArrayList list = new System.Collections.ArrayList();
@@ -3531,10 +3531,10 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		protected static bool ReadSearchFont(Font.FaceInfo[] fonts, string face)
+		protected static bool ReadSearchFont(FontFaceInfo[] fonts, string face)
 		{
 			//	Cherche si une fonte existe dans la liste des fontes.
-			foreach ( Font.FaceInfo info in fonts )
+			foreach ( FontFaceInfo info in fonts )
 			{
 				if ( info.IsLatin )
 				{

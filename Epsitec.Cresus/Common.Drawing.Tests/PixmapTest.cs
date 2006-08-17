@@ -37,12 +37,12 @@ namespace Epsitec.Common.Drawing
 			pixmap.Dispose ();
 		}
 		
-		[Test] public void CheckPixmapNewOSBitmap()
+		[Test] public void CheckAllocatePixmap()
 		{
 			Pixmap pixmap = new Pixmap ();
 			System.IntPtr dc = System.IntPtr.Zero;
 			
-			pixmap.CreateOSBitmap (new System.Drawing.Size (200, 100), dc);
+			pixmap.AllocatePixmap (new System.Drawing.Size (200, 100));
 			
 			int width;
 			int height;
@@ -68,7 +68,7 @@ namespace Epsitec.Common.Drawing
 			Graphics graphics = new Graphics ();
 			Pixmap   pixmap   = graphics.Pixmap;
 			
-			graphics.CreateOSBitmap ();
+			graphics.AllocatePixmap ();
 			graphics.SetPixmapSize (200, 100);
 			
 			int width;

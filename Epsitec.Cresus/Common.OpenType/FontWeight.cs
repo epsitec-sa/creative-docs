@@ -1,14 +1,15 @@
-//	Copyright © 2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2005-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.OpenType
 {
 	/// <summary>
-	/// L'énumération FontWeight détermine la graisse de la fonte.
+	/// The <c>FontWeight</c> enumeration describes the weight of
+	/// a font (normal, bold, thin, etc.)
 	/// </summary>
 	public enum FontWeight
 	{
-		Normal			= 400,				//	fonte standard
+		Normal			= 400,				//	standard weight
 		
 		Thin			= 100,
 		ExtraLight		= 200,

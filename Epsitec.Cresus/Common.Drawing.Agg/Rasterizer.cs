@@ -89,6 +89,16 @@ namespace Epsitec.Common.Drawing
 			
 			AntiGrain.Rasterizer.AddGlyph(this.agg_ras, font.Handle, glyph, x, y, scale);
 		}
+
+		protected override void AddPlainGlyphs(Font font, ushort[] glyphs, double[] x, double xx, double xy, double yx, double yy, double tx, double ty)
+		{
+			Transform transform = new Transform (xx, xy, yx, yy, tx, ty);
+
+			transform.MultiplyBy (this.transform);
+			AntiGrain.Rasterizer.SetTransform (this.agg_ras, transform.XX, transform.XY, transform.YX, transform.YY, transform.TX, transform.TY);
+			AntiGrain.Rasterizer.AddGlyphs (this.agg_ras, font.Handle, 1.0, glyphs, x, null, null);
+			AntiGrain.Rasterizer.SetTransform (this.agg_ras, this.transform.XX, this.transform.XY, this.transform.YX, this.transform.YY, this.transform.TX, this.transform.TY);
+		}
 		
 		public override void AddGlyph(Font font, int glyph, double x, double y, double scale, double sx, double sy)
 		{
@@ -169,12 +179,6 @@ namespace Epsitec.Common.Drawing
 		{
 			this.CreateOnTheFly ();
 			AntiGrain.Rasterizer.AddGlyphs (this.agg_ras, font.Handle, scale, glyphs, x, y, sx);
-		}
-		
-		protected override double AddPlainText(Font font, string text, double xx, double xy, double yx, double yy, double tx, double ty)
-		{
-			this.CreateOnTheFly ();
-			return AntiGrain.Rasterizer.AddText (this.agg_ras, font.Handle, text, 0, xx, xy, yx, yy, tx, ty);
 		}
 		
 		

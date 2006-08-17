@@ -1,13 +1,15 @@
 //	Copyright © 2005-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
+using System.Collections.Generic;
+
 namespace Epsitec.Common.Text
 {
 	/// <summary>
 	/// La classe TextContext décrit un contexte (pour la désérialisation) lié à
 	/// un environnement 'texte'.
 	/// </summary>
-	public class TextContext
+	public class TextContext : ILanguageRecognizer
 	{
 		public TextContext()
 		{
@@ -382,14 +384,14 @@ namespace Epsitec.Common.Text
 		{
 			TextContext.InitializeFontCollection (null);
 			
-			if (TextContext.font_ids.Contains (face))
+			if (TextContext.font_ids.ContainsKey (face))
 			{
-				System.Collections.ArrayList list = TextContext.font_ids[face] as System.Collections.ArrayList;
-				return (OpenType.FontIdentity[]) list.ToArray (typeof (OpenType.FontIdentity));
+				List<OpenType.FontIdentity> list = TextContext.font_ids[face];
+				return list.ToArray ();
 			}
 			else
 			{
-				System.Collections.ArrayList list = new System.Collections.ArrayList ();
+				List<OpenType.FontIdentity> list = new List<Epsitec.Common.OpenType.FontIdentity> ();
 				
 				foreach (OpenType.FontIdentity id in TextContext.font_collection)
 				{
@@ -405,7 +407,7 @@ namespace Epsitec.Common.Text
 				}
 				
 				TextContext.font_ids[face] = list;
-				return (OpenType.FontIdentity[]) list.ToArray (typeof (OpenType.FontIdentity));
+				return list.ToArray ();
 			}
 		}
 		
@@ -1767,7 +1769,31 @@ namespace Epsitec.Common.Text
 		{
 			return this.stories;
 		}
-		
+
+
+		#region ILanguageRecognizer Members
+
+		bool ILanguageRecognizer.GetLanguage(ulong[] text, int offset, out double hyphenation, out string locale)
+		{
+			Properties.LanguageProperty property;
+
+			this.GetLanguage (text[offset], out property);
+
+			if (property == null)
+			{
+				hyphenation = 0;
+				locale = null;
+				return false;
+			}
+			else
+			{
+				hyphenation = property.Hyphenation;
+				locale = property.Locale;
+				return true;
+			}
+		}
+
+		#endregion
 		
 		#region TextFinder Class
 		private class TextFinder
@@ -2049,8 +2075,8 @@ namespace Epsitec.Common.Text
 		private long							get_margins_last_style_version;
 		private ulong							get_margins_last_code;
 		private Properties.MarginsProperty		get_margins_last_property;
-		
-		static System.Collections.Hashtable		font_ids = new System.Collections.Hashtable ();
+
+		static Dictionary<string, List<OpenType.FontIdentity>> font_ids = new Dictionary<string, List<Epsitec.Common.OpenType.FontIdentity>> ();
 		
 		internal const int						SerializationVersion = 5;
 	}

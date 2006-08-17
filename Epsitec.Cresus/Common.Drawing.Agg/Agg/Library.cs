@@ -14,8 +14,12 @@ namespace Epsitec.Common.Drawing.Agg
 		{
 			this.Dispose (false);
 		}
-		
-		
+
+
+		public static void Initialize()
+		{
+		}
+
 		#region IDisposable Members
 		public void Dispose()
 		{

@@ -3579,11 +3579,11 @@ namespace Epsitec.Common.Widgets
 			return def;
 		}
 
-		
-		protected void FontToRun(Drawing.TextBreak.XRun run, int fontIndex, FontItem fontItem, SupplItem supplItem)
+
+		protected void FontToRun(Drawing.TextBreak.XRun run, Drawing.Font font, FontItem fontItem, SupplItem supplItem)
 		{
+			run.Font       = font;
 			run.FontName   = fontItem.FontName;
-			run.FontId     = fontIndex;
 			run.FontScale  = fontItem.FontScale;
 			run.FontSize   = this.DefaultFontSize*fontItem.FontScale;
 			run.FontColor  = fontItem.FontColor;
@@ -3596,7 +3596,6 @@ namespace Epsitec.Common.Widgets
 		}
 
 		protected void PutRun(System.Collections.ArrayList runList,
-							  System.Collections.ArrayList fontList,
 							  System.Collections.Stack fontStack,
 							  SupplItem supplItem,
 							  int partIndex, ref int startIndex, int currentIndex,
@@ -3605,33 +3604,26 @@ namespace Epsitec.Common.Widgets
 			if ( currentIndex-startIndex == 0 )  return;
 
 			FontItem fontItem = (FontItem)fontStack.Peek();
-			Drawing.Font font = fontItem.RetFont(supplItem.Bold>0, supplItem.Italic>0);
+			Drawing.Font font = fontItem.GetFont(supplItem.Bold>0, supplItem.Italic>0);
 
-			int fontIndex = fontList.IndexOf(font);
-			if ( fontIndex == -1 )  // fonte inconnue jusqu'à présent ?
-			{
-				fontIndex = fontList.Add(font);  // ajoute la fonte dans la liste
-			}
-
-			Drawing.TextBreak.XRun run = new Drawing.TextBreak.XRun();
+			Drawing.TextBreak.XRun run = new Drawing.TextBreak.XRun ();
 			run.Start  = startIndex-partIndex;
 			run.Length = currentIndex-startIndex;
 			run.Image  = image;
 			run.VerticalOffset = verticalOffset;
-			this.FontToRun(run, fontIndex, fontItem, supplItem);
+			this.FontToRun(run, font, fontItem, supplItem);
 			runList.Add(run);
 
 			startIndex = currentIndex;
 		}
 
-		protected void PutTab(System.Collections.ArrayList fontList,
-							  System.Collections.Stack fontStack,
+		protected void PutTab(System.Collections.Stack fontStack,
 							  SupplItem supplItem,
 							  int startIndex,
 							  Tag tag, System.Collections.Hashtable parameters)
 		{
 			FontItem fontItem = (FontItem)fontStack.Peek();
-			Drawing.Font font = fontItem.RetFont(supplItem.Bold>0, supplItem.Italic>0);
+			Drawing.Font font = fontItem.GetFont(supplItem.Bold>0, supplItem.Italic>0);
 
 			JustifBlock block = new JustifBlock(this);
 			block.Tab        = (tag == Tag.Tab);
@@ -3658,7 +3650,6 @@ namespace Epsitec.Common.Widgets
 			//	Génère les listes suivantes:
 			//	this.parts   parties entre 2 tabs contenant une liste de runs
 			//	this.tabs    JustifBlocks des tabulateurs rencontrés
-			//	this.fonts   toutes les fontes rencontrées
 			if ( this.MaxTextOffset == 0 )
 			{
 				this.parts = null;
@@ -3688,7 +3679,6 @@ namespace Epsitec.Common.Widgets
 
 			System.Collections.Stack		fontStack = this.CreateFontStack();
 			System.Collections.Hashtable	parameters;
-			System.Collections.ArrayList	fontList = new System.Collections.ArrayList();
 			SupplItem						supplItem = new SupplItem();
 
 			int		textLength = this.MaxTextOffset;
@@ -3713,7 +3703,7 @@ namespace Epsitec.Common.Widgets
 			
 					if ( tag != Tag.None && tag != Tag.LineBreak )
 					{
-						this.PutRun(runList, fontList, fontStack, supplItem, partIndex, ref startIndex, currentIndex, null, 0);
+						this.PutRun(runList, fontStack, supplItem, partIndex, ref startIndex, currentIndex, null, 0);
 					}
 
 					if ( tag == Tag.EndOfText )  // fin du texte ?
@@ -3725,7 +3715,7 @@ namespace Epsitec.Common.Widgets
 					if ( tag == Tag.Tab  ||  // partie terminée par un tabulateur ?
 						 tag == Tag.List )
 					{
-						this.PutTab(fontList, fontStack, supplItem, startIndex, tag, parameters);
+						this.PutTab(fontStack, supplItem, startIndex, tag, parameters);
 						currentIndex ++;
 						startIndex = currentIndex;
 						tagEnding = tag;
@@ -3822,7 +3812,7 @@ namespace Epsitec.Common.Widgets
 							
 								buffer.Append(TextLayout.CodeObject);
 								currentIndex ++;
-								this.PutRun(runList, fontList, fontStack, supplItem, partIndex, ref startIndex, currentIndex, image, verticalOffset);
+								this.PutRun(runList, fontStack, supplItem, partIndex, ref startIndex, currentIndex, image, verticalOffset);
 								break;
 
 							case Tag.LineBreak:
@@ -3859,9 +3849,6 @@ namespace Epsitec.Common.Widgets
 				partIndex = currentIndex;
 			}
 			while ( tagEnding != Tag.None );
-
-			this.fonts = new Drawing.Font[fontList.Count];
-			fontList.CopyTo(this.fonts);
 		}
 
 		protected void GenerateBlocks()
@@ -3882,7 +3869,7 @@ noText:
 				{
 					fontItem.FontScale = this.ScanFontScale(this.MaxTextOffset);
 				}
-				Drawing.Font font = fontItem.RetFont(false, false);
+				Drawing.Font font = fontItem.GetFont(false, false);
 
 				JustifBlock block = new JustifBlock(this);
 				block.BoL       = true;
@@ -3969,14 +3956,13 @@ noText:
 
 				bool beginOfPart = beginOfText;
 
-				Drawing.TextBreak textBreak = new Drawing.TextBreak();
-				textBreak.SetFonts(this.fonts);
+				Drawing.TextBreak textBreak = new Drawing.TextBreak ();
 				textBreak.SetText(part.Text, this.BreakMode);
 				textBreak.SetRuns(part.Runs);
 
 				//	Essaie de caser le texte dans la largeur restante.
 				double restWidth = this.layoutSize.Width-pos+tabWidth;
-				Drawing.TextBreak.Line[] lines = textBreak.GetLines(restWidth, this.layoutSize.Width-indent, this.layoutSize.Width);
+				Drawing.TextBreak.Line[] lines = textBreak.GetLines (restWidth, this.layoutSize.Width-indent, this.layoutSize.Width);
 			
 				if ( lines == null || lines.Length == 0 )
 				{
@@ -4017,7 +4003,7 @@ noText:
 
 				int lineStart = 0;
 				int runIndex  = 0;
-				foreach ( Drawing.TextBreak.Line line in lines )
+				foreach (Drawing.TextBreak.Line line in lines)
 				{
 					int brutIndex = lineStart;
 					bool beginOfLine = beginOfPart;
@@ -4051,7 +4037,7 @@ noText:
 								pos = indent;
 							}
 
-							Drawing.Font font = this.fonts[run.FontId] as Drawing.Font;
+							Drawing.Font font = run.Font;
 
 							JustifBlock block = new JustifBlock(this);
 							block.BoL        = beginOfLine;
@@ -4105,8 +4091,8 @@ noText:
 								if ( this.JustifMode != Drawing.TextJustifMode.NoLine )
 								{
 									double width = dx/run.FontSize;
-									block.Infos = new Drawing.Font.ClassInfo[1];
-									block.Infos[0] = new Drawing.Font.ClassInfo(Drawing.Font.ClassId.PlainText, 1, width, 0.0);
+									block.Infos = new Drawing.FontClassInfo[1];
+									block.Infos[0] = new Drawing.FontClassInfo(Drawing.GlyphClass.PlainText, 1, width, 0.0);
 									block.InfoWidth = width;
 									block.InfoElast = 0.0;
 								}
@@ -4186,11 +4172,10 @@ noText:
 			if ( index < 0 )  return 0.0;
 			string part = text.Substring(0, index);
 
-			Drawing.TextBreak textBreak = new Drawing.TextBreak();
-			textBreak.SetFonts(this.fonts);
+			Drawing.TextBreak textBreak = new Drawing.TextBreak ();
 			textBreak.SetText(part, Drawing.TextBreakMode.None);
 			textBreak.SetRuns(runs);
-			Drawing.TextBreak.Line[] lines = textBreak.GetLines(1000000);
+			Drawing.TextBreak.Line[] lines = textBreak.GetLines (1000000);
 			if ( lines == null || lines.Length == 0 )  return 0.0;
 
 			Drawing.TextBreak.Line line = lines[0] as Drawing.TextBreak.Line;
@@ -4779,16 +4764,16 @@ noText:
 				return this.MemberwiseClone() as FontItem;
 			}
 
-			public Drawing.Font RetFont(bool bold, bool italic)
+			public Drawing.Font GetFont(bool bold, bool italic)
 			{
 				Drawing.Font font     = null;
 				string       fontFace = TextLayout.FontName(this.FontName);
 				
-				Drawing.Font.FaceInfo face = Drawing.Font.GetFaceInfo(fontFace);
+				Drawing.FontFaceInfo face = Drawing.Font.GetFaceInfo(fontFace);
 				
 				if ( face != null )
 				{
-					font = face.GetFont(bold, italic, this.FontScale);
+					font = face.GetFont(bold, italic);
 				}
 				
 				if ( font == null )
@@ -4926,7 +4911,7 @@ noText:
 			public bool						List;		// contient une puce
 			public System.Collections.Hashtable Parameters;
 			public bool						Visible;
-			public Drawing.Font.ClassInfo[]	Infos;
+			public Drawing.FontClassInfo[]	Infos;
 			public double					InfoWidth;
 			public double					InfoElast;
 		}
@@ -4952,7 +4937,7 @@ noText:
 			public bool						ListEnding;
 			public int						Index;
 			public string					Text;
-			public Drawing.TextBreak.XRun[]	Runs;
+			public Drawing.TextBreak.XRun[] Runs;
 		}
 
 		public class Context
@@ -5090,7 +5075,6 @@ noText:
 		protected double						verticalMark;
 		protected int							totalLine;
 		protected int							visibleLine;
-		protected Drawing.Font[]				fonts;
 		protected System.Collections.ArrayList  parts  = new System.Collections.ArrayList();
 		protected System.Collections.ArrayList  tabs   = new System.Collections.ArrayList();
 		protected System.Collections.ArrayList	blocks = new System.Collections.ArrayList();

@@ -20,17 +20,30 @@ namespace Epsitec.Common.Drawing
 			
 			fonts[0] = Font.GetFont ("Tahoma", "Regular");
 			fonts[1] = Font.GetFont ("Tahoma", "Bold");
+
+			TextBreak.XRun[] runs = new TextBreak.XRun[3];
+
+			runs[0] = new TextBreak.XRun ();
+			runs[1] = new TextBreak.XRun ();
+			runs[2] = new TextBreak.XRun ();
+
+			runs[0].Locale = "fr-ch";
+			runs[1].Locale = "fr-ch";
+			runs[2].Locale = "fr-ch";
+
+			runs[0].Font = fonts[0];
+			runs[1].Font = fonts[1];
+			runs[2].Font = fonts[0];
 			
-			int[]    run_lengths = new int[3];
-			int[]    run_fonts   = new int[3];
-			double[] run_sizes   = new double[3];
+			runs[0].Length = text[0].Length;
+			runs[1].Length = text[1].Length;
+			runs[2].Length = text[2].Length;
 			
-			run_lengths[0] = text[0].Length;	run_fonts[0] = 0;	run_sizes[0] = 12.0;
-			run_lengths[1] = text[1].Length;	run_fonts[1] = 1;	run_sizes[1] = 12.0;
-			run_lengths[2] = text[2].Length;	run_fonts[2] = 0;	run_sizes[2] = 12.0;
+			runs[0].FontSize = 12.0;
+			runs[1].FontSize = 12.0;
+			runs[2].FontSize = 12.0;
 			
-			tb.SetFonts (fonts);
-			tb.SetRuns (run_lengths, run_fonts, run_sizes);
+			tb.SetRuns (runs);
 			
 			double space = 300;
 			double width;
@@ -69,7 +82,7 @@ namespace Epsitec.Common.Drawing
 		[Test] public void CheckGetHyphenationPositions()
 		{
 			short[] pos;
-			
+
 			pos = TextBreak.GetHyphenationPositions ("atmosphère");
 			
 			Assert.AreEqual (3, pos.Length);

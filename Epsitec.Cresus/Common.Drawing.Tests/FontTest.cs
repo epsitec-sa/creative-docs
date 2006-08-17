@@ -7,7 +7,6 @@ namespace Epsitec.Common.Drawing
 	{
 		public FontTest()
 		{
-			Font.Initialise ();
 		}
 
 		[Test]
@@ -24,7 +23,8 @@ namespace Epsitec.Common.Drawing
 			System.Console.Out.WriteLine ("ç --> {0}", TextBreak.GetUnicodeName ('ç'));
 		}
 		
-		[Test] /*[Ignore ("too slow") ]*/ public void CheckInit()
+		[Test]
+		public void CheckInit()
 		{
 			int n = Font.Count;
 			System.Console.Out.WriteLine (n.ToString () + " fonts found");
@@ -36,13 +36,14 @@ namespace Epsitec.Common.Drawing
 				
 				if (font.GetGlyphIndex ('e') == 0)
 				{
-					System.Console.WriteLine (font.FullName + " (" + font.LocalStyleName + ") is not a Latin font");
+					System.Console.Out.WriteLine ("{0} ({1}/{2}) is not a Latin font", font.FullName, font.FaceName, font.StyleName);
 				}
 				else
 				{
-					System.Console.Out.WriteLine (font.FullName + " (" + font.LocalStyleName + ") / e=" + font.GetGlyphIndex ('e').ToString ());
+					System.Console.Out.WriteLine (font.FullName + " (" + font.LocaleStyleName + ") / e=" + font.GetGlyphIndex ('e').ToString ());
 					System.Console.Out.WriteLine ("  A=" + font.Ascender + " D=" + font.Descender + " H=" + (font.LineHeight-font.Ascender+font.Descender) + " w=" + font.GetCharAdvance ('e'));
 				}
+				
 				Font find = Font.GetFont (font.FaceName, font.StyleName, font.OpticalName);
 				
 				Assert.IsNotNull (find);
@@ -52,7 +53,8 @@ namespace Epsitec.Common.Drawing
 			Assert.IsNull (Font.GetFont (n+1));
 		}
 
-		[Test] public void CheckAllFontComposites()
+		[Test]
+		public void CheckAllFontComposites()
 		{
 			int n = Font.Count;
 			System.Console.Out.WriteLine (n.ToString () + " fonts found");
@@ -107,16 +109,14 @@ namespace Epsitec.Common.Drawing
 					text.TextLayout.DefaultFontSize = 60;
 					
 					window.Show ();
-					Widgets.Window.RunInTestEnvironment (window);
 				}
 			}
 		}
-		
-		static int last_font_chunk = 0;
 
-		[Test] public void CheckFaces()
+		[Test]
+		public void CheckFaces()
 		{
-			Font.FaceInfo[] faces = Font.Faces;
+			FontFaceInfo[] faces = Font.Faces;
 			System.Console.Out.WriteLine ("{0} font faces found.", faces.Length);
 			
 			for (int i = 0; i < faces.Length; i++)
@@ -126,10 +126,10 @@ namespace Epsitec.Common.Drawing
 				
 				System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 				
-				Font font_regular     = faces[i].GetFont (false, false, 12.0);
-				Font font_italic      = faces[i].GetFont (false, true, 12.0);
-				Font font_bold        = faces[i].GetFont (true, false, 12.0);
-				Font font_bold_italic = faces[i].GetFont (true, true, 12.0);
+				Font font_regular     = faces[i].GetFont (false, false);
+				Font font_italic      = faces[i].GetFont (false, true);
+				Font font_bold        = faces[i].GetFont (true, false);
+				Font font_bold_italic = faces[i].GetFont (true, true);
 				
 				if (font_regular != null     && font_regular.IsSynthetic)		buffer.Append ("* regular ");
 				if (font_italic != null      && font_italic.IsSynthetic)		buffer.Append ("* italic ");
@@ -140,17 +140,19 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 		
-		[Test] public void CheckRegularFacesMissing()
+		[Test]
+		public void CheckRegularFacesMissing()
 		{
-			Font.FaceInfo[] faces = Font.Faces;
+			FontFaceInfo[] faces = Font.Faces;
 			System.Console.Out.WriteLine ("{0} font faces found.", faces.Length);
+			int count = 0;
 			
 			for (int i = 0; i < faces.Length; i++)
 			{
 				string   face   = faces[i].Name;
 				string[] styles = faces[i].StyleNames;
 				
-				Font font_regular  = faces[i].GetFont (false, false, 12.0);
+				Font font_regular  = faces[i].GetFont (false, false);
 				Font fallback_font = Font.GetFontFallback (face);
 				
 				if (font_regular == null)
@@ -164,13 +166,18 @@ namespace Epsitec.Common.Drawing
 						Assert.IsFalse (font.IsStyleRegular);
 						System.Console.WriteLine ("   {0}", font.UniqueName);
 					}
+					
+					count++;
 				}
 			}
+
+			System.Console.Out.WriteLine ("{0} font faces have no Regular style");
 		}
 		
-		[Test] public void CheckRegularFacesFound()
+		[Test]
+		public void CheckRegularFacesFound()
 		{
-			Font.FaceInfo[] faces = Font.Faces;
+			FontFaceInfo[] faces = Font.Faces;
 			System.Console.Out.WriteLine ("{0} font faces found.", faces.Length);
 			
 			for (int i = 0; i < faces.Length; i++)
@@ -178,7 +185,7 @@ namespace Epsitec.Common.Drawing
 				string   face   = faces[i].Name;
 				string[] styles = faces[i].StyleNames;
 				
-				Font font_regular = faces[i].GetFont (false, false, 12.0);
+				Font font_regular = faces[i].GetFont (false, false);
 				
 				if (font_regular != null)
 				{
@@ -196,7 +203,8 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 		
-		[Test] public void CheckSyntheticFont()
+		[Test]
+		public void CheckSyntheticFont()
 		{
 			Font font = Font.GetFont ("Tahoma", "Italic");
 			
@@ -215,7 +223,8 @@ namespace Epsitec.Common.Drawing
 			Assert.AreEqual (font, Font.GetFont ("Tahoma", "Bold Oblique"));
 		}
 		
-		[Test] public void CheckFontGeometry()
+		[Test]
+		public void CheckFontGeometry()
 		{
 			Font font = Font.GetFont ("Tahoma", "Regular");
 			
@@ -230,98 +239,55 @@ namespace Epsitec.Common.Drawing
 			Assert.IsTrue (height >= ascender-descender);
 		}
 		
-		[Test] public void CheckFontTextCharEndX()
+		[Test]
+		public void CheckFontTextCharEndX()
 		{
 			Font font = Font.GetFont ("Tahoma", "Regular");
 			
 			Assert.IsNotNull (font);
-			
-			string   text  = "Hello";
+
 			double[] end_x;
-			double   width = font.GetTextAdvance (text);
+			
+			string text  = "Hello";
+			double width = font.GetTextAdvance (text);
 			
 			font.GetTextCharEndX (text, out end_x);
 			
-			Assert.IsTrue (end_x.Length == text.Length);
-			Assert.IsTrue (end_x[end_x.Length-1] == width);
+			Assert.AreEqual (text.Length, end_x.Length);
+			Assert.AreEqual (width, end_x[end_x.Length-1]);
+
+			font.OpenTypeFont.PushActiveFeatures ();
+			text  = "afin AV";
+
+			font.OpenTypeFont.SelectFeatures ();
+			width = font.GetTextAdvance (text);
+			font.GetTextCharEndX (text, out end_x);
+
+			Assert.AreEqual (text.Length, end_x.Length);
+			Assert.AreEqual (width, end_x[end_x.Length-1]);
+			Assert.AreEqual (3138, (int) (1000*width));
+
+			font.OpenTypeFont.SelectFeatures ("kern");
+			width = font.GetTextAdvance (text);
+			font.GetTextCharEndX (text, out end_x);
+
+			Assert.AreEqual (text.Length, end_x.Length);
+			Assert.AreEqual (width, end_x[end_x.Length-1]);
+			Assert.AreEqual (3111, (int) (1000*width));
+			
+			font.OpenTypeFont.SelectFeatures ("liga", "kern");
+			width = font.GetTextAdvance (text);
+			font.GetTextCharEndX (text, out end_x);
+
+			Assert.AreEqual (text.Length, end_x.Length);
+			Assert.AreEqual (width, end_x[end_x.Length-1]);
+			Assert.AreEqual (3097, (int) (1000*width));
+			
+			font.OpenTypeFont.PopActiveFeatures ();
 		}
 		
-#if false
-		[Test] public void CheckTextBreak()
-		{
-			Font   font = Font.GetFont ("Times New Roman", "Regular");
-			string text = "The quick brown     fox jumps over the lazy dog. Whatever, we just need a piece of long text to break apart.";
-			double width = 100;
-			TextBreakOld tb = new TextBreakOld (font, text, 12.0, TextBreakMode.None);
-			
-			string break_text;
-			double break_width;
-			
-			int line_count = 0;
-			int n_char;
-			string[] chunk = new string[10];
-			
-			while (tb.GetNextBreak (width, out break_text, out break_width, out n_char))
-			{
-				Assert.IsTrue (break_width <= width);
-				Assert.IsTrue (break_text.Length > 0);
-				Assert.IsTrue (n_char > 0);
-				Assert.IsTrue (! break_text.StartsWith (" "));
-//				Assert.IsTrue (! break_text.EndsWith (" "));
-				
-				chunk[line_count++] = break_text;
-				
-				Assert.AreEqual (break_width, font.GetTextAdvance (break_text)*12.0);
-				Assert.AreEqual ((line_count < 6), tb.MoreText);
-			}
-			
-			Assert.AreEqual (6, line_count);
-			Assert.AreEqual ("", break_text);
-			Assert.AreEqual (0, break_width);
-			Assert.AreEqual (0, n_char);
-			
-			Assert.AreEqual ("apart.", chunk[5]);
-			
-			Assert.AreEqual (false, tb.GetNextBreak (width, out break_text, out break_width, out n_char));
-			
-			tb.Dispose ();
-			
-			tb = new TextBreakOld (font, "absolutely   ", 12.0, TextBreakMode.None);
-			Assert.AreEqual (true, tb.GetNextBreak (40.0, out break_text, out break_width, out n_char));
-			Assert.AreEqual ("", break_text);
-			Assert.AreEqual (0.0, break_width);
-			Assert.AreEqual (true, tb.GetNextBreak (55.0, out break_text, out break_width, out n_char));
-			Assert.AreEqual ("absolutely ", break_text);
-			Assert.AreEqual (true, tb.GetNextBreak (55.0, out break_text, out break_width, out n_char));
-			tb.Dispose ();
-			
-			tb = new TextBreakOld (font, "absolutely   ", 12.0, TextBreakMode.None);
-			Assert.AreEqual (true, tb.GetNextBreak (60.0, out break_text, out break_width, out n_char));
-			Assert.AreEqual ("absolutely   ", break_text);
-			Assert.AreEqual (false, tb.GetNextBreak (60.0, out break_text, out break_width, out n_char));
-			tb.Dispose ();
-			
-			tb = new TextBreakOld (font, "absolutely, really", 12.0, TextBreakMode.Split);
-			Assert.AreEqual (true, tb.GetNextBreak (40.0, out break_text, out break_width, out n_char));
-			Assert.AreEqual ("absolute", break_text);
-			Assert.AreEqual (true, tb.GetNextBreak (40.0, out break_text, out break_width, out n_char));
-			Assert.AreEqual ("ly,", break_text);
-			Assert.AreEqual (true, tb.GetNextBreak (40.0, out break_text, out break_width, out n_char));
-			Assert.AreEqual ("really", break_text);
-			Assert.AreEqual (false, tb.GetNextBreak (40.0, out break_text, out break_width, out n_char));
-			tb.Dispose ();
-			
-			tb = new TextBreakOld (font, "absolutely, really", 12.0, TextBreakMode.Ellipsis);
-			Assert.AreEqual (true, tb.GetNextBreak (40.0, out break_text, out break_width, out n_char));
-			Assert.AreEqual ("absol\u2026", break_text);
-			Assert.AreEqual (true, tb.GetNextBreak (40.0, out break_text, out break_width, out n_char));
-			Assert.AreEqual ("really", break_text);
-			Assert.AreEqual (false, tb.GetNextBreak (40.0, out break_text, out break_width, out n_char));
-			tb.Dispose ();
-		}
-#endif
-		
-		[Test] public void CheckGlyphPaint()
+		[Test]
+		public void CheckGlyphPaint()
 		{
 			System.Windows.Forms.Form form = new System.Windows.Forms.Form ();
 			
@@ -375,7 +341,7 @@ namespace Epsitec.Common.Drawing
 			
 			foreach (char c in text)
 			{
-				int glyph = font.GetGlyphIndex (c);
+				ushort glyph = font.GetGlyphIndex (c);
 				
 				rasterizer.AddGlyph (font, glyph, x, y, size);
 				
@@ -410,9 +376,42 @@ namespace Epsitec.Common.Drawing
 			rasterizer.Render (renderer);
 			
 			form.Show ();
+			Widgets.Window.RunInTestEnvironment (form);
 		}
 
-		[Test] public void CheckSyntheticGlyphPaint()
+		[Test]
+		public void CheckFontPaintingByWidgets()
+		{
+			Widgets.Window window = new Widgets.Window ();
+
+			Widgets.Button text1 = new Epsitec.Common.Widgets.Button ();
+			Widgets.Button text2 = new Epsitec.Common.Widgets.Button ();
+
+			Widgets.TextFieldMulti multi = new Widgets.TextFieldMulti ();
+			
+			multi.Name = "Infos";
+			multi.IsReadOnly = true;
+			multi.MaxChar = 10000;
+			multi.Dock = Widgets.DockStyle.Fill;
+			multi.Margins = new Margins (6, 6, 6, 34);
+			
+			window.Root.Children.Add (text1);
+			window.Root.Children.Add (text2);
+			window.Root.Children.Add (multi);
+
+			text1.Dock = Epsitec.Common.Widgets.DockStyle.Top;
+			text2.Dock = Epsitec.Common.Widgets.DockStyle.Top;
+
+			text1.Text = "Line1: Hello";
+			text2.Text = "Line2: <i>Hello</i>";
+			multi.Text = "Simple text<br/>Other text<br/>More <i>italic</i> text.<br/>And some <b>bold</b> text.";
+			
+			window.Show ();
+			Widgets.Window.RunInTestEnvironment (window);
+		}
+
+		[Test]
+		public void CheckSyntheticGlyphPaint()
 		{
 			System.Windows.Forms.Form form = new System.Windows.Forms.Form ();
 			
@@ -454,7 +453,7 @@ namespace Epsitec.Common.Drawing
 			
 			foreach (char c in text)
 			{
-				int glyph = font.GetGlyphIndex (c);
+				ushort glyph = font.GetGlyphIndex (c);
 				
 				rasterizer.AddGlyph (font, glyph, x, y, size);
 				
@@ -494,12 +493,12 @@ namespace Epsitec.Common.Drawing
 			rasterizer.AddOutline (rect, 1);
 			rasterizer.Render (renderer);
 			
-			
-			
 			form.Show ();
+			Widgets.Window.RunInTestEnvironment (form);
 		}
 
-		[Test] public void CheckDefaultFont()
+		[Test]
+		public void CheckDefaultFont()
 		{
 			Font   font = Font.DefaultFont;
 			double size = Font.DefaultFontSize;
@@ -508,7 +507,8 @@ namespace Epsitec.Common.Drawing
 			Assert.IsTrue (size > 0);
 		}
 
-		[Test] public void CheckGlyphDynamicBold()
+		[Test]
+		public void CheckGlyphDynamicBold()
 		{
 			System.Windows.Forms.Form form = new System.Windows.Forms.Form ();
 			
@@ -546,7 +546,7 @@ namespace Epsitec.Common.Drawing
 				
 				foreach (char c in text)
 				{
-					int glyph = font.GetGlyphIndex (c);
+					ushort glyph = font.GetGlyphIndex (c);
 					
 					path.Append (font, glyph, size, 0, 0, size, x, y, bold_width);
 					
@@ -561,11 +561,11 @@ namespace Epsitec.Common.Drawing
 			}
 			
 			form.Show ();
+			Widgets.Window.RunInTestEnvironment (form);
 		}
-		
-		static readonly int cpu_speed = 1700;
 
-		[Test] public void CheckRenderingSpeed()
+		[Test]
+		public void CheckRenderingSpeed()
 		{
 			Graphics gra  = new Epsitec.Common.Drawing.Graphics ();
 			Font     font = Font.GetFont ("Tahoma", "Regular");
@@ -619,7 +619,8 @@ namespace Epsitec.Common.Drawing
 			System.Console.Out.WriteLine ("Mean Rendering : " + mean.ToString () + " -> " + (mean / cpu_speed / text.Length) + "us / char in AGG <=> " + (mean / text.Length) + " cycles / char.");
 		}
 		
-		[Test] public void CheckRenderingSpeedGDIPlus()
+		[Test]
+		public void CheckRenderingSpeedGDIPlus()
 		{
 			double   size = 10.6;
 			string   text = "The quick brown fox jumps over the lazy dog. Apportez ce vieux whisky au juge blond qui fume !";
@@ -653,12 +654,12 @@ namespace Epsitec.Common.Drawing
 			
 			System.Console.Out.WriteLine ("Mean Rendering : " + (tot / 100).ToString () + " -> " + (tot * 1000 / 100 / cpu_speed / text.Length) + "ns / char in GDI+");
 		}
-		
-		
+
 		[System.Runtime.InteropServices.DllImport ("GDI32.dll")] extern static void TextOut(System.IntPtr hdc, int x, int y, string text, int len);
 		[System.Runtime.InteropServices.DllImport ("GDI32.dll")] extern static void SelectObject(System.IntPtr hdc, System.IntPtr hfont);
 
-		[Test] public void CheckRenderingSpeedGDI()
+		[Test]
+		public void CheckRenderingSpeedGDI()
 		{
 			double   size = 10.6;
 			string   text = "The quick brown fox jumps over the lazy dog. Apportez ce vieux whisky au juge blond qui fume !";
@@ -702,6 +703,30 @@ namespace Epsitec.Common.Drawing
 			gra.ReleaseHdc (hDC);
 			
 			System.Console.Out.WriteLine ("Mean Rendering : " + (tot / 100).ToString () + " -> " + (tot * 1000 / 100 / cpu_speed / text.Length) + "ns / char in GDI");
+		}
+
+		[Test]
+		public void CheckCharBounds()
+		{
+			foreach (FontFaceInfo face in Font.Faces)
+			{
+				if (face.Name == "Arial")
+				{
+					foreach (Font font in face.GetFonts ())
+					{
+						System.Console.WriteLine ("Using font : {0}/{1}/{2}", font.FaceName, font.StyleName, font.OpticalName);
+						System.Console.WriteLine ("'A' bounds: {0}, advance: {1}", font.GetCharBounds ('A'), font.GetCharAdvance ('A'));
+						System.Console.WriteLine ("'B' bounds: {0}, advance: {1}", font.GetCharBounds ('B'), font.GetCharAdvance ('B'));
+						System.Console.WriteLine ("'I' bounds: {0}, advance: {1}", font.GetCharBounds ('I'), font.GetCharAdvance ('I'));
+						System.Console.WriteLine ("'i' bounds: {0}, advance: {1}", font.GetCharBounds ('i'), font.GetCharAdvance ('i'));
+						System.Console.WriteLine ("'O' bounds: {0}, advance: {1}", font.GetCharBounds ('O'), font.GetCharAdvance ('O'));
+						System.Console.WriteLine ("'o' bounds: {0}, advance: {1}", font.GetCharBounds ('o'), font.GetCharAdvance ('o'));
+						System.Console.WriteLine ("'p' bounds: {0}, advance: {1}", font.GetCharBounds ('p'), font.GetCharAdvance ('p'));
+						System.Console.WriteLine ("'q' bounds: {0}, advance: {1}", font.GetCharBounds ('q'), font.GetCharAdvance ('q'));
+						System.Console.WriteLine ("' ' bounds: {0}, advance: {1}", font.GetCharBounds (' '), font.GetCharAdvance (' '));
+					}
+				}
+			}
 		}
 		
 		[Test] public void CheckFillPixelCache()
@@ -808,6 +833,7 @@ namespace Epsitec.Common.Drawing
 			this.global_pixmap_4 = gra.Pixmap;
 			
 			form.Show ();
+			Widgets.Window.RunInTestEnvironment (form);
 		}
 		
 #if false
@@ -835,7 +861,7 @@ namespace Epsitec.Common.Drawing
 				if (font.FaceName.StartsWith ("Bal"))
 				{
 					System.Console.Out.WriteLine (font.FaceName + " / " + font.StyleName + " / " + font.OpticalName);
-					System.Console.Out.WriteLine ("  " + font.FullName + " (" + font.LocalStyleName + ") / e=" + font.GetGlyphIndex ('e').ToString ());
+					System.Console.Out.WriteLine ("  " + font.FullName + " (" + font.LocaleStyleName + ") / e=" + font.GetGlyphIndex ('e').ToString ());
 					System.Console.Out.WriteLine ("  A=" + font.Ascender + " D=" + font.Descender + " H=" + (font.LineHeight-font.Ascender+font.Descender) + " w=" + font.GetCharAdvance ('e'));
 					
 					Font find = Font.GetFont (font.FaceName, font.StyleName, font.OpticalName);
@@ -846,6 +872,9 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 
+
+		static readonly int cpu_speed = 1700;
+		static int last_font_chunk = 0;
 		
 		private void form_Paint1(object sender, System.Windows.Forms.PaintEventArgs e)
 		{

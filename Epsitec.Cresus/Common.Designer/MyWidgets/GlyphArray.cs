@@ -414,7 +414,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 						{
 							if ( this.glyphsMode )
 							{
-								int glyph = (int) this.glyphs[first++];
+								ushort glyph = (ushort) this.glyphs[first++];
 								double width = font.GetGlyphAdvance(glyph)*fontSize;
 								graphics.Rasterizer.AddGlyph(font, glyph, rect.Center.X-width/2.0, rect.Bottom+rect.Height*0.35, fontSize);
 								graphics.RenderSolid(adorner.ColorText(cellState));
@@ -422,7 +422,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 							else
 							{
 								char c = (char) this.unicodes[first++];
-								int glyph = font.GetGlyphIndex(c);
+								ushort glyph = font.GetGlyphIndex (c);
 								double width = font.GetGlyphAdvance(glyph)*fontSize;
 								graphics.AddText(rect.Center.X-width/2.0, rect.Bottom+rect.Height*0.35, c.ToString(), font, fontSize);
 								graphics.RenderSolid(adorner.ColorText(cellState));
