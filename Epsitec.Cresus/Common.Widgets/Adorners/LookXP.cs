@@ -443,7 +443,8 @@ namespace Epsitec.Common.Widgets.Adorners
 
 			if ( style == ButtonStyle.Normal        ||
 				 style == ButtonStyle.DefaultAccept ||
-				 style == ButtonStyle.DefaultCancel )
+				 style == ButtonStyle.DefaultCancel ||
+				 style == ButtonStyle.DefaultAcceptAndCancel )
 			{
 				Drawing.Path path = this.PathRoundRectangle(rect, 0, 0);
 			
@@ -464,7 +465,7 @@ namespace Epsitec.Common.Widgets.Adorners
 					graphics.RenderSolid(this.colorControl);
 				}
 			
-				if ( style == ButtonStyle.DefaultAccept )
+				if ( style == ButtonStyle.DefaultAccept || style == ButtonStyle.DefaultAcceptAndCancel )
 				{
 					Drawing.Path pInside = this.PathRoundRectangle(rect, -1.5, 0);
 					graphics.Rasterizer.AddOutline(pInside, 2);

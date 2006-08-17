@@ -415,7 +415,8 @@ namespace Epsitec.Common.Widgets.Adorners
 
 			if ( style == ButtonStyle.Normal        ||
 				 style == ButtonStyle.DefaultAccept ||
-				 style == ButtonStyle.DefaultCancel )
+				 style == ButtonStyle.DefaultCancel ||
+				 style == ButtonStyle.DefaultAcceptAndCancel )
 			{
 				if ( (state&WidgetPaintState.Enabled) != 0 )
 				{
@@ -429,7 +430,7 @@ namespace Epsitec.Common.Widgets.Adorners
 					}
 					else
 					{
-						if ( style == ButtonStyle.DefaultAccept )
+						if ( style == ButtonStyle.DefaultAccept || style == ButtonStyle.DefaultAcceptAndCancel )
 						{
 							this.PaintImageButton(graphics, rInside, 2);
 						}
@@ -502,7 +503,7 @@ namespace Epsitec.Common.Widgets.Adorners
 					}
 					else
 					{
-						if ( style == ButtonStyle.DefaultAccept )
+						if ( style == ButtonStyle.DefaultAccept || style == ButtonStyle.DefaultAcceptAndCancel )
 						{
 							this.PaintImageButton(graphics, rInside, 2);
 						}

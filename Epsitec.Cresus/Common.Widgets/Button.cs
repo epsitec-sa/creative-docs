@@ -24,6 +24,7 @@ namespace Epsitec.Common.Widgets
 		
 		DefaultAccept,					// bouton pour accepter un choix dans un dialogue (OK)
 		DefaultCancel,					// bouton pour refuser un choix dans un dialogue (Cancel)
+		DefaultAcceptAndCancel,			// bouton unique pour accepter ou refuser un choix dans un dialogue
 	}
 	
 	/// <summary>
@@ -118,7 +119,7 @@ namespace Epsitec.Common.Widgets
 		{
 			IFeel feel = Feel.Factory.Active;
 
-			if (this.buttonStyle == ButtonStyle.DefaultAccept)
+			if (this.buttonStyle == ButtonStyle.DefaultAccept || this.buttonStyle == ButtonStyle.DefaultAcceptAndCancel)
 			{
 				if (feel.AcceptShortcut == shortcut)
 				{
@@ -127,7 +128,7 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 
-			if (this.buttonStyle == ButtonStyle.DefaultCancel)
+			if (this.buttonStyle == ButtonStyle.DefaultCancel || this.buttonStyle == ButtonStyle.DefaultAcceptAndCancel)
 			{
 				if (feel.CancelShortcut == shortcut)
 				{
@@ -149,6 +150,7 @@ namespace Epsitec.Common.Widgets
 				case ButtonStyle.Normal:
 				case ButtonStyle.DefaultAccept:
 				case ButtonStyle.DefaultCancel:
+				case ButtonStyle.DefaultAcceptAndCancel:
 					return 1.0;
 				
 				default:
