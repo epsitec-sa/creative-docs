@@ -27,8 +27,8 @@ namespace Epsitec.Common.Widgets
 		{
 			// Coupe un mot selon un certain nombre de règles basées sur
 			// les voyelles et les consonnes. Le mot donné peut contenir des
-			// lettres accentuées.
-			// Rend une liste des coupures possibles.
+			// lettres accentuées. En revanche, il ne doit pas contenir de
+			// tiret. Rend une liste des césures possibles.
 			List<int> list = new List<int>();
 
 			TextPointer tp = new TextPointer(word);
@@ -36,7 +36,7 @@ namespace Epsitec.Common.Widgets
 			{
 				// Cherche dans le dictionnaire des exceptions si le mot en fait
 				// partie ou pas.
-				tp.Exception(list);
+				tp.SearchException(list);
 
 				// Avance dans le mot syllabes par syllabes ...
 				bool firstSyllabe = true;
@@ -48,14 +48,14 @@ namespace Epsitec.Common.Widgets
 						continue;
 					}
 
-					// Teste si la coupure est une coupure interdite à cause d'une
+					// Teste si la césure est une césure interdite à cause d'une
 					// exception dans dico_nc.
 					if (tp.Position == tp.Banned)
 					{
 						continue;
 					}
 
-					// Teste si la coupure est trop proche du début du mot (par
+					// Teste si la césure est trop proche du début du mot (par
 					// exemple: é-cole) ou trop proche de la fin du mot (par
 					// exemple: école-s).
 					if (tp.Position < tp.Root+2)
@@ -71,14 +71,14 @@ namespace Epsitec.Common.Widgets
 					firstSyllabe = false;
 
 					// Teste s'il ne reste que des consonnes depuis cette éventuelle
-					// coupure (par exemple: rangeme-nts)
+					// césure (par exemple: rangeme-nts)
 					if (tp.IsRestConsonne())
 					{
 						break;
 					}
 
 					// Si on est juste après un apostrophe, il faut ignorer
-					// la coupure. Par exemple dans:  aujourd'hui
+					// la césure. Par exemple dans:  aujourd'hui
 					if (tp.GetChar(-1) == '\'')
 					{
 						continue;
@@ -352,6 +352,7 @@ namespace Epsitec.Common.Widgets
 		{
 			public TextPointer(string word)
 			{
+				//	Constructeur avec un mot initial.
 				this.text = WordBreak.RemoveAccent(word).ToUpper();
 				this.length = word.Length;
 				this.position = 0;
@@ -405,12 +406,14 @@ namespace Epsitec.Common.Widgets
 
 			public TextPointer(TextPointer src)
 			{
+				//	Constructeur qui copie une instance existante.
 				this.text = src.text;
 				src.CopyCursor(this);
 			}
 
-			public void CopyCursor(TextPointer dst)
+			protected void CopyCursor(TextPointer dst)
 			{
+				//	Copie la position du curseur.
 				dst.start = this.start;
 				dst.length = this.length;
 				dst.position = this.position;
@@ -420,6 +423,7 @@ namespace Epsitec.Common.Widgets
 
 			public int Start
 			{
+				//	Offset du début du mot (par exemple 2 avec "l'aérospatial").
 				get
 				{
 					return this.start;
@@ -428,6 +432,7 @@ namespace Epsitec.Common.Widgets
 
 			public int Length
 			{
+				//	Longueur du mot, après Start (par exemple 11 avec "l'aérospatial").
 				get
 				{
 					return this.length;
@@ -436,6 +441,7 @@ namespace Epsitec.Common.Widgets
 
 			public int Position
 			{
+				//	Position dans le mot, après Start (par exemple 1 avec "l'a|érospatial).
 				get
 				{
 					return this.position;
@@ -452,6 +458,7 @@ namespace Epsitec.Common.Widgets
 
 			public int Root
 			{
+				//	Longueur de la racine, après Start (par exemple 4 avec "l'aérospatial").
 				get
 				{
 					return this.root;
@@ -471,18 +478,6 @@ namespace Epsitec.Common.Widgets
 				return this.text[this.start+this.position+index];
 			}
 
-			public bool Recede()
-			{
-				//	Recule le pointeur.
-				if (this.position == 0)
-				{
-					return false;
-				}
-
-				this.position--;
-				return true;
-			}
-
 			public bool Advance()
 			{
 				//	Avance le pointeur.
@@ -495,7 +490,7 @@ namespace Epsitec.Common.Widgets
 				return true;
 			}
 
-			public bool IsDouble()
+			protected bool IsDouble()
 			{
 				// Test s'il y a deux mêmes lettres qui se suivent.
 				// Reste moins de 2 lettres ?
@@ -510,7 +505,7 @@ namespace Epsitec.Common.Widgets
 					return false;
 				}
 
-				// Vérifie si la coupure est dans une terminaison "féminin pluriel",
+				// Vérifie si la césure est dans une terminaison "féminin pluriel",
 				// c'est-à-dire "ées", pour éviter de couper "commencé-es" !
 
 				if (this.length-this.position == 3 &&
@@ -525,7 +520,7 @@ namespace Epsitec.Common.Widgets
 				return true;
 			}
 
-			public bool SkipVoyelles()
+			protected bool SkipVoyelles()
 			{
 				// Saute une ou plusieurs voyelles.
 				// Retourne true si doubles lettres.
@@ -550,7 +545,7 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 
-			public bool SkipConsonnes(bool firstSyllabe)
+			protected bool SkipConsonnes(bool firstSyllabe)
 			{
 				// Saute une ou plusieurs consonnes.
 				// Retourne true si doubles lettres.
@@ -613,7 +608,7 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 
-			public bool SearchDico(string[] dico, List<int> list)
+			protected bool SearchDico(string[] dico, List<int> list)
 			{
 				// Cherche un groupe de lettres dans un dictionnaire.
 				if (this.position == this.length)
@@ -717,7 +712,7 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 
-			public void Exception(List<int> list)
+			public void SearchException(List<int> list)
 			{
 				// Cherche dans les dictionnaires si le mot est une exception.
 				if (this.SearchDico(WordBreak.dico_ne, null))
@@ -729,7 +724,7 @@ namespace Epsitec.Common.Widgets
 				if (this.SearchDico(WordBreak.dico_nc, lb))
 				{
 					System.Diagnostics.Debug.Assert(lb.Count == 1);
-					this.banned = lb[0];
+					this.banned = lb[0]-this.start;
 					return;
 				}
 
@@ -746,7 +741,7 @@ namespace Epsitec.Common.Widgets
 			protected int					start;  // début effectif du mot
 			protected int					length;  // longueur du texte
 			protected int					position;  // position du pointeur
-			protected int					banned;  // position coupure interdite
+			protected int					banned;  // position césure interdite
 			protected int					root;  // longueur préposition
 		}
 
