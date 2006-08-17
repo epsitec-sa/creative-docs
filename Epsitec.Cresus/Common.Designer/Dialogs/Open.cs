@@ -85,6 +85,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonCancel = new Button(footer);
 				this.buttonCancel.PreferredWidth = 75;
 				this.buttonCancel.Text = Res.Strings.Dialog.Button.Cancel;
+				this.buttonCancel.ButtonStyle = ButtonStyle.DefaultCancel;
 				this.buttonCancel.Dock = DockStyle.Left;
 				this.buttonCancel.Margins = new Margins(0, 6, 0, 0);
 				this.buttonCancel.Clicked += new MessageEventHandler(this.HandleButtonCloseClicked);
