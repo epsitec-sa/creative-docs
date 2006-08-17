@@ -131,6 +131,11 @@
     <Compile Include="ColorCollection.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ITextBreakEngineFactory.cs" />
+    <Compile Include="TextBreak.cs" />
+    <Compile Include="ITextBreakEngine.cs" />
+    <Compile Include="TextBreakRun.cs" />
+    <Compile Include="TextBreakMode.cs" />
     <Compile Include="DirtyRegion.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -139,9 +144,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="NativeTextRenderer.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="TextBreak.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="TextStyle.cs">
