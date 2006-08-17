@@ -4,7 +4,8 @@ namespace Epsitec.Common.Support
 {
 	[TestFixture] public class IOTest
 	{
-		[Test] public void CheckBZip2Stream()
+		[Test]
+		public void CheckBZip2Stream()
 		{
 			byte[] buffer = System.Text.Encoding.UTF8.GetBytes (IOTest.SampleText);
 			
@@ -33,8 +34,9 @@ namespace Epsitec.Common.Support
 				Assert.AreEqual (buffer[i], read[i], string.Format ("offset {0}: {1} != {2}", i, (char) buffer[i], (char) read[i]));
 			}
 		}
-		
-		[Test] public void CheckZipStream()
+
+		[Test]
+		public void CheckZipStream()
 		{
 			byte[] buffer = System.Text.Encoding.UTF8.GetBytes (IOTest.SampleText);
 			
@@ -62,8 +64,9 @@ namespace Epsitec.Common.Support
 				Assert.AreEqual (buffer[i], read[i], string.Format ("offset {0}: {1} != {2}", i, (char) buffer[i], (char) read[i]));
 			}
 		}
-		
-		[Test] public void CheckDeflateStreamLevel1()
+
+		[Test]
+		public void CheckDeflateStreamLevel1()
 		{
 			byte[] buffer = System.Text.Encoding.UTF8.GetBytes (IOTest.SampleText);
 			
@@ -91,8 +94,9 @@ namespace Epsitec.Common.Support
 				Assert.AreEqual (buffer[i], read[i], string.Format ("offset {0}: {1} != {2}", i, (char) buffer[i], (char) read[i]));
 			}
 		}
-		
-		[Test] public void CheckDeflateStreamLevel9()
+
+		[Test]
+		public void CheckDeflateStreamLevel9()
 		{
 			byte[] buffer = System.Text.Encoding.UTF8.GetBytes (IOTest.SampleText);
 			
@@ -120,8 +124,9 @@ namespace Epsitec.Common.Support
 				Assert.AreEqual (buffer[i], read[i], string.Format ("offset {0}: {1} != {2}", i, (char) buffer[i], (char) read[i]));
 			}
 		}
-		
-		[Test] public void CheckGZipStream()
+
+		[Test]
+		public void CheckGZipStream()
 		{
 			byte[] buffer = System.Text.Encoding.UTF8.GetBytes (IOTest.SampleText);
 			
@@ -149,8 +154,9 @@ namespace Epsitec.Common.Support
 				Assert.AreEqual (buffer[i], read[i], string.Format ("offset {0}: {1} != {2}", i, (char) buffer[i], (char) read[i]));
 			}
 		}
-		
-		[Test] public void CheckChecksumCRC()
+
+		[Test]
+		public void CheckChecksumCRC()
 		{
 			IO.IChecksum checksum = IO.Checksum.CreateCrc32 ();
 			byte[] buffer = System.Text.Encoding.UTF8.GetBytes (IOTest.SampleText);
@@ -179,8 +185,9 @@ namespace Epsitec.Common.Support
 			
 			Assert.IsTrue (value_0 != value_1);
 		}
-		
-		[Test] public void CheckChecksumAdler()
+
+		[Test]
+		public void CheckChecksumAdler()
 		{
 			IO.IChecksum checksum = IO.Checksum.CreateAdler32 ();
 			byte[] buffer = System.Text.Encoding.UTF8.GetBytes (IOTest.SampleText);
@@ -209,8 +216,8 @@ namespace Epsitec.Common.Support
 			Assert.IsTrue (value_0 != value_1);
 		}
 		
-		
-		[Test] public void CheckDeflateCompressor()
+		[Test]
+		public void CheckDeflateCompressor()
 		{
 			byte[] data = new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 1, 2, 3, 1, 2, 3, 5, 6, 7, 8, 1, 2, 3, 3, 4, 5, 2, 3, 7, 8, 1, 2, 3, 1, 2, 3, 5, 6, 7, 8, 1, 2, 3 };
 			
@@ -220,6 +227,45 @@ namespace Epsitec.Common.Support
 			System.Console.Out.WriteLine ("Raw data length: {0}, compressed: {1}, decompressed: {2}", data.Length, compressed.Length, decompressed.Length);
 			
 			Assert.IsTrue (Types.Comparer.Equal (data, decompressed), "Original Data != Decompressed Data");
+		}
+
+		[Test]
+		public void CheckZip()
+		{
+			IO.ZipFile file = new IO.ZipFile ();
+
+			file.AddEntry ("file 1.txt", System.Text.Encoding.UTF8.GetBytes ("Hello, simple file.\r\nAt the root of the ZIP archive.\r\n"));
+			file.AddEntry ("images/i1.bin", new byte[] { 0x1, 0x2, 0x3, 0x4, 0x5, 0x1, 0x2, 0x3, 0x4, 0x5 });
+			file.AddEntry ("images/i2.bin", new byte[] { 0x1, 0x2, 0x3, 0x4, 0x5, 0x1, 0x2, 0x3, 0x4, 0x5 });
+			file.AddEntry ("file 2.txt", System.Text.Encoding.UTF8.GetBytes ("Other, simple file.\r\nAt the root of the ZIP archive.\r\n"));
+			file.AddEntry ("text/more.txt", System.Text.Encoding.UTF8.GetBytes ("More simple text in a subfolder in the ZIP archive.\r\n"));
+			file.AddDirectory ("empty folder");
+
+			file.SaveFile ("t1.zip");
+
+			IO.ZipFile read = new IO.ZipFile ();
+
+			read.LoadFile ("t1.zip");
+
+			string[] entryNames = Types.Collection.ToArray (read.EntryNames);
+			string[] directoryNames = Types.Collection.ToArray (read.DirectoryNames);
+
+			Assert.AreEqual (5, entryNames.Length);
+			Assert.AreEqual ("file 1.txt", entryNames[0]);
+			Assert.AreEqual ("file 2.txt", entryNames[1]);
+			Assert.AreEqual ("images/i1.bin", entryNames[2]);
+			Assert.AreEqual ("images/i2.bin", entryNames[3]);
+			Assert.AreEqual ("text/more.txt", entryNames[4]);
+
+			Assert.AreEqual (3, directoryNames.Length);
+			Assert.AreEqual ("empty folder/", directoryNames[0]);
+			Assert.AreEqual ("images/", directoryNames[1]);
+			Assert.AreEqual ("text/", directoryNames[2]);
+
+			read.RemoveEntry ("file 2.txt");
+			read.RemoveEntry ("images/i1.bin");
+
+			read.SaveFile ("t2.zip");
 		}
 		
 		private static string					SampleText
