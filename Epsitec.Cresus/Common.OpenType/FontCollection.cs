@@ -1,72 +1,409 @@
-//	Copyright © 2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2005-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
+
+using System.Collections.Generic;
 
 namespace Epsitec.Common.OpenType
 {
 	public delegate void FontIdentityCallback(FontIdentity fid);
 	
 	/// <summary>
-	/// La classe FontCollection gère une collection de fontes, donnant accès
-	/// aux fontes individuelles.
+	/// The <c>FontCollection</c> class manages the collection of available
+	/// fonts.
 	/// </summary>
-	public sealed class FontCollection : System.Collections.IEnumerable
+	public sealed class FontCollection : IEnumerable<FontIdentity>
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="T:FontCollection"/> class.
+		/// </summary>
 		public FontCollection()
 		{
-			this.font_hash = new System.Collections.Hashtable ();
-			this.full_hash = new System.Collections.Hashtable ();
-			this.fuid_hash = new System.Collections.Hashtable ();
-			this.full_list = new System.Collections.ArrayList ();
+			this.fontDict = new Dictionary<string, FontIdentity> ();
+			this.fullDict = new Dictionary<string, FontIdentity> ();
+			this.fuidDict = new Dictionary<string, FontIdentity> ();
+			this.fullList = new List<FontIdentity> ();
 		}
-		
-		
+
+
+		/// <summary>
+		/// Gets the <see cref="T:FontIdentity"/> with the specified name.
+		/// </summary>
+		/// <value>The <see cref="T:FontIdentity"/> or <c>null</c> if it does
+		/// not exist in the collection.</value>
 		public FontIdentity						this[string name]
 		{
 			get
 			{
-				return this.full_hash[name] as FontIdentity;
+				lock (this.localExclusion)
+				{
+					FontIdentity value;
+
+					if (this.fullDict.TryGetValue (name, out value))
+					{
+						return value;
+					}
+					else
+					{
+						return null;
+					}
+				}
 			}
 		}
-		
-		
-		public static bool						LoadTTC
+
+
+		/// <summary>
+		/// Gets or sets a value indicating whether to load True Type Collections
+		/// (TTC files).
+		/// </summary>
+		/// <value>
+		///		<c>true</c> if True Type Collections should be loaded; otherwise, <c>false</c>.
+		/// </value>
+		public static bool						LoadTrueTypeCollections
 		{
 			get
 			{
-				return FontCollection.load_ttc;
+				return FontCollection.loadTtc;
 			}
 			set
 			{
-				FontCollection.load_ttc = value;
+				FontCollection.loadTtc = value;
 			}
 		}
-		
+
+		/// <summary>
+		/// Gets the default font collection object.
+		/// </summary>
+		/// <value>The default font collection object.</value>
 		public static FontCollection			Default
 		{
 			get
 			{
-				if (FontCollection.default_collection == null)
+				if (FontCollection.defaultCollection == null)
 				{
-					FontCollection.default_collection = new FontCollection ();
+					lock (FontCollection.globalExclusion)
+					{
+						if (FontCollection.defaultCollection == null)
+						{
+							FontCollection.defaultCollection = new FontCollection ();
+						}
+					}
 				}
 				
-				return FontCollection.default_collection;
+				return FontCollection.defaultCollection;
 			}
 		}
-		
+
+
+		/// <summary>
+		/// Initializes this font collection object. If font identities have
+		/// already been loaded by <see cref="LoadFromCache()"/>.
+		/// </summary>
+		/// <returns><c>true</c> if the font collection has changed; otherwise, <c>false</c>.</returns>
 		public bool Initialize()
 		{
-			//	Initialise la table des fontes (FontIdentity) en complétant ce qui
-			//	est déjà connu (par ex. parce que chargé via un LoadFromCache).
-			//	Retourne 'true' s'il y a eu du changement.
-			
-			this.changes = 0;
-			
-			System.Collections.Hashtable delete = new System.Collections.Hashtable ();
-			
-			foreach (FontIdentity fid in this.full_list)
+			lock (this.localExclusion)
 			{
-				delete[fid.OsFontName] = fid;
+				return this.LockedInitialize ();
+			}
+		}
+
+		/// <summary>
+		/// Refreshes the cache.
+		/// </summary>
+		/// <returns><c>true</c> if the contents of the cache changed; otherwise, <c>false</c>.</returns>
+		public bool RefreshCache()
+		{
+			return this.RefreshCache (null);
+		}
+
+		/// <summary>
+		/// Refreshes the cache.
+		/// </summary>
+		/// <param name="callback">A callback called on every saved font identity.</param>
+		/// <returns><c>true</c> if the contents of the cache changed; otherwise, <c>false</c>.</returns>
+		public bool RefreshCache(FontIdentityCallback callback)
+		{
+			lock (this.localExclusion)
+			{
+				this.LockedLoadFromCache ();
+
+				if (this.LockedInitialize ())
+				{
+					return this.LockedSaveToCache (callback);
+				}
+				else
+				{
+					return false;
+				}
+			}
+		}
+
+		/// <summary>
+		/// Saves the current state of the font collection to the disk cache.
+		/// </summary>
+		/// <returns><c>true</c> if the cache could be written; otherwise, <c>false</c>.</returns>
+		public bool SaveToCache()
+		{
+			return this.SaveToCache (null);
+		}
+
+		/// <summary>
+		/// Saves the current state of the font collection to the disk cache.
+		/// </summary>
+		/// <param name="callback">A callback called on every saved font identity.</param>
+		/// <returns><c>true</c> if the cache could be written; otherwise, <c>false</c>.</returns>
+		public bool SaveToCache(FontIdentityCallback callback)
+		{
+			lock (this.localExclusion)
+			{
+				return this.LockedSaveToCache (callback);
+			}
+		}
+
+		/// <summary>
+		/// Loads the font identity information from the disk cache.
+		/// </summary>
+		public void LoadFromCache()
+		{
+			lock (this.localExclusion)
+			{
+				this.LockedLoadFromCache ();
+			}
+		}
+
+		/// <summary>
+		/// Enumerates the font families.
+		/// </summary>
+		/// <returns></returns>
+		public IEnumerable<string> GetFontFamilies()
+		{
+			lock (this.localExclusion)
+			{
+				return (string[]) this.families.Clone ();
+			}
+		}
+
+		/// <summary>
+		/// Gets the <see cref="T:FontIdentity"/> with the specified unique font
+		/// identifier.
+		/// </summary>
+		/// <returns>The <see cref="T:FontIdentity"/> or <c>null</c> if it does
+		/// not exist in the collection.</returns>
+		public FontIdentity FindFontByUniqueFontIdentifier(string fuid)
+		{
+			lock (this.localExclusion)
+			{
+				FontIdentity value;
+
+				if (this.fuidDict.TryGetValue (fuid, out value))
+				{
+					return value;
+				}
+				else
+				{
+					return null;
+				}
+			}
+		}
+
+		/// <summary>
+		/// Creates the font object based on the font face and font style.
+		/// </summary>
+		/// <param name="face">The font face.</param>
+		/// <param name="style">The font style.</param>
+		/// <returns>The font object or <c>null</c> if no font can be found.</returns>
+		public Font CreateFont(string face, string style)
+		{
+			lock (this.localExclusion)
+			{
+				Font font = this.LockedCreateFont (face, style);
+
+				if (font == null)
+				{
+					font = this.LockedCreateFont (face, string.Concat (style, " -Bold"));
+				}
+
+				if (font == null)
+				{
+					font = this.LockedCreateFont (face, string.Concat (style, " -Italic"));
+				}
+
+				if (font == null)
+				{
+					font = this.LockedCreateFont (face, string.Concat (style, " -Bold -Italic"));
+				}
+
+				if (font == null)
+				{
+					//	Zut. On n'a toujours rien trouvé de tel... Il faut absolument
+					//	trouver quelque chose :
+
+					foreach (FontIdentity identity in this.fullList)
+					{
+						if (identity.InvariantFaceName == face)
+						{
+							return this.CreateFont (identity);
+						}
+					}
+
+					//	Mince, cette fonte n'existe vraiment pas !
+
+					font = this.LockedCreateFont ("Arial", style);
+				}
+
+				if (font == null)
+				{
+					font = this.LockedCreateFont ("Arial", "Regular");
+				}
+
+				System.Diagnostics.Debug.Assert (font != null);
+
+				return font;
+			}
+		}
+
+		/// <summary>
+		/// Creates the font object based on the full font name.
+		/// </summary>
+		/// <param name="font">The full font name.</param>
+		/// <returns>The font object or <c>null</c> if no font can be found.</returns>
+		public Font CreateFont(string font)
+		{
+			return this.CreateFont (this[font]);
+		}
+
+		/// <summary>
+		/// Creates the font object based on the font identity.
+		/// </summary>
+		/// <param name="font">The font identity.</param>
+		/// <returns>The font object or <c>null</c> if no font can be found.</returns>
+		public Font CreateFont(FontIdentity font)
+		{
+			if ((font == null) ||
+				(font.FontData == null))
+			{
+				return null;
+			}
+
+			return new Font (font);
+		}
+
+		/// <summary>
+		/// Gets the style hash, which is a simplified version of the style
+		/// name.
+		/// </summary>
+		/// <param name="style">The raw style name.</param>
+		/// <returns>The hashed style name.</returns>
+		public static string GetStyleHash(string style)
+		{
+			//	Le "hash" d'un style de fonte correspond à une forme simplifiée
+			//	et triée des éléments constituant un nom de style. On évite des
+			//	problèmes de comparaison liés à des permutations, etc.
+
+			//	En plus, le nom de style peut contenir des éléments "*Xyz" où "x"
+			//	peut être "+", "-" ou "!" pour ajouter, supprimer ou inverser un
+			//	style tel que "Bold" ou "Italic".
+
+			if (string.IsNullOrEmpty (style))
+			{
+				return style;
+			}
+
+			string[] parts = style.Split (' ');
+
+			int bold   = 0;
+			int italic = 0;
+
+			List<string> list = new List<string> ();
+
+			foreach (string part in parts)
+			{
+				if (part.Length > 0)
+				{
+					switch (part)
+					{
+						case "Regular":
+							break;
+						case "Normal":
+							break;
+						case "Roman":
+							break;
+
+						case "Bold":
+							bold  = 1;
+							break;
+						case "+Bold":
+							bold += 1;
+							break;
+						case "-Bold":
+							bold -= 1;
+							break;
+
+						case "Italic":
+							italic  = 1;
+							break;
+						case "+Italic":
+							italic += 1;
+							break;
+						case "-Italic":
+							italic -= 1;
+							break;
+
+						case "!Bold":
+							bold   = (bold > 0)   ? bold-1   : bold+1;
+							break;
+						case "!Italic":
+							italic = (italic > 0) ? italic-1 : italic+1;
+							break;
+
+						default:
+							if (list.Contains (part) == false)
+							{
+								list.Add (part);
+							}
+							break;
+					}
+				}
+			}
+
+			if (bold > 0)
+			{
+				list.Add ("Bold");
+			}
+			if (italic > 0)
+			{
+				list.Add ("Italic");
+			}
+
+			list.Sort ();
+
+			return string.Join (" ", list.ToArray ());
+		}
+
+
+		#region IEnumerable Members
+		
+		public IEnumerator<FontIdentity> GetEnumerator()
+		{
+			return this.fullList.GetEnumerator ();
+		}
+		
+		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+		{
+			return this.fullList.GetEnumerator ();
+		}
+
+		#endregion
+
+		private bool LockedInitialize()
+		{
+			this.changes = 0;
+
+			Dictionary<string, FontIdentity> delete = new Dictionary<string, FontIdentity> ();
+			
+			foreach (FontIdentity fid in this.fullList)
+			{
+				delete[fid.InternalFontName] = fid;
 			}
 			
 			this.families = Platform.Neutral.GetFontFamilies ();
@@ -77,73 +414,72 @@ namespace Epsitec.Common.OpenType
 				
 				foreach (string style in styles)
 				{
-					string os_font_name = FontCollection.GetInternalOsFontName (family, style);
+					string internalFontName = FontCollection.GetInternalFontName (family, style);
 					
-					delete.Remove (os_font_name);
+					delete.Remove (internalFontName);
 					
-					if (this.font_hash.Contains (os_font_name))
+					if (this.fontDict.ContainsKey (internalFontName))
 					{
 						continue;
 					}
 					
-					byte[] data_name = Platform.Neutral.LoadFontDataNameTable (family, style);
+					byte[] dataName = Platform.Neutral.LoadFontDataNameTable (family, style);
 					
 					Table_name name_t = null;
 					object     record = Platform.Neutral.GetFontSystemDescription (family, style);
 					
-					string full_name = null;
-					string fuid_name = null;
+					string fullName = null;
+					string fuidName = null;
 					
-					if (data_name == null)
+					if (dataName == null)
 					{
-						//	La table des noms n'est pas disponible si c'est une fonte
-						//	de type TTC (TrueType Collection). On doit donc s'y prendre
-						//	autrement.
+						//	If the file is a TrueType Collection, there will be no available name
+						//	table. We will have to access it by other means.
 						
 						if ((record != null) &&
-							(FontCollection.LoadTTC))
+							(FontCollection.LoadTrueTypeCollections))
 						{
 							FontIdentity fid  = new FontIdentity (record, 0);
-							Table_ttcf   ttcf = fid.FontData.TrueTypeCollection;
+							Table_ttcf   ttcf = fid.FontData.TrueTypeCollectionTable;
 							
 							int    num  = ttcf.NumFonts;
 							byte[] data = ttcf.BaseData;
 							
 							for (int i = 0; i < num; i++)
 							{
-								FontData font_data = new FontData (data, i);
-								FontIdentity fid_n = new FontIdentity (font_data, record, i);
+								FontData  fontData = new FontData (data, i);
+								FontIdentity fid_n = new FontIdentity (fontData, record, i);
 								int  name_t_offset = fid_n.FontData["name"].Offset;
 								int  name_t_length = fid_n.FontData["name"].Length;
 								
 								name_t    = new Table_name (data, name_t_offset);
-								full_name = name_t.GetFullFontName ();
-								fuid_name = name_t.GetUniqueFontIdentifier ();
+								fullName = name_t.GetFullFontName ();
+								fuidName = name_t.GetUniqueFontIdentifier ();
 								
 								fid_n.DefineTableName (name_t, name_t_length);
 								fid_n.DefineSystemFontFamilyAndStyle (family, style);
 								
-								this.Add (full_name, fuid_name, fid_n);
+								this.Add (fullName, fuidName, fid_n);
 							}
 						}
 					}
 					else
 					{
-						//	Fonte normale, simple à gérer :
+						//	Standard font file, easy to process...
 						
-						name_t    = new Table_name (data_name, 0);
-						full_name = name_t.GetFullFontName ();
-						fuid_name = name_t.GetUniqueFontIdentifier ();
+						name_t   = new Table_name (dataName, 0);
+						fullName = name_t.GetFullFontName ();
+						fuidName = name_t.GetUniqueFontIdentifier ();
 						
 						if ((record != null) &&
-							(full_name != null) &&
-							(this.full_hash.ContainsKey (full_name) == false))
+							(fullName != null) &&
+							(this.fullDict.ContainsKey (fullName) == false))
 						{
-							FontIdentity fid = new FontIdentity (name_t, data_name.Length, record);
+							FontIdentity fid = new FontIdentity (name_t, dataName.Length, record);
 							
 							fid.DefineSystemFontFamilyAndStyle (family, style);
 							
-							this.Add (full_name, fuid_name, fid);
+							this.Add (fullName, fuidName, fid);
 						}
 					}
 				}
@@ -158,52 +494,22 @@ namespace Epsitec.Common.OpenType
 			
 			return (this.changes > 0);
 		}
-		
-		
-		public bool RefreshCache()
+
+		private bool LockedSaveToCache(FontIdentityCallback callback)
 		{
-			return this.RefreshCache (null);
-		}
-		
-		public bool RefreshCache(FontIdentityCallback callback)
-		{
-			//	Retourne true si le contenu du cache a été modifié.
-			
-			System.Diagnostics.Debug.WriteLine ("Loading font collection from cache.");
-			
-			this.LoadFromCache ();
-			
-			System.Diagnostics.Debug.WriteLine ("Done.");
-			
-			if (this.Initialize ())
-			{
-				System.Diagnostics.Debug.WriteLine ("Updating cache on disk.");
-				
-				return this.SaveToCache (callback);
-			}
-			
-			return false;
-		}
-		
-		public bool SaveToCache()
-		{
-			return this.SaveToCache (null);
-		}
-		
-		public bool SaveToCache(FontIdentityCallback callback)
-		{
-			string app_data_path = System.Environment.GetFolderPath (System.Environment.SpecialFolder.ApplicationData);
-			string cache_dir_path = System.IO.Path.Combine (app_data_path, "Epsitec Cache");
+			string appDataPath  = System.Environment.GetFolderPath (System.Environment.SpecialFolder.ApplicationData);
+			string cacheDirPath = System.IO.Path.Combine (appDataPath, FontCollection.CacheFolderName);
 			
 			try
 			{
-				System.IO.Directory.CreateDirectory (cache_dir_path);
+				System.IO.Directory.CreateDirectory (cacheDirPath);
 			}
 			catch
 			{
+				//	Never mind if we fail...
 			}
 			
-			string path = System.IO.Path.Combine (cache_dir_path, FontCollection.CacheFileName);
+			string path = System.IO.Path.Combine (cacheDirPath, FontCollection.CacheFileName);
 			
 			try
 			{
@@ -211,24 +517,25 @@ namespace Epsitec.Common.OpenType
 			}
 			catch
 			{
+				//	Never mind if we fail...
 			}
 			
 			try
 			{
 				using (System.IO.FileStream file = new System.IO.FileStream (path, System.IO.FileMode.CreateNew, System.IO.FileAccess.Write))
 				{
-					using (System.IO.Stream compressor = IO.Compression.CreateDeflateStream(file, 1))
+					using (System.IO.Stream compressor = Epsitec.Common.IO.Compression.CreateDeflateStream (file, 1))
 					{
-						foreach (FontIdentity fid in this.full_list)
+						foreach (FontIdentity fid in this.fullList)
 						{
 							if (callback != null)
 							{
 								callback (fid);
 							}
-						
+
 							FontIdentity.Serialize (compressor, fid);
 						}
-						
+
 						compressor.Flush ();
 					}
 				}
@@ -240,19 +547,19 @@ namespace Epsitec.Common.OpenType
 			
 			return true;
 		}
-		
-		public void LoadFromCache()
+
+		private void LockedLoadFromCache()
 		{
-			string app_data_path  = System.Environment.GetFolderPath (System.Environment.SpecialFolder.ApplicationData);
-			string cache_dir_path = System.IO.Path.Combine (app_data_path, "Epsitec Cache");
-			string path           = System.IO.Path.Combine (cache_dir_path, FontCollection.CacheFileName);
+			string appDataPath  = System.Environment.GetFolderPath (System.Environment.SpecialFolder.ApplicationData);
+			string cacheDirPath = System.IO.Path.Combine (appDataPath, FontCollection.CacheFolderName);
+			string path         = System.IO.Path.Combine (cacheDirPath, FontCollection.CacheFileName);
 			
 			try
 			{
 				using (System.IO.FileStream file = new System.IO.FileStream (path, System.IO.FileMode.Open, System.IO.FileAccess.Read))
 				{
 					string name;
-					using (System.IO.Stream decompressor = IO.Decompression.CreateStream (file, out name))
+					using (System.IO.Stream decompressor = Epsitec.Common.IO.Decompression.CreateStream (file, out name))
 					{
 						FontIdentity fid = FontIdentity.Deserialize (decompressor);
 						
@@ -266,73 +573,13 @@ namespace Epsitec.Common.OpenType
 			}
 			catch
 			{
+				//	Never mind...
 			}
 			
 			this.RefreshFullList ();
 		}
-		
-		
-		public string[] GetFontFamilies()
-		{
-			return (string[]) this.families.Clone ();
-		}
-		
-		
-		public FontIdentity FindFontByUniqueFontIdentifier(string fuid)
-		{
-			return this.fuid_hash[fuid] as FontIdentity;
-		}
-		
-		
-		public Font CreateFont(string face, string style)
-		{
-			Font font = this.InternalCreateFont (face, style);
-			
-			if (font == null)
-			{
-				font = this.InternalCreateFont (face, string.Concat (style, " -Bold"));
-			}
-			
-			if (font == null)
-			{
-				font = this.InternalCreateFont (face, string.Concat (style, " -Italic"));
-			}
-			
-			if (font == null)
-			{
-				font = this.InternalCreateFont (face, string.Concat (style, " -Bold -Italic"));
-			}
-			
-			if (font == null)
-			{
-				//	Zut. On n'a toujours rien trouvé de tel... Il faut absolument
-				//	trouver quelque chose :
-				
-				foreach (FontIdentity identity in this.full_list)
-				{
-					if (identity.InvariantFaceName == face)
-					{
-						return this.CreateFont (identity);
-					}
-				}
-				
-				//	Mince, cette fonte n'existe vraiment pas !
-				
-				font = this.InternalCreateFont ("Arial", style);
-			}
-			
-			if (font == null)
-			{
-				font = this.InternalCreateFont ("Arial", "Regular");
-			}
-			
-			System.Diagnostics.Debug.Assert (font != null);
-			
-			return font;
-		}
-		
-		
-		internal Font InternalCreateFont(string face, string style)
+
+		private Font LockedCreateFont(string face, string style)
 		{
 			//	Pour trouver la fonte correspondante, on se base sur le "hash"
 			//	du nom de style, ce qui permet d'être plus souple dans le cas
@@ -340,7 +587,7 @@ namespace Epsitec.Common.OpenType
 			
 			string hash = FontCollection.GetStyleHash (style);
 			
-			foreach (FontIdentity identity in this.full_list)
+			foreach (FontIdentity identity in this.fullList)
 			{
 				if ((identity.InvariantFaceName == face) &&
 					(identity.InvariantStyleHash == hash))
@@ -352,162 +599,82 @@ namespace Epsitec.Common.OpenType
 			return null;
 		}
 		
-		
-		public Font CreateFont(string font)
+		private void Add(string fullName, string fuidName, FontIdentity fid)
 		{
-			return this.CreateFont (this[font]);
-		}
-			
-		public Font CreateFont(FontIdentity font)
-		{
-			if ((font == null) ||
-				(font.FontData == null))
+			if (this.fullDict.ContainsKey (fullName) == false)
 			{
-				return null;
-			}
-			
-			return new Font (font);
-		}
-		
-		
-		#region IEnumerable Members
-		public System.Collections.IEnumerator GetEnumerator()
-		{
-			return this.full_list.GetEnumerator ();
-		}
-		#endregion
-		
-		public static string GetStyleHash(string style)
-		{
-			//	Le "hash" d'un style de fonte correspond à une forme simplifiée
-			//	et triée des éléments constituant un nom de style. On évite des
-			//	problèmes de comparaison liés à des permutations, etc.
-
-			//	En plus, le nom de style peut contenir des éléments "*Xyz" où "x"
-			//	peut être "+", "-" ou "!" pour ajouter, supprimer ou inverser un
-			//	style tel que "Bold" ou "Italic".
-			
-			string[] parts = style.Split (' ');
-			
-			int bold   = 0;
-			int italic = 0;
-			
-			System.Collections.ArrayList list = new System.Collections.ArrayList ();
-			
-			foreach (string part in parts)
-			{
-				if (part.Length > 0)
-				{
-					switch (part)
-					{
-						case "Regular":	break;
-						case "Normal":	break;
-						case "Roman":	break;
-						
-						case "Bold":	bold  = 1;	break;
-						case "+Bold":	bold += 1;	break;
-						case "-Bold":	bold -= 1;	break;
-						
-						case "Italic":	italic  = 1; break;
-						case "+Italic":	italic += 1; break;
-						case "-Italic":	italic -= 1; break;
-						
-						case "!Bold":	bold   = (bold > 0)   ? bold-1   : bold+1;	 break;
-						case "!Italic":	italic = (italic > 0) ? italic-1 : italic+1; break;
-						
-						default:
-							if (list.Contains (part) == false)
-							{
-								list.Add (part);
-							}
-							break;
-					}
-				}
-			}
-			
-			if (bold > 0)
-			{
-				list.Add ("Bold");
-			}
-			if (italic > 0)
-			{
-				list.Add ("Italic");
-			}
-			
-			list.Sort ();
-			
-			return string.Join (" ", (string[]) list.ToArray (typeof (string)));
-		}
-		
-		public static string GetInternalOsFontName(string family, string style)
-		{
-			return string.Concat (family, "/", style);
-		}
-		
-		
-		private void Add(string full_name, string fuid_name, FontIdentity fid)
-		{
-			if (this.full_hash.ContainsKey (full_name) == false)
-			{
-				string font_name = fid.OsFontName;
+				string fontName = fid.InternalFontName;
 				
-				this.font_hash[font_name] = fid;
-				this.full_hash[full_name] = fid;
-				this.fuid_hash[fuid_name] = fid;
+				this.fontDict[fontName] = fid;
+				this.fullDict[fullName] = fid;
+				this.fuidDict[fuidName] = fid;
 				this.changes++;
 			}
 		}
 		
 		private void Remove(FontIdentity fid)
 		{
-			this.font_hash.Remove (fid.OsFontName);
-			this.full_hash.Remove (fid.FullName);
-			this.fuid_hash.Remove (fid.UniqueFontId);
+			this.fontDict.Remove (fid.InternalFontName);
+			this.fullDict.Remove (fid.FullName);
+			this.fuidDict.Remove (fid.UniqueFontId);
+			
 			this.changes++;
 		}
 		
 		private void RefreshFullList()
 		{
-			this.full_list.Clear ();
+			this.fullList.Clear ();
 			
-			foreach (string name in this.full_hash.Keys)
+			foreach (string name in this.fullDict.Keys)
 			{
-				this.full_list.Add (this[name]);
+				this.fullList.Add (this[name]);
 			}
+
+			//	For every font identity, find out how many other font identities
+			//	belong to the same font face :
+
+			Dictionary<string, int> faceCount = new Dictionary<string, int> ();
 			
-			System.Collections.Hashtable hash = new System.Collections.Hashtable ();
-			
-			foreach (FontIdentity fid in this.full_hash.Values)
+			foreach (FontIdentity fid in this.fullDict.Values)
 			{
 				string face = fid.InvariantFaceName;
 				
-				if (hash.Contains (face))
+				if (faceCount.ContainsKey (face))
 				{
-					hash[face] = (int) hash[face] + 1;
+					faceCount[face] = faceCount[face] + 1;
 				}
 				else
 				{
-					hash[face] = 1;
+					faceCount[face] = 1;
 				}
 			}
 			
-			foreach (FontIdentity fid in this.full_hash.Values)
+			foreach (FontIdentity fid in this.fullDict.Values)
 			{
-				fid.DefineFontStyleCount ((int) hash[fid.InvariantFaceName]);
+				fid.DefineFontStyleCount (faceCount[fid.InvariantFaceName]);
 			}
 			
-			this.full_list.Sort (FontIdentity.Comparer);
+			this.fullList.Sort (FontIdentity.Comparer);
+		}
+
+		internal static string GetInternalFontName(string family, string style)
+		{
+			return string.Concat (family, "/", style);
 		}
 		
 		
-		private static bool						load_ttc;
-		private static FontCollection			default_collection;
-		private static string					CacheFileName = "OpenType.FontCollection.1.5.data";
+		private static object					globalExclusion = new object ();
+		private static bool						loadTtc;
+		private static FontCollection			defaultCollection;
 		
-		private System.Collections.Hashtable	font_hash;
-		private System.Collections.Hashtable	full_hash;
-		private System.Collections.Hashtable	fuid_hash;
-		private System.Collections.ArrayList	full_list;
+		private static string CacheFolderName	= "Epsitec Cache";
+		private static string CacheFileName		= "OpenType.FontCollection.2.0.data";
+		
+		private object							localExclusion = new object ();
+		private Dictionary<string, FontIdentity> fontDict;
+		private Dictionary<string, FontIdentity> fullDict;
+		private Dictionary<string, FontIdentity> fuidDict;
+		private List<FontIdentity>				fullList;
 		private string[]						families;
 		private int								changes;
 	}

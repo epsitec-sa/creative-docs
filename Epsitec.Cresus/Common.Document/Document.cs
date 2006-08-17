@@ -909,7 +909,7 @@ namespace Epsitec.Common.Document
 			}
 			
 			this.containOldText = false;
-			Font.FaceInfo[] fonts = Font.Faces;
+			FontFaceInfo[] fonts = Font.Faces;
 			foreach ( Objects.Abstract obj in this.Deep(null) )
 			{
 				obj.ReadFinalize();

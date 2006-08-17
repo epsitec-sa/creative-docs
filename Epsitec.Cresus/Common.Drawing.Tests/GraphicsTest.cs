@@ -350,7 +350,7 @@ namespace Epsitec.Common.Drawing
 			
 			while (line_width < width)
 			{
-				Font.ClassInfo[] text_infos;
+				FontClassInfo[] text_infos;
 				double           text_width;
 				double           text_elasticity;
 				

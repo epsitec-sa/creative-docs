@@ -1,6 +1,8 @@
 //	Copyright © 2005-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
+using System.Collections.Generic;
+
 namespace Epsitec.Common.Text
 {
 	/// <summary>
@@ -26,8 +28,8 @@ namespace Epsitec.Common.Text
 		public OpenType.FontName[] GetFontUse()
 		{
 			PropertyWrapper[] wrappers = this.GetPropertyUsage (Properties.WellKnownType.Font);
-			
-			System.Collections.Hashtable hash = new System.Collections.Hashtable ();
+
+			List<OpenType.FontName> list = new List<OpenType.FontName> ();
 			
 			foreach (PropertyWrapper wrapper in wrappers)
 			{
@@ -38,19 +40,15 @@ namespace Epsitec.Common.Text
 				
 				OpenType.FontName name = new OpenType.FontName (font_face, font_style);
 				
-				if (hash.Contains (name) == false)
+				if (list.Contains (name) == false)
 				{
-					hash[name] = name;
+					list.Add (name);
 				}
 			}
+
+			list.Sort ();
 			
-			OpenType.FontName[] names = new OpenType.FontName[hash.Count];
-			
-			hash.Keys.CopyTo (names, 0);
-			
-			System.Array.Sort (names);
-			
-			return names;
+			return list.ToArray ();
 		}
 		
 		public string[] GetImageUse()

@@ -74,6 +74,8 @@
     <Reference Include="System">
       <Name>System</Name>
     </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
     <ProjectReference Include="..\Common.Debug\Common.Debug.csproj">
       <Name>Common.Debug</Name>
       <Project>{AF58270B-4B5C-49F7-81D8-723CFF122F2C}</Project>
@@ -128,6 +130,7 @@
     <Compile Include="Platform\Win32.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="FontSizeInfo.cs" />
     <Compile Include="Support.cs">
       <SubType>Code</SubType>
     </Compile>

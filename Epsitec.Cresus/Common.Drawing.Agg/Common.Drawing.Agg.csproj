@@ -131,6 +131,8 @@
     <Compile Include="ContentAlignment.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="GlyphClass.cs" />
+    <Compile Include="FontClassInfo.cs" />
     <Compile Include="DashedPath.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -140,6 +142,7 @@
     <Compile Include="Font.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="FontFaceInfo.cs" />
     <Compile Include="GlyphPaintStyle.cs">
       <SubType>Code</SubType>
     </Compile>

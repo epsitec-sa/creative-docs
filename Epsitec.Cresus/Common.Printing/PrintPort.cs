@@ -495,7 +495,9 @@ namespace Epsitec.Common.Printing
 			{
 				if (use_platform_font)
 				{
+#if false
 					os_font = font.GetOsFont (size);
+#endif
 				}
 			}
 			catch
@@ -516,7 +518,7 @@ namespace Epsitec.Common.Printing
 				double       ox   = 0;
 				
 				double[] glyph_x;
-				int[]    glyph;
+				ushort[] glyph;
 				byte[]   glyph_n;
 				
 				//	On n'a pas réussi à obtenir la fonte système pour représenter le texte, alors
@@ -612,15 +614,15 @@ namespace Epsitec.Common.Printing
 			return width;
 		}
 		
-		public double PaintText(double x, double y, string text, Drawing.Font font, double size, Drawing.Font.ClassInfo[] infos)
+		public double PaintText(double x, double y, string text, Drawing.Font font, double size, Drawing.FontClassInfo[] infos)
 		{
 			//	TODO: déplacer ce code dans la librairie AGG; faire en sorte que ça marche aussi
-			//	si ClassId != ClassId.Space...
+			//	si GlyphClass != GlyphClass.Space...
 			
 			for (int i = 0; i < infos.Length; i++)
 			{
 				if ((infos[i].Scale != 1.00) &&
-					(infos[i].ClassId == Drawing.Font.ClassId.Space))
+					(infos[i].GlyphClass == Drawing.GlyphClass.Space))
 				{
 					string[] texts = text.Split (new char[] { ' ', (char) 160 });
 					double space_w = font.GetCharAdvance (' ') * size * infos[i].Scale;

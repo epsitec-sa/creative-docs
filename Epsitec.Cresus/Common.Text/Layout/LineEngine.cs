@@ -412,7 +412,7 @@ advance_next:
 					break_penalty = 0;
 				}
 				
-				ulong    hyphen = scratch.Font.GetHyphen ();
+				ulong    hyphen = scratch.Font.HyphenChar;
 				ushort[] glyphs;
 				byte[]   attr;
 				
@@ -612,7 +612,7 @@ advance_next:
 				//	correctement des langues comme le suédois ou l'ancien allemand
 				//	qui peuvent provoquer le dédoublement de certains caractères) :
 				
-				ulong[] temp = this.GetHyphenatedText (text, offset, length, font.GetHyphen ());
+				ulong[] temp = this.GetHyphenatedText (text, offset, length, font.HyphenChar);
 				int     end  = temp.Length - 1;
 				extra_glyphs = 1;
 				
@@ -788,7 +788,7 @@ advance_next:
 				//	correctement des langues comme le suédois ou l'ancien allemand
 				//	qui peuvent provoquer le dédoublement de certains caractères) :
 				
-				ulong[] temp = this.GetHyphenatedText (text, offset, length, font.GetHyphen ());
+				ulong[] temp = this.GetHyphenatedText (text, offset, length, font.HyphenChar);
 				
 				profile.Add (context, font, font_size, temp, 0, length + 1, font_advance);
 			}

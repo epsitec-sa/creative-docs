@@ -1,23 +1,23 @@
-//	Copyright © 2003-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
-using System.Runtime.InteropServices;
+using System.Collections.Generic;
 
 namespace Epsitec.Common.Drawing
 {
 	public sealed class Font : System.IDisposable
 	{
 		#region Private constructors
-		Font(System.IntPtr handle)
+		Font(OpenType.FontIdentity fontIdentity)
 		{
-			System.Diagnostics.Debug.Assert (handle != System.IntPtr.Zero);
-			this.handle = handle;
+			this.open_type_font = Font.font_collection.CreateFont (fontIdentity);
 		}
 		
-		Font(System.IntPtr handle, string synthetic_style, SyntheticFontMode synthetic_mode) : this (handle)
+		Font(Font baseFont, string synthetic_style, SyntheticFontMode synthetic_mode)
 		{
-			this.synthetic_style = synthetic_style;
-			this.synthetic_mode  = synthetic_mode;
+			this.open_type_font  = baseFont.open_type_font;
+		    this.synthetic_style = synthetic_style;
+		    this.synthetic_mode  = synthetic_mode;
 		}
 
 		~Font()
@@ -39,10 +39,16 @@ namespace Epsitec.Common.Drawing
 			System.Diagnostics.Debug.Assert (result != System.IntPtr.Zero);
 			
 			System.Diagnostics.Debug.WriteLine ("AntiGrain.Win32.dll loaded successfully");
-			
-			Font.Initialise ();
+
+			Agg.Library.Initialize ();
+
+			Font.SetupFonts ();
 		}
 		#endregion
+
+		public static void Initialize()
+		{
+		}
 		
 		#region IDisposable members
 		public void Dispose()
@@ -54,22 +60,35 @@ namespace Epsitec.Common.Drawing
 		
 		public System.IntPtr					Handle
 		{
-			get { return this.handle; }
+			get
+			{
+				if (this.handle == System.IntPtr.Zero)
+				{
+					byte[] data = this.OpenTypeFont.FontData.Data;
+					int    size = data.Length;
+
+					System.IntPtr osHandle = this.OpenTypeFont.GetFontHandleAtEmSize ();
+					
+					this.handle = AntiGrain.Font.CreateFaceHandle (data, size, osHandle);
+				}
+				
+				return this.handle;
+			}
 		}
 		
 		public string							FaceName
 		{
 			get
 			{
-				string face  = AntiGrain.Font.Face.GetName (this.handle, (int) NameId.Face);
-				string style = this.StyleName;
-				
-				if (face.EndsWith (style))
-				{
-					face = face.Substring (0, face.Length - style.Length).Trim ();
-				}
-				
-				return face;
+				return this.OpenTypeFont.FontIdentity.InvariantFaceName;
+			}
+		}
+
+		public FontFaceInfo						FaceInfo
+		{
+			get
+			{
+				return this.face_info;
 			}
 		}
 		
@@ -77,12 +96,7 @@ namespace Epsitec.Common.Drawing
 		{
 			get
 			{
-				if (this.synthetic_style == null)
-				{
-					return AntiGrain.Font.Face.GetName (this.handle, (int) NameId.Style);
-				}
-				
-				return this.synthetic_style;
+				return this.synthetic_style ?? this.OpenTypeFont.FontIdentity.InvariantStyleName;
 			}
 		}
 		
@@ -90,12 +104,7 @@ namespace Epsitec.Common.Drawing
 		{
 			get
 			{
-				if (this.StyleName.IndexOf ("Bold") > -1)
-				{
-					return true;
-				}
-				
-				return false;
+				return (this.StyleName.IndexOf ("Bold") > -1);
 			}
 		}
 		
@@ -103,13 +112,8 @@ namespace Epsitec.Common.Drawing
 		{
 			get
 			{
-				if ((this.StyleName.IndexOf ("Italic") > -1) ||
-					(this.StyleName.IndexOf ("Oblique") > -1))
-				{
-					return true;
-				}
-                
-				return false;
+				return (this.StyleName.IndexOf ("Italic") > -1)
+					|| (this.StyleName.IndexOf ("Oblique") > -1);
 			}
 		}
 		
@@ -123,36 +127,36 @@ namespace Epsitec.Common.Drawing
 					case "Normal":
 					case "Regular":
 						return true;
+					
+					default:
+						return false;
 				}
-				return false;
 			}
 		}
 		
-		public bool								IsSingleFontInFace
+		public string							LocaleStyleName
 		{
 			get
 			{
-				FaceInfo info = this.GetFaceInfo ();
-				
-				return info.Count == 1;
+				return this.OpenTypeFont.FontIdentity.LocaleStyleName;
 			}
-		}
-		
-		public string							LocalStyleName
-		{
-			get { return AntiGrain.Font.Face.GetName (this.handle, (int) NameId.StyleUserLocale); }
 		}
 		
 		public string							OpticalName
 		{
-			get { return AntiGrain.Font.Face.GetName (this.handle, (int) NameId.Optical); }
+			get
+			{
+				return "";
+				//	TODO: handle optical name
+//				return this.OpenTypeFont.FontIdentity.InvariantOpticalName;
+			}
 		}
 		
 		public string							UniqueName
 		{
 			get
 			{
-				return AntiGrain.Font.Face.GetName (this.handle, (int) NameId.Unique);
+				return this.OpenTypeFont.FontIdentity.UniqueFontId;
 			}
 		}
 		
@@ -186,27 +190,46 @@ namespace Epsitec.Common.Drawing
 		
 		public double							Ascender
 		{
-			get { return AntiGrain.Font.Face.GetMetrics (this.handle, 1); }
+			get
+			{
+				return this.OpenTypeFont.GetAscender (1.0);
+			}
 		}
 		
 		public double							Descender
 		{
-			get { return AntiGrain.Font.Face.GetMetrics (this.handle, 2); }
+			get
+			{
+				return this.OpenTypeFont.GetDescender (1.0);
+			}
 		}
 		
 		public double							LineHeight
 		{
-			get { return AntiGrain.Font.Face.GetMetrics (this.handle, 3); }
+			get
+			{
+				double ascender  = this.OpenTypeFont.GetAscender (1.0);
+				double descender = this.OpenTypeFont.GetDescender (1.0);
+				double lineGap   = this.OpenTypeFont.GetLineGap (1.0);
+
+				return ascender-descender+lineGap;
+			}
 		}
 		
 		public bool								IsSynthetic
 		{
-			get { return this.synthetic_mode != SyntheticFontMode.None; }
+			get
+			{
+				return this.synthetic_mode != SyntheticFontMode.None;
+			}
 		}
 		
 		public SyntheticFontMode				SyntheticFontMode
 		{
-			get { return this.synthetic_mode; }
+			get
+			{
+				return this.synthetic_mode;
+			}
 		}
 		
 		public Transform						SyntheticTransform
@@ -231,8 +254,8 @@ namespace Epsitec.Common.Drawing
 				{
 					return 90 - Font.DefaultObliqueAngle;
 				}
-				
-				return AntiGrain.Font.Face.GetCaretSlope (this.handle);
+
+				return this.OpenTypeFont.GetCaretAngleDeg ();
 			}
 		}
 		
@@ -240,64 +263,33 @@ namespace Epsitec.Common.Drawing
 		{
 			get
 			{
-				if (this.open_type_font_ok == false)
-				{
-					if (Font.open_type_font_collection == null)
-					{
-						Font.open_type_font_collection = OpenType.FontCollection.Default;
-						Font.open_type_font_collection.Initialize ();
-					}
-					
-					OpenType.FontIdentity id = Font.open_type_font_collection.FindFontByUniqueFontIdentifier (this.UniqueName);
-					
-					this.open_type_font_ok = true;
-					this.open_type_font = id == null ? null : new OpenType.Font (id);
-				}
-				
 				return this.open_type_font;
 			}
 		}
 		
 		
-		public Font.FaceInfo GetFaceInfo()
+		public ushort GetGlyphIndex(int unicode)
 		{
-			Font.SetupFonts ();
-			return this.face_info;
+			return this.OpenTypeFont.GetGlyphIndex (unicode);
 		}
 		
-		
-		public int GetGlyphIndex(int unicode)
+		public double GetGlyphAdvance(ushort glyph)
 		{
-			try
-			{
-				//				OpenType.Font font = this.OpenTypeFont;
-				//				return font == null ? 0 : (int) font.GetGlyphIndex (unicode);
-				return AntiGrain.Font.Face.GetGlyphIndex (this.handle, unicode);
-			}
-			catch (System.NullReferenceException ex)
-			{
-				System.Diagnostics.Debug.WriteLine (string.Format ("Exception in GetGlyphIndex for font {0}:", this.FullName));
-				System.Diagnostics.Debug.WriteLine (ex.Message);
-				throw;
-			}
-		}
-		
-		public double GetGlyphAdvance(int glyph)
-		{
-			return AntiGrain.Font.Face.GetGlyphAdvance (this.handle, glyph);
+			return this.OpenTypeFont.GetGlyphWidth (glyph, 1.0);
 		}
 		
 		public double GetCharAdvance(int unicode)
 		{
-			return AntiGrain.Font.Face.GetCharAdvance (this.handle, unicode);
+			return this.GetGlyphAdvance (this.GetGlyphIndex (unicode));
 		}
 		
 		public double GetTextAdvance(string text)
 		{
-			return AntiGrain.Font.Face.GetTextAdvance (this.handle, text, 0);
+			ushort[] glyphs = this.OpenTypeFont.GenerateGlyphs (text);
+			return this.OpenTypeFont.GetTotalWidth (glyphs, 1.0);
 		}
 		
-		public Rectangle GetGlyphBounds(int glyph, double size)
+		public Rectangle GetGlyphBounds(ushort glyph, double size)
 		{
 			Drawing.Rectangle rect = this.GetGlyphBounds (glyph);
 			
@@ -306,34 +298,27 @@ namespace Epsitec.Common.Drawing
 			return rect;
 		}
 		
-		public Rectangle GetGlyphBounds(int glyph)
+		public Rectangle GetGlyphBounds(ushort glyph)
 		{
 			if (this.synthetic_mode == SyntheticFontMode.Oblique)
 			{
-				Path path = new Path ();
-				path.Append (this, glyph, this.SyntheticTransform);
-				
-				return path.ComputeBounds ();
+				using (Path path = new Path ())
+				{
+					path.Append (this, glyph, this.SyntheticTransform);
+					return path.ComputeBounds ();
+				}
 			}
 			
 			double x1, y1, x2, y2;
-			AntiGrain.Font.Face.GetGlyphBounds (this.handle, glyph, out x1, out y1, out x2, out y2);
+
+			this.OpenTypeFont.GetGlyphBounds (glyph, 1.0, out x1, out x2, out y1, out y2);
+			
 			return new Rectangle (x1, y1, x2 - x1, y2 - y1);
 		}
 		
 		public Rectangle GetCharBounds(int unicode)
 		{
-			if (this.synthetic_mode == SyntheticFontMode.Oblique)
-			{
-				Path path = new Path ();
-				path.Append (this, this.GetGlyphIndex (unicode), this.SyntheticTransform);
-				
-				return path.ComputeBounds ();
-			}
-			
-			double x1, y1, x2, y2;
-			AntiGrain.Font.Face.GetCharBounds (this.handle, unicode, out x1, out y1, out x2, out y2);
-			return new Rectangle (x1, y1, x2 - x1, y2 - y1);
+			return this.GetGlyphBounds (this.GetGlyphIndex (unicode));
 		}
 		
 		public Rectangle GetTextBounds(string text)
@@ -345,79 +330,119 @@ namespace Epsitec.Common.Drawing
 				
 				foreach (char unicode in text)
 				{
-					int glyph = this.GetGlyphIndex (unicode);
+					ushort glyph = this.GetGlyphIndex (unicode);
 					path.Append (this, glyph, transform);
 					transform.TX = transform.TX + this.GetGlyphAdvance (glyph);
 				}
 				
 				return path.ComputeBounds ();
 			}
+
+			ushort[] glyphs = this.OpenTypeFont.GenerateGlyphs (text);
+			double[] temp_x = new double[glyphs.Length];
+
+			if (glyphs.Length == 0)
+			{
+				return Rectangle.Empty;
+			}
 			
+			this.OpenTypeFont.GetPositions (glyphs, 1.0, 0.0, temp_x);
+
 			double x1, y1, x2, y2;
-			AntiGrain.Font.Face.GetTextBounds (this.handle, text, 0, out x1, out y1, out x2, out y2);
+			double xmin, ymin, xmax, ymax;
+
+			this.OpenTypeFont.GetGlyphBounds (glyphs[0], 1.0, out x1, out x2, out y1, out y2);
 			
-			return new Rectangle (x1, y1, x2 - x1, y2 - y1);
+			xmin = x1;
+			ymin = y1;
+			xmax = x2;
+			ymax = y2;
+
+			for (int i = 1; i < glyphs.Length; i++)
+			{
+				this.OpenTypeFont.GetGlyphBounds (glyphs[i], 1.0, out x1, out x2, out y1, out y2);
+				
+				x1 += temp_x[i];
+				x2 += temp_x[i];
+
+				xmin = System.Math.Min (xmin, x1);
+				xmax = System.Math.Max (xmax, x2);
+				ymin = System.Math.Min (ymin, y1);
+				ymax = System.Math.Max (ymax, y2);
+			}
+			
+			return new Rectangle (xmin, ymin, xmax - xmin, ymax - ymin);
 		}
 		
 		
-		public void GetTextCharEndX(string text, out double[] x_array)
+		public void GetTextCharEndX(string text, out double[] xPos)
 		{
-			int n = text.Length;
+			int   n        = text.Length;
+			int[] glyphMap = new int[n];
 			
-			x_array = new double[n];
+			xPos = new double[n];
+
+			ushort[] glyphs = this.OpenTypeFont.GenerateGlyphs (text, ref glyphMap);
+			double[] temp_x = new double[glyphs.Length+1];
 			
-			int count = AntiGrain.Font.Face.GetTextCharEndXArray (this.handle, text, 0, x_array);
+			temp_x[glyphs.Length] = this.OpenTypeFont.GetPositions (glyphs, 1.0, 0.0, temp_x);
+
+			int index = 0;
 			
-			System.Diagnostics.Debug.Assert (count == n);
+			for (int i = 0; i < glyphs.Length; i++)
+			{
+				int mapped = glyphMap[i]+1;
+
+				if (mapped > 1)
+				{
+					double dx = temp_x[i+1] - temp_x[i];
+					
+					for (int j = 0; j < mapped; j++)
+					{
+						xPos[index] = temp_x[i] + dx * (j+1) / mapped;
+						index++;
+					}
+				}
+				else
+				{
+					xPos[index] = temp_x[i+1];
+					index++;
+				}
+			}
 		}
 		
-		public void GetTextCharEndX(string text, Font.ClassInfo[] infos, out double[] x_array)
+		public void GetTextCharEndX(string text, FontClassInfo[] infos, out double[] x_array)
 		{
-			int n = text.Length;
-			
-			x_array = new double[n];
-			
-			int count = AntiGrain.Font.Face.GetTextCharEndXArray (this.handle, text, 0, x_array);
-			
-			System.Diagnostics.Debug.Assert (count == n);
-			
-			double x1 = 0;
-			double x2 = 0;
+			this.GetTextCharEndX (text, out x_array);
 			
 			double scale_space = 1.0;
 			double scale_plain = 1.0;
 			
 			for (int i = 0; i < infos.Length; i++)
 			{
-				switch (infos[i].ClassId)
+				switch (infos[i].GlyphClass)
 				{
-					case ClassId.PlainText:
+					case GlyphClass.PlainText:
 						scale_plain = infos[i].Scale;
 						break;
 					
-					case ClassId.Space:
+					case GlyphClass.Space:
 						scale_space = infos[i].Scale;
 						break;
 				}
 			}
 			
-			//	Transforme les [x] absolus en [dx], multiplie par l'échelle à utiliser pour la classe
-			//	de caractère concernée, puis retransforme en [x] absolus :
-			
-			for (int i = 0; i < n; i++)
+			//	Transform absolute [x] into relative [dx], scale using the glyph class and then
+			//	transform back [dx] to [x] :
+
+			double x1 = 0;
+			double x2 = 0;
+
+			for (int i = 0; i < x_array.Length; i++)
 			{
 				double dx = x_array[i] - x1;
 				
-				switch (text[i])
-				{
-					case ' ':
-					case (char) 160:
-						dx *= scale_space;
-						break;
-					default:
-						dx *= scale_plain;
-						break;
-				}
+				dx *= (OpenType.Font.IsStretchableSpaceCharacter (text[i])) ? scale_space : scale_plain;
 				
 				x1 = x_array[i];
 				x2 = x2 + dx;
@@ -426,7 +451,7 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 		
-		public void GetTextClassInfos(string text, out ClassInfo[] infos, out double width, out double elasticity)
+		public void GetTextClassInfos(string text, out FontClassInfo[] infos, out double width, out double elasticity)
 		{
 			int n = text.Length;
 			
@@ -441,24 +466,21 @@ namespace Epsitec.Common.Drawing
 			for (int i = 0; i < n; i++)
 			{
 				int unicode = text[i];
-				
-				switch (unicode)
+
+				if (OpenType.Font.IsStretchableSpaceCharacter (unicode))
 				{
-					case ' ':
-					case (char) 160:
-						n_space += 1;
-						w_space += this.GetCharAdvance (unicode);
-						break;
-					
-					default:
-						n_text += 1;
-						w_text += this.GetCharAdvance (unicode);
-						break;
+					n_space += 1;
+					w_space += this.GetCharAdvance (unicode);
+				}
+				else
+				{
+					n_text += 1;
+					w_text += this.GetCharAdvance (unicode);
 				}
 			}
 			
 			int m = ((n_text > 0 && w_text > 0) ? 1 : 0) + ((n_space > 0 && w_space > 0) ? 1 : 0);
-			infos = new ClassInfo[m];
+			infos = new FontClassInfo[m];
 			
 			m = 0;
 			
@@ -466,7 +488,7 @@ namespace Epsitec.Common.Drawing
 			{
 				double e = 0.00 * n_text;
 				
-				infos[m++]  = new ClassInfo (ClassId.PlainText, n_text, w_text, e);
+				infos[m++]  = new FontClassInfo (GlyphClass.PlainText, n_text, w_text, e);
 				width      += w_text;
 				elasticity += e;
 			}
@@ -475,245 +497,51 @@ namespace Epsitec.Common.Drawing
 			{
 				double e = 1.00 * n_space;
 				
-				infos[m++]  = new ClassInfo (ClassId.Space, n_space, w_space, e);
+				infos[m++]  = new FontClassInfo (GlyphClass.Space, n_space, w_space, e);
 				width      += w_space;
 				elasticity += e;
 			}
 		}
-		
-		public void GetGlyphs(string text, out int[] glyphs, out byte[] glyph_n)
-		{
-			int n = text.Length;
-			
-			glyphs  = new int[n];
-			glyph_n = new byte[n];
-			
-			for (int i = 0; i < n; i++)
-			{
-				glyphs[i]  = this.GetGlyphIndex (text[i]);
-				glyph_n[i] = 1;
-			}
-		}
-		
-		public void GetGlyphsEndX(string text, out double[] glyph_x, out int[] glyphs, out byte[] glyph_n)
-		{
-			int n = text.Length;
-			
-			this.GetTextCharEndX (text, out glyph_x);
-			
-			glyphs  = new int[n];
-			glyph_n = new byte[n];
-			
-			for (int i = 0; i < n; i++)
-			{
-				glyphs[i]  = this.GetGlyphIndex (text[i]);
-				glyph_n[i] = 1;
-			}
-		}
-		
-		
-		#region Decompiled from System.Drawing
-		[StructLayout(LayoutKind.Sequential, CharSet=CharSet.Auto), ComVisible(false)]
-			public class LOGFONT
-		{
-			public LOGFONT()
-			{
-			}
-			
-			public override string ToString()
-			{
-				object[] objArray1 = new object[28];
-				objArray1[0] = "lfHeight=";
-				objArray1[1] = this.lfHeight;
-				objArray1[2] = ", lfWidth=";
-				objArray1[3] = this.lfWidth;
-				objArray1[4] = ", lfEscapement=";
-				objArray1[5] = this.lfEscapement;
-				objArray1[6] = ", lfOrientation=";
-				objArray1[7] = this.lfOrientation;
-				objArray1[8] = ", lfWeight=";
-				objArray1[9] = this.lfWeight;
-				objArray1[10] = ", lfItalic=";
-				objArray1[11] = this.lfItalic;
-				objArray1[12] = ", lfUnderline=";
-				objArray1[13] = this.lfUnderline;
-				objArray1[14] = ", lfStrikeOut=";
-				objArray1[15] = this.lfStrikeOut;
-				objArray1[16] = ", lfCharSet=";
-				objArray1[17] = this.lfCharSet;
-				objArray1[18] = ", lfOutPrecision=";
-				objArray1[19] = this.lfOutPrecision;
-				objArray1[20] = ", lfClipPrecision=";
-				objArray1[21] = this.lfClipPrecision;
-				objArray1[22] = ", lfQuality=";
-				objArray1[23] = this.lfQuality;
-				objArray1[24] = ", lfPitchAndFamily=";
-				objArray1[25] = this.lfPitchAndFamily;
-				objArray1[26] = ", lfFaceName=";
-				objArray1[27] = this.lfFaceName;
-				return string.Concat(objArray1);
-			}
 
-			public byte lfCharSet;
-			public byte lfClipPrecision;
-			public int lfEscapement;
-			[MarshalAs(UnmanagedType.ByValTStr, SizeConst=32)]
-			public string lfFaceName;
-			public int lfHeight;
-			public byte lfItalic;
-			public int lfOrientation;
-			public byte lfOutPrecision;
-			public byte lfPitchAndFamily;
-			public byte lfQuality;
-			public byte lfStrikeOut;
-			public byte lfUnderline;
-			public int lfWeight;
-			public int lfWidth;
+		public void GetGlyphsEndX(string text, out double[] xPos, out ushort[] glyphs, out byte[] glyphCharCount)
+		{
+			int[] glyphMap = new int[text.Length];
+			
+			glyphs         = this.OpenTypeFont.GenerateGlyphs (text, ref glyphMap);
+			xPos           = new double[glyphs.Length];
+			glyphCharCount = new byte[glyphs.Length];
+			
+			this.OpenTypeFont.GetPositions (glyphs, 1.0, 0.0, xPos);
+			
+			for (int i = 0; i < glyphs.Length; i++)
+			{
+				glyphCharCount[i] = (byte) (glyphMap[i] + 1);
+			}
 		}
 		
-		public struct HandleRef
-		{
-			public HandleRef(object wrapper, System.IntPtr handle)
-			{
-				//	Methods
-				this.m_wrapper = wrapper;
-				this.m_handle = handle;
-			}
-			public static explicit operator System.IntPtr(HandleRef value)
-			{
-				return value.m_handle;
-			}
-
-			public System.IntPtr Handle { get { return this.m_handle; } }
-			public object Wrapper { get { return this.m_wrapper; } }
-			//	Properties
-
-			//	Fields
-			internal System.IntPtr m_handle;
-			internal object m_wrapper;
-		}
-		[DllImport("gdi32.dll", CharSet=CharSet.Auto)]
-		public static extern int GetObject(System.IntPtr hObject, int nSize, [In, Out] LOGFONT lf);
-		[DllImport("user32.dll", EntryPoint="GetDC", CharSet=CharSet.Auto, ExactSpelling=true)]
-		private static extern System.IntPtr IntGetDC(System.IntPtr hWnd);
-		[DllImport("user32.dll", EntryPoint="ReleaseDC", CharSet=CharSet.Auto, ExactSpelling=true)]
-		private static extern int IntReleaseDC(System.IntPtr hWnd, System.IntPtr hDC);
 		
-
-		public static int GetObject(System.IntPtr hObject, ref LOGFONT lp)
-		{
-			return Font.GetObject(hObject, Marshal.SizeOf(typeof(LOGFONT)), lp);
-		}
-		public static System.Drawing.Font FromHfont(System.IntPtr hfont)
-		{
-			LOGFONT logfont1 = new LOGFONT();
-			Font.GetObject(hfont, ref logfont1);
-			System.IntPtr ptr1 = Font.IntGetDC(System.IntPtr.Zero);
-			try
-			{
-				return Font.FromLogFont(logfont1, ptr1);
-			}
-			finally
-			{
-				Font.IntReleaseDC(System.IntPtr.Zero, ptr1);
-			}
-		}
-		[DllImport("gdiplus.dll", CharSet=CharSet.Ansi, ExactSpelling=true)]
-		internal static extern int GdipCreateFontFromLogfontA(System.IntPtr hdc, [In, Out, MarshalAs(UnmanagedType.AsAny)] object lf, out System.IntPtr font);
-		[DllImport("gdiplus.dll", CharSet=CharSet.Unicode, ExactSpelling=true)]
-		internal static extern int GdipCreateFontFromLogfontW(System.IntPtr hdc, [In, Out, MarshalAs(UnmanagedType.AsAny)] object lf, out System.IntPtr font);
-		
-		public static System.Drawing.Font FromLogFont(object lf, System.IntPtr hdc)
-		{
-			int num1;
-			bool flag1;
-			System.IntPtr ptr1 = System.IntPtr.Zero;
-			if (Marshal.SystemDefaultCharSize == 1)
-			{
-				num1 = Font.GdipCreateFontFromLogfontA(hdc, lf, out ptr1);
-			}
-			else
-			{
-				num1 = Font.GdipCreateFontFromLogfontW(hdc, lf, out ptr1);
-			}
-			
-			if (num1 == 16)
-			{
-				throw new System.ArgumentException("GDI+ not a TrueType font, no name");
-			}
-			if (num1 != 0)
-			{
-				throw new System.Exception("StatusException" + num1);
-			}
-			if (ptr1 == System.IntPtr.Zero)
-			{
-				throw new System.ArgumentException(string.Concat("GDI+ does not handle non True-type fonts: ", lf.ToString()));
-			}
-			if (Marshal.SystemDefaultCharSize == 1)
-			{
-				flag1 = (Marshal.ReadByte(lf, 28) == 64);
-			}
-			else
-			{
-				flag1 = (Marshal.ReadInt16(lf, 28) == 64);
-			}
-			
-			//	return new System.Drawing.Font(ptr1, Marshal.ReadByte(lf, 23), flag1);
- 
-			return null;
-		}
-		#endregion
-		
-		public System.Drawing.Font GetOsFont(double scale)
-		{
-			if (this.os_font == null)
-			{
-				if (this.IsSynthetic)
-				{
-					return null;
-				}
-				
-				System.IntPtr hfont = AntiGrain.Font.Face.GetOsHandle (this.handle);
-				
-				if (hfont != System.IntPtr.Zero)
-				{
-					Font.FromHfont (hfont);
-					this.os_font = System.Drawing.Font.FromHfont (hfont);
-				}
-				
-				if (this.os_font_cache == null)
-				{
-					this.os_font_cache = new System.Collections.Hashtable ();
-				}
-			}
-			
-			if (this.os_font != null)
-			{
-				if (this.os_font_cache.Contains (scale))
-				{
-					return this.os_font_cache[scale] as System.Drawing.Font;
-				}
-				
-				double              size = this.os_font.SizeInPoints / this.os_font.Size;
-				System.Drawing.Font font = new System.Drawing.Font (this.os_font.FontFamily, (float) (scale * size), this.os_font.Style);
-				
-				this.os_font_cache[scale] = font;
-				
-				return font;
-			}
-			
-			return null;
-		}
 		
 		
 		public void FillPixelCache(string text, double size, double ox, double oy)
 		{
-			AntiGrain.Font.PixelCache.Fill (this.handle, text, size, ox, oy);
+			if (string.IsNullOrEmpty (text))
+			{
+				return;
+			}
+			
+			ushort[] glyphs = this.OpenTypeFont.GenerateGlyphs (text);
+			AntiGrain.Font.PixelCache.Fill (this.Handle, glyphs, size, ox, oy);
 		}
 		
 		public double PaintPixelCache(Pixmap pixmap, string text, double size, double ox, double oy, Color color)
 		{
-			return AntiGrain.Font.PixelCache.Paint (pixmap.Handle, this.handle, text, size, ox, oy, color.R, color.G, color.B, color.A);
+			if (string.IsNullOrEmpty (text))
+			{
+				return 0.0;
+			}
+
+			ushort[] glyphs = this.OpenTypeFont.GenerateGlyphs (text);
+			return AntiGrain.Font.PixelCache.Paint (pixmap.Handle, this.Handle, glyphs, size, ox, oy, color.R, color.G, color.B, color.A);
 		}
 		
 		
@@ -725,116 +553,67 @@ namespace Epsitec.Common.Drawing
 			
 			if (this.handle != System.IntPtr.Zero)
 			{
+				AntiGrain.Font.DisposeFaceHandle (this.handle);
 				this.handle = System.IntPtr.Zero;
 			}
 		}
 		
 		
-		public static void Initialise()
-		{
-			if (Font.initialised == false)
-			{
-				Font.initialised = true;
-				
-				System.Diagnostics.Debug.WriteLine ("Calling AntiGrain.Interface.");
-				AntiGrain.Interface.Initialise ();
-				System.Diagnostics.Debug.WriteLine ("AntiGrain.Interface initialised.");
-				AntiGrain.Font.Initialise ();
-				System.Diagnostics.Debug.WriteLine ("AntiGrain.Font initialised.");
-			}
-		}
-
 		private static void SetupFonts()
 		{
+			bool save = false;
+			
 			if (Font.font_array == null)
 			{
 				System.Diagnostics.Debug.WriteLine ("SetupFonts called");
+
+				Font.font_collection = OpenType.FontCollection.Default;
+				Font.font_collection.LoadFromCache ();
 				
-				int n = AntiGrain.Font.GetFaceCount ();
+				save = Font.font_collection.Initialize ();
+
+				Font.font_array = new List<Font> ();
+				Font.font_hash  = new Dictionary<string, Font> ();
 				
-				Font.font_array = new Font[n];
-				Font.font_hash  = new System.Collections.Hashtable ();
-				
-				int m = 0;
-				
-				for (int i = 0; i < n; i++)
+				foreach (OpenType.FontIdentity fontIdentity in Font.font_collection)
 				{
-					Font   font = new Font (AntiGrain.Font.GetFaceByRank (i));
+					Font font = new Font (fontIdentity);
 					string name = font.FullName;
+
+					System.Diagnostics.Debug.Assert (Font.font_hash.ContainsKey (name) == false);
 					
-					if (Font.font_hash.ContainsKey (name) == false)
-					{
-						Font.font_array[m++] = font;
-						Font.font_hash[name] = font;
-					}
+					Font.font_array.Add (font);
+					Font.font_hash[name] = font;
 				}
 				
-				Font[] array_compact = new Font[m];
-				
-				int j = 0;
-				
-				for (int i = 0; i < Font.font_array.Length; i++)
-				{
-					if (Font.font_array[i] != null)
-					{
-						array_compact[j++] = Font.font_array[i];
-					}
-				}
-				
-				Font.font_array = array_compact;
-				
-				System.Diagnostics.Debug.Assert (Font.font_array.Length == m);
 				System.Diagnostics.Debug.WriteLine ("SetupFonts done");
 			}
 			
 			if (Font.face_array == null)
 			{
-				System.Collections.Hashtable hash = new System.Collections.Hashtable ();
+				Font.face_array = new List<FontFaceInfo> ();
+				Font.face_hash = new Dictionary<string, FontFaceInfo> ();
 				
-				//	Construit la table des familles des diverses fontes.
-				
-				int n = Font.font_array.Length;
-				
-				for (int i = 0; i < n; i++)
+				foreach (Font font in Font.font_array)
 				{
-					Font   font = Font.font_array[i];
 					string face = font.FaceName;
-					
-					System.Collections.ArrayList list = hash[face] as System.Collections.ArrayList;
-					
-					if (list == null)
+
+					FontFaceInfo info;
+
+					if (Font.face_hash.TryGetValue (face, out info) == false)
 					{
-						list = new System.Collections.ArrayList ();
-						hash[face] = list;
+						info = new FontFaceInfo (face);
+						Font.face_hash[face] = info;
+						Font.face_array.Add (info);
 					}
-					
-					list.Add (font);
+
+					info.Add (font);
 				}
-				
-				n = hash.Count;
-				
-				//	Alloue la table des familles; pour chaque famille, stocke les diverses
-				//	fontes natives trouvées.
-				
-				Font.face_array = new Font.FaceInfo[n];
-				Font.face_hash  = new System.Collections.Hashtable ();
-				
-				string[] faces = new string[n];
-				
-				hash.Keys.CopyTo (faces, 0);
-				System.Array.Sort (faces);
-				
-				for (int i = 0; i < n; i++)
-				{
-					string face = faces[i];
-					System.Collections.ArrayList list = hash[face] as System.Collections.ArrayList;
-					
-					Font[] fonts = new Font[list.Count];
-					list.CopyTo (fonts, 0);
-					
-					Font.face_array[i]   = new Font.FaceInfo (face, fonts);
-					Font.face_hash[face] = Font.face_array[i];
-				}
+			}
+
+			if (save)
+			{
+				Font.font_collection.SaveToCache ();
 			}
 		}
 		
@@ -843,8 +622,7 @@ namespace Epsitec.Common.Drawing
 		{
 			get
 			{
-				Font.SetupFonts ();
-				return Font.font_array.Length;
+				return Font.font_array.Count;
 			}
 		}
 		
@@ -874,25 +652,19 @@ namespace Epsitec.Common.Drawing
 			get { return 20.0; }
 		}
 		
-		public static Font.FaceInfo[]			Faces
+		public static FontFaceInfo[]			Faces
 		{
 			get
 			{
-				Font.SetupFonts ();
-				Font.FaceInfo[] faces = new FaceInfo[Font.face_array.Length];
-				Font.face_array.CopyTo (faces, 0);
-				
-				return faces;
+				return Font.face_array.ToArray ();
 			}
 		}
 		
 		
 		public static Font GetFont(int rank)
 		{
-			Font.SetupFonts ();
-			
 			if ((rank >= 0) &&
-				(rank < Font.font_array.Length))
+				(rank < Font.font_array.Count))
 			{
 				return Font.font_array[rank];
 			}
@@ -907,7 +679,6 @@ namespace Epsitec.Common.Drawing
 		
 		public static Font GetFont(string face, string style, string optical)
 		{
-			Font.SetupFonts ();
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 			
 			buffer.Append (face);
@@ -926,9 +697,9 @@ namespace Epsitec.Common.Drawing
 			
 			string key = buffer.ToString ();
 			
-			Font font = Font.font_hash[key] as Font;
+			Font font;
 			
-			if (font == null)
+			if (Font.font_hash.TryGetValue (key, out font) == false)
 			{
 				int pos;
 				
@@ -941,6 +712,10 @@ namespace Epsitec.Common.Drawing
 					if (font == null)
 					{
 						font = Font.GetFont (face, style.Replace ("Regular", "Roman"), optical);
+					}
+					if (font == null)
+					{
+						font = Font.GetFont (face, style.Replace ("Regular", ""), optical);
 					}
 					
 					return font;
@@ -977,19 +752,14 @@ namespace Epsitec.Common.Drawing
 						//	La fonte de base (droite) existe. C'est une bonne nouvelle. On va créer
 						//	une fonte synthétique oblique...
 						
-						Font   syn_font = new Font (font.Handle, style, SyntheticFontMode.Oblique);
+						Font   syn_font = new Font (font, style, SyntheticFontMode.Oblique);
 						string syn_name = syn_font.FullName;
 						
 						System.Diagnostics.Debug.Assert (syn_font.StyleName == style);
 						System.Diagnostics.Debug.Assert (syn_font.IsSynthetic);
 						System.Diagnostics.Debug.Assert (Font.font_hash.ContainsKey (syn_name) == false);
-						
-						int n = Font.font_array.Length;
-						Font[] array_copy = new Font[n+1];
-						Font.font_array.CopyTo (array_copy, 0);
-						Font.font_array = array_copy;
-						
-						Font.font_array[n]       = syn_font;
+
+						Font.font_array.Add (syn_font);
 						Font.font_hash[syn_name] = syn_font;
 						
 						font = syn_font;
@@ -1010,14 +780,14 @@ namespace Epsitec.Common.Drawing
 			return Font.GetFont (id.InvariantFaceName, id.InvariantStyleName);
 		}
 		
-		public static Font.FaceInfo GetFaceInfo(string face)
+		public static FontFaceInfo GetFaceInfo(string face)
 		{
-			return Font.face_hash[face] as FaceInfo;
+			return Font.face_hash[face];
 		}
 		
 		public static Font GetFontFallback(string face)
 		{
-			FaceInfo info = Font.face_hash[face] as FaceInfo;
+			FontFaceInfo info = Font.face_hash[face];
 			
 			if (info != null)
 			{
@@ -1041,240 +811,30 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
-		#region Class ClassInfo
-		public class ClassInfo
+		internal void DefineFaceInfo(FontFaceInfo info)
 		{
-			public ClassInfo(ClassId id, int count, double width, double elasticity)
-			{
-				this.class_id   = id;
-				this.count      = count;
-				this.width      = width;
-				this.elasticity = elasticity;
-				this.scale      = 1.0;
-			}
-			
-			
-			public ClassId						ClassId
-			{
-				get
-				{
-					return this.class_id;
-				}
-			}
-			
-			public int							Count
-			{
-				get
-				{
-					return this.count;
-				}
-			}
-			
-			public double						Width
-			{
-				get
-				{
-					return this.width;
-				}
-			}
-			
-			public double						Elasticity
-			{
-				get
-				{
-					return this.elasticity;
-				}
-			}
-			
-			public double						Scale
-			{
-				get
-				{
-					return this.scale;
-				}
-				set
-				{
-					this.scale = value;
-				}
-			}
-			
-			
-			protected ClassId					class_id;
-			protected int						count;				//	nombre de glyphes dans cette classe
-			protected double					width;				//	largeur cumulée
-			protected double					elasticity;			//	élasticité des glyphes
-			protected double					scale;				//	facteur d'échelle [x]
+			this.face_info = info;
 		}
-		#endregion
 		
-		#region Enum ClassId
-		public enum ClassId
-		{
-			Space		= 0,
-			PlainText	= 1,
-			Ligature_2	= 2,
-			Ligature_3	= 3,
-			
-			//	...
-			
-			Other		= 100
-		}
-		#endregion
-		
-		#region Class FaceInfo
-		public class FaceInfo
-		{
-			public FaceInfo(string name, Font[] fonts)
-			{
-				this.name  = name;
-				this.fonts = fonts;
-				
-				for (int i = 0; i < this.fonts.Length; i++)
-				{
-					System.Diagnostics.Debug.Assert (this.fonts[i].FaceName == this.name);
-					System.Diagnostics.Debug.Assert (this.fonts[i].face_info == null);
-					
-					this.fonts[i].face_info = this;
-				}
-			}
-			
-			
-			public string						Name
-			{
-				get
-				{
-					return this.name;
-				}
-			}
-			
-			public string[]						StyleNames
-			{
-				get
-				{
-					System.Collections.Hashtable hash = new System.Collections.Hashtable ();
-					
-					for (int i = 0; i < this.fonts.Length; i++)
-					{
-						string name = this.fonts[i].StyleName;
-						
-						if (name == "")
-						{
-							name = "Regular";
-						}
-						
-						hash[name] = this;
-					}
-					
-					string[] names = new string[hash.Count];
-					hash.Keys.CopyTo (names, 0);
-					
-					return names;
-				}
-			}
-			
-			public int							Count
-			{
-				get
-				{
-					return this.fonts.Length;
-				}
-			}
-			
-			public bool							IsLatin
-			{
-				get
-				{
-					//	TODO: cacher cette information dans un fichier externe
-					//	pour éviter de devoir lire la fonte pour déterminer si
-					//	elle est intéressante, ou non.
-					
-					return true;
-					//-					return this.fonts[0].GetGlyphIndex ('e') > 0;
-				}
-			}
-			
-			
-			public Font GetFont(bool bold, bool italic, double size)
-			{
-				string style_1 = null;
-				string style_2 = null;
-				string style_3 = null;
-				
-				if (bold)
-				{
-					if (italic)
-					{
-						style_1 = "Bold Italic";
-						style_2 = "Bold Oblique";
-					}
-					else
-					{
-						style_1 = "Bold";
-					}
-				}
-				else
-				{
-					if (italic)
-					{
-						style_1 = "Italic";
-						style_2 = "Oblique";
-					}
-					else
-					{
-						style_1 = "Regular";
-						style_2 = "Normal";
-						style_3 = "Roman";
-					}
-				}
-				
-				foreach (Font font in this.fonts)
-				{
-					if ((font.StyleName == style_1) ||
-						(font.StyleName == style_2) ||
-						(font.StyleName == style_3))
-					{
-						return font;
-					}
-				}
-				
-				//	Le style spécifié n'existe pas en tant que tel. Demandons encore à Font de
-				//	voir si ce n'est pas possible d'obtenir une fonte synthétique :
-				
-				Font synthetic = Font.GetFont (this.name, style_1);
-				
-				return synthetic;
-			}
-			
-			public Font[] GetFonts()
-			{
-				Font[] copy = new Font[this.fonts.Length];
-				this.fonts.CopyTo (copy, 0);
-				return copy;
-			}
-			
-			
-			private string						name;
-			private Font[]						fonts;
-		}
-		#endregion
 		
 		
 		System.IntPtr							handle;
 		string									synthetic_style;
 		SyntheticFontMode						synthetic_mode;
+#if false
 		System.Drawing.Font						os_font;
 		System.Collections.Hashtable			os_font_cache;
-		FaceInfo								face_info;
+#endif
+		FontFaceInfo							face_info;
 		OpenType.Font							open_type_font;
-		bool									open_type_font_ok;
 		
-		static Font[]							font_array = null;
-		static FaceInfo[]						face_array = null;
-		static System.Collections.Hashtable		font_hash  = null;
-		static System.Collections.Hashtable		face_hash  = null;
+		static OpenType.FontCollection			font_collection;
+		static List<Font>						font_array;
+		static List<FontFaceInfo>				face_array;
+		static Dictionary<string, Font>			font_hash;
+		static Dictionary<string, FontFaceInfo>	face_hash;
 		static Font								default_font;
 		static bool								initialised = false;
-		static OpenType.FontCollection			open_type_font_collection;
 		
 		enum NameId
 		{

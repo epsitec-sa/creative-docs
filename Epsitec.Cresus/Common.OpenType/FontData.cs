@@ -1,36 +1,35 @@
-//	Copyright © 2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2005-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.OpenType
 {
 	/// <summary>
-	/// La classe FontData donne accès aux tables internes d'une fonte OpenType.
+	/// The <c>FontData</c> class is a wrapper for the internal OpenType font
+	/// tables. It keeps a reference to the raw font data.
 	/// </summary>
-	internal sealed class FontData
+	public sealed class FontData
 	{
-		public FontData()
+		internal FontData()
 		{
 		}
-		
-		public FontData(byte[] data, int ttc_index)
+
+		internal FontData(byte[] data, int ttcIndex)
 		{
 			if ((data[0] == 't') &&
 				(data[1] == 't') &&
 				(data[2] == 'c') &&
 				(data[3] == 'f'))
 			{
-				//	Ce n'est pas une fonte unique, mais une collection de fontes
-				//	groupées dans une TrueType Collection.
+				//	This is not a unique font, but a TrueType font Collection.
 				
 				Table_ttcf ttcf = new Table_ttcf (data, 0);
 				
-				System.Diagnostics.Debug.Assert (ttc_index >= 0);
-				System.Diagnostics.Debug.Assert (ttc_index < ttcf.NumFonts);
+				System.Diagnostics.Debug.Assert (ttcIndex >= 0);
+				System.Diagnostics.Debug.Assert (ttcIndex < ttcf.NumFonts);
 				
-				//	Détermine l'offset dans le fichier TTC pour accéder aux
-				//	véritables informations de la fonte :
+				//	The table directory is located further in the file :
 				
-				int font_offset = ttcf.GetFontOffset (ttc_index);
+				int font_offset = ttcf.GetFontOffset (ttcIndex);
 				
 				this.Initialize (new TableDirectory (data, font_offset));
 			}
@@ -73,12 +72,12 @@ namespace Epsitec.Common.OpenType
 		}
 		
 		
-		public Table_ttcf						TrueTypeCollection
+		public Table_ttcf						TrueTypeCollectionTable
 		{
 			get
 			{
 				byte[] data = this.ot_directory.BaseData;
-				
+
 				if ((data[0] == 't') &&
 					(data[1] == 't') &&
 					(data[2] == 'c') &&
@@ -86,14 +85,19 @@ namespace Epsitec.Common.OpenType
 				{
 					return new Table_ttcf (data, 0);
 				}
-				
-				return null;
+				else
+				{
+					return null;
+				}
 			}
 		}
 		
 		
 		private void Initialize(TableDirectory directory)
 		{
+			System.Diagnostics.Debug.Assert (this.ot_directory == null);
+			System.Diagnostics.Debug.Assert (directory != null);
+			
 			this.ot_directory = directory;
 		}
 		

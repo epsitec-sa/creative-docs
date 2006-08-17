@@ -18,7 +18,7 @@ namespace Epsitec.Common.OpenType
 			Font         zapf    = collection.CreateFont ("Zapf Dingbats BT");
 			FontIdentity zapf_id = zapf.FontIdentity;
 			
-			Table_cmap zapf_cmap = zapf_id.GetTable_cmap ();
+			Table_cmap zapf_cmap = zapf_id.InternalGetTable_cmap ();
 			IndexMappingTable zapf_imp = zapf_cmap.FindFormatSubTable (3, 0, 4);
 			
 			Assert.AreEqual (3, zapf_imp.GetGlyphIndex (0xF020));
@@ -33,7 +33,7 @@ namespace Epsitec.Common.OpenType
 			Font         wing1    = collection.CreateFont ("Wingdings");
 			FontIdentity wing1_id = wing1.FontIdentity;
 			
-			Table_cmap wing1_cmap = wing1_id.GetTable_cmap ();
+			Table_cmap wing1_cmap = wing1_id.InternalGetTable_cmap ();
 			IndexMappingTable wing1_imp = wing1_cmap.FindFormatSubTable (3, 0, 4);
 			
 			Assert.AreEqual (3, wing1_imp.GetGlyphIndex (0xF020));
@@ -60,7 +60,7 @@ namespace Epsitec.Common.OpenType
 			
 			foreach (FontIdentity id in collection)
 			{
-				Font font = new Font (id);
+				Font font = collection.CreateFont (id);
 				string[] features = font.GetSupportedFeatures ();
 				
 				System.Array.Sort (features);
@@ -106,7 +106,7 @@ namespace Epsitec.Common.OpenType
 			
 			foreach (FontIdentity id in collection)
 			{
-				Font font = new Font (id);
+				Font font = collection.CreateFont (id);
 				string[] features = font.GetSupportedFeatures ();
 				
 				System.Array.Sort (features);

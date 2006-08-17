@@ -140,12 +140,31 @@ namespace Epsitec.Common.Drawing
 				this.AddGlyph (font, glyphs[i], x[i], y[i], scale, sx == null ? 1.0 : sx[i], 1.0);
 			}
 		}
-		
-		protected override double AddPlainText(Font font, string text, double xx, double xy, double yx, double yy, double tx, double ty)
+
+		protected override void AddPlainGlyphs(Font font, ushort[] glyphs, double[] x, double xx, double xy, double yx, double yy, double tx, double ty)
 		{
-			throw new System.NotImplementedException ();
+			Transform transform = new Transform (xx, xy, yx, yy, tx, ty);
+
+			transform.MultiplyBy (this.transform);
+
+			for (int i = 0; i < glyphs.Length; i++)
+			{
+				ushort glyph = glyphs[i];
+
+				tx += xx * x[i];
+				ty += yx * x[i];
+
+				//	TODO: Test Test Test Test Test !!!!
+				
+				if (glyph < 0xfff0)
+				{
+					Path temp = new Path ();
+					temp.Append (font, glyph, xx, xy, yx, yy, tx, ty);
+					this.AddSurface (temp);
+					temp.Dispose ();
+				}
+			}
 		}
-		
 		
 		protected override void Dispose(bool disposing)
 		{

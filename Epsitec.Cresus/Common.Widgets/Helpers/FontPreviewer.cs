@@ -17,7 +17,7 @@ namespace Epsitec.Common.Widgets.Helpers
 		
 		public static void Initialize()
 		{
-			Drawing.Font.Initialise ();
+			Drawing.Font.Initialize ();
 		}
 		
 		
@@ -97,7 +97,7 @@ namespace Epsitec.Common.Widgets.Helpers
 					
 					if (fid.IsSymbolFont)
 					{
-						for (int i = 2; i < 100; i++)
+						for (ushort i = 2; i < 100; i++)
 						{
 							double advance = font.GetGlyphAdvance (i);
 							
@@ -136,7 +136,7 @@ namespace Epsitec.Common.Widgets.Helpers
 						
 						for (int i = 0; i < sample.Length; i++)
 						{
-							int    glyph   = font.GetGlyphIndex (sample[i]);
+							ushort glyph   = font.GetGlyphIndex (sample[i]);
 							double advance = font.GetGlyphAdvance (glyph);
 							
 							path.Append (font, glyph, x, y, 1);
@@ -163,7 +163,7 @@ namespace Epsitec.Common.Widgets.Helpers
 					
 					if (fid.IsSymbolFont)
 					{
-						for (int i = 2; i < 100; i++)
+						for (ushort i = 2; i < 100; i++)
 						{
 							double advance = font.GetGlyphAdvance (i);
 							
@@ -202,7 +202,7 @@ namespace Epsitec.Common.Widgets.Helpers
 						
 						for (int i = 0; i < sample.Length; i++)
 						{
-							int    glyph   = font.GetGlyphIndex (sample[i]);
+							ushort glyph   = font.GetGlyphIndex (sample[i]);
 							double advance = font.GetGlyphAdvance (glyph);
 							
 							path.Append (font, glyph, x, y, 1);

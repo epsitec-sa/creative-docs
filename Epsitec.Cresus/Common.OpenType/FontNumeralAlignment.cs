@@ -1,17 +1,18 @@
-//	Copyright © 2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2005-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.OpenType
 {
 	/// <summary>
-	/// L'énumération FontNumeralAlignment détermine quelle variante de chiffres
-	/// doit être utilisée dans une fonte.
+	/// The <c>FontNumeralAlignment</c> enumeration specifies which
+	/// digits should be used in a font (normal, proportional or
+	/// tabular).
 	/// </summary>
 	public enum FontNumeralAlignment
 	{
-		Normal,						//	comportement par défaut pour la fonte
+		Normal,						//	default behavior
 		
-		Proportional,				//	chiffres avec largeur proportionnelle
-		Tabular,					//	chiffres avec largeur fixe
+		Proportional,				//	variable width digits
+		Tabular,					//	fixed width digits
 	}
 }

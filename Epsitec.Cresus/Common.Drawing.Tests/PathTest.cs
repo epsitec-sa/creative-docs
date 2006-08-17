@@ -127,7 +127,7 @@ namespace Epsitec.Common.Drawing
 			Font font = Font.GetFont ("Times New Roman", "Italic");
 			Path path = new Path ();
 			
-			int glyph = font.GetGlyphIndex ('f');
+			ushort glyph = font.GetGlyphIndex ('f');
 			
 			path.Append (font, glyph, 0, 0, 12.0);
 			
@@ -373,6 +373,7 @@ namespace Epsitec.Common.Drawing
 			
 			//	Mesures: 3ms en HighSpeed, 15ms en HighQuality; en cas de redimensionnement: 50ms et 200ms ?!
 			
+#if false
 			e.Graphics.DrawString ("Hello, world. 14pt", font.GetOsFont (14.0), System.Drawing.Brushes.Black, 10,  80);
 			e.Graphics.DrawString ("Hello, world. 13pt", font.GetOsFont (13.0), System.Drawing.Brushes.Black, 10,  90);
 			e.Graphics.DrawString ("Hello, world. 12pt", font.GetOsFont (12.0), System.Drawing.Brushes.Black, 10, 100);
@@ -381,8 +382,11 @@ namespace Epsitec.Common.Drawing
 			e.Graphics.DrawString ("Hello, world. 9pt",  font.GetOsFont (9.0),  System.Drawing.Brushes.Black, 10, 130);
 			
 			this.DrawString ("Hello, world. 14pt", 10, 60, 14, e.Graphics, font);
+#endif
+
 		}
-		
+
+#if false
 		private void DrawString(string text, double x, double y, double size, System.Drawing.Graphics os_graphics, Font font)
 		{
 			System.Drawing.Font os_font = font.GetOsFont (size);
@@ -400,6 +404,7 @@ namespace Epsitec.Common.Drawing
 				ox = xxx[i];
 			}
 		}
+#endif
 
 		private void HandleFormSizeChanged(object sender, System.EventArgs e)
 		{

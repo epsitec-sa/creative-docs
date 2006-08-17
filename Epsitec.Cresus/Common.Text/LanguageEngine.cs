@@ -1,4 +1,4 @@
-//	Copyright © 2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2005-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Text
@@ -13,7 +13,7 @@ namespace Epsitec.Common.Text
 		{
 		}
 		
-		public static void GenerateHyphens(TextContext context, ulong[] text, int offset, int length, Unicode.BreakInfo[] breaks)
+		public static void GenerateHyphens(ILanguageRecognizer recognizer, ulong[] text, int offset, int length, Unicode.BreakInfo[] breaks)
 		{
 			int run_start  = 0;
 			int run_length = 0;
@@ -22,21 +22,14 @@ namespace Epsitec.Common.Text
 			
 			for (int i = 0; i < length; i++)
 			{
-				Properties.LanguageProperty property;
-				
-				ulong  code   = text[offset + i];
-				string locale = null;
-				
-				context.GetLanguage (code, out property);
-				
-				if (property != null)
+				double hyphenation = 0;
+				string locale      = null;
+
+				recognizer.GetLanguage (text, offset+i, out hyphenation, out locale);
+
+				if (hyphenation <= 0)
 				{
-					double hyphenation = property.Hyphenation;
-					
-					if (hyphenation > 0)
-					{
-						locale = property.Locale;
-					}
+					locale = null;
 				}
 				
 				//	Détermine un "run" de caractères appartenant à la même langue
@@ -50,7 +43,7 @@ namespace Epsitec.Common.Text
 					{
 						//	Traite la tranche qui vient de se terminer.
 						
-						LanguageEngine.GenerateHyphensForRun (context, text, offset + run_start, run_length, run_locale, run_start, breaks);
+						LanguageEngine.GenerateHyphensForRun (text, offset + run_start, run_length, run_locale, run_start, breaks);
 					}
 					
 					run_start  = i;
@@ -66,11 +59,11 @@ namespace Epsitec.Common.Text
 			{
 				//	Traite la tranche finale.
 				
-				LanguageEngine.GenerateHyphensForRun (context, text, offset + run_start, run_length, run_locale, run_start, breaks);
+				LanguageEngine.GenerateHyphensForRun (text, offset + run_start, run_length, run_locale, run_start, breaks);
 			}
 		}
 		
-		private static void GenerateHyphensForRun(TextContext context, ulong[] text, int text_offset, int length, string locale, int break_offset, Unicode.BreakInfo[] breaks)
+		private static void GenerateHyphensForRun(ulong[] text, int text_offset, int length, string locale, int break_offset, Unicode.BreakInfo[] breaks)
 		{
 			if (length < 1)
 			{

@@ -147,7 +147,18 @@ namespace Epsitec.Common.Drawing
 		protected abstract void SyncTransform();
 		
 		protected abstract void AddPlainGlyphs(Font font, double scale, ushort[] glyphs, double[] x, double[] y, double[] sx);
-		protected abstract double AddPlainText(Font font, string text, double xx, double xy, double yx, double yy, double tx, double ty);
+		protected abstract void AddPlainGlyphs(Font font, ushort[] glyphs, double[] x, double xx, double xy, double yx, double yy, double tx, double ty);
+		
+		protected double AddPlainText(Font font, string text, double xx, double xy, double yx, double yy, double tx, double ty)
+		{
+			ushort[] glyphs  = font.OpenTypeFont.GenerateGlyphs (text);
+			double[] x       = new double[glyphs.Length];
+			double   advance = font.OpenTypeFont.GetPositions (glyphs, 1.0, 0.0, x);
+			
+			this.AddPlainGlyphs (font, glyphs, x, xx, xy, yx, yy, tx, ty);
+			
+			return advance;
+		}
 		
 		#region IDisposable Members
 		public void Dispose()

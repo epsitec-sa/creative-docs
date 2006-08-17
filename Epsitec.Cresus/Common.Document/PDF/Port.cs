@@ -484,7 +484,7 @@ namespace Epsitec.Common.Document.PDF
 				double width = 0.0;
 				double ox = 0.0;
 				double[] glyphX;
-				int[]    glyph;
+				ushort[] glyph;
 				byte[]   glyphN;
 
 				font.GetGlyphsEndX(text, out glyphX, out glyph, out glyphN);
@@ -522,7 +522,7 @@ namespace Epsitec.Common.Document.PDF
 				if ( n == 0 )  return 0.0;
 
 				double[] glyphX;
-				int[]    glyph;
+				ushort[] glyph;
 				byte[]   glyphN;
 
 				font.GetGlyphsEndX(text, out glyphX, out glyph, out glyphN);
@@ -576,12 +576,12 @@ namespace Epsitec.Common.Document.PDF
 			}
 		}
 		
-		public double PaintText(double x, double y, string text, Font font, double size, Font.ClassInfo[] infos)
+		public double PaintText(double x, double y, string text, Font font, double size, FontClassInfo[] infos)
 		{
 			for ( int i=0 ; i<infos.Length ; i++ )
 			{
 				if ( infos[i].Scale != 1.00 &&
-					 infos[i].ClassId == Drawing.Font.ClassId.Space )
+					 infos[i].GlyphClass == Drawing.GlyphClass.Space )
 				{
 					string[] texts = text.Split(new char[] { ' ', (char) 160 });
 					double spaceW = font.GetCharAdvance(' ') * size * infos[i].Scale;
