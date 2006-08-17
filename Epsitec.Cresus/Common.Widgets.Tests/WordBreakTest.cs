@@ -14,6 +14,37 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		protected void CheckWord(string word)
+		{
+			//	Teste un mot.
+			System.Text.StringBuilder builder = new System.Text.StringBuilder();
+			List<int> hope = new List<int>();
+
+			for (int i=0; i<word.Length; i++)
+			{
+				char c = word[i];
+
+				if (c == '/')
+				{
+					hope.Add(builder.Length);
+				}
+				else
+				{
+					builder.Append(c);
+				}
+			}
+
+			List<int> list = WordBreak.Break(builder.ToString());
+
+			Assert.IsTrue(list.Count == hope.Count);
+			for (int i=0; i<list.Count; i++)
+			{
+				Assert.IsTrue(list[i] == hope[i]);
+			}
+		}
+
+		//	Liste des mots à tester. Les endroits où WordBreak doit trouver
+		//	une césure possible sont marqué par un slash "/".
 		static string[] list =
 		{
 			"aéro/spa/tial",
@@ -59,6 +90,7 @@ namespace Epsitec.Common.Widgets
 			"com/pen/sa/tion",
 			"cré/er",
 			"cons/truc/tion",
+			"concier/ge",
 			"ci/toyens",
 			"ca/tas/tro/phe",
 			"cir/cons/cri/re",
@@ -120,6 +152,7 @@ namespace Epsitec.Common.Widgets
 			"éco/le",
 			"égra/ti/gnu/re",
 			"élon/ga/tion",
+			"elles",
 			"émeu/te",
 			"en/ter/re/ment",
 			"éruc/ta/tion",
@@ -452,7 +485,7 @@ namespace Epsitec.Common.Widgets
 			"l'étoi/le",
 			"l'ap/par/te/ment",
 			"qu'il",
-			"qu'el/les",
+			"qu'elles",
 			"qu'avec",
 			"qu'ain/si",
 			"qu'alors",
@@ -472,34 +505,7 @@ namespace Epsitec.Common.Widgets
 			"com/men/cées",
 			"(com/men/cée)",
 			"(com/men/cées)",
+			"(concier/ge)",
 		};
-
-		protected void CheckWord(string word)
-		{
-			System.Text.StringBuilder builder = new System.Text.StringBuilder();
-			List<int> hope = new List<int>();
-
-			for (int i=0; i<word.Length; i++)
-			{
-				char c = word[i];
-
-				if (c == '/')
-				{
-					hope.Add(builder.Length);
-				}
-				else
-				{
-					builder.Append(c);
-				}
-			}
-
-			List<int> list = WordBreak.Break(builder.ToString());
-
-			Assert.IsTrue(list.Count == hope.Count);
-			for (int i=0; i<list.Count; i++)
-			{
-				Assert.IsTrue(list[i] == hope[i]);
-			}
-		}
 	}
 }
