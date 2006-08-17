@@ -5,14 +5,26 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.IO
 {
-	public class ZipFile
+	/// <summary>
+	/// The <c>ZipFile</c> class manages ZIP file loading and saving. The contents
+	/// of the ZIP file can be accessed as individual entries, each stored as a byte
+	/// array.
+	/// </summary>
+	public sealed class ZipFile
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="ZipFile"/> class.
+		/// </summary>
 		public ZipFile()
 		{
 			this.entries = new List<Entry> ();
 		}
 
-		
+
+		/// <summary>
+		/// Gets or sets the compression level.
+		/// </summary>
+		/// <value>The compression level (<c>0</c> = store only, <c>5</c> = default, <c>9</c> = best compression).</value>
 		public int CompressionLevel
 		{
 			get
@@ -25,6 +37,10 @@ namespace Epsitec.Common.IO
 			}
 		}
 
+		/// <summary>
+		/// Enumerates the entry names.
+		/// </summary>
+		/// <value>The entry names.</value>
 		public IEnumerable<string> EntryNames
 		{
 			get
@@ -43,6 +59,10 @@ namespace Epsitec.Common.IO
 			}
 		}
 
+		/// <summary>
+		/// Enumerates the directory names.
+		/// </summary>
+		/// <value>The directory names.</value>
 		public IEnumerable<string> DirectoryNames
 		{
 			get
@@ -57,6 +77,10 @@ namespace Epsitec.Common.IO
 			}
 		}
 
+		/// <summary>
+		/// Enumerates the entries.
+		/// </summary>
+		/// <value>The entries.</value>
 		public IEnumerable<Entry> Entries
 		{
 			get
@@ -64,7 +88,11 @@ namespace Epsitec.Common.IO
 				return this.entries;
 			}
 		}
-		
+
+		/// <summary>
+		/// Gets the <see cref="Entry"/> with the specified name.
+		/// </summary>
+		/// <value>The <see cref="Entry"/> with the specified name.</value>
 		public Entry this[string name]
 		{
 			get
@@ -72,8 +100,49 @@ namespace Epsitec.Common.IO
 				return this.entries.Find (delegate (Entry entry) { return entry.Name == name; });
 			}
 		}
-		
-		
+
+
+		/// <summary>
+		/// Tries to load the specified ZIP file.
+		/// </summary>
+		/// <param name="name">The file name.</param>
+		/// <returns><c>true</c> on success; otherwise, <c>false</c>.</returns>
+		public bool TryLoadFile(string name)
+		{
+			try
+			{
+				using (System.IO.Stream stream = System.IO.File.OpenRead (name))
+				{
+					int b1 = stream.ReadByte ();
+					int b2 = stream.ReadByte ();
+					int b3 = stream.ReadByte ();
+					int b4 = stream.ReadByte ();
+					
+					stream.Position = 0;
+
+					if ((b1 == 'P') &&
+						(b2 == 'K') &&
+						(b3 == 3) &&
+						(b4 == 4))
+					{
+						this.LoadFile (stream);
+
+						return true;
+					}
+				}
+
+			}
+			catch (System.IO.IOException)
+			{
+			}
+			
+			return false;
+		}
+
+		/// <summary>
+		/// Loads the specified ZIP file.
+		/// </summary>
+		/// <param name="name">The file name.</param>
 		public void LoadFile(string name)
 		{
 			using (System.IO.Stream stream = System.IO.File.OpenRead (name))
@@ -81,7 +150,11 @@ namespace Epsitec.Common.IO
 				this.LoadFile (stream);
 			}
 		}
-		
+
+		/// <summary>
+		/// Loads the specified ZIP stream.
+		/// </summary>
+		/// <param name="stream">The file stream.</param>
 		public void LoadFile(System.IO.Stream stream)
 		{
 			this.entries.Clear ();
@@ -123,6 +196,10 @@ namespace Epsitec.Common.IO
 			zip.Close ();
 		}
 
+		/// <summary>
+		/// Saves to the specified ZIP file.
+		/// </summary>
+		/// <param name="name">The file name.</param>
 		public void SaveFile(string name)
 		{
 			using (System.IO.Stream stream = System.IO.File.Create (name))
@@ -131,6 +208,10 @@ namespace Epsitec.Common.IO
 			}
 		}
 
+		/// <summary>
+		/// Saves to the specified ZIP stream.
+		/// </summary>
+		/// <param name="stream">The stream.</param>
 		public void SaveFile(System.IO.Stream stream)
 		{
 			this.entries.Sort (delegate (Entry a, Entry b) { return string.Compare (a.Name, b.Name); });
@@ -149,6 +230,12 @@ namespace Epsitec.Common.IO
 		}
 
 
+		/// <summary>
+		/// Adds a file entry to the ZIP file.
+		/// </summary>
+		/// <param name="name">The file entry name. It can include a relative path using
+		/// exclusively forward slashes as separators.</param>
+		/// <param name="data">The data.</param>
 		public void AddEntry(string name, byte[] data)
 		{
 			System.Diagnostics.Debug.Assert (string.IsNullOrEmpty (name) == false);
@@ -162,6 +249,11 @@ namespace Epsitec.Common.IO
 			this.entries.Add (new Entry (name, data, System.DateTime.Now));
 		}
 
+		/// <summary>
+		/// Adds an empty directory to the ZIP file. This is done automatically when
+		/// adding a file entry for which there is not yet a directory entry.
+		/// </summary>
+		/// <param name="name">The directory entry name.</param>
 		public void AddDirectory(string name)
 		{
 			if (string.IsNullOrEmpty (name))
@@ -187,6 +279,10 @@ namespace Epsitec.Common.IO
 			}
 		}
 
+		/// <summary>
+		/// Removes the file entry.
+		/// </summary>
+		/// <param name="name">The file entry name.</param>
 		public void RemoveEntry(string name)
 		{
 			System.Diagnostics.Debug.Assert (string.IsNullOrEmpty (name) == false);
@@ -222,22 +318,30 @@ namespace Epsitec.Common.IO
 		}
 
 		
+		/// <summary>
+		/// The <c>Entry</c> structure maps a file name to its data and date/time
+		/// stamp.
+		/// </summary>
 		public struct Entry
 		{
-			public Entry(string fileName, byte[] data, System.DateTime date)
+			internal Entry(string fileName, byte[] data, System.DateTime date)
 			{
 				this.name = fileName;
 				this.data = data;
 				this.date = date;
 			}
 
-			public Entry(string directoryName, System.DateTime date)
+			internal Entry(string directoryName, System.DateTime date)
 			{
 				this.name = directoryName;
 				this.data = null;
 				this.date = date;
 			}
 
+			/// <summary>
+			/// Gets the full name of the entry.
+			/// </summary>
+			/// <value>The full name.</value>
 			public string Name
 			{
 				get
@@ -246,6 +350,10 @@ namespace Epsitec.Common.IO
 				}
 			}
 
+			/// <summary>
+			/// Gets or sets the data of the entry.
+			/// </summary>
+			/// <value>The data.</value>
 			public byte[] Data
 			{
 				get
@@ -258,6 +366,10 @@ namespace Epsitec.Common.IO
 				}
 			}
 
+			/// <summary>
+			/// Gets the date and time associated with the entry.
+			/// </summary>
+			/// <value>The date and time.</value>
 			public System.DateTime DateTime
 			{
 				get
@@ -266,6 +378,12 @@ namespace Epsitec.Common.IO
 				}
 			}
 
+			/// <summary>
+			/// Gets a value indicating whether this entry is a directory.
+			/// </summary>
+			/// <value>
+			/// 	<c>true</c> if this entry is a directory; otherwise, <c>false</c>.
+			/// </value>
 			public bool IsDirectory
 			{
 				get
@@ -274,6 +392,10 @@ namespace Epsitec.Common.IO
 				}
 			}
 
+			/// <summary>
+			/// Gets a value indicating whether this entry is empty.
+			/// </summary>
+			/// <value><c>true</c> if this entry is empty; otherwise, <c>false</c>.</value>
 			public bool IsEmpty
 			{
 				get
@@ -282,6 +404,9 @@ namespace Epsitec.Common.IO
 				}
 			}
 
+			/// <summary>
+			/// The default empty entry.
+			/// </summary>
 			public static Entry Empty = new Entry ();
 
 			private string name;
@@ -289,7 +414,7 @@ namespace Epsitec.Common.IO
 			private System.DateTime date;
 		}
 
-		int level = 5;
-		List<Entry> entries;
+		private int level = 5;
+		private List<Entry> entries;
 	}
 }
