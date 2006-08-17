@@ -49,6 +49,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				Button buttonCancel = new Button(this.window.Root);
 				buttonCancel.PreferredWidth = 75;
 				buttonCancel.Text = Res.Strings.Dialog.Export.Button.Cancel;
+				buttonCancel.ButtonStyle = ButtonStyle.DefaultCancel;
 				buttonCancel.Anchor = AnchorStyles.BottomLeft;
 				buttonCancel.Margins = new Margins(10+75+10, 0, 0, 10);
 				buttonCancel.Clicked += new MessageEventHandler(this.HandleExportButtonCancelClicked);

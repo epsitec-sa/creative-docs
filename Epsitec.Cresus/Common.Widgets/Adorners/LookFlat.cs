@@ -387,7 +387,8 @@ namespace Epsitec.Common.Widgets.Adorners
 
 			if ( style == ButtonStyle.Normal        ||
 				 style == ButtonStyle.DefaultAccept ||
-				 style == ButtonStyle.DefaultCancel )
+				 style == ButtonStyle.DefaultCancel ||
+				 style == ButtonStyle.DefaultAcceptAndCancel )
 			{
 				Drawing.Path path = this.PathRoundRectangle(rect, 0);
 			
@@ -402,7 +403,7 @@ namespace Epsitec.Common.Widgets.Adorners
 				}
 				else if ( (state&WidgetPaintState.Enabled) != 0 )
 				{
-					if ( style == ButtonStyle.DefaultAccept )
+					if ( style == ButtonStyle.DefaultAccept || style == ButtonStyle.DefaultAcceptAndCancel )
 					{
 						graphics.RenderSolid(this.colorControlLight);
 					}

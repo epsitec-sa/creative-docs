@@ -405,7 +405,8 @@ namespace Epsitec.Common.Widgets.Adorners
 
 			if ( style == ButtonStyle.Normal        ||
 				 style == ButtonStyle.DefaultAccept ||
-				 style == ButtonStyle.DefaultCancel )
+				 style == ButtonStyle.DefaultCancel ||
+				 style == ButtonStyle.DefaultAcceptAndCancel )
 			{
 				graphics.AddFilledRectangle(rect);
 				graphics.RenderSolid(this.colorControl);
@@ -429,7 +430,7 @@ namespace Epsitec.Common.Widgets.Adorners
 				}
 				else
 				{
-					if ( style == ButtonStyle.DefaultAccept )
+					if ( style == ButtonStyle.DefaultAccept || style == ButtonStyle.DefaultAcceptAndCancel )
 					{
 						//	Rectangle noir autour.
 						Drawing.Rectangle rOut = rect;

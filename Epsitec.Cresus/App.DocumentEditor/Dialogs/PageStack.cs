@@ -81,7 +81,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				Button buttonClose = new Button(this.window.Root);
 				buttonClose.PreferredWidth = 75;
 				buttonClose.Text = Res.Strings.Dialog.Button.Close;
-				buttonClose.ButtonStyle = ButtonStyle.DefaultAccept;
+				buttonClose.ButtonStyle = ButtonStyle.DefaultAcceptAndCancel;
 				buttonClose.Anchor = AnchorStyles.BottomLeft;
 				buttonClose.Margins = new Margins(posx, 0, 0, 6);
 				buttonClose.Clicked += new MessageEventHandler(this.HandleButtonCloseClicked);

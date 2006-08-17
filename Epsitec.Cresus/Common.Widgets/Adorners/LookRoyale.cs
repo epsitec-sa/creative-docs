@@ -472,11 +472,12 @@ namespace Epsitec.Common.Widgets.Adorners
 
 			if ( style == ButtonStyle.Normal        ||
 				 style == ButtonStyle.DefaultAccept ||
-				 style == ButtonStyle.DefaultCancel )
+				 style == ButtonStyle.DefaultCancel ||
+				 style == ButtonStyle.DefaultAcceptAndCancel )
 			{
 				if ( (state&WidgetPaintState.Enabled) != 0 )
 				{
-					if ( style == ButtonStyle.DefaultAccept )
+					if ( style == ButtonStyle.DefaultAccept || style == ButtonStyle.DefaultAcceptAndCancel )
 					{
 						rFocus.Deflate(1);
 						rInside.Deflate(1);
@@ -500,7 +501,7 @@ namespace Epsitec.Common.Widgets.Adorners
 						graphics.RenderSolid(this.colorEntered);
 						rect.Inflate(1.0);
 					}
-					else if ( style == ButtonStyle.DefaultAccept )
+					else if ( style == ButtonStyle.DefaultAccept || style == ButtonStyle.DefaultAcceptAndCancel )
 					{
 						rect.Deflate(1.0);
 						double radius = this.RetRadius(rect);

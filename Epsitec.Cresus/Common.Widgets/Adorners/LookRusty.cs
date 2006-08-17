@@ -391,7 +391,8 @@ namespace Epsitec.Common.Widgets.Adorners
 			//	Dessine le fond d'un bouton rectangulaire.
 			if ( style == ButtonStyle.Normal        ||
 				 style == ButtonStyle.DefaultAccept ||
-				 style == ButtonStyle.DefaultCancel )
+				 style == ButtonStyle.DefaultCancel ||
+				 style == ButtonStyle.DefaultAcceptAndCancel )
 			{
 				if ( (state&WidgetPaintState.Enabled) != 0 )
 				{
@@ -401,7 +402,7 @@ namespace Epsitec.Common.Widgets.Adorners
 					shadow.Bottom -= 5;
 					this.PaintImageButton(graphics, shadow, 64);
 
-					if ( style == ButtonStyle.DefaultAccept )
+					if ( style == ButtonStyle.DefaultAccept || style == ButtonStyle.DefaultAcceptAndCancel )
 					{
 						this.PaintImageButton(graphics, rect, 0);
 					}

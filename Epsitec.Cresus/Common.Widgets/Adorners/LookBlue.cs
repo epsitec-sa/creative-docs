@@ -429,10 +429,11 @@ namespace Epsitec.Common.Widgets.Adorners
 
 			if ( style == ButtonStyle.Normal        ||
 				 style == ButtonStyle.DefaultAccept ||
-				 style == ButtonStyle.DefaultCancel )
+				 style == ButtonStyle.DefaultCancel ||
+				 style == ButtonStyle.DefaultAcceptAndCancel )
 			{
 				if ( (state&WidgetPaintState.Enabled) != 0 &&
-					 style == ButtonStyle.DefaultAccept )
+					 style == ButtonStyle.DefaultAccept || style == ButtonStyle.DefaultAcceptAndCancel )
 				{
 					rect.Deflate(1);
 				}
@@ -486,7 +487,7 @@ namespace Epsitec.Common.Widgets.Adorners
 				}
 
 				if ( (state&WidgetPaintState.Enabled) != 0 &&
-					 style == ButtonStyle.DefaultAccept )
+					 style == ButtonStyle.DefaultAccept  || style == ButtonStyle.DefaultAcceptAndCancel )
 				{
 					rect.Inflate(1);
 					path = this.PathRoundRectangle(rect, 0);

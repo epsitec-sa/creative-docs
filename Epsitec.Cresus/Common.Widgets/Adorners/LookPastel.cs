@@ -453,7 +453,8 @@ namespace Epsitec.Common.Widgets.Adorners
 
 			if ( style == ButtonStyle.Normal        ||
 				 style == ButtonStyle.DefaultAccept ||
-				 style == ButtonStyle.DefaultCancel )
+				 style == ButtonStyle.DefaultCancel ||
+				 style == ButtonStyle.DefaultAcceptAndCancel )
 			{
 				Drawing.Rectangle shadow = rect;
 				shadow.Right  += 4;
@@ -462,7 +463,7 @@ namespace Epsitec.Common.Widgets.Adorners
 
 				if ( (state&WidgetPaintState.Enabled) != 0 )
 				{
-					if ( style == ButtonStyle.DefaultAccept )
+					if ( style == ButtonStyle.DefaultAccept || style == ButtonStyle.DefaultAcceptAndCancel )
 					{
 						rFocus.Deflate(1);
 						rInside.Deflate(1);
@@ -486,7 +487,7 @@ namespace Epsitec.Common.Widgets.Adorners
 					this.PaintImageButton(graphics, rect, 2);
 				}
 
-				if ( style == ButtonStyle.DefaultAccept )
+				if ( style == ButtonStyle.DefaultAccept || style == ButtonStyle.DefaultAcceptAndCancel )
 				{
 					rect.Deflate(0.5);
 					double radius = this.RetRadius(rect);
