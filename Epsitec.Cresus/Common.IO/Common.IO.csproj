@@ -130,6 +130,7 @@
     <Compile Include="Tools.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ZipFile.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
