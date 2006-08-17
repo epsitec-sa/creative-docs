@@ -61,6 +61,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				Button buttonClose = new Button(footer);
 				buttonClose.PreferredWidth = 75;
 				buttonClose.Text = Res.Strings.Dialog.Button.Cancel;
+				buttonClose.ButtonStyle = ButtonStyle.DefaultCancel;
 				buttonClose.Dock = DockStyle.Left;
 				buttonClose.Clicked += new MessageEventHandler(this.HandleButtonCloseClicked);
 				buttonClose.TabIndex = tabIndex++;
