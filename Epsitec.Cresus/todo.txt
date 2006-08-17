@@ -1,7 +1,0 @@
-Localisations
--------------
-
-- TextRuler
-- AbstractYesNoCancel
-- Dialog
-- Designer.Application
