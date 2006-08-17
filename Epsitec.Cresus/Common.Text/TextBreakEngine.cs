@@ -80,7 +80,8 @@ namespace Epsitec.Common.Text
 				LanguageEngine.GenerateHyphens (this, utf32, 0, utf32.Length, this.breaks);
 			}
 
-			if ((this.mode & Drawing.TextBreakMode.SingleLine) != 0)
+			if (((this.mode & Drawing.TextBreakMode.SingleLine) != 0) &&
+				((this.mode & Drawing.TextBreakMode.Split) != 0))
 			{
 				for (int i = 0; i < this.breaks.Length; i++)
 				{
