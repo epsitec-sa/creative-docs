@@ -241,6 +241,13 @@ namespace Epsitec.Common.Support
 			read.RemoveEntry ("images/i1.bin");
 
 			read.SaveFile ("t2.zip");
+
+			Assert.IsTrue (read.TryLoadFile ("t2.zip"));
+			Assert.IsFalse (read.TryLoadFile ("t3.zip"));
+
+			System.IO.File.WriteAllBytes ("t2.zip", new byte[] { 0, 1, 2 });
+			
+			Assert.IsFalse (read.TryLoadFile ("t2.zip"));
 		}
 
 		[Test]
