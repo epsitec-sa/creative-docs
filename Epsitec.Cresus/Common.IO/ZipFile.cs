@@ -12,6 +12,7 @@ namespace Epsitec.Common.IO
 			this.entries = new List<Entry> ();
 		}
 
+		
 		public int CompressionLevel
 		{
 			get
@@ -55,6 +56,23 @@ namespace Epsitec.Common.IO
 				}
 			}
 		}
+
+		public IEnumerable<Entry> Entries
+		{
+			get
+			{
+				return this.entries;
+			}
+		}
+		
+		public Entry this[string name]
+		{
+			get
+			{
+				return this.entries.Find (delegate (Entry entry) { return entry.Name == name; });
+			}
+		}
+		
 		
 		public void LoadFile(string name)
 		{
@@ -179,8 +197,6 @@ namespace Epsitec.Common.IO
 			this.entries.RemoveAll (delegate (Entry entry) { return entry.Name == name; });
 		}
 
-		
-		
 		private void WriteEntry(ICSharpCode.SharpZipLib.Zip.ZipOutputStream zip, Entry entry, ICSharpCode.SharpZipLib.Checksums.Crc32 crc)
 		{
 			ICSharpCode.SharpZipLib.Zip.ZipEntry e = new ICSharpCode.SharpZipLib.Zip.ZipEntry (entry.Name);
@@ -206,7 +222,7 @@ namespace Epsitec.Common.IO
 		}
 
 		
-		private struct Entry
+		public struct Entry
 		{
 			public Entry(string fileName, byte[] data, System.DateTime date)
 			{
@@ -257,6 +273,16 @@ namespace Epsitec.Common.IO
 					return this.data == null;
 				}
 			}
+
+			public bool IsEmpty
+			{
+				get
+				{
+					return this.name == null;
+				}
+			}
+
+			public static Entry Empty = new Entry ();
 
 			private string name;
 			private byte[] data;

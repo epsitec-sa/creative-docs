@@ -36,36 +36,6 @@ namespace Epsitec.Common.Support
 		}
 
 		[Test]
-		public void CheckZipStream()
-		{
-			byte[] buffer = System.Text.Encoding.UTF8.GetBytes (IOTest.SampleText);
-			
-			System.IO.MemoryStream target = new System.IO.MemoryStream ();
-			System.IO.Stream   compressor = IO.Compression.CreateZipStream (target, "test");
-			
-			compressor.Write (buffer, 0, buffer.Length);
-			compressor.Close ();
-			
-			byte[] data = target.ToArray ();
-			long length = data.Length;
-			
-			System.Console.Out.WriteLine ("Compressed size : {0} bytes, using ZIP", length);
-			
-			System.IO.MemoryStream source = new System.IO.MemoryStream (data);
-			System.IO.Stream decompressor = IO.Decompression.CreateStream (source);
-			
-			byte[] read = new byte[buffer.Length];
-			
-			decompressor.Read (read, 0, buffer.Length);
-			decompressor.Close ();
-			
-			for (int i = 0; i < buffer.Length; i++)
-			{
-				Assert.AreEqual (buffer[i], read[i], string.Format ("offset {0}: {1} != {2}", i, (char) buffer[i], (char) read[i]));
-			}
-		}
-
-		[Test]
 		public void CheckDeflateStreamLevel1()
 		{
 			byte[] buffer = System.Text.Encoding.UTF8.GetBytes (IOTest.SampleText);
@@ -230,7 +200,7 @@ namespace Epsitec.Common.Support
 		}
 
 		[Test]
-		public void CheckZip()
+		public void CheckZipFile()
 		{
 			IO.ZipFile file = new IO.ZipFile ();
 
@@ -262,13 +232,48 @@ namespace Epsitec.Common.Support
 			Assert.AreEqual ("images/", directoryNames[1]);
 			Assert.AreEqual ("text/", directoryNames[2]);
 
+			Assert.IsTrue (new System.TimeSpan (System.Math.Abs (file["file 2.txt"].DateTime.Ticks - read["file 2.txt"].DateTime.Ticks)).Seconds <= 1);
+			Assert.AreEqual (file["file 2.txt"].Data.Length, read["file 2.txt"].Data.Length);
+			Assert.IsTrue (read["foo"].IsEmpty);
+			Assert.AreEqual ("Hello, simple file.\r\nAt the root of the ZIP archive.\r\n", System.Text.Encoding.UTF8.GetString (read["file 1.txt"].Data));
+			
 			read.RemoveEntry ("file 2.txt");
 			read.RemoveEntry ("images/i1.bin");
 
 			read.SaveFile ("t2.zip");
 		}
-		
-		private static string					SampleText
+
+		[Test]
+		public void CheckZipStream()
+		{
+			byte[] buffer = System.Text.Encoding.UTF8.GetBytes (IOTest.SampleText);
+
+			System.IO.MemoryStream target = new System.IO.MemoryStream ();
+			System.IO.Stream compressor = IO.Compression.CreateZipStream (target, "test");
+
+			compressor.Write (buffer, 0, buffer.Length);
+			compressor.Close ();
+
+			byte[] data = target.ToArray ();
+			long length = data.Length;
+
+			System.Console.Out.WriteLine ("Compressed size : {0} bytes, using ZIP", length);
+
+			System.IO.MemoryStream source = new System.IO.MemoryStream (data);
+			System.IO.Stream decompressor = IO.Decompression.CreateStream (source);
+
+			byte[] read = new byte[buffer.Length];
+
+			decompressor.Read (read, 0, buffer.Length);
+			decompressor.Close ();
+
+			for (int i = 0; i < buffer.Length; i++)
+			{
+				Assert.AreEqual (buffer[i], read[i], string.Format ("offset {0}: {1} != {2}", i, (char) buffer[i], (char) read[i]));
+			}
+		}
+
+		private static string SampleText
 		{
 			get
 			{
