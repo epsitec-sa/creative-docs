@@ -132,6 +132,7 @@ namespace Epsitec.Common.Support
 			"at/mo/sphè/re",
 			"ayions",
 
+			"ba/yer",
 			"blas/phè/me",
 			"blond",
 			"brouil/lard",
@@ -147,11 +148,11 @@ namespace Epsitec.Common.Support
 
 			"ca/rac/té/ris/ti/que",
 			"chou/chou",
+			"com/pen/sa/tion",
 			"cons/puer",
 			"cons/truit",
-			"com/pen/sa/tion",
-			"cré/er",
 			"cons/truc/tion",
+			"con/scien/ce",
 			"con/cier/ge",
 			"ci/toyens",
 			"ca/tas/tro/phe",
@@ -167,8 +168,9 @@ namespace Epsitec.Common.Support
 			"che/vreuil",
 			"clouer",
 			"cloa/que",
-			"convain/cre",
+			"con/vain/cre",
 			"cos/mo/go/nie",
+			"cré/er",
 			"créa/tion",
 			"croyan/ce",
 			"cul/tu/re",					//	et la règle des cul* ?
@@ -200,6 +202,7 @@ namespace Epsitec.Common.Support
 			"dé/si/rer",
 			"dé/sis/ter",
 			"dé/so/la/tion",
+			"dé/sta/bi/li/ser",
 
 			"es/prit",
 			"éthnie",
@@ -263,7 +266,8 @@ namespace Epsitec.Common.Support
 			"hymne",
 			"hy/da/tis/me",
 			"hy/drau/li/ques",
-			"hémi/sphè/re",
+			"hé/mi/sphè/re",
+			"hé/mi/èdre",
 			"hy/per/ten/sion",
 
 			"im/pres/crip/ti/ble",
@@ -417,6 +421,9 @@ namespace Epsitec.Common.Support
 			"pros/ter/ner",
 			"pros/ta/te",
 			"pro/émi/nen/ce",
+			"po/êle",
+			"po/ète",
+			"po/èti/que/ment",
 			"po/ly/va/lent",
 			"pro/phy/laxie",
 			"pliu/re",
@@ -430,6 +437,7 @@ namespace Epsitec.Common.Support
 			"pres/sion",
 			"pres/tan/ce",
 			"pres/que",
+			"pré/scien/ce",
 
 			"quel/con/que",
 			"quin/quen/nal",
@@ -441,6 +449,7 @@ namespace Epsitec.Common.Support
 			"ré/tro/spec/tif",
 			"res/ti/tua/ble",
 			"res/pec/tueux",
+			"re/struc/tu/rer",
 			"re/pro/duc/tion",
 			"ré/flexion",
 			"re/dis/tri/buer",
@@ -499,6 +508,9 @@ namespace Epsitec.Common.Support
 			"scle/ro/se",
 			"scar/la/ti/ne",
 			"scè/ne",
+			"stag/nant",
+			"sta/bi/li/ser",
+			"struc/tu/rer",
 			"sub/or/don/ner",
 			"sub/or/ner",
 			"sub/ur/bain",
@@ -608,22 +620,6 @@ namespace Epsitec.Common.Support
 			"(com/men/cée)",
 			"(com/men/cées)",
 			"(con/cier/ge)",
-
-			//	Faux :
-
-			//"ma/ïs",
-			"po/ète",
-			
-			"Alpes",
-			"pré/scien/ce",		//	OK
-			"con/scien/ce",		//	pas OK? (règle des con* je veux bien, mais pas cons-cience)
-			"ba/yer",
-			"hé/mi/èdre",		//	à mon avis, la césure étymologique prime ici !
-			"stag/nant",
-			"struc/tu/rer",		//	OK
-			"re/struc/tu/rer",	//	pas OK?
-			"sta/bi/li/ser",	//	OK
-			"dé/sta/bi/li/ser",	//	pas OK?
 		};
 
 
