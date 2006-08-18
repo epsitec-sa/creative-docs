@@ -242,8 +242,6 @@ namespace Epsitec.Common.Text.BreakEngines
 		// (exceptions très spéciales) :
 		static protected string[] tableSpecialBreak =
 		{
-			"CON 3",		// con-cierge
-			"ELLE 2",		// el-le
 			"HYMNE 3",		// hym-ne
 		};
 

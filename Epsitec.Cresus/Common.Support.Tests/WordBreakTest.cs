@@ -10,40 +10,91 @@ namespace Epsitec.Common.Support
 		[Test]
 		public void CheckWordBreak()
 		{
+			this.errorCounter = 0;
+
 			foreach (string word in WordBreakTest.list)
 			{
-				this.CheckWord (word);
+				this.CheckWord(word);
+			}
+
+			if (this.errorCounter != 0)
+			{
+				Assert.Fail(string.Format("{0} errors listed in Console.Error !", this.errorCounter));
+			}
+			else
+			{
+				System.Console.Error.WriteLine("All word breaks are OK.");
 			}
 		}
 
 		protected void CheckWord(string word)
 		{
-			//	Teste un mot.
-			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
-			List<int> hope = new List<int> ();
+			//	Teste un mot. En cas d'erreur, écrit un texte explicite dans Console.Error.
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder();
+			List<int> hope = new List<int>();
 
 			foreach (char c in word)
 			{
-				if (c == '/')
+				if (c == '/')  // séparateur souhaité ?
 				{
-					hope.Add (buffer.Length);
+					hope.Add(buffer.Length);
 				}
 				else
 				{
-					buffer.Append (c);
+					buffer.Append(c);
 				}
 			}
 
-			Assert.AreEqual (hope.Count, Types.Collection.Count (Common.Text.BreakEngines.FrenchWordBreakEngine.Break (buffer.ToString ())), string.Format ("Count mismatch in {0}", buffer.ToString ()));
+			string brut = buffer.ToString();  // mot brut, sans séparateurs
 
-			int i = 0;
+			List<int> result = new List<int>(Common.Text.BreakEngines.FrenchWordBreakEngine.Break(brut));
 
-			foreach (int pos in Common.Text.BreakEngines.FrenchWordBreakEngine.Break (buffer.ToString ()))
+			if (!WordBreakTest.AreEqual(hope, result))  // résultat incorrect ?
 			{
-				Assert.AreEqual (pos, hope[i], string.Format ("Expected {0}, got {1} in {2}", pos, hope[i], buffer.ToString ()));
-				i++;
+				string wrong = WordBreakTest.AddSeparators(brut, result);
+				System.Console.Error.WriteLine(string.Format("Correct: {0}   Result: {1}", word, wrong));
+
+				this.errorCounter++;
 			}
 		}
+
+		static protected bool AreEqual(List<int> list1, List<int> list2)
+		{
+			//	Vérifie si deux listes sont identiques.
+			if (list1.Count != list2.Count)
+			{
+				return false;
+			}
+
+			for (int i=0; i<list1.Count; i++)
+			{
+				if (list1[i] != list2[i])
+				{
+					return false;
+				}
+			}
+
+			return true;
+		}
+
+		static protected string AddSeparators(string word, List<int> list)
+		{
+			//	Remet les séparateurs "/" dans un mot.
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder();
+
+			for (int i=0; i<word.Length; i++)
+			{
+				if (list.Contains(i))
+				{
+					buffer.Append("/");
+				}
+
+				buffer.Append(word[i]);
+			}
+
+			return buffer.ToString();
+		}
+
 
 		//	Liste des mots à tester. Les endroits où WordBreak doit trouver
 		//	une césure possible sont marqué par un slash "/".
@@ -80,6 +131,7 @@ namespace Epsitec.Common.Support
 			"ava/re",
 			"at/mo/sphè/re",
 			"ayions",
+
 			"blas/phè/me",
 			"blond",
 			"brouil/lard",
@@ -92,6 +144,7 @@ namespace Epsitec.Common.Support
 			"brouet/tier",
 			"bu/ty/li/que",
 			"bus",
+
 			"ca/rac/té/ris/ti/que",
 			"chou/chou",
 			"cons/puer",
@@ -99,7 +152,7 @@ namespace Epsitec.Common.Support
 			"com/pen/sa/tion",
 			"cré/er",
 			"cons/truc/tion",
-			"concier/ge",
+			"con/cier/ge",
 			"ci/toyens",
 			"ca/tas/tro/phe",
 			"cir/cons/cri/re",
@@ -119,6 +172,7 @@ namespace Epsitec.Common.Support
 			"créa/tion",
 			"croyan/ce",
 			"cul/tu/re",					//	et la règle des cul* ?
+
 			"dac/ty/lo/gra/phie",
 			"déjà",
 			"de",
@@ -146,6 +200,7 @@ namespace Epsitec.Common.Support
 			"dé/si/rer",
 			"dé/sis/ter",
 			"dé/so/la/tion",
+
 			"es/prit",
 			"éthnie",
 			"exem/plai/re",
@@ -164,12 +219,13 @@ namespace Epsitec.Common.Support
 			"éco/le",
 			"égra/ti/gnu/re",
 			"élon/ga/tion",
-			"elles",
+			"el/les",
 			"émeu/te",
 			"en/ter/re/ment",
 			"éruc/ta/tion",
 			"eu/cli/de",
 			"ex/ploi/ta/tion",
+
 			"fisc",
 			"flam/boyer",
 			"fos/set/te",
@@ -182,6 +238,7 @@ namespace Epsitec.Common.Support
 			"fos/si/li/sa/tion",
 			"fuis/seur",
 			"fu/tur",
+
 			"gla/ciai/re",
 			"gym/nas/ti/que",
 			"gueu/se",
@@ -197,6 +254,7 @@ namespace Epsitec.Common.Support
 			"gout/ter",
 			"grand",
 			"guin/da/ge",
+
 			"har/mo/nies",
 			"hé/mo/phi/lie",
 			"hen/de/ca/syl/la/de",
@@ -207,6 +265,7 @@ namespace Epsitec.Common.Support
 			"hy/drau/li/ques",
 			"hémi/sphè/re",
 			"hy/per/ten/sion",
+
 			"im/pres/crip/ti/ble",
 			"il/lo/gi/que",
 			"idiot",
@@ -244,6 +303,7 @@ namespace Epsitec.Common.Support
 			"ini/tia/ti/ve",
 			"ins/ta/ment",
 			"ins/tan/ta/nes",
+
 			"ja/bot",
 			"jap/per",
 			"jan/vier",
@@ -256,9 +316,11 @@ namespace Epsitec.Common.Support
 			"jour/nel/le/ment",
 			"joux/te",
 			"jus/te/ment",
+
 			"ka/lei/dos/co/pe",
 			"kle/phte",
 			"ki/lo/oc/tets",
+
 			"laid",
 			"lam/pions",
 			"liè/vre",
@@ -267,6 +329,7 @@ namespace Epsitec.Common.Support
 			"lors/que",
 			"loua/ble",
 			"luxu/rieux",
+
 			"ma/chia/ve/lis/me",
 			"ma/gis/tral",
 			"ma/ni/ché/en",
@@ -308,6 +371,7 @@ namespace Epsitec.Common.Support
 			"me/su/res",
 			"mi/cro/or/di/na/teur",
 			"moyen/nant",
+
 			"naif",
 			"nean",
 			"néo/lo/gis/me",
@@ -319,6 +383,7 @@ namespace Epsitec.Common.Support
 			"nuan/ces",
 			"non/obs/tant",
 			"no/nan/te",
+
 			"obus",
 			"ob/jec/tif",
 			"ob/ses/sions",
@@ -334,6 +399,7 @@ namespace Epsitec.Common.Support
 			"obs/ti/né",
 			"ou/vrir",
 			"oto/rhi/no/la/ryn/go/lo/gis/tes",
+
 			"par/ti/cu/liai/re/ment",
 			"pas/til/le",
 			"pa/tho/lo/gi/que",
@@ -364,11 +430,13 @@ namespace Epsitec.Common.Support
 			"pres/sion",
 			"pres/tan/ce",
 			"pres/que",
+
 			"quel/con/que",
 			"quin/quen/nal",
 			"qui/con/que",
 			"ques/tion/nai/res",
 			"quo/tient",
+
 			"re/cons/ti/tu/tion",
 			"ré/tro/spec/tif",
 			"res/ti/tua/ble",
@@ -397,6 +465,7 @@ namespace Epsitec.Common.Support
 			"ro/man/tis/me",
 			"rhu/mes",
 			"rha/pso/die",
+
 			"sans/crit",
 			"san/glot",
 			"san/gui/nel/le",
@@ -457,6 +526,7 @@ namespace Epsitec.Common.Support
 			"su/pé/rieur",
 			"su/per/struc/tu/res",
 			"su/per/po/ser",
+
 			"temps",
 			"tem/po/rel",
 			"tha/la/mus",
@@ -476,10 +546,12 @@ namespace Epsitec.Common.Support
 			"te/le/sco/pe",
 			"te/le/vi/sion",
 			"te/le/ma/ti/que",
+
 			"usi/ne",
 			"ul/cè/re",
 			"uni/ta/ris/me",
 			"uni/te",
+
 			"vas/cu/lai/re",
 			"vi/cis/si/tu/des",
 			"vieil/lard",
@@ -491,17 +563,22 @@ namespace Epsitec.Common.Support
 			"voir",
 			"vol/ti/ge",
 			"voyant",
+
 			"wa/gons",
+
 			"xé/no/pho/bie",
 			"xy/lo/pho/nes",
+
 			"yuan",
+
 			"zi/za/nie",
 			"zo/dia/que",
+
 			"d'abord",
 			"l'étoi/le",
 			"l'ap/par/te/ment",
 			"qu'il",
-			"qu'elles",
+			"qu'el/les",
 			"qu'avec",
 			"qu'ain/si",
 			"qu'alors",
@@ -530,11 +607,11 @@ namespace Epsitec.Common.Support
 			"in/sta/ble",
 			"(com/men/cée)",
 			"(com/men/cées)",
-			"(concier/ge)",
+			"(con/cier/ge)",
 
 			//	Faux :
 
-			"ma/ïs",
+			//"ma/ïs",
 			"po/ète",
 			
 			"Alpes",
@@ -548,5 +625,8 @@ namespace Epsitec.Common.Support
 			"sta/bi/li/ser",	//	OK
 			"dé/sta/bi/li/ser",	//	pas OK?
 		};
+
+
+		protected int						errorCounter;
 	}
 }
