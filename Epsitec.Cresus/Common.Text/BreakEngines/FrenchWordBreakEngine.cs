@@ -136,8 +136,6 @@ namespace Epsitec.Common.Text.BreakEngines
 			"DESOL",	// dé-solé
 			"DESORM",	// dé-sormais
 
-			"HEMIE",	// hemiè-dre
-
 			"INIQ",		// ini-que
 			"INIT",		// ini-tiative
 
@@ -176,16 +174,20 @@ namespace Epsitec.Common.Text.BreakEngines
 			"ANTISP 24",	// anti-spasmodique
 			"ATMO 24",		// atmo-sphère
 
+			"BAY 2",		// ba-yer
+
 			"CAOU 4",		// caou-tchouc
 			"COO 2",		// co-opération
+			"CONSCI 3",		// con-science
 			"CIS 3",		// cis-alpin
 
+			"DESTA 2",		// dé-stabiliser
 			"DES 3",		// dés-aveu
 			"DIAGN 4",		// diag-nostique
 
 			"EXTRAO 25",	// extra-ordinaire
 
-			"HEMI 4",		// hemi-sphère
+			"HEMI 24",		// hemi-sphère
 
 			"INA 2",		// in-actif
 			"INE 2",		// in-égal
@@ -211,6 +213,7 @@ namespace Epsitec.Common.Text.BreakEngines
 
 			"OTORH 3",		// oto-rhinolaryngologiste
 
+			"POE 2",		// po-ète
 			"PRE 3",		// pré-occuper
 			"PROE 3",		// pro-éminent
 
@@ -224,8 +227,10 @@ namespace Epsitec.Common.Text.BreakEngines
 			"REE 2",		// ré-élection
 			"REI 2",		// ré-intégrer
 			"REO 2",		// ré-organiser
+			"RESTR 2",		// re-structurer
 			"RETRO 25",		// rétro-spectif
 
+			"STAG 4",		// stag-nant
 			"SUBLU 3",		// sub-lunaire
 			"SUBO 3",		// sub-ordonner
 			"SUBRO 3",		// sub-rogateur
