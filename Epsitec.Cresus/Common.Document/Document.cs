@@ -670,7 +670,7 @@ namespace Epsitec.Common.Document
 				ZipFile zip = new ZipFile();
 				string err = "";
 
-				if (zip.TryLoadFile(filename))
+				if (!Misc.IsExtension(filename, ".icon") && zip.TryLoadFile(filename))
 				{
 					// Fichier CrDoc au format ZIP, chargé avec succès.
 					using (MemoryStream stream = new MemoryStream(zip["document.data"].Data))
