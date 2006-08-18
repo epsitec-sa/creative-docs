@@ -105,7 +105,7 @@ namespace Epsitec.Common.Support
 
 
 		//	Liste des mots à tester. Les endroits où WordBreak doit trouver
-		//	une césure possible sont marqué par un slash "/".
+		//	une césure possible sont marqués par un slash "/".
 		static string[] list =
 		{
 			"aéro/spa/tial",
