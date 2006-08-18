@@ -668,28 +668,14 @@ namespace Epsitec.Common.Document
 			try
 			{
 				ZipFile zip = new ZipFile();
+				string err = "";
 
 				if (zip.TryLoadFile(filename))
 				{
-					// Fichier CrDoc au format ZIP, chargé avec succès !
+					// Fichier CrDoc au format ZIP, chargé avec succès.
 					using (MemoryStream stream = new MemoryStream(zip["document.data"].Data))
 					{
-						string err = this.Read(stream, System.IO.Path.GetDirectoryName(filename), true);
-						if ( err == "" )
-						{
-							if ( Misc.IsExtension(filename, ".crdoc") ||
-								 Misc.IsExtension(filename, ".icon")  )
-							{
-								this.Filename = filename;
-								this.globalSettings.LastFilenameAdd(filename);
-								this.IsDirtySerialize = false;
-							}
-						}
-						else
-						{
-							this.IsDirtySerialize = false;
-						}
-						return err;
+						err = this.Read(stream, System.IO.Path.GetDirectoryName(filename), true);
 					}
 				}
 				else
@@ -697,24 +683,25 @@ namespace Epsitec.Common.Document
 					// Désérialisation standard; c'est un ancien fichier CrDoc.
 					using (Stream stream = File.OpenRead(filename))
 					{
-						string err = this.Read(stream, System.IO.Path.GetDirectoryName(filename));
-						if ( err == "" )
-						{
-							if ( Misc.IsExtension(filename, ".crdoc") ||
-								 Misc.IsExtension(filename, ".icon")  )
-							{
-								this.Filename = filename;
-								this.globalSettings.LastFilenameAdd(filename);
-								this.IsDirtySerialize = false;
-							}
-						}
-						else
-						{
-							this.IsDirtySerialize = false;
-						}
-						return err;
+						err = this.Read(stream, System.IO.Path.GetDirectoryName(filename), false);
 					}
-			}	
+				}
+
+				if (err == "")
+				{
+					if (Misc.IsExtension(filename, ".crdoc")||
+						Misc.IsExtension(filename, ".icon"))
+					{
+						this.Filename = filename;
+						this.globalSettings.LastFilenameAdd(filename);
+						this.IsDirtySerialize = false;
+					}
+				}
+				else
+				{
+					this.IsDirtySerialize = false;
+				}
+				return err;
 			}
 			catch ( System.Exception e )
 			{
@@ -732,8 +719,7 @@ namespace Epsitec.Common.Document
 
 		protected string Read(Stream stream, string directory, bool isZip)
 		{
-			//	Ouvre un document sérialisé, soit parce que l'utilisateur veut ouvrir
-			//	explicitement un fichier, soit par Engine.
+			//	Ouvre un document sérialisé, zippé ou non.
 			this.ioDirectory = directory;
 			this.readWarnings = new System.Collections.ArrayList();
 
