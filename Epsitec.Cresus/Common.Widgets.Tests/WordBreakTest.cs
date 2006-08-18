@@ -36,7 +36,7 @@ namespace Epsitec.Common.Widgets
 
 			int i = 0;
 
-			foreach (int pos in WordBreak.Break (buffer.ToString ()))
+			foreach (int pos in Common.Text.BreakEngines.FrenchWordBreakEngine.Break (buffer.ToString ()))
 			{
 				Assert.AreEqual (pos, hope[i++]);
 			}
