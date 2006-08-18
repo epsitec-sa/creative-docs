@@ -128,6 +128,7 @@
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="BreakEngines\FrenchWordBreakEngine.cs" />
     <Compile Include="ILanguageRecognizer.cs" />
     <Compile Include="TextBreakEngineFactory.cs" />
     <Compile Include="CursorAttachment.cs">

@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Epsitec.Common.Widgets
+namespace Epsitec.Common.Text.BreakEngines
 {
 	/// <summary>
 	/// (c) 2002 - EPSITEC & Daniel Roux
@@ -21,7 +21,7 @@ namespace Epsitec.Common.Widgets
 	///   ponturer      -> pon/tu/rer
 	///   tralalèrement -> tra/la/lè/re/ment
 	/// </summary>
-	public class WordBreak
+	public class FrenchWordBreakEngine
 	{
 		static public List<int> Break(string word)
 		{
@@ -254,7 +254,7 @@ namespace Epsitec.Common.Widgets
 			builder = new System.Text.StringBuilder(s.Length);
 			for (int i=0; i<s.Length; i++)
 			{
-				builder.Append(WordBreak.RemoveAccent(s[i]));
+				builder.Append(FrenchWordBreakEngine.RemoveAccent(s[i]));
 			}
 			return builder.ToString();
 		}
@@ -353,7 +353,7 @@ namespace Epsitec.Common.Widgets
 			public TextPointer(string word)
 			{
 				//	Constructeur avec un mot initial.
-				this.text = WordBreak.RemoveAccent(word).ToUpper();
+				this.text = FrenchWordBreakEngine.RemoveAccent(word).ToUpper();
 				this.length = word.Length;
 				this.position = 0;
 				this.start = 0;
@@ -536,7 +536,7 @@ namespace Epsitec.Common.Widgets
 						return true;
 					}
 
-					if (!WordBreak.IsVoyelle(this.GetChar(0)))
+					if (!FrenchWordBreakEngine.IsVoyelle(this.GetChar(0)))
 					{
 						return false;
 					}
@@ -558,7 +558,7 @@ namespace Epsitec.Common.Widgets
 							return false;
 						}
 
-						if (!WordBreak.IsVoyelle(this.GetChar(0)))
+						if (!FrenchWordBreakEngine.IsVoyelle(this.GetChar(0)))
 						{
 							break;
 						}
@@ -579,7 +579,7 @@ namespace Epsitec.Common.Widgets
 						return true;
 					}
 
-					if (WordBreak.IsVoyelle(this.GetChar(0)))
+					if (FrenchWordBreakEngine.IsVoyelle(this.GetChar(0)))
 					{
 						return false;
 					}
@@ -596,7 +596,7 @@ namespace Epsitec.Common.Widgets
 				while (true)
 				{
 					char letter = tmp.GetChar(0);
-					if (letter != 'X' && WordBreak.IsVoyelle(letter))
+					if (letter != 'X' && FrenchWordBreakEngine.IsVoyelle(letter))
 					{
 						return false;
 					}
@@ -683,7 +683,7 @@ namespace Epsitec.Common.Widgets
 				while (true)
 				{
 					// Début de syllabe ?
-					if (tp.SearchDico(WordBreak.dico_sy, null))
+					if (tp.SearchDico(FrenchWordBreakEngine.dico_sy, null))
 					{
 						tp.CopyCursor(this);
 						return true;
@@ -702,7 +702,7 @@ namespace Epsitec.Common.Widgets
 					}
 
 					// Consonne-voyelle ?
-					if (WordBreak.IsVoyelle(tp.GetChar(1)))
+					if (FrenchWordBreakEngine.IsVoyelle(tp.GetChar(1)))
 					{
 						tp.CopyCursor(this);
 						return true;
@@ -715,20 +715,20 @@ namespace Epsitec.Common.Widgets
 			public void SearchException(List<int> list)
 			{
 				// Cherche dans les dictionnaires si le mot est une exception.
-				if (this.SearchDico(WordBreak.dico_ne, null))
+				if (this.SearchDico(FrenchWordBreakEngine.dico_ne, null))
 				{
 					return;
 				}
 
 				List<int> lb = new List<int>();
-				if (this.SearchDico(WordBreak.dico_nc, lb))
+				if (this.SearchDico(FrenchWordBreakEngine.dico_nc, lb))
 				{
 					System.Diagnostics.Debug.Assert(lb.Count == 1);
 					this.banned = lb[0]-this.start;
 					return;
 				}
 
-				if (this.SearchDico(WordBreak.dico_ex, list))
+				if (this.SearchDico(FrenchWordBreakEngine.dico_ex, list))
 				{
 					System.Diagnostics.Debug.Assert(list.Count != 0);
 					this.root = list[list.Count-1]-this.start;  // offset préposition
