@@ -30,22 +30,9 @@ namespace Epsitec.Common.Support
 		protected void CheckWord(string word)
 		{
 			//	Teste un mot. En cas d'erreur, écrit un texte explicite dans Console.Error.
-			System.Text.StringBuilder buffer = new System.Text.StringBuilder();
-			List<int> hope = new List<int>();
-
-			foreach (char c in word)
-			{
-				if (c == '/')  // séparateur souhaité ?
-				{
-					hope.Add(buffer.Length);
-				}
-				else
-				{
-					buffer.Append(c);
-				}
-			}
-
-			string brut = buffer.ToString();  // mot brut, sans séparateurs
+			string brut;
+			List<int> hope;
+			WordBreakTest.RemoveSeparators(word, out brut, out hope);
 
 			List<int> result = new List<int>(Common.Text.BreakEngines.FrenchWordBreakEngine.Break(brut));
 
@@ -77,19 +64,40 @@ namespace Epsitec.Common.Support
 			return true;
 		}
 
-		static protected string AddSeparators(string word, List<int> list)
+		static protected void RemoveSeparators(string wordWithSep, out string wordWithout, out List<int> list)
+		{
+			//	Enlève les séparateurs "/" dans un mot et retourne la liste des positions.
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder();
+			list = new List<int>();
+
+			foreach (char c in wordWithSep)
+			{
+				if (c == '/')  // séparateur souhaité ?
+				{
+					list.Add(buffer.Length);
+				}
+				else
+				{
+					buffer.Append(c);
+				}
+			}
+
+			wordWithout = buffer.ToString();  // mot brut, sans séparateurs
+		}
+
+		static protected string AddSeparators(string wordWithout, List<int> list)
 		{
 			//	Remet les séparateurs "/" dans un mot.
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder();
 
-			for (int i=0; i<word.Length; i++)
+			for (int i=0; i<wordWithout.Length; i++)
 			{
 				if (list.Contains(i))
 				{
 					buffer.Append("/");
 				}
 
-				buffer.Append(word[i]);
+				buffer.Append(wordWithout[i]);
 			}
 
 			return buffer.ToString();
@@ -173,7 +181,7 @@ namespace Epsitec.Common.Support
 			"cré/er",
 			"créa/tion",
 			"croyan/ce",
-			"cul/tu/re",					//	et la règle des cul* ?
+			"cul/tu/re",
 
 			"dac/ty/lo/gra/phie",
 			"déjà",
@@ -375,6 +383,8 @@ namespace Epsitec.Common.Support
 			"me/su/res",
 			"mi/cro/or/di/na/teur",
 			"moyen/nant",
+			"mais",
+			"maïs",
 
 			"naif",
 			"nean",
@@ -623,6 +633,6 @@ namespace Epsitec.Common.Support
 		};
 
 
-		protected int						errorCounter;
+		protected int errorCounter;
 	}
 }
