@@ -42,6 +42,13 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
+		public Drawing.Image GetImage()
+		{
+			//	Retourne les données de l'image.
+			return this.imageOriginal;
+		}
+
+
 		public override void MoveHandleStarting(int rank, Point pos, DrawingContext drawingContext)
 		{
 			//	Début du déplacement d'une poignée.

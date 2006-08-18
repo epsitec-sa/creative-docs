@@ -1,6 +1,8 @@
+using System.Collections.Generic;
 using Epsitec.Common.Support;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
+using Epsitec.Common.IO;
 
 namespace Epsitec.Common.Document
 {
@@ -956,6 +958,62 @@ namespace Epsitec.Common.Document
 				{
 					this.namesExist = value;
 					this.document.Notifier.NotifySelNamesChanged();
+				}
+			}
+		}
+		#endregion
+
+
+		#region Images
+		public void ImagesGenerateShortNames()
+		{
+			//	Génère les noms courts pour toutes les images du document.
+			List<string> list = new List<string>();
+			foreach (Objects.Abstract obj in this.document.Deep(null))
+			{
+				Properties.Image image = obj.PropertyImage;
+				if (image != null)
+				{
+					if (!list.Contains(image.Filename))
+					{
+						list.Add(image.Filename);
+					}
+				}
+			}
+
+			foreach (Objects.Abstract obj in this.document.Deep(null))
+			{
+				Properties.Image image = obj.PropertyImage;
+				if (image != null)
+				{
+					int index = list.IndexOf(image.Filename);
+					System.Diagnostics.Debug.Assert(index != -1);
+					image.ShortName = index.ToString(System.Globalization.CultureInfo.InvariantCulture);
+				}
+			}
+		}
+
+		public void ImagesWriteData(ZipFile zip)
+		{
+			//	Ecrit toutes les données des images.
+			List<string> list = new List<string>();
+			foreach (Objects.Abstract obj in this.document.Deep(null))
+			{
+				Properties.Image image = obj.PropertyImage;
+				if (image != null)
+				{
+					if (!list.Contains(image.ShortName))
+					{
+						list.Add(image.ShortName);
+
+						string name = string.Format("images/{0}", image.ShortName);
+
+						Objects.Image imageObj = obj as Objects.Image;
+						Drawing.Image di = imageObj.GetImage();
+						//?byte[] data = di.???;  // TODO: comment faire ?
+
+						//?zip.AddEntry(name, data);
+					}
 				}
 			}
 		}
