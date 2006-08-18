@@ -1178,41 +1178,44 @@ namespace Epsitec.Common.Document
 					File.Delete(filename);
 				}
 
-#if false
-				using ( Stream stream = File.OpenWrite(filename) )
+				if (this.type == DocumentType.Pictogram)
 				{
-					Document.WriteIdentifier(stream, this.ioType);
-
-					if ( this.ioType == IOType.BinaryCompress )
+					using (Stream stream = File.OpenWrite(filename))
 					{
-						//?Stream compressor = IO.Compression.CreateBZip2Stream(stream);
-						Stream compressor = IO.Compression.CreateDeflateStream(stream, 1);
+						Document.WriteIdentifier(stream, this.ioType);
+
+						if (this.ioType == IOType.BinaryCompress)
+						{
+							//?Stream compressor = IO.Compression.CreateBZip2Stream(stream);
+							Stream compressor = IO.Compression.CreateDeflateStream(stream, 1);
+							BinaryFormatter formatter = new BinaryFormatter();
+							formatter.Serialize(compressor, this);
+							compressor.Close();
+						}
+						else if (this.ioType == IOType.SoapUncompress)
+						{
+							SoapFormatter formatter = new SoapFormatter();
+							formatter.Serialize(stream, this);
+						}
+					}
+				}
+				else
+				{
+					byte[] data;
+					using (MemoryStream stream = new MemoryStream())
+					{
+						Document.WriteIdentifier(stream, this.ioType);
+
 						BinaryFormatter formatter = new BinaryFormatter();
-						formatter.Serialize(compressor, this);
-						compressor.Close();
-					}
-					else if ( this.ioType == IOType.SoapUncompress )
-					{
-						SoapFormatter formatter = new SoapFormatter();
 						formatter.Serialize(stream, this);
+						data = stream.ToArray();
 					}
-				}
-#else
-				byte[] data;
-				using ( MemoryStream stream = new MemoryStream() )
-				{
-					Document.WriteIdentifier(stream, this.ioType);
 
-					BinaryFormatter formatter = new BinaryFormatter();
-					formatter.Serialize(stream, this);
-					data = stream.ToArray();
+					ZipFile zip = new ZipFile();
+					zip.AddEntry("document.data", data);
+					zip.CompressionLevel = 6;
+					zip.SaveFile(filename);
 				}
-
-				ZipFile zip = new ZipFile();
-				zip.AddEntry("document.data", data);
-				zip.CompressionLevel = 6;
-				zip.SaveFile(filename);
-#endif
 			}
 			catch ( System.Exception e )
 			{
