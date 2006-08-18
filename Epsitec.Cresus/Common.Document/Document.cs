@@ -1201,6 +1201,8 @@ namespace Epsitec.Common.Document
 				}
 				else
 				{
+					this.modifier.ImagesGenerateShortNames();
+
 					byte[] data;
 					using (MemoryStream stream = new MemoryStream())
 					{
@@ -1213,6 +1215,7 @@ namespace Epsitec.Common.Document
 
 					ZipFile zip = new ZipFile();
 					zip.AddEntry("document.data", data);
+					this.modifier.ImagesWriteData(zip);
 					zip.CompressionLevel = 6;
 					zip.SaveFile(filename);
 				}
