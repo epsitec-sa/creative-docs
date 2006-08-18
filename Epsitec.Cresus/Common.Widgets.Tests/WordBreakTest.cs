@@ -4,43 +4,44 @@ using Epsitec.Common.Support;
 
 namespace Epsitec.Common.Widgets
 {
-	[TestFixture] public class WordBreakTest
+	[TestFixture]
+	public class WordBreakTest
 	{
-		[Test] public void CheckWordBreak()
+		[Test]
+		public void CheckWordBreak()
 		{
 			foreach (string word in WordBreakTest.list)
 			{
-				this.CheckWord(word);
+				this.CheckWord (word);
 			}
 		}
 
 		protected void CheckWord(string word)
 		{
 			//	Teste un mot.
-			System.Text.StringBuilder builder = new System.Text.StringBuilder();
-			List<int> hope = new List<int>();
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+			List<int> hope = new List<int> ();
 
-			for (int i=0; i<word.Length; i++)
+			foreach (char c in word)
 			{
-				char c = word[i];
-
 				if (c == '/')
 				{
-					hope.Add(builder.Length);
+					hope.Add (buffer.Length);
 				}
 				else
 				{
-					builder.Append(c);
+					buffer.Append (c);
 				}
 			}
 
-			List<int> list = WordBreak.Break(builder.ToString());
+			int i = 0;
 
-			Assert.IsTrue(list.Count == hope.Count);
-			for (int i=0; i<list.Count; i++)
+			foreach (int pos in WordBreak.Break (buffer.ToString ()))
 			{
-				Assert.IsTrue(list[i] == hope[i]);
+				Assert.AreEqual (pos, hope[i++]);
 			}
+
+			Assert.AreEqual (hope.Count, i);
 		}
 
 		//	Liste des mots à tester. Les endroits où WordBreak doit trouver
@@ -147,6 +148,7 @@ namespace Epsitec.Common.Widgets
 			"épis/to/lai/re",
 			"epreu/ve",
 			"Egip/tien",
+			"Égyp/tien",
 			"ébran/la/ble",
 			"ébrui/ter",
 			"éco/le",
