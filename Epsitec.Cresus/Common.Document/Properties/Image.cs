@@ -15,12 +15,13 @@ namespace Epsitec.Common.Document.Properties
 
 		protected override void Initialise()
 		{
-			this.filename = "";
-			this.mirrorH  = false;
-			this.mirrorV  = false;
-			this.homo     = true;
-			this.filter   = true;
-			this.reload   = false;
+			this.filename  = "";
+			this.shortName = "";
+			this.mirrorH   = false;
+			this.mirrorV   = false;
+			this.homo      = true;
+			this.filter    = true;
+			this.reload    = false;
 		}
 
 		public string Filename
@@ -36,6 +37,24 @@ namespace Epsitec.Common.Document.Properties
 				{
 					this.NotifyBefore();
 					this.filename = value;
+					this.NotifyAfter();
+				}
+			}
+		}
+
+		public string ShortName
+		{
+			get
+			{
+				return this.shortName;
+			}
+
+			set
+			{
+				if (this.shortName != value)
+				{
+					this.NotifyBefore();
+					this.shortName = value;
 					this.NotifyAfter();
 				}
 			}
@@ -166,12 +185,13 @@ namespace Epsitec.Common.Document.Properties
 			//	Effectue une copie de la propriété.
 			base.CopyTo(property);
 			Image p = property as Image;
-			p.filename = this.filename;
-			p.mirrorH  = this.mirrorH;
-			p.mirrorV  = this.mirrorV;
-			p.homo     = this.homo;
-			p.filter   = this.filter;
-			p.reload   = this.reload;
+			p.filename  = this.filename;
+			p.shortName = this.shortName;
+			p.mirrorH   = this.mirrorH;
+			p.mirrorV   = this.mirrorV;
+			p.homo      = this.homo;
+			p.filter    = this.filter;
+			p.reload    = this.reload;
 		}
 
 		public override bool Compare(Abstract property)
@@ -180,12 +200,13 @@ namespace Epsitec.Common.Document.Properties
 			if ( !base.Compare(property) )  return false;
 
 			Image p = property as Image;
-			if ( p.filename != this.filename )  return false;
-			if ( p.mirrorH  != this.mirrorH  )  return false;
-			if ( p.mirrorV  != this.mirrorV  )  return false;
-			if ( p.homo     != this.homo     )  return false;
-			if ( p.filter   != this.filter   )  return false;
-			if ( p.reload   != this.reload   )  return false;
+			if ( p.filename  != this.filename  )  return false;
+			if ( p.shortName != this.shortName )  return false;
+			if ( p.mirrorH   != this.mirrorH   )  return false;
+			if ( p.mirrorV   != this.mirrorV   )  return false;
+			if ( p.homo      != this.homo      )  return false;
+			if ( p.filter    != this.filter    )  return false;
+			if ( p.reload    != this.reload    )  return false;
 
 			return true;
 		}
@@ -214,6 +235,7 @@ namespace Epsitec.Common.Document.Properties
 			}
 
 			info.AddValue("Filename", filename);
+			info.AddValue("ShortName", this.shortName);
 			info.AddValue("MirrorH", this.mirrorH);
 			info.AddValue("MirrorV", this.mirrorV);
 			info.AddValue("Homo", this.homo);
@@ -246,11 +268,21 @@ namespace Epsitec.Common.Document.Properties
 			{
 				this.filename = this.document.IoDirectory + "\\" + this.filename;
 			}
+
+			if ( this.document.IsRevisionGreaterOrEqual(2, 0, 1) )
+			{
+				this.shortName = info.GetString("ShortName");
+			}
+			else
+			{
+				this.shortName = "";
+			}
 		}
 		#endregion
 
 	
 		protected string			filename;
+		protected string			shortName;
 		protected bool				mirrorH;
 		protected bool				mirrorV;
 		protected bool				homo;
