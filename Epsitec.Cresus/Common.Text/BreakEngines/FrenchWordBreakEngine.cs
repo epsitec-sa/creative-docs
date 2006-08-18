@@ -1,9 +1,11 @@
+//	Copyright © 2002-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Responsable: Daniel ROUX
+
 using System.Collections.Generic;
 
 namespace Epsitec.Common.Text.BreakEngines
 {
 	/// <summary>
-	/// (c) 2002 - EPSITEC & Daniel Roux
 	/// Algorithme de césure pour les mots français.
 	/// Ce système a été inventé en 1985 pour le logiciel Text sur Smaky.
 	/// Il était initialement programmé en assembleur Calm 2 pour le processeur
@@ -23,7 +25,7 @@ namespace Epsitec.Common.Text.BreakEngines
 	/// </summary>
 	public class FrenchWordBreakEngine
 	{
-		static public List<int> Break(string word)
+		static public IEnumerable<int> Break(string word)
 		{
 			// Coupe un mot selon un certain nombre de règles basées sur
 			// les voyelles et les consonnes. Le mot donné peut contenir des
@@ -39,10 +41,10 @@ namespace Epsitec.Common.Text.BreakEngines
 				tp.SearchException(list);
 
 				// Avance dans le mot syllabes par syllabes ...
-				bool firstSyllabe = true;
+				bool firstSyllable = true;
 				while (tp.Position < tp.Length)
 				{
-					if (!tp.IsSyllabe(firstSyllabe))
+					if (!tp.IsSyllable(firstSyllable))
 					{
 						tp.Advance();
 						continue;
@@ -68,11 +70,11 @@ namespace Epsitec.Common.Text.BreakEngines
 						continue;
 					}
 
-					firstSyllabe = false;
+					firstSyllable = false;
 
 					// Teste s'il ne reste que des consonnes depuis cette éventuelle
 					// césure (par exemple: rangeme-nts)
-					if (tp.IsRestConsonne())
+					if (tp.IsRestConsonant())
 					{
 						break;
 					}
@@ -98,7 +100,7 @@ namespace Epsitec.Common.Text.BreakEngines
 
 		// Dictionnaire de tous les débuts possibles de syllabes (cette
 		// liste ne doit contenir que des consonnes) :
-		static protected string[] dico_sy =
+		static protected string[] syllableStartTable =
 		{
 			"BL",		// re-blochon
 			"BR",		// cham-bre
@@ -123,8 +125,8 @@ namespace Epsitec.Common.Text.BreakEngines
 
 		// Dictionnaire de tous les mots (ou débuts de mots) à couper
 		// normalement (cette liste est parcourue AVANT la liste des
-		// divisions étymoligiques dico_ex) :
-		static protected string[] dico_ne =
+		// divisions étymologiques tableExceptions) :
+		static protected string[] tableNoExceptions =
 		{
 			"DESERT",	// dé-sert
 			"DESID",	// dé-sidératif
@@ -167,7 +169,7 @@ namespace Epsitec.Common.Text.BreakEngines
 
 		// Dictionnaire de tous les mots (ou débuts de mots) à couper
 		// spécialement (divisions étymologiques) :
-		static protected string[] dico_ex =
+		static protected string[] tableExceptions =
 		{
 			"AERO 4",		// aéro-spatial
 			"ANTIA 24",		// anti-alcoolique
@@ -238,7 +240,7 @@ namespace Epsitec.Common.Text.BreakEngines
 
 		// Dictionnaire de tous les débuts de mots à ne pas couper
 		// (exceptions très spéciales) :
-		static protected string[] dico_nc =
+		static protected string[] tableSpecialBreak =
 		{
 			"CON 3",		// con-cierge
 			"ELLE 2",		// el-le
@@ -322,7 +324,7 @@ namespace Epsitec.Common.Text.BreakEngines
 			return cc;
 		}
 
-		static protected bool IsVoyelle(char letter)
+		static protected bool IsVowel(char letter)
 		{
 			// Test si le caractère est une voyelle, c'est-à-dire :
 			//  "A" , "E" , "I" , "O" , "U"  ou  "Y"
@@ -520,7 +522,7 @@ namespace Epsitec.Common.Text.BreakEngines
 				return true;
 			}
 
-			protected bool SkipVoyelles()
+			protected bool SkipVowels()
 			{
 				// Saute une ou plusieurs voyelles.
 				// Retourne true si doubles lettres.
@@ -536,7 +538,7 @@ namespace Epsitec.Common.Text.BreakEngines
 						return true;
 					}
 
-					if (!FrenchWordBreakEngine.IsVoyelle(this.GetChar(0)))
+					if (!FrenchWordBreakEngine.IsVowel(this.GetChar(0)))
 					{
 						return false;
 					}
@@ -545,11 +547,11 @@ namespace Epsitec.Common.Text.BreakEngines
 				}
 			}
 
-			protected bool SkipConsonnes(bool firstSyllabe)
+			protected bool SkipConsonants(bool firstSyllable)
 			{
 				// Saute une ou plusieurs consonnes.
 				// Retourne true si doubles lettres.
-				if (!firstSyllabe)
+				if (!firstSyllable)
 				{
 					while (true)
 					{
@@ -558,7 +560,7 @@ namespace Epsitec.Common.Text.BreakEngines
 							return false;
 						}
 
-						if (!FrenchWordBreakEngine.IsVoyelle(this.GetChar(0)))
+						if (!FrenchWordBreakEngine.IsVowel(this.GetChar(0)))
 						{
 							break;
 						}
@@ -579,7 +581,7 @@ namespace Epsitec.Common.Text.BreakEngines
 						return true;
 					}
 
-					if (FrenchWordBreakEngine.IsVoyelle(this.GetChar(0)))
+					if (FrenchWordBreakEngine.IsVowel(this.GetChar(0)))
 					{
 						return false;
 					}
@@ -588,7 +590,7 @@ namespace Epsitec.Common.Text.BreakEngines
 				}
 			}
 
-			public bool IsRestConsonne()
+			public bool IsRestConsonant()
 			{
 				// Teste s'il ne reste plus que des consonnes dans le mot.
 				TextPointer tmp = new TextPointer(this);
@@ -596,7 +598,7 @@ namespace Epsitec.Common.Text.BreakEngines
 				while (true)
 				{
 					char letter = tmp.GetChar(0);
-					if (letter != 'X' && FrenchWordBreakEngine.IsVoyelle(letter))
+					if (letter != 'X' && FrenchWordBreakEngine.IsVowel(letter))
 					{
 						return false;
 					}
@@ -608,7 +610,7 @@ namespace Epsitec.Common.Text.BreakEngines
 				}
 			}
 
-			protected bool SearchDico(string[] dico, List<int> list)
+			protected bool SearchDictionary(string[] dico, List<int> list)
 			{
 				// Cherche un groupe de lettres dans un dictionnaire.
 				if (this.position == this.length)
@@ -651,7 +653,7 @@ namespace Epsitec.Common.Text.BreakEngines
 				return false;
 			}
 
-			public bool IsSyllabe(bool firstSyllabe)
+			public bool IsSyllable(bool firstSyllable)
 			{
 				// Cherche s'il s'agit d'une syllabe normale, c'est-à-dire:
 				//  - une ou plusieurs consonnes quelconques (voir *)
@@ -668,13 +670,13 @@ namespace Epsitec.Common.Text.BreakEngines
 				}
 
 				TextPointer tp = new TextPointer(this);
-				if (tp.SkipConsonnes(firstSyllabe))
+				if (tp.SkipConsonants(firstSyllable))
 				{
 					tp.CopyCursor(this);
 					return true;
 				}
 
-				if (tp.SkipVoyelles())
+				if (tp.SkipVowels())
 				{
 					tp.CopyCursor(this);
 					return true;
@@ -683,7 +685,7 @@ namespace Epsitec.Common.Text.BreakEngines
 				while (true)
 				{
 					// Début de syllabe ?
-					if (tp.SearchDico(FrenchWordBreakEngine.dico_sy, null))
+					if (tp.SearchDictionary(FrenchWordBreakEngine.syllableStartTable, null))
 					{
 						tp.CopyCursor(this);
 						return true;
@@ -702,7 +704,7 @@ namespace Epsitec.Common.Text.BreakEngines
 					}
 
 					// Consonne-voyelle ?
-					if (FrenchWordBreakEngine.IsVoyelle(tp.GetChar(1)))
+					if (FrenchWordBreakEngine.IsVowel(tp.GetChar(1)))
 					{
 						tp.CopyCursor(this);
 						return true;
@@ -715,20 +717,20 @@ namespace Epsitec.Common.Text.BreakEngines
 			public void SearchException(List<int> list)
 			{
 				// Cherche dans les dictionnaires si le mot est une exception.
-				if (this.SearchDico(FrenchWordBreakEngine.dico_ne, null))
+				if (this.SearchDictionary(FrenchWordBreakEngine.tableNoExceptions, null))
 				{
 					return;
 				}
 
 				List<int> lb = new List<int>();
-				if (this.SearchDico(FrenchWordBreakEngine.dico_nc, lb))
+				if (this.SearchDictionary(FrenchWordBreakEngine.tableSpecialBreak, lb))
 				{
 					System.Diagnostics.Debug.Assert(lb.Count == 1);
 					this.banned = lb[0]-this.start;
 					return;
 				}
 
-				if (this.SearchDico(FrenchWordBreakEngine.dico_ex, list))
+				if (this.SearchDictionary(FrenchWordBreakEngine.tableExceptions, list))
 				{
 					System.Diagnostics.Debug.Assert(list.Count != 0);
 					this.root = list[list.Count-1]-this.start;  // offset préposition

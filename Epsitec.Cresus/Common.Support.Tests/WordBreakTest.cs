@@ -2,7 +2,7 @@ using NUnit.Framework;
 using System.Collections.Generic;
 using Epsitec.Common.Support;
 
-namespace Epsitec.Common.Widgets
+namespace Epsitec.Common.Support
 {
 	[TestFixture]
 	public class WordBreakTest
@@ -34,14 +34,15 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 
+			Assert.AreEqual (hope.Count, Types.Collection.Count (Common.Text.BreakEngines.FrenchWordBreakEngine.Break (buffer.ToString ())), string.Format ("Count mismatch in {0}", buffer.ToString ()));
+
 			int i = 0;
 
 			foreach (int pos in Common.Text.BreakEngines.FrenchWordBreakEngine.Break (buffer.ToString ()))
 			{
-				Assert.AreEqual (pos, hope[i++]);
+				Assert.AreEqual (pos, hope[i], string.Format ("Expected {0}, got {1} in {2}", pos, hope[i], buffer.ToString ()));
+				i++;
 			}
-
-			Assert.AreEqual (hope.Count, i);
 		}
 
 		//	Liste des mots à tester. Les endroits où WordBreak doit trouver
@@ -53,8 +54,12 @@ namespace Epsitec.Common.Widgets
 			"an/ti/al/co/oli/que",
 			"an/ti/thè/se",
 			"an/ti/cham/bre",
+			"ab/sent",
+			"abs/trait",
 			"abra/ca/da/brant",
 			"al/chi/mis/te",
+			"al/pin",
+			"amour",
 			"ana/ly/se",
 			"ano/ny/me",
 			"ap/pros/ta/te",
@@ -71,8 +76,11 @@ namespace Epsitec.Common.Widgets
 			"an/nuel/le",
 			"au/jour/d'hui",
 			"ap/proxi/ma/tif",
+			"asy/mé/trie",
 			"ava/re",
 			"at/mo/sphè/re",
+			"ayions",
+			"blas/phè/me",
 			"blond",
 			"brouil/lard",
 			"bon/hom/me",
@@ -87,7 +95,7 @@ namespace Epsitec.Common.Widgets
 			"ca/rac/té/ris/ti/que",
 			"chou/chou",
 			"cons/puer",
-			"cons/cien/ce",
+			"cons/truit",
 			"com/pen/sa/tion",
 			"cré/er",
 			"cons/truc/tion",
@@ -110,6 +118,8 @@ namespace Epsitec.Common.Widgets
 			"cos/mo/go/nie",
 			"créa/tion",
 			"croyan/ce",
+			"cul/tu/re",					//	et la règle des cul* ?
+			"dac/ty/lo/gra/phie",
 			"déjà",
 			"de",
 			"des",
@@ -297,6 +307,7 @@ namespace Epsitec.Common.Widgets
 			"mes/es/ti/mer",
 			"me/su/res",
 			"mi/cro/or/di/na/teur",
+			"moyen/nant",
 			"naif",
 			"nean",
 			"néo/lo/gis/me",
@@ -320,6 +331,7 @@ namespace Epsitec.Common.Widgets
 			"orien/ter",
 			"obs/cur/sis/ment",
 			"obs/ta/cle",
+			"obs/ti/né",
 			"ou/vrir",
 			"oto/rhi/no/la/ryn/go/lo/gis/tes",
 			"par/ti/cu/liai/re/ment",
@@ -335,6 +347,7 @@ namespace Epsitec.Common.Widgets
 			"pi/lu/le",
 			"pha/rynx",
 			"pers/pi/ca/ce",
+			"pré/sco/lai/re",
 			"pros/ter/ner",
 			"pros/ta/te",
 			"pro/émi/nen/ce",
@@ -392,6 +405,7 @@ namespace Epsitec.Common.Widgets
 			"sab/ba/tin",
 			"site",
 			"scru/pu/leu/se/ments",
+			"soixan/te",
 			"so/phis/ti/quer",
 			"sor/cier",
 			"spon/ta/ne/ment",
@@ -505,9 +519,34 @@ namespace Epsitec.Common.Widgets
 			"d'au/cuns",
 			"com/men/cée",
 			"com/men/cées",
+			"es/pion",
+			"oa/sis",
+			"théâ/tre",
+			"taxer",
+			"tuyau",
+			"payer",
+			"tex/tuel",
+			"pay/san",
+			"in/sta/ble",
 			"(com/men/cée)",
 			"(com/men/cées)",
 			"(concier/ge)",
+
+			//	Faux :
+
+			"ma/ïs",
+			"po/ète",
+			
+			"Alpes",
+			"pré/scien/ce",		//	OK
+			"con/scien/ce",		//	pas OK? (règle des con* je veux bien, mais pas cons-cience)
+			"ba/yer",
+			"hé/mi/èdre",		//	à mon avis, la césure étymologique prime ici !
+			"stag/nant",
+			"struc/tu/rer",		//	OK
+			"re/struc/tu/rer",	//	pas OK?
+			"sta/bi/li/ser",	//	OK
+			"dé/sta/bi/li/ser",	//	pas OK?
 		};
 	}
 }
