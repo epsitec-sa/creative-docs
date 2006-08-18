@@ -2,6 +2,7 @@ using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Text;
+using Epsitec.Common.IO;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
@@ -666,25 +667,54 @@ namespace Epsitec.Common.Document
 
 			try
 			{
-				using ( Stream stream = File.OpenRead(filename) )
+				ZipFile zip = new ZipFile();
+
+				if (zip.TryLoadFile(filename))
 				{
-					string err = this.Read(stream, System.IO.Path.GetDirectoryName(filename));
-					if ( err == "" )
+					// Fichier CrDoc au format ZIP, chargé avec succès !
+					using (MemoryStream stream = new MemoryStream(zip["document.data"].Data))
 					{
-						if ( Misc.IsExtension(filename, ".crdoc") ||
-							 Misc.IsExtension(filename, ".icon")  )
+						string err = this.Read(stream, System.IO.Path.GetDirectoryName(filename), true);
+						if ( err == "" )
 						{
-							this.Filename = filename;
-							this.globalSettings.LastFilenameAdd(filename);
+							if ( Misc.IsExtension(filename, ".crdoc") ||
+								 Misc.IsExtension(filename, ".icon")  )
+							{
+								this.Filename = filename;
+								this.globalSettings.LastFilenameAdd(filename);
+								this.IsDirtySerialize = false;
+							}
+						}
+						else
+						{
 							this.IsDirtySerialize = false;
 						}
+						return err;
 					}
-					else
-					{
-						this.IsDirtySerialize = false;
-					}
-					return err;
 				}
+				else
+				{
+					// Désérialisation standard; c'est un ancien fichier CrDoc.
+					using (Stream stream = File.OpenRead(filename))
+					{
+						string err = this.Read(stream, System.IO.Path.GetDirectoryName(filename));
+						if ( err == "" )
+						{
+							if ( Misc.IsExtension(filename, ".crdoc") ||
+								 Misc.IsExtension(filename, ".icon")  )
+							{
+								this.Filename = filename;
+								this.globalSettings.LastFilenameAdd(filename);
+								this.IsDirtySerialize = false;
+							}
+						}
+						else
+						{
+							this.IsDirtySerialize = false;
+						}
+						return err;
+					}
+			}	
 			}
 			catch ( System.Exception e )
 			{
@@ -694,6 +724,13 @@ namespace Epsitec.Common.Document
 		}
 
 		public string Read(Stream stream, string directory)
+		{
+			//	Ouvre un document sérialisé, soit parce que l'utilisateur veut ouvrir
+			//	explicitement un fichier, soit par Engine.
+			return this.Read(stream, directory, false);
+		}
+
+		protected string Read(Stream stream, string directory, bool isZip)
 		{
 			//	Ouvre un document sérialisé, soit parce que l'utilisateur veut ouvrir
 			//	explicitement un fichier, soit par Engine.
@@ -724,10 +761,17 @@ namespace Epsitec.Common.Document
 
 				try
 				{
-					string compressorName;
-					using ( Stream compressor = IO.Decompression.CreateStream(stream, out compressorName) )
+					if (isZip)
 					{
-						doc = (Document) formatter.Deserialize(compressor);
+						doc = (Document) formatter.Deserialize(stream);
+					}
+					else
+					{
+						string compressorName;
+						using (Stream compressor = IO.Decompression.CreateStream(stream, out compressorName))
+						{
+							doc = (Document) formatter.Deserialize(compressor);
+						}
 					}
 				}
 				catch ( System.Exception e )
@@ -1148,6 +1192,7 @@ namespace Epsitec.Common.Document
 					File.Delete(filename);
 				}
 
+#if false
 				using ( Stream stream = File.OpenWrite(filename) )
 				{
 					Document.WriteIdentifier(stream, this.ioType);
@@ -1166,6 +1211,22 @@ namespace Epsitec.Common.Document
 						formatter.Serialize(stream, this);
 					}
 				}
+#else
+				byte[] data;
+				using ( MemoryStream stream = new MemoryStream() )
+				{
+					Document.WriteIdentifier(stream, this.ioType);
+
+					BinaryFormatter formatter = new BinaryFormatter();
+					formatter.Serialize(stream, this);
+					data = stream.ToArray();
+				}
+
+				ZipFile zip = new ZipFile();
+				zip.AddEntry("document.data", data);
+				zip.CompressionLevel = 6;
+				zip.SaveFile(filename);
+#endif
 			}
 			catch ( System.Exception e )
 			{
