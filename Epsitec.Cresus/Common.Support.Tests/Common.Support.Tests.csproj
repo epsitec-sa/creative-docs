@@ -207,6 +207,7 @@
     <Compile Include="VersionCheckerTest.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="WordBreakTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="resources\LowLevelTest\ab.00.resource" />
