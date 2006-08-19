@@ -237,7 +237,52 @@ namespace Epsitec.Common.Drawing
 				this.UnlockBits ();
 			}
 		}
-		
+
+		public byte[] Save(ImageFormat format)
+		{
+			return this.Save (format, 0);
+		}
+
+		public byte[] Save(ImageFormat format, int depth)
+		{
+			int quality = 0;
+			ImageCompression compression = ImageCompression.None;
+			
+			switch (format)
+			{
+				case ImageFormat.Bmp:
+				case ImageFormat.Png:
+					if (depth == 0)
+					{
+						depth = 32;
+					}
+					break;
+
+				case ImageFormat.Gif:
+					break;
+				
+				case ImageFormat.Tiff:
+					if (depth == 0)
+					{
+						depth = 32;
+					}
+					compression = ImageCompression.Lzw;
+					break;
+				
+				case ImageFormat.Jpeg:
+					depth = 24;
+					quality = 75;
+					break;
+
+				case ImageFormat.WindowsIcon:
+					break;
+				
+				default:
+					throw new System.ArgumentException ("Invalid format specified", "format");
+			}
+			
+			return this.Save (format, depth, quality, compression);
+		}
 		
 		public byte[] Save(ImageFormat format, int depth, int quality, ImageCompression compression)
 		{
