@@ -112,21 +112,6 @@ namespace Epsitec.Common.Drawing
 		{
 			return AntiGrain.TextBreak.GetUnicodeName (code);
 		}
-		
-		public static short[] GetHyphenationPositions(string text)
-		{
-			short[] breaks = new short[25];
-			int     num    = AntiGrain.TextBreak.HyphenateWord (text, text.Length, breaks);
-			
-			short[] result = new short[num];
-			
-			for (int i = 0; i < num; i++)
-			{
-				result[i] = breaks[i];
-			}
-			
-			return result;
-		}
 
 		public class XRun
 		{

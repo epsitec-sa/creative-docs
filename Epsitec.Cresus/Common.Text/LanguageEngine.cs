@@ -1,6 +1,8 @@
 //	Copyright © 2005-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
+using System.Collections.Generic;
+
 namespace Epsitec.Common.Text
 {
 	/// <summary>
@@ -101,9 +103,7 @@ namespace Epsitec.Common.Text
 				{
 					if (word.Length > 3)
 					{
-						short[] break_pos = LanguageEngine.GetHyphenationPositions (word);
-					
-						foreach (short pos in break_pos)
+						foreach (int pos in BreakEngines.FrenchWordBreakEngine.Break (word))
 						{
 							breaks[break_offset + pos - 1] = Unicode.BreakInfo.HyphenateGoodChoice;
 						}
@@ -114,21 +114,6 @@ namespace Epsitec.Common.Text
 					break_offset += word.Length + 1;
 				}
 			}
-		}
-		
-		private static short[] GetHyphenationPositions(string text)
-		{
-			short[] breaks = new short[25];
-			int     num    = AntiGrain.TextBreak.HyphenateWord (text, text.Length, breaks);
-			
-			short[] result = new short[num];
-			
-			for (int i = 0; i < num; i++)
-			{
-				result[i] = breaks[i];
-			}
-			
-			return result;
 		}
 	}
 }
