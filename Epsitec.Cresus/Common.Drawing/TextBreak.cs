@@ -110,7 +110,7 @@ namespace Epsitec.Common.Drawing
 		
 		public static string GetUnicodeName(int code)
 		{
-			return AntiGrain.TextBreak.GetUnicodeName (code);
+			return AntiGrain.Font.GetUnicodeName (code);
 		}
 
 		public class XRun
