@@ -261,6 +261,14 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 
+		public bool								IsDynamicFont
+		{
+			get
+			{
+				return this.isDynamicFont;
+			}
+		}
+
 		
 		internal FontData						FontData
 		{
@@ -356,7 +364,6 @@ namespace Epsitec.Common.OpenType
 
 			return info == null ? null : info.Handle;
 		}
-
 		
 		internal static void Serialize(System.IO.Stream stream, FontIdentity fid)
 		{
@@ -470,6 +477,14 @@ namespace Epsitec.Common.OpenType
 
 			return fid;
 		}
+
+		internal static FontIdentity CreateDynamicFont(byte[] data)
+		{
+			FontData fontData = new FontData (data, 0);
+			FontIdentity id = new FontIdentity (fontData, null, 0);
+			id.isDynamicFont = true;
+			return id;
+		}
 		
 
 		internal void DefineTableName(Table_name openTypeNameTable, int length)
@@ -565,7 +580,7 @@ namespace Epsitec.Common.OpenType
 		
 		private object							record;
 		private FontData						fontData;
-		private Dictionary<int, FontSizeInfo>		fontSizes;
+		private Dictionary<int, FontSizeInfo>	fontSizes;
 		private string							styleHash;
 		private int								ttcIndex;
 		private int								fontStyleCount;
@@ -573,6 +588,7 @@ namespace Epsitec.Common.OpenType
 		private string							systemFontStyle;
 		private bool							isSymbolFont;
 		private bool							isSymbolFontDefined;
+		private bool							isDynamicFont;
 		private byte[]							blob1;
 		private byte[]							blob2;
 	}

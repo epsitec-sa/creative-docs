@@ -288,6 +288,32 @@ namespace Epsitec.Common.OpenType
 			return new Font (font);
 		}
 
+
+		/// <summary>
+		/// Registers the font as a dynamic font.
+		/// </summary>
+		/// <param name="data">The font data.</param>
+		/// <returns>the font identity of the newly registered font; otherwise, <c>null</c>.</returns>
+		public FontIdentity RegisterDynamicFont(byte[] data)
+		{
+			FontIdentity fid = FontIdentity.CreateDynamicFont (data);
+
+			int name_t_offset = fid.FontData["name"].Offset;
+			int name_t_length = fid.FontData["name"].Length;
+
+			fid.DefineTableName (new Table_name (data, name_t_offset), name_t_length);
+			
+			if (this.fullDict.ContainsKey (fid.FullName))
+			{
+				return null;
+			}
+
+			this.Add (fid);
+			this.RefreshFullList ();
+			
+			return fid;
+		}
+		
 		/// <summary>
 		/// Gets the style hash, which is a simplified version of the style
 		/// name.
@@ -528,6 +554,13 @@ namespace Epsitec.Common.OpenType
 					{
 						foreach (FontIdentity fid in this.fullList)
 						{
+							if (fid.IsDynamicFont)
+							{
+								//	Never store dynamic fonts into the cache.
+								
+								continue;
+							}
+							
 							if (callback != null)
 							{
 								callback (fid);
@@ -597,6 +630,14 @@ namespace Epsitec.Common.OpenType
 			}
 			
 			return null;
+		}
+
+		private void Add(FontIdentity fid)
+		{
+			string fullName = fid.FullName;
+			string fuidName = fid.UniqueFontId;
+
+			this.Add (fullName, fuidName, fid);
 		}
 		
 		private void Add(string fullName, string fuidName, FontIdentity fid)
