@@ -5,6 +5,12 @@ namespace Epsitec.Common.Drawing
 {
 	[TestFixture] public class PixmapTest
 	{
+		[SetUp]
+		public void Initialization()
+		{
+			Epsitec.Common.Drawing.Font.Initialize ();
+		}
+
 		[Test]
 		public void AutomatedTestEnvironment()
 		{
@@ -32,7 +38,7 @@ namespace Epsitec.Common.Drawing
 			Assert.AreEqual (800, stride);
 			Assert.AreEqual (System.Drawing.Imaging.PixelFormat.Format32bppPArgb, format);
 			Assert.IsFalse (scan0 == System.IntPtr.Zero);
-			Assert.IsTrue (pixmap.GetMemoryBitmapHandle () == System.IntPtr.Zero);
+			Assert.IsFalse (pixmap.GetMemoryBitmapHandle () == System.IntPtr.Zero);
 			
 			pixmap.Dispose ();
 		}
