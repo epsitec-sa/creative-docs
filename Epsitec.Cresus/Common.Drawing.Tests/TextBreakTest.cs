@@ -78,18 +78,5 @@ namespace Epsitec.Common.Drawing
 				last_n_char = n_char;
 			}
 		}
-		
-		[Test] public void CheckGetHyphenationPositions()
-		{
-			short[] pos;
-
-			pos = TextBreak.GetHyphenationPositions ("atmosphère");
-			
-			Assert.AreEqual (3, pos.Length);
-			
-			Assert.AreEqual (2, pos[0]);
-			Assert.AreEqual (4, pos[1]);
-			Assert.AreEqual (8, pos[2]);
-		}
 	}
 }
