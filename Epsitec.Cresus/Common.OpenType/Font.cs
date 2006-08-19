@@ -171,6 +171,14 @@ namespace Epsitec.Common.OpenType
 				return this.GetAdvance (this.EllipsisGlyph) / per_em;
 			}
 		}
+
+		public FontType							FontType
+		{
+			get
+			{
+				return this.fontType;
+			}
+		}
 		
 		
 		internal void Initialize(FontIdentity identity)
@@ -183,6 +191,7 @@ namespace Epsitec.Common.OpenType
 		internal void Initialize(FontData fontData)
 		{
 			this.fontData = fontData;
+			this.fontType = FontType.Unsupported;
 			
 			this.ot_GSUB = Table_GSUB.Create (this.fontData["GSUB"]);
 			this.ot_GDEF = Table_GDEF.Create (this.fontData["GDEF"]);
@@ -191,10 +200,21 @@ namespace Epsitec.Common.OpenType
 			this.ot_head = new Table_head (this.fontData["head"]);
 			this.ot_hhea = new Table_hhea (this.fontData["hhea"]);
 			this.ot_hmtx = new Table_hmtx (this.fontData["hmtx"]);
-			this.ot_glyf = this.fontData["glyf"] == null ? null : new Table_glyf (this.fontData["glyf"]);
 
-			if (this.fontData["loca"] != null)
+			if ((this.fontData["glyf"] != null) &&
+				(this.fontData["loca"] != null))
 			{
+				this.fontType = FontType.TrueType;
+			}
+			else
+			{
+				this.fontType = FontType.PostScript;
+			}
+			
+			if (this.FontType == FontType.TrueType)
+			{
+				this.ot_glyf = new Table_glyf (this.fontData["glyf"]);
+
 				switch (this.ot_head.IndexToLocFormat)
 				{
 					case 0:
@@ -2435,6 +2455,7 @@ namespace Epsitec.Common.OpenType
 		private Table_glyf						ot_glyf;
 		private KerningTableFormat0				ot_kernFormat0;
 		private IndexMappingTable				ot_indexMapping;
+		private FontType						fontType;
 		
 		private string							activeScript;
 		private string							activeLanguage;

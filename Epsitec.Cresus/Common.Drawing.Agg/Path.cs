@@ -311,6 +311,11 @@ namespace Epsitec.Common.Drawing
 		
 		public void Append(Font font, int glyph, double xx, double xy, double yx, double yy, double tx, double ty)
 		{
+			if (font == null)
+			{
+				return;
+			}
+
 			this.CreateOnTheFly ();
 			this.has_curve = true;
 			this.is_empty  = false;
