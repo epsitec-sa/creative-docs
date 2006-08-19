@@ -268,7 +268,7 @@ namespace Epsitec.Common.Text.BreakEngines
 		{
 			//	Retourne le même caractère sans accent (é -> e).
 			//	TODO: traiter tous les accents unicode ?
-			char lower = System.Char.ToLower(c);
+			char lower = System.Char.ToLowerInvariant(c);
 			char cc = lower;
 
 			switch (cc)
@@ -321,7 +321,7 @@ namespace Epsitec.Common.Text.BreakEngines
 
 			if (lower != c)  // a-t-on utilisé une majuscule transformée en minuscule ?
 			{
-				cc = System.Char.ToUpper(cc);  // remet en majuscule
+				cc = System.Char.ToUpperInvariant(cc);  // remet en majuscule
 			}
 
 			return cc;
