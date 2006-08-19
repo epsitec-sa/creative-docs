@@ -356,19 +356,19 @@ namespace Epsitec.Common.Text
 			{
 				TextContext.font_collection = OpenType.FontCollection.Default;
 				TextContext.font_collection.RefreshCache (callback);
-				TextContext.font_cache = new System.Collections.Hashtable ();
+				TextContext.font_cache = new Dictionary<string, OpenType.Font> ();
 			}
 		}
 		
 		public static string[] GetAvailableFontFaces()
 		{
 			TextContext.InitializeFontCollection (null);
-			
-			System.Collections.Hashtable hash = new System.Collections.Hashtable ();
+
+			Dictionary<string, OpenType.FontIdentity> hash = new Dictionary<string, OpenType.FontIdentity> ();
 			
 			foreach (OpenType.FontIdentity id in TextContext.font_collection)
 			{
-				if (hash.Contains (id.InvariantFaceName) == false)
+				if (hash.ContainsKey (id.InvariantFaceName) == false)
 				{
 					hash[id.InvariantFaceName] = id;
 				}
@@ -386,12 +386,11 @@ namespace Epsitec.Common.Text
 			
 			if (TextContext.font_ids.ContainsKey (face))
 			{
-				List<OpenType.FontIdentity> list = TextContext.font_ids[face];
-				return list.ToArray ();
+				return TextContext.font_ids[face].ToArray ();
 			}
 			else
 			{
-				List<OpenType.FontIdentity> list = new List<Epsitec.Common.OpenType.FontIdentity> ();
+				List<OpenType.FontIdentity> list = new List<OpenType.FontIdentity> ();
 				
 				foreach (OpenType.FontIdentity id in TextContext.font_collection)
 				{
@@ -1924,9 +1923,7 @@ namespace Epsitec.Common.Text
 			
 			lock (TextContext.font_cache)
 			{
-				font = TextContext.font_cache[font_full] as OpenType.Font;
-				
-				if (font == null)
+				if (TextContext.font_cache.TryGetValue (font_full, out font) == false)
 				{
 					font = TextContext.font_collection.CreateFont (font_face, font_style);
 					TextContext.font_cache[font_full] = font;
@@ -1998,7 +1995,7 @@ namespace Epsitec.Common.Text
 		private bool							is_properties_property_enabled = true;
 		
 		static OpenType.FontCollection			font_collection;
-		static System.Collections.Hashtable		font_cache;
+		static Dictionary<string, OpenType.Font> font_cache;
 		
 		private System.Collections.Hashtable	resources;
 		

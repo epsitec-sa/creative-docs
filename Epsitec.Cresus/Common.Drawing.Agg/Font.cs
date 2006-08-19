@@ -67,7 +67,7 @@ namespace Epsitec.Common.Drawing
 					byte[] data = this.OpenTypeFont.FontData.Data;
 					int    size = data.Length;
 
-					System.IntPtr osHandle = this.OpenTypeFont.GetFontHandleAtEmSize ();
+					System.IntPtr osHandle = this.OpenTypeFont.FontIdentity.IsDynamicFont ? System.IntPtr.Zero : this.OpenTypeFont.GetFontHandleAtEmSize ();
 					
 					this.handle = AntiGrain.Font.CreateFaceHandle (data, size, osHandle);
 				}
@@ -543,7 +543,35 @@ namespace Epsitec.Common.Drawing
 			ushort[] glyphs = this.OpenTypeFont.GenerateGlyphs (text);
 			return AntiGrain.Font.PixelCache.Paint (pixmap.Handle, this.Handle, glyphs, size, ox, oy, color.R, color.G, color.B, color.A);
 		}
-		
+
+
+		public static void RegisterDynamicFont(byte[] data)
+		{
+			OpenType.FontIdentity fid = Font.font_collection.RegisterDynamicFont (data);
+			
+			if (fid != null)
+			{
+				Font font = new Font (fid);
+				string name = font.FullName;
+				string face = font.FaceName;
+
+				System.Diagnostics.Debug.Assert (Font.font_hash.ContainsKey (name) == false);
+				
+				Font.font_array.Add (font);
+				Font.font_hash[name] = font;
+				
+				FontFaceInfo info;
+
+				if (Font.face_hash.TryGetValue (face, out info) == false)
+				{
+					info = new FontFaceInfo (face);
+					Font.face_hash[face] = info;
+					Font.face_array.Add (info);
+				}
+
+				info.Add (font);
+			}
+		}
 		
 		private void Dispose(bool disposing)
 		{
