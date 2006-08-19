@@ -444,7 +444,7 @@ namespace Epsitec.Common.Drawing
 			double x = 10;
 			double y = root.Client.Size.Height - 10;
 			
-			Font   font = Font.GetFont ("Wingdings", "Normal");
+			Font   font = Font.GetFont ("Wingdings", "Regular");
 			double size = 48;
 			
 			e.Graphics.FillMode = FillMode.NonZero;
