@@ -36,12 +36,17 @@ namespace Epsitec.Common.Drawing
 				
 				if (font.GetGlyphIndex ('e') == 0)
 				{
-					System.Console.Out.WriteLine ("{0} ({1}/{2}) is not a Latin font", font.FullName, font.FaceName, font.StyleName);
+					System.Console.Out.WriteLine ("{0} ({1}/{2}) is not a Latin font ({3})", font.FullName, font.FaceName, font.StyleName, font.OpenTypeFont.FontIdentity.IsSymbolFont ? "symbol" : "-");
 				}
 				else
 				{
 					System.Console.Out.WriteLine (font.FullName + " (" + font.LocaleStyleName + ") / e=" + font.GetGlyphIndex ('e').ToString ());
 					System.Console.Out.WriteLine ("  A=" + font.Ascender + " D=" + font.Descender + " H=" + (font.LineHeight-font.Ascender+font.Descender) + " w=" + font.GetCharAdvance ('e'));
+				}
+
+				if (font.OpenTypeFont.FontType != OpenType.FontType.TrueType)
+				{
+					System.Console.Out.WriteLine ("--> FontType is {0}", font.OpenTypeFont.FontType);
 				}
 				
 				Font find = Font.GetFont (font.FaceName, font.StyleName, font.OpticalName);

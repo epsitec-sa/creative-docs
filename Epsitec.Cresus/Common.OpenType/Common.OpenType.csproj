@@ -91,6 +91,7 @@
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="FontType.cs" />
     <Compile Include="Font.cs">
       <SubType>Code</SubType>
     </Compile>

@@ -84,6 +84,8 @@ namespace Epsitec.Common.Drawing
 
 		public Font GetFont(bool bold, bool italic)
 		{
+			bool regular = !bold && !italic;
+			
 			foreach (Font font in this.fonts)
 			{
 				bool isBoldFont   = font.IsStyleBold;
@@ -92,7 +94,11 @@ namespace Epsitec.Common.Drawing
 				if ((bold == isBoldFont) &&
 					(italic == isItalicFont))
 				{
-					return font;
+					if ((!regular) ||
+						(font.IsStyleRegular))
+					{
+						return font;
+					}
 				}
 			}
 			
