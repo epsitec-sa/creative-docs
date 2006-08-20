@@ -34,10 +34,10 @@ namespace Epsitec.App.DocumentEditor
 			
 			CommandDispatcher.SetDispatcher (this, this.commandDispatcher);
 			
-			this.type = type;
+			this.documentType = type;
 			this.useArray = false;
 
-			if ( this.type == DocumentType.Pictogram )
+			if ( this.documentType == DocumentType.Pictogram )
 			{
 				this.installType = InstallType.Full;
 			}
@@ -79,14 +79,14 @@ namespace Epsitec.App.DocumentEditor
 			if ( !this.ReadGlobalSettings() )
 			{
 				this.globalSettings = new GlobalSettings();
-				this.globalSettings.Initialise(this.type);
+				this.globalSettings.Initialise(this.documentType);
 			}
 
 			Epsitec.Common.Widgets.Adorners.Factory.SetActive(this.globalSettings.Adorner);
 
 			this.dlgSplash = new Dialogs.Splash(this);
 			
-			if ( this.type != DocumentType.Pictogram &&
+			if ( this.documentType != DocumentType.Pictogram &&
 				 this.globalSettings.SplashScreen )
 			{
 				this.dlgSplash.Show();
@@ -119,7 +119,7 @@ namespace Epsitec.App.DocumentEditor
 			
 			this.dlgSplash.StartTimer();
 
-			this.clipboard = new Document(this.type, DocumentMode.Clipboard, this.installType, this.debugMode, this.globalSettings, this.CommandDispatcher, this.CommandContext);
+			this.clipboard = new Document(this.documentType, DocumentMode.Clipboard, this.installType, this.debugMode, this.globalSettings, this.CommandDispatcher, this.CommandContext);
 			this.clipboard.Name = "Clipboard";
 
 			this.documents = new System.Collections.ArrayList();
@@ -206,9 +206,9 @@ namespace Epsitec.App.DocumentEditor
 			base.Dispose(disposing);
 		}
 
-		public DocumentType Type
+		public DocumentType DocumentType
 		{
-			get { return this.type; }
+			get { return this.documentType; }
 		}
 		
 		public InstallType InstallType
@@ -665,14 +665,14 @@ namespace Epsitec.App.DocumentEditor
 			this.InfoAdd("StatusObject", 120);
 
 			//?this.InfoAdd("ZoomMin");
-			if ( this.type != DocumentType.Pictogram )
+			if ( this.documentType != DocumentType.Pictogram )
 			{
 				this.InfoAdd("ZoomPage");
 				this.InfoAdd("ZoomPageWidth");
 			}
 			this.InfoAdd("ZoomDefault");
 			this.InfoAdd("ZoomSel");
-			if ( this.type != DocumentType.Pictogram )
+			if ( this.documentType != DocumentType.Pictogram )
 			{
 				this.InfoAdd("ZoomSelWidth");
 			}
@@ -718,7 +718,7 @@ namespace Epsitec.App.DocumentEditor
 			this.VToolBarAdd (this.toolZoomState.Command);
 			this.VToolBarAdd (this.toolHandState.Command);
 			this.VToolBarAdd (this.toolPickerState.Command);
-			if ( this.type == DocumentType.Pictogram )
+			if ( this.documentType == DocumentType.Pictogram )
 			{
 				this.VToolBarAdd (this.toolHotSpotState.Command);
 			}
@@ -741,7 +741,7 @@ namespace Epsitec.App.DocumentEditor
 				this.VToolBarAdd (this.toolArrayState.Command);
 			}
 			this.VToolBarAdd (this.toolImageState.Command);
-			if ( this.type != DocumentType.Pictogram )
+			if ( this.documentType != DocumentType.Pictogram )
 			{
 				this.VToolBarAdd (this.toolDimensionState.Command);
 			}
@@ -1576,7 +1576,7 @@ namespace Epsitec.App.DocumentEditor
 
 			dialog.InitialDirectory = this.globalSettings.InitialDirectory;
 			dialog.FileName = "";
-			if ( this.type == DocumentType.Graphic )
+			if ( this.documentType == DocumentType.Graphic )
 			{
 				dialog.Title = Res.Strings.Dialog.Open.TitleDoc;
 				dialog.Filters.Add("crdoc", Res.Strings.Dialog.FileDoc, "*.crdoc");
@@ -1702,7 +1702,7 @@ namespace Epsitec.App.DocumentEditor
 			
 				dialog.InitialDirectory = this.globalSettings.InitialDirectory;
 				dialog.FileName = this.CurrentDocument.Filename;
-				if ( this.type == DocumentType.Graphic )
+				if ( this.documentType == DocumentType.Graphic )
 				{
 					dialog.Title = Res.Strings.Dialog.Save.TitleDoc;
 					dialog.Filters.Add("crdoc", Res.Strings.Dialog.FileDoc, "*.crdoc");
@@ -5121,7 +5121,7 @@ namespace Epsitec.App.DocumentEditor
 			//	Crée un nouveau document.
 			this.PrepareCloseDocument();
 
-			Document doc = new Document(this.type, DocumentMode.Modify, this.installType, this.debugMode, this.globalSettings, this.CommandDispatcher, this.CommandContext);
+			Document doc = new Document(this.documentType, DocumentMode.Modify, this.installType, this.debugMode, this.globalSettings, this.CommandDispatcher, this.CommandContext);
 			doc.Name = "Document";
 			doc.Clipboard = this.clipboard;
 
@@ -5168,7 +5168,7 @@ namespace Epsitec.App.DocumentEditor
 				this.CurrentDocument.HRuler = di.hRuler;
 				this.CurrentDocument.VRuler = di.vRuler;
 
-				this.RibbonsSetDocument(this.type, this.installType, this.debugMode, this.globalSettings, this.CurrentDocument);
+				this.RibbonsSetDocument(this.documentType, this.installType, this.debugMode, this.globalSettings, this.CurrentDocument);
 
 				this.CommandStateShake(this.pageNextState);
 				this.CommandStateShake(this.pagePrevState);
@@ -5181,7 +5181,7 @@ namespace Epsitec.App.DocumentEditor
 			}
 			else
 			{
-				this.RibbonsSetDocument(this.type, this.installType, this.debugMode, this.globalSettings, null);
+				this.RibbonsSetDocument(this.documentType, this.installType, this.debugMode, this.globalSettings, null);
 
 				this.HandleDocumentChanged();
 				this.HandleMouseChanged();
@@ -5378,7 +5378,7 @@ namespace Epsitec.App.DocumentEditor
 					dir = dir.Substring(0, i);
 				}
 
-				if ( this.type == DocumentType.Pictogram )
+				if ( this.documentType == DocumentType.Pictogram )
 				{
 					return string.Format("{0}\\{1}", dir, "CresusPicto.data");
 				}
@@ -5466,7 +5466,7 @@ namespace Epsitec.App.DocumentEditor
 		#endregion
 
 
-		protected DocumentType					type;
+		protected DocumentType					documentType;
 		protected InstallType					installType;
 		protected DebugMode						debugMode;
 		protected bool							useArray;
