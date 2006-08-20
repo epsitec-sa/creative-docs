@@ -100,7 +100,7 @@ namespace Epsitec.Common.Widgets
 			window.Text = "CheckAdornerWidgets";
 			window.Name = "CheckAdornerWidgets";
 
-			ToolTip tip = new ToolTip();
+			ToolTip tip = ToolTip.Default;
 			tip.Behaviour = ToolTipBehaviour.Normal;
 			
 			HMenu menu = new HMenu();

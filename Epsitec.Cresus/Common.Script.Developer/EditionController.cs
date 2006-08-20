@@ -57,7 +57,7 @@ namespace Epsitec.Common.Script.Developer
 		{
 			this.panel    = new Panels.MethodEditionPanel ();
 			this.tool_bar = new HToolBar (parent);
-			this.tool_tip = new ToolTip ();
+			this.tool_tip = ToolTip.Default;
 			
 			this.tool_bar.Dock = DockStyle.Top;
 			

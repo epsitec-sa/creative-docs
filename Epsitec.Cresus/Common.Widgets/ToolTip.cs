@@ -16,9 +16,9 @@ namespace Epsitec.Common.Widgets
 	/// <summary>
 	/// La classe ToolTip implémente les "info bulles".
 	/// </summary>
-	public class ToolTip : Support.Data.IComponent
+	public class ToolTip : DependencyObject
 	{
-		public ToolTip()
+		private ToolTip()
 		{
 			this.window = new Window ();
 			this.window.MakeFramelessWindow ();
@@ -30,11 +30,6 @@ namespace Epsitec.Common.Widgets
 			
 			this.timer = new Timer ();
 			this.timer.TimeElapsed += new Support.EventHandler (this.HandleTimerTimeElapsed);
-			
-			lock (ToolTip.global_tool_tips)
-			{
-				ToolTip.global_tool_tips.Add (this);
-			}
 		}
 
 		
@@ -63,28 +58,12 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public static ToolTip					Default
-		{
-			get
-			{
-				return ToolTip.default_tool_tip;
-			}
-		}
+		public static readonly ToolTip			Default = new ToolTip ();
 
 
 		public static void HideAllToolTips()
 		{
-			ToolTip[] tips = null;
-			
-			lock (ToolTip.global_tool_tips)
-			{
-				tips = (ToolTip[]) ToolTip.global_tool_tips.ToArray (typeof (ToolTip));
-			}
-			
-			foreach (ToolTip tip in tips)
-			{
-				tip.HideToolTip ();
-			}
+			ToolTip.Default.HideToolTip ();
 		}
 		
 		
@@ -127,13 +106,13 @@ namespace Epsitec.Common.Widgets
 		
 		public void SetToolTip(Widget widget, string caption)
 		{
-//-			ToolTip.SetToolTipText (widget, caption);
-			this.DefineToolTip (widget, string.IsNullOrEmpty (caption));
+			ToolTip.SetToolTipText (widget, caption);
+			this.DefineToolTip (widget, caption);
 		}
 		
 		public void SetToolTip(Widget widget, Widget caption)
 		{
-//-			ToolTip.SetToolTipWidget (widget, caption);
+			ToolTip.SetToolTipWidget (widget, caption);
 			this.DefineToolTip (widget, caption);
 		}
 
@@ -174,24 +153,6 @@ namespace Epsitec.Common.Widgets
 				widget.Disposed  += new Support.EventHandler (this.HandleWidgetDisposed);
 			}
 			
-			if (this != ToolTip.default_tool_tip)
-			{
-				if (this.owner == null)
-				{
-					this.owner = widget.Window;
-					
-					if (this.owner != null)
-					{
-						//	C'est la première fois que le widget auquel nous nous attachons
-						//	possède une fenêtre valide. On va donc s'enregistrer auprès de
-						//	la fenêtre en tant que IComponent; ça permet de garantir que
-						//	lorsque la fenêtre est détruite, le ToolTip l'est aussi...
-						
-						this.owner.Components.Add (this);
-					}
-				}
-			}
-			
 			this.hash[widget] = caption;
 			
 			if ((this.widget == widget) &&
@@ -201,64 +162,6 @@ namespace Epsitec.Common.Widgets
 				this.ShowToolTip (this.birth_pos, this.caption);
 			}
 		}
-		
-		
-		public void Dispose()
-		{
-			this.Dispose (true);
-			System.GC.SuppressFinalize (this);
-		}
-		
-		
-		protected virtual void Dispose(bool disposing)
-		{
-			if (disposing)
-			{
-				Widget[] widgets = new Widget[this.hash.Count];
-				this.hash.Keys.CopyTo (widgets, 0);
-				
-				foreach (Widget widget in widgets)
-				{
-					this.DefineToolTip (widget, null);
-				}
-				
-				System.Diagnostics.Debug.Assert (this.hash.Count == 0);
-				
-				if (this.widget != null)
-				{
-					this.DetachFromWidget (this.widget);
-				}
-				
-				this.hash   = null;
-				this.widget = null;
-				this.owner  = null;
-				
-				if (this.window != null)
-				{
-					this.window.Dispose ();
-					this.window = null;
-				}
-				
-				if (this.timer != null)
-				{
-					this.timer.TimeElapsed -= new Support.EventHandler (this.HandleTimerTimeElapsed);
-					this.timer.Dispose();
-					this.timer = null;
-				}
-				
-				if (this.Disposed != null)
-				{
-					this.Disposed (this);
-					this.Disposed = null;
-				}
-				
-				lock (ToolTip.global_tool_tips)
-				{
-					ToolTip.global_tool_tips.Remove (this);
-				}
-			}
-		}
-		
 		
 		private void AttachToWidget(Widget widget)
 		{
@@ -434,7 +337,8 @@ namespace Epsitec.Common.Widgets
 			
 			System.Diagnostics.Debug.Assert(this.widget != widget);
 			System.Diagnostics.Debug.Assert(this.hash.Contains(widget));
-			
+
+			ToolTip.SetToolTipText (widget, null);
 			this.DefineToolTip (widget, null);
 		}
 		
@@ -575,8 +479,32 @@ namespace Epsitec.Common.Widgets
 		}
 		#endregion
 		
-		public event Support.EventHandler		Disposed;
+		private class PrivateDependencyPropertyMetadata : DependencyPropertyMetadata
+		{
+			public PrivateDependencyPropertyMetadata()
+			{
+			}
 
+			protected override void OnPropertyInvalidated(DependencyObject sender, object oldValue, object newValue)
+			{
+				base.OnPropertyInvalidated (sender, oldValue, newValue);
+
+				if (oldValue == null)
+				{
+					//	A tool tip is being defined for the first time.
+
+					ToolTip.Default.AttachToolTipSource (sender);
+				}
+				else if (newValue == null)
+				{
+					//	A previously defined tool tip is being cleared.
+					
+					ToolTip.Default.DetachToolTipSource (sender);
+				}
+			}
+
+			public static readonly PrivateDependencyPropertyMetadata Default = new PrivateDependencyPropertyMetadata ();
+		}
 		
 		public static string GetToolTipText(DependencyObject obj)
 		{
@@ -610,9 +538,10 @@ namespace Epsitec.Common.Widgets
 			}
 			else
 			{
-				obj.SetValue (ToolTip.ToolTipTextProperty, value);
 				obj.ClearValue (ToolTip.ToolTipCaptionProperty);
 				obj.ClearValue (ToolTip.ToolTipWidgetProperty);
+				
+				obj.SetValue (ToolTip.ToolTipTextProperty, value);
 			}
 		}
 
@@ -626,9 +555,10 @@ namespace Epsitec.Common.Widgets
 			}
 			else
 			{
-				obj.SetValue (ToolTip.ToolTipCaptionProperty, value);
 				obj.ClearValue (ToolTip.ToolTipTextProperty);
 				obj.ClearValue (ToolTip.ToolTipWidgetProperty);
+				
+				obj.SetValue (ToolTip.ToolTipCaptionProperty, value);
 			}
 		}
 
@@ -642,15 +572,16 @@ namespace Epsitec.Common.Widgets
 			}
 			else
 			{
-				obj.SetValue (ToolTip.ToolTipWidgetProperty, value);
 				obj.ClearValue (ToolTip.ToolTipCaptionProperty);
 				obj.ClearValue (ToolTip.ToolTipTextProperty);
+				
+				obj.SetValue (ToolTip.ToolTipWidgetProperty, value);
 			}
 		}
 
-		public static readonly DependencyProperty ToolTipTextProperty    = DependencyProperty.RegisterAttached ("ToolTipText", typeof (string), typeof (ToolTip));
-		public static readonly DependencyProperty ToolTipCaptionProperty = DependencyProperty.RegisterAttached ("ToolTipCaption", typeof (Support.Druid), typeof (ToolTip));
-		public static readonly DependencyProperty ToolTipWidgetProperty  = DependencyProperty.RegisterAttached ("ToolTipWidget", typeof (Widget), typeof (ToolTip));
+		public static readonly DependencyProperty ToolTipTextProperty    = DependencyProperty.RegisterAttached ("ToolTipText", typeof (string), typeof (ToolTip), PrivateDependencyPropertyMetadata.Default);
+		public static readonly DependencyProperty ToolTipCaptionProperty = DependencyProperty.RegisterAttached ("ToolTipCaption", typeof (Support.Druid), typeof (ToolTip), PrivateDependencyPropertyMetadata.Default);
+		public static readonly DependencyProperty ToolTipWidgetProperty  = DependencyProperty.RegisterAttached ("ToolTipWidget", typeof (Widget), typeof (ToolTip), PrivateDependencyPropertyMetadata.Default);
 		
 		protected ToolTipBehaviour				behaviour = ToolTipBehaviour.Normal;
 		
@@ -672,7 +603,20 @@ namespace Epsitec.Common.Widgets
 		private static readonly Drawing.Point	margin = new Drawing.Point(3, 2);
 		private static readonly Drawing.Point	offset = new Drawing.Point(8, -16);
 		
-		static System.Collections.ArrayList		global_tool_tips = new System.Collections.ArrayList ();
-		static ToolTip							default_tool_tip = new ToolTip ();
+		internal void AttachToolTipSource(DependencyObject sender)
+		{
+			Widget widget = sender as Widget;
+
+			System.Diagnostics.Debug.Assert (widget != null);
+			System.Diagnostics.Debug.Assert (this.hash.Contains (widget) == false);
+		}
+
+		internal void DetachToolTipSource(DependencyObject sender)
+		{
+			Widget widget = sender as Widget;
+
+			System.Diagnostics.Debug.Assert (widget != null);
+			System.Diagnostics.Debug.Assert (this.hash.Contains (widget) == true);
+		}
 	}
 }
