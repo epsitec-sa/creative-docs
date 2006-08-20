@@ -30,7 +30,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.window.Owner = this.editor.Window;
 				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowAboutCloseClicked);
 
-				About.CreateWidgetSplash(this.window.Root, this.editor.InstallType);
+				About.CreateWidgetSplash(this.window.Root, this.editor.InstallType, this.editor.DocumentType);
 
 				//	Bouton de fermeture.
 				Button buttonClose = new Button(this.window.Root);
@@ -63,13 +63,17 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		}
 
 
-		public static StaticText CreateWidgetSplash(Widget parent, InstallType type)
+		public static StaticText CreateWidgetSplash(Widget parent, InstallType type, DocumentType docType)
 		{
 			//	Crée les widgets pour l'image de bienvenue.
 			double y = parent.ActualHeight-200;
 
 			string res;
-			if ( type == InstallType.Freeware )
+			if (docType == DocumentType.Pictogram)
+			{
+				res = "manifest:Epsitec.App.Pictogram.SplashScreen.png";
+			}
+			else if ( type == InstallType.Freeware )
 			{
 				res = "manifest:Epsitec.App.CreativeDocs.SplashScreen.png";
 			}

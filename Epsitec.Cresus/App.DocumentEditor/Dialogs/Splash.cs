@@ -36,7 +36,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.window.Root.PaintForeground += new PaintEventHandler(this.HandleSplashPaintForeground);
 				this.window.Owner = this.editor.Window;
 
-				StaticText image = About.CreateWidgetSplash(this.window.Root, this.editor.InstallType);
+				StaticText image = About.CreateWidgetSplash(this.window.Root, this.editor.InstallType, this.editor.DocumentType);
 				image.Clicked += new MessageEventHandler(this.HandleSplashImageClicked);
 
 				this.workInProgress = new StaticText(image);

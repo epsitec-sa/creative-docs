@@ -133,7 +133,7 @@ namespace Epsitec.App.DocumentEditor
 		
 		public DocumentType				Type
 		{
-			get { return this.editor.Type; }
+			get { return this.editor.DocumentType; }
 		}
 		
 		public Window					MainWindow
@@ -200,7 +200,7 @@ namespace Epsitec.App.DocumentEditor
 		{
 			get
 			{
-				if ( this.editor.Type == DocumentType.Pictogram )
+				if ( this.editor.DocumentType == DocumentType.Pictogram )
 				{
 					return ".icon";
 				}
