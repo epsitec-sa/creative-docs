@@ -127,15 +127,17 @@ namespace Epsitec.Common.Widgets
 		
 		public void SetToolTip(Widget widget, string caption)
 		{
-			this.DefineToolTip (widget, caption);
+//-			ToolTip.SetToolTipText (widget, caption);
+			this.DefineToolTip (widget, string.IsNullOrEmpty (caption));
 		}
 		
 		public void SetToolTip(Widget widget, Widget caption)
 		{
+//-			ToolTip.SetToolTipWidget (widget, caption);
 			this.DefineToolTip (widget, caption);
 		}
-		
-		
+
+
 		private void DefineToolTip(Widget widget, object caption)
 		{
 			if (this.hash == null)
@@ -575,6 +577,7 @@ namespace Epsitec.Common.Widgets
 		
 		public event Support.EventHandler		Disposed;
 
+		
 		public static string GetToolTipText(DependencyObject obj)
 		{
 			return obj.GetValue (ToolTip.ToolTipTextProperty) as string;
@@ -592,15 +595,24 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		public static Widget GetToolTipWidget(DependencyObject obj)
+		{
+			return obj.GetValue (ToolTip.ToolTipWidgetProperty) as Widget;
+		}
+
 		public static void SetToolTipText(DependencyObject obj, string value)
 		{
 			if (string.IsNullOrEmpty (value))
 			{
+				obj.ClearValue (ToolTip.ToolTipCaptionProperty);
 				obj.ClearValue (ToolTip.ToolTipTextProperty);
+				obj.ClearValue (ToolTip.ToolTipWidgetProperty);
 			}
 			else
 			{
 				obj.SetValue (ToolTip.ToolTipTextProperty, value);
+				obj.ClearValue (ToolTip.ToolTipCaptionProperty);
+				obj.ClearValue (ToolTip.ToolTipWidgetProperty);
 			}
 		}
 
@@ -609,15 +621,36 @@ namespace Epsitec.Common.Widgets
 			if (value.IsEmpty)
 			{
 				obj.ClearValue (ToolTip.ToolTipCaptionProperty);
+				obj.ClearValue (ToolTip.ToolTipTextProperty);
+				obj.ClearValue (ToolTip.ToolTipWidgetProperty);
 			}
 			else
 			{
 				obj.SetValue (ToolTip.ToolTipCaptionProperty, value);
+				obj.ClearValue (ToolTip.ToolTipTextProperty);
+				obj.ClearValue (ToolTip.ToolTipWidgetProperty);
 			}
 		}
 
-		public static readonly DependencyProperty ToolTipTextProperty = DependencyProperty.RegisterAttached ("ToolTipText", typeof (string), typeof (ToolTip));
+		public static void SetToolTipWidget(DependencyObject obj, Widget value)
+		{
+			if (value == null)
+			{
+				obj.ClearValue (ToolTip.ToolTipCaptionProperty);
+				obj.ClearValue (ToolTip.ToolTipTextProperty);
+				obj.ClearValue (ToolTip.ToolTipWidgetProperty);
+			}
+			else
+			{
+				obj.SetValue (ToolTip.ToolTipWidgetProperty, value);
+				obj.ClearValue (ToolTip.ToolTipCaptionProperty);
+				obj.ClearValue (ToolTip.ToolTipTextProperty);
+			}
+		}
+
+		public static readonly DependencyProperty ToolTipTextProperty    = DependencyProperty.RegisterAttached ("ToolTipText", typeof (string), typeof (ToolTip));
 		public static readonly DependencyProperty ToolTipCaptionProperty = DependencyProperty.RegisterAttached ("ToolTipCaption", typeof (Support.Druid), typeof (ToolTip));
+		public static readonly DependencyProperty ToolTipWidgetProperty  = DependencyProperty.RegisterAttached ("ToolTipWidget", typeof (Widget), typeof (ToolTip));
 		
 		protected ToolTipBehaviour				behaviour = ToolTipBehaviour.Normal;
 		
