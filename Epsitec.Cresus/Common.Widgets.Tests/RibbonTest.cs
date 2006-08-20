@@ -35,7 +35,7 @@ namespace Epsitec.Common.Widgets
 			window.Text = "CheckRibbonWidgets";
 			window.Name = "CheckRibbonWidgets";
 
-			ToolTip tip = new ToolTip();
+			ToolTip tip = ToolTip.Default;
 			tip.Behaviour = ToolTipBehaviour.Normal;
 
 			//	Crée le widget pour permettre de changer d'adorner.

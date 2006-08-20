@@ -284,7 +284,7 @@ namespace Epsitec.Common.Widgets
 			//	Crée tous les widgets du layout.
 			Rectangle rect = this.window.Root.Client.Bounds;
 
-			this.tip = new ToolTip();
+			this.tip = ToolTip.Default;
 
 			this.menu = new HMenu();
 			this.menu.Host = this.window;
