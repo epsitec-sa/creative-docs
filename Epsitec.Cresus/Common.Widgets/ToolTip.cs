@@ -1,5 +1,8 @@
-//	Copyright © 2003-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
+
+using System.Collections.Generic;
+using Epsitec.Common.Types;
 
 namespace Epsitec.Common.Widgets
 {
@@ -571,6 +574,50 @@ namespace Epsitec.Common.Widgets
 		#endregion
 		
 		public event Support.EventHandler		Disposed;
+
+		public static string GetToolTipText(DependencyObject obj)
+		{
+			return obj.GetValue (ToolTip.ToolTipTextProperty) as string;
+		}
+
+		public static Support.Druid GetToolTipCaption(DependencyObject obj)
+		{
+			if (obj.ContainsValue (ToolTip.ToolTipCaptionProperty))
+			{
+				return (Support.Druid) obj.GetValue (ToolTip.ToolTipCaptionProperty);
+			}
+			else
+			{
+				return Support.Druid.Empty;
+			}
+		}
+
+		public static void SetToolTipText(DependencyObject obj, string value)
+		{
+			if (string.IsNullOrEmpty (value))
+			{
+				obj.ClearValue (ToolTip.ToolTipTextProperty);
+			}
+			else
+			{
+				obj.SetValue (ToolTip.ToolTipTextProperty, value);
+			}
+		}
+
+		public static void SetToolTipCaption(DependencyObject obj, Support.Druid value)
+		{
+			if (value.IsEmpty)
+			{
+				obj.ClearValue (ToolTip.ToolTipCaptionProperty);
+			}
+			else
+			{
+				obj.SetValue (ToolTip.ToolTipCaptionProperty, value);
+			}
+		}
+
+		public static readonly DependencyProperty ToolTipTextProperty = DependencyProperty.RegisterAttached ("ToolTipText", typeof (string), typeof (ToolTip));
+		public static readonly DependencyProperty ToolTipCaptionProperty = DependencyProperty.RegisterAttached ("ToolTipCaption", typeof (Support.Druid), typeof (ToolTip));
 		
 		protected ToolTipBehaviour				behaviour = ToolTipBehaviour.Normal;
 		
