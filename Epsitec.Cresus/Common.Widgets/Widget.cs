@@ -2906,7 +2906,24 @@ namespace Epsitec.Common.Widgets
 				
 				if (window != null)
 				{
-					window.QueueCommand (this, this.Command);
+					Command commandObject = this.CommandObject;
+					string  commandLine   = this.CommandLine;
+
+					if (commandObject == null)
+					{
+						if (string.IsNullOrEmpty (commandLine))
+						{
+							//	Command cannot be queued !
+						}
+						else
+						{
+							window.QueueCommand (this, commandLine);
+						}
+					}
+					else
+					{
+						window.QueueCommand (this, commandObject);
+					}
 				}
 			}
 		}

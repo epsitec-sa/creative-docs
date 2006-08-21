@@ -47,7 +47,7 @@ namespace Epsitec.Common.Widgets
 		
 		public GlyphButton(string command, string name) : this ()
 		{
-			this.Command = command;
+			this.CommandLine = command;
 			this.Name    = name;
 		}
 		

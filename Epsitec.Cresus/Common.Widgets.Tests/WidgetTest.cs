@@ -1801,13 +1801,13 @@ namespace Epsitec.Common.Widgets
 		
 		[Test] public void CheckCommandName()
 		{
-			Widget w1 = new Widget (); w1.Name = "A"; w1.Command = "a";
-			Widget w2 = new Widget (); w2.Name = "B"; w2.Command = "b ()";  w2.SetParent (w1);
-			Widget w3 = new Widget (); w3.Name = "C"; w3.Command = "c (1)"; w3.SetParent (w2);
+			Widget w1 = new Widget (); w1.Name = "A"; w1.CommandLine = "a";
+			Widget w2 = new Widget (); w2.Name = "B"; w2.CommandLine = "b ()";  w2.SetParent (w1);
+			Widget w3 = new Widget (); w3.Name = "C"; w3.CommandLine = "c (1)"; w3.SetParent (w2);
 			
-			Assert.AreEqual ("a",     w1.Command);
-			Assert.AreEqual ("b ()",  w2.Command);
-			Assert.AreEqual ("c (1)", w3.Command);
+			Assert.AreEqual ("a",     w1.CommandLine);
+			Assert.AreEqual ("b ()",  w2.CommandLine);
+			Assert.AreEqual ("c (1)", w3.CommandLine);
 			
 			Assert.AreEqual ("a", w1.CommandName);
 			Assert.AreEqual ("b", w2.CommandName);
@@ -1848,11 +1848,11 @@ namespace Epsitec.Common.Widgets
 		[Test] public void CheckFindChildBasedOnCommandName()
 		{
 			Widget root = new Widget ();
-			Widget w1 = new Widget ();	w1.Command = "a";	w1.SetParent (root);
+			Widget w1 = new Widget ();	w1.CommandLine = "a";	w1.SetParent (root);
 			Widget w2 = new Widget ();						w2.SetParent (root);
-			Widget w3 = new Widget ();	w3.Command = "b";	w3.SetParent (w2);
-			Widget w4 = new Widget ();	w4.Command = "c";	w4.SetParent (w2);
-			Widget w5 = new Widget ();	w5.Command = "d";	w5.SetParent (w4);
+			Widget w3 = new Widget ();	w3.CommandLine = "b";	w3.SetParent (w2);
+			Widget w4 = new Widget ();	w4.CommandLine = "c";	w4.SetParent (w2);
+			Widget w5 = new Widget ();	w5.CommandLine = "d";	w5.SetParent (w4);
 			Widget w6 = new Widget ();	w6.Name = "e";		w6.SetParent (w1);
 			
 			Assert.AreEqual (w1, root.FindCommandWidgets ("a") [0]);

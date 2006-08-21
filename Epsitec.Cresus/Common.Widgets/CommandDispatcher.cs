@@ -142,14 +142,19 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 		}
-		
-		public static void Dispatch(CommandDispatcherChain dispatcherChain, CommandContextChain contextChain, string command, object source)
+
+		public static void Dispatch(CommandDispatcherChain dispatcherChain, CommandContextChain contextChain, string commandLine, object source)
+		{
+			CommandDispatcher.Dispatch (dispatcherChain, contextChain, null, commandLine, source);
+		}
+
+		public static void Dispatch(CommandDispatcherChain dispatcherChain, CommandContextChain contextChain, Command commandObject, string commandLine, object source)
 		{
 			if (dispatcherChain != null)
 			{
 				foreach (CommandDispatcher dispatcher in dispatcherChain.Dispatchers)
 				{
-					if (dispatcher.InternalDispatch (contextChain, command, source))
+					if (dispatcher.InternalDispatch (contextChain, commandObject, commandLine, source))
 					{
 						break;
 					}
@@ -157,8 +162,12 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		public bool InternalDispatch(CommandContextChain contextChain, string commandLine, object source)
+		{
+			return this.InternalDispatch (contextChain, null, commandLine, source);
+		}
 
-		public bool InternalDispatch(CommandContextChain contextChain, string command, object source)
+		public bool InternalDispatch(CommandContextChain contextChain, Command commandObject, string commandLine, object source)
 		{
 			
 #if false //#fix
@@ -206,7 +215,7 @@ namespace Epsitec.Common.Widgets
 			bool handled = false;
 			
 #if true //#fix
-			handled = this.InternalDispatchSingleCommand (contextChain, command, source);
+			handled = this.InternalDispatchSingleCommand (contextChain, commandObject, commandLine, source);
 #else
 			try
 			{
@@ -615,27 +624,37 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		protected bool InternalDispatchSingleCommand(CommandContextChain contextChain, string commandLine, object source)
+		protected bool InternalDispatchSingleCommand(CommandContextChain contextChain, Command commandObject, string commandLine, object source)
 		{
 			//	Transmet la commande à ceux qui sont intéressés
 
+			if ((commandLine == null) &&
+				(commandObject != null))
+			{
+				commandLine = commandObject.Name;
+			}
+			
 			string commandName = CommandDispatcher.ExtractCommandName (commandLine);
 			
-			if (commandName == null)
+			if (string.IsNullOrEmpty (commandName))
 			{
 				return false;
 			}
 
-			int loopCounter = 0;
-
-			Command command = Command.Find (commandName);
+			if (commandObject == null)
+			{
+				commandObject = Command.Find (commandName);
+			}
+			
 			CommandContext commandContext;
 			CommandState commandState;
 
+			int loopCounter = 0;
+
 		again:
 			
-			if ((command == null) ||
-				(command.IsReadWrite))
+			if ((commandObject == null) ||
+				(commandObject.IsReadWrite))
 			{
 				//	The command will always be considered to be "enabled" if it
 				//	has never been defined as such or if no command state has ever
@@ -648,8 +667,8 @@ namespace Epsitec.Common.Widgets
 			{
 				System.Diagnostics.Debug.Assert (contextChain != null);
 				System.Diagnostics.Debug.Assert (contextChain.IsEmpty == false);
-				
-				commandState = contextChain.GetCommandState (command, out commandContext);
+
+				commandState = contextChain.GetCommandState (commandObject, out commandContext);
 
 				System.Diagnostics.Debug.Assert (commandContext != null);
 				System.Diagnostics.Debug.Assert (commandState != null);
@@ -674,7 +693,7 @@ namespace Epsitec.Common.Widgets
 			System.Diagnostics.Debug.Assert (commandName.IndexOf ("*") < 0, "Found '*' in command name.", "The command '" + commandLine + "' may not contain a '*' in its name.\nPlease fix the command name definition source code.");
 			System.Diagnostics.Debug.Assert (commandName.IndexOf (".") < 0, "Found '.' in command name.", "The command '" + commandLine + "' may not contain a '.' in its name.\nPlease fix the command name definition source code.");
 
-			CommandEventArgs e = new CommandEventArgs (source, command, commandArgs, commandContext, commandState);
+			CommandEventArgs e = new CommandEventArgs (source, commandObject, commandArgs, commandContext, commandState);
 
 			EventSlot slot;
 			int handled = 0;
@@ -712,13 +731,13 @@ namespace Epsitec.Common.Widgets
 				}
 				
 				if ((commandState != null) &&
-					(command.CommandType == CommandType.Multiple))
+					(commandObject.CommandType == CommandType.Multiple))
 				{
-					command = MultiCommand.GetSelectedCommand (commandState);
-					
-					if (command != null)
+					commandObject = MultiCommand.GetSelectedCommand (commandState);
+
+					if (commandObject != null)
 					{
-						commandName = command.CommandId;
+						commandName = commandObject.CommandId;
 						commandLine = commandName;
 
 						goto again;

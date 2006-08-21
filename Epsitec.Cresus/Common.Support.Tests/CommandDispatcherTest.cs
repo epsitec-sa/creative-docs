@@ -71,9 +71,9 @@ namespace Epsitec.Common.Support
 			Assert.AreEqual (contextB, Types.Collection.ToArray (chain.Contexts)[0]);
 			Assert.AreEqual (contextA, Types.Collection.ToArray (chain.Contexts)[1]);
 
-			v3.Command = "TestSave";
+			v3.CommandLine = "TestSave";
 
-			Assert.AreEqual ("TestSave", v3.Command);
+			Assert.AreEqual ("TestSave", v3.CommandLine);
 			Assert.AreEqual ("TestSave", v3.CommandName);
 
 			CommandCache.Instance.Synchronize ();

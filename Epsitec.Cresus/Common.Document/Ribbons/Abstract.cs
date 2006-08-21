@@ -96,7 +96,7 @@ namespace Epsitec.Common.Document.Ribbons
 			Command c = Common.Widgets.Command.Get (command);
 			IconButton button = new IconButton(this);
 
-			button.Command = command;
+			button.CommandLine = command;
 			button.IconName = Misc.Icon(c.Icon);
 			button.PreferredIconSize = Misc.IconPreferredSize(iconSize);
 			button.AutoFocus = false;
@@ -118,7 +118,7 @@ namespace Epsitec.Common.Document.Ribbons
 			Command c = Common.Widgets.Command.Get (command);
 			IconButtonCombo button = new IconButtonCombo(this);
 
-			button.Command = command;
+			button.CommandLine = command;
 			button.AutoFocus = false;
 			button.IsLiveUpdateEnabled = false;
 
@@ -161,7 +161,7 @@ namespace Epsitec.Common.Document.Ribbons
 			Command c = Common.Widgets.Command.Get (command);
 			IconButtonsCombo button = new IconButtonsCombo(this);
 
-			button.Command = command;
+			button.CommandLine = command;
 			button.AutoFocus = false;
 			button.IsLiveUpdateEnabled = false;
 
@@ -185,7 +185,7 @@ namespace Epsitec.Common.Document.Ribbons
 		{
 			//	Crée un bouton "v" pour un menu.
 			GlyphButton button = new GlyphButton(this);
-			button.Command = command;
+			button.CommandLine = command;
 			button.ButtonStyle = ButtonStyle.ToolItem;
 			button.GlyphShape = GlyphShape.Menu;
 			button.AutoFocus = false;

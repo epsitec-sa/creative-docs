@@ -340,7 +340,7 @@ namespace Epsitec.Common.Document.TextPanels
 			Command c = Common.Widgets.Command.Get (command);
 			IconButton button = new IconButton(this);
 
-			button.Command = command;
+			button.CommandLine = command;
 			button.IconName = Misc.Icon(c.Icon);
 			button.PreferredIconSize = Misc.IconPreferredSize(iconSize);
 			button.AutoFocus = false;
@@ -427,7 +427,7 @@ namespace Epsitec.Common.Document.TextPanels
 			//	Crée un bouton "v" pour un menu.
 			GlyphButton button = new GlyphButton(this);
 
-			button.Command = command;
+			button.CommandLine = command;
 			button.ButtonStyle = ButtonStyle.Combo;
 			button.GlyphShape = GlyphShape.Menu;
 			button.AutoFocus = false;

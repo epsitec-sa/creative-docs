@@ -29,7 +29,7 @@ namespace Epsitec.Common.Widgets
 		public IconButton(string command, string icon)
 			: this (icon)
 		{
-			this.Command = command;
+			this.CommandLine = command;
 		}
 
 		public IconButton(string command, string icon, string name)
