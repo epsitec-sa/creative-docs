@@ -16,6 +16,7 @@ namespace Epsitec.Common.Document.Properties
 		protected override void Initialise()
 		{
 			this.filename  = "";
+			this.shortName = "";
 			this.insideDoc = true;
 			this.mirrorH   = false;
 			this.mirrorV   = false;
@@ -31,15 +32,29 @@ namespace Epsitec.Common.Document.Properties
 			{
 				return this.filename;
 			}
-			
+
 			set
 			{
-				if ( this.filename != value )
+				if (this.filename != value)
 				{
 					this.NotifyBefore();
 					this.filename = value;
 					this.NotifyAfter();
 				}
+			}
+		}
+
+		public string ShortName
+		{
+			//	Nom court de l'image, à l'intérieur du fichier Zip.
+			get
+			{
+				return this.shortName;
+			}
+
+			set
+			{
+				this.shortName = value;
 			}
 		}
 
@@ -183,6 +198,7 @@ namespace Epsitec.Common.Document.Properties
 			base.CopyTo(property);
 			Image p = property as Image;
 			p.filename  = this.filename;
+			p.shortName = this.shortName;
 			p.insideDoc = this.insideDoc;
 			p.mirrorH   = this.mirrorH;
 			p.mirrorV   = this.mirrorV;
@@ -198,6 +214,7 @@ namespace Epsitec.Common.Document.Properties
 
 			Image p = property as Image;
 			if ( p.filename  != this.filename  )  return false;
+			if ( p.shortName != this.shortName )  return false;
 			if ( p.insideDoc != this.insideDoc )  return false;
 			if ( p.mirrorH   != this.mirrorH   )  return false;
 			if ( p.mirrorV   != this.mirrorV   )  return false;
@@ -232,6 +249,7 @@ namespace Epsitec.Common.Document.Properties
 			}
 
 			info.AddValue("Filename", filename);
+			info.AddValue("ShortName", shortName);
 			info.AddValue("InsideDoc", this.insideDoc);
 			info.AddValue("MirrorH", this.mirrorH);
 			info.AddValue("MirrorV", this.mirrorV);
@@ -268,10 +286,12 @@ namespace Epsitec.Common.Document.Properties
 
 			if ( this.document.IsRevisionGreaterOrEqual(2, 0, 1) )
 			{
+				this.shortName = info.GetString("ShortName");
 				this.insideDoc = info.GetBoolean("InsideDoc");
 			}
 			else
 			{
+				this.shortName = null;
 				this.insideDoc = false;
 			}
 		}
@@ -279,6 +299,7 @@ namespace Epsitec.Common.Document.Properties
 
 	
 		protected string			filename;
+		protected string			shortName;
 		protected bool				insideDoc;
 		protected bool				mirrorH;
 		protected bool				mirrorV;

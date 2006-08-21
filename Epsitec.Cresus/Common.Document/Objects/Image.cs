@@ -322,8 +322,9 @@ namespace Epsitec.Common.Document.Objects
 		protected void OpenBitmap(IPaintPort port)
 		{
 			//	Ouvre le bitmap de l'image si nécessaire.
-			Properties.Image image = this.PropertyImage;
-			if ( string.IsNullOrEmpty(image.Filename) )
+			Properties.Image propImage = this.PropertyImage;
+
+			if (string.IsNullOrEmpty(propImage.Filename))
 			{
 				this.imageOriginal = null;
 				this.imageDimmed = null;
@@ -339,25 +340,30 @@ namespace Epsitec.Common.Document.Objects
 					Size size = this.ImageBitmapSize();
 					bool filter = this.PropertyImage.Filter;
 					pdfPort.FilterImage = filter;
-					PDF.ImageSurface surface = pdfPort.SearchImageSurface(image.Filename, size, filter);
+					PDF.ImageSurface surface = pdfPort.SearchImageSurface(propImage.Filename, size, filter);
 					System.Diagnostics.Debug.Assert(surface != null);
 					this.imageOriginal = surface.DrawingImage;
 					this.imageDimmed = null;
 				}
 				else
 				{
-					if ( image.Reload || image.Filename != this.filename )
+					if (propImage.Reload || propImage.Filename != this.filename)
 					{
-						this.filename = image.Filename;
+						this.filename = propImage.Filename;
 
-						ImageCache.Item item = this.document.ImageCache.Add(this.filename);
+						ImageCache.Item item = this.document.ImageCache.Get(this.filename);
 
-						if (item.Image == null)
+						if (item == null)
 						{
-							this.document.ImageCache.Remove(this.filename);
+							item = this.document.ImageCache.Add(this.filename, null);
+
+							if (item.Image == null)
+							{
+								this.document.ImageCache.Remove(this.filename);
+							}
 						}
 
-						image.ReloadReset();
+						propImage.ReloadReset();
 					}
 				}
 			}
@@ -477,7 +483,16 @@ namespace Epsitec.Common.Document.Objects
 		{
 			//	Vérifie si tous les fichiers existent.
 			Properties.Image pi = this.PropertyImage;
-			if ( pi == null )  return;
+			if ( pi == null )
+			{
+				return;
+			}
+
+			if (pi.InsideDoc)  // image incorporée au document ?
+			{
+				return;  // oui -> forcément OK
+			}
+
 			if ( !System.IO.File.Exists(pi.Filename) )
 			{
 				string message = string.Format(Res.Strings.Object.Image.Error, pi.Filename);
