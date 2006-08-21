@@ -42,21 +42,6 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
-		public byte[] Data
-		{
-			//	Accès aux données brutes de l'image.
-			get
-			{
-				return this.data;
-			}
-
-			set
-			{
-				this.data = value;
-			}
-		}
-
-
 		public override void MoveHandleStarting(int rank, Point pos, DrawingContext drawingContext)
 		{
 			//	Début du déplacement d'une poignée.
@@ -304,13 +289,15 @@ namespace Epsitec.Common.Document.Objects
 			double width, height, angle;
 			this.ImageGeometry(out center, out width, out height, out angle);
 
-			if ( width > 0 && height > 0 && this.imageOriginal != null )
+			ImageCache.Item item = this.Item;
+
+			if ( width > 0 && height > 0 && item != null && item.Image != null)
 			{
 				Properties.Image property = this.PropertyImage;
 
 				if ( property.Homo )  // conserve les proportions ?
 				{
-					double rapport = this.imageOriginal.Height/this.imageOriginal.Width;
+					double rapport = item.Image.Height/item.Image.Width;
 					if ( rapport < height/width )  height = width*rapport;
 					else                           width  = height/rapport;
 				}
@@ -332,15 +319,15 @@ namespace Epsitec.Common.Document.Objects
 			angle  = Point.ComputeAngleDeg(pbl, pbr);
 		}
 
-		protected void OpenBitmapOriginal(IPaintPort port)
+		protected void OpenBitmap(IPaintPort port)
 		{
 			//	Ouvre le bitmap de l'image si nécessaire.
 			Properties.Image image = this.PropertyImage;
-			if ( image.Filename == "" )
+			if ( string.IsNullOrEmpty(image.Filename) )
 			{
 				this.imageOriginal = null;
 				this.imageDimmed = null;
-				this.filename = "";
+				this.filename = null;
 			}
 			else
 			{
@@ -362,56 +349,34 @@ namespace Epsitec.Common.Document.Objects
 					if ( image.Reload || image.Filename != this.filename )
 					{
 						this.filename = image.Filename;
-						try
+
+						ImageCache.Item item = this.document.ImageCache.Add(this.filename);
+
+						if (item.Image == null)
 						{
-							this.data = System.IO.File.ReadAllBytes(this.filename);
-							this.imageOriginal = Drawing.Bitmap.FromData(this.data);
+							this.document.ImageCache.Remove(this.filename);
 						}
-						catch
-						{
-							this.data = null;
-							this.imageOriginal = null;
-						}
-						this.imageDimmed = null;
+
 						image.ReloadReset();
 					}
 				}
 			}
 		}
 
-		protected void OpenBitmapDimmed(DrawingContext drawingContext)
+		protected ImageCache.Item Item
 		{
-			//	Ouvre le bitmap de la variante estompée de l'image si nécessaire.
-#if false
-			if ( this.imageOriginal == null )  return;
-			if ( this.imageDimmed != null )  return;
-			if ( !drawingContext.IsDimmed )  return;
-
-			this.imageDimmed = Bitmap.CopyImage(this.imageOriginal);
-			Pixmap.RawData data = new Pixmap.RawData(this.imageDimmed);
-			using ( data )
+			//	Retourne l'item de l'image cachée, s'il existe.
+			get
 			{
-				Color pixel;
-				double intensity;
-
-				for ( int y=0 ; y<data.Height ; y++ )
+				if (string.IsNullOrEmpty(this.filename))
 				{
-					for ( int x=0 ; x<data.Width ; x++ )
-					{
-						pixel = data[x,y];
-
-						intensity = pixel.GetBrightness();
-						intensity = System.Math.Max(intensity*2.0-1.0, 0.0);
-						pixel.R = intensity;
-						pixel.G = intensity;
-						pixel.B = intensity;
-						pixel.A *= 0.2;  // très transparent
-
-						data[x,y] = pixel;
-					}
+					return null;
+				}
+				else
+				{
+					return this.document.ImageCache.Get(this.filename);
 				}
 			}
-#endif
 		}
 
 		public override void DrawImage(IPaintPort port, DrawingContext drawingContext)
@@ -419,10 +384,16 @@ namespace Epsitec.Common.Document.Objects
 			//	Dessine l'image.
 			if ( this.TotalHandle < 2 )  return;
 
-			this.OpenBitmapOriginal(port);
-			this.OpenBitmapDimmed(drawingContext);
+			this.OpenBitmap(port);
 
-			Drawing.Image image = drawingContext.IsDimmed ? this.imageDimmed : this.imageOriginal;
+			Drawing.Image image = null;
+			ImageCache.Item item = this.Item;
+
+			if (item != null)
+			{
+				image = drawingContext.IsDimmed ? item.ImageDimmed : item.Image;
+			}
+
 			if ( image == null )
 			{
 				Path path = this.PathBuildOutline();
@@ -520,7 +491,6 @@ namespace Epsitec.Common.Document.Objects
 
 		
 		protected string					filename;
-		protected byte[]					data;
 		protected Drawing.Image				imageOriginal;
 		protected Drawing.Image				imageDimmed;
 	}

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Drawing;
@@ -134,6 +135,11 @@ namespace Epsitec.Common.Document
 				this.notifier  = new Notifier(this);
 			}
 
+			if ( this.type != DocumentType.Pictogram )
+			{
+				this.imageCache = new ImageCache();
+			}
+
 			if ( this.mode == DocumentMode.Clipboard )
 			{
 				Viewer clipboardViewer = new Viewer(this);
@@ -164,6 +170,11 @@ namespace Epsitec.Common.Document
 			{
 				this.notifier.Dispose();
 				this.notifier = null;
+			}
+
+			if ( this.imageCache != null )
+			{
+				this.imageCache = null;
 			}
 
 			if ( this.dialogs != null )
@@ -377,7 +388,16 @@ namespace Epsitec.Common.Document
 		public Modifier Modifier
 		{
 			//	Modificateur éventuel pour ce document.
-			get { return this.modifier; }
+			get
+			{
+				return this.modifier;
+			}
+		}
+
+		public ImageCache ImageCache
+		{
+			//	Cache des images de ce document.
+			get { return this.imageCache; }
 		}
 
 		public Wrappers Wrappers
@@ -1201,7 +1221,8 @@ namespace Epsitec.Common.Document
 				}
 				else
 				{
-					this.modifier.ImagesGenerateShortNames();
+					this.ImageFlushUnused();
+					this.imageCache.GenerateShortNames();
 
 					byte[] data;
 					using (MemoryStream stream = new MemoryStream())
@@ -1215,7 +1236,7 @@ namespace Epsitec.Common.Document
 
 					ZipFile zip = new ZipFile();
 					zip.AddEntry("document.data", data);
-					this.modifier.ImagesWriteData(zip);
+					this.imageCache.WriteData(zip);
 					zip.CompressionLevel = 6;
 					zip.SaveFile(filename);
 				}
@@ -1241,6 +1262,25 @@ namespace Epsitec.Common.Document
 				this.IsDirtySerialize = false;
 			}
 			return "";
+		}
+
+		protected void ImageFlushUnused()
+		{
+			//	Supprime toutes les images inutilisées du cache des images.
+			List<string> filenames = new List<string>();
+			foreach (Objects.Abstract obj in this.Deep(null))
+			{
+				Properties.Image image = obj.PropertyImage;
+				if (image != null)
+				{
+					if (!filenames.Contains(image.Filename))
+					{
+						filenames.Add(image.Filename);
+					}
+				}
+			}
+
+			this.imageCache.FlushUnused(filenames);
 		}
 
 		protected static IOType ReadIdentifier(Stream stream)
@@ -2409,6 +2449,7 @@ namespace Epsitec.Common.Document
 		protected UndoableList					textFlows;
 		protected Settings.Settings				settings;
 		protected Modifier						modifier;
+		protected ImageCache					imageCache;
 		protected Wrappers						wrappers;
 		protected Notifier						notifier;
 		protected Printer						printer;
