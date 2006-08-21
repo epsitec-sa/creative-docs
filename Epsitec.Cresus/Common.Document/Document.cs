@@ -1267,6 +1267,9 @@ namespace Epsitec.Common.Document
 		protected void ImageFlushUnused()
 		{
 			//	Supprime toutes les images inutilisées du cache des images.
+			//	Met également à jour les modes InsideDoc.
+			this.imageCache.ClearInsideDoc();
+
 			List<string> filenames = new List<string>();
 			foreach (Objects.Abstract obj in this.Deep(null))
 			{
@@ -1276,6 +1279,12 @@ namespace Epsitec.Common.Document
 					if (!filenames.Contains(image.Filename))
 					{
 						filenames.Add(image.Filename);
+					}
+
+					if (image.InsideDoc)
+					{
+						ImageCache.Item item = this.imageCache.Get(image.Filename);
+						item.InsideDoc = true;
 					}
 				}
 			}
