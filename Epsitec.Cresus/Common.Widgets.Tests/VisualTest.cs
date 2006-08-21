@@ -83,8 +83,10 @@ namespace Epsitec.Common.Widgets
 			Assert.AreEqual (1, count);
 
 			visual.CommandObject = ApplicationCommands.Copy;
-			
-			Assert.AreEqual (2, count);
+			manager.ActiveCulture = Resources.FindCultureInfo ("fr");
+
+			Assert.AreEqual ("Copier", visual.GetDisplayCaption ().Description);
+			Assert.AreEqual (3, count);
 		}
 
 		[Test]

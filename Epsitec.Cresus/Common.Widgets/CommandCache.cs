@@ -153,6 +153,10 @@ namespace Epsitec.Common.Widgets
 
 		internal void InvalidateCommandCaption(Command command)
 		{
+			//	Called by Command after the Caption object associated with the
+			//	command changed. This is used to notify the visual, so that it
+			//	has the opportunity to refresh its representation.
+			
 			for (int i = 0; i < this.records.Length; i++)
 			{
 				if (this.records[i].Command == command)
