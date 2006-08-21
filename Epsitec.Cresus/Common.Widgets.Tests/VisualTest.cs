@@ -65,9 +65,10 @@ namespace Epsitec.Common.Widgets
 			
 			manager.ActiveCulture = Resources.FindCultureInfo ("fr");
 			
-			visual.CommandLine = ApplicationCommands.Cut.Name;
+			visual.CommandObject = ApplicationCommands.Cut;
 
-			Assert.AreEqual ("Cut", visual.CommandLine);
+			Assert.IsNull (visual.CommandLine);
+			Assert.AreEqual ("Cut", visual.CommandName);
 			Assert.AreEqual ("Couper", ApplicationCommands.Cut.Caption.Description);
 			Assert.AreEqual ("Couper", visual.GetDisplayCaption ().Description);
 		}

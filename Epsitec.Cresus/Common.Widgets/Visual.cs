@@ -112,11 +112,11 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return (string) this.GetValue (Visual.CommandProperty);
+				return (string) this.GetValue (Visual.CommandLineProperty);
 			}
 			set
 			{
-				this.SetValue (Visual.CommandProperty, value);
+				this.SetValue (Visual.CommandLineProperty, value);
 			}
 		}
 
@@ -124,7 +124,11 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return null;
+				return (Command) this.GetValue (Visual.CommandObjectProperty);
+			}
+			set
+			{
+				this.SetValue (Visual.CommandObjectProperty, value);
 			}
 		}
 		
@@ -132,7 +136,25 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return CommandDispatcher.ExtractCommandName (this.CommandLine);
+				string commandLine = this.CommandLine;
+
+				if (string.IsNullOrEmpty (commandLine))
+				{
+					Command commandObject = this.CommandObject;
+
+					if (commandObject == null)
+					{
+						return null;
+					}
+					else
+					{
+						return commandObject.Name;
+					}
+				}
+				else
+				{
+					return CommandDispatcher.ExtractCommandName (this.CommandLine);
+				}
 			}
 		}
 
@@ -1253,16 +1275,16 @@ namespace Epsitec.Common.Widgets
 		{
 		}
 
+
+		public virtual Command GetCommand()
+		{
+			return this.CommandObject ?? Command.Get (CommandDispatcher.ExtractCommandName (this.CommandLine));
+		}
+	 
 		public virtual Caption GetDisplayCaption()
 		{
-			string commandName = this.CommandName;
-			
-			Caption commandCaption = null;
-
-			if (string.IsNullOrEmpty (commandName) == false)
-			{
-				commandCaption = Epsitec.Common.Widgets.Command.Get (commandName).Caption;
-			}
+			Command commandObject  = this.GetCommand ();
+			Caption commandCaption = commandObject == null ? null : commandObject.Caption;
 
 			return Caption.Merge (commandCaption, this.Caption);
 		}
@@ -1618,7 +1640,13 @@ namespace Epsitec.Common.Widgets
 		private static void NotifyCommandChanged(DependencyObject o, object oldValue, object newValue)
 		{
 			Visual that = o as Visual;
-			that.OnCommandChanged (new DependencyPropertyChangedEventArgs (Visual.CommandProperty, oldValue, newValue));
+			that.OnCommandChanged (new DependencyPropertyChangedEventArgs (Visual.CommandLineProperty, oldValue, newValue));
+		}
+
+		private static void NotifyCommandObjectChanged(DependencyObject o, object oldValue, object newValue)
+		{
+			Visual that = o as Visual;
+			that.OnCommandObjectChanged (new DependencyPropertyChangedEventArgs (Visual.CommandLineProperty, oldValue, newValue));
 		}
 
 		private static void NotifyCaptionDruidChanged(DependencyObject o, object oldValue, object newValue)
@@ -1707,6 +1735,30 @@ namespace Epsitec.Common.Widgets
 			//	Changing the command might/will also change the caption. Pretend
 			//	that the caption just changed :
 			
+			this.InvalidateDisplayCaption ();
+		}
+
+		protected virtual void OnCommandObjectChanged(Types.DependencyPropertyChangedEventArgs e)
+		{
+			Command oldCommand = e.OldValue as Command;
+			Command newCommand = e.NewValue as Command;
+
+			if (oldCommand == null)
+			{
+				CommandCache.Instance.AttachVisual (this);
+			}
+			else if (newCommand == null)
+			{
+				CommandCache.Instance.DetachVisual (this);
+			}
+			else
+			{
+				CommandCache.Instance.InvalidateVisual (this);
+			}
+
+			//	Changing the command might/will also change the caption. Pretend
+			//	that the caption just changed :
+
 			this.InvalidateDisplayCaption ();
 		}
 		
@@ -1860,8 +1912,9 @@ namespace Epsitec.Common.Widgets
 		public static readonly DependencyProperty AcceptThreeStatePropery		= DependencyProperty.Register ("AcceptThreeState", typeof (bool), typeof (Visual), new DependencyPropertyMetadata (false));
 		
 		public static readonly DependencyProperty BackColorProperty				= DependencyProperty.Register ("BackColor", typeof (Drawing.Color), typeof (Visual), new VisualPropertyMetadata (Drawing.Color.Empty, VisualPropertyMetadataOptions.AffectsDisplay));
-		
-		public static readonly DependencyProperty CommandProperty				= DependencyProperty.Register ("Command", typeof (string), typeof (Visual), new VisualPropertyMetadata (null, new PropertyInvalidatedCallback (Visual.NotifyCommandChanged), VisualPropertyMetadataOptions.AffectsDisplay));
+
+		public static readonly DependencyProperty CommandLineProperty			= DependencyProperty.Register ("CommandLine", typeof (string), typeof (Visual), new VisualPropertyMetadata (null, new PropertyInvalidatedCallback (Visual.NotifyCommandChanged), VisualPropertyMetadataOptions.AffectsDisplay));
+		public static readonly DependencyProperty CommandObjectProperty			= DependencyProperty.Register ("CommandObject", typeof (Command), typeof (Visual), new VisualPropertyMetadata (null, new PropertyInvalidatedCallback (Visual.NotifyCommandObjectChanged), VisualPropertyMetadataOptions.AffectsDisplay));
 		public static readonly DependencyProperty CaptionDruidProperty			= DependencyProperty.Register ("CaptionDruid", typeof (Support.Druid), typeof (Visual), new VisualPropertyMetadata (Support.Druid.Empty, new PropertyInvalidatedCallback (Visual.NotifyCaptionDruidChanged), VisualPropertyMetadataOptions.AffectsDisplay));
 
 		private static long						nextSerialId = 1;
