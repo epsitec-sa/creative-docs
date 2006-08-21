@@ -362,6 +362,13 @@ namespace Epsitec.Common.Document.Objects
 								this.document.ImageCache.Remove(this.filename);
 							}
 						}
+						else
+						{
+							if (propImage.Reload)
+							{
+								item.Reload();
+							}
+						}
 
 						propImage.ReloadReset();
 					}
