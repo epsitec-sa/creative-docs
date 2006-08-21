@@ -61,14 +61,14 @@ namespace Epsitec.Common.Widgets
 		
 		public MenuItem(string command, string text) : this ()
 		{
-			this.Command  = command;
+			this.CommandLine  = command;
 			this.Text     = text;
 			this.text_only = true;
 		}
 		
 		public MenuItem(string command, string icon, string text, string shortcut) : this ()
 		{
-			this.Command  = command;
+			this.CommandLine  = command;
 			this.IconName = icon;
 			this.Text     = text;
 			this.ShortKey = shortcut;	//#fix
@@ -722,7 +722,7 @@ namespace Epsitec.Common.Widgets
 				//	Un MenuItem qui pointe sur un sous-menu ne peut pas avoir de
 				//	commande associée :
 				
-				that.Command = null;
+				that.CommandLine = null;
 			}
 			
 			if (old_submenu != null)

@@ -1571,7 +1571,8 @@ namespace Epsitec.Common.Widgets
 			public QueueItem(Widget source, string command)
 			{
 				this.source          = source;
-				this.command         = command;
+				this.commandObject   = null;
+				this.commandLine     = command;
 				this.dispatcherChain = CommandDispatcherChain.BuildChain (source);
 				this.contextChain    = CommandContextChain.BuildChain (source);
 				
@@ -1583,7 +1584,34 @@ namespace Epsitec.Common.Widgets
 			public QueueItem(DependencyObject source, string command)
 			{
 				this.source          = source;
-				this.command         = command;
+				this.commandObject   = null;
+				this.commandLine     = command;
+				this.dispatcherChain = CommandDispatcherChain.BuildChain (source);
+				this.contextChain    = CommandContextChain.BuildChain (source);
+
+				System.Diagnostics.Debug.Assert (this.dispatcherChain != null);
+				System.Diagnostics.Debug.Assert (this.dispatcherChain.IsEmpty == false);
+				System.Diagnostics.Debug.Assert (this.contextChain != null);
+			}
+
+			public QueueItem(Widget source, Command command)
+			{
+				this.source          = source;
+				this.commandObject   = command;
+				this.commandLine     = null;
+				this.dispatcherChain = CommandDispatcherChain.BuildChain (source);
+				this.contextChain    = CommandContextChain.BuildChain (source);
+
+				System.Diagnostics.Debug.Assert (this.dispatcherChain != null);
+				System.Diagnostics.Debug.Assert (this.dispatcherChain.IsEmpty == false);
+				System.Diagnostics.Debug.Assert (this.contextChain != null);
+			}
+
+			public QueueItem(DependencyObject source, Command command)
+			{
+				this.source          = source;
+				this.commandObject   = command;
+				this.commandLine     = null;
 				this.dispatcherChain = CommandDispatcherChain.BuildChain (source);
 				this.contextChain    = CommandContextChain.BuildChain (source);
 
@@ -1601,11 +1629,19 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 			
-			public string						Command
+			public string						CommandLine
 			{
 				get
 				{
-					return this.command;
+					return this.commandLine;
+				}
+			}
+
+			public Command						CommandObject
+			{
+				get
+				{
+					return this.commandObject;
 				}
 			}
 			
@@ -1627,7 +1663,8 @@ namespace Epsitec.Common.Widgets
 			
 			
 			object								source;
-			string								command;
+			string								commandLine;
+			Command								commandObject;
 			CommandDispatcherChain				dispatcherChain;
 			CommandContextChain					contextChain;
 		}
@@ -1654,6 +1691,30 @@ namespace Epsitec.Common.Widgets
 			else
 			{
 				this.QueueCommand (new QueueItem (source, name));
+			}
+		}
+
+		public void QueueCommand(Widget source, Command command)
+		{
+			if (CommandDispatcherChain.BuildChain (source) == null)
+			{
+				System.Diagnostics.Debug.WriteLine (string.Format ("Command '{0}' cannot be dispatched, no dispatcher defined.", command.Name));
+			}
+			else
+			{
+				this.QueueCommand (new QueueItem (source, command));
+			}
+		}
+
+		public void QueueCommand(DependencyObject source, Command command)
+		{
+			if (CommandDispatcherChain.BuildChain (source) == null)
+			{
+				System.Diagnostics.Debug.WriteLine (string.Format ("Command '{0}' cannot be dispatched, no dispatcher defined.", command.Name));
+			}
+			else
+			{
+				this.QueueCommand (new QueueItem (source, command));
 			}
 		}
 
@@ -1788,13 +1849,14 @@ namespace Epsitec.Common.Widgets
 		{
 			while (this.cmd_queue.Count > 0)
 			{
-				QueueItem item    = this.cmd_queue.Dequeue ();
-				object    source  = item.Source;
-				string    command = item.Command;
+				QueueItem item          = this.cmd_queue.Dequeue ();
+				object    source        = item.Source;
+				string    commandLine   = item.CommandLine;
+				Command   commandObject = item.CommandObject;
 
 				System.Diagnostics.Debug.Assert (item.DispatcherChain.IsEmpty == false);
 				
-				CommandDispatcher.Dispatch (item.DispatcherChain, item.ContextChain, command, source);
+				CommandDispatcher.Dispatch (item.DispatcherChain, item.ContextChain, commandObject, commandLine, source);
 			}
 			
 			if (this.is_dispose_queued)

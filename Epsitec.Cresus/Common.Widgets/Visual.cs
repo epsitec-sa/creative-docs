@@ -108,7 +108,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public string							Command
+		public string							CommandLine
 		{
 			get
 			{
@@ -119,12 +119,20 @@ namespace Epsitec.Common.Widgets
 				this.SetValue (Visual.CommandProperty, value);
 			}
 		}
+
+		public Command							CommandObject
+		{
+			get
+			{
+				return null;
+			}
+		}
 		
 		public string							CommandName
 		{
 			get
 			{
-				return CommandDispatcher.ExtractCommandName (this.Command);
+				return CommandDispatcher.ExtractCommandName (this.CommandLine);
 			}
 		}
 
@@ -132,7 +140,8 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return ! string.IsNullOrEmpty (this.Command);
+				return (! string.IsNullOrEmpty (this.CommandLine))
+					|| (this.CommandObject != null);
 			}
 		}
 

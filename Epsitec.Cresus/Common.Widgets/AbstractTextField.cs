@@ -918,27 +918,27 @@ namespace Epsitec.Common.Widgets
 			bool sel = (this.TextNavigator.CursorFrom != this.TextNavigator.CursorTo);
 
 			mi = new MenuItem();
-			mi.Command = "Cut";
+			mi.CommandLine = "Cut";
 			mi.Name = "Cut";
 			mi.Text = Res.Strings.AbstractTextField.Menu.Cut;
 			mi.Enable = sel;
 			this.contextMenu.Items.Add(mi);
 
 			mi = new MenuItem();
-			mi.Command = "Copy";
+			mi.CommandLine = "Copy";
 			mi.Name = "Copy";
 			mi.Text = Res.Strings.AbstractTextField.Menu.Copy;
 			mi.Enable = sel;
 			this.contextMenu.Items.Add(mi);
 
 			mi = new MenuItem();
-			mi.Command = "Paste";
+			mi.CommandLine = "Paste";
 			mi.Name = "Paste";
 			mi.Text = Res.Strings.AbstractTextField.Menu.Paste;
 			this.contextMenu.Items.Add(mi);
 
 			mi = new MenuItem();
-			mi.Command = "Delete";
+			mi.CommandLine = "Delete";
 			mi.Name = "Delete";
 			mi.Text = Res.Strings.AbstractTextField.Menu.Delete;
 			mi.Enable = sel;
@@ -947,7 +947,7 @@ namespace Epsitec.Common.Widgets
 			this.contextMenu.Items.Add(new MenuSeparator());
 
 			mi = new MenuItem();
-			mi.Command = "SelectAll";
+			mi.CommandLine = "SelectAll";
 			mi.Name = "SelectAll";
 			mi.Text = Res.Strings.AbstractTextField.Menu.SelectAll;
 			this.contextMenu.Items.Add(mi);

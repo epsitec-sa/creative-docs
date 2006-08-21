@@ -82,7 +82,7 @@ namespace Epsitec.Common.Document.Containers
 			this.buttonPageStack = new Button(this);
 			this.buttonPageStack.Dock = DockStyle.Bottom;
 			this.buttonPageStack.Margins = new Margins(0, 0, 0, 0);
-			this.buttonPageStack.Command = "PageStack";
+			this.buttonPageStack.CommandLine = "PageStack";
 			this.buttonPageStack.Text = Res.Strings.Container.Pages.Button.PageStack;
 			this.buttonPageStack.TabIndex = 100;
 			this.buttonPageStack.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;

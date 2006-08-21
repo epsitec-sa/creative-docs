@@ -97,25 +97,25 @@ namespace Epsitec.Common.Document.Containers
 			this.selectorAuto = new IconButton(Misc.Icon("SelectorAuto"));
 			this.selectorAuto.AutoFocus = false;
 			this.selectorToolBar.Items.Add(this.selectorAuto);
-			this.selectorAuto.Command = "SelectorAuto";
+			this.selectorAuto.CommandLine = "SelectorAuto";
 			ToolTip.Default.SetToolTip(this.selectorAuto, Res.Strings.Container.Principal.Button.Auto);
 			
 			this.selectorIndividual = new IconButton(Misc.Icon("SelectorIndividual"));
 			this.selectorIndividual.AutoFocus = false;
 			this.selectorToolBar.Items.Add(this.selectorIndividual);
-			this.selectorIndividual.Command = "SelectorIndividual";
+			this.selectorIndividual.CommandLine = "SelectorIndividual";
 			ToolTip.Default.SetToolTip(this.selectorIndividual, Res.Strings.Container.Principal.Button.Individual);
 			
 			this.selectorScaler = new IconButton(Misc.Icon("SelectorScaler"));
 			this.selectorScaler.AutoFocus = false;
 			this.selectorToolBar.Items.Add(this.selectorScaler);
-			this.selectorScaler.Command = "SelectorScaler";
+			this.selectorScaler.CommandLine = "SelectorScaler";
 			ToolTip.Default.SetToolTip(this.selectorScaler, Res.Strings.Container.Principal.Button.Scaler);
 			
 			this.selectorStretch = new IconButton(Misc.Icon("SelectorStretch"));
 			this.selectorStretch.AutoFocus = false;
 			this.selectorToolBar.Items.Add(this.selectorStretch);
-			this.selectorStretch.Command = "SelectorStretch";
+			this.selectorStretch.CommandLine = "SelectorStretch";
 			this.selectorStretch.Name = "SelectorStretch";
 			ToolTip.Default.SetToolTip(this.selectorStretch, Res.Strings.Container.Principal.Button.Stretch);
 
@@ -135,13 +135,13 @@ namespace Epsitec.Common.Document.Containers
 			this.selectorTotal = new IconButton(Misc.Icon("SelectTotal"));
 			this.selectorTotal.AutoFocus = false;
 			this.selectorToolBar.Items.Add(this.selectorTotal);
-			this.selectorTotal.Command = "SelectTotal";
+			this.selectorTotal.CommandLine = "SelectTotal";
 			ToolTip.Default.SetToolTip(this.selectorTotal, Res.Strings.Container.Principal.Button.Total);
 			
 			this.selectorPartial = new IconButton(Misc.Icon("SelectPartial"));
 			this.selectorPartial.AutoFocus = false;
 			this.selectorToolBar.Items.Add(this.selectorPartial);
-			this.selectorPartial.Command = "SelectPartial";
+			this.selectorPartial.CommandLine = "SelectPartial";
 			ToolTip.Default.SetToolTip(this.selectorPartial, Res.Strings.Container.Principal.Button.Partial);
 
 			this.selectorToolBar.Items.Add(new IconSeparator());
@@ -149,13 +149,13 @@ namespace Epsitec.Common.Document.Containers
 			this.selectorAdaptLine = new IconButton(Misc.Icon("SelectorAdaptLine"));
 			this.selectorAdaptLine.AutoFocus = false;
 			this.selectorToolBar.Items.Add(this.selectorAdaptLine);
-			this.selectorAdaptLine.Command = "SelectorAdaptLine";
+			this.selectorAdaptLine.CommandLine = "SelectorAdaptLine";
 			ToolTip.Default.SetToolTip(this.selectorAdaptLine, Res.Strings.Container.Principal.Button.AdaptLine);
 			
 			this.selectorAdaptText = new IconButton(Misc.Icon("SelectorAdaptText"));
 			this.selectorAdaptText.AutoFocus = false;
 			this.selectorToolBar.Items.Add(this.selectorAdaptText);
-			this.selectorAdaptText.Command = "SelectorAdaptText";
+			this.selectorAdaptText.CommandLine = "SelectorAdaptText";
 			ToolTip.Default.SetToolTip(this.selectorAdaptText, Res.Strings.Container.Principal.Button.AdaptText);
 		}
 
@@ -437,7 +437,7 @@ namespace Epsitec.Common.Document.Containers
 					{
 						Button button = new Button();
 						button.PreferredHeight = 40;
-						button.Command = cmd;
+						button.CommandLine = cmd;
 						button.Name = name;
 						button.Text = text;
 						button.ContentAlignment = ContentAlignment.MiddleLeft;

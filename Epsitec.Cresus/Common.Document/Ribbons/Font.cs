@@ -260,7 +260,7 @@ namespace Epsitec.Common.Document.Ribbons
 			Command c = Common.Widgets.Command.Get (command);
 			Widgets.ButtonFontFace button = new Widgets.ButtonFontFace(this);
 
-			button.Command = command;
+			button.CommandLine = command;
 			button.AutoFocus = false;
 
 			if ( c.Statefull )

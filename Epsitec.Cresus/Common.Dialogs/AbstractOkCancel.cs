@@ -84,7 +84,7 @@ namespace Epsitec.Common.Dialogs
 			button1               = new Button (this.window.Root);
 			button1.SetManualBounds(new Drawing.Rectangle(this.window.ClientSize.Width - 2*75 - 2*8, 16, 75, button1.PreferredHeight));
 			button1.Text          = Widgets.Res.Strings.Dialog.Button.OK;
-			button1.Command       = "ValidateDialog";
+			button1.CommandLine       = "ValidateDialog";
 			button1.TabIndex      = 2;
 			button1.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			button1.Shortcuts.Add (Widgets.Feel.Factory.Active.AcceptShortcut);
@@ -95,7 +95,7 @@ namespace Epsitec.Common.Dialogs
 				button2.SetManualBounds(new Drawing.Rectangle(this.window.ClientSize.Width - 1*75 - 1*8, 16, 75, button2.PreferredHeight));
 				button2.Text          = Widgets.Res.Strings.Dialog.Button.Cancel;
 				button2.Name          = "Cancel";
-				button2.Command       = "QuitDialog";
+				button2.CommandLine       = "QuitDialog";
 				button2.TabIndex      = 3;
 				button2.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 				button2.Shortcuts.Add (Widgets.Feel.Factory.Active.CancelShortcut);

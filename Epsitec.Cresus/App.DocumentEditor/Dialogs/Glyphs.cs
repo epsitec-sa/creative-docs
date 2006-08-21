@@ -131,7 +131,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.buttonFilter = new IconButton(bookArray);
 				this.buttonFilter.PreferredWidth = 21;
 				this.buttonFilter.PreferredHeight = 21;
-				this.buttonFilter.Command = "TextFontFilter";
+				this.buttonFilter.CommandLine = "TextFontFilter";
 				this.buttonFilter.IconName = Misc.Icon("TextFontFilter");
 				this.buttonFilter.PreferredIconSize = Misc.IconPreferredSize("Normal");
 				this.buttonFilter.AutoFocus = false;
@@ -242,7 +242,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 				//	Boutons de fermeture.
 				Button buttonOk = new Button(this.window.Root);
-				buttonOk.Command = "GlyphsInsert";
+				buttonOk.CommandLine = "GlyphsInsert";
 				buttonOk.PreferredWidth = 75;
 				buttonOk.Text = Res.Strings.Dialog.Glyphs.Button.Insert;
 				buttonOk.ButtonStyle = ButtonStyle.DefaultAccept;

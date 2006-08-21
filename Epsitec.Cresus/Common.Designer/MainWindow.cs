@@ -276,7 +276,7 @@ namespace Epsitec.Common.Designer
 			this.bookModules.Margins = new Margins(0, 0, 3, 0);
 			this.bookModules.Arrows = TabBookArrows.Right;
 			this.bookModules.HasCloseButton = true;
-			this.bookModules.CloseButton.Command = "Close";
+			this.bookModules.CloseButton.CommandLine = "Close";
 			this.bookModules.ActivePageChanged += new EventHandler(this.HandleBookModulesActivePageChanged);
 			ToolTip.Default.SetToolTip(this.bookModules.CloseButton, Res.Strings.Action.Close);
 

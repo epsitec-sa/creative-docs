@@ -754,7 +754,7 @@ namespace Epsitec.App.DocumentEditor
 			this.bookDocuments.Margins = new Margins(1, 0, 3, 1);
 			this.bookDocuments.Arrows = TabBookArrows.Right;
 			this.bookDocuments.HasCloseButton = true;
-			this.bookDocuments.CloseButton.Command = "Close";
+			this.bookDocuments.CloseButton.CommandLine = "Close";
 			this.bookDocuments.ActivePageChanged += new EventHandler(this.HandleBookDocumentsActivePageChanged);
 			ToolTip.Default.SetToolTip(this.bookDocuments.CloseButton, Res.Strings.Tooltip.TabBook.Close);
 
@@ -914,7 +914,7 @@ namespace Epsitec.App.DocumentEditor
 			ToolTip.Default.SetToolTip(quickPagePrev, DocumentEditor.GetRes("Action.PagePrev"));
 
 			di.quickPageMenu = new Button(hBand);
-			di.quickPageMenu.Command = "PageMenu";
+			di.quickPageMenu.CommandLine = "PageMenu";
 			di.quickPageMenu.Clicked += new MessageEventHandler(this.HandleQuickPageMenu);
 			di.quickPageMenu.PreferredWidth = System.Math.Floor(sw*2.0);
 			di.quickPageMenu.PreferredHeight = sw;
@@ -930,7 +930,7 @@ namespace Epsitec.App.DocumentEditor
 			ToolTip.Default.SetToolTip(quickPageNext, DocumentEditor.GetRes("Action.PageNext"));
 
 			Button quickPageNew = new Button(hBand);
-			quickPageNew.Command = "PageNew";
+			quickPageNew.CommandLine = "PageNew";
 			quickPageNew.Text = "<b>+</b>";
 			quickPageNew.PreferredWidth = sw;
 			quickPageNew.PreferredHeight = sw;
@@ -950,7 +950,7 @@ namespace Epsitec.App.DocumentEditor
 			vBand.Margins = new Margins(0, wm, 6+wm+tm, wm+sw+1);
 
 			Button quickLayerNew = new Button(vBand);
-			quickLayerNew.Command = "LayerNew";
+			quickLayerNew.CommandLine = "LayerNew";
 			quickLayerNew.Text = "<b>+</b>";
 			quickLayerNew.PreferredWidth = sw;
 			quickLayerNew.PreferredHeight = sw;
@@ -967,7 +967,7 @@ namespace Epsitec.App.DocumentEditor
 			ToolTip.Default.SetToolTip(quickLayerNext, DocumentEditor.GetRes("Action.LayerNext"));
 
 			di.quickLayerMenu = new Button(vBand);
-			di.quickLayerMenu.Command = "LayerMenu";
+			di.quickLayerMenu.CommandLine = "LayerMenu";
 			di.quickLayerMenu.Clicked += new MessageEventHandler(this.HandleQuickLayerMenu);
 			di.quickLayerMenu.PreferredWidth = sw;
 			di.quickLayerMenu.PreferredHeight = sw;
@@ -1115,10 +1115,10 @@ namespace Epsitec.App.DocumentEditor
 			for ( int i=0 ; i<menu.Items.Count ; i++ )
 			{
 				MenuItem item = menu.Items[i] as MenuItem;
-				if ( item.Command == cmd )
+				if ( item.CommandLine == cmd )
 				{
 					item.Submenu = sub;
-					item.Command = cmd;
+					item.CommandLine = cmd;
 					return;
 				}
 			}
