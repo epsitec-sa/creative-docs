@@ -70,6 +70,15 @@ namespace Epsitec.Common.Document
 			}
 		}
 
+		public void ClearInsideDoc()
+		{
+			//	Enlève tous les modes InsideDoc.
+			foreach (Item item in this.dico.Values)
+			{
+				item.InsideDoc = false;
+			}
+		}
+
 		public void GenerateShortNames()
 		{
 			//	Génère les noms courts pour toutes les images du document.
@@ -122,9 +131,11 @@ namespace Epsitec.Common.Document
 			//	Ecrit toutes les données des images.
 			foreach (Item item in this.dico.Values)
 			{
-				string name = string.Format("images/{0}", item.ShortName);
-
-				zip.AddEntry(name, item.Data);
+				if (item.InsideDoc)
+				{
+					string name = string.Format("images/{0}", item.ShortName);
+					zip.AddEntry(name, item.Data);
+				}
 			}
 		}
 
@@ -171,6 +182,19 @@ namespace Epsitec.Common.Document
 				set
 				{
 					this.shortName = value;
+				}
+			}
+
+			public bool InsideDoc
+			{
+				//	Image incorporée au fichier Zip ?
+				get
+				{
+					return this.insideDoc;
+				}
+				set
+				{
+					this.insideDoc = value;
 				}
 			}
 
@@ -240,6 +264,7 @@ namespace Epsitec.Common.Document
 
 			protected string				filename;
 			protected string				shortName;
+			protected bool					insideDoc;
 			protected byte[]				data;
 			protected Drawing.Image			image;
 			protected Drawing.Image			imageDimmed;
