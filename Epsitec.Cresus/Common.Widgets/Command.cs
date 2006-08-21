@@ -569,8 +569,7 @@ namespace Epsitec.Common.Widgets
 				this.InitializeDummyCaption ();
 			}
 
-			this.caption.AddEventHandler (Caption.IconProperty, this.HandleIconChanged);
-			this.caption.AddEventHandler (Caption.DescriptionProperty, this.HandleDescriptionChanged);
+			this.caption.Changed += this.HandleCaptionChanged;
 			this.caption.AddEventHandler (Command.CommandTypeProperty, this.HandleCommandTypeChanged);
 
 			this.InitializeCommandType ();
@@ -641,12 +640,9 @@ namespace Epsitec.Common.Widgets
 
 		#region Private Event Handlers
 
-		private void HandleIconChanged(object sender, DependencyPropertyChangedEventArgs e)
+		private void HandleCaptionChanged(object sender)
 		{
-		}
-
-		private void HandleDescriptionChanged(object sender, DependencyPropertyChangedEventArgs e)
-		{
+			CommandCache.Instance.InvalidateCommandCaption (this);
 		}
 
 		private void HandleCommandTypeChanged(object sender, DependencyPropertyChangedEventArgs e)

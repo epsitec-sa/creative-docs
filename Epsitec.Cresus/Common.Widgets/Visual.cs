@@ -159,7 +159,7 @@ namespace Epsitec.Common.Widgets
 				{
 					if (this.AttachCaption (this.CaptionDruid))
 					{
-						this.OnCaptionChanged ();
+						this.InvalidateDisplayCaption ();
 					}
 				}
 				
@@ -1244,7 +1244,7 @@ namespace Epsitec.Common.Widgets
 		{
 		}
 
-		public virtual Caption GetCaption()
+		public virtual Caption GetDisplayCaption()
 		{
 			string commandName = this.CommandName;
 			
@@ -1327,6 +1327,77 @@ namespace Epsitec.Common.Widgets
 
 		#endregion
 
+		#region Internal Methods for Command
+
+		internal void NotifyCommandCaptionChanged()
+		{
+			this.InvalidateDisplayCaption ();
+		}
+
+		#endregion
+
+		#region Private Methods for Caption management
+
+		private void InvalidateDisplayCaption()
+		{
+			this.OnCaptionChanged ();
+		}
+
+		private void DetachCaption()
+		{
+			if (this.caption != null)
+			{
+				this.caption.Changed -= this.HandleCaptionChanged;
+				this.caption = null;
+			}
+		}
+
+		private bool AttachCaption(Support.Druid caption)
+		{
+			if (caption.IsValid)
+			{
+				return this.AttachCaption (Support.Resources.DefaultManager.GetCaption (caption));
+			}
+			else
+			{
+				return false;
+			}
+		}
+
+		private bool AttachCaption(Caption caption)
+		{
+			System.Diagnostics.Debug.Assert (this.caption == null);
+
+			if (caption != null)
+			{
+				this.caption = caption;
+				this.caption.Changed += this.HandleCaptionChanged;
+
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+
+		private void HandleCaptionChanged(object sender)
+		{
+			this.InvalidateDisplayCaption ();
+		}
+
+		#endregion
+
+		protected virtual void OnCaptionChanged()
+		{
+			Support.EventHandler handler = (Support.EventHandler) this.GetUserEventHandler ("CaptionChanged");
+
+			if (handler != null)
+			{
+				handler (this);
+			}
+		}
+
 		protected virtual void OnChildrenChanged()
 		{
 			Support.EventHandler handler = (Support.EventHandler) this.GetUserEventHandler ("ChildrenChanged");
@@ -1375,6 +1446,16 @@ namespace Epsitec.Common.Widgets
 		}
 
 		#endregion
+
+		protected override void Dispose(bool disposing)
+		{
+			if (disposing)
+			{
+				this.DetachCaption ();
+			}
+			
+			base.Dispose (disposing);
+		}
 
 		#region Object Overrides
 
@@ -1540,62 +1621,9 @@ namespace Epsitec.Common.Widgets
 
 			that.DetachCaption ();
 			that.AttachCaption (newDruid);
-			that.OnCaptionChanged ();
+			that.InvalidateDisplayCaption ();
 		}
 
-		private void DetachCaption()
-		{
-			if (this.caption != null)
-			{
-				this.caption.Changed -= this.HandleCaptionChanged;
-				this.caption = null;
-			}
-		}
-
-		private bool AttachCaption(Support.Druid caption)
-		{
-			if (caption.IsValid)
-			{
-				return this.AttachCaption (Support.Resources.DefaultManager.GetCaption (caption));
-			}
-			else
-			{
-				return false;
-			}
-		}
-
-		private bool AttachCaption(Caption caption)
-		{
-			System.Diagnostics.Debug.Assert (this.caption == null);
-
-			if (caption != null)
-			{
-				this.caption = caption;
-				this.caption.Changed += this.HandleCaptionChanged;
-				
-				return true;
-			}
-			else
-			{
-				return false;
-			}
-		}
-
-		private void HandleCaptionChanged(object sender)
-		{
-			this.OnCaptionChanged ();
-		}
-
-		protected virtual void OnCaptionChanged()
-		{
-			Support.EventHandler handler = (Support.EventHandler) this.GetUserEventHandler ("CaptionChanged");
-
-			if (handler != null)
-			{
-				handler (this);
-			}
-		}
-		
 		private static void NotifyAnchorChanged(DependencyObject o, object oldValue, object newValue)
 		{
 			Visual that = o as Visual;
@@ -1641,21 +1669,24 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void OnCommandChanged(Types.DependencyPropertyChangedEventArgs e)
 		{
-			string old_command = e.OldValue as string;
-			string new_command = e.NewValue as string;
-			string old_command_name = CommandDispatcher.ExtractCommandName (old_command);
-			string new_command_name = CommandDispatcher.ExtractCommandName (new_command);
+			string oldCommand = e.OldValue as string;
+			string newCommand = e.NewValue as string;
+			string oldCommandName = CommandDispatcher.ExtractCommandName (oldCommand);
+			string newCommandName = CommandDispatcher.ExtractCommandName (newCommand);
 			
-			if (old_command_name == new_command_name)
+			if (oldCommandName == newCommandName)
 			{
-				//	Quelqu'un a fait un changement minime (espace ou argument de
-				//	la commande). Ca ne compte pas ici.
+				//	This was just a tiny change in the command specification (e.g. the
+				//	command arguments changed, but not the command itself). This does
+				//	not count as a real command change here.
+
+				return;
 			}
-			else if (old_command_name == null)
+			else if (oldCommandName == null)
 			{
 				CommandCache.Instance.AttachVisual (this);
 			}
-			else if (new_command_name == null)
+			else if (newCommandName == null)
 			{
 				CommandCache.Instance.DetachVisual (this);
 			}
@@ -1663,6 +1694,11 @@ namespace Epsitec.Common.Widgets
 			{
 				CommandCache.Instance.InvalidateVisual (this);
 			}
+
+			//	Changing the command might/will also change the caption. Pretend
+			//	that the caption just changed :
+			
+			this.InvalidateDisplayCaption ();
 		}
 		
 		protected virtual void OnActiveStateChanged()

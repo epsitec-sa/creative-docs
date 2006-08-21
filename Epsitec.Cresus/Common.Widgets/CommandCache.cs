@@ -149,6 +149,22 @@ namespace Epsitec.Common.Widgets
 			this.RequestAsyncSynchronization ();
 		}
 
+		internal void InvalidateCommandCaption(Command command)
+		{
+			for (int i = 0; i < this.records.Length; i++)
+			{
+				if (this.records[i].Command == command)
+				{
+					Visual visual = this.records[i].Visual;
+					
+					if (visual != null)
+					{
+						visual.NotifyCommandCaptionChanged ();
+					}
+				}
+			}
+		}
+
 		internal void InvalidateState(CommandState state)
 		{
 			//	Called by CommandState when the command state settings change.
