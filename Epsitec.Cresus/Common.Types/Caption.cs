@@ -7,6 +7,12 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Types
 {
+	/// <summary>
+	/// The <c>Caption</c> class encapsulates several strings as a single instance;
+	/// it is used to label widgets, associate a description, an icon, etc. The
+	/// <c>Caption</c> class is also used as a serialization support for commands,
+	/// types, etc.
+	/// </summary>
 	public sealed class Caption : DependencyObject
 	{
 		public Caption()
@@ -309,18 +315,18 @@ namespace Epsitec.Common.Types
 		/// <returns>The merged caption object.</returns>
 		public static Caption Merge(Caption a, Caption b)
 		{
-			if ((a == null) ||
-				(b == null))
-			{
-				throw new System.ArgumentNullException ();
-			}
-			
 			Caption caption = new Caption ();
 
 			caption.SuspendChanged ();
-			
-			DependencyObject.CopyDefinedProperties (a, caption);
-			DependencyObject.CopyDefinedProperties (b, caption);
+
+			if (a != null)
+			{
+				DependencyObject.CopyDefinedProperties (a, caption);
+			}
+			if (b != null)
+			{
+				DependencyObject.CopyDefinedProperties (b, caption);
+			}
 
 			caption.ResumeChanged ();
 			
@@ -548,6 +554,9 @@ namespace Epsitec.Common.Types
 		public static readonly DependencyProperty DescriptionProperty = DependencyProperty.Register ("Description", typeof (string), typeof (Caption), Caption.CaptionMetadataInstance);
 		public static readonly DependencyProperty IconProperty = DependencyProperty.Register ("Icon", typeof (string), typeof (Caption), Caption.CaptionMetadataInstance);
 
+		/// <summary>
+		/// Occurs when the <c>Caption</c> object changes.
+		/// </summary>
 		public event Support.EventHandler Changed;
 
 		private Collections.HostedList<string> labels;

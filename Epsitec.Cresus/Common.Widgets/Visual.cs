@@ -151,6 +151,33 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		public Caption							Caption
+		{
+			get
+			{
+				if (this.caption == null)
+				{
+					if (this.AttachCaption (this.CaptionDruid))
+					{
+						this.OnCaptionChanged ();
+					}
+				}
+				
+				return this.caption;
+			}
+		}
+
+		public Support.Druid					CaptionDruid
+		{
+			get
+			{
+				return (Support.Druid) this.GetValue (Visual.CaptionDruidProperty);
+			}
+			set
+			{
+				this.SetValue (Visual.CaptionDruidProperty, value);
+			}
+		}
 		
 		public AnchorStyles						Anchor
 		{
@@ -1217,6 +1244,20 @@ namespace Epsitec.Common.Widgets
 		{
 		}
 
+		public virtual Caption GetCaption()
+		{
+			string commandName = this.CommandName;
+			
+			Caption commandCaption = null;
+
+			if (string.IsNullOrEmpty (commandName) == false)
+			{
+				commandCaption = Epsitec.Common.Widgets.Command.Get (commandName).Caption;
+			}
+
+			return Caption.Merge (commandCaption, this.Caption);
+		}
+		
 		internal virtual void InvalidateTextLayout()
 		{
 		}
@@ -1335,6 +1376,8 @@ namespace Epsitec.Common.Widgets
 
 		#endregion
 
+		#region Object Overrides
+
 		public override bool Equals(object obj)
 		{
 			return this.Equals (obj as Visual);
@@ -1344,8 +1387,9 @@ namespace Epsitec.Common.Widgets
 		{
 			return (int) this.visualSerialId;
 		}
-		
-		
+
+		#endregion
+
 		static Visual()
 		{
 		}
@@ -1487,6 +1531,71 @@ namespace Epsitec.Common.Widgets
 			that.OnCommandChanged (new DependencyPropertyChangedEventArgs (Visual.CommandProperty, oldValue, newValue));
 		}
 
+		private static void NotifyCaptionDruidChanged(DependencyObject o, object oldValue, object newValue)
+		{
+			Visual that = o as Visual;
+			
+			Support.Druid oldDruid = (Support.Druid) oldValue;
+			Support.Druid newDruid = (Support.Druid) newValue;
+
+			that.DetachCaption ();
+			that.AttachCaption (newDruid);
+			that.OnCaptionChanged ();
+		}
+
+		private void DetachCaption()
+		{
+			if (this.caption != null)
+			{
+				this.caption.Changed -= this.HandleCaptionChanged;
+				this.caption = null;
+			}
+		}
+
+		private bool AttachCaption(Support.Druid caption)
+		{
+			if (caption.IsValid)
+			{
+				return this.AttachCaption (Support.Resources.DefaultManager.GetCaption (caption));
+			}
+			else
+			{
+				return false;
+			}
+		}
+
+		private bool AttachCaption(Caption caption)
+		{
+			System.Diagnostics.Debug.Assert (this.caption == null);
+
+			if (caption != null)
+			{
+				this.caption = caption;
+				this.caption.Changed += this.HandleCaptionChanged;
+				
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+
+		private void HandleCaptionChanged(object sender)
+		{
+			this.OnCaptionChanged ();
+		}
+
+		protected virtual void OnCaptionChanged()
+		{
+			Support.EventHandler handler = (Support.EventHandler) this.GetUserEventHandler ("CaptionChanged");
+
+			if (handler != null)
+			{
+				handler (this);
+			}
+		}
+		
 		private static void NotifyAnchorChanged(DependencyObject o, object oldValue, object newValue)
 		{
 			Visual that = o as Visual;
@@ -1632,7 +1741,19 @@ namespace Epsitec.Common.Widgets
 				this.RemoveEventHandler (Visual.KeyboardFocusProperty, value);
 			}
 		}
-		
+
+		public event Support.EventHandler			CaptionChanged
+		{
+			add
+			{
+				this.AddUserEventHandler ("CaptionChanged", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler ("CaptionChanged", value);
+			}
+		}
+
 		public static readonly DependencyProperty IndexProperty					= DependencyProperty.Register ("Index", typeof (int), typeof (Visual), new DependencyPropertyMetadata (-1));
 		public static readonly DependencyProperty GroupProperty					= DependencyProperty.Register ("Group", typeof (string), typeof (Visual));
 		public static readonly DependencyProperty NameProperty					= DependencyObjectTree.NameProperty.AddOwner (typeof (Visual));
@@ -1695,7 +1816,8 @@ namespace Epsitec.Common.Widgets
 		
 		public static readonly DependencyProperty BackColorProperty				= DependencyProperty.Register ("BackColor", typeof (Drawing.Color), typeof (Visual), new VisualPropertyMetadata (Drawing.Color.Empty, VisualPropertyMetadataOptions.AffectsDisplay));
 		
-		public static readonly DependencyProperty CommandProperty				= DependencyProperty.Register ("Command", typeof (string), typeof (Visual), new DependencyPropertyMetadata (null, new PropertyInvalidatedCallback (Visual.NotifyCommandChanged)));
+		public static readonly DependencyProperty CommandProperty				= DependencyProperty.Register ("Command", typeof (string), typeof (Visual), new VisualPropertyMetadata (null, new PropertyInvalidatedCallback (Visual.NotifyCommandChanged), VisualPropertyMetadataOptions.AffectsDisplay));
+		public static readonly DependencyProperty CaptionDruidProperty			= DependencyProperty.Register ("CaptionDruid", typeof (Support.Druid), typeof (Visual), new VisualPropertyMetadata (Support.Druid.Empty, new PropertyInvalidatedCallback (Visual.NotifyCaptionDruidChanged), VisualPropertyMetadataOptions.AffectsDisplay));
 
 		private static long						nextSerialId = 1;
 		
@@ -1709,5 +1831,6 @@ namespace Epsitec.Common.Widgets
 		
 		private FlatChildrenCollection			children;
 		private Visual							parent;
+		private Caption							caption;
 	}
 }
