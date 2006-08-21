@@ -71,6 +71,20 @@ namespace Epsitec.Common.Widgets
 			Assert.AreEqual ("Cut", visual.CommandName);
 			Assert.AreEqual ("Couper", ApplicationCommands.Cut.Caption.Description);
 			Assert.AreEqual ("Couper", visual.GetDisplayCaption ().Description);
+
+			int count = 0;
+			
+			visual.DisplayCaptionChanged += delegate (object sender) { count++; };
+			
+			manager.ActiveCulture = Resources.FindCultureInfo ("en");
+
+			Assert.AreEqual ("Cut", ApplicationCommands.Cut.Caption.Description);
+			Assert.AreEqual ("Cut", visual.GetDisplayCaption ().Description);
+			Assert.AreEqual (1, count);
+
+			visual.CommandObject = ApplicationCommands.Copy;
+			
+			Assert.AreEqual (2, count);
 		}
 
 		[Test]

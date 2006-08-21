@@ -60,7 +60,7 @@ namespace Epsitec.Common.Widgets
 			
 			visual.SetCommandCacheId (id);
 			
-			this.records[id]  = new Record (visual);
+			this.records[id] = new Record (visual);
 			this.clearCount += 1;
 			
 			System.Diagnostics.Debug.Assert (this.records[id].IsAlive);
@@ -100,6 +100,8 @@ namespace Epsitec.Common.Widgets
 			{
 				return;
 			}
+
+			this.records[id].SetCommand (visual.GetCommand ());
 			
 			if (this.records[id].ClearCommandState ())
 			{
@@ -248,8 +250,9 @@ namespace Epsitec.Common.Widgets
 		{
 			public Record(Visual visual)
 			{
-				this.visual = new Types.Weak<Visual> (visual);
-				this.state  = null;
+				this.visual  = new Types.Weak<Visual> (visual);
+				this.state   = null;
+				this.command = visual.GetCommand ();
 			}
 			
 			
@@ -294,7 +297,7 @@ namespace Epsitec.Common.Widgets
 			{
 				get
 				{
-					return this.state == null ? null : this.state.Command;
+					return this.command;
 				}
 			}
 			
@@ -318,6 +321,7 @@ namespace Epsitec.Common.Widgets
 			{
 				this.visual  = null;
 				this.state   = null;
+				this.command = null;
 			}
 			
 			public bool ClearCommandState()
@@ -339,10 +343,16 @@ namespace Epsitec.Common.Widgets
 				
 				this.state = state;
 			}
+
+			public void SetCommand(Command command)
+			{
+				this.command = command;
+			}
 			
 			
 			private Types.Weak<Visual>			visual;
 			private CommandState				state;
+			private Command						command;
 		}
 		
 		#endregion
@@ -352,11 +362,11 @@ namespace Epsitec.Common.Widgets
 			//	Synchronize the information stored in the specified record. This
 			//	will re-associate the Visual with its CommandState, if possible.
 			
-			Visual visual = this.records[index].Visual;
+			Visual  visual  = this.records[index].Visual;
+			Command command = this.records[index].Command;
 			
 			if (visual != null)
 			{
-				Command command = Command.Find (visual.CommandName);
 				CommandContextChain chain = CommandContextChain.BuildChain (visual);
 				
 				if ((command != null) &&
