@@ -71,11 +71,6 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		~Widget()
-		{
-			this.Dispose (false);
-		}
-		
 		static Widget()
 		{
 			System.Diagnostics.Debug.WriteLine ("Initializing Widget infrastructure.");

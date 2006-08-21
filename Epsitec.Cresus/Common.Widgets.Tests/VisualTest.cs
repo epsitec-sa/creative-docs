@@ -57,6 +57,22 @@ namespace Epsitec.Common.Widgets
 		}
 
 		[Test]
+		public void CheckDisplayCaption()
+		{
+			Visual visual = new Visual ();
+
+			ResourceManager manager = Resources.DefaultManager;
+			
+			manager.ActiveCulture = Resources.FindCultureInfo ("fr");
+			
+			visual.Command = ApplicationCommands.Cut.Name;
+
+			Assert.AreEqual ("Cut", visual.Command);
+			Assert.AreEqual ("Couper", ApplicationCommands.Cut.Caption.Description);
+			Assert.AreEqual ("Couper", visual.GetDisplayCaption ().Description);
+		}
+
+		[Test]
 		public void CheckVisualEnable()
 		{
 			Visual a = new Visual ();
