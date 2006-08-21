@@ -968,27 +968,50 @@ namespace Epsitec.Common.Document
 		public void ImagesGenerateShortNames()
 		{
 			//	Génère les noms courts pour toutes les images du document.
-			List<string> list = new List<string>();
+			List<string> listFilename = new List<string>();
 			foreach (Objects.Abstract obj in this.document.Deep(null))
 			{
 				Properties.Image image = obj.PropertyImage;
 				if (image != null)
 				{
-					if (!list.Contains(image.Filename))
+					if (!listFilename.Contains(image.Filename))
 					{
-						list.Add(image.Filename);
+						listFilename.Add(image.Filename);
 					}
 				}
 			}
 
+			//	Génère la liste des noms courts.
+			List<string> listShortNames = new List<string>();
+			foreach (string filename in listFilename)
+			{
+				string shortName = System.IO.Path.GetFileName(filename);
+
+				if (listShortNames.Contains(shortName))
+				{
+					string name = System.IO.Path.GetFileNameWithoutExtension(filename);
+					string ext  = System.IO.Path.GetExtension(filename);  // extension avec le "." !
+
+					int i=2;
+					do
+					{
+						shortName = string.Format("{0} ({1}){2}", name, i.ToString(), ext);
+						i++;
+					}
+					while (listShortNames.Contains(shortName));
+				}
+
+				listShortNames.Add(shortName);
+			}
+
+			//	Donne les noms courts à toutes les images du document.
 			foreach (Objects.Abstract obj in this.document.Deep(null))
 			{
 				Properties.Image image = obj.PropertyImage;
 				if (image != null)
 				{
-					int index = list.IndexOf(image.Filename);
-					System.Diagnostics.Debug.Assert(index != -1);
-					image.ShortName = index.ToString(System.Globalization.CultureInfo.InvariantCulture);
+					int index = listFilename.IndexOf(image.Filename);
+					image.ShortName = listShortNames[index];
 				}
 			}
 		}

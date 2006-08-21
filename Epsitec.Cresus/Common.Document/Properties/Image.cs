@@ -26,6 +26,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public string Filename
 		{
+			//	Nom du fichier original avec le chemin d'accès complet.
 			get
 			{
 				return this.filename;
@@ -44,6 +45,9 @@ namespace Epsitec.Common.Document.Properties
 
 		public string ShortName
 		{
+			//	Nom court (sans dossiers), utilisé pour la sérialisation Zip.
+			//	Toutes les images d'un document doivent obligatoirement avoir des
+			//	noms différents.
 			get
 			{
 				return this.shortName;
