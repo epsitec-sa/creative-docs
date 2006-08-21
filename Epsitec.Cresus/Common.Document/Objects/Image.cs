@@ -356,10 +356,12 @@ namespace Epsitec.Common.Document.Objects
 						this.filename = image.Filename;
 						try
 						{
-							this.imageOriginal = Drawing.Bitmap.FromFile(this.filename);
+							this.data = System.IO.File.ReadAllBytes(this.filename);
+							this.imageOriginal = Drawing.Bitmap.FromData(this.data);
 						}
 						catch
 						{
+							this.data = null;
 							this.imageOriginal = null;
 						}
 						this.imageDimmed = null;
@@ -510,6 +512,7 @@ namespace Epsitec.Common.Document.Objects
 
 		
 		protected string					filename;
+		protected byte[]					data;
 		protected Drawing.Image				imageOriginal;
 		protected Drawing.Image				imageDimmed;
 	}
