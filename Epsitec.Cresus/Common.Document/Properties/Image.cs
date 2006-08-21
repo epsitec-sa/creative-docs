@@ -51,12 +51,7 @@ namespace Epsitec.Common.Document.Properties
 
 			set
 			{
-				if (this.shortName != value)
-				{
-					this.NotifyBefore();
-					this.shortName = value;
-					this.NotifyAfter();
-				}
+				this.shortName = value;
 			}
 		}
 

@@ -1009,10 +1009,9 @@ namespace Epsitec.Common.Document
 						string name = string.Format("images/{0}", image.ShortName);
 
 						Objects.Image imageObj = obj as Objects.Image;
-						Drawing.Image di = imageObj.GetImage();
-						//?byte[] data = di.???;  // TODO: comment faire ?
+						byte[] data = imageObj.Data;
 
-						//?zip.AddEntry(name, data);
+						zip.AddEntry(name, data);
 					}
 				}
 			}

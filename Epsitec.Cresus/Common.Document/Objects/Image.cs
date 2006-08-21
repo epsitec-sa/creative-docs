@@ -42,10 +42,18 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
-		public Drawing.Image GetImage()
+		public byte[] Data
 		{
-			//	Retourne les données de l'image.
-			return this.imageOriginal;
+			//	Accès aux données brutes de l'image.
+			get
+			{
+				return this.data;
+			}
+
+			set
+			{
+				this.data = value;
+			}
 		}
 
 
