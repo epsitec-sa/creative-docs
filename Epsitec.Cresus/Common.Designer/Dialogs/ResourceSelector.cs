@@ -39,18 +39,24 @@ namespace Epsitec.Common.Designer.Dialogs
 				Widget header = new Widget(this.window.Root);
 				header.Margins = new Margins(0, 0, 0, 2);
 				header.Dock = DockStyle.Top;
+				header.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
 
 				this.header1 = new StaticText(header);
 				this.header1.MinWidth = 100;
-				this.header1.Dock = DockStyle.Left;
+				this.header1.Dock = DockStyle.Fill;
 
 				this.header2 = new StaticText(header);
 				this.header2.MinWidth = 100;
-				this.header2.Dock = DockStyle.Left;
+				this.header2.Dock = DockStyle.Fill;
+				
+				Widget filler = new Widget(header);
+				filler.Dock = DockStyle.Right;
+				filler.PreferredWidth = 16;
 
 				header = new Widget(this.window.Root);
 				header.Margins = new Margins(0, 0, 0, 4);
 				header.Dock = DockStyle.Top;
+				header.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
 
 				this.filterLabel = new TextField(header);
 				this.filterLabel.MinWidth = 100;
@@ -59,7 +65,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.filterLabel.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleFilterKeyboardFocusChanged);
 				this.filterLabel.TabIndex = tabIndex++;
 				this.filterLabel.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-				this.filterLabel.Dock = DockStyle.Left;
+				this.filterLabel.Dock = DockStyle.Fill;
 				this.filterLabel.Margins = new Margins(0, 1, 0, 0);
 
 				this.filterText = new TextField(header);
@@ -69,7 +75,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.filterText.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleFilterKeyboardFocusChanged);
 				this.filterText.TabIndex = tabIndex++;
 				this.filterText.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-				this.filterText.Dock = DockStyle.Left;
+				this.filterText.Dock = DockStyle.Fill;
 				this.filterText.Margins = new Margins(0, 1, 0, 0);
 
 				this.buttonClear = new Button(header);
@@ -77,12 +83,11 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonClear.PreferredSize = new Size(16, 20);
 				this.buttonClear.TabIndex = tabIndex++;
 				this.buttonClear.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-				this.buttonClear.Dock = DockStyle.Fill;
+				this.buttonClear.Dock = DockStyle.Right;
 				this.buttonClear.Clicked += new MessageEventHandler(this.HandleButtonClearClicked);
 
 				//	Tableau principal.
 				this.array = new MyWidgets.StringArray(this.window.Root);
-				this.array.ColumnsWidthChanged += new EventHandler(this.HandleArrayColumnsWidthChanged);
 				this.array.CellCountChanged += new EventHandler(this.HandleArrayCellCountChanged);
 				this.array.CellsContentChanged += new EventHandler(this.HandleArrayCellsContentChanged);
 				this.array.SelectedRowChanged += new EventHandler(this.HandleArraySelectedRowChanged);
@@ -198,19 +203,6 @@ namespace Epsitec.Common.Designer.Dialogs
 
 			string culture = Misc.CultureName(this.mainWindow.CurrentModule.ResourceManager.ActiveCulture);
 			this.header2.Text = string.Format(Res.Strings.Dialog.ResourceSelector.Text, culture);
-		}
-
-		protected void UpdateColumnsWidth()
-		{
-			//	TODO: étrange problème lors du redimensionnement de la fenêtre...
-			double w1 = this.array.GetColumnsAbsoluteWidth(0);
-			double w2 = this.array.GetColumnsAbsoluteWidth(1);
-
-			this.header1.PreferredWidth = w1;
-			this.filterLabel.PreferredWidth = w1;
-
-			this.header2.PreferredWidth = w2;
-			this.filterText.PreferredWidth = w2;
 		}
 
 		protected int UpdateDruidsIndex()
@@ -528,12 +520,6 @@ namespace Epsitec.Common.Designer.Dialogs
 			}
 		}
 
-
-		protected void HandleArrayColumnsWidthChanged(object sender)
-		{
-			//	La largeur des colonnes a changé.
-			this.UpdateColumnsWidth();
-		}
 
 		protected void HandleArrayCellCountChanged(object sender)
 		{
