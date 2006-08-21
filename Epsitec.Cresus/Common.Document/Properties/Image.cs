@@ -16,7 +16,7 @@ namespace Epsitec.Common.Document.Properties
 		protected override void Initialise()
 		{
 			this.filename  = "";
-			this.shortName = "";
+			this.insideDoc = true;
 			this.mirrorH   = false;
 			this.mirrorV   = false;
 			this.homo      = true;
@@ -43,19 +43,17 @@ namespace Epsitec.Common.Document.Properties
 			}
 		}
 
-		public string ShortName
+		public bool InsideDoc
 		{
-			//	Nom court (sans dossiers), utilisé pour la sérialisation Zip.
-			//	Toutes les images d'un document doivent obligatoirement avoir des
-			//	noms différents.
+			//	Détermine si les données de l'images sont incorporées au fichier crdoc.
 			get
 			{
-				return this.shortName;
+				return this.insideDoc;
 			}
 
 			set
 			{
-				this.shortName = value;
+				this.insideDoc = value;
 			}
 		}
 
@@ -185,7 +183,7 @@ namespace Epsitec.Common.Document.Properties
 			base.CopyTo(property);
 			Image p = property as Image;
 			p.filename  = this.filename;
-			p.shortName = this.shortName;
+			p.insideDoc = this.insideDoc;
 			p.mirrorH   = this.mirrorH;
 			p.mirrorV   = this.mirrorV;
 			p.homo      = this.homo;
@@ -200,7 +198,7 @@ namespace Epsitec.Common.Document.Properties
 
 			Image p = property as Image;
 			if ( p.filename  != this.filename  )  return false;
-			if ( p.shortName != this.shortName )  return false;
+			if ( p.insideDoc != this.insideDoc )  return false;
 			if ( p.mirrorH   != this.mirrorH   )  return false;
 			if ( p.mirrorV   != this.mirrorV   )  return false;
 			if ( p.homo      != this.homo      )  return false;
@@ -234,7 +232,7 @@ namespace Epsitec.Common.Document.Properties
 			}
 
 			info.AddValue("Filename", filename);
-			info.AddValue("ShortName", this.shortName);
+			info.AddValue("InsideDoc", this.insideDoc);
 			info.AddValue("MirrorH", this.mirrorH);
 			info.AddValue("MirrorV", this.mirrorV);
 			info.AddValue("Homo", this.homo);
@@ -270,18 +268,18 @@ namespace Epsitec.Common.Document.Properties
 
 			if ( this.document.IsRevisionGreaterOrEqual(2, 0, 1) )
 			{
-				this.shortName = info.GetString("ShortName");
+				this.insideDoc = info.GetBoolean("InsideDoc");
 			}
 			else
 			{
-				this.shortName = "";
+				this.insideDoc = false;
 			}
 		}
 		#endregion
 
 	
 		protected string			filename;
-		protected string			shortName;
+		protected bool				insideDoc;
 		protected bool				mirrorH;
 		protected bool				mirrorV;
 		protected bool				homo;
