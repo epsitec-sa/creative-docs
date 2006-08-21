@@ -796,7 +796,7 @@ namespace Epsitec.Common.Document
 					num += name[i++]-'0';
 				}
 				num ++;
-				return string.Concat(copy, " (", num.ToString(), name.Substring(i));
+				return string.Concat(copy, " (", num.ToString(System.Globalization.CultureInfo.InvariantCulture), name.Substring(i));
 			}
 
 			return string.Concat(copy, " ", of, " ", name);
