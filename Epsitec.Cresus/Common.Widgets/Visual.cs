@@ -1371,7 +1371,7 @@ namespace Epsitec.Common.Widgets
 
 		private void InvalidateDisplayCaption()
 		{
-			this.OnCaptionChanged ();
+			this.OnDisplayCaptionChanged ();
 		}
 
 		private void DetachCaption()
@@ -1419,9 +1419,9 @@ namespace Epsitec.Common.Widgets
 
 		#endregion
 
-		protected virtual void OnCaptionChanged()
+		protected virtual void OnDisplayCaptionChanged()
 		{
-			Support.EventHandler handler = (Support.EventHandler) this.GetUserEventHandler ("CaptionChanged");
+			Support.EventHandler handler = (Support.EventHandler) this.GetUserEventHandler ("DisplayCaptionChanged");
 
 			if (handler != null)
 			{
@@ -1839,15 +1839,15 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public event Support.EventHandler			CaptionChanged
+		public event Support.EventHandler			DisplayCaptionChanged
 		{
 			add
 			{
-				this.AddUserEventHandler ("CaptionChanged", value);
+				this.AddUserEventHandler ("DisplayCaptionChanged", value);
 			}
 			remove
 			{
-				this.RemoveUserEventHandler ("CaptionChanged", value);
+				this.RemoveUserEventHandler ("DisplayCaptionChanged", value);
 			}
 		}
 
