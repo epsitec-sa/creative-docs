@@ -995,7 +995,7 @@ namespace Epsitec.Common.Document
 					int i=2;
 					do
 					{
-						shortName = string.Format("{0} ({1}){2}", name, i.ToString(), ext);
+						shortName = string.Format("{0} ({1}){2}", name, i.ToString(System.Globalization.CultureInfo.InvariantCulture), ext);
 						i++;
 					}
 					while (listShortNames.Contains(shortName));
