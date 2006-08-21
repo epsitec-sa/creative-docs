@@ -695,7 +695,7 @@ namespace Epsitec.Common.Document
 					// Fichier CrDoc au format ZIP, chargé avec succès.
 					using (MemoryStream stream = new MemoryStream(zip["document.data"].Data))
 					{
-						err = this.Read(stream, System.IO.Path.GetDirectoryName(filename), true);
+						err = this.Read(stream, System.IO.Path.GetDirectoryName(filename), zip);
 					}
 				}
 				else
@@ -703,7 +703,7 @@ namespace Epsitec.Common.Document
 					// Désérialisation standard; c'est un ancien fichier CrDoc.
 					using (Stream stream = File.OpenRead(filename))
 					{
-						err = this.Read(stream, System.IO.Path.GetDirectoryName(filename), false);
+						err = this.Read(stream, System.IO.Path.GetDirectoryName(filename), null);
 					}
 				}
 
@@ -734,10 +734,10 @@ namespace Epsitec.Common.Document
 		{
 			//	Ouvre un document sérialisé, soit parce que l'utilisateur veut ouvrir
 			//	explicitement un fichier, soit par Engine.
-			return this.Read(stream, directory, false);
+			return this.Read(stream, directory, null);
 		}
 
-		protected string Read(Stream stream, string directory, bool isZip)
+		protected string Read(Stream stream, string directory, ZipFile zip)
 		{
 			//	Ouvre un document sérialisé, zippé ou non.
 			this.ioDirectory = directory;
@@ -767,17 +767,18 @@ namespace Epsitec.Common.Document
 
 				try
 				{
-					if (isZip)
-					{
-						doc = (Document) formatter.Deserialize(stream);
-					}
-					else
+					if (zip == null)
 					{
 						string compressorName;
 						using (Stream compressor = IO.Decompression.CreateStream(stream, out compressorName))
 						{
 							doc = (Document) formatter.Deserialize(compressor);
 						}
+					}
+					else
+					{
+						doc = (Document) formatter.Deserialize(stream);
+						doc.ImageCacheAll(zip);
 					}
 				}
 				catch ( System.Exception e )
@@ -832,6 +833,7 @@ namespace Epsitec.Common.Document
 			this.uniqueAggregateId = doc.uniqueAggregateId;
 			this.uniqueParagraphStyleId = doc.uniqueParagraphStyleId;
 			this.uniqueCharacterStyleId = doc.uniqueCharacterStyleId;
+			this.imageCache = doc.imageCache;
 			
 			if ( this.textContext != null )
 			{
@@ -1223,6 +1225,7 @@ namespace Epsitec.Common.Document
 				{
 					this.ImageFlushUnused();
 					this.imageCache.GenerateShortNames();
+					this.ImageUpdate();
 
 					byte[] data;
 					using (MemoryStream stream = new MemoryStream())
@@ -1262,34 +1265,6 @@ namespace Epsitec.Common.Document
 				this.IsDirtySerialize = false;
 			}
 			return "";
-		}
-
-		protected void ImageFlushUnused()
-		{
-			//	Supprime toutes les images inutilisées du cache des images.
-			//	Met également à jour les modes InsideDoc.
-			this.imageCache.ClearInsideDoc();
-
-			List<string> filenames = new List<string>();
-			foreach (Objects.Abstract obj in this.Deep(null))
-			{
-				Properties.Image image = obj.PropertyImage;
-				if (image != null)
-				{
-					if (!filenames.Contains(image.Filename))
-					{
-						filenames.Add(image.Filename);
-					}
-
-					if (image.InsideDoc)
-					{
-						ImageCache.Item item = this.imageCache.Get(image.Filename);
-						item.InsideDoc = true;
-					}
-				}
-			}
-
-			this.imageCache.FlushUnused(filenames);
 		}
 
 		protected static IOType ReadIdentifier(Stream stream)
@@ -1479,7 +1454,84 @@ namespace Epsitec.Common.Document
 			return ( Document.ReadRevision >= r );
 		}
 		#endregion
-		
+
+
+		#region Images
+		protected void ImageFlushUnused()
+		{
+			//	Supprime toutes les images inutilisées du cache des images.
+			List<string> filenames = new List<string>();
+			foreach (Objects.Abstract obj in this.Deep(null))
+			{
+				Properties.Image propImage = obj.PropertyImage;
+				if (propImage != null)
+				{
+					if (!filenames.Contains(propImage.Filename))
+					{
+						filenames.Add(propImage.Filename);
+					}
+				}
+			}
+
+			this.imageCache.FlushUnused(filenames);
+		}
+
+		protected void ImageUpdate()
+		{
+			//	Met à jour les informations ShortName et InsideDoc.
+			//	ShortName est mis à jour dans les propriétés des objets Image du document.
+			//	InsideDoc est mis à jour dans le cache des images.
+			this.imageCache.ClearInsideDoc();
+
+			foreach (Objects.Abstract obj in this.Deep(null))
+			{
+				Properties.Image propImage = obj.PropertyImage;
+				if (propImage != null)
+				{
+					ImageCache.Item item = this.imageCache.Get(propImage.Filename);
+
+					if (item != null)
+					{
+						propImage.ShortName = item.ShortName;
+
+						if (propImage.InsideDoc)
+						{
+							item.InsideDoc = true;
+						}
+					}
+				}
+			}
+		}
+
+		protected void ImageCacheAll(ZipFile zip)
+		{
+			//	Cache toutes les données pour les objets Images du document.
+			this.imageCache = new ImageCache();
+
+			foreach (Objects.Abstract obj in this.Deep(null))
+			{
+				Properties.Image propImage = obj.PropertyImage;
+				if (propImage != null)
+				{
+					if (!this.imageCache.Contains(propImage.Filename))  // pas encore dans le cache ?
+					{
+						if (propImage.InsideDoc)
+						{
+							string name = string.Format("images/{0}", propImage.ShortName);
+							byte[] data = zip[name].Data;  // lit les données dans le fichier zip
+							this.imageCache.Add(propImage.Filename, data);
+						}
+						else
+						{
+							this.imageCache.Add(propImage.Filename, null);
+						}
+					}
+				}
+			}
+		}
+		#endregion
+
+
 		public void Paint(Graphics graphics, DrawingContext drawingContext, Rectangle clipRect)
 		{
 			//	Dessine le document.

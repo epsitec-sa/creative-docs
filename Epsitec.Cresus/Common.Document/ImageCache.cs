@@ -25,19 +25,33 @@ namespace Epsitec.Common.Document
 
 		public Item Get(string filename)
 		{
-			return this.dico[filename];
-		}
-
-		public Item Add(string filename)
-		{
-			//	Ajoute une nouvelle image dans le cache.
 			if (this.dico.ContainsKey(filename))
 			{
 				return this.dico[filename];
 			}
 			else
 			{
-				Item item = new Item(filename);
+				return null;
+			}
+		}
+
+		public bool Contains(string filename)
+		{
+			return this.dico.ContainsKey(filename);
+		}
+
+		public Item Add(string filename, byte[] data)
+		{
+			//	Ajoute une nouvelle image dans le cache.
+			//	Si les données 'data' n'existent pas, l'image est lue sur disque.
+			//	Si les données existent, l'image est lue à partir des données en mémoire.
+			if (this.dico.ContainsKey(filename))
+			{
+				return this.dico[filename];
+			}
+			else
+			{
+				Item item = new Item(filename, data);
 				this.dico.Add(filename, item);
 				return item;
 			}
@@ -143,15 +157,25 @@ namespace Epsitec.Common.Document
 		#region Class Item
 		public class Item
 		{
-			public Item(string filename)
+			public Item(string filename, byte[] data)
 			{
-				//	Constructeur qui lit l'image sur disque.
+				//	Constructeur qui met en cache les données de l'image.
+				//	Si les données 'data' n'existent pas, l'image est lue sur disque.
+				//	Si les données existent, l'image est lue à partir des données en mémoire.
 				this.filename = filename;
 				this.shortName = null;
 
 				try
 				{
-					this.data = System.IO.File.ReadAllBytes(this.filename);
+					if (data == null)  // lecture sur disque ?
+					{
+						this.data = System.IO.File.ReadAllBytes(this.filename);
+					}
+					else  // image en mémoire ?
+					{
+						this.data = data;
+					}
+
 					this.image = Drawing.Bitmap.FromData(this.data);
 				}
 				catch
