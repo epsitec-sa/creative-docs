@@ -326,6 +326,11 @@ namespace Epsitec.Common.Widgets
 		/// <returns>The command.</returns>
 		public static Command Get(Support.Druid druid)
 		{
+			if (druid.IsEmpty)
+			{
+				return null;
+			}
+			
 			return Command.Get (druid.ToResourceId ());
 		}
 
@@ -337,6 +342,11 @@ namespace Epsitec.Common.Widgets
 		/// <returns>The command.</returns>
 		public static Command Get(string id)
 		{
+			if (string.IsNullOrEmpty (id))
+			{
+				return null;
+			}
+			
 			lock (Command.commands)
 			{
 				Command command = Command.Find (id);
@@ -357,6 +367,11 @@ namespace Epsitec.Common.Widgets
 		/// <returns>The command, or <c>null</c> if none could be found.</returns>
 		public static Command Find(Support.Druid druid)
 		{
+			if (druid.IsEmpty)
+			{
+				return null;
+			}
+
 			return Command.Find (druid.ToResourceId ());
 		}
 
