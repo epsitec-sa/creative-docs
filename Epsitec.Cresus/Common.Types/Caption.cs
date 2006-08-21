@@ -317,8 +317,12 @@ namespace Epsitec.Common.Types
 			
 			Caption caption = new Caption ();
 
+			caption.SuspendChanged ();
+			
 			DependencyObject.CopyDefinedProperties (a, caption);
 			DependencyObject.CopyDefinedProperties (b, caption);
+
+			caption.ResumeChanged ();
 			
 			return caption;
 		}
@@ -331,16 +335,73 @@ namespace Epsitec.Common.Types
 			
 			this.sortedLabels = labels;
 		}
-		
+
 		private void HandleLabelInsertion(string value)
 		{
 			this.sortedLabels = null;
+			this.NotifyChanged ();
 		}
 
 		private void HandleLabelRemoval(string value)
 		{
 			this.sortedLabels = null;
+			this.NotifyChanged ();
 		}
+
+		#region Methods used to handle the Changed event
+
+		protected override void BeginMultiplePropertyChange()
+		{
+			this.SuspendChanged ();
+			base.BeginMultiplePropertyChange ();
+		}
+
+		protected override void EndMultiplePropertyChange()
+		{
+			base.EndMultiplePropertyChange ();
+			this.ResumeChanged ();
+		}
+
+		private void SuspendChanged()
+		{
+			System.Threading.Interlocked.Increment (ref this.suspendCounter);
+		}
+
+		private void ResumeChanged()
+		{
+			if (System.Threading.Interlocked.Decrement (ref this.suspendCounter) == 0)
+			{
+				if (this.hasChanged)
+				{
+					this.hasChanged = false;
+
+					if (this.Changed != null)
+					{
+						this.Changed (this);
+					}
+				}
+			}
+		}
+		
+		private void NotifyChanged()
+		{
+			if (this.suspendCounter > 0)
+			{
+				this.hasChanged = true;
+			}
+			
+			if (System.Threading.Thread.VolatileRead (ref this.suspendCounter) == 0)
+			{
+				this.hasChanged = false;
+				
+				if (this.Changed != null)
+				{
+					this.Changed (this);
+				}
+			}
+		}
+
+		#endregion
 
 		#region Visitor Class
 
@@ -454,19 +515,45 @@ namespace Epsitec.Common.Types
 
 		#endregion
 
+		#region CaptionMetadata Class
+
+		private class CaptionMetadata : DependencyPropertyMetadata
+		{
+			protected override void OnPropertyInvalidated(DependencyObject sender, object oldValue, object newValue)
+			{
+				base.OnPropertyInvalidated (sender, oldValue, newValue);
+
+				Caption caption = sender as Caption;
+				caption.NotifyChanged ();
+			}
+		}
+
+		#endregion
+
 		private static object GetLabelsValue(DependencyObject o)
 		{
 			Caption that = (Caption) o;
 			return that.Labels;
 		}
+		private static void NotifyLabelsChanged(DependencyObject o, object oldValue, object newValue)
+		{
+			Caption caption = o as Caption;
+			caption.NotifyChanged ();
+		}
 
-		public static readonly DependencyProperty NameProperty = DependencyProperty.Register ("Name", typeof (string), typeof (Caption));
-		public static readonly DependencyProperty LabelsProperty = DependencyProperty.RegisterReadOnly ("Labels", typeof (ICollection<string>), typeof (Caption), new DependencyPropertyMetadata (Caption.GetLabelsValue).MakeReadOnlySerializable ());
-		public static readonly DependencyProperty DescriptionProperty = DependencyProperty.Register ("Description", typeof (string), typeof (Caption));
-		public static readonly DependencyProperty IconProperty = DependencyProperty.Register ("Icon", typeof (string), typeof (Caption));
+		private static CaptionMetadata CaptionMetadataInstance = new CaptionMetadata ();
+		
+		public static readonly DependencyProperty NameProperty = DependencyProperty.Register ("Name", typeof (string), typeof (Caption), Caption.CaptionMetadataInstance);
+		public static readonly DependencyProperty LabelsProperty = DependencyProperty.RegisterReadOnly ("Labels", typeof (ICollection<string>), typeof (Caption), new DependencyPropertyMetadata (Caption.GetLabelsValue, Caption.NotifyLabelsChanged).MakeReadOnlySerializable ());
+		public static readonly DependencyProperty DescriptionProperty = DependencyProperty.Register ("Description", typeof (string), typeof (Caption), Caption.CaptionMetadataInstance);
+		public static readonly DependencyProperty IconProperty = DependencyProperty.Register ("Icon", typeof (string), typeof (Caption), Caption.CaptionMetadataInstance);
+
+		public event Support.EventHandler Changed;
 
 		private Collections.HostedList<string> labels;
 		private string[] sortedLabels;
 		private Support.Druid druid;
+		private int suspendCounter;
+		private bool hasChanged;
 	}
 }

@@ -39,6 +39,35 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual ("Enumeration MyEnum", target.GetBindingExpression (Stuff.EnumProperty).GetSourceNamedType ().Name);
 			Assert.AreEqual (Support.Druid.FromLong (0x0000400000000005L), target.GetBindingExpression (Stuff.EnumProperty).GetSourceNamedType ().CaptionId);
 		}
+
+		[Test]
+		public void CheckChanged()
+		{
+			Caption caption1 = new Caption ();
+			Caption caption2 = new Caption ();
+
+			int count = 0;
+
+			caption2.Changed += delegate(object sender) { count++; };
+
+			caption1.Name = "Abc";
+			caption1.Labels.Add ("Short");
+			caption1.Labels.Add ("Long label");
+			caption1.Description = "Description for Abc";
+
+			caption2.Name = "Xyz";
+
+			Assert.AreEqual (1, count);
+
+			caption2.Labels.Add ("1");
+			caption2.Labels.Add ("2");
+
+			Assert.AreEqual (3, count);
+
+			Caption.CopyDefinedProperties (caption1, caption2);
+			
+			Assert.AreEqual (4, count);
+		}
 		
 		[Test]
 		public void CheckLabels()

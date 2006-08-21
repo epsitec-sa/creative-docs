@@ -269,9 +269,18 @@ namespace Epsitec.Common.Types
 		/// </summary>
 		public void ClearAllValues()
 		{
-			foreach (DependencyProperty property in this.DefinedProperties)
+			try
 			{
-				this.ClearValue (property);
+				this.BeginMultiplePropertyChange ();
+				
+				foreach (DependencyProperty property in this.DefinedProperties)
+				{
+					this.ClearValue (property);
+				}
+			}
+			finally
+			{
+				this.EndMultiplePropertyChange ();
 			}
 		}
 
@@ -716,9 +725,18 @@ namespace Epsitec.Common.Types
 		/// <param name="destination">The destination object.</param>
 		public static void CopyAttachedProperties(DependencyObject source, DependencyObject destination)
 		{
-			foreach (DependencyProperty property in source.AttachedProperties)
+			try
 			{
-				destination.SetValue (property, source.GetValue (property));
+				destination.BeginMultiplePropertyChange ();
+
+				foreach (DependencyProperty property in source.AttachedProperties)
+				{
+					destination.SetValue (property, source.GetValue (property));
+				}
+			}
+			finally
+			{
+				destination.EndMultiplePropertyChange ();
 			}
 		}
 
@@ -758,9 +776,18 @@ namespace Epsitec.Common.Types
 		/// <param name="destination">The destination object.</param>
 		public static void CopyDefinedProperties(DependencyObject source, DependencyObject destination)
 		{
-			foreach (DependencyProperty property in source.DefinedProperties)
+			try
 			{
-				DependencyObject.CopyDefinedProperty (source, destination, property, true);
+				destination.BeginMultiplePropertyChange ();
+				
+				foreach (DependencyProperty property in source.DefinedProperties)
+				{
+					DependencyObject.CopyDefinedProperty (source, destination, property, true);
+				}
+			}
+			finally
+			{
+				destination.EndMultiplePropertyChange ();
 			}
 		}
 		
@@ -947,6 +974,14 @@ namespace Epsitec.Common.Types
 		}
 
 		protected virtual void Dispose(bool disposing)
+		{
+		}
+
+		protected virtual void BeginMultiplePropertyChange()
+		{
+		}
+
+		protected virtual void EndMultiplePropertyChange()
 		{
 		}
 

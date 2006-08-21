@@ -65,12 +65,26 @@ namespace Epsitec.Common.Widgets
 		{
 			ToolTip.Default.HideToolTip ();
 		}
-		
+
+
+		public static bool HasToolTip(DependencyObject obj)
+		{
+			if ((obj.ContainsValue (ToolTip.ToolTipTextProperty)) ||
+				(obj.ContainsValue (ToolTip.ToolTipWidgetProperty)))
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
 		
 		public void ShowToolTipForWidget(Widget widget)
 		{
-			if (this.hash.Contains (widget))
+			if (ToolTip.HasToolTip (widget))
 			{
+//-			if (this.hash.Contains (widget))
 				this.HideToolTip ();
 				this.AttachToWidget (widget);
 				this.ShowToolTip ();
@@ -336,7 +350,8 @@ namespace Epsitec.Common.Widgets
 			}
 			
 			System.Diagnostics.Debug.Assert(this.widget != widget);
-			System.Diagnostics.Debug.Assert(this.hash.Contains(widget));
+//-			System.Diagnostics.Debug.Assert(this.hash.Contains(widget));
+			System.Diagnostics.Debug.Assert(ToolTip.HasToolTip (widget));
 
 			ToolTip.SetToolTipText (widget, null);
 			this.DefineToolTip (widget, null);
@@ -511,18 +526,6 @@ namespace Epsitec.Common.Widgets
 			return obj.GetValue (ToolTip.ToolTipTextProperty) as string;
 		}
 
-		public static Support.Druid GetToolTipCaption(DependencyObject obj)
-		{
-			if (obj.ContainsValue (ToolTip.ToolTipCaptionProperty))
-			{
-				return (Support.Druid) obj.GetValue (ToolTip.ToolTipCaptionProperty);
-			}
-			else
-			{
-				return Support.Druid.Empty;
-			}
-		}
-
 		public static Widget GetToolTipWidget(DependencyObject obj)
 		{
 			return obj.GetValue (ToolTip.ToolTipWidgetProperty) as Widget;
@@ -532,33 +535,13 @@ namespace Epsitec.Common.Widgets
 		{
 			if (string.IsNullOrEmpty (value))
 			{
-				obj.ClearValue (ToolTip.ToolTipCaptionProperty);
 				obj.ClearValue (ToolTip.ToolTipTextProperty);
 				obj.ClearValue (ToolTip.ToolTipWidgetProperty);
 			}
 			else
 			{
-				obj.ClearValue (ToolTip.ToolTipCaptionProperty);
 				obj.ClearValue (ToolTip.ToolTipWidgetProperty);
-				
 				obj.SetValue (ToolTip.ToolTipTextProperty, value);
-			}
-		}
-
-		public static void SetToolTipCaption(DependencyObject obj, Support.Druid value)
-		{
-			if (value.IsEmpty)
-			{
-				obj.ClearValue (ToolTip.ToolTipCaptionProperty);
-				obj.ClearValue (ToolTip.ToolTipTextProperty);
-				obj.ClearValue (ToolTip.ToolTipWidgetProperty);
-			}
-			else
-			{
-				obj.ClearValue (ToolTip.ToolTipTextProperty);
-				obj.ClearValue (ToolTip.ToolTipWidgetProperty);
-				
-				obj.SetValue (ToolTip.ToolTipCaptionProperty, value);
 			}
 		}
 
@@ -566,21 +549,17 @@ namespace Epsitec.Common.Widgets
 		{
 			if (value == null)
 			{
-				obj.ClearValue (ToolTip.ToolTipCaptionProperty);
 				obj.ClearValue (ToolTip.ToolTipTextProperty);
 				obj.ClearValue (ToolTip.ToolTipWidgetProperty);
 			}
 			else
 			{
-				obj.ClearValue (ToolTip.ToolTipCaptionProperty);
 				obj.ClearValue (ToolTip.ToolTipTextProperty);
-				
 				obj.SetValue (ToolTip.ToolTipWidgetProperty, value);
 			}
 		}
 
 		public static readonly DependencyProperty ToolTipTextProperty    = DependencyProperty.RegisterAttached ("ToolTipText", typeof (string), typeof (ToolTip), PrivateDependencyPropertyMetadata.Default);
-		public static readonly DependencyProperty ToolTipCaptionProperty = DependencyProperty.RegisterAttached ("ToolTipCaption", typeof (Support.Druid), typeof (ToolTip), PrivateDependencyPropertyMetadata.Default);
 		public static readonly DependencyProperty ToolTipWidgetProperty  = DependencyProperty.RegisterAttached ("ToolTipWidget", typeof (Widget), typeof (ToolTip), PrivateDependencyPropertyMetadata.Default);
 		
 		protected ToolTipBehaviour				behaviour = ToolTipBehaviour.Normal;
