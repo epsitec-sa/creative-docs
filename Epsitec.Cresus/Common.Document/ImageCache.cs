@@ -201,6 +201,23 @@ namespace Epsitec.Common.Document
 				this.imageDimmed = null;
 			}
 
+			public void Reload()
+			{
+				//	Relit l'image sur disque.
+				try
+				{
+					this.data = System.IO.File.ReadAllBytes(this.filename);
+					this.image = Drawing.Bitmap.FromData(this.data);
+				}
+				catch
+				{
+					this.data = null;
+					this.image = null;
+				}
+
+				this.imageDimmed = null;
+			}
+
 			public string Filename
 			{
 				//	Retourne le nom de fichier avec le chemin complet.
