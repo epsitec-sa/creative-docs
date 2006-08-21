@@ -16,15 +16,10 @@ namespace Epsitec.Common.Document
 			this.dico = new Dictionary<string, Item>();
 		}
 
-		public void Dispose()
-		{
-			this.dico.Clear();
-			this.dico = null;
-		}
-
 
 		public Item Get(string filename)
 		{
+			//	Retourne les données d'une image.
 			if (this.dico.ContainsKey(filename))
 			{
 				return this.dico[filename];
@@ -37,6 +32,7 @@ namespace Epsitec.Common.Document
 
 		public bool Contains(string filename)
 		{
+			//	Vérifie si une image est en cache.
 			return this.dico.ContainsKey(filename);
 		}
 
@@ -149,6 +145,24 @@ namespace Epsitec.Common.Document
 				{
 					string name = string.Format("images/{0}", item.ShortName);
 					zip.AddEntry(name, item.Data);
+				}
+			}
+		}
+
+		public void ReadData(ZipFile zip, Properties.Image propImage)
+		{
+			//	Lit les données d'une image.
+			if (!this.Contains(propImage.Filename))  // pas encore dans le cache ?
+			{
+				if (propImage.InsideDoc)
+				{
+					string name = string.Format("images/{0}", propImage.ShortName);
+					byte[] data = zip[name].Data;  // lit les données dans le fichier zip
+					this.Add(propImage.Filename, data);
+				}
+				else
+				{
+					this.Add(propImage.Filename, null);  // lit le fichier image sur disque
 				}
 			}
 		}

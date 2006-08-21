@@ -1513,19 +1513,7 @@ namespace Epsitec.Common.Document
 				Properties.Image propImage = obj.PropertyImage;
 				if (propImage != null)
 				{
-					if (!this.imageCache.Contains(propImage.Filename))  // pas encore dans le cache ?
-					{
-						if (propImage.InsideDoc)
-						{
-							string name = string.Format("images/{0}", propImage.ShortName);
-							byte[] data = zip[name].Data;  // lit les données dans le fichier zip
-							this.imageCache.Add(propImage.Filename, data);
-						}
-						else
-						{
-							this.imageCache.Add(propImage.Filename, null);
-						}
-					}
+					this.imageCache.ReadData(zip, propImage);
 				}
 			}
 		}
