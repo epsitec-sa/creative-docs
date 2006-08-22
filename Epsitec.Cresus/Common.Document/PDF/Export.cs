@@ -551,7 +551,9 @@ namespace Epsitec.Common.Document.PDF
 							ImageSurface image = ImageSurface.Search(this.imageSurfaces, filename, size, filter);
 							if ( image == null )
 							{
-								image = new ImageSurface(filename, size, filter, id++);
+								ImageCache.Item item = this.document.ImageCache.Get(filename);
+								System.Diagnostics.Debug.Assert(item != null);
+								image = new ImageSurface(item, size, filter, id++);
 								this.imageSurfaces.Add(image);
 							}
 						}
@@ -1500,13 +1502,7 @@ namespace Epsitec.Common.Document.PDF
 		{
 			//	Crée une image.
 			//	Création d'une instance de Magick.Image à partir du nom de fichier.
-			byte[] imageData;
-			using ( System.IO.FileStream file = System.IO.File.OpenRead(image.Filename) )
-			{
-				imageData = new byte[file.Length];
-				file.Read(imageData, 0, imageData.Length);
-				file.Close();
-			}
+			byte[] imageData = image.Cache.Data;
 			
 			Magick.Blob blob = new Magick.Blob();
 			blob.Update(imageData);

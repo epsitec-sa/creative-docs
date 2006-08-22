@@ -9,34 +9,24 @@ namespace Epsitec.Common.Document.PDF
 	/// </summary>
 	public class ImageSurface
 	{
-		public ImageSurface(string filename, Size size, bool filter, int id)
+		public ImageSurface(ImageCache.Item cache, Size size, bool filter, int id)
 		{
-			this.filename = filename;
+			this.cache = cache;
 			this.size = size;
 			this.filter = filter;
 			this.id = id;
-
-			//	Crée une fois pour toutes le Drawing.Image associé à cette image.
-			try
-			{
-				this.drawingImage = Bitmap.FromFile(this.filename);
-			}
-			catch
-			{
-				this.drawingImage = null;
-			}
 		}
 
 		public void Dispose()
 		{
 			//	Libère la surface.
-			this.drawingImage = null;
+			this.cache = null;
 		}
 
-		public string Filename
+		public ImageCache.Item Cache
 		{
-			//	Nom de l'image.
-			get { return this.filename; }
+			//	Cache de l'image.
+			get { return this.cache; }
 		}
 
 		public Size Size
@@ -60,7 +50,7 @@ namespace Epsitec.Common.Document.PDF
 		public Drawing.Image DrawingImage
 		{
 			//	Donne le Drawing.Image associé.
-			get { return this.drawingImage; }
+			get { return this.cache.Image; }
 		}
 
 
@@ -69,9 +59,9 @@ namespace Epsitec.Common.Document.PDF
 			//	Cherche une image d'après son nom dans une liste.
 			foreach ( ImageSurface image in list )
 			{
-				if ( image.filename == filename &&
-					 image.size     == size     &&
-					 image.filter   == filter   )
+				if ( image.cache.Filename == filename &&
+					 image.size           == size     &&
+					 image.filter         == filter   )
 				{
 					return image;
 				}
@@ -84,9 +74,9 @@ namespace Epsitec.Common.Document.PDF
 			//	Cherche une image d'après son Drawing.Image.
 			foreach ( ImageSurface image in list )
 			{
-				if ( image.drawingImage == null )  continue;
+				if ( image.DrawingImage == null )  continue;
 
-				if ( image.drawingImage.UniqueId == drim.UniqueId )
+				if ( image.DrawingImage.UniqueId == drim.UniqueId )
 				{
 					return image;
 				}
@@ -95,10 +85,9 @@ namespace Epsitec.Common.Document.PDF
 		}
 
 
-		protected string					filename;
+		protected ImageCache.Item			cache;
 		protected Size						size;
 		protected bool						filter;
 		protected int						id;
-		protected Drawing.Image				drawingImage;
 	}
 }
