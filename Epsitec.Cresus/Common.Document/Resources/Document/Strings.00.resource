@@ -345,6 +345,8 @@
   <data name="Panel.Gradient.Tooltip.HatchWidth" id="0MA">Epaisseur (zéro si inutilisé)</data>
   <data name="Panel.Gradient.Tooltip.HatchDistance" id="0NA">Espacement</data>
   <data name="Panel.Gradient.Tooltip.Swap" id="0OA">Permute les 2 couleurs</data>
+  <data name="Panel.Image.Button.Open" id="04901" mod="1">Ouvrir</data>
+  <data name="Panel.Image.Button.Save" id="05901" mod="1">Enregistrer sous</data>
   <data name="Panel.Image.Button.Update" id="0PA">Màj</data>
   <data name="Panel.Image.Button.MirrorX" id="0QA">Miroir X</data>
   <data name="Panel.Image.Button.MirrorY" id="0RA">Miroir Y</data>
@@ -352,8 +354,9 @@
   <data name="Panel.Image.Button.Filter" id="0TA">Filtre adoucissant</data>
   <data name="Panel.Image.Button.Inside" id="02901" mod="1">Image incorporée au document</data>
   <data name="Panel.Image.Tooltip.Filename" id="0UA">Nom du fichier de l'image</data>
-  <data name="Panel.Image.Tooltip.Browse" id="0VA">Choix du nom de fichier de l'image</data>
-  <data name="Panel.Image.Tooltip.Update" id="00B">Actualise l'image</data>
+  <data name="Panel.Image.Tooltip.Open" id="0VA">Choix du nom de fichier de l'image à ouvrir</data>
+  <data name="Panel.Image.Tooltip.Save" id="06901" mod="1">Exporte l&amp;apos;image dans un fichier sur disque</data>
+  <data name="Panel.Image.Tooltip.Update" id="00B">Actualise l'image d&amp;apos;après le fichier sur disque</data>
   <data name="Panel.Image.Dialog.Title" id="01B">Ouvrir une image</data>
   <data name="File.Bitmap.All" id="02B">Toutes les images</data>
   <data name="File.Bitmap.BMP" id="03B">Bitmap Windows BMP</data>
