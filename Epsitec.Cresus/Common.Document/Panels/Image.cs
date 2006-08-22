@@ -242,7 +242,6 @@ namespace Epsitec.Common.Document.Panels
 		private void HandleOpenClicked(object sender, MessageEventArgs e)
 		{
 			FileOpen dialog = new FileOpen();
-		
 			dialog.Title = Res.Strings.Panel.Image.Dialog.Open.Title;
 			dialog.FileName = this.fieldFilename.Text;
 			dialog.Filters.Add("all", Res.Strings.File.Bitmap.All, "*.bmp; *.tif; *.tiff; *.jpg; *.jpeg; *.gif; *.png; *.wmf; *.emf");
@@ -262,17 +261,17 @@ namespace Epsitec.Common.Document.Panels
 		{
 			//	Le bouton 'Màj' pour relire l'image a été cliqué.
 			Properties.Image p = this.property as Properties.Image;
-			string filename = p.Filename;
+			ImageCache.Item item = this.document.ImageCache.Get(p.Filename);
 
-			ImageCache.Item item = this.document.ImageCache.Get(filename);
 			if (item != null)
 			{
 				if (item.Reload())  // relit l'image sur disque
 				{
-					return;
+					return;  // tout c'est bien passé
 				}
 			}
 
+			//	Indique que la mise à jour n'est pas possible.
 			this.document.Modifier.ActiveViewer.DialogError(Res.Strings.Error.FileDoesNoetExist);
 		}
 
@@ -285,11 +284,22 @@ namespace Epsitec.Common.Document.Panels
 				return;
 			}
 
-			FileSave dialog = new FileSave();
+			string ext = System.IO.Path.GetExtension(this.fieldFilename.Text);
+			if (ext.StartsWith("."))
+			{
+				ext = ext.Substring(1);
+			}
 
+			FileSave dialog = new FileSave();
 			dialog.Title = Res.Strings.Panel.Image.Dialog.Save.Title;
 			dialog.FileName = this.fieldFilename.Text;
+			dialog.PromptForOverwriting = true;
+			dialog.Filters.Add(ext, Res.Strings.File.Bitmap.All, "*."+ext);
 			dialog.OpenDialog();  // demande le nom du fichier...
+			if (dialog.Result != Common.Dialogs.DialogResult.Accept)
+			{
+				return;
+			}
 
 			if (System.IO.File.Exists(dialog.FileName))
 			{
