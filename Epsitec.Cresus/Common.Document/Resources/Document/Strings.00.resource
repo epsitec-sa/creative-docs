@@ -357,7 +357,8 @@
   <data name="Panel.Image.Tooltip.Open" id="0VA">Choix du nom de fichier de l'image à importer</data>
   <data name="Panel.Image.Tooltip.Save" id="06901" mod="1">Exporte l&amp;apos;image dans un fichier sur disque</data>
   <data name="Panel.Image.Tooltip.Update" id="00B">Actualise l'image d&amp;apos;après le fichier sur disque</data>
-  <data name="Panel.Image.Dialog.Title" id="01B">Ouvrir une image</data>
+  <data name="Panel.Image.Dialog.Open.Title" id="01B">Importer une image</data>
+  <data name="Panel.Image.Dialog.Save.Title" id="07901" mod="1">Exporter une image</data>
   <data name="File.Bitmap.All" id="02B">Toutes les images</data>
   <data name="File.Bitmap.BMP" id="03B">Bitmap Windows BMP</data>
   <data name="File.Bitmap.TIF" id="04B">Tagged Image TIFF</data>

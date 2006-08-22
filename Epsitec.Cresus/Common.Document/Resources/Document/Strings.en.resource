@@ -353,7 +353,8 @@
   <data name="Panel.Image.Tooltip.Filename" id="0UA">Image file name</data>
   <data name="Panel.Image.Tooltip.Browse" id="0VA">Browse for an image</data>
   <data name="Panel.Image.Tooltip.Update" id="00B">Update image</data>
-  <data name="Panel.Image.Dialog.Title" id="01B">Open image</data>
+  <data name="Panel.Image.Dialog.Open.Title" id="01B">
+  </data>
   <data name="File.Bitmap.All" id="02B">All images</data>
   <data name="File.Bitmap.BMP" id="03B">Windows Bitmap BMP</data>
   <data name="File.Bitmap.TIF" id="04B">Tagged Image File Format TIFF</data>
@@ -1315,4 +1316,6 @@
   <data name="Error.Boolean" id="0V801">Impossible operation.</data>
   <data name="Error.NoText" id="00901">There is no text in the current document.</data>
   <data name="Error.NotFound" id="01901">The text cannot be found in the current document.</data>
+  <data name="Panel.Image.Dialog.Save.Title" id="07901">
+  </data>
 </bundle>
