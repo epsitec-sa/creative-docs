@@ -22,7 +22,6 @@ namespace Epsitec.Common.Document.Properties
 			this.mirrorV   = false;
 			this.homo      = true;
 			this.filter    = true;
-			this.reload    = false;
 		}
 
 		public string Filename
@@ -144,28 +143,6 @@ namespace Epsitec.Common.Document.Properties
 			}
 		}
 
-		public void ReloadDo()
-		{
-			this.document.Modifier.OpletQueueEnable = false;
-			this.NotifyBefore();
-			this.reload = true;
-			this.NotifyAfter();
-			this.document.Modifier.OpletQueueEnable = true;
-		}
-
-		public void ReloadReset()
-		{
-			this.reload = false;
-		}
-
-		public bool Reload
-		{
-			get
-			{
-				return this.reload;
-			}
-		}
-
 		public override string SampleText
 		{
 			//	Donne le petit texte pour les échantillons.
@@ -204,7 +181,6 @@ namespace Epsitec.Common.Document.Properties
 			p.mirrorV   = this.mirrorV;
 			p.homo      = this.homo;
 			p.filter    = this.filter;
-			p.reload    = this.reload;
 		}
 
 		public override bool Compare(Abstract property)
@@ -220,7 +196,6 @@ namespace Epsitec.Common.Document.Properties
 			if ( p.mirrorV   != this.mirrorV   )  return false;
 			if ( p.homo      != this.homo      )  return false;
 			if ( p.filter    != this.filter    )  return false;
-			if ( p.reload    != this.reload    )  return false;
 
 			return true;
 		}
@@ -305,6 +280,5 @@ namespace Epsitec.Common.Document.Properties
 		protected bool				mirrorV;
 		protected bool				homo;
 		protected bool				filter;
-		protected bool				reload;
 	}
 }

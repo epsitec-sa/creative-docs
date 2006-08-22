@@ -188,9 +188,31 @@ namespace Epsitec.Common.Document.Panels
 		
 		private void HandleTextChanged(object sender)
 		{
-			//	Une valeur a été changée.
-			if ( this.ignoreChanged )  return;
+			//	Le nom de l'image a été changé.
+			if (this.ignoreChanged)
+			{
+				return;
+			}
+
 			this.OnChanged();
+
+			Properties.Image p = this.property as Properties.Image;
+			string filename = p.Filename;
+
+			if (!string.IsNullOrEmpty(filename))
+			{
+				ImageCache.Item item = this.document.ImageCache.Get(filename);
+
+				if (item == null)
+				{
+					item = this.document.ImageCache.Add(filename, null);
+
+					if (item.Image == null)
+					{
+						this.document.ImageCache.Remove(filename);
+					}
+				}
+			}
 		}
 
 		private void HandleButtonActiveStateChanged(object sender)
@@ -220,8 +242,20 @@ namespace Epsitec.Common.Document.Panels
 
 		private void HandleUpdateClicked(object sender, MessageEventArgs e)
 		{
+			//	Le bouton 'Màj' pour relire l'image a été cliqué.
 			Properties.Image p = this.property as Properties.Image;
-			p.ReloadDo();
+			string filename = p.Filename;
+
+			ImageCache.Item item = this.document.ImageCache.Get(filename);
+			if (item != null)
+			{
+				if (item.Reload())  // relit l'image sur disque
+				{
+					return;
+				}
+			}
+
+			this.document.Modifier.ActiveViewer.DialogError(Res.Strings.Error.FileDoesNoetExist);
 		}
 
 
