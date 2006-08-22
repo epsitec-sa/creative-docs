@@ -319,68 +319,6 @@ namespace Epsitec.Common.Document.Objects
 			angle  = Point.ComputeAngleDeg(pbl, pbr);
 		}
 
-		protected void OpenBitmap(IPaintPort port)
-		{
-			//	Ouvre le bitmap de l'image si nécessaire.
-			Properties.Image propImage = this.PropertyImage;
-
-			if (string.IsNullOrEmpty(propImage.Filename))
-			{
-				this.imageOriginal = null;
-				this.imageDimmed = null;
-				this.filename = null;
-			}
-			else
-			{
-				if ( port is PDF.Port )  // exportation PDF ?
-				{
-					//	Ne crée pas un nouveau Drawing.Image, mais utilise celui
-					//	qui est associé au PDF.ImageSurface.
-					PDF.Port pdfPort = port as PDF.Port;
-					Size size = this.ImageBitmapSize();
-					bool filter = this.PropertyImage.Filter;
-					pdfPort.FilterImage = filter;
-					PDF.ImageSurface surface = pdfPort.SearchImageSurface(propImage.Filename, size, filter);
-					System.Diagnostics.Debug.Assert(surface != null);
-					this.imageOriginal = surface.DrawingImage;
-					this.imageDimmed = null;
-				}
-				else
-				{
-#if false
-					if (propImage.Reload || propImage.Filename != this.filename)
-					{
-						this.filename = propImage.Filename;
-
-						ImageCache.Item item = this.document.ImageCache.Get(this.filename);
-
-						if (item == null)
-						{
-							item = this.document.ImageCache.Add(this.filename, null);
-
-							if (item.Image == null)
-							{
-								this.document.ImageCache.Remove(this.filename);
-							}
-						}
-						else
-						{
-							if (propImage.Reload)
-							{
-								if (!item.Reload())
-								{
-									this.document.Modifier.ActiveViewer.DialogError(Res.Strings.Error.FileDoesNoetExist);
-								}
-							}
-						}
-
-						propImage.ReloadReset();
-					}
-#endif
-				}
-			}
-		}
-
 		protected ImageCache.Item Item
 		{
 			//	Retourne l'item de l'image cachée, s'il existe.
@@ -395,8 +333,6 @@ namespace Epsitec.Common.Document.Objects
 		{
 			//	Dessine l'image.
 			if ( this.TotalHandle < 2 )  return;
-
-			this.OpenBitmap(port);
 
 			Drawing.Image image = null;
 			ImageCache.Item item = this.Item;
@@ -523,10 +459,5 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 		#endregion
-
-		
-		protected string					filename;
-		protected Drawing.Image				imageOriginal;
-		protected Drawing.Image				imageDimmed;
 	}
 }
