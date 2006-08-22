@@ -74,9 +74,18 @@ namespace Epsitec.Common.Document
 		{
 			//	Supprime toutes les images inutilisées du cache des images, c'est-à-dire
 			//	dont le nom de fichier n'est pas dans la liste filenames.
-			for (int i=0; i<this.dico.Count; i++)
+			List<string> keysToDelete = new List<string>();
+			foreach (string key in this.dico.Keys)
 			{
-				//	TODO:
+				if (!filenames.Contains(key))
+				{
+					keysToDelete.Add(key);
+				}
+			}
+
+			foreach (string key in keysToDelete)
+			{
+				this.dico.Remove(key);
 			}
 		}
 
