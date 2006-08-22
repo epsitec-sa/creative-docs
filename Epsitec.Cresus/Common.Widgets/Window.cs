@@ -2295,8 +2295,13 @@ namespace Epsitec.Common.Widgets
 
 				width  += this.window.Size.Width  - this.window.ClientSize.Width;
 				height += this.window.Size.Height - this.window.ClientSize.Height;
+				
+				System.Drawing.Size size = new System.Drawing.Size (width, height);
 
-				this.window.MinimumSize = new System.Drawing.Size (width, height);
+				if (this.window.MinimumSize != size)
+				{
+					this.window.MinimumSize = size;
+				}
 			}
 		}
 
