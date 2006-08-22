@@ -1,4 +1,5 @@
 using Epsitec.Common.Widgets;
+using Epsitec.Common.Drawing;
 using System.Runtime.Serialization;
 
 namespace Epsitec.Common.Document.Properties
@@ -22,6 +23,7 @@ namespace Epsitec.Common.Document.Properties
 			this.mirrorV   = false;
 			this.homo      = true;
 			this.filter    = true;
+			this.cropMargins = Margins.Zero;
 		}
 
 		public string Filename
@@ -143,6 +145,25 @@ namespace Epsitec.Common.Document.Properties
 			}
 		}
 
+		public Margins CropMargins
+		{
+			//	Marge de recadrage.
+			get
+			{
+				return this.cropMargins;
+			}
+
+			set
+			{
+				if (this.cropMargins != value)
+				{
+					this.NotifyBefore();
+					this.cropMargins = value;
+					this.NotifyAfter();
+				}
+			}
+		}
+
 		public override string SampleText
 		{
 			//	Donne le petit texte pour les échantillons.
@@ -174,13 +195,14 @@ namespace Epsitec.Common.Document.Properties
 			//	Effectue une copie de la propriété.
 			base.CopyTo(property);
 			Image p = property as Image;
-			p.filename  = this.filename;
-			p.shortName = this.shortName;
-			p.insideDoc = this.insideDoc;
-			p.mirrorH   = this.mirrorH;
-			p.mirrorV   = this.mirrorV;
-			p.homo      = this.homo;
-			p.filter    = this.filter;
+			p.filename    = this.filename;
+			p.shortName   = this.shortName;
+			p.insideDoc   = this.insideDoc;
+			p.mirrorH     = this.mirrorH;
+			p.mirrorV     = this.mirrorV;
+			p.homo        = this.homo;
+			p.filter      = this.filter;
+			p.cropMargins = this.cropMargins;
 		}
 
 		public override bool Compare(Abstract property)
@@ -189,13 +211,14 @@ namespace Epsitec.Common.Document.Properties
 			if ( !base.Compare(property) )  return false;
 
 			Image p = property as Image;
-			if ( p.filename  != this.filename  )  return false;
-			if ( p.shortName != this.shortName )  return false;
-			if ( p.insideDoc != this.insideDoc )  return false;
-			if ( p.mirrorH   != this.mirrorH   )  return false;
-			if ( p.mirrorV   != this.mirrorV   )  return false;
-			if ( p.homo      != this.homo      )  return false;
-			if ( p.filter    != this.filter    )  return false;
+			if ( p.filename    != this.filename    )  return false;
+			if ( p.shortName   != this.shortName   )  return false;
+			if ( p.insideDoc   != this.insideDoc   )  return false;
+			if ( p.mirrorH     != this.mirrorH     )  return false;
+			if ( p.mirrorV     != this.mirrorV     )  return false;
+			if ( p.homo        != this.homo        )  return false;
+			if ( p.filter      != this.filter      )  return false;
+			if ( p.cropMargins != this.cropMargins )  return false;
 
 			return true;
 		}
@@ -230,6 +253,11 @@ namespace Epsitec.Common.Document.Properties
 			info.AddValue("MirrorV", this.mirrorV);
 			info.AddValue("Homo", this.homo);
 			info.AddValue("Filter", this.filter);
+
+			info.AddValue("CropLeft", this.cropMargins.Left);
+			info.AddValue("CropRight", this.cropMargins.Right);
+			info.AddValue("CropBottom", this.cropMargins.Bottom);
+			info.AddValue("CropTop", this.cropMargins.Top);
 		}
 
 		protected Image(SerializationInfo info, StreamingContext context) : base(info, context)
@@ -263,11 +291,17 @@ namespace Epsitec.Common.Document.Properties
 			{
 				this.shortName = info.GetString("ShortName");
 				this.insideDoc = info.GetBoolean("InsideDoc");
+
+				this.cropMargins.Left = info.GetDouble("CropLeft");
+				this.cropMargins.Right = info.GetDouble("CropRight");
+				this.cropMargins.Bottom = info.GetDouble("CropBottom");
+				this.cropMargins.Top = info.GetDouble("CropTop");
 			}
 			else
 			{
 				this.shortName = null;
 				this.insideDoc = false;
+				this.cropMargins = Margins.Zero;
 			}
 		}
 		#endregion
@@ -280,5 +314,6 @@ namespace Epsitec.Common.Document.Properties
 		protected bool				mirrorV;
 		protected bool				homo;
 		protected bool				filter;
+		protected Margins			cropMargins;
 	}
 }
