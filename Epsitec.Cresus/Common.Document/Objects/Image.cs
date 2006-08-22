@@ -347,6 +347,7 @@ namespace Epsitec.Common.Document.Objects
 				}
 				else
 				{
+#if false
 					if (propImage.Reload || propImage.Filename != this.filename)
 					{
 						this.filename = propImage.Filename;
@@ -366,12 +367,16 @@ namespace Epsitec.Common.Document.Objects
 						{
 							if (propImage.Reload)
 							{
-								item.Reload();
+								if (!item.Reload())
+								{
+									this.document.Modifier.ActiveViewer.DialogError(Res.Strings.Error.FileDoesNoetExist);
+								}
 							}
 						}
 
 						propImage.ReloadReset();
 					}
+#endif
 				}
 			}
 		}
@@ -381,14 +386,8 @@ namespace Epsitec.Common.Document.Objects
 			//	Retourne l'item de l'image cachée, s'il existe.
 			get
 			{
-				if (string.IsNullOrEmpty(this.filename))
-				{
-					return null;
-				}
-				else
-				{
-					return this.document.ImageCache.Get(this.filename);
-				}
+				Properties.Image pi = this.PropertyImage;
+				return this.document.ImageCache.Get(pi.Filename);
 			}
 		}
 

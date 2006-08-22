@@ -1317,4 +1317,5 @@
   <data name="Error.Boolean" id="0V801">Opération impossible.</data>
   <data name="Error.NoText" id="00901">Le document ne contient aucun texte.</data>
   <data name="Error.NotFound" id="01901">Le texte recherché n'existe pas dans ce document.</data>
+  <data name="Error.FileDoesNoetExist" id="03901" mod="1">Le fichier n&amp;apos;existe pas.</data>
 </bundle>

@@ -20,6 +20,11 @@ namespace Epsitec.Common.Document
 		public Item Get(string filename)
 		{
 			//	Retourne les données d'une image.
+			if (string.IsNullOrEmpty(filename))
+			{
+				return null;
+			}
+
 			if (this.dico.ContainsKey(filename))
 			{
 				return this.dico[filename];
@@ -210,21 +215,37 @@ namespace Epsitec.Common.Document
 				this.imageDimmed = null;
 			}
 
-			public void Reload()
+			public bool Reload()
 			{
 				//	Relit l'image sur disque.
+				//	Retourne false en cas d'erreur.
+				byte[] initialData = this.data;
+
 				try
 				{
 					this.data = System.IO.File.ReadAllBytes(this.filename);
+				}
+				catch
+				{
+					this.data = initialData;
+					return false;
+				}
+
+				Drawing.Image initialImage = this.image;
+
+				try
+				{
 					this.image = Drawing.Bitmap.FromData(this.data);
 				}
 				catch
 				{
-					this.data = null;
-					this.image = null;
+					this.data = initialData;
+					this.image = initialImage;
+					return false;
 				}
 
 				this.imageDimmed = null;
+				return true;
 			}
 
 			public string Filename
