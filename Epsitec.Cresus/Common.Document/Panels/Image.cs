@@ -12,54 +12,63 @@ namespace Epsitec.Common.Document.Panels
 	{
 		public Image(Document document) : base(document)
 		{
+			int tabIndex = 0;
+
 			this.fieldFilename = new TextField(this);
 			this.fieldFilename.TextChanged += new EventHandler(this.HandleTextChanged);
-			this.fieldFilename.TabIndex = 1;
+			this.fieldFilename.TabIndex = tabIndex++;
 			this.fieldFilename.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldFilename, Res.Strings.Panel.Image.Tooltip.Filename);
 
-			this.buttonBrowse = new Button(this);
-			this.buttonBrowse.Text = Res.Strings.Dialog.Button.Browse;
-			this.buttonBrowse.Clicked += new MessageEventHandler(this.HandleBrowseClicked);
-			this.buttonBrowse.TabIndex = 2;
-			this.buttonBrowse.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			ToolTip.Default.SetToolTip(this.buttonBrowse, Res.Strings.Panel.Image.Tooltip.Browse);
+			this.buttonOpen = new Button(this);
+			this.buttonOpen.Text = Res.Strings.Panel.Image.Button.Open;
+			this.buttonOpen.Clicked += new MessageEventHandler(this.HandleOpenClicked);
+			this.buttonOpen.TabIndex = tabIndex++;
+			this.buttonOpen.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			ToolTip.Default.SetToolTip(this.buttonOpen, Res.Strings.Panel.Image.Tooltip.Open);
 
 			this.buttonUpdate = new Button(this);
 			this.buttonUpdate.Text = Res.Strings.Panel.Image.Button.Update;
 			this.buttonUpdate.Clicked += new MessageEventHandler(this.HandleUpdateClicked);
-			this.buttonUpdate.TabIndex = 3;
+			this.buttonUpdate.TabIndex = tabIndex++;
 			this.buttonUpdate.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.buttonUpdate, Res.Strings.Panel.Image.Tooltip.Update);
+
+			this.buttonSave = new Button(this);
+			this.buttonSave.Text = Res.Strings.Panel.Image.Button.Save;
+			this.buttonSave.Clicked += new MessageEventHandler(this.HandleSaveClicked);
+			this.buttonSave.TabIndex = tabIndex++;
+			this.buttonSave.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			ToolTip.Default.SetToolTip(this.buttonSave, Res.Strings.Panel.Image.Tooltip.Save);
 
 			this.buttonMirrorH = new CheckButton(this);
 			this.buttonMirrorH.Text = Res.Strings.Panel.Image.Button.MirrorX;
 			this.buttonMirrorH.ActiveStateChanged += new EventHandler(this.HandleButtonActiveStateChanged);
-			this.buttonMirrorH.TabIndex = 4;
+			this.buttonMirrorH.TabIndex = tabIndex++;
 			this.buttonMirrorH.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			this.buttonMirrorV = new CheckButton(this);
 			this.buttonMirrorV.Text = Res.Strings.Panel.Image.Button.MirrorY;
 			this.buttonMirrorV.ActiveStateChanged += new EventHandler(this.HandleButtonActiveStateChanged);
-			this.buttonMirrorV.TabIndex = 5;
+			this.buttonMirrorV.TabIndex = tabIndex++;
 			this.buttonMirrorV.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			this.buttonHomo = new CheckButton(this);
 			this.buttonHomo.Text = Res.Strings.Panel.Image.Button.Homo;
 			this.buttonHomo.ActiveStateChanged += new EventHandler(this.HandleButtonActiveStateChanged);
-			this.buttonHomo.TabIndex = 6;
+			this.buttonHomo.TabIndex = tabIndex++;
 			this.buttonHomo.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			this.buttonFilter = new CheckButton(this);
 			this.buttonFilter.Text = Res.Strings.Panel.Image.Button.Filter;
 			this.buttonFilter.ActiveStateChanged += new EventHandler(this.HandleButtonActiveStateChanged);
-			this.buttonFilter.TabIndex = 7;
+			this.buttonFilter.TabIndex = tabIndex++;
 			this.buttonFilter.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			this.buttonInside = new CheckButton(this);
 			this.buttonInside.Text = Res.Strings.Panel.Image.Button.Inside;
 			this.buttonInside.ActiveStateChanged += new EventHandler(this.HandleButtonActiveStateChanged);
-			this.buttonInside.TabIndex = 8;
+			this.buttonInside.TabIndex = tabIndex++;
 			this.buttonInside.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			this.isNormalAndExtended = true;
@@ -70,8 +79,9 @@ namespace Epsitec.Common.Document.Panels
 			if ( disposing )
 			{
 				this.fieldFilename.TextChanged -= new EventHandler(this.HandleTextChanged);
-				this.buttonBrowse.Clicked -= new MessageEventHandler(this.HandleBrowseClicked);
+				this.buttonOpen.Clicked -= new MessageEventHandler(this.HandleOpenClicked);
 				this.buttonUpdate.Clicked -= new MessageEventHandler(this.HandleUpdateClicked);
+				this.buttonSave.Clicked -= new MessageEventHandler(this.HandleSaveClicked);
 				this.buttonMirrorH.ActiveStateChanged -= new EventHandler(this.HandleButtonActiveStateChanged);
 				this.buttonMirrorV.ActiveStateChanged -= new EventHandler(this.HandleButtonActiveStateChanged);
 				this.buttonHomo.ActiveStateChanged -= new EventHandler(this.HandleButtonActiveStateChanged);
@@ -79,8 +89,9 @@ namespace Epsitec.Common.Document.Panels
 				this.buttonInside.ActiveStateChanged -= new EventHandler(this.HandleButtonActiveStateChanged);
 
 				this.fieldFilename = null;
-				this.buttonBrowse = null;
+				this.buttonOpen = null;
 				this.buttonUpdate = null;
+				this.buttonSave = null;
 				this.buttonMirrorH = null;
 				this.buttonMirrorV = null;
 				this.buttonHomo = null;
@@ -97,7 +108,7 @@ namespace Epsitec.Common.Document.Panels
 			//	Retourne la hauteur standard.
 			get
 			{
-				return ( this.isExtendedSize ? this.LabelHeight+140 : this.LabelHeight+55 );
+				return ( this.isExtendedSize ? this.LabelHeight+165 : this.LabelHeight+55 );
 			}
 		}
 
@@ -151,11 +162,17 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldFilename.SetManualBounds(r);
 
 			r.Offset(0, -25);
+			r.Left = rect.Left;
 			r.Right = rect.Right-50-2;
-			this.buttonBrowse.SetManualBounds(r);
+			this.buttonOpen.SetManualBounds(r);
 			r.Left = rect.Right-50;
 			r.Right = rect.Right;
 			this.buttonUpdate.SetManualBounds(r);
+
+			r.Offset(0, -25);
+			r.Left = rect.Left;
+			r.Right = rect.Right-50-2;
+			this.buttonSave.SetManualBounds(r);
 
 			r.Offset(0, -25);
 			r.Left = rect.Left;
@@ -179,6 +196,7 @@ namespace Epsitec.Common.Document.Panels
 			r.Right = rect.Right;
 			this.buttonInside.SetManualBounds(r);
 
+			this.buttonSave.Visibility = (this.isExtendedSize);
 			this.buttonMirrorH.Visibility = (this.isExtendedSize);
 			this.buttonMirrorV.Visibility = (this.isExtendedSize);
 			this.buttonHomo.Visibility = (this.isExtendedSize);
@@ -221,7 +239,7 @@ namespace Epsitec.Common.Document.Panels
 			this.OnChanged();
 		}
 
-		private void HandleBrowseClicked(object sender, MessageEventArgs e)
+		private void HandleOpenClicked(object sender, MessageEventArgs e)
 		{
 			FileOpen dialog = new FileOpen();
 		
@@ -258,10 +276,15 @@ namespace Epsitec.Common.Document.Panels
 			this.document.Modifier.ActiveViewer.DialogError(Res.Strings.Error.FileDoesNoetExist);
 		}
 
+		private void HandleSaveClicked(object sender, MessageEventArgs e)
+		{
+		}
+
 
 		protected TextField					fieldFilename;
-		protected Button					buttonBrowse;
+		protected Button					buttonOpen;
 		protected Button					buttonUpdate;
+		protected Button					buttonSave;
 		protected CheckButton				buttonMirrorH;
 		protected CheckButton				buttonMirrorV;
 		protected CheckButton				buttonHomo;
