@@ -641,7 +641,10 @@ namespace Epsitec.Common.Document.PDF
 
 			if ( this.imageSurfaceList == null )  return;
 
-			ImageSurface image = ImageSurface.Search(this.imageSurfaceList, bitmap);
+			//	La taille de l'image est récupérée par une variable statique de Objects.Image.
+			//	Elle permet de retrouver le bon ImageSurface, lorsque la même image existe
+			//	plusieurs fois dans le même document, à des tailes différentes !
+			ImageSurface image = ImageSurface.Search(this.imageSurfaceList, bitmap, Objects.Image.DrawingSize);
 			if ( image == null )  return;
 
 			this.SetTransform(this.transform);
