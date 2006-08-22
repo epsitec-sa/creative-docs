@@ -382,6 +382,8 @@ namespace Epsitec.Common.Document.Objects
 						else                           width  = height/rapport;
 					}
 
+					Image.DrawingSize = new Size(width, height);  // donne la taille à PDF.Port.PaintImage
+
 #if false
 					port.TranslateTransform(center.X, center.Y);
 					port.RotateTransformDeg(angle, 0, 0);
@@ -407,6 +409,8 @@ namespace Epsitec.Common.Document.Objects
 					port.PaintImage(image, rect);
 					//?port.PaintImage(image, rect, property.Filter);  // TODO: passer ce paramètre à AGG
 #endif
+
+					Image.DrawingSize = Size.Empty;
 				}
 
 				port.Transform = ot;
@@ -459,5 +463,11 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 		#endregion
+
+
+		//	Utilisé pour passer la taille de l'image dessinée à PDF.Port.PaintImage.
+		//	Ceci permet de retrouver le bon ImageSurface, lorsque la même image existe
+		//	plusieurs fois dans le même document, à des tailes différentes !
+		public static Size DrawingSize = Size.Empty;
 	}
 }

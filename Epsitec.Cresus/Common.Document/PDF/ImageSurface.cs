@@ -69,16 +69,27 @@ namespace Epsitec.Common.Document.PDF
 			return null;
 		}
 
-		public static ImageSurface Search(System.Collections.ArrayList list, Drawing.Image drim)
+		public static ImageSurface Search(System.Collections.ArrayList list, Drawing.Image drim, Size size)
 		{
 			//	Cherche une image d'après son Drawing.Image.
+			//	La taille est passée d'une étrange façon. Voir la remarque dans Objects.Image.DrawingSize !
 			foreach ( ImageSurface image in list )
 			{
 				if ( image.DrawingImage == null )  continue;
 
 				if ( image.DrawingImage.UniqueId == drim.UniqueId )
 				{
-					return image;
+					if (size.IsEmpty)
+					{
+						return image;
+					}
+					else
+					{
+						if (image.size == size)
+						{
+							return image;
+						}
+					}
 				}
 			}
 			return null;
