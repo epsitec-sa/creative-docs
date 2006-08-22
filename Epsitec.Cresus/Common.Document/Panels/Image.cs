@@ -243,7 +243,7 @@ namespace Epsitec.Common.Document.Panels
 		{
 			FileOpen dialog = new FileOpen();
 		
-			dialog.Title = Res.Strings.Panel.Image.Dialog.Title;
+			dialog.Title = Res.Strings.Panel.Image.Dialog.Open.Title;
 			dialog.FileName = this.fieldFilename.Text;
 			dialog.Filters.Add("all", Res.Strings.File.Bitmap.All, "*.bmp; *.tif; *.tiff; *.jpg; *.jpeg; *.gif; *.png; *.wmf; *.emf");
 			dialog.Filters.Add("bmp", Res.Strings.File.Bitmap.BMP, "*.bmp");
@@ -252,7 +252,7 @@ namespace Epsitec.Common.Document.Panels
 			dialog.Filters.Add("gif", Res.Strings.File.Bitmap.GIF, "*.gif");
 			dialog.Filters.Add("png", Res.Strings.File.Bitmap.PNG, "*.png");
 			dialog.Filters.Add("wmf", Res.Strings.File.Vector.WMF, "*.wmf; *.emf");
-			dialog.OpenDialog();
+			dialog.OpenDialog();  // demande le nom du fichier...
 
 			this.fieldFilename.Text = TextLayout.ConvertToTaggedText(dialog.FileName);
 			this.fieldFilename.Cursor = this.fieldFilename.Text.Length;
@@ -278,6 +278,27 @@ namespace Epsitec.Common.Document.Panels
 
 		private void HandleSaveClicked(object sender, MessageEventArgs e)
 		{
+			Properties.Image p = this.property as Properties.Image;
+			ImageCache.Item item = this.document.ImageCache.Get(p.Filename);
+			if (item == null)
+			{
+				return;
+			}
+
+			FileSave dialog = new FileSave();
+
+			dialog.Title = Res.Strings.Panel.Image.Dialog.Save.Title;
+			dialog.FileName = this.fieldFilename.Text;
+			dialog.OpenDialog();  // demande le nom du fichier...
+
+			if (System.IO.File.Exists(dialog.FileName))
+			{
+				System.IO.File.Delete(dialog.FileName);
+			}
+
+			System.IO.FileStream stream = new System.IO.FileStream(dialog.FileName, System.IO.FileMode.CreateNew);
+			stream.Write(item.Data, 0, item.Data.Length);
+			stream.Close();
 		}
 
 
