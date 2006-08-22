@@ -403,7 +403,21 @@ namespace Epsitec.Common.Document.Objects
 
 			if (item != null)
 			{
-				image = drawingContext.IsDimmed ? item.ImageDimmed : item.Image;
+				if (port is PDF.Port)  // exportation PDF ?
+				{
+					Properties.Image pi = this.PropertyImage;
+					PDF.Port pdfPort = port as PDF.Port;
+					Size size = this.ImageBitmapSize();
+					bool filter = pi.Filter;
+					pdfPort.FilterImage = filter;
+					PDF.ImageSurface surface = pdfPort.SearchImageSurface(pi.Filename, size, filter);
+					System.Diagnostics.Debug.Assert(surface != null);
+					image = surface.DrawingImage;
+				}
+				else
+				{
+					image = drawingContext.IsDimmed ? item.ImageDimmed : item.Image;
+				}
 			}
 
 			if ( image == null )
