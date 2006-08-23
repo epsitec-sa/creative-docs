@@ -41,6 +41,7 @@ namespace Epsitec.Common.Widgets.Platform
 		public const int WM_XBUTTONDOWN		= 0x020B;
 		public const int WM_XBUTTONUP		= 0x020C;
 		public const int WM_XBUTTONDBLCLK	= 0x020D;
+		public const int WM_SIZING			= 0x0214;
 		public const int WM_ENTERSIZEMOVE	= 0x0231;
 		public const int WM_EXITSIZEMOVE	= 0x0232;
 		public const int WM_MOUSELEAVE		= 0x02A3;
@@ -134,5 +135,14 @@ namespace Epsitec.Common.Widgets.Platform
 		public const uint SWP_NOCOPYBITS = 0x0100;
 		public const uint SWP_NOOWNERZORDER = 0x0200;  /* Don't do owner Z ordering */
 		public const uint SWP_NOSENDCHANGING = 0x0400;  /* Don't send WM_WINDOWPOSCHANGING */
+		
+		public const int WMSZ_LEFT = 1;
+		public const int WMSZ_RIGHT = 2;
+		public const int WMSZ_TOP = 3;
+		public const int WMSZ_TOPLEFT = 4;
+		public const int WMSZ_TOPRIGHT = 5;
+		public const int WMSZ_BOTTOM = 6;
+		public const int WMSZ_BOTTOMLEFT = 7;
+		public const int WMSZ_BOTTOMRIGHT = 8;
 	}
 }
