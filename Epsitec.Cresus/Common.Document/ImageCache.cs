@@ -251,14 +251,7 @@ namespace Epsitec.Common.Document
 			public void Write(string otherFilename)
 			{
 				//	Exporte l'image dans un fichier quelconque.
-				if (System.IO.File.Exists(otherFilename))
-				{
-					System.IO.File.Delete(otherFilename);
-				}
-
-				System.IO.FileStream stream = new System.IO.FileStream(otherFilename, System.IO.FileMode.CreateNew);
-				stream.Write(this.Data, 0, this.Data.Length);
-				stream.Close();
+				System.IO.File.WriteAllBytes(otherFilename, this.data);
 			}
 
 			public string Filename
