@@ -21,6 +21,7 @@ namespace Epsitec.Common.Widgets
 			Center,
 		}
 
+
 		public Offset()
 		{
 			this.AutoEngage = true;
@@ -51,11 +52,7 @@ namespace Epsitec.Common.Widgets
 			}
 			set
 			{
-				if (this.offset != value)
-				{
-					this.offset = value;
-					this.OnOffsetValueChanged();
-				}
+				this.offset = value;
 			}
 		}
 
@@ -72,9 +69,23 @@ namespace Epsitec.Common.Widgets
 		}
 
 
+		protected Rectangle UsedRectangle
+		{
+			get
+			{
+				Rectangle rect = this.Client.Bounds;
+
+				double dim = System.Math.Min(rect.Width, rect.Height);
+				rect.Width = dim;
+				rect.Height = dim;  // doit être carré
+
+				return rect;
+			}
+		}
+
 		protected Rectangle PartRectangle(Part part)
 		{
-			Rectangle rect = this.Client.Bounds;
+			Rectangle rect = this.UsedRectangle;
 			double w = rect.Width/3;
 			double h = rect.Height/3;
 
@@ -102,7 +113,7 @@ namespace Epsitec.Common.Widgets
 		protected Part PartDetect(Point pos)
 		{
 			Part[] parts = { Part.Center, Part.Left, Part.Right, Part.Down, Part.Up };
-			foreach (Part part in parts)
+			foreach (Part part in parts)  // TODO: faire mieux, sans parts !
 			{
 				if (this.PartRectangle(part).Contains(pos))
 				{
@@ -137,7 +148,8 @@ namespace Epsitec.Common.Widgets
 					if (this.HilitedPart != Part.None)
 					{
 						this.mouseDown = true;
-						this.initialOffset = this.offset;
+						this.offset = Point.Zero;
+						this.OnOffsetValueStarting();
 						this.initialPos = pos;
 						this.ButtonAction(this.HilitedPart);
 					}
@@ -150,7 +162,8 @@ namespace Epsitec.Common.Widgets
 					{
 						if (this.HilitedPart == Part.Center)
 						{
-							this.OffsetValue = this.initialOffset + (pos-this.initialPos);
+							this.offset = pos-this.initialPos;
+							this.OnOffsetValueChanging();
 							this.Invalidate();
 						}
 					}
@@ -164,10 +177,14 @@ namespace Epsitec.Common.Widgets
 				case MessageType.MouseUp:
 					this.mouseDown = false;
 					message.Consumer = this;
+					this.OnOffsetValueChanged();
 					break;
 
 				case MessageType.MouseLeave:
-					this.HilitedPart = Part.None;
+					if (!this.mouseDown)
+					{
+						this.HilitedPart = Part.None;
+					}
 					break;
 			}
 		}
@@ -177,44 +194,85 @@ namespace Epsitec.Common.Widgets
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
 			Rectangle rect;
 
-			if (this.hilitedPart != Part.None)
-			{
-				rect = this.PartRectangle(this.hilitedPart);
-				graphics.AddFilledCircle(rect.Center.X, rect.Center.Y, rect.Width*0.5, rect.Height*0.5);
-				graphics.RenderSolid(adorner.ColorCaption);
-			}
-
-			rect = this.Client.Bounds;
-			rect.Deflate(1);
-			graphics.AddCircle(rect.Center.X, rect.Center.Y, rect.Width*0.5, rect.Height*0.5);
-			graphics.RenderSolid(adorner.ColorBorder);
-
-			rect = this.PartRectangle(Part.Center);
-			graphics.AddCircle(rect.Center.X, rect.Center.Y, rect.Width*0.4, rect.Height*0.4);
-			graphics.RenderSolid(adorner.ColorBorder);
-
-			rect = this.PartRectangle(Part.Left);
-			rect.Inflate(2);
-			adorner.PaintGlyph(graphics, rect, this.PaintState, GlyphShape.ArrowLeft, PaintTextStyle.Button);
-
-			rect = this.PartRectangle(Part.Right);
-			rect.Inflate(2);
-			adorner.PaintGlyph(graphics, rect, this.PaintState, GlyphShape.ArrowRight, PaintTextStyle.Button);
-
-			rect = this.PartRectangle(Part.Down);
-			rect.Inflate(2);
-			adorner.PaintGlyph(graphics, rect, this.PaintState, GlyphShape.ArrowDown, PaintTextStyle.Button);
-
-			rect = this.PartRectangle(Part.Up);
-			rect.Inflate(2);
-			adorner.PaintGlyph(graphics, rect, this.PaintState, GlyphShape.ArrowUp, PaintTextStyle.Button);
+			Color hiliteColor1 = adorner.ColorCaption;
+			Color hiliteColor2 = hiliteColor1;
+			hiliteColor2.A *= 0.3;
+			Color centerColor = Color.FromRgb(1, 0, 0);
 
 			if (this.mouseDown && this.hilitedPart == Part.Center)
 			{
-				graphics.LineWidth = 3;
-				graphics.AddLine(this.initialPos, this.initialPos+this.offset);
-				graphics.RenderSolid(adorner.ColorCaption);
-				graphics.LineWidth = 1;
+				rect = this.UsedRectangle;
+				graphics.AddFilledCircle(rect.Center, rect.Width*0.5);
+				graphics.RenderSolid(hiliteColor2);
+
+				rect.Deflate(1);
+				graphics.AddCircle(rect.Center, rect.Width*0.5);
+				graphics.AddLine(rect.Left, rect.Center.Y, rect.Right, rect.Center.Y);
+				graphics.AddLine(rect.Center.X, rect.Bottom, rect.Center.X, rect.Top);
+				graphics.RenderSolid(adorner.ColorBorder);
+
+				if (this.offset == Point.Zero)
+				{
+					graphics.AddFilledCircle(rect.Center, 4);
+					graphics.RenderSolid(centerColor);
+				}
+				else
+				{
+					Point mark = rect.Center+this.offset;
+					Point ext = Point.Move(rect.Center, mark, rect.Width*0.5);
+
+					if (Point.Distance(rect.Center, mark) > rect.Width*0.5)
+					{
+						mark = Point.Move(rect.Center, mark, rect.Width*0.5);
+					}
+
+					graphics.AddLine(rect.Center, ext);
+					graphics.RenderSolid(centerColor);
+
+					graphics.AddFilledCircle(mark, 4);
+					graphics.RenderSolid(centerColor);
+				}
+			}
+			else
+			{
+				if (this.hilitedPart != Part.None)
+				{
+					rect = this.UsedRectangle;
+					graphics.AddFilledCircle(rect.Center, rect.Width*0.5);
+					graphics.RenderSolid(hiliteColor2);
+
+					rect = this.PartRectangle(this.hilitedPart);
+					graphics.AddFilledCircle(rect.Center, rect.Width*0.5);
+					graphics.RenderSolid(hiliteColor1);
+				}
+
+				if (this.Enable)
+				{
+					rect = this.UsedRectangle;
+					rect.Deflate(1);
+					graphics.AddCircle(rect.Center, rect.Width*0.5);
+					graphics.RenderSolid(adorner.ColorBorder);
+
+					rect = this.PartRectangle(Part.Center);
+					graphics.AddCircle(rect.Center, rect.Width*0.4);
+					graphics.RenderSolid(adorner.ColorBorder);
+				}
+
+				rect = this.PartRectangle(Part.Left);
+				rect.Inflate(2);
+				adorner.PaintGlyph(graphics, rect, this.PaintState, GlyphShape.ArrowLeft, PaintTextStyle.Button);
+
+				rect = this.PartRectangle(Part.Right);
+				rect.Inflate(2);
+				adorner.PaintGlyph(graphics, rect, this.PaintState, GlyphShape.ArrowRight, PaintTextStyle.Button);
+
+				rect = this.PartRectangle(Part.Down);
+				rect.Inflate(2);
+				adorner.PaintGlyph(graphics, rect, this.PaintState, GlyphShape.ArrowDown, PaintTextStyle.Button);
+
+				rect = this.PartRectangle(Part.Up);
+				rect.Inflate(2);
+				adorner.PaintGlyph(graphics, rect, this.PaintState, GlyphShape.ArrowUp, PaintTextStyle.Button);
 			}
 		}
 
@@ -243,11 +301,55 @@ namespace Epsitec.Common.Widgets
 				move.Y = this.step;
 			}
 
-			this.OffsetValue += move;
+			this.offset += move;
 		}
 
 
 		#region Events handler
+		protected virtual void OnOffsetValueStarting()
+		{
+			//	Génère un événement pour dire que l'offset va changer.
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("OffsetValueStarting");
+			if (handler != null)
+			{
+				handler(this);
+			}
+		}
+
+		public event Support.EventHandler OffsetValueStarting
+		{
+			add
+			{
+				this.AddUserEventHandler("OffsetValueStarting", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("OffsetValueStarting", value);
+			}
+		}
+
+		protected virtual void OnOffsetValueChanging()
+		{
+			//	Génère un événement pour dire que l'offset est en train de changer.
+			EventHandler handler = (EventHandler) this.GetUserEventHandler("OffsetValueChanging");
+			if (handler != null)
+			{
+				handler(this);
+			}
+		}
+
+		public event Support.EventHandler OffsetValueChanging
+		{
+			add
+			{
+				this.AddUserEventHandler("OffsetValueChanging", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler("OffsetValueChanging", value);
+			}
+		}
+
 		protected virtual void OnOffsetValueChanged()
 		{
 			//	Génère un événement pour dire que l'offset a changé.
@@ -277,7 +379,6 @@ namespace Epsitec.Common.Widgets
 
 		protected Part						hilitedPart = Part.None;
 		protected bool						mouseDown = false;
-		protected Point						initialOffset;
 		protected Point						initialPos;
 	}
 }
