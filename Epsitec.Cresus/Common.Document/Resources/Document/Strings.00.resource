@@ -359,6 +359,18 @@
   <data name="Panel.Image.Tooltip.Update" id="00B">Actualise l'image d&amp;apos;après le fichier sur disque</data>
   <data name="Panel.Image.Dialog.Open.Title" id="01B">Importer une image</data>
   <data name="Panel.Image.Dialog.Save.Title" id="07901" mod="1">Exporter une image</data>
+  <data name="Panel.Image.Short.CropLeft" id="08901" mod="1">G</data>
+  <data name="Panel.Image.Short.CropRight" id="0B901" mod="1">D</data>
+  <data name="Panel.Image.Short.CropBottom" id="0C901" mod="1">B</data>
+  <data name="Panel.Image.Short.CropTop" id="0D901" mod="1">H</data>
+  <data name="Panel.Image.Long.CropLeft" id="09901" mod="1">Marge gauche</data>
+  <data name="Panel.Image.Long.CropRight" id="0E901" mod="1">Marge droite</data>
+  <data name="Panel.Image.Long.CropBottom" id="0F901" mod="1">Marge inf.</data>
+  <data name="Panel.Image.Long.CropTop" id="0G901" mod="1">Marge sup.</data>
+  <data name="Panel.Image.Tooltip.CropLeft" id="0A901" mod="1">Marge gauche de cadrage</data>
+  <data name="Panel.Image.Tooltip.CropRight" id="0H901" mod="1">Marge droite de cadrage</data>
+  <data name="Panel.Image.Tooltip.CropBottom" id="0I901" mod="1">Marge inférieure de cadrage</data>
+  <data name="Panel.Image.Tooltip.CropTop" id="0J901" mod="1">Marge supérieure de cadrage</data>
   <data name="File.Bitmap.All" id="02B">Toutes les images</data>
   <data name="File.Bitmap.BMP" id="03B">Bitmap Windows BMP</data>
   <data name="File.Bitmap.TIF" id="04B">Tagged Image TIFF</data>
