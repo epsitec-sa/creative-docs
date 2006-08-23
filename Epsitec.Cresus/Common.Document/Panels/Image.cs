@@ -79,6 +79,8 @@ namespace Epsitec.Common.Document.Panels
 
 			this.offset = new Offset(this);
 			this.offset.OffsetValue = Point.Zero;
+			this.offset.OffsetValueStarting += new EventHandler(this.HandleOffsetValueStarting);
+			this.offset.OffsetValueChanging += new EventHandler(this.HandleOffsetValueChanging);
 			this.offset.OffsetValueChanged += new EventHandler(this.HandleOffsetValueChanged);
 
 			this.buttonMirrorH = new CheckButton(this);
@@ -126,6 +128,8 @@ namespace Epsitec.Common.Document.Panels
 				this.fieldCropRight.TextFieldReal.EditionAccepted -= new EventHandler(this.HandleFieldChanged);
 				this.fieldCropBottom.TextFieldReal.EditionAccepted -= new EventHandler(this.HandleFieldChanged);
 				this.fieldCropTop.TextFieldReal.EditionAccepted -= new EventHandler(this.HandleFieldChanged);
+				this.offset.OffsetValueStarting -= new EventHandler(this.HandleOffsetValueStarting);
+				this.offset.OffsetValueChanging -= new EventHandler(this.HandleOffsetValueChanging);
 				this.offset.OffsetValueChanged -= new EventHandler(this.HandleOffsetValueChanged);
 				this.buttonMirrorH.ActiveStateChanged -= new EventHandler(this.HandleButtonActiveStateChanged);
 				this.buttonMirrorV.ActiveStateChanged -= new EventHandler(this.HandleButtonActiveStateChanged);
@@ -186,6 +190,8 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldCropBottom.TextFieldReal.InternalValue = (decimal) crop.Bottom;
 			this.fieldCropTop.TextFieldReal.InternalValue = (decimal) crop.Top;
 
+			this.UpdateOffset();
+
 			this.ignoreChanged = false;
 		}
 
@@ -208,6 +214,64 @@ namespace Epsitec.Common.Document.Panels
 			crop.Bottom = (double) this.fieldCropBottom.TextFieldReal.InternalValue;
 			crop.Top = (double) this.fieldCropTop.TextFieldReal.InternalValue;
 			p.CropMargins = crop;
+		}
+
+
+		protected void UpdateOffset()
+		{
+			Properties.Image p = this.property as Properties.Image;
+			if (p == null)  return;
+
+			this.offset.Enable = (p.CropMargins != Margins.Zero);
+		}
+
+		protected void StartingOffset()
+		{
+			this.initialCrop.Left = (double) this.fieldCropLeft.TextFieldReal.InternalValue;
+			this.initialCrop.Right = (double) this.fieldCropRight.TextFieldReal.InternalValue;
+			this.initialCrop.Bottom = (double) this.fieldCropBottom.TextFieldReal.InternalValue;
+			this.initialCrop.Top = (double) this.fieldCropTop.TextFieldReal.InternalValue;
+		}
+
+		protected void MakeOffset()
+		{
+			Point move = this.offset.OffsetValue;
+			Margins crop = this.initialCrop;
+
+			if (move.X > 0)
+			{
+				double m = System.Math.Min(move.X, crop.Right);
+				crop.Right -= m;
+				crop.Left  += m;
+			}
+
+			if (move.X < 0)
+			{
+				double m = System.Math.Min(-move.X, crop.Left);
+				crop.Left  -= m;
+				crop.Right += m;
+			}
+
+			if (move.Y > 0)
+			{
+				double m = System.Math.Min(move.Y, crop.Top);
+				crop.Top    -= m;
+				crop.Bottom += m;
+			}
+
+			if (move.Y < 0)
+			{
+				double m = System.Math.Min(-move.Y, crop.Bottom);
+				crop.Bottom -= m;
+				crop.Top    += m;
+			}
+
+			this.fieldCropLeft.TextFieldReal.InternalValue = (decimal) crop.Left;
+			this.fieldCropRight.TextFieldReal.InternalValue = (decimal) crop.Right;
+			this.fieldCropBottom.TextFieldReal.InternalValue = (decimal) crop.Bottom;
+			this.fieldCropTop.TextFieldReal.InternalValue = (decimal) crop.Top;
+
+			this.OnChanged();
 		}
 
 
@@ -403,59 +467,22 @@ namespace Epsitec.Common.Document.Panels
 			}
 
 			this.OnChanged();
+			this.UpdateOffset();
+		}
+
+		void HandleOffsetValueStarting(object sender)
+		{
+			this.StartingOffset();
+		}
+
+		void HandleOffsetValueChanging(object sender)
+		{
+			this.MakeOffset();
 		}
 
 		void HandleOffsetValueChanged(object sender)
 		{
-			if (this.ignoreChanged)
-			{
-				return;
-			}
-
-			Point move = this.offset.OffsetValue;
-
-			this.ignoreChanged = true;
-			this.offset.OffsetValue = Point.Zero;
-			this.ignoreChanged = false;
-
-			Margins crop = Margins.Zero;
-			crop.Left = (double) this.fieldCropLeft.TextFieldReal.InternalValue;
-			crop.Right = (double) this.fieldCropRight.TextFieldReal.InternalValue;
-			crop.Bottom = (double) this.fieldCropBottom.TextFieldReal.InternalValue;
-			crop.Top = (double) this.fieldCropTop.TextFieldReal.InternalValue;
-
-			if (move.X > 0)
-			{
-				double m = System.Math.Min(move.X, crop.Right);
-				crop.Right -= m;
-				crop.Left  += m;
-			}
-
-			if (move.X < 0)
-			{
-				double m = System.Math.Min(-move.X, crop.Left);
-				crop.Left  -= m;
-				crop.Right += m;
-			}
-
-			if (move.Y > 0)
-			{
-				double m = System.Math.Min(move.Y, crop.Top);
-				crop.Top    -= m;
-				crop.Bottom += m;
-			}
-
-			if (move.Y < 0)
-			{
-				double m = System.Math.Min(-move.Y, crop.Bottom);
-				crop.Bottom -= m;
-				crop.Top    += m;
-			}
-
-			this.fieldCropLeft.TextFieldReal.InternalValue = (decimal) crop.Left;
-			this.fieldCropRight.TextFieldReal.InternalValue = (decimal) crop.Right;
-			this.fieldCropBottom.TextFieldReal.InternalValue = (decimal) crop.Bottom;
-			this.fieldCropTop.TextFieldReal.InternalValue = (decimal) crop.Top;
+			this.MakeOffset();
 		}
 		
 
@@ -474,6 +501,8 @@ namespace Epsitec.Common.Document.Panels
 		protected CheckButton				buttonHomo;
 		protected CheckButton				buttonFilter;
 		protected CheckButton				buttonInside;
+
+		protected Margins					initialCrop;
 	}
 }
 
