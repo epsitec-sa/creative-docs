@@ -546,7 +546,6 @@ namespace Epsitec.Common.OpenType
 			{
 				int num_glyph = this.ot_maxp.NumGlyphs;
 
-				double advance = 0;
 				double per_em  = this.ot_head.UnitsPerEm;
 				double scale   = size / per_em;
 

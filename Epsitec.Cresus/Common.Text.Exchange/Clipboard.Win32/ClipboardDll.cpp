@@ -24,9 +24,9 @@ BOOL APIENTRY DllMain( HMODULE hModule,
 }
 
 
-static void* clipboardData = NULL;
-static int   clipboardSize = 0;
-static int   clipboardHtmlFormat = RegisterClipboardFormat(L"HTML Format");
+static void*  clipboardData = NULL;
+static SIZE_T clipboardSize = 0;
+static int    clipboardHtmlFormat = RegisterClipboardFormat(L"HTML Format");
 
 
 // retourne la taille des données contenues dans le clipboard, ou 0 si
@@ -76,7 +76,7 @@ EXPORT int ReadHtmlFromClipboard(HWND mainWindow)
 		CloseClipboard();
 	}
 	
-	return clipboardSize;
+	return (int) clipboardSize;
 }
 
 
@@ -86,9 +86,9 @@ EXPORT int ReadHtmlFromClipboard(HWND mainWindow)
 
 EXPORT void ReadClipboardData(BYTE* buffer, int size)
 {
-	if (size > clipboardSize)
+	if (size > (int) clipboardSize)
 	{
-		size = clipboardSize;
+		size = (int) clipboardSize;
 	}
 	
 	if (clipboardData != NULL)

@@ -3021,7 +3021,7 @@ namespace Epsitec.App.DocumentEditor
 		}
 
 		[Command ("Object")]
-		void CommandObject(CommandDispatcher dispatcher, CommandEventArgs e)
+		new void CommandObject(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			//	Exécute une commande locale à un objet.
 			Widget widget = e.Source as Widget;
