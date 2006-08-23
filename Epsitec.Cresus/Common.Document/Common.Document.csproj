@@ -623,6 +623,7 @@
     <Compile Include="Widgets\ButtonFontFace.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Widgets\Cropper.cs" />
     <Compile Include="Widgets\DummyTextFieldCombo.cs">
       <SubType>Code</SubType>
     </Compile>
