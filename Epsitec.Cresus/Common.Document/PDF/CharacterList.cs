@@ -1,4 +1,3 @@
-using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.OpenType;
 using Epsitec.Common.Text;
@@ -12,13 +11,10 @@ namespace Epsitec.Common.Document.PDF
 	{
 		public CharacterList(TextLayout.OneCharStructure oneChar)
 		{
-			this.unicode      = (int) oneChar.Character;
+			this.unicode      = oneChar.Character;
 			this.unicodes     = null;
-			this.glyph        = 0;
 			this.openTypeFont = oneChar.Font.OpenTypeFont;
-			this.bold         = oneChar.Bold;
-			this.italic       = oneChar.Italic;
-			this.isGlyph      = false;
+			this.glyph        = this.openTypeFont.GetGlyphIndex (this.unicode);
 		}
 
 		public CharacterList(ushort glyph, int unicode, OpenType.Font font)
@@ -27,9 +23,6 @@ namespace Epsitec.Common.Document.PDF
 			this.unicodes     = null;
 			this.glyph        = glyph;
 			this.openTypeFont = font;
-			this.bold         = false;
-			this.italic       = false;
-			this.isGlyph      = true;
 		}
 
 		public CharacterList(ushort glyph, int[] unicodes, OpenType.Font font)
@@ -38,14 +31,6 @@ namespace Epsitec.Common.Document.PDF
 			this.unicodes     = unicodes;
 			this.glyph        = glyph;
 			this.openTypeFont = font;
-			this.bold         = false;
-			this.italic       = false;
-			this.isGlyph      = true;
-		}
-
-		public void Dispose()
-		{
-			this.openTypeFont = null;
 		}
 
 		public int Unicode
@@ -63,34 +48,11 @@ namespace Epsitec.Common.Document.PDF
 			get { return this.glyph; }
 		}
 
-		public int Code
-		{
-			get
-			{
-				if ( this.isGlyph )
-				{
-					return this.glyph;
-				}
-				else
-				{
-					return this.unicode;
-				}
-			}
-		}
-
 		public double Width
 		{
 			get
 			{
-				if ( this.isGlyph )
-				{
-					return this.openTypeFont.GetGlyphWidth(this.glyph, 1.0);
-				}
-				else
-				{
-					Drawing.Font df = Drawing.Font.GetFont(this.openTypeFont);
-					return df.GetCharAdvance(this.unicode);
-				}
+				return this.openTypeFont.GetGlyphWidth (this.glyph, 1.0);
 			}
 		}
 
@@ -99,37 +61,18 @@ namespace Epsitec.Common.Document.PDF
 			get { return this.openTypeFont; }
 		}
 
-		public bool Bold
-		{
-			get { return this.bold; }
-		}
-
-		public bool Italic
-		{
-			get { return this.italic; }
-		}
-
-		public bool IsGlyph
-		{
-			get { return this.isGlyph; }
-		}
-
-
 		public override bool Equals(object obj)
 		{
 			CharacterList o = obj as CharacterList;
 
 			return ( this.unicode      == o.unicode      &&
 					 this.glyph        == o.glyph        &&
-					 this.openTypeFont == o.openTypeFont &&
-					 this.bold         == o.bold         &&
-					 this.italic       == o.italic       &&
-					 this.isGlyph      == o.isGlyph      );
+					 this.openTypeFont == o.openTypeFont );
 		}
 
 		public override int GetHashCode() 
 		{
-			return this.unicode.GetHashCode() ^ this.openTypeFont.GetHashCode();
+			return this.unicode ^ this.openTypeFont.GetHashCode();
 		}
 
 
@@ -137,8 +80,5 @@ namespace Epsitec.Common.Document.PDF
 		protected int[]						unicodes;
 		protected ushort					glyph;
 		protected OpenType.Font				openTypeFont;
-		protected bool						bold;
-		protected bool						italic;
-		protected bool						isGlyph;
 	}
 }

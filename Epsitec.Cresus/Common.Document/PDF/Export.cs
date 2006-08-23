@@ -2017,15 +2017,7 @@ namespace Epsitec.Common.Document.PDF
 
 			Font drawingFont = font.DrawingFont;
 			Drawing.Transform ft = drawingFont.SyntheticTransform;
-			int glyph;
-			if ( cl.IsGlyph )
-			{
-				glyph = cl.Glyph;
-			}
-			else
-			{
-				glyph = drawingFont.GetGlyphIndex(cl.Unicode);
-			}
+			int glyph = cl.Glyph;
 			Path path = new Path();
 			path.Append(drawingFont, glyph, ft.XX, ft.XY, ft.YX, ft.YY, ft.TX, ft.TY);
 
@@ -2045,20 +2037,7 @@ namespace Epsitec.Common.Document.PDF
 		protected void FlushFont()
 		{
 			//	Libère toutes les fontes.
-			foreach ( System.Collections.DictionaryEntry dict in this.characterList )
-			{
-				CharacterList ch = dict.Key as CharacterList;
-				ch.Dispose();
-			}
-			this.characterList.Clear();
 			this.characterList = null;
-
-			foreach ( System.Collections.DictionaryEntry dict in this.fontList )
-			{
-				FontList font = dict.Key as FontList;
-				font.Dispose();
-			}
-			this.fontList.Clear();
 			this.fontList = null;
 		}
 		#endregion

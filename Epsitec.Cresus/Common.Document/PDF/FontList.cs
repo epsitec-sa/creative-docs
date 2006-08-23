@@ -15,12 +15,6 @@ namespace Epsitec.Common.Document.PDF
 			this.id = id;
 		}
 
-		public void Dispose()
-		{
-			this.openTypeFont = null;
-			this.drawingFont = null;
-		}
-
 		public void AddCharacter(CharacterList cl)
 		{
 			if ( this.characters == null )
