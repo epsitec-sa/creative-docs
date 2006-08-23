@@ -3339,7 +3339,7 @@ namespace Epsitec.Common.Document
 			this.contextMenu.ShowAsContextMenu(this.Window, mouse);
 		}
 
-		public void CommandObject(string cmd)
+		public void ExecuteObjectCommand(string cmd)
 		{
 			//	Exécute une commande locale à un objet.
 			if ( cmd == "CreateEnding" )

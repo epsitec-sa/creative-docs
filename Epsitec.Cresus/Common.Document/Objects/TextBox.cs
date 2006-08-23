@@ -234,8 +234,6 @@ namespace Epsitec.Common.Document.Objects
 
 			foreach ( TextLayout.OneCharStructure oneChar in fix )
 			{
-				if ( oneChar == null )  continue;
-
 				PDF.CharacterList cl = new PDF.CharacterList(oneChar);
 				if ( !table.ContainsKey(cl) )
 				{

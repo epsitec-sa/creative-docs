@@ -1,3 +1,6 @@
+
+using System.Collections.Generic;
+
 namespace Epsitec.Common.Widgets
 {
 	#region AnchorEvent Definitions
@@ -94,7 +97,7 @@ namespace Epsitec.Common.Widgets
 				}
 				
 				if ((this.text != value) &&
-					(this.SimplifiedText != value))
+					(this.GetSimplifiedText () != value))
 				{
 					int offsetError;
 					if ( TextLayout.CheckSyntax(value, out offsetError) )
@@ -110,13 +113,10 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		private string SimplifiedText
+		private string GetSimplifiedText()
 		{
-			get
-			{
-				string text = this.text ?? "";
-				return text.Contains ("<put ") ? this.GetSimplify () : text;
-			}
+			string text = this.text ?? "";
+			return text.Contains ("<put ") ? this.GetSimplify () : text;
 		}
 
 		public string							InternalText
@@ -572,7 +572,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 
-		protected Drawing.Rectangle GetRectangleBounds(bool all)
+		private Drawing.Rectangle GetRectangleBounds(bool all)
 		{
 			//	Retourne le rectangle englobant du layout, en tenant compte de
 			//	toutes les lignes (all=true) ou seulement des lignes visibles (all=false).
@@ -867,7 +867,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
-		protected JustifBlock SearchJustifBlock(Context context)
+		private JustifBlock SearchJustifBlock(Context context)
 		{
 			//	Cherche le premier bloc correspondant à un index.
 			int i = this.SearchJustifBlockRank(context);
@@ -875,7 +875,7 @@ namespace Epsitec.Common.Widgets
 			return this.blocks[i] as JustifBlock;
 		}
 
-		protected int SearchJustifBlockRank(Context context)
+		private int SearchJustifBlockRank(Context context)
 		{
 			//	Cherche le premier bloc correspondant à un index.
 			this.UpdateLayout();
@@ -917,14 +917,14 @@ namespace Epsitec.Common.Widgets
 			return -1;
 		}
 
-		protected bool IsPrepared(TextLayout.Context context, string key)
+		private bool IsPrepared(TextLayout.Context context, string key)
 		{
 			//	Cherche si la préparation contient une commande donnée.
 			if ( context.PrepareOffset == -1 )  return false;
 			return (this.SearchPrepared(context, key) == "yes");
 		}
 
-		protected string SearchPrepared(TextLayout.Context context, string key)
+		private string SearchPrepared(TextLayout.Context context, string key)
 		{
 			//	Cherche si la préparation contient une commande donnée.
 			if ( context.PrepareOffset == -1 )  return "";
@@ -945,7 +945,7 @@ namespace Epsitec.Common.Widgets
 			return found;  // retourne la *dernière* préparation trouvée
 		}
 
-		protected void InsertPutCommand(TextLayout.Context context, string cmd)
+		private void InsertPutCommand(TextLayout.Context context, string cmd)
 		{
 			//	Modifie les caractères sélectionnés avec une commande <put..>..</put>.
 			string begin = "<put " + cmd + ">";
@@ -996,7 +996,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		protected void DeletePutCommand(TextLayout.Context context, string beginCmd, string endCmd)
+		private void DeletePutCommand(TextLayout.Context context, string beginCmd, string endCmd)
 		{
 			int i, len;
 
@@ -1021,7 +1021,7 @@ namespace Epsitec.Common.Widgets
 			context.PrepareLength2 -= len;
 		}
 
-		protected void ListInsert(TextLayout.Context context, string cmd)
+		private void ListInsert(TextLayout.Context context, string cmd)
 		{
 			//	Insère des puces dans tous les paragraphes sélectionnés.
 			int from = System.Math.Min(context.CursorFrom, context.CursorTo);
@@ -1063,7 +1063,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		protected void ListDelete(TextLayout.Context context)
+		private void ListDelete(TextLayout.Context context)
 		{
 			//	Supprime les puces dans tous les paragraphes sélectionnés.
 			int from = System.Math.Min(context.CursorFrom, context.CursorTo);
@@ -1098,7 +1098,7 @@ namespace Epsitec.Common.Widgets
 			this.Text = text;
 		}
 
-		protected void AlignToBreakLines(ref int from, ref int to)
+		private void AlignToBreakLines(ref int from, ref int to)
 		{
 			//	Adapte les index from/to pour englober des paragraphes entiers.
 			//	from: début d'un paragraphe (après un <br/>)
@@ -1162,8 +1162,8 @@ namespace Epsitec.Common.Widgets
 			context.CursorAfter = false;
 		}
 
-		
-		protected int DeleteText(int from, int to)
+
+		private int DeleteText(int from, int to)
 		{
 			//	Supprime des caractères, tout en conservant les commandes. S'il reste
 			//	des commandes superflues, elles seront supprimées par Symplify().
@@ -1344,7 +1344,7 @@ namespace Epsitec.Common.Widgets
 			return true;
 		}
 
-		protected void MemoriseDeletedStyle(TextLayout.Context context, JustifBlock block)
+		private void MemoriseDeletedStyle(TextLayout.Context context, JustifBlock block)
 		{
 			if ( block == null )  return;
 
@@ -1398,8 +1398,8 @@ namespace Epsitec.Common.Widgets
 			return true;
 		}
 
-		
-		protected bool IsWordSeparator(char character)
+
+		private bool IsWordSeparator(char character)
 		{
 			//	Indique si un caractère est un séparateur pour les déplacements
 			//	avec Ctrl+flèche.
@@ -1417,7 +1417,7 @@ namespace Epsitec.Common.Widgets
 			return true;
 		}
 
-		protected bool IsDualCursor(int index)
+		private bool IsDualCursor(int index)
 		{
 			//	Indique s'il existe 2 positions différentes pour un index.
 			//	L'une avec CursorAfter = false, et l'autre avec CursorAfter = true.
@@ -1613,7 +1613,7 @@ namespace Epsitec.Common.Widgets
 					}
 					else
 					{
-						color = block.GetFontColor;
+						color = block.GetFontColor ();
 					}
 				}
 				else
@@ -1723,8 +1723,8 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		
-		protected void UnderlinedPoints(Drawing.IPaintPort graphics, JustifBlock block,
+
+		private void UnderlinedPoints(Drawing.IPaintPort graphics, JustifBlock block,
 										Drawing.Point pos,
 										out Drawing.Point p1, out Drawing.Point p2)
 		{
@@ -1761,7 +1761,7 @@ namespace Epsitec.Common.Widgets
 			p2.Y -= 0.5;
 		}
 
-		protected Drawing.Path PathWave(Drawing.Point p1, Drawing.Point p2)
+		private Drawing.Path PathWave(Drawing.Point p1, Drawing.Point p2)
 		{
 			//	Génère le chemin d'une vague "/\/\/\/\/\/\".
 			//	Le début "montant" de la vague est toujours aligné sur x=0, afin que
@@ -1814,7 +1814,7 @@ namespace Epsitec.Common.Widgets
 			return path;
 		}
 
-		protected Drawing.Path PathTab(Drawing.IPaintPort graphics, Drawing.Rectangle rect)
+		private Drawing.Path PathTab(Drawing.IPaintPort graphics, Drawing.Rectangle rect)
 		{
 			//	Génère le chemin pour représenter un tabulateur.
 			double x1 = rect.Left+1.0/this.drawingScale;
@@ -1835,8 +1835,8 @@ namespace Epsitec.Common.Widgets
 			path.LineTo(x2-len, y-len);
 			return path;
 		}
-		
-		protected void PaintList(Drawing.IPaintPort graphics,
+
+		private void PaintList(Drawing.IPaintPort graphics,
 								 Drawing.Rectangle rect, double baseLine,
 								 JustifBlock block, ref double listValue)
 		{
@@ -1908,9 +1908,9 @@ namespace Epsitec.Common.Widgets
 				listValue += step;
 			}
 		}
-		
-		
-		protected void OnAnchor(AnchorEventArgs e)
+
+
+		private void OnAnchor(AnchorEventArgs e)
 		{
 			if ( this.Anchor != null )
 			{
@@ -1929,8 +1929,8 @@ namespace Epsitec.Common.Widgets
 			return this.DetectIndex(new Drawing.Point(posx, 0), posLine, selZone, out index, out after);
 		}
 
-		
-		protected bool DetectIndex(Drawing.Point pos, int posLine, bool selZone, out int index, out bool after)
+
+		private bool DetectIndex(Drawing.Point pos, int posLine, bool selZone, out int index, out bool after)
 		{
 			//	Trouve l'index dans le texte interne qui correspond à la
 			//	position indiquée. Retourne false en cas d'échec.
@@ -2054,7 +2054,7 @@ namespace Epsitec.Common.Widgets
 			return false;
 		}
 
-		protected bool IsAfter(int blockRank, int index)
+		private bool IsAfter(int blockRank, int index)
 		{
 			//	Teste si le bloc précédent contient aussi le même index. Si oui,
 			//	retourne true, car l'index trouvé correspond à la 2ème position possible.
@@ -2101,9 +2101,9 @@ namespace Epsitec.Common.Widgets
 			}
 			return null;
 		}
-		
 
-		protected double IndexToPosX(JustifBlock block, JustifLine line, int index)
+
+		private double IndexToPosX(JustifBlock block, JustifLine line, int index)
 		{
 			//	Retourne la position horizontale correspondant à un index dans un bloc.
 			if ( block.LineBreak && index == block.EndIndex+1 )
@@ -2157,7 +2157,7 @@ namespace Epsitec.Common.Widgets
 
 				double top    = line.Pos.Y+line.Ascender;
 				double bottom = line.Pos.Y+line.Descender;
-				Drawing.Color color = block.GetFontColor.Basic;
+				Drawing.Color color = block.GetFontColor ().Basic;
 
 				if ( area.Rect.Top    != top    ||
 					 area.Rect.Bottom != bottom ||  // rectangle dans autre ligne ?
@@ -2310,7 +2310,7 @@ namespace Epsitec.Common.Widgets
 			return false;
 		}
 
-		protected bool ScanItalic(int offset)
+		private bool ScanItalic(int offset)
 		{
 			System.Collections.Hashtable parameters;
 			string text = this.InternalText;
@@ -2350,7 +2350,7 @@ namespace Epsitec.Common.Widgets
 			return italic;
 		}
 
-		protected double ScanFontScale(int offset)
+		private double ScanFontScale(int offset)
 		{
 			System.Collections.Hashtable parameters;
 			string text = this.InternalText;
@@ -2577,9 +2577,9 @@ namespace Epsitec.Common.Widgets
 			
 			return -1;
 		}
-		
-		
-		protected static bool DeleteTagsList(string endTag, System.Collections.ArrayList list)
+
+
+		private static bool DeleteTagsList(string endTag, System.Collections.ArrayList list)
 		{
 			//	Enlève un tag à la fin de la liste.
 			System.Diagnostics.Debug.Assert(endTag.StartsWith("</"));
@@ -2623,7 +2623,7 @@ namespace Epsitec.Common.Widgets
 			return result;
 		}
 
-		protected static string TagCapturePrev(string text, int from, int to, Tag search)
+		private static string TagCapturePrev(string text, int from, int to, Tag search)
 		{
 			int i = TextLayout.TagSearchPrev(text, from, to, search);
 			if ( i == -1 )  return null;
@@ -2632,7 +2632,7 @@ namespace Epsitec.Common.Widgets
 			return text.Substring(i, j-i+1);
 		}
 
-		protected static void TagComplete(ref string text, Tag open, Tag close, string ot, string ct)
+		private static void TagComplete(ref string text, Tag open, Tag close, string ot, string ct)
 		{
 			if ( ot != null && TextLayout.TagCompleteNext(text, open, close) )
 			{
@@ -2645,7 +2645,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		protected static bool TagCompleteNext(string text, Tag open, Tag close)
+		private static bool TagCompleteNext(string text, Tag open, Tag close)
 		{
 			int ic = TextLayout.TagSearchNext(text, 0, text.Length, close);
 			if ( ic == -1 )  return false;
@@ -2653,7 +2653,7 @@ namespace Epsitec.Common.Widgets
 			return ( io == -1 || io > ic );
 		}
 
-		protected static bool TagCompletePrev(string text, Tag open, Tag close)
+		private static bool TagCompletePrev(string text, Tag open, Tag close)
 		{
 			int io = TextLayout.TagSearchPrev(text, 0, text.Length, open);
 			if ( io == -1 )  return false;
@@ -2661,7 +2661,7 @@ namespace Epsitec.Common.Widgets
 			return ( ic == -1 || io > ic );
 		}
 
-		protected static int TagSearchNext(string text, int from, int to, Tag search)
+		private static int TagSearchNext(string text, int from, int to, Tag search)
 		{
 			//	Cherche un tag en avant.
 			System.Collections.Hashtable parameters;
@@ -2677,7 +2677,7 @@ namespace Epsitec.Common.Widgets
 			return -1;
 		}
 
-		protected static int TagSearchPrev(string text, int from, int to, Tag search)
+		private static int TagSearchPrev(string text, int from, int to, Tag search)
 		{
 			//	Cherche un tag en arrière.
 			System.Collections.Hashtable parameters;
@@ -3089,7 +3089,7 @@ namespace Epsitec.Common.Widgets
 				(this.embedder != null))
 			{
 				string oldSimplifiedText = this.simplifiedText;
-				string newSimplifiedText = this.SimplifiedText;
+				string newSimplifiedText = this.GetSimplifiedText ();
 
 				if (oldSimplifiedText != newSimplifiedText)
 				{
@@ -3111,20 +3111,20 @@ namespace Epsitec.Common.Widgets
 			this.textChangeNotificationSuspendCounter--;
 			this.NotifyTextChanges ();
 		}
-		
-		protected void MarkContentsAsDirty()
+
+		private void MarkContentsAsDirty()
 		{
 			this.isContentsDirty = true;
 			this.isSimpleDirty = true;
 			this.isLayoutDirty = true;
 		}
-		
-		protected void MarkLayoutAsDirty()
+
+		private void MarkLayoutAsDirty()
 		{
 			this.isLayoutDirty = true;
 		}
-		
-		protected void UpdateLayout()
+
+		private void UpdateLayout()
 		{
 			if ( this.isSimpleDirty )
 			{
@@ -3164,26 +3164,22 @@ namespace Epsitec.Common.Widgets
 		{
 			//	Simplifie et met à plat toutes les commandes HTML du texte.
 			//	Les commandes <put..>..</put> sont intégrées puis supprimées.
-			System.Collections.Stack		fontStack;
-			FontSimplify					fontDefault;
-			FontSimplify					fontItem;
-			FontSimplify					fontCurrent;
+			Stack<FontDefinition>				fontStack;
+			FontDefinition					fontDefault;
+			FontDefinition					fontItem;
+			FontDefinition					fontCurrent;
 			System.Text.StringBuilder		buffer;
 			System.Collections.Hashtable	parameters;
 
-			fontStack = new System.Collections.Stack();
+			fontStack = new Stack<FontDefinition> ();
 
 			//	Prépare la fonte initiale par défaut.
-			fontDefault = new FontSimplify();
-			fontDefault.FontName  = TextLayout.CodeDefault + this.DefaultFont.FaceName;
-			fontDefault.FontScale = "100%";
-			fontDefault.FontColor = TextLayout.CodeDefault + "#" + Drawing.RichColor.ToHexa(this.DefaultRichColor);
+			fontDefault = new FontDefinition(string.Concat (TextLayout.CodeDefault, this.DefaultFont.FaceName), "100%", string.Concat (TextLayout.CodeDefault, "#", Drawing.RichColor.ToHexa(this.DefaultRichColor)));
 
-			fontItem = new FontSimplify();
-			fontItem = fontDefault.Copy();
-			fontStack.Push(fontItem);  // push la fonte initiale (jamais de pop)
-
-			fontCurrent = fontItem.Copy();
+			fontItem = fontDefault;
+			fontCurrent = fontDefault;
+			
+			fontStack.Push (fontItem);  // push la fonte initiale (jamais de pop)
 
 			SupplSimplify supplItem = new SupplSimplify();
 			SupplSimplify supplCurrent = new SupplSimplify();
@@ -3202,10 +3198,10 @@ namespace Epsitec.Common.Widgets
 					case Tag.Font:
 						if ( parameters != null )
 						{
-							fontItem = ((FontSimplify)fontStack.Peek()).Copy();
-							if ( parameters.ContainsKey("face")  )  fontItem.FontName  = (string)parameters["face"];
-							if ( parameters.ContainsKey("size")  )  fontItem.FontScale = (string)parameters["size"];
-							if ( parameters.ContainsKey("color") )  fontItem.FontColor = (string)parameters["color"];
+							fontItem = fontStack.Peek();
+							if ( parameters.ContainsKey("face")  )  fontItem.DefineFontName  ((string)parameters["face"]);
+							if ( parameters.ContainsKey("size")  )  fontItem.DefineFontScale ((string)parameters["size"]);
+							if ( parameters.ContainsKey("color") )  fontItem.DefineFontColor ((string)parameters["color"]);
 							fontStack.Push(fontItem);
 						}
 						break;
@@ -3215,7 +3211,7 @@ namespace Epsitec.Common.Widgets
 						{
 							fontStack.Pop();
 						}
-						fontItem = (FontSimplify)fontStack.Peek();
+						fontItem = fontStack.Peek();
 						break;
 
 					case Tag.Bold:
@@ -3270,9 +3266,9 @@ namespace Epsitec.Common.Widgets
 					case Tag.AnchorEnd:
 					case Tag.Wave:
 					case Tag.WaveEnd:
-						this.SimplifyPutFont(buffer, fontDefault, fontCurrent, fontItem, supplCurrent, supplItem, ref fontCmd);
+						fontCmd = this.SimplifyPutFont(buffer, fontDefault, fontCurrent, fontItem, supplCurrent, supplItem, fontCmd);
 						this.SimplifyPutSuppl(buffer, supplCurrent, supplItem);
-						fontCurrent = fontItem.Copy();
+						fontCurrent = fontItem;
 						supplCurrent = supplItem.Copy();
 						buffer.Append(this.text.Substring(begin, offset-begin));
 						break;
@@ -3294,11 +3290,11 @@ namespace Epsitec.Common.Widgets
 			return buffer.ToString();
 		}
 
-		protected void SimplifyPutFont(System.Text.StringBuilder buffer,
-									   FontSimplify fontDefault,
-									   FontSimplify fontCurrent, FontSimplify fontItem,
-									   SupplSimplify supplCurrent, SupplSimplify supplItem,
-									   ref bool fontCmd)
+		private bool SimplifyPutFont(System.Text.StringBuilder buffer,
+			/**/					 FontDefinition fontDefault,
+			/**/					 FontDefinition fontCurrent, FontDefinition fontItem,
+			/**/					 SupplSimplify supplCurrent, SupplSimplify supplItem,
+			/**/					 bool fontCmd)
 		{
 			string itemFontName  = (supplItem.PutFontName  != "") ? supplItem.PutFontName  : fontItem.FontName;
 			string itemFontScale = (supplItem.PutfontScale != "") ? supplItem.PutfontScale : fontItem.FontScale;
@@ -3353,10 +3349,12 @@ namespace Epsitec.Common.Widgets
 					fontCmd = true;
 				}
 			}
+			
+			return fontCmd;
 		}
 
-		protected void SimplifyPutSuppl(System.Text.StringBuilder buffer,
-										SupplSimplify supplCurrent, SupplSimplify supplItem)
+		private void SimplifyPutSuppl(System.Text.StringBuilder buffer,
+			/**/					  SupplSimplify supplCurrent, SupplSimplify supplItem)
 		{
 			if ( supplItem.IsBold != supplCurrent.IsBold )
 			{
@@ -3420,8 +3418,8 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 		}
-		
-		protected System.Collections.Stack CreateFontStack()
+
+		private System.Collections.Stack CreateFontStack()
 		{
 			System.Collections.Stack stack = new System.Collections.Stack();
 			FontItem font = new FontItem(this);
@@ -3433,9 +3431,9 @@ namespace Epsitec.Common.Widgets
 			stack.Push(font);  // push la fonte initiale (jamais de pop)
 			return stack;
 		}
-		
-		
-		protected double ParseScale(string scale)
+
+
+		private double ParseScale(string scale)
 		{
 			if ( scale.EndsWith("%") )
 			{
@@ -3446,8 +3444,8 @@ namespace Epsitec.Common.Widgets
 				return System.Double.Parse(scale, System.Globalization.CultureInfo.InvariantCulture) / this.DefaultFontSize;
 			}
 		}
-		
-		protected void ProcessFontTag(System.Collections.Stack stack, System.Collections.Hashtable parameters)
+
+		private void ProcessFontTag(System.Collections.Stack stack, System.Collections.Hashtable parameters)
 		{
 			if ( parameters != null )
 			{
@@ -3474,7 +3472,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		protected bool ProcessFormatTags(Tag tag, System.Collections.Stack fontStack, SupplItem supplItem, System.Collections.Hashtable parameters)
+		private bool ProcessFormatTags(Tag tag, System.Collections.Stack fontStack, SupplItem supplItem, System.Collections.Hashtable parameters)
 		{
 			switch ( tag )
 			{
@@ -3531,7 +3529,7 @@ namespace Epsitec.Common.Widgets
 			return true;
 		}
 
-		protected double ProcessNum(System.Collections.Hashtable parameters, string key, double def)
+		private double ProcessNum(System.Collections.Hashtable parameters, string key, double def)
 		{
 			if ( parameters == null )  return def;
 			if ( !parameters.ContainsKey(key) )  return def;
@@ -3540,7 +3538,7 @@ namespace Epsitec.Common.Widgets
 			return System.Double.Parse(s, System.Globalization.CultureInfo.InvariantCulture);
 		}
 
-		protected string ProcessString(System.Collections.Hashtable parameters, string key, string def)
+		private string ProcessString(System.Collections.Hashtable parameters, string key, string def)
 		{
 			if ( parameters == null )  return def;
 			if ( !parameters.ContainsKey(key) )  return def;
@@ -3548,7 +3546,7 @@ namespace Epsitec.Common.Widgets
 			return parameters[key] as string;
 		}
 
-		protected Drawing.TextListType ProcessListType(System.Collections.Hashtable parameters, string key, Drawing.TextListType def)
+		private Drawing.TextListType ProcessListType(System.Collections.Hashtable parameters, string key, Drawing.TextListType def)
 		{
 			if ( parameters == null )  return def;
 			if ( !parameters.ContainsKey(key) )  return def;
@@ -3562,7 +3560,7 @@ namespace Epsitec.Common.Widgets
 			return def;
 		}
 
-		protected Drawing.TextListGlyph ProcessListGlyph(System.Collections.Hashtable parameters, string key, Drawing.TextListGlyph def)
+		private Drawing.TextListGlyph ProcessListGlyph(System.Collections.Hashtable parameters, string key, Drawing.TextListGlyph def)
 		{
 			if ( parameters == null )  return def;
 			if ( !parameters.ContainsKey(key) )  return def;
@@ -3580,7 +3578,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		protected void FontToRun(Drawing.TextBreak.XRun run, Drawing.Font font, FontItem fontItem, SupplItem supplItem)
+		private void FontToRun(Drawing.TextBreak.XRun run, Drawing.Font font, FontItem fontItem, SupplItem supplItem)
 		{
 			run.Font       = font;
 			run.FontName   = fontItem.FontName;
@@ -3595,7 +3593,7 @@ namespace Epsitec.Common.Widgets
 			run.WaveColor  = supplItem.WaveColor;
 		}
 
-		protected void PutRun(System.Collections.ArrayList runList,
+		private void PutRun(System.Collections.ArrayList runList,
 							  System.Collections.Stack fontStack,
 							  SupplItem supplItem,
 							  int partIndex, ref int startIndex, int currentIndex,
@@ -3617,7 +3615,7 @@ namespace Epsitec.Common.Widgets
 			startIndex = currentIndex;
 		}
 
-		protected void PutTab(System.Collections.Stack fontStack,
+		private void PutTab(System.Collections.Stack fontStack,
 							  SupplItem supplItem,
 							  int startIndex,
 							  Tag tag, System.Collections.Hashtable parameters)
@@ -3645,7 +3643,7 @@ namespace Epsitec.Common.Widgets
 			this.tabs.Add(block);
 		}
 
-		protected void GenerateRuns()
+		private void GenerateRuns()
 		{
 			//	Génère les listes suivantes:
 			//	this.parts   parties entre 2 tabs contenant une liste de runs
@@ -3851,7 +3849,7 @@ namespace Epsitec.Common.Widgets
 			while ( tagEnding != Tag.None );
 		}
 
-		protected void GenerateBlocks()
+		private void GenerateBlocks()
 		{
 			//	Met à jour this.blocks en fonction du texte, de la fonte et des dimensions.
 			this.blocks.Clear();
@@ -4162,7 +4160,7 @@ noText:
 			}
 		}
 
-		protected double DecimalTabLength(string text, Drawing.TextBreak.XRun[] runs)
+		private double DecimalTabLength(string text, Drawing.TextBreak.XRun[] runs)
 		{
 			//	Retourne la distance jusqu'au point décimal.
 			if ( text.Length == 0 )  return 0.0;
@@ -4182,7 +4180,7 @@ noText:
 			return line.Width;
 		}
 
-		protected void GenerateJustification()
+		private void GenerateJustification()
 		{
 			//	Met à jour this.lines en fonction de this.blocks.
 			//	Détermine la position des blocs en fonction de l'alignement.
@@ -4593,62 +4591,67 @@ noText:
 			//	Génère la structure pour chaque caractère du texte, ce qui permet
 			//	de gérer les textes spéciaux non rectangulaires, tels que l'objet
 			//	ObjectTextLine de Pictogram.
-			if ( this.layoutSize.Width == 0 )
+			
+			if (this.layoutSize.Width == 0)
 			{
 				return new OneCharStructure[0];
 			}
 
-			this.UpdateLayout();
+			this.UpdateLayout ();
 
-			int len = this.MaxTextIndex;
-			if ( len == 0 )  len ++;
+			int len = System.Math.Max (this.MaxTextIndex, 1);
+
 			OneCharStructure[] array = new OneCharStructure[len];
 
-			if ( this.blocks.Count == 1 )
+			if (this.blocks.Count == 1)
 			{
 				JustifBlock block = this.blocks[0] as JustifBlock;
-				if ( block.Text.Length == 0 )  // texte vide ?
+
+				if (block.Text.Length == 0)  // texte vide ?
 				{
-					array[0] = new OneCharStructure();
+					array[0] = new OneCharStructure ();
 					array[0].Character  = TextLayout.CodeEndOfText;
 					array[0].Font       = block.Font;
 					array[0].FontSize   = block.FontSize;
-					array[0].FontColor  = block.GetFontColor;
+					array[0].FontColor  = block.GetFontColor ();
 					array[0].Bold       = block.Bold;
 					array[0].Italic     = block.Italic;
 					array[0].Underlined = block.Underlined;
+
 					return array;
 				}
 			}
 
 			int index = 0;
-			foreach ( JustifBlock block in this.blocks )
+
+			foreach (JustifBlock block in this.blocks)
 			{
-				for ( int i=0 ; i<block.Text.Length ; i++ )
+				for (int i=0; i<block.Text.Length; i++)
 				{
-					System.Diagnostics.Debug.Assert(index < len);
-					array[index] = new OneCharStructure();
+					System.Diagnostics.Debug.Assert (index < len);
+
+					array[index] = new OneCharStructure ();
 					array[index].Character  = block.Text[i];
 					array[index].Font       = block.Font;
 					array[index].FontSize   = block.FontSize;
-					array[index].FontColor  = block.GetFontColor;
+					array[index].FontColor  = block.GetFontColor ();
 					array[index].Bold       = block.Bold;
 					array[index].Italic     = block.Italic;
 					array[index].Underlined = block.Underlined;
-					index ++;
+
+					index++;
 				}
 			}
-			//?System.Diagnostics.Debug.Assert(index == len);
 
 			return array;
 		}
 
-		public class OneCharStructure
+		public struct OneCharStructure
 		{
 			public char						Character;
 			public Drawing.Font				Font;
 			public double					FontSize;
-			public Drawing.RichColor		FontColor = Drawing.RichColor.Empty;
+			public Drawing.RichColor		FontColor;
 			public bool						Bold;
 			public bool						Italic;
 			public bool						Underlined;
@@ -4681,21 +4684,61 @@ noText:
 		
 		
 		//	Fonte servant à refléter simplifier les commandes HTML rencontrées.
-		//	Un stack de FontSimplify est créé.
-		protected class FontSimplify
+		//	Un stack de FontDefinition est créé.
+		private struct FontDefinition
 		{
-			public FontSimplify Copy()
+			internal FontDefinition(string name, string scale, string color)
 			{
-				return this.MemberwiseClone() as FontSimplify;
+				this.name = name;
+				this.scale = scale;
+				this.color = color;
 			}
 
+			internal string FontName
+			{
+				get
+				{
+					return this.name;
+				}
+			}
 			
-			public string		FontName;
-			public string		FontScale;
-			public string		FontColor;
+			internal string FontScale
+			{
+				get
+				{
+					return this.scale;
+				}
+			}
+			
+			internal string FontColor
+			{
+				get
+				{
+					return this.color;
+				}
+			}
+
+			internal void DefineFontName(string value)
+			{
+				this.name = value;
+			}
+
+			internal void DefineFontScale(string value)
+			{
+				this.scale = value;
+			}
+
+			internal void DefineFontColor(string value)
+			{
+				this.color = value;
+			}
+			
+			private string name;
+			private string scale;
+			private string color;
 		}
 
-		protected class SupplSimplify
+		private class SupplSimplify
 		{
 			public SupplSimplify Copy()
 			{
@@ -4752,7 +4795,7 @@ noText:
 
 		//	Fonte servant à refléter les commandes HTML rencontrées.
 		//	Un stack de FontItem est créé.
-		protected class FontItem
+		private class FontItem
 		{
 			public FontItem(TextLayout host)
 			{
@@ -4797,14 +4840,14 @@ noText:
 				}
 			}
 
-			protected TextLayout	host;
+			private TextLayout host;
 			
 			public string				FontName;
 			public double				FontScale;
 			public Drawing.RichColor	FontColor;
 		}
 
-		protected class SupplItem
+		private class SupplItem
 		{
 			public int				Bold       = 0;  // gras si > 0
 			public int				Italic     = 0;  // italique si > 0
@@ -4816,7 +4859,7 @@ noText:
 
 		//	Descripteur d'un bloc de texte. Tous les caractères du bloc ont
 		//	la même fonte, même taille et même couleur.
-		protected class JustifBlock
+		private class JustifBlock
 		{
 			public JustifBlock(TextLayout host)
 			{
@@ -4870,19 +4913,19 @@ noText:
 				}
 			}
 
-			public Drawing.RichColor GetFontColor
+			public Drawing.RichColor GetFontColor()
 			{
-				get
+				if ( this.FontColor.IsEmpty )
 				{
-					if ( this.FontColor.IsEmpty )
-					{
-						return host.DefaultRichColor;
-					}
+					return host.DefaultRichColor;
+				}
+				else
+				{
 					return this.FontColor;
 				}
 			}
-			
-			protected TextLayout			host;
+
+			private TextLayout host;
 
 			public bool						BoL;		// begin of line
 			public bool						LineBreak;	// ending with br
@@ -4918,7 +4961,7 @@ noText:
 
 		//	Descripteur d'une ligne de texte. Une ligne est composée
 		//	d'un ou plusieurs blocs.
-		protected class JustifLine
+		private class JustifLine
 		{
 			public int						FirstBlock;	// index du premier bloc
 			public int						LastBlock;	// index du dernier bloc
@@ -4932,7 +4975,7 @@ noText:
 		}
 
 		//	Descripteur d'une partie comprise entre 2 tabulateurs.
-		protected class TabPart
+		private class TabPart
 		{
 			public bool						ListEnding;
 			public int						Index;
@@ -5006,9 +5049,9 @@ noText:
 				}
 			}
 
-			protected TextLayout			textLayout;
-			protected int					cursorFrom     = 0;
-			protected int					cursorTo       = 0;
+			private TextLayout textLayout;
+			private int cursorFrom     = 0;
+			private int cursorTo       = 0;
 			public bool						CursorAfter    = false;
 			public int						CursorLine     = 0;
 			public double					CursorPosX     = 0;
@@ -5026,9 +5069,9 @@ noText:
 		}
 		
 		public event AnchorEventHandler			Anchor;
-		
-		
-		protected void CloneStyleIfDefaultStyleInUse()
+
+
+		private void CloneStyleIfDefaultStyleInUse()
 		{
 			if ( this.style.IsDefaultStyle )
 			{
@@ -5043,12 +5086,12 @@ noText:
 		}
 
 
-		protected static bool IsDefaultFontName(string name)
+		private static bool IsDefaultFontName(string name)
 		{
 			return name.StartsWith(TextLayout.CodeDefault.ToString());
 		}
-		
-		protected static string FontName(string name)
+
+		private static string FontName(string name)
 		{
 			if ( TextLayout.IsDefaultFontName(name) )
 			{
@@ -5058,31 +5101,31 @@ noText:
 		}
 
 
-		protected Widget						embedder;
-		protected Support.ResourceManager		resourceManager;
-		protected Drawing.TextStyle				style;
-		
-		protected bool							isContentsDirty;
-		protected bool							isSimpleDirty;
-		protected bool							isLayoutDirty;
-		protected bool							isPrepareDirty;
-		protected string						text;
-		protected string						simpleText;
-		protected string						simplifiedText;
-		protected int							textChangeNotificationSuspendCounter;
-		protected Drawing.Size					layoutSize;
-		protected double						drawingScale;
-		protected double						verticalMark;
-		protected int							totalLine;
-		protected int							visibleLine;
-		protected System.Collections.ArrayList  parts  = new System.Collections.ArrayList();
-		protected System.Collections.ArrayList  tabs   = new System.Collections.ArrayList();
-		protected System.Collections.ArrayList	blocks = new System.Collections.ArrayList();
-		protected System.Collections.ArrayList	lines  = new System.Collections.ArrayList();
+		private Widget							embedder;
+		private Support.ResourceManager			resourceManager;
+		private Drawing.TextStyle				style;
+
+		private bool							isContentsDirty;
+		private bool							isSimpleDirty;
+		private bool							isLayoutDirty;
+		private bool							isPrepareDirty;
+		private string							text;
+		private string							simpleText;
+		private string							simplifiedText;
+		private int								textChangeNotificationSuspendCounter;
+		private Drawing.Size					layoutSize;
+		private double							drawingScale;
+		private double							verticalMark;
+		private int								totalLine;
+		private int								visibleLine;
+		private System.Collections.ArrayList	parts  = new System.Collections.ArrayList ();
+		private System.Collections.ArrayList	tabs   = new System.Collections.ArrayList ();
+		private System.Collections.ArrayList	blocks = new System.Collections.ArrayList ();
+		private System.Collections.ArrayList	lines  = new System.Collections.ArrayList ();
 		
 		public const double						Infinite		= 1000000;
-		
-		protected const char					CodeDefault		= '*';
+
+		private const char						CodeDefault		= '*';
 		public const char						CodeNull		= '\u0000';
 		public const char						CodeSpace		= '\u0020';
 		public const char						CodeObject		= '\ufffc';

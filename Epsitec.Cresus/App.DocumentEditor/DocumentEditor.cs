@@ -3025,7 +3025,7 @@ namespace Epsitec.App.DocumentEditor
 		{
 			//	Exécute une commande locale à un objet.
 			Widget widget = e.Source as Widget;
-			this.CurrentDocument.Modifier.ActiveViewer.CommandObject(widget.Name);
+			this.CurrentDocument.Modifier.ActiveViewer.ExecuteObjectCommand(widget.Name);
 		}
 
 		[Command ("ArrayOutlineFrame")]
