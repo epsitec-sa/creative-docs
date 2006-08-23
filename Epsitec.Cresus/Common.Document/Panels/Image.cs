@@ -418,74 +418,44 @@ namespace Epsitec.Common.Document.Panels
 			this.offset.OffsetValue = Point.Zero;
 			this.ignoreChanged = false;
 
-#if false
-			Properties.Image p = this.property as Properties.Image;
-			Margins crop = p.CropMargins;
-
-			if (move.X > 0 && crop.Right >= move.X)
-			{
-				crop.Right -= move.X;
-				crop.Left  += move.X;
-			}
-
-			if (move.X < 0 && crop.Left <= move.X)
-			{
-				crop.Left  -= move.X;
-				crop.Right += move.X;
-			}
-
-			if (move.Y > 0 && crop.Top >= move.Y)
-			{
-				crop.Top    -= move.Y;
-				crop.Bottom += move.Y;
-			}
-
-			if (move.Y < 0 && crop.Bottom <= move.Y)
-			{
-				crop.Bottom -= move.Y;
-				crop.Top    += move.Y;
-			}
-
-			p.CropMargins = crop;
-
-			this.OnChanged();
-#endif
-#if true
 			Margins crop = Margins.Zero;
 			crop.Left = (double) this.fieldCropLeft.TextFieldReal.InternalValue;
 			crop.Right = (double) this.fieldCropRight.TextFieldReal.InternalValue;
 			crop.Bottom = (double) this.fieldCropBottom.TextFieldReal.InternalValue;
 			crop.Top = (double) this.fieldCropTop.TextFieldReal.InternalValue;
 
-			if (move.X > 0 && crop.Right >= move.X)
+			if (move.X > 0)
 			{
-				crop.Right -= move.X;
-				crop.Left  += move.X;
+				double m = System.Math.Min(move.X, crop.Right);
+				crop.Right -= m;
+				crop.Left  += m;
 			}
 
-			if (move.X < 0 && crop.Left >= -move.X)
+			if (move.X < 0)
 			{
-				crop.Right -= move.X;
-				crop.Left  += move.X;
+				double m = System.Math.Min(-move.X, crop.Left);
+				crop.Left  -= m;
+				crop.Right += m;
 			}
 
-			if (move.Y > 0 && crop.Top >= move.Y)
+			if (move.Y > 0)
 			{
-				crop.Top    -= move.Y;
-				crop.Bottom += move.Y;
+				double m = System.Math.Min(move.Y, crop.Top);
+				crop.Top    -= m;
+				crop.Bottom += m;
 			}
 
-			if (move.Y < 0 && crop.Bottom >= -move.Y)
+			if (move.Y < 0)
 			{
-				crop.Top    -= move.Y;
-				crop.Bottom += move.Y;
+				double m = System.Math.Min(-move.Y, crop.Bottom);
+				crop.Bottom -= m;
+				crop.Top    += m;
 			}
 
 			this.fieldCropLeft.TextFieldReal.InternalValue = (decimal) crop.Left;
 			this.fieldCropRight.TextFieldReal.InternalValue = (decimal) crop.Right;
 			this.fieldCropBottom.TextFieldReal.InternalValue = (decimal) crop.Bottom;
 			this.fieldCropTop.TextFieldReal.InternalValue = (decimal) crop.Top;
-#endif
 		}
 		
 
