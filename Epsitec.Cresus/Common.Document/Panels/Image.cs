@@ -41,6 +41,46 @@ namespace Epsitec.Common.Document.Panels
 			this.buttonSave.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.buttonSave, Res.Strings.Panel.Image.Tooltip.Save);
 
+			this.fieldCropLeft = new Widgets.TextFieldLabel(this, Widgets.TextFieldLabel.Type.TextFieldReal);
+			this.fieldCropLeft.LabelShortText = Res.Strings.Panel.Image.Short.CropLeft;
+			this.fieldCropLeft.LabelLongText  = Res.Strings.Panel.Image.Long.CropLeft;
+			this.document.Modifier.AdaptTextFieldRealScalar(this.fieldCropLeft.TextFieldReal);
+			this.fieldCropLeft.TextFieldReal.EditionAccepted += new EventHandler(this.HandleFieldChanged);
+			this.fieldCropLeft.TabIndex = tabIndex++;
+			this.fieldCropLeft.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			ToolTip.Default.SetToolTip(this.fieldCropLeft, Res.Strings.Panel.Image.Tooltip.CropLeft);
+
+			this.fieldCropRight = new Widgets.TextFieldLabel(this, Widgets.TextFieldLabel.Type.TextFieldReal);
+			this.fieldCropRight.LabelShortText = Res.Strings.Panel.Image.Short.CropRight;
+			this.fieldCropRight.LabelLongText  = Res.Strings.Panel.Image.Long.CropRight;
+			this.document.Modifier.AdaptTextFieldRealScalar(this.fieldCropRight.TextFieldReal);
+			this.fieldCropRight.TextFieldReal.EditionAccepted += new EventHandler(this.HandleFieldChanged);
+			this.fieldCropRight.TabIndex = tabIndex++;
+			this.fieldCropRight.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			ToolTip.Default.SetToolTip(this.fieldCropRight, Res.Strings.Panel.Image.Tooltip.CropRight);
+
+			this.fieldCropBottom = new Widgets.TextFieldLabel(this, Widgets.TextFieldLabel.Type.TextFieldReal);
+			this.fieldCropBottom.LabelShortText = Res.Strings.Panel.Image.Short.CropBottom;
+			this.fieldCropBottom.LabelLongText  = Res.Strings.Panel.Image.Long.CropBottom;
+			this.document.Modifier.AdaptTextFieldRealScalar(this.fieldCropBottom.TextFieldReal);
+			this.fieldCropBottom.TextFieldReal.EditionAccepted += new EventHandler(this.HandleFieldChanged);
+			this.fieldCropBottom.TabIndex = tabIndex++;
+			this.fieldCropBottom.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			ToolTip.Default.SetToolTip(this.fieldCropBottom, Res.Strings.Panel.Image.Tooltip.CropBottom);
+
+			this.fieldCropTop = new Widgets.TextFieldLabel(this, Widgets.TextFieldLabel.Type.TextFieldReal);
+			this.fieldCropTop.LabelShortText = Res.Strings.Panel.Image.Short.CropTop;
+			this.fieldCropTop.LabelLongText  = Res.Strings.Panel.Image.Long.CropTop;
+			this.document.Modifier.AdaptTextFieldRealScalar(this.fieldCropTop.TextFieldReal);
+			this.fieldCropTop.TextFieldReal.EditionAccepted += new EventHandler(this.HandleFieldChanged);
+			this.fieldCropTop.TabIndex = tabIndex++;
+			this.fieldCropTop.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			ToolTip.Default.SetToolTip(this.fieldCropTop, Res.Strings.Panel.Image.Tooltip.CropTop);
+
+			this.offset = new Offset(this);
+			this.offset.OffsetValue = Point.Zero;
+			this.offset.OffsetValueChanged += new EventHandler(this.HandleOffsetValueChanged);
+
 			this.buttonMirrorH = new CheckButton(this);
 			this.buttonMirrorH.Text = Res.Strings.Panel.Image.Button.MirrorX;
 			this.buttonMirrorH.ActiveStateChanged += new EventHandler(this.HandleButtonActiveStateChanged);
@@ -73,7 +113,7 @@ namespace Epsitec.Common.Document.Panels
 
 			this.isNormalAndExtended = true;
 		}
-		
+
 		protected override void Dispose(bool disposing)
 		{
 			if ( disposing )
@@ -82,6 +122,11 @@ namespace Epsitec.Common.Document.Panels
 				this.buttonOpen.Clicked -= new MessageEventHandler(this.HandleOpenClicked);
 				this.buttonUpdate.Clicked -= new MessageEventHandler(this.HandleUpdateClicked);
 				this.buttonSave.Clicked -= new MessageEventHandler(this.HandleSaveClicked);
+				this.fieldCropLeft.TextFieldReal.EditionAccepted -= new EventHandler(this.HandleFieldChanged);
+				this.fieldCropRight.TextFieldReal.EditionAccepted -= new EventHandler(this.HandleFieldChanged);
+				this.fieldCropBottom.TextFieldReal.EditionAccepted -= new EventHandler(this.HandleFieldChanged);
+				this.fieldCropTop.TextFieldReal.EditionAccepted -= new EventHandler(this.HandleFieldChanged);
+				this.offset.OffsetValueChanged -= new EventHandler(this.HandleOffsetValueChanged);
 				this.buttonMirrorH.ActiveStateChanged -= new EventHandler(this.HandleButtonActiveStateChanged);
 				this.buttonMirrorV.ActiveStateChanged -= new EventHandler(this.HandleButtonActiveStateChanged);
 				this.buttonHomo.ActiveStateChanged -= new EventHandler(this.HandleButtonActiveStateChanged);
@@ -92,6 +137,11 @@ namespace Epsitec.Common.Document.Panels
 				this.buttonOpen = null;
 				this.buttonUpdate = null;
 				this.buttonSave = null;
+				this.fieldCropLeft = null;
+				this.fieldCropRight = null;
+				this.fieldCropBottom = null;
+				this.fieldCropTop = null;
+				this.offset = null;
 				this.buttonMirrorH = null;
 				this.buttonMirrorV = null;
 				this.buttonHomo = null;
@@ -108,7 +158,7 @@ namespace Epsitec.Common.Document.Panels
 			//	Retourne la hauteur standard.
 			get
 			{
-				return ( this.isExtendedSize ? this.LabelHeight+165 : this.LabelHeight+55 );
+				return ( this.isExtendedSize ? this.LabelHeight+215 : this.LabelHeight+55 );
 			}
 		}
 
@@ -130,6 +180,12 @@ namespace Epsitec.Common.Document.Panels
 			this.buttonFilter .ActiveState = p.Filter    ? ActiveState.Yes : ActiveState.No;
 			this.buttonInside .ActiveState = p.InsideDoc ? ActiveState.Yes : ActiveState.No;
 
+			Margins crop = p.CropMargins;
+			this.fieldCropLeft.TextFieldReal.InternalValue = (decimal) crop.Left;
+			this.fieldCropRight.TextFieldReal.InternalValue = (decimal) crop.Right;
+			this.fieldCropBottom.TextFieldReal.InternalValue = (decimal) crop.Bottom;
+			this.fieldCropTop.TextFieldReal.InternalValue = (decimal) crop.Top;
+
 			this.ignoreChanged = false;
 		}
 
@@ -145,6 +201,13 @@ namespace Epsitec.Common.Document.Panels
 			p.Homo      = ( this.buttonHomo   .ActiveState == ActiveState.Yes );
 			p.Filter    = ( this.buttonFilter .ActiveState == ActiveState.Yes );
 			p.InsideDoc = ( this.buttonInside .ActiveState == ActiveState.Yes );
+
+			Margins crop = Margins.Zero;
+			crop.Left = (double) this.fieldCropLeft.TextFieldReal.InternalValue;
+			crop.Right = (double) this.fieldCropRight.TextFieldReal.InternalValue;
+			crop.Bottom = (double) this.fieldCropBottom.TextFieldReal.InternalValue;
+			crop.Top = (double) this.fieldCropTop.TextFieldReal.InternalValue;
+			p.CropMargins = crop;
 		}
 
 
@@ -176,6 +239,26 @@ namespace Epsitec.Common.Document.Panels
 
 			r.Offset(0, -25);
 			r.Left = rect.Left;
+			r.Right = rect.Left+62;
+			this.fieldCropLeft.SetManualBounds(r);
+			r.Offset(62+5, 0);
+			this.fieldCropRight.SetManualBounds(r);
+
+			r.Offset(0, -25);
+			r.Left = rect.Left;
+			r.Right = rect.Left+62;
+			this.fieldCropBottom.SetManualBounds(r);
+			r.Offset(62+5, 0);
+			this.fieldCropTop.SetManualBounds(r);
+
+			Rectangle rr = r;
+			rr.Top = rr.Bottom+45;
+			rr.Left = rect.Right-45;
+			rr.Right = rect.Right;
+			this.offset.SetManualBounds(rr);
+
+			r.Offset(0, -25);
+			r.Left = rect.Left;
 			r.Width = 70;
 			this.buttonMirrorH.SetManualBounds(r);
 			r.Offset(80, 0);
@@ -197,6 +280,11 @@ namespace Epsitec.Common.Document.Panels
 			this.buttonInside.SetManualBounds(r);
 
 			this.buttonSave.Visibility = (this.isExtendedSize);
+			this.fieldCropLeft.Visibility = (this.isExtendedSize);
+			this.fieldCropRight.Visibility = (this.isExtendedSize);
+			this.fieldCropBottom.Visibility = (this.isExtendedSize);
+			this.fieldCropTop.Visibility = (this.isExtendedSize);
+			this.offset.Visibility = (this.isExtendedSize);
 			this.buttonMirrorH.Visibility = (this.isExtendedSize);
 			this.buttonMirrorV.Visibility = (this.isExtendedSize);
 			this.buttonHomo.Visibility = (this.isExtendedSize);
@@ -306,11 +394,111 @@ namespace Epsitec.Common.Document.Panels
 			item.Write(dialog.FileName);  // écrit le fichier sur disque
 		}
 
+		private void HandleFieldChanged(object sender)
+		{
+			//	Un champ a été changé.
+			if (this.ignoreChanged)
+			{
+				return;
+			}
+
+			this.OnChanged();
+		}
+
+		void HandleOffsetValueChanged(object sender)
+		{
+			if (this.ignoreChanged)
+			{
+				return;
+			}
+
+			Point move = this.offset.OffsetValue;
+
+			this.ignoreChanged = true;
+			this.offset.OffsetValue = Point.Zero;
+			this.ignoreChanged = false;
+
+#if false
+			Properties.Image p = this.property as Properties.Image;
+			Margins crop = p.CropMargins;
+
+			if (move.X > 0 && crop.Right >= move.X)
+			{
+				crop.Right -= move.X;
+				crop.Left  += move.X;
+			}
+
+			if (move.X < 0 && crop.Left <= move.X)
+			{
+				crop.Left  -= move.X;
+				crop.Right += move.X;
+			}
+
+			if (move.Y > 0 && crop.Top >= move.Y)
+			{
+				crop.Top    -= move.Y;
+				crop.Bottom += move.Y;
+			}
+
+			if (move.Y < 0 && crop.Bottom <= move.Y)
+			{
+				crop.Bottom -= move.Y;
+				crop.Top    += move.Y;
+			}
+
+			p.CropMargins = crop;
+
+			this.OnChanged();
+#endif
+#if true
+			Margins crop = Margins.Zero;
+			crop.Left = (double) this.fieldCropLeft.TextFieldReal.InternalValue;
+			crop.Right = (double) this.fieldCropRight.TextFieldReal.InternalValue;
+			crop.Bottom = (double) this.fieldCropBottom.TextFieldReal.InternalValue;
+			crop.Top = (double) this.fieldCropTop.TextFieldReal.InternalValue;
+
+			if (move.X > 0 && crop.Right >= move.X)
+			{
+				crop.Right -= move.X;
+				crop.Left  += move.X;
+			}
+
+			if (move.X < 0 && crop.Left >= -move.X)
+			{
+				crop.Right -= move.X;
+				crop.Left  += move.X;
+			}
+
+			if (move.Y > 0 && crop.Top >= move.Y)
+			{
+				crop.Top    -= move.Y;
+				crop.Bottom += move.Y;
+			}
+
+			if (move.Y < 0 && crop.Bottom >= -move.Y)
+			{
+				crop.Top    -= move.Y;
+				crop.Bottom += move.Y;
+			}
+
+			this.fieldCropLeft.TextFieldReal.InternalValue = (decimal) crop.Left;
+			this.fieldCropRight.TextFieldReal.InternalValue = (decimal) crop.Right;
+			this.fieldCropBottom.TextFieldReal.InternalValue = (decimal) crop.Bottom;
+			this.fieldCropTop.TextFieldReal.InternalValue = (decimal) crop.Top;
+#endif
+		}
+		
+
 
 		protected TextField					fieldFilename;
 		protected Button					buttonOpen;
 		protected Button					buttonUpdate;
 		protected Button					buttonSave;
+		protected Widgets.TextFieldLabel	fieldCropLeft;
+		protected Widgets.TextFieldLabel	fieldCropRight;
+		protected Widgets.TextFieldLabel	fieldCropBottom;
+		protected Widgets.TextFieldLabel	fieldCropTop;
+		protected Offset					offset;
 		protected CheckButton				buttonMirrorH;
 		protected CheckButton				buttonMirrorV;
 		protected CheckButton				buttonHomo;
@@ -318,3 +506,4 @@ namespace Epsitec.Common.Document.Panels
 		protected CheckButton				buttonInside;
 	}
 }
+
