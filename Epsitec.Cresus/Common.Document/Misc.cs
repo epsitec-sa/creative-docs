@@ -93,6 +93,50 @@ namespace Epsitec.Common.Document
 		}
 
 
+		static public Path GetHatchPath(Rectangle rect, double distance, Point reference)
+		{
+			//	Retourne des hachures à 45 degrés remplissant sans déborder un rectangle.
+			//	Une hachure passe toujours par le point de référence.
+			Path path = new Path();
+
+			//	Déplace le point de référence sur le bord gauche du rectangle.
+			reference.Y += rect.Left - reference.X;
+			reference.X = rect.Left;
+			double d = reference.Y - rect.Bottom;
+
+			double v = System.Math.Ceiling(rect.Width/distance) * distance;
+			v -= d % distance;
+
+			for (double y=rect.Bottom-v; y<rect.Top; y+=distance)
+			{
+				double x1 = rect.Left;
+				double y1 = y;
+				double x2 = rect.Right;
+				double y2 = y+rect.Width;
+
+				if (y1 < rect.Bottom)
+				{
+					x1 += rect.Bottom-y1;
+					y1 = rect.Bottom;
+				}
+
+				if (y2 > rect.Top)
+				{
+					x2 -= y2-rect.Top;
+					y2 = rect.Top;
+				}
+
+				if (x1 < x2)
+				{
+					path.MoveTo(x1, y1);
+					path.LineTo(x2, y2);
+				}
+			}
+
+			return path;
+		}
+
+		
 		static public string GetColorNiceName(RichColor color)
 		{
 			//	Donne le nom d'une couleur d'après ses composantes.
