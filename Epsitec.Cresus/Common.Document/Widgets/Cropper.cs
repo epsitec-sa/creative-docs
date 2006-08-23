@@ -14,9 +14,8 @@ namespace Epsitec.Common.Document.Widgets
 			None,
 			Left,
 			Right,
-			Down,
-			Up,
-			Center,
+			Bottom,
+			Top,
 		}
 
 
@@ -154,8 +153,24 @@ namespace Epsitec.Common.Document.Widgets
 			this.ignoreChanged = false;
 		}
 
+
+		protected Size ImageSize
+		{
+			//	Retourne la taille de l'image. Si elle est inconnue, retourne une taille par défaut.
+			get
+			{
+				if (this.size.IsEmpty)  // taille inconnue ?
+				{
+					return new Size(1000, 1000);
+				}
+
+				return this.size;
+			}
+		}
+
 		protected Rectangle UsedRectangle
 		{
+			//	Retourne la zone pour la partie interactive.
 			get
 			{
 				Rectangle rect = this.Client.Bounds;
@@ -170,60 +185,26 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
-		protected Rectangle PartRectangle(Part part)
-		{
-			Rectangle rect = this.UsedRectangle;
-			double w = rect.Width/3;
-			double h = rect.Height/3;
-
-			switch (part)
-			{
-				case Part.Left:
-					return new Rectangle(rect.Left, rect.Center.Y-h/2, h, w);
-
-				case Part.Right:
-					return new Rectangle(rect.Right-w, rect.Center.Y-h/2, h, w);
-
-				case Part.Down:
-					return new Rectangle(rect.Center.X-w/2, rect.Bottom, h, w);
-
-				case Part.Up:
-					return new Rectangle(rect.Center.X-w/2, rect.Top-h, h, w);
-
-				case Part.Center:
-					return new Rectangle(rect.Center.X-w/2, rect.Center.Y-h/2, h, w);
-			}
-
-			return Rectangle.Empty;
-		}
-
-		protected Part PartDetect(Point pos)
-		{
-			Part[] parts = { Part.Center, Part.Left, Part.Right, Part.Down, Part.Up };
-			foreach (Part part in parts)  // TODO: faire mieux, sans parts !
-			{
-				if (this.PartRectangle(part).Contains(pos))
-				{
-					return part;
-				}
-			}
-
-			return Part.None;
-		}
-
-		protected Part HilitedPart
+		protected Rectangle CropRectangle
 		{
 			get
 			{
-				return this.hilitedPart;
-			}
-			set
-			{
-				if (this.hilitedPart != value)
+				Rectangle rect = this.UsedRectangle;
+				Size size = this.ImageSize;
+				Margins crop = Margins.Zero;
+
+				crop.Left = this.crop.Left*rect.Width/size.Width;
+				crop.Right = this.crop.Right*rect.Width/size.Width;
+				crop.Bottom = this.crop.Bottom*rect.Height/size.Height;
+				crop.Top = this.crop.Top*rect.Height/size.Height;
+				rect.Deflate(crop);
+
+				if (rect.IsSurfaceZero)
 				{
-					this.hilitedPart = value;
-					this.Invalidate();
+					return Rectangle.Empty;
 				}
+
+				return rect;
 			}
 		}
 
@@ -233,11 +214,6 @@ namespace Epsitec.Common.Document.Widgets
 			switch (message.Type)
 			{
 				case MessageType.MouseDown:
-					if (this.HilitedPart != Part.None)
-					{
-						this.mouseDown = true;
-						this.initialPos = pos;
-					}
 					message.Captured = true;
 					message.Consumer = this;
 					break;
@@ -245,14 +221,9 @@ namespace Epsitec.Common.Document.Widgets
 				case MessageType.MouseMove:
 					if (this.mouseDown)
 					{
-						if (this.HilitedPart == Part.Center)
-						{
-							this.Invalidate();
-						}
 					}
 					else
 					{
-						this.HilitedPart = this.PartDetect(pos);
 					}
 					message.Consumer = this;
 					break;
@@ -260,13 +231,11 @@ namespace Epsitec.Common.Document.Widgets
 				case MessageType.MouseUp:
 					this.mouseDown = false;
 					message.Consumer = this;
-					this.OnCropChanged();
 					break;
 
 				case MessageType.MouseLeave:
 					if (!this.mouseDown)
 					{
-						this.HilitedPart = Part.None;
 					}
 					break;
 			}
@@ -312,11 +281,46 @@ namespace Epsitec.Common.Document.Widgets
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
 			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
-			Rectangle rect;
 
-			rect = this.UsedRectangle;
-			graphics.AddRectangle(rect);
-			graphics.RenderSolid(adorner.ColorBorder);
+			Rectangle bounds = this.UsedRectangle;
+			graphics.Align(ref bounds);
+			bounds.Deflate(0.5);
+
+			Rectangle inside = this.CropRectangle;
+			if (inside.IsEmpty)
+			{
+				graphics.Rasterizer.AddOutline(Misc.GetHatchPath(bounds, 4, bounds.BottomLeft));
+				graphics.AddRectangle(bounds);
+				graphics.RenderSolid(adorner.ColorBorder);
+			}
+			else
+			{
+				graphics.Align(ref inside);
+				inside.Deflate(0.5);
+
+				if (bounds == inside)
+				{
+					graphics.AddRectangle(bounds);
+					graphics.RenderSolid(adorner.ColorBorder);
+				}
+				else
+				{
+					Rectangle left   = new Rectangle(bounds.Left, bounds.Bottom, inside.Left-bounds.Left, bounds.Height);
+					Rectangle right  = new Rectangle(inside.Right, bounds.Bottom, bounds.Right-inside.Right, bounds.Height);
+					Rectangle bottom = new Rectangle(inside.Left, bounds.Bottom, inside.Width, inside.Bottom-bounds.Bottom);
+					Rectangle top    = new Rectangle(inside.Left, inside.Top, inside.Width, bounds.Top-inside.Top);
+
+					graphics.Rasterizer.AddOutline(Misc.GetHatchPath(left, 4, bounds.BottomLeft));
+					graphics.Rasterizer.AddOutline(Misc.GetHatchPath(right, 4, bounds.BottomLeft));
+					graphics.Rasterizer.AddOutline(Misc.GetHatchPath(bottom, 4, bounds.BottomLeft));
+					graphics.Rasterizer.AddOutline(Misc.GetHatchPath(top, 4, bounds.BottomLeft));
+
+					graphics.AddRectangle(bounds);
+					graphics.AddRectangle(inside);
+
+					graphics.RenderSolid(adorner.ColorBorder);
+				}
+			}
 		}
 
 
@@ -390,8 +394,6 @@ namespace Epsitec.Common.Document.Widgets
 		protected Widgets.TextFieldLabel	fieldCropTop;
 
 		protected bool						ignoreChanged = false;
-		protected Part						hilitedPart = Part.None;
 		protected bool						mouseDown = false;
-		protected Point						initialPos;
 	}
 }
