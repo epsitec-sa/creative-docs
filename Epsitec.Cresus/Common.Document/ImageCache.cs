@@ -248,6 +248,19 @@ namespace Epsitec.Common.Document
 				return true;
 			}
 
+			public void Write(string otherFilename)
+			{
+				//	Exporte l'image dans un fichier quelconque.
+				if (System.IO.File.Exists(otherFilename))
+				{
+					System.IO.File.Delete(otherFilename);
+				}
+
+				System.IO.FileStream stream = new System.IO.FileStream(otherFilename, System.IO.FileMode.CreateNew);
+				stream.Write(this.Data, 0, this.Data.Length);
+				stream.Close();
+			}
+
 			public string Filename
 			{
 				//	Retourne le nom de fichier avec le chemin complet.

@@ -241,6 +241,7 @@ namespace Epsitec.Common.Document.Panels
 
 		private void HandleOpenClicked(object sender, MessageEventArgs e)
 		{
+			//	Le bouton 'Importer' pour choisir l'image a été cliqué.
 			FileOpen dialog = new FileOpen();
 			dialog.Title = Res.Strings.Panel.Image.Dialog.Open.Title;
 			dialog.FileName = this.fieldFilename.Text;
@@ -277,6 +278,7 @@ namespace Epsitec.Common.Document.Panels
 
 		private void HandleSaveClicked(object sender, MessageEventArgs e)
 		{
+			//	Le bouton 'Exporter' pour choisir l'image a été cliqué.
 			Properties.Image p = this.property as Properties.Image;
 			ImageCache.Item item = this.document.ImageCache.Get(p.Filename);
 			if (item == null)
@@ -287,7 +289,7 @@ namespace Epsitec.Common.Document.Panels
 			string ext = System.IO.Path.GetExtension(this.fieldFilename.Text);
 			if (ext.StartsWith("."))
 			{
-				ext = ext.Substring(1);
+				ext = ext.Substring(1);  // enlève le point
 			}
 
 			FileSave dialog = new FileSave();
@@ -301,14 +303,7 @@ namespace Epsitec.Common.Document.Panels
 				return;
 			}
 
-			if (System.IO.File.Exists(dialog.FileName))
-			{
-				System.IO.File.Delete(dialog.FileName);
-			}
-
-			System.IO.FileStream stream = new System.IO.FileStream(dialog.FileName, System.IO.FileMode.CreateNew);
-			stream.Write(item.Data, 0, item.Data.Length);
-			stream.Close();
+			item.Write(dialog.FileName);  // écrit le fichier sur disque
 		}
 
 
