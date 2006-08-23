@@ -862,7 +862,6 @@ namespace Epsitec.Common.Drawing
 		static Dictionary<string, Font>			font_hash;
 		static Dictionary<string, FontFaceInfo>	face_hash;
 		static Font								default_font;
-		static bool								initialised = false;
 		
 		enum NameId
 		{

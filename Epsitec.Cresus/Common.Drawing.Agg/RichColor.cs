@@ -1,4 +1,4 @@
-﻿//	Copyright © 2004-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+﻿//	Copyright © 2004-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Drawing
@@ -15,7 +15,8 @@ namespace Epsitec.Common.Drawing
 	[System.ComponentModel.TypeConverter (typeof (RichColor.Converter))]
 	
 	/// <summary>
-	/// Cette classe représente une couleur RGB ou CMYK.
+	/// The <c>RichColor</c> structure represents an RGB or CMYK color, or
+	/// a grayscale value.
 	/// </summary>
 	public struct RichColor : System.Runtime.Serialization.ISerializable
 	{
@@ -30,7 +31,7 @@ namespace Epsitec.Common.Drawing
 				this.value2 = 0.0;
 				this.value3 = 0.0;
 				this.value4 = 0.0;
-				this.isEmpty = true;
+				this.isValid = false;
 				this.name = null;
 			}
 			else
@@ -41,7 +42,7 @@ namespace Epsitec.Common.Drawing
 				this.value2 = color.G;
 				this.value3 = color.B;
 				this.value4 = 0.0;
-				this.isEmpty = false;
+				this.isValid = true;
 				this.name = null;
 			}
 		}
@@ -55,7 +56,7 @@ namespace Epsitec.Common.Drawing
 			this.value2 = g;
 			this.value3 = b;
 			this.value4 = 0.0;
-			this.isEmpty = false;
+			this.isValid = true;
 			this.name = null;
 		}
 
@@ -68,7 +69,7 @@ namespace Epsitec.Common.Drawing
 			this.value2 = g;
 			this.value3 = b;
 			this.value4 = 0.0;
-			this.isEmpty = false;
+			this.isValid = true;
 			this.name = null;
 		}
 
@@ -81,7 +82,7 @@ namespace Epsitec.Common.Drawing
 			this.value2 = brightness;
 			this.value3 = brightness;
 			this.value4 = 0.0;
-			this.isEmpty = false;
+			this.isValid = true;
 			this.name = null;
 		}
 
@@ -94,7 +95,7 @@ namespace Epsitec.Common.Drawing
 			this.value2 = m;
 			this.value3 = y;
 			this.value4 = k;
-			this.isEmpty = false;
+			this.isValid = true;
 			this.name = null;
 		}
 
@@ -103,7 +104,7 @@ namespace Epsitec.Common.Drawing
 		{
 			get
 			{
-				return this.isEmpty;
+				return !this.isValid;
 			}
 		}
 		
@@ -111,7 +112,7 @@ namespace Epsitec.Common.Drawing
 		{
 			get
 			{
-				return !this.isEmpty;
+				return this.isValid;
 			}
 		}
 		
@@ -119,7 +120,7 @@ namespace Epsitec.Common.Drawing
 		{
 			get
 			{
-				return !this.isEmpty && this.alpha == 0.0;
+				return this.isValid && this.alpha == 0.0;
 			}
 		}
 		
@@ -127,7 +128,7 @@ namespace Epsitec.Common.Drawing
 		{
 			get
 			{
-				return !this.isEmpty && this.alpha == 1.0;
+				return this.isValid && this.alpha == 1.0;
 			}
 		}
 		
@@ -135,7 +136,7 @@ namespace Epsitec.Common.Drawing
 		{
 			get
 			{
-				return !this.isEmpty && this.alpha != 0.0;
+				return this.isValid && this.alpha != 0.0;
 			}
 		}
 		
@@ -616,15 +617,7 @@ namespace Epsitec.Common.Drawing
 		}
 
 		
-		public static RichColor					Empty
-		{
-			get
-			{
-				RichColor c = new RichColor();
-				c.isEmpty = true;
-				return c;
-			}
-		}
+		public static readonly RichColor		Empty = new RichColor ();
 		
 		
 		public void ChangeBrightness(double adjust)
@@ -827,7 +820,7 @@ namespace Epsitec.Common.Drawing
 			color.value2 = m;
 			color.value3 = y;
 			color.value4 = k;
-			color.isEmpty = false;
+			color.isValid = true;
 
 			return color;
 		}
@@ -842,7 +835,7 @@ namespace Epsitec.Common.Drawing
 			color.value2 = 0.0;
 			color.value3 = 0.0;
 			color.value4 = 0.0;
-			color.isEmpty = false;
+			color.isValid = true;
 
 			return color;
 		}
@@ -857,7 +850,7 @@ namespace Epsitec.Common.Drawing
 			color.value2 = 0.0;
 			color.value3 = 0.0;
 			color.value4 = 0.0;
-			color.isEmpty = false;
+			color.isValid = true;
 
 			return color;
 		}
@@ -1073,10 +1066,19 @@ namespace Epsitec.Common.Drawing
 		
 		public static bool operator == (RichColor a, RichColor b)
 		{
-			if (a.isEmpty && b.isEmpty)  return true;
-			if (a.isEmpty || b.isEmpty)  return false;
-			
-			if (a.colorSpace != b.colorSpace)  return false;
+			if (!a.isValid && !b.isValid)
+			{
+				return true;
+			}
+			if (!a.isValid || !b.isValid)
+			{
+				return false;
+			}
+
+			if (a.colorSpace != b.colorSpace)
+			{
+				return false;
+			}
 
 			switch (a.colorSpace)
 			{
@@ -1153,62 +1155,14 @@ namespace Epsitec.Common.Drawing
 		#region ISerializable Members
 		public RichColor(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
 		{
-#if false
-			try
-			{
-				object o1 = info.GetValue ("ColorSpace", typeof (object));
-			
-				this.colorSpace = (ColorSpace) info.GetValue ("ColorSpace", typeof (ColorSpace));
-			
-				this.alpha  = info.GetDouble ("Alpha");
-				this.value1 = info.GetDouble ("V1");
-				this.value2 = info.GetDouble ("V2");
-				this.value3 = info.GetDouble ("V3");
-				this.value4 = info.GetDouble ("V4");
-				this.isEmpty = info.GetBoolean ("IsEmpty");
-				this.name = info.GetString ("Name");
-			}
-			catch (System.Runtime.Serialization.SerializationException)
-			{
-				object o1 = info.GetValue ("colorSpace", typeof (object));
-			
-				if (o1.GetType () == typeof (string))
-				{
-					this.colorSpace = (ColorSpace) System.Enum.Parse (typeof (ColorSpace), info.GetString ("colorSpace"), false);
-				
-					this.alpha  = System.Double.Parse (info.GetString ("alpha"), System.Globalization.CultureInfo.InvariantCulture);
-					this.value1 = System.Double.Parse (info.GetString ("value1"), System.Globalization.CultureInfo.InvariantCulture);
-					this.value2 = System.Double.Parse (info.GetString ("value2"), System.Globalization.CultureInfo.InvariantCulture);
-					this.value3 = System.Double.Parse (info.GetString ("value3"), System.Globalization.CultureInfo.InvariantCulture);
-					this.value4 = System.Double.Parse (info.GetString ("value4"), System.Globalization.CultureInfo.InvariantCulture);
-					this.isEmpty = info.GetString ("isEmpty") == "true";
-					this.name = null;
-				}
-				else
-				{
-					this.colorSpace = (ColorSpace) info.GetValue ("colorSpace", typeof (ColorSpace));
-				
-					this.alpha  = info.GetDouble ("alpha");
-					this.value1 = info.GetDouble ("value1");
-					this.value2 = info.GetDouble ("value2");
-					this.value3 = info.GetDouble ("value3");
-					this.value4 = info.GetDouble ("value4");
-					this.isEmpty = info.GetBoolean ("isEmpty");
-					this.name = null;
-				}
-				
-				System.Diagnostics.Debug.WriteLine (string.Format ("Deserialized old-style RichColor: {0} - {1}/{2}/{3}/{4}", this.colorSpace, this.value1, this.value2, this.value3, this.value4));
-			}
-#else
 			this.colorSpace = (ColorSpace) info.GetValue("ColorSpace", typeof(ColorSpace));
 			this.alpha  = info.GetDouble("Alpha");
 			this.value1 = info.GetDouble("V1");
 			this.value2 = info.GetDouble("V2");
 			this.value3 = info.GetDouble("V3");
 			this.value4 = info.GetDouble("V4");
-			this.isEmpty = info.GetBoolean("IsEmpty");
+			this.isValid = !info.GetBoolean ("IsEmpty");
 			this.name = info.GetString("Name");
-#endif
 		}
 		
 		void System.Runtime.Serialization.ISerializable.GetObjectData(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
@@ -1219,7 +1173,7 @@ namespace Epsitec.Common.Drawing
 			info.AddValue("V2", this.value2);
 			info.AddValue("V3", this.value3);
 			info.AddValue("V4", this.value4);
-			info.AddValue ("IsEmpty", this.isEmpty);
+			info.AddValue ("IsEmpty", !this.isValid);
 			info.AddValue("Name", this.name);
 		}
 		#endregion
@@ -1230,7 +1184,7 @@ namespace Epsitec.Common.Drawing
 		private double						value2;  // green or magenta
 		private double						value3;  // blue or yellow
 		private double						value4;  // black
-		private bool						isEmpty;
+		private bool						isValid;
 		private string						name;
 		
 		
