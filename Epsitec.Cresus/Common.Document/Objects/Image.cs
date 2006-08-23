@@ -297,6 +297,9 @@ namespace Epsitec.Common.Document.Objects
 
 				if ( property.Homo )  // conserve les proportions ?
 				{
+					Drawing.Rectangle crop = new Drawing.Rectangle(0, 0, item.Image.Height, item.Image.Width);
+					crop.Deflate(property.CropMargins);
+
 					double rapport = item.Image.Height/item.Image.Width;
 					if ( rapport < height/width )  height = width*rapport;
 					else                           width  = height/rapport;
@@ -375,42 +378,48 @@ namespace Epsitec.Common.Document.Objects
 				{
 					Properties.Image property = this.PropertyImage;
 
-					if ( property.Homo )  // conserve les proportions ?
-					{
-						double rapport = image.Height/image.Width;
-						if ( rapport < height/width )  height = width*rapport;
-						else                           width  = height/rapport;
-					}
+					Drawing.Rectangle crop = new Drawing.Rectangle(0, 0, image.Width, image.Height);
+					crop.Deflate(property.CropMargins);
 
-					Image.DrawingSize = new Size(width, height);  // donne la taille à PDF.Port.PaintImage
+					if (!crop.IsSurfaceZero)
+					{
+						if (property.Homo)  // conserve les proportions ?
+						{
+							double rapport = crop.Height/crop.Width;
+							if (rapport < height/width)  height = width*rapport;
+							else                         width  = height/rapport;
+						}
+
+						Image.DrawingSize = new Size(width, height);  // donne la taille à PDF.Port.PaintImage
 
 #if false
-					port.TranslateTransform(center.X, center.Y);
-					port.RotateTransformDeg(angle, 0, 0);
+						port.TranslateTransform(center.X, center.Y);
+						port.RotateTransformDeg(angle, 0, 0);
 
-					double mirrorx = property.MirrorH ? -1 : 1;
-					double mirrory = property.MirrorV ? -1 : 1;
-					port.ScaleTransform(mirrorx, mirrory, 0, 0);
+						double mirrorx = property.MirrorH ? -1 : 1;
+						double mirrory = property.MirrorV ? -1 : 1;
+						port.ScaleTransform(mirrorx, mirrory, 0, 0);
 
-					Drawing.Rectangle rect = new Drawing.Rectangle(-width/2, -height/2, width, height);
-					port.PaintImage(image, rect);
+						Drawing.Rectangle rect = new Drawing.Rectangle(-width/2, -height/2, width, height);
+						port.PaintImage(image, rect);
 #endif
 #if true
-					port.TranslateTransform(center.X-width/2, center.Y-height/2);
-					port.RotateTransformDeg(angle, width/2, height/2);
-					port.TranslateTransform(width/2, height/2);
-					double sx = property.MirrorH ? -width  : width;
-					double sy = property.MirrorV ? -height : height;
-					port.ScaleTransform(sx, sy, 0.0, 0.0);
-					port.TranslateTransform(-0.5, -0.5);
+						port.TranslateTransform(center.X-width/2, center.Y-height/2);
+						port.RotateTransformDeg(angle, width/2, height/2);
+						port.TranslateTransform(width/2, height/2);
+						double sx = property.MirrorH ? -width  : width;
+						double sy = property.MirrorV ? -height : height;
+						port.ScaleTransform(sx, sy, 0.0, 0.0);
+						port.TranslateTransform(-0.5, -0.5);
 
-					Drawing.Rectangle rect = new Drawing.Rectangle(0, 0, 1.0, 1.0);
-					port.FilterImage = this.PropertyImage.Filter;
-					port.PaintImage(image, rect);
-					//?port.PaintImage(image, rect, property.Filter);  // TODO: passer ce paramètre à AGG
+						Drawing.Rectangle rect = new Drawing.Rectangle(0, 0, 1.0, 1.0);
+						port.FilterImage = this.PropertyImage.Filter;
+						port.PaintImage(image, rect, crop);
+						//?port.PaintImage(image, rect, property.Filter);  // TODO: passer ce paramètre à AGG
 #endif
 
-					Image.DrawingSize = Size.Empty;
+						Image.DrawingSize = Size.Empty;
+					}
 				}
 
 				port.Transform = ot;

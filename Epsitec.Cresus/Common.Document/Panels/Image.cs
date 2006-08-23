@@ -45,6 +45,8 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldCropLeft.LabelShortText = Res.Strings.Panel.Image.Short.CropLeft;
 			this.fieldCropLeft.LabelLongText  = Res.Strings.Panel.Image.Long.CropLeft;
 			this.document.Modifier.AdaptTextFieldRealScalar(this.fieldCropLeft.TextFieldReal);
+			this.fieldCropLeft.TextFieldReal.MinValue = (decimal) 0;
+			this.fieldCropLeft.TextFieldReal.MaxValue = (decimal) 1000;
 			this.fieldCropLeft.TextFieldReal.EditionAccepted += new EventHandler(this.HandleFieldChanged);
 			this.fieldCropLeft.TabIndex = tabIndex++;
 			this.fieldCropLeft.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
@@ -54,6 +56,8 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldCropRight.LabelShortText = Res.Strings.Panel.Image.Short.CropRight;
 			this.fieldCropRight.LabelLongText  = Res.Strings.Panel.Image.Long.CropRight;
 			this.document.Modifier.AdaptTextFieldRealScalar(this.fieldCropRight.TextFieldReal);
+			this.fieldCropRight.TextFieldReal.MinValue = (decimal) 0;
+			this.fieldCropRight.TextFieldReal.MaxValue = (decimal) 1000;
 			this.fieldCropRight.TextFieldReal.EditionAccepted += new EventHandler(this.HandleFieldChanged);
 			this.fieldCropRight.TabIndex = tabIndex++;
 			this.fieldCropRight.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
@@ -63,6 +67,8 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldCropBottom.LabelShortText = Res.Strings.Panel.Image.Short.CropBottom;
 			this.fieldCropBottom.LabelLongText  = Res.Strings.Panel.Image.Long.CropBottom;
 			this.document.Modifier.AdaptTextFieldRealScalar(this.fieldCropBottom.TextFieldReal);
+			this.fieldCropBottom.TextFieldReal.MinValue = (decimal) 0;
+			this.fieldCropBottom.TextFieldReal.MaxValue = (decimal) 1000;
 			this.fieldCropBottom.TextFieldReal.EditionAccepted += new EventHandler(this.HandleFieldChanged);
 			this.fieldCropBottom.TabIndex = tabIndex++;
 			this.fieldCropBottom.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
@@ -72,6 +78,8 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldCropTop.LabelShortText = Res.Strings.Panel.Image.Short.CropTop;
 			this.fieldCropTop.LabelLongText  = Res.Strings.Panel.Image.Long.CropTop;
 			this.document.Modifier.AdaptTextFieldRealScalar(this.fieldCropTop.TextFieldReal);
+			this.fieldCropTop.TextFieldReal.MinValue = (decimal) 0;
+			this.fieldCropTop.TextFieldReal.MaxValue = (decimal) 1000;
 			this.fieldCropTop.TextFieldReal.EditionAccepted += new EventHandler(this.HandleFieldChanged);
 			this.fieldCropTop.TabIndex = tabIndex++;
 			this.fieldCropTop.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
