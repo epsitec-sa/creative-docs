@@ -51,6 +51,8 @@ namespace Epsitec.Common.Widgets.Platform
 			this.dirty_rectangle = Drawing.Rectangle.Empty;
 			this.dirty_region    = new Drawing.DirtyRegion ();
 
+			base.MinimumSize = new System.Drawing.Size (1, 1);
+
 			this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
 			
 			this.SetStyle (System.Windows.Forms.ControlStyles.AllPaintingInWmPaint, true);
@@ -686,7 +688,7 @@ namespace Epsitec.Common.Widgets.Platform
 			}
 		}
 		
-		public new System.Drawing.Size ClientSize
+		public new System.Drawing.Size			ClientSize
 		{
 			get
 			{
@@ -702,6 +704,18 @@ namespace Epsitec.Common.Widgets.Platform
 				}
 
 				return clientSize;
+			}
+		}
+		
+		public new System.Drawing.Size			MinimumSize
+		{
+			get
+			{
+				return this.minimum_size;
+			}
+			set
+			{
+				this.minimum_size = value;
 			}
 		}
 		
@@ -1407,6 +1421,59 @@ namespace Epsitec.Common.Widgets.Platform
 					mmi->MaxPosition.X = -4;
 					mmi->MaxPosition.Y = -4;
 				}
+			}
+
+			if (msg.Msg == Win32Const.WM_SIZING)
+			{
+				//	Since the size returned by WM_GETMINMAXINFO seems to be cached by Windows when the
+				//	user drags a window border, we cannot use it. We must be able to update the Minimum
+				//	size constraint dynamically.
+				
+				//	Handling WM_SIZING is the way to go: make sure the user does not reduce the window
+				//	size below the specified size.
+				
+				unsafe
+				{
+					Win32Api.Rect* rect = (Win32Api.Rect*) msg.LParam.ToPointer ();
+					int wParam = msg.WParam.ToInt32 ();
+
+					int dx = System.Math.Max (this.minimum_size.Width, rect->Right - rect->Left);
+					int dy = System.Math.Max (this.minimum_size.Height, rect->Bottom - rect->Top);
+
+					dx = System.Math.Max (dx, base.MinimumSize.Width);
+					dy = System.Math.Max (dy, base.MinimumSize.Height);
+					
+					switch (wParam)
+					{
+						case Win32Const.WMSZ_LEFT:
+						case Win32Const.WMSZ_BOTTOMLEFT:
+						case Win32Const.WMSZ_TOPLEFT:
+							rect->Left = rect->Right - dx;
+							break;
+						case Win32Const.WMSZ_RIGHT:
+						case Win32Const.WMSZ_BOTTOMRIGHT:
+						case Win32Const.WMSZ_TOPRIGHT:
+							rect->Right = rect->Left + dx;
+							break;
+					}
+					
+					switch (wParam)
+					{
+						case Win32Const.WMSZ_BOTTOM:
+						case Win32Const.WMSZ_BOTTOMLEFT:
+						case Win32Const.WMSZ_BOTTOMRIGHT:
+							rect->Bottom = rect->Top + dy;
+							break;
+						case Win32Const.WMSZ_TOP:
+						case Win32Const.WMSZ_TOPLEFT:
+						case Win32Const.WMSZ_TOPRIGHT:
+							rect->Top = rect->Bottom - dy;
+							break;
+					}
+				}
+
+				msg.Result = new System.IntPtr (1);
+				return;
 			}
 			
 //			if (msg.Msg == Win32Const.WM_WINDOWPOSCHANGING)
@@ -2132,6 +2199,7 @@ namespace Epsitec.Common.Widgets.Platform
 		private Drawing.Point					paint_offset;
 		private System.Drawing.Rectangle		form_bounds;
 		private System.Drawing.Size				form_min_size;
+		private System.Drawing.Size				minimum_size;
 		private bool							form_bounds_set = false;
 		private bool							on_resize_event = false;
 		
