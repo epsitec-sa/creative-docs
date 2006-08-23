@@ -196,8 +196,8 @@ namespace Epsitec.Common.Widgets
 
 			Color hiliteColor1 = adorner.ColorCaption;
 			Color hiliteColor2 = hiliteColor1;
-			hiliteColor2.A *= 0.3;
-			Color centerColor = Color.FromRgb(1, 0, 0);
+			hiliteColor2.A *= 0.3;  // comme hiliteColor1, mais plus transparent
+			Color centerColor = Color.FromRgb(1, 0, 0);  // rouge
 
 			if (this.mouseDown && this.hilitedPart == Part.Center)
 			{
