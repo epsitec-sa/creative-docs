@@ -152,6 +152,7 @@ namespace Epsitec.Common.Document.Widgets
 
 		protected void UpdateField()
 		{
+			//	Met à jour tous les widgets, suite à une modification.
 			this.ignoreChanged = true;
 
 			this.fieldCropLeft.MaxValue = (decimal) this.size.Width;
@@ -172,7 +173,8 @@ namespace Epsitec.Common.Document.Widgets
 
 		protected Size ImageSize
 		{
-			//	Retourne la taille de l'image. Si elle est inconnue, retourne une taille par défaut.
+			//	Retourne la taille de l'image. Si elle est inconnue, retourne une taille
+			//	par défaut arbitraire de 1000 x 1000.
 			get
 			{
 				if (this.size.IsEmpty)  // taille inconnue ?
@@ -227,6 +229,7 @@ namespace Epsitec.Common.Document.Widgets
 
 		protected void InvalidateBounds()
 		{
+			//	Invalide la partie interactive.
 			Rectangle bounds = this.BoundsRectangle;
 			bounds.Inflate(1);
 			this.Invalidate(bounds);
@@ -255,10 +258,10 @@ namespace Epsitec.Common.Document.Widgets
 			Rectangle crop = this.CropRectangle;
 			double m = 2;
 
-			bool left   = (pos.X >= crop.Left-m && pos.X <= crop.Left+m);
-			bool right  = (pos.X >= crop.Right-m && pos.X <= crop.Right+m);
+			bool left   = (pos.X >= crop.Left-m   && pos.X <= crop.Left+m);
+			bool right  = (pos.X >= crop.Right-m  && pos.X <= crop.Right+m);
 			bool bottom = (pos.Y >= crop.Bottom-m && pos.Y <= crop.Bottom+m);
-			bool top    = (pos.Y >= crop.Top-m && pos.Y <= crop.Top+m);
+			bool top    = (pos.Y >= crop.Top-m    && pos.Y <= crop.Top+m);
 
 			if (bottom && left)  return Part.BottomLeft;
 			if (bottom && right) return Part.BottomRight;
@@ -277,9 +280,12 @@ namespace Epsitec.Common.Document.Widgets
 			return Part.None;
 		}
 
-		protected void MovePart(Point pos)
+		protected void MovePart(Point pos, bool isConstrain)
 		{
 			//	Déplace un élément selon la souris.
+			Point m = pos-this.initialPos;
+			bool isHorizontal = System.Math.Abs(m.X) > System.Math.Abs(m.Y);
+
 			pos = this.ConvWidgetToImage(pos);
 			Margins crop = this.Crop;
 			Size size = this.ImageSize;
@@ -307,6 +313,12 @@ namespace Epsitec.Common.Document.Widgets
 			if (this.hilited == Part.Showed)
 			{
 				Point move = pos - this.ConvWidgetToImage(this.initialPos);
+
+				if (isConstrain)
+				{
+					if (isHorizontal)  move.Y = 0;
+					else               move.X = 0;
+				}
 
 				crop = this.initialCrop;
 				crop.Left   += move.X;
@@ -362,11 +374,13 @@ namespace Epsitec.Common.Document.Widgets
 
 		public override Drawing.Margins GetShapeMargins()
 		{
+			//	Marges supplémentaires utiles lorsqu'il y a des hilited.
 			return new Drawing.Margins(0, 1, 1, 1);
 		}
 
 		protected override void ProcessMessage(Message message, Point pos)
 		{
+			//	Gestion des événements.
 			switch (message.Type)
 			{
 				case MessageType.MouseDown:
@@ -383,7 +397,7 @@ namespace Epsitec.Common.Document.Widgets
 				case MessageType.MouseMove:
 					if (this.mouseDown)
 					{
-						this.MovePart(pos);
+						this.MovePart(pos, message.IsControlPressed || message.IsShiftPressed);
 					}
 					else
 					{
@@ -430,7 +444,7 @@ namespace Epsitec.Common.Document.Widgets
 				this.fieldCropBottom.Visibility = true;
 				this.fieldCropTop.Visibility = true;
 
-				if (rect.Height < 70)
+				if (rect.Height < 70)  // disposition 2.2 ?
 				{
 					Rectangle r = rect;
 					r.Bottom = r.Top-20;
@@ -445,7 +459,7 @@ namespace Epsitec.Common.Document.Widgets
 
 					this.buttonReset.Visibility = false;
 				}
-				else
+				else  // disposition 1.2.1 ?
 				{
 					double w = (rect.Width-5)*0.5;
 					Rectangle r = rect;
@@ -477,6 +491,7 @@ namespace Epsitec.Common.Document.Widgets
 
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
+			//	Dessine la partie interactive de droite.
 			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
 
 			Rectangle bounds = this.BoundsRectangle;
@@ -561,7 +576,7 @@ namespace Epsitec.Common.Document.Widgets
 
 		private void HandleFieldChanged(object sender)
 		{
-			//	Un champ a été changé.
+			//	Une valeur numérique éditable a été changée.
 			if (this.ignoreChanged)
 			{
 				return;
@@ -595,6 +610,7 @@ namespace Epsitec.Common.Document.Widgets
 
 		private void HandleButtonReset(object sender, MessageEventArgs e)
 		{
+			//	Le bouton "T" a été actionné.
 			this.Crop = Margins.Zero;
 		}
 
