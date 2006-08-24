@@ -1318,23 +1318,7 @@
   <data name="Error.NotFound" id="01901">The text cannot be found in the current document.</data>
   <data name="Panel.Image.Dialog.Save.Title" id="07901">
   </data>
-  <data name="Panel.Image.Short.CropLeft" id="08901">
-  </data>
-  <data name="Panel.Image.Long.CropLeft" id="09901">
-  </data>
   <data name="Panel.Image.Tooltip.CropLeft" id="0A901">
-  </data>
-  <data name="Panel.Image.Short.CropRight" id="0B901">
-  </data>
-  <data name="Panel.Image.Short.CropBottom" id="0C901">
-  </data>
-  <data name="Panel.Image.Short.CropTop" id="0D901">
-  </data>
-  <data name="Panel.Image.Long.CropRight" id="0E901">
-  </data>
-  <data name="Panel.Image.Long.CropBottom" id="0F901">
-  </data>
-  <data name="Panel.Image.Long.CropTop" id="0G901">
   </data>
   <data name="Panel.Image.Tooltip.CropRight" id="0H901">
   </data>

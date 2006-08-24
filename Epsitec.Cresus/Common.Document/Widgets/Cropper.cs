@@ -32,54 +32,38 @@ namespace Epsitec.Common.Document.Widgets
 
 			int tabIndex = 0;
 
-			this.fieldCropLeft = new Widgets.TextFieldLabel(this, Widgets.TextFieldLabel.Type.TextFieldReal);
-			this.fieldCropLeft.LabelShortText = Res.Strings.Panel.Image.Short.CropLeft;
-			this.fieldCropLeft.LabelLongText  = Res.Strings.Panel.Image.Long.CropLeft;
-			this.fieldCropLeft.TextFieldReal.UnitType = RealUnitType.Scalar;
-			this.fieldCropLeft.TextFieldReal.Step = 1.0M;
-			this.fieldCropLeft.TextFieldReal.Resolution = 1.0M;
-			this.fieldCropLeft.TextFieldReal.MinValue = (decimal) 0;
-			this.fieldCropLeft.TextFieldReal.MaxValue = (decimal) 1000;
-			this.fieldCropLeft.TextFieldReal.EditionAccepted += new EventHandler(this.HandleFieldChanged);
+			this.fieldCropLeft = new TextFieldReal(this);
+			Cropper.InitTextFieldReal(this.fieldCropLeft);
+			this.fieldCropLeft.MinValue = (decimal) 0;
+			this.fieldCropLeft.MaxValue = (decimal) 1000;
+			this.fieldCropLeft.EditionAccepted += new EventHandler(this.HandleFieldChanged);
 			this.fieldCropLeft.TabIndex = tabIndex++;
 			this.fieldCropLeft.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldCropLeft, Res.Strings.Panel.Image.Tooltip.CropLeft);
 
-			this.fieldCropRight = new Widgets.TextFieldLabel(this, Widgets.TextFieldLabel.Type.TextFieldReal);
-			this.fieldCropRight.LabelShortText = Res.Strings.Panel.Image.Short.CropRight;
-			this.fieldCropRight.LabelLongText  = Res.Strings.Panel.Image.Long.CropRight;
-			this.fieldCropRight.TextFieldReal.UnitType = RealUnitType.Scalar;
-			this.fieldCropRight.TextFieldReal.Step = 1.0M;
-			this.fieldCropRight.TextFieldReal.Resolution = 1.0M;
-			this.fieldCropRight.TextFieldReal.MinValue = (decimal) 0;
-			this.fieldCropRight.TextFieldReal.MaxValue = (decimal) 1000;
-			this.fieldCropRight.TextFieldReal.EditionAccepted += new EventHandler(this.HandleFieldChanged);
+			this.fieldCropRight = new TextFieldReal(this);
+			Cropper.InitTextFieldReal(this.fieldCropRight);
+			this.fieldCropRight.MinValue = (decimal) 0;
+			this.fieldCropRight.MaxValue = (decimal) 1000;
+			this.fieldCropRight.EditionAccepted += new EventHandler(this.HandleFieldChanged);
 			this.fieldCropRight.TabIndex = tabIndex++;
 			this.fieldCropRight.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldCropRight, Res.Strings.Panel.Image.Tooltip.CropRight);
 
-			this.fieldCropBottom = new Widgets.TextFieldLabel(this, Widgets.TextFieldLabel.Type.TextFieldReal);
-			this.fieldCropBottom.LabelShortText = Res.Strings.Panel.Image.Short.CropBottom;
-			this.fieldCropBottom.LabelLongText  = Res.Strings.Panel.Image.Long.CropBottom;
-			this.fieldCropBottom.TextFieldReal.UnitType = RealUnitType.Scalar;
-			this.fieldCropBottom.TextFieldReal.Step = 1.0M;
-			this.fieldCropBottom.TextFieldReal.Resolution = 1.0M;
-			this.fieldCropBottom.TextFieldReal.MinValue = (decimal) 0;
-			this.fieldCropBottom.TextFieldReal.MaxValue = (decimal) 1000;
-			this.fieldCropBottom.TextFieldReal.EditionAccepted += new EventHandler(this.HandleFieldChanged);
+			this.fieldCropBottom = new TextFieldReal(this);
+			Cropper.InitTextFieldReal(this.fieldCropBottom);
+			this.fieldCropBottom.MinValue = (decimal) 0;
+			this.fieldCropBottom.MaxValue = (decimal) 1000;
+			this.fieldCropBottom.EditionAccepted += new EventHandler(this.HandleFieldChanged);
 			this.fieldCropBottom.TabIndex = tabIndex++;
 			this.fieldCropBottom.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldCropBottom, Res.Strings.Panel.Image.Tooltip.CropBottom);
 
-			this.fieldCropTop = new Widgets.TextFieldLabel(this, Widgets.TextFieldLabel.Type.TextFieldReal);
-			this.fieldCropTop.LabelShortText = Res.Strings.Panel.Image.Short.CropTop;
-			this.fieldCropTop.LabelLongText  = Res.Strings.Panel.Image.Long.CropTop;
-			this.fieldCropTop.TextFieldReal.UnitType = RealUnitType.Scalar;
-			this.fieldCropTop.TextFieldReal.Step = 1.0M;
-			this.fieldCropTop.TextFieldReal.Resolution = 1.0M;
-			this.fieldCropTop.TextFieldReal.MinValue = (decimal) 0;
-			this.fieldCropTop.TextFieldReal.MaxValue = (decimal) 1000;
-			this.fieldCropTop.TextFieldReal.EditionAccepted += new EventHandler(this.HandleFieldChanged);
+			this.fieldCropTop = new TextFieldReal(this);
+			Cropper.InitTextFieldReal(this.fieldCropTop);
+			this.fieldCropTop.MinValue = (decimal) 0;
+			this.fieldCropTop.MaxValue = (decimal) 1000;
+			this.fieldCropTop.EditionAccepted += new EventHandler(this.HandleFieldChanged);
 			this.fieldCropTop.TabIndex = tabIndex++;
 			this.fieldCropTop.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldCropTop, Res.Strings.Panel.Image.Tooltip.CropTop);
@@ -94,10 +78,10 @@ namespace Epsitec.Common.Document.Widgets
 		{
 			if (disposing)
 			{
-				this.fieldCropLeft.TextFieldReal.EditionAccepted -= new EventHandler(this.HandleFieldChanged);
-				this.fieldCropRight.TextFieldReal.EditionAccepted -= new EventHandler(this.HandleFieldChanged);
-				this.fieldCropBottom.TextFieldReal.EditionAccepted -= new EventHandler(this.HandleFieldChanged);
-				this.fieldCropTop.TextFieldReal.EditionAccepted -= new EventHandler(this.HandleFieldChanged);
+				this.fieldCropLeft.EditionAccepted -= new EventHandler(this.HandleFieldChanged);
+				this.fieldCropRight.EditionAccepted -= new EventHandler(this.HandleFieldChanged);
+				this.fieldCropBottom.EditionAccepted -= new EventHandler(this.HandleFieldChanged);
+				this.fieldCropTop.EditionAccepted -= new EventHandler(this.HandleFieldChanged);
 
 				this.fieldCropLeft = null;
 				this.fieldCropRight = null;
@@ -106,6 +90,18 @@ namespace Epsitec.Common.Document.Widgets
 			}
 
 			base.Dispose(disposing);
+		}
+
+
+		static protected void InitTextFieldReal(TextFieldReal field)
+		{
+			field.UnitType = RealUnitType.Scalar;
+			field.Step = 1.0M;
+			field.Resolution = 1.0M;
+			field.DefocusAction = DefocusAction.AutoAcceptOrRejectEdition;
+			field.AutoSelectOnFocus = true;
+			field.SwallowEscape = true;
+			field.SwallowReturn = true;
 		}
 
 
@@ -150,10 +146,10 @@ namespace Epsitec.Common.Document.Widgets
 		{
 			this.ignoreChanged = true;
 
-			this.fieldCropLeft.TextFieldReal.InternalValue = (decimal) crop.Left;
-			this.fieldCropRight.TextFieldReal.InternalValue = (decimal) crop.Right;
-			this.fieldCropBottom.TextFieldReal.InternalValue = (decimal) crop.Bottom;
-			this.fieldCropTop.TextFieldReal.InternalValue = (decimal) crop.Top;
+			this.fieldCropLeft.InternalValue = (decimal) crop.Left;
+			this.fieldCropRight.InternalValue = (decimal) crop.Right;
+			this.fieldCropBottom.InternalValue = (decimal) crop.Bottom;
+			this.fieldCropTop.InternalValue = (decimal) crop.Top;
 			
 			this.ignoreChanged = false;
 		}
@@ -527,22 +523,22 @@ namespace Epsitec.Common.Document.Widgets
 			TextFieldReal field = sender as TextFieldReal;
 			Margins crop = this.Crop;
 
-			if (field == this.fieldCropLeft.TextFieldReal)
+			if (field == this.fieldCropLeft)
 			{
 				crop.Left = (double) field.InternalValue;
 			}
 
-			if (field == this.fieldCropRight.TextFieldReal)
+			if (field == this.fieldCropRight)
 			{
 				crop.Right = (double) field.InternalValue;
 			}
 
-			if (field == this.fieldCropBottom.TextFieldReal)
+			if (field == this.fieldCropBottom)
 			{
 				crop.Bottom = (double) field.InternalValue;
 			}
 
-			if (field == this.fieldCropTop.TextFieldReal)
+			if (field == this.fieldCropTop)
 			{
 				crop.Top = (double) field.InternalValue;
 			}
@@ -580,10 +576,10 @@ namespace Epsitec.Common.Document.Widgets
 		protected Margins					crop;
 		protected Size						size;
 
-		protected Widgets.TextFieldLabel	fieldCropLeft;
-		protected Widgets.TextFieldLabel	fieldCropRight;
-		protected Widgets.TextFieldLabel	fieldCropBottom;
-		protected Widgets.TextFieldLabel	fieldCropTop;
+		protected TextFieldReal				fieldCropLeft;
+		protected TextFieldReal				fieldCropRight;
+		protected TextFieldReal				fieldCropBottom;
+		protected TextFieldReal				fieldCropTop;
 
 		protected bool						ignoreChanged = false;
 		protected bool						mouseDown = false;
