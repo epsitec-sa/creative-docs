@@ -229,6 +229,18 @@ namespace Epsitec.Common.Document.PDF
 			}
 		}
 
+		public Size ImageFinalSize
+		{
+			get
+			{
+				return this.imageFinalSize;
+			}
+			set
+			{
+				this.imageFinalSize = value;
+			}
+		}
+
 		public void PushColorModifier(ColorModifierCallback method)
 		{
 			this.stackColorModifier.Push(method);
@@ -653,10 +665,7 @@ namespace Epsitec.Common.Document.PDF
 
 			if ( this.imageSurfaceList == null )  return;
 
-			//	La taille de l'image est récupérée par une variable statique de Objects.Image.
-			//	Elle permet de retrouver le bon ImageSurface, lorsque la même image existe
-			//	plusieurs fois dans le même document, à des tailes différentes !
-			ImageSurface image = ImageSurface.Search(this.imageSurfaceList, bitmap, Objects.Image.DrawingSize);
+			ImageSurface image = ImageSurface.Search(this.imageSurfaceList, bitmap, this.imageFinalSize, this.imageCrop);
 			if ( image == null )  return;
 
 			this.SetTransform(this.transform);
@@ -1352,11 +1361,11 @@ namespace Epsitec.Common.Document.PDF
 			return -1;
 		}
 
-		public ImageSurface SearchImageSurface(string filename, Size size, bool filter)
+		public ImageSurface SearchImageSurface(string filename, Size size, Margins crop, bool filter)
 		{
 			//	Cherche l'image à utiliser.
 			if ( this.imageSurfaceList == null )  return null;
-			return ImageSurface.Search(this.imageSurfaceList, filename, size, filter);
+			return ImageSurface.Search(this.imageSurfaceList, filename, size, crop, filter);
 		}
 
 
@@ -1386,6 +1395,7 @@ namespace Epsitec.Common.Document.PDF
 		protected FillMode						fillMode;
 		protected bool							imageFilter;
 		protected Margins						imageCrop;
+		protected Size							imageFinalSize;
 
 		protected System.Text.StringBuilder		stringBuilder;
 		protected RichColor						currentStrokeColor;

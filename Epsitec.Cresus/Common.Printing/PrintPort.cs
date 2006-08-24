@@ -213,6 +213,18 @@ namespace Epsitec.Common.Printing
 			}
 		}
 
+		public Drawing.Size						ImageFinalSize
+		{
+			get
+			{
+				return this.image_final_size;
+			}
+			set
+			{
+				this.image_final_size = value;
+			}
+		}
+
 		public void PushColorModifier(Drawing.ColorModifierCallback method)
 		{
 			this.stackColorModifier.Push(method);
@@ -830,6 +842,7 @@ namespace Epsitec.Common.Printing
 		protected double						line_miter_limit = 4.0;
 		protected bool							image_filter;
 		protected Drawing.Margins				image_crop;
+		protected Drawing.Size					image_final_size;
 		
 		protected float							offset_x, offset_y;
 		protected float							scale;
