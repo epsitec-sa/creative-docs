@@ -16,6 +16,10 @@ namespace Epsitec.Common.Document.Widgets
 			Right,
 			Bottom,
 			Top,
+			BottomLeft,
+			BottomRight,
+			TopLeft,
+			TopRight,
 			Showed,
 		}
 
@@ -240,25 +244,19 @@ namespace Epsitec.Common.Document.Widgets
 			Rectangle crop = this.CropRectangle;
 			double m = 2;
 
-			if (pos.X >= crop.Left-m && pos.X <= crop.Left+m)
-			{
-				return Part.Left;
-			}
+			bool left   = (pos.X >= crop.Left-m && pos.X <= crop.Left+m);
+			bool right  = (pos.X >= crop.Right-m && pos.X <= crop.Right+m);
+			bool bottom = (pos.Y >= crop.Bottom-m && pos.Y <= crop.Bottom+m);
+			bool top    = (pos.Y >= crop.Top-m && pos.Y <= crop.Top+m);
 
-			if (pos.X >= crop.Right-m && pos.X <= crop.Right+m)
-			{
-				return Part.Right;
-			}
-
-			if (pos.Y >= crop.Bottom-m && pos.Y <= crop.Bottom+m)
-			{
-				return Part.Bottom;
-			}
-
-			if (pos.Y >= crop.Top-m && pos.Y <= crop.Top+m)
-			{
-				return Part.Top;
-			}
+			if (bottom && left)  return Part.BottomLeft;
+			if (bottom && right) return Part.BottomRight;
+			if (top && left)     return Part.TopLeft;
+			if (top && right)    return Part.TopRight;
+			if (left)            return Part.Left;
+			if (right)           return Part.Right;
+			if (bottom)          return Part.Bottom;
+			if (top)             return Part.Top;
 
 			if (crop.Contains(pos) && this.crop != Margins.Zero)
 			{
@@ -275,22 +273,22 @@ namespace Epsitec.Common.Document.Widgets
 			Margins crop = this.Crop;
 			Size size = this.ImageSize;
 
-			if (this.hilited == Part.Left)
+			if (this.hilited == Part.Left || this.hilited == Part.BottomLeft || this.hilited == Part.TopLeft)
 			{
 				crop.Left = pos.X;
 			}
 
-			if (this.hilited == Part.Right)
+			if (this.hilited == Part.Right || this.hilited == Part.BottomRight || this.hilited == Part.TopRight)
 			{
 				crop.Right = size.Width-pos.X;
 			}
 
-			if (this.hilited == Part.Bottom)
+			if (this.hilited == Part.Bottom || this.hilited == Part.BottomLeft || this.hilited == Part.BottomRight)
 			{
 				crop.Bottom = pos.Y;
 			}
 
-			if (this.hilited == Part.Top)
+			if (this.hilited == Part.Top || this.hilited == Part.TopLeft || this.hilited == Part.TopRight)
 			{
 				crop.Top = size.Height-pos.Y;
 			}
@@ -350,7 +348,12 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
-		
+
+		public override Drawing.Margins GetShapeMargins()
+		{
+			return new Drawing.Margins(0, 1, 1, 1);
+		}
+
 		protected override void ProcessMessage(Message message, Point pos)
 		{
 			switch (message.Type)
@@ -472,7 +475,7 @@ namespace Epsitec.Common.Document.Widgets
 					graphics.RenderSolid(adorner.ColorBorder);
 				}
 
-				if (this.hilited == Part.Left)
+				if (this.hilited == Part.Left || this.hilited == Part.BottomLeft || this.hilited == Part.TopLeft)
 				{
 					graphics.LineWidth = 3;
 					graphics.AddLine(crop.Left, bounds.Bottom, crop.Left, bounds.Top);
@@ -480,7 +483,7 @@ namespace Epsitec.Common.Document.Widgets
 					graphics.LineWidth = 1;
 				}
 
-				if (this.hilited == Part.Right)
+				if (this.hilited == Part.Right || this.hilited == Part.BottomRight || this.hilited == Part.TopRight)
 				{
 					graphics.LineWidth = 3;
 					graphics.AddLine(crop.Right, bounds.Bottom, crop.Right, bounds.Top);
@@ -488,7 +491,7 @@ namespace Epsitec.Common.Document.Widgets
 					graphics.LineWidth = 1;
 				}
 
-				if (this.hilited == Part.Bottom)
+				if (this.hilited == Part.Bottom || this.hilited == Part.BottomLeft || this.hilited == Part.BottomRight)
 				{
 					graphics.LineWidth = 3;
 					graphics.AddLine(bounds.Left, crop.Bottom, bounds.Right, crop.Bottom);
@@ -496,7 +499,7 @@ namespace Epsitec.Common.Document.Widgets
 					graphics.LineWidth = 1;
 				}
 
-				if (this.hilited == Part.Top)
+				if (this.hilited == Part.Top || this.hilited == Part.TopLeft || this.hilited == Part.TopRight)
 				{
 					graphics.LineWidth = 3;
 					graphics.AddLine(bounds.Left, crop.Top, bounds.Right, crop.Top);
