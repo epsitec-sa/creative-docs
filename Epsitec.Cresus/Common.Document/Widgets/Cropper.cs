@@ -16,6 +16,7 @@ namespace Epsitec.Common.Document.Widgets
 			Right,
 			Bottom,
 			Top,
+			Showed,
 		}
 
 
@@ -117,7 +118,7 @@ namespace Epsitec.Common.Document.Widgets
 				{
 					this.crop = value;
 					this.UpdateField();
-					this.Invalidate();
+					this.InvalidateBounds();
 					this.OnCropChanged();
 				}
 			}
@@ -135,7 +136,7 @@ namespace Epsitec.Common.Document.Widgets
 				if (this.size != value)
 				{
 					this.size = value;
-					this.Invalidate();
+					this.InvalidateBounds();
 				}
 			}
 		}
@@ -168,7 +169,7 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
-		protected Rectangle UsedRectangle
+		protected Rectangle BoundsRectangle
 		{
 			//	Retourne la zone pour la partie interactive.
 			get
@@ -187,24 +188,165 @@ namespace Epsitec.Common.Document.Widgets
 
 		protected Rectangle CropRectangle
 		{
+			//	Retourne la zone pour la partie recadrée dans la partie interactive.
 			get
 			{
-				Rectangle rect = this.UsedRectangle;
+				Rectangle bounds = this.BoundsRectangle;
 				Size size = this.ImageSize;
+
 				Margins crop = Margins.Zero;
+				crop.Left = this.crop.Left*bounds.Width/size.Width;
+				crop.Right = this.crop.Right*bounds.Width/size.Width;
+				crop.Bottom = this.crop.Bottom*bounds.Height/size.Height;
+				crop.Top = this.crop.Top*bounds.Height/size.Height;
+				bounds.Deflate(crop);
 
-				crop.Left = this.crop.Left*rect.Width/size.Width;
-				crop.Right = this.crop.Right*rect.Width/size.Width;
-				crop.Bottom = this.crop.Bottom*rect.Height/size.Height;
-				crop.Top = this.crop.Top*rect.Height/size.Height;
-				rect.Deflate(crop);
-
-				if (rect.IsSurfaceZero)
+				if (bounds.IsSurfaceZero)
 				{
 					return Rectangle.Empty;
 				}
 
-				return rect;
+				return bounds;
+			}
+		}
+
+		protected void InvalidateBounds()
+		{
+			Rectangle bounds = this.BoundsRectangle;
+			bounds.Inflate(1);
+			this.Invalidate(bounds);
+		}
+
+		protected Point ConvWidgetToImage(Point mouse)
+		{
+			//	Conversion d'une position de la souris dans un widget en position dans l'image.
+			Rectangle bounds = this.BoundsRectangle;
+			Size size = this.ImageSize;
+
+			mouse -= bounds.BottomLeft;
+			Point pos = new Point(mouse.X*size.Width/bounds.Width, mouse.Y*size.Height/bounds.Height);
+
+			pos.X = System.Math.Max(pos.X, 0);
+			pos.X = System.Math.Min(pos.X, size.Width);
+			pos.Y = System.Math.Max(pos.Y, 0);
+			pos.Y = System.Math.Min(pos.Y, size.Height);
+
+			return pos;
+		}
+
+		protected Part DetectPart(Point pos)
+		{
+			//	Détecte la partie survolée par la souris.
+			Rectangle crop = this.CropRectangle;
+			double m = 2;
+
+			if (pos.X >= crop.Left-m && pos.X <= crop.Left+m)
+			{
+				return Part.Left;
+			}
+
+			if (pos.X >= crop.Right-m && pos.X <= crop.Right+m)
+			{
+				return Part.Right;
+			}
+
+			if (pos.Y >= crop.Bottom-m && pos.Y <= crop.Bottom+m)
+			{
+				return Part.Bottom;
+			}
+
+			if (pos.Y >= crop.Top-m && pos.Y <= crop.Top+m)
+			{
+				return Part.Top;
+			}
+
+			if (crop.Contains(pos) && this.crop != Margins.Zero)
+			{
+				return Part.Showed;
+			}
+
+			return Part.None;
+		}
+
+		protected void MovePart(Point pos)
+		{
+			//	Déplace un élément selon la souris.
+			pos = this.ConvWidgetToImage(pos);
+			Margins crop = this.Crop;
+			Size size = this.ImageSize;
+
+			if (this.hilited == Part.Left)
+			{
+				crop.Left = pos.X;
+			}
+
+			if (this.hilited == Part.Right)
+			{
+				crop.Right = size.Width-pos.X;
+			}
+
+			if (this.hilited == Part.Bottom)
+			{
+				crop.Bottom = pos.Y;
+			}
+
+			if (this.hilited == Part.Top)
+			{
+				crop.Top = size.Height-pos.Y;
+			}
+
+			if (this.hilited == Part.Showed)
+			{
+				Point move = pos - this.ConvWidgetToImage(this.initialPos);
+
+				crop = this.initialCrop;
+				crop.Left   += move.X;
+				crop.Right  -= move.X;
+				crop.Bottom += move.Y;
+				crop.Top    -= move.Y;
+
+				if (crop.Left < 0)
+				{
+					crop.Right += crop.Left;
+					crop.Left = 0;
+				}
+
+				if (crop.Right < 0)
+				{
+					crop.Left += crop.Right;
+					crop.Right = 0;
+				}
+
+				if (crop.Bottom < 0)
+				{
+					crop.Top += crop.Bottom;
+					crop.Bottom = 0;
+				}
+
+				if (crop.Top < 0)
+				{
+					crop.Bottom += crop.Top;
+					crop.Top = 0;
+				}
+			}
+
+			this.Crop = crop;
+		}
+
+		protected Part Hilited
+		{
+			//	Partie mise en évidence.
+			get
+			{
+				return this.hilited;
+			}
+			set
+			{
+				if (this.hilited != value)
+				{
+					this.hilited = value;
+					this.InvalidateBounds();
+				}
 			}
 		}
 
@@ -214,6 +356,12 @@ namespace Epsitec.Common.Document.Widgets
 			switch (message.Type)
 			{
 				case MessageType.MouseDown:
+					if (this.hilited != Part.None)
+					{
+						this.initialPos = pos;
+						this.initialCrop = this.crop;
+						this.mouseDown = true;
+					}
 					message.Captured = true;
 					message.Consumer = this;
 					break;
@@ -221,9 +369,11 @@ namespace Epsitec.Common.Document.Widgets
 				case MessageType.MouseMove:
 					if (this.mouseDown)
 					{
+						this.MovePart(pos);
 					}
 					else
 					{
+						this.Hilited = this.DetectPart(pos);
 					}
 					message.Consumer = this;
 					break;
@@ -236,6 +386,7 @@ namespace Epsitec.Common.Document.Widgets
 				case MessageType.MouseLeave:
 					if (!this.mouseDown)
 					{
+						this.Hilited = Part.None;
 					}
 					break;
 			}
@@ -282,12 +433,12 @@ namespace Epsitec.Common.Document.Widgets
 		{
 			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
 
-			Rectangle bounds = this.UsedRectangle;
+			Rectangle bounds = this.BoundsRectangle;
 			graphics.Align(ref bounds);
 			bounds.Deflate(0.5);
 
-			Rectangle inside = this.CropRectangle;
-			if (inside.IsEmpty)
+			Rectangle crop = this.CropRectangle;
+			if (crop.IsEmpty)  // aucune partie recadrée ?
 			{
 				graphics.Rasterizer.AddOutline(Misc.GetHatchPath(bounds, 4, bounds.BottomLeft));
 				graphics.AddRectangle(bounds);
@@ -295,20 +446,20 @@ namespace Epsitec.Common.Document.Widgets
 			}
 			else
 			{
-				graphics.Align(ref inside);
-				inside.Deflate(0.5);
+				graphics.Align(ref crop);
+				crop.Deflate(0.5);
 
-				if (bounds == inside)
+				if (bounds == crop)  // partie recadrée = toute l'image ?
 				{
 					graphics.AddRectangle(bounds);
 					graphics.RenderSolid(adorner.ColorBorder);
 				}
 				else
 				{
-					Rectangle left   = new Rectangle(bounds.Left, bounds.Bottom, inside.Left-bounds.Left, bounds.Height);
-					Rectangle right  = new Rectangle(inside.Right, bounds.Bottom, bounds.Right-inside.Right, bounds.Height);
-					Rectangle bottom = new Rectangle(inside.Left, bounds.Bottom, inside.Width, inside.Bottom-bounds.Bottom);
-					Rectangle top    = new Rectangle(inside.Left, inside.Top, inside.Width, bounds.Top-inside.Top);
+					Rectangle left   = new Rectangle(bounds.Left, bounds.Bottom, crop.Left-bounds.Left, bounds.Height);
+					Rectangle right  = new Rectangle(crop.Right, bounds.Bottom, bounds.Right-crop.Right, bounds.Height);
+					Rectangle bottom = new Rectangle(crop.Left, bounds.Bottom, crop.Width, crop.Bottom-bounds.Bottom);
+					Rectangle top    = new Rectangle(crop.Left, crop.Top, crop.Width, bounds.Top-crop.Top);
 
 					graphics.Rasterizer.AddOutline(Misc.GetHatchPath(left, 4, bounds.BottomLeft));
 					graphics.Rasterizer.AddOutline(Misc.GetHatchPath(right, 4, bounds.BottomLeft));
@@ -316,9 +467,47 @@ namespace Epsitec.Common.Document.Widgets
 					graphics.Rasterizer.AddOutline(Misc.GetHatchPath(top, 4, bounds.BottomLeft));
 
 					graphics.AddRectangle(bounds);
-					graphics.AddRectangle(inside);
+					graphics.AddRectangle(crop);
 
 					graphics.RenderSolid(adorner.ColorBorder);
+				}
+
+				if (this.hilited == Part.Left)
+				{
+					graphics.LineWidth = 3;
+					graphics.AddLine(crop.Left, bounds.Bottom, crop.Left, bounds.Top);
+					graphics.RenderSolid(adorner.ColorCaption);
+					graphics.LineWidth = 1;
+				}
+
+				if (this.hilited == Part.Right)
+				{
+					graphics.LineWidth = 3;
+					graphics.AddLine(crop.Right, bounds.Bottom, crop.Right, bounds.Top);
+					graphics.RenderSolid(adorner.ColorCaption);
+					graphics.LineWidth = 1;
+				}
+
+				if (this.hilited == Part.Bottom)
+				{
+					graphics.LineWidth = 3;
+					graphics.AddLine(bounds.Left, crop.Bottom, bounds.Right, crop.Bottom);
+					graphics.RenderSolid(adorner.ColorCaption);
+					graphics.LineWidth = 1;
+				}
+
+				if (this.hilited == Part.Top)
+				{
+					graphics.LineWidth = 3;
+					graphics.AddLine(bounds.Left, crop.Top, bounds.Right, crop.Top);
+					graphics.RenderSolid(adorner.ColorCaption);
+					graphics.LineWidth = 1;
+				}
+
+				if (this.hilited == Part.Showed)
+				{
+					graphics.AddFilledRectangle(crop);
+					graphics.RenderSolid(adorner.ColorCaption);
 				}
 			}
 		}
@@ -395,5 +584,8 @@ namespace Epsitec.Common.Document.Widgets
 
 		protected bool						ignoreChanged = false;
 		protected bool						mouseDown = false;
+		protected Part						hilited = Part.None;
+		protected Point						initialPos;
+		protected Margins					initialCrop;
 	}
 }
