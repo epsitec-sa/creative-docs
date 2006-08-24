@@ -348,7 +348,7 @@ namespace Epsitec.Common.Document.Objects
 					PDF.Port pdfPort = port as PDF.Port;
 					Size size = this.ImageBitmapSize();
 					bool filter = pi.Filter;
-					pdfPort.FilterImage = filter;
+					pdfPort.ImageFilter = filter;
 					PDF.ImageSurface surface = pdfPort.SearchImageSurface(pi.Filename, size, filter);
 					System.Diagnostics.Debug.Assert(surface != null);
 					image = surface.DrawingImage;
@@ -413,7 +413,7 @@ namespace Epsitec.Common.Document.Objects
 						port.TranslateTransform(-0.5, -0.5);
 
 						Drawing.Rectangle rect = new Drawing.Rectangle(0, 0, 1.0, 1.0);
-						port.FilterImage = this.PropertyImage.Filter;
+						port.ImageFilter = this.PropertyImage.Filter;
 						port.PaintImage(image, rect, crop);
 						//?port.PaintImage(image, rect, property.Filter);  // TODO: passer ce paramètre à AGG
 #endif

@@ -188,15 +188,15 @@ namespace Epsitec.Common.Printing
 			}
 		}
 		
-		public bool								FilterImage
+		public bool								ImageFilter
 		{
 			get
 			{
-				return this.filter_image;
+				return this.image_filter;
 			}
 			set
 			{
-				this.filter_image = value;
+				this.image_filter = value;
 			}
 		}
 		
@@ -816,7 +816,8 @@ namespace Epsitec.Common.Printing
 		protected Drawing.JoinStyle				line_join        = Drawing.JoinStyle.Miter;
 		protected Drawing.CapStyle				line_cap         = Drawing.CapStyle.Square;
 		protected double						line_miter_limit = 4.0;
-		protected bool							filter_image;
+		protected bool							image_filter = false;
+		protected Margins						image_crop = Margins.Zero;
 		
 		protected float							offset_x, offset_y;
 		protected float							scale;

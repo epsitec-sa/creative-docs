@@ -130,15 +130,27 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 
-		public bool								FilterImage
+		public bool								ImageFilter
 		{
 			get
 			{
-				return this.filter_image;
+				return this.image_filter;
 			}
 			set
 			{
-				this.filter_image = value;
+				this.image_filter = value;
+			}
+		}
+		
+		public Margins							ImageCrop
+		{
+			get
+			{
+				return this.image_crop;
+			}
+			set
+			{
+				this.image_crop = value;
 			}
 		}
 		
@@ -517,8 +529,8 @@ namespace Epsitec.Common.Drawing
 			this.AddFilledRectangle (fill_x, fill_y, fill_width, fill_height);
 			this.ImageRenderer.BitmapImage = bitmap;
 			this.ImageRenderer.Transform = transform;
-			
-			if (this.filter_image)
+
+			if (this.image_filter)
 			{
 				this.ImageRenderer.SelectBilinearFilter ();
 			}
@@ -1030,7 +1042,8 @@ namespace Epsitec.Common.Drawing
 
 		
 		private const double				AlmostInfinite = 1000000000.0;
-		private bool						filter_image = true;
+		private bool						image_filter = true;
+		private Margins						image_crop = Margins.Zero;
 		
 		private double						line_width;
 		private JoinStyle					line_join;
