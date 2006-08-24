@@ -113,7 +113,7 @@ namespace Epsitec.Common.Document.Panels
 			//	Retourne la hauteur standard.
 			get
 			{
-				return ( this.isExtendedSize ? this.LabelHeight+215 : this.LabelHeight+55 );
+				return ( this.isExtendedSize ? this.LabelHeight+240 : this.LabelHeight+55 );
 			}
 		}
 
@@ -207,9 +207,9 @@ namespace Epsitec.Common.Document.Panels
 			r.Right = rect.Right-50-2;
 			this.buttonSave.SetManualBounds(r);
 
-			r.Offset(0, -50);
+			r.Offset(0, -75);
 			Rectangle rr = r;
-			rr.Top = rr.Bottom+45;
+			rr.Top = rr.Bottom+70;
 			rr.Left = rect.Left;
 			rr.Right = rect.Right;
 			this.cropper.SetManualBounds(rr);

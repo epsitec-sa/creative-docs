@@ -63,6 +63,13 @@ namespace Epsitec.Common.Document.Widgets
 			this.fieldCropTop.TabIndex = tabIndex++;
 			this.fieldCropTop.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldCropTop, Res.Strings.Panel.Image.Tooltip.CropTop);
+
+			this.buttonReset = new Button(this);
+			this.buttonReset.Text = Res.Strings.Panel.Image.Button.Reset;
+			this.buttonReset.TabIndex = tabIndex++;
+			this.buttonReset.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.buttonReset.Clicked += new MessageEventHandler(this.HandleButtonReset);
+			ToolTip.Default.SetToolTip(this.buttonReset, Res.Strings.Panel.Image.Tooltip.Reset);
 		}
 
 		public Cropper(Widget embedder) : this()
@@ -79,10 +86,13 @@ namespace Epsitec.Common.Document.Widgets
 				this.fieldCropBottom.EditionAccepted -= new EventHandler(this.HandleFieldChanged);
 				this.fieldCropTop.EditionAccepted -= new EventHandler(this.HandleFieldChanged);
 
+				this.buttonReset.Clicked -= new MessageEventHandler(this.HandleButtonReset);
+
 				this.fieldCropLeft = null;
 				this.fieldCropRight = null;
 				this.fieldCropBottom = null;
 				this.fieldCropTop = null;
+				this.buttonReset = null;
 			}
 
 			base.Dispose(disposing);
@@ -153,6 +163,8 @@ namespace Epsitec.Common.Document.Widgets
 			this.fieldCropRight.InternalValue = (decimal) crop.Right;
 			this.fieldCropBottom.InternalValue = (decimal) crop.Bottom;
 			this.fieldCropTop.InternalValue = (decimal) crop.Top;
+
+			this.buttonReset.Enable = (this.crop != Margins.Zero);
 			
 			this.ignoreChanged = false;
 		}
@@ -402,7 +414,7 @@ namespace Epsitec.Common.Document.Widgets
 			if ( this.fieldCropLeft == null )  return;
 
 			Rectangle rect = this.Client.Bounds;
-			rect.Width -= rect.Height+5;
+			rect.Width -= rect.Height+5;  // place pour la partie interactive de droite
 
 			if (rect.Width < 100 || rect.Height < 45)
 			{
@@ -418,16 +430,48 @@ namespace Epsitec.Common.Document.Widgets
 				this.fieldCropBottom.Visibility = true;
 				this.fieldCropTop.Visibility = true;
 
-				Rectangle r = rect;
-				r.Bottom = r.Top-20;
-				r.Width = (r.Width-5)*0.5;
-				this.fieldCropLeft.SetManualBounds(r);
-				r.Offset(r.Width+5, 0);
-				this.fieldCropRight.SetManualBounds(r);
-				r.Offset(-(r.Width+5), -25);
-				this.fieldCropBottom.SetManualBounds(r);
-				r.Offset(r.Width+5, 0);
-				this.fieldCropTop.SetManualBounds(r);
+				if (rect.Height < 70)
+				{
+					Rectangle r = rect;
+					r.Bottom = r.Top-20;
+					r.Width = (r.Width-5)*0.5;
+					this.fieldCropLeft.SetManualBounds(r);
+					r.Offset(r.Width+5, 0);
+					this.fieldCropRight.SetManualBounds(r);
+					r.Offset(-(r.Width+5), -25);
+					this.fieldCropBottom.SetManualBounds(r);
+					r.Offset(r.Width+5, 0);
+					this.fieldCropTop.SetManualBounds(r);
+
+					this.buttonReset.Visibility = false;
+				}
+				else
+				{
+					double w = (rect.Width-5)*0.5;
+					Rectangle r = rect;
+					r.Bottom = r.Top-20;
+
+					r.Left = rect.Left+w/2;
+					r.Width = w;
+					this.fieldCropTop.SetManualBounds(r);
+
+					r.Offset(0, -25);
+					r.Left = rect.Left;
+					r.Width = w;
+					this.fieldCropLeft.SetManualBounds(r);
+					r.Offset(w+5, 0);
+					this.fieldCropRight.SetManualBounds(r);
+
+					r.Offset(0, -25);
+					r.Left = rect.Left+w/2;
+					r.Width = w;
+					this.fieldCropBottom.SetManualBounds(r);
+
+					r.Left = rect.Right-20;
+					r.Right = rect.Right;
+					this.buttonReset.SetManualBounds(r);
+					this.buttonReset.Visibility = true;
+				}
 			}
 		}
 
@@ -549,6 +593,10 @@ namespace Epsitec.Common.Document.Widgets
 			this.Crop = crop;
 		}
 
+		private void HandleButtonReset(object sender, MessageEventArgs e)
+		{
+			this.Crop = Margins.Zero;
+		}
 
 
 		#region Events handler
@@ -583,6 +631,7 @@ namespace Epsitec.Common.Document.Widgets
 		protected TextFieldReal				fieldCropRight;
 		protected TextFieldReal				fieldCropBottom;
 		protected TextFieldReal				fieldCropTop;
+		protected Button					buttonReset;
 
 		protected bool						ignoreChanged = false;
 		protected bool						mouseDown = false;

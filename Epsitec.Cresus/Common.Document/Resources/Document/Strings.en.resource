@@ -1326,4 +1326,8 @@
   </data>
   <data name="Panel.Image.Tooltip.CropTop" id="0J901">
   </data>
+  <data name="Panel.Image.Tooltip.Reset" id="0K901">
+  </data>
+  <data name="Panel.Image.Button.Reset" id="0L901">
+  </data>
 </bundle>
