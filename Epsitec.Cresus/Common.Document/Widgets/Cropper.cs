@@ -34,7 +34,6 @@ namespace Epsitec.Common.Document.Widgets
 
 			this.fieldCropLeft = new TextFieldReal(this);
 			Cropper.InitTextFieldReal(this.fieldCropLeft);
-			this.fieldCropLeft.MinValue = (decimal) 0;
 			this.fieldCropLeft.MaxValue = (decimal) 1000;
 			this.fieldCropLeft.EditionAccepted += new EventHandler(this.HandleFieldChanged);
 			this.fieldCropLeft.TabIndex = tabIndex++;
@@ -43,7 +42,6 @@ namespace Epsitec.Common.Document.Widgets
 
 			this.fieldCropRight = new TextFieldReal(this);
 			Cropper.InitTextFieldReal(this.fieldCropRight);
-			this.fieldCropRight.MinValue = (decimal) 0;
 			this.fieldCropRight.MaxValue = (decimal) 1000;
 			this.fieldCropRight.EditionAccepted += new EventHandler(this.HandleFieldChanged);
 			this.fieldCropRight.TabIndex = tabIndex++;
@@ -52,7 +50,6 @@ namespace Epsitec.Common.Document.Widgets
 
 			this.fieldCropBottom = new TextFieldReal(this);
 			Cropper.InitTextFieldReal(this.fieldCropBottom);
-			this.fieldCropBottom.MinValue = (decimal) 0;
 			this.fieldCropBottom.MaxValue = (decimal) 1000;
 			this.fieldCropBottom.EditionAccepted += new EventHandler(this.HandleFieldChanged);
 			this.fieldCropBottom.TabIndex = tabIndex++;
@@ -61,7 +58,6 @@ namespace Epsitec.Common.Document.Widgets
 
 			this.fieldCropTop = new TextFieldReal(this);
 			Cropper.InitTextFieldReal(this.fieldCropTop);
-			this.fieldCropTop.MinValue = (decimal) 0;
 			this.fieldCropTop.MaxValue = (decimal) 1000;
 			this.fieldCropTop.EditionAccepted += new EventHandler(this.HandleFieldChanged);
 			this.fieldCropTop.TabIndex = tabIndex++;
@@ -96,6 +92,7 @@ namespace Epsitec.Common.Document.Widgets
 		static protected void InitTextFieldReal(TextFieldReal field)
 		{
 			field.UnitType = RealUnitType.Scalar;
+			field.MinValue = (decimal) 0;
 			field.Step = 1.0M;
 			field.Resolution = 1.0M;
 			field.DefocusAction = DefocusAction.AutoAcceptOrRejectEdition;
@@ -136,6 +133,7 @@ namespace Epsitec.Common.Document.Widgets
 				if (this.size != value)
 				{
 					this.size = value;
+					this.UpdateField();
 					this.InvalidateBounds();
 				}
 			}
@@ -145,6 +143,11 @@ namespace Epsitec.Common.Document.Widgets
 		protected void UpdateField()
 		{
 			this.ignoreChanged = true;
+
+			this.fieldCropLeft.MaxValue = (decimal) this.size.Width;
+			this.fieldCropRight.MaxValue = (decimal) this.size.Width;
+			this.fieldCropBottom.MaxValue = (decimal) this.size.Height;
+			this.fieldCropTop.MaxValue = (decimal) this.size.Height;
 
 			this.fieldCropLeft.InternalValue = (decimal) crop.Left;
 			this.fieldCropRight.InternalValue = (decimal) crop.Right;
