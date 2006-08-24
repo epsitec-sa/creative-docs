@@ -205,18 +205,30 @@ namespace Epsitec.Common.Document.PDF
 			}
 		}
 		
-		public bool FilterImage
+		public bool ImageFilter
 		{
 			get
 			{
-				return this.filterImage;
+				return this.imageFilter;
 			}
 			set
 			{
-				this.filterImage = value;
+				this.imageFilter = value;
 			}
 		}
-		
+
+		public Margins ImageCrop
+		{
+			get
+			{
+				return this.imageCrop;
+			}
+			set
+			{
+				this.imageCrop = value;
+			}
+		}
+
 		public void PushColorModifier(ColorModifierCallback method)
 		{
 			this.stackColorModifier.Push(method);
@@ -1372,7 +1384,8 @@ namespace Epsitec.Common.Document.PDF
 		protected TypeComplexSurface			complexType;
 		protected Transform						transform;
 		protected FillMode						fillMode;
-		protected bool							filterImage;
+		protected bool							imageFilter = false;
+		protected Margins						imageCrop = Margins.Zero;
 
 		protected System.Text.StringBuilder		stringBuilder;
 		protected RichColor						currentStrokeColor;

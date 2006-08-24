@@ -374,6 +374,7 @@ namespace Epsitec.Common.Document.Widgets
 
 		protected void UpdateCursorPart()
 		{
+			//	Utilise le curseur de souris adéquat en fonction de la partie hilited.
 			switch (this.hilited)
 			{
 				case Part.Left:
