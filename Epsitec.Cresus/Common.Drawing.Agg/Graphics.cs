@@ -1043,7 +1043,7 @@ namespace Epsitec.Common.Drawing
 		
 		private const double				AlmostInfinite = 1000000000.0;
 		private bool						image_filter = true;
-		private Margins						image_crop = Margins.Zero;
+		private Margins						image_crop;
 		
 		private double						line_width;
 		private JoinStyle					line_join;

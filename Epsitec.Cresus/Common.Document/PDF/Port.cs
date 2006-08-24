@@ -1384,8 +1384,8 @@ namespace Epsitec.Common.Document.PDF
 		protected TypeComplexSurface			complexType;
 		protected Transform						transform;
 		protected FillMode						fillMode;
-		protected bool							imageFilter = false;
-		protected Margins						imageCrop = Margins.Zero;
+		protected bool							imageFilter;
+		protected Margins						imageCrop;
 
 		protected System.Text.StringBuilder		stringBuilder;
 		protected RichColor						currentStrokeColor;
