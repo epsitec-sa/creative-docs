@@ -366,8 +366,43 @@ namespace Epsitec.Common.Document.Widgets
 				if (this.hilited != value)
 				{
 					this.hilited = value;
+					this.UpdateCursorPart();
 					this.InvalidateBounds();
 				}
+			}
+		}
+
+		protected void UpdateCursorPart()
+		{
+			switch (this.hilited)
+			{
+				case Part.Left:
+				case Part.Right:
+					this.MouseCursor = MouseCursor.AsSizeWE;
+					break;
+
+				case Part.Bottom:
+				case Part.Top:
+					this.MouseCursor = MouseCursor.AsSizeNS;
+					break;
+
+				case Part.BottomLeft:
+				case Part.TopRight:
+					this.MouseCursor = MouseCursor.AsSizeNESW;
+					break;
+
+				case Part.BottomRight:
+				case Part.TopLeft:
+					this.MouseCursor = MouseCursor.AsSizeNWSE;
+					break;
+
+				case Part.Showed:
+					this.MouseCursor = MouseCursor.AsSizeAll;
+					break;
+
+				default:
+					this.MouseCursor = MouseCursor.AsArrow;
+					break;
 			}
 		}
 
