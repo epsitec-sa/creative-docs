@@ -199,8 +199,20 @@ namespace Epsitec.Common.Printing
 				this.image_filter = value;
 			}
 		}
-		
-		
+
+
+		public Drawing.Margins					ImageCrop
+		{
+			get
+			{
+				return this.image_crop;
+			}
+			set
+			{
+				this.image_crop = value;
+			}
+		}
+
 		public void PushColorModifier(Drawing.ColorModifierCallback method)
 		{
 			this.stackColorModifier.Push(method);
@@ -816,8 +828,8 @@ namespace Epsitec.Common.Printing
 		protected Drawing.JoinStyle				line_join        = Drawing.JoinStyle.Miter;
 		protected Drawing.CapStyle				line_cap         = Drawing.CapStyle.Square;
 		protected double						line_miter_limit = 4.0;
-		protected bool							image_filter = false;
-		protected Margins						image_crop = Margins.Zero;
+		protected bool							image_filter;
+		protected Drawing.Margins				image_crop;
 		
 		protected float							offset_x, offset_y;
 		protected float							scale;
