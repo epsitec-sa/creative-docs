@@ -9,10 +9,11 @@ namespace Epsitec.Common.Document.PDF
 	/// </summary>
 	public class ImageSurface
 	{
-		public ImageSurface(ImageCache.Item cache, Size size, bool filter, int id)
+		public ImageSurface(ImageCache.Item cache, Size size, Margins crop, bool filter, int id)
 		{
 			this.cache = cache;
 			this.size = size;
+			this.crop = crop;
 			this.filter = filter;
 			this.id = id;
 		}
@@ -35,6 +36,12 @@ namespace Epsitec.Common.Document.PDF
 			get { return this.size; }
 		}
 
+		public Margins Crop
+		{
+			//	Marges de recadrage de l'image.
+			get { return this.crop; }
+		}
+
 		public bool Filter
 		{
 			//	Filtre de l'image.
@@ -54,13 +61,14 @@ namespace Epsitec.Common.Document.PDF
 		}
 
 
-		public static ImageSurface Search(System.Collections.ArrayList list, string filename, Size size, bool filter)
+		public static ImageSurface Search(System.Collections.ArrayList list, string filename, Size size, Margins crop, bool filter)
 		{
 			//	Cherche une image d'après son nom dans une liste.
 			foreach ( ImageSurface image in list )
 			{
 				if ( image.cache.Filename == filename &&
 					 image.size           == size     &&
+					 image.crop           == crop     &&
 					 image.filter         == filter   )
 				{
 					return image;
@@ -69,27 +77,18 @@ namespace Epsitec.Common.Document.PDF
 			return null;
 		}
 
-		public static ImageSurface Search(System.Collections.ArrayList list, Drawing.Image drim, Size size)
+		public static ImageSurface Search(System.Collections.ArrayList list, Drawing.Image drim, Size size, Margins crop)
 		{
 			//	Cherche une image d'après son Drawing.Image.
-			//	La taille est passée d'une étrange façon. Voir la remarque dans Objects.Image.DrawingSize !
 			foreach ( ImageSurface image in list )
 			{
 				if ( image.DrawingImage == null )  continue;
 
-				if ( image.DrawingImage.UniqueId == drim.UniqueId )
+				if ( image.DrawingImage.UniqueId == drim.UniqueId &&
+					 image.size                  == size          &&
+					 image.crop                  == crop          )
 				{
-					if (size.IsEmpty)
-					{
-						return image;
-					}
-					else
-					{
-						if (image.size == size)
-						{
-							return image;
-						}
-					}
+					return image;
 				}
 			}
 			return null;
@@ -98,6 +97,7 @@ namespace Epsitec.Common.Document.PDF
 
 		protected ImageCache.Item			cache;
 		protected Size						size;
+		protected Margins					crop;
 		protected bool						filter;
 		protected int						id;
 	}

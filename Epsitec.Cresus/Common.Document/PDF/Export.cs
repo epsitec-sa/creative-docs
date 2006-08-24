@@ -546,14 +546,15 @@ namespace Epsitec.Common.Document.PDF
 							System.Diagnostics.Debug.Assert(propImage != null);
 							string filename = propImage.Filename;
 							bool filter = propImage.Filter;
+							Margins crop = propImage.CropMargins;
 							Size size = objImage.ImageBitmapSize();
 
-							ImageSurface image = ImageSurface.Search(this.imageSurfaces, filename, size, filter);
+							ImageSurface image = ImageSurface.Search(this.imageSurfaces, filename, size, crop, filter);
 							if ( image == null )
 							{
 								ImageCache.Item item = this.document.ImageCache.Get(filename);
 								System.Diagnostics.Debug.Assert(item != null);
-								image = new ImageSurface(item, size, filter, id++);
+								image = new ImageSurface(item, size, crop, filter, id++);
 								this.imageSurfaces.Add(image);
 							}
 						}

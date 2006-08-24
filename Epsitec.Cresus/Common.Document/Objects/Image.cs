@@ -339,17 +339,20 @@ namespace Epsitec.Common.Document.Objects
 
 			Drawing.Image image = null;
 			ImageCache.Item item = this.Item;
+			Size size = this.ImageBitmapSize();
+			Properties.Image pi = this.PropertyImage;
+			bool filter = pi.Filter;
+			Margins crop = pi.CropMargins;
+			port.ImageFilter = filter;
+			port.ImageCrop = crop;
+			port.ImageFinalSize = size;
 
 			if (item != null)
 			{
 				if (port is PDF.Port)  // exportation PDF ?
 				{
-					Properties.Image pi = this.PropertyImage;
 					PDF.Port pdfPort = port as PDF.Port;
-					Size size = this.ImageBitmapSize();
-					bool filter = pi.Filter;
-					pdfPort.ImageFilter = filter;
-					PDF.ImageSurface surface = pdfPort.SearchImageSurface(pi.Filename, size, filter);
+					PDF.ImageSurface surface = pdfPort.SearchImageSurface(pi.Filename, size, crop, filter);
 					System.Diagnostics.Debug.Assert(surface != null);
 					image = surface.DrawingImage;
 				}
@@ -376,28 +379,24 @@ namespace Epsitec.Common.Document.Objects
 
 				if ( width > 0 && height > 0 )
 				{
-					Properties.Image property = this.PropertyImage;
+					Drawing.Rectangle cropRect = new Drawing.Rectangle(0, 0, image.Width, image.Height);
+					cropRect.Deflate(crop);
 
-					Drawing.Rectangle crop = new Drawing.Rectangle(0, 0, image.Width, image.Height);
-					crop.Deflate(property.CropMargins);
-
-					if (!crop.IsSurfaceZero)
+					if (!cropRect.IsSurfaceZero)
 					{
-						if (property.Homo)  // conserve les proportions ?
+						if (pi.Homo)  // conserve les proportions ?
 						{
-							double rapport = crop.Height/crop.Width;
+							double rapport = cropRect.Height/cropRect.Width;
 							if (rapport < height/width)  height = width*rapport;
 							else                         width  = height/rapport;
 						}
-
-						Image.DrawingSize = new Size(width, height);  // donne la taille à PDF.Port.PaintImage
 
 #if false
 						port.TranslateTransform(center.X, center.Y);
 						port.RotateTransformDeg(angle, 0, 0);
 
-						double mirrorx = property.MirrorH ? -1 : 1;
-						double mirrory = property.MirrorV ? -1 : 1;
+						double mirrorx = pi.MirrorH ? -1 : 1;
+						double mirrory = pi.MirrorV ? -1 : 1;
 						port.ScaleTransform(mirrorx, mirrory, 0, 0);
 
 						Drawing.Rectangle rect = new Drawing.Rectangle(-width/2, -height/2, width, height);
@@ -407,18 +406,15 @@ namespace Epsitec.Common.Document.Objects
 						port.TranslateTransform(center.X-width/2, center.Y-height/2);
 						port.RotateTransformDeg(angle, width/2, height/2);
 						port.TranslateTransform(width/2, height/2);
-						double sx = property.MirrorH ? -width  : width;
-						double sy = property.MirrorV ? -height : height;
+						double sx = pi.MirrorH ? -width  : width;
+						double sy = pi.MirrorV ? -height : height;
 						port.ScaleTransform(sx, sy, 0.0, 0.0);
 						port.TranslateTransform(-0.5, -0.5);
 
 						Drawing.Rectangle rect = new Drawing.Rectangle(0, 0, 1.0, 1.0);
-						port.ImageFilter = this.PropertyImage.Filter;
-						port.PaintImage(image, rect, crop);
-						//?port.PaintImage(image, rect, property.Filter);  // TODO: passer ce paramètre à AGG
+						port.PaintImage(image, rect, cropRect);
+						//?port.PaintImage(image, rect, cropRect, pi.Filter);  // TODO: passer ce paramètre à AGG
 #endif
-
-						Image.DrawingSize = Size.Empty;
 					}
 				}
 
@@ -472,11 +468,5 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 		#endregion
-
-
-		//	Utilisé pour passer la taille de l'image dessinée à PDF.Port.PaintImage.
-		//	Ceci permet de retrouver le bon ImageSurface, lorsque la même image existe
-		//	plusieurs fois dans le même document, à des tailes différentes !
-		public static Size DrawingSize = Size.Empty;
 	}
 }

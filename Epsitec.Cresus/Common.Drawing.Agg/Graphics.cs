@@ -154,6 +154,18 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 		
+		public Size								ImageFinalSize
+		{
+			get
+			{
+				return this.image_final_size;
+			}
+			set
+			{
+				this.image_final_size = value;
+			}
+		}
+		
 		
 		public FillMode							FillMode
 		{
@@ -1044,6 +1056,7 @@ namespace Epsitec.Common.Drawing
 		private const double				AlmostInfinite = 1000000000.0;
 		private bool						image_filter = true;
 		private Margins						image_crop;
+		private Size						image_final_size;
 		
 		private double						line_width;
 		private JoinStyle					line_join;

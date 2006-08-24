@@ -23,6 +23,7 @@ namespace Epsitec.Common.Drawing
 		FillMode	FillMode			{ get; set; }
 		bool		ImageFilter			{ get; set; }
 		Margins		ImageCrop			{ get; set; }
+		Size		ImageFinalSize		{ get; set; }
 		
 		void PushColorModifier(ColorModifierCallback method);
 		ColorModifierCallback PopColorModifier();
