@@ -7,7 +7,7 @@ namespace Epsitec.Common.Drawing
 	/// The <c>ColorSpace</c> enumeration specifies the color space used to
 	/// represent a <see cref="RichColor"/>.
 	/// </summary>
-	public enum ColorSpace : byte
+	public enum ColorSpace
 	{
 		Invalid = 0,
 		Rgb = 1,

@@ -1170,13 +1170,15 @@ namespace Epsitec.Common.Drawing
 		}
 		#endregion
 
+		private ColorSpace					colorSpace;
 		private double						alpha;
 		private double						value1;  // red or cyan or gray
 		private double						value2;  // green or magenta
 		private double						value3;  // blue or yellow
 		private double						value4;  // black
-		private string						name;
-		private ColorSpace					colorSpace;
 		private bool						isValid;
+		private string						name;
+		
+		
 	}
 }
