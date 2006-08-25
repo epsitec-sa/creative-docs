@@ -685,7 +685,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		protected virtual Drawing.Size GetTextLayoutSize()
+		protected override Drawing.Size GetTextLayoutSize()
 		{
 			return new Drawing.Size(AbstractTextField.Infinity, this.realSize.Height);
 		}

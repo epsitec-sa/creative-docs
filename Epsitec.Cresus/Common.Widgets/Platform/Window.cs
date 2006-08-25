@@ -1437,6 +1437,8 @@ namespace Epsitec.Common.Widgets.Platform
 					Win32Api.Rect* rect = (Win32Api.Rect*) msg.LParam.ToPointer ();
 					int wParam = msg.WParam.ToInt32 ();
 
+//					System.Diagnostics.Debug.WriteLine (string.Format ("dx={0} MinWidth={1} MinimumSize={2}", rect->Right - rect->Left, this.minimum_size.Width, base.MinimumSize.Width));
+
 					int dx = System.Math.Max (this.minimum_size.Width, rect->Right - rect->Left);
 					int dy = System.Math.Max (this.minimum_size.Height, rect->Bottom - rect->Top);
 

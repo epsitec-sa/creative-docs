@@ -87,6 +87,13 @@ namespace Epsitec.Common.Widgets
 
 			Assert.AreEqual ("Copier", visual.GetDisplayCaption ().Description);
 			Assert.AreEqual (3, count);
+
+			visual.CommandObject = ApplicationCommands.SelectAll;
+
+			Assert.AreEqual ("Sélectionner tout", visual.GetDisplayCaption ().Description);
+			Assert.AreEqual ("Tout", Types.Collection.Extract (visual.GetDisplayCaption ().SortedLabels, 0));
+			Assert.AreEqual ("Sél. tout", Types.Collection.Extract (visual.GetDisplayCaption ().SortedLabels, 1));
+			Assert.AreEqual ("Sélectionner tout", Types.Collection.Extract (visual.GetDisplayCaption ().SortedLabels, 2));
 		}
 
 		[Test]

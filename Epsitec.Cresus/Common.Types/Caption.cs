@@ -24,6 +24,14 @@ namespace Epsitec.Common.Types
 			this.druid = druid;
 		}
 
+		public bool								HasLabels
+		{
+			get
+			{
+				return this.labels == null ? false : (this.labels.Count > 0);
+			}
+		}
+		
 		public ICollection<string>				Labels
 		{
 			get
@@ -315,6 +323,12 @@ namespace Epsitec.Common.Types
 		/// <returns>The merged caption object.</returns>
 		public static Caption Merge(Caption a, Caption b)
 		{
+			if ((a == null) &&
+				(b == null))
+			{
+				return null;
+			}
+			
 			Caption caption = new Caption ();
 
 			caption.SuspendChanged ();
@@ -323,7 +337,8 @@ namespace Epsitec.Common.Types
 			{
 				DependencyObject.CopyDefinedProperties (a, caption);
 			}
-			if (b != null)
+			if ((b != null) &&
+				(a != b))
 			{
 				DependencyObject.CopyDefinedProperties (b, caption);
 			}
