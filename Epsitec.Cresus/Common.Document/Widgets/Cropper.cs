@@ -154,12 +154,12 @@ namespace Epsitec.Common.Document.Widgets
 		}
 
 
-		protected bool IsMultiSelection
+		protected bool IsSingleSelection
 		{
-			//	Indique si plusieurs objets sont sélectionnés.
+			//	Indique si un seul objet est sélectionné.
 			get
 			{
-				return (this.document.Modifier.TotalSelected > 1);
+				return (this.document.Modifier.TotalSelected == 1);
 			}
 		}
 
@@ -201,10 +201,13 @@ namespace Epsitec.Common.Document.Widgets
 			get
 			{
 				Properties.Image pi = this.SelectedPropertyImage;
-				ImageCache.Item item = this.document.ImageCache.Get(pi.Filename);
-				if (item != null)
+				if (pi != null)
 				{
-					return item.Image.Size;
+					ImageCache.Item item = this.document.ImageCache.Get(pi.Filename);
+					if (item != null)
+					{
+						return item.Image.Size;
+					}
 				}
 
 				return new Size(1000, 1000);
@@ -235,7 +238,7 @@ namespace Epsitec.Common.Document.Widgets
 			{
 				Properties.Image pi = this.SelectedPropertyImage;
 				
-				if (!pi.Homo)
+				if (pi == null || !pi.Homo)
 				{
 					return false;
 				}
@@ -257,7 +260,7 @@ namespace Epsitec.Common.Document.Widgets
 
 			Size size = this.ImageSize;
 
-			this.Enable = !this.IsMultiSelection;
+			this.Enable = this.IsSingleSelection;
 
 			this.fieldCropLeft.MaxValue = (decimal) size.Width;
 			this.fieldCropRight.MaxValue = (decimal) size.Width;
