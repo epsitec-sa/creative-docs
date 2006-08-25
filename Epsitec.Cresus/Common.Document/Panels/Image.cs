@@ -42,6 +42,7 @@ namespace Epsitec.Common.Document.Panels
 			ToolTip.Default.SetToolTip(this.buttonSave, Res.Strings.Panel.Image.Tooltip.Save);
 
 			this.cropper = new Widgets.Cropper(this);
+			this.cropper.Document = this.document;
 			this.cropper.CropChanged += new EventHandler(this.HandleCropChanged);
 
 			this.buttonMirrorH = new CheckButton(this);
@@ -113,7 +114,7 @@ namespace Epsitec.Common.Document.Panels
 			//	Retourne la hauteur standard.
 			get
 			{
-				return ( this.isExtendedSize ? this.LabelHeight+240 : this.LabelHeight+55 );
+				return ( this.isExtendedSize ? this.LabelHeight+275 : this.LabelHeight+55 );
 			}
 		}
 
@@ -136,7 +137,6 @@ namespace Epsitec.Common.Document.Panels
 			this.buttonInside .ActiveState = p.InsideDoc ? ActiveState.Yes : ActiveState.No;
 
 			this.cropper.Crop = p.CropMargins;
-			this.cropper.Size = this.GetImageSelectedSize();
 
 			this.ignoreChanged = false;
 		}
@@ -157,30 +157,7 @@ namespace Epsitec.Common.Document.Panels
 			p.CropMargins = this.cropper.Crop;
 		}
 
-
-		protected Size GetImageSelectedSize()
-		{
-			//	Retourne la taille de l'image sélectionnée dans le document.
-			Objects.Abstract sel = this.document.Modifier.RetFirstSelectedObject();
-			if (sel != null)
-			{
-				Objects.Image image = sel as Objects.Image;
-				if (image != null)
-				{
-					Properties.Image pi = this.property as Properties.Image;
-					ImageCache.Item item = this.document.ImageCache.Get(pi.Filename);
-					if (item != null)
-					{
-						return item.Image.Size;
-					}
-				}
-			}
-
-			return Size.Zero;
-		}
-
-
-
+		
 		protected override void UpdateClientGeometry()
 		{
 			//	Met à jour la géométrie.
@@ -207,9 +184,9 @@ namespace Epsitec.Common.Document.Panels
 			r.Right = rect.Right-50-2;
 			this.buttonSave.SetManualBounds(r);
 
-			r.Offset(0, -75);
+			r.Offset(0, -110);
 			Rectangle rr = r;
-			rr.Top = rr.Bottom+70;
+			rr.Top = rr.Bottom+105;
 			rr.Left = rect.Left;
 			rr.Right = rect.Right;
 			this.cropper.SetManualBounds(rr);
