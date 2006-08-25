@@ -3070,6 +3070,40 @@ namespace Epsitec.Common.Widgets
 			return buffer.ToString();
 		}
 
+		public static string SelectBestText(TextLayout model, IEnumerable<string> texts, Drawing.Size size)
+		{
+			string bestText  = null;
+			double bestDelta = double.NegativeInfinity;
+
+			TextLayout layout = new TextLayout (model);
+
+			//	The texts are sorted from shortest to longest.
+
+			foreach (string text in texts)
+			{
+				layout.Text = text;
+
+				double width = layout.SingleLineSize.Width;
+				double delta = size.Width - width;
+
+				if (bestText == null)
+				{
+					bestDelta = delta;
+					bestText  = text;
+				}
+				else if (delta > 0)
+				{
+					//	If this text fits into the given width, use it as it provides more
+					//	contents than the previous, shorter, text.
+
+					bestDelta = delta;
+					bestText  = text;
+				}
+			}
+
+			return bestText;
+		}
+		
 		private void SetText(string newText)
 		{
 			System.Diagnostics.Debug.Assert (newText != null);

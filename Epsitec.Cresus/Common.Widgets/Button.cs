@@ -157,6 +157,42 @@ namespace Epsitec.Common.Widgets
 					return 0.0;
 			}
 		}
+
+		protected override Epsitec.Common.Drawing.Size GetTextLayoutSize()
+		{
+			Drawing.Size size = base.GetTextLayoutSize ();
+
+			switch (this.ButtonStyle)
+			{
+				case ButtonStyle.Normal:
+				case ButtonStyle.DefaultAccept:
+				case ButtonStyle.DefaultAcceptAndCancel:
+				case ButtonStyle.DefaultCancel:
+					size.Width = System.Math.Max (0, size.Width - 8);
+					size.Height = System.Math.Max (0, size.Height - 8);
+					break;
+			}
+			
+			return size;
+		}
+
+		protected override Epsitec.Common.Drawing.Point GetTextLayoutOffset()
+		{
+			Drawing.Point offset = base.GetTextLayoutOffset ();
+
+			switch (this.ButtonStyle)
+			{
+				case ButtonStyle.Normal:
+				case ButtonStyle.DefaultAccept:
+				case ButtonStyle.DefaultAcceptAndCancel:
+				case ButtonStyle.DefaultCancel:
+					offset.X += 4;
+					offset.Y += 4;
+					break;
+			}
+			
+			return offset;
+		}
 		
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
@@ -165,7 +201,7 @@ namespace Epsitec.Common.Widgets
 
 			Drawing.Rectangle rect  = this.Client.Bounds;
 			WidgetPaintState  state = this.PaintState;
-			Drawing.Point     pos   = Drawing.Point.Zero;
+			Drawing.Point     pos   = this.GetTextLayoutOffset ();
 			
 			if ( (state & WidgetPaintState.Enabled) == 0 )
 			{

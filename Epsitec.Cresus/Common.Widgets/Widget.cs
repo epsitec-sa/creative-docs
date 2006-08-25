@@ -2956,7 +2956,9 @@ namespace Epsitec.Common.Widgets
 			if (this.text_layout != null)
 			{
 				this.text_layout.Alignment  = this.ContentAlignment;
-				this.text_layout.LayoutSize = this.IsActualGeometryValid ? this.Client.Size : this.PreferredSize;
+				this.text_layout.LayoutSize = this.GetTextLayoutSize ();
+				
+				this.UpdateCaption ();
 			}
 		}
 
@@ -2968,6 +2970,48 @@ namespace Epsitec.Common.Widgets
 			{
 				this.UpdateTextLayout ();
 			}
+		}
+
+		protected override void OnDisplayCaptionChanged()
+		{
+			base.OnDisplayCaptionChanged ();
+			this.UpdateCaption ();
+		}
+
+		public void ForceCaptionUpdate()
+		{
+			if (this.text_layout == null)
+			{
+				this.CreateTextLayout ();
+			}
+			
+			this.UpdateTextLayout ();
+		}
+
+		protected virtual void UpdateCaption()
+		{
+			if (this.text_layout == null)
+			{
+				this.CreateTextLayout ();
+			}
+			
+			Caption caption = this.GetDisplayCaption ();
+
+			if ((caption != null) &&
+				(caption.HasLabels))
+			{
+				this.Text = TextLayout.SelectBestText (this.TextLayout, caption.SortedLabels, this.GetTextLayoutSize ());
+			}
+		}
+
+		protected virtual Drawing.Size GetTextLayoutSize()
+		{
+			return this.IsActualGeometryValid ? this.Client.Size : this.PreferredSize;
+		}
+
+		protected virtual Drawing.Point GetTextLayoutOffset()
+		{
+			return Drawing.Point.Zero;
 		}
 
 		internal void InternalNotifyTextLayoutTextChanged(string oldText, string newText)
@@ -3888,9 +3932,7 @@ namespace Epsitec.Common.Widgets
 				this.Validator.MakeDirty (true);
 			}
 		}
-		
-		
-		
+
 		
 		
 		

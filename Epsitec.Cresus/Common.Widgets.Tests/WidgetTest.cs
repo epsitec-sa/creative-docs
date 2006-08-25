@@ -85,6 +85,88 @@ namespace Epsitec.Common.Widgets
 		}
 #endif
 
+		[Test]
+		public void CheckDisplayCaption()
+		{
+			ResourceManager manager = Resources.DefaultManager;
+
+			manager.ActiveCulture = Resources.FindCultureInfo ("fr");
+
+			StaticText label = new StaticText ();
+
+			label.PreferredSize = new Size (10, 24);
+			label.CommandObject = ApplicationCommands.SelectAll;
+
+			Assert.AreEqual ("Tout", label.Text);
+
+			string oldText = null;
+
+			for (double s = 15; s < 200; s += 5)
+			{
+				label.PreferredWidth = s;
+				label.ForceCaptionUpdate ();
+
+				string newText = label.Text;
+
+				if (newText != oldText)
+				{
+					System.Console.Out.WriteLine ("{0}: {1}", s, newText);
+					oldText = newText;
+				}
+			}
+		}
+
+		[Test]
+		public void CheckDisplayCaptionInteractive()
+		{
+			ResourceManager manager = Resources.DefaultManager;
+
+			manager.ActiveCulture = Resources.FindCultureInfo ("fr");
+
+			Window window = new Window ();
+
+			Widget w1 = new Widget ();
+			Widget w2 = new Widget ();
+
+			w1.Dock = DockStyle.Left;
+			w2.Dock = DockStyle.Fill;
+
+			w1.PreferredWidth = 100;
+
+			Button b1 = new Button ();
+			Button b2 = new Button ();
+			Button b3 = new Button ();
+
+			b1.CommandObject = ApplicationCommands.Copy;
+			b2.CommandObject = ApplicationCommands.Delete;
+			b3.CommandObject = ApplicationCommands.SelectAll;
+
+			b1.MinWidth = 20;
+			b2.MinWidth = 20;
+			b3.MinWidth = 20;
+			
+			b1.Margins = new Margins (0, 0, 2, 1);
+			b2.Margins = new Margins (0, 0, 1, 1);
+			b3.Margins = new Margins (0, 0, 1, 2);
+			
+			b1.Dock = DockStyle.Stacked;
+			b2.Dock = DockStyle.Stacked;
+			b3.Dock = DockStyle.Stacked;
+
+			w2.ContainerLayoutMode = ContainerLayoutMode.VerticalFlow;
+			
+			w2.Children.Add (b1);
+			w2.Children.Add (b2);
+			w2.Children.Add (b3);
+			
+			window.Root.Children.Add (w1);
+			window.Root.Children.Add (w2);
+
+			window.Show ();
+			
+			Window.RunInTestEnvironment (window);
+		}
+
 #if false
 		[Test] public void CheckAbstractWidget()
 		{
@@ -261,8 +343,9 @@ namespace Epsitec.Common.Widgets
 			System.Console.WriteLine ("Getting 5 managed properties: {0} cycles.", c2 / runs);
 		}
 #endif
-		
-		[Test] public void CheckTextFrame()
+
+		[Test]
+		public void CheckTextFrame()
 		{
 			Window window = new Window ();
 			
