@@ -224,7 +224,7 @@ namespace Epsitec.Common.Document.Widgets
 				Objects.Image objectImage = this.SelectedObjectImage;
 				if (objectImage != null)
 				{
-					return objectImage.BoundingBox.Size;
+					return objectImage.ImageBitmapMaxFill;
 				}
 
 				return new Size(1000, 1000);
