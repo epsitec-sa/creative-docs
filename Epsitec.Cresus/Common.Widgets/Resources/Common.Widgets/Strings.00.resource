@@ -84,4 +84,5 @@
   <data name="ShortcutEditor.Code.None" id="0H2" mod="1">Aucun</data>
   <data name="ShortcutEditor.Modifier.Tooltip" id="0I2" mod="1">Touches super-shift</data>
   <data name="ShortcutEditor.Code.Tooltip" id="0J2" mod="1">Touche principale</data>
+  <data name="Shortcut.Template.TextWithShortcut" id="0K2" mod="1" about="{0} : emplacement où placer le texte&lt;br/&gt;{1} : emplacement où placer le raccourci">{0} ({1})</data>
 </bundle>
