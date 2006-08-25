@@ -118,6 +118,12 @@ namespace Epsitec.Common.Document.Panels
 			}
 		}
 
+		public override void UpdateGeometry()
+		{
+			//	Met à jour après un changement de géométrie.
+			this.cropper.UpdateField();
+		}
+
 		protected override void PropertyToWidgets()
 		{
 			//	Propriété -> widgets.

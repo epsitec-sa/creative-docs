@@ -219,6 +219,11 @@ namespace Epsitec.Common.Document.Panels
 			this.PropertyToWidgets();
 		}
 
+		public virtual void UpdateGeometry()
+		{
+			//	Met à jour après un changement de géométrie.
+		}
+
 		protected virtual void PropertyToWidgets()
 		{
 			//	Propriété -> widgets.

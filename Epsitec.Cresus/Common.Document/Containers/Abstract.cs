@@ -52,6 +52,13 @@ namespace Epsitec.Common.Document.Containers
 			this.Update();  // màj immédiate si l'agrégat est visible
 		}
 
+		public void SetDirtyGeometry()
+		{
+			//	Indique qu'il faudra mettre à jour selon les géométries.
+			this.isDirtyGeometry = true;
+			this.Update();  // màj immédiate si l'agrégat est visible
+		}
+
 		public void SetDirtyProperties(System.Collections.ArrayList propertyList)
 		{
 			//	Indique qu'il faudra mettre à jour les valeurs contenues.
@@ -115,7 +122,7 @@ namespace Epsitec.Common.Document.Containers
 				this.isDirtySelNames = false;
 			}
 
-			if ( this.dirtyProperties.Count > 0 )
+			if (this.dirtyProperties.Count > 0)
 			{
 				this.DoUpdateProperties(this.dirtyProperties);
 				this.dirtyProperties.Clear();  // propre
@@ -139,7 +146,13 @@ namespace Epsitec.Common.Document.Containers
 				this.dirtyObject = null;
 			}
 
-			if ( this.isDirtySelNames )
+			if (this.isDirtyGeometry)
+			{
+				this.DoUpdateGeometry();
+				this.isDirtyGeometry = false;  // propre
+			}
+
+			if (this.isDirtySelNames)
 			{
 				this.DoUpdateSelNames();
 				this.isDirtySelNames = false;
@@ -149,6 +162,11 @@ namespace Epsitec.Common.Document.Containers
 		protected virtual void DoUpdateContent()
 		{
 			//	Effectue la mise à jour du contenu.
+		}
+
+		protected virtual void DoUpdateGeometry()
+		{
+			//	Effectue la mise à jour selon la géométrie.
 		}
 
 		protected virtual void DoUpdateProperties(System.Collections.ArrayList propertyList)
@@ -192,6 +210,7 @@ namespace Epsitec.Common.Document.Containers
 
 		protected Document						document;
 		protected bool							isDirtyContent;
+		protected bool							isDirtyGeometry;
 		protected System.Collections.ArrayList	dirtyProperties = new System.Collections.ArrayList();
 		protected System.Collections.ArrayList	dirtyAggregates = new System.Collections.ArrayList();
 		protected System.Collections.ArrayList	dirtyTextStyles = new System.Collections.ArrayList();
