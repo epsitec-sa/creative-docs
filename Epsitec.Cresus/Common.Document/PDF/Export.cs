@@ -547,7 +547,7 @@ namespace Epsitec.Common.Document.PDF
 							string filename = propImage.Filename;
 							bool filter = propImage.Filter;
 							Margins crop = propImage.CropMargins;
-							Size size = objImage.ImageBitmapSize();
+							Size size = objImage.ImageBitmapSize;
 
 							ImageSurface image = ImageSurface.Search(this.imageSurfaces, filename, size, crop, filter);
 							if ( image == null )

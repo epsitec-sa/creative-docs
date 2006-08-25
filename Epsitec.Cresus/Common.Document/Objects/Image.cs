@@ -282,31 +282,46 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		public Size ImageBitmapSize()
+		public Size ImageBitmapMaxFill
+		{
+			//	Donne la place maximale que peut prendre le bitmap rectangulaire de l'image.
+			get
+			{
+				Point center;
+				double width, height, angle;
+				this.ImageGeometry(out center, out width, out height, out angle);
+				return new Size(width, height);
+			}
+		}
+
+		public Size ImageBitmapSize
 		{
 			//	Donne les dimensions effectives utilisées par le bitmap rectangulaire de l'image.
-			Point center;
-			double width, height, angle;
-			this.ImageGeometry(out center, out width, out height, out angle);
-
-			ImageCache.Item item = this.Item;
-
-			if ( width > 0 && height > 0 && item != null && item.Image != null)
+			get
 			{
-				Properties.Image property = this.PropertyImage;
+				Point center;
+				double width, height, angle;
+				this.ImageGeometry(out center, out width, out height, out angle);
 
-				if ( property.Homo )  // conserve les proportions ?
+				ImageCache.Item item = this.Item;
+
+				if ( width > 0 && height > 0 && item != null && item.Image != null)
 				{
-					Drawing.Rectangle crop = new Drawing.Rectangle(0, 0, item.Image.Height, item.Image.Width);
-					crop.Deflate(property.CropMargins);
+					Properties.Image property = this.PropertyImage;
 
-					double rapport = item.Image.Height/item.Image.Width;
-					if ( rapport < height/width )  height = width*rapport;
-					else                           width  = height/rapport;
+					if ( property.Homo )  // conserve les proportions ?
+					{
+						Drawing.Rectangle crop = new Drawing.Rectangle(0, 0, item.Image.Height, item.Image.Width);
+						crop.Deflate(property.CropMargins);
+
+						double rapport = item.Image.Height/item.Image.Width;
+						if ( rapport < height/width )  height = width*rapport;
+						else                           width  = height/rapport;
+					}
 				}
-			}
 
-			return new Size(width, height);
+				return new Size(width, height);
+			}
 		}
 
 		protected void ImageGeometry(out Point center, out double width, out double height, out double angle)
@@ -339,7 +354,7 @@ namespace Epsitec.Common.Document.Objects
 
 			Drawing.Image image = null;
 			ImageCache.Item item = this.Item;
-			Size size = this.ImageBitmapSize();
+			Size size = this.ImageBitmapSize;
 			Properties.Image pi = this.PropertyImage;
 			bool filter = pi.Filter;
 			Margins crop = pi.CropMargins;
