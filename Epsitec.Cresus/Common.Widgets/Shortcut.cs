@@ -316,6 +316,12 @@ namespace Epsitec.Common.Widgets
 		}
 
 
+		/// <summary>
+		/// Appends the main shortcut name to the text.
+		/// </summary>
+		/// <param name="text">The text.</param>
+		/// <param name="shortcuts">The shortcuts.</param>
+		/// <returns>The text with the shortcut.</returns>
 		public static string AppendShortcutText(string text, IEnumerable<Shortcut> shortcuts)
 		{
 			if (shortcuts != null)
