@@ -3005,7 +3005,10 @@ namespace Epsitec.Common.Widgets
 				}
 				if (caption.HasDescription)
 				{
-					ToolTip.Default.SetToolTip (this, caption.Description);
+					Collections.ShortcutCollection shortcuts = Shortcut.GetShortcuts (caption);
+					string tip = Shortcut.AppendShortcutText (caption.Description, shortcuts);
+
+					ToolTip.Default.SetToolTip (this, tip);
 				}
 			}
 		}

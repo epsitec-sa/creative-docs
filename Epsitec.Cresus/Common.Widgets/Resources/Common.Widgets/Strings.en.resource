@@ -80,4 +80,9 @@
   <data name="TextRuler.Tooltip.Unit" id="0D2">mm</data>
   <data name="TextRuler.Tooltip.Deleted" id="0E2">Deleted</data>
   <data name="TextRuler.FontDefault" id="0F2">Default...</data>
+  <data name="ShortcutEditor.Modifier.None" id="0G2" mod="1">—</data>
+  <data name="ShortcutEditor.Code.None" id="0H2" mod="1">None</data>
+  <data name="ShortcutEditor.Modifier.Tooltip" id="0I2" mod="1">Modifier keys</data>
+  <data name="ShortcutEditor.Code.Tooltip" id="0J2" mod="1">Main key (letter, number, sign, etc.)</data>
+  <data name="Shortcut.Template.TextWithShortcut" id="0K2" mod="1">{0} ({1})</data>
 </bundle>

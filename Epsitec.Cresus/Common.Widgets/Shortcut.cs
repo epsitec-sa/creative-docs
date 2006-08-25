@@ -2,6 +2,7 @@
 //	Responsable: Pierre ARNAUD
 
 using Epsitec.Common.Types;
+using System.Collections.Generic;
 
 [assembly: Epsitec.Common.Types.DependencyClass (typeof (Epsitec.Common.Widgets.Shortcut))]
 
@@ -312,6 +313,20 @@ namespace Epsitec.Common.Widgets
 		public static bool operator!=(Shortcut a, Shortcut b)
 		{
 			return !(a == b);
+		}
+
+
+		public static string AppendShortcutText(string text, IEnumerable<Shortcut> shortcuts)
+		{
+			if (shortcuts != null)
+			{
+				foreach (Shortcut shortcut in shortcuts)
+				{
+					return string.Format (Res.Strings.Shortcut.Template.TextWithShortcut, text, shortcut);
+				}
+			}
+			
+			return text;
 		}
 
 		

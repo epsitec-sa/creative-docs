@@ -415,6 +415,7 @@ namespace Epsitec.Common.Widgets
 			return null;
 		}
 
+
 		public override int GetHashCode()
 		{
 			return this.uniqueId;
