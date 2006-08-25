@@ -258,26 +258,44 @@ namespace Epsitec.Common.Document.Widgets
 			//	Met à jour tous les widgets, suite à une modification.
 			this.ignoreChanged = true;
 
-			Size size = this.ImageSize;
-
 			this.Enable = this.IsSingleSelection;
+
+			Size size;
+			Margins crop;
+			bool isFillEnabled;
+			double zoom;
+
+			if (this.Enable)
+			{
+				size = this.ImageSize;
+				crop = this.crop;
+				isFillEnabled = this.IsFillEnabled;
+
+				double zoomx = size.Width/(size.Width-crop.Left-crop.Right);
+				double zoomy = size.Height/(size.Height-crop.Bottom-crop.Top);
+				zoom = System.Math.Min(zoomx, zoomy);
+			}
+			else
+			{
+				size = Size.Zero;
+				crop = Margins.Zero;
+				isFillEnabled = false;
+				zoom = 1.0;
+			}
 
 			this.fieldCropLeft.MaxValue = (decimal) size.Width;
 			this.fieldCropRight.MaxValue = (decimal) size.Width;
 			this.fieldCropBottom.MaxValue = (decimal) size.Height;
 			this.fieldCropTop.MaxValue = (decimal) size.Height;
 
-			this.fieldCropLeft.InternalValue = (decimal) this.crop.Left;
-			this.fieldCropRight.InternalValue = (decimal) this.crop.Right;
-			this.fieldCropBottom.InternalValue = (decimal) this.crop.Bottom;
-			this.fieldCropTop.InternalValue = (decimal) this.crop.Top;
+			this.fieldCropLeft.InternalValue = (decimal) crop.Left;
+			this.fieldCropRight.InternalValue = (decimal) crop.Right;
+			this.fieldCropBottom.InternalValue = (decimal) crop.Bottom;
+			this.fieldCropTop.InternalValue = (decimal) crop.Top;
 
-			this.buttonReset.Enable = (this.crop != Margins.Zero);
-			this.buttonFill.Enable = this.IsFillEnabled;
-
-			double zoomx = size.Width/(size.Width-this.crop.Left-this.crop.Right);
-			double zoomy = size.Height/(size.Height-this.crop.Bottom-this.crop.Top);
-			this.sliderZoom.Value = (decimal) System.Math.Min(zoomx, zoomy);
+			this.buttonReset.Enable = (crop != Margins.Zero);
+			this.buttonFill.Enable = isFillEnabled;
+			this.sliderZoom.Value = (decimal) zoom;
 			
 			this.ignoreChanged = false;
 		}
