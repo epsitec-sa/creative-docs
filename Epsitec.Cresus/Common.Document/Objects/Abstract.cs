@@ -638,6 +638,8 @@ namespace Epsitec.Common.Document.Objects
 				drawingContext.MagnetClearStarting();
 				this.document.Modifier.TextInfoModif = "";
 			}
+
+			this.document.Notifier.NotifyGeometryChanged();
 		}
 
 

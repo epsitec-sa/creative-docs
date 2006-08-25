@@ -253,7 +253,7 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
-		protected void UpdateField()
+		public void UpdateField()
 		{
 			//	Met à jour tous les widgets, suite à une modification.
 			this.ignoreChanged = true;

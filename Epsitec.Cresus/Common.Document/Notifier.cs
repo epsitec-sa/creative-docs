@@ -57,6 +57,7 @@ namespace Epsitec.Common.Document
 			this.toolChanged = true;
 			this.saveChanged = true;
 			this.selectionChanged = true;
+			this.geometryChanged = true;
 			this.shaperChanged = true;
 			this.textChanged = true;
 			this.textCursorChanged = true;
@@ -86,6 +87,7 @@ namespace Epsitec.Common.Document
 
 			this.toolChanged = true;
 			this.selectionChanged = true;
+			this.geometryChanged = true;
 			this.pagesChanged = true;
 			this.layersChanged = true;
 			this.undoRedoChanged = true;
@@ -156,6 +158,14 @@ namespace Epsitec.Common.Document
 			//	Indique que les objets sélectionnés ont changé.
 			if ( !this.enable || !this.enableSelectionChanged )  return;
 			this.selectionChanged = true;
+			this.NotifyAsync();
+		}
+
+		public void NotifyGeometryChanged()
+		{
+			//	Indique que les objets sélectionnés ont changé.
+			if ( !this.enable )  return;
+			this.geometryChanged = true;
 			this.NotifyAsync();
 		}
 
@@ -478,6 +488,12 @@ namespace Epsitec.Common.Document
 				this.selectionChanged = false;
 			}
 
+			if ( this.geometryChanged )
+			{
+				this.OnGeometryChanged();
+				this.geometryChanged = false;
+			}
+
 			if ( this.shaperChanged )
 			{
 				this.OnShaperChanged();
@@ -688,6 +704,14 @@ namespace Epsitec.Common.Document
 			if ( this.SelectionChanged != null )  // qq'un écoute ?
 			{
 				this.SelectionChanged();
+			}
+		}
+
+		protected void OnGeometryChanged()
+		{
+			if ( this.GeometryChanged != null )  // qq'un écoute ?
+			{
+				this.GeometryChanged();
 			}
 		}
 
@@ -916,6 +940,7 @@ namespace Epsitec.Common.Document
 		public event SimpleEventHandler			ToolChanged;
 		public event SimpleEventHandler			SaveChanged;
 		public event SimpleEventHandler			SelectionChanged;
+		public event SimpleEventHandler			GeometryChanged;
 		public event SimpleEventHandler			ShaperChanged;
 		public event SimpleEventHandler			TextChanged;
 		public event SimpleEventHandler			TextCursorChanged;
@@ -955,6 +980,7 @@ namespace Epsitec.Common.Document
 		protected bool							toolChanged;
 		protected bool							saveChanged;
 		protected bool							selectionChanged;
+		protected bool							geometryChanged;
 		protected bool							shaperChanged;
 		protected bool							textChanged;
 		protected bool							textCursorChanged;

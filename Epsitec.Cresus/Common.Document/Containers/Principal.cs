@@ -588,6 +588,19 @@ namespace Epsitec.Common.Document.Containers
 			this.HandleOriginColorChanged(originColorLastPanel, true);
 		}
 
+		protected override void DoUpdateGeometry()
+		{
+			//	Effectue la mise à jour après un changement de géométrie.
+			foreach ( Widget widget in this.scrollable.Panel.Children.Widgets )
+			{
+				Panels.Abstract panel = widget as Panels.Abstract;
+				if ( panel != null )
+				{
+					panel.UpdateGeometry();
+				}
+			}
+		}
+
 		protected override void DoUpdateSelNames()
 		{
 			//	Effectue la mise à jour de la sélection par noms.

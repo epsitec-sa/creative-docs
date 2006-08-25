@@ -525,6 +525,7 @@ namespace Epsitec.Common.Document
 		{
 			//	Fin du déplacement.
 			this.document.Modifier.TextInfoModif = "";
+			this.document.Notifier.NotifyGeometryChanged();
 		}
 
 		protected void MoveTextInfoModif(int rank)

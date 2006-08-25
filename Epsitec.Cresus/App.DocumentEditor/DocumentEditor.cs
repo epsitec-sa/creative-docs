@@ -3798,6 +3798,7 @@ namespace Epsitec.App.DocumentEditor
 			this.CurrentDocument.Notifier.ToolChanged            += new SimpleEventHandler(this.HandleToolChanged);
 			this.CurrentDocument.Notifier.SaveChanged            += new SimpleEventHandler(this.HandleSaveChanged);
 			this.CurrentDocument.Notifier.SelectionChanged       += new SimpleEventHandler(this.HandleSelectionChanged);
+			this.CurrentDocument.Notifier.GeometryChanged        += new SimpleEventHandler(this.HandleGeometryChanged);
 			this.CurrentDocument.Notifier.ShaperChanged          += new SimpleEventHandler(this.HandleShaperChanged);
 			this.CurrentDocument.Notifier.TextChanged            += new SimpleEventHandler(this.HandleTextChanged);
 			this.CurrentDocument.Notifier.StyleChanged           += new SimpleEventHandler(this.HandleStyleChanged);
@@ -4321,6 +4322,17 @@ namespace Epsitec.App.DocumentEditor
 			StatusField field = this.info.Items["StatusObject"] as StatusField;
 			field.Text = this.TextInfoObject;
 			field.Invalidate();
+		}
+
+		private void HandleGeometryChanged()
+		{
+			//	Appelé par le document lorsque la géométrie d'un objet a changé.
+			if (this.IsCurrentDocument)
+			{
+				DocumentInfo di = this.CurrentDocumentInfo;
+
+				di.containerPrincipal.SetDirtyContent();
+			}
 		}
 
 		private void HandleShaperChanged()
@@ -5190,6 +5202,7 @@ namespace Epsitec.App.DocumentEditor
 				this.HandleToolChanged();
 				this.HandleSaveChanged();
 				this.HandleSelectionChanged();
+				this.HandleGeometryChanged();
 				this.HandleStyleChanged();
 				this.HandlePagesChanged();
 				this.HandleLayersChanged();
