@@ -109,6 +109,7 @@ namespace Epsitec.Common.Text
 		private string FindNextBreak(ref double width, out int n_chars)
 		{
 			bool add_ellipsis = false;
+			char ellipsis = '\0';
 
 		restart:
 			if (this.pos >= this.text.Length)
@@ -227,7 +228,7 @@ namespace Epsitec.Common.Text
 
 			try_fit:
 				if ((breakOffset == 0) &&
-					(offset > 0) &&
+					(offset >= 0) &&
 					(width < (advance + charWidth)))
 				{
 					//	Oops... The word is too long to fit in the given space, and there is no position
@@ -235,19 +236,34 @@ namespace Epsitec.Common.Text
 
 					if (((this.mode & Drawing.TextBreakMode.Ellipsis) != 0) &&
 						(font != null) &&
-						(font.OpenTypeFont.EllipsisGlyph > 0) &&
 						(add_ellipsis == false))
 					{
 						//	The caller specified that an ellipsis should be added if a word gets
 						//	truncated.
 
-						if (width > font.OpenTypeFont.EllipsisWidth*scale)
+						if ((font.OpenTypeFont.EllipsisWidth > 0) &&
+							(width > font.OpenTypeFont.EllipsisWidth*scale))
 						{
 							//	Pretend that there is an ellipsis (...) at the end of the text, reduce the
 							//	available width and start all the process over again.
 
 							width -= font.OpenTypeFont.EllipsisWidth*scale;
+							ellipsis = font.OpenTypeFont.EllipsisChar;
 							add_ellipsis = true;
+							goto restart;
+						}
+					}
+					
+					if ((add_ellipsis) &&
+						(ellipsis != font.OpenTypeFont.PeriodChar) &&
+						(offset == 0))
+					{
+						if ((font.OpenTypeFont.PeriodWidth > 0) &&
+							(width > font.OpenTypeFont.PeriodWidth*scale))
+						{
+							width += font.OpenTypeFont.EllipsisWidth*scale;
+							width -= font.OpenTypeFont.PeriodWidth*scale;
+							ellipsis = font.OpenTypeFont.PeriodChar;
 							goto restart;
 						}
 					}
@@ -262,7 +278,7 @@ namespace Epsitec.Common.Text
 						breakRun       = run;
 						breakRunIndex  = runIndex;
 						breakRunOffset = runOffset;
-						breakChar      = add_ellipsis ? font.OpenTypeFont.EllipsisChar : (char)0;
+						breakChar      = ellipsis;
 
 						goto break_text;
 					}

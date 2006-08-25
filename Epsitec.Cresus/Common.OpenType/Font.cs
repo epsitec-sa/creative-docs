@@ -64,15 +64,6 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 		
-		public double							PeriodWidth
-		{
-			get
-			{
-				ushort glyph = this.GetGlyphIndex ('.');
-				return (glyph == 0xffff) ? 0.5 : this.GetGlyphWidth (glyph, 1.0);
-			}
-		}
-		
 		public double							EmWidth
 		{
 			get
@@ -115,6 +106,14 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 		
+		public char								PeriodChar
+		{
+			get
+			{
+				return '.';
+			}
+		}
+		
 		public ushort							SpaceGlyph
 		{
 			get
@@ -153,7 +152,20 @@ namespace Epsitec.Common.OpenType
 				return this.ellipsisGlyph;
 			}
 		}
-		
+
+		public ushort							PeriodGlyph
+		{
+			get
+			{
+				if (this.periodGlyph == 0)
+				{
+					this.periodGlyph = this.ot_indexMapping.GetGlyphIndex (this.PeriodChar);
+				}
+
+				return this.periodGlyph;
+			}
+		}
+
 		public double							HyphenWidth
 		{
 			get
@@ -169,6 +181,17 @@ namespace Epsitec.Common.OpenType
 			{
 				double per_em  = this.ot_head.UnitsPerEm;
 				return this.GetAdvance (this.EllipsisGlyph) / per_em;
+			}
+		}
+
+		public double							PeriodWidth
+		{
+			get
+			{
+				double per_em  = this.ot_head.UnitsPerEm;
+				ushort glyph   = this.PeriodGlyph;
+				
+				return glyph == 0xffff ? 0.5 : (this.GetAdvance (this.PeriodGlyph) / per_em);
 			}
 		}
 
@@ -2473,6 +2496,7 @@ namespace Epsitec.Common.OpenType
 		private ushort							spaceGlyph;
 		private ushort							hyphenGlyph;
 		private ushort							ellipsisGlyph;
+		private ushort							periodGlyph;
 		private ushort[]						glyphCache;
 		private ushort[]						advanceCache;
 		

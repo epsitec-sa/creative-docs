@@ -31,6 +31,14 @@ namespace Epsitec.Common.Types
 				return this.labels == null ? false : (this.labels.Count > 0);
 			}
 		}
+
+		public bool								HasDescription
+		{
+			get
+			{
+				return string.IsNullOrEmpty (this.Description) ? false : true;
+			}
+		}
 		
 		public ICollection<string>				Labels
 		{
