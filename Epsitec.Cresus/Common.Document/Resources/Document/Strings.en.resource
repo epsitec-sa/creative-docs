@@ -1318,16 +1318,24 @@
   <data name="Error.NotFound" id="01901">The text cannot be found in the current document.</data>
   <data name="Panel.Image.Dialog.Save.Title" id="07901">
   </data>
-  <data name="Panel.Image.Tooltip.CropLeft" id="0A901">
+  <data name="Panel.Image.Crop.Tooltip.CropLeft" id="0A901">
   </data>
-  <data name="Panel.Image.Tooltip.CropRight" id="0H901">
+  <data name="Panel.Image.Crop.Tooltip.CropRight" id="0H901">
   </data>
-  <data name="Panel.Image.Tooltip.CropBottom" id="0I901">
+  <data name="Panel.Image.Crop.Tooltip.CropBottom" id="0I901">
   </data>
-  <data name="Panel.Image.Tooltip.CropTop" id="0J901">
+  <data name="Panel.Image.Crop.Tooltip.CropTop" id="0J901">
   </data>
-  <data name="Panel.Image.Tooltip.Reset" id="0K901">
+  <data name="Panel.Image.Crop.Tooltip.Reset" id="0K901">
   </data>
-  <data name="Panel.Image.Button.Reset" id="0L901">
+  <data name="Panel.Image.Crop.Button.Fill" id="0L901">
+  </data>
+  <data name="Panel.Image.Crop.Tooltip.Fill" id="0M901">
+  </data>
+  <data name="Panel.Image.Crop.Button.Reset" id="0N901">
+  </data>
+  <data name="Panel.Image.Crop.Tooltip.Zoom" id="0O901">
+  </data>
+  <data name="Panel.Image.Crop.Title" id="0P901">
   </data>
 </bundle>

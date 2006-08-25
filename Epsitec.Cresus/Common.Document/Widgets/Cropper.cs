@@ -32,44 +32,61 @@ namespace Epsitec.Common.Document.Widgets
 
 			int tabIndex = 0;
 
-			this.fieldCropLeft = new TextFieldReal(this);
-			Cropper.InitTextFieldReal(this.fieldCropLeft);
-			this.fieldCropLeft.MaxValue = (decimal) 1000;
-			this.fieldCropLeft.EditionAccepted += new EventHandler(this.HandleFieldChanged);
-			this.fieldCropLeft.TabIndex = tabIndex++;
-			this.fieldCropLeft.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			ToolTip.Default.SetToolTip(this.fieldCropLeft, Res.Strings.Panel.Image.Tooltip.CropLeft);
-
-			this.fieldCropRight = new TextFieldReal(this);
-			Cropper.InitTextFieldReal(this.fieldCropRight);
-			this.fieldCropRight.MaxValue = (decimal) 1000;
-			this.fieldCropRight.EditionAccepted += new EventHandler(this.HandleFieldChanged);
-			this.fieldCropRight.TabIndex = tabIndex++;
-			this.fieldCropRight.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			ToolTip.Default.SetToolTip(this.fieldCropRight, Res.Strings.Panel.Image.Tooltip.CropRight);
-
-			this.fieldCropBottom = new TextFieldReal(this);
-			Cropper.InitTextFieldReal(this.fieldCropBottom);
-			this.fieldCropBottom.MaxValue = (decimal) 1000;
-			this.fieldCropBottom.EditionAccepted += new EventHandler(this.HandleFieldChanged);
-			this.fieldCropBottom.TabIndex = tabIndex++;
-			this.fieldCropBottom.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			ToolTip.Default.SetToolTip(this.fieldCropBottom, Res.Strings.Panel.Image.Tooltip.CropBottom);
-
-			this.fieldCropTop = new TextFieldReal(this);
-			Cropper.InitTextFieldReal(this.fieldCropTop);
-			this.fieldCropTop.MaxValue = (decimal) 1000;
-			this.fieldCropTop.EditionAccepted += new EventHandler(this.HandleFieldChanged);
-			this.fieldCropTop.TabIndex = tabIndex++;
-			this.fieldCropTop.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			ToolTip.Default.SetToolTip(this.fieldCropTop, Res.Strings.Panel.Image.Tooltip.CropTop);
+			this.title = new StaticText(this);
+			this.title.Text = Res.Strings.Panel.Image.Crop.Title;
 
 			this.buttonReset = new Button(this);
-			this.buttonReset.Text = Res.Strings.Panel.Image.Button.Reset;
+			this.buttonReset.Text = Res.Strings.Panel.Image.Crop.Button.Reset;
 			this.buttonReset.TabIndex = tabIndex++;
 			this.buttonReset.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			this.buttonReset.Clicked += new MessageEventHandler(this.HandleButtonReset);
-			ToolTip.Default.SetToolTip(this.buttonReset, Res.Strings.Panel.Image.Tooltip.Reset);
+			ToolTip.Default.SetToolTip(this.buttonReset, Res.Strings.Panel.Image.Crop.Tooltip.Reset);
+
+			this.buttonFill = new Button(this);
+			this.buttonFill.Text = Res.Strings.Panel.Image.Crop.Button.Fill;
+			this.buttonFill.TabIndex = tabIndex++;
+			this.buttonFill.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.buttonFill.Clicked += new MessageEventHandler(this.HandleButtonFill);
+			ToolTip.Default.SetToolTip(this.buttonFill, Res.Strings.Panel.Image.Crop.Tooltip.Fill);
+
+			this.fieldCropTop = new TextFieldReal(this);
+			Cropper.InitTextFieldReal(this.fieldCropTop);
+			this.fieldCropTop.EditionAccepted += new EventHandler(this.HandleFieldChanged);
+			this.fieldCropTop.TabIndex = tabIndex++;
+			this.fieldCropTop.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			ToolTip.Default.SetToolTip(this.fieldCropTop, Res.Strings.Panel.Image.Crop.Tooltip.CropTop);
+
+			this.fieldCropLeft = new TextFieldReal(this);
+			Cropper.InitTextFieldReal(this.fieldCropLeft);
+			this.fieldCropLeft.EditionAccepted += new EventHandler(this.HandleFieldChanged);
+			this.fieldCropLeft.TabIndex = tabIndex++;
+			this.fieldCropLeft.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			ToolTip.Default.SetToolTip(this.fieldCropLeft, Res.Strings.Panel.Image.Crop.Tooltip.CropLeft);
+
+			this.fieldCropRight = new TextFieldReal(this);
+			Cropper.InitTextFieldReal(this.fieldCropRight);
+			this.fieldCropRight.EditionAccepted += new EventHandler(this.HandleFieldChanged);
+			this.fieldCropRight.TabIndex = tabIndex++;
+			this.fieldCropRight.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			ToolTip.Default.SetToolTip(this.fieldCropRight, Res.Strings.Panel.Image.Crop.Tooltip.CropRight);
+
+			this.fieldCropBottom = new TextFieldReal(this);
+			Cropper.InitTextFieldReal(this.fieldCropBottom);
+			this.fieldCropBottom.EditionAccepted += new EventHandler(this.HandleFieldChanged);
+			this.fieldCropBottom.TabIndex = tabIndex++;
+			this.fieldCropBottom.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			ToolTip.Default.SetToolTip(this.fieldCropBottom, Res.Strings.Panel.Image.Crop.Tooltip.CropBottom);
+
+			this.sliderZoom = new VSlider(this);
+			this.sliderZoom.MinValue = 1.0M;
+			this.sliderZoom.MaxValue = 4.0M;
+			this.sliderZoom.SmallChange = 0.1M;
+			this.sliderZoom.LargeChange = 0.5M;
+			this.sliderZoom.Resolution = 0.000000001M;
+			this.sliderZoom.ValueChanged += new EventHandler(this.HandleSliderZoomChanged);
+			this.sliderZoom.TabIndex = tabIndex++;
+			this.sliderZoom.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			ToolTip.Default.SetToolTip(this.sliderZoom, Res.Strings.Panel.Image.Crop.Tooltip.Zoom);
 		}
 
 		public Cropper(Widget embedder) : this()
@@ -87,30 +104,34 @@ namespace Epsitec.Common.Document.Widgets
 				this.fieldCropTop.EditionAccepted -= new EventHandler(this.HandleFieldChanged);
 
 				this.buttonReset.Clicked -= new MessageEventHandler(this.HandleButtonReset);
+				this.buttonFill.Clicked -= new MessageEventHandler(this.HandleButtonFill);
+				this.sliderZoom.ValueChanged -= new EventHandler(this.HandleSliderZoomChanged);
 
 				this.fieldCropLeft = null;
 				this.fieldCropRight = null;
 				this.fieldCropBottom = null;
 				this.fieldCropTop = null;
 				this.buttonReset = null;
+				this.buttonFill = null;
+				this.sliderZoom = null;
 			}
 
 			base.Dispose(disposing);
 		}
 
 
-		static protected void InitTextFieldReal(TextFieldReal field)
+		public Document Document
 		{
-			field.UnitType = RealUnitType.Scalar;
-			field.MinValue = (decimal) 0;
-			field.Step = 1.0M;
-			field.Resolution = 1.0M;
-			field.DefocusAction = DefocusAction.AutoAcceptOrRejectEdition;
-			field.AutoSelectOnFocus = true;
-			field.SwallowEscape = true;
-			field.SwallowReturn = true;
+			//	Document contenant l'image sélectionnée dont on modifie le cadrage.
+			get
+			{
+				return this.document;
+			}
+			set
+			{
+				this.document = value;
+			}
 		}
-
 
 		public Margins Crop
 		{
@@ -124,6 +145,7 @@ namespace Epsitec.Common.Document.Widgets
 				if (this.crop != value)
 				{
 					this.crop = value;
+					this.cropBeforeZoom = value;
 					this.UpdateField();
 					this.InvalidateBounds();
 					this.OnCropChanged();
@@ -131,60 +153,121 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
-		public Size Size
+
+		protected Objects.Image SelectedObjectImage
 		{
-			//	Taille de l'image.
+			//	Retourne l'objet Image sélectionné dans le document.
 			get
 			{
-				return this.size;
-			}
-			set
-			{
-				if (this.size != value)
+				Objects.Abstract objectSelected = this.document.Modifier.RetFirstSelectedObject();
+				if (objectSelected != null)
 				{
-					this.size = value;
-					this.UpdateField();
-					this.InvalidateBounds();
+					return objectSelected as Objects.Image;
 				}
+
+				return null;
 			}
 		}
 
+		protected Properties.Image SelectedPropertyImage
+		{
+			//	Retourne la propriété Image de l'objet sélectionné dans le document.
+			get
+			{
+				Objects.Image objectImage = this.SelectedObjectImage;
+				if (objectImage != null)
+				{
+					return objectImage.PropertyImage;
+				}
+
+				return null;
+			}
+		}
+
+		protected Size ImageSize
+		{
+			//	Taille de l'image.
+			//	Si la taille de l'image est inconnue, retourne une taille
+			//	par défaut arbitraire de 1000 x 1000.
+			get
+			{
+				Properties.Image pi = this.SelectedPropertyImage;
+				ImageCache.Item item = this.document.ImageCache.Get(pi.Filename);
+				if (item != null)
+				{
+					return item.Image.Size;
+				}
+
+				return new Size(1000, 1000);
+			}
+		}
+
+		protected Size ObjectSize
+		{
+			//	Taille de l'objet Image dans le document.
+			//	Si la taille de l'objet est inconnue, retourne une taille
+			//	par défaut arbitraire de 1000 x 1000.
+			get
+			{
+				Objects.Image objectImage = this.SelectedObjectImage;
+				if (objectImage != null)
+				{
+					return objectImage.BoundingBox.Size;
+				}
+
+				return new Size(1000, 1000);
+			}
+		}
+
+		protected bool IsFillEnabled
+		{
+			//	Indique si le bouton 'fill' est activé.
+			get
+			{
+				Properties.Image pi = this.SelectedPropertyImage;
+				
+				if (!pi.Homo)
+				{
+					return false;
+				}
+
+				Size imageSize = this.ImageSize;
+				Size objectSize = this.ObjectSize;
+
+				Rectangle rect = new Rectangle(Point.Zero, imageSize);
+				rect.Deflate(this.crop);
+
+				return System.Math.Abs(rect.Width/rect.Height - objectSize.Width/objectSize.Height) > 0.0001;
+			}
+		}
 
 		protected void UpdateField()
 		{
 			//	Met à jour tous les widgets, suite à une modification.
 			this.ignoreChanged = true;
 
-			this.fieldCropLeft.MaxValue = (decimal) this.size.Width;
-			this.fieldCropRight.MaxValue = (decimal) this.size.Width;
-			this.fieldCropBottom.MaxValue = (decimal) this.size.Height;
-			this.fieldCropTop.MaxValue = (decimal) this.size.Height;
+			Size size = this.ImageSize;
 
-			this.fieldCropLeft.InternalValue = (decimal) crop.Left;
-			this.fieldCropRight.InternalValue = (decimal) crop.Right;
-			this.fieldCropBottom.InternalValue = (decimal) crop.Bottom;
-			this.fieldCropTop.InternalValue = (decimal) crop.Top;
+			this.fieldCropLeft.MaxValue = (decimal) size.Width;
+			this.fieldCropRight.MaxValue = (decimal) size.Width;
+			this.fieldCropBottom.MaxValue = (decimal) size.Height;
+			this.fieldCropTop.MaxValue = (decimal) size.Height;
+
+			this.fieldCropLeft.InternalValue = (decimal) this.crop.Left;
+			this.fieldCropRight.InternalValue = (decimal) this.crop.Right;
+			this.fieldCropBottom.InternalValue = (decimal) this.crop.Bottom;
+			this.fieldCropTop.InternalValue = (decimal) this.crop.Top;
 
 			this.buttonReset.Enable = (this.crop != Margins.Zero);
+			this.buttonFill.Enable = this.IsFillEnabled;
+
+			double zoomx = size.Width/(size.Width-this.crop.Left-this.crop.Right);
+			double zoomy = size.Height/(size.Height-this.crop.Bottom-this.crop.Top);
+			this.sliderZoom.Value = (decimal) System.Math.Min(zoomx, zoomy);
 			
 			this.ignoreChanged = false;
 		}
 
-
-		protected Size ImageSize
-		{
-			//	Retourne la taille de l'image. Si elle est inconnue, retourne une taille
-			//	par défaut arbitraire de 1000 x 1000.
-			get
-			{
-				if (this.size.IsEmpty)  // taille inconnue ?
-				{
-					return new Size(1000, 1000);
-				}
-
-				return this.size;
-			}
-		}
 
 		protected Rectangle BoundsRectangle
 		{
@@ -192,6 +275,7 @@ namespace Epsitec.Common.Document.Widgets
 			get
 			{
 				Rectangle rect = this.Client.Bounds;
+				rect.Deflate(0, 0, 30, 5);
 				rect.Left = rect.Right-rect.Height;  // doit être carré
 
 				if (rect.Width < 0)
@@ -325,33 +409,81 @@ namespace Epsitec.Common.Document.Widgets
 				crop.Right  -= move.X;
 				crop.Bottom += move.Y;
 				crop.Top    -= move.Y;
-
-				if (crop.Left < 0)
-				{
-					crop.Right += crop.Left;
-					crop.Left = 0;
-				}
-
-				if (crop.Right < 0)
-				{
-					crop.Left += crop.Right;
-					crop.Right = 0;
-				}
-
-				if (crop.Bottom < 0)
-				{
-					crop.Top += crop.Bottom;
-					crop.Bottom = 0;
-				}
-
-				if (crop.Top < 0)
-				{
-					crop.Bottom += crop.Top;
-					crop.Top = 0;
-				}
+				crop = this.CropAdjust(crop);
 			}
 
 			this.Crop = crop;
+		}
+
+		protected Margins CropAdjust(Margins crop)
+		{
+			//	Ajuste le recadrage pour n'avoir jamais de marges négatives.
+			if (crop.Left < 0)
+			{
+				crop.Right += crop.Left;
+				crop.Left = 0;
+			}
+
+			if (crop.Right < 0)
+			{
+				crop.Left += crop.Right;
+				crop.Right = 0;
+			}
+
+			if (crop.Bottom < 0)
+			{
+				crop.Top += crop.Bottom;
+				crop.Bottom = 0;
+			}
+
+			if (crop.Top < 0)
+			{
+				crop.Bottom += crop.Top;
+				crop.Top = 0;
+			}
+
+			return crop;
+		}
+
+		protected Margins CropFillObject(Margins crop)
+		{
+			//	Ajuste le recadrage pour remplir tout l'objet.
+			Size objectSize = this.ObjectSize;
+
+			Size size = this.ImageSize;
+			Rectangle rect = new Rectangle(Point.Zero, size);
+			rect.Deflate(crop);
+			double w = rect.Width;
+			double h = rect.Height;
+
+			if (rect.Width/rect.Height > objectSize.Width/objectSize.Height)
+			{
+				h = w/(objectSize.Width/objectSize.Height);
+
+				if (h > size.Height)
+				{
+					w /= h/size.Height;
+					h = size.Height;
+				}
+			}
+			else if (rect.Width/rect.Height < objectSize.Width/objectSize.Height)
+			{
+				w = h*(objectSize.Width/objectSize.Height);
+
+				if (w > size.Width)
+				{
+					h /= w/size.Width;
+					w = size.Width;
+				}
+			}
+
+			crop.Left   = rect.Center.X-w/2;
+			crop.Right  = size.Width-(rect.Center.X+w/2);
+			crop.Bottom = rect.Center.Y-h/2;
+			crop.Top    = size.Height-(rect.Center.Y+h/2);
+			crop = this.CropAdjust(crop);
+
+			return crop;
 		}
 
 		protected Part Hilited
@@ -461,67 +593,75 @@ namespace Epsitec.Common.Document.Widgets
 			//	Met à jour la géométrie.
 			base.UpdateClientGeometry();
 
-			if ( this.fieldCropLeft == null )  return;
+			if ( this.title == null )  return;
 
 			Rectangle rect = this.Client.Bounds;
-			rect.Width -= rect.Height+5;  // place pour la partie interactive de droite
+			Rectangle r;
 
-			if (rect.Width < 100 || rect.Height < 45)
+			if (rect.Width < 160 || rect.Height < 105)
 			{
+				this.title.Visibility = false;
+				this.buttonReset.Visibility = false;
+				this.buttonFill.Visibility = false;
 				this.fieldCropLeft.Visibility = false;
 				this.fieldCropRight.Visibility = false;
 				this.fieldCropBottom.Visibility = false;
 				this.fieldCropTop.Visibility = false;
+				this.sliderZoom.Visibility = false;
 			}
 			else
 			{
+				this.title.Visibility = true;
+				this.buttonReset.Visibility = true;
+				this.buttonFill.Visibility = true;
 				this.fieldCropLeft.Visibility = true;
 				this.fieldCropRight.Visibility = true;
 				this.fieldCropBottom.Visibility = true;
 				this.fieldCropTop.Visibility = true;
+				this.sliderZoom.Visibility = true;
 
-				if (rect.Height < 70)  // disposition 2.2 ?
-				{
-					Rectangle r = rect;
-					r.Bottom = r.Top-20;
-					r.Width = (r.Width-5)*0.5;
-					this.fieldCropLeft.SetManualBounds(r);
-					r.Offset(r.Width+5, 0);
-					this.fieldCropRight.SetManualBounds(r);
-					r.Offset(-(r.Width+5), -25);
-					this.fieldCropBottom.SetManualBounds(r);
-					r.Offset(r.Width+5, 0);
-					this.fieldCropTop.SetManualBounds(r);
+				rect = this.Client.Bounds;
+				rect.Top -= 5;
+				rect.Bottom = rect.Top-20;
 
-					this.buttonReset.Visibility = false;
-				}
-				else  // disposition 1.2.1 ?
-				{
-					double w = (rect.Width-5)*0.5;
-					Rectangle r = rect;
-					r.Bottom = r.Top-20;
+				double w = System.Math.Floor((rect.Width-10)/3);
+				r = rect;
+				r.Width = w;
+				this.title.SetManualBounds(r);
+				r.Offset(w+5, 0);
+				this.buttonReset.SetManualBounds(r);
+				r.Offset(w+5, 0);
+				r.Right = rect.Right;
+				this.buttonFill.SetManualBounds(r);
 
-					r.Left = rect.Left+w/2;
-					r.Width = w;
-					this.fieldCropTop.SetManualBounds(r);
+				rect = this.Client.Bounds;
+				rect.Deflate(0, 0, 30, 5);
+				rect.Width -= rect.Height+12+5;  // place pour la partie interactive de droite
 
-					r.Offset(0, -25);
-					r.Left = rect.Left;
-					r.Width = w;
-					this.fieldCropLeft.SetManualBounds(r);
-					r.Offset(w+5, 0);
-					this.fieldCropRight.SetManualBounds(r);
+				r = rect;
+				r.Left = rect.Right+3;
+				r.Right = rect.Right+3+12;
+				this.sliderZoom.SetManualBounds(r);
 
-					r.Offset(0, -25);
-					r.Left = rect.Left+w/2;
-					r.Width = w;
-					this.fieldCropBottom.SetManualBounds(r);
+				w = System.Math.Floor((rect.Width-5)/2);
+				r = rect;
+				r.Bottom = r.Top-20;
 
-					r.Left = rect.Right-20;
-					r.Right = rect.Right;
-					this.buttonReset.SetManualBounds(r);
-					this.buttonReset.Visibility = true;
-				}
+				r.Left = rect.Left+w/2+2;
+				r.Width = w;
+				this.fieldCropTop.SetManualBounds(r);
+
+				r.Offset(0, -25);
+				r.Left = rect.Left;
+				r.Width = w;
+				this.fieldCropLeft.SetManualBounds(r);
+				r.Offset(w+5, 0);
+				this.fieldCropRight.SetManualBounds(r);
+
+				r.Offset(0, -25);
+				r.Left = rect.Left+w/2+2;
+				r.Width = w;
+				this.fieldCropBottom.SetManualBounds(r);
 			}
 		}
 
@@ -558,10 +698,10 @@ namespace Epsitec.Common.Document.Widgets
 					Rectangle bottom = new Rectangle(crop.Left, bounds.Bottom, crop.Width, crop.Bottom-bounds.Bottom);
 					Rectangle top    = new Rectangle(crop.Left, crop.Top, crop.Width, bounds.Top-crop.Top);
 
-					graphics.Rasterizer.AddOutline(Misc.GetHatchPath(left, 4, bounds.BottomLeft));
-					graphics.Rasterizer.AddOutline(Misc.GetHatchPath(right, 4, bounds.BottomLeft));
+					graphics.Rasterizer.AddOutline(Misc.GetHatchPath(left,   4, bounds.BottomLeft));
+					graphics.Rasterizer.AddOutline(Misc.GetHatchPath(right,  4, bounds.BottomLeft));
 					graphics.Rasterizer.AddOutline(Misc.GetHatchPath(bottom, 4, bounds.BottomLeft));
-					graphics.Rasterizer.AddOutline(Misc.GetHatchPath(top, 4, bounds.BottomLeft));
+					graphics.Rasterizer.AddOutline(Misc.GetHatchPath(top,    4, bounds.BottomLeft));
 
 					graphics.AddRectangle(bounds);
 					graphics.AddRectangle(crop);
@@ -607,6 +747,25 @@ namespace Epsitec.Common.Document.Widgets
 					graphics.RenderSolid(adorner.ColorCaption);
 				}
 			}
+
+			Rectangle rect = this.Client.Bounds;
+			rect.Deflate(0.5);
+			graphics.AddLine(rect.TopLeft, rect.TopRight);
+			graphics.AddLine(rect.BottomLeft, rect.BottomRight);
+			graphics.RenderSolid(adorner.ColorBorder);
+		}
+
+
+		static protected void InitTextFieldReal(TextFieldReal field)
+		{
+			field.UnitType = RealUnitType.Scalar;
+			field.MinValue = (decimal) 0;
+			field.Step = 1.0M;
+			field.Resolution = 1.0M;
+			field.DefocusAction = DefocusAction.AutoAcceptOrRejectEdition;
+			field.AutoSelectOnFocus = true;
+			field.SwallowEscape = true;
+			field.SwallowReturn = true;
 		}
 
 
@@ -646,8 +805,44 @@ namespace Epsitec.Common.Document.Widgets
 
 		private void HandleButtonReset(object sender, MessageEventArgs e)
 		{
-			//	Le bouton "T" a été actionné.
+			//	Le bouton "Tout" a été actionné.
 			this.Crop = Margins.Zero;
+		}
+
+		private void HandleButtonFill(object sender, MessageEventArgs e)
+		{
+			//	Le bouton "Remplir" a été actionné.
+			this.Crop = this.CropFillObject(this.crop);
+		}
+
+		private void HandleSliderZoomChanged(object sender)
+		{
+			//	Le slider pour le zoom a été déplacé.
+			if (this.ignoreChanged)
+			{
+				return;
+			}
+
+			double zoom = (double) this.sliderZoom.Value;
+
+			Size size = this.ImageSize;
+			Rectangle rect = new Rectangle(Point.Zero, size);
+			rect.Deflate(this.cropBeforeZoom);
+			double w = size.Width/zoom;
+			double h = size.Height/zoom;
+
+			//	TODO: faire mieux pour conserver les proportions !
+
+			Margins crop = Margins.Zero;
+			crop.Left   = rect.Center.X-w/2;
+			crop.Right  = size.Width-(rect.Center.X+w/2);
+			crop.Bottom = rect.Center.Y-h/2;
+			crop.Top    = size.Height-(rect.Center.Y+h/2);
+			crop = this.CropAdjust(crop);
+
+			Margins cbz = this.cropBeforeZoom;
+			this.Crop = crop;
+			this.cropBeforeZoom = cbz;
 		}
 
 
@@ -676,19 +871,23 @@ namespace Epsitec.Common.Document.Widgets
 		#endregion
 
 
-		protected Margins					crop;
-		protected Size						size;
+		protected Document					document;
+		protected Margins					crop = new Margins(double.NaN, double.NaN, double.NaN, double.NaN);
 
+		protected StaticText				title;
+		protected Button					buttonReset;
+		protected Button					buttonFill;
 		protected TextFieldReal				fieldCropLeft;
 		protected TextFieldReal				fieldCropRight;
 		protected TextFieldReal				fieldCropBottom;
 		protected TextFieldReal				fieldCropTop;
-		protected Button					buttonReset;
+		protected VSlider					sliderZoom;
 
 		protected bool						ignoreChanged = false;
 		protected bool						mouseDown = false;
 		protected Part						hilited = Part.None;
 		protected Point						initialPos;
 		protected Margins					initialCrop;
+		protected Margins					cropBeforeZoom;
 	}
 }

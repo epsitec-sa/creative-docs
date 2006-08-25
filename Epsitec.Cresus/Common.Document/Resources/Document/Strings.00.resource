@@ -359,12 +359,16 @@
   <data name="Panel.Image.Tooltip.Update" id="00B">Actualise l'image d&amp;apos;après le fichier sur disque</data>
   <data name="Panel.Image.Dialog.Open.Title" id="01B">Importer une image</data>
   <data name="Panel.Image.Dialog.Save.Title" id="07901" mod="1">Exporter une image</data>
-  <data name="Panel.Image.Tooltip.CropLeft" id="0A901" mod="1">Marge gauche de cadrage en pixels</data>
-  <data name="Panel.Image.Tooltip.CropRight" id="0H901" mod="1">Marge droite de cadrage en pixels</data>
-  <data name="Panel.Image.Tooltip.CropBottom" id="0I901" mod="1">Marge inférieure de cadrage en pixels</data>
-  <data name="Panel.Image.Tooltip.CropTop" id="0J901" mod="1">Marge supérieure de cadrage en pixels</data>
-  <data name="Panel.Image.Tooltip.Reset" id="0K901" mod="1">Montre toute l&amp;apos;image</data>
-  <data name="Panel.Image.Button.Reset" id="0L901" mod="1">T</data>
+  <data name="Panel.Image.Crop.Title" id="0P901" mod="1">Cadrage</data>
+  <data name="Panel.Image.Crop.Tooltip.CropLeft" id="0A901" mod="1">Marge gauche de cadrage en pixels</data>
+  <data name="Panel.Image.Crop.Tooltip.CropRight" id="0H901" mod="1">Marge droite de cadrage en pixels</data>
+  <data name="Panel.Image.Crop.Tooltip.CropBottom" id="0I901" mod="1">Marge inférieure de cadrage en pixels</data>
+  <data name="Panel.Image.Crop.Tooltip.CropTop" id="0J901" mod="1">Marge supérieure de cadrage en pixels</data>
+  <data name="Panel.Image.Crop.Tooltip.Zoom" id="0O901" mod="1">Zoom de l&amp;apos;image</data>
+  <data name="Panel.Image.Crop.Tooltip.Fill" id="0M901" mod="1">Rempli toute l&amp;apos;image</data>
+  <data name="Panel.Image.Crop.Tooltip.Reset" id="0K901" mod="1">Montre toute l&amp;apos;image</data>
+  <data name="Panel.Image.Crop.Button.Fill" id="0L901" mod="1">Remplir</data>
+  <data name="Panel.Image.Crop.Button.Reset" id="0N901" mod="1">Tout</data>
   <data name="File.Bitmap.All" id="02B">Toutes les images</data>
   <data name="File.Bitmap.BMP" id="03B">Bitmap Windows BMP</data>
   <data name="File.Bitmap.TIF" id="04B">Tagged Image TIFF</data>
