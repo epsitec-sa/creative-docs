@@ -908,7 +908,11 @@ namespace Epsitec.Common.Document
 			//	Retourne le nombre d'objets sélectionnés.
 			get
 			{
-				if ( this.dirtyCounters )  this.UpdateCounters();
+				if (this.dirtyCounters)
+				{
+					this.UpdateCounters();
+				}
+
 				return this.totalSelected;
 			}
 
@@ -923,7 +927,11 @@ namespace Epsitec.Common.Document
 			//	Retourne le nombre d'objets cachés dans le calque courant.
 			get
 			{
-				if ( this.dirtyCounters )  this.UpdateCounters();
+				if (this.dirtyCounters)
+				{
+					this.UpdateCounters();
+				}
+
 				return this.totalHide;
 			}
 

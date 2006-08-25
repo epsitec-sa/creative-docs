@@ -154,6 +154,15 @@ namespace Epsitec.Common.Document.Widgets
 		}
 
 
+		protected bool IsMultiSelection
+		{
+			//	Indique si plusieurs objets sont sélectionnés.
+			get
+			{
+				return (this.document.Modifier.TotalSelected > 1);
+			}
+		}
+
 		protected Objects.Image SelectedObjectImage
 		{
 			//	Retourne l'objet Image sélectionné dans le document.
@@ -247,6 +256,8 @@ namespace Epsitec.Common.Document.Widgets
 			this.ignoreChanged = true;
 
 			Size size = this.ImageSize;
+
+			this.Enable = !this.IsMultiSelection;
 
 			this.fieldCropLeft.MaxValue = (decimal) size.Width;
 			this.fieldCropRight.MaxValue = (decimal) size.Width;
@@ -670,81 +681,84 @@ namespace Epsitec.Common.Document.Widgets
 			//	Dessine la partie interactive de droite.
 			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
 
-			Rectangle bounds = this.BoundsRectangle;
-			graphics.Align(ref bounds);
-			bounds.Deflate(0.5);
-
-			Rectangle crop = this.CropRectangle;
-			if (crop.IsEmpty)  // aucune partie recadrée ?
+			if (this.Enable)
 			{
-				graphics.Rasterizer.AddOutline(Misc.GetHatchPath(bounds, 4, bounds.BottomLeft));
-				graphics.AddRectangle(bounds);
-				graphics.RenderSolid(adorner.ColorBorder);
-			}
-			else
-			{
-				graphics.Align(ref crop);
-				crop.Deflate(0.5);
+				Rectangle bounds = this.BoundsRectangle;
+				graphics.Align(ref bounds);
+				bounds.Deflate(0.5);
 
-				if (bounds == crop)  // partie recadrée = toute l'image ?
+				Rectangle crop = this.CropRectangle;
+				if (crop.IsEmpty)  // aucune partie recadrée ?
 				{
+					graphics.Rasterizer.AddOutline(Misc.GetHatchPath(bounds, 4, bounds.BottomLeft));
 					graphics.AddRectangle(bounds);
 					graphics.RenderSolid(adorner.ColorBorder);
 				}
 				else
 				{
-					Rectangle left   = new Rectangle(bounds.Left, bounds.Bottom, crop.Left-bounds.Left, bounds.Height);
-					Rectangle right  = new Rectangle(crop.Right, bounds.Bottom, bounds.Right-crop.Right, bounds.Height);
-					Rectangle bottom = new Rectangle(crop.Left, bounds.Bottom, crop.Width, crop.Bottom-bounds.Bottom);
-					Rectangle top    = new Rectangle(crop.Left, crop.Top, crop.Width, bounds.Top-crop.Top);
+					graphics.Align(ref crop);
+					crop.Deflate(0.5);
 
-					graphics.Rasterizer.AddOutline(Misc.GetHatchPath(left,   4, bounds.BottomLeft));
-					graphics.Rasterizer.AddOutline(Misc.GetHatchPath(right,  4, bounds.BottomLeft));
-					graphics.Rasterizer.AddOutline(Misc.GetHatchPath(bottom, 4, bounds.BottomLeft));
-					graphics.Rasterizer.AddOutline(Misc.GetHatchPath(top,    4, bounds.BottomLeft));
+					if (bounds == crop)  // partie recadrée = toute l'image ?
+					{
+						graphics.AddRectangle(bounds);
+						graphics.RenderSolid(adorner.ColorBorder);
+					}
+					else
+					{
+						Rectangle left   = new Rectangle(bounds.Left, bounds.Bottom, crop.Left-bounds.Left, bounds.Height);
+						Rectangle right  = new Rectangle(crop.Right, bounds.Bottom, bounds.Right-crop.Right, bounds.Height);
+						Rectangle bottom = new Rectangle(crop.Left, bounds.Bottom, crop.Width, crop.Bottom-bounds.Bottom);
+						Rectangle top    = new Rectangle(crop.Left, crop.Top, crop.Width, bounds.Top-crop.Top);
 
-					graphics.AddRectangle(bounds);
-					graphics.AddRectangle(crop);
+						graphics.Rasterizer.AddOutline(Misc.GetHatchPath(left, 4, bounds.BottomLeft));
+						graphics.Rasterizer.AddOutline(Misc.GetHatchPath(right, 4, bounds.BottomLeft));
+						graphics.Rasterizer.AddOutline(Misc.GetHatchPath(bottom, 4, bounds.BottomLeft));
+						graphics.Rasterizer.AddOutline(Misc.GetHatchPath(top, 4, bounds.BottomLeft));
 
-					graphics.RenderSolid(adorner.ColorBorder);
-				}
+						graphics.AddRectangle(bounds);
+						graphics.AddRectangle(crop);
 
-				if (this.hilited == Part.Left || this.hilited == Part.BottomLeft || this.hilited == Part.TopLeft)
-				{
-					graphics.LineWidth = 3;
-					graphics.AddLine(crop.Left, bounds.Bottom, crop.Left, bounds.Top);
-					graphics.RenderSolid(adorner.ColorCaption);
-					graphics.LineWidth = 1;
-				}
+						graphics.RenderSolid(adorner.ColorBorder);
+					}
 
-				if (this.hilited == Part.Right || this.hilited == Part.BottomRight || this.hilited == Part.TopRight)
-				{
-					graphics.LineWidth = 3;
-					graphics.AddLine(crop.Right, bounds.Bottom, crop.Right, bounds.Top);
-					graphics.RenderSolid(adorner.ColorCaption);
-					graphics.LineWidth = 1;
-				}
+					if (this.hilited == Part.Left || this.hilited == Part.BottomLeft || this.hilited == Part.TopLeft)
+					{
+						graphics.LineWidth = 3;
+						graphics.AddLine(crop.Left, bounds.Bottom, crop.Left, bounds.Top);
+						graphics.RenderSolid(adorner.ColorCaption);
+						graphics.LineWidth = 1;
+					}
 
-				if (this.hilited == Part.Bottom || this.hilited == Part.BottomLeft || this.hilited == Part.BottomRight)
-				{
-					graphics.LineWidth = 3;
-					graphics.AddLine(bounds.Left, crop.Bottom, bounds.Right, crop.Bottom);
-					graphics.RenderSolid(adorner.ColorCaption);
-					graphics.LineWidth = 1;
-				}
+					if (this.hilited == Part.Right || this.hilited == Part.BottomRight || this.hilited == Part.TopRight)
+					{
+						graphics.LineWidth = 3;
+						graphics.AddLine(crop.Right, bounds.Bottom, crop.Right, bounds.Top);
+						graphics.RenderSolid(adorner.ColorCaption);
+						graphics.LineWidth = 1;
+					}
 
-				if (this.hilited == Part.Top || this.hilited == Part.TopLeft || this.hilited == Part.TopRight)
-				{
-					graphics.LineWidth = 3;
-					graphics.AddLine(bounds.Left, crop.Top, bounds.Right, crop.Top);
-					graphics.RenderSolid(adorner.ColorCaption);
-					graphics.LineWidth = 1;
-				}
+					if (this.hilited == Part.Bottom || this.hilited == Part.BottomLeft || this.hilited == Part.BottomRight)
+					{
+						graphics.LineWidth = 3;
+						graphics.AddLine(bounds.Left, crop.Bottom, bounds.Right, crop.Bottom);
+						graphics.RenderSolid(adorner.ColorCaption);
+						graphics.LineWidth = 1;
+					}
 
-				if (this.hilited == Part.Showed)
-				{
-					graphics.AddFilledRectangle(crop);
-					graphics.RenderSolid(adorner.ColorCaption);
+					if (this.hilited == Part.Top || this.hilited == Part.TopLeft || this.hilited == Part.TopRight)
+					{
+						graphics.LineWidth = 3;
+						graphics.AddLine(bounds.Left, crop.Top, bounds.Right, crop.Top);
+						graphics.RenderSolid(adorner.ColorCaption);
+						graphics.LineWidth = 1;
+					}
+
+					if (this.hilited == Part.Showed)
+					{
+						graphics.AddFilledRectangle(crop);
+						graphics.RenderSolid(adorner.ColorCaption);
+					}
 				}
 			}
 
