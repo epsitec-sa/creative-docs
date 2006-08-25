@@ -141,9 +141,9 @@ namespace Epsitec.Common.Widgets
 			b2.CommandObject = ApplicationCommands.Delete;
 			b3.CommandObject = ApplicationCommands.SelectAll;
 
-			b1.MinWidth = 20;
-			b2.MinWidth = 20;
-			b3.MinWidth = 20;
+			b1.MinWidth = 10;
+			b2.MinWidth = 10;
+			b3.MinWidth = 10;
 			
 			b1.Margins = new Margins (0, 0, 2, 1);
 			b2.Margins = new Margins (0, 0, 1, 1);

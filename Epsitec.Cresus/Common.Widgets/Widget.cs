@@ -2997,10 +2997,16 @@ namespace Epsitec.Common.Widgets
 			
 			Caption caption = this.GetDisplayCaption ();
 
-			if ((caption != null) &&
-				(caption.HasLabels))
+			if (caption != null)
 			{
-				this.Text = TextLayout.SelectBestText (this.TextLayout, caption.SortedLabels, this.GetTextLayoutSize ());
+				if (caption.HasLabels)
+				{
+					this.Text = TextLayout.SelectBestText (this.TextLayout, caption.SortedLabels, this.GetTextLayoutSize ());
+				}
+				if (caption.HasDescription)
+				{
+					ToolTip.Default.SetToolTip (this, caption.Description);
+				}
 			}
 		}
 

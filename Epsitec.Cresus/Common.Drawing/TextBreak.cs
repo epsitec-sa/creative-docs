@@ -88,6 +88,11 @@ namespace Epsitec.Common.Drawing
 				}
 
 				list.Add (new TextBreak.Line (line_text, line_width, line_skip));
+
+				if (line_skip == 0)
+				{
+					break;
+				}
 				
 				if ((line_text.Length > 0) &&
 					(line_text[line_text.Length-1] == TextBreak.CodeLineBreak))
