@@ -137,6 +137,23 @@ namespace Epsitec.Common.Widgets
 			Button b2 = new Button ();
 			Button b3 = new Button ();
 
+			Button buttonFr = new Button ();
+			Button buttonEn = new Button ();
+
+			buttonFr.Dock = DockStyle.Stacked;
+			buttonEn.Dock = DockStyle.Stacked;
+			
+			buttonFr.Margins = new Margins (0, 20, 2, 1);
+			buttonEn.Margins = new Margins (0, 20, 1, 0);
+			buttonFr.Text = "Français";
+			buttonEn.Text = "Anglais";
+
+			w1.Children.Add (buttonFr);
+			w1.Children.Add (buttonEn);
+
+			buttonFr.Clicked += delegate (object sender, MessageEventArgs e) { manager.ActiveCulture = Resources.FindCultureInfo ("fr"); };
+			buttonEn.Clicked += delegate (object sender, MessageEventArgs e) { manager.ActiveCulture = Resources.FindCultureInfo ("en"); };
+
 			b1.CommandObject = ApplicationCommands.Copy;
 			b2.CommandObject = ApplicationCommands.Delete;
 			b3.CommandObject = ApplicationCommands.SelectAll;
@@ -153,6 +170,7 @@ namespace Epsitec.Common.Widgets
 			b2.Dock = DockStyle.Stacked;
 			b3.Dock = DockStyle.Stacked;
 
+			w1.ContainerLayoutMode = ContainerLayoutMode.VerticalFlow;
 			w2.ContainerLayoutMode = ContainerLayoutMode.VerticalFlow;
 			
 			w2.Children.Add (b1);
