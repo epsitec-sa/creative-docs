@@ -414,7 +414,6 @@ namespace Epsitec.Common.Designer
 		static public void GetIconNames(string fullName, out string moduleName, out string shortName)
 		{
 			//	Fractionne un nom du type "manifest:Epsitec.Common.Designer.Images.xxx.icon".
-			//	TODO: faire mieux !
 			if (string.IsNullOrEmpty(fullName))
 			{
 				moduleName = null;
@@ -422,9 +421,35 @@ namespace Epsitec.Common.Designer
 			}
 			else
 			{
-				string[] parts = fullName.Split('.');
-				moduleName = parts[parts.Length-4];
-				shortName = parts[parts.Length-2];
+				string infix  = ".Images.";
+				string suffix = ".icon";
+				
+				int infixPos  = fullName.IndexOf (infix);
+				int prefixLen = fullName.IndexOf (':') + 1;
+
+				if (infixPos > 0)
+				{
+					//	"manifest:Epsitec.Common.Designer.Images.Xyz.Abc.icon" produit les
+					//	résultats suivants :
+					//
+					//	moduleName = "Epsitec.Common.Designer"
+					//	shortName  = "Xyz.Abc"
+
+					moduleName = fullName.Substring (prefixLen, infixPos - prefixLen);
+					shortName  = fullName.Substring (infixPos + infix.Length);
+
+					if (shortName.EndsWith (suffix))
+					{
+						shortName = shortName.Substring (0, shortName.Length - suffix.Length);
+					}
+				}
+				else
+				{
+					//	TODO: faire mieux !
+					string[] parts = fullName.Split ('.');
+					moduleName = parts[parts.Length-4];
+					shortName = parts[parts.Length-2];
+				}
 			}
 		}
 
