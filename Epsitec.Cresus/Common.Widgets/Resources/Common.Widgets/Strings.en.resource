@@ -85,4 +85,5 @@
   <data name="ShortcutEditor.Modifier.Tooltip" id="0I2" mod="1">Modifier keys</data>
   <data name="ShortcutEditor.Code.Tooltip" id="0J2" mod="1">Main key (letter, number, sign, etc.)</data>
   <data name="Shortcut.Template.TextWithShortcut" id="0K2" mod="1">{0} ({1})</data>
+  <data name="AbstractTextField.Menu.Delete" id="03">Delete</data>
 </bundle>

@@ -748,6 +748,18 @@
   <ItemGroup>
     <Content Include="Resources\Common.Widgets\Captions.en.resource" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Images\Cmd.Cut.icon" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Images\Cmd.Delete.icon" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Images\Cmd.Copy.icon" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Images\Cmd.Paste.icon" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>
