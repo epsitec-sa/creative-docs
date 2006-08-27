@@ -165,6 +165,10 @@ namespace Epsitec.Common.Widgets
 			this.UpdateText (newIconName);
 		}
 
+		protected override void DefineTextFromCaption(string text)
+		{
+		}
+
 
 		public static IconButton CreateSimple(string command, string icon)
 		{
