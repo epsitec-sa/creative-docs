@@ -711,30 +711,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		private static void NotifyTextChanged(DependencyObject o, object oldValue, object newValue)
-		{
-			Widget that = o as Widget;
-			string oldText = oldValue as string;
-			string newText = newValue as string;
-
-			if (string.IsNullOrEmpty (newText))
-			{
-				that.DisposeTextLayout ();
-			}
-			else
-			{
-				that.ModifyTextLayout (newText);
-			}
-			
-			that.OnTextChanged ();
-			that.Invalidate ();
-
-			if (that.AutoMnemonic)
-			{
-				that.ResetMnemonicShortcut ();
-			}
-		}
-		
 		public virtual TextLayout					TextLayout
 		{
 			get { return this.text_layout; }
@@ -765,7 +741,25 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 		}
-		
+
+		public string								IconName
+		{
+			get
+			{
+				return (string) this.GetValue (Widget.IconNameProperty);
+			}
+			set
+			{
+				if (string.IsNullOrEmpty (value))
+				{
+					this.ClearValue (Widget.IconNameProperty);
+				}
+				else
+				{
+					this.SetValue (Widget.IconNameProperty, value);
+				}
+			}
+		}
 		
 		public char									Mnemonic
 		{
@@ -3001,16 +2995,36 @@ namespace Epsitec.Common.Widgets
 			{
 				if (caption.HasLabels)
 				{
-					this.Text = TextLayout.SelectBestText (this.TextLayout, caption.SortedLabels, this.GetTextLayoutSize ());
+					this.DefineTextFromCaption (TextLayout.SelectBestText (this.TextLayout, caption.SortedLabels, this.GetTextLayoutSize ()));
 				}
+				
 				if (caption.HasDescription)
 				{
 					Collections.ShortcutCollection shortcuts = Shortcut.GetShortcuts (caption);
 					string tip = Shortcut.AppendShortcutText (caption.Description, shortcuts);
 
-					ToolTip.Default.SetToolTip (this, tip);
+					this.DefineToolTipFromCaption (tip);
+				}
+
+				if (caption.HasIcon)
+				{
+					this.DefineIconFromCaption (caption.Icon);
 				}
 			}
+		}
+
+		protected virtual void DefineTextFromCaption(string text)
+		{
+			this.Text = text;
+		}
+
+		protected virtual void DefineToolTipFromCaption(string tip)
+		{
+			ToolTip.Default.SetToolTip (this, tip);
+		}
+
+		protected virtual void DefineIconFromCaption(string icon)
+		{
 		}
 
 		protected virtual Drawing.Size GetTextLayoutSize()
@@ -3942,6 +3956,10 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		protected virtual void OnIconNameChanged(string oldIconName, string newIconName)
+		{
+		}
+
 		
 		
 		
@@ -4202,8 +4220,41 @@ namespace Epsitec.Common.Widgets
 			return that.Text;
 		}
 
+		private static void NotifyTextChanged(DependencyObject o, object oldValue, object newValue)
+		{
+			Widget that = o as Widget;
+			string oldText = oldValue as string;
+			string newText = newValue as string;
+
+			if (string.IsNullOrEmpty (newText))
+			{
+				that.DisposeTextLayout ();
+			}
+			else
+			{
+				that.ModifyTextLayout (newText);
+			}
+
+			that.OnTextChanged ();
+			that.Invalidate ();
+
+			if (that.AutoMnemonic)
+			{
+				that.ResetMnemonicShortcut ();
+			}
+		}
+
+		private static void NotifyIconNameChanged(DependencyObject o, object oldValue, object newValue)
+		{
+			Widget that = o as Widget;
+			string oldIconName = oldValue as string;
+			string newIconName = newValue as string;
+			that.OnIconNameChanged (oldIconName, newIconName);
+		}
+
 		public static readonly DependencyProperty TextProperty = DependencyProperty.Register ("Text", typeof (string), typeof (Widget), new DependencyPropertyMetadata (Widget.GetTextValue, Widget.SetTextValue, Widget.NotifyTextChanged));
 		public static readonly DependencyProperty TabIndexProperty = DependencyProperty.Register ("TabIndex", typeof (int), typeof (Widget), new DependencyPropertyMetadata (0));
+		public static readonly DependencyProperty IconNameProperty = DependencyProperty.Register ("IconName", typeof (string), typeof (Widget), new Helpers.VisualPropertyMetadata (null, Widget.NotifyIconNameChanged, Helpers.VisualPropertyMetadataOptions.AffectsDisplay));
 		
 		private InternalState					internal_state;
 		

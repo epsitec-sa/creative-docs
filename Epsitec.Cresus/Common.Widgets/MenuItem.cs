@@ -126,34 +126,18 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
-		public string							IconName
-		{
-			get
-			{
-				return this.icon_name;
-			}
-			set
-			{
-				if (this.icon_name != value)
-				{
-					this.icon_name = value;
-					this.UpdateIconSize ();
-				}
-			}
-		}
-
 		public string							IconNameActiveNo
 		{
 			get
 			{
-				return this.icon_nameActiveNo;
+				return this.iconNameActiveNo;
 			}
 
 			set
 			{
-				if (this.icon_nameActiveNo != value)
+				if (this.iconNameActiveNo != value)
 				{
-					this.icon_nameActiveNo = value;
+					this.iconNameActiveNo = value;
 					this.UpdateIconSize ();
 				}
 			}
@@ -163,14 +147,14 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.icon_nameActiveYes;
+				return this.iconNameActiveYes;
 			}
 
 			set
 			{
-				if (this.icon_nameActiveYes != value)
+				if (this.iconNameActiveYes != value)
 				{
-					this.icon_nameActiveYes = value;
+					this.iconNameActiveYes = value;
 					this.UpdateIconSize ();
 				}
 			}
@@ -262,30 +246,29 @@ namespace Epsitec.Common.Widgets
 			double dx = 0;
 			double dy = 0;
 			
-			if ((this.icon_nameActiveNo != null) &&
-				(this.icon_nameActiveNo.Length > 0))
+			if ((this.iconNameActiveNo != null) &&
+				(this.iconNameActiveNo.Length > 0))
 			{
-				TextLayout layout = this.GetIconTextLayout (this.icon_nameActiveNo);
+				TextLayout layout = this.GetIconTextLayout (this.iconNameActiveNo);
 				Drawing.Size size = layout.SingleLineSize;
 				
 				dx = System.Math.Max (dx, size.Width);
 				dy = System.Math.Max (dy, size.Height);
 			}
 			
-			if ((this.icon_nameActiveYes != null) &&
-				(this.icon_nameActiveYes.Length > 0))
+			if ((this.iconNameActiveYes != null) &&
+				(this.iconNameActiveYes.Length > 0))
 			{
-				TextLayout layout = this.GetIconTextLayout (this.icon_nameActiveYes);
+				TextLayout layout = this.GetIconTextLayout (this.iconNameActiveYes);
 				Drawing.Size size = layout.SingleLineSize;
 				
 				dx = System.Math.Max (dx, size.Width);
 				dy = System.Math.Max (dy, size.Height);
 			}
 			
-			if ((this.icon_name != null) &&
-				(this.icon_name.Length > 0))
+			if (this.ContainsValue (Widget.IconNameProperty))
 			{
-				TextLayout layout = this.GetIconTextLayout (this.icon_name);
+				TextLayout layout = this.GetIconTextLayout (this.IconName);
 				Drawing.Size size = layout.SingleLineSize;
 				
 				dx = System.Math.Max (dx, size.Width);
@@ -392,6 +375,13 @@ namespace Epsitec.Common.Widgets
 			base.OnExited (e);
 		}
 
+		protected override void OnIconNameChanged(string oldIconName, string newIconName)
+		{
+			base.OnIconNameChanged (oldIconName, newIconName);
+			
+			this.UpdateIconSize ();
+		}
+
 		
 		protected virtual void OnUserAction(MessageEventArgs e)
 		{
@@ -490,23 +480,23 @@ namespace Epsitec.Common.Widgets
 			}
 			else
 			{
-				string icon = this.icon_name;
+				string icon = this.IconName;
 				
 				switch (this.ActiveState)
 				{
 					case ActiveState.No:
-						if ((this.icon_nameActiveNo != null) &&
-							(this.icon_nameActiveNo.Length > 0))
+						if ((this.iconNameActiveNo != null) &&
+							(this.iconNameActiveNo.Length > 0))
 						{
-							icon = this.icon_nameActiveNo;
+							icon = this.iconNameActiveNo;
 						}
 						break;
 					
 					case ActiveState.Yes:
-						if ((this.icon_nameActiveYes != null) &&
-							(this.icon_nameActiveYes.Length > 0))
+						if ((this.iconNameActiveYes != null) &&
+							(this.iconNameActiveYes.Length > 0))
 						{
-							icon = this.icon_nameActiveYes;
+							icon = this.iconNameActiveYes;
 						}
 						break;
 				}
@@ -515,7 +505,7 @@ namespace Epsitec.Common.Widgets
 					(icon.Length > 0))
 				{
 					if ((this.ActiveState == ActiveState.Yes) &&
-						(icon != this.icon_nameActiveYes))
+						(icon != this.iconNameActiveYes))
 					{
 						Drawing.Rectangle iRect = rect;
 						iRect.Width = this.icon_size.Width;
@@ -760,9 +750,8 @@ namespace Epsitec.Common.Widgets
 		protected bool							text_only = false;
 		
 		protected double						submenu_mark_width;
-		protected string						icon_name;
-		protected string						icon_nameActiveNo;
-		protected string						icon_nameActiveYes;
+		protected string						iconNameActiveNo;
+		protected string						iconNameActiveYes;
 		protected TextLayout					icon;
 		protected TextLayout					shortcut;
 		protected Drawing.Size					icon_size;

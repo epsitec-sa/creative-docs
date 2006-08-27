@@ -36,7 +36,17 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
-				return string.IsNullOrEmpty (this.Description) ? false : true;
+				return this.ContainsValue (Caption.DescriptionProperty)
+					&& !string.IsNullOrEmpty (this.Description);
+			}
+		}
+
+		public bool								HasIcon
+		{
+			get
+			{
+				return this.ContainsValue (Caption.IconProperty)
+					&& !string.IsNullOrEmpty (this.Icon);
 			}
 		}
 		
