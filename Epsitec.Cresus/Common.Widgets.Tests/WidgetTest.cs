@@ -137,6 +137,20 @@ namespace Epsitec.Common.Widgets
 			Button b2 = new Button ();
 			Button b3 = new Button ();
 
+			IconButton ib1 = new IconButton ();
+			IconButton ib2 = new IconButton ();
+			IconButton ib3 = new IconButton ();
+
+			ib1.CommandObject = ApplicationCommands.Copy;
+			ib2.CommandObject = ApplicationCommands.Delete;
+			ib3.CommandObject = ApplicationCommands.SelectAll;
+			
+			HToolBar toolbar = new HToolBar ();
+
+			toolbar.Items.Add (ib1);
+			toolbar.Items.Add (ib2);
+			toolbar.Items.Add (ib3);
+
 			Button buttonFr = new Button ();
 			Button buttonEn = new Button ();
 
@@ -170,12 +184,16 @@ namespace Epsitec.Common.Widgets
 			b2.Dock = DockStyle.Stacked;
 			b3.Dock = DockStyle.Stacked;
 
+			toolbar.Margins = new Margins (0, 0, 10, 0);
+			toolbar.Dock = DockStyle.Stacked;
+
 			w1.ContainerLayoutMode = ContainerLayoutMode.VerticalFlow;
 			w2.ContainerLayoutMode = ContainerLayoutMode.VerticalFlow;
 			
 			w2.Children.Add (b1);
 			w2.Children.Add (b2);
 			w2.Children.Add (b3);
+			w2.Children.Add (toolbar);
 			
 			window.Root.Children.Add (w1);
 			window.Root.Children.Add (w2);
