@@ -48,22 +48,6 @@ namespace Epsitec.Common.Widgets
 			Visual.PreferredHeightProperty.OverrideMetadata (typeof (IconButton), metadataDy);
 		}
 
-		public string IconName
-		{
-			get
-			{
-				return this.iconName;
-			}
-
-			set
-			{
-				if (this.iconName != value)
-				{
-					this.iconName = value;
-					this.UpdateText ();
-				}
-			}
-		}
 
 		public Drawing.Size PreferredIconSize
 		{
@@ -77,7 +61,7 @@ namespace Epsitec.Common.Widgets
 				if (this.preferredIconSize != value)
 				{
 					this.preferredIconSize = value;
-					this.UpdateText ();
+					this.UpdateText (this.IconName);
 				}
 			}
 		}
@@ -94,7 +78,7 @@ namespace Epsitec.Common.Widgets
 				if (this.preferredIconLanguage != value)
 				{
 					this.preferredIconLanguage = value;
-					this.UpdateText ();
+					this.UpdateText (this.IconName);
 				}
 			}
 		}
@@ -111,17 +95,16 @@ namespace Epsitec.Common.Widgets
 				if (this.preferredIconStyle != value)
 				{
 					this.preferredIconStyle = value;
-					this.UpdateText ();
+					this.UpdateText (this.IconName);
 				}
 			}
 		}
 
-		protected void UpdateText()
+		protected void UpdateText(string iconName)
 		{
 			//	Met à jour le texte du bouton, qui est un tag <img.../> contenant le nom de l'image
 			//	suivi des différentes préférences (taille et langue).
-			if (this.iconName == null ||
-				 this.iconName == "")
+			if (string.IsNullOrEmpty (iconName))
 			{
 				this.Text = null;
 			}
@@ -130,7 +113,7 @@ namespace Epsitec.Common.Widgets
 				System.Text.StringBuilder builder = new System.Text.StringBuilder ();
 
 				builder.Append (@"<img src=""");
-				builder.Append (this.iconName);
+				builder.Append (iconName);
 				builder.Append (@"""");
 
 				if (this.preferredIconSize.Width != 0 && this.preferredIconSize.Height != 0)
@@ -173,6 +156,13 @@ namespace Epsitec.Common.Widgets
 			{
 				return Widgets.Adorners.Factory.Active.GeometryThreeStateShapeMargins;
 			}
+		}
+
+		protected override void OnIconNameChanged(string oldIconName, string newIconName)
+		{
+			base.OnIconNameChanged (oldIconName, newIconName);
+
+			this.UpdateText (newIconName);
 		}
 
 
@@ -222,9 +212,8 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		protected string iconName = null;
-		protected Drawing.Size preferredIconSize = Drawing.Size.Empty;
+		protected Drawing.Size preferredIconSize;
 		protected string preferredIconLanguage = System.Globalization.CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
-		protected string preferredIconStyle = null;
+		protected string preferredIconStyle;
 	}
 }
