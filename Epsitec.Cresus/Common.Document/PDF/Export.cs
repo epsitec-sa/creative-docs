@@ -1513,6 +1513,34 @@ namespace Epsitec.Common.Document.PDF
 			blob.Dispose();
 			blob = null;
 
+			int dx, dy;
+
+			Margins crop = image.Crop;
+			if (crop != Margins.Zero)  // recadrage nécessaire ?
+			{
+				dx = magick.Width;
+				dy = magick.Height;
+				dx -= (int) crop.Left;
+				dx -= (int) crop.Right;
+				dy -= (int) crop.Bottom;
+				dy -= (int) crop.Top;
+
+				Magick.Image copy = new Magick.Image(dx, dy);
+
+				byte[] buffer = new byte[dx*dy*4];
+
+				magick.ModifyBegin();
+				magick.GetRawPixels(buffer, (int) crop.Left, (int) crop.Top, dx, dy);
+				magick.ModifyEnd();
+
+				copy.ModifyBegin();
+				copy.SetRawPixels(buffer, 0, 0, dx, dy);
+				copy.ModifyEnd();
+
+				magick.Dispose();
+				magick = copy;
+			}
+
 			bool useMask = false;
 
 			//	Mise à l'échelle éventuelle de l'image selon les choix de l'utilisateur.
@@ -1535,8 +1563,8 @@ namespace Epsitec.Common.Document.PDF
 				finalDpiY = System.Math.Min(finalDpiY, this.imageMaxDpi);
 			}
 
-			int dx = magick.Width;
-			int dy = magick.Height;
+			dx = magick.Width;
+			dy = magick.Height;
 			bool resizeRequired = false;
 
 			if ( currentDpiX != finalDpiX || currentDpiY != finalDpiY )
