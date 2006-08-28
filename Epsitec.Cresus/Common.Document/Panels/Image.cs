@@ -42,7 +42,7 @@ namespace Epsitec.Common.Document.Panels
 			ToolTip.Default.SetToolTip(this.buttonSave, Res.Strings.Panel.Image.Tooltip.Save);
 
 			this.buttonRotation90 = new IconButton(this);
-			this.buttonRotation90.IconName = Misc.Icon("ImageRotate90");
+			this.buttonRotation90.IconName = Misc.Icon("ImageRotation90");
 			this.buttonRotation90.ButtonStyle = ButtonStyle.ActivableIcon;
 			this.buttonRotation90.Pressed += new MessageEventHandler(this.HandleButtonPressed);
 			this.buttonRotation90.TabIndex = tabIndex++;
@@ -50,7 +50,7 @@ namespace Epsitec.Common.Document.Panels
 			ToolTip.Default.SetToolTip(this.buttonRotation90, Res.Strings.Panel.Image.Button.Rotation90);
 
 			this.buttonRotation180 = new IconButton(this);
-			this.buttonRotation180.IconName = Misc.Icon("ImageRotate180");
+			this.buttonRotation180.IconName = Misc.Icon("ImageRotation180");
 			this.buttonRotation180.ButtonStyle = ButtonStyle.ActivableIcon;
 			this.buttonRotation180.Pressed += new MessageEventHandler(this.HandleButtonPressed);
 			this.buttonRotation180.TabIndex = tabIndex++;
@@ -58,7 +58,7 @@ namespace Epsitec.Common.Document.Panels
 			ToolTip.Default.SetToolTip(this.buttonRotation180, Res.Strings.Panel.Image.Button.Rotation180);
 
 			this.buttonRotation270 = new IconButton(this);
-			this.buttonRotation270.IconName = Misc.Icon("ImageRotate270");
+			this.buttonRotation270.IconName = Misc.Icon("ImageRotation270");
 			this.buttonRotation270.ButtonStyle = ButtonStyle.ActivableIcon;
 			this.buttonRotation270.Pressed += new MessageEventHandler(this.HandleButtonPressed);
 			this.buttonRotation270.TabIndex = tabIndex++;
