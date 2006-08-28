@@ -853,9 +853,8 @@ namespace Epsitec.Common.Document.Widgets
 
 			double zoom = (double) this.sliderZoom.Value;  // zoom souhaité
 
-			Size size = this.ImageSize;
-			Margins crop = this.cropBeforeZoom;
-			Margins newCrop = Margins.Zero;
+			Size size = this.ImageSize;  // taille de l'image sélectionnée
+			Margins crop = this.cropBeforeZoom;  // crop avant de commencer à zoomer
 
 			Rectangle rect = new Rectangle(Point.Zero, size);
 			rect.Deflate(crop);  // rectangle effectif actuel
@@ -876,6 +875,7 @@ namespace Epsitec.Common.Document.Widgets
 				w = h*rect.Width/rect.Height;  // garde les mêmes proportions
 			}
 
+			Margins newCrop = Margins.Zero;
 			newCrop.Left   = rect.Center.X-w/2;
 			newCrop.Right  = size.Width-(rect.Center.X+w/2);
 			newCrop.Bottom = rect.Center.Y-h/2;
@@ -884,7 +884,7 @@ namespace Epsitec.Common.Document.Widgets
 
 			Margins cbz = this.cropBeforeZoom;
 			this.Crop = newCrop;
-			this.cropBeforeZoom = cbz;
+			this.cropBeforeZoom = cbz;  // conserve le crop avant de commencer à zoomer
 		}
 
 
