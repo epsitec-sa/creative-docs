@@ -335,6 +335,30 @@ namespace Epsitec.Common.Document.Objects
 			width  = System.Math.Min(Point.Distance(pbl,pbr), Point.Distance(ptl,ptr));
 			height = System.Math.Min(Point.Distance(pbl,ptl), Point.Distance(pbr,ptr));
 			angle  = Point.ComputeAngleDeg(pbl, pbr);
+
+			Properties.Image pi = this.PropertyImage;
+			if (pi != null)
+			{
+				if (pi.RotationMode == Properties.Image.Rotation.Angle90)
+				{
+					angle += 90;
+				}
+
+				if (pi.RotationMode == Properties.Image.Rotation.Angle180)
+				{
+					angle += 180;
+				}
+				
+				if (pi.RotationMode == Properties.Image.Rotation.Angle270)
+				{
+					angle += 270;
+				}
+
+				if (pi.RotationMode == Properties.Image.Rotation.Angle90 || pi.RotationMode == Properties.Image.Rotation.Angle270)
+				{
+					Misc.Swap(ref width, ref height);
+				}
+			}
 		}
 
 		protected ImageCache.Item Item
