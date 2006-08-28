@@ -41,57 +41,65 @@ namespace Epsitec.Common.Document.Panels
 			this.buttonSave.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.buttonSave, Res.Strings.Panel.Image.Tooltip.Save);
 
+			this.buttonRotation90 = new IconButton(this);
+			this.buttonRotation90.IconName = Misc.Icon("ImageRotate90");
+			this.buttonRotation90.ButtonStyle = ButtonStyle.ActivableIcon;
+			this.buttonRotation90.Pressed += new MessageEventHandler(this.HandleButtonPressed);
+			this.buttonRotation90.TabIndex = tabIndex++;
+			this.buttonRotation90.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			ToolTip.Default.SetToolTip(this.buttonRotation90, Res.Strings.Panel.Image.Button.Rotation90);
+
+			this.buttonRotation180 = new IconButton(this);
+			this.buttonRotation180.IconName = Misc.Icon("ImageRotate180");
+			this.buttonRotation180.ButtonStyle = ButtonStyle.ActivableIcon;
+			this.buttonRotation180.Pressed += new MessageEventHandler(this.HandleButtonPressed);
+			this.buttonRotation180.TabIndex = tabIndex++;
+			this.buttonRotation180.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			ToolTip.Default.SetToolTip(this.buttonRotation180, Res.Strings.Panel.Image.Button.Rotation180);
+
+			this.buttonRotation270 = new IconButton(this);
+			this.buttonRotation270.IconName = Misc.Icon("ImageRotate270");
+			this.buttonRotation270.ButtonStyle = ButtonStyle.ActivableIcon;
+			this.buttonRotation270.Pressed += new MessageEventHandler(this.HandleButtonPressed);
+			this.buttonRotation270.TabIndex = tabIndex++;
+			this.buttonRotation270.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			ToolTip.Default.SetToolTip(this.buttonRotation270, Res.Strings.Panel.Image.Button.Rotation270);
+
+			this.buttonMirrorH = new IconButton(this);
+			this.buttonMirrorH.IconName = Misc.Icon("ImageMirrorH");
+			this.buttonMirrorH.ButtonStyle = ButtonStyle.ActivableIcon;
+			this.buttonMirrorH.Pressed += new MessageEventHandler(this.HandleButtonPressed);
+			this.buttonMirrorH.TabIndex = tabIndex++;
+			this.buttonMirrorH.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			ToolTip.Default.SetToolTip(this.buttonMirrorH, Res.Strings.Panel.Image.Button.MirrorX);
+
+			this.buttonMirrorV = new IconButton(this);
+			this.buttonMirrorV.IconName = Misc.Icon("ImageMirrorV");
+			this.buttonMirrorV.ButtonStyle = ButtonStyle.ActivableIcon;
+			this.buttonMirrorV.Pressed += new MessageEventHandler(this.HandleButtonPressed);
+			this.buttonMirrorV.TabIndex = tabIndex++;
+			this.buttonMirrorV.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			ToolTip.Default.SetToolTip(this.buttonMirrorV, Res.Strings.Panel.Image.Button.MirrorY);
+
+			this.buttonFilter = new IconButton(this);
+			this.buttonFilter.IconName = Misc.Icon("ImageFilter");
+			this.buttonFilter.ButtonStyle = ButtonStyle.ActivableIcon;
+			this.buttonFilter.Pressed += new MessageEventHandler(this.HandleButtonPressed);
+			this.buttonFilter.TabIndex = tabIndex++;
+			this.buttonFilter.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			ToolTip.Default.SetToolTip(this.buttonFilter, Res.Strings.Panel.Image.Button.Filter);
+
+			this.buttonHomo = new IconButton(this);
+			this.buttonHomo.IconName = Misc.Icon("ImageHomo");
+			this.buttonHomo.ButtonStyle = ButtonStyle.ActivableIcon;
+			this.buttonHomo.Pressed += new MessageEventHandler(this.HandleButtonPressed);
+			this.buttonHomo.TabIndex = tabIndex++;
+			this.buttonHomo.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			ToolTip.Default.SetToolTip(this.buttonHomo, Res.Strings.Panel.Image.Button.Homo);
+
 			this.cropper = new Widgets.Cropper(this);
 			this.cropper.Document = this.document;
 			this.cropper.CropChanged += new EventHandler(this.HandleCropChanged);
-
-			this.buttonRotation0 = new RadioButton(this);
-			this.buttonRotation0.Text = "0°";
-			this.buttonRotation0.ActiveStateChanged += new EventHandler(this.HandleButtonActiveStateChanged);
-			this.buttonRotation0.TabIndex = tabIndex++;
-			this.buttonRotation0.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-
-			this.buttonRotation90 = new RadioButton(this);
-			this.buttonRotation90.Text = "90°";
-			this.buttonRotation90.ActiveStateChanged += new EventHandler(this.HandleButtonActiveStateChanged);
-			this.buttonRotation90.TabIndex = tabIndex++;
-			this.buttonRotation90.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-
-			this.buttonRotation180 = new RadioButton(this);
-			this.buttonRotation180.Text = "180°";
-			this.buttonRotation180.ActiveStateChanged += new EventHandler(this.HandleButtonActiveStateChanged);
-			this.buttonRotation180.TabIndex = tabIndex++;
-			this.buttonRotation180.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-
-			this.buttonRotation270 = new RadioButton(this);
-			this.buttonRotation270.Text = "270°";
-			this.buttonRotation270.ActiveStateChanged += new EventHandler(this.HandleButtonActiveStateChanged);
-			this.buttonRotation270.TabIndex = tabIndex++;
-			this.buttonRotation270.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-
-			this.buttonMirrorH = new CheckButton(this);
-			this.buttonMirrorH.Text = Res.Strings.Panel.Image.Button.MirrorX;
-			this.buttonMirrorH.ActiveStateChanged += new EventHandler(this.HandleButtonActiveStateChanged);
-			this.buttonMirrorH.TabIndex = tabIndex++;
-			this.buttonMirrorH.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-
-			this.buttonMirrorV = new CheckButton(this);
-			this.buttonMirrorV.Text = Res.Strings.Panel.Image.Button.MirrorY;
-			this.buttonMirrorV.ActiveStateChanged += new EventHandler(this.HandleButtonActiveStateChanged);
-			this.buttonMirrorV.TabIndex = tabIndex++;
-			this.buttonMirrorV.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-
-			this.buttonHomo = new CheckButton(this);
-			this.buttonHomo.Text = Res.Strings.Panel.Image.Button.Homo;
-			this.buttonHomo.ActiveStateChanged += new EventHandler(this.HandleButtonActiveStateChanged);
-			this.buttonHomo.TabIndex = tabIndex++;
-			this.buttonHomo.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-
-			this.buttonFilter = new CheckButton(this);
-			this.buttonFilter.Text = Res.Strings.Panel.Image.Button.Filter;
-			this.buttonFilter.ActiveStateChanged += new EventHandler(this.HandleButtonActiveStateChanged);
-			this.buttonFilter.TabIndex = tabIndex++;
-			this.buttonFilter.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			this.buttonInside = new CheckButton(this);
 			this.buttonInside.Text = Res.Strings.Panel.Image.Button.Inside;
@@ -111,14 +119,13 @@ namespace Epsitec.Common.Document.Panels
 				this.buttonUpdate.Clicked -= new MessageEventHandler(this.HandleUpdateClicked);
 				this.buttonSave.Clicked -= new MessageEventHandler(this.HandleSaveClicked);
 				this.cropper.CropChanged -= new EventHandler(this.HandleCropChanged);
-				this.buttonRotation0.ActiveStateChanged -= new EventHandler(this.HandleButtonActiveStateChanged);
-				this.buttonRotation90.ActiveStateChanged -= new EventHandler(this.HandleButtonActiveStateChanged);
-				this.buttonRotation180.ActiveStateChanged -= new EventHandler(this.HandleButtonActiveStateChanged);
-				this.buttonRotation270.ActiveStateChanged -= new EventHandler(this.HandleButtonActiveStateChanged);
-				this.buttonMirrorH.ActiveStateChanged -= new EventHandler(this.HandleButtonActiveStateChanged);
-				this.buttonMirrorV.ActiveStateChanged -= new EventHandler(this.HandleButtonActiveStateChanged);
-				this.buttonHomo.ActiveStateChanged -= new EventHandler(this.HandleButtonActiveStateChanged);
-				this.buttonFilter.ActiveStateChanged -= new EventHandler(this.HandleButtonActiveStateChanged);
+				this.buttonRotation90.Pressed -= new MessageEventHandler(this.HandleButtonPressed);
+				this.buttonRotation180.Pressed -= new MessageEventHandler(this.HandleButtonPressed);
+				this.buttonRotation270.Pressed -= new MessageEventHandler(this.HandleButtonPressed);
+				this.buttonMirrorH.Pressed -= new MessageEventHandler(this.HandleButtonPressed);
+				this.buttonMirrorV.Pressed -= new MessageEventHandler(this.HandleButtonPressed);
+				this.buttonHomo.Pressed -= new MessageEventHandler(this.HandleButtonPressed);
+				this.buttonFilter.Pressed -= new MessageEventHandler(this.HandleButtonPressed);
 				this.buttonInside.ActiveStateChanged -= new EventHandler(this.HandleButtonActiveStateChanged);
 
 				this.fieldFilename = null;
@@ -126,7 +133,6 @@ namespace Epsitec.Common.Document.Panels
 				this.buttonUpdate = null;
 				this.buttonSave = null;
 				this.cropper = null;
-				this.buttonRotation0 = null;
 				this.buttonRotation90 = null;
 				this.buttonRotation180 = null;
 				this.buttonRotation270 = null;
@@ -146,7 +152,7 @@ namespace Epsitec.Common.Document.Panels
 			//	Retourne la hauteur standard.
 			get
 			{
-				return ( this.isExtendedSize ? this.LabelHeight+295 : this.LabelHeight+55 );
+				return ( this.isExtendedSize ? this.LabelHeight+245 : this.LabelHeight+55 );
 			}
 		}
 
@@ -169,7 +175,6 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldFilename.Text = TextLayout.ConvertToTaggedText(p.Filename);
 			this.fieldFilename.Cursor = p.Filename.Length;
 
-			this.buttonRotation0.ActiveState   = p.RotationMode == Properties.Image.Rotation.Angle0   ? ActiveState.Yes : ActiveState.No;
 			this.buttonRotation90.ActiveState  = p.RotationMode == Properties.Image.Rotation.Angle90  ? ActiveState.Yes : ActiveState.No;
 			this.buttonRotation180.ActiveState = p.RotationMode == Properties.Image.Rotation.Angle180 ? ActiveState.Yes : ActiveState.No;
 			this.buttonRotation270.ActiveState = p.RotationMode == Properties.Image.Rotation.Angle270 ? ActiveState.Yes : ActiveState.No;
@@ -193,10 +198,10 @@ namespace Epsitec.Common.Document.Panels
 
 			p.Filename  = TextLayout.ConvertToSimpleText(this.fieldFilename.Text);
 
-			if (this.buttonRotation0.ActiveState   == ActiveState.Yes)  p.RotationMode = Properties.Image.Rotation.Angle0;
-			if (this.buttonRotation90.ActiveState  == ActiveState.Yes)  p.RotationMode = Properties.Image.Rotation.Angle90;
-			if (this.buttonRotation180.ActiveState == ActiveState.Yes)  p.RotationMode = Properties.Image.Rotation.Angle180;
-			if (this.buttonRotation270.ActiveState == ActiveState.Yes)  p.RotationMode = Properties.Image.Rotation.Angle270;
+			     if (this.buttonRotation90.ActiveState  == ActiveState.Yes)  p.RotationMode = Properties.Image.Rotation.Angle90;
+			else if (this.buttonRotation180.ActiveState == ActiveState.Yes)  p.RotationMode = Properties.Image.Rotation.Angle180;
+			else if (this.buttonRotation270.ActiveState == ActiveState.Yes)  p.RotationMode = Properties.Image.Rotation.Angle270;
+			else                                                             p.RotationMode = Properties.Image.Rotation.Angle0;
 
 			p.MirrorH   = ( this.buttonMirrorH.ActiveState == ActiveState.Yes );
 			p.MirrorV   = ( this.buttonMirrorV.ActiveState == ActiveState.Yes );
@@ -234,8 +239,26 @@ namespace Epsitec.Common.Document.Panels
 			r.Right = rect.Right-50-2;
 			this.buttonSave.SetManualBounds(r);
 
-			r.Offset(0, -110);
+			r.Offset(0, -30);
 			Rectangle rr = r;
+			rr.Height = 22;
+			rr.Width = 22;
+			this.buttonRotation90.SetManualBounds(rr);
+			rr.Offset(22, 0);
+			this.buttonRotation180.SetManualBounds(rr);
+			rr.Offset(22, 0);
+			this.buttonRotation270.SetManualBounds(rr);
+			rr.Offset(22+8, 0);
+			this.buttonMirrorH.SetManualBounds(rr);
+			rr.Offset(22, 0);
+			this.buttonMirrorV.SetManualBounds(rr);
+			rr.Offset(22+8, 0);
+			this.buttonFilter.SetManualBounds(rr);
+			rr.Offset(22+8, 0);
+			this.buttonHomo.SetManualBounds(rr);
+
+			r.Offset(0, -110);
+			rr = r;
 			rr.Top = rr.Bottom+105;
 			rr.Left = rect.Left;
 			rr.Right = rect.Right;
@@ -243,43 +266,11 @@ namespace Epsitec.Common.Document.Panels
 
 			r.Offset(0, -25);
 			r.Left = rect.Left;
-			r.Width = 40;
-			this.buttonRotation0.SetManualBounds(r);
-			r.Offset(r.Width, 0);
-			r.Width = 45;
-			this.buttonRotation90.SetManualBounds(r);
-			r.Offset(r.Width, 0);
-			r.Width = 50;
-			this.buttonRotation180.SetManualBounds(r);
-			r.Offset(r.Width, 0);
-			r.Width = 45;
-			this.buttonRotation270.SetManualBounds(r);
-
-			r.Offset(0, -20);
-			r.Left = rect.Left;
-			r.Width = 70;
-			this.buttonMirrorH.SetManualBounds(r);
-			r.Offset(80, 0);
-			this.buttonMirrorV.SetManualBounds(r);
-
-			r.Offset(0, -20);
-			r.Left = rect.Left;
-			r.Right = rect.Right;
-			this.buttonHomo.SetManualBounds(r);
-
-			r.Offset(0, -20);
-			r.Left = rect.Left;
-			r.Right = rect.Right;
-			this.buttonFilter.SetManualBounds(r);
-
-			r.Offset(0, -20);
-			r.Left = rect.Left;
 			r.Right = rect.Right;
 			this.buttonInside.SetManualBounds(r);
 
 			this.buttonSave.Visibility = (this.isExtendedSize);
 			this.cropper.Visibility = (this.isExtendedSize);
-			this.buttonRotation0.Visibility = (this.isExtendedSize);
 			this.buttonRotation90.Visibility = (this.isExtendedSize);
 			this.buttonRotation180.Visibility = (this.isExtendedSize);
 			this.buttonRotation270.Visibility = (this.isExtendedSize);
@@ -317,6 +308,35 @@ namespace Epsitec.Common.Document.Panels
 					}
 				}
 			}
+		}
+
+		private void HandleButtonPressed(object sender, MessageEventArgs e)
+		{
+			//	Un bouton a été pressé.
+			IconButton button = sender as IconButton;
+
+			if (button == this.buttonRotation90)
+			{
+				this.buttonRotation180.ActiveState = ActiveState.No;
+				this.buttonRotation270.ActiveState = ActiveState.No;
+			}
+
+			if (button == this.buttonRotation180)
+			{
+				this.buttonRotation90.ActiveState = ActiveState.No;
+				this.buttonRotation270.ActiveState = ActiveState.No;
+			}
+
+			if (button == this.buttonRotation270)
+			{
+				this.buttonRotation90.ActiveState = ActiveState.No;
+				this.buttonRotation180.ActiveState = ActiveState.No;
+			}
+
+			button.ActiveState = (button.ActiveState == ActiveState.Yes) ? ActiveState.No : ActiveState.Yes;
+
+			this.OnChanged();
+			this.document.Notifier.NotifyGeometryChanged();
 		}
 
 		private void HandleButtonActiveStateChanged(object sender)
@@ -403,15 +423,14 @@ namespace Epsitec.Common.Document.Panels
 		protected Button					buttonOpen;
 		protected Button					buttonUpdate;
 		protected Button					buttonSave;
+		protected IconButton				buttonRotation90;
+		protected IconButton				buttonRotation180;
+		protected IconButton				buttonRotation270;
+		protected IconButton				buttonMirrorH;
+		protected IconButton				buttonMirrorV;
+		protected IconButton				buttonFilter;
+		protected IconButton				buttonHomo;
 		protected Widgets.Cropper			cropper;
-		protected RadioButton				buttonRotation0;
-		protected RadioButton				buttonRotation90;
-		protected RadioButton				buttonRotation180;
-		protected RadioButton				buttonRotation270;
-		protected CheckButton				buttonMirrorH;
-		protected CheckButton				buttonMirrorV;
-		protected CheckButton				buttonHomo;
-		protected CheckButton				buttonFilter;
 		protected CheckButton				buttonInside;
 
 		protected Margins					initialCrop;
