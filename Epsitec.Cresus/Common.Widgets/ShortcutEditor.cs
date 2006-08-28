@@ -24,7 +24,8 @@ namespace Epsitec.Common.Widgets
 
 			this.fieldModifier = new TextFieldCombo(this);
 			this.fieldModifier.IsReadOnly = true;
-			this.fieldModifier.ComboClosed += new EventHandler(this.HandleFieldModifierComboClosed);
+			this.fieldModifier.TextChanged += new EventHandler(this.HandleFieldModifierTextChanged);
+			this.fieldModifier.IsLiveUpdateEnabled = false;
 			this.fieldModifier.PreferredWidth = 100;
 			this.fieldModifier.Dock = DockStyle.Left;
 			ToolTip.Default.SetToolTip(this.fieldModifier, Res.Strings.ShortcutEditor.Modifier.Tooltip);
@@ -38,7 +39,8 @@ namespace Epsitec.Common.Widgets
 
 			this.fieldCode = new TextFieldCombo(this);
 			this.fieldCode.IsReadOnly = true;
-			this.fieldCode.ComboClosed += new EventHandler(this.HandleFieldCodeComboClosed);
+			this.fieldCode.TextChanged += new EventHandler(this.HandleFieldCodeTextChanged);
+			this.fieldCode.IsLiveUpdateEnabled = false;
 			this.fieldCode.PreferredWidth = 100;
 			this.fieldCode.Dock = DockStyle.Left;
 			ToolTip.Default.SetToolTip(this.fieldCode, Res.Strings.ShortcutEditor.Code.Tooltip);
@@ -91,11 +93,11 @@ namespace Epsitec.Common.Widgets
 				this.label.Dispose();
 				this.label = null;
 
-				this.fieldModifier.ComboClosed -= new EventHandler(this.HandleFieldModifierComboClosed);
+				this.fieldModifier.TextChanged -= new EventHandler(this.HandleFieldModifierTextChanged);
 				this.fieldModifier.Dispose();
 				this.fieldModifier = null;
 
-				this.fieldCode.ComboClosed -= new EventHandler(this.HandleFieldCodeComboClosed);
+				this.fieldCode.TextChanged -= new EventHandler(this.HandleFieldCodeTextChanged);
 				this.fieldCode.Dispose();
 				this.fieldCode = null;
 			}
@@ -295,9 +297,9 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		void HandleFieldModifierComboClosed(object sender)
+		void HandleFieldModifierTextChanged(object sender)
 		{
-			//	Fermeture (et donc choix) avec le menu-combo des touches modificatrices.
+			//	Changement des touches modificatrices.
 			if (this.isIgnoreChanging)
 			{
 				return;
@@ -310,9 +312,9 @@ namespace Epsitec.Common.Widgets
 			this.Shortcut = full;
 		}
 
-		void HandleFieldCodeComboClosed(object sender)
+		void HandleFieldCodeTextChanged(object sender)
 		{
-			//	Fermeture (et donc choix) avec le menu-combo des touches principales.
+			//	Changement des touches principales.
 			if (this.isIgnoreChanging)
 			{
 				return;
