@@ -260,10 +260,10 @@ namespace Epsitec.Common.Document.Widgets
 
 			this.Enable = this.IsSingleSelection;
 
-			Size size;
-			Margins crop;
-			bool isFillEnabled;
-			double zoom;
+			Size size = Size.Zero;
+			Margins crop = Margins.Zero;
+			bool isFillEnabled = false;
+			double zoom = 1.0;
 
 			if (this.Enable)
 			{
@@ -274,13 +274,6 @@ namespace Epsitec.Common.Document.Widgets
 				double zoomx = size.Width/(size.Width-crop.Left-crop.Right);
 				double zoomy = size.Height/(size.Height-crop.Bottom-crop.Top);
 				zoom = System.Math.Min(zoomx, zoomy);
-			}
-			else
-			{
-				size = Size.Zero;
-				crop = Margins.Zero;
-				isFillEnabled = false;
-				zoom = 1.0;
 			}
 
 			this.fieldCropLeft.MaxValue = (decimal) size.Width;
@@ -858,25 +851,39 @@ namespace Epsitec.Common.Document.Widgets
 				return;
 			}
 
-			double zoom = (double) this.sliderZoom.Value;
+			double zoom = (double) this.sliderZoom.Value;  // zoom souhaité
 
 			Size size = this.ImageSize;
+			Margins crop = this.cropBeforeZoom;
+			Margins newCrop = Margins.Zero;
+
 			Rectangle rect = new Rectangle(Point.Zero, size);
-			rect.Deflate(this.cropBeforeZoom);
-			double w = size.Width/zoom;
-			double h = size.Height/zoom;
+			rect.Deflate(crop);  // rectangle effectif actuel
 
-			//	TODO: faire mieux pour conserver les proportions !
+			double zoomx = size.Width/rect.Width;  // zoom horizontal actuel
+			double zoomy = size.Height/rect.Height;  // zoom vertical actuel
 
-			Margins crop = Margins.Zero;
-			crop.Left   = rect.Center.X-w/2;
-			crop.Right  = size.Width-(rect.Center.X+w/2);
-			crop.Bottom = rect.Center.Y-h/2;
-			crop.Top    = size.Height-(rect.Center.Y+h/2);
-			crop = this.CropAdjust(crop);
+			double w, h;
+
+			if (zoomx < zoomy)
+			{
+				w = size.Width/zoom;  // nouvelle largeur
+				h = w*rect.Height/rect.Width;  // garde les mêmes proportions
+			}
+			else
+			{
+				h = size.Height/zoom;  // nouvelle hauteur
+				w = h*rect.Width/rect.Height;  // garde les mêmes proportions
+			}
+
+			newCrop.Left   = rect.Center.X-w/2;
+			newCrop.Right  = size.Width-(rect.Center.X+w/2);
+			newCrop.Bottom = rect.Center.Y-h/2;
+			newCrop.Top    = size.Height-(rect.Center.Y+h/2);
+			newCrop = this.CropAdjust(newCrop);
 
 			Margins cbz = this.cropBeforeZoom;
-			this.Crop = crop;
+			this.Crop = newCrop;
 			this.cropBeforeZoom = cbz;
 		}
 
