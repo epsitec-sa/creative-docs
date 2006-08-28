@@ -346,8 +346,10 @@
   <data name="Panel.Gradient.Tooltip.HatchDistance" id="0NA">Distance</data>
   <data name="Panel.Gradient.Tooltip.Swap" id="0OA">Swap colors</data>
   <data name="Panel.Image.Button.Update" id="0PA">Update</data>
-  <data name="Panel.Image.Button.MirrorX" id="0QA">Swap X</data>
-  <data name="Panel.Image.Button.MirrorY" id="0RA">Swap Y</data>
+  <data name="Panel.Image.Button.MirrorX" id="0QA">
+  </data>
+  <data name="Panel.Image.Button.MirrorY" id="0RA">
+  </data>
   <data name="Panel.Image.Button.Homo" id="0SA">Keep proportions</data>
   <data name="Panel.Image.Button.Filter" id="0TA">Antialiasing filter</data>
   <data name="Panel.Image.Tooltip.Filename" id="0UA">Image file name</data>
@@ -1337,5 +1339,11 @@
   <data name="Panel.Image.Crop.Tooltip.Zoom" id="0O901">
   </data>
   <data name="Panel.Image.Crop.Title" id="0P901">
+  </data>
+  <data name="Panel.Image.Button.Rotation90" id="0Q901">
+  </data>
+  <data name="Panel.Image.Button.Rotation180" id="0R901">
+  </data>
+  <data name="Panel.Image.Button.Rotation270" id="0S901">
   </data>
 </bundle>

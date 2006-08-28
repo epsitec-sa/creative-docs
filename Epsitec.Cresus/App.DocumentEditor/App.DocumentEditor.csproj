@@ -170,6 +170,13 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.ico" />
+    <EmbeddedResource Include="Images\ImageHomo.icon" />
+    <EmbeddedResource Include="Images\ImageFilter.icon" />
+    <EmbeddedResource Include="Images\ImageMirrorH.icon" />
+    <EmbeddedResource Include="Images\ImageMirrorV.icon" />
+    <EmbeddedResource Include="Images\ImageRotate180.icon" />
+    <EmbeddedResource Include="Images\ImageRotate270.icon" />
+    <EmbeddedResource Include="Images\ImageRotate90.icon" />
     <EmbeddedResource Include="Images\Picker.icon" />
     <EmbeddedResource Include="Images\Zoom.icon" />
     <EmbeddedResource Include="Images\Hand.icon" />

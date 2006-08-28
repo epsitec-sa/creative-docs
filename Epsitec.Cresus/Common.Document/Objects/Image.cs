@@ -452,7 +452,6 @@ namespace Epsitec.Common.Document.Objects
 
 						Drawing.Rectangle rect = new Drawing.Rectangle(0, 0, 1.0, 1.0);
 						port.PaintImage(image, rect, cropRect);
-						//?port.PaintImage(image, rect, cropRect, pi.Filter);  // TODO: passer ce paramètre à AGG
 #endif
 					}
 				}

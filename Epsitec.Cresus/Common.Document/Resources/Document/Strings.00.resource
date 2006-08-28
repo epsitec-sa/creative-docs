@@ -348,9 +348,12 @@
   <data name="Panel.Image.Button.Open" id="04901" mod="1">Importer</data>
   <data name="Panel.Image.Button.Save" id="05901" mod="1">Exporter</data>
   <data name="Panel.Image.Button.Update" id="0PA">Màj</data>
-  <data name="Panel.Image.Button.MirrorX" id="0QA">Miroir X</data>
-  <data name="Panel.Image.Button.MirrorY" id="0RA">Miroir Y</data>
-  <data name="Panel.Image.Button.Homo" id="0SA">Conserver proportions</data>
+  <data name="Panel.Image.Button.Rotation90" id="0Q901" mod="1">Quart de tour anti-horaire</data>
+  <data name="Panel.Image.Button.Rotation180" id="0R901" mod="1">Demi-tour</data>
+  <data name="Panel.Image.Button.Rotation270" id="0S901" mod="1">Quart de tour horaire</data>
+  <data name="Panel.Image.Button.MirrorX" id="0QA">Miroir horizontal</data>
+  <data name="Panel.Image.Button.MirrorY" id="0RA">Miroir vertical</data>
+  <data name="Panel.Image.Button.Homo" id="0SA">Conserver les proportions</data>
   <data name="Panel.Image.Button.Filter" id="0TA">Filtre adoucissant</data>
   <data name="Panel.Image.Button.Inside" id="02901" mod="1">Image incorporée au document</data>
   <data name="Panel.Image.Tooltip.Filename" id="0UA">Nom du fichier de l'image</data>
