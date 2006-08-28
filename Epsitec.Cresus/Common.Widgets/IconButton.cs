@@ -162,7 +162,10 @@ namespace Epsitec.Common.Widgets
 		{
 			base.OnIconNameChanged (oldIconName, newIconName);
 
-			this.UpdateText (newIconName);
+			if (! string.IsNullOrEmpty (newIconName))
+			{
+				this.UpdateText (newIconName);
+			}
 		}
 
 		protected override void DefineTextFromCaption(string text)
