@@ -10,6 +10,15 @@ namespace Epsitec.Common.Document.Properties
 	[System.Serializable()]
 	public class Image : Abstract
 	{
+		public enum Rotation
+		{
+			Angle0,
+			Angle90,
+			Angle180,
+			Angle270,
+		}
+
+
 		public Image(Document document, Type type) : base(document, type)
 		{
 		}
@@ -19,6 +28,7 @@ namespace Epsitec.Common.Document.Properties
 			this.filename  = "";
 			this.shortName = "";
 			this.insideDoc = true;
+			this.rotation  = Rotation.Angle0;
 			this.mirrorH   = false;
 			this.mirrorV   = false;
 			this.homo      = true;
@@ -70,6 +80,24 @@ namespace Epsitec.Common.Document.Properties
 			set
 			{
 				this.insideDoc = value;
+			}
+		}
+
+		public Rotation RotationMode
+		{
+			get
+			{
+				return this.rotation;
+			}
+			
+			set
+			{
+				if (this.rotation != value)
+				{
+					this.NotifyBefore();
+					this.rotation = value;
+					this.NotifyAfter();
+				}
 			}
 		}
 
@@ -198,6 +226,7 @@ namespace Epsitec.Common.Document.Properties
 			p.filename    = this.filename;
 			p.shortName   = this.shortName;
 			p.insideDoc   = this.insideDoc;
+			p.rotation    = this.rotation;
 			p.mirrorH     = this.mirrorH;
 			p.mirrorV     = this.mirrorV;
 			p.homo        = this.homo;
@@ -214,6 +243,7 @@ namespace Epsitec.Common.Document.Properties
 			if ( p.filename    != this.filename    )  return false;
 			if ( p.shortName   != this.shortName   )  return false;
 			if ( p.insideDoc   != this.insideDoc   )  return false;
+			if ( p.rotation    != this.rotation    )  return false;
 			if ( p.mirrorH     != this.mirrorH     )  return false;
 			if ( p.mirrorV     != this.mirrorV     )  return false;
 			if ( p.homo        != this.homo        )  return false;
@@ -249,6 +279,7 @@ namespace Epsitec.Common.Document.Properties
 			info.AddValue("Filename", filename);
 			info.AddValue("ShortName", shortName);
 			info.AddValue("InsideDoc", this.insideDoc);
+			info.AddValue("Rotation", this.rotation);
 			info.AddValue("MirrorH", this.mirrorH);
 			info.AddValue("MirrorV", this.mirrorV);
 			info.AddValue("Homo", this.homo);
@@ -296,12 +327,15 @@ namespace Epsitec.Common.Document.Properties
 				this.cropMargins.Right = info.GetDouble("CropRight");
 				this.cropMargins.Bottom = info.GetDouble("CropBottom");
 				this.cropMargins.Top = info.GetDouble("CropTop");
+
+				this.rotation = (Rotation) info.GetValue("Rotation", typeof(Rotation));
 			}
 			else
 			{
 				this.shortName = null;
 				this.insideDoc = false;
 				this.cropMargins = Margins.Zero;
+				this.rotation = Rotation.Angle0;
 			}
 		}
 		#endregion
@@ -310,6 +344,7 @@ namespace Epsitec.Common.Document.Properties
 		protected string			filename;
 		protected string			shortName;
 		protected bool				insideDoc;
+		protected Rotation			rotation;
 		protected bool				mirrorH;
 		protected bool				mirrorV;
 		protected bool				homo;
