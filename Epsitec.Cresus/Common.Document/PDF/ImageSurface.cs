@@ -77,7 +77,7 @@ namespace Epsitec.Common.Document.PDF
 			return null;
 		}
 
-		public static ImageSurface Search(System.Collections.ArrayList list, Drawing.Image drim, Size size, Margins crop)
+		public static ImageSurface Search(System.Collections.ArrayList list, Drawing.Image drim, Size size, Margins crop, bool filter)
 		{
 			//	Cherche une image d'après son Drawing.Image.
 			foreach ( ImageSurface image in list )
@@ -86,7 +86,8 @@ namespace Epsitec.Common.Document.PDF
 
 				if ( image.DrawingImage.UniqueId == drim.UniqueId &&
 					 image.size                  == size          &&
-					 image.crop                  == crop          )
+					 image.crop                  == crop          &&
+					 image.filter                == filter        )
 				{
 					return image;
 				}
