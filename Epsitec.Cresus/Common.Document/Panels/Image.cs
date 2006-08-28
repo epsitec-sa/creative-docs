@@ -45,6 +45,30 @@ namespace Epsitec.Common.Document.Panels
 			this.cropper.Document = this.document;
 			this.cropper.CropChanged += new EventHandler(this.HandleCropChanged);
 
+			this.buttonRotation0 = new RadioButton(this);
+			this.buttonRotation0.Text = "0°";
+			this.buttonRotation0.ActiveStateChanged += new EventHandler(this.HandleButtonActiveStateChanged);
+			this.buttonRotation0.TabIndex = tabIndex++;
+			this.buttonRotation0.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+
+			this.buttonRotation90 = new RadioButton(this);
+			this.buttonRotation90.Text = "90°";
+			this.buttonRotation90.ActiveStateChanged += new EventHandler(this.HandleButtonActiveStateChanged);
+			this.buttonRotation90.TabIndex = tabIndex++;
+			this.buttonRotation90.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+
+			this.buttonRotation180 = new RadioButton(this);
+			this.buttonRotation180.Text = "180°";
+			this.buttonRotation180.ActiveStateChanged += new EventHandler(this.HandleButtonActiveStateChanged);
+			this.buttonRotation180.TabIndex = tabIndex++;
+			this.buttonRotation180.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+
+			this.buttonRotation270 = new RadioButton(this);
+			this.buttonRotation270.Text = "270°";
+			this.buttonRotation270.ActiveStateChanged += new EventHandler(this.HandleButtonActiveStateChanged);
+			this.buttonRotation270.TabIndex = tabIndex++;
+			this.buttonRotation270.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+
 			this.buttonMirrorH = new CheckButton(this);
 			this.buttonMirrorH.Text = Res.Strings.Panel.Image.Button.MirrorX;
 			this.buttonMirrorH.ActiveStateChanged += new EventHandler(this.HandleButtonActiveStateChanged);
@@ -87,6 +111,10 @@ namespace Epsitec.Common.Document.Panels
 				this.buttonUpdate.Clicked -= new MessageEventHandler(this.HandleUpdateClicked);
 				this.buttonSave.Clicked -= new MessageEventHandler(this.HandleSaveClicked);
 				this.cropper.CropChanged -= new EventHandler(this.HandleCropChanged);
+				this.buttonRotation0.ActiveStateChanged -= new EventHandler(this.HandleButtonActiveStateChanged);
+				this.buttonRotation90.ActiveStateChanged -= new EventHandler(this.HandleButtonActiveStateChanged);
+				this.buttonRotation180.ActiveStateChanged -= new EventHandler(this.HandleButtonActiveStateChanged);
+				this.buttonRotation270.ActiveStateChanged -= new EventHandler(this.HandleButtonActiveStateChanged);
 				this.buttonMirrorH.ActiveStateChanged -= new EventHandler(this.HandleButtonActiveStateChanged);
 				this.buttonMirrorV.ActiveStateChanged -= new EventHandler(this.HandleButtonActiveStateChanged);
 				this.buttonHomo.ActiveStateChanged -= new EventHandler(this.HandleButtonActiveStateChanged);
@@ -98,6 +126,10 @@ namespace Epsitec.Common.Document.Panels
 				this.buttonUpdate = null;
 				this.buttonSave = null;
 				this.cropper = null;
+				this.buttonRotation0 = null;
+				this.buttonRotation90 = null;
+				this.buttonRotation180 = null;
+				this.buttonRotation270 = null;
 				this.buttonMirrorH = null;
 				this.buttonMirrorV = null;
 				this.buttonHomo = null;
@@ -114,7 +146,7 @@ namespace Epsitec.Common.Document.Panels
 			//	Retourne la hauteur standard.
 			get
 			{
-				return ( this.isExtendedSize ? this.LabelHeight+275 : this.LabelHeight+55 );
+				return ( this.isExtendedSize ? this.LabelHeight+295 : this.LabelHeight+55 );
 			}
 		}
 
@@ -136,6 +168,12 @@ namespace Epsitec.Common.Document.Panels
 
 			this.fieldFilename.Text = TextLayout.ConvertToTaggedText(p.Filename);
 			this.fieldFilename.Cursor = p.Filename.Length;
+
+			this.buttonRotation0.ActiveState   = p.RotationMode == Properties.Image.Rotation.Angle0   ? ActiveState.Yes : ActiveState.No;
+			this.buttonRotation90.ActiveState  = p.RotationMode == Properties.Image.Rotation.Angle90  ? ActiveState.Yes : ActiveState.No;
+			this.buttonRotation180.ActiveState = p.RotationMode == Properties.Image.Rotation.Angle180 ? ActiveState.Yes : ActiveState.No;
+			this.buttonRotation270.ActiveState = p.RotationMode == Properties.Image.Rotation.Angle270 ? ActiveState.Yes : ActiveState.No;
+			
 			this.buttonMirrorH.ActiveState = p.MirrorH   ? ActiveState.Yes : ActiveState.No;
 			this.buttonMirrorV.ActiveState = p.MirrorV   ? ActiveState.Yes : ActiveState.No;
 			this.buttonHomo   .ActiveState = p.Homo      ? ActiveState.Yes : ActiveState.No;
@@ -154,6 +192,12 @@ namespace Epsitec.Common.Document.Panels
 			if ( p == null )  return;
 
 			p.Filename  = TextLayout.ConvertToSimpleText(this.fieldFilename.Text);
+
+			if (this.buttonRotation0.ActiveState   == ActiveState.Yes)  p.RotationMode = Properties.Image.Rotation.Angle0;
+			if (this.buttonRotation90.ActiveState  == ActiveState.Yes)  p.RotationMode = Properties.Image.Rotation.Angle90;
+			if (this.buttonRotation180.ActiveState == ActiveState.Yes)  p.RotationMode = Properties.Image.Rotation.Angle180;
+			if (this.buttonRotation270.ActiveState == ActiveState.Yes)  p.RotationMode = Properties.Image.Rotation.Angle270;
+
 			p.MirrorH   = ( this.buttonMirrorH.ActiveState == ActiveState.Yes );
 			p.MirrorV   = ( this.buttonMirrorV.ActiveState == ActiveState.Yes );
 			p.Homo      = ( this.buttonHomo   .ActiveState == ActiveState.Yes );
@@ -199,6 +243,20 @@ namespace Epsitec.Common.Document.Panels
 
 			r.Offset(0, -25);
 			r.Left = rect.Left;
+			r.Width = 40;
+			this.buttonRotation0.SetManualBounds(r);
+			r.Offset(r.Width, 0);
+			r.Width = 45;
+			this.buttonRotation90.SetManualBounds(r);
+			r.Offset(r.Width, 0);
+			r.Width = 50;
+			this.buttonRotation180.SetManualBounds(r);
+			r.Offset(r.Width, 0);
+			r.Width = 45;
+			this.buttonRotation270.SetManualBounds(r);
+
+			r.Offset(0, -20);
+			r.Left = rect.Left;
 			r.Width = 70;
 			this.buttonMirrorH.SetManualBounds(r);
 			r.Offset(80, 0);
@@ -221,6 +279,10 @@ namespace Epsitec.Common.Document.Panels
 
 			this.buttonSave.Visibility = (this.isExtendedSize);
 			this.cropper.Visibility = (this.isExtendedSize);
+			this.buttonRotation0.Visibility = (this.isExtendedSize);
+			this.buttonRotation90.Visibility = (this.isExtendedSize);
+			this.buttonRotation180.Visibility = (this.isExtendedSize);
+			this.buttonRotation270.Visibility = (this.isExtendedSize);
 			this.buttonMirrorH.Visibility = (this.isExtendedSize);
 			this.buttonMirrorV.Visibility = (this.isExtendedSize);
 			this.buttonHomo.Visibility = (this.isExtendedSize);
@@ -342,6 +404,10 @@ namespace Epsitec.Common.Document.Panels
 		protected Button					buttonUpdate;
 		protected Button					buttonSave;
 		protected Widgets.Cropper			cropper;
+		protected RadioButton				buttonRotation0;
+		protected RadioButton				buttonRotation90;
+		protected RadioButton				buttonRotation180;
+		protected RadioButton				buttonRotation270;
 		protected CheckButton				buttonMirrorH;
 		protected CheckButton				buttonMirrorV;
 		protected CheckButton				buttonHomo;
