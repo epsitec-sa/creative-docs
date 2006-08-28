@@ -1512,6 +1512,7 @@ namespace Epsitec.Common.Document.PDF
 			
 			blob.Dispose();
 			blob = null;
+			imageData = null;
 
 			int dx, dy;
 
@@ -1525,20 +1526,20 @@ namespace Epsitec.Common.Document.PDF
 				dy -= (int) crop.Bottom;
 				dy -= (int) crop.Top;
 
-				Magick.Image copy = new Magick.Image(dx, dy);
-
 				byte[] buffer = new byte[dx*dy*4];
 
+				//	Attention, avec Magick, y=0 est en haut, d'où crop.Top !
 				magick.ModifyBegin();
 				magick.GetRawPixels(buffer, (int) crop.Left, (int) crop.Top, dx, dy);
 				magick.ModifyEnd();
 
-				copy.ModifyBegin();
-				copy.SetRawPixels(buffer, 0, 0, dx, dy);
-				copy.ModifyEnd();
+				Magick.Image cropped = new Magick.Image(dx, dy);
+				cropped.ModifyBegin();
+				cropped.SetRawPixels(buffer, 0, 0, dx, dy);
+				cropped.ModifyEnd();
 
 				magick.Dispose();
-				magick = copy;
+				magick = cropped;  // remplace par l'instance recadrée
 			}
 
 			bool useMask = false;

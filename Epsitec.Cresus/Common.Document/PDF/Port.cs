@@ -665,7 +665,7 @@ namespace Epsitec.Common.Document.PDF
 
 			if ( this.imageSurfaceList == null )  return;
 
-			ImageSurface image = ImageSurface.Search(this.imageSurfaceList, bitmap, this.imageFinalSize, this.imageCrop);
+			ImageSurface image = ImageSurface.Search(this.imageSurfaceList, bitmap, this.imageFinalSize, this.imageCrop, this.imageFilter);
 			if ( image == null )  return;
 
 			this.SetTransform(this.transform);
