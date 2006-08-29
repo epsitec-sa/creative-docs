@@ -135,7 +135,9 @@ namespace Epsitec.Common.Document
 				this.notifier  = new Notifier(this);
 			}
 
-			if ( this.type != DocumentType.Pictogram )
+			//	Il ne faut pas créer de ImageCache lorsqu'on crée un document
+			//	juste pour une icône !
+			if ( this.mode == DocumentMode.Modify )
 			{
 				this.imageCache = new ImageCache();
 			}
