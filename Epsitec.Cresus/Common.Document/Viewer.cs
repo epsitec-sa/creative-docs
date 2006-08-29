@@ -872,6 +872,11 @@ namespace Epsitec.Common.Document
 								this.Select(obj, false, this.drawingContext.IsShift);
 								this.moveAutoSel = true;
 
+								if (!this.drawingContext.IsShift)
+								{
+									this.ChangeMouseCursor(MouseCursorType.Finger);
+								}
+
 								if ( this.selector.Visible && this.drawingContext.IsShift )
 								{
 									obj.GlobalSelect(true, false);
