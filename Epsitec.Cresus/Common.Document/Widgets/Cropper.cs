@@ -325,6 +325,7 @@ namespace Epsitec.Common.Document.Widgets
 				crop.Right = this.crop.Right*bounds.Width/size.Width;
 				crop.Bottom = this.crop.Bottom*bounds.Height/size.Height;
 				crop.Top = this.crop.Top*bounds.Height/size.Height;
+				crop = this.CropRotate(crop, 1);
 				bounds.Deflate(crop);
 
 				if (bounds.IsSurfaceZero)
@@ -344,28 +345,26 @@ namespace Epsitec.Common.Document.Widgets
 			this.Invalidate(bounds);
 		}
 
-		protected Point ConvWidgetToImage(Point mouse)
+		protected Point ConvWidgetToImage(Point mouse, Size imageSize)
 		{
 			//	Conversion d'une position de la souris dans un widget en position dans l'image.
 			Rectangle bounds = this.BoundsRectangle;
-			Size size = this.ImageSize;
-
 			mouse -= bounds.BottomLeft;
-			Point pos = new Point(mouse.X*size.Width/bounds.Width, mouse.Y*size.Height/bounds.Height);
+			Point pos = new Point(mouse.X/bounds.Width, mouse.Y/bounds.Height);
 
 			pos.X = System.Math.Max(pos.X, 0);
-			pos.X = System.Math.Min(pos.X, size.Width);
+			pos.X = System.Math.Min(pos.X, 1);
 			pos.Y = System.Math.Max(pos.Y, 0);
-			pos.Y = System.Math.Min(pos.Y, size.Height);
+			pos.Y = System.Math.Min(pos.Y, 1);
 
-			return pos;
+			return new Point(pos.X*imageSize.Width, pos.Y*imageSize.Height);
 		}
 
 		protected Part DetectPart(Point pos)
 		{
 			//	Détecte la partie survolée par la souris.
 			Rectangle crop = this.CropRectangle;
-			double m = 2;
+			double m = 2;  // marge de détection
 
 			bool left   = (pos.X >= crop.Left-m   && pos.X <= crop.Left+m);
 			bool right  = (pos.X >= crop.Right-m  && pos.X <= crop.Right+m);
@@ -395,9 +394,18 @@ namespace Epsitec.Common.Document.Widgets
 			Point m = pos-this.initialPos;
 			bool isHorizontal = System.Math.Abs(m.X) > System.Math.Abs(m.Y);
 
-			pos = this.ConvWidgetToImage(pos);
-			Margins crop = this.Crop;
 			Size size = this.ImageSize;
+			int angle = this.AngleRotate(1);
+
+			if (angle == 90 || angle == 270)
+			{
+				double t = size.Width;
+				size.Width = size.Height;
+				size.Height = t;
+			}
+
+			pos = this.ConvWidgetToImage(pos, size);
+			Margins crop = this.CropRotate(this.Crop, 1);
 
 			if (this.hilited == Part.Left || this.hilited == Part.BottomLeft || this.hilited == Part.TopLeft)
 			{
@@ -421,7 +429,7 @@ namespace Epsitec.Common.Document.Widgets
 
 			if (this.hilited == Part.Showed)
 			{
-				Point move = pos - this.ConvWidgetToImage(this.initialPos);
+				Point move = pos - this.ConvWidgetToImage(this.initialPos, size);
 
 				if (isConstrain)
 				{
@@ -429,7 +437,7 @@ namespace Epsitec.Common.Document.Widgets
 					else               move.X = 0;
 				}
 
-				crop = this.initialCrop;
+				crop = this.CropRotate(this.initialCrop, 1);
 				crop.Left   += move.X;
 				crop.Right  -= move.X;
 				crop.Bottom += move.Y;
@@ -437,7 +445,7 @@ namespace Epsitec.Common.Document.Widgets
 				crop = this.CropAdjust(crop);
 			}
 
-			this.Crop = crop;
+			this.Crop = this.CropRotate(crop, -1);
 		}
 
 		protected Margins CropAdjust(Margins crop)
@@ -507,6 +515,63 @@ namespace Epsitec.Common.Document.Widgets
 			crop.Bottom = rect.Center.Y-h/2;
 			crop.Top    = size.Height-(rect.Center.Y+h/2);
 			crop = this.CropAdjust(crop);
+
+			return crop;
+		}
+
+		protected int AngleRotate(int direction)
+		{
+			//	Retourne l'angle de la rotation du recadrage, selon les propriétés de l'image.
+			//	direction =  1  ->  rotation CCW (normale)
+			//	direction = -1  ->  rotation CW
+			int angle = 0;
+
+			Properties.Image pi = this.SelectedPropertyImage;
+			if (pi != null)
+			{
+				if (pi.RotationMode == Properties.Image.Rotation.Angle90 )  angle =  90;
+				if (pi.RotationMode == Properties.Image.Rotation.Angle180)  angle = 180;
+				if (pi.RotationMode == Properties.Image.Rotation.Angle270)  angle = 270;
+
+				angle *= direction;  // inverse éventuellement le sens
+				if (angle < 0)
+				{
+					angle = 360+angle;  // 0..270
+				}
+			}
+
+			return angle;
+		}
+
+		protected Margins CropRotate(Margins crop, int direction)
+		{
+			//	Effectue une rotation du recadrage, selon les propriétés de l'image.
+			int angle = this.AngleRotate(direction);
+			Margins icrop = crop;
+
+			if (angle == 90)  // quart de tour à gauche ?
+			{
+				crop.Left   = icrop.Top;
+				crop.Right  = icrop.Bottom;
+				crop.Bottom = icrop.Left;
+				crop.Top    = icrop.Right;
+			}
+
+			if (angle == 180)  // demi-tour ?
+			{
+				crop.Left   = icrop.Right;
+				crop.Right  = icrop.Left;
+				crop.Bottom = icrop.Top;
+				crop.Top    = icrop.Bottom;
+			}
+
+			if (angle == 270)  // quart de tour à droite ?
+			{
+				crop.Left   = icrop.Bottom;
+				crop.Right  = icrop.Top;
+				crop.Bottom = icrop.Right;
+				crop.Top    = icrop.Left;
+			}
 
 			return crop;
 		}
