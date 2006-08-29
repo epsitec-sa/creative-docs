@@ -763,7 +763,8 @@ namespace Epsitec.Common.Support
 		
 		public System.Xml.XmlNode CreateXmlNode(System.Xml.XmlDocument xmldoc)
 		{
-			System.Xml.XmlElement   bundle_node  = xmldoc.CreateElement ("bundle");
+			System.Xml.XmlElement bundleNode = xmldoc.CreateElement ("bundle");
+			
 			System.Xml.XmlAttribute name_attr    = xmldoc.CreateAttribute ("name");
 			System.Xml.XmlAttribute caption_attr = xmldoc.CreateAttribute ("caption");
 			System.Xml.XmlAttribute type_attr    = xmldoc.CreateAttribute ("type");
@@ -778,29 +779,29 @@ namespace Epsitec.Common.Support
 			culture_attr.Value = this.culture.TwoLetterISOLanguageName;
 			rank_attr.Value    = this.rank < 0 ? "" : this.rank.ToString (System.Globalization.CultureInfo.InvariantCulture);
 			
-			if (name_attr.Value != "")
+			if (!string.IsNullOrEmpty (name_attr.Value))
 			{
-				bundle_node.Attributes.Append (name_attr);
+				bundleNode.Attributes.Append (name_attr);
 			}
-			if (caption_attr.Value != "")
+			if (!string.IsNullOrEmpty (caption_attr.Value))
 			{
-				bundle_node.Attributes.Append (caption_attr);
+				bundleNode.Attributes.Append (caption_attr);
 			}
-			if (type_attr.Value != "")
+			if (!string.IsNullOrEmpty (type_attr.Value))
 			{
-				bundle_node.Attributes.Append (type_attr);
+				bundleNode.Attributes.Append (type_attr);
 			}
-			if (about_attr.Value != "")
+			if (!string.IsNullOrEmpty (about_attr.Value))
 			{
-				bundle_node.Attributes.Append (about_attr);
+				bundleNode.Attributes.Append (about_attr);
 			}
-			if (culture_attr.Value != "")
+			if (!string.IsNullOrEmpty (culture_attr.Value))
 			{
-				bundle_node.Attributes.Append (culture_attr);
+				bundleNode.Attributes.Append (culture_attr);
 			}
-			if (rank_attr.Value != "")
+			if (!string.IsNullOrEmpty (rank_attr.Value))
 			{
-				bundle_node.Attributes.Append (rank_attr);
+				bundleNode.Attributes.Append (rank_attr);
 			}
 			
 			for (int i = 0; i < this.fields.Length; i++)
@@ -812,10 +813,10 @@ namespace Epsitec.Common.Support
 				
 				fragment.InnerXml = source;
 				
-				bundle_node.AppendChild (fragment);
+				bundleNode.AppendChild (fragment);
 			}
 			
-			return bundle_node;
+			return bundleNode;
 		}
 		
 		
@@ -1099,7 +1100,7 @@ namespace Epsitec.Common.Support
 			
 			if (node.Attributes[name] == null)
 			{
-				if (value == "")
+				if (string.IsNullOrEmpty (value))
 				{
 					return;
 				}
@@ -1111,8 +1112,8 @@ namespace Epsitec.Common.Support
 				
 				return;
 			}
-			
-			if (value == "")
+
+			if (string.IsNullOrEmpty (value))
 			{
 				node.Attributes.Remove (node.Attributes[name]);
 			}
