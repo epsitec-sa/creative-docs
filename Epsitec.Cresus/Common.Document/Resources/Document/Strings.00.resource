@@ -368,7 +368,7 @@
   <data name="Panel.Image.Crop.Tooltip.CropBottom" id="0I901" mod="1">Marge inférieure de cadrage en pixels</data>
   <data name="Panel.Image.Crop.Tooltip.CropTop" id="0J901" mod="1">Marge supérieure de cadrage en pixels</data>
   <data name="Panel.Image.Crop.Tooltip.Zoom" id="0O901" mod="1">Zoom de l&amp;apos;image</data>
-  <data name="Panel.Image.Crop.Tooltip.Fill" id="0M901" mod="1">Rempli toute l&amp;apos;image</data>
+  <data name="Panel.Image.Crop.Tooltip.Fill" id="0M901" mod="1">Rempli tout le cadre</data>
   <data name="Panel.Image.Crop.Tooltip.Reset" id="0K901" mod="1">Montre toute l&amp;apos;image</data>
   <data name="Panel.Image.Crop.Button.Fill" id="0L901" mod="1">Remplir</data>
   <data name="Panel.Image.Crop.Button.Reset" id="0N901" mod="1">Tout</data>
