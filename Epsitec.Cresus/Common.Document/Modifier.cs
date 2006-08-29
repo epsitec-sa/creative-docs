@@ -809,7 +809,7 @@ namespace Epsitec.Common.Document
 			{
 				DrawingContext context = viewer.DrawingContext;
 				context.InternalPageLayer(0, 0);
-				context.ZoomPageAndCenter();
+				//?context.ZoomPageAndCenter();
 			}
 
 			this.UpdatePageAfterChanging();

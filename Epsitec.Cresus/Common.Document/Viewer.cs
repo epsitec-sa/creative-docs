@@ -4217,6 +4217,13 @@ namespace Epsitec.Common.Document
 			//	Dessine le document.
 			if ( this.Window.IsSizeMoveInProgress )
 			{
+				//	N'affiche pas le document pendant le redimensionnement de la fenêtre.
+				return;
+			}
+
+			if (this.document.InitializationInProgress)
+			{
+				//	N'affiche pas le document pendant la phase d'initialisation.
 				return;
 			}
 			
