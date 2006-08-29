@@ -177,7 +177,7 @@ namespace Epsitec.App.DocumentEditor
 
 			if ( this.IsCurrentDocument )
 			{
-				this.firstInitialise = true;
+				this.InitializationInProgress = true;
 				this.CurrentDocument.Notifier.NotifyAllChanged();
 				this.CurrentDocument.Notifier.GenerateEvents();
 			}
@@ -292,15 +292,42 @@ namespace Epsitec.App.DocumentEditor
 			if ( this.currentDocument < 0 )  return;
 			this.CurrentDocument.Notifier.GenerateEvents();
 
-			if ( this.firstInitialise )
+			if (this.initializationInProgress)
 			{
-				this.firstInitialise = false;
+				this.InitializationInProgress = false;
 				if ( this.IsCurrentDocument )
 				{
 					DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
 					context.ZoomPageAndCenter();
 					this.CurrentDocument.Modifier.ActiveViewer.Focus();
 				}
+			}
+		}
+
+		public bool InitializationInProgress
+		{
+			//	Initialisation en cours. Cette période dure depuis la création d'un
+			//	nouveau document, jusqu'au premier AsyncNotify effectué lorsque tout
+			//	existe de façon certaine. Lorsque ce mode est true, le document n'est
+			//	pas affiché, pour éviter de voir apparaître brièvement un document
+			//	avec un zoom faux. Ceci est nécessaire à cause de ZoomPageAndCenter
+			//	pour lequel la fenêtre doit exister dans sa taille définitive !
+			set
+			{
+				this.initializationInProgress = value;
+
+				//	Informe tous les documents ouverts de l'état.
+				int total = this.documents.Count;
+				for (int i=0; i<total; i++)
+				{
+					DocumentInfo di = this.documents[i] as DocumentInfo;
+					di.document.InitializationInProgress = this.initializationInProgress;
+				}
+			}
+
+			get
+			{
+				return this.initializationInProgress;
 			}
 		}
 
@@ -1673,6 +1700,7 @@ namespace Epsitec.App.DocumentEditor
 					this.CreateDocument();
 				}
 				err = this.CurrentDocument.Read(filename);
+				this.InitializationInProgress = true;
 				this.UpdateRulers();
 				if ( err == "" )
 				{
@@ -1834,14 +1862,14 @@ namespace Epsitec.App.DocumentEditor
 			{
 				this.CreateDocument();
 				this.CurrentDocument.Modifier.New();
-				this.CurrentDocument.Modifier.ActiveViewer.Focus();
 			}
 			else
 			{
 				this.Open(this.globalSettings.NewDocument);
 				this.CurrentDocument.IsDirtySerialize = false;
-				this.CurrentDocument.Modifier.ActiveViewer.Focus();
 			}
+
+			this.InitializationInProgress = true;
 		}
 
 		[Command ("Open")]
@@ -5483,7 +5511,7 @@ namespace Epsitec.App.DocumentEditor
 		protected InstallType					installType;
 		protected DebugMode						debugMode;
 		protected bool							useArray;
-		protected bool							firstInitialise;
+		protected bool							initializationInProgress;
 		protected Document						clipboard;
 		protected int							currentDocument;
 		protected System.Collections.ArrayList	documents;

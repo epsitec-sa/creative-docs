@@ -80,6 +80,7 @@ namespace Epsitec.Common.Document
 			this.globalSettings = globalSettings;
 			this.commandDispatcher = commandDispatcher;
 			this.commandContext = commandContext;
+			this.initializationInProgress = true;
 
 			if ( this.type == DocumentType.Pictogram )
 			{
@@ -259,6 +260,14 @@ namespace Epsitec.Common.Document
 			//	Bloc-notes associé.
 			get { return this.clipboard; }
 			set { this.clipboard = value; }
+		}
+
+		public bool InitializationInProgress
+		{
+			//	Initialisation du document en cours.
+			//	Voir le commentaire dans DocumentEditor.cs, InitializationInProgress.
+			get { return this.initializationInProgress; }
+			set { this.initializationInProgress = value; }
 		}
 
 		#region ForSamples
@@ -2478,6 +2487,7 @@ namespace Epsitec.Common.Document
 		protected DocumentMode					mode;
 		protected InstallType					installType;
 		protected DebugMode						debugMode;
+		protected bool							initializationInProgress;
 		protected Settings.GlobalSettings		globalSettings;
 		protected CommandDispatcher				commandDispatcher;
 		protected CommandContext				commandContext;
