@@ -199,7 +199,9 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Exécute une commande.
 			if (name == "PanelRun")
 			{
+				this.GetCommandState("PanelRun").ActiveState = ActiveState.Yes;
 				this.module.RunPanel(this.access.AccessIndex);
+				this.GetCommandState("PanelRun").ActiveState = ActiveState.No;
 				return;
 			}
 
