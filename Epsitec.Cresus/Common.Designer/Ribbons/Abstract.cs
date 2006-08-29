@@ -14,7 +14,28 @@ namespace Epsitec.Common.Designer.Ribbons
 			this.mainWindow = mainWindow;
 		}
 
-		
+
+		public IconButton SearchIconButton(string command)
+		{
+			//	Cherche le bouton utilisé pour une commande, dans le ruban.
+			Command c = Common.Widgets.Command.Get(command);
+			string icon = Misc.Icon(c.Icon);
+
+			foreach (Widget widget in this.Children)
+			{
+				IconButton button = widget as IconButton;
+				if (button != null)
+				{
+					if (button.IconName == icon)
+					{
+						return button;
+					}
+				}
+			}
+
+			return null;
+		}
+
 		protected IconButton CreateIconButton(string command)
 		{
 			//	Crée un bouton pour une commande.

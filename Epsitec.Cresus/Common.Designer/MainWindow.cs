@@ -285,6 +285,63 @@ namespace Epsitec.Common.Designer
 		}
 
 
+		public void ActiveButton(string command, bool active)
+		{
+			//	Active un bouton dans un ruban.
+			IconButton button = this.SearchIconButton(command);
+			if (button != null)
+			{
+				//this.GetCommandState(command).ActiveState = active ? ActiveState.Yes : ActiveState.No;
+				button.PreferredIconStyle = active ? "Active" : null;
+			}
+		}
+
+		protected IconButton SearchIconButton(string command)
+		{
+			//	Cherche le bouton utilisé pour une commande, dans tous les rubans.
+			IconButton button;
+
+			button = this.SearchIconButton(this.ribbonMain, command);
+			if (button != null)
+			{
+				return button;
+			}
+
+			button = this.SearchIconButton(this.ribbonOper, command);
+			if (button != null)
+			{
+				return button;
+			}
+
+			button = this.SearchIconButton(this.ribbonText, command);
+			if (button != null)
+			{
+				return button;
+			}
+
+			return null;
+		}
+
+		protected IconButton SearchIconButton(RibbonPage page, string command)
+		{
+			//	Cherche le bouton utilisé pour une commande, dans un ruban.
+			foreach (Widget widget in page.Items)
+			{
+				Ribbons.Abstract section = widget as Ribbons.Abstract;
+				if (section != null)
+				{
+					IconButton button = section.SearchIconButton(command);
+					if (button != null)
+					{
+						return button;
+					}
+				}
+			}
+
+			return null;
+		}
+
+
 		#region Info manager
 		protected StatusField InfoAdd(string name, double width)
 		{
