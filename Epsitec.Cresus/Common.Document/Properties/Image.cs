@@ -10,12 +10,13 @@ namespace Epsitec.Common.Document.Properties
 	[System.Serializable()]
 	public class Image : Abstract
 	{
+		//	Rotation CCW de l'image.
 		public enum Rotation
 		{
-			Angle0,
-			Angle90,
-			Angle180,
-			Angle270,
+			Angle0,		// droit
+			Angle90,	// quart de tour à gauche
+			Angle180,	// demi-tour
+			Angle270,	// quart de tour à droite
 		}
 
 
