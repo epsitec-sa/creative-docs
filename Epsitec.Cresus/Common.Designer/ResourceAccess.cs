@@ -117,6 +117,7 @@ namespace Epsitec.Common.Designer
 			//	Enregistre les modifications des ressources.
 			if (this.IsBundlesType)
 			{
+				this.AdjustBundles();
 				this.SaveBundles();
 			}
 
@@ -1612,6 +1613,51 @@ namespace Epsitec.Common.Designer
 			bundle.Add(newField);
 		}
 
+		protected void AdjustBundles()
+		{
+			//	Ajuste les bundles avant une sérialisation.
+			foreach (ResourceBundle bundle in this.bundles)
+			{
+				for (int i=0; i<bundle.FieldCount; i++)
+				{
+					ResourceBundle.Field field = bundle[i];
+
+					if (this.IsCaptionsType)
+					{
+						Common.Types.Caption caption = new Common.Types.Caption();
+
+						string s = field.AsString;
+						if (!string.IsNullOrEmpty(s))
+						{
+							caption.DeserializeFromString(s);
+						}
+
+						//	Le Caption.Name doit contenir le nom de la commande, sans
+						//	le préfixe, dans le bundle par défaut. Dans les autres
+						//	bundles, il ne faut rien.
+						if (bundle == this.primaryBundle)
+						{
+							caption.Name = this.SubAllFilter(field.Name);
+						}
+						else
+						{
+							caption.Name = null;
+						}
+
+						field.SetStringValue(caption.SerializeToString());
+					}
+
+					if (bundle != this.primaryBundle)
+					{
+						//	Supprime le 'name="Truc.Chose' dans tous les bundles,
+						//	sauf dans le bundle par défaut.
+						//	TODO: il reste un <data name="" id="08">...</data> !
+						field.SetName(null);
+					}
+				}
+			}
+		}
+
 		protected void SaveBundles()
 		{
 			foreach (ResourceBundle bundle in this.bundles)
@@ -2105,6 +2151,32 @@ namespace Epsitec.Common.Designer
 				{
 					return name.Substring(fix.Length);
 				}
+			}
+
+			return name;
+		}
+
+		protected string SubAllFilter(string name)
+		{
+			//	Supprime tous les filtres fixes connus si nécessaire.
+			string filter;
+
+			filter = ResourceAccess.GetFixFilter(Type.Captions);
+			if (name.StartsWith(filter))
+			{
+				return name.Substring(filter.Length);
+			}
+
+			filter = ResourceAccess.GetFixFilter(Type.Commands);
+			if (name.StartsWith(filter))
+			{
+				return name.Substring(filter.Length);
+			}
+
+			filter = ResourceAccess.GetFixFilter(Type.Types);
+			if (name.StartsWith(filter))
+			{
+				return name.Substring(filter.Length);
 			}
 
 			return name;
