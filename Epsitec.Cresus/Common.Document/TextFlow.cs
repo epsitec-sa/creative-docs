@@ -1,6 +1,8 @@
+using System.Collections.Generic;
 using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Text;
+using Epsitec.Common.IO;
 using System.Runtime.Serialization;
 
 namespace Epsitec.Common.Document
@@ -448,12 +450,12 @@ namespace Epsitec.Common.Document
 		{
 			this.HandleTextNavigatorTabsChanged(null);
 		}
-		
-		
-		public static void StatisticFonts(System.Collections.ArrayList list, UndoableList textFlows)
+
+
+		public static void StatisticFonts(List<OpenType.FontName> list, UndoableList textFlows)
 		{
-			//	Retourne une liste contenant tous les noms des polices utilisées dans
-			//	tous les TextFlows du document.
+			//	Rempli une liste avec tous les noms des polices utilisées dans tous
+			//	les TextFlows du document.
 			foreach ( TextFlow flow in textFlows )
 			{
 				Text.TextStats stats = new TextStats(flow.textStory);
@@ -461,11 +463,28 @@ namespace Epsitec.Common.Document
 
 				foreach ( OpenType.FontName fontName in fontNames )
 				{
-					if ( !list.Contains(fontName.FaceName) )
+					if ( !list.Contains(fontName) )
 					{
-						list.Add(fontName.FaceName);
+						list.Add(fontName);
 					}
 				}
+			}
+		}
+
+		public static void WriteData(ZipFile zip, UndoableList textFlows)
+		{
+			//	Ecrit sur disque tous les fichiers des polices utilisées dans le document.
+			List<OpenType.FontName> documentList = new List<OpenType.FontName>();
+			TextFlow.StatisticFonts(documentList, textFlows);
+			documentList.Sort();
+
+			foreach (OpenType.FontName fontName in documentList)
+			{
+				OpenType.Font font = TextContext.GetFont(fontName.FaceName, fontName.StyleName);
+				System.Diagnostics.Debug.Assert(font != null);
+
+				string name = string.Format("fonts/{0} {1}", fontName.FaceName, fontName.StyleName);
+				zip.AddEntry(name, font.FontData.Data);
 			}
 		}
 
@@ -478,18 +497,20 @@ namespace Epsitec.Common.Document
 			System.Collections.ArrayList existingList = new System.Collections.ArrayList();
 			foreach ( OpenType.FontIdentity id in fontList )
 			{
-				existingList.Add(id.InvariantFaceName);
+				OpenType.FontName fontName = new OpenType.FontName(id.InvariantFaceName, id.InvariantStyleName);
+				existingList.Add(fontName);
 			}
 
-			System.Collections.ArrayList documentList = new System.Collections.ArrayList();
+			List<OpenType.FontName> documentList = new List<OpenType.FontName>();
 			TextFlow.StatisticFonts(documentList, textFlows);
 			documentList.Sort();
 
-			foreach ( string face in documentList )
+			foreach ( OpenType.FontName fontName in documentList )
 			{
-				if ( !existingList.Contains(face) )
+				if ( !existingList.Contains(fontName) )
 				{
-					string message = string.Format(Res.Strings.Object.Text.Error, face);
+					string mix = string.Format("{0} {1}", fontName.FaceName, fontName.StyleName);
+					string message = string.Format(Res.Strings.Object.Text.Error, mix);
 					if ( !warnings.Contains(message) )
 					{
 						warnings.Add(message);
