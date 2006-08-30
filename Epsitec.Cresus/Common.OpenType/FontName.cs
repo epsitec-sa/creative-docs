@@ -5,10 +5,15 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.OpenType
 {
+	using XmlAttribute=System.Xml.Serialization.XmlAttributeAttribute;
+	using XmlIgnore=System.Xml.Serialization.XmlIgnoreAttribute;
+
+
 	/// <summary>
 	/// The <c>FontName</c> structure stores the face and style name as a
 	/// single object.
 	/// </summary>
+	[System.Serializable]
 	public struct FontName : System.IComparable<FontName>, System.IEquatable<FontName>
 	{
 		/// <summary>
