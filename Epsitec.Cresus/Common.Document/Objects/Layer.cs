@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
 using System.Runtime.Serialization;

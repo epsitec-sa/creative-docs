@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
 using Epsitec.Common.Drawing;
@@ -216,7 +217,7 @@ namespace Epsitec.Common.Document.Objects
 			return true;
 		}
 
-		public override void FillFontFaceList(System.Collections.ArrayList list)
+		public override void FillFontFaceList(List<OpenType.FontName> list)
 		{
 			//	Ajoute toutes les fontes utilisées par l'objet dans une liste.
 			this.textLayout.FillFontFaceList(list);

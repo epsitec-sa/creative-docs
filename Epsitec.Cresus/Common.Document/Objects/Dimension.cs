@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
 using Epsitec.Common.Drawing;
@@ -390,10 +391,10 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
-		public override void FillFontFaceList(System.Collections.ArrayList list)
+		public override void FillFontFaceList(List<OpenType.FontName> list)
 		{
 			//	Ajoute toutes les fontes utilisées par l'objet dans une liste.
-			string fontName = this.PropertyTextFont.FontName;
+			OpenType.FontName fontName = new OpenType.FontName(this.PropertyTextFont.FontName, "");
 
 			if ( !list.Contains(fontName) )
 			{
@@ -986,10 +987,12 @@ namespace Epsitec.Common.Document.Objects
 		public override void ReadCheckWarnings(FontFaceInfo[] fonts, System.Collections.ArrayList warnings)
 		{
 			//	Vérifie si tous les fichiers existent.
-			string fontName = this.PropertyTextFont.FontName;
+			OpenType.FontName fontName = new OpenType.FontName(this.PropertyTextFont.FontName, "");
+
 			if ( !Abstract.ReadSearchFont(fonts, fontName) )
 			{
-				string message = string.Format(Res.Strings.Object.Text.Error, fontName);
+				string mix = string.Format("{0} {1}", fontName.FaceName, fontName.StyleName);
+				string message = string.Format(Res.Strings.Object.Text.Error, mix);
 				if ( !warnings.Contains(message) )
 				{
 					warnings.Add(message);

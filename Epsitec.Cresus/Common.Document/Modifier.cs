@@ -1029,7 +1029,7 @@ namespace Epsitec.Common.Document
 			{
 				builder.Append(br);
 				builder.Append(string.Format(Res.Strings.Statistic.Fonts, t1, t2));
-				System.Collections.ArrayList list = new System.Collections.ArrayList();
+				List<OpenType.FontName> list = new List<OpenType.FontName>();
 				TextFlow.StatisticFonts(list, this.document.TextFlows);
 				this.StatisticFonts(list);
 				list.Sort();
@@ -1040,9 +1040,9 @@ namespace Epsitec.Common.Document
 				}
 				else
 				{
-					foreach ( string s in list )
+					foreach ( OpenType.FontName fontName in list )
 					{
-						info = string.Format("{0}{1}<br/>", chip, s);
+						info = string.Format("{0}{1} {2}<br/>", chip, fontName.FaceName, fontName.StyleName);
 						builder.Append(info);
 					}
 				}
@@ -1072,16 +1072,18 @@ namespace Epsitec.Common.Document
 		}
 
 		// Construit la liste de toutes les fontes utilisées.
-		protected void StatisticFonts(System.Collections.ArrayList list)
+		protected void StatisticFonts(List<OpenType.FontName> list)
 		{
 			foreach ( Objects.Abstract obj in this.document.Deep(null) )
 			{
 				Properties.Font font = obj.PropertyTextFont;
 				if ( font != null )
 				{
-					if ( !list.Contains(font.FontName) )
+					OpenType.FontName fontName = new OpenType.FontName(font.FontName, "");
+
+					if (!list.Contains(fontName))
 					{
-						list.Add(font.FontName);
+						list.Add(fontName);
 					}
 				}
 

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
@@ -2418,7 +2419,7 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
-		public virtual void FillFontFaceList(System.Collections.ArrayList list)
+		public virtual void FillFontFaceList(List<OpenType.FontName> list)
 		{
 			//	Ajoute toutes les fontes utilisées par l'objet dans une liste.
 		}
@@ -3518,13 +3519,14 @@ namespace Epsitec.Common.Document.Objects
 		protected static void ReadCheckFonts(FontFaceInfo[] fonts, System.Collections.ArrayList warnings, TextLayout textLayout)
 		{
 			//	Vérifie si toutes les fontes d'un TextLayout existent.
-			System.Collections.ArrayList list = new System.Collections.ArrayList();
+			List<OpenType.FontName> list = new List<OpenType.FontName>();
 			textLayout.FillFontFaceList(list);
-			foreach ( string face in list )
+			foreach ( OpenType.FontName fontName in list )
 			{
-				if ( !Abstract.ReadSearchFont(fonts, face) )
+				if ( !Abstract.ReadSearchFont(fonts, fontName) )
 				{
-					string message = string.Format(Res.Strings.Object.Text.Error, face);
+					string mix = string.Format("{0} {1}", fontName.FaceName, fontName.StyleName);
+					string message = string.Format(Res.Strings.Object.Text.Error, mix);
 					if ( !warnings.Contains(message) )
 					{
 						warnings.Add(message);
@@ -3533,14 +3535,14 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		protected static bool ReadSearchFont(FontFaceInfo[] fonts, string face)
+		protected static bool ReadSearchFont(FontFaceInfo[] fonts, OpenType.FontName fontName)
 		{
 			//	Cherche si une fonte existe dans la liste des fontes.
 			foreach ( FontFaceInfo info in fonts )
 			{
 				if ( info.IsLatin )
 				{
-					if ( info.Name == face )  return true;
+					if ( info.Name == fontName.FaceName )  return true;
 				}
 			}
 			return false;
