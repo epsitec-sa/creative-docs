@@ -1,81 +1,66 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <bundle name="Captions" type="Caption" culture="fr">
-  <data name="Cap.Geometry.LeftMargin" id="0">&lt;s:data  id="_0" f:Description="Marge gauche" f:Labels="{Collection {Text 'Marge gauche'}}" /&gt;</data>
-  <data name="Cap.Geometry.RightMargin" id="01">&lt;s:data id="_0" f:Description="Marge droite" f:Labels="{Collection {Text 'Marge droite'}}" /&gt;</data>
-  <data name="Cap.Geometry.TopMargin" id="02">&lt;s:data id="_0" f:Description="Marge supérieure" f:Labels="{Collection {Text 'Marge supérieure'}}" /&gt;</data>
-  <data name="Cap.Geometry.BottomMargin" id="03">&lt;s:data id="_0" f:Description="Marge inférieure" f:Labels="{Collection {Text 'Marge inférieure'}}" /&gt;</data>
-
-  <data name="Cap.Geometry.OriginX" id="04">&lt;s:data id="_0" f:Description="Origine horizontale (X)" f:Labels="{Collection {Text 'Origine X'}, {Text 'X'}}" /&gt;</data>
-  <data name="Cap.Geometry.OriginY" id="05">&lt;s:data id="_0" f:Description="Origine verticale (Y)" f:Labels="{Collection {Text 'Origine Y'}, {Text 'Y'}}" /&gt;</data>
-  <data name="Cap.Geometry.Width" id="06">&lt;s:data id="_0" f:Description="Largeur" f:Labels="{Collection {Text 'Largeur ΔX'}, {Text 'ΔX'}}" /&gt;</data>
-  <data name="Cap.Geometry.Height" id="07">&lt;s:data id="_0" f:Description="Hauteur" f:Labels="{Collection {Text 'Hauteur ΔY'}, {Text 'ΔY'}}" /&gt;</data>
-
-  <data name="Cap.Geometry.MinWidth" id="0R">&lt;s:data id="_0" f:Description="Largeur minimale" f:Labels="{Collection {Text 'Largeur minimale'}}" /&gt;</data>
-  <data name="Cap.Geometry.MaxWidth" id="0S">&lt;s:data id="_0" f:Description="Largeur maximale" f:Labels="{Collection {Text 'Largeur maximale'}}" /&gt;</data>
-  <data name="Cap.Geometry.MinHeight" id="0T">&lt;s:data id="_0" f:Description="Hauteur minimale" f:Labels="{Collection {Text 'Hauteur minimale'}}" /&gt;</data>
-  <data name="Cap.Geometry.MaxHeight" id="0U">&lt;s:data id="_0" f:Description="Hauteur maximale" f:Labels="{Collection {Text 'Hauteur maximale'}}" /&gt;</data>
-
-  <data name="Cap.Padding.Left" id="08">&lt;s:data id="_0" f:Description="Marge intérieure gauche" f:Labels="{Collection {Text 'Marge gauche'}}" /&gt;</data>
-  <data name="Cap.Padding.Right" id="09">&lt;s:data id="_0" f:Description="Marge intérieure droite" f:Labels="{Collection {Text 'Marge droite'}}" /&gt;</data>
-  <data name="Cap.Padding.Top" id="0A">&lt;s:data id="_0" f:Description="Marge intérieure supérieure" f:Labels="{Collection {Text 'Marge supérieure'}, {Text 'Marge sup.'}}" /&gt;</data>
-  <data name="Cap.Padding.Bottom" id="0B">&lt;s:data id="_0" f:Description="Marge intérieure inférieure" f:Labels="{Collection {Text 'Marge inférieure'}, {Text 'Marge inf.'}}" /&gt;</data>
-
-  <data name="Cap.Layout.ChildrenPlacement" id="0C">&lt;s:data id="_0" f:Description="Contenu" f:Labels="{Collection {Text 'Contenu'}}" /&gt;</data>
-  <data name="Cap.Layout.AnchoredHorizontalAttachment" id="0D">&lt;s:data id="_0" f:Description="Position horizontale" f:Labels="{Collection {Text 'Pos. h.'}, {Text 'Position horizontale'}}" /&gt;</data>
-  <data name="Cap.Layout.AnchoredHorizontalAttachment" id="0E">&lt;s:data id="_0" f:Description="Position verticale" f:Labels="{Collection {Text 'Pos. v.'}, {Text 'Position verticale'}}" /&gt;</data>
-  <data name="Cap.Layout.StackedHorizontalAttachment" id="0F">&lt;s:data id="_0" f:Description="Position horizontale" f:Labels="{Collection {Text 'Pos. h.'}, {Text 'Position horizontale'}}" /&gt;</data>
-  <data name="Cap.Layout.StackedVerticalAttachment" id="0G">&lt;s:data id="_0" f:Description="Position verticale" f:Labels="{Collection {Text 'Pos. v.'}, {Text 'Position verticale'}}" /&gt;</data>
-  <data name="Cap.Layout.StackedHorizontalAlignment" id="0H">&lt;s:data id="_0" f:Description="Alignement horizontal" f:Labels="{Collection {Text 'Align. h.'}, {Text 'Alignement horizontal'}}" /&gt;</data>
-  <data name="Cap.Layout.StackedVerticalAlignment" id="0I">&lt;s:data id="_0" f:Description="Alignement vertical" f:Labels="{Collection {Text 'Align. v.'}, {Text 'Alignement vertical'}}" /&gt;</data>
-
-  <data name="Cap.Layout.Anchored" id="011">&lt;s:data id="_0" f:Description="Ancré" f:Labels="{Collection {Text 'Ancré'}}" f:Icon="manifest:Epsitec.Common.Designer.Images.PropertyCPAnchored.icon" /&gt;</data>
-  <data name="Cap.Layout.VerticalStacked" id="012">&lt;s:data id="_0" f:Description="Disposition verticale" f:Labels="{Collection {Text 'Vertical'}}" f:Icon="manifest:Epsitec.Common.Designer.Images.PropertyCPVertical.icon" /&gt;</data>
-  <data name="Cap.Layout.HorizontalStacked" id="013">&lt;s:data id="_0" f:Description="Disposition horizontale" f:Labels="{Collection {Text 'Horizontal'}}" f:Icon="manifest:Epsitec.Common.Designer.Images.PropertyCPHorizontal.icon" /&gt;</data>
-  <data name="Cap.Layout.Grid" id="014">&lt;s:data id="_0" f:Description="Grille" f:Labels="{Collection {Text 'Grille'}}" f:Icon="manifest:Epsitec.Common.Designer.Images.PropertyCPGrid.icon" /&gt;</data>
-
-  <data name="Cap.Layout.Attachment.Left" id="021">&lt;s:data id="_0" f:Description="Attaché à gauche" f:Labels="{Collection {Text 'À gauche'}}" f:Icon="manifest:Epsitec.Common.Designer.Images.PropertyAttachmentLeft.icon" /&gt;</data>
-  <data name="Cap.Layout.Attachment.Right" id="022">&lt;s:data id="_0" f:Description="Attaché à droite" f:Labels="{Collection {Text 'À droite'}}" f:Icon="manifest:Epsitec.Common.Designer.Images.PropertyAttachmentRight.icon" /&gt;</data>
-  <data name="Cap.Layout.Attachment.Botton" id="023">&lt;s:data id="_0" f:Description="Attaché en bas" f:Labels="{Collection {Text 'En bas'}}" f:Icon="manifest:Epsitec.Common.Designer.Images.PropertyAttachmentBottom.icon" /&gt;</data>
-  <data name="Cap.Layout.Attachment.Top" id="024">&lt;s:data id="_0" f:Description="Attaché en haut" f:Labels="{Collection {Text 'En haut'}}" f:Icon="manifest:Epsitec.Common.Designer.Images.PropertyAttachmentTop.icon" /&gt;</data>
-  <data name="Cap.Layout.Attachment.HFill" id="025">&lt;s:data id="_0" f:Description="Attaché partout" f:Labels="{Collection {Text 'Partout'}}" f:Icon="manifest:Epsitec.Common.Designer.Images.PropertyAttachmentHFill.icon" /&gt;</data>
-  <data name="Cap.Layout.Attachment.VFill" id="026">&lt;s:data id="_0" f:Description="Attaché partout" f:Labels="{Collection {Text 'Partout'}}" f:Icon="manifest:Epsitec.Common.Designer.Images.PropertyAttachmentVFill.icon" /&gt;</data>
-
-  <data name="Cap.Layout.Alignment.Left" id="031">&lt;s:data id="_0" f:Description="Aligné à gauche" f:Labels="{Collection {Text 'Gauche'}}" f:Icon="manifest:Epsitec.Common.Designer.Images.PropertyAlignmentLeft.icon" /&gt;</data>
-  <data name="Cap.Layout.Alignment.Right" id="032">&lt;s:data id="_0" f:Description="Aligné à droite" f:Labels="{Collection {Text 'Droite'}}" f:Icon="manifest:Epsitec.Common.Designer.Images.PropertyAlignmentRight.icon" /&gt;</data>
-  <data name="Cap.Layout.Alignment.Bottom" id="033">&lt;s:data id="_0" f:Description="Aligné en bas" f:Labels="{Collection {Text 'En bas'}}" f:Icon="manifest:Epsitec.Common.Designer.Images.PropertyAlignmentBottom.icon" /&gt;</data>
-  <data name="Cap.Layout.Alignment.Top" id="034">&lt;s:data id="_0" f:Description="Aligné en haut" f:Labels="{Collection {Text 'En haut'}}" f:Icon="manifest:Epsitec.Common.Designer.Images.PropertyAlignmentTop.icon" /&gt;</data>
-  <data name="Cap.Layout.Alignment.HCenter" id="035">&lt;s:data id="_0" f:Description="Centré horizontalement" f:Labels="{Collection {Text 'Centré'}}" f:Icon="manifest:Epsitec.Common.Designer.Images.PropertyAlignmentHCenter.icon" /&gt;</data>
-  <data name="Cap.Layout.Alignment.VCenter" id="036">&lt;s:data id="_0" f:Description="Centré verticalement" f:Labels="{Collection {Text 'Centré'}}" f:Icon="manifest:Epsitec.Common.Designer.Images.PropertyAlignmentVCenter.icon" /&gt;</data>
-  <data name="Cap.Layout.Alignment.HStretch" id="037">&lt;s:data id="_0" f:Description="Étiré horizontalement" f:Labels="{Collection {Text 'Étiré'}}" f:Icon="manifest:Epsitec.Common.Designer.Images.PropertyAlignmentHStretch.icon" /&gt;</data>
-  <data name="Cap.Layout.Alignment.VStretch" id="038">&lt;s:data id="_0" f:Description="Étiré verticalement" f:Labels="{Collection {Text 'Étiré'}}" f:Icon="manifest:Epsitec.Common.Designer.Images.PropertyAlignmentVStretch.icon" /&gt;</data>
-  <data name="Cap.Layout.Alignment.BaseLine" id="039">&lt;s:data id="_0" f:Description="Sur la ligne de base" f:Labels="{Collection {Text 'Ligne de base'}}" f:Icon="manifest:Epsitec.Common.Designer.Images.PropertyAlignmentBaseLine.icon" /&gt;</data>
-
-  <data name="Cap.Grid.ColumnsCount" id="0J">&lt;s:data id="_0" f:Description="Nb de colonnes" f:Labels="{Collection {Text 'Nombre de colonnes'}}" /&gt;</data>
-  <data name="Cap.Grid.RowsCount" id="0K">&lt;s:data id="_0" f:Description="Nb de lignes" f:Labels="{Collection {Text 'Nombre de lignes'}}" /&gt;</data>
-
-  <data name="Cap.Grid.ColumnSpan" id="0L">&lt;s:data id="_0" f:Description="Colonnes occupées" f:Labels="{Collection {Text 'Colonnes occupées'}}" /&gt;</data>
-  <data name="Cap.Grid.RowSpan" id="0M">&lt;s:data id="_0" f:Description="Lignes occupées" f:Labels="{Collection {Text 'Lignes occupées'}}" /&gt;</data>
-
-  <data name="Cap.Grid.ColumnMode" id="0N">&lt;s:data id="_0" f:Description="Mode colonne" f:Labels="{Collection {Text 'Mode colonne'}}" /&gt;</data>
-  <data name="Cap.Grid.RowMode" id="0O">&lt;s:data id="_0" f:Description="Mode ligne" f:Labels="{Collection {Text 'Mode ligne'}}" /&gt;</data>
-
-  <data name="Cap.Grid.ColumnWidth" id="0P">&lt;s:data id="_0" f:Description="Largeur colonne" f:Labels="{Collection {Text 'Largeur colonne'}}" /&gt;</data>
-  <data name="Cap.Grid.RowHeight" id="0Q">&lt;s:data id="_0" f:Description="Hauteur ligne" f:Labels="{Collection {Text 'Hauteur ligne'}}" /&gt;</data>
-
-  <data name="Cap.Grid.MinWidth" id="041">&lt;s:data id="_0" f:Description="Largeur minimale" f:Labels="{Collection {Text 'Largeur minimale'}}" /&gt;</data>
-  <data name="Cap.Grid.MaxWidth" id="042">&lt;s:data id="_0" f:Description="Largeur maximale" f:Labels="{Collection {Text 'Largeur maximale'}}" /&gt;</data>
-  <data name="Cap.Grid.MinHeight" id="043">&lt;s:data id="_0" f:Description="Hauteur minimale" f:Labels="{Collection {Text 'Hauteur minimale'}}" /&gt;</data>
-  <data name="Cap.Grid.MaxHeight" id="044">&lt;s:data id="_0" f:Description="Hauteur maximale" f:Labels="{Collection {Text 'Hauteur maximale'}}" /&gt;</data>
-  <data name="Cap.Grid.LeftBorder" id="045">&lt;s:data id="_0" f:Description="Bord gauche" f:Labels="{Collection {Text 'Bord gauche'}}" /&gt;</data>
-  <data name="Cap.Grid.RightBorder" id="046">&lt;s:data id="_0" f:Description="Bord droite" f:Labels="{Collection {Text 'Bord droite'}}" /&gt;</data>
-  <data name="Cap.Grid.TopBorder" id="047">&lt;s:data id="_0" f:Description="Bord supérieur" f:Labels="{Collection {Text 'Bord supérieur'}}" /&gt;</data>
-  <data name="Cap.Grid.BottomBorder" id="048">&lt;s:data id="_0" f:Description="Bord inférieur" f:Labels="{Collection {Text 'Bord inférieur'}}" /&gt;</data>
-
-  <data name="Cap.Grid.Mode.Proportional" id="051">&lt;s:data id="_0" f:Description="Proportionnel" f:Labels="{Collection {Text 'Proportionnel'}}" f:Icon="manifest:Epsitec.Common.Designer.Images.PropertyGridProportional.icon" /&gt;</data>
-  <data name="Cap.Grid.Mode.Absolute" id="052">&lt;s:data id="_0" f:Description="Absolu" f:Labels="{Collection {Text 'Absolu'}}" f:Icon="manifest:Epsitec.Common.Designer.Images.PropertyGridAbsolute.icon" /&gt;</data>
-  <data name="Cap.Grid.Mode.Auto" id="053">&lt;s:data id="_0" f:Description="Automatique" f:Labels="{Collection {Text 'Automatique'}}" f:Icon="manifest:Epsitec.Common.Designer.Images.PropertyGridAuto.icon" /&gt;</data>
-
-  <data name="Cmd.New" id="061"></data>
-  <data name="Typ.New" id="062"></data>
-
+  <data name="Cap.Geometry.LeftMargin" id="0">&lt;s:data id="_0" f:Description="Marge gauche" f:Name="Geometry.LeftMargin" f:Labels="{Collection {Text 'Marge gauche'}}" /&gt;</data>
+  <data name="Cap.Geometry.RightMargin" id="01">&lt;s:data id="_0" f:Description="Marge droite" f:Name="Geometry.RightMargin" f:Labels="{Collection {Text 'Marge droite'}}" /&gt;</data>
+  <data name="Cap.Geometry.TopMargin" id="02">&lt;s:data id="_0" f:Description="Marge supérieure" f:Name="Geometry.TopMargin" f:Labels="{Collection {Text 'Marge supérieure'}}" /&gt;</data>
+  <data name="Cap.Geometry.BottomMargin" id="03">&lt;s:data id="_0" f:Description="Marge inférieure" f:Name="Geometry.BottomMargin" f:Labels="{Collection {Text 'Marge inférieure'}}" /&gt;</data>
+  <data name="Cap.Geometry.OriginX" id="04">&lt;s:data id="_0" f:Description="Origine horizontale (X)" f:Name="Geometry.OriginX" f:Labels="{Collection {Text 'Origine X'}, {Text 'X'}}" /&gt;</data>
+  <data name="Cap.Geometry.OriginY" id="05">&lt;s:data id="_0" f:Description="Origine verticale (Y)" f:Name="Geometry.OriginY" f:Labels="{Collection {Text 'Origine Y'}, {Text 'Y'}}" /&gt;</data>
+  <data name="Cap.Geometry.Width" id="06">&lt;s:data id="_0" f:Description="Largeur" f:Name="Geometry.Width" f:Labels="{Collection {Text 'Largeur ΔX'}, {Text 'ΔX'}}" /&gt;</data>
+  <data name="Cap.Geometry.Height" id="07">&lt;s:data id="_0" f:Description="Hauteur" f:Name="Geometry.Height" f:Labels="{Collection {Text 'Hauteur ΔY'}, {Text 'ΔY'}}" /&gt;</data>
+  <data name="Cap.Geometry.MinWidth" id="0R">&lt;s:data id="_0" f:Description="Largeur minimale" f:Name="Geometry.MinWidth" f:Labels="{Collection {Text 'Largeur minimale'}}" /&gt;</data>
+  <data name="Cap.Geometry.MaxWidth" id="0S">&lt;s:data id="_0" f:Description="Largeur maximale" f:Name="Geometry.MaxWidth" f:Labels="{Collection {Text 'Largeur maximale'}}" /&gt;</data>
+  <data name="Cap.Geometry.MinHeight" id="0T">&lt;s:data id="_0" f:Description="Hauteur minimale" f:Name="Geometry.MinHeight" f:Labels="{Collection {Text 'Hauteur minimale'}}" /&gt;</data>
+  <data name="Cap.Geometry.MaxHeight" id="0U">&lt;s:data id="_0" f:Description="Hauteur maximale" f:Name="Geometry.MaxHeight" f:Labels="{Collection {Text 'Hauteur maximale'}}" /&gt;</data>
+  <data name="Cap.Padding.Left" id="08">&lt;s:data id="_0" f:Description="Marge intérieure gauche" f:Name="Padding.Left" f:Labels="{Collection {Text 'Marge gauche'}}" /&gt;</data>
+  <data name="Cap.Padding.Right" id="09">&lt;s:data id="_0" f:Description="Marge intérieure droite" f:Name="Padding.Right" f:Labels="{Collection {Text 'Marge droite'}}" /&gt;</data>
+  <data name="Cap.Padding.Top" id="0A">&lt;s:data id="_0" f:Description="Marge intérieure supérieure" f:Name="Padding.Top" f:Labels="{Collection {Text 'Marge supérieure'}, {Text 'Marge sup.'}}" /&gt;</data>
+  <data name="Cap.Padding.Bottom" id="0B">&lt;s:data id="_0" f:Description="Marge intérieure inférieure" f:Name="Padding.Bottom" f:Labels="{Collection {Text 'Marge inférieure'}, {Text 'Marge inf.'}}" /&gt;</data>
+  <data name="Cap.Layout.ChildrenPlacement" id="0C">&lt;s:data id="_0" f:Description="Contenu" f:Name="Layout.ChildrenPlacement" f:Labels="{Collection {Text 'Contenu'}}" /&gt;</data>
+  <data name="Cap.Layout.AnchoredHorizontalAttachment" id="0D">&lt;s:data id="_0" f:Description="Position horizontale" f:Name="Layout.AnchoredHorizontalAttachment" f:Labels="{Collection {Text 'Pos. h.'}, {Text 'Position horizontale'}}" /&gt;</data>
+  <data name="Cap.Layout.AnchoredHorizontalAttachment" id="0E">&lt;s:data id="_0" f:Description="Position verticale" f:Name="Layout.AnchoredHorizontalAttachment" f:Labels="{Collection {Text 'Pos. v.'}, {Text 'Position verticale'}}" /&gt;</data>
+  <data name="Cap.Layout.StackedHorizontalAttachment" id="0F">&lt;s:data id="_0" f:Description="Position horizontale" f:Name="Layout.StackedHorizontalAttachment" f:Labels="{Collection {Text 'Pos. h.'}, {Text 'Position horizontale'}}" /&gt;</data>
+  <data name="Cap.Layout.StackedVerticalAttachment" id="0G">&lt;s:data id="_0" f:Description="Position verticale" f:Name="Layout.StackedVerticalAttachment" f:Labels="{Collection {Text 'Pos. v.'}, {Text 'Position verticale'}}" /&gt;</data>
+  <data name="Cap.Layout.StackedHorizontalAlignment" id="0H">&lt;s:data id="_0" f:Description="Alignement horizontal" f:Name="Layout.StackedHorizontalAlignment" f:Labels="{Collection {Text 'Align. h.'}, {Text 'Alignement horizontal'}}" /&gt;</data>
+  <data name="Cap.Layout.StackedVerticalAlignment" id="0I">&lt;s:data id="_0" f:Description="Alignement vertical" f:Name="Layout.StackedVerticalAlignment" f:Labels="{Collection {Text 'Align. v.'}, {Text 'Alignement vertical'}}" /&gt;</data>
+  <data name="Cap.Layout.Anchored" id="011">&lt;s:data id="_0" f:Description="Ancré" f:Icon="manifest:Epsitec.Common.Designer.Images.PropertyCPAnchored.icon" f:Name="Layout.Anchored" f:Labels="{Collection {Text 'Ancré'}}" /&gt;</data>
+  <data name="Cap.Layout.VerticalStacked" id="012">&lt;s:data id="_0" f:Description="Disposition verticale" f:Icon="manifest:Epsitec.Common.Designer.Images.PropertyCPVertical.icon" f:Name="Layout.VerticalStacked" f:Labels="{Collection {Text 'Vertical'}}" /&gt;</data>
+  <data name="Cap.Layout.HorizontalStacked" id="013">&lt;s:data id="_0" f:Description="Disposition horizontale" f:Icon="manifest:Epsitec.Common.Designer.Images.PropertyCPHorizontal.icon" f:Name="Layout.HorizontalStacked" f:Labels="{Collection {Text 'Horizontal'}}" /&gt;</data>
+  <data name="Cap.Layout.Grid" id="014">&lt;s:data id="_0" f:Description="Grille" f:Icon="manifest:Epsitec.Common.Designer.Images.PropertyCPGrid.icon" f:Name="Layout.Grid" f:Labels="{Collection {Text 'Grille'}}" /&gt;</data>
+  <data name="Cap.Layout.Attachment.Left" id="021">&lt;s:data id="_0" f:Description="Attaché à gauche" f:Icon="manifest:Epsitec.Common.Designer.Images.PropertyAttachmentLeft.icon" f:Name="Layout.Attachment.Left" f:Labels="{Collection {Text 'À gauche'}}" /&gt;</data>
+  <data name="Cap.Layout.Attachment.Right" id="022">&lt;s:data id="_0" f:Description="Attaché à droite" f:Icon="manifest:Epsitec.Common.Designer.Images.PropertyAttachmentRight.icon" f:Name="Layout.Attachment.Right" f:Labels="{Collection {Text 'À droite'}}" /&gt;</data>
+  <data name="Cap.Layout.Attachment.Botton" id="023">&lt;s:data id="_0" f:Description="Attaché en bas" f:Icon="manifest:Epsitec.Common.Designer.Images.PropertyAttachmentBottom.icon" f:Name="Layout.Attachment.Botton" f:Labels="{Collection {Text 'En bas'}}" /&gt;</data>
+  <data name="Cap.Layout.Attachment.Top" id="024">&lt;s:data id="_0" f:Description="Attaché en haut" f:Icon="manifest:Epsitec.Common.Designer.Images.PropertyAttachmentTop.icon" f:Name="Layout.Attachment.Top" f:Labels="{Collection {Text 'En haut'}}" /&gt;</data>
+  <data name="Cap.Layout.Attachment.HFill" id="025">&lt;s:data id="_0" f:Description="Attaché partout" f:Icon="manifest:Epsitec.Common.Designer.Images.PropertyAttachmentHFill.icon" f:Name="Layout.Attachment.HFill" f:Labels="{Collection {Text 'Partout'}}" /&gt;</data>
+  <data name="Cap.Layout.Attachment.VFill" id="026">&lt;s:data id="_0" f:Description="Attaché partout" f:Icon="manifest:Epsitec.Common.Designer.Images.PropertyAttachmentVFill.icon" f:Name="Layout.Attachment.VFill" f:Labels="{Collection {Text 'Partout'}}" /&gt;</data>
+  <data name="Cap.Layout.Alignment.Left" id="031">&lt;s:data id="_0" f:Description="Aligné à gauche" f:Icon="manifest:Epsitec.Common.Designer.Images.PropertyAlignmentLeft.icon" f:Name="Layout.Alignment.Left" f:Labels="{Collection {Text 'Gauche'}}" /&gt;</data>
+  <data name="Cap.Layout.Alignment.Right" id="032">&lt;s:data id="_0" f:Description="Aligné à droite" f:Icon="manifest:Epsitec.Common.Designer.Images.PropertyAlignmentRight.icon" f:Name="Layout.Alignment.Right" f:Labels="{Collection {Text 'Droite'}}" /&gt;</data>
+  <data name="Cap.Layout.Alignment.Bottom" id="033">&lt;s:data id="_0" f:Description="Aligné en bas" f:Icon="manifest:Epsitec.Common.Designer.Images.PropertyAlignmentBottom.icon" f:Name="Layout.Alignment.Bottom" f:Labels="{Collection {Text 'En bas'}}" /&gt;</data>
+  <data name="Cap.Layout.Alignment.Top" id="034">&lt;s:data id="_0" f:Description="Aligné en haut" f:Icon="manifest:Epsitec.Common.Designer.Images.PropertyAlignmentTop.icon" f:Name="Layout.Alignment.Top" f:Labels="{Collection {Text 'En haut'}}" /&gt;</data>
+  <data name="Cap.Layout.Alignment.HCenter" id="035">&lt;s:data id="_0" f:Description="Centré horizontalement" f:Icon="manifest:Epsitec.Common.Designer.Images.PropertyAlignmentHCenter.icon" f:Name="Layout.Alignment.HCenter" f:Labels="{Collection {Text 'Centré'}}" /&gt;</data>
+  <data name="Cap.Layout.Alignment.VCenter" id="036">&lt;s:data id="_0" f:Description="Centré verticalement" f:Icon="manifest:Epsitec.Common.Designer.Images.PropertyAlignmentVCenter.icon" f:Name="Layout.Alignment.VCenter" f:Labels="{Collection {Text 'Centré'}}" /&gt;</data>
+  <data name="Cap.Layout.Alignment.HStretch" id="037">&lt;s:data id="_0" f:Description="Étiré horizontalement" f:Icon="manifest:Epsitec.Common.Designer.Images.PropertyAlignmentHStretch.icon" f:Name="Layout.Alignment.HStretch" f:Labels="{Collection {Text 'Étiré'}}" /&gt;</data>
+  <data name="Cap.Layout.Alignment.VStretch" id="038">&lt;s:data id="_0" f:Description="Étiré verticalement" f:Icon="manifest:Epsitec.Common.Designer.Images.PropertyAlignmentVStretch.icon" f:Name="Layout.Alignment.VStretch" f:Labels="{Collection {Text 'Étiré'}}" /&gt;</data>
+  <data name="Cap.Layout.Alignment.BaseLine" id="039">&lt;s:data id="_0" f:Description="Sur la ligne de base" f:Icon="manifest:Epsitec.Common.Designer.Images.PropertyAlignmentBaseLine.icon" f:Name="Layout.Alignment.BaseLine" f:Labels="{Collection {Text 'Ligne de base'}}" /&gt;</data>
+  <data name="Cap.Grid.ColumnsCount" id="0J">&lt;s:data id="_0" f:Description="Nb de colonnes" f:Name="Grid.ColumnsCount" f:Labels="{Collection {Text 'Nombre de colonnes'}}" /&gt;</data>
+  <data name="Cap.Grid.RowsCount" id="0K">&lt;s:data id="_0" f:Description="Nb de lignes" f:Name="Grid.RowsCount" f:Labels="{Collection {Text 'Nombre de lignes'}}" /&gt;</data>
+  <data name="Cap.Grid.ColumnSpan" id="0L">&lt;s:data id="_0" f:Description="Colonnes occupées" f:Name="Grid.ColumnSpan" f:Labels="{Collection {Text 'Colonnes occupées'}}" /&gt;</data>
+  <data name="Cap.Grid.RowSpan" id="0M">&lt;s:data id="_0" f:Description="Lignes occupées" f:Name="Grid.RowSpan" f:Labels="{Collection {Text 'Lignes occupées'}}" /&gt;</data>
+  <data name="Cap.Grid.ColumnMode" id="0N">&lt;s:data id="_0" f:Description="Mode colonne" f:Name="Grid.ColumnMode" f:Labels="{Collection {Text 'Mode colonne'}}" /&gt;</data>
+  <data name="Cap.Grid.RowMode" id="0O">&lt;s:data id="_0" f:Description="Mode ligne" f:Name="Grid.RowMode" f:Labels="{Collection {Text 'Mode ligne'}}" /&gt;</data>
+  <data name="Cap.Grid.ColumnWidth" id="0P">&lt;s:data id="_0" f:Description="Largeur colonne" f:Name="Grid.ColumnWidth" f:Labels="{Collection {Text 'Largeur colonne'}}" /&gt;</data>
+  <data name="Cap.Grid.RowHeight" id="0Q">&lt;s:data id="_0" f:Description="Hauteur ligne" f:Name="Grid.RowHeight" f:Labels="{Collection {Text 'Hauteur ligne'}}" /&gt;</data>
+  <data name="Cap.Grid.MinWidth" id="041">&lt;s:data id="_0" f:Description="Largeur minimale" f:Name="Grid.MinWidth" f:Labels="{Collection {Text 'Largeur minimale'}}" /&gt;</data>
+  <data name="Cap.Grid.MaxWidth" id="042">&lt;s:data id="_0" f:Description="Largeur maximale" f:Name="Grid.MaxWidth" f:Labels="{Collection {Text 'Largeur maximale'}}" /&gt;</data>
+  <data name="Cap.Grid.MinHeight" id="043">&lt;s:data id="_0" f:Description="Hauteur minimale" f:Name="Grid.MinHeight" f:Labels="{Collection {Text 'Hauteur minimale'}}" /&gt;</data>
+  <data name="Cap.Grid.MaxHeight" id="044">&lt;s:data id="_0" f:Description="Hauteur maximale" f:Name="Grid.MaxHeight" f:Labels="{Collection {Text 'Hauteur maximale'}}" /&gt;</data>
+  <data name="Cap.Grid.LeftBorder" id="045">&lt;s:data id="_0" f:Description="Bord gauche" f:Name="Grid.LeftBorder" f:Labels="{Collection {Text 'Bord gauche'}}" /&gt;</data>
+  <data name="Cap.Grid.RightBorder" id="046">&lt;s:data id="_0" f:Description="Bord droite" f:Name="Grid.RightBorder" f:Labels="{Collection {Text 'Bord droite'}}" /&gt;</data>
+  <data name="Cap.Grid.TopBorder" id="047">&lt;s:data id="_0" f:Description="Bord supérieur" f:Name="Grid.TopBorder" f:Labels="{Collection {Text 'Bord supérieur'}}" /&gt;</data>
+  <data name="Cap.Grid.BottomBorder" id="048">&lt;s:data id="_0" f:Description="Bord inférieur" f:Name="Grid.BottomBorder" f:Labels="{Collection {Text 'Bord inférieur'}}" /&gt;</data>
+  <data name="Cap.Grid.Mode.Proportional" id="051">&lt;s:data id="_0" f:Description="Proportionnel" f:Icon="manifest:Epsitec.Common.Designer.Images.PropertyGridProportional.icon" f:Name="Grid.Mode.Proportional" f:Labels="{Collection {Text 'Proportionnel'}}" /&gt;</data>
+  <data name="Cap.Grid.Mode.Absolute" id="052">&lt;s:data id="_0" f:Description="Absolu" f:Icon="manifest:Epsitec.Common.Designer.Images.PropertyGridAbsolute.icon" f:Name="Grid.Mode.Absolute" f:Labels="{Collection {Text 'Absolu'}}" /&gt;</data>
+  <data name="Cap.Grid.Mode.Auto" id="053">&lt;s:data id="_0" f:Description="Automatique" f:Icon="manifest:Epsitec.Common.Designer.Images.PropertyGridAuto.icon" f:Name="Grid.Mode.Auto" f:Labels="{Collection {Text 'Automatique'}}" /&gt;</data>
+  <data name="Cmd.New" id="061">&lt;s:data id="_0" f:Name="New" /&gt;</data>
+  <data name="Typ.New" id="062">&lt;s:data id="_0" f:Name="New" /&gt;</data>
 </bundle>

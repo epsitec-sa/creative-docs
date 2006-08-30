@@ -5,8 +5,6 @@
   <data id="03">&lt;s:data id="_0" f:Description="Paste" f:Labels="{Collection {Text 'Paste'}}" /&gt;</data>
   <data id="04">&lt;s:data id="_0" f:Description="Delete" f:Labels="{Collection {Text 'Delete'}, {Text 'Del.'}}" /&gt;</data>
   <data id="05">&lt;s:data id="_0" f:Description="Select all" f:Labels="{Collection {Text 'Select all'}, {Text 'Sel. all'}}" /&gt;</data>
-  <data id="06">
-  </data>
-  <data id="07">
-  </data>
+  <data id="06">&lt;s:data id="_0" /&gt;</data>
+  <data id="07">&lt;s:data id="_0" /&gt;</data>
 </bundle>
