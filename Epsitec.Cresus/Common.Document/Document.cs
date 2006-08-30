@@ -114,6 +114,7 @@ namespace Epsitec.Common.Document
 			this.uniqueParagraphStyleId = 0;
 			this.uniqueCharacterStyleId = 0;
 			this.containOldText = false;
+			this.fontList = null;
 
 			this.printDialog = new Common.Dialogs.PrinterDocumentProperties();
 
@@ -789,6 +790,7 @@ namespace Epsitec.Common.Document
 					else
 					{
 						doc = (Document) formatter.Deserialize(stream);
+						doc.FontReadAll(zip);
 						doc.ImageCacheAll(zip);
 					}
 				}
@@ -1234,6 +1236,7 @@ namespace Epsitec.Common.Document
 				}
 				else
 				{
+					this.FontUpdate();
 					this.ImageFlushUnused();
 					this.imageCache.GenerateShortNames();
 					this.ImageUpdate();
@@ -1251,7 +1254,7 @@ namespace Epsitec.Common.Document
 					ZipFile zip = new ZipFile();
 					zip.AddEntry("document.data", data);
 					this.imageCache.WriteData(zip);
-					TextFlow.WriteFontsData(zip, this.textFlows);
+					this.FontWriteAll(zip);
 					zip.CompressionLevel = 6;
 					zip.SaveFile(filename);
 				}
@@ -1346,6 +1349,7 @@ namespace Epsitec.Common.Document
 				info.AddValue("TextContextData", textContextData);
 
 				info.AddValue("TextFlows", this.textFlows);
+				info.AddValue("FontList", this.fontList);
 			}
 
 			info.AddValue("UniqueObjectId", this.uniqueObjectId);
@@ -1424,6 +1428,15 @@ namespace Epsitec.Common.Document
 				{
 					this.textFlows = new UndoableList(this, UndoableListType.TextFlows);
 				}
+
+				if (this.IsRevisionGreaterOrEqual(2, 0, 1))
+				{
+					this.fontList = (List<OpenType.FontName>) info.GetValue("FontList", typeof(List<OpenType.FontName>));
+				}
+				else
+				{
+					this.fontList = null;
+				}
 			}
 
 			this.uniqueObjectId = info.GetInt32("UniqueObjectId");
@@ -1467,6 +1480,57 @@ namespace Epsitec.Common.Document
 		}
 		#endregion
 
+
+		#region Fonts
+		protected void FontUpdate()
+		{
+			//	Met à jour la liste de toutes les polices utilisées dans le document.
+			this.fontList = new List<Epsitec.Common.OpenType.FontName>();
+			TextFlow.StatisticFonts(this.fontList, this.textFlows);
+			this.fontList.Sort();
+		}
+
+		protected void FontWriteAll(ZipFile zip)
+		{
+			//	Ecrit sur disque tous les fichiers des polices utilisées dans le document.
+			if (this.fontList == null)
+			{
+				return;
+			}
+
+			foreach (OpenType.FontName fontName in this.fontList)
+			{
+				OpenType.Font font = TextContext.GetFont(fontName.FaceName, fontName.StyleName);
+				System.Diagnostics.Debug.Assert(font != null);
+
+				string name = Document.GetFontFilename(fontName);
+				zip.AddEntry(name, font.FontData.Data);
+			}
+		}
+
+		protected void FontReadAll(ZipFile zip)
+		{
+			//	Lit sur disque tous les fichiers des polices utilisées dans le document.
+			if (this.fontList == null)
+			{
+				return;
+			}
+
+			foreach (OpenType.FontName fontName in this.fontList)
+			{
+				string name = Document.GetFontFilename(fontName);
+				byte[] data = zip[name].Data;  // lit les données dans le fichier zip
+				Drawing.Font.RegisterDynamicFont(data);
+			}
+		}
+
+		protected static string GetFontFilename(OpenType.FontName fontName)
+		{
+			//	Retourne le nom de fichier à utiliser pour une police donnée.
+			//	TODO: améliorer, s'il existe des caractères spéciaux !
+			return string.Format("fonts/{0}", fontName.FullName);
+		}
+		#endregion
 
 		#region Images
 		protected void ImageFlushUnused()
@@ -2520,6 +2584,7 @@ namespace Epsitec.Common.Document
 		protected Dialogs						dialogs;
 		protected string						ioDirectory;
 		protected System.Collections.ArrayList	readWarnings;
+		protected List<OpenType.FontName>		fontList;
 		protected IOType						ioType;
 		protected Objects.Memory				readObjectMemory;
 		protected Objects.Memory				readObjectMemoryText;
