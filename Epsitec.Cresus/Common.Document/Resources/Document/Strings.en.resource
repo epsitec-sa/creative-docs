@@ -346,17 +346,14 @@
   <data id="0NA">Distance</data>
   <data id="0OA">Swap colors</data>
   <data id="0PA">Update</data>
-  <data id="0QA">
-  </data>
-  <data id="0RA">
-  </data>
+  <data id="0QA">Horizontal flip</data>
+  <data id="0RA">Vertical flip</data>
   <data id="0SA">Keep proportions</data>
   <data id="0TA">Antialiasing filter</data>
   <data id="0UA">Image file name</data>
   <data id="0VA">Browse for an image</data>
-  <data id="00B">Update image</data>
-  <data id="01B">
-  </data>
+  <data id="00B">Update image from a file</data>
+  <data id="01B">Import an image from a file</data>
   <data id="02B">All images</data>
   <data id="03B">Windows Bitmap BMP</data>
   <data id="04B">Tagged Image File Format TIFF</data>
@@ -1318,32 +1315,23 @@
   <data id="0V801">Impossible operation.</data>
   <data id="00901">There is no text in the current document.</data>
   <data id="01901">The text cannot be found in the current document.</data>
-  <data id="07901">
-  </data>
-  <data id="0A901">
-  </data>
-  <data id="0H901">
-  </data>
-  <data id="0I901">
-  </data>
-  <data id="0J901">
-  </data>
-  <data id="0K901">
-  </data>
-  <data id="0L901">
-  </data>
-  <data id="0M901">
-  </data>
-  <data id="0N901">
-  </data>
-  <data id="0O901">
-  </data>
-  <data id="0P901">
-  </data>
-  <data id="0Q901">
-  </data>
-  <data id="0R901">
-  </data>
-  <data id="0S901">
-  </data>
+  <data id="07901" mod="1">Export an image to a file</data>
+  <data id="0A901" mod="1">Left crop margin, in pixels</data>
+  <data id="0H901" mod="1">Right crop margin, in pixels</data>
+  <data id="0I901" mod="1">Bottom crop margin, in pixels</data>
+  <data id="0J901" mod="1">Top crop margin, in pixels</data>
+  <data id="0K901" mod="1">Zoom to fit the image</data>
+  <data id="0L901" mod="1">Fill</data>
+  <data id="0M901" mod="1">Zoom to fill the frame</data>
+  <data id="0N901" mod="1">Fit</data>
+  <data id="0O901" mod="1">Image zoom</data>
+  <data id="0P901" mod="1">Cropping</data>
+  <data id="0Q901" mod="1">Turn 90° left</data>
+  <data id="0R901" mod="1">Turn 180°</data>
+  <data id="0S901" mod="1">Turn 90° right</data>
+  <data id="04901" mod="1">Import</data>
+  <data id="05901" mod="1">Export</data>
+  <data id="02901" mod="1">Embedded image</data>
+  <data id="06901" mod="1">Export the image to a file</data>
+  <data id="03901" mod="1">The file does not exist</data>
 </bundle>
