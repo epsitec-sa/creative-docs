@@ -991,8 +991,7 @@ namespace Epsitec.Common.Document.Objects
 
 			if ( !Abstract.ReadSearchFont(fonts, fontName) )
 			{
-				string mix = string.Format("{0} {1}", fontName.FaceName, fontName.StyleName);
-				string message = string.Format(Res.Strings.Object.Text.Error, mix);
+				string message = string.Format(Res.Strings.Object.Text.Error, fontName.FullName);
 				if ( !warnings.Contains(message) )
 				{
 					warnings.Add(message);
