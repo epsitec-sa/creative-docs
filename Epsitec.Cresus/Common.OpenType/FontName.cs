@@ -47,6 +47,25 @@ namespace Epsitec.Common.OpenType
 		}
 
 		/// <summary>
+		/// Gets the full name of the font (face and style).
+		/// </summary>
+		/// <value>The full name of the font (face and style).</value>
+		public string FullName
+		{
+			get
+			{
+				if (this.style == "")
+				{
+					return this.face;
+				}
+				else
+				{
+					return string.Format("{0} {1}", this.face, this.style);
+				}
+			}
+		}
+
+		/// <summary>
 		/// Returns the hash code for this instance.
 		/// </summary>
 		/// <returns>

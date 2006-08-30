@@ -1251,7 +1251,7 @@ namespace Epsitec.Common.Document
 					ZipFile zip = new ZipFile();
 					zip.AddEntry("document.data", data);
 					this.imageCache.WriteData(zip);
-					TextFlow.WriteData(zip, this.textFlows);
+					TextFlow.WriteFontsData(zip, this.textFlows);
 					zip.CompressionLevel = 6;
 					zip.SaveFile(filename);
 				}

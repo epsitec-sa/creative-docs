@@ -471,7 +471,7 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		public static void WriteData(ZipFile zip, UndoableList textFlows)
+		public static void WriteFontsData(ZipFile zip, UndoableList textFlows)
 		{
 			//	Ecrit sur disque tous les fichiers des polices utilisées dans le document.
 			List<OpenType.FontName> documentList = new List<OpenType.FontName>();
@@ -509,8 +509,7 @@ namespace Epsitec.Common.Document
 			{
 				if ( !existingList.Contains(fontName) )
 				{
-					string mix = string.Format("{0} {1}", fontName.FaceName, fontName.StyleName);
-					string message = string.Format(Res.Strings.Object.Text.Error, mix);
+					string message = string.Format(Res.Strings.Object.Text.Error, fontName.FullName);
 					if ( !warnings.Contains(message) )
 					{
 						warnings.Add(message);
