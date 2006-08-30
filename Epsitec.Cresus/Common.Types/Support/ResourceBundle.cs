@@ -1833,7 +1833,7 @@ namespace Epsitec.Common.Support
 		private int						depth;
 		
 		private Field[]					fields;
-		private bool					refInclusion = true;
+		private bool					refInclusion = false;  // TODO: [DR] à vérifier !
 		private bool					autoMerge    = true;
 	}
 }
