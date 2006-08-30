@@ -1072,7 +1072,7 @@ namespace Epsitec.Common.Document
 		}
 
 		// Construit la liste de toutes les fontes utilisées.
-		protected void StatisticFonts(List<OpenType.FontName> list)
+		public void StatisticFonts(List<OpenType.FontName> list)
 		{
 			foreach ( Objects.Abstract obj in this.document.Deep(null) )
 			{
