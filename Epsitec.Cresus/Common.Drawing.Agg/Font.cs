@@ -607,8 +607,6 @@ namespace Epsitec.Common.Drawing
 				{
 					Font font = new Font (fontIdentity);
 
-					//	Sydnie KO ?
-					
 					if (font.OpenTypeFont != null)
 					{
 						string name = font.FullName;
@@ -617,6 +615,10 @@ namespace Epsitec.Common.Drawing
 
 						Font.font_array.Add (font);
 						Font.font_hash[name] = font;
+					}
+					else
+					{
+						System.Diagnostics.Debug.WriteLine (string.Format ("{0} has no data", fontIdentity.FullName));
 					}
 				}
 				
