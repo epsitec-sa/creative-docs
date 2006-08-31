@@ -228,11 +228,29 @@ namespace Epsitec.Common.Support
 				return this.xmlroot.OwnerDocument;
 			}
 		}
-		
+
 		public bool							RefInclusionEnabled
 		{
-			get { return this.refInclusion; }
-			set { this.refInclusion = value; }
+			get
+			{
+				return this.refInclusion;
+			}
+			set
+			{
+				this.refInclusion = value;
+			}
+		}
+
+		public bool							FieldNameRequired
+		{
+			get
+			{
+				return this.fieldNameRequired;
+			}
+			set
+			{
+				this.fieldNameRequired = value;
+			}
 		}
 		
 		public bool							AutoMergeEnabled
@@ -574,11 +592,12 @@ namespace Epsitec.Common.Support
 
 				int index;
 				
-				if (name == null)
+				if (string.IsNullOrEmpty (name))
 				{
 					//	En principe, tous les champs doivent avoir un nom valide.
 					
-					if (this.refInclusion == false)
+					if ((this.refInclusion == false) ||
+						(this.fieldNameRequired == false))
 					{
 						//	Cas particulier: si l'utilisateur a désactivé l'inclusion des <ref>
 						//	alors il se peut qu'un champ soit en fait un <ref> sans nom, auquel
@@ -1833,7 +1852,8 @@ namespace Epsitec.Common.Support
 		private int						depth;
 		
 		private Field[]					fields;
-		private bool					refInclusion = false;  // TODO: [DR] à vérifier !
+		private bool					refInclusion = true;
 		private bool					autoMerge    = true;
+		private bool					fieldNameRequired;
 	}
 }

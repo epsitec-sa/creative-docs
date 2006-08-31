@@ -14,7 +14,7 @@ namespace Epsitec.Common.OpenType
 	public sealed class FontCollection : IEnumerable<FontIdentity>
 	{
 		/// <summary>
-		/// Initializes a new instance of the <see cref="T:FontCollection"/> class.
+		/// Initializes a new instance of the <see cref="FontCollection"/> class.
 		/// </summary>
 		public FontCollection()
 		{
@@ -26,9 +26,9 @@ namespace Epsitec.Common.OpenType
 
 
 		/// <summary>
-		/// Gets the <see cref="T:FontIdentity"/> with the specified name.
+		/// Gets the <see cref="FontIdentity"/> with the specified name.
 		/// </summary>
-		/// <value>The <see cref="T:FontIdentity"/> or <c>null</c> if it does
+		/// <value>The <see cref="FontIdentity"/> or <c>null</c> if it does
 		/// not exist in the collection.</value>
 		public FontIdentity						this[string name]
 		{
@@ -47,6 +47,33 @@ namespace Epsitec.Common.OpenType
 						return null;
 					}
 				}
+			}
+		}
+
+		/// <summary>
+		/// Gets the <see cref="FontIdentity"/> with the specified name.
+		/// </summary>
+		/// <value>The <see cref="FontIdentity"/> or <c>null</c> if it does
+		/// not exist in the collection.</value>
+		public FontIdentity this[FontName name]
+		{
+			get
+			{
+				lock (this.localExclusion)
+				{
+					FontIdentity value;
+
+					foreach (FontIdentity fid in this.fullList)
+					{
+						if ((fid.InvariantFaceName == name.FaceName) &&
+							(fid.InvariantStyleName == name.StyleName))
+						{
+							return fid;
+						}
+					}
+				}
+				
+				return null;
 			}
 		}
 
@@ -184,10 +211,10 @@ namespace Epsitec.Common.OpenType
 		}
 
 		/// <summary>
-		/// Gets the <see cref="T:FontIdentity"/> with the specified unique font
+		/// Gets the <see cref="FontIdentity"/> with the specified unique font
 		/// identifier.
 		/// </summary>
-		/// <returns>The <see cref="T:FontIdentity"/> or <c>null</c> if it does
+		/// <returns>The <see cref="FontIdentity"/> or <c>null</c> if it does
 		/// not exist in the collection.</returns>
 		public FontIdentity FindFontByUniqueFontIdentifier(string fuid)
 		{

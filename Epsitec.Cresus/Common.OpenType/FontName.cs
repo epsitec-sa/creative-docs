@@ -13,7 +13,7 @@ namespace Epsitec.Common.OpenType
 	public struct FontName : System.IComparable<FontName>, System.IEquatable<FontName>
 	{
 		/// <summary>
-		/// Initializes a new instance of the <see cref="T:FontName"/> structure.
+		/// Initializes a new instance of the <see cref="FontName"/> structure.
 		/// </summary>
 		/// <param name="face">The font face.</param>
 		/// <param name="style">The font style.</param>
@@ -21,6 +21,16 @@ namespace Epsitec.Common.OpenType
 		{
 			this.face  = face;
 			this.style = style;
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="FontName"/> structure.
+		/// </summary>
+		/// <param name="fontIdentity">The font identity.</param>
+		public FontName(FontIdentity fontIdentity)
+		{
+			this.face  = fontIdentity.InvariantFaceName;
+			this.style = fontIdentity.InvariantStyleName;
 		}
 
 		/// <summary>
@@ -55,13 +65,13 @@ namespace Epsitec.Common.OpenType
 		{
 			get
 			{
-				if (this.style == "")
+				if (string.IsNullOrEmpty (this.style))
 				{
 					return this.face;
 				}
 				else
 				{
-					return string.Format("{0} {1}", this.face, this.style);
+					return string.Concat (this.face, " ", this.style);
 				}
 			}
 		}
