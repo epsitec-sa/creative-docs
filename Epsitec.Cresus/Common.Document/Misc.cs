@@ -195,6 +195,15 @@ namespace Epsitec.Common.Document
 		}
 
 
+		static public string StyleInvariantToLocal(string face, string style)
+		{
+			//	Conversion d'un nom de style dans la culture locale.
+			//	Par exemple, 'Bold' devient 'Gras'.
+			OpenType.FontName fontName = new OpenType.FontName(face, style);
+			OpenType.FontIdentity id = OpenType.FontCollection.Default[fontName];
+			return id.LocaleStyleName;
+		}
+
 		static public System.Collections.ArrayList MergeFontList(System.Collections.ArrayList inList, System.Collections.ArrayList quickFaceNames, bool quickOnly, string selectedFaceName, out int quickCount)
 		{
 			//	Crée une liste qui contient les polices rapides au début.

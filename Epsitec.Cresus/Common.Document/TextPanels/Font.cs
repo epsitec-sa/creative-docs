@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
 using Epsitec.Common.Drawing;
@@ -31,7 +32,7 @@ namespace Epsitec.Common.Document.TextPanels
 			this.fontStyle = new TextFieldCombo(this);
 			this.fontStyle.IsReadOnly = true;
 			this.fontStyle.AutoFocus = false;
-			this.fontStyle.TextChanged += new EventHandler(this.HandleFieldChanged);
+			this.fontStyle.ComboClosed += new EventHandler(this.HandleFontStyleTextChanged);
 			this.fontStyle.TabIndex = this.tabIndex++;
 			this.fontStyle.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fontStyle, Res.Strings.TextPanel.Font.Tooltip.Style);
@@ -78,7 +79,7 @@ namespace Epsitec.Common.Document.TextPanels
 			{
 				this.fontFace.ComboOpening -= new EventHandler<CancelEventArgs> (this.HandleFontFaceComboOpening);
 				this.fontFace.ComboClosed -= new EventHandler(this.HandleFontFaceTextChanged);
-				this.fontStyle.TextChanged -= new EventHandler(this.HandleFieldChanged);
+				this.fontStyle.ComboClosed -= new EventHandler(this.HandleFontStyleTextChanged);
 				this.fontSize.ButtonUnit.Clicked += new MessageEventHandler(this.HandleButtonUnitClicked);
 				this.fontColor.Clicked -= new MessageEventHandler(this.HandleFieldColorClicked);
 				this.fontColor.Changed -= new EventHandler(this.HandleFieldColorChanged);
@@ -248,7 +249,7 @@ namespace Epsitec.Common.Document.TextPanels
 			this.UpdateComboStyleList(face);
 
 			this.fontFace.Text  = TextLayout.ConvertToTaggedText(face);
-			this.fontStyle.Text = TextLayout.ConvertToTaggedText(style);
+			this.fontStyle.Text = TextLayout.ConvertToTaggedText(Misc.StyleInvariantToLocal(face, style));
 			this.ProposalFontFaceCombo(this.fontFace, !isFace);
 			this.ProposalTextFieldCombo(this.fontStyle, !isStyle);
 
@@ -277,9 +278,15 @@ namespace Epsitec.Common.Document.TextPanels
 			if ( face == null )  return;
 
 			OpenType.FontIdentity[] list = TextContext.GetAvailableFontIdentities(face);
+			this.stylesInvariant = new List<string>();
+			this.stylesLocal = new List<string>();
+
 			foreach ( OpenType.FontIdentity id in list )
 			{
-				this.fontStyle.Items.Add(id.InvariantStyleName);
+				this.fontStyle.Items.Add(id.LocaleStyleName);
+
+				this.stylesInvariant.Add(id.InvariantStyleName);
+				this.stylesLocal.Add(id.LocaleStyleName);
 			}
 		}
 
@@ -510,33 +517,6 @@ namespace Epsitec.Common.Document.TextPanels
 		}
 		#endregion
 
-		
-		private void HandleFieldChanged(object sender)
-		{
-			//	Un champ a été changé.
-			if ( this.ignoreChanged )  return;
-
-			this.TextWrapper.SuspendSynchronizations();
-
-			if ( sender == this.fontStyle )
-			{
-				string style = this.fontStyle.Text;
-				if ( style != "" )
-				{
-					string face = this.TextWrapper.Active.FontFace;
-					this.TextWrapper.Defined.FontFace = face;
-					this.TextWrapper.Defined.FontStyle = style;
-				}
-				else
-				{
-					this.TextWrapper.Defined.ClearFontStyle();
-				}
-				this.TextWrapper.DefineOperationName("FontStyle", Res.Strings.Action.FontStyle);
-			}
-
-			this.TextWrapper.ResumeSynchronizations();
-			this.ActionMade();
-		}
 
 		private void HandleFontFaceComboOpening(object sender, CancelEventArgs e)
 		{
@@ -578,6 +558,40 @@ namespace Epsitec.Common.Document.TextPanels
 				this.TextWrapper.Defined.FontStyle = style;
 				this.TextWrapper.DefineOperationName("FontFace", Res.Strings.Action.FontFace);
 			}
+
+			this.TextWrapper.ResumeSynchronizations();
+			this.ActionMade();
+		}
+
+		private void HandleFontStyleTextChanged(object sender)
+		{
+			if ( this.ignoreChanged )  return;
+			if ( !this.TextWrapper.IsAttached )  return;
+
+			string style = TextLayout.ConvertToSimpleText(this.fontStyle.Text);
+			for (int i=0; i<this.stylesLocal.Count; i++)
+			{
+				if (this.stylesLocal[i] == style)
+				{
+					style = this.stylesInvariant[i];
+					break;
+				}
+			}
+
+			this.TextWrapper.SuspendSynchronizations();
+
+			if ( style != "" )
+			{
+				string face = this.TextWrapper.Active.FontFace;
+				this.TextWrapper.Defined.FontFace = face;
+				this.TextWrapper.Defined.FontStyle = style;
+			}
+			else
+			{
+				this.TextWrapper.Defined.ClearFontStyle();
+			}
+
+			this.TextWrapper.DefineOperationName("FontStyle", Res.Strings.Action.FontStyle);
 
 			this.TextWrapper.ResumeSynchronizations();
 			this.ActionMade();
@@ -845,6 +859,8 @@ namespace Epsitec.Common.Document.TextPanels
 
 		protected ColorSample				originFieldColor;
 		protected int						originFieldRank = -1;
+		protected List<string>				stylesInvariant;
+		protected List<string>				stylesLocal;
 	}
 }
 
