@@ -3511,19 +3511,19 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		public virtual void ReadCheckWarnings(FontFaceInfo[] fonts, System.Collections.ArrayList warnings)
+		public virtual void ReadCheckWarnings(System.Collections.ArrayList warnings)
 		{
 			//	Vérifie si tous les fichiers existent.
 		}
 
-		protected static void ReadCheckFonts(FontFaceInfo[] fonts, System.Collections.ArrayList warnings, TextLayout textLayout)
+		protected static void ReadCheckFonts(System.Collections.ArrayList warnings, TextLayout textLayout)
 		{
 			//	Vérifie si toutes les fontes d'un TextLayout existent.
 			List<OpenType.FontName> list = new List<OpenType.FontName>();
 			textLayout.FillFontFaceList(list);
 			foreach ( OpenType.FontName fontName in list )
 			{
-				if ( !Abstract.ReadSearchFont(fonts, fontName) )
+				if ( !Abstract.ReadSearchFont(fontName) )
 				{
 					string message = string.Format(Res.Strings.Object.Text.Error, fontName.FullName);
 					if ( !warnings.Contains(message) )
@@ -3534,17 +3534,17 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		protected static bool ReadSearchFont(FontFaceInfo[] fonts, OpenType.FontName fontName)
+		protected static bool ReadSearchFont(OpenType.FontName fontName)
 		{
 			//	Cherche si une fonte existe dans la liste des fontes.
-			foreach ( FontFaceInfo info in fonts )
+			if (fontName.StyleName == "")
 			{
-				if ( info.IsLatin )
-				{
-					if ( info.Name == fontName.FaceName )  return true;
-				}
+				OpenType.FontIdentity did = Misc.DefaultFontIdentityStyle(fontName.FaceName);
+				fontName = new OpenType.FontName(did.InvariantFaceName, did.InvariantStyleName);
 			}
-			return false;
+
+			OpenType.FontIdentity id = OpenType.FontCollection.Default[fontName];
+			return (id != null);
 		}
 
 		public virtual void ReadFinalizeFlowReady(TextFlow flow)

@@ -1774,10 +1774,10 @@ namespace Epsitec.Common.Document.Objects
 			this.textLayout.Text = info.GetString("Text");
 		}
 
-		public override void ReadCheckWarnings(FontFaceInfo[] fonts, System.Collections.ArrayList warnings)
+		public override void ReadCheckWarnings(System.Collections.ArrayList warnings)
 		{
 			//	Vérifie si tous les fichiers existent.
-			Common.Document.Objects.Abstract.ReadCheckFonts(fonts, warnings, this.textLayout);
+			Common.Document.Objects.Abstract.ReadCheckFonts(warnings, this.textLayout);
 		}
 		#endregion
 
