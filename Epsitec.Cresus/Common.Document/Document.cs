@@ -1500,12 +1500,14 @@ namespace Epsitec.Common.Document
 				return;
 			}
 
-			foreach (OpenType.FontName fontName in this.fontList)
+			for (int i=0; i<this.fontList.Count; i++)
 			{
+				OpenType.FontName fontName = this.fontList[i];
+
 				OpenType.Font font = TextContext.GetFont(fontName.FaceName, fontName.StyleName);
 				System.Diagnostics.Debug.Assert(font != null);
 
-				string name = Document.GetFontFilename(fontName);
+				string name = Document.GetFontFilename(fontName, i);
 				zip.AddEntry(name, font.FontData.Data);
 			}
 		}
@@ -1518,19 +1520,22 @@ namespace Epsitec.Common.Document
 				return;
 			}
 
-			foreach (OpenType.FontName fontName in this.fontList)
+			for (int i=0; i<this.fontList.Count; i++)
 			{
-				string name = Document.GetFontFilename(fontName);
+				OpenType.FontName fontName = this.fontList[i];
+
+				string name = Document.GetFontFilename(fontName, i);
 				byte[] data = zip[name].Data;  // lit les données dans le fichier zip
 				Drawing.Font.RegisterDynamicFont(data);
 			}
 		}
 
-		protected static string GetFontFilename(OpenType.FontName fontName)
+		protected static string GetFontFilename(OpenType.FontName fontName, int rank)
 		{
 			//	Retourne le nom de fichier à utiliser pour une police donnée.
 			//	TODO: améliorer, s'il existe des caractères spéciaux !
-			return string.Format("fonts/{0}", fontName.FullName);
+			//?return string.Format("fonts/{0}", fontName.FullName);
+			return string.Format("fonts/{0}", rank.ToString(System.Globalization.CultureInfo.InvariantCulture));
 		}
 		#endregion
 
