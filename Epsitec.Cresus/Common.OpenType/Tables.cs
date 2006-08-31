@@ -33,6 +33,14 @@ namespace Epsitec.Common.OpenType
 				return this.offset;
 			}
 		}
+
+		public int								BaseLength
+		{
+			get
+			{
+				return this.data.Length - this.offset;
+			}
+		}
 		
 		
 		protected int ReadInt8(int offset)

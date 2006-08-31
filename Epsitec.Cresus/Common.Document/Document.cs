@@ -1508,7 +1508,8 @@ namespace Epsitec.Common.Document
 				System.Diagnostics.Debug.Assert(font != null);
 
 				string name = Document.GetFontFilename(fontName, i);
-				zip.AddEntry(name, font.FontData.Data);
+				
+				zip.AddEntry(name, font.FontData.Data.Array);
 			}
 		}
 
