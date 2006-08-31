@@ -63,11 +63,11 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 		
-		public byte[]							Data
+		public System.ArraySegment<byte>		Data
 		{
 			get
 			{
-				return this.ot_directory.BaseData;
+				return new System.ArraySegment<byte> (this.ot_directory.BaseData, this.ot_directory.BaseOffset, this.ot_directory.BaseLength);
 			}
 		}
 		

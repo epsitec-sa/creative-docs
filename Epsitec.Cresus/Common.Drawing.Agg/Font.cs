@@ -64,8 +64,21 @@ namespace Epsitec.Common.Drawing
 			{
 				if (this.handle == System.IntPtr.Zero)
 				{
-					byte[] data = this.OpenTypeFont.FontData.Data;
-					int    size = data.Length;
+					System.ArraySegment<byte> segment = this.OpenTypeFont.FontData.Data;
+
+					if (segment.Offset > 0)
+					{
+						System.Diagnostics.Debug.WriteLine ("Requested Font.Handle for TTC font " + this.FullName);
+						
+						//	TODO: solve this bug !
+						
+						return System.IntPtr.Zero;
+					}
+					
+					int    size = segment.Count;
+					byte[] data = new byte[size];
+
+					System.Array.Copy (segment.Array, segment.Offset, data, 0, size);
 
 					System.IntPtr osHandle = this.OpenTypeFont.FontIdentity.IsDynamicFont ? System.IntPtr.Zero : this.OpenTypeFont.GetFontHandleAtEmSize ();
 					

@@ -738,7 +738,7 @@ namespace Epsitec.Common.OpenType
 		
 		
 		private static object					globalExclusion = new object ();
-		private static bool						loadTtc;
+		private static bool						loadTtc = true;
 		private static FontCollection			defaultCollection;
 		
 		private static string CacheFolderName	= "Epsitec Cache";
