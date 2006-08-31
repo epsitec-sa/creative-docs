@@ -989,7 +989,7 @@ namespace Epsitec.Common.Document.Objects
 			//	Vérifie si tous les fichiers existent.
 			OpenType.FontName fontName = new OpenType.FontName(this.PropertyTextFont.FontName, "");
 
-			if ( !Abstract.ReadSearchFont(fontName) )
+			if (!Misc.IsExistingFont(fontName))
 			{
 				string message = string.Format(Res.Strings.Object.Text.Error, fontName.FullName);
 				if ( !warnings.Contains(message) )

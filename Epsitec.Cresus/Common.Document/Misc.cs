@@ -297,6 +297,19 @@ namespace Epsitec.Common.Document
 			}
 		}
 
+		static public bool IsExistingFont(OpenType.FontName fontName)
+		{
+			//	Indique si une police existe, c'est-à-dire si elle est installée.
+			if (fontName.StyleName == "")
+			{
+				OpenType.FontIdentity did = Misc.DefaultFontIdentityStyle(fontName.FaceName);
+				fontName = new OpenType.FontName(did.InvariantFaceName, did.InvariantStyleName);
+			}
+
+			OpenType.FontIdentity id = OpenType.FontCollection.Default[fontName];
+			return (id != null);
+		}
+
 		static public string DefaultFontStyle(string face)
 		{
 			//	Cherche le FontStyle par défaut pour un FontFace donné.
