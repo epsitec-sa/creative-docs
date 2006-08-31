@@ -1534,9 +1534,8 @@ namespace Epsitec.Common.Document
 		protected static string GetFontFilename(OpenType.FontName fontName, int rank)
 		{
 			//	Retourne le nom de fichier à utiliser pour une police donnée.
-			//	TODO: améliorer, s'il existe des caractères spéciaux !
-			//?return string.Format("fonts/{0}", fontName.FullName);
-			return string.Format("fonts/{0}", rank.ToString(System.Globalization.CultureInfo.InvariantCulture));
+			//	Un nom très simple 'n.font' est tout à fait suffisant.
+			return string.Format("fonts/{0}.font", rank.ToString(System.Globalization.CultureInfo.InvariantCulture));
 		}
 		#endregion
 
