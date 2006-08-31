@@ -212,6 +212,15 @@ namespace Epsitec.Common.Document
 			this.containerGuides.SelectGuide = rank;
 		}
 
+		public void UpdateFontsAdded()
+		{
+			//	Appelé lorsque la liste de polices s'est allongée.
+			//	Ceci peut arriver après l'ouverture d'un document qui contenait des polices
+			//	non installées.
+			if ( this.containerFonts == null )  return;
+			this.containerFonts.UpdateListAdded();
+		}
+
 		public void UpdateFonts()
 		{
 			//	Appelé lorsque la liste de polices rapides a changé.

@@ -197,7 +197,7 @@ namespace Epsitec.Common.Document
 
 		static public System.Collections.ArrayList MergeFontList(System.Collections.ArrayList inList, System.Collections.ArrayList quickFaceNames, bool quickOnly, string selectedFaceName, out int quickCount)
 		{
-			//	Crée une liste qui contient les fontes rapides au début.
+			//	Crée une liste qui contient les polices rapides au début.
 			//	En mode quickOnly (liste courte), la police selectedFaceName apparaît même si elle
 			//	ne fait pas partie des polices rapides.
 			//	inList: tous les OpenType.FontIdentity connus
@@ -208,12 +208,12 @@ namespace Epsitec.Common.Document
 
 			if ( quickFaceNames.Count == 0 )  quickOnly = false;
 
-			//	Copie la liste en enlevant toutes les fontes rapides.
+			//	Copie la liste en enlevant toutes les polices rapides.
 			foreach ( Common.OpenType.FontIdentity id in inList )
 			{
-				if ( quickFaceNames.Contains(id.InvariantFaceName) )  // fonte fréquement utilisée ?
+				if ( quickFaceNames.Contains(id.InvariantFaceName) )  // police fréquement utilisée ?
 				{
-					begin.Add(id);  // begin <- fontes fréquentes dans le même ordre que inList
+					begin.Add(id);  // begin <- polices fréquentes dans le même ordre que inList
 
 					if ( selectedFaceName == id.InvariantFaceName )
 					{
@@ -223,24 +223,31 @@ namespace Epsitec.Common.Document
 
 				if ( !quickOnly || id.InvariantFaceName == selectedFaceName )
 				{
-					outList.Add(id);  // outList <- fontes normales
+					outList.Add(id);  // outList <- polices normales
 				}
 			}
 
-			//	Remet les fontes rapides au début.
+			//	Remet les polices rapides au début.
 			int ii = 0;
 			foreach ( Common.OpenType.FontIdentity id in begin )
 			{
 				outList.Insert(ii++, id);
 			}
 
-			quickCount = begin.Count;  // quickCount <- nombre de fontes fréquement utilisées
+			quickCount = begin.Count;  // quickCount <- nombre de polices fréquement utilisées
 			return outList;
+		}
+
+		static public void ClearFontList()
+		{
+			//	Met à zéro les listes des polices connues. Cela forcera à les refaire.
+			Misc.fontListWithSymbols    = null;
+			Misc.fontListWithoutSymbols = null;
 		}
 
 		static public System.Collections.ArrayList GetFontList(bool enableSymbols)
 		{
-			//	Donne la liste de tous les OpenType.FontIdentity des fontes connues.
+			//	Donne la liste de tous les OpenType.FontIdentity des polices connues.
 			//	Cette liste est déjà triée par ordre alphabétique.
 			if ( Misc.fontListWithSymbols == null )  // cache à créer ?
 			{
@@ -267,7 +274,7 @@ namespace Epsitec.Common.Document
 
 		static public void AddFontList(TextFieldCombo combo, bool enableSymbols)
 		{
-			//	Ajoute la liste des fontes dans la liste d'un TextFieldCombo.
+			//	Ajoute la liste des polices dans la liste d'un TextFieldCombo.
 			//	TODO: à supprimer prochainement...
 			if ( Misc.fontListCombo == null )
 			{
@@ -380,7 +387,7 @@ namespace Epsitec.Common.Document
 
 		static public Font GetFont(string fontName)
 		{
-			//	Donne une fonte d'après son nom.
+			//	Donne une police d'après son nom.
 			Font font = Font.GetFont(fontName, "Regular");
 
 			if ( font == null )
@@ -393,7 +400,7 @@ namespace Epsitec.Common.Document
 
 		static public string GetUnicodeName(int code, string fontFace, string fontStyle)
 		{
-			//	Retourne le nom d'un caractère Unicode ou du glyph d'une fonte de symboles.
+			//	Retourne le nom d'un caractère Unicode ou du glyph d'une police de symboles.
 			Common.OpenType.Font font = TextContext.GetFont(fontFace, fontStyle);
 			if ( font != null && font.FontIdentity.IsSymbolFont )
 			{
@@ -433,7 +440,7 @@ namespace Epsitec.Common.Document
 
 		static public string[] DefaultFeatures()
 		{
-			//	Donne la liste des "features" communs à toutes les fontes.
+			//	Donne la liste des "features" communs à toutes les polices.
 			string[] list = new string[2];
 			int i=0;
 			list[i++] = "liga";

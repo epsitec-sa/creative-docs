@@ -66,6 +66,14 @@ namespace Epsitec.Common.Document.Containers
 			this.UpdateFontsButtons();
 		}
 
+		public void UpdateListAdded()
+		{
+			//	Met à jour la liste des polices lorsque de nouvelles polices sont apparues.
+			//	Ceci peut arriver après l'ouverture d'un document qui contenait des polices
+			//	non installées.
+			this.fontSelector.FontList = Misc.GetFontList(false);
+		}
+
 		public void UpdateList()
 		{
 			//	Met à jour la liste des polices rapides.

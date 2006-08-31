@@ -476,16 +476,6 @@ namespace Epsitec.Common.Document
 			//	Vérifie que toutes les polices existent après l'ouverture d'un document.
 			if ( textFlows.Count == 0 )  return;
 
-#if false
-			System.Collections.ArrayList fontList = Misc.GetFontList(true);
-			System.Collections.ArrayList existingList = new System.Collections.ArrayList();
-			foreach ( OpenType.FontIdentity id in fontList )
-			{
-				OpenType.FontName fontName = new OpenType.FontName(id.InvariantFaceName, id.InvariantStyleName);
-				existingList.Add(fontName);
-			}
-#endif
-
 			List<OpenType.FontName> documentList = new List<OpenType.FontName>();
 			TextFlow.StatisticFonts(documentList, textFlows);
 			documentList.Sort();

@@ -138,6 +138,7 @@ namespace Epsitec.App.DocumentEditor
 				else
 				{
 					err = this.CurrentDocument.Read(filename);
+					this.UpdateAfterRead();
 				}
 				this.UpdateRulers();
 				if ( err == "" )
@@ -167,6 +168,7 @@ namespace Epsitec.App.DocumentEditor
 					this.CreateDocument();
 					string filename = this.globalSettings.LastFilenameGet(0);
 					string err = this.CurrentDocument.Read(filename);
+					this.UpdateAfterRead();
 					this.UpdateRulers();
 					if ( err == "" )
 					{
@@ -1701,6 +1703,7 @@ namespace Epsitec.App.DocumentEditor
 				}
 				err = this.CurrentDocument.Read(filename);
 				this.InitializationInProgress = true;
+				this.UpdateAfterRead();
 				this.UpdateRulers();
 				if ( err == "" )
 				{
@@ -4943,6 +4946,19 @@ namespace Epsitec.App.DocumentEditor
 				tm = sr-1;
 			}
 			viewer.Margins = new Margins(wm+lm, wm+sw+1, 6+wm+tm, wm+sw+1);
+		}
+
+		protected void UpdateAfterRead()
+		{
+			//	Effectue une mise à jour après avoir ouvert un fichier.
+			if (this.IsCurrentDocument)
+			{
+				//	Il faudra refaire la liste des polices connues, ce qui est
+				//	nécessaire si le document ouvert contenait des polices non
+				//	installées.
+				Misc.ClearFontList();
+				this.CurrentDocument.Dialogs.UpdateFontsAdded();
+			}
 		}
 
 
