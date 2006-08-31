@@ -61,12 +61,13 @@ namespace Epsitec.Common.OpenType
 			{
 				lock (this.localExclusion)
 				{
-					FontIdentity value;
-
+					string faceName = name.FaceName;
+					string styleHash = FontCollection.GetStyleHash (name.StyleName);
+					
 					foreach (FontIdentity fid in this.fullList)
 					{
-						if ((fid.InvariantFaceName == name.FaceName) &&
-							(fid.InvariantStyleName == name.StyleName))
+						if ((fid.InvariantFaceName == faceName) &&
+							(fid.InvariantStyleHash == styleHash))
 						{
 							return fid;
 						}
@@ -464,6 +465,11 @@ namespace Epsitec.Common.OpenType
 			foreach (string family in this.families)
 			{
 				string[] styles = Platform.Neutral.GetFontStyles (family);
+
+				if (styles.Length == 0)
+				{
+					System.Diagnostics.Debug.WriteLine (string.Format ("{0} has no styles", family));
+				}
 				
 				foreach (string style in styles)
 				{
