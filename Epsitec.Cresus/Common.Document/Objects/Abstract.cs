@@ -3523,7 +3523,7 @@ namespace Epsitec.Common.Document.Objects
 			textLayout.FillFontFaceList(list);
 			foreach ( OpenType.FontName fontName in list )
 			{
-				if ( !Abstract.ReadSearchFont(fontName) )
+				if (!Misc.IsExistingFont(fontName))
 				{
 					string message = string.Format(Res.Strings.Object.Text.Error, fontName.FullName);
 					if ( !warnings.Contains(message) )
@@ -3532,19 +3532,6 @@ namespace Epsitec.Common.Document.Objects
 					}
 				}
 			}
-		}
-
-		protected static bool ReadSearchFont(OpenType.FontName fontName)
-		{
-			//	Cherche si une fonte existe dans la liste des fontes.
-			if (fontName.StyleName == "")
-			{
-				OpenType.FontIdentity did = Misc.DefaultFontIdentityStyle(fontName.FaceName);
-				fontName = new OpenType.FontName(did.InvariantFaceName, did.InvariantStyleName);
-			}
-
-			OpenType.FontIdentity id = OpenType.FontCollection.Default[fontName];
-			return (id != null);
 		}
 
 		public virtual void ReadFinalizeFlowReady(TextFlow flow)

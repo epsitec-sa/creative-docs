@@ -490,19 +490,9 @@ namespace Epsitec.Common.Document
 			TextFlow.StatisticFonts(documentList, textFlows);
 			documentList.Sort();
 
-			foreach (OpenType.FontName fn in documentList)
+			foreach (OpenType.FontName fontName in documentList)
 			{
-				OpenType.FontName fontName = fn;
-
-				if (fontName.StyleName == "")
-				{
-					OpenType.FontIdentity did = Misc.DefaultFontIdentityStyle(fontName.FaceName);
-					fontName = new OpenType.FontName(did.InvariantFaceName, did.InvariantStyleName);
-				}
-
-				OpenType.FontIdentity id = OpenType.FontCollection.Default[fontName];
-
-				if (id == null)
+				if (!Misc.IsExistingFont(fontName))
 				{
 					string message = string.Format(Res.Strings.Object.Text.Error, fontName.FullName);
 					if ( !warnings.Contains(message) )
