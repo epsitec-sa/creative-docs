@@ -476,6 +476,7 @@ namespace Epsitec.Common.Document
 			//	Vérifie que toutes les polices existent après l'ouverture d'un document.
 			if ( textFlows.Count == 0 )  return;
 
+#if false
 			System.Collections.ArrayList fontList = Misc.GetFontList(true);
 			System.Collections.ArrayList existingList = new System.Collections.ArrayList();
 			foreach ( OpenType.FontIdentity id in fontList )
@@ -483,14 +484,25 @@ namespace Epsitec.Common.Document
 				OpenType.FontName fontName = new OpenType.FontName(id.InvariantFaceName, id.InvariantStyleName);
 				existingList.Add(fontName);
 			}
+#endif
 
 			List<OpenType.FontName> documentList = new List<OpenType.FontName>();
 			TextFlow.StatisticFonts(documentList, textFlows);
 			documentList.Sort();
 
-			foreach ( OpenType.FontName fontName in documentList )
+			foreach (OpenType.FontName fn in documentList)
 			{
-				if ( !existingList.Contains(fontName) )
+				OpenType.FontName fontName = fn;
+
+				if (fontName.StyleName == "")
+				{
+					OpenType.FontIdentity did = Misc.DefaultFontIdentityStyle(fontName.FaceName);
+					fontName = new OpenType.FontName(did.InvariantFaceName, did.InvariantStyleName);
+				}
+
+				OpenType.FontIdentity id = OpenType.FontCollection.Default[fontName];
+
+				if (id == null)
 				{
 					string message = string.Format(Res.Strings.Object.Text.Error, fontName.FullName);
 					if ( !warnings.Contains(message) )

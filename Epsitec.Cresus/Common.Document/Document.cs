@@ -1485,7 +1485,7 @@ namespace Epsitec.Common.Document
 		protected void FontUpdate()
 		{
 			//	Met à jour la liste de toutes les polices utilisées dans le document.
-			this.fontList = new List<Epsitec.Common.OpenType.FontName>();
+			this.fontList = new List<OpenType.FontName>();
 
 			TextFlow.StatisticFonts(this.fontList, this.textFlows);
 			this.modifier.StatisticFonts(this.fontList);
