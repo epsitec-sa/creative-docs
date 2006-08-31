@@ -606,12 +606,18 @@ namespace Epsitec.Common.Drawing
 				foreach (OpenType.FontIdentity fontIdentity in Font.font_collection)
 				{
 					Font font = new Font (fontIdentity);
-					string name = font.FullName;
 
-					System.Diagnostics.Debug.Assert (Font.font_hash.ContainsKey (name) == false);
+					//	Sydnie KO ?
 					
-					Font.font_array.Add (font);
-					Font.font_hash[name] = font;
+					if (font.OpenTypeFont != null)
+					{
+						string name = font.FullName;
+
+						System.Diagnostics.Debug.Assert (Font.font_hash.ContainsKey (name) == false);
+
+						Font.font_array.Add (font);
+						Font.font_hash[name] = font;
+					}
 				}
 				
 				System.Diagnostics.Debug.WriteLine ("SetupFonts done");
