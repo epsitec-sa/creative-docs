@@ -195,7 +195,7 @@ namespace Epsitec.Common.Document
 		}
 
 
-		static public string StyleInvariantToLocal(string face, string style)
+		static public string StyleInvariantToLocale(string face, string style)
 		{
 			//	Conversion d'un nom de style dans la culture locale.
 			//	Par exemple, 'Bold' devient 'Gras'.
