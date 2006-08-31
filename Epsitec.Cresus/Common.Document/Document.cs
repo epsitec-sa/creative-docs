@@ -974,11 +974,10 @@ namespace Epsitec.Common.Document
 			}
 			
 			this.containOldText = false;
-			FontFaceInfo[] fonts = Font.Faces;
 			foreach ( Objects.Abstract obj in this.Deep(null) )
 			{
 				obj.ReadFinalize();
-				obj.ReadCheckWarnings(fonts, this.readWarnings);
+				obj.ReadCheckWarnings(this.readWarnings);
 
 				if ( (obj is Objects.TextBox) || (obj is Objects.TextLine) )
 				{
