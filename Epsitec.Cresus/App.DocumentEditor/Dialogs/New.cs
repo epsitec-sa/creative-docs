@@ -1,8 +1,10 @@
+using System.Collections.Generic;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Document;
 using Epsitec.Common.IO;
+using System.IO;
 
 namespace Epsitec.App.DocumentEditor.Dialogs
 {
@@ -101,8 +103,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		protected void UpdateTable(int sel)
 		{
 			//	Met à jour la table des fichiers.
-			this.listedFilenames = this.GetFilenames();
-			int rows = (this.listedFilenames == null) ? 0 : this.listedFilenames.Length;
+			this.ListFilenames();
+			int rows = this.files.Count;
 
 			this.table.SetArraySize(4, rows);
 			this.table.SetWidthColumn(0, 50);
@@ -152,8 +154,11 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 					}
 				}
 
+				//?st = this.table[0, row].Children[0] as StaticText;
+				//?st.Text = string.Format(@"<img src=""{0}""/>", "d:/t.png");
+
 				st = this.table[2, row].Children[0] as StaticText;
-				st.Text = System.IO.Path.GetFileNameWithoutExtension(this.listedFilenames[row]);
+				st.Text = System.IO.Path.GetFileNameWithoutExtension(this.files[row].Filename);
 
 				this.table.SelectRow(row, row==sel);
 			}
@@ -164,17 +169,29 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			}
 		}
 
-		protected string[] GetFilenames()
+		protected void ListFilenames()
 		{
-			//	Retourne la liste des fichiers .crmod contenus dans le dossier adhoc.
+			//	Effectue la liste des fichiers .crmod contenus dans le dossier adhoc.
+			string[] filenames;
+
 			try
 			{
 				string path = System.IO.Path.GetDirectoryName(this.globalSettings.NewDocument);
-				return System.IO.Directory.GetFiles(path, "*.crmod", System.IO.SearchOption.TopDirectoryOnly);
+				filenames = System.IO.Directory.GetFiles(path, "*.crmod", System.IO.SearchOption.TopDirectoryOnly);
 			}
 			catch
 			{
-				return null;
+				filenames = null;
+			}
+
+			this.files = new List<Item>();
+
+			if (filenames != null)
+			{
+				foreach (string filename in filenames)
+				{
+					this.files.Add(new Item(filename));
+				}
 			}
 		}
 
@@ -207,13 +224,80 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			}
 			else
 			{
-				this.selectedFilename = this.listedFilenames[sel];
+				this.selectedFilename = this.files[sel].Filename;
 			}
 		}
 
 
+		#region Class Item
+		protected class Item
+		{
+			public Item(string filename)
+			{
+				this.filename = filename;
+				this.image = null;
+				Image i = this.Image;  // pour lire l'image, provisoire !
+			}
+
+			public string Filename
+			{
+				//	Nom du fichier avec le chemin d'accès complet.
+				get
+				{
+					return this.filename;
+				}
+				set
+				{
+					this.filename = value;
+				}
+			}
+
+			public Image Image
+			{
+				//	Retourne l'image miniature associée au fichier.
+				get
+				{
+					if (this.image == null)
+					{
+						byte[] data = ReadPreview();
+						if (data != null)
+						{
+							this.image = Bitmap.FromData(data);
+						}
+					}
+
+					return this.image;
+				}
+			}
+
+			protected byte[] ReadPreview()
+			{
+				//	Lit les données de l'image miniature associée au fichier.
+				ZipFile zip = new ZipFile();
+
+				if (zip.TryLoadFile(this.filename))
+				{
+					try
+					{
+						return zip["preview.png"].Data;  // lit les données dans le fichier zip
+					}
+					catch
+					{
+						return null;
+					}
+				}
+
+				return null;
+			}
+
+			protected string					filename;
+			protected Image						image;
+		}
+		#endregion
+
+
 		protected CellTable					table;
-		protected string[]					listedFilenames;
+		protected List<Item>				files;
 		protected string					selectedFilename;
 	}
 }
