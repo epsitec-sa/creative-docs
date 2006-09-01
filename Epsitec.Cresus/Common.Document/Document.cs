@@ -1489,7 +1489,7 @@ namespace Epsitec.Common.Document
 			byte[] data = this.printer.Miniature();
 			if (data != null)
 			{
-				zip.AddEntry("preview.jpg", data);
+				zip.AddEntry("preview.png", data);
 			}
 		}
 		#endregion

@@ -56,7 +56,7 @@ namespace Epsitec.Common.Document
 			drawingContext.IsBitmap = true;
 
 			byte[] data;
-			string err = this.ExportGeometry(drawingContext, 0, ImageFormat.Jpeg, 10, ImageCompression.None, 24, 85, 1, false, out data);
+			string err = this.ExportGeometry(drawingContext, 0, ImageFormat.Png, 10, ImageCompression.None, 24, 85, 1, false, out data);
 			if (err == "")
 			{
 				return data;
@@ -1176,92 +1176,6 @@ namespace Epsitec.Common.Document
 
 			return "";  // ok
 		}
-
-#if false
-		protected string ExportGeometry(DrawingContext drawingContext, string filename, int pageNumber)
-		{
-			//	Exporte la géométrie complexe de tous les objets, en utilisant
-			//	un bitmap intermédiaire.
-			ImageFormat format = this.imageFormat;
-			double dpi = this.imageDpi;
-			int depth = this.imageDepth;  // 8, 16, 24 ou 32
-			int quality = (int) (this.imageQuality*100.0);  // 0..100
-			ImageCompression compression = this.imageCompression;
-
-			if ( format == ImageFormat.Unknown )
-			{
-				return Res.Strings.Error.BadImage;
-			}
-
-			Size pageSize = this.document.GetPageSize(pageNumber);
-
-			Graphics gfx = new Graphics();
-			int dx = (int) ((pageSize.Width/10.0)*(dpi/25.4));
-			int dy = (int) ((pageSize.Height/10.0)*(dpi/25.4));
-			gfx.SetPixmapSize(dx, dy);
-			gfx.SolidRenderer.ClearAlphaRgb((depth==32)?0:1, 1,1,1);
-			gfx.Rasterizer.Gamma = this.imageAA;
-
-			double zoomH = dx / pageSize.Width;
-			double zoomV = dy / pageSize.Height;
-			double zoom = System.Math.Min(zoomH, zoomV);
-			gfx.TranslateTransform(0, dy);
-			gfx.ScaleTransform(zoom, -zoom, 0, 0);
-
-			DrawingContext cView = this.document.Modifier.ActiveViewer.DrawingContext;
-			System.Collections.ArrayList layers = this.ComputeLayers(cView.CurrentPage);
-			foreach ( Objects.Layer layer in layers )
-			{
-				Properties.ModColor modColor = layer.PropertyModColor;
-				gfx.PushColorModifier(new ColorModifierCallback(modColor.ModifyColor));
-				drawingContext.IsDimmed = (layer.Print == Objects.LayerPrint.Dimmed);
-				gfx.PushColorModifier(new ColorModifierCallback(drawingContext.DimmedColor));
-
-				foreach ( Objects.Abstract obj in this.document.Deep(layer) )
-				{
-					if ( obj.IsHide )  continue;  // objet caché ?
-					obj.DrawGeometry(gfx, drawingContext);
-				}
-
-				gfx.PopColorModifier();
-				gfx.PopColorModifier();
-			}
-
-			if ( this.document.InstallType == InstallType.Demo )
-			{
-				this.PaintDemo(gfx, pageNumber);
-			}
-			if ( this.document.InstallType == InstallType.Expired )
-			{
-				this.PaintExpired(gfx, pageNumber);
-			}
-
-			Bitmap bitmap = Bitmap.FromPixmap(gfx.Pixmap) as Bitmap;
-			if ( bitmap == null )  return Res.Strings.Error.NoBitmap;
-
-			try
-			{
-				byte[] data;
-				System.IO.FileStream stream;
-				data = bitmap.Save(format, depth, quality, compression);
-
-				if ( System.IO.File.Exists(filename) )
-				{
-					System.IO.File.Delete(filename);
-				}
-
-				stream = new System.IO.FileStream(filename, System.IO.FileMode.CreateNew);
-				stream.Write(data, 0, data.Length);
-				stream.Close();
-			}
-			catch ( System.Exception e )
-			{
-				return e.Message;
-			}
-
-			return "";  // ok
-		}
-#endif
 
 
 		protected Settings.PrintInfo PrintInfo
