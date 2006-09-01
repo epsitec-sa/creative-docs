@@ -1077,9 +1077,8 @@ namespace Epsitec.Common.Document
 		{
 			//	Exporte la géométrie complexe de tous les objets, en utilisant
 			//	un bitmap intermédiaire.
-			int quality = (int) (this.imageQuality*100.0);  // 0..100
 			byte[] data;
-			string err = this.ExportGeometry(drawingContext, pageNumber, this.imageFormat, this.imageDpi, this.imageCompression, this.imageDepth, quality, this.imageAA, true, out data);
+			string err = this.ExportGeometry(drawingContext, pageNumber, this.imageFormat, this.imageDpi, this.imageCompression, this.imageDepth, this.imageQuality, this.imageAA, true, out data);
 			if (err != "")
 			{
 				return err;
@@ -1087,16 +1086,7 @@ namespace Epsitec.Common.Document
 
 			try
 			{
-				System.IO.FileStream stream;
-
-				if (System.IO.File.Exists(filename))
-				{
-					System.IO.File.Delete(filename);
-				}
-
-				stream = new System.IO.FileStream(filename, System.IO.FileMode.CreateNew);
-				stream.Write(data, 0, data.Length);
-				stream.Close();
+				System.IO.File.WriteAllBytes(filename, data);
 			}
 			catch (System.Exception e)
 			{
@@ -1106,7 +1096,7 @@ namespace Epsitec.Common.Document
 			return "";  // ok
 		}
 
-		protected string ExportGeometry(DrawingContext drawingContext, int pageNumber, ImageFormat format, double dpi, ImageCompression compression, int depth, int quality, double AA, bool paintMark, out byte[] data)
+		protected string ExportGeometry(DrawingContext drawingContext, int pageNumber, ImageFormat format, double dpi, ImageCompression compression, int depth, double quality, double AA, bool paintMark, out byte[] data)
 		{
 			//	Exporte la géométrie complexe de tous les objets, en utilisant
 			//	un bitmap intermédiaire. Retourne un éventuel message d'erreur ainsi
@@ -1176,7 +1166,8 @@ namespace Epsitec.Common.Document
 
 			try
 			{
-				data = bitmap.Save(format, depth, quality, compression);
+				int q = (int) (quality*100.0);  // 0..100
+				data = bitmap.Save(format, depth, q, compression);
 			}
 			catch (System.Exception e)
 			{
