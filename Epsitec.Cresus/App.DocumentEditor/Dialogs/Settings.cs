@@ -652,7 +652,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 							bt = new CheckButton();
 							bt.Name = row.ToString();
 							bt.Dock = DockStyle.Fill;
-							bt.Margins = new Margins (4, 0, 0, 0);
+							bt.Margins = new Margins(4, 0, 0, 0);
 							bt.ActiveStateChanged += new EventHandler(this.HandleQuickUsedChanged);
 							this.quickList[column, row].Insert(bt);
 						}
@@ -661,7 +661,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 							ib = new IconButton();
 							ib.Name = row.ToString();
 							ib.Dock = DockStyle.Fill;
-							ib.Margins = new Margins (0, 0, 0, 0);
+							ib.Margins = new Margins(0, 0, 0, 0);
 							this.quickList[column, row].Insert(ib);
 						}
 						else if ( column == 2 )  // bouton pour le séparateur ?
@@ -669,7 +669,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 							ib = new IconButton();
 							ib.Name = row.ToString();
 							ib.Dock = DockStyle.Fill;
-							ib.Margins = new Margins (1, 1, 1, 1);
+							ib.Margins = new Margins(1, 1, 1, 1);
 							ib.Clicked += new MessageEventHandler(this.HandleQuickSeparatorClicked);
 							this.quickList[column, row].Insert(ib);
 						}
@@ -678,7 +678,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 							st = new StaticText();
 							st.ContentAlignment = ContentAlignment.MiddleLeft;
 							st.Dock = DockStyle.Fill;
-							st.Margins = new Margins (6, 0, 0, 0);
+							st.Margins = new Margins(6, 0, 0, 0);
 							this.quickList[column, row].Insert(st);
 						}
 					}
