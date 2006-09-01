@@ -1252,6 +1252,7 @@ namespace Epsitec.Common.Document
 
 					ZipFile zip = new ZipFile();
 					zip.AddEntry("document.data", data);
+					this.WriteMiniature(zip);
 					this.imageCache.WriteData(zip);
 					this.FontWriteAll(zip);
 					zip.CompressionLevel = 6;
@@ -1476,6 +1477,19 @@ namespace Epsitec.Common.Document
 			//	Indique si un fichier est compatible avec une révision/version.
 			long r = ((long)revision<<32) + ((long)version<<16) + (long)subversion;
 			return ( Document.ReadRevision >= r );
+		}
+		#endregion
+
+
+		#region Miniature
+		protected void WriteMiniature(ZipFile zip)
+		{
+			//	Ecrit la miniature de la première page dans le fichier zip.
+			byte[] data = this.printer.Miniature();
+			if (data != null)
+			{
+				zip.AddEntry("preview.jpg", data);
+			}
 		}
 		#endregion
 
