@@ -715,10 +715,20 @@ namespace Epsitec.App.DocumentEditor
 			slider.Name = "StatusZoomSlider";
 			slider.PreferredWidth = 100;
 			slider.Margins = new Margins(1, 1, 1, 1);
-			slider.MinValue = 0.1M;
-			slider.MaxValue = 16.0M;
-			slider.SmallChange = 0.1M;
-			slider.LargeChange = 0.1M;
+			if (this.documentType == DocumentType.Pictogram)
+			{
+				slider.MinValue = 0.5M;
+				slider.MaxValue = 8.0M;
+				slider.SmallChange = 0.1M;
+				slider.LargeChange = 0.5M;
+			}
+			else
+			{
+				slider.MinValue = 0.1M;
+				slider.MaxValue = 16.0M;
+				slider.SmallChange = 0.1M;
+				slider.LargeChange = 0.5M;
+			}
 			slider.Resolution = 0.0M;
 			slider.LogarithmicDivisor = 3.0M;
 			slider.ValueChanged += new EventHandler(this.HandleSliderZoomChanged);
