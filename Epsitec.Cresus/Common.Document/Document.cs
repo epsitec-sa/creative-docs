@@ -785,6 +785,7 @@ namespace Epsitec.Common.Document
 						using (Stream compressor = IO.Decompression.CreateStream(stream, out compressorName))
 						{
 							doc = (Document) formatter.Deserialize(compressor);
+							doc.imageCache = new ImageCache();
 						}
 					}
 					else
