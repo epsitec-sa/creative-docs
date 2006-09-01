@@ -1486,10 +1486,11 @@ namespace Epsitec.Common.Document
 		protected void WriteMiniature(ZipFile zip)
 		{
 			//	Ecrit la miniature de la première page dans le fichier zip.
-			byte[] data = this.printer.Miniature();
-			if (data != null)
+			string filename;
+			byte[] data;
+			if (this.printer.Miniature(out filename, out data))
 			{
-				zip.AddEntry("preview.png", data);
+				zip.AddEntry(filename, data);
 			}
 		}
 		#endregion
