@@ -47,7 +47,7 @@ namespace Epsitec.Common.Document
 			return this.ExportGeometry(drawingContext, filename, this.document.Modifier.ActiveViewer.DrawingContext.CurrentPage);
 		}
 
-		public byte[] Miniature()
+		public bool Miniature(out string filename, out byte[] data)
 		{
 			//	Retourne les données pour l'image miniature de la première page.
 			DrawingContext drawingContext = new DrawingContext(this.document, null);
@@ -55,15 +55,17 @@ namespace Epsitec.Common.Document
 			drawingContext.PreviewActive = false;
 			drawingContext.IsBitmap = true;
 
-			byte[] data;
 			string err = this.ExportGeometry(drawingContext, 0, ImageFormat.Png, 10, ImageCompression.None, 24, 85, 1, false, out data);
 			if (err == "")
 			{
-				return data;
+				filename = null;
+				data = null;
+				return false;
 			}
 			else
 			{
-				return null;
+				filename = "preview.png";
+				return true;
 			}
 		}
 
