@@ -213,4 +213,8 @@
   <data id="0I6">+41 84 827 37 87</data>
   <data id="0J6">Fax:</data>
   <data id="0K6">+41 21 728 44 83</data>
+  <data id="0L6">
+  </data>
+  <data id="0M6">
+  </data>
 </bundle>
