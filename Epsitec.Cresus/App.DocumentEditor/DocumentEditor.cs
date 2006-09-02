@@ -1880,7 +1880,7 @@ namespace Epsitec.App.DocumentEditor
 				string filename = this.dlgNew.Filename;
 				if (filename != null)
 				{
-					if (filename == "")
+					if (filename == "*")  // nouveau document vide ?
 					{
 						this.CreateDocument();
 						this.CurrentDocument.Modifier.New();
