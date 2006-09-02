@@ -91,7 +91,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.slider.Resolution = 1.0M;
 				this.slider.Value = (decimal) this.table.DefHeight;
 				this.slider.ValueChanged += new EventHandler(this.HandleSliderChanged);
-				ToolTip.Default.SetToolTip(this.slider, "Taille des échantillons");
+				ToolTip.Default.SetToolTip(this.slider, Res.Strings.Dialog.New.Tooltip.PreviewSize);
 
 			}
 
@@ -130,10 +130,10 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.table.SetWidthColumn(2, 70);
 			this.table.SetWidthColumn(3, 40);
 
-			this.table.SetHeaderTextH(0, "Aperçu");
-			this.table.SetHeaderTextH(1, "Résumé");
-			this.table.SetHeaderTextH(2, "Fichier");
-			this.table.SetHeaderTextH(3, "Taille");
+			this.table.SetHeaderTextH(0, Res.Strings.Dialog.New.Header.Preview);
+			this.table.SetHeaderTextH(1, Res.Strings.Dialog.New.Header.Description);
+			this.table.SetHeaderTextH(2, Res.Strings.Dialog.New.Header.Filename);
+			this.table.SetHeaderTextH(3, Res.Strings.Dialog.New.Header.Size);
 
 			StaticText st;
 			ImageShower im;
@@ -327,7 +327,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 					}
 
 					size = (size+500)/1000;
-					return string.Format("{0} Ko", size.ToString());
+					return string.Format(Res.Strings.Dialog.New.Size, size.ToString());
 				}
 			}
 
@@ -338,7 +338,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				{
 					if (this.filename == null)  // nouveau document vide ?
 					{
-						return "Nouveau document vide";
+						return Res.Strings.Dialog.New.EmptyDocument;
 					}
 					else
 					{
