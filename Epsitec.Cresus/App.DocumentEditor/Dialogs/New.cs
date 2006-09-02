@@ -146,6 +146,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 						if (column == 0)  // miniature ?
 						{
 							im = new ImageShower();
+							im.CrossIfNoImage = false;
 							im.Dock = DockStyle.Fill;
 							im.Margins = new Margins(0, 0, 0, 0);
 							this.table[column, row].Insert(im);

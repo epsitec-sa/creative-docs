@@ -35,20 +35,34 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		public bool CrossIfNoImage
+		{
+			get
+			{
+				return this.crossIfNoImage;
+			}
 
+			set
+			{
+				this.crossIfNoImage = value;
+			}
+}
 
 
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
-			//	Dessine la couleur.
+			//	Dessine l'image.
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
 			Drawing.Rectangle rect = this.Client.Bounds;
 
 			if (this.image == null)
 			{
-				graphics.AddLine(rect.BottomLeft, rect.TopRight);
-				graphics.AddLine(rect.BottomRight, rect.TopLeft);
-				graphics.RenderSolid(adorner.ColorBorder);
+				if (this.crossIfNoImage)
+				{
+					graphics.AddLine(rect.BottomLeft, rect.TopRight);
+					graphics.AddLine(rect.BottomRight, rect.TopLeft);
+					graphics.RenderSolid(adorner.ColorBorder);
+				}
 			}
 			else
 			{
@@ -68,7 +82,7 @@ namespace Epsitec.Common.Widgets
 					rect.Right -= ww/2;
 				}
 				graphics.Align(ref rect);
-				rect.Inflate(1);
+				rect.Inflate(1);  // pour que le rectangle touche les bords
 
 				graphics.PaintImage(this.image, rect);
 
@@ -79,5 +93,6 @@ namespace Epsitec.Common.Widgets
 		}
 
 		protected Drawing.Image						image;
+		protected bool								crossIfNoImage = true;
 	}
 }
