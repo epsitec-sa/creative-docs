@@ -1880,8 +1880,16 @@ namespace Epsitec.App.DocumentEditor
 				string filename = this.dlgNew.Filename;
 				if (filename != null)
 				{
-					this.Open(filename);
-					this.CurrentDocument.IsDirtySerialize = false;
+					if (filename == "")
+					{
+						this.CreateDocument();
+						this.CurrentDocument.Modifier.New();
+					}
+					else
+					{
+						this.Open(filename);
+						this.CurrentDocument.IsDirtySerialize = false;
+					}
 					this.InitializationInProgress = true;
 				}
 				return;

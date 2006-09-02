@@ -156,7 +156,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 							st = new StaticText();
 							st.ContentAlignment = ContentAlignment.MiddleLeft;
 							st.Dock = DockStyle.Fill;
-							st.Margins = new Margins(6, 0, 0, 0);
+							st.Margins = new Margins(6, 6, 0, 0);
 							this.table[column, row].Insert(st);
 						}
 						else if (column == 2)  // filename ?
@@ -180,6 +180,9 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 				im = this.table[0, row].Children[0] as ImageShower;
 				im.DrawingImage = this.files[row].Image;
+
+				st = this.table[1, row].Children[0] as StaticText;
+				st.Text = this.files[row].Description;
 
 				st = this.table[2, row].Children[0] as StaticText;
 				st.Text = this.files[row].ShortFilename;
@@ -212,6 +215,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			}
 
 			this.files = new List<Item>();
+			this.files.Add(new Item(null));  // nouveau document vide
 
 			if (filenames != null)
 			{
@@ -280,11 +284,14 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				//	Nom du fichier avec le chemin d'accès complet.
 				get
 				{
-					return this.filename;
-				}
-				set
-				{
-					this.filename = value;
+					if (this.filename == null)  // nouveau document vide ?
+					{
+						return "";
+					}
+					else
+					{
+						return this.filename;
+					}
 				}
 			}
 
@@ -293,7 +300,14 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				//	Nom du fichier court, sans le chemin d'accès ni l'extension.
 				get
 				{
-					return System.IO.Path.GetFileNameWithoutExtension(this.filename);
+					if (this.filename == null)  // nouveau document vide ?
+					{
+						return "";
+					}
+					else
+					{
+						return System.IO.Path.GetFileNameWithoutExtension(this.filename);
+					}
 				}
 			}
 
@@ -302,14 +316,37 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				//	Taille du fichier en kilo-bytes.
 				get
 				{
-					long size = 0;
-					using (System.IO.FileStream stream = System.IO.File.OpenRead(this.filename))
+					if (this.filename == null)  // nouveau document vide ?
 					{
-						size = stream.Length;
+						return "";
 					}
+					else
+					{
+						long size = 0;
+						using (System.IO.FileStream stream = System.IO.File.OpenRead(this.filename))
+						{
+							size = stream.Length;
+						}
 
-					size = (size+500)/1000;
-					return string.Format("{0} Ko", size.ToString());
+						size = (size+500)/1000;
+						return string.Format("{0} Ko", size.ToString());
+					}
+				}
+			}
+
+			public string Description
+			{
+				//	Retourne la description du fichier.
+				get
+				{
+					if (this.filename == null)  // nouveau document vide ?
+					{
+						return "Nouveau document vide";
+					}
+					else
+					{
+						return "";
+					}
 				}
 			}
 
@@ -318,13 +355,20 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				//	Retourne l'image miniature associée au fichier.
 				get
 				{
-					byte[] data = ReadPreview();
-					if (data != null)
+					if (this.filename == null)  // nouveau document vide ?
 					{
-						return Bitmap.FromData(data);
+						return null;
 					}
+					else
+					{
+						byte[] data = ReadPreview();
+						if (data != null)
+						{
+							return Bitmap.FromData(data);
+						}
 
-					return null;
+						return null;
+					}
 				}
 			}
 
