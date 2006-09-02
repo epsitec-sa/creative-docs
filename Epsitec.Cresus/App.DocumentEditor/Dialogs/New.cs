@@ -96,7 +96,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			}
 
 			this.selectedFilename = null;
-			this.UpdateTable(-1);
+			this.UpdateTable(0);
 
 			this.window.ShowDialog();
 		}
