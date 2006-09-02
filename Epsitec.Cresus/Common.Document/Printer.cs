@@ -58,14 +58,14 @@ namespace Epsitec.Common.Document
 			string err = this.ExportGeometry(drawingContext, 0, ImageFormat.Png, 10, ImageCompression.None, 24, 85, 1, false, out data);
 			if (err == "")
 			{
-				filename = null;
-				data = null;
-				return false;
+				filename = "preview.png";
+				return true;
 			}
 			else
 			{
-				filename = "preview.png";
-				return true;
+				filename = null;
+				data = null;
+				return false;
 			}
 		}
 

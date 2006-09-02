@@ -45,7 +45,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				int tabIndex = 0;
 
 				this.table = new CellTable(this.window.Root);
-				this.table.DefHeight = 80;
+				this.table.DefHeight = 50;
 				this.table.HeaderHeight = 20;
 				this.table.StyleH = CellArrayStyles.Stretch | CellArrayStyles.Separator | CellArrayStyles.Header | CellArrayStyles.Mobile;
 				this.table.StyleV = CellArrayStyles.ScrollNorm | CellArrayStyles.Separator | CellArrayStyles.SelectLine;
@@ -203,7 +203,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			try
 			{
 				string path = System.IO.Path.GetDirectoryName(this.globalSettings.NewDocument);
-				filenames = System.IO.Directory.GetFiles(path, "*.crmod", System.IO.SearchOption.TopDirectoryOnly);
+				filenames = System.IO.Directory.GetFiles(path, "*.crdoc", System.IO.SearchOption.TopDirectoryOnly);
 			}
 			catch
 			{
@@ -308,7 +308,6 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 					}
 
 					size = (size+500)/1000;
-
 					return string.Format("{0} Ko", size.ToString());
 				}
 			}
