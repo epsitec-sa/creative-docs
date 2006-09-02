@@ -113,6 +113,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.table.SetWidthColumn(3, 20);
 
 			StaticText st;
+			ImageShower im;
 			for (int row=0; row<rows; row++)
 			{
 				for (int column=0; column<this.table.Columns; column++)
@@ -121,11 +122,10 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 					{
 						if (column == 0)  // miniature ?
 						{
-							st = new StaticText();
-							st.ContentAlignment = ContentAlignment.MiddleLeft;
-							st.Dock = DockStyle.Fill;
-							st.Margins = new Margins(6, 0, 0, 0);
-							this.table[column, row].Insert(st);
+							im = new ImageShower();
+							im.Dock = DockStyle.Fill;
+							im.Margins = new Margins(0, 0, 0, 0);
+							this.table[column, row].Insert(im);
 						}
 						else if (column == 1)  // résumé ?
 						{
@@ -154,8 +154,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 					}
 				}
 
-				//?st = this.table[0, row].Children[0] as StaticText;
-				//?st.Text = string.Format(@"<img src=""{0}""/>", "d:/t.png");
+				im = this.table[0, row].Children[0] as ImageShower;
+				im.DrawingImage = this.files[row].Image;
 
 				st = this.table[2, row].Children[0] as StaticText;
 				st.Text = System.IO.Path.GetFileNameWithoutExtension(this.files[row].Filename);
