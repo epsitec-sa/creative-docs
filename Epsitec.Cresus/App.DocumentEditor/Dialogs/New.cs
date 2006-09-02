@@ -46,7 +46,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 				this.table = new CellTable(this.window.Root);
 				this.table.DefHeight = 80;
-				this.table.StyleH = CellArrayStyles.Stretch | CellArrayStyles.Separator;
+				this.table.HeaderHeight = 20;
+				this.table.StyleH = CellArrayStyles.Stretch | CellArrayStyles.Separator | CellArrayStyles.Header | CellArrayStyles.Mobile;
 				this.table.StyleV = CellArrayStyles.ScrollNorm | CellArrayStyles.Separator | CellArrayStyles.SelectLine;
 				this.table.Margins = new Margins(0, 0, 0, 0);
 				this.table.Dock = DockStyle.Fill;
@@ -76,6 +77,22 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				buttonCancel.Clicked += new MessageEventHandler(this.HandleButtonCancelClicked);
 				buttonCancel.TabIndex = tabIndex++;
 				buttonCancel.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+
+				this.slider = new HSlider(footer);
+				this.slider.PreferredWidth = 80;
+				this.slider.Dock = DockStyle.Right;
+				this.slider.Margins = new Margins(0, 0, 4, 4);
+				this.slider.TabIndex = tabIndex++;
+				this.slider.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+				this.slider.MinValue = 20.0M;
+				this.slider.MaxValue = 100.0M;
+				this.slider.SmallChange = 1.0M;
+				this.slider.LargeChange = 10.0M;
+				this.slider.Resolution = 1.0M;
+				this.slider.Value = (decimal) this.table.DefHeight;
+				this.slider.ValueChanged += new EventHandler(this.HandleSliderChanged);
+				ToolTip.Default.SetToolTip(this.slider, "Taille des échantillons");
+
 			}
 
 			this.selectedFilename = null;
@@ -107,10 +124,16 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			int rows = this.files.Count;
 
 			this.table.SetArraySize(4, rows);
+
 			this.table.SetWidthColumn(0, 50);
 			this.table.SetWidthColumn(1, 100);
 			this.table.SetWidthColumn(2, 80);
-			this.table.SetWidthColumn(3, 20);
+			this.table.SetWidthColumn(3, 40);
+
+			this.table.SetHeaderTextH(0, "Aperçu");
+			this.table.SetHeaderTextH(1, "Résumé");
+			this.table.SetHeaderTextH(2, "Fichier");
+			this.table.SetHeaderTextH(3, "Taille");
 
 			StaticText st;
 			ImageShower im;
@@ -228,6 +251,17 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			}
 		}
 
+		private void HandleSliderChanged(object sender)
+		{
+			this.table.DefHeight = (double) this.slider.Value;
+			this.table.HeaderHeight = 20;
+
+			for (int i=0; i<this.table.Rows; i++)
+			{
+				this.table.SetHeightRow(i, this.table.DefHeight);
+			}
+		}
+
 
 		#region Class Item
 		protected class Item
@@ -235,8 +269,6 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			public Item(string filename)
 			{
 				this.filename = filename;
-				this.image = null;
-				Image i = this.Image;  // pour lire l'image, provisoire !
 			}
 
 			public string Filename
@@ -257,16 +289,13 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				//	Retourne l'image miniature associée au fichier.
 				get
 				{
-					if (this.image == null)
+					byte[] data = ReadPreview();
+					if (data != null)
 					{
-						byte[] data = ReadPreview();
-						if (data != null)
-						{
-							this.image = Bitmap.FromData(data);
-						}
+						return Bitmap.FromData(data);
 					}
 
-					return this.image;
+					return null;
 				}
 			}
 
@@ -291,12 +320,12 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			}
 
 			protected string					filename;
-			protected Image						image;
 		}
 		#endregion
 
 
 		protected CellTable					table;
+		protected HSlider					slider;
 		protected List<Item>				files;
 		protected string					selectedFilename;
 	}

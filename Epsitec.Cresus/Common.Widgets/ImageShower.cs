@@ -52,7 +52,29 @@ namespace Epsitec.Common.Widgets
 			}
 			else
 			{
+				double w = this.image.Width;
+				double h = this.image.Height;
+
+				if (rect.Width/rect.Height < w/h)
+				{
+					double hh = rect.Height - rect.Width*h/w;
+					rect.Bottom += hh/2;
+					rect.Top    -= hh/2;
+				}
+				else
+				{
+					double ww = rect.Width - rect.Height*w/h;
+					rect.Left  += ww/2;
+					rect.Right -= ww/2;
+				}
+				graphics.Align(ref rect);
+				rect.Inflate(1);
+
 				graphics.PaintImage(this.image, rect);
+
+				rect.Deflate(0.5);
+				graphics.AddRectangle(rect);
+				graphics.RenderSolid(adorner.ColorBorder);
 			}
 		}
 

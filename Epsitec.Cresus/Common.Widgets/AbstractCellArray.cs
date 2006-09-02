@@ -100,7 +100,7 @@ namespace Epsitec.Common.Widgets
 				if ( value != this.styleH )
 				{
 					this.styleH = value;
-					this.MarkAsDirty ();
+					this.MarkAsDirty();
 				}
 			}
 		}
@@ -109,10 +109,10 @@ namespace Epsitec.Common.Widgets
 		{
 			this.isDirty = true;
 			
-			Layouts.LayoutContext.AddToMeasureQueue (this);
-			Layouts.LayoutContext.AddToArrangeQueue (this);
+			Layouts.LayoutContext.AddToMeasureQueue(this);
+			Layouts.LayoutContext.AddToArrangeQueue(this);
 			
-			this.Invalidate ();
+			this.Invalidate();
 		}
 		
 		public CellArrayStyles StyleV
@@ -128,7 +128,7 @@ namespace Epsitec.Common.Widgets
 				if ( value != this.styleV )
 				{
 					this.styleV = value;
-					this.MarkAsDirty ();
+					this.MarkAsDirty();
 				}
 			}
 		}
@@ -146,7 +146,7 @@ namespace Epsitec.Common.Widgets
 				if ( value != this.offsetH )
 				{
 					this.offsetH = value;
-					this.MarkAsDirty ();
+					this.MarkAsDirty();
 				}
 			}
 		}
@@ -164,7 +164,7 @@ namespace Epsitec.Common.Widgets
 				if ( value != this.offsetV )
 				{
 					this.offsetV = value;
-					this.MarkAsDirty ();
+					this.MarkAsDirty();
 				}
 			}
 		}
@@ -237,10 +237,10 @@ namespace Epsitec.Common.Widgets
 		
 		public override Drawing.Margins GetInternalPadding()
 		{
-			Drawing.Margins padding = new Drawing.Margins (this.margins.Left+this.leftMargin,
-				/**/									   this.margins.Right+this.rightMargin,
-				/**/									   this.margins.Top+this.topMargin,
-				/**/									   this.margins.Bottom+this.bottomMargin);
+			Drawing.Margins padding = new Drawing.Margins(this.margins.Left+this.leftMargin,
+				/**/									  this.margins.Right+this.rightMargin,
+				/**/									  this.margins.Top+this.topMargin,
+				/**/									  this.margins.Bottom+this.bottomMargin);
 			
 			return padding;
 		}
@@ -285,7 +285,7 @@ namespace Epsitec.Common.Widgets
 			HeaderButton button = this.FindButtonV(rank);
 			button.Text = text;
 
-			this.MarkAsDirty ();
+			this.MarkAsDirty();
 		}
 
 		public virtual void SetHeaderTextH(int rank, string text)
@@ -299,7 +299,7 @@ namespace Epsitec.Common.Widgets
 			HeaderButton button = this.FindButtonH(rank);
 			button.Text = text;
 
-			this.MarkAsDirty ();
+			this.MarkAsDirty();
 		}
 
 		public virtual void SetHeaderSortV(int rank, SortMode mode)
@@ -401,7 +401,7 @@ namespace Epsitec.Common.Widgets
 				this.widthColumns[rank] = width;
 			}
 
-			this.MarkAsDirty ();
+			this.MarkAsDirty();
 		}
 		
 		public virtual void HideColumns(int start, int count)
@@ -418,7 +418,7 @@ namespace Epsitec.Common.Widgets
 					this.widthColumns[i] = 0;
 				}
 			}
-			this.MarkAsDirty ();
+			this.MarkAsDirty();
 		}
 		
 		public virtual void ShowColumns(int start, int count)
@@ -435,7 +435,7 @@ namespace Epsitec.Common.Widgets
 					this.widthColumns[i] = this.defWidth;
 				}
 			}
-			this.MarkAsDirty ();
+			this.MarkAsDirty();
 		}
 		
 		public virtual double RetHeightRow(int rank)
@@ -470,7 +470,7 @@ namespace Epsitec.Common.Widgets
 				this.heightRows[rank] = height;
 			}
 
-			this.MarkAsDirty ();
+			this.MarkAsDirty();
 		}
 		
 		public virtual void HideRows(int start, int count)
@@ -487,7 +487,7 @@ namespace Epsitec.Common.Widgets
 					this.heightRows[i] = 0;
 				}
 			}
-			this.MarkAsDirty ();
+			this.MarkAsDirty();
 		}
 		
 		public virtual void ShowRows(int start, int count)
@@ -504,7 +504,7 @@ namespace Epsitec.Common.Widgets
 					this.heightRows[i] = this.defHeight;
 				}
 			}
-			this.MarkAsDirty ();
+			this.MarkAsDirty();
 		}
 		
 
@@ -776,26 +776,26 @@ namespace Epsitec.Common.Widgets
 		{
 			//	Modifie la hauteur d'une ligne.
 			this.SetHeightRow(this.dragRank, this.dragDim+(this.dragPos-pos));
-			this.MarkAsDirty ();
+			this.MarkAsDirty();
 		}
 
 		protected void DragMovedColumn(int column, double pos)
 		{
 			//	Modifie la largeur d'une colonne.
 			this.SetWidthColumn(this.dragRank, this.dragDim+(pos-this.dragPos));
-			this.MarkAsDirty ();
+			this.MarkAsDirty();
 		}
 
 		protected void DragEndedRow(int row, double pos)
 		{
 			//	La hauteur d'une ligne a été modifiée.
-			this.MarkAsDirty ();
+			this.MarkAsDirty();
 		}
 
 		protected void DragEndedColumn(int column, double pos)
 		{
 			//	La largeur d'une colonne a été modifiée.
-			this.MarkAsDirty ();
+			this.MarkAsDirty();
 		}
 
 
@@ -1287,14 +1287,14 @@ namespace Epsitec.Common.Widgets
 
 		protected override void ArrangeOverride(Epsitec.Common.Widgets.Layouts.LayoutContext context)
 		{
-			base.ArrangeOverride (context);
-			this.Update ();
+			base.ArrangeOverride(context);
+			this.Update();
 		}
 		
 		protected override void SetBoundsOverride(Drawing.Rectangle oldRect, Drawing.Rectangle newRect)
 		{
-			base.SetBoundsOverride (oldRect, newRect);
-			this.UpdateGeometry ();
+			base.SetBoundsOverride(oldRect, newRect);
+			this.UpdateGeometry();
 		}
 		
 		protected void UpdateGeometry()
@@ -1331,11 +1331,11 @@ namespace Epsitec.Common.Widgets
 
 			if ( (this.styleH & CellArrayStyles.Stretch) != 0 )
 			{
-				this.StretchColumns (rect.Width, rect.Height);
+				this.StretchColumns(rect.Width, rect.Height);
 			}
 			if ( (this.styleV & CellArrayStyles.Stretch) != 0 )
 			{
-				this.StretchRows (rect.Width, rect.Height);
+				this.StretchRows(rect.Width, rect.Height);
 			}
 
 			//	Positionne l'ascenseur vertical.
@@ -1600,43 +1600,42 @@ namespace Epsitec.Common.Widgets
 						cRect.Left += 1;
 						cRect.Top  -= 1;  // laisse la place pour la grille
 						this.array[x, y].SetManualBounds(cRect);
-						this.array[x,y].SetParent (this.container);
+						this.array[x,y].SetParent(this.container);
 						this.array[x,y].Visibility = true;
 						this.array[x,y].SetArrayRank(this, x, y);
 					}
 					else if (this.array[x,y].Parent != null)
 					{
-						this.DetachCell (this.array[x,y], true);
+						this.DetachCell(this.array[x,y], true);
 					}
 					px += dx;
 				}
 			}
 			
-			this.SetFocusedCell (focusedCell);
+			this.SetFocusedCell(focusedCell);
 		}
-		
-		protected void DetachCell(Cell cell, bool keep_focus)
+
+		protected void DetachCell(Cell cell, bool keepFocus)
 		{
-			if ((keep_focus) &&
-				(cell.ContainsKeyboardFocus))
+			if ( keepFocus && cell.ContainsKeyboardFocus )
 			{
 				//	La cellule qui contient le focus n'est plus visible; il faudrait donc
 				//	supprimer son parent, mais ce faisant, on perdrait le focus. Dilemme !
 							
 				focusedCell = cell;
-				focusedCell.Hide ();
+				focusedCell.Hide();
 			}
 			else
 			{
-				if (this.focusedCell == cell)
+				if ( this.focusedCell == cell )
 				{
 					this.focusedCell = null;
-					cell.SetFocused (false);
-					this.SetFocused (true);
+					cell.SetFocused(false);
+					this.SetFocused(true);
 				}
 				
-				cell.SetArrayRank (null, -1, -1);
-				cell.SetParent (null);
+				cell.SetArrayRank(null, -1, -1);
+				cell.SetParent(null);
 			}
 		}
 		
@@ -1647,7 +1646,7 @@ namespace Epsitec.Common.Widgets
 			{
 				if ( this.focusedWidget != null )
 				{
-					this.focusedWidget.KeyboardFocusChanged -= new PropertyChangedEventHandler (this.HandleFocusedWidgetKeyboardFocusChanged);
+					this.focusedWidget.KeyboardFocusChanged -= new PropertyChangedEventHandler(this.HandleFocusedWidgetKeyboardFocusChanged);
 					this.focusedWidget.PreProcessing -= new MessageEventHandler(this.HandleFocusedWidgetPreProcessing);
 					this.focusedWidget = null;
 				}
@@ -1660,7 +1659,7 @@ namespace Epsitec.Common.Widgets
 					
 					System.Diagnostics.Debug.Assert( this.focusedWidget != null );
 					
-					this.focusedWidget.KeyboardFocusChanged += new PropertyChangedEventHandler (this.HandleFocusedWidgetKeyboardFocusChanged);
+					this.focusedWidget.KeyboardFocusChanged += new PropertyChangedEventHandler(this.HandleFocusedWidgetKeyboardFocusChanged);
 					this.focusedWidget.PreProcessing += new MessageEventHandler(this.HandleFocusedWidgetPreProcessing);
 				}
 			}
@@ -1689,8 +1688,7 @@ namespace Epsitec.Common.Widgets
 		public virtual void SetArraySize(int maxColumns, int maxRows)
 		{
 			//	Choix des dimensions du tableau.
-			if ((this.maxColumns == maxColumns) &&
-				(this.maxRows == maxRows))
+			if ( this.maxColumns == maxColumns && this.maxRows == maxRows )
 			{
 				return;
 			}
@@ -1701,13 +1699,13 @@ namespace Epsitec.Common.Widgets
 			{
 				for (int row = 0; row < this.maxRows; row++)
 				{
-					this.DetachCell (this.array[col,row], false);
+					this.DetachCell(this.array[col,row], false);
 					this.array[col,row] = null;
 				}
 			}
 			
-			int minMaxCol = System.Math.Min (maxColumns, this.maxColumns);
-			int minMaxRow = System.Math.Min (maxRows, this.maxRows);
+			int minMaxCol = System.Math.Min(maxColumns, this.maxColumns);
+			int minMaxRow = System.Math.Min(maxRows, this.maxRows);
 			
 			//	Supprime les lignes excédentaires, sans parcourir une seconde
 			//	fois les colonnes déjà supprimées.
@@ -1716,7 +1714,7 @@ namespace Epsitec.Common.Widgets
 			{
 				for (int col = 0; col < minMaxCol; col++)
 				{
-					this.DetachCell (this.array[col,row], false);
+					this.DetachCell(this.array[col,row], false);
 					this.array[col,row] = null;
 				}
 			}
@@ -1888,8 +1886,8 @@ namespace Epsitec.Common.Widgets
 			//	Dessine le tableau.
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
 
-			System.Diagnostics.Debug.Assert (this.isDirty == false);
-			System.Diagnostics.Debug.Assert (this.isGrimy == false);
+			System.Diagnostics.Debug.Assert(this.isDirty == false);
+			System.Diagnostics.Debug.Assert(this.isGrimy == false);
 			
 //-			this.Update();  // mis à jour si nécessaire
 
@@ -1911,14 +1909,14 @@ namespace Epsitec.Common.Widgets
 #endif
 		}
 
-		protected override void PaintForegroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clip_rect)
+		protected override void PaintForegroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
 			//	Dessine la grille par-dessus.
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
 
 			WidgetPaintState state = this.PaintState;
 			Drawing.Rectangle rect = this.Client.Bounds;
-			rect.Deflate(this.GetInternalPadding ());
+			rect.Deflate(this.GetInternalPadding());
 			rect.Inflate(-0.5, -0.5);
 
 			graphics.LineWidth = 1;
