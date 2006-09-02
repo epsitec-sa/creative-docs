@@ -126,8 +126,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.table.SetArraySize(4, rows);
 
 			this.table.SetWidthColumn(0, 50);
-			this.table.SetWidthColumn(1, 100);
-			this.table.SetWidthColumn(2, 80);
+			this.table.SetWidthColumn(1, 110);
+			this.table.SetWidthColumn(2, 70);
 			this.table.SetWidthColumn(3, 40);
 
 			this.table.SetHeaderTextH(0, "Aperçu");
@@ -169,9 +169,9 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 						else if (column == 3)  // taille ?
 						{
 							st = new StaticText();
-							st.ContentAlignment = ContentAlignment.MiddleLeft;
+							st.ContentAlignment = ContentAlignment.MiddleRight;
 							st.Dock = DockStyle.Fill;
-							st.Margins = new Margins(6, 0, 0, 0);
+							st.Margins = new Margins(0, 6, 0, 0);
 							this.table[column, row].Insert(st);
 						}
 					}
@@ -181,7 +181,10 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				im.DrawingImage = this.files[row].Image;
 
 				st = this.table[2, row].Children[0] as StaticText;
-				st.Text = System.IO.Path.GetFileNameWithoutExtension(this.files[row].Filename);
+				st.Text = this.files[row].ShortFilename;
+
+				st = this.table[3, row].Children[0] as StaticText;
+				st.Text = this.files[row].FileSize;
 
 				this.table.SelectRow(row, row==sel);
 			}
@@ -281,6 +284,32 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				set
 				{
 					this.filename = value;
+				}
+			}
+
+			public string ShortFilename
+			{
+				//	Nom du fichier court, sans le chemin d'accès ni l'extension.
+				get
+				{
+					return System.IO.Path.GetFileNameWithoutExtension(this.filename);
+				}
+			}
+
+			public string FileSize
+			{
+				//	Taille du fichier en kilo-bytes.
+				get
+				{
+					long size = 0;
+					using (System.IO.FileStream stream = System.IO.File.OpenRead(this.filename))
+					{
+						size = stream.Length;
+					}
+
+					size = (size+500)/1000;
+
+					return string.Format("{0} Ko", size.ToString());
 				}
 			}
 
