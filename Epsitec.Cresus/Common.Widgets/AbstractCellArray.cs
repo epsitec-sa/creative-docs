@@ -73,18 +73,25 @@ namespace Epsitec.Common.Widgets
 			base.Dispose(disposing);
 		}
 		
-		public Drawing.Color				HiliteColor
+		public Drawing.Color HiliteColor
 		{
 			get { return this.hiliteColor; }
 			set { this.hiliteColor = value; }
 		}
 
-		public bool							IsFlyOverHilite
+		public bool IsFlyOverHilite
 		{
 			get { return this.isFlyOverHilite; }
 			set { this.isFlyOverHilite = value; }
 		}
-		
+
+		public double AlphaSeparator
+		{
+			//	Composante A de la couleur des traits de séparations horizontaux et verticaux.
+			get { return this.alphaSeparator; }
+			set { this.alphaSeparator = value; }
+		}
+
 
 
 		public CellArrayStyles StyleH
@@ -1921,6 +1928,8 @@ namespace Epsitec.Common.Widgets
 
 			graphics.LineWidth = 1;
 			Drawing.Color color = adorner.ColorTextFieldBorder((state&WidgetPaintState.Enabled) != 0);
+			Drawing.Color separatorColor = color;
+			separatorColor.A = this.alphaSeparator;
 
 			//	Dessine le rectangle englobant.
 			graphics.AddRectangle(rect);
@@ -1943,7 +1952,7 @@ namespace Epsitec.Common.Widgets
 					y -= this.RetHeightRow(i);
 					if ( y < rect.Bottom || y > rect.Top )  continue;
 					graphics.AddLine(x1, y, x2, y);
-					graphics.RenderSolid(color);
+					graphics.RenderSolid(separatorColor);
 				}
 			}
 
@@ -1964,7 +1973,7 @@ namespace Epsitec.Common.Widgets
 					x += this.RetWidthColumn(i);
 					if ( x < rect.Left || x > rect.Right )  continue;
 					graphics.AddLine(x, y1, x, y2);
-					graphics.RenderSolid(color);
+					graphics.RenderSolid(separatorColor);
 				}
 			}
 			
@@ -2069,6 +2078,7 @@ namespace Epsitec.Common.Widgets
 		protected int							flyOverColumn = -1;
 		protected Drawing.Color					hiliteColor = Drawing.Color.Empty;
 		protected bool							isFlyOverHilite = false;
+		protected double						alphaSeparator = 1.0;
 		
 		protected bool							isDraggingSlider;
 		protected double						savedTotalWidth;

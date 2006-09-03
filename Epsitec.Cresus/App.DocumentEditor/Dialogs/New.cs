@@ -49,6 +49,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.table.HeaderHeight = 20;
 				this.table.StyleH = CellArrayStyles.Stretch | CellArrayStyles.Separator | CellArrayStyles.Header | CellArrayStyles.Mobile;
 				this.table.StyleV = CellArrayStyles.ScrollNorm | CellArrayStyles.Separator | CellArrayStyles.SelectLine;
+				this.table.AlphaSeparator = 0.3;
 				this.table.Margins = new Margins(0, 0, 0, 0);
 				this.table.Dock = DockStyle.Fill;
 
@@ -179,7 +180,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				}
 
 				im = this.table[0, row].Children[0] as ImageShower;
-				if (row == 0)
+				if (row == 0)  // nouveau document vide ?
 				{
 					im.FixIcon = Misc.Icon("New");
 				}
@@ -222,7 +223,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			}
 
 			this.files = new List<Item>();
-			this.files.Add(new Item(null));  // nouveau document vide
+			this.files.Add(new Item(null));  // première ligne avec 'nouveau document vide'
 
 			if (filenames != null)
 			{
