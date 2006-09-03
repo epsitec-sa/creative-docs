@@ -48,13 +48,14 @@
   <data name="Dialog.Warning.Text2" id="0D1">Malgré ces problèmes, le fichier a été ouvert le mieux possible.</data>
   <data name="Dialog.Warning.Text3" id="0E1">Son aspect est toutefois différent de ce qu'il devrait être.</data>
   <data name="Dialog.New.Title" id="0L6" mod="1">Nouveau document</data>
-  <data name="Dialog.New.EmptyDocument" id="0T6" mod="1">Nouveau document vide</data>
+  <data name="Dialog.New.EmptyDocument" id="0T6" mod="1">Vide</data>
   <data name="Dialog.File.Header.Preview" id="0N6" mod="1">Aperçu</data>
   <data name="Dialog.File.Header.Filename" id="0P6" mod="1">Nom</data>
   <data name="Dialog.File.Header.Description" id="0O6" mod="1">Type</data>
   <data name="Dialog.File.Header.Size" id="0Q6" mod="1">Taille</data>
   <data name="Dialog.File.Size" id="0S6" mod="1">{0} Ko</data>
   <data name="Dialog.File.Directory" id="0U6" mod="1">Dossier</data>
+  <data name="Dialog.File.Document" id="007" mod="1">Document</data>
   <data name="Dialog.File.Button.Open" id="0M6" mod="1">Ouvrir</data>
   <data name="Dialog.File.Tooltip.PreviewSize" id="0R6" mod="1">Taille des échantillons</data>
   <data name="Dialog.Open.TitleDoc" id="0F1">Ouvrir un document</data>
