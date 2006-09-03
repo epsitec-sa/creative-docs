@@ -28,7 +28,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.WindowInit("FileNew", 400, 300, true);
 				this.window.Text = Res.Strings.Dialog.New.Title;
 				this.window.Owner = this.editor.Window;
-				this.window.Icon = Bitmap.FromManifestResource("Epsitec.App.DocumentEditor.Images.Application.icon", this.GetType().Assembly);
+				//this.window.Icon = Bitmap.FromManifestResource("Epsitec.App.DocumentEditor.Images.Application.icon", this.GetType().Assembly);
 				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowCloseClicked);
 				this.window.Root.MinSize = new Size(300, 200);
 				this.window.Root.Padding = new Margins(8, 8, 8, 8);
@@ -51,11 +51,11 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		}
 
 
-		protected override string FilenameFilter
+		protected override string Extension
 		{
 			get
 			{
-				return "*.crmod";
+				return ".crmod";
 			}
 		}
 	}

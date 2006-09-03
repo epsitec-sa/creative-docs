@@ -26,9 +26,9 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.window.MakeSecondaryWindow();
 				this.window.PreventAutoClose = true;
 				this.WindowInit("FileOpen", 400, 300, true);
-				this.window.Text = Res.Strings.Dialog.New.Title;
+				this.window.Text = Res.Strings.Dialog.Open.TitleDoc;
 				this.window.Owner = this.editor.Window;
-				this.window.Icon = Bitmap.FromManifestResource("Epsitec.App.DocumentEditor.Images.Application.icon", this.GetType().Assembly);
+				//this.window.Icon = Bitmap.FromManifestResource("Epsitec.App.DocumentEditor.Images.Application.icon", this.GetType().Assembly);
 				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowCloseClicked);
 				this.window.Root.MinSize = new Size(300, 200);
 				this.window.Root.Padding = new Margins(8, 8, 8, 8);
@@ -41,7 +41,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				header.Dock = DockStyle.Top;
 
 				StaticText label = new StaticText(header);
-				label.Text = "Document";
+				label.Text = Res.Strings.Dialog.Open.LabelDoc;
 				label.PreferredWidth = 70;
 				label.Dock = DockStyle.Left;
 
@@ -68,11 +68,19 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		}
 
 
-		protected override string FilenameFilter
+		protected override bool IsNavigationEnabled
 		{
 			get
 			{
-				return "*.crdoc";
+				return true;
+			}
+		}
+
+		protected override string Extension
+		{
+			get
+			{
+				return ".crdoc";
 			}
 		}
 
@@ -81,7 +89,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			get
 			{
 				string path = System.IO.Path.GetDirectoryName(this.globalSettings.NewDocument);
-				string filename = string.Concat(path, "\\", this.fieldFilename.Text, ".crdoc");
+				string filename = string.Concat(path, "\\", this.fieldFilename.Text, this.Extension);
 				return filename;
 			}
 		}
