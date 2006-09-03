@@ -18,6 +18,18 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		}
 
 
+		public string InitialDirectory
+		{
+			get
+			{
+				return this.initialDirectory;
+			}
+			set
+			{
+				this.initialDirectory = value;
+			}
+		}
+
 		public string Filename
 		{
 			get
@@ -58,7 +70,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 			Button buttonOpen = new Button(footer);
 			buttonOpen.PreferredWidth = 75;
-			buttonOpen.Text = Res.Strings.Dialog.New.Button.Open;
+			buttonOpen.Text = Res.Strings.Dialog.File.Button.Open;
 			buttonOpen.ButtonStyle = ButtonStyle.DefaultAccept;
 			buttonOpen.Dock = DockStyle.Left;
 			buttonOpen.Margins = new Margins(0, 6, 0, 0);
@@ -89,7 +101,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.slider.Resolution = 1.0M;
 			this.slider.Value = (decimal) this.table.DefHeight;
 			this.slider.ValueChanged += new EventHandler(this.HandleSliderChanged);
-			ToolTip.Default.SetToolTip(this.slider, Res.Strings.Dialog.New.Tooltip.PreviewSize);
+			ToolTip.Default.SetToolTip(this.slider, Res.Strings.Dialog.File.Tooltip.PreviewSize);
 		}
 
 
@@ -106,10 +118,10 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.table.SetWidthColumn(2, 90);
 			this.table.SetWidthColumn(3, 40);
 
-			this.table.SetHeaderTextH(0, Res.Strings.Dialog.New.Header.Preview);
-			this.table.SetHeaderTextH(1, Res.Strings.Dialog.New.Header.Filename);
-			this.table.SetHeaderTextH(2, Res.Strings.Dialog.New.Header.Description);
-			this.table.SetHeaderTextH(3, Res.Strings.Dialog.New.Header.Size);
+			this.table.SetHeaderTextH(0, Res.Strings.Dialog.File.Header.Preview);
+			this.table.SetHeaderTextH(1, Res.Strings.Dialog.File.Header.Filename);
+			this.table.SetHeaderTextH(2, Res.Strings.Dialog.File.Header.Description);
+			this.table.SetHeaderTextH(3, Res.Strings.Dialog.File.Header.Size);
 
 			StaticText st;
 			ImageShower im;
@@ -155,13 +167,14 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				}
 
 				im = this.table[0, row].Children[0] as ImageShower;
-				if (this is FileNew && row == 0)  // nouveau document vide ?
+				string fixIcon = this.files[row].FixIcon;
+				if (fixIcon == null)
 				{
-					im.FixIcon = Misc.Icon("New");
+					im.DrawingImage = this.files[row].Image;
 				}
 				else
 				{
-					im.DrawingImage = this.files[row].Image;
+					im.FixIcon = Misc.Icon(fixIcon);
 				}
 
 				st = this.table[1, row].Children[0] as StaticText;
@@ -185,39 +198,68 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		protected void ListFilenames()
 		{
 			//	Effectue la liste des fichiers .crmod contenus dans le dossier adhoc.
+			this.files = new List<Item>();
+
+			if (this is FileNew)
+			{
+				this.files.Add(new Item(null, false));  // première ligne avec 'nouveau document vide'
+			}
+
+			if (this.IsNavigationEnabled)
+			{
+				string[] directories;
+
+				try
+				{
+					directories = System.IO.Directory.GetDirectories(this.initialDirectory, "*", SearchOption.TopDirectoryOnly);
+				}
+				catch
+				{
+					directories = null;
+				}
+
+				if (directories != null)
+				{
+					foreach (string directory in directories)
+					{
+						this.files.Add(new Item(directory, true));
+					}
+				}
+			}
+
 			string[] filenames;
 
 			try
 			{
-				string path = System.IO.Path.GetDirectoryName(this.globalSettings.NewDocument);
-				filenames = System.IO.Directory.GetFiles(path, this.FilenameFilter, System.IO.SearchOption.TopDirectoryOnly);
+				filenames = System.IO.Directory.GetFiles(this.initialDirectory, "*"+this.Extension, System.IO.SearchOption.TopDirectoryOnly);
 			}
 			catch
 			{
 				filenames = null;
 			}
 
-			this.files = new List<Item>();
-
-			if (this is FileNew)
-			{
-				this.files.Add(new Item(null));  // première ligne avec 'nouveau document vide'
-			}
-
 			if (filenames != null)
 			{
 				foreach (string filename in filenames)
 				{
-					this.files.Add(new Item(filename));
+					this.files.Add(new Item(filename, false));
 				}
 			}
 		}
 
-		protected virtual string FilenameFilter
+		protected virtual bool IsNavigationEnabled
 		{
 			get
 			{
-				return "*";
+				return false;
+			}
+		}
+
+		protected virtual string Extension
+		{
+			get
+			{
+				return ".xxx";
 			}
 		}
 
@@ -281,9 +323,10 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		#region Class Item
 		protected class Item
 		{
-			public Item(string filename)
+			public Item(string filename, bool isDirectory)
 			{
 				this.filename = filename;
+				this.isDirectory = isDirectory;
 			}
 
 			public string Filename
@@ -313,7 +356,22 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 					}
 					else
 					{
-						return System.IO.Path.GetFileNameWithoutExtension(this.filename);
+						if (this.isDirectory)
+						{
+							int index = this.filename.LastIndexOf("\\");
+							if (index == -1)
+							{
+								return this.filename;
+							}
+							else
+							{
+								return this.filename.Substring(index+1);
+							}
+						}
+						else
+						{
+							return System.IO.Path.GetFileNameWithoutExtension(this.filename);
+						}
 					}
 				}
 			}
@@ -323,18 +381,25 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				//	Taille du fichier en kilo-bytes.
 				get
 				{
-					long size = 0;
-
-					if (this.filename != null)
+					if (this.isDirectory)
 					{
-						using (System.IO.FileStream stream = System.IO.File.OpenRead(this.filename))
-						{
-							size = stream.Length;
-						}
+						return "";
 					}
+					else
+					{
+						long size = 0;
 
-					size = (size+500)/1000;
-					return string.Format(Res.Strings.Dialog.New.Size, size.ToString());
+						if (this.filename != null)
+						{
+							using (System.IO.FileStream stream = System.IO.File.OpenRead(this.filename))
+							{
+								size = stream.Length;
+							}
+						}
+
+						size = (size+500)/1000;
+						return string.Format(Res.Strings.Dialog.File.Size, size.ToString());
+					}
 				}
 			}
 
@@ -349,7 +414,37 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 					}
 					else
 					{
-						return "—";
+						if (this.isDirectory)
+						{
+							return Res.Strings.Dialog.File.Directory;
+						}
+						else
+						{
+							return "—";
+						}
+					}
+				}
+			}
+
+			public string FixIcon
+			{
+				//	Retourne l'éventuelle icône fixe qui remplace l'image miniature.
+				get
+				{
+					if (this.filename == null)  // nouveau document vide ?
+					{
+						return "New";
+					}
+					else
+					{
+						if (this.isDirectory)
+						{
+							return "Open";
+						}
+						else
+						{
+							return null;
+						}
 					}
 				}
 			}
@@ -365,13 +460,20 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 					}
 					else
 					{
-						byte[] data = ReadPreview();
-						if (data != null)
+						if (this.isDirectory)
 						{
-							return Bitmap.FromData(data);
+							return null;
 						}
+						else
+						{
+							byte[] data = ReadPreview();
+							if (data != null)
+							{
+								return Bitmap.FromData(data);
+							}
 
-						return null;
+							return null;
+						}
 					}
 				}
 			}
@@ -397,12 +499,15 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			}
 
 			protected string					filename;
+			protected bool						isDirectory;
 		}
 		#endregion
 
 
 		protected CellTable					table;
 		protected HSlider					slider;
+
+		protected string					initialDirectory;
 		protected List<Item>				files;
 		protected string					selectedFilename;
 		protected int						tabIndex;

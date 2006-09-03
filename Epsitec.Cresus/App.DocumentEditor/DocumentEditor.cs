@@ -1613,50 +1613,56 @@ namespace Epsitec.App.DocumentEditor
 			//	Retourne false si le fichier n'a pas été ouvert.
 			this.dlgSplash.Hide();
 
-#if false
-			Common.Dialogs.FileOpen dialog = new Common.Dialogs.FileOpen();
+			if ( this.documentType == DocumentType.Pictogram )
+			{
+				Common.Dialogs.FileOpen dialog = new Common.Dialogs.FileOpen();
 
-			dialog.InitialDirectory = this.globalSettings.InitialDirectory;
-			dialog.FileName = "";
-			if ( this.documentType == DocumentType.Graphic )
-			{
-				dialog.Title = Res.Strings.Dialog.Open.TitleDoc;
-				dialog.Filters.Add("crdoc", Res.Strings.Dialog.FileDoc, "*.crdoc");
-			}
-			else
-			{
-				dialog.Title = Res.Strings.Dialog.Open.TitlePic;
-				dialog.Filters.Add("icon", Res.Strings.Dialog.FilePic, "*.icon");
-			}
-			dialog.AcceptMultipleSelection = true;
-			dialog.Owner = this.Window;
-			dialog.OpenDialog();
-			if ( dialog.Result != Common.Dialogs.DialogResult.Accept )  return false;
+				dialog.InitialDirectory = this.globalSettings.InitialDirectory;
+				dialog.FileName = "";
+				if ( this.documentType == DocumentType.Graphic )
+				{
+					dialog.Title = Res.Strings.Dialog.Open.TitleDoc;
+					dialog.Filters.Add("crdoc", Res.Strings.Dialog.FileDoc, "*.crdoc");
+				}
+				else
+				{
+					dialog.Title = Res.Strings.Dialog.Open.TitlePic;
+					dialog.Filters.Add("icon", Res.Strings.Dialog.FilePic, "*.icon");
+				}
+				dialog.AcceptMultipleSelection = true;
+				dialog.Owner = this.Window;
+				dialog.OpenDialog();
+				if ( dialog.Result != Common.Dialogs.DialogResult.Accept )  return false;
 
-			string[] names = dialog.FileNames;
-			if ( names.Length >= 1 )
-			{
-				this.globalSettings.InitialDirectory = System.IO.Path.GetDirectoryName(names[0]);
-			}
-			for ( int i=0 ; i<names.Length ; i++ )
-			{
-				this.Open(names[i]);
-			}
-			return true;
-#else
-			this.dlgFileOpen.Show();  // choix d'un fichier...
-			string filename = this.dlgFileOpen.Filename;
-			if (filename == null)
-			{
-				return false;
-			}
-			else
-			{
-				this.globalSettings.InitialDirectory = System.IO.Path.GetDirectoryName(filename);
-				this.Open(filename);
+				string[] names = dialog.FileNames;
+				if ( names.Length >= 1 )
+				{
+					this.globalSettings.InitialDirectory = System.IO.Path.GetDirectoryName(names[0]);
+				}
+				for ( int i=0 ; i<names.Length ; i++ )
+				{
+					this.Open(names[i]);
+				}
 				return true;
 			}
-#endif
+			else
+			{
+				this.dlgFileOpen.InitialDirectory = this.globalSettings.InitialDirectory;
+
+				this.dlgFileOpen.Show();  // choix d'un fichier...
+				
+				string filename = this.dlgFileOpen.Filename;
+				if (filename == null)
+				{
+					return false;
+				}
+				else
+				{
+					this.globalSettings.InitialDirectory = System.IO.Path.GetDirectoryName(filename);
+					this.Open(filename);
+					return true;
+				}
+			}
 		}
 
 		protected bool OpenModel(CommandDispatcher dispatcher)
@@ -1892,7 +1898,10 @@ namespace Epsitec.App.DocumentEditor
 
 			if (this.documentType == DocumentType.Graphic && this.globalSettings.NewDocument != "")
 			{
+				this.dlgFileNew.InitialDirectory = System.IO.Path.GetDirectoryName(this.globalSettings.NewDocument);
+
 				this.dlgFileNew.Show();  // choix d'un fichier...
+
 				string filename = this.dlgFileNew.Filename;
 				if (filename != null)
 				{
