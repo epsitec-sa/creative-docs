@@ -439,7 +439,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 						}
 						else
 						{
-							return "Document";
+							return Res.Strings.Dialog.File.Document;
 						}
 					}
 				}
