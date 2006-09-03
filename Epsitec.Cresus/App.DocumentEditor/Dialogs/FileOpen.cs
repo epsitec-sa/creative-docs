@@ -28,17 +28,17 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.WindowInit("FileOpen", 400, 300, true);
 				this.window.Text = Res.Strings.Dialog.Open.TitleDoc;
 				this.window.Owner = this.editor.Window;
-				//this.window.Icon = Bitmap.FromManifestResource("Epsitec.App.DocumentEditor.Images.Application.icon", this.GetType().Assembly);
+				this.window.Icon = Bitmap.FromManifestResource("Epsitec.App.DocumentEditor.Images.Application.icon", this.GetType().Assembly);
 				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowCloseClicked);
 				this.window.Root.MinSize = new Size(300, 200);
 				this.window.Root.Padding = new Margins(8, 8, 8, 8);
 
 				this.CreateResizer();
 
-
+				//	Chamin d'accès.
 				Widget header1 = new Widget(this.window.Root);
 				header1.PreferredHeight = 20;
-				header1.Margins = new Margins(0, 0, 0, 5);
+				header1.Margins = new Margins(0, 0, 0, 4);
 				header1.Dock = DockStyle.Top;
 
 				StaticText label = new StaticText(header1);
@@ -57,7 +57,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				buttonParent.Clicked += new MessageEventHandler(this.HandleButtonParentClicked);
 				ToolTip.Default.SetToolTip(buttonParent, "Dossier parent");
 
-
+				//	Nom du fichier.
 				Widget header2 = new Widget(this.window.Root);
 				header2.PreferredHeight = 20;
 				header2.Margins = new Margins(0, 0, 0, 8);
@@ -71,7 +71,6 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.fieldFilename = new TextField(header2);
 				this.fieldFilename.Dock = DockStyle.Fill;
 				this.fieldFilename.Margins = new Margins(0, 27, 0, 0);
-
 				
 
 				this.CreateTable();
@@ -162,7 +161,14 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			}
 			else
 			{
-				this.fieldFilename.Text = this.files[sel].ShortFilename;
+				if (this.files[sel].IsDirectory)
+				{
+					this.fieldFilename.Text = "";
+				}
+				else
+				{
+					this.fieldFilename.Text = this.files[sel].ShortFilename;
+				}
 			}
 		}
 
