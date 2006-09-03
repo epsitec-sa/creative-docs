@@ -1613,6 +1613,7 @@ namespace Epsitec.App.DocumentEditor
 			//	Retourne false si le fichier n'a pas été ouvert.
 			this.dlgSplash.Hide();
 
+#if false
 			Common.Dialogs.FileOpen dialog = new Common.Dialogs.FileOpen();
 
 			dialog.InitialDirectory = this.globalSettings.InitialDirectory;
@@ -1642,6 +1643,20 @@ namespace Epsitec.App.DocumentEditor
 				this.Open(names[i]);
 			}
 			return true;
+#else
+			this.dlgFileOpen.Show();  // choix d'un fichier...
+			string filename = this.dlgFileOpen.Filename;
+			if (filename == null)
+			{
+				return false;
+			}
+			else
+			{
+				this.globalSettings.InitialDirectory = System.IO.Path.GetDirectoryName(filename);
+				this.Open(filename);
+				return true;
+			}
+#endif
 		}
 
 		protected bool OpenModel(CommandDispatcher dispatcher)

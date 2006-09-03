@@ -49,5 +49,14 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			//	Enregistre la position de la fenêtre du dialogue.
 			this.WindowSave("FileNew");
 		}
+
+
+		protected override string FilenameFilter
+		{
+			get
+			{
+				return "*.crmod";
+			}
+		}
 	}
 }
