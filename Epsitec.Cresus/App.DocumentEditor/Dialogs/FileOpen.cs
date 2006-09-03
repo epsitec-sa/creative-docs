@@ -35,32 +35,52 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 				this.CreateResizer();
 
-				Widget header = new Widget(this.window.Root);
-				header.PreferredHeight = 20;
-				header.Margins = new Margins(0, 0, 0, 8);
-				header.Dock = DockStyle.Top;
 
-				StaticText label = new StaticText(header);
-				label.Text = Res.Strings.Dialog.Open.LabelDoc;
+				Widget header1 = new Widget(this.window.Root);
+				header1.PreferredHeight = 20;
+				header1.Margins = new Margins(0, 0, 0, 5);
+				header1.Dock = DockStyle.Top;
+
+				StaticText label = new StaticText(header1);
+				label.Text = "Chemin";
 				label.PreferredWidth = 70;
 				label.Dock = DockStyle.Left;
 
-				this.fieldFilename = new TextField(header);
-				this.fieldFilename.Dock = DockStyle.Fill;
+				this.fieldPath = new TextField(header1);
+				this.fieldPath.Dock = DockStyle.Fill;
 
-				IconButton buttonParent = new IconButton(header);
+				IconButton buttonParent = new IconButton(header1);
 				buttonParent.IconName = Misc.Icon("Open");
 				buttonParent.Dock = DockStyle.Right;
 				buttonParent.Margins = new Margins(5, 0, 0, 0);
 				buttonParent.Clicked += new MessageEventHandler(this.HandleButtonParentClicked);
 				ToolTip.Default.SetToolTip(buttonParent, "Dossier parent");
+
+
+				Widget header2 = new Widget(this.window.Root);
+				header2.PreferredHeight = 20;
+				header2.Margins = new Margins(0, 0, 0, 8);
+				header2.Dock = DockStyle.Top;
+
+				label = new StaticText(header2);
+				label.Text = Res.Strings.Dialog.Open.LabelDoc;
+				label.PreferredWidth = 70;
+				label.Dock = DockStyle.Left;
+
+				this.fieldFilename = new TextField(header2);
+				this.fieldFilename.Dock = DockStyle.Fill;
+				this.fieldFilename.Margins = new Margins(0, 27, 0, 0);
+
 				
+
 				this.CreateTable();
 				this.CreateFooter();
 			}
 
 			this.selectedFilename = null;
 			this.UpdateTable(-1);
+
+			this.fieldPath.Text = this.initialDirectory;
 
 			this.fieldFilename.Text = "";
 			this.fieldFilename.Focus();
@@ -74,6 +94,26 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.WindowSave("FileOpen");
 		}
 
+
+		public override string InitialDirectory
+		{
+			get
+			{
+				return this.initialDirectory;
+			}
+			set
+			{
+				if (this.initialDirectory != value)
+				{
+					this.initialDirectory = value;
+
+					if (this.fieldPath != null)
+					{
+						this.fieldPath.Text = this.initialDirectory;
+					}
+				}
+			}
+		}
 
 		protected override bool IsNavigationEnabled
 		{
@@ -107,7 +147,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			int index = this.initialDirectory.LastIndexOf("\\");
 			if (index != -1)
 			{
-				this.initialDirectory = this.initialDirectory.Substring(0, index);
+				this.InitialDirectory = this.initialDirectory.Substring(0, index);
 				this.UpdateTable(-1);
 			}
 		}
@@ -126,6 +166,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		}
 
 
+		protected TextField						fieldPath;
 		protected TextField						fieldFilename;
 	}
 }
