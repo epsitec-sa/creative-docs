@@ -99,7 +99,8 @@ namespace Epsitec.App.DocumentEditor
 			this.dlgGlyphs    = new Dialogs.Glyphs(this);
 			this.dlgInfos     = new Dialogs.Infos(this);
 			this.dlgKey       = new Dialogs.Key(this);
-			this.dlgNew       = new Dialogs.New(this);
+			this.dlgFileNew   = new Dialogs.FileNew(this);
+			this.dlgFileOpen  = new Dialogs.FileOpen(this);
 			this.dlgPageStack = new Dialogs.PageStack(this);
 			this.dlgPrint     = new Dialogs.Print(this);
 			this.dlgReplace   = new Dialogs.Replace(this);
@@ -1876,8 +1877,8 @@ namespace Epsitec.App.DocumentEditor
 
 			if (this.documentType == DocumentType.Graphic && this.globalSettings.NewDocument != "")
 			{
-				this.dlgNew.Show();  // choix d'un fichier...
-				string filename = this.dlgNew.Filename;
+				this.dlgFileNew.Show();  // choix d'un fichier...
+				string filename = this.dlgFileNew.Filename;
 				if (filename != null)
 				{
 					if (filename == "*")  // nouveau document vide ?
@@ -5432,7 +5433,8 @@ namespace Epsitec.App.DocumentEditor
 			this.dlgGlyphs.Save();
 			this.dlgInfos.Save();
 			this.dlgKey.Save();
-			this.dlgNew.Save();
+			this.dlgFileNew.Save();
+			this.dlgFileOpen.Save();
 			this.dlgPageStack.Save();
 			this.dlgPrint.Save();
 			this.dlgReplace.Save();
@@ -5599,7 +5601,8 @@ namespace Epsitec.App.DocumentEditor
 		protected Dialogs.Glyphs				dlgGlyphs;
 		protected Dialogs.Infos					dlgInfos;
 		protected Dialogs.Key					dlgKey;
-		protected Dialogs.New					dlgNew;
+		protected Dialogs.FileNew				dlgFileNew;
+		protected Dialogs.FileOpen				dlgFileOpen;
 		protected Dialogs.PageStack				dlgPageStack;
 		protected Dialogs.Print					dlgPrint;
 		protected Dialogs.Replace				dlgReplace;
