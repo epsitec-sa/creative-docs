@@ -82,7 +82,6 @@ namespace Epsitec.Common.Widgets
 					rect.Right -= ww/2;
 				}
 				graphics.Align(ref rect);
-				rect.Inflate(1);  // pour que le rectangle touche les bords
 
 				graphics.PaintImage(this.image, rect);
 
