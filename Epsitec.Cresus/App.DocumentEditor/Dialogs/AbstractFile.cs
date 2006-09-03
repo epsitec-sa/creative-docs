@@ -366,7 +366,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				{
 					if (this.filename == null)  // nouveau document vide ?
 					{
-						return Res.Strings.Dialog.New.EmptyDocument;
+						return "—";
 					}
 					else
 					{
@@ -403,7 +403,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				//	Taille du fichier en kilo-bytes.
 				get
 				{
-					if (this.isDirectory)
+					if (this.filename == null || this.isDirectory)
 					{
 						return "";
 					}
@@ -411,12 +411,9 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 					{
 						long size = 0;
 
-						if (this.filename != null)
+						using (System.IO.FileStream stream = System.IO.File.OpenRead(this.filename))
 						{
-							using (System.IO.FileStream stream = System.IO.File.OpenRead(this.filename))
-							{
-								size = stream.Length;
-							}
+							size = stream.Length;
 						}
 
 						size = (size+500)/1000;
@@ -432,7 +429,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				{
 					if (this.filename == null)  // nouveau document vide ?
 					{
-						return "—";
+						return Res.Strings.Dialog.New.EmptyDocument;
 					}
 					else
 					{
