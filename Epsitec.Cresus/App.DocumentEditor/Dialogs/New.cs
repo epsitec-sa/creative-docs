@@ -179,7 +179,14 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				}
 
 				im = this.table[0, row].Children[0] as ImageShower;
-				im.DrawingImage = this.files[row].Image;
+				if (row == 0)
+				{
+					im.FixIcon = Misc.Icon("New");
+				}
+				else
+				{
+					im.DrawingImage = this.files[row].Image;
+				}
 
 				st = this.table[1, row].Children[0] as StaticText;
 				st.Text = this.files[row].ShortFilename;

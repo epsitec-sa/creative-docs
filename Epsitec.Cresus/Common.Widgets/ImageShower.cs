@@ -35,6 +35,33 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		public string FixIcon
+		{
+			get
+			{
+				return this.fixIcon;
+			}
+
+			set
+			{
+				if (this.fixIcon != value)
+				{
+					this.fixIcon = value;
+
+					if (this.fixIcon == null)
+					{
+						this.textLayout = null;
+					}
+					else
+					{
+						this.textLayout = new TextLayout();
+						this.textLayout.Alignment = ContentAlignment.MiddleCenter;
+						this.textLayout.Text = string.Format(@"<img src=""{0}""/>", this.fixIcon);
+					}
+				}
+			}
+		}
+
 		public bool CrossIfNoImage
 		{
 			get
@@ -46,7 +73,7 @@ namespace Epsitec.Common.Widgets
 			{
 				this.crossIfNoImage = value;
 			}
-}
+		}
 
 
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
@@ -57,7 +84,12 @@ namespace Epsitec.Common.Widgets
 
 			if (this.image == null)
 			{
-				if (this.crossIfNoImage)
+				if (this.textLayout != null)
+				{
+					this.textLayout.LayoutSize = rect.Size;
+					this.textLayout.Paint(rect.BottomLeft, graphics);
+				}
+				else if (this.crossIfNoImage)
 				{
 					graphics.AddLine(rect.BottomLeft, rect.TopRight);
 					graphics.AddLine(rect.BottomRight, rect.TopLeft);
@@ -92,6 +124,9 @@ namespace Epsitec.Common.Widgets
 		}
 
 		protected Drawing.Image						image;
+		protected string							fixIcon;
+		protected TextLayout						textLayout;
 		protected bool								crossIfNoImage = true;
 	}
 }
+
