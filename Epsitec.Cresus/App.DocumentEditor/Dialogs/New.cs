@@ -148,7 +148,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 							im = new ImageShower();
 							im.CrossIfNoImage = false;
 							im.Dock = DockStyle.Fill;
-							im.Margins = new Margins(0, 0, 0, 0);
+							im.Margins = new Margins(1, 1, 1, 1);
 							this.table[column, row].Insert(im);
 						}
 						else if (column == 1)  // résumé ?
