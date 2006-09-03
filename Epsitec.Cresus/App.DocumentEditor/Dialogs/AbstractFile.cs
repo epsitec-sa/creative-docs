@@ -18,7 +18,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		}
 
 
-		public string InitialDirectory
+		public virtual string InitialDirectory
 		{
 			get
 			{
@@ -306,7 +306,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			int sel = this.table.SelectedRow;
 			if (sel != -1 && this.files[sel].IsDirectory)
 			{
-				this.initialDirectory = this.files[sel].Filename;
+				this.InitialDirectory = this.files[sel].Filename;
 				this.UpdateTable(-1);
 				return;
 			}
