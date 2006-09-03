@@ -171,10 +171,12 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				if (fixIcon == null)
 				{
 					im.DrawingImage = this.files[row].Image;
+					im.FixIcon = null;
 				}
 				else
 				{
 					im.FixIcon = Misc.Icon(fixIcon);
+					im.DrawingImage = null;
 				}
 
 				st = this.table[1, row].Children[0] as StaticText;
@@ -301,6 +303,14 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 		protected void HandleButtonOpenClicked(object sender, MessageEventArgs e)
 		{
+			int sel = this.table.SelectedRow;
+			if (sel != -1 && this.files[sel].IsDirectory)
+			{
+				this.initialDirectory = this.files[sel].Filename;
+				this.UpdateTable(-1);
+				return;
+			}
+
 			this.editor.Window.MakeActive();
 			this.window.Hide();
 			this.OnClosed();
@@ -373,6 +383,14 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 							return System.IO.Path.GetFileNameWithoutExtension(this.filename);
 						}
 					}
+				}
+			}
+
+			public bool IsDirectory
+			{
+				get
+				{
+					return this.isDirectory;
 				}
 			}
 

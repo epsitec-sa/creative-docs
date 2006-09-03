@@ -47,6 +47,13 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 				this.fieldFilename = new TextField(header);
 				this.fieldFilename.Dock = DockStyle.Fill;
+
+				IconButton buttonParent = new IconButton(header);
+				buttonParent.IconName = Misc.Icon("Open");
+				buttonParent.Dock = DockStyle.Right;
+				buttonParent.Margins = new Margins(5, 0, 0, 0);
+				buttonParent.Clicked += new MessageEventHandler(this.HandleButtonParentClicked);
+				ToolTip.Default.SetToolTip(buttonParent, "Dossier parent");
 				
 				this.CreateTable();
 				this.CreateFooter();
@@ -94,7 +101,17 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			}
 		}
 
-		
+
+		private void HandleButtonParentClicked(object sender, MessageEventArgs e)
+		{
+			int index = this.initialDirectory.LastIndexOf("\\");
+			if (index != -1)
+			{
+				this.initialDirectory = this.initialDirectory.Substring(0, index);
+				this.UpdateTable(-1);
+			}
+		}
+
 		protected override void HandleTableFinalSelectionChanged(object sender)
 		{
 			int sel = this.table.SelectedRow;
