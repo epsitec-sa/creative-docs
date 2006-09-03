@@ -47,10 +47,11 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				label.Dock = DockStyle.Left;
 
 				this.fieldPath = new TextField(header1);
+				this.fieldPath.IsReadOnly = true;
 				this.fieldPath.Dock = DockStyle.Fill;
 
 				IconButton buttonParent = new IconButton(header1);
-				buttonParent.IconName = Misc.Icon("Open");
+				buttonParent.IconName = Misc.Icon("ParentDirectory");
 				buttonParent.Dock = DockStyle.Right;
 				buttonParent.Margins = new Margins(5, 0, 0, 0);
 				buttonParent.Clicked += new MessageEventHandler(this.HandleButtonParentClicked);

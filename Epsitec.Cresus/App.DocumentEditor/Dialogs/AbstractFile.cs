@@ -457,7 +457,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 					{
 						if (this.isDirectory)
 						{
-							return "Open";
+							return "Directory";
 						}
 						else
 						{
