@@ -27,6 +27,70 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		}
 
 
+		protected void CreateResizer()
+		{
+			ResizeKnob resize = new ResizeKnob(this.window.Root);
+			resize.Anchor = AnchorStyles.BottomRight;
+			resize.Margins = new Margins(0, -8, 0, -8);
+			ToolTip.Default.SetToolTip(resize, Res.Strings.Dialog.Tooltip.Resize);
+		}
+
+		protected void CreateTable()
+		{
+			this.table = new CellTable(this.window.Root);
+			this.table.DefHeight = 50;
+			this.table.HeaderHeight = 20;
+			this.table.StyleH = CellArrayStyles.Stretch | CellArrayStyles.Separator | CellArrayStyles.Header | CellArrayStyles.Mobile;
+			this.table.StyleV = CellArrayStyles.ScrollNorm | CellArrayStyles.Separator | CellArrayStyles.SelectLine;
+			this.table.AlphaSeparator = 0.3;
+			this.table.Margins = new Margins(0, 0, 0, 0);
+			this.table.Dock = DockStyle.Fill;
+		}
+
+		protected void CreateFooter()
+		{
+			//	Crée le pied du dialogue.
+			Widget footer = new Widget(this.window.Root);
+			footer.PreferredHeight = 22;
+			footer.Margins = new Margins(0, 0, 8, 0);
+			footer.Dock = DockStyle.Bottom;
+
+			Button buttonOpen = new Button(footer);
+			buttonOpen.PreferredWidth = 75;
+			buttonOpen.Text = Res.Strings.Dialog.New.Button.Open;
+			buttonOpen.ButtonStyle = ButtonStyle.DefaultAccept;
+			buttonOpen.Dock = DockStyle.Left;
+			buttonOpen.Margins = new Margins(0, 6, 0, 0);
+			buttonOpen.Clicked += new MessageEventHandler(this.HandleButtonOpenClicked);
+			buttonOpen.TabIndex = this.tabIndex++;
+			buttonOpen.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+
+			Button buttonCancel = new Button(footer);
+			buttonCancel.PreferredWidth = 75;
+			buttonCancel.Text = Res.Strings.Dialog.Button.Cancel;
+			buttonCancel.ButtonStyle = ButtonStyle.DefaultCancel;
+			buttonCancel.Dock = DockStyle.Left;
+			buttonCancel.Margins = new Margins(0, 6, 0, 0);
+			buttonCancel.Clicked += new MessageEventHandler(this.HandleButtonCancelClicked);
+			buttonCancel.TabIndex = this.tabIndex++;
+			buttonCancel.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+
+			this.slider = new HSlider(footer);
+			this.slider.PreferredWidth = 80;
+			this.slider.Dock = DockStyle.Right;
+			this.slider.Margins = new Margins(0, 0, 4, 4);
+			this.slider.TabIndex = this.tabIndex++;
+			this.slider.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.slider.MinValue = 20.0M;
+			this.slider.MaxValue = 100.0M;
+			this.slider.SmallChange = 1.0M;
+			this.slider.LargeChange = 10.0M;
+			this.slider.Resolution = 1.0M;
+			this.slider.Value = (decimal) this.table.DefHeight;
+			this.slider.ValueChanged += new EventHandler(this.HandleSliderChanged);
+			ToolTip.Default.SetToolTip(this.slider, Res.Strings.Dialog.New.Tooltip.PreviewSize);
+		}
+
 		protected void UpdateTable(int sel)
 		{
 			//	Met à jour la table des fichiers.
@@ -315,5 +379,6 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		protected HSlider					slider;
 		protected List<Item>				files;
 		protected string					selectedFilename;
+		protected int						tabIndex;
 	}
 }
