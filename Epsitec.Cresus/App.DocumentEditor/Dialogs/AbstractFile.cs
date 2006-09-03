@@ -191,7 +191,11 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.table.SelectRow(row, row==sel);
 			}
 
-			if (sel != -1)
+			if (sel == -1)
+			{
+				this.table.ShowCell(0, 0);  // montre le début de la table
+			}
+			else
 			{
 				this.table.ShowSelect();  // montre la ligne sélectionnée
 			}
@@ -438,7 +442,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 						}
 						else
 						{
-							return "—";
+							return "Document";
 						}
 					}
 				}
