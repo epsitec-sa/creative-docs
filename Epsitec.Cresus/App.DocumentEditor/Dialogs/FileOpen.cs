@@ -34,12 +34,29 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.window.Root.Padding = new Margins(8, 8, 8, 8);
 
 				this.CreateResizer();
+
+				Widget header = new Widget(this.window.Root);
+				header.PreferredHeight = 20;
+				header.Margins = new Margins(0, 0, 0, 8);
+				header.Dock = DockStyle.Top;
+
+				StaticText label = new StaticText(header);
+				label.Text = "Document";
+				label.PreferredWidth = 70;
+				label.Dock = DockStyle.Left;
+
+				this.fieldFilename = new TextField(header);
+				this.fieldFilename.Dock = DockStyle.Fill;
+				
 				this.CreateTable();
 				this.CreateFooter();
 			}
 
 			this.selectedFilename = null;
-			this.UpdateTable(0);
+			this.UpdateTable(-1);
+
+			this.fieldFilename.Text = "";
+			this.fieldFilename.Focus();
 
 			this.window.ShowDialog();
 		}
@@ -49,5 +66,41 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			//	Enregistre la position de la fenêtre du dialogue.
 			this.WindowSave("FileOpen");
 		}
+
+
+		protected override string FilenameFilter
+		{
+			get
+			{
+				return "*.crdoc";
+			}
+		}
+
+		protected override string SelectedFilename
+		{
+			get
+			{
+				string path = System.IO.Path.GetDirectoryName(this.globalSettings.NewDocument);
+				string filename = string.Concat(path, "\\", this.fieldFilename.Text, ".crdoc");
+				return filename;
+			}
+		}
+
+		
+		protected override void HandleTableFinalSelectionChanged(object sender)
+		{
+			int sel = this.table.SelectedRow;
+			if (sel == -1)
+			{
+				this.fieldFilename.Text = "";
+			}
+			else
+			{
+				this.fieldFilename.Text = this.files[sel].ShortFilename;
+			}
+		}
+
+
+		protected TextField						fieldFilename;
 	}
 }

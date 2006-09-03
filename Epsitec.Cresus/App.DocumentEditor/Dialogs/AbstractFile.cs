@@ -45,6 +45,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.table.AlphaSeparator = 0.3;
 			this.table.Margins = new Margins(0, 0, 0, 0);
 			this.table.Dock = DockStyle.Fill;
+			this.table.FinalSelectionChanged += new EventHandler(this.HandleTableFinalSelectionChanged);
 		}
 
 		protected void CreateFooter()
@@ -90,6 +91,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.slider.ValueChanged += new EventHandler(this.HandleSliderChanged);
 			ToolTip.Default.SetToolTip(this.slider, Res.Strings.Dialog.New.Tooltip.PreviewSize);
 		}
+
 
 		protected void UpdateTable(int sel)
 		{
@@ -153,7 +155,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				}
 
 				im = this.table[0, row].Children[0] as ImageShower;
-				if (row == 0)  // nouveau document vide ?
+				if (this is FileNew && row == 0)  // nouveau document vide ?
 				{
 					im.FixIcon = Misc.Icon("New");
 				}
@@ -188,7 +190,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			try
 			{
 				string path = System.IO.Path.GetDirectoryName(this.globalSettings.NewDocument);
-				filenames = System.IO.Directory.GetFiles(path, "*.crdoc", System.IO.SearchOption.TopDirectoryOnly);
+				filenames = System.IO.Directory.GetFiles(path, this.FilenameFilter, System.IO.SearchOption.TopDirectoryOnly);
 			}
 			catch
 			{
@@ -196,7 +198,11 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			}
 
 			this.files = new List<Item>();
-			this.files.Add(new Item(null));  // première ligne avec 'nouveau document vide'
+
+			if (this is FileNew)
+			{
+				this.files.Add(new Item(null));  // première ligne avec 'nouveau document vide'
+			}
 
 			if (filenames != null)
 			{
@@ -207,7 +213,35 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			}
 		}
 
+		protected virtual string FilenameFilter
+		{
+			get
+			{
+				return "*";
+			}
+		}
 
+		protected virtual string SelectedFilename
+		{
+			get
+			{
+				int sel = this.table.SelectedRow;
+				if (sel == -1)
+				{
+					return null;
+				}
+				else
+				{
+					return this.files[sel].Filename;
+				}
+			}
+		}
+
+
+
+		protected virtual void HandleTableFinalSelectionChanged(object sender)
+		{
+		}
 
 		protected void HandleWindowCloseClicked(object sender)
 		{
@@ -229,15 +263,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.window.Hide();
 			this.OnClosed();
 
-			int sel = this.table.SelectedRow;
-			if (sel == -1)
-			{
-				this.selectedFilename = null;
-			}
-			else
-			{
-				this.selectedFilename = this.files[sel].Filename;
-			}
+			this.selectedFilename = this.SelectedFilename;
 		}
 
 		protected void HandleSliderChanged(object sender)
