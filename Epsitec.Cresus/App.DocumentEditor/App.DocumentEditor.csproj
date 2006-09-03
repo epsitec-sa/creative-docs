@@ -208,7 +208,9 @@
     <Compile Include="Dialogs\Abstract.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Dialogs\New.cs" />
+    <Compile Include="Dialogs\AbstractFile.cs" />
+    <Compile Include="Dialogs\FileNew.cs" />
+    <Compile Include="Dialogs\FileOpen.cs" />
     <Compile Include="Dialogs\Download.cs">
       <SubType>Code</SubType>
     </Compile>
