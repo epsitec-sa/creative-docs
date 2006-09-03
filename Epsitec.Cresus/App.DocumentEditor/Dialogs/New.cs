@@ -126,13 +126,13 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.table.SetArraySize(4, rows);
 
 			this.table.SetWidthColumn(0, 50);
-			this.table.SetWidthColumn(1, 110);
-			this.table.SetWidthColumn(2, 70);
+			this.table.SetWidthColumn(1, 90);
+			this.table.SetWidthColumn(2, 90);
 			this.table.SetWidthColumn(3, 40);
 
 			this.table.SetHeaderTextH(0, Res.Strings.Dialog.New.Header.Preview);
-			this.table.SetHeaderTextH(1, Res.Strings.Dialog.New.Header.Description);
-			this.table.SetHeaderTextH(2, Res.Strings.Dialog.New.Header.Filename);
+			this.table.SetHeaderTextH(1, Res.Strings.Dialog.New.Header.Filename);
+			this.table.SetHeaderTextH(2, Res.Strings.Dialog.New.Header.Description);
 			this.table.SetHeaderTextH(3, Res.Strings.Dialog.New.Header.Size);
 
 			StaticText st;
@@ -151,20 +151,20 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 							im.Margins = new Margins(1, 1, 1, 1);
 							this.table[column, row].Insert(im);
 						}
-						else if (column == 1)  // résumé ?
-						{
-							st = new StaticText();
-							st.ContentAlignment = ContentAlignment.MiddleLeft;
-							st.Dock = DockStyle.Fill;
-							st.Margins = new Margins(6, 6, 0, 0);
-							this.table[column, row].Insert(st);
-						}
-						else if (column == 2)  // filename ?
+						else if (column == 1)  // filename ?
 						{
 							st = new StaticText();
 							st.ContentAlignment = ContentAlignment.MiddleLeft;
 							st.Dock = DockStyle.Fill;
 							st.Margins = new Margins(6, 0, 0, 0);
+							this.table[column, row].Insert(st);
+						}
+						else if (column == 2)  // résumé ?
+						{
+							st = new StaticText();
+							st.ContentAlignment = ContentAlignment.MiddleLeft;
+							st.Dock = DockStyle.Fill;
+							st.Margins = new Margins(6, 6, 0, 0);
 							this.table[column, row].Insert(st);
 						}
 						else if (column == 3)  // taille ?
@@ -182,10 +182,10 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				im.DrawingImage = this.files[row].Image;
 
 				st = this.table[1, row].Children[0] as StaticText;
-				st.Text = this.files[row].Description;
+				st.Text = this.files[row].ShortFilename;
 
 				st = this.table[2, row].Children[0] as StaticText;
-				st.Text = this.files[row].ShortFilename;
+				st.Text = this.files[row].Description;
 
 				st = this.table[3, row].Children[0] as StaticText;
 				st.Text = this.files[row].FileSize;
@@ -302,7 +302,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				{
 					if (this.filename == null)  // nouveau document vide ?
 					{
-						return "—";
+						return Res.Strings.Dialog.New.EmptyDocument;
 					}
 					else
 					{
@@ -338,11 +338,11 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				{
 					if (this.filename == null)  // nouveau document vide ?
 					{
-						return Res.Strings.Dialog.New.EmptyDocument;
+						return "—";
 					}
 					else
 					{
-						return "";
+						return "—";
 					}
 				}
 			}
