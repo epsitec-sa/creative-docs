@@ -61,6 +61,16 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.table.DoubleClicked += new MessageEventHandler(this.HandleTableDoubleClicked);
 		}
 
+		protected void CreateRename()
+		{
+			this.fieldRename = new TextFieldEx(this.window.Root);
+			this.fieldRename.Visibility = false;
+			this.fieldRename.ButtonShowCondition = ShowCondition.Always;
+			this.fieldRename.EditionAccepted += new EventHandler(this.HandleRenameAccepted);
+			this.fieldRename.EditionRejected += new EventHandler(this.HandleRenameRejected);
+			this.fieldRename.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleRenameKeyboardFocusChanged);
+		}
+
 		protected void CreateFooter()
 		{
 			//	Crée le pied du dialogue.
@@ -105,6 +115,18 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			ToolTip.Default.SetToolTip(this.slider, Res.Strings.Dialog.File.Tooltip.PreviewSize);
 		}
 
+
+		protected void SelectFilenameTable(string filenameToSelect)
+		{
+			//	Sélectionne et montre un fichier dans la table.
+			for (int i=0; i<this.files.Count; i++)
+			{
+				Item item = this.files[i];
+				this.table.SelectRow(i, item.Filename == filenameToSelect);
+			}
+
+			this.table.ShowSelect();
+		}
 
 		protected void UpdateTable(int sel)
 		{
@@ -290,6 +312,151 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		}
 
 
+		protected void ParentDirectory()
+		{
+			//	Remonte dans le dossier parent.
+			int index = this.initialDirectory.LastIndexOf("\\");
+			if (index != -1)
+			{
+				this.InitialDirectory = this.initialDirectory.Substring(0, index);
+				this.UpdateTable(-1);
+			}
+		}
+
+		protected void NewDirectory()
+		{
+			//	Crée un nouveau dossier vide.
+			string newDir = this.NewDirectoryName;
+			if (newDir == null)
+			{
+				return;
+			}
+
+			try
+			{
+				System.IO.Directory.CreateDirectory(newDir);
+			}
+			catch
+			{
+				return;
+			}
+
+			this.UpdateTable(-1);
+			this.SelectFilenameTable(newDir);
+		}
+
+		protected string NewDirectoryName
+		{
+			//	Retourne le nom à utiliser pour le nouveau dossier à créer.
+			//	On est assuré que le nom retourné n'existe pas déjà.
+			get
+			{
+				for (int i=1; i<100; i++)
+				{
+					string newDir = string.Concat(this.initialDirectory, "\\Nouveau dossier");
+					if (i > 1)
+					{
+						newDir = string.Concat(newDir, " (", i.ToString(), ")");
+					}
+
+					bool exist = false;
+					foreach (Item item in this.files)
+					{
+						if (item.IsDirectory && item.Filename == newDir)
+						{
+							exist = true;
+							break;
+						}
+					}
+
+					if (!exist)
+					{
+						return newDir;
+					}
+				}
+
+				return null;
+			}
+		}
+
+		protected void FileDelete()
+		{
+		}
+
+		protected void RenameStarting()
+		{
+			int sel = this.table.SelectedRow;
+			if (sel == -1)
+			{
+				return;
+			}
+
+			this.renameSelected = sel;
+
+			StaticText st = this.table[1, sel].Children[0] as StaticText;
+			Rectangle rect = st.MapClientToRoot(st.ActualBounds);
+			rect.Deflate(0, System.Math.Floor((rect.Height-20)/2));
+			rect.Offset(-11, 0);  // TODO: mystère...
+			rect.Width += 36;  // place pour les boutons "v" et "x"
+
+			this.ignoreChanged = true;
+			this.fieldRename.SetManualBounds(rect);
+			this.fieldRename.Text = this.files[sel].ShortFilename;
+			this.fieldRename.SelectAll();
+			this.fieldRename.Visibility = true;
+			this.fieldRename.Focus();
+			this.ignoreChanged = false;
+		}
+
+		protected void RenameEnding(bool accepted)
+		{
+			this.fieldRename.Visibility = false;
+
+			if (accepted && this.renameSelected != -1)
+			{
+				int sel = this.renameSelected;
+				string srcFilename = this.files[sel].Filename;
+				string dstFilename = string.Concat(System.IO.Path.GetDirectoryName(srcFilename), "\\", this.fieldRename.Text, System.IO.Path.GetExtension(srcFilename));
+
+				try
+				{
+					System.IO.File.Move(srcFilename, dstFilename);
+				}
+				catch
+				{
+					return;
+				}
+
+				this.files[sel].Filename = dstFilename;
+
+				StaticText st = this.table[1, sel].Children[0] as StaticText;
+				st.Text = this.files[sel].ShortFilename;
+			}
+
+			this.renameSelected = -1;
+		}
+
+
+
+		private void HandleRenameAccepted(object sender)
+		{
+			this.RenameEnding(true);
+		}
+
+		private void HandleRenameRejected(object sender)
+		{
+			this.RenameEnding(false);
+		}
+
+		private void HandleRenameKeyboardFocusChanged(object sender, Epsitec.Common.Types.DependencyPropertyChangedEventArgs e)
+		{
+			if (this.ignoreChanged)
+			{
+				return;
+			}
+
+			this.RenameEnding(true);
+		}
 
 		protected virtual void HandleTableFinalSelectionChanged(object sender)
 		{
@@ -373,6 +540,10 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 					{
 						return this.filename;
 					}
+				}
+				set
+				{
+					this.filename = value;
 				}
 			}
 
@@ -542,10 +713,13 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 		protected CellTable					table;
 		protected HSlider					slider;
+		protected TextFieldEx				fieldRename;
 
 		protected string					initialDirectory;
 		protected List<Item>				files;
 		protected string					selectedFilename;
 		protected int						tabIndex;
+		protected bool						ignoreChanged = false;
+		protected int						renameSelected = -1;
 	}
 }
