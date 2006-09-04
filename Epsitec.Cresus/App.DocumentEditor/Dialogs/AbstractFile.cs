@@ -125,7 +125,10 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.table.SelectRow(i, item.Filename == filenameToSelect);
 			}
 
-			this.table.ShowSelect();
+			if (filenameToSelect != null)
+			{
+				this.table.ShowSelect();
+			}
 		}
 
 		protected void UpdateTable(int sel)
@@ -381,6 +384,40 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 		protected void FileDelete()
 		{
+			int sel = this.table.SelectedRow;
+			if (sel == -1)
+			{
+				return;
+			}
+
+			string filenameToSelect = null;
+
+			if (sel < this.files.Count-1)
+			{
+				filenameToSelect = this.files[sel+1].Filename;
+			}
+			else
+			{
+				if (sel > 0)
+				{
+					filenameToSelect = this.files[sel-1].Filename;
+				}
+			}
+
+			//	TODO: comment supprimer en mettant dans la corbeille ?
+			if (this.files[sel].IsDirectory)
+			{
+				string directory = this.files[sel].Filename;
+				System.IO.Directory.Delete(directory, true);
+			}
+			else
+			{
+				string filename = this.files[sel].Filename;
+				System.IO.File.Delete(filename);
+			}
+
+			this.UpdateTable(-1);
+			this.SelectFilenameTable(filenameToSelect);
 		}
 
 		protected void RenameStarting()
