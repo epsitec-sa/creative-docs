@@ -68,7 +68,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.fieldRename.ButtonShowCondition = ShowCondition.Always;
 			this.fieldRename.EditionAccepted += new EventHandler(this.HandleRenameAccepted);
 			this.fieldRename.EditionRejected += new EventHandler(this.HandleRenameRejected);
-			this.fieldRename.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleRenameKeyboardFocusChanged);
+			this.fieldRename.IsFocusedChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleRenameFocusChanged);
 		}
 
 		protected void CreateFooter()
@@ -391,13 +391,20 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				return;
 			}
 
-			this.renameSelected = sel;
-
 			StaticText st = this.table[1, sel].Children[0] as StaticText;
 			Rectangle rect = st.MapClientToRoot(st.ActualBounds);
-			rect.Deflate(0, System.Math.Floor((rect.Height-20)/2));
-			rect.Offset(-11, 0);  // TODO: mystère...
-			rect.Width += 36;  // place pour les boutons "v" et "x"
+			rect.Deflate(0, System.Math.Floor((rect.Height-20)/2));  // force une hauteur de 20
+			rect.Offset(-13, 0);  // TODO: mystère...
+			rect.Width += 38;  // place pour les boutons "v" et "x"
+
+			//Rectangle box = this.table.MapClientToRoot(this.table.ActualBounds);  // TODO: pourquoi ça ne marche pas ???
+			Rectangle box = this.table.ActualBounds;
+			box.Deflate(2);
+			box.Top -= this.table.HeaderHeight;
+			if (!box.Contains(rect))
+			{
+				return;
+			}
 
 			this.ignoreChanged = true;
 			this.fieldRename.SetManualBounds(rect);
@@ -406,6 +413,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.fieldRename.Visibility = true;
 			this.fieldRename.Focus();
 			this.ignoreChanged = false;
+
+			this.renameSelected = sel;
 		}
 
 		protected void RenameEnding(bool accepted)
@@ -467,7 +476,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.RenameEnding(false);
 		}
 
-		private void HandleRenameKeyboardFocusChanged(object sender, Epsitec.Common.Types.DependencyPropertyChangedEventArgs e)
+		private void HandleRenameFocusChanged(object sender, Epsitec.Common.Types.DependencyPropertyChangedEventArgs e)
 		{
 			if (this.ignoreChanged)
 			{
