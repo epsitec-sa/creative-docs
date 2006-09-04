@@ -51,6 +51,20 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.fieldPath.Dock = DockStyle.Fill;
 				this.fieldPath.ComboOpening += new EventHandler<CancelEventArgs>(this.HandleFieldPathComboOpening);
 
+				IconButton buttonDelete = new IconButton(access);
+				buttonDelete.IconName = Misc.Icon("FileDelete");
+				buttonDelete.Dock = DockStyle.Right;
+				buttonDelete.Margins = new Margins(0, 0, 0, 0);
+				buttonDelete.Clicked += new MessageEventHandler(this.HandleButtonDeleteClicked);
+				ToolTip.Default.SetToolTip(buttonDelete, "Supprimer un fichier");
+
+				IconButton buttonRename = new IconButton(access);
+				buttonRename.IconName = Misc.Icon("FileRename");
+				buttonRename.Dock = DockStyle.Right;
+				buttonRename.Margins = new Margins(0, 0, 0, 0);
+				buttonRename.Clicked += new MessageEventHandler(this.HandleButtonRenameClicked);
+				ToolTip.Default.SetToolTip(buttonRename, "Renommer un fichier");
+
 				IconButton buttonNew = new IconButton(access);
 				buttonNew.IconName = Misc.Icon("NewDirectory");
 				buttonNew.Dock = DockStyle.Right;
@@ -67,6 +81,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 				//	Liste centrale principale.
 				this.CreateTable();
+				this.CreateRename();
 
 				//	Boutons en bas.
 				this.CreateFooter();
@@ -151,81 +166,6 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		}
 
 
-		protected void ParentDirectory()
-		{
-			//	Remonte dans le dossier parent.
-			int index = this.initialDirectory.LastIndexOf("\\");
-			if (index != -1)
-			{
-				this.InitialDirectory = this.initialDirectory.Substring(0, index);
-				this.UpdateTable(-1);
-			}
-		}
-
-		protected void NewDirectory()
-		{
-			//	Crée un nouveau dossier vide.
-			string newDir = this.NewDirectoryName;
-			if (newDir == null)
-			{
-				return;
-			}
-
-			try
-			{
-				System.IO.Directory.CreateDirectory(newDir);
-			}
-			catch
-			{
-				return;
-			}
-
-			this.UpdateTable(-1);
-
-			for (int i=0; i<this.files.Count; i++)
-			{
-				Item item = this.files[i];
-				if (item.Filename == newDir)
-				{
-					this.table.SelectRow(i, true);
-					this.table.ShowSelect();
-					break;
-				}
-			}
-		}
-
-		protected string NewDirectoryName
-		{
-			//	Retourne le nom à utiliser pour le nouveau dossier à créer.
-			get
-			{
-				for (int i=1; i<100; i++)
-				{
-					string newDir = string.Concat(this.initialDirectory, "\\Nouveau dossier");
-					if (i > 1)
-					{
-						newDir = string.Concat(newDir, " (", i.ToString(), ")");
-					}
-
-					bool exist = false;
-					foreach (Item item in this.files)
-					{
-						if (item.IsDirectory && item.Filename == newDir)
-						{
-							exist = true;
-							break;
-						}
-					}
-
-					if (!exist)
-					{
-						return newDir;
-					}
-				}
-
-				return null;
-			}
-		}
 
 
 		private void HandleFieldPathComboOpening(object sender, CancelEventArgs e)
@@ -251,6 +191,18 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		{
 			//	Le bouton 'nouveau dossier' a été cliqué.
 			this.NewDirectory();
+		}
+
+		private void HandleButtonRenameClicked(object sender, MessageEventArgs e)
+		{
+			//	Le bouton 'renommer' a été cliqué.
+			this.RenameStarting();
+		}
+
+		private void HandleButtonDeleteClicked(object sender, MessageEventArgs e)
+		{
+			//	Le bouton 'supprimer' a été cliqué.
+			this.FileDelete();
 		}
 
 		protected override void HandleTableFinalSelectionChanged(object sender)
