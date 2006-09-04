@@ -4049,21 +4049,7 @@ namespace Epsitec.Common.Document
 				}
 
 				//	Dessine les repères.
-				if ( this.drawingContext.GuidesShow )
-				{
-					Objects.Page page = this.document.GetObjects[this.drawingContext.CurrentPage] as Objects.Page;
-
-					if ( page.MasterGuides && this.drawingContext.MasterPageList.Count > 0 )
-					{
-						foreach ( Objects.Page masterPage in this.drawingContext.MasterPageList )
-						{
-							this.DrawGuides(graphics, masterPage.Guides, false);
-						}
-					}
-
-					this.DrawGuides(graphics, page.Guides, !this.document.Settings.GlobalGuides);
-					this.DrawGuides(graphics, this.document.Settings.GuidesListGlobal, this.document.Settings.GlobalGuides);
-				}
+				this.DrawGuides(graphics);
 
 				//	Dessine les marqueurs
 				this.DrawMarker(graphics);
@@ -4097,6 +4083,26 @@ namespace Epsitec.Common.Document
 			}
 
 			graphics.LineWidth = initialWidth;
+		}
+
+		public void DrawGuides(Graphics graphics)
+		{
+			//	Dessine tous les repères.
+			if (this.drawingContext.GuidesShow)
+			{
+				Objects.Page page = this.document.GetObjects[this.drawingContext.CurrentPage] as Objects.Page;
+
+				if (page.MasterGuides && this.drawingContext.MasterPageList.Count > 0)
+				{
+					foreach (Objects.Page masterPage in this.drawingContext.MasterPageList)
+					{
+						this.DrawGuides(graphics, masterPage.Guides, false);
+					}
+				}
+
+				this.DrawGuides(graphics, page.Guides, !this.document.Settings.GlobalGuides);
+				this.DrawGuides(graphics, this.document.Settings.GuidesListGlobal, this.document.Settings.GlobalGuides);
+			}
 		}
 
 		protected void DrawGuides(Graphics graphics, UndoableList guides, bool editable)

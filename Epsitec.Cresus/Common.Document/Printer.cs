@@ -1148,6 +1148,10 @@ namespace Epsitec.Common.Document
 				gfx.PopColorModifier();
 			}
 
+			gfx.LineWidth = 1/zoom;
+			this.document.Modifier.ActiveViewer.DrawGuides(gfx);
+			gfx.LineWidth = 1;
+
 			if (paintMark)
 			{
 				if (this.document.InstallType == InstallType.Demo)
