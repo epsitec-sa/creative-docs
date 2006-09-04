@@ -170,6 +170,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.ico" />
+    <EmbeddedResource Include="Images\NewDirectory.icon" />
     <EmbeddedResource Include="Images\Directory.icon" />
     <EmbeddedResource Include="Images\ParentDirectory.icon" />
     <EmbeddedResource Include="Images\ImageHomo.icon" />

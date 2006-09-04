@@ -194,7 +194,10 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 			if (sel == -1)
 			{
-				this.table.ShowCell(0, 0);  // montre le début de la table
+				if (this.table.Rows > 0)
+				{
+					this.table.ShowCell(0, 0);  // montre le début de la table
+				}
 			}
 			else
 			{

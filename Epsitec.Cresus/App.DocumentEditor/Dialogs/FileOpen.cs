@@ -51,6 +51,13 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.fieldPath.Dock = DockStyle.Fill;
 				this.fieldPath.ComboOpening += new EventHandler<CancelEventArgs>(this.HandleFieldPathComboOpening);
 
+				IconButton buttonNew = new IconButton(access);
+				buttonNew.IconName = Misc.Icon("NewDirectory");
+				buttonNew.Dock = DockStyle.Right;
+				buttonNew.Margins = new Margins(0, 0, 0, 0);
+				buttonNew.Clicked += new MessageEventHandler(this.HandleButtonNewClicked);
+				ToolTip.Default.SetToolTip(buttonNew, "Nouveau dossier");
+
 				IconButton buttonParent = new IconButton(access);
 				buttonParent.IconName = Misc.Icon("ParentDirectory");
 				buttonParent.Dock = DockStyle.Right;
@@ -144,6 +151,83 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		}
 
 
+		protected void ParentDirectory()
+		{
+			//	Remonte dans le dossier parent.
+			int index = this.initialDirectory.LastIndexOf("\\");
+			if (index != -1)
+			{
+				this.InitialDirectory = this.initialDirectory.Substring(0, index);
+				this.UpdateTable(-1);
+			}
+		}
+
+		protected void NewDirectory()
+		{
+			//	Crée un nouveau dossier vide.
+			string newDir = this.NewDirectoryName;
+			if (newDir == null)
+			{
+				return;
+			}
+
+			try
+			{
+				System.IO.Directory.CreateDirectory(newDir);
+			}
+			catch
+			{
+				return;
+			}
+
+			this.UpdateTable(-1);
+
+			for (int i=0; i<this.files.Count; i++)
+			{
+				Item item = this.files[i];
+				if (item.Filename == newDir)
+				{
+					this.table.SelectRow(i, true);
+					this.table.ShowSelect();
+					break;
+				}
+			}
+		}
+
+		protected string NewDirectoryName
+		{
+			//	Retourne le nom à utiliser pour le nouveau dossier à créer.
+			get
+			{
+				for (int i=1; i<100; i++)
+				{
+					string newDir = string.Concat(this.initialDirectory, "\\Nouveau dossier");
+					if (i > 1)
+					{
+						newDir = string.Concat(newDir, " (", i.ToString(), ")");
+					}
+
+					bool exist = false;
+					foreach (Item item in this.files)
+					{
+						if (item.IsDirectory && item.Filename == newDir)
+						{
+							exist = true;
+							break;
+						}
+					}
+
+					if (!exist)
+					{
+						return newDir;
+					}
+				}
+
+				return null;
+			}
+		}
+
+
 		private void HandleFieldPathComboOpening(object sender, CancelEventArgs e)
 		{
 			//	Le menu pour le chamin d'accès va être ouvert.
@@ -160,12 +244,13 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		private void HandleButtonParentClicked(object sender, MessageEventArgs e)
 		{
 			//	Le bouton 'dossier parent' a été cliqué.
-			int index = this.initialDirectory.LastIndexOf("\\");
-			if (index != -1)
-			{
-				this.InitialDirectory = this.initialDirectory.Substring(0, index);
-				this.UpdateTable(-1);
-			}
+			this.ParentDirectory();
+		}
+
+		private void HandleButtonNewClicked(object sender, MessageEventArgs e)
+		{
+			//	Le bouton 'nouveau dossier' a été cliqué.
+			this.NewDirectory();
 		}
 
 		protected override void HandleTableFinalSelectionChanged(object sender)
