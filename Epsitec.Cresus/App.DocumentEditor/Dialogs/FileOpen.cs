@@ -51,6 +51,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.fieldPath.Dock = DockStyle.Fill;
 				this.fieldPath.Margins = new Margins(0, 5, 0, 0);
 				this.fieldPath.ComboOpening += new EventHandler<CancelEventArgs>(this.HandleFieldPathComboOpening);
+				this.fieldPath.ComboClosed += new EventHandler(this.HandleFieldPathComboClosed);
+				this.fieldPath.TextChanged += new EventHandler(this.HandleFieldPathTextChanged);
 
 				this.buttonDelete = new IconButton(access);
 				this.buttonDelete.IconName = Misc.Icon("FileDelete");
@@ -77,7 +79,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				ToolTip.Default.SetToolTip(this.buttonParent, Res.Strings.Dialog.Open.ParentDirectory);
 
 				//	Liste centrale principale.
-				this.CreateTable();
+				this.CreateTable(20);
 				this.CreateRename();
 
 				//	Boutons en bas.
@@ -101,8 +103,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 			this.selectedFilename = null;
 			this.UpdateTable(-1);
-
-			this.fieldPath.Text = this.initialDirectory;
+			this.UpdateInitialDirectory();
 
 			this.fieldFilename.Text = "";
 			this.fieldFilename.Focus();
@@ -117,32 +118,21 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		}
 
 
-		public override string InitialDirectory
-		{
-			get
-			{
-				return this.initialDirectory;
-			}
-			set
-			{
-				if (this.initialDirectory != value)
-				{
-					this.initialDirectory = value;
-
-					if (this.fieldPath != null)
-					{
-						this.fieldPath.Text = this.initialDirectory;
-					}
-				}
-			}
-		}
-
 		protected override void UpdateButtons()
 		{
 			//	Met à jour les boutons en fonction du fichier sélectionné dans la liste.
 			int sel = this.table.SelectedRow;
 			this.buttonRename.Enable = (sel != -1);
 			this.buttonDelete.Enable = (sel != -1);
+		}
+
+		protected override void UpdateInitialDirectory()
+		{
+			//	Met à jour le chemin d'accès.
+			if (this.fieldPath != null)
+			{
+				this.fieldPath.Text = AbstractFile.GetIllustredPath(this.initialDirectory);
+			}
 		}
 
 		protected override bool IsNavigationEnabled
@@ -165,15 +155,72 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 		private void HandleFieldPathComboOpening(object sender, CancelEventArgs e)
 		{
-			//	Le menu pour le chamin d'accès va être ouvert.
-			string[] drivers = System.IO.Directory.GetLogicalDrives();
+			//	Le menu pour le chemin d'accès va être ouvert.
+			this.comboTexts = new List<string>();
+			this.comboDirectories = new List<string>();
+
+			System.IO.DriveInfo[] drives = System.IO.DriveInfo.GetDrives();
 
 			this.fieldPath.Items.Clear();
 
-			foreach (string driver in drivers)
+			foreach (System.IO.DriveInfo drive in drives)
 			{
-				this.fieldPath.Items.Add(driver);
+				string text = AbstractFile.GetIllustredDriveString(drive);
+				this.fieldPath.Items.Add(text);
+				this.comboTexts.Add(text);
+				this.comboDirectories.Add(drive.Name);
+
+				if (this.initialDirectory.StartsWith(drive.Name))
+				{
+					string[] dirs = this.initialDirectory.Split('\\');
+					for (int i=1; i<dirs.Length; i++)
+					{
+						string dir = "";
+						text = "";
+						for (int j=0; j<i; j++)
+						{
+							dir += dirs[j]+"\\";
+							text += "|  ";
+						}
+						text += Misc.Image("FileTypeDirectory");
+						text += " ";
+						text += dirs[i];
+
+						this.fieldPath.Items.Add(text);
+						this.comboTexts.Add(text);
+
+						if (dir.Length > 3 && dir.EndsWith("\\"))
+						{
+							dir = dir.Substring(0, dir.Length-1);
+						}
+						this.comboDirectories.Add(dir);
+					}
+				}
 			}
+		}
+
+		private void HandleFieldPathComboClosed(object sender)
+		{
+			//	Le menu pour le chemin d'accès a été fermé.
+			int index = this.comboTexts.IndexOf(this.fieldPath.Text);
+			if (index != -1)
+			{
+				this.InitialDirectory = this.comboDirectories[index];
+				this.UpdateTable(-1);
+			}
+		}
+
+		void HandleFieldPathTextChanged(object sender)
+		{
+			//	Le texte pour le chemin d'accès a changé.
+			if (this.ignoreChanged)
+			{
+				return;
+			}
+
+			this.ignoreChanged = true;
+			//?this.fieldPath.Text = AbstractFile.RemoveStartingSpaces(this.fieldPath.Text);
+			this.ignoreChanged = false;
 		}
 
 		private void HandleButtonParentClicked(object sender, MessageEventArgs e)
@@ -207,5 +254,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		protected IconButton					buttonRename;
 		protected IconButton					buttonDelete;
 		protected TextField						fieldFilename;
+		protected List<string>					comboDirectories;
+		protected List<string>					comboTexts;
 	}
 }

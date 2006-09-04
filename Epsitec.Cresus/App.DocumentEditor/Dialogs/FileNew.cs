@@ -34,7 +34,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.window.Root.Padding = new Margins(8, 8, 8, 8);
 
 				this.CreateResizer();
-				this.CreateTable();
+				this.CreateTable(50);
 				this.CreateFooter();
 			}
 
