@@ -39,5 +39,29 @@ namespace Epsitec.Common.IO
 			
 			return o;
 		}
+		
+		public static byte[] SerializeToMemory(object o)
+		{
+			BinaryFormatter        formatter  = new BinaryFormatter ();
+			System.IO.MemoryStream memory     = new System.IO.MemoryStream ();
+
+			formatter.Serialize (memory, o);
+
+			memory.Close ();
+
+			return memory.ToArray ();
+		}
+
+		public static object DeserializeFromMemory(byte[] buffer)
+		{
+			BinaryFormatter        formatter    = new BinaryFormatter ();
+			System.IO.MemoryStream memory       = new System.IO.MemoryStream (buffer, 0, buffer.Length, false, false);
+
+			object o = formatter.Deserialize (memory);
+
+			memory.Close ();
+
+			return o;
+		}
 	}
 }
