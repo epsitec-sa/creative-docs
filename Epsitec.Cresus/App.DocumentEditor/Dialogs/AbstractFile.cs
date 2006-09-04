@@ -19,7 +19,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		}
 
 
-		public virtual string InitialDirectory
+		public string InitialDirectory
 		{
 			get
 			{
@@ -27,7 +27,11 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			}
 			set
 			{
-				this.initialDirectory = value;
+				if (this.initialDirectory != value)
+				{
+					this.initialDirectory = value;
+					this.UpdateInitialDirectory();
+				}
 			}
 		}
 
@@ -48,10 +52,10 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			ToolTip.Default.SetToolTip(resize, Res.Strings.Dialog.Tooltip.Resize);
 		}
 
-		protected void CreateTable()
+		protected void CreateTable(double cellHeight)
 		{
 			this.table = new CellTable(this.window.Root);
-			this.table.DefHeight = 50;
+			this.table.DefHeight = cellHeight;
 			this.table.HeaderHeight = 20;
 			this.table.StyleH = CellArrayStyles.Stretch | CellArrayStyles.Separator | CellArrayStyles.Header | CellArrayStyles.Mobile;
 			this.table.StyleV = CellArrayStyles.ScrollNorm | CellArrayStyles.Separator | CellArrayStyles.SelectLine;
@@ -297,6 +301,11 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			//	Met à jour les boutons en fonction du fichier sélectionné dans la liste.
 		}
 
+		protected virtual void UpdateInitialDirectory()
+		{
+			//	Met à jour le chemin d'accès.
+		}
+
 
 		protected virtual bool IsNavigationEnabled
 		{
@@ -323,7 +332,13 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			int index = this.initialDirectory.LastIndexOf("\\");
 			if (index != -1)
 			{
-				this.InitialDirectory = this.initialDirectory.Substring(0, index);
+				string dir = this.initialDirectory.Substring(0, index);
+				if (dir.Length == 2)  // "C:" ?
+				{
+					dir += "\\";  // toujours la forme "C:\\"
+				}
+
+				this.InitialDirectory = dir;
 				this.UpdateTable(-1);
 			}
 		}
@@ -529,6 +544,116 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 			return false;  // ne pas fermer le dialogue
 		}
+
+
+		protected static string GetIllustredPath(string path)
+		{
+			//	Retourne le chemin illustré.
+			if (path.Length == 3 && path.EndsWith(":\\"))  // "C:\" ?
+			{
+				System.IO.DriveType type = AbstractFile.GetDriveType(path);
+				return string.Concat(AbstractFile.GetImageDriveType(type), " ", path);
+			}
+
+			if (path.EndsWith(":\\)"))  // "Travail (D:\)" ?
+			{
+				string drive = path.Substring(path.Length-4, 3);  // garde "D:\"
+				System.IO.DriveType type = AbstractFile.GetDriveType(drive);
+				return string.Concat(AbstractFile.GetImageDriveType(type), " ", path);
+			}
+
+			string[] dirs = path.Split('\\');
+			if (dirs.Length != 0)
+			{
+				string text = "";
+				for (int i=0; i<dirs.Length-1; i++)
+				{
+					text += "|  ";
+				}
+
+				text += Misc.Image("FileTypeDirectory");
+				text += " ";
+				text += dirs[dirs.Length-1];
+				return text;
+			}
+
+			return path;
+		}
+
+		protected static System.IO.DriveType GetDriveType(string drive)
+		{
+			return DriveType.Fixed;
+		}
+
+		protected static string GetImageDriveType(System.IO.DriveType type)
+		{
+			switch (type)
+			{
+				case DriveType.CDRom:
+					return Misc.Image("FileTypeCDRom");
+
+				case DriveType.Network:
+					return Misc.Image("FileTypeNetword");
+
+				case DriveType.Removable:
+					return Misc.Image("FileTypeRemovable");
+			}
+
+			return Misc.Image("FileTypeFixed");
+		}
+
+		protected static string GetIllustredDriveString(System.IO.DriveInfo drive)
+		{
+			//	Retourne le texte illustré à utiliser pour un drive donné.
+			System.Text.StringBuilder builder = new System.Text.StringBuilder();
+
+			builder.Append(AbstractFile.GetImageDriveType(drive.DriveType));
+			builder.Append(" ");
+
+			try
+			{
+				builder.Append(drive.VolumeLabel);
+				builder.Append(" (");
+				builder.Append(drive.Name);
+				builder.Append(")");
+			}
+			catch
+			{
+				builder.Append(drive.Name);
+			}
+
+			return builder.ToString();
+		}
+
+#if false
+		protected static string RemoveStartingSpaces(string text)
+		{
+			//	Supprime tous les espaces au début d'un texte.
+			while (text.StartsWith(" "))
+			{
+				text = text.Substring(1);
+			}
+
+			return text;
+		}
+
+		protected static string RemoveTagImage(string text)
+		{
+			//	Supprime le tag "<img ... />" contenu dans un texte.
+			int start = text.IndexOf("<img ");
+			if (start != -1)
+			{
+				int end = text.IndexOf("/>", start);
+				if (end != -1)
+				{
+					text = text.Remove(start, end-start+2);
+				}
+			}
+
+			return text;
+		}
+#endif
+
 
 
 		private void HandleRenameAccepted(object sender)
@@ -755,7 +880,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 					{
 						if (this.isDirectory)
 						{
-							return "Directory";
+							return "FileTypeDirectory";
 						}
 						else
 						{
@@ -830,5 +955,6 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		protected int						tabIndex;
 		protected int						renameSelected = -1;
 		protected Widget					focusedWidget;
+		protected bool						ignoreChanged = false;
 	}
 }
