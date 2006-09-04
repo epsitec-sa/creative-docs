@@ -84,23 +84,17 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 		private void HandleWindowExportCloseClicked(object sender)
 		{
-			this.editor.Window.MakeActive();
-			this.window.Hide();
-			this.OnClosed();
+			this.CloseWindow();
 		}
 
 		private void HandleExportButtonCancelClicked(object sender, MessageEventArgs e)
 		{
-			this.editor.Window.MakeActive();
-			this.window.Hide();
-			this.OnClosed();
+			this.CloseWindow();
 		}
 
 		private void HandleExportButtonOkClicked(object sender, MessageEventArgs e)
 		{
-			this.editor.Window.MakeActive();
-			this.window.Hide();
-			this.OnClosed();
+			this.CloseWindow();
 
 			string filename = string.Format("{0}\\{1}", this.editor.CurrentDocument.ExportDirectory, this.editor.CurrentDocument.ExportFilename);
 			string err = this.editor.CurrentDocument.Export(filename);

@@ -130,16 +130,12 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 		private void HandleWindowUpdateCloseClicked(object sender)
 		{
-			this.editor.Window.MakeActive();
-			this.window.Hide();
-			this.OnClosed();
+			this.CloseWindow();
 		}
 
 		private void HandleUpdateButtonCloseClicked(object sender, MessageEventArgs e)
 		{
-			this.editor.Window.MakeActive();
-			this.window.Hide();
-			this.OnClosed();
+			this.CloseWindow();
 		}
 
 

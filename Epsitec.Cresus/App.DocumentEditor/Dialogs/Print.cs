@@ -109,23 +109,17 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 		private void HandleWindowPrintCloseClicked(object sender)
 		{
-			this.editor.Window.MakeActive();
-			this.window.Hide();
-			this.OnClosed();
+			this.CloseWindow();
 		}
 
 		private void HandlePrintButtonCancelClicked(object sender, MessageEventArgs e)
 		{
-			this.editor.Window.MakeActive();
-			this.window.Hide();
-			this.OnClosed();
+			this.CloseWindow();
 		}
 
 		private void HandlePrintButtonOkClicked(object sender, MessageEventArgs e)
 		{
-			this.editor.Window.MakeActive();
-			this.window.Hide();
-			this.OnClosed();
+			this.CloseWindow();
 
 			Common.Dialogs.Print dialog = this.editor.CurrentDocument.PrintDialog;
 			this.editor.CurrentDocument.Print(dialog);

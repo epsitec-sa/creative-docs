@@ -99,6 +99,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 				this.fieldFilename = new TextField(file);
 				this.fieldFilename.Dock = DockStyle.Fill;
+				this.fieldFilename.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleKeyboardFocusChanged);
 			}
 
 			this.selectedFilename = null;
@@ -155,17 +156,6 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			}
 		}
 
-		protected override string SelectedFilename
-		{
-			get
-			{
-				string path = System.IO.Path.GetDirectoryName(this.globalSettings.NewDocument);
-				string filename = string.Concat(path, "\\", this.fieldFilename.Text, this.Extension);
-				return filename;
-			}
-		}
-
-
 
 
 		private void HandleFieldPathComboOpening(object sender, CancelEventArgs e)
@@ -203,27 +193,6 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		{
 			//	Le bouton 'supprimer' a été cliqué.
 			this.FileDelete();
-		}
-
-		protected override void HandleTableFinalSelectionChanged(object sender)
-		{
-			//	Sélection changée dans la liste.
-			int sel = this.table.SelectedRow;
-			if (sel == -1)
-			{
-				this.fieldFilename.Text = "";
-			}
-			else
-			{
-				if (this.files[sel].IsDirectory)
-				{
-					this.fieldFilename.Text = "";
-				}
-				else
-				{
-					this.fieldFilename.Text = this.files[sel].ShortFilename;
-				}
-			}
 		}
 
 
