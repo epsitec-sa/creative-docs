@@ -62,7 +62,9 @@
   <data name="Dialog.Open.TitleMod" id="0G1">Ouvrir un document modèle</data>
   <data name="Dialog.Open.TitlePic" id="0H1">Ouvrir une icône</data>
   <data name="Dialog.Open.TitleCol" id="0I1">Ouvrir une palette de couleurs</data>
+  <data name="Dialog.Open.LabelPath" id="017" mod="1">Regarder dans</data>
   <data name="Dialog.Open.LabelDoc" id="0V6" mod="1">Document</data>
+  <data name="Dialog.Open.ParentDirectory" id="027" mod="1">Dossier parent</data>
   <data name="Dialog.Save.TitleDoc" id="0J1">Enregistrer un document</data>
   <data name="Dialog.Save.TitleMod" id="0K1">Enregistrer un document modèle</data>
   <data name="Dialog.Save.TitlePic" id="0L1">Enregistrer une icône</data>
