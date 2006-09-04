@@ -310,9 +310,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 		private void HandleWindowCloseClicked(object sender)
 		{
-			this.editor.Window.MakeActive();
-			this.window.Hide();
-			this.OnClosed();
+			this.CloseWindow();
 		}
 
 		private void HandleButtonClicked(object sender, MessageEventArgs e)
@@ -334,9 +332,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 		private void HandleButtonCloseClicked(object sender, MessageEventArgs e)
 		{
-			this.editor.Window.MakeActive();
-			this.window.Hide();
-			this.OnClosed();
+			this.CloseWindow();
 		}
 
 

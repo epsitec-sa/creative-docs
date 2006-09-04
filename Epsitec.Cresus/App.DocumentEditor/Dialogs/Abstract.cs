@@ -104,6 +104,15 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		}
 
 
+		protected void CloseWindow()
+		{
+			//	Ferme la fenêtre du dialogue.
+			this.editor.Window.MakeActive();
+			this.window.Hide();
+			this.OnClosed();
+		}
+
+		
 		protected virtual void OnClosed()
 		{
 			if ( this.Closed != null )

@@ -15,6 +15,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 	{
 		public AbstractFile(DocumentEditor editor) : base(editor)
 		{
+			this.focusedWidget = null;
 		}
 
 
@@ -58,7 +59,10 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.table.Margins = new Margins(0, 0, 0, 0);
 			this.table.Dock = DockStyle.Fill;
 			this.table.FinalSelectionChanged += new EventHandler(this.HandleTableFinalSelectionChanged);
+			this.table.TabIndex = this.tabIndex++;
+			this.table.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			this.table.DoubleClicked += new MessageEventHandler(this.HandleTableDoubleClicked);
+			this.table.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleKeyboardFocusChanged);
 		}
 
 		protected void CreateRename()
@@ -298,22 +302,6 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			}
 		}
 
-		protected virtual string SelectedFilename
-		{
-			get
-			{
-				int sel = this.table.SelectedRow;
-				if (sel == -1)
-				{
-					return null;
-				}
-				else
-				{
-					return this.files[sel].Filename;
-				}
-			}
-		}
-
 
 		protected void ParentDirectory()
 		{
@@ -385,6 +373,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 		protected void FileDelete()
 		{
+			//	Supprime un fichier ou un dossier.
 			int sel = this.table.SelectedRow;
 			if (sel == -1)
 			{
@@ -423,6 +412,9 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 		protected void RenameStarting()
 		{
+			//	Début d'un renommer. Le widget pour éditer le nom est positionné et
+			//	rendu visible.
+			System.Diagnostics.Debug.Assert(this.fieldRename != null);
 			int sel = this.table.SelectedRow;
 			if (sel == -1)
 			{
@@ -444,24 +436,25 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				return;
 			}
 
-			this.ignoreChanged = true;
 			this.fieldRename.SetManualBounds(rect);
 			this.fieldRename.Text = this.files[sel].ShortFilename;
 			this.fieldRename.SelectAll();
 			this.fieldRename.Visibility = true;
 			this.fieldRename.Focus();
-			this.ignoreChanged = false;
 
 			this.renameSelected = sel;
 		}
 
 		protected void RenameEnding(bool accepted)
 		{
+			//	Fin d'un renommer. Le fichier ou le dossier est renommé (si accepted = true)
+			//	et le widget pour éditer le nom est caché.
 			this.fieldRename.Visibility = false;
 
 			if (accepted && this.renameSelected != -1)
 			{
 				int sel = this.renameSelected;
+				this.renameSelected = -1;
 				string srcFilename, dstFilename;
 
 				if (this.files[sel].IsDirectory)
@@ -498,78 +491,81 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				StaticText st = this.table[1, sel].Children[0] as StaticText;
 				st.Text = this.files[sel].ShortFilename;
 			}
-
-			this.renameSelected = -1;
 		}
 
+		protected bool ActionOpen()
+		{
+			//	Effectue l'action lorsque le bouton 'Ouvrir' est actionné.
+			//	Retourne true s'il faut fermer le dialogue.
+			int sel = this.table.SelectedRow;
+			if (sel != -1)
+			{
+				if (this.files[sel].IsDirectory)  // ouvre un dossier ?
+				{
+					this.InitialDirectory = this.files[sel].Filename;
+					this.UpdateTable(-1);
+					return false;  // ne pas fermer le dialogue
+				}
+				else
+				{
+					this.selectedFilename = this.files[sel].Filename;
+					return true;  // il faudra ferme le dialogue
+				}
+			}
+
+			return false;  // ne pas fermer le dialogue
+		}
 
 
 		private void HandleRenameAccepted(object sender)
 		{
+			//	Le TextFieldEx pour renommer a accepté l'édition.
 			this.RenameEnding(true);
 		}
 
 		private void HandleRenameRejected(object sender)
 		{
+			//	Le TextFieldEx pour renommer a refusé l'édition.
 			this.RenameEnding(false);
 		}
 
 		private void HandleRenameFocusChanged(object sender, Epsitec.Common.Types.DependencyPropertyChangedEventArgs e)
 		{
-			if (this.ignoreChanged)
+			//	Le TextFieldEx pour renommer a pris/perdu le focus.
+			bool focused = (bool) e.NewValue;
+			if (!focused)  // focus perdu ?
 			{
-				return;
+				this.RenameEnding(true);
 			}
 
-			this.RenameEnding(true);
 		}
 
-		protected virtual void HandleTableFinalSelectionChanged(object sender)
+		protected void HandleKeyboardFocusChanged(object sender, Epsitec.Common.Types.DependencyPropertyChangedEventArgs e)
+		{
+			//	Un widget (table ou filename) à pris/perdu le focus.
+			bool focused = (bool) e.NewValue;
+
+			if (focused)
+			{
+				this.focusedWidget = sender as Widget;
+			}
+		}
+
+		private void HandleTableFinalSelectionChanged(object sender)
 		{
 			//	Sélection changée dans la liste.
 		}
 
-		protected void HandleTableDoubleClicked(object sender, MessageEventArgs e)
+		private void HandleTableDoubleClicked(object sender, MessageEventArgs e)
 		{
 			//	Double-clic dans la liste.
-			this.HandleButtonOpenClicked(null, null);
-		}
-
-		protected void HandleWindowCloseClicked(object sender)
-		{
-			//	Fenêtre fermée.
-			this.editor.Window.MakeActive();
-			this.window.Hide();
-			this.OnClosed();
-		}
-
-		protected void HandleButtonCancelClicked(object sender, MessageEventArgs e)
-		{
-			//	Bouton 'annuler' cliqué.
-			this.editor.Window.MakeActive();
-			this.window.Hide();
-			this.OnClosed();
-		}
-
-		protected void HandleButtonOpenClicked(object sender, MessageEventArgs e)
-		{
-			//	Bouton 'ouvrir' cliqué.
-			int sel = this.table.SelectedRow;
-			if (sel != -1 && this.files[sel].IsDirectory)
+			if (this.ActionOpen())
 			{
-				this.InitialDirectory = this.files[sel].Filename;
-				this.UpdateTable(-1);
-				return;
+				this.CloseWindow();
 			}
-
-			this.editor.Window.MakeActive();
-			this.window.Hide();
-			this.OnClosed();
-
-			this.selectedFilename = this.SelectedFilename;
 		}
 
-		protected void HandleSliderChanged(object sender)
+		private void HandleSliderChanged(object sender)
 		{
 			//	Slider pour la taille des miniatures changé.
 			this.table.DefHeight = (double) this.slider.Value;
@@ -578,6 +574,39 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			for (int i=0; i<this.table.Rows; i++)
 			{
 				this.table.SetHeightRow(i, this.table.DefHeight);
+			}
+		}
+
+		protected void HandleWindowCloseClicked(object sender)
+		{
+			//	Fenêtre fermée.
+			this.CloseWindow();
+		}
+
+		private void HandleButtonCancelClicked(object sender, MessageEventArgs e)
+		{
+			//	Bouton 'Annuler' cliqué.
+			this.CloseWindow();
+		}
+
+		private void HandleButtonOpenClicked(object sender, MessageEventArgs e)
+		{
+			//	Bouton 'Ouvrir' cliqué.
+			if (this.focusedWidget is AbstractTextField)  // focus dans un texte éditable ?
+			{
+				AbstractTextField field = this.focusedWidget as AbstractTextField;
+				if (!string.IsNullOrEmpty(field.Text))
+				{
+					string filename = string.Concat(this.initialDirectory, "\\", field.Text, this.Extension);
+					this.selectedFilename = filename;
+					this.CloseWindow();
+					return;
+				}
+			}
+
+			if (this.ActionOpen())
+			{
+				this.CloseWindow();
 			}
 		}
 
@@ -785,7 +814,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		protected List<Item>				files;
 		protected string					selectedFilename;
 		protected int						tabIndex;
-		protected bool						ignoreChanged = false;
 		protected int						renameSelected = -1;
+		protected Widget					focusedWidget;
 	}
 }
