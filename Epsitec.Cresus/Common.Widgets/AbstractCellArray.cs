@@ -1085,11 +1085,14 @@ namespace Epsitec.Common.Widgets
 		public void SelectRow(int row, bool state)
 		{
 			//	Sélectionne toute une ligne.
-			if ( row < 0 || row >= this.maxRows )  return;
-			for ( int column=0 ; column<this.maxColumns ; column++ )
+			if (row >= 0 && row < this.maxRows)
 			{
-				this.SelectCell(column, row, state);
+				for (int column=0; column<this.maxColumns; column++)
+				{
+					this.SelectCell(column, row, state);
+				}
 			}
+
 			if ( state )
 			{
 				this.selectedRow = row;

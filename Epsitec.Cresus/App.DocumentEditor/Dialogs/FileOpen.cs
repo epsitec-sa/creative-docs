@@ -25,7 +25,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.window = new Window();
 				this.window.MakeSecondaryWindow();
 				this.window.PreventAutoClose = true;
-				this.WindowInit("FileOpen", 400, 300, true);
+				this.WindowInit("FileOpen", 400, 400, true);
 				this.window.Text = Res.Strings.Dialog.Open.TitleDoc;
 				this.window.Owner = this.editor.Window;
 				this.window.Icon = Bitmap.FromManifestResource("Epsitec.App.DocumentEditor.Images.Application.icon", this.GetType().Assembly);
@@ -49,35 +49,32 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.fieldPath = new TextFieldCombo(access);
 				this.fieldPath.IsReadOnly = true;
 				this.fieldPath.Dock = DockStyle.Fill;
+				this.fieldPath.Margins = new Margins(0, 5, 0, 0);
 				this.fieldPath.ComboOpening += new EventHandler<CancelEventArgs>(this.HandleFieldPathComboOpening);
 
-				IconButton buttonDelete = new IconButton(access);
-				buttonDelete.IconName = Misc.Icon("FileDelete");
-				buttonDelete.Dock = DockStyle.Right;
-				buttonDelete.Margins = new Margins(0, 0, 0, 0);
-				buttonDelete.Clicked += new MessageEventHandler(this.HandleButtonDeleteClicked);
-				ToolTip.Default.SetToolTip(buttonDelete, "Supprimer un fichier");
+				this.buttonDelete = new IconButton(access);
+				this.buttonDelete.IconName = Misc.Icon("FileDelete");
+				this.buttonDelete.Dock = DockStyle.Right;
+				this.buttonDelete.Clicked += new MessageEventHandler(this.HandleButtonDeleteClicked);
+				ToolTip.Default.SetToolTip(this.buttonDelete, "Supprimer un fichier");
 
-				IconButton buttonRename = new IconButton(access);
-				buttonRename.IconName = Misc.Icon("FileRename");
-				buttonRename.Dock = DockStyle.Right;
-				buttonRename.Margins = new Margins(0, 0, 0, 0);
-				buttonRename.Clicked += new MessageEventHandler(this.HandleButtonRenameClicked);
-				ToolTip.Default.SetToolTip(buttonRename, "Renommer un fichier");
+				this.buttonRename = new IconButton(access);
+				this.buttonRename.IconName = Misc.Icon("FileRename");
+				this.buttonRename.Dock = DockStyle.Right;
+				this.buttonRename.Clicked += new MessageEventHandler(this.HandleButtonRenameClicked);
+				ToolTip.Default.SetToolTip(this.buttonRename, "Renommer un fichier");
 
-				IconButton buttonNew = new IconButton(access);
-				buttonNew.IconName = Misc.Icon("NewDirectory");
-				buttonNew.Dock = DockStyle.Right;
-				buttonNew.Margins = new Margins(0, 0, 0, 0);
-				buttonNew.Clicked += new MessageEventHandler(this.HandleButtonNewClicked);
-				ToolTip.Default.SetToolTip(buttonNew, "Nouveau dossier");
+				this.buttonNew = new IconButton(access);
+				this.buttonNew.IconName = Misc.Icon("NewDirectory");
+				this.buttonNew.Dock = DockStyle.Right;
+				this.buttonNew.Clicked += new MessageEventHandler(this.HandleButtonNewClicked);
+				ToolTip.Default.SetToolTip(this.buttonNew, "Nouveau dossier");
 
-				IconButton buttonParent = new IconButton(access);
-				buttonParent.IconName = Misc.Icon("ParentDirectory");
-				buttonParent.Dock = DockStyle.Right;
-				buttonParent.Margins = new Margins(5, 0, 0, 0);
-				buttonParent.Clicked += new MessageEventHandler(this.HandleButtonParentClicked);
-				ToolTip.Default.SetToolTip(buttonParent, Res.Strings.Dialog.Open.ParentDirectory);
+				this.buttonParent = new IconButton(access);
+				this.buttonParent.IconName = Misc.Icon("ParentDirectory");
+				this.buttonParent.Dock = DockStyle.Right;
+				this.buttonParent.Clicked += new MessageEventHandler(this.HandleButtonParentClicked);
+				ToolTip.Default.SetToolTip(this.buttonParent, Res.Strings.Dialog.Open.ParentDirectory);
 
 				//	Liste centrale principale.
 				this.CreateTable();
@@ -140,6 +137,14 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			}
 		}
 
+		protected override void UpdateButtons()
+		{
+			//	Met à jour les boutons en fonction du fichier sélectionné dans la liste.
+			int sel = this.table.SelectedRow;
+			this.buttonRename.Enable = (sel != -1);
+			this.buttonDelete.Enable = (sel != -1);
+		}
+
 		protected override bool IsNavigationEnabled
 		{
 			get
@@ -197,6 +202,10 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 
 		protected TextFieldCombo				fieldPath;
+		protected IconButton					buttonParent;
+		protected IconButton					buttonNew;
+		protected IconButton					buttonRename;
+		protected IconButton					buttonDelete;
 		protected TextField						fieldFilename;
 	}
 }
