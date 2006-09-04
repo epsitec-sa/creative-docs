@@ -133,6 +133,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			{
 				this.table.ShowSelect();
 			}
+
+			this.UpdateButtons();
 		}
 
 		protected void UpdateTable(int sel)
@@ -152,6 +154,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.table.SetHeaderTextH(1, Res.Strings.Dialog.File.Header.Filename);
 			this.table.SetHeaderTextH(2, Res.Strings.Dialog.File.Header.Description);
 			this.table.SetHeaderTextH(3, Res.Strings.Dialog.File.Header.Size);
+
+			this.table.SelectRow(-1, true);
 
 			StaticText st;
 			ImageShower im;
@@ -232,6 +236,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			{
 				this.table.ShowSelect();  // montre la ligne sélectionnée
 			}
+
+			this.UpdateButtons();
 		}
 
 		protected void ListFilenames()
@@ -286,8 +292,15 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			}
 		}
 
+		protected virtual void UpdateButtons()
+		{
+			//	Met à jour les boutons en fonction du fichier sélectionné dans la liste.
+		}
+
+
 		protected virtual bool IsNavigationEnabled
 		{
+			//	Indique si ce dialogue permet la navigation.
 			get
 			{
 				return false;
@@ -296,6 +309,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 		protected virtual string Extension
 		{
+			//	Retourne l'extension des fichiers gérés par ce dialogue.
 			get
 			{
 				return ".xxx";
@@ -544,8 +558,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		{
 			//	Un widget (table ou filename) à pris/perdu le focus.
 			bool focused = (bool) e.NewValue;
-
-			if (focused)
+			if (focused)  // focus pris ?
 			{
 				this.focusedWidget = sender as Widget;
 			}
@@ -554,6 +567,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		private void HandleTableFinalSelectionChanged(object sender)
 		{
 			//	Sélection changée dans la liste.
+			this.UpdateButtons();
 		}
 
 		private void HandleTableDoubleClicked(object sender, MessageEventArgs e)
