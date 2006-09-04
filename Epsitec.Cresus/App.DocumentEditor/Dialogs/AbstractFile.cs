@@ -346,6 +346,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 			this.UpdateTable(-1);
 			this.SelectFilenameTable(newDir);
+			this.RenameStarting();
 		}
 
 		protected string NewDirectoryName
