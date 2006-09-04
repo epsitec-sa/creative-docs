@@ -58,6 +58,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.table.Margins = new Margins(0, 0, 0, 0);
 			this.table.Dock = DockStyle.Fill;
 			this.table.FinalSelectionChanged += new EventHandler(this.HandleTableFinalSelectionChanged);
+			this.table.DoubleClicked += new MessageEventHandler(this.HandleTableDoubleClicked);
 		}
 
 		protected void CreateFooter()
@@ -289,10 +290,18 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 		protected virtual void HandleTableFinalSelectionChanged(object sender)
 		{
+			//	Sélection changée dans la liste.
+		}
+
+		protected void HandleTableDoubleClicked(object sender, MessageEventArgs e)
+		{
+			//	Double-clic dans la liste.
+			this.HandleButtonOpenClicked(null, null);
 		}
 
 		protected void HandleWindowCloseClicked(object sender)
 		{
+			//	Fenêtre fermée.
 			this.editor.Window.MakeActive();
 			this.window.Hide();
 			this.OnClosed();
@@ -300,6 +309,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 		protected void HandleButtonCancelClicked(object sender, MessageEventArgs e)
 		{
+			//	Bouton 'annuler' cliqué.
 			this.editor.Window.MakeActive();
 			this.window.Hide();
 			this.OnClosed();
@@ -307,6 +317,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 		protected void HandleButtonOpenClicked(object sender, MessageEventArgs e)
 		{
+			//	Bouton 'ouvrir' cliqué.
 			int sel = this.table.SelectedRow;
 			if (sel != -1 && this.files[sel].IsDirectory)
 			{
@@ -324,6 +335,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 		protected void HandleSliderChanged(object sender)
 		{
+			//	Slider pour la taille des miniatures changé.
 			this.table.DefHeight = (double) this.slider.Value;
 			this.table.HeaderHeight = 20;
 
@@ -335,6 +347,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 
 		#region Class Item
+		//	Cette classe représente une 'ligne' dans la liste, qui peut représenter
+		//	un fichier, un dossier ou la commande 'nouveau document vide'.
 		protected class Item
 		{
 			public Item(string filename, bool isDirectory)
