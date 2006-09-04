@@ -415,16 +415,35 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			if (accepted && this.renameSelected != -1)
 			{
 				int sel = this.renameSelected;
-				string srcFilename = this.files[sel].Filename;
-				string dstFilename = string.Concat(System.IO.Path.GetDirectoryName(srcFilename), "\\", this.fieldRename.Text, System.IO.Path.GetExtension(srcFilename));
+				string srcFilename, dstFilename;
 
-				try
+				if (this.files[sel].IsDirectory)
 				{
-					System.IO.File.Move(srcFilename, dstFilename);
+					srcFilename = this.files[sel].Filename;
+					dstFilename = string.Concat(System.IO.Path.GetDirectoryName(srcFilename), "\\", this.fieldRename.Text);
+
+					try
+					{
+						System.IO.Directory.Move(srcFilename, dstFilename);
+					}
+					catch
+					{
+						return;
+					}
 				}
-				catch
+				else
 				{
-					return;
+					srcFilename = this.files[sel].Filename;
+					dstFilename = string.Concat(System.IO.Path.GetDirectoryName(srcFilename), "\\", this.fieldRename.Text, System.IO.Path.GetExtension(srcFilename));
+
+					try
+					{
+						System.IO.File.Move(srcFilename, dstFilename);
+					}
+					catch
+					{
+						return;
+					}
 				}
 
 				this.files[sel].Filename = dstFilename;
