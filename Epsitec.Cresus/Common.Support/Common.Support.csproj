@@ -149,6 +149,9 @@
     <Compile Include="EmptyEnumerator.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="FileInfoIconSize.cs" />
+    <Compile Include="FileInfoSelection.cs" />
+    <Compile Include="FileManager.cs" />
     <Compile Include="IImageProvider.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -171,6 +174,7 @@
     <Compile Include="Platform\Win32\IMalloc.cs" />
     <Compile Include="Platform\Win32\IShellFolder.cs" />
     <Compile Include="Platform\Win32\ShellApi.cs" />
+    <Compile Include="Platform\Win32\ShellFileOperation.cs" />
     <Compile Include="Platform\Win32\ShellFunctions.cs" />
     <Compile Include="SerialAlgorithm.cs">
       <SubType>Code</SubType>
@@ -181,6 +185,7 @@
     <Compile Include="Sync.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="SystemFileId.cs" />
     <Compile Include="Tags.cs">
       <SubType>Code</SubType>
     </Compile>
