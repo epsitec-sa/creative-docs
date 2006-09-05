@@ -58,19 +58,19 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.buttonDelete.IconName = Misc.Icon("FileDelete");
 				this.buttonDelete.Dock = DockStyle.Right;
 				this.buttonDelete.Clicked += new MessageEventHandler(this.HandleButtonDeleteClicked);
-				ToolTip.Default.SetToolTip(this.buttonDelete, "Supprimer un fichier");
+				ToolTip.Default.SetToolTip(this.buttonDelete, Res.Strings.Dialog.Open.Delete);
 
 				this.buttonRename = new IconButton(access);
 				this.buttonRename.IconName = Misc.Icon("FileRename");
 				this.buttonRename.Dock = DockStyle.Right;
 				this.buttonRename.Clicked += new MessageEventHandler(this.HandleButtonRenameClicked);
-				ToolTip.Default.SetToolTip(this.buttonRename, "Renommer un fichier");
+				ToolTip.Default.SetToolTip(this.buttonRename, Res.Strings.Dialog.Open.Rename);
 
 				this.buttonNew = new IconButton(access);
 				this.buttonNew.IconName = Misc.Icon("NewDirectory");
 				this.buttonNew.Dock = DockStyle.Right;
 				this.buttonNew.Clicked += new MessageEventHandler(this.HandleButtonNewClicked);
-				ToolTip.Default.SetToolTip(this.buttonNew, "Nouveau dossier");
+				ToolTip.Default.SetToolTip(this.buttonNew, Res.Strings.Dialog.Open.NewDirectory);
 
 				this.buttonParent = new IconButton(access);
 				this.buttonParent.IconName = Misc.Icon("ParentDirectory");
