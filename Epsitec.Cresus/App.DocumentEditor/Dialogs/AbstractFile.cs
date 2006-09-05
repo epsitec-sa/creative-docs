@@ -859,7 +859,15 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 						}
 						else
 						{
-							return Res.Strings.Dialog.File.Document;
+							Document.Statistics stat = this.Statistics;
+							if (stat == null)
+							{
+								return Res.Strings.Dialog.File.Document;
+							}
+							else
+							{
+								return string.Format("Format: {0}<br/>Pages: {1}<br/>Calques: {2}<br/>Objets: {3}<br/>Dégradés: {4}", stat.PageFormat, stat.PagesCount.ToString(), stat.LayersCount.ToString(), stat.ObjectsCount.ToString(), stat.ComplexesCount.ToString());
+							}
 						}
 					}
 				}
@@ -917,6 +925,37 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				}
 			}
 
+			protected Document.Statistics Statistics
+			{
+				//	Retourne les statistiques associées au fichier.
+				get
+				{
+					if (this.filename == null)  // nouveau document vide ?
+					{
+						return null;
+					}
+					else
+					{
+						if (this.isDirectory)
+						{
+							return null;
+						}
+						else
+						{
+							byte[] data = ReadStatistics();
+							if (data != null)
+							{
+								Document.Statistics stat = new Document.Statistics();
+								stat = Serialization.DeserializeFromMemory(data) as Document.Statistics;
+								return stat;
+							}
+
+							return null;
+						}
+					}
+				}
+			}
+
 			protected byte[] ReadPreview()
 			{
 				//	Lit les données de l'image miniature associée au fichier.
@@ -927,6 +966,26 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 					try
 					{
 						return zip["preview.png"].Data;  // lit les données dans le fichier zip
+					}
+					catch
+					{
+						return null;
+					}
+				}
+
+				return null;
+			}
+
+			protected byte[] ReadStatistics()
+			{
+				//	Lit les données des statistiques associée au fichier.
+				ZipFile zip = new ZipFile();
+
+				if (zip.TryLoadFile(this.filename))
+				{
+					try
+					{
+						return zip["statistics.data"].Data;  // lit les données dans le fichier zip
 					}
 					catch
 					{
