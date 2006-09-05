@@ -16,7 +16,7 @@ namespace Epsitec.Common.Widgets
 		Sort			= 0x00000080,		// choix pour tri possible
 		SelectCell		= 0x00000100,		// sélectionne une cellule individuelle
 		SelectLine		= 0x00000200,		// sélectionne toute la ligne
-		SelectMulti		= 0x00000400,		// sélections multiples possibles avec Ctrl
+		SelectMulti		= 0x00000400,		// sélections multiples possibles avec Ctrl et Shift
 	}
 
 
@@ -1073,11 +1073,34 @@ namespace Epsitec.Common.Widgets
 			int sr = System.Math.Min(row1, row2);
 			int er = System.Math.Max(row1, row2);
 
-			for ( int column=sc ; column<=ec ; column++ )
+			if ((this.styleV & CellArrayStyles.SelectLine) != 0)
 			{
-				for ( int row=sr ; row<=er ; row ++ )
+				for (int row=sr; row<=er; row++)
 				{
-					this.SelectCell(column, row, state);
+					for (int column=0; column<this.Columns; column++)
+					{
+						this.SelectCell(column, row, state);
+					}
+				}
+			}
+			else if ((this.styleH & CellArrayStyles.SelectLine) != 0)
+			{
+				for (int column=sc; column<=ec; column++)
+				{
+					for (int row=0; row<this.Rows; row++)
+					{
+						this.SelectCell(column, row, state);
+					}
+				}
+			}
+			else
+			{
+				for (int column=sc; column<=ec; column++)
+				{
+					for (int row=sr; row<=er; row++)
+					{
+						this.SelectCell(column, row, state);
+					}
 				}
 			}
 		}
