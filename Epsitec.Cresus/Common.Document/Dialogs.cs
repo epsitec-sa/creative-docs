@@ -1195,34 +1195,10 @@ namespace Epsitec.Common.Document
 			field.Name = "PaperFormat";
 
 			field.Items.Add(Res.Strings.Dialog.Print.Format.User);
-			field.Items.Add("Diapositive");
-			field.Items.Add("Letter US");
-			field.Items.Add("Legal");
-			field.Items.Add("Tabloïd");
-			field.Items.Add("Formulaire/Demi");
-			field.Items.Add("Executive US");
-			field.Items.Add("Listing");
-			field.Items.Add("Affiche");
-			field.Items.Add("A1");
-			field.Items.Add("A2");
-			field.Items.Add("A3+");
-			field.Items.Add("A3");
-			field.Items.Add("A4");
-			field.Items.Add("A5");
-			field.Items.Add("A6");
-			field.Items.Add("B1 (ISO)");
-			field.Items.Add("B4 (ISO)");
-			field.Items.Add("B5 (ISO)");
-			field.Items.Add("B4 (JIS)");
-			field.Items.Add("B5 (JIS)");
-			field.Items.Add("C3");
-			field.Items.Add("C4");
-			field.Items.Add("C5");
-			field.Items.Add("C6");
-			field.Items.Add("RA2");
-			field.Items.Add("RA3");
-			field.Items.Add("RA4");
-			field.Items.Add("DL");
+			foreach (string format in Dialogs.PaperList)
+			{
+				field.Items.Add(format);
+			}
 
 			field.SelectedIndexChanged += new EventHandler(this.HandleFieldPaperChanged);
 			field.TabIndex = this.tabIndex++;
@@ -1311,6 +1287,52 @@ namespace Epsitec.Common.Document
 
 			this.ignoreChanged = initial;
 		}
+
+		public static string PaperFormat(Size pageSize)
+		{
+			//	Retourne le format en clair, s'il existe.
+			int i = Dialogs.PaperSizeToRank(pageSize);
+			if (i == 0)
+			{
+				return null;
+			}
+			else
+			{
+				return Dialogs.PaperList[i-1];
+			}
+		}
+
+		protected static string[] PaperList =
+		{
+			"Diapositive",
+			"Letter US",
+			"Legal",
+			"Tabloïd",
+			"Formulaire/Demi",
+			"Executive US",
+			"Listing",
+			"Affiche",
+			"A1",
+			"A2",
+			"A3+",
+			"A3",
+			"A4",
+			"A5",
+			"A6",
+			"B1 (ISO)",
+			"B4 (ISO)",
+			"B5 (ISO)",
+			"B4 (JIS)",
+			"B5 (JIS)",
+			"C3",
+			"C4",
+			"C5",
+			"C6",
+			"RA2",
+			"RA3",
+			"RA4",
+			"DL",
+		};
 
 		protected static Size PaperRankToSize(int rank)
 		{

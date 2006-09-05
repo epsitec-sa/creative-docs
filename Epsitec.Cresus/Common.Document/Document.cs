@@ -1254,6 +1254,7 @@ namespace Epsitec.Common.Document
 					ZipFile zip = new ZipFile();
 					zip.AddEntry("document.data", data);
 					this.WriteMiniature(zip);
+					this.WriteStatistics(zip);
 					this.imageCache.WriteData(zip);
 					this.FontWriteAll(zip);
 					zip.CompressionLevel = 6;
@@ -1492,6 +1493,153 @@ namespace Epsitec.Common.Document
 			{
 				zip.AddEntry(filename, data);
 			}
+		}
+		#endregion
+
+
+		#region Statistics
+		[System.Serializable()]
+		public class Statistics : ISerializable
+		{
+			public Statistics()
+			{
+			}
+
+			public Size PageSize
+			{
+				//	Dimensions d'une page en unités internes.
+				get
+				{
+					return this.pageSize;
+				}
+				set
+				{
+					this.pageSize = value;
+				}
+			}
+
+			public string PageFormat
+			{
+				//	Format d'une page en clair ("A4" ou "123 x 456").
+				get
+				{
+					return this.pageFormat;
+				}
+				set
+				{
+					this.pageFormat = value;
+				}
+			}
+
+			public int PagesCount
+			{
+				//	Nombre total de pages.
+				get
+				{
+					return this.pagesCount;
+				}
+				set
+				{
+					this.pagesCount = value;
+				}
+			}
+
+			public int LayersCount
+			{
+				//	Nombre total de calques.
+				get
+				{
+					return this.layersCount;
+				}
+				set
+				{
+					this.layersCount = value;
+				}
+			}
+
+			public int ObjectsCount
+			{
+				//	Nombre total d'objets.
+				get
+				{
+					return this.objectsCount;
+				}
+				set
+				{
+					this.objectsCount = value;
+				}
+			}
+
+			public int ComplexesCount
+			{
+				//	Nombre total d'objets dégradés ou transparents.
+				get
+				{
+					return this.complexesCount;
+				}
+				set
+				{
+					this.complexesCount = value;
+				}
+			}
+
+
+			public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
+			{
+				//	Sérialise l'objet.
+				info.AddValue("Version", 1);
+				info.AddValue("PageSize", this.pageSize);
+				info.AddValue("PageFormat", this.pageFormat);
+				info.AddValue("PagesCount", this.pagesCount);
+				info.AddValue("LayersCount", this.layersCount);
+				info.AddValue("ObjectsCount", this.objectsCount);
+				info.AddValue("ComplexesCount", this.complexesCount);
+			}
+
+			protected Statistics(SerializationInfo info, StreamingContext context)
+			{
+				//	Constructeur qui désérialise l'objet.
+				int version = info.GetInt32("Version");
+				this.pageSize = (Size) info.GetValue("PageSize", typeof(Size));
+				this.pageFormat = info.GetString("PageFormat");
+				this.pagesCount = info.GetInt32("PagesCount");
+				this.layersCount = info.GetInt32("LayersCount");
+				this.objectsCount = info.GetInt32("ObjectsCount");
+				this.complexesCount = info.GetInt32("ComplexesCount");
+			}
+
+
+			protected Size					pageSize;
+			protected string				pageFormat;
+			protected int					pagesCount;
+			protected int					layersCount;
+			protected int					objectsCount;
+			protected int					complexesCount;
+		}
+
+		protected void WriteStatistics(ZipFile zip)
+		{
+			//	Ecrit la description du document dans le fichier zip.
+			Statistics stat = new Statistics();
+			stat.PageSize = this.PageSize;
+
+			string format = Dialogs.PaperFormat(stat.PageSize);
+			if (format == null)
+			{
+				stat.PageFormat = string.Format("{0} x {1}", this.modifier.RealToString(stat.PageSize.Width), this.modifier.RealToString(stat.PageSize.Height));
+			}
+			else
+			{
+				stat.PageFormat = format;
+			}
+
+			stat.PagesCount = this.modifier.StatisticTotalPages();
+			stat.LayersCount = this.modifier.StatisticTotalLayers();
+			stat.ObjectsCount = this.modifier.StatisticTotalObjects();
+			stat.ComplexesCount = this.modifier.StatisticTotalComplex();
+
+			byte[] data = Serialization.SerializeToMemory(stat);
+			zip.AddEntry("statistics.data", data);
 		}
 		#endregion
 
