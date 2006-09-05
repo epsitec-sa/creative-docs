@@ -181,7 +181,8 @@ namespace Epsitec.App.DocumentEditor
 
 			if ( this.IsCurrentDocument )
 			{
-				this.InitializationInProgress = true;
+				this.initializationInProgress = true;
+				this.CurrentDocument.InitializationInProgress = true;
 				this.CurrentDocument.Notifier.NotifyAllChanged();
 				this.CurrentDocument.Notifier.GenerateEvents();
 			}
@@ -298,40 +299,32 @@ namespace Epsitec.App.DocumentEditor
 
 			if (this.initializationInProgress)
 			{
-				this.InitializationInProgress = false;
-				if ( this.IsCurrentDocument )
-				{
-					DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
-					context.ZoomPageAndCenter();
-					this.CurrentDocument.Modifier.ActiveViewer.Focus();
-				}
-			}
-		}
+				//	Initialisation en cours. Cette période dure depuis la création d'un
+				//	nouveau document, jusqu'au premier AsyncNotify effectué lorsque tout
+				//	existe de façon certaine. Lorsque ce mode est true, le document n'est
+				//	pas affiché, pour éviter de voir apparaître brièvement un document
+				//	avec un zoom faux. Ceci est nécessaire à cause de ZoomPageAndCenter
+				//	pour lequel la fenêtre doit exister dans sa taille définitive !
+				this.initializationInProgress = false;
 
-		public bool InitializationInProgress
-		{
-			//	Initialisation en cours. Cette période dure depuis la création d'un
-			//	nouveau document, jusqu'au premier AsyncNotify effectué lorsque tout
-			//	existe de façon certaine. Lorsque ce mode est true, le document n'est
-			//	pas affiché, pour éviter de voir apparaître brièvement un document
-			//	avec un zoom faux. Ceci est nécessaire à cause de ZoomPageAndCenter
-			//	pour lequel la fenêtre doit exister dans sa taille définitive !
-			set
-			{
-				this.initializationInProgress = value;
-
-				//	Informe tous les documents ouverts de l'état.
 				int total = this.documents.Count;
 				for (int i=0; i<total; i++)
 				{
 					DocumentInfo di = this.documents[i] as DocumentInfo;
-					di.document.InitializationInProgress = this.initializationInProgress;
+					if (di.document.InitializationInProgress)
+					{
+						di.document.InitializationInProgress = false;
+						DrawingContext context = di.document.Modifier.ActiveViewer.DrawingContext;
+						context.ZoomPageAndCenter();
+					}
 				}
-			}
 
-			get
-			{
-				return this.initializationInProgress;
+				if (this.IsCurrentDocument)
+				{
+					//?DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
+					//?context.ZoomPageAndCenter();
+					this.CurrentDocument.Modifier.ActiveViewer.Focus();
+				}
 			}
 		}
 
@@ -1652,7 +1645,7 @@ namespace Epsitec.App.DocumentEditor
 				this.dlgFileOpen.Show();  // choix d'un fichier...
 
 				string[] names = this.dlgFileOpen.Filenames;
-				if (names == null)
+				if (names == null)  // annuler ?
 				{
 					return false;
 				}
@@ -1739,7 +1732,8 @@ namespace Epsitec.App.DocumentEditor
 					this.CreateDocument();
 				}
 				err = this.CurrentDocument.Read(filename);
-				this.InitializationInProgress = true;
+				this.initializationInProgress = true;
+				this.CurrentDocument.InitializationInProgress = true;
 				this.UpdateAfterRead();
 				this.UpdateRulers();
 				if ( err == "" )
@@ -1919,7 +1913,8 @@ namespace Epsitec.App.DocumentEditor
 						this.Open(filename);
 						this.CurrentDocument.IsDirtySerialize = false;
 					}
-					this.InitializationInProgress = true;
+					this.initializationInProgress = true;
+					this.CurrentDocument.InitializationInProgress = true;
 				}
 				return;
 			}
@@ -1934,8 +1929,8 @@ namespace Epsitec.App.DocumentEditor
 				this.Open(this.globalSettings.NewDocument);
 				this.CurrentDocument.IsDirtySerialize = false;
 			}
-
-			this.InitializationInProgress = true;
+			this.initializationInProgress = true;
+			this.CurrentDocument.InitializationInProgress = true;
 		}
 
 		[Command ("Open")]
