@@ -1650,18 +1650,22 @@ namespace Epsitec.App.DocumentEditor
 				this.dlgFileOpen.InitialDirectory = this.globalSettings.InitialDirectory;
 
 				this.dlgFileOpen.Show();  // choix d'un fichier...
-				
-				string filename = this.dlgFileOpen.Filename;
-				if (filename == null)
+
+				string[] names = this.dlgFileOpen.Filenames;
+				if (names == null)
 				{
 					return false;
 				}
-				else
+
+				if (names.Length >= 1)
 				{
-					this.globalSettings.InitialDirectory = System.IO.Path.GetDirectoryName(filename);
-					this.Open(filename);
-					return true;
+					this.globalSettings.InitialDirectory = System.IO.Path.GetDirectoryName(names[0]);
 				}
+				for (int i=0; i<names.Length; i++)
+				{
+					this.Open(names[i]);
+				}
+				return true;
 			}
 		}
 

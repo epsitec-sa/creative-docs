@@ -17,6 +17,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		{
 			this.fileExtension = ".crmod";
 			this.isNavigationEnabled = false;
+			this.isMultipleSelection = false;
 		}
 
 		public override void Show()
@@ -41,9 +42,10 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			}
 
 			this.selectedFilename = null;
+			this.selectedFilenames = null;
 			this.UpdateTable(0);
 
-			this.table.Focus();
+			this.table.Focus();  // focus dans la liste des modèles
 
 			this.window.ShowDialog();
 		}
