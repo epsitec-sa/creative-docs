@@ -889,10 +889,12 @@ namespace Epsitec.Common.Widgets
 		{
 			//	Sélectionne une cellule.
 			CellArrayStyles style = this.styleV | this.styleH;
-			if ( (style & CellArrayStyles.SelectCell) == 0 &&
-				 (style & CellArrayStyles.SelectLine) == 0 )  return;
+			if ((style & CellArrayStyles.SelectCell) == 0 && (style & CellArrayStyles.SelectLine) == 0)
+			{
+				return;
+			}
 
-			if ( (style & CellArrayStyles.SelectMulti) == 0 || !isControlPressed )
+			if (((style & CellArrayStyles.SelectMulti) == 0 || !isControlPressed) && !isShiftPressed)
 			{
 				this.DeselectAll();
 				this.selectedRow = -1;
@@ -900,15 +902,15 @@ namespace Epsitec.Common.Widgets
 			}
 
 			int row, column;
-			if ( this.Detect(pos, out row, out column) )  // détecte la cellule visée par la souris
+			if (this.Detect(pos, out row, out column))  // détecte la cellule visée par la souris
 			{
-				if ( !this.mouseDown )  // bouton pressé ?
+				if (!this.mouseDown)  // bouton pressé ?
 				{
 					this.mouseState = !this.array[column, row].IsSelected;
 				}
 				bool state = this.mouseState;
 
-				if ( (style & CellArrayStyles.SelectMulti) != 0 && isShiftPressed )
+				if ((style & CellArrayStyles.SelectMulti) != 0 && isShiftPressed)
 				{
 					this.SelectZone(column, row, this.selectedColumn, this.selectedRow, state);
 				}
@@ -917,21 +919,21 @@ namespace Epsitec.Common.Widgets
 					this.SelectCell(column, row, state);
 					this.selectedColumn = column;
 					this.selectedRow = row;
-				}
 
-				if ( (this.styleV & CellArrayStyles.SelectLine) != 0 )
-				{
-					this.SelectRow(row, state);
-				}
+					if ((this.styleV & CellArrayStyles.SelectLine) != 0)
+					{
+						this.SelectRow(row, state);
+					}
 
-				if ( (this.styleH & CellArrayStyles.SelectLine) != 0 )
-				{
-					this.SelectColumn(column, state);
+					if ((this.styleH & CellArrayStyles.SelectLine) != 0)
+					{
+						this.SelectColumn(column, state);
+					}
 				}
 			}
 
 			this.OnSelectionChanged();
-			if ( isFinal )
+			if (isFinal)
 			{
 				this.OnFinalSelectionChanged();
 			}
