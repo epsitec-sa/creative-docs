@@ -15,6 +15,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 	{
 		public FileNew(DocumentEditor editor) : base(editor)
 		{
+			this.fileExtension = ".crmod";
+			this.isNavigationEnabled = false;
 		}
 
 		public override void Show()
@@ -50,15 +52,6 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		{
 			//	Enregistre la position de la fenêtre du dialogue.
 			this.WindowSave("FileNew");
-		}
-
-
-		protected override string Extension
-		{
-			get
-			{
-				return ".crmod";
-			}
 		}
 	}
 }

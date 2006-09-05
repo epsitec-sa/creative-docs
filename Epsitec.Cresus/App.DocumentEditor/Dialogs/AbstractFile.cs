@@ -254,7 +254,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.files.Add(new Item(null, false));  // première ligne avec 'nouveau document vide'
 			}
 
-			if (this.IsNavigationEnabled)
+			if (this.isNavigationEnabled)
 			{
 				string[] directories;
 
@@ -280,7 +280,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 			try
 			{
-				filenames = System.IO.Directory.GetFiles(this.initialDirectory, "*"+this.Extension, System.IO.SearchOption.TopDirectoryOnly);
+				filenames = System.IO.Directory.GetFiles(this.initialDirectory, "*"+this.fileExtension, System.IO.SearchOption.TopDirectoryOnly);
 			}
 			catch
 			{
@@ -304,25 +304,6 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		protected virtual void UpdateInitialDirectory()
 		{
 			//	Met à jour le chemin d'accès.
-		}
-
-
-		protected virtual bool IsNavigationEnabled
-		{
-			//	Indique si ce dialogue permet la navigation.
-			get
-			{
-				return false;
-			}
-		}
-
-		protected virtual string Extension
-		{
-			//	Retourne l'extension des fichiers gérés par ce dialogue.
-			get
-			{
-				return ".xxx";
-			}
 		}
 
 
@@ -736,7 +717,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				AbstractTextField field = this.focusedWidget as AbstractTextField;
 				if (!string.IsNullOrEmpty(field.Text))
 				{
-					string filename = string.Concat(this.initialDirectory, "\\", field.Text, this.Extension);
+					string filename = string.Concat(this.initialDirectory, "\\", field.Text, this.fileExtension);
 					this.selectedFilename = filename;
 					this.CloseWindow();
 					return;
@@ -1008,6 +989,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		protected HSlider					slider;
 		protected TextFieldEx				fieldRename;
 
+		protected string					fileExtension;
+		protected bool						isNavigationEnabled = false;
 		protected string					initialDirectory;
 		protected List<Item>				files;
 		protected string					selectedFilename;
