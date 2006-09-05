@@ -218,6 +218,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Dialogs\AbstractFile.cs" />
+    <Compile Include="Dialogs\FileOpenModel.cs" />
     <Compile Include="Dialogs\FileNew.cs" />
     <Compile Include="Dialogs\FileOpen.cs" />
     <Compile Include="Dialogs\Download.cs">

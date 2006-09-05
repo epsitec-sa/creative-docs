@@ -92,20 +92,21 @@ namespace Epsitec.App.DocumentEditor
 				this.dlgSplash.Show();
 			}
 			
-			this.dlgAbout     = new Dialogs.About(this);
-			this.dlgDownload  = new Dialogs.Download(this);
-			this.dlgExport    = new Dialogs.Export(this);
-			this.dlgExportPDF = new Dialogs.ExportPDF(this);
-			this.dlgGlyphs    = new Dialogs.Glyphs(this);
-			this.dlgInfos     = new Dialogs.Infos(this);
-			this.dlgKey       = new Dialogs.Key(this);
-			this.dlgFileNew   = new Dialogs.FileNew(this);
-			this.dlgFileOpen  = new Dialogs.FileOpen(this);
-			this.dlgPageStack = new Dialogs.PageStack(this);
-			this.dlgPrint     = new Dialogs.Print(this);
-			this.dlgReplace   = new Dialogs.Replace(this);
-			this.dlgSettings  = new Dialogs.Settings(this);
-			this.dlgUpdate    = new Dialogs.Update(this);
+			this.dlgAbout         = new Dialogs.About(this);
+			this.dlgDownload      = new Dialogs.Download(this);
+			this.dlgExport        = new Dialogs.Export(this);
+			this.dlgExportPDF     = new Dialogs.ExportPDF(this);
+			this.dlgGlyphs        = new Dialogs.Glyphs(this);
+			this.dlgInfos         = new Dialogs.Infos(this);
+			this.dlgKey           = new Dialogs.Key(this);
+			this.dlgFileNew       = new Dialogs.FileNew(this);
+			this.dlgFileOpen      = new Dialogs.FileOpen(this);
+			this.dlgFileOpenModel = new Dialogs.FileOpenModel(this);
+			this.dlgPageStack     = new Dialogs.PageStack(this);
+			this.dlgPrint         = new Dialogs.Print(this);
+			this.dlgReplace       = new Dialogs.Replace(this);
+			this.dlgSettings      = new Dialogs.Settings(this);
+			this.dlgUpdate        = new Dialogs.Update(this);
 
 			this.dlgGlyphs.Closed    += new EventHandler(this.HandleDlgClosed);
 			this.dlgInfos.Closed     += new EventHandler(this.HandleDlgClosed);
@@ -1661,23 +1662,18 @@ namespace Epsitec.App.DocumentEditor
 			//	Retourne false si le fichier n'a pas été ouvert.
 			this.dlgSplash.Hide();
 
-			Common.Dialogs.FileOpen dialog = new Common.Dialogs.FileOpen();
+			this.dlgFileOpenModel.InitialDirectory = this.globalSettings.InitialDirectory;
 
-			dialog.InitialDirectory = this.globalSettings.InitialDirectory;
-			dialog.FileName = "";
-			dialog.Title = Res.Strings.Dialog.Open.TitleMod;
-			dialog.Filters.Add("crmod", Res.Strings.Dialog.FileMod, "*.crmod");
-			dialog.AcceptMultipleSelection = true;
-			dialog.Owner = this.Window;
-			dialog.OpenDialog();
-			if ( dialog.Result != Common.Dialogs.DialogResult.Accept )  return false;
-
-			string[] names = dialog.FileNames;
-			if ( names.Length >= 1 )
+			this.dlgFileOpenModel.Show();  // choix d'un fichier...
+			if (this.dlgFileOpenModel.Result != Common.Dialogs.DialogResult.Accept)
 			{
-				this.globalSettings.InitialDirectory = System.IO.Path.GetDirectoryName(names[0]);
+				return false;
 			}
-			for ( int i=0 ; i<names.Length ; i++ )
+
+			this.globalSettings.InitialDirectory = this.dlgFileOpenModel.InitialDirectory;
+
+			string[] names = this.dlgFileOpenModel.Filenames;
+			for (int i=0; i<names.Length; i++)
 			{
 				this.Open(names[i]);
 			}
@@ -5453,6 +5449,7 @@ namespace Epsitec.App.DocumentEditor
 			this.dlgKey.Save();
 			this.dlgFileNew.Save();
 			this.dlgFileOpen.Save();
+			this.dlgFileOpenModel.Save();
 			this.dlgPageStack.Save();
 			this.dlgPrint.Save();
 			this.dlgReplace.Save();
@@ -5621,6 +5618,7 @@ namespace Epsitec.App.DocumentEditor
 		protected Dialogs.Key					dlgKey;
 		protected Dialogs.FileNew				dlgFileNew;
 		protected Dialogs.FileOpen				dlgFileOpen;
+		protected Dialogs.FileOpenModel			dlgFileOpenModel;
 		protected Dialogs.PageStack				dlgPageStack;
 		protected Dialogs.Print					dlgPrint;
 		protected Dialogs.Replace				dlgReplace;
