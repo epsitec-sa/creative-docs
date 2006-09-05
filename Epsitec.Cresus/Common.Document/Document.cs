@@ -1583,29 +1583,64 @@ namespace Epsitec.Common.Document
 				}
 			}
 
+			public int FontsCount
+			{
+				//	Nombre total de polices.
+				get
+				{
+					return this.fontsCount;
+				}
+				set
+				{
+					this.fontsCount = value;
+				}
+			}
+
+			public int ImagesCount
+			{
+				//	Nombre total d'images bitmap.
+				get
+				{
+					return this.imagesCount;
+				}
+				set
+				{
+					this.imagesCount = value;
+				}
+			}
+
 
 			public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
 			{
 				//	Sérialise l'objet.
-				info.AddValue("Version", 1);
+				info.AddValue("Version", 2);
 				info.AddValue("PageSize", this.pageSize);
 				info.AddValue("PageFormat", this.pageFormat);
 				info.AddValue("PagesCount", this.pagesCount);
 				info.AddValue("LayersCount", this.layersCount);
 				info.AddValue("ObjectsCount", this.objectsCount);
 				info.AddValue("ComplexesCount", this.complexesCount);
+				info.AddValue("FontsCount", this.fontsCount);
+				info.AddValue("ImagesCount", this.imagesCount);
 			}
 
 			protected Statistics(SerializationInfo info, StreamingContext context)
 			{
 				//	Constructeur qui désérialise l'objet.
 				int version = info.GetInt32("Version");
+
 				this.pageSize = (Size) info.GetValue("PageSize", typeof(Size));
 				this.pageFormat = info.GetString("PageFormat");
 				this.pagesCount = info.GetInt32("PagesCount");
 				this.layersCount = info.GetInt32("LayersCount");
 				this.objectsCount = info.GetInt32("ObjectsCount");
 				this.complexesCount = info.GetInt32("ComplexesCount");
+
+				if (version >= 2)
+				{
+					this.fontsCount = info.GetInt32("FontsCount");
+					this.imagesCount = info.GetInt32("ImagesCount");
+				}
 			}
 
 
@@ -1615,6 +1650,8 @@ namespace Epsitec.Common.Document
 			protected int					layersCount;
 			protected int					objectsCount;
 			protected int					complexesCount;
+			protected int					fontsCount;
+			protected int					imagesCount;
 		}
 
 		protected void WriteStatistics(ZipFile zip)
@@ -1637,6 +1674,14 @@ namespace Epsitec.Common.Document
 			stat.LayersCount = this.modifier.StatisticTotalLayers();
 			stat.ObjectsCount = this.modifier.StatisticTotalObjects();
 			stat.ComplexesCount = this.modifier.StatisticTotalComplex();
+
+			List<OpenType.FontName> fontList = new List<OpenType.FontName>();
+			TextFlow.StatisticFonts(fontList, this.TextFlows);
+			this.modifier.StatisticFonts(fontList);
+			stat.FontsCount = fontList.Count;
+
+			System.Collections.ArrayList imageList = this.modifier.StatisticImages();
+			stat.ImagesCount = imageList.Count;
 
 			byte[] data = Serialization.SerializeToMemory(stat);
 			zip.AddEntry("statistics.data", data);

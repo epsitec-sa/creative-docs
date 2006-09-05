@@ -59,7 +59,7 @@
   <data name="Dialog.File.Button.Open" id="0M6" mod="1">Ouvrir</data>
   <data name="Dialog.File.Tooltip.PreviewSize" id="0R6" mod="1">Taille des échantillons</data>
   <data name="Dialog.File.NewDirectoryName" id="037" mod="1">Nouveau dossier</data>
-  <data name="Dialog.File.Statistics" id="047" mod="1">Format: {0}&lt;br/&gt;Pages: {1}&lt;br/&gt;Calques: {2}&lt;br/&gt;Objets: {3}&lt;br/&gt;Dégradés: {4}</data>
+  <data name="Dialog.File.Statistics" id="047" mod="1">Format: {0}&lt;br/&gt;Pages/calques: {1}/{2}&lt;br/&gt;Polices/images: {5}/{6}&lt;br/&gt;Objets: {3}/{4}</data>
   <data name="Dialog.Open.TitleDoc" id="0F1">Ouvrir un document</data>
   <data name="Dialog.Open.TitleMod" id="0G1">Ouvrir un document modèle</data>
   <data name="Dialog.Open.TitlePic" id="0H1">Ouvrir une icône</data>
