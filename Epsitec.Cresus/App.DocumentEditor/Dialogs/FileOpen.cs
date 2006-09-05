@@ -17,6 +17,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		{
 			this.fileExtension = ".crdoc";
 			this.isNavigationEnabled = true;
+			this.isMultipleSelection = true;
 		}
 
 		public override void Show()
@@ -104,11 +105,12 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			}
 
 			this.selectedFilename = null;
+			this.selectedFilenames = null;
 			this.UpdateTable(-1);
 			this.UpdateInitialDirectory();
 
 			this.fieldFilename.Text = "";
-			this.fieldFilename.Focus();
+			this.fieldFilename.Focus();  // focus pour frapper le nom du fichier à ouvrir
 
 			this.window.ShowDialog();
 		}

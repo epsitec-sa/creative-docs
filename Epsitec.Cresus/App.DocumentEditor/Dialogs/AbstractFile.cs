@@ -43,6 +43,25 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			}
 		}
 
+		public string[] Filenames
+		{
+			get
+			{
+				if (this.selectedFilename == null)
+				{
+					return null;
+				}
+
+				if (this.selectedFilenames == null)
+				{
+					this.selectedFilenames = new string[1];
+					this.selectedFilenames[0] = this.selectedFilename;
+				}
+
+				return this.selectedFilenames;
+			}
+		}
+
 
 		protected void CreateResizer()
 		{
@@ -54,11 +73,19 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 		protected void CreateTable(double cellHeight)
 		{
+			CellArrayStyles sh = CellArrayStyles.Stretch | CellArrayStyles.Separator | CellArrayStyles.Header | CellArrayStyles.Mobile;
+			CellArrayStyles sv = CellArrayStyles.ScrollNorm | CellArrayStyles.Separator | CellArrayStyles.SelectLine;
+
+			if (this.isMultipleSelection)
+			{
+				sv |= CellArrayStyles.SelectMulti;
+			}
+
 			this.table = new CellTable(this.window.Root);
 			this.table.DefHeight = cellHeight;
 			this.table.HeaderHeight = 20;
-			this.table.StyleH = CellArrayStyles.Stretch | CellArrayStyles.Separator | CellArrayStyles.Header | CellArrayStyles.Mobile;
-			this.table.StyleV = CellArrayStyles.ScrollNorm | CellArrayStyles.Separator | CellArrayStyles.SelectLine;
+			this.table.StyleH = sh;
+			this.table.StyleV = sv;
 			this.table.AlphaSeparator = 0.3;
 			this.table.Margins = new Margins(0, 0, 0, 0);
 			this.table.Dock = DockStyle.Fill;
@@ -518,8 +545,36 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				}
 				else
 				{
-					this.selectedFilename = this.files[sel].Filename;
-					return true;  // il faudra ferme le dialogue
+					int selCount = 0;
+					for (int i=0; i<this.table.Rows; i++)
+					{
+						if (this.table.IsCellSelected(i, 0) && !this.files[i].IsDirectory)
+						{
+							selCount++;
+						}
+					}
+
+					if (selCount == 0)
+					{
+						return false;  // ne pas fermer le dialogue
+					}
+
+					this.selectedFilenames = new string[selCount];
+					int rank = 0;
+					for (int i=0; i<this.table.Rows; i++)
+					{
+						if (this.table.IsCellSelected(i, 0) && !this.files[i].IsDirectory)
+						{
+							if (rank == 0)
+							{
+								this.selectedFilename = this.files[i].Filename;  // premier fichier sélectionné
+							}
+
+							this.selectedFilenames[rank++] = this.files[i].Filename;
+						}
+					}
+
+					return true;  // il faudra fermer le dialogue
 				}
 			}
 
@@ -719,6 +774,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				{
 					string filename = string.Concat(this.initialDirectory, "\\", field.Text, this.fileExtension);
 					this.selectedFilename = filename;
+					this.selectedFilenames = null;
 					this.CloseWindow();
 					return;
 				}
@@ -991,9 +1047,11 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 		protected string					fileExtension;
 		protected bool						isNavigationEnabled = false;
+		protected bool						isMultipleSelection = false;
 		protected string					initialDirectory;
 		protected List<Item>				files;
 		protected string					selectedFilename;
+		protected string[]					selectedFilenames;
 		protected int						tabIndex;
 		protected int						renameSelected = -1;
 		protected Widget					focusedWidget;
