@@ -712,6 +712,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			{
 				this.table.SetHeightRow(i, this.table.DefHeight);
 			}
+
+			this.table.ShowSelect();
 		}
 
 		protected void HandleWindowCloseClicked(object sender)
@@ -844,7 +846,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 			public string Description
 			{
-				//	Retourne la description du fichier.
+				//	Retourne la description du fichier, basée sur les statistiques si elles existent.
 				get
 				{
 					if (this.filename == null)  // nouveau document vide ?
@@ -866,7 +868,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 							}
 							else
 							{
-								return string.Format(Res.Strings.Dialog.File.Statistics, stat.PageFormat, stat.PagesCount.ToString(), stat.LayersCount.ToString(), stat.ObjectsCount.ToString(), stat.ComplexesCount.ToString());
+								return string.Format(Res.Strings.Dialog.File.Statistics, stat.PageFormat, stat.PagesCount.ToString(), stat.LayersCount.ToString(), stat.ObjectsCount.ToString(), stat.ComplexesCount.ToString(), stat.FontsCount.ToString(), stat.ImagesCount.ToString());
 							}
 						}
 					}

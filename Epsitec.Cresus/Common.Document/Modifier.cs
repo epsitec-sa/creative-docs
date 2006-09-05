@@ -1091,7 +1091,7 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		protected System.Collections.ArrayList StatisticImages()
+		public System.Collections.ArrayList StatisticImages()
 		{
 			//	Construit la liste de toutes les images utilisées.
 			System.Collections.ArrayList list = new System.Collections.ArrayList();
