@@ -440,6 +440,80 @@ namespace Epsitec.Common.Drawing
 			
 			return bitmap;
 		}
+
+#if false
+		[System.Runtime.InteropServices.StructLayout (System.Runtime.InteropServices.LayoutKind.Sequential)]
+		private struct ICONINFO
+		{
+			public bool fIcon;
+			public System.Int32 xHotspot;
+			public System.Int32 yHotspot;
+			public System.IntPtr hbmMask;
+			public System.IntPtr hbmColor;
+		}
+
+		[System.Runtime.InteropServices.DllImport ("user32.dll")]
+		private static extern bool GetIconInfo(System.IntPtr hIcon, out ICONINFO iconinfo);
+
+		[System.Runtime.InteropServices.DllImport ("user32.dll")]
+		private static extern int GetDIBits(System.IntPtr hDc, System.IntPtr hBitmap, int startScan, int numScanLines, byte[] bits, ref BITMAPINFO info, int usage);
+#endif
+		[System.Runtime.InteropServices.DllImport ("user32.dll", SetLastError=true)]
+		private static extern bool DrawIconEx(System.IntPtr hDc, int x, int y, System.IntPtr hIcon, int dx, int dy, int imageIndex, System.IntPtr filckerFreeBrush, int flags);
+
+		private const int DI_MASK = 0x01;
+		private const int DI_IMAGE = 0x02;
+		private const int DI_NORMAL = 0x03;
+		private const int DI_COMPAT = 0x04;
+		private const int DI_DEFAULTSIZE = 0x08;
+
+		public static Image FromNativeIcon(System.Drawing.Icon native)
+		{
+#if false
+			ICONINFO iconInfo;
+			Bitmap.GetIconInfo (native, out iconInfo);
+#endif
+			
+			System.Drawing.Bitmap src_bitmap = native.ToBitmap ();
+			System.Drawing.Bitmap dst_bitmap = new System.Drawing.Bitmap (src_bitmap.Width, src_bitmap.Height, System.Drawing.Imaging.PixelFormat.Format32bppPArgb);
+
+			double dpi_x = src_bitmap.HorizontalResolution;
+			double dpi_y = src_bitmap.VerticalResolution;
+			
+			int dx = src_bitmap.Width;
+			int dy = src_bitmap.Height;
+
+			src_bitmap.SetResolution (dst_bitmap.HorizontalResolution, dst_bitmap.VerticalResolution);
+
+			using (System.Drawing.Graphics graphics = System.Drawing.Graphics.FromImage (dst_bitmap))
+			{
+#if false
+				graphics.FillRectangle (new System.Drawing.SolidBrush (System.Drawing.Color.Red), 0, 0, dx/2, dy);
+
+				System.IntPtr hdc = graphics.GetHdc ();
+
+				Bitmap.DrawIconEx (hdc, 0, 0, native.Handle, dx, dy, 0, System.IntPtr.Zero, DI_IMAGE);
+
+				graphics.ReleaseHdc (hdc);
+#endif
+				graphics.DrawIconUnstretched (native, new System.Drawing.Rectangle (0, 0, src_bitmap.Width, src_bitmap.Height));
+			}
+
+			Bitmap bitmap = new Bitmap ();
+
+			bitmap.bitmap			 = dst_bitmap;
+			bitmap.bitmap_dx         = dx;
+			bitmap.bitmap_dy         = dy;
+			bitmap.size				 = new Size (dx, dy);
+			bitmap.origin			 = new Point (0, 0);
+			bitmap.is_origin_defined = false;
+
+			bitmap.dpi_x = dpi_x;
+			bitmap.dpi_y = dpi_y;
+
+			return bitmap;
+			
+		}
 		
 		public static Image FromData(byte[] data)
 		{
@@ -649,7 +723,7 @@ namespace Epsitec.Common.Drawing
 			System.Drawing.Bitmap dst_bitmap = new System.Drawing.Bitmap (src_bitmap.Width, src_bitmap.Height);
 			
 			double dpi_x = src_bitmap.HorizontalResolution;
-			double dpi_y = dst_bitmap.VerticalResolution;
+			double dpi_y = src_bitmap.VerticalResolution;
 				
 			src_bitmap.SetResolution (dst_bitmap.HorizontalResolution, dst_bitmap.VerticalResolution);
 				

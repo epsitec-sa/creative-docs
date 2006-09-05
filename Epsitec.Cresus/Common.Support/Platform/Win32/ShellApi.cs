@@ -118,6 +118,18 @@ namespace Epsitec.Common.Support.Platform.Win32
 			public IntPtr hProcess;					// Handle to the newly started application.
 		}
 
+		[StructLayout (LayoutKind.Sequential, CharSet=CharSet.Auto)]
+		public struct SHFILEINFO
+		{
+			public IntPtr hIcon;
+			public int iIcon;
+			public uint dwAttributes;
+			[MarshalAs (UnmanagedType.ByValTStr, SizeConst=260)]
+			public string szDisplayName;
+			[MarshalAs (UnmanagedType.ByValTStr, SizeConst=80)]
+			public string szTypeName;
+		}
+
 		// Contains information that the SHFileOperation function uses to perform file operations. 
 		[StructLayout (LayoutKind.Sequential, CharSet=CharSet.Unicode)]
 		public struct SHFILEOPSTRUCT
@@ -188,6 +200,32 @@ namespace Epsitec.Common.Support.Platform.Win32
 		public static extern Int32 SHGetMalloc(
 			out IntPtr hObject);	// Address of a pointer that receives the Shell's IMalloc interface pointer. 
 
+		[System.Flags]
+		public enum SHGFI
+		{
+			SHGFI_ICON				= 0x00000100,
+			SHGFI_DISPLAYNAME		= 0x00000200,
+			SHGFI_TYPENAME			= 0x00000400,
+			SHGFI_ATTRIBUTES		= 0x00000800,
+			SHGFI_ICONLOCATION		= 0x00001000,
+			SHGFI_EXETYPE			= 0x00002000,
+			SHGFI_SYSICONINDEX		= 0x00004000,
+			SHGFI_LINKOVERLAY		= 0x00008000,
+			SHGFI_SELECTED			= 0x00010000,
+			SHGFI_ATTR_SPECIFIED	= 0x00020000,
+			SHGFI_LARGEICON			= 0x00000000,
+			SHGFI_SMALLICON			= 0x00000001,
+			SHGFI_SHELLICONSIZE		= 0x00000004,
+			SHGFI_PIDL				= 0x00000008,
+			SHGFI_USEFILEATTRIBUTES	= 0x00000010
+		}
+
+		[DllImport ("shell32.dll", CharSet=CharSet.Unicode)]
+		public static extern System.IntPtr SHGetFileInfo(string pszPath, uint dwFileAttributes, out SHFILEINFO psfi, int cbFileInfo, SHGFI uFlags);
+		
+		[DllImport ("shell32.dll", CharSet=CharSet.Unicode)]
+		public static extern System.IntPtr SHGetFileInfo(IntPtr pidl, uint dwFileAttributes, out SHFILEINFO psfi, int cbFileInfo, SHGFI uFlags);
+		
 		// Retrieves the path of a folder as an PIDL.
 		[DllImport ("shell32.dll")]
 		public static extern Int32 SHGetFolderLocation(

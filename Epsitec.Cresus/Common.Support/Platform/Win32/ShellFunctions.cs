@@ -23,7 +23,7 @@ namespace Epsitec.Common.Support.Platform.Win32
 			IntPtr ptrRet;
 			ShellApi.SHGetDesktopFolder (out ptrRet);
 
-			System.Type shellFolderType = System.Type.GetType ("ShellLib.IShellFolder");
+			System.Type shellFolderType = typeof (IShellFolder);
 			Object obj = Marshal.GetTypedObjectForIUnknown (ptrRet, shellFolderType);
 			IShellFolder ishellFolder = (IShellFolder) obj;
 
@@ -32,26 +32,28 @@ namespace Epsitec.Common.Support.Platform.Win32
 
 		public static Type GetShellFolderType()
 		{
-			System.Type shellFolderType = System.Type.GetType ("ShellLib.IShellFolder");
+			System.Type shellFolderType = typeof (IShellFolder);
 			return shellFolderType;
 		}
 
 		public static Type GetMallocType()
 		{
-			System.Type mallocType = System.Type.GetType ("ShellLib.IMalloc");
+			System.Type mallocType = typeof (IMalloc);
 			return mallocType;
 		}
 
 		public static Type GetFolderFilterType()
 		{
-			System.Type folderFilterType = System.Type.GetType ("ShellLib.IFolderFilter");
-			return folderFilterType;
+//-			System.Type folderFilterType = typeof (IFolderFilter);
+			throw new System.NotImplementedException ();
+//-			return folderFilterType;
 		}
 
 		public static Type GetFolderFilterSiteType()
 		{
-			System.Type folderFilterSiteType = System.Type.GetType ("ShellLib.IFolderFilterSite");
-			return folderFilterSiteType;
+//-			System.Type folderFilterSiteType = typeof (IFolderFilterSite);
+			throw new System.NotImplementedException ();
+//-			return folderFilterSiteType;
 		}
 
 		public static IShellFolder GetShellFolder(IntPtr ptrShellFolder)

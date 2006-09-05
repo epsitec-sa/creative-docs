@@ -85,6 +85,7 @@
     <Reference Include="System.Data">
       <Name>System.Data</Name>
     </Reference>
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Runtime.Serialization.Formatters.Soap">
       <Name>System.Runtime.Serialization.Formatters.Soap</Name>
     </Reference>
@@ -161,6 +162,8 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="CaptionCacheTest.cs" />
+    <Compile Include="FileManagerTest.cs" />
+    <Compile Include="FileInfoTest.cs" />
     <Compile Include="ResourceManagerTest.cs" />
     <Compile Include="DruidTest.cs" />
     <Compile Include="EventsTest.cs" />
