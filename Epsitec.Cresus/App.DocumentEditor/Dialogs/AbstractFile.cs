@@ -400,8 +400,9 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			if (this.buttonRename != null)
 			{
 				int sel = this.table.SelectedRow;
-				this.buttonRename.Enable = (sel != -1);
-				this.buttonDelete.Enable = (sel != -1);
+				bool enable = (sel != -1 && this.files[sel].Filename != "*");
+				this.buttonRename.Enable = enable;
+				this.buttonDelete.Enable = enable;
 			}
 		}
 
@@ -495,7 +496,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		{
 			//	Supprime un fichier ou un dossier.
 			int sel = this.table.SelectedRow;
-			if (sel == -1)
+			if (sel == -1 || this.files[sel].Filename == "*")
 			{
 				return;
 			}
@@ -536,7 +537,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			//	rendu visible.
 			System.Diagnostics.Debug.Assert(this.fieldRename != null);
 			int sel = this.table.SelectedRow;
-			if (sel == -1)
+			if (sel == -1 || this.files[sel].Filename == "*")
 			{
 				return;
 			}
