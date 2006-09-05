@@ -131,7 +131,9 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			//	Met à jour le chemin d'accès.
 			if (this.fieldPath != null)
 			{
-				this.fieldPath.Text = AbstractFile.GetIllustredPath(this.initialDirectory);
+				this.ignoreChanged = true;
+				this.fieldPath.Text = AbstractFile.RemoveStartingSpaces(AbstractFile.GetIllustredPath(this.initialDirectory));
+				this.ignoreChanged = false;
 			}
 		}
 
@@ -170,17 +172,17 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.comboTexts.Add(text);
 				this.comboDirectories.Add(drive.Name);
 
-				if (this.initialDirectory.StartsWith(drive.Name))
+				if (this.initialDirectory.Length > 3 && this.initialDirectory.StartsWith(drive.Name))
 				{
 					string[] dirs = this.initialDirectory.Split('\\');
 					for (int i=1; i<dirs.Length; i++)
 					{
 						string dir = "";
 						text = "";
-						for (int j=0; j<i; j++)
+						for (int j=0; j<=i; j++)
 						{
 							dir += dirs[j]+"\\";
-							text += "|  ";
+							text += "   ";
 						}
 						text += Misc.Image("FileTypeDirectory");
 						text += " ";
@@ -197,15 +199,16 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 					}
 				}
 			}
+
+			this.comboSelected = -1;
 		}
 
 		private void HandleFieldPathComboClosed(object sender)
 		{
 			//	Le menu pour le chemin d'accès a été fermé.
-			int index = this.comboTexts.IndexOf(this.fieldPath.Text);
-			if (index != -1)
+			if (this.comboSelected != -1)
 			{
-				this.InitialDirectory = this.comboDirectories[index];
+				this.InitialDirectory = this.comboDirectories[this.comboSelected];
 				this.UpdateTable(-1);
 			}
 		}
@@ -219,7 +222,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			}
 
 			this.ignoreChanged = true;
-			//?this.fieldPath.Text = AbstractFile.RemoveStartingSpaces(this.fieldPath.Text);
+			this.comboSelected = this.comboTexts.IndexOf(this.fieldPath.Text);
+			this.fieldPath.Text = AbstractFile.RemoveStartingSpaces(this.fieldPath.Text);
 			this.ignoreChanged = false;
 		}
 
@@ -256,5 +260,6 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		protected TextField						fieldFilename;
 		protected List<string>					comboDirectories;
 		protected List<string>					comboTexts;
+		protected int							comboSelected;
 	}
 }

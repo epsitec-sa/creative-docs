@@ -568,7 +568,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				string text = "";
 				for (int i=0; i<dirs.Length-1; i++)
 				{
-					text += "|  ";
+					text += "   ";
 				}
 
 				text += Misc.Image("FileTypeDirectory");
@@ -625,7 +625,6 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			return builder.ToString();
 		}
 
-#if false
 		protected static string RemoveStartingSpaces(string text)
 		{
 			//	Supprime tous les espaces au début d'un texte.
@@ -652,7 +651,6 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 			return text;
 		}
-#endif
 
 
 
