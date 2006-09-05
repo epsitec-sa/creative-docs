@@ -78,6 +78,7 @@
     <Reference Include="System.Data">
       <Name>System.Data</Name>
     </Reference>
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms">
       <Name>System.Windows.Forms</Name>
     </Reference>
@@ -166,6 +167,11 @@
     <Compile Include="OpletQueue.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Platform\Win32\FileInfo.cs" />
+    <Compile Include="Platform\Win32\IMalloc.cs" />
+    <Compile Include="Platform\Win32\IShellFolder.cs" />
+    <Compile Include="Platform\Win32\ShellApi.cs" />
+    <Compile Include="Platform\Win32\ShellFunctions.cs" />
     <Compile Include="SerialAlgorithm.cs">
       <SubType>Code</SubType>
     </Compile>
