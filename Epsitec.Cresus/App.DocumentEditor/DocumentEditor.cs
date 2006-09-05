@@ -153,15 +153,7 @@ namespace Epsitec.App.DocumentEditor
 			{
 				if ( this.globalSettings.FirstAction == Settings.FirstAction.OpenNewDocument )
 				{
-					if ( this.globalSettings.NewDocument == "" )
-					{
-						this.CreateDocument();
-					}
-					else
-					{
-						this.Open(this.globalSettings.NewDocument);
-						this.CurrentDocument.IsDirtySerialize = false;
-					}
+					this.CreateDocument();
 				}
 
 				if ( this.globalSettings.FirstAction == Settings.FirstAction.OpenLastFile &&
@@ -1625,7 +1617,10 @@ namespace Epsitec.App.DocumentEditor
 				dialog.AcceptMultipleSelection = true;
 				dialog.Owner = this.Window;
 				dialog.OpenDialog();
-				if ( dialog.Result != Common.Dialogs.DialogResult.Accept )  return false;
+				if (dialog.Result != Common.Dialogs.DialogResult.Accept)
+				{
+					return false;
+				}
 
 				string[] names = dialog.FileNames;
 				if ( names.Length >= 1 )
@@ -1643,17 +1638,14 @@ namespace Epsitec.App.DocumentEditor
 				this.dlgFileOpen.InitialDirectory = this.globalSettings.InitialDirectory;
 
 				this.dlgFileOpen.Show();  // choix d'un fichier...
-
-				string[] names = this.dlgFileOpen.Filenames;
-				if (names == null)  // annuler ?
+				if (this.dlgFileOpen.Result != Common.Dialogs.DialogResult.Accept)
 				{
 					return false;
 				}
 
-				if (names.Length >= 1)
-				{
-					this.globalSettings.InitialDirectory = System.IO.Path.GetDirectoryName(names[0]);
-				}
+				this.globalSettings.InitialDirectory = this.dlgFileOpen.InitialDirectory;
+
+				string[] names = this.dlgFileOpen.Filenames;
 				for (int i=0; i<names.Length; i++)
 				{
 					this.Open(names[i]);
@@ -1894,43 +1886,46 @@ namespace Epsitec.App.DocumentEditor
 		{
 			this.dlgSplash.Hide();
 
-			if (this.documentType == DocumentType.Graphic && this.globalSettings.NewDocument != "")
+			if (this.documentType == DocumentType.Graphic)  // CrDoc ?
 			{
-				this.dlgFileNew.InitialDirectory = System.IO.Path.GetDirectoryName(this.globalSettings.NewDocument);
+				string newDocument = this.globalSettings.NewDocument;
+
+				if (newDocument.EndsWith(".crmod"))  // ancienne définition ?
+				{
+					newDocument = System.IO.Path.GetDirectoryName(newDocument);
+				}
+
+				this.dlgFileNew.InitialDirectory = newDocument;
 
 				this.dlgFileNew.Show();  // choix d'un fichier...
+				if (this.dlgFileNew.Result != Common.Dialogs.DialogResult.Accept)
+				{
+					return;
+				}
+
+				this.globalSettings.NewDocument = this.dlgFileNew.InitialDirectory;
 
 				string filename = this.dlgFileNew.Filename;
-				if (filename != null)
+				if (filename == "*")  // nouveau document vide ?
 				{
-					if (filename == "*")  // nouveau document vide ?
-					{
-						this.CreateDocument();
-						this.CurrentDocument.Modifier.New();
-					}
-					else
-					{
-						this.Open(filename);
-						this.CurrentDocument.IsDirtySerialize = false;
-					}
-					this.initializationInProgress = true;
-					this.CurrentDocument.InitializationInProgress = true;
+					this.CreateDocument();
+					this.CurrentDocument.Modifier.New();
 				}
-				return;
+				else
+				{
+					this.Open(filename);
+					this.CurrentDocument.IsDirtySerialize = false;
+				}
+				this.initializationInProgress = true;
+				this.CurrentDocument.InitializationInProgress = true;
 			}
-
-			if (this.globalSettings.NewDocument == "")
+			else  // CrPicto ?
 			{
 				this.CreateDocument();
 				this.CurrentDocument.Modifier.New();
+				this.initializationInProgress = true;
+				this.CurrentDocument.InitializationInProgress = true;
 			}
-			else
-			{
-				this.Open(this.globalSettings.NewDocument);
-				this.CurrentDocument.IsDirtySerialize = false;
-			}
-			this.initializationInProgress = true;
-			this.CurrentDocument.InitializationInProgress = true;
 		}
 
 		[Command ("Open")]

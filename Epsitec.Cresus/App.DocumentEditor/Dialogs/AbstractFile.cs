@@ -19,6 +19,22 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		}
 
 
+		public Common.Dialogs.DialogResult Result
+		{
+			//	Indique si le dialogue a été fermé avec 'ouvrir' ou 'annuler'.
+			get
+			{
+				if (this.selectedFilename == null)
+				{
+					return Common.Dialogs.DialogResult.Cancel;
+				}
+				else
+				{
+					return Common.Dialogs.DialogResult.Accept;
+				}
+			}
+		}
+
 		public string InitialDirectory
 		{
 			get
