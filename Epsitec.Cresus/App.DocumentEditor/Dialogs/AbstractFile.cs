@@ -37,6 +37,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 		public string Filename
 		{
+			//	Retourne le nom du fichier à ouvrir, ou null si l'utilisateur a choisi
+			//	le bouton 'annuler'.
 			get
 			{
 				return this.selectedFilename;
@@ -45,9 +47,11 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 		public string[] Filenames
 		{
+			//	Retourne les noms des fichiers à ouvrir, ou null si l'utilisateur a choisi
+			//	le bouton 'annuler'.
 			get
 			{
-				if (this.selectedFilename == null)
+				if (this.selectedFilename == null)  // annuler ?
 				{
 					return null;
 				}
