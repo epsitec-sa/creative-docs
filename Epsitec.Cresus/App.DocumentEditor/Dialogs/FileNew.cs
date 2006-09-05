@@ -16,7 +16,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		public FileNew(DocumentEditor editor) : base(editor)
 		{
 			this.fileExtension = ".crmod";
-			this.isNavigationEnabled = false;
+			this.isNavigationEnabled = true;
 			this.isMultipleSelection = false;
 		}
 
@@ -37,13 +37,16 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.window.Root.Padding = new Margins(8, 8, 8, 8);
 
 				this.CreateResizer();
+				this.CreateAccess();
 				this.CreateTable(50);
+				this.CreateRename();
 				this.CreateFooter();
 			}
 
 			this.selectedFilename = null;
 			this.selectedFilenames = null;
 			this.UpdateTable(0);
+			this.UpdateInitialDirectory();
 
 			this.table.Focus();  // focus dans la liste des modèles
 
