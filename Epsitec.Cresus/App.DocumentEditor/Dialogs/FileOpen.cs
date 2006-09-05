@@ -15,6 +15,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 	{
 		public FileOpen(DocumentEditor editor) : base(editor)
 		{
+			this.fileExtension = ".crdoc";
+			this.isNavigationEnabled = true;
 		}
 
 		public override void Show()
@@ -136,23 +138,6 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.ignoreChanged = false;
 			}
 		}
-
-		protected override bool IsNavigationEnabled
-		{
-			get
-			{
-				return true;
-			}
-		}
-
-		protected override string Extension
-		{
-			get
-			{
-				return ".crdoc";
-			}
-		}
-
 
 
 		private void HandleFieldPathComboOpening(object sender, CancelEventArgs e)
