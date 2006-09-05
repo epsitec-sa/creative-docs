@@ -41,6 +41,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.selectedFilename = null;
 			this.UpdateTable(0);
 
+			this.table.Focus();
+
 			this.window.ShowDialog();
 		}
 

@@ -374,7 +374,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			{
 				for (int i=1; i<100; i++)
 				{
-					string newDir = string.Concat(this.initialDirectory, "\\Nouveau dossier");
+					string newDir = string.Concat(this.initialDirectory, "\\", Res.Strings.Dialog.File.NewDirectoryName);
 					if (i > 1)
 					{
 						newDir = string.Concat(newDir, " (", i.ToString(), ")");
@@ -866,7 +866,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 							}
 							else
 							{
-								return string.Format("Format: {0}<br/>Pages: {1}<br/>Calques: {2}<br/>Objets: {3}<br/>Dégradés: {4}", stat.PageFormat, stat.PagesCount.ToString(), stat.LayersCount.ToString(), stat.ObjectsCount.ToString(), stat.ComplexesCount.ToString());
+								return string.Format(Res.Strings.Dialog.File.Statistics, stat.PageFormat, stat.PagesCount.ToString(), stat.LayersCount.ToString(), stat.ObjectsCount.ToString(), stat.ComplexesCount.ToString());
 							}
 						}
 					}
