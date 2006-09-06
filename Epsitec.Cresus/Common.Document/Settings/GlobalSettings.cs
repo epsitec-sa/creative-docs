@@ -40,6 +40,8 @@ namespace Epsitec.Common.Document.Settings
 			this.splashScreen = true;
 			this.firstAction = FirstAction.OpenNewDocument;
 			this.newDocument = "";
+			this.lastModel = new System.Collections.ArrayList();
+			this.lastModelMax = 10;
 			this.lastFilename = new System.Collections.ArrayList();
 			this.lastFilenameMax = 10;
 			this.labelProperties = true;
@@ -87,9 +89,25 @@ namespace Epsitec.Common.Document.Settings
 			{
 			}
 
-			if ( type != DocumentType.Pictogram )
+			if (type != DocumentType.Pictogram)
 			{
-				this.newDocument = this.initialDirectory + @"\" + "normal.crmod";
+				try
+				{
+					string[] list = System.IO.Directory.GetFiles(this.initialDirectory, "*.crmod");
+					for (int i=0; i<lastModelMax; i++)
+					{
+						if (i >= list.Length)  break;
+						this.LastModelAdd(list[i]);
+					}
+				}
+				catch
+				{
+				}
+			}
+
+			if (type != DocumentType.Pictogram)
+			{
+				this.newDocument = this.initialDirectory;
 			}
 		}
 
@@ -262,6 +280,55 @@ namespace Epsitec.Common.Document.Settings
 			{
 				this.newDocument = value;
 			}
+		}
+
+
+		public int LastModelCount
+		{
+			get
+			{
+				return this.lastModel.Count;
+			}
+		}
+
+		public string LastModelGet(int index)
+		{
+			return this.lastModel[index] as string;
+		}
+
+		public string LastModelGetShort(int index)
+		{
+			return Misc.ExtractName(this.LastModelGet(index));
+		}
+
+		public void LastModelAdd(string filename)
+		{
+			int index = this.LastModelSearch(filename);
+			if ( index < 0 )
+			{
+				this.LastModelTrunc();
+			}
+			else
+			{
+				this.lastModel.RemoveAt(index);
+			}
+			this.lastModel.Insert(0, filename);
+		}
+
+		protected int LastModelSearch(string filename)
+		{
+			for ( int i=0 ; i<this.lastModel.Count ; i++ )
+			{
+				string s = this.lastModel[i] as string;
+				if ( s == filename )  return i;
+			}
+			return -1;
+		}
+
+		protected void LastModelTrunc()
+		{
+			if ( this.lastModel.Count < this.lastModelMax )  return;
+			this.lastModel.RemoveAt(this.lastModel.Count-1);
 		}
 
 
@@ -761,7 +828,7 @@ namespace Epsitec.Common.Document.Settings
 		public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
 			//	Sérialise les réglages.
-			info.AddValue("Version", 6);
+			info.AddValue("Version", 7);
 
 			info.AddValue("WindowLocation", this.windowLocation);
 			info.AddValue("WindowSize", this.windowSize);
@@ -776,6 +843,7 @@ namespace Epsitec.Common.Document.Settings
 			info.AddValue("SplashScreen", this.splashScreen);
 			info.AddValue("FirstAction", this.firstAction);
 			info.AddValue("NewDocument", this.newDocument);
+			info.AddValue("LastModel", this.lastModel);
 			info.AddValue("LastFilename", this.lastFilename);
 			info.AddValue("InitialDirectory", this.initialDirectory);
 			info.AddValue("LabelProperties", this.labelProperties);
@@ -843,6 +911,15 @@ namespace Epsitec.Common.Document.Settings
 			{
 				this.newDocument = "";
 			}
+
+			if ( version >= 7 )
+			{
+				this.lastModel = (System.Collections.ArrayList) info.GetValue("LastModel", typeof(System.Collections.ArrayList));
+			}
+			else
+			{
+				this.lastModel = new System.Collections.ArrayList();
+			}
 		}
 		#endregion
 
@@ -859,6 +936,8 @@ namespace Epsitec.Common.Document.Settings
 		protected bool							splashScreen;
 		protected FirstAction					firstAction;
 		protected string						newDocument;
+		protected System.Collections.ArrayList	lastModel;
+		protected int							lastModelMax;
 		protected System.Collections.ArrayList	lastFilename;
 		protected int							lastFilenameMax;
 		protected string						initialDirectory;
