@@ -340,289 +340,6 @@ namespace Epsitec.App.DocumentEditor
 		{
 			ToolTip.Default.Behaviour = ToolTipBehaviour.Normal;
 
-#if false
-			this.menu = new HMenu();
-			this.menu.Visibility = false;
-			this.menu.Host = this;
-			this.menu.Items.Add(new MenuItem("", Res.Strings.Menu.Main.File));
-			this.menu.Items.Add(new MenuItem("", Res.Strings.Menu.Main.Edit));
-			this.menu.Items.Add(new MenuItem("", Res.Strings.Menu.Main.Objects));
-			this.menu.Items.Add(new MenuItem("", Res.Strings.Menu.Main.Show));
-			if ( this.useArray )
-			{
-				this.menu.Items.Add(new MenuItem("", Res.Strings.Menu.Main.Array));
-			}
-			this.menu.Items.Add(new MenuItem("", Res.Strings.Menu.Main.Document));
-#if DEBUG
-			this.menu.Items.Add(new MenuItem("", Res.Strings.Menu.Main.Debug));
-#endif
-			this.menu.Items.Add(new MenuItem("", Res.Strings.Menu.Main.Help));
-
-			int i = 0;
-
-			VMenu fileMenu = new VMenu();
-			fileMenu.Name = "File";
-			fileMenu.Host = this;
-			this.MenuAdd(fileMenu, "New");
-			this.MenuAdd(fileMenu, "Open");
-			if ( this.type != DocumentType.Pictogram )
-			{
-				this.MenuAdd(fileMenu, "OpenModel");
-			}
-			this.MenuAdd(fileMenu, "Close");
-			this.MenuAdd(fileMenu, "CloseAll");
-			this.MenuAdd(fileMenu, null);
-			this.MenuAdd(fileMenu, "Save");
-			this.MenuAdd(fileMenu, "SaveAs");
-			if ( this.type != DocumentType.Pictogram )
-			{
-				this.MenuAdd(fileMenu, "SaveModel");
-			}
-			this.MenuAdd(fileMenu, null);
-			this.MenuAdd(fileMenu, "Print");
-			this.MenuAdd(fileMenu, "Export");
-			this.MenuAdd(fileMenu, null);
-			this.MenuAdd(fileMenu, "", "SubmenuLastFiles", DocumentEditor.GetRes("Action.LastFiles"), "");
-			this.MenuAdd(fileMenu, null);
-			this.MenuAdd(fileMenu, "", "QuitApplication", DocumentEditor.GetRes("Action.Quit"), "");
-			fileMenu.AdjustSize();
-			this.menu.Items[i++].Submenu = fileMenu;
-
-			this.fileMenu = fileMenu;
-			this.BuildLastFilenamesMenu();
-
-			VMenu editMenu = new VMenu();
-			editMenu.Name = "Edit";
-			editMenu.Host = this;
-			this.MenuAdd(editMenu, "Undo");
-			this.MenuAdd(editMenu, "Redo");
-			this.MenuAdd(editMenu, null);
-			this.MenuAdd(editMenu, "Cut");
-			this.MenuAdd(editMenu, "Copy");
-			this.MenuAdd(editMenu, "Paste");
-			this.MenuAdd(editMenu, null);
-			this.MenuAdd(editMenu, "Delete");
-			this.MenuAdd(editMenu, "Duplicate");
-			editMenu.AdjustSize();
-			this.menu.Items[i++].Submenu = editMenu;
-
-			VMenu objMenu = new VMenu();
-			objMenu.Name = "Obj";
-			objMenu.Host = this;
-			this.MenuAdd(objMenu, "DeselectAll");
-			this.MenuAdd(objMenu, "SelectAll");
-			this.MenuAdd(objMenu, "SelectInvert");
-			this.MenuAdd(objMenu, null);
-			this.MenuAdd(objMenu, "HideSel");
-			this.MenuAdd(objMenu, "HideRest");
-			this.MenuAdd(objMenu, "HideCancel");
-			this.MenuAdd(objMenu, "y/n", "HideHalf", DocumentEditor.GetRes("Action.HideHalf"), "");
-			this.MenuAdd(objMenu, null);
-			this.MenuAdd(objMenu, Misc.Icon("OrderUpAll"), "SubmenuOrder", DocumentEditor.GetRes("Action.OrderMain"), "");
-			this.MenuAdd(objMenu, Misc.Icon("MoveH"), "SubmenuOper", DocumentEditor.GetRes("Action.OperationMain"), "");
-			this.MenuAdd(objMenu, Misc.Icon("GroupEmpty"), "SubmenuGroup", DocumentEditor.GetRes("Action.GroupMain"), "");
-			this.MenuAdd(objMenu, Misc.Icon("Combine"), "SubmenuGeom", DocumentEditor.GetRes("Action.GeometryMain"), "");
-			this.MenuAdd(objMenu, Misc.Icon("BooleanOr"), "SubmenuBool", DocumentEditor.GetRes("Action.BooleanMain"), "");
-			objMenu.AdjustSize();
-			this.menu.Items[i++].Submenu = objMenu;
-
-			VMenu orderMenu = new VMenu();
-			orderMenu.Name = "Order";
-			orderMenu.Host = this;
-			this.MenuAdd(orderMenu, "OrderUpAll");
-			this.MenuAdd(orderMenu, "OrderUpOne");
-			this.MenuAdd(orderMenu, "OrderDownOne");
-			this.MenuAdd(orderMenu, "OrderDownAll");
-			orderMenu.AdjustSize();
-			this.MenuAddSub(objMenu, orderMenu, "SubmenuOrder");
-
-			VMenu operMenu = new VMenu();
-			operMenu.Name = "Oper";
-			operMenu.Host = this;
-			this.MenuAdd(operMenu, "Rotate90");
-			this.MenuAdd(operMenu, "Rotate180");
-			this.MenuAdd(operMenu, "Rotate270");
-			this.MenuAdd(operMenu, null);
-			this.MenuAdd(operMenu, "MirrorH");
-			this.MenuAdd(operMenu, "MirrorV");
-			this.MenuAdd(operMenu, null);
-			this.MenuAdd(operMenu, "ScaleDiv2");
-			this.MenuAdd(operMenu, "ScaleMul2");
-			operMenu.AdjustSize();
-			this.MenuAddSub(objMenu, operMenu, "SubmenuOper");
-
-			VMenu groupMenu = new VMenu();
-			groupMenu.Name = "Group";
-			groupMenu.Host = this;
-			this.MenuAdd(groupMenu, "Group");
-			this.MenuAdd(groupMenu, "Merge");
-			this.MenuAdd(groupMenu, "Extract");
-			this.MenuAdd(groupMenu, "Ungroup");
-			this.MenuAdd(groupMenu, null);
-			this.MenuAdd(groupMenu, "Inside");
-			this.MenuAdd(groupMenu, "Outside");
-			groupMenu.AdjustSize();
-			this.MenuAddSub(objMenu, groupMenu, "SubmenuGroup");
-
-			VMenu geomMenu = new VMenu();
-			geomMenu.Name = "Geom";
-			geomMenu.Host = this;
-			this.MenuAdd(geomMenu, "Combine");
-			this.MenuAdd(geomMenu, "Uncombine");
-			this.MenuAdd(geomMenu, null);
-			this.MenuAdd(geomMenu, "ToBezier");
-			this.MenuAdd(geomMenu, "ToPoly");
-			this.MenuAdd(geomMenu, null);
-			this.MenuAdd(geomMenu, "Fragment");
-#if DEBUG
-			this.MenuAdd(geomMenu, "", "ToSimplest", DocumentEditor.GetRes("Action.ToSimplest"), "");
-#endif
-			geomMenu.AdjustSize();
-			this.MenuAddSub(objMenu, geomMenu, "SubmenuGeom");
-
-			VMenu boolMenu = new VMenu();
-			boolMenu.Name = "Bool";
-			boolMenu.Host = this;
-			this.MenuAdd(boolMenu, "BooleanOr");
-			this.MenuAdd(boolMenu, "BooleanAnd");
-			this.MenuAdd(boolMenu, "BooleanXor");
-			this.MenuAdd(boolMenu, "BooleanFrontMinus");
-			this.MenuAdd(boolMenu, "BooleanBackMinus");
-			boolMenu.AdjustSize();
-			this.MenuAddSub(objMenu, boolMenu, "SubmenuBool");
-
-			VMenu showMenu = new VMenu();
-			showMenu.Name = "Show";
-			showMenu.Host = this;
-			this.MenuAdd(showMenu, "Preview");
-			this.MenuAdd(showMenu, "Grid");
-			this.MenuAdd(showMenu, "Magnet");
-			if ( this.type != DocumentType.Pictogram )
-			{
-				this.MenuAdd(showMenu, "Rulers");
-				this.MenuAdd(showMenu, "Labels");
-				this.MenuAdd(showMenu, "Aggregates");
-			}
-			this.MenuAdd(showMenu, null);
-			this.MenuAdd(showMenu, "ZoomMin");
-			if ( this.type != DocumentType.Pictogram )
-			{
-				this.MenuAdd(showMenu, "ZoomPage");
-				this.MenuAdd(showMenu, "ZoomPageWidth");
-			}
-			this.MenuAdd(showMenu, "ZoomDefault");
-			this.MenuAdd(showMenu, "ZoomSel");
-			if ( this.type != DocumentType.Pictogram )
-			{
-				this.MenuAdd(showMenu, "ZoomSelWidth");
-			}
-			this.MenuAdd(showMenu, "ZoomPrev");
-			this.MenuAdd(showMenu, "ZoomSub");
-			this.MenuAdd(showMenu, "ZoomAdd");
-			showMenu.AdjustSize();
-			this.menu.Items[i++].Submenu = showMenu;
-
-#if false
-			if ( this.useArray )
-			{
-				VMenu arrayMenu = new VMenu();
-				arrayMenu.Name = "Array";
-				arrayMenu.Host = this;
-				this.MenuAdd(arrayMenu, "ArrayFrame"), ";
-				this.MenuAdd(arrayMenu, "ArrayHoriz"), ";
-				this.MenuAdd(arrayMenu, "ArrayVerti"), ";
-				this.MenuAdd(arrayMenu, null);
-				this.MenuAdd(arrayMenu, "", "", "Assistants", "");
-				this.MenuAdd(arrayMenu, null);
-				this.MenuAdd(arrayMenu, "", "ArrayAddColumnLeft", "Insérer des colonnes à gauche", "");
-				this.MenuAdd(arrayMenu, "", "ArrayAddColumnRight", "Insérer des colonnes à droite", "");
-				this.MenuAdd(arrayMenu, "", "ArrayAddRowTop", "Insérer des lignes en dessus", "");
-				this.MenuAdd(arrayMenu, "", "ArrayAddRowBottom", "Insérer des lignes en dessous", "");
-				this.MenuAdd(arrayMenu, null);
-				this.MenuAdd(arrayMenu, "", "ArrayDelColumn", "Supprimer les colonnes", "");
-				this.MenuAdd(arrayMenu, "", "ArrayDelRow", "Supprimer les lignes", "");
-				this.MenuAdd(arrayMenu, null);
-				this.MenuAdd(arrayMenu, "", "ArrayAlignColumn", "Egaliser les largeurs de colonne", "");
-				this.MenuAdd(arrayMenu, "", "ArrayAlignRow", "Egaliser les hauteurs de ligne", "");
-				this.MenuAdd(arrayMenu, null);
-				this.MenuAdd(arrayMenu, "", "ArraySwapColumn", "Permuter le contenu des colonnes", "");
-				this.MenuAdd(arrayMenu, "", "ArraySwapRow", "Permuter le contenu des lignes", "");
-				arrayMenu.AdjustSize();
-				this.menu.Items[i++].Submenu = arrayMenu;
-
-				VMenu arrayLookMenu = new VMenu();
-				arrayLookMenu.Name = "ArrayLook";
-				arrayLookMenu.Host = this;
-				for ( int j=0 ; j<100 ; j++ )
-				{
-					string text, name;
-					if ( !Objects.Array.CommandLook(j, out text, out name) )  break;
-					if ( name == "" )
-					{
-						this.MenuAdd(arrayLookMenu, null);
-					}
-					else
-					{
-						this.MenuAdd(arrayLookMenu, "", "ArrayLook(this.Name)", text, "", name);
-					}
-				}
-				arrayLookMenu.AdjustSize();
-				arrayMenu.Items[4].Submenu = arrayLookMenu;
-			}
-#endif
-
-			VMenu docMenu = new VMenu();
-			docMenu.Name = "Document";
-			docMenu.Host = this;
-			this.MenuAdd(docMenu, "Settings");
-			this.MenuAdd(docMenu, "Infos");
-			this.MenuAdd(docMenu, "PageStack");
-			this.MenuAdd(docMenu, "Glyphs");
-			this.MenuAdd(docMenu, null);
-			this.MenuAdd(docMenu, "PageNew");
-			this.MenuAdd(docMenu, "Up");
-			this.MenuAdd(docMenu, "Down");
-			this.MenuAdd(docMenu, "DeleteItem");
-			this.MenuAdd(docMenu, null);
-			this.MenuAdd(docMenu, "LayerNew");
-			this.MenuAdd(docMenu, "Up");
-			this.MenuAdd(docMenu, "Down");
-			this.MenuAdd(docMenu, "DeleteItem");
-			docMenu.AdjustSize();
-			this.menu.Items[i++].Submenu = docMenu;
-
-#if DEBUG
-			VMenu debugMenu = new VMenu();
-			debugMenu.Name = "Debug";
-			debugMenu.Host = this;
-			this.MenuAdd(debugMenu, "y/n", "DebugBboxThin", "Show BBoxThin", Misc.GetShortcut(this.debugBboxThinState));
-			this.MenuAdd(debugMenu, "y/n", "DebugBboxGeom", "Show BBoxGeom", Misc.GetShortcut(this.debugBboxGeomState));
-			this.MenuAdd(debugMenu, "y/n", "DebugBboxFull", "Show BBoxFull", Misc.GetShortcut(this.debugBboxFullState));
-			this.MenuAdd(debugMenu, null);
-			this.MenuAdd(debugMenu, "", "DebugDirty", "Make dirty", Misc.GetShortcut(this.debugDirtyState));
-			this.MenuAdd(debugMenu, null);
-			this.MenuAdd(debugMenu, "SelectTotal");
-			this.MenuAdd(debugMenu, "SelectPartial");
-			this.MenuAdd(debugMenu, null);
-			this.MenuAdd(debugMenu, "", "ForceSaveAll", "Save and overwrite all", Misc.GetShortcut(this.forceSaveAllState));
-			debugMenu.AdjustSize();
-			this.menu.Items[i++].Submenu = debugMenu;
-#endif
-
-			VMenu helpMenu = new VMenu();
-			helpMenu.Name = "Help";
-			helpMenu.Host = this;
-			if ( this.installType != InstallType.Freeware )
-			{
-				this.MenuAdd(helpMenu, "Key");
-			}
-			this.MenuAdd(helpMenu, "Update");
-			this.MenuAdd(helpMenu, null);
-			this.MenuAdd(helpMenu, "About");
-			helpMenu.AdjustSize();
-			this.menu.Items[i++].Submenu = helpMenu;
-#endif
-
 			//	Crée le RibbonBook unique qui remplace le traditionnel menu.
 			this.ribbonBook = new RibbonBook(this);
 			this.ribbonBook.Dock = DockStyle.Top;
@@ -1114,64 +831,6 @@ namespace Epsitec.App.DocumentEditor
 			document.Modifier.AttachContainer(di.containerOperations);
 #endif
 		}
-
-		#region LastFilenames
-		protected void BuildLastModelsMenu()
-		{
-			//	Construit le sous-menu des derniers modèles ouverts.
-			if ( this.menu == null )  return;
-
-			VMenu lastMenu = new VMenu();
-			lastMenu.Name = "LastModels";
-			lastMenu.Host = this;
-
-			int total = this.globalSettings.LastModelCount;
-			if ( total == 0 )
-			{
-				this.MenuAdd(lastMenu, "", "", Res.Strings.LastFiles.None, "");
-			}
-			else
-			{
-				for ( int i=0 ; i<total ; i++ )
-				{
-					string filename = string.Format("{0} {1}", (i+1)%10, this.globalSettings.LastModelGetShort(i));
-					this.MenuAdd(lastMenu, "", "LastModel(this.Name)", filename, "", this.globalSettings.LastModelGet(i));
-				}
-			}
-
-			lastMenu.AdjustSize();
-
-			this.MenuAddSub(this.fileMenu, lastMenu, "SubmenuLastModels");
-		}
-
-		protected void BuildLastFilenamesMenu()
-		{
-			//	Construit le sous-menu des derniers fichiers ouverts.
-			if ( this.menu == null )  return;
-
-			VMenu lastMenu = new VMenu();
-			lastMenu.Name = "LastFilenames";
-			lastMenu.Host = this;
-
-			int total = this.globalSettings.LastFilenameCount;
-			if ( total == 0 )
-			{
-				this.MenuAdd(lastMenu, "", "", Res.Strings.LastFiles.None, "");
-			}
-			else
-			{
-				for ( int i=0 ; i<total ; i++ )
-				{
-					string filename = string.Format("{0} {1}", (i+1)%10, this.globalSettings.LastFilenameGetShort(i));
-					this.MenuAdd(lastMenu, "", "LastFile(this.Name)", filename, "", this.globalSettings.LastFilenameGet(i));
-				}
-			}
-
-			lastMenu.AdjustSize();
-
-			this.MenuAddSub(this.fileMenu, lastMenu, "SubmenuLastFiles");
-		}
-		#endregion
 
 		public HMenu GetMenu()
 		{
@@ -1750,12 +1409,10 @@ namespace Epsitec.App.DocumentEditor
 						if (Misc.IsExtension(filename, ".crmod"))
 						{
 							this.globalSettings.LastModelAdd(filename);
-							this.BuildLastModelsMenu();
 						}
 						else
 						{
 							this.globalSettings.LastFilenameAdd(filename);
-							this.BuildLastFilenamesMenu();
 						}
 						this.UseDocument(i);
 						this.MouseHideWait();
@@ -1830,7 +1487,6 @@ namespace Epsitec.App.DocumentEditor
 			{
 				this.globalSettings.InitialDirectory = System.IO.Path.GetDirectoryName(filename);
 				this.globalSettings.LastFilenameAdd(filename);
-				this.BuildLastFilenamesMenu();
 			}
 			this.MouseHideWait();
 			this.DialogError(dispatcher, err);
@@ -1864,7 +1520,6 @@ namespace Epsitec.App.DocumentEditor
 			{
 				this.globalSettings.InitialDirectory = System.IO.Path.GetDirectoryName(filename);
 				this.globalSettings.LastModelAdd(filename);
-				this.BuildLastModelsMenu();
 			}
 			this.MouseHideWait();
 			this.DialogError(dispatcher, err);
@@ -1963,7 +1618,6 @@ namespace Epsitec.App.DocumentEditor
 					this.CurrentDocument.IsDirtySerialize = false;
 				}
 				this.globalSettings.LastModelAdd(filename);
-				this.BuildLastModelsMenu();
 				this.initializationInProgress = true;
 				this.CurrentDocument.InitializationInProgress = true;
 			}
@@ -2069,7 +1723,6 @@ namespace Epsitec.App.DocumentEditor
 				this.CreateDocument();
 				this.CurrentDocument.Modifier.New();
 				this.globalSettings.LastModelAdd(filename);
-				this.BuildLastModelsMenu();
 				this.initializationInProgress = true;
 				this.CurrentDocument.InitializationInProgress = true;
 			}
@@ -4000,9 +3653,6 @@ namespace Epsitec.App.DocumentEditor
 				this.infosState.Enable = false;
 				this.pageStackState.Enable = false;
 			}
-
-			this.BuildLastModelsMenu();
-			this.BuildLastFilenamesMenu();
 		}
 
 		private void HandleMouseChanged()

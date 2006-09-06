@@ -789,7 +789,7 @@
   <data id="0HO">Apply character style {0}</data>
   <data id="0IO">Use font {0}</data>
   <data id="0JO">File</data>
-  <data id="0KO">New</data>
+  <data id="0KO">New...</data>
   <data id="0LO">Open...</data>
   <data id="0MO">Open template...</data>
   <data id="0NO">Close</data>
