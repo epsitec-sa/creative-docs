@@ -99,6 +99,32 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		}
 
 
+		protected void CreateCommandDispatcher()
+		{
+			return;  //?
+
+			this.dispatcher = new CommandDispatcher();
+			this.context = new CommandContext();
+
+			this.renameState = this.CreateCommandState("Cmd.Dialog.File.Rename", this.HandleCommandRename);
+
+			CommandDispatcher.SetDispatcher(this.window, this.dispatcher);
+		}
+
+		protected CommandState CreateCommandState(string commandName, CommandEventHandler handler)
+		{
+			Command command = Command.Get("[04]");
+			this.dispatcher.Register(command, handler);
+
+			return this.context.GetCommandState(commandName);
+		}
+
+		private void HandleCommandRename(CommandDispatcher d, CommandEventArgs e)
+		{
+			int i=123;
+		}
+
+
 		protected void CreateResizer()
 		{
 			//	Crée l'icône en bas à droite pour signaler que la fenêtre est redimensionnable.
@@ -742,18 +768,16 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 		protected bool PromptForOverwriting()
 		{
-			if (this.isSave)
+			//	Si requis, demande s'il faut écraser le fichier ?
+			if (this.isSave && System.IO.File.Exists(this.selectedFilename))  // fichier existe déjà ?
 			{
-				if (System.IO.File.Exists(this.selectedFilename))  // fichier existe déjà ?
+				string message = string.Format(Res.Strings.Dialog.Save.File, Misc.ExtractName(this.selectedFilename), this.selectedFilename);
+				Common.Dialogs.DialogResult result = this.editor.DialogQuestion(this.editor.CommandDispatcher, message);
+				if (result != Common.Dialogs.DialogResult.Yes)
 				{
-					string message = string.Format(Res.Strings.Dialog.Save.File, Misc.ExtractName(this.selectedFilename), this.selectedFilename);
-					Common.Dialogs.DialogResult result = this.editor.DialogQuestion(this.editor.CommandDispatcher, message);
-					if (result != Common.Dialogs.DialogResult.Yes)
-					{
-						this.selectedFilename = null;
-						this.selectedFilenames = null;
-						return false;  // ne pas fermer le dialogue
-					}
+					this.selectedFilename = null;
+					this.selectedFilenames = null;
+					return false;  // ne pas fermer le dialogue
 				}
 			}
 
@@ -1041,7 +1065,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 		private void HandleButtonOKClicked(object sender, MessageEventArgs e)
 		{
-			//	Bouton 'Ouvrir' cliqué.
+			//	Bouton 'Ouvrir/Enregistrer' cliqué.
 			if (this.focusedWidget is AbstractTextField)  // focus dans un texte éditable ?
 			{
 				AbstractTextField field = this.focusedWidget as AbstractTextField;
@@ -1350,5 +1374,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		protected List<string>				comboDirectories;
 		protected List<string>				comboTexts;
 		protected int						comboSelected;
+		protected CommandDispatcher			dispatcher;
+		protected CommandContext			context;
+		protected CommandState				renameState;
 	}
 }

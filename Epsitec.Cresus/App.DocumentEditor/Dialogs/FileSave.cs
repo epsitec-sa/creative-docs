@@ -39,6 +39,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.window.Root.MinSize = new Size(300, 200);
 				this.window.Root.Padding = new Margins(8, 8, 8, 8);
 
+				this.CreateCommandDispatcher();
 				this.CreateResizer();
 				this.CreateAccess();
 				this.CreateTable(20);
