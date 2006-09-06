@@ -728,6 +728,10 @@ namespace Epsitec.Common.Document
 						this.globalSettings.LastFilenameAdd(filename);
 						this.IsDirtySerialize = false;
 					}
+					if (Misc.IsExtension(filename, ".crmod"))
+					{
+						this.globalSettings.LastModelAdd(filename);
+					}
 				}
 				else
 				{

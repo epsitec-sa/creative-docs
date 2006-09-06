@@ -9,7 +9,7 @@ using System.IO;
 namespace Epsitec.App.DocumentEditor.Dialogs
 {
 	/// <summary>
-	/// Classe abstraite pour les dialogues FileNew et FileOpen.
+	/// Classe abstraite pour les dialogues FileNew, FileOpen et FileOpenModel.
 	/// </summary>
 	public abstract class AbstractFile : Abstract
 	{
@@ -363,7 +363,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			//	Effectue la liste des fichiers .crmod contenus dans le dossier adhoc.
 			this.files = new List<Item>();
 
-			if (this is FileNew)
+			if (this.isNewEmtpyDocument)
 			{
 				this.files.Add(new Item(null, false));  // première ligne avec 'nouveau document vide'
 			}
@@ -1250,6 +1250,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		protected string					fileExtension;
 		protected bool						isNavigationEnabled = false;
 		protected bool						isMultipleSelection = false;
+		protected bool						isNewEmtpyDocument = false;
 		protected string					initialDirectory;
 		protected List<Item>				files;
 		protected string					selectedFilename;

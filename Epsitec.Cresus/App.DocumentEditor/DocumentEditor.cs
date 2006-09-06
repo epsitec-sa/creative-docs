@@ -1102,6 +1102,34 @@ namespace Epsitec.App.DocumentEditor
 		}
 
 		#region LastFilenames
+		protected void BuildLastModelsMenu()
+		{
+			//	Construit le sous-menu des derniers modèles ouverts.
+			if ( this.menu == null )  return;
+
+			VMenu lastMenu = new VMenu();
+			lastMenu.Name = "LastModels";
+			lastMenu.Host = this;
+
+			int total = this.globalSettings.LastModelCount;
+			if ( total == 0 )
+			{
+				this.MenuAdd(lastMenu, "", "", Res.Strings.LastFiles.None, "");
+			}
+			else
+			{
+				for ( int i=0 ; i<total ; i++ )
+				{
+					string filename = string.Format("{0} {1}", (i+1)%10, this.globalSettings.LastModelGetShort(i));
+					this.MenuAdd(lastMenu, "", "LastModel(this.Name)", filename, "", this.globalSettings.LastModelGet(i));
+				}
+			}
+
+			lastMenu.AdjustSize();
+
+			this.MenuAddSub(this.fileMenu, lastMenu, "SubmenuLastModels");
+		}
+
 		protected void BuildLastFilenamesMenu()
 		{
 			//	Construit le sous-menu des derniers fichiers ouverts.
@@ -1705,8 +1733,16 @@ namespace Epsitec.App.DocumentEditor
 					DocumentInfo di = this.documents[i] as DocumentInfo;
 					if ( di.document.Filename == filename )
 					{
-						this.globalSettings.LastFilenameAdd(filename);
-						this.BuildLastFilenamesMenu();
+						if (Misc.IsExtension(filename, ".crmod"))
+						{
+							this.globalSettings.LastModelAdd(filename);
+							this.BuildLastModelsMenu();
+						}
+						else
+						{
+							this.globalSettings.LastFilenameAdd(filename);
+							this.BuildLastFilenamesMenu();
+						}
 						this.UseDocument(i);
 						this.MouseHideWait();
 						return true;
@@ -1813,8 +1849,8 @@ namespace Epsitec.App.DocumentEditor
 			if ( err == "" )
 			{
 				this.globalSettings.InitialDirectory = System.IO.Path.GetDirectoryName(filename);
-				this.globalSettings.LastFilenameAdd(filename);
-				this.BuildLastFilenamesMenu();
+				this.globalSettings.LastModelAdd(filename);
+				this.BuildLastModelsMenu();
 			}
 			this.MouseHideWait();
 			this.DialogError(dispatcher, err);
@@ -1911,6 +1947,8 @@ namespace Epsitec.App.DocumentEditor
 				{
 					this.Open(filename);
 					this.CurrentDocument.IsDirtySerialize = false;
+					this.globalSettings.LastModelAdd(filename);
+					this.BuildLastModelsMenu();
 				}
 				this.initializationInProgress = true;
 				this.CurrentDocument.InitializationInProgress = true;
@@ -2001,14 +2039,21 @@ namespace Epsitec.App.DocumentEditor
 			this.UseDocument(doc);
 		}
 
-		[Command ("LastFile")]
+		[Command("LastFile")]
 		void CommandLastFile(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			string filename = e.CommandArgs[0];
 			this.Open(filename);
 		}
 
-		[Command ("QuitApplication")]
+		[Command("LastModel")]
+		void CommandLastModel(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			string filename = e.CommandArgs[0];
+			this.Open(filename);
+		}
+
+		[Command("QuitApplication")]
 		void CommandQuitApplication(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			if ( !this.AutoSaveAll(dispatcher) )  return;
@@ -3930,6 +3975,7 @@ namespace Epsitec.App.DocumentEditor
 				this.pageStackState.Enable = false;
 			}
 
+			this.BuildLastModelsMenu();
 			this.BuildLastFilenamesMenu();
 		}
 
