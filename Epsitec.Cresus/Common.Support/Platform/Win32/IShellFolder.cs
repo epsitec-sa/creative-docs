@@ -43,8 +43,9 @@ namespace Epsitec.Common.Support.Platform.Win32
 		Int32 BindToObject(
 			IntPtr pidl,				// Address of an ITEMIDLIST structure (PIDL) that identifies the subfolder.
 			IntPtr pbc,					// Optional address of an IBindCtx interface on a bind context object to be 
-			// used during this operation.
-			Guid riid,					// Identifier of the interface to return. 
+										// used during this operation.
+			[In]
+			ref Guid riid,				// Identifier of the interface to return. 
 			out IntPtr ppv);			// Address that receives the interface pointer.
 
 		// Requests a pointer to an object's storage interface. 
@@ -52,10 +53,11 @@ namespace Epsitec.Common.Support.Platform.Win32
 		[PreserveSig]
 		Int32 BindToStorage(
 			IntPtr pidl,				// Address of an ITEMIDLIST structure that identifies the subfolder relative 
-			// to its parent folder. 
+										// to its parent folder. 
 			IntPtr pbc,					// Optional address of an IBindCtx interface on a bind context object to be 
-			// used during this operation.
-			Guid riid,					// Interface identifier (IID) of the requested storage interface.
+										// used during this operation.
+			[In]
+			ref Guid riid,				// Interface identifier (IID) of the requested storage interface.
 			out IntPtr ppv);			// Address that receives the interface pointer specified by riid.
 
 		// Determines the relative order of two file objects or folders, given their item identifier lists.
@@ -78,7 +80,8 @@ namespace Epsitec.Common.Support.Platform.Win32
 		[PreserveSig]
 		Int32 CreateViewObject(
 			IntPtr hwndOwner,			// Handle to the owner window.
-			Guid riid,					// Identifier of the requested interface. 
+			[In]
+			ref Guid riid,				// Identifier of the requested interface. 
 			out IntPtr ppv);			// Address of a pointer to the requested interface. 
 
 		// Retrieves the attributes of one or more file objects or subfolders. 
@@ -103,8 +106,9 @@ namespace Epsitec.Common.Support.Platform.Win32
 			// a dialog box or message box.
 			UInt32 cidl,				// Number of file objects or subfolders specified in the apidl parameter. 
 			IntPtr[] apidl,				// Address of an array of pointers to ITEMIDLIST structures, each of which 
-			// uniquely identifies a file object or subfolder relative to the parent folder.
-			Guid riid,					// Identifier of the COM interface object to return.
+										// uniquely identifies a file object or subfolder relative to the parent folder.
+			[In]
+			ref Guid riid,				// Identifier of the COM interface object to return.
 			ref UInt32 rgfReserved,		// Reserved. 
 			out IntPtr ppv);			// Pointer to the requested interface.
 
