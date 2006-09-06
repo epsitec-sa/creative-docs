@@ -74,6 +74,8 @@
   <data name="Dialog.Save.TitleMod" id="0K1">Enregistrer un document modèle</data>
   <data name="Dialog.Save.TitlePic" id="0L1">Enregistrer une icône</data>
   <data name="Dialog.Save.TitleCol" id="0M1">Enregistrer une palette de couleurs</data>
+  <data name="Dialog.Delete.File" id="087" mod="1">Voulez-vous supprimer le document &lt;b&gt;{0}&lt;/b&gt; ?&lt;br/&gt;&lt;br/&gt;{1}</data>
+  <data name="Dialog.Delete.Directory" id="097" mod="1">Voulez-vous supprimer le dossier &lt;b&gt;{0}&lt;/b&gt; et tout son contenu ?&lt;br/&gt;&lt;br/&gt;{1}</data>
   <data name="Dialog.FileDoc" id="0N1">Documents</data>
   <data name="Dialog.FileMod" id="0O1">Documents modèles</data>
   <data name="Dialog.FilePic" id="0P1">Icônes</data>
