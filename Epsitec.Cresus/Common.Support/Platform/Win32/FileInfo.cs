@@ -23,6 +23,17 @@ namespace Epsitec.Common.Support.Platform.Win32
 			return icon;
 		}
 
+		public static System.Drawing.Icon GetIcon(string path, FileInfoSelection selection, FileInfoIconSize iconSize)
+		{
+			System.Drawing.Icon icon;
+			string displayName;
+			string typeName;
+			
+			FileInfo.GetIconAndDescription (path, selection, iconSize, out icon, out displayName, out typeName);
+
+			return icon;
+		}
+
 		public static void GetDisplayAndTypeNames(SystemFileId file, out string displayName, out string typeName)
 		{
 			System.Drawing.Icon icon;
@@ -31,6 +42,13 @@ namespace Epsitec.Common.Support.Platform.Win32
 			FileInfo.GetIconAndDescription (csidl, FileInfoSelection.Normal, FileInfoIconSize.None, out icon, out displayName, out typeName);
 		}
 
+		public static void GetDisplayAndTypeNames(string path, out string displayName, out string typeName)
+		{
+			System.Drawing.Icon icon;
+			
+			FileInfo.GetIconAndDescription (path, FileInfoSelection.Normal, FileInfoIconSize.None, out icon, out displayName, out typeName);
+		}
+		
 		public static string GetPath(SystemFileId file)
 		{
 			ShellApi.CSIDL csidl = FileInfo.GetCsidl (file);
@@ -63,6 +81,74 @@ namespace Epsitec.Common.Support.Platform.Win32
 				System.Runtime.InteropServices.Marshal.ReleaseComObject (allocator);
 			}
 		}
+
+		public static IEnumerable<string> GetFolderItems(string path)
+		{
+			IMalloc allocator = ShellFunctions.GetMalloc ();
+
+			System.IntPtr pidlPath;
+			System.IntPtr pidlElement;
+
+			System.IntPtr ptrRoot;
+			System.IntPtr ptrPath;
+			System.IntPtr ptrList;
+			
+			uint attributes = 0;
+			uint eaten = 0;
+			uint count;
+
+			ShellApi.SHGetDesktopFolder (out ptrRoot);
+			
+			IShellFolder root;
+			IShellFolder folder;
+			IEnumIDList  list;
+			
+			root = System.Runtime.InteropServices.Marshal.GetTypedObjectForIUnknown (ptrRoot, typeof (IShellFolder)) as IShellFolder;
+			root.ParseDisplayName (System.IntPtr.Zero, System.IntPtr.Zero, path, ref eaten, out pidlPath, ref attributes);
+			root.BindToObject (pidlPath, System.IntPtr.Zero, ref ShellGuids.IID_IShellFolder, out ptrPath);
+			
+			folder = System.Runtime.InteropServices.Marshal.GetTypedObjectForIUnknown (ptrPath, typeof (IShellFolder)) as IShellFolder;
+
+			ShellApi.SHCONT flags = ShellApi.SHCONT.SHCONTF_FOLDERS | ShellApi.SHCONT.SHCONTF_NONFOLDERS;
+
+			folder.EnumObjects (System.IntPtr.Zero, (int) flags, out ptrList);
+
+			list = System.Runtime.InteropServices.Marshal.GetTypedObjectForIUnknown (ptrList, typeof (IEnumIDList)) as IEnumIDList;
+
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder (260);
+			System.Drawing.Icon icon;
+
+			while (list.Next (1, out pidlElement, out count) == 0)
+			{
+				System.Diagnostics.Debug.Assert (count == 1);
+				
+				string displayName;
+				string typeName;
+
+				System.IntPtr pidlTemp = ShellApi.ILCombine (pidlPath, pidlElement);
+
+				if (pidlTemp != System.IntPtr.Zero)
+				{
+					FileInfo.GetIconAndDescription (FileInfoSelection.Normal, FileInfoIconSize.None, pidlElement, out icon, out displayName, out typeName);
+					ShellApi.SHGetPathFromIDList (pidlTemp, buffer);
+					allocator.Free (pidlTemp);
+				}
+				
+				
+				allocator.Free (pidlElement);
+				
+				yield return buffer.ToString ();
+			}
+
+			allocator.Free (pidlPath);
+
+			System.Runtime.InteropServices.Marshal.ReleaseComObject (list);
+			System.Runtime.InteropServices.Marshal.ReleaseComObject (root);
+			System.Runtime.InteropServices.Marshal.ReleaseComObject (allocator);
+
+			yield break;
+		}
+		
 		
 		private static bool GetIconAndDescription(ShellApi.CSIDL csidl, FileInfoSelection selection, FileInfoIconSize iconSize, out System.Drawing.Icon icon, out string displayName, out string typeName)
 		{
@@ -70,67 +156,20 @@ namespace Epsitec.Common.Support.Platform.Win32
 
 			try
 			{
-				System.IntPtr       pidl = System.IntPtr.Zero;
-				ShellApi.SHFILEINFO info = new ShellApi.SHFILEINFO ();
+				System.IntPtr pidl = System.IntPtr.Zero;
+				ShellApi.SHGetFolderLocation (System.IntPtr.Zero, (short) csidl, System.IntPtr.Zero, 0, out pidl);
 
 				try
 				{
-					ShellApi.SHGetFolderLocation (System.IntPtr.Zero, (short) csidl, System.IntPtr.Zero, 0, out pidl);
-
-					if (pidl == System.IntPtr.Zero)
-					{
-						icon        = null;
-						displayName = null;
-						typeName    = null;
-						
-						return false;
-					}
-
-					ShellApi.SHGFI flags = ShellApi.SHGFI.SHGFI_DISPLAYNAME |
-						/**/			   ShellApi.SHGFI.SHGFI_TYPENAME |
-						/**/			   ShellApi.SHGFI.SHGFI_PIDL;
-
-					switch (selection)
-					{
-						case FileInfoSelection.Active:
-							flags |= ShellApi.SHGFI.SHGFI_SELECTED;
-							break;
-					}
-
-					switch (iconSize)
-					{
-						case FileInfoIconSize.Small:
-							flags |= ShellApi.SHGFI.SHGFI_SMALLICON;
-							flags |= ShellApi.SHGFI.SHGFI_ICON;
-							break;
-						case FileInfoIconSize.Large:
-							flags |= ShellApi.SHGFI.SHGFI_LARGEICON;
-							flags |= ShellApi.SHGFI.SHGFI_ICON;
-							break;
-					}
-					
-					ShellApi.SHGetFileInfo (pidl, 0, out info, System.Runtime.InteropServices.Marshal.SizeOf (info), flags);
+					return FileInfo.GetIconAndDescription (selection, iconSize, pidl, out icon, out displayName, out typeName);
 				}
 				finally
 				{
-					allocator.Free (pidl);
+					if (pidl != System.IntPtr.Zero)
+					{
+						allocator.Free (pidl);
+					}
 				}
-
-				if (info.hIcon == System.IntPtr.Zero)
-				{
-					icon = null;
-				}
-				else
-				{
-					icon = System.Drawing.Icon.FromHandle (info.hIcon);
-					icon = icon == null ? null : icon.Clone () as System.Drawing.Icon;
-					FileInfo.DestroyIcon (info.hIcon);
-				}
-
-				displayName = info.szDisplayName;
-				typeName    = info.szTypeName;
-				
-				return true;
 			}
 			finally
 			{
@@ -138,7 +177,95 @@ namespace Epsitec.Common.Support.Platform.Win32
 			}
 		}
 
-		public static ShellApi.CSIDL GetCsidl(SystemFileId id)
+		private static bool GetIconAndDescription(string path, FileInfoSelection selection, FileInfoIconSize iconSize, out System.Drawing.Icon icon, out string displayName, out string typeName)
+		{
+			IMalloc allocator = ShellFunctions.GetMalloc ();
+
+			try
+			{
+				System.IntPtr pidl = System.IntPtr.Zero;
+				uint attribute;
+				ShellApi.SHParseDisplayName (path, System.IntPtr.Zero, out pidl, 0, out attribute);
+
+				try
+				{
+					return FileInfo.GetIconAndDescription (selection, iconSize, pidl, out icon, out displayName, out typeName);
+				}
+				finally
+				{
+					if (pidl != System.IntPtr.Zero)
+					{
+						allocator.Free (pidl);
+					}
+				}
+			}
+			finally
+			{
+				System.Runtime.InteropServices.Marshal.ReleaseComObject (allocator);
+			}
+		}
+
+		private static bool GetIconAndDescription(FileInfoSelection selection, FileInfoIconSize iconSize, System.IntPtr pidl, out System.Drawing.Icon icon, out string displayName, out string typeName)
+		{
+			if (pidl == System.IntPtr.Zero)
+			{
+				icon        = null;
+				displayName = null;
+				typeName    = null;
+
+				return false;
+			}
+
+			ShellApi.SHFILEINFO info = new ShellApi.SHFILEINFO ();
+			
+			FileInfo.GetShellFileInfo (pidl, selection, iconSize, ref info);
+
+			if (info.hIcon == System.IntPtr.Zero)
+			{
+				icon = null;
+			}
+			else
+			{
+				icon = System.Drawing.Icon.FromHandle (info.hIcon);
+				icon = icon == null ? null : icon.Clone () as System.Drawing.Icon;
+				FileInfo.DestroyIcon (info.hIcon);
+			}
+
+			displayName = info.szDisplayName;
+			typeName    = info.szTypeName;
+
+			return true;
+		}
+
+		private static void GetShellFileInfo(System.IntPtr pidl, FileInfoSelection selection, FileInfoIconSize iconSize, ref ShellApi.SHFILEINFO info)
+		{
+			ShellApi.SHGFI flags = ShellApi.SHGFI.SHGFI_DISPLAYNAME |
+					/**/			   ShellApi.SHGFI.SHGFI_TYPENAME |
+					/**/			   ShellApi.SHGFI.SHGFI_PIDL;
+
+			switch (selection)
+			{
+				case FileInfoSelection.Active:
+					flags |= ShellApi.SHGFI.SHGFI_SELECTED;
+					break;
+			}
+
+			switch (iconSize)
+			{
+				case FileInfoIconSize.Small:
+					flags |= ShellApi.SHGFI.SHGFI_SMALLICON;
+					flags |= ShellApi.SHGFI.SHGFI_ICON;
+					break;
+				case FileInfoIconSize.Large:
+					flags |= ShellApi.SHGFI.SHGFI_LARGEICON;
+					flags |= ShellApi.SHGFI.SHGFI_ICON;
+					break;
+			}
+
+			ShellApi.SHGetFileInfo (pidl, 0, out info, System.Runtime.InteropServices.Marshal.SizeOf (info), flags);
+		}
+
+		private static ShellApi.CSIDL GetCsidl(SystemFileId id)
 		{
 			switch (id)
 			{
@@ -248,6 +375,6 @@ namespace Epsitec.Common.Support.Platform.Win32
 		}
 
 		[System.Runtime.InteropServices.DllImport ("user32.dll")]
-		public static extern int DestroyIcon(System.IntPtr hIcon);
+		private static extern int DestroyIcon(System.IntPtr hIcon);
 	}
 }

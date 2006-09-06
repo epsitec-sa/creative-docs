@@ -244,6 +244,10 @@ namespace Epsitec.Common.Support.Platform.Win32
 			// relative to the root of the namespace (the desktop). 
 			StringBuilder pszPath);	// Address of a buffer to receive the file system path.
 
+		[DllImport ("shell32.dll")]
+		public static extern IntPtr ILCombine(
+			IntPtr pidlAbsolute,
+			IntPtr pidlRelative);
 
 		// Takes the CSIDL of a folder and returns the pathname.
 		[DllImport ("shell32.dll")]
@@ -649,7 +653,7 @@ namespace Epsitec.Common.Support.Platform.Win32
 
 		}
 
-		public enum SHCONTF
+		public enum SHCONT
 		{
 			SHCONTF_FOLDERS=0x0020,   // only want folders enumerated (SFGAO_FOLDER)
 			SHCONTF_NONFOLDERS=0x0040,   // include non folders
