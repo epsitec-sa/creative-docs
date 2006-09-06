@@ -471,39 +471,39 @@ namespace Epsitec.App.DocumentEditor
 			this.vToolBar = new VToolBar(this);
 			this.vToolBar.Dock = DockStyle.Left;
 
-			this.VToolBarAdd (this.toolSelectState.Command);
-			this.VToolBarAdd (this.toolGlobalState.Command);
-			this.VToolBarAdd (this.toolShaperState.Command);
-			this.VToolBarAdd (this.toolEditState.Command);
-			this.VToolBarAdd (this.toolZoomState.Command);
-			this.VToolBarAdd (this.toolHandState.Command);
-			this.VToolBarAdd (this.toolPickerState.Command);
+			this.VToolBarAdd(this.toolSelectState.Command);
+			this.VToolBarAdd(this.toolGlobalState.Command);
+			this.VToolBarAdd(this.toolShaperState.Command);
+			this.VToolBarAdd(this.toolEditState.Command);
+			this.VToolBarAdd(this.toolZoomState.Command);
+			this.VToolBarAdd(this.toolHandState.Command);
+			this.VToolBarAdd(this.toolPickerState.Command);
 			if ( this.documentType == DocumentType.Pictogram )
 			{
 				this.VToolBarAdd (this.toolHotSpotState.Command);
 			}
 			this.VToolBarAdd(null);
-			this.VToolBarAdd (this.toolLineState.Command);
-			this.VToolBarAdd (this.toolRectangleState.Command);
-			this.VToolBarAdd (this.toolCircleState.Command);
-			this.VToolBarAdd (this.toolEllipseState.Command);
-			this.VToolBarAdd (this.toolPolyState.Command);
-			this.VToolBarAdd (this.toolBezierState.Command);
-			this.VToolBarAdd (this.toolRegularState.Command);
-			this.VToolBarAdd (this.toolSurfaceState.Command);
-			this.VToolBarAdd (this.toolVolumeState.Command);
+			this.VToolBarAdd(this.toolLineState.Command);
+			this.VToolBarAdd(this.toolRectangleState.Command);
+			this.VToolBarAdd(this.toolCircleState.Command);
+			this.VToolBarAdd(this.toolEllipseState.Command);
+			this.VToolBarAdd(this.toolPolyState.Command);
+			this.VToolBarAdd(this.toolBezierState.Command);
+			this.VToolBarAdd(this.toolRegularState.Command);
+			this.VToolBarAdd(this.toolSurfaceState.Command);
+			this.VToolBarAdd(this.toolVolumeState.Command);
 			//this.VToolBarAdd(this.toolTextLineState.Command);
 			//this.VToolBarAdd(this.toolTextBoxState.Command);
-			this.VToolBarAdd (this.toolTextLine2State.Command);
-			this.VToolBarAdd (this.toolTextBox2State.Command);
+			this.VToolBarAdd(this.toolTextLine2State.Command);
+			this.VToolBarAdd(this.toolTextBox2State.Command);
 			if ( this.useArray )
 			{
-				this.VToolBarAdd (this.toolArrayState.Command);
+				this.VToolBarAdd(this.toolArrayState.Command);
 			}
 			this.VToolBarAdd (this.toolImageState.Command);
 			if ( this.documentType != DocumentType.Pictogram )
 			{
-				this.VToolBarAdd (this.toolDimensionState.Command);
+				this.VToolBarAdd(this.toolDimensionState.Command);
 			}
 			this.VToolBarAdd(null);
 
@@ -1356,6 +1356,7 @@ namespace Epsitec.App.DocumentEditor
 			else
 			{
 				this.dlgFileOpen.InitialDirectory = this.globalSettings.InitialDirectory;
+				this.dlgFileOpen.InitialFilename = "";
 
 				this.dlgFileOpen.Show();  // choix d'un fichier...
 				if (this.dlgFileOpen.Result != Common.Dialogs.DialogResult.Accept)
@@ -1381,7 +1382,8 @@ namespace Epsitec.App.DocumentEditor
 			//	Retourne false si le fichier n'a pas été ouvert.
 			this.dlgSplash.Hide();
 
-			this.dlgFileOpenModel.InitialDirectory = this.globalSettings.InitialDirectory;
+			this.dlgFileOpenModel.InitialDirectory = this.globalSettings.NewDocument;
+			this.dlgFileOpenModel.InitialFilename = "";
 
 			this.dlgFileOpenModel.Show();  // choix d'un fichier...
 			if (this.dlgFileOpenModel.Result != Common.Dialogs.DialogResult.Accept)
@@ -1389,7 +1391,7 @@ namespace Epsitec.App.DocumentEditor
 				return false;
 			}
 
-			this.globalSettings.InitialDirectory = this.dlgFileOpenModel.InitialDirectory;
+			this.globalSettings.NewDocument = this.dlgFileOpenModel.InitialDirectory;
 
 			string[] names = this.dlgFileOpenModel.Filenames;
 			for (int i=0; i<names.Length; i++)
@@ -3334,14 +3336,14 @@ namespace Epsitec.App.DocumentEditor
 		protected void InitCommands()
 		{
 			//	Initialise toutes les commandes.
-			this.toolSelectState = this.CreateCommandState ("ToolSelect", "ToolSelect", "ToolSelect", KeyCode.AlphaS);
-			this.toolGlobalState = this.CreateCommandState ("ToolGlobal", "ToolGlobal", "ToolGlobal", KeyCode.AlphaG);
-			this.toolShaperState = this.CreateCommandState ("ToolShaper", "ToolShaper", "ToolShaper", KeyCode.AlphaA);
-			this.toolEditState = this.CreateCommandState ("ToolEdit", "ToolEdit", "ToolEdit", KeyCode.AlphaE);
-			this.toolZoomState = this.CreateCommandState ("ToolZoom", "ToolZoom", "ToolZoom", KeyCode.AlphaZ);
-			this.toolHandState = this.CreateCommandState ("ToolHand", "ToolHand", "ToolHand", KeyCode.AlphaH);
-			this.toolPickerState = this.CreateCommandState ("ToolPicker", "ToolPicker", "ToolPicker", KeyCode.AlphaI);
-			this.toolHotSpotState = this.CreateCommandState ("ToolHotSpot", "ToolHotSpot", "ToolHotSpot");
+			this.toolSelectState = this.CreateCommandState("ToolSelect", "ToolSelect", "ToolSelect", KeyCode.AlphaS);
+			this.toolGlobalState = this.CreateCommandState("ToolGlobal", "ToolGlobal", "ToolGlobal", KeyCode.AlphaG);
+			this.toolShaperState = this.CreateCommandState("ToolShaper", "ToolShaper", "ToolShaper", KeyCode.AlphaA);
+			this.toolEditState = this.CreateCommandState("ToolEdit", "ToolEdit", "ToolEdit", KeyCode.AlphaE);
+			this.toolZoomState = this.CreateCommandState("ToolZoom", "ToolZoom", "ToolZoom", KeyCode.AlphaZ);
+			this.toolHandState = this.CreateCommandState("ToolHand", "ToolHand", "ToolHand", KeyCode.AlphaH);
+			this.toolPickerState = this.CreateCommandState("ToolPicker", "ToolPicker", "ToolPicker", KeyCode.AlphaI);
+			this.toolHotSpotState = this.CreateCommandState("ToolHotSpot", "ToolHotSpot", "ToolHotSpot");
 			this.toolLineState = this.CreateCommandState("ObjectLine", "ObjectLine", "ToolLine", KeyCode.AlphaL);
 			this.toolRectangleState = this.CreateCommandState("ObjectRectangle", "ObjectRectangle", "ToolRectangle", KeyCode.AlphaR);
 			this.toolCircleState = this.CreateCommandState("ObjectCircle", "ObjectCircle", "ToolCircle", KeyCode.AlphaC);
@@ -3602,37 +3604,37 @@ namespace Epsitec.App.DocumentEditor
 
 		protected CommandState CreateCommandState(string commandName, params Widgets.Shortcut[] shortcuts)
 		{
-			return this.CreateCommandState (commandName, commandName, commandName, shortcuts);
+			return this.CreateCommandState(commandName, commandName, commandName, shortcuts);
 		}
 
 		protected CommandState CreateCommandState(string commandName, bool statefull, params Widgets.Shortcut[] shortcuts)
 		{
-			return this.CreateCommandState (commandName, commandName, commandName, statefull, shortcuts);
+			return this.CreateCommandState(commandName, commandName, commandName, statefull, shortcuts);
 		}
 
 		protected CommandState CreateCommandState(string commandName, string icon, string tooltip, params Widgets.Shortcut[] shortcuts)
 		{
-			return this.CreateCommandState (commandName, icon, tooltip, false, shortcuts);
+			return this.CreateCommandState(commandName, icon, tooltip, false, shortcuts);
 		}
 
 		protected CommandState CreateCommandState(string commandName, string icon, string tooltip, bool statefull, params Widgets.Shortcut[] shortcuts)
 		{
 			//	Crée un nouveau Command + CommandState.
-			Command command = Epsitec.Common.Widgets.Command.Get (commandName);
+			Command command = Epsitec.Common.Widgets.Command.Get(commandName);
 
 			if (command.IsReadWrite)
 			{
 				if (shortcuts.Length > 0)
 				{
-					command.Shortcuts.AddRange (shortcuts);
+					command.Shortcuts.AddRange(shortcuts);
 				}
 
 				string description = DocumentEditor.GetRes("Action."+tooltip);
 
-				command.ManuallyDefineCommand (description, icon, null, statefull);
+				command.ManuallyDefineCommand(description, icon, null, statefull);
 			}
 
-			return this.CommandContext.GetCommandState (command);
+			return this.CommandContext.GetCommandState(command);
 		}
 
 
