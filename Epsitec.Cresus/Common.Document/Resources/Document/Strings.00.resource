@@ -810,7 +810,7 @@
   <data name="Action.Apply.Tooltip.StyleCharacter" id="0HO">Appliquer le style de caractère {0}</data>
   <data name="Action.Apply.Tooltip.Font" id="0IO">Utiliser la police {0}</data>
   <data name="Action.FileMain" id="0JO">Fichier</data>
-  <data name="Action.New" id="0KO">Nouveau</data>
+  <data name="Action.New" id="0KO">Nouveau...</data>
   <data name="Action.Open" id="0LO">Ouvrir...</data>
   <data name="Action.OpenModel" id="0MO">Ouvrir modèle...</data>
   <data name="Action.Close" id="0NO">Fermer</data>

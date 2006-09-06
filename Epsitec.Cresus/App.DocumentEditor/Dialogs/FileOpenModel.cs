@@ -29,7 +29,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.window = new Window();
 				this.window.MakeSecondaryWindow();
 				this.window.PreventAutoClose = true;
-				this.WindowInit("FileOpenModel", 400, 400, true);
+				this.WindowInit("FileOpenModel", 400, 379, true);
 				this.window.Text = Res.Strings.Dialog.Open.TitleMod;
 				this.window.Owner = this.editor.Window;
 				this.window.Icon = Bitmap.FromManifestResource("Epsitec.App.DocumentEditor.Images.Application.icon", this.GetType().Assembly);
