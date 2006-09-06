@@ -733,26 +733,31 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 						}
 					}
 
-					if (this.isSave)
-					{
-						if (System.IO.File.Exists(this.selectedFilename))  // fichier existe déjà ?
-						{
-							string message = string.Format(Res.Strings.Dialog.Save.File, Misc.ExtractName(this.selectedFilename), this.selectedFilename);
-							Common.Dialogs.DialogResult result = this.editor.DialogQuestion(this.editor.CommandDispatcher, message);
-							if (result != Common.Dialogs.DialogResult.Yes)
-							{
-								this.selectedFilename = null;
-								this.selectedFilenames = null;
-								return false;  // ne pas fermer le dialogue
-							}
-						}
-					}
-
-					return true;  // il faudra fermer le dialogue
+					return this.PromptForOverwriting();
 				}
 			}
 
 			return false;  // ne pas fermer le dialogue
+		}
+
+		protected bool PromptForOverwriting()
+		{
+			if (this.isSave)
+			{
+				if (System.IO.File.Exists(this.selectedFilename))  // fichier existe déjà ?
+				{
+					string message = string.Format(Res.Strings.Dialog.Save.File, Misc.ExtractName(this.selectedFilename), this.selectedFilename);
+					Common.Dialogs.DialogResult result = this.editor.DialogQuestion(this.editor.CommandDispatcher, message);
+					if (result != Common.Dialogs.DialogResult.Yes)
+					{
+						this.selectedFilename = null;
+						this.selectedFilenames = null;
+						return false;  // ne pas fermer le dialogue
+					}
+				}
+			}
+
+			return true;  // il faudra fermer le dialogue
 		}
 
 
@@ -1045,7 +1050,11 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 					string filename = string.Concat(this.initialDirectory, "\\", field.Text, this.fileExtension);
 					this.selectedFilename = filename;
 					this.selectedFilenames = null;
-					this.CloseWindow();
+
+					if (this.PromptForOverwriting())
+					{
+						this.CloseWindow();
+					}
 					return;
 				}
 			}
