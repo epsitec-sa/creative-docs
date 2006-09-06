@@ -200,7 +200,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			file.Dock = DockStyle.Bottom;
 
 			StaticText label = new StaticText(file);
-			label.Text = Res.Strings.Dialog.Open.LabelDoc;
+			label.Text = this.isModel ? Res.Strings.Dialog.Open.LabelMod : Res.Strings.Dialog.Open.LabelDoc;
 			label.PreferredWidth = 80;
 			label.Dock = DockStyle.Left;
 
@@ -381,7 +381,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 			if (this.isNewEmtpyDocument)
 			{
-				this.files.Add(new Item(null, false));  // première ligne avec 'nouveau document vide'
+				this.files.Add(new Item(null, false, this.isModel));  // première ligne avec 'nouveau document vide'
 			}
 
 			if (this.isNavigationEnabled)
@@ -401,7 +401,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				{
 					foreach (string directory in directories)
 					{
-						this.files.Add(new Item(directory, true));
+						this.files.Add(new Item(directory, true, this.isModel));
 					}
 				}
 			}
@@ -421,7 +421,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			{
 				foreach (string filename in filenames)
 				{
-					this.files.Add(new Item(filename, false));
+					this.files.Add(new Item(filename, false, this.isModel));
 				}
 			}
 		}
@@ -1055,10 +1055,11 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		//	un fichier, un dossier ou la commande 'nouveau document vide'.
 		protected class Item
 		{
-			public Item(string filename, bool isDirectory)
+			public Item(string filename, bool isDirectory, bool isModel)
 			{
 				this.filename = filename;
 				this.isDirectory = isDirectory;
+				this.isModel = isModel;
 			}
 
 			public string Filename
@@ -1164,7 +1165,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 							Document.Statistics stat = this.Statistics;
 							if (stat == null)
 							{
-								return Res.Strings.Dialog.File.Document;
+								return this.isModel ? Res.Strings.Dialog.File.Model : Res.Strings.Dialog.File.Document;
 							}
 							else
 							{
@@ -1300,6 +1301,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 			protected string					filename;
 			protected bool						isDirectory;
+			protected bool						isModel;
 		}
 		#endregion
 
@@ -1315,6 +1317,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		protected TextFieldEx				fieldRename;
 
 		protected string					fileExtension;
+		protected bool						isModel = false;
 		protected bool						isNavigationEnabled = false;
 		protected bool						isMultipleSelection = false;
 		protected bool						isNewEmtpyDocument = false;

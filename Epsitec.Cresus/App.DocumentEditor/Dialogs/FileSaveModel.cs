@@ -16,6 +16,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		public FileSaveModel(DocumentEditor editor) : base(editor)
 		{
 			this.fileExtension = ".crmod";
+			this.isModel = true;
 			this.isNavigationEnabled = true;
 			this.isMultipleSelection = false;
 			this.isNewEmtpyDocument = false;
