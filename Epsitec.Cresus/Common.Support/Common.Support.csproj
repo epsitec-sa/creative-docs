@@ -119,6 +119,7 @@
     <Compile Include="CommandAttribute.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="FolderDetailsMode.cs" />
     <Compile Include="Data\ComponentCollection.cs">
       <SubType>Code</SubType>
     </Compile>
