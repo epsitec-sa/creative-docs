@@ -1271,6 +1271,22 @@ namespace Epsitec.App.DocumentEditor
 			return dialog.Result;
 		}
 
+		public Common.Dialogs.DialogResult DialogQuestion(CommandDispatcher dispatcher, string message)
+		{
+			//	Affiche le dialogue pour poser une question oui/non.
+			if ( this.Window == null )  return Common.Dialogs.DialogResult.None;
+
+			this.dlgSplash.Hide();
+
+			string title = Res.Strings.Application.TitleShort;
+			string icon = "manifest:Epsitec.Common.Dialogs.Images.Question.icon";
+
+			Common.Dialogs.IDialog dialog = Common.Dialogs.Message.CreateYesNo(title, icon, message, "", "", dispatcher);
+			dialog.Owner = this.Window;
+			dialog.OpenDialog();
+			return dialog.Result;
+		}
+
 		protected static string AdjustFilename(string filename)
 		{
 			//	Si on a tapé "toto", mais qu'il existe le fichier "Toto",

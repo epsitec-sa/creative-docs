@@ -517,6 +517,22 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				return;
 			}
 
+			string message;
+			if (this.files[sel].IsDirectory)
+			{
+				message = string.Format(Res.Strings.Dialog.Delete.Directory, this.files[sel].ShortFilename, this.files[sel].Filename);
+			}
+			else
+			{
+				message = string.Format(Res.Strings.Dialog.Delete.File, this.files[sel].ShortFilename, this.files[sel].Filename);
+			}
+
+			Common.Dialogs.DialogResult result = this.editor.DialogQuestion(this.editor.CommandDispatcher, message);
+			if ( result != Common.Dialogs.DialogResult.Yes )
+			{
+				return;
+			}
+
 			string filenameToSelect = null;
 
 			if (sel < this.files.Count-1)
