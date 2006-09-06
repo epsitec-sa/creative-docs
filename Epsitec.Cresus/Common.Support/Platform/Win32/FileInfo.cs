@@ -26,7 +26,7 @@ namespace Epsitec.Common.Support.Platform.Win32
 			this.root      = null;
 		}
 
-		public static FolderItem GetFolderItem(SystemFileId file, FolderDetailsMode mode)
+		public static FolderItem CreateFolderItem(SystemFileId file, FolderDetailsMode mode)
 		{
 			ShellApi.CSIDL csidl = FileInfo.GetCsidl (file);
 			System.IntPtr pidl = System.IntPtr.Zero;
@@ -37,94 +37,33 @@ namespace Epsitec.Common.Support.Platform.Win32
 				return FolderItem.Empty;
 			}
 
-			return FileInfo.CreateFolderItemAndInheritPidl (mode, pidl);
+			FolderItem item = FileInfo.CreateFolderItemAndInheritPidl (mode, pidl);
+
+			if (file == SystemFileId.VirtualDesktop)
+			{
+				item.Handle = PidlHandle.VirtualDesktopHandle;
+			}
+			
+			return item;
 		}
 		
-		public static System.Drawing.Icon GetIcon(SystemFileId file, FolderDetailsMode mode)
+		public static FolderItem CreateFolderItem(string path, FolderDetailsMode mode)
 		{
-			System.Drawing.Icon icon;
-			string displayName;
-			string typeName;
-			ShellApi.CSIDL csidl = FileInfo.GetCsidl (file);
-
-			FileInfo.GetIconAndDescription (csidl, mode, out icon, out displayName, out typeName);
-			
-			return icon;
-		}
-
-		public static System.Drawing.Icon GetIcon(string path, FolderDetailsMode mode)
-		{
-			System.Drawing.Icon icon;
-			string displayName;
-			string typeName;
-			
-			FileInfo.GetIconAndDescription (path, mode, out icon, out displayName, out typeName);
-
-			return icon;
-		}
-
-		public static void GetDisplayAndTypeNames(SystemFileId file, out string displayName, out string typeName)
-		{
-			System.Drawing.Icon icon;
-			ShellApi.CSIDL csidl = FileInfo.GetCsidl (file);
-
-			FileInfo.GetIconAndDescription (csidl, FolderDetailsMode.NoIcons, out icon, out displayName, out typeName);
-		}
-
-		public static void GetDisplayAndTypeNames(string path, out string displayName, out string typeName)
-		{
-			System.Drawing.Icon icon;
-
-			FileInfo.GetIconAndDescription (path, FolderDetailsMode.NoIcons, out icon, out displayName, out typeName);
-		}
-		
-		public static string GetPath(SystemFileId file)
-		{
-			ShellApi.CSIDL csidl = FileInfo.GetCsidl (file);
-			System.IntPtr  pidl = System.IntPtr.Zero;
-
-			try
-			{
-				ShellApi.SHGetFolderLocation (System.IntPtr.Zero, (short) csidl, System.IntPtr.Zero, 0, out pidl);
-
-				if (pidl == System.IntPtr.Zero)
-				{
-					return null;
-				}
-
-				System.Text.StringBuilder path = new System.Text.StringBuilder (260);
-				ShellApi.SHGetPathFromIDList (pidl, path);
-				return path.ToString ();
-			}
-			finally
-			{
-				PidlHandle.FreePidl (pidl);
-			}
-		}
-
-		public static string GetPath(FolderItem item)
-		{
-			PidlHandle handle = item.Handle as PidlHandle;
-
-			System.Text.StringBuilder path = new System.Text.StringBuilder (260);
-			ShellApi.SHGetPathFromIDList (handle.Pidl, path);
-			return path.ToString ();
-		}
-
-		public static IEnumerable<FolderItem> GetFolderItems(string path, FolderDetailsMode mode)
-		{
-			System.IntPtr pidlPath;
+			System.IntPtr pidl = System.IntPtr.Zero;
 			
 			uint attributes = 0;
 			uint eaten = 0;
 
-			FileInfo.instance.root.ParseDisplayName (System.IntPtr.Zero, System.IntPtr.Zero, path, ref eaten, out pidlPath, ref attributes);
-			IEnumerable<FolderItem> enumerable;
+			FileInfo.instance.root.ParseDisplayName (System.IntPtr.Zero, System.IntPtr.Zero, path, ref eaten, out pidl, ref attributes);
+			
+			if (pidl == System.IntPtr.Zero)
+			{
+				return FolderItem.Empty;
+			}
 
-			PidlHandle handle = PidlHandle.Inherit (pidlPath);
-			return FileInfo.GetFolderItems (handle, mode, true);
+			return FileInfo.CreateFolderItemAndInheritPidl (mode, pidl);
 		}
-
+		
 		public static IEnumerable<FolderItem> GetFolderItems(FolderItem path, FolderDetailsMode mode)
 		{
 			return FileInfo.GetFolderItems (path.Handle as PidlHandle, mode, false);
@@ -147,10 +86,17 @@ namespace Epsitec.Common.Support.Platform.Win32
 
 			if (ptrPath == System.IntPtr.Zero)
 			{
-				yield break;
+				if (handle != PidlHandle.VirtualDesktopHandle)
+				{
+					yield break;
+				}
+
+				folder = FileInfo.instance.root;
 			}
-			
-			folder = System.Runtime.InteropServices.Marshal.GetTypedObjectForIUnknown (ptrPath, typeof (IShellFolder)) as IShellFolder;
+			else
+			{
+				folder = System.Runtime.InteropServices.Marshal.GetTypedObjectForIUnknown (ptrPath, typeof (IShellFolder)) as IShellFolder;
+			}
 
 			ShellApi.SHCONT flags = ShellApi.SHCONT.SHCONTF_FOLDERS | ShellApi.SHCONT.SHCONTF_NONFOLDERS;
 
@@ -175,6 +121,11 @@ namespace Epsitec.Common.Support.Platform.Win32
 			}
 
 			System.Runtime.InteropServices.Marshal.ReleaseComObject (list);
+
+			if (folder != FileInfo.instance.root)
+			{
+				System.Runtime.InteropServices.Marshal.ReleaseComObject (folder);
+			}
 			
 			if (disposeHandleWhenFinished)
 			{
