@@ -11,6 +11,8 @@ namespace Epsitec.Common.Document.Settings
 		OpenNewDocument = 1,
 		OpenLastFile    = 2,
 		OpenLastFiles   = 3,
+		OpenLastModel   = 4,
+		OpenLastModels  = 5,
 	}
 
 	public enum MouseWheelAction
@@ -512,7 +514,7 @@ namespace Epsitec.Common.Document.Settings
 		#region FirstAction
 		public static int FirstActionCount
 		{
-			get { return 3; }
+			get { return 4; }
 		}
 
 		public static string FirstActionString(FirstAction action)
@@ -523,6 +525,8 @@ namespace Epsitec.Common.Document.Settings
 				case FirstAction.OpenNewDocument:  return Res.Strings.Dialog.Settings.FirstAction.OpenNewDocument;
 				case FirstAction.OpenLastFile:     return Res.Strings.Dialog.Settings.FirstAction.OpenLastFile;
 				case FirstAction.OpenLastFiles:    return Res.Strings.Dialog.Settings.FirstAction.OpenLastFiles;
+				case FirstAction.OpenLastModel:    return Res.Strings.Dialog.Settings.FirstAction.OpenLastModel;
+				case FirstAction.OpenLastModels:   return Res.Strings.Dialog.Settings.FirstAction.OpenLastModels;
 			}
 			return "?";
 		}
@@ -533,7 +537,8 @@ namespace Epsitec.Common.Document.Settings
 			{
 				case 0:  return FirstAction.Nothing;
 				case 1:  return FirstAction.OpenNewDocument;
-				case 2:  return FirstAction.OpenLastFile;
+				case 2:  return FirstAction.OpenLastModel;
+				case 3:  return FirstAction.OpenLastFile;
 			}
 			return FirstAction.Nothing;
 		}

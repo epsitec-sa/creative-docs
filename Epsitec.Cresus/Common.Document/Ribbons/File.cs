@@ -15,7 +15,7 @@ namespace Epsitec.Common.Document.Ribbons
 			this.PreferredWidth = 8 + 22*1.5*4 + 4 + 22*2 + this.separatorWidth + 22;
 
 			this.buttonNew        = this.CreateIconButton("New", "Large");
-			this.buttonLastModels = this.CreateMenuButton("", Res.Strings.Action.LastFiles, new MessageEventHandler(this.HandleLastModelsPressed));
+			this.buttonLastModels = this.CreateMenuButton("", Res.Strings.Action.LastModels, new MessageEventHandler(this.HandleLastModelsPressed));
 			this.buttonOpen       = this.CreateIconButton("Open", "Large");
 			this.buttonLastFiles  = this.CreateMenuButton ("", Res.Strings.Action.LastFiles, new MessageEventHandler (this.HandleLastFilesPressed));
 			this.buttonSave       = this.CreateIconButton("Save", "Large");

@@ -1334,4 +1334,10 @@
   <data id="02901" mod="1">Embedded image</data>
   <data id="06901" mod="1">Export the image to a file</data>
   <data id="03901" mod="1">The file does not exist</data>
+  <data id="0T901">
+  </data>
+  <data id="0U901">
+  </data>
+  <data id="0V901">
+  </data>
 </bundle>

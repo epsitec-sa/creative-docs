@@ -157,6 +157,20 @@ namespace Epsitec.App.DocumentEditor
 					this.CreateDocument();
 				}
 
+				if ( this.globalSettings.FirstAction == Settings.FirstAction.OpenLastModel &&
+					 this.globalSettings.LastModelCount > 0 )
+				{
+					this.CreateDocument();
+					string filename = this.globalSettings.LastModelGet(0);
+					string err = this.CurrentDocument.Read(filename);
+					this.UpdateAfterRead();
+					this.UpdateRulers();
+					if ( err == "" )
+					{
+						this.DialogWarnings(this.commandDispatcher, this.CurrentDocument.ReadWarnings);
+					}
+				}
+
 				if ( this.globalSettings.FirstAction == Settings.FirstAction.OpenLastFile &&
 					 this.globalSettings.LastFilenameCount > 0 )
 				{
