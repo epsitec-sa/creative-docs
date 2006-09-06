@@ -152,6 +152,7 @@
     <Compile Include="FileInfoIconSize.cs" />
     <Compile Include="FileInfoSelection.cs" />
     <Compile Include="FileManager.cs" />
+    <Compile Include="FolderItem.cs" />
     <Compile Include="IImageProvider.cs">
       <SubType>Code</SubType>
     </Compile>

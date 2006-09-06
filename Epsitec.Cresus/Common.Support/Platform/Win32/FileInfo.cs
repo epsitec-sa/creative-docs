@@ -88,7 +88,7 @@ namespace Epsitec.Common.Support.Platform.Win32
 			}
 		}
 
-		public static IEnumerable<string> GetFolderItems(string path)
+		public static IEnumerable<FolderItem> GetFolderItems(string path)
 		{
 			System.IntPtr pidlPath;
 			System.IntPtr pidlElement;
@@ -131,11 +131,19 @@ namespace Epsitec.Common.Support.Platform.Win32
 					FileInfo.GetIconAndDescription (FileInfoSelection.Normal, FileInfoIconSize.None, pidlElement, out icon, out displayName, out typeName);
 					ShellApi.SHGetPathFromIDList (pidlTemp, buffer);
 					FileInfo.instance.allocator.Free (pidlTemp);
+					Drawing.Image image = null;
+
+					if (icon != null)
+					{
+						image = Drawing.Bitmap.FromNativeIcon (icon);
+					}
+
+					FolderItem item = new FolderItem (image, displayName, typeName, buffer.ToString (), System.IntPtr.Zero);
+				
+					yield return item;
 				}
 
 				FileInfo.instance.allocator.Free (pidlElement);
-				
-				yield return buffer.ToString ();
 			}
 
 			FileInfo.instance.allocator.Free (pidlPath);

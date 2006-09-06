@@ -81,9 +81,9 @@ namespace Epsitec.Common.Support
 		{
 			string path = @"S:\Epsitec.Cresus\External";
 
-			foreach (string name in Platform.Win32.FileInfo.GetFolderItems (path))
+			foreach (FolderItem item in Platform.Win32.FileInfo.GetFolderItems (path))
 			{
-				System.Console.Out.WriteLine ("{0}", name);
+				System.Console.Out.WriteLine ("{0} ({1}), {2}, Virtual={3}", item.DisplayName, item.TypeName, item.FullPath, item.IsVirtual);
 			}
 		}
 	}
