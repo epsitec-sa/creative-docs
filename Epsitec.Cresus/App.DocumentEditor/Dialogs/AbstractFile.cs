@@ -51,6 +51,22 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			}
 		}
 
+		public string InitialFilename
+		{
+			get
+			{
+				return this.initialFilename;
+			}
+			set
+			{
+				if (this.initialFilename != value)
+				{
+					this.initialFilename = value;
+					this.UpdateInitialFilename();
+				}
+			}
+		}
+
 		public string Filename
 		{
 			//	Retourne le nom du fichier à ouvrir, ou null si l'utilisateur a choisi
@@ -201,15 +217,15 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			footer.Margins = new Margins(0, 0, 8, 0);
 			footer.Dock = DockStyle.Bottom;
 
-			Button buttonOpen = new Button(footer);
-			buttonOpen.PreferredWidth = 75;
-			buttonOpen.Text = Res.Strings.Dialog.File.Button.Open;
-			buttonOpen.ButtonStyle = ButtonStyle.DefaultAccept;
-			buttonOpen.Dock = DockStyle.Left;
-			buttonOpen.Margins = new Margins(0, 6, 0, 0);
-			buttonOpen.Clicked += new MessageEventHandler(this.HandleButtonOpenClicked);
-			buttonOpen.TabIndex = this.tabIndex++;
-			buttonOpen.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			Button buttonOK = new Button(footer);
+			buttonOK.PreferredWidth = 75;
+			buttonOK.Text = this.isSave ? Res.Strings.Dialog.File.Button.Save : Res.Strings.Dialog.File.Button.Open;
+			buttonOK.ButtonStyle = ButtonStyle.DefaultAccept;
+			buttonOK.Dock = DockStyle.Left;
+			buttonOK.Margins = new Margins(0, 6, 0, 0);
+			buttonOK.Clicked += new MessageEventHandler(this.HandleButtonOKClicked);
+			buttonOK.TabIndex = this.tabIndex++;
+			buttonOK.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			Button buttonCancel = new Button(footer);
 			buttonCancel.PreferredWidth = 75;
@@ -429,6 +445,26 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			{
 				this.ignoreChanged = true;
 				this.fieldPath.Text = AbstractFile.RemoveStartingSpaces(AbstractFile.GetIllustredPath(this.initialDirectory));
+				this.ignoreChanged = false;
+			}
+		}
+
+		protected void UpdateInitialFilename()
+		{
+			//	Met à jour le nom du fichier.
+			if (this.fieldFilename != null)
+			{
+				this.ignoreChanged = true;
+
+				if (string.IsNullOrEmpty(this.initialFilename))
+				{
+					this.fieldFilename.Text = "";
+				}
+				else
+				{
+					this.fieldFilename.Text = System.IO.Path.GetFileNameWithoutExtension(this.initialFilename);
+				}
+
 				this.ignoreChanged = false;
 			}
 		}
@@ -687,6 +723,21 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 							}
 
 							this.selectedFilenames[rank++] = this.files[i].Filename;
+						}
+					}
+
+					if (this.isSave)
+					{
+						if (System.IO.File.Exists(this.selectedFilename))  // fichier existe déjà ?
+						{
+							string message = string.Format(Res.Strings.Dialog.Save.File, Misc.ExtractName(this.selectedFilename), this.selectedFilename);
+							Common.Dialogs.DialogResult result = this.editor.DialogQuestion(this.editor.CommandDispatcher, message);
+							if (result != Common.Dialogs.DialogResult.Yes)
+							{
+								this.selectedFilename = null;
+								this.selectedFilenames = null;
+								return false;  // ne pas fermer le dialogue
+							}
 						}
 					}
 
@@ -976,7 +1027,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.CloseWindow();
 		}
 
-		private void HandleButtonOpenClicked(object sender, MessageEventArgs e)
+		private void HandleButtonOKClicked(object sender, MessageEventArgs e)
 		{
 			//	Bouton 'Ouvrir' cliqué.
 			if (this.focusedWidget is AbstractTextField)  // focus dans un texte éditable ?
@@ -1267,7 +1318,9 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		protected bool						isNavigationEnabled = false;
 		protected bool						isMultipleSelection = false;
 		protected bool						isNewEmtpyDocument = false;
+		protected bool						isSave = false;
 		protected string					initialDirectory;
+		protected string					initialFilename;
 		protected List<Item>				files;
 		protected string					selectedFilename;
 		protected string[]					selectedFilenames;
