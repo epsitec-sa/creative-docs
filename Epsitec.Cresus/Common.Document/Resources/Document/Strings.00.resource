@@ -16,6 +16,8 @@
   <data name="Dialog.Settings.ToLinePrecision" id="0D">Convertir en droites et opérations booléennes</data>
   <data name="Dialog.Settings.FirstAction.Nothing" id="0E">Rien</data>
   <data name="Dialog.Settings.FirstAction.OpenNewDocument" id="0F">Ouvrir un document vide</data>
+  <data name="Dialog.Settings.FirstAction.OpenLastModel" id="0T901" mod="1">Ouvrir le dernier modèle</data>
+  <data name="Dialog.Settings.FirstAction.OpenLastModels" id="0U901" mod="1">Ouvrir les derniers modèles</data>
   <data name="Dialog.Settings.FirstAction.OpenLastFile" id="0G">Ouvrir le dernier document</data>
   <data name="Dialog.Settings.FirstAction.OpenLastFiles" id="0H">Ouvrir les derniers documents</data>
   <data name="Dialog.Settings.MouseWheelAction.Zoom" id="0I">Loupe</data>
@@ -818,6 +820,7 @@
   <data name="Action.SaveModel" id="0RO">Enregistrer modèle...</data>
   <data name="Action.Print" id="0SO">Imprimer...</data>
   <data name="Action.Export" id="0TO">Exporter...</data>
+  <data name="Action.LastModels" id="0V901" mod="1">Modèles récents</data>
   <data name="Action.LastFiles" id="0UO">Fichiers récents</data>
   <data name="Action.Quit" id="0VO">Quitter</data>
   <data name="Action.Key" id="00P">Clé...</data>
