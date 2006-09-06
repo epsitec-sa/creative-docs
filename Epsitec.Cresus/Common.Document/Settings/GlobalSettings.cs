@@ -301,7 +301,7 @@ namespace Epsitec.Common.Document.Settings
 		public string LastModelGetShort(int index)
 		{
 			string last = this.LastModelGet(index);
-			if (last == "*")  // nouveau document vide ?
+			if (last == GlobalSettings.NewEmptyDocument)  // nouveau document vide ?
 			{
 				return Res.Strings.File.Model.Empty;
 			}
@@ -935,6 +935,11 @@ namespace Epsitec.Common.Document.Settings
 			}
 		}
 		#endregion
+
+
+		//	Chaîne utilisée à la place du nom de fichier modèle (*.crmod) lorsque la
+		//	commande 'Nouveau document vide' est actionnée.
+		public static readonly string NewEmptyDocument = "#NewEmptyDocument#";
 
 
 		protected Drawing.Point					windowLocation;
