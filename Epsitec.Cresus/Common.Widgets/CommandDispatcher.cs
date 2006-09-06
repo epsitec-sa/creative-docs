@@ -258,6 +258,11 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 		}
+
+		public void Register(Command command, CommandEventHandler handler)
+		{
+			this.Register (command.Name, handler);
+		}
 		
 		public void Register(string commandName, CommandEventHandler handler)
 		{
