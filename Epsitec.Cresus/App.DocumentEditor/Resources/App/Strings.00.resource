@@ -56,6 +56,7 @@
   <data name="Dialog.File.Size" id="0S6" mod="1">{0} Ko</data>
   <data name="Dialog.File.Directory" id="0U6" mod="1">Dossier</data>
   <data name="Dialog.File.Document" id="007" mod="1">Document</data>
+  <data name="Dialog.File.Model" id="0D7" mod="1">Modèle</data>
   <data name="Dialog.File.Button.Open" id="0M6" mod="1">Ouvrir</data>
   <data name="Dialog.File.Button.Save" id="0A7" mod="1">Enregistrer</data>
   <data name="Dialog.File.Tooltip.PreviewSize" id="0R6" mod="1">Taille des échantillons</data>
@@ -67,6 +68,7 @@
   <data name="Dialog.Open.TitleCol" id="0I1">Ouvrir une palette de couleurs</data>
   <data name="Dialog.Open.LabelPath" id="017" mod="1">Regarder dans</data>
   <data name="Dialog.Open.LabelDoc" id="0V6" mod="1">Document</data>
+  <data name="Dialog.Open.LabelMod" id="0C7" mod="1">Modèle</data>
   <data name="Dialog.Open.ParentDirectory" id="027" mod="1">Dossier parent</data>
   <data name="Dialog.Open.NewDirectory" id="057" mod="1">Nouveau dossier</data>
   <data name="Dialog.Open.Rename" id="067" mod="1">Renommer un fichier</data>
