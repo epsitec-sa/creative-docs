@@ -55,6 +55,8 @@ namespace Epsitec.Common.Support
 			}
 		}
 
+		public static readonly FolderItem Empty = new FolderItem ();
+
 		internal Platform.FolderItemHandle Handle
 		{
 			get
