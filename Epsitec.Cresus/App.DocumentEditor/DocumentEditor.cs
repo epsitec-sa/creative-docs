@@ -1952,7 +1952,7 @@ namespace Epsitec.App.DocumentEditor
 				this.globalSettings.NewDocument = this.dlgFileNew.InitialDirectory;
 
 				string filename = this.dlgFileNew.Filename;
-				if (filename == "*")  // nouveau document vide ?
+				if (filename == GlobalSettings.NewEmptyDocument)  // nouveau document vide ?
 				{
 					this.CreateDocument();
 					this.CurrentDocument.Modifier.New();
@@ -2064,7 +2064,7 @@ namespace Epsitec.App.DocumentEditor
 		void CommandLastModel(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			string filename = e.CommandArgs[0];
-			if (filename == "*")  // nouveau document vide ?
+			if (filename == GlobalSettings.NewEmptyDocument)  // nouveau document vide ?
 			{
 				this.CreateDocument();
 				this.CurrentDocument.Modifier.New();

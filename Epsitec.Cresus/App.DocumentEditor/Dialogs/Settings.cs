@@ -81,7 +81,6 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 				TextFieldCombo combo;
 				TextFieldSlider field;
-				TextField edit;
 				CheckButton check;
 				HToolBar toolBar;
 				this.tabIndex = 0;

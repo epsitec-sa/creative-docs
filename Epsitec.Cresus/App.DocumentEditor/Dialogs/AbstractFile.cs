@@ -416,7 +416,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			if (this.buttonRename != null)
 			{
 				int sel = this.table.SelectedRow;
-				bool enable = (sel != -1 && this.files[sel].Filename != "*");
+				bool enable = (sel != -1 && this.files[sel].Filename != Common.Document.Settings.GlobalSettings.NewEmptyDocument);
 				this.buttonRename.Enable = enable;
 				this.buttonDelete.Enable = enable;
 			}
@@ -512,7 +512,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		{
 			//	Supprime un fichier ou un dossier.
 			int sel = this.table.SelectedRow;
-			if (sel == -1 || this.files[sel].Filename == "*")
+			if (sel == -1 || this.files[sel].Filename == Common.Document.Settings.GlobalSettings.NewEmptyDocument)
 			{
 				return;
 			}
@@ -553,7 +553,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			//	rendu visible.
 			System.Diagnostics.Debug.Assert(this.fieldRename != null);
 			int sel = this.table.SelectedRow;
-			if (sel == -1 || this.files[sel].Filename == "*")
+			if (sel == -1 || this.files[sel].Filename == Common.Document.Settings.GlobalSettings.NewEmptyDocument)
 			{
 				return;
 			}
@@ -1001,7 +1001,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				{
 					if (this.filename == null)  // nouveau document vide ?
 					{
-						return "*";
+						return Common.Document.Settings.GlobalSettings.NewEmptyDocument;
 					}
 					else
 					{
