@@ -4,11 +4,26 @@ using System.Text;
 
 namespace Epsitec.Common.Support.Platform.Win32
 {
-	public static class FileInfo
+	public class FileInfo
 	{
-		static FileInfo()
+		private FileInfo()
 		{
-			System.Windows.Forms.Application.EnableVisualStyles ();
+			this.allocator = ShellFunctions.GetMalloc ();
+
+			System.IntPtr ptrRoot;
+			
+			ShellApi.SHGetDesktopFolder (out ptrRoot);
+			
+			this.root = System.Runtime.InteropServices.Marshal.GetTypedObjectForIUnknown (ptrRoot, typeof (IShellFolder)) as IShellFolder;
+		}
+
+		~FileInfo()
+		{
+			System.Runtime.InteropServices.Marshal.ReleaseComObject (this.allocator);
+			System.Runtime.InteropServices.Marshal.ReleaseComObject (this.root);
+
+			this.allocator = null;
+			this.root      = null;
 		}
 		
 		public static System.Drawing.Icon GetIcon(SystemFileId file, FileInfoSelection selection, FileInfoIconSize iconSize)
@@ -52,44 +67,32 @@ namespace Epsitec.Common.Support.Platform.Win32
 		public static string GetPath(SystemFileId file)
 		{
 			ShellApi.CSIDL csidl = FileInfo.GetCsidl (file);
-			IMalloc allocator = ShellFunctions.GetMalloc ();
+			System.IntPtr  pidl = System.IntPtr.Zero;
 
 			try
 			{
-				System.IntPtr pidl = System.IntPtr.Zero;
+				ShellApi.SHGetFolderLocation (System.IntPtr.Zero, (short) csidl, System.IntPtr.Zero, 0, out pidl);
 
-				try
+				if (pidl == System.IntPtr.Zero)
 				{
-					ShellApi.SHGetFolderLocation (System.IntPtr.Zero, (short) csidl, System.IntPtr.Zero, 0, out pidl);
-
-					if (pidl == System.IntPtr.Zero)
-					{
-						return null;
-					}
-
-					System.Text.StringBuilder path = new System.Text.StringBuilder (260);
-					ShellApi.SHGetPathFromIDList (pidl, path);
-					return path.ToString ();
+					return null;
 				}
-				finally
-				{
-					allocator.Free (pidl);
-				}
+
+				System.Text.StringBuilder path = new System.Text.StringBuilder (260);
+				ShellApi.SHGetPathFromIDList (pidl, path);
+				return path.ToString ();
 			}
 			finally
 			{
-				System.Runtime.InteropServices.Marshal.ReleaseComObject (allocator);
+				FileInfo.instance.allocator.Free (pidl);
 			}
 		}
 
 		public static IEnumerable<string> GetFolderItems(string path)
 		{
-			IMalloc allocator = ShellFunctions.GetMalloc ();
-
 			System.IntPtr pidlPath;
 			System.IntPtr pidlElement;
 
-			System.IntPtr ptrRoot;
 			System.IntPtr ptrPath;
 			System.IntPtr ptrList;
 			
@@ -97,15 +100,11 @@ namespace Epsitec.Common.Support.Platform.Win32
 			uint eaten = 0;
 			uint count;
 
-			ShellApi.SHGetDesktopFolder (out ptrRoot);
-			
-			IShellFolder root;
 			IShellFolder folder;
 			IEnumIDList  list;
-			
-			root = System.Runtime.InteropServices.Marshal.GetTypedObjectForIUnknown (ptrRoot, typeof (IShellFolder)) as IShellFolder;
-			root.ParseDisplayName (System.IntPtr.Zero, System.IntPtr.Zero, path, ref eaten, out pidlPath, ref attributes);
-			root.BindToObject (pidlPath, System.IntPtr.Zero, ref ShellGuids.IID_IShellFolder, out ptrPath);
+
+			FileInfo.instance.root.ParseDisplayName (System.IntPtr.Zero, System.IntPtr.Zero, path, ref eaten, out pidlPath, ref attributes);
+			FileInfo.instance.root.BindToObject (pidlPath, System.IntPtr.Zero, ref ShellGuids.IID_IShellFolder, out ptrPath);
 			
 			folder = System.Runtime.InteropServices.Marshal.GetTypedObjectForIUnknown (ptrPath, typeof (IShellFolder)) as IShellFolder;
 
@@ -131,77 +130,54 @@ namespace Epsitec.Common.Support.Platform.Win32
 				{
 					FileInfo.GetIconAndDescription (FileInfoSelection.Normal, FileInfoIconSize.None, pidlElement, out icon, out displayName, out typeName);
 					ShellApi.SHGetPathFromIDList (pidlTemp, buffer);
-					allocator.Free (pidlTemp);
+					FileInfo.instance.allocator.Free (pidlTemp);
 				}
-				
-				
-				allocator.Free (pidlElement);
+
+				FileInfo.instance.allocator.Free (pidlElement);
 				
 				yield return buffer.ToString ();
 			}
 
-			allocator.Free (pidlPath);
+			FileInfo.instance.allocator.Free (pidlPath);
 
 			System.Runtime.InteropServices.Marshal.ReleaseComObject (list);
-			System.Runtime.InteropServices.Marshal.ReleaseComObject (root);
-			System.Runtime.InteropServices.Marshal.ReleaseComObject (allocator);
-
-			yield break;
 		}
 		
 		
 		private static bool GetIconAndDescription(ShellApi.CSIDL csidl, FileInfoSelection selection, FileInfoIconSize iconSize, out System.Drawing.Icon icon, out string displayName, out string typeName)
 		{
-			IMalloc allocator = ShellFunctions.GetMalloc ();
+			System.IntPtr pidl = System.IntPtr.Zero;
+			ShellApi.SHGetFolderLocation (System.IntPtr.Zero, (short) csidl, System.IntPtr.Zero, 0, out pidl);
 
 			try
 			{
-				System.IntPtr pidl = System.IntPtr.Zero;
-				ShellApi.SHGetFolderLocation (System.IntPtr.Zero, (short) csidl, System.IntPtr.Zero, 0, out pidl);
-
-				try
-				{
-					return FileInfo.GetIconAndDescription (selection, iconSize, pidl, out icon, out displayName, out typeName);
-				}
-				finally
-				{
-					if (pidl != System.IntPtr.Zero)
-					{
-						allocator.Free (pidl);
-					}
-				}
+				return FileInfo.GetIconAndDescription (selection, iconSize, pidl, out icon, out displayName, out typeName);
 			}
 			finally
 			{
-				System.Runtime.InteropServices.Marshal.ReleaseComObject (allocator);
+				if (pidl != System.IntPtr.Zero)
+				{
+					FileInfo.instance.allocator.Free (pidl);
+				}
 			}
 		}
 
 		private static bool GetIconAndDescription(string path, FileInfoSelection selection, FileInfoIconSize iconSize, out System.Drawing.Icon icon, out string displayName, out string typeName)
 		{
-			IMalloc allocator = ShellFunctions.GetMalloc ();
+			System.IntPtr pidl = System.IntPtr.Zero;
+			uint attribute;
+			ShellApi.SHParseDisplayName (path, System.IntPtr.Zero, out pidl, 0, out attribute);
 
 			try
 			{
-				System.IntPtr pidl = System.IntPtr.Zero;
-				uint attribute;
-				ShellApi.SHParseDisplayName (path, System.IntPtr.Zero, out pidl, 0, out attribute);
-
-				try
-				{
-					return FileInfo.GetIconAndDescription (selection, iconSize, pidl, out icon, out displayName, out typeName);
-				}
-				finally
-				{
-					if (pidl != System.IntPtr.Zero)
-					{
-						allocator.Free (pidl);
-					}
-				}
+				return FileInfo.GetIconAndDescription (selection, iconSize, pidl, out icon, out displayName, out typeName);
 			}
 			finally
 			{
-				System.Runtime.InteropServices.Marshal.ReleaseComObject (allocator);
+				if (pidl != System.IntPtr.Zero)
+				{
+					FileInfo.instance.allocator.Free (pidl);
+				}
 			}
 		}
 
@@ -376,5 +352,10 @@ namespace Epsitec.Common.Support.Platform.Win32
 
 		[System.Runtime.InteropServices.DllImport ("user32.dll")]
 		private static extern int DestroyIcon(System.IntPtr hIcon);
+
+		private static FileInfo instance = new FileInfo ();
+		
+		private IMalloc allocator;
+		private IShellFolder root;
 	}
 }

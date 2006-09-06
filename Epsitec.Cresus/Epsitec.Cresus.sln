@@ -116,8 +116,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Clipboard.Win32", "Common.T
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.CresusPictogrammes", "App.CresusPictogrammes\App.CresusPictogrammes.csproj", "{5AA8327F-FA0E-4951-8F90-63D15480042A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Shell", "Common.Shell\Common.Shell.csproj", "{B0EB59C0-2FFF-4FA5-95F6-F96BF491F158}"
-EndProject
 Global
 	GlobalSection(DPCodeReviewSolutionGUID) = preSolution
 		DPCodeReviewSolutionGUID = {00000000-0000-0000-0000-000000000000}
@@ -654,16 +652,6 @@ Global
 		{5AA8327F-FA0E-4951-8F90-63D15480042A}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{5AA8327F-FA0E-4951-8F90-63D15480042A}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{5AA8327F-FA0E-4951-8F90-63D15480042A}.Release|Win32.ActiveCfg = Release|Any CPU
-		{B0EB59C0-2FFF-4FA5-95F6-F96BF491F158}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B0EB59C0-2FFF-4FA5-95F6-F96BF491F158}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B0EB59C0-2FFF-4FA5-95F6-F96BF491F158}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{B0EB59C0-2FFF-4FA5-95F6-F96BF491F158}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{B0EB59C0-2FFF-4FA5-95F6-F96BF491F158}.Debug|Win32.ActiveCfg = Debug|Any CPU
-		{B0EB59C0-2FFF-4FA5-95F6-F96BF491F158}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B0EB59C0-2FFF-4FA5-95F6-F96BF491F158}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B0EB59C0-2FFF-4FA5-95F6-F96BF491F158}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{B0EB59C0-2FFF-4FA5-95F6-F96BF491F158}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{B0EB59C0-2FFF-4FA5-95F6-F96BF491F158}.Release|Win32.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
