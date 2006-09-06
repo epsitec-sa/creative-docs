@@ -6,44 +6,7 @@ namespace Epsitec.Common.Support
 	public class FileInfoTest
 	{
 		[Test]
-		public void CheckGetIcon1()
-		{
-			System.Array ids = System.Enum.GetValues (typeof (SystemFileId));
-
-			FolderDetailsMode modeNormal = FolderDetailsMode.LargeIcons;
-			FolderDetailsMode modeActive = FolderDetailsMode.LargeIcons;
-			
-			modeActive.IconSelection = FileInfoSelection.Active;
-
-			foreach (int id in ids)
-			{
-				System.Drawing.Icon iconNormal = Platform.Win32.FileInfo.GetIcon ((SystemFileId) id, modeNormal);
-				System.Drawing.Icon iconActive = Platform.Win32.FileInfo.GetIcon ((SystemFileId) id, modeActive);
-
-				string displayName;
-				string typeName;
-
-				Platform.Win32.FileInfo.GetDisplayAndTypeNames ((SystemFileId) id, out displayName, out typeName);
-				
-				string path = Platform.Win32.FileInfo.GetPath ((SystemFileId) id);
-
-				System.Console.Out.WriteLine ("{0} : {1} ({2}){3}{4}", (SystemFileId) id, displayName, typeName, (iconNormal == null) ? " no normal icon" : "", (iconActive == null) ? " no normal icon" : "");
-				System.Console.Out.WriteLine ("----> path = {0}", path);
-
-				if (iconNormal != null)
-				{
-					Drawing.Bitmap image = Drawing.Bitmap.FromNativeIcon (iconNormal) as Drawing.Bitmap;
-
-					System.Console.Out.WriteLine ("Image is {0} x {1}", image.Width, image.Height);
-
-					byte[] data = image.Save (Epsitec.Common.Drawing.ImageFormat.Png);
-					System.IO.File.WriteAllBytes (string.Concat ((SystemFileId) id, ".png"), data);
-				}
-			}
-		}
-		
-		[Test]
-		public void CheckGetIcon2()
+		public void CheckCreateFolderItem1()
 		{
 			string[] paths = new string[]
 			{
@@ -57,32 +20,22 @@ namespace Epsitec.Common.Support
 
 			foreach (string path in paths)
 			{
-				System.Drawing.Icon icon = Platform.Win32.FileInfo.GetIcon (path, FolderDetailsMode.LargeIcons);
-				
-				string displayName;
-				string typeName;
-
-				Platform.Win32.FileInfo.GetDisplayAndTypeNames (path, out displayName, out typeName);
-
+				FolderItem item = Platform.Win32.FileInfo.CreateFolderItem (path, FolderDetailsMode.LargeIcons);
 				string file = System.IO.Path.GetFileName (path);
 
-				System.Console.Out.WriteLine ("{0} : {1} ({2}){3}", file, displayName, typeName, (icon == null) ? " no normal icon" : "");
-				System.Console.Out.WriteLine ("----> path = {0}", path);
+				System.Console.Out.WriteLine ("{0} : {1} ({2}){3}", file, item.DisplayName, item.TypeName, (item.Icon == null) ? " no normal icon" : "");
+				System.Console.Out.WriteLine ("----> path = {0}", item.FullPath);
 				
-				if (icon != null)
+				if (item.Icon != null)
 				{
-					Drawing.Bitmap image = Drawing.Bitmap.FromNativeIcon (icon) as Drawing.Bitmap;
-
-					System.Console.Out.WriteLine ("Image is {0} x {1}", image.Width, image.Height);
-
-					byte[] data = image.Save (Epsitec.Common.Drawing.ImageFormat.Png);
-					System.IO.File.WriteAllBytes (string.Concat (file, ".png"), data);
+					byte[] data = item.Icon.BitmapImage.Save (Epsitec.Common.Drawing.ImageFormat.Png);
+					System.IO.File.WriteAllBytes (string.Concat ("Files ", file, ".png"), data);
 				}
 			}
 		}
 
 		[Test]
-		public void CheckGetFolderItem()
+		public void CheckCreateFolderItem2()
 		{
 			System.Array ids = System.Enum.GetValues (typeof (SystemFileId));
 
@@ -90,7 +43,7 @@ namespace Epsitec.Common.Support
 
 			foreach (int id in ids)
 			{
-				FolderItem item = Platform.Win32.FileInfo.GetFolderItem ((SystemFileId) id, modeNormal);
+				FolderItem item = Platform.Win32.FileInfo.CreateFolderItem ((SystemFileId) id, modeNormal);
 
 				System.Console.Out.WriteLine ("{0} : {1} ({2}) virtual={3}", (SystemFileId) id, item.DisplayName, item.TypeName, item.IsVirtual);
 				System.Console.Out.WriteLine ("----> path = {0}", item.FullPath);
@@ -104,11 +57,34 @@ namespace Epsitec.Common.Support
 		}
 
 		[Test]
-		public void CheckGetFolderItems()
+		public void CheckGetFolderItemsFromFolder()
 		{
 			string path = @"S:\Epsitec.Cresus\External";
+			FolderItem root = Platform.Win32.FileInfo.CreateFolderItem (path, FolderDetailsMode.NoIcons);
 
-			foreach (FolderItem item in Platform.Win32.FileInfo.GetFolderItems (path, FolderDetailsMode.LargeIcons))
+			foreach (FolderItem item in Platform.Win32.FileInfo.GetFolderItems (root, FolderDetailsMode.LargeIcons))
+			{
+				System.Console.Out.WriteLine ("{0} ({1}), {2}, Virtual={3}", item.DisplayName, item.TypeName, item.FullPath, item.IsVirtual);
+			}
+		}
+
+		[Test]
+		public void CheckGetFolderItemsFromDesktop()
+		{
+			FolderItem root = Platform.Win32.FileInfo.CreateFolderItem (SystemFileId.VirtualDesktop, FolderDetailsMode.NoIcons);
+
+			foreach (FolderItem item in Platform.Win32.FileInfo.GetFolderItems (root, FolderDetailsMode.LargeIcons))
+			{
+				System.Console.Out.WriteLine ("{0} ({1}), {2}, Virtual={3}", item.DisplayName, item.TypeName, item.FullPath, item.IsVirtual);
+			}
+		}
+
+		[Test]
+		public void CheckGetFolderItemsFromMyComputer()
+		{
+			FolderItem root = Platform.Win32.FileInfo.CreateFolderItem (SystemFileId.VirtualMyComputer, FolderDetailsMode.NoIcons);
+
+			foreach (FolderItem item in Platform.Win32.FileInfo.GetFolderItems (root, FolderDetailsMode.LargeIcons))
 			{
 				System.Console.Out.WriteLine ("{0} ({1}), {2}, Virtual={3}", item.DisplayName, item.TypeName, item.FullPath, item.IsVirtual);
 			}

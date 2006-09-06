@@ -44,6 +44,8 @@ namespace Epsitec.Common.Support.Platform.Win32
 			}
 		}
 
+		public static readonly PidlHandle VirtualDesktopHandle = new PidlHandle ();
+
 		System.IntPtr pidl;
 	}
 }

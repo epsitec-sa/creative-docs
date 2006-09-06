@@ -63,6 +63,10 @@ namespace Epsitec.Common.Support
 			{
 				return this.handle;
 			}
+			set
+			{
+				this.handle = value;
+			}
 		}
 		
 		private Drawing.Image icon;
