@@ -149,17 +149,17 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		protected void CreateAccess()
 		{
 			//	Crée la partie controlant le chemin d'accès.
-			Widget access = new Widget(this.window.Root);
-			access.PreferredHeight = 20;
-			access.Margins = new Margins(0, 0, 0, 8);
-			access.Dock = DockStyle.Top;
+			Widget group = new Widget(this.window.Root);
+			group.PreferredHeight = 20;
+			group.Margins = new Margins(0, 0, 0, 8);
+			group.Dock = DockStyle.Top;
 
-			StaticText label = new StaticText(access);
+			StaticText label = new StaticText(group);
 			label.Text = Res.Strings.Dialog.Open.LabelPath;
 			label.PreferredWidth = 80;
 			label.Dock = DockStyle.Left;
 
-			this.fieldPath = new TextFieldCombo(access);
+			this.fieldPath = new TextFieldCombo(group);
 			this.fieldPath.IsReadOnly = true;
 			this.fieldPath.Dock = DockStyle.Fill;
 			this.fieldPath.Margins = new Margins(0, 5, 0, 0);
@@ -167,25 +167,25 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.fieldPath.ComboClosed += new EventHandler(this.HandleFieldPathComboClosed);
 			this.fieldPath.TextChanged += new EventHandler(this.HandleFieldPathTextChanged);
 
-			this.buttonDelete = new IconButton(access);
+			this.buttonDelete = new IconButton(group);
 			this.buttonDelete.IconName = Misc.Icon("FileDelete");
 			this.buttonDelete.Dock = DockStyle.Right;
 			this.buttonDelete.Clicked += new MessageEventHandler(this.HandleButtonDeleteClicked);
 			ToolTip.Default.SetToolTip(this.buttonDelete, Res.Strings.Dialog.Open.Delete);
 
-			this.buttonRename = new IconButton(access);
+			this.buttonRename = new IconButton(group);
 			this.buttonRename.IconName = Misc.Icon("FileRename");
 			this.buttonRename.Dock = DockStyle.Right;
 			this.buttonRename.Clicked += new MessageEventHandler(this.HandleButtonRenameClicked);
 			ToolTip.Default.SetToolTip(this.buttonRename, Res.Strings.Dialog.Open.Rename);
 
-			this.buttonNew = new IconButton(access);
+			this.buttonNew = new IconButton(group);
 			this.buttonNew.IconName = Misc.Icon("NewDirectory");
 			this.buttonNew.Dock = DockStyle.Right;
 			this.buttonNew.Clicked += new MessageEventHandler(this.HandleButtonNewClicked);
 			ToolTip.Default.SetToolTip(this.buttonNew, Res.Strings.Dialog.Open.NewDirectory);
 
-			this.buttonParent = new IconButton(access);
+			this.buttonParent = new IconButton(group);
 			this.buttonParent.IconName = Misc.Icon("ParentDirectory");
 			this.buttonParent.Dock = DockStyle.Right;
 			this.buttonParent.Clicked += new MessageEventHandler(this.HandleButtonParentClicked);
@@ -194,19 +194,26 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 		protected void CreateFilename()
 		{
-			Widget file = new Widget(this.window.Root);
-			file.PreferredHeight = 20;
-			file.Margins = new Margins(0, 0, 8, 0);
-			file.Dock = DockStyle.Bottom;
+			Widget group = new Widget(this.window.Root);
+			group.PreferredHeight = 20;
+			group.Margins = new Margins(0, 0, 8, 0);
+			group.Dock = DockStyle.Bottom;
 
-			StaticText label = new StaticText(file);
+			StaticText label = new StaticText(group);
 			label.Text = this.isModel ? Res.Strings.Dialog.Open.LabelMod : Res.Strings.Dialog.Open.LabelDoc;
 			label.PreferredWidth = 80;
 			label.Dock = DockStyle.Left;
 
-			this.fieldFilename = new TextField(file);
+			this.fieldFilename = new TextField(group);
 			this.fieldFilename.Dock = DockStyle.Fill;
 			this.fieldFilename.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleKeyboardFocusChanged);
+
+			TextField ext = new TextField(group);
+			ext.IsReadOnly = true;
+			ext.Text = this.fileExtension;
+			ext.PreferredWidth = 50;
+			ext.Margins = new Margins(1, 0, 0, 0);
+			ext.Dock = DockStyle.Right;
 		}
 
 		protected void CreateFooter()
