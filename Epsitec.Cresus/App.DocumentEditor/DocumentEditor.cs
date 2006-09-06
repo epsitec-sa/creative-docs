@@ -1494,8 +1494,16 @@ namespace Epsitec.App.DocumentEditor
 				}
 				else
 				{
-					this.dlgFileSave.InitialDirectory = this.globalSettings.InitialDirectory;
-					this.dlgFileSave.InitialFilename = this.CurrentDocument.Filename;
+					if (this.CurrentDocument.Filename == "")
+					{
+						this.dlgFileSave.InitialDirectory = this.globalSettings.InitialDirectory;
+						this.dlgFileSave.InitialFilename = "";
+					}
+					else
+					{
+						this.dlgFileSave.InitialDirectory = System.IO.Path.GetDirectoryName(this.CurrentDocument.Filename);
+						this.dlgFileSave.InitialFilename = this.CurrentDocument.Filename;
+					}
 
 					this.dlgFileSave.Show();  // choix d'un fichier...
 					if (this.dlgFileSave.Result != Common.Dialogs.DialogResult.Accept)
@@ -1532,8 +1540,15 @@ namespace Epsitec.App.DocumentEditor
 
 			this.dlgSplash.Hide();
 
-			this.dlgFileSaveModel.InitialDirectory = this.globalSettings.InitialDirectory;
-			this.dlgFileSaveModel.InitialFilename = this.CurrentDocument.Filename;
+			string newDocument = this.globalSettings.NewDocument;
+
+			if (newDocument.EndsWith(".crmod"))  // ancienne définition ?
+			{
+				newDocument = System.IO.Path.GetDirectoryName(newDocument);
+			}
+
+			this.dlgFileSaveModel.InitialDirectory = newDocument;
+			this.dlgFileSaveModel.InitialFilename = "";
 
 			this.dlgFileSaveModel.Show();  // choix d'un fichier...
 			if (this.dlgFileSaveModel.Result != Common.Dialogs.DialogResult.Accept)
@@ -1548,7 +1563,7 @@ namespace Epsitec.App.DocumentEditor
 			string err = this.CurrentDocument.Write(filename);
 			if ( err == "" )
 			{
-				this.globalSettings.InitialDirectory = System.IO.Path.GetDirectoryName(filename);
+				this.globalSettings.NewDocument = this.dlgFileSaveModel.InitialDirectory;
 				this.globalSettings.LastModelAdd(filename);
 			}
 			this.MouseHideWait();

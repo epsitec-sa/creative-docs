@@ -31,7 +31,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.window = new Window();
 				this.window.MakeSecondaryWindow();
 				this.window.PreventAutoClose = true;
-				this.WindowInit("FileNew", 400, 401, true);
+				this.WindowInit("FileNew", 400, 379, true);
 				this.window.Text = Res.Strings.Dialog.New.Title;
 				this.window.Owner = this.editor.Window;
 				this.window.Icon = Bitmap.FromManifestResource("Epsitec.App.DocumentEditor.Images.Application.icon", this.GetType().Assembly);
@@ -44,12 +44,14 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.CreateTable(50);
 				this.CreateRename();
 				this.CreateFooter();
+				this.CreateFilename();
 			}
 
 			this.selectedFilename = null;
 			this.selectedFilenames = null;
-			this.UpdateTable(0);
+			this.UpdateTable(0);  // sélectionne 'Document vide'
 			this.UpdateInitialDirectory();
+			this.UpdateInitialFilename();
 
 			this.table.Focus();  // focus dans la liste des modèles
 
