@@ -81,7 +81,7 @@ namespace Epsitec.Common.Document.Settings
 			try
 			{
 				string[] list = System.IO.Directory.GetFiles(this.initialDirectory, ext);
-				for ( int i=0 ; i<lastFilenameMax ; i++ )
+				for ( int i=0 ; i<this.lastFilenameMax ; i++ )
 				{
 					if ( i >= list.Length )  break;
 					this.LastFilenameAdd(list[i]);
@@ -96,7 +96,8 @@ namespace Epsitec.Common.Document.Settings
 				try
 				{
 					string[] list = System.IO.Directory.GetFiles(this.initialDirectory, "*.crmod");
-					for (int i=0; i<lastModelMax; i++)
+					this.LastModelAdd(GlobalSettings.NewEmptyDocument);
+					for (int i=0; i<this.lastModelMax-1; i++)
 					{
 						if (i >= list.Length)  break;
 						this.LastModelAdd(list[i]);
