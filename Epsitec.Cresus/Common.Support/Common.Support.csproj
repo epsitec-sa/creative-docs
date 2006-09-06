@@ -171,10 +171,12 @@
     <Compile Include="OpletQueue.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Platform\FolderItemHandle.cs" />
     <Compile Include="Platform\Win32\FileInfo.cs" />
     <Compile Include="Platform\Win32\IEnumIDList.cs" />
     <Compile Include="Platform\Win32\IMalloc.cs" />
     <Compile Include="Platform\Win32\IShellFolder.cs" />
+    <Compile Include="Platform\Win32\PidlHandle.cs" />
     <Compile Include="Platform\Win32\ShellApi.cs" />
     <Compile Include="Platform\Win32\ShellFileOperation.cs" />
     <Compile Include="Platform\Win32\ShellFunctions.cs" />

@@ -84,7 +84,7 @@ namespace Epsitec.Common.Support.Platform.Win32
 			}
 			finally
 			{
-				FileInfo.instance.allocator.Free (pidl);
+				PidlHandle.FreePidl (pidl);
 			}
 		}
 
@@ -130,7 +130,6 @@ namespace Epsitec.Common.Support.Platform.Win32
 				{
 					FileInfo.GetIconAndDescription (FileInfoSelection.Normal, FileInfoIconSize.None, pidlElement, out icon, out displayName, out typeName);
 					ShellApi.SHGetPathFromIDList (pidlTemp, buffer);
-					FileInfo.instance.allocator.Free (pidlTemp);
 					Drawing.Image image = null;
 
 					if (icon != null)
@@ -138,15 +137,18 @@ namespace Epsitec.Common.Support.Platform.Win32
 						image = Drawing.Bitmap.FromNativeIcon (icon);
 					}
 
-					FolderItem item = new FolderItem (image, displayName, typeName, buffer.ToString (), System.IntPtr.Zero);
-				
+					//	Do not free pidlTemp, as it is transmitted to the PidlHandle. This
+					//	avoids a useless copy operation.
+					
+					FolderItem item = new FolderItem (image, displayName, typeName, buffer.ToString (), PidlHandle.Inherit (pidlTemp));
+
 					yield return item;
 				}
 
-				FileInfo.instance.allocator.Free (pidlElement);
+				PidlHandle.FreePidl (pidlElement);
 			}
 
-			FileInfo.instance.allocator.Free (pidlPath);
+			PidlHandle.FreePidl (pidlPath);
 
 			System.Runtime.InteropServices.Marshal.ReleaseComObject (list);
 		}
@@ -163,10 +165,7 @@ namespace Epsitec.Common.Support.Platform.Win32
 			}
 			finally
 			{
-				if (pidl != System.IntPtr.Zero)
-				{
-					FileInfo.instance.allocator.Free (pidl);
-				}
+				PidlHandle.FreePidl (pidl);
 			}
 		}
 
@@ -182,10 +181,7 @@ namespace Epsitec.Common.Support.Platform.Win32
 			}
 			finally
 			{
-				if (pidl != System.IntPtr.Zero)
-				{
-					FileInfo.instance.allocator.Free (pidl);
-				}
+				PidlHandle.FreePidl (pidl);
 			}
 		}
 

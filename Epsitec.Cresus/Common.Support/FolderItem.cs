@@ -6,13 +6,13 @@ namespace Epsitec.Common.Support
 {
 	public struct FolderItem
 	{
-		internal FolderItem(Common.Drawing.Image icon, string displayName, string typeName, string fullPath, System.IntPtr handle)
+		internal FolderItem(Common.Drawing.Image icon, string displayName, string typeName, string fullPath, Platform.FolderItemHandle handle)
 		{
 			this.icon = icon;
 			this.displayName = displayName;
 			this.typeName = typeName;
 			this.fullPath = fullPath;
-			this.systemItemReference = handle;
+			this.handle = handle;
 		}
 		
 		public Drawing.Image Icon
@@ -55,11 +55,11 @@ namespace Epsitec.Common.Support
 			}
 		}
 
-		internal System.IntPtr SystemItemReference
+		internal Platform.FolderItemHandle Handle
 		{
 			get
 			{
-				return this.systemItemReference;
+				return this.handle;
 			}
 		}
 		
@@ -67,6 +67,6 @@ namespace Epsitec.Common.Support
 		private string displayName;
 		private string typeName;
 		private string fullPath;
-		private System.IntPtr systemItemReference;
+		private Platform.FolderItemHandle handle;
 	}
 }
