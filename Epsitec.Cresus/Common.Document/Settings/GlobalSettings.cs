@@ -300,7 +300,15 @@ namespace Epsitec.Common.Document.Settings
 
 		public string LastModelGetShort(int index)
 		{
-			return Misc.ExtractName(this.LastModelGet(index));
+			string last = this.LastModelGet(index);
+			if (last == "*")  // nouveau document vide ?
+			{
+				return Res.Strings.File.Model.Empty;
+			}
+			else
+			{
+				return Misc.ExtractName(last);
+			}
 		}
 
 		public void LastModelAdd(string filename)
