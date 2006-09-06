@@ -19,6 +19,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.isNavigationEnabled = true;
 			this.isMultipleSelection = false;
 			this.isNewEmtpyDocument = true;
+			this.isSave = false;
 		}
 
 		public override void Show()

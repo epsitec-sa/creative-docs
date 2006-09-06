@@ -57,6 +57,7 @@
   <data name="Dialog.File.Directory" id="0U6" mod="1">Dossier</data>
   <data name="Dialog.File.Document" id="007" mod="1">Document</data>
   <data name="Dialog.File.Button.Open" id="0M6" mod="1">Ouvrir</data>
+  <data name="Dialog.File.Button.Save" id="0A7" mod="1">Enregistrer</data>
   <data name="Dialog.File.Tooltip.PreviewSize" id="0R6" mod="1">Taille des échantillons</data>
   <data name="Dialog.File.NewDirectoryName" id="037" mod="1">Nouveau dossier</data>
   <data name="Dialog.File.Statistics" id="047" mod="1">Format: {0}&lt;br/&gt;Pages/calques: {1}/{2}&lt;br/&gt;Polices/images: {5}/{6}&lt;br/&gt;Objets: {3}/{4}</data>
@@ -74,6 +75,7 @@
   <data name="Dialog.Save.TitleMod" id="0K1">Enregistrer un document modèle</data>
   <data name="Dialog.Save.TitlePic" id="0L1">Enregistrer une icône</data>
   <data name="Dialog.Save.TitleCol" id="0M1">Enregistrer une palette de couleurs</data>
+  <data name="Dialog.Save.File" id="0B7" mod="1">Le document &lt;b&gt;{0}&lt;/b&gt; existe déjà.&lt;br/&gt;&lt;br/&gt;{1}&lt;br/&gt;&lt;br/&gt;Voulez-vous le remplacer ?</data>
   <data name="Dialog.Delete.File" id="087" mod="1">Voulez-vous supprimer le document &lt;b&gt;{0}&lt;/b&gt; ?&lt;br/&gt;&lt;br/&gt;{1}</data>
   <data name="Dialog.Delete.Directory" id="097" mod="1">Voulez-vous supprimer le dossier &lt;b&gt;{0}&lt;/b&gt; et tout son contenu ?&lt;br/&gt;&lt;br/&gt;{1}</data>
   <data name="Dialog.FileDoc" id="0N1">Documents</data>

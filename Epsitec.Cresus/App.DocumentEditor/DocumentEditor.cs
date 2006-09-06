@@ -102,6 +102,8 @@ namespace Epsitec.App.DocumentEditor
 			this.dlgFileNew       = new Dialogs.FileNew(this);
 			this.dlgFileOpen      = new Dialogs.FileOpen(this);
 			this.dlgFileOpenModel = new Dialogs.FileOpenModel(this);
+			this.dlgFileSave      = new Dialogs.FileSave(this);
+			this.dlgFileSaveModel = new Dialogs.FileSaveModel(this);
 			this.dlgPageStack     = new Dialogs.PageStack(this);
 			this.dlgPrint         = new Dialogs.Print(this);
 			this.dlgReplace       = new Dialogs.Replace(this);
@@ -1471,26 +1473,39 @@ namespace Epsitec.App.DocumentEditor
 			{
 				this.dlgSplash.Hide();
 
-				Common.Dialogs.FileSave dialog = new Common.Dialogs.FileSave();
-			
-				dialog.InitialDirectory = this.globalSettings.InitialDirectory;
-				dialog.FileName = this.CurrentDocument.Filename;
-				if ( this.documentType == DocumentType.Graphic )
+				if (this.documentType == DocumentType.Pictogram)
 				{
-					dialog.Title = Res.Strings.Dialog.Save.TitleDoc;
-					dialog.Filters.Add("crdoc", Res.Strings.Dialog.FileDoc, "*.crdoc");
+					Common.Dialogs.FileSave dialog = new Common.Dialogs.FileSave();
+
+					dialog.InitialDirectory = this.globalSettings.InitialDirectory;
+					dialog.FileName = this.CurrentDocument.Filename;
+					dialog.Title = Res.Strings.Dialog.Save.TitlePic;
+					dialog.Filters.Add("icon", Res.Strings.Dialog.FilePic, "*.icon");
+					dialog.PromptForOverwriting = true;
+					dialog.Owner = this.Window;
+					dialog.OpenDialog();
+					if (dialog.Result != Common.Dialogs.DialogResult.Accept)
+					{
+						return false;
+					}
+
+					filename = dialog.FileName;
+					filename = DocumentEditor.AdjustFilename(filename);
 				}
 				else
 				{
-					dialog.Title = Res.Strings.Dialog.Save.TitlePic;
-					dialog.Filters.Add("icon", Res.Strings.Dialog.FilePic, "*.icon");
+					this.dlgFileSave.InitialDirectory = this.globalSettings.InitialDirectory;
+					this.dlgFileSave.InitialFilename = this.CurrentDocument.Filename;
+
+					this.dlgFileSave.Show();  // choix d'un fichier...
+					if (this.dlgFileSave.Result != Common.Dialogs.DialogResult.Accept)
+					{
+						return false;
+					}
+
+					filename = this.dlgFileSave.Filename;
+					filename = DocumentEditor.AdjustFilename(filename);
 				}
-				dialog.PromptForOverwriting = true;
-				dialog.Owner = this.Window;
-				dialog.OpenDialog();
-				if ( dialog.Result != Common.Dialogs.DialogResult.Accept )  return false;
-				filename = dialog.FileName;
-				filename = DocumentEditor.AdjustFilename(filename);
 			}
 			else
 			{
@@ -1517,17 +1532,16 @@ namespace Epsitec.App.DocumentEditor
 
 			this.dlgSplash.Hide();
 
-			Common.Dialogs.FileSave dialog = new Common.Dialogs.FileSave();
-		
-			dialog.InitialDirectory = this.globalSettings.InitialDirectory;
-			dialog.FileName = "";
-			dialog.Title = Res.Strings.Dialog.Save.TitleMod;
-			dialog.Filters.Add("crmod", Res.Strings.Dialog.FileMod, "*.crmod");
-			dialog.PromptForOverwriting = true;
-			dialog.Owner = this.Window;
-			dialog.OpenDialog();
-			if ( dialog.Result != Common.Dialogs.DialogResult.Accept )  return false;
-			filename = dialog.FileName;
+			this.dlgFileSaveModel.InitialDirectory = this.globalSettings.InitialDirectory;
+			this.dlgFileSaveModel.InitialFilename = this.CurrentDocument.Filename;
+
+			this.dlgFileSaveModel.Show();  // choix d'un fichier...
+			if (this.dlgFileSaveModel.Result != Common.Dialogs.DialogResult.Accept)
+			{
+				return false;
+			}
+
+			filename = this.dlgFileSaveModel.Filename;
 			filename = DocumentEditor.AdjustFilename(filename);
 
 			this.MouseShowWait();
@@ -5188,6 +5202,8 @@ namespace Epsitec.App.DocumentEditor
 			this.dlgFileNew.Save();
 			this.dlgFileOpen.Save();
 			this.dlgFileOpenModel.Save();
+			this.dlgFileSave.Save();
+			this.dlgFileSaveModel.Save();
 			this.dlgPageStack.Save();
 			this.dlgPrint.Save();
 			this.dlgReplace.Save();
@@ -5357,6 +5373,8 @@ namespace Epsitec.App.DocumentEditor
 		protected Dialogs.FileNew				dlgFileNew;
 		protected Dialogs.FileOpen				dlgFileOpen;
 		protected Dialogs.FileOpenModel			dlgFileOpenModel;
+		protected Dialogs.FileSave				dlgFileSave;
+		protected Dialogs.FileSaveModel			dlgFileSaveModel;
 		protected Dialogs.PageStack				dlgPageStack;
 		protected Dialogs.Print					dlgPrint;
 		protected Dialogs.Replace				dlgReplace;

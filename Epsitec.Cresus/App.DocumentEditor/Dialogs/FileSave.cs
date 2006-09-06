@@ -11,15 +11,15 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 	/// <summary>
 	/// Dialogue pour ouvrir un document existant.
 	/// </summary>
-	public class FileOpenModel : AbstractFile
+	public class FileSave : AbstractFile
 	{
-		public FileOpenModel(DocumentEditor editor) : base(editor)
+		public FileSave(DocumentEditor editor) : base(editor)
 		{
-			this.fileExtension = ".crmod";
+			this.fileExtension = ".crdoc";
 			this.isNavigationEnabled = true;
-			this.isMultipleSelection = true;
+			this.isMultipleSelection = false;
 			this.isNewEmtpyDocument = false;
-			this.isSave = false;
+			this.isSave = true;
 		}
 
 		public override void Show()
@@ -30,8 +30,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.window = new Window();
 				this.window.MakeSecondaryWindow();
 				this.window.PreventAutoClose = true;
-				this.WindowInit("FileOpenModel", 400, 379, true);
-				this.window.Text = Res.Strings.Dialog.Open.TitleMod;
+				this.WindowInit("FileSave", 400, 389, true);
+				this.window.Text = Res.Strings.Dialog.Save.TitleDoc;
 				this.window.Owner = this.editor.Window;
 				this.window.Icon = Bitmap.FromManifestResource("Epsitec.App.DocumentEditor.Images.Application.icon", this.GetType().Assembly);
 				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowCloseClicked);
@@ -40,7 +40,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 				this.CreateResizer();
 				this.CreateAccess();
-				this.CreateTable(50);
+				this.CreateTable(20);
 				this.CreateRename();
 				this.CreateFooter();
 				this.CreateFilename();
@@ -52,6 +52,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.UpdateInitialDirectory();
 			this.UpdateInitialFilename();
 
+			this.fieldFilename.SelectAll();
 			this.fieldFilename.Focus();  // focus pour frapper le nom du fichier à ouvrir
 
 			this.window.ShowDialog();
@@ -60,7 +61,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		public override void Save()
 		{
 			//	Enregistre la position de la fenêtre du dialogue.
-			this.WindowSave("FileOpenModel");
+			this.WindowSave("FileSave");
 		}
 	}
 }

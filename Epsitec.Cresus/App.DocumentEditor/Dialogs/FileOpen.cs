@@ -19,6 +19,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.isNavigationEnabled = true;
 			this.isMultipleSelection = true;
 			this.isNewEmtpyDocument = false;
+			this.isSave = false;
 		}
 
 		public override void Show()
@@ -49,8 +50,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.selectedFilenames = null;
 			this.UpdateTable(-1);
 			this.UpdateInitialDirectory();
+			this.UpdateInitialFilename();
 
-			this.fieldFilename.Text = "";
 			this.fieldFilename.Focus();  // focus pour frapper le nom du fichier à ouvrir
 
 			this.window.ShowDialog();
