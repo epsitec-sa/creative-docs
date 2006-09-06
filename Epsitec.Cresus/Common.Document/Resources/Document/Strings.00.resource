@@ -1324,6 +1324,7 @@
   <data name="Color.Cyan" id="0I801">Cyan</data>
   <data name="Color.Blue" id="0J801">Bleu</data>
   <data name="Color.Magenta" id="0K801">Magenta</data>
+  <data name="File.Model.Empty" id="00A01" mod="1">Document vide</data>
   <data name="Question.ManyObjects" id="0L801">Voulez-vous vraiment transformer {0} objets ?</data>
   <data name="Error.BadFile" id="0M801">Type de fichier incorrect.</data>
   <data name="Error.BadImage" id="0N801">Format d'image inconnu.</data>

@@ -1961,9 +1961,9 @@ namespace Epsitec.App.DocumentEditor
 				{
 					this.Open(filename);
 					this.CurrentDocument.IsDirtySerialize = false;
-					this.globalSettings.LastModelAdd(filename);
-					this.BuildLastModelsMenu();
 				}
+				this.globalSettings.LastModelAdd(filename);
+				this.BuildLastModelsMenu();
 				this.initializationInProgress = true;
 				this.CurrentDocument.InitializationInProgress = true;
 			}
@@ -2064,7 +2064,19 @@ namespace Epsitec.App.DocumentEditor
 		void CommandLastModel(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			string filename = e.CommandArgs[0];
-			this.Open(filename);
+			if (filename == "*")  // nouveau document vide ?
+			{
+				this.CreateDocument();
+				this.CurrentDocument.Modifier.New();
+				this.globalSettings.LastModelAdd(filename);
+				this.BuildLastModelsMenu();
+				this.initializationInProgress = true;
+				this.CurrentDocument.InitializationInProgress = true;
+			}
+			else
+			{
+				this.Open(filename);
+			}
 		}
 
 		[Command("QuitApplication")]
