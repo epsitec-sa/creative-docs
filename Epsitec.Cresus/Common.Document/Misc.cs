@@ -722,6 +722,11 @@ namespace Epsitec.Common.Document
 		static public string Icon(string icon)
 		{
 			//	Retourne le nom complet d'une icône.
+			if (string.IsNullOrEmpty(icon))
+			{
+				return null;
+			}
+
 			return string.Format("manifest:Epsitec.App.DocumentEditor.Images.{0}.icon", icon);
 		}
 
