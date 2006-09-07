@@ -3361,182 +3361,182 @@ namespace Epsitec.App.DocumentEditor
 			this.toolImageState = this.CreateCommandState("ObjectImage", "ObjectImage", "ToolImage");
 			this.toolDimensionState = this.CreateCommandState("ObjectDimension", "ObjectDimension", "ToolDimension");
 
-			this.newState = this.CreateCommandState("New", KeyCode.ModifierControl|KeyCode.AlphaN);
-			this.openState = this.CreateCommandState("Open", KeyCode.ModifierControl|KeyCode.AlphaO);
-			this.openModelState = this.CreateCommandState("OpenModel");
-			this.saveState = this.CreateCommandState("Save", KeyCode.ModifierControl|KeyCode.AlphaS);
-			this.saveAsState = this.CreateCommandState("SaveAs");
-			this.saveModelState = this.CreateCommandState("SaveModel");
+			this.newState = this.CreateCommandState("New", "New", KeyCode.ModifierControl|KeyCode.AlphaN);
+			this.openState = this.CreateCommandState("Open", "Open", KeyCode.ModifierControl|KeyCode.AlphaO);
+			this.openModelState = this.CreateCommandState("OpenModel", "OpenModel");
+			this.saveState = this.CreateCommandState("Save", "Save", KeyCode.ModifierControl|KeyCode.AlphaS);
+			this.saveAsState = this.CreateCommandState("SaveAs", "SaveAs");
+			this.saveModelState = this.CreateCommandState("SaveModel", "SaveModel");
 			this.closeState = this.CreateCommandState("Close", null, "Close", KeyCode.ModifierControl|KeyCode.FuncF4);
-			this.closeAllState = this.CreateCommandState("CloseAll");
+			this.closeAllState = this.CreateCommandState("CloseAll", "CloseAll");
 			this.forceSaveAllState = this.CreateCommandState("ForceSaveAll");
 			this.nextDocState = this.CreateCommandState("NextDocument", KeyCode.ModifierControl|KeyCode.FuncF6);
 			this.prevDocState = this.CreateCommandState("PrevDocument", KeyCode.ModifierControl|KeyCode.ModifierShift|KeyCode.FuncF6);
-			this.printState = this.CreateCommandState("Print", KeyCode.ModifierControl|KeyCode.AlphaP);
-			this.exportState = this.CreateCommandState("Export");
-			this.glyphsState = this.CreateCommandState("Glyphs", KeyCode.FuncF7);
+			this.printState = this.CreateCommandState("Print", "Print", KeyCode.ModifierControl|KeyCode.AlphaP);
+			this.exportState = this.CreateCommandState("Export", "Export");
+			this.glyphsState = this.CreateCommandState("Glyphs", "Glyphs", KeyCode.FuncF7);
 			this.glyphsInsertState = this.CreateCommandState("GlyphsInsert");
 			this.textEditingState = this.CreateCommandState("TextEditing");
-			this.replaceState = this.CreateCommandState("Replace", KeyCode.ModifierControl|KeyCode.AlphaF);
+			this.replaceState = this.CreateCommandState("Replace", "Replace", KeyCode.ModifierControl|KeyCode.AlphaF);
 			this.findNextState = this.CreateCommandState("FindNext", KeyCode.FuncF3);
 			this.findPrevState = this.CreateCommandState("FindPrev", KeyCode.ModifierShift|KeyCode.FuncF3);
 			this.findDefNextState = this.CreateCommandState("FindDefNext", KeyCode.ModifierControl|KeyCode.FuncF3);
 			this.findDefPrevState = this.CreateCommandState("FindDefPrev", KeyCode.ModifierControl|KeyCode.ModifierShift|KeyCode.FuncF3);
-			this.deleteState = this.CreateCommandState("Delete", KeyCode.Delete);
-			this.duplicateState = this.CreateCommandState("Duplicate", KeyCode.ModifierControl|KeyCode.AlphaD);
+			this.deleteState = this.CreateCommandState("Delete", "Delete", KeyCode.Delete);
+			this.duplicateState = this.CreateCommandState("Duplicate", "Duplicate", KeyCode.ModifierControl|KeyCode.AlphaD);
 
-			this.cutState = this.CreateCommandState("Cut", KeyCode.ModifierControl|KeyCode.AlphaX);
-			this.copyState = this.CreateCommandState("Copy", KeyCode.ModifierControl|KeyCode.AlphaC);
-			this.pasteState = this.CreateCommandState("Paste", KeyCode.ModifierControl|KeyCode.AlphaV);
-			
-			this.fontBoldState = this.CreateCommandState("FontBold", true, KeyCode.ModifierControl|KeyCode.AlphaB);
-			this.fontItalicState = this.CreateCommandState("FontItalic", true, KeyCode.ModifierControl|KeyCode.AlphaI);
-			this.fontUnderlinedState = this.CreateCommandState("FontUnderlined", true, KeyCode.ModifierControl|KeyCode.AlphaU);
-			this.fontOverlinedState = this.CreateCommandState("FontOverlined", true);
-			this.fontStrikeoutState = this.CreateCommandState("FontStrikeout", true);
-			this.fontSubscriptState = this.CreateCommandState("FontSubscript", true, KeyCode.ModifierControl|KeyCode.AlphaG);
-			this.fontSuperscriptState = this.CreateCommandState("FontSuperscript", true, KeyCode.ModifierControl|KeyCode.AlphaT);
-			this.fontSizePlusState = this.CreateCommandState("FontSizePlus");
-			this.fontSizeMinusState = this.CreateCommandState("FontSizeMinus");
-			this.fontClearState = this.CreateCommandState("FontClear");
-			this.paragraphLeadingState = this.CreateCommandState("ParagraphLeading", true);
-			this.paragraphLeadingPlusState = this.CreateCommandState("ParagraphLeadingPlus");
-			this.paragraphLeadingMinusState = this.CreateCommandState("ParagraphLeadingMinus");
-			this.paragraphIndentPlusState = this.CreateCommandState("ParagraphIndentPlus");
-			this.paragraphIndentMinusState = this.CreateCommandState("ParagraphIndentMinus");
+			this.cutState = this.CreateCommandState("Cut", "Cut", KeyCode.ModifierControl|KeyCode.AlphaX);
+			this.copyState = this.CreateCommandState("Copy", "Copy", KeyCode.ModifierControl|KeyCode.AlphaC);
+			this.pasteState = this.CreateCommandState("Paste", "Paste", KeyCode.ModifierControl|KeyCode.AlphaV);
+
+			this.fontBoldState = this.CreateCommandState("FontBold", "FontBold", true, KeyCode.ModifierControl|KeyCode.AlphaB);
+			this.fontItalicState = this.CreateCommandState("FontItalic", "FontItalic", true, KeyCode.ModifierControl|KeyCode.AlphaI);
+			this.fontUnderlinedState = this.CreateCommandState("FontUnderlined", "FontUnderlined", true, KeyCode.ModifierControl|KeyCode.AlphaU);
+			this.fontOverlinedState = this.CreateCommandState("FontOverlined", "FontOverlined", true);
+			this.fontStrikeoutState = this.CreateCommandState("FontStrikeout", "FontStrikeout", true);
+			this.fontSubscriptState = this.CreateCommandState("FontSubscript", "FontSubscript", true, KeyCode.ModifierControl|KeyCode.AlphaG);
+			this.fontSuperscriptState = this.CreateCommandState("FontSuperscript", "FontSuperscript", true, KeyCode.ModifierControl|KeyCode.AlphaT);
+			this.fontSizePlusState = this.CreateCommandState("FontSizePlus", "FontSizePlus");
+			this.fontSizeMinusState = this.CreateCommandState("FontSizeMinus", "FontSizeMinus");
+			this.fontClearState = this.CreateCommandState("FontClear", "FontClear");
+			this.paragraphLeadingState = this.CreateCommandState("ParagraphLeading", "ParagraphLeading", true);
+			this.paragraphLeadingPlusState = this.CreateCommandState("ParagraphLeadingPlus", "ParagraphLeadingPlus");
+			this.paragraphLeadingMinusState = this.CreateCommandState("ParagraphLeadingMinus", "ParagraphLeadingMinus");
+			this.paragraphIndentPlusState = this.CreateCommandState("ParagraphIndentPlus", "ParagraphIndentPlus");
+			this.paragraphIndentMinusState = this.CreateCommandState("ParagraphIndentMinus", "ParagraphIndentMinus");
 			this.paragraphJustifState = this.CreateCommandState("ParagraphJustif", null, "ParagraphJustif", true);
-			this.paragraphClearState = this.CreateCommandState("ParagraphClear");
-			
-			this.orderUpOneState = this.CreateCommandState("OrderUpOne", KeyCode.ModifierControl|KeyCode.PageUp);
-			this.orderDownOneState = this.CreateCommandState("OrderDownOne", KeyCode.ModifierControl|KeyCode.PageDown);
-			this.orderUpAllState = this.CreateCommandState("OrderUpAll", KeyCode.ModifierShift|KeyCode.PageUp);
-			this.orderDownAllState = this.CreateCommandState("OrderDownAll", KeyCode.ModifierShift|KeyCode.PageDown);
+			this.paragraphClearState = this.CreateCommandState("ParagraphClear", "ParagraphClear");
+
+			this.orderUpOneState = this.CreateCommandState("OrderUpOne", "OrderUpOne", KeyCode.ModifierControl|KeyCode.PageUp);
+			this.orderDownOneState = this.CreateCommandState("OrderDownOne", "OrderDownOne", KeyCode.ModifierControl|KeyCode.PageDown);
+			this.orderUpAllState = this.CreateCommandState("OrderUpAll", "OrderUpAll", KeyCode.ModifierShift|KeyCode.PageUp);
+			this.orderDownAllState = this.CreateCommandState("OrderDownAll", "OrderDownAll", KeyCode.ModifierShift|KeyCode.PageDown);
 			
 			this.moveLeftFreeState = this.CreateCommandState("MoveLeftFree", "MoveHi", "MoveLeft");
 			this.moveRightFreeState = this.CreateCommandState("MoveRightFree", "MoveH", "MoveRight");
 			this.moveUpFreeState = this.CreateCommandState("MoveUpFree", "MoveV", "MoveUp");
 			this.moveDownFreeState = this.CreateCommandState("MoveDownFree", "MoveVi", "MoveDown");
 			
-			this.rotate90State = this.CreateCommandState("Rotate90");
-			this.rotate180State = this.CreateCommandState("Rotate180");
-			this.rotate270State = this.CreateCommandState("Rotate270");
-			this.rotateFreeCCWState = this.CreateCommandState("RotateFreeCCW");
-			this.rotateFreeCWState = this.CreateCommandState("RotateFreeCW");
+			this.rotate90State = this.CreateCommandState("Rotate90", "Rotate90");
+			this.rotate180State = this.CreateCommandState("Rotate180", "Rotate180");
+			this.rotate270State = this.CreateCommandState("Rotate270", "Rotate270");
+			this.rotateFreeCCWState = this.CreateCommandState("RotateFreeCCW", "RotateFreeCCW");
+			this.rotateFreeCWState = this.CreateCommandState("RotateFreeCW", "RotateFreeCW");
 			
-			this.mirrorHState = this.CreateCommandState("MirrorH");
-			this.mirrorVState = this.CreateCommandState("MirrorV");
-			
-			this.scaleMul2State = this.CreateCommandState("ScaleMul2");
-			this.scaleDiv2State = this.CreateCommandState("ScaleDiv2");
-			this.scaleMulFreeState = this.CreateCommandState("ScaleMulFree");
-			this.scaleDivFreeState = this.CreateCommandState("ScaleDivFree");
-			
-			this.alignLeftState = this.CreateCommandState("AlignLeft");
-			this.alignCenterXState = this.CreateCommandState("AlignCenterX");
-			this.alignRightState = this.CreateCommandState("AlignRight");
-			this.alignTopState = this.CreateCommandState("AlignTop");
-			this.alignCenterYState = this.CreateCommandState("AlignCenterY");
-			this.alignBottomState = this.CreateCommandState("AlignBottom");
-			this.alignGridState = this.CreateCommandState("AlignGrid");
-			
-			this.shareLeftState = this.CreateCommandState("ShareLeft");
-			this.shareCenterXState = this.CreateCommandState("ShareCenterX");
-			this.shareSpaceXState = this.CreateCommandState("ShareSpaceX");
-			this.shareRightState = this.CreateCommandState("ShareRight");
-			this.shareTopState = this.CreateCommandState("ShareTop");
-			this.shareCenterYState = this.CreateCommandState("ShareCenterY");
-			this.shareSpaceYState = this.CreateCommandState("ShareSpaceY");
-			this.shareBottomState = this.CreateCommandState("ShareBottom");
-			
-			this.adjustWidthState = this.CreateCommandState("AdjustWidth");
-			this.adjustHeightState = this.CreateCommandState("AdjustHeight");
-			
-			this.colorToRgbState = this.CreateCommandState("ColorToRgb");
-			this.colorToCmykState = this.CreateCommandState("ColorToCmyk");
-			this.colorToGrayState = this.CreateCommandState("ColorToGray");
-			this.colorStrokeDarkState = this.CreateCommandState("ColorStrokeDark");
-			this.colorStrokeLightState = this.CreateCommandState("ColorStrokeLight");
-			this.colorFillDarkState = this.CreateCommandState("ColorFillDark");
-			this.colorFillLightState = this.CreateCommandState("ColorFillLight");
-			
-			this.mergeState = this.CreateCommandState("Merge");
-			this.extractState = this.CreateCommandState("Extract");
-			this.groupState = this.CreateCommandState("Group");
-			this.ungroupState = this.CreateCommandState("Ungroup");
-			this.insideState = this.CreateCommandState("Inside");
-			this.outsideState = this.CreateCommandState("Outside");
-			this.combineState = this.CreateCommandState("Combine");
-			this.uncombineState = this.CreateCommandState("Uncombine");
-			this.toBezierState = this.CreateCommandState("ToBezier");
-			this.toPolyState = this.CreateCommandState("ToPoly");
-			this.toTextBox2State = this.CreateCommandState("ToTextBox2", "ObjectTextBox", "ToTextBox2");
-			this.fragmentState = this.CreateCommandState("Fragment");
+			this.mirrorHState = this.CreateCommandState("MirrorH", "MirrorH");
+			this.mirrorVState = this.CreateCommandState("MirrorV", "MirrorV");
 
-			this.shaperHandleAddState = this.CreateCommandState("ShaperHandleAdd");
-			this.shaperHandleSubState = this.CreateCommandState("ShaperHandleSub");
-			this.shaperHandleToLineState = this.CreateCommandState("ShaperHandleToLine", true);
-			this.shaperHandleToCurveState = this.CreateCommandState("ShaperHandleToCurve", true);
-			this.shaperHandleSymState = this.CreateCommandState("ShaperHandleSym", true);
-			this.shaperHandleSmoothState = this.CreateCommandState("ShaperHandleSmooth", true);
-			this.shaperHandleDisState = this.CreateCommandState("ShaperHandleDis", true);
-			this.shaperHandleInlineState = this.CreateCommandState("ShaperHandleInline", true);
-			this.shaperHandleFreeState = this.CreateCommandState("ShaperHandleFree", true);
-			this.shaperHandleSimplyState = this.CreateCommandState("ShaperHandleSimply", true);
-			this.shaperHandleCornerState = this.CreateCommandState("ShaperHandleCorner", true);
-			this.shaperHandleContinueState = this.CreateCommandState("ShaperHandleContinue");
-			
-			this.booleanAndState = this.CreateCommandState("BooleanAnd");
-			this.booleanOrState = this.CreateCommandState("BooleanOr");
-			this.booleanXorState = this.CreateCommandState("BooleanXor");
-			this.booleanFrontMinusState = this.CreateCommandState("BooleanFrontMinus");
-			this.booleanBackMinusState = this.CreateCommandState("BooleanBackMinus");
-			
-			this.undoState = this.CreateCommandState("Undo", KeyCode.ModifierControl|KeyCode.AlphaZ);
-			this.redoState = this.CreateCommandState("Redo", KeyCode.ModifierControl|KeyCode.AlphaY);
+			this.scaleMul2State = this.CreateCommandState("ScaleMul2", "ScaleMul2");
+			this.scaleDiv2State = this.CreateCommandState("ScaleDiv2", "ScaleDiv2");
+			this.scaleMulFreeState = this.CreateCommandState("ScaleMulFree", "ScaleMulFree");
+			this.scaleDivFreeState = this.CreateCommandState("ScaleDivFree", "ScaleDivFree");
+
+			this.alignLeftState = this.CreateCommandState("AlignLeft", "AlignLeft");
+			this.alignCenterXState = this.CreateCommandState("AlignCenterX", "AlignCenterX");
+			this.alignRightState = this.CreateCommandState("AlignRight", "AlignRight");
+			this.alignTopState = this.CreateCommandState("AlignTop", "AlignTop");
+			this.alignCenterYState = this.CreateCommandState("AlignCenterY", "AlignCenterY");
+			this.alignBottomState = this.CreateCommandState("AlignBottom", "AlignBottom");
+			this.alignGridState = this.CreateCommandState("AlignGrid", "AlignGrid");
+
+			this.shareLeftState = this.CreateCommandState("ShareLeft", "ShareLeft");
+			this.shareCenterXState = this.CreateCommandState("ShareCenterX", "ShareCenterX");
+			this.shareSpaceXState = this.CreateCommandState("ShareSpaceX", "ShareSpaceX");
+			this.shareRightState = this.CreateCommandState("ShareRight", "ShareRight");
+			this.shareTopState = this.CreateCommandState("ShareTop", "ShareTop");
+			this.shareCenterYState = this.CreateCommandState("ShareCenterY", "ShareCenterY");
+			this.shareSpaceYState = this.CreateCommandState("ShareSpaceY", "ShareSpaceY");
+			this.shareBottomState = this.CreateCommandState("ShareBottom", "ShareBottom");
+
+			this.adjustWidthState = this.CreateCommandState("AdjustWidth", "AdjustWidth");
+			this.adjustHeightState = this.CreateCommandState("AdjustHeight", "AdjustHeight");
+
+			this.colorToRgbState = this.CreateCommandState("ColorToRgb", "ColorToRgb");
+			this.colorToCmykState = this.CreateCommandState("ColorToCmyk", "ColorToCmyk");
+			this.colorToGrayState = this.CreateCommandState("ColorToGray", "ColorToGray");
+			this.colorStrokeDarkState = this.CreateCommandState("ColorStrokeDark", "ColorStrokeDark");
+			this.colorStrokeLightState = this.CreateCommandState("ColorStrokeLight", "ColorStrokeLight");
+			this.colorFillDarkState = this.CreateCommandState("ColorFillDark", "ColorFillDark");
+			this.colorFillLightState = this.CreateCommandState("ColorFillLight", "ColorFillLight");
+
+			this.mergeState = this.CreateCommandState("Merge", "Merge");
+			this.extractState = this.CreateCommandState("Extract", "Extract");
+			this.groupState = this.CreateCommandState("Group", "Group");
+			this.ungroupState = this.CreateCommandState("Ungroup", "Ungroup");
+			this.insideState = this.CreateCommandState("Inside", "Inside");
+			this.outsideState = this.CreateCommandState("Outside", "Outside");
+			this.combineState = this.CreateCommandState("Combine", "Combine");
+			this.uncombineState = this.CreateCommandState("Uncombine", "Uncombine");
+			this.toBezierState = this.CreateCommandState("ToBezier", "ToBezier");
+			this.toPolyState = this.CreateCommandState("ToPoly", "ToPoly");
+			this.toTextBox2State = this.CreateCommandState("ToTextBox2", "ObjectTextBox", "ToTextBox2");
+			this.fragmentState = this.CreateCommandState("Fragment", "Fragment");
+
+			this.shaperHandleAddState = this.CreateCommandState("ShaperHandleAdd", "ShaperHandleAdd");
+			this.shaperHandleSubState = this.CreateCommandState("ShaperHandleSub", "ShaperHandleSub");
+			this.shaperHandleToLineState = this.CreateCommandState("ShaperHandleToLine", "ShaperHandleToLine", true);
+			this.shaperHandleToCurveState = this.CreateCommandState("ShaperHandleToCurve", "ShaperHandleToCurve", true);
+			this.shaperHandleSymState = this.CreateCommandState("ShaperHandleSym", "ShaperHandleSym", true);
+			this.shaperHandleSmoothState = this.CreateCommandState("ShaperHandleSmooth", "ShaperHandleSmooth", true);
+			this.shaperHandleDisState = this.CreateCommandState("ShaperHandleDis", "ShaperHandleDis", true);
+			this.shaperHandleInlineState = this.CreateCommandState("ShaperHandleInline", "ShaperHandleInline", true);
+			this.shaperHandleFreeState = this.CreateCommandState("ShaperHandleFree", "ShaperHandleFree", true);
+			this.shaperHandleSimplyState = this.CreateCommandState("ShaperHandleSimply", "ShaperHandleSimply", true);
+			this.shaperHandleCornerState = this.CreateCommandState("ShaperHandleCorner", "ShaperHandleCorner", true);
+			this.shaperHandleContinueState = this.CreateCommandState("ShaperHandleContinue", "ShaperHandleContinue");
+
+			this.booleanAndState = this.CreateCommandState("BooleanAnd", "BooleanAnd");
+			this.booleanOrState = this.CreateCommandState("BooleanOr", "BooleanOr");
+			this.booleanXorState = this.CreateCommandState("BooleanXor", "BooleanXor");
+			this.booleanFrontMinusState = this.CreateCommandState("BooleanFrontMinus", "BooleanFrontMinus");
+			this.booleanBackMinusState = this.CreateCommandState("BooleanBackMinus", "BooleanBackMinus");
+
+			this.undoState = this.CreateCommandState("Undo", "Undo", KeyCode.ModifierControl|KeyCode.AlphaZ);
+			this.redoState = this.CreateCommandState("Redo", "Redo", KeyCode.ModifierControl|KeyCode.AlphaY);
 			this.undoRedoListState = this.CreateCommandState("UndoRedoList");
-			
-			this.deselectAllState = this.CreateCommandState("DeselectAll", KeyCode.Escape);
-			this.selectAllState = this.CreateCommandState("SelectAll", KeyCode.ModifierControl|KeyCode.AlphaA);
-			this.selectInvertState = this.CreateCommandState("SelectInvert");
-			this.selectorAutoState = this.CreateCommandState("SelectorAuto");
-			this.selectorIndividualState = this.CreateCommandState("SelectorIndividual");
-			this.selectorScalerState = this.CreateCommandState("SelectorScaler");
-			this.selectorStretchState = this.CreateCommandState("SelectorStretch");
+
+			this.deselectAllState = this.CreateCommandState("DeselectAll", "DeselectAll", KeyCode.Escape);
+			this.selectAllState = this.CreateCommandState("SelectAll", "SelectAll", KeyCode.ModifierControl|KeyCode.AlphaA);
+			this.selectInvertState = this.CreateCommandState("SelectInvert", "SelectInvert");
+			this.selectorAutoState = this.CreateCommandState("SelectorAuto", "SelectorAuto");
+			this.selectorIndividualState = this.CreateCommandState("SelectorIndividual", "SelectorIndividual");
+			this.selectorScalerState = this.CreateCommandState("SelectorScaler", "SelectorScaler");
+			this.selectorStretchState = this.CreateCommandState("SelectorStretch", "SelectorStretch");
 			this.selectorStretchTypeState = this.CreateCommandState("SelectorStretchType");
-			this.selectTotalState = this.CreateCommandState("SelectTotal");
-			this.selectPartialState = this.CreateCommandState("SelectPartial");
-			this.selectorAdaptLine = this.CreateCommandState("SelectorAdaptLine");
-			this.selectorAdaptText = this.CreateCommandState("SelectorAdaptText");
-			
-			this.hideHalfState = this.CreateCommandState("HideHalf", true);
-			this.hideSelState = this.CreateCommandState("HideSel");
-			this.hideRestState = this.CreateCommandState("HideRest");
-			this.hideCancelState = this.CreateCommandState("HideCancel");
-			
-			this.zoomMinState = this.CreateCommandState("ZoomMin", true);
-			this.zoomPageState = this.CreateCommandState("ZoomPage", true, KeyCode.ModifierControl|KeyCode.Digit0);
-			this.zoomPageWidthState = this.CreateCommandState("ZoomPageWidth", true);
-			this.zoomDefaultState = this.CreateCommandState("ZoomDefault", true);
-			this.zoomSelState = this.CreateCommandState("ZoomSel");
-			this.zoomSelWidthState = this.CreateCommandState("ZoomSelWidth");
-			this.zoomPrevState = this.CreateCommandState("ZoomPrev");
-			this.zoomSubState = this.CreateCommandState("ZoomSub", KeyCode.Substract);
-			this.zoomAddState = this.CreateCommandState("ZoomAdd", KeyCode.Add);
-			
-			this.previewState = this.CreateCommandState("Preview", true);
-			this.gridState = this.CreateCommandState("Grid", true);
-			this.textGridState = this.CreateCommandState("TextGrid", true);
-			this.textShowControlCharactersState = this.CreateCommandState("TextShowControlCharacters", true);
-			this.textFontFilterState = this.CreateCommandState("TextFontFilter", true);
-			this.textFontSampleAbcState = this.CreateCommandState("TextFontSampleAbc", true);
-			this.textInsertQuadState = this.CreateCommandState("TextInsertQuad");
-			this.textInsertNewFrameState = this.CreateCommandState("TextInsertNewFrame");
-			this.textInsertNewPageState = this.CreateCommandState("TextInsertNewPage");
-			this.magnetState = this.CreateCommandState("Magnet", true);
-			this.magnetLayerState = this.CreateCommandState("MagnetLayer", true);
-			this.rulersState = this.CreateCommandState("Rulers", true);
-			this.labelsState = this.CreateCommandState("Labels", true);
-			this.aggregatesState = this.CreateCommandState("Aggregates", true);
+			this.selectTotalState = this.CreateCommandState("SelectTotal", "SelectTotal");
+			this.selectPartialState = this.CreateCommandState("SelectPartial", "SelectPartial");
+			this.selectorAdaptLine = this.CreateCommandState("SelectorAdaptLine", "SelectorAdaptLine");
+			this.selectorAdaptText = this.CreateCommandState("SelectorAdaptText", "SelectorAdaptText");
+
+			this.hideHalfState = this.CreateCommandState("HideHalf", "HideHalf", true);
+			this.hideSelState = this.CreateCommandState("HideSel", "HideSel");
+			this.hideRestState = this.CreateCommandState("HideRest", "HideRest");
+			this.hideCancelState = this.CreateCommandState("HideCancel", "HideCancel");
+
+			this.zoomMinState = this.CreateCommandState("ZoomMin", "ZoomMin", true);
+			this.zoomPageState = this.CreateCommandState("ZoomPage", "ZoomPage", true, KeyCode.ModifierControl|KeyCode.Digit0);
+			this.zoomPageWidthState = this.CreateCommandState("ZoomPageWidth", "ZoomPageWidth", true);
+			this.zoomDefaultState = this.CreateCommandState("ZoomDefault", "ZoomDefault", true);
+			this.zoomSelState = this.CreateCommandState("ZoomSel", "ZoomSel");
+			this.zoomSelWidthState = this.CreateCommandState("ZoomSelWidth", "ZoomSelWidth");
+			this.zoomPrevState = this.CreateCommandState("ZoomPrev", "ZoomPrev");
+			this.zoomSubState = this.CreateCommandState("ZoomSub", "ZoomSub", KeyCode.Substract);
+			this.zoomAddState = this.CreateCommandState("ZoomAdd", "ZoomAdd", KeyCode.Add);
+
+			this.previewState = this.CreateCommandState("Preview", "Preview", true);
+			this.gridState = this.CreateCommandState("Grid", "Grid", true);
+			this.textGridState = this.CreateCommandState("TextGrid", "TextGrid", true);
+			this.textShowControlCharactersState = this.CreateCommandState("TextShowControlCharacters", "TextShowControlCharacters", true);
+			this.textFontFilterState = this.CreateCommandState("TextFontFilter", "TextFontFilter", true);
+			this.textFontSampleAbcState = this.CreateCommandState("TextFontSampleAbc", "TextFontSampleAbc", true);
+			this.textInsertQuadState = this.CreateCommandState("TextInsertQuad", "TextInsertQuad");
+			this.textInsertNewFrameState = this.CreateCommandState("TextInsertNewFrame", "TextInsertNewFrame");
+			this.textInsertNewPageState = this.CreateCommandState("TextInsertNewPage", "TextInsertNewPage");
+			this.magnetState = this.CreateCommandState("Magnet", "Magnet", true);
+			this.magnetLayerState = this.CreateCommandState("MagnetLayer", "MagnetLayer", true);
+			this.rulersState = this.CreateCommandState("Rulers", "Rulers", true);
+			this.labelsState = this.CreateCommandState("Labels", "Labels", true);
+			this.aggregatesState = this.CreateCommandState("Aggregates", "Aggregates", true);
 
 			this.arrayOutlineFrameState = this.CreateCommandState("ArrayOutlineFrame");
 			this.arrayOutlineHorizState = this.CreateCommandState("ArrayOutlineHoriz");
@@ -3563,7 +3563,7 @@ namespace Epsitec.App.DocumentEditor
 			this.pagePrevState = this.CreateCommandState("PagePrev", KeyCode.PageUp);
 			this.pageNextState = this.CreateCommandState("PageNext", KeyCode.PageDown);
 			this.pageMenuState = this.CreateCommandState("PageMenu");
-			this.pageNewState = this.CreateCommandState("PageNew");
+			this.pageNewState = this.CreateCommandState("PageNew", "PageNew");
 			this.pageDuplicateState = this.CreateCommandState("PageDuplicate");
 			this.pageUpState = this.CreateCommandState("PageUp");
 			this.pageDownState = this.CreateCommandState("PageDown");
@@ -3572,19 +3572,19 @@ namespace Epsitec.App.DocumentEditor
 			this.layerPrevState = this.CreateCommandState("LayerPrev");
 			this.layerNextState = this.CreateCommandState("LayerNext");
 			this.layerMenuState = this.CreateCommandState("LayerMenu");
-			this.layerNewState = this.CreateCommandState("LayerNew");
+			this.layerNewState = this.CreateCommandState("LayerNew", "LayerNew");
 			this.layerDuplicateState = this.CreateCommandState("LayerDuplicate");
-			this.layerNewSelState = this.CreateCommandState("LayerNewSel");
-			this.layerMergeUpState = this.CreateCommandState("LayerMergeUp");
-			this.layerMergeDownState = this.CreateCommandState("LayerMergeDown");
+			this.layerNewSelState = this.CreateCommandState("LayerNewSel", "LayerNewSel");
+			this.layerMergeUpState = this.CreateCommandState("LayerMergeUp", "LayerMergeUp");
+			this.layerMergeDownState = this.CreateCommandState("LayerMergeDown", "LayerMergeDown");
 			this.layerUpState = this.CreateCommandState("LayerUp");
 			this.layerDownState = this.CreateCommandState("LayerDown");
 			this.layerDeleteState = this.CreateCommandState("LayerDelete");
 
-			this.settingsState = this.CreateCommandState("Settings", KeyCode.FuncF5);
-			this.infosState = this.CreateCommandState("Infos");
+			this.settingsState = this.CreateCommandState("Settings", "Settings", KeyCode.FuncF5);
+			this.infosState = this.CreateCommandState("Infos", "Infos");
 			this.aboutState = this.CreateCommandState("AboutApplication", "About", "About");
-			this.pageStackState = this.CreateCommandState("PageStack");
+			this.pageStackState = this.CreateCommandState("PageStack", "PageStack");
 			this.updateState = this.CreateCommandState("UpdateApplication", "Update", "Update");
 			this.keyState = this.CreateCommandState("KeyApplication", "Key", "Key");
 
@@ -3604,12 +3604,22 @@ namespace Epsitec.App.DocumentEditor
 
 		protected CommandState CreateCommandState(string commandName, params Widgets.Shortcut[] shortcuts)
 		{
-			return this.CreateCommandState(commandName, commandName, commandName, shortcuts);
+			return this.CreateCommandState(commandName, null, commandName, shortcuts);
 		}
 
 		protected CommandState CreateCommandState(string commandName, bool statefull, params Widgets.Shortcut[] shortcuts)
 		{
-			return this.CreateCommandState(commandName, commandName, commandName, statefull, shortcuts);
+			return this.CreateCommandState(commandName, null, commandName, statefull, shortcuts);
+		}
+
+		protected CommandState CreateCommandState(string commandName, string icon, bool statefull, params Widgets.Shortcut[] shortcuts)
+		{
+			return this.CreateCommandState(commandName, icon, commandName, statefull, shortcuts);
+		}
+
+		protected CommandState CreateCommandState(string commandName, string icon, params Widgets.Shortcut[] shortcuts)
+		{
+			return this.CreateCommandState(commandName, icon, commandName, false, shortcuts);
 		}
 
 		protected CommandState CreateCommandState(string commandName, string icon, string tooltip, params Widgets.Shortcut[] shortcuts)
