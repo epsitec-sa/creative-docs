@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace Epsitec.Common.Support.Platform.Win32
 {
-	public class ShellGuids
+	internal static class ShellGuids
 	{
 		public static Guid IID_IMalloc = 
 			new Guid ("{00000002-0000-0000-C000-000000000046}");

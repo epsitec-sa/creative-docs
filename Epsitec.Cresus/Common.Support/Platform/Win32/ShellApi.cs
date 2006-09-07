@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Epsitec.Common.Support.Platform.Win32
 {
-	public static class ShellApi
+	internal static class ShellApi
 	{
 		public delegate Int32 BrowseCallbackProc(IntPtr hwnd, UInt32 uMsg, Int32 lParam, Int32 lpData);
 

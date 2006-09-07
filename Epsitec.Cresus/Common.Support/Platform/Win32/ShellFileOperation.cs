@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace Epsitec.Common.Support.Platform.Win32
 {
-	public class ShellFileOperation
+	internal sealed class ShellFileOperation
 	{
 		public enum FileOperations
 		{
@@ -164,9 +164,9 @@ namespace Epsitec.Common.Support.Platform.Win32
 		public FileOperations Operation;
 		public IntPtr OwnerWindow;
 		public ShellFileOperationFlags OperationFlags;
-		public String ProgressTitle;
-		public String[] SourceFiles;
-		public String[] DestFiles;
+		public string ProgressTitle;
+		public string[] SourceFiles;
+		public string[] DestFiles;
 
 		public ShellFileOperation()
 		{
@@ -187,8 +187,8 @@ namespace Epsitec.Common.Support.Platform.Win32
 			FileOpStruct.hwnd = OwnerWindow;
 			FileOpStruct.wFunc = (uint) Operation;
 
-			String multiSource = StringArrayToMultiString (SourceFiles);
-			String multiDest = StringArrayToMultiString (DestFiles);
+			string multiSource = StringArrayToMultiString (SourceFiles);
+			string multiDest = StringArrayToMultiString (DestFiles);
 			FileOpStruct.pFrom = Marshal.StringToHGlobalUni (multiSource);
 			FileOpStruct.pTo = Marshal.StringToHGlobalUni (multiDest);
 
@@ -215,9 +215,9 @@ namespace Epsitec.Common.Support.Platform.Win32
 			return true;
 		}
 
-		private String StringArrayToMultiString(String[] stringArray)
+		private string StringArrayToMultiString(string[] stringArray)
 		{
-			String multiString = "";
+			string multiString = "";
 
 			if (stringArray == null)
 				return "";

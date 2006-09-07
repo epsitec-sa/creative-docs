@@ -8,7 +8,7 @@ namespace Epsitec.Common.Support.Platform.Win32
 	[ComImport]
 	[Guid("000214F2-0000-0000-C000-000000000046")]
 	[InterfaceType (ComInterfaceType.InterfaceIsIUnknown)]
-	public interface IEnumIDList
+	internal interface IEnumIDList
 	{
 		[PreserveSig]
 		int Next(int count, out IntPtr elementPidl, out uint fetched);

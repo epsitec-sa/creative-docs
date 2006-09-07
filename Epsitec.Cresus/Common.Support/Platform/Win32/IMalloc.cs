@@ -7,7 +7,7 @@ namespace Epsitec.Common.Support.Platform.Win32
 	[ComImport]
 	[InterfaceType (ComInterfaceType.InterfaceIsIUnknown)]
 	[Guid ("00000002-0000-0000-C000-000000000046")]
-	public interface IMalloc
+	internal interface IMalloc
 	{
 		// Allocates a block of memory.
 		// Return value: a pointer to the allocated memory block.

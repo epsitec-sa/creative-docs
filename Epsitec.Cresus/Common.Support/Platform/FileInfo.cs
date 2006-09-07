@@ -1,12 +1,13 @@
-using System;
+//	Copyright © 2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Responsable: Pierre ARNAUD
+
 using System.Collections.Generic;
-using System.Text;
 
 namespace Epsitec.Common.Support.Platform
 {
 	public static class FileInfo
 	{
-		public static FolderItem CreateFolderItem(SystemFileId file, FolderDetailsMode mode)
+		public static FolderItem CreateFolderItem(FolderId file, FolderDetailsMode mode)
 		{
 			return Win32.FileInfo.CreateFolderItem (file, mode);
 		}

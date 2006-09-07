@@ -1,10 +1,11 @@
-using System;
+//	Copyright © 2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Responsable: Pierre ARNAUD
+
 using System.Collections.Generic;
-using System.Text;
 
 namespace Epsitec.Common.Support.Platform.Win32
 {
-	public class FileInfo
+	internal sealed class FileInfo
 	{
 		private FileInfo()
 		{
@@ -26,7 +27,7 @@ namespace Epsitec.Common.Support.Platform.Win32
 			this.root      = null;
 		}
 
-		public static FolderItem CreateFolderItem(SystemFileId file, FolderDetailsMode mode)
+		public static FolderItem CreateFolderItem(FolderId file, FolderDetailsMode mode)
 		{
 			ShellApi.CSIDL csidl = FileInfo.GetCsidl (file);
 			System.IntPtr pidl = System.IntPtr.Zero;
@@ -39,7 +40,7 @@ namespace Epsitec.Common.Support.Platform.Win32
 
 			FolderItem item = FileInfo.CreateFolderItemAndInheritPidl (mode, pidl);
 
-			if (file == SystemFileId.VirtualDesktop)
+			if (file == FolderId.VirtualDesktop)
 			{
 				item.Handle = PidlHandle.VirtualDesktopHandle;
 			}
@@ -248,109 +249,109 @@ namespace Epsitec.Common.Support.Platform.Win32
 			ShellApi.SHGetFileInfo (pidl, 0, out info, System.Runtime.InteropServices.Marshal.SizeOf (info), flags);
 		}
 
-		private static ShellApi.CSIDL GetCsidl(SystemFileId id)
+		private static ShellApi.CSIDL GetCsidl(FolderId id)
 		{
 			switch (id)
 			{
-				case SystemFileId.AdminTools:
+				case FolderId.AdminTools:
 					return ShellApi.CSIDL.CSIDL_ADMINTOOLS;
-				case SystemFileId.AltStartup:
+				case FolderId.AltStartup:
 					return ShellApi.CSIDL.CSIDL_ALTSTARTUP;
-				case SystemFileId.ApplicatioData:
+				case FolderId.ApplicatioData:
 					return ShellApi.CSIDL.CSIDL_APPDATA;
-				case SystemFileId.CdBurnArea:
+				case FolderId.CdBurnArea:
 					return ShellApi.CSIDL.CSIDL_CDBURN_AREA;
-				case SystemFileId.CommonAdminTools:
+				case FolderId.CommonAdminTools:
 					return ShellApi.CSIDL.CSIDL_COMMON_ADMINTOOLS;
-				case SystemFileId.CommonAltStartup:
+				case FolderId.CommonAltStartup:
 					return ShellApi.CSIDL.CSIDL_COMMON_ALTSTARTUP;
-				case SystemFileId.CommonAppData:
+				case FolderId.CommonAppData:
 					return ShellApi.CSIDL.CSIDL_COMMON_APPDATA;
-				case SystemFileId.CommonDesktopDirectory:
+				case FolderId.CommonDesktopDirectory:
 					return ShellApi.CSIDL.CSIDL_COMMON_DESKTOPDIRECTORY;
-				case SystemFileId.CommonDocuments:
+				case FolderId.CommonDocuments:
 					return ShellApi.CSIDL.CSIDL_COMMON_DOCUMENTS;
-				case SystemFileId.CommonFavorites:
+				case FolderId.CommonFavorites:
 					return ShellApi.CSIDL.CSIDL_COMMON_FAVORITES;
-				case SystemFileId.CommonMusic:
+				case FolderId.CommonMusic:
 					return ShellApi.CSIDL.CSIDL_COMMON_MUSIC;
-				case SystemFileId.CommonPictures:
+				case FolderId.CommonPictures:
 					return ShellApi.CSIDL.CSIDL_COMMON_PICTURES;
-				case SystemFileId.CommonStartMenu:
+				case FolderId.CommonStartMenu:
 					return ShellApi.CSIDL.CSIDL_COMMON_STARTMENU;
-				case SystemFileId.CommonStartMenuPrograms:
+				case FolderId.CommonStartMenuPrograms:
 					return ShellApi.CSIDL.CSIDL_COMMON_PROGRAMS;
-				case SystemFileId.CommonStartMenuProgramsStartup:
+				case FolderId.CommonStartMenuProgramsStartup:
 					return ShellApi.CSIDL.CSIDL_COMMON_STARTUP;
-				case SystemFileId.CommonTemplates:
+				case FolderId.CommonTemplates:
 					return ShellApi.CSIDL.CSIDL_COMMON_TEMPLATES;
-				case SystemFileId.CommonVideo:
+				case FolderId.CommonVideo:
 					return ShellApi.CSIDL.CSIDL_COMMON_VIDEO;
-				case SystemFileId.Cookies:
+				case FolderId.Cookies:
 					return ShellApi.CSIDL.CSIDL_COOKIES;
-				case SystemFileId.DesktopDirectory:
+				case FolderId.DesktopDirectory:
 					return ShellApi.CSIDL.CSIDL_DESKTOPDIRECTORY;
-				case SystemFileId.Favorites:
+				case FolderId.Favorites:
 					return ShellApi.CSIDL.CSIDL_FAVORITES;
-				case SystemFileId.Fonts:
+				case FolderId.Fonts:
 					return ShellApi.CSIDL.CSIDL_FONTS;
-				case SystemFileId.History:
+				case FolderId.History:
 					return ShellApi.CSIDL.CSIDL_HISTORY;
-				case SystemFileId.Internet:
+				case FolderId.Internet:
 					return ShellApi.CSIDL.CSIDL_INTERNET;
-				case SystemFileId.InternetCache:
+				case FolderId.InternetCache:
 					return ShellApi.CSIDL.CSIDL_INTERNET_CACHE;
-				case SystemFileId.LocalAppData:
+				case FolderId.LocalAppData:
 					return ShellApi.CSIDL.CSIDL_LOCAL_APPDATA;
-				case SystemFileId.MyDocuments:
+				case FolderId.MyDocuments:
 					return ShellApi.CSIDL.CSIDL_PERSONAL;
-				case SystemFileId.MyMusic:
+				case FolderId.MyMusic:
 					return ShellApi.CSIDL.CSIDL_MYMUSIC;
-				case SystemFileId.MyPictures:
+				case FolderId.MyPictures:
 					return ShellApi.CSIDL.CSIDL_MYPICTURES;
-				case SystemFileId.MyVideo:
+				case FolderId.MyVideo:
 					return ShellApi.CSIDL.CSIDL_MYVIDEO;
-				case SystemFileId.NetHood:
+				case FolderId.NetHood:
 					return ShellApi.CSIDL.CSIDL_NETHOOD;
-				case SystemFileId.PrintHood:
+				case FolderId.PrintHood:
 					return ShellApi.CSIDL.CSIDL_PRINTHOOD;
-				case SystemFileId.Profile:
+				case FolderId.Profile:
 					return ShellApi.CSIDL.CSIDL_PROFILE;
-				case SystemFileId.Profiles:
+				case FolderId.Profiles:
 					return ShellApi.CSIDL.CSIDL_PROFILES;
-				case SystemFileId.ProgramFiles:
+				case FolderId.ProgramFiles:
 					return ShellApi.CSIDL.CSIDL_PROGRAM_FILES;
-				case SystemFileId.ProgramFilesCommon:
+				case FolderId.ProgramFilesCommon:
 					return ShellApi.CSIDL.CSIDL_PROGRAM_FILES_COMMON;
-				case SystemFileId.Recent:
+				case FolderId.Recent:
 					return ShellApi.CSIDL.CSIDL_RECENT;
-				case SystemFileId.SendTo:
+				case FolderId.SendTo:
 					return ShellApi.CSIDL.CSIDL_SENDTO;
-				case SystemFileId.StartMenu:
+				case FolderId.StartMenu:
 					return ShellApi.CSIDL.CSIDL_STARTMENU;
-				case SystemFileId.StartMenuPrograms:
+				case FolderId.StartMenuPrograms:
 					return ShellApi.CSIDL.CSIDL_PROGRAMS;
-				case SystemFileId.StartMenuProgramsStartup:
+				case FolderId.StartMenuProgramsStartup:
 					return ShellApi.CSIDL.CSIDL_STARTUP;
-				case SystemFileId.Templates:
+				case FolderId.Templates:
 					return ShellApi.CSIDL.CSIDL_TEMPLATES;
-				case SystemFileId.VirtualControlPanel:
+				case FolderId.VirtualControlPanel:
 					return ShellApi.CSIDL.CSIDL_CONTROLS;
-				case SystemFileId.VirtualDesktop:
+				case FolderId.VirtualDesktop:
 					return ShellApi.CSIDL.CSIDL_DESKTOP;
-				case SystemFileId.VirtualMyComputer:
+				case FolderId.VirtualMyComputer:
 					return ShellApi.CSIDL.CSIDL_DRIVES;
-				case SystemFileId.VirtualMyDocuments:
+				case FolderId.VirtualMyDocuments:
 					return ShellApi.CSIDL.CSIDL_MYDOCUMENTS;
-				case SystemFileId.VirtualNetwork:
+				case FolderId.VirtualNetwork:
 					return ShellApi.CSIDL.CSIDL_NETWORK;
-				case SystemFileId.VirtualPrinters:
+				case FolderId.VirtualPrinters:
 					return ShellApi.CSIDL.CSIDL_PRINTERS;
-				case SystemFileId.VirtualRecycleBin:
+				case FolderId.VirtualRecycleBin:
 					return ShellApi.CSIDL.CSIDL_BITBUCKET;
-				case SystemFileId.Windows:
+				case FolderId.Windows:
 					return ShellApi.CSIDL.CSIDL_WINDOWS;
-				case SystemFileId.WindowsSystem:
+				case FolderId.WindowsSystem:
 					return ShellApi.CSIDL.CSIDL_SYSTEM;
 			}
 
