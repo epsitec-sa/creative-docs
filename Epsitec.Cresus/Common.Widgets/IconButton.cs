@@ -20,6 +20,12 @@ namespace Epsitec.Common.Widgets
 			this.SetEmbedder (embedder);
 		}
 
+		public IconButton(Command command)
+			: this ()
+		{
+			this.CommandObject = command;
+		}
+
 		public IconButton(string icon)
 			: this ()
 		{

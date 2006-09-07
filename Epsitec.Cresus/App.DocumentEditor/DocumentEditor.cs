@@ -912,7 +912,7 @@ namespace Epsitec.App.DocumentEditor
 			}
 			else
 			{
-				IconButton button = new IconButton(command.CommandId, Misc.Icon(command.Icon), command.CommandId);
+				IconButton button = new IconButton(command);
 				this.vToolBar.Items.Add(button);
 				ToolTip.Default.SetToolTip(button, Misc.GetTextWithShortcut(command));
 				return button;
@@ -934,7 +934,7 @@ namespace Epsitec.App.DocumentEditor
 		{
 			Command command = Widgets.Command.Get (commandName);
 
-			IconButton button = new IconButton(command.CommandId, Misc.Icon(command.Icon), command.CommandId);
+			IconButton button = new IconButton(command);
 			button.PreferredIconSize = Misc.IconPreferredSize("Small");
 			double h = this.info.PreferredHeight-3;
 			button.PreferredSize = new Size(h, h);
@@ -1076,7 +1076,7 @@ namespace Epsitec.App.DocumentEditor
 			}
 			else
 			{
-				IconButton button = new IconButton(command.CommandId, Misc.Icon(command.Icon), command.CommandId);
+				IconButton button = new IconButton(command);
 				this.ribbonBook.Items.Add(button);
 				ToolTip.Default.SetToolTip(button, Misc.GetTextWithShortcut(command));
 				return button;
@@ -3631,7 +3631,7 @@ namespace Epsitec.App.DocumentEditor
 
 				string description = DocumentEditor.GetRes("Action."+tooltip);
 
-				command.ManuallyDefineCommand(description, icon, null, statefull);
+				command.ManuallyDefineCommand(description, Misc.Icon(icon), null, statefull);
 			}
 
 			return this.CommandContext.GetCommandState(command);
