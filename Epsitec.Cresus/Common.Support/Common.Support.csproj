@@ -119,7 +119,7 @@
     <Compile Include="CommandAttribute.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="FolderDetailsMode.cs" />
+    <Compile Include="FolderQueryMode.cs" />
     <Compile Include="Data\ComponentCollection.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -151,7 +151,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="FileInfoIconSize.cs" />
-    <Compile Include="FileInfoSelection.cs" />
+    <Compile Include="FileInfoIconSelection.cs" />
     <Compile Include="FileManager.cs" />
     <Compile Include="FolderItem.cs" />
     <Compile Include="IImageProvider.cs">

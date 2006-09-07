@@ -19,9 +19,13 @@ namespace Epsitec.Common.Support
 				@"C:\Documents and Settings\Arnaud\Desktop"
 			};
 
+			FolderQueryMode mode = FolderQueryMode.LargeIcons;
+			
+			mode.AsOpenFolder = true;
+
 			foreach (string path in paths)
 			{
-				FolderItem item = FileManager.CreateFolderItem (path, FolderDetailsMode.LargeIcons);
+				FolderItem item = FileManager.GetFolderItem (path, mode);
 				string file = System.IO.Path.GetFileName (path);
 
 				System.Console.Out.WriteLine ("{0} : {1} ({2}){3}", file, item.DisplayName, item.TypeName, (item.Icon == null) ? " no normal icon" : "");
@@ -40,13 +44,13 @@ namespace Epsitec.Common.Support
 		{
 			System.Array ids = System.Enum.GetValues (typeof (FolderId));
 
-			FolderDetailsMode modeNormal = FolderDetailsMode.LargeIcons;
+			FolderQueryMode modeNormal = FolderQueryMode.LargeIcons;
 			List<FolderId> failedList = new List<FolderId> ();
 			List<FolderId> virtualList = new List<FolderId> ();
 
 			foreach (int id in ids)
 			{
-				FolderItem item = FileManager.CreateFolderItem ((FolderId) id, modeNormal);
+				FolderItem item = FileManager.GetFolderItem ((FolderId) id, modeNormal);
 
 				if (item.IsEmpty)
 				{
@@ -75,7 +79,7 @@ namespace Epsitec.Common.Support
 			
 			foreach (FolderId id in virtualList)
 			{
-				FolderItem item = FileManager.CreateFolderItem (id, modeNormal);
+				FolderItem item = FileManager.GetFolderItem (id, modeNormal);
 
 				System.Console.Out.WriteLine ("{0} : {1} ({2})", id, item.DisplayName, item.TypeName);
 
@@ -103,9 +107,9 @@ namespace Epsitec.Common.Support
 		public void CheckGetFolderItemsFromFolder()
 		{
 			string path = @"S:\Epsitec.Cresus\External";
-			FolderItem root = FileManager.CreateFolderItem (path, FolderDetailsMode.NoIcons);
+			FolderItem root = FileManager.GetFolderItem (path, FolderQueryMode.NoIcons);
 
-			foreach (FolderItem item in FileManager.GetFolderItems (root, FolderDetailsMode.LargeIcons))
+			foreach (FolderItem item in FileManager.GetFolderItems (root, FolderQueryMode.LargeIcons))
 			{
 				System.Console.Out.WriteLine ("{0} ({1}), {2}, Virtual={3}", item.DisplayName, item.TypeName, item.FullPath, item.IsVirtual);
 			}
@@ -114,9 +118,9 @@ namespace Epsitec.Common.Support
 		[Test]
 		public void CheckGetFolderItemsFromDesktop()
 		{
-			FolderItem root = FileManager.CreateFolderItem (FolderId.VirtualDesktop, FolderDetailsMode.NoIcons);
+			FolderItem root = FileManager.GetFolderItem (FolderId.VirtualDesktop, FolderQueryMode.NoIcons);
 
-			foreach (FolderItem item in FileManager.GetFolderItems (root, FolderDetailsMode.LargeIcons))
+			foreach (FolderItem item in FileManager.GetFolderItems (root, FolderQueryMode.LargeIcons))
 			{
 				System.Console.Out.WriteLine ("{0} ({1}), {2}, Virtual={3}", item.DisplayName, item.TypeName, item.FullPath, item.IsVirtual);
 			}
@@ -125,9 +129,9 @@ namespace Epsitec.Common.Support
 		[Test]
 		public void CheckGetFolderItemsFromMyComputer()
 		{
-			FolderItem root = FileManager.CreateFolderItem (FolderId.VirtualMyComputer, FolderDetailsMode.NoIcons);
+			FolderItem root = FileManager.GetFolderItem (FolderId.VirtualMyComputer, FolderQueryMode.NoIcons);
 
-			foreach (FolderItem item in FileManager.GetFolderItems (root, FolderDetailsMode.LargeIcons))
+			foreach (FolderItem item in FileManager.GetFolderItems (root, FolderQueryMode.LargeIcons))
 			{
 				System.Console.Out.WriteLine ("{0} ({1}), {2}, Virtual={3}", item.DisplayName, item.TypeName, item.FullPath, item.IsVirtual);
 			}
@@ -136,26 +140,39 @@ namespace Epsitec.Common.Support
 		[Test]
 		public void CheckGetParentFolderItem1()
 		{
-			FolderItem item = FileManager.CreateFolderItem (FolderId.VirtualMyDocuments, FolderDetailsMode.NoIcons);
+			FolderItem item = FileManager.GetFolderItem (FolderId.VirtualMyDocuments, FolderQueryMode.NoIcons);
 
 			while (!item.IsEmpty)
 			{
 				System.Console.Out.WriteLine ("{0} ({1}), {2}", item.DisplayName, item.TypeName, item.FullPath);
 
-				item = FileManager.GetParentFolderItem (item, FolderDetailsMode.NoIcons);
+				item = FileManager.GetParentFolderItem (item, FolderQueryMode.NoIcons);
 			}
 		}
 
 		[Test]
 		public void CheckGetParentFolderItem2()
 		{
-			FolderItem item = FileManager.CreateFolderItem (@"S:\Epsitec.Cresus\External", FolderDetailsMode.NoIcons);
+			FolderItem item = FileManager.GetFolderItem (@"S:\Epsitec.Cresus\External", FolderQueryMode.NoIcons);
 
 			while (!item.IsEmpty)
 			{
 				System.Console.Out.WriteLine ("{0} ({1}), {2}", item.DisplayName, item.TypeName, item.FullPath);
 
-				item = FileManager.GetParentFolderItem (item, FolderDetailsMode.NoIcons);
+				item = FileManager.GetParentFolderItem (item, FolderQueryMode.NoIcons);
+			}
+		}
+
+		[Test]
+		public void CheckGetParentFolderItem3()
+		{
+			FolderItem item = FileManager.GetFolderItem (@"\\bigdell\s$\Arnaud\Desktop\5000.txt", FolderQueryMode.NoIcons);
+
+			while (!item.IsEmpty)
+			{
+				System.Console.Out.WriteLine ("{0} ({1}), {2}", item.DisplayName, item.TypeName, item.FullPath);
+
+				item = FileManager.GetParentFolderItem (item, FolderQueryMode.NoIcons);
 			}
 		}
 	}

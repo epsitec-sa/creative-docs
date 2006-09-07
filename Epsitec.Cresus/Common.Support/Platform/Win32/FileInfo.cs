@@ -27,7 +27,7 @@ namespace Epsitec.Common.Support.Platform.Win32
 			this.root      = null;
 		}
 
-		public static FolderItem CreateFolderItem(FolderId file, FolderDetailsMode mode)
+		public static FolderItem CreateFolderItem(FolderId file, FolderQueryMode mode)
 		{
 			ShellApi.CSIDL csidl = FileInfo.GetCsidl (file);
 			System.IntPtr  pidl  = System.IntPtr.Zero;
@@ -65,7 +65,7 @@ namespace Epsitec.Common.Support.Platform.Win32
 			return item;
 		}
 		
-		public static FolderItem CreateFolderItem(string path, FolderDetailsMode mode)
+		public static FolderItem CreateFolderItem(string path, FolderQueryMode mode)
 		{
 			System.IntPtr pidl = System.IntPtr.Zero;
 			
@@ -82,39 +82,13 @@ namespace Epsitec.Common.Support.Platform.Win32
 			return FileInfo.CreateFolderItemAndInheritPidl (mode, pidl);
 		}
 
-		public static FolderItem GetParentFolderItem(FolderItem path, FolderDetailsMode mode)
+		public static FolderItem GetParentFolderItem(FolderItem path, FolderQueryMode mode)
 		{
 			PidlHandle handle = path.Handle as PidlHandle;
 			
 			if ((handle != PidlHandle.VirtualDesktopHandle) &&
 				(handle != null))
 			{
-#if false
-				System.IntPtr pidlPath = handle.Pidl;
-				System.IntPtr pidlLast = System.IntPtr.Zero;
-				System.IntPtr ptrParent;
-				
-				IShellFolder folder;
-				
-				ShellApi.SHBindToParent (pidlPath, ref ShellGuids.IID_IShellFolder, out ptrParent, ref pidlLast);
-				
-				//	There is no need to free the relative pidl (pidlLast), as documented on MSDN.
-
-				pidlLast = System.IntPtr.Zero;
-
-				if (ptrParent != System.IntPtr.Zero)
-				{
-					folder = System.Runtime.InteropServices.Marshal.GetTypedObjectForIUnknown (ptrParent, typeof (IShellFolder)) as IShellFolder;
-
-					
-					
-					//	TODO: ...
-
-					folder.
-					
-					System.Runtime.InteropServices.Marshal.ReleaseComObject (folder);
-				}
-#else
 				System.IntPtr pidl = ShellApi.ILCombine (handle.Pidl, System.IntPtr.Zero);
 				
 				if (ShellApi.ILRemoveLastID (pidl))
@@ -125,18 +99,17 @@ namespace Epsitec.Common.Support.Platform.Win32
 				{
 					PidlHandle.FreePidl (pidl);
 				}
-#endif
 			}
 			
 			return FolderItem.Empty;
 		}
 		
-		public static IEnumerable<FolderItem> GetFolderItems(FolderItem path, FolderDetailsMode mode)
+		public static IEnumerable<FolderItem> GetFolderItems(FolderItem path, FolderQueryMode mode)
 		{
 			return FileInfo.GetFolderItems (path.Handle as PidlHandle, mode, false);
 		}
 
-		private static IEnumerable<FolderItem> GetFolderItems(PidlHandle handle, FolderDetailsMode mode, bool disposeHandleWhenFinished)
+		private static IEnumerable<FolderItem> GetFolderItems(PidlHandle handle, FolderQueryMode mode, bool disposeHandleWhenFinished)
 		{
 			System.IntPtr pidlPath = handle.Pidl;
 			System.IntPtr pidlElement;
@@ -200,7 +173,7 @@ namespace Epsitec.Common.Support.Platform.Win32
 			}
 		}
 
-		private static FolderItem CreateFolderItemAndInheritPidl(FolderDetailsMode mode, System.IntPtr pidl)
+		private static FolderItem CreateFolderItemAndInheritPidl(FolderQueryMode mode, System.IntPtr pidl)
 		{
 			//	Do not free pidl, as it is transmitted to the PidlHandle. This
 			//	avoids a useless copy operation.
@@ -211,7 +184,7 @@ namespace Epsitec.Common.Support.Platform.Win32
 			string displayName;
 			string typeName;
 
-			FileInfo.GetIconAndDescription (mode, pidl, out icon, out displayName, out typeName);
+			FileInfo.GetIconAndDescription (pidl, mode, out icon, out displayName, out typeName);
 			ShellApi.SHGetPathFromIDList (pidl, buffer);
 			Drawing.Image image = null;
 
@@ -224,14 +197,14 @@ namespace Epsitec.Common.Support.Platform.Win32
 		}
 
 
-		private static bool GetIconAndDescription(ShellApi.CSIDL csidl, FolderDetailsMode mode, out System.Drawing.Icon icon, out string displayName, out string typeName)
+		private static bool GetIconAndDescription(ShellApi.CSIDL csidl, FolderQueryMode mode, out System.Drawing.Icon icon, out string displayName, out string typeName)
 		{
 			System.IntPtr pidl = System.IntPtr.Zero;
 			ShellApi.SHGetFolderLocation (System.IntPtr.Zero, (short) csidl, System.IntPtr.Zero, 0, out pidl);
 
 			try
 			{
-				return FileInfo.GetIconAndDescription (mode, pidl, out icon, out displayName, out typeName);
+				return FileInfo.GetIconAndDescription (pidl, mode, out icon, out displayName, out typeName);
 			}
 			finally
 			{
@@ -239,7 +212,7 @@ namespace Epsitec.Common.Support.Platform.Win32
 			}
 		}
 
-		private static bool GetIconAndDescription(string path, FolderDetailsMode mode, out System.Drawing.Icon icon, out string displayName, out string typeName)
+		private static bool GetIconAndDescription(string path, FolderQueryMode mode, out System.Drawing.Icon icon, out string displayName, out string typeName)
 		{
 			System.IntPtr pidl = System.IntPtr.Zero;
 			uint attribute;
@@ -247,7 +220,7 @@ namespace Epsitec.Common.Support.Platform.Win32
 
 			try
 			{
-				return FileInfo.GetIconAndDescription (mode, pidl, out icon, out displayName, out typeName);
+				return FileInfo.GetIconAndDescription (pidl, mode, out icon, out displayName, out typeName);
 			}
 			finally
 			{
@@ -255,7 +228,7 @@ namespace Epsitec.Common.Support.Platform.Win32
 			}
 		}
 
-		private static bool GetIconAndDescription(FolderDetailsMode mode, System.IntPtr pidl, out System.Drawing.Icon icon, out string displayName, out string typeName)
+		private static bool GetIconAndDescription(System.IntPtr pidl, FolderQueryMode mode, out System.Drawing.Icon icon, out string displayName, out string typeName)
 		{
 			if (pidl == System.IntPtr.Zero)
 			{
@@ -287,15 +260,21 @@ namespace Epsitec.Common.Support.Platform.Win32
 			return true;
 		}
 
-		private static void GetShellFileInfo(System.IntPtr pidl, FolderDetailsMode mode, ref ShellApi.SHFILEINFO info)
+		private static void GetShellFileInfo(System.IntPtr pidl, FolderQueryMode mode, ref ShellApi.SHFILEINFO info)
 		{
 			ShellApi.SHGFI flags = ShellApi.SHGFI.SHGFI_DISPLAYNAME |
-					/**/			   ShellApi.SHGFI.SHGFI_TYPENAME |
-					/**/			   ShellApi.SHGFI.SHGFI_PIDL;
+				/**/			   ShellApi.SHGFI.SHGFI_TYPENAME |
+				/**/			   ShellApi.SHGFI.SHGFI_PIDL |
+				/**/			   ShellApi.SHGFI.SHGFI_ATTRIBUTES;
 
+			if (mode.AsOpenFolder)
+			{
+				flags |= ShellApi.SHGFI.SHGFI_OPENICON;
+			}
+			
 			switch (mode.IconSelection)
 			{
-				case FileInfoSelection.Active:
+				case FileInfoIconSelection.Active:
 					flags |= ShellApi.SHGFI.SHGFI_SELECTED;
 					break;
 			}
