@@ -28,7 +28,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			//	Crée et montre la fenêtre du dialogue.
 			if ( this.window == null )
 			{
-				this.CreateAll("FileSaveModel", new Size(400, 379), Res.Strings.Dialog.Save.TitleMod, 50);
+				this.CreateAll("FileSaveModel", new Size(510, 379), Res.Strings.Dialog.Save.TitleMod, 50);
 			}
 
 			this.UpdateAll(-1, true);

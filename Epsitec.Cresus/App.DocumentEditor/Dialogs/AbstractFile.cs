@@ -112,11 +112,12 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.window.Owner = this.editor.Window;
 			this.window.Icon = Bitmap.FromManifestResource("Epsitec.App.DocumentEditor.Images.Application.icon", this.GetType().Assembly);
 			this.window.WindowCloseClicked += new EventHandler(this.HandleWindowCloseClicked);
-			this.window.Root.MinSize = new Size(300, 200);
+			this.window.Root.MinSize = new Size(400, 200);
 			this.window.Root.Padding = new Margins(8, 8, 8, 8);
 
 			this.CreateCommandDispatcher();
 			this.CreateResizer();
+			this.CreateFavourites();
 			this.CreateAccess();
 			this.CreateTable(cellHeight);
 			this.CreateRename();
@@ -129,6 +130,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			//	Mise à jour lorsque les widgets sont déjà créés, avant de montrer le dialogue.
 			this.selectedFilename = null;
 			this.selectedFilenames = null;
+			this.UpdateFavourites();
 			this.UpdateTable(initialSelection);
 			this.UpdateInitialDirectory();
 			this.UpdateInitialFilename();
@@ -179,6 +181,19 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			resize.Anchor = AnchorStyles.BottomRight;
 			resize.Margins = new Margins(0, -8, 0, -8);
 			ToolTip.Default.SetToolTip(resize, Res.Strings.Dialog.Tooltip.Resize);
+		}
+
+		protected void CreateFavourites()
+		{
+			//	Crée le panneau gauche pour les favoris.
+			this.favourites = new Scrollable(this.window.Root);
+			this.favourites.PreferredWidth = 100;
+			this.favourites.HorizontalScrollerMode = ScrollableScrollerMode.HideAlways;
+			this.favourites.VerticalScrollerMode = ScrollableScrollerMode.Auto;
+			this.favourites.Panel.IsAutoFitting = true;
+			this.favourites.IsForegroundFrame = true;
+			this.favourites.Dock = DockStyle.Left;
+			this.favourites.Margins = new Margins(0, 10, 0, 0);
 		}
 
 		protected void CreateTable(double cellHeight)
@@ -343,6 +358,36 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			}
 
 			this.UpdateButtons();
+		}
+
+		protected void UpdateFavourites()
+		{
+			//	Met à jour la liste des favoris.
+			foreach (Widget widget in this.favourites.Panel.Children.Widgets)
+			{
+				if (widget is Filename)
+				{
+					Filename f = widget as Filename;
+					//?f.Clicked -= new MessageEventHandler();
+				}
+
+				widget.Dispose();
+			}
+
+			this.FavouritesAdd("Mes exemples", "Application");
+			this.FavouritesAdd("Exemples Epsitec", "New");
+			this.FavouritesAdd("Mes documents", "FileTypeDirectory");
+			this.FavouritesAdd("Poste de travail", "FileTypeDirectory");
+		}
+
+		protected void FavouritesAdd(string text, string icon)
+		{
+			Filename f = new Filename();
+			f.FilenameValue = text;
+			f.IconValue = Misc.Icon(icon);
+			f.Dock = DockStyle.Top;
+			//?f.Clicked += new MessageEventHandler();
+			this.favourites.Panel.Children.Add(f);
 		}
 
 		protected void UpdateTable(int sel)
@@ -1389,6 +1434,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		#endregion
 
 
+		protected Scrollable				favourites;
 		protected CellTable					table;
 		protected HSlider					slider;
 		protected TextFieldCombo			fieldPath;

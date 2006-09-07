@@ -26,13 +26,12 @@ namespace Epsitec.App.DocumentEditor
 		public DocumentEditor(DocumentType type)
 		{
 			//	On crée son propre dispatcher, pour éviter de marcher sur les autres commandes.
-			
 			System.Diagnostics.Debug.WriteLine("*** Created Primary Command Dispatcher ***");
 			this.commandDispatcher = new CommandDispatcher("Common.DocumentEditor", CommandDispatcherLevel.Primary);
 			this.commandDispatcher.RegisterController(this);
-			this.commandContext = new CommandContext ();
+			this.commandContext = new CommandContext();
 			
-			CommandDispatcher.SetDispatcher (this, this.commandDispatcher);
+			CommandDispatcher.SetDispatcher(this, this.commandDispatcher);
 			
 			this.documentType = type;
 			this.useArray = false;
@@ -480,7 +479,7 @@ namespace Epsitec.App.DocumentEditor
 			this.VToolBarAdd(this.toolPickerState.Command);
 			if ( this.documentType == DocumentType.Pictogram )
 			{
-				this.VToolBarAdd (this.toolHotSpotState.Command);
+				this.VToolBarAdd(this.toolHotSpotState.Command);
 			}
 			this.VToolBarAdd(null);
 			this.VToolBarAdd(this.toolLineState.Command);
@@ -500,7 +499,7 @@ namespace Epsitec.App.DocumentEditor
 			{
 				this.VToolBarAdd(this.toolArrayState.Command);
 			}
-			this.VToolBarAdd (this.toolImageState.Command);
+			this.VToolBarAdd(this.toolImageState.Command);
 			if ( this.documentType != DocumentType.Pictogram )
 			{
 				this.VToolBarAdd(this.toolDimensionState.Command);
@@ -546,7 +545,7 @@ namespace Epsitec.App.DocumentEditor
 						first = false;
 					}
 
-					Command c = Widgets.Command.Get (cmd);
+					Command c = Widgets.Command.Get(cmd);
 					this.RibbonAdd(c);
 
 					if ( sep )
@@ -599,22 +598,22 @@ namespace Epsitec.App.DocumentEditor
 				document.Modifier.ActiveViewer = viewer;
 				document.Modifier.AttachViewer(viewer);
 #else
-				Widget leftPane = new Widget (di.tabPage);
-				Widget rightPane = new Widget (di.tabPage);
+				Widget leftPane = new Widget(di.tabPage);
+				Widget rightPane = new Widget(di.tabPage);
 				
-				VSplitter splitter = new VSplitter (di.tabPage);
+				VSplitter splitter = new VSplitter(di.tabPage);
 				
 				leftPane.Dock = DockStyle.Fill;
 				splitter.Dock = DockStyle.Right;
 				rightPane.Dock = DockStyle.Right;
 				
 				mainViewParent = leftPane;
-				Viewer viewer = new Viewer (document);
-				viewer.SetParent (mainViewParent);
+				Viewer viewer = new Viewer(document);
+				viewer.SetParent(mainViewParent);
 				viewer.Anchor = AnchorStyles.All;
-				viewer.Margins = new Margins (wm, wm+sw+1, 6+wm, wm+sw+1);
+				viewer.Margins = new Margins(wm, wm+sw+1, 6+wm, wm+sw+1);
 				document.Modifier.ActiveViewer = viewer;
-				document.Modifier.AttachViewer (viewer);
+				document.Modifier.AttachViewer(viewer);
 #endif
 
 #if false
@@ -864,7 +863,7 @@ namespace Epsitec.App.DocumentEditor
 			}
 			else
 			{
-				Command c = Widgets.Command.Get (command);
+				Command c = Widgets.Command.Get(command);
 
 				MenuItem item = new MenuItem(c.CommandId, Misc.Icon(c.Icon), c.Description, Misc.GetShortcut(c), c.CommandId);
 				vmenu.Items.Add(item);
@@ -932,7 +931,7 @@ namespace Epsitec.App.DocumentEditor
 
 		protected IconButton InfoAdd(string commandName)
 		{
-			Command command = Widgets.Command.Get (commandName);
+			Command command = Widgets.Command.Get(commandName);
 
 			IconButton button = new IconButton(command);
 			button.PreferredIconSize = Misc.IconPreferredSize("Small");
@@ -2095,7 +2094,7 @@ namespace Epsitec.App.DocumentEditor
 		void CommandCombo(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			IconButtonCombo combo = e.Source as IconButtonCombo;
-			CommandState cs = this.commandContext.GetCommandState (e.CommandName);
+			CommandState cs = this.commandContext.GetCommandState(e.CommandName);
 			if ( combo != null && cs != null )
 			{
 				cs.AdvancedState = combo.SelectedName;
@@ -3555,7 +3554,7 @@ namespace Epsitec.App.DocumentEditor
 
 			this.resDesignerBuildState = this.CreateCommandState("ResDesignerBuild");
 			this.resDesignerTranslateState = this.CreateCommandState("ResDesignerTranslate");
-			this.debugBboxThinState = this.CreateCommandState ("DebugBboxThin");
+			this.debugBboxThinState = this.CreateCommandState("DebugBboxThin");
 			this.debugBboxGeomState = this.CreateCommandState("DebugBboxGeom");
 			this.debugBboxFullState = this.CreateCommandState("DebugBboxFull");
 			this.debugDirtyState = this.CreateCommandState("DebugDirty", KeyCode.FuncF12);
@@ -5265,16 +5264,16 @@ namespace Epsitec.App.DocumentEditor
 				int i = dir.LastIndexOf("\\");
 				if ( i > 0 )
 				{
-					dir = dir.Substring(0, i);
+					dir = dir.Substring(0, i);  // supprime le dossier "1.0.0.0" à la fin
 				}
 
 				if ( this.documentType == DocumentType.Pictogram )
 				{
-					return string.Format("{0}\\{1}", dir, "CresusPicto.data");
+					return string.Concat(dir, "\\CresusPicto.data");
 				}
 				else
 				{
-					return string.Format("{0}\\{1}", dir, "CresusDocuments.data");
+					return string.Concat(dir, "\\CresusDocuments.data");
 				}
 			}
 		}

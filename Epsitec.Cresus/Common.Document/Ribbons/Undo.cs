@@ -16,7 +16,7 @@ namespace Epsitec.Common.Document.Ribbons
 
 			this.buttonUndo = this.CreateIconButton("Undo", "Large");
 			this.buttonRedo = this.CreateIconButton("Redo", "Large");
-			this.buttonList = this.CreateMenuButton ("UndoRedoList", Res.Strings.Action.UndoRedoList, new MessageEventHandler (this.HandleListPressed));
+			this.buttonList = this.CreateMenuButton("UndoRedoList", Res.Strings.Action.UndoRedoList, new MessageEventHandler(this.HandleListPressed));
 			
 //			this.UpdateClientGeometry();
 		}

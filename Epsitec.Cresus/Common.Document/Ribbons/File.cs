@@ -18,7 +18,7 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonLastModels = this.CreateMenuButton("", Res.Strings.Action.LastModels, new MessageEventHandler(this.HandleLastModelsPressed));
 
 			this.buttonOpen       = this.CreateIconButton("Open", "Large");
-			this.buttonLastFiles  = this.CreateMenuButton ("", Res.Strings.Action.LastFiles, new MessageEventHandler (this.HandleLastFilesPressed));
+			this.buttonLastFiles  = this.CreateMenuButton("", Res.Strings.Action.LastFiles, new MessageEventHandler(this.HandleLastFilesPressed));
 
 			this.buttonSave       = this.CreateIconButton("Save", "Large");
 			this.buttonPrint      = this.CreateIconButton("Print", "Large");
