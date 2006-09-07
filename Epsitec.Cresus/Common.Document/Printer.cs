@@ -47,7 +47,7 @@ namespace Epsitec.Common.Document
 			return this.ExportGeometry(drawingContext, filename, this.document.Modifier.ActiveViewer.DrawingContext.CurrentPage);
 		}
 
-		public bool Miniature(out string filename, out byte[] data)
+		public bool Miniature(Size sizeHope, out string filename, out byte[] data)
 		{
 			//	Retourne les données pour l'image miniature de la première page.
 			DrawingContext drawingContext = new DrawingContext(this.document, null);
@@ -55,7 +55,12 @@ namespace Epsitec.Common.Document
 			drawingContext.PreviewActive = false;
 			drawingContext.IsBitmap = true;
 
-			string err = this.ExportGeometry(drawingContext, 0, ImageFormat.Png, 10, ImageCompression.None, 24, 85, 1, false, out data);
+			Size pageSize = this.document.GetPageSize(0);
+			double dpix = sizeHope.Width*254/pageSize.Width;
+			double dpiy = sizeHope.Height*254/pageSize.Height;
+			double dpi = System.Math.Min(dpix, dpiy);
+			
+			string err = this.ExportGeometry(drawingContext, 0, ImageFormat.Png, dpi, ImageCompression.None, 24, 85, 1, false, out data);
 			if (err == "")
 			{
 				filename = "preview.png";
@@ -1111,10 +1116,10 @@ namespace Epsitec.Common.Document
 			}
 
 			Size pageSize = this.document.GetPageSize(pageNumber);
-
-			Graphics gfx = new Graphics();
 			int dx = (int) ((pageSize.Width/10.0)*(dpi/25.4));
 			int dy = (int) ((pageSize.Height/10.0)*(dpi/25.4));
+
+			Graphics gfx = new Graphics();
 			gfx.SetPixmapSize(dx, dy);
 			gfx.SolidRenderer.ClearAlphaRgb((depth==32)?0:1, 1, 1, 1);
 			gfx.Rasterizer.Gamma = AA;
