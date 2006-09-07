@@ -3025,7 +3025,13 @@ namespace Epsitec.Common.Widgets
 
 		protected virtual void DefineIconFromCaption(string icon)
 		{
-			if (icon.EndsWith (".icon"))
+			Drawing.Image image = Support.ImageProvider.Default.GetImage (icon, Support.Resources.DefaultManager);
+
+			if (image == null)
+			{
+				this.IconName = null;
+			}
+			else
 			{
 				this.IconName = icon;
 			}

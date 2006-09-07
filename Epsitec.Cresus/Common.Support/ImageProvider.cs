@@ -316,7 +316,7 @@ namespace Epsitec.Common.Support
 				
 				if (assembly == null)
 				{
-					throw new System.ArgumentException (string.Format ("Illegal assembly or resource name for manifest image ({0}).", res_name));
+					return null;
 				}
 				
 				Drawing.Image image = Drawing.Bitmap.FromManifestResource (res_name, assembly);
