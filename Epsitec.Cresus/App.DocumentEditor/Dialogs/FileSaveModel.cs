@@ -28,36 +28,11 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			//	Crée et montre la fenêtre du dialogue.
 			if ( this.window == null )
 			{
-				this.window = new Window();
-				this.window.MakeSecondaryWindow();
-				this.window.PreventAutoClose = true;
-				this.WindowInit("FileSaveModel", 400, 379, true);
-				this.window.Text = Res.Strings.Dialog.Save.TitleMod;
-				this.window.Owner = this.editor.Window;
-				this.window.Icon = Bitmap.FromManifestResource("Epsitec.App.DocumentEditor.Images.Application.icon", this.GetType().Assembly);
-				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowCloseClicked);
-				this.window.Root.MinSize = new Size(300, 200);
-				this.window.Root.Padding = new Margins(8, 8, 8, 8);
-
-				this.CreateCommandDispatcher();
-				this.CreateResizer();
-				this.CreateAccess();
-				this.CreateTable(50);
-				this.CreateRename();
-				this.CreateFooter();
-				this.CreateFilename();
+				this.CreateAll("FileSaveModel", new Size(400, 379), Res.Strings.Dialog.Save.TitleMod, 50);
 			}
 
-			this.selectedFilename = null;
-			this.selectedFilenames = null;
-			this.UpdateTable(-1);
-			this.UpdateInitialDirectory();
-			this.UpdateInitialFilename();
-
-			this.fieldFilename.SelectAll();
-			this.fieldFilename.Focus();  // focus pour frapper le nom du fichier à ouvrir
-
-			this.window.ShowDialog();
+			this.UpdateAll(-1, true);
+			this.window.ShowDialog();  // montre le dialogue modal...
 		}
 
 		public override void Save()

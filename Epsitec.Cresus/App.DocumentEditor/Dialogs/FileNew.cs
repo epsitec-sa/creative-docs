@@ -28,35 +28,11 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			//	Crée et montre la fenêtre du dialogue.
 			if ( this.window == null )
 			{
-				this.window = new Window();
-				this.window.MakeSecondaryWindow();
-				this.window.PreventAutoClose = true;
-				this.WindowInit("FileNew", 400, 379, true);
-				this.window.Text = Res.Strings.Dialog.New.Title;
-				this.window.Owner = this.editor.Window;
-				this.window.Icon = Bitmap.FromManifestResource("Epsitec.App.DocumentEditor.Images.Application.icon", this.GetType().Assembly);
-				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowCloseClicked);
-				this.window.Root.MinSize = new Size(300, 200);
-				this.window.Root.Padding = new Margins(8, 8, 8, 8);
-
-				this.CreateCommandDispatcher();
-				this.CreateResizer();
-				this.CreateAccess();
-				this.CreateTable(50);
-				this.CreateRename();
-				this.CreateFooter();
-				this.CreateFilename();
+				this.CreateAll("FileNew", new Size(400, 379), Res.Strings.Dialog.New.Title, 50);
 			}
 
-			this.selectedFilename = null;
-			this.selectedFilenames = null;
-			this.UpdateTable(0);  // sélectionne 'Document vide'
-			this.UpdateInitialDirectory();
-			this.UpdateInitialFilename();
-
-			this.table.Focus();  // focus dans la liste des modèles
-
-			this.window.ShowDialog();
+			this.UpdateAll(0, false);  // sélectionne 'Document vide'
+			this.window.ShowDialog();  // montre le dialogue modal...
 		}
 
 		public override void Save()
