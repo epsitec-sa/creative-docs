@@ -1493,7 +1493,7 @@ namespace Epsitec.Common.Document
 			//	Ecrit la miniature de la première page dans le fichier zip.
 			string filename;
 			byte[] data;
-			if (this.printer.Miniature(out filename, out data))
+			if (this.printer.Miniature(new Size(100, 100), out filename, out data))
 			{
 				zip.AddEntry(filename, data);
 			}
