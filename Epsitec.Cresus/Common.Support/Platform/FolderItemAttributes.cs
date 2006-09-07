@@ -1,0 +1,25 @@
+//	Copyright © 2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Responsable: Pierre ARNAUD
+
+using System.Collections.Generic;
+
+namespace Epsitec.Common.Support.Platform
+{
+	[System.Flags]
+	internal enum FolderItemAttributes
+	{
+		None			= 0,
+
+		Browsable		= 0x0001,
+		CanCopy			= 0x0002,
+		CanDelete		= 0x0004,
+		CanMove			= 0x0008,
+		CanRename		= 0x0010,
+		Compressed		= 0x0020,
+		Encrypted		= 0x0040,
+		Hidden			= 0x0080,
+		Shortcut		= 0x0100,
+		ReadOnly		= 0x0200,
+		Shared			= 0x0400,
+	}
+}
