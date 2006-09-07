@@ -1651,7 +1651,6 @@ namespace Epsitec.Common.Designer
 					{
 						//	Supprime le 'name="Truc.Chose' dans tous les bundles,
 						//	sauf dans le bundle par défaut.
-						//	TODO: il reste un <data name="" id="08">...</data> !
 						field.SetName(null);
 					}
 				}

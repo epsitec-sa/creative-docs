@@ -319,6 +319,18 @@ namespace Epsitec.Common.Designer.Viewers
 				}
 			}
 
+			while (collection.Count > 0)
+			{
+				if (collection[collection.Count-1] == KeyCode.None)
+				{
+					collection.RemoveAt(collection.Count-1);
+				}
+				else
+				{
+					break;
+				}
+			}
+
 			this.access.SetField(sel, cultureName, "Shortcuts", new ResourceAccess.Field(collection));
 			this.UpdateColor();
 		}

@@ -273,7 +273,7 @@ namespace Epsitec.Common.Widgets
 
 				if (text == this.fieldModifier.Text)
 				{
-					return this.listModifier[i-1];  // -1 pour sauver "Aucun" en tête de liste
+					return this.listModifier[i-1];  // -1 pour sauter "Aucun" en tête de liste
 				}
 			}
 

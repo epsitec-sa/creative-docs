@@ -106,7 +106,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 			//	Les Druids utilisés ici sont de la forme [MMDL].
 			//	MM: numéro de module, voir dans App.DocumentEditor/Resources/App/module.info
-			//	D: numéro du développeur
+			//	D: numéro du développeur (pour le moment, le numéro du développeur est toujours "0")
 			//	L: numéro local, voir dans App.DocumentEditor/Resources/App/Captions.00.resource
 			this.parentState = this.CreateCommandState("[3001]", this.ParentDirectory);
 			this.newState    = this.CreateCommandState("[3003]", this.NewDirectory);
