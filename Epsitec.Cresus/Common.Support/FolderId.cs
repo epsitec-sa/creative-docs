@@ -1,10 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
+//	Copyright © 2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Support
 {
-	public enum SystemFileId
+	/// <summary>
+	/// The <c>FolderId</c> enumeration lists all special folders which might
+	/// be defined by the Operating System (currently only Microsoft Windows).
+	/// </summary>
+	public enum FolderId
 	{
 		CommonAdminTools,
 		CommonAltStartup,

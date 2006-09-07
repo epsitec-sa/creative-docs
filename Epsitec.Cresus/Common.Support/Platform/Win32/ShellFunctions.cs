@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 namespace Epsitec.Common.Support.Platform.Win32
 {
 
-	public class ShellFunctions
+	internal static class ShellFunctions
 	{
 		public static IMalloc GetMalloc()
 		{

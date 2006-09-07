@@ -192,7 +192,7 @@
     <Compile Include="Sync.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="SystemFileId.cs" />
+    <Compile Include="FolderId.cs" />
     <Compile Include="Tags.cs">
       <SubType>Code</SubType>
     </Compile>

@@ -1,6 +1,7 @@
-using System;
+//	Copyright © 2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Responsable: Pierre ARNAUD
+
 using System.Collections.Generic;
-using System.Text;
 
 namespace Epsitec.Common.Support
 {
@@ -23,7 +24,7 @@ namespace Epsitec.Common.Support
 		/// Gets the icon for this item.
 		/// </summary>
 		/// <value>The icon or <c>null</c>.</value>
-		public Drawing.Image Icon
+		public Drawing.Image					Icon
 		{
 			get
 			{
@@ -35,7 +36,7 @@ namespace Epsitec.Common.Support
 		/// Gets the display name for the item.
 		/// </summary>
 		/// <value>The display name.</value>
-		public string DisplayName
+		public string							DisplayName
 		{
 			get
 			{
@@ -47,7 +48,7 @@ namespace Epsitec.Common.Support
 		/// Gets the type name for the item (e.g. "Folder", "Text File", ...).
 		/// </summary>
 		/// <value>The type name.</value>
-		public string TypeName
+		public string							TypeName
 		{
 			get
 			{
@@ -60,7 +61,7 @@ namespace Epsitec.Common.Support
 		/// file path.
 		/// </summary>
 		/// <value>The full path.</value>
-		public string FullPath
+		public string							FullPath
 		{
 			get
 			{
@@ -75,7 +76,7 @@ namespace Epsitec.Common.Support
 		/// <value>
 		/// 	<c>true</c> if this item is purely virtual; otherwise, <c>false</c>.
 		/// </value>
-		public bool IsVirtual
+		public bool								IsVirtual
 		{
 			get
 			{
@@ -87,7 +88,7 @@ namespace Epsitec.Common.Support
 		/// Gets a value indicating whether this item is empty.
 		/// </summary>
 		/// <value><c>true</c> if this item is empty; otherwise, <c>false</c>.</value>
-		public bool IsEmpty
+		public bool								IsEmpty
 		{
 			get
 			{
@@ -95,9 +96,9 @@ namespace Epsitec.Common.Support
 			}
 		}
 
-		public static readonly FolderItem Empty = new FolderItem ();
+		public static readonly FolderItem		Empty = new FolderItem ();
 
-		internal Platform.FolderItemHandle Handle
+		internal Platform.FolderItemHandle		Handle
 		{
 			get
 			{
@@ -109,10 +110,10 @@ namespace Epsitec.Common.Support
 			}
 		}
 		
-		private Drawing.Image icon;
-		private string displayName;
-		private string typeName;
-		private string fullPath;
-		private Platform.FolderItemHandle handle;
+		private Drawing.Image					icon;
+		private string							displayName;
+		private string							typeName;
+		private string							fullPath;
+		private Platform.FolderItemHandle		handle;
 	}
 }
