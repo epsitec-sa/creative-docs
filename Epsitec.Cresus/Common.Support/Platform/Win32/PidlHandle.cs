@@ -4,6 +4,10 @@ using System.Text;
 
 namespace Epsitec.Common.Support.Platform.Win32
 {
+	/// <summary>
+	/// The <c>PidlHandle</c> class wraps a SHELL pointer to ID List so that
+	/// we don't forget to free the associated memory.
+	/// </summary>
 	internal class PidlHandle : Platform.FolderItemHandle
 	{
 		private PidlHandle()

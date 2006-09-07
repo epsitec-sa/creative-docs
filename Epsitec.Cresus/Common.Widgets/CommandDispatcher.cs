@@ -261,9 +261,14 @@ namespace Epsitec.Common.Widgets
 
 		public void Register(Command command, CommandEventHandler handler)
 		{
-			this.Register (command.Name, handler);
+			this.Register (command.CommandId, handler);
 		}
-		
+
+		public void Register(Command command, Support.SimpleCallback handler)
+		{
+			this.Register (command.CommandId, delegate (CommandDispatcher d, CommandEventArgs e) { handler (); });
+		}
+
 		public void Register(string commandName, CommandEventHandler handler)
 		{
 			System.Diagnostics.Debug.Assert (commandName.IndexOf ("*") < 0, "Found '*' in command name.", "The command '" + commandName + "' may not contain a '*' in its name.\nPlease fix the registration source code.");
@@ -636,7 +641,7 @@ namespace Epsitec.Common.Widgets
 			if ((commandLine == null) &&
 				(commandObject != null))
 			{
-				commandLine = commandObject.Name;
+				commandLine = commandObject.CommandId;
 			}
 			
 			string commandName = CommandDispatcher.ExtractCommandName (commandLine);

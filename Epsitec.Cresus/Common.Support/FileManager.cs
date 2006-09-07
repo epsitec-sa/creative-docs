@@ -39,5 +39,25 @@ namespace Epsitec.Common.Support
 			fo.SourceFiles = Types.Collection.ToArray (files);
 			fo.DoOperation ();
 		}
+
+		public static FolderItem CreateFolderItem(SystemFileId file, FolderDetailsMode mode)
+		{
+			return Platform.FileInfo.CreateFolderItem (file, mode);
+		}
+
+		public static FolderItem CreateFolderItem(string path, FolderDetailsMode mode)
+		{
+			return Platform.FileInfo.CreateFolderItem (path, mode);
+		}
+
+		public static IEnumerable<FolderItem> GetFolderItems(FolderItem path, FolderDetailsMode mode)
+		{
+			return Platform.FileInfo.GetFolderItems (path, mode);
+		}
+
+		public static IEnumerable<FolderItem> GetFolderItems(string path, FolderDetailsMode mode)
+		{
+			return Platform.FileInfo.GetFolderItems (Platform.FileInfo.CreateFolderItem (path, FolderDetailsMode.NoIcons), mode);
+		}
 	}
 }
