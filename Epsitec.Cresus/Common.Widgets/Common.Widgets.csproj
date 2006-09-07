@@ -137,6 +137,7 @@
     <Compile Include="CloneView.cs" />
     <Compile Include="Controllers\StringController.cs" />
     <Compile Include="CommandType.cs" />
+    <Compile Include="Filename.cs" />
     <Compile Include="ImageShower.cs" />
     <Compile Include="ShortcutEditor.cs" />
     <Compile Include="Layouts\Collections\ColumnDefinitionCollection.cs" />

@@ -14,7 +14,7 @@ namespace Epsitec.Common.Document.Ribbons
 			this.Title = "Debug";
 			this.PreferredWidth = 8 + 40;
 
-			this.buttonOthers = this.CreateMenuButton ("", "Debug menu...", new MessageEventHandler (this.HandleOthersPressed));
+			this.buttonOthers = this.CreateMenuButton("", "Debug menu...", new MessageEventHandler(this.HandleOthersPressed));
 			
 //			this.UpdateClientGeometry();
 		}
