@@ -1,4 +1,5 @@
 using NUnit.Framework;
+using System.Collections.Generic;
 
 namespace Epsitec.Common.Support
 {
@@ -40,18 +41,60 @@ namespace Epsitec.Common.Support
 			System.Array ids = System.Enum.GetValues (typeof (FolderId));
 
 			FolderDetailsMode modeNormal = FolderDetailsMode.LargeIcons;
+			List<FolderId> failedList = new List<FolderId> ();
+			List<FolderId> virtualList = new List<FolderId> ();
 
 			foreach (int id in ids)
 			{
 				FolderItem item = FileManager.CreateFolderItem ((FolderId) id, modeNormal);
 
-				System.Console.Out.WriteLine ("{0} : {1} ({2}) virtual={3}", (FolderId) id, item.DisplayName, item.TypeName, item.IsVirtual);
-				System.Console.Out.WriteLine ("----> path = {0}", item.FullPath);
+				if (item.IsEmpty)
+				{
+					failedList.Add (((FolderId) id));
+				}
+				else if (item.IsVirtual)
+				{
+					virtualList.Add ((FolderId) id);
+				}
+				else
+				{
+					System.Console.Out.WriteLine ("{0} : {1} ({2})", (FolderId) id, item.DisplayName, item.TypeName);
+					System.Console.Out.WriteLine ("----> path = {0}", item.FullPath);
+
+					if (item.Icon != null)
+					{
+						byte[] data = item.Icon.BitmapImage.Save (Epsitec.Common.Drawing.ImageFormat.Png);
+						System.IO.File.WriteAllBytes (string.Concat ("Item ", (FolderId) id, ".png"), data);
+					}
+				}
+			}
+			
+			System.Console.Out.WriteLine ();
+			System.Console.Out.WriteLine ("Pure virtual folders");
+			System.Console.Out.WriteLine ("--------------------");
+			
+			foreach (FolderId id in virtualList)
+			{
+				FolderItem item = FileManager.CreateFolderItem (id, modeNormal);
+
+				System.Console.Out.WriteLine ("{0} : {1} ({2})", id, item.DisplayName, item.TypeName);
 
 				if (item.Icon != null)
 				{
 					byte[] data = item.Icon.BitmapImage.Save (Epsitec.Common.Drawing.ImageFormat.Png);
-					System.IO.File.WriteAllBytes (string.Concat ("Item ", (FolderId) id, ".png"), data);
+					System.IO.File.WriteAllBytes (string.Concat ("Item ", id, ".png"), data);
+				}
+			}
+
+			if (failedList.Count > 0)
+			{
+				System.Console.Out.WriteLine ();
+				System.Console.Out.WriteLine ("Failed to resolve");
+				System.Console.Out.WriteLine ("-----------------");
+
+				foreach (FolderId id in failedList)
+				{
+					System.Console.Out.WriteLine ("{0}", id);
 				}
 			}
 		}
@@ -87,6 +130,32 @@ namespace Epsitec.Common.Support
 			foreach (FolderItem item in FileManager.GetFolderItems (root, FolderDetailsMode.LargeIcons))
 			{
 				System.Console.Out.WriteLine ("{0} ({1}), {2}, Virtual={3}", item.DisplayName, item.TypeName, item.FullPath, item.IsVirtual);
+			}
+		}
+
+		[Test]
+		public void CheckGetParentFolderItem1()
+		{
+			FolderItem item = FileManager.CreateFolderItem (FolderId.VirtualMyDocuments, FolderDetailsMode.NoIcons);
+
+			while (!item.IsEmpty)
+			{
+				System.Console.Out.WriteLine ("{0} ({1}), {2}", item.DisplayName, item.TypeName, item.FullPath);
+
+				item = FileManager.GetParentFolderItem (item, FolderDetailsMode.NoIcons);
+			}
+		}
+
+		[Test]
+		public void CheckGetParentFolderItem2()
+		{
+			FolderItem item = FileManager.CreateFolderItem (@"S:\Epsitec.Cresus\External", FolderDetailsMode.NoIcons);
+
+			while (!item.IsEmpty)
+			{
+				System.Console.Out.WriteLine ("{0} ({1}), {2}", item.DisplayName, item.TypeName, item.FullPath);
+
+				item = FileManager.GetParentFolderItem (item, FolderDetailsMode.NoIcons);
 			}
 		}
 	}

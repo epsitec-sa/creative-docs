@@ -21,5 +21,10 @@ namespace Epsitec.Common.Support.Platform
 		{
 			return Win32.FileInfo.GetFolderItems (path, mode);
 		}
+
+		public static FolderItem GetParentFolderItem(FolderItem path, FolderDetailsMode mode)
+		{
+			return Win32.FileInfo.GetParentFolderItem (path, mode);
+		}
 	}
 }
