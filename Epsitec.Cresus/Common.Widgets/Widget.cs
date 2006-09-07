@@ -2986,29 +2986,35 @@ namespace Epsitec.Common.Widgets
 		{
 			if (this.text_layout == null)
 			{
+				//	Create the text layout object first. This will automatically call
+				//	UpdateCaption back again, so we don't need to do anything else
+				//	here :
+
 				this.CreateTextLayout ();
 			}
-			
-			Caption caption = this.GetDisplayCaption ();
-
-			if (caption != null)
+			else
 			{
-				if (caption.HasLabels)
-				{
-					this.DefineTextFromCaption (TextLayout.SelectBestText (this.TextLayout, caption.SortedLabels, this.GetTextLayoutSize ()));
-				}
-				
-				if (caption.HasDescription)
-				{
-					Collections.ShortcutCollection shortcuts = Shortcut.GetShortcuts (caption);
-					string tip = Shortcut.AppendShortcutText (caption.Description, shortcuts);
+				Caption caption = this.GetDisplayCaption ();
 
-					this.DefineToolTipFromCaption (tip);
-				}
-
-				if (caption.HasIcon)
+				if (caption != null)
 				{
-					this.DefineIconFromCaption (caption.Icon);
+					if (caption.HasLabels)
+					{
+						this.DefineTextFromCaption (TextLayout.SelectBestText (this.TextLayout, caption.SortedLabels, this.GetTextLayoutSize ()));
+					}
+
+					if (caption.HasDescription)
+					{
+						Collections.ShortcutCollection shortcuts = Shortcut.GetShortcuts (caption);
+						string tip = Shortcut.AppendShortcutText (caption.Description, shortcuts);
+
+						this.DefineToolTipFromCaption (tip);
+					}
+
+					if (caption.HasIcon)
+					{
+						this.DefineIconFromCaption (caption.Icon);
+					}
 				}
 			}
 		}
