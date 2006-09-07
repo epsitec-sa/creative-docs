@@ -99,8 +99,7 @@ namespace Epsitec.Common.Support
 		
 		public Drawing.Image GetImage(string name, Support.ResourceManager resourceManager)
 		{
-			if ((name == null) ||
-				(name.Length < 1))
+			if (string.IsNullOrEmpty (name))
 			{
 				return null;
 			}
