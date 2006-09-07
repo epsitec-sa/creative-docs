@@ -328,7 +328,10 @@ namespace Epsitec.Common.Widgets
 			{
 				foreach (Shortcut shortcut in shortcuts)
 				{
-					return string.Format (Res.Strings.Shortcut.Template.TextWithShortcut, text, shortcut);
+					if (!shortcut.IsEmpty)
+					{
+						return string.Format (Res.Strings.Shortcut.Template.TextWithShortcut, text, shortcut);
+					}
 				}
 			}
 			

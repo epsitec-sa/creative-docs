@@ -3025,7 +3025,10 @@ namespace Epsitec.Common.Widgets
 
 		protected virtual void DefineIconFromCaption(string icon)
 		{
-//-			this.IconName = icon;
+			if (icon.EndsWith (".icon"))
+			{
+				this.IconName = icon;
+			}
 		}
 
 		protected virtual Drawing.Size GetTextLayoutSize()

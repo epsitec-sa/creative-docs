@@ -172,6 +172,7 @@
     <Compile Include="OpletQueue.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Platform\FileInfo.cs" />
     <Compile Include="Platform\FolderItemHandle.cs" />
     <Compile Include="Platform\Win32\FileInfo.cs" />
     <Compile Include="Platform\Win32\IEnumIDList.cs" />
