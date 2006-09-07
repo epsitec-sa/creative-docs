@@ -225,14 +225,20 @@ namespace Epsitec.Common.Support.Platform.Win32
 		
 		[DllImport ("shell32.dll", CharSet=CharSet.Unicode)]
 		public static extern System.IntPtr SHGetFileInfo(IntPtr pidl, uint dwFileAttributes, out SHFILEINFO psfi, int cbFileInfo, SHGFI uFlags);
-		
+
 		// Retrieves the path of a folder as an PIDL.
 		[DllImport ("shell32.dll")]
-		public static extern Int32 SHGetFolderLocation(
+		public static extern uint SHGetFolderLocation(
 			IntPtr hwndOwner,		// Handle to the owner window.
 			Int32 nFolder,			// A CSIDL value that identifies the folder to be located.
 			IntPtr hToken,			// Token that can be used to represent a particular user.
 			UInt32 dwReserved,		// Reserved.
+			out IntPtr ppidl);		// Address of a pointer to an item identifier list structure 
+		// Retrieves the path of a folder as an PIDL.
+		[DllImport ("shell32.dll")]
+		public static extern uint SHGetSpecialFolderLocation(
+			IntPtr hwndOwner,		// Handle to the owner window.
+			Int32 nFolder,			// A CSIDL value that identifies the folder to be located.
 			out IntPtr ppidl);		// Address of a pointer to an item identifier list structure 
 		// specifying the folder's location relative to the root of the namespace 
 		// (the desktop). 
@@ -248,6 +254,10 @@ namespace Epsitec.Common.Support.Platform.Win32
 		public static extern IntPtr ILCombine(
 			IntPtr pidlAbsolute,
 			IntPtr pidlRelative);
+
+		[DllImport ("shell32.dll")]
+		public static extern bool ILRemoveLastID(
+			IntPtr pidl);
 
 		// Takes the CSIDL of a folder and returns the pathname.
 		[DllImport ("shell32.dll")]
@@ -287,8 +297,8 @@ namespace Epsitec.Common.Support.Platform.Win32
 		[DllImport ("shell32.dll")]
 		public static extern Int32 SHBindToParent(
 			IntPtr pidl,			// The item's PIDL. 
-			[MarshalAs (UnmanagedType.LPStruct)]
-		Guid riid,				// The REFIID of one of the interfaces exposed by the item's parent object. 
+			[In]
+			ref Guid riid,				// The REFIID of one of the interfaces exposed by the item's parent object. 
 			out IntPtr ppv,			// A pointer to the interface specified by riid. You must release the object when 
 			// you are finished. 
 			ref IntPtr ppidlLast);	// The item's PIDL relative to the parent folder. This PIDL can be used with many

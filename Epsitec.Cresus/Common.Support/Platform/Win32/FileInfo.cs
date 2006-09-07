@@ -30,9 +30,26 @@ namespace Epsitec.Common.Support.Platform.Win32
 		public static FolderItem CreateFolderItem(FolderId file, FolderDetailsMode mode)
 		{
 			ShellApi.CSIDL csidl = FileInfo.GetCsidl (file);
-			System.IntPtr pidl = System.IntPtr.Zero;
-			ShellApi.SHGetFolderLocation (System.IntPtr.Zero, (short) csidl, System.IntPtr.Zero, 0, out pidl);
+			System.IntPtr  pidl  = System.IntPtr.Zero;
+			
+			uint result = ShellApi.SHGetFolderLocation (System.IntPtr.Zero, (short) csidl, System.IntPtr.Zero, 0, out pidl);
 
+			//	For some weird reason, I cannot get the shell folder location for "My Documents"
+			//	on my 2003 development machine. Here is a hack :
+			
+			if ((result != 0) &&
+				(result != 1))
+			{
+				if (csidl == ShellApi.CSIDL.CSIDL_MYDOCUMENTS)
+				{
+					return FileInfo.CreateFolderItem ("::{450d8fba-ad25-11d0-98a8-0800361b1103}", mode);
+				}
+				else
+				{
+					System.Diagnostics.Debug.WriteLine (string.Format ("Cannot map {0}, error code {1}", csidl, result.ToString ("X")));
+				}
+			}
+			
 			if (pidl == System.IntPtr.Zero)
 			{
 				return FolderItem.Empty;
@@ -63,6 +80,55 @@ namespace Epsitec.Common.Support.Platform.Win32
 			}
 
 			return FileInfo.CreateFolderItemAndInheritPidl (mode, pidl);
+		}
+
+		public static FolderItem GetParentFolderItem(FolderItem path, FolderDetailsMode mode)
+		{
+			PidlHandle handle = path.Handle as PidlHandle;
+			
+			if ((handle != PidlHandle.VirtualDesktopHandle) &&
+				(handle != null))
+			{
+#if false
+				System.IntPtr pidlPath = handle.Pidl;
+				System.IntPtr pidlLast = System.IntPtr.Zero;
+				System.IntPtr ptrParent;
+				
+				IShellFolder folder;
+				
+				ShellApi.SHBindToParent (pidlPath, ref ShellGuids.IID_IShellFolder, out ptrParent, ref pidlLast);
+				
+				//	There is no need to free the relative pidl (pidlLast), as documented on MSDN.
+
+				pidlLast = System.IntPtr.Zero;
+
+				if (ptrParent != System.IntPtr.Zero)
+				{
+					folder = System.Runtime.InteropServices.Marshal.GetTypedObjectForIUnknown (ptrParent, typeof (IShellFolder)) as IShellFolder;
+
+					
+					
+					//	TODO: ...
+
+					folder.
+					
+					System.Runtime.InteropServices.Marshal.ReleaseComObject (folder);
+				}
+#else
+				System.IntPtr pidl = ShellApi.ILCombine (handle.Pidl, System.IntPtr.Zero);
+				
+				if (ShellApi.ILRemoveLastID (pidl))
+				{
+					return FileInfo.CreateFolderItemAndInheritPidl (mode, pidl);
+				}
+				else
+				{
+					PidlHandle.FreePidl (pidl);
+				}
+#endif
+			}
+			
+			return FolderItem.Empty;
 		}
 		
 		public static IEnumerable<FolderItem> GetFolderItems(FolderItem path, FolderDetailsMode mode)

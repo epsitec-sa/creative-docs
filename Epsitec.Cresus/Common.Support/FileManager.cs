@@ -85,5 +85,10 @@ namespace Epsitec.Common.Support
 		{
 			return Platform.FileInfo.GetFolderItems (Platform.FileInfo.CreateFolderItem (path, FolderDetailsMode.NoIcons), mode);
 		}
+		
+		public static FolderItem GetParentFolderItem(FolderItem path, FolderDetailsMode mode)
+		{
+			return Platform.FileInfo.GetParentFolderItem (path, mode);
+		}
 	}
 }
