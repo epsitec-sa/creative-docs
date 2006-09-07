@@ -640,7 +640,7 @@ namespace Epsitec.Common.Support.Platform.Win32
 			SFGAO_ENCRYPTED=0x00002000,   // object is encrypted (use alt color)
 			SFGAO_ISSLOW=0x00004000,   // 'slow' object
 			SFGAO_GHOSTED=0x00008000,   // ghosted icon
-			SFGAO_LINK=0x00010000,   // Shortcut (link)
+			SFGAO_LINK=0x00010000,   // Shortcut (l1§ink)
 			SFGAO_SHARE=0x00020000,   // shared
 			SFGAO_READONLY=0x00040000,   // read-only
 			SFGAO_HIDDEN=0x00080000,   // hidden object

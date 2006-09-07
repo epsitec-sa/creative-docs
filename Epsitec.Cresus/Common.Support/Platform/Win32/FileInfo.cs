@@ -138,7 +138,7 @@ namespace Epsitec.Common.Support.Platform.Win32
 				folder = System.Runtime.InteropServices.Marshal.GetTypedObjectForIUnknown (ptrPath, typeof (IShellFolder)) as IShellFolder;
 			}
 
-			ShellApi.SHCONT flags = ShellApi.SHCONT.SHCONTF_FOLDERS | ShellApi.SHCONT.SHCONTF_NONFOLDERS;
+			ShellApi.SHCONT flags = ShellApi.SHCONT.SHCONTF_FOLDERS | ShellApi.SHCONT.SHCONTF_NONFOLDERS | ShellApi.SHCONT.SHCONTF_INCLUDEHIDDEN;
 
 			folder.EnumObjects (System.IntPtr.Zero, (int) flags, out ptrList);
 
@@ -183,8 +183,9 @@ namespace Epsitec.Common.Support.Platform.Win32
 
 			string displayName;
 			string typeName;
+			FolderItemAttributes attributes;
 
-			FileInfo.GetIconAndDescription (pidl, mode, out icon, out displayName, out typeName);
+			FileInfo.GetIconAndDescription (pidl, mode, out icon, out displayName, out typeName, out attributes);
 			ShellApi.SHGetPathFromIDList (pidl, buffer);
 			Drawing.Image image = null;
 
@@ -193,7 +194,7 @@ namespace Epsitec.Common.Support.Platform.Win32
 				image = Drawing.Bitmap.FromNativeIcon (icon);
 			}
 
-			return new FolderItem (image, displayName, typeName, buffer.ToString (), PidlHandle.Inherit (pidl));
+			return new FolderItem (image, displayName, typeName, buffer.ToString (), PidlHandle.Inherit (pidl), attributes);
 		}
 
 
@@ -230,11 +231,18 @@ namespace Epsitec.Common.Support.Platform.Win32
 
 		private static bool GetIconAndDescription(System.IntPtr pidl, FolderQueryMode mode, out System.Drawing.Icon icon, out string displayName, out string typeName)
 		{
+			FolderItemAttributes attributes;
+			return FileInfo.GetIconAndDescription (pidl, mode, out icon, out displayName, out typeName, out attributes);
+		}
+
+		private static bool GetIconAndDescription(System.IntPtr pidl, FolderQueryMode mode, out System.Drawing.Icon icon, out string displayName, out string typeName, out FolderItemAttributes attributes)
+		{
 			if (pidl == System.IntPtr.Zero)
 			{
 				icon        = null;
 				displayName = null;
 				typeName    = null;
+				attributes  = FolderItemAttributes.None;
 
 				return false;
 			}
@@ -256,6 +264,53 @@ namespace Epsitec.Common.Support.Platform.Win32
 
 			displayName = info.szDisplayName;
 			typeName    = info.szTypeName;
+
+			attributes = FolderItemAttributes.None;
+
+			if ((info.dwAttributes & (uint) ShellApi.SFGAO.SFGAO_BROWSABLE) != 0)
+			{
+				attributes |= FolderItemAttributes.Browsable;
+			}
+			if ((info.dwAttributes & (uint) ShellApi.SFGAO.SFGAO_CANCOPY) != 0)
+			{
+				attributes |= FolderItemAttributes.CanCopy;
+			}
+			if ((info.dwAttributes & (uint) ShellApi.SFGAO.SFGAO_CANDELETE) != 0)
+			{
+				attributes |= FolderItemAttributes.CanDelete;
+			}
+			if ((info.dwAttributes & (uint) ShellApi.SFGAO.SFGAO_CANMOVE) != 0)
+			{
+				attributes |= FolderItemAttributes.CanMove;
+			}
+			if ((info.dwAttributes & (uint) ShellApi.SFGAO.SFGAO_CANRENAME) != 0)
+			{
+				attributes |= FolderItemAttributes.CanRename;
+			}
+			if ((info.dwAttributes & (uint) ShellApi.SFGAO.SFGAO_COMPRESSED) != 0)
+			{
+				attributes |= FolderItemAttributes.Compressed;
+			}
+			if ((info.dwAttributes & (uint) ShellApi.SFGAO.SFGAO_ENCRYPTED) != 0)
+			{
+				attributes |= FolderItemAttributes.Encrypted;
+			}
+			if ((info.dwAttributes & (uint) ShellApi.SFGAO.SFGAO_HIDDEN) != 0)
+			{
+				attributes |= FolderItemAttributes.Hidden;
+			}
+			if ((info.dwAttributes & (uint) ShellApi.SFGAO.SFGAO_READONLY) != 0)
+			{
+				attributes |= FolderItemAttributes.ReadOnly;
+			}
+			if ((info.dwAttributes & (uint) ShellApi.SFGAO.SFGAO_SHARE) != 0)
+			{
+				attributes |= FolderItemAttributes.Shared;
+			}
+			if ((info.dwAttributes & (uint) ShellApi.SFGAO.SFGAO_LINK) != 0)
+			{
+				attributes |= FolderItemAttributes.Shortcut;
+			}
 
 			return true;
 		}
