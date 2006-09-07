@@ -37,6 +37,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 		public string InitialDirectory
 		{
+			//	Dossier initial.
 			get
 			{
 				return this.initialDirectory;
@@ -53,6 +54,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 		public string InitialFilename
 		{
+			//	Nom de fichier initial.
 			get
 			{
 				return this.initialFilename;
@@ -95,6 +97,50 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				}
 
 				return this.selectedFilenames;
+			}
+		}
+
+
+		protected void CreateAll(string name, Size windowSize, string title, double cellHeight)
+		{
+			//	Crée la fenêtre et tous les widgets pour peupler le dialogue.
+			this.window = new Window();
+			this.window.MakeSecondaryWindow();
+			this.window.PreventAutoClose = true;
+			this.WindowInit(name, windowSize.Width, windowSize.Height, true);
+			this.window.Text = title;
+			this.window.Owner = this.editor.Window;
+			this.window.Icon = Bitmap.FromManifestResource("Epsitec.App.DocumentEditor.Images.Application.icon", this.GetType().Assembly);
+			this.window.WindowCloseClicked += new EventHandler(this.HandleWindowCloseClicked);
+			this.window.Root.MinSize = new Size(300, 200);
+			this.window.Root.Padding = new Margins(8, 8, 8, 8);
+
+			this.CreateCommandDispatcher();
+			this.CreateResizer();
+			this.CreateAccess();
+			this.CreateTable(cellHeight);
+			this.CreateRename();
+			this.CreateFooter();
+			this.CreateFilename();
+		}
+
+		protected void UpdateAll(int initialSelection, bool focusInFilename)
+		{
+			//	Mise à jour lorsque les widgets sont déjà créés, avant de montrer le dialogue.
+			this.selectedFilename = null;
+			this.selectedFilenames = null;
+			this.UpdateTable(initialSelection);
+			this.UpdateInitialDirectory();
+			this.UpdateInitialFilename();
+
+			if (focusInFilename)
+			{
+				this.fieldFilename.SelectAll();
+				this.fieldFilename.Focus();  // focus pour frapper le nom du fichier à ouvrir
+			}
+			else
+			{
+				this.table.Focus();  // focus dans la liste des modèles
 			}
 		}
 
@@ -194,7 +240,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.fieldPath.ComboClosed += new EventHandler(this.HandleFieldPathComboClosed);
 			this.fieldPath.TextChanged += new EventHandler(this.HandleFieldPathTextChanged);
 
-
+			//	Il faut créer ces boutons dans l'ordre 'droite à gauche' !
 			IconButton buttonDelete = new IconButton(group);
 			buttonDelete.CommandObject = this.deleteState.Command;
 			buttonDelete.Dock = DockStyle.Right;
@@ -214,6 +260,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 		protected void CreateFilename()
 		{
+			//	Crée la partie permettant d'éditer le nom de fichier.
 			Widget group = new Widget(this.window.Root);
 			group.PreferredHeight = 20;
 			group.Margins = new Margins(0, 0, 8, 0);
@@ -238,7 +285,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 		protected void CreateFooter()
 		{
-			//	Crée le pied du dialogue, avec les boutons 'ouvrir' et 'annuler'.
+			//	Crée le pied du dialogue, avec les boutons 'ouvrir/enregistrer' et 'annuler'.
 			Widget footer = new Widget(this.window.Root);
 			footer.PreferredHeight = 22;
 			footer.Margins = new Margins(0, 0, 8, 0);
