@@ -104,19 +104,25 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.dispatcher = new CommandDispatcher();
 			this.context = new CommandContext();
 
-			this.renameState = this.CreateCommandState("[3004]", this.RenameStarting); //<--
-			this.deleteState = this.CreateCommandState("[3005]", this.FileDelete); //<--
+			//	Les Druids utilisés ici sont de la forme [MMDL].
+			//	MM: numéro de module, voir dans App.DocumentEditor/Resources/App/module.info
+			//	D: numéro du développeur
+			//	L: numéro local, voir dans App.DocumentEditor/Resources/App/Captions.00.resource
+			this.parentState = this.CreateCommandState("[3001]", this.ParentDirectory);
+			this.newState    = this.CreateCommandState("[3003]", this.NewDirectory);
+			this.renameState = this.CreateCommandState("[3004]", this.RenameStarting);
+			this.deleteState = this.CreateCommandState("[3005]", this.FileDelete);
 
 			CommandDispatcher.SetDispatcher(this.window, this.dispatcher);
-			CommandContext.SetContext(this.window, this.context);				//<--
+			CommandContext.SetContext(this.window, this.context);
 		}
 
 		protected CommandState CreateCommandState(string commandDruid, SimpleCallback handler)
 		{
-			Command command = Command.Get(commandDruid);						//<--
+			Command command = Command.Get(commandDruid);
 			this.dispatcher.Register(command, handler);
 
-			return this.context.GetCommandState(command);						//<--
+			return this.context.GetCommandState(command);
 		}
 
 
@@ -189,42 +195,21 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.fieldPath.TextChanged += new EventHandler(this.HandleFieldPathTextChanged);
 
 
-#if false
-			this.buttonDelete = new IconButton(group);
-			this.buttonDelete.IconName = Misc.Icon("FileDelete");
-			this.buttonDelete.Dock = DockStyle.Right;
-			this.buttonDelete.Clicked += new MessageEventHandler(this.HandleButtonDeleteClicked);
-			ToolTip.Default.SetToolTip(this.buttonDelete, Res.Strings.Dialog.Open.Delete);
-
-			this.buttonRename = new IconButton(group);
-			this.buttonRename.IconName = Misc.Icon("FileRename");
-			this.buttonRename.Dock = DockStyle.Right;
-			this.buttonRename.Clicked += new MessageEventHandler(this.HandleButtonRenameClicked);
-			ToolTip.Default.SetToolTip(this.buttonRename, Res.Strings.Dialog.Open.Rename);
-#else
-			IconButton buttonRename;
-			IconButton buttonDelete;
-			
-			buttonDelete = new IconButton (group);
+			IconButton buttonDelete = new IconButton(group);
 			buttonDelete.CommandObject = this.deleteState.Command;
 			buttonDelete.Dock = DockStyle.Right;
-			
-			buttonRename = new IconButton (group);
+
+			IconButton buttonRename = new IconButton(group);
 			buttonRename.CommandObject = this.renameState.Command;
 			buttonRename.Dock = DockStyle.Right;
-#endif
 
-			this.buttonNew = new IconButton(group);
-			this.buttonNew.IconName = Misc.Icon("NewDirectory");
-			this.buttonNew.Dock = DockStyle.Right;
-			this.buttonNew.Clicked += new MessageEventHandler(this.HandleButtonNewClicked);
-			ToolTip.Default.SetToolTip(this.buttonNew, Res.Strings.Dialog.Open.NewDirectory);
+			IconButton buttonNew = new IconButton(group);
+			buttonNew.CommandObject = this.newState.Command;
+			buttonNew.Dock = DockStyle.Right;
 
-			this.buttonParent = new IconButton(group);
-			this.buttonParent.IconName = Misc.Icon("ParentDirectory");
-			this.buttonParent.Dock = DockStyle.Right;
-			this.buttonParent.Clicked += new MessageEventHandler(this.HandleButtonParentClicked);
-			ToolTip.Default.SetToolTip(this.buttonParent, Res.Strings.Dialog.Open.ParentDirectory);
+			IconButton buttonParent = new IconButton(group);
+			buttonParent.CommandObject = this.parentState.Command;
+			buttonParent.Dock = DockStyle.Right;
 		}
 
 		protected void CreateFilename()
@@ -471,17 +456,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		protected void UpdateButtons()
 		{
 			//	Met à jour les boutons en fonction du fichier sélectionné dans la liste.
-#if false
-			if (this.buttonRename != null)
-			{
-				int sel = this.table.SelectedRow;
-				bool enable = (sel != -1 && this.files[sel].Filename != Common.Document.Settings.GlobalSettings.NewEmptyDocument);
-				this.buttonRename.Enable = enable;
-				this.buttonDelete.Enable = enable;
-			}
-#else
-			if ((this.renameState != null) &&
-				(this.deleteState != null))
+			if (this.renameState != null &&
+				this.deleteState != null)
 			{
 				int sel = this.table.SelectedRow;
 				bool enable = (sel != -1 && this.files[sel].Filename != Common.Document.Settings.GlobalSettings.NewEmptyDocument);
@@ -489,7 +465,6 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.renameState.Enable = enable;
 				this.deleteState.Enable = enable;
 			}
-#endif
 		}
 
 		protected void UpdateInitialDirectory()
@@ -1370,12 +1345,6 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		protected CellTable					table;
 		protected HSlider					slider;
 		protected TextFieldCombo			fieldPath;
-		protected IconButton				buttonParent;
-		protected IconButton				buttonNew;
-#if false
-		protected IconButton				buttonRename;
-		protected IconButton				buttonDelete;
-#endif
 		protected TextField					fieldFilename;
 		protected TextFieldEx				fieldRename;
 
@@ -1399,6 +1368,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		protected int						comboSelected;
 		protected CommandDispatcher			dispatcher;
 		protected CommandContext			context;
+		protected CommandState				parentState;
+		protected CommandState				newState;
 		protected CommandState				renameState;
 		protected CommandState				deleteState;
 	}

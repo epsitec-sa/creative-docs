@@ -817,7 +817,7 @@
   <data name="Action.CloseAll" id="0OO">Fermer tout</data>
   <data name="Action.Save" id="0PO">Enregistrer</data>
   <data name="Action.SaveAs" id="0QO">Enregistrer sous...</data>
-  <data name="Action.SaveModel" id="0RO">Enregistrer modèle...</data>
+  <data name="Action.SaveModel" id="0RO" mod="1">Enregistrer en tant que modèle...</data>
   <data name="Action.Print" id="0SO">Imprimer...</data>
   <data name="Action.Export" id="0TO">Exporter...</data>
   <data name="Action.LastModels" id="0V901" mod="1">Modèles récents</data>
