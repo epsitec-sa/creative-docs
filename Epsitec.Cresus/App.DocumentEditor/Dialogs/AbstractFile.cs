@@ -1101,10 +1101,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		private void HandleFieldPathComboOpening(object sender, CancelEventArgs e)
 		{
 			//	Le menu pour le chemin d'accès va être ouvert.
-			this.comboTexts = new List<string>();
-			this.comboFolders = new List<FolderItem>();
-
-			this.fieldPath.Items.Clear();
+			this.comboFolders = new List<Item>();
 
 			FolderItem computer = FileManager.GetFolderItem(FolderId.VirtualMyComputer, FolderQueryMode.NoIcons);
 			FolderItem desktop = FileManager.GetFolderItem(FolderId.VirtualDesktop, FolderQueryMode.NoIcons);
@@ -1115,10 +1112,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 					continue;
 				}
 
-				string text = item.DisplayName;
-				this.fieldPath.Items.Add(text);
-				this.comboTexts.Add(text);
-				this.comboFolders.Add(item);
+				this.ComboAdd(item);
 
 				if (item.DisplayName == computer.DisplayName)
 				{
@@ -1129,33 +1123,41 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 							continue;
 						}
 
-						text = AbstractFile.AddStringIndent(subItem.DisplayName, 1);
-						this.fieldPath.Items.Add(text);
-						this.comboTexts.Add(text);
-						this.comboFolders.Add(subItem);
+						this.ComboAdd(subItem);
 					}
 				}
+			}
 
-#if false
-				if (this.initialFolder.FullPath.StartsWith(item.FullPath))
-				{
-					int index = this.fieldPath.Items.Count;
-					int indent = 1;
-					FolderItem current = this.initialFolder;
-					while (item.FullPath != current.FullPath)
-					{
-						text = AbstractFile.AddStringIndent(current.DisplayName, indent++);
-						this.fieldPath.Items.Insert(index, text);
-						this.comboTexts.Insert(index, text);
-						this.comboFolders.Insert(index, current);
+			FolderItem folder = this.initialFolder;
+			while (!folder.IsEmpty)
+			{
+				this.ComboAdd(folder);
 
-						current = FileManager.GetParentFolderItem(current, FolderQueryMode.NoIcons);
-					}
-				}
-#endif
+				folder = FileManager.GetParentFolderItem(folder, FolderQueryMode.NoIcons);
+			}
+
+			this.comboFolders.Sort();
+
+
+			this.fieldPath.Items.Clear();
+			this.comboTexts = new List<string>();
+
+			foreach (Item cell in this.comboFolders)
+			{
+				string text = AbstractFile.AddStringIndent(cell.ShortFilename, cell.Level);
+				this.fieldPath.Items.Add(text);
+				this.comboTexts.Add(text);
 			}
 
 			this.comboSelected = -1;
+		}
+
+		protected void ComboAdd(FolderItem folderItem)
+		{
+			//	TODO: vérifier si la liste ne contient pas déjà folderItem !
+			Item item = new Item(folderItem, this.isModel);
+			item.SortAccordingToLevel = true;
+			this.comboFolders.Add(item);
 		}
 
 		private void HandleFieldPathComboClosed(object sender)
@@ -1163,7 +1165,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			//	Le menu pour le chemin d'accès a été fermé.
 			if (this.comboSelected != -1)
 			{
-				this.SetInitialFolder(this.comboFolders[this.comboSelected]);
+				this.SetInitialFolder(this.comboFolders[this.comboSelected].FolderItem);
 				this.UpdateTable(-1);
 			}
 		}
@@ -1475,6 +1477,41 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				return null;
 			}
 
+			public bool SortAccordingToLevel
+			{
+				//	Indique si le tri doit tenir compte du niveau (lent).
+				get
+				{
+					return this.sortAccordingToLevel;
+				}
+				set
+				{
+					this.sortAccordingToLevel = value;
+				}
+			}
+
+			public int Level
+			{
+				//	Retourne le niveau d'imbrication du dossier.
+				//	Pour un dossier du bureau, le niveau est 0.
+				//	Pour un dossier du poste de travail, le niveau est 1.
+				//	Un cache évite de recalculer le niveau chaque fois !
+				get
+				{
+					if (this.level == -1)  // niveau pas encore connu ?
+					{
+						FolderItem item = this.folderItem;
+						while (!item.IsEmpty)
+						{
+							item = FileManager.GetParentFolderItem(item, FolderQueryMode.NoIcons);
+							this.level++;
+						}
+					}
+
+					return this.level;  // retourne le niveau connu
+				}
+			}
+
 			protected byte[] ReadStatistics()
 			{
 				//	Lit les données des statistiques associée au fichier.
@@ -1500,6 +1537,15 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			{
 				Item that = obj as Item;
 
+				if (this.sortAccordingToLevel)
+				{
+					int cl = this.Level.CompareTo(that.Level);
+					if (cl != 0)
+					{
+						return cl;
+					}
+				}
+
 				if (this.isNewEmptyDocument != that.isNewEmptyDocument)
 				{
 					return this.isNewEmptyDocument ? -1 : 1;  // 'nouveau document vide' au début
@@ -1510,10 +1556,10 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 					return this.IsDirectory ? -1 : 1;  // dossiers avant les fichiers
 				}
 
-				int r = this.folderItem.TypeName.CompareTo(that.folderItem.TypeName);
-				if (r != 0)
+				int ct = this.folderItem.TypeName.CompareTo(that.folderItem.TypeName);
+				if (ct != 0)
 				{
-					return r;
+					return ct;
 				}
 
 				string f1 = this.ShortFilename.ToLower();
@@ -1525,6 +1571,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			protected FolderItem				folderItem;
 			protected bool						isModel;
 			protected bool						isNewEmptyDocument;
+			protected bool						sortAccordingToLevel = false;
+			protected int						level = -1;
 		}
 		#endregion
 
@@ -1555,7 +1603,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		protected bool						ignoreChanged = false;
 		protected List<FolderItem>			favoritesList;
 		protected List<FolderItem>			favoritesVisited;
-		protected List<FolderItem>			comboFolders;
+		protected List<Item>				comboFolders;
 		protected List<string>				comboTexts;
 		protected int						comboSelected;
 		protected CommandDispatcher			dispatcher;
