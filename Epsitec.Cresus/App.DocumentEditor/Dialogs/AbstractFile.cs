@@ -377,8 +377,11 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 			string path;
 
-			path = string.Concat(Common.Support.Globals.Directories.Executable, "\\Samples");
-			this.FavouritesAdd("Exemples Epsitec", "FileTypeEpsitecSamples", path);
+			if (!this.isSave)
+			{
+				path = string.Concat(Common.Support.Globals.Directories.Executable, "\\Samples");
+				this.FavouritesAdd("Exemples Epsitec", "FileTypeEpsitecSamples", path);
+			}
 
 			path = Common.Support.Globals.Directories.UserAppData;
 			int i = path.LastIndexOf("\\");
