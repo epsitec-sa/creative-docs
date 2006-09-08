@@ -1001,6 +1001,16 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		}
 
 
+		protected static string StringIndent(string text, int level)
+		{
+			while (level > 0)
+			{
+				text = "   "+text;
+				level--;
+			}
+			return text;
+		}
+
 		protected static string GetIllustredPath(string path)
 		{
 			//	Retourne le chemin illustré.
@@ -1175,6 +1185,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 			this.fieldPath.Items.Clear();
 
+			FolderItem computer = FileManager.GetFolderItem(FolderId.VirtualMyComputer, FolderQueryMode.NoIcons);
 			FolderItem desktop = FileManager.GetFolderItem(FolderId.VirtualDesktop, FolderQueryMode.NoIcons);
 			foreach (FolderItem item in FileManager.GetFolderItems(desktop, FolderQueryMode.NoIcons))
 			{
@@ -1188,31 +1199,36 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.comboTexts.Add(text);
 				this.comboFolders.Add(item);
 
-#if false
-				if (this.initialDirectory.Length > 3 && this.initialDirectory.StartsWith(drive.Name))
+				if (item.DisplayName == computer.DisplayName)
 				{
-					string[] dirs = this.initialDirectory.Split('\\');
-					for (int i=1; i<dirs.Length; i++)
+					foreach (FolderItem subItem in FileManager.GetFolderItems(item, FolderQueryMode.NoIcons))
 					{
-						string dir = "";
-						text = "";
-						for (int j=0; j<=i; j++)
+						if (!subItem.IsFolder)
 						{
-							dir += dirs[j]+"\\";
-							text += "   ";
+							continue;
 						}
-						text += Misc.Image("FileTypeDirectory");
-						text += " ";
-						text += dirs[i];
 
+						text = AbstractFile.StringIndent(subItem.DisplayName, 1);
 						this.fieldPath.Items.Add(text);
 						this.comboTexts.Add(text);
+						this.comboFolders.Add(subItem);
+					}
+				}
 
-						if (dir.Length > 3 && dir.EndsWith("\\"))
-						{
-							dir = dir.Substring(0, dir.Length-1);
-						}
-						this.comboDirectories.Add(dir);
+#if false
+				if (this.initialFolder.FullPath.StartsWith(item.FullPath))
+				{
+					int index = this.fieldPath.Items.Count;
+					int indent = 1;
+					FolderItem current = this.initialFolder;
+					while (item.FullPath != current.FullPath)
+					{
+						text = AbstractFile.StringIndent(current.DisplayName, indent++);
+						this.fieldPath.Items.Insert(index, text);
+						this.comboTexts.Insert(index, text);
+						this.comboFolders.Insert(index, current);
+
+						current = FileManager.GetParentFolderItem(current, FolderQueryMode.NoIcons);
 					}
 				}
 #endif
