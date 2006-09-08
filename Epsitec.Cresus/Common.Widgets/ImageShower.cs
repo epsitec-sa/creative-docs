@@ -75,6 +75,19 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		public bool PaintFrame
+		{
+			get
+			{
+				return this.paintFrame;
+			}
+
+			set
+			{
+				this.paintFrame = value;
+			}
+		}
+
 
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
@@ -117,9 +130,12 @@ namespace Epsitec.Common.Widgets
 
 				graphics.PaintImage(this.image, rect);
 
-				rect.Deflate(0.5);
-				graphics.AddRectangle(rect);
-				graphics.RenderSolid(adorner.ColorBorder);
+				if (this.paintFrame)
+				{
+					rect.Deflate(0.5);
+					graphics.AddRectangle(rect);
+					graphics.RenderSolid(adorner.ColorBorder);
+				}
 			}
 		}
 
@@ -127,6 +143,7 @@ namespace Epsitec.Common.Widgets
 		protected string							fixIcon;
 		protected TextLayout						textLayout;
 		protected bool								crossIfNoImage = true;
+		protected bool								paintFrame = true;
 	}
 }
 
