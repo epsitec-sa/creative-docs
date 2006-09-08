@@ -64,6 +64,20 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		public bool StretchImage
+		{
+			//	Stretch les images en fonction de la place disponible.
+			get
+			{
+				return this.stretchImage;
+			}
+
+			set
+			{
+				this.stretchImage = value;
+			}
+		}
+
 		public bool PaintFrame
 		{
 			//	Cadre éventuel.
@@ -85,7 +99,7 @@ namespace Epsitec.Common.Widgets
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
 			Drawing.Rectangle rect = this.Client.Bounds;
 
-			if (this.image == null)
+			if (this.image == null)  // icône fixe ?
 			{
 				if (this.textLayout != null)
 				{
@@ -93,25 +107,32 @@ namespace Epsitec.Common.Widgets
 					this.textLayout.Paint(rect.BottomLeft, graphics);
 				}
 			}
-			else
+			else  // image ?
 			{
 				double w = this.image.Width;
 				double h = this.image.Height;
 
-				if (rect.Width/rect.Height < w/h)
+				if (this.stretchImage)
 				{
-					double hh = rect.Height - rect.Width*h/w;
-					rect.Bottom += hh/2;
-					rect.Top    -= hh/2;
+					if (rect.Width/rect.Height < w/h)
+					{
+						double hh = rect.Height - rect.Width*h/w;
+						rect.Bottom += hh/2;
+						rect.Top    -= hh/2;
+					}
+					else
+					{
+						double ww = rect.Width - rect.Height*w/h;
+						rect.Left  += ww/2;
+						rect.Right -= ww/2;
+					}
 				}
 				else
 				{
-					double ww = rect.Width - rect.Height*w/h;
-					rect.Left  += ww/2;
-					rect.Right -= ww/2;
+					rect = new Rectangle(rect.Center.X-w/2, rect.Center.Y-h/2, w, h);
 				}
-				graphics.Align(ref rect);
 
+				graphics.Align(ref rect);
 				graphics.PaintImage(this.image, rect);
 			}
 
@@ -127,6 +148,7 @@ namespace Epsitec.Common.Widgets
 		protected string							fixIcon;
 		protected TextLayout						textLayout;
 		protected bool								paintFrame = false;
+		protected bool								stretchImage = false;
 	}
 }
 
