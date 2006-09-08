@@ -611,6 +611,15 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.UpdateButtons();
 		}
 
+		protected bool UseLargeIcons
+		{
+			//	Indique si la hauteur des lignes permet l'usage des grandes icônes.
+			get
+			{
+				return (this.table.DefHeight >= 32);
+			}
+		}
+
 		protected void ListFilenames()
 		{
 			//	Effectue la liste des fichiers contenus dans le dossier adhoc.
@@ -621,7 +630,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.files.Add(new Item());  // première ligne avec 'nouveau document vide'
 			}
 
-			foreach (FolderItem item in FileManager.GetFolderItems(this.initialFolder, FolderQueryMode.SmallIcons))
+			FolderQueryMode mode = this.UseLargeIcons ? FolderQueryMode.LargeIcons : FolderQueryMode.SmallIcons;
+			foreach (FolderItem item in FileManager.GetFolderItems(this.initialFolder, mode))
 			{
 				if (item.IsHidden)
 				{
@@ -1175,6 +1185,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		private void HandleSliderChanged(object sender)
 		{
 			//	Slider pour la taille des miniatures changé.
+			bool initialMode = this.UseLargeIcons;
+
 			this.table.DefHeight = (double) this.slider.Value;
 			this.table.HeaderHeight = 20;
 
@@ -1183,7 +1195,14 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.table.SetHeightRow(i, this.table.DefHeight);
 			}
 
-			this.table.ShowSelect();
+			if (initialMode == this.UseLargeIcons)
+			{
+				this.table.ShowSelect();
+			}
+			else
+			{
+				this.UpdateTable(this.table.SelectedRow);
+			}
 		}
 
 		protected void HandleWindowCloseClicked(object sender)
