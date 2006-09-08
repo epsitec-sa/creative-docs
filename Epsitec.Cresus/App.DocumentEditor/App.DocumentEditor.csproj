@@ -176,14 +176,9 @@
     <EmbeddedResource Include="Images\FileTypeMySamples.icon" />
     <Content Include="Resources\App\Captions.00.resource" />
     <Content Include="Resources\App\Captions.en.resource" />
-    <EmbeddedResource Include="Images\FileTypeFixed.icon" />
-    <EmbeddedResource Include="Images\FileTypeNetwork.icon" />
-    <EmbeddedResource Include="Images\FileTypeRemovable.icon" />
-    <EmbeddedResource Include="Images\FileTypeCDRom.icon" />
     <EmbeddedResource Include="Images\FileRename.icon" />
     <EmbeddedResource Include="Images\FileDelete.icon" />
     <EmbeddedResource Include="Images\NewDirectory.icon" />
-    <EmbeddedResource Include="Images\FileTypeDirectory.icon" />
     <EmbeddedResource Include="Images\ParentDirectory.icon" />
     <EmbeddedResource Include="Images\ImageHomo.icon" />
     <EmbeddedResource Include="Images\ImageFilter.icon" />

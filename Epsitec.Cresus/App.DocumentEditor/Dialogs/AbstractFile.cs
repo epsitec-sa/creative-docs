@@ -537,7 +537,6 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 						if (column == 0)  // miniature ?
 						{
 							im = new ImageShower();
-							im.CrossIfNoImage = false;
 							im.Dock = DockStyle.Fill;
 							im.Margins = new Margins(1, 1, 1, 1);
 							this.table[column, row].Insert(im);
@@ -581,6 +580,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				{
 					im.FixIcon = Misc.Icon(fixIcon);
 					im.DrawingImage = null;
+					im.PaintFrame = false;
 				}
 
 				st = this.table[1, row].Children[0] as StaticText;
@@ -1365,15 +1365,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 					}
 					else
 					{
-						if (this.IsDirectory)
-						{
-							//?return "FileTypeDirectory";
-							return null;
-						}
-						else
-						{
-							return null;
-						}
+						return null;
 					}
 				}
 			}
@@ -1491,6 +1483,12 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				if (this.IsDirectory != that.IsDirectory)
 				{
 					return this.IsDirectory ? -1 : 1;  // dossiers avant les fichiers
+				}
+
+				int r = this.folderItem.TypeName.CompareTo(that.folderItem.TypeName);
+				if (r != 0)
+				{
+					return r;
 				}
 
 				string f1 = this.ShortFilename.ToLower();

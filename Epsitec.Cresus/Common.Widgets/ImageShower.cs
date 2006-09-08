@@ -24,6 +24,7 @@ namespace Epsitec.Common.Widgets
 
 		public Drawing.Image DrawingImage
 		{
+			//	Image bitmap à afficher.
 			get
 			{
 				return this.image;
@@ -37,6 +38,7 @@ namespace Epsitec.Common.Widgets
 
 		public string FixIcon
 		{
+			//	Icône fixe éventuelle, à la place d'une image.
 			get
 			{
 				return this.fixIcon;
@@ -62,21 +64,9 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public bool CrossIfNoImage
-		{
-			get
-			{
-				return this.crossIfNoImage;
-			}
-
-			set
-			{
-				this.crossIfNoImage = value;
-			}
-		}
-
 		public bool PaintFrame
 		{
+			//	Cadre éventuel.
 			get
 			{
 				return this.paintFrame;
@@ -102,12 +92,6 @@ namespace Epsitec.Common.Widgets
 					this.textLayout.LayoutSize = rect.Size;
 					this.textLayout.Paint(rect.BottomLeft, graphics);
 				}
-				else if (this.crossIfNoImage)
-				{
-					graphics.AddLine(rect.BottomLeft, rect.TopRight);
-					graphics.AddLine(rect.BottomRight, rect.TopLeft);
-					graphics.RenderSolid(adorner.ColorBorder);
-				}
 			}
 			else
 			{
@@ -129,21 +113,20 @@ namespace Epsitec.Common.Widgets
 				graphics.Align(ref rect);
 
 				graphics.PaintImage(this.image, rect);
+			}
 
-				if (this.paintFrame)
-				{
-					rect.Deflate(0.5);
-					graphics.AddRectangle(rect);
-					graphics.RenderSolid(adorner.ColorBorder);
-				}
+			if (this.paintFrame)
+			{
+				rect.Deflate(0.5);
+				graphics.AddRectangle(rect);
+				graphics.RenderSolid(adorner.ColorBorder);
 			}
 		}
 
 		protected Drawing.Image						image;
 		protected string							fixIcon;
 		protected TextLayout						textLayout;
-		protected bool								crossIfNoImage = true;
-		protected bool								paintFrame = true;
+		protected bool								paintFrame = false;
 	}
 }
 
