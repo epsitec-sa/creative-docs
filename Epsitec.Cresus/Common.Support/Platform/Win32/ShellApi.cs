@@ -379,18 +379,22 @@ namespace Epsitec.Common.Support.Platform.Win32
 			IntPtr dwItem1,					// First event-dependent value. 
 			IntPtr dwItem2);				// Second event-dependent value. 
 
+		
+		public const uint SHARD_PIDL	= 0x0001;
+		public const uint SHARD_PATHW	= 0x0003;
+
 		// Adds a document to the Shell's list of recently used documents or clears all documents from the list. 
 		[DllImport ("shell32.dll")]
 		public static extern void SHAddToRecentDocs(
-			UInt32 uFlags,					// Flag that indicates the meaning of the pv parameter.
+			uint uFlags,					// Flag that indicates the meaning of the pv parameter.
 			IntPtr pv);						// A pointer to either a null-terminated string with the path and file name 
 		// of the document, or a PIDL that identifies the document's file object. 
 		// Set this parameter to NULL to clear all documents from the list. 
 		[DllImport ("shell32.dll")]
 		public static extern void SHAddToRecentDocs(
-			UInt32 uFlags,
+			uint uFlags,
 			[MarshalAs (UnmanagedType.LPWStr)]
-		String pv);
+			string pv);
 
 		// Executes a command on a printer object. 
 		[DllImport ("shell32.dll")]
