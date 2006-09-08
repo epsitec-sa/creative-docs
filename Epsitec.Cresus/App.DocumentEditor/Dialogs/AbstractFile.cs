@@ -556,10 +556,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 			foreach (FolderItem item in FileManager.GetFolderItems(this.initialDirectory, FolderQueryMode.NoIcons))
 			{
-				if (item.DisplayName.EndsWith(this.fileExtension))
-				{
-					this.files.Add(new Item(item.DisplayName, false, this.isModel));
-				}
+				this.files.Add(new Item(item.DisplayName, item.IsFolder, this.isModel));
 			}
 
 
@@ -1334,14 +1331,11 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 					}
 					else
 					{
-						long size = 0;
+						System.IO.FileInfo info = new System.IO.FileInfo (this.filename);
 
-						using (System.IO.FileStream stream = System.IO.File.OpenRead(this.filename))
-						{
-							size = stream.Length;
-						}
-
-						size = (size+500)/1000;
+						long size = info.Exists ? info.Length : 0;
+						
+						size = (size+500)/1024;
 						return string.Format(Res.Strings.Dialog.File.Size, size.ToString());
 					}
 				}
