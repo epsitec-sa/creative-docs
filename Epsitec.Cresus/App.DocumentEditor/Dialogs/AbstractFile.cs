@@ -574,6 +574,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				if (fixIcon == null)
 				{
 					im.DrawingImage = this.files[row].Image;
+					im.PaintFrame = !this.files[row].IsDirectory;
 					im.FixIcon = null;
 				}
 				else
@@ -619,7 +620,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.files.Add(new Item());  // première ligne avec 'nouveau document vide'
 			}
 
-			foreach (FolderItem item in FileManager.GetFolderItems(this.initialFolder, FolderQueryMode.NoIcons))
+			foreach (FolderItem item in FileManager.GetFolderItems(this.initialFolder, FolderQueryMode.SmallIcons))
 			{
 				if (!item.IsFolder)  // fichier ?
 				{
@@ -667,7 +668,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			if (this.fieldPath != null)
 			{
 				this.ignoreChanged = true;
-				//?this.fieldPath.Text = AbstractFile.RemoveStartingSpaces(AbstractFile.GetIllustredPath(this.initialFolder.FullPath));
+				//?this.fieldPath.Text = AbstractFile.RemoveStartingIndent(AbstractFile.GetIllustredPath(this.initialFolder.FullPath));
 				this.fieldPath.Text = this.initialFolder.DisplayName;
 				this.UpdateSelectedFavorites();
 				this.ignoreChanged = false;
@@ -1001,8 +1002,9 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		}
 
 
-		protected static string StringIndent(string text, int level)
+		protected static string AddStringIndent(string text, int level)
 		{
+			//	Ajoute des niveaux d'indentation au début d'un texte.
 			while (level > 0)
 			{
 				text = "   "+text;
@@ -1011,109 +1013,12 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			return text;
 		}
 
-		protected static string GetIllustredPath(string path)
+		protected static string RemoveStartingIndent(string text)
 		{
-			//	Retourne le chemin illustré.
-			path = TextLayout.ConvertToTaggedText(path);
-
-			if (path.Length == 3 && path.EndsWith(":\\"))  // "C:\" ?
+			//	Supprime tous les niveaux d'indentation au début d'un texte.
+			while (text.StartsWith("   "))
 			{
-				System.IO.DriveType type = AbstractFile.GetDriveType(path);
-				return string.Concat(AbstractFile.GetImageDriveType(type), " ", path);
-			}
-
-			if (path.EndsWith(":\\)"))  // "Travail (D:\)" ?
-			{
-				string drive = path.Substring(path.Length-4, 3);  // garde "D:\"
-				System.IO.DriveType type = AbstractFile.GetDriveType(drive);
-				return string.Concat(AbstractFile.GetImageDriveType(type), " ", path);
-			}
-
-			string[] dirs = path.Split('\\');
-			if (dirs.Length != 0)
-			{
-				string text = "";
-				for (int i=0; i<dirs.Length-1; i++)
-				{
-					text += "   ";
-				}
-
-				text += Misc.Image("FileTypeDirectory");
-				text += " ";
-				text += dirs[dirs.Length-1];
-				return text;
-			}
-
-			return path;
-		}
-
-		protected static System.IO.DriveType GetDriveType(string drive)
-		{
-			return DriveType.Fixed;
-		}
-
-		protected static string GetImageDriveType(System.IO.DriveType type)
-		{
-			switch (type)
-			{
-				case DriveType.CDRom:
-					return Misc.Image("FileTypeCDRom");
-
-				case DriveType.Network:
-					return Misc.Image("FileTypeNetword");
-
-				case DriveType.Removable:
-					return Misc.Image("FileTypeRemovable");
-			}
-
-			return Misc.Image("FileTypeFixed");
-		}
-
-		protected static string GetIllustredDriveString(System.IO.DriveInfo drive)
-		{
-			//	Retourne le texte illustré à utiliser pour un drive donné.
-			System.Text.StringBuilder builder = new System.Text.StringBuilder();
-
-			builder.Append(AbstractFile.GetImageDriveType(drive.DriveType));
-			builder.Append(" ");
-
-			try
-			{
-				builder.Append(drive.VolumeLabel);
-				builder.Append(" (");
-				builder.Append(drive.Name);
-				builder.Append(")");
-			}
-			catch
-			{
-				builder.Append(drive.Name);
-			}
-
-			return builder.ToString();
-		}
-
-		protected static string RemoveStartingSpaces(string text)
-		{
-			//	Supprime tous les espaces au début d'un texte.
-			while (text.StartsWith(" "))
-			{
-				text = text.Substring(1);
-			}
-
-			return text;
-		}
-
-		protected static string RemoveTagImage(string text)
-		{
-			//	Supprime le tag "<img ... />" contenu dans un texte.
-			int start = text.IndexOf("<img ");
-			if (start != -1)
-			{
-				int end = text.IndexOf("/>", start);
-				if (end != -1)
-				{
-					text = text.Remove(start, end-start+2);
-				}
+				text = text.Substring(3);
 			}
 
 			return text;
@@ -1208,7 +1113,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 							continue;
 						}
 
-						text = AbstractFile.StringIndent(subItem.DisplayName, 1);
+						text = AbstractFile.AddStringIndent(subItem.DisplayName, 1);
 						this.fieldPath.Items.Add(text);
 						this.comboTexts.Add(text);
 						this.comboFolders.Add(subItem);
@@ -1223,7 +1128,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 					FolderItem current = this.initialFolder;
 					while (item.FullPath != current.FullPath)
 					{
-						text = AbstractFile.StringIndent(current.DisplayName, indent++);
+						text = AbstractFile.AddStringIndent(current.DisplayName, indent++);
 						this.fieldPath.Items.Insert(index, text);
 						this.comboTexts.Insert(index, text);
 						this.comboFolders.Insert(index, current);
@@ -1257,7 +1162,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 			this.ignoreChanged = true;
 			this.comboSelected = this.comboTexts.IndexOf(this.fieldPath.Text);
-			this.fieldPath.Text = AbstractFile.RemoveStartingSpaces(this.fieldPath.Text);
+			this.fieldPath.Text = AbstractFile.RemoveStartingIndent(this.fieldPath.Text);
 			this.ignoreChanged = false;
 		}
 
@@ -1462,7 +1367,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 					{
 						if (this.IsDirectory)
 						{
-							return "FileTypeDirectory";
+							//?return "FileTypeDirectory";
+							return null;
 						}
 						else
 						{
@@ -1485,7 +1391,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 					{
 						if (this.IsDirectory)
 						{
-							return null;
+							return this.folderItem.Icon;
 						}
 						else
 						{
