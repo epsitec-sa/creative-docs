@@ -556,6 +556,13 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 			foreach (FolderItem item in FileManager.GetFolderItems(this.initialDirectory, FolderQueryMode.NoIcons))
 			{
+				//	TODO: il faudrait modifier la classe "Item" pour bien faire. Le mieux est de mémoriser
+				//	directement le FolderItem dans le Item, de manière à pouvoir obtenir :
+				//	- Le DisplayName qui est ce que tu affiches dans le dialogue
+				//	- Le FullPath qui est le nom du fichier à utiliser pour les opérations System.IO.File
+				//	- L'icône
+				//	- Les infos supplémentaire (dossier/caché/lecture seule/etc.)
+				
 				this.files.Add(new Item(item.DisplayName, item.IsFolder, this.isModel));
 			}
 
