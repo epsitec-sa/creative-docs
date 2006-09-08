@@ -15,6 +15,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 	{
 		public AbstractFile(DocumentEditor editor) : base(editor)
 		{
+			this.favoritesVisited = new List<FolderItem>();
 			this.focusedWidget = null;
 		}
 
@@ -44,17 +45,33 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			}
 			set
 			{
+				FolderItem folder;
+
 				if (value == "")  // poste de travail ?
 				{
-					this.initialFolder = FileManager.GetFolderItem(FolderId.VirtualMyComputer, FolderQueryMode.NoIcons);
+					folder = FileManager.GetFolderItem(FolderId.VirtualMyComputer, FolderQueryMode.NoIcons);
 				}
 				else
 				{
-					this.initialFolder = FileManager.GetFolderItem(value, FolderQueryMode.NoIcons);
+					folder = FileManager.GetFolderItem(value, FolderQueryMode.NoIcons);
 				}
 
-				this.UpdateInitialDirectory();
+				this.SetInitialFolder(folder);
 			}
+		}
+
+		protected void SetInitialFolder(FolderItem folder)
+		{
+			if (!this.initialFolder.IsEmpty)
+			{
+				this.favoritesVisited.Add(this.initialFolder);
+			}
+
+			this.initialFolder = folder;
+
+			this.UpdateInitialDirectory();
+			this.UpdateTable(-1);
+			this.UpdateButtons();
 		}
 
 		public string InitialFilename
@@ -264,7 +281,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.fieldPath.ComboClosed += new EventHandler(this.HandleFieldPathComboClosed);
 			this.fieldPath.TextChanged += new EventHandler(this.HandleFieldPathTextChanged);
 
-			//	Il faut créer ces boutons dans l'ordre 'droite à gauche' !
+			//	Il faut créer ces boutons dans l'ordre 'de droite à gauche' !
 			IconButton buttonDelete = new IconButton(group);
 			buttonDelete.CommandObject = this.deleteState.Command;
 			buttonDelete.Dock = DockStyle.Right;
@@ -281,9 +298,9 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			buttonParent.CommandObject = this.parentState.Command;
 			buttonParent.Dock = DockStyle.Right;
 
-			IconButton buttonNext = new IconButton(group);
-			buttonNext.CommandObject = this.nextState.Command;
-			buttonNext.Dock = DockStyle.Right;
+			//IconButton buttonNext = new IconButton(group);
+			//buttonNext.CommandObject = this.nextState.Command;
+			//buttonNext.Dock = DockStyle.Right;
 
 			IconButton buttonPrev = new IconButton(group);
 			buttonPrev.CommandObject = this.prevState.Command;
@@ -466,6 +483,11 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		protected void UpdateTable(int sel)
 		{
 			//	Met à jour la table des fichiers.
+			if (this.table == null)
+			{
+				return;
+			}
+
 			this.ListFilenames();
 			int rows = this.files.Count;
 
@@ -649,6 +671,14 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 		protected void NavigatePrev()
 		{
+			if (this.favoritesVisited.Count == 0)
+			{
+				return;
+			}
+
+			this.SetInitialFolder(this.favoritesVisited[this.favoritesVisited.Count-1]);
+			this.favoritesVisited.RemoveAt(this.favoritesVisited.Count-1);
+			this.favoritesVisited.RemoveAt(this.favoritesVisited.Count-1);
 		}
 
 		protected void NavigateNext()
@@ -664,10 +694,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				return;
 			}
 
-			this.initialFolder = parent;
-			this.UpdateInitialDirectory();
-			this.UpdateTable(-1);
-			this.UpdateButtons();
+			this.SetInitialFolder(parent);
 		}
 
 		protected void NewDirectory()
@@ -887,10 +914,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			{
 				if (this.files[sel].IsDirectory)  // ouvre un dossier ?
 				{
-					this.initialFolder = this.files[sel].FolderItem;
-					this.UpdateInitialDirectory();
-					this.UpdateTable(-1);
-					this.UpdateButtons();
+					this.SetInitialFolder(this.files[sel].FolderItem);
 					return false;  // ne pas fermer le dialogue
 				}
 				else
@@ -1065,11 +1089,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			//	Favoris cliqué dans le panneau de gauche.
 			Filename f = sender as Filename;
 			int i = System.Int32.Parse(f.Name, System.Globalization.CultureInfo.InvariantCulture);
-			this.initialFolder = this.favoritesList[i];
-
-			this.UpdateInitialDirectory();
-			this.UpdateTable(-1);
-			this.UpdateButtons();
+			this.SetInitialFolder(this.favoritesList[i]);
 		}
 
 		private void HandleRenameAccepted(object sender)
@@ -1562,6 +1582,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		protected Widget					focusedWidget;
 		protected bool						ignoreChanged = false;
 		protected List<FolderItem>			favoritesList;
+		protected List<FolderItem>			favoritesVisited;
 		protected List<string>				comboDirectories;
 		protected List<string>				comboTexts;
 		protected int						comboSelected;
