@@ -551,7 +551,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.files.Add(new Item(null, false, this.isModel));  // première ligne avec 'nouveau document vide'
 			}
 
-#if false
+#if true
 			//?FolderItem root = FileManager.GetFolderItem(this.initialDirectory, FolderQueryMode.NoIcons);
 
 			foreach (FolderItem item in FileManager.GetFolderItems(this.initialDirectory, FolderQueryMode.NoIcons))
