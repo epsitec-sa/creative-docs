@@ -170,6 +170,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.ico" />
+    <EmbeddedResource Include="Images\NavigateNext.icon" />
+    <EmbeddedResource Include="Images\NavigatePrev.icon" />
     <EmbeddedResource Include="Images\FileTypeEpsitecSamples.icon" />
     <EmbeddedResource Include="Images\FileTypeMySamples.icon" />
     <Content Include="Resources\App\Captions.00.resource" />
