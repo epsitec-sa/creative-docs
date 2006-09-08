@@ -317,25 +317,25 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			footer.Margins = new Margins(0, 0, 8, 0);
 			footer.Dock = DockStyle.Bottom;
 
-			Button buttonOK = new Button(footer);
-			buttonOK.PreferredWidth = 75;
-			buttonOK.Text = this.isSave ? Res.Strings.Dialog.File.Button.Save : Res.Strings.Dialog.File.Button.Open;
-			buttonOK.ButtonStyle = ButtonStyle.DefaultAccept;
-			buttonOK.Dock = DockStyle.Left;
-			buttonOK.Margins = new Margins(0, 6, 0, 0);
-			buttonOK.Clicked += new MessageEventHandler(this.HandleButtonOKClicked);
-			buttonOK.TabIndex = this.tabIndex++;
-			buttonOK.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.buttonOK = new Button(footer);
+			this.buttonOK.PreferredWidth = 75;
+			this.buttonOK.Text = this.isSave ? Res.Strings.Dialog.File.Button.Save : Res.Strings.Dialog.File.Button.Open;
+			this.buttonOK.ButtonStyle = ButtonStyle.DefaultAccept;
+			this.buttonOK.Dock = DockStyle.Left;
+			this.buttonOK.Margins = new Margins(0, 6, 0, 0);
+			this.buttonOK.Clicked += new MessageEventHandler(this.HandleButtonOKClicked);
+			this.buttonOK.TabIndex = this.tabIndex++;
+			this.buttonOK.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
-			Button buttonCancel = new Button(footer);
-			buttonCancel.PreferredWidth = 75;
-			buttonCancel.Text = Res.Strings.Dialog.Button.Cancel;
-			buttonCancel.ButtonStyle = ButtonStyle.DefaultCancel;
-			buttonCancel.Dock = DockStyle.Left;
-			buttonCancel.Margins = new Margins(0, 6, 0, 0);
-			buttonCancel.Clicked += new MessageEventHandler(this.HandleButtonCancelClicked);
-			buttonCancel.TabIndex = this.tabIndex++;
-			buttonCancel.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.buttonCancel = new Button(footer);
+			this.buttonCancel.PreferredWidth = 75;
+			this.buttonCancel.Text = Res.Strings.Dialog.Button.Cancel;
+			this.buttonCancel.ButtonStyle = ButtonStyle.DefaultCancel;
+			this.buttonCancel.Dock = DockStyle.Left;
+			this.buttonCancel.Margins = new Margins(0, 6, 0, 0);
+			this.buttonCancel.Clicked += new MessageEventHandler(this.HandleButtonCancelClicked);
+			this.buttonCancel.TabIndex = this.tabIndex++;
+			this.buttonCancel.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			this.slider = new HSlider(footer);
 			this.slider.PreferredWidth = 80;
@@ -831,6 +831,9 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				return;
 			}
 
+			this.buttonOK.ButtonStyle = ButtonStyle.Normal;
+			this.buttonCancel.ButtonStyle = ButtonStyle.Normal;
+
 			this.fieldRename.SetManualBounds(rect);
 			this.fieldRename.Text = this.files[sel].ShortFilename;
 			this.fieldRename.SelectAll();
@@ -844,7 +847,15 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		{
 			//	Fin d'un renommer. Le fichier ou le dossier est renommé (si accepted = true)
 			//	et le widget pour éditer le nom est caché.
+			if (!this.fieldRename.Visibility)
+			{
+				return;
+			}
+
 			this.fieldRename.Visibility = false;
+
+			this.buttonOK.ButtonStyle = ButtonStyle.DefaultAccept;
+			this.buttonCancel.ButtonStyle = ButtonStyle.DefaultCancel;
 
 			if (accepted && this.renameSelected != -1)
 			{
@@ -1509,6 +1520,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		protected TextFieldCombo			fieldPath;
 		protected TextField					fieldFilename;
 		protected TextFieldEx				fieldRename;
+		protected Button					buttonOK;
+		protected Button					buttonCancel;
 
 		protected string					fileExtension;
 		protected bool						isModel = false;
