@@ -119,6 +119,7 @@
     <Compile Include="CommandAttribute.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="FileOperationMode.cs" />
     <Compile Include="FolderQueryMode.cs" />
     <Compile Include="Data\ComponentCollection.cs">
       <SubType>Code</SubType>
@@ -173,6 +174,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Platform\FileInfo.cs" />
+    <Compile Include="Platform\FileOperation.cs" />
     <Compile Include="Platform\FolderItemAttributes.cs" />
     <Compile Include="Platform\FolderItemHandle.cs" />
     <Compile Include="Platform\Win32\FileInfo.cs" />

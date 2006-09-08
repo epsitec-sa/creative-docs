@@ -164,41 +164,66 @@ namespace Epsitec.Common.Support.Platform.Win32
 		public FileOperations Operation;
 		public IntPtr OwnerWindow;
 		public ShellFileOperationFlags OperationFlags;
-		public string ProgressTitle;
+		private string ProgressTitle;
 		public string[] SourceFiles;
 		public string[] DestFiles;
 
+		public FileOperationMode OperationMode
+		{
+			set
+			{
+				this.OperationFlags = ShellFileOperationFlags.FOF_ALLOWUNDO |
+					/**/			  ShellFileOperationFlags.FOF_WANTNUKEWARNING |
+					/**/			  ShellFileOperationFlags.FOF_NO_CONNECTED_ELEMENTS;
+
+				if (value.Silent)
+				{
+					this.OperationFlags |= ShellFileOperationFlags.FOF_SILENT;
+				}
+				if (value.AutoConfirmation)
+				{
+					this.OperationFlags |= ShellFileOperationFlags.FOF_NOCONFIRMATION;
+				}
+				if (value.AutoCreateDirectory)
+				{
+					this.OperationFlags |= ShellFileOperationFlags.FOF_NOCONFIRMMKDIR;
+				}
+				if (value.AutoRenameOnCollision)
+				{
+					this.OperationFlags |= ShellFileOperationFlags.FOF_RENAMEONCOLLISION;
+				}
+			}
+		}
+
 		public ShellFileOperation()
 		{
-			// set default properties
-			Operation = FileOperations.FO_COPY;
-			OwnerWindow = IntPtr.Zero;
-			OperationFlags = ShellFileOperationFlags.FOF_ALLOWUNDO 
-				| ShellFileOperationFlags.FOF_MULTIDESTFILES
-				| ShellFileOperationFlags.FOF_NO_CONNECTED_ELEMENTS
-				| ShellFileOperationFlags.FOF_WANTNUKEWARNING;
-			ProgressTitle = "";
+			this.Operation = FileOperations.FO_COPY;
+			this.OwnerWindow = IntPtr.Zero;
+			this.OperationFlags = ShellFileOperationFlags.FOF_ALLOWUNDO |
+				/**/			  ShellFileOperationFlags.FOF_MULTIDESTFILES |
+				/**/			  ShellFileOperationFlags.FOF_NO_CONNECTED_ELEMENTS |
+				/**/			  ShellFileOperationFlags.FOF_WANTNUKEWARNING;
+			this.ProgressTitle = "";
 		}
 
 		public bool DoOperation()
 		{
-			ShellApi.SHFILEOPSTRUCT FileOpStruct = new ShellApi.SHFILEOPSTRUCT ();
+			ShellApi.SHFILEOPSTRUCT fileOpStruct = new ShellApi.SHFILEOPSTRUCT ();
 
-			FileOpStruct.hwnd = OwnerWindow;
-			FileOpStruct.wFunc = (uint) Operation;
+			fileOpStruct.hwnd = this.OwnerWindow;
+			fileOpStruct.wFunc = (uint) this.Operation;
 
-			string multiSource = StringArrayToMultiString (SourceFiles);
-			string multiDest = StringArrayToMultiString (DestFiles);
-			FileOpStruct.pFrom = Marshal.StringToHGlobalUni (multiSource);
-			FileOpStruct.pTo = Marshal.StringToHGlobalUni (multiDest);
+			string multiSource = ShellFileOperation.StringArrayToMultiString (SourceFiles);
+			string multiDest = ShellFileOperation.StringArrayToMultiString (DestFiles);
+			fileOpStruct.pFrom = Marshal.StringToHGlobalUni (multiSource);
+			fileOpStruct.pTo = Marshal.StringToHGlobalUni (multiDest);
 
-			FileOpStruct.fFlags = (ushort) OperationFlags;
-			FileOpStruct.lpszProgressTitle = ProgressTitle;
-			FileOpStruct.fAnyOperationsAborted = 0;
-			FileOpStruct.hNameMappings = IntPtr.Zero;
+			fileOpStruct.fFlags = (ushort) this.OperationFlags;
+			fileOpStruct.lpszProgressTitle = this.ProgressTitle;
+			fileOpStruct.fAnyOperationsAborted = 0;
+			fileOpStruct.hNameMappings = System.IntPtr.Zero;
 
-			int RetVal;
-			RetVal = ShellApi.SHFileOperation (ref FileOpStruct);
+			int retVal = ShellApi.SHFileOperation (ref fileOpStruct);
 
 			ShellApi.SHChangeNotify (
 				(uint) ShellChangeNotificationEvents.SHCNE_ALLEVENTS,
@@ -206,28 +231,37 @@ namespace Epsitec.Common.Support.Platform.Win32
 				IntPtr.Zero,
 				IntPtr.Zero);
 
-			if (RetVal!=0)
+			if (retVal != 0)
+			{
 				return false;
+			}
 
-			if (FileOpStruct.fAnyOperationsAborted != 0)
+			if (fileOpStruct.fAnyOperationsAborted != 0)
+			{
 				return false;
+			}
 
 			return true;
 		}
 
-		private string StringArrayToMultiString(string[] stringArray)
+		private static string StringArrayToMultiString(string[] stringArray)
 		{
-			string multiString = "";
+			System.Text.StringBuilder multiString = new System.Text.StringBuilder ();
 
 			if (stringArray == null)
-				return "";
+			{
+				return null;
+			}
 
-			for (int i=0; i<stringArray.Length; i++)
-				multiString += stringArray[i] + '\0';
+			for (int i=0; i < stringArray.Length; i++)
+			{
+				multiString.Append (stringArray[i]);
+				multiString.Append ('\0');
+			}
 
-			multiString += '\0';
+			multiString.Append ('\0');
 
-			return multiString;
+			return multiString.ToString ();
 		}
 	}
 

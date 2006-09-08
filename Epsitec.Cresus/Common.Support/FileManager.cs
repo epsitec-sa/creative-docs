@@ -11,34 +11,64 @@ namespace Epsitec.Common.Support
 		/// Deletes the file. This sends the file to the recycle bin.
 		/// </summary>
 		/// <param name="file">The fully qualified file path.</param>
-		public static void DeleteFile(string file)
+		public static bool DeleteFile(FileOperationMode mode, string file)
 		{
-			FileManager.DeleteFiles (file);
+			return FileManager.DeleteFiles (mode, file);
 		}
 
 		/// <summary>
 		/// Deletes the files. This sends the files to the recycle bin.
 		/// </summary>
 		/// <param name="file">The fully qualified file paths.</param>
-		public static void DeleteFiles(params string[] files)
+		public static bool DeleteFiles(FileOperationMode mode, params string[] files)
 		{
 			IEnumerable<string> enumFiles = files;
-			FileManager.DeleteFiles (enumFiles);
+			return FileManager.DeleteFiles (mode, enumFiles);
 		}
 
 		/// <summary>
 		/// Deletes the files. This sends the files to the recycle bin.
 		/// </summary>
 		/// <param name="file">The fully qualified file paths.</param>
-		public static void DeleteFiles(IEnumerable<string> files)
+		public static bool DeleteFiles(FileOperationMode mode, IEnumerable<string> files)
 		{
-			Platform.Win32.ShellFileOperation fo = new Epsitec.Common.Support.Platform.Win32.ShellFileOperation ();
-			
-			fo.Operation = Epsitec.Common.Support.Platform.Win32.ShellFileOperation.FileOperations.FO_DELETE;
-			fo.OperationFlags = Epsitec.Common.Support.Platform.Win32.ShellFileOperation.ShellFileOperationFlags.FOF_ALLOWUNDO
-			/**/			  | Epsitec.Common.Support.Platform.Win32.ShellFileOperation.ShellFileOperationFlags.FOF_WANTNUKEWARNING;
-			fo.SourceFiles = Types.Collection.ToArray (files);
-			fo.DoOperation ();
+			return Platform.FileOperation.DeleteFiles (mode, files);
+		}
+
+
+		public static bool MoveFile(FileOperationMode mode, string source, string destination)
+		{
+			return FileManager.MoveFiles (mode, new string[] { source }, new string[] { destination });
+		}
+
+		public static bool MoveFiles(FileOperationMode mode, IEnumerable<string> source, IEnumerable<string> destination)
+		{
+			return Platform.FileOperation.MoveFiles (mode, source, destination);
+		}
+
+		public static bool MoveFilesToFolder(FileOperationMode mode, IEnumerable<string> source, string destinationFolder)
+		{
+			return Platform.FileOperation.MoveFilesToFolder (mode, source, destinationFolder);
+		}
+
+		public static bool CopyFile(FileOperationMode mode, string source, string destination)
+		{
+			return FileManager.CopyFiles (mode, new string[] { source }, new string[] { destination });
+		}
+
+		public static bool CopyFiles(FileOperationMode mode, IEnumerable<string> source, IEnumerable<string> destination)
+		{
+			return Platform.FileOperation.CopyFiles (mode, source, destination);
+		}
+
+		public static bool CopyFilesToFolder(FileOperationMode mode, IEnumerable<string> source, string destinationFolder)
+		{
+			return Platform.FileOperation.CopyFilesToFolder (mode, source, destinationFolder);
+		}
+
+		public static bool RenameFile(FileOperationMode mode, string source, string destination)
+		{
+			return Platform.FileOperation.RenameFiles (mode, new string[] { source }, new string[] { destination });
 		}
 
 		/// <summary>
@@ -89,6 +119,16 @@ namespace Epsitec.Common.Support
 		public static FolderItem GetParentFolderItem(FolderItem path, FolderQueryMode mode)
 		{
 			return Platform.FileInfo.GetParentFolderItem (path, mode);
+		}
+
+		public static void AddToRecentDocuments(string path)
+		{
+			Platform.FileOperation.AddToRecentDocuments (path);
+		}
+
+		public static void AddToRecentDocuments(FolderItem path)
+		{
+			Platform.FileOperation.AddToRecentDocuments (path);
 		}
 	}
 }
