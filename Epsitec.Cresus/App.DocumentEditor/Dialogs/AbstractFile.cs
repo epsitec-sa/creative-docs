@@ -374,20 +374,30 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				widget.Dispose();
 			}
 
-			this.FavouritesAdd("Mes exemples", "Application");
-			this.FavouritesAdd("Exemples Epsitec", "New");
-			this.FavouritesAdd("Mes documents", "FileTypeDirectory");
-			this.FavouritesAdd("Poste de travail", "FileTypeDirectory");
+			string path;
 
-			this.FavouritesAdd(FolderId.VirtualMyComputer);
-			this.FavouritesAdd(FolderId.DesktopDirectory);
-			this.FavouritesAdd(FolderId.MyDocuments);
+			path = string.Concat(Common.Support.Globals.Directories.Executable, "\\Samples");
+			this.FavouritesAdd("Exemples Epsitec", "FileTypeEpsitecSamples", path);
+
+			path = Common.Support.Globals.Directories.UserAppData;
+			int i = path.LastIndexOf("\\");
+			if (i > 0)
+			{
+				path = path.Substring(0, i);  // supprime le dossier "1.0.0.0" à la fin
+			}
+			this.FavouritesAdd("Mes exemples", "FileTypeMySamples", path);
+
+			this.FavouritesAdd(FolderId.VirtualDesktop);  // bureau
+			this.FavouritesAdd(FolderId.MyDocuments);  // mes documents
+			this.FavouritesAdd(FolderId.VirtualMyComputer);  // poste de travail
+			this.FavouritesAdd(FolderId.VirtualNetwork);  // favoris réseau
 		}
 
-		protected void FavouritesAdd(string text, string icon)
+		protected void FavouritesAdd(string text, string icon, string path)
 		{
 			//	Ajoute un favoris dans le panneau de gauche.
 			Filename f = new Filename();
+			f.Name = path;
 			f.FilenameValue = text;
 			f.IconValue = Misc.Icon(icon);
 			f.Dock = DockStyle.Top;
