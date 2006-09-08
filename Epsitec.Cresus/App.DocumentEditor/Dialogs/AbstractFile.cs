@@ -556,7 +556,10 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 			foreach (FolderItem item in FileManager.GetFolderItems(this.initialDirectory, FolderQueryMode.NoIcons))
 			{
-				this.files.Add(new Item(item.DisplayName, false, this.isModel));
+				if (item.DisplayName.EndsWith(this.fileExtension))
+				{
+					this.files.Add(new Item(item.DisplayName, false, this.isModel));
+				}
 			}
 
 
