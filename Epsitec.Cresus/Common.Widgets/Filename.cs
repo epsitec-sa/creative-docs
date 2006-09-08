@@ -130,7 +130,7 @@ namespace Epsitec.Common.Widgets
 
 		protected static readonly double	topMargin = 5;
 		protected static readonly double	iconHeight = 32;
-		protected static readonly double	textHeight = 20;
+		protected static readonly double	textHeight = 16;
 
 		protected string					filename;
 		protected string					icon;
