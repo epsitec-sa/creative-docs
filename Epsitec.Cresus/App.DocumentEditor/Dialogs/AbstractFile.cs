@@ -558,67 +558,24 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 			if (this.isNewEmtpyDocument)
 			{
-				this.files.Add(new Item(null, false, this.isModel));  // première ligne avec 'nouveau document vide'
+				this.files.Add(new Item());  // première ligne avec 'nouveau document vide'
 			}
-
-#if false
-			//?FolderItem root = FileManager.GetFolderItem(this.initialDirectory, FolderQueryMode.NoIcons);
 
 			foreach (FolderItem item in FileManager.GetFolderItems(this.initialDirectory, FolderQueryMode.NoIcons))
 			{
-				//	TODO: il faudrait modifier la classe "Item" pour bien faire. Le mieux est de mémoriser
-				//	directement le FolderItem dans le Item, de manière à pouvoir obtenir :
-				//	- Le DisplayName qui est ce que tu affiches dans le dialogue
-				//	- Le FullPath qui est le nom du fichier à utiliser pour les opérations System.IO.File
-				//	- L'icône
-				//	- Les infos supplémentaire (dossier/caché/lecture seule/etc.)
-
-				this.files.Add(new Item(item.FullPath, item.IsFolder, this.isModel));
-			}
-
-
-#else
-			if (this.isNavigationEnabled)
-			{
-				string[] directories;
-
-				try
+				if (!item.IsFolder)  // fichier ?
 				{
-					directories = System.IO.Directory.GetDirectories(this.initialDirectory, "*", SearchOption.TopDirectoryOnly);
-				}
-				catch
-				{
-					directories = null;
-				}
-
-				if (directories != null)
-				{
-					foreach (string directory in directories)
+					string ext = System.IO.Path.GetExtension(item.FullPath);
+					if (ext != this.fileExtension)  // autre extension ?
 					{
-						this.files.Add(new Item(directory, true, this.isModel));
+						continue;  // oui -> ignore ce fichier
 					}
 				}
+
+				this.files.Add(new Item(item, this.isModel));  // ajoute une ligne à la liste
 			}
 
-			string[] filenames;
-
-			try
-			{
-				filenames = System.IO.Directory.GetFiles(this.initialDirectory, "*"+this.fileExtension, System.IO.SearchOption.TopDirectoryOnly);
-			}
-			catch
-			{
-				filenames = null;
-			}
-
-			if (filenames != null)
-			{
-				foreach (string filename in filenames)
-				{
-					this.files.Add(new Item(filename, false, this.isModel));
-				}
-			}
-#endif
+			this.files.Sort();  // trie toute la liste
 		}
 
 		protected void UpdateButtons()
@@ -832,7 +789,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			}
 
 			this.buttonOK.ButtonStyle = ButtonStyle.Normal;
-			this.buttonCancel.ButtonStyle = ButtonStyle.Normal;
+			this.buttonCancel.ButtonStyle = ButtonStyle.Normal;  // TODO: ne fonctionne pas !
 
 			this.fieldRename.SetManualBounds(rect);
 			this.fieldRename.Text = this.files[sel].ShortFilename;
@@ -893,7 +850,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 					}
 				}
 
-				this.files[sel].Filename = dstFilename;
+				FolderItem item = FileManager.GetFolderItem(dstFilename, FolderQueryMode.NoIcons);
+				this.files[sel].FolderItem = item;
 
 				StaticText st = this.table[1, sel].Children[0] as StaticText;
 				st.Text = this.files[sel].ShortFilename;
@@ -1264,13 +1222,32 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		#region Class Item
 		//	Cette classe représente une 'ligne' dans la liste, qui peut représenter
 		//	un fichier, un dossier ou la commande 'nouveau document vide'.
-		protected class Item
+		protected class Item : System.IComparable
 		{
-			public Item(string filename, bool isDirectory, bool isModel)
+			public Item()
 			{
-				this.filename = filename;
-				this.isDirectory = isDirectory;
+				//	Crée un item pour 'Nouveau  document vide'.
+				this.isNewEmptyDocument = true;
+			}
+
+			public Item(FolderItem folderItem, bool isModel)
+			{
+				//	Crée un item pour un fichier ou un dossier.
+				this.folderItem = folderItem;
 				this.isModel = isModel;
+				this.isNewEmptyDocument = false;
+			}
+
+			public FolderItem FolderItem
+			{
+				get
+				{
+					return this.folderItem;
+				}
+				set
+				{
+					this.folderItem = value;
+				}
 			}
 
 			public string Filename
@@ -1278,18 +1255,14 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				//	Nom du fichier avec le chemin d'accès complet.
 				get
 				{
-					if (this.filename == null)  // nouveau document vide ?
+					if (this.isNewEmptyDocument)  // nouveau document vide ?
 					{
 						return Common.Document.Settings.GlobalSettings.NewEmptyDocument;
 					}
 					else
 					{
-						return this.filename;
+						return this.folderItem.FullPath;
 					}
-				}
-				set
-				{
-					this.filename = value;
 				}
 			}
 
@@ -1298,27 +1271,19 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				//	Nom du fichier court, sans le chemin d'accès ni l'extension.
 				get
 				{
-					if (this.filename == null)  // nouveau document vide ?
+					if (this.isNewEmptyDocument)  // nouveau document vide ?
 					{
 						return "—";
 					}
 					else
 					{
-						if (this.isDirectory)
+						if (this.folderItem.IsFolder)
 						{
-							int index = this.filename.LastIndexOf("\\");
-							if (index == -1)
-							{
-								return TextLayout.ConvertToTaggedText(this.filename);
-							}
-							else
-							{
-								return TextLayout.ConvertToTaggedText(this.filename.Substring(index+1));
-							}
+							return TextLayout.ConvertToTaggedText(this.folderItem.DisplayName);
 						}
 						else
 						{
-							return TextLayout.ConvertToTaggedText(System.IO.Path.GetFileNameWithoutExtension(this.filename));
+							return TextLayout.ConvertToTaggedText(System.IO.Path.GetFileNameWithoutExtension(this.folderItem.FullPath));
 						}
 					}
 				}
@@ -1328,7 +1293,12 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			{
 				get
 				{
-					return this.isDirectory;
+					if (this.isNewEmptyDocument)
+					{
+						return false;
+					}
+
+					return this.folderItem.IsFolder;
 				}
 			}
 
@@ -1337,13 +1307,13 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				//	Taille du fichier en kilo-bytes.
 				get
 				{
-					if (this.filename == null || this.isDirectory)
+					if (this.isNewEmptyDocument || this.IsDirectory)
 					{
 						return "";
 					}
 					else
 					{
-						System.IO.FileInfo info = new System.IO.FileInfo (this.filename);
+						System.IO.FileInfo info = new System.IO.FileInfo(this.folderItem.FullPath);
 
 						long size = info.Exists ? info.Length : 0;
 						
@@ -1358,13 +1328,13 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				//	Retourne la description du fichier, basée sur les statistiques si elles existent.
 				get
 				{
-					if (this.filename == null)  // nouveau document vide ?
+					if (this.isNewEmptyDocument)  // nouveau document vide ?
 					{
 						return Res.Strings.Dialog.New.EmptyDocument;
 					}
 					else
 					{
-						if (this.isDirectory)
+						if (this.IsDirectory)
 						{
 							return Res.Strings.Dialog.File.Directory;
 						}
@@ -1389,13 +1359,13 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				//	Retourne l'éventuelle icône fixe qui remplace l'image miniature.
 				get
 				{
-					if (this.filename == null)  // nouveau document vide ?
+					if (this.isNewEmptyDocument)  // nouveau document vide ?
 					{
 						return "New";
 					}
 					else
 					{
-						if (this.isDirectory)
+						if (this.IsDirectory)
 						{
 							return "FileTypeDirectory";
 						}
@@ -1412,19 +1382,19 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				//	Retourne l'image miniature associée au fichier.
 				get
 				{
-					if (this.filename == null)  // nouveau document vide ?
+					if (this.isNewEmptyDocument)  // nouveau document vide ?
 					{
 						return null;
 					}
 					else
 					{
-						if (this.isDirectory)
+						if (this.IsDirectory)
 						{
 							return null;
 						}
 						else
 						{
-							byte[] data = ReadPreview();
+							byte[] data = this.ReadPreview();
 							if (data != null)
 							{
 								return Bitmap.FromData(data);
@@ -1441,19 +1411,19 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				//	Retourne les statistiques associées au fichier.
 				get
 				{
-					if (this.filename == null)  // nouveau document vide ?
+					if (this.isNewEmptyDocument)  // nouveau document vide ?
 					{
 						return null;
 					}
 					else
 					{
-						if (this.isDirectory)
+						if (this.IsDirectory)
 						{
 							return null;
 						}
 						else
 						{
-							byte[] data = ReadStatistics();
+							byte[] data = this.ReadStatistics();
 							if (data != null)
 							{
 								Document.Statistics stat = new Document.Statistics();
@@ -1472,7 +1442,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				//	Lit les données de l'image miniature associée au fichier.
 				ZipFile zip = new ZipFile();
 
-				if (zip.TryLoadFile(this.filename))
+				if (zip.TryLoadFile(this.folderItem.FullPath))
 				{
 					try
 					{
@@ -1492,7 +1462,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				//	Lit les données des statistiques associée au fichier.
 				ZipFile zip = new ZipFile();
 
-				if (zip.TryLoadFile(this.filename))
+				if (zip.TryLoadFile(this.folderItem.FullPath))
 				{
 					try
 					{
@@ -1507,9 +1477,30 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				return null;
 			}
 
-			protected string					filename;
-			protected bool						isDirectory;
+			#region IComparable Members
+			public int CompareTo(object obj)
+			{
+				Item that = obj as Item;
+
+				if (this.isNewEmptyDocument != that.isNewEmptyDocument)
+				{
+					return this.isNewEmptyDocument ? -1 : 1;  // 'nouveau document vide' au début
+				}
+
+				if (this.IsDirectory != that.IsDirectory)
+				{
+					return this.IsDirectory ? -1 : 1;  // dossiers avant les fichiers
+				}
+
+				string f1 = this.ShortFilename.ToLower();
+				string f2 = that.ShortFilename.ToLower();
+				return f1.CompareTo(f2);
+			}
+			#endregion
+
+			protected FolderItem				folderItem;
 			protected bool						isModel;
+			protected bool						isNewEmptyDocument;
 		}
 		#endregion
 
