@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <bundle name="Captions" type="Caption" culture="fr">
   <data name="Cap.New" id="0">&lt;s:data id="_0" f:Name="New" /&gt;</data>
-  <data name="Cmd.Dialog.File.NavigatePrev" id="06" mod="1">&lt;s:data id="_0" f:Description="Précédente" f:Icon="manifest:Epsitec.App.DocumentEditor.Images.NavigatePrev.icon" f:Name="Dialog.File.NavigatePrev" f:Labels="{Collection {Text 'Précédente'}}" /&gt;</data>
+  <data name="Cmd.Dialog.File.NavigatePrev" id="06" mod="1">&lt;s:data id="_0" f:Description="Ouvrir le dernier dossier visité" f:Icon="manifest:Epsitec.App.DocumentEditor.Images.NavigatePrev.icon" f:Name="Dialog.File.NavigatePrev" f:Labels="{Collection {Text 'Précédente'}}" /&gt;</data>
   <data name="Cmd.Dialog.File.NavigateNext" id="07" mod="1">&lt;s:data id="_0" f:Description="Suivante" f:Icon="manifest:Epsitec.App.DocumentEditor.Images.NavigateNext.icon" f:Name="Dialog.File.NavigateNext" f:Labels="{Collection {Text 'Suivante'}}" /&gt;</data>
   <data name="Cmd.Dialog.File.ParentDirectory" id="01">&lt;s:data id="_0" f:Name="Dialog.File.ParentDirectory" f:Description="Dossier parent" f:Icon="manifest:Epsitec.App.DocumentEditor.Images.ParentDirectory.icon" f:Labels="{Collection {Text 'Dossier parent'}}" /&gt;</data>
   <data name="Cmd.Dialog.File.NewDirectory" id="03" mod="1">&lt;s:data id="_0" f:Icon="manifest:Epsitec.App.DocumentEditor.Images.NewDirectory.icon" f:Name="Dialog.File.NewDirectory" f:Description="Nouveau dossier" f:Labels="{Collection {Text 'Nouveau dossier'}}" /&gt;</data>

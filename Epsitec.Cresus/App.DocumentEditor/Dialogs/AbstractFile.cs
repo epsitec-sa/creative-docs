@@ -60,20 +60,6 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			}
 		}
 
-		protected void SetInitialFolder(FolderItem folder)
-		{
-			if (!this.initialFolder.IsEmpty)
-			{
-				this.favoritesVisited.Add(this.initialFolder);
-			}
-
-			this.initialFolder = folder;
-
-			this.UpdateInitialDirectory();
-			this.UpdateTable(-1);
-			this.UpdateButtons();
-		}
-
 		public string InitialFilename
 		{
 			//	Nom de fichier initial.
@@ -119,6 +105,41 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				}
 
 				return this.selectedFilenames;
+			}
+		}
+
+
+		protected void SetInitialFolder(FolderItem folder)
+		{
+			//	Change le dossier courant.
+			if (!this.IsFavoritesEndWith(this.initialFolder))
+			{
+				this.favoritesVisited.Add(this.initialFolder);
+			}
+
+			this.initialFolder = folder;
+
+			this.UpdateInitialDirectory();
+			this.UpdateTable(-1);
+			this.UpdateButtons();
+		}
+
+		protected bool IsFavoritesEndWith(FolderItem folder)
+		{
+			if (folder.IsEmpty)
+			{
+				return true;  // on n'insère jamais un folder vide
+			}
+
+			if (this.favoritesVisited.Count == 0)
+			{
+				return false;
+			}
+			else
+			{
+				FolderItem last = this.favoritesVisited[this.favoritesVisited.Count-1];
+				//?return (last == folder);  // TODO: dès que Pierre le permettra !
+				return false;
 			}
 		}
 
@@ -633,6 +654,11 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				FolderItem parent = FileManager.GetParentFolderItem(this.initialFolder, FolderQueryMode.NoIcons);
 				this.parentState.Enable = !parent.IsEmpty;
 			}
+
+			if (this.prevState != null)
+			{
+				this.prevState.Enable = (this.favoritesVisited.Count > 0);
+			}
 		}
 
 		protected void UpdateInitialDirectory()
@@ -679,6 +705,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.SetInitialFolder(this.favoritesVisited[this.favoritesVisited.Count-1]);
 			this.favoritesVisited.RemoveAt(this.favoritesVisited.Count-1);
 			this.favoritesVisited.RemoveAt(this.favoritesVisited.Count-1);
+			this.UpdateButtons();
 		}
 
 		protected void NavigateNext()
@@ -1143,21 +1170,25 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		private void HandleFieldPathComboOpening(object sender, CancelEventArgs e)
 		{
 			//	Le menu pour le chemin d'accès va être ouvert.
-#if false
 			this.comboTexts = new List<string>();
-			this.comboDirectories = new List<string>();
-
-			System.IO.DriveInfo[] drives = System.IO.DriveInfo.GetDrives();
+			this.comboFolders = new List<FolderItem>();
 
 			this.fieldPath.Items.Clear();
 
-			foreach (System.IO.DriveInfo drive in drives)
+			FolderItem desktop = FileManager.GetFolderItem(FolderId.VirtualDesktop, FolderQueryMode.NoIcons);
+			foreach (FolderItem item in FileManager.GetFolderItems(desktop, FolderQueryMode.NoIcons))
 			{
-				string text = AbstractFile.GetIllustredDriveString(drive);
+				if (!item.IsFolder)
+				{
+					continue;
+				}
+
+				string text = item.DisplayName;
 				this.fieldPath.Items.Add(text);
 				this.comboTexts.Add(text);
-				this.comboDirectories.Add(drive.Name);
+				this.comboFolders.Add(item);
 
+#if false
 				if (this.initialDirectory.Length > 3 && this.initialDirectory.StartsWith(drive.Name))
 				{
 					string[] dirs = this.initialDirectory.Split('\\');
@@ -1184,28 +1215,25 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 						this.comboDirectories.Add(dir);
 					}
 				}
+#endif
 			}
 
 			this.comboSelected = -1;
-#endif
 		}
 
 		private void HandleFieldPathComboClosed(object sender)
 		{
 			//	Le menu pour le chemin d'accès a été fermé.
-#if false
 			if (this.comboSelected != -1)
 			{
-				this.InitialDirectory = this.comboDirectories[this.comboSelected];
+				this.SetInitialFolder(this.comboFolders[this.comboSelected]);
 				this.UpdateTable(-1);
 			}
-#endif
 		}
 
 		void HandleFieldPathTextChanged(object sender)
 		{
 			//	Le texte pour le chemin d'accès a changé.
-#if false
 			if (this.ignoreChanged)
 			{
 				return;
@@ -1215,7 +1243,6 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.comboSelected = this.comboTexts.IndexOf(this.fieldPath.Text);
 			this.fieldPath.Text = AbstractFile.RemoveStartingSpaces(this.fieldPath.Text);
 			this.ignoreChanged = false;
-#endif
 		}
 
 		private void HandleSliderChanged(object sender)
@@ -1583,7 +1610,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		protected bool						ignoreChanged = false;
 		protected List<FolderItem>			favoritesList;
 		protected List<FolderItem>			favoritesVisited;
-		protected List<string>				comboDirectories;
+		protected List<FolderItem>			comboFolders;
 		protected List<string>				comboTexts;
 		protected int						comboSelected;
 		protected CommandDispatcher			dispatcher;
