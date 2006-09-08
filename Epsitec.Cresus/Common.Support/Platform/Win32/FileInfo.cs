@@ -111,6 +111,11 @@ namespace Epsitec.Common.Support.Platform.Win32
 
 		private static IEnumerable<FolderItem> GetFolderItems(PidlHandle handle, FolderQueryMode mode, bool disposeHandleWhenFinished)
 		{
+			if (handle == null)
+			{
+				throw new System.IO.FileNotFoundException ();
+			}
+			
 			System.IntPtr pidlPath = handle.Pidl;
 			System.IntPtr pidlElement;
 
