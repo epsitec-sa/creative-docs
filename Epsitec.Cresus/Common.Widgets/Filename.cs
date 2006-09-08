@@ -23,7 +23,8 @@ namespace Epsitec.Common.Widgets
 
 		static Filename()
 		{
-			Helpers.VisualPropertyMetadata metadataDy = new Helpers.VisualPropertyMetadata(50.0, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
+			double h = Filename.textHeight + Filename.iconHeight;
+			Helpers.VisualPropertyMetadata metadataDy = new Helpers.VisualPropertyMetadata(h, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
 			Visual.PreferredHeightProperty.OverrideMetadata(typeof(Filename), metadataDy);
 		}
 
@@ -60,6 +61,22 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		public Image ImageValue
+		{
+			get
+			{
+				return this.image;
+			}
+			set
+			{
+				if (this.image != value)
+				{
+					this.image = value;
+					this.Invalidate();
+				}
+			}
+		}
+
 
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
@@ -68,40 +85,55 @@ namespace Epsitec.Common.Widgets
 
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
 
-			double h = 20;  // hauteur utilisée pour le nom de fichier
-
-			Rectangle filenameRect = this.Client.Bounds;
-			filenameRect.Top = filenameRect.Bottom+h;
+			Rectangle textRect = this.Client.Bounds;
+			textRect.Top = textRect.Bottom+Filename.textHeight;
 
 			Rectangle iconRect = this.Client.Bounds;
-			iconRect.Bottom += h;
-			iconRect.Offset(0, -5);
+			iconRect.Bottom += Filename.textHeight;
 
-			if (this.filenameLayout == null)
+			//	Affiche le texte.
+			if (this.textLayout == null)
 			{
-				this.filenameLayout = new TextLayout();
+				this.textLayout = new TextLayout();
 			}
 
-			this.filenameLayout.Alignment = ContentAlignment.MiddleCenter;
-			this.filenameLayout.LayoutSize = filenameRect.Size;
-			this.filenameLayout.Text = this.filename;
-			this.filenameLayout.Paint(filenameRect.BottomLeft, graphics);
+			this.textLayout.Alignment = ContentAlignment.MiddleCenter;
+			this.textLayout.LayoutSize = textRect.Size;
+			this.textLayout.Text = this.filename;
+			this.textLayout.Paint(textRect.BottomLeft, graphics);
 
-			if (this.iconLayout == null)
+			//	Affiche l'icône.
+			if (this.icon != null)
 			{
-				this.iconLayout = new TextLayout();
+				if (this.iconLayout == null)
+				{
+					this.iconLayout = new TextLayout();
+				}
+
+				this.iconLayout.Alignment = ContentAlignment.MiddleCenter;
+				this.iconLayout.LayoutSize = iconRect.Size;
+				this.iconLayout.Text = string.Format(@"<img src=""{0}""/>", this.icon);
+				this.iconLayout.Paint(iconRect.BottomLeft, graphics);
 			}
 
-			this.iconLayout.Alignment = ContentAlignment.MiddleCenter;
-			this.iconLayout.LayoutSize = iconRect.Size;
-			this.iconLayout.Text = string.Format(@"<img src=""{0}""/>", this.icon);
-			this.iconLayout.Paint(iconRect.BottomLeft, graphics);
+			if (this.image != null)
+			{
+				double m = (iconRect.Width-iconRect.Height)/2;
+				iconRect.Left += m;
+				iconRect.Right -= m;
+				graphics.Align(ref iconRect);
+				graphics.PaintImage(this.image, iconRect);
+			}
 		}
 
 
+		protected static readonly double	iconHeight = 32;
+		protected static readonly double	textHeight = 20;
+
 		protected string					filename;
 		protected string					icon;
-		protected TextLayout				filenameLayout;
+		protected Image						image;
+		protected TextLayout				textLayout;
 		protected TextLayout				iconLayout;
 	}
 }
