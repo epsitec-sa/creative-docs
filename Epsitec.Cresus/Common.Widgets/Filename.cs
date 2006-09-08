@@ -23,7 +23,7 @@ namespace Epsitec.Common.Widgets
 
 		static Filename()
 		{
-			double h = Filename.textHeight + Filename.iconHeight;
+			double h = Filename.textHeight + Filename.iconHeight + Filename.topMargin;
 			Helpers.VisualPropertyMetadata metadataDy = new Helpers.VisualPropertyMetadata(h, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
 			Visual.PreferredHeightProperty.OverrideMetadata(typeof(Filename), metadataDy);
 		}
@@ -89,6 +89,7 @@ namespace Epsitec.Common.Widgets
 			textRect.Top = textRect.Bottom+Filename.textHeight;
 
 			Rectangle iconRect = this.Client.Bounds;
+			iconRect.Top -= Filename.topMargin;
 			iconRect.Bottom += Filename.textHeight;
 
 			//	Affiche le texte.
@@ -127,6 +128,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 
+		protected static readonly double	topMargin = 5;
 		protected static readonly double	iconHeight = 32;
 		protected static readonly double	textHeight = 20;
 
