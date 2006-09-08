@@ -100,7 +100,7 @@ namespace Epsitec.Common.Widgets
 
 			this.textLayout.Alignment = ContentAlignment.MiddleCenter;
 			this.textLayout.LayoutSize = textRect.Size;
-			this.textLayout.Text = this.filename;
+			this.textLayout.Text = TextLayout.ConvertToTaggedText(this.filename);
 			this.textLayout.Paint(textRect.BottomLeft, graphics);
 
 			//	Affiche l'icône.

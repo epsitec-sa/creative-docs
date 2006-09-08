@@ -548,7 +548,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.files.Add(new Item(null, false, this.isModel));  // première ligne avec 'nouveau document vide'
 			}
 
-#if true
+#if false
 			//?FolderItem root = FileManager.GetFolderItem(this.initialDirectory, FolderQueryMode.NoIcons);
 
 			foreach (FolderItem item in FileManager.GetFolderItems(this.initialDirectory, FolderQueryMode.NoIcons))
@@ -640,7 +640,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				}
 				else
 				{
-					this.fieldFilename.Text = System.IO.Path.GetFileNameWithoutExtension(this.initialFilename);
+					this.fieldFilename.Text = TextLayout.ConvertToTaggedText(System.IO.Path.GetFileNameWithoutExtension(this.initialFilename));
 				}
 
 				this.ignoreChanged = false;
@@ -823,11 +823,12 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				int sel = this.renameSelected;
 				this.renameSelected = -1;
 				string srcFilename, dstFilename;
+				string newText = TextLayout.ConvertToSimpleText(this.fieldRename.Text);
 
 				if (this.files[sel].IsDirectory)
 				{
 					srcFilename = this.files[sel].Filename;
-					dstFilename = string.Concat(System.IO.Path.GetDirectoryName(srcFilename), "\\", this.fieldRename.Text);
+					dstFilename = string.Concat(System.IO.Path.GetDirectoryName(srcFilename), "\\", newText);
 
 					try
 					{
@@ -841,7 +842,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				else
 				{
 					srcFilename = this.files[sel].Filename;
-					dstFilename = string.Concat(System.IO.Path.GetDirectoryName(srcFilename), "\\", this.fieldRename.Text, System.IO.Path.GetExtension(srcFilename));
+					dstFilename = string.Concat(System.IO.Path.GetDirectoryName(srcFilename), "\\", newText, System.IO.Path.GetExtension(srcFilename));
 
 					try
 					{
@@ -860,9 +861,9 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			}
 		}
 
-		protected bool ActionOpen()
+		protected bool ActionOK()
 		{
-			//	Effectue l'action lorsque le bouton 'Ouvrir' est actionné.
+			//	Effectue l'action lorsque le bouton 'Ouvrir/Enregistrer' est actionné.
 			//	Retourne true s'il faut fermer le dialogue.
 			int sel = this.table.SelectedRow;
 			if (sel != -1)
@@ -933,6 +934,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		protected static string GetIllustredPath(string path)
 		{
 			//	Retourne le chemin illustré.
+			path = TextLayout.ConvertToTaggedText(path);
+
 			if (path.Length == 3 && path.EndsWith(":\\"))  // "C:\" ?
 			{
 				System.IO.DriveType type = AbstractFile.GetDriveType(path);
@@ -1088,7 +1091,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		private void HandleTableDoubleClicked(object sender, MessageEventArgs e)
 		{
 			//	Double-clic dans la liste.
-			if (this.ActionOpen())
+			if (this.ActionOK())
 			{
 				this.CloseWindow();
 			}
@@ -1224,7 +1227,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				AbstractTextField field = this.focusedWidget as AbstractTextField;
 				if (!string.IsNullOrEmpty(field.Text))
 				{
-					string filename = string.Concat(this.initialDirectory, "\\", field.Text, this.fileExtension);
+					string filename = string.Concat(this.initialDirectory, "\\", TextLayout.ConvertToSimpleText(field.Text), this.fileExtension);
 					this.selectedFilename = filename;
 					this.selectedFilenames = null;
 
@@ -1236,7 +1239,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				}
 			}
 
-			if (this.ActionOpen())
+			if (this.ActionOK())
 			{
 				this.CloseWindow();
 			}
@@ -1291,16 +1294,16 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 							int index = this.filename.LastIndexOf("\\");
 							if (index == -1)
 							{
-								return this.filename;
+								return TextLayout.ConvertToTaggedText(this.filename);
 							}
 							else
 							{
-								return this.filename.Substring(index+1);
+								return TextLayout.ConvertToTaggedText(this.filename.Substring(index+1));
 							}
 						}
 						else
 						{
-							return System.IO.Path.GetFileNameWithoutExtension(this.filename);
+							return TextLayout.ConvertToTaggedText(System.IO.Path.GetFileNameWithoutExtension(this.filename));
 						}
 					}
 				}
