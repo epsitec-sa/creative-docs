@@ -185,7 +185,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 		protected void CreateFavourites()
 		{
-			//	Crée le panneau gauche pour les favoris.
+			//	Crée le panneau de gauche pour les favoris.
 			this.favourites = new Scrollable(this.window.Root);
 			this.favourites.PreferredWidth = 100;
 			this.favourites.HorizontalScrollerMode = ScrollableScrollerMode.HideAlways;
@@ -362,7 +362,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 		protected void UpdateFavourites()
 		{
-			//	Met à jour la liste des favoris.
+			//	Met à jour le panneau de gauche des favoris.
 			foreach (Widget widget in this.favourites.Panel.Children.Widgets)
 			{
 				if (widget is Filename)
@@ -378,13 +378,32 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.FavouritesAdd("Exemples Epsitec", "New");
 			this.FavouritesAdd("Mes documents", "FileTypeDirectory");
 			this.FavouritesAdd("Poste de travail", "FileTypeDirectory");
+
+			this.FavouritesAdd(FolderId.VirtualMyComputer);
+			this.FavouritesAdd(FolderId.DesktopDirectory);
+			this.FavouritesAdd(FolderId.MyDocuments);
 		}
 
 		protected void FavouritesAdd(string text, string icon)
 		{
+			//	Ajoute un favoris dans le panneau de gauche.
 			Filename f = new Filename();
 			f.FilenameValue = text;
 			f.IconValue = Misc.Icon(icon);
+			f.Dock = DockStyle.Top;
+			//?f.Clicked += new MessageEventHandler();
+			this.favourites.Panel.Children.Add(f);
+		}
+
+		protected void FavouritesAdd(FolderId id)
+		{
+			//	Ajoute un favoris dans le panneau de gauche.
+			FolderItem item = FileManager.GetFolderItem(id, FolderQueryMode.LargeIcons);
+
+			Filename f = new Filename();
+			f.Name = item.FullPath;
+			f.FilenameValue = item.DisplayName;
+			f.ImageValue = item.Icon;
 			f.Dock = DockStyle.Top;
 			//?f.Clicked += new MessageEventHandler();
 			this.favourites.Panel.Children.Add(f);
