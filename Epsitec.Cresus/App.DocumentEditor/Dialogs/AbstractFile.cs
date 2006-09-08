@@ -40,15 +40,20 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			//	Dossier initial.
 			get
 			{
-				return this.initialDirectory;
+				return this.initialFolder.FullPath;
 			}
 			set
 			{
-				if (this.initialDirectory != value)
+				if (value == "")  // poste de travail ?
 				{
-					this.initialDirectory = value;
-					this.UpdateInitialDirectory();
+					this.initialFolder = FileManager.GetFolderItem(FolderId.VirtualMyComputer, FolderQueryMode.NoIcons);
 				}
+				else
+				{
+					this.initialFolder = FileManager.GetFolderItem(value, FolderQueryMode.NoIcons);
+				}
+
+				this.UpdateInitialDirectory();
 			}
 		}
 
@@ -135,6 +140,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.UpdateTable(initialSelection);
 			this.UpdateInitialDirectory();
 			this.UpdateInitialFilename();
+			this.UpdateButtons();
 
 			if (focusInFilename)
 			{
@@ -385,6 +391,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				widget.Dispose();
 			}
 
+			this.favoritesList = new List<FolderItem>();
+
 			string path;
 
 			if (!this.isSave)
@@ -410,13 +418,17 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		protected void FavoritesAdd(string text, string icon, string path)
 		{
 			//	Ajoute un favoris dans le panneau de gauche.
+			FolderItem item = FileManager.GetFolderItem(path, FolderQueryMode.LargeIcons);
+
 			Filename f = new Filename();
-			f.Name = path;
+			f.Name = this.favoritesList.Count.ToString(System.Globalization.CultureInfo.InvariantCulture);
 			f.FilenameValue = text;
 			f.IconValue = Misc.Icon(icon);
 			f.Dock = DockStyle.Top;
 			f.Clicked += new MessageEventHandler(this.HandleFavoriteClicked);
 			this.favorites.Panel.Children.Add(f);
+
+			this.favoritesList.Add(item);
 		}
 
 		protected void FavoritesAdd(FolderId id)
@@ -425,12 +437,14 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			FolderItem item = FileManager.GetFolderItem(id, FolderQueryMode.LargeIcons);
 
 			Filename f = new Filename();
-			f.Name = item.FullPath;
+			f.Name = this.favoritesList.Count.ToString(System.Globalization.CultureInfo.InvariantCulture);
 			f.FilenameValue = item.DisplayName;
 			f.ImageValue = item.Icon;
 			f.Dock = DockStyle.Top;
 			f.Clicked += new MessageEventHandler(this.HandleFavoriteClicked);
 			this.favorites.Panel.Children.Add(f);
+
+			this.favoritesList.Add(item);
 		}
 
 		protected void UpdateSelectedFavorites()
@@ -442,7 +456,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				{
 					Filename f = widget as Filename;
 
-					bool active = (f.Name == this.initialDirectory);
+					int i = System.Int32.Parse(f.Name, System.Globalization.CultureInfo.InvariantCulture);
+					bool active = (this.favoritesList[i].FullPath == this.initialFolder.FullPath);
 					f.ActiveState = active ? ActiveState.Yes : ActiveState.No;
 				}
 			}
@@ -561,7 +576,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.files.Add(new Item());  // première ligne avec 'nouveau document vide'
 			}
 
-			foreach (FolderItem item in FileManager.GetFolderItems(this.initialDirectory, FolderQueryMode.NoIcons))
+			foreach (FolderItem item in FileManager.GetFolderItems(this.initialFolder, FolderQueryMode.NoIcons))
 			{
 				if (!item.IsFolder)  // fichier ?
 				{
@@ -590,6 +605,12 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.renameState.Enable = enable;
 				this.deleteState.Enable = enable;
 			}
+
+			if (this.parentState != null)
+			{
+				FolderItem parent = FileManager.GetParentFolderItem(this.initialFolder, FolderQueryMode.NoIcons);
+				this.parentState.Enable = !parent.IsEmpty;
+			}
 		}
 
 		protected void UpdateInitialDirectory()
@@ -598,7 +619,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			if (this.fieldPath != null)
 			{
 				this.ignoreChanged = true;
-				this.fieldPath.Text = AbstractFile.RemoveStartingSpaces(AbstractFile.GetIllustredPath(this.initialDirectory));
+				//?this.fieldPath.Text = AbstractFile.RemoveStartingSpaces(AbstractFile.GetIllustredPath(this.initialFolder.FullPath));
+				this.fieldPath.Text = this.initialFolder.DisplayName;
 				this.UpdateSelectedFavorites();
 				this.ignoreChanged = false;
 			}
@@ -636,18 +658,16 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		protected void ParentDirectory()
 		{
 			//	Remonte dans le dossier parent.
-			int index = this.initialDirectory.LastIndexOf("\\");
-			if (index != -1)
+			FolderItem parent = FileManager.GetParentFolderItem(this.initialFolder, FolderQueryMode.NoIcons);
+			if (parent.IsEmpty)
 			{
-				string dir = this.initialDirectory.Substring(0, index);
-				if (dir.Length == 2)  // "C:" ?
-				{
-					dir += "\\";  // toujours la forme "C:\\"
-				}
-
-				this.InitialDirectory = dir;
-				this.UpdateTable(-1);
+				return;
 			}
+
+			this.initialFolder = parent;
+			this.UpdateInitialDirectory();
+			this.UpdateTable(-1);
+			this.UpdateButtons();
 		}
 
 		protected void NewDirectory()
@@ -681,7 +701,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			{
 				for (int i=1; i<100; i++)
 				{
-					string newDir = string.Concat(this.initialDirectory, "\\", Res.Strings.Dialog.File.NewDirectoryName);
+					string newDir = string.Concat(this.initialFolder.FullPath, "\\", Res.Strings.Dialog.File.NewDirectoryName);
 					if (i > 1)
 					{
 						newDir = string.Concat(newDir, " (", i.ToString(), ")");
@@ -867,8 +887,10 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			{
 				if (this.files[sel].IsDirectory)  // ouvre un dossier ?
 				{
-					this.InitialDirectory = this.files[sel].Filename;
+					this.initialFolder = this.files[sel].FolderItem;
+					this.UpdateInitialDirectory();
 					this.UpdateTable(-1);
+					this.UpdateButtons();
 					return false;  // ne pas fermer le dialogue
 				}
 				else
@@ -1041,9 +1063,13 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		private void HandleFavoriteClicked(object sender, MessageEventArgs e)
 		{
 			//	Favoris cliqué dans le panneau de gauche.
-			Filename filename = sender as Filename;
-			this.InitialDirectory = filename.Name;
+			Filename f = sender as Filename;
+			int i = System.Int32.Parse(f.Name, System.Globalization.CultureInfo.InvariantCulture);
+			this.initialFolder = this.favoritesList[i];
+
+			this.UpdateInitialDirectory();
 			this.UpdateTable(-1);
+			this.UpdateButtons();
 		}
 
 		private void HandleRenameAccepted(object sender)
@@ -1097,6 +1123,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		private void HandleFieldPathComboOpening(object sender, CancelEventArgs e)
 		{
 			//	Le menu pour le chemin d'accès va être ouvert.
+#if false
 			this.comboTexts = new List<string>();
 			this.comboDirectories = new List<string>();
 
@@ -1140,21 +1167,25 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			}
 
 			this.comboSelected = -1;
+#endif
 		}
 
 		private void HandleFieldPathComboClosed(object sender)
 		{
 			//	Le menu pour le chemin d'accès a été fermé.
+#if false
 			if (this.comboSelected != -1)
 			{
 				this.InitialDirectory = this.comboDirectories[this.comboSelected];
 				this.UpdateTable(-1);
 			}
+#endif
 		}
 
 		void HandleFieldPathTextChanged(object sender)
 		{
 			//	Le texte pour le chemin d'accès a changé.
+#if false
 			if (this.ignoreChanged)
 			{
 				return;
@@ -1164,6 +1195,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.comboSelected = this.comboTexts.IndexOf(this.fieldPath.Text);
 			this.fieldPath.Text = AbstractFile.RemoveStartingSpaces(this.fieldPath.Text);
 			this.ignoreChanged = false;
+#endif
 		}
 
 		private void HandleSliderChanged(object sender)
@@ -1200,7 +1232,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				AbstractTextField field = this.focusedWidget as AbstractTextField;
 				if (!string.IsNullOrEmpty(field.Text))
 				{
-					string filename = string.Concat(this.initialDirectory, "\\", TextLayout.ConvertToSimpleText(field.Text), this.fileExtension);
+					string filename = string.Concat(this.initialFolder.FullPath, "\\", TextLayout.ConvertToSimpleText(field.Text), this.fileExtension);
 					this.selectedFilename = filename;
 					this.selectedFilenames = null;
 
@@ -1226,7 +1258,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		{
 			public Item()
 			{
-				//	Crée un item pour 'Nouveau  document vide'.
+				//	Crée un item pour 'Nouveau document vide'.
 				this.isNewEmptyDocument = true;
 			}
 
@@ -1520,7 +1552,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		protected bool						isMultipleSelection = false;
 		protected bool						isNewEmtpyDocument = false;
 		protected bool						isSave = false;
-		protected string					initialDirectory;
+		protected FolderItem				initialFolder;
 		protected string					initialFilename;
 		protected List<Item>				files;
 		protected string					selectedFilename;
@@ -1529,6 +1561,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		protected int						renameSelected = -1;
 		protected Widget					focusedWidget;
 		protected bool						ignoreChanged = false;
+		protected List<FolderItem>			favoritesList;
 		protected List<string>				comboDirectories;
 		protected List<string>				comboTexts;
 		protected int						comboSelected;
