@@ -622,6 +622,11 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 			foreach (FolderItem item in FileManager.GetFolderItems(this.initialFolder, FolderQueryMode.SmallIcons))
 			{
+				if (item.IsHidden)
+				{
+					continue;  // ignore les dossiers et fichiers cachés
+				}
+
 				if (!item.IsFolder)  // fichier ?
 				{
 					string ext = System.IO.Path.GetExtension(item.FullPath);
