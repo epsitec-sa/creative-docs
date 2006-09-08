@@ -102,6 +102,11 @@ namespace Epsitec.Common.Support
 		/// <returns>An enumeration of folder items.</returns>
 		public static IEnumerable<FolderItem> GetFolderItems(FolderItem path, FolderQueryMode mode)
 		{
+			if (path.IsEmpty)
+			{
+				throw new System.ArgumentException ("Empty FolderItem provided");
+			}
+
 			return Platform.FileInfo.GetFolderItems (path, mode);
 		}
 
@@ -113,7 +118,14 @@ namespace Epsitec.Common.Support
 		/// <returns>An enumeration of folder items.</returns>
 		public static IEnumerable<FolderItem> GetFolderItems(string path, FolderQueryMode mode)
 		{
-			return Platform.FileInfo.GetFolderItems (Platform.FileInfo.CreateFolderItem (path, FolderQueryMode.NoIcons), mode);
+			try
+			{
+				return Platform.FileInfo.GetFolderItems (Platform.FileInfo.CreateFolderItem (path, mode), mode);
+			}
+			catch (System.IO.FileNotFoundException)
+			{
+				throw new System.IO.FileNotFoundException (string.Format ("File {0} does not exist", path), path);
+			}
 		}
 		
 		public static FolderItem GetParentFolderItem(FolderItem path, FolderQueryMode mode)
