@@ -105,6 +105,15 @@ namespace Epsitec.Common.Support
 			}
 		}
 
+		public bool								IsFolder
+		{
+			get
+			{
+				return (this.attributes & Platform.FolderItemAttributes.Folder) != 0;
+			}
+		}
+
+
 		public bool								IsCompressed
 		{
 			get

@@ -21,5 +21,6 @@ namespace Epsitec.Common.Support.Platform
 		Shortcut		= 0x0100,
 		ReadOnly		= 0x0200,
 		Shared			= 0x0400,
+		Folder			= 0x0800,
 	}
 }

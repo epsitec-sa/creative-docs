@@ -271,6 +271,10 @@ namespace Epsitec.Common.Support.Platform.Win32
 			{
 				attributes |= FolderItemAttributes.Browsable;
 			}
+			if ((info.dwAttributes & (uint) ShellApi.SFGAO.SFGAO_FOLDER) != 0)
+			{
+				attributes |= FolderItemAttributes.Folder;
+			}
 			if ((info.dwAttributes & (uint) ShellApi.SFGAO.SFGAO_CANCOPY) != 0)
 			{
 				attributes |= FolderItemAttributes.CanCopy;
