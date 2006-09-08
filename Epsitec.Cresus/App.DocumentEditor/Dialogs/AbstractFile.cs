@@ -123,6 +123,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.CreateRename();
 			this.CreateFooter();
 			this.CreateFilename();
+
+			this.UpdateFavourites();
 		}
 
 		protected void UpdateAll(int initialSelection, bool focusInFilename)
@@ -130,7 +132,6 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			//	Mise à jour lorsque les widgets sont déjà créés, avant de montrer le dialogue.
 			this.selectedFilename = null;
 			this.selectedFilenames = null;
-			this.UpdateFavourites();
 			this.UpdateTable(initialSelection);
 			this.UpdateInitialDirectory();
 			this.UpdateInitialFilename();
@@ -368,7 +369,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				if (widget is Filename)
 				{
 					Filename f = widget as Filename;
-					//?f.Clicked -= new MessageEventHandler();
+					f.Clicked -= new MessageEventHandler(this.HandleFavouriteClicked);
 				}
 
 				widget.Dispose();
@@ -401,7 +402,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			f.FilenameValue = text;
 			f.IconValue = Misc.Icon(icon);
 			f.Dock = DockStyle.Top;
-			//?f.Clicked += new MessageEventHandler();
+			f.Clicked += new MessageEventHandler(this.HandleFavouriteClicked);
 			this.favourites.Panel.Children.Add(f);
 		}
 
@@ -415,8 +416,23 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			f.FilenameValue = item.DisplayName;
 			f.ImageValue = item.Icon;
 			f.Dock = DockStyle.Top;
-			//?f.Clicked += new MessageEventHandler();
+			f.Clicked += new MessageEventHandler(this.HandleFavouriteClicked);
 			this.favourites.Panel.Children.Add(f);
+		}
+
+		protected void UpdateSelectedFavourites()
+		{
+			//	Met à jour le favoris sélectionné selon le chemin d'accès en cours.
+			foreach (Widget widget in this.favourites.Panel.Children.Widgets)
+			{
+				if (widget is Filename)
+				{
+					Filename f = widget as Filename;
+
+					bool active = (f.Name == this.initialDirectory);
+					f.ActiveState = active ? ActiveState.Yes : ActiveState.No;
+				}
+			}
 		}
 
 		protected void UpdateTable(int sel)
@@ -524,7 +540,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 		protected void ListFilenames()
 		{
-			//	Effectue la liste des fichiers .crmod contenus dans le dossier adhoc.
+			//	Effectue la liste des fichiers contenus dans le dossier adhoc.
 			this.files = new List<Item>();
 
 			if (this.isNewEmtpyDocument)
@@ -532,6 +548,16 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.files.Add(new Item(null, false, this.isModel));  // première ligne avec 'nouveau document vide'
 			}
 
+#if true
+			//?FolderItem root = FileManager.GetFolderItem(this.initialDirectory, FolderQueryMode.NoIcons);
+
+			foreach (FolderItem item in FileManager.GetFolderItems(this.initialDirectory, FolderQueryMode.NoIcons))
+			{
+				this.files.Add(new Item(item.DisplayName, false, this.isModel));
+			}
+
+
+#else
 			if (this.isNavigationEnabled)
 			{
 				string[] directories;
@@ -572,6 +598,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 					this.files.Add(new Item(filename, false, this.isModel));
 				}
 			}
+#endif
 		}
 
 		protected void UpdateButtons()
@@ -595,6 +622,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			{
 				this.ignoreChanged = true;
 				this.fieldPath.Text = AbstractFile.RemoveStartingSpaces(AbstractFile.GetIllustredPath(this.initialDirectory));
+				this.UpdateSelectedFavourites();
 				this.ignoreChanged = false;
 			}
 		}
@@ -1009,6 +1037,14 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		}
 
 
+
+		private void HandleFavouriteClicked(object sender, MessageEventArgs e)
+		{
+			//	Favoris cliqué dans le panneau de gauche.
+			Filename filename = sender as Filename;
+			this.InitialDirectory = filename.Name;
+			this.UpdateTable(-1);
+		}
 
 		private void HandleRenameAccepted(object sender)
 		{
