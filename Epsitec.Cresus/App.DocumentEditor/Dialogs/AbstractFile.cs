@@ -574,6 +574,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				{
 					im.DrawingImage = this.files[row].Image;
 					im.PaintFrame = !this.files[row].IsDirectory;
+					im.StretchImage = !this.files[row].IsDirectory;
 					im.FixIcon = null;
 				}
 				else
