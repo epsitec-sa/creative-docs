@@ -1103,8 +1103,14 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			//	Le menu pour le chemin d'accès va être ouvert.
 			this.comboFolders = new List<Item>();
 
-			FolderItem computer = FileManager.GetFolderItem(FolderId.VirtualMyComputer, FolderQueryMode.NoIcons);
+#if true
+			//	Ajoute toutes les unités du bureau et du poste de travail.
 			FolderItem desktop = FileManager.GetFolderItem(FolderId.VirtualDesktop, FolderQueryMode.NoIcons);
+			FolderItem computer = FileManager.GetFolderItem(FolderId.VirtualMyComputer, FolderQueryMode.NoIcons);
+
+			this.ComboAdd(desktop, null);
+			Item root = this.comboFolders[this.comboFolders.Count-1];
+			
 			foreach (FolderItem item in FileManager.GetFolderItems(desktop, FolderQueryMode.NoIcons))
 			{
 				if (!item.IsFolder)
@@ -1112,7 +1118,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 					continue;
 				}
 
-				this.ComboAdd(item);
+				this.ComboAdd(item, root);
+				Item parent = this.comboFolders[this.comboFolders.Count-1];
 
 				if (item.DisplayName == computer.DisplayName)
 				{
@@ -1123,28 +1130,56 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 							continue;
 						}
 
-						this.ComboAdd(subItem);
+						this.ComboAdd(subItem, parent);
 					}
 				}
 			}
+#endif
 
-			FolderItem folder = this.initialFolder;
-			while (!folder.IsEmpty)
+#if true
+			//	Ajoute toutes les unités du chemin courant et de ses parents.
+			FolderItem currentFolder = this.initialFolder;
+			int nb = 0;
+			while (!currentFolder.IsEmpty)
 			{
-				this.ComboAdd(folder);
-
-				folder = FileManager.GetParentFolderItem(folder, FolderQueryMode.NoIcons);
+				this.ComboAdd(currentFolder, null);
+				nb++;
+				currentFolder = FileManager.GetParentFolderItem(currentFolder, FolderQueryMode.NoIcons);
 			}
 
+			int count = this.comboFolders.Count;
+			for (int i=count-nb; i<count-1; i++)
+			{
+				this.comboFolders[i].Parent = this.comboFolders[i+1];
+			}
+#endif
+
+			//	Trie la liste obtenue.
 			this.comboFolders.Sort();
 
+			//	Supprime les doublons.
+			int index=0;
+			while (index < this.comboFolders.Count-1)
+			{
+				Item i1 = this.comboFolders[index];
+				Item i2 = this.comboFolders[index+1];
+				if (i1.CompareTo(i2) == 0)
+				{
+					this.comboFolders.RemoveAt(index+1);
+				}
+				else
+				{
+					index++;
+				}
+			}
 
+			//	Crée le menu-combo.
 			this.fieldPath.Items.Clear();
 			this.comboTexts = new List<string>();
 
 			foreach (Item cell in this.comboFolders)
 			{
-				string text = AbstractFile.AddStringIndent(cell.ShortFilename, cell.Level);
+				string text = AbstractFile.AddStringIndent(cell.ShortFilename, cell.Deep);
 				this.fieldPath.Items.Add(text);
 				this.comboTexts.Add(text);
 			}
@@ -1152,10 +1187,11 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.comboSelected = -1;
 		}
 
-		protected void ComboAdd(FolderItem folderItem)
+		protected void ComboAdd(FolderItem folderItem, Item parent)
 		{
 			//	TODO: vérifier si la liste ne contient pas déjà folderItem !
 			Item item = new Item(folderItem, this.isModel);
+			item.Parent = parent;
 			item.SortAccordingToLevel = true;
 			this.comboFolders.Add(item);
 		}
@@ -1477,41 +1513,6 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				return null;
 			}
 
-			public bool SortAccordingToLevel
-			{
-				//	Indique si le tri doit tenir compte du niveau (lent).
-				get
-				{
-					return this.sortAccordingToLevel;
-				}
-				set
-				{
-					this.sortAccordingToLevel = value;
-				}
-			}
-
-			public int Level
-			{
-				//	Retourne le niveau d'imbrication du dossier.
-				//	Pour un dossier du bureau, le niveau est 0.
-				//	Pour un dossier du poste de travail, le niveau est 1.
-				//	Un cache évite de recalculer le niveau chaque fois !
-				get
-				{
-					if (this.level == -1)  // niveau pas encore connu ?
-					{
-						FolderItem item = this.folderItem;
-						while (!item.IsEmpty)
-						{
-							item = FileManager.GetParentFolderItem(item, FolderQueryMode.NoIcons);
-							this.level++;
-						}
-					}
-
-					return this.level;  // retourne le niveau connu
-				}
-			}
-
 			protected byte[] ReadStatistics()
 			{
 				//	Lit les données des statistiques associée au fichier.
@@ -1532,19 +1533,110 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				return null;
 			}
 
+
+			public bool SortAccordingToLevel
+			{
+				//	Indique si le tri doit tenir compte du niveau (lent).
+				get
+				{
+					return this.sortAccordingToLevel;
+				}
+				set
+				{
+					this.sortAccordingToLevel = value;
+				}
+			}
+
+			public Item Parent
+			{
+				get
+				{
+					return this.parent;
+				}
+				set
+				{
+					this.parent = value;
+				}
+			}
+
+			protected Item GetParent(int level)
+			{
+				int deep = this.Deep;
+				if (level <= deep)
+				{
+					Item current = this;
+					for (int i=0; i<deep-level; i++)
+					{
+						current = current.parent;
+					}
+					return current;
+				}
+				else
+				{
+					return null;
+				}
+			}
+
+			public int Deep
+			{
+				//	Retourne la profondeur d'imbrication du dossier.
+				//	Pour un dossier du bureau, la profondeur est 0.
+				//	Pour un dossier du poste de travail, la profondeur est 1.
+				get
+				{
+					int deep = 0;
+					Item current = this;
+					while (current.parent != null)
+					{
+						current = current.parent;
+						deep++;
+					}
+					return deep;
+				}
+			}
+
+
 			#region IComparable Members
 			public int CompareTo(object obj)
 			{
-				Item that = obj as Item;
-
 				if (this.sortAccordingToLevel)
 				{
-					int cl = this.Level.CompareTo(that.Level);
-					if (cl != 0)
+					Item that = obj as Item;
+
+					for (int level=0; level<100; level++)
 					{
-						return cl;
+						Item p1 = this.GetParent(level);
+						Item p2 = that.GetParent(level);
+
+						if (p1 == null && p2 == null)
+						{
+							return this.BaseCompareTo(obj);
+						}
+
+						if (p1 == null && p2 != null)
+						{
+							return -1;
+						}
+
+						if (p1 != null && p2 == null)
+						{
+							return 1;
+						}
+
+						int c = p1.BaseCompareTo(p2);
+						if (c != 0)
+						{
+							return c;
+						}
 					}
 				}
+
+				return this.BaseCompareTo(obj);
+			}
+
+			protected int BaseCompareTo(object obj)
+			{
+				Item that = obj as Item;
 
 				if (this.isNewEmptyDocument != that.isNewEmptyDocument)
 				{
@@ -1569,10 +1661,10 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			#endregion
 
 			protected FolderItem				folderItem;
+			protected Item						parent;
 			protected bool						isModel;
 			protected bool						isNewEmptyDocument;
 			protected bool						sortAccordingToLevel = false;
-			protected int						level = -1;
 		}
 		#endregion
 
