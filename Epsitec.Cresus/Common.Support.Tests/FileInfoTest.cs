@@ -179,9 +179,15 @@ namespace Epsitec.Common.Support
 			Assert.AreEqual (parent1, parent2);
 			Assert.AreEqual (desktop, parent1);
 			Assert.AreEqual (desktop, parent2);
-			
+
 			Assert.IsTrue (okComputer);
 			Assert.IsTrue (okDocuments);
+		}
+
+		[Test]
+		public void CheckShowHiddenFiles()
+		{
+			System.Console.Out.WriteLine ("Show hidden files : {0}", FolderItem.ShowHiddenFiles);
 		}
 		
 		[Test]
