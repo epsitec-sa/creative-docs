@@ -196,6 +196,19 @@ namespace Epsitec.Common.Support
 			}
 		}
 
+		
+		public static readonly FolderItem		Empty = new FolderItem ();
+
+		public static bool						ShowHiddenFiles
+		{
+			get
+			{
+				int value = (int) Microsoft.Win32.Registry.GetValue (@"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced", "Hidden", 2);
+
+				return value == 1;
+			}
+		}
+		
 		#region IEquatable<FolderItem> Members
 
 		public bool Equals(FolderItem other)
@@ -261,8 +274,7 @@ namespace Epsitec.Common.Support
 			return buffer.ToString ();
 		}
 		
-		public static readonly FolderItem		Empty = new FolderItem ();
-
+		
 		internal Platform.FolderItemHandle		Handle
 		{
 			get

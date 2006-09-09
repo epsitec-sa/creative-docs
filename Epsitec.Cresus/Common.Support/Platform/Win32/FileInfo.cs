@@ -59,6 +59,11 @@ namespace Epsitec.Common.Support.Platform.Win32
 
 			if (file == FolderId.VirtualDesktop)
 			{
+				if (PidlHandle.VirtualDesktopHandle.Pidl == System.IntPtr.Zero)
+				{
+					PidlHandle.VirtualDesktopHandle.SetPidlCopy (pidl);
+				}
+
 				item.Handle = PidlHandle.VirtualDesktopHandle;
 			}
 			

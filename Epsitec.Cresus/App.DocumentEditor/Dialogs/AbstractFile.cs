@@ -631,11 +631,12 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			}
 
 			FolderQueryMode mode = this.UseLargeIcons ? FolderQueryMode.LargeIcons : FolderQueryMode.SmallIcons;
+			bool showHidden = FolderItem.ShowHiddenFiles;
 			foreach (FolderItem item in FileManager.GetFolderItems(this.initialFolder, mode))
 			{
-				if (item.IsHidden)
+				if (item.IsHidden && !showHidden)
 				{
-					continue;  // ignore les dossiers et fichiers cachés
+					continue;  // ignore les dossiers et fichiers cachés si l'utilisateur ne veut pas les voir
 				}
 
 				if (!item.IsFolder)  // fichier ?
