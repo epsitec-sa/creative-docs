@@ -26,6 +26,11 @@ namespace Epsitec.Common.Support.Platform.Win32
 				return this.pidl;
 			}
 		}
+
+		public void SetPidlCopy(System.IntPtr pidl)
+		{
+			this.pidl = ShellApi.ILCombine (pidl, System.IntPtr.Zero);
+		}
 		
 		protected override void Dispose(bool disposing)
 		{
@@ -33,6 +38,25 @@ namespace Epsitec.Common.Support.Platform.Win32
 			this.pidl = System.IntPtr.Zero;
 		}
 
+		protected override bool InternalEquals(FolderItemHandle other)
+		{
+			PidlHandle that = other as PidlHandle;
+			
+			if (System.Object.ReferenceEquals (that, null))
+			{
+				return false;
+			}
+
+			if (this.pidl == that.pidl)
+			{
+				return true;
+			}
+			else
+			{
+				return ShellApi.ILIsEqual (this.pidl, that.pidl);
+			}
+		}
+		
 		public static PidlHandle Inherit(System.IntPtr pidl)
 		{
 			PidlHandle handle = new PidlHandle ();
@@ -51,5 +75,6 @@ namespace Epsitec.Common.Support.Platform.Win32
 		public static readonly PidlHandle VirtualDesktopHandle = new PidlHandle ();
 
 		System.IntPtr pidl;
+
 	}
 }

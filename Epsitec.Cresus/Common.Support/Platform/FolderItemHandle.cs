@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Support.Platform
 {
-	internal abstract class FolderItemHandle : System.IDisposable
+	internal abstract class FolderItemHandle : System.IDisposable, System.IEquatable<FolderItemHandle>
 	{
 		public FolderItemHandle()
 		{
@@ -26,6 +26,36 @@ namespace Epsitec.Common.Support.Platform
 
 		#endregion
 
+		#region IEquatable<FolderItemHandle> Members
+
+		public bool Equals(FolderItemHandle other)
+		{
+			if (System.Object.ReferenceEquals (other, null))
+			{
+				return false;
+			}
+			if (System.Object.ReferenceEquals (other, this))
+			{
+				return true;
+			}
+
+			return this.InternalEquals (other);
+		}
+
+		#endregion
+
+		public override bool Equals(object obj)
+		{
+			FolderItemHandle other = obj as FolderItemHandle;
+			return this.Equals (other);
+		}
+
+		public override int GetHashCode()
+		{
+			return base.GetHashCode ();
+		}
+
 		protected abstract void Dispose(bool disposing);
+		protected abstract bool InternalEquals(FolderItemHandle other);
 	}
 }
