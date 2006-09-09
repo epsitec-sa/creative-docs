@@ -148,6 +148,43 @@ namespace Epsitec.Common.Support
 		}
 
 		[Test]
+		public void CheckEqualsFolderItem()
+		{
+			FolderItem desktop = FileManager.GetFolderItem (FolderId.VirtualDesktop, FolderQueryMode.NoIcons);
+			FolderItem computer = FileManager.GetFolderItem (FolderId.VirtualMyComputer, FolderQueryMode.NoIcons);
+			FolderItem documents = FileManager.GetFolderItem (FolderId.VirtualMyDocuments, FolderQueryMode.NoIcons);
+
+			bool okComputer = false;
+			bool okDocuments = false;
+
+			FolderItem parent1 = FolderItem.Empty;
+			FolderItem parent2 = FolderItem.Empty;
+
+			Assert.AreEqual (parent1, parent2);
+
+			foreach (FolderItem item in FileManager.GetFolderItems (desktop, FolderQueryMode.NoIcons))
+			{
+				if (item == computer)
+				{
+					okComputer = true;
+					parent1 = FileManager.GetParentFolderItem (item, FolderQueryMode.NoIcons);
+				}
+				if (item == documents)
+				{
+					okDocuments = true;
+					parent2 = FileManager.GetParentFolderItem (item, FolderQueryMode.NoIcons);
+				}
+			}
+
+			Assert.AreEqual (parent1, parent2);
+			Assert.AreEqual (desktop, parent1);
+			Assert.AreEqual (desktop, parent2);
+			
+			Assert.IsTrue (okComputer);
+			Assert.IsTrue (okDocuments);
+		}
+		
+		[Test]
 		public void CheckGetParentFolderItem1()
 		{
 			FolderItem item = FileManager.GetFolderItem (FolderId.VirtualMyDocuments, FolderQueryMode.NoIcons);

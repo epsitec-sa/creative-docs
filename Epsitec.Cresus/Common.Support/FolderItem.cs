@@ -9,7 +9,7 @@ namespace Epsitec.Common.Support
 	/// The <c>FolderItem</c> structure represents an item in a folder. This
 	/// can be a folder, a file or a virtual folder (provided by the shell).
 	/// </summary>
-	public struct FolderItem
+	public struct FolderItem : System.IEquatable<FolderItem>
 	{
 		internal FolderItem(Common.Drawing.Image icon, string displayName, string typeName, string fullPath, Platform.FolderItemHandle handle, Platform.FolderItemAttributes attributes)
 		{
@@ -194,6 +194,52 @@ namespace Epsitec.Common.Support
 					return null;
 				}
 			}
+		}
+
+		#region IEquatable<FolderItem> Members
+
+		public bool Equals(FolderItem other)
+		{
+			if (System.Object.ReferenceEquals (other, null))
+			{
+				return false;
+			}
+
+			if (this.handle == null)
+			{
+				return (this.handle == other.handle);
+			}
+
+			return this.handle.Equals (other.handle);
+		}
+
+		#endregion
+
+		public static bool operator==(FolderItem a, FolderItem b)
+		{
+			return a.Equals (b);
+		}
+
+		public static bool operator!=(FolderItem a, FolderItem b)
+		{
+			return !a.Equals (b);
+		}
+
+		public override bool Equals(object obj)
+		{
+			if (obj is FolderItem)
+			{
+				return this.Equals ((FolderItem) obj);
+			}
+			else
+			{
+				return false;
+			}
+		}
+
+		public override int GetHashCode()
+		{
+			return this.handle == null ? 0 : this.handle.GetHashCode ();
 		}
 
 		public override string ToString()

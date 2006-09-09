@@ -257,6 +257,11 @@ namespace Epsitec.Common.Support.Platform.Win32
 			IntPtr pidlRelative);
 
 		[DllImport ("shell32.dll")]
+		public static extern bool ILIsEqual(
+			IntPtr pidlA,
+			IntPtr pidlB);
+
+		[DllImport ("shell32.dll")]
 		public static extern bool ILRemoveLastID(
 			IntPtr pidl);
 
