@@ -138,8 +138,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			else
 			{
 				FolderItem last = this.favoritesVisited[this.favoritesVisited.Count-1];
-				//?return (last == folder);  // TODO: dès que Pierre le permettra !
-				return false;
+				return (last == folder);
 			}
 		}
 
@@ -495,7 +494,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 					Filename f = widget as Filename;
 
 					int i = System.Int32.Parse(f.Name, System.Globalization.CultureInfo.InvariantCulture);
-					bool active = (this.favoritesList[i].FullPath == this.initialFolder.FullPath);
+					bool active = (this.favoritesList[i] == this.initialFolder);
 					f.ActiveState = active ? ActiveState.Yes : ActiveState.No;
 				}
 			}
@@ -1216,7 +1215,6 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 		protected void ComboAdd(FolderItem folderItem, Item parent)
 		{
-			//	TODO: vérifier si la liste ne contient pas déjà folderItem !
 			Item item = new Item(folderItem, this.isModel);
 			item.Parent = parent;
 			item.SortAccordingToLevel = true;
