@@ -1561,6 +1561,10 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 			protected Item GetParent(int level)
 			{
+				//	Retourne un parent.
+				//	Le niveau 0 correspond au bureau.
+				//	Le niveau Deep correspond à l'objet lui-même.
+				//	Un niveau supérieur retourne null.
 				int deep = this.Deep;
 				if (level <= deep)
 				{
@@ -1599,6 +1603,16 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			#region IComparable Members
 			public int CompareTo(object obj)
 			{
+				//	Comparaison simple ou complexe, selon SortAccordingToLevel.
+				//	En mode complexe (SortAccordingToLevel = true), on cherche
+				//	à obtenir cet ordre:
+				//		A		(deep = 0)
+				//		B		(deep = 0)
+				//		B/1		(deep = 1)
+				//		B/1/a	(deep = 2)
+				//		B/1/b	(deep = 2)
+				//		B/2		(deep = 1)
+				//		C		(deep = 0)
 				if (this.sortAccordingToLevel)
 				{
 					Item that = obj as Item;
@@ -1636,6 +1650,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 			protected int BaseCompareTo(object obj)
 			{
+				//	Comparaison simple, sans tenir compte du niveau.
 				Item that = obj as Item;
 
 				if (this.isNewEmptyDocument != that.isNewEmptyDocument)
