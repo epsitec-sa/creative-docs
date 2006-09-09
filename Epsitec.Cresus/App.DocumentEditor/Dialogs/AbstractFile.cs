@@ -1392,6 +1392,19 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				}
 			}
 
+			public bool IsDrive
+			{
+				get
+				{
+					if (this.isNewEmptyDocument)
+					{
+						return false;
+					}
+
+					return this.folderItem.IsDrive;
+				}
+			}
+
 			public string FileSize
 			{
 				//	Taille du fichier en kilo-bytes.
@@ -1685,15 +1698,31 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 					return this.isNewEmptyDocument ? -1 : 1;  // 'nouveau document vide' au début
 				}
 
+				if (this.IsDrive != that.IsDrive)
+				{
+					return this.IsDrive ? -1 : 1;  // unités avant les fichiers
+				}
+
 				if (this.IsDirectory != that.IsDirectory)
 				{
 					return this.IsDirectory ? -1 : 1;  // dossiers avant les fichiers
 				}
 
-				int ct = this.folderItem.TypeName.CompareTo(that.folderItem.TypeName);
-				if (ct != 0)
+				if (this.IsDrive)
 				{
-					return ct;
+					int ct = this.folderItem.DriveInfo.Name.CompareTo(that.folderItem.DriveInfo.Name);
+					if (ct != 0)
+					{
+						return ct;
+					}
+				}
+				else
+				{
+					int ct = this.folderItem.TypeName.CompareTo(that.folderItem.TypeName);
+					if (ct != 0)
+					{
+						return ct;
+					}
 				}
 
 				string f1 = this.ShortFilename.ToLower();
