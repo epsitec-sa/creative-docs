@@ -634,9 +634,14 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			bool showHidden = FolderItem.ShowHiddenFiles;
 			foreach (FolderItem item in FileManager.GetFolderItems(this.initialFolder, mode))
 			{
+				if (!item.IsFileSystemNode)
+				{
+					continue;  // ignore les items qui ne stockent pas des fichiers
+				}
+
 				if (item.IsHidden && !showHidden)
 				{
-					continue;  // ignore les dossiers et fichiers cachés si l'utilisateur ne veut pas les voir
+					continue;  // ignore les items cachés si l'utilisateur ne veut pas les voir
 				}
 
 				if (!item.IsFolder)  // fichier ?
@@ -1108,12 +1113,23 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			//	Ajoute toutes les unités du bureau et du poste de travail.
 			FolderItem desktop = FileManager.GetFolderItem(FolderId.VirtualDesktop, FolderQueryMode.NoIcons);
 			FolderItem computer = FileManager.GetFolderItem(FolderId.VirtualMyComputer, FolderQueryMode.NoIcons);
+			bool showHidden = FolderItem.ShowHiddenFiles;
 
 			this.ComboAdd(desktop, null);
 			Item root = this.comboFolders[this.comboFolders.Count-1];
 			
 			foreach (FolderItem item in FileManager.GetFolderItems(desktop, FolderQueryMode.NoIcons))
 			{
+				if (!item.IsFileSystemNode)
+				{
+					continue;  // ignore les items qui ne stockent pas des fichiers
+				}
+
+				if (item.IsHidden && !showHidden)
+				{
+					continue;  // ignore les items cachés si l'utilisateur ne veut pas les voir
+				}
+
 				if (!item.IsFolder)
 				{
 					continue;
@@ -1126,6 +1142,16 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				{
 					foreach (FolderItem subItem in FileManager.GetFolderItems(item, FolderQueryMode.NoIcons))
 					{
+						if (!subItem.IsFileSystemNode)
+						{
+							continue;  // ignore les items qui ne stockent pas des fichiers
+						}
+
+						if (subItem.IsHidden && !showHidden)
+						{
+							continue;  // ignore les items cachés si l'utilisateur ne veut pas les voir
+						}
+
 						if (!subItem.IsFolder)
 						{
 							continue;
