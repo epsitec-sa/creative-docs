@@ -124,6 +124,7 @@ namespace Epsitec.Common.Support
 			foreach (FolderItem item in FileManager.GetFolderItems (root, FolderQueryMode.LargeIcons))
 			{
 				System.Console.Out.WriteLine ("{0} ({1}), {2}, Virtual={3}", item.DisplayName, item.TypeName, item.FullPath, item.IsVirtual);
+				System.Console.Out.WriteLine ("  {0}", item);
 			}
 		}
 
@@ -135,6 +136,14 @@ namespace Epsitec.Common.Support
 			foreach (FolderItem item in FileManager.GetFolderItems (root, FolderQueryMode.LargeIcons))
 			{
 				System.Console.Out.WriteLine ("{0} ({1}), {2}, Virtual={3}", item.DisplayName, item.TypeName, item.FullPath, item.IsVirtual);
+				System.Console.Out.WriteLine ("  {0}", item);
+
+				System.IO.DriveInfo drive = item.DriveInfo;
+
+				if (drive != null)
+				{
+					System.Console.Out.WriteLine ("  DriveType={0}", drive.DriveType);
+				}
 			}
 		}
 
