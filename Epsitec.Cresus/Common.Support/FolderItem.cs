@@ -154,6 +154,48 @@ namespace Epsitec.Common.Support
 			}
 		}
 
+		public bool								IsDrive
+		{
+			get
+			{
+				//	WIN32 specific code :
+
+				if ((this.fullPath != null) &&
+					(this.fullPath.Length == 3) &&
+					(this.fullPath[1] == ':'))
+				{
+					return true;
+				}
+				else
+				{
+					return false;
+				}
+			}
+		}
+
+		public bool								IsFileSystemNode
+		{
+			get
+			{
+				return (this.attributes & Platform.FolderItemAttributes.FileSystemNode) != 0;
+			}
+		}
+
+		public System.IO.DriveInfo				DriveInfo
+		{
+			get
+			{
+				if (this.IsDrive)
+				{
+					return new System.IO.DriveInfo (this.fullPath);
+				}
+				else
+				{
+					return null;
+				}
+			}
+		}
+
 		public override string ToString()
 		{
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
@@ -161,11 +203,14 @@ namespace Epsitec.Common.Support
 			buffer.Append (this.DisplayName);
 			buffer.AppendFormat (" ({0}) attr=", this.TypeName);
 			buffer.Append (this.IsBrowsable ? "B" : "b");
+			buffer.Append (this.IsFolder ? "F" : "f");
+			buffer.Append (this.IsDrive ? "D" : "d");
 			buffer.Append (this.IsCompressed ? "C" : "c");
 			buffer.Append (this.IsEncrypted ? "E" : "e");
 			buffer.Append (this.IsHidden ? "H" : "h");
 			buffer.Append (this.IsShortcut ? "S" : "s");
 			buffer.Append (this.IsReadOnly ? "R" : "r");
+			buffer.Append (this.IsFileSystemNode ? "N" : "n");
 
 			return buffer.ToString ();
 		}

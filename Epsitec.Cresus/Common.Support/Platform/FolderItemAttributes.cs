@@ -22,5 +22,6 @@ namespace Epsitec.Common.Support.Platform
 		ReadOnly		= 0x0200,
 		Shared			= 0x0400,
 		Folder			= 0x0800,
+		FileSystemNode	= 0x1000,
 	}
 }

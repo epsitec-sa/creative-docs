@@ -186,12 +186,16 @@ namespace Epsitec.Common.Support.Platform.Win32
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder (260);
 			System.Drawing.Icon icon;
 
+			string fullPath;
 			string displayName;
 			string typeName;
 			FolderItemAttributes attributes;
 
-			FileInfo.GetIconAndDescription (pidl, mode, out icon, out displayName, out typeName, out attributes);
 			ShellApi.SHGetPathFromIDList (pidl, buffer);
+
+			fullPath = buffer.ToString ();
+
+			FileInfo.GetIconAndDescription (pidl, fullPath, mode, out icon, out displayName, out typeName, out attributes);
 			Drawing.Image image = null;
 
 			if (icon != null)
@@ -199,48 +203,11 @@ namespace Epsitec.Common.Support.Platform.Win32
 				image = Drawing.Bitmap.FromNativeIcon (icon);
 			}
 
-			return new FolderItem (image, displayName, typeName, buffer.ToString (), PidlHandle.Inherit (pidl), attributes);
+			return new FolderItem (image, displayName, typeName, fullPath, PidlHandle.Inherit (pidl), attributes);
 		}
 
 
-		private static bool GetIconAndDescription(ShellApi.CSIDL csidl, FolderQueryMode mode, out System.Drawing.Icon icon, out string displayName, out string typeName)
-		{
-			System.IntPtr pidl = System.IntPtr.Zero;
-			ShellApi.SHGetFolderLocation (System.IntPtr.Zero, (short) csidl, System.IntPtr.Zero, 0, out pidl);
-
-			try
-			{
-				return FileInfo.GetIconAndDescription (pidl, mode, out icon, out displayName, out typeName);
-			}
-			finally
-			{
-				PidlHandle.FreePidl (pidl);
-			}
-		}
-
-		private static bool GetIconAndDescription(string path, FolderQueryMode mode, out System.Drawing.Icon icon, out string displayName, out string typeName)
-		{
-			System.IntPtr pidl = System.IntPtr.Zero;
-			uint attribute;
-			ShellApi.SHParseDisplayName (path, System.IntPtr.Zero, out pidl, 0, out attribute);
-
-			try
-			{
-				return FileInfo.GetIconAndDescription (pidl, mode, out icon, out displayName, out typeName);
-			}
-			finally
-			{
-				PidlHandle.FreePidl (pidl);
-			}
-		}
-
-		private static bool GetIconAndDescription(System.IntPtr pidl, FolderQueryMode mode, out System.Drawing.Icon icon, out string displayName, out string typeName)
-		{
-			FolderItemAttributes attributes;
-			return FileInfo.GetIconAndDescription (pidl, mode, out icon, out displayName, out typeName, out attributes);
-		}
-
-		private static bool GetIconAndDescription(System.IntPtr pidl, FolderQueryMode mode, out System.Drawing.Icon icon, out string displayName, out string typeName, out FolderItemAttributes attributes)
+		private static bool GetIconAndDescription(System.IntPtr pidl, string fullPath, FolderQueryMode mode, out System.Drawing.Icon icon, out string displayName, out string typeName, out FolderItemAttributes attributes)
 		{
 			if (pidl == System.IntPtr.Zero)
 			{
@@ -253,9 +220,27 @@ namespace Epsitec.Common.Support.Platform.Win32
 			}
 
 			ShellApi.SHFILEINFO info = new ShellApi.SHFILEINFO ();
-			
-			FileInfo.GetShellFileInfo (pidl, mode, ref info);
 
+			bool requestAttributes;
+			
+			attributes = FolderItemAttributes.None;
+
+			if ((!string.IsNullOrEmpty (fullPath)) &&
+				(fullPath.Length == 3) &&
+				(fullPath[1] == ':'))
+			{
+				requestAttributes = false;
+				
+				attributes |= FolderItemAttributes.Folder;
+				attributes |= FolderItemAttributes.FileSystemNode;
+			}
+			else
+			{
+				requestAttributes = true;
+			}
+
+			FileInfo.GetShellFileInfo (pidl, mode, requestAttributes, ref info);
+			
 			if (info.hIcon == System.IntPtr.Zero)
 			{
 				icon = null;
@@ -270,7 +255,17 @@ namespace Epsitec.Common.Support.Platform.Win32
 			displayName = info.szDisplayName;
 			typeName    = info.szTypeName;
 
-			attributes = FolderItemAttributes.None;
+#if false
+			System.Diagnostics.Debug.WriteLine (string.Format ("{0} {1} : {2}", displayName, typeName, info.dwAttributes.ToString ("X")));
+
+			foreach (uint bit in System.Enum.GetValues (typeof (ShellApi.SFGAO)))
+			{
+				if ((info.dwAttributes & bit) == bit)
+				{
+					System.Diagnostics.Debug.WriteLine (string.Format ("- {0}", (ShellApi.SFGAO) bit));
+				}
+			}
+#endif
 
 			if ((info.dwAttributes & (uint) ShellApi.SFGAO.SFGAO_BROWSABLE) != 0)
 			{
@@ -320,39 +315,54 @@ namespace Epsitec.Common.Support.Platform.Win32
 			{
 				attributes |= FolderItemAttributes.Shortcut;
 			}
+			if ((info.dwAttributes & (uint) ShellApi.SFGAO.SFGAO_FILESYSANCESTOR) != 0)
+			{
+				attributes |= FolderItemAttributes.FileSystemNode;
+			}
+			if ((info.dwAttributes & (uint) ShellApi.SFGAO.SFGAO_FILESYSTEM) != 0)
+			{
+				attributes |= FolderItemAttributes.FileSystemNode;
+			}
 
 			return true;
 		}
 
-		private static void GetShellFileInfo(System.IntPtr pidl, FolderQueryMode mode, ref ShellApi.SHFILEINFO info)
+		private static void GetShellFileInfo(System.IntPtr pidl, FolderQueryMode mode, bool requestAttributes, ref ShellApi.SHFILEINFO info)
 		{
 			ShellApi.SHGFI flags = ShellApi.SHGFI.SHGFI_DISPLAYNAME |
 				/**/			   ShellApi.SHGFI.SHGFI_TYPENAME |
-				/**/			   ShellApi.SHGFI.SHGFI_PIDL |
-				/**/			   ShellApi.SHGFI.SHGFI_ATTRIBUTES;
+				/**/			   ShellApi.SHGFI.SHGFI_PIDL;
 
-			if (mode.AsOpenFolder)
+			if (requestAttributes)
 			{
-				flags |= ShellApi.SHGFI.SHGFI_OPENICON;
-			}
-			
-			switch (mode.IconSelection)
-			{
-				case FileInfoIconSelection.Active:
-					flags |= ShellApi.SHGFI.SHGFI_SELECTED;
-					break;
+				flags |= ShellApi.SHGFI.SHGFI_ATTRIBUTES;
 			}
 
-			switch (mode.IconSize)
+			if (mode != null)
 			{
-				case FileInfoIconSize.Small:
-					flags |= ShellApi.SHGFI.SHGFI_SMALLICON;
-					flags |= ShellApi.SHGFI.SHGFI_ICON;
-					break;
-				case FileInfoIconSize.Large:
-					flags |= ShellApi.SHGFI.SHGFI_LARGEICON;
-					flags |= ShellApi.SHGFI.SHGFI_ICON;
-					break;
+				if (mode.AsOpenFolder)
+				{
+					flags |= ShellApi.SHGFI.SHGFI_OPENICON;
+				}
+
+				switch (mode.IconSelection)
+				{
+					case FileInfoIconSelection.Active:
+						flags |= ShellApi.SHGFI.SHGFI_SELECTED;
+						break;
+				}
+
+				switch (mode.IconSize)
+				{
+					case FileInfoIconSize.Small:
+						flags |= ShellApi.SHGFI.SHGFI_SMALLICON;
+						flags |= ShellApi.SHGFI.SHGFI_ICON;
+						break;
+					case FileInfoIconSize.Large:
+						flags |= ShellApi.SHGFI.SHGFI_LARGEICON;
+						flags |= ShellApi.SHGFI.SHGFI_ICON;
+						break;
+				}
 			}
 
 			ShellApi.SHGetFileInfo (pidl, 0, out info, System.Runtime.InteropServices.Marshal.SizeOf (info), flags);
