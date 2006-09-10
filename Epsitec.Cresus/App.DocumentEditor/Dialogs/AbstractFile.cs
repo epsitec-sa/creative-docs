@@ -54,6 +54,11 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				else
 				{
 					folder = FileManager.GetFolderItem(value, FolderQueryMode.NoIcons);
+
+					if (folder.IsEmpty)
+					{
+						folder = FileManager.GetFolderItem(FolderId.VirtualMyComputer, FolderQueryMode.NoIcons);
+					}
 				}
 
 				this.SetInitialFolder(folder);
@@ -117,7 +122,14 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.favoritesVisited.Add(this.initialFolder);
 			}
 
-			this.initialFolder = folder;
+			if (folder.IsEmpty)
+			{
+				this.initialFolder = FileManager.GetFolderItem(FolderId.VirtualMyComputer, FolderQueryMode.NoIcons);
+			}
+			else
+			{
+				this.initialFolder = folder;
+			}
 
 			this.UpdateInitialDirectory();
 			this.UpdateTable(-1);
@@ -165,8 +177,6 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.CreateRename();
 			this.CreateFooter();
 			this.CreateFilename();
-
-			this.UpdateFavorites();
 		}
 
 		protected void UpdateAll(int initialSelection, bool focusInFilename)
@@ -174,6 +184,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			//	Mise à jour lorsque les widgets sont déjà créés, avant de montrer le dialogue.
 			this.selectedFilename = null;
 			this.selectedFilenames = null;
+			this.UpdateFavorites();
 			this.UpdateTable(initialSelection);
 			this.UpdateInitialDirectory();
 			this.UpdateInitialFilename();
@@ -212,8 +223,6 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.favoritesDownState   = this.CreateCommandState("[300B]", this.FavoriteDown);
 			this.favoritesBigState    = this.CreateCommandState("[300C]", this.FavoriteBig);
 
-			this.favoritesBigState.ActiveState = ActiveState.Yes;
-
 			CommandDispatcher.SetDispatcher(this.window, this.dispatcher);
 			CommandContext.SetContext(this.window, this.context);
 		}
@@ -240,7 +249,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		{
 			//	Crée le panneau de gauche pour les favoris.
 			Widget container = new Widget(this.window.Root);
-			container.PreferredWidth = 100;
+			container.PreferredWidth = 110;
 			container.Dock = DockStyle.Left;
 			container.Margins = new Margins(0, 10, 0, 0);
 
@@ -462,6 +471,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		protected void UpdateFavorites()
 		{
 			//	Met à jour le panneau de gauche des favoris.
+			this.favoritesBigState.ActiveState = this.globalSettings.FavoritesBig ? ActiveState.Yes : ActiveState.No;
+
 			foreach (Widget widget in this.favorites.Panel.Children.Widgets)
 			{
 				if (widget is Filename)
@@ -495,6 +506,15 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.FavoritesAdd(FolderId.VirtualMyDocuments);  // Mes documents
 			this.FavoritesAdd(FolderId.VirtualMyComputer);   // Poste de travail
 			this.FavoritesAdd(FolderId.VirtualNetwork);      // Favoris réseau
+
+			this.favoritesFixes = this.favoritesList.Count;
+
+			System.Collections.ArrayList list = this.globalSettings.FavoritesList;
+			foreach (string dir in list)
+			{
+				FolderItem item = FileManager.GetFolderItem(dir, FolderQueryMode.NoIcons);
+				this.FavoritesAdd(item.DisplayName, "FileTypeFavorite", dir);
+			}
 		}
 
 		protected void FavoritesAdd(string text, string icon, string path)
@@ -534,6 +554,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		protected void UpdateSelectedFavorites()
 		{
 			//	Met à jour le favoris sélectionné selon le chemin d'accès en cours.
+			this.favoritesSelected = -1;
+
 			foreach (Widget widget in this.favorites.Panel.Children.Widgets)
 			{
 				if (widget is Filename)
@@ -543,6 +565,11 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 					int i = System.Int32.Parse(f.Name, System.Globalization.CultureInfo.InvariantCulture);
 					bool active = (this.favoritesList[i] == this.initialFolder);
 					f.ActiveState = active ? ActiveState.Yes : ActiveState.No;
+
+					if (active)
+					{
+						this.favoritesSelected = i;
+					}
 				}
 			}
 		}
@@ -715,7 +742,14 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 			this.favoritesExtend.GlyphShape = this.favoritesToolbar.Visibility ? GlyphShape.ArrowUp : GlyphShape.ArrowDown;
 
-			int sel = this.table.SelectedRow;
+			System.Collections.ArrayList list = this.globalSettings.FavoritesList;
+			int sel = this.favoritesSelected-this.favoritesFixes;
+			this.favoritesAddState.Enable = this.IsFavoriteAddPossible;
+			this.favoritesRemoveState.Enable = (sel >= 0);
+			this.favoritesUpState.Enable = (sel >= 1);
+			this.favoritesDownState.Enable = (sel >= 0 && sel < list.Count-1);
+
+			sel = this.table.SelectedRow;
 			bool enable = (sel != -1 && this.files[sel].Filename != Common.Document.Settings.GlobalSettings.NewEmptyDocument);
 			
 			this.renameState.Enable = enable;
@@ -998,24 +1032,87 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			}
 		}
 
+		protected bool IsFavoriteAddPossible
+		{
+			//	Indique si le dossier en cours peut être ajouté aux favoris.
+			get
+			{
+				foreach (FolderItem item in this.favoritesList)
+				{
+					if (item == this.initialFolder)
+					{
+						return false;
+					}
+				}
+
+				return true;
+			}
+		}
+
 		protected void FavoriteAdd()
 		{
 			//	Ajoute un favoris.
+			if (this.IsFavoriteAddPossible)
+			{
+				System.Collections.ArrayList list = this.globalSettings.FavoritesList;
+				list.Add(this.InitialDirectory);
+
+				this.UpdateFavorites();
+				this.UpdateSelectedFavorites();
+				this.UpdateButtons();
+			}
 		}
 
 		protected void FavoriteRemove()
 		{
 			//	Supprime un favoris.
+			System.Collections.ArrayList list = this.globalSettings.FavoritesList;
+			int sel = this.favoritesSelected-this.favoritesFixes;
+
+			if (sel >= 0)
+			{
+				list.RemoveAt(sel);
+
+				this.UpdateFavorites();
+				this.UpdateSelectedFavorites();
+				this.UpdateButtons();
+			}
 		}
 
 		protected void FavoriteUp()
 		{
 			//	Monte un favoris dans la liste.
+			System.Collections.ArrayList list = this.globalSettings.FavoritesList;
+			int sel = this.favoritesSelected-this.favoritesFixes;
+
+			if (sel >= 1)
+			{
+				string s = list[sel] as string;
+				list.RemoveAt(sel);
+				list.Insert(sel-1, s);
+
+				this.UpdateFavorites();
+				this.UpdateSelectedFavorites();
+				this.UpdateButtons();
+			}
 		}
 
 		protected void FavoriteDown()
 		{
 			//	Descend un favoris dans la liste.
+			System.Collections.ArrayList list = this.globalSettings.FavoritesList;
+			int sel = this.favoritesSelected-this.favoritesFixes;
+
+			if (sel >= 0 && sel < list.Count-1)
+			{
+				string s = list[sel] as string;
+				list.RemoveAt(sel);
+				list.Insert(sel+1, s);
+
+				this.UpdateFavorites();
+				this.UpdateSelectedFavorites();
+				this.UpdateButtons();
+			}
 		}
 
 		protected void FavoriteBig()
@@ -1024,10 +1121,12 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			if (this.favoritesBigState.ActiveState == ActiveState.No)
 			{
 				this.favoritesBigState.ActiveState = ActiveState.Yes;
+				this.globalSettings.FavoritesBig = true;
 			}
 			else
 			{
 				this.favoritesBigState.ActiveState = ActiveState.No;
+				this.globalSettings.FavoritesBig = false;
 			}
 
 			foreach (Widget widget in this.favorites.Panel.Children.Widgets)
@@ -1857,6 +1956,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		protected Widget					focusedWidget;
 		protected bool						ignoreChanged = false;
 		protected List<FolderItem>			favoritesList;
+		protected int						favoritesFixes;
+		protected int						favoritesSelected;
 		protected List<FolderItem>			favoritesVisited;
 		protected List<Item>				comboFolders;
 		protected List<string>				comboTexts;

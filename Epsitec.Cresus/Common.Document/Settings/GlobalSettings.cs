@@ -394,7 +394,7 @@ namespace Epsitec.Common.Document.Settings
 		}
 
 
-		protected System.Collections.ArrayList FavoritesList
+		public System.Collections.ArrayList FavoritesList
 		{
 			get
 			{
@@ -402,7 +402,7 @@ namespace Epsitec.Common.Document.Settings
 			}
 		}
 
-		protected bool FavoritesBig
+		public bool FavoritesBig
 		{
 			get
 			{
