@@ -79,6 +79,34 @@ namespace Epsitec.Common.Drawing
 				return this.bitmap_data.Stride;
 			}
 		}
+
+		public byte[] GetRawBitmapBytes()
+		{
+			this.LockBits ();
+
+			try
+			{
+				if (this.bitmap_data != null)
+				{
+					System.IntPtr memory = this.Scan0;
+					int size = this.bitmap_data.Height * this.bitmap_data.Stride;
+
+					if ((memory != System.IntPtr.Zero) &&
+						(size > 0))
+					{
+						byte[] data = new byte[size];
+						System.Runtime.InteropServices.Marshal.Copy (memory, data, 0, size);
+						return data;
+					}
+				}
+			}
+			finally
+			{
+				this.UnlockBits ();
+			}
+
+			return null;
+		}
 		
 		
 		public bool								IsValid
