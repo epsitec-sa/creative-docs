@@ -16,6 +16,10 @@ namespace Epsitec.Common.Support.Platform.Win32
 			ShellApi.SHGetDesktopFolder (out ptrRoot);
 			
 			this.root = System.Runtime.InteropServices.Marshal.GetTypedObjectForIUnknown (ptrRoot, typeof (IShellFolder)) as IShellFolder;
+
+			FileInfo.CreateFolderItem (FolderId.VirtualDesktop, null);
+
+			System.Diagnostics.Debug.Assert (PidlHandle.VirtualDesktopHandle.Pidl != System.IntPtr.Zero);
 		}
 
 		~FileInfo()
@@ -130,7 +134,6 @@ namespace Epsitec.Common.Support.Platform.Win32
 			uint count;
 
 			IShellFolder folder;
-			IEnumIDList list;
 
 			FileInfo.instance.root.BindToObject (pidlPath, System.IntPtr.Zero, ref ShellGuids.IID_IShellFolder, out ptrPath);
 
@@ -152,25 +155,30 @@ namespace Epsitec.Common.Support.Platform.Win32
 
 			folder.EnumObjects (System.IntPtr.Zero, (int) flags, out ptrList);
 
-			list = System.Runtime.InteropServices.Marshal.GetTypedObjectForIUnknown (ptrList, typeof (IEnumIDList)) as IEnumIDList;
-
-			while (list.Next (1, out pidlElement, out count) == 0)
+			if (ptrList != System.IntPtr.Zero)
 			{
-				System.Diagnostics.Debug.Assert (count == 1);
+				IEnumIDList list;
 				
-				System.IntPtr pidlTemp = ShellApi.ILCombine (pidlPath, pidlElement);
+				list = System.Runtime.InteropServices.Marshal.GetTypedObjectForIUnknown (ptrList, typeof (IEnumIDList)) as IEnumIDList;
 
-				if (pidlTemp != System.IntPtr.Zero)
+				while (list.Next (1, out pidlElement, out count) == 0)
 				{
-					FolderItem item = FileInfo.CreateFolderItemAndInheritPidl (mode, pidlTemp);
+					System.Diagnostics.Debug.Assert (count == 1);
 
-					yield return item;
+					System.IntPtr pidlTemp = ShellApi.ILCombine (pidlPath, pidlElement);
+
+					if (pidlTemp != System.IntPtr.Zero)
+					{
+						FolderItem item = FileInfo.CreateFolderItemAndInheritPidl (mode, pidlTemp);
+
+						yield return item;
+					}
+
+					PidlHandle.FreePidl (pidlElement);
 				}
 
-				PidlHandle.FreePidl (pidlElement);
+				System.Runtime.InteropServices.Marshal.ReleaseComObject (list);
 			}
-
-			System.Runtime.InteropServices.Marshal.ReleaseComObject (list);
 
 			if (folder != FileInfo.instance.root)
 			{
@@ -208,7 +216,16 @@ namespace Epsitec.Common.Support.Platform.Win32
 				image = Drawing.Bitmap.FromNativeIcon (icon);
 			}
 
-			return new FolderItem (image, displayName, typeName, fullPath, PidlHandle.Inherit (pidl), attributes);
+			PidlHandle handle = PidlHandle.Inherit (pidl);
+
+			if ((PidlHandle.VirtualDesktopHandle.Pidl != System.IntPtr.Zero) &&
+				(handle.Equals (PidlHandle.VirtualDesktopHandle)))
+			{
+				handle.Dispose ();
+				handle = PidlHandle.VirtualDesktopHandle;
+			}
+
+			return new FolderItem (image, displayName, typeName, fullPath, handle, attributes);
 		}
 
 
