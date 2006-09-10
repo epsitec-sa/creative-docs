@@ -1,8 +1,10 @@
-//	Copyright © 2004-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2004-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.IO
 {
+	public delegate void ChecksumCallback(IChecksum checksum);
+
 	/// <summary>
 	/// La classe Checksum permet d'accéder aux divers algorithmes de calcul
 	/// de ... checksums sur des données binaires. Voir IChecksum.
@@ -11,6 +13,30 @@ namespace Epsitec.Common.IO
 	{
 		private Checksum()
 		{
+		}
+
+		public static long ComputeCrc32(ChecksumCallback callback)
+		{
+			if (Checksum.sharedCrc32 == null)
+			{
+				Checksum.sharedCrc32 = Checksum.CreateCrc32 ();
+			}
+
+			Checksum.sharedCrc32.Reset ();
+			callback (Checksum.sharedCrc32);
+			return Checksum.sharedCrc32.Value;
+		}
+
+		public static long ComputeAdler32(ChecksumCallback callback)
+		{
+			if (Checksum.sharedAdler32 == null)
+			{
+				Checksum.sharedAdler32 = Checksum.CreateAdler32 ();
+			}
+
+			Checksum.sharedAdler32.Reset ();
+			callback (Checksum.sharedAdler32);
+			return Checksum.sharedAdler32.Value;
 		}
 		
 		
@@ -143,5 +169,11 @@ namespace Epsitec.Common.IO
 			{
 			}
 		}
+
+		[System.ThreadStatic]
+		private static IChecksum sharedCrc32;
+		
+		[System.ThreadStatic]
+		private static IChecksum sharedAdler32;
 	}
 }
