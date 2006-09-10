@@ -21,9 +21,25 @@ namespace Epsitec.Common.Widgets
 		}
 
 
+		public static double ExtendedHeight
+		{
+			get
+			{
+				return Filename.textHeight + Filename.iconHeight + Filename.topMargin;
+			}
+		}
+
+		public static double CompactedHeight
+		{
+			get
+			{
+				return 20;
+			}
+		}
+
 		static Filename()
 		{
-			double h = Filename.textHeight + Filename.iconHeight + Filename.topMargin;
+			double h = Filename.ExtendedHeight;
 			Helpers.VisualPropertyMetadata metadataDy = new Helpers.VisualPropertyMetadata(h, Helpers.VisualPropertyMetadataOptions.AffectsMeasure);
 			Visual.PreferredHeightProperty.OverrideMetadata(typeof(Filename), metadataDy);
 		}
@@ -85,12 +101,29 @@ namespace Epsitec.Common.Widgets
 
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
 
-			Rectangle textRect = this.Client.Bounds;
-			textRect.Top = textRect.Bottom+Filename.textHeight;
-
 			Rectangle iconRect = this.Client.Bounds;
-			iconRect.Top -= Filename.topMargin;
-			iconRect.Bottom += Filename.textHeight;
+			Rectangle textRect = this.Client.Bounds;
+
+			bool compact;
+			string dim;
+			if (textRect.Height <= Filename.CompactedHeight)
+			{
+				compact = true;
+				dim = "dx=\"16\" dy=\"16\"";
+
+				iconRect.Width = iconRect.Height;
+				textRect.Left = iconRect.Right+2;
+				iconRect.Deflate(2);
+			}
+			else
+			{
+				compact = false;
+				dim = "dx=\"32\" dy=\"32\"";
+
+				iconRect.Top -= Filename.topMargin;
+				iconRect.Bottom += Filename.textHeight;
+				textRect.Top = textRect.Bottom+Filename.textHeight;
+			}
 
 			//	Affiche le texte.
 			if (this.textLayout == null)
@@ -98,7 +131,7 @@ namespace Epsitec.Common.Widgets
 				this.textLayout = new TextLayout();
 			}
 
-			this.textLayout.Alignment = ContentAlignment.MiddleCenter;
+			this.textLayout.Alignment = compact ? ContentAlignment.MiddleLeft : ContentAlignment.MiddleCenter;
 			this.textLayout.LayoutSize = textRect.Size;
 			this.textLayout.Text = TextLayout.ConvertToTaggedText(this.filename);
 			this.textLayout.Paint(textRect.BottomLeft, graphics);
@@ -111,9 +144,9 @@ namespace Epsitec.Common.Widgets
 					this.iconLayout = new TextLayout();
 				}
 
-				this.iconLayout.Alignment = ContentAlignment.MiddleCenter;
+				this.iconLayout.Alignment = compact ? ContentAlignment.MiddleLeft : ContentAlignment.MiddleCenter;
 				this.iconLayout.LayoutSize = iconRect.Size;
-				this.iconLayout.Text = string.Format(@"<img src=""{0}""/>", this.icon);
+				this.iconLayout.Text = string.Format(@"<img src=""{0}"" {1}/>", this.icon, dim);
 				this.iconLayout.Paint(iconRect.BottomLeft, graphics);
 			}
 
