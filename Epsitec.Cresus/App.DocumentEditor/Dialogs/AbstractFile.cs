@@ -200,12 +200,19 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			//	MM: numéro de module, voir dans App.DocumentEditor/Resources/App/module.info
 			//	D: numéro du développeur (pour le moment, le numéro du développeur est toujours "0")
 			//	L: numéro local, voir dans App.DocumentEditor/Resources/App/Captions.00.resource
-			this.prevState   = this.CreateCommandState("[3006]", this.NavigatePrev);
-			this.nextState   = this.CreateCommandState("[3007]", this.NavigateNext);
-			this.parentState = this.CreateCommandState("[3001]", this.ParentDirectory);
-			this.newState    = this.CreateCommandState("[3003]", this.NewDirectory);
-			this.renameState = this.CreateCommandState("[3004]", this.RenameStarting);
-			this.deleteState = this.CreateCommandState("[3005]", this.FileDelete);
+			this.prevState            = this.CreateCommandState("[3006]", this.NavigatePrev);
+			this.nextState            = this.CreateCommandState("[3007]", this.NavigateNext);
+			this.parentState          = this.CreateCommandState("[3001]", this.ParentDirectory);
+			this.newState             = this.CreateCommandState("[3003]", this.NewDirectory);
+			this.renameState          = this.CreateCommandState("[3004]", this.RenameStarting);
+			this.deleteState          = this.CreateCommandState("[3005]", this.FileDelete);
+			this.favoritesAddState    = this.CreateCommandState("[3008]", this.FavoriteAdd);
+			this.favoritesRemoveState = this.CreateCommandState("[3009]", this.FavoriteRemove);
+			this.favoritesUpState     = this.CreateCommandState("[300A]", this.FavoriteUp);
+			this.favoritesDownState   = this.CreateCommandState("[300B]", this.FavoriteDown);
+			this.favoritesBigState    = this.CreateCommandState("[300C]", this.FavoriteBig);
+
+			this.favoritesBigState.ActiveState = ActiveState.Yes;
 
 			CommandDispatcher.SetDispatcher(this.window, this.dispatcher);
 			CommandContext.SetContext(this.window, this.context);
@@ -232,14 +239,52 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		protected void CreateFavorites()
 		{
 			//	Crée le panneau de gauche pour les favoris.
-			this.favorites = new Scrollable(this.window.Root);
-			this.favorites.PreferredWidth = 100;
+			Widget container = new Widget(this.window.Root);
+			container.PreferredWidth = 100;
+			container.Dock = DockStyle.Left;
+			container.Margins = new Margins(0, 10, 0, 0);
+
+			this.favoritesToolbar = new Widget(container);
+			this.favoritesToolbar.Visibility = false;
+			this.favoritesToolbar.PreferredHeight = 22;
+			this.favoritesToolbar.Dock = DockStyle.Top;
+			this.favoritesToolbar.Margins = new Margins(0, 0, 0, 1);
+
+			IconButton buttonAdd = new IconButton(this.favoritesToolbar);
+			buttonAdd.CommandObject = this.favoritesAddState.Command;
+			buttonAdd.Dock = DockStyle.Left;
+
+			IconButton buttonRemove = new IconButton(this.favoritesToolbar);
+			buttonRemove.CommandObject = this.favoritesRemoveState.Command;
+			buttonRemove.Dock = DockStyle.Left;
+
+			IconButton buttonUp = new IconButton(this.favoritesToolbar);
+			buttonUp.CommandObject = this.favoritesUpState.Command;
+			buttonUp.Dock = DockStyle.Left;
+
+			IconButton buttonDown = new IconButton(this.favoritesToolbar);
+			buttonDown.CommandObject = this.favoritesDownState.Command;
+			buttonDown.Dock = DockStyle.Left;
+
+			IconButton buttonBig = new IconButton(this.favoritesToolbar);
+			buttonBig.CommandObject = this.favoritesBigState.Command;
+			buttonBig.Dock = DockStyle.Left;
+
+			this.favorites = new Scrollable(container);
 			this.favorites.HorizontalScrollerMode = ScrollableScrollerMode.HideAlways;
 			this.favorites.VerticalScrollerMode = ScrollableScrollerMode.Auto;
 			this.favorites.Panel.IsAutoFitting = true;
 			this.favorites.IsForegroundFrame = true;
-			this.favorites.Dock = DockStyle.Left;
-			this.favorites.Margins = new Margins(0, 10, 0, 0);
+			this.favorites.Dock = DockStyle.Fill;
+
+			Widget band = new Widget(this.favorites);
+			band.PreferredHeight = 12;
+			band.Dock = DockStyle.Top;
+
+			this.favoritesExtend = new GlyphButton(band);
+			this.favoritesExtend.PreferredSize = new Size(12, 12);
+			this.favoritesExtend.Dock = DockStyle.Left;
+			this.favoritesExtend.Clicked += new MessageEventHandler(this.HandleFavoritesExtendClicked);
 		}
 
 		protected void CreateTable(double cellHeight)
@@ -458,6 +503,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			FolderItem item = FileManager.GetFolderItem(path, FolderQueryMode.LargeIcons);
 
 			Filename f = new Filename();
+			f.PreferredHeight = (this.favoritesBigState.ActiveState == ActiveState.Yes) ? Common.Widgets.Filename.ExtendedHeight : Common.Widgets.Filename.CompactedHeight;
 			f.Name = this.favoritesList.Count.ToString(System.Globalization.CultureInfo.InvariantCulture);
 			f.FilenameValue = text;
 			f.IconValue = Misc.Icon(icon);
@@ -474,6 +520,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			FolderItem item = FileManager.GetFolderItem(id, FolderQueryMode.LargeIcons);
 
 			Filename f = new Filename();
+			f.PreferredHeight = (this.favoritesBigState.ActiveState == ActiveState.Yes) ? Common.Widgets.Filename.ExtendedHeight : Common.Widgets.Filename.CompactedHeight;
 			f.Name = this.favoritesList.Count.ToString(System.Globalization.CultureInfo.InvariantCulture);
 			f.FilenameValue = item.DisplayName;
 			f.ImageValue = item.Icon;
@@ -661,26 +708,23 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		protected void UpdateButtons()
 		{
 			//	Met à jour les boutons en fonction du fichier sélectionné dans la liste.
-			if (this.renameState != null &&
-				this.deleteState != null)
+			if (this.renameState == null)
 			{
-				int sel = this.table.SelectedRow;
-				bool enable = (sel != -1 && this.files[sel].Filename != Common.Document.Settings.GlobalSettings.NewEmptyDocument);
-				
-				this.renameState.Enable = enable;
-				this.deleteState.Enable = enable;
+				return;
 			}
 
-			if (this.parentState != null)
-			{
-				FolderItem parent = FileManager.GetParentFolderItem(this.initialFolder, FolderQueryMode.NoIcons);
-				this.parentState.Enable = !parent.IsEmpty;
-			}
+			this.favoritesExtend.GlyphShape = this.favoritesToolbar.Visibility ? GlyphShape.ArrowUp : GlyphShape.ArrowDown;
 
-			if (this.prevState != null)
-			{
-				this.prevState.Enable = (this.favoritesVisited.Count > 0);
-			}
+			int sel = this.table.SelectedRow;
+			bool enable = (sel != -1 && this.files[sel].Filename != Common.Document.Settings.GlobalSettings.NewEmptyDocument);
+			
+			this.renameState.Enable = enable;
+			this.deleteState.Enable = enable;
+
+			FolderItem parent = FileManager.GetParentFolderItem(this.initialFolder, FolderQueryMode.NoIcons);
+			this.parentState.Enable = !parent.IsEmpty;
+
+			this.prevState.Enable = (this.favoritesVisited.Count > 0);
 		}
 
 		protected void UpdateInitialDirectory()
@@ -954,6 +998,48 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			}
 		}
 
+		protected void FavoriteAdd()
+		{
+			//	Ajoute un favoris.
+		}
+
+		protected void FavoriteRemove()
+		{
+			//	Supprime un favoris.
+		}
+
+		protected void FavoriteUp()
+		{
+			//	Monte un favoris dans la liste.
+		}
+
+		protected void FavoriteDown()
+		{
+			//	Descend un favoris dans la liste.
+		}
+
+		protected void FavoriteBig()
+		{
+			//	Modifie la hauteur des favoris.
+			if (this.favoritesBigState.ActiveState == ActiveState.No)
+			{
+				this.favoritesBigState.ActiveState = ActiveState.Yes;
+			}
+			else
+			{
+				this.favoritesBigState.ActiveState = ActiveState.No;
+			}
+
+			foreach (Widget widget in this.favorites.Panel.Children.Widgets)
+			{
+				if (widget is Filename)
+				{
+					Filename f = widget as Filename;
+					f.PreferredHeight = (this.favoritesBigState.ActiveState == ActiveState.Yes) ? Common.Widgets.Filename.ExtendedHeight : Common.Widgets.Filename.CompactedHeight;
+				}
+			}
+		}
+
 		protected bool ActionOK()
 		{
 			//	Effectue l'action lorsque le bouton 'Ouvrir/Enregistrer' est actionné.
@@ -1046,6 +1132,12 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		}
 
 
+
+		private void HandleFavoritesExtendClicked(object sender, MessageEventArgs e)
+		{
+			this.favoritesToolbar.Visibility = !this.favoritesToolbar.Visibility;
+			this.UpdateButtons();
+		}
 
 		private void HandleFavoriteClicked(object sender, MessageEventArgs e)
 		{
@@ -1739,6 +1831,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 
 		protected Scrollable				favorites;
+		protected GlyphButton				favoritesExtend;
+		protected Widget					favoritesToolbar;
 		protected CellTable					table;
 		protected HSlider					slider;
 		protected TextFieldCombo			fieldPath;
@@ -1775,5 +1869,10 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		protected CommandState				newState;
 		protected CommandState				renameState;
 		protected CommandState				deleteState;
+		protected CommandState				favoritesAddState;
+		protected CommandState				favoritesRemoveState;
+		protected CommandState				favoritesUpState;
+		protected CommandState				favoritesDownState;
+		protected CommandState				favoritesBigState;
 	}
 }
