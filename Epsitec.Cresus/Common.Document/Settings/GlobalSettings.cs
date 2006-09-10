@@ -46,6 +46,8 @@ namespace Epsitec.Common.Document.Settings
 			this.lastModelMax = 10;
 			this.lastFilename = new System.Collections.ArrayList();
 			this.lastFilenameMax = 10;
+			this.favoritesList = new System.Collections.ArrayList();
+			this.favoritesBig = true;
 			this.labelProperties = true;
 			this.fineCursor = false;
 			this.fineCursor = false;
@@ -389,6 +391,27 @@ namespace Epsitec.Common.Document.Settings
 		{
 			if ( this.lastFilename.Count < this.lastFilenameMax )  return;
 			this.lastFilename.RemoveAt(this.lastFilename.Count-1);
+		}
+
+
+		protected System.Collections.ArrayList FavoritesList
+		{
+			get
+			{
+				return this.favoritesList;
+			}
+		}
+
+		protected bool FavoritesBig
+		{
+			get
+			{
+				return this.favoritesBig;
+			}
+			set
+			{
+				this.favoritesBig = value;
+			}
 		}
 
 
@@ -842,7 +865,7 @@ namespace Epsitec.Common.Document.Settings
 		public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
 			//	Sérialise les réglages.
-			info.AddValue("Version", 7);
+			info.AddValue("Version", 8);
 
 			info.AddValue("WindowLocation", this.windowLocation);
 			info.AddValue("WindowSize", this.windowSize);
@@ -860,6 +883,8 @@ namespace Epsitec.Common.Document.Settings
 			info.AddValue("LastModel", this.lastModel);
 			info.AddValue("LastFilename", this.lastFilename);
 			info.AddValue("InitialDirectory", this.initialDirectory);
+			info.AddValue("FavoritesList", this.favoritesList);
+			info.AddValue("FavoritesBig", this.favoritesBig);
 			info.AddValue("LabelProperties", this.labelProperties);
 
 			info.AddValue("ColorCollection", this.colorCollection);
@@ -934,6 +959,17 @@ namespace Epsitec.Common.Document.Settings
 			{
 				this.lastModel = new System.Collections.ArrayList();
 			}
+
+			if ( version >= 8 )
+			{
+				this.favoritesList = (System.Collections.ArrayList) info.GetValue("FavoritesList", typeof(System.Collections.ArrayList));
+				this.favoritesBig = info.GetBoolean("FavoritesBig");
+			}
+			else
+			{
+				this.favoritesList = new System.Collections.ArrayList();
+				this.favoritesBig = true;
+			}
 		}
 		#endregion
 
@@ -960,6 +996,8 @@ namespace Epsitec.Common.Document.Settings
 		protected System.Collections.ArrayList	lastFilename;
 		protected int							lastFilenameMax;
 		protected string						initialDirectory;
+		protected System.Collections.ArrayList	favoritesList;
+		protected bool							favoritesBig;
 		protected bool							labelProperties;
 		protected Drawing.ColorCollection		colorCollection;
 		protected string						colorCollectionDirectory;
