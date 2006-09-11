@@ -13,7 +13,7 @@ namespace Epsitec.Common.Support
 	{
 		internal FolderItem(Common.Drawing.Image icon, string displayName, string typeName, string fullPath, Platform.FolderItemHandle handle, Platform.FolderItemAttributes attributes)
 		{
-			this.icon = icon;
+			this.icon = icon == null ? null : new FolderItemIcon (icon);
 			this.displayName = displayName;
 			this.typeName = typeName;
 			this.fullPath = fullPath;
@@ -25,7 +25,7 @@ namespace Epsitec.Common.Support
 		/// Gets the icon for this item.
 		/// </summary>
 		/// <value>The icon or <c>null</c>.</value>
-		public Drawing.Image					Icon
+		public FolderItemIcon					Icon
 		{
 			get
 			{
@@ -287,7 +287,7 @@ namespace Epsitec.Common.Support
 			}
 		}
 		
-		private Drawing.Image					icon;
+		private FolderItemIcon					icon;
 		private string							displayName;
 		private string							typeName;
 		private string							fullPath;

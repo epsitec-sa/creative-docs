@@ -33,7 +33,7 @@ namespace Epsitec.Common.Support
 				
 				if (item.Icon != null)
 				{
-					byte[] data = item.Icon.BitmapImage.Save (Epsitec.Common.Drawing.ImageFormat.Png);
+					byte[] data = item.Icon.Image.BitmapImage.Save (Epsitec.Common.Drawing.ImageFormat.Png);
 					System.IO.File.WriteAllBytes (string.Concat ("Files ", file, ".png"), data);
 				}
 			}
@@ -67,7 +67,7 @@ namespace Epsitec.Common.Support
 
 					if (item.Icon != null)
 					{
-						byte[] data = item.Icon.BitmapImage.Save (Epsitec.Common.Drawing.ImageFormat.Png);
+						byte[] data = item.Icon.Image.BitmapImage.Save (Epsitec.Common.Drawing.ImageFormat.Png);
 						System.IO.File.WriteAllBytes (string.Concat ("Item ", (FolderId) id, ".png"), data);
 					}
 				}
@@ -85,7 +85,7 @@ namespace Epsitec.Common.Support
 
 				if (item.Icon != null)
 				{
-					byte[] data = item.Icon.BitmapImage.Save (Epsitec.Common.Drawing.ImageFormat.Png);
+					byte[] data = item.Icon.Image.BitmapImage.Save (Epsitec.Common.Drawing.ImageFormat.Png);
 					System.IO.File.WriteAllBytes (string.Concat ("Item ", id, ".png"), data);
 				}
 			}
@@ -190,11 +190,13 @@ namespace Epsitec.Common.Support
 			FolderItem documents1 = FileManager.GetFolderItem (FolderId.VirtualMyDocuments, FolderQueryMode.LargeIcons);
 			FolderItem documents2 = FileManager.GetFolderItem (FolderId.VirtualMyDocuments, FolderQueryMode.LargeIcons);
 
-			byte[] image1 = documents1.Icon.BitmapImage.GetRawBitmapBytes ();
-			byte[] image2 = documents1.Icon.BitmapImage.GetRawBitmapBytes ();
+			byte[] image1 = documents1.Icon.Image.BitmapImage.GetRawBitmapBytes ();
+			byte[] image2 = documents1.Icon.Image.BitmapImage.GetRawBitmapBytes ();
 
 			Assert.AreEqual (IO.Checksum.ComputeCrc32 (delegate (IO.IChecksum checksum) { checksum.Update (image1); }),
 							 IO.Checksum.ComputeCrc32 (delegate (IO.IChecksum checksum) { checksum.Update (image2); }));
+
+			Assert.AreEqual (documents1.Icon.ImageName, documents2.Icon.ImageName);
 		}
 		
 		[Test]
