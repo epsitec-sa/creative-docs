@@ -631,7 +631,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 						{
 							st = new StaticText();
 							st.ContentAlignment = ContentAlignment.MiddleLeft;
-							st.TextBreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
+							st.TextBreakMode = TextBreakMode.Hyphenate;
 							st.Dock = DockStyle.Fill;
 							st.Margins = new Margins(6, 6, 0, 0);
 							this.table[column, row].Insert(st);
@@ -899,11 +899,11 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			string message;
 			if (this.files[sel].IsDirectory)
 			{
-				message = string.Format(Res.Strings.Dialog.Delete.Directory, this.files[sel].ShortFilename, this.files[sel].Filename);
+				message = string.Format(Res.Strings.Dialog.Question.Delete.Directory, this.files[sel].ShortFilename, this.files[sel].Filename);
 			}
 			else
 			{
-				message = string.Format(Res.Strings.Dialog.Delete.File, this.files[sel].ShortFilename, this.files[sel].Filename);
+				message = string.Format(Res.Strings.Dialog.Question.Delete.File, this.files[sel].ShortFilename, this.files[sel].Filename);
 			}
 
 			Common.Dialogs.DialogResult result = this.editor.DialogQuestion(this.editor.CommandDispatcher, message);
@@ -1203,9 +1203,18 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		protected bool PromptForOverwriting()
 		{
 			//	Si requis, demande s'il faut écraser le fichier ?
+			if (!this.isSave && !System.IO.File.Exists(this.selectedFilename))  // fichier n'existe pas ?
+			{
+				string message = string.Format(Res.Strings.Dialog.Question.Open.File, Misc.ExtractName(this.selectedFilename), this.selectedFilename);
+				Common.Dialogs.DialogResult result = this.editor.DialogError(this.editor.CommandDispatcher, message);
+				this.selectedFilename = null;
+				this.selectedFilenames = null;
+				return false;  // ne pas fermer le dialogue
+			}
+
 			if (this.isSave && System.IO.File.Exists(this.selectedFilename))  // fichier existe déjà ?
 			{
-				string message = string.Format(Res.Strings.Dialog.Save.File, Misc.ExtractName(this.selectedFilename), this.selectedFilename);
+				string message = string.Format(Res.Strings.Dialog.Question.Save.File, Misc.ExtractName(this.selectedFilename), this.selectedFilename);
 				Common.Dialogs.DialogResult result = this.editor.DialogQuestion(this.editor.CommandDispatcher, message);
 				if (result != Common.Dialogs.DialogResult.Yes)
 				{

@@ -41,7 +41,7 @@
   <data id="061">Help</data>
   <data id="071">Close this dialog</data>
   <data id="081">Explanation</data>
-  <data id="0A1">The file {0} has been modified.</data>
+  <data id="0A1">The file &lt;b&gt;{0}&lt;/b&gt; has been modified.</data>
   <data id="0B1">Do you want to save changes?</data>
   <data id="0C1">Following problems have been identified:</data>
   <data id="0D1">The file has been opened despite of these problems.</data>
@@ -262,5 +262,7 @@
   <data id="0C7">
   </data>
   <data id="0D7">
+  </data>
+  <data id="0E7">
   </data>
 </bundle>
