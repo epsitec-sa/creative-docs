@@ -1588,6 +1588,10 @@ namespace Epsitec.Common.Widgets
 					{
 						image = image.GetImageForPaintStyle (paintStyle);
 					}
+					else if (image.IsPaintStyleDefined (Drawing.GlyphPaintStyle.Normal))
+					{
+						image = image.GetImageForPaintStyle (Drawing.GlyphPaintStyle.Normal);
+					}
 
 					image.DefineZoom (graphics.Transform.GetZoom ());
 					image.DefineColor (uniqueColor.Basic);
