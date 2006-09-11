@@ -83,6 +83,12 @@ namespace Epsitec.Common.Support
 			return Platform.FileInfo.CreateFolderItem (file, mode);
 		}
 
+
+		public static FolderItemIcon GetFolderItemIcon(FolderItem item, FolderQueryMode mode)
+		{
+			return Platform.FileInfo.CreateFolderItem (item.Handle, mode).Icon;
+		}
+
 		/// <summary>
 		/// Gets the folder item for a given path (which must exist).
 		/// </summary>

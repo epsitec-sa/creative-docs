@@ -93,5 +93,26 @@ namespace Epsitec.Common.Support
 			
 			FileManager.DeleteFiles (mode, @"S:\file manager test 1", @"S:\file manager test 2");
 		}
+
+		[Test]
+		public void CheckRecentDocuments()
+		{
+			string path = @"S:\Epsitec.Cresus\Example Document.txt";
+			FileManager.AddToRecentDocuments (path);
+
+			bool ok = false;
+
+			foreach (FolderItem item in FileManager.GetFolderItems (FileManager.GetFolderItem (FolderId.Recent, FolderQueryMode.NoIcons), FolderQueryMode.NoIcons))
+			{
+				System.Console.Out.WriteLine (item);
+
+				if (item.FullPath == path)
+				{
+					ok = true;
+				}
+			}
+
+			Assert.IsTrue (ok, "Not found in recent folder");
+		}
 	}
 }

@@ -73,20 +73,35 @@ namespace Epsitec.Common.Support.Platform.Win32
 			
 			return item;
 		}
-		
+
 		public static FolderItem CreateFolderItem(string path, FolderQueryMode mode)
 		{
 			System.IntPtr pidl = System.IntPtr.Zero;
-			
+
 			uint attributes = 0;
 			uint eaten = 0;
 
 			FileInfo.instance.root.ParseDisplayName (System.IntPtr.Zero, System.IntPtr.Zero, path, ref eaten, out pidl, ref attributes);
-			
+
 			if (pidl == System.IntPtr.Zero)
 			{
 				return FolderItem.Empty;
 			}
+
+			return FileInfo.CreateFolderItemAndInheritPidl (mode, pidl);
+		}
+
+		public static FolderItem CreateFolderItem(FolderItemHandle handle, FolderQueryMode mode)
+		{
+			PidlHandle pidlHandle = handle as PidlHandle;
+			System.IntPtr pidl = pidlHandle == null ? System.IntPtr.Zero : pidlHandle.Pidl;
+
+			if (pidl == System.IntPtr.Zero)
+			{
+				return FolderItem.Empty;
+			}
+
+			pidl = ShellApi.ILCombine (pidl, System.IntPtr.Zero);
 
 			return FileInfo.CreateFolderItemAndInheritPidl (mode, pidl);
 		}
