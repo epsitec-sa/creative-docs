@@ -17,7 +17,7 @@ namespace Epsitec.Common.Support.Platform.Win32
 			
 			this.root = System.Runtime.InteropServices.Marshal.GetTypedObjectForIUnknown (ptrRoot, typeof (IShellFolder)) as IShellFolder;
 
-			FileInfo.CreateFolderItem (FolderId.VirtualDesktop, null);
+			FileInfo.CreateFolderItem (FolderId.VirtualDesktop, FolderQueryMode.NoIcons);
 
 			System.Diagnostics.Debug.Assert (PidlHandle.VirtualDesktopHandle.Pidl != System.IntPtr.Zero);
 		}
@@ -240,7 +240,7 @@ namespace Epsitec.Common.Support.Platform.Win32
 				handle = PidlHandle.VirtualDesktopHandle;
 			}
 
-			return new FolderItem (image, displayName, typeName, fullPath, handle, attributes);
+			return new FolderItem (image, mode, displayName, typeName, fullPath, handle, attributes);
 		}
 
 
@@ -375,31 +375,28 @@ namespace Epsitec.Common.Support.Platform.Win32
 				flags |= ShellApi.SHGFI.SHGFI_ATTRIBUTES;
 			}
 
-			if (mode != null)
+			if (mode.AsOpenFolder)
 			{
-				if (mode.AsOpenFolder)
-				{
-					flags |= ShellApi.SHGFI.SHGFI_OPENICON;
-				}
+				flags |= ShellApi.SHGFI.SHGFI_OPENICON;
+			}
 
-				switch (mode.IconSelection)
-				{
-					case FileInfoIconSelection.Active:
-						flags |= ShellApi.SHGFI.SHGFI_SELECTED;
-						break;
-				}
+			switch (mode.IconSelection)
+			{
+				case FileInfoIconSelection.Active:
+					flags |= ShellApi.SHGFI.SHGFI_SELECTED;
+					break;
+			}
 
-				switch (mode.IconSize)
-				{
-					case FileInfoIconSize.Small:
-						flags |= ShellApi.SHGFI.SHGFI_SMALLICON;
-						flags |= ShellApi.SHGFI.SHGFI_ICON;
-						break;
-					case FileInfoIconSize.Large:
-						flags |= ShellApi.SHGFI.SHGFI_LARGEICON;
-						flags |= ShellApi.SHGFI.SHGFI_ICON;
-						break;
-				}
+			switch (mode.IconSize)
+			{
+				case FileInfoIconSize.Small:
+					flags |= ShellApi.SHGFI.SHGFI_SMALLICON;
+					flags |= ShellApi.SHGFI.SHGFI_ICON;
+					break;
+				case FileInfoIconSize.Large:
+					flags |= ShellApi.SHGFI.SHGFI_LARGEICON;
+					flags |= ShellApi.SHGFI.SHGFI_ICON;
+					break;
 			}
 
 			ShellApi.SHGetFileInfo (pidl, 0, out info, System.Runtime.InteropServices.Marshal.SizeOf (info), flags);

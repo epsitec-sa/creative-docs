@@ -3,12 +3,8 @@
 
 namespace Epsitec.Common.Support
 {
-	public sealed class FolderQueryMode
+	public struct FolderQueryMode
 	{
-		public FolderQueryMode()
-		{
-		}
-
 		public FileInfoIconSelection IconSelection
 		{
 			get

@@ -11,9 +11,10 @@ namespace Epsitec.Common.Support
 	/// </summary>
 	public struct FolderItem : System.IEquatable<FolderItem>
 	{
-		internal FolderItem(Common.Drawing.Image icon, string displayName, string typeName, string fullPath, Platform.FolderItemHandle handle, Platform.FolderItemAttributes attributes)
+		internal FolderItem(Common.Drawing.Image icon, FolderQueryMode queryMode, string displayName, string typeName, string fullPath, Platform.FolderItemHandle handle, Platform.FolderItemAttributes attributes)
 		{
 			this.icon = icon == null ? null : new FolderItemIcon (icon);
+			this.queryMode = queryMode;
 			this.displayName = displayName;
 			this.typeName = typeName;
 			this.fullPath = fullPath;
@@ -250,6 +251,18 @@ namespace Epsitec.Common.Support
 			}
 		}
 
+		/// <summary>
+		/// Gets the folder query mode used to get this item.
+		/// </summary>
+		/// <value>The query mode.</value>
+		public FolderQueryMode					QueryMode
+		{
+			get
+			{
+				return this.queryMode;
+			}
+		}
+
 		
 		public static readonly FolderItem		Empty = new FolderItem ();
 
@@ -351,5 +364,6 @@ namespace Epsitec.Common.Support
 		private string							fullPath;
 		private Platform.FolderItemHandle		handle;
 		private Platform.FolderItemAttributes	attributes;
+		private FolderQueryMode					queryMode;
 	}
 }
