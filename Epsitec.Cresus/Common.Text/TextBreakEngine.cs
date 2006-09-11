@@ -85,9 +85,10 @@ namespace Epsitec.Common.Text
 			{
 				for (int i = 0; i < this.breaks.Length; i++)
 				{
-					if (this.breaks[i] == Unicode.BreakInfo.Yes)
+					if ((this.breaks[i] == Unicode.BreakInfo.Yes) ||
+						(this.breaks[i] == Unicode.BreakInfo.Optional))
 					{
-						this.breaks[i] = Unicode.BreakInfo.Optional;
+						this.breaks[i] = Unicode.BreakInfo.No;
 					}
 				}
 			}

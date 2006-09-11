@@ -185,6 +185,19 @@ namespace Epsitec.Common.Support
 		}
 
 		[Test]
+		public void CheckEqualsFolderIcons()
+		{
+			FolderItem documents1 = FileManager.GetFolderItem (FolderId.VirtualMyDocuments, FolderQueryMode.LargeIcons);
+			FolderItem documents2 = FileManager.GetFolderItem (FolderId.VirtualMyDocuments, FolderQueryMode.LargeIcons);
+
+			byte[] image1 = documents1.Icon.BitmapImage.GetRawBitmapBytes ();
+			byte[] image2 = documents1.Icon.BitmapImage.GetRawBitmapBytes ();
+
+			Assert.AreEqual (IO.Checksum.ComputeCrc32 (delegate (IO.IChecksum checksum) { checksum.Update (image1); }),
+							 IO.Checksum.ComputeCrc32 (delegate (IO.IChecksum checksum) { checksum.Update (image2); }));
+		}
+		
+		[Test]
 		public void CheckShowHiddenFiles()
 		{
 			System.Console.Out.WriteLine ("Show hidden files : {0}", FolderItem.ShowHiddenFiles);

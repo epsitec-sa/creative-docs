@@ -622,6 +622,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 						{
 							st = new StaticText();
 							st.ContentAlignment = ContentAlignment.MiddleLeft;
+							st.TextBreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
 							st.Dock = DockStyle.Fill;
 							st.Margins = new Margins(6, 0, 0, 0);
 							this.table[column, row].Insert(st);
@@ -630,6 +631,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 						{
 							st = new StaticText();
 							st.ContentAlignment = ContentAlignment.MiddleLeft;
+							st.TextBreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
 							st.Dock = DockStyle.Fill;
 							st.Margins = new Margins(6, 6, 0, 0);
 							this.table[column, row].Insert(st);
@@ -638,6 +640,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 						{
 							st = new StaticText();
 							st.ContentAlignment = ContentAlignment.MiddleRight;
+							st.TextBreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
 							st.Dock = DockStyle.Fill;
 							st.Margins = new Margins(0, 6, 0, 0);
 							this.table[column, row].Insert(st);
