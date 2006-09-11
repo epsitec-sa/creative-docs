@@ -771,8 +771,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			if (this.fieldPath != null)
 			{
 				this.ignoreChanged = true;
-				//?this.fieldPath.Text = AbstractFile.RemoveStartingIndent(AbstractFile.GetIllustredPath(this.initialFolder.FullPath));
-				this.fieldPath.Text = this.initialFolder.DisplayName;
+				this.fieldPath.Text = TextLayout.ConvertToTaggedText(this.initialFolder.DisplayName);
 				this.UpdateSelectedFavorites();
 				this.ignoreChanged = false;
 			}
