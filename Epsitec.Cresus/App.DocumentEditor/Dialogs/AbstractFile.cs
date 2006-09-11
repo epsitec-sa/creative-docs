@@ -505,22 +505,12 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 			this.favoritesList = new List<FolderItem>();
 
-			string path;
-
 			if (!this.isSave)
 			{
-				path = string.Concat(Common.Support.Globals.Directories.Executable, "\\Exemples originaux");
-				this.FavoritesAdd("Exemples originaux", "FileTypeEpsitecSamples", path);
+				this.FavoritesAdd(Document.DisplayOriginalSamples, "FileTypeEpsitecSamples", Document.DirectoryOriginalSamples);
 			}
 
-			path = Common.Support.Globals.Directories.UserAppData;
-			int i = path.LastIndexOf("\\");
-			if (i > 0)
-			{
-				path = path.Substring(0, i);  // supprime le dossier "1.0.0.0" à la fin
-			}
-			path = string.Concat(path, "\\Mes exemples");
-			this.FavoritesAdd("Mes exemples", "FileTypeMySamples", path);
+			this.FavoritesAdd(Document.DisplayMySamples, "FileTypeMySamples", Document.DirectoryMySamples);
 
 			this.FavoritesAdd(FolderId.VirtualDesktop);      // Bureau
 			this.FavoritesAdd(FolderId.VirtualMyDocuments);  // Mes documents
