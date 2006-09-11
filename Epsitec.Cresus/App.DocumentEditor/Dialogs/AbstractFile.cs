@@ -249,9 +249,23 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		{
 			//	Crée le panneau de gauche pour les favoris.
 			Widget container = new Widget(this.window.Root);
-			container.PreferredWidth = 110;
+			container.PreferredWidth = 111;
 			container.Dock = DockStyle.Left;
 			container.Margins = new Margins(0, 10, 0, 0);
+
+			Widget header = new Widget(container);
+			header.PreferredHeight = 20;
+			header.Dock = DockStyle.Top;
+			header.Margins = new Margins(0, 0, 0, 8);
+
+			this.favoritesExtend = new GlyphButton(header);
+			this.favoritesExtend.Dock = DockStyle.Left;
+			this.favoritesExtend.Clicked += new MessageEventHandler(this.HandleFavoritesExtendClicked);
+
+			StaticText label = new StaticText(header);
+			label.Text = Res.Strings.Dialog.Open.LabelPath;
+			label.ContentAlignment = ContentAlignment.MiddleRight;
+			label.Dock = DockStyle.Fill;
 
 			this.favoritesToolbar = new Widget(container);
 			this.favoritesToolbar.Visibility = false;
@@ -289,11 +303,6 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			Widget band = new Widget(this.favorites);
 			band.PreferredHeight = 12;
 			band.Dock = DockStyle.Top;
-
-			this.favoritesExtend = new GlyphButton(band);
-			this.favoritesExtend.PreferredSize = new Size(12, 12);
-			this.favoritesExtend.Dock = DockStyle.Left;
-			this.favoritesExtend.Clicked += new MessageEventHandler(this.HandleFavoritesExtendClicked);
 		}
 
 		protected void CreateTable(double cellHeight)
@@ -341,11 +350,6 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			group.PreferredHeight = 20;
 			group.Margins = new Margins(0, 0, 0, 8);
 			group.Dock = DockStyle.Top;
-
-			StaticText label = new StaticText(group);
-			label.Text = Res.Strings.Dialog.Open.LabelPath;
-			label.PreferredWidth = 80;
-			label.Dock = DockStyle.Left;
 
 			this.fieldPath = new TextFieldCombo(group);
 			this.fieldPath.IsReadOnly = true;
