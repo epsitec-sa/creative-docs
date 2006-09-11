@@ -64,6 +64,7 @@
   <data name="Dialog.File.Button.Open" id="0M6" mod="1">Ouvrir</data>
   <data name="Dialog.File.Button.Save" id="0A7" mod="1">Enregistrer</data>
   <data name="Dialog.File.Button.New" id="0F7" mod="1">Nouveau</data>
+  <data name="Dialog.File.Tooltip.Extend" id="0G7" mod="1">Montre ou cache les options pour les favoris</data>
   <data name="Dialog.File.Tooltip.PreviewSize" id="0R6" mod="1">Taille des échantillons</data>
   <data name="Dialog.File.NewDirectoryName" id="037" mod="1">Nouveau dossier</data>
   <data name="Dialog.File.Statistics" id="047" mod="1">Format: {0}&lt;br/&gt;Pages/calques: {1}/{2}&lt;br/&gt;Polices/images: {5}/{6}&lt;br/&gt;Objets: {3}/{4}</data>
