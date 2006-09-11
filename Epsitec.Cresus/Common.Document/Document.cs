@@ -1285,6 +1285,7 @@ namespace Epsitec.Common.Document
 				this.Filename = filename;
 				this.IsDirtySerialize = false;
 			}
+			MiniatureCache.Remove(filename);
 			return "";
 		}
 
