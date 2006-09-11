@@ -1210,8 +1210,8 @@ namespace Epsitec.App.DocumentEditor
 			string icon = "manifest:Epsitec.Common.Dialogs.Images.Warning.icon";
 			string shortFilename = Misc.ExtractName(this.CurrentDocument.Filename, this.CurrentDocument.IsDirtySerialize);
 			string statistic = string.Format("<font size=\"80%\">{0}</font><br/>", this.CurrentDocument.Modifier.Statistic(false, false));
-			string question1 = string.Format(Res.Strings.Dialog.Save.Question1, shortFilename);
-			string question2 = Res.Strings.Dialog.Save.Question2;
+			string question1 = string.Format(Res.Strings.Dialog.Question.Save.Part1, shortFilename);
+			string question2 = Res.Strings.Dialog.Question.Save.Part2;
 			string message = string.Format("<font size=\"100%\">{0}</font><br/><br/>{1}{2}", question1, statistic, question2);
 			Common.Dialogs.IDialog dialog = Common.Dialogs.Message.CreateYesNoCancel(title, icon, message, null, null, dispatcher);
 			dialog.Owner = this.Window;

@@ -133,8 +133,8 @@ namespace Epsitec.Common.Widgets
 
 			this.textLayout.Alignment = compact ? ContentAlignment.MiddleLeft : ContentAlignment.MiddleCenter;
 			this.textLayout.LayoutSize = textRect.Size;
-			this.textLayout.Text = TextLayout.ConvertToTaggedText(this.filename);
 			this.textLayout.BreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
+			this.textLayout.Text = TextLayout.ConvertToTaggedText(this.filename);
 			this.textLayout.Paint(textRect.BottomLeft, graphics);
 
 			//	Affiche l'icône.
