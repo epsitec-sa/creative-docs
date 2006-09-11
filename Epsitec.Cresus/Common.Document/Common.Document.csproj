@@ -183,6 +183,7 @@
     <Compile Include="Containers\Styles.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="MiniatureCache.cs" />
     <Compile Include="ImageCache.cs" />
     <Compile Include="Dialogs.cs">
       <SubType>Code</SubType>

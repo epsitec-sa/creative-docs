@@ -1732,13 +1732,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 						}
 						else
 						{
-							byte[] data = this.ReadPreview();
-							if (data != null)
-							{
-								return Bitmap.FromData(data);
-							}
-
-							return null;
+							MiniatureCache.Add(this.folderItem.FullPath);
+							return MiniatureCache.Image(this.folderItem.FullPath);
 						}
 					}
 				}
@@ -1773,26 +1768,6 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 						}
 					}
 				}
-			}
-
-			protected byte[] ReadPreview()
-			{
-				//	Lit les données de l'image miniature associée au fichier.
-				ZipFile zip = new ZipFile();
-
-				if (zip.TryLoadFile(this.folderItem.FullPath))
-				{
-					try
-					{
-						return zip["preview.png"].Data;  // lit les données dans le fichier zip
-					}
-					catch
-					{
-						return null;
-					}
-				}
-
-				return null;
 			}
 
 			protected byte[] ReadStatistics()
