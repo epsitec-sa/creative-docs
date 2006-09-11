@@ -931,6 +931,17 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				return;
 			}
 
+			//	Construit la liste des fichiers à supprimer.
+			List<string> filenamesToDelete = new List<string>();
+			for (int i=0; i<this.table.Rows; i++)
+			{
+				if (this.table.IsCellSelected(i, 0))
+				{
+					filenamesToDelete.Add(this.files[i].Filename);
+				}
+			}
+
+			//	Cherche le nom du fichier qu'il faudra sélectionner après la suppression.
 			string filenameToSelect = null;
 
 			if (sel < this.files.Count-1)
@@ -945,8 +956,11 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				}
 			}
 
+			//	Supprime le ou les fichiers.
 			FileOperationMode mode = new FileOperationMode();
-			if (FileManager.DeleteFile(mode, this.files[sel].Filename))  // TODO: la valeur retournée n'indique pas un 'non' !
+			FileManager.DeleteFiles(mode, filenamesToDelete);
+
+			if (!System.IO.File.Exists(filenamesToDelete[0]))  // fichier n'existe plus (donc bien supprimé) ?
 			{
 				this.UpdateTable(-1);
 				this.SelectFilenameTable(filenameToSelect);
