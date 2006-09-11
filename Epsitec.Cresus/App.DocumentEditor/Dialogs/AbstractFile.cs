@@ -1523,7 +1523,13 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				AbstractTextField field = this.focusedWidget as AbstractTextField;
 				if (!string.IsNullOrEmpty(field.Text))
 				{
-					string filename = string.Concat(this.initialFolder.FullPath, "\\", TextLayout.ConvertToSimpleText(field.Text), this.fileExtension);
+					string filename = string.Concat(TextLayout.ConvertToSimpleText(field.Text), this.fileExtension);
+
+					if (!System.IO.Path.IsPathRooted(filename))
+					{
+						filename = string.Concat(this.initialFolder.FullPath, "\\", filename);
+					}
+
 					this.selectedFilename = filename;
 					this.selectedFilenames = null;
 
