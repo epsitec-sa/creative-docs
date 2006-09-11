@@ -71,7 +71,7 @@ namespace Epsitec.Common.Support
 		}
 
 		/// <summary>
-		/// Gets a value indicating whether this instance is purely virtual (i.e. it
+		/// Gets a value indicating whether this item is purely virtual (i.e. it
 		/// has no full path and only exists as a virtual construct, such as "My Computer").
 		/// </summary>
 		/// <value>
@@ -97,6 +97,13 @@ namespace Epsitec.Common.Support
 			}
 		}
 
+		/// <summary>
+		/// Gets a value indicating whether this item is browsable. This is
+		/// the case of the Internet.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this item is browsable; otherwise, <c>false</c>.
+		/// </value>
 		public bool								IsBrowsable
 		{
 			get
@@ -105,6 +112,10 @@ namespace Epsitec.Common.Support
 			}
 		}
 
+		/// <summary>
+		/// Gets a value indicating whether this item is a folder.
+		/// </summary>
+		/// <value><c>true</c> if this item is a folder; otherwise, <c>false</c>.</value>
 		public bool								IsFolder
 		{
 			get
@@ -114,6 +125,12 @@ namespace Epsitec.Common.Support
 		}
 
 
+		/// <summary>
+		/// Gets a value indicating whether this item is compressed.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this item is compressed; otherwise, <c>false</c>.
+		/// </value>
 		public bool								IsCompressed
 		{
 			get
@@ -122,6 +139,12 @@ namespace Epsitec.Common.Support
 			}
 		}
 
+		/// <summary>
+		/// Gets a value indicating whether this item is encrypted.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this item is encrypted; otherwise, <c>false</c>.
+		/// </value>
 		public bool								IsEncrypted
 		{
 			get
@@ -130,6 +153,10 @@ namespace Epsitec.Common.Support
 			}
 		}
 
+		/// <summary>
+		/// Gets a value indicating whether this item is hidden.
+		/// </summary>
+		/// <value><c>true</c> if this item is hidden; otherwise, <c>false</c>.</value>
 		public bool								IsHidden
 		{
 			get
@@ -138,6 +165,12 @@ namespace Epsitec.Common.Support
 			}
 		}
 
+		/// <summary>
+		/// Gets a value indicating whether this item is a shortcut.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this item is a shortcut; otherwise, <c>false</c>.
+		/// </value>
 		public bool								IsShortcut
 		{
 			get
@@ -146,6 +179,12 @@ namespace Epsitec.Common.Support
 			}
 		}
 
+		/// <summary>
+		/// Gets a value indicating whether this item is read only.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this item is read only; otherwise, <c>false</c>.
+		/// </value>
 		public bool								IsReadOnly
 		{
 			get
@@ -154,6 +193,10 @@ namespace Epsitec.Common.Support
 			}
 		}
 
+		/// <summary>
+		/// Gets a value indicating whether this item is a drive.
+		/// </summary>
+		/// <value><c>true</c> if this item is a drive; otherwise, <c>false</c>.</value>
 		public bool								IsDrive
 		{
 			get
@@ -173,6 +216,13 @@ namespace Epsitec.Common.Support
 			}
 		}
 
+		/// <summary>
+		/// Gets a value indicating whether this item is file system node (a
+		/// real folder or file).
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this item is a file system node; otherwise, <c>false</c>.
+		/// </value>
 		public bool								IsFileSystemNode
 		{
 			get
@@ -181,6 +231,10 @@ namespace Epsitec.Common.Support
 			}
 		}
 
+		/// <summary>
+		/// Gets the drive info.
+		/// </summary>
+		/// <value>The drive info or <c>null</c> if the item is not a drive.</value>
 		public System.IO.DriveInfo				DriveInfo
 		{
 			get
@@ -199,6 +253,10 @@ namespace Epsitec.Common.Support
 		
 		public static readonly FolderItem		Empty = new FolderItem ();
 
+		/// <summary>
+		/// Gets a value indicating whether the user expects hidden files to show.
+		/// </summary>
+		/// <value><c>true</c> if hidden files should be shown; otherwise, <c>false</c>.</value>
 		public static bool						ShowHiddenFiles
 		{
 			get
