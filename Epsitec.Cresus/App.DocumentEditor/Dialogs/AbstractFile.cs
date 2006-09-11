@@ -547,8 +547,13 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			f.IconValue = Misc.Icon(icon);
 			f.Dock = DockStyle.Top;
 			f.Clicked += new MessageEventHandler(this.HandleFavoriteClicked);
-			this.favorites.Panel.Children.Add(f);
 
+			if (!string.IsNullOrEmpty(item.FullPath))
+			{
+				ToolTip.Default.SetToolTip(f, TextLayout.ConvertToTaggedText(item.FullPath));
+			}
+
+			this.favorites.Panel.Children.Add(f);
 			this.favoritesList.Add(item);
 		}
 
@@ -564,8 +569,13 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			f.ImageValue = item.Icon.Image;
 			f.Dock = DockStyle.Top;
 			f.Clicked += new MessageEventHandler(this.HandleFavoriteClicked);
-			this.favorites.Panel.Children.Add(f);
 
+			if (!string.IsNullOrEmpty(item.FullPath))
+			{
+				ToolTip.Default.SetToolTip(f, TextLayout.ConvertToTaggedText(item.FullPath));
+			}
+
+			this.favorites.Panel.Children.Add(f);
 			this.favoritesList.Add(item);
 		}
 
