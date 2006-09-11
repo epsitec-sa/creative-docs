@@ -3,7 +3,7 @@
 
 namespace Epsitec.Common.Support
 {
-	public enum FileInfoIconSelection
+	public enum FileInfoIconSelection : byte
 	{
 		Normal,
 		Active
