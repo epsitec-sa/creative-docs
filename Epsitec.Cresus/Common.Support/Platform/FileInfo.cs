@@ -11,10 +11,15 @@ namespace Epsitec.Common.Support.Platform
 		{
 			return Win32.FileInfo.CreateFolderItem (file, mode);
 		}
-		
+
 		public static FolderItem CreateFolderItem(string path, FolderQueryMode mode)
 		{
 			return Win32.FileInfo.CreateFolderItem (path, mode);
+		}
+
+		internal static FolderItem CreateFolderItem(FolderItemHandle handle, FolderQueryMode mode)
+		{
+			return Win32.FileInfo.CreateFolderItem (handle, mode);
 		}
 
 		public static IEnumerable<FolderItem> GetFolderItems(FolderItem path, FolderQueryMode mode)
