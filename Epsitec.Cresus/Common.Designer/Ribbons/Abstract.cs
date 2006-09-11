@@ -48,6 +48,7 @@ namespace Epsitec.Common.Designer.Ribbons
 			Command c = Widgets.Command.Get (command);
 			IconButton button = new IconButton(this);
 
+#if false
 			button.CommandLine = command;
 			button.IconName = Misc.Icon(c.Icon);
 			button.PreferredIconSize = Misc.IconPreferredSize(iconSize);
@@ -57,6 +58,12 @@ namespace Epsitec.Common.Designer.Ribbons
 			{
 				button.ButtonStyle = ButtonStyle.ActivableIcon;
 			}
+#else
+			button.CommandObject = c;
+			button.IconName = Misc.Icon (c.Icon);
+			button.PreferredIconSize = Misc.IconPreferredSize (iconSize);
+			button.AutoFocus = false;
+#endif
 
 			button.TabIndex = this.tabIndex++;
 			button.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;

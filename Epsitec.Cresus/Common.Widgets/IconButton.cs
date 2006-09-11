@@ -180,6 +180,18 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		protected override void OnCommandObjectChanged(Types.DependencyPropertyChangedEventArgs e)
+		{
+			base.OnCommandObjectChanged (e);
+
+			Command command = e.NewValue as Command;
+
+			if (command != null)
+			{
+				this.ButtonStyle = command.Statefull ? ButtonStyle.ActivableIcon : ButtonStyle.ToolItem;
+			}
+		}
+
 		protected override void DefineTextFromCaption(string text)
 		{
 		}
