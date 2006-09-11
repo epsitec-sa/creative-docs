@@ -798,8 +798,18 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			if (this.fieldPath != null)
 			{
 				this.ignoreChanged = true;
-				this.fieldPath.Text = TextLayout.ConvertToTaggedText(this.initialFolder.DisplayName);
+
+				FolderItemIcon icon = FileManager.GetFolderItemIcon(this.initialFolder, FolderQueryMode.SmallIcons);
+
+				string text = TextLayout.ConvertToTaggedText(this.initialFolder.DisplayName);
+				if (icon != null)
+				{
+					text = string.Format("<img src=\"{0}\"/> {1}", icon.ImageName, text);
+				}
+				
+				this.fieldPath.Text = text;
 				this.UpdateSelectedFavorites();
+
 				this.ignoreChanged = false;
 			}
 		}
@@ -1345,14 +1355,14 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 #if true
 			//	Ajoute toutes les unités du bureau et du poste de travail.
-			FolderItem desktop = FileManager.GetFolderItem(FolderId.VirtualDesktop, FolderQueryMode.NoIcons);
-			FolderItem computer = FileManager.GetFolderItem(FolderId.VirtualMyComputer, FolderQueryMode.NoIcons);
+			FolderItem desktop = FileManager.GetFolderItem(FolderId.VirtualDesktop, FolderQueryMode.SmallIcons);
+			FolderItem computer = FileManager.GetFolderItem(FolderId.VirtualMyComputer, FolderQueryMode.SmallIcons);
 			bool showHidden = FolderItem.ShowHiddenFiles;
 
 			this.ComboAdd(desktop, null);
 			Item root = this.comboFolders[this.comboFolders.Count-1];
-			
-			foreach (FolderItem item in FileManager.GetFolderItems(desktop, FolderQueryMode.NoIcons))
+
+			foreach (FolderItem item in FileManager.GetFolderItems(desktop, FolderQueryMode.SmallIcons))
 			{
 				if (!item.IsFileSystemNode)
 				{
@@ -1374,7 +1384,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 				if (item.DisplayName == computer.DisplayName)
 				{
-					foreach (FolderItem subItem in FileManager.GetFolderItems(item, FolderQueryMode.NoIcons))
+					foreach (FolderItem subItem in FileManager.GetFolderItems(item, FolderQueryMode.SmallIcons))
 					{
 						if (!subItem.IsFileSystemNode)
 						{
@@ -1405,7 +1415,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			{
 				this.ComboAdd(currentFolder, null);
 				nb++;
-				currentFolder = FileManager.GetParentFolderItem(currentFolder, FolderQueryMode.NoIcons);
+				currentFolder = FileManager.GetParentFolderItem(currentFolder, FolderQueryMode.SmallIcons);
 			}
 
 			int count = this.comboFolders.Count;
@@ -1440,7 +1450,14 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 			foreach (Item cell in this.comboFolders)
 			{
-				string text = AbstractFile.AddStringIndent(cell.ShortFilename, cell.Deep);
+				FolderItemIcon icon = cell.FolderItem.Icon;
+				if (cell.FolderItem.Icon == null || cell.FolderItem.Icon.Image.Height > 16)
+				{
+					icon = FileManager.GetFolderItemIcon(cell.FolderItem, FolderQueryMode.SmallIcons);
+				}
+				string text = string.Format("<img src=\"{0}\"/> {1}", icon.ImageName, cell.ShortFilename);
+				text = AbstractFile.AddStringIndent(text, cell.Deep);
+
 				this.fieldPath.Items.Add(text);
 				this.comboTexts.Add(text);
 			}
