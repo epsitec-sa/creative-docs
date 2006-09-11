@@ -418,9 +418,23 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			footer.Margins = new Margins(0, 0, 8, 0);
 			footer.Dock = DockStyle.Bottom;
 
+			string ok;
+			if (this.isNewEmtpyDocument)
+			{
+				ok = Res.Strings.Dialog.File.Button.New;
+			}
+			else if (this.isSave)
+			{
+				ok = Res.Strings.Dialog.File.Button.Save;
+			}
+			else
+			{
+				ok = Res.Strings.Dialog.File.Button.Open;
+			}
+
 			this.buttonOK = new Button(footer);
 			this.buttonOK.PreferredWidth = 75;
-			this.buttonOK.Text = this.isSave ? Res.Strings.Dialog.File.Button.Save : Res.Strings.Dialog.File.Button.Open;
+			this.buttonOK.Text = ok;
 			this.buttonOK.ButtonStyle = ButtonStyle.DefaultAccept;
 			this.buttonOK.Dock = DockStyle.Left;
 			this.buttonOK.Margins = new Margins(0, 6, 0, 0);
