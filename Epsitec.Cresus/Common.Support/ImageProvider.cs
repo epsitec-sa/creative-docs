@@ -100,6 +100,13 @@ namespace Epsitec.Common.Support
 			{
 				return null;
 			}
+
+			if (name.StartsWith ("foldericon:"))
+			{
+				long id = long.Parse (name.Substring (11), System.Globalization.CultureInfo.InvariantCulture);
+
+				return FolderItemIconCache.Instance.Resolve (id);
+			}
 			
 			if (name.StartsWith ("dyn:"))
 			{

@@ -135,6 +135,6 @@ namespace Epsitec.Common.Support
 		private static FolderItemIconCache instance;
 
 		private Dictionary<long, Item> images = new Dictionary<long,Item> ();
-		private long nextIndex;
+		private long nextIndex = System.DateTime.UtcNow.Ticks;
 	}
 }

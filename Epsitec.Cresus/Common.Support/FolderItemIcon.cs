@@ -29,7 +29,7 @@ namespace Epsitec.Common.Support
 		{
 			get
 			{
-				return string.Format (System.Globalization.CultureInfo.InvariantCulture, "icon:{0}", this.id);
+				return string.Format (System.Globalization.CultureInfo.InvariantCulture, "foldericon:{0}", this.id);
 			}
 		}
 
