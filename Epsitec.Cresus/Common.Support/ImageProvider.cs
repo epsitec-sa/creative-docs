@@ -5,9 +5,6 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Support
 {
-	using Hashtable = System.Collections.Hashtable;
-	using ArrayList = System.Collections.ArrayList;
-	
 	/// <summary>
 	/// La classe ImageProvider permet d'obtenir des images à partir de leur
 	/// nom. Cette implémentation supporte les protocoles suivants :
@@ -117,10 +114,10 @@ namespace Epsitec.Common.Support
 				
 				string base_name = full_name.Substring (0, pos);
 				string argument = full_name.Substring (pos+1);
-				
-				Drawing.DynamicImage image = this.dynamicImages[base_name] as Drawing.DynamicImage;
-				
-				if (image != null)
+
+				Drawing.DynamicImage image;
+
+				if (this.dynamicImages.TryGetValue (base_name, out image))
 				{
 					image = image.GetImageForArgument (argument);
 				}
@@ -431,9 +428,9 @@ namespace Epsitec.Common.Support
 				argument = full_name.Substring (pos+1);
 			}
 			
-			Drawing.DynamicImage image = this.dynamicImages[base_name];
+			Drawing.DynamicImage image;
 			
-			if (image != null)
+			if (this.dynamicImages.TryGetValue (base_name, out image))
 			{
 				image.ClearCache (argument);
 			}
