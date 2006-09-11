@@ -1577,140 +1577,175 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		protected void DrawDynamicImageFontBrief(Graphics graphics, Size size, string argument, GlyphPaintStyle style, Color color, object xAdorner)
+		protected bool DrawDynamicImageFontBrief(Graphics graphics, Size size, string argument, GlyphPaintStyle style, Color color, object xAdorner)
 		{
 			//	Dessine une police pour l'icône résumée, pour une image dynamique.
-			if ( style == GlyphPaintStyle.Disabled )  return;
-
-			IAdorner adorner = xAdorner as IAdorner;
-
-			string[] arguments = argument.Split('\t');
-			System.Diagnostics.Debug.Assert(arguments.Length == 2);
-			string fontFace  = arguments[0];
-			string fontStyle = arguments[1];
-
-			Rectangle rect = new Rectangle(0, 1.5, size.Width, size.Height-5);
-
-			OpenType.Font font = TextContext.GetFont(fontFace, fontStyle);
-			OpenType.FontIdentity id = font.FontIdentity;
-			double ox = rect.Left;
-			double oy = rect.Bottom + rect.Height*0.25;
-
-			//	Dessine l'échantillon "Abc".
-			double fontSize = rect.Height*0.85;
-			Color c = adorner.ColorText(WidgetPaintState.Enabled);
-			Path path = Common.Widgets.Helpers.FontPreviewer.GetPathAbc(id, ox, oy, fontSize);
-				
-			if ( path != null )
+			if (style != GlyphPaintStyle.Normal)
 			{
-				Rectangle bounds = path.ComputeBounds();
-				double sx = (rect.Width-bounds.Width)/2-ox;
-				graphics.TranslateTransform(sx, 0);
-
-				graphics.Color = c;
-				graphics.PaintSurface(path);
-				path.Dispose();
-
-				graphics.TranslateTransform(-sx, 0);
+				return false;
 			}
+			if (graphics != null)
+			{
+				IAdorner adorner = xAdorner as IAdorner;
+
+				string[] arguments = argument.Split ('\t');
+				System.Diagnostics.Debug.Assert (arguments.Length == 2);
+				string fontFace  = arguments[0];
+				string fontStyle = arguments[1];
+
+				Rectangle rect = new Rectangle (0, 1.5, size.Width, size.Height-5);
+
+				OpenType.Font font = TextContext.GetFont (fontFace, fontStyle);
+				OpenType.FontIdentity id = font.FontIdentity;
+				double ox = rect.Left;
+				double oy = rect.Bottom + rect.Height*0.25;
+
+				//	Dessine l'échantillon "Abc".
+				double fontSize = rect.Height*0.85;
+				Color c = adorner.ColorText (WidgetPaintState.Enabled);
+				Path path = Common.Widgets.Helpers.FontPreviewer.GetPathAbc (id, ox, oy, fontSize);
+
+				if (path != null)
+				{
+					Rectangle bounds = path.ComputeBounds ();
+					double sx = (rect.Width-bounds.Width)/2-ox;
+					graphics.TranslateTransform (sx, 0);
+
+					graphics.Color = c;
+					graphics.PaintSurface (path);
+					path.Dispose ();
+
+					graphics.TranslateTransform (-sx, 0);
+				}
+			}
+			
+			return true;
 		}
 
-		protected void DrawDynamicImageFontMenu(Graphics graphics, Size size, string argument, GlyphPaintStyle style, Color color, object xAdorner)
+		protected bool DrawDynamicImageFontMenu(Graphics graphics, Size size, string argument, GlyphPaintStyle style, Color color, object xAdorner)
 		{
 			//	Dessine une police pour un menu, pour une image dynamique.
-			if ( style == GlyphPaintStyle.Disabled )  return;
-
-			IAdorner adorner = xAdorner as IAdorner;
-
-			string[] arguments = argument.Split('\t');
-			System.Diagnostics.Debug.Assert(arguments.Length == 2);
-			string fontFace  = arguments[0];
-			string fontStyle = arguments[1];
-
-			OpenType.Font font = TextContext.GetFont(fontFace, fontStyle);
-			OpenType.FontIdentity id = font.FontIdentity;
-			double oy = size.Height*0.25;
-
-			//	Dessine le nom de la police.
-			Rectangle r = new Rectangle(3, 0, 140-3, size.Height);
-			Color c = adorner.ColorText(WidgetPaintState.Enabled);
-			TextLayout layout = new TextLayout();
-			layout.Text = TextLayout.ConvertToTaggedText(fontFace);
-			layout.Alignment = ContentAlignment.MiddleLeft;
-			layout.LayoutSize = r.Size;
-			layout.Paint(r.BottomLeft, graphics, r, c, GlyphPaintStyle.Normal);
-
-			//	Dessine l'échantillon "Abc".
-			double fontSize = size.Height*0.85;
-			Path path = Common.Widgets.Helpers.FontPreviewer.GetPathAbc(id, 140+5, oy, fontSize);
-				
-			if ( path != null )
+			if (style != GlyphPaintStyle.Normal)
 			{
-				graphics.Color = c;
-				graphics.PaintSurface(path);
-				path.Dispose();
+				return false;
+			}
+			
+			if (graphics != null)
+			{
+				IAdorner adorner = xAdorner as IAdorner;
+
+				string[] arguments = argument.Split ('\t');
+				System.Diagnostics.Debug.Assert (arguments.Length == 2);
+				string fontFace  = arguments[0];
+				string fontStyle = arguments[1];
+
+				OpenType.Font font = TextContext.GetFont (fontFace, fontStyle);
+				OpenType.FontIdentity id = font.FontIdentity;
+				double oy = size.Height*0.25;
+
+				//	Dessine le nom de la police.
+				Rectangle r = new Rectangle (3, 0, 140-3, size.Height);
+				Color c = adorner.ColorText (WidgetPaintState.Enabled);
+				TextLayout layout = new TextLayout ();
+				layout.Text = TextLayout.ConvertToTaggedText (fontFace);
+				layout.Alignment = ContentAlignment.MiddleLeft;
+				layout.LayoutSize = r.Size;
+				layout.Paint (r.BottomLeft, graphics, r, c, GlyphPaintStyle.Normal);
+
+				//	Dessine l'échantillon "Abc".
+				double fontSize = size.Height*0.85;
+				Path path = Common.Widgets.Helpers.FontPreviewer.GetPathAbc (id, 140+5, oy, fontSize);
+
+				if (path != null)
+				{
+					graphics.Color = c;
+					graphics.PaintSurface (path);
+					path.Dispose ();
+				}
+
+				//	Dessine les traits verticaux de séparation.
+				graphics.AddLine (140+0.5, 0, 140+0.5, size.Height);
+				graphics.RenderSolid (adorner.ColorTextFieldBorder (true));
 			}
 
-			//	Dessine les traits verticaux de séparation.
-			graphics.AddLine(140+0.5, 0, 140+0.5, size.Height);
-			graphics.RenderSolid(adorner.ColorTextFieldBorder(true));
+			return true;
 		}
 
-		protected void DrawDynamicImageStyleBrief(Graphics graphics, Size size, string argument, GlyphPaintStyle style, Color color, object xAdorner)
+		protected bool DrawDynamicImageStyleBrief(Graphics graphics, Size size, string argument, GlyphPaintStyle style, Color color, object xAdorner)
 		{
 			//	Dessine un style pour l'icône résumée, pour une image dynamique.
-			if ( style == GlyphPaintStyle.Disabled )  return;
+			if (style != GlyphPaintStyle.Normal)
+			{
+				return false;
+			}
+			
+			if (graphics != null)
+			{
+				IAdorner adorner = xAdorner as IAdorner;
 
-			IAdorner adorner = xAdorner as IAdorner;
+				string[] arguments = argument.Split ('\t');
+				System.Diagnostics.Debug.Assert (arguments.Length == 2);
+				string styleName = arguments[0];
+				Text.TextStyleClass styleClass = Text.TextStyleClass.Paragraph;
+				if (arguments[1] == "Character")
+					styleClass = Text.TextStyleClass.Text;
+				Text.TextStyle textStyle = this.document.TextContext.StyleList.GetTextStyle (styleName, styleClass);
 
-			string[] arguments = argument.Split('\t');
-			System.Diagnostics.Debug.Assert(arguments.Length == 2);
-			string styleName = arguments[0];
-			Text.TextStyleClass styleClass = Text.TextStyleClass.Paragraph;
-			if ( arguments[1] == "Character" )  styleClass = Text.TextStyleClass.Text;
-			Text.TextStyle textStyle = this.document.TextContext.StyleList.GetTextStyle(styleName, styleClass);
+				//	Plus la hauteur est petite, plus il faut de place pour le nom, pour qu'il reste lisible.
+				//	Avec h=45, la hauteur pour le nom est de 14, soit environ un tier.
+				//	Avec h=22, la hauteur pour le nom est de 11, soit la moitié.
+				double factor = System.Math.Min (0.68 - size.Height*0.36/45, 0.5);
+				double limit = System.Math.Floor (size.Height*factor);
 
-			//	Plus la hauteur est petite, plus il faut de place pour le nom, pour qu'il reste lisible.
-			//	Avec h=45, la hauteur pour le nom est de 14, soit environ un tier.
-			//	Avec h=22, la hauteur pour le nom est de 11, soit la moitié.
-			double factor = System.Math.Min(0.68 - size.Height*0.36/45, 0.5);
-			double limit = System.Math.Floor(size.Height*factor);
+				Rectangle rect = new Rectangle (3, limit, size.Width-6, size.Height-limit-3);
+				graphics.AddFilledRectangle (rect);
+				graphics.RenderSolid (Color.FromBrightness (1));  // fond blanc
+				this.DrawStyle (graphics, rect, textStyle);
 
-			Rectangle rect = new Rectangle(3, limit, size.Width-6, size.Height-limit-3);
-			graphics.AddFilledRectangle(rect);
-			graphics.RenderSolid(Color.FromBrightness(1));  // fond blanc
-			this.DrawStyle(graphics, rect, textStyle);
-
-			rect = new Rectangle(3, 0, size.Width-3, limit);
-			string text = Misc.UserTextStyleName(this.document.TextContext.StyleList.StyleMap.GetCaption(textStyle));
-			Color c = adorner.ColorText(WidgetPaintState.Enabled);
-			this.DrawDynamicText(graphics, rect, text, limit*10/14, c, ContentAlignment.MiddleLeft);
+				rect = new Rectangle (3, 0, size.Width-3, limit);
+				string text = Misc.UserTextStyleName (this.document.TextContext.StyleList.StyleMap.GetCaption (textStyle));
+				Color c = adorner.ColorText (WidgetPaintState.Enabled);
+				this.DrawDynamicText (graphics, rect, text, limit*10/14, c, ContentAlignment.MiddleLeft);
+			}
+			
+			return true;
 		}
 
-		protected void DrawDynamicImageStyleMenu(Graphics graphics, Size size, string argument, GlyphPaintStyle style, Color color, object xAdorner)
+		protected bool DrawDynamicImageStyleMenu(Graphics graphics, Size size, string argument, GlyphPaintStyle style, Color color, object xAdorner)
 		{
 			//	Dessine un style pour un menu, pour une image dynamique.
-			IAdorner adorner = xAdorner as IAdorner;
+			if (style != GlyphPaintStyle.Normal)
+			{
+				return false;
+			}
+			
+			if (graphics != null)
+			{
+				IAdorner adorner = xAdorner as IAdorner;
 
-			string[] arguments = argument.Split('\t');
-			System.Diagnostics.Debug.Assert(arguments.Length == 2);
-			string styleName = arguments[0];
-			Text.TextStyleClass styleClass = Text.TextStyleClass.Paragraph;
-			if ( arguments[1] == "Character" )  styleClass = Text.TextStyleClass.Text;
-			Text.TextStyle textStyle = this.document.TextContext.StyleList.GetTextStyle(styleName, styleClass);
+				string[] arguments = argument.Split ('\t');
+				System.Diagnostics.Debug.Assert (arguments.Length == 2);
+				string styleName = arguments[0];
+				Text.TextStyleClass styleClass = Text.TextStyleClass.Paragraph;
+				if (arguments[1] == "Character")
+					styleClass = Text.TextStyleClass.Text;
+				Text.TextStyle textStyle = this.document.TextContext.StyleList.GetTextStyle (styleName, styleClass);
 
-			double limit = System.Math.Floor(size.Width*0.5);
+				double limit = System.Math.Floor (size.Width*0.5);
 
-			Rectangle r = new Rectangle(3, 0, limit-3, size.Height);
-			string text = Misc.UserTextStyleName(this.document.TextContext.StyleList.StyleMap.GetCaption(textStyle));
-			Color c = adorner.ColorText(WidgetPaintState.Enabled);
-			this.DrawDynamicText(graphics, r, text, 0, c, ContentAlignment.MiddleLeft);
+				Rectangle r = new Rectangle (3, 0, limit-3, size.Height);
+				string text = Misc.UserTextStyleName (this.document.TextContext.StyleList.StyleMap.GetCaption (textStyle));
+				Color c = adorner.ColorText (WidgetPaintState.Enabled);
+				this.DrawDynamicText (graphics, r, text, 0, c, ContentAlignment.MiddleLeft);
 
-			Rectangle rect = new Rectangle(limit, 0, size.Width-limit, size.Height);
-			this.DrawStyle(graphics, rect, textStyle);
+				Rectangle rect = new Rectangle (limit, 0, size.Width-limit, size.Height);
+				this.DrawStyle (graphics, rect, textStyle);
 
-			graphics.AddLine(limit-0.5, 0, limit-0.5, size.Height);  // séparateur vertical
-			graphics.RenderSolid(adorner.ColorBorder);
+				graphics.AddLine (limit-0.5, 0, limit-0.5, size.Height);  // séparateur vertical
+				graphics.RenderSolid (adorner.ColorBorder);
+			}
+			
+			return true;
 		}
 
 		protected void DrawStyle(Graphics graphics, Rectangle rect, Text.TextStyle textStyle)

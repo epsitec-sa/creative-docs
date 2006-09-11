@@ -19,31 +19,45 @@ namespace Epsitec.Common.Widgets
 			Epsitec.Common.Support.ImageProvider.Default.AddDynamicImage ("Xyz", image);
 		}
 
-		private void DynamicImageXyz(Drawing.Graphics graphics, Drawing.Size size, string argument, Drawing.GlyphPaintStyle style, Drawing.Color color, object adorner)
+		private bool DynamicImageXyz(Drawing.Graphics graphics, Drawing.Size size, string argument, Drawing.GlyphPaintStyle style, Drawing.Color color, object adorner)
 		{
 			//	Méthode de test pour peindre une image dynamique selon un
 			//	modèle nommé "Xyz"; l'argument reçu en entrée permet de
 			//	déterminer exactement ce qui doit être peint.
-			
-			int    hue; 
-			double saturation = (style == Drawing.GlyphPaintStyle.Disabled) ? 0.2 : 1.0;
-			double value      = (style == Drawing.GlyphPaintStyle.Disabled) ? 0.7 : 1.0;
-			
-			if (argument == "random")
+
+			switch (style)
 			{
-				System.Random random = new System.Random ();
-				hue = random.Next (360);
+				case GlyphPaintStyle.Normal:
+				case GlyphPaintStyle.Disabled:
+					break;
+				default:
+					return false;
 			}
-			else
+
+			if (graphics != null)
 			{
-				hue = int.Parse (argument);
+				int hue;
+				double saturation = (style == Drawing.GlyphPaintStyle.Disabled) ? 0.2 : 1.0;
+				double value      = (style == Drawing.GlyphPaintStyle.Disabled) ? 0.7 : 1.0;
+
+				if (argument == "random")
+				{
+					System.Random random = new System.Random ();
+					hue = random.Next (360);
+				}
+				else
+				{
+					hue = int.Parse (argument);
+				}
+
+				graphics.AddFilledRectangle (0, 0, size.Width, size.Height);
+				graphics.RenderSolid (Drawing.Color.FromHsv (hue, saturation, value));
+				graphics.LineWidth = 2.0;
+				graphics.AddRectangle (1, 1, size.Width-2, size.Height-2);
+				graphics.RenderSolid (Drawing.Color.FromBrightness (0));
 			}
 			
-			graphics.AddFilledRectangle (0, 0, size.Width, size.Height);
-			graphics.RenderSolid (Drawing.Color.FromHsv (hue, saturation, value));
-			graphics.LineWidth = 2.0;
-			graphics.AddRectangle (1, 1, size.Width-2, size.Height-2);
-			graphics.RenderSolid (Drawing.Color.FromBrightness (0));
+			return true;
 		}
 
 		[Test] public void AutomatedTestEnvironment()
