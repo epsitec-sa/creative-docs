@@ -5,12 +5,24 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Support
 {
+	/// <summary>
+	/// The <c>FolderItemIconCache</c> is used to store and retrieve small images.
+	/// When an image is added to the cache, duplicates are avoided (images with
+	/// same pixels will produce the same id).
+	/// </summary>
 	internal sealed class FolderItemIconCache
 	{
-		public FolderItemIconCache()
+		private FolderItemIconCache()
 		{
 		}
 
+		/// <summary>
+		/// Adds the specified image to the cache. This internally increments
+		/// a counter associated with the image; every call to <c>Add</c>
+		/// should have a matching call to <c>Release</c>.
+		/// </summary>
+		/// <param name="image">The image.</param>
+		/// <returns>The id associed with the image.</returns>
 		public long Add(Drawing.Image image)
 		{
 			long id = -1;
@@ -74,6 +86,10 @@ namespace Epsitec.Common.Support
 			}
 		}
 
+		/// <summary>
+		/// Releases the specified image based on its id.
+		/// </summary>
+		/// <param name="id">The image id.</param>
 		public void Release(long id)
 		{
 			System.Diagnostics.Debug.Assert (id >= 0);
@@ -96,6 +112,12 @@ namespace Epsitec.Common.Support
 			}
 		}
 
+		/// <summary>
+		/// Resolves the specified image id and returns the corresponding
+		/// image.
+		/// </summary>
+		/// <param name="id">The id.</param>
+		/// <returns>The image or <c>null</c> if the id cannot be resolved.</returns>
 		public Drawing.Image Resolve(long id)
 		{
 			lock (this.images)
@@ -106,7 +128,9 @@ namespace Epsitec.Common.Support
 			}
 		}
 
-		struct Item
+		#region Private Item Structure
+		
+		private struct Item
 		{
 			public Drawing.Image image;
 			public long crc;
@@ -114,6 +138,7 @@ namespace Epsitec.Common.Support
 			public int count;
 		}
 
+		#endregion
 
 		public static FolderItemIconCache Instance
 		{
