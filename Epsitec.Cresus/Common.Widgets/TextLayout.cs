@@ -1549,18 +1549,19 @@ namespace Epsitec.Common.Widgets
 
 		public void Paint(Drawing.Point pos, Drawing.IPaintPort graphics, Drawing.Rectangle clipRect, Drawing.RichColor uniqueColor, Drawing.GlyphPaintStyle paintStyle)
 		{
-			this.UpdateLayout();
+			this.UpdateLayout ();
 
 			IAdorner adorner = Adorners.Factory.Active;
 			double listValue = 0.0;
 			bool listEncounter = false;
-			foreach ( JustifBlock block in this.blocks )
+			foreach (JustifBlock block in this.blocks)
 			{
-				if ( !block.Visible )  continue;
+				if (!block.Visible)
+					continue;
 
-				Drawing.Rectangle blockRect = new Drawing.Rectangle();
-				
-				if ( block.IsImage )
+				Drawing.Rectangle blockRect = new Drawing.Rectangle ();
+
+				if (block.IsImage)
 				{
 					blockRect.Top    = pos.Y+block.Pos.Y+block.ImageAscender;
 					blockRect.Bottom = pos.Y+block.Pos.Y+block.ImageDescender;
@@ -1570,46 +1571,49 @@ namespace Epsitec.Common.Widgets
 					blockRect.Top    = pos.Y+block.Pos.Y+block.Font.Ascender*block.FontSize;
 					blockRect.Bottom = pos.Y+block.Pos.Y+block.Font.Descender*block.FontSize;
 				}
-				
+
 				blockRect.Left   = pos.X+block.Pos.X;
 				blockRect.Width  = block.Width;
-				
-				if ( !blockRect.IntersectsWith(clipRect) )  continue;
 
-				if ( block.IsImage )
+				if (!blockRect.IntersectsWith (clipRect))
+				{
+					continue;
+				}
+
+				if (block.IsImage)
 				{
 					Drawing.Image image = block.Image;
 
-					if ( image.IsPaintStyleDefined(paintStyle) )
+					if (image.IsPaintStyleDefined (paintStyle))
 					{
-						image = image.GetImageForPaintStyle(paintStyle);
+						image = image.GetImageForPaintStyle (paintStyle);
 					}
-					
-					image.DefineZoom(graphics.Transform.GetZoom());
-					image.DefineColor(uniqueColor.Basic);
-					image.DefineAdorner(adorner);
-					
+
+					image.DefineZoom (graphics.Transform.GetZoom ());
+					image.DefineColor (uniqueColor.Basic);
+					image.DefineAdorner (adorner);
+
 					double dx = image.Width;
 					double dy = image.Height;
 					double ix = pos.X+block.Pos.X;
 					double iy = pos.Y+block.Pos.Y+block.ImageDescender; //+block.VerticalOffset;
-					
-					if ( block.Anchor )
+
+					if (block.Anchor)
 					{
-						this.OnAnchor(new AnchorEventArgs(ix, iy, dx, dy, block.BeginIndex));
+						this.OnAnchor (new AnchorEventArgs (ix, iy, dx, dy, block.BeginIndex));
 					}
-					
-					graphics.Align(ref ix, ref iy);
-					graphics.PaintImage(image.BitmapImage, ix, iy, dx, dy, 0, 0, image.Width, image.Height);
+
+					graphics.Align (ref ix, ref iy);
+					graphics.PaintImage (image.BitmapImage, ix, iy, dx, dy, 0, 0, image.Width, image.Height);
 					continue;
 				}
 
 				Drawing.RichColor color;
-				if ( uniqueColor.IsEmpty )
+				if (uniqueColor.IsEmpty)
 				{
-					if ( block.Anchor )
+					if (block.Anchor)
 					{
-						color = new Drawing.RichColor(this.AnchorColor);
+						color = new Drawing.RichColor (this.AnchorColor);
 					}
 					else
 					{
@@ -1620,106 +1624,108 @@ namespace Epsitec.Common.Widgets
 				{
 					color = uniqueColor;
 				}
-				
-				if ( block.Tab )
+
+				if (block.Tab)
 				{
-					if ( this.ShowTab )
+					if (this.ShowTab)
 					{
 						graphics.LineWidth = 1.0/this.drawingScale;
-						graphics.RichColor = new Drawing.RichColor(0.35, color.R, color.G, color.B);
-						graphics.PaintOutline(this.PathTab(graphics, blockRect));
+						graphics.RichColor = new Drawing.RichColor (0.35, color.R, color.G, color.B);
+						graphics.PaintOutline (this.PathTab (graphics, blockRect));
 					}
 					continue;
 				}
 
-				if ( block.List )
+				if (block.List)
 				{
 					graphics.RichColor = color;
-					this.PaintList(graphics, blockRect, pos.Y+block.Pos.Y, block, ref listValue);
+					this.PaintList (graphics, blockRect, pos.Y+block.Pos.Y, block, ref listValue);
 					listEncounter = true;
 					continue;
 				}
 
 				double x = pos.X+block.Pos.X;
 				double y = pos.Y+block.Pos.Y;
-				
-				if ( block.Anchor )
+
+				if (block.Anchor)
 				{
 					double ascender  = block.Font.Ascender  * block.FontSize;
 					double descender = block.Font.Descender * block.FontSize;
-					this.OnAnchor(new AnchorEventArgs(x, y+descender, block.Width, ascender-descender, block.BeginIndex));
+					this.OnAnchor (new AnchorEventArgs (x, y+descender, block.Width, ascender-descender, block.BeginIndex));
 				}
 
 				graphics.RichColor = color;
 
-				if ( block.Infos == null )
+				if (block.Infos == null)
 				{
-					graphics.PaintText(x, y, block.Text, block.Font, block.FontSize);
+					graphics.PaintText (x, y, block.Text, block.Font, block.FontSize);
 				}
 				else
 				{
-					graphics.PaintText(x, y, block.Text, block.Font, block.FontSize, block.Infos);
+					graphics.PaintText (x, y, block.Text, block.Font, block.FontSize, block.Infos);
 				}
 
-				if ( block.Underlined )
+				if (block.Underlined)
 				{
 					Drawing.Point p1, p2;
-					this.UnderlinedPoints(graphics, block, pos, out p1, out p2);
+					this.UnderlinedPoints (graphics, block, pos, out p1, out p2);
 					graphics.LineWidth = 1.0;
 					graphics.RichColor = color;
-					graphics.PaintOutline(Drawing.Path.FromLine(p1, p2));
+					graphics.PaintOutline (Drawing.Path.FromLine (p1, p2));
 				}
 
-				if ( block.Wave )
+				if (block.Wave)
 				{
 					Drawing.Point p1, p2;
-					this.UnderlinedPoints(graphics, block, pos, out p1, out p2);
+					this.UnderlinedPoints (graphics, block, pos, out p1, out p2);
 					graphics.LineWidth = 0.75;
-					if ( block.WaveColor.IsEmpty )
+					if (block.WaveColor.IsEmpty)
 					{
-						graphics.Color = this.WaveColor;;
+						graphics.Color = this.WaveColor;
+						;
 					}
 					else
 					{
 						graphics.Color = block.WaveColor;
 					}
-					graphics.PaintOutline(this.PathWave(p1, p2));
+					graphics.PaintOutline (this.PathWave (p1, p2));
 				}
 
-				if ( block.LineBreak )
+				if (block.LineBreak)
 				{
-					if ( !listEncounter )  listValue = 0.0;
+					if (!listEncounter)
+						listValue = 0.0;
 					listEncounter = false;
 
-					if ( this.ShowLineBreak )
+					if (this.ShowLineBreak)
 					{
 						double width = block.Width;
 
-						if ( block.Infos != null )
+						if (block.Infos != null)
 						{
 							double[] charsWidth;
-							block.Font.GetTextCharEndX(block.Text, block.Infos, out charsWidth);
+							block.Font.GetTextCharEndX (block.Text, block.Infos, out charsWidth);
 							width = charsWidth[charsWidth.Length-1]*block.FontSize;
 						}
 
 						string text = "\u00B6";  // caractère unicode 182
-						graphics.PaintText(x+width, y, text, block.Font, block.FontSize);
+						graphics.PaintText (x+width, y, text, block.Font, block.FontSize);
 					}
 				}
 			}
 
-			if ( !double.IsNaN(this.verticalMark) )  // dessine le marqueur vertical ?
+			if (!double.IsNaN (this.verticalMark))  // dessine le marqueur vertical ?
 			{
-				Drawing.Path path = new Drawing.Path();
+				Drawing.Path path = new Drawing.Path ();
 				double x = pos.X+this.verticalMark;
 				double y = pos.Y;
-				graphics.Align(ref x, ref y);
-				path.MoveTo(x+0.5, pos.Y);
-				path.LineTo(x+0.5, pos.Y+this.layoutSize.Height);
+				graphics.Align (ref x, ref y);
+				path.MoveTo (x+0.5, pos.Y);
+				path.LineTo (x+0.5, pos.Y+this.layoutSize.Height);
 				Drawing.Color color = adorner.ColorCaption;
 				color.A = 0.5;
 				graphics.Color = color;
-				graphics.PaintOutline(path);
+				graphics.PaintOutline (path);
 			}
 		}
 

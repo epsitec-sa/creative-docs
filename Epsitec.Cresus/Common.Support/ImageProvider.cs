@@ -15,7 +15,7 @@ namespace Epsitec.Common.Support
 	/// - "res:id#field", accès direct à une image dans un bundle de ressources
 	/// - "dyn:tag", accès à une image dynamique
 	/// </summary>
-	public class ImageProvider : IImageProvider
+	public sealed class ImageProvider : IImageProvider
 	{
 		private ImageProvider()
 		{
@@ -36,12 +36,12 @@ namespace Epsitec.Common.Support
 				}
 			}
 			
-			ImageProvider.default_provider = new ImageProvider ();
-			ImageProvider.default_paths    = new string[4];
-			ImageProvider.default_paths[0] = System.Windows.Forms.Application.StartupPath;
-			ImageProvider.default_paths[1] = path;
-			ImageProvider.default_paths[2] = other;
-			ImageProvider.default_paths[3] = "";
+			ImageProvider.defaultProvider = new ImageProvider ();
+			ImageProvider.defaultPaths    = new string[4];
+			ImageProvider.defaultPaths[0] = System.Windows.Forms.Application.StartupPath;
+			ImageProvider.defaultPaths[1] = path;
+			ImageProvider.defaultPaths[2] = other;
+			ImageProvider.defaultPaths[3] = "";
 		}
 		
 		
@@ -54,18 +54,18 @@ namespace Epsitec.Common.Support
 		
 		public static ImageProvider		Default
 		{
-			get { return ImageProvider.default_provider; }
+			get { return ImageProvider.defaultProvider; }
 		}
 		
 		public bool						CheckFilePath
 		{
 			get
 			{
-				return this.check_path;
+				return this.checkPath;
 			}
 			set
 			{
-				this.check_path = value;
+				this.checkPath = value;
 			}
 		}
 		
@@ -73,7 +73,7 @@ namespace Epsitec.Common.Support
 		{
 			get
 			{
-				if (this.keep_alive_images == null)
+				if (this.keepAliveImages == null)
 				{
 					return false;
 				}
@@ -86,11 +86,11 @@ namespace Epsitec.Common.Support
 				{
 					if (value)
 					{
-						this.keep_alive_images = new ArrayList ();
+						this.keepAliveImages = new List<Drawing.Image> ();
 					}
 					else
 					{
-						this.keep_alive_images = null;
+						this.keepAliveImages = null;
 					}
 				}
 			}
@@ -118,7 +118,7 @@ namespace Epsitec.Common.Support
 				string base_name = full_name.Substring (0, pos);
 				string argument = full_name.Substring (pos+1);
 				
-				Drawing.DynamicImage image = this.dynamic_images[base_name] as Drawing.DynamicImage;
+				Drawing.DynamicImage image = this.dynamicImages[base_name] as Drawing.DynamicImage;
 				
 				if (image != null)
 				{
@@ -130,8 +130,8 @@ namespace Epsitec.Common.Support
 			
 			if (this.images.ContainsKey (name))
 			{
-				System.WeakReference weak_ref = this.images[name] as System.WeakReference;
-				Drawing.Image image = weak_ref.Target as Drawing.Image;
+				Types.Weak<Drawing.Image> weak_ref = this.images[name];
+				Drawing.Image image = weak_ref.Target;
 				
 				if (weak_ref.IsAlive)
 				{
@@ -159,9 +159,9 @@ namespace Epsitec.Common.Support
 					}
 				}
 				
-				for (int i = 0; i < ImageProvider.default_paths.Length; i++)
+				for (int i = 0; i < ImageProvider.defaultPaths.Length; i++)
 				{
-					string path = ImageProvider.default_paths[i];
+					string path = ImageProvider.defaultPaths[i];
 					
 					//	Il se peut que cette option ne soit pas définie :
 					
@@ -205,11 +205,11 @@ namespace Epsitec.Common.Support
 				}
 				else
 				{
-					this.images[name] = new System.WeakReference (image);
+					this.images[name] = new Types.Weak<Drawing.Image> (image);
 					
-					if (this.keep_alive_images != null)
+					if (this.keepAliveImages != null)
 					{
-						this.keep_alive_images.Add (image);
+						this.keepAliveImages.Add (image);
 					}
 				}
 				
@@ -237,7 +237,7 @@ namespace Epsitec.Common.Support
 				
 				if (res_full.IndexOf (':') < 0)
 				{
-					res_full = this.default_resource_provider + res_full;
+					res_full = this.defaultResourceProvider + res_full;
 				}
 				
 				Drawing.Image image = null;
@@ -259,11 +259,11 @@ namespace Epsitec.Common.Support
 				
 				if (image != null)
 				{
-					this.images[name] = new System.WeakReference (image);
+					this.images[name] = new Types.Weak<Drawing.Image> (image);
 					
-					if (this.keep_alive_images != null)
+					if (this.keepAliveImages != null)
 					{
-						this.keep_alive_images.Add (image);
+						this.keepAliveImages.Add (image);
 					}
 				}
 				
@@ -325,11 +325,11 @@ namespace Epsitec.Common.Support
 				
 				if (image != null)
 				{
-					this.images[name] = new System.WeakReference (image);
+					this.images[name] = new Types.Weak<Drawing.Image> (image);
 					
-					if (this.keep_alive_images != null)
+					if (this.keepAliveImages != null)
 					{
-						this.keep_alive_images.Add (image);
+						this.keepAliveImages.Add (image);
 					}
 				}
 				
@@ -350,9 +350,9 @@ namespace Epsitec.Common.Support
 
 			if (provider == "file")
 			{
-				for (int i = 0; i < ImageProvider.default_paths.Length; i++)
+				for (int i = 0; i < ImageProvider.defaultPaths.Length; i++)
 				{
-					string path = ImageProvider.default_paths[i];
+					string path = ImageProvider.defaultPaths[i];
 					
 					if (string.IsNullOrEmpty (path))
 					{
@@ -392,31 +392,25 @@ namespace Epsitec.Common.Support
 
 		public Drawing.Image[] GetLongLifeCacheContents()
 		{
-			if (this.keep_alive_images == null)
+			if (this.keepAliveImages == null)
 			{
 				return new Drawing.Image[0];
 			}
-			
-			object[]        objects = this.keep_alive_images.ToArray ();
-			Drawing.Image[] images  = new Drawing.Image[objects.Length];
-			
-			for (int i = 0; i < objects.Length; i++)
+			else
 			{
-				images[i] = objects[i] as Drawing.Image;
+				return this.keepAliveImages.ToArray ();
 			}
-			
-			return images;
 		}
 		
 		
 		public void AddDynamicImage(string tag, Drawing.DynamicImage image)
 		{
-			this.dynamic_images[tag] = image;
+			this.dynamicImages[tag] = image;
 		}
 		
 		public void RemoveDynamicImage(string tag)
 		{
-			this.dynamic_images.Remove (tag);
+			this.dynamicImages.Remove (tag);
 		}
 		
 		public void ClearDynamicImageCache(string full_name)
@@ -437,7 +431,7 @@ namespace Epsitec.Common.Support
 				argument = full_name.Substring (pos+1);
 			}
 			
-			Drawing.DynamicImage image = this.dynamic_images[base_name] as Drawing.DynamicImage;
+			Drawing.DynamicImage image = this.dynamicImages[base_name];
 			
 			if (image != null)
 			{
@@ -472,30 +466,32 @@ namespace Epsitec.Common.Support
 						System.Reflection.Assembly assembly = assemblies[i];
 						
 						string name = string.Concat ("manifest:", res_name);
-						
-						System.WeakReference weak_ref = this.images[name] as System.WeakReference;
-						
-						if ((weak_ref == null) ||
-							(weak_ref.IsAlive == false))
+
+						if (this.images.ContainsKey (name))
 						{
-							try
+							Types.Weak<Drawing.Image> weak_ref = this.images[name];
+
+							if (weak_ref.IsAlive == false)
 							{
-								Drawing.Image image = Drawing.Bitmap.FromManifestResource (res_name, assembly);
-								
-								if (image != null)
+								try
 								{
-									System.Diagnostics.Debug.WriteLine ("Pre-loaded image " + res_name + " from assembly " + assembly.GetName ());
-									
-									this.images[name] = new System.WeakReference (image);
-									
-									if (this.keep_alive_images != null)
+									Drawing.Image image = Drawing.Bitmap.FromManifestResource (res_name, assembly);
+
+									if (image != null)
 									{
-										this.keep_alive_images.Add (image);
+										System.Diagnostics.Debug.WriteLine ("Pre-loaded image " + res_name + " from assembly " + assembly.GetName ());
+
+										this.images[name] = new Types.Weak<Drawing.Image> (image);
+
+										if (this.keepAliveImages != null)
+										{
+											this.keepAliveImages.Add (image);
+										}
 									}
 								}
-							}
-							catch
-							{
+								catch
+								{
+								}
 							}
 						}
 					}
@@ -516,10 +512,10 @@ namespace Epsitec.Common.Support
 					this.ClearImageCache (names[i]);
 				}
 			}
-			else
+			else if (this.images.ContainsKey (name))
 			{
-				System.WeakReference weak_ref = this.images[name] as System.WeakReference;
-				Drawing.Image        image    = weak_ref.Target as Drawing.Image;
+				Types.Weak<Drawing.Image> weak_ref = this.images[name];
+				Drawing.Image             image    = weak_ref.Target;
 				
 				this.images.Remove (name);
 				
@@ -529,9 +525,9 @@ namespace Epsitec.Common.Support
 				}
 			}
 			
-			if (this.keep_alive_images != null)
+			if (this.keepAliveImages != null)
 			{
-				this.keep_alive_images.Clear ();
+				this.keepAliveImages.Clear ();
 			}
 		}
 		
@@ -568,11 +564,11 @@ namespace Epsitec.Common.Support
 		}
 		
 		
-		protected Drawing.Image CreateBitmapFromBundle(ResourceBundle bundle, string image_name)
+		private Drawing.Image CreateBitmapFromBundle(ResourceBundle bundle, string image_name)
 		{
 			string field_name = "i." + image_name;
 			
-			Drawing.Image cache = this.bundle_hash[bundle] as Drawing.Image;
+			Drawing.Image cache = this.bundleImages[bundle];
 			
 			if (cache == null)
 			{
@@ -588,7 +584,7 @@ namespace Epsitec.Common.Support
 				
 				cache = Drawing.Bitmap.FromData (image_data, Drawing.Point.Zero, size);
 				
-				this.bundle_hash[bundle] = cache;
+				this.bundleImages[bundle] = cache;
 			}
 			
 			System.Diagnostics.Debug.Assert (cache != null);
@@ -621,15 +617,15 @@ namespace Epsitec.Common.Support
 			return null;
 		}
 
+
+		private Dictionary<string, Types.Weak<Drawing.Image>>	images = new Dictionary<string, Types.Weak<Drawing.Image>> ();
+		private Dictionary<string, Drawing.DynamicImage>		dynamicImages = new Dictionary<string, Drawing.DynamicImage> ();
+		private List<Drawing.Image>								keepAliveImages;
+		private Dictionary<ResourceBundle, Drawing.Image>		bundleImages = new Dictionary<ResourceBundle, Drawing.Image> ();
+		private string											defaultResourceProvider = "file:";
+		private bool											checkPath = true;
 		
-		protected Hashtable				images = new Hashtable ();
-		protected Hashtable				dynamic_images = new Hashtable ();
-		protected ArrayList				keep_alive_images = null;
-		protected Hashtable				bundle_hash = new Hashtable ();
-		protected string				default_resource_provider = "file:";
-		protected bool					check_path = true;
-		
-		protected static ImageProvider	default_provider;
-		protected static string[]		default_paths;
+		private static ImageProvider							defaultProvider;
+		private static string[]									defaultPaths;
 	}
 }

@@ -3,13 +3,13 @@
 
 namespace Epsitec.Common.Drawing
 {
-	public delegate void DynamicImagePaintCallback(Drawing.Graphics graphics, Drawing.Size size, string argument, Drawing.GlyphPaintStyle style, Drawing.Color color, object adorner);
+	public delegate bool DynamicImagePaintCallback(Drawing.Graphics graphics, Drawing.Size size, string argument, Drawing.GlyphPaintStyle style, Drawing.Color color, object adorner);
 	
 	/// <summary>
 	/// La classe DynamicImage permet de représenter une image construite à la
 	/// volée (on the fly). Le dessin lui-même se fait dans un call-back fourni
 	/// par l'utilisateur.
-	/// Cette class est utilisée par le protocole "dyn:xyz/abc" (cf ImageProvider,
+	/// Cette classe est utilisée par le protocole "dyn:xyz/abc" (cf ImageProvider,
 	/// il sait retrouver le DynamicImage correspondant à partir de la paire nom
 	/// "xyz" et argument "abc").
 	/// </summary>
@@ -325,6 +325,11 @@ namespace Epsitec.Common.Drawing
 			
 			return this.GetImageForKey (new Key (style, this.Width, this.Height, this.Argument));
 		}
+
+		public override bool IsPaintStyleDefined(GlyphPaintStyle style)
+		{
+			return this.PaintCallback (null, Size.Zero, this.Argument, style, Color.Empty, null);
+		}
 		
 		public DynamicImage GetImageForArgument(string argument)
 		{
@@ -430,49 +435,50 @@ namespace Epsitec.Common.Drawing
 					graphics.SetPixmapSize (dx, dy);
 					Drawing.Pixmap pixmap = graphics.Pixmap;
 					pixmap.Clear ();
-					
-					callback (graphics, size, this.Argument, this.paintStyle, this.Color, this.Adorner);
-					
-					int width, height, stride;
-					System.Drawing.Imaging.PixelFormat format;
-					System.IntPtr scan0;
-					
-					pixmap.GetMemoryLayout(out width, out height, out stride, out format, out scan0);
-					System.Diagnostics.Debug.Assert(width == dx);
-					System.Diagnostics.Debug.Assert(height == dy);
 
-					System.Drawing.Bitmap                bitmap = new System.Drawing.Bitmap (dx, dy, format);
-					System.Drawing.Rectangle             bbox   = new System.Drawing.Rectangle (0, 0, dx, dy);
-					System.Drawing.Imaging.ImageLockMode mode   = System.Drawing.Imaging.ImageLockMode.WriteOnly;
-					System.Drawing.Imaging.BitmapData    data   = bitmap.LockBits (bbox, mode, format);
-					
-					try
+					if (callback (graphics, size, this.Argument, this.paintStyle, this.Color, this.Adorner))
 					{
-						unsafe
+						int width, height, stride;
+						System.Drawing.Imaging.PixelFormat format;
+						System.IntPtr scan0;
+
+						pixmap.GetMemoryLayout (out width, out height, out stride, out format, out scan0);
+						System.Diagnostics.Debug.Assert (width == dx);
+						System.Diagnostics.Debug.Assert (height == dy);
+
+						System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap (dx, dy, format);
+						System.Drawing.Rectangle bbox   = new System.Drawing.Rectangle (0, 0, dx, dy);
+						System.Drawing.Imaging.ImageLockMode mode   = System.Drawing.Imaging.ImageLockMode.WriteOnly;
+						System.Drawing.Imaging.BitmapData data   = bitmap.LockBits (bbox, mode, format);
+
+						try
 						{
-							int   num = stride / 4;
-							uint* src = (uint*) scan0.ToPointer();
-							uint* buf = (uint*) data.Scan0.ToPointer() + dy * num;
-						
-							for (int line = 0; line < dy; line++)
+							unsafe
 							{
-								buf -= num;
-							
-								uint* dst = buf;
-							
-								for ( int i=0 ; i<num ; i++ )
+								int num = stride / 4;
+								uint* src = (uint*) scan0.ToPointer ();
+								uint* buf = (uint*) data.Scan0.ToPointer () + dy * num;
+
+								for (int line = 0; line < dy; line++)
 								{
-									*dst++ = *src++;
+									buf -= num;
+
+									uint* dst = buf;
+
+									for (int i=0; i<num; i++)
+									{
+										*dst++ = *src++;
+									}
 								}
 							}
 						}
+						finally
+						{
+							bitmap.UnlockBits (data);
+						}
+
+						this.cache = Bitmap.FromNativeBitmap (bitmap, this.Origin, size).BitmapImage;
 					}
-					finally
-					{
-						bitmap.UnlockBits(data);
-					}
-					
-					this.cache = Bitmap.FromNativeBitmap(bitmap, this.Origin, size).BitmapImage;
 				}
 			}
 		}
