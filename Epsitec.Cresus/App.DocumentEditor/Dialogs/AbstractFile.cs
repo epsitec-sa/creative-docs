@@ -261,6 +261,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.favoritesExtend = new GlyphButton(header);
 			this.favoritesExtend.Dock = DockStyle.Left;
 			this.favoritesExtend.Clicked += new MessageEventHandler(this.HandleFavoritesExtendClicked);
+			ToolTip.Default.SetToolTip(this.favoritesExtend, Res.Strings.Dialog.File.Tooltip.Extend);
 
 			StaticText label = new StaticText(header);
 			label.Text = Res.Strings.Dialog.Open.LabelPath;
@@ -930,22 +931,6 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				return;
 			}
 
-			string message;
-			if (this.files[sel].IsDirectory)
-			{
-				message = string.Format(Res.Strings.Dialog.Question.Delete.Directory, this.files[sel].ShortFilename, this.files[sel].Filename);
-			}
-			else
-			{
-				message = string.Format(Res.Strings.Dialog.Question.Delete.File, this.files[sel].ShortFilename, this.files[sel].Filename);
-			}
-
-			Common.Dialogs.DialogResult result = this.editor.DialogQuestion(this.editor.CommandDispatcher, message);
-			if ( result != Common.Dialogs.DialogResult.Yes )
-			{
-				return;
-			}
-
 			string filenameToSelect = null;
 
 			if (sel < this.files.Count-1)
@@ -960,25 +945,12 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				}
 			}
 
-#if false
-			//	TODO: comment supprimer en mettant dans la corbeille ?
-			if (this.files[sel].IsDirectory)
+			FileOperationMode mode = new FileOperationMode();
+			if (FileManager.DeleteFile(mode, this.files[sel].Filename))  // TODO: la valeur retournée n'indique pas un 'non' !
 			{
-				string directory = this.files[sel].Filename;
-				System.IO.Directory.Delete(directory, true);
+				this.UpdateTable(-1);
+				this.SelectFilenameTable(filenameToSelect);
 			}
-			else
-			{
-				string filename = this.files[sel].Filename;
-				System.IO.File.Delete(filename);
-			}
-#else
-			FileOperationMode mode = new FileOperationMode ();
-			FileManager.DeleteFile (mode, this.files[sel].Filename);
-#endif
-
-			this.UpdateTable(-1);
-			this.SelectFilenameTable(filenameToSelect);
 		}
 
 		protected void RenameStarting()
