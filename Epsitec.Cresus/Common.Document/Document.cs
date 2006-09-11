@@ -1324,6 +1324,49 @@ namespace Epsitec.Common.Document
 			stream.Write(buffer, 0, 8);
 		}
 
+
+		public static string DisplayOriginalSamples
+		{
+			//	Retourne le nom à afficher pour le dossier contenant les exemples originaux.
+			get
+			{
+				return "Exemples originaux";
+			}
+		}
+
+		public static string DisplayMySamples
+		{
+			//	Retourne le nom à afficher pour le dossier contenant les exemples personnels.
+			get
+			{
+				return "Mes exemples";
+			}
+		}
+
+		public static string DirectoryOriginalSamples
+		{
+			//	Retourne le nom du dossier contenant les exemples originaux.
+			get
+			{
+				return string.Concat(Common.Support.Globals.Directories.Executable, "\\Exemples originaux");
+			}
+		}
+
+		public static string DirectoryMySamples
+		{
+			//	Retourne le nom du dossier contenant les exemples personnels.
+			get
+			{
+				string path = Common.Support.Globals.Directories.UserAppData;
+				int i = path.LastIndexOf("\\");
+				if (i > 0)
+				{
+					path = path.Substring(0, i);  // supprime le dossier "1.0.0.0" à la fin
+				}
+				return string.Concat(path, "\\Mes exemples");
+			}
+		}
+
 		
 		#region Serialization
 		public void GetObjectData(SerializationInfo info, StreamingContext context)
