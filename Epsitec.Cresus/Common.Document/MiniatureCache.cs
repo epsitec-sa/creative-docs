@@ -11,7 +11,8 @@ namespace Epsitec.Common.Document
 	{
 		public static void Add(string filename)
 		{
-			//	Ajoute une miniature dans le cache.
+			//	Ajoute une miniature dans le cache, si elle n'y est pas déjà.
+			//	Si la miniature a changé, il faut au préalable exécuter Remove.
 			if (!MiniatureCache.cache.ContainsKey(filename))
 			{
 				byte[] data = MiniatureCache.ReadMiniature(filename);
@@ -32,6 +33,7 @@ namespace Epsitec.Common.Document
 		public static Image Image(string filename)
 		{
 			//	Retourne une miniature contenue dans le cache.
+			//	Retourne null si la miniature n'est pas dans le cache.
 			return MiniatureCache.cache[filename];
 		}
 

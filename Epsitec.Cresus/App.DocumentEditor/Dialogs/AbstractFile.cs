@@ -15,7 +15,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 	{
 		public AbstractFile(DocumentEditor editor) : base(editor)
 		{
-			this.favoritesVisited = new List<FolderItem>();
+			this.directoriesVisited = new List<FolderItem>();
 			this.focusedWidget = null;
 		}
 
@@ -117,9 +117,9 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		protected void SetInitialFolder(FolderItem folder)
 		{
 			//	Change le dossier courant.
-			if (!this.IsFavoritesEndWith(this.initialFolder))
+			if (!this.IsDirectoriesEndWith(this.initialFolder))
 			{
-				this.favoritesVisited.Add(this.initialFolder);
+				this.directoriesVisited.Add(this.initialFolder);
 			}
 
 			if (folder.IsEmpty)
@@ -136,20 +136,20 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.UpdateButtons();
 		}
 
-		protected bool IsFavoritesEndWith(FolderItem folder)
+		protected bool IsDirectoriesEndWith(FolderItem folder)
 		{
 			if (folder.IsEmpty)
 			{
 				return true;  // on n'insère jamais un folder vide
 			}
 
-			if (this.favoritesVisited.Count == 0)
+			if (this.directoriesVisited.Count == 0)
 			{
 				return false;
 			}
 			else
 			{
-				FolderItem last = this.favoritesVisited[this.favoritesVisited.Count-1];
+				FolderItem last = this.directoriesVisited[this.directoriesVisited.Count-1];
 				return (last == folder);
 			}
 		}
@@ -509,8 +509,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 			if (!this.isSave)
 			{
-				path = string.Concat(Common.Support.Globals.Directories.Executable, "\\Samples");
-				this.FavoritesAdd("Exemples Epsitec", "FileTypeEpsitecSamples", path);
+				path = string.Concat(Common.Support.Globals.Directories.Executable, "\\Exemples originaux");
+				this.FavoritesAdd("Exemples originaux", "FileTypeEpsitecSamples", path);
 			}
 
 			path = Common.Support.Globals.Directories.UserAppData;
@@ -519,6 +519,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			{
 				path = path.Substring(0, i);  // supprime le dossier "1.0.0.0" à la fin
 			}
+			path = string.Concat(path, "\\Mes exemples");
 			this.FavoritesAdd("Mes exemples", "FileTypeMySamples", path);
 
 			this.FavoritesAdd(FolderId.VirtualDesktop);      // Bureau
@@ -540,6 +541,12 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		{
 			//	Ajoute un favoris dans le panneau de gauche.
 			FolderItem item = FileManager.GetFolderItem(path, FolderQueryMode.LargeIcons);
+
+			if (item.IsEmpty && !System.IO.Directory.Exists(path))
+			{
+				System.IO.Directory.CreateDirectory(path);
+				item = FileManager.GetFolderItem(path, FolderQueryMode.LargeIcons);
+			}
 
 			Filename f = new Filename();
 			f.PreferredHeight = (this.favoritesBigState.ActiveState == ActiveState.Yes) ? Common.Widgets.Filename.ExtendedHeight : Common.Widgets.Filename.CompactedHeight;
@@ -790,7 +797,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			FolderItem parent = FileManager.GetParentFolderItem(this.initialFolder, FolderQueryMode.NoIcons);
 			this.parentState.Enable = !parent.IsEmpty;
 
-			this.prevState.Enable = (this.favoritesVisited.Count > 0);
+			this.prevState.Enable = (this.directoriesVisited.Count > 0);
 		}
 
 		protected void UpdateInitialDirectory()
@@ -838,14 +845,14 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 		protected void NavigatePrev()
 		{
-			if (this.favoritesVisited.Count == 0)
+			if (this.directoriesVisited.Count == 0)
 			{
 				return;
 			}
 
-			this.SetInitialFolder(this.favoritesVisited[this.favoritesVisited.Count-1]);
-			this.favoritesVisited.RemoveAt(this.favoritesVisited.Count-1);
-			this.favoritesVisited.RemoveAt(this.favoritesVisited.Count-1);
+			this.SetInitialFolder(this.directoriesVisited[this.directoriesVisited.Count-1]);
+			this.directoriesVisited.RemoveAt(this.directoriesVisited.Count-1);
+			this.directoriesVisited.RemoveAt(this.directoriesVisited.Count-1);
 			this.UpdateButtons();
 		}
 
@@ -1437,6 +1444,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			foreach (Item cell in this.comboFolders)
 			{
 				FolderItemIcon icon = cell.FolderItem.Icon;
+				//?if (cell.FolderItem.Icon == null || cell.FolderItem.QueryMode != FolderQueryMode.SmallIcons)  // TODO: dès que possible !
 				if (cell.FolderItem.Icon == null || cell.FolderItem.Icon.Image.Height > 16)
 				{
 					icon = FileManager.GetFolderItemIcon(cell.FolderItem, FolderQueryMode.SmallIcons);
@@ -1986,7 +1994,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		protected List<FolderItem>			favoritesList;
 		protected int						favoritesFixes;
 		protected int						favoritesSelected;
-		protected List<FolderItem>			favoritesVisited;
+		protected List<FolderItem>			directoriesVisited;
 		protected List<Item>				comboFolders;
 		protected List<string>				comboTexts;
 		protected int						comboSelected;
