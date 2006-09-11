@@ -1223,7 +1223,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		protected bool PromptForOverwriting()
 		{
 			//	Si requis, demande s'il faut écraser le fichier ?
-			if (!this.isSave && !System.IO.File.Exists(this.selectedFilename))  // fichier n'existe pas ?
+			if (!this.isSave && this.selectedFilename != Common.Document.Settings.GlobalSettings.NewEmptyDocument && !System.IO.File.Exists(this.selectedFilename))  // fichier n'existe pas ?
 			{
 				string message = string.Format(Res.Strings.Dialog.Question.Open.File, Misc.ExtractName(this.selectedFilename), this.selectedFilename);
 				Common.Dialogs.DialogResult result = this.editor.DialogError(this.editor.CommandDispatcher, message);
