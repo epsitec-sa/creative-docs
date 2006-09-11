@@ -183,6 +183,7 @@
     <Compile Include="Platform\FolderItemAttributes.cs" />
     <Compile Include="Platform\FolderItemHandle.cs" />
     <Compile Include="FolderItemIcon.cs" />
+    <Compile Include="Platform\IFileOperationWindow.cs" />
     <Compile Include="Platform\Win32\FileInfo.cs" />
     <Compile Include="Platform\Win32\IEnumIDList.cs" />
     <Compile Include="Platform\Win32\IMalloc.cs" />

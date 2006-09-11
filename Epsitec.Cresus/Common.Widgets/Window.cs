@@ -17,7 +17,7 @@ namespace Epsitec.Common.Widgets
 	/// n'est pas un widget en tant que tel: Window.Root définit le widget à la
 	/// racine de la fenêtre.
 	/// </summary>
-	public class Window : Types.DependencyObject, Support.Data.IContainer
+	public class Window : Types.DependencyObject, Support.Data.IContainer, Support.Platform.IFileOperationWindow
 	{
 		public Window()
 		{
@@ -1051,6 +1051,15 @@ namespace Epsitec.Common.Widgets
 				return this.components;
 			}
 		}
+		#endregion
+
+		#region IFileOperationWindow Members
+
+		System.IntPtr Support.Platform.IFileOperationWindow.GetPlatformHandle()
+		{
+			return this.window.Handle;
+		}
+
 		#endregion
 		
 		
