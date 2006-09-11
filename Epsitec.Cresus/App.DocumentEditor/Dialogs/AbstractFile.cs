@@ -920,6 +920,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				}
 			}
 
+#if false
 			//	TODO: comment supprimer en mettant dans la corbeille ?
 			if (this.files[sel].IsDirectory)
 			{
@@ -931,6 +932,10 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				string filename = this.files[sel].Filename;
 				System.IO.File.Delete(filename);
 			}
+#else
+			FileOperationMode mode = new FileOperationMode ();
+			FileManager.DeleteFile (mode, this.files[sel].Filename);
+#endif
 
 			this.UpdateTable(-1);
 			this.SelectFilenameTable(filenameToSelect);
