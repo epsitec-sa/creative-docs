@@ -192,6 +192,8 @@ namespace Epsitec.Common.Support.Platform.Win32
 				{
 					this.OperationFlags |= ShellFileOperationFlags.FOF_RENAMEONCOLLISION;
 				}
+
+				this.OwnerWindow = value.OwnerWindow == null ? System.IntPtr.Zero : value.OwnerWindow.GetPlatformHandle ();
 			}
 		}
 

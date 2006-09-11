@@ -13,6 +13,24 @@ namespace Epsitec.Common.Support
 		{
 		}
 
+		public FileOperationMode(Platform.IFileOperationWindow ownerWindow)
+			: this ()
+		{
+			this.ownerWindow = ownerWindow;
+		}
+
+		public Platform.IFileOperationWindow	OwnerWindow
+		{
+			get
+			{
+				return this.ownerWindow;
+			}
+			set
+			{
+				this.ownerWindow = value;
+			}
+		}
+
 		public bool								Silent
 		{
 			get
@@ -65,5 +83,6 @@ namespace Epsitec.Common.Support
 		private bool							autoRenameOnCollision;
 		private bool							autoConfirmation;
 		private bool							autoCreateDirectory;
+		private Platform.IFileOperationWindow	ownerWindow;
 	}
 }

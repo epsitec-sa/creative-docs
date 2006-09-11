@@ -957,7 +957,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			}
 
 			//	Supprime le ou les fichiers.
-			FileOperationMode mode = new FileOperationMode();
+			FileOperationMode mode = new FileOperationMode(this.window);
 			FileManager.DeleteFiles(mode, filenamesToDelete);
 
 			if (!System.IO.File.Exists(filenamesToDelete[0]))  // fichier n'existe plus (donc bien supprimé) ?
