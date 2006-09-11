@@ -197,6 +197,9 @@ namespace Epsitec.Common.Support
 							 IO.Checksum.ComputeCrc32 (delegate (IO.IChecksum checksum) { checksum.Update (image2); }));
 
 			Assert.AreEqual (documents1.Icon.ImageName, documents2.Icon.ImageName);
+
+			System.Console.Out.WriteLine ("Large icon name for Desktop: {0}", FileManager.GetFolderItem (FolderId.VirtualDesktop, FolderQueryMode.LargeIcons).Icon.ImageName);
+			System.Console.Out.WriteLine ("Small icon name for Desktop: {0}", FileManager.GetFolderItem (FolderId.VirtualDesktop, FolderQueryMode.SmallIcons).Icon.ImageName);
 		}
 		
 		[Test]

@@ -135,6 +135,6 @@ namespace Epsitec.Common.Support
 		private static FolderItemIconCache instance;
 
 		private Dictionary<long, Item> images = new Dictionary<long,Item> ();
-		private long nextIndex = System.DateTime.UtcNow.Ticks;
+		private long nextIndex = (System.DateTime.UtcNow.Ticks - 632935616148146251)/10000;	//	>0 and time [ms] dependent to avoid accidental reuse of ids
 	}
 }
