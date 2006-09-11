@@ -547,7 +547,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			f.PreferredHeight = (this.favoritesBigState.ActiveState == ActiveState.Yes) ? Common.Widgets.Filename.ExtendedHeight : Common.Widgets.Filename.CompactedHeight;
 			f.Name = this.favoritesList.Count.ToString(System.Globalization.CultureInfo.InvariantCulture);
 			f.FilenameValue = item.DisplayName;
-			f.ImageValue = item.Icon;
+			f.ImageValue = item.Icon.Image;
 			f.Dock = DockStyle.Top;
 			f.Clicked += new MessageEventHandler(this.HandleFavoriteClicked);
 			this.favorites.Panel.Children.Add(f);
@@ -1695,7 +1695,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 					{
 						if (this.IsDirectory)
 						{
-							return this.folderItem.Icon;
+							return this.folderItem.Icon.Image;
 						}
 						else
 						{
