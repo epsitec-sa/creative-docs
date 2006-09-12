@@ -16,8 +16,16 @@ namespace Epsitec.Common.Support.Platform.Win32
 
 			if (System.IO.File.Exists (this.path))
 			{
-				pf = (IPersistFile) this.link;
-				pf.Load (this.path, 0);
+				try
+				{
+					pf = (IPersistFile) this.link;
+					pf.Load (this.path, 0);
+					this.link.Resolve (System.IntPtr.Zero, (ShellApi.SLR_FLAGS) (0x00010000*100) | ShellApi.SLR_FLAGS.SLR_NO_UI | ShellApi.SLR_FLAGS.SLR_NOSEARCH | ShellApi.SLR_FLAGS.SLR_NOUPDATE);
+				}
+				catch
+				{
+					this.Dispose ();
+				}
 			}
 		}
 
@@ -88,10 +96,17 @@ namespace Epsitec.Common.Support.Platform.Win32
 		{
 			get
 			{
-				System.IntPtr pidl;
-				this.link.GetIDList (out pidl);
+				if (this.link != null)
+				{
+					System.IntPtr pidl;
+					this.link.GetIDList (out pidl);
 
-				return PidlHandle.Inherit (pidl);
+					return PidlHandle.Inherit (pidl);
+				}
+				else
+				{
+					return null;
+				}
 			}
 			set
 			{

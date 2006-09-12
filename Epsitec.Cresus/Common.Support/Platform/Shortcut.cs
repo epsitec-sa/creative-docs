@@ -13,7 +13,9 @@ namespace Epsitec.Common.Support.Platform
 		{
 			using (Win32.ShellShortcut shortcut = new Win32.ShellShortcut (path))
 			{
-				return Win32.FileInfo.CreateFolderItem (shortcut.TargetPidl, mode);
+				FolderItemHandle handle = shortcut.TargetPidl;
+				
+				return handle == null ? FolderItem.Empty : Win32.FileInfo.CreateFolderItem (handle, mode);
 			}
 		}
 	}

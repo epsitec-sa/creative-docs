@@ -751,6 +751,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 			FolderQueryMode mode = this.UseLargeIcons ? FolderQueryMode.LargeIcons : FolderQueryMode.SmallIcons;
 			bool showHidden = FolderItem.ShowHiddenFiles;
+			bool skipFolders = this.initialFolder.Equals (FileManager.GetFolderItem (FolderId.Recent, FolderQueryMode.NoIcons));
 			foreach (FolderItem item in FileManager.GetFolderItems(this.initialFolder, mode))
 			{
 				if (!item.IsFileSystemNode)
@@ -765,9 +766,35 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 				if (item.IsShortcut)
 				{
+					if (skipFolders)
+					{
+						//	Filtre tout de suite les fichiers que l'on ne sait pas nous intéresser.
+						//	En effet, le nom du raccourci se termine par .crdoc.lnk s'il s'agit d'un
+						//	document .crdoc.
+
+						string name = item.FullPath.Substring (0, item.FullPath.Length-4);
+
+						if (!string.Equals (name, this.fileExtension, System.StringComparison.OrdinalIgnoreCase))  // autre extension ?
+						{
+							continue;
+						}
+					}
+
+					//	Vérifie que le fichier existe plutôt que de montrer des raccourcis cassés
+					//	qui ne mènent nulle part:
+					
 					FolderItem target = FileManager.ResolveShortcut(item, FolderQueryMode.NoIcons);
 
 					if (target.IsFolder)
+					{
+						//	On liste le dossier.
+						
+						if (skipFolders)
+						{
+							continue;
+						}
+					}
+					else if (target.IsEmpty)
 					{
 						continue;
 					}
