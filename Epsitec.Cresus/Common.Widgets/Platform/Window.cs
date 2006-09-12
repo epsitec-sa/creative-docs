@@ -1487,15 +1487,14 @@ namespace Epsitec.Common.Widgets.Platform
 //					System.Diagnostics.Debug.WriteLine (" WindowState: "+this.WindowState.ToString());
 //				}
 //			}
-//			if (msg.Msg == Win32Const.WM_WINDOWPOSCHANGED)
-//			{
-//				unsafe
-//				{
-//					Win32Api.WindowPos* wp = (Win32Api.WindowPos*) msg.LParam.ToPointer ();
-//					System.Diagnostics.Debug.WriteLine (" WINDOWPOSCHANGED: "+wp->X+", "+wp->Y+", "+wp->Width+", "+wp->Height+", flags="+wp->Flags.ToString("X8"));
-//					System.Diagnostics.Debug.WriteLine (" WindowState: "+this.WindowState.ToString());
-//				}
-//			}
+			if (msg.Msg == Win32Const.WM_WINDOWPOSCHANGED)
+			{
+				unsafe
+				{
+					Win32Api.WindowPos* wp = (Win32Api.WindowPos*) msg.LParam.ToPointer ();
+					this.form_bounds = new System.Drawing.Rectangle (wp->X, wp->Y, wp->Width, wp->Height);
+				}
+			}
 			
 			if (msg.Msg == Win32Const.WM_APP_DISPOSE)
 			{
