@@ -10,6 +10,9 @@ namespace Epsitec.Common.Widgets
 		{
 			this.ArrowUp.Name   = "Up";
 			this.ArrowDown.Name = "Down";
+
+			this.ArrowMax.GlyphShape = GlyphShape.ArrowUp;
+			this.ArrowMin.GlyphShape = GlyphShape.ArrowDown;
 		}
 
 		public VSlider(Widget embedder)
