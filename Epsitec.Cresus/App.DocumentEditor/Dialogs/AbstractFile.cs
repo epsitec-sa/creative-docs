@@ -751,7 +751,15 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 					continue;  // ignore les items cachés si l'utilisateur ne veut pas les voir
 				}
 
-				if (!item.IsFolder)  // fichier ?
+				if (item.IsShortcut)
+				{
+					FolderItem target = FileManager.ResolveShortcut(item, FolderQueryMode.NoIcons);
+					if (!target.IsFolder)
+					{
+						continue;
+					}
+				}
+				else if (!item.IsFolder)  // fichier ?
 				{
 					string ext = System.IO.Path.GetExtension(item.FullPath);
 					if (ext != this.fileExtension)  // autre extension ?
@@ -1026,7 +1034,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				string srcFilename, dstFilename;
 				string newText = TextLayout.ConvertToSimpleText(this.fieldRename.Text);
 
-				if (this.files[sel].IsDirectory)
+				if (this.files[sel].IsDirectory && !this.files[sel].FolderItem.IsShortcut)
 				{
 					srcFilename = this.files[sel].Filename;
 					dstFilename = string.Concat(System.IO.Path.GetDirectoryName(srcFilename), "\\", newText);
@@ -1177,7 +1185,15 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			{
 				if (this.files[sel].IsDirectory)  // ouvre un dossier ?
 				{
-					this.SetInitialFolder(this.files[sel].FolderItem);
+					if (this.files[sel].FolderItem.IsShortcut)
+					{
+						this.SetInitialFolder(FileManager.ResolveShortcut(this.files[sel].FolderItem, FolderQueryMode.NoIcons));
+					}
+					else
+					{
+						this.SetInitialFolder(this.files[sel].FolderItem);
+					}
+
 					return false;  // ne pas fermer le dialogue
 				}
 				else
@@ -1628,7 +1644,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 					}
 					else
 					{
-						if (this.folderItem.IsFolder)
+						if (this.folderItem.IsFolder || this.folderItem.IsShortcut)
 						{
 							return TextLayout.ConvertToTaggedText(this.folderItem.DisplayName);
 						}
@@ -1649,7 +1665,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 						return false;
 					}
 
-					return this.folderItem.IsFolder;
+					return this.folderItem.IsFolder || this.folderItem.IsShortcut;
 				}
 			}
 
@@ -1700,7 +1716,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 					{
 						if (this.IsDirectory)
 						{
-							return Res.Strings.Dialog.File.Directory;
+							//?return Res.Strings.Dialog.File.Directory;
+							return this.folderItem.TypeName;
 						}
 						else
 						{
