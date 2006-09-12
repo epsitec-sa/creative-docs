@@ -346,7 +346,18 @@ namespace Epsitec.Common.Support.Platform.Win32
 			}
 			if ((info.dwAttributes & (uint) ShellApi.SFGAO.SFGAO_LINK) != 0)
 			{
-				attributes |= FolderItemAttributes.Shortcut;
+				if (string.Equals (System.IO.Path.GetExtension (fullPath), ".lnk", System.StringComparison.OrdinalIgnoreCase))
+				{
+					attributes |= FolderItemAttributes.Shortcut;
+				}
+				else if (string.Equals (System.IO.Path.GetExtension (fullPath), ".url", System.StringComparison.OrdinalIgnoreCase))
+				{
+					attributes |= FolderItemAttributes.WebLink;
+				}
+				else
+				{
+					System.Diagnostics.Debug.WriteLine ("Unsupported SGFAO_LINK on file: " + fullPath);
+				}
 			}
 			if ((info.dwAttributes & (uint) ShellApi.SFGAO.SFGAO_FILESYSANCESTOR) != 0)
 			{
