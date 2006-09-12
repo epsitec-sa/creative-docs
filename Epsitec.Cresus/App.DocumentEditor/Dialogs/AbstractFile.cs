@@ -1022,17 +1022,17 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.renameSelected = -1;
 				string srcFilename, dstFilename;
 				string newText = TextLayout.ConvertToSimpleText(this.fieldRename.Text);
+				bool ok;
 
 				if (this.files[sel].IsDirectory)
 				{
 					srcFilename = this.files[sel].Filename;
 					dstFilename = string.Concat(System.IO.Path.GetDirectoryName(srcFilename), "\\", newText);
 
-					try
-					{
-						System.IO.Directory.Move(srcFilename, dstFilename);
-					}
-					catch
+					FileOperationMode mode = new FileOperationMode(this.window);
+					FileManager.RenameFile(mode, srcFilename, dstFilename);
+
+					if (System.IO.Directory.Exists(srcFilename))
 					{
 						return;
 					}
@@ -1042,16 +1042,15 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 					srcFilename = this.files[sel].Filename;
 					dstFilename = string.Concat(System.IO.Path.GetDirectoryName(srcFilename), "\\", newText, System.IO.Path.GetExtension(srcFilename));
 
-					try
-					{
-						System.IO.File.Move(srcFilename, dstFilename);
-					}
-					catch
+					FileOperationMode mode = new FileOperationMode(this.window);
+					FileManager.RenameFile(mode, srcFilename, dstFilename);
+
+					if (System.IO.File.Exists(srcFilename))
 					{
 						return;
 					}
 				}
-
+				
 				FolderItem item = FileManager.GetFolderItem(dstFilename, FolderQueryMode.NoIcons);
 				this.files[sel].FolderItem = item;
 
