@@ -5269,12 +5269,16 @@ namespace Epsitec.App.DocumentEditor
 
 				if ( this.documentType == DocumentType.Pictogram )
 				{
-					return string.Concat(dir, "\\CresusPicto.data");
+					return string.Concat(dir, "\\CresusPicto2.data");  // (*)
 				}
 				else
 				{
-					return string.Concat(dir, "\\CresusDocuments.data");
+					return string.Concat(dir, "\\CresusDocuments2.data");  // (*)
 				}
+
+				//	(*)	Le nom a passé de 'CresusDocuments.data' à 'CresusDocuments2.data'
+				//		afin de repartir d'un fichier neuf, ce qui est nécessaire vu
+				//		notamment les changements de dossier 'Samples' en 'Exemples originaux'.
 			}
 		}
 		#endregion
