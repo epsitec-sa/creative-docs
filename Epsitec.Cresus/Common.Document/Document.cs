@@ -1204,12 +1204,7 @@ namespace Epsitec.Common.Document
 			//	Enregistre le document sur disque.
 			System.Diagnostics.Debug.Assert(this.mode == DocumentMode.Modify);
 
-			string dir = System.IO.Path.GetDirectoryName(filename);
-			if (dir.ToLower() == Document.DirectoryOriginalSamples.ToLower())
-			{
-				string file = System.IO.Path.GetFileName(filename);
-				filename = string.Concat(Document.DirectoryMySamples, "\\", file);
-			}
+			filename = Document.RedirectionFilename(filename);
 			
 			int undoCount = this.modifier.OpletQueue.UndoActionCount;
 			
@@ -1372,6 +1367,38 @@ namespace Epsitec.Common.Document
 				}
 				return string.Concat(path, "\\", Document.DisplayMySamples);
 			}
+		}
+
+		public static string RedirectionFilename(string filename)
+		{
+			//	Redirige un nom de dossier ou de fichier des 'Exemples originaux'
+			//	vers 'Mes exemples', si nécessaire.
+			if (string.IsNullOrEmpty(filename))
+			{
+				return filename;
+			}
+
+			int i1 = filename.LastIndexOf("\\");
+			int i2 = filename.LastIndexOf(".");
+
+			if (i2 > i1)  // fichier ?
+			{
+				string dir = System.IO.Path.GetDirectoryName(filename);
+				if (dir.ToLower() == Document.DirectoryOriginalSamples.ToLower())
+				{
+					string file = System.IO.Path.GetFileName(filename);
+					filename = string.Concat(Document.DirectoryMySamples, "\\", file);
+				}
+			}
+			else  // dossier ?
+			{
+				if (filename.ToLower() == Document.DirectoryOriginalSamples.ToLower())
+				{
+					filename = Document.DirectoryMySamples;
+				}
+			}
+
+			return filename;
 		}
 
 		
