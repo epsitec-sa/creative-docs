@@ -56,8 +56,7 @@ namespace Epsitec.Common.Document.Settings
 
 			//	Suppose que le dossier des exemples est dans le même dossier
 			//	que l'application.
-			string dir = Support.Globals.Directories.Executable;
-			this.initialDirectory = dir + @"\Samples";
+			this.initialDirectory = Document.DirectoryOriginalSamples;
 
 			this.colorCollection = new ColorCollection();
 			this.colorCollectionDirectory = "";
