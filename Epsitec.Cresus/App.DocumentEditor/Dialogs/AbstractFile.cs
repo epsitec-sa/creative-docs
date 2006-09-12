@@ -1022,7 +1022,6 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.renameSelected = -1;
 				string srcFilename, dstFilename;
 				string newText = TextLayout.ConvertToSimpleText(this.fieldRename.Text);
-				bool ok;
 
 				if (this.files[sel].IsDirectory)
 				{

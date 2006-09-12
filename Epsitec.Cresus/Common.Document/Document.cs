@@ -1203,6 +1203,13 @@ namespace Epsitec.Common.Document
 		{
 			//	Enregistre le document sur disque.
 			System.Diagnostics.Debug.Assert(this.mode == DocumentMode.Modify);
+
+			string dir = System.IO.Path.GetDirectoryName(filename);
+			if (dir.ToLower() == Document.DirectoryOriginalSamples.ToLower())
+			{
+				string file = System.IO.Path.GetFileName(filename);
+				filename = string.Concat(Document.DirectoryMySamples, "\\", file);
+			}
 			
 			int undoCount = this.modifier.OpletQueue.UndoActionCount;
 			
