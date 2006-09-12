@@ -131,6 +131,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.initialFolder = folder;
 			}
 
+			this.initialSmallIcon = FileManager.GetFolderItemIcon(this.initialFolder, FolderQueryMode.SmallIcons);
+
 			this.UpdateInitialDirectory();
 			this.UpdateTable(-1);
 			this.UpdateButtons();
@@ -797,12 +799,10 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			{
 				this.ignoreChanged = true;
 
-				FolderItemIcon icon = FileManager.GetFolderItemIcon(this.initialFolder, FolderQueryMode.SmallIcons);
-
 				string text = TextLayout.ConvertToTaggedText(this.initialFolder.DisplayName);
-				if (icon != null)
+				if (this.initialSmallIcon != null)
 				{
-					text = string.Format("<img src=\"{0}\"/> {1}", icon.ImageName, text);
+					text = string.Format("<img src=\"{0}\"/> {1}", this.initialSmallIcon.ImageName, text);
 				}
 				
 				this.fieldPath.Text = text;
@@ -1434,12 +1434,11 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			foreach (Item cell in this.comboFolders)
 			{
 				FolderItemIcon icon = cell.FolderItem.Icon;
-				//?if (cell.FolderItem.Icon == null || cell.FolderItem.QueryMode != FolderQueryMode.SmallIcons)  // TODO: dès que possible !
-				if (cell.FolderItem.Icon == null || cell.FolderItem.Icon.Image.Height > 16)
+				if (cell.SmallIcon == null)
 				{
-					icon = FileManager.GetFolderItemIcon(cell.FolderItem, FolderQueryMode.SmallIcons);
+					cell.SmallIcon = FileManager.GetFolderItemIcon(cell.FolderItem, FolderQueryMode.SmallIcons);
 				}
-				string text = string.Format("<img src=\"{0}\"/> {1}", icon.ImageName, cell.ShortFilename);
+				string text = string.Format("<img src=\"{0}\"/> {1}", cell.SmallIcon.ImageName, cell.ShortFilename);
 				text = AbstractFile.AddStringIndent(text, cell.Deep);
 
 				this.fieldPath.Items.Add(text);
@@ -1577,6 +1576,27 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				set
 				{
 					this.folderItem = value;
+
+					if (this.folderItem.QueryMode.IconSize == FileInfoIconSize.Small)
+					{
+						this.smallIcon = this.folderItem.Icon;
+					}
+					else
+					{
+						this.smallIcon = null;
+					}
+				}
+			}
+
+			public FolderItemIcon SmallIcon
+			{
+				get
+				{
+					return this.smallIcon;
+				}
+				set
+				{
+					this.smallIcon = value;
 				}
 			}
 
@@ -1947,6 +1967,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			#endregion
 
 			protected FolderItem				folderItem;
+			protected FolderItemIcon			smallIcon;
 			protected Item						parent;
 			protected bool						isModel;
 			protected bool						isNewEmptyDocument;
@@ -1973,6 +1994,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		protected bool						isNewEmtpyDocument = false;
 		protected bool						isSave = false;
 		protected FolderItem				initialFolder;
+		protected FolderItemIcon			initialSmallIcon;
 		protected string					initialFilename;
 		protected List<Item>				files;
 		protected string					selectedFilename;

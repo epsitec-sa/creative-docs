@@ -251,10 +251,6 @@
   </data>
   <data id="077">
   </data>
-  <data id="087">
-  </data>
-  <data id="097">
-  </data>
   <data id="0A7">
   </data>
   <data id="0B7">
