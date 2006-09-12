@@ -148,5 +148,15 @@ namespace Epsitec.Common.Support
 		{
 			Platform.FileOperation.AddToRecentDocuments (path);
 		}
+
+		public static FolderItem ResolveShortcut(string path, FolderQueryMode mode)
+		{
+			return Platform.Shortcut.Resolve (path, mode);
+		}
+
+		public static FolderItem ResolveShortcut(FolderItem path, FolderQueryMode mode)
+		{
+			return Platform.Shortcut.Resolve (path.FullPath, mode);
+		}
 	}
 }

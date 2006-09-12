@@ -211,7 +211,7 @@ namespace Epsitec.Common.Support.Platform.Win32
 			//	Do not free pidl, as it is transmitted to the PidlHandle. This
 			//	avoids a useless copy operation.
 			
-			System.Text.StringBuilder buffer = new System.Text.StringBuilder (260);
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder (Win32Const.MAX_PATH);
 			System.Drawing.Icon icon;
 
 			string fullPath;
@@ -286,7 +286,7 @@ namespace Epsitec.Common.Support.Platform.Win32
 			{
 				icon = System.Drawing.Icon.FromHandle (info.hIcon);
 				icon = icon == null ? null : icon.Clone () as System.Drawing.Icon;
-				FileInfo.DestroyIcon (info.hIcon);
+				ShellApi.DestroyIcon (info.hIcon);
 			}
 
 			displayName = info.szDisplayName;
@@ -511,8 +511,6 @@ namespace Epsitec.Common.Support.Platform.Win32
 			throw new System.ArgumentException (string.Format ("{0} cannot be mapped to a CSIDL", id));
 		}
 
-		[System.Runtime.InteropServices.DllImport ("user32.dll")]
-		private static extern int DestroyIcon(System.IntPtr hIcon);
 
 		private static FileInfo instance = new FileInfo ();
 		

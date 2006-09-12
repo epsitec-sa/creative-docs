@@ -43,7 +43,7 @@ namespace Epsitec.Common.Support.Platform.Win32
 		Int32 BindToObject(
 			IntPtr pidl,				// Address of an ITEMIDLIST structure (PIDL) that identifies the subfolder.
 			IntPtr pbc,					// Optional address of an IBindCtx interface on a bind context object to be 
-										// used during this operation.
+			// used during this operation.
 			[In]
 			ref Guid riid,				// Identifier of the interface to return. 
 			out IntPtr ppv);			// Address that receives the interface pointer.
@@ -53,9 +53,9 @@ namespace Epsitec.Common.Support.Platform.Win32
 		[PreserveSig]
 		Int32 BindToStorage(
 			IntPtr pidl,				// Address of an ITEMIDLIST structure that identifies the subfolder relative 
-										// to its parent folder. 
+			// to its parent folder. 
 			IntPtr pbc,					// Optional address of an IBindCtx interface on a bind context object to be 
-										// used during this operation.
+			// used during this operation.
 			[In]
 			ref Guid riid,				// Interface identifier (IID) of the requested storage interface.
 			out IntPtr ppv);			// Address that receives the interface pointer specified by riid.
@@ -106,7 +106,7 @@ namespace Epsitec.Common.Support.Platform.Win32
 			// a dialog box or message box.
 			UInt32 cidl,				// Number of file objects or subfolders specified in the apidl parameter. 
 			IntPtr[] apidl,				// Address of an array of pointers to ITEMIDLIST structures, each of which 
-										// uniquely identifies a file object or subfolder relative to the parent folder.
+			// uniquely identifies a file object or subfolder relative to the parent folder.
 			[In]
 			ref Guid riid,				// Identifier of the COM interface object to return.
 			ref UInt32 rgfReserved,		// Reserved. 
@@ -136,5 +136,4 @@ namespace Epsitec.Common.Support.Platform.Win32
 			// a list of possible values, see the description of the SHGNO enum. 
 			out IntPtr ppidlOut);		// Address of a pointer to an ITEMIDLIST structure which receives the new ITEMIDLIST. 
 	}
-
 }
