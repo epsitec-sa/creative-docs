@@ -84,7 +84,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.ico" />
-    <Content Include="Samples\normal.crmod" />
+    <Content Include="Exemples originaux\normal.crmod" />
     <Compile Include="Application.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -92,34 +92,34 @@
       <SubType>Code</SubType>
     </Compile>
     <EmbeddedResource Include="SplashScreen.png" />
-    <Content Include="Samples\2005-curve.crdoc" />
-    <Content Include="Samples\2005-font.crdoc" />
-    <Content Include="Samples\a4-1col.crmod" />
-    <Content Include="Samples\a4-2col.crmod" />
-    <Content Include="Samples\a4-3col.crmod" />
-    <Content Include="Samples\ab.crdoc" />
-    <Content Include="Samples\aqua1.crdoc" />
-    <Content Include="Samples\blupi.crdoc" />
-    <Content Include="Samples\cresus.crdoc" />
-    <Content Include="Samples\cross1.crdoc" />
-    <Content Include="Samples\cross2.crdoc" />
-    <Content Include="Samples\epsitec.crdoc" />
-    <Content Include="Samples\flowchart1.crdoc" />
-    <Content Include="Samples\illusion1.crdoc" />
-    <Content Include="Samples\illusion2.crdoc" />
-    <Content Include="Samples\logo.crdoc" />
-    <Content Include="Samples\meca1.crdoc" />
-    <Content Include="Samples\motor.crdoc" />
-    <Content Include="Samples\objets.crdoc" />
-    <Content Include="Samples\perpective1.crdoc" />
-    <Content Include="Samples\perpective2.crdoc" />
-    <Content Include="Samples\smilies.crdoc" />
-    <Content Include="Samples\target.crdoc" />
-    <Content Include="Samples\text1.crdoc" />
-    <Content Include="Samples\text2.crdoc" />
-    <Content Include="Samples\title.crdoc" />
-    <Content Include="Samples\transparency.crdoc" />
-    <Content Include="Samples\warning.crdoc" />
+    <Content Include="Exemples originaux\2005-curve.crdoc" />
+    <Content Include="Exemples originaux\2005-font.crdoc" />
+    <Content Include="Exemples originaux\a4-1col.crmod" />
+    <Content Include="Exemples originaux\a4-2col.crmod" />
+    <Content Include="Exemples originaux\a4-3col.crmod" />
+    <Content Include="Exemples originaux\ab.crdoc" />
+    <Content Include="Exemples originaux\aqua1.crdoc" />
+    <Content Include="Exemples originaux\blupi.crdoc" />
+    <Content Include="Exemples originaux\cresus.crdoc" />
+    <Content Include="Exemples originaux\cross1.crdoc" />
+    <Content Include="Exemples originaux\cross2.crdoc" />
+    <Content Include="Exemples originaux\epsitec.crdoc" />
+    <Content Include="Exemples originaux\flowchart1.crdoc" />
+    <Content Include="Exemples originaux\illusion1.crdoc" />
+    <Content Include="Exemples originaux\illusion2.crdoc" />
+    <Content Include="Exemples originaux\logo.crdoc" />
+    <Content Include="Exemples originaux\meca1.crdoc" />
+    <Content Include="Exemples originaux\motor.crdoc" />
+    <Content Include="Exemples originaux\objets.crdoc" />
+    <Content Include="Exemples originaux\perpective1.crdoc" />
+    <Content Include="Exemples originaux\perpective2.crdoc" />
+    <Content Include="Exemples originaux\smilies.crdoc" />
+    <Content Include="Exemples originaux\target.crdoc" />
+    <Content Include="Exemples originaux\text1.crdoc" />
+    <Content Include="Exemples originaux\text2.crdoc" />
+    <Content Include="Exemples originaux\title.crdoc" />
+    <Content Include="Exemples originaux\transparency.crdoc" />
+    <Content Include="Exemples originaux\warning.crdoc" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

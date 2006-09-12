@@ -5,6 +5,8 @@ using System.Text;
 
 namespace Epsitec.Common.Support.Platform.Win32
 {
+	using FILETIME = System.Runtime.InteropServices.ComTypes.FILETIME;
+
 	internal static class ShellApi
 	{
 		public delegate Int32 BrowseCallbackProc(IntPtr hwnd, UInt32 uMsg, Int32 lParam, Int32 lpData);
@@ -124,7 +126,7 @@ namespace Epsitec.Common.Support.Platform.Win32
 			public IntPtr hIcon;
 			public int iIcon;
 			public uint dwAttributes;
-			[MarshalAs (UnmanagedType.ByValTStr, SizeConst=260)]
+			[MarshalAs (UnmanagedType.ByValTStr, SizeConst=Win32Const.MAX_PATH)]
 			public string szDisplayName;
 			[MarshalAs (UnmanagedType.ByValTStr, SizeConst=80)]
 			public string szTypeName;
@@ -194,7 +196,55 @@ namespace Epsitec.Common.Support.Platform.Win32
 			public IntPtr hwndList;
 		}
 
+		// IShellLink.Resolve fFlags
+		[System.Flags]
+		internal enum SLR_FLAGS
+		{
+			SLR_NO_UI=0x0001,
+			SLR_ANY_MATCH=0x0002,
+			SLR_UPDATE=0x0004,
+			SLR_NOUPDATE=0x0008,
+			SLR_NOSEARCH=0x0010,
+			SLR_NOTRACK=0x0020,
+			SLR_NOLINKINFO=0x0040,
+			SLR_INVOKE_MSI=0x0080
+		}
 
+		// IShellLink.GetPath fFlags
+		[System.Flags]
+		internal enum SLGP_FLAGS
+		{
+			SLGP_SHORTPATH=0x0001,
+			SLGP_UNCPRIORITY=0x0002,
+			SLGP_RAWPATH=0x0004
+		}
+
+
+		[StructLayoutAttribute (LayoutKind.Sequential, CharSet=CharSet.Unicode)]
+		internal struct WIN32_FIND_DATAW
+		{
+			public int dwFileAttributes;
+			public FILETIME ftCreationTime;
+			public FILETIME ftLastAccessTime;
+			public FILETIME ftLastWriteTime;
+			public int nFileSizeHigh;
+			public int nFileSizeLow;
+			public int dwReserved0;
+			public int dwReserved1;
+
+			[MarshalAs (UnmanagedType.ByValTStr, SizeConst=Win32Const.MAX_PATH)]
+			public string cFileName;
+
+			[MarshalAs (UnmanagedType.ByValTStr, SizeConst=Win32Const.MAX_SHORTPATH)]
+			public string cAlternateFileName;
+		}
+
+		[DllImport ("shell32.dll", CharSet=CharSet.Auto)]
+		public static extern System.IntPtr ExtractIcon(System.IntPtr hInst, string lpszExeFileName, int nIconIndex);
+
+		[DllImport ("user32.dll")]
+		public static extern bool DestroyIcon(System.IntPtr hIcon);
+		
 		// Retrieves a pointer to the Shell's IMalloc interface.
 		[DllImport ("shell32.dll")]
 		public static extern Int32 SHGetMalloc(

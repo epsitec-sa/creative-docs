@@ -184,6 +184,10 @@
     <Compile Include="Platform\FolderItemHandle.cs" />
     <Compile Include="FolderItemIcon.cs" />
     <Compile Include="Platform\IFileOperationWindow.cs" />
+    <Compile Include="Platform\Shortcut.cs" />
+    <Compile Include="Platform\Win32\IShellLink.cs" />
+    <Compile Include="Platform\Win32\ShellLink.cs" />
+    <Compile Include="Platform\Win32\IPersistFile.cs" />
     <Compile Include="Platform\Win32\FileInfo.cs" />
     <Compile Include="Platform\Win32\IEnumIDList.cs" />
     <Compile Include="Platform\Win32\IMalloc.cs" />
@@ -193,6 +197,8 @@
     <Compile Include="Platform\Win32\ShellFileOperation.cs" />
     <Compile Include="Platform\Win32\ShellFunctions.cs" />
     <Compile Include="Platform\Win32\ShellGuids.cs" />
+    <Compile Include="Platform\Win32\ShellShortcut.cs" />
+    <Compile Include="Platform\Win32\Win32Const.cs" />
     <Compile Include="SerialAlgorithm.cs">
       <SubType>Code</SubType>
     </Compile>

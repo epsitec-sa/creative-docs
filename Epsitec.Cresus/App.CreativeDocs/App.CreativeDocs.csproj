@@ -88,7 +88,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.ico" />
-    <Content Include="Samples\normal.crmod" />
+    <Content Include="Original Samples\normal.crmod" />
     <Compile Include="Application.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -99,26 +99,26 @@
     <Content Include="Resources\App\Strings.00.resource" />
     <Content Include="Resources\Common.Widgets\Strings.00.resource" />
     <Content Include="Resources\Document\Strings.00.resource" />
-    <Content Include="Samples\2005-curve.crdoc" />
-    <Content Include="Samples\2005-font.crdoc" />
-    <Content Include="Samples\a4-1col.crmod" />
-    <Content Include="Samples\a4-2col.crmod" />
-    <Content Include="Samples\a4-3col.crmod" />
-    <Content Include="Samples\aqua1.crdoc" />
-    <Content Include="Samples\blupi.crdoc" />
-    <Content Include="Samples\cross1.crdoc" />
-    <Content Include="Samples\cross2.crdoc" />
-    <Content Include="Samples\flowchart1.crdoc" />
-    <Content Include="Samples\illusion1.crdoc" />
-    <Content Include="Samples\illusion2.crdoc" />
-    <Content Include="Samples\meca1.crdoc" />
-    <Content Include="Samples\motor.crdoc" />
-    <Content Include="Samples\objets.crdoc" />
-    <Content Include="Samples\perpective1.crdoc" />
-    <Content Include="Samples\perpective2.crdoc" />
-    <Content Include="Samples\smilies.crdoc" />
-    <Content Include="Samples\title.crdoc" />
-    <Content Include="Samples\transparency.crdoc" />
+    <Content Include="Original Samples\2005-curve.crdoc" />
+    <Content Include="Original Samples\2005-font.crdoc" />
+    <Content Include="Original Samples\a4-1col.crmod" />
+    <Content Include="Original Samples\a4-2col.crmod" />
+    <Content Include="Original Samples\a4-3col.crmod" />
+    <Content Include="Original Samples\aqua1.crdoc" />
+    <Content Include="Original Samples\blupi.crdoc" />
+    <Content Include="Original Samples\cross1.crdoc" />
+    <Content Include="Original Samples\cross2.crdoc" />
+    <Content Include="Original Samples\flowchart1.crdoc" />
+    <Content Include="Original Samples\illusion1.crdoc" />
+    <Content Include="Original Samples\illusion2.crdoc" />
+    <Content Include="Original Samples\meca1.crdoc" />
+    <Content Include="Original Samples\motor.crdoc" />
+    <Content Include="Original Samples\objets.crdoc" />
+    <Content Include="Original Samples\perpective1.crdoc" />
+    <Content Include="Original Samples\perpective2.crdoc" />
+    <Content Include="Original Samples\smilies.crdoc" />
+    <Content Include="Original Samples\title.crdoc" />
+    <Content Include="Original Samples\transparency.crdoc" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
