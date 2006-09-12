@@ -1,4 +1,6 @@
-using System;
+//	Copyright © 2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Responsable: Pierre ARNAUD
+
 using System.Runtime.InteropServices;
 
 namespace Epsitec.Common.Support.Platform.Win32
@@ -15,7 +17,7 @@ namespace Epsitec.Common.Support.Platform.Win32
 			// multiple files with a single function call. Use FO_MOVE instead. 
 		}
 
-		[Flags]
+		[System.Flags]
 		public enum ShellFileOperationFlags
 		{
 			FOF_MULTIDESTFILES=0x0001,	// The pTo member specifies multiple destination files (one for 
@@ -49,7 +51,7 @@ namespace Epsitec.Common.Support.Platform.Win32
 
 		}
 
-		[Flags]
+		[System.Flags]
 		public enum ShellChangeNotificationEvents : uint
 		{
 			SHCNE_RENAMEITEM=0x00000001,	// The name of a nonfolder item has changed. SHCNF_IDLIST or 
@@ -254,11 +256,9 @@ namespace Epsitec.Common.Support.Platform.Win32
 				}
 			}
 
-			ShellApi.SHChangeNotify (
-				(uint) ShellChangeNotificationEvents.SHCNE_ALLEVENTS,
-				(uint) ShellChangeNotificationFlags.SHCNF_DWORD,
-				IntPtr.Zero,
-				IntPtr.Zero);
+			ShellApi.SHChangeNotify ((uint) ShellChangeNotificationEvents.SHCNE_ALLEVENTS,
+				/**/				 (uint) ShellChangeNotificationFlags.SHCNF_DWORD,
+				/**/				 System.IntPtr.Zero, System.IntPtr.Zero);
 
 			if (retVal != 0)
 			{

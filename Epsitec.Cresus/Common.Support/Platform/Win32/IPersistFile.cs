@@ -1,22 +1,17 @@
-using System;
-using System.Text;
+//	Copyright © 2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Responsable: Pierre ARNAUD
+
 using System.Runtime.InteropServices;
 
 namespace Epsitec.Common.Support.Platform.Win32
 {
-	[
-	  ComImport (),
-	  InterfaceType (ComInterfaceType.InterfaceIsIUnknown),
-	  Guid ("0000010B-0000-0000-C000-000000000046")
-	]
+	[ComImport]
+	[InterfaceType (ComInterfaceType.InterfaceIsIUnknown)]
+	[Guid ("0000010B-0000-0000-C000-000000000046")]
+	
 	public interface IPersistFile
 	{
-		#region Methods inherited from IPersist
-
-		void GetClassID(
-		  out Guid pClassID);
-
-		#endregion
+		void GetClassID(out System.Guid pClassID);
 
 		[PreserveSig]
 		int IsDirty();
@@ -33,7 +28,6 @@ namespace Epsitec.Common.Support.Platform.Win32
 		  [MarshalAs (UnmanagedType.LPWStr)] string pszFileName);
 
 		void GetCurFile(
-		  out IntPtr ppszFileName);
-
+		  out System.IntPtr ppszFileName);
 	}
 }

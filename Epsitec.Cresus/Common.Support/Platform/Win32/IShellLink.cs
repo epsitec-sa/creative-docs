@@ -1,3 +1,6 @@
+//	Copyright © 2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Responsable: Pierre ARNAUD
+
 using System.Runtime.InteropServices;
 
 namespace Epsitec.Common.Support.Platform.Win32
@@ -5,6 +8,7 @@ namespace Epsitec.Common.Support.Platform.Win32
 	[ComImport]
 	[InterfaceType (ComInterfaceType.InterfaceIsIUnknown)]
 	[Guid ("000214F9-0000-0000-C000-000000000046")]
+	
 	internal interface IShellLink
 	{
 		void GetPath([Out, MarshalAs (UnmanagedType.LPWStr)] System.Text.StringBuilder pszFile, int cchMaxPath, out ShellApi.WIN32_FIND_DATAW pfd, ShellApi.SLGP_FLAGS fFlags);

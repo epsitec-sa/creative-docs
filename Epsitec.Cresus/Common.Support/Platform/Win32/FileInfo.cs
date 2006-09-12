@@ -9,8 +9,6 @@ namespace Epsitec.Common.Support.Platform.Win32
 	{
 		private FileInfo()
 		{
-			this.allocator = ShellFunctions.GetMalloc ();
-
 			System.IntPtr ptrRoot;
 			
 			ShellApi.SHGetDesktopFolder (out ptrRoot);
@@ -24,10 +22,8 @@ namespace Epsitec.Common.Support.Platform.Win32
 
 		~FileInfo()
 		{
-			System.Runtime.InteropServices.Marshal.ReleaseComObject (this.allocator);
 			System.Runtime.InteropServices.Marshal.ReleaseComObject (this.root);
 
-			this.allocator = null;
 			this.root      = null;
 		}
 
@@ -514,7 +510,6 @@ namespace Epsitec.Common.Support.Platform.Win32
 
 		private static FileInfo instance = new FileInfo ();
 		
-		private IMalloc allocator;
 		private IShellFolder root;
 	}
 }
