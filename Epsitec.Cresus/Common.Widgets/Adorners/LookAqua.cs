@@ -2129,6 +2129,10 @@ namespace Epsitec.Common.Widgets.Adorners
 					this.PaintImageButton3v(graphics, rect, icon);
 				}
 			}
+			else if (rank >= 44 && rank <= 47)
+			{
+				this.PaintImageButton9(graphics, rect, 5, icon, 5);
+			}
 			else
 			{
 				this.PaintImageButton1(graphics, rect, icon);
@@ -2224,6 +2228,68 @@ namespace Epsitec.Common.Widgets.Adorners
 			graphics.Align(ref prect);
 			if ( !prect.IsSurfaceZero )
 			{
+				graphics.PaintImage(this.bitmap, prect, picon);
+			}
+		}
+
+		protected void PaintImageButton9(Drawing.Graphics graphics,
+										 Drawing.Rectangle rect,
+										 double rectMargin,
+										 Drawing.Rectangle icon,
+										 double iconMargin)
+		{
+			//	Dessine un bouton composé de 9 morceaux d'image.
+			if ( rectMargin <= 1 || rect.Width < 16 || rect.Height < 16 )
+			{
+				PaintImageButton1(graphics, rect, icon);
+				return;
+			}
+
+			graphics.Align(ref rect);
+
+			Drawing.Rectangle prect = new Drawing.Rectangle();
+			Drawing.Rectangle picon = new Drawing.Rectangle();
+
+			for ( int i=0 ; i<3 ; i++ )
+			{
+				switch ( i )
+				{
+					case 0:
+						prect.Bottom = rect.Bottom;
+						prect.Top    = rect.Bottom+rectMargin;
+						picon.Bottom = icon.Bottom;
+						picon.Top    = icon.Bottom+iconMargin;
+						break;
+					case 1:
+						prect.Bottom = rect.Bottom+rectMargin;
+						prect.Top    = rect.Top-rectMargin;
+						picon.Bottom = icon.Bottom+iconMargin;
+						picon.Top    = icon.Top-iconMargin;
+						break;
+					case 2:
+						prect.Bottom = rect.Top-rectMargin;
+						prect.Top    = rect.Top;
+						picon.Bottom = icon.Top-iconMargin;
+						picon.Top    = icon.Top;
+						break;
+				}
+
+				prect.Left   = rect.Left;
+				prect.Right  = rect.Left+rectMargin;
+				picon.Left   = icon.Left;
+				picon.Right  = icon.Left+iconMargin;
+				graphics.PaintImage(this.bitmap, prect, picon);
+
+				prect.Left   = rect.Left+rectMargin;
+				prect.Right  = rect.Right-rectMargin;
+				picon.Left   = icon.Left+iconMargin;
+				picon.Right  = icon.Right-iconMargin;
+				graphics.PaintImage(this.bitmap, prect, picon);
+
+				prect.Left   = rect.Right-rectMargin;
+				prect.Right  = rect.Right;
+				picon.Left   = icon.Right-iconMargin;
+				picon.Right  = icon.Right;
 				graphics.PaintImage(this.bitmap, prect, picon);
 			}
 		}
