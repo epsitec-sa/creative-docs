@@ -774,10 +774,15 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				if (item.IsShortcut)
 				{
 					FolderItem target = FileManager.ResolveShortcut(item, FolderQueryMode.NoIcons);
-					if (!target.IsFolder)
+
+					if (target.IsFolder)
+					{
+						continue;
+					}
+					else
 					{
 						string ext = System.IO.Path.GetExtension(target.FullPath);
-						if (ext != this.fileExtension)  // autre extension ?
+						if (!string.Equals (ext, this.fileExtension, System.StringComparison.OrdinalIgnoreCase))  // autre extension ?
 						{
 							continue;  // oui -> ignore ce fichier
 						}
@@ -790,7 +795,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				else if (!item.IsFolder)  // fichier ?
 				{
 					string ext = System.IO.Path.GetExtension(item.FullPath);
-					if (ext != this.fileExtension)  // autre extension ?
+					if (!string.Equals (ext, this.fileExtension, System.StringComparison.OrdinalIgnoreCase))  // autre extension ?
 					{
 						continue;  // oui -> ignore ce fichier
 					}

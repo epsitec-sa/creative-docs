@@ -386,6 +386,7 @@ namespace Epsitec.Common.Widgets
 		
 		private void ShowToolTip(Drawing.Point mouse, object caption)
 		{
+			System.Diagnostics.Debug.WriteLine (string.Format ("Show {0}", caption));
 			Widget tip = null;
 			
 			if (caption is string)
