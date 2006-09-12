@@ -1,6 +1,8 @@
 //	Copyright © 2003-2006, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
+using System.Runtime.InteropServices;
+
 namespace Epsitec.Common.Drawing
 {
 	using BitmapData = System.Drawing.Imaging.BitmapData;
@@ -95,7 +97,7 @@ namespace Epsitec.Common.Drawing
 						(size > 0))
 					{
 						byte[] data = new byte[size];
-						System.Runtime.InteropServices.Marshal.Copy (memory, data, 0, size);
+						Marshal.Copy (memory, data, 0, size);
 						return data;
 					}
 				}
@@ -469,8 +471,7 @@ namespace Epsitec.Common.Drawing
 			return bitmap;
 		}
 
-#if false
-		[System.Runtime.InteropServices.StructLayout (System.Runtime.InteropServices.LayoutKind.Sequential)]
+		[StructLayout (LayoutKind.Sequential)]
 		private struct ICONINFO
 		{
 			public bool fIcon;
@@ -479,14 +480,154 @@ namespace Epsitec.Common.Drawing
 			public System.IntPtr hbmMask;
 			public System.IntPtr hbmColor;
 		}
+		[StructLayout (LayoutKind.Sequential)]
+		public struct CIEXYZ
+		{
+			public uint x, y, z;
+		}
 
-		[System.Runtime.InteropServices.DllImport ("user32.dll")]
+		[StructLayout (LayoutKind.Sequential)]
+		public struct CIEXYZTRIPLE
+		{
+			public CIEXYZ red, green, blue;
+		}
+
+		[StructLayout(LayoutKind.Sequential)]
+		public struct BITMAPV5HEADER
+		{
+			public int			bV5Size;
+			public int			bV5Width;
+			public int			bV5Height;
+			public ushort		bV5Planes;
+			public ushort		bV5BitCount;
+			public uint			bV5Compression;
+			public uint			bV5SizeImage;
+			public int			bV5XPelsPerMeter;
+			public int			bV5YPelsPerMeter;
+			public uint			bV5ClrUsed;
+			public uint			bV5ClrImportant;
+			public uint			bV5RedMask;
+			public uint			bV5GreenMask;
+			public uint			bV5BlueMask;
+			public uint			bV5AlphaMask;
+			public CIEXYZTRIPLE bV5Endpoints;
+			public uint			bV5CSType;
+			public uint			bV5GammaRed;
+			public uint			bV5GammaGreen;
+			public uint			bV5GammaBlue;
+			public uint			bV5Intent;
+			public uint			bV5ProfileData;
+			public uint			bV5ProfileSize;
+			public uint			bV5Reserved;
+		}
+
+		public static System.Drawing.Bitmap ConvertIcon(System.IntPtr hIcon, int dx, int dy)
+		{
+			BITMAPV5HEADER bmpInfo32 = new BITMAPV5HEADER ();
+			const int BI_BITFIELDS = 3;
+			
+			bmpInfo32.bV5Size     = Marshal.SizeOf (bmpInfo32);
+			bmpInfo32.bV5Width    = dx;
+			bmpInfo32.bV5Height   = dy;
+			bmpInfo32.bV5Planes   = 1;
+			bmpInfo32.bV5BitCount = 32;
+			bmpInfo32.bV5Compression = BI_BITFIELDS;
+			bmpInfo32.bV5RedMask   = 0x00ff0000;
+			bmpInfo32.bV5GreenMask = 0x0000ff00;
+			bmpInfo32.bV5BlueMask  = 0x000000ff;
+			bmpInfo32.bV5AlphaMask = 0xff000000;
+			
+			System.IntPtr bits;
+			System.IntPtr dc = Bitmap.CreateCompatibleDC (System.IntPtr.Zero);
+			System.IntPtr bmp = Bitmap.CreateDIBSection (dc, ref bmpInfo32, 0, out bits, System.IntPtr.Zero, 0);
+			System.IntPtr hbOld = Bitmap.SelectObject (dc, bmp);
+			System.IntPtr brush = Bitmap.CreateSolidBrush (0xffffff);
+
+			Bitmap.DrawIconEx (dc, 0, 0, hIcon, 0, 0, 0, brush, DI_NORMAL);
+			Bitmap.DeleteObject (brush);
+
+			System.Drawing.Bitmap bitmap = System.Drawing.Bitmap.FromHicon (hIcon);
+
+			System.Drawing.Imaging.ImageLockMode mode = System.Drawing.Imaging.ImageLockMode.ReadOnly;
+			System.Drawing.Imaging.PixelFormat format = System.Drawing.Imaging.PixelFormat.Format32bppArgb;
+			System.Drawing.Imaging.BitmapData data = bitmap.LockBits (new System.Drawing.Rectangle (0, 0, dx, dy), mode, format);
+
+			unsafe
+			{
+				byte* rawBytes = (byte*) bits.ToPointer ();
+				byte* gdiBytes = (byte*) data.Scan0.ToPointer ();
+
+				gdiBytes += data.Stride * dy;
+				
+				for (int y = 0; y < dy; y++)
+				{
+					gdiBytes -= data.Stride;
+					
+					for (int x = 0; x < dx; x++)
+					{
+						byte bB = gdiBytes[x*4+0];
+						byte bG = gdiBytes[x*4+1];
+						byte bR = gdiBytes[x*4+2];
+
+						byte cB = *rawBytes++;
+						byte cG = *rawBytes++;
+						byte cR = *rawBytes++;
+						byte cA = *rawBytes++;
+
+						if (cA != 0)
+						{
+							gdiBytes[x*4+0] = cB;
+							gdiBytes[x*4+1] = cG;
+							gdiBytes[x*4+2] = cR;
+							gdiBytes[x*4+3] = cA;
+						}
+					}
+				}
+			}
+			
+			bitmap.UnlockBits (data);
+
+			Bitmap.SelectObject (dc, hbOld);
+			Bitmap.DeleteObject (bmp);
+			Bitmap.DeleteDC (dc);
+			
+			return bitmap;
+		}
+
+		[DllImport ("shell32.dll", CharSet=CharSet.Auto)]
+		static extern uint ExtractIconEx(string szFileName, int nIconIndex, out System.IntPtr phiconLarge, out System.IntPtr phiconSmall, uint nIcons);
+
+		[DllImport ("gdi32.dll")]
+		static extern System.IntPtr CreateCompatibleDC(System.IntPtr hdc);
+
+		[DllImport ("gdi32.dll")]
+		static extern System.IntPtr CreateSolidBrush(int color);
+
+		[DllImport ("gdi32.dll")]
+		static extern System.IntPtr SelectObject(System.IntPtr hdc, System.IntPtr obj);
+
+		[DllImport ("gdi32.dll")]
+		static extern void DeleteObject(System.IntPtr obj);
+
+		[DllImport ("gdi32.dll")]
+		static extern int GetPixel(System.IntPtr dc, int x, int y);
+
+		[DllImport ("gdi32.dll")]
+		static extern void DeleteDC(System.IntPtr dc);
+
+		[DllImport ("gdi32.dll")]
+		static extern System.IntPtr CreateDIBSection(System.IntPtr hdc, [In] ref BITMAPV5HEADER pbmi, uint iUsage, out System.IntPtr ppvBits, System.IntPtr hSection, uint dwOffset);
+
+//		[DllImport("gdi32.dll")]
+		//		static extern IntPtr CreateDIBitmap(System.IntPtr hdc, [In] ref BITMAPV5HEADER lpbmih, uint fdwInit, byte [] lpbInit, [In] ref BITMAPINFO lpbmi, uint fuUsage);
+		
+		[DllImport ("user32.dll")]
 		private static extern bool GetIconInfo(System.IntPtr hIcon, out ICONINFO iconinfo);
 
-		[System.Runtime.InteropServices.DllImport ("user32.dll")]
-		private static extern int GetDIBits(System.IntPtr hDc, System.IntPtr hBitmap, int startScan, int numScanLines, byte[] bits, ref BITMAPINFO info, int usage);
-#endif
-		[System.Runtime.InteropServices.DllImport ("user32.dll", SetLastError=true)]
+//		[DllImport ("user32.dll")]
+//		private static extern int GetDIBits(System.IntPtr hDc, System.IntPtr hBitmap, int startScan, int numScanLines, byte[] bits, ref BITMAPINFO info, int usage);
+
+		[DllImport ("user32.dll", SetLastError=true)]
 		private static extern bool DrawIconEx(System.IntPtr hDc, int x, int y, System.IntPtr hIcon, int dx, int dy, int imageIndex, System.IntPtr filckerFreeBrush, int flags);
 
 		private const int DI_MASK = 0x01;
@@ -503,7 +644,7 @@ namespace Epsitec.Common.Drawing
 #endif
 			
 			System.Drawing.Bitmap src_bitmap = native.ToBitmap ();
-			System.Drawing.Bitmap dst_bitmap = new System.Drawing.Bitmap (src_bitmap.Width, src_bitmap.Height, System.Drawing.Imaging.PixelFormat.Format32bppPArgb);
+			System.Drawing.Bitmap dst_bitmap;
 
 			double dpi_x = src_bitmap.HorizontalResolution;
 			double dpi_y = src_bitmap.VerticalResolution;
@@ -511,21 +652,7 @@ namespace Epsitec.Common.Drawing
 			int dx = src_bitmap.Width;
 			int dy = src_bitmap.Height;
 
-			src_bitmap.SetResolution (dst_bitmap.HorizontalResolution, dst_bitmap.VerticalResolution);
-
-			using (System.Drawing.Graphics graphics = System.Drawing.Graphics.FromImage (dst_bitmap))
-			{
-#if false
-				graphics.FillRectangle (new System.Drawing.SolidBrush (System.Drawing.Color.Red), 0, 0, dx/2, dy);
-
-				System.IntPtr hdc = graphics.GetHdc ();
-
-				Bitmap.DrawIconEx (hdc, 0, 0, native.Handle, dx, dy, 0, System.IntPtr.Zero, DI_IMAGE);
-
-				graphics.ReleaseHdc (hdc);
-#endif
-				graphics.DrawIconUnstretched (native, new System.Drawing.Rectangle (0, 0, src_bitmap.Width, src_bitmap.Height));
-			}
+			dst_bitmap = Bitmap.ConvertIcon (native.Handle, dx, dy);
 
 			Bitmap bitmap = new Bitmap ();
 
