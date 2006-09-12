@@ -1,6 +1,7 @@
 using Epsitec.Common.Document;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Drawing;
+using Epsitec.Common.Support;
 using System.Runtime.Serialization;
 
 namespace Epsitec.Common.Document.Settings
@@ -326,6 +327,8 @@ namespace Epsitec.Common.Document.Settings
 				this.lastModel.RemoveAt(index);
 			}
 			this.lastModel.Insert(0, filename);
+
+			FileManager.AddToRecentDocuments(filename);
 		}
 
 		protected int LastModelSearch(string filename)
@@ -375,6 +378,8 @@ namespace Epsitec.Common.Document.Settings
 				this.lastFilename.RemoveAt(index);
 			}
 			this.lastFilename.Insert(0, filename);
+
+			FileManager.AddToRecentDocuments(filename);
 		}
 
 		protected int LastFilenameSearch(string filename)
