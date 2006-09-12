@@ -456,7 +456,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.buttonCancel.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			this.slider = new HSlider(footer);
-			this.slider.PreferredWidth = 80;
+			this.slider.PreferredWidth = 110;
+			this.slider.IsMinMaxButtons = true;
 			this.slider.Dock = DockStyle.Right;
 			this.slider.Margins = new Margins(0, 0, 4, 4);
 			this.slider.TabIndex = this.tabIndex++;
