@@ -55,10 +55,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				{
 					if (this.isSave)
 					{
-						if (value.ToLower() == Document.DirectoryOriginalSamples.ToLower())
-						{
-							value = Document.DirectoryMySamples;
-						}
+						value = Document.RedirectionFilename(value);
 					}
 
 					folder = FileManager.GetFolderItem(value, FolderQueryMode.NoIcons);
@@ -82,14 +79,9 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			}
 			set
 			{
-				if (this.isSave && !string.IsNullOrEmpty(value))
+				if (this.isSave)
 				{
-					string dir = System.IO.Path.GetDirectoryName(value);
-					if (dir.ToLower() == Document.DirectoryOriginalSamples.ToLower())
-					{
-						string file = System.IO.Path.GetFileName(value);
-						value = string.Concat(Document.DirectoryMySamples, "\\", file);
-					}
+					value = Document.RedirectionFilename(value);
 				}
 
 				if (this.initialFilename != value)
