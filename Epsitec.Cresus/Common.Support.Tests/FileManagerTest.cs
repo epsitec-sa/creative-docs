@@ -104,8 +104,9 @@ namespace Epsitec.Common.Support
 
 			foreach (FolderItem item in FileManager.GetFolderItems (FileManager.GetFolderItem (FolderId.Recent, FolderQueryMode.NoIcons), FolderQueryMode.NoIcons))
 			{
+				System.Console.Out.WriteLine ("{0}", item);
 				string resolvesTo = FileManager.ResolveShortcut (item, FolderQueryMode.NoIcons).FullPath;
-				System.Console.Out.WriteLine ("{0} --> {1}", item, resolvesTo);
+				System.Console.Out.WriteLine ("  --> {0}", resolvesTo);
 				
 				if (path == resolvesTo)
 				{
