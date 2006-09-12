@@ -23,5 +23,6 @@ namespace Epsitec.Common.Support.Platform
 		Shared			= 0x0400,
 		Folder			= 0x0800,
 		FileSystemNode	= 0x1000,
+		WebLink			= 0x2000
 	}
 }

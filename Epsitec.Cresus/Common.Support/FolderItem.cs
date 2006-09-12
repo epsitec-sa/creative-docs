@@ -181,6 +181,20 @@ namespace Epsitec.Common.Support
 		}
 
 		/// <summary>
+		/// Gets a value indicating whether this item is a web link.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this item is a web link; otherwise, <c>false</c>.
+		/// </value>
+		public bool								IsWebLink
+		{
+			get
+			{
+				return (this.attributes & Platform.FolderItemAttributes.WebLink) != 0;
+			}
+		}
+
+		/// <summary>
 		/// Gets a value indicating whether this item is read only.
 		/// </summary>
 		/// <value>
