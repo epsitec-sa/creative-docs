@@ -46,8 +46,6 @@
   <data name="Dialog.Question.Save.Part2" id="0B1">Voulez-vous enregistrer les modifications ?</data>
   <data name="Dialog.Question.Save.File" id="0B7" mod="1">Le document &lt;b&gt;{0}&lt;/b&gt; existe déjà.&lt;br/&gt;&lt;br/&gt;{1}&lt;br/&gt;&lt;br/&gt;Voulez-vous le remplacer ?</data>
   <data name="Dialog.Question.Open.File" id="0E7" mod="1">Le document &lt;b&gt;{0}&lt;/b&gt; n&amp;apos;existe pas.&lt;br/&gt;&lt;br/&gt;{1}</data>
-  <data name="Dialog.Question.Delete.File" id="087" mod="1">Voulez-vous supprimer le document &lt;b&gt;{0}&lt;/b&gt; ?&lt;br/&gt;&lt;br/&gt;{1}</data>
-  <data name="Dialog.Question.Delete.Directory" id="097" mod="1">Voulez-vous supprimer le dossier &lt;b&gt;{0}&lt;/b&gt; et tout son contenu ?&lt;br/&gt;&lt;br/&gt;{1}</data>
   <data name="Dialog.Warning.Text1" id="0C1">Les problèmes suivants ont été rencontrés:</data>
   <data name="Dialog.Warning.Text2" id="0D1">Malgré ces problèmes, le fichier a été ouvert le mieux possible.</data>
   <data name="Dialog.Warning.Text3" id="0E1">Son aspect est toutefois différent de ce qu'il devrait être.</data>

@@ -1330,7 +1330,7 @@ namespace Epsitec.Common.Document
 			//	Retourne le nom à afficher pour le dossier contenant les exemples originaux.
 			get
 			{
-				return "Exemples originaux";
+				return Res.Strings.Directory.OriginalSamples;
 			}
 		}
 
@@ -1339,7 +1339,7 @@ namespace Epsitec.Common.Document
 			//	Retourne le nom à afficher pour le dossier contenant les exemples personnels.
 			get
 			{
-				return "Mes exemples";
+				return Res.Strings.Directory.MySamples;
 			}
 		}
 
@@ -1348,7 +1348,7 @@ namespace Epsitec.Common.Document
 			//	Retourne le nom du dossier contenant les exemples originaux.
 			get
 			{
-				return string.Concat(Common.Support.Globals.Directories.Executable, "\\Exemples originaux");
+				return string.Concat(Common.Support.Globals.Directories.Executable, "\\", Document.DisplayOriginalSamples);
 			}
 		}
 
@@ -1363,7 +1363,7 @@ namespace Epsitec.Common.Document
 				{
 					path = path.Substring(0, i);  // supprime le dossier "1.0.0.0" à la fin
 				}
-				return string.Concat(path, "\\Mes exemples");
+				return string.Concat(path, "\\", Document.DisplayMySamples);
 			}
 		}
 

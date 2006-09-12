@@ -1,5 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <bundle name="Strings" type="String" culture="fr">
+  <data name="Directory.OriginalSamples" id="01A01" mod="1" about="NE PAS MODIFIER (nom de dossier)">Exemples originaux</data>
+  <data name="Directory.MySamples" id="02A01" mod="1" about="NE PAS MODIFIER (nom de dossier)">Mes exemples</data>
   <data name="Dialog.Title" id="0">Crésus</data>
   <data name="Dialog.Button.Browse" id="01">Parcourir...</data>
   <data name="Dialog.Button.Properties" id="02">Attributs...</data>
