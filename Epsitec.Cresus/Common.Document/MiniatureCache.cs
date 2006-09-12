@@ -34,7 +34,14 @@ namespace Epsitec.Common.Document
 		{
 			//	Retourne une miniature contenue dans le cache.
 			//	Retourne null si la miniature n'est pas dans le cache.
-			return MiniatureCache.cache[filename];
+			if (MiniatureCache.cache.ContainsKey(filename))
+			{
+				return MiniatureCache.cache[filename];
+			}
+			else
+			{
+				return null;
+			}
 		}
 
 
