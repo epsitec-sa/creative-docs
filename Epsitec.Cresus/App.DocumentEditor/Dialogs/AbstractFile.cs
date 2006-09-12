@@ -676,9 +676,12 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				string fixIcon = this.files[row].FixIcon;
 				if (fixIcon == null)
 				{
-					im.DrawingImage = this.files[row].Image;
-					im.PaintFrame = !this.files[row].IsDirectory;
-					im.StretchImage = !this.files[row].IsDirectory;
+					Image image;
+					bool icon;
+					this.files[row].GetImage(out image, out icon);
+					im.DrawingImage = image;
+					im.PaintFrame = !icon;
+					im.StretchImage = !icon;
 					im.FixIcon = null;
 				}
 				else
@@ -1731,25 +1734,33 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				}
 			}
 
-			public Image Image
+			public void GetImage(out Image image, out bool icon)
 			{
-				//	Retourne l'image miniature associée au fichier.
-				get
+				//	Donne l'image miniature associée au fichier.
+				if (this.isNewEmptyDocument)  // nouveau document vide ?
 				{
-					if (this.isNewEmptyDocument)  // nouveau document vide ?
+					image = null;
+					icon = false;
+				}
+				else
+				{
+					if (this.IsDirectory)
 					{
-						return null;
+						image = this.folderItem.Icon.Image;
+						icon = true;
 					}
 					else
 					{
-						if (this.IsDirectory)
+						MiniatureCache.Add(this.folderItem.FullPath);
+						image = MiniatureCache.Image(this.folderItem.FullPath);
+						if (image == null)
 						{
-							return this.folderItem.Icon.Image;
+							image = this.folderItem.Icon.Image;
+							icon = true;
 						}
 						else
 						{
-							MiniatureCache.Add(this.folderItem.FullPath);
-							return MiniatureCache.Image(this.folderItem.FullPath);
+							icon = false;
 						}
 					}
 				}
