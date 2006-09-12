@@ -244,6 +244,15 @@ namespace Epsitec.Common.Support.Platform.Win32
 
 		[DllImport ("user32.dll")]
 		public static extern bool DestroyIcon(System.IntPtr hIcon);
+
+		[DllImport ("user32.dll")]
+		public static extern bool IsWindowEnabled(System.IntPtr hWnd);
+
+		[DllImport ("user32.dll")]
+		public static extern bool EnableWindow(System.IntPtr hWnd, bool enable);
+
+		[DllImport ("user32.dll")]
+		public static extern System.IntPtr GetDesktopWindow();
 		
 		// Retrieves a pointer to the Shell's IMalloc interface.
 		[DllImport ("shell32.dll")]

@@ -162,7 +162,7 @@ namespace Epsitec.Common.Support.Platform.Win32
 
 		// properties
 		public FileOperations Operation;
-		public IntPtr OwnerWindow;
+		public IFileOperationWindow OwnerWindow;
 		public ShellFileOperationFlags OperationFlags;
 		private string ProgressTitle;
 		public string[] SourceFiles;
@@ -193,14 +193,14 @@ namespace Epsitec.Common.Support.Platform.Win32
 					this.OperationFlags |= ShellFileOperationFlags.FOF_RENAMEONCOLLISION;
 				}
 
-				this.OwnerWindow = value.OwnerWindow == null ? System.IntPtr.Zero : value.OwnerWindow.GetPlatformHandle ();
+				this.OwnerWindow = value.OwnerWindow == null ? null : value.OwnerWindow;
 			}
 		}
 
 		public ShellFileOperation()
 		{
 			this.Operation = FileOperations.FO_COPY;
-			this.OwnerWindow = IntPtr.Zero;
+			this.OwnerWindow = null;
 			this.OperationFlags = ShellFileOperationFlags.FOF_ALLOWUNDO |
 				/**/			  ShellFileOperationFlags.FOF_MULTIDESTFILES |
 				/**/			  ShellFileOperationFlags.FOF_NO_CONNECTED_ELEMENTS |
@@ -212,7 +212,7 @@ namespace Epsitec.Common.Support.Platform.Win32
 		{
 			ShellApi.SHFILEOPSTRUCT fileOpStruct = new ShellApi.SHFILEOPSTRUCT ();
 
-			fileOpStruct.hwnd = this.OwnerWindow;
+			fileOpStruct.hwnd = this.OwnerWindow == null ? System.IntPtr.Zero : this.OwnerWindow.GetPlatformHandle ();
 			fileOpStruct.wFunc = (uint) this.Operation;
 
 			string multiSource = ShellFileOperation.StringArrayToMultiString (SourceFiles);
@@ -225,7 +225,34 @@ namespace Epsitec.Common.Support.Platform.Win32
 			fileOpStruct.fAnyOperationsAborted = 0;
 			fileOpStruct.hNameMappings = System.IntPtr.Zero;
 
-			int retVal = ShellApi.SHFileOperation (ref fileOpStruct);
+			bool enable = false;
+			
+			if ((fileOpStruct.hwnd != System.IntPtr.Zero) &&
+				(fileOpStruct.hwnd != ShellApi.GetDesktopWindow ()) &&
+				(ShellApi.IsWindowEnabled (fileOpStruct.hwnd)))
+			{
+				//	Disable the owner window before we start working, as SHFileOperation
+				//	won't really block the UI while working.
+				
+				ShellApi.EnableWindow (fileOpStruct.hwnd, false);
+				enable = true;
+			}
+
+			int retVal;
+
+			try
+			{
+				retVal = ShellApi.SHFileOperation (ref fileOpStruct);
+			}
+			finally
+			{
+				if (enable)
+				{
+					//	Restore the window enable, if required.
+					
+					ShellApi.EnableWindow (fileOpStruct.hwnd, true);
+				}
+			}
 
 			ShellApi.SHChangeNotify (
 				(uint) ShellChangeNotificationEvents.SHCNE_ALLEVENTS,
