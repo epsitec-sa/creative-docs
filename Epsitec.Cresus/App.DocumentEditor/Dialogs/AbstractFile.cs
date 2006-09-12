@@ -515,6 +515,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 			this.FavoritesAdd(Document.DisplayMySamples, "FileTypeMySamples", Document.DirectoryMySamples);
 
+			this.FavoritesAdd(FolderId.Recent);              // Mes documents récents
 			this.FavoritesAdd(FolderId.VirtualDesktop);      // Bureau
 			this.FavoritesAdd(FolderId.VirtualMyDocuments);  // Mes documents
 			this.FavoritesAdd(FolderId.VirtualMyComputer);   // Poste de travail
@@ -757,7 +758,15 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 					FolderItem target = FileManager.ResolveShortcut(item, FolderQueryMode.NoIcons);
 					if (!target.IsFolder)
 					{
-						continue;
+						string ext = System.IO.Path.GetExtension(target.FullPath);
+						if (ext != this.fileExtension)  // autre extension ?
+						{
+							continue;  // oui -> ignore ce fichier
+						}
+						else
+						{
+							int ii=123;
+						}
 					}
 				}
 				else if (!item.IsFolder)  // fichier ?

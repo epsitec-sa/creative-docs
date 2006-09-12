@@ -366,10 +366,15 @@ namespace Epsitec.Common.Widgets
 
 		protected void UpdateMinMaxButtons()
 		{
-			if (this.isMinMaxButtons)
+			if (this.arrowUp != null)
 			{
-				this.arrowMax.Enable = (this.Value < this.MaxValue);
-				this.arrowMin.Enable = (this.Value > this.MinValue);
+				decimal min = this.isInverted ? this.MaxValue : this.MinValue;
+				decimal max = this.isInverted ? this.MinValue : this.MaxValue;
+
+				this.arrowUp.Enable   = (this.Value < max);
+				this.arrowDown.Enable = (this.Value > min);
+				this.arrowMax.Enable  = (this.Value < max);
+				this.arrowMin.Enable  = (this.Value > min);
 			}
 		}
 
@@ -517,13 +522,13 @@ namespace Epsitec.Common.Widgets
 
 			if (button == this.arrowMax)
 			{
-				this.Value = this.MaxValue;
+				this.Value = this.isInverted ? this.MinValue : this.MaxValue;
 				this.Invalidate();
 			}
 
 			if (button == this.arrowMin)
 			{
-				this.Value = this.MinValue;
+				this.Value = this.isInverted ? this.MaxValue : this.MinValue;
 				this.Invalidate();
 			}
 		}
